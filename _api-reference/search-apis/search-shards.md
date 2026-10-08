@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search shards
+title: "搜尋分片"
 parent: Search APIs
 nav_order: 85
 ---
 
-# Search shards API
-**Introduced 1.0**
+# 搜尋分片 API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The `_search_shards` API provides information about which shards OpenSearch would route a search request to if the request were executed. This helps you understand how OpenSearch plans to distribute the query across shards without actually running the search. This API does not execute the search but allows you to inspect routing decisions, shard distribution, and the nodes that would handle the request. 
+`_search_shards` API 提供相關資訊，說明如果執行請求，OpenSearch 會將搜尋請求路由到哪些分片。這可協助您了解 OpenSearch 計畫如何將查詢分配到各分片，而無需實際執行搜尋。此 API 不會執行搜尋，但可讓您檢視路由決策、分片分佈，以及將處理該請求的節點。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_search_shards
@@ -20,30 +21,30 @@ POST /_search_shards
 POST /{index}/_search_shards
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Date type   | Description                                            |
+| 參數 | 資料類型 | 說明 |
 | --------- | ------ | ------------------------------------------------------ |
-| `<index>` | String | A comma-separated list of target index names. |
+| `<index>` | 字串 | 以逗號分隔的目標索引名稱清單。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
-| `allow_no_indices` | Boolean | If `true`, the request does not fail if a wildcard expression or index alias resolves to no concrete indexes. Default is `true`. |
-| `expand_wildcards` | String | Controls how wildcard expressions are expanded. Options are: `open` (default), `closed`, `hidden`, `none`, or `all`. |
-| `ignore_unavailable` | Boolean | If `true`, missing or closed indexes are ignored. Default is `false`. |
-| `local` | Boolean | If `true`, the operation is performed only on the local node, without retrieving the state from the cluster manager node. Default is `false`. |
-| `preference` | String | Specifies a preference in selecting which shards or nodes to target. See [The `preference` query parameter]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#the-preference-query-parameter) for more information. |
-| `routing` | String | A comma-separated list of specific routing values used for shard selection. |
+| 參數 | 資料類型 | 說明 |
+| `allow_no_indices` | 布林值 | 若為 `true`，當萬用字元運算式或索引別名未解析到任何具體索引時，請求不會失敗。預設為 `true`。 |
+| `expand_wildcards` | 字串 | 控制萬用字元運算式的展開方式。選項為：`open`（預設）、`closed`、`hidden`、`none` 或 `all`。 |
+| `ignore_unavailable` | 布林值 | 若為 `true`，將忽略遺失或已關閉的索引。預設為 `false`。 |
+| `local` | 布林值 | 若為 `true`，此操作僅在本機節點上執行，不會從叢集管理員節點擷取狀態。預設為 `false`。 |
+| `preference` | 字串 | 指定選取目標分片或節點時的偏好設定。如需更多資訊，請參閱 [`preference` 查詢參數]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#the-preference-query-parameter)。 |
+| `routing` | 字串 | 以逗號分隔的特定路由值清單，用於分片選取。 |
 
 
-## Request body fields
+## 請求本文欄位
 
-The request body can include a full search query to simulate how the request would be routed:
+請求本文可包含完整的搜尋查詢，以模擬請求的路由方式：
 
 ```json
 {
@@ -55,9 +56,9 @@ The request body can include a full search query to simulate how the request wou
 }
 ```
 
-## Example
+## 範例
 
-Create an index:
+建立索引：
 
 ```json
 PUT /logs-demo
@@ -77,7 +78,7 @@ PUT /logs-demo
 ```
 {% include copy-curl.html %}
 
-Index the first document with `routing=user1`:
+使用 `routing=user1` 為第一份文件編製索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -118,7 +119,7 @@ response = client.index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Index the second document with `routing=user2`:
+使用 `routing=user2` 為第二份文件編製索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -159,9 +160,9 @@ response = client.index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Example request
+### 範例請求
 
-Simulate routing with `_search_shards`:
+使用 `_search_shards` 模擬路由：
 
 <!-- spec_insert_start
 component: example_code
@@ -209,9 +210,9 @@ response = client.search_shards(
 <!-- spec_insert_end -->
 
 
-### Example response
+### 範例回應
 
-The response displays the node and shard that would be searched if the search were executed:
+回應會顯示如果執行搜尋，將被搜尋的節點與分片：
 
 ```json
 {
@@ -246,21 +247,21 @@ The response displays the node and shard that would be searched if the search we
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Date type | Description |
-| `nodes` | Object | Contains a map of node IDs to node metadata, such as name and transport address.  |
-| `indices` | Object | Contains a map of index names included in the request. |
-| `shards` | Array of arrays | Nested arrays representing shard copies (primary/replica) for the request. |
-| `shards.index` | String | The index name. |
-| `shards.shard` | Integer | The shard number. |
-| `shards.node` | String | The node ID of the node containing this shard. |
-| `shards.primary` | Boolean | Whether this is a primary shard. |
-| `shards.state` | String | The current shard state. |
-| `shards.allocation_id.id` | String | A unique ID for this shard allocation. |
+| 欄位 | 資料類型 | 說明 |
+| `nodes` | 物件 | 包含節點 ID 對應至節點中繼資料（例如名稱與傳輸位址）的對應表。 |
+| `indices` | 物件 | 包含請求中所含索引名稱的對應表。 |
+| `shards` | 陣列的陣列 | 代表此請求之分片副本（主要分片／副本分片）的巢狀陣列。 |
+| `shards.index` | 字串 | 索引名稱。 |
+| `shards.shard` | 整數 | 分片編號。 |
+| `shards.node` | 字串 | 包含此分片之節點的節點 ID。 |
+| `shards.primary` | 布林值 | 是否為主要分片。 |
+| `shards.state` | 字串 | 目前的分片狀態。 |
+| `shards.allocation_id.id` | 字串 | 此分片分配的唯一 ID。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/shards/search_shards`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`indices:admin/shards/search_shards`。

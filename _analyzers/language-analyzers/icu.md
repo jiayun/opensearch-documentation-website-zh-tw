@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: ICU
 parent: Language analyzers
@@ -6,94 +7,94 @@ grand_parent: Analyzers
 nav_order: 205
 ---
 
-# ICU analyzer
+# ICU 分析器
 
-The `icu_analyzer` uses the International Components for Unicode (ICU) library to provide advanced text analysis for multilingual content. Available through the `analysis-icu` plugin, this analyzer excels at processing languages with complex writing systems, including Chinese, Japanese, Korean, Thai, Arabic, and Hebrew.
+`icu_analyzer` 使用 International Components for Unicode (ICU) 程式庫，為多語言內容提供進階文字分析。此分析器透過 `analysis-icu` 外掛程式提供，擅長處理書寫系統複雜的語言，包括中文、日文、韓文、泰文、阿拉伯文和希伯來文。
 
-Unlike the standard analyzer, the `icu_analyzer` applies Unicode-aware text segmentation that recognizes word boundaries in languages that don't use spaces as delimiters. The analyzer combines ICU tokenization with character normalization and case folding to produce consistent, searchable tokens across diverse language families.
+與標準分析器不同，`icu_analyzer` 會套用支援 Unicode 的文字分段，能辨識不使用空格作為分隔符號之語言中的詞語邊界。此分析器結合 ICU 斷詞、字元正規化與大小寫折疊，在不同語系之間產生一致且可搜尋的詞元。
 
-## Installing the ICU plugin
+## 安裝 ICU 外掛程式
 
-Before using the `icu_analyzer`, you must install the `analysis-icu` plugin:
+使用 `icu_analyzer` 之前，您必須先安裝 `analysis-icu` 外掛程式：
 
 ```bash
 bin/opensearch-plugin install analysis-icu
 ```
 {% include copy.html %}
 
-After installation, restart your OpenSearch cluster for the plugin to take effect.
+安裝完成後，請重新啟動您的 OpenSearch 叢集，讓外掛程式生效。
 
-For more information about installing plugins, see [Managing OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/).
+如需安裝外掛程式的詳細資訊，請參閱[管理 OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)。
 
-## ICU plugin components
+## ICU 外掛程式元件
 
-The `analysis-icu` plugin provides several components that can be used independently or combined in custom analyzers. The built-in `icu_analyzer` uses a combination of these components.
+`analysis-icu` 外掛程式提供數個元件，可以單獨使用，也可以在自訂分析器中組合使用。內建的 `icu_analyzer` 使用了這些元件的組合。
 
-### Tokenizer
+### 斷詞器
 
-- [`icu_tokenizer`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/icu-tokenizer/): Tokenizes text using ICU Unicode text segmentation rules. More accurate than the standard tokenizer for languages without spaces between words.
+- [`icu_tokenizer`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/icu-tokenizer/)：使用 ICU Unicode 文字分段規則對文字進行斷詞。對於詞語之間沒有空格的語言，比標準斷詞器更精確。
 
-### Character filters
+### 字元篩選器
 
-- [`icu_normalizer`]({{site.url}}{{site.baseurl}}/analyzers/character-filters/icu-normalization/): Normalizes characters to their canonical Unicode forms. Can be configured with different normalization modes (NFC, NFD, NFKC, NFKD).
+- [`icu_normalizer`]({{site.url}}{{site.baseurl}}/analyzers/character-filters/icu-normalization/)：將字元正規化為標準 Unicode 形式。可以設定不同的正規化模式（NFC、NFD、NFKC、NFKD）。
 
-### Token filters
+### 詞元篩選器
 
-- `icu_normalizer`: Normalizes tokens to canonical Unicode forms (same as character filter but operates on tokens).
-- [`icu_folding`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/icu-folding/): Performs Unicode normalization and case folding, including removal of diacritics. More comprehensive than the `asciifolding` filter.
-- [`icu_transform`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/icu-transform/): Applies ICU transforms for transliteration, such as converting between scripts (for example, Cyrillic to Latin).
+- `icu_normalizer`：將詞元正規化為標準 Unicode 形式（與字元篩選器相同，但作用於詞元）。
+- [`icu_folding`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/icu-folding/)：執行 Unicode 正規化與大小寫折疊，包括移除變音符號。比 `asciifolding` 篩選器更全面。
+- [`icu_transform`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/icu-transform/)：套用 ICU 轉換以進行音譯，例如在不同文字系統之間轉換（例如從西里爾字母轉換為拉丁字母）。
 
-### Field types
+### 欄位類型
 
-- [`icu_collation_keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/icu-collation-keyword/): Provides language-specific collation for sorting and range queries.
+- [`icu_collation_keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/icu-collation-keyword/)：提供特定語言的定序，用於排序和範圍查詢。
 
 
-## How the ICU analyzer works
+## ICU 分析器的運作方式
 
-The `icu_analyzer` applies a sequence of transformations to input text:
+`icu_analyzer` 會對輸入文字套用一系列轉換：
 
-- **Tokenization**: Breaks text into tokens using the ICU Unicode text segmentation algorithm. This approach identifies word boundaries accurately in languages like Chinese, Japanese, Korean, and Thai, where spaces don't separate words.
-- **Normalization**: Converts characters to canonical Unicode forms, resolving variations in how diacritics, ligatures, and composite characters are represented.
-- **Case folding**: Applies comprehensive case transformations that handle language-specific rules, such as the Turkish İ/i distinction, more effectively than basic lowercasing.
-- **Character filtering**: Standardizes equivalent Unicode representations and removes non-textual elements from the token stream.
+- **斷詞**：使用 ICU Unicode 文字分段演算法將文字拆分為詞元。此方法能在中文、日文、韓文和泰文等不以空格分隔詞語的語言中，精確辨識詞語邊界。
+- **正規化**：將字元轉換為標準 Unicode 形式，消除變音符號、合字和組合字元在表示方式上的差異。
+- **大小寫折疊**：套用全面的大小寫轉換，處理特定語言的規則（例如土耳其文的 İ/i 區別），效果優於基本的小寫轉換。
+- **字元篩選**：將等效的 Unicode 表示方式標準化，並從詞元串流中移除非文字元素。
 
-## When to use the ICU analyzer
+## 何時使用 ICU 分析器
 
-Consider using the `icu_analyzer` for the following use cases:
+請考慮在下列使用案例中使用 `icu_analyzer`：
 
-- **CJK content**: Chinese, Japanese, and Korean text benefits from ICU word segmentation capabilities, which identify natural word boundaries more accurately than bigram approaches.
-- **Southeast Asian languages**: Thai, Khmer, Lao, and similar languages that require dictionary-based or rule-based word boundary detection.
-- **Right-to-left scripts**: Arabic, Hebrew, and other RTL writing systems where proper character normalization is essential.
-- **Diacritical marks**: Content with accented characters, umlauts, or other diacritics that need consistent normalization.
-- **Multilingual applications**: Search indexes containing multiple languages that require uniform text processing.
-- **Unicode-heavy content**: Documents with special Unicode characters, ligatures, or combining marks.
+- **CJK 內容**：中文、日文和韓文文字可受益於 ICU 的分詞功能，其辨識自然詞語邊界的精確度高於二元組 (bigram) 方法。
+- **東南亞語言**：泰文、高棉文、寮文以及需要以字典或規則為基礎進行詞語邊界偵測的類似語言。
+- **從右到左的文字**：阿拉伯文、希伯來文以及其他需要適當字元正規化的 RTL 書寫系統。
+- **變音符號**：包含重音字元、母音變音或其他需要一致正規化之變音符號的內容。
+- **多語言應用程式**：包含多種語言且需要統一文字處理的搜尋索引。
+- **大量使用 Unicode 的內容**：包含特殊 Unicode 字元、合字或組合符號的文件。
 
-The `icu_analyzer` provides superior word boundary detection for CJK text compared to the `cjk` analyzer's bigram tokenization method.
+與 `cjk` 分析器的二元組斷詞方法相比，`icu_analyzer` 能為 CJK 文字提供更優異的詞語邊界偵測。
 {: .note}
 
-## Comparison with other analyzers
+## 與其他分析器的比較
 
-The following table compares the ICU analyzer with other analyzers.
+下表比較 ICU 分析器與其他分析器。
 
-| Analyzer | Best for | Tokenization method |
+| 分析器 | 最適用於 | 斷詞方法 |
 |:---------|:---------|:-------------------|
-| `standard` | General-purpose, European languages | Unicode text segmentation (space-based) |
-| `cjk` | Chinese, Japanese, Korean | Bigram tokenization (overlapping 2-character sequences) |
-| `icu_analyzer` | Multilingual, complex scripts, CJK | ICU Unicode text segmentation (language-aware) |
+| `standard` | 一般用途、歐洲語言 | Unicode 文字分段（以空格為基礎） |
+| `cjk` | 中文、日文、韓文 | 二元組斷詞（重疊的 2 字元序列） |
+| `icu_analyzer` | 多語言、複雜文字系統、CJK | ICU Unicode 文字分段（可辨識語言） |
 
-## Performance considerations
+## 效能考量
 
-The `icu_analyzer` uses more computational resources than basic analyzers because of its sophisticated Unicode processing and language-aware tokenization. The analyzer requires additional memory for ICU data tables and consumes more CPU cycles during text analysis compared to the `standard` or `cjk` analyzers.
+由於 `icu_analyzer` 採用精密的 Unicode 處理與可辨識語言的斷詞，因此比基本分析器使用更多運算資源。與 `standard` 或 `cjk` 分析器相比，此分析器需要額外的記憶體來存放 ICU 資料表，並在文字分析期間消耗更多 CPU 週期。
 
-For most search applications, the accuracy improvements justify the performance overhead, particularly when handling non-Latin scripts or multilingual content. The impact is most noticeable during indexing; query-time analysis has minimal effect on search latency.
+對於大多數搜尋應用程式而言，精確度的提升值得付出這些效能負擔，尤其是在處理非拉丁文字或多語言內容時。影響在編製索引期間最為明顯；查詢時的分析對搜尋延遲的影響極小。
 
-Evaluate the `icu_analyzer` with representative data from your use case to verify that performance meets your requirements.
+請使用您使用案例中具代表性的資料評估 `icu_analyzer`，以確認效能符合您的需求。
 {: .tip}
 
 
-## Example: Using the ICU analyzer
+## 範例：使用 ICU 分析器
 
-You can assign the `icu_analyzer` to a text field when creating an index:
+您可以在建立索引時，將 `icu_analyzer` 指派給文字欄位：
 
 ```json
 PUT /multilingual-index
@@ -110,9 +111,9 @@ PUT /multilingual-index
 ```
 {% include copy-curl.html %}
 
-## Example: Analyzing text with the ICU analyzer
+## 範例：使用 ICU 分析器分析文字
 
-Use the following request to see how the `icu_analyzer` processes multilingual text:
+使用下列請求查看 `icu_analyzer` 如何處理多語言文字：
 
 ```json
 POST /_analyze
@@ -123,7 +124,7 @@ POST /_analyze
 ```
 {% include copy-curl.html %}
 
-The analyzer tokenizes Japanese characters at natural word boundaries and normalizes accented Latin characters. In this example, `café` becomes `cafe` and `naïve` becomes `naive` through Unicode case folding. The response demonstrates proper segmentation of both Japanese and English text:
+此分析器會在自然詞語邊界對日文字元進行斷詞，並將帶重音的拉丁字元正規化。在此範例中，透過 Unicode 大小寫折疊，`café` 會變成 `cafe`，`naïve` 會變成 `naive`。回應展示了日文和英文文字的正確分段：
 
 ```json
 {
@@ -237,9 +238,9 @@ The analyzer tokenizes Japanese characters at natural word boundaries and normal
 }
 ```
 
-## Custom ICU analyzer
+## 自訂 ICU 分析器
 
-You can create a custom analyzer using ICU components with specific configuration:
+您可以使用 ICU 元件搭配特定組態來建立自訂分析器：
 
 ```json
 PUT /custom-icu-index
@@ -270,12 +271,12 @@ PUT /custom-icu-index
 ```
 {% include copy-curl.html %}
 
-## Related documentation
+## 相關文件
 
-- [ICU tokenizer]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/icu-tokenizer/) -- Unicode text segmentation
-- [ICU normalization character filter]({{site.url}}{{site.baseurl}}/analyzers/character-filters/icu-normalization/) -- Character-level Unicode normalization
-- [ICU folding token filter]({{site.url}}{{site.baseurl}}/analyzers/token-filters/icu-folding/) -- Case folding and diacritic removal
-- [ICU transform token filter]({{site.url}}{{site.baseurl}}/analyzers/token-filters/icu-transform/) -- Transliteration and text transformation
-- [ICU collation keyword field]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/icu-collation-keyword/) -- Language-specific sorting
-- [CJK analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/cjk/) -- Alternative for CJK text
-- [Managing OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/#installing-plugins) -- Plugin installation guide
+- [ICU 斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/icu-tokenizer/) -- Unicode 文字分段
+- [ICU 正規化字元篩選器]({{site.url}}{{site.baseurl}}/analyzers/character-filters/icu-normalization/) -- 字元層級的 Unicode 正規化
+- [ICU 折疊詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/icu-folding/) -- 大小寫折疊與變音符號移除
+- [ICU 轉換詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/icu-transform/) -- 音譯與文字轉換
+- [ICU 定序關鍵字欄位]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/icu-collation-keyword/) -- 特定語言的排序
+- [CJK 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/cjk/) -- CJK 文字的替代方案
+- [管理 OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/#installing-plugins) -- 外掛程式安裝指南

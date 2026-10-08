@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: table_wrappers
 ---
 
@@ -9,37 +10,37 @@ layout: table_wrappers
 <body>
   <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="svg-link" viewBox="0 0 24 24">
-      <title>Link</title>
+      <title>連結</title>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link">
         <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
       </svg>
     </symbol>
     <symbol id="svg-search" viewBox="0 0 24 24">
-      <title>Search</title>
+      <title>搜尋</title>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
         <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
     </symbol>
     <symbol id="svg-menu" viewBox="0 0 24 24">
-      <title>Menu</title>
+      <title>選單</title>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
         <line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>
       </svg>
     </symbol>
     <symbol id="svg-arrow-right" viewBox="0 0 24 24">
-      <title>Expand</title>
+      <title>展開</title>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
         <polyline points="9 18 15 12 9 6"></polyline>
       </svg>
     </symbol>
     <symbol id="svg-doc" viewBox="0 0 24 24">
-      <title>Document</title>
+      <title>文件</title>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
         <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline>
       </svg>
     </symbol>
     <symbol id="svg-grid" viewBox="0 0 24 24">
-      <title>Documentation Menu</title>
+      <title>文件選單</title>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid">
         <rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect>
       </svg>
@@ -53,10 +54,10 @@ layout: table_wrappers
     <div class="side-bar sidebar-container">
       <div class="site-header">
         <a href="{{site.latesturl}}/" id="menu-button" class="site-button">
-          Documentation <svg viewBox="0 0 24 24" class="icon"><use xlink:href="#svg-grid"></use></svg>
+          文件 <svg viewBox="0 0 24 24" class="icon"><use xlink:href="#svg-grid"></use></svg>
         </a>
       </div>
-      <nav role="navigation" aria-label="Main" id="site-nav" class="site-nav">        
+      <nav role="navigation" aria-label="主選單 (Main)" id="site-nav" class="site-nav">        
         {%- comment -%}
           Resolve the section's canonical URL.
           Sections default to "/<section>/" unless the section's defaults block in
@@ -72,10 +73,10 @@ layout: table_wrappers
             <a href="{{site.url}}{{site.baseurl}}{{ section_href }}" class="site-category">{{ page.section-name }}</a>
           {% endif %}
           
-          <a href="{{site.url}}{{site.latesturl}}/" class="back-link">&#x2190; Back to docs home</a>
+          <a href="{{site.url}}{{site.latesturl}}/" class="back-link">&#x2190; 回到文件首頁</a>
           
           {% if page.section == "opensearch" %}
-            <version-selector selected="{{ site.data.versions.current }}"></version-selector>
+            <span class="static-version-label" style="font-weight: bold; margin-left: 10px;">3.9</span>
           {% endif %}
           </div>
         {% assign pages_top_size = site.html_pages
@@ -171,7 +172,7 @@ layout: table_wrappers
 
           {% unless is_collection_index %}
             {% if page.collection or page.parent %}
-            <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+            <nav aria-label="導覽列 (Breadcrumb)" class="breadcrumb-nav">
               <ol class="breadcrumb-nav-list">
                 {%- comment -%}Add collection name as first breadcrumb{%- endcomment -%}
                 {% if page.collection %}
@@ -227,7 +228,8 @@ layout: table_wrappers
             {% endif %}
           {% endunless %}
         {% endunless %}
-        <div id="main-content" class="main-content content-container" role="main">
+        <div id="main-content" class="main-content content-container" role="main" lang="{{ page.translation_language | default: site.lang }}"{% unless page.url == "/404.html" %} data-pagefind-body data-pagefind-filter="section:{{ page.section-name | escape }}"{% endunless %}>
+          {% include translation-preview.html %}
           {% if page.section == "opensearch" %}
             {% if site.doc_version == "supported" %}
               <p class="supported-version-warning">You're viewing version {{site.opensearch_major_minor_version}} of the OpenSearch documentation. For the latest version, see the <a href="{% if page.url contains '404' %}{{ site.url }}{{ site.latesturl }}/about/{% else %}{{ site.url }}{{ site.latesturl }}{{ page.url }}{% endif %}">current documentation</a>. For information about OpenSearch version maintenance, see <a href="https://opensearch.org/releases.html">Release Schedule and Maintenance Policy</a>.</p>
@@ -241,6 +243,10 @@ layout: table_wrappers
           {% if page.section == "migration-assistant" %}
             <p class="migration-assistant-version-banner">You're viewing the <strong>current</strong> version of Migration Assistant documentation (Kubernetes/EKS-based). For the classic ECS/CDK-based version, see the <a href="{{ site.url }}{{ site.baseurl }}/classic/migration-assistant/">classic documentation</a>.</p>
           {% endif %}
+          <div class="community-translation-banner" data-pagefind-ignore>
+            本站為社群維護的台灣繁體中文翻譯。
+            {% unless page.url == "/licenses/" %}<a href="https://github.com/opensearch-project/documentation-website/blob/3.9/{{ page.path }}">查看英文原文</a>{% endunless %}
+          </div>
           {% if site.heading_anchors != false %}
             {% include vendor/anchor_headings.html html=content beforeHeading="true" anchorBody="<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><use xlink:href=\"#svg-link\"></use></svg>" anchorClass="anchor-heading" anchorAttrs="aria-labelledby=\"%html_id%\"" %}
           {% else %}
@@ -253,7 +259,7 @@ layout: table_wrappers
 
           {% if page.has_children == true and page.has_toc != false %}
             <hr>
-            <h2>Related documentation</h2>
+            <h2>相關文件</h2>
             <ul>
               {% for child in toc_list %}
                 <li>
@@ -279,7 +285,7 @@ layout: table_wrappers
                 <div class="d-flex mt-2">
                   {% if site.last_edit_timestamp and site.last_edit_time_format and page.last_modified_date %}
                     <p class="text-small text-grey-dk-000 mb-0 mr-2">
-                      Page last modified: <span class="d-inline-block">{{ page.last_modified_date | date: site.last_edit_time_format }}</span>.
+                      頁面最後更新 (Page last modified): <span class="d-inline-block">{{ page.last_modified_date | date: site.last_edit_time_format }}</span>.
                     </p>
                   {% endif %}
                   {% if
@@ -329,6 +335,7 @@ layout: table_wrappers
   <script src="{{ '/assets/js/search.js' | relative_url }}"></script>
   {% endif %}
   <script src="{{ '/assets/js/copy-button.js' | relative_url }}"></script>
+  <script src="{{ '/assets/js/shared-navigation.js' | relative_url }}"></script>
   <script src="{{ '/assets/js/nav-scroll.js' | relative_url }}"></script>
   <script src="{{ '/assets/js/listener.js' | relative_url }}"></script>
   <script src="{{ '/assets/js/theme-toggle.js' | relative_url }}"></script>

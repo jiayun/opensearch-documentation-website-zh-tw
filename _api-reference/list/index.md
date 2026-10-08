@@ -1,45 +1,46 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: List APIs
+title: "List API"
 nav_order: 20
 has_children: true
 redirect_from:
   - /api-reference/list/
 ---
 
-# List APIs
-**Introduced 2.18**
+# List API
+**於 2.18 版推出**
 {: .label .label-purple }
 
-The List API retrieves statistics about indexes and shards in a paginated format. This streamlines the task of processing responses that include many indexes.
+List API 以分頁格式擷取索引和分片的統計資料。這可簡化處理包含大量索引之回應的工作。
 
-The List API supports two operations:
+List API 支援兩種操作：
 
-- [List indices]({{site.url}}{{site.baseurl}}/api-reference/list/list-indices/)
-- [List shards]({{site.url}}{{site.baseurl}}/api-reference/list/list-shards/)
+- [列出索引]({{site.url}}{{site.baseurl}}/api-reference/list/list-indices/)
+- [列出分片]({{site.url}}{{site.baseurl}}/api-reference/list/list-shards/)
 
-## Shared query parameters
+## 共用查詢參數
 
-All List API operations support the following optional query parameters.
+所有 List API 操作都支援下列選用查詢參數。
 
-Parameter | Description
+參數 | 說明
 :--- | :--- |
-`v` |  Provides verbose output by adding headers to the columns. It also adds some formatting to help align each of the columns. All examples in this section include the `v` parameter.
-`help` | Lists the default and other available headers for a given operation.
-`h`  |  Limits the output to specific headers.
-`format` |  The format in which to return the result. Valid values are `json`, `yaml`, `cbor`, and `smile`.
-`s` | Sorts the output by the specified columns.
+`v` |  為各欄加入標頭以提供詳細輸出。它也會加入一些格式設定，以協助對齊各欄。本節的所有範例都包含 `v` 參數。
+`help` | 列出指定操作的預設標頭及其他可用標頭。
+`h`  |  將輸出限制為特定標頭。
+`format` |  傳回結果的格式。有效值為 `json`、`yaml`、`cbor` 和 `smile`。
+`s` | 依指定欄排序輸出。
 
-## Examples
+## 範例
 
-The following examples show how to use the optional query parameters to customize all List API responses.
+下列範例示範如何使用選用查詢參數來自訂所有 List API 回應。
 
 
-### Get verbose output
+### 取得詳細輸出
 
-To query indexes and their statistics with a verbose output that includes all column headings in the response, use the `v` query parameter, as shown in the following example.
+若要查詢索引及其統計資料，並取得在回應中包含所有欄標題的詳細輸出，請使用 `v` 查詢參數，如下列範例所示。
 
-#### Request
+#### 請求
 
 <!-- spec_insert_start
 component: example_code
@@ -63,7 +64,7 @@ response = client.list.indices(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Response
+#### 回應
 
 ```json
 health status index           uuid    pri rep  docs.count  docs.deleted
@@ -73,18 +74,18 @@ next_token null
 ```
 
 
-### Get all available headers
+### 取得所有可用標頭
 
-To see all the available headers, use the `help` parameter with the following syntax:
+若要查看所有可用標頭，請以下列語法使用 `help` 參數：
 
 ```json
 GET _list/{operation_name}?help
 ```
 {% include copy-curl.html %}
 
-#### Request
+#### 請求
 
-The following example list indices operation returns all the available headers:
+下列列出索引操作範例會傳回所有可用標頭：
 
 <!-- spec_insert_start
 component: example_code
@@ -108,9 +109,9 @@ response = client.list.indices(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Response
+#### 回應
 
-The following example displays the indexes and their health status in a table:
+下列範例以表格顯示索引及其健康狀態：
 
 ```json
 health     | h                              | current health status
@@ -122,20 +123,20 @@ rep        | r,shards.replica,shardsReplica | number of replica shards
 docs.count | dc,docsCount                   | available docs
 ```
 
-### Get a subset of headers
+### 取得部分標頭
 
-To limit the output to a subset of headers, use the `h` parameter with the following syntax:
+若要將輸出限制為部分標頭，請以下列語法使用 `h` 參數：
 
 ```json
 GET _list/{operation_name}?h={header_name_1},{header_name_2}&v
 ```
 {% include copy-curl.html %}
 
-For any operation, you can determine which headers are available by using the `help` parameter and then using the `h` parameter to limit the output to only a subset of headers. 
+對於任何操作，您可以使用 `help` 參數來確認哪些標頭可用，然後使用 `h` 參數將輸出限制為僅包含部分標頭。 
 
-#### Request
+#### 請求
 
-The following example limits the indexes in the response to only the index name and health status headers:
+下列範例將回應中的索引資訊限制為僅包含索引名稱和健康狀態標頭：
 
 <!-- spec_insert_start
 component: example_code
@@ -159,7 +160,7 @@ response = client.list.indices(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Response
+### 回應
 
 ```json
 green  .kibana_1
@@ -168,18 +169,18 @@ next_token null
 ```
 
 
-### Sort by a header
+### 依標頭排序
 
-To sort the output on a single page by a header, use the `s` parameter with the following syntax:
+若要依標頭排序單一頁面上的輸出，請以下列語法使用 `s` 參數：
 
 ```json
 GET _list/{operation_name}?s={header_name_1},{header_name_2}
 ```
 {% include copy-curl.html %}
 
-#### Request
+#### 請求
 
-The following example request sorts indexes by index name:
+下列範例請求會依索引名稱排序索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -203,7 +204,7 @@ response = client.list.indices(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Response
+#### 回應
 
 ```json
 green sample-index-2
@@ -211,24 +212,24 @@ yellow sample-index-1
 next_token null
 ```
 
-### Retrieve data in JSON format
+### 以 JSON 格式擷取資料
 
-By default, List APIs return data in a `text/plain` format. Other supported formats are [YAML](https://yaml.org/), [CBOR](https://cbor.io/), and [Smile](https://github.com/FasterXML/smile-format-specification).
+預設情況下，List API 會以 `text/plain` 格式傳回資料。其他支援的格式為 [YAML](https://yaml.org/)、[CBOR](https://cbor.io/) 和 [Smile](https://github.com/FasterXML/smile-format-specification)。
 
 
-To retrieve data in the JSON format, use the `format=json` parameter with the following syntax.
+若要以 JSON 格式擷取資料，請以下列語法使用 `format=json` 參數。
 
-If you use the Security plugin, ensure you have the appropriate permissions.
+如果您使用 Security 外掛程式，請確保您具有適當的權限。
 {: .note }
 
-#### Request
+#### 請求
 
 ```json
 GET _list/{operation_name}?help
 ```
 {% include copy-curl.html %}
 
-#### Request
+#### 請求
 
 <!-- spec_insert_start
 component: example_code
@@ -252,9 +253,9 @@ response = client.list.indices(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Response
+### 回應
 
-The response contains data in JSON format:
+回應包含 JSON 格式的資料：
 
 ```json
 {

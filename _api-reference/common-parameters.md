@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Common REST parameters
+title: "常見 REST 參數"
 nav_order: 160
 redirect_from:
   - /opensearch/common-parameters/
@@ -8,142 +9,141 @@ redirect_from:
   - /observing-your-data/alerting/cron/
 ---
 
-# Common REST parameters 
+# 常見 REST 參數 
 
-OpenSearch supports the following parameters for all REST operations:
+OpenSearch 為所有 REST 操作支援下列參數：
 
-## Human-readable output
+## 人類可讀輸出
 
-To convert output units to human-readable values (for example, `1h` for 1 hour and `1kb` for 1,024 bytes), add `?human=true` to the request URL. For a list of supported units, see [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/).
+若要將輸出單位轉換為人類可讀的值（例如 1 小時顯示為 `1h`，1,024 位元組顯示為 `1kb`），請在請求 URL 中加入 `?human=true`。支援的單位清單請參閱 [支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。
 
-#### Example request
+#### 範例請求
 
-The following request requires response values to be in human-readable format:
+下列請求要求回應值以人類可讀格式呈現：
 
 ```json
 
 GET {index_name}/_search?human=true
 ```
 
-## Pretty result
+## 美化結果
 
-To get back JSON responses in a readable format, add `?pretty=true` to the request URL.  
+若要以可讀格式取得 JSON 回應，請在請求 URL 中加入 `?pretty=true`。  
 
-#### Example request
+#### 範例請求
 
-The following request requires the response to be displayed in pretty JSON format:
+下列請求要求回應以美化的 JSON 格式顯示：
 
 ```json
 
 GET {index_name}/_search?pretty=true
 ```
 
-## Content type
+## 內容類型
 
-To specify the type of content in the request body, use the `Content-Type` key name in the request header. Most operations support JSON, YAML, and CBOR formats.  
+若要指定請求本文中的內容類型，請在請求標頭中使用 `Content-Type` 鍵名。大多數操作支援 JSON、YAML 與 CBOR 格式。  
 
-#### Example request
+#### 範例請求
 
-The following request specifies JSON format for the request body:
+下列請求為請求本文指定 JSON 格式：
 
 ```json
 
 curl -H "Content-type: application/json" -XGET localhost:9200/_scripts/<template_name>
 ```
 
-## Request body in query string
+## 查詢字串中的請求本文
 
-If the client library does not accept a request body for non-POST requests, use the `source` query string parameter to pass the request body. Also, specify the `source_content_type` parameter with a supported media type such as `application/json`.  
+如果用戶端程式庫不接受非 POST 請求的請求本文，請使用 `source` 查詢字串參數來傳遞請求本文。同時，請以支援的媒體類型（例如 `application/json`）指定 `source_content_type` 參數。  
 
 
-#### Example request
+#### 範例請求
 
-The following request searches the documents in the `shakespeare` index for a specific field and value:
+下列請求在 `shakespeare` 索引中搜尋特定欄位與值：
 
 ```json
 
 GET shakespeare/search?source={"query":{"exists":{"field":"speaker"}}}&source_content_type=application/json
 ```
 
-## Stack traces
+## 堆疊追蹤
 
-To include the error stack trace in the response when an exception is raised, add `error_trace=true` to the request URL.  
+若要在引發例外狀況時將錯誤堆疊追蹤包含在回應中，請在請求 URL 中加入 `error_trace=true`。  
+#### 範例請求
 
-#### Example request
-
-The following request sets `error_trace` to `true` so that the response returns exception-triggered errors:
+下列請求將 `error_trace` 設為 `true`，使回應傳回由例外狀況觸發的錯誤：
 
 ```json
 
 GET {index_name}/_search?error_trace=true
 ```
 
-## Filtered responses
+## 篩選回應
 
-To reduce the response size use the `filter_path` parameter to filter the fields that are returned. This parameter takes a comma-separated list of filters. It supports using wildcards to match any field or part of a field's name. You can also exclude fields with `-`.  
+若要縮減回應大小，請使用 `filter_path` 參數篩選傳回的欄位。此參數接受以逗號分隔的篩選器清單，並支援使用萬用字元比對任何欄位或欄位名稱的一部分。您也可以使用 `-` 排除欄位。  
 
-#### Example request
+#### 範例請求
 
-The following request specifies filters to limit the fields returned in the response:
+下列請求指定篩選器，以限制回應中傳回的欄位：
 
 ```json
 
 GET _search?filter_path={field_name}.*,-{field_name}
 ```
 
-## Cron expressions
+## Cron 運算式
 
-Several OpenSearch features accept cron expressions for scheduling, including [Index State Management]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/), [alerting]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/), and [anomaly detection]({{site.url}}{{site.baseurl}}/observing-your-data/ad/index/). OpenSearch uses the standard UNIX cron syntax. All schedule times are in UTC.
+多項 OpenSearch 功能接受用於排程的 cron 運算式，包括 [Index State Management]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/)、[警示]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/) 與[異常偵測]({{site.url}}{{site.baseurl}}/observing-your-data/ad/index/)。OpenSearch 使用標準 UNIX cron 語法。所有排程時間均為 UTC。
 
-A cron expression has the following format:
+Cron 運算式的格式如下：
 
 ```
 <minutes> <hours> <day_of_month> <month> <day_of_week>
 ```
 
-The following table describes each field.
+下表說明各個欄位。
 
-| Field | Values | Special characters |
+| 欄位 | 值 | 特殊字元 |
 | :--- | :--- | :--- |
-| Minutes | 0--59 | `, - * /` |
-| Hours | 0--23 | `, - * /` |
-| Day of month | 1--31 | `, - * /` |
-| Month | 1--12 or JAN--DEC (case-insensitive) | `, - * /` |
-| Day of week | 0--7 (0 and 7 are both Sunday) or SUN--SAT (case-insensitive) | `, - * /` |
+| 分鐘 | 0--59 | `, - * /` |
+| 小時 | 0--23 | `, - * /` |
+| 日期 | 1--31 | `, - * /` |
+| 月份 | 1--12 或 JAN--DEC（不分大小寫） | `, - * /` |
+| 星期 | 0--7（0 與 7 皆為星期日）或 SUN--SAT（不分大小寫） | `, - * /` |
 
-The following table describes the special characters.
+下表說明各個特殊字元。
 
-| Character | Description |
+| 字元 | 說明 |
 | :--- | :--- |
-| `*` | Matches all values. For example, `*` in the hours field means every hour. |
-| `-` | Range. For example, `9-17` in hours means every hour from 9:00 to 17:00 UTC. |
-| `,` | Multiple values. For example, `1,3,5` in `day_of_week` means Monday, Wednesday, and Friday. |
-| `/` | Increment. For example, `0/15` in minutes means every 15 minutes starting at minute 0. |
+| `*` | 比對所有值。例如，小時欄位中的 `*` 表示每小時。 |
+| `-` | 範圍。例如，小時欄位中的 `9-17` 表示從 9:00 到 17:00 UTC 的每小時。 |
+| `,` | 多個值。例如，`day_of_week` 中的 `1,3,5` 表示星期一、星期三與星期五。 |
+| `/` | 遞增。例如，分鐘欄位中的 `0/15` 表示從第 0 分鐘開始每 15 分鐘。 |
 
-Two fields specify the day: `day_of_month` and `day_of_week`. If you use a non-wildcard value in both, the schedule runs whenever either field matches the time. For example, `15 2 1,15 * 1` runs at 2:15 AM UTC on the first day of the month, on the 15th day of the month, and every Monday. To schedule a single day, set one field and leave the other as `*`.
+有兩個欄位用於指定日期：`day_of_month` 與 `day_of_week`。如果兩者都使用非萬用字元的值，只要任一欄位符合時間，排程就會執行。例如，`15 2 1,15 * 1` 會在每月第一天、每月 15 日以及每個星期一的 UTC 上午 2:15 執行。若要排程單一日期，請設定其中一個欄位，並將另一個欄位保留為 `*`。
 
-### Examples
+### 範例
 
-| Expression | Description |
+| 運算式 | 說明 |
 | :--- | :--- |
-| `5 9 * * *` | 9:05 AM UTC every day |
-| `0/15 9 * * *` | Every 15 minutes from 9:00 to 9:45 AM UTC |
-| `5 9 * * 1-5` | 9:05 AM UTC Monday through Friday |
-| `5 9 * * MON-FRI` | 9:05 AM UTC Monday through Friday (using named days) |
-| `45 13 1-31/2 * *` | 1:45 PM UTC every other day |
-| `0/10 * * * 6-7` | Every 10 minutes on Saturday and Sunday |
-| `0 0-23/3 1 1-12/2 *` | Every 3 hours on the first day of every other month |
+| `5 9 * * *` | 每天 UTC 上午 9:05 |
+| `0/15 9 * * *` | 每天 UTC 上午 9:00 至 9:45 之間每 15 分鐘 |
+| `5 9 * * 1-5` | 星期一至星期五 UTC 上午 9:05 |
+| `5 9 * * MON-FRI` | 星期一至星期五 UTC 上午 9:05（使用具名日期） |
+| `45 13 1-31/2 * *` | 每隔一天 UTC 下午 1:45 |
+| `0/10 * * * 6-7` | 星期六與星期日每 10 分鐘 |
+| `0 0-23/3 1 1-12/2 *` | 每隔一個月的第一天每 3 小時 |
 
 
 <!-- vale off -->
-## X-Opaque-Id header
+## X-Opaque-Id 標頭
 <!-- vale on -->
 
-You can specify an opaque identifier for any request using the `X-Opaque-Id` header. This identifier is used to track tasks and deduplicate deprecation warnings in server-side logs. This identifier is used to differentiate between callers sending requests to your OpenSearch cluster. Do not specify a unique value per request.
+您可以使用 `X-Opaque-Id` 標頭為任何請求指定不透明識別碼。此識別碼用於追蹤任務，並在伺服器端記錄檔中去除重複的淘汰警告。此識別碼用於區分傳送請求至 OpenSearch 叢集的不同呼叫者。請勿為每個請求指定唯一的值。
 
-#### Example request
+#### 範例請求
 
-The following request adds an opaque ID to the request:
+下列請求為請求加入不透明 ID：
 
 ```bash
 curl -H "X-Opaque-Id: my-curl-client-1" -XGET localhost:9200/_tasks
@@ -151,14 +151,14 @@ curl -H "X-Opaque-Id: my-curl-client-1" -XGET localhost:9200/_tasks
 {% include copy.html %}
 
 <!-- vale off -->
-## `X-Request-Id` header
+## `X-Request-Id` 標頭
 <!-- vale on -->
 
-You can specify a unique identifier for a search request using the `X-Request-Id` header. This identifier is used to track individual search requests and can be referenced in logs, such as slow logs, for troubleshooting and analysis. The value must be a 32-character hexadecimal string. 
+您可以使用 `X-Request-Id` 標頭為搜尋請求指定唯一識別碼。此識別碼用於追蹤個別搜尋請求，並可在記錄檔（例如慢速記錄）中參照，以進行疑難排解與分析。該值必須是 32 個字元的十六進位字串。 
 
-#### Example request
+#### 範例請求
 
-The following request adds a request ID to a search request:
+下列請求為搜尋請求加入請求 ID：
 
 ```bash
 curl -X GET "http://localhost:9200/_search" \
@@ -168,6 +168,6 @@ curl -X GET "http://localhost:9200/_search" \
 ```
 {% include copy.html %}
 
-## Related documentation
+## 相關文件
 
-- [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/)
+- [支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)

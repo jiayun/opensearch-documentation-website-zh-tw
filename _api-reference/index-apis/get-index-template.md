@@ -1,36 +1,37 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get index template
+title: "取得索引範本"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 30
 ---
 
 # Get Index Template API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Get Index Template API returns information about one or more index templates.
+Get Index Template API 會傳回一或多個索引範本的資訊。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_index_template/{template-name}
 ```
 
-## Query parameters
+## 查詢參數
 
-The following optional query parameters are supported.
+支援下列選用的查詢參數。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`create` | Boolean | When true, the API cannot replace or update any existing index templates. Default is `false`.
-`cluster_manager_timeout` | Time | The amount of time to wait for a connection to the cluster manager node. Default is `30s`.
-`flat_settings` | Boolean | Whether to return settings in the flat form, which can improve readability, especially for heavily nested settings. For example, the flat form of "index": { "creation_date": "123456789" } is "index.creation_date": "123456789".
+`create` | 布林值 | 設為 true 時，API 無法取代或更新任何現有的索引範本。預設為 `false`。
+`cluster_manager_timeout` | 時間 | 等待連線至叢集管理員節點的時間長度。預設為 `30s`。
+`flat_settings` | 布林值 | 是否以扁平形式傳回設定，這可提升可讀性，尤其是對於多層巢狀的設定。例如，"index": { "creation_date": "123456789" } 的扁平形式為 "index.creation_date": "123456789"。
 
-## Example requests
+## 範例請求
 
-The following example request gets information about an index template by using a wildcard expression:
+下列範例請求使用萬用字元運算式取得某個索引範本的資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -54,7 +55,7 @@ response = client.indices.get_index_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The following example request gets information about all index templates:
+下列範例請求取得所有索引範本的資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -74,6 +75,6 @@ response = client.indices.get_index_template()
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/index_template/get`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`indices:admin/index_template/get`。

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Line chart
+title: "折線圖"
 parent: Visualization types
 grand_parent: Creating visualizations in the Visualize application
 great_grand_parent: Building data visualizations
@@ -9,62 +10,62 @@ redirect_from:
   - /dashboards/visualize/line-charts/
 ---
 
-# Line chart
+# 折線圖
 
-A line chart shows one or more series of numerical data points on the Y-axis plotted against a numerical field on the X-axis. The points can be connected by a line. The X-axis value can be a timeline or any other continuous or discrete number series.
+折線圖將 Y 軸上的一個或多個數值資料點序列，對照 X 軸上的數值欄位繪製出來。資料點可以用線連接。X 軸的值可以是時間軸，或任何其他連續或離散的數值序列。
 
-## When to use line charts
+## 何時使用折線圖
 
-Use line charts to reveal trends, cyclical behaviors, rate-of-change information, and inflection points across time or any continuous numerical quantity. Use multiple lines to show correlation between metrics.
+使用折線圖呈現隨時間或任何連續數值量變化的趨勢、週期性行為、變化率資訊及轉折點。使用多條線呈現指標之間的相關性。
 
-## Creating a line chart
+## 建立折線圖
 
-The examples on this page use the **Sample flight data** dataset. Before you begin, complete the [prerequisites]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites).
+本頁範例使用 **Sample flight data** 資料集。開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites)。
 {: .note}
 
-To create a line chart, follow these steps:
+若要建立折線圖，請依照下列步驟操作：
 
-1. In the **New Visualization** dialog, select **Line**, then select your index pattern (for example, **opensearch_dashboards_sample_data_flights**).
-2. Under **Metrics**, expand **Y-axis Count**.
-3. Set **Aggregation** to **Average** and **Field** to **AvgTicketPrice**.
-4. (Optional) Enter a **Custom label**, for example `Average Ticket Price`.
-5. Select **Update**.
+1. 在 **New Visualization** 對話方塊中，選取 **Line**，然後選取您的索引模式（例如，**opensearch_dashboards_sample_data_flights**）。
+2. 在 **Metrics** 下，展開 **Y-axis Count**。
+3. 將 **Aggregation** 設為 **Average**，並將 **Field** 設為 **AvgTicketPrice**。
+4. （選用）輸入 **Custom label**，例如 `Average Ticket Price`。
+5. 選取 **Update**。
 
-   The chart displays a single bar with height of a little over `$600`, the average ticket price for every document in the flight database.
+   圖表會顯示一個高度略高於 `$600` 的長條，代表航班資料庫中所有文件的平均票價。
 
-   If your visualization displays a different value, make sure that your time filter window is large enough to encompass all the sample flight data.
+   如果您的視覺化顯示不同的值，請確認您的時間篩選範圍夠大，足以涵蓋所有航班範例資料。
    {: .note}
 
-6. Under **Buckets**, select **Add** > **X-axis**.
-7. Set **Aggregation** to **Histogram** and **Field** to **DistanceKilometers**.
-8. Select **Update**.
+6. 在 **Buckets** 下，選取 **Add** > **X-axis**。
+7. 將 **Aggregation** 設為 **Histogram**，並將 **Field** 設為 **DistanceKilometers**。
+8. 選取 **Update**。
 
-   The chart shows average ticket price as a function of bucketed flight distance.
+   圖表會顯示平均票價隨分桶後的飛行距離變化的情形。
 
-### Adding a split series
+### 新增分割序列
 
-1. Under **Buckets**, select **Add** > **Split series**.
-2. Set **Sub aggregation** to **Terms**, **Field** to **dayOfWeek**, **Order by** to **Alphabetical**, and **Size** to `7`.
-3. Select **Update**.
+1. 在 **Buckets** 下，選取 **Add** > **Split series**。
+2. 將 **Sub aggregation** 設為 **Terms**、**Field** 設為 **dayOfWeek**、**Order by** 設為 **Alphabetical**，並將 **Size** 設為 `7`。
+3. 選取 **Update**。
 
-   The average ticket price is displayed per weekday value in seven different lines, as shown in the following image. The average ticket price for weekday value keys 5 and 6 are significantly higher across most flight distances.
+   平均票價會依星期值，以七條不同的線顯示，如下圖所示。在大多數飛行距離中，星期值鍵為 5 和 6 的平均票價明顯較高。
 
-   ![Line chart showing average ticket price compared to distance by day of week]({{site.url}}{{site.baseurl}}/images/dashboards/example-line-cost-vs-distance.png)
+   ![顯示依星期區分的平均票價與距離比較的折線圖]({{site.url}}{{site.baseurl}}/images/dashboards/example-line-cost-vs-distance.png)
 
-## Configuring a line chart
+## 設定折線圖
 
-For information about general visualization configuration, see [Configuring visualizations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-viz/).
+如需一般視覺化組態的相關資訊，請參閱[設定視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-viz/)。
 
-### Metrics & axes tab
+### Metrics & axes 分頁
 
-| Setting | Description |
+| 設定 | 說明 |
 | :--- | :--- |
-| **Chart type** | Override per series. Supports **Line**, **Area**, **Bar**. |
-| **Mode** | **Normal** overlaps lines. **Stacked** is available when combining with area/bar types. |
-| **Line mode** | **Straight**, **Smoothed**, or **Stepped**. |
-| **Y-axis scale** | **Linear**, **Log**, or **Square root**. |
+| **Chart type** | 可針對各序列覆寫。支援 **Line**、**Area**、**Bar**。 |
+| **Mode** | **Normal** 會讓線條重疊。與區域圖／長條圖類型結合時，可使用 **Stacked**。 |
+| **Line mode** | **Straight**、**Smoothed** 或 **Stepped**。 |
+| **Y-axis scale** | **Linear**、**Log** 或 **Square root**。 |
 
-## Next steps
+## 後續步驟
 
-- To choose a different visualization type, see [Visualization types]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/).
-- To add this visualization to a dashboard, see [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/).
+- 若要選擇不同的視覺化類型，請參閱[視覺化類型]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/)。
+- 若要將此視覺化新增至儀表板，請參閱[建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)。

@@ -1,18 +1,19 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: OpenSearch cluster configuration
+title: "OpenSearch 叢集組態"
 parent: OpenSearch Kubernetes Operator
 grand_parent: Installing OpenSearch
 nav_order: 20
 ---
 
-# OpenSearch cluster configuration
+# OpenSearch 叢集組態
 
-The operator deploys and manages OpenSearch clusters. You can configure node pools, TLS certificates, plugins, keystore secrets, and other cluster-specific settings.
+Operator 會部署並管理 OpenSearch 叢集。您可以設定節點集區、TLS 憑證、外掛程式、金鑰庫 Secret，以及其他叢集專屬的設定。
 
-## Node pools and scaling
+## 節點集區與擴展
 
-OpenSearch clusters consist of one or more node pools. Each node pool is a logical group of nodes with the same [role]({{site.url}}{{site.baseurl}}/tuning-your-cluster/) and can have its own resources. For each configured node pool, the operator creates a Kubernetes `StatefulSet` and `Service`, allowing you to communicate with specific node pools:
+OpenSearch 叢集由一個或多個節點集區組成。每個節點集區都是一組具有相同[角色]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)的節點所構成的邏輯群組，並且可以擁有自己的資源。Operator 會為每個已設定的節點集區建立 Kubernetes `StatefulSet` 和 `Service`，讓您能與特定的節點集區通訊：
 
 ```yaml
 spec:
@@ -46,11 +47,11 @@ spec:
 ```
 {% include copy.html %}
 
-For additional node pool configuration options, such as storage, security context, labels, and affinity rules, see [Kubernetes deployment customization]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/operator-kubernetes-custom/).
+如需其他節點集區組態選項，例如儲存空間、安全性內容、標籤和親和性規則，請參閱 [Kubernetes 部署自訂]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/operator-kubernetes-custom/)。
 
-## Configuring opensearch.yml
+## 設定 opensearch.yml
 
-The operator automatically generates an `opensearch.yml` configuration file based on the parameters in the cluster `spec` you provide (for example, Transport Layer Security (TLS) configuration). To add custom settings, use the `additionalConfig` field in the cluster `spec`:
+Operator 會根據您所提供的叢集 `spec` 中的參數（例如傳輸層安全性 (TLS) 組態），自動產生 `opensearch.yml` 組態檔案。若要新增自訂設定，請使用叢集 `spec` 中的 `additionalConfig` 欄位：
 
 ```yaml
 spec:
@@ -67,40 +68,40 @@ nodePools:
 ```
 {% include copy.html %}
 
-Use `spec.general.additionalConfig` to add settings applied to all cluster nodes. The operator stores these settings in a shared `ConfigMap` and mounts it to all node pools.
+使用 `spec.general.additionalConfig` 新增套用至所有叢集節點的設定。Operator 會將這些設定儲存在共用的 `ConfigMap` 中，並將其掛載至所有節點集區。
 
-For node-pool-specific configuration, use `nodePools[].additionalConfig`. The operator merges these settings with `spec.general.additionalConfig` for that node pool, with node pool settings taking precedence. When a node pool has `additionalConfig` defined, it receives its own `ConfigMap` containing the merged configuration.
+若要進行節點集區專屬的組態，請使用 `nodePools[].additionalConfig`。Operator 會將這些設定與該節點集區的 `spec.general.additionalConfig` 合併，且節點集區的設定優先。當節點集區定義了 `additionalConfig` 時，該節點集區會取得自己的 `ConfigMap`，其中包含合併後的組態。
 
-Provide all settings as a map of strings using the flat form. For non-string values (for example, Boolean or numeric values), enclose them in quotes: `"true"` or `"1234"`.
+請以扁平格式的字串對應表提供所有設定。對於非字串值（例如布林值或數值），請用引號括住：`"true"` 或 `"1234"`。
 
-The operator merges its generated settings with the custom settings you provide. You cannot override basic settings such as `node.name`, `node.roles`, `cluster.name`, and network and discovery settings using `additionalConfig`.
+Operator 會將其產生的設定與您提供的自訂設定合併。您無法使用 `additionalConfig` 覆寫基本設定，例如 `node.name`、`node.roles`、`cluster.name`，以及網路和探索設定。
 
-Changing any `additionalConfig` triggers a rolling restart of the cluster. To avoid a restart, use the [Cluster Settings API]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/) to change settings at runtime.
+變更任何 `additionalConfig` 都會觸發叢集的滾動重新啟動。若要避免重新啟動，請使用 [Cluster Settings API]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/) 在執行階段變更設定。
 {: .note}
 
 ## TLS
 
-For security reasons, encryption is required for communication with the OpenSearch cluster and between cluster nodes. If you do not configure any encryption, OpenSearch uses the included demo TLS certificates, which are not suitable for active deployments.
+基於安全性考量，與 OpenSearch 叢集之間以及叢集節點之間的通訊都必須加密。如果您未設定任何加密，OpenSearch 會使用內建的示範 TLS 憑證，而這些憑證不適合用於實際運作的部署。
 
-Depending on your requirements, the operator offers the following ways of managing TLS certificates:
+視您的需求而定，Operator 提供下列管理 TLS 憑證的方式：
 
-- **Operator-generated certificates (Recommended)**: The operator generates its own Certificate Authority (CA) and signs certificates for all nodes using that CA. Use this option unless you want to directly expose your OpenSearch cluster outside your Kubernetes cluster or your organization has rules about using self-signed certificates for internal communication.
-- **Your own certificates**: Supply your own certificates.
+- **Operator 產生的憑證（建議）**：Operator 會產生自己的憑證授權單位 (CA)，並使用該 CA 為所有節點簽署憑證。除非您想將 OpenSearch 叢集直接公開至 Kubernetes 叢集之外，或您的組織對內部通訊使用自我簽署憑證有相關規定，否則請使用此選項。
+- **您自己的憑證**：提供您自己的憑證。
 
-When the operator generates certificates, you can control certificate validity using the `duration` field (for example, `"720h"`, `"17520h"`). If omitted, it defaults to one year (`"8760h"`).
+當 Operator 產生憑證時，您可以使用 `duration` 欄位控制憑證有效期限（例如 `"720h"`、`"17520h"`）。若省略，預設為一年（`"8760h"`）。
 {: .note}
 
-TLS certificates are used for the following endpoints (each can be configured independently):
+TLS 憑證用於下列端點（每個端點皆可獨立設定）：
 
-- [Node transport](#node-transport)
-- [Node HTTP REST API](#node-http-rest-api)
+- [節點傳輸](#node-transport)
+- [節點 HTTP REST API](#node-http-rest-api)
 - [OpenSearch Dashboards HTTP]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/operator-dashboards-config/#opensearch-dashboards-http)
 
-### Node transport
+### 節點傳輸
 
-OpenSearch cluster nodes communicate with each other using the OpenSearch transport protocol (port 9300 by default). This endpoint is not exposed externally, so in almost all cases, operator-generated certificates are adequate.
+OpenSearch 叢集節點之間使用 OpenSearch 傳輸協定（預設為連接埠 9300）彼此通訊。此端點不會對外公開，因此在幾乎所有情況下，Operator 產生的憑證都已足夠。
 
-To configure node transport security, you can use the following fields in the `OpenSearchCluster` custom resource:
+若要設定節點傳輸安全性，您可以在 `OpenSearchCluster` 自訂資源中使用下列欄位：
 
 ```yaml
 # ...
@@ -122,19 +123,19 @@ spec:
 ```
 {% include copy.html %}
 
-To have the operator generate the certificates, set `generate` and `perNode` to `true` (you can omit the other fields). The operator generates a CA certificate, issues one certificate per node, and signs them. Certificates default to one year validity, which you can configure using `duration`. The operator supports rotation by reissuing certificates when near expiry if `rotateDaysBeforeExpiry` is set.
+若要讓 Operator 產生憑證，請將 `generate` 和 `perNode` 設為 `true`（其他欄位可省略）。Operator 會產生 CA 憑證，為每個節點核發一個憑證並加以簽署。憑證預設有效期限為一年，您可以使用 `duration` 進行設定。如果已設定 `rotateDaysBeforeExpiry`，Operator 會在憑證即將到期時重新核發憑證，以支援憑證輪替。
 
-Alternatively, you can provide the certificates yourself (for example, if your organization has an internal CA). You can either provide one certificate to be used by all nodes or provide a certificate for each node (recommended). In this mode, set `generate: false` and `perNode` to `true` or `false` depending on whether you're providing per-node certificates.
+或者，您也可以自行提供憑證（例如，您的組織擁有內部 CA）。您可以提供一個供所有節點使用的憑證，或為每個節點各提供一個憑證（建議）。在此模式下，請根據您是否提供個別節點的憑證，將 `generate: false` 和 `perNode` 設為 `true` 或 `false`。
 
-If you provide only one certificate, place it in a Kubernetes TLS secret (with the fields `ca.crt`, `tls.key`, and `tls.crt`, all PEM-encoded) and provide the name of the secret as `secret.name`. To keep the CA certificate separate, place it in a separate secret and supply that as `caSecret.name`. If you provide one certificate per node, place all certificates into one secret (including the `ca.crt`) with a `<hostname>.key` and `<hostname>.crt` for each node. The hostname is defined as `<cluster-name>-<nodepool-component>-<index>` (for example, `my-first-cluster-masters-0`).
+如果您只提供一個憑證，請將其放入 Kubernetes TLS Secret（包含 `ca.crt`、`tls.key` 和 `tls.crt` 欄位，皆為 PEM 編碼），並以 `secret.name` 提供該 Secret 的名稱。若要將 CA 憑證分開存放，請將其放入另一個 Secret，並以 `caSecret.name` 提供。如果您為每個節點各提供一個憑證，請將所有憑證放入同一個 Secret（包括 `ca.crt`），並為每個節點提供 `<hostname>.key` 和 `<hostname>.crt`。主機名稱定義為 `<cluster-name>-<nodepool-component>-<index>`（例如 `my-first-cluster-masters-0`）。
 
-If you provide the certificates yourself, you must also provide the list of certificate Distinguished Names (DNs) in `nodesDn`. Wildcards can be used (for example, `"CN=my-first-cluster-*,OU=my-org"`).
+如果您自行提供憑證，還必須在 `nodesDn` 中提供憑證辨別名稱 (DN) 清單。可以使用萬用字元（例如 `"CN=my-first-cluster-*,OU=my-org"`）。
 
-### Node HTTP REST API
+### 節點 HTTP REST API
 
-Each OpenSearch cluster node exposes the REST API using HTTPS (by default, at port 9200).
+每個 OpenSearch 叢集節點都會透過 HTTPS 公開 REST API（預設使用連接埠 9200）。
 
-To configure HTTP API security, the following fields in the `OpenSearchCluster` custom resource are available:
+若要設定 HTTP API 安全性，可以使用 `OpenSearchCluster` 自訂資源中的下列欄位：
 
 ```yaml
 # ...
@@ -155,18 +156,18 @@ spec:
 ```
 {% include copy.html %}
 
-You can either let the operator generate and sign the certificates or provide your own. The only difference between node transport certificates and node HTTP REST API certificates is that per-node certificates are not supported for HTTP REST API. Otherwise, the two work the same way.
+您可以讓 operator 產生並簽署憑證，也可以提供您自己的憑證。節點傳輸憑證與節點 HTTP REST API 憑證唯一的差異在於，HTTP REST API 不支援個別節點的憑證。除此之外，兩者的運作方式相同。
 
-The `enabled` field controls whether TLS is enabled for the HTTP endpoint. If `enabled` is set to `false`, the cluster uses HTTP instead of HTTPS. If `enabled` is `nil` (not set), TLS is enabled by default when the HTTP config exists. To explicitly disable TLS, set `enabled: false`.
+`enabled` 欄位控制是否為 HTTP 端點啟用 TLS。如果 `enabled` 設為 `false`，叢集會使用 HTTP 而非 HTTPS。如果 `enabled` 為 `nil`（未設定），則當 HTTP 組態存在時，預設會啟用 TLS。若要明確停用 TLS，請設定 `enabled: false`。
 {: .note}
 
-When using generated certificates, you can optionally specify a `customFQDN` field to include a custom domain in the certificate's Subject Alternative Names (SAN) alongside the default cluster DNS names.
+使用產生的憑證時，您可以選擇性地指定 `customFQDN` 欄位，以便在憑證的主體別名（Subject Alternative Names，SAN）中，除了預設的叢集 DNS 名稱之外，再加入自訂網域。
 
-If you provide your own certificates, add the following names as SAN: `<cluster-name>`, `<cluster-name>.<namespace>`, `<cluster-name>.<namespace>.svc`, `<cluster-name>.<namespace>.svc.cluster.local`.
+如果您提供自己的憑證，請將下列名稱新增為 SAN：`<cluster-name>`、`<cluster-name>.<namespace>`、`<cluster-name>.<namespace>.svc`、`<cluster-name>.<namespace>.svc.cluster.local`。
 
-Directly exposing the node HTTP port outside the Kubernetes cluster is not recommended. Instead, configure an ingress. The ingress can then present a certificate from an accredited CA (for example, Let's Encrypt) and hide self-signed certificates used internally. In this configuration, supply the nodes internally with properly signed certificates.
+不建議將節點 HTTP 連接埠直接公開至 Kubernetes 叢集外部。請改為設定 ingress。ingress 接著可以出示由受認可 CA（例如 Let's Encrypt）簽發的憑證，並隱藏內部使用的自我簽署憑證。在此組態中，請在內部為節點提供經過正確簽署的憑證。
 
-If you provide your own node certificates, you must also provide an admin cert that the operator can use for managing the cluster:
+如果您提供自己的節點憑證，也必須提供 operator 可用於管理叢集的管理員憑證：
 
 ```yaml
 spec:
@@ -177,13 +178,13 @@ spec:
 ```
 {% include copy.html %}
 
-Make sure the DN of the certificate is set in the `adminDn` field.
+請確認已在 `adminDn` 欄位中設定憑證的 DN。
 
-## Adding plugins
+## 新增外掛程式
 
-You can extend the OpenSearch functionality using [plugins]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/plugins/#available-plugins). Commonly used ones are snapshot repository plugins for external backups (for example, to Amazon S3 or Microsoft Azure Blob Storage). The operator supports automatically installing plugins during setup.
+您可以使用[外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/plugins/#available-plugins)擴充 OpenSearch 的功能。常用的外掛程式包括用於外部備份（例如備份至 Amazon S3 或 Microsoft Azure Blob Storage）的快照儲存庫外掛程式。operator 支援在設定期間自動安裝外掛程式。
 
-To install a plugin for OpenSearch, add it to the `general.pluginsList`:
+若要為 OpenSearch 安裝外掛程式，請將其新增至 `general.pluginsList`：
 
 ```yaml
 general:
@@ -199,7 +200,7 @@ general:
 ```
 {% include copy.html %}
 
-To install a plugin for OpenSearch Dashboards, add it to the `dashboards.pluginsList`:
+若要為 OpenSearch Dashboards 安裝外掛程式，請將其新增至 `dashboards.pluginsList`：
 
 ```yaml
 dashboards:
@@ -210,7 +211,7 @@ dashboards:
 ```
 {% include copy.html %}
 
-To install a plugin for the bootstrap pod, add it to the `bootstrap.pluginsList`:
+若要為 bootstrap pod 安裝外掛程式，請將其新增至 `bootstrap.pluginsList`：
 
 ```yaml
 bootstrap:
@@ -218,18 +219,18 @@ bootstrap:
 ```
 {% include copy.html %}
 
-Note the following considerations:
+請注意下列事項：
 
-- [Bundled plugins]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/plugins/#bundled-plugins) are installed automatically and do not need to be added to the list.
-- You can provide either a plugin name or a complete URL to the plugin ZIP file. The items you provide are passed to the `bin/opensearch-plugin install <plugin-name>` command.
-- Updating the plugin list for an already installed cluster triggers a rolling restart of all OpenSearch nodes.
-- If your plugin requires additional configuration, provide it in either `additionalConfig` (see [Configuring opensearch.yml](#configuring-opensearchyml)) or as secrets in the OpenSearch keystore (see [Add secrets to keystore](#add-secrets-to-keystore)).
+- [隨附的外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/plugins/#bundled-plugins)會自動安裝，不需要新增至清單中。
+- 您可以提供外掛程式名稱，或外掛程式 ZIP 檔案的完整 URL。您提供的項目會傳遞給 `bin/opensearch-plugin install <plugin-name>` 命令。
+- 為已安裝的叢集更新外掛程式清單時，會觸發所有 OpenSearch 節點的滾動重新啟動。
+- 如果您的外掛程式需要額外的組態，請在 `additionalConfig` 中提供（請參閱[設定 opensearch.yml](#configuring-opensearchyml)），或以 Secret 的形式提供於 OpenSearch keystore 中（請參閱[將 Secret 新增至 keystore](#add-secrets-to-keystore)）。
 
-## Add secrets to keystore
+## 將 Secret 新增至 keystore
 
-Some OpenSearch features (for example, snapshot repository plugins) require sensitive configuration. OpenSearch handles this using the OpenSearch keystore. You can populate this keystore using Kubernetes secrets.
+部分 OpenSearch 功能（例如快照儲存庫外掛程式）需要敏感的組態。OpenSearch 使用 OpenSearch keystore 處理這類組態。您可以使用 Kubernetes Secret 填入此 keystore。
 
-Add the secrets under the `general.keystore` section:
+請在 `general.keystore` 區段下新增 Secret：
 
 ```yaml
 general:
@@ -242,9 +243,9 @@ general:
 ```
 {% include copy.html %}
 
-With this configuration, all keys of the secrets become keys in the keystore.
+使用此組態時，Secret 中的所有金鑰都會成為 keystore 中的金鑰。
 
-If you only want to load some keys from a secret or rename the existing keys, you can add key mappings as a map:
+如果您只想從 Secret 載入部分金鑰，或重新命名現有的金鑰，可以將金鑰對應新增為 map：
 
 ```yaml
 general:
@@ -264,10 +265,10 @@ general:
 ```
 {% include copy.html %}
 
-Only provided keys are loaded from the secret. Any keys not specified are ignored.
+只有所提供的金鑰會從 Secret 中載入。任何未指定的金鑰都會被忽略。
 {: .note}
 
-To populate the keystore of the bootstrap pod, add the secrets under the `bootstrap.keystore` section:
+若要填入 bootstrap pod 的 keystore，請在 `bootstrap.keystore` 區段下新增 Secret：
 
 ```yaml
 bootstrap:
@@ -282,15 +283,15 @@ bootstrap:
 
 ## SmartScaler
 
-SmartScaler is a mechanism built into the operator that enables nodes to be safely removed from the cluster. When a node is being removed from a cluster, the safe drain process ensures that all of its data is transferred to other nodes in the cluster before the node is taken offline. This prevents any data loss or corruption that could occur if the node were shut down or disconnected without first transferring its data to other nodes.
+SmartScaler 是內建於 operator 的機制，可讓節點安全地從叢集中移除。從叢集中移除節點時，安全排空程序會確保在節點離線之前，將其所有資料轉移至叢集中的其他節點。這可以防止節點在未先將資料轉移至其他節點的情況下關閉或中斷連線時，可能發生的任何資料遺失或損毀。
 
-During the safe drain process, the node being removed is marked as "draining", which means that it no longer receives new requests. Instead, it only processes outstanding requests until its workload is completed. Once all requests are processed, the node begins transferring its data to other nodes in the cluster. The safe drain process continues until all data is transferred and the node is no longer part of the cluster. Only after that does the operator turn down the node.
+在安全排空程序期間，要移除的節點會被標記為「排空中」，這表示該節點不再接收新的請求。相反地，它只會處理尚未完成的請求，直到其工作負載完成為止。所有請求都處理完畢後，該節點便開始將其資料轉移至叢集中的其他節點。安全排空程序會持續進行，直到所有資料都轉移完成，且該節點不再屬於叢集為止。在此之後，operator 才會關閉該節點。
 
-## Set the Java heap size
+## 設定 Java 堆積大小
 
-To configure the amount of memory allocated to the OpenSearch nodes, set the heap size using the `jvm` field. This operation has no downtime, and the cluster remains operational.
+若要設定配置給 OpenSearch 節點的記憶體量，請使用 `jvm` 欄位設定堆積大小。此操作不會造成停機，叢集會持續運作。
 
-Set the heap size to half of the memory request.
+請將堆積大小設為記憶體請求量的一半。
 {: .note}
 
 ```yaml
@@ -312,13 +313,13 @@ spec:
 ```
 {% include copy.html %}
 
-If `jvm` is not provided, the Java heap size is set to half of `resources.requests.memory`, which is the recommended value for data nodes.
+如果未提供 `jvm`，Java 堆積大小會設為 `resources.requests.memory` 的一半，這是資料節點的建議值。
 
-If `jvm` is not provided and `resources.requests.memory` does not exist, the value is `-Xmx512M -Xms512M`.
+如果未提供 `jvm` 且 `resources.requests.memory` 不存在，則值為 `-Xmx512M -Xms512M`。
 
-## Configure `vm.max_map_count`
+## 設定 `vm.max_map_count`
 
-OpenSearch requires the Linux kernel `vm.max_map_count` option [to be set to at least 262144]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#important-settings). The operator sets this option to `262144` by default using an init container for each OpenSearch pod. If you already set this option on the Kubernetes hosts using `sysctl` and don't want the operator to change it, disable it by adding the following option to your cluster `spec`:
+OpenSearch 要求 Linux 核心的 `vm.max_map_count` 選項[至少設為 262144]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#important-settings)。Operator 預設會為每個 OpenSearch pod 使用 init 容器，將此選項設為 `262144`。如果您已在 Kubernetes 主機上使用 `sysctl` 設定此選項，且不希望 Operator 變更它，請在叢集 `spec` 中新增下列選項以停用此功能：
 
 ```yaml
 spec:
@@ -327,11 +328,11 @@ spec:
 ```
 {% include copy.html %}
 
-By default, the init container uses a `busybox` image. To change this (for example, to use an image from a private registry), see [Custom init helper]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/operator-kubernetes-custom/#custom-init-helper).
+根據預設，init 容器會使用 `busybox` 映像檔。若要變更此設定（例如使用私有登錄檔中的映像檔），請參閱[自訂 init 輔助程式]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/operator-kubernetes-custom/#custom-init-helper)。
 
-## Configuring snapshot repositories
+## 設定快照儲存庫
 
-You can configure snapshot repositories for the OpenSearch cluster using the operator. The `general.snapshotRepositories` field supports multiple snapshot repositories. After configuring a snapshot repository, users can create custom ISM policies in OpenSearch Dashboards to back up indexes.
+您可以使用 Operator 為 OpenSearch 叢集設定快照儲存庫。`general.snapshotRepositories` 欄位支援多個快照儲存庫。設定快照儲存庫後，使用者可以在 OpenSearch Dashboards 中建立自訂 ISM 政策來備份索引。
 
 ```yaml
 spec:
@@ -352,11 +353,11 @@ spec:
 ```
 {% include copy.html %}
 
-### Prerequisites for configuring snapshot repositories
+### 設定快照儲存庫的先決條件
 
-Before configuring `snapshotRepositories` for a cluster, ensure the following prerequisites are met:
+在為叢集設定 `snapshotRepositories` 之前，請確認已符合下列先決條件：
 
-1. The appropriate cloud provider native plugins are installed. For example:
+1. 已安裝適當的雲端供應商原生外掛程式。例如：
 
    ```yaml
    spec:
@@ -365,7 +366,7 @@ Before configuring `snapshotRepositories` for a cluster, ensure the following pr
    ```
    {% include copy.html %}
 
-2. The required roles/permissions for the backend cloud are pre-created. The following example shows an Amazon Web Services (AWS) Identity and Access Management (IAM) role added for Kubernetes nodes so that snapshots can be published to the `opensearch-s3-snapshot` S3 bucket:
+2. 已預先建立後端雲端所需的角色／權限。下列範例顯示為 Kubernetes 節點新增的 Amazon Web Services (AWS) Identity and Access Management (IAM) 角色，以便將快照發布至 `opensearch-s3-snapshot` S3 儲存貯體：
 
    ```json
    {

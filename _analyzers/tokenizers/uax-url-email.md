@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: UAX URL email
+title: "UAX URL 電子郵件"
 parent: Tokenizers
 nav_order: 150
 ---
 
-# UAX URL email tokenizer
+# UAX URL 電子郵件斷詞器
 
-In addition to regular text, the `uax_url_email` tokenizer is designed to handle URLs, email addresses, and domain names. It is based on the Unicode Text Segmentation algorithm ([UAX #29](https://www.unicode.org/reports/tr29/)), which allows it to correctly tokenize complex text, including URLs and email addresses.
+除了處理一般文字，`uax_url_email` 斷詞器也專為處理 URL、電子郵件地址和網域名稱而設計。它以 Unicode 文字分段演算法（[UAX #29](https://www.unicode.org/reports/tr29/)）為基礎，可正確地將複雜文字切分為詞元，包括 URL 和電子郵件地址。
 
-## Example usage
+## 使用範例
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `uax_url_email` tokenizer:
+下列範例請求會建立名為 `my_index` 的新索引，並設定使用 `uax_url_email` 斷詞器的分析器：
 
 ```json
 PUT /my_index
@@ -43,9 +44,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢視分析器產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -56,7 +57,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {
@@ -74,11 +75,11 @@ The response contains the generated tokens:
 }
 ```
 
-## Parameters
+## 參數
 
-The `uax_url_email` tokenizer can be configured with the following parameter.
+您可以使用下列參數設定 `uax_url_email` 斷詞器。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`max_token_length` | Optional | Integer | Sets the maximum length of the produced token. If this length is exceeded, the token is split into multiple tokens at the length configured in `max_token_length`. Default is `255`.
+`max_token_length` | 選用 | 整數 | 設定產生的詞元長度上限。如果超過此長度，詞元會依照 `max_token_length` 中設定的長度切分為多個詞元。預設為 `255`。
 

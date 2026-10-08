@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Mapping
+title: "對應"
 parent: Character filters
 nav_order: 120
 ---
 
-# Mapping character filter
+# 對應字元篩選器
 
-The `mapping` character filter accepts a map of key-value pairs for character replacement. Whenever the filter encounters a string of characters matching a key, it replaces them with the corresponding value. Replacement values can be empty strings.
+`mapping` 字元篩選器接受一個用於字元取代的鍵值對對應表。每當篩選器遇到與某個鍵相符的字元字串時，就會將其取代為對應的值。取代值可以是空字串。
 
-The filter applies greedy matching, meaning that the longest matching pattern is matched. 
+此篩選器採用貪婪比對，也就是會比對最長的相符模式。
 
-The `mapping` character filter helps in scenarios where specific text replacements are required before tokenization.
+在斷詞之前需要進行特定文字取代的情境中，`mapping` 字元篩選器相當實用。
 
-## Example 
+## 範例
 
-The following request configures a `mapping` character filter that converts Roman numerals (such as I, II, or III) into their corresponding Arabic numerals (1, 2, and 3): 
+下列請求會設定一個 `mapping` 字元篩選器，將羅馬數字（例如 I、II 或 III）轉換為對應的阿拉伯數字（1、2 和 3）：
 
 ```json
 GET /_analyze
@@ -38,7 +39,7 @@ GET /_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains a token where Roman numerals have been replaced with Arabic numerals:
+回應包含一個詞元，其中的羅馬數字已取代為阿拉伯數字：
 
 ```json
 {
@@ -54,18 +55,18 @@ The response contains a token where Roman numerals have been replaced with Arabi
 }
 ```
 
-## Parameters
+## 參數
 
-You can use either of the following parameters to configure the key-value map.
+您可以使用下列任一參數來設定鍵值對應表。
 
-| Parameter       | Required/Optional | Data type | Description    |
+| 參數       | 必要/選用 | 資料類型 | 說明    |
 |:---|:---|:---|:---|
-| `mappings`       | Optional          | Array      | An array of key-value pairs in the format `key => value`. Each key found in the input text will be replaced with its corresponding value. |
-| `mappings_path`  | Optional          | String     | The path to a UTF-8 encoded file containing key-value mappings. Each mapping should appear on a new line in the format `key => value`. The path can be absolute or relative to the OpenSearch configuration directory. |
+| `mappings`       | 選用          | 陣列      | 格式為 `key => value` 的鍵值對陣列。輸入文字中找到的每個鍵都會取代為其對應的值。 |
+| `mappings_path`  | 選用          | 字串     | 包含鍵值對應之 UTF-8 編碼檔案的路徑。每個對應應以 `key => value` 格式各自位於新的一行。路徑可以是絕對路徑，或相對於 OpenSearch 組態目錄的相對路徑。 |
 
-### Using a custom mapping character filter
+### 使用自訂對應字元篩選器
 
-You can create a custom mapping character filter by defining your own set of mappings. The following request creates a custom character filter that replaces common abbreviations in a text:
+您可以定義自己的一組對應，以建立自訂對應字元篩選器。下列請求會建立一個自訂字元篩選器，用來取代文字中常見的縮寫：
 
 ```json
 PUT /test-index
@@ -96,7 +97,7 @@ PUT /test-index
 ```
 {% include copy-curl.html %}
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器產生的詞元：
 
 ```json
 GET /text-index/_analyze
@@ -108,7 +109,7 @@ GET /text-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response shows that the abbreviations were replaced:
+回應顯示縮寫已被取代：
 
 ```json
 {

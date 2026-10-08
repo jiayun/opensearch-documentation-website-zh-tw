@@ -1,57 +1,58 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Clear cache
+title: "清除快取"
 parent: Index operations
 grand_parent: Index APIs
 nav_order: 10
 ---
 
 # Clear Cache API
-**Introduced 1.0**
+**1.0 版新增**
 {: .label .label-purple }
 
-The clear cache API operation clears the caches of one or more indexes. For data streams, the API clears the caches of the stream’s backing indexes.
+Clear Cache API 作業會清除一個或多個索引的快取。對於資料串流，此 API 會清除該串流後備索引的快取。
 
 
-If you use the Security plugin, you must have the `manage index` privileges.
+如果您使用 Security 外掛程式，則必須具備 `manage index` 權限。
 {: .note}
 
-## Endpoints
+## 端點
 
 ```json
 POST /{target}/_cache/clear
 ```
 
-## Path parameters
+## 路徑參數
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 :--- | :--- | :---
-| `target` | String | Comma-delimited list of data streams, indexes, and index aliases to which cache clearing is applied. Wildcard expressions (`*`) are supported. To target all data streams and indexes in a cluster, omit this parameter or use `_all` or `*`. Optional. |
+| `target` | 字串 | 要套用快取清除的資料串流、索引與索引別名的逗號分隔清單。支援萬用字元運算式 (`*`)。若要指定叢集中的所有資料串流與索引，請省略此參數或使用 `_all` 或 `*`。選用。 |
 
 
-## Query parameters
+## 查詢參數
 
-All query parameters are optional.
+所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 :--- | :--- | :---
-| `allow_no_indices` | Boolean | Whether to ignore wildcards, index aliases, or `_all` target (`target` path parameter) values that don’t match any indexes. If `false`, the request returns an error if any wildcard expression, index alias, or `_all` target value doesn't match any indexes. This behavior also applies if the request targets include other open indexes. For example, a request where the target is `fig*,app*` returns an error if an index starts with `fig` but no index starts with `app`. Defaults to `true`. |
-| `expand_wildcards` | String | Determines the index types that wildcard expressions can expand to. Accepts multiple values separated by a comma, such as  `open,hidden`. Valid values are: <br /><br /> `all` -- Expand to open, closed, and hidden indexes.<br /><br />`open` -- Expand only to open indexes.<br /><br />`closed` -- Expand only to closed indexes<br /><br />`hidden` -- Expand to include hidden indexes. Must be combined with `open`, `closed`, or `both`.<br /><br />`none` -- Expansions are not accepted.<br /><br /> Defaults to `open`. |
-| `fielddata` | Boolean | If `true`, clears the fields cache. Use the `fields` parameter to clear specific fields' caches. Defaults to `true`. |
-| `fields` | String | Used in conjunction with the `fielddata` parameter. Comma-delimited list of field names that are cleared out of the cache. Does not support objects or field aliases. Defaults to all fields. |
-| `file` | Boolean | If `true`, clears the unused entries from the file cache on nodes with the Search role. Defaults to `false`. |
-| `index` | String | Comma-delimited list of index names that are cleared out of the cache. |
-| `ignore_unavailable` | Boolean | If `true`, OpenSearch ignores missing or closed indexes. Defaults to `false`. |
-| `query` | Boolean | If `true`, clears the query cache. Defaults to `true`. |
-| `request` | Boolean | If `true`, clears the request cache. Defaults to `true`. |
+| `allow_no_indices` | 布林值 | 是否忽略不符合任何索引的萬用字元、索引別名或 `_all` 目標 (`target` 路徑參數) 值。若為 `false`，當任何萬用字元運算式、索引別名或 `_all` 目標值不符合任何索引時，請求會回傳錯誤。即使請求目標包含其他開啟的索引，此行為也適用。例如，當目標為 `fig*,app*` 時，若有索引以 `fig` 開頭但沒有索引以 `app` 開頭，則請求會回傳錯誤。預設為 `true`。 |
+| `expand_wildcards` | 字串 | 決定萬用字元運算式可展開至哪些索引類型。接受以逗號分隔的多個值，例如 `open,hidden`。有效值為：<br /><br /> `all` -- 展開至開啟、關閉與隱藏的索引。<br /><br />`open` -- 僅展開至開啟的索引。<br /><br />`closed` -- 僅展開至關閉的索引<br /><br />`hidden` -- 展開以包含隱藏的索引。必須與 `open`、`closed` 或 `both` 搭配使用。<br /><br />`none` -- 不接受展開。<br /><br /> 預設為 `open`。 |
+| `fielddata` | 布林值 | 若為 `true`，則清除欄位快取。使用 `fields` 參數可清除特定欄位的快取。預設為 `true`。 |
+| `fields` | 字串 | 與 `fielddata` 參數搭配使用。要從快取中清除的欄位名稱的逗號分隔清單。不支援物件或欄位別名。預設為所有欄位。 |
+| `file` | 布林值 | 若為 `true`，則清除具有 Search 角色之節點上檔案快取中未使用的項目。預設為 `false`。 |
+| `index` | 字串 | 要從快取中清除的索引名稱的逗號分隔清單。 |
+| `ignore_unavailable` | 布林值 | 若為 `true`，OpenSearch 會忽略遺失或已關閉的索引。預設為 `false`。 |
+| `query` | 布林值 | 若為 `true`，則清除查詢快取。預設為 `true`。 |
+| `request` | 布林值 | 若為 `true`，則清除請求快取。預設為 `true`。 |
 
-## Example requests
+## 範例請求
 
-The following example requests show multiple clear cache API uses.
+下列範例請求展示 Clear Cache API 的多種用法。
 
-### Clear a specific cache
+### 清除特定快取
 
-The following request clears the fields cache only:
+下列請求僅清除欄位快取：
 
 <!-- spec_insert_start
 component: example_code
@@ -78,7 +79,7 @@ response = client.indices.clear_cache(
 
 <hr />
 
-The following request clears the query cache only:
+下列請求僅清除查詢快取：
 
 <!-- spec_insert_start
 component: example_code
@@ -105,7 +106,7 @@ response = client.indices.clear_cache(
 
 <hr />
 
-The following request clears the request cache only:
+下列請求僅清除請求快取：
 
 <!-- spec_insert_start
 component: example_code
@@ -130,9 +131,9 @@ response = client.indices.clear_cache(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Clear the cache for specific fields
+### 清除特定欄位的快取
 
-The following request clears the fields caches of `fielda` and `fieldb`:
+下列請求清除 `fielda` 與 `fieldb` 的欄位快取：
 
 <!-- spec_insert_start
 component: example_code
@@ -157,9 +158,9 @@ response = client.indices.clear_cache(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Clear caches for specific data streams or indexes
+### 清除特定資料串流或索引的快取
 
-The following request clears the cache for two specific indexes:
+下列請求清除兩個特定索引的快取：
 
 <!-- spec_insert_start
 component: example_code
@@ -183,9 +184,9 @@ response = client.indices.clear_cache(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Clear caches for all data streams and indexes
+#### 清除所有資料串流與索引的快取
 
-The following request clears the cache for all data streams and indexes:
+下列請求清除所有資料串流與索引的快取：
 
 <!-- spec_insert_start
 component: example_code
@@ -206,7 +207,7 @@ response = client.indices.clear_cache()
 <!-- spec_insert_end -->
 
 
-### Clear unused entries from the cache on search-capable nodes
+### 清除具搜尋能力節點上快取中未使用的項目
 
 <!-- spec_insert_start
 component: example_code
@@ -231,9 +232,9 @@ response = client.indices.clear_cache(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-The `POST /books,hockey/_cache/clear` request returns the following fields:
+`POST /books,hockey/_cache/clear` 請求會回傳下列欄位：
 
 ```json
 {
@@ -245,17 +246,17 @@ The `POST /books,hockey/_cache/clear` request returns the following fields:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The `POST /books,hockey/_cache/clear` request returns the following response fields:
+`POST /books,hockey/_cache/clear` 請求會回傳下列回應欄位：
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `_shards` | Object | Shard information. |
-| `total` | Integer | Total number of shards. |
-| `successful` | Integer | Number of index shards with caches successfully cleared. |
-| `failed` | Integer | Number of index shards with caches that failed to clear. |
+| `_shards` | 物件 | 分片資訊。 |
+| `total` | 整數 | 分片總數。 |
+| `successful` | 整數 | 成功清除快取的索引分片數量。 |
+| `failed` | 整數 | 清除快取失敗的索引分片數量。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/cache/clear`.
+如果您使用 Security 外掛程式，請確保您具備適當的權限：`indices:admin/cache/clear`。

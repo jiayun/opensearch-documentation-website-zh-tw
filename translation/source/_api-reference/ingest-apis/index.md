@@ -1,0 +1,33 @@
+---
+layout: default
+title: Ingest APIs
+has_children: false
+nav_order: 70
+redirect_from:
+  - /opensearch/rest-api/ingest-apis/index/
+  - /api-reference/ingest-apis/
+---
+
+# Ingest APIs
+**Introduced 1.0**
+{: .label .label-purple }
+
+Ingest APIs are a valuable tool for loading data into a system. Ingest APIs work together with [ingest pipelines]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/ingest-pipelines/) and [ingest processors]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/ingest-processors/) to process or transform data from a variety of sources and in a variety of formats. 
+
+## Ingest pipeline APIs
+
+Simplify, secure, and scale your OpenSearch data ingestion with the following APIs:
+
+- [Create pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/create-ingest/): Use this API to create or update a pipeline configuration.
+- [Get pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/get-ingest/): Use this API to retrieve a pipeline configuration.
+- [Simulate pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/simulate-ingest/): Use this pipeline to test a pipeline configuration.
+- [Access data in a pipeline]({{site.url}}{{site.baseurl}}/ingest-pipelines/accessing-data/): Use this API to access data in a pipeline.
+- [Delete pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/delete-ingest/): Use this API to delete a pipeline configuration.
+
+## Required permissions
+
+If you use the Security plugin, make sure you have the appropriate permissions. The following permissions are required for this API:
+
+- `cluster:admin/ingest/pipeline/get`: Required for getting pipelines
+- `cluster:admin/ingest/pipeline/put`: Required for creating or updating pipelines
+- `cluster:admin/ingest/pipeline/delete`: Required for deleting pipelines

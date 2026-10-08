@@ -1,20 +1,21 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Workflow settings
+title: "工作流程設定"
 nav_order: 30
 ---
 
-# Workflow settings
+# 工作流程設定
 
-The following keys represent configurable workflow settings.
+下列索引鍵代表可設定的工作流程設定。
 
-|Setting	|Data type	|Default value	|Description	|
+|設定	|資料類型	|預設值	|說明	|
 |:---	|:---	|:---	|:---	|
-|`plugins.flow_framework.enabled`	|Boolean	|`false`	|Whether the Flow Framework API is enabled.	|
-|`plugins.flow_framework.max_workflows`	|Integer	|`1000`	| The maximum number of workflows that you can create. When the limit is above 1,000, the number of existing workflows is defined as a lower bound for performance reasons, so the actual maximum may slightly exceed this value.	|
-|`plugins.flow_framework.max_workflow_steps`	|Integer	|`50`	|The maximum number of steps a workflow can have.	|
-|`plugins.flow_framework.request_timeout`	|Time units	|`10s`	|The default timeout for REST requests, which applies to internal search queries.	|
-|`plugins.flow_framework.task_request_retry_duration`	|Time units	|`5s`	| When steps correspond to an API that produces a `task_id`, OpenSearch will retry them at this interval until completion.	|
-|`plugins.flow_framework.workflow_thread_pool_size`	|Integer	|`4`	|The maximum size of the workflow thread pool used for polling retries. |
-|`plugins.flow_framework.provision_thread_pool_size`	|Integer	|`8`	|The maximum size of the provision workflow thread pool. |
-|`plugins.flow_framework.deprovision_thread_pool_size`	|Integer	|`4`	|The maximum size of the deprovision workflow thread pool. |
+|`plugins.flow_framework.enabled`	|布林值	|`false`	|是否啟用 Flow Framework API。	|
+|`plugins.flow_framework.max_workflows`	|整數	|`1000`	| 您可以建立的工作流程數量上限。當上限超過 1,000 時，基於效能考量，現有工作流程的數量會定義為下限，因此實際的上限可能會略微超過此值。	|
+|`plugins.flow_framework.max_workflow_steps`	|整數	|`50`	|一個工作流程可包含的步驟數量上限。	|
+|`plugins.flow_framework.request_timeout`	|時間單位	|`10s`	|REST 請求的預設逾時時間，適用於內部搜尋查詢。	|
+|`plugins.flow_framework.task_request_retry_duration`	|時間單位	|`5s`	| 當步驟對應到會產生 `task_id` 的 API 時，OpenSearch 會以此間隔重試這些步驟，直到完成為止。	|
+|`plugins.flow_framework.workflow_thread_pool_size`	|整數	|`4`	|用於輪詢重試的工作流程執行緒集區大小上限。 |
+|`plugins.flow_framework.provision_thread_pool_size`	|整數	|`8`	|佈建工作流程執行緒集區的大小上限。 |
+|`plugins.flow_framework.deprovision_thread_pool_size`	|整數	|`4`	|取消佈建工作流程執行緒集區的大小上限。 |

@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Bucket sort
+title: "桶排序"
 parent: Pipeline aggregations
 nav_order: 40
 ---
 
-# Bucket sort aggregation
+# 桶排序彙總
 
-The `bucket_sort` aggregation is a parent aggregation that sorts or truncates the buckets produced by its parent multi-bucket aggregation.
+`bucket_sort` 彙總是一種父彙總，會對其父多桶彙總所產生的桶 (bucket) 進行排序或截斷。
 
-In `bucket_sort` aggregations, you can sort buckets by multiple fields, each with its own sort order. Buckets can be sorted by their key, document count, or values from subaggregations. You can also use the `from` and `size` parameters to truncate the results, with or without sorting.
+在 `bucket_sort` 彙總中，您可以依多個欄位對桶進行排序，每個欄位各有其排序順序。桶可以依其鍵、文件計數或子彙總的值進行排序。您也可以使用 `from` 和 `size` 參數截斷結果，無論是否進行排序皆可。
 
-For information about specifying sort order, see [Sort results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/).
+如需指定排序順序的相關資訊，請參閱[排序結果]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/)。
 
-## Parameters
+## 參數
 
-The `bucket_sort` aggregation takes the following parameters.
+`bucket_sort` 彙總接受下列參數。
 
-| Parameter        | Required/Optional | Data type       | Description |
+| 參數        | 必要/選用 | 資料類型       | 說明 |
 | :--              | :--               |  :--            | :--         |
-| `gap_policy`     | Optional          | String          | The policy to apply to missing data. Valid values are `skip` and `insert_zeros`. Default is `skip`. See [Data gaps]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#data-gaps). |
-| `sort`           | Optional          | String          | A list of fields by which to sort. See [Sort results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/). |
-| `from`           | Optional          | String          | The index of the first result to return. Must be a non-negative integer. Default is `0`. See [The `from` and `size` parameters]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#the-from-and-size-parameters). |
-| `size`           | Optional          | String          | The maximum number of results to return. Must be a positive integer. See [The `from` and `size` parameters]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#the-from-and-size-parameters).|
+| `gap_policy`     | 選用          | 字串          | 套用於缺漏資料的原則。有效值為 `skip` 和 `insert_zeros`。預設為 `skip`。請參閱[資料缺口]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#data-gaps)。 |
+| `sort`           | 選用          | 字串          | 用於排序的欄位清單。請參閱[排序結果]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/)。 |
+| `from`           | 選用          | 字串          | 要傳回的第一個結果的索引。必須為非負整數。預設為 `0`。請參閱[`from` 和 `size` 參數]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#the-from-and-size-parameters)。 |
+| `size`           | 選用          | 字串          | 要傳回的結果數量上限。必須為正整數。請參閱[`from` 和 `size` 參數]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#the-from-and-size-parameters)。|
 
-You must supply at least one of `sort`, `from`, and `size`.
+您必須至少提供 `sort`、`from` 和 `size` 其中之一。
 {: .note}
 
-## Example
+## 範例
 
-The following example creates a date histogram with a one-month interval from the OpenSearch Dashboards e-commerce sample data. The `sum` subaggregation calculates the sum of all bytes for each month. Finally, the aggregation sorts the buckets in descending order by number of bytes:
+下列範例會根據 OpenSearch Dashboards 電子商務範例資料，建立間隔為一個月的日期直方圖。`sum` 子彙總會計算每個月所有位元組的總和。最後，此彙總會依位元組數以遞減順序對桶進行排序：
 
 ```json
 GET opensearch_dashboards_sample_data_logs/_search
@@ -61,9 +62,9 @@ GET opensearch_dashboards_sample_data_logs/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The aggregation reorders the buckets in descending order by total number of bytes:
+此彙總會依位元組總數以遞減順序重新排列桶：
 
 ```json
 {
@@ -116,9 +117,9 @@ The aggregation reorders the buckets in descending order by total number of byte
 }
 ```
 
-## Example: Truncating the results 
+## 範例：截斷結果 
 
-To truncate the results, provide the `from` and/or `size` parameters. The following example performs the same sort but returns two buckets, starting with the second bucket:
+若要截斷結果，請提供 `from` 和/或 `size` 參數。下列範例執行相同的排序，但從第二個桶開始傳回兩個桶：
 
 ```json
 GET opensearch_dashboards_sample_data_logs/_search
@@ -152,7 +153,7 @@ GET opensearch_dashboards_sample_data_logs/_search
 ```
 {% include copy-curl.html %}
 
-The aggregation returns the two sorted buckets:
+此彙總會傳回兩個已排序的桶：
 
 ```json
 {
@@ -197,7 +198,7 @@ The aggregation returns the two sorted buckets:
 }
 ```
 
-To truncate results without sorting, omit the `sort` parameter:
+若要截斷結果而不進行排序，請省略 `sort` 參數：
 
 ```json
 GET opensearch_dashboards_sample_data_logs/_search

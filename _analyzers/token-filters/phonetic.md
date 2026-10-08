@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Phonetic
+title: "語音"
 parent: Token filters
 nav_order: 330
 ---
 
-# Phonetic token filter
+# 語音詞元篩選器
 
-The `phonetic` token filter transforms tokens into their phonetic representations, enabling more flexible matching of words that sound similar but are spelled differently. This is particularly useful for searching names, brands, or other entities that users might spell differently but pronounce similarly.
+`phonetic` 詞元篩選器會將詞元轉換為其語音表示法，讓發音相似但拼寫不同的單字能夠更彈性地相符。這在搜尋名稱、品牌或其他實體時特別實用，因為使用者可能會以不同方式拼寫，但發音相似。
 
-The `phonetic` token filter is not included in OpenSearch distributions by default. To use this token filter, you must first install the `analysis-phonetic` plugin as follows and then restart OpenSearch:
+OpenSearch 發行版本預設不包含 `phonetic` 詞元篩選器。若要使用此詞元篩選器，您必須先依下列方式安裝 `analysis-phonetic` 外掛程式，然後重新啟動 OpenSearch：
 
 ```bash
 ./bin/opensearch-plugin install analysis-phonetic
 ```
 {% include copy.html %}
 
-For more information about installing plugins, see [Managing OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/).
+如需有關安裝外掛程式的詳細資訊，請參閱[管理 OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)。
 {: .note}
 
-## Parameters
+## 參數
 
-The `phonetic` token filter can be configured with the following parameters.
+您可以使用下列參數設定 `phonetic` 詞元篩選器。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`encoder` | Optional | String | Specifies the phonetic algorithm to use.<br><br>Valid values are:<br>- `metaphone` (default)<br>- `double_metaphone`<br>- `soundex`<br>- `refined_soundex`<br>- `caverphone1`<br>- `caverphone2`<br>- `cologne`<br>- `nysiis`<br>- `koelnerphonetik`<br>- `haasephonetik`<br>- `beider_morse`<br>- `daitch_mokotoff ` 
-`replace` | Optional | Boolean | Whether to replace the original token. If `false`, the original token is included in the output along with the phonetic encoding. Default is `true`.
+`encoder` | 選用 | 字串 | 指定要使用的語音演算法。<br><br>有效值為：<br>- `metaphone`（預設）<br>- `double_metaphone`<br>- `soundex`<br>- `refined_soundex`<br>- `caverphone1`<br>- `caverphone2`<br>- `cologne`<br>- `nysiis`<br>- `koelnerphonetik`<br>- `haasephonetik`<br>- `beider_morse`<br>- `daitch_mokotoff ` 
+`replace` | 選用 | 布林值 | 是否取代原始詞元。若為 `false`，原始詞元會與語音編碼一起包含在輸出中。預設值為 `true`。
 
 
-## Example
+## 範例
 
-The following example request creates a new index named `names_index` and configures an analyzer with a `phonetic` filter:
+下列範例請求會建立名為 `names_index` 的新索引，並設定具有 `phonetic` 篩選器的分析器：
 
 ```json
 PUT /names_index
@@ -59,9 +60,9 @@ PUT /names_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated for the names `Stephen` and `Steven` using the analyzer:
+使用下列請求，檢查使用此分析器為名稱 `Stephen` 和 `Steven` 所產生的詞元：
 
 ```json
 POST /names_index/_analyze
@@ -81,7 +82,7 @@ POST /names_index/_analyze
 ```
 {% include copy-curl.html %}
 
-In both cases, the response contains the same generated token:
+在這兩種情況下，回應都包含相同的產生詞元：
 
 ```json
 {

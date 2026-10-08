@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: k-NN (gRPC)
 parent: gRPC APIs
@@ -6,49 +7,49 @@ nav_order: 30
 ---
 
 # k-NN (gRPC) API
-**Introduced 3.2**
+**3.2 版新增**
 {: .label .label-purple }
 
 
-The gRPC k-NN API is generally available. However, expect updates to the protobuf structure as the feature matures in upcoming versions.
+gRPC k-NN API 已正式推出 (GA)。不過，隨著此功能在後續版本中逐漸成熟，protobuf 結構可能會有所更新。
 
-The gRPC k-NN API provides an efficient, binary-encoded interface for performing k-nearest neighbor searches using protocol buffers over gRPC. The k-NN plugin offers a specific search query type for vector similarity searches. This API offers superior performance compared to the traditional HTTP-based approach, making it ideal for large-scale machine learning and vector database applications.
+gRPC k-NN API 提供高效能的二進位編碼介面，可透過 gRPC 使用 protocol buffers 執行 k 最近鄰 (k-nearest neighbor) 搜尋。k-NN 外掛程式提供專門用於向量相似度搜尋的查詢類型。與傳統的 HTTP 方式相比，此 API 具有更佳的效能，非常適合大規模機器學習與向量資料庫應用。
 
-For information about HTTP-based k-NN queries, see [k-NN query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/).
+如需 HTTP 方式的 k-NN 查詢資訊，請參閱 [k-NN 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)。
 
-## Prerequisite
+## 必要條件
 
-To submit gRPC requests, you must have a set of protobufs on the client side. For ways to obtain the protobufs, see [Using gRPC APIs]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/#how-to-use-grpc-apis).
+若要送出 gRPC 請求，用戶端必須具備一組 protobufs。取得 protobufs 的方式請參閱 [使用 gRPC API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/#how-to-use-grpc-apis)。
 
-## gRPC service and method
+## gRPC 服務與方法
 
-gRPC k-NN APIs reside in the [`SearchService`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/services/search_service.proto#L22), the same service used for general search operations.
+gRPC k-NN API 位於 [`SearchService`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/services/search_service.proto#L22)，與一般搜尋作業使用相同的服務。
 
-You can submit k-NN search requests by invoking the [`Search`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/services/search_service.proto#L23) gRPC method within the `SearchService`, using a [`KnnQuery`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L2023) within the search request. The method takes a [`SearchRequest`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L20) and returns a [`SearchResponse`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L262).
+您可以在 `SearchService` 中呼叫 [`Search`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/services/search_service.proto#L23) gRPC 方法來送出 k-NN 搜尋請求，並在搜尋請求中使用 [`KnnQuery`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L2023)。此方法接受 [`SearchRequest`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L20) 並傳回 [`SearchResponse`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L262)。
 
-The gRPC implementation uses the same underlying k-NN functionality as the HTTP API while providing improved performance through protocol buffer serialization.
+gRPC 實作使用與 HTTP API 相同的底層 k-NN 功能，同時透過 protocol buffer 序列化提供更佳的效能。
 
-## KnnQuery fields
+## KnnQuery 欄位
 
-The gRPC k-NN API uses the [`KnnQuery`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L2023) message within a [`QueryContainer`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L1368) for k-NN searches. The `KnnQuery` message accepts the following fields.
+gRPC k-NN API 在 [`QueryContainer`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L1368) 中使用 [`KnnQuery`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L2023) 訊息來執行 k-NN 搜尋。`KnnQuery` 訊息接受下列欄位。
 
-| Field | Protobuf type | Description |
+| 欄位 | Protobuf 類型 | 說明 |
 | :---- | :---- | :---- |
-| `field` | `string` | The vector field against which to run the search query. Required. |
-| `vector` | `repeated float` | A query vector. Must have the same number of dimensions as the vector field. Optional. |
-| `k` | `int32` | The number of nearest neighbors to return as top hits. Optional. |
-| `min_score` | `float` | The minimum similarity score required for a neighbor to be considered a hit. Optional. |
-| `max_distance` | `float` | The maximum physical distance in vector space required for a neighbor to be considered a hit. Optional. |
-| `filter` | [`QueryContainer`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L1368) | Filters for the k-NN search query. See [Filter limitations](#filter-limitations). Optional. |
-| `boost` | `float` | A boost value used to increase or decrease relevance scores. Default is 1.0. Optional. |
-| `underscore_name` | `string` | A query name for query tagging (JSON key: `_name`). Optional. |
-| `method_parameters` | [`ObjectMap`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L3890) | Algorithm-specific parameters (for example, `ef_search` or `nprobes`). Optional. |
-| `rescore` | [`KnnQueryRescore`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L2073) | A rescoring configuration for improved accuracy. Available in versions later than 2.17. Optional. |
-| `expand_nested_docs` | `bool` | When `true`, retrieves scores for all nested field documents within each parent document. Used with nested queries. Optional. |
+| `field` | `string` | 要對其執行搜尋查詢的向量欄位。必要。 |
+| `vector` | `repeated float` | 查詢向量。必須與向量欄位具有相同的維度數。選用。 |
+| `k` | `int32` | 要作為前幾筆結果 (top hits) 傳回的最近鄰數量。選用。 |
+| `min_score` | `float` | 鄰居被視為命中所需的最低相似度分數。選用。 |
+| `max_distance` | `float` | 鄰居被視為命中所需的向量空間中最大實體距離。選用。 |
+| `filter` | [`QueryContainer`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L1368) | k-NN 搜尋查詢的篩選條件。請參閱 [篩選限制](#filter-limitations)。選用。 |
+| `boost` | `float` | 用於提高或降低相關性分數的加權值 (boost)。預設為 1.0。選用。 |
+| `underscore_name` | `string` | 用於查詢標記的查詢名稱 (JSON 鍵：`_name`)。選用。 |
+| `method_parameters` | [`ObjectMap`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L3890) | 演算法專屬參數 (例如 `ef_search` 或 `nprobes`)。選用。 |
+| `rescore` | [`KnnQueryRescore`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L2073) | 用於提升準確度的重新評分 (rescoring) 組態。適用於 2.17 之後的版本。選用。 |
+| `expand_nested_docs` | `bool` | 當設為 `true` 時，會擷取每個父文件內所有巢狀欄位文件的分數。用於巢狀查詢。選用。 |
 
-## Example request
+## 請求範例
 
-The following example shows a gRPC search request with a k-NN query. It searches for the 10 most similar vectors to the query vector `[0.1, 0.2, 0.3, 0.4]` in the `my_vector` field of the `vector_index` index:
+下列範例顯示包含 k-NN 查詢的 gRPC 搜尋請求。它會在 `vector_index` 索引的 `my_vector` 欄位中搜尋與查詢向量 `[0.1, 0.2, 0.3, 0.4]` 最相似的 10 個向量：
 
 ```json
 {
@@ -67,9 +68,9 @@ The following example shows a gRPC search request with a k-NN query. It searches
 ```
 {% include copy.html %}
 
-## Java gRPC client example
+## Java gRPC 用戶端範例
 
-The following is a basic example of using the gRPC k-NN API (the actual implementation depends on your gRPC client setup):
+以下是使用 gRPC k-NN API 的基本範例 (實際實作取決於您的 gRPC 用戶端設定)：
 
 ```java
 import org.opensearch.protobufs.*;
@@ -134,29 +135,29 @@ public class KnnGrpcClient {
 ```
 {% include copy.html %}
 
-## Response fields
+## 回應欄位
 
-k-NN search requests return the same [`SearchResponse`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L262) structure as regular search operations. For information about response fields, see [Search (gRPC) response fields]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/search/#response-fields).
+k-NN 搜尋請求會傳回與一般搜尋作業相同的 [`SearchResponse`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L262) 結構。如需回應欄位的資訊，請參閱 [Search (gRPC) 回應欄位]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/search/#response-fields)。
 
-The response includes the standard search metadata (`took`, `timed_out`, and `shards`) and a `hits` array containing the k-NN documents with their similarity scores.
+回應包含標準搜尋中繼資料 (`took`、`timed_out` 與 `shards`)，以及包含 k-NN 文件及其相似度分數的 `hits` 陣列。
 
-## Filter limitations
+## 篩選限制
 
-The gRPC k-NN API has limited support for the `filter` clause compared to the HTTP API. For the current list of supported query types in gRPC, see the [Search API QueryContainer documentation]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/search/#querycontainer-fields) and [Supported queries]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/search/#supported-queries).
+與 HTTP API 相比，gRPC k-NN API 對 `filter` 子句的支援有限。如需 gRPC 目前支援的查詢類型清單，請參閱 [Search API QueryContainer 文件]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/search/#querycontainer-fields) 與 [支援的查詢]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/search/#supported-queries)。
 
-For complex filtering requirements, consider using the HTTP k-NN API, simplifying your filter logic, or waiting for the next version of k-NN gRPC.
+若有複雜的篩選需求，請考慮使用 HTTP k-NN API、簡化您的篩選邏輯，或等待下一版 k-NN gRPC。
 
 
 
-## Related APIs
+## 相關 API
 
-- [Search (gRPC)]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/search/) - General gRPC search functionality
-- [Bulk (gRPC)]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/bulk/) - Bulk operations using gRPC
-- [k-NN queries]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/) - HTTP-based k-NN query documentation
+- [Search (gRPC)]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/search/) - 一般 gRPC 搜尋功能
+- [Bulk (gRPC)]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/bulk/) - 使用 gRPC 的大量作業
+- [k-NN 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/) - HTTP 方式的 k-NN 查詢文件
 
-## Next steps
+## 後續步驟
 
-- Learn more about [vector search in OpenSearch]({{site.url}}{{site.baseurl}}/search-plugins/knn/index/).
-- Explore [k-NN index settings]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/).
-- Review [performance tuning for k-NN]({{site.url}}{{site.baseurl}}/search-plugins/knn/performance-tuning/).
-- Read about [gRPC configuration]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/#grpc-settings).
+- 進一步了解 [OpenSearch 中的向量搜尋]({{site.url}}{{site.baseurl}}/search-plugins/knn/index/)。
+- 探索 [k-NN 索引設定]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/)。
+- 檢閱 [k-NN 效能調校]({{site.url}}{{site.baseurl}}/search-plugins/knn/performance-tuning/)。
+- 閱讀 [gRPC 組態]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/#grpc-settings)。

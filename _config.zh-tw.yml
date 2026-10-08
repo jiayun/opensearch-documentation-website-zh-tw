@@ -1,0 +1,133 @@
+url: "https://jiayun.github.io"
+baseurl: "/opensearch-documentation-website-zh-tw/3.9"
+latesturl: "/opensearch-documentation-website-zh-tw/3.9"
+
+# Overriding GA tracking
+ga_tracking: null
+
+opensearch_collection:
+  collections:
+    about:
+      name: "關於 OpenSearch"
+    getting-started:
+      name: "快速入門"
+    tutorials:
+      name: "教學課程"
+    install-and-configure:
+      name: "安裝與設定"
+    migrate-or-upgrade:
+      name: "移轉或升級"
+    tuning-your-cluster:
+      name: "建立與調校您的叢集"
+    security:
+      name: "安全性"
+    im-plugin:
+      name: "管理索引"
+    ingest-pipelines:
+      name: "資料匯入管線"
+    mappings:
+      name: "對應"
+    analyzers:
+      name: "文字分析"
+    search-plugins:
+      name: "搜尋"
+    query-dsl:
+      name: "Query DSL"
+    sql-and-ppl:
+      name: "SQL 與 PPL"
+    aggregations:
+      name: "彙總"
+    scripting:
+      name: "指令碼"
+    vector-search:
+      name: "向量搜尋"
+    ml-commons-plugin:
+      name: "機器學習"
+    ai-agent-integrations:
+      name: "AI 代理程式整合"
+    automating-configurations:
+      name: "自動化設定"
+    dashboards:
+      name: "OpenSearch Dashboards"
+    observing-your-data:
+      name: "可觀測性"
+    security-analytics:
+      name: "安全性分析"
+    reporting:
+      name: "報告"
+    monitoring-your-cluster:
+      name: "監控您的叢集"
+    tools:
+      name: "工具"
+    api-reference:
+      name: "API 參考"
+    developer-documentation:
+      name: "開發人員文件"
+
+clients_collection:
+  collections:
+    clients:
+      name: "用戶端"
+
+migration_assistant_collection:
+  collections:
+    migration-assistant:
+      name: "OpenSearch 移轉小幫手"
+
+migration_assistant_classic_collection:
+  collections:
+    migration-assistant-classic:
+      name: "移轉小幫手 (Classic)"
+
+benchmark_collection:
+  collections:
+    benchmark:
+      name: "OpenSearch Benchmark"
+
+data_prepper_collection:
+  collections:
+    data-prepper: 
+      name: "OpenSearch Data Prepper"
+
+title: "OpenSearch 文件"
+description: >-
+  OpenSearch 的文件，OpenSearch 是一個 Apache 2.0 授權的搜尋、分析與視覺化套件，具備進階安全性、提醒功能、SQL 支援、自動化索引管理、深度效能分析等功能。
+lang: "zh-TW"
+
+exclude:
+  - README.md
+  - DEVELOPER_GUIDE.md
+  - style-guide/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - templates/
+  - .sass-cache/
+  - .jekyll-cache/
+  - .idea/
+  - .github/
+  - .bundle/
+  - _site/
+  - spec-insert
+  - release-notes
+  - translation
+  - scripts
+  - AGENTS.md
+  - requirements-translation.txt
+  - package.json
+  - package-lock.json
+  - licenses/inventory.json
+  - .translation-cache
+  - validation
+
+gh_edit_link_text: "在 GitHub 上編輯此頁面 (Edit this page on GitHub)"
+gh_edit_repository: "https://github.com/jiayun/opensearch-documentation-website-zh-tw"
+gh_edit_branch: "3.9-zh-tw"
+
+# Use the same pinned theme gem, without a remote download at build time.
+theme: just-the-docs
+remote_theme: null

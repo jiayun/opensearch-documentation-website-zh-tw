@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Stop analyzer
+title: "Stop 分析器"
 parent: Analyzers
 nav_order: 110
 ---
 
-# Stop analyzer
+# Stop 分析器
 
-The `stop` analyzer removes a predefined list of stopwords. This analyzer consists of a `lowercase` tokenizer and a `stop` token filter.
+`stop` 分析器會移除預先定義的停用詞清單。此分析器由 `lowercase` 斷詞器和 `stop` 詞元篩選器組成。
 
-## Parameters
+## 參數
 
-You can configure a `stop` analyzer with the following parameters.
+您可以使用下列參數設定 `stop` 分析器。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`stopwords` | Optional | String or list of strings | A string specifying a predefined list of stopwords (such as `_english_`) or an array specifying a custom list of stopwords. Default is `_english_`.
-`stopwords_path` | Optional | String | The path (absolute or relative to the config directory) to the file containing a list of stopwords.
+`stopwords` | 選用 | 字串或字串清單 | 指定預先定義之停用詞清單的字串 (例如 `_english_`)，或指定自訂停用詞清單的陣列。預設為 `_english_`。
+`stopwords_path` | 選用 | 字串 | 包含停用詞清單之檔案的路徑 (絕對路徑或相對於 config 目錄的路徑)。
 
-## Example
+## 範例
 
-Use the following command to create an index named `my_stop_index` with a `stop` analyzer:
+使用下列命令建立名為 `my_stop_index` 且使用 `stop` 分析器的索引：
 
 ```json
 PUT /my_stop_index
@@ -37,9 +38,9 @@ PUT /my_stop_index
 ```
 {% include copy-curl.html %}
 
-## Configuring a custom analyzer
+## 設定自訂分析器
 
-Use the following command to configure an index with a custom analyzer that is equivalent to a `stop` analyzer:
+使用下列命令為索引設定與 `stop` 分析器等效的自訂分析器：
 
 ```json
 PUT /my_custom_stop_analyzer_index
@@ -68,9 +69,9 @@ PUT /my_custom_stop_analyzer_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用該分析器所產生的詞元：
 
 ```json
 POST /my_custom_stop_analyzer_index/_analyze
@@ -81,7 +82,7 @@ POST /my_custom_stop_analyzer_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {
@@ -118,9 +119,9 @@ The response contains the generated tokens:
 }
 ```
 
-# Specifying stopwords
+# 指定停用詞
 
-The following example request specifies a custom list of stopwords:
+下列範例請求會指定自訂停用詞清單：
 
 ```json
 PUT /my_new_custom_stop_index
@@ -147,7 +148,7 @@ PUT /my_new_custom_stop_index
 ```
 {% include copy-curl.html %}
 
-The following example request specifies a path to the file containing stopwords:
+下列範例請求會指定包含停用詞之檔案的路徑：
 
 ```json
 PUT /my_new_custom_stop_index
@@ -174,4 +175,4 @@ PUT /my_new_custom_stop_index
 ```
 {% include copy-curl.html %}
 
-In this example, the file is located in the config directory. You can also specify a full path to the file.
+在此範例中，檔案位於 config 目錄中。您也可以指定檔案的完整路徑。

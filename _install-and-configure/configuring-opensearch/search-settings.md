@@ -1,72 +1,73 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search settings
+title: "搜尋設定"
 parent: Configuring OpenSearch
 nav_order: 80
 ---
 
-# Search settings
+# 搜尋設定
 
-OpenSearch provides settings that control how search requests run across the cluster, including request limits, timeouts and cancellation, scroll and Point in Time (PIT) context lifetimes, and query and aggregation optimizations.
+OpenSearch 提供多項設定，用於控制搜尋請求在叢集中的執行方式，包括請求限制、逾時與取消、scroll 與 Point in Time (PIT) 內容的存留時間，以及查詢與彙總的最佳化。
 
-To learn how to apply these settings, see [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/).
+若要了解如何套用這些設定，請參閱[設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/)。
 
-OpenSearch supports the following search settings:
+OpenSearch 支援下列搜尋設定：
 
-- `search.max_buckets` (Dynamic, integer): The maximum number of aggregation buckets allowed in a single response. Default is `65535`. 
+- `search.max_buckets`（動態，整數）：單一回應中允許的彙總桶 (bucket) 數量上限。預設為 `65535`。
 
-- `search.phase_took_enabled` (Dynamic, Boolean): Enables returning phase-level `took` time values in search responses. Default is `false`. 
+- `search.phase_took_enabled`（動態，布林值）：啟用在搜尋回應中傳回階段層級的 `took` 時間值。預設為 `false`。
 
-- `search.allow_expensive_queries` (Dynamic, Boolean): Allows or disallows expensive queries. For more information, see [Expensive queries]({{site.url}}{{site.baseurl}}/query-dsl/index/#expensive-queries).
+- `search.allow_expensive_queries`（動態，布林值）：允許或禁止高成本查詢。如需詳細資訊，請參閱[高成本查詢]({{site.url}}{{site.baseurl}}/query-dsl/index/#expensive-queries)。
 
-- `search.query_rewriting.enabled` (Dynamic, Boolean): Enables query rewriting optimizations that can improve search performance by transforming queries into more efficient forms. When enabled, OpenSearch can automatically optimize certain query patterns, such as merging multiple `term` queries on the same field into a single `terms` query. Default is `false`.
+- `search.query_rewriting.enabled`（動態，布林值）：啟用查詢改寫最佳化，可將查詢轉換為更有效率的形式，以提升搜尋效能。啟用後，OpenSearch 可以自動最佳化特定查詢模式，例如將針對同一欄位的多個 `term` 查詢合併為單一 `terms` 查詢。預設為 `false`。
 
-- `search.query_rewriting.terms_threshold` (Dynamic, integer): Controls the threshold for the number of `term` queries on the same field that triggers the `terms` merging rewriter to combine them into a single `terms` query. For example, if set to `16` (default), when 16 or more term queries target the same field within a Boolean clause, they will be merged into a single `terms` query for better performance. Minimum is `2`. Default is `16`.
+- `search.query_rewriting.terms_threshold`（動態，整數）：控制觸發 `terms` 合併改寫器的門檻值，即針對同一欄位的 `term` 查詢數量達到此值時，會將其合併為單一 `terms` 查詢。例如，若設為 `16`（預設值），當布林子句中有 16 個以上的 term 查詢針對同一欄位時，這些查詢會合併為單一 `terms` 查詢，以獲得更佳的效能。最小值為 `2`。預設為 `16`。
 
-- `search.query.max_query_string_length` (Dynamic, integer): The maximum allowed length for query string queries. This setting helps prevent performance issues by rejecting query strings longer than the specified limit. Default is `32000`.
+- `search.query.max_query_string_length`（動態，整數）：query string 查詢允許的最大長度。此設定會拒絕超過指定限制的查詢字串，有助於避免效能問題。預設為 `32000`。
 
-- `search.default_allow_partial_results` (Dynamic, Boolean):  A cluster-level setting that allows returning partial search results if a request times out or a shard fails. If a search request contains an `allow_partial_search_results` parameter, the parameter takes precedence over this setting. Default is `true`. 
+- `search.default_allow_partial_results`（動態，布林值）：叢集層級設定，允許在請求逾時或分片失敗時傳回部分搜尋結果。若搜尋請求包含 `allow_partial_search_results` 參數，則該參數的優先順序高於此設定。預設為 `true`。
 
-- `search.node_level_query_fanout.enabled` (Dynamic, Boolean): Enables node-level query fan-out. When enabled, the coordinating node groups shard-level `query_then_fetch` query and `can_match` requests by target data node instead of sending one transport request per shard. If a search request contains the `node_level_query_fanout` parameter, the parameter takes precedence over this setting. Default is `false`.
+- `search.node_level_query_fanout.enabled`（動態，布林值）：啟用節點層級的查詢扇出 (fan-out)。啟用後，協調節點會依目標資料節點將分片層級的 `query_then_fetch` 查詢與 `can_match` 請求分組，而不是針對每個分片各傳送一個傳輸請求。若搜尋請求包含 `node_level_query_fanout` 參數，則該參數的優先順序高於此設定。預設為 `false`。
 
 <p id="index-pruning-settings"></p>
 
-- `search.index_pruning.enabled` (Dynamic, Boolean): Enables index-level search pruning, which runs on the coordinating node before any shard-level request. For more information, see [Index-level search pruning]({{site.url}}{{site.baseurl}}/search-plugins/index-level-search-pruning/). Default is `false`.
+- `search.index_pruning.enabled`（動態，布林值）：啟用索引層級搜尋修剪，此修剪會在任何分片層級請求之前於協調節點上執行。如需詳細資訊，請參閱[索引層級搜尋修剪]({{site.url}}{{site.baseurl}}/search-plugins/index-level-search-pruning/)。預設為 `false`。
 
-- `search.index_pruning.min_shards` (Dynamic, integer): The minimum number of active shard groups (a primary shard and its replicas count as one group) required before OpenSearch attempts index-level search pruning. Default is `128`.
+- `search.index_pruning.min_shards`（動態，整數）：OpenSearch 嘗試執行索引層級搜尋修剪前所需的作用中分片群組數量下限（一個主要分片及其副本計為一個群組）。預設為 `128`。
 
-- `search.index_pruning.fields` (Dynamic, list): The query fields eligible for index-level search pruning. OpenSearch extracts range constraints only for these fields. Default is `[]`.
+- `search.index_pruning.fields`（動態，清單）：可進行索引層級搜尋修剪的查詢欄位。OpenSearch 只會針對這些欄位擷取範圍限制條件。預設為 `[]`。
 
-- `search.cancel_after_time_interval` (Dynamic, time unit): A cluster-level setting that sets the default timeout for all search requests at the coordinating node level. After the specified time has been reached, the request is stopped and all associated tasks are canceled. Default is `-1` (no timeout).
+- `search.cancel_after_time_interval`（動態，時間單位）：叢集層級設定，用於在協調節點層級為所有搜尋請求設定預設逾時。達到指定時間後，請求會停止，且所有相關工作都會取消。預設為 `-1`（不逾時）。
 
-- `search.default_search_timeout` (Dynamic, time unit): A cluster-level setting that specifies the maximum amount of time that a search request can run before the request is canceled at the shard-level. If the `timeout` interval is specified in the search request, that interval takes precedence over the configured setting. Default is `-1`.
+- `search.default_search_timeout`（動態，時間單位）：叢集層級設定，指定搜尋請求在分片層級遭到取消前可執行的最長時間。若搜尋請求中指定了 `timeout` 間隔，則該間隔的優先順序高於已設定的設定值。預設為 `-1`。
 
-- `search.default_keep_alive` (Dynamic, time unit): Specifies the default keep alive value for scroll and Point in Time (PIT) searches. Because a request may land on a shard multiple times (for example, during the query and fetch phases), OpenSearch opens a _request context_ that exists for the full duration of the request to ensure consistency of the shard state for each individual shard request. In a standard search, once the fetch phase completes, the request context is closed. For a scroll or a PIT search, OpenSearch keeps the request context open until explicitly closed (or until the keep alive time is reached). A background thread periodically checks all open scroll and PIT contexts and deletes the ones that have exceeded their keep alive timeout. The `search.keep_alive_interval` setting specifies how frequently the contexts are checked for expiration. The `search.default_keep_alive` setting is the default deadline for expiration. A scroll or PIT request can explicitly specify the keep alive, which takes precedence over this setting. Default is `5m`.
+- `search.default_keep_alive`（動態，時間單位）：指定 scroll 與 Point in Time (PIT) 搜尋的預設 keep alive 值。由於一個請求可能會多次到達同一分片（例如在查詢與擷取階段期間），OpenSearch 會開啟一個在請求整個期間都存在的_請求內容_，以確保每個個別分片請求的分片狀態一致。在標準搜尋中，擷取階段完成後，請求內容即會關閉。對於 scroll 或 PIT 搜尋，OpenSearch 會讓請求內容保持開啟，直到明確關閉為止（或直到達到 keep alive 時間）。背景執行緒會定期檢查所有開啟中的 scroll 與 PIT 內容，並刪除已超過 keep alive 逾時的內容。`search.keep_alive_interval` 設定指定檢查內容是否到期的頻率。`search.default_keep_alive` 設定為預設的到期期限。scroll 或 PIT 請求可以明確指定 keep alive，其優先順序高於此設定。預設為 `5m`。
 
-- `search.keep_alive_interval` (Static, time unit): Determines the interval at which OpenSearch checks for request contexts that have exceeded their keep alive limit. Default is `1m`.
+- `search.keep_alive_interval`（靜態，時間單位）：決定 OpenSearch 檢查已超過 keep alive 限制之請求內容的間隔。預設為 `1m`。
 
-- `search.max_keep_alive` (Dynamic, time unit): Specifies the maximum keep alive value. The `max_keep_alive` setting is used as a safety check against the other `keep_alive` settings (for example, `default_keep_alive`) and request-level keep alive settings (for scroll and PIT contexts). If a request exceeds the `max_keep_alive` value in either case, the operation will fail. Default is `24h`.
+- `search.max_keep_alive`（動態，時間單位）：指定 keep alive 值的上限。`max_keep_alive` 設定可作為安全檢查，用來檢查其他 `keep_alive` 設定（例如 `default_keep_alive`）以及請求層級的 keep alive 設定（適用於 scroll 與 PIT 內容）。無論哪種情況，若請求超過 `max_keep_alive` 值，作業都會失敗。預設為 `24h`。
 
-- `search.low_level_cancellation` (Dynamic, Boolean): Enables low-level request cancellation. Lucene's classic timeout mechanism only checks the time while collecting search results. However, an expensive query, such as wildcard or prefix, can take a long time to expand before starting to collect results. In this case, the query can run for a period of time that is greater than the timeout value. The low-level cancellation mechanism addresses this scenario by timing out not only while collecting search results but also during the query expansion phase or before performing any Lucene operation. Default is `true`.
+- `search.low_level_cancellation`（動態，布林值）：啟用低層級請求取消。Lucene 的傳統逾時機制只會在收集搜尋結果時檢查時間。然而，高成本查詢（例如 wildcard 或 prefix）在開始收集結果之前，可能需要很長的時間進行展開。在此情況下，查詢的執行時間可能會超過逾時值。低層級取消機制可處理此情境，不僅在收集搜尋結果時會逾時，在查詢展開階段或執行任何 Lucene 作業之前也會逾時。預設為 `true`。
 
-- `search.max_open_scroll_context` (Dynamic, integer): A node-level setting that specifies the maximum number of open scroll contexts for the node. Default is `500`.
+- `search.max_open_scroll_context`（動態，整數）：節點層級設定，指定節點開啟中的 scroll 內容數量上限。預設為 `500`。
 
-- `search.request_stats_enabled` (Dynamic, Boolean): Turns on node-level collection of phase-timing statistics from the perspective of the coordinating node. The request-level statistics keep track of how long (in total) search requests spend in each of the different search phases. You can retrieve these counters using the [Nodes Stats API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/). Default is `false`.
+- `search.request_stats_enabled`（動態，布林值）：從協調節點的角度開啟節點層級的階段計時統計資料收集。請求層級統計資料會追蹤搜尋請求在各個不同搜尋階段中（總共）花費的時間。您可以使用 [Nodes Stats API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/) 擷取這些計數器。預設為 `false`。
 
-- `search.highlight.term_vector_multi_value` (Static, Boolean): Specifies to highlight snippets across values of a multi-valued field. Default is `true`.
+- `search.highlight.term_vector_multi_value`（靜態，布林值）：指定跨多值欄位的各個值來醒目提示片段。預設為 `true`。
 
-- `search.max_aggregation_rewrite_filters` (Dynamic, integer): Determines the maximum number of rewrite filters allowed during aggregation. Set this value to `0` to disable the filter rewrite optimization for aggregations. This is an experimental feature and may change or be removed in future versions.
+- `search.max_aggregation_rewrite_filters`（動態，整數）：決定彙總期間允許的改寫篩選條件數量上限。將此值設為 `0` 可停用彙總的篩選條件改寫最佳化。這是實驗性功能，未來版本中可能會變更或移除。
 
-- `search.dynamic_pruning.cardinality_aggregation.max_allowed_cardinality` (Dynamic, integer): Determines the threshold for applying dynamic pruning in cardinality aggregation. If a field's cardinality exceeds this threshold, the aggregation reverts to the default method. This is an experimental feature and may change or be removed in future versions.
+- `search.dynamic_pruning.cardinality_aggregation.max_allowed_cardinality`（動態，整數）：決定在 cardinality 彙總中套用動態修剪的門檻值。若欄位的基數超過此門檻值，彙總會改回使用預設方法。這是實驗性功能，未來版本中可能會變更或移除。
 
-- `search.aggregation.bucket_selection_strategy_factor` (Dynamic, integer): Controls the algorithm used to select top buckets in terms aggregations. This factor determines when to use a priority queue (better for small result sets) and when to use quick select (better for large result sets). The strategy is chosen based on the condition `size * factor < bucketsInOrd`. A factor of `0` always uses priority queue, while higher values favor quick select for larger result sets. Valid values are `0` to `10` (inclusive). Default is `5`.
+- `search.aggregation.bucket_selection_strategy_factor`（動態，整數）：控制在 terms 彙總中用於選取前幾名桶的演算法。此係數決定何時使用優先佇列（較適合小型結果集），以及何時使用快速選擇（較適合大型結果集）。策略會依據條件 `size * factor < bucketsInOrd` 選擇。係數為 `0` 時一律使用優先佇列，而較高的值則會在較大的結果集中偏向使用快速選擇。有效值為 `0` 到 `10`（含）。預設為 `5`。
 
-- `search.keyword_index_or_doc_values_enabled` (Dynamic, Boolean): Determines whether to use the index or doc values when running `multi_term` queries on `keyword` fields. Default value is `false`.
+- `search.keyword_index_or_doc_values_enabled`（動態，布林值）：決定在 `keyword` 欄位上執行 `multi_term` 查詢時，要使用索引還是 doc values。預設值為 `false`。
 
-## Scripting settings
+## 指令碼設定
 
-Scripts used in searches are governed by the script size, compilation, and caching settings. For more information, see [Script and resource settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/script-and-resource-settings/).
+搜尋中使用的指令碼受指令碼大小、編譯與快取設定所管控。如需詳細資訊，請參閱[指令碼與資源設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/script-and-resource-settings/)。
 
-## Point in Time settings
+## Point in Time 設定
 
-For information about PIT settings, see [PIT settings]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/point-in-time/#pit-settings).
+如需 PIT 設定的相關資訊，請參閱 [PIT 設定]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/point-in-time/#pit-settings)。

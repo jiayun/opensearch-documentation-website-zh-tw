@@ -1,33 +1,34 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Variable width histogram
+title: "可變寬度直方圖"
 parent: Bucket aggregations
 nav_order: 210
 ---
 
-# Variable width histogram aggregation
+# 可變寬度直方圖彙總
 
-The `variable_width_histogram` aggregation divides a numeric field's values into a target number of buckets whose widths adapt to the data. Bucket boundaries are derived by clustering the values, so dense parts of the value range are split into narrow buckets and sparse parts are covered by wide ones. Use this aggregation for unevenly distributed data, for which a fixed `interval` in a [`histogram`]({{site.url}}{{site.baseurl}}/aggregations/bucket/histogram/) aggregation produces either many nearly empty buckets or a few buckets holding almost every document.
+`variable_width_histogram` 彙總將數值欄位的值劃分為目標數量的桶，其寬度會根據資料自動調整。桶的邊界是透過對值進行分群 (clustering) 來衍生的，因此值範圍中較密集的部分會被劃分為窄桶，而稀疏的部分則由寬桶覆蓋。請將此彙總用於分佈不均的資料，對於這類資料，在 [`histogram`]({{site.url}}{{site.baseurl}}/aggregations/bucket/histogram/) 彙總中使用固定的 `interval` 會導致產生許多幾乎為空的桶，或者只有少數幾個桶包含幾乎所有文件。
 
-Each shard buffers the first `initial_buffer` values it collects, sorts them, and divides them into a number of initial clusters equal to three-quarters of `shard_size`. It assigns each remaining value to the nearest cluster, unless the value lies more than twice the average distance between neighboring cluster centroids away from all of them and the shard holds fewer than `shard_size` clusters, in which case the shard starts a new cluster. The coordinating node collects the clusters from all shards and repeatedly merges the two clusters with the closest centroids until `buckets` remain.
+每個分片會緩衝其收集到的前 `initial_buffer` 個值，對其進行排序，並將其劃分為數量等於 `shard_size` 四分之三的初始分群。它將每個剩餘的值分配給最近的分群，除非該值與所有分群中心點 (centroids) 之間的距離都超過相鄰分群中心點平均距離的兩倍，且該分片擁有的分群數量少於 `shard_size`，在這種情況下，分片會啟動一個新分群。協調節點會收集所有分片的分群，並重複合併中心點最近的兩個分群，直到剩下 `buckets` 個為止。
 
-## Parameters
+## 參數
 
-The `variable_width_histogram` aggregation takes the following parameters.
+`variable_width_histogram` 彙總使用以下參數。
 
-| Parameter | Required/Optional | Data type | Description |
+| 參數 | 必要/選用 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `field` | Required | String | The numeric field to aggregate on. Provide either `field` or `script`. |
-| `buckets` | Optional | Integer | The target number of buckets. Must be greater than `0` and cannot exceed the `search.max_buckets` setting. The response can contain fewer buckets than requested when the values do not separate into that many clusters. Default is `10`. |
-| `shard_size` | Optional | Integer | The number of clusters each shard builds before its results are sent to the coordinating node. Must be greater than `1`. Larger values produce smaller clusters on each shard, which reduces overlap between the final buckets and places their boundaries more accurately, but increases both the memory used on the shards and the volume of data transferred to the coordinating node. Default is `buckets` multiplied by `50`. |
-| `initial_buffer` | Optional | Integer | The number of values each shard buffers before it computes the initial cluster boundaries. Must be greater than or equal to `buckets`. A larger buffer derives the initial boundaries from a more representative sample of the data but uses more memory. Default is the smaller of `shard_size` multiplied by `10` and `50000`. |
-| `script` | Optional | Object | A script that produces the numeric value to aggregate on. Provide either `field` or `script`. |
-| `missing` | Optional | Number | The value to assign to documents missing the target field. By default, missing documents are ignored. |
-| `format` | Optional | String | A [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) formatting string applied to `min`, `key`, and `max`. Returns the formatted output in the additional `min_as_string`, `key_as_string`, and `max_as_string` response fields. |
+| `field` | 必要 | 字串 | 要進行彙總的數值欄位。請提供 `field` 或 `script`。 |
+| `buckets` | 選用 | 整數 | 目標桶數量。必須大於 `0` 且不能超過 `search.max_buckets` 設定。當值無法分開成這麼多個分群時，回應中包含的桶數量可能會少於請求的數量。預設值為 `10`。 |
+| `shard_size` | 選用 | 整數 | 每個分片在將結果發送到協調節點之前建立的分群數量。必須大於 `1`。較大的值會在每個分片上產生較小的分群，這能減少最終桶之間的重疊，並更準確地定位其邊界，但會增加分片上使用的記憶體以及傳輸到協調節點的資料量。預設值為 `buckets` 乘以 `50`。 |
+| `initial_buffer` | 選用 | 整數 | 每個分片在計算初始分群邊界之前緩衝的值數量。必須大於或等於 `buckets`。較大的緩衝區能從更具代表性的資料樣本中衍生出初始邊界，但會使用更多記憶體。預設值為 `shard_size` 乘以 `10` 與 `50000` 兩者中的較小值。 |
+| `script` | 選用 | 物件 | 用於產生要彙總之數值的指令碼。請提供 `field` 或 `script`。 |
+| `missing` | 選用 | 數字 | 分配給缺失目標欄位之文件的值。預設情況下，會忽略缺失此欄位的文件。 |
+| `format` | 選用 | 字串 | 應用於 `min`、`key` 和 `max` 的 [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) 格式化字串。在額外的 `min_as_string`、`key_as_string` 和 `max_as_string` 回應欄位中返回格式化後的輸出。 |
 
-## Example
+## 範例
 
-The following example groups ecommerce order totals into five variable-width buckets:
+以下範例將電子商務訂單總額分組為五個可變寬度的桶：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -45,7 +46,7 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -105,11 +106,11 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 }
 ```
 
-The buckets covering the crowded low end of the price range are a few tens of dollars wide, whereas the last bucket spans nearly $2,000 to cover the few highest orders.
+覆蓋價格範圍低端密集區域的桶寬度僅為數十美元，而最後一個桶則跨越近 2,000 美元，以覆蓋少數最高金額的訂單。
 
-## Example: Nesting a subaggregation
+## 範例：巢狀子彙總
 
-Like other bucket aggregations, `variable_width_histogram` accepts subaggregations. The following example computes the average number of items ordered in each price bucket:
+與其他桶彙總一樣，`variable_width_histogram` 接受子彙總。以下範例計算每個價格桶中訂購項目的平均數量：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -134,7 +135,7 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the subaggregation result in each bucket:
+回應中包含每個桶的子彙總結果：
 
 ```json
 {
@@ -174,35 +175,35 @@ The response contains the subaggregation result in each bucket:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response body fields.
+下表列出了回應本文的欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `buckets` | Array | The variable-width buckets, sorted by `key` in ascending order. |
-| `buckets.min` | Double | The lower bound of the bucket. |
-| `buckets.key` | Double | The mean of the values in the bucket. |
-| `buckets.max` | Double | The upper bound of the bucket. |
-| `buckets.doc_count` | Integer | The number of documents in the bucket. |
-| `buckets.min_as_string` | String | The lower bound of the bucket, formatted according to `format`. Returned only when `format` is set. |
-| `buckets.key_as_string` | String | The mean of the values in the bucket, formatted according to `format`. Returned only when `format` is set. |
-| `buckets.max_as_string` | String | The upper bound of the bucket, formatted according to `format`. Returned only when `format` is set. |
+| `buckets` | 陣列 | 可變寬度的桶，按 `key` 升序排序。 |
+| `buckets.min` | 雙精度浮點數 | 桶的下限。 |
+| `buckets.key` | 雙精度浮點數 | 桶中值的平均值。 |
+| `buckets.max` | 雙精度浮點數 | 桶的上限。 |
+| `buckets.doc_count` | 整數 | 桶中的文件數量。 |
+| `buckets.min_as_string` | 字串 | 根據 `format` 格式化後的桶下限。僅在設定 `format` 時返回。 |
+| `buckets.key_as_string` | 字串 | 根據 `format` 格式化後的桶中值平均值。僅在設定 `format` 時返回。 |
+| `buckets.max_as_string` | 字串 | 根據 `format` 格式化後的桶上限。僅在設定 `format` 時返回。 |
 
-## Limitations
+## 限制
 
-The `variable_width_histogram` aggregation has the following limitations:
+`variable_width_histogram` 彙總有以下限制：
 
-- The aggregation cannot be nested inside a parent aggregation that collects more than one bucket. A [`terms`]({{site.url}}{{site.baseurl}}/aggregations/bucket/terms/), [`histogram`]({{site.url}}{{site.baseurl}}/aggregations/bucket/histogram/), [`range`]({{site.url}}{{site.baseurl}}/aggregations/bucket/range/), or [`filters`]({{site.url}}{{site.baseurl}}/aggregations/bucket/filters/) parent returns the following error:
+- 該彙總不能巢狀在收集多個桶的父彙總內部。使用 [`terms`]({{site.url}}{{site.baseurl}}/aggregations/bucket/terms/)、[`histogram`]({{site.url}}{{site.baseurl}}/aggregations/bucket/histogram/)、[`range`]({{site.url}}{{site.baseurl}}/aggregations/bucket/range/) 或 [`filters`]({{site.url}}{{site.baseurl}}/aggregations/bucket/filters/) 作為父彙總會返回以下錯誤：
 
   ```
   [variable_width_histogram] cannot be nested inside an aggregation that collects more than a single bucket.
   ```
 
-  Single-bucket parents, such as [`filter`]({{site.url}}{{site.baseurl}}/aggregations/bucket/filter/), [`global`]({{site.url}}{{site.baseurl}}/aggregations/bucket/global/), and [`nested`]({{site.url}}{{site.baseurl}}/aggregations/bucket/nested/), are supported.
-- The aggregation cannot run as a child of a [`nested`]({{site.url}}{{site.baseurl}}/aggregations/bucket/nested/) aggregation when it has a subaggregation that requires document scores, such as [`top_hits`]({{site.url}}{{site.baseurl}}/aggregations/metric/top-hits/). This combination returns an error.
-- The `keyed` parameter is not supported, so buckets are always returned as an array.
-- The `min` and `max` bounds are approximate. While merging clusters, OpenSearch can leave two clusters whose bounds overlap as separate buckets if their centroids are far apart. It then sets the boundary between the two buckets to the midpoint of the overlap, so a bound is not necessarily a value present in the data, and the lower bucket holds more values than its bounds indicate while the upper bucket holds fewer. Lowering a bucket's `max` in this way can place it below the bucket's own `key`, which is the mean of the values in the bucket. The fourth bucket in the first example response reports a `key` of `318.4` against a `max` of `308.0` for this reason. This merging step runs on a single-shard index as well as on a multi-shard one.
-- Buckets are not contiguous. Each bucket's bounds are the smallest and largest values it holds, so a gap in the data appears as a gap between adjacent buckets. In the subaggregation example response, one bucket ends at `370.0` and the next begins at `393.0`.
-- Bucket bounds are sensitive to outliers. A few extreme values stretch a bucket across a wide range of the data: the last bucket in the first example response spans `308.0` to `2250.0` to hold 8 orders.
-- Bucket boundaries depend on the order in which each shard collects values, so they can change as segments merge or as documents are added, even when the value distribution stays the same.
+  支援單桶父彙總，例如 [`filter`]({{site.url}}{{site.baseurl}}/aggregations/bucket/filter/)、[`global`]({{site.url}}{{site.baseurl}}/aggregations/bucket/global/) 和 [`nested`]({{site.url}}{{site.baseurl}}/aggregations/bucket/nested/)。
+- 當該彙總具有需要文件分數的子彙總（例如 [`top_hits`]({{site.url}}{{site.baseurl}}/aggregations/metric/top-hits/)）時，不能作為 [`nested`]({{site.url}}{{site.baseurl}}/aggregations/bucket/nested/) 彙總的子彙總執行。這種組合會返回錯誤。
+- 不支援 `keyed` 參數，因此桶始終以陣列形式返回。
+- `min` 和 `max` 邊界是近似值。在合併分群時，如果兩個分群的中心點相距較遠，OpenSearch 可能會將邊界重疊的兩個分群保留為獨立的桶。接著它會將兩個桶之間的邊界設定為重疊部分的中點，因此邊界不一定是資料中存在的值，且較低的桶包含的值比其邊界所示的更多，而較高的桶包含的值較少。以這種方式降低桶的 `max` 可能會使其低於桶自身的 `key`（即桶中值的平均值）。第一個範例回應中的第四個桶由於這個原因，報告的 `key` 為 `318.4`，而 `max` 為 `308.0`。此合併步驟在單分片索引和多分片索引上都會執行。
+- 桶是不連續的。每個桶的邊界是其包含的最小值和最大值，因此資料中的間隙會表現為相鄰桶之間的間隙。在子彙總範例回應中，一個桶在 `370.0` 結束，而下一個桶在 `393.0` 開始。
+- 桶邊界對離群值很敏感。少數極端值會使桶跨越寬廣的資料範圍：第一個範例回應中的最後一個桶跨越 `308.0` 到 `2250.0` 以包含 8 筆訂單。
+- 桶邊界取決於每個分片收集值的順序，因此即使值分佈保持不變，邊界也可能隨著分段 (segments) 合併或文件新增而改變。

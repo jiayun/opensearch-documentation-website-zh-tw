@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Pattern
 parent: Tokenizers
 nav_order: 100
 ---
 
-# Pattern tokenizer
+# Pattern 斷詞器
 
-The `pattern` tokenizer is a highly flexible tokenizer that allows you to split text into tokens based on a custom Java regular expression. Unlike the `simple_pattern` and `simple_pattern_split` tokenizers, which use Lucene regular expressions, the `pattern` tokenizer can handle more complex and detailed regex patterns, offering greater control over how the text is tokenized.
+`pattern` 斷詞器是一種高度靈活的斷詞器，可讓您根據自訂的 Java 規則運算式將文字分割為詞元。與使用 Lucene 規則運算式的 `simple_pattern` 和 `simple_pattern_split` 斷詞器不同，`pattern` 斷詞器能處理更複雜、更精細的規則運算式模式，讓您更能掌控文字的斷詞方式。
 
-## Example usage
+## 使用範例
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `pattern` tokenizer. The tokenizer splits text on `-`, `_`, or `.` characters:
+下列範例請求會建立名為 `my_index` 的新索引，並設定一個使用 `pattern` 斷詞器的分析器。此斷詞器會依據 `-`、`_` 或 `.` 字元分割文字：
 
 ```json
 PUT /my_index
@@ -44,9 +45,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -57,7 +58,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {
@@ -94,19 +95,19 @@ The response contains the generated tokens:
 }
 ```
 
-## Parameters
+## 參數
 
-The `pattern` tokenizer can be configured with the following parameters.
+`pattern` 斷詞器可使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`pattern` | Optional | String | The pattern used to split text into tokens, specified using a [Java regular expression](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html). Default is `\W+`.
-`flags` | Optional | String | Configures pipe-separated [flags](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#field.summary) to apply to the regular expression, for example, `"CASE_INSENSITIVE|MULTILINE|DOTALL"`. 
-`group` | Optional | Integer | Specifies the capture group to be used as a token. Default is `-1` (split on a match).
+`pattern` | 選用 | 字串 | 用來將文字分割為詞元的模式，以 [Java 規則運算式](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)指定。預設為 `\W+`。
+`flags` | 選用 | 字串 | 設定要套用至規則運算式、以管線符號分隔的[旗標](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#field.summary)，例如 `"CASE_INSENSITIVE|MULTILINE|DOTALL"`。 
+`group` | 選用 | 整數 | 指定要作為詞元的擷取群組。預設為 `-1`（依據相符項目分割）。
 
-## Example using a group parameter
+## 使用 group 參數的範例
 
-The following example request configures a `group` parameter that captures only the second group:
+下列範例請求設定了一個僅擷取第二個群組的 `group` 參數：
 
 ```json
 PUT /my_index_group2
@@ -132,7 +133,7 @@ PUT /my_index_group2
 ```
 {% include copy-curl.html %}
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器產生的詞元：
 
 ```json
 POST /my_index_group2/_analyze
@@ -143,7 +144,7 @@ POST /my_index_group2/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

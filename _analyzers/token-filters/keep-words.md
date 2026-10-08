@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Keep words
+title: "保留字詞"
 parent: Token filters
 nav_order: 190
 ---
 
-# Keep words token filter
+# 保留字詞詞元篩選器
 
-The `keep_words` token filter is designed to keep only certain words during the analysis process. This filter is useful if you have a large body of text but are only interested in certain keywords or terms.
+`keep_words` 詞元篩選器的用途是在分析過程中僅保留特定字詞。如果您有大量文字，但只關注其中的特定關鍵字或術語，此篩選器就很實用。
 
-## Parameters
+## 參數
 
-The `keep_words` token filter can be configured with the following parameters.
+您可以使用下列參數設定 `keep_words` 詞元篩選器。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`keep_words` |  Required if `keep_words_path` is not configured | List of strings | The list of words to keep.
-`keep_words_path` | Required if `keep_words` is not configured | String | The path to the file containing the list of words to keep.
-`keep_words_case` | Optional | Boolean | Whether to lowercase all words during comparison. Default is `false`.
+`keep_words` |  未設定 `keep_words_path` 時為必要 | 字串清單 | 要保留的字詞清單。
+`keep_words_path` | 未設定 `keep_words` 時為必要 | 字串 | 包含要保留之字詞清單的檔案路徑。
+`keep_words_case` | 選用 | 布林值 | 是否在比較時將所有字詞轉換為小寫。預設為 `false`。
  
 
-## Example
+## 範例
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `keep_words` filter:
+下列範例請求會建立名為 `my_index` 的新索引，並設定一個使用 `keep_words` 篩選器的分析器：
 
 ```json
 PUT my_index
@@ -48,9 +49,9 @@ PUT my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用該分析器所產生的詞元：
 
 ```json
 GET /my_index/_analyze
@@ -61,7 +62,7 @@ GET /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

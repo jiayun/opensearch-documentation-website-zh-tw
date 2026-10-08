@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Text analysis
+title: "文字分析"
 has_children: true
 nav_order: 5
 nav_exclude: true
@@ -13,74 +14,74 @@ redirect_from:
   - /analyzers/index/
 ---
 
-# Text analysis
+# 文字分析
 
-When you are searching documents using a full-text search, you want to receive all relevant results. If you're looking for "walk", you're interested in results that contain any form of the word, like "Walk", "walked", or "walking". To facilitate full-text search, OpenSearch uses text analysis.
+當您使用全文搜尋來搜尋文件時，您會希望取得所有相關的結果。如果您要找「walk」，您會對包含該字任何形式的結果感興趣，例如「Walk」、「walked」或「walking」。為了協助全文搜尋，OpenSearch 使用文字分析。
 
-The objective of text analysis is to split the unstructured free text content of the source document into a sequence of terms, which are then stored in an inverted index. Subsequently, when a similar text analysis is applied to a user's query, the resulting sequence of terms facilitates the matching of relevant source documents.
+文字分析的目的是將來源文件中非結構化的自由文字內容分割成一連串的詞彙 (term)，接著將這些詞彙儲存在反向索引中。之後，當對使用者的查詢套用類似的文字分析時，所產生的詞彙序列便有助於比對相關的來源文件。
 
-From a technical point of view, the text analysis process consists of several steps, some of which are optional:
+從技術角度來看，文字分析流程包含數個步驟，其中部分步驟為選用：
 
-1. Before the free text content can be split into individual words, it may be beneficial to refine the text at the character level. The primary aim of this optional step is to help the tokenizer (the subsequent stage in the analysis process) generate better tokens. This can include removal of markup tags (such as HTML) or handling specific character patterns (like replacing the &#x1F642; emoji with the text `:slightly_smiling_face:`).
+1. 在將自由文字內容分割成個別單字之前，先在字元層級精煉文字可能會有所幫助。此選用步驟的主要目的是協助斷詞器（分析流程的下一個階段）產生更好的詞元。這可能包括移除標記標籤（例如 HTML），或處理特定的字元模式（例如將 &#x1F642; 表情符號取代為文字 `:slightly_smiling_face:`）。
 
-2. The next step is to split the free text into individual words---_tokens_. This is performed by a _tokenizer_. For example, after tokenization, the sentence `Actions speak louder than words` is split into tokens `Actions`, `speak`, `louder`, `than`, and `words`.
+2. 下一步是將自由文字分割成個別單字---_詞元_。這是由 _斷詞器_ 執行。例如，經過斷詞後，句子 `Actions speak louder than words` 會被分割成詞元 `Actions`、`speak`、`louder`、`than` 和 `words`。
 
-3. The last step is to process individual tokens by applying a series of token filters. The aim is to convert each token into a predictable form that is directly stored in the index, for example, by converting them to lowercase or performing stemming (reducing the word to its root). For example, the token `Actions` becomes `action`, `louder` becomes `loud`, and `words` becomes `word`.
+3. 最後一步是套用一系列詞元篩選器來處理個別詞元。目的是將每個詞元轉換成可預測的形式並直接儲存在索引中，例如將詞元轉換成小寫，或執行詞幹提取（將單字還原為其字根）。例如，詞元 `Actions` 會變成 `action`，`louder` 會變成 `loud`，而 `words` 會變成 `word`。
 
-Although the terms ***token*** and ***term*** may sound similar and are occasionally used interchangeably, it is helpful to understand the difference between the two. In the context of Apache Lucene, each holds a distinct role. A ***token*** is created by a tokenizer during text analysis and often undergoes a number of additional modifications as it passes through the chain of token filters. Each token is associated with metadata that can be further used during the text analysis process. A ***term*** is a data value that is directly stored in the inverted index and is associated with much less metadata. During search, matching operates at the term level.
+儘管 ***token***（詞元）與 ***term***（詞彙）這兩個術語聽起來相似，有時也會交替使用，但了解兩者之間的差異會很有幫助。在 Apache Lucene 的語境中，兩者各自扮演不同的角色。***詞元*** 是斷詞器在文字分析期間建立的，在通過詞元篩選器鏈時，通常會經過多次額外的修改。每個詞元都與中繼資料相關聯，這些中繼資料可在文字分析流程中進一步使用。***詞彙*** 是直接儲存在反向索引中的資料值，關聯的中繼資料少得多。在搜尋期間，比對是在詞彙層級進行。
 {: .note}
 
-## Analyzers
+## 分析器
 
-In OpenSearch, the abstraction that encompasses text analysis is referred to as an _analyzer_. Each analyzer contains the following sequentially applied components:
+在 OpenSearch 中，涵蓋文字分析的抽象概念稱為 _分析器_。每個分析器都包含下列依序套用的元件：
 
-1. **Character filters**: First, a character filter receives the original text as a stream of characters and adds, removes, or modifies characters in the text. For example, a character filter can strip HTML characters from a string so that the text `<p><b>Actions</b> speak louder than <em>words</em></p>` becomes `\nActions speak louder than words\n`. The output of a character filter is a stream of characters.
+1. **字元篩選器**：首先，字元篩選器會以字元串流的形式接收原始文字，並在文字中新增、移除或修改字元。例如，字元篩選器可以從字串中移除 HTML 字元，使文字 `<p><b>Actions</b> speak louder than <em>words</em></p>` 變成 `\nActions speak louder than words\n`。字元篩選器的輸出是字元串流。
 
-1. **Tokenizer**: Next, a tokenizer receives the stream of characters that has been processed by the character filter and splits the text into individual _tokens_ (usually, words). For example, a tokenizer can split text on white space so that the preceding text becomes [`Actions`, `speak`, `louder`, `than`, `words`]. Tokenizers also maintain metadata about tokens, such as their starting and ending positions in the text. The output of a tokenizer is a stream of tokens.
+1. **斷詞器**：接著，斷詞器會接收經字元篩選器處理過的字元串流，並將文字分割成個別的 _詞元_（通常是單字）。例如，斷詞器可以依空白分割文字，使上述文字變成 [`Actions`, `speak`, `louder`, `than`, `words`]。斷詞器也會維護詞元的中繼資料，例如詞元在文字中的起始與結束位置。斷詞器的輸出是詞元串流。
 
-1. **Token filters**: Last, a token filter receives the stream of tokens from the tokenizer and adds, removes, or modifies tokens. For example, a token filter may lowercase the tokens so that `Actions` becomes `action`, remove stopwords like `than`, or add synonyms like `talk` for the word `speak`.
+1. **詞元篩選器**：最後，詞元篩選器會接收來自斷詞器的詞元串流，並新增、移除或修改詞元。例如，詞元篩選器可以將詞元轉換為小寫，使 `Actions` 變成 `action`；移除如 `than` 的停用詞；或為單字 `speak` 新增如 `talk` 的同義詞。
 
-An analyzer must contain exactly one tokenizer and may contain zero or more character filters and zero or more token filters.
+分析器必須只包含一個斷詞器，並且可以包含零個或多個字元篩選器，以及零個或多個詞元篩選器。
 {: .note}
 
-There is also a special type of analyzer called a ***normalizer***. A normalizer is similar to an analyzer except that it does not contain a tokenizer and can only include specific types of character filters and token filters. These filters can perform only character-level operations, such as character or pattern replacement, and cannot perform operations on the token as a whole. This means that replacing a token with a synonym or stemming is not supported. See [Normalizers]({{site.url}}{{site.baseurl}}/analyzers/normalizers/) for further details.
+另外還有一種特殊類型的分析器，稱為 ***正規化器***。正規化器與分析器類似，差別在於它不包含斷詞器，且只能包含特定類型的字元篩選器與詞元篩選器。這些篩選器只能執行字元層級的操作，例如字元或模式取代，無法對整個詞元執行操作。這表示不支援將詞元取代為同義詞或詞幹提取。如需更多詳細資訊，請參閱[正規化器]({{site.url}}{{site.baseurl}}/analyzers/normalizers/)。
 
-## Supported analyzers
+## 支援的分析器
 
-For a list of supported analyzers, see [Analyzers]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/index/).
+如需支援的分析器清單，請參閱[分析器]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/index/)。
 
-## Custom analyzers
+## 自訂分析器
 
-If needed, you can combine tokenizers, token filters, and character filters to create a custom analyzer. For more information, see [Creating a custom analyzer]({{site.url}}{{site.baseurl}}/analyzers/custom-analyzer/).
+如有需要，您可以組合斷詞器、詞元篩選器與字元篩選器來建立自訂分析器。如需更多資訊，請參閱[建立自訂分析器]({{site.url}}{{site.baseurl}}/analyzers/custom-analyzer/)。
 
-## Text analysis at indexing time and query time
+## 編製索引時與查詢時的文字分析
 
-OpenSearch performs text analysis on text fields when you index a document and when you send a search request. Depending on the time of text analysis, the analyzers used for it are classified as follows:
+OpenSearch 會在您將文件編製索引時以及傳送搜尋請求時，對文字欄位執行文字分析。依據文字分析的時機，所使用的分析器分類如下：
 
-- An _index analyzer_ performs analysis at indexing time: When you are indexing a [text]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) field, OpenSearch analyzes it before indexing it. For more information about ways to specify index analyzers, see [Index analyzers]({{site.url}}{{site.baseurl}}/analyzers/index-analyzers/).
+- _索引分析器_ 在編製索引時執行分析：當您為 [text]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 欄位編製索引時，OpenSearch 會在編製索引之前先分析該欄位。如需有關指定索引分析器方式的更多資訊，請參閱[索引分析器]({{site.url}}{{site.baseurl}}/analyzers/index-analyzers/)。
 
-- A _search analyzer_ performs analysis at query time: OpenSearch analyzes the query string when you run a full-text query on a text field. For more information about ways to specify search analyzers, see [Search analyzers]({{site.url}}{{site.baseurl}}/analyzers/search-analyzers/).
+- _搜尋分析器_ 在查詢時執行分析：當您對文字欄位執行全文查詢時，OpenSearch 會分析查詢字串。如需有關指定搜尋分析器方式的更多資訊，請參閱[搜尋分析器]({{site.url}}{{site.baseurl}}/analyzers/search-analyzers/)。
 
-In most cases, you should use the same analyzer at both indexing and search time because the text field and the query string will be analyzed in the same way and the resulting tokens will match as expected.
+在大多數情況下，您應該在編製索引與搜尋時使用相同的分析器，因為這樣文字欄位與查詢字串會以相同方式進行分析，所產生的詞元也會如預期般相符。
 {: .tip}
 
-### Example
+### 範例
 
-When you index a document that has a text field with the text `Actions speak louder than words`, OpenSearch analyzes the text and produces the following list of tokens: 
+當您將包含文字欄位且其文字為 `Actions speak louder than words` 的文件編製索引時，OpenSearch 會分析該文字並產生下列詞元清單：
 
-Text field tokens = [`action`, `speak`, `loud`, `than`, `word`]
+文字欄位詞元 = [`action`, `speak`, `loud`, `than`, `word`]
 
-When you search for documents that match the query `speaking loudly`, OpenSearch analyzes the query string and produces the following list of tokens:
+當您搜尋符合查詢 `speaking loudly` 的文件時，OpenSearch 會分析查詢字串並產生下列詞元清單：
 
-Query string tokens = [`speak`, `loud`]
+查詢字串詞元 = [`speak`, `loud`]
 
-Then OpenSearch compares each token in the query string against the list of text field tokens and finds that both lists contain the tokens `speak` and `loud`, so OpenSearch returns this document as part of the search results that match the query.
+接著，OpenSearch 會將查詢字串中的每個詞元與文字欄位詞元清單進行比較，發現兩份清單都包含詞元 `speak` 與 `loud`，因此 OpenSearch 會將此文件作為符合查詢的搜尋結果之一傳回。
 
-## Testing an analyzer
+## 測試分析器
 
-To test a built-in analyzer and view the list of tokens it generates when a document is indexed, you can use the [Analyze API]({{site.url}}{{site.baseurl}}/api-reference/analyze-apis/#apply-a-built-in-analyzer).
+若要測試內建分析器，並檢視將文件編製索引時其產生的詞元清單，您可以使用 [Analyze API]({{site.url}}{{site.baseurl}}/api-reference/analyze-apis/#apply-a-built-in-analyzer)。
 
-Specify the analyzer and the text to be analyzed in the request:
+在請求中指定分析器與要分析的文字：
 
 ```json
 GET /_analyze
@@ -91,11 +92,11 @@ GET /_analyze
 ```
 {% include copy-curl.html %}
 
-The following image shows the query string.
+下圖顯示查詢字串。
 
-![Query string with indexes]({{site.url}}{{site.baseurl}}/images/string-indices.png)
+![含索引位置的查詢字串]({{site.url}}{{site.baseurl}}/images/string-indices.png)
 
-The response contains each token and its start and end offsets that correspond to the starting index in the original string (inclusive) and the ending index (exclusive):
+回應包含每個詞元及其起始與結束位移，分別對應原始字串中的起始索引（包含）與結束索引（不包含）：
 
 ```json
 {
@@ -132,16 +133,16 @@ The response contains each token and its start and end offsets that correspond t
 }
 ```
 
-## Verifying analyzer settings
+## 驗證分析器設定
 
-To verify which analyzer is associated with which field, you can use the get mapping API operation:
+若要驗證哪個分析器與哪個欄位相關聯，您可以使用 get mapping API 操作：
 
 ```json
 GET /testindex/_mapping
 ```
 {% include copy-curl.html %}
 
-The response provides information about the analyzers for each field:
+回應會提供每個欄位的分析器資訊：
 
 ```json
 {
@@ -159,31 +160,31 @@ The response provides information about the analyzers for each field:
 }
 ```
 
-## Normalizers
+## 正規化器
 
-Tokenization divides text into individual terms, but it does not address variations in token forms. Normalization resolves these issues by converting tokens into a standard format. This ensures that similar terms are matched appropriately, even if they are not identical.
+斷詞會將文字分割成個別詞彙，但無法處理詞元形式的變化。正規化會將詞元轉換為標準格式來解決這些問題。這可確保相似的詞彙能適當地相符，即使它們並不完全相同。
 
-### Normalization techniques
+### 正規化技術
 
-The following normalization techniques can help address variations in token forms:
+下列正規化技術有助於處理詞元形式的變化：
 
-1. **Case normalization**: Converts all tokens to lowercase to ensure case-insensitive matching. For example, "Hello" is normalized to "hello".
+1. **大小寫正規化**：將所有詞元轉換為小寫，以確保不區分大小寫的比對。例如，「Hello」會正規化為「hello」。
 
-2. **Stemming**: Reduces words to their root form. For instance, "cars" is stemmed to "car" and "running" is normalized to "run".
+2. **詞幹提取**：將單字還原為其字根形式。例如，「cars」會提取詞幹為「car」，而「running」會正規化為「run」。
 
-3. **Synonym handling:** Treats synonyms as equivalent. For example, "jogging" and "running" can be indexed under a common term, such as "run".
+3. **同義詞處理：**將同義詞視為相等。例如，「jogging」與「running」可以在共同的詞彙（例如「run」）下編製索引。
 
-### Normalization
+### 正規化
 
-A search for `Hello` will match documents containing `hello` because of case normalization.
+由於大小寫正規化，搜尋 `Hello` 會比對到包含 `hello` 的文件。
 
-A search for `cars` will also match documents containing `car` because of stemming.
+由於詞幹提取，搜尋 `cars` 也會比對到包含 `car` 的文件。
 
-A query for `running` can retrieve documents containing `jogging` using synonym handling.
+透過同義詞處理，查詢 `running` 可以擷取包含 `jogging` 的文件。
 
-Normalization ensures that searches are not limited to exact term matches, allowing for more relevant results. For instance, a search for `Cars running` can be normalized to match `car run`.
+正規化可確保搜尋不受限於完全相符的詞彙，從而取得更相關的結果。例如，搜尋 `Cars running` 可以正規化以比對 `car run`。
 
-## Next steps
+## 後續步驟
 
-- Learn more about specifying [index analyzers]({{site.url}}{{site.baseurl}}/analyzers/index-analyzers/) and [search analyzers]({{site.url}}{{site.baseurl}}/analyzers/search-analyzers/).
-- See the list of [supported analyzers]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/index/).
+- 進一步了解如何指定[索引分析器]({{site.url}}{{site.baseurl}}/analyzers/index-analyzers/)與[搜尋分析器]({{site.url}}{{site.baseurl}}/analyzers/search-analyzers/)。
+- 請參閱[支援的分析器]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/index/)清單。

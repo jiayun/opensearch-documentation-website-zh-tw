@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using Dev Tools
+title: "使用 Dev Tools"
 parent: Exploring data
 nav_order: 20
 has_children: true
@@ -14,33 +15,33 @@ redirect_from:
   - /dashboards/dev-tools/
 ---
 
-# Using Dev Tools
+# 使用 Dev Tools
 
-The **Dev Tools** application in OpenSearch Dashboards provides tools for querying your cluster and testing queries and ingest patterns. 
+OpenSearch Dashboards 中的 **Dev Tools** 應用程式提供了用於查詢叢集以及測試查詢和匯入模式的工具。
 
-If you're new to the Dev Tools application, see [Run queries in the Dev Tools console]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-dev-tools/) for a hands-on introduction.
+如果您是第一次使用 Dev Tools 應用程式，請參閱 [在 Dev Tools 主控台執行查詢]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-dev-tools/) 以獲取實作入門介紹。
 {: .tip}
 
-## Navigating to Dev Tools
+## 導覽至 Dev Tools
 
-To open Dev Tools, select **Dev Tools** on the main OpenSearch Dashboards page, as shown in the following image.
+若要開啟 Dev Tools，請在 OpenSearch Dashboards 主頁面上選取 **Dev Tools**，如下圖所示。
 
-![Dev Tools console from main page]({{site.url}}{{site.baseurl}}/images/dev-tools/dev-tools-main.png)
+![從主頁面進入 Dev Tools 主控台]({{site.url}}{{site.baseurl}}/images/dev-tools/dev-tools-main.png)
 
-You can open Dev Tools from any other page by navigating to the main menu and selecting **Management** > **Dev Tools**, as shown in the following image.
+您也可以從任何其他頁面透過導覽至主選單並選取 **Management** > **Dev Tools** 來開啟 Dev Tools，如下圖所示。
 
-![Dev Tools console from all pages]({{site.url}}{{site.baseurl}}/images/dev-tools/dev-tools-left.png){: width="200" }
+![從所有頁面進入 Dev Tools 主控台]({{site.url}}{{site.baseurl}}/images/dev-tools/dev-tools-left.png){: width="200" }
 
-In installations with workspaces enabled, select the code icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/code-icon.png" class="inline-icon" alt="code icon"/>{:/}) in the lower-left corner of the navigation panel.
+在啟用了工作區 (workspaces) 的安裝環境中，請選取導覽面板左下角的程式碼圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/code-icon.png" class="inline-icon" alt="code icon"/>{:/})。
 
-## Using Dev Tools
+## 使用 Dev Tools
 
-The **Dev Tools** application is shown in the following image. 
+**Dev Tools** 應用程式如下圖所示。
 
-![Dev Tools Console application]({{site.url}}{{site.baseurl}}/images/dev-tools/dev-tools-console.png)
+![Dev Tools 主控台應用程式]({{site.url}}{{site.baseurl}}/images/dev-tools/dev-tools-console.png)
 
-Dev Tools contains the following applications:
+Dev Tools 包含以下應用程式：
 
-- [**Console**]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/console/) sends [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/) queries and other REST API requests to OpenSearch and displays the responses.
-- [**Grok Debugger**]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/grok-debugger/) builds and tests [Grok patterns]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/grok/) against sample log data before you use them in ingest pipelines.
-- [**Query Profiler**]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/query-profiler/) measures how long each part of a search query takes to run so that you can identify slow components.
+- [**Console**]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/console/) 可將 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/) 查詢和其他 REST API 請求發送到 OpenSearch 並顯示回應。
+- [**Grok Debugger**]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/grok-debugger/) 可在您將 [Grok 模式]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/grok/) 用於資料匯入管線之前，針對範例記錄資料建立並測試該模式。
+- [**Query Profiler**]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/query-profiler/) 可測量搜尋查詢中每個部分的執行時間，以便您識別效能緩慢的元件。

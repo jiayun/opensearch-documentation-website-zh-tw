@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reverse nested
+title: "反向巢狀"
 parent: Bucket aggregations
 nav_order: 160
 redirect_from:
   - /query-dsl/aggregations/bucket/reverse-nested/
 ---
 
-# Reverse nested aggregation
+# 反向巢狀彙總
 
-The `reverse_nested` aggregation allows you to aggregate on parent document fields from within a [`nested` aggregation]({{site.url}}{{site.baseurl}}/aggregations/bucket/nested/) context. When you group by a nested field, the aggregation context shifts to the nested documents. The `reverse_nested` aggregation breaks out of that nested context and joins back to the parent (or root) document, making parent fields accessible for further subaggregations.
+`reverse_nested` 彙總可讓您在 [`nested` 彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/nested/)情境中，針對父文件欄位進行彙總。當您依巢狀欄位分組時，彙總情境會轉移至巢狀文件。`reverse_nested` 彙總會跳出該巢狀情境，並連接回父文件（或根文件），讓後續的子彙總能夠存取父文件欄位。
 
-The `reverse_nested` aggregation must be defined inside a `nested` aggregation.
+`reverse_nested` 彙總必須定義在 `nested` 彙總內。
 {: .note}
 
-## Parameters
+## 參數
 
-The `reverse_nested` aggregation takes the following parameters.
+`reverse_nested` 彙總接受下列參數。
 
-| Parameter | Required/Optional | Data type | Description |
+| 參數 | 必要／選用 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `path` | Optional | String | The nested object path to join back to. Default is empty (joins back to the root document). For multi-level nesting, specify an intermediate nested path to join to that level instead of the root. |
+| `path` | 選用 | 字串 | 要連接回的巢狀物件路徑。預設為空（連接回根文件）。若有多層巢狀結構，請指定中間層的巢狀路徑，以連接至該層，而非根文件。 |
 
-## Example setup
+## 範例設定
 
-Create an index with issues containing nested comments:
+建立索引，其中的議題包含巢狀留言：
 
 ```json
 PUT /issues
@@ -46,7 +47,7 @@ PUT /issues
 ```
 {% include copy-curl.html %}
 
-Index some documents:
+將一些文件編製索引：
 
 ```json
 POST /issues/_bulk?refresh=true
@@ -59,9 +60,9 @@ POST /issues/_bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-## Example
+## 範例
 
-The following example finds the most active commenters and then uses `reverse_nested` to determine the issue tags with which each commenter is most involved. Without `reverse_nested`, the `tags` field would be inaccessible because the aggregation context is inside the nested `comments` objects:
+下列範例會找出最活躍的留言者，接著使用 `reverse_nested` 判斷每位留言者最常參與哪些標籤的議題。若沒有 `reverse_nested`，便無法存取 `tags` 欄位，因為彙總情境位於巢狀 `comments` 物件內：
 
 ```json
 GET /issues/_search
@@ -97,7 +98,7 @@ GET /issues/_search
 ```
 {% include copy-curl.html %}
 
-The response shows that Bob's comments appear on issues tagged with "ui" (2 issues), "enhancement" (1), and "mobile" (1):
+回應顯示，Bob 的留言出現在標記為「ui」（2 個議題）、「enhancement」（1 個）及「mobile」（1 個）的議題中：
 
 ```json
 {
@@ -195,9 +196,9 @@ The response shows that Bob's comments appear on issues tagged with "ui" (2 issu
 }
 ```
 
-## Example: Using the path parameter with multi-level nesting
+## 範例：在多層巢狀結構中使用 path 參數
 
-When documents contain nested objects within nested objects, you can use the `path` parameter to join back to an intermediate level rather than the root. The following example uses a forum-style structure where posts contain nested comments, and each comment contains nested replies:
+當文件中的巢狀物件內含其他巢狀物件時，您可以使用 `path` 參數連接回中間層，而非根文件。下列範例使用論壇式結構，其中貼文包含巢狀留言，而每則留言包含巢狀回覆：
 
 ```json
 PUT /forum_posts
@@ -223,7 +224,7 @@ PUT /forum_posts
 ```
 {% include copy-curl.html %}
 
-Index a post with comments and replies:
+將包含留言和回覆的貼文編製索引：
 
 ```json
 POST /forum_posts/_doc/1?refresh=true
@@ -237,7 +238,7 @@ POST /forum_posts/_doc/1?refresh=true
 ```
 {% include copy-curl.html %}
 
-The following aggregation groups by reply author, then uses `reverse_nested` with `"path": "comments"` to join back to the comment level (not the root) and find which comment authors each person replied to:
+下列彙總會依回覆作者分組，接著使用 `reverse_nested` 搭配 `"path": "comments"` 連接回留言層級（而非根文件），並找出每個人回覆了哪些留言作者：
 
 ```json
 GET /forum_posts/_search
@@ -272,7 +273,7 @@ GET /forum_posts/_search
 ```
 {% include copy-curl.html %}
 
-The response shows that Bob replied to Alice's comment, and Carol also replied to Alice's comment:
+回應顯示，Bob 回覆了 Alice 的留言，Carol 也回覆了 Alice 的留言：
 
 ```json
 {
@@ -345,10 +346,10 @@ The response shows that Bob replied to Alice's comment, and Carol also replied t
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response body fields.
+下表列出回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `doc_count` | Integer | The number of parent documents that the aggregation joined back to. This count reflects distinct parent documents, not nested documents. |
+| `doc_count` | 整數 | 彙總連接回的父文件數量。此計數反映的是相異父文件的數量，而非巢狀文件的數量。 |

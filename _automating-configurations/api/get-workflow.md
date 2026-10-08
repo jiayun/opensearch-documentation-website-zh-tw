@@ -1,47 +1,48 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get a workflow
+title: "取得工作流程"
 parent: Workflow APIs
 nav_order: 20
 ---
 
 # Get Workflow API
 
-The Get Workflow API retrieves the workflow template.   
+Get Workflow API 會擷取工作流程範本。   
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_flow_framework/workflow/{workflow_id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. 
+下表列出可用的路徑參數。 
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `workflow_id` | String | The ID of the workflow to be retrieved. Required. |
+| `workflow_id` | 字串 | 要擷取的工作流程 ID。必要。 |
 
-## Example request
+## 請求範例
 
 ```json
 GET /_plugins/_flow_framework/workflow/8xL8bowB8y25Tqfenm50
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-To retrieve a template in YAML format, specify `Content-Type: application/yaml` in the request header:
+若要擷取 YAML 格式的範本，請在請求標頭中指定 `Content-Type: application/yaml`：
 
 ```bash
 curl -XGET "http://localhost:9200/_plugins/_flow_framework/workflow/8xL8bowB8y25Tqfenm50" -H 'Content-Type: application/yaml'
 ```
 
-To retrieve a template in JSON format, specify `Content-Type: application/json` in the request header:
+若要擷取 JSON 格式的範本，請在請求標頭中指定 `Content-Type: application/json`：
 
 ```bash
 curl -XGET "http://localhost:9200/_plugins/_flow_framework/workflow/8xL8bowB8y25Tqfenm50" -H 'Content-Type: application/json'
 ```
 
-OpenSearch responds with the stored template containing the same content as the body of the [create workflow]({{site.url}}{{site.baseurl}}/automating-configurations/api/create-workflow/) request. The order of fields in the returned template may not exactly match the original template but will function identically.
+OpenSearch 會回傳已儲存的範本，其內容與[建立工作流程]({{site.url}}{{site.baseurl}}/automating-configurations/api/create-workflow/)請求的本文相同。回傳範本中的欄位順序可能與原始範本不完全一致，但功能相同。

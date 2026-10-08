@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Validate query
+title: "驗證查詢"
 nav_order: 87
 parent: Search APIs
 redirect_from: 
@@ -8,51 +9,51 @@ redirect_from:
 ---
 
 # Validate Query API
-**Introduced 1.0**
+**1.0 版推出**
 {: .label .label-purple }
 
-You can use the Validate Query API to validate a query without running it. The query can be sent as a path parameter or included in the request body.
+您可以使用 Validate Query API 在不執行查詢的情況下驗證查詢。查詢可以作為路徑參數傳送，也可以包含在請求本文中。
 
-## Endpoints
+## 端點
 
-The Validate Query API contains the following path:
+Validate Query API 包含下列路徑：
 
 ```json
 GET {index}/_validate/query
 ```
 
-## Path parameters
+## 路徑參數
 
-All path parameters are optional.
+所有路徑參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`index` | String | The index to validate the query against. If you don't specify an index or multiple indexes as part of the URL (or want to override the URL value for an individual search), you can include it here. Examples include `"logs-*"` and `["my-store", "sample_data_ecommerce"]`.
-`query` | Query object | The query using [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/).
+`index` | 字串 | 要據以驗證查詢的索引。如果您未在 URL 中指定一個或多個索引（或想要覆寫個別搜尋的 URL 值），可以在此處加入。範例包括 `"logs-*"` 和 `["my-store", "sample_data_ecommerce"]`。
+`query` | 查詢物件 | 使用 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/) 撰寫的查詢。
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`all_shards` | Boolean | When `true`, validation is run against [all shards](#rewrite-and-all_shards) instead of against one shard per index. Default is `false`.
-`allow_no_indices` | Boolean | Whether to ignore wildcards that don't match any indexes. Default is `true`.
-`allow_partial_search_results` | Boolean | Whether to return partial results if the request encounters an error or times out. Default is `true`.
-`analyzer` | String | The analyzer to use in the query string. This should only be used with the `q` option.
-`analyze_wildcard` | Boolean | Specifies whether to analyze wildcard and prefix queries. Default is `false`. 
-`default_operator` | String | Indicates whether the default operator for a string query should be `AND` or `OR`. Default is `OR`.
-`df` | String | The default field if a field prefix is not provided in the query string.
-`expand_wildcards` | String | Specifies the type of index that wildcard expressions can match. Supports comma-separated values. Valid values are `all` (match any index), `open` (match open, non-hidden indexes), `closed` (match closed, non-hidden indexes), `hidden` (match hidden indexes), and `none` (deny wildcard expressions). Default is `open`.
-`explain` | Boolean | Whether to return information about how OpenSearch computed the [document's score](#explain). Default is `false`.
-`ignore_unavailable` |  Boolean | Specifies whether to include missing or closed indexes in the response and ignores unavailable shards during the search request. Default is `false`.
-`lenient` | Boolean | Specifies whether OpenSearch should ignore format-based query failures (for example, as a result of querying a text field for an integer). Default is `false`. 
-`rewrite` | Determines how OpenSearch [rewrites](#rewrite) and scores multi-term queries. Valid values are `constant_score`, `scoring_boolean`, `constant_score_boolean`, `top_terms_N`, `top_terms_boost_N`, and `top_terms_blended_freqs_N`. Default is `constant_score`.
-`q` | String | A query in the Lucene string syntax.
+`all_shards` | 布林值 | 若為 `true`，則會針對[所有分片](#rewrite-and-all_shards)執行驗證，而非每個索引僅針對一個分片。預設為 `false`。
+`allow_no_indices` | 布林值 | 是否忽略不符合任何索引的萬用字元。預設為 `true`。
+`allow_partial_search_results` | 布林值 | 當請求發生錯誤或逾時時，是否傳回部分結果。預設為 `true`。
+`analyzer` | 字串 | 查詢字串中要使用的分析器。此參數僅應與 `q` 選項搭配使用。
+`analyze_wildcard` | 布林值 | 指定是否分析萬用字元查詢和前綴查詢。預設為 `false`。 
+`default_operator` | 字串 | 指出字串查詢的預設運算子應為 `AND` 或 `OR`。預設為 `OR`。
+`df` | 字串 | 查詢字串中未提供欄位前綴時使用的預設欄位。
+`expand_wildcards` | 字串 | 指定萬用字元運算式可比對的索引類型。支援以逗號分隔的值。有效值為 `all`（比對任何索引）、`open`（比對開啟且非隱藏的索引）、`closed`（比對已關閉且非隱藏的索引）、`hidden`（比對隱藏索引）以及 `none`（拒絕萬用字元運算式）。預設為 `open`。
+`explain` | 布林值 | 是否傳回 OpenSearch 如何計算[文件分數](#explain)的相關資訊。預設為 `false`。
+`ignore_unavailable` |  布林值 | 指定是否在回應中包含遺失或已關閉的索引，並在搜尋請求期間忽略無法使用的分片。預設為 `false`。
+`lenient` | 布林值 | 指定 OpenSearch 是否應忽略因格式造成的查詢失敗（例如，以整數查詢文字欄位所導致的失敗）。預設為 `false`。 
+`rewrite` | 決定 OpenSearch 如何[重寫](#rewrite)多詞查詢並為其評分。有效值為 `constant_score`、`scoring_boolean`、`constant_score_boolean`、`top_terms_N`、`top_terms_boost_N` 和 `top_terms_blended_freqs_N`。預設為 `constant_score`。
+`q` | 字串 | 以 Lucene 字串語法撰寫的查詢。
 
-## Example request
+## 請求範例
 
-The following example request uses an index named `Hamlet` created using a `bulk` request:
+下列請求範例使用名為 `Hamlet` 的索引，該索引是透過 `bulk` 請求建立的：
 
 <!-- spec_insert_start
 component: example_code
@@ -92,7 +93,7 @@ response = client.bulk(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-You can then use the Validate Query API to validate an index query, as shown in the following example:
+接著，您可以使用 Validate Query API 驗證索引查詢，如下列範例所示：
 
 <!-- spec_insert_start
 component: example_code
@@ -118,7 +119,7 @@ response = client.indices.validate_query(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The query can also be sent as a request body, as shown in the following example:
+查詢也可以作為請求本文傳送，如下列範例所示：
 
 <!-- spec_insert_start
 component: example_code
@@ -190,9 +191,9 @@ response = client.indices.validate_query(
 <!-- spec_insert_end -->
 
 
-## Example responses
+## 回應範例
 
-If the query passes validation, then the response indicates that the query is `true`, as shown in the following example response, where the `valid` parameter is `true`:
+如果查詢通過驗證，回應會指出該查詢為 `true`，如下列回應範例所示，其中 `valid` 參數為 `true`：
 
 ```
 {
@@ -205,7 +206,7 @@ If the query passes validation, then the response indicates that the query is `t
 }
 ```
 
-If the query does not pass validation, then OpenSearch responds that the query is `false`. The following example request query includes a dynamic mapping not configured in the `hamlet` index:
+如果查詢未通過驗證，OpenSearch 會回應該查詢為 `false`。下列請求範例的查詢包含未在 `hamlet` 索引中設定的動態對應：
 
 <!-- spec_insert_start
 component: example_code
@@ -254,7 +255,7 @@ response = client.indices.validate_query(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-OpenSearch responds with the following, where the `valid` parameter is `false`:
+OpenSearch 會傳回下列回應，其中 `valid` 參數為 `false`：
 
 ```
 {
@@ -267,11 +268,11 @@ OpenSearch responds with the following, where the `valid` parameter is `false`:
 }
 ```
 
-Certain query parameters can also affect what is included in the response. The following examples show how the [Explain](#explain), [Rewrite](#rewrite), and [all_shards](#rewrite-and-all_shards) query options affect the response.
+某些查詢參數也會影響回應中包含的內容。下列範例說明 [Explain](#explain)、[Rewrite](#rewrite) 和 [all_shards](#rewrite-and-all_shards) 查詢選項如何影響回應。
 
 ### Explain 
 
-The `explain` option returns information about the query failure in the `explanations` field, as shown in the following example response:
+`explain` 選項會在 `explanations` 欄位中傳回查詢失敗的相關資訊，如下列回應範例所示：
 
 ```
 {
@@ -292,7 +293,7 @@ The `explain` option returns information about the query failure in the `explana
 
 ### Rewrite
 
-When the `rewrite` option is set to `true` in the request, the `explanations` option shows the Lucene query that is executed as a string, as shown in the following response:
+當請求中的 `rewrite` 選項設定為 `true` 時，`explanations` 選項會以字串形式顯示所執行的 Lucene 查詢，如下列回應所示：
 
 ```
 {
@@ -313,9 +314,9 @@ When the `rewrite` option is set to `true` in the request, the `explanations` op
 ```
 
 
-### Rewrite and all_shards
+### Rewrite 和 all_shards
 
-When both the `rewrite` and `all_shards` options are set to `true`, the Validate Query API responds with detailed information from all available shards as opposed to only one shard (the default), as shown in the following response:
+當 `rewrite` 和 `all_shards` 選項皆設定為 `true` 時，Validate Query API 會回應來自所有可用分片的詳細資訊，而非僅來自單一分片（預設），如下列回應所示：
 
 ```
 {
@@ -336,6 +337,6 @@ When both the `rewrite` and `all_shards` options are set to `true`, the Validate
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/validate/query`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`indices:admin/validate/query`。

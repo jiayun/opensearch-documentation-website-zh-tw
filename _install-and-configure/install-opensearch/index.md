@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Installing OpenSearch
+title: "安裝 OpenSearch"
 nav_order: 2
 has_children: true
 redirect_from:
@@ -11,17 +12,17 @@ redirect_from:
   - /install-and-configure/install-opensearch/
 ---
 
-# Installing OpenSearch
+# 安裝 OpenSearch
 
-You can install OpenSearch using Docker, Helm, the OpenSearch Kubernetes Operator, tarball, RPM, Debian packages, Ansible, or on Windows. Each method requires specific [ports to be open](#network-requirements) and [important settings](#important-settings) to be configured on your host.
+您可以使用 Docker、Helm、OpenSearch Kubernetes Operator、tarball、RPM、Debian 套件、Ansible 或在 Windows 上安裝 OpenSearch。每種方法都要求在您的主機上[開啟特定連接埠](#network-requirements)並設定[重要設定](#important-settings)。
 
-To try OpenSearch on your computer, see [Installation quickstart]({{site.url}}{{site.baseurl}}/getting-started/quickstart/).
+若要在您的電腦上嘗試 OpenSearch，請參閱 [安裝快速入門]({{site.url}}{{site.baseurl}}/getting-started/quickstart/)。
 
-For operating system compatibility, see [Compatible operating systems]({{site.url}}{{site.baseurl}}/install-and-configure/os-comp/).
+關於作業系統相容性，請參閱 [相容的作業系統]({{site.url}}{{site.baseurl}}/install-and-configure/os-comp/)。
 
-## Installation steps
+## 安裝步驟
 
-Installation steps vary depending on the deployment method. For steps specific to your deployment, see the following installation guides:
+安裝步驟根據部署方法而有所不同。如需針對您的部署方式的步驟，請參閱以下安裝指南：
 
 - [Docker]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/docker/)
 - [OpenSearch Kubernetes Operator]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/)
@@ -32,29 +33,29 @@ Installation steps vary depending on the deployment method. For steps specific t
 - [Ansible playbook]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/ansible/)
 - [Windows]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/windows/)
 
-## Preparing a cluster for production
+## 為生產環境準備叢集
 
-The [Installation quickstart]({{site.url}}{{site.baseurl}}/getting-started/quickstart/) and the default installations in most guides create a cluster that uses the demo security configuration. The demo configuration uses self-signed demo certificates and known passwords for internal users, so it is intended for testing only. Before you use a cluster in production, complete the following tasks:
+[安裝快速入門]({{site.url}}{{site.baseurl}}/getting-started/quickstart/) 以及大多數指南中的預設安裝會建立一個使用示範安全性組態的叢集。示範組態使用自我簽署的示範憑證以及內部使用者的已知密碼，因此僅適用於測試。在生產環境中使用叢集之前，請完成以下任務：
 
-- Replace the demo certificates with certificates issued by your own certificate authority. For more information, see [Configuring TLS certificates]({{site.url}}{{site.baseurl}}/security/configuration/tls/).
-- Configure how users authenticate. You can use the internal user database of the Security plugin or connect an external identity provider for single sign-on, such as [SAML]({{site.url}}{{site.baseurl}}/security/authentication-backends/saml/), [OpenID Connect]({{site.url}}{{site.baseurl}}/security/authentication-backends/openid-connect/), or [LDAP]({{site.url}}{{site.baseurl}}/security/authentication-backends/ldap/). For more information, see [Configuring the security backend]({{site.url}}{{site.baseurl}}/security/configuration/configuration/).
-- Map users or the backend roles provided by your identity provider to roles that grant access to the cluster. For more information, see [Defining users and roles]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/).
-- Replace the default passwords of the demo internal users, or remove the users that you don't need. For more information, see [Demo configuration passwords]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#demo-configuration-passwords).
-- Configure the [important settings](#important-settings) on every host.
-- Run multiple nodes, including dedicated cluster manager nodes, so that the cluster remains available when a node fails. For more information, see [Creating a cluster]({{site.url}}{{site.baseurl}}/tuning-your-cluster/).
-- Back up your data using snapshots. For more information, see [Snapshots]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/index/).
+- 將示範憑證替換為由您自己的憑證授權單位核發的憑證。如需更多資訊，請參閱 [設定 TLS 憑證]({{site.url}}{{site.baseurl}}/security/configuration/tls/)。
+- 設定使用者驗證方式。您可以使用 Security 外掛程式的內部使用者資料庫，或連接外部身分提供者以實現單一登入，例如 [SAML]({{site.url}}{{site.baseurl}}/security/authentication-backends/saml/)、[OpenID Connect]({{site.url}}{{site.baseurl}}/security/authentication-backends/openid-connect/) 或 [LDAP]({{site.url}}{{site.baseurl}}/security/authentication-backends/ldap/)。如需更多資訊，請參閱 [設定安全性後端]({{site.url}}{{site.baseurl}}/security/configuration/configuration/)。
+- 將使用者或由身分提供者提供的後端角色對應到授予叢集存取權限的角色。如需更多資訊，請參閱 [定義使用者與角色]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/)。
+- 替換示範內部使用者的預設密碼，或刪除不需要的使用者。如需更多資訊，請參閱 [示範組態密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#demo-configuration-passwords)。
+- 在每台主機上設定 [重要設定](#important-settings)。
+- 執行多個節點（包括專用的叢集管理員節點），以便在節點發生故障時叢集仍可用。如需更多資訊，請參閱 [建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)。
+- 使用快照備份您的資料。如需更多資訊，請參閱 [快照]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/index/)。
 
-For more security recommendations, see [Best practices for OpenSearch security]({{site.url}}{{site.baseurl}}/security/configuration/best-practices/).
+如需更多安全性建議，請參閱 [OpenSearch 安全性最佳實踐]({{site.url}}{{site.baseurl}}/security/configuration/best-practices/)。
 
-## File system recommendations
+## 檔案系統建議
 
-Avoid using a network file system for node storage in a production workflow. Using a network file system for node storage can cause performance issues in your cluster due to factors such as network conditions (like latency or limited throughput) or read/write speeds. You should use solid-state drives (SSDs) installed on the host for node storage where possible.
+在生產環境的工作流程中，請避免使用網路檔案系統作為節點儲存空間。使用網路檔案系統作為節點儲存空間可能會因為網路狀況（如延遲或吞吐量受限）或讀寫速度等因素，導致叢集出現效能問題。只要可能，您應該使用安裝在主機上的固態硬碟 (SSD) 作為節點儲存空間。
 
-## Java compatibility
+## Java 相容性
 
-The OpenSearch distribution for Linux ships with a compatible [Adoptium JDK](https://adoptium.net/) version of Java in the `jdk` directory. To find the JDK version, run `./jdk/bin/java -version`. For example, the OpenSearch 1.0.0 tarball ships with Java 15.0.1+9 (non-LTS), OpenSearch 1.3.0 ships with Java 11.0.14.1+1 (LTS), and OpenSearch 2.0.0 ships with Java 17.0.2+8 (LTS). OpenSearch is tested with all compatible Java versions.
+Linux 版的 OpenSearch 分發版在 `jdk` 目錄中附帶了相容的 [Adoptium JDK](https://adoptium.net/) Java 版本。若要查看 JDK 版本，請執行 `./jdk/bin/java -version`。例如，OpenSearch 1.0.0 tarball 附帶 Java 15.0.1+9 (non-LTS)，OpenSearch 1.3.0 附帶 Java 11.0.14.1+1 (LTS)，而 OpenSearch 2.0.0 附帶 Java 17.0.2+8 (LTS)。OpenSearch 已通過所有相容 Java 版本的測試。
 
-OpenSearch version | Compatible Java versions | Bundled Java version
+OpenSearch 版本 | 相容的 Java 版本 | 內建 Java 版本
 :---------- | :-------- | :-----------
 1.0--1.2.x    | 11, 15     | 15.0.1+9
 1.3.x          | 8, 11, 14  | 11.0.25+9
@@ -64,143 +65,143 @@ OpenSearch version | Compatible Java versions | Bundled Java version
 3.5.0+        | 21, 25 | 25.0.2+10
 3.6.1+        | 21, 25, 26 | 25.0.4.1+1
 
-To use a different Java installation, set the `OPENSEARCH_JAVA_HOME` or `JAVA_HOME` environment variable to the Java installation location. For example:
+若要使用不同的 Java 安裝版本，請將 `OPENSEARCH_JAVA_HOME` 或 `JAVA_HOME` 環境變數設定為 Java 安裝位置。例如：
 
 ```bash
 export OPENSEARCH_JAVA_HOME=/path/to/opensearch-{{site.opensearch_version}}/jdk
 ```
 {% include copy.html %}
 
-## Network requirements
+## 網路要求
 
-The following TCP ports need to be open for OpenSearch components.
+OpenSearch 元件需要開啟以下 TCP 連接埠。
 
-Port number | OpenSearch component
+連接埠號碼 | OpenSearch 元件
 :--- | :--- 
-443 | OpenSearch Dashboards in AWS OpenSearch Service with encryption in transit (TLS)
+443 | AWS OpenSearch Service 中啟用傳輸中加密 (TLS) 的 OpenSearch Dashboards
 5601 | OpenSearch Dashboards
 9200 | OpenSearch REST API
-9300 | Node communication and transport (internal), cross cluster search
+9300 | 節點通訊與傳輸 (內部)、跨叢集搜尋
 9600 | Performance Analyzer
 
-No UDP ports are used.
+不使用 UDP 連接埠。
 {: .note}
 
-## Important settings
+## 重要設定
 
-For production workloads running on Linux, make sure the [Linux setting](https://www.kernel.org/doc/Documentation/sysctl/vm.txt) `vm.max_map_count` is set to at least `262144`. 
+對於在 Linux 上執行的生產環境工作負載，請確保 [Linux 設定](https://www.kernel.org/doc/Documentation/sysctl/vm.txt) `vm.max_map_count` 至少設定為 `262144`。
 
-Even if you use the Docker image, set this value on the host machine. To check the current value, run this command:
+即使您使用 Docker 映像檔，也請在主機機器上設定此值。若要檢查目前的值，請執行此命令：
 
 ```bash
 cat /proc/sys/vm/max_map_count
 ```
 {% include copy.html %}
 
-To increase the value, add the following line to `/etc/sysctl.conf`:
+若要增加此值，請將以下行新增至 `/etc/sysctl.conf`：
 
 ```
 vm.max_map_count=262144
 ```
 {% include copy.html %}
 
-Then reload the settings:
+然後重新載入設定：
 
 ```bash
 sudo sysctl -p
 ```
 {% include copy.html %}
 
-For Windows workloads, set `vm.max_map_count` in the Docker Desktop WSL distribution. First, open a shell in the distribution:
+對於 Windows 工作負載，請在 Docker Desktop WSL 分發版中設定 `vm.max_map_count`。首先，在分發版中開啟 shell：
 
 ```bash
 wsl -d docker-desktop
 ```
 {% include copy.html %}
 
-Then set the value:
+然後設定該值：
 
 ```bash
 sysctl -w vm.max_map_count=262144
 ```
 {% include copy.html %}
 
-The [sample `docker-compose.yml`]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/docker/#sample-docker-composeyml) file also contains several key settings:
+[範例 `docker-compose.yml`]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/docker/#sample-docker-composeyml) 檔案還包含幾個關鍵設定：
 
 - `bootstrap.memory_lock=true`
 
-  Disables swapping (along with `memlock`). Swapping can dramatically decrease performance and stability, so you should ensure it is disabled on production clusters.
+  停用分頁 (swapping)（與 `memlock` 一同設定）。分頁可能會大幅降低效能與穩定性，因此您應確保在生產環境叢集中將其停用。
 
-  Enabling the `bootstrap.memory_lock` setting will cause the JVM to reserve any memory it needs. The [Java SE Hotspot VM Garbage Collection Tuning Guide](https://docs.oracle.com/javase/9/gctuning/other-considerations.htm#JSGCT-GUID-B29C9153-3530-4C15-9154-E74F44E3DAD9) documents a default 1 gigabyte (GB) Class Metadata native memory reservation. Combined with Java heap, this may result in an error due to the lack of native memory on VMs with less memory than these requirements. To prevent errors, limit the reserved memory size using `-XX:CompressedClassSpaceSize` or `-XX:MaxMetaspaceSize` and set the size of the Java heap to make sure you have enough system memory.
+  啟用 `bootstrap.memory_lock` 設定將導致 JVM 預留其所需的所有記憶體。[Java SE Hotspot VM Garbage Collection Tuning Guide](https://docs.oracle.com/javase/9/gctuning/other-considerations.htm#JSGCT-GUID-B29C9153-3530-4C15-9154-E74F44E3DAD9) 記錄了預設 1 gigabyte (GB) 的 Class Metadata 原生記憶體預留。結合 Java heap，在記憶體低於這些要求的 VM 上，這可能會因為缺乏原生記憶體而導致錯誤。為了防止錯誤，請使用 `-XX:CompressedClassSpaceSize` 或 `-XX:MaxMetaspaceSize` 限制預留記憶體大小，並設定 Java heap 的大小以確保您有足夠的系統記憶體。
 
 - `OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m`
 
-  Sets the size of the Java heap (we recommend half of system RAM).
+  設定 Java heap 的大小（我們建議設定為系統 RAM 的一半）。
   
- OpenSearch defaults to `-Xms1g -Xmx1g` for heap memory allocation, which takes precedence over configurations specified using percentage notation (`-XX:MinRAMPercentage`, `-XX:MaxRAMPercentage`). For example, if you set `OPENSEARCH_JAVA_OPTS=-XX:MinRAMPercentage=30 -XX:MaxRAMPercentage=70`, the predefined `-Xms1g -Xmx1g` values will override these settings. When using `OPENSEARCH_JAVA_OPTS` to define memory allocation, make sure you use the `-Xms` and `-Xmx` notation.
+ OpenSearch 的 heap 記憶體配置預設為 `-Xms1g -Xmx1g`，其優先級高於使用百分比表示法 (`-XX:MinRAMPercentage`, `-XX:MaxRAMPercentage`) 指定的組態。例如，如果您設定 `OPENSEARCH_JAVA_OPTS=-XX:MinRAMPercentage=30 -XX:MaxRAMPercentage=70`，預定義的 `-Xms1g -Xmx1g` 值將覆蓋這些設定。使用 `OPENSEARCH_JAVA_OPTS` 定義記憶體配置時，請確保使用 `-Xms` 和 `-Xmx` 表示法。
 {: .note}
 
 - `nofile 65536`
 
-  Sets a limit of 65536 open files for the OpenSearch user.
+  為 OpenSearch 使用者設定 65536 個開啟檔案的限制。
 
 - `port 9600`
 
-  Allows you to access Performance Analyzer on port 9600.
+  允許您透過連接埠 9600 存取 Performance Analyzer。
 
-Do not declare the same JVM options in multiple locations because it can result in unexpected behavior or a failure of the OpenSearch service to start. If you declare JVM options using an environment variable, such as `OPENSEARCH_JAVA_OPTS=-Xms3g -Xmx3g`, then you should comment out any references to that JVM option in `config/jvm.options`. Conversely, if you define JVM options in `config/jvm.options`, then you should not define those JVM options using environment variables.
+請勿在多個位置宣告相同的 JVM 選項，因為這可能會導致非預期的行為或 OpenSearch 服務無法啟動。如果您使用環境變數（例如 `OPENSEARCH_JAVA_OPTS=-Xms3g -Xmx3g`）宣告 JVM 選項，則應將 `config/jvm.options` 中對該 JVM 選項的所有引用註解掉。反之，如果您在 `config/jvm.options` 中定義 JVM 選項，則不應使用環境變數定義這些 JVM 選項。
 {: .note}
 
-## Important system properties
+## 重要系統屬性
 
-OpenSearch has a number of system properties, listed in the following table, that you can specify in `config/jvm.options` or `OPENSEARCH_JAVA_OPTS` using `-D` command line argument notation.
+OpenSearch 有許多系統屬性（列於下表），您可以使用 `-D` 命令列參數表示法在 `config/jvm.options` 或 `OPENSEARCH_JAVA_OPTS` 中指定這些屬性。
 
-Property | Description
+屬性 | 說明
 :---------- | :-------- 
-`opensearch.xcontent.string.length.max=<value>` | By default, OpenSearch does not impose any limits on the maximum length of the JSON/YAML/CBOR/Smile string fields. To protect your cluster against potential distributed denial-of-service (DDoS) or memory issues, you can set the `opensearch.xcontent.string.length.max` system property to a reasonable limit (the maximum is 2,147,483,647), for example, `-Dopensearch.xcontent.string.length.max=5000000`.  | 
-`opensearch.xcontent.fast_double_writer=[true|false]` | By default, OpenSearch serializes floating-point numbers using the default implementation provided by the Java Runtime Environment. Set this value to `true` to use the Schubfach algorithm, which is faster but may lead to small differences in precision. Default is `false`. |
-`opensearch.xcontent.name.length.max=<value>` | By default, OpenSearch does not impose any limits on the maximum length of the JSON/YAML/CBOR/Smile field names. To protect your cluster against potential DDoS or memory issues, you can set the `opensearch.xcontent.name.length.max` system property to a reasonable limit (the maximum is 2,147,483,647), for example, `-Dopensearch.xcontent.name.length.max=50000`. |
-`opensearch.xcontent.depth.max=<value>` | By default, OpenSearch does not impose any limits on the maximum nesting depth for JSON/YAML/CBOR/Smile documents. To protect your cluster against potential DDoS or memory issues, you can set the `opensearch.xcontent.depth.max` system property to a reasonable limit (the maximum is 2,147,483,647), for example, `-Dopensearch.xcontent.depth.max=1000`. |
-`opensearch.xcontent.codepoint.max=<value>` | By default, OpenSearch imposes a limit of `52428800` on the maximum size of the YAML documents (in code points). To protect your cluster against potential DDoS or memory issues, you can change the `opensearch.xcontent.codepoint.max` system property to a reasonable limit (the maximum is 2,147,483,647). For example, `-Dopensearch.xcontent.codepoint.max=5000000`. |
+`opensearch.xcontent.string.length.max=<value>` | 預設情況下，OpenSearch 不對 JSON/YAML/CBOR/Smile 字串欄位的最大長度設定任何限制。為了保護您的叢集免於潛在的分散式阻斷服務 (DDoS) 或記憶體問題，您可以將 `opensearch.xcontent.string.length.max` 系統屬性設定為合理的限制（最大值為 2,147,483,647），例如 `-Dopensearch.xcontent.string.length.max=5000000`。 | 
+`opensearch.xcontent.fast_double_writer=[true|false]` | 預設情況下，OpenSearch 使用 Java Runtime Environment 提供的預設實作來序列化浮點數。將此值設定為 `true` 以使用 Schubfach 演算法，該演算法速度較快，但可能會導致微小的精度差異。預設值為 `false`。 |
+`opensearch.xcontent.name.length.max=<value>` | 預設情況下，OpenSearch 不對 JSON/YAML/CBOR/Smile 欄位名稱的最大長度設定任何限制。為了保護您的叢集免於潛在的 DDoS 或記憶體問題，您可以將 `opensearch.xcontent.name.length.max` 系統屬性設定為合理的限制（最大值為 2,147,483,647），例如 `-Dopensearch.xcontent.name.length.max=50000`。 |
+`opensearch.xcontent.depth.max=<value>` | 預設情況下，OpenSearch 不對 JSON/YAML/CBOR/Smile 文件的最大巢狀深度設定任何限制。為了保護您的叢集免於潛在的 DDoS 或記憶體問題，您可以將 `opensearch.xcontent.depth.max` 系統屬性設定為合理的限制（最大值為 2,147,483,647），例如 `-Dopensearch.xcontent.depth.max=1000`。 |
+`opensearch.xcontent.codepoint.max=<value>` | 預設情況下，OpenSearch 對 YAML 文件的最大大小（以碼點為單位）設定 `52428800` 的限制。為了保護您的叢集免於潛在的 DDoS 或記憶體問題，您可以將 `opensearch.xcontent.codepoint.max` 系統屬性更改為合理的限制（最大值為 2,147,483,647）。例如 `-Dopensearch.xcontent.codepoint.max=5000000`。 |
 
-## Common issues
+## 常見問題
 
-The following issues can occur with any installation method.
+下列問題可能會發生在任何安裝方法中。
 
-### Error message: "max virtual memory areas vm.max_map_count [65530] is too low"
+### 錯誤訊息：「max virtual memory areas vm.max_map_count [65530] is too low」
 
-OpenSearch fails to start on Linux if the `vm.max_map_count` setting of the host is too low. The OpenSearch log contains the following error:
+如果主機的 `vm.max_map_count` 設定過低，OpenSearch 在 Linux 上將無法啟動。OpenSearch 記錄檔會包含以下錯誤：
 
 ```
 ERROR: [1] bootstrap checks failed
 [1]: max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
 ```
 
-To fix this error, set `vm.max_map_count` to at least `262144` as described in [Important settings](#important-settings). If you use Docker, set the value on the host machine, not in the container.
+要修正此錯誤，請按照 [重要設定](#important-settings) 中的說明，將 `vm.max_map_count` 設定為至少 `262144`。如果您使用 Docker，請在主機機器上設定此值，而非在容器中設定。
 
-### Error message: "NotSslRecordException: not an SSL/TLS record"
+### 錯誤訊息：「NotSslRecordException: not an SSL/TLS record」
 
-The demo security configuration serves the REST API over HTTPS. If a client sends a request over HTTP, the client receives an empty reply, and OpenSearch logs the following error for every request:
+示範安全性組態透過 HTTPS 提供 REST API 服務。如果用戶端透過 HTTP 發送請求，用戶端將收到空回應，且 OpenSearch 會為每個請求記錄以下錯誤：
 
 ```
 io.netty.handler.ssl.NotSslRecordException: not an SSL/TLS record: 474554202f20485454502f312e310d0a...
 ```
 
-To fix this error, send requests to `https://localhost:9200` instead of `http://localhost:9200`. Check every client that connects to OpenSearch, including monitoring tools and other services on the host that send requests on a schedule.
+要修正此錯誤，請將請求發送到 `https://localhost:9200` 而非 `http://localhost:9200`。請檢查每個連接到 OpenSearch 的用戶端，包括監視工具以及主機上定期發送請求的其他服務。
 
-### Error message: "Password failed validation"
+### 錯誤訊息：「Password failed validation」
 
-OpenSearch does not start if the value of `OPENSEARCH_INITIAL_ADMIN_PASSWORD` is not a strong password. The OpenSearch log contains an error similar to the following:
+如果 `OPENSEARCH_INITIAL_ADMIN_PASSWORD` 的值不是強密碼，OpenSearch 將無法啟動。OpenSearch 記錄檔會包含類似於以下的錯誤：
 
 ```
 Password admin failed validation: "Password is too short". Please re-try with a minimum 8 character password and must contain at least one uppercase letter, one lowercase letter, one digit, and one special character that is strong.
 ```
 
-To fix this error, choose a password that meets the [admin password requirements]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements).
+要修正此錯誤，請選擇符合 [管理員密碼要求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements) 的密碼。
 
-### Error message: "the default discovery settings are unsuitable for production use"
+### 錯誤訊息：「the default discovery settings are unsuitable for production use」
 
-When OpenSearch binds to an address other than `localhost`, for example, after you set `network.host` to `0.0.0.0` so that other hosts can reach it, OpenSearch enforces bootstrap checks. If the node has no discovery settings, OpenSearch fails to start and logs the following error:
+當 OpenSearch 綁定到 `localhost` 以外的位址時（例如，在您將 `network.host` 設定為 `0.0.0.0` 以便其他主機可以存取之後），OpenSearch 會執行啟動檢查 (bootstrap checks)。如果節點沒有設定探索 (discovery) 設定，OpenSearch 將無法啟動並記錄以下錯誤：
 
 ```
 bound or publishing to a non-loopback address, enforcing bootstrap checks
@@ -208,7 +209,7 @@ ERROR: [1] bootstrap checks failed
 [1]: the default discovery settings are unsuitable for production use; at least one of [discovery.seed_hosts, discovery.seed_providers, cluster.initial_cluster_manager_nodes / cluster.initial_master_nodes] must be configured
 ```
 
-To fix this error, configure discovery in `opensearch.yml`:
+要修正此錯誤，請在 `opensearch.yml` 中設定探索：
 
-- For a single-node cluster, set `discovery.type: single-node`.
-- For a multi-node cluster, set `discovery.seed_hosts` and `cluster.initial_cluster_manager_nodes`. For more information, see [Creating a cluster]({{site.url}}{{site.baseurl}}/tuning-your-cluster/).
+- 對於單節點叢集，請設定 `discovery.type: single-node`。
+- 對於多節點叢集，請設定 `discovery.seed_hosts` 和 `cluster.initial_cluster_manager_nodes`。如需更多資訊，請參閱 [建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)。

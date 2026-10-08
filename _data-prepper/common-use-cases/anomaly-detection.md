@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Anomaly detection
+title: "異常偵測"
 parent: Common use cases
 nav_order: 5
 ---
 
-# Anomaly detection with Data Prepper
+# 使用 Data Prepper 進行異常偵測
 
-You can use OpenSearch Data Prepper to train models and generate anomalies in near real time on time-series aggregated events. You can generate anomalies either on events generated within the pipeline or on events coming directly into the pipeline, like OpenTelemetry metrics. You can feed these tumbling window aggregated time-series events to the [`anomaly_detector` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/anomaly-detector/), which trains a model and generates anomalies with a grade score. Then you can configure your pipeline to write the anomalies to a separate index to create document monitors and trigger fast alerting.
+您可以使用 OpenSearch Data Prepper 對時間序列彙總事件進行模型訓練，並近乎即時地產生異常。您可以針對管線內產生的事件，或直接進入管線的事件 (例如 OpenTelemetry 指標) 產生異常。您可以將這些跳動視窗彙總的時間序列事件饋送至 [`anomaly_detector` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/anomaly-detector/)，該處理器會訓練模型並產生附有評分的異常。接著，您可以設定管線，將異常寫入獨立的索引，以建立文件監視器並快速觸發警示。
 
-## Metrics from logs 
+## 來自記錄檔的指標
 
-The following pipeline receives logs from an HTTP source like FluentBit, extracts important values from the logs by matching the value in the `log` key against the [Grok Apache Common Log Format](https://httpd.apache.org/docs/2.4/logs.html#accesslog), and then forwards the grokked logs to both the `log-to-metrics-pipeline` pipeline and an OpenSearch index named `logs`.
+下列管線會從 HTTP 來源 (例如 FluentBit) 接收記錄檔，透過將 `log` 索引鍵的值與 [Grok Apache Common Log Format](https://httpd.apache.org/docs/2.4/logs.html#accesslog) 進行比對，從記錄檔中擷取重要值，然後將 grok 處理後的記錄檔轉送至 `log-to-metrics-pipeline` 管線以及名為 `logs` 的 OpenSearch 索引。
 
-The `log-to-metrics-pipeline` pipeline receives the grokked logs from the `apache-log-pipeline-with-metrics` pipeline, aggregates them, and derives histogram metrics based on the values in the `clientip` and `request` keys. It then sends the histogram metrics to an OpenSearch index named `histogram_metrics` as well as to the `log-to-metrics-anomaly-detector-pipeline` pipeline.
+`log-to-metrics-pipeline` 管線會從 `apache-log-pipeline-with-metrics` 管線接收 grok 處理後的記錄檔，將其彙總，並根據 `clientip` 和 `request` 索引鍵的值衍生直方圖指標。接著，它會將直方圖指標傳送至名為 `histogram_metrics` 的 OpenSearch 索引，以及 `log-to-metrics-anomaly-detector-pipeline` 管線。
 
-The `log-to-metrics-anomaly-detector-pipeline` pipeline receives the aggregated histogram metrics from the `log-to-metrics-pipeline` pipeline and sends them to the `anomaly_detector` processor to detect anomalies by using the Random Cut Forest algorithm. If the algorithm detects anomalies, it sends them to an OpenSearch index named `log-metric-anomalies`.
+`log-to-metrics-anomaly-detector-pipeline` 管線會從 `log-to-metrics-pipeline` 管線接收彙總的直方圖指標，並將其傳送至 `anomaly_detector` 處理器，以使用 Random Cut Forest 演算法偵測異常。如果演算法偵測到異常，便會將其傳送至名為 `log-metric-anomalies` 的 OpenSearch 索引。
 
 ```json
 apache-log-pipeline-with-metrics:
@@ -76,17 +77,17 @@ log-to-metrics-anomaly-detector-pipeline:
 ```
 {% include copy-curl.html %}
 
-## Metrics from traces
+## 來自追蹤的指標
 
-You can derive metrics from traces and find anomalies in those metrics. In this example, the `entry-pipeline` pipeline receives trace data from the OpenTelemetry Collector and forwards it to the following pipelines:
+您可以從追蹤衍生指標，並在這些指標中尋找異常。在此範例中，`entry-pipeline` 管線會從 OpenTelemetry Collector 接收追蹤資料，並將其轉送至下列管線：
 
-- `span-pipeline` –- Extracts the raw spans from the traces. The pipeline sends the raw spans to any indexes OpenSearch prefixed with `otel-v1-apm-span`.
+- `span-pipeline` –- 從追蹤中擷取原始 span。此管線會將原始 span 傳送至任何以 `otel-v1-apm-span` 為前置詞的 OpenSearch 索引。
 
-- `service-map-pipeline` –- Aggregates and analyzes the traces to create documents that represent connections between services. The pipeline sends these documents to an OpenSearch index named `otel-v1-apm-service-map`. You can then see a visualization of the service map through the [Trace Analytics]({{site.url}}{{site.baseurl}}/observing-your-data/trace/index/) plugin for OpenSearch Dashboards.
+- `service-map-pipeline` –- 彙總並分析追蹤，以建立代表服務之間連線的文件。此管線會將這些文件傳送至名為 `otel-v1-apm-service-map` 的 OpenSearch 索引。接著，您可以透過 OpenSearch Dashboards 的 [Trace Analytics]({{site.url}}{{site.baseurl}}/observing-your-data/trace/index/) 外掛程式，查看服務對應的視覺化。
 
-- `trace-to-metrics-pipeline` -- Aggregates and derives histogram metrics from the traces based on the value of the `serviceName`. The pipeline then sends the derived metrics to an OpenSearch index named `metrics_for_traces` and to the `trace-to-metrics-anomaly-detector-pipeline` pipeline.
+- `trace-to-metrics-pipeline` -- 根據 `serviceName` 的值，彙總並從追蹤衍生直方圖指標。接著，此管線會將衍生的指標傳送至名為 `metrics_for_traces` 的 OpenSearch 索引，以及 `trace-to-metrics-anomaly-detector-pipeline` 管線。
 
-The `trace-to-metrics-anomaly-detector-pipeline` pipeline receives the aggregated histogram metrics from the `trace-to-metrics-pipeline` and sends them to the `anomaly_detector` processor to detect anomalies by using the Random Cut Forest algorithm. If the algorithm detects any anomalies, it sends them to an OpenSearch index named `trace-metric-anomalies`.
+`trace-to-metrics-anomaly-detector-pipeline` 管線會從 `trace-to-metrics-pipeline` 接收彙總的直方圖指標，並將其傳送至 `anomaly_detector` 處理器，以使用 Random Cut Forest 演算法偵測異常。如果演算法偵測到任何異常，便會將其傳送至名為 `trace-metric-anomalies` 的 OpenSearch 索引。
 
 ```json
 entry-pipeline:
@@ -169,11 +170,11 @@ trace-to-metrics-anomaly-detector-pipeline:
 ```
 {% include copy-curl.html %}
 
-## OpenTelemetry metrics
+## OpenTelemetry 指標
 
-You can create a pipeline that receives OpenTelemetry metrics and detects anomalies in those metrics. In this example, `entry-pipeline` receives metrics from the OpenTelemetry Collector. If a metric is of type `GAUGE` and the name of the metric is `totalApiBytesSent`, the processor sends it to the `ad-pipeline` pipeline.
+您可以建立管線，以接收 OpenTelemetry 指標並偵測這些指標中的異常。在此範例中，`entry-pipeline` 會從 OpenTelemetry Collector 接收指標。如果指標的類型為 `GAUGE`，且指標名稱為 `totalApiBytesSent`，則處理器會將其傳送至 `ad-pipeline` 管線。
 
-The `ad-pipeline` pipeline receives the metrics from the entry pipeline and performs anomaly detection on the metric values by using the [`anomaly_detector` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/anomaly-detector/).
+`ad-pipeline` 管線會從進入管線接收指標，並使用 [`anomaly_detector` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/anomaly-detector/) 對指標值執行異常偵測。
 
 ```json
 entry-pipeline:

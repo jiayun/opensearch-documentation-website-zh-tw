@@ -1,39 +1,40 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Go client
+title: "Go 用戶端"
 nav_order: 50
 ---
 
-# Go client
+# Go 用戶端
 
-The OpenSearch Go client lets you connect your Go application with the data in your OpenSearch cluster. This getting started guide illustrates how to connect to OpenSearch, index documents, and run queries. For the client's complete API documentation and additional examples, see the [Go client API documentation](https://pkg.go.dev/github.com/opensearch-project/opensearch-go/v5).
+OpenSearch Go 用戶端可讓您將 Go 應用程式連線至 OpenSearch 叢集中的資料。本入門指南說明如何連線至 OpenSearch、將文件編製索引，以及執行查詢。如需用戶端完整的 API 文件和其他範例，請參閱 [Go 用戶端 API 文件](https://pkg.go.dev/github.com/opensearch-project/opensearch-go/v5)。
 
-For the client source code, see the [`opensearch-go` repo](https://github.com/opensearch-project/opensearch-go).
+如需用戶端原始碼，請參閱 [`opensearch-go` 儲存庫](https://github.com/opensearch-project/opensearch-go)。
 
 
-## Installing the Go client
+## 安裝 Go 用戶端
 
-The Go client requires Go 1.26 or later.
+Go 用戶端需要 Go 1.26 或更新版本。
 
-If you're starting a new project, create a new module by running the following command:
+如果您要開始新專案，請執行下列命令來建立新模組：
 
 ```bash
 go mod init <mymodulename>
 ```
 {% include copy.html %}
 
-To add the Go client to your project, run the following command:
+若要將 Go 用戶端加入您的專案，請執行下列命令：
 
 ```bash
 go get github.com/opensearch-project/opensearch-go/v5
 ```
 {% include copy.html %}
 
-Version 5 of the client is not compatible with code written for version 4. For migration instructions, see the [v5 upgrade guide](https://github.com/opensearch-project/opensearch-go/blob/main/UPGRADING_V5.md).
+第 5 版用戶端與為第 4 版撰寫的程式碼不相容。如需遷移說明，請參閱 [v5 升級指南](https://github.com/opensearch-project/opensearch-go/blob/main/UPGRADING_V5.md)。
 
-## Connecting to OpenSearch
+## 連線至 OpenSearch
 
-The examples on this page use the following imports:
+本頁的範例使用下列匯入：
 
 ```go
 import (
@@ -49,7 +50,7 @@ import (
 ```
 {% include copy.html %}
 
-To connect to the default OpenSearch host, create a client object with the address `https://localhost:9200` if you are using the Security plugin:
+若要連線至預設的 OpenSearch 主機，如果您使用 Security 外掛程式，請建立位址為 `https://localhost:9200` 的用戶端物件：
 
 ```go
 client, err := opensearchapi.NewClient(opensearchapi.Config{
@@ -64,7 +65,7 @@ client, err := opensearchapi.NewClient(opensearchapi.Config{
 ```
 {% include copy.html %}
 
-If you are not using the Security plugin, create a client object with the address `http://localhost:9200`:
+如果您未使用 Security 外掛程式，請建立位址為 `http://localhost:9200` 的用戶端物件：
 
 ```go
 client, err := opensearchapi.NewClient(opensearchapi.Config{
@@ -76,13 +77,13 @@ client, err := opensearchapi.NewClient(opensearchapi.Config{
 ```
 {% include copy.html %}
 
-By default, the client discovers the nodes in the cluster when it starts and then sends requests to the nodes' publish addresses. If these addresses are not reachable from your application---for example, when OpenSearch runs in Docker---requests time out. Setting `DiscoverNodesOnStart` to `false` makes the client send requests only to the addresses that you specify in `Addresses`.
+根據預設，用戶端會在啟動時探索叢集中的節點，然後將請求傳送至節點的發布位址。如果您的應用程式無法連線至這些位址（例如 OpenSearch 在 Docker 中執行時），請求就會逾時。將 `DiscoverNodesOnStart` 設為 `false` 可讓用戶端只將請求傳送至您在 `Addresses` 中指定的位址。
 
-## Connecting to Amazon OpenSearch Service
+## 連線至 Amazon OpenSearch Service
 
-In the following example, replace the endpoint with your domain endpoint, which is listed on the domain's details page in the Amazon OpenSearch Service console.
+在下列範例中，請將端點取代為您的網域端點，該端點列於 Amazon OpenSearch Service 主控台中網域的詳細資料頁面。
 
-The following example illustrates connecting to Amazon OpenSearch Service:
+下列範例說明如何連線至 Amazon OpenSearch Service：
 
 ```go
 package main
@@ -148,13 +149,13 @@ func getCredentialProvider(accessKey, secretAccessKey, token string) aws.Credent
 ```
 {% include copy.html %}
 
-To use the default AWS credential chain in this or the Amazon OpenSearch Serverless example, omit the `config.WithCredentialsProvider` option.
+若要在此範例或 Amazon OpenSearch Serverless 範例中使用預設的 AWS 憑證鏈，請省略 `config.WithCredentialsProvider` 選項。
 
-## Connecting to Amazon OpenSearch Serverless
+## 連線至 Amazon OpenSearch Serverless
 
-In the following example, replace the endpoint with your collection endpoint, which is listed on the collection's details page in the Amazon OpenSearch Service console.
+在下列範例中，請將端點取代為您的集合端點，該端點列於 Amazon OpenSearch Service 主控台中集合的詳細資料頁面。
 
-The following example illustrates connecting to Amazon OpenSearch Serverless:
+下列範例說明如何連線至 Amazon OpenSearch Serverless：
 
 ```go
 package main
@@ -220,12 +221,12 @@ func getCredentialProvider(accessKey, secretAccessKey, token string) aws.Credent
 ```
 {% include copy.html %}
 
-Amazon OpenSearch Serverless supports a subset of OpenSearch API operations and does not support the `refresh` parameter used in the examples on this page. For more information, see [Supported operations and plugins in Amazon OpenSearch Serverless](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-genref.html).
+Amazon OpenSearch Serverless 支援部分 OpenSearch API 操作，且不支援本頁範例中使用的 `refresh` 參數。如需詳細資訊，請參閱 [Amazon OpenSearch Serverless 中支援的操作和外掛程式](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-genref.html)。
 {: .note}
 
-The `opensearchapi.NewClient` constructor takes an `opensearchapi.Config{}` type. Its `Client` field contains an `opensearch.Config{}` type, which can be customized using options such as a list of OpenSearch node addresses or a username and password combination.
+`opensearchapi.NewClient` 建構函式接受 `opensearchapi.Config{}` 類型。其 `Client` 欄位包含 `opensearch.Config{}` 類型，可使用 OpenSearch 節點位址清單或使用者名稱與密碼組合等選項進行自訂。
 
-To connect to multiple OpenSearch nodes, specify them in the `Addresses` parameter:
+若要連線至多個 OpenSearch 節點，請在 `Addresses` 參數中指定這些節點：
 
 ```go
 var (
@@ -241,7 +242,7 @@ client, err := opensearchapi.NewClient(opensearchapi.Config{
 ```
 {% include copy.html %}
 
-The Go client retries requests for a maximum of three times by default. To customize the number of retries, set the `MaxRetries` parameter. Additionally, you can change the list of response codes for which a request is retried by setting the `RetryOnStatus` parameter. The following code snippet creates a new Go client with custom `MaxRetries` and `RetryOnStatus` values:
+根據預設，Go 用戶端最多會重試請求三次。若要自訂重試次數，請設定 `MaxRetries` 參數。此外，您可以設定 `RetryOnStatus` 參數，變更會觸發請求重試的回應碼清單。下列程式碼片段會建立具有自訂 `MaxRetries` 和 `RetryOnStatus` 值的新 Go 用戶端：
 
 ```go
 client, err := opensearchapi.NewClient(opensearchapi.Config{
@@ -255,9 +256,9 @@ client, err := opensearchapi.NewClient(opensearchapi.Config{
 ```
 {% include copy.html %}
 
-## Sample data
+## 範例資料
 
-The examples on this page use a `Student` struct to represent documents. The JSON tags determine the field names in the indexed documents:
+本頁的範例使用 `Student` 結構來表示文件。JSON 標籤決定已編製索引文件中的欄位名稱：
 
 ```go
 type Student struct {
@@ -269,9 +270,9 @@ type Student struct {
 ```
 {% include copy.html %}
 
-## Creating an index
+## 建立索引
 
-The following example creates an index with one primary shard and one replica. It explicitly maps the `gradDate` field as a `date` in the `yyyy-MM-dd` format. OpenSearch maps the other document fields dynamically when you index documents:
+下列範例建立具有一個主要分片和一個副本的索引。它明確將 `gradDate` 欄位對應為採用 `yyyy-MM-dd` 格式的 `date`。當您將文件編製索引時，OpenSearch 會動態對應其他文件欄位：
 
 ```go
 ctx := context.Background()
@@ -296,9 +297,9 @@ createResp, err := client.Indices.Create(ctx, opensearchapi.IndicesCreateReq{
 ```
 {% include copy.html %}
 
-## Indexing a document
+## 將文件編製索引
 
-Index a document using the following code. Setting the `Refresh` parameter to `true` makes the document immediately available for search:
+使用下列程式碼將文件編製索引。將 `Refresh` 參數設定為 `true`，即可立即搜尋該文件：
 
 ```go
 student := Student{FirstName: "John", LastName: "Doe", GPA: 3.89, GradDate: "2022-05-15"}
@@ -311,9 +312,9 @@ indexResp, err := client.Doc.Index(ctx, opensearchapi.IndexReq{
 ```
 {% include copy.html %}
 
-## Bulk indexing
+## 批次編製索引
 
-Index multiple documents in a single request using the following code. The request body contains an action line followed by a document line for each document, and each line must end with a newline character:
+使用下列程式碼，在單一請求中將多個文件編製索引。請求本文中，每個文件都有一行動作，後面接著一行文件內容，而且每一行都必須以換行字元結尾：
 
 ```go
 students := []struct {
@@ -339,11 +340,11 @@ bulkResp, err := client.Doc.Bulk(ctx, opensearchapi.BulkReq{
 ```
 {% include copy.html %}
 
-If any of the operations fail, the method returns an `*opensearchapi.PartialBulkError` error together with the response. To check the result of each operation, examine the `bulkResp.Items` field.
+如果任何操作失敗，此方法會連同回應一起傳回 `*opensearchapi.PartialBulkError` 錯誤。若要檢查每個操作的結果，請查看 `bulkResp.Items` 欄位。
 
-## Searching for documents
+## 搜尋文件
 
-Search for all documents in an index using the following code:
+使用下列程式碼搜尋索引中的所有文件：
 
 ```go
 searchResp, err := client.Search(ctx, &opensearchapi.SearchReq{
@@ -366,7 +367,7 @@ for _, hit := range searchResp.Hits.Hits {
 ```
 {% include copy.html %}
 
-In each item in `searchResp.Hits.Hits`, the `ID` field contains a pointer to the document ID, and the `Source` field contains the document as raw JSON. To access the document fields, unmarshal `Source` into a `Student` struct:
+在 `searchResp.Hits.Hits` 的每個項目中，`ID` 欄位包含指向文件 ID 的指標，而 `Source` 欄位包含原始 JSON 格式的文件。若要存取文件欄位，請將 `Source` 反序列化為 `Student` 結構：
 
 ```go
 for _, hit := range searchResp.Hits.Hits {
@@ -379,7 +380,7 @@ for _, hit := range searchResp.Hits.Hits {
 ```
 {% include copy.html %}
 
-Search using a range query:
+使用範圍查詢進行搜尋：
 
 ```go
 searchResp, err := client.Search(ctx, &opensearchapi.SearchReq{
@@ -389,9 +390,9 @@ searchResp, err := client.Search(ctx, &opensearchapi.SearchReq{
 ```
 {% include copy.html %}
 
-## Paginating results
+## 將結果分頁
 
-To paginate results, use the `from` and `size` parameters. The following example sorts students by graduation date and retrieves the results two at a time. The first request returns the first page of results, and the second request returns the next page:
+若要將結果分頁，請使用 `from` 和 `size` 參數。下列範例依畢業日期排序學生，並且每次擷取兩筆結果。第一個請求傳回第一頁結果，第二個請求則傳回下一頁：
 
 ```go
 searchResp, err := client.Search(ctx, &opensearchapi.SearchReq{
@@ -425,11 +426,11 @@ for i, resp := range []*opensearchapi.SearchResp{searchResp, nextResp} {
 ```
 {% include copy.html %}
 
-The `from` and `size` parameters work well for the first pages of results. To paginate through a large number of results, use point in time with `search_after`. For more information, see [Paginate results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/).
+`from` 和 `size` 參數適合用於前幾頁的結果。若要瀏覽大量結果的各個分頁，請搭配 `search_after` 使用時間點。若需詳細資訊，請參閱[將結果分頁]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/)。
 
-## Updating a document
+## 更新文件
 
-Update specific fields of a document using a partial document in the `doc` field. Only the specified fields are updated:
+使用 `doc` 欄位中的部分文件，更新文件的特定欄位。只會更新指定的欄位：
 
 ```go
 updateResp, err := client.Doc.Update(ctx, opensearchapi.UpdateReq{
@@ -440,9 +441,9 @@ updateResp, err := client.Doc.Update(ctx, opensearchapi.UpdateReq{
 ```
 {% include copy.html %}
 
-## Deleting a document
+## 刪除文件
 
-Delete a document using the following code:
+使用下列程式碼刪除文件：
 
 ```go
 deleteResp, err := client.Doc.Delete(ctx, opensearchapi.DeleteReq{
@@ -453,23 +454,23 @@ deleteResp, err := client.Doc.Delete(ctx, opensearchapi.DeleteReq{
 ```
 {% include copy.html %}
 
-## Deleting an index
+## 刪除索引
 
-Delete an index using the following code:
+使用下列程式碼刪除索引：
 
 ```go
 deleteIndexResp, err := client.Indices.Delete(ctx, &opensearchapi.IndicesDeleteReq{Indices: []string{index}})
 ```
 {% include copy.html %}
 
-## Sample program
+## 範例程式
 
-This sample program combines the code from the preceding sections. It connects to a cluster that has the Security plugin enabled. To connect to a cluster without the Security plugin, change the lines marked with `// Without security` comments.
+此範例程式整合了前面各節的程式碼。它會連線至已啟用 Security 外掛程式的叢集。若要連線至未使用 Security 外掛程式的叢集，請修改以 `// Without security` 註解標記的程式碼行。
 
-This sample program is for testing only. It specifies credentials in code and disables certificate validation so that it can connect to a cluster that uses self-signed certificates. In production, load credentials from a secure location and validate the cluster's certificate.
+此範例程式僅供測試使用。它在程式碼中指定認證資訊，並停用憑證驗證，以便連線至使用自我簽署憑證的叢集。在正式環境中，請從安全的位置載入認證資訊，並驗證叢集的憑證。
 {: .warning}
 
-The following sample program creates a client, creates an index, indexes documents individually and in bulk, searches for documents, updates a document, deletes a document, and then deletes the index:
+下列範例程式會建立用戶端、建立索引、逐一及批次將文件編製索引、搜尋文件、更新文件、刪除文件，最後刪除索引：
 
 ```go
 package main
@@ -703,7 +704,7 @@ func run() error {
 ```
 {% include copy.html %}
 
-The program produces the following output:
+程式會產生下列輸出：
 
 ```
 Creating index......
@@ -740,7 +741,7 @@ Deleting the index......
 Acknowledged: true
 ```
 
-## Related documentation
+## 相關文件
 
-- For more examples of using the client, see the [`opensearch-go` user guide](https://github.com/opensearch-project/opensearch-go/blob/main/USER_GUIDE.md).
-- For guides to specific tasks, such as bulk indexing and searching, see the [`opensearch-go` guides](https://github.com/opensearch-project/opensearch-go/tree/main/guides).
+- 如需更多使用用戶端的範例，請參閱 [`opensearch-go` 使用者指南](https://github.com/opensearch-project/opensearch-go/blob/main/USER_GUIDE.md)。
+- 如需特定工作的指南，例如大量編製索引和搜尋，請參閱 [`opensearch-go` 指南](https://github.com/opensearch-project/opensearch-go/tree/main/guides)。

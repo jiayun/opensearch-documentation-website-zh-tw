@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "zh-tw-review-request/v1",
+  "type": "object",
+  "required": [
+    "schema",
+    "metadata",
+    "items"
+  ],
+  "properties": {
+    "schema": {
+      "const": "zh-tw-review-request/v1"
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "page",
+        "part",
+        "parts",
+        "prompt_version"
+      ],
+      "properties": {
+        "page": {
+          "type": "string"
+        },
+        "page_title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "part": {
+          "type": "integer"
+        },
+        "parts": {
+          "type": "integer"
+        },
+        "prompt_version": {
+          "type": "string"
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "source",
+          "translation"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^(front_matter|body|section\\.\\d{3})$"
+          },
+          "source": {
+            "type": "string",
+            "description": "Full original English text (no placeholders)."
+          },
+          "translation": {
+            "type": "string",
+            "description": "Full zh-TW text (no placeholders)."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,39 +1,40 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Managing OpenSearch Dashboards plugins
+title: "管理 OpenSearch Dashboards 外掛程式"
 nav_order: 100
 redirect_from: 
   - /dashboards/install/plugins/
 ---
 
-# Managing OpenSearch Dashboards plugins
+# 管理 OpenSearch Dashboards 外掛程式
 
-OpenSearch Dashboards provides a command line tool called `opensearch-dashboards-plugin` for managing plugins.
+OpenSearch Dashboards 提供了一個名為 `opensearch-dashboards-plugin` 的命令列工具用於管理外掛程式。
 
-## Prerequisites
+## 前置條件
 
-- A compatible OpenSearch cluster
-- The corresponding OpenSearch plugins [installed on that cluster]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)
-- The corresponding version of [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/) (for example, OpenSearch Dashboards 2.3.0 works with OpenSearch 2.3.0)
+- 相容的 OpenSearch 叢集
+- [安裝在該叢集上]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)的對應 OpenSearch 外掛程式
+- 對應版本的 [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/) (例如，OpenSearch Dashboards 2.3.0 可與 OpenSearch 2.3.0 搭配使用)
 
-## Using the `opensearch-dashboards-plugin` tool
+## 使用 `opensearch-dashboards-plugin` 工具
 
-Use the `opensearch-dashboards-plugin` tool to perform the following actions:
+使用 `opensearch-dashboards-plugin` 工具來執行以下操作：
 
-- [List](#listing-installed-plugins) installed plugins.
-- [Install](#installing-plugins) plugins.
-- [Remove](#removing-plugins) installed plugins.
+- [列出](#listing-installed-plugins)已安裝的外掛程式。
+- [安裝](#installing-plugins)外掛程式。
+- [移除](#removing-plugins)已安裝的外掛程式。
 
-### Listing installed plugins
+### 列出已安裝的外掛程式
 
-To view the list of installed plugins from the command line, use the following command:
+若要從命令列查看已安裝外掛程式的清單，請使用以下命令：
 
 ```bash
 sudo bin/opensearch-dashboards-plugin list
 ```
 {% include copy.html %}
 
-The command returns the list of installed plugins and their versions:
+該命令會回傳已安裝外掛程式及其版本的清單：
 
 ```bash
 alertingDashboards@3.1.0.0
@@ -52,44 +53,44 @@ searchRelevanceDashboards@3.1.0.0
 securityAnalyticsDashboards@3.1.0.0
 ```
 
-### Installing plugins
+### 安裝外掛程式
 
-To install a plugin, provide the URL of the plugin's zip file:
+若要安裝外掛程式，請提供外掛程式 zip 檔案的 URL：
 
 ```bash
 sudo bin/opensearch-dashboards-plugin install <plugin-zip-url>
 ```
 {% include copy.html %}
 
-To install a plugin from a zip file on the host, provide the file path using the `file://` scheme:
+若要從主機上的 zip 檔案安裝外掛程式，請使用 `file://` 方案提供檔案路徑：
 
 ```bash
 sudo bin/opensearch-dashboards-plugin install file:///<path-to-plugin-zip>
 ```
 {% include copy.html %}
 
-The plugin version must match your OpenSearch Dashboards version. For more information, see [Plugin compatibility](#plugin-compatibility). After installing the plugin, restart OpenSearch Dashboards.
+外掛程式版本必須與您的 OpenSearch Dashboards 版本相符。如需更多資訊，請參閱 [外掛程式相容性](#plugin-compatibility)。安裝外掛程式後，請重新啟動 OpenSearch Dashboards。
 
-### Removing plugins
+### 移除外掛程式
 
-To remove a plugin, use the following command:
+若要移除外掛程式，請使用以下命令：
 
 ```bash
 sudo bin/opensearch-dashboards-plugin remove alertingDashboards
 ```
 {% include copy.html %}
 
-Then remove all associated entries from `opensearch_dashboards.yml` and restart OpenSearch Dashboards. 
+接著從 `opensearch_dashboards.yml` 中移除所有相關項目，並重新啟動 OpenSearch Dashboards。
 
-### Updating plugins
+### 更新外掛程式
 
-The `opensearch-dashboards-plugin` tool does not update plugins. To update a plugin, [remove the old version](#removing-plugins), [install the new version](#installing-plugins), and restart OpenSearch Dashboards.
+`opensearch-dashboards-plugin` 工具不支援更新外掛程式。若要更新外掛程式，請[移除舊版本](#removing-plugins)、[安裝新版本](#installing-plugins)並重新啟動 OpenSearch Dashboards。
 
-## Available plugins
+## 可用的外掛程式
 
-The following table lists available OpenSearch Dashboards plugins. All listed plugins are included in the default OpenSearch distributions.
+下表列出了可用的 OpenSearch Dashboards 外掛程式。所有列出的外掛程式均包含在預設的 OpenSearch 發行版中。
 
-| Plugin name | Repository | Earliest available version |
+| 外掛程式名稱 | 儲存庫 | 最早可用版本 |
 | :--- | :--- | :--- |
 | `alertingDashboards` | [alerting-dashboards-plugin](https://github.com/opensearch-project/alerting-dashboards-plugin) | 1.0.0 |
 | `anomalyDetectionDashboards` | [anomaly-detection-dashboards-plugin](https://github.com/opensearch-project/anomaly-detection-dashboards-plugin) | 1.0.0 |
@@ -107,18 +108,18 @@ The following table lists available OpenSearch Dashboards plugins. All listed pl
 | `securityAnalyticsDashboards` | [security-analytics-dashboards-plugin](https://github.com/opensearch-project/security-analytics-dashboards-plugin)| 2.4.0 |
 | `securityDashboards` | [security-dashboards-plugin](https://github.com/opensearch-project/security-dashboards-plugin) | 1.0.0 |
 
-_<sup>*</sup>`dashboardNotebooks` was merged into the Observability plugin with the release of OpenSearch 1.2.0._<br>
+_<sup>*</sup>`dashboardNotebooks` 已在 OpenSearch 1.2.0 版本中合併至 Observability 外掛程式。_<br>
 
-## Plugin compatibility
+## 外掛程式相容性
 
-Major, minor, and patch plugin versions must match OpenSearch major, minor, and patch versions in order to be compatible. For example, plugins versions 2.3.0.x work only with OpenSearch 2.3.0.
+外掛程式的主版本、次版本和修補版本必須與 OpenSearch 的主版本、次版本和修補版本相符才能相容。例如，外掛程式版本 2.3.0.x 僅能與 OpenSearch 2.3.0 搭配使用。
 {: .warning}
 
-## Plugin dependencies
+## 外掛程式相依性
 
-Some plugins extend functionality of other plugins. If a plugin has a dependency on another plugin, you must install the required dependency before installing the dependent plugin. For plugin dependencies, see the [manifest file](https://github.com/opensearch-project/opensearch-build/blob/main/manifests/{{site.opensearch_dashboards_version}}/opensearch-dashboards-{{site.opensearch_dashboards_version}}.yml). In this file, each plugin's dependencies are listed in the `depends_on` parameter.
+某些外掛程式會擴展其他外掛程式的功能。如果某個外掛程式相依於另一個外掛程式，您必須在安裝相依外掛程式之前先安裝所需的相依項目。關於外掛程式相依性，請參閱 [manifest 檔案](https://github.com/opensearch-project/opensearch-build/blob/main/manifests/{{site.opensearch_dashboards_version}}/opensearch-dashboards-{{site.opensearch_dashboards_version}}.yml)。在此檔案中，每個外掛程式的相依項目都列在 `depends_on` 參數中。
 
-## Related documentation
+## 相關文件
 
-- [Installing OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/)
-- [Managing OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)
+- [安裝 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/)
+- [管理 OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)

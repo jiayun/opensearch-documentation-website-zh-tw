@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete index template
+title: "刪除索引範本"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 20
 ---
 
-# Delete Index Template API
-**Introduced 1.0**
+# 刪除索引範本 API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Delete Index Template API deletes one or more index templates.
+刪除索引範本 API 會刪除一或多個索引範本。
 
-## Endpoints
+## 端點
 
 ```json
 DELETE /_index_template/{template-name}
 ```
 
-## Path parameters
+## 路徑參數
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`template-name` | String | The name of the index template. You can delete multiple templates in one request by separating the template names with commas. When multiple template names are used in the request, wildcards are not supported.
+`template-name` | 字串 | 索引範本的名稱。您可以在一個請求中以逗號分隔多個範本名稱，一次刪除多個範本。當請求中使用多個範本名稱時，不支援萬用字元。
 
-## Query parameters
+## 查詢參數
 
-The following optional query parameters are supported.
+支援下列選用的查詢參數。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`cluster_manager_timeout` | Time | The amount of time to wait for a connection to the cluster manager node. Default is `30s`.
-`timeout` | Time | The amount of time that the operation will wait for a response. Default is `30s`.
+`cluster_manager_timeout` | Time | 等待連線至叢集管理員節點的時間。預設為 `30s`。
+`timeout` | Time | 此作業等待回應的時間。預設為 `30s`。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/index_template/delete`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`indices:admin/index_template/delete`。

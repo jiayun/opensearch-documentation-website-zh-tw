@@ -1,16 +1,17 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Operator configuration
+title: "Operator 組態"
 parent: OpenSearch Kubernetes Operator
 grand_parent: Installing OpenSearch
 nav_order: 10
 ---
 
-# Operator configuration
+# Operator 組態
 
-You can configure general options for the operator itself using Helm values you provide during installation: `helm install opensearch-operator opensearch-operator/opensearch-operator -f values.yaml`.
+您可以使用在安裝期間提供的 Helm 值來設定 operator 本身的通用選項：`helm install opensearch-operator opensearch-operator/opensearch-operator -f values.yaml`。
 
-For a list of all supported values, see the default chart [`values.yaml`](https://github.com/opensearch-project/opensearch-k8s-operator/blob/main/charts/opensearch-operator/values.yaml). The following are some important configuration options:
+如需所有支援的值清單，請參閱預設 chart [`values.yaml`](https://github.com/opensearch-project/opensearch-k8s-operator/blob/main/charts/opensearch-operator/values.yaml)。以下是一些重要的組態選項：
 
 ```yaml
 manager:
@@ -31,14 +32,14 @@ manager:
 ```
 {% include copy.html %}
 
-The operator uses admission controller webhooks to validate OpenSearch Custom Resource Definitions (CRDs).
+operator 使用許可控制器 webhook 來驗證 OpenSearch 自訂資源定義 (CRDs)。
 {: .note}
 
 <!-- vale off -->
-## pprof endpoints
+## pprof 端點
 <!-- vale on -->
 
-To diagnose memory issues, you can enable the standard Go [`pprof`](https://pkg.go.dev/net/http/pprof) endpoints by adding the following to your `values.yaml`:
+為了診斷記憶體問題，您可以在 `values.yaml` 中加入以下內容來啟用標準的 Go [`pprof`](https://pkg.go.dev/net/http/pprof) 端點：
 
 ```yaml
 manager:
@@ -46,23 +47,23 @@ manager:
 ```
 {% include copy.html %}
 
-For security reasons, the endpoints are only exposed on `localhost` inside the pod. To access them, use port-forwarding:
+出於安全性考量，這些端點僅在 pod 內部的 `localhost` 暴露。若要存取這些端點，請使用連接埠轉發 (port-forwarding)：
 
 ```bash
 kubectl port-forward deployment/opensearch-operator-controller-manager 6060
 ```
 {% include copy.html %}
 
-Then use the Go `pprof` tool from another terminal:
+接著從另一個終端機使用 Go `pprof` 工具：
 
 ```bash
 go tool pprof http://localhost:6060/debug/pprof/heap
 ```
 {% include copy.html %}
 
-## Custom operator communication URL
+## 自訂 operator 通訊 URL
 
-You can configure the operator to use a custom URL when communicating with OpenSearch by setting the `operatorClusterURL` field:
+您可以透過設定 `operatorClusterURL` 欄位，將 operator 設定為在與 OpenSearch 通訊時使用自訂 URL：
 
 ```yaml
 spec:
@@ -75,4 +76,4 @@ spec:
 ```
 {% include copy.html %}
 
-Use this configuration when you have external certificates (for example, from cert-manager) valid for a specific FQDN. The operator uses this custom URL instead of the default internal Kubernetes DNS name, allowing you to use the same certificate for both external access and operator communication.
+當您擁有適用於特定 FQDN 的外部憑證（例如來自 cert-manager）時，請使用此組態。operator 會使用此自訂 URL 而非預設的內部 Kubernetes DNS 名稱，讓您能將相同的憑證同時用於外部存取與 operator 通訊。

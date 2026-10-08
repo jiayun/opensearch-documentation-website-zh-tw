@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Stats bucket
+title: "統計桶"
 parent: Pipeline aggregations
 nav_order: 190
 ---
 
-# Stats bucket aggregation
+# 統計桶彙總
 
-The `stats_bucket` aggregation is a sibling aggregation that returns a variety of stats (`count`, `min`, `max`, `avg`, and `sum`) for the buckets of a previous aggregation.
+`stats_bucket` 彙總是一種同層級彙總，會針對前一個彙總的桶 (bucket) 傳回多種統計資料（`count`、`min`、`max`、`avg` 和 `sum`）。
 
-The specified metric must be numeric, and the sibling aggregation must be a multi-bucket aggregation.
+指定的指標必須是數值，且同層級彙總必須是多桶彙總。
 
-## Parameters
+## 參數
 
-The `stats_bucket` aggregation takes the following parameters.
+`stats_bucket` 彙總接受下列參數。
 
-| Parameter             | Required/Optional | Data type       | Description |
+| 參數             | 必要/選用 | 資料類型       | 說明 |
 | :--                   | :--               |  :--            | :--         |
-| `buckets_path`        | Required          | String          | The path of the aggregation buckets to be aggregated. See [Buckets path]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path). |
-| `gap_policy`          | Optional          | String          | The policy to apply to missing data. Valid values are `skip` and `insert_zeros`. Default is `skip`. See [Data gaps]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#data-gaps). |
-| `format`              | Optional          | String          | A [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) formatting string. Returns the formatted output in the aggregation's `<stat>_as_string` property. |
+| `buckets_path`        | 必要          | 字串          | 要彙總之彙總桶的路徑。請參閱[桶路徑]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path)。 |
+| `gap_policy`          | 選用          | 字串          | 套用於缺漏資料的原則。有效值為 `skip` 和 `insert_zeros`。預設值為 `skip`。請參閱[資料缺口]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#data-gaps)。 |
+| `format`              | 選用          | 字串          | [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) 格式字串。在彙總的 `<stat>_as_string` 屬性中傳回格式化後的輸出。 |
 
-## Example
+## 範例
 
-The following example creates a date histogram with a one-month interval using the OpenSearch Dashboards e-commerce sample data. The `sum` subaggregation calculates the sum of all bytes for each month. Finally, the `stats_bucket` aggregation returns the `count`, `avg`, `sum`, `min`, and `max` stats from these sums:
+下列範例使用 OpenSearch Dashboards 電子商務範例資料，建立間隔為一個月的日期直方圖。`sum` 子彙總會計算每個月所有位元組的總和。最後，`stats_bucket` 彙總會根據這些總和傳回 `count`、`avg`、`sum`、`min` 和 `max` 統計資料：
 
 ```json
 GET opensearch_dashboards_sample_data_logs/_search
@@ -53,9 +54,9 @@ GET opensearch_dashboards_sample_data_logs/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The aggregation returns all five basic statistics for the buckets:
+此彙總會針對這些桶傳回全部五項基本統計資料：
 
 ```json
 {

@@ -1,0 +1,195 @@
+---
+layout: default
+title: Binary quantization
+parent: Vector quantization
+grand_parent: Optimizing vector storage
+nav_order: 40
+has_children: false
+has_math: true
+---
+
+# Binary quantization
+
+OpenSearch supports binary quantization (BQ) with binary vector support for the Faiss engine. BQ compresses vectors into a binary format (0s and 1s), making it highly efficient in terms of memory usage. You can choose to represent each vector dimension using 1, 2, or 4 bits, depending on the desired precision. One of the advantages of using BQ is that the training process is handled automatically during indexing. This means that no separate training step is required, unlike other quantization techniques such as PQ.
+
+## Using BQ
+
+To configure BQ for the Faiss engine, define a `knn_vector` field and specify the `binary` encoder in the method parameters. The `bits` parameter controls the number of bits used for quantization and can be set to `1`, `2`, or `4`:
+
+- `1`-bit quantization: 32x compression
+- `2`-bit quantization: 16x compression
+- `4`-bit quantization: 8x compression
+
+The following example creates an index with 1-bit binary quantization:
+
+```json
+PUT my-vector-index
+{
+  "settings": {
+    "index": {
+      "knn": true
+    }
+  },
+  "mappings": {
+    "properties": {
+      "my_vector_field": {
+        "type": "knn_vector",
+        "dimension": 8,
+        "space_type": "l2",
+        "method": {
+          "name": "hnsw",
+          "engine": "faiss",
+          "parameters": {
+            "m": 16,
+            "ef_construction": 512,
+            "encoder": {
+              "name": "binary",
+              "parameters": {
+                "bits": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+## Enhancing search quality with ADC and RR
+**Introduced 3.2**
+{: .label .label-purple }
+
+If your search results have low recall, you can enhance search quality by specifying asymmetric distance computation (ADC) or random rotation (RR) in the index mapping.
+
+ADC maintains a full-precision query vector while rescaling it to have meaningful distance computations against binary-quantized document vectors. This asymmetric approach preserves more information about the query vector, boosting search quality without significant memory penalty. ADC is supported for 1-bit quantization only.
+
+RR addresses the issue of binary quantization giving equal weight to each vector dimension during the quantization process. By rotating the distribution, RR can redistribute variance (information) from high-variance dimensions to low-variance dimensions, preserving more information during the 32x compression process. RR is supported for 1-bit, 2-bit, and 4-bit quantization.
+
+For optimal performance and recall enhancement, use both ADC and RR together:
+
+```json
+PUT vector-index
+{
+  "settings" : {
+    "index": {
+      "knn": true
+    }
+  },
+  "mappings": {
+    "properties": {
+      "vector_field": {
+        "type": "knn_vector",
+        "dimension": 8,
+        "space_type": "l2",
+        "method": {
+            "name": "hnsw",
+            "engine": "faiss",
+            "parameters": {
+              "encoder": {
+                "name": "binary",
+                "parameters": {
+                  "bits": 1,
+                  "random_rotation": true,
+                  "enable_adc": true
+                }
+              }
+            }
+        }
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+ADC and RR impact search and indexing performance, so they are disabled by default. ADC may introduce a moderate latency increase because of full-precision distance computations, while RR primarily affects indexing latency because vectors must be rotated during the process.
+{: .note}
+
+## Search using binary quantized vectors
+
+You can perform a vector search on your index by providing a vector and specifying the number of nearest neighbors (k) to return:
+
+```json
+GET my-vector-index/_search
+{
+  "size": 2,
+  "query": {
+    "knn": {
+      "my_vector_field": {
+        "vector": [1.5, 5.5, 1.5, 5.5, 1.5, 5.5, 1.5, 5.5],
+        "k": 10
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+You can also fine-tune search by providing the `ef_search` and `oversample_factor` parameters.
+The `oversample_factor` parameter controls the factor by which the search oversamples the candidate vectors before ranking them. Using a higher oversample factor means that more candidates will be considered before ranking, improving accuracy but also increasing search time. When selecting the `oversample_factor` value, consider the trade-off between accuracy and efficiency. For example, setting the `oversample_factor` to `2.0` will double the number of candidates considered during the ranking phase, which may help achieve better results. 
+
+The following request specifies the `ef_search` and `oversample_factor` parameters:
+
+```json
+GET my-vector-index/_search
+{
+  "size": 2,
+  "query": {
+    "knn": {
+      "my_vector_field": {
+        "vector": [1.5, 5.5, 1.5, 5.5, 1.5, 5.5, 1.5, 5.5],
+        "k": 10,
+        "method_parameters": {
+            "ef_search": 10
+        },
+        "rescore": {
+            "oversample_factor": 10.0
+        }
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+
+## HNSW memory estimation
+
+The memory required for the Hierarchical Navigable Small World (HNSW) graph can be estimated as `1.1 * (dimension * bits / 8 + 8 * m)` bytes/vector, where `m` is the maximum number of bidirectional links created for each element during the construction of the graph.
+
+As an example, assume that you have 1 million vectors with a dimension of 256 and an `m` of 16. The following sections provide memory requirement estimations for various compression values.
+
+### 1-bit quantization (32x compression)
+
+In 1-bit quantization, each dimension is represented using 1 bit, equivalent to a 32x compression factor. The memory requirement can be estimated as follows:
+
+```r
+Memory = 1.1 * ((256 * 1 / 8) + 8 * 16) * 1,000,000
+       ~= 0.176 GB
+```
+
+### 2-bit quantization (16x compression)
+
+In 2-bit quantization, each dimension is represented using 2 bits, equivalent to a 16x compression factor. The memory requirement can be estimated as follows:
+
+```r
+Memory = 1.1 * ((256 * 2 / 8) + 8 * 16) * 1,000,000
+       ~= 0.211 GB
+```
+
+### 4-bit quantization (8x compression)
+
+In 4-bit quantization, each dimension is represented using 4 bits, equivalent to an 8x compression factor. The memory requirement can be estimated as follows:
+
+```r
+Memory = 1.1 * ((256 * 4 / 8) + 8 * 16) * 1,000,000
+       ~= 0.282 GB
+```
+
+## Next steps
+
+- [Disk-based vector search]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/disk-based-vector-search/)
+- [Memory-optimized vectors]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/)
+- [k-NN query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)

@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index analyzers
+title: "索引分析器"
 nav_order: 20
 parent: Analyzers
 ---
 
-# Index analyzers
+# 索引分析器
 
-Index analyzers are specified at indexing time and are used to analyze [text]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) fields when indexing a document.
+索引分析器是在編製索引時指定的，用於在將文件編製索引時分析 [text]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 欄位。
 
-## Determining which index analyzer to use
+## 判斷要使用哪個索引分析器
 
-To determine which analyzer to use for a field when a document is indexed, OpenSearch examines the following parameters in order:
+為了判斷在將文件編製索引時要對欄位使用哪個分析器，OpenSearch 會依序檢查下列參數：
 
-1. The `analyzer` mapping parameter of the field
-1. The `analysis.analyzer.default` index setting
-1. The `standard` analyzer (default)
+1. 欄位的 `analyzer` 對應參數
+1. `analysis.analyzer.default` 索引設定
+1. `standard` 分析器（預設）
 
-When specifying an index analyzer, keep in mind that in most cases, specifying an analyzer for each `text` field in an index works best. Analyzing both the text field (at indexing time) and the query string (at query time) with the same analyzer ensures that the search uses the same terms as those that are stored in the index. 
+指定索引分析器時，請注意，在大多數情況下，為索引中的每個 `text` 欄位指定分析器的效果最好。使用相同的分析器分析文字欄位（在編製索引時）和查詢字串（在查詢時），可確保搜尋使用的詞彙與儲存在索引中的詞彙相同。
 {: .important }
 
-For information about verifying which analyzer is associated with which field, see [Verifying analyzer settings]({{site.url}}{{site.baseurl}}/analyzers/index/#verifying-analyzer-settings).
+如需有關驗證哪個分析器與哪個欄位相關聯的資訊，請參閱[驗證分析器設定]({{site.url}}{{site.baseurl}}/analyzers/index/#verifying-analyzer-settings)。
 
-## Specifying an index analyzer for a field
+## 為欄位指定索引分析器
 
-When creating index mappings, you can supply the `analyzer` parameter for each [text]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) field. For example, the following request specifies the `simple` analyzer for the `text_entry` field:
+建立索引對應時，您可以為每個 [text]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 欄位提供 `analyzer` 參數。例如，下列請求為 `text_entry` 欄位指定 `simple` 分析器：
 
 ```json
 PUT testindex
@@ -41,9 +42,9 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-## Specifying a default index analyzer for an index
+## 為索引指定預設索引分析器
 
-If you want to use the same analyzer for all text fields in an index, you can specify it in the `analysis.analyzer.default` setting as follows:
+如果您想對索引中的所有文字欄位使用相同的分析器，可以在 `analysis.analyzer.default` 設定中指定，如下所示：
 
 ```json
 PUT testindex
@@ -61,6 +62,6 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-If you don't specify a default analyzer, the `standard` analyzer is used.
+如果您未指定預設分析器，則會使用 `standard` 分析器。
 {: .note}
 

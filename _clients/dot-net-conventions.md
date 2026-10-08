@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: .NET client considerations
+title: ".NET 用戶端注意事項"
 nav_order: 20
 has_children: false
 parent: .NET clients
 ---
 
-# .NET client considerations and best practices
+# .NET 用戶端注意事項與最佳做法
 
-The following sections provide information regarding the considerations and best practices for using .NET clients.
+以下各節提供使用 .NET 用戶端時的注意事項與最佳做法相關資訊。
 
-## Registering OpenSearch.Client as a singleton
+## 將 OpenSearch.Client 註冊為單一執行個體
 
-As a rule, you should set up your OpenSearch.Client as a singleton. OpenSearch.Client manages connections to the server and the states of the nodes in a cluster. Additionally, each client uses a lot of configuration for its setup. Therefore, it is beneficial to create an OpenSearch.Client instance once and reuse it for all OpenSearch operations. The client is thread safe, so the same instance can be shared by multiple threads.
+原則上，您應將 OpenSearch.Client 設定為單一執行個體 (singleton)。OpenSearch.Client 會管理與伺服器的連線，以及叢集中各節點的狀態。此外，每個用戶端在設定時都會使用大量組態。因此，建立一次 OpenSearch.Client 執行個體，並在所有 OpenSearch 作業中重複使用，會比較有利。此用戶端具備執行緒安全性，因此多個執行緒可以共用同一個執行個體。
 
-## Exceptions
+## 例外狀況
 
-The following are the types of exceptions that may be thrown by .NET clients:
+以下是 .NET 用戶端可能擲回的例外狀況類型：
 
-- `OpenSearchClientException` is a known exception that occurs either in the request pipeline (for example, timeout reached) or in OpenSearch (for example, malformed query). If it is an OpenSearch exception, the `ServerError` response property contains the error that OpenSearch returns. 
-- `UnexpectedOpenSearchClientException` is an unknown exception (for example, an error during deserialization) and is a subclass of OpenSearchClientException.
-- System exceptions are thrown when the API is not used properly. 
+- `OpenSearchClientException` 是已知的例外狀況，發生在請求管線中（例如達到逾時）或 OpenSearch 中（例如查詢格式錯誤）。如果是 OpenSearch 例外狀況，`ServerError` 回應屬性會包含 OpenSearch 傳回的錯誤。
+- `UnexpectedOpenSearchClientException` 是未知的例外狀況（例如還原序列化期間發生的錯誤），且為 OpenSearchClientException 的子類別。
+- 未正確使用 API 時，會擲回系統例外狀況。
 
-## Nodes
+## 節點
 
-To create a node, pass a `Uri` object into its constructor:
+若要建立節點，請將 `Uri` 物件傳入其建構函式：
 
 ```cs
 var uri = new Uri("http://example.org/opensearch");
@@ -32,54 +33,54 @@ var node = new Node(uri);
 ```
 {% include copy.html %}
 
-When first created, a node is cluster-manager-eligible, and its `HoldsData` property is set to true. 
-The `AbsolutePath` property of the node created previously is `"/opensearch/"`: A trailing forward slash is appended so that the paths can be easily combined. If not specified, the default `Port` is 80.
+節點在初次建立時具備叢集管理員資格，且其 `HoldsData` 屬性會設為 true。
+先前建立之節點的 `AbsolutePath` 屬性為 `"/opensearch/"`：系統會附加結尾的正斜線，以便輕鬆組合路徑。若未指定，預設的 `Port` 為 80。
 
-Nodes are considered equal if they have the same endpoint. Metadata is not taken into account when checking nodes for equality.
+如果節點具有相同的端點，即視為相等。檢查節點是否相等時，不會將中繼資料納入考量。
 {: .note}
 
-## Connection pools
+## 連線集區
 
-Connection pools are instances of `IConnectionPool` and are responsible for managing the nodes in the OpenSearch cluster. We recommend creating a [singleton client](#registering-opensearchclient-as-a-singleton) with a single `ConnectionSettings` object. The lifetime of both the client and its `ConnectionSettings` is the lifetime of the application.
+連線集區是 `IConnectionPool` 的執行個體，負責管理 OpenSearch 叢集中的節點。我們建議建立搭配單一 `ConnectionSettings` 物件的[單一執行個體用戶端](#registering-opensearchclient-as-a-singleton)。用戶端及其 `ConnectionSettings` 的存留期間皆與應用程式的存留期間相同。
 
-The following are connection pool types.
+以下是連線集區的類型。
 
 - **SingleNodeConnectionPool**
 
-`SingleNodeConnectionPool` is the default connection pool that is used if no connection pool is passed to the `ConnectionSettings` constructor. Use `SingleNodeConnectionPool` if you have only one node in the cluster or if your cluster has a load balancer as an entry point. `SingleNodeConnectionPool` does not support sniffing or pinging and does not mark nodes as dead or alive. 
+`SingleNodeConnectionPool` 是預設的連線集區，在未將連線集區傳入 `ConnectionSettings` 建構函式時使用。如果叢集中只有一個節點，或叢集以負載平衡器作為進入點，請使用 `SingleNodeConnectionPool`。`SingleNodeConnectionPool` 不支援探查 (sniffing) 或 ping，也不會將節點標記為失效或存活。
 
 - **CloudConnectionPool**
 
-`CloudConnectionPool` is a subclass of `SingleNodeConnectionPool` that takes a Cloud ID and credentials. Like `SingleNodeConnectionPool`, `CloudConnectionPool` does not support sniffing or pinging.
+`CloudConnectionPool` 是 `SingleNodeConnectionPool` 的子類別，會接受 Cloud ID 與認證。與 `SingleNodeConnectionPool` 相同，`CloudConnectionPool` 不支援探查或 ping。
 
 - **StaticConnectionPool**
 
-`StaticConnectionPool` is used for a small cluster when you do not want to turn on sniffing to learn about cluster topology. `StaticConnectionPool` does not support sniffing, but can support pinging.
+`StaticConnectionPool` 適用於您不想開啟探查來了解叢集拓撲的小型叢集。`StaticConnectionPool` 不支援探查，但可以支援 ping。
 
 - **SniffingConnectionPool**
 
-`SniffingConnectionPool` is a subclass of `StaticConnectionPool`. It is thread safe and supports sniffing and pinging. `SniffingConnectionPool` can be reseeded at run time, and you can specify node roles when seeding.
+`SniffingConnectionPool` 是 `StaticConnectionPool` 的子類別。它具備執行緒安全性，並支援探查與 ping。`SniffingConnectionPool` 可以在執行階段重新植入節點，且您可以在植入時指定節點角色。
 
 - **StickyConnectionPool**
 
-`StickyConnectionPool` is set up to return the first live node, which then persists between requests. It can be seeded using an enumerable of `Uri` or `Node` objects. `StickyConnectionPool` does not support sniffing but supports pinging.
+`StickyConnectionPool` 設定為傳回第一個存活的節點，該節點隨後會在各請求之間持續使用。您可以使用 `Uri` 或 `Node` 物件的可列舉集合來植入節點。`StickyConnectionPool` 不支援探查，但支援 ping。
 
 - **StickySniffingConnectionPool**
 
-`StickySniffingConnectionPool` is a subclass of `SniffingConnectionPool`. Like `StickyConnectionPool`, it returns the first live node2, which then persists between requests. `StickySniffingConnectionPool` supports sniffing and sorting so that each instance of your application can favor a different node. Nodes have weights associated with them and can be sorted by weight.
+`StickySniffingConnectionPool` 是 `SniffingConnectionPool` 的子類別。與 `StickyConnectionPool` 相同，它會傳回第一個存活的節點，該節點隨後會在各請求之間持續使用。`StickySniffingConnectionPool` 支援探查與排序，讓應用程式的每個執行個體都能優先使用不同的節點。節點具有相關聯的權重，並可依權重排序。
 
-## Retries
+## 重試
 
-If a request does not succeed, it is automatically retried. By default, the number of retries is the number of nodes known to OpenSearch.Client in your cluster. The number of retries is also limited by the timeout parameter, so OpenSearch.Client retries requests as many times as possible within the timeout period. 
+如果請求未成功，系統會自動重試。根據預設，重試次數為 OpenSearch.Client 所知叢集中的節點數量。重試次數也受逾時參數限制，因此 OpenSearch.Client 會在逾時期間內盡可能多次重試請求。
 
-To set the maximum number of retries, specify the number in the `MaximumRetries` property on the `ConnectionSettings` object.
+若要設定最大重試次數，請在 `ConnectionSettings` 物件的 `MaximumRetries` 屬性中指定次數。
 
 ```cs
 var settings = new ConnectionSettings(connectionPool).MaximumRetries(5);
 ```
 {% include copy.html %}
 
-You can also set a `RequestTimeout` that specifies a timeout for a single request and a `MaxRetryTimeout` that specifies the time limit for all retry attempts. In the following example, `RequestTimeout` is set to 4 seconds, and `MaxRetryTimeout` is set to 12 seconds, so the maximum number of attempts for a query is 3. 
+您也可以設定 `RequestTimeout` 來指定單一請求的逾時，並設定 `MaxRetryTimeout` 來指定所有重試嘗試的時間限制。在以下範例中，`RequestTimeout` 設為 4 秒，`MaxRetryTimeout` 設為 12 秒，因此查詢的最大嘗試次數為 3 次。
 
 ```cs
 var settings = new ConnectionSettings(connectionPool)
@@ -88,8 +89,8 @@ var settings = new ConnectionSettings(connectionPool)
 ```
 {% include copy.html %}
 
-## Failover
+## 容錯移轉
 
-If you are using a connection pool with multiple nodes, a request is retried if it returns a 502 (Bad Gateway), 503 (Service Unavailable), or 504 (Gateway Timeout) HTTP error response code. If the response code is an error code in the 400–501 or 505–599 ranges, the request is not retried.
+如果您使用的連線集區包含多個節點，當請求傳回 502 (Bad Gateway)、503 (Service Unavailable) 或 504 (Gateway Timeout) HTTP 錯誤回應碼時，系統會重試該請求。如果回應碼為 400–501 或 505–599 範圍內的錯誤碼，則不會重試請求。
 
-A response is considered valid if the response code is in the 2xx range or the response code has one of the expected values for this request. For example, 404 (Not Found) is a valid response for a request that checks whether an index exists.
+如果回應碼在 2xx 範圍內，或回應碼為此請求的預期值之一，該回應即視為有效。例如，對於檢查索引是否存在的請求，404 (Not Found) 是有效的回應。

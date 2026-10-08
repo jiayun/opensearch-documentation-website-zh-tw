@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Clone index
+title: "複製索引"
 parent: Index operations
 grand_parent: Index APIs
 nav_order: 20
@@ -8,32 +9,32 @@ redirect_from:
   - /opensearch/rest-api/index-apis/clone/
 ---
 
-# Clone Index API
-**Introduced 1.0**
+# 複製索引 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The clone index API clones an existing index into a new index, where each original primary shard is cloned into a new primary shard in the target index.
+複製索引 API 會將現有索引複製到新索引，其中每個原始主要分片都會複製成目標索引中的新主要分片。
 
-Use this API in the following scenarios:
+在下列情境中使用此 API：
 
-- Creating a backup copy of an index with the same number of shards before making destructive changes.
-- Testing configuration changes on a cloned copy while preserving the original index.
-- Duplicating an index for parallel processing workflows with different settings or aliases.
+- 在進行破壞性變更之前，建立分片數相同的索引備份。
+- 在保留原始索引的同時，於複製的副本上測試組態變更。
+- 複製索引，以供使用不同設定或別名的平行處理工作流程使用。
 
-The clone operation follows a three-step process to efficiently duplicate index data:
+複製作業遵循三個步驟，以有效率地複製索引資料：
 
-1. OpenSearch creates a target index with the same definition as the source index, including mappings and settings.
-2. The system creates hard links from the source index segments to the target index. If the file system does not support hard linking, OpenSearch copies all segments to the target index, which requires more time and disk space.
-3. OpenSearch recovers the target index as if it were a closed index that has been reopened, making it available for use.
+1. OpenSearch 會建立與來源索引具有相同定義的目標索引，包括對應與設定。
+2. 系統會建立從來源索引區段到目標索引的硬連結。如果檔案系統不支援硬連結，OpenSearch 會將所有區段複製到目標索引，這需要更多時間與磁碟空間。
+3. OpenSearch 會復原目標索引，如同復原已關閉後重新開啟的索引，使其可供使用。
 
-## Prerequisites
+## 先決條件
 
-Before cloning an index, you must prepare the source index by marking it as read-only and ensuring the cluster is healthy:
+在複製索引之前，您必須將來源索引標記為唯讀，並確保叢集狀態良好，以完成準備：
 
-- The source index must have the `index.blocks.write` setting set to `true` to prevent write operations during the cloning process. Metadata changes, such as deleting the index, are still allowed.
-- The cluster health status must be `green` to ensure all primary and replica shards are available.
+- 來源索引必須將 `index.blocks.write` 設定設為 `true`，以防止在複製過程中進行寫入作業。仍允許變更中繼資料，例如刪除索引。
+- 叢集健康狀態必須為 `green`，以確保所有主要分片與副本分片皆可用。
 
-The following example request sets the `products` index to read-only mode so that it can be cloned:
+下列範例請求會將 `products` 索引設為唯讀模式，以便複製：
 
 <!-- spec_insert_start
 component: example_code
@@ -79,71 +80,71 @@ response = client.indices.put_settings(
 api: indices.clone
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 POST /{index}/_clone/{target}
 PUT  /{index}/_clone/{target}
 ```
 <!-- spec_insert_end -->
 
-## Requirements
+## 需求
 
-An index can only be cloned if it meets the following requirements:
+索引必須符合下列需求才能複製：
 
-- The target index must not already exist.
-- The source index must have the same number of primary shards as the target index.
-- The source index must be marked as read-only by setting `index.blocks.write` to `true`.
-- The cluster health status must be `green`.
-- The node handling the clone process must have sufficient free disk space to accommodate a second copy of the index if hard linking is not supported by the file system.
+- 目標索引必須尚未存在。
+- 來源索引的主要分片數必須與目標索引相同。
+- 來源索引必須透過將 `index.blocks.write` 設為 `true`，標記為唯讀。
+- 叢集健康狀態必須為 `green`。
+- 如果檔案系統不支援硬連結，處理複製程序的節點必須有足夠的可用磁碟空間，以容納索引的第二份副本。
 
-## Index naming restrictions
+## 索引命名限制
 
-OpenSearch indexes have the following naming restrictions:
+OpenSearch 索引有下列命名限制：
 
-- All letters must be lowercase.
-- Index names can't begin with underscores (`_`) or hyphens (`-`).
-- Index names can't contain spaces, commas, or the following characters:
+- 所有字母都必須為小寫。
+- 索引名稱不能以底線（`_`）或連字號（`-`）開頭。
+- 索引名稱不能包含空格、逗號或下列字元：
 
-  `:`, `"`, `*`, `+`, `/`, `\`, `|`, `?`, `#`, `>`, or `<`
+  `:`、`"`、`*`、`+`、`/`、`\`、`|`、`?`、`#`、`>` 或 `<`
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required | Data type | Description |
+| 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `index` | **Required** | String | The name of the source index to clone. |
-| `target` | **Required** | String | The name of the target index to create. |
+| `index` | **必要** | 字串 | 要複製的來源索引名稱。 |
+| `target` | **必要** | 字串 | 要建立的目標索引名稱。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `cluster_manager_timeout` | String | The amount of time to wait for a connection to the cluster manager node. | `30s` |
-| `task_execution_timeout` | String | The amount of time to wait for the task to complete. Only applicable when `wait_for_completion` is set to `false`. | `1h` |
-| `timeout` | String | The amount of time to wait for a response. If no response is received before the timeout expires, the request fails and returns an error. | `30s` |
-| `wait_for_active_shards` | String | The number of active shard copies required for the operation to proceed. Specify `all` or any positive integer up to the total number of shards in the index (`number_of_replicas+1`). | `1` (only the primary shard) |
-| `wait_for_completion` | Boolean | Specifies whether to wait for the operation to complete before returning a response. | `true` |
+| `cluster_manager_timeout` | 字串 | 等待連線至叢集管理員節點的時間。 | `30s` |
+| `task_execution_timeout` | 字串 | 等待工作完成的時間。僅在 `wait_for_completion` 設為 `false` 時適用。 | `1h` |
+| `timeout` | 字串 | 等待回應的時間。如果在逾時期限前未收到回應，請求會失敗並傳回錯誤。 | `30s` |
+| `wait_for_active_shards` | 字串 | 作業繼續進行所需的作用中分片副本數。指定 `all`，或不超過索引分片總數（`number_of_replicas+1`）的任意正整數。 | `1`（僅主要分片） |
+| `wait_for_completion` | 布林值 | 指定是否在傳回回應之前等待作業完成。 | `true` |
 
-## Request body fields
+## 請求本文欄位
 
-The clone index API creates a new target index, so you can specify index settings and aliases to apply to the target index in the request body. The request body is optional.
+複製索引 API 會建立新的目標索引，因此您可以在請求本文中指定要套用至目標索引的索引設定與別名。請求本文為選用。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`settings` | Object | Configuration options for the target index. For a list of index settings, see [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/). Optional.
-`settings.index.number_of_shards` | Integer | The number of primary shards in the target index. This value must equal the number of primary shards in the source index. Optional. Default is the same as the source index.
-`settings.index.number_of_replicas` | Integer | The number of replica shards for each primary shard in the target index. Optional. Default is the same as the source index.
-`aliases` | Object | Index aliases to apply to the target index. Each key is an alias name, and the value is an alias configuration object. For more information, see [Index aliases]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/). Optional.
+`settings` | 物件 | 目標索引的組態選項。如需索引設定清單，請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)。選用。
+`settings.index.number_of_shards` | 整數 | 目標索引中的主要分片數。此值必須等於來源索引中的主要分片數。選用。預設與來源索引相同。
+`settings.index.number_of_replicas` | 整數 | 目標索引中每個主要分片的副本分片數。選用。預設與來源索引相同。
+`aliases` | 物件 | 要套用至目標索引的索引別名。每個鍵都是別名名稱，而值則是別名組態物件。如需詳細資訊，請參閱[索引別名]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/)。選用。
 
-**Note**: You cannot specify mappings in the clone request. The mappings from the source index are automatically used for the target index.
+**注意**：您無法在複製請求中指定對應。來源索引的對應會自動用於目標索引。
 {: .note}
 
-## Example: Cloning an index
+## 範例：複製索引
 
-The following example request clones the `products` index into a new index named `products-clone`:
+下列範例請求會將 `products` 索引複製到名為 `products-clone` 的新索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -171,9 +172,9 @@ response = client.indices.clone(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Cloning an index with settings and aliases
+## 範例：使用設定與別名複製索引
 
-The following example request clones the `products` index into a new index named `products-clone-configured` with custom settings and an alias:
+下列範例請求會將 `products` 索引複製到名為 `products-clone-configured` 的新索引，並使用自訂設定與別名：
 
 <!-- spec_insert_start
 component: example_code
@@ -232,9 +233,9 @@ response = client.indices.clone(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-OpenSearch returns the following response when the clone request is successful. The `index` field contains the name of the target index that was created:
+複製請求成功時，OpenSearch 會傳回下列回應。`index` 欄位包含已建立的目標索引名稱：
 
 ```json
 {
@@ -244,30 +245,30 @@ OpenSearch returns the following response when the clone request is successful. 
 }
 ```
 
-The response returns immediately once the target index has been added to the cluster state. It does not wait for the clone operation to complete.
+目標索引加入叢集狀態後，便會立即傳回回應。它不會等待複製作業完成。
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`acknowledged` | Boolean | Indicates whether the clone request was received by the cluster. A value of `true` means the request was received.
-`shards_acknowledged` | Boolean | Indicates whether the number of shard copies specified by the `wait_for_active_shards` setting became active before the operation timed out. A value of `true` means the target number of shard copies became active. A value of `false` means that the operation timed out before the target number of shard copies became active.
-`index` | String | The name of the newly created target index.
+`acknowledged` | 布林值 | 表示叢集是否已收到複製請求。值為 `true` 表示已收到請求。
+`shards_acknowledged` | 布林值 | 表示 `wait_for_active_shards` 設定所指定數量的分片副本是否在作業逾時之前進入作用中狀態。值為 `true` 表示目標數量的分片副本已進入作用中狀態。值為 `false` 表示作業在目標數量的分片副本進入作用中狀態之前已逾時。
+`index` | 字串 | 新建立的目標索引名稱。
 
-## Monitoring the cloning process
+## 監控複製程序
 
-The clone API returns immediately after adding the target index to the cluster state, before any shards are allocated. At this point, all shards are in the `unassigned` state. If the target index cannot be allocated for any reason, its primary shards will remain `unassigned` until they can be allocated on a node.
+複製 API 會在將目標索引加入叢集狀態後立即傳回，此時尚未配置任何分片。此時，所有分片都處於 `unassigned` 狀態。如果目標索引因任何原因而無法配置，其主要分片會維持 `unassigned` 狀態，直到可以將它們配置到節點上。
 
-Once a primary shard is allocated, it transitions to the `initializing` state, and the clone operation begins. When the clone operation completes, the shard becomes `active`. OpenSearch then attempts to allocate any replicas and may relocate the primary shard to another node.
+主要分片配置完成後，會轉為 `initializing` 狀態，並開始複製作業。複製作業完成後，分片會變成 `active`。接著，OpenSearch 會嘗試配置所有副本，並可能將主要分片重新配置到另一個節點。
 
-You can monitor the cloning process using one of the following methods:
+您可以使用下列其中一種方法監控複製程序：
 
-- To view the progress of shard recovery and cloning, use the [CAT recovery API]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-recovery/).
-- To wait until all primary shards have been allocated, use the [Cluster health API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/) with the `wait_for_status` parameter set to `yellow`.
+- 若要檢視分片復原與複製的進度，請使用 [CAT recovery API]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-recovery/)。
+- 若要等待所有主要分片完成配置，請使用 [Cluster health API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/)，並將 `wait_for_status` 參數設為 `yellow`。
 
-The following example request monitors the recovery process for the cloned index:
+下列範例請求會監控複製索引的復原程序：
 
 <!-- spec_insert_start
 component: example_code
@@ -292,10 +293,10 @@ response = client.cat.recovery(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Wait for active shards
+## 等待作用中分片
 
-Because the clone operation creates a new index, the `wait_for_active_shards` setting for index creation also applies to the clone operation. This setting determines how many shard copies must be active before the operation returns a response. For more information, see [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/).
+由於複製作業會建立新索引，因此用於索引建立的 `wait_for_active_shards` 設定也適用於複製作業。此設定決定作業傳回回應之前，必須有多少個分片副本處於作用中狀態。如需詳細資訊，請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/resize`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`indices:admin/resize`。

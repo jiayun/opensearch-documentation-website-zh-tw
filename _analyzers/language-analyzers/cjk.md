@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: CJK
 parent: Language analyzers
@@ -6,14 +7,14 @@ grand_parent: Analyzers
 nav_order: 80
 ---
 
-# CJK analyzer
+# CJK 分析器
 
-The built-in `cjk` analyzer is designed for Chinese, Japanese, and Korean (CJK) text. It uses bigram tokenization to break down CJK text into overlapping two-character sequences, which is effective for languages that don't use spaces to separate words.
+內建的 `cjk` 分析器專為中文、日文和韓文 (CJK) 文字而設計。它使用二元語法 (bigram) 斷詞，將 CJK 文字拆解為相互重疊的雙字元序列，這對於不使用空格分隔單字的語言相當有效。
 
-You may find that the `icu_analyzer` in the ICU analysis plugin works better for CJK text than the `cjk` analyzer. Experiment with your text and queries.
+您可能會發現，對於 CJK 文字，ICU 分析外掛程式中的 `icu_analyzer` 效果比 `cjk` 分析器更好。請使用您的文字和查詢進行實驗。
 {: .note}
 
-The `cjk` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將 `cjk` 分析器套用至文字欄位：
 
 ```json
 PUT /cjk-index
@@ -30,9 +31,9 @@ PUT /cjk-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，搭配此語言分析器使用 `stem_exclusion`：
 
 ```json
 PUT index_with_stem_exclusion_cjk_analyzer
@@ -51,21 +52,21 @@ PUT index_with_stem_exclusion_cjk_analyzer
 ```
 {% include copy-curl.html %}
 
-## CJK analyzer internals
+## CJK 分析器內部結構
 
-The `cjk` analyzer is built using the following components:
+`cjk` 分析器由下列元件建構而成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
+- 詞元篩選器：
   - cjk_width
   - lowercase
   - cjk_bigram
-  - stop (similar to English)
+  - stop（與英文類似）
 
-## Custom CJK analyzer
+## 自訂 CJK 分析器
 
-You can create a custom CJK analyzer using the following command:
+您可以使用下列命令建立自訂 CJK 分析器：
 
 ```json
 PUT /cjk-index
@@ -109,9 +110,9 @@ PUT /cjk-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 POST /cjk-index/_analyze
@@ -122,7 +123,7 @@ POST /cjk-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {
@@ -146,6 +147,6 @@ The response contains the generated tokens:
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [ICU analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/) -- Alternative for CJK text
+- [ICU 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/) -- CJK 文字的替代方案

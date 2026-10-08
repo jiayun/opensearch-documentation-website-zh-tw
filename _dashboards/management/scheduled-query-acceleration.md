@@ -1,53 +1,54 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Scheduled Query Acceleration
+title: "排程查詢加速"
 parent: Connecting data sources
 nav_order: 50
 has_children: false
 ---
 
-# Scheduled Query Acceleration
-Introduced 2.17
+# 排程查詢加速
+於 2.17 版推出
 {: .label .label-purple }
 
-Scheduled Query Acceleration (SQA) is designed to optimize queries sent directly from OpenSearch to external data sources, such as Amazon Simple Storage Service (Amazon S3). It uses automation to address issues commonly encountered when managing and refreshing indexes, views, and data. 
+排程查詢加速 (Scheduled Query Acceleration，SQA) 旨在最佳化從 OpenSearch 直接傳送至外部資料來源（例如 Amazon Simple Storage Service (Amazon S3)）的查詢。它透過自動化來解決管理及重新整理索引、檢視和資料時常見的問題。
 
-Query acceleration is facilitated by secondary indexes like [skipping indexes]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#skipping-indexes), [covering indexes]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#covering-indexes), or [materialized views]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#materialized-views). When queries run, they use these indexes instead of directly querying Amazon S3. 
+查詢加速是透過次要索引來實現，例如[略過索引]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#skipping-indexes)、[涵蓋索引]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#covering-indexes)或[具體化檢視]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#materialized-views)。執行查詢時，查詢會使用這些索引，而不是直接查詢 Amazon S3。
 
-The secondary indexes need to be refreshed periodically in order to remain current with the Amazon S3 data. This refresh operation can be scheduled using either an internal scheduler (within Spark) or an external scheduler.
+次要索引需要定期重新整理，才能與 Amazon S3 資料保持同步。此重新整理作業可以使用內部排程器（在 Spark 內）或外部排程器進行排程。
 
-SQA provides the following benefits:
+SQA 提供下列優點：
 
-- **Cost reduction through optimized resource usage**: SQA reduces the operational load on driver nodes, lowering the costs associated with maintaining auto-refresh for indexes and views.
+- **透過最佳化資源使用來降低成本**：SQA 可減輕驅動程式節點的作業負載，降低為索引和檢視維持自動重新整理的相關成本。
 
-- **Improved observability of refresh operations**: SQA provides visibility into index states and refresh timing, offering insights into data processing and the current system state.
+- **提升重新整理作業的可觀測性**：SQA 提供索引狀態和重新整理時間的可見性，讓您深入了解資料處理情形及目前的系統狀態。
 
-- **Better control over refresh scheduling**: SQA allows flexible scheduling of refresh intervals, helping you to manage resource usage and refresh frequency according to specific requirements.
+- **更有效地控制重新整理排程**：SQA 可彈性排程重新整理間隔，協助您依據特定需求管理資源使用量和重新整理頻率。
 
-- **Simplified index management**: SQA enables updates to index settings, such as refresh intervals, in a single query, which simplifies workflows.
+- **簡化索引管理**：SQA 可讓您在單一查詢中更新索引設定（例如重新整理間隔），進而簡化工作流程。
 
-## Concepts
+## 概念
 
-Before configuring SQA, familiarize yourself with the following topics:
+設定 SQA 之前，請先熟悉下列主題：
 
-- [Optimizing query performance using OpenSearch indexing]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/)
-- [Flint index refresh](https://github.com/opensearch-project/opensearch-spark/blob/main/docs/index.md#flint-index-refresh)
+- [使用 OpenSearch 索引最佳化查詢效能]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/)
+- [Flint 索引重新整理](https://github.com/opensearch-project/opensearch-spark/blob/main/docs/index.md#flint-index-refresh)
 - [Index State Management](https://github.com/opensearch-project/opensearch-spark/blob/main/docs/index.md#index-state-transition-1)
 
-## Prerequisites
+## 先決條件
 
-Before configuring SQA, verify that the following requirements are met:
+設定 SQA 之前，請確認符合下列需求：
 
-- Ensure you're running OpenSearch version 2.17 or later.
-- Ensure you have the SQL plugin installed. The SQL plugin is included in most OpenSearch distributions. For more information, see [Managing OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/).
-- Ensure you have configured a data source (in this example, Amazon S3): Configure a skipping index, covering index, or materialized view. These secondary data sources are additional data structures that improve query performance by optimizing queries sent to external data sources, such as Amazon S3. For more information, see [Optimizing query performance using OpenSearch indexing]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/).
-- Configure Amazon EMR Serverless (needed for access to Apache Spark). 
+- 請確定您執行的是 OpenSearch 2.17 版或更新版本。
+- 請確定您已安裝 SQL 外掛程式。大多數 OpenSearch 發行版本都包含 SQL 外掛程式。如需更多資訊，請參閱[管理 OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)。
+- 請確定您已設定資料來源（在此範例中為 Amazon S3）：設定略過索引、涵蓋索引或具體化檢視。這些次要資料來源是額外的資料結構，可透過最佳化傳送至外部資料來源（例如 Amazon S3）的查詢來提升查詢效能。如需更多資訊，請參閱[使用 OpenSearch 索引最佳化查詢效能]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/)。
+- 設定 Amazon EMR Serverless（存取 Apache Spark 時需要）。
 
-## Configuring SQA settings
+## 設定 SQA 設定
 
-If you want to override default configuration values, change the following cluster settings:
+若要覆寫預設組態值，請變更下列叢集設定：
 
--  **Enable asynchronous query execution**: Set `plugins.query.executionengine.async_query.enabled` to `true` (default value):
+-  **啟用非同步查詢執行**：將 `plugins.query.executionengine.async_query.enabled` 設為 `true`（預設值）：
     ```json
     PUT /_cluster/settings
     {
@@ -58,9 +59,9 @@ If you want to override default configuration values, change the following clust
     ```
     {% include copy-curl.html %}
 
-    For more information, see [Settings](https://github.com/opensearch-project/sql/blob/main/docs/user/admin/settings.rst#pluginsqueryexecutionengineasync_queryenabled).
+    如需更多資訊，請參閱[設定](https://github.com/opensearch-project/sql/blob/main/docs/user/admin/settings.rst#pluginsqueryexecutionengineasync_queryenabled)。
 
-- **Configure the external scheduler interval for asynchronous queries**: This setting defines how often the external scheduler checks for tasks, allowing customization of refresh frequency. There is no default value for this setting: if this value is empty, the default comes from `opensearch-spark` and is `5 minutes`. Adjusting the interval based on workload volume can help you to optimize resources and manage costs:
+- **設定非同步查詢的外部排程器間隔**：此設定定義外部排程器檢查工作的頻率，讓您能自訂重新整理頻率。此設定沒有預設值：若此值為空，則預設值來自 `opensearch-spark`，且為 `5 minutes`。根據工作負載量調整間隔，有助於您最佳化資源並管理成本：
     ```json
     PUT /_cluster/settings
     {
@@ -71,11 +72,11 @@ If you want to override default configuration values, change the following clust
     ```
     {% include copy-curl.html %}
 
-    For more information, see [Settings](https://github.com/opensearch-project/sql/blob/main/docs/user/admin/settings.rst#pluginsqueryexecutionengineasync_queryexternal_schedulerinterval).
+    如需更多資訊，請參閱[設定](https://github.com/opensearch-project/sql/blob/main/docs/user/admin/settings.rst#pluginsqueryexecutionengineasync_queryexternal_schedulerinterval)。
 
-## Running an accelerated query
+## 執行加速查詢
 
-You can run accelerated queries in [Query Workbench]({{site.url}}{{site.baseurl}}/dashboards/query-workbench/). To run an accelerated query, use the following syntax:
+您可以在 [Query Workbench]({{site.url}}{{site.baseurl}}/dashboards/query-workbench/) 中執行加速查詢。若要執行加速查詢，請使用下列語法：
 
 ```sql
 CREATE SKIPPING INDEX example_index
@@ -86,7 +87,7 @@ WITH (
 ```
 {% include copy.html %}
 
-By default, the query uses an external scheduler. To use an internal scheduler, set `scheduler_mode` to `internal`:
+根據預設，查詢會使用外部排程器。若要使用內部排程器，請將 `scheduler_mode` 設為 `internal`：
 
 ```sql
 CREATE SKIPPING INDEX example_index
@@ -98,53 +99,53 @@ WITH (
 ```
 {% include copy.html %}
 
-## Parameters
+## 參數
 
-When creating indexes using an accelerated query, you can specify the following parameters in the `WITH` clause to control refresh behavior, scheduling, and timing.
+使用加速查詢建立索引時，您可以在 `WITH` 子句中指定下列參數，以控制重新整理行為、排程和時間。
 
-| Parameter  | Description  | 
+| 參數  | 說明  | 
 |:--- | :--- | 
-| `auto_refresh`      | Enables automatic refresh for the index. If `true`, the index refreshes automatically at the specified interval. If `false`, the refresh operation must be triggered manually using the `REFRESH` statement. Default is `false`.   |
-| `refresh_interval`  | Defines the amount of time between index refresh operations for the index, which determines how frequently new data is ingested into the index. This is applicable only when `auto_refresh` is enabled. The interval determines how frequently new data is integrated and can be specified in formats like `1 minute` or `10 seconds`. For valid time units, see [Time units](#time-units).| 
-| `scheduler_mode`    | Specifies the scheduling mode for auto-refresh (internal or external scheduling). The external scheduler requires a `checkpoint_location` (a path for refresh job checkpoints) for state management. For more information, see [Starting streaming queries](https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#starting-streaming-queries). Valid values are `internal` and `external`.| 
+| `auto_refresh`      | 為索引啟用自動重新整理。若為 `true`，索引會依指定的間隔自動重新整理。若為 `false`，則必須使用 `REFRESH` 陳述式手動觸發重新整理作業。預設為 `false`。   |
+| `refresh_interval`  | 定義索引各次重新整理作業之間的時間長度，這決定了新資料匯入索引的頻率。僅在啟用 `auto_refresh` 時適用。此間隔決定整合新資料的頻率，可使用 `1 minute` 或 `10 seconds` 等格式指定。如需有效的時間單位，請參閱[時間單位](#time-units)。| 
+| `scheduler_mode`    | 指定自動重新整理的排程模式（內部或外部排程）。外部排程器需要 `checkpoint_location`（重新整理工作檢查點的路徑）以進行狀態管理。如需更多資訊，請參閱[啟動串流查詢](https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#starting-streaming-queries)。有效值為 `internal` 和 `external`。| 
 
-For more information and additional available parameters, see [Flint index refresh](https://github.com/opensearch-project/opensearch-spark/blob/main/docs/index.md#flint-index-refresh).
+如需更多資訊及其他可用參數，請參閱 [Flint 索引重新整理](https://github.com/opensearch-project/opensearch-spark/blob/main/docs/index.md#flint-index-refresh)。
 
-## Time units
+## 時間單位
 
-You can specify the following time units when defining time intervals:
+定義時間間隔時，您可以指定下列時間單位：
 
-- Milliseconds: `ms`, `millisecond`, or `milliseconds`
-- Seconds: `s`, `second`, or `seconds`
-- Minutes: `m`, `minute`, or `minutes`
-- Hours: `h`, `hour`, or `hours`
-- Days: `d`, `day`, or `days`
+- 毫秒：`ms`、`millisecond` 或 `milliseconds`
+- 秒：`s`、`second` 或 `seconds`
+- 分鐘：`m`、`minute` 或 `minutes`
+- 小時：`h`、`hour` 或 `hours`
+- 天：`d`、`day` 或 `days`
 
-## Monitoring index status
+## 監控索引狀態
 
-To monitor the status of an index, use the following statement:
+若要監控索引的狀態，請使用下列陳述式：
 
 ```sql
 SHOW FLINT INDEXES IN spark_catalog.default;
 ```
 {% include copy.html %}
 
-## Managing scheduled jobs
+## 管理排程工作
 
-Use the following commands to manage scheduled jobs.
+使用下列命令來管理排程工作。
 
-### Enabling jobs
+### 啟用工作
 
-To disable auto-refresh using an internal or external scheduler, set `auto_refresh` to `false`:
+若要停用使用內部或外部排程器的自動重新整理，請將 `auto_refresh` 設為 `false`：
 
 ```sql
 ALTER MATERIALIZED VIEW myglue_test.default.count_by_status_v9 WITH (auto_refresh = false);
 ```
 {% include copy.html %}
 
-### Updating schedules
+### 更新排程
 
-To update the schedule and modify the refresh settings, specify the `refresh_interval` in the `WITH` clause:
+若要更新排程並修改重新整理設定，請在 `WITH` 子句中指定 `refresh_interval`：
 
 ```sql
 ALTER INDEX example_index
@@ -152,57 +153,57 @@ WITH (refresh_interval = '30 minutes');
 ```
 {% include copy.html %}
 
-### Switching the scheduler mode
+### 切換排程器模式
 
-To switch the scheduler mode, specify the `scheduler_mode` in the `WITH` clause:
+若要切換排程器模式，請在 `WITH` 子句中指定 `scheduler_mode`：
 
 ```sql
 ALTER MATERIALIZED VIEW myglue_test.default.count_by_status_v9 WITH (scheduler_mode = 'internal');
 ```
 {% include copy.html %}
 
-### Inspecting scheduler metadata
+### 檢查排程器中繼資料
 
-To inspect scheduler metadata, use the following request:
+若要檢查排程器中繼資料，請使用下列請求：
 
 ```json
 GET /.async-query-scheduler/_search
 ```
 {% include copy-curl.html %}
 
-## Best practices
+## 最佳做法
 
-We recommend the following best practices when using SQA.
+使用 SQA 時，建議您遵循下列最佳做法。
 
-### Performance optimization
+### 效能最佳化
 
-- **Recommended refresh intervals**: Choosing the right refresh interval is crucial for balancing resource usage and system performance. Consider your workload requirements and the freshness of the data you need when setting intervals.
+- **建議的重新整理間隔**：選擇適當的重新整理間隔，對於平衡資源使用量和系統效能至關重要。設定間隔時，請考量您的工作負載需求以及所需的資料新鮮度。
 
-- **Concurrent job limits**: Limit the number of concurrent running jobs to avoid overloading system resources. Monitor system capacity and adjust job limits accordingly to ensure optimal performance.
+- **並行工作限制**：限制同時執行的工作數量，以避免系統資源超載。請監控系統容量並據以調整工作限制，以確保最佳效能。
 
-- **Resource usage**: Efficient resource allocation is key to maximizing performance. Properly allocate memory, CPU, and I/O based on the workload and the type of queries you're running.
+- **資源使用量**：有效率的資源配置是發揮最大效能的關鍵。請根據工作負載及您執行的查詢類型，適當配置記憶體、CPU 和 I/O。
 
-### Cost management
+### 成本管理
 
-- **Use an external scheduler**: An external scheduler offloads refresh operations, reducing demand on core driver nodes.
+- **使用外部排程器**：外部排程器可分擔重新整理作業，減少對核心驅動程式節點的需求。
 
-- **Configure a refresh interval for your use case**: Longer refresh intervals lead to reduced costs but may impact data freshness.
+- **依您的使用案例設定重新整理間隔**：較長的重新整理間隔可降低成本，但可能影響資料新鮮度。
 
-- **Optimize the refresh schedule**: Adjust refresh intervals based on workload patterns to reduce unnecessary refresh operations.
+- **最佳化重新整理排程**：根據工作負載模式調整重新整理間隔，以減少不必要的重新整理作業。
 
-- **Monitor costs**: Regularly monitor costs related to scheduled queries and refresh operations. Using observability tools can help you gain insights into resource usage and costs over time.
+- **監控成本**：定期監控與排程查詢及重新整理作業相關的成本。使用可觀測性工具，有助於您深入了解一段時間內的資源使用量和成本。
 
-## Validating settings
+## 驗證設定
 
-You can validate your settings by running a test query and verifying the scheduler configuration:
+您可以執行測試查詢並驗證排程器組態，以驗證您的設定：
 
 ```sql
 SHOW FLINT INDEXES EXTENDED
 ```
 {% include copy.html %}
 
-For more information, see the [OpenSearch Spark documentation](https://github.com/opensearch-project/opensearch-spark/blob/main/docs/index.md#all-indexes).
+如需更多資訊，請參閱 [OpenSearch Spark 文件](https://github.com/opensearch-project/opensearch-spark/blob/main/docs/index.md#all-indexes)。
 
-## Troubleshooting
+## 疑難排解
 
-If the refresh operation is not triggering as expected, ensure that the `auto_refresh` setting is enabled and the refresh interval is properly configured.
+若重新整理作業未如預期觸發，請確定已啟用 `auto_refresh` 設定，且已正確設定重新整理間隔。

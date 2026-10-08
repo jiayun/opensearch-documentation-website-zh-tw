@@ -1,18 +1,19 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Porter stem
+title: "Porter 詞幹"
 parent: Token filters
 nav_order: 340
 ---
 
-# Porter stem token filter
+# Porter 詞幹詞元篩選器
 
-The `porter_stem` token filter reduces words to their base (or _stem_) form and removes common suffixes from words, which helps in matching similar words by their root. For example, the word `running` is stemmed to `run`. This token filter is primarily used for the English language and provides stemming based on the [Porter stemming algorithm](https://snowballstem.org/algorithms/porter/stemmer.html).
+`porter_stem` 詞元篩選器會將單字還原為其基本（或稱 _詞幹_）形式，並移除單字的常見字尾，有助於依據字根比對相似的單字。例如，單字 `running` 會被詞幹化為 `run`。此詞元篩選器主要用於英文，並依據 [Porter 詞幹提取演算法](https://snowballstem.org/algorithms/porter/stemmer.html) 提供詞幹提取功能。
 
 
-## Example
+## 範例
 
-The following example request creates a new index named `my_stem_index` and configures an analyzer with a `porter_stem` filter:
+下列範例請求會建立名為 `my_stem_index` 的新索引，並設定一個含有 `porter_stem` 篩選器的分析器：
 
 ```json
 PUT /my_stem_index
@@ -39,9 +40,9 @@ PUT /my_stem_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 POST /my_stem_index/_analyze
@@ -52,7 +53,7 @@ POST /my_stem_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含所產生的詞元：
 
 ```json
 {

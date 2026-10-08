@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Norwegian
+title: "挪威語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 240
 ---
 
-# Norwegian analyzer
+# 挪威語分析器
 
-The built-in `norwegian` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `norwegian` 分析器套用至文字欄位：
 
 ```json
 PUT /norwegian-index
@@ -25,9 +26,9 @@ PUT /norwegian-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，將 `stem_exclusion` 搭配此語言分析器使用：
 
 ```json
 PUT index_with_stem_exclusion_norwegian_analyzer
@@ -46,21 +47,21 @@ PUT index_with_stem_exclusion_norwegian_analyzer
 ```
 {% include copy-curl.html %}
 
-## Norwegian analyzer internals
+## 挪威語分析器內部結構
 
-The `norwegian` analyzer is built using the following components:
+`norwegian` 分析器由下列元件建構而成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
+- 詞元篩選器：
   - lowercase
-  - stop (Norwegian)
+  - stop (挪威語)
   - keyword
-  - stemmer (Norwegian)
+  - stemmer (挪威語)
 
-## Custom Norwegian analyzer
+## 自訂挪威語分析器
 
-You can create a custom Norwegian analyzer using the following command:
+您可以使用下列命令建立自訂挪威語分析器：
 
 ```json
 PUT /norwegian-index
@@ -108,9 +109,9 @@ PUT /norwegian-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用此分析器產生的詞元：
 
 ```json
 POST /norwegian-index/_analyze
@@ -121,7 +122,7 @@ POST /norwegian-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

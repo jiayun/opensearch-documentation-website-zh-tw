@@ -1,45 +1,46 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Custom branding
+title: "自訂品牌"
 parent: Settings and administration
 nav_order: 40
 ---
 
-# Custom branding
-Introduced 1.2
+# 自訂品牌
+於 1.2 版推出
 {: .label .label-purple }
 
-By default, OpenSearch Dashboards uses the OpenSearch logo, but if you want to use custom branding elements such as the `favicon` or main Dashboards logo, you can do so by editing `opensearch_dashboards.yml` or by including a custom `opensearch_dashboards.yml` file when you start your OpenSearch cluster.
+OpenSearch Dashboards 預設使用 OpenSearch 標誌。若您想使用自訂品牌元素，例如 `favicon` 或 Dashboards 主要標誌，可以編輯 `opensearch_dashboards.yml`，或在啟動 OpenSearch 叢集時納入自訂的 `opensearch_dashboards.yml` 檔案。
 
-For example, if you're using Docker to start your OpenSearch cluster, include the following lines in the `opensearch-dashboards` section of your `docker-compose.yml` file:
+例如，若您使用 Docker 啟動 OpenSearch 叢集，請在 `docker-compose.yml` 檔案的 `opensearch-dashboards` 區段中加入以下幾行：
 
 ```
 volumes:
   - ./opensearch_dashboards.yml:/usr/share/opensearch-dashboards/config/opensearch_dashboards.yml
 ```
 
-Doing so replaces the Docker image's default `opensearch_dashboards.yml` with your custom `opensearch_dashboards.yml` file, so be sure to include your desired settings as well. For example, if you want to configure TLS for OpenSearch Dashboards, see [Configure TLS for OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/install/tls/).
+這樣做會以您自訂的 `opensearch_dashboards.yml` 檔案取代 Docker 映像檔預設的 `opensearch_dashboards.yml`，因此請務必一併加入您需要的設定。例如，若您想為 OpenSearch Dashboards 設定 TLS，請參閱[為 OpenSearch Dashboards 設定 TLS]({{site.url}}{{site.baseurl}}/dashboards/install/tls/)。
 
-Re-launch OpenSearch Dashboards, and OpenSearch Dashboards now uses your custom elements.
+重新啟動 OpenSearch Dashboards，OpenSearch Dashboards 即會使用您的自訂元素。
 
-## Branding elements
+## 品牌元素
 
-The following elements in OpenSearch Dashboards are customizable:
+OpenSearch Dashboards 中的以下元素可以自訂：
 
-![OpenSearch customizable branding elements]({{site.url}}{{site.baseurl}}/images/dashboards-branding-labels.png)
+![OpenSearch 可自訂的品牌元素]({{site.url}}{{site.baseurl}}/images/dashboards-branding-labels.png)
 
-Setting | Corresponding branding element
+設定 | 對應的品牌元素
 :--- | :---
-`logo` | Header logo. See #1 in the image.
-`mark` | OpenSearch Dashboards mark. See #2 in the image.
-`loadingLogo` | Loading logo used when OpenSearch Dashboards is starting. See #3 in the image.
-`faviconUrl` | Website icon. Loads next to the application title. See #4 in the image.
-`applicationTitle` | The application's title. See #5 in the image.
+`logo` | 頁首標誌。請參閱圖中的 #1。
+`mark` | OpenSearch Dashboards 標記。請參閱圖中的 #2。
+`loadingLogo` | OpenSearch Dashboards 啟動時使用的載入標誌。請參閱圖中的 #3。
+`faviconUrl` | 網站圖示。顯示於應用程式標題旁。請參閱圖中的 #4。
+`applicationTitle` | 應用程式的標題。請參閱圖中的 #5。
 
-To consolidate navigation controls and reduce the space the header takes up on the page, see [Condensed header](#condensed-header).
+若要整合導覽控制項並減少頁首在頁面上所佔的空間，請參閱[緊湊頁首](#condensed-header)。
 {: .note}
 
-To start using your own branding elements in OpenSearch Dashboards, first uncomment this section of `opensearch_dashboards.yml`:
+若要開始在 OpenSearch Dashboards 中使用您自己的品牌元素，請先取消註解 `opensearch_dashboards.yml` 中的這個區段：
 
 ```yml
 # opensearchDashboards.branding:
@@ -56,11 +57,11 @@ To start using your own branding elements in OpenSearch Dashboards, first uncomm
   # applicationTitle: ""
 ```
 
-Add the URLs you want to use as branding elements to the appropriate setting. Valid image types are `SVG`, `PNG`, and `GIF`.
+將您要用作品牌元素的 URL 加入對應的設定中。有效的圖片類型為 `SVG`、`PNG` 和 `GIF`。
 
-Customization of dark mode Dashboards is also available, but you first must supply a valid link to `defaultUrl`, and then link to your preferred image with `darkModeUrl`. If you don't provide a `darkModeUrl` link, then Dashboards uses the provided `defaultUrl` element for dark mode. You are not required to customize all branding elements, so if you wanted to, it's perfectly valid to change just the logo or any other element. Leave unchanged elements as commented.
+您也可以自訂深色模式的 Dashboards，但必須先為 `defaultUrl` 提供有效的連結，然後再使用 `darkModeUrl` 連結到您偏好的圖片。若您未提供 `darkModeUrl` 連結，則 Dashboards 會在深色模式中使用所提供的 `defaultUrl` 元素。您不需要自訂所有品牌元素，因此若您願意，只變更標誌或任何其他單一元素也完全沒問題。未變更的元素請保持註解狀態。
 
-The following example demonstrates how to use `SVG` files as logos but leaves the other elements as defaults.
+以下範例示範如何使用 `SVG` 檔案作為標誌，但將其他元素保持為預設值。
 
 ```yml
 logo:
@@ -76,9 +77,9 @@ logo:
 applicationTitle: "My custom application"
 ```
 
-We recommend linking to images that are hosted on a web server, but if you really want to use locally hosted images, save your images inside `assets`, and then configure `opensearch_dashboards.yml` to use the correct paths. You can access locally stored images through the `ui/assets` folder.
+我們建議連結到託管於網頁伺服器上的圖片，但若您確實想使用本機託管的圖片，請將圖片儲存在 `assets` 內，然後設定 `opensearch_dashboards.yml` 以使用正確的路徑。您可以透過 `ui/assets` 資料夾存取本機儲存的圖片。
 
-The following example assumes the default port of 5601 that Dashboards uses and demonstrates how to link to locally stored images.
+以下範例假設 Dashboards 使用的預設連接埠為 5601，並示範如何連結到本機儲存的圖片。
 
 ```yml
 logo:
@@ -94,11 +95,11 @@ mark:
 applicationTitle: "My custom application"
 ```
 
-### Condensed header
+### 緊湊頁首
 
-The condensed header view reduces the footprint of the header and frees up space on the page by combining navigational elements into a single header bar.
+緊湊頁首檢視會將導覽元素合併至單一頁首列，藉此縮小頁首所佔的面積，並釋出頁面空間。
 
-The current default view remains close in appearance to the two-bar header offered in the previous version of Dashboards, with minor differences. To specify the condensed header, add the configuration property `useExpandedHeader` to the `opensearch_dashboards.yml` file and set the value to `false`, as the following example illustrates.
+目前的預設檢視在外觀上仍與舊版 Dashboards 提供的雙列頁首相近，僅有些微差異。若要指定使用緊湊頁首，請在 `opensearch_dashboards.yml` 檔案中加入組態屬性 `useExpandedHeader`，並將其值設為 `false`，如以下範例所示。
 
  ```yml
 # opensearchDashboards.branding:
@@ -116,39 +117,39 @@ The current default view remains close in appearance to the two-bar header offer
   useExpandedHeader: false
 ```
 
-In a future release, default behavior will become `useExpandedHeader: false`. If you want to retain the default view in subsequent releases, you can explicitly set the property to `true` in advance. Alternatively, you can also do this when upgrading.
+在未來的版本中，預設行為將變為 `useExpandedHeader: false`。若您想在後續版本中保留預設檢視，可以事先將此屬性明確設為 `true`。或者，您也可以在升級時進行此設定。
 {: .note }
 
-The condensed view header appears as in the following example.
+緊湊檢視的頁首如以下範例所示。
 
-![Condensed header]({{site.url}}{{site.baseurl}}/images/DBs-Condensed.jpeg)
+![緊湊頁首]({{site.url}}{{site.baseurl}}/images/DBs-Condensed.jpeg)
 
-Header element | Description
+頁首元素 | 說明
 :--- | :---
-OpenSearch logo | See #1. Functions as the home button.
-Header bar | See #2. A single header bar used for all navigation controls.
+OpenSearch 標誌 | 請參閱 #1。可作為首頁按鈕使用。
+頁首列 | 請參閱 #2。用於所有導覽控制項的單一頁首列。
 
-The default view remains close to the traditional view, with minor changes.
+預設檢視仍與傳統檢視相近，僅有些微變更。
 
-![Default header]({{site.url}}{{site.baseurl}}/images/DBs-Traditional.jpeg)
+![預設頁首]({{site.url}}{{site.baseurl}}/images/DBs-Traditional.jpeg)
 
-Header element | Description
+頁首元素 | 說明
 :--- | :---
-Home button | See #1. Returns to the home page and provides an indication when a page is loading.
-Header label | See #2. The label also functions as a home button.
-Navigation controls | See #3. Additional navigation controls on right-side insertion points.
+首頁按鈕 | 請參閱 #1。可返回首頁，並在頁面載入時顯示提示。
+頁首標籤 | 請參閱 #2。此標籤也可作為首頁按鈕使用。
+導覽控制項 | 請參閱 #3。位於右側插入點的其他導覽控制項。
 
-#### Preserving navigation elements in the default view
+#### 在預設檢視中保留導覽元素
 
-You can continue using the top header bar in the default view for custom navigation links (such as menu items and plugins). Follow the following steps to keep these elements in the top header in the default view.
-1. Replace the property `coreStart.chrome.navControls.registerRight(...)` with `coreStart.chrome.navControls.registerExpandedRight(...)` and then replace the property  `coreStart.chrome.navControls.registerCenter(...)` with `coreStart.chrome.navControls.registerExpandedCenter(...)`
+您可以繼續在預設檢視中使用頂端頁首列放置自訂導覽連結（例如選單項目和外掛程式）。請依照以下步驟，在預設檢視中將這些元素保留在頂端頁首。
+1. 將屬性 `coreStart.chrome.navControls.registerRight(...)` 取代為 `coreStart.chrome.navControls.registerExpandedRight(...)`，然後將屬性 `coreStart.chrome.navControls.registerCenter(...)` 取代為 `coreStart.chrome.navControls.registerExpandedCenter(...)`
 
-2. Make sure the configuration property `useExpandedHeader` is explicitly set to `true`.
+2. 確認組態屬性 `useExpandedHeader` 已明確設為 `true`。
 
 
-## Sample configuration
+## 組態範例
 
-The following configuration enables the Security plugin and SSL within OpenSearch Dashboards and uses custom branding elements to replace the OpenSearch logo and application title.
+以下組態會在 OpenSearch Dashboards 中啟用 Security 外掛程式與 SSL，並使用自訂品牌元素取代 OpenSearch 標誌與應用程式標題。
 
 ```yml
 server.host: "0"

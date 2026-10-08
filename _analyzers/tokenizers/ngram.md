@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: N-gram
 parent: Tokenizers
 nav_order: 80
 ---
 
-# N-gram tokenizer
+# N-gram 斷詞器
 
-The `ngram` tokenizer splits text into overlapping n-grams (sequences of characters) of a specified length. This tokenizer is particularly useful when you want to perform partial word matching or autocomplete search functionality because it generates substrings (character n-grams) of the original input text.
+`ngram` 斷詞器會將文字分割成指定長度的重疊 n-gram（字元序列）。當您想要執行部分字詞比對或自動完成搜尋功能時，此斷詞器特別有用，因為它會產生原始輸入文字的子字串（字元 n-gram）。
 
-## Example usage
+## 使用範例
 
-The following example request creates a new index named `my_index` and configures an analyzer with an `ngram` tokenizer:
+下列範例請求會建立一個名為 `my_index` 的新索引，並設定一個帶有 `ngram` 斷詞器的分析器：
 
 ```json
 PUT /my_index
@@ -38,9 +39,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢視使用該分析器所產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -51,7 +52,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {
@@ -67,22 +68,22 @@ The response contains the generated tokens:
 }
 ```
 
-## Parameters
+## 參數
 
-The `ngram` tokenizer can be configured with the following parameters.
+`ngram` 斷詞器可以使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`min_gram` | Optional | Integer | The minimum length of the n-grams. Default is `1`.
-`max_gram` | Optional | Integer | The maximum length of the n-grams. Default is `2`.
-`token_chars` | Optional | List of strings | The character classes to be included in tokenization. Valid values are:<br>- `letter`<br>- `digit`<br>- `whitespace`<br>- `punctuation`<br>- `symbol`<br>- `custom` (You must also specify the `custom_token_chars` parameter)<br>Default is an empty list (`[]`), which retains all the characters.
-`custom_token_chars` | Optional | String | Custom characters to be included in the tokens.
+`min_gram` | 選用 | 整數 | n-gram 的最小長度。預設為 `1`。
+`max_gram` | 選用 | 整數 | n-gram 的最大長度。預設為 `2`。
+`token_chars` | 選用 | 字串陣列 | 要包含在斷詞中的字元類別。有效值為：<br>- `letter`<br>- `digit`<br>- `whitespace`<br>- `punctuation`<br>- `symbol`<br>- `custom`（您還必須指定 `custom_token_chars` 參數）<br>預設為空陣列（`[]`），會保留所有字元。
+`custom_token_chars` | 選用 | 字串 | 要包含在詞元中的自訂字元。
 
-### Maximum difference between `min_gram` and `max_gram`
+### `min_gram` 與 `max_gram` 之間的最大差異
 
-The maximum difference between `min_gram` and `max_gram` is configured using the index-level `index.max_ngram_diff` setting and defaults to `1`.
+`min_gram` 與 `max_gram` 之間的最大差異是使用索引層級的 `index.max_ngram_diff` 設定來設定，預設為 `1`。
 
-The following example request creates an index with a custom `index.max_ngram_diff` setting: 
+下列範例請求會建立一個具有自訂 `index.max_ngram_diff` 設定的索引：
 
 ```json
 PUT /my-index

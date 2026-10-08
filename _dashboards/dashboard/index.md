@@ -1,72 +1,73 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Creating dashboards
+title: "建立儀表板"
 nav_order: 70
 has_children: true
 redirect_from:
   - /dashboards/dashboard/
 ---
 
-# Creating dashboards
+# 建立儀表板
 
-You can use the **Dashboards** application in OpenSearch Dashboards to build a dashboard, a page containing multiple panels showing different views of your data.
+您可以使用 OpenSearch Dashboards 中的 **Dashboards** 應用程式來建立儀表板，儀表板是一個包含多個面板的頁面，可用於顯示資料的不同檢視。
 
-If you're new to the Dashboards application, see [Explore the Dashboards application]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-dashboards/) for a hands-on introduction using sample data.
+如果您是第一次使用 Dashboards 應用程式，請參閱 [探索 Dashboards 應用程式]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-dashboards/)，透過範例資料進行實作入門。
 {: .tip}
 
->This documentation uses the following terms:
->- _OpenSearch Dashboards_: The web UI for OpenSearch.
->- **Dashboards** application: The application within OpenSearch Dashboards for creating dashboards.
->- _dashboard_ (lowercase): An individual collection of data visualizations created in the **Dashboards** application.
+>本文件使用以下術語：
+>- _OpenSearch Dashboards_：OpenSearch 的網頁使用者介面 (UI)。
+>- **Dashboards** 應用程式：OpenSearch Dashboards 中用於建立儀表板的應用程式。
+>- _儀表板 (dashboard)_（小寫）：在 **Dashboards** 應用程式中建立的單一資料視覺化集合。
 {: .note}
 
-Dashboards typically contain visualizations, but can also contain searches.
+儀表板通常包含視覺化，但也可以包含搜尋。
 
-A dashboard shows one or more panels, usually arranged to support a business goal such as operations, decision support, or observability. A dashboard can contain any number of panels, subject only to display and legibility constraints.
+儀表板顯示一個或多個面板，通常排列以支援業務目標，例如營運、決策支援或可觀測性。儀表板可以包含任意數量的面板，僅受限於顯示與可讀性的限制。
 
-## Prerequisites
+## 前置條件
 
-The tutorials on this page use the [**Sample eCommerce data**](https://playground.opensearch.org/app/home#/tutorial_directory) dataset that is already installed in [OpenSearch Playground](https://playground.opensearch.org/app/home#/).
+本頁面的教學使用已安裝在 [OpenSearch Playground](https://playground.opensearch.org/app/home#/) 中的 [**Sample eCommerce data**](https://playground.opensearch.org/app/home#/tutorial_directory) 資料集。
 
-If you've installed a local OpenSearch Dashboards instance, add the sample data by following these steps:
+如果您安裝了本機的 OpenSearch Dashboards 執行個體，請按照以下步驟新增範例資料：
 
-1. On the OpenSearch Dashboards home page, select **Add sample data**.
-2. In the **Sample eCommerce data** panel, select **Add data**.
+1. 在 OpenSearch Dashboards 首頁上，選取 **Add sample data**。
+2. 在 **Sample eCommerce data** 面板中，選取 **Add data**。
 
-For more information, see [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
+如需更多資訊，請參閱 [新增範例資料]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
 
-## Navigating the Dashboards application UI
+## 導覽 Dashboards 應用程式 UI
 
-The following image shows the main components of the **Dashboards** application.
+下圖顯示了 **Dashboards** 應用程式的主要元件。
 
 ![Dashboards app default page]({{site.url}}{{site.baseurl}}/images/dashboards/dashboard-UI-blank-callouts.png)
 
-- The _application menu_ (A) contains application options. This menu is context-sensitive and is different for other applications.
-- The _search_ bar (B) enables selection of data using a query language search.
-- The _time filter_ (C) enables selection of data based on a time and date range.
-- The _filter_ (D) provides a graphical interface for selecting data values and ranges.
-- The _application panel_ (E) displays the dashboard, which contains visualization and search panels.
+- _應用程式選單_ (A) 包含應用程式選項。此選單具有情境感知能力，且在不同應用程式中有所不同。
+- _搜尋_ 欄 (B) 可使用查詢語言搜尋來選取資料。
+- _時間篩選器_ (C) 可根據時間和日期範圍選取資料。
+- _篩選器_ (D) 提供圖形介面以選取資料值和範圍。
+- _應用程式面板_ (E) 顯示儀表板，其中包含視覺化和搜尋面板。
 
-## Creating a dashboard and adding an existing visualization
+## 建立儀表板並新增現有的視覺化
 
-The procedure for creating a dashboard is as follows:
+建立儀表板的程序如下：
 
-1. Open a dashboard. You can start with a new (empty) dashboard, modify an existing dashboard, or clone an existing dashboard as a starting point for a similar dashboard. See [Opening a dashboard]({{site.url}}{{site.baseurl}}/dashboards/dashboard/opening-a-dashboard/).
+1. 開啟儀表板。您可以從新的（空白）儀表板開始、修改現有的儀表板，或複製現有的儀表板作為建立類似儀表板的起點。請參閱 [開啟儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/opening-a-dashboard/)。
 
-1. Ensure that the data filters include the data you want to work on. This typically, but not always, means setting the time filter to include a range of timestamps. See [Selecting a time range]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/#selecting-a-time-range).
+1. 確認資料篩選器包含您要處理的資料。這通常（但並非總是）表示要將時間篩選器設定為包含某個時間戳記範圍。請參閱 [選取時間範圍]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/#selecting-a-time-range)。
 
-   OpenSearch applications, including Dashboards, Visualize, and Discover, apply filters to all data in the application. The filter is applied to all index patterns used in the dashboard. For example, a time filter applied to a log monitoring dashboard selects the documents from all log visualizations on that dashboard, even if they include documents from different index patterns. See [Index patterns]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/).
+   OpenSearch 應用程式（包括 Dashboards、Visualize 和 Discover）會將篩選器套用至應用程式中的所有資料。篩選器會套用至儀表板中使用的所有索引模式。例如，套用至記錄檔監控儀表板的時間篩選器，會從該儀表板上的所有記錄檔視覺化中選取文件，即使這些文件來自不同的索引模式也是如此。請參閱 [索引模式]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/)。
    {: .note}
 
-1. Add panels to the dashboard. You can select saved panels or create new visualization within the **Dashboards** application. See [Adding a visualization to a dashboard]({{site.url}}{{site.baseurl}}/dashboards/dashboard/adding-a-viz/).
+1. 將面板新增至儀表板。您可以選取已儲存的面板，或在 **Dashboards** 應用程式中建立新的視覺化。請參閱 [將視覺化新增至儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/adding-a-viz/)。
 
-1. Arrange and resize panels on the dashboard. See [Customizing a dashboard]({{site.url}}{{site.baseurl}}/dashboards/dashboard/customizing-a-dash/).
+1. 在儀表板上排列面板並調整其大小。請參閱 [自訂儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/customizing-a-dash/)。
 
-1. Save the completed (or work-in-progress) dashboard. See [Saving a dashboard]({{site.url}}{{site.baseurl}}/dashboards/dashboard/managing-a-dash/#saving-a-dashboard).
+1. 儲存已完成（或仍在進行中）的儀表板。請參閱 [儲存儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/managing-a-dash/#saving-a-dashboard)。
 
 
-## Next steps
+## 後續步驟
 
-- For a quick introduction to viewing and filtering dashboards, see [Explore the Dashboards application]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-dashboards/). 
+- 如需快速了解如何檢視和篩選儀表板，請參閱 [探索 Dashboards 應用程式]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-dashboards/)。 
 
-- For a comprehensive end-to-end tutorial, see [Tutorial: Creating a dashboard]({{site.url}}{{site.baseurl}}/dashboards/dashboard/dash-tutorial/).
+- 如需完整的端到端教學，請參閱 [教學：建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/dash-tutorial/)。

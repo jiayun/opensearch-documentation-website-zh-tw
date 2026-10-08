@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Spanish
+title: "西班牙文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 300
 ---
 
-# Spanish analyzer
+# 西班牙文分析器
 
-The built-in `spanish` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `spanish` 分析器套用至文字欄位：
 
 ```json
 PUT /spanish-index
@@ -25,9 +26,9 @@ PUT /spanish-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，將 `stem_exclusion` 搭配此語言分析器使用：
 
 ```json
 PUT index_with_stem_exclusion_spanish_analyzer
@@ -46,21 +47,21 @@ PUT index_with_stem_exclusion_spanish_analyzer
 ```
 {% include copy-curl.html %}
 
-## Spanish analyzer internals
+## 西班牙文分析器內部結構
 
-The `spanish` analyzer is built using the following components:
+`spanish` 分析器由下列元件組成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
+- 詞元篩選器：
   - lowercase
-  - stop (Spanish)
+  - stop（西班牙文）
   - keyword
-  - stemmer (Spanish)
+  - stemmer（西班牙文）
 
-## Custom Spanish analyzer
+## 自訂西班牙文分析器
 
-You can create a custom Spanish analyzer using the following command:
+您可以使用下列命令建立自訂西班牙文分析器：
 
 ```json
 PUT /spanish-index
@@ -107,9 +108,9 @@ PUT /spanish-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器產生的詞元：
 
 ```json
 POST /spanish-index/_analyze
@@ -120,7 +121,7 @@ POST /spanish-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

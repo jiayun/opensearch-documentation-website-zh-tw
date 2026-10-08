@@ -1,45 +1,46 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Resolve index
+title: "解析索引"
 parent: Core index APIs
 grand_parent: Index APIs
 nav_order: 70
 ---
 
 # Resolve Index API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Resolve Index API helps you understand how OpenSearch resolves aliases, data streams, and concrete indexes that match a specified name or wildcard expression.
+Resolve Index API 可協助您了解 OpenSearch 如何解析符合指定名稱或萬用字元運算式的別名、資料串流與具體索引。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_resolve/index/{name}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are required.
+下表列出可用的路徑參數。所有路徑參數皆為必要。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `name` | String | The name, alias, data stream, or wildcard expression to resolve. |
+| `name` | String | 要解析的名稱、別名、資料串流或萬用字元運算式。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `expand_wildcards` | String | Controls how wildcard expressions expand to matching indexes. Multiple values can be combined using commas. Valid values are:<br>• `all` – Expand to open and closed indexes, including hidden ones.<br>• `open` – Expand only to open indexes.<br>• `closed` – Expand only to closed indexes.<br>• `hidden` – Include hidden indexes (must be used with `open`, `closed`, or both).<br>• `none` – Wildcard expressions are not accepted.<br>**Default**: `open`. |
+| `expand_wildcards` | String | 控制萬用字元運算式如何展開至符合的索引。可使用逗號合併多個值。有效值為：<br>• `all` – 展開至開啟與關閉的索引，包括隱藏的索引。<br>• `open` – 僅展開至開啟的索引。<br>• `closed` – 僅展開至關閉的索引。<br>• `hidden` – 包含隱藏的索引（必須與 `open`、`closed` 或兩者一併使用）。<br>• `none` – 不接受萬用字元運算式。<br>**預設**：`open`。 |
 
-## Example requests
+## 範例請求
 
-The following sections provide example Resolve API requests.
+下列章節提供 Resolve API 的範例請求。
 
 
-### Resolve a concrete index
+### 解析具體索引
 
 
 <!-- spec_insert_start
@@ -64,7 +65,7 @@ response = client.indices.resolve_index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Resolve indexes using a wildcard
+### 使用萬用字元解析索引
 
 
 <!-- spec_insert_start
@@ -89,9 +90,9 @@ response = client.indices.resolve_index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Resolve a data stream or alias
+### 解析資料串流或別名
 
-If an alias or data stream named `logs-app` exists, use the following request to resolve it:
+若存在名為 `logs-app` 的別名或資料串流，請使用下列請求來解析它：
 
 <!-- spec_insert_start
 component: example_code
@@ -115,9 +116,9 @@ response = client.indices.resolve_index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Resolve hidden indexes using a wildcard in a remote cluster
+### 在遠端叢集中使用萬用字元解析隱藏索引
 
-The following example shows an API request using a wildcard, a remote cluster, and `expand_wildcards` configured to `hidden`:
+下列範例顯示使用萬用字元、遠端叢集，並將 `expand_wildcards` 設定為 `hidden` 的 API 請求：
 
 <!-- spec_insert_start
 component: example_code
@@ -142,7 +143,7 @@ response = client.indices.resolve_index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -159,14 +160,14 @@ response = client.indices.resolve_index(
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `indices` | Array | A list of resolved concrete indexes. |
-| `aliases` | Array | A list of resolved index aliases. |
-| `data_streams` | Array | A list of matched data streams. |
+| `indices` | Array | 已解析的具體索引清單。 |
+| `aliases` | Array | 已解析的索引別名清單。 |
+| `data_streams` | Array | 符合的資料串流清單。 |
 
-## Required permissions
+## 必要權限
 
-If you are using the Security plugin, the user running these queries needs to have at least `read` permissions for the resolved index. 
+若您使用 Security 外掛程式，執行這些查詢的使用者必須至少具備已解析索引的 `read` 權限。 

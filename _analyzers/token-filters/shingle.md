@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Shingle
 parent: Token filters
 nav_order: 370
 ---
 
-# Shingle token filter
+# Shingle 詞元篩選器
 
-The `shingle` token filter is used to generate word n-grams, or _shingles_, from input text. For example, for the string `slow green turtle`, the `shingle` filter creates the following one- and two-word shingles: `slow`, `slow green`, `green`, `green turtle`, and `turtle`.
+`shingle` 詞元篩選器用於從輸入文字產生單字 n-gram，也就是 _shingle_。例如，對於字串 `slow green turtle`，`shingle` 篩選器會建立下列由一個和兩個單字組成的 shingle：`slow`、`slow green`、`green`、`green turtle` 和 `turtle`。
 
-This token filter is often used in conjunction with other filters to enhance search accuracy by indexing phrases rather than individual tokens. For more information, see [Phrase suggester]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/did-you-mean/#phrase-suggester).
+此詞元篩選器通常會與其他篩選器搭配使用，透過將片語而非個別詞元編製索引來提升搜尋準確度。如需詳細資訊，請參閱[片語建議器]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/did-you-mean/#phrase-suggester)。
 
-## Parameters
+## 參數
 
-The `shingle` token filter can be configured with the following parameters.
+`shingle` 詞元篩選器可以使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`min_shingle_size` | Optional | Integer | The minimum number of tokens to concatenate. Default is `2`.
-`max_shingle_size` | Optional | Integer | The maximum number of tokens to concatenate. Default is `2`.
-`output_unigrams` | Optional | Boolean | Whether to include unigrams (individual tokens) as output. Default is `true`.
-`output_unigrams_if_no_shingles` | Optional | Boolean | Whether to output unigrams if no shingles are generated. Default is `false`.
-`token_separator` | Optional | String |  A separator used to concatenate tokens into a shingle. Default is a space (`" "`).
-`filler_token` | Optional | String | A token inserted into empty positions or gaps between tokens. Default is an underscore (`_`).
+`min_shingle_size` | 選用 | 整數 | 要串接的詞元數量下限。預設為 `2`。
+`max_shingle_size` | 選用 | 整數 | 要串接的詞元數量上限。預設為 `2`。
+`output_unigrams` | 選用 | 布林值 | 是否在輸出中包含 unigram（個別詞元）。預設為 `true`。
+`output_unigrams_if_no_shingles` | 選用 | 布林值 | 若未產生任何 shingle，是否輸出 unigram。預設為 `false`。
+`token_separator` | 選用 | 字串 |  用於將詞元串接成 shingle 的分隔符號。預設為空格（`" "`）。
+`filler_token` | 選用 | 字串 | 插入空白位置或詞元之間間隙的詞元。預設為底線（`_`）。
 
-If `output_unigrams` and `output_unigrams_if_no_shingles` are both set to `true`, `output_unigrams_if_no_shingles` is ignored.
+若 `output_unigrams` 和 `output_unigrams_if_no_shingles` 都設為 `true`，則會忽略 `output_unigrams_if_no_shingles`。
 {: .note}
 
-## Example
+## 範例
 
-The following example request creates a new index named `my-shingle-index` and configures an analyzer with a `shingle` filter:
+下列範例請求會建立名為 `my-shingle-index` 的新索引，並設定含有 `shingle` 篩選器的分析器：
 
 ```json
 PUT /my-shingle-index
@@ -60,9 +61,9 @@ PUT /my-shingle-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢視使用此分析器所產生的詞元：
 
 ```json
 GET /my-shingle-index/_analyze
@@ -73,7 +74,7 @@ GET /my-shingle-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

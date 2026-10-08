@@ -1,18 +1,19 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get alias
+title: "取得別名"
 parent: Alias APIs
 grand_parent: Index APIs
 nav_order: 20
 ---
 
-# Get Index Alias API
-**Introduced 1.0**
+# 取得索引別名 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Returns information about one or more aliases.
+傳回一個或多個別名的相關資訊。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_alias
@@ -20,34 +21,34 @@ GET /_alias/{alias}
 GET /{index}/_alias/{alias}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `<alias>` | String | Comma-separated list or wildcard expression of alias names to retrieve. To retrieve information for all index aliases, use `_all` or `*`. |
-| `<index>` | String | Comma-separated list or wildcard expression of index names used to limit the request. |
+| `<alias>` | String | 以逗號分隔的別名清單或萬用字元運算式，用於指定要擷取的別名。如要擷取所有索引別名的資訊，請使用 `_all` 或 `*`。 |
+| `<index>` | String | 以逗號分隔的索引名稱清單或萬用字元運算式，用於限制請求範圍。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `allow_no_indices` | Boolean | Whether to ignore wildcards that don't match any indexes. Default is `true`. |
-| `expand_wildcards` | String | Type of index that wildcard expressions can match. Supports comma-separated values. Valid values are `all`, `open`, `closed`, `hidden`, and `none`. Default is `all`. |
-| `ignore_unavailable` | Boolean | Whether to ignore unavailable indexes. Default is `false`. |
-| `local` | Boolean | Whether to return information from the local node only instead of from the cluster manager node. Default is `false`. |
+| `allow_no_indices` | Boolean | 是否忽略不符合任何索引的萬用字元。預設為 `true`。 |
+| `expand_wildcards` | String | 萬用字元運算式可符合的索引類型。支援以逗號分隔的值。有效值為 `all`、`open`、`closed`、`hidden` 及 `none`。預設為 `all`。 |
+| `ignore_unavailable` | Boolean | 是否忽略無法使用的索引。預設為 `false`。 |
+| `local` | Boolean | 是否僅從本機節點傳回資訊，而非從叢集管理員節點傳回。預設為 `false`。 |
 
-## Example request: Get all aliases for an index
+## 範例請求：取得索引的所有別名
 
-You can add index aliases during index creation using a create index API request.
+您可以在建立索引時，使用建立索引 API 請求來新增索引別名。
 
-The following create index API request creates the `logs_20302801` index with two aliases:
+下列建立索引 API 請求會建立 `logs_20302801` 索引，並包含兩個別名：
 
 - `current_day`
-- `2030`, which only returns documents in the `logs_20302801` index with a `year` field value of `2030`
+- `2030`，僅傳回 `logs_20302801` 索引中 `year` 欄位值為 `2030` 的文件
 
 <!-- spec_insert_start
 component: example_code
@@ -106,7 +107,7 @@ response = client.indices.create(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The following get index alias API request returns all aliases for the index `logs_20302801`:
+下列取得索引別名 API 請求會傳回索引 `logs_20302801` 的所有別名：
 
 <!-- spec_insert_start
 component: example_code
@@ -131,9 +132,9 @@ response = client.indices.get_alias(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example request: Get a specific alias
+## 範例請求：取得特定別名
 
-The following index alias API request returns the `2030` alias:
+下列索引別名 API 請求會傳回 `2030` 別名：
 
 <!-- spec_insert_start
 component: example_code
@@ -157,9 +158,9 @@ response = client.indices.get_alias(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example request: Get aliases based on a wildcard
+## 範例請求：根據萬用字元取得別名
 
-The following index alias API request returns any alias that begins with `20`:
+下列索引別名 API 請求會傳回任何以 `20` 開頭的別名：
 
 <!-- spec_insert_start
 component: example_code
@@ -183,7 +184,7 @@ response = client.indices.get_alias(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -203,24 +204,24 @@ response = client.indices.get_alias(
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `<index>` | Object | Contains aliases for the index. |
-| `<index>.aliases` | Object | Contains alias information for the index. |
-| `<index>.aliases.<alias>` | Object | Contains configuration for the alias. |
-| `<index>.aliases.<alias>.filter` | Object | Query used to limit documents the alias can access. |
-| `<index>.aliases.<alias>.index_routing` | String | Routing value used for indexing operations. |
-| `<index>.aliases.<alias>.search_routing` | String | Routing value used for search operations. |
-| `<index>.aliases.<alias>.is_write_index` | Boolean | Whether the index is the write index for the alias. |
+| `<index>` | Object | 包含索引的別名。 |
+| `<index>.aliases` | Object | 包含索引的別名資訊。 |
+| `<index>.aliases.<alias>` | Object | 包含別名的組態。 |
+| `<index>.aliases.<alias>.filter` | Object | 用於限制別名可存取之文件的查詢。 |
+| `<index>.aliases.<alias>.index_routing` | String | 用於編製索引作業的路由值。 |
+| `<index>.aliases.<alias>.search_routing` | String | 用於搜尋作業的路由值。 |
+| `<index>.aliases.<alias>.is_write_index` | Boolean | 索引是否為別名的寫入索引。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/aliases/get`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`indices:admin/aliases/get`。
 
-## Related documentation
+## 相關文件
 
-For more information about index aliases, see [Index aliases]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/).
+如需索引別名的更多資訊，請參閱[索引別名]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/)。

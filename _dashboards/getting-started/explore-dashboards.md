@@ -1,93 +1,94 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Explore the Dashboards application
+title: "探索 Dashboards 應用程式"
 parent: Getting started
 nav_order: 40
 ---
 
-# Explore the Dashboards application
+# 探索 Dashboards 應用程式
 
-The **Dashboards** application lets you combine multiple visualizations into a single page for monitoring and analysis.
+**Dashboards** 應用程式可讓您將多個視覺化組合到單一頁面中，以進行監控與分析。
 
-With **Dashboards**, you can:
+使用 **Dashboards**，您可以：
 
-- Display multiple data visualizations in a single view.
-- Build dynamic dashboards.
-- Create and share reports.
-- Embed analytics to differentiate your applications.
+- 在單一檢視中顯示多個資料視覺化。
+- 建置動態儀表板。
+- 建立並分享報告。
+- 嵌入分析功能，讓您的應用程式更具特色。
 
-## Prerequisites
+## 先決條件
 
-The examples on this page use the [**Sample flight data**](https://playground.opensearch.org/app/home#/tutorial_directory) dataset that is already installed in [OpenSearch Playground](https://playground.opensearch.org/app/home#/).
+本頁的範例使用 [OpenSearch Playground](https://playground.opensearch.org/app/home#/) 中已安裝的 [**Sample flight data**](https://playground.opensearch.org/app/home#/tutorial_directory) 資料集。
 
-If you're using a local installation of OpenSearch Dashboards and haven't added sample data yet, see [Prepare your data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
+如果您使用的是本機安裝的 OpenSearch Dashboards，且尚未新增範例資料，請參閱[準備您的資料]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
 
-## Try it: Explore a prebuilt dashboard
+## 動手試試：探索預先建置的儀表板
 
-1. From the navigation panel, select **OpenSearch Dashboards** > **Dashboards**. The panel displays a list of existing dashboards.
+1. 從導覽面板中，選取 **OpenSearch Dashboards** > **Dashboards**。面板會顯示現有儀表板的清單。
 
-1. In the search toolbar, search for and select **[Flights] Global Flight Dashboard**.
+1. 在搜尋工具列中，搜尋並選取 **[Flights] Global Flight Dashboard**。
 
-    The panel displays a dashboard preloaded with visualizations, including charts, maps, and data tables.
+    面板會顯示一個預先載入視覺化的儀表板，包括圖表、地圖和資料表。
 
-1. To add other panels to the dashboard, select the **Edit** button and choose **Add** from the toolbar.
+1. 若要將其他面板新增至儀表板，請選取 **Edit** 按鈕，然後從工具列中選擇 **Add**。
 
-1. In the search toolbar in the **Add panels** window, enter `flights`.
+1. 在 **Add panels** 視窗的搜尋工具列中，輸入 `flights`。
 
-1. From the narrowed list, select **[Flights] Delay Buckets**.
+1. 從篩選後的清單中，選取 **[Flights] Delay Buckets**。
 
-1. Select {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/cross-icon.png" class="inline-icon" alt="cross icon"/>{:/} (cross) to exit the confirmation dialog.
+1. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/cross-icon.png" class="inline-icon" alt="cross icon"/>{:/}（叉號）以關閉確認對話方塊。
 
-1. Select {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/cross-icon.png" class="inline-icon" alt="cross icon"/>{:/} (cross) to exit the **Add panels** window.
+1. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/cross-icon.png" class="inline-icon" alt="cross icon"/>{:/}（叉號）以關閉 **Add panels** 視窗。
 
-1. Scroll down to confirm that the newly added panel is now displayed as the last panel on the dashboard.
+1. 向下捲動，確認新增的面板現在顯示為儀表板上的最後一個面板。
 
-    The resulting view is shown in the following image.
+    產生的檢視如下圖所示。
 
-    ![Add panel view]({{site.url}}{{site.baseurl}}/images/dashboards/add-dash-panel.png)
+    ![新增面板檢視]({{site.url}}{{site.baseurl}}/images/dashboards/add-dash-panel.png)
 
-### Adding your own visualization
+### 新增您自己的視覺化
 
-If you're using a local installation and saved the `Flight count over time` visualization in [Explore the Visualize application]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-visualize/), you can add it to this dashboard. Saving visualizations is not available in the OpenSearch Playground because it is read-only.
+如果您使用的是本機安裝，且已在[探索 Visualize 應用程式]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-visualize/)中儲存 `Flight count over time` 視覺化，即可將其新增至此儀表板。由於 OpenSearch Playground 為唯讀，因此無法在其中儲存視覺化。
 
-To add the visualization, follow these steps:
+若要新增視覺化，請依照下列步驟操作：
 
-1. Select **Add** from the toolbar.
-1. In the search toolbar, enter `Flight count over time`.
-1. Select the visualization from the list.
+1. 從工具列中選取 **Add**。
+1. 在搜尋工具列中，輸入 `Flight count over time`。
+1. 從清單中選取該視覺化。
 
-    The visualization is added as the last panel on the dashboard, as shown in the following image.
+    該視覺化會新增為儀表板上的最後一個面板，如下圖所示。
 
-    ![Flight count over time panel added to the end of the dashboard]({{site.url}}{{site.baseurl}}/images/dashboards/add-flight-count-panel.png)
+    ![新增至儀表板末端的 Flight count over time 面板]({{site.url}}{{site.baseurl}}/images/dashboards/add-flight-count-panel.png)
 
-## Filtering data in the Dashboards application
+## 在 Dashboards 應用程式中篩選資料
 
-You can interact with visualizations to filter data.
+您可以與視覺化互動以篩選資料。
 
-Using the **[Flights] Global Flight Dashboard** dashboard, follow these steps to filter the sample flight data:
+使用 **[Flights] Global Flight Dashboard** 儀表板，依照下列步驟篩選範例航班資料：
 
-1. On the **[Flights] Airline Carrier** panel, select the **Toggle legend** icon in the lower-left corner. Then select **OpenSearch-Air** and then select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/plus-icon.png" class="inline-icon" alt="plus icon"/>{:/} (plus) icon.
+1. 在 **[Flights] Airline Carrier** 面板上，選取左下角的 **Toggle legend** 圖示。接著選取 **OpenSearch-Air**，然後選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/plus-icon.png" class="inline-icon" alt="plus icon"/>{:/}（加號）圖示。
 
-    The dashboard updates automatically, adding the filter `Carrier: OpenSearch-Air` to the upper-left filter bar, as shown in the following image.
+    儀表板會自動更新，並將篩選條件 `Carrier: OpenSearch-Air` 新增至左上方的篩選列，如下圖所示。
 
-    ![Dashboard filtered by the OpenSearch-Air carrier]({{site.url}}{{site.baseurl}}/images/dashboards/airline-carrier-filter.png)
+    ![依 OpenSearch-Air 航空公司篩選的儀表板]({{site.url}}{{site.baseurl}}/images/dashboards/airline-carrier-filter.png)
 
-1. Select **Save** to save the dashboard.
+1. 選取 **Save** 以儲存儀表板。
 
-Alternatively, you can use the dashboard toolbar to apply filters:
+或者，您也可以使用儀表板工具列來套用篩選條件：
 
-1. If you've added a filter using the preceding instructions, first select {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/cross-icon.png" class="inline-icon" alt="cross icon"/>{:/} (cross) in the `Carrier: OpenSearch-Air` filter in the filter bar to remove the filter.
+1. 如果您已依照前述說明新增篩選條件，請先在篩選列的 `Carrier: OpenSearch-Air` 篩選條件中選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/cross-icon.png" class="inline-icon" alt="cross icon"/>{:/}（叉號）以移除該篩選條件。
 
-1. In the dashboard toolbar, select **+ Add filter**.
+1. 在儀表板工具列中，選取 **+ Add filter**。
 
-1. From the **Field**, **Operator**, and **Value** dropdown lists, select **Carrier**, **is**, and **OpenSearch-Air**, respectively.
+1. 從 **Field**、**Operator** 和 **Value** 下拉式清單中，分別選取 **Carrier**、**is** 和 **OpenSearch-Air**。
 
-1. Select **Save**.
+1. 選取 **Save**。
 
-## Further reading
+## 延伸閱讀
 
-- For the full Dashboards reference, see [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/).
+- 如需完整的 Dashboards 參考資料，請參閱[建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)。
 
-## Next steps
+## 後續步驟
 
-- Learn how to run API queries in [Run queries in the Dev Tools console]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-dev-tools/).
+- 在[在 Dev Tools 主控台中執行查詢]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-dev-tools/)中，了解如何執行 API 查詢。

@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Add and manage your data
+title: "新增與管理您的資料"
 nav_order: 35
 ---
 
-# Add and manage your data
+# 新增與管理您的資料
 
-OpenSearch stores data as JSON _documents_ and groups related documents into an _index_. Adding a document to an index that doesn't exist creates the index and infers a type for each field, so you can start storing data without defining any fields. Once you index documents, you can retrieve, update, and delete them from the index.
+OpenSearch 將資料儲存為 JSON _文件_，並將相關文件歸入一個 _索引_。將文件新增至不存在的索引時，會建立該索引並推斷每個欄位的類型，因此您無需定義任何欄位即可開始儲存資料。將文件編製索引後，您就可以從索引中擷取、更新及刪除這些文件。
 
-## Indexing documents
+## 將文件編製索引
 
-To add a JSON document to an OpenSearch index (that is, to _index_ a document), you send an HTTP request with the following header:
+若要將 JSON 文件新增至 OpenSearch 索引（也就是將文件 _編製索引_），請傳送包含下列標頭的 HTTP 請求：
 
 ```json
 PUT /{index-name}/_doc/{document-id}
 ```
 
-For example, to index a document representing a student, send the following request:
+例如，若要將代表一名學生的文件編製索引，請傳送下列請求：
 
 ```json
 PUT /students/_doc/1
@@ -28,22 +29,22 @@ PUT /students/_doc/1
 ```
 {% include copy-curl.html %}
 
-Once you send the preceding request, OpenSearch creates an index called `students` and stores the document in the index. If you don't provide an ID for your document, OpenSearch generates a document ID. In the preceding request, the document ID is specified as the student ID (`1`).
+傳送上述請求後，OpenSearch 會建立名為 `students` 的索引，並將文件儲存在該索引中。如果您未提供文件 ID，OpenSearch 會產生文件 ID。在上述請求中，文件 ID 指定為學生 ID（`1`）。
 
-To learn more about indexing, see [Managing indexes]({{site.url}}{{site.baseurl}}/im-plugin/).
+若要進一步了解編製索引，請參閱[管理索引]({{site.url}}{{site.baseurl}}/im-plugin/)。
 
-## Dynamic mapping
+## 動態對應
 
-When you index a document, OpenSearch infers the field types from the JSON types submitted in the document. This process is called _dynamic mapping_. For more information, see [Dynamic mapping]({{site.url}}{{site.baseurl}}/mappings/#dynamic-mapping).
+將文件編製索引時，OpenSearch 會根據文件中提交的 JSON 類型推斷欄位類型。此程序稱為 _動態對應_。如需詳細資訊，請參閱[動態對應]({{site.url}}{{site.baseurl}}/mappings/#dynamic-mapping)。
 
-To view the inferred field types, send a request to the `_mapping` endpoint:
+若要檢視推斷出的欄位類型，請向 `_mapping` 端點傳送請求：
 
 ```json
 GET /students/_mapping
 ```
 {% include copy-curl.html %}
 
-OpenSearch responds with the field `type` for each field:
+OpenSearch 會在回應中為每個欄位提供 `type` 欄位：
 
 ```json
 {
@@ -71,26 +72,26 @@ OpenSearch responds with the field `type` for each field:
 }
 ```
 
-OpenSearch mapped the numeric fields to the `float` and `long` types. Notice that OpenSearch mapped the `name` text field to `text` and added a `name.keyword` subfield mapped to `keyword`. Fields mapped to `text` are analyzed (lowercased and split into terms) and can be used for full-text search. Fields mapped to `keyword` are used for exact term search.
+OpenSearch 將數值欄位對應至 `float` 與 `long` 類型。請注意，OpenSearch 將 `name` 文字欄位對應至 `text`，並新增一個對應至 `keyword` 的 `name.keyword` 子欄位。對應至 `text` 的欄位會經過分析（轉為小寫並切分為詞彙），可用於全文搜尋。對應至 `keyword` 的欄位則用於精確詞彙搜尋。
 
-## Index mappings and settings
+## 索引對應與設定
 
-OpenSearch indexes are configured with mappings and settings:
+OpenSearch 索引透過對應與設定進行組態：
 
-- A _mapping_ is a collection of fields and the types of those fields. For more information, see [Mappings and field types]({{site.url}}{{site.baseurl}}/mappings/).
-- _Settings_ include index data like the index name, creation date, and number of shards. For more information, see [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/).
+- _對應_ 是欄位及其類型的集合。如需詳細資訊，請參閱[對應與欄位類型]({{site.url}}{{site.baseurl}}/mappings/)。
+- _設定_ 包含索引資料，例如索引名稱、建立日期和分片數量。如需詳細資訊，請參閱[設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/)。
 
-Once a field is created, you cannot change its type. Changing a field type requires deleting the index and recreating it with the new mappings. To control field types, specify the mappings yourself when you create the index.
+欄位建立後，便無法變更其類型。若要變更欄位類型，必須刪除索引，再使用新的對應重新建立索引。若要控制欄位類型，請在建立索引時自行指定對應。
 {: .note}
 
-In the preceding example, OpenSearch mapped `grad_year` to `long`, but a graduation year is a date. To map `grad_year` to `date`, first delete the index that dynamic mapping created:
+在上述範例中，OpenSearch 將 `grad_year` 對應至 `long`，但畢業年份是日期。若要將 `grad_year` 對應至 `date`，請先刪除動態對應所建立的索引：
 
 ```json
 DELETE /students
 ```
 {% include copy-curl.html %}
 
-You can specify the mappings and settings in one request. The following request recreates the index, specifying the number of index shards and mapping the `name` field to `text` and the `grad_year` field to `date`. Because a graduation year has no month or day, the `format` parameter tells OpenSearch to interpret the field as a four-digit year:
+您可以在單一請求中指定對應與設定。下列請求會重新建立索引，指定索引分片數量，並將 `name` 欄位對應至 `text`、將 `grad_year` 欄位對應至 `date`。由於畢業年份沒有月份或日期，`format` 參數會告知 OpenSearch 將該欄位解讀為四位數的年份：
 
 ```json
 PUT /students
@@ -113,7 +114,7 @@ PUT /students
 ```
 {% include copy-curl.html %}
 
-Now index the same document again:
+現在再次將同一份文件編製索引：
 
 ```json
 PUT /students/_doc/1
@@ -125,16 +126,16 @@ PUT /students/_doc/1
 ```
 {% include copy-curl.html %}
 
-OpenSearch stores `grad_year` as the date `2022-01-01`, so you can now use date range queries on it. The `_source` still contains the original value, `2022`.
+OpenSearch 會將 `grad_year` 儲存為日期 `2022-01-01`，因此您現在可以對其使用日期範圍查詢。`_source` 仍包含原始值 `2022`。
 
-To view the mappings for the index fields, send the following request:
+若要檢視索引欄位的對應，請傳送下列請求：
 
 ```json
 GET /students/_mapping
 ```
 {% include copy-curl.html %}
 
-OpenSearch mapped the `name` and `grad_year` fields according to the specified types and inferred the field type for the `gpa` field:
+OpenSearch 依照指定的類型對應 `name` 與 `grad_year` 欄位，並推斷 `gpa` 欄位的欄位類型：
 
 ```json
 {
@@ -157,11 +158,11 @@ OpenSearch mapped the `name` and `grad_year` fields according to the specified t
 }
 ```
 
-Note that `name` no longer has a `name.keyword` subfield. Explicit mappings replace the dynamic defaults, so only the types you specify are used.
+請注意，`name` 不再有 `name.keyword` 子欄位。明確的對應會取代動態預設值，因此只會使用您指定的類型。
 
-## Searching for documents
+## 搜尋文件
 
-To run a search for the document, specify the index that you're searching and a query that will be used to match documents. The simplest query is the `match_all` query, which matches all documents in an index:
+若要搜尋文件，請指定要搜尋的索引，以及用來比對文件的查詢。最簡單的查詢是 `match_all` 查詢，它會比對索引中的所有文件：
 
 ```json
 GET /students/_search
@@ -173,7 +174,7 @@ GET /students/_search
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns the indexed document:
+OpenSearch 會傳回已編製索引的文件：
 
 ```json
 {
@@ -207,11 +208,11 @@ OpenSearch returns the indexed document:
 }
 ```
 
-For more information about search, see [Search your data]({{site.url}}{{site.baseurl}}/getting-started/search-data/).
+如需搜尋的詳細資訊，請參閱[搜尋您的資料]({{site.url}}{{site.baseurl}}/getting-started/search-data/)。
 
-## Updating documents
+## 更新文件
 
-In OpenSearch, stored documents are immutable, so an update replaces the document rather than modifying it in place. OpenSearch retrieves the current document, applies your changes, and indexes the result as a new version. You can replace an entire document using the Index Document API, providing values for all existing and added fields in the document. For example, to update the `gpa` field and add an `address` field to the previously indexed document, send the following request:
+在 OpenSearch 中，已儲存的文件是不可變的，因此更新會取代文件，而不是就地修改。OpenSearch 會擷取目前的文件、套用您的變更，並將結果編製索引為新版本。您可以使用 Index Document API 取代整份文件，並為文件中所有現有及新增的欄位提供值。例如，若要更新先前已編製索引之文件的 `gpa` 欄位並新增 `address` 欄位，請傳送下列請求：
 
 ```json
 PUT /students/_doc/1
@@ -224,7 +225,7 @@ PUT /students/_doc/1
 ```
 {% include copy-curl.html %}
 
-Alternatively, you can update parts of a document by calling the Update Document API:
+或者，您可以呼叫 Update Document API 來更新文件的部分內容：
 
 ```json
 POST /students/_update/1/
@@ -237,9 +238,9 @@ POST /students/_update/1/
 ```
 {% include copy-curl.html %}
 
-This request updates only the fields that you provide and leaves the rest of the document unchanged. The document must already exist; updating a document that isn't in the index returns an error. For more information about partial document updates, see [Update Document API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-document/).
+此請求只會更新您提供的欄位，文件的其餘部分則維持不變。文件必須已存在；更新不在索引中的文件會傳回錯誤。如需部分文件更新的詳細資訊，請參閱 [Update Document API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-document/)。
 
-To update a document if it exists or index a new one if it doesn't, use an _upsert_ operation. Add `doc_as_upsert` to the request and set it to `true`:
+若要在文件存在時更新文件，或在文件不存在時將新文件編製索引，請使用 _upsert_ 操作。在請求中加入 `doc_as_upsert` 並將其設為 `true`：
 
 ```json
 POST /students/_update/2/
@@ -254,35 +255,35 @@ POST /students/_update/2/
 ```
 {% include copy-curl.html %}
 
-Because no document with the ID `2` exists, OpenSearch indexes a new one. Had the document existed, the same request would have updated it instead of returning an error.
+由於不存在 ID 為 `2` 的文件，OpenSearch 會將新文件編製索引。如果該文件已存在，同一個請求就會更新該文件，而不會傳回錯誤。
 
-For more information about upsert operations, see [Upsert]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-document/#upsert).
+如需 upsert 操作的詳細資訊，請參閱 [Upsert]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-document/#upsert)。
 
-## Deleting a document
+## 刪除文件
 
-To delete a document, send a delete request and provide the document ID:
+若要刪除文件，請傳送刪除請求並提供文件 ID：
 
 ```json
 DELETE /students/_doc/1
 ```
 {% include copy-curl.html %}
 
-## Deleting an index
+## 刪除索引
 
-To permanently delete an index and all documents in it, send the following request:
+若要永久刪除索引及其中的所有文件，請傳送下列請求：
 
 ```json
 DELETE /students
 ```
 {% include copy-curl.html %}
 
-## Further reading
+## 延伸閱讀
 
-- For information about document APIs, see [Document APIs]({{site.url}}{{site.baseurl}}/api-reference/document-apis/).
-- For information about mappings, see [Mappings and field types]({{site.url}}{{site.baseurl}}/mappings/).
-- For information about settings, see [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/).
+- 如需文件 API 的相關資訊，請參閱[文件 API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/)。
+- 如需對應的相關資訊，請參閱[對應與欄位類型]({{site.url}}{{site.baseurl}}/mappings/)。
+- 如需設定的相關資訊，請參閱[設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/)。
 
-## Next steps
+## 後續步驟
 
-- To index many documents in a single request, see [Ingest data into OpenSearch]({{site.url}}{{site.baseurl}}/getting-started/ingest-data/).
-- To learn about search options, see [Search your data]({{site.url}}{{site.baseurl}}/getting-started/search-data/).
+- 若要在單一請求中將多份文件編製索引，請參閱[將資料匯入 OpenSearch]({{site.url}}{{site.baseurl}}/getting-started/ingest-data/)。
+- 若要了解搜尋選項，請參閱[搜尋您的資料]({{site.url}}{{site.baseurl}}/getting-started/search-data/)。

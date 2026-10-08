@@ -1,73 +1,74 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Rare terms
+title: "罕見詞彙"
 parent: Bucket aggregations
 nav_order: 155
 ---
 
-# Rare terms aggregation
+# 罕見詞彙彙總
 
-The `rare_terms` aggregation is a bucket aggregation that identifies infrequent terms in a dataset. In contrast to the `terms` aggregation, which finds the most common terms, the `rare_terms` aggregation finds terms that appear with the lowest frequency. The `rare_terms` aggregation is suitable for applications like anomaly detection, long-tail analysis, and exception reporting.
+`rare_terms` 彙總是一種桶 (bucket) 彙總，可識別資料集中不常出現的詞彙。`terms` 彙總會找出最常見的詞彙，而 `rare_terms` 彙總則相反，會找出出現頻率最低的詞彙。`rare_terms` 彙總適用於異常偵測、長尾分析和例外狀況報告等應用。
 
-It is possible to use `terms` to search for infrequent values by ordering the returned values by ascending count (`"order": {"count": "asc"}`). However, we strongly discourage this practice because it can lead to inaccurate results when multiple shards are involved. A term that is globally infrequent might not appear as infrequent on every individual shard or might be entirely absent from the least frequent results returned by some shards. Conversely, a term that appears infrequently on one shard might be common on another. In both scenarios, rare terms can be missed during shard-level aggregation, resulting in incorrect overall results. Instead of the `terms` aggregation, we recommend using the `rare_terms` aggregation, which is specifically designed to handle these cases more accurately.
+您可以使用 `terms`，並依計數遞增排序傳回的值 (`"order": {"count": "asc"}`)，藉此搜尋不常出現的值。不過，我們強烈建議您不要這麼做，因為涉及多個分片時，可能會導致結果不準確。在全域上不常出現的詞彙，在個別分片上不一定都顯得不常出現，也可能完全不在某些分片傳回的最低頻率結果中。反之，在某個分片上不常出現的詞彙，在另一個分片上可能很常見。在這兩種情況下，分片層級的彙總都可能遺漏罕見詞彙，導致整體結果不正確。我們建議您改用 `rare_terms` 彙總來取代 `terms` 彙總，因為前者是專為更準確地處理這些情況而設計。
 {: .warning}
 
-## Approximated results
+## 近似結果
 
-Computing exact results for the `rare_terms` aggregation necessitates compiling a complete map of the values on all shards, which requires excessive runtime memory. For this reason, the `rare_terms` aggregation results are approximated.
+若要計算 `rare_terms` 彙總的精確結果，必須彙整所有分片上的值的完整對照表，這會耗用過多的執行階段記憶體。因此，`rare_terms` 彙總的結果是近似值。
 
-Most errors in `rare_terms` computations are _false negatives_ or "missed" values, which define the _sensitivity_ of the aggregation's detection test. The `rare_terms` aggregation uses a CuckooFilter algorithm to achieve a balance of appropriate sensitivity and acceptable memory use. For a description of the CuckooFilter algorithm, see [this paper](https://www.cs.cmu.edu/~dga/papers/cuckoo-conext2014.pdf).
+`rare_terms` 計算中的大多數錯誤都是「偽陰性」(_false negatives_) 或「遺漏」的值，這些錯誤定義了彙總偵測測試的「敏感度」(_sensitivity_)。`rare_terms` 彙總使用 CuckooFilter 演算法，在適當的敏感度與可接受的記憶體用量之間取得平衡。如需 CuckooFilter 演算法的說明，請參閱[這篇論文](https://www.cs.cmu.edu/~dga/papers/cuckoo-conext2014.pdf)。
 
-## Controlling sensitivity
+## 控制敏感度
 
-Sensitivity error in the `rare_terms` aggregation algorithm is measured as the fraction of rare values that are missed, or `false negatives/target values`. For example, if the aggregation misses 100 rare values in a dataset with 5,000 rare values, sensitivity error is `100/5000 = 0.02`, or 2%. 
+`rare_terms` 彙總演算法的敏感度誤差，是以遺漏的罕見值所占比例來衡量，即 `false negatives/target values`。例如，如果彙總在含有 5,000 個罕見值的資料集中遺漏了 100 個罕見值，則敏感度誤差為 `100/5000 = 0.02`，即 2%。 
 
-You can adjust the `precision` parameter in `rare_terms` aggregations to control the trade-off between sensitivity and memory use.
+您可以調整 `rare_terms` 彙總中的 `precision` 參數，以控制敏感度與記憶體用量之間的取捨。
 
-These factors also affect the sensitivity-memory trade-off:
+下列因素也會影響敏感度與記憶體之間的取捨：
 
-- The total number of unique values
-- The fraction of rare items in the dataset
+- 唯一值的總數
+- 資料集中罕見項目所占的比例
 
-The following guidelines can help you decide which `precision` value to use.
+下列準則可協助您決定要使用哪個 `precision` 值。
 
-### Calculating memory use
+### 計算記憶體用量
 
-Runtime memory use is described in absolute terms, typically in MB of RAM.
+執行階段記憶體用量以絕對值表示，通常以 MB 的 RAM 為單位。
 
-Memory use increases linearly with the number of unique items. The linear scaling factor varies from roughly 1.0 to 2.5 MB per 1 million unique values, depending on the `precision` parameter. For the default `precision` of `0.001`, the memory cost is about 1.75 MB per 1 million unique values.
+記憶體用量會隨唯一項目的數量線性增加。視 `precision` 參數而定，線性縮放係數約為每 100 萬個唯一值 1.0 至 2.5 MB。若使用預設的 `precision` 值 `0.001`，記憶體成本約為每 100 萬個唯一值 1.75 MB。
 
-### Managing sensitivity error
+### 管理敏感度誤差
 
-Sensitivity error increases linearly with the total number of unique values. For information about estimating the number of unique values, see [Cardinality aggregation]({{site.url}}{{site.baseurl}}/aggregations/metric/cardinality/).
+敏感度誤差會隨唯一值的總數線性增加。如需估算唯一值數量的相關資訊，請參閱[基數彙總]({{site.url}}{{site.baseurl}}/aggregations/metric/cardinality/)。
 
-Sensitivity error rarely exceeds 2.5% at the default `precision`, even for datasets with 10--20 million unique values. For a `precision` of `0.00001`, sensitivity error is rarely above 0.6%. However, a very low absolute number of rare values can cause large variances in the error rate (if there are only two rare values, missing one of them results in a 50% error rate).
-
-
-## Compatibility with other aggregations
-
-The `rare_terms` aggregation uses breadth-first collection mode and is incompatible with aggregations that require depth-first collection mode in some subaggregations and nesting configurations. 
-
-For more information about breadth-first search in OpenSearch, see [Collect mode]({{site.url}}{{site.baseurl}}/aggregations/bucket/terms#collect-mode).
+在預設的 `precision` 下，即使資料集含有 1,000 萬至 2,000 萬個唯一值，敏感度誤差也很少超過 2.5%。若 `precision` 為 `0.00001`，敏感度誤差很少高於 0.6%。不過，罕見值的絕對數量非常少時，可能會造成誤差率大幅變動 (如果只有兩個罕見值，遺漏其中一個就會產生 50% 的誤差率)。
 
 
-## Parameters
+## 與其他彙總的相容性
 
-The `rare_terms` aggregation takes the following parameters.
+`rare_terms` 彙總使用廣度優先收集模式，在某些子彙總和巢狀組態中，與需要深度優先收集模式的彙總不相容。 
 
-| Parameter             | Required/Optional | Data type       | Description |
+如需 OpenSearch 中廣度優先搜尋的詳細資訊，請參閱[收集模式]({{site.url}}{{site.baseurl}}/aggregations/bucket/terms#collect-mode)。
+
+
+## 參數
+
+`rare_terms` 彙總接受下列參數。
+
+| 參數             | 必要/選用 | 資料類型       | 說明 |
 | :--                   | :--               | :--             | :--         |
-| `field`               | Required          | String          | The field to analyze for rare terms. Must be of a numeric type or a text type with a `keyword` mapping. |
-| `max_doc_count`       | Optional          | Integer         | The maximum document count required in order for a term to be considered rare. Default is `1`. Maximum is `100`. |
-| `precision`           | Optional          | Integer         | Controls the precision of the algorithm used to identify rare terms. Higher values provide more precise results but consume more memory. Default is `0.001`. Minimum (most precise allowable) is `0.00001`. |
-| `include`             | Optional          | Array/regex     | Terms to include in the result. Can be a regular expression or an array of values. |
-| `exclude`             | Optional          | Array/regex     | Terms to exclude from the result. Can be a regular expression or an array of values. |
-| `missing`             | Optional          | String          | The value to use for documents that do not have a value for the field being aggregated. |
+| `field`               | 必要          | 字串          | 要分析罕見詞彙的欄位。必須是數值類型，或是具有 `keyword` 對應的文字類型。 |
+| `max_doc_count`       | 選用          | 整數         | 詞彙被視為罕見所需的最大文件計數。預設值為 `1`。最大值為 `100`。 |
+| `precision`           | 選用          | 整數         | 控制用於識別罕見詞彙之演算法的精確度。值越高，結果越精確，但會耗用更多記憶體。預設值為 `0.001`。最小值 (允許的最高精確度) 為 `0.00001`。 |
+| `include`             | 選用          | 陣列/regex     | 要納入結果的詞彙。可以是規則運算式或值的陣列。 |
+| `exclude`             | 選用          | 陣列/regex     | 要從結果中排除的詞彙。可以是規則運算式或值的陣列。 |
+| `missing`             | 選用          | 字串          | 用於沒有被彙總欄位值之文件的值。 |
 
 
-## Example
+## 範例
 
-The following request returns all destination airport codes that appear only once in the OpenSearch Dashboards sample flight data:
+下列請求會傳回 OpenSearch Dashboards 範例航班資料中只出現一次的所有目的地機場代號：
 
 ```json
 GET /opensearch_dashboards_sample_data_flights/_search
@@ -85,9 +86,9 @@ GET /opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-The response shows that there are two airports that meet the criterion of appearing only once in the data:
+回應顯示有兩個機場符合在資料中只出現一次的條件：
 
 ```json
 {
@@ -125,11 +126,11 @@ The response shows that there are two airports that meet the criterion of appear
 ```
 
 
-## Document count limit
+## 文件計數上限
 
-Use the `max_doc_count` parameter to specify the largest document count that the `rare_terms` aggregation can return. There is no limit on the number of terms returned by `rare_terms`, so a large `max_doc_count` value can potentially return very large result sets. For this reason, `100` is the largest allowable `max_doc_count`.
+使用 `max_doc_count` 參數指定 `rare_terms` 彙總可傳回的最大文件計數。`rare_terms` 傳回的詞彙數量沒有限制，因此較大的 `max_doc_count` 值可能會傳回非常大的結果集。因此，`100` 是允許的最大 `max_doc_count`。
 
-The following request returns all destination airport codes that appear two times at most in the OpenSearch Dashboards sample flight data:
+下列請求會傳回 OpenSearch Dashboards 範例航班資料中最多出現兩次的所有目的地機場代號：
 
 ```json
 GET /opensearch_dashboards_sample_data_flights/_search
@@ -147,7 +148,7 @@ GET /opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-The response shows that seven destination airport codes meet the criterion of appearing in two or fewer documents, including the two from the previous example:
+回應顯示有七個目的地機場代號符合出現在兩份以下文件中的條件，其中包括上一個範例中的兩個：
 
 ```json
 {
@@ -205,11 +206,11 @@ The response shows that seven destination airport codes meet the criterion of ap
 ```
 
 
-## Filtering (include and exclude)
+## 篩選 (include 與 exclude)
 
-Use the `include` and `exclude` parameters to filter values returned by the `rare_terms` aggregation. Both parameters can be included in the same aggregation. The `exclude` filter takes precedence; any excluded values are removed from the result, regardless of whether they were explicitly included.
+使用 `include` 和 `exclude` 參數篩選 `rare_terms` 彙總傳回的值。這兩個參數可以同時用於同一個彙總中。`exclude` 篩選條件的優先順序較高；任何被排除的值都會從結果中移除，無論這些值是否已明確納入。
 
-The arguments to `include` and `exclude` can be regular expressions (regex), including string literals, or arrays. Mixing regex and array arguments results in an error. For example, the following combination is not allowed:
+`include` 和 `exclude` 的引數可以是規則運算式 (regex，包括字串常值) 或陣列。混用 regex 與陣列引數會導致錯誤。例如，不允許下列組合：
 
 ```json
 "rare_terms": {
@@ -221,9 +222,9 @@ The arguments to `include` and `exclude` can be regular expressions (regex), inc
 ```
 
 
-### Example: Filtering
+### 範例：篩選
 
-The following example modifies the previous example to include all airport codes beginning with "A" but exclude the "ABQ" airport code:
+下列範例修改了上一個範例，納入所有以「A」開頭的機場代號，但排除「ABQ」機場代號：
 
 ```json
 GET /opensearch_dashboards_sample_data_flights/_search
@@ -243,7 +244,7 @@ GET /opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-The response shows the two airport codes that meet the filtering requirements:
+回應顯示符合篩選要求的兩個機場代號：
 
 ```json
 {
@@ -281,9 +282,9 @@ The response shows the two airport codes that meet the filtering requirements:
 ```
 
 
-### Example: Filtering with array input
+### 範例：使用陣列輸入進行篩選
 
-The following example returns all destination airport codes that appear two times at most in the OpenSearch Dashboards sample flight data but specifies an array of airport codes to exclude:
+下列範例會傳回 OpenSearch Dashboards 範例航班資料中最多出現兩次的所有目的地機場代號，但指定了要排除的機場代號陣列：
 
 ```json
 GET /opensearch_dashboards_sample_data_flights/_search
@@ -302,7 +303,7 @@ GET /opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-The response omits the excluded airport codes:
+回應省略了被排除的機場代號：
 
 ```json
 {

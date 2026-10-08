@@ -1,66 +1,67 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index patterns
+title: "索引模式"
 parent: Connecting data sources
 nav_order: 10
 ---
 
-# Index patterns
+# 索引模式
 
-Index patterns are essential for accessing OpenSearch data. An _index pattern_ references one or more indexes, data streams, or index aliases. For example, an index pattern can point you to your log data from yesterday or all indexes that contain that data. 
+索引模式是存取 OpenSearch 資料的必要元素。_索引模式_會參照一或多個索引、資料串流或索引別名。例如，索引模式可以指向您昨天的記錄資料，或包含該資料的所有索引。
 
-If you store data in multiple indexes, creating an index pattern enables your visualizations to retrieve data from all indexes that match the index pattern. You need to create index patterns to define how data is retrieved and fields are formatted so that you can query, search, and display data. 
+如果您將資料儲存在多個索引中，建立索引模式可讓您的視覺化從所有符合該索引模式的索引中擷取資料。您需要建立索引模式來定義資料的擷取方式以及欄位的格式，以便查詢、搜尋及顯示資料。
 
 
 
-## Prerequisites
+## 先決條件
 
-Before you can create an index pattern, your data must be indexed. To learn about indexing your data in OpenSearch, see [Managing indexes]({{site.url}}{{site.baseurl}}/im-plugin/index/). 
+在建立索引模式之前，您的資料必須已編製索引。若要了解如何在 OpenSearch 中將資料編製索引，請參閱[管理索引]({{site.url}}{{site.baseurl}}/im-plugin/index/)。
 
-> To create or modify index patterns, your role must have the following permissions:
-> - The `kibana_user` role (or equivalent), which grants access to OpenSearch Dashboards.
-> - The `kibana_all_write` tenant permission for the tenant in which you want to create the index pattern. With `kibana_all_read`, you can view existing index patterns but cannot create or modify them.
-> - Read access to the indexes that the index pattern will match.
+> 若要建立或修改索引模式，您的角色必須具備下列權限：
+> - `kibana_user` 角色（或同等角色），此角色會授予 OpenSearch Dashboards 的存取權。
+> - 您要在其中建立索引模式之租用戶的 `kibana_all_write` 租用戶權限。若具備 `kibana_all_read`，您可以檢視現有的索引模式，但無法建立或修改索引模式。
+> - 索引模式將會符合之索引的讀取權限。
 >
-> Contact your administrator for support. For more information about tenant permissions, see [Multi-tenancy configuration]({{site.url}}{{site.baseurl}}/security/multi-tenancy/multi-tenancy-config/#give-roles-access-to-tenants). For more information about roles, see [Predefined roles]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#predefined-roles).
+> 如需協助，請聯絡您的管理員。如需租用戶權限的詳細資訊，請參閱[多租用戶組態]({{site.url}}{{site.baseurl}}/security/multi-tenancy/multi-tenancy-config/#give-roles-access-to-tenants)。如需角色的詳細資訊，請參閱[預先定義的角色]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#predefined-roles)。
 {: .note}
 
-## Creating an index pattern
+## 建立索引模式
 
-If you added sample data, you have index patterns that you can use to analyze that data. To create an index pattern for your own data, follow these steps.
+如果您已新增範例資料，您就會有可用來分析該資料的索引模式。若要為您自己的資料建立索引模式，請依照下列步驟操作。
 
-### Step 1: Define the index pattern
+### 步驟 1：定義索引模式
 
-1. Go to OpenSearch Dashboards, and select **Management** > **Dashboards Management** > **Index patterns**.
-2. Select **Create index pattern**.
-3. From the **Create index pattern** window, define the index pattern by entering a name for your index pattern in the **Index pattern name** field. Dashboards automatically adds a wildcard, `*`, once you start typing. Using a wildcard is helpful for matching an index pattern to multiple sources or indexes. A dropdown list displaying all the indexes that match your index pattern appears when you start typing. 
-4. Select **Next step**.
+1. 前往 OpenSearch Dashboards，然後選取 **Management** > **Dashboards Management** > **Index patterns**。
+2. 選取 **Create index pattern**。
+3. 在 **Create index pattern** 視窗中，於 **Index pattern name** 欄位輸入索引模式的名稱，以定義索引模式。當您開始輸入時，Dashboards 會自動加入萬用字元 `*`。使用萬用字元有助於讓索引模式符合多個來源或索引。當您開始輸入時，會出現一個下拉式清單，顯示所有符合您索引模式的索引。
+4. 選取 **Next step**。
 
-An example of step 1 is shown in the following image. Note that the index pattern `security*` matches three indexes. By defining the pattern with a wildcard `*`, you can query and visualize all the data in your indexes.
+下圖顯示步驟 1 的範例。請注意，索引模式 `security*` 符合三個索引。透過使用萬用字元 `*` 定義模式，您可以查詢並視覺化索引中的所有資料。
 
-![Index pattern step 1 UI ]({{site.url}}{{site.baseurl}}/images/dashboards/index-patterns-step1.png){: width="700" }
+![索引模式步驟 1 使用者介面]({{site.url}}{{site.baseurl}}/images/dashboards/index-patterns-step1.png){: width="700" }
 
-### Step 2: Configure the settings
+### 步驟 2：設定各項設定
 
-1. Select `@timestamp` from the dropdown menu to specify the time field for OpenSearch to use when filtering documents based on time. Selecting this time filter determines which field the time filter is applied to. It can be the timestamp of a request or any relevant timestamp field. If you don't want to use a time filter, select that option from the dropdown menu. If you select this option, OpenSearch returns all of the data in the indexes that match the pattern.
+1. 從下拉式選單中選取 `@timestamp`，以指定 OpenSearch 依時間篩選文件時要使用的時間欄位。選取此時間篩選條件會決定時間篩選條件要套用至哪個欄位。該欄位可以是請求的時間戳記，或任何相關的時間戳記欄位。如果您不想使用時間篩選條件，請從下拉式選單中選取該選項。如果您選取此選項，OpenSearch 會傳回符合該模式之索引中的所有資料。
 
-2. Select **Create index pattern.** An example is shown in the following image.
+2. 選取 **Create index pattern.**。下圖顯示一個範例。
 
-    ![Index pattern step 2 UI ]({{site.url}}{{site.baseurl}}/images/dashboards/index-pattern-step2.png){: width="700" }
+    ![索引模式步驟 2 使用者介面]({{site.url}}{{site.baseurl}}/images/dashboards/index-pattern-step2.png){: width="700" }
 
-Once the index pattern has been created, you can view the mapping of the matching indexes. Within the table, you can see the list of fields, along with their data type and properties. An example is shown in the following image.
+建立索引模式後，您可以檢視相符索引的對應。在表格中，您可以看到欄位清單，以及欄位的資料類型和屬性。下圖顯示一個範例。
 
-![Index pattern table UI ]({{site.url}}{{site.baseurl}}/images/dashboards/index-pattern-table.png){: width="700" }
+![索引模式表格使用者介面]({{site.url}}{{site.baseurl}}/images/dashboards/index-pattern-table.png){: width="700" }
 
-## Best practices
+## 最佳實務
 
-Consider the following best practices when creating index patterns:
+建立索引模式時，請考慮下列最佳實務：
 
-- **Make your index patterns specific**: Instead of creating an index pattern that matches all indexes, create an index pattern that matches all indexes starting with a certain prefix, for example, `my-index-`. The more specific your index patterns, the better it will be to query and analyze your data.
-- **Use wildcards sparingly**: Wildcards can be useful for matching multiple indexes, but they can also make it more difficult to manage your index patterns. Try to use wildcards as specifically as possible.
-- **Test your index patterns**: Make sure to test your index patterns to ensure that they match the correct indexes. 
+- **讓索引模式具體明確**：與其建立符合所有索引的索引模式，不如建立符合所有以特定前置詞開頭之索引的索引模式，例如 `my-index-`。索引模式越具體，就越有利於查詢和分析您的資料。
+- **謹慎使用萬用字元**：萬用字元在比對多個索引時很實用，但也可能讓索引模式更難管理。請盡可能具體地使用萬用字元。
+- **測試您的索引模式**：請務必測試您的索引模式，確保其符合正確的索引。
 
-## Next steps
+## 後續步驟
 
-- [Understand your data through visuals]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/).
-- [Dig into your data]({{site.url}}{{site.baseurl}}/dashboards/discover/index-discover/).
+- [透過視覺效果了解您的資料]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/)。
+- [深入探索您的資料]({{site.url}}{{site.baseurl}}/dashboards/discover/index-discover/)。

@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: ASCII folding
+title: "ASCII 摺疊"
 parent: Token filters
 nav_order: 20
 ---
 
-# ASCII folding token filter
+# ASCII 摺疊詞元篩選器
 
-The `asciifolding` token filter converts non-ASCII characters to their closest ASCII equivalents. For example, *é* becomes *e*, *ü* becomes *u*, and *ñ* becomes *n*. This process is known as *transliteration*.
+`asciifolding` 詞元篩選器會將非 ASCII 字元轉換為最接近的 ASCII 對等字元。例如，*é* 會轉換為 *e*，*ü* 會轉換為 *u*，*ñ* 會轉換為 *n*。此過程稱為*音譯 (transliteration)*。
 
 
-The `asciifolding` token filter offers a number of benefits:
+`asciifolding` 詞元篩選器提供多項優點：
 
-  - **Enhanced search flexibility**: Users often omit accents or special characters when entering queries. The `asciifolding` token filter ensures that such queries still return relevant results.
-  - **Normalization**: Standardizes the indexing process by ensuring that accented characters are consistently converted to their ASCII equivalents.
-  - **Internationalization**: Particularly useful for applications including multiple languages and character sets.
+  - **提升搜尋彈性**：使用者在輸入查詢時，經常會省略重音符號或特殊字元。`asciifolding` 詞元篩選器可確保此類查詢仍能傳回相關結果。
+  - **正規化**：確保帶有重音符號的字元一律轉換為其 ASCII 對等字元，藉此將編製索引的過程標準化。
+  - **國際化**：特別適用於包含多種語言和字元集的應用程式。
 
-While the `asciifolding` token filter can simplify searches, it may also lead to the loss of specific information, particularly if the distinction between accented and non-accented characters in the dataset is significant.
+雖然 `asciifolding` 詞元篩選器可以簡化搜尋，但也可能導致特定資訊遺失，尤其是當資料集中帶重音符號與不帶重音符號字元之間的區別很重要時。
 {: .warning}
 
-## Parameters
+## 參數
 
-You can configure the `asciifolding` token filter using the `preserve_original` parameter. Setting this parameter to `true` keeps both the original token and its ASCII-folded version in the token stream. This can be particularly useful when you want to match both the original (with accents) and the normalized (without accents) versions of a term in a search query. Default is `false`.
+您可以使用 `preserve_original` 參數來設定 `asciifolding` 詞元篩選器。將此參數設為 `true` 時，詞元串流中會同時保留原始詞元及其經過 ASCII 摺疊的版本。當您希望在搜尋查詢中同時比對詞彙的原始版本（帶重音符號）與正規化版本（不帶重音符號）時，這項功能特別實用。預設值為 `false`。
 
-## Example
+## 範例
 
-The following example request creates a new index named `example_index` and defines an analyzer with the `asciifolding` filter and `preserve_original` parameter set to `true`:
+下列範例請求會建立名為 `example_index` 的新索引，並定義一個使用 `asciifolding` 篩選器且 `preserve_original` 參數設為 `true` 的分析器：
 
 ```json
 PUT /example_index
@@ -54,9 +55,9 @@ PUT /example_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 POST /example_index/_analyze
@@ -67,7 +68,7 @@ POST /example_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

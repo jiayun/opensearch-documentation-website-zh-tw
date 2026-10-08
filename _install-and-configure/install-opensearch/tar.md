@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Tarball
 parent: Installing OpenSearch
@@ -7,29 +8,29 @@ redirect_from:
   - /opensearch/install/tar/
 ---
 
-# Installing OpenSearch from a tarball
+# 從 tarball 安裝 OpenSearch
 
-Installing OpenSearch from a tarball, also known as a tar archive, may appeal to users who want granular control over installation details like file permissions and installation paths.
+從 tarball（又稱 tar 封存檔）安裝 OpenSearch，適合想要精細控制安裝細節（例如檔案權限與安裝路徑）的使用者。
 
-Generally speaking, the installation of OpenSearch from a tarball can be broken down into a few steps:
+一般而言，從 tarball 安裝 OpenSearch 可分為以下幾個步驟：
 
-1. **Download and unpack OpenSearch.**
-1. **Configure important system settings.**
-   - These settings are applied to the host before modifying any OpenSearch files.
-1. **(Optional) Test OpenSearch.**
-   - Confirm that OpenSearch is able to run before you apply any custom configuration.
-   - This can be done without any security (no password, no certificates) or with a demo security configuration that can be applied by a packaged script.
-1. **Configure OpenSearch for your environment.**
-   -  Apply basic settings to OpenSearch and start using it in your environment.
+1. **下載並解壓縮 OpenSearch。**
+1. **設定重要的系統設定。**
+   - 這些設定會在修改任何 OpenSearch 檔案之前套用至主機。
+1. **（選用）測試 OpenSearch。**
+   - 在套用任何自訂組態之前，確認 OpenSearch 能夠執行。
+   - 您可以在不使用任何安全性（無密碼、無憑證）的情況下進行，也可以使用由隨附指令碼套用的示範安全性組態進行。
+1. **針對您的環境設定 OpenSearch。**
+   -  將基本設定套用至 OpenSearch，並開始在您的環境中使用。
 
-The tarball is a self-contained directory with everything needed to run OpenSearch, including an integrated Java Development Kit (JDK). This installation method is compatible with most Linux distributions, including CentOS 7, Amazon Linux 2, and Ubuntu 18.04. If you have your own Java installation and set the environment variable `JAVA_HOME` in the terminal, macOS works as well.
+tarball 是一個獨立完整的目錄，內含執行 OpenSearch 所需的一切，包括整合的 Java Development Kit (JDK)。此安裝方式與大多數 Linux 發行版相容，包括 CentOS 7、Amazon Linux 2 及 Ubuntu 18.04。如果您有自己安裝的 Java，並在終端機中設定了環境變數 `JAVA_HOME`，則 macOS 也可以使用。
 
-This guide assumes that you are comfortable working from the Linux command line interface (CLI). You should understand how to input commands, navigate between directories, and edit text files. Some example commands reference the `vi` text editor, but you may use any text editor available.
+本指南假設您熟悉 Linux 命令列介面 (CLI) 的操作。您應了解如何輸入命令、在目錄之間切換，以及編輯文字檔案。部分範例命令使用 `vi` 文字編輯器，但您可以使用任何可用的文字編輯器。
 {:.note}
 
-## Step 1: Download and unpack OpenSearch
+## 步驟 1：下載並解壓縮 OpenSearch
 
-1. Download the appropriate tar.gz archive from the [OpenSearch downloads page](https://opensearch.org/downloads.html){:target='\_blank'} or by using the command line (such as with `wget`).
+1. 從 [OpenSearch 下載頁面](https://opensearch.org/downloads.html){:target='\_blank'}下載適當的 tar.gz 封存檔，或使用命令列（例如使用 `wget`）下載。
    ```bash
    # x64
    wget https://artifacts.opensearch.org/releases/bundle/opensearch/{{site.opensearch_version}}/opensearch-{{site.opensearch_version}}-linux-x64.tar.gz
@@ -37,7 +38,7 @@ This guide assumes that you are comfortable working from the Linux command line 
    # ARM64
    wget https://artifacts.opensearch.org/releases/bundle/opensearch/{{site.opensearch_version}}/opensearch-{{site.opensearch_version}}-linux-arm64.tar.gz
    ```
-1. Extract the contents of the tarball.
+1. 解壓縮 tarball 的內容。
    ```bash
    # x64
    tar -xvf opensearch-{{site.opensearch_version}}-linux-x64.tar.gz
@@ -46,16 +47,16 @@ This guide assumes that you are comfortable working from the Linux command line 
    tar -xvf opensearch-{{site.opensearch_version}}-linux-arm64.tar.gz
    ```
 
-## Step 2: Configure important system settings
+## 步驟 2：設定重要的系統設定
 
-Before launching OpenSearch you should review some [important system settings]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#important-settings){:target='\_blank'}.
-1. Disable memory paging and swapping performance on the host to improve performance.
+啟動 OpenSearch 之前，您應先檢查一些[重要的系統設定]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#important-settings){:target='\_blank'}。
+1. 停用主機上的記憶體分頁與置換，以提升效能。
    ```bash
    sudo swapoff -a
    ```
    {% include copy.html %}
 
-1. Increase the number of memory maps available to OpenSearch.
+1. 增加 OpenSearch 可用的記憶體對應數量。
    ```bash
    # Edit the sysctl config file
    sudo vi /etc/sysctl.conf
@@ -72,48 +73,48 @@ Before launching OpenSearch you should review some [important system settings]({
    cat /proc/sys/vm/max_map_count
    ```
 
-## Step 3: (Optional) Test OpenSearch
+## 步驟 3：（選用）測試 OpenSearch
 
-Before proceeding you should test your installation of OpenSearch. Otherwise, it can be difficult to determine whether future problems are due to installation issues or custom settings you applied after installation. There are two quick methods for testing OpenSearch at this stage:
+繼續之前，您應先測試 OpenSearch 的安裝。否則，日後發生問題時，將難以判斷是安裝問題所致，還是安裝後套用的自訂設定所致。在此階段，有兩種快速測試 OpenSearch 的方法：
 
-1. **(Security enabled)** Apply a generic configuration using the demo security script included in the tar archive.
-1. **(Security disabled)** Manually disable the Security plugin and test the instance before applying your own custom security settings.
+1. **（啟用安全性）** 使用 tar 封存檔中隨附的示範安全性指令碼套用通用組態。
+1. **（停用安全性）** 手動停用 Security 外掛程式，並在套用您自己的自訂安全性設定之前測試執行個體。
 
-The demo security script will apply a generic configuration to your instance of OpenSearch. This configuration defines some environment variables and also applies self-signed TLS certificates. If you would like to configure these yourself, see [Step 4: Set up OpenSearch in your environment](#step-4-set-up-opensearch-in-your-environment).
+示範安全性指令碼會將通用組態套用至您的 OpenSearch 執行個體。此組態會定義一些環境變數，並套用自我簽署的 TLS 憑證。如果您想自行設定這些項目，請參閱[步驟 4：在您的環境中設定 OpenSearch](#step-4-set-up-opensearch-in-your-environment)。
 
-If you only want to verify that the service is properly configured and you intend to configure security settings yourself, then you may want to disable the Security plugin and launch the service without encryption or authentication.
+如果您只想確認服務已正確設定，並打算自行設定安全性設定，則可以停用 Security 外掛程式，並在不加密也不驗證的情況下啟動服務。
 
-An OpenSearch node configured by the demo security script is not suitable for a production environment. If you plan to use the node in a production environment after running `opensearch-tar-install.sh`, you should, at a minimum, replace the demo TLS certificates with your own TLS certificates and [update the list of internal users and passwords]({{site.url}}{{site.baseurl}}/security/configuration/yaml/). See [Security configuration]({{site.url}}{{site.baseurl}}/security/configuration/index/) for additional guidance to ensure that your nodes are configured according to your security requirements.
+由示範安全性指令碼設定的 OpenSearch 節點不適用於正式環境。如果您打算在執行 `opensearch-tar-install.sh` 之後將該節點用於正式環境，至少應將示範 TLS 憑證替換為您自己的 TLS 憑證，並[更新內部使用者與密碼清單]({{site.url}}{{site.baseurl}}/security/configuration/yaml/)。如需確保節點依照您的安全性需求進行設定的更多指引，請參閱[安全性組態]({{site.url}}{{site.baseurl}}/security/configuration/index/)。
 {: .warning}
 
-### Option 1: Test your OpenSearch settings with security enabled
+### 選項 1：在啟用安全性的情況下測試 OpenSearch 設定
 
-1. Change to the top directory of your OpenSearch installation.
+1. 切換至 OpenSearch 安裝的最上層目錄。
    ```bash
    cd /path/to/opensearch-{{site.opensearch_version}}
    ```
    {% include copy.html %}
 
-1. Run the OpenSearch startup script with the security demo configuration.
+1. 使用安全性示範組態執行 OpenSearch 啟動指令碼。
    ```bash
    ./opensearch-tar-install.sh
    ```
    {% include copy.html %}
 
-   For OpenSearch 2.12 or later, set a new custom admin password before installation using the following command, following the [admin password requirements]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements):
+   若為 OpenSearch 2.12 或更新版本，請在安裝前使用下列命令設定新的自訂管理員密碼，並遵循[管理員密碼要求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)：
    ```bash
    $ export OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>
    ```
    {% include copy.html %}
 
-1. Open another terminal session and send requests to the server to verify that OpenSearch is running. Note the use of the `--insecure` flag, which is required because the TLS certificates are self-signed.
-   - Send a request to port 9200:
+1. 開啟另一個終端機工作階段，並向伺服器傳送請求，以確認 OpenSearch 正在執行。請注意 `--insecure` 旗標的使用，由於 TLS 憑證為自我簽署，因此必須使用此旗標。
+   - 向連接埠 9200 傳送請求：
       ```bash
       curl -X GET https://localhost:9200 -u 'admin:<custom-admin-password>' --insecure
       ```
       {% include copy.html %}
 
-      You should get a response that looks like this:
+      您應會收到類似以下的回應：
       ```bash
       {
          "name" : "hostname",
@@ -133,13 +134,13 @@ An OpenSearch node configured by the demo security script is not suitable for a 
          "tagline" : "The OpenSearch Project: https://opensearch.org/"
       }
       ```
-   - Query the plugins endpoint:
+   - 查詢外掛程式端點：
       ```bash
       curl -X GET https://localhost:9200/_cat/plugins?v -u 'admin:<custom-admin-password>' --insecure
       ```
       {% include copy.html %}
 
-      The response should look like this:
+      回應應類似以下內容：
       ```bash
       name     component                            version
       hostname opensearch-alerting                  {{site.opensearch_version}}
@@ -158,31 +159,31 @@ An OpenSearch node configured by the demo security script is not suitable for a 
       hostname opensearch-security                  {{site.opensearch_version}}
       hostname opensearch-sql                       {{site.opensearch_version}}
       ```
-1. Return to the original terminal session and stop the process by pressing `CTRL + C`.
+1. 返回原本的終端機工作階段，並按下 `CTRL + C` 停止處理程序。
 
-### Option 2: Test your OpenSearch settings with security disabled
+### 選項 2：在停用安全性的情況下測試您的 OpenSearch 設定
 
-1. Open the configuration file.
+1. 開啟組態檔案。
    ```bash
    vi /path/to/opensearch-{{site.opensearch_version}}/config/opensearch.yml
    ```
    {% include copy.html %}
 
-1. Add the following line to disable the Security plugin:
+1. 新增下列這一行以停用 Security 外掛程式：
    ```bash
    plugins.security.disabled: true
    ```
    {% include copy.html %}
 
-1. Save the change and close the file.
-1. Open another terminal session and send requests to the server to verify that OpenSearch is running. Because the Security plugin has been disabled, you will be sending commands using `HTTP` rather than `HTTPS`.
-   - Send a request to port 9200.
+1. 儲存變更並關閉檔案。
+1. 開啟另一個終端機工作階段，並向伺服器傳送請求，以確認 OpenSearch 正在執行。由於 Security 外掛程式已停用，您將使用 `HTTP` 而非 `HTTPS` 傳送命令。
+   - 向連接埠 9200 傳送請求。
       ```bash
       curl -X GET http://localhost:9200
       ```
       {% include copy.html %}
 
-      You should get a response that looks like this:
+      您應該會收到類似下列內容的回應：
       ```bash
       {
          "name" : "hostname",
@@ -202,13 +203,13 @@ An OpenSearch node configured by the demo security script is not suitable for a 
          "tagline" : "The OpenSearch Project: https://opensearch.org/"
       }
       ```
-   - Query the plugins endpoint.
+   - 查詢外掛程式端點。
       ```bash
       curl -X GET http://localhost:9200/_cat/plugins?v
       ```
       {% include copy.html %}
 
-      The response should look like this:
+      回應應類似下列內容：
       ```bash
       name     component                            version
       hostname opensearch-alerting                  {{site.opensearch_version}}
@@ -228,31 +229,31 @@ An OpenSearch node configured by the demo security script is not suitable for a 
       hostname opensearch-sql                       {{site.opensearch_version}}
       ```
 
-## Step 4: Set up OpenSearch in your environment
+## 步驟 4：在您的環境中設定 OpenSearch
 
-Users who do not have prior experience with OpenSearch may want a list of recommended settings in order to get started with the service. By default, OpenSearch is not bound to a network interface and cannot be reached by external hosts. Additionally, security settings are either undefined (greenfield install) or populated by default usernames and passwords if you ran the security demo script by invoking `opensearch-tar-install.sh`. The following recommendations will enable a user to bind OpenSearch to a network interface, create and sign TLS certificates, and configure basic authentication.
+沒有 OpenSearch 使用經驗的使用者，可能會需要一份建議設定清單，以便開始使用此服務。根據預設，OpenSearch 不會繫結至網路介面，外部主機也無法連線。此外，安全性設定若不是尚未定義 (全新安裝)，就是在您透過叫用 `opensearch-tar-install.sh` 執行安全性示範指令碼後，填入了預設的使用者名稱和密碼。下列建議可讓使用者將 OpenSearch 繫結至網路介面、建立並簽署 TLS 憑證，以及設定基本驗證。
 
-The following recommended settings will allow you to:
+下列建議設定可讓您：
 
-- Bind OpenSearch to an IP or network interface on the host.
-- Set initial and maximum JVM heap sizes.
-- Define an environment variable that points to the bundled JDK.
-- Configure your own TLS certificates - no third-party certificate authority (CA) is required.
-- Create an admin user with a custom password.
+- 將 OpenSearch 繫結至主機上的 IP 或網路介面。
+- 設定初始和最大 JVM 堆積大小。
+- 定義指向隨附 JDK 的環境變數。
+- 設定您自己的 TLS 憑證，不需要第三方憑證授權單位 (CA)。
+- 建立具有自訂密碼的管理員使用者。
 
-If you ran the security demo script, then you will need to manually reconfigure settings that were modified. Refer to [Security configuration]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/) for guidance before proceeding.
+如果您已執行安全性示範指令碼，則需要手動重新設定已被修改的設定。在繼續之前，請參閱[安全性組態]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)以取得指引。
 {:.note}
 
-Before modifying any configuration files, it's always a good idea to save a backup copy before making changes. The backup file can be used to revert any issues caused by a bad configuration.
+在修改任何組態檔案之前，最好先儲存一份備份副本再進行變更。備份檔案可用於還原因錯誤組態所造成的任何問題。
 {:.tip}
 
-1. Open `opensearch.yml`.
+1. 開啟 `opensearch.yml`。
    ```bash
    vi /path/to/opensearch-{{site.opensearch_version}}/config/opensearch.yml
    ```
    {% include copy.html %}
 
-1. Add the following lines.
+1. 新增下列幾行。
    ```bash
    # Bind OpenSearch to the correct network interface. Use 0.0.0.0
    # to include all available interfaces or specify an IP address
@@ -270,40 +271,40 @@ Before modifying any configuration files, it's always a good idea to save a back
    ```
    {% include copy.html %}
 
-1. Save your changes and close the file.
-1. Specify initial and maximum JVM heap sizes.
-   1.  Open `jvm.options`.
+1. 儲存變更並關閉檔案。
+1. 指定初始和最大 JVM 堆積大小。
+   1.  開啟 `jvm.options`。
          ```bash
          vi /path/to/opensearch-{{site.opensearch_version}}/config/jvm.options
          ```
          {% include copy.html %}
 
-   1. Modify the values for initial and maximum heap sizes. As a starting point, you should set these values to half of the available system memory. For dedicated hosts this value can be increased based on your workflow requirements.
-      -  As an example, if the host machine has 8 GB of memory then you might want to set the initial and maximum heap sizes to 4 GB:
+   1. 修改初始和最大堆積大小的值。作為起點，您應將這些值設定為可用系統記憶體的一半。對於專用主機，可根據您的工作流程需求提高此值。
+      -  舉例來說，如果主機有 8 GB 記憶體，您可能會想將初始和最大堆積大小設定為 4 GB：
          ```bash
          -Xms4g
          -Xmx4g
          ```
          {% include copy.html %}
 
-   1. Save your changes and close the file.
-1. Specify the location of the included JDK.
+   1. 儲存變更並關閉檔案。
+1. 指定隨附 JDK 的位置。
    ```bash
    export OPENSEARCH_JAVA_HOME=/path/to/opensearch-{{site.opensearch_version}}/jdk
    ```
    {% include copy.html %}
 
-### Configure TLS
+### 設定 TLS
 
-TLS certificates provide additional security for your cluster by allowing clients to confirm the identity of hosts and encrypt traffic between the client and host. For more information, refer to [Configure TLS Certificates]({{site.url}}{{site.baseurl}}/security/configuration/tls/) and [Generate Certificates]({{site.url}}{{site.baseurl}}/security/configuration/generate-certificates/), which are included in the [Security plugin]({{site.url}}{{site.baseurl}}/security/index/) documentation. For work performed in a development environment, self-signed certificates are usually adequate. This section will guide you through the basic steps required to generate your own TLS certificates and apply them to your OpenSearch host.
+TLS 憑證可讓用戶端確認主機的身分，並加密用戶端與主機之間的流量，為您的叢集提供額外的安全性。如需詳細資訊，請參閱 [Security 外掛程式]({{site.url}}{{site.baseurl}}/security/index/)文件中的[設定 TLS 憑證]({{site.url}}{{site.baseurl}}/security/configuration/tls/)和[產生憑證]({{site.url}}{{site.baseurl}}/security/configuration/generate-certificates/)。在開發環境中進行的工作，通常使用自我簽署憑證就已足夠。本節將引導您完成產生自己的 TLS 憑證並將其套用至 OpenSearch 主機所需的基本步驟。
 
-1. Navigate to the OpenSearch `config` directory. This is where the certificates will be stored.
+1. 前往 OpenSearch 的 `config` 目錄。憑證將儲存在此處。
    ```bash
    cd /path/to/opensearch-{{site.opensearch_version}}/config/
    ```
    {% include copy.html %}
 
-1. Generate a root certificate. This is what you will use to sign your other certificates.
+1. 產生根憑證。您將使用此憑證來簽署其他憑證。
    ```bash
    # Create a private key for the root certificate
    openssl genrsa -out root-ca-key.pem 2048
@@ -312,7 +313,7 @@ TLS certificates provide additional security for your cluster by allowing client
    # replace the arguments passed to -subj so they reflect your specific host.
    openssl req -new -x509 -sha256 -key root-ca-key.pem -subj "/C=CA/ST=ONTARIO/L=TORONTO/O=ORG/OU=UNIT/CN=ROOT" -out root-ca.pem -days 730
    ```
-1. Next, create the admin certificate. This certificate is used to gain elevated rights for performing administrative tasks relating to the Security plugin.
+1. 接著，建立管理員憑證。此憑證用於取得較高權限，以執行與 Security 外掛程式相關的管理工作。
    ```bash
    # Create a private key for the admin certificate.
    openssl genrsa -out admin-key-temp.pem 2048
@@ -327,7 +328,7 @@ TLS certificates provide additional security for your cluster by allowing client
    # Sign the admin certificate with the root certificate and private key you created earlier.
    openssl x509 -req -in admin.csr -CA root-ca.pem -CAkey root-ca-key.pem -CAcreateserial -sha256 -out admin.pem -days 730
    ```
-1. Create a certificate for the node being configured.
+1. 為正在設定的節點建立憑證。
    ```bash
    # Create a private key for the node certificate.
    openssl genrsa -out node1-key-temp.pem 2048
@@ -346,13 +347,13 @@ TLS certificates provide additional security for your cluster by allowing client
    # Sign the node certificate with the root certificate and private key that you created earlier.
    openssl x509 -req -in node1.csr -CA root-ca.pem -CAkey root-ca-key.pem -CAcreateserial -sha256 -out node1.pem -days 730 -extfile node1.ext
    ```
-1. Remove temporary files that are no longer required.
+1. 移除不再需要的暫存檔案。
    ```bash
    rm *temp.pem *csr *ext
    ```
    {% include copy.html %}
 
-1. Add these certificates to `opensearch.yml` as described in [Generate Certificates]({{site.url}}{{site.baseurl}}/security/configuration/generate-certificates/#add-distinguished-names-to-opensearchyml). Advanced users might also choose to append the settings using a script:
+1. 依照[產生憑證]({{site.url}}{{site.baseurl}}/security/configuration/generate-certificates/#add-distinguished-names-to-opensearchyml)中的說明，將這些憑證新增至 `opensearch.yml`。進階使用者也可以選擇使用指令碼附加這些設定：
    ```bash
    #! /bin/bash
 
@@ -379,7 +380,7 @@ TLS certificates provide additional security for your cluster by allowing client
    ```
    {% include copy.html %}
 
-1. (Optional) Add trust for the self-signed root certificate.
+1. （選用）為自我簽署的根憑證新增信任。
    ```bash
    # Copy the root certificate to the correct directory
    sudo cp /path/to/opensearch-{{site.opensearch_version}}/config/root-ca.pem /etc/pki/ca-trust/source/anchors/
@@ -388,18 +389,18 @@ TLS certificates provide additional security for your cluster by allowing client
    sudo update-ca-trust
    ```
 
-### Configure a user
+### 設定使用者
 
-Users are defined and authenticated by OpenSearch in a variety of ways. One method, which does not require additional backend infrastructure, is to manually configure users in `internal_users.yml`. See [YAML files]({{site.url}}{{site.baseurl}}/security/configuration/yaml/) for more information about configuring users. The following steps explain how to remove all demo users except for the `admin` user and how to replace the `admin` default password using a script.
+OpenSearch 可透過多種方式定義和驗證使用者。其中一種不需要額外後端基礎架構的方法，是在 `internal_users.yml` 中手動設定使用者。如需設定使用者的詳細資訊，請參閱 [YAML 檔案]({{site.url}}{{site.baseurl}}/security/configuration/yaml/)。下列步驟說明如何使用指令碼移除 `admin` 使用者以外的所有示範使用者，以及如何替換 `admin` 的預設密碼。
 
-1. Make the Security plugin scripts executable.
+1. 將 Security 外掛程式的指令碼設為可執行。
    ```bash
    chmod 755 /path/to/opensearch-{{site.opensearch_version}}/plugins/opensearch-security/tools/*.sh
    ```
    {% include copy.html %}
 
-1. Run `hash.sh` to generate a new password.
-   - This script will fail if a path to the JDK has not been defined.
+1. 執行 `hash.sh` 以產生新密碼。
+   - 如果尚未定義 JDK 的路徑，此指令碼將會失敗。
       ```bash
       # Example output if a JDK isn't found...
       $ ./hash.sh
@@ -413,20 +414,20 @@ Users are defined and authenticated by OpenSearch in a variety of ways. One meth
       ```
       {% include copy.html %}
 
-   - Declare an environment variable when you invoke the script in order to avoid issues:
+   - 為避免發生問題，請在呼叫指令碼時宣告環境變數：
       ```bash
       OPENSEARCH_JAVA_HOME=/path/to/opensearch-{{site.opensearch_version}}/jdk ./hash.sh
       ```
       {% include copy.html %}
 
-   - Enter the desired password at the prompt and make a note of the output hash.
-1. Open `internal_users.yml`.
+   - 在提示中輸入所需的密碼，並記下輸出的雜湊值。
+1. 開啟 `internal_users.yml`。
    ```bash
    vi /path/to/opensearch-{{site.opensearch_version}}/config/opensearch-security/internal_users.yml
    ```
    {% include copy.html %}
 
-1. Remove all demo users except for `admin` and replace the hash with the output provided by `hash.sh` in a previous step. The file should look similar to the following example:
+1. 移除 `admin` 以外的所有示範使用者，並將雜湊值替換為先前步驟中 `hash.sh` 提供的輸出。此檔案應類似下列範例：
    ```bash
    ---
    # This is the internal user database
@@ -447,11 +448,11 @@ Users are defined and authenticated by OpenSearch in a variety of ways. One meth
    ```
    {% include copy.html %}
 
-### Apply changes
+### 套用變更
 
-Now that TLS certificates are installed and demo users were removed or assigned new passwords, the last step is to apply the configuration changes. This last configuration step requires invoking `securityadmin.sh` while OpenSearch is running on the host.
+現在 TLS 憑證已安裝完成，且示範使用者已移除或已指派新密碼，最後一個步驟是套用組態變更。此最後的組態步驟需要在主機上執行 OpenSearch 時呼叫 `securityadmin.sh`。
 
-1. Start OpenSearch. It must be running for `securityadmin.sh` to apply changes.
+1. 啟動 OpenSearch。OpenSearch 必須處於執行狀態，`securityadmin.sh` 才能套用變更。
    ```bash
    # Change directories
    cd /path/to/opensearch-{{site.opensearch_version}}/bin
@@ -459,25 +460,25 @@ Now that TLS certificates are installed and demo users were removed or assigned 
    # Run the service in the foreground
    ./opensearch
    ```
-1. Open a separate terminal session with the host and navigate to the directory containing `securityadmin.sh`.
+1. 開啟與主機連線的另一個終端機工作階段，並前往包含 `securityadmin.sh` 的目錄。
    ```bash
    # Change to the correct directory
    cd /path/to/opensearch-{{site.opensearch_version}}/plugins/opensearch-security/tools
    ```
-1. Invoke the script. See [Apply changes using securityadmin.sh]({{site.url}}{{site.baseurl}}/security/configuration/security-admin/) for definitions of the arguments you must pass.
+1. 呼叫指令碼。如需您必須傳遞之引數的定義，請參閱[使用 securityadmin.sh 套用變更]({{site.url}}{{site.baseurl}}/security/configuration/security-admin/)。
    ```bash
    # You can omit the environment variable if you declared this in your $PATH.
    OPENSEARCH_JAVA_HOME=/path/to/opensearch-{{site.opensearch_version}}/jdk ./securityadmin.sh -cd /path/to/opensearch-{{site.opensearch_version}}/config/opensearch-security/ -cacert /path/to/opensearch-{{site.opensearch_version}}/config/root-ca.pem -cert /path/to/opensearch-{{site.opensearch_version}}/config/admin.pem -key /path/to/opensearch-{{site.opensearch_version}}/config/admin-key.pem -icl -nhnv
    ```
-1. Stop and restart the running OpenSearch process to apply the changes.
+1. 停止並重新啟動執行中的 OpenSearch 程序以套用變更。
 
-### Verify that the service is running
+### 確認服務正在執行
 
-OpenSearch is now running on your host with custom TLS certificates and a secure user for basic authentication. You can verify external connectivity by sending an API request to your OpenSearch node from another host.
+OpenSearch 現在已在您的主機上執行，並使用自訂的 TLS 憑證，以及一個用於基本驗證的安全使用者。您可以從另一台主機向您的 OpenSearch 節點傳送 API 請求，以確認外部連線能力。
 
-During previous tests you directed requests to `localhost`. Now that TLS certificates have been applied and the new certificates reference your host's actual DNS record, requests to `localhost` will fail the common name (CN) check and the certificate will be considered invalid. Instead, requests should be sent to the address you specified while generating the certificate.
+在先前的測試中，您將請求傳送至 `localhost`。現在已套用 TLS 憑證，且新憑證參照的是您主機實際的 DNS 記錄，因此傳送至 `localhost` 的請求將無法通過通用名稱 (CN) 檢查，憑證也會被視為無效。您應改為將請求傳送至您在產生憑證時指定的位址。
 
-You should add trust for the root certificate to your client before sending requests. If you do not add trust, then you must use the `-k` option so that cURL ignores CN and root certificate validation.
+在傳送請求之前，您應在用戶端中加入對根憑證的信任。若您未加入信任，則必須使用 `-k` 選項，讓 cURL 略過 CN 與根憑證驗證。
 {:.tip}
 
 ```bash
@@ -501,38 +502,38 @@ $ curl https://your.host.address:9200 -u admin:yournewpassword -k
 }
 ```
 
-### Run OpenSearch as a service using `systemd`
+### 使用 `systemd` 將 OpenSearch 作為服務執行
 
-This section will guide you through creating a service for OpenSearch and registering it with `systemd`. After the service has been defined, you can enable, start, and stop the OpenSearch service using `systemctl` commands. The commands in this section reflect an environment where OpenSearch has been installed to `/opt/opensearch` and should be changed depending on your installation path.
+本節將引導您為 OpenSearch 建立服務，並將其註冊至 `systemd`。定義服務之後，您可以使用 `systemctl` 命令來啟用、啟動及停止 OpenSearch 服務。本節中的命令假設 OpenSearch 已安裝至 `/opt/opensearch`，請依據您的安裝路徑進行變更。
 
-The following configuration is only suitable for testing in a non-production environment. We do not recommend using the following configuration in a production environment. You should install OpenSearch with the [RPM]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/rpm/) distribution if you want to run OpenSearch as a systemd-managed service on your host. The tarball installation does not define a specific installation path, users, roles, or permissions. Failure to properly secure your host environment can result in unexpected behavior.
+以下組態僅適用於非正式環境中的測試。我們不建議在正式環境中使用以下組態。若您想在主機上將 OpenSearch 作為由 systemd 管理的服務執行，應使用 [RPM]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/rpm/) 發行版本安裝 OpenSearch。tarball 安裝並未定義特定的安裝路徑、使用者、角色或權限。若未妥善保護您的主機環境，可能會導致非預期的行為。
 {: .warning}
 
-1. Create a user for the OpenSearch service.
+1. 為 OpenSearch 服務建立使用者。
    ```bash
    sudo adduser --system --shell /bin/bash -U --no-create-home opensearch
    ```
    {% include copy.html %}
 
-1. Add your user to the `opensearch` user group.
+1. 將您的使用者加入 `opensearch` 使用者群組。
    ```bash
    sudo usermod -aG opensearch $USER
    ```
    {% include copy.html %}
 
-1. Change the file owner to `opensearch`. Make sure to change the path if your OpenSearch files are in a different directory.
+1. 將檔案擁有者變更為 `opensearch`。若您的 OpenSearch 檔案位於其他目錄，請務必變更路徑。
    ```bash
    sudo chown -R opensearch /opt/opensearch/
    ```
    {% include copy.html %}
 
-1. Create the service file and open it for editing.
+1. 建立服務檔案並開啟以進行編輯。
    ```bash
    sudo vi /etc/systemd/system/opensearch.service
    ```
    {% include copy.html %}
 
-1. Enter the following example service configuration. Make sure to change references to the path if your OpenSearch files are in a different directory.
+1. 輸入以下範例服務組態。若您的 OpenSearch 檔案位於其他目錄，請務必變更參照的路徑。
    ```bash
    [Unit]
    Description=OpenSearch
@@ -566,36 +567,36 @@ The following configuration is only suitable for testing in a non-production env
    ```
    {% include copy.html %}
 
-1. Reload `systemd` manager configuration.
+1. 重新載入 `systemd` 管理員組態。
    ```bash
    sudo systemctl daemon-reload
    ```
    {% include copy.html %}
 
-1. Enable the OpenSearch service.
+1. 啟用 OpenSearch 服務。
    ```bash
    sudo systemctl enable opensearch.service
    ```
    {% include copy.html %}
 
-1. Start the OpenSearch service.
+1. 啟動 OpenSearch 服務。
    ```bash
    sudo systemctl start opensearch
    ```
    {% include copy.html %}
 
-1. Verify that the service is running.
+1. 確認服務正在執行。
    ```bash
    sudo systemctl status opensearch
    ```
    {% include copy.html %}
 
-## Related documentation
+## 相關文件
 
-- [Preparing a cluster for production]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#preparing-a-cluster-for-production)
-- [Common installation issues]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#common-issues)
-- [OpenSearch configuration]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)
-- [Configure Performance Analyzer for Tarball Installation]({{site.url}}{{site.baseurl}}/monitoring-plugins/pa/index/#install-performance-analyzer)
-- [Install and configure OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/)
-- [OpenSearch plugin installation]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)
-- [About the Security plugin]({{site.url}}{{site.baseurl}}/security/index/)
+- [為正式環境準備叢集]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#preparing-a-cluster-for-production)
+- [常見的安裝問題]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#common-issues)
+- [OpenSearch 組態]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)
+- [為 Tarball 安裝設定 Performance Analyzer]({{site.url}}{{site.baseurl}}/monitoring-plugins/pa/index/#install-performance-analyzer)
+- [安裝及設定 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/)
+- [OpenSearch 外掛程式安裝]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)
+- [關於 Security 外掛程式]({{site.url}}{{site.baseurl}}/security/index/)

@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search analyzers
+title: "搜尋分析器"
 nav_order: 30
 parent: Analyzers
 ---
 
-# Search analyzers
+# 搜尋分析器
 
-Search analyzers are specified at query time and are used to analyze the query string when you run a full-text query on a [text]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) field.
+搜尋分析器是在查詢時指定，當您對 [text]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 欄位執行全文查詢時，用於分析查詢字串。
 
-## Determining which search analyzer to use
+## 決定要使用的搜尋分析器
 
-To determine which analyzer to use for a query string at query time, OpenSearch examines the following parameters in order:
+為了決定在查詢時要對查詢字串使用哪個分析器，OpenSearch 會依序檢查下列參數：
 
-1. The `analyzer` parameter of the query
-1. The `search_analyzer` mapping parameter of the field
-1. The `analysis.analyzer.default_search` index setting
-1. The `analyzer` mapping parameter of the field
-1. The `standard` analyzer (default)
+1. 查詢的 `analyzer` 參數
+1. 欄位的 `search_analyzer` 對應參數
+1. `analysis.analyzer.default_search` 索引設定
+1. 欄位的 `analyzer` 對應參數
+1. `standard` 分析器（預設）
 
-In most cases, specifying a search analyzer that is different from the index analyzer is not necessary and could negatively impact search result relevance or lead to unexpected search results.
+在大多數情況下，不需要指定與索引分析器不同的搜尋分析器，這麼做可能會對搜尋結果的相關性造成負面影響，或導致非預期的搜尋結果。
 {: .warning}
 
-## Specifying a search analyzer at query time
+## 在查詢時指定搜尋分析器
 
-You can override the default analyzer behavior by explicitly setting the analyzer in the query. The following query uses the `english` analyzer to stem the input terms:
+您可以在查詢中明確設定分析器，以覆寫預設的分析器行為。下列查詢使用 `english` 分析器對輸入詞彙進行詞幹提取：
 
 ```json
 GET /shakespeare/_search
@@ -41,13 +42,13 @@ GET /shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-## Specifying a search analyzer in the mappings
+## 在對應中指定搜尋分析器
 
-When defining mappings, you can provide both the `analyzer` (used at index time) and `search_analyzer` (used at query time) for any [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) field.
+定義對應時，您可以為任何 [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 欄位同時提供 `analyzer`（在編製索引時使用）和 `search_analyzer`（在查詢時使用）。
 
-### Example: Different analyzers for indexing and search
+### 範例：編製索引和搜尋使用不同的分析器
 
-The following configuration allows different tokenization strategies for indexing and querying:
+下列組態允許編製索引和查詢時使用不同的斷詞策略：
 
 ```json
 PUT /testindex
@@ -65,9 +66,9 @@ PUT /testindex
 ```
 {% include copy-curl.html %}
 
-### Example: Using the edge n-gram analyzer for indexing and the standard analyzer for search
+### 範例：編製索引時使用 edge n-gram 分析器，搜尋時使用 standard 分析器
 
-The following configuration enables [autocomplete]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/autocomplete/)-like behavior, where you can type the beginning of a word and still receive relevant matches:
+下列組態可實現類似[自動完成]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/autocomplete/)的行為，讓您輸入單字的開頭仍能取得相關的相符結果：
 
 ```json
 PUT /articles
@@ -103,8 +104,8 @@ PUT /articles
 ```
 {% include copy-curl.html %}
 
-The `edge_ngram_analyzer` is applied at index time, breaking input strings into partial prefixes (n-grams), which allows the index to store fragments like "se", "sea", "sear", and so on. 
-Use the following request to index a document:
+`edge_ngram_analyzer` 會在編製索引時套用，將輸入字串拆分為部分前綴（n-gram），讓索引能儲存「se」、「sea」、「sear」等片段。
+使用下列請求將文件編製索引：
 
 ```json
 PUT /articles/_doc/1
@@ -114,7 +115,7 @@ PUT /articles/_doc/1
 ```
 {% include copy-curl.html %}
 
-Use the following request to search for the partial word `sear` in the `title` field:
+使用下列請求在 `title` 欄位中搜尋部分單字 `sear`：
 
 ```json
 POST /articles/_search
@@ -128,7 +129,7 @@ POST /articles/_search
 ```
 {% include copy-curl.html %}
 
-The response demonstrates that the query containing "sear" matches the document "Search Analyzer in Action" because the n-gram tokens generated at index time include that prefix. This mirrors the [autocomplete functionality]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/autocomplete/), in which typing a prefix can retrieve full matches:
+回應顯示，包含「sear」的查詢與文件「Search Analyzer in Action」相符，因為編製索引時產生的 n-gram 詞元包含該前綴。這與[自動完成功能]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/autocomplete/)相同，輸入前綴即可擷取完整的相符結果：
 
 ```json
 {
@@ -153,9 +154,9 @@ The response demonstrates that the query containing "sear" matches the document 
 }
 ```
 
-## Setting a default search analyzer for an index
+## 為索引設定預設搜尋分析器
 
-Specify `analysis.analyzer.default_search` to define a search analyzer for all fields unless overridden:
+指定 `analysis.analyzer.default_search`，為所有欄位定義搜尋分析器，除非另有覆寫：
 
 ```json
 PUT /testindex
@@ -176,6 +177,6 @@ PUT /testindex
 ```
 {% include copy-curl.html %}
 
-This configuration ensures consistent behavior across multiple fields, especially when using custom analyzers.
+此組態可確保多個欄位之間的行為一致，尤其是在使用自訂分析器時。
 
-For more information about supported analyzers, see [Analyzers]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/index/).
+如需有關支援的分析器的詳細資訊，請參閱[分析器]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/index/)。

@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Python ML client
+title: "Python ML 用戶端"
 parent: Python client
 nav_order: 10
 ---
 
-# Python machine learning client
+# Python 機器學習用戶端
 
-The Python machine learning (ML) client (`opensearch-py-ml`) is a Python library that you use together with the [Python client]({{site.url}}{{site.baseurl}}/clients/python-low-level/) (`opensearch-py`). It provides the following tools:
+Python 機器學習 (ML) 用戶端 (`opensearch-py-ml`) 是一個 Python 程式庫，可與 [Python 用戶端]({{site.url}}{{site.baseurl}}/clients/python-low-level/) (`opensearch-py`) 搭配使用。它提供下列工具：
 
-- DataFrames that represent OpenSearch indexes and support pandas-like operations, so that you can analyze data stored in OpenSearch.
-- Methods for uploading ML models to the ML Commons plugin and managing them.
+- 代表 OpenSearch 索引並支援類似 pandas 操作的 DataFrame，讓您能分析儲存在 OpenSearch 中的資料。
+- 用於將 ML 模型上傳至 ML Commons 外掛程式並加以管理的方法。
 
-## Installing the Python ML client
+## 安裝 Python ML 用戶端
 
-The latest version of the client, `opensearch-py-ml` 1.3.0, requires Python 3.11 or later. To add the client to your project, install it using [pip](https://pip.pypa.io/):
+最新版本的用戶端 `opensearch-py-ml` 1.3.0 需要 Python 3.11 或更新版本。若要將用戶端加入您的專案，請使用 [pip](https://pip.pypa.io/) 安裝：
 
 ```bash
 pip install opensearch-py-ml
 ```
 {% include copy.html %}
 
-Installing `opensearch-py-ml` also installs the Python client (`opensearch-py`), which you use to connect to OpenSearch.
+安裝 `opensearch-py-ml` 也會一併安裝 Python 用戶端 (`opensearch-py`)，您可用它連線至 OpenSearch。
 
-## Connecting to OpenSearch
+## 連線至 OpenSearch
 
-To connect to OpenSearch, create a Python client object and import `opensearch_py_ml`. If you are using the Security plugin, create the client object with SSL enabled. Replace `<custom-admin-password>` with the admin password that you set when installing OpenSearch:
+若要連線至 OpenSearch，請建立一個 Python 用戶端物件並匯入 `opensearch_py_ml`。如果您使用 Security 外掛程式，請在啟用 SSL 的情況下建立用戶端物件。將 `<custom-admin-password>` 替換為安裝 OpenSearch 時設定的管理員密碼：
 
 ```python
 from opensearchpy import OpenSearch
@@ -50,7 +51,7 @@ client = OpenSearch(
 ```
 {% include copy.html %}
 
-If you are not using the Security plugin, create the client object with SSL disabled:
+如果您未使用 Security 外掛程式，請在停用 SSL 的情況下建立用戶端物件：
 
 ```python
 from opensearchpy import OpenSearch
@@ -71,13 +72,13 @@ client = OpenSearch(
 ```
 {% include copy.html %}
 
-For more connection options, including connecting to Amazon OpenSearch Service, see [Python client]({{site.url}}{{site.baseurl}}/clients/python-low-level/).
+如需更多連線選項，包括連線至 Amazon OpenSearch Service，請參閱 [Python 用戶端]({{site.url}}{{site.baseurl}}/clients/python-low-level/)。
 
-## Analyzing data with DataFrames
+## 使用 DataFrame 分析資料
 
-An `opensearch-py-ml` DataFrame represents an OpenSearch index. When you select, filter, or aggregate data in a DataFrame, the client translates the operation into an OpenSearch request, so the data stays in the index until you need the results.
+`opensearch-py-ml` DataFrame 代表一個 OpenSearch 索引。當您在 DataFrame 中選取、篩選或彙總資料時，用戶端會將該操作轉換為 OpenSearch 請求，因此資料會保留在索引中，直到您需要結果為止。
 
-First, use the Python client to index sample documents into a `students` index:
+首先，使用 Python 用戶端將範例文件編製索引至 `students` 索引：
 
 ```python
 docs = [
@@ -91,7 +92,7 @@ for doc_id, doc in enumerate(docs, start=1):
 ```
 {% include copy.html %}
 
-Then create a DataFrame for the `students` index and display its first rows:
+接著為 `students` 索引建立 DataFrame 並顯示其前幾列：
 
 ```python
 df = oml.DataFrame(client, "students")
@@ -99,7 +100,7 @@ print(df.head())
 ```
 {% include copy.html %}
 
-The output contains one row for each document, indexed by document ID:
+輸出內容包含每份文件一列，並以文件 ID 作為索引：
 
 ```
   firstName   gpa   gradDate   lastName
@@ -110,14 +111,14 @@ The output contains one row for each document, indexed by document ID:
 [3 rows x 4 columns]
 ```
 
-To calculate summary statistics for the numeric fields, use the `describe` method:
+若要計算數值欄位的摘要統計資料，請使用 `describe` 方法：
 
 ```python
 print(df.describe())
 ```
 {% include copy.html %}
 
-The output contains statistics for the `gpa` field:
+輸出內容包含 `gpa` 欄位的統計資料：
 
 ```
             gpa
@@ -131,14 +132,14 @@ min    3.890000
 max    3.930000
 ```
 
-To filter documents and select columns, use pandas syntax. The following example returns the names and GPAs of students whose GPA is greater than 3.9:
+若要篩選文件並選取欄位，請使用 pandas 語法。下列範例會傳回 GPA 大於 3.9 的學生姓名與 GPA：
 
 ```python
 print(df[df["gpa"] > 3.9][["firstName", "lastName", "gpa"]])
 ```
 {% include copy.html %}
 
-The output contains the two matching students:
+輸出內容包含兩位符合條件的學生：
 
 ```
   firstName   lastName   gpa
@@ -148,15 +149,15 @@ The output contains the two matching students:
 [2 rows x 3 columns]
 ```
 
-To convert a DataFrame to a pandas DataFrame, use the `to_pandas` method. This method retrieves all matching documents from OpenSearch.
+若要將 DataFrame 轉換為 pandas DataFrame，請使用 `to_pandas` 方法。此方法會從 OpenSearch 擷取所有符合條件的文件。
 
-For all DataFrame methods, see the [`opensearch-py-ml` DataFrame reference](https://opensearch-project.github.io/opensearch-py-ml/reference/dataframe.html).
+如需所有 DataFrame 方法，請參閱 [`opensearch-py-ml` DataFrame 參考文件](https://opensearch-project.github.io/opensearch-py-ml/reference/dataframe.html)。
 
-## Uploading a pretrained model
+## 上傳預先訓練模型
 
-Use the `MLCommonClient` class to register and deploy one of the [pretrained models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/) that OpenSearch provides.
+使用 `MLCommonClient` 類別來註冊並部署 OpenSearch 提供的其中一個[預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)。
 
-By default, ML Commons runs models only on dedicated ML nodes. If your cluster doesn't have dedicated ML nodes, allow models to run on data nodes:
+預設情況下，ML Commons 只會在專用的 ML 節點上執行模型。如果您的叢集沒有專用的 ML 節點，請允許模型在資料節點上執行：
 
 ```python
 client.cluster.put_settings(body={
@@ -167,9 +168,9 @@ client.cluster.put_settings(body={
 ```
 {% include copy.html %}
 
-For more information, see [ML Commons cluster settings]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/).
+如需更多資訊，請參閱 [ML Commons 叢集設定]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/)。
 
-The following example registers and deploys the `huggingface/sentence-transformers/all-MiniLM-L6-v2` model. The method waits until the model is deployed and returns the model ID:
+下列範例會註冊並部署 `huggingface/sentence-transformers/all-MiniLM-L6-v2` 模型。此方法會等待模型部署完成，並傳回模型 ID：
 
 ```python
 from opensearch_py_ml.ml_commons import MLCommonClient
@@ -186,7 +187,7 @@ model_id = ml_client.register_pretrained_model(
 ```
 {% include copy.html %}
 
-The method prints the model ID and the deployment task ID:
+此方法會列印模型 ID 與部署工作 ID：
 
 ```
 Model was registered successfully. Model Id:  oVMj-aABo6RnaVqceH5b
@@ -195,9 +196,9 @@ Task ID: olMj-aABo6RnaVqcuX7E
 Model deployed successfully
 ```
 
-Because the example doesn't specify a model group, ML Commons creates a model group for the model. To register the model in an existing model group, pass the model group ID in the `model_group_id` parameter.
+由於範例未指定模型群組，ML Commons 會為該模型建立一個模型群組。若要將模型註冊到現有的模型群組，請在 `model_group_id` 參數中傳入模型群組 ID。
 
-To generate an embedding using the deployed model, send the text to the model:
+若要使用已部署的模型產生嵌入，請將文字傳送至模型：
 
 ```python
 response = ml_client.generate_model_inference(
@@ -210,14 +211,14 @@ print(embedding["data"][:3])
 ```
 {% include copy.html %}
 
-The model returns a 384-dimensional embedding. The output contains the embedding dimensions and the first three values:
+模型會傳回 384 維的嵌入。輸出內容包含嵌入的維度與前三個值：
 
 ```
 [384]
 [-0.0007759315, 0.018069174, 0.014426488]
 ```
 
-When you no longer need the model, undeploy it and delete it, along with its model group:
+當您不再需要該模型時，請將其取消部署並刪除，連同其模型群組一併刪除：
 
 ```python
 model_group_id = ml_client.get_model_info(model_id)["model_group_id"]
@@ -227,10 +228,10 @@ ml_client.model_access_control.delete_model_group(model_group_id)
 ```
 {% include copy.html %}
 
-## Related documentation
+## 相關文件
 
-- For the complete client documentation, see the [`opensearch-py-ml` documentation](https://opensearch-project.github.io/opensearch-py-ml/index.html).
-- For the client API reference, see the [`opensearch-py-ml` API reference](https://opensearch-project.github.io/opensearch-py-ml/reference/index.html).
-- For example Jupyter notebooks, see the [`opensearch-py-ml` examples](https://opensearch-project.github.io/opensearch-py-ml/examples/index.html).
-- For the client source code, see the [`opensearch-py-ml` GitHub repository](https://github.com/opensearch-project/opensearch-py-ml).
-- For more information about pretrained models, see [Pretrained models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/).
+- 如需完整的用戶端文件，請參閱 [`opensearch-py-ml` 文件](https://opensearch-project.github.io/opensearch-py-ml/index.html)。
+- 如需用戶端 API 參考文件，請參閱 [`opensearch-py-ml` API 參考文件](https://opensearch-project.github.io/opensearch-py-ml/reference/index.html)。
+- 如需 Jupyter notebook 範例，請參閱 [`opensearch-py-ml` 範例](https://opensearch-project.github.io/opensearch-py-ml/examples/index.html)。
+- 如需用戶端原始碼，請參閱 [`opensearch-py-ml` GitHub 儲存庫](https://github.com/opensearch-project/opensearch-py-ml)。
+- 如需預先訓練模型的更多資訊，請參閱[預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)。

@@ -1,77 +1,78 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Adding a visualization to a dashboard
+title: "將視覺化新增至儀表板"
 parent: Creating dashboards
 nav_order: 20
 has_children: false
 ---
 
-# Adding a visualization to a dashboard
+# 將視覺化新增至儀表板
 
-You can add an existing panel to a dashboard or create a new visualization directly in a dashboard.
+您可以將現有的面板新增至儀表板，或直接在儀表板中建立新的視覺化。
 
-## Prerequisites
+## 前置條件
 
-You can add a visualization to a dashboard only when you have the dashboard open for editing. See [Opening a dashboard]({{site.url}}{{site.baseurl}}/dashboards/dashboard/opening-a-dashboard/).
+您僅在開啟儀表板進行編輯時，才能將視覺化新增至儀表板。請參閱 [開啟儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/opening-a-dashboard/)。
 
 
-## Creating a new visualization in a dashboard
+## 在儀表板中建立新的視覺化
 
-You can create a new visualization, but not a new search, in a dashboard.
+您可以在儀表板中建立新的視覺化，但不能建立新的搜尋。
 
-To add a search to a dashboard, you must create it in the Discover application, then add it. See [Exploring data with Discover]({{site.url}}{{site.baseurl}}/dashboards/discover/index-discover/).
+若要將搜尋新增至儀表板，您必須先在 Discover 應用程式中建立，然後再將其新增。請參閱 [使用 Discover 探索資料]({{site.url}}{{site.baseurl}}/dashboards/discover/index-discover/)。
 {: .note}
 
-To create a new visualization in a dashboard, follow these steps:
+若要在儀表板中建立新的視覺化，請執行以下步驟：
 
-1. From the application toolbar, choose **Create new**.
+1. 從應用程式工具列中，選擇 **Create new**。
 
-1. From the **New Visualization** window, choose a visualization type.
+1. 從 **New Visualization** 視窗中，選擇視覺化類型。
 
-1. In the **New _\<type\>_/Choose a source** dialog, select an index pattern.
+1. 在 **New _\<type\>_/Choose a source** 對話框中，選取索引模式。
 
-   Rather than a source selection dialog at this point, advanced visualization tools like Maps and VisBuilder have source selection built into the tool.
+   在此步驟中，Maps 和 VisBuilder 等進階視覺化工具將來源選取功能內建於工具中，而不會顯示來源選取對話框。
    {: .note}
 
-1. The Dashboards application opens the Visualize editor and displays the default (count) visualization.
+1. Dashboards 應用程式會開啟 Visualize 編輯器，並顯示預設的 (count) 視覺化。
 
 <!-- Edit the visualization as described in [Building visualizations]({{site.url}}{{site.baseurl}}/dashboards/visualize/viz-index/#building-visualizations). -->
    
-1. Save the visualization.
+1. 儲存該視覺化。
 
 <!-- See [Saving a new visualization]({{site.url}}{{site.baseurl}}/dashboards/visualize/saving-a-viz/#saving-a-new-visualization). -->
 
-   Make sure the **Add to dashboard after saving** toggle in the **Save visualization** dialog is selected.
+   請確保 **Save visualization** 對話框中的 **Add to dashboard after saving** 切換按鈕已選取。
    
-   When you add a visualization by creating it in a dashboard, the **Save** button in the **Save visualization** dialog says **Save and return**.
+   當您透過在儀表板中建立來新增視覺化時，**Save visualization** 對話框中的 **Save** 按鈕會顯示為 **Save and return**。
    {: .note}
 
-## Adding a panel to a dashboard
+## 將面板新增至儀表板
 
-To add a visualization or search to a dashboard, follow these steps:
+若要將視覺化或搜尋新增至儀表板，請執行以下步驟：
 
-1. In the application menu, select **Add**.
+1. 在應用程式功能表中，選取 **Add**。
 
-   The application displays the **Add panels** dialog.
+   應用程式會顯示 **Add panels** 對話框。
 
-1. (Optional) In the **Search** box, enter a term to filter the list of panels.
+1. (選用) 在 **Search** 欄位中，輸入詞彙以篩選面板清單。
 
-   Search is _not_ case-sensitive. Special characters are not allowed, even though they are allowed in a panel name.
+   搜尋 _不_ 區分大小寫。不允許使用特殊字元，即使面板名稱中允許使用這些字元。
 
-1. (Optional) In the Sort drop-down, choose Ascending or Descending to select alphabetical or reverse alphabetical sorting.
+1. (選用) 在 Sort 下拉式選單中，選擇 Ascending 或 Descending 以選取字母升冪或降冪排序。
 
-   Sorting _is_ case-sensitive. Special characters are included in the sort. For example, searching on `ecommerce` would include all of these visualizations in the filtered list: `[eCommerce] Markdown`, `[Ecommerce] Order Count`, and `eCommerce Orders`.
+   排序 _會_ 區分大小寫。排序中包含特殊字元。例如，搜尋 `ecommerce` 會將所有這些視覺化包含在篩選清單中：`[eCommerce] Markdown`、`[Ecommerce] Order Count` 和 `eCommerce Orders`。
 
-1. (Optional) In the **Types** drop-down, select one or more panel types. The drop-down includes visualizations, searches, and special visualization types such as **Maps** and **VisBuilder** panels. If no items are selected, the filter includes all types by default.
+1. (選用) 在 **Types** 下拉式選單中，選取一個或多個面板類型。該下拉式選單包含視覺化、搜尋以及特殊的視覺化類型，例如 **Maps** 和 **VisBuilder** 面板。如果未選取任何項目，則篩選器預設包含所有類型。
 
-1. (Optional) In the Rows per page drop-down, select the number of panels to list per dialog page. Default is 10.
+1. (選用) 在 Rows per page 下拉式選單中，選取每個對話框頁面要列出的面板數量。預設為 10。
 
-1. (Optional) Select a page number to jump to from the page number list, or scroll through the pages with the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/arrow-right-icon.png" class="inline-icon" alt="right icon"/>{:/} (right) and {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/arrow-left-icon.png" class="inline-icon" alt="left icon"/>{:/} (left) icons.
+1. (選用) 從頁碼清單中選取要跳轉的頁碼，或使用 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/arrow-right-icon.png" class="inline-icon" alt="right icon"/>{:/} (右) 和 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/arrow-left-icon.png" class="inline-icon" alt="left icon"/>{:/} (左) 圖示翻頁。
 
-1. Select one or more panels from the list.
+1. 從清單中選取一個或多個面板。
 
-   The dialog remains active so that you can choose more than one panel to add to the dashboard.
+   對話框會保持啟動狀態，以便您可以選擇多個面板新增至儀表板。
    {: .note}
 
-1. Choose the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/cross-icon.png" class="inline-icon" alt="cross icon"/>{:/} (cross) icon to close the dialog.
+1. 選擇 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/cross-icon.png" class="inline-icon" alt="cross icon"/>{:/} (叉叉) 圖示以關閉對話框。
 

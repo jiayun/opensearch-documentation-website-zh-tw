@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Galician
+title: "加利西亞語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 160
 ---
 
-# Galician analyzer
+# 加利西亞語分析器
 
-The built-in `galician` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `galician` 分析器套用至文字欄位：
 
 ```json
 PUT /galician-index
@@ -25,9 +26,9 @@ PUT /galician-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，將 `stem_exclusion` 與此語言分析器搭配使用：
 
 ```json
 PUT index_with_stem_exclusion_galician_analyzer
@@ -46,21 +47,21 @@ PUT index_with_stem_exclusion_galician_analyzer
 ```
 {% include copy-curl.html %}
 
-## Galician analyzer internals
+## 加利西亞語分析器內部結構
 
-The `galician` analyzer is built using the following components:
+`galician` 分析器由下列元件建構而成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
+- 詞元篩選器：
   - lowercase
-  - stop (Galician)
+  - stop（加利西亞語）
   - keyword
-  - stemmer (Galician)
+  - stemmer（加利西亞語）
 
-## Custom Galician analyzer
+## 自訂加利西亞語分析器
 
-You can create a custom Galician analyzer using the following command:
+您可以使用下列命令建立自訂加利西亞語分析器：
 
 ```json
 PUT /galician-index
@@ -107,9 +108,9 @@ PUT /galician-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查分析器產生的詞元：
 
 ```json
 POST /galician-index/_analyze
@@ -120,7 +121,7 @@ POST /galician-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

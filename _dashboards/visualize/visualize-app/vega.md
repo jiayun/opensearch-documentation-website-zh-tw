@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Vega visualization
+title: "Vega 視覺化"
 parent: Visualization types
 grand_parent: Creating visualizations in the Visualize application
 great_grand_parent: Building data visualizations
@@ -9,32 +10,32 @@ redirect_from:
   - /dashboards/visualize/vega/
 ---
 
-# Vega visualization
+# Vega 視覺化
 
-[Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/) are open-source, declarative language visualization tools that you can use to create custom data visualizations with your OpenSearch data and [Vega data](https://vega.github.io/vega/docs/data/). These tools are ideal for advanced users comfortable with writing OpenSearch queries directly. You define data sources inline within your Vega specification. 
+[Vega](https://vega.github.io/vega/) 和 [Vega-Lite](https://vega.github.io/vega-lite/) 是開放原始碼的宣告式語言視覺化工具。您可以使用 OpenSearch 資料和 [Vega 資料](https://vega.github.io/vega/docs/data/)，透過這些工具建立自訂資料視覺化。這些工具最適合能夠直接撰寫 OpenSearch 查詢的進階使用者。您可以在 Vega 規格中以內嵌方式定義資料來源。
 
-## When to use Vega visualizations
+## 何時使用 Vega 視覺化
 
-Use Vega visualizations when you need visualization types or analytical capabilities not available in standard OpenSearch visualization types, including advanced statistical analysis, custom interactive behaviors, and specialized analytical techniques.
+當您需要標準 OpenSearch 視覺化類型所未提供的視覺化類型或分析功能時，請使用 Vega 視覺化，包括進階統計分析、自訂互動行為及專門的分析技術。
 
-## Enabling Vega visualizations
+## 啟用 Vega 視覺化
 
-Vega visualizations are enabled by default. Write your [Vega specifications](https://vega.github.io/vega/docs/specification/) in JSON or [Hjson](https://hjson.github.io/) format. You can specify one or more OpenSearch queries within a specification. 
+Vega 視覺化預設為啟用。請以 JSON 或 [Hjson](https://hjson.github.io/) 格式撰寫您的 [Vega 規格](https://vega.github.io/vega/docs/specification/)。您可以在一個規格中指定一或多個 OpenSearch 查詢。
 
-To disable Vega visualizations, set `vis_type_vega.enabled` to `false` in your `opensearch_dashboards.yml` file. 
+若要停用 Vega 視覺化，請在 `opensearch_dashboards.yml` 檔案中將 `vis_type_vega.enabled` 設定為 `false`。
 
-## Creating a Vega visualization
+## 建立 Vega 視覺化
 
-The examples on this page use the **Sample e-commerce data** dataset. To learn about adding sample datasets, see [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
+本頁中的範例使用 **Sample e-commerce data** 資料集。若要了解如何新增範例資料集，請參閱[新增範例資料]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
 {: .note}
 
-The following example creates a network graph that visualizes relationships between product manufacturers in the sample e-commerce dataset. It uses the [`adjacency_matrix` aggregation]({{site.url}}{{site.baseurl}}/aggregations/bucket/adjacency-matrix/) to determine how frequently products from different manufacturers appear together in the same orders.
+下列範例會建立一個網路圖，以視覺化方式呈現範例電子商務資料集中各產品製造商之間的關係。此範例使用 [`adjacency_matrix` 彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/adjacency-matrix/)來判斷不同製造商的產品在同一筆訂單中一起出現的頻率。
 
-To create a Vega visualization for this aggregation, follow these steps:
+若要為此彙總建立 Vega 視覺化，請依照下列步驟操作：
 
-1. From the menu on the left, select **Visualize**.
-2. Select **Create Visualization** and then select **Vega**.
-3. Replace the default spec with the following and then select **Update**:
+1. 從左側選單中選取 **Visualize**。
+2. 選取 **Create Visualization**，然後選取 **Vega**。
+3. 將預設規格取代為下列內容，然後選取 **Update**：
 
 ```json
 {
@@ -171,49 +172,49 @@ To create a Vega visualization for this aggregation, follow these steps:
 ```
 {% include copy.html %}
 
-The following image shows the resulting network graph. Node size represents the document count for each manufacturer, and edge thickness represents the number of orders containing products from both manufacturers.
+下圖顯示產生的網路圖。節點大小代表每個製造商的文件數，邊線粗細則代表同時包含兩個製造商產品的訂單數。
 
-![Adjacency matrix network graph visualization in OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/images/dashboards/adjacency-graph.png)
+![OpenSearch Dashboards 中的鄰接矩陣網路圖視覺化]({{site.url}}{{site.baseurl}}/images/dashboards/adjacency-graph.png)
 
-## Creating Vega visualizations from multiple data sources
-Introduced 2.13
+## 從多個資料來源建立 Vega 視覺化
+於 2.13 版推出
 {: .label .label-purple }
 
-Before proceeding, ensure that the following configuration settings are enabled in the `config/opensearch_dashboards.yaml` file. For configuration details, refer to the `vis_type_vega` [`README`](https://github.com/opensearch-project/OpenSearch-Dashboards/blob/main/src/plugins/vis_type_vega/README.md).
+繼續操作之前，請確認已在 `config/opensearch_dashboards.yaml` 檔案中啟用下列組態設定。如需組態詳細資訊，請參閱 `vis_type_vega` [`README`](https://github.com/opensearch-project/OpenSearch-Dashboards/blob/main/src/plugins/vis_type_vega/README.md)。
 
 ```
 data_source.enabled: true
 vis_type_vega.enabled: true
 ```
 
-After you have configured [multiple data sources]({{site.url}}{{site.baseurl}}/dashboards/management/multi-data-sources/) in OpenSearch Dashboards, you can use Vega to query those data sources. The following GIF shows the process of creating Vega visualizations in OpenSearch Dashboards.
+在 OpenSearch Dashboards 中設定[多個資料來源]({{site.url}}{{site.baseurl}}/dashboards/management/multi-data-sources/)之後，您就可以使用 Vega 查詢這些資料來源。下列 GIF 顯示在 OpenSearch Dashboards 中建立 Vega 視覺化的過程。
 
-![Process of creating Vega visualizations in OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/images/dashboards/configure-vega.gif)
+![在 OpenSearch Dashboards 中建立 Vega 視覺化的過程]({{site.url}}{{site.baseurl}}/images/dashboards/configure-vega.gif)
 
-### Step 1: Set up and connect data sources
+### 步驟 1：設定並連接資料來源
 
-Open OpenSearch Dashboards and follow these steps:
+開啟 OpenSearch Dashboards，並依照下列步驟操作：
 
-1. Select **Dashboards Management** from the menu on the left.
-2. Select **Data sources** and then select the **Create data source** button.
-3. On the **Create data source** page, enter the connection details and endpoint URL, as shown in the following GIF.
-4. On the **Home page**, select **Add sample data**. Under **Data source**, select your newly created data source, and then select the **Add data button** for the **Sample web logs** dataset.
+1. 從左側選單中選取 **Dashboards Management**。
+2. 選取 **Data sources**，然後選取 **Create data source** 按鈕。
+3. 在 **Create data source** 頁面上，輸入連線詳細資訊和端點 URL，如下列 GIF 所示。
+4. 在 **Home page** 上，選取 **Add sample data**。在 **Data source** 下，選取您新建立的資料來源，然後為 **Sample web logs** 資料集選取 **Add data button**。
 
-The following GIF shows the steps required for setting up and connecting a data source.
+下列 GIF 顯示設定並連接資料來源所需的步驟。
 
-![Setting up and connecting data sources with OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/images/dashboards/Add_datasource.gif)
+![使用 OpenSearch Dashboards 設定並連接資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/Add_datasource.gif)
 
-### Step 2: Create the visualization
+### 步驟 2：建立視覺化
 
-1. From the menu on the left, select **Visualize**.
-2. On the **Visualizations** page, select **Create Visualization** and then select **Vega** in the pop-up window.
+1. 從左側選單中選取 **Visualize**。
+2. 在 **Visualizations** 頁面上，選取 **Create Visualization**，然後在快顯視窗中選取 **Vega**。
 
-### Step 3: Add the Vega specification
+### 步驟 3：新增 Vega 規格
 
-By default, queries use data from the local cluster. You can assign individual `data_source_name` values to each OpenSearch query in your Vega specification. This allows you to query multiple indexes across different data sources in a single visualization.
+根據預設，查詢會使用本機叢集的資料。您可以為 Vega 規格中的每個 OpenSearch 查詢個別指定 `data_source_name` 值。如此一來，您就能在單一視覺化中查詢不同資料來源的多個索引。
 
-1. Verify that the data source you created is specified under `data_source_name`. Alternatively, in your Vega specification, add the `data_source_name` field under the `url` property to target a specific data source by name.
-2. Copy the following Vega specification and then select the **Update** button in the lower-right corner. The visualization should appear. 
+1. 確認您建立的資料來源已指定於 `data_source_name` 下。或者，您也可以在 Vega 規格中，於 `url` 屬性下新增 `data_source_name` 欄位，依名稱指定特定資料來源。
+2. 複製下列 Vega 規格，然後選取右下角的 **Update** 按鈕。視覺化應會隨即顯示。
 
 ```json
 {
@@ -296,13 +297,13 @@ By default, queries use data from the local cluster. You can assign individual `
 ```
 {% include copy.html %}
 
-## Additional resources
+## 其他資源
 
-The following resources provide additional information about Vega visualizations in OpenSearch Dashboards:
+下列資源提供有關 OpenSearch Dashboards 中 Vega 視覺化的其他資訊：
 
-- [Improving ease of use in OpenSearch Dashboards with Vega visualizations](https://opensearch.org/blog/Improving-Dashboards-usability-with-Vega/)
+- [使用 Vega 視覺化提升 OpenSearch Dashboards 的易用性](https://opensearch.org/blog/Improving-Dashboards-usability-with-Vega/)
 
-## Next steps
+## 後續步驟
 
-- To choose a different visualization type, see [Visualization types]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/).
-- To add this visualization to a dashboard, see [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/).
+- 若要選擇其他視覺化類型，請參閱[視覺化類型]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/)。
+- 若要將此視覺化新增至儀表板，請參閱[建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)。

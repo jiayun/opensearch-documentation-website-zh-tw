@@ -1,0 +1,6 @@
+{% if site.translation_preview %}
+<aside class="community-translation-banner" lang="zh-TW" data-pagefind-ignore>
+  <strong>翻譯預覽版</strong>：{{ site.data.translation_preview.reviewed }}／{{ site.data.translation_preview.total }} 頁已完成校對。
+  {% if page.translation_language == 'en' %}此頁尚未完成翻譯，以下顯示上游英文原文。{% elsif page.translation_language == 'zh-TW' %}此頁已通過中文校對；未完成頁面顯示英文原文。{% else %}未完成頁面顯示英文原文。{% endif %}
+</aside>
+{% endif %}

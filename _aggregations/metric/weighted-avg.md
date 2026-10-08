@@ -1,42 +1,43 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Weighted average
+title: "加權平均"
 parent: Metric aggregations
 nav_order: 150
 has_math: true
 ---
 
-# Weighted average aggregation
+# 加權平均彙總
 
-The `weighted_avg` aggregation computes a weighted average of numeric values extracted from documents. Unlike a regular average where each data point contributes equally, a weighted average assigns different importance to each data point based on a corresponding weight value.
+`weighted_avg` 彙總會計算從文件中擷取之數值的加權平均。一般平均中每個資料點的貢獻相同，加權平均則依據對應的權重值，為每個資料點指定不同的重要性。
 
-The weighted average is calculated using the formula $$ \frac{\sum_{i=1}^n \text{value}_i \cdot \text{weight}_i}{\sum_{i=1}^n \text{weight}_i} $$.
+加權平均的計算公式為 $$ \frac{\sum_{i=1}^n \text{value}_i \cdot \text{weight}_i}{\sum_{i=1}^n \text{weight}_i} $$。
 
-In a regular average, every data point contributes equally, which is equivalent to assigning a weight of `1` to all values.
+在一般平均中，每個資料點的貢獻相同，這等同於為所有值指定 `1` 的權重。
 
-## Parameters
+## 參數
 
-The `weighted_avg` aggregation takes the following parameters.
+`weighted_avg` 彙總接受下列參數。
 
-| Parameter     | Required/Optional  | Description |
+| 參數     | 必要/選用  | 說明 |
 |---------------|----------|-------------|
-| `value`       | Required      | Defines how to obtain the numeric values to average. Requires a `field` or `script`. |
-| `weight`      | Required      | Defines how to obtain the weight for each value. Requires a `field` or `script`. |
-| `format`      | Optional       | A [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) formatting string. Returns the formatted output in the aggregation's `value_as_string` property. |
-| `value_type`  | Optional       | A type hint for the values when using scripts or unmapped fields. |
+| `value`       | 必要      | 定義如何取得要計算平均的數值。需要 `field` 或 `script`。 |
+| `weight`      | 必要      | 定義如何取得每個值的權重。需要 `field` 或 `script`。 |
+| `format`      | 選用       | [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) 格式字串。在彙總的 `value_as_string` 屬性中傳回格式化後的輸出。 |
+| `value_type`  | 選用       | 使用指令碼或未對應欄位時，值的類型提示。 |
 
-You can specify the following parameters within `value` or `weight`.
+您可以在 `value` 或 `weight` 中指定下列參數。
 
-| Parameter  | Required/Optional |  Description |
+| 參數  | 必要/選用 |  說明 |
 |------------|----------|-------------|
-| `field`    | Optional | The document field to use for the value or weight. |
-| `missing`  | Optional | A default value or weight to use when the field is missing. See [Missing values](#missing-values).|
-| `script`   | Optional | A script that provides the value or weight. Mutually exclusive with `field`. |
+| `field`    | 選用 | 用作值或權重的文件欄位。 |
+| `missing`  | 選用 | 欄位缺失時使用的預設值或權重。請參閱[缺失值](#missing-values)。|
+| `script`   | 選用 | 提供值或權重的指令碼。與 `field` 互斥。 |
 
 
-## Example
+## 範例
 
-First, create an index and add some data. Product C is missing the `rating` and `num_reviews` fields:
+首先，建立索引並新增一些資料。產品 C 缺少 `rating` 和 `num_reviews` 欄位：
 
 ```json
 POST _bulk
@@ -49,7 +50,7 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-The following request calculates a weighted average product rating, where each product's rating is weighted by its `num_reviews`. Products with more reviews have a greater influence on the final average:
+下列請求會計算產品評分的加權平均，其中每個產品的評分以其 `num_reviews` 加權。評論數較多的產品對最終平均的影響較大：
 
 ```json
 GET /products/_search
@@ -72,9 +73,9 @@ GET /products/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The response contains the `weighted_rating`, calculated as `(4.5 * 100 + 3.8 * 50) / (100 + 50) = 4.27`. Only documents containing values for both `rating` and `num_reviews` are included in the calculation:
+回應包含 `weighted_rating`，其計算方式為 `(4.5 * 100 + 3.8 * 50) / (100 + 50) = 4.27`。只有同時包含 `rating` 和 `num_reviews` 值的文件才會納入計算：
 
 ```json
 {
@@ -104,11 +105,11 @@ The response contains the `weighted_rating`, calculated as `(4.5 * 100 + 3.8 * 5
 }
 ```
 
-## Multi-valued fields
+## 多值欄位
 
-The `value` field can contain multiple values per document, but the `weight` field must resolve to exactly one value. Documents with multiple weights cause an error. To handle multi-valued weight fields, use a `script` that reduces them to a single number.
+`value` 欄位在每份文件中可包含多個值，但 `weight` 欄位必須解析為恰好一個值。具有多個權重的文件會導致錯誤。若要處理多值的權重欄位，請使用可將其縮減為單一數字的 `script`。
 
-When a document contains multiple values, the single weight is applied to each value independently. The following example indexes a document where `rating` is a multi-valued field and then runs the aggregation:
+當文件包含多個值時，單一權重會分別套用至每個值。下列範例會將一份 `rating` 為多值欄位的文件編製索引，然後執行彙總：
 
 ```json
 POST /products/_doc?refresh=true
@@ -143,7 +144,7 @@ GET /products/_search
 ```
 {% include copy-curl.html %}
 
-The three values (`1`, `2`, and `3`) are each weighted by `2`, resulting in `((1*2) + (2*2) + (3*2)) / (2+2+2) = 2.0`:
+三個值（`1`、`2` 和 `3`）各自以 `2` 加權，結果為 `((1*2) + (2*2) + (3*2)) / (2+2+2) = 2.0`：
 
 ```json
 {
@@ -156,9 +157,9 @@ The three values (`1`, `2`, and `3`) are each weighted by `2`, resulting in `((1
 }
 ```
 
-## Using a script
+## 使用指令碼
 
-You can supply scripts for the value, the weight, or both to compute derived quantities on the fly. The following example adds `1` to each rating and weight before computing the weighted average:
+您可以為值、權重或兩者提供指令碼，以即時計算衍生數值。下列範例會在計算加權平均之前，將每個評分和權重加上 `1`：
 
 ```json
 GET /products/_search
@@ -180,11 +181,11 @@ GET /products/_search
 ```
 {% include copy-curl.html %}
 
-## Missing values
+## 缺失值
 
-Documents missing the `value` field are excluded from the calculation by default. Documents missing the `weight` field are still included with an implicit weight of `1`.
+根據預設，缺少 `value` 欄位的文件會從計算中排除。缺少 `weight` 欄位的文件仍會納入計算，並使用隱含權重 `1`。
 
-The `missing` parameter overrides these defaults by specifying a substitute value for documents that lack the field. The following example assigns a default rating of `3.0` and a default review count of `1` to documents missing those fields:
+`missing` 參數會為缺少該欄位的文件指定替代值，藉此覆寫這些預設行為。下列範例會為缺少這些欄位的文件指定預設評分 `3.0` 及預設評論數 `1`：
 
 ```json
 GET /products/_search
@@ -209,7 +210,7 @@ GET /products/_search
 ```
 {% include copy-curl.html %}
 
-With the missing values applied, the weighted average is calculated as `(4.5 * 100 + 3.8 * 50 + 3.0 * 1) / (100 + 50 + 1) = 4.26`:
+套用缺失值後，加權平均的計算方式為 `(4.5 * 100 + 3.8 * 50 + 3.0 * 1) / (100 + 50 + 1) = 4.26`：
 
 ```json
 {

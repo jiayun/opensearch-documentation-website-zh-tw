@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Snowball
 parent: Token filters
 nav_order: 380
 ---
 
-# Snowball token filter
+# Snowball 詞元篩選器
 
-The `snowball` token filter is a stemming filter based on the [Snowball](https://snowballstem.org/) algorithm. It supports many languages and is more efficient and accurate than the Porter stemming algorithm.
+`snowball` 詞元篩選器是以 [Snowball](https://snowballstem.org/) 演算法為基礎的詞幹提取篩選器。它支援多種語言，且比 Porter 詞幹提取演算法更有效率、更準確。
 
-## Parameters
+## 參數
 
-The `snowball` token filter can be configured with a `language` parameter that accepts the following values:
+您可以使用 `language` 參數來設定 `snowball` 詞元篩選器，此參數接受下列值：
 
 - `Arabic`
 - `Armenian`
@@ -19,7 +20,7 @@ The `snowball` token filter can be configured with a `language` parameter that a
 - `Catalan`
 - `Danish`
 - `Dutch`
-- `English` (default)
+- `English`（預設）
 - `Estonian`
 - `Finnish`
 - `French`
@@ -40,9 +41,9 @@ The `snowball` token filter can be configured with a `language` parameter that a
 - `Swedish`
 - `Turkish`
 
-## Example
+## 範例
 
-The following example request creates a new index named `my-snowball-index` and configures an analyzer with a `snowball` filter:
+下列範例請求會建立名為 `my-snowball-index` 的新索引，並設定一個使用 `snowball` 篩選器的分析器：
 
 ```json
 PUT /my-snowball-index
@@ -71,9 +72,9 @@ PUT /my-snowball-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器所產生的詞元：
 
 ```json
 GET /my-snowball-index/_analyze
@@ -84,7 +85,7 @@ GET /my-snowball-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

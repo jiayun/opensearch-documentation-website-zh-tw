@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Simple pattern split
+title: "簡單模式分割"
 parent: Tokenizers
 nav_order: 120
 ---
 
-# Simple pattern split tokenizer
+# 簡單模式分割斷詞器
 
-The `simple_pattern_split` tokenizer uses a regular expression to split text into tokens. The regular expression defines the pattern used to determine where to split the text. Any matching pattern in the text is used as a delimiter, and the text between delimiters becomes a token. Use this tokenizer when you want to define delimiters and tokenize the rest of the text based on a pattern.
+`simple_pattern_split` 斷詞器使用規則運算式將文字分割成詞元。規則運算式定義了用來判斷文字分割位置的模式。文字中任何符合模式的內容都會作為分隔字元，而分隔字元之間的文字則成為詞元。當您想要定義分隔字元，並根據模式將其餘文字斷詞時，可以使用此斷詞器。
 
-The tokenizer uses the matched parts of the input text (based on the regular expression) only as delimiters or boundaries to split the text into terms. The matched portions are not included in the resulting terms. For example, if the tokenizer is configured to split text at dot characters (`.`) and the input text is `one.two.three`, then the generated terms are `one`, `two`, and `three`. The dot characters themselves are not included in the resulting terms.
+此斷詞器僅將輸入文字中符合的部分（依據規則運算式）用作分隔字元或邊界，以將文字分割成詞彙。符合的部分不會包含在產生的詞彙中。例如，如果斷詞器設定為在點字元（`.`）處分割文字，而輸入文字為 `one.two.three`，則產生的詞彙為 `one`、`two` 和 `three`。點字元本身不會包含在產生的詞彙中。
 
-## Example usage
+## 範例用法
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `simple_pattern_split` tokenizer. The tokenizer is configured to split text on hyphens:
+下列範例請求會建立一個名為 `my_index` 的新索引，並設定一個包含 `simple_pattern_split` 斷詞器的分析器。此斷詞器設定為以連字號分割文字：
 
 ```json
 PUT /my_index
@@ -46,9 +47,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢視使用該分析器產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -59,7 +60,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {
@@ -96,10 +97,10 @@ The response contains the generated tokens:
 }
 ```
 
-## Parameters
+## 參數
 
-The `simple_pattern_split` tokenizer can be configured with the following parameter.
+`simple_pattern_split` 斷詞器可以使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`pattern` | Optional | String | The pattern used to split text into tokens, specified using a [Lucene regular expression](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/util/automaton/RegExp.html). Default is an empty string, which returns the input text as one token. 
+`pattern` | 選用 | 字串 | 用於將文字分割成詞元的模式，以 [Lucene 規則運算式](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/util/automaton/RegExp.html) 指定。預設為空字串，此時會將輸入文字作為單一詞元傳回。 

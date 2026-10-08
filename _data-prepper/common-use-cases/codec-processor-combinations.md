@@ -1,53 +1,54 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Codec processor combinations
+title: "編解碼器與處理器組合"
 parent: Common use cases
 nav_order: 10
 ---
 
-# Codec processor combinations
+# 編解碼器與處理器組合
 
-At ingestion time, data received by the [`s3` source]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/) can be parsed by [codecs]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#codec). Codecs compresses and decompresses large data sets in a certain format before ingestion them through an OpenSearch Data Prepper pipeline [processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/processors/).
+在匯入時，[`s3` 來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/)所接收的資料可以由[編解碼器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#codec)剖析。編解碼器會在資料透過 OpenSearch Data Prepper 管線[處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/processors/)匯入之前，以特定格式壓縮和解壓縮大型資料集。
 
-While most codecs can be used with most processors, the following codec processor combinations can make your pipeline more efficient when used with the following input types.
+雖然大多數編解碼器都可以搭配大多數處理器使用，但在處理下列輸入類型時，使用下列編解碼器與處理器組合可以讓您的管線更有效率。
 
-## JSON array
+## JSON 陣列
 
-A [JSON array](https://json-schema.org/understanding-json-schema/reference/array) is used to order elements of different types. Because an array is required in JSON, the data contained within the array must be tabular.
+[JSON 陣列](https://json-schema.org/understanding-json-schema/reference/array)用於排列不同類型的元素。由於 JSON 中必須使用陣列，因此陣列中包含的資料必須是表格式資料。
 
-The JSON array does not require a processor. 
+JSON 陣列不需要處理器。
 
 ## NDJSON
 
-Unlike a JSON array, [NDJSON](https://www.npmjs.com/package/ndjson) allows for each row of data to be delimited by a newline, meaning data is processed per line instead of an array.
+與 JSON 陣列不同，[NDJSON](https://www.npmjs.com/package/ndjson) 允許以換行符號分隔每一列資料，也就是說，資料會逐行處理，而不是以陣列方式處理。
 
-The NDJSON input type is parsed using the [newline]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#newline-codec) codec, which parses each single line as a single log event. The [parse_json]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/parse-json/) processor then outputs each line as a single event.
+NDJSON 輸入類型會使用 [newline]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#newline-codec) 編解碼器剖析，該編解碼器會將每一行剖析為單一記錄事件。接著，[parse_json]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/parse-json/) 處理器會將每一行輸出為單一事件。
 
 ## CSV
 
-The CSV data type inputs data as a table. It can used without a codec or processor, but it does require one or the other, for example, either only the `csv` processor or the `csv` codec.
+CSV 資料類型會以表格形式輸入資料。它可以不同時搭配編解碼器與處理器使用，但仍需要其中之一，例如只使用 `csv` 處理器，或只使用 `csv` 編解碼器。
 
-The CSV input type is most effective when used with the following codec processor combinations.
+搭配下列編解碼器與處理器組合使用時，CSV 輸入類型最有效率。
 
-### `csv` codec
+### `csv` 編解碼器
 
-When the [`csv` codec]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#csv-codec) is used without a processor, it automatically detects headers from the CSV and uses them for index mapping.
+當 [`csv` 編解碼器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#csv-codec)在不搭配處理器的情況下使用時，會自動偵測 CSV 中的標頭，並將其用於索引對應。
 
-### `newline` codec 
+### `newline` 編解碼器
 
-The [`newline` codec]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#newline-codec) parses each row as a single log event. The codec will only detect a header when `header_destination` is configured. The [`csv`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/csv/) processor then outputs the event into columns. The header detected in `header_destination` from the `newline` codec can be used in the `csv` processor under `column_names_source_key.`
+[`newline` 編解碼器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#newline-codec)會將每一列剖析為單一記錄事件。只有在設定 `header_destination` 時，此編解碼器才會偵測標頭。接著，[`csv`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/csv/) 處理器會將事件輸出為多個欄。從 `newline` 編解碼器的 `header_destination` 中偵測到的標頭，可以在 `csv` 處理器的 `column_names_source_key.` 下使用。
 
 ## Parquet
 
-[Apache Parquet](https://parquet.apache.org/docs/overview/) is a columnar storage format built for Hadoop. When configuring a pipeline, you can use the Parquet codec to read Parquet data directly from the Amazon Simple Storage Service (Amazon S3) object. This will retrieve all data from Parquet. Alternatively, you can use [S3 Select]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#using-s3_select-with-the-s3-source) instead of the codec. In this case, [S3 Select]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#using-s3_select-with-the-s3-source) parses the Parquet file directly. This can be more efficient if you are filtering or loading a subset of data.
+[Apache Parquet](https://parquet.apache.org/docs/overview/) 是專為 Hadoop 打造的欄式儲存格式。設定管線時，您可以使用 Parquet 編解碼器，直接從 Amazon Simple Storage Service (Amazon S3) 物件讀取 Parquet 資料。這會從 Parquet 擷取所有資料。或者，您也可以使用 [S3 Select]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#using-s3_select-with-the-s3-source) 來取代編解碼器。在此情況下，[S3 Select]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#using-s3_select-with-the-s3-source) 會直接剖析 Parquet 檔案。如果您要篩選或載入部分資料，這種做法可能更有效率。
 
-Additional S3 charges apply when using [S3 Select]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#using-s3_select-with-the-s3-source).
+使用 [S3 Select]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#using-s3_select-with-the-s3-source) 時會產生額外的 S3 費用。
 {: .note}
 
 ## Avro
 
-[Apache Avro](https://avro.apache.org/docs) is a columnar storage format built for Hadoop. It is most efficient without the use of a codec. When used with [S3 Select]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#using-s3_select-with-the-s3-source), Avro can deliver strong performance by enabling selective data retrieval.
+[Apache Avro](https://avro.apache.org/docs) 是專為 Hadoop 打造的欄式儲存格式。不使用編解碼器時，其效率最高。搭配 [S3 Select]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3#using-s3_select-with-the-s3-source) 使用時，Avro 可以透過選擇性擷取資料來提供優異的效能。
 
 ## `event_json`
 
-The `event_json` output codec converts event data and metadata into JSON format to send to a sink, such as an S3 sink. The `event_json` input codec reads the event and its metadata to create an event in Data Prepper.
+`event_json` 輸出編解碼器會將事件資料和中繼資料轉換為 JSON 格式，以傳送至接收端 (sink)，例如 S3 接收端。`event_json` 輸入編解碼器會讀取事件及其中繼資料，以在 Data Prepper 中建立事件。

@@ -1,41 +1,42 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index template exists
+title: "索引範本是否存在"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 40
 ---
 
-# Index template exists
-**Introduced 1.0**
+# 索引範本是否存在
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The index template exists API operation is used to verify whether an index template exists.
+索引範本是否存在 API 操作用於驗證索引範本是否存在。
 
-## Endpoints
+## 端點
 
 ```json
 HEAD /_index_template/{template-name}
 ```
 
-## Path parameters
+## 路徑參數
 
-All path parameters are required.
+所有路徑參數皆為必要。
 
-| Parameter       | Type   | Description                                        |
+| 參數       | 類型   | 說明                                        |
 | --------------- | ------ | -------------------------------------------------- |
-| `template-name` | String | The name of the index template to check for existence. |
+| `template-name` | 字串 | 要檢查是否存在的索引範本名稱。 |
 
-## Query parameters
+## 查詢參數
 
-All parameters are optional.
+所有參數皆為選用。
 
-| Parameter                 | Type    | Description                                                                                          |
+| 參數                 | 類型    | 說明                                                                                          |
 | ------------------------- | ------- | ---------------------------------------------------------------------------------------------------- |
-| `local` | Boolean | If true, the request does not retrieve the state from the cluster manager node. Default is `false`. |
-| `cluster_manager_timeout` | Time | Specifies how long to wait for a connection to the cluster manager node. Default is `30s`.           |
+| `local` | 布林值 | 若為 true，請求不會從叢集管理員節點擷取狀態。預設值為 `false`。 |
+| `cluster_manager_timeout` | 時間 | 指定等待連線至叢集管理員節點的時間長度。預設值為 `30s`。           |
 
-## Example request
+## 請求範例
 
 <!-- spec_insert_start
 component: example_code
@@ -59,15 +60,15 @@ response = client.indices.exists_index_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example responses
+## 回應範例
 
-If the template exists, the response returns a success code:
+若範本存在，回應會傳回成功碼：
 
 ```json
 200 OK
 ```
 
-If the template does not exist, the response returns a failure code:
+若範本不存在，回應會傳回失敗碼：
 
 ```json
 404 Not Found

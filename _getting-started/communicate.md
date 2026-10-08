@@ -1,55 +1,56 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Communicate with OpenSearch
+title: "與 OpenSearch 通訊"
 nav_order: 30
-description: "Learn how to communicate with OpenSearch using the REST API to add documents, run queries, and change cluster settings."
+description: "了解如何使用 REST API 與 OpenSearch 通訊，以新增文件、執行查詢及變更叢集設定。"
 ---
 
-# Communicate with OpenSearch
+# 與 OpenSearch 通訊
 
-You interact with OpenSearch clusters using the REST API. Through the REST API, you can change most OpenSearch settings, modify indexes, check cluster health, get statistics---almost everything. You can use clients like [cURL](https://curl.se/) or any programming language that can send HTTP requests.
+您可以使用 REST API 與 OpenSearch 叢集互動。透過 REST API，您可以變更大部分的 OpenSearch 設定、修改索引、檢查叢集健康狀態、取得統計資料，幾乎無所不能。您可以使用 [cURL](https://curl.se/) 等用戶端，或任何能夠傳送 HTTP 請求的程式語言。
 
-You can send HTTP requests in your terminal or in the [Dev Tools console]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/index/) in OpenSearch Dashboards.
+您可以在終端機中，或在 OpenSearch Dashboards 的 [Dev Tools 主控台]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/index/)中傳送 HTTP 請求。
 
-If you need to communicate with OpenSearch in your programming language, see the [Clients]({{site.url}}{{site.baseurl}}/clients/) section for a list of available clients.
+如果您需要以您使用的程式語言與 OpenSearch 通訊，請參閱[用戶端]({{site.url}}{{site.baseurl}}/clients/)一節，查看可用的用戶端清單。
 
-## Sending requests in a terminal
+## 在終端機中傳送請求
 
-When sending cURL requests in a terminal, the request format varies depending on whether you're using the Security plugin:
+在終端機中傳送 cURL 請求時，請求格式會因您是否使用 Security 外掛程式而有所不同：
 
-- **Without Security plugin**: Use `http://` URLs and no authentication.
-- **With Security plugin**: Use `https://` URLs and provide username/password credentials.
+- **未使用 Security 外掛程式**：使用 `http://` URL，且不需要驗證。
+- **使用 Security 外掛程式**：使用 `https://` URL，並提供使用者名稱/密碼憑證。
 
-As an example, consider a request to the Cluster Health API. 
+舉例來說，請參考對 Cluster Health API 的請求。
 
-If you're not using the Security plugin, send the following request:
+如果您未使用 Security 外掛程式，請傳送下列請求：
 
 ```bash
 curl -X GET "http://localhost:9200/_cluster/health"
 ```
 {% include copy.html %}
 
-If you're using the Security plugin, provide the username and password in the request. The default username is `admin`, and the password is set in your `docker-compose.yml` file in the `OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>` setting:
+如果您使用 Security 外掛程式，請在請求中提供使用者名稱和密碼。預設使用者名稱為 `admin`，密碼則設定於您的 `docker-compose.yml` 檔案中的 `OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>` 設定：
 
 ```bash
 curl -X GET "https://localhost:9200/_cluster/health" -ku admin:<custom-admin-password>
 ```
 {% include copy.html %}
 
-### Pretty format
+### 美化格式
 
-OpenSearch generally returns responses in a flat JSON format by default. For a human-readable response body, provide the `pretty` query parameter:
+OpenSearch 預設通常會以扁平的 JSON 格式傳回回應。若要取得便於閱讀的回應本文，請提供 `pretty` 查詢參數：
 
 ```bash
 curl -X GET "http://localhost:9200/_cluster/health?pretty"
 ```
 {% include copy.html %}
 
-For more information about `pretty` and other useful query parameters, see [Common REST parameters]({{site.url}}{{site.baseurl}}/opensearch/common-parameters/).
+如需有關 `pretty` 及其他實用查詢參數的詳細資訊，請參閱[常用 REST 參數]({{site.url}}{{site.baseurl}}/opensearch/common-parameters/)。
 
-### Request body
+### 請求本文
 
-For requests that contain a body, specify the `Content-Type` header and provide the request payload in the `-d` (data) option:
+對於包含本文的請求，請指定 `Content-Type` 標頭，並在 `-d`（資料）選項中提供請求酬載：
 
 ```json
 curl -X GET "http://localhost:9200/_search?pretty" -H 'Content-Type: application/json' -d'
@@ -61,27 +62,27 @@ curl -X GET "http://localhost:9200/_search?pretty" -H 'Content-Type: application
 ```
 {% include copy.html %}
 
-## Sending requests in Dev Tools
+## 在 Dev Tools 中傳送請求
 
-The Dev Tools console in OpenSearch Dashboards uses a simpler syntax to format REST requests as compared to the cURL command. To send requests in Dev Tools, use the following steps:
+相較於 cURL 命令，OpenSearch Dashboards 中的 Dev Tools 主控台使用更簡單的語法來格式化 REST 請求。若要在 Dev Tools 中傳送請求，請依照下列步驟操作：
 
-1. Access OpenSearch Dashboards by opening `http://localhost:5601/` in a web browser on the same host that is running your OpenSearch cluster. If you're using the Security plugin, access OpenSearch Dashboards by opening `https://localhost:5601/`. The default username is `admin`, and the password is set in your `docker-compose.yml` file in the `OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>` setting.
-1. On the top menu bar, go to **Management > Dev Tools**.
-1. In the left pane of the console, enter the following request:
+1. 在執行 OpenSearch 叢集的同一部主機上，以網頁瀏覽器開啟 `http://localhost:5601/` 來存取 OpenSearch Dashboards。如果您使用 Security 外掛程式，請開啟 `https://localhost:5601/` 來存取 OpenSearch Dashboards。預設使用者名稱為 `admin`，密碼則設定於您的 `docker-compose.yml` 檔案中的 `OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>` 設定。
+1. 在頂端選單列中，前往 **Management > Dev Tools**。
+1. 在主控台的左側窗格中，輸入下列請求：
     ```json
     GET _cluster/health
     ```
     {% include copy-curl.html %}
-1. Choose the triangle icon on the upper right of the request to submit the query. You can also submit the request by pressing `Ctrl+Enter` (or `Cmd+Enter` for Mac users). To learn more about using the OpenSearch Dashboards console for submitting queries, see [Console]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/console/).
+1. 選擇請求右上方的三角形圖示以提交查詢。您也可以按下 `Ctrl+Enter`（Mac 使用者請按 `Cmd+Enter`）來提交請求。若要進一步了解如何使用 OpenSearch Dashboards 主控台提交查詢，請參閱[主控台]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/console/)。
 
-In most of the OpenSearch documentation, requests are presented in the Dev Tools console format.
+在大部分的 OpenSearch 文件中，請求皆以 Dev Tools 主控台格式呈現。
 
-## Further reading
+## 延伸閱讀
 
-- For information about the OpenSearch REST API, see the [REST API reference]({{site.url}}{{site.baseurl}}/api-reference/).
-- For information about OpenSearch language clients, see [Clients]({{site.url}}{{site.baseurl}}/clients/).
+- 如需有關 OpenSearch REST API 的資訊，請參閱 [REST API 參考]({{site.url}}{{site.baseurl}}/api-reference/)。
+- 如需有關 OpenSearch 語言用戶端的資訊，請參閱[用戶端]({{site.url}}{{site.baseurl}}/clients/)。
 
-## Next steps
+## 後續步驟
 
-- To add, search, update, and delete documents, see [Add and manage your data]({{site.url}}{{site.baseurl}}/getting-started/manage-data/).
+- 若要新增、搜尋、更新及刪除文件，請參閱[新增與管理您的資料]({{site.url}}{{site.baseurl}}/getting-started/manage-data/)。
  

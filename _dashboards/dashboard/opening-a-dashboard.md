@@ -1,55 +1,56 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Opening a dashboard
+title: "開啟儀表板"
 parent: Creating dashboards
 nav_order: 10
 has_children: false
 ---
 
-# Opening a dashboard
+# 開啟儀表板
 
-To open a dashboard for editing, you can do one of the following:
+若要開啟儀表板以進行編輯，您可以執行以下其中一項操作：
 
-- [Create a new empty dashboard](#creating-a-new-dashboard).
-- [Clone an existing dashboard](#cloning-a-dashboard).
-- [Edit an existing dashboard](#editing-an-existing-dashboard).
-
-
-## Creating a new dashboard
-
-To create a new dashboard, follow these steps:
-
-1. In the [navigation panel]({{site.url}}{{site.baseurl}}/dashboards/navigating-ui/#the-left-navigation-panel), select **OpenSearch Dashboards** > **Dashboards**.
-
-1. From the **Dashboards** application panel, choose **Create**.
-
-1. From the drop-down, select **Dashboard**.
-
-   The Dashboards application opens an empty dashboard in edit mode, as shown in the following image.
+- [建立新的空白儀表板](#creating-a-new-dashboard)。
+- [複製現有儀表板](#cloning-a-dashboard)。
+- [編輯現有儀表板](#editing-an-existing-dashboard)。
 
 
-## Cloning a dashboard
+## 建立新儀表板
 
-To clone a dashboard, follow these steps:
+若要建立新儀表板，請按照以下步驟操作：
 
-1. In the [navigation panel]({{site.url}}{{site.baseurl}}/dashboards/navigating-ui/#the-left-navigation-panel), select **OpenSearch Dashboards** > **Dashboards**.
+1. 在 [導覽面板]({{site.url}}{{site.baseurl}}/dashboards/navigating-ui/#the-left-navigation-panel) 中，選取 **OpenSearch Dashboards** > **Dashboards**。
 
-1. From the list in the **Dashboards** table, select a dashboard by choosing its title from the table.
+1. 從 **Dashboards** 應用程式面板中，選擇 **Create**。
 
-1. From the menu in the toolbar, select **Clone**.
+1. 從下拉式選單中，選取 **Dashboard**。
 
-1. In the **Clone dashboard** dialog, enter a name for the cloned dashboard.
-
-1. Select **Confirm Clone**.
+   Dashboards 應用程式將以編輯模式開啟一個空白儀表板，如下圖所示。
 
 
-## Editing an existing dashboard
+## 複製儀表板
 
-To edit an existing dashboard, follow these steps:
+若要複製儀表板，請按照以下步驟操作：
 
-1. In the [navigation panel]({{site.url}}{{site.baseurl}}/dashboards/navigating-ui/#the-left-navigation-panel), select **OpenSearch Dashboards** > **Dashboards**.
+1. 在 [導覽面板]({{site.url}}{{site.baseurl}}/dashboards/navigating-ui/#the-left-navigation-panel) 中，選取 **OpenSearch Dashboards** > **Dashboards**。
 
-1. From the list in the **Dashboards** table, select a dashboard by choosing its title from the table.
+1. 從 **Dashboards** 表格的清單中，透過選擇表格中的標題來選取一個儀表板。
 
-1. From the menu in the toolbar, select **Edit**.
+1. 從工具列的選單中，選取 **Clone**。
+
+1. 在 **Clone dashboard** 對話方塊中，為複製的儀表板輸入名稱。
+
+1. 選取 **Confirm Clone**。
+
+
+## 編輯現有儀表板
+
+若要編輯現有儀表板，請按照以下步驟操作：
+
+1. 在 [導覽面板]({{site.url}}{{site.baseurl}}/dashboards/navigating-ui/#the-left-navigation-panel) 中，選取 **OpenSearch Dashboards** > **Dashboards**。
+
+1. 從 **Dashboards** 表格的清單中，透過選擇表格中的標題來選取一個儀表板。
+
+1. 從工具列的選單中，選取 **Edit**。
 

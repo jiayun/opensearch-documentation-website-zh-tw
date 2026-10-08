@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Advanced management
+title: "進階管理"
 parent: OpenSearch Kubernetes Operator
 grand_parent: Installing OpenSearch
 nav_order: 70
 ---
 
-# Advanced OpenSearch Operator management
+# 進階 OpenSearch Operator 管理
 
-This page covers advanced cluster management features including monitoring, Index State Management (ISM) policies, index and component templates, and snapshot policies.
+本頁面涵蓋進階叢集管理功能，包括監視、索引狀態管理 (ISM) 策略、索引與元件範本，以及快照策略。
 
-## OpenSearch monitoring
+## OpenSearch 監視
 
-You can install and enable the [Prometheus exporter plugin for OpenSearch](https://github.com/opensearch-project/opensearch-prometheus-exporter) on your cluster. When enabled, the operator installs the plugin into the OpenSearch pods and generates a Prometheus `ServiceMonitor` object to configure the plugin for scraping.
+您可以在叢集上安裝並啟用 [Prometheus exporter plugin for OpenSearch](https://github.com/opensearch-project/opensearch-prometheus-exporter)。啟用後，operator 會將該外掛程式安裝到 OpenSearch pod 中，並產生一個 Prometheus `ServiceMonitor` 物件來設定外掛程式的抓取 (scraping) 行為。
 
-By default, the admin user is used to access the monitoring API. To use a separate user with limited permissions, create that user using one of the following options:
+預設情況下，使用 admin 使用者來存取監視 API。若要使用權限受限的獨立使用者，請使用以下其中一種選項建立該使用者：
 
-- Create a user using the OpenSearch API or Dashboards, create a Kubernetes secret with `username` and `password` keys, and provide that secret name in the `monitoringUserSecret` field.
-- Use the `OpenSearchUser` CRD to create the user and provide the secret in the `monitoringUserSecret` field. For more information, see [User and role management]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/operator-security/).
+- 使用 OpenSearch API 或 Dashboards 建立使用者，建立一個包含 `username` 和 `password` 鍵值的 Kubernetes secret，並在 `monitoringUserSecret` 欄位中提供該 secret 名稱。
+- 使用 `OpenSearchUser` CRD 建立使用者，並在 `monitoringUserSecret` 欄位中提供 secret。如需更多資訊，請參閱 [User and role management]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/operator-security/)。
 
-To configure monitoring, add the following fields to your cluster `spec`:
+若要設定監視，請將以下欄位新增至您的叢集 `spec`：
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -44,11 +45,11 @@ spec:
 ```
 {% include copy.html %}
 
-## Managing ISM policies with Kubernetes resources
+## 使用 Kubernetes 資源管理 ISM 策略
 
-The operator provides a custom Kubernetes resource that lets you create, update, or manage ISM policies using Kubernetes objects.
+operator 提供了一個自訂 Kubernetes 資源，讓您可以使用 Kubernetes 物件來建立、更新或管理 ISM 策略。
 
-Fields in the CRD directly map to the OpenSearch ISM policy structure. The operator does not modify policies that already exist. You can create an example policy as follows:
+CRD 中的欄位直接對應到 OpenSearch ISM 策略結構。operator 不會修改已經存在的策略。您可以按照以下方式建立範例策略：
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -84,19 +85,19 @@ spec:
 ```
 {% include copy.html %}
 
-The `OpenSearchISMPolicy` must be created in the same namespace as the OpenSearch cluster. The `policyId` field is optional; if not provided, the operator uses `metadata.name`.
+`OpenSearchISMPolicy` 必須建立在與 OpenSearch 叢集相同的命名空間中。`policyId` 欄位是選用的；如果未提供，operator 將使用 `metadata.name`。
 
-## Managing index and component templates
+## 管理索引與元件範本
 
-The operator provides the `OpensearchIndexTemplate` and `OpensearchComponentTemplate` CRDs for managing index and component templates.
+operator 提供 `OpensearchIndexTemplate` 和 `OpensearchComponentTemplate` CRD 用於管理索引與元件範本。
 
-The two CRD specifications closely mirror the OpenSearch API structure with some field name changes from `snake_case` to `camelCase`:
+這兩種 CRD 規範緊密鏡像 OpenSearch API 結構，僅部分欄位名稱從 `snake_case` 變更為 `camelCase`：
 
-- `index_patterns` → `indexPatterns` (`OpensearchIndexTemplate` only)
-- `composed_of` → `composedOf` (`OpensearchIndexTemplate` only)
+- `index_patterns` → `indexPatterns` (僅限 `OpensearchIndexTemplate`)
+- `composed_of` → `composedOf` (僅限 `OpensearchIndexTemplate`)
 - `template.aliases.<alias>.is_write_index` → `template.aliases.<alias>.isWriteIndex`
 
-The following example creates a component template that sets the number of shards and replicas and specifies a time format for documents:
+以下範例建立了一個元件範本，用於設定分片與副本數量，並為文件指定時間格式：
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -126,7 +127,7 @@ spec:
 ```
 {% include copy.html %}
 
-The following index template uses the component template defined earlier (see `composedOf`) for all indexes matching the `logs-2020-01-*` pattern:
+以下索引範本針對所有符合 `logs-2020-01-*` 模式的索引，使用先前定義的元件範本 (參閱 `composedOf`)：
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -151,12 +152,12 @@ spec:
 ```
 {% include copy.html %}
 
-The `.spec.name` field of the index template is immutable and cannot be changed after deployment.
+索引範本的 `.spec.name` 欄位是不可變的，部署後無法變更。
 {: .note}
 
-## Apply ISM policies to existing indexes
+## 將 ISM 策略套用到現有索引
 
-To apply an ISM policy to existing indexes in the OpenSearch cluster, set the `applyToExistingIndices` flag to `true` in the `OpenSearchISMPolicy` CRD:
+若要將 ISM 策略套用到 OpenSearch 叢集中的現有索引，請將 `OpenSearchISMPolicy` CRD 中的 `applyToExistingIndices` 旗標設定為 `true`：
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -188,16 +189,16 @@ spec:
 ```
 {% include copy.html %}
 
-The `applyToExistingIndices` field defaults to `false` if omitted.
+如果省略 `applyToExistingIndices` 欄位，則預設為 `false`。
 {: .note}
 
-When set to `true`, the operator applies the ISM policy to all existing indexes matching the specified index pattern. If multiple ISM policies target the same index pattern with this flag enabled, each policy must have a different priority.
+當設定為 `true` 時，operator 會將 ISM 策略套用到所有符合指定索引模式的現有索引。如果多個 ISM 策略在啟用此旗標的情況下針對相同的索引模式，則每項策略必須具有不同的優先順序。
 
-## Managing snapshot policies with Kubernetes resources
+## 使用 Kubernetes 資源管理快照策略
 
-The operator provides a custom Kubernetes resource to create, update, and manage Snapshot Lifecycle Management (SLM) policies using Kubernetes manifests. This allows you to declaratively define and control snapshot policies alongside your cluster resources.
+operator 提供了一個自訂 Kubernetes 資源，讓您可以使用 Kubernetes 資訊清單來建立、更新和管理快照生命週期管理 (SLM) 策略。這讓您可以與叢集資源一起以宣告式定義並控制快照策略。
 
-Fields in the CRD map directly to the OpenSearch snapshot policy structure. The operator does not modify policies that already exist. You can define a new policy using the following example:
+CRD 中的欄位直接對應到 OpenSearch 快照策略結構。operator 不會修改已經存在的策略。您可以使用以下範例定義新策略：
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -240,9 +241,9 @@ spec:
 ```
 {% include copy.html %}
 
-Note the following considerations:
+請注意以下考量因素：
 
-- The `OpensearchSnapshotPolicy` must be created in the same namespace as the OpenSearch cluster it targets.
-- `policyName` is optional. If not provided, the operator uses `metadata.name`.
-- The `repository` field must reference an existing snapshot repository configured in the OpenSearch cluster. For information about configuring snapshot repositories, see [Configuring snapshot repositories]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/operator-opensearch-config/#configuring-snapshot-repositories).
+- `OpensearchSnapshotPolicy` 必須建立在與其目標 OpenSearch 叢集相同的命名空間中。
+- `policyName` 是選用的。如果未提供，operator 將使用 `metadata.name`。
+- `repository` 欄位必須引用 OpenSearch 叢集中已設定的現有快照儲存庫。關於設定快照儲存庫的資訊，請參閱 [Configuring snapshot repositories]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/operator-opensearch-config/#configuring-snapshot-repositories)。
 {: .note}

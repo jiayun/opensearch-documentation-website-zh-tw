@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Install and configure OpenSearch Benchmark
+title: "安裝與設定 OpenSearch Benchmark"
 nav_order: 5
 parent: User guide
 has_children: true
@@ -8,7 +9,7 @@ redirect_from:
   - /benchmark/user-guide/install-and-configure/
 ---
 
-# Installing and configuring OpenSearch Benchmark 
+# 安裝與設定 OpenSearch Benchmark 
 
-OpenSearch Benchmark can be installed using `pip`. After installation, you can configure connections to your OpenSearch cluster and customize benchmarking behavior.
+OpenSearch Benchmark 可使用 `pip` 安裝。安裝後，您可以設定與 OpenSearch 叢集的連線，並自訂基準測試行為。
 

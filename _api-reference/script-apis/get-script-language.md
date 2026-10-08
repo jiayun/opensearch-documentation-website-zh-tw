@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get script languages
+title: "取得指令碼語言"
 parent: Script APIs
 nav_order: 60
 ---
 
-# Get Script Languages API
-**Introduced 1.0**
+# 取得指令碼語言 API
+**1.0 版引入**
 {: .label .label-purple }
 
-The Get Script Languages API retrieves all supported script languages (such as Painless) and the contexts in which they can be used. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+取得指令碼語言 API 會擷取所有支援的指令碼語言（例如 Painless），以及這些語言可使用的情境。如需詳細資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-## Example request
+## 請求範例
 
 <!-- spec_insert_start
 component: example_code
@@ -31,9 +32,9 @@ response = client.get_script_languages()
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-The `GET _script_language` request returns the available contexts for each language:
+`GET _script_language` 請求會傳回每種語言可用的情境：
 
 ```json
 {
@@ -102,13 +103,13 @@ The `GET _script_language` request returns the available contexts for each langu
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The request contains the following response fields.
+此請求包含下列回應欄位。
 
-Field | Data type | Description | 
+欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-`types_allowed` | List of strings | The types of scripts that are enabled, determined by the `script.allowed_types` setting. May contain `inline` and/or `stored`.
-`language_contexts` | List of objects | A list of objects, each of which maps a supported language to its available contexts.
-`language_contexts.language` | String | The name of the registered scripting language.
-`language_contexts.contexts` | List of strings | A list of all contexts for the language, determined by the `script.allowed_contexts` setting.
+`types_allowed` | 字串清單 | 已啟用的指令碼類型，由 `script.allowed_types` 設定決定。可能包含 `inline` 和/或 `stored`。
+`language_contexts` | 物件清單 | 物件清單，其中每個物件都會將一種支援的語言對應至其可用的情境。
+`language_contexts.language` | 字串 | 已註冊的指令碼語言名稱。
+`language_contexts.contexts` | 字串清單 | 該語言所有情境的清單，由 `script.allowed_contexts` 設定決定。

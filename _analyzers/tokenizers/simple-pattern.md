@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Simple pattern
+title: "簡單模式"
 parent: Tokenizers
 nav_order: 110
 ---
 
-# Simple pattern tokenizer
+# 簡單模式斷詞器
 
-The `simple_pattern` tokenizer identifies matching sequences in text based on a regular expression and uses those sequences as tokens. It extracts terms that match the regular expression. Use this tokenizer when you want to directly extract specific patterns as terms.
+`simple_pattern` 斷詞器會根據規則運算式找出文字中相符的序列，並將這些序列做為詞元。它會擷取符合規則運算式的詞彙。當您想直接將特定模式擷取為詞彙時，請使用此斷詞器。
 
-## Example usage
+## 使用範例
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `simple_pattern` tokenizer. The tokenizer extracts numeric terms from text:
+下列範例請求會建立名為 `my_index` 的新索引，並設定使用 `simple_pattern` 斷詞器的分析器。此斷詞器會從文字中擷取數字詞彙：
 
 ```json
 PUT /my_index
@@ -36,9 +37,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -49,7 +50,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含所產生的詞元：
 
 ```json
 {
@@ -79,11 +80,11 @@ The response contains the generated tokens:
 }
 ```
 
-## Parameters
+## 參數
 
-The `simple_pattern` tokenizer can be configured with the following parameter.
+`simple_pattern` 斷詞器可使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`pattern` | Optional | String | The pattern used to split text into tokens, specified using a [Lucene regular expression](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/util/automaton/RegExp.html). Default is an empty string, which returns the input text as one token. 
+`pattern` | 選用 | 字串 | 用於將文字分割成詞元的模式，以 [Lucene 規則運算式](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/util/automaton/RegExp.html) 指定。預設為空字串，會將輸入文字以單一詞元回傳。 
 

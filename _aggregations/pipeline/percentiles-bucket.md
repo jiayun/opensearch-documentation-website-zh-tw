@@ -1,36 +1,37 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Percentiles bucket
+title: "百分位數桶"
 parent: Pipeline aggregations
 nav_order: 160
 ---
 
-# Percentiles bucket aggregation
+# 百分位數桶彙總
 
-The `percentiles_bucket` aggregation is a sibling aggregation that calculates the percentile placement of bucketed metrics.
+`percentiles_bucket` 彙總是一種同層級彙總，用於計算分桶指標的百分位數位置。
 
-The `percentiles_bucket` aggregation computes percentiles exactly, without approximation or interpolation. Each percentile is returned as the closest value less than or equal to the target percentile.
+`percentiles_bucket` 彙總會精確計算百分位數，不使用近似或內插。每個百分位數都會傳回小於或等於目標百分位數的最接近值。
 
-The `percentiles_bucket` aggregation requires that the entire list of values be kept temporarily in memory, even for large datasets. In contrast, [the `percentiles` metric aggregation]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile/) uses less memory but approximates the percentages.
+`percentiles_bucket` 彙總需要將整個值清單暫時保留在記憶體中，即使是大型資料集也是如此。相較之下，[`percentiles` 指標彙總]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile/)使用的記憶體較少，但會以近似方式計算百分比。
 
-The specified metric must be numeric, and the sibling aggregation must be a multi-bucket aggregation.
+指定的指標必須是數值，且同層級彙總必須是多桶 (multi-bucket) 彙總。
 
-## Parameters
+## 參數
 
-The `avg_bucket` aggregation takes the following parameters.
+`avg_bucket` 彙總接受下列參數。
 
-| Parameter             | Required/Optional | Data type       | Description |
+| 參數             | 必要/選用 | 資料類型       | 說明 |
 | :--                   | :--               |  :--            | :--         |
-| `buckets_path`        | Required          | String          | The path of the aggregation buckets to aggregate. See [Buckets path]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path). |
-| `gap_policy`          | Optional          | String          | The policy to apply to missing data. Valid values are `skip` and `insert_zeros`. Default is `skip`. See [Data gaps]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#data-gaps). |
-| `format`              | Optional          | String          | A [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) formatting string. Returns the formatted output in the aggregation's `value_as_string` property. |
-| `percents`            | Optional          | List            | A list containing any number of numeric percentage values to be included in the output. Valid values are between 0.0 and 100.0, inclusive. Default is `[1.0, 5.0, 25.0, 50.0, 75.0, 95.0, 99.0]`. |
-| `keyed`               | Optional          | Boolean         | Whether to format the output as a dictionary rather than as an array of key-value pair objects. Default is `true` (format the output as key-value pairs). |
+| `buckets_path`        | 必要          | 字串          | 要彙總的彙總桶路徑。請參閱[桶路徑]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path)。 |
+| `gap_policy`          | 選用          | 字串          | 套用於缺漏資料的策略。有效值為 `skip` 和 `insert_zeros`。預設為 `skip`。請參閱[資料缺口]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#data-gaps)。 |
+| `format`              | 選用          | 字串          | [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) 格式字串。在彙總的 `value_as_string` 屬性中傳回格式化後的輸出。 |
+| `percents`            | 選用          | 清單            | 包含任意數量數值百分比的清單，這些值會包含在輸出中。有效值介於 0.0 到 100.0 之間（含）。預設為 `[1.0, 5.0, 25.0, 50.0, 75.0, 95.0, 99.0]`。 |
+| `keyed`               | 選用          | 布林值         | 是否將輸出格式化為字典，而非鍵值對物件的陣列。預設為 `true`（將輸出格式化為鍵值對）。 |
 
 
-## Example
+## 範例
 
-The following example creates a date histogram with a one-week interval from the OpenSearch Dashboards e-commerce sample data. The `sum` subaggregation adds up the `taxful_total_price` for each week. Finally, the `percentiles_bucket` aggregation calculates the percentile values for each week from these sums:
+下列範例使用 OpenSearch Dashboards 電子商務範例資料，建立間隔為一週的日期直方圖。`sum` 子彙總會加總每週的 `taxful_total_price`。最後，`percentiles_bucket` 彙總會根據這些總和計算每週的百分位數值：
 
 ```json
 POST /opensearch_dashboards_sample_data_ecommerce/_search
@@ -60,13 +61,13 @@ POST /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-The aggregation returns the default percentile values for the weekly price totals:
+此彙總會傳回每週價格總和的預設百分位數值：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
 
 ```json
@@ -148,15 +149,15 @@ The aggregation returns the default percentile values for the weekly price total
 ```
 </details>
 
-## Example: Options
+## 範例：選項
 
-The next example computes percentiles using the same data as in the previous example but with the following differences:
+下一個範例使用與上一個範例相同的資料計算百分位數，但有下列差異：
 
-- The `percents` parameter specifies that only the 25th, 50th, and 75th percentiles be calculated.
-- String-formatted outputs are appended using the `format` parameter.
-- Results are displayed as key-value pair objects (with string values appended) by setting the `keyed` parameter to `false`.
+- `percents` 參數指定只計算第 25、第 50 和第 75 百分位數。
+- 使用 `format` 參數附加字串格式的輸出。
+- 將 `keyed` 參數設定為 `false`，以鍵值對物件（附加字串值）的形式顯示結果。
 
-The example is as follows:
+範例如下：
 
 ```json
 POST /opensearch_dashboards_sample_data_ecommerce/_search
@@ -189,14 +190,14 @@ POST /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response: Options
+## 範例回應：選項
 
-The options modify the output of the aggregation:
+這些選項會修改彙總的輸出：
 
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
 
 ```json

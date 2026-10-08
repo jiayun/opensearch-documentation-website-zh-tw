@@ -1,91 +1,92 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Execute agent stream (gRPC)
+title: "執行代理程式串流 (gRPC)"
 parent: gRPC APIs
 nav_order: 50
 ---
 
 # Execute Agent Stream API (gRPC)
-**Introduced 3.8**
+**3.8 版新增**
 {: .label .label-purple }
 
-The gRPC Execute Agent Stream API provides a binary interface for streaming the execution of an agent using protocol buffers over gRPC. The server streams response chunks to the client as the agent generates them, so the client can begin processing output before execution completes. Use streaming for conversational agents that produce token-by-token output from large language models (LLMs).
+gRPC Execute Agent Stream API 提供二進位介面，可透過 gRPC 使用 protocol buffers 串流執行代理程式。伺服器會在代理程式產生回應區塊時，將其串流傳送至用戶端，因此用戶端可在執行完成前開始處理輸出。串流適用於會從大型語言模型 (LLM) 逐詞元產生輸出的對話式代理程式。
 
-You can stream agent execution over either REST or gRPC. Both transports return the same incrementally generated output, so choose the one that best fits your client:
+您可以透過 REST 或 gRPC 串流代理程式執行。兩種傳輸方式都會傳回相同的漸進式產生輸出，因此請選擇最適合您用戶端的方式：
 
-- **REST streaming** uses server-sent events (SSE) over HTTP, which browsers, standard HTTP clients, and command line tools such as cURL support directly. This is an experimental feature and is not recommended for use in a production environment. For more information, see [Execute Agent Stream API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-stream-agent/).
-- **gRPC streaming** uses protocol buffers over HTTP/2. This transport provides lower serialization overhead and smaller payloads, native server streaming semantics with HTTP/2 flow control and connection multiplexing, and a strongly typed schema from which you can generate clients in any [gRPC-supported language](https://grpc.io/docs/languages/).
+- **REST 串流**透過 HTTP 使用伺服器傳送事件 (SSE)，瀏覽器、標準 HTTP 用戶端以及 cURL 等命令列工具都直接支援。這是一項實驗性功能，不建議在正式環境中使用。如需更多資訊，請參閱 [Execute Agent Stream API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-stream-agent/)。
+- **gRPC 串流**透過 HTTP/2 使用 protocol buffers。此傳輸方式提供較低的序列化負擔與較小的酬載、具備 HTTP/2 流量控制與連線多工的原生伺服器串流語意，以及強型別結構描述，您可從中產生任何 [gRPC 支援語言](https://grpc.io/docs/languages/)的用戶端。
 
-Streaming agent execution is supported for agents that use the following externally hosted models:
+使用下列外部託管模型的代理程式支援串流代理程式執行：
 
 - [OpenAI Chat Completion](https://platform.openai.com/docs/api-reference/completions)
 - [Amazon Bedrock Converse Stream](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ConverseStream.html)
 
-## Prerequisites
+## 必要條件
 
-Before using the gRPC Execute Agent Stream API, ensure that you have fulfilled the following prerequisites:
+使用 gRPC Execute Agent Stream API 之前，請確定您已符合下列必要條件：
 
-- Enable gRPC transport on the cluster. For more information, see [Using gRPC APIs]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/#how-to-use-grpc-apis).
-- Obtain the ML Commons protobufs on the client side. For ways to obtain the protobufs, see [Using gRPC APIs]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/#how-to-use-grpc-apis).
-- Register an agent that uses a supported streaming model. For agent and connector configuration, see [Execute Agent Stream API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-stream-agent/#step-2-register-a-compatible-externally-hosted-model).
+- 在叢集上啟用 gRPC 傳輸。如需更多資訊，請參閱[使用 gRPC API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/#how-to-use-grpc-apis)。
+- 在用戶端取得 ML Commons protobufs。取得 protobufs 的方式請參閱[使用 gRPC API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/#how-to-use-grpc-apis)。
+- 註冊使用支援串流之模型的代理程式。代理程式與連接器的組態請參閱 [Execute Agent Stream API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-stream-agent/#step-2-register-a-compatible-externally-hosted-model)。
 
-## gRPC service and method
+## gRPC 服務與方法
 
-The gRPC Execute Agent Stream API resides in the [`MLService`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/services/ml_service.proto#L22) service.
+gRPC Execute Agent Stream API 位於 [`MLService`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/services/ml_service.proto#L22) 服務中。
 
-You can submit streaming agent execution requests by invoking the [`ExecuteAgentStream`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/services/ml_service.proto#L27) method within the `MLService`. The method takes an [`MlExecuteAgentStreamRequest`](#mlexecuteagentstreamrequest-fields) and returns a stream of [`PredictResponse`](#response-fields) messages.
+您可以透過叫用 `MLService` 內的 [`ExecuteAgentStream`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/services/ml_service.proto#L27) 方法來提交串流代理程式執行請求。該方法接受 [`MlExecuteAgentStreamRequest`](#mlexecuteagentstreamrequest-fields)，並傳回 [`PredictResponse`](#response-fields) 訊息串流。
 
-`ExecuteAgentStream` is a server streaming remote procedure call (RPC): the client sends a single request, and the server returns a sequence of response messages. The final message sets `is_last` to `true`, and the server then closes the stream.
+`ExecuteAgentStream` 是伺服器串流遠端程序呼叫 (RPC)：用戶端傳送單一請求，伺服器則傳回一連串回應訊息。最後一則訊息會將 `is_last` 設為 `true`，然後伺服器關閉串流。
 {: .note}
 
-## Request fields
+## 請求欄位
 
-The gRPC Execute Agent Stream API supports the following request fields.
+gRPC Execute Agent Stream API 支援下列請求欄位。
 
-### MlExecuteAgentStreamRequest fields
+### MlExecuteAgentStreamRequest 欄位
 
-The [`MlExecuteAgentStreamRequest`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3396) message accepts the following fields.
+[`MlExecuteAgentStreamRequest`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3396) 訊息接受下列欄位。
 
-| Field | Protobuf type | Required | Description |
+| 欄位 | Protobuf 類型 | 必要 | 描述 |
 | :---- | :---- | :---- | :---- |
-| `agent_id` | `string` | Required | The ID of the agent to execute. |
-| `ml_execute_agent_stream_request_body` | [`MLExecuteAgentStreamRequestBody`](#mlexecuteagentstreamrequestbody-fields) | Required | The request payload containing the execution parameters. |
+| `agent_id` | `string` | 必要 | 要執行之代理程式的 ID。 |
+| `ml_execute_agent_stream_request_body` | [`MLExecuteAgentStreamRequestBody`](#mlexecuteagentstreamrequestbody-fields) | 必要 | 包含執行參數的請求酬載。 |
 
 <!-- vale off -->
-### MLExecuteAgentStreamRequestBody fields
+### MLExecuteAgentStreamRequestBody 欄位
 <!-- vale on -->
 
-The [`MLExecuteAgentStreamRequestBody`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3318) message accepts the following fields.
+[`MLExecuteAgentStreamRequestBody`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3318) 訊息接受下列欄位。
 
-| Field | Protobuf type | Required | Description |
+| 欄位 | Protobuf 類型 | 必要 | 描述 |
 | :---- | :---- | :---- | :---- |
-| `parameters` | [`Parameters`](#parameters-fields) | Required | The input parameters passed to the agent. |
+| `parameters` | [`Parameters`](#parameters-fields) | 必要 | 傳遞給代理程式的輸入參數。 |
 
-### Parameters fields
+### Parameters 欄位
 
-For agent execution, the [`Parameters`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3356) message accepts the following field.
+執行代理程式時，[`Parameters`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3356) 訊息接受下列欄位。
 
-| Field | Protobuf type | Description |
+| 欄位 | Protobuf 類型 | 描述 |
 | :---- | :---- | :---- |
-| `question` | `string` | The input question sent to the agent. |
+| `question` | `string` | 傳送給代理程式的輸入問題。 |
 
-## Response fields
+## 回應欄位
 
-The server streams a sequence of [`PredictResponse`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3367) messages. Each message carries one chunk of the generated output and provides the following fields.
+伺服器會串流傳回一連串 [`PredictResponse`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3367) 訊息。每則訊息承載一個產生輸出的區塊，並提供下列欄位。
 
-| Field | Protobuf type | Description |
+| 欄位 | Protobuf 類型 | 描述 |
 | :---- | :---- | :---- |
-| `inference_results` | `repeated InferenceResults` | The inference results for the chunk. |
-| `inference_results.output` | `repeated Output` | The output objects for each inference result. |
-| `inference_results.output.name` | `string` | The name of the output field (typically, `response`). |
-| `inference_results.output.result` | `string` | The values of the `memory_id` and `parent_interaction_id` fields. |
-| `inference_results.output.data_as_map` | `DataAsMap` | The response content and metadata for the chunk. |
-| `inference_results.output.data_as_map.content` | `string` | The text content of the chunk. Concatenate the `content` values across chunks to reconstruct the full response. |
-| `inference_results.output.data_as_map.is_last` | `bool` | Whether this is the final chunk in the stream. When `true`, no further messages are sent. |
+| `inference_results` | `repeated InferenceResults` | 該區塊的推論結果。 |
+| `inference_results.output` | `repeated Output` | 每個推論結果的輸出物件。 |
+| `inference_results.output.name` | `string` | 輸出欄位的名稱 (通常為 `response`)。 |
+| `inference_results.output.result` | `string` | `memory_id` 與 `parent_interaction_id` 欄位的值。 |
+| `inference_results.output.data_as_map` | `DataAsMap` | 該區塊的回應內容與中繼資料。 |
+| `inference_results.output.data_as_map.content` | `string` | 該區塊的文字內容。將各區塊的 `content` 值串接起來，即可重建完整回應。 |
+| `inference_results.output.data_as_map.is_last` | `bool` | 這是否為串流中的最後一個區塊。當為 `true` 時，不會再傳送任何訊息。 |
 
-## Example request
+## 請求範例
 
-The following example shows the JSON representation of the gRPC request message. Replace the `agent_id` and `question` with values that match your agent configuration:
+下列範例顯示 gRPC 請求訊息的 JSON 表示法。請將 `agent_id` 與 `question` 替換為符合您代理程式組態的值：
 
 ```json
 {
@@ -99,7 +100,7 @@ The following example shows the JSON representation of the gRPC request message.
 ```
 {% include copy.html %}
 
-The following example shows a Java gRPC client that streams the execution of a conversational agent. Replace the agent ID and question with values that match your agent configuration:
+下列範例顯示串流執行對話式代理程式的 Java gRPC 用戶端。請將代理程式 ID 與問題替換為符合您代理程式組態的值：
 
 ```java
 import org.opensearch.protobufs.*;
@@ -157,9 +158,9 @@ public class ExecuteAgentStreamClient {
 ```
 {% include copy.html %}
 
-## Example response
+## 回應範例
 
-The server returns a sequence of `PredictResponse` messages. Each message carries a chunk of generated text in the `content` field, and the final message sets `isLast` to `true`. The following example shows the JSON representation of a streamed chunk:
+伺服器會傳回一連串 `PredictResponse` 訊息。每則訊息在 `content` 欄位中承載一段產生的文字，而最後一則訊息會將 `isLast` 設為 `true`。下列範例顯示串流區塊的 JSON 表示法：
 
 ```json
 {
@@ -187,7 +188,7 @@ The server returns a sequence of `PredictResponse` messages. Each message carrie
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [Execute Agent Stream API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-stream-agent/) -- The REST equivalent for streaming agent execution
-- [Using gRPC APIs]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/) -- gRPC transport configuration and client requirements
+- [Execute Agent Stream API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-stream-agent/) -- 串流代理程式執行的 REST 對應版本
+- [使用 gRPC API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/) -- gRPC 傳輸組態與用戶端需求

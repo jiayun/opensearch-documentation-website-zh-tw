@@ -1,3 +1,4 @@
+<!-- Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations. -->
 <!-- Inline theme detection to prevent dark mode flash -->
 <script>
   (function() {
@@ -50,8 +51,5 @@
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
 {% endif %}
 
-{% if jekyll.environment == "development" %}
-  <script src="{{ '/assets/js/version-selector.js' | relative_url }}"></script>
-{% else %}
-  <script src="{{ '/latest/assets/js/version-selector.js' }}"></script>
-{% endif %}
+
+<meta name="docs-baseurl" content="{{ site.baseurl }}">

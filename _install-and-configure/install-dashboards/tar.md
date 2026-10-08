@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Tarball
 parent: Installing OpenSearch Dashboards
@@ -7,19 +8,19 @@ redirect_from:
   - /dashboards/install/tar/
 ---
 
-# Installing OpenSearch Dashboards from a tarball
+# 從 tarball 安裝 OpenSearch Dashboards
 
-## Prerequisites
+## 前置條件
 
-Install OpenSearch. For more information, see [Installing OpenSearch from a tarball]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/tar/).
+安裝 OpenSearch。如需更多資訊，請參閱 [從 tarball 安裝 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/tar/)。
 
-## Install OpenSearch Dashboards from a tarball
+## 從 tarball 安裝 OpenSearch Dashboards
 
-To install OpenSearch Dashboards from a tarball, follow these steps:
+若要從 tarball 安裝 OpenSearch Dashboards，請執行以下步驟：
 
-1. Download the tarball from the [OpenSearch downloads page](https://opensearch.org/downloads.html){:target='\_blank'}.
+1. 從 [OpenSearch 下載頁面](https://opensearch.org/downloads.html){:target='\_blank'}下載 tarball。
 
-1. Extract the TAR file to a directory and change to that directory:
+1. 將 TAR 檔案解壓縮到一個目錄並切換到該目錄：
 
    ```bash
    # x64
@@ -30,16 +31,16 @@ To install OpenSearch Dashboards from a tarball, follow these steps:
    cd opensearch-dashboards-{{site.opensearch_dashboards_version}}
    ```
 
-1. If desired, modify `config/opensearch_dashboards.yml`.
+1. 如有需要，請修改 `config/opensearch_dashboards.yml`。
 
-1. Start OpenSearch Dashboards:
+1. 啟動 OpenSearch Dashboards：
 
    ```bash
    ./bin/opensearch-dashboards
    ```
 
-1. In a web browser, go to `http://localhost:5601` and log in as the `admin` user using the custom admin password that you set when you installed OpenSearch. If OpenSearch Dashboards runs on a remote host, replace `localhost` with the IP address or DNS name of that host. For more information, see [Accessing OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards).
+1. 在網頁瀏覽器中，前往 `http://localhost:5601` 並使用您在安裝 OpenSearch 時設定的自訂管理員密碼，以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行在遠端主機上，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱 [存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
 
-## Related documentation
+## 相關文件
 
-- [Preparing OpenSearch Dashboards for production]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#preparing-opensearch-dashboards-for-production)
+- [為生產環境準備 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#preparing-opensearch-dashboards-for-production)

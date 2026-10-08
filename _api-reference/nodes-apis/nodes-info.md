@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Nodes info
+title: "節點資訊"
 parent: Nodes APIs
 nav_order: 10
 ---
 
 # Nodes Info API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Nodes Info API represents mostly static information about your cluster's nodes, including the following:
+Nodes Info API 提供叢集節點的資訊，其中大多為靜態資訊，包含下列項目：
 
-- Host system information 
+- 主機系統資訊 
 - JVM 
-- Processor Type 
-- Node settings 
-- Thread pools settings 
-- Installed plugins
+- 處理器類型 
+- 節點設定 
+- 執行緒集區設定 
+- 已安裝的外掛程式
 
 
-## Endpoints
+## 端點
 
 ```json
 GET /_nodes
@@ -30,44 +31,44 @@ GET /_nodes/{nodeId}/{metrics}
 GET /_nodes/{nodeId}/info/{metrics}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- |:-------| :---
-`node_id` | String | A comma-separated list of node IDs used to filter results. Supports [node filters]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/#node-filters). Defaults to `_all`.
-`metrics` | String | A comma-separated list of metric groups that will be included in the response. For example, `jvm,thread_pool`. Defaults to all metrics.
+`node_id` | 字串 | 以逗號分隔的節點 ID 清單，用於篩選結果。支援[節點篩選器]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/#node-filters)。預設為 `_all`。
+`metrics` | 字串 | 以逗號分隔的指標群組清單，這些群組將包含在回應中。例如，`jvm,thread_pool`。預設包含所有指標。
 
-The following table lists all available metric groups.
+下表列出所有可用的指標群組。
 
-Metric | Description
+指標 | 說明
 :--- |:----
-`settings` | A node's settings. This is a combination of the default settings, custom settings from the [configuration file]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/#configuration-file), and dynamically [updated settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/#updating-cluster-settings-using-the-api).
-`os` | Static information about the host operating system, including version, processor architecture, and available/allocated processors.
-`process` | Contains the process ID.
-`jvm` | Detailed static information about the running JVM, including arguments.
-`thread_pool` | Configured options for all individual thread pools.
-`transport` | Mostly static information about the transport layer.
-`http` | Mostly static information about the HTTP layer.
-`plugins` | Information about installed plugins and modules.
-`ingest` | Information about ingest pipelines and available ingest processors.
-`search_pipelines` | Information about search pipelines configured on the node.
-`aggregations` | Information about available [aggregations]({{site.url}}{{site.baseurl}}/opensearch/aggregations/).
-`indices` | Static index settings configured at the node level.
+`settings` | 節點的設定。這些設定包含預設設定、[組態檔案]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/#configuration-file)中的自訂設定，以及動態[更新的設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/#updating-cluster-settings-using-the-api)。
+`os` | 主機作業系統的靜態資訊，包括版本、處理器架構，以及可用與已配置的處理器。
+`process` | 包含處理程序 ID。
+`jvm` | 執行中 JVM 的詳細靜態資訊，包括引數。
+`thread_pool` | 各個執行緒集區已設定的選項。
+`transport` | 傳輸層的資訊，其中大多為靜態資訊。
+`http` | HTTP 層的資訊，其中大多為靜態資訊。
+`plugins` | 已安裝的外掛程式與模組的資訊。
+`ingest` | 資料匯入管線與可用的匯入處理器的資訊。
+`search_pipelines` | 節點上已設定的搜尋管線的資訊。
+`aggregations` | 可用的[彙總]({{site.url}}{{site.baseurl}}/opensearch/aggregations/)資訊。
+`indices` | 在節點層級設定的靜態索引設定。
 
-## Query parameters
+## 查詢參數
 
-You can include the following query parameters in your request. All query parameters are optional.
+您可以在請求中加入下列查詢參數。所有查詢參數皆為選用。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- |:-------| :---
-`flat_settings`| Boolean | Specifies whether to return the `settings` object of the response in flat format. Default is `false`.
-`timeout` | Time | Sets the time limit for node response. Default value is `30s`.
+`flat_settings`| 布林值 | 指定是否以扁平格式傳回回應的 `settings` 物件。預設為 `false`。
+`timeout` | 時間 | 設定節點回應的時間限制。預設值為 `30s`。
 
-## Example request
+## 請求範例
 
-The following query requests the `process` and `transport` metrics from the cluster manager node: 
+下列查詢向叢集管理員節點請求 `process` 與 `transport` 指標： 
 
 <!-- spec_insert_start
 component: example_code
@@ -92,7 +93,7 @@ response = client.nodes.info(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To get thread pool information about the cluster manager node only, use the following query:
+若要僅取得叢集管理員節點的執行緒集區資訊，請使用下列查詢：
 
 <!-- spec_insert_start
 component: example_code
@@ -117,9 +118,9 @@ response = client.nodes.info(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-The response contains the metric groups specified in the `<metrics>` request parameter (in this case, `process` and `transport`):
+回應包含 `<metrics>` 請求參數中指定的指標群組（在此範例中為 `process` 與 `transport`）：
 
 ```json
 {
@@ -165,35 +166,35 @@ The response contains the metric groups specified in the `<metrics>` request par
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response contains the basic node identification and build info for every node matching the `<nodeId>` request parameter. The following table lists the response fields.
+回應包含每個符合 `<nodeId>` 請求參數的節點的基本識別資訊與建置資訊。下表列出回應欄位。
 
-Field | Description
+欄位 | 說明
 :--- |:----
-name | The node's name.
-`transport_address` | The node's transport address.
-`host` | The node's host address.
-`ip` | The node's host IP address.
-`version` | The node's OpenSearch version.
-`build_type` | The node's build type, such as `rpm`, `docker`, or `tar`.
-`build_hash` | The git commit hash of the build.
-`total_indexing_buffer` | The maximum heap size in bytes used to hold newly indexed documents. Once this heap size is exceeded, the documents are written to disk.
-`roles` | The list of the node's roles.
-`attributes` | The node's attributes.
-`os` | Information about the operating system, including name, version, architecture, refresh interval, and the number of available and allocated processors.
-`process` | Information about the currently running process, including PID, refresh interval, and `mlockall`, which specifies whether the process address space has been successfully locked in memory. 
-`jvm` | Information about the JVM, including PID, version, memory information, garbage collector information, and arguments.
-`thread_pool` | Information about the thread pool.
-`transport` | Information about the transport address, including bound address, publish address, and profiles.
-`http` | Information about the HTTP address, including bound address, publish address, and maximum content length, in bytes.
-`plugins` | Information about the installed plugins, including name, version, OpenSearch version, Java version, description, class name, custom folder name, a list of extended plugins, and `has_native_controller`, which specifies whether the plugin has a native controller process. 
-`modules` | Information about the modules, including name, version, OpenSearch version, Java version, description, class name, custom folder name, a list of extended plugins, and `has_native_controller`, which specifies whether the plugin has a native controller process. Modules are different from plugins because modules are loaded into OpenSearch automatically, while plugins have to be installed manually.
-`ingest` | Information about ingest pipelines and processors.
-`search_pipelines` | Information about search pipelines configured on the node.
-`aggregations` | Information about the available aggregation types.
+name | 節點的名稱。
+`transport_address` | 節點的傳輸位址。
+`host` | 節點的主機位址。
+`ip` | 節點的主機 IP 位址。
+`version` | 節點的 OpenSearch 版本。
+`build_type` | 節點的建置類型，例如 `rpm`、`docker` 或 `tar`。
+`build_hash` | 此建置的 git 提交雜湊值。
+`total_indexing_buffer` | 用於存放新編製索引的文件的最大堆積大小，以位元組為單位。一旦超過此堆積大小，文件就會寫入磁碟。
+`roles` | 節點的角色清單。
+`attributes` | 節點的屬性。
+`os` | 作業系統的資訊，包括名稱、版本、架構、重新整理間隔，以及可用與已配置的處理器數量。
+`process` | 目前執行中的處理程序資訊，包括 PID、重新整理間隔，以及 `mlockall`，此欄位指定處理程序的位址空間是否已成功鎖定在記憶體中。 
+`jvm` | JVM 的資訊，包括 PID、版本、記憶體資訊、記憶體回收器資訊與引數。
+`thread_pool` | 執行緒集區的資訊。
+`transport` | 傳輸位址的資訊，包括繫結位址、發布位址與設定檔。
+`http` | HTTP 位址的資訊，包括繫結位址、發布位址，以及以位元組為單位的最大內容長度。
+`plugins` | 已安裝的外掛程式資訊，包括名稱、版本、OpenSearch 版本、Java 版本、說明、類別名稱、自訂資料夾名稱、擴充的外掛程式清單，以及 `has_native_controller`，此欄位指定外掛程式是否具有原生控制器處理程序。 
+`modules` | 模組的資訊，包括名稱、版本、OpenSearch 版本、Java 版本、說明、類別名稱、自訂資料夾名稱、擴充的外掛程式清單，以及 `has_native_controller`，此欄位指定外掛程式是否具有原生控制器處理程序。模組與外掛程式的差異在於，模組會自動載入 OpenSearch，而外掛程式必須手動安裝。
+`ingest` | 資料匯入管線與處理器的資訊。
+`search_pipelines` | 節點上已設定的搜尋管線的資訊。
+`aggregations` | 可用的彙總類型的資訊。
 
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:monitor/nodes/info`.
+若您使用 Security 外掛程式，請確認您具有適當的權限：`cluster:monitor/nodes/info`。

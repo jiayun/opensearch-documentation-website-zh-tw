@@ -1,53 +1,54 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Date range
+title: "日期範圍"
 parent: Bucket aggregations
 nav_order: 30
 redirect_from:
   - /query-dsl/aggregations/bucket/date-range/
 ---
 
-# Date range aggregation
+# 日期範圍彙總
 
-Use the `date_range` aggregation to group documents into buckets defined by date boundaries. The `date_range` aggregation behaves like the numeric `range` aggregation but accepts date math in addition to [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) dates and epoch milliseconds.
+使用 `date_range` 彙總，依日期邊界所定義的桶 (bucket) 將文件分組。`date_range` 彙總的行為與數值型 `range` 彙總類似，但除了 [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) 日期和 epoch 毫秒之外，還接受日期運算 (date math)。
 
-Note the following details:
+請注意下列細節：
 
-- `from` is inclusive, `to` is exclusive.
-- To create an open-ended bucket, omit `from` or `to`.
-- Date math supports rounding: for example, `now-7d/d` (start of the day, 7 days ago).
+- `from` 包含邊界值，`to` 不包含邊界值。
+- 若要建立開放式的桶，請省略 `from` 或 `to`。
+- 日期運算支援捨入，例如 `now-7d/d`（7 天前當天的開始時間）。
 
-## Parameters
+## 參數
 
-The following is a table of parameters accepted by `date_range` aggregations.
+下表列出 `date_range` 彙總接受的參數。
 
-| Parameter | Required | Description |
+| 參數 | 必要 | 說明 |
 | --- | --- | --- |
-| `field` | Yes | The date field to aggregate on. |
-| `ranges`| Yes | The non-empty array of range objects. Each object must specify at least one boundary, `from` and/or `to`. |
-| `ranges[].from` | One of `from` or `to` is required. | Lower inclusive bound. |
-| `ranges[].to` | One of `from` or `to` is required. | Upper exclusive bound. |
-| `ranges[].key`| No | The label for the bucket.|
-| `format`| No | Controls the `*_as_string` fields in the response, for example, `yyyy-MM-dd`. |
-| `time_zone` | No | The IANA zone or UTC offset used when evaluating date math or rounding, for example,`Europe/Dublin`, `+01:00`. |
-| `keyed` | No | If `true`, returns an object with the key `key` instead of an array. |
-| `missing` | No | The value to substitute for documents in which the field is missing. |
+| `field` | 是 | 要進行彙總的日期欄位。 |
+| `ranges`| 是 | 由範圍物件組成的非空陣列。每個物件必須至少指定一個邊界，即 `from` 和/或 `to`。 |
+| `ranges[].from` | `from` 或 `to` 必須擇一提供。 | 包含邊界值的下限。 |
+| `ranges[].to` | `from` 或 `to` 必須擇一提供。 | 不包含邊界值的上限。 |
+| `ranges[].key`| 否 | 桶的標籤。|
+| `format`| 否 | 控制回應中的 `*_as_string` 欄位，例如 `yyyy-MM-dd`。 |
+| `time_zone` | 否 | 評估日期運算或捨入時所使用的 IANA 時區或 UTC 偏移量，例如 `Europe/Dublin`、`+01:00`。 |
+| `keyed` | 否 | 若為 `true`，則傳回以 `key` 為鍵的物件，而非陣列。 |
+| `missing` | 否 | 用來替代缺少該欄位之文件的值。 |
 
 
-### Accepted values for `from` and `to`
+### `from` 和 `to` 可接受的值
 
-The following values of `from` and `to` are accepted:
+`from` 和 `to` 可接受下列值：
 
-- ISO 8601 strings: `"2025-10-01T00:00:00Z"`, `"2025-10-01"`
-- Date math: `"now-7d/d"`, `"now+1M/M"`, `"2025-09-01||/M"`
-- Epoch milliseconds: `1756684800000`
+- ISO 8601 字串：`"2025-10-01T00:00:00Z"`、`"2025-10-01"`
+- 日期運算：`"now-7d/d"`、`"now+1M/M"`、`"2025-09-01||/M"`
+- Epoch 毫秒：`1756684800000`
 
-If components are omitted in a date string, the missing parts are filled with defaults. For example, `"2025-10"` is treated as the start of October 2025.
+若日期字串中省略了部分組成元素，缺少的部分會以預設值填入。例如，`"2025-10"` 會被視為 2025 年 10 月的開始時間。
 {: .note}
 
-## Example: Three sliding windows
+## 範例：三個滑動時間窗
 
-The following example produces three buckets (last 7 days, previous 7 days, and older), using date math and `yyyy-MM-dd` output `format`:
+下列範例使用日期運算和 `yyyy-MM-dd` 輸出 `format`，產生三個桶（最近 7 天、前 7 天，以及更早的資料）：
 
 ```json
 GET my-index/_search
@@ -70,7 +71,7 @@ GET my-index/_search
 ```
 {% include copy-curl.html %}
 
-Example response:
+回應範例：
 
 ```json
 "aggregations": {
@@ -103,9 +104,9 @@ Example response:
   }
 ```
 
-## Example: Bucket for the last 10 days with a custom string format
+## 範例：使用自訂字串格式建立最近 10 天的桶
 
-The following request creates a single bucket that covers the last 10 calendar days. It starts at the beginning of the day 10 days ago (`now-10d/d`) and ends at the beginning of tomorrow (`now+1d/d`, exclusive). The `format` only affects the `*_as_string` fields in the response---not document matching:
+下列請求會建立單一桶，涵蓋最近 10 個日曆天。其起點為 10 天前當天的開始時間（`now-10d/d`），終點為明天的開始時間（`now+1d/d`，不包含）。`format` 只會影響回應中的 `*_as_string` 欄位，而不會影響文件比對：
 
 ```json
 GET my-index/_search
@@ -124,9 +125,9 @@ GET my-index/_search
 ```
 {% include copy-curl.html %}
 
-## Example: Keyed response and custom keys
+## 範例：具鍵值的回應與自訂鍵
 
-The following request returns an object organized by your labels for easier downstream processing:
+下列請求會傳回依您的標籤組織的物件，以便後續處理：
 
 ```json
 GET my-index/_search
@@ -148,7 +149,7 @@ GET my-index/_search
 ```
 {% include copy-curl.html %}
 
-Example response:
+回應範例：
 
 ```json
 "aggregations": {
@@ -171,9 +172,9 @@ Example response:
   }
 ```
 
-## Example: Epoch milliseconds with a time zone
+## 範例：搭配時區使用 epoch 毫秒
 
-When the field value is provided in epoch milliseconds, you can still provide `from` and `to` parameters as numbers. For example, in the following request, `time_zone` affects date math and boundary evaluation:
+當欄位值以 epoch 毫秒提供時，您仍可將 `from` 和 `to` 參數以數字形式提供。例如，在下列請求中，`time_zone` 會影響日期運算和邊界評估：
 
 ```json
 GET my-index/_search
@@ -195,9 +196,9 @@ GET my-index/_search
 ```
 {% include copy-curl.html %}
 
-## Example: Handling missing dates
+## 範例：處理缺少的日期
 
-Use `missing` to route documents without a value into a bucket by substituting a default:
+使用 `missing` 代入預設值，將沒有值的文件歸入某個桶：
 
 ```json
 GET my-index/_search

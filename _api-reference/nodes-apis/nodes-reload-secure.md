@@ -1,34 +1,35 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Nodes reload secure settings
+title: "節點重新載入安全設定"
 parent: Nodes APIs
 nav_order: 50
 ---
 
-# Nodes Reload Secure Settings API
-**Introduced 1.0**
+# 節點重新載入安全設定 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The nodes reload secure settings endpoint allows you to change secure settings on a node and reload the secure settings without restarting the node.
+節點重新載入安全設定端點可讓您變更節點上的安全設定，並重新載入安全設定，而不需重新啟動節點。
 
-## Endpoints
+## 端點
 
 ```json
 POST _nodes/reload_secure_settings
 POST _nodes/{node_id}/reload_secure_settings
 ```
 
-## Path parameter
+## 路徑參數
 
-You can include the following optional path parameter in your request.
+您可以在請求中加入下列選用路徑參數。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`node_id` | String | A comma-separated list of node IDs used to filter results. Supports [node filters]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/#node-filters). Defaults to `_all`.
+`node_id` | 字串 | 以逗號分隔的節點 ID 清單，用於篩選結果。支援[節點篩選器]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/#node-filters)。預設為 `_all`。
 
-## Request body fields
+## 請求本文欄位
 
-The request may include an optional object containing the password for the OpenSearch keystore.
+請求可包含選用物件，內含 OpenSearch keystore 的密碼。
 
 ```json
 {
@@ -36,9 +37,9 @@ The request may include an optional object containing the password for the OpenS
 }
 ```
 
-## Example request
+## 請求範例
 
-The following is an example API request:
+以下是 API 請求範例：
 
 <!-- spec_insert_start
 component: example_code
@@ -62,9 +63,9 @@ response = client.nodes.reload_secure_settings(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-The following is an example response:
+以下是回應範例：
 
 ```json
 {
@@ -82,6 +83,6 @@ The following is an example response:
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you set the following permissions: `cluster:manage/nodes`.
+如果您使用 Security 外掛程式，請務必設定下列權限：`cluster:manage/nodes`。

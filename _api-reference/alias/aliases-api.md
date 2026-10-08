@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Manage aliases
+title: "管理別名"
 parent: Alias APIs
 grand_parent: Index APIs
 nav_order: 50
@@ -9,56 +10,56 @@ redirect_from:
 ---
 
 # Manage Aliases API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Manage aliases API performs multiple index alias operations in a single atomic transaction. Use this API when you need to add or remove multiple aliases, switch an alias from one index to another, or delete indexes while managing their aliases simultaneously. This API accepts an array of actions, making it ideal for complex alias operations that must happen atomically.
+Manage aliases API 可在單一原子交易中執行多項索引別名操作。當您需要新增或移除多個別名、將別名從一個索引切換到另一個索引，或在管理別名的同時刪除索引時，請使用此 API。此 API 接受一個動作陣列，因此非常適合必須以原子方式執行的複雜別名操作。
 
-This API is distinct from the [Create or update alias API]({{site.url}}{{site.baseurl}}/api-reference/alias/create-alias/), which operates on a single alias at a time and uses different request parameters. Use the Manage aliases API for bulk operations and atomic transactions involving multiple aliases or indexes.
+此 API 與 [Create or update alias API]({{site.url}}{{site.baseurl}}/api-reference/alias/create-alias/) 不同，後者一次只操作一個別名，並使用不同的請求參數。針對涉及多個別名或索引的大量操作與原子交易，請使用 Manage aliases API。
 
-For conceptual information about index aliases, including use cases and examples, see [Index aliases]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/).
+如需索引別名的概念性資訊（包括使用案例與範例），請參閱[索引別名]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/)。
 
 
-## Endpoints
+## 端點
 
 ```json
 POST _aliases
 ```
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`cluster_manager_timeout` | Time | The amount of time to wait for a response from the cluster manager node. Default is `30s`.
-`timeout` | Time | The amount of time to wait for a response from the cluster. Default is `30s`.
+`cluster_manager_timeout` | 時間 | 等待叢集管理員節點回應的時間量。預設為 `30s`。
+`timeout` | 時間 | 等待叢集回應的時間量。預設為 `30s`。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-Field | Data type | Description | Required
+欄位 | 資料類型 | 說明 | 必要
 :--- | :--- | :--- | :---
-`actions` | Array | Set of actions you want to perform on the index. Valid options are: `add`, `remove`, and `remove_index`. You must have at least one action in the array. | Yes
-`add` | N/A | Adds an alias to the specified index. | No
-`remove` | N/A | Removes an alias from the specified index. | No
-`remove_index` | N/A | Deletes an index. | No
-`index` | String | Name of the index you want to associate with the alias. Supports wildcard expressions. | Yes if you don't supply an `indices` field in the body.
-`indices` | Array | Array of index names you want to associate with the alias. | Yes if you don't supply an `index` field in the body.
-`alias` | String | The name of the alias. | Yes if you don't supply an `aliases` field in the body.
-`aliases` | Array | Array of alias names. | Yes if you don't supply an `alias` field in the body.
-`filter` | Object | A filter to use with the alias, so the alias points to a filtered part of the index. | No
-`is_hidden` | Boolean | Specifies whether the alias should be hidden from results that include wildcard expressions | No
-`must_exist` | Boolean | Specifies whether the alias to remove must exist. | No
-`is_write_index` | Boolean | Specifies whether the index should be a write index. An alias can only have one write index at a time. If a write request is submitted to a alias that links to multiple indexes, OpenSearch executes the request only on the write index. **Important**: Aliases that don't explicitly set `is_write_index: true` for an index and only reference one index will have that index behave as the write index until another index is referenced. At that point, there will be no write index and writes will be rejected. | No
-`routing` | String | Used to assign a custom value to a shard for specific operations. | No
-`index_routing` | String | Assigns a custom value to a shard only for index operations. | No
-`search_routing` | String | Assigns a custom value to a shard only for search operations. | No
+`actions` | 陣列 | 您要對索引執行的動作集合。有效選項為：`add`、`remove` 與 `remove_index`。陣列中必須至少有一個動作。 | 是
+`add` | 不適用 | 將別名新增至指定的索引。 | 否
+`remove` | 不適用 | 從指定的索引移除別名。 | 否
+`remove_index` | 不適用 | 刪除索引。 | 否
+`index` | 字串 | 要與別名建立關聯的索引名稱。支援萬用字元運算式。 | 若您未在本文中提供 `indices` 欄位則為必要。
+`indices` | 陣列 | 要與別名建立關聯的索引名稱陣列。 | 若您未在本文中提供 `index` 欄位則為必要。
+`alias` | 字串 | 別名的名稱。 | 若您未在本文中提供 `aliases` 欄位則為必要。
+`aliases` | 陣列 | 別名名稱陣列。 | 若您未在本文中提供 `alias` 欄位則為必要。
+`filter` | 物件 | 與別名搭配使用的篩選器，使別名指向索引中經篩選的部分。 | 否
+`is_hidden` | 布林值 | 指定別名是否應在包含萬用字元運算式的結果中隱藏 | 否
+`must_exist` | 布林值 | 指定要移除的別名是否必須存在。 | 否
+`is_write_index` | 布林值 | 指定索引是否應為寫入索引。一個別名一次只能有一個寫入索引。若寫入請求提交至連結多個索引的別名，OpenSearch 只會在寫入索引上執行該請求。**重要**：未為索引明確設定 `is_write_index: true` 且僅參照一個索引的別名，會讓該索引在參照另一個索引之前一直作為寫入索引。一旦參照另一個索引，就不會再有寫入索引，寫入作業將被拒絕。 | 否
+`routing` | 字串 | 用於在特定操作中為分片指派自訂值。 | 否
+`index_routing` | 字串 | 僅在索引操作中為分片指派自訂值。 | 否
+`search_routing` | 字串 | 僅在搜尋操作中為分片指派自訂值。 | 否
 
-## Example: Add an alias
+## 範例：新增別名
 
-The following request creates an alias called `logs_current` that points to the `application_logs_2024` index:
+下列請求會建立名為 `logs_current` 的別名，指向 `application_logs_2024` 索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -112,9 +113,9 @@ response = client.indices.update_aliases(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Remove an alias
+## 範例：移除別名
 
-The following request removes the `logs_current` alias from the `application_logs_2024` index:
+下列請求會從 `application_logs_2024` 索引移除 `logs_current` 別名：
 
 <!-- spec_insert_start
 component: example_code
@@ -168,9 +169,9 @@ response = client.indices.update_aliases(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Rename an alias
+## 範例：重新命名別名
 
-You can atomically rename an alias by removing it from one index and adding it to another in the same request. The following example moves the `primary_data` alias from `dataset_v1` to `dataset_v2`:
+您可以在同一請求中將別名從一個索引移除並新增至另一個索引，以原子方式重新命名別名。下列範例將 `primary_data` 別名從 `dataset_v1` 移至 `dataset_v2`：
 
 ```json
 POST /_aliases
@@ -193,12 +194,12 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-Alias operations are atomic, meaning there's no moment when `primary_data` points to both indexes or to neither index.
+別名操作是原子的，也就是說 `primary_data` 不會有任何時刻同時指向兩個索引或都不指向任何索引。
 {: .important}
 
-## Example: Add an alias to multiple indexes
+## 範例：將別名新增至多個索引
 
-You can associate a single alias with multiple indexes using separate `add` actions:
+您可以使用多個 `add` 動作，將單一別名與多個索引建立關聯：
 
 ```json
 POST /_aliases
@@ -229,10 +230,10 @@ POST /_aliases
 
 
 <!-- vale off -->
-## Example: Use the indices array
+## 範例：使用 indices 陣列
 <!-- vale on -->
 
-Alternatively, you can specify multiple indexes in a single action using the `indices` array:
+或者，您也可以使用 `indices` 陣列在單一動作中指定多個索引：
 
 ```json
 POST /_aliases
@@ -249,9 +250,9 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-## Example: Use wildcard patterns
+## 範例：使用萬用字元模式
 
-You can use wildcard patterns to add multiple indexes that match a naming pattern. The following example creates an alias for all indexes that start with `sales_2024`:
+您可以使用萬用字元模式來新增多個符合命名模式的索引。下列範例為所有以 `sales_2024` 開頭的索引建立別名：
 
 ```json
 POST /_aliases
@@ -268,15 +269,15 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-This creates a point-in-time alias that includes all indexes matching the pattern at the time of creation. It does not automatically include new indexes created later that match the pattern.
+這會建立一個時間點別名，其中包含建立當下所有符合該模式的索引。它不會自動包含之後建立且符合該模式的新索引。
 {: .note}
 
-It is an error to write to an alias that points to multiple indexes unless you specify a write index.
+除非您指定寫入索引，否則寫入指向多個索引的別名會產生錯誤。
 {: .important}
 
-## Example: Index swapping
+## 範例：索引替換
 
-You can atomically replace an index with a new one without downtime. This is useful for reindexing operations:
+您可以在不停機的情況下，以不可分割的方式將索引替換為新索引。這在重新編製索引作業中很實用：
 
 ```json
 POST /_aliases
@@ -298,11 +299,11 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-This operation adds the new index to the alias and deletes the old index in a single atomic operation.
+此作業會在單一不可分割的作業中，將新索引加入別名並刪除舊索引。
 
-## Example: Filtered aliases
+## 範例：篩選別名
 
-Filtered aliases enable you to segment data within an index by applying query filters. This allows you to create focused subsets of your data accessible through separate alias names. First, ensure your index has the necessary field mappings:
+篩選別名可讓您套用查詢篩選條件，對索引內的資料進行區隔。如此一來，您就能建立聚焦的資料子集，並透過不同的別名名稱存取。首先，請確認您的索引已具備必要的欄位對應：
 
 ```json
 PUT /user_activity
@@ -324,7 +325,7 @@ PUT /user_activity
 ```
 {% include copy-curl.html %}
 
-Then create filtered aliases to segment your data:
+接著建立篩選別名以區隔您的資料：
 
 ```json
 POST /_aliases
@@ -359,13 +360,13 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-These aliases apply the specified filters automatically to all search, count, and delete by query operations.
+這些別名會自動將指定的篩選條件套用至所有搜尋、計數和依查詢刪除作業。
 
-## Example: Basic routing
+## 範例：基本路由
 
-Routing allows you to direct operations to specific shards, improving performance by reducing the number of shards that need to be queried.
+路由可讓您將作業導向特定分片，藉由減少需要查詢的分片數量來提升效能。
 
-The following example creates an alias with a routing value:
+以下範例會建立具有路由值的別名：
 
 ```json
 POST /_aliases
@@ -383,9 +384,9 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-## Example: Separate routing for index and search operations
+## 範例：為索引和搜尋作業分別設定路由
 
-You can specify different routing values for indexing and searching:
+您可以為編製索引和搜尋指定不同的路由值：
 
 ```json
 POST /_aliases
@@ -404,14 +405,14 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-In this example, all documents indexed through the alias go to the "mobile" shard, but searches can query both "mobile" and "tablet" shards.
+在此範例中，所有透過別名編製索引的文件都會送往「mobile」分片，但搜尋可以同時查詢「mobile」和「tablet」分片。
 
-When you perform a search with both alias routing and a routing parameter, OpenSearch uses the intersection of both values. For example, if you search `GET /mobile_sessions/_search?routing=tablet,mobile`, only the "mobile" routing value will be used since it's the intersection of the alias routing (`mobile,tablet`) and the search parameter (`tablet,mobile`).
+當您執行搜尋時若同時使用別名路由和 routing 參數，OpenSearch 會使用兩者值的交集。例如，若您搜尋 `GET /mobile_sessions/_search?routing=tablet,mobile`，則只會使用「mobile」路由值，因為它是別名路由（`mobile,tablet`）與搜尋參數（`tablet,mobile`）的交集。
 {: .note}
 
-## Example: Setting a write index
+## 範例：設定寫入索引
 
-When an alias points to multiple indexes, you must specify which index should handle write operations.
+當別名指向多個索引時，您必須指定由哪個索引處理寫入作業。
 
 ```json
 POST /_aliases
@@ -436,7 +437,7 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-Now you can write to the alias, and all write operations will go to `logs_2024_01`:
+現在您可以寫入別名，所有寫入作業都會送往 `logs_2024_01`：
 
 ```json
 POST /active_logs/_doc
@@ -448,9 +449,9 @@ POST /active_logs/_doc
 ```
 {% include copy-curl.html %}
 
-## Example: Switch the write index
+## 範例：切換寫入索引
 
-You can atomically switch which index serves as the write index:
+您可以以不可分割的方式切換作為寫入索引的索引：
 
 ```json
 POST /_aliases
@@ -475,15 +476,15 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-> Keep the following important considerations in mind when working with write indexes:
-> - An alias can have only one write index at a time.
-> - If an alias points to multiple indexes without a designated write index, write operations will be rejected.
-> - For aliases pointing to a single index, that index automatically serves as the write index.
+> 使用寫入索引時，請留意以下重要事項：
+> - 一個別名同一時間只能有一個寫入索引。
+> - 若別名指向多個索引但未指定寫入索引，寫入作業將遭到拒絕。
+> - 對於指向單一索引的別名，該索引會自動作為寫入索引。
 {: .important}
 
-## Example: Use the must_exist parameter
+## 範例：使用 must_exist 參數
 
-OpenSearch provides a `must_exist` parameter for remove operations that controls error handling when removing non-existent aliases:
+OpenSearch 為移除作業提供 `must_exist` 參數，用於控制移除不存在的別名時的錯誤處理方式：
 
 ```json
 POST /_aliases
@@ -501,13 +502,13 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-- `must_exist: true` - Throws an error if the alias doesn't exist
-- `must_exist: false` - Silently succeeds even if the alias doesn't exist
-- `must_exist: null` (default) - Throws an error only if none of the specified aliases exist
+- `must_exist: true` - 若別名不存在，則擲回錯誤
+- `must_exist: false` - 即使別名不存在，也會無聲地成功
+- `must_exist: null`（預設）- 只有在所有指定的別名都不存在時才擲回錯誤
 
-## Example response
+## 範例回應
 
-All successful alias operations return the same response format:
+所有成功的別名作業都會傳回相同的回應格式：
 
 ```json
 {
@@ -515,10 +516,10 @@ All successful alias operations return the same response format:
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/aliases/get`.
+若您使用 Security 外掛程式，請確認您具備適當的權限：`indices:admin/aliases/get`。
 
-## Related documentation
+## 相關文件
 
-For more information about index aliases, see [Index aliases]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/).
+如需有關索引別名的詳細資訊，請參閱[索引別名]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/)。

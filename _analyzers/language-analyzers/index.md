@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Language analyzers
+title: "語言分析器"
 nav_order: 140
 parent: Analyzers
 has_children: true
@@ -10,22 +11,22 @@ redirect_from:
   - /analyzers/language-analyzers/
 ---
 
-# Language analyzers
+# 語言分析器
 
-OpenSearch supports the following language analyzers:
-`arabic`, `armenian`, `basque`, `bengali`, `brazilian`, `bulgarian`, `catalan`, `czech`, `danish`, `dutch`, `english`, `estonian`, `finnish`, `french`, `galician`, `german`, `greek`, `hindi`, `hungarian`, `indonesian`, `irish`, `italian`, [`kuromoji`]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/) (Japanese analyzer; requires plugin), `latvian`, `lithuanian`, `norwegian`, `persian`, [`polish`]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/polish/) (requires plugin), `portuguese`, `romanian`, `russian`, `sorani`, `spanish`, `swedish`, `thai`, `turkish`, and [`ukrainian`]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/ukrainian/) (requires plugin).
+OpenSearch 支援下列語言分析器：
+`arabic`、`armenian`、`basque`、`bengali`、`brazilian`、`bulgarian`、`catalan`、`czech`、`danish`、`dutch`、`english`、`estonian`、`finnish`、`french`、`galician`、`german`、`greek`、`hindi`、`hungarian`、`indonesian`、`irish`、`italian`、[`kuromoji`]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)（日文分析器；需要外掛程式）、`latvian`、`lithuanian`、`norwegian`、`persian`、[`polish`]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/polish/)（需要外掛程式）、`portuguese`、`romanian`、`russian`、`sorani`、`spanish`、`swedish`、`thai`、`turkish`，以及 [`ukrainian`]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/ukrainian/)（需要外掛程式）。
 
-For multilingual text processing with advanced Unicode support, OpenSearch also provides the [`icu_analyzer`]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/), which offers superior text segmentation for languages with complex scripts such as Chinese, Japanese, Korean, Thai, and Arabic (requires the `analysis-icu` plugin).
+針對需要進階 Unicode 支援的多語言文字處理，OpenSearch 也提供 [`icu_analyzer`]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/)，可為中文、日文、韓文、泰文和阿拉伯文等使用複雜文字系統的語言提供更優異的文字分段功能（需要 `analysis-icu` 外掛程式）。
 
-To use an analyzer when you map an index, specify the value in your query. For example, to map your index with the French language analyzer, specify the `french` value in the analyzer field:
+若要在對應索引時使用分析器，請在查詢中指定該值。例如，若要使用法文語言分析器對應您的索引，請在 analyzer 欄位中指定 `french` 值：
 
 ```json
  "analyzer": "french"
 ```
 
-#### Example request
+#### 請求範例
 
-The following query specifies an index `my-index` with the `content` field configured as multi-field, and a sub-field named `french` is configured with the `french` language analyzer:
+下列查詢指定了索引 `my-index`，其中 `content` 欄位設定為多重欄位 (multi-field)，且名為 `french` 的子欄位設定為使用 `french` 語言分析器：
 
 ```json
 PUT my-index
@@ -47,7 +48,7 @@ PUT my-index
 ```
 {% include copy-curl.html %}
 
-The default `french` analyzer can also be configured for the entire index using the following query:
+您也可以使用下列查詢，為整個索引設定預設的 `french` 分析器：
 
 ```json
 PUT my-index
@@ -78,13 +79,13 @@ PUT my-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can apply stem exclusion to any language analyzer by providing a list of lowercase words that should be excluded from stemming. Internally, OpenSearch uses the `keyword_marker` token filter to mark these words as keywords, ensuring that they are not stemmed.
+您可以為任何語言分析器套用詞幹排除，方法是提供一份應排除於詞幹提取之外的小寫單字清單。在內部，OpenSearch 會使用 `keyword_marker` 詞元篩選器將這些單字標記為關鍵字，以確保它們不會被提取詞幹。
 
-## Stem exclusion example
+## 詞幹排除範例
 
-Use the following request to configure `stem_exclusion`:
+使用下列請求來設定 `stem_exclusion`：
 
 ```json
 PUT index_with_stem_exclusion_english_analyzer
@@ -104,9 +105,9 @@ PUT index_with_stem_exclusion_english_analyzer
 {% include copy-curl.html %}
 
 
-## Stem exclusion with custom analyzers
+## 搭配自訂分析器使用詞幹排除
 
-All language analyzers consist of tokenizers and token filters specific to a particular language. If you want to implement a custom version of the language analyzer with stem exclusion, you need to configure the `keyword_marker` token filter and list the words excluded from stemming in the `keywords` parameter:
+所有語言分析器都由特定語言專用的斷詞器和詞元篩選器組成。若您想實作具備詞幹排除功能的自訂版語言分析器，則需要設定 `keyword_marker` 詞元篩選器，並在 `keywords` 參數中列出要排除於詞幹提取之外的單字：
 
 ```json
 PUT index_with_keyword_marker_analyzer

@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Analyze your data
+title: "分析您的資料"
 nav_order: 60
 ---
 
-# Analyze your data
+# 分析您的資料
 
-The `students` index that you built in the previous tutorials contains three documents, so you could inspect each result in the response. Real-world indexes can contain thousands of documents, making that approach impractical. In this tutorial, you'll explore, filter, and sort the **Sample flight data** dataset, which contains about 13,000 documents. You'll also use aggregations to summarize the data.
+您在先前教學中建立的 `students` 索引包含三份文件，因此您可以逐一檢查回應中的每個結果。實際的索引可能包含數千份文件，使這種做法不切實際。在本教學中，您將探索、篩選並排序 **Sample flight data** 資料集，此資料集包含約 13,000 份文件。您也會使用彙總來摘要資料。
 
-## Add the sample data
+## 新增範例資料
 
-This tutorial uses a sample dataset provided in OpenSearch Dashboards, so it requires a running OpenSearch Dashboards instance. If you followed the [Installation quickstart]({{site.url}}{{site.baseurl}}/getting-started/quickstart/), OpenSearch Dashboards is already included in your installation.
+本教學使用 OpenSearch Dashboards 提供的範例資料集，因此需要一個執行中的 OpenSearch Dashboards 執行個體。如果您依照[安裝快速入門]({{site.url}}{{site.baseurl}}/getting-started/quickstart/)操作，您的安裝中已包含 OpenSearch Dashboards。
 
-To add the **Sample flight data** dataset, follow these steps:
+若要新增 **Sample flight data** 資料集，請依照下列步驟操作：
 
-1. In a web browser, open `http://localhost:5601`. This is the address of a cluster [set up without security]({{site.url}}{{site.baseurl}}/getting-started/quickstart/#set-up-a-cluster-without-security). If you [set up your cluster with security]({{site.url}}{{site.baseurl}}/getting-started/quickstart/#set-up-a-cluster-with-security), open `https://localhost:5601` and sign in as `admin` using the password that you set.
-1. On the OpenSearch Dashboards home page, select **Add sample data**.
-1. In the **Sample flight data** panel, select **Add data**.
+1. 在網頁瀏覽器中開啟 `http://localhost:5601`。這是[未設定安全性]({{site.url}}{{site.baseurl}}/getting-started/quickstart/#set-up-a-cluster-without-security)之叢集的位址。如果您[已設定叢集的安全性]({{site.url}}{{site.baseurl}}/getting-started/quickstart/#set-up-a-cluster-with-security)，請開啟 `https://localhost:5601`，並使用您設定的密碼以 `admin` 身分登入。
+1. 在 OpenSearch Dashboards 首頁上，選取 **Add sample data**。
+1. 在 **Sample flight data** 面板中，選取 **Add data**。
 
-Adding the dataset creates an index named `opensearch_dashboards_sample_data_flights`. Each document represents one flight and records its carrier, origin and destination, ticket price, distance, and delay.
+新增此資料集會建立名為 `opensearch_dashboards_sample_data_flights` 的索引。每份文件代表一個航班，並記錄其航空公司、出發地與目的地、票價、距離及延誤時間。
 
-OpenSearch Dashboards generates the document IDs and the `timestamp` values when you add the dataset, so those values differ from the ones in this tutorial. All other field values come from a fixed dataset and match.
+OpenSearch Dashboards 會在您新增資料集時產生文件 ID 與 `timestamp` 值，因此這些值會與本教學中的值不同。所有其他欄位值都來自固定的資料集，因此會相符。
 
-## Explore the data
+## 探索資料
 
-Before you query an index, find out what it contains. To count the documents in the index, send the following request:
+在查詢索引之前，請先了解其內容。若要計算索引中的文件數量，請傳送下列請求：
 
 ```json
 GET /opensearch_dashboards_sample_data_flights/_count
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns the document count:
+OpenSearch 會傳回文件數量：
 
 ```json
 {
@@ -45,29 +46,29 @@ OpenSearch returns the document count:
 }
 ```
 
-To view the field types, request the mappings:
+若要檢視欄位類型，請請求對應：
 
 ```json
 GET /opensearch_dashboards_sample_data_flights/_mapping
 ```
 {% include copy-curl.html %}
 
-The response lists 27 fields. The examples in this tutorial use the following ones.
+回應列出 27 個欄位。本教學中的範例使用下列欄位。
 
-| Field | Type | Description |
+| 欄位 | 類型 | 說明 |
 | :--- | :--- | :--- |
-| `Carrier` | `keyword` | The airline operating the flight. |
-| `OriginCityName` | `keyword` | The city the flight departs from. |
-| `DestCityName` | `keyword` | The city the flight arrives in. |
-| `DestCountry` | `keyword` | The two-letter country code of the destination. |
-| `AvgTicketPrice` | `float` | The average ticket price, in dollars. |
-| `FlightDelayMin` | `integer` | The departure delay, in minutes. |
-| `Cancelled` | `boolean` | Whether the flight was canceled. |
-| `timestamp` | `date` | The departure date and time. |
+| `Carrier` | `keyword` | 營運該航班的航空公司。 |
+| `OriginCityName` | `keyword` | 航班出發的城市。 |
+| `DestCityName` | `keyword` | 航班抵達的城市。 |
+| `DestCountry` | `keyword` | 目的地的兩字母國碼。 |
+| `AvgTicketPrice` | `float` | 平均票價，以美元為單位。 |
+| `FlightDelayMin` | `integer` | 出發延誤時間，以分鐘為單位。 |
+| `Cancelled` | `boolean` | 航班是否已取消。 |
+| `timestamp` | `date` | 出發日期與時間。 |
 
-Every string field in this index is mapped to `keyword`, so all string searches are exact. For full-text search on analyzed `text` fields, see [Search your data]({{site.url}}{{site.baseurl}}/getting-started/search-data/).
+此索引中的每個字串欄位都對應為 `keyword`，因此所有字串搜尋都是完全比對。若要對經過分析的 `text` 欄位進行全文搜尋，請參閱[搜尋您的資料]({{site.url}}{{site.baseurl}}/getting-started/search-data/)。
 
-To see what a document looks like, run a search that returns one result:
+若要查看文件的樣貌，請執行只傳回一個結果的搜尋：
 
 ```json
 GET /opensearch_dashboards_sample_data_flights/_search
@@ -77,7 +78,7 @@ GET /opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-The response contains one flight. This flight went from Frankfurt to Sydney and was not delayed, so `FlightDelayMin` is `0` and `FlightDelay` is `false`:
+回應包含一個航班。此航班從法蘭克福飛往雪梨且沒有延誤，因此 `FlightDelayMin` 為 `0`，而 `FlightDelay` 為 `false`：
 
 ```json
 "hits": [
@@ -124,13 +125,13 @@ The response contains one flight. This flight went from Frankfurt to Sydney and 
 ]
 ```
 
-## Filter results
+## 篩選結果
 
-The following examples set `size` to `0`, which tells OpenSearch to return the number of matching documents without returning the documents themselves. Use this when you want to know how many documents match rather than which ones.
+下列範例將 `size` 設為 `0`，這會讓 OpenSearch 傳回相符文件的數量，而不傳回文件本身。當您想知道有多少文件相符，而非哪些文件相符時，請使用此做法。
 
-### Match an exact value
+### 比對確切值
 
-To count the flights operated by one carrier, use a `term` query:
+若要計算單一航空公司營運的航班數量，請使用 `term` 查詢：
 
 ```json
 GET /opensearch_dashboards_sample_data_flights/_search
@@ -145,7 +146,7 @@ GET /opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-OpenSearch reports the number of matching flights in `hits.total.value`:
+OpenSearch 會在 `hits.total.value` 中回報相符的航班數量：
 
 ```json
 {
@@ -168,9 +169,9 @@ OpenSearch reports the number of matching flights in `hits.total.value`:
 }
 ```
 
-### Match a range of values
+### 比對值的範圍
 
-To count the flights delayed by an hour or more, use a `range` query on `FlightDelayMin`:
+若要計算延誤一小時以上的航班數量，請對 `FlightDelayMin` 使用 `range` 查詢：
 
 ```json
 GET /opensearch_dashboards_sample_data_flights/_search
@@ -187,7 +188,7 @@ GET /opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-The response reports 2,867 matching flights:
+回應回報 2,867 個相符的航班：
 
 ```json
 {
@@ -210,9 +211,9 @@ The response reports 2,867 matching flights:
 }
 ```
 
-### Combine conditions
+### 組合條件
 
-Real questions combine conditions. To count the flights that one carrier delayed by an hour or more and did not cancel, use a `bool` query:
+實際的問題通常會組合多個條件。若要計算單一航空公司延誤一小時以上且未取消的航班數量，請使用 `bool` 查詢：
 
 ```json
 GET /opensearch_dashboards_sample_data_flights/_search
@@ -233,7 +234,7 @@ GET /opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-The response reports 625 matching flights:
+回應回報 625 個相符的航班：
 
 ```json
 {
@@ -256,13 +257,13 @@ The response reports 625 matching flights:
 }
 ```
 
-The `filter` clauses must all match, and the `must_not` clause excludes documents that match it. For more information, see [Boolean queries]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/).
+`filter` 子句必須全部相符，而 `must_not` 子句會排除與其相符的文件。如需詳細資訊，請參閱[布林值查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/)。
 
-## Sort results and select fields
+## 排序結果並選取欄位
 
-By default, OpenSearch returns the 10 highest-scoring documents and the complete source of each one. Because the preceding queries used only filters, every document scored the same, so the order was arbitrary. To choose the order and reduce the response size, add `sort`, `size`, and `_source`.
+根據預設，OpenSearch 會傳回分數最高的 10 份文件，以及每份文件的完整來源。由於前述查詢僅使用篩選條件，每份文件的分數都相同，因此順序是任意的。若要選擇順序並縮減回應大小，請加入 `sort`、`size` 和 `_source`。
 
-The following request finds flights to Australia, returns the two most expensive, and includes only four fields from each document:
+下列請求會尋找飛往澳洲的航班，傳回票價最高的兩筆，並且只包含每份文件中的四個欄位：
 
 ```json
 GET /opensearch_dashboards_sample_data_flights/_search
@@ -281,7 +282,7 @@ GET /opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns the two flights with the highest ticket prices:
+OpenSearch 會傳回票價最高的兩個航班：
 
 ```json
 {
@@ -333,15 +334,15 @@ OpenSearch returns the two flights with the highest ticket prices:
 }
 ```
 
-The `hits.total.value` field reports 416 matching flights, and `size` limits the response to 2 of them. Each hit contains a `sort` array with the value that OpenSearch sorted on, and `_score` is `null` because sorting by a field replaces relevance ranking.
+`hits.total.value` 欄位顯示有 416 個相符的航班，而 `size` 將回應限制為其中 2 個。每個命中結果都包含一個 `sort` 陣列，其中含有 OpenSearch 用來排序的值；`_score` 為 `null`，因為依欄位排序會取代相關性排名。
 
-## Summarize data using aggregations
+## 使用彙總摘要資料
 
-The queries so far return documents or count them. An _aggregation_ summarizes many documents into a single result, which is how you answer questions that no individual document contains, such as which carrier is delayed most often.
+到目前為止的查詢都是傳回文件或計算文件數量。_彙總_ 會將許多文件摘要成單一結果，讓您能夠回答任何單一文件都未包含的問題，例如哪家航空公司最常誤點。
 
-### Count documents per group
+### 計算每個群組的文件數量
 
-A `terms` aggregation groups documents by the value of a field and counts each group. The following request counts the flights operated by each carrier. Setting `size` to `0` keeps the 13,059 matching documents out of the response, leaving only the summary:
+`terms` 彙總會依欄位的值將文件分組，並計算每個群組的數量。下列請求會計算每家航空公司營運的航班數量。將 `size` 設為 `0` 可讓 13,059 份相符文件不出現在回應中，只留下摘要：
 
 ```json
 GET /opensearch_dashboards_sample_data_flights/_search
@@ -358,7 +359,7 @@ GET /opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns one bucket per carrier, ordered by document count:
+OpenSearch 會為每家航空公司傳回一個桶 (bucket)，並依文件數量排序：
 
 ```json
 {
@@ -406,11 +407,11 @@ OpenSearch returns one bucket per carrier, ordered by document count:
 }
 ```
 
-The `hits.total.value` field reports `10000` with a `relation` of `gte` because OpenSearch stops tracking the exact total once the number of matches reaches 10,000. Only the total hit count is approximate. The aggregation still includes every matching document, so the bucket counts add up to all 13,059 flights.
+`hits.total.value` 欄位顯示 `10000`，且 `relation` 為 `gte`，這是因為當相符數量達到 10,000 時，OpenSearch 就會停止追蹤確切總數。只有命中總數是近似值。彙總仍會包含每一份相符文件，因此各桶的數量加總起來就是全部 13,059 個航班。
 
-### Calculate a metric for each group
+### 計算每個群組的指標
 
-Nest an aggregation inside another one to calculate a metric for every bucket. The following request adds an `avg` aggregation that averages `FlightDelayMin` within each carrier:
+將一個彙總巢狀置於另一個彙總中，即可計算每個桶的指標。下列請求加入了 `avg` 彙總，用以計算每家航空公司的 `FlightDelayMin` 平均值：
 
 ```json
 GET /opensearch_dashboards_sample_data_flights/_search
@@ -434,7 +435,7 @@ GET /opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-Each bucket now contains the average delay for that carrier. Logstash Airways has the longest average delay, at about 50 minutes:
+現在每個桶都包含該航空公司的平均誤點時間。Logstash Airways 的平均誤點時間最長，約為 50 分鐘：
 
 ```json
 {
@@ -494,9 +495,9 @@ Each bucket now contains the average delay for that carrier. Logstash Airways ha
 }
 ```
 
-### Group documents by time
+### 依時間將文件分組
 
-A `date_histogram` aggregation groups documents into time intervals, which is how you chart data over time. The following request counts flights per week:
+`date_histogram` 彙總會將文件分組到各個時間間隔中，讓您能夠繪製資料隨時間變化的圖表。下列請求會計算每週的航班數量：
 
 ```json
 GET /opensearch_dashboards_sample_data_flights/_search
@@ -514,7 +515,7 @@ GET /opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns one bucket per week, each with a `key_as_string` field containing the start of the interval. Because OpenSearch Dashboards generates the `timestamp` values when you add the sample data, your intervals begin on the date you added it:
+OpenSearch 會為每週傳回一個桶，每個桶都有一個 `key_as_string` 欄位，其中包含該間隔的起始時間。由於 OpenSearch Dashboards 會在您新增範例資料時產生 `timestamp` 值，因此您的間隔會從您新增資料的日期開始：
 
 ```json
 {
@@ -574,16 +575,16 @@ OpenSearch returns one bucket per week, each with a `key_as_string` field contai
 }
 ```
 
-For more information about the available aggregations, see [Aggregations]({{site.url}}{{site.baseurl}}/aggregations/).
+如需可用彙總的詳細資訊，請參閱[彙總]({{site.url}}{{site.baseurl}}/aggregations/)。
 
-## Visualize the data
+## 將資料視覺化
 
-To explore the data visually in OpenSearch Dashboards, follow the OpenSearch Dashboards getting started documentation starting with [Create an index pattern]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#step-2-create-an-index-pattern). 
+若要在 OpenSearch Dashboards 中以視覺化方式探索資料，請參閱 OpenSearch Dashboards 入門文件，並從[建立索引模式]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#step-2-create-an-index-pattern)開始。
 
-Each flight records the coordinates of its origin and destination airports in the `OriginLocation` and `DestLocation` fields, so you can plot the flights on a map. For more information, see [Maps application]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/maps/).
+每個航班都會在 `OriginLocation` 和 `DestLocation` 欄位中記錄其出發與目的地機場的座標，因此您可以在地圖上繪製航班。如需詳細資訊，請參閱[地圖應用程式]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/maps/)。
 
-## Next steps
+## 後續步驟
 
-- To learn more about summarizing data, see [Aggregations]({{site.url}}{{site.baseurl}}/aggregations/).
-- To explore OpenSearch Dashboards applications, see [Getting started with OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/getting-started/index/).
-- To shut down the cluster when you're finished, see [Stop the cluster]({{site.url}}{{site.baseurl}}/getting-started/quickstart/#stop-the-cluster).
+- 若要深入了解如何彙整資料，請參閱[彙總]({{site.url}}{{site.baseurl}}/aggregations/)。
+- 若要探索 OpenSearch Dashboards 應用程式，請參閱[OpenSearch Dashboards 入門]({{site.url}}{{site.baseurl}}/dashboards/getting-started/index/)。
+- 若要在完成後關閉叢集，請參閱[停止叢集]({{site.url}}{{site.baseurl}}/getting-started/quickstart/#stop-the-cluster)。

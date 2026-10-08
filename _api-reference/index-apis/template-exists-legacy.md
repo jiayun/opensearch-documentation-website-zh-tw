@@ -1,45 +1,46 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Template exists (deprecated)
+title: "範本是否存在（已棄用）"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 100
 ---
 
-# Template exists
-**Introduced 1.0**
+# 範本是否存在
+**於 1.0 版引入**
 {: .label .label-purple }
 
-The Template Exists API has been deprecated. Use the new [Index Template Exists]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-template-exists/) API.
+Template Exists API 已棄用。請使用新的 [Index Template Exists]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-template-exists/) API。
 {: .warning}
 
-The template exists API operation is used to verify whether one or more index templates created using the legacy `/_template` endpoint exist.
+範本是否存在 API 作業用於確認使用舊版 `/_template` 端點建立的一或多個索引範本是否存在。
 
-## Endpoints
+## 端點
 
 ```json
 HEAD /_template/{template-name}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All parameters are required.
+下表列出可用的路徑參數。所有參數皆為必要參數。
 
-| Parameter       | Type   | Description                                                                      |
+| 參數       | 類型   | 說明                                                                      |
 | :-------------- | :----- | :------------------------------------------------------------------------------- |
-| `template-name` | String | The name of the index template to check. Accepts wildcard expressions.               |
+| `template-name` | 字串 | 要檢查的索引範本名稱。接受萬用字元運算式。               |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All parameters are optional.
+下表列出可用的查詢參數。所有參數皆為選用參數。
 
-| Parameter                  | Type    | Description                                                                                          |
+| 參數                  | 類型    | 說明                                                                                          |
 | :------------------------- | :------ | :--------------------------------------------------------------------------------------------------- |
-| `flat_settings` | Boolean | If `true`, returns settings in flat format. Default is `false`.                                       |
-| `local` | Boolean | If `true`, the request does not retrieve the state from the cluster manager node. Default is `false`. |
-| `cluster_manager_timeout` | Time | Specifies how long to wait for a connection to the cluster manager node. Default is `30s`.           |
+| `flat_settings` | 布林值 | 若為 `true`，則以扁平格式傳回設定。預設為 `false`。                                       |
+| `local` | 布林值 | 若為 `true`，則請求不會從叢集管理員節點擷取狀態。預設為 `false`。 |
+| `cluster_manager_timeout` | 時間 | 指定等待連線至叢集管理員節點的時間長度。預設為 `30s`。           |
 
-## Example request
+## 請求範例
 
 <!-- spec_insert_start
 component: example_code
@@ -63,7 +64,7 @@ response = client.indices.exists_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-If the template exists, a `200 OK` status is returned with no response body. If the template does not exist, `404 Not Found` is returned.
+若範本存在，則傳回 `200 OK` 狀態，且不含回應本文。若範本不存在，則傳回 `404 Not Found`。
 

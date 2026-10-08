@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Persian
+title: "波斯文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 250
 ---
 
-# Persian analyzer
+# 波斯文分析器
 
-The built-in `persian` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `persian` 分析器套用至文字欄位：
 
 ```json
 PUT /persian-index
@@ -25,9 +26,9 @@ PUT /persian-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，搭配此語言分析器使用 `stem_exclusion`：
 
 ```json
 PUT index_with_stem_exclusion_persian_analyzer
@@ -46,25 +47,25 @@ PUT index_with_stem_exclusion_persian_analyzer
 ```
 {% include copy-curl.html %}
 
-## Persian analyzer internals
+## 波斯文分析器內部結構
 
-The `persian` analyzer is built using the following components:
+`persian` 分析器由下列元件組成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Char filter: `mapping`
+- 字元篩選器：`mapping`
 
-- Token filters:
+- 詞元篩選器：
   - lowercase
   - decimal_digit
-  - normalization (Arabic)
-  - normalization (Persian)
-  - stop (Persian)
+  - normalization（阿拉伯文）
+  - normalization（波斯文）
+  - stop（波斯文）
   - keyword
 
-## Custom Persian analyzer
+## 自訂波斯文分析器
 
-You can create a custom Persian analyzer using the following command:
+您可以使用下列命令建立自訂波斯文分析器：
 
 ```json
 PUT /persian-index
@@ -116,9 +117,9 @@ PUT /persian-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查分析器產生的詞元：
 
 ```json
 POST /persian-index/_analyze
@@ -129,7 +130,7 @@ POST /persian-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

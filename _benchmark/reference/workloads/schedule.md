@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: schedule
 parent: Anatomy of a workload
@@ -6,19 +7,19 @@ nav_order: 40
 ---
 
 <!-- vale off -->
-# schedule element
+# schedule 元素
 <!-- vale on -->
 
-The `schedule` element contains a list of tasks that are run in a specified order during the benchmark test. Each task is an operation supported by OpenSearch Benchmark.
+`schedule` 元素包含一份任務清單，這些任務會在基準測試期間依指定順序執行。每個任務都是 OpenSearch Benchmark 支援的一項操作。
 
-You can define `schedule` in either of the following locations:
+您可以在下列任一位置定義 `schedule`：
 
-- At the top level of `workload.json`. Use this form when the workload defines a single benchmarking scenario. OpenSearch Benchmark treats the schedule as an implicit default test procedure.
-- Inside a test procedure, in the [`test_procedures`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/test-procedures/) element. Use this form when the workload defines multiple scenarios, each with its own name, description, and schedule.
+- 在 `workload.json` 的最上層。當工作負載只定義單一基準測試情境時，請使用此形式。OpenSearch Benchmark 會將該排程視為隱含的預設測試程序。
+- 在測試程序內的 [`test_procedures`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/test-procedures/) 元素中。當工作負載定義多個情境，且每個情境都有自己的名稱、說明和排程時，請使用此形式。
 
-## Example
+## 範例
 
-The following `schedule` creates an index, waits for the cluster to become healthy, indexes documents in bulk, and then runs a `match_all` query:
+下列 `schedule` 會建立索引、等待叢集變為健康狀態、大量將文件編製索引，然後執行 `match_all` 查詢：
 
 ```json
   "schedule": [
@@ -60,26 +61,26 @@ The following `schedule` creates an index, waits for the cluster to become healt
   ]
 ```
 
-According to this `schedule`, the actions run in the following order:
+根據此 `schedule`，動作會依下列順序執行：
 
-1. The `create-index` operation creates an index. The index remains empty until the `bulk` operation adds documents with benchmarked data.
-2. The `cluster-health` operation assesses the cluster's health before running the workload. In this example, the workload waits until the cluster's health status is `green`.
-   - The `bulk` operation runs the `bulk` API to index `5000` documents simultaneously.
-   - Before benchmarking, the workload waits until the specified `warmup-time-period` passes. In this example, the warmup period is `120` seconds.
-3. The `clients` field defines the number of clients, in this example, eight, that run the bulk indexing operation concurrently.
-4. The `search` operation runs a `match_all` query to match all documents after they have been indexed by the `bulk` API using the specified clients.
-   - The `iterations` field defines the number of times each client runs the `search` operation. The benchmark report automatically adjusts the percentile numbers based on this number. To generate a precise percentile, the benchmark needs to run at least 1,000 iterations.
-   - The `target-throughput` field defines the number of requests per second performed by each client. This setting can help reduce benchmark latency. For example, a `target-throughput` of 100 requests divided by 8 clients means that each client issues 12 requests per second. For more information about how target throughput is defined in OpenSearch Benchmark, see [Target throughput]({{site.url}}{{site.baseurl}}/benchmark/target-throughput/).
+1. `create-index` 操作會建立索引。在 `bulk` 操作加入含有基準測試資料的文件之前，該索引會保持空白。
+2. `cluster-health` 操作會在執行工作負載之前評估叢集的健康狀態。在此範例中，工作負載會等到叢集的健康狀態為 `green`。
+   - `bulk` 操作會執行 `bulk` API，同時將 `5000` 文件編製索引。
+   - 在進行基準測試之前，工作負載會等到指定的 `warmup-time-period` 經過。在此範例中，暖機期間為 `120` 秒。
+3. `clients` 欄位定義同時執行大量編製索引操作的用戶端數量，在此範例中為八個。
+4. `search` 操作會在文件由指定的用戶端透過 `bulk` API 編製索引之後，執行 `match_all` 查詢以比對所有文件。
+   - `iterations` 欄位定義每個用戶端執行 `search` 操作的次數。基準測試報告會根據此數字自動調整百分位數。若要產生精確的百分位數，基準測試至少需要執行 1,000 次反覆運算。
+   - `target-throughput` 欄位定義每個用戶端每秒執行的請求數量。此設定有助於降低基準測試延遲。例如，`target-throughput` 為 100 個請求除以 8 個用戶端，表示每個用戶端每秒發出 12 個請求。如需有關 OpenSearch Benchmark 中如何定義目標輸送量的詳細資訊，請參閱[目標輸送量]({{site.url}}{{site.baseurl}}/benchmark/target-throughput/)。
 
-## Defining tasks
+## 定義任務
 
-The `schedule` element defines tasks using the methods described in this section.
+`schedule` 元素會使用本節所述的方法來定義任務。
 
-### Using the operations element
+### 使用 operations 元素
 
-The following example defines a `force-merge` and `match-all` query task using the `operations` element. The `force-merge` operation does not use any parameters, so only the `name` and `operation-type` are needed. The `match-all-query` parameter requires a query `body` and `operation-type`.
+下列範例使用 `operations` 元素定義 `force-merge` 和 `match-all` 查詢任務。`force-merge` 操作不使用任何參數，因此只需要 `name` 和 `operation-type`。`match-all-query` 參數需要查詢 `body` 和 `operation-type`。
 
-Operations defined in the `operations` element can be reused in the schedule more than once:
+在 `operations` 元素中定義的操作可以在排程中重複使用多次：
 
 ```yml
 {
@@ -114,11 +115,11 @@ Operations defined in the `operations` element can be reused in the schedule mor
 }
 ```
 
-For the full list of available operation types, see [`operations`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/operations/).
+如需可用操作類型的完整清單，請參閱 [`operations`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/operations/)。
 
-### Defining operations inline
+### 以內嵌方式定義操作
 
-If you don't want to reuse an operation in the schedule, you can define operations inside the `schedule` element, as shown in the following example:
+如果您不想在排程中重複使用某項操作，可以在 `schedule` 元素內定義操作，如下列範例所示：
 
 ```yml
 {
@@ -149,55 +150,55 @@ If you don't want to reuse an operation in the schedule, you can define operatio
 }
 ```
 
-## Task options
+## 任務選項
 
-Each task contains the following options.
+每個任務都包含下列選項。
 
-Parameter | Required | Type | Description
+參數 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`operation` | Yes | List | Either refers to the name of an operation, defined in the `operations` element, or includes the entire operation inline.
-`name` | No | String | Specifies a unique name for the task when multiple tasks use the same operation.
-`tags` | No | String | Unique identifiers that can be used to filter between `tasks.clients` or the number of clients that should execute a task concurrently. Default is 1.
-`clients` | No | Integer | Specifies the number of clients that will run the task concurrently. Default is `1`.
+`operation` | 是 | 清單 | 參照在 `operations` 元素中定義的操作名稱，或以內嵌方式包含整個操作。
+`name` | 否 | 字串 | 當多個任務使用相同操作時，為該任務指定唯一名稱。
+`tags` | 否 | 字串 | 唯一識別碼，可用於在 `tasks.clients` 之間進行篩選，或篩選應同時執行任務的用戶端數量。預設值為 1。
+`clients` | 否 | 整數 | 指定將同時執行該任務的用戶端數量。預設值為 `1`。
 
-## Target options
+## 目標選項
 
-OpenSearch Benchmark requires one of the following options when running a task.
+執行任務時，OpenSearch Benchmark 需要下列其中一個選項。
 
-Parameter | Required | Type | Description
+參數 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`target-throughput` | No | Integer | Defines the benchmark mode. When not defined, OpenSearch Benchmark assumes that it is a throughput benchmark and runs the task as fast as possible. This is useful for batch operations, where achieving better throughput is preferred over better latency. When defined, the target specifies the number of requests per second across all clients. For example, if you specify `target-throughput: 1000` with 8 clients, each client issues 125 (= 1000 / 8) requests per second.
-`target-interval` | No | Interval | Defines an interval of 1 divided by the `target-throughput` (in seconds) when the `target-throughput` is less than 1 operation per second. Define either `target-throughput` or `target-interval` but not both, otherwise OpenSearch Benchmark raises an error.
-`ignore-response-error-level` | No | Boolean | Controls whether to ignore errors encountered during the task when a benchmark is run with the `on-error=abort` command flag.
+`target-throughput` | 否 | 整數 | 定義基準測試模式。未定義時，OpenSearch Benchmark 會假設這是輸送量基準測試，並盡可能快速地執行任務。這適用於批次操作，此類操作偏好達到更好的輸送量，而非更低的延遲。定義後，目標會指定所有用戶端合計每秒的請求數量。例如，如果您以 8 個用戶端指定 `target-throughput: 1000`，每個用戶端每秒會發出 125 (= 1000 / 8) 個請求。
+`target-interval` | 否 | 間隔 | 當 `target-throughput` 小於每秒 1 次操作時，定義 1 除以 `target-throughput` (以秒為單位) 的間隔。請定義 `target-throughput` 或 `target-interval` 其中之一，但不可同時定義兩者，否則 OpenSearch Benchmark 會引發錯誤。
+`ignore-response-error-level` | 否 | 布林值 | 控制使用 `on-error=abort` 命令旗標執行基準測試時，是否忽略任務期間遇到的錯誤。
 
-## Iteration-based options
+## 以反覆運算次數為基礎的選項
 
-Iteration-based options determine the number of times that an operation should run. They can also define the number of iterative runs when tasks are run in [parallel](#parallel-tasks). To configure an iteration-based schedule, use the following options.
+以反覆運算次數為基礎的選項決定操作應執行的次數。當任務以[平行](#parallel-tasks)方式執行時，這些選項也可以定義反覆執行的次數。若要設定以反覆運算次數為基礎的排程，請使用下列選項。
 
-Parameter | Required | Type | Description
+參數 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`iterations` | No | Integer | Specifies the number of times that a client should execute an operation. All iterations are included in the measured results. Default is `1`.
-`warmup-iterations` | No | Integer | Specifies the number of times that a client should execute an operation in order to warm up the benchmark candidate. The `warmup-iterations` do not appear in the measurement results. Default is `0`.
+`iterations` | 否 | 整數 | 指定用戶端應執行某項操作的次數。所有反覆運算都會納入測量結果。預設值為 `1`。
+`warmup-iterations` | 否 | 整數 | 指定用戶端為了讓基準測試對象暖機而應執行某項操作的次數。`warmup-iterations` 不會出現在測量結果中。預設值為 `0`。
 
-## Time-based options
+## 以時間為基礎的選項
 
-Time-based options determine the duration of time, in seconds, for which operations should run. This is ideal for batch-style operations, which may require an additional warmup period.
+以時間為基礎的選項決定操作應執行的持續時間 (以秒為單位)。這非常適合批次類型的操作，此類操作可能需要額外的暖機期間。
 
-To configure a time-based schedule, use the following options.
+若要設定以時間為基礎的排程，請使用下列選項。
 
-Parameter | Required | Type | Description
+參數 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`time-period` | No | Integer | Specifies the time period, in seconds, that OpenSearch Benchmark considers for measurement. This is not required for bulk indexing because OpenSearch Benchmark bulk indexes all documents and naturally measures all samples after the specified `warmup-time-period`.
-`ramp-up-time-period` | No | Integer | Specifies the time period, in seconds, during which OpenSearch Benchmark gradually adds clients and reaches the total number of clients specified for the operation.
-`warmup-time-period` | No | Integer | Specifies the amount of time, in seconds, to warm up the benchmark candidate. None of the response data captured during the warmup period appears in the measurement results.
+`time-period` | 否 | 整數 | 指定 OpenSearch Benchmark 納入測量的時間長度 (以秒為單位)。大量編製索引不需要此選項，因為 OpenSearch Benchmark 會將所有文件大量編製索引，並在指定的 `warmup-time-period` 之後自然地測量所有樣本。
+`ramp-up-time-period` | 否 | 整數 | 指定 OpenSearch Benchmark 逐步加入用戶端，直到達到為該操作指定之用戶端總數的時間長度 (以秒為單位)。
+`warmup-time-period` | 否 | 整數 | 指定讓基準測試對象暖機的時間長度 (以秒為單位)。暖機期間擷取的回應資料都不會出現在測量結果中。
 
-## Parallel tasks
+## 平行任務
 
-The `parallel` element concurrently runs tasks wrapped inside the element.
+`parallel` 元素會同時執行包在該元素內的任務。
 
-When running tasks in parallel, each task requires the `client` option in order to ensure that clients inside your benchmark are reserved for that task. Otherwise, when the `client` option is specified inside the `parallel` element without a connection to the task, the benchmark uses that number of clients for all tasks.
+平行執行任務時，每個任務都需要 `client` 選項，以確保基準測試中的用戶端保留給該任務使用。否則，當 `client` 選項在 `parallel` 元素內指定且未與任務關聯時，基準測試會對所有任務使用該數量的用戶端。
 
-In the following example, `parallel-task-1` and `parallel-task-2` execute a `bulk` operation concurrently:
+在下列範例中，`parallel-task-1` 和 `parallel-task-2` 會同時執行 `bulk` 操作：
 
 ```yml
 {
@@ -230,9 +231,9 @@ In the following example, `parallel-task-1` and `parallel-task-2` execute a `bul
 }
 ```
 
-The `parallel` element supports all `schedule` parameters, in addition to the following options.
+除了下列選項之外，`parallel` 元素也支援所有 `schedule` 參數。
 
-Parameter | Required | Type | Description
+參數 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`tasks` | Yes | Array | Defines a list of tasks that should be executed concurrently.
-`completed-by` | No | String | Allows you to define the name of one task in the task list or the value `any`. If `completed-by` is set to the name of one task in the list, the `parallel-task` structure is considered to be complete once that specific task has been completed. If `completed-by` is set to `any`, the `parallel-task` structure is considered to be complete when any one of the tasks in the list has been completed. If `completed-by` is not explicitly defined, the `parallel-task` structure is considered to be complete as soon as all of the tasks in the list have been completed.
+`tasks` | 是 | 陣列 | 定義應同時執行的任務清單。
+`completed-by` | 否 | 字串 | 可讓您定義任務清單中某個任務的名稱，或定義值 `any`。如果 `completed-by` 設定為清單中某個任務的名稱，則該特定任務完成後，`parallel-task` 結構即視為完成。如果 `completed-by` 設定為 `any`，則清單中任一任務完成時，`parallel-task` 結構即視為完成。如果未明確定義 `completed-by`，則清單中所有任務都完成後，`parallel-task` 結構即視為完成。

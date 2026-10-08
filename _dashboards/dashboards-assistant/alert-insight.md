@@ -1,44 +1,45 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Alert insights
+title: "警示洞察"
 parent: OpenSearch Assistant for OpenSearch Dashboards
 nav_order: 10
 has_children: false
 ---
 
-# Alert insights
+# 警示洞察
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress the feature or if you want to leave feedback, join the discussion in the [OpenSearch forum](https://forum.opensearch.org/).    
+這是一項實驗性功能，不建議在正式環境中使用。若要取得此功能的最新進度或提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/)的討論。    
 {: .warning}
 
-The OpenSearch Dashboards Assistant alert insights help generate alert summaries and provide log patterns based on the logs that triggered the alert.
+OpenSearch Dashboards Assistant 的警示洞察可協助產生警示摘要，並根據觸發警示的記錄檔提供記錄模式。
 
-## Configuring alert insights
+## 設定警示洞察
 
-To configure alert insights, use the following steps.
+若要設定警示洞察，請依照下列步驟操作。
 
-### Prerequisite
+### 先決條件
 
-Before using alert insights, you must have the `alerting` and `alerting-dashboards` plugins installed on your cluster. By default, these plugins are installed as part of standard OpenSearch distributions. For more information, see [Managing OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/).
+使用警示洞察之前，您必須在叢集上安裝 `alerting` 與 `alerting-dashboards` 外掛程式。根據預設，這些外掛程式會隨標準 OpenSearch 發行版本一併安裝。如需詳細資訊，請參閱[管理 OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)。
 
-### Step 1: Enable alert insights
+### 步驟 1：啟用警示洞察
 
-To enable alert insights, configure the following `opensearch_dashboards.yml` setting:
+若要啟用警示洞察，請設定下列 `opensearch_dashboards.yml` 設定：
 
 ```yaml
 assistant.alertInsight.enabled: true
 ```
 {% include copy.html %}
 
-### Step 2: Create the agents
+### 步驟 2：建立代理程式
 
-To orchestrate alert insights, you'll need to create the necessary [agents]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/). Create a workflow template for creating all necessary agents by sending the following request:
+若要協調警示洞察，您需要建立必要的[代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)。請傳送以下請求，建立用於建立所有必要代理程式的工作流程範本：
 
 <details markdown="block">
-  <summary>
-    Request
-  </summary>
-  {: .text-delta}
+<summary>
+    請求
+</summary>
+{: .text-delta}
 
 ```json
 POST /_plugins/_flow_framework/workflow?provision=true
@@ -141,21 +142,21 @@ POST /_plugins/_flow_framework/workflow?provision=true
 
 </details>
 
-For sample agent templates, see [Flow Framework sample templates](https://github.com/opensearch-project/flow-framework/tree/2.x/sample-templates). Note the agent ID; you'll use it in the following step.
+如需代理程式範本的範例，請參閱 [Flow Framework 範例範本](https://github.com/opensearch-project/flow-framework/tree/2.x/sample-templates)。請記下代理程式 ID，您將在下一個步驟中使用。
 
-For this example, use the templates to create the following agents: 
-- An alert insights agent, see [flow template](https://github.com/opensearch-project/flow-framework/blob/2.x/sample-templates/create-knowledge-base-alert-agent.json)
-- Two summary agents:
-    - A basic alert summary agent, see [flow template](https://github.com/opensearch-project/flow-framework/blob/2.x/sample-templates/alert-summary-agent-claude-tested.json)
-    - An agent for an alert summary that includes log patterns, see [flow template](https://github.com/opensearch-project/flow-framework/blob/2.x/sample-templates/alert-summary-log-pattern-agent.json)
+在此範例中，請使用這些範本建立下列代理程式：
+- 一個警示洞察代理程式，請參閱[流程範本](https://github.com/opensearch-project/flow-framework/blob/2.x/sample-templates/create-knowledge-base-alert-agent.json)
+- 兩個摘要代理程式：
+    - 一個基本警示摘要代理程式，請參閱[流程範本](https://github.com/opensearch-project/flow-framework/blob/2.x/sample-templates/alert-summary-agent-claude-tested.json)
+    - 一個用於產生包含記錄模式之警示摘要的代理程式，請參閱[流程範本](https://github.com/opensearch-project/flow-framework/blob/2.x/sample-templates/alert-summary-log-pattern-agent.json)
 
-    These agents require different prompts. The prompt for the log patterns summary must include a placeholder `${parameters.topNLogPatternData}` and additional instructions to guide the LLM on using this information effectively. Note that log patterns are available only for query monitors created using OpenSearch Dashboards.
+    這些代理程式需要不同的提示詞。記錄模式摘要的提示詞必須包含預留位置 `${parameters.topNLogPatternData}`，以及引導 LLM 有效運用此資訊的額外指示。請注意，記錄模式僅適用於使用 OpenSearch Dashboards 建立的查詢監視器。
 
-### Step 3: Create the root agents
+### 步驟 3：建立根代理程式
 
-Next, create [root agents]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-tutorial/#root_agent) for agents created in the previous step.
+接下來，為上一個步驟中建立的代理程式建立[根代理程式]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-tutorial/#root_agent)。
 
-Create a root agent for the alert summary agent:
+為警示摘要代理程式建立根代理程式：
 
 ```json
 POST /.plugins-ml-config/_doc/os_summary
@@ -168,7 +169,7 @@ POST /.plugins-ml-config/_doc/os_summary
 ```
 {% include copy-curl.html %}
 
-Create a root agent for the alert summary with log patterns agent:
+為包含記錄模式的警示摘要代理程式建立根代理程式：
 
 ```json
 POST /.plugins-ml-config/_doc/os_summary_with_log_pattern
@@ -181,7 +182,7 @@ POST /.plugins-ml-config/_doc/os_summary_with_log_pattern
 ```
 {% include copy-curl.html %}
 
-Create a root agent for the alert insights agent:
+為警示洞察代理程式建立根代理程式：
 
 ```json
 POST /.plugins-ml-config/_doc/os_insight
@@ -194,17 +195,17 @@ POST /.plugins-ml-config/_doc/os_insight
 ```
 {% include copy-curl.html %}
 
-The created `os_insight` agent provides alert insights related to OpenSearch cluster metrics. For insights about alerts unrelated to OpenSearch cluster metrics, you need to register an agent with [this template](https://github.com/opensearch-project/flow-framework/blob/2.x/sample-templates/create-knowledge-base-alert-agent.json) and change the agent name to `KB_For_Alert_Insight`.
+所建立的 `os_insight` 代理程式會提供與 OpenSearch 叢集指標相關的警示洞察。若要取得與 OpenSearch 叢集指標無關之警示的洞察，您需要使用[此範本](https://github.com/opensearch-project/flow-framework/blob/2.x/sample-templates/create-knowledge-base-alert-agent.json)註冊代理程式，並將代理程式名稱變更為 `KB_For_Alert_Insight`。
 {: .note}
 
-This example demonstrates a system index. In security-enabled domains, only superadmins have permissions to execute this code. For information about making superadmin calls, see [System indexes]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/). For access permissions, contact your system administrator.
+此範例示範的是系統索引。在已啟用安全性的網域中，只有超級管理員才有權限執行此程式碼。如需進行超級管理員呼叫的相關資訊，請參閱[系統索引]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/)。如需存取權限，請聯絡您的系統管理員。
 {: .warning}
 
-### Step 4: Test the agents
+### 步驟 4：測試代理程式
 
-You can verify that the agents were created successfully by calling the agents with an example payload.
+您可以使用範例承載呼叫代理程式，以確認代理程式已成功建立。
 
-To test the alert summary agent, send the following request:
+若要測試警示摘要代理程式，請傳送以下請求：
 
 ```json
 POST /_plugins/_ml/agents/{SUMMARY_AGENT_ID}/_execute
@@ -217,7 +218,7 @@ POST /_plugins/_ml/agents/{SUMMARY_AGENT_ID}/_execute
 ```
 {% include copy-curl.html %}
 
-To test the alert summary with log patterns agent, send the following request:
+若要測試包含記錄模式之警示摘要代理程式，請傳送以下請求：
 
 ```json
 POST /_plugins/_ml/agents/{SUMMARY_WITH_LOG_PATTERNS_AGENT_ID}/_execute
@@ -231,7 +232,7 @@ POST /_plugins/_ml/agents/{SUMMARY_WITH_LOG_PATTERNS_AGENT_ID}/_execute
 ```
 {% include copy-curl.html %}
 
-To test the alert insights agent, send the following request:
+若要測試警示洞察代理程式，請傳送以下請求：
 
 ```json
 POST /_plugins/_ml/agents/{ALERT_INSIGHTS_AGENT_ID}/_execute
@@ -245,9 +246,9 @@ POST /_plugins/_ml/agents/{ALERT_INSIGHTS_AGENT_ID}/_execute
 ```
 {% include copy-curl.html %}
 
-## Generating an alert summary
+## 產生警示摘要
 
-You can generate an alert summary by calling the `/api/assistant/summary` API endpoint. To generate an alert summary, the fields `index`, `dsl`, and `topNLogPatternData` are optional. If all three fields are provided, the agent will provide a summary with log pattern analysis; otherwise, it will provide a general summary:
+您可以呼叫 `/api/assistant/summary` API 端點來產生警示摘要。若要產生警示摘要，`index`、`dsl` 和 `topNLogPatternData` 欄位皆為選用。如果提供了這三個欄位，代理程式會提供包含記錄檔模式分析的摘要；否則，代理程式會提供一般摘要：
 
 ```json
 POST /api/assistant/summary
@@ -262,20 +263,20 @@ POST /api/assistant/summary
 ```
 {% include copy-curl.html %}
 
-The following table describes the Assistant Summary API parameters.
+下表說明 Assistant Summary API 的參數。
 
-Parameter | Required/Optional | Description
+參數 | 必要/選用 | 說明
 :--- | :--- | :---
-`summaryType` | Required | Specifies the type of application calling this API. Use `alerts` for alert insights.
-`question` | Required | Specifies the user's question regarding alert insights. Default is `Please summarize this alert, do not use any tool.` 
-`context` | Required | Provides context for the alert, including the alert monitor definition, active alerts, and trigger values.
-`index` | Optional | The index that the alert monitors. If this parameter is not provided, log pattern analysis is not returned.
-`dsl` | Optional | The DSL query for alert monitoring. If this parameter is not provided, log pattern analysis is not returned.
-`topNLogPatternData` | Optional | Log patterns for the alert trigger data. If this parameter is not provided, log pattern analysis is not returned.
+`summaryType` | 必要 | 指定呼叫此 API 的應用程式類型。若為警示洞察，請使用 `alerts`。
+`question` | 必要 | 指定使用者關於警示洞察的問題。預設為 `Please summarize this alert, do not use any tool.` 
+`context` | 必要 | 提供警示的內容資訊，包括警示監視器定義、作用中警示以及觸發值。
+`index` | 選用 | 警示所監視的索引。如果未提供此參數，則不會回傳記錄檔模式分析。
+`dsl` | 選用 | 用於警示監視的 DSL 查詢。如果未提供此參數，則不會回傳記錄檔模式分析。
+`topNLogPatternData` | 選用 | 警示觸發資料的記錄檔模式。如果未提供此參數，則不會回傳記錄檔模式分析。
 
-## Generating alert insights
+## 產生警示洞察
 
-You can generate alert insights by calling the `/api/assistant/insight` API endpoint. To generate alert insights, all of the following parameters are required:
+您可以呼叫 `/api/assistant/insight` API 端點來產生警示洞察。若要產生警示洞察，必須提供以下所有參數：
 
 ```json
 POST /api/assistant/insight
@@ -289,33 +290,33 @@ POST /api/assistant/insight
 ```
 {% include copy-curl.html %}
 
-The following table describes the Assistant Insight API parameters.
+下表說明 Assistant Insight API 的參數。
 
-Parameter | Required/Optional | Description 
+參數 | 必要/選用 | 說明 
 :--- | :--- | :---
-`summaryType` | Required | Specifies the type of application calling this API. Use `alerts` for alert insights.
-`insightType` | Required | Defines the alert type. Use `os_insight` for cluster metrics alerts and `user_insight` for other alert types.
-`question` | Required | Specifies the user's question regarding alert insights. Default is `Please provide your insight on this alerts.` 
-`context` | Required | Provides context for the alert, including the alert monitor definition, active alerts, and trigger values.
-`summary` | Required | The result returned by the alert summary agent.
+`summaryType` | 必要 | 指定呼叫此 API 的應用程式類型。若為警示洞察，請使用 `alerts`。
+`insightType` | 必要 | 定義警示類型。叢集指標警示請使用 `os_insight`，其他警示類型請使用 `user_insight`。
+`question` | 必要 | 指定使用者關於警示洞察的問題。預設為 `Please provide your insight on this alerts.` 
+`context` | 必要 | 提供警示的內容資訊，包括警示監視器定義、作用中警示以及觸發值。
+`summary` | 必要 | 警示摘要代理程式所回傳的結果。
 
 
-## Viewing alert insights in OpenSearch Dashboards
+## 在 OpenSearch Dashboards 中檢視警示洞察
 
-Before viewing alert insights, you must configure alerts in OpenSearch Dashboards. For more information, see [Alerting]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/index/).
+在檢視警示洞察之前，您必須先在 OpenSearch Dashboards 中設定警示。如需詳細資訊，請參閱[警示]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/index/)。
 
-To view alert insights in OpenSearch Dashboards, use the following steps:
+若要在 OpenSearch Dashboards 中檢視警示洞察，請使用以下步驟：
 
-1. On the top menu bar, go to **OpenSearch Plugins > Alerting**. All alerts are displayed.
+1. 在頂端選單列中，前往 **OpenSearch Plugins > Alerting**。系統會顯示所有警示。
 
-1. Hover over the alerts for your desired monitor. If you configured alert insights, you will see a sparkle icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards-assistant/sparkle-icon.png" class="inline-icon" alt="sparkle icon"/>{:/}) next to the alerts in the **Alerts** column, as shown in the following image.
+1. 將游標停留在所需監視器的警示上。如果您已設定警示洞察，將會在 **Alerts** 欄中的警示旁邊看到閃亮圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards-assistant/sparkle-icon.png" class="inline-icon" alt="sparkle icon"/>{:/})，如下圖所示。
     
-    ![Alerting page with sparkle icon]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/alert-insight-start.png)
+    ![含有閃亮圖示的 Alerting 頁面]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/alert-insight-start.png)
 
-1. Select the alerts label or the sparkle icon. You will see the generated summary, as shown in the following image.
+1. 選取警示標籤或閃亮圖示。您將會看到產生的摘要，如下圖所示。
     
-    ![Alert summary]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/alert-insight-summary.png)
+    ![警示摘要]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/alert-insight-summary.png)
 
-1. Select the information icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards-assistant/info-icon.png" class="inline-icon" alt="info icon"/>{:/}) to view alert insights. You will see the generated alert insights, as shown in the following image.
+1. 選取資訊圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards-assistant/info-icon.png" class="inline-icon" alt="info icon"/>{:/}) 以檢視警示洞察。您將會看到產生的警示洞察，如下圖所示。
     
-    ![Alert insights]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/alert-insight-insight.png)
+    ![警示洞察]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/alert-insight-insight.png)

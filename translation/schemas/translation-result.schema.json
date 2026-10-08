@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "zh-tw-translation-result/v1",
+  "type": "object",
+  "required": [
+    "segments"
+  ],
+  "description": "Exactly one entry per request segment id (a repeated id is rejected); every placeholder must appear exactly as often as in the source.",
+  "properties": {
+    "schema": {
+      "const": "zh-tw-translation-result/v1"
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^(fm(\\.[A-Za-z0-9_-]+)+|body\\.\\d{3})$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

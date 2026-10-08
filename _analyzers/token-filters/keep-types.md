@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Keep types
+title: "保留類型"
 parent: Token filters
 nav_order: 180
 ---
 
-# Keep types token filter
+# 保留類型詞元篩選器
 
-The `keep_types` token filter is a type of token filter used in text analysis to control which token types are kept or discarded. Different tokenizers produce different token types, for example, `<HOST>`, `<NUM>`, or `<ALPHANUM>`.
+`keep_types` 詞元篩選器是一種用於文字分析的詞元篩選器，可控制要保留或捨棄哪些詞元類型。不同的斷詞器會產生不同的詞元類型，例如 `<HOST>`、`<NUM>` 或 `<ALPHANUM>`。
 
-The `keyword`, `simple_pattern`, and `simple_pattern_split` tokenizers do not support the `keep_types` token filter because these tokenizers do not support token type attributes.
+`keyword`、`simple_pattern` 和 `simple_pattern_split` 斷詞器不支援 `keep_types` 詞元篩選器，因為這些斷詞器不支援詞元類型屬性。
 {: .note}
 
-## Parameters
+## 參數
 
-The `keep_types` token filter can be configured with the following parameters.
+`keep_types` 詞元篩選器可使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`types` | Required | List of strings | List of token types to be kept or discarded (determined by the `mode`).
-`mode`| Optional | String | Whether to `include` or `exclude` the token types specified in `types`. Default is `include`.
+`types` | 必要 | 字串清單 | 要保留或捨棄的詞元類型清單（由 `mode` 決定）。
+`mode`| 選用 | 字串 | 是否要 `include` 或 `exclude` `types` 中指定的詞元類型。預設為 `include`。
  
 
-## Example
+## 範例
 
-The following example request creates a new index named `test_index` and configures an analyzer with a `keep_types` filter:
+下列範例請求會建立名為 `test_index` 的新索引，並設定一個含有 `keep_types` 篩選器的分析器：
 
 ```json
 PUT /test_index
@@ -50,9 +51,9 @@ PUT /test_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用該分析器產生的詞元：
 
 ```json
 GET /test_index/_analyze
@@ -63,7 +64,7 @@ GET /test_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

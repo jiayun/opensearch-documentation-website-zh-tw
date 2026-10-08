@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Voting configuration exclusions
+title: "投票組態排除項目"
 parent: Cluster APIs
 nav_order: 75
 ---
 
-# Voting Configuration Exclusions API
-**Introduced 1.0**
+# 投票組態排除項目 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The `_cluster/voting_config_exclusions` API allows you to exclude one or more nodes from the voting configuration. This is useful when you want to safely remove cluster-manager-eligible nodes from the cluster or to change the current cluster manager.
+`_cluster/voting_config_exclusions` API 可讓您從投票組態中排除一或多個節點。當您想要安全地從叢集中移除具備叢集管理員資格的節點，或變更目前的叢集管理員時，這項功能很有用。
 
-## Adding voting configuration exclusions
+## 新增投票組態排除項目
 
-Use the POST method to add voting configuration exclusions.
+使用 POST 方法新增投票組態排除項目。
 
-### Endpoints
+### 端點
 ```json
 POST /_cluster/voting_config_exclusions
 ```
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter    | Data type      | Description                                                                                                                                                                                                                                                                 |
+| 參數    | 資料類型      | 說明                                                                                                                                                                                                                                                                 |
 |:-------------|:---------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `node_ids` | List or String | A comma-separated list of node IDs to exclude from the voting configuration. When using this setting, you cannot also specify `node_names`. Either `node_ids` or `node_names` is required in order to receive a valid response.                                                     |
-| `node_names` | List or String | A comma-separated list of node names to exclude from the voting configuration. When using this setting, you cannot also specify `node_ids`. Either `node_ids` or `node_names` is required in order to receive a valid response.                                                     |
-| `timeout` | String | When adding a voting configuration exclusion, the API waits for the specified nodes to be excluded from the voting configuration before returning a response. If the timeout expires before the appropriate condition is satisfied, the request fails and returns an error. |
+| `node_ids` | 清單或字串 | 要從投票組態中排除的節點 ID 清單，以逗號分隔。使用此設定時，您不能同時指定 `node_names`。必須提供 `node_ids` 或 `node_names`，才能收到有效的回應。                                                     |
+| `node_names` | 清單或字串 | 要從投票組態中排除的節點名稱清單，以逗號分隔。使用此設定時，您不能同時指定 `node_ids`。必須提供 `node_ids` 或 `node_names`，才能收到有效的回應。                                                     |
+| `timeout` | 字串 | 新增投票組態排除項目時，API 會等待指定的節點從投票組態中排除後，才傳回回應。如果在符合適當條件之前超過逾時期限，請求便會失敗並傳回錯誤。 |
 
-### Example
+### 範例
 
-Exclude a node named `opensearch-node1` from the voting configuration:
+從投票組態中排除名為 `opensearch-node1` 的節點：
 
 <!-- spec_insert_start
 component: example_code
@@ -58,7 +59,7 @@ response = client.cluster.post_voting_config_exclusions(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Alternatively, you can specify the node IDs as a comma-separated list:
+或者，您可以使用以逗號分隔的清單指定節點 ID：
 
 <!-- spec_insert_start
 component: example_code
@@ -84,27 +85,27 @@ response = client.cluster.post_voting_config_exclusions(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Removing voting configuration exclusions
+## 移除投票組態排除項目
 
-Use the DELETE method to clear the list of nodes that were previously excluded from the voting configuration. This is typically used after excluded nodes have been safely removed or replaced. You can optionally wait for the nodes to be removed from the cluster before clearing the exclusions.
+使用 DELETE 方法清除先前從投票組態中排除的節點清單。這通常用於已安全移除或取代遭排除節點之後。您可以選擇等待節點從叢集中移除後，再清除排除項目。
 
-### Endpoints
+### 端點
 
 ```json
 DELETE /_cluster/voting_config_exclusions
 ```
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter          | Data type | Description                                                                                                                                                                                                                                                                                                                                                                          |
+| 參數          | 資料類型 | 說明                                                                                                                                                                                                                                                                                                                                                                          |
 |:-------------------|:----------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `wait_for_removal` | Boolean | Specifies whether to wait for all excluded nodes to be removed from the cluster before clearing the voting configuration exclusions list. When `true`, all excluded nodes are removed from the cluster before this API takes any action. When `false`, the voting configuration exclusions list is cleared even if some excluded nodes are still present in the cluster. _(Default: `true`)_ |
+| `wait_for_removal` | 布林值 | 指定是否等待所有遭排除的節點從叢集中移除後，再清除投票組態排除項目清單。當 `true` 時，所有遭排除的節點都會在此 API 採取任何動作之前從叢集中移除。當 `false` 時，即使部分遭排除的節點仍存在於叢集中，也會清除投票組態排除項目清單。_（預設：`true`）_ |
 
-### Example
+### 範例
 
-Use the following request to remove all voting configuration exclusions without waiting for nodes to be removed:
+使用下列請求移除所有投票組態排除項目，無須等待節點移除：
 
 <!-- spec_insert_start
 component: example_code

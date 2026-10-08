@@ -1,48 +1,49 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Network compression
+title: "網路壓縮"
 parent: Settings and administration
 nav_order: 50
 ---
 
-# Network compression
-**Introduced 1.0**
+# 網路壓縮
+**1.0 版本引入**
 {: .label .label-purple }
 
-OpenSearch Dashboards supports automatic compression of JavaScript and CSS bundles to reduce network transfer sizes. This feature is especially useful when deploying OpenSearch Dashboards behind a proxy, gateway, or load balancer that has response size limitations.
+OpenSearch Dashboards 支援對 JavaScript 和 CSS 組合包 (bundles) 進行自動壓縮，以減少網路傳輸大小。當在具有回應大小限制的代理伺服器、閘道或負載平衡器後方部署 OpenSearch Dashboards 時，此功能特別有用。
 
-## Compression methods
+## 壓縮方法
 
-OpenSearch Dashboards generates pre-compressed versions of all plugin bundles using the following compression algorithms:
+OpenSearch Dashboards 使用以下壓縮演算法為所有外掛程式組合包產生預壓縮版本：
 
-- **Brotli (`br`)**: Modern compression algorithm providing the best compression ratio
-- **gzip (`gz`)**: Widely supported compression algorithm with good compatibility
+- **Brotli (`br`)**：現代壓縮演算法，提供最佳的壓縮率
+- **gzip (`gz`)**：廣泛支援且相容性良好的壓縮演算法
 
-When a client requests a bundle file, OpenSearch Dashboards automatically serves the compressed version if the client sends the appropriate `Accept-Encoding` header. If no compression encoding is specified, OpenSearch Dashboards serves the uncompressed file.
+當用戶端請求組合包檔案時，如果用戶端傳送了適當的 `Accept-Encoding` 標頭，OpenSearch Dashboards 會自動提供壓縮版本。如果未指定壓縮編碼，OpenSearch Dashboards 則提供未壓縮的檔案。
 
-## Compression effectiveness
+## 壓縮效果
 
-The following table shows typical compression ratios for large plugin bundles, using the Observability plugin as an example:
+下表顯示了大型外掛程式組合包的典型壓縮率，以 Observability 外掛程式為例：
 
-| Compression method | File size | Compression ratio |
+| 壓縮方法 | 檔案大小 | 壓縮率 |
 |:---|:---|:---|
-| Brotli (`br`) | ~1.8 MB | ~86% reduction |
-| gzip (`gz`) | ~2.5 MB | ~80% reduction |
-| Uncompressed | ~12.6 MB | Baseline |
+| Brotli (`br`) | ~1.8 MB | 減少 ~86% |
+| gzip (`gz`) | ~2.5 MB | 減少 ~80% |
+| 未壓縮 | ~12.6 MB | 基準 |
 
-The actual compression ratio varies depending on the plugin and its dependencies.
+實際壓縮率會根據外掛程式及其相依項目而有所不同。
 
-## Configuration
+## 組態
 
-Compression is enabled by default. You can control compression behavior using the following settings in `opensearch_dashboards.yml`.
+壓縮功能預設為啟用。您可以使用 `opensearch_dashboards.yml` 中的以下設定來控制壓縮行為。
 
 ### `server.compression.enabled`
 
-Enables or disables HTTP compression for all responses. When set to `false`, OpenSearch Dashboards serves only uncompressed content, regardless of client headers.
+啟用或停用所有回應的 HTTP 壓縮。當設定為 `false` 時，無論用戶端標頭為何，OpenSearch Dashboards 僅提供未壓縮的內容。
 
-- **Type**: Boolean
-- **Default**: `true`
-- **Example**:
+- **資料類型**：布林值
+- **預設值**：`true`
+- **範例**：
 
   ```yaml
   server:
@@ -53,11 +54,11 @@ Enables or disables HTTP compression for all responses. When set to `false`, Ope
 
 ### `server.compression.referrerWhitelist`
 
-Limits compression to requests from specific referrer hostnames. When this setting is configured, OpenSearch Dashboards only compresses responses for requests that come from the specified referrers. This setting is only valid when `server.compression.enabled` is `true`.
+將壓縮限制在來自特定參照者 (referrer) 主機名稱的請求。設定此設定後，OpenSearch Dashboards 僅對來自指定參照者的請求壓縮回應。此設定僅在 `server.compression.enabled` 為 `true` 時有效。
 
-- **Type**: Array of strings
-- **Default**: Not set (compression enabled for all referrers)
-- **Example**:
+- **資料類型**：字串陣列
+- **預設值**：未設定 (所有參照者均啟用壓縮)
+- **範例**：
 
   ```yaml
   server:
@@ -69,11 +70,11 @@ Limits compression to requests from specific referrer hostnames. When this setti
   ```
   {% include copy.html %}
 
-## Using compression with proxies
+## 在代理伺服器中使用壓縮
 
-When deploying OpenSearch Dashboards behind a proxy, gateway, or load balancer, configure your proxy to request compressed content by including the `Accept-Encoding` header in upstream requests.
+在代理伺服器、閘道或負載平衡器後方部署 OpenSearch Dashboards 時，請設定您的代理伺服器在向上游發送請求時包含 `Accept-Encoding` 標頭，以請求壓縮內容。
 
-### Example: Requesting Brotli compression
+### 範例：請求 Brotli 壓縮
 
 ```bash
 curl -H 'Accept-Encoding: br' \
@@ -81,7 +82,7 @@ curl -H 'Accept-Encoding: br' \
 ```
 {% include copy.html %}
 
-The response includes the `Content-Encoding: br` header, indicating that Brotli compression was applied:
+回應包含 `Content-Encoding: br` 標頭，表示已套用 Brotli 壓縮：
 
 ```bash
 HTTP/1.1 200 OK
@@ -96,7 +97,7 @@ Keep-Alive: timeout=120
 Transfer-Encoding: chunked
 ```
 
-### Example: Requesting zip compression
+### 範例：請求 zip 壓縮
 
 ```bash
 curl -H 'Accept-Encoding: gzip' \
@@ -104,7 +105,7 @@ curl -H 'Accept-Encoding: gzip' \
 ```
 {% include copy.html %}
 
-The response includes the `Content-Encoding: gzip` header:
+回應包含 `Content-Encoding: gzip` 標頭：
 
 ```bash
 HTTP/1.1 200 OK
@@ -119,22 +120,22 @@ Keep-Alive: timeout=120
 Transfer-Encoding: chunked
 ```
 
-### Example: No compression
+### 範例：不壓縮
 
-If you don't specify an `Accept-Encoding` header (or if compression is disabled), OpenSearch Dashboards serves the uncompressed file:
+如果您未指定 `Accept-Encoding` 標頭 (或已停用壓縮)，OpenSearch Dashboards 會提供未壓縮的檔案：
 
 ```bash
 curl https://your-dashboards-host/bundles/plugin/observabilityDashboards/observabilityDashboards.plugin.js
 ```
 {% include copy.html %}
 
-### Proxy configuration examples
+### 代理伺服器組態範例
 
-The following examples show how to configure different proxy servers to request compressed content.
+以下範例顯示如何設定不同的代理伺服器以請求壓縮內容。
 
 #### NGINX
 
-Configure NGINX to request compressed content from OpenSearch Dashboards:
+設定 NGINX 從 OpenSearch Dashboards 請求壓縮內容：
 
 ```json
 location / {
@@ -147,7 +148,7 @@ location / {
 
 #### Apache
 
-Configure Apache to request compressed content from OpenSearch Dashboards:
+設定 Apache 從 OpenSearch Dashboards 請求壓縮內容：
 
 ```xml
 <Location />
@@ -158,25 +159,25 @@ Configure Apache to request compressed content from OpenSearch Dashboards:
 ```
 {% include copy.html %}
 
-## Proxy response size limits
+## 代理伺服器回應大小限制
 
-If your proxy or gateway has response size limits (for example, 10 MB), follow these steps to address them:
+如果您的代理伺服器或閘道有回應大小限制 (例如 10 MB)，請按照以下步驟處理：
 
-1. Configure your proxy to request Brotli compression first (best compression ratio):
+1. 設定您的代理伺服器優先請求 Brotli 壓縮 (最佳壓縮率)：
    ```
    Accept-Encoding: br, gzip
    ```
    {% include copy.html %}
 
-2. Verify that the compressed bundle size is within your proxy's limits. Most OpenSearch Dashboards plugin bundles compress to less than 3 MB with Brotli.
+2. 確認壓縮後的組合包大小在代理伺服器的限制範圍內。大多數 OpenSearch Dashboards 外掛程式組合包使用 Brotli 壓縮後小於 3 MB。
 
-3. If issues persist, consider increasing your proxy's response size limit or breaking large plugins into smaller components.
+3. 如果問題仍然存在，請考慮增加代理伺服器的回應大小限制，或將大型外掛程式拆分為較小的元件。
 
-## Browser support
+## 瀏覽器支援
 
-All modern browsers automatically include the `Accept-Encoding` header in their requests and transparently decompress responses. Compression is handled automatically without any configuration required on the browser side.
+所有現代瀏覽器都會在請求中自動包含 `Accept-Encoding` 標頭，並透明地解壓縮回應。壓縮過程會自動處理，無需在瀏覽器端進行任何設定。
 
-Browser support for compression methods:
+瀏覽器對壓縮方法的支援情況：
 
-- **Brotli**: Supported in all modern browsers (Chrome, Firefox, Safari, Edge)
-- **gzip**: Universally supported by all browsers
+- **Brotli**：所有現代瀏覽器 (Chrome, Firefox, Safari, Edge) 均支援
+- **gzip**：所有瀏覽器普遍支援

@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: High-level Python client (deprecated)
+title: "高階 Python 用戶端（已棄用）"
 nav_order: 200
 ---
 
-# High-level Python client
+# 高階 Python 用戶端
 
-The OpenSearch high-level Python client (`opensearch-dsl-py`) is deprecated, and its repository is archived. We recommend switching to the [Python client (`opensearch-py`)]({{site.url}}{{site.baseurl}}/clients/python-low-level/), which now includes the functionality of `opensearch-dsl-py`.
+OpenSearch 高階 Python 用戶端（`opensearch-dsl-py`）已棄用，其儲存庫也已封存。我們建議改用 [Python 用戶端（`opensearch-py`）]({{site.url}}{{site.baseurl}}/clients/python-low-level/)，該用戶端現在已包含 `opensearch-dsl-py` 的功能。
 {: .warning}
 
-The OpenSearch high-level Python client (`opensearch-dsl-py`) provides wrapper classes for common OpenSearch entities, like documents, so you can work with them as Python objects. Additionally, the high-level client simplifies writing queries and supplies convenient Python methods for common OpenSearch operations. The high-level Python client supports creating and indexing documents, searching with and without filters, and updating documents using queries.
+OpenSearch 高階 Python 用戶端（`opensearch-dsl-py`）為文件等常見的 OpenSearch 實體提供包裝類別，讓您可以將這些實體當作 Python 物件來操作。此外，高階用戶端可簡化查詢的撰寫，並提供便利的 Python 方法來執行常見的 OpenSearch 操作。高階 Python 用戶端支援建立文件並將其編製索引、使用或不使用篩選器進行搜尋，以及使用查詢更新文件。
 
-This getting started guide illustrates how to connect to OpenSearch, index documents, and run queries. For the client source code, see the [`opensearch-dsl-py` repo](https://github.com/opensearch-project/opensearch-dsl-py).
+本入門指南說明如何連線至 OpenSearch、將文件編製索引，以及執行查詢。如需用戶端的原始碼，請參閱 [`opensearch-dsl-py` 儲存庫](https://github.com/opensearch-project/opensearch-dsl-py)。
 
-## Setup
+## 設定
 
-To add the client to your project, install it using [pip](https://pip.pypa.io/):
+若要將用戶端加入您的專案，請使用 [pip](https://pip.pypa.io/) 安裝：
 
 ```bash
 pip install opensearch-dsl
 ```
 {% include copy.html %}
 
-After installing the client, you can import it like any other module:
+安裝用戶端後，您可以像匯入其他模組一樣匯入它：
 
 ```python
 from opensearchpy import OpenSearch
@@ -30,9 +31,9 @@ from opensearch_dsl import Search, Document, Text, Keyword
 ```
 {% include copy.html %}
 
-## Connecting to OpenSearch
+## 連線至 OpenSearch
 
-To connect to the default OpenSearch host, create a client object with SSL enabled if you are using the Security plugin. Replace `<custom-admin-password>` with the admin password that you set when you installed OpenSearch:
+若要連線至預設的 OpenSearch 主機，請建立用戶端物件；如果您使用 Security 外掛程式，請啟用 SSL。將 `<custom-admin-password>` 替換為您安裝 OpenSearch 時設定的管理員密碼：
 
 ```python
 host = 'localhost'
@@ -54,7 +55,7 @@ client = OpenSearch(
 ```
 {% include copy.html %}
 
-If you have your own client certificates, specify them in the `client_cert_path` and `client_key_path` parameters:
+如果您有自己的用戶端憑證，請在 `client_cert_path` 和 `client_key_path` 參數中指定：
 
 ```python
 host = 'localhost'
@@ -82,7 +83,7 @@ client = OpenSearch(
 ```
 {% include copy.html %}
 
-If you are not using the Security plugin, create a client object with SSL disabled:
+如果您未使用 Security 外掛程式，請建立停用 SSL 的用戶端物件：
 
 ```python
 host = 'localhost'
@@ -100,9 +101,9 @@ client = OpenSearch(
 ```
 {% include copy.html %}
 
-## Creating an index
+## 建立索引
 
-To create an OpenSearch index, use the `client.indices.create()` method. You can use the following code to construct a JSON object with custom settings:
+若要建立 OpenSearch 索引，請使用 `client.indices.create()` 方法。您可以使用下列程式碼建構具有自訂設定的 JSON 物件：
 
 ```python
 index_name = 'my-dsl-index'
@@ -118,9 +119,9 @@ response = client.indices.create(index=index_name, body=index_body)
 ```
 {% include copy.html %}
 
-## Indexing a document
+## 將文件編製索引
 
-You can create a class to represent the documents that you'll index in OpenSearch by extending the `Document` class:
+您可以透過繼承 `Document` 類別來建立一個類別，代表您將在 OpenSearch 中編製索引的文件：
 
 ```python
 class Movie(Document):
@@ -136,7 +137,7 @@ class Movie(Document):
 ```
 {% include copy.html %}
 
-To index a document, create an object of the new class and call its `save()` method:
+若要將文件編製索引，請建立新類別的物件，並呼叫其 `save()` 方法：
 
 ```python
 # Set up the opensearch-py version of the document
@@ -146,9 +147,9 @@ response = doc.save(using=client)
 ```
 {% include copy.html %}
 
-## Performing bulk operations
+## 執行批次操作
 
-You can perform several operations at the same time by using the `bulk()` method of the client. The operations may be of the same type or of different types. Note that the operations must be separated by a `\n` and the entire string must be a single line:
+您可以使用用戶端的 `bulk()` 方法同時執行多項操作。這些操作可以是相同類型，也可以是不同類型。請注意，各項操作必須以 `\n` 分隔，而且整個字串必須位於同一行：
 
 ```python
 movies = '{ "index" : { "_index" : "my-dsl-index", "_id" : "2" } } \n { "title" : "Interstellar", "director" : "Christopher Nolan", "year" : "2014"} \n { "create" : { "_index" : "my-dsl-index", "_id" : "3" } } \n { "title" : "Star Trek Beyond", "director" : "Justin Lin", "year" : "2015"} \n { "update" : {"_id" : "3", "_index" : "my-dsl-index" } } \n { "doc" : {"year" : "2016"} }'
@@ -157,9 +158,9 @@ client.bulk(body=movies)
 ```
 {% include copy.html %}
 
-## Searching for documents
+## 搜尋文件
 
-You can use the `Search` class to construct a query. The following code creates a Boolean query with a filter:
+您可以使用 `Search` 類別來建構查詢。下列程式碼會建立包含篩選器的布林值查詢：
 
 ```python
 s = Search(using=client, index=index_name) \
@@ -170,7 +171,7 @@ response = s.execute()
 ```
 {% include copy.html %}
 
-The preceding query is equivalent to the following query in OpenSearch domain-specific language (DSL):
+上述查詢等同於下列以 OpenSearch 領域特定語言（DSL）撰寫的查詢：
 
 ```json
 GET my-dsl-index/_search 
@@ -192,9 +193,9 @@ GET my-dsl-index/_search
 }
 ```
 
-## Deleting a document
+## 刪除文件
 
-You can delete a document using the `client.delete()` method:
+您可以使用 `client.delete()` 方法刪除文件：
 
 ```python
 response = client.delete(
@@ -204,9 +205,9 @@ response = client.delete(
 ```
 {% include copy.html %}
 
-## Deleting an index
+## 刪除索引
 
-You can delete an index using the `client.indices.delete()` method:
+您可以使用 `client.indices.delete()` 方法刪除索引：
 
 ```python
 response = client.indices.delete(
@@ -215,9 +216,9 @@ response = client.indices.delete(
 ```
 {% include copy.html %}
 
-## Sample program
+## 範例程式
 
-The following sample program creates a client, adds an index with non-default settings, inserts a document, performs bulk operations, searches for the document, deletes the document, and then deletes the index:
+下列範例程式會建立用戶端、新增具有非預設設定的索引、插入文件、執行批次操作、搜尋該文件、刪除該文件，然後刪除索引：
 
 ```python
 from opensearchpy import OpenSearch

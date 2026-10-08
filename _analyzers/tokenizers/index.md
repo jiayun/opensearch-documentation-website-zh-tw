@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Tokenizers
+title: "斷詞器"
 nav_order: 60
 has_children: true
 has_toc: false
@@ -8,56 +9,56 @@ redirect_from:
   - /analyzers/tokenizers/
 ---
 
-# Tokenizers
+# 斷詞器
 
-A tokenizer receives a stream of characters and splits the text into individual _tokens_. A token consists of a term (usually, a word) and metadata about this term. For example, a tokenizer can split text on white space so that the text `Actions speak louder than words.` becomes [`Actions`, `speak`, `louder`, `than`, `words.`]. 
+斷詞器會接收字元串流，並將文字分割為個別的 _詞元_。詞元由一個詞彙（通常是一個單字）及該詞彙的中繼資料組成。例如，斷詞器可以依空白字元分割文字，使文字 `Actions speak louder than words.` 變成 [`Actions`, `speak`, `louder`, `than`, `words.`]。 
 
-The output of a tokenizer is a stream of tokens. Tokenizers also maintain the following metadata about tokens:
+斷詞器的輸出是詞元串流。斷詞器也會保留下列有關詞元的中繼資料：
 
-- The **order** or **position** of each token: This information is used for word and phrase proximity queries. 
-- The starting and ending positions (**offsets**) of the tokens in the text: This information is used for highlighting search terms. 
-- The token **type**: Some tokenizers (for example, `standard`) classify tokens by type, for example, `<ALPHANUM>` or `<NUM>`. Simpler tokenizers (for example, `letter`) only classify tokens as type `word`.
+- 每個詞元的**順序**或**位置**：此資訊用於單字與片語的鄰近查詢。 
+- 詞元在文字中的起始與結束位置（**位移**）：此資訊用於醒目提示搜尋詞彙。 
+- 詞元的**類型**：某些斷詞器（例如 `standard`）會依類型將詞元分類，例如 `<ALPHANUM>` 或 `<NUM>`。較簡單的斷詞器（例如 `letter`）只會將詞元分類為 `word` 類型。
 
-You can use tokenizers to define custom analyzers. 
+您可以使用斷詞器定義自訂分析器。 
 
-## Built-in tokenizers
+## 內建斷詞器
 
-The following tables list the built-in tokenizers that OpenSearch provides. 
+下列表格列出 OpenSearch 提供的內建斷詞器。 
 
-### Word tokenizers
+### 單字斷詞器
 
-Word tokenizers parse full text into words.
+單字斷詞器會將全文剖析為單字。
 
-Tokenizer | Description | Example
+斷詞器 | 說明 | 範例
 :--- | :--- | :---
-[`standard`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/standard/) | - Parses strings into tokens at word boundaries <br> - Removes most punctuation | `It’s fun to contribute a brand-new PR or 2 to OpenSearch!` <br>becomes<br> [`It’s`, `fun`, `to`, `contribute`, `a`,`brand`, `new`, `PR`, `or`, `2`, `to`, `OpenSearch`] 
-[`letter`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/letter/) | - Parses strings into tokens on any non-letter character <br> - Removes non-letter characters | `It’s fun to contribute a brand-new PR or 2 to OpenSearch!` <br>becomes<br> [`It`, `s`, `fun`, `to`, `contribute`, `a`,`brand`, `new`, `PR`, `or`, `to`, `OpenSearch`]
-[`lowercase`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/lowercase/) | - Parses strings into tokens on any non-letter character <br> - Removes non-letter characters <br> - Converts terms to lowercase | `It’s fun to contribute a brand-new PR or 2 to OpenSearch!` <br>becomes<br> [`it`, `s`, `fun`, `to`, `contribute`, `a`,`brand`, `new`, `pr`, `or`, `to`, `opensearch`]
-[`whitespace`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/whitespace/) | - Parses strings into tokens at white space characters | `It’s fun to contribute a brand-new PR or 2 to OpenSearch!` <br>becomes<br> [`It’s`, `fun`, `to`, `contribute`, `a`,`brand-new`, `PR`, `or`, `2`, `to`, `OpenSearch!`] 
-[`uax_url_email`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/uax-url-email/) | - Similar to the standard tokenizer <br> - Unlike the standard tokenizer, leaves URLs and email addresses as single terms | `It’s fun to contribute a brand-new PR or 2 to OpenSearch opensearch-project@github.com!` <br>becomes<br> [`It’s`, `fun`, `to`, `contribute`, `a`,`brand`, `new`, `PR`, `or`, `2`, `to`, `OpenSearch`, `opensearch-project@github.com`] 
-[`classic`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/classic/) | - Parses strings into tokens on: <br> &emsp; - Punctuation characters that are followed by a white space character <br> &emsp; - Hyphens if the term does not contain numbers <br> - Removes punctuation <br>  - Leaves URLs and email addresses as single terms | `Part number PA-35234, single-use product (128.32)` <br>becomes<br> [`Part`, `number`, `PA-35234`, `single`, `use`, `product`, `128.32`]
-[`thai`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/thai/) | - Parses Thai text into terms | `สวัสดีและยินดีต` <br>becomes<br> [`สวัสด`, `และ`, `ยินดี`, `ต`] 
+[`standard`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/standard/) | - 在字詞邊界將字串剖析為詞元 <br> - 移除大部分標點符號 | `It’s fun to contribute a brand-new PR or 2 to OpenSearch!` <br>會變成<br> [`It’s`, `fun`, `to`, `contribute`, `a`,`brand`, `new`, `PR`, `or`, `2`, `to`, `OpenSearch`] 
+[`letter`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/letter/) | - 在任何非字母字元處將字串剖析為詞元 <br> - 移除非字母字元 | `It’s fun to contribute a brand-new PR or 2 to OpenSearch!` <br>會變成<br> [`It`, `s`, `fun`, `to`, `contribute`, `a`,`brand`, `new`, `PR`, `or`, `to`, `OpenSearch`]
+[`lowercase`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/lowercase/) | - 在任何非字母字元處將字串剖析為詞元 <br> - 移除非字母字元 <br> - 將詞彙轉換為小寫 | `It’s fun to contribute a brand-new PR or 2 to OpenSearch!` <br>會變成<br> [`it`, `s`, `fun`, `to`, `contribute`, `a`,`brand`, `new`, `pr`, `or`, `to`, `opensearch`]
+[`whitespace`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/whitespace/) | - 在空白字元處將字串剖析為詞元 | `It’s fun to contribute a brand-new PR or 2 to OpenSearch!` <br>會變成<br> [`It’s`, `fun`, `to`, `contribute`, `a`,`brand-new`, `PR`, `or`, `2`, `to`, `OpenSearch!`] 
+[`uax_url_email`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/uax-url-email/) | - 與標準斷詞器類似 <br> - 與標準斷詞器不同的是，會將 URL 與電子郵件地址保留為單一詞彙 | `It’s fun to contribute a brand-new PR or 2 to OpenSearch opensearch-project@github.com!` <br>會變成<br> [`It’s`, `fun`, `to`, `contribute`, `a`,`brand`, `new`, `PR`, `or`, `2`, `to`, `OpenSearch`, `opensearch-project@github.com`] 
+[`classic`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/classic/) | - 在下列位置將字串剖析為詞元：<br> &emsp; - 後面接著空白字元的標點符號 <br> &emsp; - 詞彙不含數字時的連字號 <br> - 移除標點符號 <br>  - 將 URL 與電子郵件地址保留為單一詞彙 | `Part number PA-35234, single-use product (128.32)` <br>會變成<br> [`Part`, `number`, `PA-35234`, `single`, `use`, `product`, `128.32`]
+[`thai`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/thai/) | - 將泰文文字剖析為詞彙 | `สวัสดีและยินดีต` <br>會變成<br> [`สวัสด`, `และ`, `ยินดี`, `ต`] 
 
-### Partial word tokenizers
+### 部分單字斷詞器
 
-Partial word tokenizers parse text into words and generate fragments of those words for partial word matching.
+部分單字斷詞器會將文字剖析為單字，並產生這些單字的片段，以進行部分單字比對。
 
-Tokenizer | Description | Example
+斷詞器 | 說明 | 範例
 :--- | :--- | :---
-[`ngram`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/ngram/)| - Generates n-grams (overlapping character sequences) from the input <br> - By default, treats the entire input as a single token and generates n-grams from all characters (including spaces and punctuation) <br> - When configured with `token_chars`, first splits on specified characters, then generates n-grams from each resulting word | `My repo` <br>becomes<br> [`M`, `My`, `y`, `y `, <code>&nbsp;</code>, <code>&nbsp;r</code>, `r`, `re`, `e`, `ep`, `p`, `po`, `o`] <br> with default behavior (no `token_chars` configuration) and n-gram length of 1--2 characters. 
-[`edge_ngram`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/edge-n-gram/) | - Generates edge n-grams (n-grams that start at the beginning of each token) <br> - By default, treats the entire input as a single token <br> - When configured with `token_chars`, first splits on specified characters (for example, punctuation or white space), then generates edge n-grams from each resulting word | `My repo` <br>becomes<br> [`M`, `My`, `r`, `re`] <br> when configured with `token_chars: ["letter"]` and default n-gram length of 1--2 characters. 
+[`ngram`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/ngram/)| - 從輸入產生 n-gram（重疊的字元序列）<br> - 預設會將整個輸入視為單一詞元，並從所有字元（包括空格與標點符號）產生 n-gram <br> - 設定 `token_chars` 時，會先在指定的字元處分割，再從分割出的每個單字產生 n-gram | `My repo` <br>會變成<br> [`M`, `My`, `y`, `y `, <code>&nbsp;</code>, <code>&nbsp;r</code>, `r`, `re`, `e`, `ep`, `p`, `po`, `o`] <br> 採用預設行為（未設定 `token_chars`）且 n-gram 長度為 1--2 個字元。 
+[`edge_ngram`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/edge-n-gram/) | - 產生 edge n-gram（從每個詞元開頭開始的 n-gram）<br> - 預設會將整個輸入視為單一詞元 <br> - 設定 `token_chars` 時，會先在指定的字元（例如標點符號或空白字元）處分割，再從分割出的每個單字產生 edge n-gram | `My repo` <br>會變成<br> [`M`, `My`, `r`, `re`] <br> 設定 `token_chars: ["letter"]` 且使用預設 n-gram 長度 1--2 個字元時。 
 
-### Structured text tokenizers
+### 結構化文字斷詞器
 
-Structured text tokenizers parse structured text, such as identifiers, email addresses, paths, or ZIP Codes.
+結構化文字斷詞器會剖析結構化文字，例如識別碼、電子郵件地址、路徑或郵遞區號。
 
-Tokenizer | Description | Example
+斷詞器 | 說明 | 範例
 :--- | :--- | :---
-[`keyword`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/keyword/) | - No-op tokenizer <br> - Outputs the entire string unchanged <br> - Can be combined with token filters, like lowercase, to normalize terms | `My repo` <br>becomes<br> `My repo`
-[`pattern`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/pattern/) | - Uses a regular expression pattern to parse text into terms on a word separator or to capture matching text as terms <br> - Uses [Java regular expressions](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) | `https://opensearch.org/forum` <br>becomes<br> [`https`, `opensearch`, `org`, `forum`] because by default the tokenizer splits terms at word boundaries (`\W+`)<br>  Can be configured with a regex pattern
-[`simple_pattern`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/simple-pattern/) | - Uses a regular expression pattern to return matching text as terms <br>  - Uses [Lucene regular expressions](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/util/automaton/RegExp.html)  <br> - Faster than the `pattern` tokenizer because it uses a subset of the `pattern` tokenizer regular expressions |  Returns an empty array by default <br> Must be configured with a pattern because the pattern defaults to an empty string
-[`simple_pattern_split`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/simple-pattern-split/) | - Uses a regular expression pattern to split the text on matches rather than returning the matches as terms  <br>  - Uses [Lucene regular expressions](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/util/automaton/RegExp.html)  <br> - Faster than the `pattern` tokenizer because it uses a subset of the `pattern` tokenizer regular expressions | No-op by default<br> Must be configured with a pattern
-[`char_group`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/character-group/) | - Parses on a set of configurable characters <br> - Faster than tokenizers that run regular expressions | No-op by default<br> Must be configured with a list of characters
-[`path_hierarchy`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/path-hierarchy/) | - Parses text on the path separator (by default, `/`) and returns a full path to each component in the tree hierarchy | `one/two/three` <br>becomes<br> [`one`, `one/two`, `one/two/three`]
+[`keyword`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/keyword/) | - 不執行任何操作的斷詞器 <br> - 原封不動地輸出整個字串 <br> - 可與詞元篩選器（例如 lowercase）搭配使用，以正規化詞彙 | `My repo` <br>會變成<br> `My repo`
+[`pattern`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/pattern/) | - 使用規則運算式模式，在字詞分隔符號處將文字剖析為詞彙，或將符合的文字擷取為詞彙 <br> - 使用 [Java 規則運算式](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) | `https://opensearch.org/forum` <br>會變成<br> [`https`, `opensearch`, `org`, `forum`]，因為斷詞器預設會在字詞邊界（`\W+`）分割詞彙<br>  可設定規則運算式模式
+[`simple_pattern`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/simple-pattern/) | - 使用規則運算式模式，將符合的文字傳回為詞彙 <br>  - 使用 [Lucene 規則運算式](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/util/automaton/RegExp.html)  <br> - 比 `pattern` 斷詞器更快，因為它使用 `pattern` 斷詞器規則運算式的子集 |  預設傳回空陣列 <br> 必須設定模式，因為模式預設為空字串
+[`simple_pattern_split`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/simple-pattern-split/) | - 使用規則運算式模式，在符合處分割文字，而非將符合的文字傳回為詞彙  <br>  - 使用 [Lucene 規則運算式](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/util/automaton/RegExp.html)  <br> - 比 `pattern` 斷詞器更快，因為它使用 `pattern` 斷詞器規則運算式的子集 | 預設不執行任何操作<br> 必須設定模式
+[`char_group`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/character-group/) | - 依一組可設定的字元進行剖析 <br> - 比執行規則運算式的斷詞器更快 | 預設不執行任何操作<br> 必須設定字元清單
+[`path_hierarchy`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/path-hierarchy/) | - 依路徑分隔符號（預設為 `/`）剖析文字，並傳回樹狀階層中每個元件的完整路徑 | `one/two/three` <br>會變成<br> [`one`, `one/two`, `one/two/three`]
 
 

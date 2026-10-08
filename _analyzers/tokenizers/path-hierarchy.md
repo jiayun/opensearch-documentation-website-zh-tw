@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Path hierarchy
+title: "路徑階層"
 parent: Tokenizers
 nav_order: 90
 ---
 
-# Path hierarchy tokenizer
+# 路徑階層斷詞器
 
-The `path_hierarchy` tokenizer tokenizes file-system-like paths (or similar hierarchical structures) by breaking them down into tokens at each hierarchy level. This tokenizer is particularly useful when working with hierarchical data such as file paths, URLs, or any other delimited paths.
+`path_hierarchy` 斷詞器會將類似檔案系統的路徑（或類似的階層式結構）在每個階層層級拆分為詞元，藉此進行斷詞。當您處理階層式資料（例如檔案路徑、URL 或任何其他以分隔符號分隔的路徑）時，此斷詞器特別實用。
 
-## Example usage
+## 使用範例
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `path_hierarchy` tokenizer:
+下列範例請求會建立名為 `my_index` 的新索引，並設定使用 `path_hierarchy` 斷詞器的分析器：
 
 ```json
 PUT /my_index
@@ -35,9 +36,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -48,7 +49,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含所產生的詞元：
 
 ```json
 {
@@ -85,21 +86,21 @@ The response contains the generated tokens:
 }
 ```
 
-## Parameters
+## 參數
 
-The `path_hierarchy` tokenizer can be configured with the following parameters.
+`path_hierarchy` 斷詞器可使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`delimiter` | Optional | String | Specifies the character used to separate path components. Default is `/`.
-`replacement` | Optional | String | Configures the character used to replace the delimiter in the tokens. Default is `/`.
-`buffer_size` | Optional | Integer | Specifies the buffer size. Default is `1024`.
-`reverse` | Optional | Boolean | If `true`, generates tokens in reverse order. Default is `false`.
-`skip` | Optional | Integer | Specifies the number of initial tokens (levels) to skip when tokenizing. Default is `0`.
+`delimiter` | 選用 | 字串 | 指定用來分隔路徑元件的字元。預設為 `/`。
+`replacement` | 選用 | 字串 | 設定用來取代詞元中分隔符號的字元。預設為 `/`。
+`buffer_size` | 選用 | 整數 | 指定緩衝區大小。預設為 `1024`。
+`reverse` | 選用 | 布林值 | 若為 `true`，則以反向順序產生詞元。預設為 `false`。
+`skip` | 選用 | 整數 | 指定斷詞時要略過的初始詞元（層級）數目。預設為 `0`。
 
-## Example using delimiter and replacement parameters
+## 使用 delimiter 與 replacement 參數的範例
 
-The following example request configures custom `delimiter` and `replacement` parameters:
+下列範例請求會設定自訂的 `delimiter` 與 `replacement` 參數：
 
 ```json
 PUT /my_index
@@ -126,7 +127,7 @@ PUT /my_index
 {% include copy-curl.html %}
 
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -137,7 +138,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含所產生的詞元：
 
 ```json
 {

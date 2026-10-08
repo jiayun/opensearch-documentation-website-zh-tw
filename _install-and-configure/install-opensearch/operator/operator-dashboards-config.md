@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: OpenSearch Dashboards configuration
+title: "OpenSearch Dashboards 組態"
 parent: OpenSearch Kubernetes Operator
 grand_parent: Installing OpenSearch
 nav_order: 30
 ---
 
-# OpenSearch Dashboards configuration
+# OpenSearch Dashboards 組態
 
-The operator can automatically deploy and manage an OpenSearch Dashboards instance. To enable it, add the following section to your cluster `spec`:
+operator 可以自動部署並管理 OpenSearch Dashboards 執行個體。若要啟用此功能，請將以下區段新增至您的叢集 `spec`：
 
 ```yaml
 # ...
@@ -20,9 +21,9 @@ spec:
 ```
 {% include copy.html %}
 
-## Configuring opensearch_dashboards.yml
+## 設定 opensearch_dashboards.yml
 
-You can customize the OpenSearch Dashboards configuration (`opensearch_dashboards.yml`) using the `additionalConfig` field in the dashboards section of the `OpenSearchCluster` custom resource:
+您可以使用 `OpenSearchCluster` 自訂資源中 dashboards 區段的 `additionalConfig` 欄位來自訂 OpenSearch Dashboards 組態 (`opensearch_dashboards.yml`)：
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -38,18 +39,18 @@ spec:
 ```
 {% include copy.html %}
 
-You can use this to configure any of the [backend authentication types]({{site.url}}{{site.baseurl}}/security-plugin/configuration/configuration/) for OpenSearch Dashboards.
+您可以使用此功能來設定 OpenSearch Dashboards 的任何 [後端驗證類型]({{site.url}}{{site.baseurl}}/security-plugin/configuration/configuration/)。
 
-The configuration must be valid. If the configuration is invalid, the OpenSearch Dashboards instance will fail to start.
+組態必須有效。如果組態無效，OpenSearch Dashboards 執行個體將無法啟動。
 {: .note}
 
-## Storing sensitive information in the dashboards configuration
+## 在 dashboards 組態中儲存敏感資訊
 
-You may need to store sensitive information in the OpenSearch Dashboards configuration file (for example, a client secret for OpenID Connect). To do this safely, use OpenSearch Dashboards variable substitution.
+您可能需要在 OpenSearch Dashboards 組態檔案中儲存敏感資訊（例如 OpenID Connect 的用戶端密鑰）。為了安全地執行此操作，請使用 OpenSearch Dashboards 變數替換。
 
-Create a secret with the sensitive information (for example, `dashboards-oidc-config`) and mount it as an environment variable in the OpenSearch Dashboards pod. For instructions, see [Adding environment variables to pods]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/operator-kubernetes-custom/#adding-environment-variables-to-pods). You can then reference any keys from that secret in your OpenSearch Dashboards configuration.
+建立一個包含敏感資訊的 secret（例如 `dashboards-oidc-config`），並將其掛載為 OpenSearch Dashboards pod 中的環境變數。有關說明，請參閱 [將環境變數新增至 pod]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/operator-kubernetes-custom/#adding-environment-variables-to-pods)。接著，您可以在 OpenSearch Dashboards 組態中引用該 secret 的任何金鑰。
 
-The following example shows a portion of a cluster `spec`:
+以下範例顯示了叢集 `spec` 的一部分：
 
 ```yaml
 spec:
@@ -65,12 +66,12 @@ spec:
 ```
 {% include copy.html %}
 
-Changing the value in the secret does not directly affect the OpenSearch Dashboards configuration. To apply the changes, restart the OpenSearch Dashboards pods.
+更改 secret 中的值不會直接影響 OpenSearch Dashboards 組態。若要套用變更，請重新啟動 OpenSearch Dashboards pod。
 {: .note}
 
-## Configuring a base path
+## 設定基本路徑
 
-When using OpenSearch Dashboards behind a reverse proxy on a subpath (for example, `/logs`), configure a base path by setting the `basePath` field. The operator automatically adds the correct configuration options to the OpenSearch Dashboards configuration:
+當在子路徑（例如 `/logs`）上透過反向代理伺服器使用 OpenSearch Dashboards 時，請透過設定 `basePath` 欄位來設定基本路徑。operator 會自動將正確的組態選項新增至 OpenSearch Dashboards 組態：
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -84,11 +85,11 @@ spec:
 ```
 {% include copy.html %}
 
-This also sets the `server.rewriteBasePath` option to `true`. If you expose OpenSearch Dashboards using an ingress controller, configure it to match this setting.
+這也會將 `server.rewriteBasePath` 選項設定為 `true`。如果您使用 ingress 控制器公開 OpenSearch Dashboards，請將其設定為與此設定相符。
 
 ## OpenSearch Dashboards HTTP
 
-OpenSearch Dashboards can expose its API and UI using HTTP or HTTPS. By default, the connection is not encrypted (HTTP). To secure the connection, you can either let the operator generate and sign a certificate or provide your own. The following fields in the `OpenSearchCluster` custom resource configure TLS for OpenSearch Dashboards:
+OpenSearch Dashboards 可以使用 HTTP 或 HTTPS 公開其 API 和 UI。預設情況下，連線未加密 (HTTP)。若要保護連線，您可以讓 operator 產生並簽署憑證，或者提供您自己的憑證。`OpenSearchCluster` 自訂資源中的以下欄位可用於設定 OpenSearch Dashboards 的 TLS：
 
 ```yaml
 # ...
@@ -108,8 +109,8 @@ spec:
 ```
 {% include copy.html %}
 
-To let the operator generate the certificate, set `tls.enable: true` and `tls.generate: true` (you can omit the other fields under `tls`). As with the node certificates, you can supply your own CA using `caSecret.name` for the operator to use.
+若要讓 operator 產生憑證，請設定 `tls.enable: true` 和 `tls.generate: true`（您可以省略 `tls` 下的其他欄位）。與節點憑證一樣，您可以使用 `caSecret.name` 提供您自己的 CA 供 operator 使用。
 
-To use your own certificate, provide it as a Kubernetes TLS secret (with fields `tls.key` and `tls.crt`) and specify the secret name in `secret.name`.
+若要使用您自己的憑證，請將其作為 Kubernetes TLS secret（包含 `tls.key` 和 `tls.crt` 欄位）提供，並在 `secret.name` 中指定 secret 名稱。
 
-When exposing OpenSearch Dashboards outside the cluster, use operator-generated certificates internally and let an ingress controller present a valid certificate from an accredited CA (for example, Let's Encrypt).
+當將 OpenSearch Dashboards 公開至叢集外部時，請在內部使用 operator 產生的憑證，並讓 ingress 控制器提供來自認可 CA（例如 Let's Encrypt）的有效憑證。

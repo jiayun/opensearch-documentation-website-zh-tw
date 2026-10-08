@@ -1,46 +1,47 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 
 layout: default
-title: Delete template (deprecated)
+title: "刪除範本（已淘汰）"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 110
 ---
 
-# Delete template
-**Introduced 1.0**
+# 刪除範本
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Delete Template API has been deprecated. Use the new [Delete Index Template]({{site.url}}{{site.baseurl}}/api-reference/index-apis/delete-index-template/) API.
+Delete Template API 已被淘汰。請改用新的 [Delete Index Template]({{site.url}}{{site.baseurl}}/api-reference/index-apis/delete-index-template/) API。
 {: .warning}
 
-The delete template API operation deletes an index template created using the legacy `/_template` endpoint.
+刪除範本 API 操作會刪除使用舊版 `/_template` 端點建立的索引範本。
 
 
-## Endpoints
+## 端點
 
 ```json
 DELETE /_template/{template-name}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are required.
+下表列出可用的路徑參數。所有路徑參數皆為必要。
 
-| Parameter    | Type   | Description                                                 |
+| 參數    | 類型   | 說明                                                 |
 | :----------- | :----- | :---------------------------------------------------------- |
-| `index-name` | String | The name of the index to delete. Supports wildcard expressions. |
+| `index-name` | String | 要刪除的索引名稱。支援萬用字元運算式。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All parameters are optional.
+下表列出可用的查詢參數。所有參數皆為選用。
 
-| Parameter       | Type | Description                                                                                  |
+| 參數       | 類型 | 說明                                                                                  |
 | :-------------- | :--- | :------------------------------------------------------------------------------------------- |
-| `cluster_manager_timeout` | Time | Specifies how long to wait for a connection to the cluster manager node. Default is `30s`. |
-| `timeout` | Time | Specifies how long to wait for the operation to complete. Default is `30s`. |
+| `cluster_manager_timeout` | Time | 指定等待連線至叢集管理員節點的時間長度。預設為 `30s`。 |
+| `timeout` | Time | 指定等待操作完成的時間長度。預設為 `30s`。 |
 
-## Example request
+## 範例請求
 
 <!-- spec_insert_start
 component: example_code
@@ -64,7 +65,7 @@ response = client.indices.delete_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 {

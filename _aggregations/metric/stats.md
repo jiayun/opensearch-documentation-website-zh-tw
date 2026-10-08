@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Stats
 parent: Metric aggregations
@@ -7,31 +8,31 @@ redirect_from:
   - /query-dsl/aggregations/metric/stats/
 ---
 
-# Stats aggregation
+# Stats 彙總
 
-The `stats` aggregation is a multi-value metric aggregation that computes a summary of numeric data. This aggregation is useful for quickly understanding the distribution of numeric fields. It can operate directly on a field, apply a script to derive the values, or handle documents with missing fields. The `stats` aggregation returns five values:
+`stats` 彙總是一種多值指標彙總，用於計算數值資料的摘要。此彙總有助於快速了解數值欄位的分布情況。它可以直接對欄位執行運算、套用指令碼來衍生值，或處理缺少欄位的文件。`stats` 彙總會傳回五個值：
 
-* `count`: The number of values collected
-* `min`: The lowest value
-* `max`: The highest value
-* `sum`: The total of all values
-* `avg`: The average of the values (sum divided by count)
+* `count`：收集到的值的數量
+* `min`：最小值
+* `max`：最大值
+* `sum`：所有值的總和
+* `avg`：值的平均數（總和除以數量）
 
-## Parameters
+## 參數
 
-The `stats` aggregation takes the following optional parameters.
+`stats` 彙總接受下列選用參數。
 
-| Parameter | Data type | Description                                                                                |
+| 參數 | 資料類型 | 說明                                                                                |
 | --------- | --------- | ------------------------------------------------------------------------------------------ |
-| `field`   | String    | The field to aggregate on. Must be a numeric field.                                            |
-| `script`  | Object    | The script used to calculate custom values for aggregation. Can be used instead of or with `field`. |
-| `missing` | Number    | The default value used for documents missing the target field. 
+| `field`   | 字串    | 要進行彙總的欄位。必須是數值欄位。                                            |
+| `script`  | 物件    | 用於計算彙總自訂值的指令碼。可取代 `field` 或與其搭配使用。 |
+| `missing` | 數字    | 用於缺少目標欄位之文件的預設值。 
 
-## Example
+## 範例
 
-The following example computes a `stats` aggregation for electricity usage.
+下列範例會計算用電量的 `stats` 彙總。
 
-Create an index named `power_usage` and add documents containing the number of kilowatt-hours (kWh) consumed during a given hour:
+建立名為 `power_usage` 的索引，並新增包含特定小時內所消耗千瓦時 (kWh) 數的文件：
 
 ```json
 PUT /power_usage/_bulk?refresh=true
@@ -44,7 +45,7 @@ PUT /power_usage/_bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-To compute statistics on the `kwh` field across all documents, use a `stats` aggregation named `consumption_stats` over the `kwh` field. Setting `size` to `0` specifies that document hits should not be returned:
+若要計算所有文件中 `kwh` 欄位的統計資料，請對 `kwh` 欄位使用名為 `consumption_stats` 的 `stats` 彙總。將 `size` 設為 `0` 表示不傳回文件命中結果：
 
 ```json
 GET /power_usage/_search
@@ -61,7 +62,7 @@ GET /power_usage/_search
 ```
 {% include copy-curl.html %}
 
-The response includes `count`, `min`, `max`, `avg`, and `sum` values for the three documents in the index:
+回應包含索引中三份文件的 `count`、`min`、`max`、`avg` 和 `sum` 值：
 
 ```json
 {
@@ -86,9 +87,9 @@ The response includes `count`, `min`, `max`, `avg`, and `sum` values for the thr
 }
 ```
 
-### Running a stats aggregation per bucket
+### 針對每個桶執行 stats 彙總
 
-You can compute separate statistics for each device by nesting a `stats` aggregation inside a `terms` aggregation in the `device_id` field. The `terms` aggregation groups documents into buckets based on unique `device_id` values, and the `stats` aggregation computes summary statistics within each bucket:
+您可以將 `stats` 彙總巢狀置於 `device_id` 欄位上的 `terms` 彙總中，藉此為每個裝置分別計算統計資料。`terms` 彙總會根據不重複的 `device_id` 值將文件分組到桶 (bucket) 中，而 `stats` 彙總則會在每個桶內計算摘要統計資料：
 
 ```json
 GET /power_usage/_search
@@ -112,7 +113,7 @@ GET /power_usage/_search
 ```
 {% include copy-curl.html %}
 
-The response returns one bucket per `device_id`, with computed `count`, `min`, `max`, `avg`, and `sum` fields within each bucket:
+回應會為每個 `device_id` 傳回一個桶，每個桶內都包含計算出的 `count`、`min`、`max`、`avg` 和 `sum` 欄位：
 
 ```json
 {
@@ -169,13 +170,13 @@ The response returns one bucket per `device_id`, with computed `count`, `min`, `
 }
 ```
 
-This allows you to compare usage statistics across devices with a single query.
+這讓您只需一個查詢即可比較各裝置的使用量統計資料。
 
-### Using a script to compute derived values
+### 使用指令碼計算衍生值
 
-You can also use a script to compute the values used in the `stats` aggregation. This is useful when the metric is derived from document fields or requires transformation.
+您也可以使用指令碼來計算 `stats` 彙總中使用的值。當指標是從文件欄位衍生而來或需要轉換時，這項功能就很實用。
 
-For example, to convert kilowatt-hours (kWh) to watt-hours (Wh) before running the `stats` aggregation, because `1 kWh` equals `1,000 Wh`, you can use a script that multiplies each value by `1,000`. The following script `doc['kwh'].value * 1000` is used to derive the input value for each document:
+例如，由於 `1 kWh` 等於 `1,000 Wh`，若要在執行 `stats` 彙總前將千瓦時 (kWh) 轉換為瓦時 (Wh)，您可以使用將每個值乘以 `1,000` 的指令碼。下列指令碼 `doc['kwh'].value * 1000` 用於衍生每份文件的輸入值：
 
 ```json
 GET /power_usage/_search
@@ -194,7 +195,7 @@ GET /power_usage/_search
 ```
 {% include copy-curl.html %}
 
-The `stats` aggregation returned in the response reflects values of `1200`, `700`, and `1500` Wh:
+回應中傳回的 `stats` 彙總反映了 `1200`、`700` 和 `1500` Wh 的值：
 
 ```json
 {
@@ -219,11 +220,11 @@ The `stats` aggregation returned in the response reflects values of `1200`, `700
 }
 ```
 
-### Using a value script with a field
+### 搭配欄位使用值指令碼
 
-When combining a field with a transformation, you can specify both `field` and `script`. This allows using the `_value` variable to reference the field's value within the script.
+將欄位與轉換結合時，您可以同時指定 `field` 和 `script`。如此即可使用 `_value` 變數，在指令碼中參照該欄位的值。
 
-The following example increases each energy reading by 5% before computing the `stats` aggregation:
+下列範例會在計算 `stats` 彙總前，將每筆能源讀數增加 5%：
 
 ```json
 GET /power_usage/_search
@@ -243,11 +244,11 @@ GET /power_usage/_search
 ```
 {% include copy-curl.html %}
 
-### Missing values
+### 缺少的值
 
-If some documents do not contain the target field, they are excluded by default from the aggregation. To include them using a default value, you can specify the `missing` parameter.
+如果部分文件不包含目標欄位，預設會將其排除在彙總之外。若要使用預設值將這些文件納入，您可以指定 `missing` 參數。
 
-The following request treats missing `kwh` values as `0.0`:
+下列請求會將缺少的 `kwh` 值視為 `0.0`：
 
 ```json
 GET /power_usage/_search

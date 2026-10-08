@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: generate-data
 nav_order: 50
@@ -9,55 +10,55 @@ redirect_from:
 ---
 
 <!-- vale off -->
-# generate-data command
+# generate-data 命令
 <!-- vale on -->
 
-The `generate-data` command creates synthetic datasets for benchmarking and testing. OpenSearch Benchmark supports two methods for data generation: using OpenSearch index mappings or custom Python modules with user-defined logic. For more information, see [Synthetic data generation]({{site.url}}{{site.baseurl}}/benchmark/features/synthetic-data-generation/).
+`generate-data` 命令會建立用於基準測試與測試的合成資料集。OpenSearch Benchmark 支援兩種資料產生方式：使用 OpenSearch 索引對應，或使用包含使用者自訂邏輯的 Python 模組。如需更多資訊，請參閱 [合成資料產生]({{site.url}}{{site.baseurl}}/benchmark/features/synthetic-data-generation/)。
 
-## Usage
+## 用法
 
 ```shell
 osb generate-data --index-name <INDEX_NAME> --output-path <OUTPUT_PATH> --total-size <SIZE_GB> [OPTIONS]
 ```
 
-**Requirements**:
+**必要條件**：
 
-- Either `--index-mappings` or `--custom-module` must be specified, but not both.
-- When using `--custom-module`, your Python module must include the `generate_synthetic_document(providers, **custom_lists)` function.
+- 必須指定 `--index-mappings` 或 `--custom-module` 其中之一，但不可同時指定兩者。
+- 使用 `--custom-module` 時，您的 Python 模組必須包含 `generate_synthetic_document(providers, **custom_lists)` 函式。
 
-## Data generation methods
+## 資料產生方式
 
-Choose one of the following approaches:
+請選擇下列其中一種方式：
 
-**Method 1: Using index mappings**:
+**方式 1：使用索引對應**：
 
 ```shell
 osb generate-data --index-name my-index --index-mappings mapping.json --output-path ./data --total-size 1
 ```
 
-**Method 2: Using a custom Python module**:
+**方式 2：使用自訂 Python 模組**：
 
 ```shell
 osb generate-data --index-name my-index --custom-module custom.py --output-path ./data --total-size 1
 ```
 
-## Options
+## 選項
 
-Use the following options with the `generate-data` command.
+搭配 `generate-data` 命令使用下列選項。
 
-| Option | Required/Optional | Description |
+| 選項 | 必要/選用 | 說明 |
 |---|---|---|
-| `--index-name` or `-n` | Required | The name of the data corpora you want to generate. |
-| `--output-path` or `-p` | Required | The path where you want the data to be generated. |
-| `--total-size` or `-s` | Required | The total amount of data you want to generate, in GB. |
-| `--index-mappings` or `-i` | Conditional (Either `--index-mappings` or `--custom-module` must be specified)| The path to the OpenSearch index mappings you want to use. Required when using mapping-based generation. Cannot be used with `--custom-module`. |
-| `--custom-module` or `-m` | Conditional (Either `--index-mappings` or `--custom-module` must be specified)| The path to the Python module that includes your custom logic. Required when using custom logic generation. Cannot be used with `--index-mappings`. The Python module must include the `generate_synthetic_document(providers, **custom_lists)` function. |
-| `--custom-config` or `-c` | Optional | The path to a YAML configuration file defining rules for how you want data to be generated. |
-| `--test-document` or `-t` | Optional | When this flag is present, OpenSearch Benchmark generates a single synthetic document and outputs it to the console. This provides you with a way to verify that the generated example document aligns with your expectations. When the flag is not present, the entire data corpora will be generated. |
+| `--index-name` 或 `-n` | 必要 | 您要產生的資料語料庫名稱。 |
+| `--output-path` 或 `-p` | 必要 | 您要產生資料的目的地路徑。 |
+| `--total-size` 或 `-s` | 必要 | 您要產生的資料總量，單位為 GB。 |
+| `--index-mappings` 或 `-i` | 條件式（必須指定 `--index-mappings` 或 `--custom-module` 其中之一）| 您要使用的 OpenSearch 索引對應路徑。使用對應式產生時為必要。不可與 `--custom-module` 併用。 |
+| `--custom-module` 或 `-m` | 條件式（必須指定 `--index-mappings` 或 `--custom-module` 其中之一）| 包含您自訂邏輯的 Python 模組路徑。使用自訂邏輯產生時為必要。不可與 `--index-mappings` 併用。Python 模組必須包含 `generate_synthetic_document(providers, **custom_lists)` 函式。 |
+| `--custom-config` 或 `-c` | 選用 | 定義資料產生規則的 YAML 組態檔路徑。 |
+| `--test-document` 或 `-t` | 選用 | 當此旗標存在時，OpenSearch Benchmark 會產生單一合成文件並輸出至主控台，讓您能驗證產生的範例文件是否符合預期。當此旗標不存在時，將產生整個資料語料庫。 |
 
-## Example output
+## 範例輸出
 
-The following is an example output when generating synthetic data:
+以下是產生合成資料時的範例輸出：
 
 ```
    ____                  _____                      __       ____                  __                         __
@@ -87,7 +88,7 @@ Generated 24271844660 docs in 12000 seconds. Total dataset size is 100.21GB.
 -----------------------------------
 ```
 
-## Related documentation
+## 相關文件
 
-- [Generating data using index mappings]({{site.url}}{{site.baseurl}}/benchmark/features/synthetic-data-generation/mapping-sdg/)
-- [Generating data using custom logic]({{site.url}}{{site.baseurl}}/benchmark/features/synthetic-data-generation/custom-logic-sdg/)
+- [使用索引對應產生資料]({{site.url}}{{site.baseurl}}/benchmark/features/synthetic-data-generation/mapping-sdg/)
+- [使用自訂邏輯產生資料]({{site.url}}{{site.baseurl}}/benchmark/features/synthetic-data-generation/custom-logic-sdg/)

@@ -1,138 +1,139 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Dashboard tutorial
+title: "儀表板教學"
 parent: Creating dashboards
 nav_order: 5
 has_children: false
 ---
 
-# Tutorial: Creating a dashboard
+# 教學：建立儀表板
 
-You can use the **Dashboards** application in OpenSearch Dashboards to build a page containing multiple visual representations of your data.
+您可以使用 OpenSearch Dashboards 中的 **Dashboards** 應用程式，建立一個包含多種資料視覺呈現方式的頁面。
 
-Use the following tutorial to learn to create a dashboard using the **Dashboards** application and the OpenSearch sample data. The sample datasets have existing sample visualizations that you can use for the dashboard, or you can create your own visualizations. The tutorials demonstrate how to do both.
+請透過以下教學，了解如何使用 **Dashboards** 應用程式和 OpenSearch 範例資料建立儀表板。範例資料集已附有現成的範例視覺化，您可以將其用於儀表板，也可以自行建立視覺化。本教學將示範這兩種做法。
 
-For an overview of the Dashboards UI, see [Navigating the Dashboards application UI]({{site.url}}{{site.baseurl}}/dashboards/dashboard/#navigating-the-dashboards-application-ui).
+如需 Dashboards 使用者介面的概觀，請參閱[瀏覽 Dashboards 應用程式使用者介面]({{site.url}}{{site.baseurl}}/dashboards/dashboard/#navigating-the-dashboards-application-ui)。
 
-## Prerequisites
+## 先決條件
 
-The tutorials on this page use the [**Sample eCommerce data**](https://playground.opensearch.org/app/home#/tutorial_directory) dataset that is already installed in [OpenSearch Playground](https://playground.opensearch.org/app/home#/).
+本頁的教學使用 [**Sample eCommerce data**](https://playground.opensearch.org/app/home#/tutorial_directory) 資料集，此資料集已安裝在 [OpenSearch Playground](https://playground.opensearch.org/app/home#/) 中。
 
-If you're using a local installation of OpenSearch Dashboards and haven't added sample data yet, see [Prepare your data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
+如果您使用的是本機安裝的 OpenSearch Dashboards，且尚未新增範例資料，請參閱[準備您的資料]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
 
-The following tutorials assume you're either using your existing installation of OpenSearch Dashboards or using the [OpenSearch Playground](https://playground.opensearch.org/app/home#/). Depending on which one you use, certain capabilities may not be available. For example, sample datasets may not be included in your existing installation, and saving a dashboard isn't an option in the OpenSearch Playground.
+以下教學假設您使用的是現有安裝的 OpenSearch Dashboards，或是 [OpenSearch Playground](https://playground.opensearch.org/app/home#/)。視您使用的環境而定，某些功能可能無法使用。例如，您現有的安裝可能未包含範例資料集，而 OpenSearch Playground 則無法儲存儀表板。
 {: .note}
 
-## Creating a dashboard
+## 建立儀表板
 
-To create a new dashboard, follow these steps:
+若要建立新的儀表板，請依照下列步驟操作：
 
-1. | In classic navigation | In workspaces navigation |
+1. | 在傳統導覽中 | 在工作區導覽中 |
    | :-- | :-- |
-   | - Select **OpenSearch Dashboards** > **Dashboards**.<br/>- Select **Dashboards**. | Select **Dashboards**. |
+   | - 選取 **OpenSearch Dashboards** > **Dashboards**。<br/>- 選取 **Dashboards**。 | 選取 **Dashboards**。 |
 
-1. | In classic navigation | In workspaces navigation |
+1. | 在傳統導覽中 | 在工作區導覽中 |
    | :-- | :-- |
-   | - In the Dashboards panel, select **Create**.<br/>- From the drop-down, select **Dashboard**. | From the application menu, select **Create Dashboard**. |
+   | - 在 Dashboards 面板中，選取 **Create**。<br/>- 從下拉式選單中選取 **Dashboard**。 | 從應用程式選單中選取 **Create Dashboard**。 |
 
-## Adding an existing visualization
+## 新增現有的視覺化
 
-To add a saved visualization to the dashboard, follow these steps:
+若要將已儲存的視覺化新增至儀表板，請依照下列步驟操作：
 
-1. From the application panel, choose **Add an existing**.
+1. 在應用程式面板中，選擇 **Add an existing**。
 
-1. In the **Add panels** dialog, type `ecommerce` in the **Search** box to filter the list of available visualizations.
+1. 在 **Add panels** 對話方塊中，於 **Search** 方塊輸入 `ecommerce`，以篩選可用的視覺化清單。
 
-1. From the **Add panels** dialog, choose **[eCommerce] Sales by Category**.
+1. 在 **Add panels** 對話方塊中，選擇 **[eCommerce] Sales by Category**。
 
-1. Choose the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/cross-icon.png" class="inline-icon" alt="cross icon"/>{:/} (cross) icon to close the dialog.
+1. 選擇 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/cross-icon.png" class="inline-icon" alt="cross icon"/>{:/}（叉號）圖示以關閉對話方塊。
 
-1. Use the [time filter]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/) to select `Last 2 years` as the time window as shown in the following image.
+1. 使用[時間篩選器]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/)選取 `Last 2 years` 作為時間範圍，如下圖所示。
 
-![Time filter set to Last 2 years]({{site.url}}{{site.baseurl}}/images/dashboards/dash-tut-time-2-years.png){: width="40%" }
+![時間篩選器設定為過去 2 年]({{site.url}}{{site.baseurl}}/images/dashboards/dash-tut-time-2-years.png){: width="40%" }
 
-1. Drag-select the narrow band of data from the area chart as shown in the following image.
+1. 在區域圖中拖曳選取一段狹窄的資料範圍，如下圖所示。
 
-   ![Visualization showing drag-select]({{site.url}}{{site.baseurl}}/images/dashboards/dash-tut-sales-drag.png){: width="60%" }
+   ![顯示拖曳選取的視覺化]({{site.url}}{{site.baseurl}}/images/dashboards/dash-tut-sales-drag.png){: width="60%" }
 
-   The data adjusts to span the width of the data display and the scale adjusts automatically, as shown in the following image.
+   資料會調整為延展至整個資料顯示區域的寬度，刻度也會自動調整，如下圖所示。
 
-   ![Sales by category area visualization]({{site.url}}{{site.baseurl}}/images/dashboards/dash-tut-sales-area.png){: width="60%" }
+   ![依類別顯示銷售額的區域視覺化]({{site.url}}{{site.baseurl}}/images/dashboards/dash-tut-sales-area.png){: width="60%" }
 
-   Selecting a date range interactively results in an absolute time interval.
-   {: .note}
+   以互動方式選取日期範圍，會產生絕對時間間隔。
+{: .note}
 
-You've created a dashboard with a single panel, which you'll continue to modify in this tutorial. Save the dashboard as described in the following section.
-
-
-## Saving a dashboard
-
-To save a new dashboard, follow these steps:
-
-1. In the **Dashboards** toolbar, choose **Save**.
-
-1. In the **Save dashboard** dialog, enter `[Ecommerce] tutorial dashboard` in the **Title** box.
-
-1. Save the time filter with the dashboard by selecting **Store time with dashboard**.
-
-1. Choose **Save**.
-
-1. Choose **Edit** from the application menu to continue editing the dashboard.
+您已建立一個只有單一面板的儀表板，接下來您會在本教學中繼續修改它。請依照下一節的說明儲存儀表板。
 
 
-## Creating a visualization
+## 儲存儀表板
 
-To create a new visualization in **Dashboards**, follow these steps:
+若要儲存新的儀表板，請依照下列步驟操作：
 
-1. From the application toolbar, choose **Create new**.
+1. 在 **Dashboards** 工具列中，選擇 **Save**。
 
-1. From the **New Visualization** window, choose **Metric**.
+1. 在 **Save dashboard** 對話方塊中，於 **Title** 方塊輸入 `[Ecommerce] tutorial dashboard`。
 
-1. In the **New Metric/Choose a source** dialog, select the index pattern **opensearch_dashboards_sample_data_ecommerce**.
+1. 選取 **Store time with dashboard**，將時間篩選器與儀表板一併儲存。
 
-1. From the toolbar, choose **Save**.
+1. 選擇 **Save**。
 
-1. In the **Save visualization** dialog, enter a title for the visualization. For this tutorial, enter `[eCommerce] Order Count`.
-
-1. Choose **Save and return**.
-
-   The **Dashboards** application saves the metric visualization and adds it to the dashboard as shown in the following image.
-
-   ![Dashboard with Sales by Category and Order Count metric panels]({{site.url}}{{site.baseurl}}/images/dashboards/dash-tut-combined.png)
+1. 從應用程式選單中選擇 **Edit**，以繼續編輯儀表板。
 
 
-## Adding subsequent panels
+## 建立視覺化
 
-Add a Markdown visualization to the dashboard. Follow these steps:
+若要在 **Dashboards** 中建立新的視覺化，請依照下列步驟操作：
 
-1. From the dashboard toolbar, choose **Add**.
+1. 在應用程式工具列中，選擇 **Create new**。
 
-1. From the **Add panels** dialog, choose **[eCommerce] Markdown**.
+1. 在 **New Visualization** 視窗中，選擇 **Metric**。
 
-1. Choose the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/cross-icon.png" class="inline-icon" alt="cross icon"/>{:/} (cross) icon to close the dialog.
+1. 在 **New Metric/Choose a source** 對話方塊中，選取索引模式 **opensearch_dashboards_sample_data_ecommerce**。
 
-   The **Dashboards** application adds the Markdown panel to the dashboard as shown in the following image.
+1. 在工具列中，選擇 **Save**。
 
-   ![Example dashboard]({{site.url}}{{site.baseurl}}/images/dashboards/dash-tut-three-panel.png)
+1. 在 **Save visualization** 對話方塊中，輸入視覺化的標題。在本教學中，請輸入 `[eCommerce] Order Count`。
+
+1. 選擇 **Save and return**。
+
+   **Dashboards** 應用程式會儲存此指標視覺化，並將其新增至儀表板，如下圖所示。
+
+   ![包含 Sales by Category 與 Order Count 指標面板的儀表板]({{site.url}}{{site.baseurl}}/images/dashboards/dash-tut-combined.png)
 
 
-## Organizing a dashboard
+## 新增後續面板
 
-You can organize a dashboard by resizing and rearranging panels. Move and resize the Markdown panel to serve as a title and description for the dashboard. Follow these steps:
+將 Markdown 視覺化新增至儀表板。請依照下列步驟操作：
 
-1. Select and hold the top of the panel anywhere to the left of the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/gear-icon.png" class="inline-icon" alt="options icon"/>{:/} (options) icon.
+1. 在儀表板工具列中，選擇 **Add**。
 
-1. Drag the panel to the top of the application panel.
+1. 在 **Add panels** 對話方塊中，選擇 **[eCommerce] Markdown**。
 
-   The Sales by Category panel automatically swaps places with the Markdown panel as you move it up.
-1. Select and hold the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/resize-icon.png" class="inline-icon" alt="resize icon"/>{:/} (resize) icon in the panel's lower-right corner.
+1. 選擇 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/cross-icon.png" class="inline-icon" alt="cross icon"/>{:/}（叉號）圖示以關閉對話方塊。
 
-1. Drag to make the panel longer and narrower so that it serves as a banner across the entire upper part of the dashboard.
+   **Dashboards** 應用程式會將 Markdown 面板新增至儀表板，如下圖所示。
 
-   The metric panel automatically moves down to allow room for the resized Markdown panel.
+   ![範例儀表板]({{site.url}}{{site.baseurl}}/images/dashboards/dash-tut-three-panel.png)
 
-   The resulting dashboard should look like the following image.
 
-   ![Example dashboard]({{site.url}}{{site.baseurl}}/images/dashboards/dash-tut-banner.png)
+## 整理儀表板
 
-1. Save your dashboard. See [Saving a dashboard](#saving-a-dashboard).
+您可以透過調整面板大小及重新排列面板來整理儀表板。移動 Markdown 面板並調整其大小，使其作為儀表板的標題與說明。請依照下列步驟操作：
+
+1. 在面板頂端、{::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/gear-icon.png" class="inline-icon" alt="options icon"/>{:/}（選項）圖示左側的任意位置選取並按住。
+
+1. 將面板拖曳至應用程式面板的頂端。
+
+   當您向上移動 Markdown 面板時，Sales by Category 面板會自動與其交換位置。
+1. 選取並按住面板右下角的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/resize-icon.png" class="inline-icon" alt="resize icon"/>{:/}（調整大小）圖示。
+
+1. 拖曳以將面板拉長並縮窄，使其成為橫跨儀表板整個上方區域的橫幅。
+
+   指標面板會自動向下移動，為調整大小後的 Markdown 面板騰出空間。
+
+   完成後的儀表板應如下圖所示。
+
+   ![範例儀表板]({{site.url}}{{site.baseurl}}/images/dashboards/dash-tut-banner.png)
+
+1. 儲存您的儀表板。請參閱[儲存儀表板](#saving-a-dashboard)。

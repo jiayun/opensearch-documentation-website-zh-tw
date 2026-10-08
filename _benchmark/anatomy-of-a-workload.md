@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Anatomy of a workload
+title: "工作負載的結構"
 nav_order: 22
 has_children: true
 has_toc: false
@@ -13,29 +14,29 @@ redirect_from:
   - /benchmark/user-guide/understanding-workloads/
 ---
 
-# Anatomy of a workload
+# 工作負載的結構
 
-A workload is a specification of one or more benchmarking scenarios. All workloads contain the following files and directories:
+工作負載是一或多個基準測試情境的規格。所有工作負載都包含下列檔案和目錄：
 
-- [`workload.json`](#workloadjson): Contains all of the workload settings.
-- [`index.json`](#indexjson): Contains the document mappings and parameters as well as index settings.
-- [`files.txt`](#filestxt): Contains the data corpora file names.
-- [`_test-procedures`](#_operations-and-_test-procedures): Most workloads contain only one default test procedure, which is configured in `default.json`.
-- [`_operations`](#_operations-and-_test-procedures): Contains all of the operations used in test procedures.
-- `workload.py`: Adds more dynamic functionality to the test.
+- [`workload.json`](#workloadjson)：包含所有工作負載設定。
+- [`index.json`](#indexjson)：包含文件對應和參數，以及索引設定。
+- [`files.txt`](#filestxt)：包含資料語料庫的檔案名稱。
+- [`_test-procedures`](#_operations-and-_test-procedures)：大多數工作負載只包含一個預設的測試程序，該程序在 `default.json` 中設定。
+- [`_operations`](#_operations-and-_test-procedures)：包含測試程序中使用的所有操作。
+- `workload.py`：為測試新增更多動態功能。
 
 <!-- vale off -->
 ## workload.json
 <!-- vale on -->
 
-A `workload.json` file usually includes the following elements:
+`workload.json` 檔案通常包含下列元素：
 
-- [`indices`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/indices/): Defines the relevant indexes and index templates used for the workload. To create an index, specify its `name`. To add definitions to your index, use the `body` option and point it to the JSON file containing the index definitions.
-- [`corpora`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/corpora/): Defines all document corpora used for the workload, including the source files that contain the documents and the number of documents in each file.
-- [`operations`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/operations/): **Optional**. Lists the OpenSearch API operations performed by the workload and how they are parameterized. For example, you can list an operation named `create-index` that creates an index in the benchmark cluster to which OpenSearch Benchmark can write documents.
-- [`schedule`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/schedule/): Defines operations and the order in which the operations run inline. Alternatively, you can use `operations` to group operations and the [`test_procedures`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/test-procedures/) parameter to specify the order of operations.
+- [`indices`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/indices/)：定義工作負載所使用的相關索引和索引範本。若要建立索引，請指定其 `name`。若要為索引新增定義，請使用 `body` 選項，並將其指向包含索引定義的 JSON 檔案。
+- [`corpora`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/corpora/)：定義工作負載所使用的所有文件語料庫，包括包含文件的來源檔案，以及每個檔案中的文件數量。
+- [`operations`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/operations/)：**選用**。列出工作負載所執行的 OpenSearch API 操作，以及這些操作的參數化方式。例如，您可以列出名為 `create-index` 的操作，該操作會在基準測試叢集中建立一個索引，供 OpenSearch Benchmark 寫入文件。
+- [`schedule`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/schedule/)：以內嵌方式定義操作及操作的執行順序。或者，您也可以使用 `operations` 將操作分組，並使用 [`test_procedures`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/test-procedures/) 參數指定操作的順序。
 
-The following example workload shows these elements working together. You can run this workload in your own benchmark configuration:
+下列範例工作負載展示了這些元素如何搭配運作。您可以在自己的基準測試組態中執行此工作負載：
 
 ```json
 {
@@ -102,9 +103,9 @@ The following example workload shows these elements working together. You can ru
 ## index.json
 <!-- vale on -->
 
-The `index.json` file defines the data mappings, indexing parameters, and index settings for workload documents during `create-index` operations. 
+`index.json` 檔案定義了在 `create-index` 操作期間，工作負載文件的資料對應、索引編製參數和索引設定。
 
-When OpenSearch Benchmark creates an index for the workload, it uses the index settings and mappings template in the `index.json` file. Mappings in the `index.json` file are based on the mappings of a single document from the workload's corpus, which is stored in the `files.txt` file. The following is an example of the `index.json` file for the `nyc_taxis` workload. You can customize the fields, such as `number_of_shards`, `number_of_replicas`, `query_cache_enabled`, and `requests_cache_enabled`. 
+當 OpenSearch Benchmark 為工作負載建立索引時，會使用 `index.json` 檔案中的索引設定和對應範本。`index.json` 檔案中的對應是根據工作負載語料庫中單一文件的對應而來，該語料庫儲存在 `files.txt` 檔案中。以下是 `nyc_taxis` 工作負載的 `index.json` 檔案範例。您可以自訂欄位，例如 `number_of_shards`、`number_of_replicas`、`query_cache_enabled` 和 `requests_cache_enabled`。
 
 ```json
 {
@@ -206,15 +207,15 @@ When OpenSearch Benchmark creates an index for the workload, it uses the index s
 ## files.txt
 <!-- vale on -->
 
-The `files.txt` file lists the files that store the workload data, which are typically stored in a zipped JSON file.
+`files.txt` 檔案列出儲存工作負載資料的檔案，這些資料通常儲存在壓縮的 JSON 檔案中。
 
 <!-- vale off -->
-## _operations and _test-procedures
+## _operations 與 _test-procedures
 <!-- vale on -->
 
-To make the workload more human-readable, `_operations` and `_test-procedures` are separated into two directories. 
+為了讓工作負載更易於閱讀，`_operations` 和 `_test-procedures` 被分成兩個目錄。
 
-The `_operations` directory contains a `default.json` file that lists all of the supported operations that the test procedure can use. Some workloads, such as `nyc_taxis`, contain an additional `.json` file that lists feature-specific operations, such as `snapshot` operations. The following JSON example shows a list of operations from the `nyc_taxis` workload:
+`_operations` 目錄包含一個 `default.json` 檔案，其中列出測試程序可使用的所有受支援操作。部分工作負載（例如 `nyc_taxis`）包含額外的 `.json` 檔案，其中列出特定功能的操作，例如 `snapshot` 操作。下列 JSON 範例顯示 `nyc_taxis` 工作負載中的操作清單：
 
 ```json
     {
@@ -574,7 +575,7 @@ The `_operations` directory contains a `default.json` file that lists all of the
     }
 ```
 
-The `_test-procedures` directory contains a `default.json` file that sets the order of operations performed by the workload. Similar to the `_operations` directory, the `_test-procedures` directory can also contain feature-specific test procedures, such as `searchable_snapshots.json` for `nyc_taxis`. The following examples show the searchable snapshots test procedures for `nyc_taxis`:
+`_test-procedures` 目錄包含一個 `default.json` 檔案，用來設定工作負載執行的操作順序。與 `_operations` 目錄類似，`_test-procedures` 目錄也可以包含特定功能的測試程序，例如用於 `nyc_taxis` 的 `searchable_snapshots.json`。下列範例顯示 `nyc_taxis` 的可搜尋快照測試程序：
 
 ```json
  {
@@ -727,13 +728,13 @@ The `_test-procedures` directory contains a `default.json` file that sets the or
     }
 ```
 
-## Workload examples
+## 工作負載範例
 
-The following examples show complete `workload.json` files that you can adapt for your own workloads.
+下列範例展示完整的 `workload.json` 檔案，您可以依自己的工作負載加以調整。
 
-### Running unthrottled
+### 不限速執行
 
-In the following example, OpenSearch Benchmark runs an unthrottled bulk index operation for 1 hour against the `movies` index:
+在下列範例中，OpenSearch Benchmark 針對 `movies` 索引執行不限速的大量索引操作，持續 1 小時：
 
 ```json
 {
@@ -767,9 +768,9 @@ In the following example, OpenSearch Benchmark runs an unthrottled bulk index op
 }
 ```
 
-### Workload with a single task
+### 單一工作的工作負載
 
-The following workload runs a benchmark with a single task: a `match_all` query. Because no `clients` are indicated, only one client is used. According to the [`schedule`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/schedule/), the workload runs the `match_all` query at 10 operations per second with 1 client, uses 100 iterations to warm up, and uses the next 100 iterations to measure the benchmark:
+下列工作負載以單一工作執行基準測試：一個 `match_all` 查詢。由於未指定 `clients`，因此只使用一個用戶端。根據 [`schedule`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/schedule/)，此工作負載以每秒 10 個操作、1 個用戶端執行 `match_all` 查詢，使用前 100 次迭代暖機，並使用接下來的 100 次迭代測量基準測試結果：
 
 ```json
 {
@@ -811,7 +812,7 @@ The following workload runs a benchmark with a single task: a `match_all` query.
 }
 ```
 
-## Next steps
+## 後續步驟
 
-- For the data, cluster requirements, and query types of each prepackaged workload, see [Workload types]({{site.url}}{{site.baseurl}}/benchmark/workload-types/).
-- For information about creating your own workload, see [Creating custom workloads]({{site.url}}{{site.baseurl}}/benchmark/creating-custom-workloads/).
+- 如需了解各個預先封裝工作負載的資料、叢集需求和查詢類型，請參閱[工作負載類型]({{site.url}}{{site.baseurl}}/benchmark/workload-types/)。
+- 如需了解如何建立您自己的工作負載，請參閱[建立自訂工作負載]({{site.url}}{{site.baseurl}}/benchmark/creating-custom-workloads/)。

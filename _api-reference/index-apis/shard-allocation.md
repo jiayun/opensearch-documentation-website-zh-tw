@@ -1,63 +1,64 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Shard allocation
+title: "分片配置"
 parent: Index blocks and allocation
 grand_parent: Index APIs
 nav_order: 20
 ---
 
-# Shard allocation filtering
-**Introduced 1.0**
+# 分片配置篩選
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Shard allocation filtering lets you constrain where shards for an index are placed by matching node attributes. You can use it to pin shards to certain nodes, avoid nodes, or require specific hardware or zones. Shards are only allocated to nodes that satisfy all active filters, including index-level shard allocation filtering and [cluster-level routing awareness]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-awareness/).
+分片配置篩選可透過比對節點屬性，限制索引分片的放置位置。您可以使用此功能，將分片固定配置到特定節點、避開某些節點，或要求特定硬體或區域。分片只會配置到符合所有啟用中篩選條件的節點，包括索引層級的分片配置篩選和[叢集層級的路由感知]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-awareness/)。
 
-## Endpoints
+## 端點
 
 ```json
 PUT /{index}/_settings
 GET /{index}/_settings
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`index` | String | One or more comma-separated indexes from which to update or read settings. Use `_all` or `*` to target all indexes. |
+`index` | 字串 | 要更新或讀取設定的一或多個索引，以逗號分隔。使用 `_all` 或 `*` 指定所有索引。 |
 
-## Built-in and custom attributes
+## 內建與自訂屬性
 
-You can filter on built‑in attributes or any custom node attribute you define. For example, custom attribute can be defined by adding `node.attr.zone: zone-a` in `opensearch.yml`. The following built‑in attributes are supported.
+您可以依據內建屬性或您定義的任何自訂節點屬性進行篩選。例如，可以在 `opensearch.yml` 中新增 `node.attr.zone: zone-a`，以定義自訂屬性。支援下列內建屬性。
 
-Attribute | Description
+屬性 | 說明
 :--- | :---
-`_name` | Match by node name.
-`_host_ip` | Match by host IP address.
-`_publish_ip` | Match by publish IP address.
-`_ip` | Match either `_host_ip` or `_publish_ip`.
-`_host` | Match by hostname.
-`_id` | Match by node ID.
-`_tier` | Match nodes by data tier role.
+`_name` | 依節點名稱比對。
+`_host_ip` | 依主機 IP 位址比對。
+`_publish_ip` | 依發布 IP 位址比對。
+`_ip` | 比對 `_host_ip` 或 `_publish_ip`。
+`_host` | 依主機名稱比對。
+`_id` | 依節點 ID 比對。
+`_tier` | 依資料層級角色比對節點。
 
-## Filter types
+## 篩選類型
 
-Use the following index settings.
+使用下列索引設定。
 
-Setting | Effect
+設定 | 效果
 :--- | :---
-`index.routing.allocation.include.<attr>` | Allocate shards to nodes that match **any** of the provided values.
-`index.routing.allocation.exclude.<attr>` | **Do not** allocate shards to nodes that match **any** of the provided values.
-`index.routing.allocation.require.<attr>` | Allocate shards **only** to nodes that match **all** of the provided values.
+`index.routing.allocation.include.<attr>` | 將分片配置到符合所提供 **任一** 值的節點。
+`index.routing.allocation.exclude.<attr>` | **不要** 將分片配置到符合所提供 **任一** 值的節點。
+`index.routing.allocation.require.<attr>` | **僅** 將分片配置到符合所提供 **所有** 值的節點。
 
-## Example requests
+## 請求範例
 
-The following examples demonstrate the different ways to use shard allocation filters.
+下列範例示範使用分片配置篩選條件的不同方式。
 
-### Allocate an index only to a specific zone
+### 僅將索引配置到特定區域
 
-Use the following command to allocate an index to nodes in `zone-a`:
+使用下列命令，將索引配置到 `zone-a` 中的節點：
 
 ```json
 PUT /test-index/_settings
@@ -67,7 +68,7 @@ PUT /test-index/_settings
 ```
 {% include copy-curl.html %}
 
-### Allocate to a subset of nodes by IPs
+### 依 IP 位址配置到部分節點
 
 ```json
 PUT /test-index/_settings
@@ -77,9 +78,9 @@ PUT /test-index/_settings
 ```
 {% include copy-curl.html %}
 
-### Exclude an index from the node
+### 排除將索引配置到該節點
 
-The following command excludes an index from node `data-node-3`:
+下列命令會排除將索引配置到節點 `data-node-3`：
 
 ```json
 PUT /test-index/_settings
@@ -89,9 +90,9 @@ PUT /test-index/_settings
 ```
 {% include copy-curl.html %}
 
-### Combine filters
+### 結合篩選條件
 
-The following command configures required rack but excludes node `data-node-7`:
+下列命令會設定必要的機架，但排除節點 `data-node-7`：
 
 ```json
 PUT /test-index/_settings
@@ -104,9 +105,9 @@ PUT /test-index/_settings
 ```
 {% include copy-curl.html %}
 
-### Clear a filter
+### 清除篩選條件
 
-To clear a filter, set its value to `null` or an empty string `""`:
+若要清除篩選條件，請將其值設為 `null` 或空字串 `""`：
 
 ```json
 PUT /test-index/settings
@@ -118,7 +119,7 @@ PUT /test-index/settings
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
 ```json
 {

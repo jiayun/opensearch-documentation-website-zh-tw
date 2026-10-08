@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: KStem
 parent: Token filters
 nav_order: 220
 ---
 
-# KStem token filter
+# KStem 詞元篩選器
 
-The `kstem` token filter is a stemming filter used to reduce words to their root forms. The filter is a lightweight algorithmic stemmer designed for the English language that performs the following stemming operations:
+`kstem` 詞元篩選器是一種詞幹提取篩選器，用於將單字還原為其字根形式。此篩選器是專為英文設計的輕量級演算法詞幹提取器，會執行下列詞幹提取操作：
 
-- Reduces plurals to their singular form.
-- Converts different verb tenses to their base form.
-- Removes common derivational endings, such as "-ing" or "-ed".
+- 將複數形式還原為單數形式。
+- 將不同的動詞時態轉換為其基本形式。
+- 移除常見的衍生字尾，例如「-ing」或「-ed」。
 
-The `kstem` token filter is equivalent to the a `stemmer` filter configured with a `light_english` language. It provides a more conservative stemming compared to other stemming filters like `porter_stem`.
+`kstem` 詞元篩選器等同於以 `light_english` 語言設定的 `stemmer` 篩選器。與 `porter_stem` 等其他詞幹提取篩選器相比，它提供較為保守的詞幹提取。
 
-The `kstem` token filter is based on the Lucene KStemFilter. For more information, see the [Lucene documentation](https://lucene.apache.org/core/{{site.lucene_version}}/analysis/common/org/apache/lucene/analysis/en/KStemFilter.html).
+`kstem` 詞元篩選器以 Lucene KStemFilter 為基礎。如需更多資訊，請參閱 [Lucene 文件](https://lucene.apache.org/core/{{site.lucene_version}}/analysis/common/org/apache/lucene/analysis/en/KStemFilter.html)。
 
-## Example
+## 範例
 
-The following example request creates a new index named `my_kstem_index` and configures an analyzer with a `kstem` filter:
+下列範例請求會建立名為 `my_kstem_index` 的新索引，並設定具有 `kstem` 篩選器的分析器：
 
 ```json
 PUT /my_kstem_index
@@ -55,9 +56,9 @@ PUT /my_kstem_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器產生的詞元：
 
 ```json
 POST /my_kstem_index/_analyze
@@ -68,7 +69,7 @@ POST /my_kstem_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

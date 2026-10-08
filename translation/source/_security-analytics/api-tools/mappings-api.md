@@ -1,0 +1,173 @@
+---
+layout: default
+title: Mappings APIs
+parent: Security Analytics APIs
+nav_order: 45
+---
+
+# Mappings APIs
+
+The following APIs can be used for a number of tasks related to mappings, from creating to getting and updating mappings.
+
+---
+## Get mappings view
+
+Returns a view of the fields contained in an index used as a log source.
+
+### Request body fields
+
+The following fields are used to get field mappings.
+
+Field | Type | Description
+:--- | :--- |:--- 
+`index_name` | String | The name of the index used for log ingestion. 
+`rule_topic` | String | The log type of the index. 
+
+#### Example request
+
+```json
+GET /_plugins/_security_analytics/mappings/view
+
+{
+   "index_name": "windows",
+   "rule_topic": "windows"
+}
+```
+
+#### Example response
+
+```json
+{
+    "properties": {
+        "windows-event_data-CommandLine": {
+            "path": "CommandLine",
+            "type": "alias"
+        },
+        "event_uid": {
+            "path": "EventID",
+            "type": "alias"
+        }
+    },
+    "unmapped_index_fields": [
+        "windows-event_data-CommandLine",
+        "unmapped_HiveName",
+        "src_ip",
+        "sha1",
+        "processPath",
+        "CallerProcessName",
+        "CallTrace",
+        "AuthenticationPackageName",
+        "AuditSourceName",
+        "AuditPolicyChanges",
+        "AttributeValue",
+        "AttributeLDAPDisplayName",
+        "ApplicationPath",
+        "Application",
+        "AllowedToDelegateTo",
+        "Address",
+        "Action",
+        "AccountType",
+        "AccountName",
+        "Accesses",
+        "AccessMask",
+        "AccessList"
+    ]
+}
+```
+
+---
+## Create mappings
+
+Creates field alias mappings for a specified index.
+
+#### Example request
+
+```json
+POST /_plugins/_security_analytics/mappings
+
+{
+   "index_name": "windows",
+   "rule_topic": "windows",
+   "partial": true,
+   "alias_mappings": {
+        "properties": {
+            "event_uid": {
+            "type": "alias",
+            "path": "EventID"
+          }
+       }
+   }
+}
+```
+
+#### Example response
+
+```json
+{
+    "acknowledged": true
+}
+```
+
+---
+## Get mappings
+
+Retrieves field alias mappings for a specified index.
+
+### Path parameters
+
+Field | Type | Description
+:--- | :--- |:--- 
+`index_name` | String | The name of the index used for log ingestion. Required.
+
+#### Example request
+
+```json
+GET /_plugins/_security_analytics/mappings?index_name=windows
+```
+
+#### Example response
+
+```json
+{
+    "windows": {
+        "mappings": {
+            "properties": {
+                "windows-event_data-CommandLine": {
+                    "type": "alias",
+                    "path": "CommandLine"
+                },
+                "event_uid": {
+                    "type": "alias",
+                    "path": "EventID"
+                }
+            }
+        }
+    }
+}
+```
+
+---
+## Update mappings
+
+Updates the field alias mapping for a specified index.
+
+#### Example request
+
+```json
+PUT /_plugins/_security_analytics/mappings
+
+{
+   "index_name": "windows",
+   "field": "CommandLine",
+   "alias": "windows-event_data-CommandLine"
+}
+```
+
+#### Example response
+
+```json
+{
+    "acknowledged": true
+}
+```
+

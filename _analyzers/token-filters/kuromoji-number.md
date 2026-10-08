@@ -1,33 +1,34 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Kuromoji number
+title: "Kuromoji 數字"
 parent: Token filters
 nav_order: 232
 ---
 
-# Kuromoji number token filter
+# Kuromoji 數字詞元篩選器
 
-The `kuromoji_number` token filter normalizes Japanese numeral expressions to standard Arabic numerals. Japanese text can represent numbers using kanji numerals (一, 二, 三…), full-width digits (１, ２, ３…), or a mix of both. This filter converts all such expressions to their standard integer or decimal equivalents.
+`kuromoji_number` 詞元篩選器會將日文數字表示法正規化為標準阿拉伯數字。日文文字可使用漢字數字（一、二、三…）、全形數字（１、２、３…）或兩者混合來表示數字。此篩選器會將所有這類表示法轉換為對應的標準整數或小數。
 
-The filter makes conversions such as the following:
+此篩選器會進行如下的轉換：
 
-- 一万二千三百四十五 becomes 12345.
-- ３，〇００ becomes 3000.
-- 千円 becomes 1000, with the unit 円 remaining as a separate token.
+- 一万二千三百四十五 轉換為 12345。
+- ３，〇００ 轉換為 3000。
+- 千円 轉換為 1000，單位 円 則保留為獨立的詞元。
 
-This filter is useful for faceted search, range queries, and sorting on fields that contain prices, counts, or other quantities written in Japanese notation.
+對於包含以日文表示法書寫之價格、數量或其他數值的欄位，此篩選器適用於多面向搜尋、範圍查詢及排序。
 
-## Installation
+## 安裝
 
-The `kuromoji_number` token filter requires the `analysis-kuromoji` plugin. For installation instructions, see [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/).
+`kuromoji_number` 詞元篩選器需要 `analysis-kuromoji` 外掛程式。如需安裝說明，請參閱 [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)。
 
-## Parameters
+## 參數
 
-The `kuromoji_number` token filter has no configurable parameters.
+`kuromoji_number` 詞元篩選器沒有可設定的參數。
 
-## Example
+## 範例
 
-The following example creates an index with a custom analyzer that uses `kuromoji_number`:
+下列範例會建立一個索引，其中包含使用 `kuromoji_number` 的自訂分析器：
 
 ```json
 PUT /kuromoji-number-index
@@ -47,7 +48,7 @@ PUT /kuromoji-number-index
 ```
 {% include copy-curl.html %}
 
-Test the analyzer with text containing kanji numeral expressions (meaning "the price is 12,345 yen"):
+使用包含漢字數字表示法的文字（意思為「價格是 12,345 日圓」）測試分析器：
 
 ```json
 POST /kuromoji-number-index/_analyze
@@ -58,7 +59,7 @@ POST /kuromoji-number-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response shows the kanji numeral converted to an Arabic integer. Note that the `12345` token spans over offsets 3–12 because the source kanji numeral `一万二千三百四十五` is 9 characters long:
+回應顯示漢字數字已轉換為阿拉伯數字整數。請注意，`12345` 詞元的位移範圍為 3–12，因為來源漢字數字 `一万二千三百四十五` 的長度為 9 個字元：
 
 ```json
 {
@@ -102,7 +103,7 @@ The response shows the kanji numeral converted to an Arabic integer. Note that t
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
-- [Kuromoji tokenizer]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/kuromoji/)
+- [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
+- [Kuromoji 斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/kuromoji/)

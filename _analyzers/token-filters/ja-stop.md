@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Japanese stop
+title: "日文停用詞"
 parent: Token filters
 nav_order: 178
 ---
 
-# Japanese stop token filter
+# 日文停用詞詞元篩選器
 
-The `ja_stop` token filter removes Japanese stop words from a token stream. It matches tokens against a word list, either the built-in Japanese stop set or a custom list that you provide. To remove tokens by grammatical category instead, use [`kuromoji_part_of_speech`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-part-of-speech/).
+`ja_stop` 詞元篩選器會從詞元串流中移除日文停用詞。它會將詞元與字詞清單比對，該清單可以是內建的日文停用詞集，也可以是您提供的自訂清單。若要改為依文法類別移除詞元，請使用 [`kuromoji_part_of_speech`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-part-of-speech/)。
 
-The filter also supports a suggest-friendly mode (`remove_trailing: false`) in which trailing stop words are preserved. This is important for autocomplete use cases where a user may be in the middle of typing a phrase that ends with a stop word or particle.
+此篩選器也支援適用於建議功能的模式（`remove_trailing: false`），在此模式下會保留結尾的停用詞。這對自動完成的使用情境很重要，因為使用者可能正在輸入一個以停用詞或助詞結尾的片語。
 
-## Installation
+## 安裝
 
-The `ja_stop` token filter requires the `analysis-kuromoji` plugin. For installation instructions, see [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/).
+`ja_stop` 詞元篩選器需要 `analysis-kuromoji` 外掛程式。如需安裝說明，請參閱 [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)。
 
-## Parameters
+## 參數
 
-The following table lists the parameters for the `ja_stop` token filter.
+下表列出 `ja_stop` 詞元篩選器的參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`stopwords` | String or array of strings | The stop words to use. Accepts `_japanese_` for the built-in Japanese stop set, an array of explicit stop words, or a path to a file containing one stop word per line. Default is `_japanese_` (the same stop set used by the built-in `kuromoji` analyzer).
-`ignore_case` | Boolean | When `true`, stop word matching is case insensitive. Default is `false`.
-`remove_trailing` | Boolean | When `true` (default), a stop word at the end of the token stream is removed. When `false`, a trailing stop word is preserved, enabling prefix-match completion queries to work correctly on partially typed input.
+`stopwords` | 字串或字串陣列 | 要使用的停用詞。可接受 `_japanese_` 以使用內建的日文停用詞集、明確列出停用詞的陣列，或是指向每行包含一個停用詞之檔案的路徑。預設為 `_japanese_`（與內建 `kuromoji` 分析器所使用的停用詞集相同）。
+`ignore_case` | 布林值 | 設為 `true` 時，停用詞比對不區分大小寫。預設為 `false`。
+`remove_trailing` | 布林值 | 設為 `true`（預設）時，會移除詞元串流結尾的停用詞。設為 `false` 時，會保留結尾的停用詞，讓前綴比對的自動完成查詢能在部分輸入的內容上正確運作。
 
-For the full list of stop words in the built-in stop set, see [stopwords.txt](https://github.com/apache/lucene/blob/main/lucene/analysis/kuromoji/src/resources/org/apache/lucene/analysis/ja/stopwords.txt) in the Lucene repository.
+如需內建停用詞集中的完整停用詞清單，請參閱 Lucene 儲存庫中的 [stopwords.txt](https://github.com/apache/lucene/blob/main/lucene/analysis/kuromoji/src/resources/org/apache/lucene/analysis/ja/stopwords.txt)。
 
-## Example: Minimal usage
+## 範例：最簡用法
 
-The following example uses `ja_stop` in isolation to show what the filter removes on its own:
+下列範例單獨使用 `ja_stop`，以顯示此篩選器本身會移除哪些內容：
 
 ```json
 PUT /ja-stop-minimal-index
@@ -49,7 +50,7 @@ PUT /ja-stop-minimal-index
 ```
 {% include copy-curl.html %}
 
-Test the analyzer with the sentence `新聞を読んでいるばかりだ` ("I do nothing but read the newspaper"), which the tokenizer segments into `新聞`, `を`, `読ん`, `で`, `いる`, `ばかり`, and `だ`:
+使用句子 `新聞を読んでいるばかりだ`（「我只讀報紙，什麼也不做」）測試分析器，斷詞器會將其切分為 `新聞`、`を`、`読ん`、`で`、`いる`、`ばかり` 和 `だ`：
 
 ```json
 POST /ja-stop-minimal-index/_analyze
@@ -60,7 +61,7 @@ POST /ja-stop-minimal-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The filter removes `を`, `で`, `いる`, and `だ` because they are in the `_japanese_` stop set. The inflected stem `読ん` and the adverbial particle `ばかり` are not in the stop set, so they remain unchanged alongside the content token `新聞`, because `ja_stop` does not normalize inflections or filter by grammatical category:
+此篩選器會移除 `を`、`で`、`いる` 和 `だ`，因為它們位於 `_japanese_` 停用詞集中。屈折詞幹 `読ん` 和副助詞 `ばかり` 不在停用詞集中，因此它們會與內容詞元 `新聞` 一同保持不變，因為 `ja_stop` 不會將屈折變化正規化，也不會依文法類別進行篩選：
 
 ```json
 {
@@ -90,17 +91,17 @@ The filter removes `を`, `で`, `いる`, and `だ` because they are in the `_j
 }
 ```
 
-Compare this with the following [full pipeline example](#example-full-analysis-pipeline). Adding `kuromoji_baseform` normalizes `読ん` to its dictionary form `読む`. Adding `kuromoji_part_of_speech` removes the adverbial particle `ばかり`, which is not in the `_japanese_` stop word list and therefore cannot be removed by `ja_stop` alone.
+請將此結果與下列[完整管線範例](#example-full-analysis-pipeline)比較。加入 `kuromoji_baseform` 會將 `読ん` 正規化為其辭典形式 `読む`。加入 `kuromoji_part_of_speech` 會移除副助詞 `ばかり`，該助詞不在 `_japanese_` 停用詞清單中，因此無法僅靠 `ja_stop` 移除。
 
-## Example: Full analysis pipeline
+## 範例：完整分析管線
 
-This example uses the same sentence `新聞を読んでいるばかりだ` ("I do nothing but read the newspaper") to show how all three filters contribute distinct work when combined:
+此範例使用相同的句子 `新聞を読んでいるばかりだ`（「我只讀報紙，什麼也不做」），以顯示三個篩選器結合使用時各自負責的不同工作：
 
-- `kuromoji_baseform` normalizes the inflected verb stem `読ん` to its dictionary form `読む`.
-- `kuromoji_part_of_speech` removes the adverbial particle `ばかり`, which `ja_stop` does not handle, and the particles `を`, `で`, and `だ`, which `ja_stop` also removes.
-- `ja_stop` removes the remaining `いる`, which is listed in the built-in Japanese stop set.
+- `kuromoji_baseform` 會將屈折動詞詞幹 `読ん` 正規化為其辭典形式 `読む`。
+- `kuromoji_part_of_speech` 會移除 `ja_stop` 無法處理的副助詞 `ばかり`，以及 `ja_stop` 也會移除的助詞 `を`、`で` 和 `だ`。
+- `ja_stop` 會移除剩餘的 `いる`，該詞列於內建的日文停用詞集中。
 
-Create an index with an analyzer that chains all three filters:
+建立一個索引，並使用串接這三個篩選器的分析器：
 
 ```json
 PUT /ja-stop-index
@@ -120,7 +121,7 @@ PUT /ja-stop-index
 ```
 {% include copy-curl.html %}
 
-Test the analyzer with the same sentence:
+使用相同的句子測試分析器：
 
 ```json
 POST /ja-stop-index/_analyze
@@ -131,7 +132,7 @@ POST /ja-stop-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains only the two content tokens with the verb in its base form:
+回應中僅包含兩個內容詞元，且動詞為其基本形式：
 
 ```json
 {
@@ -154,9 +155,9 @@ The response contains only the two content tokens with the verb in its base form
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
-- [Kuromoji tokenizer]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/kuromoji/)
-- [Kuromoji base form token filter]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-baseform/)
-- [Kuromoji part-of-speech token filter]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-part-of-speech/)
+- [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
+- [Kuromoji 斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/kuromoji/)
+- [Kuromoji 基本形式詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-baseform/)
+- [Kuromoji 詞性詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-part-of-speech/)

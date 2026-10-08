@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Keyword marker
 parent: Token filters
 nav_order: 200
 ---
 
-# Keyword marker token filter
+# Keyword marker 詞元篩選器
 
-The `keyword_marker` token filter is used to prevent certain tokens from being altered by stemmers or other filters. The `keyword_marker` token filter does this by marking the specified tokens as `keywords`, which prevents any stemming or other processing. This ensures that specific words remain in their original form. 
+`keyword_marker` 詞元篩選器用於防止特定詞元被詞幹分析器或其他篩選器修改。`keyword_marker` 詞元篩選器會將指定的詞元標記為 `keywords`，藉此避免任何詞幹提取或其他處理，確保特定字詞維持原始形式。
 
-## Parameters
+## 參數
 
-The `keyword_marker` token filter can be configured with the following parameters.
+`keyword_marker` 詞元篩選器可使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`ignore_case` | Optional | Boolean | Whether to ignore the letter case when matching keywords. Default is `false`.
-`keywords` | Required if either `keywords_path` or `keywords_pattern` is not set | List of strings | The list of tokens to mark as keywords. 
-`keywords_path` | Required if either `keywords` or `keywords_pattern` is not set | String | The path (relative to the `config` directory or absolute) to the list of keywords.
-`keywords_pattern` | Required if either `keywords` or `keywords_path` is not set | String | A [regular expression](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) used for matching tokens to be marked as keywords.
+`ignore_case` | 選用 | 布林值 | 比對關鍵字時是否忽略字母大小寫。預設為 `false`。
+`keywords` | 若未設定 `keywords_path` 或 `keywords_pattern`，則為必要 | 字串清單 | 要標記為關鍵字的詞元清單。
+`keywords_path` | 若未設定 `keywords` 或 `keywords_pattern`，則為必要 | 字串 | 關鍵字清單的路徑（相對於 `config` 目錄的路徑或絕對路徑）。
+`keywords_pattern` | 若未設定 `keywords` 或 `keywords_path`，則為必要 | 字串 | 用於比對要標記為關鍵字之詞元的[規則運算式](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)。
  
 
-## Example
+## 範例
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `keyword_marker` filter. The filter marks the word `example` as a keyword:
+下列範例請求會建立名為 `my_index` 的新索引，並設定一個使用 `keyword_marker` 篩選器的分析器。此篩選器會將字詞 `example` 標記為關鍵字：
 
 ```json
 PUT /my_index
@@ -49,9 +50,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用此分析器所產生的詞元：
 
 ```json
 GET /my_index/_analyze
@@ -62,7 +63,7 @@ GET /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens. Note that while the word `favorite` was stemmed, the word `example` was not stemmed because it was marked as a keyword:
+回應中包含產生的詞元。請注意，字詞 `favorite` 經過了詞幹提取，但字詞 `example` 因為已被標記為關鍵字，所以未經詞幹提取：
 
 ```json
 {
@@ -85,7 +86,7 @@ The response contains the generated tokens. Note that while the word `favorite` 
 }
 ```
 
-You can further examine the impact of the `keyword_marker` token filter by adding the following parameters to the `_analyze` query:
+您可以在 `_analyze` 查詢中加入下列參數，進一步檢查 `keyword_marker` 詞元篩選器的影響：
 
 ```json
 GET /my_index/_analyze
@@ -98,7 +99,7 @@ GET /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-This will produce additional details in the response similar to the following:
+這會在回應中產生額外的詳細資訊，類似如下：
 
 ```json
 {

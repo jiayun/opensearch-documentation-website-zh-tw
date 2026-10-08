@@ -1,126 +1,127 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Scatter plot
+title: "散佈圖"
 parent: Visualization types
 grand_parent: Creating visualizations using queries
 great_grand_parent: Building data visualizations
 nav_order: 55
 ---
 
-# Scatter plots in the visualization editor
+# 視覺化編輯器中的散佈圖
 
-A scatter plot visualizes relationships between two numerical variables. Each point on the chart represents an observation from the dataset, with its position determined by the values of the two variables. You can split data by a categorical field to compare how different groups distribute across the same dimensions.
+散佈圖可將兩個數值變數之間的關係視覺化。圖表上的每個點代表資料集中的一筆觀測值，其位置由這兩個變數的值決定。您可以依類別欄位分割資料，以比較不同群組在相同維度上的分布情形。
 
-## Creating a scatter plot
+## 建立散佈圖
 
-The following examples build on each other, starting with a basic two-variable scatter and adding dimensions. Before you begin, complete the [prerequisites]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/#prerequisites).
+以下範例會逐步延伸，先從基本的雙變數散佈圖開始，再加入其他維度。開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/#prerequisites)。
 
-### Basic scatter plot
+### 基本散佈圖
 
-Start with a query that returns two numeric fields:
+首先使用會傳回兩個數值欄位的查詢：
 
 ```sql
 source = opensearch_dashboards_sample_data_flights | fields AvgTicketPrice, DistanceMiles
 ```
 {% include copy.html %}
 
-After running this query, select **Scatter** as the chart type. The fields are mapped as follows:
+執行此查詢後，選取 **Scatter** 作為圖表類型。欄位的對應方式如下：
 
-- The **X-Axis** displays the `AvgTicketPrice` field.
-- The **Y-Axis** displays the `DistanceMiles` field.
+- **X-Axis** 顯示 `AvgTicketPrice` 欄位。
+- **Y-Axis** 顯示 `DistanceMiles` 欄位。
 
-The result is a scatter plot showing the relationship between ticket price and flight distance. Each point represents a single flight, as shown in the following image.
+結果會產生一張顯示機票價格與飛行距離之間關係的散佈圖。每個點代表一個航班，如下圖所示。
 
-![Basic scatter plot showing average flight price compared to distance]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/scatter/scatter-two-num-fields.png){: width="100%" }
+![顯示平均機票價格與距離比較的基本散佈圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/scatter/scatter-two-num-fields.png){: width="100%" }
 
-### Using thresholds
+### 使用閾值
 
-To apply thresholds, enable **Use threshold colors** in the **Scatter** section. Then open the **Thresholds** section and add a threshold of `6000` to highlight long-distance flights, as shown in the following image.
+若要套用閾值，請在 **Scatter** 區段中啟用 **Use threshold colors**。接著開啟 **Thresholds** 區段，並新增 `6000` 的閾值以醒目標示長途航班，如下圖所示。
 
-![Scatter plot with threshold at 6000 highlighting long-distance flights]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/scatter/scatter-with-threshold.png){: width="100%" }
+![閾值為 6000 並醒目標示長途航班的散佈圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/scatter/scatter-with-threshold.png){: width="100%" }
 
-For more information, see [Thresholds]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/).
+如需更多資訊，請參閱[閾值]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/)。
 
-### Adding a color dimension
+### 新增色彩維度
 
-Add a categorical field to split the data points into color-coded groups:
+新增類別欄位，將資料點分割成以色彩區分的群組：
 
 ```sql
 source = opensearch_dashboards_sample_data_flights | fields AvgTicketPrice, DistanceMiles, DestWeather
 ```
 {% include copy.html %}
 
-This query returns two numeric fields: `AvgTicketPrice` and `DistanceMiles`. Select `DestWeather` as the **Color** field.
+此查詢會傳回兩個數值欄位：`AvgTicketPrice` 和 `DistanceMiles`。選取 `DestWeather` 作為 **Color** 欄位。
 
-The result is a scatter plot with points split into color-coded groups---each weather condition is rendered in a distinct color, as shown in the following image.
+結果會產生一張資料點分割成以色彩區分群組的散佈圖，每種天氣狀況都以不同的色彩呈現，如下圖所示。
 
-![Scatter plot with color-coded weather categories]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/scatter/scatter-two-numerical-one-cate-fields.png){: width="100%" }
+![以色彩區分天氣類別的散佈圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/scatter/scatter-two-numerical-one-cate-fields.png){: width="100%" }
 
-### Adding a size dimension
+### 新增大小維度
 
-Add a third numeric field to control point size, creating a bubble chart:
+新增第三個數值欄位以控制點的大小，藉此建立泡泡圖：
 
 ```sql
 source = opensearch_dashboards_sample_data_flights | fields AvgTicketPrice, DistanceMiles, DestWeather, FlightDelayMin
 ```
 {% include copy.html %}
 
-This query returns three numeric fields: `AvgTicketPrice`, `DistanceMiles`, and `FlightDelayMin`. Select `DestWeather` as the **Color** field and map `FlightDelayMin` to the **Size** field.
+此查詢會傳回三個數值欄位：`AvgTicketPrice`、`DistanceMiles` 和 `FlightDelayMin`。選取 `DestWeather` 作為 **Color** 欄位，並將 `FlightDelayMin` 對應至 **Size** 欄位。
 
-Points now vary in size---larger bubbles represent longer delays. Each color still represents a weather condition, making it possible to identify whether certain weather types correlate with both higher prices and longer delays, as shown in the following image.
+現在各點的大小會有所不同，較大的泡泡代表較長的延誤時間。每種色彩仍代表一種天氣狀況，因此您可以判斷特定天氣類型是否同時與較高的價格及較長的延誤相關，如下圖所示。
 
-![Scatter plot with size representing flight delay minutes]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/scatter/scatter-two-numerical-one-cate-fields-one-size.png){: width="100%" }
+![以大小表示航班延誤分鐘數的散佈圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/scatter/scatter-two-numerical-one-cate-fields-one-size.png){: width="100%" }
 
-## Configuring a scatter plot
+## 設定散佈圖
 
-You can configure the following settings in the configuration panel.
+您可以在組態面板中設定下列設定。
 
-### Fields
+### 欄位
 
-In the **Fields** section, configure the fields displayed on each axis.
+在 **Fields** 區段中，設定各軸上顯示的欄位。
 
-| Configuration | Fields | Description |
+| 組態 | 欄位 | 說明 |
 | :---| :---| :---|
-| **Two numerical** | X-Axis (numeric), Y-Axis (numeric) | Select two numeric fields to display data points showing the relationship between two numerical variables. |
-| **Two numerical + one categorical** | X-Axis (numeric), Y-Axis (numeric), Color (categorical) | Select two numeric fields and a categorical Color field to display data points split into color-coded groups. |
-| **Three numerical + one categorical** | X-Axis (numeric), Y-Axis (numeric), Size (numeric), Color (categorical) | Select three numeric fields and a categorical Color field to display data points with colors indicating categories and the third numeric field controlling the size of the points. |
+| **兩個數值** | X-Axis (數值)、Y-Axis (數值) | 選取兩個數值欄位，以顯示呈現兩個數值變數之間關係的資料點。 |
+| **兩個數值 + 一個類別** | X-Axis (數值)、Y-Axis (數值)、Color (類別) | 選取兩個數值欄位和一個類別 Color 欄位，以顯示分割成以色彩區分群組的資料點。 |
+| **三個數值 + 一個類別** | X-Axis (數值)、Y-Axis (數值)、Size (數值)、Color (類別) | 選取三個數值欄位和一個類別 Color 欄位，以顯示用色彩表示類別、並由第三個數值欄位控制點大小的資料點。 |
 
-### Split
+### 分割
 
-In the **Split by** dropdown list, select a field to split the chart into separate elements by value. For more information, see [Split]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#split).
+在 **Split by** 下拉式清單中，選取一個欄位，依值將圖表分割成不同的元素。如需更多資訊，請參閱[分割]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#split)。
 
-### Scatter
+### 散佈
 
-Use the following settings to customize the appearance of the scatter plot.
+使用下列設定自訂散佈圖的外觀。
 
-| Setting | Description |
+| 設定 | 說明 |
 | :---| :---|
-| **Point size** | Controls the default size of data points when no Size field is mapped. |
-| **Shape** | Controls the shape of each data point. Supported values: **Circle**, **Square**, **Diamond**, **Cross**. |
-| **Filled** | When enabled, data points are filled with color. When disabled, only the outline is rendered. |
-| **Angle** | Controls the display angle of each data point in degrees. Supports values in the 0–360 range. |
+| **Point size** | 控制未對應 Size 欄位時資料點的預設大小。 |
+| **Shape** | 控制每個資料點的形狀。支援的值：**Circle**、**Square**、**Diamond**、**Cross**。 |
+| **Filled** | 啟用時，資料點會填滿色彩。停用時，只會呈現外框。 |
+| **Angle** | 控制每個資料點的顯示角度 (以度為單位)。支援 0–360 範圍內的值。 |
 
-### Thresholds
+### 閾值
 
-For information about configuring thresholds, see [Thresholds]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/).
+如需設定閾值的相關資訊，請參閱[閾值]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/)。
 
-### Standard options
+### 標準選項
 
-For information about configuring units, unit suffixes, decimal precision, and minimum and maximum values, see [Standard options]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/standard-options/).
+如需設定單位、單位後綴、小數精確度以及最小值和最大值的相關資訊，請參閱[標準選項]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/standard-options/)。
 
-### Axes
+### 座標軸
 
-The X-axis and Y-axis share the same configuration options. For more information, see [Axes]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#axes).
+X 軸和 Y 軸共用相同的組態選項。如需更多資訊，請參閱[座標軸]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#axes)。
 
-### Legend
+### 圖例
 
-The legend summarizes the visual color encodings used in the chart.
+圖例彙整了圖表中使用的視覺色彩編碼。
 
-| Setting | Description |
+| 設定 | 說明 |
 | :---| :---|
-| **Show legend** | Shows or hides the legend. |
-| **Position** | Controls where the legend appears relative to the chart. Supported values: **Left**, **Right**, **Top**, **Bottom**. |
+| **Show legend** | 顯示或隱藏圖例。 |
+| **Position** | 控制圖例相對於圖表的顯示位置。支援的值：**Left**、**Right**、**Top**、**Bottom**。 |
 
-### Tooltip
+### 工具提示
 
-Toggle the **Show tooltip** selector to enable or disable tooltips.
+切換 **Show tooltip** 選取器以啟用或停用工具提示。

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get data stream stats
+title: "取得資料串流統計"
 parent: Data stream APIs
 nav_order: 30
 redirect_from:
@@ -8,16 +9,16 @@ redirect_from:
 ---
 
 # Data Stream Stats API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Data Stream Stats API provides statistics about one or more data streams, including the number of backing indexes, store size, and maximum timestamp. Use this API to monitor storage and indexing activity across data streams.
+Data Stream Stats API 提供一或多個資料串流的統計資訊，包括後備索引 (backing index) 的數量、儲存大小與最大時間戳記。請使用此 API 監控各資料串流的儲存與索引活動。
 
 <!-- spec_insert_start
 api: indices.data_streams_stats
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_data_stream/_stats
 GET /_data_stream/{name}/_stats
@@ -28,31 +29,31 @@ GET /_data_stream/{name}/_stats
 api: indices.data_streams_stats
 component: path_parameters
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `name` | List or String | A comma-separated list of data streams used to limit the request. Wildcard expressions (`*`) are supported. To target all data streams in a cluster, omit this parameter or use `*`. |
+| `name` | List 或 String | 以逗號分隔的資料串流清單，用於限制請求範圍。支援萬用字元運算式 (`*`)。若要指定叢集中的所有資料串流，請省略此參數或使用 `*`。 |
 
 <!-- spec_insert_end -->
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `error_trace` | Boolean | Whether to include the stack trace of returned errors. | `false` |
-| `filter_path` | List or String | Used to reduce the response. This parameter takes a comma-separated list of filters. It supports using wildcards to match any field or part of a field’s name. You can also exclude fields with `-`. | N/A |
-| `human` | Boolean | Whether to return human-readable values for statistics. | `false` |
-| `pretty` | Boolean | Whether to pretty format the returned JSON response. | `false` |
-| `source` | String | The URL-encoded request definition. Useful for libraries that do not accept a request body for non-POST requests. | N/A |
+| `error_trace` | Boolean | 是否包含所回傳錯誤的堆疊追蹤。 | `false` |
+| `filter_path` | List 或 String | 用於篩減回應。此參數接受以逗號分隔的篩選器清單，支援使用萬用字元比對任何欄位或欄位名稱的一部分。您也可以使用 `-` 排除欄位。 | N/A |
+| `human` | Boolean | 是否以人類可讀的格式回傳統計值。 | `false` |
+| `pretty` | Boolean | 是否將回傳的 JSON 回應格式化為易讀樣式。 | `false` |
+| `source` | String | 經 URL 編碼的請求定義。適用於不支援在非 POST 請求中附帶請求本文的用戶端程式庫。 | N/A |
 
-## Example requests
+## 範例請求
 
-Create an index template with a matching pattern and data stream enabled:
+建立一個包含相符模式並啟用資料串流的索引範本：
 
 <!-- spec_insert_start
 component: example_code
@@ -93,7 +94,7 @@ response = client.indices.put_index_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Create the data stream:
+建立資料串流：
 
 <!-- spec_insert_start
 component: example_code
@@ -120,7 +121,7 @@ response = client.indices.create_data_stream(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Index a document to generate a backing index:
+將文件編製索引以產生後備索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -157,7 +158,7 @@ response = client.index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Retrieve statistics for the data stream:
+擷取資料串流的統計資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -182,7 +183,7 @@ response = client.indices.data_streams_stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -207,36 +208,36 @@ response = client.indices.data_streams_stats(
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `_shards.total` | Integer | The total number of shards involved in the request. |
-| `_shards.successful` | Integer | The number of successful shard fetches. |
-| `_shards.failed` | Integer | The number of failed shard fetches. |
-| `data_stream_count` | Integer | The total number of data streams returned in the response. |
-| `backing_indices` | Integer | The total number of backing indexes across all data streams. |
-| `total_store_size` | String | A human-readable total size of all data stream storage. Present only if `human=true`. |
-| `total_store_size_bytes` | Integer | The total storage used by all data streams, in bytes. |
-| `data_streams` | Array | A list of objects, one for each data stream. For object fields, see [The data stream objects](#the-data-stream-objects). |
+| `_shards.total` | Integer | 請求所涉及的分片總數。 |
+| `_shards.successful` | Integer | 成功擷取的分片數量。 |
+| `_shards.failed` | Integer | 擷取失敗的分片數量。 |
+| `data_stream_count` | Integer | 回應中回傳的資料串流總數。 |
+| `backing_indices` | Integer | 所有資料串流的後備索引總數。 |
+| `total_store_size` | String | 所有資料串流儲存空間的人類可讀總大小。僅在 `human=true` 時顯示。 |
+| `total_store_size_bytes` | Integer | 所有資料串流使用的儲存空間總量，單位為位元組。 |
+| `data_streams` | Array | 物件清單，每個資料串流一個物件。物件欄位請參閱 [資料串流物件](#the-data-stream-objects)。 |
 
-### The data stream objects
+### 資料串流物件
 
-Each data stream object contains the following fields.
+每個資料串流物件包含下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `data_stream` | String | The name of the data stream. |
-| `backing_indices` | Integer | The number of backing indexes for the data stream. |
-| `store_size` | String | Human-readable storage used by the data stream. Present only if `human=true`. |
-| `store_size_bytes` | Integer | The total storage used by the data stream, in bytes. |
-| `maximum_timestamp` | Long | The maximum timestamp across all documents in the data stream. |
+| `data_stream` | String | 資料串流的名稱。 |
+| `backing_indices` | Integer | 該資料串流的後備索引數量。 |
+| `store_size` | String | 該資料串流使用儲存空間的人類可讀大小。僅在 `human=true` 時顯示。 |
+| `store_size_bytes` | Integer | 該資料串流使用的儲存空間總量，單位為位元組。 |
+| `maximum_timestamp` | Long | 資料串流中所有文件的最大時間戳記。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:monitor/data_stream/stats`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`indices:monitor/data_stream/stats`。
 
-## Related documentation
+## 相關文件
 
-- [Data streams]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)
-- [Get data streams]({{site.url}}{{site.baseurl}}/api-reference/data-stream/data-stream-info/)
+- [資料串流]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)
+- [取得資料串流]({{site.url}}{{site.baseurl}}/api-reference/data-stream/data-stream-info/)

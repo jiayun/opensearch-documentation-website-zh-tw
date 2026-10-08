@@ -1,41 +1,42 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete a workflow
+title: "刪除工作流程"
 parent: Workflow APIs
 nav_order: 80
 ---
 
 # Delete Workflow API
 
-When you no longer need a workflow template, you can delete it by calling the Delete Workflow API.
+當您不再需要某個工作流程範本時，可以呼叫 Delete Workflow API 將其刪除。
 
-Note that deleting a workflow only deletes the stored template---it does not deprovision its resources.
+請注意，刪除工作流程只會刪除已儲存的範本，不會取消佈建其資源。
 
-When a workflow is deleted, its corresponding status (returned by the [Workflow State API]({{site.url}}{{site.baseurl}}/automating-configurations/api/get-workflow-status/)) is also deleted unless either the provisioning status is `IN_PROGRESS` or resources have been provisioned.
+刪除工作流程時，其對應的狀態（由 [Workflow State API]({{site.url}}{{site.baseurl}}/automating-configurations/api/get-workflow-status/) 傳回）也會一併刪除，除非佈建狀態為 `IN_PROGRESS` 或已佈建資源。
 
-## Endpoints
+## 端點
 
 ```json
 DELETE /_plugins/_flow_framework/workflow/{workflow_id}
 ``` 
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. 
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `workflow_id` | String | The ID of the workflow to be retrieved. Required. |
+| `workflow_id` | String | 要擷取的工作流程 ID。必要。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `clear_status` | Boolean | Determines whether to delete the workflow state (without deprovisioning resources) after deleting the template. OpenSearch deletes the workflow state only if the provisioning status is not `IN_PROGRESS`. Default is `false`. |
+| `clear_status` | Boolean | 決定在刪除範本後，是否刪除工作流程狀態（不取消佈建資源）。只有在佈建狀態不是 `IN_PROGRESS` 時，OpenSearch 才會刪除工作流程狀態。預設為 `false`。 |
 
-## Example request
+## 請求範例
 
 ```json
 DELETE /_plugins/_flow_framework/workflow/8xL8bowB8y25Tqfenm50
@@ -47,9 +48,9 @@ DELETE /_plugins/_flow_framework/workflow/8xL8bowB8y25Tqfenm50?clear_status=true
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-If the workflow exists, a delete response contains the status of the deletion, where the `result` field is set to `deleted` on success or `not_found` if the workflow does not exist (it may have already been deleted):
+如果工作流程存在，刪除回應會包含刪除的狀態。成功時，`result` 欄位會設為 `deleted`；如果工作流程不存在（可能已經被刪除），則會設為 `not_found`：
 
 ```json
 {

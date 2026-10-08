@@ -1,46 +1,47 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get template (deprecated)
+title: "取得範本 (已淘汰)"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 90
 ---
 
-# Get template
-**Introduced 1.0**
+# 取得範本
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Get Template API has been deprecated. Use the new [Get Index Template]({{site.url}}{{site.baseurl}}/api-reference/index-apis/get-index-template/) API.
+Get Template API 已被淘汰。請改用新的 [Get Index Template]({{site.url}}{{site.baseurl}}/api-reference/index-apis/get-index-template/) API。
 {: .warning}
 
-The get template API operation is used to retrieve one or more index templates created using the legacy `/_template` endpoint.
+get template API 操作用於擷取一或多個使用舊版 `/_template` 端點建立的索引範本。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_template
 GET /_template/{template-name}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All parameters are optional.
+下表列出可用的路徑參數。所有參數皆為選用。
 
-| Parameter       | Type   | Description                                                                      |
+| 參數       | 類型   | 說明                                                                      |
 | :-------------- | :----- | :------------------------------------------------------------------------------- |
-| `template-name` | String | The name of the index template to retrieve. Accepts wildcard expressions. |
+| `template-name` | 字串 | 要擷取的索引範本名稱。接受萬用字元運算式。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All parameters are optional.
+下表列出可用的查詢參數。所有參數皆為選用。
 
-| Parameter        | Type    | Description                                                                                          |
+| 參數        | 類型    | 說明                                                                                          |
 | :--------------- | :------ | :--------------------------------------------------------------------------------------------------- |
-| `flat_settings` | Boolean | If true, returns settings in flat format. Default is `false`.                                       |
-| `local` | Boolean | If true, the request does not retrieve the state from the cluster manager node. Default is `false`. |
-| `cluster_manager_timeout` | Time | Specifies how long to wait for a connection to the cluster manager node. Default is `30s`.           |
+| `flat_settings` | 布林值 | 若為 true，則以扁平格式傳回設定。預設為 `false`。                                       |
+| `local` | 布林值 | 若為 true，請求不會從叢集管理員節點擷取狀態。預設為 `false`。 |
+| `cluster_manager_timeout` | 時間 | 指定等待連線至叢集管理員節點的時間長度。預設為 `30s`。           |
 
-## Example request
+## 範例請求
 
 <!-- spec_insert_start
 component: example_code
@@ -64,7 +65,7 @@ response = client.indices.get_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -88,15 +89,15 @@ response = client.indices.get_template(
 }
 ```
 
-## Response fields
+## 回應欄位
 
-The response object contains the following fields.
+回應物件包含下列欄位。
 
-| Field            | Type             | Description                                                                    |
+| 欄位            | 類型             | 說明                                                                    |
 | ---------------- | ---------------- | ------------------------------------------------------------------------------ |
-| `order` | Integer | An integer that determines the priority of the template when multiple templates match an index. Templates with a higher order value have higher precedence and are applied after lower-order templates, allowing them to override conflicting settings or mappings. |
-| `index_patterns` | Array of strings | The list of index name patterns to which the template applies.  |
-| `settings` | Object | The index-level settings defined in the template. |
-| `mappings` | Object | The field mappings defined for indexes that match the pattern. |
-| `aliases` | Object | The aliases to associate with matching indexes. |
+| `order` | 整數 | 當多個範本符合某個索引時，決定範本優先順序的整數。order 值較高的範本具有較高的優先權，並在較低 order 的範本之後套用，因此可以覆寫衝突的設定或對應。 |
+| `index_patterns` | 字串陣列 | 範本適用的索引名稱模式清單。  |
+| `settings` | 物件 | 範本中定義的索引層級設定。 |
+| `mappings` | 物件 | 為符合模式的索引定義的欄位對應。 |
+| `aliases` | 物件 | 要與符合的索引建立關聯的別名。 |
 

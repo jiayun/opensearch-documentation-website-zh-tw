@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cluster allocation explain
+title: "叢集配置說明"
 nav_order: 10
 parent: Cluster APIs
 has_children: false
@@ -9,26 +10,26 @@ redirect_from:
 ---
 
 # Cluster Allocation Explain API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Cluster Allocation Explain API provides detailed explanations for shard allocations in your cluster. Use this API to troubleshoot and diagnose shard allocation issues.
+Cluster Allocation Explain API 提供叢集中分片配置的詳細說明。您可以使用此 API 來疑難排解並診斷分片配置問題。
 
-This API is particularly useful in the following scenarios:
+此 API 在下列情境中特別有用：
 
-- Understanding why a shard remains unassigned and cannot be allocated to any node.
-- Determining why a shard was allocated to a particular node instead of another.
-- Understanding why a shard remains on its current node rather than being rebalanced to another node.
-- Verifying that allocation settings and filters are working as expected.
+- 瞭解為什麼某個分片仍未指派，且無法配置到任何節點。
+- 判斷為什麼某個分片被配置到特定節點而非其他節點。
+- 瞭解為什麼某個分片仍留在其目前的節點上，而未重新平衡到其他節點。
+- 驗證配置設定與篩選器是否如預期運作。
 
-When called without a request body, the API finds the first unassigned shard and explains why it cannot be allocated. When called with specific shard information, it provides allocation details for that particular shard.
+在不帶請求本文的情況下呼叫時，此 API 會找出第一個未指派的分片，並說明為什麼無法配置該分片。在帶有特定分片資訊的情況下呼叫時，則會提供該特定分片的配置詳細資訊。
 
 
 <!-- spec_insert_start
 api: cluster.allocation_explain
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET  /_cluster/allocation/explain
 POST /_cluster/allocation/explain
@@ -39,31 +40,31 @@ POST /_cluster/allocation/explain
 api: cluster.allocation_explain
 component: query_parameters
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `include_disk_info` | Boolean | When `true`, returns information about disk usage and shard sizes. _(Default: `false`)_ |
-| `include_yes_decisions` | Boolean | When `true`, returns any `YES` decisions in the allocation explanation. `YES` decisions indicate when a particular shard allocation attempt was successful for the given node. _(Default: `false`)_ |
+| `include_disk_info` | 布林值 | 當設為 `true` 時，傳回磁碟使用量與分片大小的相關資訊。_(預設：`false`)_ |
+| `include_yes_decisions` | 布林值 | 當設為 `true` 時，在配置說明中傳回任何 `YES` 決策。`YES` 決策表示針對指定節點的特定分片配置嘗試何時成功。_(預設：`false`)_ |
 
 <!-- spec_insert_end -->
 
-## Request body fields
+## 請求本文欄位
 
-The index, shard, and primary flag for which to generate an explanation. Leave this empty to generate an explanation for the first unassigned shard.
+要產生說明的索引、分片與主要分片旗標。留空即可為第一個未指派的分片產生說明。
 
-The request body is optional. It is a JSON object with the following fields.
+請求本文為選用。它是一個包含下列欄位的 JSON 物件。
 
-| Property | Data type | Description |
+| 屬性 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `current_node` | String | Specifies the node ID or the name of the node to only explain a shard that is currently located on the specified node. |
-| `index` | String | The name of the index that contains the shard for which to generate an explanation. |
-| `primary` | Boolean | When `true`, returns a routing explanation for the primary shard based on the node ID. |
-| `shard` | Integer | Specifies the ID of the shard that you would like an explanation for. |
+| `current_node` | 字串 | 指定節點 ID 或節點名稱，以便僅說明目前位於指定節點上的分片。 |
+| `index` | 字串 | 包含要產生說明之分片的索引名稱。 |
+| `primary` | 布林值 | 當設為 `true` 時，根據節點 ID 傳回主要分片的路由說明。 |
+| `shard` | 整數 | 指定您想要取得說明的分片 ID。 |
 
-## Example request
+## 範例請求
 
 <!-- spec_insert_start
 component: example_code
@@ -104,9 +105,9 @@ response = client.cluster.allocation_explain(
 <!-- spec_insert_end -->
 
 
-## Example response
+## 範例回應
 
-The following response shows an assigned primary shard with allocation decisions for other nodes in the cluster:
+下列回應顯示一個已指派的主要分片，以及叢集中其他節點的配置決策：
 
 ```json
 {
@@ -195,9 +196,9 @@ The following response shows an assigned primary shard with allocation decisions
 }
 ```
 
-## Example: Explaining the first unassigned shard
+## 範例：說明第一個未指派的分片
 
-To get an explanation for the first unassigned shard found by OpenSearch, send an empty request body:
+若要取得 OpenSearch 找到的第一個未指派分片的說明，請傳送空的請求本文：
 
 <!-- spec_insert_start
 component: example_code
@@ -223,9 +224,9 @@ response = client.cluster.allocation_explain(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Example response
+#### 範例回應
 
-The following response shows an unassigned replica shard in a single-node cluster:
+下列回應顯示單一節點叢集中一個未指派的副本分片：
 
 ```json
 {
@@ -261,18 +262,18 @@ The following response shows an unassigned replica shard in a single-node cluste
 }
 ```
 
-The response contains the following fields:
-- `current_state`: The shard is `unassigned`.
-- `unassigned_info.reason`: The shard became unassigned during cluster recovery (`CLUSTER_RECOVERED`).
-- `can_allocate`: Set to `no` because the shard cannot be allocated to any available node.
-- `node_decision`: Set to `no` for the only node in the cluster.
-- `decider`: The `same_shard` allocator blocks allocation because the primary shard is already on this node.
+回應包含下列欄位：
+- `current_state`：該分片為 `unassigned`。
+- `unassigned_info.reason`：該分片在叢集復原期間變為未指派 (`CLUSTER_RECOVERED`)。
+- `can_allocate`：設為 `no`，因為該分片無法配置到任何可用的節點。
+- `node_decision`：針對叢集中唯一的節點設為 `no`。
+- `decider`：`same_shard` 配置器阻止配置，因為主要分片已位於此節點上。
 
-This is a typical situation in single-node clusters where replica shards cannot be allocated because OpenSearch does not allow a primary and its replica to coexist on the same node.
+這是單一節點叢集中的典型情況，副本分片無法配置，因為 OpenSearch 不允許主要分片與其副本共存於同一節點上。
 
-## Example: Explaining a specific assigned shard
+## 範例：說明特定已指派的分片
 
-To understand why an assigned shard remains on its current node, specify the shard details:
+若要了解為何某個已指派的分片仍留在目前的節點上，請指定分片詳細資料：
 
 <!-- spec_insert_start
 component: example_code
@@ -311,7 +312,7 @@ response = client.cluster.allocation_explain(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -347,16 +348,16 @@ response = client.cluster.allocation_explain(
 }
 ```
 
-The response contains the following fields:
-- `current_state`: The shard is `started` and functioning normally.
-- `current_node`: Contains details about the node hosting this shard.
-- `can_remain_on_current_node`: Set to `yes` because the shard is allowed to stay on its current node.
-- `can_rebalance_cluster`: Set to `no` because rebalancing is disabled when the cluster has unassigned shards.
-- `can_rebalance_cluster_decisions`: Lists the deciders that prevent rebalancing.
+回應包含下列欄位：
+- `current_state`：此分片為 `started` 且運作正常。
+- `current_node`：包含裝載此分片之節點的詳細資料。
+- `can_remain_on_current_node`：設為 `yes`，因為允許此分片留在目前的節點上。
+- `can_rebalance_cluster`：設為 `no`，因為叢集有未指派的分片時會停用重新平衡。
+- `can_rebalance_cluster_decisions`：列出阻止重新平衡的決策器。
 
-## Example: Including disk information
+## 範例：包含磁碟資訊
 
-Use the `include_disk_info` parameter to get detailed disk usage statistics:
+使用 `include_disk_info` 參數取得詳細的磁碟使用量統計資料：
 
 <!-- spec_insert_start
 component: example_code
@@ -396,9 +397,9 @@ response = client.cluster.allocation_explain(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Example response
+#### 範例回應
 
-The response includes additional `cluster_info` with disk usage and shard size details:
+回應包含額外的 `cluster_info`，其中有磁碟使用量與分片大小詳細資料：
 
 ```json
 {
@@ -478,17 +479,17 @@ The response includes additional `cluster_info` with disk usage and shard size d
 }
 ```
 
-The `cluster_info` object provides:
-- `nodes`: Disk usage statistics for each node, including free and used disk space percentages, and resource utilization metrics (CPU, memory, and I/O).
-- `shard_sizes`: The size of each shard in the cluster in bytes (response shows a sample; actual responses include all shards).
-- `shard_paths`: The file system path where each shard is stored on the node (response shows a sample; actual responses include all shards).
-- `reserved_sizes`: Reserved disk space for ongoing shard operations.
+`cluster_info` 物件提供：
+- `nodes`：每個節點的磁碟使用量統計資料，包括可用與已用磁碟空間百分比，以及資源使用率指標（CPU、記憶體與 I/O）。
+- `shard_sizes`：叢集中每個分片的大小，以位元組為單位（回應顯示的是範例；實際回應會包含所有分片）。
+- `shard_paths`：每個分片在節點上儲存的檔案系統路徑（回應顯示的是範例；實際回應會包含所有分片）。
+- `reserved_sizes`：為進行中的分片作業保留的磁碟空間。
 
-This information is useful when diagnosing disk-related allocation issues or understanding how disk space affects allocation decisions.
+在診斷磁碟相關的配置問題，或了解磁碟空間如何影響配置決策時，這些資訊很有用。
 
-## Example: Specifying a node with current_node
+## 範例：使用 current_node 指定節點
 
-Use the `current_node` parameter to get an explanation only if the shard is located on a specific node:
+使用 `current_node` 參數，僅在分片位於特定節點時取得說明：
 
 <!-- spec_insert_start
 component: example_code
@@ -530,103 +531,103 @@ response = client.cluster.allocation_explain(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-This query returns an explanation only if the replica shard 0 of the `books` index is currently on the `opensearch-node1` node. If the shard is on a different node or is unassigned, the API returns an error.
+唯有當 `books` 索引的副本分片 0 目前位於 `opensearch-node1` 節點時，此查詢才會傳回說明。如果分片位於其他節點或未指派，API 會傳回錯誤。
 
-## Response fields
+## 回應欄位
 
-The API returns different fields depending on whether the shard is assigned or unassigned.
+此 API 會根據分片是否已指派而回傳不同的欄位。
 
-### Common response fields
+### 常見回應欄位
 
-The following table lists the common response fields.
+下表列出常見的回應欄位。
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`index` | The name of the index containing the shard.
-`shard` | The shard ID within the index.
-`primary` | Whether this is a primary shard (`true`) or replica shard (`false`).
-`current_state` | The current state of the shard: `started`, `unassigned`, `initializing`, or `relocating`.
+`index` | 包含該分片的索引名稱。
+`shard` | 索引內的分片 ID。
+`primary` | 這是主要分片 (`true`) 還是副本分片 (`false`)。
+`current_state` | 分片的目前狀態：`started`、`unassigned`、`initializing` 或 `relocating`。
 
-### Fields for assigned shards
+### 已指派分片的欄位
 
-The following table lists the response fields for assigned shards.
+下表列出已指派分片的回應欄位。
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`current_node` | Information about the node where the shard is currently allocated, including node ID, name, transport address, and custom attributes.
-`can_remain_on_current_node` | Whether the shard is allowed to remain on its current node: `yes`, `no`, or `decision_not_taken`.
-`can_rebalance_cluster` | Whether rebalancing is allowed in the cluster: `yes`, `no`, or `decision_not_taken`.
-`can_rebalance_to_other_node` | Whether the shard can be rebalanced to another node: `yes` or `no`.
-`rebalance_explanation` | A human-readable explanation for the rebalancing decision.
-`can_remain_decisions` | An array of deciders that determined whether the shard can remain on its current node. Included only when `can_remain_on_current_node` is `no`.
-`can_rebalance_cluster_decisions` | An array of deciders that determined whether cluster rebalancing is allowed. Included only when `can_rebalance_cluster` is `no`.
-`node_allocation_decisions` | An array of potential target nodes with allocation decisions for each node.
+`current_node` | 分片目前所在節點的資訊，包括節點 ID、名稱、傳輸位址與自訂屬性。
+`can_remain_on_current_node` | 分片是否允許留在其目前節點：`yes`、`no` 或 `decision_not_taken`。
+`can_rebalance_cluster` | 叢集是否允許重新平衡：`yes`、`no` 或 `decision_not_taken`。
+`can_rebalance_to_other_node` | 分片是否可以重新平衡到其他節點：`yes` 或 `no`。
+`rebalance_explanation` | 重新平衡決策的人類可讀說明。
+`can_remain_decisions` | 決定分片是否可留在目前節點的決策器陣列。僅在 `can_remain_on_current_node` 為 `no` 時才會包含。
+`can_rebalance_cluster_decisions` | 決定是否允許叢集重新平衡的決策器陣列。僅在 `can_rebalance_cluster` 為 `no` 時才會包含。
+`node_allocation_decisions` | 潛在目標節點的陣列，包含每個節點的指派決策。
 
-### Fields for unassigned shards
+### 未指派分片的欄位
 
-The following table lists the response fields for unassigned shards.
+下表列出未指派分片的回應欄位。
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`unassigned_info` | Information about why the shard is unassigned, including the reason, timestamp, and last allocation attempt.
-`unassigned_info.reason` | The reason the shard became unassigned, such as `INDEX_CREATED`, `CLUSTER_RECOVERED`, `NODE_LEFT`, or `REPLICA_ADDED`.
-`unassigned_info.at` | The timestamp (ISO 8601 format) when the shard became unassigned.
-`unassigned_info.last_allocation_status` | The result of the last allocation attempt: `no_attempt`, `no`, `throttled`, or `no_valid_shard_copy`.
-`unassigned_info.details` | Additional details about why the shard became unassigned. Included only when additional details are available.
-`can_allocate` | Whether the shard can be allocated: `yes`, `no`, `throttled`, `no_valid_shard_copy`, or `allocation_delayed`.
-`allocate_explanation` | A human-readable explanation for why the shard cannot be allocated.
-`configured_delay` | The configured delay before allocating the shard. Included only when `can_allocate` is `allocation_delayed`.
-`configured_delay_in_millis` | The configured delay in milliseconds. Included only when `can_allocate` is `allocation_delayed`.
-`remaining_delay` | The remaining time before the shard can be allocated. Included only when `can_allocate` is `allocation_delayed`.
-`remaining_delay_in_millis` | The remaining delay in milliseconds. Included only when `can_allocate` is `allocation_delayed`.
-`node_allocation_decisions` | An array of nodes with allocation decisions for each node.
+`unassigned_info` | 分片為何未指派的資訊，包括原因、時間戳記與最後一次指派嘗試。
+`unassigned_info.reason` | 分片變成未指派的原因，例如 `INDEX_CREATED`、`CLUSTER_RECOVERED`、`NODE_LEFT` 或 `REPLICA_ADDED`。
+`unassigned_info.at` | 分片變成未指派的時間戳記 (ISO 8601 格式)。
+`unassigned_info.last_allocation_status` | 最後一次指派嘗試的結果：`no_attempt`、`no`、`throttled` 或 `no_valid_shard_copy`。
+`unassigned_info.details` | 分片為何變成未指派的其他詳細資訊。僅在有其他詳細資訊可用時才會包含。
+`can_allocate` | 分片是否可以指派：`yes`、`no`、`throttled`、`no_valid_shard_copy` 或 `allocation_delayed`。
+`allocate_explanation` | 分片無法指派原因的人類可讀說明。
+`configured_delay` | 指派分片前所設定的延遲。僅在 `can_allocate` 為 `allocation_delayed` 時才會包含。
+`configured_delay_in_millis` | 以毫秒為單位的設定延遲。僅在 `can_allocate` 為 `allocation_delayed` 時才會包含。
+`remaining_delay` | 分片可以指派前的剩餘時間。僅在 `can_allocate` 為 `allocation_delayed` 時才會包含。
+`remaining_delay_in_millis` | 以毫秒為單位的剩餘延遲。僅在 `can_allocate` 為 `allocation_delayed` 時才會包含。
+`node_allocation_decisions` | 節點的陣列，包含每個節點的指派決策。
 
-### Node allocation decision fields
+### 節點指派決策欄位
 
-The following table lists the fields in the node allocation decisions array.
+下表列出節點指派決策陣列中的欄位。
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`node_id` | The unique identifier of the node.
-`node_name` | The name of the node.
-`transport_address` | The transport address of the node.
-`node_attributes` | Custom attributes assigned to the node, such as Availability Zone or instance type.
-`node_decision` | The allocation decision for this node: `yes`, `no`, `throttled`, `worse_balance`, or `awaiting_info`.
-`weight_ranking` | The relative weight ranking for this node in allocation decisions. Lower values indicate higher preference. Included only when nodes are ranked for allocation decisions.
-`deciders` | An array of allocators that made decisions about whether to allocate the shard to this node.
-`store` | Information about shard data found on the node (for replica shards). Includes `matching_size` and `matching_size_in_bytes`. Included only when shard store information is available.
+`node_id` | 節點的唯一識別碼。
+`node_name` | 節點的名稱。
+`transport_address` | 節點的傳輸位址。
+`node_attributes` | 指派給節點的自訂屬性，例如可用區域或執行個體類型。
+`node_decision` | 此節點的指派決策：`yes`、`no`、`throttled`、`worse_balance` 或 `awaiting_info`。
+`weight_ranking` | 此節點在指派決策中的相對權重排名。數值越低表示偏好越高。僅在為指派決策對節點進行排名時才會包含。
+`deciders` | 決定是否將分片指派給此節點的配置器陣列。
+`store` | 節點上找到的分片資料資訊 (適用於副本分片)。包含 `matching_size` 與 `matching_size_in_bytes`。僅在分片儲存資訊可用時才會包含。
 
-### Decider fields
+### 決策器欄位
 
-Each decider in the `deciders` array contains the following fields.
+`deciders` 陣列中的每個決策器都包含下列欄位。
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`decider` | The name of the allocator that made the decision.
-`decision` | The decision made by the allocator: `YES`, `NO`, or `THROTTLE`.
-`explanation` | A detailed explanation of why the allocator made this decision, including any relevant settings or constraints.
+`decider` | 做出決策的配置器名稱。
+`decision` | 配置器做出的決策：`YES`、`NO` 或 `THROTTLE`。
+`explanation` | 配置器為何做出此決策的詳細說明，包括任何相關的設定或限制。
 
-## Common allocators
+## 常見配置器
 
-The following table lists common allocators that affect shard allocation decisions.
+下表列出影響分片指派決策的常見配置器。
 
-Allocator | Description
+配置器 | 說明
 :--- | :---
-`same_shard` | Prevents a primary shard and its replica from being allocated to the same node.
-`disk_threshold` | Checks whether the node has sufficient disk space for the shard based on low and high watermark thresholds.
-`filter` | Applies allocation filters based on index settings like `index.routing.allocation.include`, `exclude`, or `require`.
-`awareness` | Enforces shard allocation awareness based on node attributes, distributing shards across Availability Zones or racks.
-`enable` | Checks whether shard allocation is enabled at the cluster, index, or shard level using the `cluster.routing.allocation.enable` setting.
-`throttling` | Limits the number of concurrent shard recoveries based on `cluster.routing.allocation.node_concurrent_recoveries`.
-`shards_limit` | Enforces the maximum number of shards per node (`cluster.routing.allocation.total_shards_per_node`) or per index.
-`max_retry` | Prevents repeated allocation attempts for shards that have failed allocation multiple times.
-`node_version` | Ensures that shards are allocated to nodes with compatible OpenSearch versions, preventing version downgrades.
-`snapshot_in_progress` | Prevents shard allocation when a snapshot operation is in progress for that shard.
-`restore_in_progress` | Controls allocation during shard restoration from a snapshot.
-`rebalance_only_when_active` | Prevents rebalancing when not all shard copies (primaries and replicas) are active in the cluster.
-`cluster_rebalance` | Controls when cluster rebalancing is allowed based on the `cluster.routing.allocation.allow_rebalance` setting: `always`, `indices_primaries_active`, or `indices_all_active`.
-`replica_after_primary_active` | Ensures that replica shards are only allocated after their primary shard is active.
+`same_shard` | 防止主要分片與其副本被指派到同一個節點。
+`disk_threshold` | 根據低水位與高水位閾值，檢查節點是否有足夠的磁碟空間容納該分片。
+`filter` | 根據索引設定 (例如 `index.routing.allocation.include`、`exclude` 或 `require`) 套用指派篩選器。
+`awareness` | 根據節點屬性強制執行分片指派感知，將分片分散到可用區域或機架。
+`enable` | 使用 `cluster.routing.allocation.enable` 設定，檢查叢集、索引或分片層級是否啟用分片指派。
+`throttling` | 根據 `cluster.routing.allocation.node_concurrent_recoveries` 限制並行分片復原的數量。
+`shards_limit` | 強制執行每個節點 (`cluster.routing.allocation.total_shards_per_node`) 或每個索引的最大分片數量。
+`max_retry` | 防止對已多次指派失敗的分片重複進行指派嘗試。
+`node_version` | 確保分片只指派給具有相容 OpenSearch 版本的節點，防止版本降級。
+`snapshot_in_progress` | 當該分片的快照作業正在進行時，防止分片指派。
+`restore_in_progress` | 控制從快照還原分片期間的指派。
+`rebalance_only_when_active` | 當並非所有分片複本 (主要與副本) 都在叢集中處於作用中狀態時，防止重新平衡。
+`cluster_rebalance` | 根據 `cluster.routing.allocation.allow_rebalance` 設定控制何時允許叢集重新平衡：`always`、`indices_primaries_active` 或 `indices_all_active`。
+`replica_after_primary_active` | 確保副本分片只在其主要分片處於作用中狀態後才被指派。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:monitor/allocation/explain`.
+如果您使用 Security 外掛程式，請確保您具備適當的權限：`cluster:monitor/allocation/explain`。

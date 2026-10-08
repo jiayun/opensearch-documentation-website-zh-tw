@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete index
+title: "刪除索引"
 parent: Core index APIs
 grand_parent: Index APIs
 nav_order: 20
@@ -9,47 +10,47 @@ redirect_from:
 ---
 
 # Delete Index API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The delete index API operation deletes one or more indexes from your cluster.
+刪除索引 API 作業會從您的叢集中刪除一或多個索引。
 
-**Warning**: Deleting an index is a permanent operation. All data in the index is lost and cannot be recovered. Always verify that you have backups or that the data is no longer needed before deleting an index.
+**警告**：刪除索引是永久性作業。索引中的所有資料都會遺失，且無法復原。刪除索引之前，請務必確認您已有備份，或已不再需要這些資料。
 {: .warning}
 
 <!-- spec_insert_start
 api: indices.delete
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 DELETE /{index}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required | Data type | Description |
+| 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `index` | **Required** | String | The name of the index to delete. You can specify a single index name, a comma-separated list of index names, or a wildcard expression. Wildcard expressions (`*`) match only open, concrete indexes. You cannot delete an index using an alias. To delete all indexes, use `_all` or `*`. To prevent accidental deletion of all indexes using `_all` or wildcard expressions, set the `action.destructive_requires_name` cluster setting to `true`. |
+| `index` | **必要** | 字串 | 要刪除的索引名稱。您可以指定單一索引名稱、以逗號分隔的索引名稱清單，或萬用字元運算式。萬用字元運算式（`*`）只會比對開啟的實體索引。您無法使用別名刪除索引。若要刪除所有索引，請使用 `_all` 或 `*`。若要避免使用 `_all` 或萬用字元運算式意外刪除所有索引，請將 `action.destructive_requires_name` 叢集設定設為 `true`。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `allow_no_indices` | Boolean | Specifies whether to ignore wildcards that do not match any indexes. If `false`, the request returns an error when wildcards do not match any indexes. | `true` |
-| `expand_wildcards` | String | Specifies the types of indexes to which wildcard expressions can expand. Supports comma-separated values. Valid values are: <br> - `all`: Match all indexes, including hidden indexes. <br> - `open`: Match open indexes. <br> - `closed`: Match closed indexes. <br> - `hidden`: Match hidden indexes. Must be combined with `open`, `closed`, or both. <br> - `none`: Do not accept wildcard expressions. | `open` |
-| `ignore_unavailable` | Boolean | Specifies whether to ignore indexes that are unavailable (missing or closed). If `true`, missing or closed indexes are not included in the response. | `false` |
-| `cluster_manager_timeout` | String | The amount of time to wait for a connection to the cluster manager node. | `30s` |
-| `timeout` | String | The amount of time to wait for a response. If no response is received before the timeout expires, the request fails and returns an error. | `30s` |
+| `allow_no_indices` | 布林值 | 指定是否忽略未比對到任何索引的萬用字元。若為 `false`，當萬用字元未比對到任何索引時，請求會傳回錯誤。 | `true` |
+| `expand_wildcards` | 字串 | 指定萬用字元運算式可展開為哪些類型的索引。支援以逗號分隔的值。有效值為：<br> - `all`：比對所有索引，包括隱藏索引。<br> - `open`：比對開啟的索引。<br> - `closed`：比對關閉的索引。<br> - `hidden`：比對隱藏索引。必須與 `open`、`closed` 或兩者搭配使用。<br> - `none`：不接受萬用字元運算式。 | `open` |
+| `ignore_unavailable` | 布林值 | 指定是否忽略無法使用的索引（不存在或已關閉）。若為 `true`，回應中不會包含不存在或已關閉的索引。 | `false` |
+| `cluster_manager_timeout` | 字串 | 等待連線至叢集管理員節點的時間長度。 | `30s` |
+| `timeout` | 字串 | 等待回應的時間長度。若在逾時期限到期前未收到回應，請求會失敗並傳回錯誤。 | `30s` |
 
-## Example: Deleting a single index
+## 範例：刪除單一索引
 
-The following example request deletes a single index named `sample-index`:
+下列範例請求會刪除名為 `sample-index` 的單一索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -73,9 +74,9 @@ response = client.indices.delete(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Deleting multiple indexes
+## 範例：刪除多個索引
 
-The following example request deletes multiple indexes by specifying them in a comma-separated list:
+下列範例請求會透過以逗號分隔的清單指定多個索引，以將其刪除：
 
 <!-- spec_insert_start
 component: example_code
@@ -99,9 +100,9 @@ response = client.indices.delete(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Deleting indexes using wildcard patterns
+## 範例：使用萬用字元模式刪除索引
 
-The following example request deletes all indexes that match the pattern `logs-2024-*`:
+下列範例請求會刪除所有符合模式 `logs-2024-*` 的索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -125,12 +126,12 @@ response = client.indices.delete(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Deleting all indexes
+## 範例：刪除所有索引
 
-**Warning**: The following operation is extremely destructive and will delete all indexes in your cluster. Use with extreme caution and only in development or testing environments.
+**警告**：下列作業具有極大的破壞性，會刪除您叢集中的所有索引。請極為謹慎地使用，且僅限於開發或測試環境。
 {: .warning}
 
-The following example request deletes all indexes in the cluster:
+下列範例請求會刪除叢集中的所有索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -154,11 +155,11 @@ response = client.indices.delete(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To prevent accidental deletion of all indexes, you can set the `action.destructive_requires_name` cluster setting to `true`. When this setting is enabled, you must specify explicit index names and cannot use `_all` or wildcard patterns to delete all indexes. For more information, see [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/).
+若要避免意外刪除所有索引，您可以將 `action.destructive_requires_name` 叢集設定設為 `true`。啟用此設定後，您必須明確指定索引名稱，且無法使用 `_all` 或萬用字元模式刪除所有索引。如需詳細資訊，請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)。
 
-## Example response
+## 回應範例
 
-OpenSearch returns the following response when the delete operation is successful:
+刪除作業成功時，OpenSearch 會傳回下列回應：
 
 ```json
 {
@@ -166,14 +167,14 @@ OpenSearch returns the following response when the delete operation is successfu
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`acknowledged` | Boolean | Indicates whether the delete request was received by the cluster. A value of `true` means the indexes were successfully deleted.
+`acknowledged` | 布林值 | 表示叢集是否已收到刪除請求。值為 `true` 表示索引已成功刪除。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/delete`.
+若您使用 Security 外掛程式，請確認您具備適當的權限：`indices:admin/delete`。

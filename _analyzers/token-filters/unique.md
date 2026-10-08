@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Unique
 parent: Token filters
 nav_order: 450
 ---
 
-# Unique token filter
+# Unique 詞元篩選器
 
-The `unique` token filter ensures that only unique tokens are kept during the analysis process, removing duplicate tokens that appear within a single field or text block. 
+`unique` 詞元篩選器可確保在分析過程中只保留唯一的詞元，並移除在單一欄位或文字區塊中出現的重複詞元。
 
-## Parameters
+## 參數
 
-The `unique` token filter can be configured with the following parameter.
+`unique` 詞元篩選器可以使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`only_on_same_position` | Optional | Boolean | If `true`, the token filter acts as a `remove_duplicates` token filter and only removes tokens that are in the same position. Default is `false`.
+`only_on_same_position` | 選用 | 布林值 | 若為 `true`，此詞元篩選器會作為 `remove_duplicates` 詞元篩選器運作，且只會移除位於相同位置的詞元。預設值為 `false`。
 
-## Example
+## 範例
 
-The following example request creates a new index named `unique_example` and configures an analyzer with a `unique` filter:
+下列範例請求會建立名為 `unique_example` 的新索引，並設定使用 `unique` 篩選器的分析器：
 
 ```json
 PUT /unique_example
@@ -48,9 +49,9 @@ PUT /unique_example
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器所產生的詞元：
 
 ```json
 GET /unique_example/_analyze
@@ -61,7 +62,7 @@ GET /unique_example/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

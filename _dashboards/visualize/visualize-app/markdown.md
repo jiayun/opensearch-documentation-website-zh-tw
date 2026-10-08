@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Markdown visualization
+title: "Markdown 視覺化"
 parent: Visualization types
 grand_parent: Creating visualizations in the Visualize application
 great_grand_parent: Building data visualizations
@@ -9,44 +10,44 @@ redirect_from:
   - /dashboards/visualize/markdown/
 ---
 
-# Markdown visualization
+# Markdown 視覺化
 
-A Markdown visualization renders formatted text within a dashboard panel. Use Markdown to provide titles, instructions, metric definitions, and explanatory context alongside data visualizations. Markdown supports headings, lists, bold and italic text, links, blockquotes, and code blocks (GitHub-flavored Markdown).
+Markdown 視覺化會在儀表板面板中呈現格式化文字。您可以使用 Markdown 在資料視覺化旁提供標題、操作說明、指標定義及說明性的背景資訊。Markdown 支援標題、清單、粗體與斜體文字、連結、區塊引言及程式碼區塊（GitHub-flavored Markdown）。
 
-Markdown visualizations do not require a data source.
+Markdown 視覺化不需要資料來源。
 
-## When to use Markdown visualizations
+## 何時使用 Markdown 視覺化
 
-Use Markdown visualizations to add context that helps you interpret the data on a dashboard. Common use cases include:
+使用 Markdown 視覺化可新增背景資訊，協助您解讀儀表板上的資料。常見的使用案例包括：
 
-- Dashboard titles and section headers
-- Instructions for interacting with filters and controls
-- Definitions of key metrics shown in other panels
-- Links to related dashboards or external documentation
-- Status notes such as data refresh intervals or maintenance schedules
+- 儀表板標題與區段標頭
+- 與篩選條件及控制項互動的操作說明
+- 其他面板中所顯示之關鍵指標的定義
+- 相關儀表板或外部文件的連結
+- 狀態說明，例如資料重新整理間隔或維護排程
 
-## Creating a Markdown visualization
+## 建立 Markdown 視覺化
 
-1. In the **New Visualization** dialog, select **Markdown**.
-2. In the **Markdown** text box on the **Data** tab, enter your Markdown content.
-3. Select **Update** to preview the rendered output, as shown in the following image.
+1. 在 **New Visualization** 對話方塊中，選取 **Markdown**。
+2. 在 **Data** 索引標籤的 **Markdown** 文字方塊中，輸入您的 Markdown 內容。
+3. 選取 **Update** 以預覽呈現的輸出，如下圖所示。
 
-![Markdown visualization showing a dashboard guide]({{site.url}}{{site.baseurl}}/images/dashboards/markdown-example.png)
+![顯示儀表板指南的 Markdown 視覺化]({{site.url}}{{site.baseurl}}/images/dashboards/markdown-example.png)
 
-4. (Optional) Select the **Options** tab to adjust the base font size or enable **Open links in new tab**.
+4. （選用）選取 **Options** 索引標籤，以調整基本字型大小或啟用 **Open links in new tab**。
 
-## Configuring a Markdown visualization
+## 設定 Markdown 視覺化
 
-The following settings are available on the **Options** tab.
+**Options** 索引標籤提供下列設定。
 
-### Options tab
+### Options 索引標籤
 
-| Setting | Description |
+| 設定 | 說明 |
 | :--- | :--- |
-| **Font size** | Controls the base font size of the rendered text. |
-| **Open links in new tab** | When enabled, links in the Markdown open in a new browser tab. |
+| **Font size** | 控制所呈現文字的基本字型大小。 |
+| **Open links in new tab** | 啟用時，Markdown 中的連結會在新的瀏覽器分頁中開啟。 |
 
-## Next steps
+## 後續步驟
 
-- To choose a different visualization type, see [Visualization types]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/).
-- To add this visualization to a dashboard, see [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/).
+- 若要選擇其他視覺化類型，請參閱[視覺化類型]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/)。
+- 若要將此視覺化新增至儀表板，請參閱[建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)。

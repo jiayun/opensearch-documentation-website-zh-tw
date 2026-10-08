@@ -1,93 +1,94 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Saved Objects APIs
+title: "Saved Objects API"
 parent: Saved objects
 grand_parent: Dashboards management
 nav_order: 15
 ---
 
-# Saved Objects APIs
+# Saved Objects API
 
-Use the Saved Objects APIs to list, retrieve, create, update, export, and import saved objects, for example to copy a set of visualizations between clusters or to inventory the visualizations that a cluster contains.
+使用 Saved Objects API 來列出、擷取、建立、更新、匯出及匯入已儲存物件。例如，您可以在叢集之間複製一組視覺化，或盤點叢集包含的視覺化。
 
-These endpoints are served by OpenSearch Dashboards rather than by OpenSearch, so send them to the OpenSearch Dashboards host and port (`5601` by default) instead of the OpenSearch REST port. Requests that use `POST`, `PUT`, or `DELETE` require the `osd-xsrf: true` header. Scripts written for Kibana OSS send the `kbn-xsrf: true` header instead, and OpenSearch Dashboards rejects these requests with the error `Request must contain a osd-xsrf header`. To fix this error, replace `kbn-xsrf` with `osd-xsrf` in your scripts.
+這些端點由 OpenSearch Dashboards 提供，而非由 OpenSearch 提供。因此，請將請求傳送至 OpenSearch Dashboards 的主機和連接埠（預設為 `5601`），而非 OpenSearch REST 連接埠。使用 `POST`、`PUT` 或 `DELETE` 的請求需要 `osd-xsrf: true` 標頭。為 Kibana OSS 撰寫的指令碼會改為傳送 `kbn-xsrf: true` 標頭，OpenSearch Dashboards 會以錯誤 `Request must contain a osd-xsrf header` 拒絕這些請求。若要修正此錯誤，請在您的指令碼中將 `kbn-xsrf` 取代為 `osd-xsrf`。
 
-Send these requests using `curl`, as shown in the examples on this page. To run a `GET` endpoint without `curl`, enter its full URL in the address bar of a browser in which you are signed in to OpenSearch Dashboards.
+請使用 `curl` 傳送這些請求，如本頁範例所示。若要在不使用 `curl` 的情況下執行 `GET` 端點，請在已登入 OpenSearch Dashboards 的瀏覽器網址列中輸入其完整 URL。
 
-The Dev Tools console cannot call these endpoints because it forwards every request to the OpenSearch REST port, where the saved objects paths do not exist.
+Dev Tools 主控台無法呼叫這些端點，因為它會將每個請求轉送至 OpenSearch REST 連接埠，而該連接埠上不存在已儲存物件路徑。
 {: .note}
 
-If the Security plugin is enabled, pass credentials using the `-u` option and add `-k` if the cluster uses a self-signed certificate:
+若已啟用 Security 外掛程式，請使用 `-u` 選項傳遞認證資訊。若叢集使用自我簽署憑證，請加上 `-k`：
 
 ```bash
 curl -k -u admin:<password> "https://localhost:5601/api/saved_objects/_find?type=visualization"
 ```
 {% include copy.html %}
 
-If OpenSearch Dashboards is served from a base path, such as when it runs behind a proxy or on a managed service, include that base path in the request, for example, `https://<host>/_dashboards/api/saved_objects/_find`.
+若 OpenSearch Dashboards 從基底路徑提供服務，請在請求中包含該基底路徑，例如 `https://<host>/_dashboards/api/saved_objects/_find`。在代理伺服器後方或在受管服務上執行時，通常就是這種情況。
 
-These APIs return the definition of a visualization, such as its aggregations and its index pattern reference. They do not run the visualization or return the data it displays. To export the underlying rows of a saved search as a CSV or Excel file, see [Reporting API]({{site.url}}{{site.baseurl}}/reporting/api/).
+這些 API 會傳回視覺化的定義，例如其彙總和索引模式參照。它們不會執行視覺化，也不會傳回視覺化所顯示的資料。若要將已儲存搜尋的底層資料列匯出為 CSV 或 Excel 檔案，請參閱 [Reporting API]({{site.url}}{{site.baseurl}}/reporting/api/)。
 {: .note}
 
-To export and import the same objects from OpenSearch Dashboards instead, see [Exporting and importing saved objects]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects/).
+若要改從 OpenSearch Dashboards 匯出及匯入相同的物件，請參閱[匯出及匯入已儲存物件]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects/)。
 
-## Selecting a tenant
+## 選取租用戶
 
-When multi-tenancy is enabled, each tenant has its own set of saved objects. Send the tenant name in the `securitytenant` header to work with the saved objects of a specific tenant:
+啟用多租用戶時，每個租用戶都有自己的一組已儲存物件。若要使用特定租用戶的已儲存物件，請在 `securitytenant` 標頭中傳送該租用戶名稱：
 
 ```bash
 curl -k -u admin:<password> -H 'securitytenant: global' "https://localhost:5601/api/saved_objects/_find?type=dashboard&fields=title"
 ```
 {% include copy.html %}
 
-Use `global` for the global tenant and `__user__` for the requesting user's private tenant.
+全域租用戶請使用 `global`，發出請求之使用者的私人租用戶請使用 `__user__`。
 
-A request that omits the header is served by the first of the following tenants that applies:
+若請求省略此標頭，會依下列順序，由第一個適用的租用戶提供服務：
 
-1. The tenant recorded in the request's session cookie.
-2. The default tenant configured for the cluster.
-3. The first tenant in the preferred tenant list that the user can access.
-4. The global tenant.
-5. The requesting user's private tenant.
+1. 請求的工作階段 Cookie 中記錄的租用戶。
+2. 為叢集設定的預設租用戶。
+3. 偏好租用戶清單中，使用者可存取的第一個租用戶。
+4. 全域租用戶。
+5. 發出請求之使用者的私人租用戶。
 
-A `curl` request carries no session cookie, so under the default configuration it is served by the global tenant.
+`curl` 請求不帶有工作階段 Cookie，因此在預設組態下，會由全域租用戶提供服務。
 
-Passing the tenant as a query parameter does not work, because the saved objects endpoints do not define one: a `securitytenant` or `security_tenant` query parameter is rejected with a `400` error. For more information about tenants, see [OpenSearch Dashboards multi-tenancy]({{site.url}}{{site.baseurl}}/security/multi-tenancy/tenant-index/).
+以查詢參數傳遞租用戶無效，因為已儲存物件端點並未定義此類查詢參數。`securitytenant` 或 `security_tenant` 查詢參數會遭到拒絕，並傳回 `400` 錯誤。如需租用戶的詳細資訊，請參閱 [OpenSearch Dashboards 多租用戶]({{site.url}}{{site.baseurl}}/security/multi-tenancy/tenant-index/)。
 
-## Find saved objects
+## 尋找已儲存物件
 
-The Find Saved Objects API searches for saved objects of one or more types.
+Find Saved Objects API 會搜尋一或多種類型的已儲存物件。
 
-### Endpoint
+### 端點
 
 ```json
 GET {osd_host}:{port}/api/saved_objects/_find
 ```
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. All query parameters except `type` are optional.
+下表列出可用的查詢參數。除了 `type` 以外，所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `type` | String | The type of saved object to search for, such as `visualization`, `dashboard`, `search`, or `index-pattern`. Repeat the parameter to search multiple types. Required. |
-| `search` | String | A query string used to filter results, such as `Sales*`. |
-| `search_fields` | String | The fields to match the `search` value against, such as `title`. |
-| `fields` | String | The object attributes to include in the response. Repeat the parameter to return multiple attributes. Returning only `title` keeps the response small. |
-| `per_page` | Integer | The number of results per page. Default is `20`. |
-| `page` | Integer | The page of results to return. Default is `1`. |
-| `sort_field` | String | The field to sort results by, such as `updated_at`. |
+| `type` | 字串 | 要搜尋的已儲存物件類型，例如 `visualization`、`dashboard`、`search` 或 `index-pattern`。若要搜尋多種類型，請重複指定此參數。必要。 |
+| `search` | 字串 | 用來篩選結果的查詢字串，例如 `Sales*`。 |
+| `search_fields` | 字串 | 要與 `search` 值比對的欄位，例如 `title`。 |
+| `fields` | 字串 | 要包含在回應中的物件屬性。若要傳回多個屬性，請重複指定此參數。僅傳回 `title` 可讓回應保持精簡。 |
+| `per_page` | 整數 | 每頁的結果數量。預設值為 `20`。 |
+| `page` | 整數 | 要傳回的結果頁面。預設值為 `1`。 |
+| `sort_field` | 字串 | 用來排序結果的欄位，例如 `updated_at`。 |
 
-### Example request
+### 範例請求
 
-The following request lists the visualizations in the cluster and returns only their titles:
+下列請求會列出叢集中的視覺化，並僅傳回其標題：
 
 ```bash
 curl "http://localhost:5601/api/saved_objects/_find?type=visualization&fields=title&per_page=5"
 ```
 {% include copy.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -120,38 +121,38 @@ curl "http://localhost:5601/api/saved_objects/_find?type=visualization&fields=ti
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists the response body fields.
+下表列出回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `total` | Integer | The number of saved objects that matched the search. |
-| `saved_objects` | Array | The matching saved objects. |
-| `saved_objects.id` | String | The ID of the saved object. Use this ID as the report source ID when you create a report definition. |
-| `saved_objects.type` | String | The type of the saved object. |
-| `saved_objects.attributes` | Object | The definition of the saved object, filtered by the `fields` parameter. |
-| `saved_objects.references` | Array | The other saved objects that this object depends on, such as its index pattern. |
-| `saved_objects.updated_at` | String | The time at which the saved object was last updated. |
+| `total` | 整數 | 符合搜尋條件的已儲存物件數量。 |
+| `saved_objects` | 陣列 | 符合條件的已儲存物件。 |
+| `saved_objects.id` | 字串 | 已儲存物件的 ID。建立報告定義時，請使用此 ID 作為報告來源 ID。 |
+| `saved_objects.type` | 字串 | 已儲存物件的類型。 |
+| `saved_objects.attributes` | 物件 | 已儲存物件的定義，會依 `fields` 參數篩選。 |
+| `saved_objects.references` | 陣列 | 此物件所依賴的其他已儲存物件，例如其索引模式。 |
+| `saved_objects.updated_at` | 字串 | 已儲存物件的最後更新時間。 |
 
-## Get saved object
+## 取得已儲存物件
 
-The Get Saved Object API retrieves a single saved object by type and ID.
+Get Saved Object API 會依類型和 ID 擷取單一已儲存物件。
 
-### Endpoint
+### 端點
 
 ```json
 GET {osd_host}:{port}/api/saved_objects/{type}/{id}
 ```
 
-### Example request
+### 範例請求
 
 ```bash
 curl "http://localhost:5601/api/saved_objects/visualization/test-viz"
 ```
 {% include copy.html %}
 
-To retrieve several saved objects in one request, send their types and IDs to the `_bulk_get` endpoint:
+若要在一個請求中擷取多個已儲存物件，請將其類型和 ID 傳送至 `_bulk_get` 端點：
 
 ```bash
 curl -X POST "http://localhost:5601/api/saved_objects/_bulk_get" \
@@ -161,38 +162,38 @@ curl -X POST "http://localhost:5601/api/saved_objects/_bulk_get" \
 ```
 {% include copy.html %}
 
-## Create saved object
+## 建立已儲存物件
 
-The Create Saved Object API creates a saved object. Provide an ID to control the object's ID, or omit it to have one generated.
+Create Saved Object API 會建立已儲存物件。您可以提供 ID 來指定物件的 ID，或省略 ID 以自動產生。
 
-Creating an object with this API requires the same attributes that the application that owns the type expects, and those attributes are not part of a public contract. Export objects from a working instance and import them elsewhere rather than composing visualizations or dashboards by hand.
+使用此 API 建立物件時，必須提供擁有該類型的應用程式所預期的相同屬性，而這些屬性並不屬於公開約定。請從正常運作的執行個體匯出物件，再匯入至其他位置，而非手動撰寫視覺化或儀表板。
 {: .note}
 
-### Endpoints
+### 端點
 
 ```json
 POST {osd_host}:{port}/api/saved_objects/{type}
 POST {osd_host}:{port}/api/saved_objects/{type}/{id}
 ```
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `overwrite` | Boolean | Whether to replace an object that already has the specified ID. Default is `false`, which returns a `409` error when the ID is in use. |
+| `overwrite` | 布林值 | 是否取代已具有指定 ID 的物件。預設為 `false`，此時若 ID 已被使用，會傳回 `409` 錯誤。 |
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `attributes` | Object | The definition of the object, in the format that the object's type expects. Required. |
-| `references` | Array | The other saved objects that this object depends on, each with a `name`, a `type`, and an `id`. Optional. |
+| `attributes` | 物件 | 物件的定義，格式須符合該物件類型的要求。必要。 |
+| `references` | 陣列 | 此物件所相依的其他已儲存物件，每個項目皆包含 `name`、`type` 和 `id`。選用。 |
 
-### Example request
+### 範例請求
 
 ```bash
 curl -X POST "http://localhost:5601/api/saved_objects/visualization/sales-by-region" \
@@ -215,7 +216,7 @@ curl -X POST "http://localhost:5601/api/saved_objects/visualization/sales-by-reg
 ```
 {% include copy.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -244,7 +245,7 @@ curl -X POST "http://localhost:5601/api/saved_objects/visualization/sales-by-reg
 }
 ```
 
-To create several objects in one request, send them to the `_bulk_create` endpoint, which accepts the same `overwrite` parameter:
+若要在單一請求中建立多個物件，請將這些物件傳送至 `_bulk_create` 端點，該端點接受相同的 `overwrite` 參數：
 
 ```bash
 curl -X POST "http://localhost:5601/api/saved_objects/_bulk_create" \
@@ -254,28 +255,28 @@ curl -X POST "http://localhost:5601/api/saved_objects/_bulk_create" \
 ```
 {% include copy.html %}
 
-The response contains the created objects in a `saved_objects` array.
+回應會在 `saved_objects` 陣列中包含已建立的物件。
 
-## Update saved object
+## 更新已儲存物件
 
-The Update Saved Object API updates the attributes of an existing saved object. The fields that you send replace the corresponding fields of the object, and the fields that you omit are left unchanged.
+Update Saved Object API 會更新現有已儲存物件的屬性。您傳送的欄位會取代物件中對應的欄位，而您省略的欄位則維持不變。
 
-### Endpoint
+### 端點
 
 ```json
 PUT {osd_host}:{port}/api/saved_objects/{type}/{id}
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `attributes` | Object | The fields of the object to update. Required. |
-| `references` | Array | The references to replace. Sending this field replaces the object's entire reference list. Optional. |
+| `attributes` | 物件 | 要更新的物件欄位。必要。 |
+| `references` | 陣列 | 要取代的參照。傳送此欄位會取代物件的整個參照清單。選用。 |
 
-### Example request
+### 範例請求
 
 ```bash
 curl -X PUT "http://localhost:5601/api/saved_objects/visualization/sales-by-region" \
@@ -285,9 +286,9 @@ curl -X PUT "http://localhost:5601/api/saved_objects/visualization/sales-by-regi
 ```
 {% include copy.html %}
 
-### Example response
+### 範例回應
 
-The response contains the updated fields rather than the full object:
+回應包含已更新的欄位，而非完整的物件：
 
 ```json
 {
@@ -302,17 +303,17 @@ The response contains the updated fields rather than the full object:
 }
 ```
 
-## Delete saved object
+## 刪除已儲存物件
 
-The Delete Saved Object API deletes a saved object. Deleting an object that others reference, such as an index pattern used by a visualization, leaves those objects with a missing reference. Use the **Relationships** action in **Dashboards Management** > **Saved objects**, or the `references` field returned by the [Find Saved Objects API](#find-saved-objects), to check what depends on an object before you delete it.
+Delete Saved Object API 會刪除已儲存物件。若刪除其他物件所參照的物件 (例如視覺化所使用的索引模式)，這些物件將會缺少參照。在刪除物件之前，請使用 **Dashboards Management** > **Saved objects** 中的 **Relationships** 動作，或 [Find Saved Objects API](#find-saved-objects) 所傳回的 `references` 欄位，檢查有哪些物件相依於該物件。
 
-### Endpoint
+### 端點
 
 ```json
 DELETE {osd_host}:{port}/api/saved_objects/{type}/{id}
 ```
 
-### Example request
+### 範例請求
 
 ```bash
 curl -X DELETE "http://localhost:5601/api/saved_objects/visualization/sales-by-day" \
@@ -320,55 +321,55 @@ curl -X DELETE "http://localhost:5601/api/saved_objects/visualization/sales-by-d
 ```
 {% include copy.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {}
 ```
 
-## Export saved objects
+## 匯出已儲存物件
 
-The Export Saved Objects API exports saved objects as newline-delimited JSON (NDJSON). Each line is one saved object, and the final line summarizes the export.
+Export Saved Objects API 會將已儲存物件匯出為以換行分隔的 JSON (NDJSON)。每一行為一個已儲存物件，最後一行則為匯出摘要。
 
-An export contains only the objects of the tenant that serves the request, so a backup of every tenant requires one request per tenant. For more information, see [Selecting a tenant](#selecting-a-tenant).
+匯出內容僅包含處理該請求之租用戶的物件，因此若要備份所有租用戶，每個租用戶都需要發出一個請求。如需詳細資訊，請參閱[選取租用戶](#selecting-a-tenant)。
 
-### Endpoint
+### 端點
 
 ```json
 POST {osd_host}:{port}/api/saved_objects/_export
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `type` | String or Array | The types of saved object to export, such as `visualization`. Provide either `type` or `objects`. |
-| `objects` | Array | The specific saved objects to export, each with a `type` and an `id`. Provide either `type` or `objects`. |
-| `includeReferencesDeep` | Boolean | Whether to also export the objects that the exported objects depend on, such as their index patterns. Set to `true` so that the export can be imported into a cluster that does not already contain those references. Optional. Default is `false`. |
-| `search` | String | A query string that limits the export to matching objects, such as `Sales*`. Use with `type`. Optional. |
-| `excludeExportDetails` | Boolean | Whether to omit the summary line at the end of the output. Optional. Default is `false`. |
-| `workspaces` | Array | The workspaces to export objects from. Use with `type`. Optional. |
+| `type` | 字串或陣列 | 要匯出的已儲存物件類型，例如 `visualization`。請提供 `type` 或 `objects` 其中之一。 |
+| `objects` | 陣列 | 要匯出的特定已儲存物件，每個項目皆包含 `type` 和 `id`。請提供 `type` 或 `objects` 其中之一。 |
+| `includeReferencesDeep` | 布林值 | 是否一併匯出所匯出物件所相依的物件，例如其索引模式。設為 `true`，即可將匯出內容匯入尚未包含這些參照的叢集。選用。預設為 `false`。 |
+| `search` | 字串 | 將匯出範圍限制為相符物件的查詢字串，例如 `Sales*`。請搭配 `type` 使用。選用。 |
+| `excludeExportDetails` | 布林值 | 是否省略輸出結尾的摘要行。選用。預設為 `false`。 |
+| `workspaces` | 陣列 | 要從中匯出物件的工作區。請搭配 `type` 使用。選用。 |
 
-A request sent to a workspace path is limited to that workspace even when the request body omits `workspaces`:
+傳送至工作區路徑的請求，即使請求本文省略 `workspaces`，也會限制在該工作區內：
 
 ```json
 POST {osd_host}:{port}/w/{workspace_id}/api/saved_objects/_export
 ```
 {% include copy.html %}
 
-The same path prefix associates imported objects with a workspace, so you can use it in place of the `workspaces` query parameter of the [Import Saved Objects API](#import-saved-objects).
+相同的路徑前置詞會將匯入的物件與工作區建立關聯，因此您可以用它取代 [Import Saved Objects API](#import-saved-objects) 的 `workspaces` 查詢參數。
 
-A request sent to a workspace path can export the objects of that workspace and objects that belong to no workspace. Requesting an object of a different workspace in `objects` returns the following error:
+傳送至工作區路徑的請求可以匯出該工作區的物件，以及不屬於任何工作區的物件。若在 `objects` 中請求其他工作區的物件，將傳回下列錯誤：
 
 ```json
 {"statusCode": 400, "error": "Bad Request", "message": "Bad Request", "attributes": {"objects": [{"id": "test-viz", "type": "visualization", "attributes": {}, "references": [], "error": {"statusCode": 403, "error": "Forbidden", "message": "Saved object does not belong to the workspace"}}]}}
 ```
 
-### Example request
+### 範例請求
 
-The following request exports one visualization along with the index pattern it references:
+下列請求會匯出一個視覺化及其所參照的索引模式：
 
 ```bash
 curl -X POST "http://localhost:5601/api/saved_objects/_export" \
@@ -379,19 +380,19 @@ curl -X POST "http://localhost:5601/api/saved_objects/_export" \
 ```
 {% include copy.html %}
 
-To export every visualization instead of a specific one, replace `objects` with `"type": "visualization"`.
+若要匯出所有視覺化而非特定的視覺化，請將 `objects` 替換為 `"type": "visualization"`。
 
-### Example response
+### 範例回應
 
-The last line of the NDJSON output summarizes the export:
+NDJSON 輸出的最後一行會摘要匯出結果：
 
 ```json
 {"exportedCount": 2, "missingRefCount": 0, "missingReferences": []}
 ```
 
-### Exporting all saved objects
+### 匯出所有已儲存物件
 
-To back up an entire OpenSearch Dashboards instance, list the types to export:
+若要備份整個 OpenSearch Dashboards 執行個體，請列出要匯出的類型：
 
 ```bash
 curl -X POST "http://localhost:5601/api/saved_objects/_export" \
@@ -402,36 +403,36 @@ curl -X POST "http://localhost:5601/api/saved_objects/_export" \
 ```
 {% include copy.html %}
 
-When multi-tenancy is enabled, repeat the request for each tenant, as described in [Selecting a tenant](#selecting-a-tenant).
+啟用多租用戶時，請依照[選取租用戶](#selecting-a-tenant)中的說明，對每個租用戶重複此請求。
 
-Installed plugins register additional types, so the types available in one instance can differ from those in another. To see the types that an instance contains, review the **Type** filter in **Dashboards Management** > **Saved objects**. Requesting a type that cannot be exported returns the following error:
+已安裝的外掛程式會註冊其他類型，因此不同執行個體中可用的類型可能有所不同。若要查看執行個體包含的類型，請檢視 **Dashboards Management** > **Saved objects** 中的 **Type** 篩選器。請求無法匯出的類型會傳回下列錯誤：
 
 ```json
 {"statusCode": 400, "error": "Bad Request", "message": "Trying to export non-exportable type(s): bogus-type"}
 ```
 
-## Import saved objects
+## 匯入已儲存物件
 
-The Import Saved Objects API imports saved objects from an NDJSON file produced by the [Export Saved Objects API](#export-saved-objects) or by an export from **Dashboards Management** > **Saved objects**. Send the file as multipart form data in a `file` field. The file must use the `.ndjson` extension.
+Import Saved Objects API 會從 [Export Saved Objects API](#export-saved-objects) 所產生的 NDJSON 檔案，或從 **Dashboards Management** > **Saved objects** 匯出的檔案匯入已儲存物件。請以 multipart 表單資料的形式，在 `file` 欄位中傳送檔案。檔案必須使用 `.ndjson` 副檔名。
 
-### Endpoint
+### 端點
 
 ```json
 POST {osd_host}:{port}/api/saved_objects/_import
 ```
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `overwrite` | Boolean | Whether to replace saved objects that already exist. Default is `false`, which causes conflicting objects to be reported as errors instead of imported. Cannot be combined with `createNewCopies`. |
-| `createNewCopies` | Boolean | Whether to import the objects under new IDs, preserving the existing objects. Cannot be combined with `overwrite`. |
-| `dataSourceId` | String | The ID of the data source to attach the imported objects to when multiple data sources are enabled. |
-| `workspaces` | String or Array | The workspaces to import the objects into. |
+| `overwrite` | 布林值 | 是否取代已存在的已儲存物件。預設為 `false`，這會使衝突的物件被回報為錯誤，而不會被匯入。無法與 `createNewCopies` 合併使用。 |
+| `createNewCopies` | 布林值 | 是否以新的 ID 匯入物件，並保留現有物件。無法與 `overwrite` 合併使用。 |
+| `dataSourceId` | 字串 | 啟用多個資料來源時，要將匯入物件附加至的資料來源 ID。 |
+| `workspaces` | 字串或陣列 | 要將物件匯入的工作區。 |
 
-### Example request
+### 範例請求
 
 ```bash
 curl -X POST "http://localhost:5601/api/saved_objects/_import?overwrite=true" \
@@ -440,7 +441,7 @@ curl -X POST "http://localhost:5601/api/saved_objects/_import?overwrite=true" \
 ```
 {% include copy.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -469,9 +470,9 @@ curl -X POST "http://localhost:5601/api/saved_objects/_import?overwrite=true" \
 }
 ```
 
-### Import errors
+### 匯入錯誤
 
-An import can fail for some objects and succeed for others. When any object fails, `success` is `false` and each failure appears in `errors` with an `error.type` field that identifies the cause:
+匯入作業可能對部分物件失敗，而對其他物件成功。當任何物件失敗時，`success` 會是 `false`，且每個失敗項目都會出現在 `errors` 中，並帶有一個用來識別原因的 `error.type` 欄位：
 
 ```json
 {
@@ -500,55 +501,55 @@ An import can fail for some objects and succeed for others. When any object fail
 }
 ```
 
-The following table lists the most common error types.
+下表列出最常見的錯誤類型。
 
-| Error type | Cause | Resolution |
+| 錯誤類型 | 原因 | 解決方式 |
 | :--- | :--- | :--- |
-| `missing_references` | The object refers to an object that the import does not contain and the target instance does not have, such as an index pattern. | Export the source objects again with `includeReferencesDeep` set to `true`, create the missing object, or ignore the reference using the [Resolve Import Errors API](#resolve-import-errors). |
-| `conflict` | An object with the same type and ID already exists. | Retry with `overwrite=true` or `createNewCopies=true`. |
-| `unsupported_type` | No installed plugin registers the object's type. | Install the plugin that provides the type or remove the object from the file. |
+| `missing_references` | 物件參照了匯入內容中未包含、且目標執行個體也沒有的物件，例如索引模式。 | 將 `includeReferencesDeep` 設為 `true` 後重新匯出來源物件、建立缺少的物件，或使用 [Resolve Import Errors API](#resolve-import-errors) 忽略該參照。 |
+| `conflict` | 已存在相同類型與 ID 的物件。 | 使用 `overwrite=true` 或 `createNewCopies=true` 重試。 |
+| `unsupported_type` | 沒有已安裝的外掛程式註冊該物件的類型。 | 安裝提供該類型的外掛程式，或從檔案中移除該物件。 |
 
-Because the response returns a `200` status code even when objects fail to import, check the `success` field rather than the status code when you script an import.
+由於即使物件匯入失敗，回應仍會傳回 `200` 狀態碼，因此當您以指令碼執行匯入時，請檢查 `success` 欄位，而非狀態碼。
 {: .note}
 
-## Resolve import errors
+## 解決匯入錯誤
 
-The Resolve Import Errors API retries a failed import with per-object instructions, such as overwriting a specific object or ignoring a missing reference. Send the same NDJSON file that the import used, along with a `retries` field that lists the objects to retry.
+Resolve Import Errors API 會依照個別物件的指示重試失敗的匯入，例如覆寫特定物件或忽略缺少的參照。請傳送匯入時使用的同一個 NDJSON 檔案，並附上列出要重試物件的 `retries` 欄位。
 
-### Endpoint
+### 端點
 
 ```json
 POST {osd_host}:{port}/api/saved_objects/_resolve_import_errors
 ```
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `createNewCopies` | Boolean | Whether to import the retried objects under new IDs. Default is `false`. |
-| `dataSourceId` | String | The ID of the data source to attach the imported objects to. |
-| `workspaces` | String or Array | The workspaces to import the objects into. |
+| `createNewCopies` | 布林值 | 是否以新的 ID 匯入重試的物件。預設為 `false`。 |
+| `dataSourceId` | 字串 | 要將匯入物件附加至的資料來源 ID。 |
+| `workspaces` | 字串或陣列 | 要將物件匯入的工作區。 |
 
-### Request body fields
+### 請求本文欄位
 
-Send the following fields as multipart form data.
+請以 multipart 表單資料的形式傳送下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `file` | File | The NDJSON file that the failed import used. Required. |
-| `retries` | Array | The objects to retry. Required. |
-| `retries.type` | String | The type of the object to retry. Required. |
-| `retries.id` | String | The ID of the object to retry. Required. |
-| `retries.overwrite` | Boolean | Whether to replace the existing object. Default is `false`. |
-| `retries.destinationId` | String | The ID to assign to the imported object. |
-| `retries.replaceReferences` | Array | The references to repoint, each with a `type`, a `from` ID, and a `to` ID. |
-| `retries.ignoreMissingReferences` | Boolean | Whether to import the object even though a reference is missing. |
+| `file` | 檔案 | 失敗的匯入所使用的 NDJSON 檔案。必要。 |
+| `retries` | 陣列 | 要重試的物件。必要。 |
+| `retries.type` | 字串 | 要重試的物件類型。必要。 |
+| `retries.id` | 字串 | 要重試的物件 ID。必要。 |
+| `retries.overwrite` | 布林值 | 是否取代現有物件。預設為 `false`。 |
+| `retries.destinationId` | 字串 | 要指派給匯入物件的 ID。 |
+| `retries.replaceReferences` | 陣列 | 要重新指向的參照，每個參照皆包含 `type`、`from` ID 及 `to` ID。 |
+| `retries.ignoreMissingReferences` | 布林值 | 即使缺少參照，是否仍匯入該物件。 |
 
-### Example request
+### 範例請求
 
-The following request retries a visualization whose index pattern is missing, importing it without the reference:
+下列請求會重試一個缺少索引模式的視覺化，並在不含該參照的情況下將其匯入：
 
 ```bash
 curl -X POST "http://localhost:5601/api/saved_objects/_resolve_import_errors" \
@@ -558,7 +559,7 @@ curl -X POST "http://localhost:5601/api/saved_objects/_resolve_import_errors" \
 ```
 {% include copy.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -577,43 +578,43 @@ curl -X POST "http://localhost:5601/api/saved_objects/_resolve_import_errors" \
 }
 ```
 
-## Limitations
+## 限制
 
-The following limits and caveats apply to the Saved Objects APIs.
+下列限制與注意事項適用於 Saved Objects API。
 
-### File format
+### 檔案格式
 
-The import endpoints accept only files with the `.ndjson` extension. A file with any other extension returns `{"statusCode": 400, "error": "Bad Request", "message": "Invalid file extension .json"}`. The legacy `/api/opensearch-dashboards/dashboards/export` endpoint produces a single JSON document instead of NDJSON, so its output cannot be imported with `_import`. Export the objects with `_export`, or from **Dashboards Management** > **Saved objects**, and import the resulting NDJSON file.
+匯入端點僅接受副檔名為 `.ndjson` 的檔案。使用其他副檔名的檔案會傳回 `{"statusCode": 400, "error": "Bad Request", "message": "Invalid file extension .json"}`。舊版 `/api/opensearch-dashboards/dashboards/export` 端點會產生單一 JSON 文件，而非 NDJSON，因此其輸出無法透過 `_import` 匯入。請使用 `_export` 或從 **Dashboards Management** > **Saved objects** 匯出物件，再匯入產生的 NDJSON 檔案。
 
-### Request size
+### 請求大小
 
-The import endpoints are bounded by the `savedObjects.maxImportPayloadBytes` setting, which is `26214400` (25 MB) by default. The `server.maxPayloadBytes` setting, which is `1048576` (1 MB) by default, applies to other OpenSearch Dashboards routes and does not raise or lower the import limit.
+匯入端點受 `savedObjects.maxImportPayloadBytes` 設定限制，預設為 `26214400`（25 MB）。`server.maxPayloadBytes` 設定預設為 `1048576`（1 MB），適用於其他 OpenSearch Dashboards 路由，不會提高或降低匯入限制。
 
-A `413 Request Entity Too Large` response for a file smaller than 25 MB usually comes from a proxy in front of OpenSearch Dashboards rather than from OpenSearch Dashboards itself. Raise the body size limit of the proxy, such as `client_max_body_size` in NGINX or `proxy-body-size` in an NGINX Ingress controller.
+若小於 25 MB 的檔案收到 `413 Request Entity Too Large` 回應，通常是來自 OpenSearch Dashboards 前方的 Proxy，而非 OpenSearch Dashboards 本身。請提高 Proxy 的本文大小限制，例如 NGINX 中的 `client_max_body_size` 或 NGINX Ingress 控制器中的 `proxy-body-size`。
 
-### Object count
+### 物件數量
 
-A single export or import is limited to `10000` objects by the `savedObjects.maxImportExportSize` setting. Split larger transfers by type or by search term.
+單次匯出或匯入受 `savedObjects.maxImportExportSize` 設定限制，最多為 `10000` 個物件。請依類型或搜尋詞彙分割較大的傳輸作業。
 
-### Conflicting parameters
+### 衝突的參數
 
-The `overwrite` and `createNewCopies` parameters cannot be used together. Sending both returns the following error:
+`overwrite` 與 `createNewCopies` 參數不能同時使用。同時傳送兩者會傳回下列錯誤：
 
 ```json
 {"statusCode": 400, "error": "Bad Request", "message": "[request query]: cannot use [overwrite] with [createNewCopies]"}
 ```
 
-### Version compatibility
+### 版本相容性
 
-Import an NDJSON file into an instance running the same version of OpenSearch Dashboards as the instance that exported it, or a later one. Objects are migrated forward as they are imported, but they cannot be migrated backward. An object exported from a later version fails with an error similar to the following:
+請將 NDJSON 檔案匯入至執行相同版本或更新版本 OpenSearch Dashboards 的執行個體，該版本須與匯出檔案的執行個體相同或更新。物件在匯入時會向前遷移，但無法向後遷移。從較新版本匯出的物件會失敗，並出現類似下列的錯誤：
 
 ```
 Document "test-viz" has property "visualization" which belongs to a more recent version of OpenSearch Dashboards [7.10.0]. The last known version is [7.9.3]
 ```
 
-## Related documentation
+## 相關文件
 
-- [Exporting and importing saved objects]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects/)
+- [匯出與匯入已儲存物件]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects/)
 - [Reporting API]({{site.url}}{{site.baseurl}}/reporting/api/)
-- [Access control lists for saved objects]({{site.url}}{{site.baseurl}}/dashboards/management/acl/)
-- [Index patterns]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/)
+- [已儲存物件的存取控制清單]({{site.url}}{{site.baseurl}}/dashboards/management/acl/)
+- [索引模式]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/)

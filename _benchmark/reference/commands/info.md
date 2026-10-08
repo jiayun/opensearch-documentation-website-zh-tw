@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: info
 nav_order: 70
@@ -9,20 +10,20 @@ redirect_from:
 ---
 
 <!-- vale off -->
-# info command
+# info 命令
 <!-- vale on -->
 
-The `info` command prints details about an OpenSearch Benchmark component.
+`info` 命令會印出 OpenSearch Benchmark 元件的詳細資訊。
 
-## Usage
+## 使用方式
 
-The following example returns information about a workload named `nyc_taxis`:
+下列範例會傳回名為 `nyc_taxis` 的工作負載資訊：
 
 ```
 opensearch-benchmark info --workload=nyc_taxis
 ```
 
-OpenSearch Benchmark returns information about the workload, as shown in the following example response:
+OpenSearch Benchmark 會傳回工作負載的資訊，如下列範例回應所示：
 
 ```
    ____                  _____                      __       ____                  __                         __
@@ -149,15 +150,15 @@ Schedule:
 ----------------------------------
 ```
 
-## Options
+## 選項
 
-You can use the following options with the `info` command:
+您可以搭配 `info` 命令使用下列選項：
 
 
-- `--workload-repository`: Defines the repository from where OpenSearch Benchmark loads workloads.
-- `--workload-path`: Defines the path to a downloaded or custom workload.
-- `--workload-revision`: Defines a specific revision from the workload source tree that OpenSearch Benchmark should use.
-- `--workload`: Defines the workload to use based on the workload's name. You can find a list of preloaded workloads using `opensearch-benchmark list workloads`.
-- `--test-procedure`: Defines a test procedure to use. You can find a list of test procedures using `opensearch-benchmark list test_procedures`.
-- `--include-tasks`: Defines a comma-separated list of test procedure tasks to run. By default, all tasks listed in a test procedure array are run.
-- `--exclude-tasks`: Defines a comma-separated list of test procedure tasks not to run.
+- `--workload-repository`：定義 OpenSearch Benchmark 載入工作負載的來源儲存庫。
+- `--workload-path`：定義已下載或自訂工作負載的路徑。
+- `--workload-revision`：定義 OpenSearch Benchmark 應使用的工作負載原始碼樹特定修訂版本。
+- `--workload`：根據工作負載名稱定義要使用的工作負載。您可以使用 `opensearch-benchmark list workloads` 查詢預先載入的工作負載清單。
+- `--test-procedure`：定義要使用的測試程序。您可以使用 `opensearch-benchmark list test_procedures` 查詢測試程序清單。
+- `--include-tasks`：定義要執行的測試程序工作清單，以逗號分隔。預設會執行測試程序陣列中列出的所有工作。
+- `--exclude-tasks`：定義不要執行的測試程序工作清單，以逗號分隔。

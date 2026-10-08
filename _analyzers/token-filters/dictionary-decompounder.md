@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Dictionary decompounder
+title: "字典複合詞拆分"
 parent: Token filters
 nav_order: 110
 ---
 
-# Dictionary decompounder token filter
+# 字典複合詞拆分詞元篩選器
 
-The `dictionary_decompounder` token filter is used to split compound words into their constituent parts based on a predefined dictionary. This filter is particularly useful for languages like German, Dutch, or Finnish, in which compound words are common, so breaking them down can improve search relevance. The `dictionary_decompounder` token filter determines whether each token (word) can be split into smaller tokens based on a list of known words. If the token can be split into known words, the filter generates the subtokens for the token.
+`dictionary_decompounder` 詞元篩選器會根據預先定義的字典，將複合詞拆分為其組成部分。此篩選器特別適用於德文、荷蘭文或芬蘭文等常見複合詞的語言，將複合詞拆解可以提升搜尋相關性。`dictionary_decompounder` 詞元篩選器會根據已知單字清單，判斷每個詞元（單字）是否可以拆分為較小的詞元。如果詞元可以拆分為已知單字，篩選器就會為該詞元產生子詞元。
 
-## Parameters
+## 參數
 
-The `dictionary_decompounder` token filter has the following parameters.
+`dictionary_decompounder` 詞元篩選器具有下列參數。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`word_list` | Required unless `word_list_path` is configured | Array of strings | The dictionary of words that the filter uses to split compound words.
-`word_list_path` | Required unless `word_list` is configured | String | A file path to a text file containing the dictionary words. Accepts either an absolute path or a path relative to the `config` directory. The dictionary file must be UTF-8 encoded, and each word must be listed on a separate line.
-`min_word_size` | Optional | Integer | The minimum length of the entire compound word that will be considered for splitting. If a compound word is shorter than this value, it is not split. Default is `5`.
-`min_subword_size` | Optional | Integer | The minimum length for any subword. If a subword is shorter than this value, it is not included in the output. Default is `2`.
-`max_subword_size` | Optional | Integer | The maximum length for any subword. If a subword is longer than this value, it is not included in the output. Default is `15`.
-`only_longest_match` | Optional | Boolean | If set to `true`, only the longest matching subword will be returned. Default is `false`.
+`word_list` | 必要，除非已設定 `word_list_path` | 字串陣列 | 篩選器用來拆分複合詞的單字字典。
+`word_list_path` | 必要，除非已設定 `word_list` | 字串 | 包含字典單字之文字檔案的檔案路徑。可接受絕對路徑，或相對於 `config` 目錄的路徑。字典檔案必須使用 UTF-8 編碼，且每個單字必須各列於單獨的一行。
+`min_word_size` | 選用 | 整數 | 複合詞整體納入拆分考量的最小長度。如果複合詞短於此值，則不會被拆分。預設為 `5`。
+`min_subword_size` | 選用 | 整數 | 任何子詞的最小長度。如果子詞短於此值，則不會包含在輸出中。預設為 `2`。
+`max_subword_size` | 選用 | 整數 | 任何子詞的最大長度。如果子詞長於此值，則不會包含在輸出中。預設為 `15`。
+`only_longest_match` | 選用 | 布林值 | 如果設定為 `true`，則只會傳回最長的相符子詞。預設為 `false`。
 
-## Example
+## 範例
 
-The following example request creates a new index named `decompound_example` and configures an analyzer with the `dictionary_decompounder` filter:
+下列範例請求會建立名為 `decompound_example` 的新索引，並設定使用 `dictionary_decompounder` 篩選器的分析器：
 
 ```json
 PUT /decompound_example
@@ -50,9 +51,9 @@ PUT /decompound_example
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器產生的詞元：
 
 ```json
 POST /decompound_example/_analyze
@@ -63,7 +64,7 @@ POST /decompound_example/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

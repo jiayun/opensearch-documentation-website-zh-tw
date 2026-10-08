@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Automating configurations
+title: "自動化組態"
 nav_order: 1
 has_children: false
 nav_exclude: true
@@ -8,41 +9,41 @@ redirect_from:
   - /automating-configurations/
 ---
 
-# Automating configurations
-**Introduced 2.13**
+# 自動化組態
+**於 2.13 版推出**
 {: .label .label-purple }
 
-You can automate complex OpenSearch setup and preprocessing tasks by providing templates for common use cases. For example, automating machine learning (ML) setup tasks streamlines the use of OpenSearch ML offerings.
+您可以提供常見使用案例的範本，將複雜的 OpenSearch 設定與前處理工作自動化。例如，將機器學習 (ML) 設定工作自動化，可以簡化 OpenSearch ML 功能的使用方式。
 
-In OpenSearch 2.12, configuration automation is limited to ML tasks.
+在 OpenSearch 2.12 中，組態自動化僅限於 ML 工作。
 {: .info}
 
-OpenSearch use case templates provide a compact description of the setup process in a JSON or YAML document. These templates describe automated workflow configurations for conversational chat or query generation, AI connectors, tools, agents, and other components that prepare OpenSearch as a backend for generative models. For custom template examples, see [Sample templates](https://github.com/opensearch-project/flow-framework/tree/main/sample-templates). For OpenSearch-provided templates, see [Workflow templates]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/).
+OpenSearch 使用案例範本以 JSON 或 YAML 文件精簡描述設定流程。這些範本描述了自動化工作流程組態，涵蓋對話式聊天或查詢產生、AI 連接器、工具、代理程式，以及其他將 OpenSearch 準備為生成式模型後端的元件。如需自訂範本範例，請參閱[範例範本](https://github.com/opensearch-project/flow-framework/tree/main/sample-templates)。如需 OpenSearch 提供的範本，請參閱[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/)。
 
-## Key features
+## 主要功能
 
-Workflow automation provides the following benefits:
+工作流程自動化提供下列優點：
 
-* **Use case templates**: Get started with predefined templates that outline the setup process for your general use cases.
-* **Customizable workflows**: Customize the workflow templates to your specific use case.
-* **Setup automation**: Easily configure AI connectors, tools, agents, and other components in a single API call.
+* **使用案例範本**：使用預先定義的範本快速入門，這些範本概述了一般使用案例的設定流程。
+* **可自訂的工作流程**：依照您的特定使用案例自訂工作流程範本。
+* **設定自動化**：只需一次 API 呼叫，即可輕鬆設定 AI 連接器、工具、代理程式及其他元件。
 
-## Template structure
+## 範本結構
 
-**Templates** implement workflow automation in OpenSearch. You can provide these templates in JSON or YAML format. You can describe one or more templates with a sequence of steps required for a particular use case. Each template consists of the following elements:
+**範本**在 OpenSearch 中實作工作流程自動化。您可以 JSON 或 YAML 格式提供這些範本。您可以用特定使用案例所需的一系列步驟來描述一或多個範本。每個範本皆由下列元素組成：
 
-* **Metadata**: A name, description, use case category, template version, and OpenSearch version compatibility range.
-* **User input**: Parameters expected from the user that are common to all automation steps across all workflows, such as an index name.
-* **Workflows**: One or more workflows containing the following elements:
-    * **User input**: Parameters expected from the user that are specific to the steps in this workflow.
-    * **Workflow Steps**: The workflow steps described as a directed acyclic graph (DAG):  
-        * ***Nodes*** describe steps of the process, which may be executed in parallel. For the syntax of workflow steps, see [Workflow steps]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-steps/). 
-        * ***Edges*** sequence nodes to be executed after the previous step is complete and may use the output fields of previous steps. When a node includes a key in the `previous_node_input` map referring to a previous node’s workflow step, a corresponding edge is automatically added to the template during parsing and may be omitted for the sake of simplicity.
+* **中繼資料**：名稱、描述、使用案例類別、範本版本，以及相容的 OpenSearch 版本範圍。
+* **使用者輸入**：預期由使用者提供、且適用於所有工作流程中所有自動化步驟的共用參數，例如索引名稱。
+* **工作流程**：一或多個工作流程，包含下列元素：
+    * **使用者輸入**：預期由使用者提供、且專屬於此工作流程中步驟的參數。
+    * **工作流程步驟**：以有向無環圖 (DAG) 描述的工作流程步驟：  
+        * ***節點***描述流程的步驟，這些步驟可以平行執行。如需工作流程步驟的語法，請參閱[工作流程步驟]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-steps/)。 
+        * ***邊***用來排序節點，使其在前一個步驟完成後執行，並可使用前一個步驟的輸出欄位。當節點在 `previous_node_input` 對應中包含參照前一個節點工作流程步驟的鍵時，系統會在剖析期間自動將對應的邊加入範本，因此為求簡潔可以省略。
 
-## Next steps
+## 後續步驟
 
-- For supported APIs, see [Workflow APIs]({{site.url}}{{site.baseurl}}/automating-configurations/api/index/).
-- For the workflow step syntax, see [Workflow steps]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-steps/).  
-- For a complete example, see [Workflow tutorial]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-tutorial/).
-- For configurable settings, see [Workflow settings]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-settings/).
-- For information about workflow access control, see [Workflow template security]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-security/).
+- 如需支援的 API，請參閱[工作流程 API]({{site.url}}{{site.baseurl}}/automating-configurations/api/index/)。
+- 如需工作流程步驟語法，請參閱[工作流程步驟]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-steps/)。  
+- 如需完整範例，請參閱[工作流程教學]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-tutorial/)。
+- 如需可設定的設定，請參閱[工作流程設定]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-settings/)。
+- 如需工作流程存取控制的相關資訊，請參閱[工作流程範本安全性]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-security/)。

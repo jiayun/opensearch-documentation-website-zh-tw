@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Stop
 parent: Token filters
 nav_order: 410
 ---
 
-# Stop token filter
+# Stop 詞元篩選器
 
-The `stop` token filter is used to remove common words (also known as _stopwords_) from a token stream during analysis. Stopwords are typically articles and prepositions, such as `a` or `for`. These words are not significantly meaningful in search queries and are often excluded to improve search efficiency and relevance. 
+`stop` 詞元篩選器用於在分析期間從詞元串流中移除常用字詞（也稱為_停用詞_）。停用詞通常是冠詞和介系詞，例如 `a` 或 `for`。這些字詞在搜尋查詢中沒有顯著意義，通常會被排除，以提升搜尋效率和相關性。
 
-The default list of English stopwords includes the following words: `a`, `an`, `and`, `are`, `as`, `at`, `be`, `but`, `by`, `for`, `if`, `in`, `into`, `is`, `it`, `no`, `not`, `of`, `on`, `or`, `such`, `that`, `the`, `their`, `then`, `there`, `these`, `they`, `this`, `to`, `was`, `will`, and `with`. 
+預設的英文停用詞清單包含下列字詞：`a`、`an`、`and`、`are`、`as`、`at`、`be`、`but`、`by`、`for`、`if`、`in`、`into`、`is`、`it`、`no`、`not`、`of`、`on`、`or`、`such`、`that`、`the`、`their`、`then`、`there`、`these`、`they`、`this`、`to`、`was`、`will` 和 `with`。
 
-## Parameters
+## 參數
 
-The `stop` token filter can be configured with the following parameters.
+`stop` 詞元篩選器可以使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`stopwords` | Optional | String | Specifies either a custom array of stopwords or a [predefined stopword set for a language](#predefined-stopword-sets-by-language). Default is `_english_`.
-`stopwords_path` | Optional | String | Specifies the file path (absolute or relative to the config directory) of the file containing custom stopwords.
-`ignore_case` | Optional | Boolean | If `true`, stopwords will be matched regardless of their case. Default is `false`.
-`remove_trailing` | Optional | Boolean | If `true`, trailing stopwords will be removed during analysis. Default is `true`.
+`stopwords` | 選用 | 字串 | 指定自訂的停用詞陣列，或[特定語言的預先定義停用詞集](#predefined-stopword-sets-by-language)。預設為 `_english_`。
+`stopwords_path` | 選用 | 字串 | 指定包含自訂停用詞之檔案的檔案路徑（絕對路徑或相對於 config 目錄的路徑）。
+`ignore_case` | 選用 | 布林值 | 若為 `true`，則比對停用詞時不區分大小寫。預設為 `false`。
+`remove_trailing` | 選用 | 布林值 | 若為 `true`，則會在分析期間移除結尾的停用詞。預設為 `true`。
 
-## Example
+## 範例
 
-The following example request creates a new index named `my-stopword-index` and configures an analyzer with a `stop` filter that uses the predefined stopword list for the English language:
+下列範例請求會建立名為 `my-stopword-index` 的新索引，並設定一個分析器，其中包含使用英文預先定義停用詞清單的 `stop` 篩選器：
 
 ```json
 PUT /my-stopword-index
@@ -53,9 +54,9 @@ PUT /my-stopword-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器產生的詞元：
 
 ```json
 GET /my-stopword-index/_analyze
@@ -66,7 +67,7 @@ GET /my-stopword-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {
@@ -110,18 +111,18 @@ The response contains the generated tokens:
 }
 ```
 
-## Predefined stopword sets by language
+## 依語言區分的預先定義停用詞集
 
-The following is a list of all available predefined stopword sets by language:
+以下是依語言區分的所有可用預先定義停用詞集清單：
 
 - [`_arabic_`](https://github.com/apache/lucene/blob/main/lucene/analysis/common/src/resources/org/apache/lucene/analysis/ar/stopwords.txt)
 - [`_armenian_`](https://github.com/apache/lucene/blob/main/lucene/analysis/common/src/resources/org/apache/lucene/analysis/hy/stopwords.txt)
 - [`_basque_`](https://github.com/apache/lucene/blob/main/lucene/analysis/common/src/resources/org/apache/lucene/analysis/eu/stopwords.txt)
 - [`_bengali_`](https://github.com/apache/lucene/blob/main/lucene/analysis/common/src/resources/org/apache/lucene/analysis/bn/stopwords.txt)
-- [`_brazilian_` (Brazilian Portuguese)](https://github.com/apache/lucene/blob/main/lucene/analysis/common/src/resources/org/apache/lucene/analysis/br/stopwords.txt) 
+- [`_brazilian_`（巴西葡萄牙文）](https://github.com/apache/lucene/blob/main/lucene/analysis/common/src/resources/org/apache/lucene/analysis/br/stopwords.txt) 
 - [`_bulgarian_`](https://github.com/apache/lucene/blob/main/lucene/analysis/common/src/resources/org/apache/lucene/analysis/bg/stopwords.txt)
 - [`_catalan_`](https://github.com/apache/lucene/blob/main/lucene/analysis/common/src/resources/org/apache/lucene/analysis/ca/stopwords.txt)
-- [`_cjk_` (Chinese, Japanese, and Korean)](https://github.com/apache/lucene/blob/main/lucene/analysis/common/src/resources/org/apache/lucene/analysis/cjk/stopwords.txt)
+- [`_cjk_`（中文、日文和韓文）](https://github.com/apache/lucene/blob/main/lucene/analysis/common/src/resources/org/apache/lucene/analysis/cjk/stopwords.txt)
 - [`_czech_`](https://github.com/apache/lucene/blob/main/lucene/analysis/common/src/resources/org/apache/lucene/analysis/cz/stopwords.txt)
 - [`_danish_`](https://github.com/apache/lucene/blob/main/lucene/analysis/common/src/resources/org/apache/lucene/analysis/snowball/danish_stop.txt)
 - [`_dutch_`](https://github.com/apache/lucene/blob/main/lucene/analysis/common/src/resources/org/apache/lucene/analysis/snowball/dutch_stop.txt)

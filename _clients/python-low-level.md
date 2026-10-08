@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Python client
+title: "Python 用戶端"
 nav_order: 10
 has_children: true
 has_toc: false
@@ -8,46 +9,46 @@ redirect_from:
   - /clients/python/
 ---
 
-# Python client
+# Python 用戶端
 
-The OpenSearch low-level Python client (`opensearch-py`) provides wrapper methods for the OpenSearch REST API so that you can interact with your cluster more naturally in Python. Rather than sending raw HTTP requests to a given URL, you can create an OpenSearch client for your cluster and call the client's built-in functions. 
+OpenSearch 低階 Python 用戶端 (`opensearch-py`) 為 OpenSearch REST API 提供封裝方法，讓您能夠在 Python 中以更自然的方式與叢集互動。您不需要將原始 HTTP 請求傳送至指定的 URL，而是可以為您的叢集建立 OpenSearch 用戶端，並呼叫用戶端的內建函式。
 
-This getting started guide illustrates how to connect to OpenSearch, index documents, and run queries. For additional information, see the following resources: 
-- [OpenSearch Python repo](https://github.com/opensearch-project/opensearch-py)
-- [API reference](https://opensearch-project.github.io/opensearch-py/api-ref.html) 
-- [User guides](https://github.com/opensearch-project/opensearch-py/tree/main/guides)
-- [Samples](https://github.com/opensearch-project/opensearch-py/tree/main/samples)
+本入門指南說明如何連線至 OpenSearch、將文件編製索引，以及執行查詢。如需更多資訊，請參閱下列資源：
+- [OpenSearch Python 儲存庫](https://github.com/opensearch-project/opensearch-py)
+- [API 參考](https://opensearch-project.github.io/opensearch-py/api-ref.html)
+- [使用者指南](https://github.com/opensearch-project/opensearch-py/tree/main/guides)
+- [範例](https://github.com/opensearch-project/opensearch-py/tree/main/samples)
 
-If you have any questions or would like to contribute, you can [create an issue](https://github.com/opensearch-project/opensearch-py/issues) to interact with the OpenSearch Python team directly. 
+如果您有任何問題或想要參與貢獻，可以[建立 issue](https://github.com/opensearch-project/opensearch-py/issues) 直接與 OpenSearch Python 團隊互動。
 
-## Installing the Python client
+## 安裝 Python 用戶端
 
-The latest version of the client, `opensearch-py` 3.2.0, requires Python 3.10 or later. To add the client to your project, install it using [pip](https://pip.pypa.io/):
+用戶端的最新版本 `opensearch-py` 3.2.0 需要 Python 3.10 或更新版本。若要將用戶端加入您的專案，請使用 [pip](https://pip.pypa.io/) 安裝：
 
 ```bash
 pip install opensearch-py
 ```
 {% include copy.html %}
 
-After installing the client, you can import it like any other module:
+安裝用戶端後，您可以像其他模組一樣匯入它：
 
 ```python
 from opensearchpy import OpenSearch
 ```
 {% include copy.html %}
 
-## Sample data
+## 範例資料
 
-The examples on this page use student documents. Each document is a Python dictionary that contains the `firstName`, `lastName`, `gpa`, and `gradDate` fields. For example, the following dictionary represents one student:
+本頁的範例使用學生文件。每份文件都是一個 Python 字典，包含 `firstName`、`lastName`、`gpa` 和 `gradDate` 欄位。例如，下列字典代表一名學生：
 
 ```python
 document = {'firstName': 'John', 'lastName': 'Doe', 'gpa': 3.89, 'gradDate': '2022-05-15'}
 ```
 {% include copy.html %}
 
-## Connecting to OpenSearch
+## 連線至 OpenSearch
 
-To connect to the default OpenSearch host, create a client object with SSL enabled if you are using the Security plugin. Replace `<custom-admin-password>` with the admin password that you set when installing OpenSearch:
+若要連線至預設的 OpenSearch 主機，如果您使用 Security 外掛程式，請建立啟用 SSL 的用戶端物件。將 `<custom-admin-password>` 替換為您在安裝 OpenSearch 時設定的管理員密碼：
 
 ```python
 host = 'localhost'
@@ -69,7 +70,7 @@ client = OpenSearch(
 ```
 {% include copy.html %}
 
-If you have your own client certificates, specify them in the `client_cert_path` and `client_key_path` parameters:
+如果您有自己的用戶端憑證，請在 `client_cert_path` 和 `client_key_path` 參數中指定它們：
 
 ```python
 host = 'localhost'
@@ -97,7 +98,7 @@ client = OpenSearch(
 ```
 {% include copy.html %}
 
-If you are not using the Security plugin, create a client object with SSL disabled:
+如果您沒有使用 Security 外掛程式，請建立停用 SSL 的用戶端物件：
 
 ```python
 host = 'localhost'
@@ -115,18 +116,18 @@ client = OpenSearch(
 ```
 {% include copy.html %}
 
-## Connecting to Amazon OpenSearch Service
+## 連線至 Amazon OpenSearch Service
 
-To sign requests to Amazon OpenSearch Service or Amazon OpenSearch Serverless using IAM credentials, install the AWS SDK for Python (Boto3):
+若要使用 IAM 憑證簽署對 Amazon OpenSearch Service 或 Amazon OpenSearch Serverless 的請求，請安裝 AWS SDK for Python (Boto3)：
 
 ```bash
 pip install boto3
 ```
 {% include copy.html %}
 
-In the following example, replace the endpoint with your domain endpoint, which is listed on the domain's details page in the Amazon OpenSearch Service console.
+在下列範例中，請將端點替換為您的網域端點，該端點列於 Amazon OpenSearch Service 主控台中網域的詳細資訊頁面。
 
-The following example illustrates connecting to Amazon OpenSearch Service using IAM credentials:
+下列範例示範如何使用 IAM 憑證連線至 Amazon OpenSearch Service：
 
 ```python
 from opensearchpy import OpenSearch, RequestsHttpConnection, RequestsAWSV4SignerAuth
@@ -149,7 +150,7 @@ client = OpenSearch(
 ```
 {% include copy.html %}
 
-To connect to Amazon OpenSearch Service through HTTP with a username and password, use the following code:
+若要透過 HTTP 使用使用者名稱和密碼連線至 Amazon OpenSearch Service，請使用下列程式碼：
 
 ```python
 from opensearchpy import OpenSearch
@@ -169,11 +170,11 @@ client = OpenSearch(
 ```
 {% include copy.html %}
 
-## Connecting to Amazon OpenSearch Serverless
+## 連線至 Amazon OpenSearch Serverless
 
-In the following example, replace the endpoint with your collection endpoint, which is listed on the collection's details page in the Amazon OpenSearch Service console.
+在下列範例中，請將端點替換為您的集合端點，該端點列於 Amazon OpenSearch Service 主控台中集合的詳細資訊頁面。
 
-The following example illustrates connecting to Amazon OpenSearch Serverless:
+下列範例示範如何連線至 Amazon OpenSearch Serverless：
 
 ```python
 from opensearchpy import OpenSearch, RequestsHttpConnection, RequestsAWSV4SignerAuth
@@ -196,12 +197,12 @@ client = OpenSearch(
 ```
 {% include copy.html %}
 
-Amazon OpenSearch Serverless supports a subset of OpenSearch API operations and does not support the `refresh` parameter used in the examples on this page. For more information, see [Supported operations and plugins in Amazon OpenSearch Serverless](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-genref.html).
+Amazon OpenSearch Serverless 支援 OpenSearch API 操作的子集，且不支援本頁範例中使用的 `refresh` 參數。如需更多資訊，請參閱 [Amazon OpenSearch Serverless 支援的操作與外掛程式](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-genref.html)。
 {: .note}
 
-## Creating an index
+## 建立索引
 
-The following example creates an index with one primary shard and one replica. It explicitly maps the `gradDate` field as a `date` in the `yyyy-MM-dd` format. OpenSearch maps the other document fields dynamically when you index documents:
+下列範例建立一個具有一個主要分片和一個副本的索引。它將 `gradDate` 欄位明確對應為 `yyyy-MM-dd` 格式的 `date`。當您將文件編製索引時，OpenSearch 會動態對應其他文件欄位：
 
 ```python
 index_name = 'students'
@@ -222,18 +223,18 @@ response = client.indices.create(index=index_name, body=index_body)
 ```
 {% include copy.html %}
 
-## Indexing a document
+## 將文件編製索引
 
-To index the `document` dictionary from [Sample data](#sample-data), use the `client.index()` method:
+若要從[範例資料](#sample-data)將 `document` 字典編製索引，請使用 `client.index()` 方法：
 
 ```python
 response = client.index(index=index_name, id='1', body=document, refresh=True)
 ```
 {% include copy.html %}
 
-## Performing bulk operations
+## 執行大量操作
 
-You can perform several operations at the same time by using the `bulk()` method of the client. The operations may be of the same type or of different types. Provide the operations as a list in which each action is followed by its document:
+您可以使用用戶端的 `bulk()` 方法同時執行多項操作。這些操作的類型可以相同，也可以不同。請以清單形式提供操作，其中每個動作後面接著其文件：
 
 ```python
 operations = [
@@ -246,16 +247,16 @@ response = client.bulk(body=operations, refresh=True)
 ```
 {% include copy.html %}
 
-## Searching for documents
+## 搜尋文件
 
-To search for all documents in an index, use the `client.search()` method without a query:
+若要在索引中搜尋所有文件，請使用 `client.search()` 方法，不需提供查詢：
 
 ```python
 response = client.search(index=index_name)
 ```
 {% include copy.html %}
 
-The response is a dictionary, and each item in `response['hits']['hits']` is a dictionary that contains the document ID in the `_id` key and the document fields in the `_source` key:
+回應是字典，而 `response['hits']['hits']` 中的每個項目都是字典，其中 `_id` 鍵包含文件 ID，`_source` 鍵則包含文件欄位：
 
 ```python
 for hit in response['hits']['hits']:
@@ -264,7 +265,7 @@ for hit in response['hits']['hits']:
 ```
 {% include copy.html %}
 
-To search using a query, provide the query in the request body. The following code uses a range query to search for students who graduated in 2019:
+若要使用查詢進行搜尋，請在請求本文中提供查詢。下列程式碼使用範圍查詢來搜尋 2019 年畢業的學生：
 
 ```python
 query = {'query': {'range': {'gradDate': {'gte': '2019-01-01', 'lte': '2019-12-31'}}}}
@@ -272,9 +273,9 @@ response = client.search(index=index_name, body=query)
 ```
 {% include copy.html %}
 
-## Paginating results
+## 將結果分頁
 
-To paginate results, use the `from` and `size` parameters. The following example sorts students by graduation date and retrieves the results two at a time. The first request returns the first page of results, and the second request returns the next page:
+若要將結果分頁，請使用 `from` 和 `size` 參數。下列範例依畢業日期排序學生，並一次擷取兩筆結果。第一個請求會傳回第一頁結果，第二個請求則會傳回下一頁：
 
 ```python
 response = client.search(index=index_name, body={'from': 0, 'size': 2, 'sort': [{'gradDate': 'asc'}]})
@@ -285,43 +286,43 @@ for page in [response, next_response]:
 ```
 {% include copy.html %}
 
-The `from` and `size` parameters work well for the first pages of results. To paginate through a large number of results, use point in time with `search_after`. For more information, see [Paginate results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/).
+`from` 和 `size` 參數適用於結果的前幾頁。若要對大量結果進行分頁，請使用時間點功能搭配 `search_after`。如需更多資訊，請參閱[將結果分頁]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/)。
 
-## Updating a document
+## 更新文件
 
-You can update a document using the `client.update()` method. The fields in the `doc` object are merged into the existing document:
+您可以使用 `client.update()` 方法更新文件。`doc` 物件中的欄位會合併到現有文件中：
 
 ```python
 response = client.update(index=index_name, id='1', body={'doc': {'gpa': 3.92}})
 ```
 {% include copy.html %}
 
-## Deleting a document
+## 刪除文件
 
-You can delete a document using the `client.delete()` method:
+您可以使用 `client.delete()` 方法刪除文件：
 
 ```python
 response = client.delete(index=index_name, id='3', refresh=True)
 ```
 {% include copy.html %}
 
-## Deleting an index
+## 刪除索引
 
-You can delete an index using the `client.indices.delete()` method:
+您可以使用 `client.indices.delete()` 方法刪除索引：
 
 ```python
 response = client.indices.delete(index=index_name)
 ```
 {% include copy.html %}
 
-## Sample program
+## 範例程式
 
-This sample program combines the code from the preceding sections. It connects to a cluster that has the Security plugin enabled. To connect to a cluster without the Security plugin, change the lines marked with `# Without security` comments.
+此範例程式結合了前述各節的程式碼。它會連線到已啟用 Security 外掛程式的叢集。若要連線到未啟用 Security 外掛程式的叢集，請變更標有 `# Without security` 註解的行。
 
-This sample program is for testing only. It specifies credentials in code. In production, load credentials from a secure location.
+此範例程式僅供測試之用。它會在程式碼中指定登入憑證。在正式環境中，請從安全的位置載入登入憑證。
 {: .warning}
 
-The following sample program creates a client, creates an index, indexes documents individually and in bulk, searches for documents, updates a document, deletes a document, and then deletes the index:
+下列範例程式會建立用戶端、建立索引、個別及大量地將文件編製索引、搜尋文件、更新文件、刪除文件，然後刪除索引：
 
 ```python
 import json
@@ -423,7 +424,7 @@ print(f"Acknowledged: {str(response['acknowledged']).lower()}")
 ```
 {% include copy.html %}
 
-The program produces the following output:
+該程式會產生下列輸出：
 
 ```
 Creating index......
@@ -460,10 +461,10 @@ Deleting the index......
 Acknowledged: true
 ```
 
-## Related documentation
+## 相關文件
 
-- To analyze data and upload ML models from Python, see [Python ML client]({{site.url}}{{site.baseurl}}/clients/opensearch-py-ml/).
-- For the client API reference, see the [`opensearch-py` API documentation](https://opensearch-project.github.io/opensearch-py/).
-- For more examples of using the client, see the [`opensearch-py` user guide](https://github.com/opensearch-project/opensearch-py/blob/main/USER_GUIDE.md).
-- For guides to specific tasks, such as bulk indexing and searching, see the [`opensearch-py` guides](https://github.com/opensearch-project/opensearch-py/tree/main/guides).
-- For complete sample applications, see the [`opensearch-py` samples](https://github.com/opensearch-project/opensearch-py/tree/main/samples).
+- 若要從 Python 分析資料並上傳 ML 模型，請參閱 [Python ML 用戶端]({{site.url}}{{site.baseurl}}/clients/opensearch-py-ml/)。
+- 如需用戶端 API 參考資料，請參閱 [`opensearch-py` API 文件](https://opensearch-project.github.io/opensearch-py/)。
+- 如需更多使用用戶端的範例，請參閱 [`opensearch-py` 使用者指南](https://github.com/opensearch-project/opensearch-py/blob/main/USER_GUIDE.md)。
+- 如需特定工作的指南，例如大量編製索引和搜尋，請參閱 [`opensearch-py` 指南](https://github.com/opensearch-project/opensearch-py/tree/main/guides)。
+- 如需完整的範例應用程式，請參閱 [`opensearch-py` 範例](https://github.com/opensearch-project/opensearch-py/tree/main/samples)。

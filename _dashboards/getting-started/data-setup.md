@@ -1,69 +1,70 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Prepare your data
+title: "準備您的資料"
 parent: Getting started
 nav_order: 20
 ---
 
-# Prepare your data
+# 準備您的資料
 
-Before you can explore, visualize, or dashboard your data in OpenSearch Dashboards, you need data in OpenSearch and an index pattern that points to it.
+在 OpenSearch Dashboards 中探索資料、將資料視覺化或為資料建立儀表板之前，您需要在 OpenSearch 中擁有資料，以及指向該資料的索引模式。
 
-## Step 1: Add data to OpenSearch
+## 步驟 1：將資料新增至 OpenSearch
 
-Choose one of the following options to add data to OpenSearch. We recommend getting started by adding sample data.
+請選擇下列其中一種方式，將資料新增至 OpenSearch。我們建議您從新增範例資料開始入門。
 
-### Add sample data
+### 新增範例資料
 
-Sample datasets come with prebuilt index patterns, visualizations, and dashboards. The [**Sample flight data**](https://playground.opensearch.org/app/home#/tutorial_directory) dataset is already installed in [OpenSearch Playground](https://playground.opensearch.org/app/home#/).
+範例資料集隨附預先建置的索引模式、視覺化和儀表板。[**Sample flight data**](https://playground.opensearch.org/app/home#/tutorial_directory) 資料集已安裝在 [OpenSearch Playground](https://playground.opensearch.org/app/home#/) 中。
 
-If you've installed a local OpenSearch Dashboards instance, add one or more sample datasets by following these steps:
+如果您已安裝本機 OpenSearch Dashboards 執行個體，請依照下列步驟新增一個或多個範例資料集：
 
-**Classic navigation:**
+**傳統導覽：**
 
-1. On the OpenSearch Dashboards home page, select **Add sample data**.
-1. On the **Add sample data** page, select the **Add data** button in the **Sample flight data** tile and any others that you want to add.
+1. 在 OpenSearch Dashboards 首頁上，選取 **Add sample data**。
+1. 在 **Add sample data** 頁面上，選取 **Sample flight data** 圖塊以及您想新增的其他圖塊中的 **Add data** 按鈕。
 
-**Workspaces navigation:**
+**工作區導覽：**
 
-1. In the left navigation panel, expand **Manage workspace** and select **Sample data**.
-1. Select the **Add data** button in the **Sample flight data** tile and any others that you want to add.
+1. 在左側導覽面板中，展開 **Manage workspace**，然後選取 **Sample data**。
+1. 選取 **Sample flight data** 圖塊以及您想新增的其他圖塊中的 **Add data** 按鈕。
 
-The following image shows the available sample datasets.
+下圖顯示可用的範例資料集。
 
-![Adding sample data window]({{site.url}}{{site.baseurl}}/images/dashboards/add-sample.png)
+![新增範例資料視窗]({{site.url}}{{site.baseurl}}/images/dashboards/add-sample.png)
 
-If you installed sample data, the index patterns are created automatically and you're ready to [explore the Discover application]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-discover/).
+如果您已安裝範例資料，系統會自動建立索引模式，您即可開始[探索 Discover 應用程式]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-discover/)。
 {: .note}
 
-### Ingest your own data
+### 匯入您自己的資料
 
-OpenSearch Dashboards reads data from OpenSearch, so you add your own data to OpenSearch. Load your data into OpenSearch using the Bulk API, Data Prepper, or other ingestion tools. For more information, see [Ingest data]({{site.url}}{{site.baseurl}}/getting-started/ingest-data/).
+OpenSearch Dashboards 會從 OpenSearch 讀取資料，因此您需要將自己的資料新增至 OpenSearch。請使用 Bulk API、Data Prepper 或其他匯入工具將資料載入 OpenSearch。如需詳細資訊，請參閱[匯入資料]({{site.url}}{{site.baseurl}}/getting-started/ingest-data/)。
 
-To send API requests, such as Bulk API requests, from OpenSearch Dashboards, use the Dev Tools console. For more information, see [Run queries in the Dev Tools console]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-dev-tools/).
+若要從 OpenSearch Dashboards 傳送 API 請求（例如 Bulk API 請求），請使用 Dev Tools 主控台。如需詳細資訊，請參閱[在 Dev Tools 主控台中執行查詢]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-dev-tools/)。
 
-After you ingest your data, create an index pattern for it as described in [Step 2](#step-2-create-an-index-pattern).
+匯入資料後，請依照[步驟 2](#step-2-create-an-index-pattern) 中的說明為資料建立索引模式。
 
-## Step 2: Create an index pattern
+## 步驟 2：建立索引模式
 
-An index pattern tells OpenSearch Dashboards which indexes to query. You need at least one index pattern before you can use Discover, Visualize, or Dashboards with your own data.
+索引模式會告訴 OpenSearch Dashboards 要查詢哪些索引。您至少需要一個索引模式，才能將 Discover、Visualize 或 Dashboards 用於您自己的資料。
 
-To create an index pattern, follow these steps:
+若要建立索引模式，請依照下列步驟操作：
 
-1. In the left navigation menu, go to **Management** > **Index patterns**.
-2. Select **Create index pattern**.
-3. Enter an index name or pattern (for example, `my-index-*` to match multiple indexes).
-4. Select **Next step**.
-5. If your index contains a timestamp field, select it from the **Time field** dropdown. For the examples in this section, select `timestamp`. This enables time-based filtering in Discover and visualizations.
-6. Select **Create index pattern**.
+1. 在左側導覽選單中，前往 **Management** > **Index patterns**。
+2. 選取 **Create index pattern**。
+3. 輸入索引名稱或模式（例如，使用 `my-index-*` 比對多個索引）。
+4. 選取 **Next step**。
+5. 如果您的索引包含時間戳記欄位，請從 **Time field** 下拉式選單中選取該欄位。在本節的範例中，請選取 `timestamp`。這會在 Discover 和視覺化中啟用以時間為基礎的篩選。
+6. 選取 **Create index pattern**。
 
-For more information, see [Index patterns]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/).
+如需詳細資訊，請參閱[索引模式]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/)。
 
-## Further reading
+## 延伸閱讀
 
-- For more information about index patterns, see [Index patterns]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/).
-- [Connecting data sources]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/).
+- 如需索引模式的詳細資訊，請參閱[索引模式]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/)。
+- [連接資料來源]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/)。
 
-## Next steps
+## 後續步驟
 
-- Learn about each application in [Learn about main applications]({{site.url}}{{site.baseurl}}/dashboards/getting-started/learn-dashboards/).
+- 在[了解主要應用程式]({{site.url}}{{site.baseurl}}/dashboards/getting-started/learn-dashboards/)中了解各個應用程式。

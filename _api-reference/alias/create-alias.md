@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create or update alias
+title: "建立或更新別名"
 parent: Alias APIs
 grand_parent: Index APIs
 nav_order: 10
@@ -8,16 +9,16 @@ redirect_from:
   - /api-reference/index-apis/update-alias/
 ---
 
-# Create Or Update Index Alias API
-**Introduced 1.0**
+# 建立或更新索引別名 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Create or Update Alias API adds one or more indexes to an index alias or updates the settings for an existing alias. For more information about index aliases, see [Index aliases]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/).
+建立或更新別名 API 可將一或多個索引新增至索引別名，或更新現有別名的設定。如需索引別名的詳細資訊，請參閱[索引別名]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/)。
 
-The Create or Update Alias API is distinct from the [Manage aliases API]({{site.url}}{{site.baseurl}}/api-reference/alias/aliases-api/), which supports the addition and removal of aliases and the removal of indexes with their aliases. In contrast, the following API only supports adding or updating an alias without updating the index itself. Each API also uses different request body parameters.
+建立或更新別名 API 與[管理別名 API]({{site.url}}{{site.baseurl}}/api-reference/alias/aliases-api/) 不同，後者支援新增和移除別名，以及移除索引及其別名。相較之下，下列 API 僅支援新增或更新別名，而不會更新索引本身。這兩個 API 使用的請求本文參數也不同。
 {: .note}
 
-## Endpoints
+## 端點
 
 ```json
 POST /{target}/_alias/{alias-name}
@@ -33,41 +34,41 @@ PUT /{target}/_aliases
 PUT /_alias
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 :--- | :--- | :---
-| `target` | String | A comma-delimited list of indexes. Wildcard expressions (`*`) are supported. To target all indexes in a cluster, use `_all` or `*`. Optional. |
-| `alias-name` | String | The alias name to be created or updated. Optional. |
+| `target` | String | 以逗號分隔的索引清單。支援萬用字元運算式（`*`）。若要以叢集中的所有索引為目標，請使用 `_all` 或 `*`。選用。 |
+| `alias-name` | String | 要建立或更新的別名名稱。選用。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`cluster_manager_timeout` | Time | The amount of time to wait for a response from the cluster manager node. Default is `30s`.
-`timeout` | Time | The amount of time to wait for a response from the cluster. Default is `30s`.
+`cluster_manager_timeout` | Time | 等待叢集管理員節點回應的時間長度。預設為 `30s`。
+`timeout` | Time | 等待叢集回應的時間長度。預設為 `30s`。
 
-## Request body
+## 請求本文
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-Field | Type | Description
+欄位 | 類型 | 說明
 :--- | :--- | :--- | :---
-`index` | String | A comma-delimited list of indexes that you want to associate with the alias. If this field is set, it will override the index name specified in the URL path.
-`alias` | String | The name of the alias. If this field is set, it will override the alias name specified in the URL path.
-`is_write_index` | Boolean | Specifies whether the index should be a write index. An alias can only have one write index at a time. If a write request is submitted to an alias that links to multiple indexes, then OpenSearch runs the request only on the write index.
-`routing` | String | Assigns a custom value to a shard for specific operations. 
-`index_routing` | String | Assigns a custom value to a shard only for index operations. 
-`search_routing` | String | Assigns a custom value to a shard only for search operations. 
-`filter` | Object | A filter to use with the alias so that the alias points to a filtered part of the index.
+`index` | String | 以逗號分隔、要與別名建立關聯的索引清單。若設定此欄位，將會覆寫 URL 路徑中指定的索引名稱。
+`alias` | String | 別名的名稱。若設定此欄位，將會覆寫 URL 路徑中指定的別名名稱。
+`is_write_index` | Boolean | 指定索引是否應為寫入索引。一個別名同一時間只能有一個寫入索引。若將寫入請求提交至連結到多個索引的別名，OpenSearch 只會在寫入索引上執行該請求。
+`routing` | String | 為特定作業指派自訂值給分片。
+`index_routing` | String | 僅為索引作業指派自訂值給分片。
+`search_routing` | String | 僅為搜尋作業指派自訂值給分片。
+`filter` | Object | 搭配別名使用的篩選條件，讓別名指向索引中經篩選的部分。
 
-## Example request: Add a simple alias
+## 範例請求：新增簡單別名
 
-The following request creates a basic alias for an index:
+下列請求會為索引建立基本別名：
 
 <!-- spec_insert_start
 component: example_code
@@ -93,9 +94,9 @@ response = client.indices.put_alias(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example request: Add a time-based alias
+## 範例請求：新增以時間為基礎的別名
 
-The following request creates an alias `quarterly-2024` for the `sales-q1-2024` index:
+下列請求會為 `sales-q1-2024` 索引建立別名 `quarterly-2024`：
 
 <!-- spec_insert_start
 component: example_code
@@ -121,9 +122,9 @@ response = client.indices.put_alias(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example request: Add a filtered alias with routing
+## 範例請求：新增具有路由的篩選別名
 
-First, create an index with appropriate mappings:
+首先，建立具有適當對應的索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -180,7 +181,7 @@ response = client.indices.create(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Then add the index alias for a specific customer with routing and filtering:
+接著，為特定客戶新增具有路由與篩選功能的索引別名：
 
 <!-- spec_insert_start
 component: example_code
@@ -230,9 +231,9 @@ response = client.indices.put_alias(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example request: Add an alias during index creation
+## 範例請求：在建立索引時新增別名
 
-You can add an alias when creating an index using the create index API:
+您可以在使用建立索引 API 建立索引時新增別名：
 
 <!-- spec_insert_start
 component: example_code
@@ -310,7 +311,7 @@ response = client.indices.create(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -318,10 +319,10 @@ response = client.indices.create(
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/aliases`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`indices:admin/aliases`。
 
-## Related documentation
+## 相關文件
 
-For more information about index aliases, see [Index aliases]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/).
+如需索引別名的詳細資訊，請參閱[索引別名]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/)。

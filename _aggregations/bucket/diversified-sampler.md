@@ -1,47 +1,48 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Diversified sampler
+title: "多樣化取樣器"
 parent: Bucket aggregations
 nav_order: 40
 redirect_from:
   - /query-dsl/aggregations/bucket/diversified-sampler/
 ---
 
-# Diversified sampler aggregation
+# 多樣化取樣器彙總
 
-The `diversified_sampler` aggregation is a filtering aggregation that limits subaggregation processing to a sample of top-scoring documents while ensuring the sample contains diverse content. It extends the [`sampler` aggregation]({{site.url}}{{site.baseurl}}/aggregations/bucket/sampler/) by deduplicating documents that share a common field value, preventing any single category from dominating the sample.
+`diversified_sampler` 彙總是一種篩選彙總，會將子彙總的處理範圍限制在分數最高的文件樣本中，同時確保樣本包含多樣化的內容。它擴充了 [`sampler` 彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/sampler/)，會對共用相同欄位值的文件進行重複資料刪除，以避免任何單一類別主導整個樣本。
 
-This aggregation is useful when you need to ensure fair representation across different groups---for example, preventing a single prolific author from skewing analytics results or ensuring geographic diversity in location-based analysis. It also reduces the cost of expensive subaggregations like `significant_terms` by producing useful results from a smaller, more representative sample.
+當您需要確保不同群組都能獲得公平呈現時，此彙總非常實用，例如避免單一多產作者使分析結果產生偏差，或在以位置為基礎的分析中確保地理多樣性。它也能透過較小但更具代表性的樣本產生有用的結果，進而降低 `significant_terms` 等成本高昂的子彙總所需的運算成本。
 
-## Parameters
+## 參數
 
-The `diversified_sampler` aggregation takes the following parameters.
+`diversified_sampler` 彙總接受下列參數。
 
-| Parameter | Required/Optional | Data type | Description |
+| 參數 | 必要/選用 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `field` | Optional | String | The field used for deduplication. Must produce a single value per document. Mutually exclusive with `script`. |
-| `script` | Optional | Object | A script that generates the deduplication value. Mutually exclusive with `field`. |
-| `shard_size` | Optional | Integer | The maximum number of top-scoring documents collected on each shard. Default is `100`. |
-| `max_docs_per_value` | Optional | Integer | The cap on how many documents sharing the same deduplication value can enter the sample. Default is `1`. |
-| `execution_hint` | Optional | String | Controls how deduplication values are managed in memory. See [Execution hint](#execution-hint). |
+| `field` | 選用 | 字串 | 用於重複資料刪除的欄位。每份文件必須只產生單一值。與 `script` 互斥。 |
+| `script` | 選用 | 物件 | 產生重複資料刪除值的指令碼。與 `field` 互斥。 |
+| `shard_size` | 選用 | 整數 | 每個分片上收集的分數最高文件數量上限。預設為 `100`。 |
+| `max_docs_per_value` | 選用 | 整數 | 共用相同重複資料刪除值的文件可進入樣本的數量上限。預設為 `1`。 |
+| `execution_hint` | 選用 | 字串 | 控制重複資料刪除值在記憶體中的管理方式。請參閱[執行提示](#execution-hint)。 |
 
-### Execution hint
+### 執行提示
 
-The following table lists the valid `execution_hint` values.
+下表列出有效的 `execution_hint` 值。
 
-| Value | Description |
+| 值 | 說明 |
 | :--- | :--- |
-| `map` | Holds field values directly in memory. |
-| `global_ordinals` | Uses Lucene's ordinal mappings for the field, offering better memory efficiency on high-cardinality fields. |
-| `bytes_hash` | Stores a hash of each value rather than the value itself. May improve speed in some scenarios but risks incorrect deduplication from hash collisions. |
+| `map` | 直接將欄位值保存在記憶體中。 |
+| `global_ordinals` | 使用 Lucene 針對該欄位的序數對應，在高基數欄位上可提供更佳的記憶體效率。 |
+| `bytes_hash` | 儲存每個值的雜湊而非值本身。在某些情境下可能提升速度，但有因雜湊衝突而導致重複資料刪除不正確的風險。 |
 
-OpenSearch may ignore the `execution_hint` if the chosen strategy is not applicable to the field type.
+如果所選策略不適用於該欄位類型，OpenSearch 可能會忽略 `execution_hint`。
 {: .note}
 
 
-## Example: Deduplicating by field
+## 範例：依欄位進行重複資料刪除
 
-The following example samples orders from the e-commerce dataset, limiting to 50 documents per `customer_gender` value, and then runs a `terms` subaggregation on the sample to see the category distribution:
+下列範例從電子商務資料集中對訂單進行取樣，每個 `customer_gender` 值最多限制 50 份文件，接著對樣本執行 `terms` 子彙總以查看類別分布：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -67,9 +68,9 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example: Deduplicating by script
+## 範例：依指令碼進行重複資料刪除
 
-You can use a script to generate deduplication values when you need to diversify on a computed or combined field. The following example diversifies by `customer_gender` using a script and limits to 3 documents per value:
+當您需要依據計算或組合而成的欄位進行多樣化時，可以使用指令碼產生重複資料刪除值。下列範例使用指令碼依 `customer_gender` 進行多樣化，並將每個值限制為 3 份文件：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -98,7 +99,7 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -148,19 +149,19 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 }
 ```
 
-With `max_docs_per_value` set to `3` and two distinct gender values, the sample contains at most 6 documents (3 per value), ensuring balanced representation in the subaggregation results.
+在 `max_docs_per_value` 設為 `3` 且有兩個不同性別值的情況下，樣本最多包含 6 份文件（每個值 3 份），確保子彙總結果中的呈現保持均衡。
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response body fields.
+下表列出回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `doc_count` | Integer | The total number of documents in the diversified sample. |
+| `doc_count` | 整數 | 多樣化樣本中的文件總數。 |
 
-## Limitations
+## 限制
 
-- The `field` or `script` must produce a single value per document. Multi-valued fields are not supported and using them causes an error.
-- Deduplication is applied independently on each shard, so documents with the same value on different shards are not deduplicated against each other.
-- This aggregation cannot be nested under a `terms` aggregation that uses `breadth_first` collect mode because breadth-first collection discards relevance scores that the diversified sampler requires.
-- There is no specialized syntax for geographic or date-based diversity values (such as `"7d"` or `"10km"`). To diversify by geographic region or time interval, write a script that buckets the raw values---for example, `(int)(doc['geoip.location'].lat / 10)` for latitude bands or `doc['order_date'].value.dayOfWeek` for day-of-week grouping.
+- `field` 或 `script` 必須為每份文件產生單一值。不支援多值欄位，使用多值欄位會導致錯誤。
+- 重複資料刪除會在每個分片上獨立套用，因此不同分片上具有相同值的文件不會彼此進行重複資料刪除。
+- 此彙總無法巢狀置於使用 `breadth_first` 收集模式的 `terms` 彙總之下，因為廣度優先收集會捨棄多樣化取樣器所需的相關性分數。
+- 地理或日期類型的多樣性值（例如 `"7d"` 或 `"10km"`）沒有專用語法。若要依地理區域或時間間隔進行多樣化，請撰寫將原始值分組為桶 (bucket) 的指令碼，例如使用 `(int)(doc['geoip.location'].lat / 10)` 劃分緯度帶，或使用 `doc['order_date'].value.dayOfWeek` 依星期幾分組。

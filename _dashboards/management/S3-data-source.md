@@ -1,50 +1,51 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Connecting Amazon S3 to OpenSearch
+title: "將 Amazon S3 連接至 OpenSearch"
 parent: Connecting data sources
 nav_order: 30
 has_children: true
 ---
 
-# Connecting Amazon S3 to OpenSearch
-Introduced 2.11
+# 將 Amazon S3 連接至 OpenSearch
+於 2.11 版推出
 {: .label .label-purple }
 
-You can connect OpenSearch to your Amazon Simple Storage Service (Amazon S3) data source using the OpenSearch Dashboards interface and then query that data, optimize query performance, define tables, and integrate your S3 data.
+您可以使用 OpenSearch Dashboards 介面，將 OpenSearch 連接至您的 Amazon Simple Storage Service (Amazon S3) 資料來源，接著查詢該資料、最佳化查詢效能、定義資料表，並整合您的 S3 資料。
 
-## Prerequisites
+## 先決條件
 
-Before connecting a data source, verify that the following requirements are met:
+連接資料來源之前，請確認已符合下列需求：
 
-- You have access to Amazon S3 and the [AWS Glue Data Catalog](https://github.com/opensearch-project/sql/blob/main/docs/user/ppl/admin/connectors/s3glue_connector.md).
-- You have access to OpenSearch and OpenSearch Dashboards.
-- You have an understanding of OpenSearch data source and connector concepts. See the [developer documentation](https://github.com/opensearch-project/sql/blob/main/docs/user/ppl/admin/datasources.md) for more information.
+- 您具有 Amazon S3 和 [AWS Glue Data Catalog](https://github.com/opensearch-project/sql/blob/main/docs/user/ppl/admin/connectors/s3glue_connector.md) 的存取權。
+- 您具有 OpenSearch 和 OpenSearch Dashboards 的存取權。
+- 您了解 OpenSearch 資料來源和連接器的概念。如需詳細資訊，請參閱[開發人員文件](https://github.com/opensearch-project/sql/blob/main/docs/user/ppl/admin/datasources.md)。
 
-## Connect your data source 
+## 連接您的資料來源
 
-To connect your data source, follow these steps:
+若要連接您的資料來源，請依照下列步驟操作：
 
-1. From the OpenSearch Dashboards main menu, go to **Management** > **Dashboards Management** > **Data sources**.
-2. On the **Data sources** page, select **Create data source connection** > **Amazon S3**.
-3. On the **Configure Amazon S3 data source** page, enter the data source, authentication details, and permissions.
-4. Select the **Review Configuration** button to verify the connection details.
-5. Select the **Connect to Amazon S3** button to establish a connection.
+1. 從 OpenSearch Dashboards 主選單，前往 **Management** > **Dashboards Management** > **Data sources**。
+2. 在 **Data sources** 頁面上，選取 **Create data source connection** > **Amazon S3**。
+3. 在 **Configure Amazon S3 data source** 頁面上，輸入資料來源、驗證詳細資料和權限。
+4. 選取 **Review Configuration** 按鈕以確認連線詳細資料。
+5. 選取 **Connect to Amazon S3** 按鈕以建立連線。
 
-## Manage your data source
+## 管理您的資料來源
 
-To manage your data source, follow these steps:
+若要管理您的資料來源，請依照下列步驟操作：
 
-1. On the **Manage data sources** tab, choose a date source from the list. 
-2. On the page for the data source, you can manage the data source, choose a use case, and configure access controls. 
-3. (Optional) Explore the Amazon S3 use cases, including querying your data and optimizing query performance. Refer to the [**Next steps**](#next-steps) section to learn more about each use case.
+1. 在 **Manage data sources** 索引標籤上，從清單中選擇資料來源。
+2. 在該資料來源的頁面上，您可以管理資料來源、選擇使用案例，以及設定存取控制。
+3. （選用）探索 Amazon S3 的使用案例，包括查詢您的資料和最佳化查詢效能。若要進一步了解各個使用案例，請參閱[**後續步驟**](#next-steps)一節。
 
-## Limitations
+## 限制
 
-This feature is currently under development, including the data integration functionality. For up-to-date information, refer to the [developer documentation on GitHub](https://github.com/opensearch-project/opensearch-spark/blob/main/docs/index.md#limitations).
+此功能目前仍在開發中，包括資料整合功能。如需最新資訊，請參閱 [GitHub 上的開發人員文件](https://github.com/opensearch-project/opensearch-spark/blob/main/docs/index.md#limitations)。
 
-## Next steps
+## 後續步驟
 
-- Learn about [querying your data in Data Explorer]({{site.url}}{{site.baseurl}}/dashboards/management/query-data-source/) through OpenSearch Dashboards.
-- Learn about [optimizing the query performance of your external data sources]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/), such as Amazon S3, through Query Workbench. 
-- Learn about [Amazon S3 and AWS Glue Data Catalog](https://github.com/opensearch-project/sql/blob/main/docs/user/ppl/admin/connectors/s3glue_connector.md) and the APIs used with Amazon S3 data sources, including configuration settings and query examples.
-- Learn about [managing your indexes]({{site.url}}{{site.baseurl}}/dashboards/im-dashboards/index/) through OpenSearch Dashboards.
+- 了解如何透過 OpenSearch Dashboards [在 Data Explorer 中查詢您的資料]({{site.url}}{{site.baseurl}}/dashboards/management/query-data-source/)。
+- 了解如何透過 Query Workbench [最佳化外部資料來源的查詢效能]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/)，例如 Amazon S3。
+- 了解 [Amazon S3 和 AWS Glue Data Catalog](https://github.com/opensearch-project/sql/blob/main/docs/user/ppl/admin/connectors/s3glue_connector.md)，以及搭配 Amazon S3 資料來源使用的 API，包括組態設定和查詢範例。
+- 了解如何透過 OpenSearch Dashboards [管理您的索引]({{site.url}}{{site.baseurl}}/dashboards/im-dashboards/index/)。

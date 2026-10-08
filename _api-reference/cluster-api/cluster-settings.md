@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cluster settings
+title: "叢集設定"
 nav_order: 50
 parent: Cluster APIs
 redirect_from:
@@ -9,52 +10,52 @@ redirect_from:
 ---
 
 # Cluster Settings API
-**Introduced 1.0**
+**於 1.0 版引入**
 {: .label .label-purple }
 
-The Cluster Settings API retrieves or modifies cluster-wide settings that apply to all nodes in your OpenSearch cluster. Settings updated through this API take precedence over those defined in the `opensearch.yml` configuration file.
+Cluster Settings API 可擷取或修改適用於 OpenSearch 叢集中所有節點的叢集整體設定。透過此 API 更新的設定優先於 `opensearch.yml` 組態檔案中定義的設定。
 
-Use the Cluster Settings API for the following purposes:
+使用 Cluster Settings API 可達成下列目的：
 
-- Retrieving current cluster configuration to understand how your cluster is configured without accessing individual node configuration files.
-- Dynamically adjusting cluster behavior without requiring a cluster restart, such as modifying shard allocation settings or recovery speeds.
-- Managing settings that need to be consistent across all nodes in the cluster, ensuring uniform behavior.
-- Temporarily changing settings for testing or troubleshooting purposes using transient settings that don't persist across cluster restarts.
+- 擷取目前的叢集組態，無需存取個別節點的組態檔案，即可瞭解叢集的設定方式。
+- 動態調整叢集行為，無需重新啟動叢集，例如修改分片配置設定或復原速度。
+- 管理叢集中所有節點都必須一致的設定，確保行為一致。
+- 使用重新啟動叢集後不會保留的暫時性設定，暫時變更設定以進行測試或疑難排解。
 
-Using this API to manage cluster-wide settings is preferred over manually editing configuration files because it ensures consistency across all nodes and allows for dynamic updates without restarts.
+建議使用此 API 管理叢集整體設定，因為它可確保所有節點的設定一致，並允許動態更新而無需重新啟動，比手動編輯組態檔案更合適。
 {: .tip}
 
-When updating cluster settings, you can specify whether changes should be persistent (persist after cluster restarts) or transient (cleared after restart). For more information about persistent and transient settings, setting precedence, and resetting settings, see [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/).
+更新叢集設定時，您可以指定變更應為持續性（重新啟動叢集後仍保留）或暫時性（重新啟動後清除）。如需持續性與暫時性設定、設定優先順序及重設設定的詳細資訊，請參閱[設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/)。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_cluster/settings
 PUT /_cluster/settings
 ```
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `cluster_manager_timeout` | String | The amount of time to wait for a response from the cluster manager node. For more information about supported time units, see [Common parameters]({{site.url}}{{site.baseurl}}/api-reference/units/#time-units). _(Default: `30s`)_ |
-| `flat_settings` | Boolean | Whether to return settings in the flat form, which can improve readability, especially for heavily nested settings. For example, the flat form of `"cluster": { "max_shards_per_node": 500 }` is `"cluster.max_shards_per_node": "500"`. _(Default: `false`)_ |
-| `include_defaults` | Boolean | **`GET` only.** When `true`, returns default cluster settings from the local node. _(Default: `false`)_ |
-| `timeout` | String | **`PUT` only.** A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and `d` (days). Also accepts `0` without a unit and `-1` to indicate an unspecified value. _(Default: `30s`)_ |
-| `master_timeout` <br> _DEPRECATED_ | String | _(Deprecated since 2.0: To promote inclusive language, use `cluster_manager_timeout` instead.)_ A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and `d` (days). Also accepts `0` without a unit and `-1` to indicate an unspecified value. |
+| `cluster_manager_timeout` | 字串 | 等待叢集管理員節點回應的時間。如需支援的時間單位的詳細資訊，請參閱[常用參數]({{site.url}}{{site.baseurl}}/api-reference/units/#time-units)。_（預設：`30s`）_ |
+| `flat_settings` | 布林值 | 是否以扁平形式傳回設定，這可提升可讀性，尤其是巢狀層級較深的設定。例如，`"cluster": { "max_shards_per_node": 500 }` 的扁平形式為 `"cluster.max_shards_per_node": "500"`。_（預設：`false`）_ |
+| `include_defaults` | 布林值 | **僅適用於 `GET`。** 當值為 `true` 時，傳回本機節點的預設叢集設定。_（預設：`false`）_ |
+| `timeout` | 字串 | **僅適用於 `PUT`。** 時間長度。單位可以是 `nanos`、`micros`、`ms`（毫秒）、`s`（秒）、`m`（分鐘）、`h`（小時）及 `d`（天）。也接受不帶單位的 `0`，以及表示未指定值的 `-1`。_（預設：`30s`）_ |
+| `master_timeout` <br> _已棄用_ | 字串 | _（自 2.0 版起棄用：為推廣包容性用語，請改用 `cluster_manager_timeout`。）_ 時間長度。單位可以是 `nanos`、`micros`、`ms`（毫秒）、`s`（秒）、`m`（分鐘）、`h`（小時）及 `d`（天）。也接受不帶單位的 `0`，以及表示未指定值的 `-1`。 |
 
-## Request body fields
+## 請求本文欄位
 
-The `GET` operation has no request body. The following table lists the request body fields for the `PUT` operation.
+`GET` 操作沒有請求本文。下表列出 `PUT` 操作的請求本文欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`persistent` | Object | Settings that persist across full cluster restarts. These settings are written to the cluster state and remain until explicitly changed.
-`transient` | Object | Settings that apply only until the next full cluster restart. Useful for temporary configuration changes during testing or troubleshooting.
+`persistent` | 物件 | 完整重新啟動叢集後仍保留的設定。這些設定會寫入叢集狀態，並持續保留，直到明確變更為止。
+`transient` | 物件 | 僅適用至下一次完整重新啟動叢集的設定。適合在測試或疑難排解期間暫時變更組態。
 
-Within the `persistent` or `transient` objects, specify the settings you want to update as key-value pairs. For example:
+在 `persistent` 或 `transient` 物件中，以索引鍵值配對指定您要更新的設定。例如：
 
 ```json
 {
@@ -64,15 +65,15 @@ Within the `persistent` or `transient` objects, specify the settings you want to
 }
 ```
 
-Not all cluster settings can be updated dynamically using the Cluster Settings API. When attempting to configure a static setting through the API, you will receive the error message `"setting [cluster.some.setting], not dynamically updateable"`. Static settings must be configured in the `opensearch.yml` file and require a node restart.
+並非所有叢集設定都能使用 Cluster Settings API 動態更新。嘗試透過 API 設定靜態設定時，您會收到錯誤訊息 `"setting [cluster.some.setting], not dynamically updateable"`。靜態設定必須在 `opensearch.yml` 檔案中設定，且需要重新啟動節點。
 {: .note }
 
-For a comprehensive list of all available cluster settings, see [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/).
+如需所有可用叢集設定的完整清單，請參閱[設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/)。
 
 
-## Example: Retrieving current cluster settings
+## 範例：擷取目前的叢集設定
 
-To view the current cluster settings without defaults, send a GET request:
+若要檢視目前的叢集設定且不包含預設值，請傳送 GET 請求：
 
 <!-- spec_insert_start
 component: example_code
@@ -92,9 +93,9 @@ response = client.cluster.get_settings()
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Example response
+#### 回應範例
 
-The response shows any persistent and transient settings that have been explicitly configured. Empty objects indicate no settings of that type have been set:
+回應會顯示所有已明確設定的持續性與暫時性設定。空物件表示尚未設定該類型的任何設定：
 
 ```json
 {
@@ -195,9 +196,9 @@ The response shows any persistent and transient settings that have been explicit
 }
 ```
 
-## Example: Including default settings
+## 範例：包含預設設定
 
-To retrieve all cluster settings, including defaults, use the `include_defaults` parameter:
+若要擷取所有叢集設定（包括預設值），請使用 `include_defaults` 參數：
 
 <!-- spec_insert_start
 component: example_code
@@ -221,9 +222,9 @@ response = client.cluster.get_settings(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Example response
+#### 範例回應
 
-The response includes a `defaults` object containing all default cluster settings (truncated for brevity). This is useful for identifying setting names and their default values before making changes:
+回應包含一個 `defaults` 物件，內含所有預設叢集設定（為精簡起見已截斷）。這在變更設定之前，可用於辨識設定名稱及其預設值：
 
 ```json
 {
@@ -261,9 +262,9 @@ The response includes a `defaults` object containing all default cluster setting
 }
 ```
 
-## Example: Using flat settings format
+## 範例：使用扁平設定格式
 
-To return settings in a flat format, which improves readability for nested settings, use the `flat_settings` parameter:
+若要以扁平格式傳回設定（可提升巢狀設定的可讀性），請使用 `flat_settings` 參數：
 
 <!-- spec_insert_start
 component: example_code
@@ -287,7 +288,7 @@ response = client.cluster.get_settings(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -330,9 +331,9 @@ response = client.cluster.get_settings(
 }
 ```
 
-## Example: Updating persistent settings
+## 範例：更新持續性設定
 
-To update a setting that persists across cluster restarts, include it in the `persistent` object:
+若要更新在叢集重新啟動後仍會保留的設定，請將其包含在 `persistent` 物件中：
 
 <!-- spec_insert_start
 component: example_code
@@ -371,9 +372,9 @@ response = client.cluster.put_settings(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Example response
+#### 範例回應
 
-The `acknowledged` field indicates that the setting was successfully updated. The response includes the updated setting:
+`acknowledged` 欄位表示該設定已成功更新。回應會包含更新後的設定：
 
 ```json
 {
@@ -387,9 +388,9 @@ The `acknowledged` field indicates that the setting was successfully updated. Th
 }
 ```
 
-## Example: Updating transient settings
+## 範例：更新暫時性設定
 
-To update a setting temporarily (until the next full cluster restart), include it in the `transient` object:
+若要暫時更新設定（直到下一次完整叢集重新啟動為止），請將其包含在 `transient` 物件中：
 
 <!-- spec_insert_start
 component: example_code
@@ -428,9 +429,9 @@ response = client.cluster.put_settings(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Example response
+#### 範例回應
 
-The `acknowledged` field indicates that the setting was successfully updated. The response includes the updated setting:
+`acknowledged` 欄位表示該設定已成功更新。回應會包含更新後的設定：
 
 ```json
 {
@@ -446,9 +447,9 @@ The `acknowledged` field indicates that the setting was successfully updated. Th
 }
 ```
 
-## Example: Resetting a setting
+## 範例：重設設定
 
-To reset a setting to its default value, assign it `null`:
+若要將設定重設為其預設值，請將其指派為 `null`：
 
 <!-- spec_insert_start
 component: example_code
@@ -487,9 +488,9 @@ response = client.cluster.put_settings(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Resetting multiple settings with wildcards
+## 範例：使用萬用字元重設多個設定
 
-To reset multiple related settings at once, use wildcard patterns:
+若要一次重設多個相關設定，請使用萬用字元模式：
 
 <!-- spec_insert_start
 component: example_code
@@ -529,9 +530,9 @@ response = client.cluster.put_settings(
 <!-- spec_insert_end -->
 
 
-#### Example response
+#### 範例回應
 
-When a setting is reset, it no longer appears in the response. The setting now uses the next value in the precedence order:
+設定重設後，就不會再出現在回應中。該設定現在會使用優先順序中的下一個值：
 
 ```json
 {
@@ -542,21 +543,21 @@ When a setting is reset, it no longer appears in the response. The setting now u
 ```
 
 
-## Response fields
+## 回應欄位
 
-The following table lists the response fields.
+下表列出回應欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`acknowledged` | Boolean | Indicates whether the settings update was successfully applied to the cluster. Only present in PUT responses.
-`persistent` | Object | Contains all persistent cluster settings that have been explicitly configured. Settings in this object persist across full cluster restarts.
-`transient` | Object | Contains all transient cluster settings that have been explicitly configured. Settings in this object are cleared after a full cluster restart.
-`defaults` | Object | Contains all default cluster settings with their default values. Only present when the `include_defaults` parameter is set to `true` in `GET` requests.
+`acknowledged` | 布林值 | 表示設定更新是否已成功套用至叢集。僅存在於 PUT 回應中。
+`persistent` | 物件 | 包含所有已明確設定的持續性叢集設定。此物件中的設定在完整叢集重新啟動後仍會保留。
+`transient` | 物件 | 包含所有已明確設定的暫時性叢集設定。此物件中的設定會在完整叢集重新啟動後被清除。
+`defaults` | 物件 | 包含所有預設叢集設定及其預設值。僅當在 `GET` 請求中將 `include_defaults` 參數設為 `true` 時才會出現。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/settings/update`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`cluster:admin/settings/update`。
 
-## Related documentation
+## 相關文件
 
-- For more information about transient settings, persistent settings, and setting precedence, see [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/).
+- 如需更多關於暫時性設定、持續性設定及設定優先順序的資訊，請參閱[設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)。

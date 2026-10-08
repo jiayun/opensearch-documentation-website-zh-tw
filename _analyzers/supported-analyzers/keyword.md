@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Keyword analyzer
+title: "Keyword 分析器"
 parent: Analyzers
 nav_order: 80
 ---
 
-# Keyword analyzer
+# Keyword 分析器
 
-The `keyword` analyzer doesn't tokenize text at all. Instead, it treats the entire input as a single token and does not break it into individual tokens. The `keyword` analyzer is often used for fields containing email addresses, URLs, or product IDs and in other cases where tokenization is not desirable. 
+`keyword` 分析器完全不會對文字進行斷詞。它會將整個輸入視為單一詞元，而不會將其拆分為個別詞元。`keyword` 分析器通常用於包含電子郵件地址、URL 或產品 ID 的欄位，以及其他不適合進行斷詞的情況。
 
-## Example
+## 範例
 
-Use the following command to create an index named `my_keyword_index` with a `keyword` analyzer:
+使用下列命令建立名為 `my_keyword_index` 且使用 `keyword` 分析器的索引：
 
 ```json
 PUT /my_keyword_index
@@ -28,9 +29,9 @@ PUT /my_keyword_index
 ```
 {% include copy-curl.html %}
 
-## Configuring a custom analyzer
+## 設定自訂分析器
 
-Use the following command to configure an index with a custom analyzer that is equivalent to the `keyword` analyzer:
+使用下列命令為索引設定與 `keyword` 分析器等效的自訂分析器：
 
 ```json
 PUT /my_custom_keyword_index
@@ -48,9 +49,9 @@ PUT /my_custom_keyword_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用該分析器產生的詞元：
 
 ```json
 POST /my_custom_keyword_index/_analyze
@@ -61,7 +62,7 @@ POST /my_custom_keyword_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Geobounds
 parent: Metric aggregations
@@ -7,22 +8,22 @@ redirect_from:
   - /query-dsl/aggregations/metric/geobounds/
 ---
 
-# Geobounds aggregation
+# Geobounds 彙總
 
-The `geo_bounds` aggregation is a multi-value aggregation that calculates the [geographic bounding box](https://docs.ogc.org/is/12-063r5/12-063r5.html#30) encompassing a set of [`geo_point`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-point/) or [`geo_shape`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-shape/) objects. The bounding box is returned as the upper-left and lower-right vertices of the rectangle given as a decimal-encoded latitude-longitude (lat-lon) pair.
+`geo_bounds` 彙總是一種多值彙總，可計算涵蓋一組 [`geo_point`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-point/) 或 [`geo_shape`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-shape/) 物件的[地理邊界框](https://docs.ogc.org/is/12-063r5/12-063r5.html#30)。邊界框會以矩形的左上角與右下角頂點傳回，並以十進位編碼的緯度-經度 (lat-lon) 配對表示。
 
-## Parameters
+## 參數
 
-The `geo_bounds` aggregation takes the following parameters.
+`geo_bounds` 彙總接受下列參數。
 
-| Parameter        | Required/Optional | Data type      | Description |
+| 參數        | 必要/選用 | 資料類型      | 說明 |
 | :--              | :--               | :--            | :--         |
-| `field`          | Required          | String         | The name of the field containing the geopoints or geoshapes for which the geobounds are computed. |
-| `wrap_longitude` | Optional          | Boolean        | Whether to allow the bounding box to overlap the international date line. Default is `true`. |
+| `field`          | 必要          | 字串         | 包含要計算地理邊界之 geopoint 或 geoshape 的欄位名稱。 |
+| `wrap_longitude` | 選用          | 布林值        | 是否允許邊界框跨越國際換日線。預設為 `true`。 |
 
-## Example
+## 範例
 
-The following example returns the `geo_bounds` for the `geoip.location` of every order in the e-commerce sample data (each `geoip.location` is a geopoint):
+下列範例會傳回電子商務範例資料中每筆訂單之 `geoip.location` 的 `geo_bounds`（每個 `geoip.location` 都是一個 geopoint）：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -39,9 +40,9 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-As shown in the following example response, the aggregation returns the `geobounds` containing all geopoints in the `geoip.location` field:
+如下列回應範例所示，彙總會傳回包含 `geoip.location` 欄位中所有 geopoint 的 `geobounds`：
 
 ```json
 {
@@ -78,11 +79,11 @@ As shown in the following example response, the aggregation returns the `geoboun
 }
 ```
 
-## Aggregating geoshapes
+## 彙總 geoshape
 
-You can run a `geo_bounds` aggregation on geoshapes.
+您可以對 geoshape 執行 `geo_bounds` 彙總。
 
-Prepare an example by inserting an index containing a geoshape field:
+先插入一個包含 geoshape 欄位的索引來準備範例：
 
 ```json
 PUT national_parks
@@ -98,7 +99,7 @@ PUT national_parks
 ```
 {% include copy-curl.html %}
 
-Ingest documents into the index. GeoJSON input specifies longitude first:
+將文件匯入索引。GeoJSON 輸入會先指定經度：
 
 ```json
 POST _bulk
@@ -113,7 +114,7 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-Run a `geo_bounds` aggregation on the `location` field:
+對 `location` 欄位執行 `geo_bounds` 彙總：
 
 ```json
 GET national_parks/_search
@@ -131,7 +132,7 @@ GET national_parks/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the smallest geo-bounding box that encloses all shapes in the `location` field:
+回應包含能涵蓋 `location` 欄位中所有形狀的最小地理邊界框：
 
 ```json
 {
@@ -168,11 +169,11 @@ The response contains the smallest geo-bounding box that encloses all shapes in 
 }
 ```
 
-## Wrapping longitude
+## 經度環繞
 
-If the optional `wrap_longitude` parameter is set to `true`, the bounding box can overlap the international date line (180&deg; meridian) and return a `bounds` object in which the upper-left longitude is greater than the lower-right longitude. The default value for `wrap_longitude` is `true`.
+若將選用的 `wrap_longitude` 參數設為 `true`，邊界框便可跨越國際換日線（180&deg; 經線），並傳回左上角經度大於右下角經度的 `bounds` 物件。`wrap_longitude` 的預設值為 `true`。
 
-Rerun the `geo_bounds` aggregation on the national parks geoshape with `wrap_longitude` set to `false`:
+將 `wrap_longitude` 設為 `false`，對國家公園的 geoshape 重新執行 `geo_bounds` 彙總：
 
 ```json
 GET national_parks/_search
@@ -190,7 +191,7 @@ GET national_parks/_search
 ```
 {% include copy-curl.html %}
 
-Note that the new resulting geobounds encompass a larger area to avoid overlapping the dateline:
+請注意，新產生的地理邊界涵蓋了較大的區域，以避免跨越換日線：
 
 ```json
 {
@@ -212,5 +213,5 @@ Note that the new resulting geobounds encompass a larger area to avoid overlappi
 }
 ```
 
-OpenSearch supports geoshape aggregation through the API but not in OpenSearch Dashboards visualizations.
+OpenSearch 支援透過 API 進行 geoshape 彙總，但不支援在 OpenSearch Dashboards 視覺化中使用。
 {: .note}

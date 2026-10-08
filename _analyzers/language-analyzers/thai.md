@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Thai
+title: "泰文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 320
 ---
 
-# Thai analyzer
+# 泰文分析器
 
-The built-in `thai` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `thai` 分析器套用至文字欄位：
 
 ```json
 PUT /thai-index
@@ -25,9 +26,9 @@ PUT /thai-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，搭配此語言分析器使用 `stem_exclusion`：
 
 ```json
 PUT index_with_stem_exclusion_thai_analyzer
@@ -46,21 +47,21 @@ PUT index_with_stem_exclusion_thai_analyzer
 ```
 {% include copy-curl.html %}
 
-## Thai analyzer internals
+## 泰文分析器內部結構
 
-The `thai` analyzer is built using the following components:
+`thai` 分析器由下列元件組成：
 
-- Tokenizer: `thai`
+- 斷詞器：`thai`
 
-- Token filters:
+- 詞元篩選器：
   - lowercase
   - decimal_digit
-  - stop (Thai)
+  - stop（泰文）
   - keyword
 
-## Custom Thai analyzer
+## 自訂泰文分析器
 
-You can create a custom Thai analyzer using the following command:
+您可以使用下列命令建立自訂泰文分析器：
 
 ```json
 PUT /thai-index
@@ -102,9 +103,9 @@ PUT /thai-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查分析器所產生的詞元：
 
 ```json
 POST /thai-index/_analyze
@@ -115,7 +116,7 @@ POST /thai-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

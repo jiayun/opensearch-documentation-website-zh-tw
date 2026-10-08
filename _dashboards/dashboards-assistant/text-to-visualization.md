@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Text to visualization
+title: "文字轉視覺化"
 parent: OpenSearch Assistant for OpenSearch Dashboards
 nav_order: 40
 has_children: false
 ---
 
-# Text to visualization
+# 文字轉視覺化
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).    
+這是一項實驗性功能，不建議在生產環境中使用。若要獲取該功能的進度更新或提供回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/) 的討論。
 {: .warning}
 
-The OpenSearch Dashboards Assistant can create visualizations using natural language instructions.
+OpenSearch Dashboards Assistant 可以使用自然語言指令來建立視覺化。
 
-## Configuration
+## 組態
 
-To configure text to visualization, use the following steps.
+若要設定文字轉視覺化，請執行以下步驟。
 
-### Step 1: Enable text to visualization
+### 步驟 1：啟用文字轉視覺化
 
-To enable text to visualization, configure the following `opensearch_dashboards.yml` setting:
+若要啟用文字轉視覺化，請設定以下 `opensearch_dashboards.yml` 設定：
 
 ```yaml
 assistant.text2viz.enabled: true
 ```
 {% include copy.html %}
 
-### Step 2: Create the agents
+### 步驟 2：建立代理程式
 
-To orchestrate text to visualization, you'll need to create the necessary [agents]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/). Create a workflow template for creating all necessary text-to-visualization agents by sending the following request:
+若要協調文字轉視覺化，您需要建立必要的 [代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)。請傳送以下請求，建立可用於建立所有必要文字轉視覺化代理程式的工作流程範本：
 
 <details markdown="block">
   <summary>
-    Request
+    請求
   </summary>
   {: .text-delta}
 
@@ -167,23 +168,23 @@ POST /_plugins/_flow_framework/workflow
 
 </details>
 
-Use the workflow ID returned in the response to provision the resources:
+使用回應中傳回的工作流程 ID 來配置資源：
 
 ```json
 POST /_plugins/_flow_framework/workflow/{workflow_id}/_provision
 ```
 {% include copy-curl.html %}
 
-To view the status of the workflow and all created resources, send the following request:
+若要查看工作流程以及所有已建立資源的狀態，請傳送以下請求：
 
 ```json
 GET /_plugins/_flow_framework/workflow/{workflow_id}/_status
 ```
 {% include copy-curl.html %}
 
-### Step 3: Configure the root agent
+### 步驟 3：設定根代理程式
 
-Next, configure a root agent for text to visualization:
+接下來，為文字轉視覺化設定根代理程式：
 
 ```json
 POST /.plugins-ml-config/_doc/os_text2vega
@@ -196,7 +197,7 @@ POST /.plugins-ml-config/_doc/os_text2vega
 ```
 {% include copy-curl.html %}
 
-Configure the agent to receive user instructions for creating visualizations:
+設定代理程式以接收建立視覺化的使用者指令：
 
 ```json
 POST /.plugins-ml-config/_doc/os_text2vega_with_instructions
@@ -209,12 +210,12 @@ POST /.plugins-ml-config/_doc/os_text2vega_with_instructions
 ```
 {% include copy-curl.html %}
 
-This example demonstrates a system index. In security-enabled domains, only superadmins have permissions to execute this code. For information about making superadmin calls, see [System indexes]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/). For access permissions, contact your system administrator.
+此範例展示了一個系統索引。在啟用安全性的網域中，只有超級管理員具有執行此程式碼的權限。有關進行超級管理員呼叫的資訊，請參閱 [系統索引]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/)。有關存取權限，請聯絡您的系統管理員。
 {: .warning}
 
-### Step 4: Test the agent
+### 步驟 4：測試代理程式
 
-You can verify that the agent was created successfully by calling the agent with an example payload:
+您可以使用範例酬載 (payload) 呼叫代理程式，以驗證代理程式是否已成功建立：
 
 ```json
 POST /_plugins/_ml/agents/{ROOT_AGENT_ID}/_execute
@@ -230,9 +231,9 @@ POST /_plugins/_ml/agents/{ROOT_AGENT_ID}/_execute
 ```
 {% include copy-curl.html %}
 
-## Generating a visualization from text
+## 從文字產生視覺化
 
-You can generate a visualization from text by calling the `/api/assistant/text2vega` API endpoint. The `input_instruction` parameter is optional:
+您可以透過呼叫 `/api/assistant/text2vega` API 端點從文字產生視覺化。`input_instruction` 參數為選用：
 
 ```json
 POST /api/assistant/text2vega
@@ -246,39 +247,39 @@ POST /api/assistant/text2vega
 ```
 {% include copy-curl.html %}
 
-The following table describes the Text to Visualization API parameters.
+下表說明了文字轉視覺化 API 的參數。
 
-Parameter | Required/Optional | Description 
+參數 | 必要/選用 | 說明 
 :--- | :--- | :---
-`input_question` | Required | The user's original question used to generate the corresponding Piped Processing Language (PPL) query.
-`ppl` | Required | 	The generated PPL query that retrieves the data required for the visualization.
-`dataSchema` | Required | Describes the structure and types of the data fields in the visualization output, based on the PPL response.
-`sampleData` | Required | Provides sample entries from the data that will populate the visualization.
-`input_instruction` | Optional | Specifies the styling instructions, such as colors, for the visualization.
+`input_question` | 必要 | 用於產生對應 Piped Processing Language (PPL) 查詢的使用者原始問題。
+`ppl` | 必要 | 產生的 PPL 查詢，用於擷取視覺化所需的資料。
+`dataSchema` | 必要 | 根據 PPL 回應，描述視覺化輸出中資料欄位的結構與類型。
+`sampleData` | 必要 | 提供將填充至視覺化中的資料範例項目。
+`input_instruction` | 選用 | 指定視覺化的樣式指令（例如顏色）。
 
-## Generating visualizations from text in OpenSearch Dashboards
+## 在 OpenSearch Dashboards 中從文字產生視覺化
 
-To generate visualizations from text in OpenSearch Dashboards, use the following steps:
+若要在 OpenSearch Dashboards 中從文字產生視覺化，請執行以下步驟：
 
-1. On the top menu bar, go to **OpenSearch Dashboards > Visualize** and then select **Create visualization**.
+1. 在頂端功能表列中，前往 **OpenSearch Dashboards > Visualize**，然後選取 **Create visualization**。
 
-1. In the **New Visualization** dialog, select **Natural language**, as shown in the following image.
+1. 在 **New Visualization** 對話方塊中，選取 **Natural language**，如下圖所示。
 
     ![Create a visualization by selecting natural language]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/t2viz-start.png){: width="800px" }
 
-1. From the data sources dropdown list, select a data source, as shown in the following image. 
+1. 從資料來源下拉式清單中選取一個資料來源，如下圖所示。
 
     ![Create a visualization by selecting natural language]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/t2viz-select-data-source.png)
 
-1. In the text box on the upper right, enter a question using natural language. A new visualization is generated, as shown in the following image.
+1. 在右上角的文字方塊中，使用自然語言輸入問題。系統將產生新的視覺化，如下圖所示。
 
     ![Create a visualization by selecting natural language]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/t2viz-ask-question.png)
 
-1. To modify the generated visualization, select **Edit visual**. In the **Edit visual** dialog, enter the desired modifications and then select **Apply**, as shown in the following image.
+1. 若要修改產生的視覺化，請選取 **Edit visual**。在 **Edit visual** 對話方塊中，輸入所需的修改內容，然後選取 **Apply**，如下圖所示。
 
     ![Create a visualization by selecting natural language]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/t2viz-edit-visual.png)
 
-    The visualization is updated, as shown in the following image.
+    視覺化已更新，如下圖所示。
 
     ![Create a visualization by selecting natural language]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/t2viz-edit-visual-response.png)
 

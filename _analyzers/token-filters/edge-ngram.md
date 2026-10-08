@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Edge n-gram
 parent: Token filters
 nav_order: 120
 ---
-# Edge n-gram token filter
-The `edge_ngram` token filter is very similar to the `ngram` token filter, where a particular string is split into substrings of different lengths. The `edge_ngram` token filter, however, generates n-grams (substrings) only from the beginning (edge) of a token. It's particularly useful in scenarios like autocomplete or prefix matching, where you want to match the beginning of words or phrases as the user types them.
+# Edge n-gram 詞元篩選器
+`edge_ngram` 詞元篩選器與 `ngram` 詞元篩選器非常相似，兩者都會將特定字串分割成不同長度的子字串。不過，`edge_ngram` 詞元篩選器只會從詞元的開頭（邊緣）產生 n-gram（子字串）。在自動完成或前綴比對等情境中，當您希望在使用者輸入時比對字詞或片語的開頭，這個篩選器特別實用。
 
-## Parameters
+## 參數
 
-The `edge_ngram` token filter can be configured with the following parameters.
+`edge_ngram` 詞元篩選器可以使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`min_gram` | Optional | Integer | The minimum length of the n-grams that will be generated. Default is `1`.
-`max_gram` | Optional | Integer | The maximum length of the n-grams that will be generated. Default is `1` for the `edge_ngram` filter and `2` for custom token filters. Avoid setting this parameter to a low value. If the value is set too low, only very short n-grams will be generated and the search term will not be found. For example, if `max_gram` is set to `3` and you index the word "banana", the longest generated token will be "ban". If the user searches for "banana", no matches will be returned. You can use the `truncate` token filter as a search analyzer to mitigate this risk.
-`preserve_original` | Optional | Boolean | Includes the original token in the output. Default is `false` .
+`min_gram` | 選用 | 整數 | 要產生的 n-gram 最小長度。預設為 `1`。
+`max_gram` | 選用 | 整數 | 要產生的 n-gram 最大長度。`edge_ngram` 篩選器的預設為 `1`，自訂詞元篩選器的預設為 `2`。請避免將此參數設為過低的值。如果值設得太低，只會產生非常短的 n-gram，導致找不到搜尋詞彙。例如，如果將 `max_gram` 設為 `3`，並將「banana」這個字編製索引，產生的最長詞元會是「ban」。如果使用者搜尋「banana」，將不會傳回任何相符結果。您可以使用 `truncate` 詞元篩選器作為搜尋分析器，以降低此風險。
+`preserve_original` | 選用 | 布林值 | 在輸出中包含原始詞元。預設為 `false`。
 
-## Example
+## 範例
 
-The following example request creates a new index named `edge_ngram_example` and configures an analyzer with the `edge_ngram` filter:
+下列範例請求會建立名為 `edge_ngram_example` 的新索引，並設定使用 `edge_ngram` 篩選器的分析器：
 
 ```json
 PUT /edge_ngram_example
@@ -46,9 +47,9 @@ PUT /edge_ngram_example
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 POST /edge_ngram_example/_analyze
@@ -59,7 +60,7 @@ POST /edge_ngram_example/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

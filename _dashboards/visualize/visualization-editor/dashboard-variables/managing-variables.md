@@ -1,212 +1,213 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Managing dashboard variables
+title: "管理儀表板變數"
 parent: Dashboard variables
 grand_parent: Creating visualizations using queries
 great_grand_parent: Building data visualizations
 nav_order: 10
 ---
 
-# Managing dashboard variables
+# 管理儀表板變數
 
-You can create, edit, delete, organize, and view dashboard variables from within a dashboard.
+您可以在儀表板中建立、編輯、刪除、整理及檢視儀表板變數。
 
-## Prerequisites
+## 前置條件
 
-Before you start, ensure that you have met the following prerequisites:
+在開始之前，請確保您已滿足下列前置條件：
 
-- Dashboard variables are [enabled]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/#enabling-dashboard-variables) in your `opensearch_dashboards.yml` file.
-- You have an [Observability workspace]({{site.url}}{{site.baseurl}}/dashboards/workspace/create-workspace/) set up.
+- 您的 `opensearch_dashboards.yml` 檔案中已[啟用]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/#enabling-dashboard-variables)儀表板變數。
+- 您已設定[Observability 工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/create-workspace/)。
 
-For the complete setup, see [Creating and using dashboard variables]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/#creating-and-using-dashboard-variables).
+如需完整的設定步驟，請參閱[建立與使用儀表板變數]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/#creating-and-using-dashboard-variables)。
 
-## Creating a query variable
+## 建立查詢變數
 
-Use a query variable when the list of available values is retrieved from a data source. For example, you can create an `extension` variable from the sample web logs data and use it to filter multiple visualizations by file extension.
+當可用值清單是從資料來源擷取時，請使用查詢變數。例如，您可以從範例 Web 記錄資料建立 `extension` 變數，並使用該變數依副檔名篩選多個視覺化。
 
-The following example uses the OpenSearch Dashboards sample web logs data. If you use a different dataset, select the dataset and fields that match your data.
+下列範例使用 OpenSearch Dashboards 範例 Web 記錄資料。如果您使用不同的資料集，請選取符合您資料的資料集和欄位。
 {: .note}
 
-To create a query variable, follow these steps:
+若要建立查詢變數，請依照下列步驟操作：
 
-1. In your Observability workspace, select **Dashboards** in the left navigation.
-1. Open an existing dashboard or select **Create** > **Dashboard** to create a new dashboard. If you create a new dashboard, save it first by entering a title and selecting **Save**.
-1. At the top of the dashboard, select **Add variable**.
-1. Configure the following general settings:
-   - **Name**: Enter `extension`. This is the identifier used to reference the variable in queries, for example, `$extension` or `${extension}`.
-   - **Label**: Enter `Extension`. This is the display name shown at the top of the dashboard.
-   - **Description**: Optionally, enter a description, such as `Filters visualizations by file extension`.
-   - **Type**: Select **Query**.
-1. In **Options Query**, keep the language set to **PPL**.
-1. In the dataset selector, select `opensearch_dashboards_sample_data_logs`.
-1. Enter the following query:
+1. 在您的 Observability 工作區中，於左側導覽列選取 **Dashboards**。
+1. 開啟現有的儀表板，或選取 **Create** > **Dashboard** 以建立新的儀表板。如果您建立新的儀表板，請先輸入標題並選取 **Save** 以儲存。
+1. 在儀表板頂端，選取 **Add variable**。
+1. 設定下列一般設定：
+   - **Name**：輸入 `extension`。這是在查詢中參照變數時使用的識別碼，例如 `$extension` 或 `${extension}`。
+   - **Label**：輸入 `Extension`。這是顯示在儀表板頂端的顯示名稱。
+   - **Description**：選用，輸入描述，例如 `Filters visualizations by file extension`。
+   - **Type**：選取 **Query**。
+1. 在 **Options Query** 中，將語言保持設定為 **PPL**。
+1. 在資料集選取器中，選取 `opensearch_dashboards_sample_data_logs`。
+1. 輸入下列查詢：
 
    ```sql
    source = opensearch_dashboards_sample_data_logs | stats count() by extension | fields extension
    ```
    {% include copy.html %}
 
-1. Select **Preview**. The preview runs the query, loads the fields returned by the query, and displays the first 100 variable options. You must successfully preview a query variable before you can save it.
-1. In **Value field**, select `extension`. The value field provides the value inserted into queries when you use `$extension` or `${extension}`.
-1. In **Label field**, keep **None**. Select a label field only when the query returns a separate field to display in the dropdown list in place of the stored value.
-1. Optional: In **Regex**, enter a regular expression to filter the available options by value. For example, `^(css|gz|zip)$` displays only the `css`, `gz`, and `zip` options.
-1. In **Refresh**, choose when OpenSearch Dashboards updates the variable options:
-   - **On dashboard load**: Refreshes options when the dashboard loads.
-   - **On time range change**: Refreshes options when the dashboard time range changes. Use this option when the available values depend on the selected time range.
-1. Configure the shared option settings. For more information, see [Configuring variable option settings](#configuring-variable-option-settings).
-1. Select **Add variable**.
+1. 選取 **Preview**。預覽會執行查詢、載入查詢傳回的欄位，並顯示前 100 個變數選項。您必須先成功預覽查詢變數，才能儲存該變數。
+1. 在 **Value field** 中，選取 `extension`。當您使用 `$extension` 或 `${extension}` 時，value field 會提供插入查詢中的值。
+1. 在 **Label field** 中，保持 **None**。僅在查詢傳回另一個欄位以取代儲存值並顯示在下拉式清單中時，才選取 label field。
+1. 選用：在 **Regex** 中，輸入正規表示式以依值篩選可用選項。例如，`^(css|gz|zip)$` 僅顯示 `css`、`gz` 和 `zip` 選項。
+1. 在 **Refresh** 中，選擇 OpenSearch Dashboards 更新變數選項的時間點：
+   - **On dashboard load**：在儀表板載入時重新整理選項。
+   - **On time range change**：在儀表板時間範圍變更時重新整理選項。當可用值取決於選定的時間範圍時，請使用此選項。
+1. 設定共用選項設定。如需更多資訊，請參閱[設定變數選項設定](#configuring-variable-option-settings)。
+1. 選取 **Add variable**。
 
-The variable appears at the top of the dashboard. The following image shows an `extension` query variable configured using the sample web logs data.
+該變數會出現在儀表板頂端。下列圖片顯示使用範例 Web 記錄資料設定的 `extension` 查詢變數。
 
-![Variable editor panel configured for an extension query variable using sample web logs data]({{site.url}}{{site.baseurl}}/images/dashboard-variables/query-variable-config.png){: width="500" }
+![使用範例 Web 記錄資料設定副檔名查詢變數的變數編輯面板]({{site.url}}{{site.baseurl}}/images/dashboard-variables/query-variable-config.png){: width="500" }
 
-### Mapping query result fields
+### 對應查詢結果欄位
 
-A query variable can use one field as the stored value and another field as the display label:
+查詢變數可以使用一個欄位作為儲存值，另一個欄位作為顯示標籤：
 
-- **Value field**: The field used as the variable value. OpenSearch Dashboards inserts this value into queries when you reference the variable.
-- **Label field**: An optional field used as the display label in the variable dropdown list. The label does not change the value inserted into queries.
+- **Value field**：用作變數值的欄位。當您參照變數時，OpenSearch Dashboards 會將此值插入查詢中。
+- **Label field**：選用，用作變數下拉式清單中顯示標籤的欄位。標籤不會改變插入查詢中的值。
 
-For example, if your query returns `service_id` and `service_name`, set **Value field** to `service_id` and **Label field** to `service_name`. The dropdown list displays the service name, and queries receive the service ID.
+例如，如果您的查詢傳回 `service_id` 和 `service_name`，請將 **Value field** 設定為 `service_id`，並將 **Label field** 設定為 `service_name`。下拉式清單會顯示服務名稱，而查詢則會接收服務 ID。
 
-If you do not select a value field, OpenSearch Dashboards uses the first field returned by the query. To avoid unexpected values, preview the query and explicitly select the field to use as the variable value.
+如果您沒有選取 value field，OpenSearch Dashboards 會使用查詢傳回的第一個欄位。為了避免出現非預期的值，請預覽查詢並明確選取要用作變數值的欄位。
 {: .tip}
 
-## Creating a custom variable
+## 建立自訂變數
 
-Use a custom variable when the list of available values is fixed and does not need to be fetched from a data source. For example, you can create an `environment` variable containing the `dev`, `staging`, and `prod` options.
+當可用值清單是固定的且不需要從資料來源擷取時，請使用自訂變數。例如，您可以建立一個包含 `dev`、`staging` 和 `prod` 選項的 `environment` 變數。
 
-To create a custom variable, follow these steps:
+若要建立自訂變數，請依照下列步驟操作：
 
-1. In your Observability workspace, select **Dashboards** in the left navigation.
-1. Open an existing dashboard or select **Create** > **Dashboard** to create a new dashboard. If you create a new dashboard, save it first by entering a title and selecting **Save**.
-1. At the top of the dashboard, select **Add variable**.
-1. Configure the following general settings:
-   - **Name**: Enter `environment`. This is the identifier used to reference the variable in queries, for example, `$environment` or `${environment}`.
-   - **Label**: Enter `Environment`.
-   - **Description**: Optionally, enter a description, such as `Filters visualizations by deployment environment`.
-   - **Type**: Select **Custom**.
-1. In **Custom options**, select **Add option**.
-1. In the first option row, enter `dev` in **Value** and `Development` in **Label**. OpenSearch Dashboards inserts the value into queries when you reference the variable and uses the optional label as the display text in the dropdown list.
-1. Select **Add option** again and enter `staging` in **Value** and `Staging` in **Label**.
-1. Select **Add option** again and enter `prod` in **Value** and `Production` in **Label**.
-1. Configure the shared option settings. For more information, see [Configuring variable option settings](#configuring-variable-option-settings).
-1. Select **Add variable**.
+1. 在您的 Observability 工作區中，於左側導覽列選取 **Dashboards**。
+1. 開啟現有的儀表板，或選取 **Create** > **Dashboard** 以建立新的儀表板。如果您建立新的儀表板，請先輸入標題並選取 **Save** 以儲存。
+1. 在儀表板頂端，選取 **Add variable**。
+1. 設定下列一般設定：
+   - **Name**：輸入 `environment`。這是在查詢中參照變數時使用的識別碼，例如 `$environment` 或 `${environment}`。
+   - **Label**：輸入 `Environment`。
+   - **Description**：選用，輸入描述，例如 `Filters visualizations by deployment environment`。
+   - **Type**：選取 **Custom**。
+1. 在 **Custom options** 中，選取 **Add option**。
+1. 在第一個選項列中，在 **Value** 中輸入 `dev`，在 **Label** 中輸入 `Development`。當您參照變數時，OpenSearch Dashboards 會將值插入查詢中，並將選用的標籤用作下拉式清單中的顯示文字。
+1. 再次選取 **Add option**，在 **Value** 中輸入 `staging`，在 **Label** 中輸入 `Staging`。
+1. 再次選取 **Add option**，在 **Value** 中輸入 `prod`，在 **Label** 中輸入 `Production`。
+1. 設定共用選項設定。如需更多資訊，請參閱[設定變數選項設定](#configuring-variable-option-settings)。
+1. 選取 **Add variable**。
 
-Custom option values must be unique and cannot be empty. OpenSearch Dashboards displays a maximum of 100 options in the dropdown list.
+自訂選項值必須唯一且不能為空。OpenSearch Dashboards 在下拉式清單中最多顯示 100 個選項。
 {: .note}
 
-The following image shows an `environment` custom variable configured with value and label pairs.
+下列圖片顯示設定了值與標籤配對的 `environment` 自訂變數。
 
-![Variable editor panel configured for an environment custom variable with value and label option rows]({{site.url}}{{site.baseurl}}/images/dashboard-variables/custom-variable-config.png){: width="500" }
+![設定了值與標籤選項列之環境自訂變數的變數編輯面板]({{site.url}}{{site.baseurl}}/images/dashboard-variables/custom-variable-config.png){: width="500" }
 
-## Configuring variable option settings
+## 設定變數選項設定
 
-Query variables and custom variables share the following option settings:
+查詢變數與自訂變數共用下列選項設定：
 
-- **Sort**: Controls how options are sorted in the dropdown list. Select **Disabled**, **Alphabetical** ascending or descending, or **Numerical** ascending or descending.
-- **Allow multiple selections**: Allows you to select more than one value from the variable dropdown list.
-- **Include All option**: Adds an **All** option to the dropdown list. This setting is available only when **Allow multiple selections** is turned on.
+- **Sort**：控制選項在下拉式清單中的排序方式。選取 **Disabled**、**Alphabetical**（升冪或降冪）或 **Numerical**（升冪或降冪）。
+- **Allow multiple selections**：允許您從變數下拉式清單中選取多個值。
+- **Include All option**：在下拉式清單中新增 **All** 選項。此設定僅在啟用 **Allow multiple selections** 時可用。
 
-## Managing existing variables
+## 管理現有變數
 
-The **Manage variables** panel lists all existing variables, including their type, name, and configuration options. To access this panel, follow these steps:
+**Manage variables** 面板會列出所有現有變數，包括其類型、名稱和組態選項。若要進入此面板，請依照下列步驟操作：
 
-1. Navigate to your workspace.
-1. From **Dashboards**, select the dashboard to update.
-1. On the top, toggle the **Edit** selector to enter edit mode.
-1. In the upper-left corner, select the **Manage variables** icon, as shown in the following image.
+1. 導覽至您的工作區。
+1. 從 **Dashboards** 中，選取要更新的儀表板。
+1. 在頂端，切換 **Edit** 選取器以進入編輯模式。
+1. 在左上角，選取 **Manage variables** 圖示，如下圖所示。
 
-![Manage variables panel displaying variable names, types, and action icons]({{site.url}}{{site.baseurl}}/images/dashboard-variables/manage_panel.png)
+![顯示變數名稱、類型和操作圖示的 Manage variables 面板]({{site.url}}{{site.baseurl}}/images/dashboard-variables/manage_panel.png)
 
-The **Manage variables** icon only appears when variables have been created in the dashboard. If no variables exist, create one first before accessing the management interface.
+**Manage variables** 圖示僅在儀表板中已建立變數時才會出現。如果不存在變數，請先建立一個變數，再進入管理介面。
 {: .note}
 
-## Editing a variable
+## 編輯變數
 
-To edit an existing variable, follow these steps:
+若要編輯現有變數，請依照下列步驟操作：
 
-1. Open the **Manage variables** panel.
-1. Select the **Edit** icon for the variable you want to modify.
-1. Make your changes.
-1. Select **Update variable** to save.
+1. 開啟 **Manage variables** 面板。
+1. 選取您要修改之變數的 **Edit** 圖示。
+1. 進行變更。
+1. 選取 **Update variable** 以儲存。
 
-Changing the variable name causes any queries that reference the old name to fail.
+變更變數名稱會導致任何參照舊名稱的查詢失敗。
 {: .note}
 
-## Deleting a variable
+## 刪除變數
 
-To delete a variable, follow these steps:
+若要刪除變數，請依照下列步驟操作：
 
-1. Open the **Manage variables** panel.
-1. Select the **Delete** icon for the variable you want to remove.
-1. Confirm the deletion in the dialog.
+1. 開啟 **Manage variables** 面板。
+1. 選取您要移除之變數的 **Delete** 圖示。
+1. 在對話方塊中確認刪除。
 
-Variables that are referenced by other variables or visualization editors display an indicator in the management panel. Deleting a referenced variable causes any queries that use it to fail.
+被其他變數或視覺化編輯器參照的變數會在管理面板中顯示指示標記。刪除被參照的變數會導致任何使用該變數的查詢失敗。
 {: .note}
 
-## Organizing variables
+## 整理變數
 
-Variables are displayed at the top of the dashboard in the order they appear in the management panel.
+變數會依照其在管理面板中出現的順序顯示在儀表板頂端。
 
-To reorder variables, follow these steps:
+若要重新排列變數，請依照下列步驟操作：
 
-1. Open the **Manage variables** panel.
-1. Drag the reorder handle on the left side of a variable.
-1. Drop it in the desired position.
-1. Save the dashboard to apply the new order.
+1. 開啟 **Manage variables** 面板。
+1. 拖曳變數左側的重新排列控制項。
+1. 將其放置在所需位置。
+1. 儲存儀表板以套用新順序。
 
-## Hiding variables
+## 隱藏變數
 
-You can hide variables from the top of the dashboard while keeping them available for use in queries.
+您可以將變數從儀表板頂端隱藏，同時保留其在查詢中的可用性。
 
-To hide or show a variable, follow these steps:
+若要隱藏或顯示變數，請依照下列步驟操作：
 
-1. Open the **Manage variables** panel.
-1. Select the **Hide/Show** icon for the variable.
-1. Save the dashboard to apply the change.
+1. 開啟 **Manage variables** 面板。
+1. 選取該變數的 **Hide/Show** 圖示。
+1. 儲存儀表板以套用變更。
 
-Hidden variables are marked with a **Hidden** badge in the management panel and do not appear in the dashboard.
+隱藏的變數在管理面板中會標記為 **Hidden** 徽章，且不會出現在儀表板中。
 {: .note}
 
-## Variable status indicators
+## 變數狀態指示器
 
-Each variable displays a status indicator at the top of the dashboard:
+每個變數在儀表板頂端都會顯示狀態指示器：
 
-- **Loading**: A spinner appears while the system fetches options.
-- **Error**: An error icon appears with a tooltip showing the error message. The dropdown is disabled.
-- **No options**: If a variable query returns no results, "No options" is displayed in the dropdown.
+- **Loading**：系統擷取選項時會出現旋轉圖示。
+- **Error**：出現錯誤圖示，且工具提示會顯示錯誤訊息。下拉式清單將被停用。
+- **No options**：如果變數查詢沒有傳回結果，下拉式清單中會顯示 "No options"。
 
-## URL synchronization
+## URL 同步
 
-Variable values are automatically synchronized to the dashboard URL using the `variableValues` query parameter:
+變數值會使用 `variableValues` 查詢參數自動同步到儀表板 URL：
 
 ```js
 ?variableValues=(service:(api),region:(us-east,us-west))
 ```
 
-URL synchronization enables the following functionality:
+URL 同步可實現下列功能：
 
-- Send a link to a dashboard with specific variable values preselected.
-- Save a dashboard view with your preferred variable settings.
-- Preserve variable selections across page refreshes.
+- 發送一個已預先選取特定變數值的儀表板連結。
+- 儲存具有您偏好變數設定的儀表板檢視。
+- 在頁面重新整理後保留變數選取內容。
 
-## Variable dependencies
+## 變數相依性
 
-Query type variables can reference other variables in their queries. The following example shows a query variable that references another variable:
+查詢類型的變數可以在其查詢中參照其他變數。下列範例顯示了一個參照另一個變數的查詢變數：
 
 ```sql
 source=logs | where region=$region | dedup service | fields service
 ```
 {% include copy.html %}
 
-In this example, the `service` variable depends on the `region` variable. When the `region` variable changes, the `service` variable automatically refreshes its options.
+在此範例中，`service` 變數相依於 `region` 變數。當 `region` 變數變更時，`service` 變數會自動重新整理其選項。
 
-Keep the following considerations in mind:
+請記住下列考量因素：
 
-- Avoid circular dependencies where Variable A references Variable B, and Variable B references Variable A.
-- Variables are evaluated in the order they appear in the management panel. Place dependent variables after the variables they reference.
+- 避免循環相依，例如變數 A 參照變數 B，而變數 B 又參照變數 A。
+- 變數會依照其在管理面板中出現的順序進行評估。請將相依變數放置在被參照變數之後。
 
-## Next steps
+## 後續步驟
 
-- [Using dashboard variables]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/using-variables/)
+- [使用儀表板變數]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/using-variables/)

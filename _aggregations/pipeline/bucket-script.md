@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Bucket script
 parent: Pipeline aggregations
 nav_order: 20
 ---
 
-# Bucket script aggregation
+# Bucket script 彙總
 
-The `bucket_script` aggregation is a parent pipeline aggregation that executes a script to perform per-bucket numeric computations across a set of buckets. Use the `bucket_script` aggregation to perform custom numeric computations on multiple metrics in a bucketed aggregation. For example, you can:
+`bucket_script` 彙總是一種父管線彙總，會執行指令碼，對一組桶 (bucket) 逐桶進行數值計算。使用 `bucket_script` 彙總可對分桶彙總中的多個指標執行自訂數值計算。例如，您可以：
 
-- Calculate derived and composite metrics.
-- Apply conditional logic using if/else statements.
-- Compute business-specific KPIs, such as custom scoring metrics.
+- 計算衍生指標與複合指標。
+- 使用 if/else 陳述式套用條件邏輯。
+- 計算特定業務的 KPI，例如自訂評分指標。
 
-## Parameters
+## 參數
 
-The `bucket_script` aggregation takes the following parameters.
+`bucket_script` 彙總接受下列參數。
 
-| Parameter             | Required/Optional | Data type       | Description |
+| 參數             | 必要/選用 | 資料類型       | 說明 |
 | :--                   | :--               |  :--            | :--         |
-| `buckets_path`        | Required          | Object          | A map of variable names to bucketed metrics that identify the metrics to be used in the script. The metrics must be numeric. See [Script variables](#script-variables). |
-| `script`              | Required          | String or Object | The script to execute. Can be an inline script, stored script, or script file. The script has access to the variable names defined in the `buckets_path` parameter. Must return a numeric value. |
-| `gap_policy`          | Optional          | String          | The policy to apply to missing data. Valid values are `skip` and `insert_zeros`. Default is `skip`. See [Data gaps]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#data-gaps). |
-| `format`              | Optional          | String          | A [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) formatting string. Returns the formatted output in the aggregation's `value_as_string` parameter. |
+| `buckets_path`        | 必要          | 物件          | 變數名稱與分桶指標之間的對應，用於識別指令碼中要使用的指標。指標必須為數值。請參閱[指令碼變數](#script-variables)。 |
+| `script`              | 必要          | 字串或物件 | 要執行的指令碼。可以是內嵌指令碼、已儲存的指令碼或指令碼檔案。指令碼可存取 `buckets_path` 參數中定義的變數名稱。必須傳回數值。 |
+| `gap_policy`          | 選用          | 字串          | 套用於缺漏資料的原則。有效值為 `skip` 和 `insert_zeros`。預設為 `skip`。請參閱[資料缺口]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#data-gaps)。 |
+| `format`              | 選用          | 字串          | [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) 格式字串。在彙總的 `value_as_string` 參數中傳回格式化後的輸出。 |
 
-## Script variables
+## 指令碼變數
 
-The `buckets_path` parameter maps script variable names to metrics from parent aggregations. These variables can then be used in the script. 
+`buckets_path` 參數會將指令碼變數名稱對應至父彙總中的指標。之後即可在指令碼中使用這些變數。
 
-For the `bucket_script` and `bucket_selector` aggregations, the `buckets_path` parameter is an object rather than a string because it must refer to multiple bucket metrics. See the [Pipeline aggregations]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path) page for a description of the string version of `buckets_path`.
+對於 `bucket_script` 和 `bucket_selector` 彙總，`buckets_path` 參數是物件而非字串，因為它必須參照多個桶指標。如需 `buckets_path` 字串版本的說明，請參閱[管線彙總]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path)頁面。
 {: .note}
 
-The following `buckets_path` maps the `sales_sum` metric to the `total_sales` script variable and the `item_count` metric to the `item_count` script variable:
+下列 `buckets_path` 會將 `sales_sum` 指標對應至 `total_sales` 指令碼變數，並將 `item_count` 指標對應至 `item_count` 指令碼變數：
 
 ```json
 "buckets_path": {
@@ -40,22 +41,22 @@ The following `buckets_path` maps the `sales_sum` metric to the `total_sales` sc
 }
 ```
 
-The mapped variables can be accessed from the `params` context. For example:
+對應的變數可從 `params` 內容中存取。例如：
 
 - `params.total_sales`
-- `params.item_count` 
+- `params.item_count`
 
-## Enabling inline scripting
+## 啟用內嵌指令碼
 
-Use the `script` parameter to add your script. The script can be inline, in a file, or in an index. To enable inline scripting, the `opensearch.yml` file in the `config` folder must contain the following:
+使用 `script` 參數新增您的指令碼。指令碼可以是內嵌的、位於檔案中，或位於索引中。若要啟用內嵌指令碼，`config` 資料夾中的 `opensearch.yml` 檔案必須包含下列內容：
 
 ```yml
 script.inline: on
 ```
 
-## Example
+## 範例
 
-The following example creates a date histogram with a one-month interval from the OpenSearch Dashboards e-commerce sample data. The `total_sales` subaggregation sums the taxed price of all items sold for each month. The `vendor_count` aggregation counts the total number of unique vendors for each month. Finally, the `avg_vendor_spend` aggregation uses an inline script to calculate the average amount spent per vendor each month:
+下列範例會從 OpenSearch Dashboards 電子商務範例資料建立間隔為一個月的日期長條圖。`total_sales` 子彙總會加總每個月所售出所有商品的含稅價格。`vendor_count` 彙總會計算每個月不重複供應商的總數。最後，`avg_vendor_spend` 彙總會使用內嵌指令碼，計算每個月每位供應商的平均支出金額：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -95,9 +96,9 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The aggregation returns the formatted monthly average vendor spend:
+此彙總會傳回格式化後的每月供應商平均支出：
 
 ```json
 {

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Configuring visualizations
+title: "設定視覺化"
 parent: Creating visualizations in the Visualize application
 grand_parent: Building data visualizations
 nav_order: 200
@@ -8,170 +9,170 @@ redirect_from:
   - /dashboards/visualize/viz-tool-ref/
 ---
 
-# Configuring visualizations
+# 設定視覺化
 
-The configuration panel is on the right side of the **Visualize** application. It contains two or more tabs depending on the type of visualization being edited. For terminology definitions, see [Concepts]({{site.url}}{{site.baseurl}}/dashboards/getting-started/concepts/).
+組態面板位於 **Visualize** 應用程式的右側。視所編輯的視覺化類型而定，組態面板會包含兩個以上的索引標籤。如需術語定義，請參閱[概念]({{site.url}}{{site.baseurl}}/dashboards/getting-started/concepts/)。
 
-The configuration panel contains the following tabs:
+組態面板包含下列索引標籤：
 
-- The **Data** tab enables the addition of metrics and data buckets to the visualization.
-- The **Metrics and axes** tab controls display options such as how to display axes, labels, and scales; text display and alignment, and visualization-specific options. This tab is labeled **Options** for some visualization types.
-- The **Panel settings** tab contains options for panel-wide settings such as the legend, tooltips, and grid lines.
+- **Data** 索引標籤可讓您將指標和資料桶 (bucket) 新增至視覺化。
+- **Metrics and axes** 索引標籤控制顯示選項，例如座標軸、標籤和刻度的顯示方式；文字的顯示和對齊方式，以及視覺化專屬的選項。對於某些視覺化類型，此索引標籤會標示為 **Options**。
+- **Panel settings** 索引標籤包含適用於整個面板的設定選項，例如圖例、工具提示和格線。
 
-## Data tab
+## Data 索引標籤
 
-The **Data** tab uses [aggregations]({{site.url}}{{site.baseurl}}/aggregations/) to determine what data is displayed and how it is grouped. When you configure a visualization, OpenSearch Dashboards automatically generates aggregation queries based on your selections. For a hands-on walkthrough, see [Creating aggregation-based visualizations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/aggregation-based-viz/).
+**Data** 索引標籤使用[彙總]({{site.url}}{{site.baseurl}}/aggregations/)來決定要顯示哪些資料，以及資料的分組方式。當您設定視覺化時，OpenSearch Dashboards 會根據您的選擇自動產生彙總查詢。如需實際操作的逐步說明，請參閱[建立以彙總為基礎的視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/aggregation-based-viz/)。
 
-The following visualization types use the **Data** tab with aggregations: **Area**, **Horizontal Bar**, **Vertical Bar**, **Coordinate Map**, **Data Table**, **Gauge**, **Goal**, **Heat Map**, **Line**, **Metric**, **Pie**, **Region Map**, and **Tag Cloud**.
+下列視覺化類型使用搭配彙總的 **Data** 索引標籤：**Area**、**Horizontal Bar**、**Vertical Bar**、**Coordinate Map**、**Data Table**、**Gauge**、**Goal**、**Heat Map**、**Line**、**Metric**、**Pie**、**Region Map** 和 **Tag Cloud**。
 {: .note}
 
-A typical **Data** tab is shown in the following image.
+下圖顯示典型的 **Data** 索引標籤。
 
-![Visualization tools Data settings]({{site.url}}{{site.baseurl}}/images/dashboards/viz-tools-data.png){: width="600" }
+![視覺化工具的 Data 設定]({{site.url}}{{site.baseurl}}/images/dashboards/viz-tools-data.png){: width="600" }
 
-The **Data** tab generally contains two types of panels for adding elements to the visualization:
+**Data** 索引標籤通常包含兩種類型的面板，用於將元素新增至視覺化：
 
-- **Y-axis**, **Data** or **Metrics** panels for choosing the field or fields to be displayed
-- **X-axis** or **Buckets** panels for choosing how to segment the data for display
+- **Y-axis**、**Data** 或 **Metrics** 面板，用於選擇要顯示的一個或多個欄位
+- **X-axis** 或 **Buckets** 面板，用於選擇如何分割資料以供顯示
 
-**Metrics** and **Buckets** panels both use _progressive disclosure_, meaning that subsequent options available to you are based on your last choice in the panel. A typical sequence for choosing a metric or bucket is as follows:
+**Metrics** 和 **Buckets** 面板都使用 _漸進式揭露_，也就是說，您後續可用的選項取決於您在面板中的上一個選擇。選擇指標或桶的典型順序如下：
 
-1. You select an aggregation type, such as average, count, max, or min, from a dropdown list of available choices.
+1. 從可用選項的下拉式清單中選取彙總類型，例如平均值、計數、最大值或最小值。
 
-1. You select a field from a dropdown list. The field selection is limited to data types to which your selected aggregation can be applied. For example, the **Count** aggregation applies to documents as a whole, so no field selection is presented. The **Date Histogram** aggregation applies only to timestamp fields.
+1. 從下拉式清單中選取欄位。可選取的欄位僅限於您所選彙總可套用的資料類型。例如，**Count** 彙總適用於整份文件，因此不會顯示欄位選項。**Date Histogram** 彙總僅適用於時間戳記欄位。
 
-1. You optionally select other options such as range intervals or a custom name to label the field in the visualization.
+1. 視需要選取其他選項，例如範圍間隔，或用於在視覺化中標示該欄位的自訂名稱。
 
-1. You optionally add more fields or buckets. For example, after choosing an _X-axis_ bucket type of histogram to display a cost variable across product category in a bar chart, you might add a _split chart_ bucket to display a separate bar chart for each customer gender.
+1. 視需要新增更多欄位或桶。例如，在選擇直方圖作為 _X-axis_ 桶類型，以長條圖顯示各產品類別的成本變數之後，您可以新增 _split chart_ 桶，為每種顧客性別分別顯示一張長條圖。
 
-### Metric aggregations
+### 指標彙總
 
-Metric aggregations appear in the **Metrics** panel and become Y-axis values in charts. The following table lists the available metric aggregations.
+指標彙總會出現在 **Metrics** 面板中，並成為圖表中的 Y 軸值。下表列出可用的指標彙總。
 
-| Metric | Description | Requires field |
+| 指標 | 說明 | 需要欄位 |
 | :--- | :--- | :--- |
-| `Count` | Counts the number of documents in each bucket. This is the default metric for new visualizations and does not require a field selection. In the aggregation API, every [bucket aggregation]({{site.url}}{{site.baseurl}}/aggregations/bucket/) response includes a `doc_count` field, which contains the number of documents that are in that bucket---and `Count` displays this value. | No |
-| [`Average`]({{site.url}}{{site.baseurl}}/aggregations/metric/average/) | Calculates the average value of a numeric field. | Yes |
-| [`Max`]({{site.url}}{{site.baseurl}}/aggregations/metric/maximum/) | Returns the maximum value of a numeric field. | Yes |
-| [`Median`]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile/) | Returns the 50th percentile value of a numeric field. In the aggregation API, this uses the `percentiles` aggregation at the 50th rank. | Yes |
-| [`Min`]({{site.url}}{{site.baseurl}}/aggregations/metric/minimum/) | Returns the minimum value of a numeric field. | Yes |
-| [`Percentile Ranks`]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile-ranks/) | Returns the percentile rank of specified values within a numeric field. After selecting, enter threshold values in the **Values** list to define the points at which to calculate ranks. | Yes |
-| [`Percentiles`]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile/) | Returns values at specified percentile ranks of a numeric field. After selecting, configure the **Percents** list to define which percentiles to calculate. The defaults are 1, 5, 25, 50, 75, 95, and 99. Each percentile appears as a separate series in the visualization. | Yes |
-| [`Standard Deviation`]({{site.url}}{{site.baseurl}}/aggregations/metric/extended-stats/) | Calculates the standard deviation of a numeric field. In the aggregation API, this uses the `extended_stats` aggregation. | Yes |
-| [`Sum`]({{site.url}}{{site.baseurl}}/aggregations/metric/sum/) | Calculates the total sum of a numeric field. | Yes |
-| [`Top Hit`]({{site.url}}{{site.baseurl}}/aggregations/metric/top-hits/) | Returns one or more of the top values from a field, sorted by a specified metric. After selecting, configure **Aggregate with** (how to combine multiple values: `Concat`, `Min`, `Max`, `Sum`, or Average), **Size** (number of top values to return), **Sort on** (field to sort by), and **Order** (ascending or descending). | Yes |
-| [`Unique Count`]({{site.url}}{{site.baseurl}}/aggregations/metric/cardinality/) | Counts the number of distinct values in a field. In the aggregation API, this corresponds to the `cardinality` aggregation. | Yes |
+| `Count` | 計算每個桶中的文件數量。這是新視覺化的預設指標，不需要選取欄位。在彙總 API 中，每個[桶彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/)回應都包含 `doc_count` 欄位，其中包含該桶中的文件數量，而 `Count` 會顯示此值。 | 否 |
+| [`Average`]({{site.url}}{{site.baseurl}}/aggregations/metric/average/) | 計算數值欄位的平均值。 | 是 |
+| [`Max`]({{site.url}}{{site.baseurl}}/aggregations/metric/maximum/) | 傳回數值欄位的最大值。 | 是 |
+| [`Median`]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile/) | 傳回數值欄位的第 50 百分位數值。在彙總 API 中，這會使用第 50 等級的 `percentiles` 彙總。 | 是 |
+| [`Min`]({{site.url}}{{site.baseurl}}/aggregations/metric/minimum/) | 傳回數值欄位的最小值。 | 是 |
+| [`Percentile Ranks`]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile-ranks/) | 傳回指定值在數值欄位中的百分位等級。選取後，請在 **Values** 清單中輸入閾值，以定義要計算等級的位置點。 | 是 |
+| [`Percentiles`]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile/) | 傳回數值欄位在指定百分位等級的值。選取後，請設定 **Percents** 清單，以定義要計算的百分位數。預設值為 1、5、25、50、75、95 和 99。每個百分位數會在視覺化中顯示為個別的數列。 | 是 |
+| [`Standard Deviation`]({{site.url}}{{site.baseurl}}/aggregations/metric/extended-stats/) | 計算數值欄位的標準差。在彙總 API 中，這會使用 `extended_stats` 彙總。 | 是 |
+| [`Sum`]({{site.url}}{{site.baseurl}}/aggregations/metric/sum/) | 計算數值欄位的總和。 | 是 |
+| [`Top Hit`]({{site.url}}{{site.baseurl}}/aggregations/metric/top-hits/) | 傳回欄位中依指定指標排序的一個或多個最高值。選取後，請設定 **Aggregate with**（多個值的合併方式：`Concat`、`Min`、`Max`、`Sum` 或 Average）、**Size**（要傳回的最高值數量）、**Sort on**（排序依據的欄位）和 **Order**（遞增或遞減）。 | 是 |
+| [`Unique Count`]({{site.url}}{{site.baseurl}}/aggregations/metric/cardinality/) | 計算欄位中相異值的數量。在彙總 API 中，這對應於 `cardinality` 彙總。 | 是 |
 
-### Parent pipeline aggregations
+### 父管線彙總
 
-Parent pipeline aggregations compute values based on the output of another metric within the same bucket. They appear in the **Metrics** panel below the basic metric aggregations.
+父管線彙總會根據同一個桶內另一個指標的輸出計算值。這些彙總會出現在 **Metrics** 面板中基本指標彙總的下方。
 
-After selecting a parent pipeline aggregation, use the **Metric** dropdown to choose which metric to operate on. Select an existing metric from the Y-axis, or select **Custom metric** to define a new metric inline (this reveals a nested aggregation selector where you can configure any of the basic metric aggregations).
+選取父管線彙總後，請使用 **Metric** 下拉式清單選擇要運算的指標。您可以從 Y 軸選取現有指標，或選取 **Custom metric** 以內嵌方式定義新指標（這會顯示一個巢狀彙總選取器，您可以在其中設定任何基本指標彙總）。
 
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| [`Cumulative Sum`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/cumulative-sum/) | Calculates the cumulative sum of a metric across ordered buckets. |
-| [`Derivative`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/derivative/) | Calculates the rate of change of a metric between consecutive buckets. |
-| [`Moving Avg`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/moving-avg/) | Calculates a moving average of a metric over a sliding window of buckets. |
-| [`Serial Diff`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/serial-diff/) | Calculates the difference between a metric value and an earlier value in the series. |
+| [`Cumulative Sum`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/cumulative-sum/) | 計算指標在依序排列的各桶之間的累計總和。 |
+| [`Derivative`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/derivative/) | 計算指標在連續桶之間的變化率。 |
+| [`Moving Avg`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/moving-avg/) | 計算指標在桶的滑動視窗上的移動平均值。 |
+| [`Serial Diff`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/serial-diff/) | 計算指標值與數列中較早值之間的差異。 |
 
-### Sibling pipeline aggregations
+### 同層級管線彙總
 
-Sibling pipeline aggregations compute a single value from all buckets in a sibling aggregation and display it alongside the other metrics. They appear in the **Metrics** panel below the parent pipeline aggregations.
+同層級管線彙總會從同層級彙總的所有桶計算出單一值，並將其與其他指標一起顯示。這些彙總會出現在 **Metrics** 面板中父管線彙總的下方。
 
-Like parent pipeline aggregations, sibling pipeline aggregations use the **Metric** dropdown to select which metric to operate on. Select an existing metric or **Custom metric** to define one inline.
+與父管線彙總相同，同層級管線彙總也使用 **Metric** 下拉式清單選取要運算的指標。您可以選取現有指標，或選取 **Custom metric** 以內嵌方式定義指標。
 
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| [`Average Bucket`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/avg-bucket/) | Calculates the average of a metric across all buckets. |
-| [`Max Bucket`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/max-bucket/) | Returns the maximum value of a metric across all buckets. |
-| [`Min Bucket`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/min-bucket/) | Returns the minimum value of a metric across all buckets. |
-| [`Sum Bucket`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/sum-bucket/) | Calculates the sum of a metric across all buckets. |
+| [`Average Bucket`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/avg-bucket/) | 計算指標在所有桶中的平均值。 |
+| [`Max Bucket`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/max-bucket/) | 傳回指標在所有桶中的最大值。 |
+| [`Min Bucket`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/min-bucket/) | 傳回指標在所有桶中的最小值。 |
+| [`Sum Bucket`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/sum-bucket/) | 計算指標在所有桶中的總和。 |
 
-### Bucket aggregations
+### 桶彙總
 
-Bucket aggregations appear in the **Buckets** panel and determine how data is grouped. When you select **Add** in the **Buckets** panel, you first choose a bucket type:
+桶彙總會顯示在 **Buckets** 面板中，用來決定資料的分組方式。當您在 **Buckets** 面板中選取 **Add** 時，首先要選擇桶 (bucket) 類型：
 
-| Bucket type | Description |
+| 桶類型 | 說明 |
 | :--- | :--- |
-| X-axis | Groups data along the horizontal axis of the chart. |
-| Split series | Creates multiple series (lines, bars, or areas) within the same chart, each representing a different group. |
-| Split chart | Creates separate charts for each group, displayed in a row or column layout. |
+| X-axis | 沿著圖表的水平軸將資料分組。 |
+| Split series | 在同一張圖表中建立多個數列（折線、長條或區域），每個數列代表不同的群組。 |
+| Split chart | 為每個群組建立個別的圖表，並以列或欄的版面配置顯示。 |
 
-After you choose a bucket type, you select a bucket aggregation to define how the data is grouped. The following table lists the available bucket aggregations.
+選擇桶類型後，您需要選取桶彙總來定義資料的分組方式。下表列出可用的桶彙總。
 
-| Aggregation | Description |
+| 彙總 | 說明 |
 | :--- | :--- |
-| [`Date Histogram`]({{site.url}}{{site.baseurl}}/aggregations/bucket/date-histogram/) | Groups documents into time intervals (for example, hourly, daily, or weekly). Requires a date field. |
-| [`Date Range`]({{site.url}}{{site.baseurl}}/aggregations/bucket/date-range/) | Groups documents into custom date ranges that you define. Requires a date field. |
-| [`Filters`]({{site.url}}{{site.baseurl}}/aggregations/bucket/filters/) | Groups documents by custom query filters that you define. Each filter creates a bucket. |
-| [`Histogram`]({{site.url}}{{site.baseurl}}/aggregations/bucket/histogram/) | Groups numeric values into fixed-size intervals. Requires a numeric field. |
-| [`IPv4 Range`]({{site.url}}{{site.baseurl}}/aggregations/bucket/ip-range/) | Groups documents into custom IP address ranges. Requires an IP field. |
-| [`Range`]({{site.url}}{{site.baseurl}}/aggregations/bucket/range/) | Groups numeric values into custom ranges that you define. Requires a numeric field. |
-| [`Significant Terms`]({{site.url}}{{site.baseurl}}/aggregations/bucket/significant-terms/) | Identifies terms that appear more frequently in the selected dataset than in the overall index. Requires a keyword or text field. |
-| [`Terms`]({{site.url}}{{site.baseurl}}/aggregations/bucket/terms/) | Groups documents by the unique values of a field. Requires a keyword, numeric, IP, or Boolean field. |
+| [`Date Histogram`]({{site.url}}{{site.baseurl}}/aggregations/bucket/date-histogram/) | 將文件分組至時間間隔（例如每小時、每天或每週）。需要日期欄位。 |
+| [`Date Range`]({{site.url}}{{site.baseurl}}/aggregations/bucket/date-range/) | 將文件分組至您定義的自訂日期範圍。需要日期欄位。 |
+| [`Filters`]({{site.url}}{{site.baseurl}}/aggregations/bucket/filters/) | 依您定義的自訂查詢篩選條件將文件分組。每個篩選條件會建立一個桶。 |
+| [`Histogram`]({{site.url}}{{site.baseurl}}/aggregations/bucket/histogram/) | 將數值分組至固定大小的間隔。需要數值欄位。 |
+| [`IPv4 Range`]({{site.url}}{{site.baseurl}}/aggregations/bucket/ip-range/) | 將文件分組至自訂的 IP 位址範圍。需要 IP 欄位。 |
+| [`Range`]({{site.url}}{{site.baseurl}}/aggregations/bucket/range/) | 將數值分組至您定義的自訂範圍。需要數值欄位。 |
+| [`Significant Terms`]({{site.url}}{{site.baseurl}}/aggregations/bucket/significant-terms/) | 找出在所選資料集中出現頻率高於整體索引的詞彙。需要 keyword 或 text 欄位。 |
+| [`Terms`]({{site.url}}{{site.baseurl}}/aggregations/bucket/terms/) | 依欄位的唯一值將文件分組。需要 keyword、數值、IP 或布林值欄位。 |
 
-For more information about bucket aggregation types, see [Bucket aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/).
-
-
-## Metrics and axes tab
-
-A typical **Metrics** tab is shown in the following image.
-
-![Visualization tools Metrics and axes settings]({{site.url}}{{site.baseurl}}/images/dashboards/viz-tools-metrics.png){: width="600" }
-
-Like the **Data** tab, contents of the **Metrics and axes** (or **Options**) tab depend on the visualization type as well as the specifics of the data that you've selected. Options vary widely, but generally fall into the following categories. This is not an exhaustive list:
+如需桶彙總類型的詳細資訊，請參閱[桶彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/)。
 
 
-### Metrics options
+## 指標與座標軸索引標籤
 
-Metrics or display options include:
+下圖顯示典型的 **Metrics** 索引標籤。
 
-- The form factor of the graphic, such as Circle or Arc for gauges; or Line/Bar/Area chart types
-- Visualization-specific options, such as Stacked or Normal (superimposed) area charts
-- Whether to display lines and dots in line graphs, line width, and line style (such as straight or smoothed)
-- Range widths
-- Color schemas (for heat maps, for example)
+![視覺化工具的指標與座標軸設定]({{site.url}}{{site.baseurl}}/images/dashboards/viz-tools-metrics.png){: width="600" }
+
+與 **Data** 索引標籤相同，**Metrics and axes**（或 **Options**）索引標籤的內容取決於視覺化類型以及您所選取資料的具體特性。選項差異很大，但通常可分為以下類別。此清單並未列出所有選項：
 
 
-### Axis options
+### 指標選項
 
-X- and Y-axis options include:
+指標或顯示選項包括：
 
-- Position of the axes
-- Mode, such as normal or percentage scale
-- Whether to display or truncate labels and their alignment
-- Custom titles for axes
-- Whether to display axis lines and tick marks
-
-
-## Panel settings
-
-A typical **Panel settings** tab is shown in the following image.
-
-![Visualization tools Panel settings]({{site.url}}{{site.baseurl}}/images/dashboards/viz-tools-panel.png){: width="600" }
-
-The **Panel settings** tab controls panel-wide display options such as the following:
-
-- Change the position of the legend
-- Show a threshold line
-- Highlight the current time on a timeline
-- Show or hide vertical or horizontal grid lines
-- Label values on charts
+- 圖形的外觀形式，例如量表的 Circle 或 Arc；或 Line/Bar/Area 圖表類型
+- 視覺化專屬選項，例如 Stacked 或 Normal（重疊）區域圖
+- 是否在折線圖中顯示線條與點、線條寬度，以及線條樣式（例如直線或平滑）
+- 範圍寬度
+- 色彩配置（例如用於熱度圖）
 
 
-## Legend colors
+### 座標軸選項
 
-The legend shows the color key in charts where range, categorical, or text variables are represented by colors.
+X 軸與 Y 軸選項包括：
 
-Use the legend to change the colors of a graphical element. To change a color, follow these steps:
+- 座標軸的位置
+- 模式，例如一般刻度或百分比刻度
+- 是否顯示或截斷標籤，以及標籤的對齊方式
+- 座標軸的自訂標題
+- 是否顯示座標軸線與刻度線
 
-1. Select an entry in the legend.
 
-2. Choose a color from the palette that appears.
+## 面板設定
 
-![Visualize legend]({{site.url}}{{site.baseurl}}/images/dashboards/legend-colors.png){: width="300" }
+下圖顯示典型的 **Panel settings** 索引標籤。
 
-## Next steps
+![視覺化工具的面板設定]({{site.url}}{{site.baseurl}}/images/dashboards/viz-tools-panel.png){: width="600" }
 
-- For a hands-on tutorial, see [Creating aggregation-based visualizations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/aggregation-based-viz/). 
+**Panel settings** 索引標籤可控制整個面板的顯示選項，例如：
+
+- 變更圖例的位置
+- 顯示閾值線
+- 在時間軸上醒目提示目前時間
+- 顯示或隱藏垂直或水平格線
+- 在圖表上標示數值
+
+
+## 圖例色彩
+
+在以色彩表示範圍、類別或文字變數的圖表中，圖例會顯示色彩對照。
+
+您可以使用圖例來變更圖形元素的色彩。若要變更色彩，請依照下列步驟操作：
+
+1. 選取圖例中的項目。
+
+2. 從出現的調色盤中選擇色彩。
+
+![視覺化圖例]({{site.url}}{{site.baseurl}}/images/dashboards/legend-colors.png){: width="300" }
+
+## 後續步驟
+
+- 如需實作教學，請參閱[建立以彙總為基礎的視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/aggregation-based-viz/)。 

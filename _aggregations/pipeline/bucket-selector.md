@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Bucket selector
+title: "桶選取器"
 parent: Pipeline aggregations
 nav_order: 30
 ---
 
-# Bucket selector aggregation
+# 桶選取器彙總
 
-The `bucket_selector` aggregation is a parent pipeline aggregation that evaluates a script to determine whether buckets returned by a `histogram` (or `date_histogram`) aggregation should be included in the final result. 
+`bucket_selector` 彙總是一種父管線彙總，會評估指令碼，以判斷 `histogram`（或 `date_histogram`）彙總所傳回的桶 (bucket) 是否應包含在最終結果中。 
 
-Unlike pipeline aggregations that create new values, the `bucket_selector` aggregation acts as a filter, keeping or removing entire buckets based on the specified criteria. Use this aggregation to filter buckets based on the computed metrics of a bucket. 
+與建立新值的管線彙總不同，`bucket_selector` 彙總的作用是篩選器，會根據指定的條件保留或移除整個桶。您可以使用此彙總，根據桶的計算指標來篩選桶。 
 
-## Parameters
+## 參數
 
-The `bucket_selector` aggregation takes the following parameters.
+`bucket_selector` 彙總接受下列參數。
 
-| Parameter             | Required/Optional | Data type       | Description |
+| 參數             | 必要/選用 | 資料類型       | 說明 |
 | :--                   | :--               |  :--            | :--         |
-| `buckets_path`        | Required          | Object          | A map of variable names to bucketed metrics that identify the metrics to be used in the script. The metrics must be numeric. See [Script variables]({{site.url}}{{site.baseurl}}/aggregations/pipeline/bucket-script#script-variables). |
-| `script`              | Required          | String or Object | The script to execute. Can be an inline script, stored script, or script file. The script has access to the variable names defined in the `buckets_path` parameter. Must return a Boolean value. Buckets returning `false` are removed from the final output. |
-| `gap_policy`          | Optional          | String          | The policy to apply to missing data. Valid values are `skip` and `insert_zeros`. Default is `skip`. See [Data gaps]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#data-gaps).  |
+| `buckets_path`        | 必要          | 物件          | 變數名稱與桶指標的對應，用來識別要在指令碼中使用的指標。指標必須為數值。請參閱[指令碼變數]({{site.url}}{{site.baseurl}}/aggregations/pipeline/bucket-script#script-variables)。 |
+| `script`              | 必要          | 字串或物件 | 要執行的指令碼。可以是內嵌指令碼、已儲存的指令碼或指令碼檔案。指令碼可以存取 `buckets_path` 參數中定義的變數名稱。必須傳回布林值。傳回 `false` 的桶會從最終輸出中移除。 |
+| `gap_policy`          | 選用          | 字串          | 套用於缺漏資料的原則。有效值為 `skip` 和 `insert_zeros`。預設為 `skip`。請參閱[資料缺口]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#data-gaps)。  |
 
 
-## Example
+## 範例
 
-The following example creates a date histogram with a one-week interval from the OpenSearch Dashboards e-commerce sample data. The `sum` subaggregation calculates the sum of all sales for each week. Finally, the `bucket_selector` aggregation filters the resulting weekly buckets, removing all the buckets that do not have a sum of more than $75,000:
+下列範例會從 OpenSearch Dashboards 電子商務範例資料建立間隔為一週的日期直方圖。`sum` 子彙總會計算每週所有銷售額的總和。最後，`bucket_selector` 彙總會篩選產生的每週桶，移除所有總和未超過 $75,000 的桶：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -58,9 +59,9 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The aggregation returns the `sales_per_week` buckets that meet the scripted criterion:
+此彙總會傳回符合指令碼條件的 `sales_per_week` 桶：
 
 ```json
 {
@@ -116,5 +117,5 @@ The aggregation returns the `sales_per_week` buckets that meet the scripted crit
 }
 ```
 
-Because it returns a Boolean rather than a numeric value, the `buckets_selector` aggregation does not take a `format` parameter. In this example, the formatted metrics are returned in the `value_as_string` result by the `sum` subaggregation. Contrast this with the [example in the `bucket_script` aggregation]({{site.url}}{{site.baseurl}}/aggregations/pipeline/bucket-script/#example).
+由於 `buckets_selector` 彙總傳回的是布林值而非數值，因此不接受 `format` 參數。在此範例中，格式化後的指標是由 `sum` 子彙總在 `value_as_string` 結果中傳回。請與 [`bucket_script` 彙總中的範例]({{site.url}}{{site.baseurl}}/aggregations/pipeline/bucket-script/#example)進行對照。
 {: .note}

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Split index
+title: "分割索引"
 parent: Index operations
 grand_parent: Index APIs
 nav_order: 110
@@ -8,37 +9,37 @@ redirect_from:
   - /opensearch/rest-api/index-apis/split/
 ---
 
-# Split Index API
-**Introduced 1.0**
+# 分割索引 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Split Index API increases the number of primary shards in an existing index by creating a new target index where each original primary shard is divided into two or more primary shards. This is useful when an index has outgrown its original shard count and needs additional capacity to handle increased data volume or query load.
+分割索引 API 會建立新的目標索引，將每個原始主要分片分割成兩個或多個主要分片，藉此增加現有索引中的主要分片數量。當索引的成長已超出其原始分片數量，且需要額外容量來處理增加的資料量或查詢負載時，這項功能便十分實用。
 
-The number of primary shards in the target index must be a multiple of the source index's primary shard count. For example, an index with 2 primary shards can be split into 4, 6, 8, or any other multiple of 2. An index with a single primary shard can be split into any number of shards.
+目標索引中的主要分片數量必須是來源索引主要分片數量的倍數。舉例來說，具有 2 個主要分片的索引可以分割成 4、6、8 或任何其他 2 的倍數。具有單一主要分片的索引則可以分割成任意數量的分片。
 
-The maximum number of splits an index supports depends on the `index.number_of_routing_shards` setting. This setting defines the total hashing space across which documents are distributed using consistent hashing. Only multiplicative factors are supported because consistent hashing requires each new shard to map to a complete, contiguous subset of the original hash space; incremental resharding (N to N+1) would require rebalancing documents across all shards, which is prohibitively expensive for search-oriented data structures. For example, an index with 2 shards and `number_of_routing_shards` set to 12 (2 x 2 x 3) supports the following split paths:
+索引支援的分割次數上限取決於 `index.number_of_routing_shards` 設定。此設定會定義使用一致性雜湊來分散文件的總雜湊空間。由於一致性雜湊要求每個新分片都必須對應到原始雜湊空間中完整且連續的子集，因此僅支援倍數因子；增量重新分片 (N 到 N+1) 需要重新平衡所有分片中的文件，對於搜尋導向的資料結構而言成本過高。舉例來說，具有 2 個分片且 `number_of_routing_shards` 設為 12 (2 x 2 x 3) 的索引支援下列分割路徑：
 
-- `2` -> `4` -> `12` (split by 2, then by 3)
-- `2` -> `6` -> `12` (split by 3, then by 2)
-- `2` -> `12` (split by 6)
+- `2` -> `4` -> `12` (先以 2 倍分割，再以 3 倍分割)
+- `2` -> `6` -> `12` (先以 3 倍分割，再以 2 倍分割)
+- `2` -> `12` (以 6 倍分割)
 
-When not explicitly configured, `number_of_routing_shards` defaults to a value that permits repeated doubling up to a maximum of 1,024 shards.
+若未明確設定，`number_of_routing_shards` 會預設為允許重複加倍、最多達 1,024 個分片的值。
 
-## Prerequisites
+## 先決條件
 
-Before you can split an index, it must meet the following conditions:
+您必須先讓索引符合下列條件，才能分割索引：
 
-- The index must be read-only. To make the index read-only, set the [dynamic index setting]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings) `index.blocks.write` to `true`.
-- The cluster health status must be green.
+- 索引必須為唯讀。若要將索引設為唯讀，請將[動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings) `index.blocks.write` 設為 `true`。
+- 叢集健康狀態必須為綠色。
 
-Additionally, the split operation enforces the following constraints:
+此外，分割作業會強制執行下列限制：
 
-- The target index must not already exist.
-- The source index must have fewer primary shards than the target index.
-- The number of primary shards in the target index must be a multiple of the source index's primary shard count.
-- The node handling the split process must have sufficient free disk space to accommodate a second copy of the existing index.
+- 目標索引不得已存在。
+- 來源索引的主要分片數量必須少於目標索引。
+- 目標索引中的主要分片數量必須是來源索引主要分片數量的倍數。
+- 處理分割程序的節點必須有足夠的可用磁碟空間，以容納現有索引的第二份複本。
 
-The following request makes the `catalog-logs` index read-only to prepare it for splitting:
+下列請求會將 `catalog-logs` 索引設為唯讀，以準備進行分割：
 
 ```json
 PUT /catalog-logs/_settings
@@ -50,82 +51,82 @@ PUT /catalog-logs/_settings
 ```
 {% include copy-curl.html %}
 
-Mappings cannot be specified in the split request. The target index inherits all mappings from the source index.
+分割請求中無法指定對應。目標索引會繼承來源索引的所有對應。
 {: .important}
 
-The split operation performs the following steps:
+分割作業會執行下列步驟：
 
-1. Allocates a new target index with an identical mapping and configuration but a higher primary shard count.
-1. Establishes hard links from the source segments into the target index directory. If the file system lacks hard-link support, a full byte-level copy occurs instead, which takes significantly longer.
-1. Runs a rehashing pass that reassigns each document to its correct target shard based on the new routing layout and removes documents that no longer belong.
-1. Initiates shard recovery on the target index, similar to the process that runs when a closed index is reopened.
+1. 配置具有相同對應與組態但主要分片數量更多的新目標索引。
+1. 從來源區段建立指向目標索引目錄的硬式連結。如果檔案系統不支援硬式連結，則會改為執行完整的位元組層級複製，這會耗費明顯更長的時間。
+1. 執行重新雜湊階段，根據新的路由配置將每份文件重新指派至正確的目標分片，並移除不再屬於該分片的文件。
+1. 在目標索引上啟動分片復原，類似於重新開啟已關閉索引時所執行的程序。
 
-## Monitoring the split process
+## 監控分割程序
 
-The split API returns as soon as the target index has been added to the cluster state; it does not wait for the split operation to complete. The split process proceeds through the following shard states:
+分割 API 在目標索引新增至叢集狀態後便會立即傳回，不會等待分割作業完成。分割程序會依序經歷下列分片狀態：
 
-1. **Unassigned** -- All shards in the target index begin in this state immediately after the API returns.
-1. **Initializing** -- Once the primary shard is allocated to the node, it transitions to this state and the data redistribution begins.
-1. **Active** -- When the split completes, the shard becomes active. OpenSearch then attempts to allocate any configured replicas and may relocate the primary shard to another node for balancing.
+1. **未指派** -- 目標索引中的所有分片在 API 傳回後會立即從此狀態開始。
+1. **初始化中** -- 主要分片配置至節點後，便會轉換為此狀態並開始重新分散資料。
+1. **作用中** -- 分割完成時，分片會變成作用中。OpenSearch 接著會嘗試配置任何已設定的副本，並可能將主要分片重新配置至其他節點以進行平衡。
 
-You can track the progress of shard recovery using the [CAT recovery API]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-recovery/), or use the [Cluster Health API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/) with `wait_for_status=yellow` to wait until all primary shards have been allocated.
+您可以使用 [CAT recovery API]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-recovery/) 追蹤分片復原的進度，或搭配 `wait_for_status=yellow` 使用 [Cluster Health API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/)，等待所有主要分片完成配置。
 
-When creating the target index, remember that OpenSearch index names have the following restrictions:
+建立目標索引時，請記得 OpenSearch 索引名稱有下列限制：
 
-- All letters must be lowercase.
-- Index names can't begin with underscores (`_`) or hyphens (`-`).
-- Index names can't contain spaces, commas, or the following characters:
+- 所有字母必須為小寫。
+- 索引名稱不能以底線 (`_`) 或連字號 (`-`) 開頭。
+- 索引名稱不能包含空格、逗號或下列字元：
 
-  `:`, `"`, `*`, `+`, `/`, `\`, `|`, `?`, `#`, `>`, or `<`
+  `:`, `"`, `*`, `+`, `/`, `\`, `|`, `?`, `#`, `>`, 或 `<`
 
 <!-- spec_insert_start
 api: indices.split
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 POST /{index}/_split/{target}
 PUT  /{index}/_split/{target}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required | Data type | Description |
+| 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `index` | **Required** | String | The name of the source index to split. |
-| `target` | **Required** | String | The name of the target index to create. |
+| `index` | **必要** | 字串 | 要分割的來源索引名稱。 |
+| `target` | **必要** | 字串 | 要建立的目標索引名稱。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數均為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `wait_for_active_shards` | String | The number of active shard copies that must be available before OpenSearch returns a response. Because the split operation creates a new index, the [wait for active shards]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/#wait-for-active-shards) setting on index creation applies here as well. Set to `all` or a positive integer. Values greater than 1 require replicas. For example, if you specify a value of 3, the index must have two replicas distributed across two additional nodes for the request to succeed. | `1` |
-| `cluster_manager_timeout` | String | The amount of time to wait for a connection to the cluster manager node. | `30s` |
-| `timeout` | String | The amount of time to wait for a response. If no response is received before the timeout expires, the request fails and returns an error. | `30s` |
-| `wait_for_completion` | Boolean | When set to `false`, the request returns immediately instead of after the operation is finished. To monitor the operation status, use the [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/) with the task ID returned by the request. | `true` |
-| `task_execution_timeout` | String | The amount of time to wait for the task to complete. Only applicable when `wait_for_completion` is set to `false`. | `1h` |
+| `wait_for_active_shards` | 字串 | OpenSearch 傳回回應之前必須可用的作用中分片複本數量。由於分割作業會建立新索引，因此建立索引時的[等待作用中分片]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/#wait-for-active-shards)設定也會在此適用。請設為 `all` 或正整數。大於 1 的值需要副本。舉例來說，如果您指定值 3，索引就必須有兩個副本分散於另外兩個節點，請求才會成功。 | `1` |
+| `cluster_manager_timeout` | 字串 | 等待連線至叢集管理員節點的時間長度。 | `30s` |
+| `timeout` | 字串 | 等待回應的時間長度。若在逾時前未收到回應，請求會失敗並傳回錯誤。 | `30s` |
+| `wait_for_completion` | 布林值 | 設為 `false` 時，請求會立即傳回，而非等到作業完成後才傳回。若要監控作業狀態，請搭配請求傳回的工作 ID 使用 [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/)。 | `true` |
+| `task_execution_timeout` | 字串 | 等待工作完成的時間長度。僅適用於 `wait_for_completion` 設為 `false` 時。 | `1h` |
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request body fields. All fields are optional.
+下表列出可用的請求本文欄位。所有欄位均為選用。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `settings` | Object | Index settings to apply to the target index. See [Index settings]({{site.url}}{{site.baseurl}}/im-plugin/index-settings/). |
-| `aliases` | Object | Aliases to associate with the target index. See [Alias APIs]({{site.url}}{{site.baseurl}}/api-reference/alias/). |
+| `settings` | 物件 | 要套用至目標索引的索引設定。請參閱[索引設定]({{site.url}}{{site.baseurl}}/im-plugin/index-settings/)。 |
+| `aliases` | 物件 | 要與目標索引建立關聯的別名。請參閱[別名 API]({{site.url}}{{site.baseurl}}/api-reference/alias/)。 |
 
-## Index codec considerations
+## 索引轉碼器考量
 
-For index codec considerations, see [Index codecs]({{site.url}}{{site.baseurl}}/im-plugin/index-codecs/#splits-and-shrinks).
+如需索引轉碼器考量，請參閱[索引轉碼器]({{site.url}}{{site.baseurl}}/im-plugin/index-codecs/#splits-and-shrinks)。
 
-## Example: Splitting an index
+## 範例：分割索引
 
-The following example splits the `catalog-logs` index from 2 primary shards into 4, removes the write block, and attaches an alias:
+下列範例會將 `catalog-logs` 索引從 2 個主要分片分割成 4 個、解除寫入封鎖，並附加別名：
 
 <!-- spec_insert_start
 component: example_code
@@ -181,9 +182,9 @@ response = client.indices.split(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Splitting a single-shard index
+## 範例：分割單一分片索引
 
-An index with a single primary shard can be split into any number of shards. The following example splits the `catalog-events` index from 1 shard into 3:
+具有單一主要分片的索引可以分割成任意數量的分片。下列範例會將 `catalog-events` 索引從 1 個分片分割成 3 個：
 
 <!-- spec_insert_start
 component: example_code
@@ -230,7 +231,7 @@ response = client.indices.split(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -240,16 +241,16 @@ response = client.indices.split(
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `acknowledged` | Boolean | Indicates whether the request was acknowledged by all relevant nodes in the cluster. |
-| `shards_acknowledged` | Boolean | Indicates whether the required number of shard copies were started before the request timed out. |
-| `index` | String | The name of the target index that was created. |
+| `acknowledged` | 布林值 | 指出請求是否已由叢集中所有相關節點確認。 |
+| `shards_acknowledged` | 布林值 | 指出在請求逾時前，是否已啟動所需數量的分片複本。 |
+| `index` | 字串 | 已建立的目標索引名稱。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/resize`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`indices:admin/resize`。

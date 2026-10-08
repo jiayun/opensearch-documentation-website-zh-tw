@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cluster APIs
+title: "叢集 API"
 has_children: true
 has_toc: false
 nav_order: 30
@@ -9,28 +10,28 @@ redirect_from:
   - /api-reference/cluster-api/
 ---
 
-# Cluster APIs
+# 叢集 API
 **Introduced 1.0**
 {: .label .label-purple }
 
-The cluster APIs allow you to manage your cluster. You can use them to check cluster health, modify settings, retrieve statistics, and more.
+叢集 API 可讓您管理叢集。您可以使用這些 API 檢查叢集健康狀態、修改設定、取得統計資料等。
 
-## Cluster API operations
+## 叢集 API 操作
 
-The following cluster API operations are available.
+以下叢集 API 操作可供使用。
 
-### Cluster information and status
-- [Cluster health]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/)
-- [Cluster pending tasks]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-pending-tasks/)
-- [Cluster settings]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/)
-- [Cluster state]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-state/)
-- [Cluster stats]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-stats/)
-- [Info]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/info/)
-- [Remote info]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/remote-info/)
+### 叢集資訊與狀態
+- [叢集健康狀態]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/)
+- [叢集待處理工作]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-pending-tasks/)
+- [叢集設定]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/)
+- [叢集狀態]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-state/)
+- [叢集統計資料]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-stats/)
+- [資訊]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/info/)
+- [遠端資訊]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/remote-info/)
 
-### Cluster management
-- [Cluster allocation]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-allocation/)
-- [Cluster awareness]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-awareness/)
-- [Cluster decommission]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-decommission/)
-- [Cluster reroute]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-reroute/)
-- [Cluster voting configuration exclusions]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-voting-configuration-exclusions/)
+### 叢集管理
+- [叢集配置]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-allocation/)
+- [叢集感知]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-awareness/)
+- [叢集除役]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-decommission/)
+- [叢集重新路由]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-reroute/)
+- [叢集投票組態排除]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-voting-configuration-exclusions/)

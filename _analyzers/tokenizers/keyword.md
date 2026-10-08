@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Keyword 
 parent: Tokenizers
 nav_order: 50
 ---
 
-# Keyword tokenizer
+# Keyword 斷詞器
 
-The `keyword` tokenizer ingests text and outputs it exactly as a single, unaltered token. This makes it particularly useful when you want the input to remain intact, such as when managing structured data like names, product codes, or email addresses. 
+`keyword` 斷詞器會匯入文字，並將其原封不動地輸出為單一詞元。當您希望輸入內容保持不變時，這項特性特別實用，例如管理姓名、產品代號或電子郵件地址等結構化資料時。
 
-The `keyword` tokenizer can be paired with token filters to process the text, for example, to normalize it or to remove extraneous characters.
+`keyword` 斷詞器可以搭配詞元篩選器來處理文字，例如將其正規化或移除多餘的字元。
 
-## Example usage
+## 範例用法
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `keyword` tokenizer:
+下列範例請求會建立名為 `my_index` 的新索引，並設定使用 `keyword` 斷詞器的分析器：
  
 ```json
 PUT /my_index
@@ -40,9 +41,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查該分析器產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -53,7 +54,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the single token representing the original text:
+回應中包含代表原始文字的單一詞元：
 
 ```json
 {
@@ -69,21 +70,21 @@ The response contains the single token representing the original text:
 }
 ```
 
-## Parameters
+## 參數
 
-The `keyword` token filter can be configured with the following parameter.
+`keyword` 詞元篩選器可以使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`buffer_size`| Optional | Integer | Determines the character buffer size. Default is `256`. There is usually no need to change this setting.
+`buffer_size`| 選用 | 整數 | 決定字元緩衝區大小。預設為 `256`。通常不需要變更此設定。
 
-## Combining the keyword tokenizer with token filters
+## 將 keyword 斷詞器與詞元篩選器結合使用
 
-To enhance the functionality of the `keyword` tokenizer, you can combine it with token filters. Token filters can transform the text, such as converting it to lowercase or removing unwanted characters.
+若要增強 `keyword` 斷詞器的功能，您可以將其與詞元篩選器結合使用。詞元篩選器可以轉換文字，例如將其轉為小寫或移除不需要的字元。
 
-### Example: Using the pattern_replace filter and keyword tokenizer
+### 範例：使用 pattern_replace 篩選器與 keyword 斷詞器
 
-In this example, the `pattern_replace` filter uses a regular expression to replace all non-alphanumeric characters with an empty string:
+在此範例中，`pattern_replace` 篩選器使用規則表達式，將所有非英數字元取代為空字串：
 
 ```json
 POST _analyze
@@ -101,7 +102,7 @@ POST _analyze
 ```
 {% include copy-curl.html %}
 
-The `pattern_replace` filter removes non-alphanumeric characters and returns the following token:
+`pattern_replace` 篩選器會移除非英數字元，並傳回下列詞元：
 
 ```json
 {

@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Event aggregation
+title: "事件彙總"
 parent: Common use cases
 nav_order: 25
 ---
 
-# Event aggregation
+# 事件彙總
 
-You can use OpenSearch Data Prepper to aggregate data from different events over a period of time. Aggregating events can help to reduce unnecessary log volume and manage use cases like multiline logs that are received as separate events. The [`aggregate` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/aggregate/) is a stateful processor that groups events based on the values for a set of specified identification keys and performs a configurable action on each group.
+您可以使用 OpenSearch Data Prepper 在一段時間內彙總來自不同事件的資料。彙總事件有助於減少不必要的記錄資料量，並處理多行記錄以個別事件形式接收等使用案例。[`aggregate` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/aggregate/) 是一種有狀態的處理器，會根據一組指定識別鍵的值將事件分組，並對每個群組執行可設定的動作。
 
-The `aggregate` processor state is stored in memory. For example, in order to combine four events into one, the processor needs to retain pieces of the first three events. The state of an aggregate group of events is kept for a configurable amount of time. Depending on your logs, the aggregate action being used, and the number of memory options in the processor configuration, the aggregation could take place over a long period of time.
+`aggregate` 處理器的狀態儲存在記憶體中。例如，若要將四個事件合併為一個，處理器需要保留前三個事件的部分內容。事件彙總群組的狀態會保留一段可設定的時間。依據您的記錄檔、所使用的彙總動作，以及處理器組態中記憶體選項的數量，彙總可能會在很長的一段時間內進行。
 
-## Basic usage
+## 基本用法
 
-The following example pipeline extracts the fields `sourceIp`, `destinationIp`, and `port` using the [`grok` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/grok/) and then aggregates on those fields over a period of 30 seconds using the [`aggregate` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/aggregate/) and the `put_all` action. At the end of the 30-second period, the aggregated log is sent to the OpenSearch sink.
+下列範例管線使用 [`grok` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/grok/) 擷取 `sourceIp`、`destinationIp` 和 `port` 欄位，然後使用 [`aggregate` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/aggregate/) 與 `put_all` 動作，在 30 秒的期間內對這些欄位進行彙總。在 30 秒期間結束時，彙總後的記錄檔會傳送至 OpenSearch 接收端。
 
 ```json
 aggregate_pipeline:  
@@ -36,7 +37,7 @@ aggregate_pipeline:
 ```
 {% include copy-curl.html %}
 
-For example, consider the following batch of logs:
+例如，請考慮以下這批記錄檔：
 
 ```json
 { "log": "127.0.0.1 192.168.0.1 80", "status": 200 }
@@ -45,7 +46,7 @@ For example, consider the following batch of logs:
 ```
 {% include copy-curl.html %}
 
-The `grok` processor will extract keys such that the log events will look like the following example. These events now have the data that the `aggregate` processor will need for the `identification_keys`.
+`grok` 處理器會擷取鍵值，使記錄事件呈現如下例所示。這些事件現在具備 `aggregate` 處理器執行 `identification_keys` 所需的資料。
 
 ```json
 { "sourceIp": "127.0.0.1", "destinationIp": "192.168.0.1", "port": 80, "status": 200 }
@@ -54,45 +55,45 @@ The `grok` processor will extract keys such that the log events will look like t
 ```
 {% include copy-curl.html %}
 
-After 30 seconds, the `aggregate` processor writes the following aggregated log to the sink:
+30 秒後，`aggregate` 處理器會將以下彙總後的記錄檔寫入接收端：
 
 ```json
 { "sourceIp": "127.0.0.1", "destinationIp": "192.168.0.1", "port": 80, "status": 200, "bytes": 1000, "http_verb": "GET" }
 ```
 {% include copy-curl.html %}
 
-## Removing duplicates
+## 移除重複項目
 
-You can remove duplicate entries by deriving keys from incoming events and specifying the `remove_duplicates` option for the `aggregate` processor. This action immediately processes the first event for a group and drops all following events in that group.
+您可以從傳入事件衍生鍵值，並為 `aggregate` 處理器指定 `remove_duplicates` 選項，以移除重複的項目。此動作會立即處理群組中的第一個事件，並捨棄該群組中所有後續的事件。
 
-In the following example, the first event is processed with the identification keys `sourceIp` and `destinationIp`:
+在下列範例中，第一個事件會以識別鍵 `sourceIp` 和 `destinationIp` 進行處理：
 
 ```json
 { "sourceIp": "127.0.0.1", "destinationIp": "192.168.0.1", "status": 200 }
 ```
 {% include copy-curl.html %}
 
-The pipeline will then drop the following event because it has the same keys:
+管線接著會捨棄以下事件，因為它具有相同的鍵值：
 
 ```json
 { "sourceIp": "127.0.0.1", "destinationIp": "192.168.0.1", "bytes": 1000 }
 ```
 {% include copy-curl.html %}
 
-The pipeline processes this event and creates a new group because the `sourceIp` is different:
+管線會處理此事件並建立新的群組，因為 `sourceIp` 不同：
 
 ```json
 { "sourceIp": "127.0.0.2", "destinationIp": "192.168.0.1", "bytes": 1000 }
 ```
 {% include copy-curl.html %}
 
-## Log aggregation and conditional routing
+## 記錄彙總與條件式路由
 
-You can use multiple plugins to combine log aggregation with conditional routing. In this example, the pipeline `log-aggregate-pipeline` receives logs by using an HTTP client, like FluentBit, and extracts important values from the logs by matching the value in the `log` key against the [Apache Common Log Format](https://httpd.apache.org/docs/2.4/logs.html).
+您可以結合多個外掛程式，將記錄彙總與條件式路由結合。在此範例中，管線 `log-aggregate-pipeline` 透過 HTTP 用戶端 (例如 FluentBit) 接收記錄檔，並將 `log` 鍵中的值與 [Apache Common Log Format](https://httpd.apache.org/docs/2.4/logs.html) 進行比對，以從記錄檔中擷取重要的值。
 
-Two of the values that the pipeline extracts from the logs with a Grok pattern include `response` and `clientip`. The `aggregate` processor then uses the `clientip` value, along with the `remove_duplicates` option, to drop any logs that contain a `clientip` that has already been processed within the given `group_duration`.
+管線使用 Grok 模式從記錄檔中擷取的其中兩個值是 `response` 和 `clientip`。接著，`aggregate` 處理器會使用 `clientip` 值搭配 `remove_duplicates` 選項，捨棄任何包含在給定 `group_duration` 內已處理過之 `clientip` 的記錄檔。
 
-Three routes, or conditional statements, exist in the pipeline. These routes separate the value of the response into `2xx`, `3xx`, `4xx`, and `5xx` responses. Logs with a `2xx` or `3xx` status are sent to the `aggregated_2xx_3xx` index, logs with a `4xx` status are sent to the `aggregated_4xx index`, and logs with a `5xx` status are sent to the `aggregated_5xx` index.
+管線中存在三條路由 (即條件陳述式)。這些路由會將回應的值區分為 `2xx`、`3xx`、`4xx` 和 `5xx` 回應。具有 `2xx` 或 `3xx` 狀態的記錄檔會傳送至 `aggregated_2xx_3xx` 索引，具有 `4xx` 狀態的記錄檔會傳送至 `aggregated_4xx index`，而具有 `5xx` 狀態的記錄檔則會傳送至 `aggregated_5xx` 索引。
 
 ```json
 log-aggregate-pipeline:

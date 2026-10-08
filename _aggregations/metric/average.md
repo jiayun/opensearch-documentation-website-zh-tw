@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Average
+title: "平均值"
 parent: Metric aggregations
 nav_order: 10
 redirect_from:
   - /query-dsl/aggregations/metric/average/
 ---
 
-# Average aggregation
+# 平均值彙總
 
-The `avg` metric is a single-value metric that returns the average value of a field.
+`avg` 指標是一個單值指標，會回傳某個欄位的平均值。
 
-## Parameters
+## 參數
 
-The `avg` aggregation takes the following parameters.
+`avg` 彙總使用以下參數。
 
-| Parameter | Required/Optional | Data type       | Description |
-| :--       | :--               | :--            | :--         |
-| `field`   | Required          | String         | The field for which the average is computed.    |
-| `missing` | Optional          | Float         | The value to assign to missing instances of the field. By default, `avg` omits missing values from the calculation. |
+| 參數 | 必要/選用 | 資料類型 | 說明 |
+| :-- | :-- | :-- | :-- |
+| `field` | 必要 | String | 要計算平均值的欄位。 |
+| `missing` | 選用 | Float | 指派給遺漏該欄位之情況的值。預設情況下，`avg` 會在計算中省略遺漏值。 |
 
-## Example
+## 範例
 
- The following example request calculates the average of the `taxful_total_price` field in the OpenSearch Dashboards e-commerce sample data:
+以下範例請求計算 OpenSearch Dashboards 電子商務範例資料中 `taxful_total_price` 欄位的平均值：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -39,9 +40,9 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-The response contains the average of the `taxful_total_price`:
+回應包含 `taxful_total_price` 的平均值：
 
 ```json
 {
@@ -69,13 +70,13 @@ The response contains the average of the `taxful_total_price`:
 }
 ```
 
-You can use the aggregation name (`avg_taxful_total_price`) as a key to retrieve the aggregation from the response.
+您可以使用彙總名稱 (`avg_taxful_total_price`) 作為鍵，從回應中取得該彙總。
 
-## Missing values
+## 遺漏值
 
-You can assign a value to missing instances of the aggregated field. See [Missing aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/missing/) for more information.
+您可以為遺漏的彙總欄位情況指派一個值。請參閱 [Missing aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/missing/) 以取得更多資訊。
 
-Prepare an example index by ingesting the following documents. Note that the second document is missing a `gpa` value:
+透過匯入以下文件來準備一個範例索引。請注意，第二份文件遺漏了 `gpa` 值：
 
 ```json
 POST _bulk
@@ -88,9 +89,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-### Example: Replacing a missing value
+### 範例：取代遺漏值
 
-Take the average, replacing the missing GPA field with `0`:
+計算平均值，並將遺漏的 GPA 欄位取代為 `0`：
 
 ```json
 GET students/_search
@@ -108,7 +109,7 @@ GET students/_search
 ```
 {% include copy-curl.html %}
 
-The response is as follows. Compare to the next example, where missing values are ignored:
+回應如下。請將其與下一個忽略遺漏值的範例進行比較：
 
 ```json
 {
@@ -136,9 +137,9 @@ The response is as follows. Compare to the next example, where missing values ar
 }
 ```
 
-### Example: Ignoring a missing value
+### 範例：忽略遺漏值
 
-Take the average but without assigning the `missing` parameter:
+計算平均值，但不指定 `missing` 參數：
 
 ```json
 GET students/_search
@@ -155,7 +156,7 @@ GET students/_search
 ```
 {% include copy-curl.html %}
 
-The aggregator calculates the average, omitting documents containing missing field values (the default behavior):
+彙總器會計算平均值，並省略包含遺漏欄位值的文件（這是預設行為）：
 
 ```json
 {

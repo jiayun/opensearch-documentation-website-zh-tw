@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Close index
+title: "關閉索引"
 parent: Core index APIs
 grand_parent: Index APIs
 nav_order: 60
@@ -8,39 +9,39 @@ redirect_from:
   - /opensearch/rest-api/index-apis/close-index/
 ---
 
-# Close Index API
-**Introduced 1.0**
+# 關閉索引 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The close index API operation closes an index. Once an index is closed, you cannot add data to it or search for any data within the index.
+關閉索引 API 作業會關閉索引。索引一旦關閉，您就無法對其新增資料，也無法在該索引內搜尋任何資料。
 
 
-## Endpoints
+## 端點
 
 ```json
 POST /{index}/_close
 ```
 
-## Path parameters
+## 路徑參數
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-&lt;index&gt; | String | The index to close. Can be a comma-separated list of multiple index names. Use `_all` or * to close all indexes.
+&lt;index&gt; | 字串 | 要關閉的索引。可以是以逗號分隔的多個索引名稱清單。使用 `_all` 或 * 可關閉所有索引。
 
-## Query parameters
+## 查詢參數
 
-All parameters are optional.
+所有參數皆為選用。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`allow_no_indices` | Boolean | Whether to ignore wildcards that don't match any indexes. Default is `true`.
-`expand_wildcards` | String | Expands wildcard expressions to different indexes. Combine multiple values with commas. Available values are all (match all indexes), open (match open indexes), closed (match closed indexes), hidden (match hidden indexes), and none (do not accept wildcard expressions). Default is `open`.
-`ignore_unavailable` | Boolean | If true, OpenSearch does not search for missing or closed indexes. Default is `false`.
-`wait_for_active_shards` | String | Specifies the number of active shards that must be available before OpenSearch processes the request. Default is 1 (only the primary shard). Set to all or a positive integer. Values greater than 1 require replicas. For example, if you specify a value of 3, the index must have two replicas distributed across two additional nodes for the request to succeed.
-`cluster_manager_timeout` | Time | How long to wait for a connection to the cluster manager node. Default is `30s`.
-`timeout` | Time | How long to wait for a response from the cluster. Default is `30s`.
+`allow_no_indices` | 布林值 | 是否忽略未符合任何索引的萬用字元。預設為 `true`。
+`expand_wildcards` | 字串 | 將萬用字元運算式展開為不同的索引。使用逗號組合多個值。可用的值為 all（符合所有索引）、open（符合開啟的索引）、closed（符合關閉的索引）、hidden（符合隱藏的索引）及 none（不接受萬用字元運算式）。預設為 `open`。
+`ignore_unavailable` | 布林值 | 若為 true，OpenSearch 不會搜尋遺失或關閉的索引。預設為 `false`。
+`wait_for_active_shards` | 字串 | 指定 OpenSearch 處理請求前必須可用的作用中分片數量。預設為 1（僅主要分片）。設定為 all 或正整數。大於 1 的值需要副本。例如，若您指定值為 3，索引必須有兩個副本，分散於另外兩個節點上，請求才能成功。
+`cluster_manager_timeout` | 時間 | 等待連線至叢集管理員節點的時間長度。預設為 `30s`。
+`timeout` | 時間 | 等待叢集回應的時間長度。預設為 `30s`。
 
-## Example requests
+## 請求範例
 
 <!-- spec_insert_start
 component: example_code
@@ -67,7 +68,7 @@ response = client.indices.close(
 <!-- spec_insert_end -->
 
 
-## Example response
+## 回應範例
 ```json
 {
   "acknowledged": true,
@@ -80,6 +81,6 @@ response = client.indices.close(
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/close` and `indices:admin/close*`.
+若您使用 Security 外掛程式，請確保您具備適當的權限：`indices:admin/close` 和 `indices:admin/close*`。

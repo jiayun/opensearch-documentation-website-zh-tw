@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: More advanced features of the high-level .NET client
+title: "高階 .NET 用戶端的更多進階功能"
 nav_order: 12
 has_children: false
 parent: .NET clients
 ---
 
-# More advanced features of the high-level .NET client (OpenSearch.Client)
+# 高階 .NET 用戶端 (OpenSearch.Client) 的更多進階功能
 
-The following example illustrates more advanced features of OpenSearch.Client. For a simple example, see the [Getting started guide]({{site.url}}{{site.baseurl}}/clients/OSC-dot-net/). This example uses the following `Student` class, which is the same class used in the [Getting started guide]({{site.url}}{{site.baseurl}}/clients/OSC-dot-net/). OpenSearch.Client converts its property names to the `firstName`, `lastName`, `gpa`, and `gradDate` field names. The `ToString` method formats a `Student` for console output:
+下列範例說明 OpenSearch.Client 的更多進階功能。簡單範例請參閱[入門指南]({{site.url}}{{site.baseurl}}/clients/OSC-dot-net/)。此範例使用下列 `Student` 類別，與[入門指南]({{site.url}}{{site.baseurl}}/clients/OSC-dot-net/)中使用的類別相同。OpenSearch.Client 會將其屬性名稱轉換為 `firstName`、`lastName`、`gpa` 和 `gradDate` 欄位名稱。`ToString` 方法會將 `Student` 格式化為主控台輸出：
 
 ```cs
 using System.Globalization;
@@ -28,11 +29,11 @@ public class Student
 ```
 {% include copy.html %}
 
-## Mappings
+## 對應
 
-OpenSearch uses dynamic mapping to infer field types of the documents that are indexed. However, to have more control over the schema of your document, you can pass an explicit mapping to OpenSearch. You can define data types for some or all fields of your document in this mapping. 
+OpenSearch 使用動態對應來推斷已編製索引文件的欄位類型。不過，若要更充分控制文件的結構描述，您可以將明確對應傳遞給 OpenSearch。您可以在這個對應中為文件的部分或所有欄位定義資料類型。
 
-Similarly, OpenSearch.Client uses auto mapping to infer field data types based on the types of the class's properties. To use auto mapping, create a `students` index using the AutoMap's default constructor:
+同樣地，OpenSearch.Client 使用自動對應，根據類別屬性的類型來推斷欄位資料類型。若要使用自動對應，請使用 AutoMap 的預設建構函式建立 `students` 索引：
 
 ```cs
 var createResponse = await osClient.Indices.CreateAsync("students",
@@ -40,7 +41,7 @@ var createResponse = await osClient.Indices.CreateAsync("students",
 ```
 {% include copy.html %}
 
-If you use auto mapping, `Gpa` is mapped as a double, and `FirstName`, `LastName`, and `GradDate` are string properties, so they are mapped as text with a keyword subfield. To search date ranges on `GradDate`, map it as a `date` in the `yyyy-MM-dd` format. If you want to search for `FirstName` and `LastName` and allow only case-sensitive full matches, you can suppress analyzing by mapping these fields as keyword only. In Query DSL, you can accomplish this using the following query:
+如果您使用自動對應，`Gpa` 會對應為 double，而 `FirstName`、`LastName` 和 `GradDate` 是字串屬性，因此會對應為帶有 keyword 子欄位的 text。若要在 `GradDate` 上搜尋日期範圍，請將它對應為 `yyyy-MM-dd` 格式的 `date`。如果您想搜尋 `FirstName` 和 `LastName`，並且只允許區分大小寫的完整符合，可以將這些欄位僅對應為 keyword 來停用分析。在 Query DSL 中，您可以使用下列查詢來完成：
 
 ```json
 PUT students
@@ -62,7 +63,7 @@ PUT students
 }
 ```
 
-In OpenSearch.Client, you can use fluid lambda syntax to map these fields:
+在 OpenSearch.Client 中，您可以使用流暢的 lambda 語法來對應這些欄位：
 
 ```cs
 var createResponse = await osClient.Indices.CreateAsync(index,
@@ -74,9 +75,9 @@ var createResponse = await osClient.Indices.CreateAsync(index,
 ```
 {% include copy.html %}
 
-## Settings
+## 設定
 
-In addition to mappings, you can specify settings like the number of primary and replica shards when creating an index. The following query sets the number of primary shards to 1 and the number of replica shards to 2:
+除了對應之外，您還可以在建立索引時指定設定，例如主要分片和副本分片的數量。下列查詢將主要分片數量設為 1，副本分片數量設為 2：
 
 ```json
 PUT students
@@ -102,7 +103,7 @@ PUT students
 }
 ```
 
-In OpenSearch.Client, the equivalent of the preceding query is the following:
+在 OpenSearch.Client 中，與前述查詢等效的寫法如下：
 
 ```cs
 var createResponse = await osClient.Indices.CreateAsync(index,
@@ -115,16 +116,16 @@ var createResponse = await osClient.Indices.CreateAsync(index,
 ```
 {% include copy.html %}
 
-## Indexing multiple documents using the Bulk API
+## 使用 Bulk API 編製多份文件的索引
 
-In addition to indexing one document using `Index` and `IndexDocument` and indexing multiple documents using `IndexMany`, you can gain more control over document indexing by using `Bulk` or `BulkAll`. Indexing documents individually is inefficient because it creates an HTTP request for every document sent. The BulkAll helper frees you from handling retry, chunking or back off request functionality. It automatically retries if the request fails, backs off if the server is down, and controls how many documents are sent in one HTTP request. 
+除了使用 `Index` 和 `IndexDocument` 為單一文件編製索引，以及使用 `IndexMany` 為多份文件編製索引之外，您還可以使用 `Bulk` 或 `BulkAll` 來取得更充分的文件索引控制。逐一為文件編製索引效率不佳，因為每份送出的文件都會建立一個 HTTP 請求。BulkAll 協助程式讓您不必自行處理重試、分塊或退避請求功能。它會在請求失敗時自動重試、在伺服器停機時退避，並控制一個 HTTP 請求中送出多少份文件。
 
-In the following example, `BulkAll` is configured with the index name, number of back off retries, and back off time. Additionally, the maximum degrees of parallelism setting controls the number of parallel HTTP requests containing the data. Finally, the size parameter signals how many documents are sent in one HTTP request. 
+在下列範例中，`BulkAll` 設定了索引名稱、退避重試次數和退避時間。此外，最大平行度設定會控制包含資料的平行 HTTP 請求數量。最後，size 參數指定一個 HTTP 請求中送出多少份文件。
 
-We recommend setting the size to 100–1000 documents in production. 
+我們建議在正式環境中將 size 設為 100–1000 份文件。
 {: .tip}
 
-`BulkAll` takes a stream of data and returns an Observable that you can use to observe the background operation.
+`BulkAll` 接受一個資料串流，並回傳一個 Observable，您可以用它來觀察背景作業。
 
 ```cs
 var bulkAll = osClient.BulkAll(ReadData(), r => r
@@ -136,9 +137,9 @@ var bulkAll = osClient.BulkAll(ReadData(), r => r
 ```
 {% include copy.html %}
 
-## Searching with Boolean query
+## 使用布林值查詢搜尋
 
-OpenSearch.Client exposes full OpenSearch query capability. In addition to simple searches that use the match query, you can create a more complex Boolean query that filters on a `gradDate` range to search for students who graduated in 2022 and sort them by last name. In the following example, search is limited to 10 documents, and the scroll API is used to control the pagination of results.
+OpenSearch.Client 公開完整的 OpenSearch 查詢功能。除了使用 match 查詢的簡單搜尋之外，您還可以建立更複雜的布林值查詢，依 `gradDate` 範圍篩選，搜尋 2022 年畢業的學生，並依姓氏排序。在下列範例中，搜尋限制為 10 份文件，並使用 scroll API 控制結果的分頁。
 
 ```cs
 var gradResponse = await osClient.SearchAsync<Student>(s => s
@@ -157,13 +158,13 @@ var gradResponse = await osClient.SearchAsync<Student>(s => s
 ```
 {% include copy.html %}
 
-The response contains the Documents property with matching documents from OpenSearch. The data is in the form of deserialized JSON objects of Student type, so you can access their properties in a strongly typed fashion. All serialization and deserialization is handled by OpenSearch.Client.
+回應包含 Documents 屬性，其中含有來自 OpenSearch 的符合文件。資料是以 Student 類型的已還原序列化 JSON 物件形式呈現，因此您可以以強型別方式存取其屬性。所有序列化與還原序列化都由 OpenSearch.Client 處理。
 
-## Aggregations
+## 彙總
 
-OpenSearch.Client includes the full OpenSearch query functionality, including aggregations. In addition to grouping search results into buckets (for example, grouping students by GPA ranges), you can calculate metrics like sum or average. The following query calculates the average GPA of all students in the index. 
+OpenSearch.Client 包含完整的 OpenSearch 查詢功能，包括彙總。除了將搜尋結果分組到桶 (bucket) 中（例如依 GPA 範圍將學生分組）之外，您還可以計算總和或平均值等指標。下列查詢計算索引中所有學生的平均 GPA。
 
-Setting Size to 0 means OpenSearch will only return the aggregation, not the actual documents.
+將 Size 設為 0 表示 OpenSearch 只會回傳彙總結果，而不會回傳實際文件。
 {: .tip}
 
 ```cs
@@ -176,9 +177,9 @@ var aggResponse = await osClient.SearchAsync<Student>(s => s
 ```
 {% include copy.html %}
 
-## Sample program for creating an index and indexing data
+## 建立索引與將資料編製索引的範例程式
 
-The sample program in this section reads student records from a `students.csv` file located in the directory from which you run the program. Create the file with one student record per line in the `FirstName,LastName,Gpa,GradDate` format, specifying the graduation date in the `yyyy-MM-dd` format. Do not include a header row. For example:
+本節的範例程式會從您執行該程式所在目錄中的 `students.csv` 檔案讀取學生記錄。請以每行一筆學生記錄的方式建立該檔案，格式為 `FirstName,LastName,Gpa,GradDate`，並以 `yyyy-MM-dd` 格式指定畢業日期。請勿包含標題列。例如：
 
 ```text
 John,Doe,3.89,2022-05-15
@@ -187,7 +188,7 @@ Zhang,Li,3.72,2022-06-10
 ```
 {% include copy.html %}
 
-The following program deletes the `students` index if it exists, creates the index, reads the student records from the file, and indexes them into OpenSearch:
+下列程式會刪除 `students` 索引 (若存在)、建立該索引、從檔案讀取學生記錄，並將其編製索引至 OpenSearch：
 
 ```cs
 using System.Globalization;
@@ -261,9 +262,9 @@ internal class Program
 ```
 {% include copy.html %}
 
-## Sample program for search
+## 搜尋的範例程式
 
-The following program searches students by name and graduation date, calculates the average GPA, and then deletes the index.
+下列程式會依姓名與畢業日期搜尋學生、計算平均 GPA，然後刪除該索引。
 
 ```cs
 using OpenSearch.Client;
@@ -372,8 +373,8 @@ internal class Program
 ```
 {% include copy.html %}
 
-## Related documentation
+## 相關文件
 
-- For more examples of using the client, see the [`opensearch-net` user guide](https://github.com/opensearch-project/opensearch-net/blob/main/USER_GUIDE.md).
-- For guides to specific tasks, such as bulk indexing and searching, see the [`opensearch-net` guides](https://github.com/opensearch-project/opensearch-net/tree/main/guides).
-- For complete sample applications, see the [`opensearch-net` samples](https://github.com/opensearch-project/opensearch-net/tree/main/samples).
+- 如需更多使用該用戶端的範例，請參閱 [`opensearch-net` 使用者指南](https://github.com/opensearch-project/opensearch-net/blob/main/USER_GUIDE.md)。
+- 如需特定工作的指南，例如大量編製索引與搜尋，請參閱 [`opensearch-net` 指南](https://github.com/opensearch-project/opensearch-net/tree/main/guides)。
+- 如需完整的範例應用程式，請參閱 [`opensearch-net` 範例](https://github.com/opensearch-project/opensearch-net/tree/main/samples)。

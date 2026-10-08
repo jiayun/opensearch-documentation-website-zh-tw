@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Thai
+title: "泰文"
 parent: Tokenizers
 nav_order: 140
 ---
 
-# Thai tokenizer
+# 泰文斷詞器
 
-The `thai` tokenizer tokenizes Thai language text. Because words in Thai language are not separated by spaces, the tokenizer must identify word boundaries based on language-specific rules.
+`thai` 斷詞器會將泰文文字斷詞。由於泰文的單字之間不以空格分隔，斷詞器必須根據語言特定的規則來識別單字邊界。
 
-## Example usage
+## 範例用法
 
-The following example request creates a new index named `thai_index` and configures an analyzer with a `thai` tokenizer:
+下列範例請求會建立一個名為 `thai_index` 的新索引，並設定一個使用 `thai` 斷詞器的分析器：
 
 ```json
 PUT /thai_index
@@ -43,9 +44,9 @@ PUT /thai_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢視使用該分析器所產生的詞元：
 
 ```json
 POST /thai_index/_analyze
@@ -56,7 +57,7 @@ POST /thai_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

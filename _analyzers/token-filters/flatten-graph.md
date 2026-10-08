@@ -1,20 +1,21 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Flatten graph
+title: "扁平化圖形"
 parent: Token filters
 nav_order: 150
 ---
 
-# Flatten graph token filter
+# 扁平化圖形詞元篩選器
 
-The `flatten_graph` token filter is used to handle complex token relationships that occur when multiple tokens are generated at the same position in a graph structure. Some token filters, like `synonym_graph` and `word_delimiter_graph`, generate multi-position tokens---tokens that overlap or span multiple positions. These token graphs are useful for search queries but are not directly supported during indexing. The `flatten_graph` token filter resolves multi-position tokens into a linear sequence of tokens. Flattening the graph ensures compatibility with the indexing process. 
+`flatten_graph` 詞元篩選器用於處理在圖形結構中，多個詞元產生於同一位置時所形成的複雜詞元關係。部分詞元篩選器（例如 `synonym_graph` 和 `word_delimiter_graph`）會產生多位置詞元，也就是彼此重疊或跨越多個位置的詞元。這些詞元圖形對搜尋查詢很有用，但在編製索引時並不直接支援。`flatten_graph` 詞元篩選器會將多位置詞元解析為線性的詞元序列。將圖形扁平化可確保與編製索引程序相容。
 
-Token graph flattening is a lossy process. Whenever possible, avoid using the `flatten_graph` filter. Instead, apply graph token filters exclusively in search analyzers, removing the need for the `flatten_graph` filter.
+詞元圖形扁平化是一個有損的程序。請盡可能避免使用 `flatten_graph` 篩選器。請改為僅在搜尋分析器中套用圖形詞元篩選器，如此便不需要使用 `flatten_graph` 篩選器。
 {: .important}
 
-## Example
+## 範例
 
-The following example request creates a new index named `test_index` and configures an analyzer with a `flatten_graph` filter:
+下列範例請求會建立名為 `test_index` 的新索引，並設定一個使用 `flatten_graph` 篩選器的分析器：
 
 ```json
 PUT /test_index
@@ -43,9 +44,9 @@ PUT /test_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 POST /test_index/_analyze
@@ -56,7 +57,7 @@ POST /test_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

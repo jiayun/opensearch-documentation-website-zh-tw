@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search templates
+title: "搜尋範本"
 parent: Search APIs
 has_children: true
 nav_order: 90
@@ -11,24 +12,24 @@ redirect_from:
   - /api-reference/search-apis/search-template/
 ---
 
-# Search Templates API
+# 搜尋範本 API
 
-You can convert your full-text queries into a search template to accept user input and dynamically insert it into your query.
+您可以將全文查詢轉換為搜尋範本，以接受使用者輸入並將其動態插入查詢中。
 
-For example, if you use OpenSearch as a backend search engine for your application or website, you can take in user queries from a search bar or a form field and pass them as parameters into a search template. That way, the syntax to create OpenSearch queries is abstracted from your end users.
+例如，如果您使用 OpenSearch 作為應用程式或網站的後端搜尋引擎，您可以從搜尋列或表單欄位接收使用者查詢，並將其作為參數傳入搜尋範本。如此一來，建立 OpenSearch 查詢的語法便對終端使用者抽象化。
 
-When you're writing code to convert user input into OpenSearch queries, you can simplify your code with search templates. If you need to add fields to your search query, you can modify the template without making changes to your code.
+當您撰寫程式碼將使用者輸入轉換為 OpenSearch 查詢時，可以使用搜尋範本簡化程式碼。如果您需要在搜尋查詢中新增欄位，可以修改範本而無需變更程式碼。
 
-Search templates use the Mustache language. For a list of all syntax options, see the [Mustache manual](https://mustache.github.io/mustache.5.html).
+搜尋範本使用 Mustache 語言。如需所有語法選項的清單，請參閱 [Mustache 手冊](https://mustache.github.io/mustache.5.html)。
 {: .note }
 
-## Create search templates
+## 建立搜尋範本
 
-A search template has two components: the query and the parameters. Parameters are user-inputted values that get placed into variables. Variables are represented with double braces in Mustache notation. When encountering a variable like `{% raw %}{{var}}{% endraw %}` in the query, OpenSearch goes to the `params` section, looks for a parameter called `var`, and replaces it with the specified value.
+搜尋範本有兩個組成部分：查詢和參數。參數是放入變數中的使用者輸入值。變數在 Mustache 記號中以雙大括號表示。當在查詢中遇到 `{% raw %}{{var}}{% endraw %}` 這類變數時，OpenSearch 會前往 `params` 部分，尋找名為 `var` 的參數，並以指定的值取代它。
 
-You can code your application to ask your user what they want to search for and then plug that value into the `params` object at runtime.
+您可以編寫應用程式詢問使用者想要搜尋什麼，然後在執行階段將該值插入 `params` 物件中。
 
-This command defines a search template to find a play by its name. The `{% raw %}{{play_name}}{% endraw %}` in the query is replaced by the value `Henry IV`:
+此命令定義一個搜尋範本，依名稱尋找劇作。查詢中的 `{% raw %}{{play_name}}{% endraw %}` 會被值 `Henry IV` 取代：
 
 <!-- spec_insert_start
 component: example_code
@@ -88,7 +89,7 @@ response = client.search_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-This template runs the search on your entire cluster. To run this search on a specific index, add the index name to the request:
+此範本會在整個叢集上執行搜尋。若要在特定索引上執行此搜尋，請在請求中加入索引名稱：
 
 <!-- spec_insert_start
 component: example_code
@@ -113,7 +114,7 @@ response = client.search_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Specify the `from` and `size` parameters:
+指定 `from` 和 `size` 參數：
 
 <!-- spec_insert_start
 component: example_code
@@ -185,16 +186,16 @@ response = client.search_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To improve the search experience, you can define defaults so the user doesn’t have to specify every possible parameter. If the parameter is not defined in the `params` section, OpenSearch uses the default value.
+為了改善搜尋體驗，您可以定義預設值，讓使用者不必指定每個可能的參數。如果參數未在 `params` 部分中定義，OpenSearch 會使用預設值。
 
-The syntax for defining the default value for a variable `var` is as follows:
+定義變數 `var` 預設值的語法如下：
 
 ```
 {% raw %}{{var}}{{^var}}default value{{/var}}{% endraw %}
 ```
 {% include copy.html %}
 
-This command sets the defaults for `from` as 10 and `size` as 10:
+此命令將 `from` 的預設值設為 10，`size` 的預設值設為 10：
 
 <!-- spec_insert_start
 component: example_code
@@ -261,11 +262,11 @@ response = client.search_template(
 <!-- spec_insert_end -->
 
 
-## Save and execute search templates
+## 儲存並執行搜尋範本
 
-After the search template works the way you want it to, you can save the source of that template as a script, making it reusable for different input parameters.
+在搜尋範本符合您的需求後，您可以將該範本的來源儲存為指令碼，使其可重複用於不同的輸入參數。
 
-When saving the search template as a script, you need to specify the `lang` parameter as `mustache`:
+將搜尋範本儲存為指令碼時，您需要將 `lang` 參數指定為 `mustache`：
 
 ```json
 POST _scripts/play_search_template
@@ -288,7 +289,7 @@ POST _scripts/play_search_template
 }
 ```
 
-Now you can reuse the template by referring to its `id` parameter. You can reuse this source template for different input values:
+現在您可以透過參照其 `id` 參數來重複使用此範本。您可以將此來源範本重複用於不同的輸入值：
 
 <!-- spec_insert_start
 component: example_code
@@ -336,7 +337,7 @@ response = client.search_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -375,7 +376,7 @@ response = client.search_template(
 }
 ```
 
-If you have a stored template and want to validate it, use the `render` operation:
+如果您有已儲存的範本並想驗證它，請使用 `render` 操作：
 
 <!-- spec_insert_start
 component: example_code
@@ -417,28 +418,28 @@ response = client.render_search_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-For more information, see [Render Template API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/render-template/).
+如需更多資訊，請參閱 [Render Template API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/render-template/)。
 
-## Advanced parameter conversion with search templates
+## 使用搜尋範本進行進階參數轉換
 
-You have a lot of different syntax options in Mustache to transpose the input parameters into a query.
-You can specify conditions, run loops, join arrays, convert arrays to JSON, and so on.
+Mustache 提供許多不同的語法選項，可將輸入參數轉換為查詢。
+您可以指定條件、執行迴圈、串接陣列、將陣列轉換為 JSON 等。
 
-### Conditions
+### 條件
 
-Use the section tag in Mustache to represent conditions:
+使用 Mustache 中的區段標籤來表示條件：
 
 ```json
 {% raw %}{{#var}}var{{/var}}{% endraw %}
 ```
 {% include copy.html %}
 
-When `var` is a Boolean value, this syntax acts as an `if` condition. The `{% raw %}{{#var}}{% endraw %}` and `{% raw %}{{/var}}{% endraw %}` tags insert the values placed between them only if `var` evaluates to `true`.
+當 `var` 是布林值時，此語法會作為 `if` 條件。只有當 `var` 的求值結果為 `true` 時，`{% raw %}{{#var}}{% endraw %}` 和 `{% raw %}{{/var}}{% endraw %}` 標籤才會插入位於兩者之間的值。
 
-Using section tags would make your JSON invalid, so you must write your query in a string format instead.
+使用區段標籤會使您的 JSON 無效，因此您必須改以字串格式撰寫查詢。
 
-This command includes the `size` parameter in the query only when the `limit` parameter is set to `true`.
-In the following example, the `limit` parameter is `true`, so the `size` parameter is activated. As a result, you would get back only two documents.
+此命令只有在 `limit` 參數設為 `true` 時，才會在查詢中包含 `size` 參數。
+在下列範例中，`limit` 參數為 `true`，因此會啟用 `size` 參數。結果只會傳回兩份文件。
 
 <!-- spec_insert_start
 component: example_code
@@ -486,7 +487,7 @@ response = client.render_search_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-You can also design an `if-else` condition. This command sets `size` to `2` if `limit` is `true`. Otherwise, it sets `size` to `10`:
+您也可以設計 `if-else` 條件。如果 `limit` 為 `true`，此命令會將 `size` 設為 `2`。否則，會將 `size` 設為 `10`：
 
 <!-- spec_insert_start
 component: example_code
@@ -531,16 +532,16 @@ response = client.search_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Loops
+### 迴圈
 
-You can also use the section tag to implement a for-each loop:
+您也可以使用區段標籤來實作 for-each 迴圈：
 
 ```
 {% raw %}{{#var}}{{.}}{{/var}}{% endraw %}
 ```
 {% include copy.html %}
 
-When `var` is an array, the search template iterates through it and creates a `terms` query.
+當 `var` 是陣列時，搜尋範本會逐一走訪其中的元素，並建立 `terms` 查詢。
 
 <!-- spec_insert_start
 component: example_code
@@ -591,7 +592,7 @@ response = client.search_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-This template is rendered as:
+此範本會呈現為：
 
 ```json
 GET _search/template
@@ -609,9 +610,9 @@ GET _search/template
 }
 ```
 
-### Join
+### 串接
 
-You can use the `join` tag to concatenate values of an array (separated by commas):
+您可以使用 `join` 標籤來串接陣列中的值（以逗號分隔）：
 
 <!-- spec_insert_start
 component: example_code
@@ -680,7 +681,7 @@ response = client.search_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Renders as:
+呈現為：
 
 ```json
 GET _search/template
@@ -695,9 +696,9 @@ GET _search/template
 }
 ```
 
-### Convert to JSON
+### 轉換為 JSON
 
-You can use the `toJson` tag to convert parameters to their JSON representation:
+您可以使用 `toJson` 標籤將參數轉換為其 JSON 表示形式：
 
 <!-- spec_insert_start
 component: example_code
@@ -764,7 +765,7 @@ response = client.search_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Renders as:
+呈現結果如下：
 
 ```json
 GET _search/template
@@ -796,10 +797,10 @@ GET _search/template
 }
 ```
 
-## Multiple search templates
+## 多個搜尋範本
 
-You can bundle multiple search templates and send them to your OpenSearch cluster in a single request using the `msearch` operation.
-This saves network round trip time, so you get back the response more quickly as compared to independent requests.
+您可以使用 `msearch` 操作，將多個搜尋範本合併在單一請求中，傳送至您的 OpenSearch 叢集。
+這可節省網路往返時間，因此相較於個別請求，您可以更快收到回應。
 
 ```json
 GET _msearch/template
@@ -809,11 +810,11 @@ GET _msearch/template
 {"id":"play_search_template","params":{"play_name":"Henry IV"}}
 ```
 
-For more information, see [Multi-search Template API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/msearch-template/).
+如需詳細資訊，請參閱[多重搜尋範本 API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/msearch-template/)。
 
-## Manage search templates
+## 管理搜尋範本
 
-To list all scripts, run the following command:
+若要列出所有指令碼，請執行下列命令：
 
 <!-- spec_insert_start
 component: example_code
@@ -838,7 +839,7 @@ response = client.cluster.state(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To retrieve a specific search template, run the following command:
+若要擷取特定搜尋範本，請執行下列命令：
 
 <!-- spec_insert_start
 component: example_code
@@ -862,7 +863,7 @@ response = client.get_script(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To delete a search template, run the following command:
+若要刪除搜尋範本，請執行下列命令：
 
 <!-- spec_insert_start
 component: example_code
@@ -886,13 +887,13 @@ response = client.delete_script(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Search template API operations
+## 搜尋範本 API 操作
 
-The following search template API operations are available:
+可使用下列搜尋範本 API 操作：
 
-- [Multi-search template]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/msearch-template/)
-- [Render template]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/render-template/)
+- [多重搜尋範本]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/msearch-template/)
+- [呈現範本]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/render-template/)
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:data/read/search/template`.
+如果您使用 Security 外掛程式，請確保您具備適當的權限：`indices:data/read/search/template`。

@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Pattern analyzer
+title: "Pattern 分析器"
 parent: Analyzers
 nav_order: 90
 ---
 
-# Pattern analyzer
+# Pattern 分析器
 
-The `pattern` analyzer allows you to define a custom analyzer that uses a regular expression (regex) to split input text into tokens. It also provides options for applying regex flags, converting tokens to lowercase, and filtering out stopwords.
+`pattern` 分析器可讓您定義自訂分析器，使用規則運算式 (regex) 將輸入文字分割為詞元。它也提供套用 regex 旗標、將詞元轉換為小寫，以及篩選停用詞的選項。
 
-## Parameters
+## 參數
 
-The `pattern` analyzer can be configured with the following parameters.
+`pattern` 分析器可以使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`pattern` | Optional | String | A [Java regular expression](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) used to tokenize the input. Default is `\W+`.
-`flags` | Optional | String | A string containing pipe-separated [Java regex flags](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#field.summary) that modify the behavior of the regular expression.
-`lowercase` | Optional | Boolean | Whether to convert tokens to lowercase. Default is `true`.
-`stopwords` | Optional | String or list of strings | A string specifying a predefined list of stopwords (such as `_english_`) or an array specifying a custom list of stopwords. Default is `_none_`.
-`stopwords_path` | Optional | String | The path (absolute or relative to the config directory) to the file containing a list of stopwords.
+`pattern` | 選用 | 字串 | 用於將輸入斷詞的 [Java 規則運算式](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)。預設為 `\W+`。
+`flags` | 選用 | 字串 | 包含以管線符號分隔之 [Java regex 旗標](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#field.summary) 的字串，用於修改規則運算式的行為。
+`lowercase` | 選用 | 布林值 | 是否將詞元轉換為小寫。預設為 `true`。
+`stopwords` | 選用 | 字串或字串清單 | 指定預先定義停用詞清單 (例如 `_english_`) 的字串，或指定自訂停用詞清單的陣列。預設為 `_none_`。
+`stopwords_path` | 選用 | 字串 | 包含停用詞清單之檔案的路徑 (絕對路徑或相對於 config 目錄的路徑)。
 
 
-## Example
+## 範例
 
-Use the following command to create an index named `my_pattern_index` with a `pattern` analyzer:
+使用下列命令建立名為 `my_pattern_index` 且具有 `pattern` 分析器的索引：
 
 ```json
 PUT /my_pattern_index
@@ -53,9 +54,9 @@ PUT /my_pattern_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用該分析器產生的詞元：
 
 ```json
 POST /my_pattern_index/_analyze
@@ -66,7 +67,7 @@ POST /my_pattern_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

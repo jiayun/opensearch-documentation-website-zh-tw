@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Median absolute deviation
+title: "中位數絕對偏差"
 parent: Metric aggregations
 nav_order: 65
 redirect_from:
   - /query-dsl/aggregations/metric/median-absolute-deviation/
 ---
 
-# Median absolute deviation aggregation
+# 中位數絕對偏差彙總
 
-The `median_absolute_deviation` aggregation is a single-value metric aggregation. Median absolute deviation is a variability metric that measures dispersion from the median.
+`median_absolute_deviation` 彙總是一種單值指標彙總。中位數絕對偏差是一種變異性指標，用於衡量與中位數的離散程度。
 
-Median absolute deviation is less affected by outliers than standard deviation, which relies on squared error terms and is useful for describing data that is not normally distributed.
+中位數絕對偏差比標準差較少受到離群值的影響，因為標準差依賴於平方誤差項；因此，中位數絕對偏差可用於描述非常態分佈的資料。
 
-Median absolute deviation is computed as follows:
+中位數絕對偏差的計算方式如下：
 
 ```
 median_absolute_deviation = median( | x<sub>i</sub> - median(x<sub>i</sub>) | )
 ```
 
 
-OpenSearch estimates `median_absolute_deviation`, rather than calculating it directly, because of memory limitations. This estimation is computationally expensive. You can adjust the trade-off between estimation accuracy and performance. For more information, see [Adjusting estimation accuracy](https://github.com/opensearch-project/documentation-website/pull/9453/files#adjusting-estimation-accuracy).
+由於記憶體限制，OpenSearch 會估算 `median_absolute_deviation` 而非直接計算。此估算過程在計算上成本較高。您可以調整估算準確度與效能之間的權衡。如需更多資訊，請參閱 [調整估算準確度](https://github.com/opensearch-project/documentation-website/pull/9453/files#adjusting-estimation-accuracy)。
 
-## Parameters
+## 參數
 
-The `median_absolute_deviation` aggregation takes the following parameters.
+`median_absolute_deviation` 彙總使用以下參數。
 
-| Parameter | Required/Optional | Data type      | Description |
-| :--       | :--               | :--            | :--         |
-| `field`   | Required          | String         | The name of the numeric field for which the median absolute deviation is computed. |
-| `missing` | Optional          | Numeric        | The value to assign to missing instances of the field. If not provided, documents with missing values are omitted from the estimation. |
-| `compression` | Optional          | Numeric        | A parameter that [adjusts the balance between estimate accuracy and performance](#adjusting-estimation-accuracy). The value of `compression` must be greater than `0`. The default value is `1000`. |
+| 參數 | 必要/選用 | 資料類型 | 說明 |
+| :-- | :-- | :-- | :-- |
+| `field` | 必要 | String | 要計算中位數絕對偏差的數值欄位名稱。 |
+| `missing` | 選用 | Numeric | 指派給欄位遺漏實例的值。如果未提供，則在估算中會省略具有遺漏值的文件。 |
+| `compression` | 選用 | Numeric | 用於 [調整估算準確度與效能之間平衡](#adjusting-estimation-accuracy) 的參數。`compression` 的值必須大於 `0`。預設值為 `1000`。 |
 
-## Example
+## 範例
 
-The following example calculates the median absolute deviation of the `DistanceMiles` field in the `opensearch_dashboards_sample_data_flights` dataset:
+以下範例計算 `opensearch_dashboards_sample_data_flights` 資料集中 `DistanceMiles` 欄位的中位數絕對偏差：
 
 ```json
 GET opensearch_dashboards_sample_data_flights/_search
@@ -51,9 +52,9 @@ GET opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
-As shown in the following example response, the aggregation returns an estimate of the median absolute deviation in the `median_absolute_deviation_DistanceMiles` variable:
+如以下範例回應所示，該彙總在 `median_absolute_deviation_DistanceMiles` 變數中回傳中位數絕對偏差的估計值：
 
 ```json
 {
@@ -81,15 +82,15 @@ As shown in the following example response, the aggregation returns an estimate 
 }
 ```
 
-## Missing values
+## 遺漏值
 
-OpenSearch ignores missing and null values when computing `median_absolute_deviation`.
+OpenSearch 在計算 `median_absolute_deviation` 時會忽略遺漏值和 null 值。
 
-You can assign a value to missing instances of the aggregated field. See [Missing aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/missing/) for more information.
+您可以為彙總欄位的遺漏實例指派一個值。如需更多資訊，請參閱 [遺漏值彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/missing/)。
 
-## Adjusting estimation accuracy
+## 調整估算準確度
 
-The median absolute deviation is calculated using the [t-digest](https://github.com/tdunning/t-digest/tree/main) data structure, which takes a `compression` parameter to balance performance and estimation accuracy. Lower values of `compression` improve performance but may reduce estimation accuracy, as shown in the following request:
+中位數絕對偏差是使用 [t-digest](https://github.com/tdunning/t-digest/tree/main) 資料結構計算的，該結構使用 `compression` 參數來平衡效能與估算準確度。較低的 `compression` 值可提高效能，但可能會降低估算準確度，如下方請求所示：
 
 ```json
 GET opensearch_dashboards_sample_data_flights/_search
@@ -107,11 +108,11 @@ GET opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-The estimation error depends on the dataset but is usually below 5%, even for `compression` values as low as `100`. (The low example value of `10` is used here to illustrate the trade-off effect and is not recommended.)
+估算誤差取決於資料集，但通常低於 5%，即使 `compression` 值低至 `100` 也是如此。（此處使用較低的範例值 `10` 是為了說明權衡效果，並不建議使用。）
 
-Note the decreased computation time (`took` time) and the slightly less accurate value of the estimated parameter in the following response.
+請注意以下回應中減少的計算時間（`took` 時間）以及估算參數值準確度的輕微下降。
 
-For reference, OpenSearch's best estimate (with `compression` set arbitrarily high) for the median absolute deviation of `DistanceMiles` is `1831.076904296875`:
+作為參考，OpenSearch 對於 `DistanceMiles` 中位數絕對偏差的最佳估計值（將 `compression` 設定為極高值）為 `1831.076904296875`：
 
 
 ```json

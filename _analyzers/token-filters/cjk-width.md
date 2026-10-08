@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: CJK width
+title: "CJK 寬度"
 parent: Token filters
 nav_order: 40
 ---
 
-# CJK width token filter
+# CJK 寬度詞元篩選器
 
-The `cjk_width` token filter normalizes Chinese, Japanese, and Korean (CJK) tokens by converting full-width ASCII characters to their standard (half-width) ASCII equivalents and half-width katakana characters to their full-width equivalents.
+`cjk_width` 詞元篩選器會正規化中文、日文和韓文 (CJK) 詞元，將全形 ASCII 字元轉換為對應的標準 (半形) ASCII 字元，並將半形片假名字元轉換為對應的全形字元。
 
-### Converting full-width ASCII characters
+### 轉換全形 ASCII 字元
 
-In CJK texts, ASCII characters (such as letters and numbers) can appear in full-width form, occupying the space of two half-width characters. Full-width ASCII characters are typically used in East Asian typography for alignment with the width of CJK characters. However, for the purposes of indexing and searching, these full-width characters need to be normalized to their standard (half-width) ASCII equivalents.
+在 CJK 文字中，ASCII 字元 (例如字母和數字) 可能以全形形式出現，佔用兩個半形字元的空間。全形 ASCII 字元通常用於東亞排版，以便與 CJK 字元的寬度對齊。然而，為了編製索引和搜尋，這些全形字元需要正規化為對應的標準 (半形) ASCII 字元。
 
-The following example illustrates ASCII character normalization:
+下列範例說明 ASCII 字元正規化：
 
 ```
         Full-Width:              ＡＢＣＤＥ １２３４５
         Normalized (half-width): ABCDE 12345
 ```
 
-### Converting half-width katakana characters
+### 轉換半形片假名字元
 
-The `cjk_width` token filter converts half-width katakana characters to their full-width counterparts, which are the standard form used in Japanese text. This normalization, illustrated in the following example, is important for consistency in text processing and searching:
+`cjk_width` 詞元篩選器會將半形片假名字元轉換為對應的全形字元，也就是日文文字中使用的標準形式。如下列範例所示，此正規化對於文字處理和搜尋的一致性非常重要：
 
 
 ```
@@ -30,9 +31,9 @@ The `cjk_width` token filter converts half-width katakana characters to their fu
         Normalized (full-width) katakana:  カタカナ
 ```
 
-## Example
+## 範例
 
-The following example request creates a new index named `cjk_width_example_index` and defines an analyzer with the `cjk_width` filter:
+下列範例請求會建立名為 `cjk_width_example_index` 的新索引，並定義一個使用 `cjk_width` 篩選器的分析器：
 
 ```json
 PUT /cjk_width_example_index
@@ -52,9 +53,9 @@ PUT /cjk_width_example_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 POST /cjk_width_example_index/_analyze
@@ -65,7 +66,7 @@ POST /cjk_width_example_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

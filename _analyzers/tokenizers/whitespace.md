@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: White space
+title: "空白字元"
 parent: Tokenizers
 nav_order: 160
 ---
 
-# White space tokenizer
+# 空白字元斷詞器
 
-The `whitespace` tokenizer splits text on white space characters, such as spaces, tabs, and new lines. It treats each word separated by white space as a token and does not perform any additional analysis or normalization like lowercasing or punctuation removal.
+`whitespace` 斷詞器會依空白字元（例如空格、定位字元與換行）分割文字。它將以空白字元分隔的每個單字視為一個詞元，且不執行任何額外的分析或正規化，例如轉為小寫或移除標點符號。
 
-## Example usage
+## 範例用法
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `whitespace` tokenizer:
+下列範例請求會建立一個名為 `my_index` 的新索引，並設定一個使用 `whitespace` 斷詞器的分析器：
 
 ```json
 PUT /my_index
@@ -43,9 +44,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢視透過該分析器產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -56,7 +57,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {
@@ -100,11 +101,11 @@ The response contains the generated tokens:
 }
 ```
 
-## Parameters
+## 參數
 
-The `whitespace` tokenizer can be configured with the following parameter.
+`whitespace` 斷詞器可以使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`max_token_length` | Optional | Integer |  Sets the maximum length of the produced token. If this length is exceeded, the token is split into multiple tokens at the length configured in `max_token_length`. Default is `255`.
+`max_token_length` | 選用 | 整數 | 設定所產生詞元的最大長度。若超過此長度，詞元會在 `max_token_length` 中設定的長度處被分割成多個詞元。預設為 `255`。
 

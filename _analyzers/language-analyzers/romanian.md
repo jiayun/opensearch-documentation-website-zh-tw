@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Romanian
+title: "羅馬尼亞文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 270
 ---
 
-# Romanian analyzer
+# 羅馬尼亞文分析器
 
-The built-in `romanian` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `romanian` 分析器套用至文字欄位：
 
 ```json
 PUT /romanian-index
@@ -25,9 +26,9 @@ PUT /romanian-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，搭配此語言分析器使用 `stem_exclusion`：
 
 ```json
 PUT index_with_stem_exclusion_romanian_analyzer
@@ -46,21 +47,21 @@ PUT index_with_stem_exclusion_romanian_analyzer
 ```
 {% include copy-curl.html %}
 
-## Romanian analyzer internals
+## 羅馬尼亞文分析器內部結構
 
-The `romanian` analyzer is built using the following components:
+`romanian` 分析器由下列元件建構而成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
+- 詞元篩選器：
   - lowercase
-  - stop (Romanian)
+  - stop（羅馬尼亞文）
   - keyword
-  - stemmer (Romanian)
+  - stemmer（羅馬尼亞文）
 
-## Custom Romanian analyzer
+## 自訂羅馬尼亞文分析器
 
-You can create a custom Romanian analyzer using the following command:
+您可以使用下列命令建立自訂羅馬尼亞文分析器：
 
 ```json
 PUT /romanian-index
@@ -107,9 +108,9 @@ PUT /romanian-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查分析器產生的詞元：
 
 ```json
 POST /romanian-index/_analyze
@@ -120,7 +121,7 @@ POST /romanian-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

@@ -1,57 +1,58 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: List indices 
+title: "列出索引"
 parent: List APIs
 nav_order: 25
 has_children: false
 ---
 
 # List Indices API
-**Introduced 2.18**
+**於 2.18 版推出**
 {: .label .label-purple }
 
-The list indices operation provides the following index information in a paginated format: 
+list indices 作業會以分頁格式提供下列索引資訊：
 
-- The amount of disk space used by the index. 
-- The number of shards contained in the index. 
-- The index's health status.
+- 索引所使用的磁碟空間量。
+- 索引中包含的分片數。
+- 索引的健康狀態。
 
-## Endpoints
+## 端點
 
 ```json
 GET _list/indices
 GET _list/indices/{index}
 ```
 
-## Query parameters
+## 查詢參數
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`bytes` | Byte size | Specifies the units for the byte size, for example, `7kb` or `6gb`. For more information, see [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/).
-`health` | String | Limits indexes based on their health status. Supported values are `green`, `yellow`, and `red`.
-`include_unloaded_segments` | Boolean | Whether to include information from segments not loaded into memory. Default is `false`.
-`cluster_manager_timeout` | Time | The amount of time to wait for a connection to the cluster manager node. Default is `30s`.
-`pri` | Boolean | Whether to return information only from the primary shards. Default is `false`.
-`time` | Time | Specifies the time units, for example, `5d` or `7h`. For more information, see [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/).
-`expand_wildcards` | Enum | Expands wildcard expressions to concrete indexes. Combine multiple values with commas. Supported values are `all`, `open`, `closed`, `hidden`, and `none`. Default is `open`.
-`next_token` | String | Fetches the next page of indexes. When `null`, only provides the first page of indexes. Default is `null`. 
-`size` | Integer | The maximum number of indexes to be displayed on a single page. The number of indexes on a single page of the response is not always equal to the specified `size`. Default is `500`. Minimum is `1` and maximum value is `5000`.
-`sort` | String | The order in which the indexes are displayed. If `desc`, then the most recently created indexes are displayed first. If `asc`, then the oldest indexes are displayed first. Default is `asc`.
+`bytes` | 位元組大小 | 指定位元組大小的單位，例如 `7kb` 或 `6gb`。如需詳細資訊，請參閱[支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。
+`health` | 字串 | 根據索引的健康狀態加以限制。支援的值為 `green`、`yellow` 及 `red`。
+`include_unloaded_segments` | 布林值 | 是否包含未載入記憶體之區段的資訊。預設為 `false`。
+`cluster_manager_timeout` | 時間 | 等待連線至叢集管理員節點的時間量。預設為 `30s`。
+`pri` | 布林值 | 是否僅傳回主要分片的資訊。預設為 `false`。
+`time` | 時間 | 指定時間單位，例如 `5d` 或 `7h`。如需詳細資訊，請參閱[支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。
+`expand_wildcards` | 列舉值 | 將萬用字元運算式展開為具體索引。以逗號合併多個值。支援的值為 `all`、`open`、`closed`、`hidden` 及 `none`。預設為 `open`。
+`next_token` | 字串 | 擷取下一頁索引。當 `null` 時，僅提供第一頁索引。預設為 `null`。
+`size` | 整數 | 單一頁面中要顯示的索引數上限。回應中單一頁面的索引數不一定等於指定的 `size`。預設為 `500`。最小值為 `1`，最大值為 `5000`。
+`sort` | 字串 | 索引的顯示順序。若為 `desc`，則先顯示最近建立的索引。若為 `asc`，則先顯示最舊的索引。預設為 `asc`。
 
-When using the `next_token` path parameter, use the token produced by the response to see the next page of indexes. After the API returns `null`, all indexes contained in the API have been returned.
+使用 `next_token` 路徑參數時，請使用回應所產生的權杖來查看下一頁索引。在 API 傳回 `null` 之後，即表示已傳回 API 中包含的所有索引。
 {: .tip }
 
 
-## Example requests
+## 範例請求
 
-To get information for all the indexes, use the following query and keep specifying the `next_token` as received from response until its `null`:
+若要取得所有索引的資訊，請使用下列查詢，並持續指定從回應收到的 `next_token`，直到其 `null`：
 
 ```json
 GET _list/indices/{index}?v&next_token=token
 ```
 
 
-To limit the information to a specific index, add the index name after your query, as shown in the following example:
+若要將資訊限制為特定索引，請在查詢後新增索引名稱，如下列範例所示：
 
 <!-- spec_insert_start
 component: example_code
@@ -76,7 +77,7 @@ response = client.list.indices(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To get information about more than one index, separate the indexes with commas, as shown in the following example:
+若要取得多個索引的資訊，請以逗號分隔索引，如下列範例所示：
 
 <!-- spec_insert_start
 component: example_code
@@ -102,9 +103,9 @@ response = client.list.indices(
 <!-- spec_insert_end -->
 
 
-## Example response
+## 範例回應
 
-**Plain text format**
+**純文字格式**
 
 ```json
 health | status | index | uuid | pri | rep | docs.count | docs.deleted | store.size | pri.store.size
@@ -112,7 +113,7 @@ green  | open | movies | UZbpfERBQ1-3GSH2bnM3sg | 1 | 1 | 1 | 0 | 7.7kb | 3.8kb
 next_token MTcyOTE5NTQ5NjM5N3wub3BlbnNlYXJjaC1zYXAtbG9nLXR5cGVzLWNvbmZpZw==
 ```
 
-**JSON format**
+**JSON 格式**
 
 ```json
 {

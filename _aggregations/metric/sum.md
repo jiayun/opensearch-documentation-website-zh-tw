@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Sum
+title: "總和"
 parent: Metric aggregations
 nav_order: 120
 redirect_from:
   - /query-dsl/aggregations/metric/sum/
 ---
 
-# Sum aggregation
+# 總和彙總
 
-The `sum` aggregation is a single-value metric aggregation that calculates the total sum of numeric values extracted from a field across all matching documents. This aggregation is commonly used to compute totals for metrics such as revenue, quantity, or duration.
+`sum` 彙總是一種單值指標彙總，會計算所有相符文件中從某個欄位擷取的數值總和。此彙總常用於計算營收、數量或持續時間等指標的總計。
 
-## Parameters
+## 參數
 
-The `sum` aggregation takes the following parameters.
+`sum` 彙總接受下列參數。
 
-| Parameter | Data type | Description                                                                                |
+| 參數 | 資料類型 | 說明                                                                                |
 | --------- | --------- | ------------------------------------------------------------------------------------------ |
-| `field`   | String    | The field to aggregate on. Must be a numeric field.                                            |
-| `script`  | Object    | The script used to calculate custom values for aggregation. Can be used instead of or with `field`. |
-| `missing` | Number    | The default value used for documents missing the target field. |
+| `field`   | 字串    | 要進行彙總的欄位。必須是數值欄位。                                            |
+| `script`  | 物件    | 用於計算彙總自訂值的指令碼。可取代 `field` 使用，或與其搭配使用。 |
+| `missing` | 數字    | 用於缺少目標欄位之文件的預設值。 |
 
-## Example
+## 範例
 
-The following example demonstrates how to calculate the total weight of deliveries recorded in a logistics index. 
+下列範例示範如何計算物流索引中所記錄配送的總重量。 
 
-Create an index:
+建立索引：
 
 ```json
 PUT /deliveries
@@ -40,7 +41,7 @@ PUT /deliveries
 ```
 {% include copy-curl.html %}
 
-Add sample documents:
+新增範例文件：
 
 ```json
 POST /deliveries/_bulk?refresh=true
@@ -56,7 +57,7 @@ POST /deliveries/_bulk?refresh=true
 {% include copy-curl.html %}
 
 
-The following request computes the total weight across all documents in the `deliveries` index, omits document hits by setting `size` to `0`, and returns the total sum of `weight_kg`:
+下列請求會計算 `deliveries` 索引中所有文件的總重量，透過將 `size` 設為 `0` 省略文件命中結果，並傳回 `weight_kg` 的總和：
 
 ```json
 GET /deliveries/_search
@@ -73,7 +74,7 @@ GET /deliveries/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the value `45.6`, corresponding to the sum of `12.5` + `7.8` + `15.0` + `10.3`:
+回應包含值 `45.6`，對應 `12.5` + `7.8` + `15.0` + `10.3` 的總和：
 
 ```json
 {
@@ -94,11 +95,11 @@ The response contains the value `45.6`, corresponding to the sum of `12.5` + `7.
 }
 ```
 
-### Using a script to compute values
+### 使用指令碼計算值
 
-Instead of specifying a field directly, you can provide a script to calculate values for the aggregation. This is useful when the value must be derived or adjusted.
+您可以提供指令碼來計算彙總的值，而不直接指定欄位。當值必須經過推導或調整時，此方法相當實用。
 
-In the following example, each weight is converted from kilograms to grams before summing using a script:
+在下列範例中，會先使用指令碼將每個重量從公斤轉換為公克，再進行加總：
 
 ```json
 GET /deliveries/_search
@@ -117,7 +118,7 @@ GET /deliveries/_search
 ```
 {% include copy-curl.html %}
 
-The response includes the `total_weight_grams` of `45600`:
+回應包含 `45600` 的 `total_weight_grams`：
 
 ```json
 {
@@ -138,11 +139,11 @@ The response includes the `total_weight_grams` of `45600`:
 }
 ```
 
-### Combining a field with a value script
+### 結合欄位與值指令碼
 
-You can also specify both a `field` and a `script`, using the special variable `_value` to reference the field's value. This is useful when applying transformations to existing field values.
+您也可以同時指定 `field` 和 `script`，並使用特殊變數 `_value` 參照該欄位的值。當您要對現有欄位值套用轉換時，此方法相當實用。
 
-The following example increases all weights by 10% before summing:
+下列範例會在加總前將所有重量增加 10%：
 
 ```json
 GET /deliveries/_search
@@ -162,7 +163,7 @@ GET /deliveries/_search
 ```
 {% include copy-curl.html %}
 
-The response reflects a 10% increase applied to the original total weight:
+回應反映出原始總重量增加了 10%：
 
 ```json
 {
@@ -183,11 +184,11 @@ The response reflects a 10% increase applied to the original total weight:
 }
 ```
 
-### Missing values
+### 缺少的值
 
-Documents missing the target field are ignored by default. To include them using a default value, use the `missing` parameter. 
+根據預設，缺少目標欄位的文件會被忽略。若要使用預設值將這些文件納入計算，請使用 `missing` 參數。 
 
-The following example assigns a default value of `0` to missing `weight_kg` fields. This ensures that the documents without this field are treated as having `weight_kg` set to `0` and included in the aggregation.
+下列範例會為缺少的 `weight_kg` 欄位指定預設值 `0`。這可確保沒有此欄位的文件會被視為 `weight_kg` 設為 `0`，並納入彙總中。
 
 ```json
 GET /deliveries/_search

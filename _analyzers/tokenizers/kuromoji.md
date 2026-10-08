@@ -1,45 +1,46 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Kuromoji
 parent: Tokenizers
 nav_order: 55
 ---
 
-# Kuromoji tokenizer
+# Kuromoji 斷詞器
 
-The `kuromoji_tokenizer` performs dictionary-based morphological analysis for Japanese text using the Kuromoji library and the IPAdic dictionary. Unlike tokenizers that split on white space or punctuation, it identifies natural word boundaries in Japanese sentences, which do not use spaces to separate words.
+`kuromoji_tokenizer` 使用 Kuromoji 程式庫與 IPAdic 字典，對日文文字執行基於字典的形態分析。與以空格或標點符號分割的斷詞器不同，它能在日文句子中識別自然的字詞邊界，因為日文不使用空格來分隔字詞。
 
-## Installation
+## 安裝
 
-The `kuromoji_tokenizer` requires the `analysis-kuromoji` plugin. For installation instructions, see [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/).
+`kuromoji_tokenizer` 需要 `analysis-kuromoji` 外掛程式。安裝說明請參閱 [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)。
 
-## Parameters
+## 參數
 
-The following table lists the parameters for the `kuromoji_tokenizer`.
+下表列出 `kuromoji_tokenizer` 的參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`mode` | String | Tokenization mode. Valid values are `normal`, `search` (default), and `extended`. See [Tokenization modes](#tokenization-modes) for details.
-`discard_punctuation` | Boolean | When `true`, punctuation tokens are discarded from the output. Default is `true`.
-`discard_compound_token` | Boolean | When `true`, the compound token produced in `search` mode is discarded and only the sub-tokens are kept. Default is `false`.
-`user_dictionary` | String | Path to a custom user dictionary CSV file placed in the OpenSearch config directory. Each line must follow the format `<text>,<subtokens>,<readings>,<part of speech>`. Optional.
-`user_dictionary_rules` | Array of strings | Inline custom dictionary rules in the same CSV format as `user_dictionary`. Optional. Cannot be used together with `user_dictionary`.
-`nbest_cost` | Integer | When set to a value greater than `-1`, enables n-best segmentation and returns alternative tokenizations whose cost (log probability penalty) is within this value of the best segmentation. Default is `-1` (disabled).
-`nbest_examples` | String | A comma-separated list of example words used to automatically calculate `nbest_cost`. When provided, the tokenizer finds the minimum additional cost needed to also produce the given examples as tokens. Optional.
+`mode` | 字串 | 斷詞模式。有效值為 `normal`、`search` (預設) 與 `extended`。詳細資訊請參閱[斷詞模式](#tokenization-modes)。
+`discard_punctuation` | 布林值 | 設為 `true` 時，標點符號詞元會從輸出中捨棄。預設為 `true`。
+`discard_compound_token` | 布林值 | 設為 `true` 時，在 `search` 模式下產生的複合詞元會被捨棄，僅保留子詞元。預設為 `false`。
+`user_dictionary` | 字串 | 位於 OpenSearch config 目錄中的自訂使用者字典 CSV 檔案路徑。每一行必須遵循 `<text>,<subtokens>,<readings>,<part of speech>` 格式。選用。
+`user_dictionary_rules` | 字串陣列 | 以與 `user_dictionary` 相同的 CSV 格式提供的內嵌自訂字典規則。選用。不可與 `user_dictionary` 一起使用。
+`nbest_cost` | 整數 | 設為大於 `-1` 的值時，會啟用 n-best 斷詞，並傳回成本 (對數機率懲罰) 與最佳斷詞結果相差不超過此值的替代斷詞結果。預設為 `-1` (停用)。
+`nbest_examples` | 字串 | 以逗號分隔的範例字詞清單，用於自動計算 `nbest_cost`。提供此參數時，斷詞器會找出同時將給定範例產生為詞元所需的最小額外成本。選用。
 
-## Tokenization modes
+## 斷詞模式
 
-The tokenization mode controls how the tokenizer handles compound and unknown words.
+斷詞模式控制斷詞器如何處理複合詞與未知詞。
 
-| Mode | Compound words | Unknown words |
+| 模式 | 複合詞 | 未知詞 |
 |:-----|:---------------|:--------------|
-| `normal` | Kept as a single token (for example, 関西国際空港 is one token). | Kept as a single token. |
-| `search` (default) | Split into sub-tokens in addition to the compound form (for example, 関西国際空港 produces 関西, 国際, 空港, and 関西国際空港). Improves recall for search queries. | Kept as a single token. |
-| `extended` | Kept as a single token (same as `normal`). | Split into unigrams (individual characters), ensuring every character is indexed. |
+| `normal` | 保留為單一詞元 (例如，関西国際空港是一個詞元)。 | 保留為單一詞元。 |
+| `search` (預設) | 除了複合形式外，再分割成子詞元 (例如，関西国際空港會產生関西、国際、空港與関西国際空港)。可提升搜尋查詢的召回率。 | 保留為單一詞元。 |
+| `extended` | 保留為單一詞元 (與 `normal` 相同)。 | 分割成單字詞元 (個別字元)，確保每個字元都被編製索引。 |
 
-## Example: Basic tokenization
+## 範例：基本斷詞
 
-The following example creates an index with a custom analyzer using `kuromoji_tokenizer` in its default `search` mode:
+下列範例建立一個索引，其自訂分析器使用預設 `search` 模式的 `kuromoji_tokenizer`：
 
 ```json
 PUT /kuromoji-tokenizer-index
@@ -57,7 +58,7 @@ PUT /kuromoji-tokenizer-index
 ```
 {% include copy-curl.html %}
 
-Test the tokenizer with a sentence meaning "Kansai International Airport is a large airport":
+使用一句意為「關西國際機場是一座大型機場」的句子來測試斷詞器：
 
 ```json
 POST /kuromoji-tokenizer-index/_analyze
@@ -68,7 +69,7 @@ POST /kuromoji-tokenizer-index/_analyze
 ```
 {% include copy-curl.html %}
 
-In `search` mode, the compound place name 関西国際空港 (Kansai International Airport) is split into its components and also kept as a compound token:
+在 `search` 模式下，複合地名関西国際空港 (關西國際機場) 會被分割成其組成部分，同時也保留為複合詞元：
 
 ```json
 {
@@ -134,9 +135,9 @@ In `search` mode, the compound place name 関西国際空港 (Kansai Internation
 }
 ```
 
-## Example: Comparing tokenization modes
+## 範例：比較斷詞模式
 
-The following example shows how the same text is tokenized differently depending on the mode. Create a custom tokenizer for each mode and compare the output:
+下列範例顯示相同文字在不同模式下會如何以不同方式斷詞。為每個模式建立自訂斷詞器並比較輸出：
 
 ```json
 PUT /kuromoji-mode-comparison
@@ -163,9 +164,9 @@ PUT /kuromoji-mode-comparison
 ```
 {% include copy-curl.html %}
 
-Test with text that contains a known compound word (関西国際空港 meaning "Kansai International Airport") and an unknown loanword (アバクロンビー meaning "Abercrombie"):
+使用包含已知複合詞 (関西国際空港，意為「關西國際機場」) 與未知外來語 (アバクロンビー，意為「Abercrombie」) 的文字進行測試：
 
-**`normal` mode**
+**`normal` 模式**
 
 ```json
 POST /kuromoji-mode-comparison/_analyze
@@ -176,7 +177,7 @@ POST /kuromoji-mode-comparison/_analyze
 ```
 {% include copy-curl.html %}
 
-In `normal` mode, the compound 関西国際空港 is kept as a single token and the unknown loanword アバクロンビー is also kept as a single token:
+在 `normal` 模式下，複合詞関西国際空港保留為單一詞元，未知外來語アバクロンビー也保留為單一詞元：
 
 ```json
 {
@@ -206,7 +207,7 @@ In `normal` mode, the compound 関西国際空港 is kept as a single token and 
 }
 ```
 
-**`search` mode**
+**`search` 模式**
 
 ```json
 POST /kuromoji-mode-comparison/_analyze
@@ -217,7 +218,7 @@ POST /kuromoji-mode-comparison/_analyze
 ```
 {% include copy-curl.html %}
 
-In `search` mode, the compound 関西国際空港 is split into sub-tokens (関西, 国際, 空港) while also being retained as a compound token with `positionLength: 3`. The unknown loanword アバクロンビー is kept as a single token, the same as in `normal` mode:
+在 `search` 模式下，複合詞関西国際空港會被分割成子詞元 (関西、国際、空港)，同時也保留為 `positionLength: 3` 的複合詞元。未知外來語アバクロンビー保留為單一詞元，與 `normal` 模式相同：
 
 ```json
 {
@@ -269,7 +270,7 @@ In `search` mode, the compound 関西国際空港 is split into sub-tokens (関�
 }
 ```
 
-**`extended` mode**
+**`extended` 模式**
 
 ```json
 POST /kuromoji-mode-comparison/_analyze
@@ -280,7 +281,7 @@ POST /kuromoji-mode-comparison/_analyze
 ```
 {% include copy-curl.html %}
 
-In `extended` mode, the known compound 関西国際空港 is handled the same as in `search` mode. The unknown loanword アバクロンビー is split into individual characters (unigrams), ensuring every character is indexed:
+在 `extended` 模式下，已知複合詞関西国際空港的處理方式與 `search` 模式相同。未知外來語アバクロンビー會被分割成個別字元 (單字詞元)，確保每個字元都被編製索引：
 
 ```json
 {
@@ -374,11 +375,11 @@ In `extended` mode, the known compound 関西国際空港 is handled the same as
 }
 ```
 
-## Example: User dictionary
+## 範例：使用者字典
 
-You can add custom compound terms to the tokenizer's dictionary to control how they are split into sub-tokens. Use `user_dictionary_rules` for inline rules or `user_dictionary` for a file.
+您可以將自訂複合詞彙加入斷詞器的字典，以控制它們如何被分割成子詞元。內嵌規則使用 `user_dictionary_rules`，檔案則使用 `user_dictionary`。
 
-The following example registers 東京スカイツリー (Tokyo Skytree) as a single noun:
+下列範例將東京スカイツリー (東京晴空塔) 註冊為單一名詞：
 
 ```json
 PUT /kuromoji-user-dict-index
@@ -405,16 +406,16 @@ PUT /kuromoji-user-dict-index
 ```
 {% include copy-curl.html %}
 
-Each `user_dictionary_rules` entry is a CSV string with four comma-separated fields, in the order `<text>,<subtokens>,<readings>,<part of speech>`. The following table describes each field.
+每個 `user_dictionary_rules` 項目都是一個 CSV 字串，包含四個以逗號分隔的欄位，順序為 `<text>,<subtokens>,<readings>,<part of speech>`。下表說明每個欄位。
 
-| Field | Description |
+| 欄位 | 說明 |
 |:---|:---|
-| `<text>` | The text as it appears in the document (for example, `東京スカイツリー`). |
-| `<subtokens>` | Space-separated subtokens for segmentatio (for example, `東京 スカイツリー`). |
-| `<readings>` | Space-separated katakana readings for each subtoken (for example, `トウキョウ スカイツリー`). |
-| `<part of speech>` | The IPAdic part of speech tag assigned to the term (for example, `カスタム名詞`). |
+| `<text>` | 文件中出現的文字 (例如，`東京スカイツリー`)。 |
+| `<subtokens>` | 以空格分隔的子詞元，用於斷詞 (例如，`東京 スカイツリー`)。 |
+| `<readings>` | 每個子詞元以空格分隔的片假名讀音 (例如，`トウキョウ スカイツリー`)。 |
+| `<part of speech>` | 指派給該詞彙的 IPAdic 詞性標籤 (例如，`カスタム名詞`)。 |
 
-Use the analyzer to test the user dictionary entry:
+使用分析器測試使用者字典項目：
 
 ```json
 POST /kuromoji-user-dict-index/_analyze
@@ -425,7 +426,7 @@ POST /kuromoji-user-dict-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The user dictionary controls how the text is segmented. Because the rule defines `東京 スカイツリー` as two sub-tokens, the tokenizer emits 東京 and スカイツリー as separate tokens rather than keeping 東京スカイツリー as a single token:
+使用者字典控制文字的分割方式。由於規則將 `東京 スカイツリー` 定義為兩個子詞元，斷詞器會輸出東京與スカイツリー作為個別詞元，而不是將東京スカイツリー保留為單一詞元：
 
 ```json
 {
@@ -462,13 +463,13 @@ The user dictionary controls how the text is segmented. Because the rule defines
 }
 ```
 
-To keep 東京スカイツリー as a single token, define it as a single sub-token in the rule:
+若要將東京スカイツリー保留為單一詞元，請在規則中將它定義為單一子詞元：
 
 ```json
 "東京スカイツリー,東京スカイツリー,トウキョウスカイツリー,カスタム名詞"
 ```
 
-## Related documentation
+## 相關文件
 
-- [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
-- [Kuromoji part-of-speech token filter]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-part-of-speech/)
+- [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
+- [Kuromoji 詞性詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-part-of-speech/)

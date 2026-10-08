@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: CSP rules
+title: "CSP 規則"
 parent: Settings and administration
 nav_order: 60
 has_children: false
 ---
 
-# CSP rules
-Introduced 2.13
+# CSP 規則
+2.13 版本引入
 {: .label .label-purple }
 
-Content Security Policy (CSP) is a security standard intended to prevent cross-site scripting (XSS), clickjacking, and other code injection attacks. OpenSearch Dashboards enforces CSP by sending a `Content-Security-Policy` response header on every page load.
+內容安全性原則 (Content Security Policy, CSP) 是一種安全性標準，旨在防止跨網站指令碼 (XSS)、點擊劫持 (clickjacking) 以及其他程式碼注入攻擊。OpenSearch Dashboards 透過在每次頁面載入時發送 `Content-Security-Policy` 回應標頭來強制執行 CSP。
 
 
-## Configuration
+## 組態
 
-To configure CSP, add the following keys to `opensearch_dashboards.yml`. All `allowed*Sources` values are appended to the strict policy defaults for that directive:
+要設定 CSP，請將下列鍵新增至 `opensearch_dashboards.yml`。所有 `allowed*Sources` 值都會附加到該指令的嚴格原則預設值中：
 
 ```yaml
 # Enable strict CSP enforcement.
@@ -36,38 +37,38 @@ csp.loosenCspDirectives: ["style-src"]
 ```
 {% include copy.html %}
 
-Then restart OpenSearch for the changes to take effect.
+接著重新啟動 OpenSearch 以使變更生效。
 
-## CSP settings 
+## CSP 設定 
 
-The following table describes the available CSP settings.
+下表說明了可用的 CSP 設定。
 
-Setting | Type | Description
+設定 | 類型 | 說明
 :--- | :--- | :---
-`csp.enable` | Boolean | Enables strict CSP enforcement. Default is `true`.
-`csp.allowedFrameAncestorSources` | Array of strings | Origins appended to the `frame-ancestors` directive. Use to allow embedding Dashboards in an iframe.
-`csp.allowedConnectSources` | Array of strings | Origins appended to `connect-src`. Use to allow browser-initiated requests to external endpoints (fetch, XHR, or WebSocket).
-`csp.allowedImgSources` | Array of strings | Origins appended to `img-src`. Use to allow images from external CDNs or tile servers.
-`csp.loosenCspDirectives` | Array of strings | Directive names to relax back to their non-strict default values.
+`csp.enable` | 布林值 | 啟用嚴格的 CSP 強制執行。預設值為 `true`。
+`csp.allowedFrameAncestorSources` | 字串陣列 | 附加到 `frame-ancestors` 指令的來源。用於允許將 Dashboards 嵌入在 iframe 中。
+`csp.allowedConnectSources` | 字串陣列 | 附加到 `connect-src` 的來源。用於允許瀏覽器發起的對外部端點的請求 (fetch、XHR 或 WebSocket)。
+`csp.allowedImgSources` | 字串陣列 | 附加到 `img-src` 的來源。用於允許來自外部 CDN 或圖塊伺服器的圖片。
+`csp.loosenCspDirectives` | 字串陣列 | 要放寬回至非嚴格預設值的指令名稱。
 
-## Enabling site embedding
+## 啟用網站嵌入
 
-To embed OpenSearch Dashboards in an iframe on another site, add that site to `csp.allowedFrameAncestorSources`:
+要將 OpenSearch Dashboards 嵌入到另一個網站的 iframe 中，請將該網站新增至 `csp.allowedFrameAncestorSources`：
 
 ```yaml
 csp.allowedFrameAncestorSources: ["https://portal.example.com"]
 ```
 {% include copy.html %}
 
-This produces the following `frame-ancestors` directive in the response header:
+這會在回應標頭中產生下列 `frame-ancestors` 指令：
 
 ```
 frame-ancestors 'self' https://portal.example.com
 ```
 
-## Report-only mode
+## 僅報告模式
 
-To audit a new CSP policy without enforcing it, enable the `Content-Security-Policy-Report-Only` header. Violations are reported but no content is blocked:
+若要在不強制執行的情況下稽核新的 CSP 原則，請啟用 `Content-Security-Policy-Report-Only` 標頭。違規情況會被報告，但不會封鎖任何內容：
 
 ```yaml
 csp-report-only.isEmitting: true
@@ -77,6 +78,6 @@ csp-report-only.allowedImgSources: ["https://cdn.example.com"]
 ```
 {% include copy.html %}
 
-## Configuring CSP rules using applicationConfig (deprecated)
+## 使用 applicationConfig 設定 CSP 規則 (已棄用)
 
-**Deprecated.** In OpenSearch Dashboards 2.13--2.16, you could set the `frame-ancestors` directive dynamically through a REST API by using the `applicationConfig` and `cspHandler` plugins. This approach is no longer functional. Use the `csp.*` settings instead.
+**已棄用。** 在 OpenSearch Dashboards 2.13--2.16 中，您可以透過 REST API 使用 `applicationConfig` 和 `cspHandler` 外掛程式動態設定 `frame-ancestors` 指令。此方法已不再可用。請改用 `csp.*` 設定。

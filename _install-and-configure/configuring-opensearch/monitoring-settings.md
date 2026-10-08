@@ -1,50 +1,51 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Monitoring settings
+title: "監控設定"
 parent: Configuring OpenSearch
 nav_order: 90
 ---
 
-# Monitoring settings
+# 監控設定
 
-OpenSearch provides settings to monitor various aspects of cluster health and performance, including file system operations, JVM garbage collection, operating system metrics, and process statistics.
+OpenSearch 提供多項設定，可用來監控叢集健康狀態與效能的各個面向，包括檔案系統操作、JVM 垃圾回收、作業系統指標與處理程序統計資料。
 
-To learn how to apply these settings, see [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/).
+若要了解如何套用這些設定，請參閱[設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/)。
 
-## File system health monitoring settings
+## 檔案系統健康狀態監控設定
 
-OpenSearch supports the following file system health monitoring settings:
+OpenSearch 支援下列檔案系統健康狀態監控設定：
 
-- `monitor.fs.health.enabled` (Dynamic, Boolean): Enables file system health monitoring to detect slow or unresponsive file system operations. Default is `true`.
+- `monitor.fs.health.enabled`（動態，布林值）：啟用檔案系統健康狀態監控，以偵測緩慢或無回應的檔案系統操作。預設值為 `true`。
 
-- `monitor.fs.health.healthy_timeout_threshold` (Dynamic, time unit): The threshold for considering a file system operation as healthy. Operations taking longer are flagged as slow. Default is `60s`. Minimum enforced is `1ms`.
+- `monitor.fs.health.healthy_timeout_threshold`（動態，時間單位）：判定檔案系統操作為健康狀態的閾值。耗時超過此值的操作會被標記為緩慢。預設值為 `60s`。強制最小值為 `1ms`。
 
-- `monitor.fs.health.slow_path_logging_threshold` (Dynamic, time unit): The threshold for logging slow file system path operations. Default is `5s`. Minimum enforced is `1ms`.
+- `monitor.fs.health.slow_path_logging_threshold`（動態，時間單位）：記錄緩慢檔案系統路徑操作的閾值。預設值為 `5s`。強制最小值為 `1ms`。
 
-- `monitor.fs.health.refresh_interval` (Static, time unit): The refresh interval for file system health monitoring. Default is `60s`. Minimum is `1ms`.
+- `monitor.fs.health.refresh_interval`（靜態，時間單位）：檔案系統健康狀態監控的重新整理間隔。預設值為 `60s`。最小值為 `1ms`。
 
-- `monitor.fs.refresh_interval` (Static, time unit): The refresh interval for file system statistics monitoring. Default is `1s`. Minimum is `1s`.
+- `monitor.fs.refresh_interval`（靜態，時間單位）：檔案系統統計資料監控的重新整理間隔。預設值為 `1s`。最小值為 `1s`。
 
-## JVM monitoring settings
+## JVM 監控設定
 
-OpenSearch supports the following JVM monitoring settings:
+OpenSearch 支援下列 JVM 監控設定：
 
-- `monitor.jvm.gc.enabled` (Static, Boolean): Enables JVM garbage collection monitoring. Default is `true`.
+- `monitor.jvm.gc.enabled`（靜態，布林值）：啟用 JVM 垃圾回收監控。預設值為 `true`。
 
-- `monitor.jvm.gc.overhead.debug` (Static, integer): The GC overhead percentage threshold for debug logging. Default is `10`. Range is `0-100`.
+- `monitor.jvm.gc.overhead.debug`（靜態，整數）：除錯 (debug) 層級記錄的 GC 額外負荷百分比閾值。預設值為 `10`。範圍為 `0-100`。
 
-- `monitor.jvm.gc.overhead.info` (Static, integer): The GC overhead percentage threshold for info logging. Default is `25`. Range is `0-100`.
+- `monitor.jvm.gc.overhead.info`（靜態，整數）：資訊 (info) 層級記錄的 GC 額外負荷百分比閾值。預設值為 `25`。範圍為 `0-100`。
 
-- `monitor.jvm.gc.overhead.warn` (Static, integer): The GC overhead percentage threshold for warning logging. Default is `50`. Range is `0-100`.
+- `monitor.jvm.gc.overhead.warn`（靜態，整數）：警告 (warning) 層級記錄的 GC 額外負荷百分比閾值。預設值為 `50`。範圍為 `0-100`。
 
-- `monitor.jvm.gc.refresh_interval` (Static, time unit): The refresh interval for JVM GC monitoring. Default is `1s`. Minimum is `1s`.
+- `monitor.jvm.gc.refresh_interval`（靜態，時間單位）：JVM GC 監控的重新整理間隔。預設值為 `1s`。最小值為 `1s`。
 
-- `monitor.jvm.refresh_interval` (Static, time unit): The refresh interval for JVM statistics monitoring. Default is `1s`. Minimum is `1s`.
+- `monitor.jvm.refresh_interval`（靜態，時間單位）：JVM 統計資料監控的重新整理間隔。預設值為 `1s`。最小值為 `1s`。
 
-## Operating system and process monitoring settings
+## 作業系統與處理程序監控設定
 
-OpenSearch supports the following operating system and process monitoring settings:
+OpenSearch 支援下列作業系統與處理程序監控設定：
 
-- `monitor.os.refresh_interval` (Static, time unit): The refresh interval for operating system statistics monitoring. Default is `1s`. Minimum is `1s`.
+- `monitor.os.refresh_interval`（靜態，時間單位）：作業系統統計資料監控的重新整理間隔。預設值為 `1s`。最小值為 `1s`。
 
-- `monitor.process.refresh_interval` (Static, time unit): The refresh interval for process statistics monitoring. Default is `1s`. Minimum is `1s`.
+- `monitor.process.refresh_interval`（靜態，時間單位）：處理程序統計資料監控的重新整理間隔。預設值為 `1s`。最小值為 `1s`。

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Scale
 parent: Index operations
@@ -7,41 +8,41 @@ nav_order: 80
 ---
 
 # Scale API
-**Introduced 3.0**
+**於 3.0 版推出**
 {: .label .label-purple }
 
-The Scale API allows you to enable or disable the `search_only` mode on an index. When an index is in `search_only` mode, it retains only its search replicas and scales down primary and regular replica shards. This optimization helps reduce resource consumption during periods of low write activity while maintaining search capabilities.
+Scale API 可讓您在索引上啟用或停用 `search_only` 模式。當索引處於 `search_only` 模式時，只會保留其搜尋副本，並縮減主要分片與一般副本分片。此最佳化有助於在寫入活動較少的期間降低資源消耗，同時維持搜尋功能。
 
-This feature supports scenarios such as scale-to-zero deployments and reader/writer separation patterns, which can significantly improve resource utilization and reduce costs in production environments.
+此功能支援縮減至零 (scale-to-zero) 部署與讀取器/寫入器分離模式等情境，可在正式環境中大幅提升資源使用率並降低成本。
 
-If you are using the Security plugin, you must have the `manage index` privileges.
+如果您使用 Security 外掛程式，則必須具備 `manage index` 權限。
 {: .note}
 
-## Endpoints
+## 端點
 
 ```json
 POST /{index}/_scale
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required | Data type | Description |
+| 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `index` | **Required** | String | The name of the index to scale. Wildcards are not supported. |
+| `index` | **必要** | 字串 | 要調整規模的索引名稱。不支援萬用字元。 |
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Required | Data type | Description |
+| 欄位 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `search_only` | **Required** | Boolean | When `true`, enables search-only mode on the index. When `false`, disables search-only mode and restores the index to normal operations. |
+| `search_only` | **必要** | 布林值 | 若為 `true`，則在索引上啟用僅限搜尋模式。若為 `false`，則停用僅限搜尋模式，並將索引恢復為正常運作。 |
 
-## Example request: Enabling search-only mode
+## 請求範例：啟用僅限搜尋模式
 
-The following request enables search-only mode for an index named `my-index`:
+下列請求會為名為 `my-index` 的索引啟用僅限搜尋模式：
 
 ```json
 POST /my-index/_scale
@@ -51,9 +52,9 @@ POST /my-index/_scale
 ```
 {% include copy-curl.html %}
 
-## Example request: Disabling search-only mode
+## 請求範例：停用僅限搜尋模式
 
-The following request disables search-only mode and returns the index to normal operations:
+下列請求會停用僅限搜尋模式，並將索引恢復為正常運作：
 
 ```json
 POST /my-index/_scale
@@ -63,9 +64,9 @@ POST /my-index/_scale
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The API returns the following response:
+此 API 會傳回下列回應：
 
 ```json
 {

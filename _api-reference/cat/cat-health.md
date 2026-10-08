@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: CAT health
 parent: CAT APIs
@@ -9,10 +10,10 @@ redirect_from:
 ---
 
 # CAT Health API
-**Introduced 1.0**
+**1.0 版新增**
 {: .label .label-purple }
 
-The CAT health operation lists the status of the cluster, how long the cluster has been up, the number of nodes, and other useful information that helps you analyze the health of your cluster.
+CAT health 操作會列出叢集的狀態、叢集已執行的時間、節點數量，以及其他有助於您分析叢集健康狀態的實用資訊。
 
 
 <!-- spec_insert_start
@@ -34,23 +35,23 @@ include_deprecated: false
 -->
 ## Query parameters
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
 | Parameter | Data type | Description | Default |
 | :--- | :--- | :--- | :--- |
-| `format` | String | A short version of the `Accept` header, such as `json` or `yaml`. | N/A |
-| `h` | List | A comma-separated list of column names to display. | N/A |
-| `help` | Boolean | Returns help information. | `false` |
-| `s` | List | A comma-separated list of column names or column aliases to sort by. | N/A |
-| `time` | String | The unit used to display time values. <br> Valid values are: `nanos`, `micros`, `ms`, `s`, `m`, `h`, and `d`. | N/A |
-| `ts` | Boolean | When `true`, returns `HH:MM:SS` and Unix epoch timestamps. | `true` |
-| `v` | Boolean | Enables verbose mode, which displays column headers. | `false` |
+| `format` | String | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
+| `h` | List | 以逗號分隔的欄位名稱清單，用於指定要顯示的欄位。 | N/A |
+| `help` | Boolean | 傳回說明資訊。 | `false` |
+| `s` | List | 以逗號分隔的欄位名稱或欄位別名清單，用於排序。 | N/A |
+| `time` | String | 用於顯示時間值的單位。<br> 有效值為：`nanos`、`micros`、`ms`、`s`、`m`、`h` 與 `d`。 | N/A |
+| `ts` | Boolean | 設為 `true` 時，傳回 `HH:MM:SS` 與 Unix 紀元時間戳記。 | `true` |
+| `v` | Boolean | 啟用詳細模式，以顯示欄位標題。 | `false` |
 
 <!-- spec_insert_end -->
 
 ## Example request
 
-The following example request give cluster health information for the past 5 days: 
+下列範例請求會提供過去 5 天的叢集健康狀態資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -85,4 +86,4 @@ epoch | timestamp | cluster | status | node.total | node.data | shards | pri | r
 
 ## Required permissions
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:monitor/health`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:monitor/health`。

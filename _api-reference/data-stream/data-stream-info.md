@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get data stream
+title: "取得資料串流"
 parent: Data stream APIs
 nav_order: 20
 ---
 
 # Get Data Stream API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Get Data Stream API returns information about one or more data streams, including their backing indexes, generation, and status.
+Get Data Stream API 會傳回一或多個資料串流的資訊，包括其後備索引、世代與狀態。
 
 <!-- spec_insert_start
 api: indices.get_data_stream
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_data_stream
 GET /_data_stream/{name}
@@ -26,32 +27,32 @@ GET /_data_stream/{name}
 api: indices.get_data_stream
 component: path_parameters
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `name` | List or String | A comma-separated list of data stream names used to limit the request. Wildcard (`*`) expressions are supported. If omitted, all data streams are returned. |
+| `name` | List 或 String | 以逗號分隔的資料串流名稱清單，用於限制請求範圍。支援萬用字元 (`*`) 運算式。若省略，則傳回所有資料串流。 |
 
 <!-- spec_insert_end -->
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `error_trace` | Boolean | Whether to include the stack trace of returned errors. | `false` |
-| `filter_path` | List or String | Used to reduce the response. This parameter takes a comma-separated list of filters. It supports using wildcards to match any field or part of a field’s name. You can also exclude fields with `-`. | N/A |
-| `human` | Boolean | Whether to return human-readable values for statistics. | `false` |
-| `pretty` | Boolean | Whether to pretty format the returned JSON response. | `false` |
-| `source` | String | The URL-encoded request definition. Useful for libraries that do not accept a request body for non-POST requests. | N/A |
+| `error_trace` | Boolean | 是否在傳回的錯誤中包含堆疊追蹤。 | `false` |
+| `filter_path` | List 或 String | 用於縮減回應內容。此參數接受以逗號分隔的篩選條件清單，並支援使用萬用字元比對任何欄位名稱或其部分。您也可以使用 `-` 排除欄位。 | N/A |
+| `human` | Boolean | 是否以人類可讀的格式傳回統計數值。 | `false` |
+| `pretty` | Boolean | 是否將傳回的 JSON 回應格式化為易讀樣式。 | `false` |
+| `source` | String | 經 URL 編碼的請求定義。對於不接受非 POST 請求本文的程式庫很有用。 | N/A |
 
 
-## Example request
+## 範例請求
 
-The following example request returns information about all data streams in the cluster:
+下列範例請求會傳回叢集中所有資料串流的資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -71,7 +72,7 @@ response = client.indices.get_data_stream()
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To return information about a specific data stream, provide its name as the `name` path parameter:
+若要傳回特定資料串流的資訊，請將其名稱作為 `name` 路徑參數提供：
 
 <!-- spec_insert_start
 component: example_code
@@ -95,7 +96,7 @@ response = client.indices.get_data_stream(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -119,45 +120,45 @@ response = client.indices.get_data_stream(
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `data_streams` | Array | A list of objects, one for each data stream. For object fields, see [The data stream objects](#the-data-stream-objects). |
+| `data_streams` | Array | 物件清單，每個資料串流一個物件。物件欄位請參閱[資料串流物件](#the-data-stream-objects)。 |
 
-### The data stream objects
+### 資料串流物件
 
-Each data stream object contains the following fields.
+每個資料串流物件包含下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `name` | String | The name of the data stream. |
-| `timestamp_field` | Object | The timestamp field configuration for the data stream. |
-| `timestamp_field.name` | String | The name of the timestamp field, usually `@timestamp`. |
-| `indices` | Array | A list of the data stream's backing indexes. The last item in the array is the current write index. For object fields, see [The backing index objects](#the-backing-index-objects). |
-| `generation` | Integer | The current generation of the data stream. This number increases by one with each rollover. |
-| `status` | String | The health status of the data stream, based on the health of its backing indexes. Valid values are `GREEN`, `YELLOW`, and `RED`. |
-| `template` | String | The name of the index template used to create the data stream. |
-| `hidden` | Boolean | Whether the data stream is hidden. |
-| `system` | Boolean | Whether the data stream is managed internally by OpenSearch and cannot be modified through normal user interaction. |
-| `ilm_policy` | String | The name of the associated Index State Management (ISM) policy, if one is configured. |
-| `allow_custom_routing` | Boolean | Whether the data stream allows custom routing on write requests. |
-| `_meta` | Object | Custom metadata attached to the data stream. |
+| `name` | String | 資料串流的名稱。 |
+| `timestamp_field` | Object | 資料串流的時間戳記欄位組態。 |
+| `timestamp_field.name` | String | 時間戳記欄位的名稱，通常為 `@timestamp`。 |
+| `indices` | Array | 資料串流後備索引的清單。陣列中的最後一個項目是目前用於寫入的索引。物件欄位請參閱[後備索引物件](#the-backing-index-objects)。 |
+| `generation` | Integer | 資料串流目前的世代。此數字每次輪替 (rollover) 時會加一。 |
+| `status` | String | 資料串流的健康狀態，依據其後備索引的健康狀態而定。有效值為 `GREEN`、`YELLOW` 與 `RED`。 |
+| `template` | String | 用於建立此資料串流的索引範本名稱。 |
+| `hidden` | Boolean | 資料串流是否為隱藏。 |
+| `system` | Boolean | 資料串流是否由 OpenSearch 內部管理，且無法透過一般使用者操作修改。 |
+| `ilm_policy` | String | 相關聯的 Index State Management (ISM) 政策名稱（若有設定）。 |
+| `allow_custom_routing` | Boolean | 資料串流是否允許在寫入請求中使用自訂路由。 |
+| `_meta` | Object | 附加至資料串流的自訂中繼資料。 |
 
-### The backing index objects
+### 後備索引物件
 
-Each backing index object contains the following fields.
+每個後備索引物件包含下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `index_name` | String | The name of the backing index. |
-| `index_uuid` | String | The UUID of the backing index. |
+| `index_name` | String | 後備索引的名稱。 |
+| `index_uuid` | String | 後備索引的 UUID。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/data_stream/get`.
+若您使用 Security 外掛程式，請確認您具備適當的權限：`indices:admin/data_stream/get`。
 
-## Related documentation
+## 相關文件
 
-- [Data streams]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)
-- [Get data stream stats]({{site.url}}{{site.baseurl}}/api-reference/data-stream/data-stream-stats/)
+- [資料串流]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)
+- [取得資料串流統計]({{site.url}}{{site.baseurl}}/api-reference/data-stream/data-stream-stats/)

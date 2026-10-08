@@ -1,20 +1,21 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Settings and administration
+title: "設定與管理"
 nav_order: 140
 has_children: true
 has_toc: false
 ---
 
-# Settings and administration
+# 設定與管理
 
-Configure and administer OpenSearch Dashboards at the deployment level by editing the `opensearch_dashboards.yml` configuration file. This documentation is intended for OpenSearch Dashboards administrators. The following settings are available:
+編輯 `opensearch_dashboards.yml` 組態檔案，即可在部署層級設定及管理 OpenSearch Dashboards。本文件適用於 OpenSearch Dashboards 管理員。可用的設定如下：
 
-- [Custom branding]({{site.url}}{{site.baseurl}}/dashboards/branding/): Replace the default OpenSearch logo and other branding elements with your own.
-- [Network compression]({{site.url}}{{site.baseurl}}/dashboards/compression/): Compress JavaScript and CSS bundles to reduce network transfer sizes.
-- [Configuring CSP rules]({{site.url}}{{site.baseurl}}/dashboards/csp/csp-dynamic-configuration/): Enforce Content Security Policy (CSP) rules to protect against cross-site scripting and other code injection attacks.
-- [Search telemetry]({{site.url}}{{site.baseurl}}/dashboards/search-telemetry/): Analyze search request performance in OpenSearch Dashboards.
+- [自訂品牌]({{site.url}}{{site.baseurl}}/dashboards/branding/)：以您自己的標誌和品牌元素取代預設的 OpenSearch 標誌及其他品牌元素。
+- [網路壓縮]({{site.url}}{{site.baseurl}}/dashboards/compression/)：壓縮 JavaScript 和 CSS 套件，以縮減網路傳輸大小。
+- [設定 CSP 規則]({{site.url}}{{site.baseurl}}/dashboards/csp/csp-dynamic-configuration/)：強制執行內容安全性原則 (Content Security Policy，CSP) 規則，防範跨網站指令碼攻擊及其他程式碼注入攻擊。
+- [搜尋遙測]({{site.url}}{{site.baseurl}}/dashboards/search-telemetry/)：分析 OpenSearch Dashboards 中搜尋請求的效能。
 
-## Related documentation
+## 相關文件
 
-- To configure data access, index patterns, saved objects, and other settings from within the Dashboards UI, see [Dashboards management]({{site.url}}{{site.baseurl}}/dashboards/management/management-index/).
+- 若要在 Dashboards UI 中設定資料存取、索引模式、已儲存物件及其他設定，請參閱 [Dashboards 管理]({{site.url}}{{site.baseurl}}/dashboards/management/management-index/)。

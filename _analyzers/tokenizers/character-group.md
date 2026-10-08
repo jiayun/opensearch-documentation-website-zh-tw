@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Character group
+title: "字元群組"
 parent: Tokenizers
 nav_order: 20
 has_children: false
 has_toc: false
 ---
 
-# Character group tokenizer
+# 字元群組斷詞器
 
-The `char_group` tokenizer splits text into tokens using specific characters as delimiters. It is suitable for situations requiring straightforward tokenization, offering a simpler alternative to pattern-based tokenizers without the added complexity.
+`char_group` 斷詞器使用特定字元作為分隔符號，將文字分割成詞元。它適用於需要簡單斷詞的情況，可作為以模式為基礎的斷詞器的較簡單替代方案，且不會增加額外的複雜性。
 
-## Example usage
+## 使用範例
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `char_group` tokenizer. The tokenizer splits text on white space, `-`, and `:` characters:
+下列範例請求會建立名為 `my_index` 的新索引，並設定一個使用 `char_group` 斷詞器的分析器。此斷詞器會依據空白字元、`-` 和 `:` 字元分割文字：
 
 ```json
 PUT /my_index
@@ -50,9 +51,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢視使用此分析器所產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -63,7 +64,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {
@@ -114,11 +115,11 @@ The response contains the generated tokens:
 }
 ```
 
-## Parameters
+## 參數
 
-The `char_group` tokenizer can be configured with the following parameters.
+`char_group` 斷詞器可使用下列參數進行設定。
 
-| **Parameter**        | **Required/Optional** | **Data type** | **Description** |
+| **參數**        | **必要/選用** | **資料類型** | **說明** |
 | :--- |  :--- |  :--- |  :--- |  
-| `tokenize_on_chars`   | Required              | Array         | Specifies a set of characters on which the text should be tokenized. You can specify single characters (for example, `-` or `@`), including escape characters (for example, `\n`), or character classes such as `whitespace`, `letter`, `digit`, `punctuation`, or `symbol`. |
-| `max_token_length`    | Optional              | Integer       | Sets the maximum length of the produced token. If this length is exceeded, the token is split into multiple tokens at the length configured in `max_token_length`. Default is `255`.  |
+| `tokenize_on_chars`   | 必要              | 陣列         | 指定一組用來對文字進行斷詞的字元。您可以指定單一字元（例如 `-` 或 `@`），包括逸出字元（例如 `\n`），或字元類別，例如 `whitespace`、`letter`、`digit`、`punctuation` 或 `symbol`。 |
+| `max_token_length`    | 選用              | 整數       | 設定所產生詞元的最大長度。若超過此長度，詞元會依 `max_token_length` 中設定的長度分割成多個詞元。預設值為 `255`。  |

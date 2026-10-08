@@ -1,33 +1,34 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Stemming
+title: "詞幹提取"
 nav_order: 140
 ---
 
-# Stemming
+# 詞幹提取
 
-Stemming is the process of reducing words to their root or base form, known as the _stem_. This technique ensures that different variations of a word are matched during search operations. For example, the words "running", "runner", and "ran" can all be reduced to the stem "run", allowing searches for any of these terms to return relevant results.
+詞幹提取 (stemming) 是將單字還原為其字根或基本形式的過程，此形式稱為_詞幹 (stem)_。這項技術可確保在搜尋作業中比對到同一個單字的不同變化形式。例如，「running」、「runner」和「ran」都可以還原為詞幹「run」，因此搜尋其中任何一個詞彙都能傳回相關結果。
 
-In natural language, words often appear in various forms because of conjugation, pluralization, or derivation. Stemming improves search operations in the following ways:
+在自然語言中，單字經常因動詞變化、複數化或衍生而以各種形式出現。詞幹提取可透過以下方式改善搜尋作業：
 
-- **Improves search recall**: By matching different word forms to a common stem, stemming increases the number of relevant documents retrieved.
-- **Reduces index size**: Storing only the stemmed versions of words can decrease the overall size of the search index.
+- **提高搜尋召回率**：透過將不同的單字形式比對到共同的詞幹，詞幹提取可增加擷取到的相關文件數量。
+- **縮減索引大小**：僅儲存單字的詞幹版本，可以減少搜尋索引的整體大小。
 
-Stemming is configured using token filters within [analyzers]({{site.url}}{{site.baseurl}}/analyzers/#analyzers). An analyzer comprises the following components:
+詞幹提取是透過[分析器]({{site.url}}{{site.baseurl}}/analyzers/#analyzers)中的詞元篩選器來設定。分析器由以下元件組成：
 
-1. **Character filters**: Modify the stream of characters before tokenization.
-2. **Tokenizer**: Splits text into tokens (typically, words).
-3. **Token filters**: Modify tokens after tokenization, for example, by applying stemming.
+1. **字元篩選器**：在斷詞之前修改字元串流。
+2. **斷詞器**：將文字分割為詞元（通常是單字）。
+3. **詞元篩選器**：在斷詞之後修改詞元，例如套用詞幹提取。
 
-## Stemming example using built-in token filters
+## 使用內建詞元篩選器的詞幹提取範例
 
-To implement stemming, you can configure a built-in token filter such as a [`porter_stem`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/porter-stem/) or [`kstem`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kstem/) filter.
+若要實作詞幹提取，您可以設定內建的詞元篩選器，例如 [`porter_stem`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/porter-stem/) 或 [`kstem`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kstem/) 篩選器。
 
-The [Porter stemming algorithm](https://snowballstem.org/algorithms/porter/stemmer.html) is a common algorithmic stemmer used for the English language.
+[Porter 詞幹提取演算法](https://snowballstem.org/algorithms/porter/stemmer.html)是英文常用的演算法式詞幹提取器。
 
-### Creating an index with a custom analyzer
+### 建立含有自訂分析器的索引
 
-The following example request creates a new index named `my_stemming_index` and configures an analyzer with the [`porter_stem`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/porter-stem/) token filter:
+以下範例請求會建立名為 `my_stemming_index` 的新索引，並設定一個使用 [`porter_stem`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/porter-stem/) 詞元篩選器的分析器：
 
 ```json
 PUT /my_stemming_index
@@ -50,15 +51,15 @@ PUT /my_stemming_index
 ```
 {% include copy-curl.html %}
 
-This configuration comprises the following:
+此組態包含以下內容：
 
-- The [`standard`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/standard/) tokenizer splits text into terms based on word boundaries.
-- The [`lowercase`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/lowercase/) filter converts all tokens to lowercase.
-- The [`porter_stem`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/porter-stem/) filter reduces words to their root form.
+- [`standard`]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/standard/) 斷詞器會根據單字邊界將文字分割為詞彙。
+- [`lowercase`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/lowercase/) 篩選器會將所有詞元轉換為小寫。
+- [`porter_stem`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/porter-stem/) 篩選器會將單字還原為其字根形式。
 
-### Testing the analyzer
+### 測試分析器
 
-To examine the stemming action, analyze a sample text using the previously configured custom analyzer:
+若要檢視詞幹提取的效果，請使用先前設定的自訂分析器分析一段範例文字：
 
 ```json
 POST /my_stemming_index/_analyze
@@ -69,7 +70,7 @@ POST /my_stemming_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {
@@ -113,50 +114,50 @@ The response contains the generated tokens:
 }
 ```
 
-## Stemmer categories
+## 詞幹提取器類別
 
-You can configure stemmers belonging to the following two categories:
+您可以設定屬於以下兩個類別的詞幹提取器：
 
-- [Algorithmic stemmers]({{site.url}}{{site.baseurl}}/analyzers/stemming/#algorithmic-stemmers)
-- [Dictionary stemmers]({{site.url}}{{site.baseurl}}/analyzers/stemming/#dictionary-stemmers)
+- [演算法式詞幹提取器]({{site.url}}{{site.baseurl}}/analyzers/stemming/#algorithmic-stemmers)
+- [字典式詞幹提取器]({{site.url}}{{site.baseurl}}/analyzers/stemming/#dictionary-stemmers)
 
-### Algorithmic stemmers
+### 演算法式詞幹提取器
 
-Algorithmic stemmers apply predefined rules to systematically strip affixes (prefixes and suffixes) from words, reducing them to their stems. The following token filters use algorithmic stemmers:
+演算法式詞幹提取器會套用預先定義的規則，有系統地移除單字的詞綴（字首和字尾），將單字還原為其詞幹。以下詞元篩選器使用演算法式詞幹提取器：
 
-- [`porter_stem`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/porter-stem/): Applies the Porter stemming algorithm to remove common suffixes and reduce words to their stems. For example, "running" becomes "run".
+- [`porter_stem`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/porter-stem/)：套用 Porter 詞幹提取演算法來移除常見字尾，並將單字還原為其詞幹。例如，「running」會變成「run」。
 
-- [`kstem`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kstem/): A lightweight stemmer designed for the English language that combines algorithmic stemming with a built-in dictionary. It reduces plurals to singulars, converts verb tenses to their base forms, and removes common derivational endings. 
-
-
-- [`stemmer`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/stemmer/): Provides algorithmic stemming for various languages, including English, with options for different stemming algorithms like `light_english`, `minimal_english`, and `porter2`. 
+- [`kstem`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kstem/)：專為英文設計的輕量型詞幹提取器，結合了演算法式詞幹提取與內建字典。它會將複數還原為單數、將動詞時態轉換為基本形式，並移除常見的衍生字尾。 
 
 
-- [`snowball`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/snowball/): Applies the Snowball algorithm to provide efficient and accurate stemming for multiple languages, including English, French, German, and others. 
-
-### Dictionary stemmers
-
-Dictionary stemmers rely on extensive dictionaries to map words to their root forms, effectively stemming irregular words. They look up each word in a precompiled list to find its corresponding stem. This operation is more resource intensive but often yields better results for irregular words and words that might appear to have a similar stem but are very different in their meaning.
-
-The most prominent example of a dictionary stemmer is the [`hunspell`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/hunspell/) token filter, which uses Hunspell---a spell checker engine used in many open-source applications.
-
-### Considerations
-When selecting a stemmer, take note of the following considerations:
-
-- Algorithmic stemmers are suitable when processing speed and memory efficiency are priorities and the language has relatively regular morphological patterns.
-- Dictionary stemmers are ideal when accuracy in handling irregular word forms is crucial and resources are available to support the increased memory usage and processing time.
+- [`stemmer`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/stemmer/)：為包括英文在內的多種語言提供演算法式詞幹提取，並提供不同詞幹提取演算法的選項，例如 `light_english`、`minimal_english` 和 `porter2`。 
 
 
-### Additional stemming configuration
+- [`snowball`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/snowball/)：套用 Snowball 演算法，為包括英文、法文、德文等多種語言提供有效率且精確的詞幹提取。 
 
-Although "organize" and "organic" share a common linguistic root, leading a stemmer to produce "organ" for both, their conceptual differences are significant. In practical search scenarios, this shared root can lead to irrelevant matches being returned in search results.
+### 字典式詞幹提取器
 
-You can address these challenges by using the following methods:
+字典式詞幹提取器仰賴大型字典將單字對應至其字根形式，能有效處理不規則單字的詞幹提取。它們會在預先編譯的清單中查詢每個單字，以找出對應的詞幹。此作業會耗用較多資源，但對於不規則單字，以及看似具有相似詞幹但意義差異很大的單字，通常能產生較佳的結果。
 
-- **Explicit stemming overrides**: Rather than relying solely on algorithmic stemming, you can define specific stemming rules. Using [`stemmer_override`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/stemmer-override/) allows you to ensure that "organize" remains unchanged while "organic" is reduced to "organ." This provides granular control over the final form of terms.
+字典式詞幹提取器最主要的範例是 [`hunspell`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/hunspell/) 詞元篩選器，它使用 Hunspell——一個在許多開放原始碼應用程式中使用的拼字檢查引擎。
 
-- **Keyword preservation**: To maintain the integrity of important terms, you can use the [`keyword_marker`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/keyword-marker/) token filter. This filter designates specific words as keywords, preventing subsequent stemmer filters from altering them. In this example, you can mark "organize" as a keyword, ensuring that it is indexed exactly as it appears.
+### 考量事項
+選擇詞幹提取器時，請注意以下考量事項：
 
-- **Conditional stemming control**: The [condition]({{site.url}}{{site.baseurl}}/analyzers/token-filters/condition/) token filter enables you to establish rules that determine whether a term should be stemmed. These can be based on various criteria, such as the term's presence in a predefined list.
+- 當處理速度和記憶體效率為優先考量，且語言具有相對規則的詞形變化模式時，適合使用演算法式詞幹提取器。
+- 當處理不規則單字形式的準確度至關重要，且有足夠資源支援增加的記憶體用量和處理時間時，字典式詞幹提取器是理想的選擇。
 
-- **Language-specific term exclusion**: For built-in language analyzers, the [`stem_exclusion`]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/english/#stem-exclusion) parameter provides a way to specify words that should be exempt from stemming. For example, you can add "organize" to the `stem_exclusion` list, preventing the analyzer from stemming it. This can be useful for preserving the distinct meaning of specific terms within a given language.
+
+### 其他詞幹提取組態
+
+雖然「organize」和「organic」擁有共同的語言學字根，使詞幹提取器對兩者都產生「organ」，但它們在概念上的差異相當大。在實際的搜尋情境中，這個共同字根可能導致搜尋結果中傳回不相關的比對項目。
+
+您可以使用以下方法來因應這些挑戰：
+
+- **明確覆寫詞幹提取**：您可以定義特定的詞幹提取規則，而非僅仰賴演算法式詞幹提取。使用 [`stemmer_override`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/stemmer-override/) 可確保「organize」保持不變，而「organic」則還原為「organ」。這能讓您精細控制詞彙的最終形式。
+
+- **保留關鍵字**：若要維持重要詞彙的完整性，您可以使用 [`keyword_marker`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/keyword-marker/) 詞元篩選器。此篩選器會將特定單字指定為關鍵字，防止後續的詞幹提取篩選器變更它們。在此範例中，您可以將「organize」標記為關鍵字，確保它完全依照原樣編製索引。
+
+- **條件式詞幹提取控制**：[condition]({{site.url}}{{site.baseurl}}/analyzers/token-filters/condition/) 詞元篩選器可讓您建立規則，以判斷某個詞彙是否應進行詞幹提取。這些規則可以根據各種條件，例如該詞彙是否存在於預先定義的清單中。
+
+- **排除特定語言的詞彙**：對於內建的語言分析器，[`stem_exclusion`]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/english/#stem-exclusion) 參數提供了一種方式，可指定應免於詞幹提取的單字。例如，您可以將「organize」新增至 `stem_exclusion` 清單，防止分析器對其進行詞幹提取。這有助於在特定語言中保留特定詞彙的獨特意義。

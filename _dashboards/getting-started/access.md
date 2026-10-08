@@ -1,52 +1,53 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Access OpenSearch Dashboards
+title: "存取 OpenSearch Dashboards"
 parent: Getting started
 nav_order: 15
 ---
 
-# Access OpenSearch Dashboards
+# 存取 OpenSearch Dashboards
 
-Once OpenSearch and OpenSearch Dashboards are running, open your browser and navigate to the following URL:
+OpenSearch 和 OpenSearch Dashboards 執行後，請開啟瀏覽器並前往下列 URL：
 
-- `http://localhost:5601` or `https://localhost:5601` for a local installation.
-- [https://playground.opensearch.org/app/home#/](https://playground.opensearch.org/app/home#/) for the OpenSearch Playground.
+- 本機安裝請使用 `http://localhost:5601` 或 `https://localhost:5601`。
+- OpenSearch Playground 請使用 [https://playground.opensearch.org/app/home#/](https://playground.opensearch.org/app/home#/)。
 
->- _OpenSearch Dashboards_ refers to the web UI for OpenSearch---the application you're looking at in your browser.
->- The **Dashboards** application is the tool within OpenSearch Dashboards for assembling visualizations into a single page.
->- A _dashboard_ (lowercase) is an individual page of visualizations created in the **Dashboards** application.
+>- _OpenSearch Dashboards_ 是指 OpenSearch 的 Web UI，也就是您正在瀏覽器中查看的應用程式。
+>- **Dashboards** 應用程式是 OpenSearch Dashboards 中用來將視覺化組合到單一頁面的工具。
+>- _儀表板_（小寫的 dashboard）是在 **Dashboards** 應用程式中建立的單一視覺化頁面。
 {: .note}
 
-## Accessing applications used in this section
+## 存取本節使用的應用程式
 
-The Getting started tutorials use the Discover, Visualize, and Dashboards applications and the Dev Tools console. Use the _left navigation panel_ on the left side of the UI to select any application or settings page that you want to use. To open the navigation panel, select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/menu-icon.png" class="inline-icon" alt="menu icon"/>{:/} (menu) icon in the header bar at the top of the page. For more information about the home page and the left navigation panel, see [Navigating OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/navigating-ui/).
+入門教學會使用 Discover、Visualize 和 Dashboards 應用程式，以及 Dev Tools 主控台。請使用 UI 左側的_左側導覽面板_，選取您要使用的任何應用程式或設定頁面。若要開啟導覽面板，請選取頁面頂端標題列中的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/menu-icon.png" class="inline-icon" alt="menu icon"/>{:/}（選單）圖示。如需首頁和左側導覽面板的詳細資訊，請參閱[瀏覽 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/navigating-ui/)。
 
-### Classic navigation
+### 傳統導覽
 
-In installations in which workspaces are not enabled, the left navigation panel lists all applications directly. The following image highlights the applications used in the tutorials.
+在未啟用工作區的安裝中，左側導覽面板會直接列出所有應用程式。下圖標示了教學中使用的應用程式。
 
-![OpenSearch Dashboards home page with classic navigation]({{site.url}}{{site.baseurl}}/images/dashboards/getting-started-classic-nav.png)
+![使用傳統導覽的 OpenSearch Dashboards 首頁]({{site.url}}{{site.baseurl}}/images/dashboards/getting-started-classic-nav.png)
 
-1. Prepare your data.
-1. Explore the Discover application.
-1. Explore the Dashboards application.
-1. Explore the Visualize application.
-1. Run queries in OpenSearch Dashboards.
+1. 準備您的資料。
+1. 探索 Discover 應用程式。
+1. 探索 Dashboards 應用程式。
+1. 探索 Visualize 應用程式。
+1. 在 OpenSearch Dashboards 中執行查詢。
 
-The examples in this documentation use classic navigation. If you have workspaces enabled, the menu structure is different but the same applications are available within your workspace.
+本文件中的範例使用傳統導覽。如果您已啟用工作區，選單結構會有所不同，但您的工作區中仍提供相同的應用程式。
 
-### Workspaces navigation
+### 工作區導覽
 
-If workspaces are enabled, first create and select a workspace. For more information, see [Workspaces navigation]({{site.url}}{{site.baseurl}}/dashboards/navigating-ui/#workspaces-navigation). The following image shows the left navigation within an example Analytics workspace, including the applications used in the tutorials.
+如果已啟用工作區，請先建立並選取工作區。如需詳細資訊，請參閱[工作區導覽]({{site.url}}{{site.baseurl}}/dashboards/navigating-ui/#workspaces-navigation)。下圖顯示範例 Analytics 工作區中的左側導覽，其中包含教學中使用的應用程式。
 
-![Left navigation within an Analytics workspace]({{site.url}}{{site.baseurl}}/images/dashboards/getting-started-workspace-interior-nav.png)
+![Analytics 工作區中的左側導覽]({{site.url}}{{site.baseurl}}/images/dashboards/getting-started-workspace-interior-nav.png)
 
-1. Prepare your data.
-1. Explore the Discover application.
-1. Explore the Dashboards application.
-1. Explore the Visualize application.
-1. Run queries in OpenSearch Dashboards.
+1. 準備您的資料。
+1. 探索 Discover 應用程式。
+1. 探索 Dashboards 應用程式。
+1. 探索 Visualize 應用程式。
+1. 在 OpenSearch Dashboards 中執行查詢。
 
-## Next steps
+## 後續步驟
 
-- To learn what each application does, see [Learn about main applications]({{site.url}}{{site.baseurl}}/dashboards/getting-started/learn-dashboards/).
+- 若要了解各個應用程式的功能，請參閱[了解主要應用程式]({{site.url}}{{site.baseurl}}/dashboards/getting-started/learn-dashboards/)。

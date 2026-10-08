@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get a workflow status
+title: "取得工作流程狀態"
 parent: Workflow APIs
 nav_order: 40
 ---
 
 # Get Workflow Status API
 
-[Provisioning a workflow]({{site.url}}{{site.baseurl}}/automating-configurations/api/provision-workflow/) may take a significant amount of time, particularly when the action is associated with OpenSearch indexing operations. The Get Workflow State API permits monitoring of the provisioning deployment status until it is complete.
+[佈建工作流程]({{site.url}}{{site.baseurl}}/automating-configurations/api/provision-workflow/)可能需要相當長的時間，尤其是當此動作涉及 OpenSearch 編製索引作業時。Get Workflow State API 可讓您監視佈建部署狀態，直到部署完成。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_flow_framework/workflow/{workflow_id}/_status
 ``` 
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. 
+下表列出可用的路徑參數。 
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `workflow_id` | String | The ID of the workflow from which to obtain the status. Required for the `PUT` method. |
+| `workflow_id` | 字串 | 要取得狀態的工作流程 ID。`PUT` 方法的必要參數。 |
 
-## Query parameters
+## 查詢參數
 
-The `all` parameter specifies whether the response should return all fields. 
+`all` 參數指定回應是否應傳回所有欄位。 
 
-When set to `false` (the default), the response contains the following fields:
+設為 `false`（預設值）時，回應包含下列欄位：
 
 - `workflow_id`
-- any `error` state
+- 任何 `error` 狀態
 - `state`
-- a list of `resources_created`
+- `resources_created` 清單
 
-When set to `true`, the response contains the following additional fields:
+設為 `true` 時，回應包含下列額外欄位：
 
 - `provisioning_progress`
 - `provision_start_time`
@@ -42,14 +43,14 @@ When set to `true`, the response contains the following additional fields:
 - `user`
 - `user_outputs`
 
-To receive all available fields in the response, set `all` to `true`:
+若要在回應中取得所有可用欄位，請將 `all` 設為 `true`：
 
 ```json
 GET /_plugins/_flow_framework/workflow/8xL8bowB8y25Tqfenm50/_status?all=true
 ``` 
 {% include copy-curl.html %}
 
-## Example request
+## 請求範例
 
 ```json
 GET /_plugins/_flow_framework/workflow/8xL8bowB8y25Tqfenm50/_status
@@ -57,11 +58,11 @@ GET /_plugins/_flow_framework/workflow/8xL8bowB8y25Tqfenm50/_status
 {% include copy-curl.html %}
 
 
-## Example response
+## 回應範例
 
-OpenSearch responds with a summary of the provisioning status and a list of created resources. 
+OpenSearch 會回應佈建狀態摘要和已建立的資源清單。 
 
-Before provisioning has begun, OpenSearch does not return any resources:
+在佈建開始之前，OpenSearch 不會傳回任何資源：
 
 ```json
 {
@@ -70,7 +71,7 @@ Before provisioning has begun, OpenSearch does not return any resources:
 }
 ```
 
-While provisioning is in progress, OpenSearch returns a partial resource list:
+佈建進行期間，OpenSearch 會傳回部分資源清單：
 
 ```json
 {
@@ -87,7 +88,7 @@ While provisioning is in progress, OpenSearch returns a partial resource list:
 }
 ```
 
-Upon provisioning completion, OpenSearch returns the full resource list:
+佈建完成後，OpenSearch 會傳回完整的資源清單：
 
 ```json
 {

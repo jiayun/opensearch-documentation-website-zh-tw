@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Dashboard variables
+title: "儀表板變數"
 has_children: true
 has_toc: false
 nav_order: 100
@@ -10,132 +11,132 @@ redirect_from:
   - /dashboards/visualize/visualization-editor/dashboard-variables/
 ---
 
-# Dashboard variables
-**Introduced 3.7**
+# 儀表板變數
+**3.7 版推出**
 {: .label .label-purple }
 
-Dashboard variables are reusable values that you can reference in [visualization editor]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/) queries. Use variables for filters, metrics, dimensions, intervals, fields, aggregations, and any other query parameter, eliminating the need to manually edit PPL or PromQL queries when switching between data views.
+儀表板變數是可重複使用的值，您可以在[視覺化編輯器]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/)的查詢中參照這些變數。您可以將變數用於篩選條件、指標、維度、間隔、欄位、彙總及任何其他查詢參數，在不同資料檢視之間切換時，無需手動編輯 PPL 或 PromQL 查詢。
 
-Dashboard variables are available in **Observability** workspaces only. To use dashboard variables, create an Observability workspace if you don't already have one. For more information, see [Workspace for OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/workspace/).
+儀表板變數僅適用於 **Observability** 工作區。若要使用儀表板變數，請先建立 Observability 工作區（如果您還沒有）。如需詳細資訊，請參閱 [OpenSearch Dashboards 的工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/)。
 {: .note}
 
-Use dashboard variables to:
+使用儀表板變數可以：
 
-- Change query parameters without editing visualizations.
-- Define values once and reference them across multiple visualizations.
-- Automatically update visualizations when variable values change.
-- Create cascading filters with dependent variables.
-- Dynamically control grouping, aggregation, and time intervals.
+- 變更查詢參數，而無需編輯視覺化。
+- 只需定義一次值，即可在多個視覺化中參照。
+- 在變數值變更時自動更新視覺化。
+- 使用相依變數建立串聯篩選條件。
+- 動態控制分組、彙總和時間間隔。
 
-## Variable types
+## 變數類型
 
-OpenSearch Dashboards supports two types of variables:
+OpenSearch Dashboards 支援兩種變數類型：
 
-- **Query variables**: Options are dynamically fetched from a data source using a Piped Processing Language (PPL) or Prometheus Query Language (PromQL) query. Use query variables when values change over time or depend on underlying data, such as service names from logs or available regions from metrics.
+- **查詢變數**：選項是使用 Piped Processing Language (PPL) 或 Prometheus Query Language (PromQL) 查詢，從資料來源動態擷取而來。當值會隨時間變化或取決於基礎資料時，請使用查詢變數，例如記錄檔中的服務名稱或指標中的可用區域。
 
-- **Custom variables**: Options are manually defined as a static list. Use custom variables for predefined categories like environment types (`dev`, `staging`, `prod`) or fixed status codes.
+- **自訂變數**：選項以靜態清單的形式手動定義。針對預先定義的類別，例如環境類型（`dev`、`staging`、`prod`）或固定的狀態碼，請使用自訂變數。
 
-## Variable syntax
+## 變數語法
 
-You can reference variables in queries using `$variableName` or `${variableName}` syntax:
+您可以使用 `$variableName` 或 `${variableName}` 語法在查詢中參照變數：
 
 ```sql
 source=logs | where service='${service}' | stats count() by region
 ```
 {% include copy.html %}
 
-When you change a variable's value in a dashboard, all visualizations referencing that variable automatically refresh using the new value.
+當您在儀表板中變更變數的值時，所有參照該變數的視覺化都會自動使用新值重新整理。
 
-## Enabling dashboard variables
+## 啟用儀表板變數
 
-In addition to [enabling workspaces]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace/#enabling-workspaces), add the following setting to your `opensearch_dashboards.yml` file:
+除了[啟用工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace/#enabling-workspaces)之外，請將下列設定新增至您的 `opensearch_dashboards.yml` 檔案：
 
 ```yaml
 explore.enabled: true
 ```
 {% include copy.html %}
 
-Restart OpenSearch Dashboards for the changes to take effect.
+重新啟動 OpenSearch Dashboards，變更才會生效。
 
-## Creating and using dashboard variables
+## 建立和使用儀表板變數
 
-The following tutorial uses the OpenSearch Dashboards sample web logs dataset to create a variable and use it in a visualization.
+下列教學使用 OpenSearch Dashboards 的範例 Web 記錄資料集來建立變數，並在視覺化中使用該變數。
 
-### Step 1: Create a workspace
+### 步驟 1：建立工作區
 
-1. Navigate to the OpenSearch Dashboards home page.
-1. Select **Create workspace**.
-1. Enter a workspace name (for example, `My Observability`).
-1. Under **Use case**, select **Observability**.
-1. Select **Create workspace**.
+1. 前往 OpenSearch Dashboards 首頁。
+1. 選取 **Create workspace**。
+1. 輸入工作區名稱（例如 `My Observability`）。
+1. 在 **Use case** 下方，選取 **Observability**。
+1. 選取 **Create workspace**。
 
-For more information, see [Create a workspace]({{site.url}}{{site.baseurl}}/dashboards/workspace/create-workspace/).
+如需詳細資訊，請參閱[建立工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/create-workspace/)。
 
-### Step 2: Set up sample data
+### 步驟 2：設定範例資料
 
-1. In the workspace, navigate to **Manage workspace** > **Sample data** and select **Add data** for the web logs dataset.
-1. Create an index pattern for the sample data:
-   1. Navigate to **Manage workspace** > **Index patterns**.
-   1. Select **Create index pattern**.
-   1. In the **Index pattern name** field, enter `opensearch_dashboards_sample_data_logs`.
-   1. Select **Next step**.
-   1. In the **Time field** dropdown, select `timestamp`.
-   1. Select **Create index pattern**.
+1. 在工作區中，前往 **Manage workspace** > **Sample data**，並為 Web 記錄資料集選取 **Add data**。
+1. 為範例資料建立索引模式：
+   1. 前往 **Manage workspace** > **Index patterns**。
+   1. 選取 **Create index pattern**。
+   1. 在 **Index pattern name** 欄位中，輸入 `opensearch_dashboards_sample_data_logs`。
+   1. 選取 **Next step**。
+   1. 在 **Time field** 下拉式選單中，選取 `timestamp`。
+   1. 選取 **Create index pattern**。
 
-### Step 3: Create a variable
+### 步驟 3：建立變數
 
-1. Select **Dashboards** in the left navigation.
-1. Select **Create** > **Dashboard**.
-1. Save the dashboard by entering a title (for example, `Log Analysis`) and selecting **Save**.
-1. At the top of the dashboard, select **Add variable**.
-1. Configure the following settings:
-   - **Name**: `extension`
-   - **Type**: **Query**
-   - **Dataset**: Select `opensearch_dashboards_sample_data_logs`
-   - **Options Query**:
+1. 在左側導覽中選取 **Dashboards**。
+1. 選取 **Create** > **Dashboard**。
+1. 輸入標題（例如 `Log Analysis`）並選取 **Save** 以儲存儀表板。
+1. 在儀表板頂端，選取 **Add variable**。
+1. 設定下列設定：
+   - **Name**：`extension`
+   - **Type**：**Query**
+   - **Dataset**：選取 `opensearch_dashboards_sample_data_logs`
+   - **Options Query**：
 
      ```sql
      source=opensearch_dashboards_sample_data_logs | stats count() by extension | fields extension
      ```
      {% include copy.html %}
 
-1. Select **Preview** to verify the results. The preview should display values: `css`, `deb`, `gz`, `rpm`, and `zip`.
-1. Select **Add variable** to save.
+1. 選取 **Preview** 以驗證結果。預覽應顯示下列值：`css`、`deb`、`gz`、`rpm` 和 `zip`。
+1. 選取 **Add variable** 以儲存。
 
-The `extension` variable now appears at the top of the dashboard with a dropdown.
+`extension` 變數現在會顯示在儀表板頂端，並附有一個下拉式選單。
 
-For more information, see [Managing dashboard variables]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/managing-variables/).
+如需詳細資訊，請參閱[管理儀表板變數]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/managing-variables/)。
 
-### Step 4: Use the variable in a visualization
+### 步驟 4：在視覺化中使用變數
 
-1. In the dashboard, select **Create new**.
-1. Select **Add visualization** to open the visualization editor.
-1. In the query editor, enter the following PPL query that references the `$extension` variable:
+1. 在儀表板中，選取 **Create new**。
+1. 選取 **Add visualization** 以開啟視覺化編輯器。
+1. 在查詢編輯器中，輸入下列參照 `$extension` 變數的 PPL 查詢：
 
    ```sql
    | where extension='$extension' | stats count() by response
    ```
    {% include copy.html %}
 
-1. In the `extension` dropdown at the top of the editor, select a value (for example, `css`).
-1. Select **Update** to run the query.
+1. 在編輯器頂端的 `extension` 下拉式選單中，選取一個值（例如 `css`）。
+1. 選取 **Update** 以執行查詢。
 
-The visualization displays the response code distribution filtered by the selected extension, as shown in the following image.
+視覺化會顯示依所選副檔名篩選的回應碼分布，如下圖所示。
 
-![Visualization editor showing a bar chart of response codes filtered by the selected extension value]({{site.url}}{{site.baseurl}}/images/dashboard-variables/variable-visualization-result.png)
+![視覺化編輯器顯示依所選副檔名值篩選的回應碼長條圖]({{site.url}}{{site.baseurl}}/images/dashboard-variables/variable-visualization-result.png)
 
-When you change the `extension` value in the dropdown, the visualization automatically updates to reflect the new selection.
+當您在下拉式選單中變更 `extension` 值時，視覺化會自動更新以反映新的選擇。
 
-If no results appear, expand the time range (for example, **Last 90 days**) using the [time filter]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/) in the upper-right corner.
+如果沒有顯示任何結果，請使用右上角的[時間篩選器]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/)擴大時間範圍（例如 **Last 90 days**）。
 {: .tip}
 
-For more information, see [Using dashboard variables]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/using-variables/).
+如需詳細資訊，請參閱[使用儀表板變數]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/using-variables/)。
 
-## Variable storage
+## 變數儲存
 
-Variables are stored as part of the dashboard saved object in OpenSearch. Each dashboard maintains its own set of variables independently.
+變數會儲存為 OpenSearch 中儀表板已儲存物件的一部分。每個儀表板都會各自獨立維護自己的一組變數。
 
-The `variablesJSON` attribute in the dashboard saved object contains the variable configurations:
+儀表板已儲存物件中的 `variablesJSON` 屬性包含變數組態：
 
 ```typescript
 {
@@ -149,22 +150,22 @@ The `variablesJSON` attribute in the dashboard saved object contains the variabl
 ```
 {% include copy.html %}
 
-Variable configurations include the following components:
+變數組態包含下列元件：
 
-- Metadata (name, label, description, type).
-- Options (query definition for query type or custom values for custom type).
-- Settings (multi-select, "All" option, sort order, visibility).
-- Current values (selected values for each variable).
+- 中繼資料（名稱、標籤、描述、類型）。
+- 選項（查詢類型的查詢定義，或自訂類型的自訂值）。
+- 設定（多重選取、「All」選項、排序順序、可見性）。
+- 目前的值（每個變數所選取的值）。
 
-Current variable values are also synchronized to the dashboard URL so that you can:
+目前的變數值也會同步至儀表板 URL，讓您可以：
 
-- Share dashboards with specific filter values preselected.
-- Bookmark dashboards with desired variable states.
-- Persist variable selections across page refreshes.
+- 分享已預先選取特定篩選值的儀表板。
+- 將具有所需變數狀態的儀表板加入書籤。
+- 在重新整理頁面後保留變數選擇。
 
-## Related documentation
+## 相關文件
 
-- [Managing dashboard variables]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/managing-variables/)
-- [Using dashboard variables]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/using-variables/)
-- [Creating visualizations using queries]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/)
-- [Workspace for OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/workspace/)
+- [管理儀表板變數]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/managing-variables/)
+- [使用儀表板變數]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/using-variables/)
+- [使用查詢建立視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/)
+- [OpenSearch Dashboards 的工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/)

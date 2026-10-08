@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: CAT cluster manager
+title: "CAT 叢集管理員"
 parent: CAT APIs
 redirect_from:
  - /opensearch/rest-api/cat/cat-master/
@@ -9,17 +10,17 @@ has_children: false
 ---
 
 # CAT Cluster Manager API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The CAT cluster manager operation lists information that helps identify the elected cluster manager node.
+CAT 叢集管理員操作會列出有助於識別已選出的叢集管理員節點的資訊。
 
 
 <!-- spec_insert_start
 api: cat.cluster_manager
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_cat/cluster_manager
 ```
@@ -32,24 +33,24 @@ component: query_parameters
 columns: Parameter, Data type, Description, Default
 include_deprecated: false
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `cluster_manager_timeout` | String | A timeout for connection to the cluster manager node. | N/A |
-| `format` | String | A short version of the HTTP `Accept` header, such as `json` or `yaml`. | N/A |
-| `h` | List | A comma-separated list of column names to display. | N/A |
-| `help` | Boolean | Returns help information. | `false` |
-| `local` | Boolean | Returns local information but does not retrieve the state from the cluster manager node. | `false` |
-| `s` | List | A comma-separated list of column names or column aliases to sort by. | N/A |
-| `v` | Boolean | Enables verbose mode, which displays column headers. | `false` |
+| `cluster_manager_timeout` | 字串 | 連線至叢集管理員節點的逾時時間。 | N/A |
+| `format` | 字串 | HTTP `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
+| `h` | 清單 | 以逗號分隔的要顯示的欄名稱清單。 | N/A |
+| `help` | 布林值 | 傳回說明資訊。 | `false` |
+| `local` | 布林值 | 傳回本機資訊，但不會從叢集管理員節點擷取狀態。 | `false` |
+| `s` | 清單 | 以逗號分隔的排序依據欄名稱或欄別名清單。 | N/A |
+| `v` | 布林值 | 啟用詳細模式，此模式會顯示欄標頭。 | `false` |
 
 <!-- spec_insert_end -->
 
 
-## Example request
+## 請求範例
 
 <!-- spec_insert_start
 component: example_code
@@ -73,13 +74,13 @@ response = client.cat.cluster_manager(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
 ```json
 id                     |   host     |     ip     |   node
 ZaIkkUd4TEiAihqJGkp5CA | 172.18.0.3 | 172.18.0.3 | opensearch-node2
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:monitor/state`.
+如果您使用 Security 外掛程式，請確保您具備適當的權限：`cluster:monitor/state`。

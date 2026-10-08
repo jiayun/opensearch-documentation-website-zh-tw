@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Polish
+title: "波蘭文"
 nav_order: 255
 parent: Language analyzers
 grand_parent: Analyzers
 ---
 
-# Polish analyzer
+# 波蘭文分析器
 
-The Polish language analyzer (`polish`) provides analysis for Polish text. This analyzer is part of the `analysis-stempel` plugin, which must be installed before use.
+波蘭文語言分析器（`polish`）可為波蘭文文字提供分析功能。此分析器屬於 `analysis-stempel` 外掛程式的一部分，使用前必須先安裝該外掛程式。
 
-## Installing the plugin
+## 安裝外掛程式
 
-Before you can use the Polish analyzer, you must install the `analysis-stempel` plugin by running the following command:
+在使用波蘭文分析器之前，您必須執行下列命令來安裝 `analysis-stempel` 外掛程式：
 
 ```bash
 ./bin/opensearch-plugin install analysis-stempel
 ```
 {% include copy.html %}
 
-For more information, see [Additional plugins]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/): Complete list of available OpenSearch plugins.
+如需詳細資訊，請參閱[其他外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/)：可用 OpenSearch 外掛程式的完整清單。
 
-## Using the Polish analyzer
+## 使用波蘭文分析器
 
-To use the Polish analyzer when you map an index, specify the `polish` value in the analyzer field:
+若要在對應索引時使用波蘭文分析器，請在 analyzer 欄位中指定 `polish` 值：
 
 ```json
 PUT my-index
@@ -40,17 +41,17 @@ PUT my-index
 ```
 {% include copy-curl.html %}
 
-## Configuring a custom Polish analyzer
+## 設定自訂波蘭文分析器
 
-You can configure a custom Polish analyzer by creating a custom analyzer that uses the Polish stemmer token filter. The default Polish analyzer applies the following analysis chain:
+您可以建立使用波蘭文詞幹提取詞元篩選器的自訂分析器，藉此設定自訂波蘭文分析器。預設的波蘭文分析器會套用下列分析鏈：
 
-1. **Tokenizer**: `standard`
-2. **Token filters**:
+1. **斷詞器**：`standard`
+2. **詞元篩選器**：
    - `lowercase`
-   - `polish_stop` (removes Polish stop words)
-   - `polish_stem` (applies Polish stemming)
+   - `polish_stop`（移除波蘭文停用詞）
+   - `polish_stem`（套用波蘭文詞幹提取）
 
-### Example: Custom Polish analyzer
+### 範例：自訂波蘭文分析器
 
 ```json
 PUT my-polish-index
@@ -86,25 +87,25 @@ PUT my-polish-index
 ```
 {% include copy-curl.html %}
 
-## Polish token filters
+## 波蘭文詞元篩選器
 
-The `analysis-stempel` plugin provides the following token filters for Polish language processing.
-
-<!-- vale off -->
-### polish_stop token filter
-<!-- vale on -->
-
-Removes common Polish stop words from the token stream.
+`analysis-stempel` 外掛程式提供下列用於波蘭文語言處理的詞元篩選器。
 
 <!-- vale off -->
-### polish_stem token filter
+### polish_stop 詞元篩選器
 <!-- vale on -->
 
-Applies Polish-specific stemming rules to reduce words to their root forms using the Stempel stemming algorithm.
+從詞元串流中移除常見的波蘭文停用詞。
 
-## Generated tokens
+<!-- vale off -->
+### polish_stem 詞元篩選器
+<!-- vale on -->
 
-Use the following request to examine the tokens generated using the analyzer:
+使用 Stempel 詞幹提取演算法套用波蘭文專屬的詞幹提取規則，將單字還原為其字根形式。
+
+## 產生的詞元
+
+使用下列請求來檢查使用此分析器所產生的詞元：
 
 ```json
 POST _analyze
@@ -115,7 +116,7 @@ POST _analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

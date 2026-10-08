@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using Query Workbench
+title: "使用 Query Workbench"
 parent: Exploring data
 nav_order: 30
 redirect_from:
   - /search-plugins/sql/workbench/
 ---
 
-# Using Query Workbench
+# 使用 Query Workbench
 
-You can use Query Workbench in OpenSearch Dashboards to run on-demand [SQL]({{site.url}}{{site.baseurl}}/search-plugins/sql/sql/index/) and [PPL]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) queries, translate queries into their equivalent REST API calls, and view and save results in different [response formats]({{site.url}}{{site.baseurl}}/search-plugins/sql/response-formats/).
+您可以在 OpenSearch Dashboards 中使用 Query Workbench 來執行隨選的 [SQL]({{site.url}}{{site.baseurl}}/search-plugins/sql/sql/index/) 和 [PPL]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) 查詢，將查詢轉換為等效的 REST API 呼叫，並以不同的 [回應格式]({{site.url}}{{site.baseurl}}/search-plugins/sql/response-formats/) 檢視及儲存結果。
 
-Query Workbench does not support delete or update operations through SQL or PPL. Access to data is read-only.
+Query Workbench 不支援透過 SQL 或 PPL 執行刪除或更新操作。對資料的存取為唯讀。
 {: .important}
 
-## Prerequisites
+## 前置條件
 
-Before getting started with this tutorial, index the sample documents by sending the following [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) request:
+在開始本教學之前，請透過發送以下 [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) 請求來為範例文件編製索引：
 
 ```json
 PUT accounts/_bulk?refresh
@@ -31,19 +32,19 @@ PUT accounts/_bulk?refresh
 ```
 {% include copy-curl.html %}
 
-See [Managing indexes]({{site.url}}{{site.baseurl}}/im-plugin/index/) to learn about indexing your own data. 
+請參閱 [管理索引]({{site.url}}{{site.baseurl}}/im-plugin/index/) 以了解如何為您自己的資料編製索引。
 
-## Running SQL queries within Query Workbench
+## 在 Query Workbench 中執行 SQL 查詢
  
- The following steps guide you through running SQL queries against OpenSearch data:
+ 以下步驟將引導您對 OpenSearch 資料執行 SQL 查詢：
 
-1. Access Query Workbench.
-    - To access Query Workbench, go to OpenSearch Dashboards and choose **OpenSearch Plugins** > **Query Workbench** from the main menu.
+1. 存取 Query Workbench。
+    - 若要存取 Query Workbench，請前往 OpenSearch Dashboards，並從主選單選擇 **OpenSearch Plugins** > **Query Workbench**。
 
-2. Run a query.
-    - Select the **SQL** button. In the query editor, type a SQL expression and then select the **Run** button to run the query. 
+2. 執行查詢。
+    - 選取 **SQL** 按鈕。在查詢編輯器中輸入 SQL 運算式，然後選取 **Run** 按鈕以執行查詢。 
     
-    The following example query retrieves the first name, last name, and balance from the `accounts` index for accounts with a balance greater than 10,000 and sorts by balance in descending order:
+    以下範例查詢會從 `accounts` 索引中擷取餘額大於 10,000 之帳戶的名字、姓氏和餘額，並依餘額遞減排序：
 
     ```sql
     SELECT
@@ -59,26 +60,26 @@ See [Managing indexes]({{site.url}}{{site.baseurl}}/im-plugin/index/) to learn a
     ```
     {% include copy.html %}
     
-3. View the results.
-    - View the results in the **Results** pane, which presents the query output in tabular format. You can filter and download the results as needed.
+3. 檢視結果。
+    - 在 **Results** 窗格中檢視結果，該窗格會以表格格式呈現查詢輸出。您可以視需要篩選及下載結果。
 
-4. Clear the query editor.  
-    - Select the **Clear** button to clear the query editor and run a new query. 
+4. 清除查詢編輯器。  
+    - 選取 **Clear** 按鈕以清除查詢編輯器並執行新的查詢。 
 
-5. Examine how the query is processed.
-    - Select the **Explain** button to examine how OpenSearch processes the query, including the steps involved and order of operations.
+5. 檢查查詢的處理方式。
+    - 選取 **Explain** 按鈕以檢查 OpenSearch 如何處理查詢，包括所涉及的步驟及作業順序。
 
-## Running PPL queries within Query Workbench
+## 在 Query Workbench 中執行 PPL 查詢
 
-Follow these steps to learn how to run PPL queries against OpenSearch data:
+請依照以下步驟了解如何對 OpenSearch 資料執行 PPL 查詢：
 
-1. Access Query Workbench.
-    - To access Query Workbench, go to OpenSearch Dashboards and choose **OpenSearch Plugins** > **Query Workbench** from the main menu.
+1. 存取 Query Workbench。
+    - 若要存取 Query Workbench，請前往 OpenSearch Dashboards，並從主選單選擇 **OpenSearch Plugins** > **Query Workbench**。
 
-2. Run a query.
-    - Select the **PPL** button. In the query editor, type a PPL query and then select the **Run** button to run the query. 
+2. 執行查詢。
+    - 選取 **PPL** 按鈕。在查詢編輯器中輸入 PPL 查詢，然後選取 **Run** 按鈕以執行查詢。 
     
-    The following is an example query that retrieves the `firstname` and `lastname` fields for documents in the `accounts` index with age greater than `18`:
+    以下範例查詢會針對 `accounts` 索引中年齡大於 `18` 的文件，擷取 `firstname` 和 `lastname` 欄位：
     
     ```sql
     search source=accounts
@@ -87,11 +88,11 @@ Follow these steps to learn how to run PPL queries against OpenSearch data:
     ```
     {% include copy.html %}
     
-3. View the results.
-    - View the results in the **Results** pane, which presents the query output in tabular format.
+3. 檢視結果。
+    - 在 **Results** 窗格中檢視結果，該窗格會以表格格式呈現查詢輸出。
 
-4. Clear the query editor.  
-    - Select the **Clear** button to clear the query editor and run a new query. 
+4. 清除查詢編輯器。  
+    - 選取 **Clear** 按鈕以清除查詢編輯器並執行新的查詢。 
 
-5. Examine how the query is processed.
-    - Select the **Explain** button to examine how OpenSearch processes the query, including the steps involved and order of operations.
+5. 檢查查詢的處理方式。
+    - 選取 **Explain** 按鈕以檢查 OpenSearch 如何處理查詢，包括所涉及的步驟及作業順序。

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Update settings
+title: "更新設定"
 parent: Index settings and mappings
 grand_parent: Index APIs
 nav_order: 20
@@ -9,19 +10,19 @@ redirect_from:
 ---
 
 # Update Index Settings API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Update Index Settings API changes index-level settings in real time. You can update dynamic index settings at any time. You can update static index settings only on a closed index, and you cannot update final static settings, such as `index.number_of_shards`, after index creation. For more information about static and dynamic index settings, see [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/).
+Update Index Settings API 可即時變更索引層級的設定。您可以隨時更新動態索引設定。您只能在已關閉的索引上更新靜態索引設定，而且在建立索引後，無法更新最終靜態設定，例如 `index.number_of_shards`。如需靜態與動態索引設定的詳細資訊，請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)。
 
-In addition to the built-in index settings, you can also update settings for individual plugins. To retrieve a complete list of all available settings, including default values, run `GET <target-index>/_settings?include_defaults=true`.
+除了內建的索引設定，您也可以更新個別外掛程式的設定。若要取得所有可用設定的完整清單（包含預設值），請執行 `GET <target-index>/_settings?include_defaults=true`。
 
-The API updates settings only on existing indexes and does not create an index. Each setting in the request body is applied whether or not it was previously set on the index. To leave settings that already have a value unchanged and apply only the settings that are not yet set, specify `preserve_existing=true`. To reset a setting to its default value, set it to `null`. For more information, see [Resetting a setting to its default value](#example-request-resetting-a-setting-to-its-default-value).
+此 API 只會更新現有索引的設定，不會建立索引。無論先前是否已在索引上設定，請求本文中的每項設定都會套用。若要維持已有值的設定不變，並只套用尚未設定的項目，請指定 `preserve_existing=true`。若要將設定重設為預設值，請將其設為 `null`。如需詳細資訊，請參閱[將設定重設為預設值](#example-request-resetting-a-setting-to-its-default-value)。
 
-If the request contains any setting that cannot be updated, the entire request is rejected and no settings are changed.
+如果請求包含任何無法更新的設定，整個請求都會遭到拒絕，且不會變更任何設定。
 
 
-## Endpoints
+## 端點
 
 <!-- spec_insert_start
 component: endpoints
@@ -31,39 +32,39 @@ PUT /{index}/_settings
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`index` | String | The name of the index to update. You can specify a single index name, a comma-separated list of index names, or a wildcard expression. Use `_all` or `*` to update settings for all indexes in the cluster.
+`index` | 字串 | 要更新的索引名稱。您可以指定單一索引名稱、以逗號分隔的索引名稱清單，或萬用字元運算式。使用 `_all` 或 `*` 可更新叢集中所有索引的設定。
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`allow_no_indices` | Boolean | Specifies whether to ignore wildcard expressions or index patterns that don’t match any indexes. When `false`, the request returns an error if a wildcard expression doesn’t match any indexes. When `true`, the request ignores missing indexes and updates only the settings for indexes that exist. Default is `false`.
-`expand_wildcards` | String | Specifies the types of indexes to which wildcard expressions can expand. Supports comma-separated values. Valid values are `all` (all indexes), `open` (open indexes), `closed` (closed indexes), `hidden` (hidden indexes), and `none` (wildcard expressions are not accepted). Default is `open`.
-`flat_settings` | Boolean | Specifies whether to return settings in flat format. When `true`, settings are returned in a flattened format. When `false`, settings are returned in nested format. Default is `false`.
-`ignore_unavailable` | Boolean | Specifies whether to ignore indexes that are missing or closed. When `true`, the request does not return an error if the target index is missing or closed. When `false`, the request returns an error if the target index is unavailable. Default is `false`.
-`preserve_existing` | Boolean | Specifies whether to preserve existing index settings. When `true`, existing settings remain unchanged and only new settings are applied. When `false`, the request updates existing settings with the provided values. Default is `false`.
-`cluster_manager_timeout` | Time | The amount of time to wait for a connection to the cluster manager node. Default is `30s`.
-`timeout` | Time | The amount of time to wait for a response. Default is `30s`.
+`allow_no_indices` | 布林值 | 指定是否忽略未符合任何索引的萬用字元運算式或索引模式。當設為 `false` 時，如果萬用字元運算式未符合任何索引，請求會傳回錯誤。當設為 `true` 時，請求會忽略不存在的索引，並只更新現有索引的設定。預設值為 `false`。
+`expand_wildcards` | 字串 | 指定萬用字元運算式可展開為哪些類型的索引。支援以逗號分隔的值。有效值為 `all`（所有索引）、`open`（開啟的索引）、`closed`（關閉的索引）、`hidden`（隱藏的索引）及 `none`（不接受萬用字元運算式）。預設值為 `open`。
+`flat_settings` | 布林值 | 指定是否以扁平格式傳回設定。當設為 `true` 時，設定會以扁平化格式傳回。當設為 `false` 時，設定會以巢狀格式傳回。預設值為 `false`。
+`ignore_unavailable` | 布林值 | 指定是否忽略不存在或已關閉的索引。當設為 `true` 時，如果目標索引不存在或已關閉，請求不會傳回錯誤。當設為 `false` 時，如果目標索引無法使用，請求會傳回錯誤。預設值為 `false`。
+`preserve_existing` | 布林值 | 指定是否保留現有的索引設定。當設為 `true` 時，現有設定會維持不變，且只會套用新設定。當設為 `false` 時，請求會以提供的值更新現有設定。預設值為 `false`。
+`cluster_manager_timeout` | 時間 | 等待與叢集管理員節點建立連線的時間。預設值為 `30s`。
+`timeout` | 時間 | 等待回應的時間。預設值為 `30s`。
 
-## Request body
+## 請求本文
 
-The request body contains the index settings you want to update. You can specify settings in either flat or nested format.
+請求本文包含您要更新的索引設定。您可以使用扁平或巢狀格式指定設定。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`settings` | Object | An object containing the index settings to update. For a list of available index settings, see [Index settings]({{site.url}}{{site.baseurl}}/im-plugin/index-settings/).
+`settings` | 物件 | 包含要更新的索引設定的物件。如需可用索引設定的清單，請參閱[索引設定]({{site.url}}{{site.baseurl}}/im-plugin/index-settings/)。
 
-## Example request: Updating settings for a single index
+## 請求範例：更新單一索引的設定
 
-The following example updates settings for the `books` index:
+下列範例會更新 `books` 索引的設定：
 
 <!-- spec_insert_start
 component: example_code
@@ -103,9 +104,9 @@ response = client.indices.put_settings(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example request: Resetting a setting to its default value
+## 請求範例：將設定重設為預設值
 
-To revert a setting to its default value, specify `null` as the value:
+若要將設定還原為預設值，請將值指定為 `null`：
 
 ```json
 PUT /books/_settings
@@ -117,9 +118,9 @@ PUT /books/_settings
 ```
 {% include copy.html %}
 
-## Example request: Updating settings for multiple indexes
+## 請求範例：更新多個索引的設定
 
-The following example updates settings for multiple indexes:
+下列範例會更新多個索引的設定：
 
 ```json
 PUT /books,products/_settings
@@ -131,9 +132,9 @@ PUT /books,products/_settings
 ```
 {% include copy.html %}
 
-## Example request: Optimizing for bulk indexing
+## 請求範例：針對大量編製索引進行最佳化
 
-To optimize an index for bulk indexing operations, disable the refresh interval by setting it to `-1`. After bulk indexing is complete, reenable it by setting it back to a positive value:
+若要針對大量編製索引作業最佳化索引，請將重新整理間隔設為 `-1` 以停用此功能。大量編製索引完成後，將其設回正值以重新啟用：
 
 ```json
 PUT /books/_settings
@@ -145,7 +146,7 @@ PUT /books/_settings
 ```
 {% include copy.html %}
 
-After completing bulk indexing, restore the refresh interval:
+完成大量編製索引後，請還原重新整理間隔：
 
 ```json
 PUT /books/_settings
@@ -157,7 +158,7 @@ PUT /books/_settings
 ```
 {% include copy.html %}
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -165,27 +166,27 @@ PUT /books/_settings
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`acknowledged` | Boolean | Indicates whether the update request was received. A value of `true` indicates that the request was received. This does not guarantee that the settings were applied.
+`acknowledged` | 布林值 | 表示是否已收到更新請求。值為 `true` 表示已收到請求。這不保證設定已套用。
 
-## Status codes
+## 狀態碼
 
-The following table lists the HTTP status codes that the API returns.
+下表列出此 API 傳回的 HTTP 狀態碼。
 
-Status code | Error type | Description
+狀態碼 | 錯誤類型 | 說明
 :--- | :--- | :---
-`200` | None | The request succeeded. The response contains `"acknowledged": true`.
-`400` | `settings_exception` | The request contains an unknown setting name or attempts to update a final setting, such as `index.number_of_shards`, on a closed index.
-`400` | `illegal_argument_exception` | The request contains an invalid setting value or attempts to update a static setting on an open index.
-`400` | `parse_exception` | The request body is missing.
-`400` | A JSON parsing error, such as `unexpected_end_of_input_exception` | The request body is not valid JSON.
-`404` | `index_not_found_exception` | A target index does not exist or a wildcard expression does not match any indexes. To ignore missing indexes, set `ignore_unavailable` to `true`. To ignore wildcard expressions that do not match any indexes, or when no target index exists, also set `allow_no_indices` to `true`.
+`200` | 無 | 請求成功。回應包含 `"acknowledged": true`。
+`400` | `settings_exception` | 請求包含未知的設定名稱，或嘗試在已關閉的索引上更新最終設定，例如 `index.number_of_shards`。
+`400` | `illegal_argument_exception` | 請求包含無效的設定值，或嘗試在開啟的索引上更新靜態設定。
+`400` | `parse_exception` | 缺少請求本文。
+`400` | JSON 剖析錯誤，例如 `unexpected_end_of_input_exception` | 請求本文不是有效的 JSON。
+`404` | `index_not_found_exception` | 目標索引不存在，或萬用字元運算式未符合任何索引。若要忽略不存在的索引，請將 `ignore_unavailable` 設為 `true`。若要忽略未符合任何索引的萬用字元運算式，或在沒有任何目標索引存在時，也請將 `allow_no_indices` 設為 `true`。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/settings/update`.
+如果您使用 Security 外掛程式，請確保您具有適當的權限：`indices:admin/settings/update`。

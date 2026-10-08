@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Getting started with the high-level .NET client
+title: "高階 .NET 用戶端入門"
 nav_order: 10
 has_children: false
 parent: .NET clients
 ---
 
-# Getting started with the high-level .NET client (OpenSearch.Client)
+# 高階 .NET 用戶端（OpenSearch.Client）入門
 
-OpenSearch.Client is a high-level .NET client. It provides strongly typed requests and responses as well as Query DSL. It frees you from constructing raw JSON requests and parsing raw JSON responses by providing models that parse and serialize/deserialize requests and responses automatically. OpenSearch.Client also exposes the OpenSearch.Net low-level client if you need it. For the client's complete API documentation, see the [OpenSearch.Client API documentation](https://opensearch-project.github.io/opensearch-net/api/OpenSearch.Client.html).
+OpenSearch.Client 是高階 .NET 用戶端。它提供強型別的請求與回應，以及 Query DSL。它提供可自動剖析及序列化／反序列化請求與回應的模型，讓您無須建構原始 JSON 請求或剖析原始 JSON 回應。OpenSearch.Client 也提供 OpenSearch.Net 低階用戶端，供您在需要時使用。如需此用戶端的完整 API 文件，請參閱 [OpenSearch.Client API 文件](https://opensearch-project.github.io/opensearch-net/api/OpenSearch.Client.html)。
 
 
-This getting started guide illustrates how to connect to OpenSearch, index documents, and run queries. For the client source code, see the [`opensearch-net` repo](https://github.com/opensearch-project/opensearch-net).
+本入門指南說明如何連線至 OpenSearch、將文件編製索引及執行查詢。如需用戶端的原始碼，請參閱 [`opensearch-net` 儲存庫](https://github.com/opensearch-project/opensearch-net)。
 
-## Installing OpenSearch.Client
+## 安裝 OpenSearch.Client
 
-To install OpenSearch.Client, download the [OpenSearch.Client NuGet package](https://www.nuget.org/packages/OpenSearch.Client/) and add it to your project in an IDE of your choice. In Microsoft Visual Studio, follow the following steps: 
-- In the **Solution Explorer** panel, right-click on your solution or project and select **Manage NuGet Packages for Solution**.
-- Search for the OpenSearch.Client NuGet package, and select **Install**.
+若要安裝 OpenSearch.Client，請下載 [OpenSearch.Client NuGet 套件](https://www.nuget.org/packages/OpenSearch.Client/)，並在您選擇的 IDE 中將其新增至專案。在 Microsoft Visual Studio 中，請依照下列步驟操作： 
+- 在 **Solution Explorer** 面板中，以滑鼠右鍵按一下您的方案或專案，然後選取 **Manage NuGet Packages for Solution**。
+- 搜尋 OpenSearch.Client NuGet 套件，然後選取 **Install**。
 
-Alternatively, add OpenSearch.Client to your project using the .NET CLI:
+或者，使用 .NET CLI 將 OpenSearch.Client 新增至您的專案：
 
 ```bash
 dotnet add package OpenSearch.Client --version 2.2.0
 ```
 {% include copy.html %}
 
-You can also add OpenSearch.Client to your .csproj file:
+您也可以將 OpenSearch.Client 新增至您的 .csproj 檔案：
 
 ```xml
 <Project>
@@ -38,11 +39,11 @@ You can also add OpenSearch.Client to your .csproj file:
 ```
 {% include copy.html %}
 
-OpenSearch.Client depends on OpenSearch.Net, so installing OpenSearch.Client also installs the low-level client. For information about supported OpenSearch versions and target frameworks, see [Compatibility]({{site.url}}{{site.baseurl}}/clients/dot-net/#compatibility).
+OpenSearch.Client 相依於 OpenSearch.Net，因此安裝 OpenSearch.Client 時也會安裝低階用戶端。如需支援的 OpenSearch 版本與目標架構的相關資訊，請參閱[相容性]({{site.url}}{{site.baseurl}}/clients/dot-net/#compatibility)。
 
-## Sample data
+## 範例資料
 
-The examples on this page use the following `Student` class to represent one student, which is equivalent to one document in the index. The `ToString` method formats a `Student` for console output:
+本頁的範例使用下列 `Student` 類別代表一名學生，相當於索引中的一份文件。`ToString` 方法會將 `Student` 格式化，以便輸出至主控台：
 
 ```cs
 using System.Globalization;
@@ -62,19 +63,19 @@ public class Student
 ```
 {% include copy.html %}
 
-By default, OpenSearch.Client uses camel case to convert property names to field names, so a `Student` is indexed as a document containing the `firstName`, `lastName`, `gpa`, and `gradDate` fields.
+依預設，OpenSearch.Client 使用駝峰式大小寫將屬性名稱轉換為欄位名稱，因此 `Student` 會被編製索引為包含 `firstName`、`lastName`、`gpa` 和 `gradDate` 欄位的文件。
 {: .note}
 
-## Connecting to OpenSearch
+## 連線至 OpenSearch
 
-Use the default constructor when creating an OpenSearchClient object to connect to the default OpenSearch host (`http://localhost:9200`). 
+建立 OpenSearchClient 物件時，使用預設建構函式即可連線至預設的 OpenSearch 主機（`http://localhost:9200`）。 
 
 ```cs
 var client  = new OpenSearchClient();
 ```
 {% include copy.html %}
 
-To connect to your OpenSearch cluster through a single node with a known address, specify this address when creating an instance of OpenSearch.Client:
+若要透過位址已知的單一節點連線至您的 OpenSearch 叢集，請在建立 OpenSearch.Client 執行個體時指定此位址：
 
 ```cs
 var nodeAddress = new Uri("http://myserver:9200");
@@ -82,7 +83,7 @@ var client = new OpenSearchClient(nodeAddress);
 ```
 {% include copy.html %}
 
-You can also connect to OpenSearch through multiple nodes. Connecting to your OpenSearch cluster with a node pool provides advantages like load balancing and cluster failover support. To connect to your OpenSearch cluster using multiple nodes, specify their addresses and create a `ConnectionSettings` object for the OpenSearch.Client instance:
+您也可以透過多個節點連線至 OpenSearch。使用節點集區連線至您的 OpenSearch 叢集，可提供負載平衡及叢集容錯移轉支援等優點。若要使用多個節點連線至您的 OpenSearch 叢集，請指定這些節點的位址，並為 OpenSearch.Client 執行個體建立 `ConnectionSettings` 物件：
 
 ```cs
 var nodes = new Uri[]
@@ -98,11 +99,11 @@ var client = new OpenSearchClient(settings);
 ```
 {% include copy.html %}
 
-### Using ConnectionSettings
+### 使用 ConnectionSettings
 
-`ConnectionConfiguration` is used to pass configuration options to the low-level OpenSearch.Net client. `ConnectionSettings` inherits from `ConnectionConfiguration` and provides additional configuration options for the high-level client, such as a default index name for requests and the mapping of property names to field names. `ConnectionSettings` is part of the OpenSearch.Client package.
+`ConnectionConfiguration` 用於將組態選項傳遞至低階 OpenSearch.Net 用戶端。`ConnectionSettings` 繼承自 `ConnectionConfiguration`，並為高階用戶端提供額外的組態選項，例如請求的預設索引名稱，以及屬性名稱與欄位名稱之間的對應。`ConnectionSettings` 是 OpenSearch.Client 套件的一部分。
 
-To set the address of the node and the default index name for requests that don't specify the index name, create a `ConnectionSettings` object:
+若要設定節點位址，以及未指定索引名稱之請求的預設索引名稱，請建立 `ConnectionSettings` 物件：
 
 ```cs
 var node = new Uri("http://myserver:9200");
@@ -111,9 +112,9 @@ var client = new OpenSearchClient(config);
 ```
 {% include copy.html %}
 
-## Creating an index
+## 建立索引
 
-The following example creates an index with one primary shard and one replica. It explicitly maps the `gradDate` field as a `date` in the `yyyy-MM-dd` format. OpenSearch maps the other document fields dynamically when you index documents:
+下列範例會建立具有一個主要分片和一個副本的索引。它會明確將 `gradDate` 欄位對應為採用 `yyyy-MM-dd` 格式的 `date`。當您將文件編製索引時，OpenSearch 會動態對應其他文件欄位：
 
 ```cs
 var index = "students";
@@ -127,18 +128,18 @@ var createIndexResponse = client.Indices.Create(index, c => c
 ```
 {% include copy.html %}
 
-## Indexing one document
+## 將單一文件編製索引
 
-Create one instance of `Student`:
+建立一個 `Student` 執行個體：
 
 ```cs
 var student = new Student { FirstName = "John", LastName = "Doe", Gpa = 3.89, GradDate = "2022-05-15" };
 ```
 {% include copy.html %}
 
-To index one document, you can use either fluent lambda syntax or object initializer syntax. The following examples set `Refresh` to `Refresh.True` so that the document is immediately available for search.
+若要將單一文件編製索引，您可以使用流暢式 Lambda 語法或物件初始設定式語法。下列範例會將 `Refresh` 設定為 `Refresh.True`，讓文件可立即供搜尋使用。
 
-Index this `Student` into the `students` index with the ID `1` using fluent lambda syntax:
+使用流暢式 Lambda 語法，將此 `Student` 以 ID `1` 編製索引至 `students` 索引：
 
 ```cs
 var indexResponse = client.Index(student, i => i
@@ -148,7 +149,7 @@ var indexResponse = client.Index(student, i => i
 ```
 {% include copy.html %}
 
-Index this `Student` into the `students` index with the ID `1` using object initializer syntax:
+使用物件初始設定式語法，將此 `Student` 以 ID `1` 編製索引至 `students` 索引：
 
 ```cs
 var indexResponse = client.Index(new IndexRequest<Student>(student, index, "1")
@@ -158,9 +159,9 @@ var indexResponse = client.Index(new IndexRequest<Student>(student, index, "1")
 ```
 {% include copy.html %}
 
-## Indexing many documents
+## 將多份文件編製索引
 
-Index multiple documents in a single request using the Bulk API:
+使用 Bulk API，在單一請求中將多份文件編製索引：
 
 ```cs
 var bulkResponse = client.Bulk(b => b
@@ -175,9 +176,9 @@ var bulkResponse = client.Bulk(b => b
 ```
 {% include copy.html %}
 
-## Searching for documents
+## 搜尋文件
 
-Search for all documents in an index using the following code:
+使用下列程式碼搜尋索引中的所有文件：
 
 ```cs
 var searchResponse = client.Search<Student>(s => s
@@ -190,7 +191,7 @@ foreach (var doc in searchResponse.Documents)
 ```
 {% include copy.html %}
 
-Each item in `searchResponse.Documents` is a `Student` object, and its fields are available as properties. To also get the ID of each document, iterate over `searchResponse.Hits`. Each hit contains the document ID in the `Id` property and the `Student` object in the `Source` property:
+`searchResponse.Documents` 中的每個項目都是 `Student` 物件，其欄位可透過屬性存取。若還要取得每份文件的 ID，請逐一走訪 `searchResponse.Hits`。每筆命中結果的 `Id` 屬性包含文件 ID，而 `Source` 屬性包含 `Student` 物件：
 
 ```cs
 foreach (var hit in searchResponse.Hits)
@@ -200,7 +201,7 @@ foreach (var hit in searchResponse.Hits)
 ```
 {% include copy.html %}
 
-To search for students who graduated in 2019, use a range query. The following Query DSL range query searches for documents whose `gradDate` falls within 2019:
+若要搜尋在 2019 年畢業的學生，請使用範圍查詢。下列 Query DSL 範圍查詢會搜尋 `gradDate` 落在 2019 年內的文件：
 
 ```json
 GET students/_search
@@ -216,7 +217,7 @@ GET students/_search
 }
 ```
 
-In OpenSearch.Client, this query looks like this:
+在 OpenSearch.Client 中，此查詢如下所示：
 
 ```cs
 var searchResponse = client.Search<Student>(s => s
@@ -229,15 +230,15 @@ var searchResponse = client.Search<Student>(s => s
 ```
 {% include copy.html %}
 
-The response contains one document, which corresponds to the correct student:
+回應包含一份文件，對應至正確的學生：
 
 ```text
 Student{firstName='Shirley', lastName='Rodriguez', gpa=3.91, gradDate=2019-05-10}
 ```
 
-## Paginating results
+## 將結果分頁
 
-To paginate results, use the `from` and `size` parameters. The following example sorts students by graduation date and retrieves the results two at a time. The first request returns the first page of results, and the second request returns the next page:
+若要將結果分頁，請使用 `from` 和 `size` 參數。下列範例依畢業日期排序學生，並每次擷取兩筆結果。第一個請求傳回第一頁結果，第二個請求傳回下一頁：
 
 ```cs
 var firstPageResponse = client.Search<Student>(s => s
@@ -262,11 +263,11 @@ foreach (var doc in nextPageResponse.Documents)
 ```
 {% include copy.html %}
 
-The `from` and `size` parameters work well for the first pages of results. To paginate through a large number of results, use point in time with `search_after`. For more information, see [Paginate results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/).
+`from` 和 `size` 參數適合用於前幾頁結果。若要對大量結果進行分頁，請搭配 `search_after` 使用時間點。詳細資訊請參閱[將結果分頁]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/)。
 
-## Updating a document
+## 更新文件
 
-Update a document using a partial document. Only the fields in the partial document are updated:
+使用部分文件來更新文件。只有部分文件中的欄位會更新：
 
 ```cs
 var updateResponse = client.Update<Student, object>("1", u => u
@@ -275,9 +276,9 @@ var updateResponse = client.Update<Student, object>("1", u => u
 ```
 {% include copy.html %}
 
-## Deleting a document
+## 刪除文件
 
-Delete a document using the following code:
+使用下列程式碼刪除文件：
 
 ```cs
 var deleteResponse = client.Delete<Student>("3", d => d
@@ -286,18 +287,18 @@ var deleteResponse = client.Delete<Student>("3", d => d
 ```
 {% include copy.html %}
 
-## Deleting an index
+## 刪除索引
 
-Delete an index using the following code:
+使用下列程式碼刪除索引：
 
 ```cs
 var deleteIndexResponse = client.Indices.Delete(index);
 ```
 {% include copy.html %}
 
-## Using OpenSearch.Client methods asynchronously
+## 以非同步方式使用 OpenSearch.Client 方法
 
-For applications that require asynchronous code, all method calls in OpenSearch.Client have asynchronous counterparts:
+對於需要非同步程式碼的應用程式，OpenSearch.Client 中的所有方法呼叫都有對應的非同步版本：
 
 ```cs
 // synchronous method
@@ -308,9 +309,9 @@ var asyncResponse = await client.IndexAsync(student, i => i.Index(index).Id("1")
 ```
 {% include copy.html %}
 
-## Falling back on the low-level OpenSearch.Net client
+## 改用低階 OpenSearch.Net 用戶端
 
-OpenSearch.Client exposes the low-level OpenSearch.Net client through the `LowLevel` property. Use the low-level client to call an API for which OpenSearch.Client does not provide a method or to construct the request body yourself instead of using the OpenSearch.Client query methods. The following example sends a range query as an anonymous object and deserializes the response into a `SearchResponse<Student>`:
+OpenSearch.Client 透過 `LowLevel` 屬性提供低階 OpenSearch.Net 用戶端的存取。您可以使用低階用戶端呼叫 OpenSearch.Client 未提供對應方法的 API，或自行建構請求本文，而不使用 OpenSearch.Client 查詢方法。下列範例將範圍查詢以匿名物件的形式傳送，並將回應反序列化為 `SearchResponse<Student>`：
 
 ```cs
 var lowLevelClient = client.LowLevel;
@@ -342,14 +343,14 @@ if (searchResponseLow.IsValid)
 ```
 {% include copy.html %}
 
-## Sample program
+## 範例程式
 
-This sample program combines the code from the preceding sections. It connects to a cluster that has the Security plugin enabled. To connect to a cluster without the Security plugin, change the lines marked with `// Without security` comments. Before running the sample program, make sure that you have the `Student` class defined in your project.
+此範例程式整合了前述各節的程式碼。它會連線至已啟用 Security 外掛程式的叢集。若要連線至未使用 Security 外掛程式的叢集，請變更以 `// Without security` 註解標示的程式碼行。執行範例程式之前，請確認您已在專案中定義 `Student` 類別。
 
-This sample program is for testing only. It specifies credentials in code and disables certificate validation so that it can connect to a cluster that uses self-signed certificates. In production, load credentials from a secure location and validate the cluster's certificate.
+此範例程式僅供測試使用。它在程式碼中指定認證資訊，並停用憑證驗證，以便連線至使用自我簽署憑證的叢集。在正式環境中，請從安全的位置載入認證資訊，並驗證叢集的憑證。
 {: .warning}
 
-The following sample program creates a client, creates an index, indexes documents individually and in bulk, searches for documents, updates a document, deletes a document, and then deletes the index:
+下列範例程式會建立用戶端、建立索引、逐一及大量將文件編製索引、搜尋文件、更新文件、刪除文件，最後刪除索引：
 
 ```cs
 using OpenSearch.Client;
@@ -471,7 +472,7 @@ internal class Program
 ```
 {% include copy.html %}
 
-The sample program produces the following output:
+範例程式會產生下列輸出：
 
 ```text
 Creating index......
@@ -508,8 +509,8 @@ Deleting the index......
 Acknowledged: true
 ```
 
-## Related documentation
+## 相關文件
 
-- For more examples of using the client, see the [`opensearch-net` user guide](https://github.com/opensearch-project/opensearch-net/blob/main/USER_GUIDE.md).
-- For guides to specific tasks, such as bulk indexing and searching, see the [`opensearch-net` guides](https://github.com/opensearch-project/opensearch-net/tree/main/guides).
-- For complete sample applications, see the [`opensearch-net` samples](https://github.com/opensearch-project/opensearch-net/tree/main/samples).
+- 如需更多使用用戶端的範例，請參閱 [`opensearch-net` 使用者指南](https://github.com/opensearch-project/opensearch-net/blob/main/USER_GUIDE.md)。
+- 如需特定工作的指南，例如大量編製索引與搜尋，請參閱 [`opensearch-net` 指南](https://github.com/opensearch-project/opensearch-net/tree/main/guides)。
+- 如需完整的範例應用程式，請參閱 [`opensearch-net` 範例](https://github.com/opensearch-project/opensearch-net/tree/main/samples)。

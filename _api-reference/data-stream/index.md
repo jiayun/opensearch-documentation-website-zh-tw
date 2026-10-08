@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Data stream APIs
+title: "資料串流 API"
 nav_order: 40
 has_children: true
 has_toc: false
@@ -8,24 +9,24 @@ redirect_from:
   - /api-reference/data-stream/
 ---
 
-# Data stream APIs
+# 資料串流 API
 
-You can use the data stream API to create, delete, and retrieve information and statistics about data streams.
+您可以使用資料串流 API 來建立、刪除資料串流，並擷取資料串流的資訊與統計資料。
 
-For conceptual information about data streams, including use cases and examples, see [Index data streams]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/).
+如需資料串流的概念資訊（包括使用案例與範例），請參閱 [索引資料串流]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)。
 
-## Available APIs
+## 可用的 API
 
-OpenSearch supports the following data stream APIs.
+OpenSearch 支援下列資料串流 API。
 
-| API | Description |
+| API | 說明 |
 |-----|-------------|
-| [Create data stream]({{site.url}}{{site.baseurl}}/api-reference/data-stream/create-data-stream/) | Creates a data stream. |
-| [Get data stream]({{site.url}}{{site.baseurl}}/api-reference/data-stream/data-stream-info/) | Returns information about one or more data streams. |
-| [Get data stream stats]({{site.url}}{{site.baseurl}}/api-reference/data-stream/data-stream-stats/) | Provides statistics on operations happening in one or more data streams. |
-| [Delete data stream]({{site.url}}{{site.baseurl}}/api-reference/data-stream/delete-data-stream/) | Deletes a data stream. |
-| [Modify data stream]({{site.url}}{{site.baseurl}}/api-reference/data-stream/modify-data-stream/) | Adds or removes backing indexes of a data stream. |
+| [Create data stream]({{site.url}}{{site.baseurl}}/api-reference/data-stream/create-data-stream/) | 建立資料串流。 |
+| [Get data stream]({{site.url}}{{site.baseurl}}/api-reference/data-stream/data-stream-info/) | 傳回一或多個資料串流的資訊。 |
+| [Get data stream stats]({{site.url}}{{site.baseurl}}/api-reference/data-stream/data-stream-stats/) | 提供一或多個資料串流中進行之操作的統計資料。 |
+| [Delete data stream]({{site.url}}{{site.baseurl}}/api-reference/data-stream/delete-data-stream/) | 刪除資料串流。 |
+| [Modify data stream]({{site.url}}{{site.baseurl}}/api-reference/data-stream/modify-data-stream/) | 新增或移除資料串流的後端索引。 |
 
-## Related documentation
+## 相關文件
 
-For more information about data streams, see [Data streams]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/).
+如需資料串流的更多資訊，請參閱 [資料串流]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)。

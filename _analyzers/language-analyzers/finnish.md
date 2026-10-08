@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Finnish
+title: "芬蘭文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 140
 ---
 
-# Finnish analyzer
+# 芬蘭文分析器
 
-The built-in `finnish` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `finnish` 分析器套用至文字欄位：
 
 ```json
 PUT /finnish-index
@@ -25,9 +26,9 @@ PUT /finnish-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，將 `stem_exclusion` 搭配此語言分析器使用：
 
 ```json
 PUT index_with_stem_exclusion_finnish_analyzer
@@ -46,21 +47,21 @@ PUT index_with_stem_exclusion_finnish_analyzer
 ```
 {% include copy-curl.html %}
 
-## Finnish analyzer internals
+## 芬蘭文分析器內部結構
 
-The `finnish` analyzer is built using the following components:
+`finnish` 分析器由下列元件建構而成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
+- 詞元篩選器：
   - lowercase
-  - stop (Finnish)
+  - stop（芬蘭文）
   - keyword
-  - stemmer (Finnish)
+  - stemmer（芬蘭文）
 
-## Custom Finnish analyzer
+## 自訂芬蘭文分析器
 
-You can create a custom Finnish analyzer using the following command:
+您可以使用下列命令建立自訂芬蘭文分析器：
 
 ```json
 PUT /finnish-index
@@ -107,9 +108,9 @@ PUT /finnish-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查分析器所產生的詞元：
 
 ```json
 POST /finnish-index/_analyze
@@ -120,7 +121,7 @@ POST /finnish-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

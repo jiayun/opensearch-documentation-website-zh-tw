@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index document
+title: "編製文件索引"
 parent: Document APIs
 nav_order: 1
 redirect_from: 
@@ -8,13 +9,13 @@ redirect_from:
 ---
 
 # Index Document API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple}
 
-The Index Document API adds a JSON document to a specified index and makes it searchable. If a document with the same ID already exists, the API updates the document and increments its version number.
+Index Document API 會將 JSON 文件新增至指定的索引，並使其可供搜尋。如果已存在具有相同 ID 的文件，此 API 會更新該文件並遞增其版本號碼。
 
 
-## Endpoints
+## 端點
 
 ```json
 PUT {index}/_doc/{id}
@@ -24,46 +25,46 @@ PUT {index}/_create/{id}
 POST {index}/_create/{id}
 ```
 
-Use the following endpoint combinations to control how documents are indexed:
+使用下列端點組合來控制文件的索引編製方式：
 
-- `PUT {index}/_doc/{id}`: Adds a new document with a specified ID or updates an existing document with the same ID.
-- `POST {index}/_doc`: Adds a new document and automatically generates a unique ID.
-- `PUT {index}/_create/{id}` or `POST {index}/_create/{id}`: Adds a new document with a specified ID only if a document with that ID does not already exist. If the document exists, the operation fails.
+- `PUT {index}/_doc/{id}`：新增具有指定 ID 的文件，或更新具有相同 ID 的現有文件。
+- `POST {index}/_doc`：新增文件，並自動產生唯一的 ID。
+- `PUT {index}/_create/{id}` 或 `POST {index}/_create/{id}`：僅在尚未存在具有該 ID 的文件時，才新增具有指定 ID 的文件。如果文件已存在，操作就會失敗。
 
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `index` | String | The name of the index. If the index does not exist, OpenSearch creates it automatically unless automatic index creation is disabled. Required. |
-| `id` | String | The unique document ID. Required when using PUT. Omit this parameter when using POST to let OpenSearch automatically generate a unique ID. |
+| `index` | 字串 | 索引的名稱。如果索引不存在，OpenSearch 會自動建立索引，除非已停用自動建立索引功能。必要。 |
+| `id` | 字串 | 唯一的文件 ID。使用 PUT 時為必要參數。使用 POST 時，省略此參數可讓 OpenSearch 自動產生唯一的 ID。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `if_seq_no` | Integer | Only performs the operation if the document's current sequence number matches the specified value. Used for optimistic concurrency control. See [Optimistic concurrency control](#optimistic-concurrency-control). |
-| `if_primary_term` | Integer | Only performs the operation if the document's current primary term matches the specified value. Used for optimistic concurrency control. See [Optimistic concurrency control](#optimistic-concurrency-control). |
-| `op_type` | Enum | The operation type. Valid values are `create` (indexes a document only if it does not already exist) and `index` (creates a new document or updates an existing document). If a document ID is specified, the default is `index`. Otherwise, the default is `create`. |
-| `pipeline` | String | The ID of the ingest pipeline to use for preprocessing the document before indexing. |
-| `routing` | String | A custom routing value used to route the operation to a specific shard. See [Routing](#routing). |
-| `refresh` | Enum | Whether to refresh the affected shards after the operation. Valid values are `true` (refresh immediately), `false` (do not refresh), and `wait_for` (wait for a refresh to occur before responding). Default is `false`. See [Refresh](#refresh). |
-| `timeout` | Time | The amount of time to wait for the primary shard to become available if it is unavailable. Default is `1m`. See [Timeout](#timeout). |
-| `version` | Integer | The explicit version number for concurrency control. The document is only indexed if its current version matches this value. See [Versioning](#versioning). |
-| `version_type` | Enum | The version type for external versioning. Valid values are `external` (only indexes if the specified version is greater than the stored version) and `external_gte` (only indexes if the specified version is greater than or equal to the stored version). Default is `internal`. See [Versioning](#versioning). |
-| `wait_for_active_shards` | String | The number of active shard copies required before proceeding with the operation. Valid values are `all` or a positive integer up to the total number of shards. Default is `1` (only the primary shard). See [Wait for active shards](#wait-for-active-shards). |
-| `require_alias` | Boolean | Whether the target index name must be an index alias. If `true` and the target is not an alias, the request fails. Default is `false`. |
+| `if_seq_no` | 整數 | 僅在文件目前的序號符合指定值時執行操作。用於樂觀並行控制。請參閱[樂觀並行控制](#optimistic-concurrency-control)。 |
+| `if_primary_term` | 整數 | 僅在文件目前的主要任期符合指定值時執行操作。用於樂觀並行控制。請參閱[樂觀並行控制](#optimistic-concurrency-control)。 |
+| `op_type` | 列舉 | 操作類型。有效值為 `create`（僅在文件尚不存在時編製其索引）和 `index`（建立新文件或更新現有文件）。如果指定了文件 ID，預設值為 `index`。否則，預設值為 `create`。 |
+| `pipeline` | 字串 | 用於在編製索引前預先處理文件的資料匯入管線 ID。 |
+| `routing` | 字串 | 用於將操作路由至特定分片的自訂路由值。請參閱[路由](#routing)。 |
+| `refresh` | 列舉 | 是否在操作後重新整理受影響的分片。有效值為 `true`（立即重新整理）、`false`（不重新整理）和 `wait_for`（等待重新整理發生後再回應）。預設值為 `false`。請參閱[重新整理](#refresh)。 |
+| `timeout` | 時間 | 主要分片無法使用時，等待其恢復可用的時間。預設值為 `1m`。請參閱[逾時](#timeout)。 |
+| `version` | 整數 | 用於並行控制的明確版本號碼。僅在文件目前的版本符合此值時，才會編製其索引。請參閱[版本控制](#versioning)。 |
+| `version_type` | 列舉 | 用於外部版本控制的版本類型。有效值為 `external`（僅在指定版本大於儲存的版本時編製索引）和 `external_gte`（僅在指定版本大於或等於儲存的版本時編製索引）。預設值為 `internal`。請參閱[版本控制](#versioning)。 |
+| `wait_for_active_shards` | 字串 | 繼續執行操作前所需的作用中分片複本數量。有效值為 `all`，或不超過分片總數的正整數。預設值為 `1`（僅主要分片）。請參閱[等待作用中的分片](#wait-for-active-shards)。 |
+| `require_alias` | 布林值 | 目標索引名稱是否必須為索引別名。如果為 `true` 且目標不是別名，請求就會失敗。預設值為 `false`。 |
 
-## Example requests
+## 請求範例
 
-The following example requests create a sample index document for an index named `sample_index`.
+下列請求範例會為名為 `sample_index` 的索引建立範例索引文件。
 
 
-### Example PUT request
+### PUT 請求範例
 
 <!-- spec_insert_start
 component: example_code
@@ -104,7 +105,7 @@ response = client.index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Example POST request
+### POST 請求範例
 
 <!-- spec_insert_start
 component: example_code
@@ -144,7 +145,7 @@ response = client.index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -162,35 +163,35 @@ response = client.index(
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `_index` | String | The name of the index to which the document was added. |
-| `_id` | String | The document's unique identifier. |
-| `_version` | Integer | The document's version number. Incremented each time the document is updated. |
-| `result` | String | The result of the indexing operation. Possible values are `created` (a new document was created) and `updated` (an existing document was updated). |
-| `_shards` | Object | Information about the replication process. |
-| `_shards.total` | Integer | The number of shard copies (primary and replicas) on which the operation should be executed. |
-| `_shards.successful` | Integer | The number of shard copies on which the operation succeeded. When the operation succeeds, this value is at least 1 (the primary shard). |
-| `_shards.failed` | Integer | The number of shard copies on which the operation failed. If the operation succeeds, this value is 0. |
-| `_seq_no` | Integer | The sequence number assigned to the document for this indexing operation. Sequence numbers are used to ensure that an older version of a document does not overwrite a newer version. See [Optimistic concurrency control](#optimistic-concurrency-control). |
-| `_primary_term` | Integer | The primary term assigned to the document for this indexing operation. See [Optimistic concurrency control](#optimistic-concurrency-control). |
+| `_index` | 字串 | 文件新增至的索引名稱。 |
+| `_id` | 字串 | 文件的唯一識別碼。 |
+| `_version` | 整數 | 文件的版本號碼。每次更新文件時都會遞增。 |
+| `result` | 字串 | 索引編製操作的結果。可能的值為 `created`（已建立新文件）和 `updated`（已更新現有文件）。 |
+| `_shards` | 物件 | 複寫程序的資訊。 |
+| `_shards.total` | 整數 | 應執行操作的分片複本（主要分片和副本）數量。 |
+| `_shards.successful` | 整數 | 操作成功的分片複本數量。操作成功時，此值至少為 1（主要分片）。 |
+| `_shards.failed` | 整數 | 操作失敗的分片複本數量。如果操作成功，此值為 0。 |
+| `_seq_no` | 整數 | 此次索引編製操作指派給文件的序號。序號用於確保文件的舊版本不會覆寫新版本。請參閱[樂觀並行控制](#optimistic-concurrency-control)。 |
+| `_primary_term` | 整數 | 此次索引編製操作指派給文件的主要任期。請參閱[樂觀並行控制](#optimistic-concurrency-control)。 |
 
 
-## Automatic index creation
+## 自動建立索引
 
-By default, if the specified index does not exist, the Index Document API automatically creates it and applies any configured index templates. The API also creates a dynamic mapping for new fields if no explicit mapping exists.
+預設情況下，如果指定的索引不存在，Index Document API 會自動建立索引，並套用任何已設定的索引範本。如果沒有明確的對應，API 也會為新欄位建立動態對應。
 
-Automatic index creation is controlled by the `action.auto_create_index` setting. By default, this setting is `true`, allowing any index to be created automatically. You can modify this setting to allow or block index creation based on specific patterns or disable automatic index creation entirely. For more information, see [Create index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/).
+自動建立索引由 `action.auto_create_index` 設定控制。此設定的預設值為 `true`，允許自動建立任何索引。您可以修改此設定，根據特定模式允許或阻擋索引建立，或完全停用自動建立索引。如需詳細資訊，請參閱[建立索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/)。
 
-## Optimistic concurrency control
+## 樂觀並行控制
 
-You can use the `if_seq_no` and `if_primary_term` parameters to perform conditional indexing based on the document's current sequence number and primary term. This ensures that the operation only succeeds if the document has not been modified since you last retrieved it.
+您可以使用 `if_seq_no` 和 `if_primary_term` 參數，根據文件目前的序號和主要任期進行條件式索引。這可確保只有在文件自您上次擷取後未經修改時，操作才會成功。
 
-For example, to update a document only if it has sequence number 3 and primary term 1, include these parameters in your request:
+例如，若要僅在文件的序號為 3 且主要任期為 1 時更新文件，請在請求中包含這些參數：
 
 ```json
 PUT sample-index/_doc/1?if_seq_no=3&if_primary_term=1
@@ -200,13 +201,13 @@ PUT sample-index/_doc/1?if_seq_no=3&if_primary_term=1
 }
 ```
 
-If the sequence number or primary term does not match the current values, OpenSearch returns a version conflict error (HTTP 409), allowing you to retrieve the latest version and retry the operation.
+如果序號或主要任期與目前的值不符，OpenSearch 會傳回版本衝突錯誤（HTTP 409），讓您能擷取最新版本並重試操作。
 
-## Automatic ID generation
+## 自動產生 ID
 
-When you use the POST method without specifying a document ID, OpenSearch automatically generates a unique ID for the document. The `op_type` is automatically set to `create`, ensuring a new document is always created.
+當您使用 POST 方法而未指定文件 ID 時，OpenSearch 會自動為文件產生唯一的 ID。`op_type` 會自動設為 `create`，確保一律建立新文件。
 
-The following example indexes a document without specifying an ID, allowing OpenSearch to generate one automatically:
+下列範例在未指定 ID 的情況下將文件編製索引，讓 OpenSearch 自動產生 ID：
 
 ```json
 POST sample-index/_doc
@@ -217,7 +218,7 @@ POST sample-index/_doc
 }
 ```
 
-The response includes the automatically generated ID:
+回應包含自動產生的 ID：
 
 ```json
 {
@@ -235,13 +236,13 @@ The response includes the automatically generated ID:
 }
 ```
 
-The generated ID is a Base64-encoded UUID that ensures uniqueness across your cluster.
+產生的 ID 是以 Base64 編碼的 UUID，可確保在整個叢集中具有唯一性。
 
-## Routing
+## 路由
 
-By default, OpenSearch determines which shard stores a document by computing a hash of the document's ID. You can override this behavior by providing a custom `routing` parameter value.
+預設情況下，OpenSearch 會計算文件 ID 的雜湊值，以決定由哪個分片儲存文件。您可以提供自訂的 `routing` 參數值來覆寫此行為。
 
-The following example routes the document to a shard based on the routing value `user123`:
+下列範例根據路由值 `user123` 將文件路由至分片：
 
 ```json
 POST sample-index/_doc?routing=user123
@@ -251,25 +252,25 @@ POST sample-index/_doc?routing=user123
 }
 ```
 
-When you use custom routing during indexing, you must provide the same routing value when retrieving, updating, or deleting the document. Otherwise, OpenSearch cannot locate the document.
+當您在編製索引時使用自訂路由，擷取、更新或刪除文件時，必須提供相同的路由值。否則，OpenSearch 無法找到文件。
 
-## Distributed model
+## 分散式模型
 
-The index operation is directed to the primary shard based on the document's routing value (either the document ID or a custom routing value). Once the primary shard completes the operation, OpenSearch distributes the update to all applicable replica shards in the replication group.
+索引操作會根據文件的路由值（文件 ID 或自訂路由值）導向主要分片。主要分片完成操作後，OpenSearch 會將更新分發至複寫群組中所有適用的副本分片。
 
-This distributed approach ensures that all shard copies remain synchronized. The primary shard coordinates the replication process and waits for confirmation from the required number of active shards before acknowledging success to the client.
+此分散式方法可確保所有分片複本維持同步。主要分片會協調複寫程序，並等待所需數量的作用中分片確認後，才向用戶端確認操作成功。
 
-## Wait for active shards
+## 等待作用中分片
 
-To improve write operation resiliency, you can configure the Index Document API to wait for a certain number of active shard copies before proceeding. By default, the operation waits only for the primary shard to be active (`wait_for_active_shards=1`).
+為了提高寫入操作的韌性，您可以設定 Index Document API，使其在繼續執行前，先等待一定數量的分片複本進入作用中狀態。預設情況下，操作只會等待主要分片進入作用中狀態（`wait_for_active_shards=1`）。
 
-You can set `wait_for_active_shards` to `all` or any positive integer up to the total number of shard copies (`number_of_replicas + 1`). If the required number of active shards is not available, the operation waits and retries until the shards become available or a timeout occurs.
+您可以將 `wait_for_active_shards` 設為 `all`，或不超過分片複本總數（`number_of_replicas + 1`）的任何正整數。如果所需數量的作用中分片無法使用，操作會等待並重試，直到分片可用或發生逾時。
 
-For example, consider a cluster with three nodes (A, B, and C) and an index with `number_of_replicas` set to 3, resulting in 4 shard copies (one primary and three replicas). By default, an indexing operation proceeds as long as the primary shard is available, even if nodes B and C are down and node A hosts the primary shard copy.
+例如，假設叢集有三個節點（A、B 和 C），且某個索引的 `number_of_replicas` 設為 3，因此共有 4 個分片複本（一個主要分片和三個副本分片）。預設情況下，只要主要分片可用，索引操作就會繼續執行，即使節點 B 和 C 停機，而節點 A 託管主要分片複本，也是如此。
 
-If you set `wait_for_active_shards=3` on the request, the indexing operation requires 3 active shard copies before proceeding. This requirement can be met when all 3 nodes are running, with each node containing a copy of the shard. However, if you set `wait_for_active_shards=all` (or `4`), the indexing operation does not proceed because you need all 4 copies active, but only 3 nodes exist. The operation times out unless a new node joins the cluster to host the fourth shard copy.
+如果您在請求中設定 `wait_for_active_shards=3`，索引操作就需要 3 個作用中的分片複本才能繼續執行。當全部 3 個節點都在執行，且每個節點都包含一個分片複本時，就能滿足此要求。不過，如果您設定 `wait_for_active_shards=all`（或 `4`），索引操作就不會繼續執行，因為您需要全部 4 個複本都處於作用中狀態，但只有 3 個節點。除非有新節點加入叢集以託管第四個分片複本，否則操作會逾時。
 
-The following example requires at least 2 active shard copies (the primary and one replica) before proceeding:
+下列範例要求至少有 2 個作用中的分片複本（主要分片和一個副本分片）才能繼續執行：
 
 ```json
 PUT sample-index/_doc/1?wait_for_active_shards=2
@@ -279,21 +280,21 @@ PUT sample-index/_doc/1?wait_for_active_shards=2
 }
 ```
 
-This setting reduces the risk of writing to an insufficient number of shard copies but does not eliminate it entirely. The check occurs before the write operation begins. Once the operation is underway, replication can still fail on some replicas while succeeding on the primary. The `_shards` section of the response indicates how many shard copies succeeded or failed.
+此設定可降低寫入至數量不足的分片複本的風險，但無法完全消除此風險。檢查會在寫入操作開始前進行。操作開始後，即使主要分片上的操作成功，部分副本上的複寫仍可能失敗。回應中的 `_shards` 區段會指出成功或失敗的分片複本數量。
 
-## Refresh
+## 重新整理
 
-The `refresh` parameter controls when indexed documents become visible to search operations. For most use cases, use the default value (`false`) for optimal performance.
+`refresh` 參數控制已編製索引的文件何時可供搜尋操作查得。對於大多數使用案例，請使用預設值（`false`）以獲得最佳效能。
 
-Valid options are:
+有效選項如下：
 
-- `false` (default): The document becomes visible according to the index refresh interval (by default, 1 second).
-- `true`: Forces an immediate refresh after indexing, making the document immediately searchable. Use sparingly, as frequent refreshes can significantly impact performance.
-- `wait_for`: Waits for the next scheduled refresh before responding. More efficient than `true` for batch operations.
+- `false`（預設）：文件會依照索引的重新整理間隔（預設為 1 秒）變為可供搜尋查得。
+- `true`：編製索引後強制立即重新整理，使文件立即可供搜尋。請謹慎使用，因為頻繁重新整理可能對效能造成顯著影響。
+- `wait_for`：等待下一次排定的重新整理後才回應。對於批次操作，比 `true` 更有效率。
 
-## Timeout
+## 逾時
 
-If the primary shard is unavailable when you submit an index request (for example, during recovery or relocation), the operation waits for up to 1 minute by default before failing. You can adjust this behavior using the `timeout` parameter:
+如果您提交索引請求時主要分片無法使用（例如，在復原或重新配置期間），操作預設最多會等待 1 分鐘才失敗。您可以使用 `timeout` 參數調整此行為：
 
 ```json
 PUT sample-index/_doc/1?timeout=5m
@@ -303,21 +304,21 @@ PUT sample-index/_doc/1?timeout=5m
 }
 ```
 
-## Versioning
+## 版本控制
 
-Every indexed document has a version number. By default, OpenSearch uses internal versioning, starting at 1 and incrementing with each update or delete operation.
+每個已編製索引的文件都有版本號碼。預設情況下，OpenSearch 使用內部版本控制，從 1 開始，並隨著每次更新或刪除操作遞增。
 
-For external versioning (such as maintaining version numbers in a separate database), set the `version_type` parameter to control how OpenSearch handles version conflicts. The following table lists the available version types.
+若要使用外部版本控制（例如，在另一個資料庫中維護版本號碼），請設定 `version_type` 參數，以控制 OpenSearch 處理版本衝突的方式。下表列出可用的版本類型。
 
-| Version type | Description |
+| 版本類型 | 說明 |
 | :--- | :--- |
-| `internal` | Only indexes the document if the specified version is identical to the version of the stored document. This is the default version type. |
-| `external` or `external_gt` | Only indexes the document if the specified version is strictly greater than the version of the stored document or if there is no existing document. The specified version is used as the new version and stored with the document. The supplied version must be a non-negative long integer. |
-| `external_gte` | Only indexes the document if the specified version is greater than or equal to the version of the stored document. If there is no existing document, the operation succeeds. The specified version is used as the new version and stored with the document. The supplied version must be a non-negative long integer. |
+| `internal` | 只有在指定版本與已儲存文件的版本相同時，才會將文件編製索引。這是預設的版本類型。 |
+| `external` 或 `external_gt` | 只有在指定版本嚴格大於已儲存文件的版本，或沒有現有文件時，才會將文件編製索引。指定版本會用作新版本，並與文件一起儲存。提供的版本必須是非負長整數。 |
+| `external_gte` | 只有在指定版本大於或等於已儲存文件的版本時，才會將文件編製索引。如果沒有現有文件，操作就會成功。指定版本會用作新版本，並與文件一起儲存。提供的版本必須是非負長整數。 |
 
-The `external_gte` version type is intended for special use cases and should be used with care. If used incorrectly, it can result in data loss.
+`external_gte` 版本類型適用於特殊使用案例，應謹慎使用。使用不當可能導致資料遺失。
 
-For example, to index a document using external versioning:
+例如，若要使用外部版本控制將文件編製索引：
 
 ```json
 PUT sample-index/_doc/1?version=5&version_type=external
@@ -328,16 +329,16 @@ PUT sample-index/_doc/1?version=5&version_type=external
 }
 ```
 
-If the provided version does not meet the requirements of the specified version type, OpenSearch returns a version conflict error. Versioning is completely real time and is not affected by the near-real-time aspects of search operations.
+如果提供的版本不符合指定版本類型的要求，OpenSearch 會傳回版本衝突錯誤。版本控制完全即時，不受搜尋操作近乎即時的特性影響。
 
-## No-op updates
+## 無操作更新
 
-When you update a document using the Index Document API, OpenSearch always creates a new version of the document, even if the document content has not changed. This behavior can be inefficient if you frequently reindex documents with the same content.
+當您使用 Index Document API 更新文件時，OpenSearch 一律會建立文件的新版本，即使文件內容並未變更也一樣。如果您經常重新編製索引內容相同的文件，這種行為可能會沒有效率。
 
-If you need to avoid creating unnecessary document versions, use the [Update Document API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-document/) with the `detect_noop` parameter set to `true`. The Update API fetches the existing document, compares it to the new content, and only creates a new version if the content has changed.
+如果您需要避免建立不必要的文件版本，請使用 [Update Document API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-document/)，並將 `detect_noop` 參數設為 `true`。Update API 會擷取現有文件、將其與新內容比較，並僅在內容已變更時建立新版本。
 
-The Index Document API does not support no-op detection because it does not fetch the old source for comparison. Whether no-op updates are problematic depends on several factors, including how frequently your data source sends updates that do not change the document and the query load on the shard receiving the updates.
+Index Document API 不支援無操作偵測，因為它不會擷取舊的來源進行比較。無操作更新是否有問題取決於多項因素，包括您的資料來源傳送未變更文件之更新的頻率，以及接收更新的分片上的查詢負載。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:data/write/index`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`indices:data/write/index`。

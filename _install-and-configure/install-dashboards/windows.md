@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Windows
 parent: Installing OpenSearch Dashboards
@@ -8,43 +9,43 @@ redirect_from:
 ---
 
 <!-- vale off -->
-# Installing OpenSearch Dashboards on Windows
+# 在 Windows 上安裝 OpenSearch Dashboards
 <!-- vale on -->
 
-## Prerequisites
+## 前置條件
 
-Before you install OpenSearch Dashboards, complete the following tasks:
+在安裝 OpenSearch Dashboards 之前，請完成以下任務：
 
-- Install OpenSearch. For more information, see [Installing OpenSearch on Windows]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/windows/).
-- Install a zip utility.
+- 安裝 OpenSearch。如需更多資訊，請參閱 [在 Windows 上安裝 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/windows/)。
+- 安裝 zip 壓縮工具。
 
-## Install OpenSearch Dashboards on Windows
+## 在 Windows 上安裝 OpenSearch Dashboards
 
-To install OpenSearch Dashboards on Windows, follow these steps:
+若要在 Windows 上安裝 OpenSearch Dashboards，請按照以下步驟操作：
 
-1. Download the [`opensearch-dashboards-{{site.opensearch_dashboards_version}}-windows-x64.zip`](https://artifacts.opensearch.org/releases/bundle/opensearch-dashboards/{{site.opensearch_dashboards_version}}/opensearch-dashboards-{{site.opensearch_dashboards_version}}-windows-x64.zip){:target='\_blank'} archive.
+1. 下載 [`opensearch-dashboards-{{site.opensearch_dashboards_version}}-windows-x64.zip`](https://artifacts.opensearch.org/releases/bundle/opensearch-dashboards/{{site.opensearch_dashboards_version}}/opensearch-dashboards-{{site.opensearch_dashboards_version}}-windows-x64.zip){:target='\_blank'} 封存檔。
 
-1. To extract the archive contents, right-click to select **Extract All**.
+1. 若要解壓縮封存檔內容，請按右鍵選取 **全部解壓縮 (Extract All)**。
    
-   **Note**: Some versions of the Windows operating system limit the file path length. If you encounter a path-length-related error when unzipping the archive, perform the following steps to enable long path support:
+   **注意**：某些版本的 Windows 作業系統會限制檔案路徑長度。如果您在解壓縮封存檔時遇到與路徑長度相關的錯誤，請執行以下步驟以啟用長路徑支援：
 
-   1. Open Powershell by entering `powershell` in the search box next to **Start** on the taskbar. 
-   1. Run the following command in Powershell:
+   1. 在工作列上 **開始** 按鈕旁的搜尋框中輸入 `powershell` 以開啟 Powershell。
+   1. 在 Powershell 中執行以下命令：
       ```bat
       Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem LongPathsEnabled -Type DWORD -Value 1 -Force
       ```
-   1. Restart your computer.
+   1. 重新啟動您的電腦。
 
-1. Configure OpenSearch Dashboards.
+1. 設定 OpenSearch Dashboards。
 
-    There are two ways to configure OpenSearch Dashboards, depending on whether OpenSearch is configured with security enabled or disabled.
+    根據 OpenSearch 的安全性設定是否啟用，有兩種設定 OpenSearch Dashboards 的方式。
 
-    In order for any changes to the `opensearch_dashboards.yml` file to take effect, a restart of OpenSearch Dashboards is required.
+    為了讓對 `opensearch_dashboards.yml` 檔案的任何變更生效，必須重新啟動 OpenSearch Dashboards。
     {: .note}
 
-    1. Option 1 -- With security enabled:
+    1. 選項 1 -- 啟用安全性：
   
-        Configuration file `\path\to\opensearch-dashboards-{{site.opensearch_dashboards_version}}\config\opensearch_dashboards.yml` comes packaged with following basic settings:
+        組態檔案 `\path\to\opensearch-dashboards-{{site.opensearch_dashboards_version}}\config\opensearch_dashboards.yml` 隨附以下基本設定：
         
         ```
         opensearch.hosts: [https://localhost:9200]
@@ -60,49 +61,49 @@ To install OpenSearch Dashboards on Windows, follow these steps:
         opensearch_security.cookie.secure: false
         ```
     
-    1. Option 2 -- With OpenSearch security disabled:
+    1. 選項 2 -- 停用 OpenSearch 安全性：
 
-        If you are using OpenSearch with security disabled, remove the Security plugin from OpenSearch Dashboards using the following command:
+        如果您在停用安全性的情況下使用 OpenSearch，請使用以下命令從 OpenSearch Dashboards 中移除 Security 外掛程式：
         
         ```
         \path\to\opensearch-dashboards-{{site.opensearch_dashboards_version}}\bin\opensearch-dashboards-plugin.bat remove securityDashboards
         ```
         
-        The basic `opensearch_dashboards.yml` file should contain:
+        基本的 `opensearch_dashboards.yml` 檔案應包含：
         
         ```
         opensearch.hosts: [http://localhost:9200]
         ```
          
-        Note the plain `http` method, instead of `https`.
+        請注意使用純 `http` 方法，而非 `https`。
         {: .note}
     
-1. Run OpenSearch Dashboards.
+1. 執行 OpenSearch Dashboards。
 
-   There are two ways of running OpenSearch Dashboards:
+   執行 OpenSearch Dashboards 有兩種方式：
 
-   1. Run the batch script using the Windows UI:
+   1. 使用 Windows UI 執行批次指令碼：
 
-      1. Navigate to the top directory of your OpenSearch Dashboards installation and open the `opensearch-dashboards-{{site.opensearch_dashboards_version}}` folder.
-      1. Open the `bin` folder and run the batch script by double-clicking the `opensearch-dashboards.bat` file. This opens a command prompt with an OpenSearch Dashboards instance running.
+      1. 導覽至 OpenSearch Dashboards 安裝的頂層目錄，並開啟 `opensearch-dashboards-{{site.opensearch_dashboards_version}}` 資料夾。
+      1. 開啟 `bin` 資料夾，並透過按兩下 `opensearch-dashboards.bat` 檔案來執行批次指令碼。這將開啟一個命令提示字元視窗並執行 OpenSearch Dashboards 執行個體。
 
-   1. Run the batch script from Command Prompt or Powershell:
+   1. 從命令提示字元或 Powershell 執行批次指令碼：
 
-      1. Open Command Prompt by entering `cmd`, or Powershell by entering `powershell`, in the search box next to **Start** on the taskbar. 
-      1. Change to the top directory of your OpenSearch Dashboards installation.
+      1. 在工作列上 **開始** 按鈕旁的搜尋框中輸入 `cmd` 以開啟命令提示字元，或輸入 `powershell` 以開啟 Powershell。
+      1. 切換至 OpenSearch Dashboards 安裝的頂層目錄。
          ```bat
          cd \path\to\opensearch-dashboards-{{site.opensearch_dashboards_version}}
          ```
-      1. Run the batch script to start OpenSearch Dashboards.
+      1. 執行批次指令碼以啟動 OpenSearch Dashboards。
          ```bat
          .\bin\opensearch-dashboards.bat
          ```
 
-1. In a web browser, go to `http://localhost:5601` and log in as the `admin` user using the custom admin password that you set when you installed OpenSearch. If OpenSearch Dashboards runs on a remote host, replace `localhost` with the IP address or DNS name of that host. For more information, see [Accessing OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards).
+1. 在網頁瀏覽器中，前往 `http://localhost:5601` 並使用您在安裝 OpenSearch 時設定的自訂管理員密碼，以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行在遠端主機上，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱 [存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
 
-To stop OpenSearch Dashboards, press `Ctrl+C` in Command Prompt or Powershell, or close the Command Prompt or Powershell window.
+若要停止 OpenSearch Dashboards，請在命令提示字元或 Powershell 中按 `Ctrl+C`，或關閉命令提示字元或 Powershell 視窗。
 {: .tip}
 
-## Related documentation
+## 相關文件
 
-- [Preparing OpenSearch Dashboards for production]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#preparing-opensearch-dashboards-for-production)
+- [為生產環境準備 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#preparing-opensearch-dashboards-for-production)

@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Ukrainian
+title: "烏克蘭文"
 nav_order: 340
 parent: Language analyzers
 grand_parent: Analyzers
 ---
 
-# Ukrainian analyzer
+# 烏克蘭文分析器
 
-The Ukrainian language analyzer (`ukrainian`) provides analysis for Ukrainian text. This analyzer is part of the `analysis-ukrainian` plugin, which must be installed before use.
+烏克蘭文分析器（`ukrainian`）可為烏克蘭文文字提供分析功能。此分析器屬於 `analysis-ukrainian` 外掛程式的一部分，使用前必須先安裝該外掛程式。
 
-## Installing the plugin
+## 安裝外掛程式
 
-Before you can use the Ukrainian analyzer, you must install the `analysis-ukrainian` plugin by running the following command:
+您必須先執行下列命令安裝 `analysis-ukrainian` 外掛程式，才能使用烏克蘭文分析器：
 
 ```bash
 ./bin/opensearch-plugin install analysis-ukrainian
 ```
 {% include copy.html %}
 
-For more information, see [Additional plugins]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/): Complete list of available OpenSearch plugins.
+如需詳細資訊，請參閱[其他外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/)：可用 OpenSearch 外掛程式的完整清單。
 
-## Using the Ukrainian analyzer
+## 使用烏克蘭文分析器
 
-To use the Ukrainian analyzer when you map an index, specify the `ukrainian` value in the analyzer field:
+若要在對應索引時使用烏克蘭文分析器，請在 analyzer 欄位中指定 `ukrainian` 值：
 
 ```json
 PUT my-index
@@ -40,20 +41,20 @@ PUT my-index
 ```
 {% include copy-curl.html %}
 
-## Ukrainian language processing
+## 烏克蘭文語言處理
 
-The Ukrainian analyzer processes text using the following approach:
+烏克蘭文分析器使用下列方式處理文字：
 
-1. **Tokenization**: Splits text into individual words.
-2. **Stop word removal**: Removes common Ukrainian stop words like "і", "в", "з", "для", "та", and so on.
-3. **Morphological analysis**: Generates various word forms and stems for Ukrainian words.
-4. **Case normalization**: Handles Ukrainian text appropriately.
+1. **斷詞**：將文字分割為個別的字詞。
+2. **移除停用詞**：移除常見的烏克蘭文停用詞，例如「і」、「в」、「з」、「для」、「та」等。
+3. **詞法分析**：為烏克蘭文字詞產生各種詞形與詞幹。
+4. **大小寫正規化**：適當地處理烏克蘭文文字。
 
-The Ukrainian analyzer uses sophisticated morphological analysis that can generate multiple forms of words to improve search recall. Unlike some other language analyzers, the Ukrainian plugin does not expose individual token filters for custom configuration.
+烏克蘭文分析器採用精密的詞法分析，可產生字詞的多種形式，以提升搜尋召回率。與其他部分語言分析器不同，烏克蘭文外掛程式不會公開個別的詞元篩選器供自訂組態使用。
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用此分析器所產生的詞元：
 
 ```json
 POST _analyze
@@ -64,7 +65,7 @@ POST _analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

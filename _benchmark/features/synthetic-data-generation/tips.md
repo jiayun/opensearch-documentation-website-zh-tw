@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Tips and best practices
+title: "提示與最佳做法"
 nav_order: 45
 parent: Synthetic data generation
 grand_parent: Additional features
 ---
 
-# Tips and best practices
+# 提示與最佳做法
 
-The following tips help you efficiently generate synthetic data and monitor performance during the process.
+下列提示可協助您有效率地產生合成資料，並在過程中監視效能。
 
-### Visualizing generation
+### 視覺化產生過程
 
-The generated URL opens a [Dask dashboard](https://docs.dask.org/en/latest/dashboard.html) that visualizes the data generation process. You can monitor CPU and memory usage for each worker and view a CPU flame graph of the generation workflow. This helps track resource usage and optimize performance, especially when using a [custom Python module]({{site.url}}{{site.baseurl}}/benchmark/features/synthetic-data-generation/custom-logic-sdg/).
+產生的 URL 會開啟 [Dask 儀表板](https://docs.dask.org/en/latest/dashboard.html)，以視覺化方式呈現資料產生過程。您可以監視每個 worker 的 CPU 與記憶體使用量，並檢視產生工作流程的 CPU 火焰圖。這有助於追蹤資源使用情況並最佳化效能，尤其是在使用[自訂 Python 模組]({{site.url}}{{site.baseurl}}/benchmark/features/synthetic-data-generation/custom-logic-sdg/)時。
 
-### Use default settings
+### 使用預設設定
 
-We recommend starting with the default synthetic data generation settings. These guidelines help you choose appropriate settings for efficient and reliable synthetic data generation:
+我們建議從預設的合成資料產生設定開始。下列準則可協助您選擇適當的設定，以進行有效率且可靠的合成資料產生：
 
-* Set the number of workers to **no more than the CPU count** on the load generation host.
-* Use a **chunk size of 10,000 documents** per chunk.
-* Adjust the `max_file_size_gb` setting as needed to control how much data is written to each generated file.
+* 將 worker 數量設定為**不超過負載產生主機的 CPU 數量**。
+* 每個區塊使用 **10,000 份文件的區塊大小**。
+* 視需要調整 `max_file_size_gb` 設定，以控制寫入每個產生檔案的資料量。

@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Histogram
+title: "直方圖"
 parent: Bucket aggregations
 nav_order: 100
 redirect_from:
   - /query-dsl/aggregations/bucket/histogram/
 ---
 
-# Histogram aggregation
+# 直方圖彙總
 
-The `histogram` aggregation divides a numeric field's value range into fixed-width intervals and counts documents in each interval. Each bucket's `key` represents the lower bound of that interval, computed as `Math.floor((value - offset) / interval) * interval + offset`.
+`histogram` 彙總會將數值欄位的值範圍劃分為固定寬度的區間，並計算每個區間中的文件數量。每個桶 (bucket) 的 `key` 代表該區間的下限，計算方式為 `Math.floor((value - offset) / interval) * interval + offset`。
 
-## Parameters
+## 參數
 
-The `histogram` aggregation takes the following parameters.
+`histogram` 彙總接受下列參數。
 
-| Parameter | Required/Optional | Data type | Description |
+| 參數 | 必要/選用 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `field` | Required | String | The numeric field to aggregate on. |
-| `interval` | Required | Number | The width of each bucket. Must be a positive value. |
-| `min_doc_count` | Optional | Integer | The minimum number of documents required for a bucket to appear in the response. Set to `1` to omit empty buckets. Default is `0` (empty buckets are included). |
-| `extended_bounds` | Optional | Object | Guarantees that buckets exist from `min` to `max`, even if no documents fall in that range. Does not filter out buckets beyond the bounds---to exclude buckets outside a range, use `hard_bounds` or a range query. Accepts `min` and `max` values. Only meaningful when `min_doc_count` is `0`. |
-| `hard_bounds` | Optional | Object | Limits the range of buckets in the response. Accepts `min` and `max` values. Buckets outside these bounds are excluded. |
-| `offset` | Optional | Number | Shifts bucket boundaries by the specified amount. Must be in the range [0, `interval`). Default is `0`. |
-| `keyed` | Optional | Boolean | When `true`, returns buckets as an object keyed by bucket value instead of an array. Default is `false`. |
-| `order` | Optional | Object | Controls the sort order of buckets. Accepts `_key` or `_count`, each with `asc` or `desc`. Default is `{"_key": "asc"}`. |
-| `missing` | Optional | Number | The value to assign to documents missing the target field, placing them in the corresponding bucket. By default, missing documents are ignored. |
+| `field` | 必要 | 字串 | 要進行彙總的數值欄位。 |
+| `interval` | 必要 | 數字 | 每個桶的寬度。必須為正值。 |
+| `min_doc_count` | 選用 | 整數 | 桶出現在回應中所需的最少文件數量。設定為 `1` 可省略空的桶。預設為 `0`（包含空的桶）。 |
+| `extended_bounds` | 選用 | 物件 | 確保從 `min` 到 `max` 都存在桶，即使該範圍內沒有任何文件。不會篩除超出邊界的桶——若要排除範圍以外的桶，請使用 `hard_bounds` 或範圍查詢。接受 `min` 和 `max` 值。僅在 `min_doc_count` 為 `0` 時才有意義。 |
+| `hard_bounds` | 選用 | 物件 | 限制回應中桶的範圍。接受 `min` 和 `max` 值。超出這些邊界的桶會被排除。 |
+| `offset` | 選用 | 數字 | 依指定的量位移桶的邊界。必須介於 [0, `interval`) 範圍內。預設為 `0`。 |
+| `keyed` | 選用 | 布林值 | 為 `true` 時，會將桶以物件形式傳回，並以桶值作為索引鍵，而非以陣列形式傳回。預設為 `false`。 |
+| `order` | 選用 | 物件 | 控制桶的排序順序。接受 `_key` 或 `_count`，並各自搭配 `asc` 或 `desc`。預設為 `{"_key": "asc"}`。 |
+| `missing` | 選用 | 數字 | 要指派給缺少目標欄位之文件的值，會將這些文件放入對應的桶中。預設會忽略缺少該欄位的文件。 |
 
-When aggregating a [numeric range field]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/range/) rather than a single-value numeric field, a document can appear in multiple buckets---one for each interval between its lower and upper bounds.
+對[數值範圍欄位]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/range/)而非單一值數值欄位進行彙總時，一份文件可能會出現在多個桶中——其下限與上限之間的每個區間各一個。
 {: .note}
 
-## Example: Basic histogram
+## 範例：基本直方圖
 
-The following example groups e-commerce order totals into $50 intervals, showing only buckets that contain at least one document:
+下列範例會將電子商務訂單總額分組為 $50 的區間，並僅顯示至少包含一份文件的桶：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -51,9 +52,9 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example: Using offset to shift bucket boundaries
+## 範例：使用 offset 位移桶的邊界
 
-The `offset` parameter shifts where bucket boundaries start. The following example uses an offset of `10`, so buckets start at 10, 60, 110, and so on instead of 0, 50, 100:
+`offset` 參數會位移桶邊界的起始位置。下列範例使用 `10` 的位移量，因此桶的起始點為 10、60、110 等，而非 0、50、100：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -73,9 +74,9 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The following response corresponds to the basic histogram example:
+下列回應對應基本直方圖範例：
 
 ```json
 {
@@ -141,12 +142,12 @@ The following response corresponds to the basic histogram example:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response body fields.
+下表列出回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `buckets` | Array or Object | The histogram buckets. Returned as an array by default, or as an object when `keyed` is `true`. |
-| `buckets.key` | Double | The lower bound of the bucket interval. |
-| `buckets.doc_count` | Integer | The number of documents in the bucket. |
+| `buckets` | 陣列或物件 | 直方圖的桶。預設以陣列形式傳回；當 `keyed` 為 `true` 時，則以物件形式傳回。 |
+| `buckets.key` | 雙精度浮點數 | 桶區間的下限。 |
+| `buckets.doc_count` | 整數 | 桶中的文件數量。 |

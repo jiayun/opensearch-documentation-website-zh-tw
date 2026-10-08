@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Classic
 parent: Tokenizers
@@ -6,27 +7,27 @@ nav_order: 35
 
 ---
 
-# Classic tokenizer
+# Classic 斷詞器
 
-The `classic` tokenizer parses text, applying English language grammatical rules to break the text into tokens. It includes specific logic to handle patterns such as the following:
+`classic` 斷詞器會剖析文字，並套用英文文法規則將文字分割成詞元。此斷詞器包含特定邏輯，可處理下列模式：
 
-- Acronyms 
-- Email addresses
-- Domain names
-- Certain types of punctuation
+- 首字母縮略字
+- 電子郵件地址
+- 網域名稱
+- 特定類型的標點符號
 
-This tokenizer works best with the English language. It may not produce optimal results for other languages, especially those with different grammatical structures.
+此斷詞器最適合用於英文。對於其他語言，特別是文法結構不同的語言，可能無法產生最佳結果。
 {: .note}
 
-The `classic` tokenizer parses text as follows:
+`classic` 斷詞器會依下列方式剖析文字：
 
-- **Punctuation**: Splits text on most punctuation marks and removes punctuation characters. Dots that aren't followed by spaces are treated as part of the token.
-- **Hyphens**: Splits words at hyphens, except when a number is present. When a number is present in a token, the token is not split and is treated like a product number. 
-- **Email**: Recognizes email addresses and hostnames and keeps them as single tokens.
+- **標點符號**：在大多數標點符號處分割文字，並移除標點字元。後面未接空格的句點會視為詞元的一部分。
+- **連字號**：在連字號處分割單字，但包含數字時除外。當詞元中包含數字時，該詞元不會被分割，而是視為產品編號處理。
+- **電子郵件**：辨識電子郵件地址和主機名稱，並將其保留為單一詞元。
 
-## Example usage
+## 使用範例
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `classic` tokenizer:
+下列範例請求會建立名為 `my_index` 的新索引，並設定使用 `classic` 斷詞器的分析器：
 
 ```json
 PUT /my_index
@@ -53,9 +54,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用該分析器所產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -66,7 +67,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {
@@ -208,18 +209,18 @@ The response contains the generated tokens:
 }
 ```
 
-## Token types
+## 詞元類型
 
-The `classic` tokenizer produces the following token types.
+`classic` 斷詞器會產生下列詞元類型。
 
-| Token type    | Description  | 
+| 詞元類型    | 說明  | 
 | :--- | :--- | 
-| `<ALPHANUM>`  | Alphanumeric tokens consisting of letters, numbers, or a combination of both.                     | 
-| `<APOSTROPHE>`| Tokens containing an apostrophe, commonly used in possessives or contractions (for example, `John's`).   |
-| `<ACRONYM>`   | Acronyms or abbreviations, often identified by a trailing period (for example, `P.S.` or `U.S.A.`).     |
-| `<COMPANY>`   | Tokens representing company names (for example, `X&Y`). If these tokens aren't produced automatically, you may need custom configurations or filters.  | 
-| `<EMAIL>`     | Tokens matching email addresses, containing an `@` symbol and a domain (for example,`support@widgets.co` or `info@example.com`). |
-| `<HOST>`      | Tokens matching website or host names, often containing `www.` or a domain suffix like `.com` (for example, `www.example.com` or `example.org`).  |
-| `<NUM>`       | Tokens containing only numbers or numeric-like sequences (for example, `1-800`, `12345`, or `3.14`).     |
-| `<CJ>`        | Tokens representing Chinese or Japanese characters.   |
-| `<ACRONYM_DEP>` | Deprecated acronym handling (for example, acronyms with different parsing rules in older versions). Rarely used---exists primarily for backward compatibility with legacy tokenizer rules. | 
+| `<ALPHANUM>`  | 由字母、數字或兩者組合構成的英數字詞元。                     | 
+| `<APOSTROPHE>`| 包含撇號的詞元，常用於所有格或縮寫形式（例如 `John's`）。   |
+| `<ACRONYM>`   | 首字母縮略字或縮寫，通常以結尾的句點識別（例如 `P.S.` 或 `U.S.A.`）。     |
+| `<COMPANY>`   | 代表公司名稱的詞元（例如 `X&Y`）。如果這些詞元未自動產生，您可能需要自訂組態或篩選器。  | 
+| `<EMAIL>`     | 符合電子郵件地址的詞元，包含 `@` 符號和網域（例如 `support@widgets.co` 或 `info@example.com`）。 |
+| `<HOST>`      | 符合網站或主機名稱的詞元，通常包含 `www.` 或 `.com` 之類的網域尾碼（例如 `www.example.com` 或 `example.org`）。  |
+| `<NUM>`       | 僅包含數字或類似數字序列的詞元（例如 `1-800`、`12345` 或 `3.14`）。     |
+| `<CJ>`        | 代表中文或日文字元的詞元。   |
+| `<ACRONYM_DEP>` | 已淘汰的首字母縮略字處理方式（例如，在舊版中使用不同剖析規則的首字母縮略字）。很少使用，主要是為了與舊版斷詞器規則維持回溯相容性而存在。 | 

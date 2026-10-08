@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Match
 parent: Full-text queries
 nav_order: 10
 ---
 
-# Match query
+# Match 查詢
 
-Use the `match` query for full-text search on a specific document field. If you run a `match` query on a [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) field, the `match` query [analyzes]({{site.url}}{{site.baseurl}}/analyzers/index/) the provided search string and returns documents that match any of the string's terms. If you run a `match` query on an exact-value field, it returns documents that match the exact value. The preferred way to search exact-value fields is to use a filter because, unlike a query, a filter is cached.
+使用 `match` 查詢對特定文件欄位執行全文搜尋。若您對 [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 欄位執行 `match` 查詢，`match` 查詢會[分析]({{site.url}}{{site.baseurl}}/analyzers/index/)所提供的搜尋字串，並傳回符合該字串中任一詞彙的文件。若您對精確值欄位執行 `match` 查詢，則會傳回與該精確值相符的文件。搜尋精確值欄位的建議做法是使用篩選器，因為與查詢不同，篩選器會被快取。
 
-The following example shows a basic `match` query for the word `wind` in the `title`:
+以下範例顯示在 `title` 中搜尋單字 `wind` 的基本 `match` 查詢：
 
 ```json
 GET _search
@@ -23,7 +24,7 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-To pass additional parameters, you can use the expanded syntax:
+若要傳遞其他參數，您可以使用展開語法：
 
 ```json
 GET _search
@@ -40,9 +41,9 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-## Examples
+## 範例
 
-In the following examples, you'll use the index that contains the following documents:
+在以下範例中，您將使用包含下列文件的索引：
 
 ```json
 PUT testindex/_doc/1
@@ -69,9 +70,9 @@ PUT testindex/_doc/3
 ```
 {% include copy-curl.html %}
 
-## Operator
+## 運算子
 
-If a `match` query is run on a `text` field, the text is analyzed with the analyzer specified in the `analyzer` parameter. Then the resulting tokens are combined into a Boolean query using the operator specified in the `operator` parameter. The default operator is `OR`, so the query `wind rise` is changed into `wind OR rise`. In this example, this query returns documents 1--3 because each document has a term that matches the query. To specify the `and` operator, use the following query:
+若對 `text` 欄位執行 `match` 查詢，文字會以 `analyzer` 參數中指定的分析器進行分析。接著，產生的詞元會使用 `operator` 參數中指定的運算子組合成布林查詢。預設運算子為 `OR`，因此查詢 `wind rise` 會轉換為 `wind OR rise`。在此範例中，此查詢會傳回文件 1--3，因為每份文件都有與查詢相符的詞彙。若要指定 `and` 運算子，請使用以下查詢：
 
 ```json
 GET testindex/_search
@@ -88,11 +89,11 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The query is constructed as `wind AND rise` and returns document 1 as the matching document:
+此查詢會建構為 `wind AND rise`，並傳回文件 1 作為相符的文件：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -128,9 +129,9 @@ The query is constructed as `wind AND rise` and returns document 1 as the matchi
 
 </details>
 
-### Minimum should match
+### 最少應符合數
 
-You can control the minimum number of terms that a document must match to be returned in the results by specifying the [`minimum_should_match`]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/) parameter:
+您可以指定 [`minimum_should_match`]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/) 參數，以控制文件必須符合的最少詞彙數量，才會在結果中傳回：
 
 ```json
 GET testindex/_search
@@ -148,11 +149,11 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-Now documents are required to match both terms, so only document 1 is returned (this is equivalent to the `and` operator):
+現在文件必須同時符合兩個詞彙，因此只會傳回文件 1（這等同於 `and` 運算子）：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -187,9 +188,9 @@ Now documents are required to match both terms, so only document 1 is returned (
 ```
 </details>
 
-## Analyzer
+## 分析器
 
-Because in this example you didn't explicitly specify the analyzer, the default `standard` analyzer is used. The default analyzer does not perform stemming, so if you run a query `the wind rises`, you receive no results because the token `rises` does not match the token `rise`. To change the search analyzer, specify it in the `analyzer` field. For example, the following query uses the `english` analyzer:
+由於在此範例中您並未明確指定分析器，因此會使用預設的 `standard` 分析器。預設分析器不會執行詞幹提取，因此若您執行查詢 `the wind rises`，將不會收到任何結果，因為詞元 `rises` 與詞元 `rise` 不相符。若要變更搜尋分析器，請在 `analyzer` 欄位中指定。例如，以下查詢使用 `english` 分析器：
 
 ```json
 GET testindex/_search
@@ -207,11 +208,11 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The `english` analyzer removes the stopword `the` and performs stemming, producing the tokens `wind` and `rise`. The latter token matches document 1, which is returned in the results:
+`english` 分析器會移除停用詞 `the` 並執行詞幹提取，產生詞元 `wind` 和 `rise`。後者與文件 1 相符，因此該文件會在結果中傳回：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -246,9 +247,9 @@ The `english` analyzer removes the stopword `the` and performs stemming, produci
 ```
 </details>
 
-## Empty query
+## 空查詢
 
-In some cases, an analyzer might remove all tokens from a query. For example, the `english` analyzer removes stop words, so in a query `and OR or`, all tokens are removed. To check the analyzer behavior, you can use the [Analyze API]({{site.url}}{{site.baseurl}}/api-reference/analyze-apis/#apply-a-built-in-analyzer):
+在某些情況下，分析器可能會移除查詢中的所有詞元。例如，`english` 分析器會移除停用詞，因此在查詢 `and OR or` 中，所有詞元都會被移除。若要檢查分析器的行為，您可以使用 [Analyze API]({{site.url}}{{site.baseurl}}/api-reference/analyze-apis/#apply-a-built-in-analyzer)：
 
 ```json
 GET testindex/_analyze
@@ -259,7 +260,7 @@ GET testindex/_analyze
 ```
 {% include copy-curl.html %}
 
-As expected, the query produces no tokens:
+如預期，此查詢不會產生任何詞元：
 
 ```json
 {
@@ -267,7 +268,7 @@ As expected, the query produces no tokens:
 }
 ```
 
-You can specify the behavior for an empty query in the `zero_terms_query` parameter. Setting `zero_terms_query` to `all` returns all documents in the index and setting it to `none` returns no documents:
+您可以在 `zero_terms_query` 參數中指定空查詢的行為。將 `zero_terms_query` 設定為 `all` 會傳回索引中的所有文件，設定為 `none` 則不會傳回任何文件：
 
 ```json
 GET testindex/_search
@@ -285,17 +286,17 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-## Fuzziness
+## 模糊比對
 
-To account for typos, you can specify `fuzziness` for your query as either of the following:
+為了因應拼寫錯誤，您可以為查詢指定 `fuzziness`，其值可為下列任一項：
 
-- An integer that specifies the maximum allowed [Damerau–Levenshtein distance](https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance) for this edit. 
-- `AUTO`: 
-  - Strings of 0–2 characters must match exactly.
-  - Strings of 3–5 characters allow 1 edit.
-  - Strings longer than 5 characters allow 2 edits.
+- 一個整數，指定此編輯所允許的最大 [Damerau–Levenshtein 距離](https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance)。 
+- `AUTO`： 
+  - 0–2 個字元的字串必須完全相符。
+  - 3–5 個字元的字串允許 1 次編輯。
+  - 超過 5 個字元的字串允許 2 次編輯。
 
-Setting `fuzziness` to the `AUTO` value works best in most cases:
+在大多數情況下，將 `fuzziness` 設定為 `AUTO` 值的效果最佳：
 
 ```json
 GET testindex/_search
@@ -312,11 +313,11 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The token `wnid` matches `wind` and the query returns documents 1 and 2:
+詞元 `wnid` 與 `wind` 相符，且此查詢會傳回文件 1 和 2：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -359,9 +360,9 @@ The token `wnid` matches `wind` and the query returns documents 1 and 2:
 ```
 </details>
 
-### Prefix length
+### 前綴長度
 
-Misspellings rarely occur in the beginning of words. Thus, you can specify the minimum length the matched prefix must be to return a document in the results. For example, you can change the preceding query to include a `prefix_length`:
+拼字錯誤很少出現在單字的開頭。因此，您可以指定相符前綴必須達到的最小長度，文件才會在結果中傳回。例如，您可以將前述查詢變更為包含 `prefix_length`：
 
 ```json
 GET testindex/_search
@@ -379,11 +380,11 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The preceding query returns no results. If you change the `prefix_length` to 1, documents 1 and 2 are returned because the first letter of the token `wnid` is not misspelled.
+前述查詢不會傳回任何結果。如果您將 `prefix_length` 變更為 1，則會傳回文件 1 和 2，因為詞元 `wnid` 的第一個字母沒有拼錯。
 
-### Transpositions
+### 換位
 
-In the preceding example, the word `wnid` contained a transposition (`in` was changed to `ni`). By default, transpositions are allowed in fuzzy matching, but you can disallow them by setting `fuzzy_transpositions` to `false`:
+在前述範例中，單字 `wnid` 包含一個換位（`in` 被改為 `ni`）。預設情況下，模糊比對允許換位，但您可以將 `fuzzy_transpositions` 設為 `false` 來禁止換位：
 
 ```json
 GET testindex/_search
@@ -401,13 +402,13 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-Now the query returns no results.
+現在查詢不會傳回任何結果。
 
-## Synonyms
+## 同義詞
 
-If you use a `synonym_graph` filter and `auto_generate_synonyms_phrase_query` is set to `true` (default), OpenSearch parses the query into terms and then combines the terms to generate a [phrase query](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/PhraseQuery.html) for multi-term synonyms. For example, if you specify `ba,batting average` as synonyms and search for `ba`, OpenSearch searches for `ba OR "batting average"`.
+如果您使用 `synonym_graph` 篩選器，且 `auto_generate_synonyms_phrase_query` 設為 `true`（預設），OpenSearch 會將查詢剖析為詞彙，然後組合這些詞彙，為多詞彙同義詞產生[片語查詢](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/PhraseQuery.html)。例如，如果您將 `ba,batting average` 指定為同義詞並搜尋 `ba`，OpenSearch 會搜尋 `ba OR "batting average"`。
 
-To match multi-term synonyms with conjunctions, set `auto_generate_synonyms_phrase_query` to `false`:
+若要以連接詞比對多詞彙同義詞，請將 `auto_generate_synonyms_phrase_query` 設為 `false`：
 
 ```json
 GET /testindex/_search
@@ -424,11 +425,11 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-The query produced is `ba OR (batting AND average)`.
+產生的查詢為 `ba OR (batting AND average)`。
 
-## Parameters
+## 參數
 
-The query accepts the name of the field (`<field>`) as a top-level parameter:
+此查詢接受欄位名稱（`<field>`）作為最上層參數：
 
 ```json
 GET _search
@@ -445,21 +446,21 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-The `<field>` accepts the following parameters. All parameters except `query` are optional.
+`<field>` 接受下列參數。除了 `query` 之外，所有參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`query` | String | The query string to use for search. Required.
-`auto_generate_synonyms_phrase_query` | Boolean | Specifies whether to create a [match phrase query]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/) automatically for multi-term synonyms. For example, if you specify `ba,batting average` as synonyms and search for `ba`, OpenSearch searches for `ba OR "batting average"` (if this option is `true`) or `ba OR (batting AND average)` (if this option is `false`). Default is `true`.
-`analyzer` | String | The [analyzer]({{site.url}}{{site.baseurl}}/analyzers/index/) used to tokenize the query string text. Default is the index-time analyzer specified for the `default_field`. If no analyzer is specified for the `default_field`, the `analyzer` is the default analyzer for the index. For more information about `index.query.default_field`, see [Dynamic index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings).
-`boost` | Floating-point | Boosts the clause by the given multiplier. Useful for weighing clauses in compound queries. Values in the [0, 1) range decrease relevance, and values greater than 1 increase relevance. Default is `1`.
-`enable_position_increments` | Boolean | When `true`, resulting queries are aware of position increments. This setting is useful when the removal of stop words leaves an unwanted "gap" between terms. Default is `true`.
-`fuzziness` | String | The number of character edits (insertions, deletions, substitutions, or transpositions) that it takes to change one word to another when determining whether a term matched a value. For example, the distance between `wined` and `wind` is 1. Valid values are non-negative integers or `AUTO`. The default, `AUTO`, dynamically selects the edit distance based on the search term's length. You can customize the thresholds using the syntax `AUTO:[low],[high]`, where `low` and `high` define the character length boundaries. When omitted, OpenSearch uses `AUTO:3,6` as the default, which applies the following rules: <br>- Terms containing 0--2 characters: Requires an exact match (0 edits). <br>- Terms containing 3--5 characters: Allows a maximum of 1 edit. <br>- Terms containing 6 or more characters: Allows a maximum of 2 edits. <br>For example, `AUTO:4,7` requires exact matches for terms containing 0--3 characters, allows a maximum of 1 edit for terms containing 4--6 characters, and allows a maximum of 2 edits for terms containing 7 or more characters. Using `AUTO` is recommended for most scenarios.
-`fuzzy_rewrite` | String | Determines how OpenSearch rewrites the query. Valid values are `constant_score`, `scoring_boolean`, `constant_score_boolean`, `top_terms_N`, `top_terms_boost_N`, and `top_terms_blended_freqs_N`. If the `fuzziness` parameter is not `0`, the query uses a `fuzzy_rewrite` method of `top_terms_blended_freqs_${max_expansions}` by default. Default is `constant_score`. 
-`fuzzy_transpositions` | Boolean | Setting `fuzzy_transpositions` to `true` (default) adds swaps of adjacent characters to the insert, delete, and substitute operations of the `fuzziness` option. For example, the distance between `wind` and `wnid` is 1 if `fuzzy_transpositions` is true (swap "n" and "i") and 2 if it is false (delete "n", insert "n"). If `fuzzy_transpositions` is false, `rewind` and `wnid` have the same distance (2) from `wind`, despite the more human-centric opinion that `wnid` is an obvious typo. The default is a good choice for most use cases.
-`lenient` | Boolean | Setting `lenient` to `true` ignores data type mismatches between the query and the document field. For example, a query string of `"8.2"` could match a field of type `float`. Default is `false`.
-`max_expansions` | Positive integer |  The maximum number of terms to which the query can expand. Fuzzy queries “expand to” a number of matching terms that are within the distance specified in `fuzziness`. Then OpenSearch tries to match those terms. Default is `50`.
-`minimum_should_match` | Positive or negative integer, positive or negative percentage, combination | If the query string contains multiple search terms and you use the `or` operator, the number of terms that need to match for the document to be considered a match. For example, if `minimum_should_match` is 2, `wind often rising` does not match `The Wind Rises.` If `minimum_should_match` is `1`, it matches. For details, see [Minimum should match]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/).
-`operator` | String | If the query string contains multiple search terms, whether all terms need to match (`AND`) or only one term needs to match (`OR`) for a document to be considered a match. Valid values are:<br>- `OR`: The string `to be` is interpreted as `to OR be`<br>- `AND`: The string `to be` is interpreted as `to AND be`<br> Default is `OR`.
-`prefix_length` | Non-negative integer | The number of leading characters that are not considered in fuzziness. Default is `0`.
-`zero_terms_query` | String | In some cases, the analyzer removes all terms from a query string. For example, the `stop` analyzer removes all terms from the string `an but this`. In those cases, `zero_terms_query` specifies whether to match no documents (`none`) or all documents (`all`). Valid values are `none` and `all`. Default is `none`.
+`query` | 字串 | 用於搜尋的查詢字串。必要。
+`auto_generate_synonyms_phrase_query` | 布林值 | 指定是否為多詞彙同義詞自動建立[比對片語查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/)。例如，如果您將 `ba,batting average` 指定為同義詞並搜尋 `ba`，OpenSearch 會搜尋 `ba OR "batting average"`（若此選項為 `true`）或 `ba OR (batting AND average)`（若此選項為 `false`）。預設為 `true`。
+`analyzer` | 字串 | 用於將查詢字串文字斷詞的[分析器]({{site.url}}{{site.baseurl}}/analyzers/index/)。預設為針對 `default_field` 指定的索引時間分析器。如果未針對 `default_field` 指定分析器，則 `analyzer` 為該索引的預設分析器。如需有關 `index.query.default_field` 的詳細資訊，請參閱[動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)。
+`boost` | 浮點數 | 依指定的倍數提升子句權重。適用於在複合查詢中為子句加權。介於 [0, 1) 範圍內的值會降低相關性，大於 1 的值會提高相關性。預設為 `1`。
+`enable_position_increments` | 布林值 | 為 `true` 時，產生的查詢會考量位置增量。當移除停用詞在詞彙之間留下不必要的「間隙」時，此設定很有用。預設為 `true`。
+`fuzziness` | 字串 | 在判斷詞彙是否與某個值相符時，將一個單字變更為另一個單字所需的字元編輯次數（插入、刪除、替換或換位）。例如，`wined` 與 `wind` 之間的距離為 1。有效值為非負整數或 `AUTO`。預設值 `AUTO` 會根據搜尋詞彙的長度動態選取編輯距離。您可以使用 `AUTO:[low],[high]` 語法自訂閾值，其中 `low` 與 `high` 定義字元長度的邊界。若省略，OpenSearch 會使用 `AUTO:3,6` 作為預設值，並套用下列規則：<br>- 包含 0--2 個字元的詞彙：需要完全相符（0 次編輯）。<br>- 包含 3--5 個字元的詞彙：最多允許 1 次編輯。<br>- 包含 6 個以上字元的詞彙：最多允許 2 次編輯。<br>例如，`AUTO:4,7` 對包含 0--3 個字元的詞彙要求完全相符，對包含 4--6 個字元的詞彙最多允許 1 次編輯，對包含 7 個以上字元的詞彙最多允許 2 次編輯。在大多數情境下，建議使用 `AUTO`。
+`fuzzy_rewrite` | 字串 | 決定 OpenSearch 如何重寫查詢。有效值為 `constant_score`、`scoring_boolean`、`constant_score_boolean`、`top_terms_N`、`top_terms_boost_N` 和 `top_terms_blended_freqs_N`。如果 `fuzziness` 參數不是 `0`，查詢預設會使用 `top_terms_blended_freqs_${max_expansions}` 的 `fuzzy_rewrite` 方法。預設為 `constant_score`。 
+`fuzzy_transpositions` | 布林值 | 將 `fuzzy_transpositions` 設為 `true`（預設）會在 `fuzziness` 選項的插入、刪除和替換操作之外，加入相鄰字元互換。例如，若 `fuzzy_transpositions` 為 true（互換「n」和「i」），`wind` 與 `wnid` 之間的距離為 1；若為 false（刪除「n」、插入「n」），則距離為 2。如果 `fuzzy_transpositions` 為 false，則 `rewind` 和 `wnid` 與 `wind` 的距離相同（2），儘管從人類的角度來看，`wnid` 顯然是打字錯誤。預設值適合大多數使用案例。
+`lenient` | 布林值 | 將 `lenient` 設為 `true` 會忽略查詢與文件欄位之間的資料類型不符。例如，查詢字串 `"8.2"` 可以比對類型為 `float` 的欄位。預設為 `false`。
+`max_expansions` | 正整數 |  查詢可擴展的最大詞彙數量。模糊查詢會「擴展到」`fuzziness` 所指定距離內的多個相符詞彙，然後 OpenSearch 會嘗試比對這些詞彙。預設為 `50`。
+`minimum_should_match` | 正或負整數、正或負百分比、組合 | 如果查詢字串包含多個搜尋詞彙且您使用 `or` 運算子，此參數為文件被視為相符所需相符的詞彙數量。例如，如果 `minimum_should_match` 為 2，`wind often rising` 不會與 `The Wind Rises.` 相符。如果 `minimum_should_match` 為 `1`，則會相符。如需詳細資訊，請參閱[最少應相符數]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/)。
+`operator` | 字串 | 如果查詢字串包含多個搜尋詞彙，此參數決定文件被視為相符時，需要所有詞彙都相符（`AND`）或只需一個詞彙相符（`OR`）。有效值為：<br>- `OR`：字串 `to be` 會被解讀為 `to OR be`<br>- `AND`：字串 `to be` 會被解讀為 `to AND be`<br> 預設為 `OR`。
+`prefix_length` | 非負整數 | 在模糊度中不予考量的開頭字元數。預設為 `0`。
+`zero_terms_query` | 字串 | 在某些情況下，分析器會移除查詢字串中的所有詞彙。例如，`stop` 分析器會移除字串 `an but this` 中的所有詞彙。在這些情況下，`zero_terms_query` 指定不比對任何文件（`none`）或比對所有文件（`all`）。有效值為 `none` 和 `all`。預設為 `none`。

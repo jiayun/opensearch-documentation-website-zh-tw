@@ -1,76 +1,77 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Getting started with OpenSearch Data Prepper
+title: "OpenSearch Data Prepper 入門"
 nav_order: 5
 redirect_from:
   - /clients/data-prepper/get-started/
 ---
 
-# Getting started with OpenSearch Data Prepper
+# OpenSearch Data Prepper 入門
 
-OpenSearch Data Prepper is an independent component, not an OpenSearch plugin, that converts data for use with OpenSearch. It's not bundled with the all-in-one OpenSearch installation packages.
+OpenSearch Data Prepper 是一個獨立元件，而非 OpenSearch 外掛程式，用於轉換資料以供 OpenSearch 使用。它並未包含在 OpenSearch 的一體式安裝套件中。
 
-If you are migrating from Open Distro Data Prepper, see [Migrating from Open Distro]({{site.url}}{{site.baseurl}}/data-prepper/migrate-open-distro/). 
+如果您要從 Open Distro Data Prepper 遷移，請參閱[從 Open Distro 遷移]({{site.url}}{{site.baseurl}}/data-prepper/migrate-open-distro/)。
 {: .note}
 
-## 1. Installing Data Prepper
+## 1. 安裝 Data Prepper
 
-There are two ways to install Data Prepper: you can run the Docker image or build from source.
+安裝 Data Prepper 的方式有兩種：您可以執行 Docker 映像檔，或從原始碼建置。
 
-The easiest way to use Data Prepper is by running the Docker image. We suggest that you use this approach if you have [Docker](https://www.docker.com) available. Run the following command:  
+使用 Data Prepper 最簡單的方式是執行 Docker 映像檔。如果您有可用的 [Docker](https://www.docker.com)，建議您採用此方式。請執行下列命令：
 
 ```bash
 docker pull opensearchproject/data-prepper:latest
 ```
 {% include copy.html %}
 
-If you have special requirements that require you to build from source, or if you want to contribute, see the [Developer Guide](https://github.com/opensearch-project/data-prepper/blob/main/docs/developer_guide.md).
+如果您有特殊需求而必須從原始碼建置，或者您想要貢獻，請參閱[開發人員指南](https://github.com/opensearch-project/data-prepper/blob/main/docs/developer_guide.md)。
 
-## 2. Configuring Data Prepper
+## 2. 設定 Data Prepper
 
-Two configuration files are required to run a Data Prepper instance. Optionally, you can configure a Log4j 2 configuration file. See [Configuring Log4j]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/configuring-log4j/) for more information. The following list describes the purpose of each configuration file:
+執行 Data Prepper 執行個體需要兩個組態檔案。您也可以選擇設定 Log4j 2 組態檔案。如需詳細資訊，請參閱[設定 Log4j]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/configuring-log4j/)。下列清單說明每個組態檔案的用途：
 
-* `pipelines.yaml`: This file describes which data pipelines to run, including sources, processors, and sinks. 
-* `data-prepper-config.yaml`: This file contains Data Prepper server settings that allow you to interact with exposed Data Prepper server APIs. 
-* `log4j2-rolling.properties` (optional): This file contains Log4j 2 configuration options and can be a JSON, YAML, XML, or .properties file type. 
+* `pipelines.yaml`：此檔案描述要執行哪些資料管線，包括來源、處理器和接收器 (sink)。
+* `data-prepper-config.yaml`：此檔案包含 Data Prepper 伺服器設定，可讓您與公開的 Data Prepper 伺服器 API 互動。
+* `log4j2-rolling.properties` (選用)：此檔案包含 Log4j 2 組態選項，檔案類型可以是 JSON、YAML、XML 或 .properties。
 
-For Data Prepper versions earlier than 2.0, the `.jar` file expects the pipeline configuration file path to be followed by the server configuration file path. See the following configuration path example:
+對於 2.0 之前的 Data Prepper 版本，`.jar` 檔案預期先指定管線組態檔案路徑，再接著指定伺服器組態檔案路徑。請參閱下列組態路徑範例：
 
 ```bash
 java -jar data-prepper-core-$VERSION.jar pipelines.yaml data-prepper-config.yaml
 ```
 {% include copy.html %}
 
-Optionally, you can add `"-Dlog4j.configurationFile=config/log4j2.properties"` to the command to pass a custom Log4j 2 configuration file. If you don't provide a properties file, Data Prepper defaults to the `log4j2.properties` file in the `shared-config` directory.
+您也可以選擇在命令中加入 `"-Dlog4j.configurationFile=config/log4j2.properties"`，以傳入自訂的 Log4j 2 組態檔案。如果您未提供 properties 檔案，Data Prepper 會預設使用 `shared-config` 目錄中的 `log4j2.properties` 檔案。
 
 
-Starting with Data Prepper 2.0, you can launch Data Prepper by using the following `data-prepper` script that does not require any additional command line arguments:
+從 Data Prepper 2.0 開始，您可以使用下列 `data-prepper` 指令碼啟動 Data Prepper，不需要任何額外的命令列引數：
 
 ```bash
 bin/data-prepper
 ```
 {% include copy.html %}
 
-Configuration files are read from specific subdirectories in the application's home directory:
-1. `pipelines/`: Used for pipeline configurations. Pipeline configurations can be written in one or more YAML files.
-2. `config/data-prepper-config.yaml`: Used for the Data Prepper server configuration.
+組態檔案會從應用程式主目錄中的特定子目錄讀取：
+1. `pipelines/`：用於管線組態。管線組態可以寫在一個或多個 YAML 檔案中。
+2. `config/data-prepper-config.yaml`：用於 Data Prepper 伺服器組態。
 
-You can supply your own pipeline configuration file path followed by the server configuration file path. However, this method will not be supported in a future release. See the following example:
+您可以提供自己的管線組態檔案路徑，再接著提供伺服器組態檔案路徑。不過，未來的版本將不再支援此方法。請參閱下列範例：
 ```bash
 bin/data-prepper pipelines.yaml data-prepper-config.yaml
 ```
 {% include copy.html %}
 
-The Log4j 2 configuration file is read from the `config/log4j2.properties` file located in the application's home directory.
+Log4j 2 組態檔案會從位於應用程式主目錄中的 `config/log4j2.properties` 檔案讀取。
 
-To configure Data Prepper, see the following information for each use case: 
+若要設定 Data Prepper，請參閱下列各使用案例的資訊：
 
-* [Trace analytics]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/trace-analytics/): Learn how to collect trace data and customize a pipeline that ingests and transforms that data. 
-* [Log analytics]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/log-analytics/): Learn how to set up Data Prepper for log observability.
+* [追蹤分析]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/trace-analytics/)：了解如何收集追蹤資料，並自訂匯入和轉換該資料的管線。
+* [記錄檔分析]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/log-analytics/)：了解如何設定 Data Prepper 以實現記錄檔可觀測性。
 
-## 3. Defining a pipeline
+## 3. 定義管線
 
-Create a Data Prepper pipeline file named `pipelines.yaml` using the following configuration:
+使用下列組態建立名為 `pipelines.yaml` 的 Data Prepper 管線檔案：
 
 ```yaml
 simple-sample-pipeline:
@@ -83,9 +84,9 @@ simple-sample-pipeline:
 ```
 {% include copy.html %}
 
-## 4. Running Data Prepper
+## 4. 執行 Data Prepper
 
-Run the following command with your pipeline configuration YAML.
+使用您的管線組態 YAML 執行下列命令。
 
 ```bash
 docker run --name data-prepper \
@@ -95,9 +96,9 @@ docker run --name data-prepper \
 ```
 {% include copy.html %}
 
-The preceding example pipeline configuration demonstrates a simple pipeline with a source (`random`) sending data to a sink (`stdout`). For examples of more advanced pipeline configurations, see [Pipelines]({{site.url}}{{site.baseurl}}/clients/data-prepper/pipelines/).
+上述管線組態範例示範了一個簡單的管線，由來源 (`random`) 將資料傳送至接收器 (`stdout`)。如需更進階的管線組態範例，請參閱[管線]({{site.url}}{{site.baseurl}}/clients/data-prepper/pipelines/)。
 
-After starting Data Prepper, you should see log output and some UUIDs after a few seconds:
+啟動 Data Prepper 後，幾秒鐘內您應該會看到記錄檔輸出和一些 UUID：
 
 ```text
 2021-09-30T20:19:44,147 [main] INFO  com.amazon.dataprepper.pipeline.server.DataPrepperServer - Data Prepper server running at :4900
@@ -115,47 +116,47 @@ After starting Data Prepper, you should see log output and some UUIDs after a fe
 e51e700e-5cab-4f6d-879a-1c3235a77d18
 b4ed2d7e-cf9c-4e9d-967c-b18e8af35c90
 ```
-The remainder of this page provides examples for running Data Prepper from the Docker image. If you
-built it from source, refer to the [Developer Guide](https://github.com/opensearch-project/data-prepper/blob/main/docs/developer_guide.md) for more information.
+本頁其餘部分提供從 Docker 映像檔執行 Data Prepper 的範例。如果您
+是從原始碼建置，請參閱[開發人員指南](https://github.com/opensearch-project/data-prepper/blob/main/docs/developer_guide.md)以取得詳細資訊。
 
-However you configure your pipeline, you'll run Data Prepper the same way. You run the Docker
-image and modify both the `pipelines.yaml` and `data-prepper-config.yaml` files.
+無論您如何設定管線，執行 Data Prepper 的方式都相同。您會執行 Docker
+映像檔，並修改 `pipelines.yaml` 和 `data-prepper-config.yaml` 這兩個檔案。
 
-For Data Prepper 2.0 or later, use this command:
+對於 Data Prepper 2.0 或更新版本，請使用此命令：
 
 ```bash
 docker run --name data-prepper -p 4900:4900 -v ${PWD}/pipelines.yaml:/usr/share/data-prepper/pipelines/pipelines.yaml -v ${PWD}/data-prepper-config.yaml:/usr/share/data-prepper/config/data-prepper-config.yaml opensearchproject/data-prepper:latest
 ```
 {% include copy.html %}
 
-For Data Prepper versions earlier than 2.0, use this command:
+對於 2.0 之前的 Data Prepper 版本，請使用此命令：
 
 ```bash
 docker run --name data-prepper -p 4900:4900 -v ${PWD}/pipelines.yaml:/usr/share/data-prepper/pipelines.yaml -v ${PWD}/data-prepper-config.yaml:/usr/share/data-prepper/data-prepper-config.yaml opensearchproject/data-prepper:1.x
 ```
 {% include copy.html %}
 
-Once Data Prepper is running, it processes data until it is shut down. Once you are done, shut it down with the following command:
+Data Prepper 執行後，會持續處理資料，直到被關閉為止。完成後，請使用下列命令將其關閉：
 
 ```bash
 POST /shutdown
 ```
 {% include copy-curl.html %}
 
-### Additional configurations
+### 其他組態
 
-For Data Prepper 2.0 or later, the Log4j 2 configuration file is read from `config/log4j2.properties` in the application's home directory. By default, it uses `log4j2-rolling.properties` in the *shared-config* directory.
+對於 Data Prepper 2.0 或更新版本，Log4j 2 組態檔案會從應用程式主目錄中的 `config/log4j2.properties` 讀取。預設會使用 *shared-config* 目錄中的 `log4j2-rolling.properties`。
 
-For Data Prepper 1.5 or earlier, optionally add `"-Dlog4j.configurationFile=config/log4j2.properties"` to the command if you want to pass a custom log4j2 properties file. If no properties file is provided, Data Prepper defaults to the log4j2.properties file in the *shared-config* directory.
+對於 Data Prepper 1.5 或更早版本，如果您想傳入自訂的 log4j2 properties 檔案，可以選擇在命令中加入 `"-Dlog4j.configurationFile=config/log4j2.properties"`。如果未提供 properties 檔案，Data Prepper 會預設使用 *shared-config* 目錄中的 log4j2.properties 檔案。
 
-## Next steps
+## 後續步驟
 
-Trace analytics is an important Data Prepper use case. If you haven't yet configured it, see [Trace analytics]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/trace-analytics/).
+追蹤分析是 Data Prepper 的重要使用案例。如果您尚未設定，請參閱[追蹤分析]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/trace-analytics/)。
 
-Log ingestion is also an important Data Prepper use case. To learn more, see [Log analytics]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/log-analytics/).
+記錄檔匯入也是 Data Prepper 的重要使用案例。若要深入了解，請參閱[記錄檔分析]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/log-analytics/)。
 
-For information about how to monitor Data Prepper, see [Monitoring]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/monitoring/).
+如需如何監控 Data Prepper 的相關資訊，請參閱[監控]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/monitoring/)。
 
-## More examples
+## 更多範例
 
-For more examples of Data Prepper, see [examples](https://github.com/opensearch-project/data-prepper/tree/main/examples/) in the Data Prepper repo. 
+如需更多 Data Prepper 範例，請參閱 Data Prepper 儲存庫中的[範例](https://github.com/opensearch-project/data-prepper/tree/main/examples/)。 

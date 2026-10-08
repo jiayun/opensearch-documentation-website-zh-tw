@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Workflow templates
+title: "工作流程範本"
 nav_order: 25
 ---
 
-# Workflow templates
+# 工作流程範本
 
-OpenSearch provides several workflow templates for some common machine learning (ML) use cases. Using a template simplifies complex setups and provides many default values for use cases like semantic or conversational search. 
+OpenSearch 為一些常見的機器學習 (ML) 使用案例提供多種工作流程範本。使用範本可以簡化複雜的設定流程，並為語意搜尋或對話式搜尋等使用案例提供許多預設值。
 
-You can specify a workflow template when you call the [Create Workflow API]({{site.url}}{{site.baseurl}}/automating-configurations/api/create-workflow/):
+您可以在呼叫 [Create Workflow API]({{site.url}}{{site.baseurl}}/automating-configurations/api/create-workflow/) 時指定工作流程範本：
 
-- To use an OpenSearch-provided workflow template, specify the template use case as the `use_case` query parameter (see the [Example](#example)). For a list of OpenSearch-provided templates, see [Supported workflow templates](#supported-workflow-templates).
+- 若要使用 OpenSearch 提供的工作流程範本，請將範本使用案例指定為 `use_case` 查詢參數（請參閱[範例](#example)）。如需 OpenSearch 提供的範本清單，請參閱[支援的工作流程範本](#supported-workflow-templates)。
 
-- To use a custom workflow template, provide the complete template in the request body. For an example of a custom template, see [an example JSON template]({{site.url}}{{site.baseurl}}/automating-configurations/api/create-workflow/#example-request-register-and-deploy-a-remote-model-json) or [an example YAML template]({{site.url}}{{site.baseurl}}/automating-configurations/api/create-workflow/#example-request-register-and-deploy-an-externally-hosted-model-in-yaml). 
+- 若要使用自訂工作流程範本，請在請求本文中提供完整的範本。如需自訂範本的範例，請參閱 [JSON 範本範例]({{site.url}}{{site.baseurl}}/automating-configurations/api/create-workflow/#example-request-register-and-deploy-a-remote-model-json)或 [YAML 範本範例]({{site.url}}{{site.baseurl}}/automating-configurations/api/create-workflow/#example-request-register-and-deploy-an-externally-hosted-model-in-yaml)。
 
-To provision the workflow, specify `provision=true` as a query parameter. 
+若要佈建工作流程，請將 `provision=true` 指定為查詢參數。
 
-## Example
+## 範例
 
-In this example, you'll configure the `semantic_search_with_cohere_embedding_query_enricher` workflow template. The workflow created using this template performs the following configuration steps:
+在此範例中，您將設定 `semantic_search_with_cohere_embedding_query_enricher` 工作流程範本。使用此範本建立的工作流程會執行下列組態步驟：
 
-- Deploys an externally hosted Cohere model
-- Creates an ingest pipeline using the model
-- Creates a sample vector index and configures a search pipeline to define the default model ID for that index
+- 部署外部託管的 Cohere 模型
+- 使用該模型建立資料匯入管線
+- 建立範例向量索引，並設定搜尋管線以定義該索引的預設模型 ID
 
-### Step 1: Create and provision the workflow
+### 步驟 1：建立並佈建工作流程
 
-Send the following request to create and provision a workflow using the `semantic_search_with_cohere_embedding_query_enricher` workflow template. The only required request body field for this template is the API key for the Cohere Embed model:
+傳送下列請求，以使用 `semantic_search_with_cohere_embedding_query_enricher` 工作流程範本建立並佈建工作流程。此範本唯一必要的請求本文欄位是 Cohere Embed 模型的 API 金鑰：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=semantic_search_with_cohere_embedding_query_enricher&provision=true
@@ -36,7 +37,7 @@ POST /_plugins/_flow_framework/workflow?use_case=semantic_search_with_cohere_emb
 ```
 {% include copy-curl.html %}
 
-OpenSearch responds with a workflow ID for the created workflow:
+OpenSearch 會回應所建立工作流程的工作流程 ID：
 
 ```json
 {
@@ -44,7 +45,7 @@ OpenSearch responds with a workflow ID for the created workflow:
 }
 ```
 
-The workflow in the previous step creates a default vector index. The default index name is `my-nlp-index`:
+上一個步驟中的工作流程會建立預設向量索引。預設索引名稱為 `my-nlp-index`：
 
 ```json
 {
@@ -52,11 +53,11 @@ The workflow in the previous step creates a default vector index. The default in
 }
 ```
 
-For all default parameter values for this workflow template, see [Cohere Embed semantic search defaults](https://github.com/opensearch-project/flow-framework/blob/2.13/src/main/resources/defaults/cohere-embedding-semantic-search-defaults.json).
+如需此工作流程範本的所有預設參數值，請參閱 [Cohere Embed 語意搜尋預設值](https://github.com/opensearch-project/flow-framework/blob/2.13/src/main/resources/defaults/cohere-embedding-semantic-search-defaults.json)。
 
-### Step 2: Ingest documents into the index 
+### 步驟 2：將文件匯入索引
 
-To ingest documents into the index created in the previous step, send the following request:
+若要將文件匯入上一個步驟中建立的索引，請傳送下列請求：
 
 ```json
 PUT /my-nlp-index/_doc/1
@@ -67,9 +68,9 @@ PUT /my-nlp-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-### Step 3: Perform vector search
+### 步驟 3：執行向量搜尋
 
-To perform a vector search on your index, use a [`neural` query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/) clause:
+若要對您的索引執行向量搜尋，請使用 [`neural` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)子句：
 
 ```json
 GET /my-nlp-index/_search
@@ -91,13 +92,13 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-Each workflow template has a defined schema and a set of APIs with predefined default values for each step. For more information about template parameter defaults, see [Supported workflow templates](#supported-workflow-templates).
+每個工作流程範本都有已定義的結構描述，以及一組在每個步驟中具有預先定義預設值的 API。如需範本參數預設值的詳細資訊，請參閱[支援的工作流程範本](#supported-workflow-templates)。
 
-### Overriding default values
+### 覆寫預設值
 
-To override a template's default values, provide the new values in the request body when sending a create workflow request. For example, the following request changes the Cohere model, the name of the `text_embedding` processor output field, and the name of the sparse index of the `semantic_search_with_cohere_embedding` template:
+若要覆寫範本的預設值，請在傳送建立工作流程請求時，於請求本文中提供新的值。例如，下列請求會變更 `semantic_search_with_cohere_embedding` 範本的 Cohere 模型、`text_embedding` 處理器輸出欄位的名稱，以及稀疏索引的名稱：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=semantic_search_with_cohere_embedding
@@ -109,360 +110,360 @@ POST /_plugins/_flow_framework/workflow?use_case=semantic_search_with_cohere_emb
 ```
 {% include copy-curl.html %}
 
-## Viewing workflow resources
+## 檢視工作流程資源
 
-The workflow you created provisioned all the necessary resources for semantic search. To view the provisioned resources, call the [Get Workflow Status API]({{site.url}}{{site.baseurl}}/automating-configurations/api/get-workflow-status/) and provide the `workflowID` for your workflow:
+您建立的工作流程已佈建語意搜尋所需的所有資源。若要檢視已佈建的資源，請呼叫 [Get Workflow Status API]({{site.url}}{{site.baseurl}}/automating-configurations/api/get-workflow-status/)，並提供您工作流程的 `workflowID`：
 
 ```json
 GET /_plugins/_flow_framework/workflow/8xL8bowB8y25Tqfenm50/_status
 ```
 {% include copy-curl.html %}
 
-## Supported workflow templates
+## 支援的工作流程範本
 
-To use a workflow template, specify it in the `use_case` query parameter when creating a workflow. The following templates are supported:
+若要使用工作流程範本，請在建立工作流程時於 `use_case` 查詢參數中指定該範本。支援下列範本：
 
 <details open markdown="block">
   <summary>
-    The following templates are supported:
+    支援下列範本：
   </summary>
 
-- Model deployment templates:
-  - [Amazon Bedrock Titan embedding](#amazon-bedrock-titan-embedding)
-  - [Amazon Bedrock Titan multimodal](#amazon-bedrock-titan-multimodal)
-  - [Cohere embedding](#cohere-embedding)
-  - [Cohere chat](#cohere-chat)
-  - [OpenAI embedding](#openai-embedding)
-  - [OpenAI chat](#openai-chat)
-- Semantic search templates:
-  - [Semantic search](#semantic-search)
-  - [Semantic search with a query enricher](#semantic-search-with-a-query-enricher)
-  - [Semantic search using a local model](#semantic-search-using-a-local-model)
-  - [Semantic search using a Cohere embedding model](#semantic-search-using-a-cohere-embedding-model)
-  - [Semantic search using Cohere embedding models with a query enricher](#semantic-search-using-cohere-embedding-models-with-a-query-enricher)
-  - [Semantic search using Cohere embedding models with reindexing](#semantic-search-using-cohere-embedding-models-with-reindexing)
-- Neural sparse search templates:
-  - [Neural sparse search](#neural-sparse-search)
-- Multimodal search templates:
-  - [Multimodal search](#multimodal-search)
-  - [Multimodal search using Amazon Bedrock Titan](#multimodal-search-using-amazon-bedrock-titan)
-- Hybrid search templates:
-  - [Hybrid search](#hybrid-search)
-  - [Hybrid search using a local model](#hybrid-search-using-a-local-model)
-- Conversational search templates:
-  - [Conversational search using an LLM](#conversational-search-using-an-llm)
-- Agentic search templates:
-  - [Agentic search with a flow agent](#agentic-search-with-a-flow-agent)
-  - [Agentic search with a conversational agent](#agentic-search-with-a-conversational-agent)
+- 模型部署範本：
+  - [Amazon Bedrock Titan 嵌入](#amazon-bedrock-titan-embedding)
+  - [Amazon Bedrock Titan 多模態](#amazon-bedrock-titan-multimodal)
+  - [Cohere 嵌入](#cohere-embedding)
+  - [Cohere 聊天](#cohere-chat)
+  - [OpenAI 嵌入](#openai-embedding)
+  - [OpenAI 聊天](#openai-chat)
+- 語意搜尋範本：
+  - [語意搜尋](#semantic-search)
+  - [使用查詢擴充器的語意搜尋](#semantic-search-with-a-query-enricher)
+  - [使用本機模型的語意搜尋](#semantic-search-using-a-local-model)
+  - [使用 Cohere 嵌入模型的語意搜尋](#semantic-search-using-a-cohere-embedding-model)
+  - [使用 Cohere 嵌入模型搭配查詢擴充器的語意搜尋](#semantic-search-using-cohere-embedding-models-with-a-query-enricher)
+  - [使用 Cohere 嵌入模型搭配重新編製索引的語意搜尋](#semantic-search-using-cohere-embedding-models-with-reindexing)
+- 神經稀疏搜尋範本：
+  - [神經稀疏搜尋](#neural-sparse-search)
+- 多模態搜尋範本：
+  - [多模態搜尋](#multimodal-search)
+  - [使用 Amazon Bedrock Titan 的多模態搜尋](#multimodal-search-using-amazon-bedrock-titan)
+- 混合搜尋範本：
+  - [混合搜尋](#hybrid-search)
+  - [使用本機模型的混合搜尋](#hybrid-search-using-a-local-model)
+- 對話式搜尋範本：
+  - [使用 LLM 的對話式搜尋](#conversational-search-using-an-llm)
+- 代理式搜尋範本：
+  - [使用流程代理程式的代理式搜尋](#agentic-search-with-a-flow-agent)
+  - [使用對話式代理程式的代理式搜尋](#agentic-search-with-a-conversational-agent)
 
 </details>
 
-## Model deployment templates
+## 模型部署範本
 
-The following workflow templates configure model deployment.
+下列工作流程範本可設定模型部署。
 
-### Amazon Bedrock Titan embedding
+### Amazon Bedrock Titan 嵌入
 
-This workflow creates and deploys an Amazon Bedrock embedding model (by default, `titan-embed-text-v1`).
+此工作流程會建立並部署 Amazon Bedrock 嵌入模型（預設為 `titan-embed-text-v1`）。
 
-- **Use case**: `bedrock_titan_embedding_model_deploy`
-- **Created components**: A connector and model for the Amazon Bedrock Titan embeddings model
-- **Required parameters**: 
+- **使用案例**：`bedrock_titan_embedding_model_deploy`
+- **建立的元件**：Amazon Bedrock Titan 嵌入模型的連接器與模型
+- **必要參數**：
   - `create_connector.credential.access_key`
   - `create_connector.credential.secret_key`
   - `create_connector.credential.session_token`
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/bedrock-titan-embedding-defaults.json)
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/bedrock-titan-embedding-defaults.json)
 
-**Note**: Requires AWS credentials and access to Amazon Bedrock.
+**注意**：需要 AWS 憑證以及 Amazon Bedrock 的存取權。
 
-### Amazon Bedrock Titan multimodal
+### Amazon Bedrock Titan 多模態
 
-This workflow creates and deploys an Amazon Bedrock multimodal embedding model (by default, `titan-embed-image-v1`).
+此工作流程會建立並部署 Amazon Bedrock 多模態嵌入模型（預設為 `titan-embed-image-v1`）。
 
-- **Use case**: `bedrock_titan_multimodal_model_deploy`
-- **Created components**: A connector and model for Amazon Bedrock Titan multimodal embeddings
-- **Required parameters**: 
+- **使用案例**：`bedrock_titan_multimodal_model_deploy`
+- **建立的元件**：用於 Amazon Bedrock Titan 多模態嵌入的連接器與模型
+- **必要參數**： 
   - `create_connector.credential.access_key`
   - `create_connector.credential.secret_key`
   - `create_connector.credential.session_token`
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/bedrock-titan-multimodal-defaults.json)
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/bedrock-titan-multimodal-defaults.json)
 
-**Note**: Requires AWS credentials and access to Amazon Bedrock.
+**注意**：需要 AWS 憑證與 Amazon Bedrock 存取權限。
 
-### Cohere embedding
+### Cohere 嵌入
 
-This workflow creates and deploys a Cohere embedding model (by default, `embed-english-v3.0`).
+此工作流程會建立並部署 Cohere 嵌入模型（預設為 `embed-english-v3.0`）。
 
-- **Use case**: `cohere_embedding_model_deploy`
-- **Created components**: A connector and model for Cohere embedding
-- **Required parameters**: 
+- **使用案例**：`cohere_embedding_model_deploy`
+- **建立的元件**：用於 Cohere 嵌入的連接器與模型
+- **必要參數**： 
   - `create_connector.credential.key`
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/cohere-embedding-defaults.json)
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/cohere-embedding-defaults.json)
 
-**Note**: Requires a Cohere API key.
+**注意**：需要 Cohere API 金鑰。
 
-### Cohere chat
+### Cohere 聊天
 
-This workflow creates and deploys a Cohere chat model (by default, Cohere Command).
+此工作流程會建立並部署 Cohere 聊天模型（預設為 Cohere Command）。
 
-- **Use case**: `cohere_chat_model_deploy`
-- **Created components**: A connector and model for Cohere chat
-- **Required parameters**: 
+- **使用案例**：`cohere_chat_model_deploy`
+- **建立的元件**：用於 Cohere 聊天的連接器與模型
+- **必要參數**： 
   - `create_connector.credential.key`
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/cohere-chat-defaults.json)
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/cohere-chat-defaults.json)
 
-**Note**: Requires a Cohere API key.
+**注意**：需要 Cohere API 金鑰。
 
-### OpenAI embedding
+### OpenAI 嵌入
 
-This workflow creates and deploys an OpenAI embedding model (by default, `text-embedding-ada-002`).
+此工作流程會建立並部署 OpenAI 嵌入模型（預設為 `text-embedding-ada-002`）。
 
-- **Use case**: `open_ai_embedding_model_deploy`
-- **Created components**: A connector and model for OpenAI embeddings
-- **Required parameters**: 
+- **使用案例**：`open_ai_embedding_model_deploy`
+- **建立的元件**：用於 OpenAI 嵌入的連接器與模型
+- **必要參數**： 
   - `create_connector.credential.key`
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/openai-embedding-defaults.json)
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/openai-embedding-defaults.json)
 
-**Note**: Requires an OpenAI API key.
+**注意**：需要 OpenAI API 金鑰。
 
-### OpenAI chat
+### OpenAI 聊天
 
-This workflow creates and deploys an OpenAI chat model (by default, `gpt-3.5-turbo`).
+此工作流程會建立並部署 OpenAI 聊天模型（預設為 `gpt-3.5-turbo`）。
 
-- **Use case**: `openai_chat_model_deploy`
-- **Created components**: A connector and model for OpenAI chat
-- **Required parameters**: 
+- **使用案例**：`openai_chat_model_deploy`
+- **建立的元件**：用於 OpenAI 聊天的連接器與模型
+- **必要參數**： 
   - `create_connector.credential.key`
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/openai-chat-defaults.json)
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/openai-chat-defaults.json)
 
-**Note**: Requires an OpenAI API key.
+**注意**：需要 OpenAI API 金鑰。
 
-## Semantic search templates
+## 語意搜尋範本
 
-The following workflow templates configure semantic search.
+下列工作流程範本可設定語意搜尋。
 
-### Semantic search
+### 語意搜尋
 
-This workflow configures [semantic search]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/).
+此工作流程會設定[語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)。
 
-- **Use case**: `semantic_search`
-- **Created components**: 
-  - An ingest pipeline with a `text_embedding` processor
-  - A vector index configured with the pipeline
-- **Required parameters**: 
-  - `create_ingest_pipeline.model_id`: The model ID of the text embedding model to be used
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-defaults.json)
+- **使用案例**：`semantic_search`
+- **建立的元件**： 
+  - 包含 `text_embedding` 處理器的資料匯入管線
+  - 設定為使用該管線的向量索引
+- **必要參數**： 
+  - `create_ingest_pipeline.model_id`：要使用的文字嵌入模型的模型 ID
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-defaults.json)
 
-### Semantic search with a query enricher
+### 搭配查詢增強器的語意搜尋
 
-This workflow configures [semantic search]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/) with a default model for neural queries.
+此工作流程會設定[語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)，並為神經查詢設定預設模型。
 
-- **Use case**: `semantic_search_with_query_enricher`
-- **Created components**: 
-  - An ingest pipeline with a `text_embedding` processor
-  - A vector index configured with the pipeline
-  - A [`query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/) search processor that sets a default model ID for neural queries.
-- **Required parameters**: 
-  - `create_ingest_pipeline.model_id`: The model ID of the text embedding model to be used
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-query-enricher-defaults.json)
+- **使用案例**：`semantic_search_with_query_enricher`
+- **建立的元件**： 
+  - 包含 `text_embedding` 處理器的資料匯入管線
+  - 設定為使用該管線的向量索引
+  - 為神經查詢設定預設模型 ID 的 [`query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/) 搜尋處理器。
+- **必要參數**： 
+  - `create_ingest_pipeline.model_id`：要使用的文字嵌入模型的模型 ID
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-query-enricher-defaults.json)
 
-### Semantic search using a local model
+### 使用本機模型的語意搜尋
 
-This workflow configures [semantic search]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/) and deploys a pretrained model.
+此工作流程會設定[語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)，並部署預先訓練的模型。
 
-- **Use case**: `semantic_search_with_local_model`
-- **Created components**:
-  - A pretrained model (by default, `huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2`)
-  - An ingest pipeline with a `text_embedding` processor
-  - A vector index configured with the pipeline
-  - A [`query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/) search processor that sets a default model ID for neural queries.
-- **Required parameters**: None
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-with-local-model-defaults.json)
+- **使用案例**：`semantic_search_with_local_model`
+- **建立的元件**：
+  - 預先訓練的模型（預設為 `huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2`）
+  - 包含 `text_embedding` 處理器的資料匯入管線
+  - 設定為使用該管線的向量索引
+  - 為神經查詢設定預設模型 ID 的 [`query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/) 搜尋處理器。
+- **必要參數**：無
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-with-local-model-defaults.json)
 
-**Note**: Uses a local pretrained model with a default configuration.
+**注意**：使用採用預設組態的本機預先訓練模型。
 
-### Semantic search using a Cohere embedding model
+### 使用 Cohere 嵌入模型的語意搜尋
 
-This workflow configures [semantic search]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/) and deploys a Cohere embedding model.
+此工作流程會設定[語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)，並部署 Cohere 嵌入模型。
 
-- **Use case**: `semantic_search_with_cohere_embedding`
-- **Created components**:
-  - A Cohere embedding model (by default, `embed-english-v3.0`) connector and deployment
-  - An ingest pipeline with a `text_embedding` processor
-  - A vector index configured with the pipeline
-- **Required parameters**:
-  - `create_connector.credential.key`: API key for the Cohere model
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/cohere-embedding-semantic-search-defaults.json)
+- **使用案例**：`semantic_search_with_cohere_embedding`
+- **建立的元件**：
+  - Cohere 嵌入模型（預設為 `embed-english-v3.0`）的連接器與部署
+  - 包含 `text_embedding` 處理器的資料匯入管線
+  - 設定為使用該管線的向量索引
+- **必要參數**：
+  - `create_connector.credential.key`：Cohere 模型的 API 金鑰
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/cohere-embedding-semantic-search-defaults.json)
 
-**Note**: Requires a Cohere API key.
+**注意**：需要 Cohere API 金鑰。
 
-### Semantic search using Cohere embedding models with a query enricher
+### 使用 Cohere 嵌入模型並搭配查詢增強器的語意搜尋
 
-This workflow configures [semantic search]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/), deploys a Cohere embedding model, and adds a query enricher search processor.
+此工作流程會設定[語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)、部署 Cohere 嵌入模型，並新增查詢增強器搜尋處理器。
 
-- **Use case**: `semantic_search_with_cohere_embedding_query_enricher`
-- **Created components**:
-  - A Cohere embedding model connector and deployment
-  - An ingest pipeline with a `text_embedding` processor
-  - A vector index configured with the pipeline
-  - A [`query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/) search processor that sets a default model ID for neural queries.
-- **Required parameters**:
-  - `create_connector.credential.key`: API key for the Cohere model
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/cohere-embedding-semantic-search-with-query-enricher-defaults.json)
+- **使用案例**：`semantic_search_with_cohere_embedding_query_enricher`
+- **建立的元件**：
+  - Cohere 嵌入模型的連接器與部署
+  - 包含 `text_embedding` 處理器的資料匯入管線
+  - 設定為使用該管線的向量索引
+  - 為神經查詢設定預設模型 ID 的 [`query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/) 搜尋處理器。
+- **必要參數**：
+  - `create_connector.credential.key`：Cohere 模型的 API 金鑰
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/cohere-embedding-semantic-search-with-query-enricher-defaults.json)
 
-**Note**: Requires a Cohere API key. 
+**注意**：需要 Cohere API 金鑰。 
 
-### Semantic search using Cohere embedding models with reindexing
+### 使用 Cohere 嵌入模型並重新編製索引的語意搜尋
 
-This workflow configures [semantic search]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/) with a Cohere embedding model and reindexes an existing index.
+此工作流程會使用 Cohere 嵌入模型設定[語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)，並對現有索引重新編製索引。
 
-- **Use case**: `semantic_search_with_reindex`
-- **Created components**:
-  - A Cohere embedding model connector and deployment
-  - A vector index configured with the pipeline
-  - A reindexing process
-- **Required parameters**:
-  - `create_connector.credential.key`: API key for the Cohere model
-  - `reindex.source_index`: The source index to be reindexed
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-with-reindex-defaults.json)
+- **使用案例**：`semantic_search_with_reindex`
+- **建立的元件**：
+  - Cohere 嵌入模型的連接器與部署
+  - 設定為使用該管線的向量索引
+  - 重新編製索引的程序
+- **必要參數**：
+  - `create_connector.credential.key`：Cohere 模型的 API 金鑰
+  - `reindex.source_index`：要重新編製索引的來源索引
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-with-reindex-defaults.json)
 
-**Note**: Reindexes a source index into a newly configured k-NN index using a Cohere embedding model.
+**注意**：使用 Cohere 嵌入模型，將來源索引重新編製索引至新設定的 k-NN 索引。
 
-## Neural sparse search templates
+## 神經稀疏搜尋範本
 
-The following workflow template configures [neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/).
+下列工作流程範本會設定[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
 
-### Neural sparse search
+### 神經稀疏搜尋
 
-This workflow configures [neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/).
+此工作流程會設定[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
 
-- **Use case**: `local_neural_sparse_search_bi_encoder`
-- **Created components**: 
-  - A locally hosted pretrained sparse encoding model (by default, `amazon/neural-sparse/opensearch-neural-sparse-encoding-v1`)
-  - An ingest pipeline with a `sparse_encoding` processor
-  - A vector index configured with the pipeline
-- **Required parameters**: None
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/local-sparse-search-biencoder-defaults.json)
+- **使用案例**：`local_neural_sparse_search_bi_encoder`
+- **建立的元件**：
+  - 本機託管的預先訓練稀疏編碼模型（預設為 `amazon/neural-sparse/opensearch-neural-sparse-encoding-v1`）
+  - 含有 `sparse_encoding` 處理器的資料匯入管線
+  - 以該管線設定的向量索引
+- **必要參數**：無
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/local-sparse-search-biencoder-defaults.json)
 
-## Multimodal search templates
+## 多模態搜尋範本
 
-The following workflow templates configure [multimodal search]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/).
+下列工作流程範本會設定[多模態搜尋]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/)。
 
-### Multimodal search
+### 多模態搜尋
 
-This workflow configures [multimodal search]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/).
+此工作流程會設定[多模態搜尋]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/)。
 
-- **Use case**: `multimodal_search`
-- **Created components**: 
-  - An ingest pipeline with a `text_image_embedding` processor
-  - A vector index configured with the pipeline
-- **Required parameters**: 
-  - `create_ingest_pipeline.model_id`: The model ID of the multimodal embedding model to be used
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/multi-modal-search-defaults.json)
+- **使用案例**：`multimodal_search`
+- **建立的元件**：
+  - 含有 `text_image_embedding` 處理器的資料匯入管線
+  - 以該管線設定的向量索引
+- **必要參數**：
+  - `create_ingest_pipeline.model_id`：要使用的多模態嵌入模型之模型 ID
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/multi-modal-search-defaults.json)
 
-### Multimodal search using Amazon Bedrock Titan
+### 使用 Amazon Bedrock Titan 的多模態搜尋
 
-This workflow deploys an Amazon Bedrock multimodal model and configures a multimodal search pipeline.
+此工作流程會部署 Amazon Bedrock 多模態模型並設定多模態搜尋管線。
 
-- **Use case**: `multimodal_search_with_bedrock_titan`
-- **Created components**:
-  - An Amazon Bedrock Titan multimodal embedding model connector and deployment
-  - An ingest pipeline with a `text_image_embedding` processor
-  - A vector index for multimodal search configured with the pipeline
-- **Required parameters**:
+- **使用案例**：`multimodal_search_with_bedrock_titan`
+- **建立的元件**：
+  - Amazon Bedrock Titan 多模態嵌入模型連接器與部署
+  - 含有 `text_image_embedding` 處理器的資料匯入管線
+  - 以該管線設定的多模態搜尋向量索引
+- **必要參數**：
   - `create_connector.credential.access_key`
   - `create_connector.credential.secret_key`
   - `create_connector.credential.session_token`
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/multimodal-search-bedrock-titan-defaults.json)
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/multimodal-search-bedrock-titan-defaults.json)
 
-**Note**: Requires AWS credentials and access to Amazon Bedrock.
+**注意**：需要 AWS 憑證以及 Amazon Bedrock 的存取權。
 
-## Hybrid search templates
+## 混合搜尋範本
 
-The following workflow templates configure [hybrid search]({{site.url}}{{site.baseurl}}/search-plugins/hybrid-search/).
+下列工作流程範本會設定[混合搜尋]({{site.url}}{{site.baseurl}}/search-plugins/hybrid-search/)。
 
-### Hybrid search
+### 混合搜尋
 
-This workflow configures [hybrid search]({{site.url}}{{site.baseurl}}/search-plugins/hybrid-search/).
+此工作流程會設定[混合搜尋]({{site.url}}{{site.baseurl}}/search-plugins/hybrid-search/)。
 
-- **Use case**: `hybrid_search`
-- **Created components**: 
-  - An ingest pipeline
-  - A vector index configured with the pipeline
-  - A search pipeline with a `normalization_processor`
-- **Required parameters**: 
-  - `create_ingest_pipeline.model_id`: The model ID of the text embedding model to be used
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/hybrid-search-defaults.json)
+- **使用案例**：`hybrid_search`
+- **建立的元件**：
+  - 資料匯入管線
+  - 以該管線設定的向量索引
+  - 含有 `normalization_processor` 的搜尋管線
+- **必要參數**：
+  - `create_ingest_pipeline.model_id`：要使用的文字嵌入模型之模型 ID
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/hybrid-search-defaults.json)
 
-### Hybrid search using a local model
+### 使用本機模型的混合搜尋
 
-This workflow configures hybrid search and deploys a pretrained model.
+此工作流程會設定混合搜尋並部署預先訓練模型。
 
-- **Use case**: `hybrid_search_with_local_model`
-- **Created components**:
-  - A pretrained model (by default, `huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2`)
-  - An ingest pipeline
-  - A vector index configured with the pipeline
-  - A search pipeline with a `normalization_processor`
-- **Required parameters**: None
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/hybrid-search-with-local-model-defaults.json)
+- **使用案例**：`hybrid_search_with_local_model`
+- **建立的元件**：
+  - 預先訓練模型（預設為 `huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2`）
+  - 資料匯入管線
+  - 以該管線設定的向量索引
+  - 含有 `normalization_processor` 的搜尋管線
+- **必要參數**：無
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/hybrid-search-with-local-model-defaults.json)
 
-**Note**: Uses a local pretrained model for hybrid search configuration.
+**注意**：使用本機預先訓練模型進行混合搜尋設定。
 
-## Conversational search templates
+## 對話式搜尋範本
 
-The following workflow template configures [conversational search with RAG]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/).
+下列工作流程範本會設定[使用 RAG 的對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)。
 
-### Conversational search using an LLM
+### 使用 LLM 的對話式搜尋
 
-This workflow deploys a large language model and configures a conversational search pipeline.
+此工作流程會部署大型語言模型並設定對話式搜尋管線。
 
-- **Use case**: `conversational_search_with_llm_deploy`
-- **Created components**:
-  - A chat model (by default, Cohere Command) connector and deployment
-  - A search pipeline with a `retrieval_augmented_generation` processor
-- **Required parameters**:
-  - `create_connector.credential.key`: API key for the LLM
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/conversational-search-defaults.json)
+- **使用案例**：`conversational_search_with_llm_deploy`
+- **建立的元件**：
+  - 聊天模型（預設為 Cohere Command）連接器與部署
+  - 含有 `retrieval_augmented_generation` 處理器的搜尋管線
+- **必要參數**：
+  - `create_connector.credential.key`：LLM 的 API 金鑰
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/conversational-search-defaults.json)
 
-**Note**: Requires an API key for the chosen language model.
+**注意**：需要所選語言模型的 API 金鑰。
 
-## Agentic search templates
+## 代理式搜尋範本
 
-The following workflow templates configure [agentic search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/).
+下列工作流程範本會設定[代理式搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/)。
 
-### Agentic search with a flow agent
+### 使用流程代理程式的代理式搜尋
 
-This workflow deploys an Amazon Bedrock chat model and configures an agentic search pipeline using a [flow agent]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/flow-agent/).
+此工作流程會部署 Amazon Bedrock 聊天模型，並使用[流程代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/flow-agent/)設定代理式搜尋管線。
 
-- **Use case**: `agentic_search_with_flow_agent`
-- **Created components**:
-  - An Amazon Bedrock connector and a remote chat model (by default, Claude 4 Sonnet)
-  - A `QueryPlanningTool`
-  - A flow agent wired to the `QueryPlanningTool`
-  - A search pipeline with an `agentic_query_translator` request processor and an `agentic_context` response processor
-- **Required parameters**:
+- **使用案例**：`agentic_search_with_flow_agent`
+- **建立的元件**：
+  - Amazon Bedrock 連接器與遠端聊天模型（預設為 Claude 4 Sonnet）
+  - `QueryPlanningTool`
+  - 連接至 `QueryPlanningTool` 的流程代理程式
+  - 含有 `agentic_query_translator` 請求處理器與 `agentic_context` 回應處理器的搜尋管線
+- **必要參數**：
   - `create_connector.credential.access_key`
   - `create_connector.credential.secret_key`
   - `create_connector.credential.session_token`
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/agentic-search-with-flow-agent-defaults.json)
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/agentic-search-with-flow-agent-defaults.json)
 
-**Note**: Requires AWS credentials and access to Amazon Bedrock.
+**注意**：需要 AWS 憑證以及 Amazon Bedrock 的存取權。
 
-### Agentic search with a conversational agent
+### 使用對話式代理程式的代理式搜尋
 
-This workflow deploys an Amazon Bedrock chat model and configures an agentic search pipeline using a [conversational agent]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-converse/) with conversation memory and multiple tools.
+此工作流程會部署 Amazon Bedrock 聊天模型，並使用具有對話記憶與多項工具的[對話式代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-converse/)設定代理式搜尋管線。
 
-- **Use case**: `agentic_search_with_conversational_agent`
-- **Created components**:
-  - An Amazon Bedrock connector and a remote chat model (by default, Claude 4 Sonnet)
-  - A `QueryPlanningTool`, `ListIndexTool`, and `IndexMappingTool`
-  - A conversational agent with conversation memory and all three tools
-  - A search pipeline with an `agentic_query_translator` request processor and an `agentic_context` response processor
-- **Required parameters**:
+- **使用案例**：`agentic_search_with_conversational_agent`
+- **建立的元件**：
+  - Amazon Bedrock 連接器與遠端聊天模型（預設為 Claude 4 Sonnet）
+  - `QueryPlanningTool`、`ListIndexTool` 與 `IndexMappingTool`
+  - 具有對話記憶與全部三項工具的對話式代理程式
+  - 含有 `agentic_query_translator` 請求處理器與 `agentic_context` 回應處理器的搜尋管線
+- **必要參數**：
   - `create_connector.credential.access_key`
   - `create_connector.credential.secret_key`
   - `create_connector.credential.session_token`
-- [Defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/agentic-search-with-conversational-agent-defaults.json)
+- [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/agentic-search-with-conversational-agent-defaults.json)
 
-**Note**: Requires AWS credentials and access to Amazon Bedrock.
+**注意**：需要 AWS 憑證以及 Amazon Bedrock 的存取權。

@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Derivative
+title: "導數"
 parent: Pipeline aggregations
 nav_order: 70
 ---
 
-# Derivative aggregation
+# 導數彙總
 
-The `derivative` aggregation is a parent aggregation used to calculate first-order and second-order derivatives of each bucket of an aggregation. "First-order derivative" and "second-order derivative" are often shortened to "first derivative" and "second derivative," respectively. This page uses the shortened terms.
+`derivative` 彙總是一種父彙總，用於計算某個彙總中每個桶 (bucket) 的一階導數與二階導數。「一階導數」和「二階導數」在英文中常分別簡稱為「first derivative」和「second derivative」。本頁使用簡稱。
 
-For an ordered series of buckets, `derivative` approximates a first derivative as the difference between metric values in the current and previous buckets.
+對於一系列有序的桶，`derivative` 會將一階導數近似為目前桶與前一個桶之間指標值的差。
 
-## Parameters
+## 參數
 
-The `derivative` aggregation takes the following parameters.
+`derivative` 彙總接受下列參數。
 
-| Parameter             | Required/Optional | Data type       | Description |
+| 參數             | 必要/選用 | 資料類型       | 說明 |
 | :--                   | :--               |  :--            | :--         |
-| `buckets_path`        | Required          | String          | The path of the aggregation buckets to be aggregated. See [Buckets path]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path). |
-| `gap_policy`          | Optional          | String          | The policy to apply to missing data. Valid values are `skip` and `insert_zeros`. Default is `skip`. See [Data gaps]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index/#data-gaps). |
-| `format`              | Optional          | String          | A [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) formatting string. Returns the formatted output in the aggregation's `value_as_string` property. |
+| `buckets_path`        | 必要          | 字串          | 要彙總的彙總桶路徑。請參閱[桶路徑]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path)。 |
+| `gap_policy`          | 選用          | 字串          | 套用於缺漏資料的原則。有效值為 `skip` 和 `insert_zeros`。預設為 `skip`。請參閱[資料缺口]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index/#data-gaps)。 |
+| `format`              | 選用          | 字串          | [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) 格式字串。在彙總的 `value_as_string` 屬性中傳回格式化後的輸出。 |
 
-## Example: First derivative
+## 範例：一階導數
 
-The following example creates a date histogram with a one-month interval from the OpenSearch Dashboards e-commerce sample data. The `sum` subaggregation calculates the sum of all bytes for each month. Finally, the `derivative` aggregation calculates the first derivative of the `sum` subaggregation. The first derivative is estimated as the difference between the number of bytes in the current month and the previous month:
+下列範例使用 OpenSearch Dashboards 電子商務範例資料，建立間隔為一個月的日期直方圖。`sum` 子彙總會計算每個月所有位元組的總和。最後，`derivative` 彙總會計算 `sum` 子彙總的一階導數。一階導數的估算方式為目前月份與前一個月份位元組數的差：
 
 ```json
 GET opensearch_dashboards_sample_data_logs/_search
@@ -53,9 +54,9 @@ GET opensearch_dashboards_sample_data_logs/_search
 ```
 {% include copy-curl.html %}
 
-## Example response: First derivative
+## 回應範例：一階導數
 
-The response shows derivatives computed for the second and third buckets: 
+回應顯示針對第二個和第三個桶計算出的導數：
 
 ```json
 {
@@ -114,11 +115,11 @@ The response shows derivatives computed for the second and third buckets:
 }
 ```
 
-No derivative is calculated for the first bucket because no previous bucket is available for that bucket.
+第一個桶沒有計算導數，因為該桶沒有前一個桶可用。
 
-## Example: Second derivative
+## 範例：二階導數
 
-To calculate a second derivative, chain one derivative aggregation to another:
+若要計算二階導數，請將一個導數彙總串接到另一個導數彙總：
 
 ```json
 GET opensearch_dashboards_sample_data_logs/_search
@@ -153,7 +154,7 @@ GET opensearch_dashboards_sample_data_logs/_search
 ```
 {% include copy-curl.html %}
 
-## Example response: Second derivative
+## 回應範例：二階導數
 
 ```json
 {
@@ -215,4 +216,4 @@ GET opensearch_dashboards_sample_data_logs/_search
 }
 ```
 
-No first derivative is calculated for the first bucket because no previous bucket is available for that bucket. Similarly, no second derivative is calculated for the first or second buckets.
+第一個桶沒有計算一階導數，因為該桶沒有前一個桶可用。同樣地，第一個和第二個桶也沒有計算二階導數。

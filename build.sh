@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 
 host="localhost"
 

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Analyze API
 nav_order: 5
@@ -10,17 +11,17 @@ redirect_from:
 ---
 
 # Analyze API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Analyze API allows you to perform [text analysis]({{site.url}}{{site.baseurl}}/analyzers/), which is the process of converting unstructured text into individual tokens (usually words) that are optimized for search. For more information about common analysis components such as character filters, tokenizers, token filters, and normalizers, see [Analyzers]({{site.url}}{{site.baseurl}}/analyzers/#analyzers).
+Analyze API 可讓您執行[文字分析]({{site.url}}{{site.baseurl}}/analyzers/)，這是將非結構化文字轉換為個別詞元（通常是單字），並針對搜尋最佳化的程序。如需字元篩選器、斷詞器、詞元篩選器和正規化器等常見分析元件的詳細資訊，請參閱[分析器]({{site.url}}{{site.baseurl}}/analyzers/#analyzers)。
 
-The Analyze API analyzes a text string and returns the resulting tokens.
+Analyze API 會分析文字字串，並傳回產生的詞元。
 
-If you use the Security plugin, you must have the `manage index` privilege. If you only want to analyze text, you must have the `manage cluster` privilege.
+如果您使用 Security 外掛程式，則必須具有 `manage index` 權限。如果您只想分析文字，則必須具有 `manage cluster` 權限。
 {: .note}
 
-## Endpoints
+## 端點
 
 ```json
 GET /_analyze
@@ -29,56 +30,56 @@ POST /_analyze
 POST /{index}/_analyze
 ```
 
-Although you can issue an analyze request using both `GET` and `POST` requests, the two have important distinctions. A `GET` request causes data to be cached in the index so that the next time the data is requested, it is retrieved faster. A `POST` request sends a string that does not already exist to the analyzer to be compared with data that is already in the index. `POST` requests are not cached.
+雖然您可以使用 `GET` 和 `POST` 請求來發出分析請求，但兩者有重要的差異。`GET` 請求會將資料快取在索引中，以便下次請求該資料時能更快擷取。`POST` 請求會將尚不存在的字串傳送至分析器，以便與索引中已有的資料進行比較。`POST` 請求不會被快取。
 {: .note}
 
-## Path parameter
+## 路徑參數
 
-You can include the following optional path parameter in your request.
+您可以在請求中包含下列選用的路徑參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`index` | String | Index that is used to derive the analyzer.
+`index` | 字串 | 用於取得分析器的索引。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`text` | String or Array of Strings | The text to analyze. If you provide an array of strings, the text is analyzed as a multi-value field. Required.
-`analyzer` | String | The name of the analyzer to apply to the `text` field. The analyzer can be built or configured in the index.<br /><br />If `analyzer` is not specified, the Analyze API uses the analyzer defined in the mapping of the `field` field.<br /><br />If the `field` field is not specified, the Analyze API uses the default analyzer for the index.<br /><br > If no index is specified or the index does not have a default analyzer, the Analyze API uses the [standard analyzer]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/standard/). Optional. See [Analyzers]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/index/).
-`attributes` | Array of Strings | An array of token attributes for filtering the output of the `explain` field.
-`char_filter` | Array of Strings | An array of character filters for preprocessing characters before the `tokenizer` field. Optional. See [Character filters]({{site.url}}{{site.baseurl}}/analyzers/character-filters/index/).
-`explain` | Boolean | If `true`, causes the response to include token attributes and additional details. Optional. Default is `false`.
-`field` | String | The field for deriving the analyzer. <br /><br > If you specify `field`, you must also specify the `index` path parameter. <br /><br > If you specify the `analyzer` field, it overrides the value of `field`. <br /><br > If you do not specify `field`, the Analyze API uses the default analyzer for the index. <br /><br > If you do not specify the `index` field or the index does not have a default analyzer, the Analyze API uses the standard analyzer. Optional.
-`filter` | Array of Strings | Array of token filters to apply after the `tokenizer` field. Optional. See [Token filters]({{site.url}}{{site.baseurl}}/analyzers/token-filters/index/).
-`normalizer` | String | A normalizer for converting text into a single token. Optional. See [Normalizers]({{site.url}}{{site.baseurl}}/analyzers/normalizers/). 
-`tokenizer` | String | A tokenizer for converting the `text` field into tokens. Optional. See [Tokenizers]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/index/).
+`text` | 字串或字串陣列 | 要分析的文字。如果您提供字串陣列，文字會以多值欄位的形式進行分析。必要。
+`analyzer` | 字串 | 要套用至 `text` 欄位的分析器名稱。分析器可在索引中建立或設定。<br /><br />如果未指定 `analyzer`，Analyze API 會使用 `field` 欄位對應中定義的分析器。<br /><br />如果未指定 `field` 欄位，Analyze API 會使用索引的預設分析器。<br /><br > 如果未指定索引，或索引沒有預設分析器，Analyze API 會使用[標準分析器]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/standard/)。選用。請參閱[分析器]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/index/)。
+`attributes` | 字串陣列 | 用於篩選 `explain` 欄位輸出的詞元屬性陣列。
+`char_filter` | 字串陣列 | 在 `tokenizer` 欄位處理之前，用於預先處理字元的字元篩選器陣列。選用。請參閱[字元篩選器]({{site.url}}{{site.baseurl}}/analyzers/character-filters/index/)。
+`explain` | 布林值 | 如果為 `true`，回應會包含詞元屬性和其他詳細資訊。選用。預設為 `false`。
+`field` | 字串 | 用於取得分析器的欄位。<br /><br > 如果您指定 `field`，也必須指定 `index` 路徑參數。<br /><br > 如果您指定 `analyzer` 欄位，它會覆寫 `field` 的值。<br /><br > 如果您未指定 `field`，Analyze API 會使用索引的預設分析器。<br /><br > 如果您未指定 `index` 欄位，或索引沒有預設分析器，Analyze API 會使用標準分析器。選用。
+`filter` | 字串陣列 | 在 `tokenizer` 欄位處理之後套用的詞元篩選器陣列。選用。請參閱[詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/index/)。
+`normalizer` | 字串 | 用於將文字轉換為單一詞元的正規化器。選用。請參閱[正規化器]({{site.url}}{{site.baseurl}}/analyzers/normalizers/)。 
+`tokenizer` | 字串 | 用於將 `text` 欄位轉換為詞元的斷詞器。選用。請參閱[斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/index/)。
 
-## Example requests
+## 請求範例
 
-[Analyze array of text strings](#analyze-array-of-text-strings)
+[分析文字字串陣列](#analyze-array-of-text-strings)
 
-[Apply a built-in analyzer](#apply-a-built-in-analyzer)
+[套用內建分析器](#apply-a-built-in-analyzer)
 
-[Apply a custom analyzer](#apply-a-custom-analyzer)
+[套用自訂分析器](#apply-a-custom-analyzer)
 
-[Apply a custom transient analyzer](#apply-a-custom-transient-analyzer)
+[套用自訂暫時分析器](#apply-a-custom-transient-analyzer)
 
-[Specify an index](#specify-an-index)
+[指定索引](#specify-an-index)
 
-[Derive the analyzer from an index field](#derive-the-analyzer-from-an-index-field)
+[從索引欄位取得分析器](#derive-the-analyzer-from-an-index-field)
 
-[Specify a normalizer](#specify-a-normalizer)
+[指定正規化器](#specify-a-normalizer)
 
-[Get token details](#get-token-details)
+[取得詞元詳細資訊](#get-token-details)
 
-[Set a token limit](#set-a-token-limit)
+[設定詞元數量上限](#set-a-token-limit)
 
-### Analyze array of text strings
+### 分析文字字串陣列
 
-When you pass an array of strings to the `text` field, it is analyzed as a multi-value field.
+當您將字串陣列傳入 `text` 欄位時，它會以多值欄位的形式進行分析。
 
 <!-- spec_insert_start
 component: example_code
@@ -120,7 +121,7 @@ response = client.indices.analyze(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The previous request returns the following fields:
+上述請求會傳回下列欄位：
 
 ````json
 {
@@ -171,11 +172,11 @@ The previous request returns the following fields:
 }
 ````
 
-### Apply a built-in analyzer
+### 套用內建分析器
 
-If you omit the `index` path parameter, you can apply any of the built-in analyzers to the text string.
+如果您省略 `index` 路徑參數，便可以將任何內建分析器套用至文字字串。
 
-The following request analyzes text using the `standard` built-in analyzer:
+下列請求使用 `standard` 內建分析器來分析文字：
 
 <!-- spec_insert_start
 component: example_code
@@ -211,7 +212,7 @@ response = client.indices.analyze(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The previous request returns the following fields:
+上述請求會傳回下列欄位：
 
 ````json
 {
@@ -241,13 +242,13 @@ The previous request returns the following fields:
 }
 ````
 
-### Apply a custom analyzer
+### 套用自訂分析器
 
-You can create your own analyzer and specify it in an analyze request.
+您可以建立自己的分析器，並在分析請求中指定該分析器。
 
-In this scenario, a custom analyzer `lowercase_ascii_folding` has been created and associated with the `books2` index. The analyzer converts text to lowercase and converts non-ASCII characters to ASCII.
+在此情境中，已建立自訂分析器 `lowercase_ascii_folding`，並將其與 `books2` 索引建立關聯。此分析器會將文字轉換為小寫，並將非 ASCII 字元轉換為 ASCII。
 
-The following request applies the custom analyzer to the provided text:
+下列請求會將自訂分析器套用至提供的文字：
 
 <!-- spec_insert_start
 component: example_code
@@ -284,7 +285,7 @@ response = client.indices.analyze(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The previous request returns the following fields:
+上述請求會傳回下列欄位：
 
 ````json
 {
@@ -321,11 +322,11 @@ The previous request returns the following fields:
 }
 ````
 
-### Apply a custom transient analyzer
+### 套用自訂暫時性分析器
 
-You can build a custom transient analyzer from tokenizers, token filters, or character filters. Use the `filter` parameter to specify token filters.
+您可以使用斷詞器、詞元篩選器或字元篩選器建置自訂暫時性分析器。請使用 `filter` 參數指定詞元篩選器。
 
-The following request uses the `uppercase` character filter to convert the text to uppercase:
+下列請求使用 `uppercase` 字元篩選器將文字轉換為大寫：
 
 <!-- spec_insert_start
 component: example_code
@@ -368,7 +369,7 @@ response = client.indices.analyze(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The previous request returns the following fields:
+上述請求會傳回下列欄位：
 
 ````json
 {
@@ -385,7 +386,7 @@ The previous request returns the following fields:
 ````
 <hr />
 
-The following request uses the `html_strip` filter to remove HTML characters from the text:
+下列請求使用 `html_strip` 篩選器移除文字中的 HTML 字元：
 
 <!-- spec_insert_start
 component: example_code
@@ -435,7 +436,7 @@ response = client.indices.analyze(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The previous request returns the following fields:
+上述請求會傳回下列欄位：
 
 ```` json
 {
@@ -453,9 +454,9 @@ The previous request returns the following fields:
 
 <hr />
 
-You can combine filters using an array.
+您可以使用陣列組合多個篩選器。
 
-The following request combines a `lowercase` translation with a `stop` filter that removes the words in the `stopwords` array:
+下列請求將 `lowercase` 轉換與 `stop` 篩選器組合使用，後者會移除 `stopwords` 陣列中的字詞：
 
 <!-- spec_insert_start
 component: example_code
@@ -512,7 +513,7 @@ response = client.indices.analyze(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The previous request returns the following fields:
+上述請求會傳回下列欄位：
 
 ````json
 {
@@ -563,11 +564,11 @@ The previous request returns the following fields:
 }
 ````
 
-### Specify an index
+### 指定索引
 
-You can analyze text using an index's default analyzer, or you can specify a different analyzer.
+您可以使用索引的預設分析器來分析文字，也可以指定其他分析器。
 
-The following request analyzes the provided text using the default analyzer associated with the `books` index:
+下列請求使用與 `books` 索引相關聯的預設分析器分析提供的文字：
 
 <!-- spec_insert_start
 component: example_code
@@ -601,7 +602,7 @@ response = client.indices.analyze(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The previous request returns the following fields:
+上述請求會傳回下列欄位：
 
 ````json
 
@@ -633,7 +634,7 @@ The previous request returns the following fields:
 
 <hr />
 
-The following request analyzes the provided text using the `keyword` analyzer, which returns the entire text value as a single token:
+下列請求使用 `keyword` 分析器分析提供的文字，此分析器會將整個文字值當作單一詞元傳回：
 
 <!-- spec_insert_start
 component: example_code
@@ -670,7 +671,7 @@ response = client.indices.analyze(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The previous request returns the following fields:
+上述請求會傳回下列欄位：
 
 ````json
 {
@@ -686,13 +687,13 @@ The previous request returns the following fields:
 }
 ````
 
-### Derive the analyzer from an index field
+### 從索引欄位取得分析器
 
-You can pass text and a field in the index. The API looks up the field's analyzer and uses it to analyze the text.
+您可以傳入文字和索引中的欄位。API 會查找該欄位的分析器，並使用它來分析文字。
 
-If the mapping does not exist, the API uses the standard analyzer, which converts all text to lowercase and tokenizes based on white space.
+如果對應不存在，API 會使用標準分析器，將所有文字轉換為小寫，並根據空白字元進行斷詞。
 
-The following request causes the analysis to be based on the mapping for `name`:
+下列請求會根據 `name` 的對應進行分析：
 
 <!-- spec_insert_start
 component: example_code
@@ -729,7 +730,7 @@ response = client.indices.analyze(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The previous request returns the following fields:
+上述請求會傳回下列欄位：
 
 ````json
 {
@@ -759,13 +760,13 @@ The previous request returns the following fields:
 }
 ````
 
-### Specify a normalizer
+### 指定正規化器
 
-Instead of using a keyword field, you can use the normalizer associated with the index. A normalizer causes the analysis change to produce a single token.
+您可以使用與索引關聯的正規化器，取代使用關鍵字欄位。正規化器會讓分析轉換產生單一詞元。
 
-In this example, the `books2` index includes a normalizer called `to_lower_fold_ascii` that converts text to lowercase and translates non-ASCII text to ASCII.
+在此範例中，`books2` 索引包含名為 `to_lower_fold_ascii` 的正規化器，會將文字轉換為小寫，並將非 ASCII 文字轉換為 ASCII。
 
-The following request applies `to_lower_fold_ascii` to the text:
+下列請求會將 `to_lower_fold_ascii` 套用至文字：
 
 <!-- spec_insert_start
 component: example_code
@@ -802,7 +803,7 @@ response = client.indices.analyze(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The previous request returns the following fields:
+上述請求會傳回下列欄位：
 
 ````json
 {
@@ -820,9 +821,9 @@ The previous request returns the following fields:
 
 <hr />
 
-You can create a custom transient normalizer with token and character filters.
+您可以使用詞元篩選器和字元篩選器建立自訂的暫時性正規化器。
 
-The following request uses the `uppercase` character filter to convert the given text to all uppercase:
+下列請求使用 `uppercase` 字元篩選器，將指定的文字全部轉換為大寫：
 
 <!-- spec_insert_start
 component: example_code
@@ -862,7 +863,7 @@ response = client.indices.analyze(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The previous request returns the following fields:
+上述請求會傳回下列欄位：
 
 ````json
 {
@@ -878,11 +879,11 @@ The previous request returns the following fields:
 }
 ````
 
-### Get token details
+### 取得詞元詳細資訊
 
-You can obtain additional details for all tokens by setting the `explain` attribute to `true`.
+您可以將 `explain` 屬性設為 `true`，以取得所有詞元的額外詳細資訊。
 
-The following request provides detailed token information for the `reverse` filter used with the `standard` tokenizer:
+下列請求提供與 `standard` 斷詞器搭配使用的 `reverse` 篩選器的詳細詞元資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -935,7 +936,7 @@ response = client.indices.analyze(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The previous request returns the following fields:
+上述請求會傳回下列欄位：
 
 ````json
 {
@@ -1000,11 +1001,11 @@ The previous request returns the following fields:
 }
 ````
 
-### Set a token limit
+### 設定詞元數量上限
 
-You can set a limit to the number of tokens generated. Setting a lower value reduces a node's memory usage. The default value is 10000.
+您可以設定產生的詞元數量上限。設定較低的值可減少節點的記憶體用量。預設值為 10000。
 
-The following request limits the tokens to four:
+下列請求將詞元數量限制為四個：
 
 ````json
 PUT /books2
@@ -1016,48 +1017,48 @@ PUT /books2
 ````
 {% include copy-curl.html %}
 
-The preceding request is an index API rather than an analyze API. See [Dynamic index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings) for additional details.
+上述請求使用的是索引 API，而非 Analyze API。請參閱[動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)，以瞭解更多詳細資訊。
 {: .note}
 
-## Response body fields
+## 回應本文欄位
 
-The text analysis endpoints return the following response fields.
+文字分析端點會傳回下列回應欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`tokens` | Array | Array of tokens derived from the `text`. See [token object](#token-object).
-`detail` | Object | Details about the analysis and each token. Included only when you request token details. See [detail object](#detail-object).
+`tokens` | 陣列 | 從 `text` 取得的詞元陣列。請參閱[詞元物件](#token-object)。
+`detail` | 物件 | 分析及各個詞元的詳細資訊。僅在您請求詞元詳細資訊時包含。請參閱[詳細資訊物件](#detail-object)。
 
-#### Token object
+#### 詞元物件
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`token`  | String | The token's text.
-`start_offset` | Integer | The token's starting position within the original text string. Offsets are zero-based.
-`end_offset` | Integer | The token's ending position within the original text string.
-type | String | Classification of the token: `<ALPHANUM>`, `<NUM>`, and so on. The tokenizer usually sets the type, but some filters define their own types. For example, the synonym filter defines the `<SYNONYM>` type.
-`position` |  Integer | The token's position within the `tokens` array.
+`token`  | 字串 | 詞元的文字。
+`start_offset` | 整數 | 詞元在原始文字字串中的起始位置。位移量從零開始計算。
+`end_offset` | 整數 | 詞元在原始文字字串中的結束位置。
+type | 字串 | 詞元的分類：`<ALPHANUM>`、`<NUM>` 等。類型通常由斷詞器設定，但有些篩選器會定義自己的類型。例如，同義詞篩選器會定義 `<SYNONYM>` 類型。
+`position` |  整數 | 詞元在 `tokens` 陣列中的位置。
 
-#### Detail object
+#### 詳細資訊物件
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`custom_analyzer` | Boolean | Whether the analyzer applied to the text is custom or built in.
-`charfilters` | Array | List of character filters applied to the text.
-`tokenizer` | Object | Name of the tokenizer applied to the text and a list of tokens<sup>*</sup> with content before the token filters were applied.
-`tokenfilters` | Array | List of token filters applied to the text. Each token filter includes the filter's name and a list of tokens<sup>*</sup> with content after the filters were applied. Token filters are listed in the order they are specified in the request. 
+`custom_analyzer` | 布林值 | 套用至文字的分析器是自訂分析器還是內建分析器。
+`charfilters` | 陣列 | 套用至文字的字元篩選器清單。
+`tokenizer` | 物件 | 套用至文字的斷詞器名稱，以及套用詞元篩選器之前的詞元<sup>*</sup>清單。
+`tokenfilters` | 陣列 | 套用至文字的詞元篩選器清單。每個詞元篩選器都包含篩選器名稱，以及套用篩選器之後的詞元<sup>*</sup>清單。詞元篩選器依照請求中指定的順序列出。 
 
-See [token object](#token-object) for token field descriptions.
+如需詞元欄位的說明，請參閱[詞元物件](#token-object)。
 {: .note}
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/analyze`.
+如果您使用 Security 外掛程式，請確保您具備適當的權限：`indices:admin/analyze`。
 
-## Related documentation
+## 相關文件
 
-- [Text analysis]({{site.url}}{{site.baseurl}}/analyzers/)
-- [Analyzers]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/index/)
-- [Tokenizers]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/index/)
-- [Token filters]({{site.url}}{{site.baseurl}}/analyzers/token-filters/index/)
-- [Normalizers]({{site.url}}{{site.baseurl}}/analyzers/normalizers/)
+- [文字分析]({{site.url}}{{site.baseurl}}/analyzers/)
+- [分析器]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/index/)
+- [斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/index/)
+- [詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/index/)
+- [正規化器]({{site.url}}{{site.baseurl}}/analyzers/normalizers/)

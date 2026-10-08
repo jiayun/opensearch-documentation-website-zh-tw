@@ -1,16 +1,17 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Common operations
+title: "常見操作"
 nav_order: 25
 redirect_from:
   - /benchmark/user-guide/understanding-workloads/common-operations/
 ---
 
-# Common operations
+# 常見操作
 
-[Test procedures]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/test-procedures/) use a variety of operations, found inside the `operations` directory of a workload. This page details the most common operations found inside OpenSearch Benchmark workloads.
+[測試程序]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/test-procedures/)會使用各種操作，這些操作位於工作負載的 `operations` 目錄中。本頁詳細說明 OpenSearch Benchmark 工作負載中最常見的操作。
 
-- [Common operations](#common-operations)
+- [常見操作](#common-operations)
   - [bulk](#bulk)
   - [create-index](#create-index)
   - [delete-index](#delete-index)
@@ -22,9 +23,9 @@ redirect_from:
 ## bulk
 <!-- vale on -->
 
-The `bulk` operation type allows you to run [bulk](/api-reference/document-apis/bulk/) requests as a task.
+`bulk` 操作類型可讓您以工作形式執行 [bulk](/api-reference/document-apis/bulk/) 請求。
 
-The following example shows a `bulk` operation type with a `bulk-size` of `5000` documents:
+下列範例顯示 `bulk` 操作類型，其 `bulk-size` 為 `5000` 份文件：
 
 ```yml
 {
@@ -39,12 +40,12 @@ The following example shows a `bulk` operation type with a `bulk-size` of `5000`
 ## create-index
 <!-- vale on -->
 
-The `create-index` operation runs the [Create Index API](/api-reference/index-apis/create-index/). It supports the following two modes of index creation:
+`create-index` 操作會執行 [Create Index API](/api-reference/index-apis/create-index/)。它支援下列兩種建立索引的模式：
 
-- Creating all indexes specified in the workloads `indices` section
-- Creating one specific index defined within the operation itself
+- 建立工作負載 `indices` 區段中指定的所有索引
+- 建立操作本身內定義的一個特定索引
 
-The following example creates all indexes defined in the `indices` section of the workload. It uses all of the index settings defined in the workload but overrides the number of shards:
+下列範例會建立工作負載 `indices` 區段中定義的所有索引。它會使用工作負載中定義的所有索引設定，但會覆寫分片數：
 
 ```yml
 {
@@ -59,7 +60,7 @@ The following example creates all indexes defined in the `indices` section of th
 }
 ```
 
-The following example creates a new index with all index settings specified in the operation body:
+下列範例會建立新索引，並在操作本文中指定所有索引設定：
 
 ```yml
 {
@@ -89,9 +90,9 @@ The following example creates a new index with all index settings specified in t
 ## delete-index
 <!-- vale on -->
 
-The `delete-index` operation runs the [Delete Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/delete-index/). Like with the [`create-index`](#create-index) operation, you can delete all indexes found in the `indices` section of the workload or delete one or more indexes based on the string passed in the `index` setting.
+`delete-index` 操作會執行 [Delete Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/delete-index/)。如同 [`create-index`](#create-index) 操作，您可以刪除工作負載 `indices` 區段中找到的所有索引，或根據 `index` 設定中傳入的字串刪除一或多個索引。
 
-The following example deletes all indexes found in the `indices` section of the workload:
+下列範例會刪除工作負載 `indices` 區段中找到的所有索引：
 
 ```yml
 {
@@ -100,7 +101,7 @@ The following example deletes all indexes found in the `indices` section of the 
 }
 ```
 
-The following example deletes all `logs_*` indexes:
+下列範例會刪除所有 `logs_*` 索引：
 
 ```yml
 {
@@ -120,10 +121,10 @@ The following example deletes all `logs_*` indexes:
 ## cluster-health
 <!-- vale on -->
 
-The `cluster-health` operation runs the [Cluster Health API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/), which checks the cluster health status and returns the expected status according to the parameters set for `request-params`. If an unexpected cluster health status is returned, the operation reports a failure. You can use the `--on-error` option in the OpenSearch Benchmark `run` command to control how OpenSearch Benchmark behaves when the health check fails.
+`cluster-health` 操作會執行 [Cluster Health API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/)，它會檢查叢集健康狀態，並根據為 `request-params` 設定的參數傳回預期狀態。若傳回非預期的叢集健康狀態，該操作會回報失敗。您可以在 OpenSearch Benchmark `run` 命令中使用 `--on-error` 選項，以控制 OpenSearch Benchmark 在健康檢查失敗時的行為。
 
 
-The following example creates a `cluster-health` operation that checks for a `green` health status on any `log-*` indexes:
+下列範例會建立 `cluster-health` 操作，以檢查任何 `log-*` 索引的 `green` 健康狀態：
 
 ```yml
 {
@@ -143,10 +144,10 @@ The following example creates a `cluster-health` operation that checks for a `gr
 ## refresh
 <!-- vale on -->
 
-The `refresh` operation runs the Refresh API. The `operation` returns no metadata.
+`refresh` 操作會執行 Refresh API。`operation` 不會傳回任何中繼資料。
 
 
-The following example refreshes all `logs-*` indexes:
+下列範例會重新整理所有 `logs-*` 索引：
 
 ```yml
 {
@@ -161,9 +162,9 @@ The following example refreshes all `logs-*` indexes:
 ## search
 <!-- vale on -->
 
-The `search` operation runs the [Search API](/api-reference/search/), which you can use to run queries in OpenSearch Benchmark indexes.
+`search` 操作會執行 [Search API](/api-reference/search/)，您可以使用它在 OpenSearch Benchmark 索引中執行查詢。
 
-The following example runs a `match_all` query inside the `search` operation:
+下列範例會在 `search` 操作內執行 `match_all` 查詢：
 
 ```yml
 {

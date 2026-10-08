@@ -1,36 +1,37 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Standard
 parent: Tokenizers
 nav_order: 130
 ---
 
-# Standard tokenizer
+# Standard 斷詞器
 
-The `standard` tokenizer is the default tokenizer in OpenSearch. It tokenizes text based on word boundaries using a grammar-based approach that recognizes letters, digits, and other characters like punctuation. It is highly versatile and suitable for many languages because it uses Unicode text segmentation rules ([UAX#29](https://unicode.org/reports/tr29/)) to break text into tokens.
+`standard` 斷詞器是 OpenSearch 的預設斷詞器。它採用基於文法的方法，依據單字邊界將文字切分為詞元，可辨識字母、數字及其他字元（例如標點符號）。由於它使用 Unicode 文字分段規則（[UAX#29](https://unicode.org/reports/tr29/)）將文字切分為詞元，因此用途廣泛，適用於多種語言。
 
-## Tokenization rules
+## 斷詞規則
 
-The `standard` tokenizer follows the word boundary rules defined in [Unicode Standard Annex #29: Unicode Text Segmentation](https://unicode.org/reports/tr29/). The following table summarizes how these rules apply to common input.
+`standard` 斷詞器遵循 [Unicode Standard Annex #29: Unicode Text Segmentation](https://unicode.org/reports/tr29/) 中定義的單字邊界規則。下表摘要說明這些規則如何套用於常見輸入。
 
-Input | Rule | Tokens
+輸入 | 規則 | 詞元
 :--- | :--- | :---
-`fast, and scalable.` | Whitespace and most punctuation, such as commas, hyphens, slashes, `+`, `#`, `%`, and `@`, split text and are removed. | `fast`, `and`, `scalable`
-`can't`, `O'Neil` | An apostrophe between two letters does not split the word. | `can't`, `O'Neil`
-`end. Next` | A period followed by a space splits the text. | `end`, `Next`
-`hello.world`, `U.S.A.` | A period between two letters does not split the word. A trailing period is removed. | `hello.world`, `U.S.A`
-`3.5`, `1,000`, `v1.2.3` | A period or comma between two digits does not split the number. | `3.5`, `1,000`, `v1.2.3`
-`snake_case` | Underscores do not split words. | `snake_case`
-`state-of-the-art` | Hyphens split words. | `state`, `of`, `the`, `art`
-`admin@example.com` | Email addresses are split at the `@` sign. | `admin`, `example.com`
-`https://opensearch.org/docs` | URLs are split at the colon and slashes. | `https`, `opensearch.org`, `docs`
-`東京`, `こんにちは` | Each ideographic and hiragana character becomes a separate token. | `東`, `京`, `こ`, `ん`, `に`, `ち`, `は`
+`fast, and scalable.` | 空白字元與大多數標點符號（例如逗號、連字號、斜線、`+`、`#`、`%` 和 `@`）會切分文字並被移除。 | `fast`, `and`, `scalable`
+`can't`, `O'Neil` | 兩個字母之間的單引號不會切分單字。 | `can't`, `O'Neil`
+`end. Next` | 句號後接空格會切分文字。 | `end`, `Next`
+`hello.world`, `U.S.A.` | 兩個字母之間的句號不會切分單字。結尾的句號會被移除。 | `hello.world`, `U.S.A`
+`3.5`, `1,000`, `v1.2.3` | 兩個數字之間的句號或逗號不會切分數字。 | `3.5`, `1,000`, `v1.2.3`
+`snake_case` | 底線不會切分單字。 | `snake_case`
+`state-of-the-art` | 連字號會切分單字。 | `state`, `of`, `the`, `art`
+`admin@example.com` | 電子郵件地址會在 `@` 符號處切分。 | `admin`, `example.com`
+`https://opensearch.org/docs` | URL 會在冒號與斜線處切分。 | `https`, `opensearch.org`, `docs`
+`東京`, `こんにちは` | 每個表意文字與平假名字元都會成為獨立的詞元。 | `東`, `京`, `こ`, `ん`, `に`, `ち`, `は`
 
-To keep email addresses and URLs as single tokens, use the [`uax_url_email` tokenizer]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/uax-url-email/). Tokens longer than `max_token_length` are split at that length. For more information, see [Parameters](#parameters).
+若要將電子郵件地址與 URL 保留為單一詞元，請使用 [`uax_url_email` 斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/uax-url-email/)。長度超過 `max_token_length` 的詞元會在該長度處切分。如需更多資訊，請參閱 [參數](#parameters)。
 
-## Example usage
+## 範例用法
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `standard` tokenizer:
+下列範例請求會建立名為 `my_index` 的新索引，並設定一個使用 `standard` 斷詞器的分析器：
 
 ```json
 PUT /my_index
@@ -56,9 +57,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢視使用該分析器產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -69,7 +70,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {
@@ -120,11 +121,11 @@ The response contains the generated tokens:
 }
 ```
 
-## Parameters
+## 參數
 
-The `standard` tokenizer can be configured with the following parameter.
+`standard` 斷詞器可以使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`max_token_length` | Optional | Integer | Sets the maximum length of the produced token. If this length is exceeded, the token is split into multiple tokens at the length configured in `max_token_length`. Default is `255`.
+`max_token_length` | 選用 | 整數 | 設定所產生詞元的最大長度。若超過此長度，詞元會在 `max_token_length` 中設定的長度處切分為多個詞元。預設值為 `255`。
 

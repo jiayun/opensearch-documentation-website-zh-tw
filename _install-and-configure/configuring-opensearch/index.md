@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Configuring OpenSearch
+title: "設定 OpenSearch"
 nav_order: 10
 has_children: true
 has_toc: false
@@ -9,42 +10,42 @@ redirect_from:
   - /install-and-configure/configuring-opensearch/
 ---
 
-# Configuring OpenSearch
+# 設定 OpenSearch
 
-Each OpenSearch setting is either a cluster setting or an index setting. Cluster settings apply to the whole cluster or to individual nodes. Index settings apply to a single index, and their names begin with `index.`. The settings pages in this section list cluster settings grouped by area, such as networking, security, and thread pools. For information about index settings, see [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/).
+每個 OpenSearch 設定不是叢集設定，就是索引設定。叢集設定套用於整個叢集或個別節點。索引設定套用於單一索引，其名稱以 `index.` 開頭。本節中的設定頁面依領域分組列出叢集設定，例如網路、安全性和執行緒集區。如需索引設定的相關資訊，請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)。
 
-Settings are also either [static](#static-settings) or [dynamic](#dynamic-settings). Whether a setting is static or dynamic determines whether you can change it while OpenSearch is running.
+設定也分為[靜態](#static-settings)或[動態](#dynamic-settings)。設定屬於靜態或動態，決定了您能否在 OpenSearch 執行期間變更該設定。
 
-The following table lists the ways in which you can specify cluster settings.
+下表列出您可以指定叢集設定的方式。
 
-| Method | Setting types | Applies to | Changes take effect |
+| 方法 | 設定類型 | 套用對象 | 變更生效時間 |
 |:---|:---|:---|:---|
-| [Configuration file](#configuration-file) (`opensearch.yml`) | Static and dynamic | The node | When the node starts |
-| [Startup options](#specifying-configuration-settings-at-startup) (command-line flags or environment variables) | Static and dynamic | The node | When the node starts |
-| [Cluster Settings API](#updating-cluster-settings-using-the-api) | Dynamic only | The whole cluster | Immediately |
+| [組態檔案](#configuration-file)（`opensearch.yml`） | 靜態和動態 | 該節點 | 節點啟動時 |
+| [啟動選項](#specifying-configuration-settings-at-startup)（命令列旗標或環境變數） | 靜態和動態 | 該節點 | 節點啟動時 |
+| [Cluster Settings API](#updating-cluster-settings-using-the-api) | 僅限動態 | 整個叢集 | 立即 |
 
-If you specify a cluster setting using more than one method, OpenSearch determines the value to use based on [setting precedence](#setting-precedence).
+如果您使用多種方法指定同一個叢集設定，OpenSearch 會根據[設定優先順序](#setting-precedence)決定要使用的值。
 
-## Static settings
+## 靜態設定
 
-Static settings are settings that you cannot update while the cluster is running. To change a static setting, update it in `opensearch.yml` or using a startup flag on each node and then restart the node. In general, static settings relate to networking, cluster formation, and the local file system. For more information, see [Creating a cluster]({{site.url}}{{site.baseurl}}/tuning-your-cluster/).
+靜態設定是指無法在叢集執行期間更新的設定。若要變更靜態設定，請在每個節點的 `opensearch.yml` 中或使用啟動旗標更新該設定，然後重新啟動節點。一般而言，靜態設定與網路、叢集形成和本機檔案系統相關。如需詳細資訊，請參閱[建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)。
 
-## Dynamic settings
+## 動態設定
 
-Dynamic settings are settings that you can update while the cluster is running. You can specify dynamic settings using any of the methods on this page, including the Cluster Settings API. For more information, see [Updating cluster settings using the API](#updating-cluster-settings-using-the-api).
+動態設定是指可以在叢集執行期間更新的設定。您可以使用本頁中的任何方法指定動態設定，包括 Cluster Settings API。如需詳細資訊，請參閱[使用 API 更新叢集設定](#updating-cluster-settings-using-the-api)。
 
-We recommend using the Cluster Settings API for cluster-wide dynamic settings. Settings updated using the API apply to all nodes, which keeps the configuration consistent across the cluster and makes configuration changes easier to track.
+對於整個叢集範圍的動態設定，我們建議使用 Cluster Settings API。使用 API 更新的設定會套用至所有節點，可讓整個叢集的組態保持一致，並使組態變更更容易追蹤。
 {: .tip}
 
-## Configuration file
+## 組態檔案
 
-You can find `opensearch.yml` in `/usr/share/opensearch/config/opensearch.yml` (Docker) or `/etc/opensearch/opensearch.yml` (most Linux distributions) on each node.
+您可以在每個節點的 `/usr/share/opensearch/config/opensearch.yml`（Docker）或 `/etc/opensearch/opensearch.yml`（大多數 Linux 發行版本）中找到 `opensearch.yml`。
 
-To change the configuration directory location, set the `OPENSEARCH_PATH_CONF` environment variable, for example, `OPENSEARCH_PATH_CONF=/etc/opensearch`. This variable is sourced from `/etc/default/opensearch` (Debian package) and `/etc/sysconfig/opensearch` (RPM package).
+若要變更組態目錄位置，請設定 `OPENSEARCH_PATH_CONF` 環境變數，例如 `OPENSEARCH_PATH_CONF=/etc/opensearch`。此變數的來源為 `/etc/default/opensearch`（Debian 套件）和 `/etc/sysconfig/opensearch`（RPM 套件）。
 
-If you set a custom `OPENSEARCH_PATH_CONF` variable, other default environment variables are not loaded.
+如果您設定了自訂的 `OPENSEARCH_PATH_CONF` 變數，則不會載入其他預設環境變數。
 
-Settings in `opensearch.yml` are not marked as persistent or transient. The following example uses the flat form:
+`opensearch.yml` 中的設定不會標示為 persistent 或 transient。下列範例使用扁平格式：
 
 ```yml
 cluster.name: my-application
@@ -52,11 +53,11 @@ action.auto_create_index: true
 compatibility.override_main_response_version: true
 ```
 
-The demo configuration includes several [settings for the Security plugin]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/security-settings/) that you should modify before using OpenSearch for a production workload. To learn more, see [Security]({{site.url}}{{site.baseurl}}/security/).
+示範組態包含數個 [Security 外掛程式的設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/security-settings/)，您應在將 OpenSearch 用於生產工作負載之前修改這些設定。若要深入了解，請參閱[安全性]({{site.url}}{{site.baseurl}}/security/)。
 
-### (Optional) CORS header configuration
+### （選用）CORS 標頭組態
 
-If you are working on a client application running against an OpenSearch cluster on a different domain, you can configure headers in `opensearch.yml` to allow for developing a local application on the same machine. Use [Cross-Origin Resource Sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) so that your application can make calls to the OpenSearch API running locally. Add the following lines to `opensearch.yml`:
+如果您正在開發的用戶端應用程式需要對不同網域上的 OpenSearch 叢集執行，您可以在 `opensearch.yml` 中設定標頭，以便在同一部機器上開發本機應用程式。使用[跨來源資源共用 (Cross-Origin Resource Sharing)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)，讓您的應用程式可以呼叫在本機執行的 OpenSearch API。將下列幾行新增至 `opensearch.yml`：
 
 ```yml
 http.host: 0.0.0.0
@@ -68,24 +69,24 @@ http.cors.allow-credentials: true
 ```
 {% include copy.html %}
 
-## Specifying configuration settings at startup
+## 在啟動時指定組態設定
 
-When you start OpenSearch, you can specify settings using command-line flags or environment variables. These settings apply only to the node that you start.
+啟動 OpenSearch 時，您可以使用命令列旗標或環境變數指定設定。這些設定僅套用於您所啟動的節點。
 
-### Command-line flags
+### 命令列旗標
 
-To pass a setting directly to OpenSearch at startup, use the `-E` flag:
+若要在啟動時直接將設定傳遞給 OpenSearch，請使用 `-E` 旗標：
 
 ```bash
 ./opensearch -Ecluster.name=opensearch-cluster -Enode.name=opensearch-node1 -Ehttp.host=0.0.0.0 -Ediscovery.type=single-node
 ```
 {% include copy.html %}
 
-### Environment variables
+### 環境變數
 
-OpenSearch reads environment variables that configure the startup process, such as `OPENSEARCH_JAVA_OPTS` for JVM options and `OPENSEARCH_PATH_CONF` for the configuration directory location.
+OpenSearch 會讀取用來設定啟動程序的環境變數，例如用於 JVM 選項的 `OPENSEARCH_JAVA_OPTS`，以及用於組態目錄位置的 `OPENSEARCH_PATH_CONF`。
 
-To specify OpenSearch settings using environment variables, define a custom environment variable and reference it in `opensearch.yml` using the `${ENV_VAR}` syntax:
+若要使用環境變數指定 OpenSearch 設定，請定義自訂環境變數，並在 `opensearch.yml` 中使用 `${ENV_VAR}` 語法參照該變數：
 
 ```yml
 node.name: ${NODE_NAME}
@@ -93,40 +94,40 @@ cluster.name: ${CLUSTER_NAME}
 ```
 {% include copy.html %}
 
-You can set environment variables in the shell, in a `systemd` service file, or in a Docker container.
+您可以在 shell、`systemd` 服務檔案或 Docker 容器中設定環境變數。
 
 #### Shell
 
-To set environment variables in a shell, export them before starting OpenSearch. Run the following commands in the same shell session.
+若要在 shell 中設定環境變數，請在啟動 OpenSearch 之前匯出這些變數。請在同一個 shell 工作階段中執行下列命令。
 
-To set the JVM heap size, export the `OPENSEARCH_JAVA_OPTS` variable:
+若要設定 JVM 堆積大小，請匯出 `OPENSEARCH_JAVA_OPTS` 變數：
 
 ```bash
 export OPENSEARCH_JAVA_OPTS="-Xms2g -Xmx2g"
 ```
 {% include copy.html %}
 
-To set the configuration directory location, export the `OPENSEARCH_PATH_CONF` variable:
+若要設定組態目錄位置，請匯出 `OPENSEARCH_PATH_CONF` 變數：
 
 ```bash
 export OPENSEARCH_PATH_CONF="/etc/opensearch"
 ```
 {% include copy.html %}
 
-Then start OpenSearch:
+然後啟動 OpenSearch：
 
 ```bash
 ./opensearch
 ```
 {% include copy.html %}
 
-Do not export OpenSearch settings directly, for example, `export discovery.type=single-node`. Setting names contain dots, which most shells do not accept in variable names. To pass a setting directly at startup, use the `-E` flag. For more information, see [Command-line flags](#command-line-flags).
+請勿直接匯出 OpenSearch 設定，例如 `export discovery.type=single-node`。設定名稱包含點號，而大多數 shell 不接受變數名稱中含有點號。若要在啟動時直接傳遞設定，請使用 `-E` 旗標。如需詳細資訊，請參閱[命令列旗標](#command-line-flags)。
 
 <!-- vale off -->
-#### systemd service file
+#### systemd 服務檔案
 <!-- vale on -->
 
-When running OpenSearch as a service managed by `systemd`, you can specify environment variables in a service override file. The following example `/etc/systemd/system/opensearch.service.d/override.conf` file sets two environment variables:
+將 OpenSearch 作為由 `systemd` 管理的服務執行時，您可以在服務覆寫檔案中指定環境變數。下列範例 `/etc/systemd/system/opensearch.service.d/override.conf` 檔案設定了兩個環境變數：
 
 ```ini
 [Service]
@@ -135,14 +136,14 @@ Environment="OPENSEARCH_PATH_CONF=/etc/opensearch"
 ```
 {% include copy.html %}
 
-After creating or modifying the file, reload the `systemd` configuration:
+建立或修改檔案後，請重新載入 `systemd` 組態：
 
 ```bash
 sudo systemctl daemon-reload
 ```
 {% include copy.html %}
 
-Then restart the OpenSearch service:
+然後重新啟動 OpenSearch 服務：
 
 ```bash
 sudo systemctl restart opensearch
@@ -151,41 +152,41 @@ sudo systemctl restart opensearch
 
 #### Docker
 
-When running OpenSearch in Docker, you can specify environment variables using the `-e` option of the `docker run` command, as shown in the following example:
+在 Docker 中執行 OpenSearch 時，您可以使用 `docker run` 命令的 `-e` 選項指定環境變數，如下列範例所示：
 
 ```bash
 docker run -e "OPENSEARCH_JAVA_OPTS=-Xms2g -Xmx2g" -e "OPENSEARCH_PATH_CONF=/usr/share/opensearch/config" opensearchproject/opensearch:latest
 ```
 {% include copy.html %}
 
-Docker accepts environment variable names that contain dots, so you can pass OpenSearch settings directly using the `-e` option. The OpenSearch Docker image converts each environment variable whose name has the form of a setting into an `-E` flag. A name has the form of a setting if it begins with at least two dot-separated parts containing lowercase letters, digits, or underscores, for example, `discovery.type`. The `processors` setting is also converted. The following command passes two settings as environment variables:
+Docker 接受包含點號的環境變數名稱，因此您可以使用 `-e` 選項直接傳遞 OpenSearch 設定。OpenSearch Docker 映像檔會將每個名稱具有設定形式的環境變數轉換為 `-E` 旗標。如果名稱開頭至少有兩個以點號分隔、由小寫字母、數字或底線組成的部分，則該名稱具有設定形式，例如 `discovery.type`。`processors` 設定也會被轉換。下列命令以環境變數的形式傳遞兩個設定：
 
 ```bash
 docker run -e "discovery.type=single-node" -e "cluster.name=my-cluster" opensearchproject/opensearch:latest
 ```
 {% include copy.html %}
 
-The image skips environment variables that have an empty value, so you cannot use an empty variable to clear a value set in `opensearch.yml`. To set a list setting to an empty list, use `[]`, for example, `-e "node.roles=[]"`.
+映像檔會略過值為空的環境變數，因此您無法使用空變數來清除在 `opensearch.yml` 中設定的值。若要將清單設定設為空清單，請使用 `[]`，例如 `-e "node.roles=[]"`。
 
-## Updating cluster settings using the API
+## 使用 API 更新叢集設定
 
-Using the [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/), you can update dynamic settings for the whole cluster while it is running. You can update a setting as either _persistent_ or _transient_. Persistent settings are written to the cluster state and persist after a cluster restart. After a restart, OpenSearch clears transient settings. Transient settings take precedence over persistent settings. For more information, see [Setting precedence](#setting-precedence).
+使用 [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/)，您可以在叢集執行期間更新整個叢集的動態設定。您可以將設定更新為「持續性」(_persistent_) 或「暫時性」(_transient_)。持續性設定會寫入叢集狀態，並在叢集重新啟動後保留。重新啟動後，OpenSearch 會清除暫時性設定。暫時性設定的優先順序高於持續性設定。如需詳細資訊，請參閱[設定的優先順序](#setting-precedence)。
 
-Before changing a setting, view the current settings by sending the following request:
+變更設定之前，請傳送下列請求以檢視目前的設定：
 
 ```json
 GET _cluster/settings?include_defaults=true
 ```
 {% include copy-curl.html %}
 
-For a more concise summary of non-default settings, send the following request:
+若要取得非預設設定的精簡摘要，請傳送下列請求：
 
 ```json
 GET _cluster/settings
 ```
 {% include copy-curl.html %}
 
-To change a setting, specify the new value as either persistent or transient. The following example shows the flat settings form:
+若要變更設定，請將新值指定為持續性或暫時性。下列範例顯示扁平的設定格式：
 
 ```json
 PUT _cluster/settings
@@ -197,7 +198,7 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-You can also use the expanded form, which lets you copy and paste from the GET response and change existing values:
+您也可以使用展開格式，這樣就能從 GET 回應中複製並貼上內容，再變更現有的值：
 
 ```json
 PUT _cluster/settings
@@ -211,25 +212,25 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-## Setting precedence
+## 設定的優先順序
 
-If you specify a setting in more than one place, OpenSearch uses the value from the source that appears first in the following list:
+如果您在多個位置指定同一個設定，OpenSearch 會使用下列清單中最先出現的來源所提供的值：
 
-1. Transient cluster settings, specified using the Cluster Settings API
-2. Persistent cluster settings, specified using the Cluster Settings API
-3. Settings passed using the `-E` flag at startup
-4. Values in `opensearch.yml`, including values supplied by `${ENV_VAR}` references
-5. Default setting values
+1. 使用 Cluster Settings API 指定的暫時性叢集設定
+2. 使用 Cluster Settings API 指定的持續性叢集設定
+3. 啟動時使用 `-E` 旗標傳入的設定
+4. `opensearch.yml` 中的值，包括由 `${ENV_VAR}` 參照提供的值
+5. 預設的設定值
 
-OpenSearch reads `opensearch.yml`, applies the `-E` flags, and then resolves any `${ENV_VAR}` references. Thus, an `-E` flag overrides the value in `opensearch.yml`, including a value supplied by an environment variable.
+OpenSearch 會讀取 `opensearch.yml`、套用 `-E` 旗標，然後解析所有 `${ENV_VAR}` 參照。因此，`-E` 旗標會覆寫 `opensearch.yml` 中的值，包括由環境變數提供的值。
 
-Transient and persistent cluster settings apply only to dynamic settings. For static settings, precedence starts with the `-E` flag.
+暫時性與持續性叢集設定僅適用於動態設定。對於靜態設定，優先順序從 `-E` 旗標開始。
 
-When you send a `GET _cluster/settings?include_defaults=true` request, the `defaults` object in the response contains values specified in `opensearch.yml` and using the `-E` flag in addition to built-in default values. The response does not indicate the source of each value.
+當您傳送 `GET _cluster/settings?include_defaults=true` 請求時，回應中的 `defaults` 物件除了內建的預設值之外，還包含在 `opensearch.yml` 中指定以及使用 `-E` 旗標指定的值。回應不會標示每個值的來源。
 
-## Resetting settings
+## 重設設定
 
-To reset a setting that you updated using the Cluster Settings API, assign it a `null` value. OpenSearch then applies the value from the next available source in the [precedence order](#setting-precedence). For example, when you reset a transient setting, OpenSearch applies the persistent value if one exists. The following request resets a transient setting:
+若要重設您使用 Cluster Settings API 更新的設定，請將其指派為 `null` 值。OpenSearch 接著會依照[優先順序](#setting-precedence)套用下一個可用來源的值。例如，當您重設暫時性設定時，如果存在持續性值，OpenSearch 會套用該持續性值。下列請求會重設一項暫時性設定：
 
 ```json
 PUT _cluster/settings
@@ -241,7 +242,7 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-You can also use wildcards to reset multiple related settings at once:
+您也可以使用萬用字元一次重設多個相關設定：
 
 ```json
 PUT _cluster/settings
@@ -253,11 +254,11 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-### Restoring the default value
+### 還原預設值
 
-A reset setting returns to its default value only if no other source specifies it. To restore the default value, remove the setting from every source:
+只有在沒有其他來源指定某項設定時，重設的設定才會回到其預設值。若要還原預設值，請從每個來源中移除該設定：
 
-1. Reset both the transient and persistent values using the Cluster Settings API:
+1. 使用 Cluster Settings API 重設暫時性值與持續性值：
 
     ```json
     PUT _cluster/settings
@@ -272,41 +273,41 @@ A reset setting returns to its default value only if no other source specifies i
     ```
     {% include copy-curl.html %}
 
-1. On each node, remove the setting from `opensearch.yml` and from any `-E` flags that specify it, including Docker environment variables that OpenSearch converts to `-E` flags. If `opensearch.yml` references an environment variable for the setting, remove the reference.
-1. Restart each node that you changed in the previous step.
+1. 在每個節點上，從 `opensearch.yml` 以及任何指定該設定的 `-E` 旗標中移除該設定，包括 OpenSearch 會轉換為 `-E` 旗標的 Docker 環境變數。如果 `opensearch.yml` 參照了該設定的環境變數，請移除該參照。
+1. 重新啟動您在上一個步驟中變更過的每個節點。
 
-If the setting is not specified in `opensearch.yml` or at startup, the first step is sufficient and no restart is required.
+如果該設定未在 `opensearch.yml` 中或啟動時指定，只需執行第一個步驟即可，不需要重新啟動。
 
-## Settings reference
+## 設定參考
 
-The following pages list cluster settings grouped by area:
+下列頁面依領域分組列出叢集設定：
 
-- [Configuration and system settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/configuration-system/)
-- [Network settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/network-settings/)
-- [Discovery and gateway settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/discovery-gateway-settings/)
-- [Security settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/security-settings/)
-- [Cluster management settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/cluster-settings/)
-- [Cluster settings for indexes]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/cluster-settings-for-indexes/)
-- [Cache settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/cache-settings/)
-- [Search settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/search-settings/)
-- [Monitoring settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/monitoring-settings/)
-- [Availability and recovery settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/availability-recovery/)
-- [Thread pool settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/thread-pool-settings/)
-- [Circuit breaker settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/circuit-breaker/)
-- [Admission control settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/admission-control-settings/)
-- [Plugin settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/plugin-settings/)
-- [Ingest settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/ingest-settings/)
-- [Script and resource settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/script-and-resource-settings/)
+- [組態與系統設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/configuration-system/)
+- [網路設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/network-settings/)
+- [探索與閘道設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/discovery-gateway-settings/)
+- [安全性設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/security-settings/)
+- [叢集管理設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/cluster-settings/)
+- [索引的叢集設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/cluster-settings-for-indexes/)
+- [快取設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/cache-settings/)
+- [搜尋設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/search-settings/)
+- [監控設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/monitoring-settings/)
+- [可用性與復原設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/availability-recovery/)
+- [執行緒集區設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/thread-pool-settings/)
+- [斷路器設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/circuit-breaker/)
+- [准入控制設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/admission-control-settings/)
+- [外掛程式設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/plugin-settings/)
+- [匯入設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/ingest-settings/)
+- [指令碼與資源設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/script-and-resource-settings/)
 
-The following page lists settings that apply to individual indexes:
+下列頁面列出適用於個別索引的設定：
 
-- [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)
+- [索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)
 
-The following pages describe other configuration options:
+下列頁面說明其他組態選項：
 
-- [Experimental feature flags]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/experimental/)
-- [Logs]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/logs/)
+- [實驗性功能旗標]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/experimental/)
+- [記錄檔]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/logs/)
 
-## Related documentation
+## 相關文件
 
-To learn how to view and update cluster settings, see [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/).
+若要了解如何檢視及更新叢集設定，請參閱 [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/)。

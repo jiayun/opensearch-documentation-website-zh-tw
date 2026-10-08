@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cluster decommission 
+title: "叢集停用"
 nav_order: 30
 parent: Cluster APIs
 has_children: false
@@ -13,12 +14,12 @@ redirect_from:
 **Introduced 1.0**
 {: .label .label-purple }
 
-The cluster decommission operation adds support decommissioning based on awareness. It greatly benefits multi-zone deployments, where awareness attributes, such as `zones`, can aid in applying new upgrades to a cluster in a controlled fashion. This is especially useful during outages, in which case, you can decommission the unhealthy zone to prevent replication requests from stalling and prevent your request backlog from becoming too large.
+叢集停用作業新增了以感知為基礎的停用支援。這對多區域部署非常有幫助，因為感知屬性（例如 `zones`）可協助以受控的方式將新的升級套用至叢集。這在發生中斷時特別有用，在這種情況下，您可以停用不健康的區域，以防止複寫請求停滯，並避免請求待處理量變得過大。
 
-For more information about allocation awareness, see [Shard allocation awareness]({{site.url}}{{site.baseurl}}/opensearch/cluster/#shard-allocation-awareness).
+如需配置感知的詳細資訊，請參閱[分片配置感知]({{site.url}}{{site.baseurl}}/opensearch/cluster/#shard-allocation-awareness)。
 
 
-## Endpoints
+## 端點
 
 ```json
 PUT  /_cluster/decommission/awareness/{awareness_attribute_name}/{awareness_attribute_value}
@@ -26,23 +27,23 @@ GET  /_cluster/decommission/awareness/{awareness_attribute_name}/_status
 DELETE /_cluster/decommission/awareness
 ```
 
-## Path parameters
+## 路徑參數
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`awareness_attribute_name` | String | The name of awareness attribute, usually `zone`.
-`awareness_attribute_value` | String | The value of the awareness attribute. For example, if you have shards allocated in two different zones, you can give each zone a value of `zone-a` or `zoneb`. The cluster decommission operation decommissions the zone listed in the method.
+`awareness_attribute_name` | 字串 | 感知屬性的名稱，通常為 `zone`。
+`awareness_attribute_value` | 字串 | 感知屬性的值。例如，如果您有分片配置在兩個不同的區域，可以為每個區域指定 `zone-a` 或 `zoneb` 的值。叢集停用作業會停用方法中所列的區域。
 
-## Example requests
+## 範例請求
 
-The following examples demonstrate how to use the Cluster Decommission API.
+下列範例示範如何使用 Cluster Decommission API。
 
-### Decommissioning and recommissioning a zone
+### 停用和重新啟用區域
 
-You can use the following example requests to decommission and recommission a zone:
+您可以使用下列範例請求來停用和重新啟用區域：
 
 
-The following example request decommissions `zone-a`:
+下列範例請求會停用 `zone-a`：
 
 <!-- spec_insert_start
 component: example_code
@@ -67,7 +68,7 @@ response = client.cluster.put_decommission_awareness(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-If you want to recommission a decommissioned zone, you can use the `DELETE` method:
+如果您想重新啟用已停用的區域，可以使用 `DELETE` 方法：
 
 <!-- spec_insert_start
 component: example_code
@@ -87,9 +88,9 @@ response = client.cluster.delete_decommission_awareness()
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Getting zone decommission status
+### 取得區域停用狀態
 
-The following example requests returns the decommission status of all zones.
+下列範例請求會傳回所有區域的停用狀態。
 
 <!-- spec_insert_start
 component: example_code
@@ -113,9 +114,9 @@ response = client.cluster.get_decommission_awareness(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Example responses
+#### 範例回應
 
-The following example response shows a successful zone decommission:
+下列範例回應顯示成功停用區域：
 
 ```json
 {
@@ -123,9 +124,9 @@ The following example response shows a successful zone decommission:
 }
 ```
 
-### Getting zone decommission status
+### 取得區域停用狀態
 
-The following example response returns the decommission status of all zones:
+下列範例回應會傳回所有區域的停用狀態：
 
 
 ```json
@@ -135,7 +136,7 @@ The following example response returns the decommission status of all zones:
 ```
 
 
-## Next steps
+## 後續步驟
 
-- For more information about zone awareness and weight, see [Cluster awareness]({{site.url}}{{site.baseurl}}/api-reference/cluster-awareness/).
-- For more information about allocation awareness, see [Cluster formation]({{site.url}}{{site.baseurl}}/opensearch/cluster/#advanced-step-6-configure-shard-allocation-awareness-or-forced-awareness).
+- 如需區域感知與權重的詳細資訊，請參閱[叢集感知]({{site.url}}{{site.baseurl}}/api-reference/cluster-awareness/)。
+- 如需配置感知的詳細資訊，請參閱[叢集形成]({{site.url}}{{site.baseurl}}/opensearch/cluster/#advanced-step-6-configure-shard-allocation-awareness-or-forced-awareness)。

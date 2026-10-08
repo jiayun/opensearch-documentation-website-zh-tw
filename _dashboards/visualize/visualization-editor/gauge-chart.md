@@ -1,96 +1,97 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Gauge chart
+title: "儀表圖"
 parent: Visualization types
 grand_parent: Creating visualizations using queries
 great_grand_parent: Building data visualizations
 nav_order: 25
 ---
 
-# Gauge charts in the visualization editor
+# 視覺化編輯器中的儀表圖
 
-A gauge chart displays a single numeric value on a semicircular arc. Use a gauge chart to show how a metric compares against defined thresholds or a target range.
+儀表圖會在半圓形弧線上顯示單一數值。使用儀表圖可呈現指標與所定義的臨界值或目標範圍相比的情況。
 
-## Creating a gauge chart
+## 建立儀表圖
 
-The following examples build on each other, starting with a basic gauge and adding complexity. Before you begin, complete the [prerequisites]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/#prerequisites).
+下列範例會逐步累加，從基本的儀表開始，再逐步增加複雜度。開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/#prerequisites)。
 
-### Basic gauge chart
+### 基本儀表圖
 
-Start with a query that returns a single numeric aggregation:
+首先使用一個會傳回單一數值彙總的查詢：
 
 ```sql
 source = opensearch_dashboards_sample_data_flights | FIELDS AvgTicketPrice
 ```
 {% include copy.html %}
 
-After running this query, select **Gauge** as the chart type. The visualization automatically applies the **Last** calculation to reduce the series to a single value for display. The editor maps the field as follows:
+執行此查詢後，選取 **Gauge** 作為圖表類型。視覺化會自動套用 **Last** 計算方式，將數列縮減為單一值以供顯示。編輯器會依下列方式對應欄位：
 
-- The **Value** field displays the `AvgTicketPrice` field (using the **Last** calculation by default).
+- **Value** 欄位會顯示 `AvgTicketPrice` 欄位（預設使用 **Last** 計算方式）。
 
-The result is a gauge displaying the last ticket price value with the default green arc, as shown in the following image.
+結果會是一個以預設綠色弧線顯示最後一筆票價值的儀表，如下圖所示。
 
-![Initial gauge chart showing the last average ticket price]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/gauge/gauge-initial-look.png){: width="100%" }
+![顯示最後一筆平均票價的初始儀表圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/gauge/gauge-initial-look.png){: width="100%" }
 
-### Adding thresholds
+### 新增臨界值
 
-Define threshold breakpoints to segment the gauge arc into colored ranges that indicate value health.
+定義臨界值斷點，將儀表弧線劃分為不同顏色的範圍，以表示數值的健康狀態。
 
-Using the same query as the previous example, open the **Thresholds** section in the settings panel and add thresholds. For example:
+使用與上一個範例相同的查詢，在設定面板中開啟 **Thresholds** 區段並新增臨界值。例如：
 
-- Base color: green (values below 500)
-- Threshold at 500: yellow (moderate price range)
-- Threshold at 800: red (high price range)
+- 基本顏色：綠色（低於 500 的值）
+- 臨界值 500：黃色（中等價格範圍）
+- 臨界值 800：紅色（高價格範圍）
 
-The arc now shows colored bands---green up to 500, yellow from 500 to 800, and red above 800. Enable **Use threshold colors** to apply the matching threshold color to the displayed value text and the arc, as shown in the following image.
+弧線現在會顯示不同顏色的色帶：500 以下為綠色、500 至 800 為黃色、800 以上為紅色。啟用 **Use threshold colors** 可將相符的臨界值顏色套用至所顯示的數值文字與弧線，如下圖所示。
 
-![Gauge chart with color-coded threshold bands]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/gauge/gauge-with-thresholds.png){: width="100%" }
+![具有依顏色區分之臨界值色帶的儀表圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/gauge/gauge-with-thresholds.png){: width="100%" }
 
-### Customizing the gauge scale
+### 自訂儀表刻度
 
-To monitor ticket prices against a fixed scale that represents the full expected range, open the **Standard options** section and set:
+若要以代表完整預期範圍的固定刻度來監控票價，請開啟 **Standard options** 區段並設定：
 
-- **Min**: `500`
-- **Max**: `1200`
+- **Min**：`500`
+- **Max**：`1200`
 
-The gauge now always spans from 500 to 1200, making it easier to compare across split panels, as shown in the following image.
+儀表現在一律會涵蓋 500 至 1200 的範圍，讓您更容易在分割的面板之間進行比較，如下圖所示。
 
-![Gauge chart with custom min/max scale]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/gauge/gauge-custom-scale.png){: width="100%" }
+![具有自訂最小值/最大值刻度的儀表圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/gauge/gauge-custom-scale.png){: width="100%" }
 
-## Configuring a gauge chart
+## 設定儀表圖
 
-You can configure the following settings in the configuration panel.
+您可以在組態面板中設定下列設定。
 
-### Fields
+### 欄位
 
-In the **Fields** section, configure the data fields.
+在 **Fields** 區段中設定資料欄位。
 
-| Field | Description |
+| 欄位 | 說明 |
 | --- | --- |
-| **Value** | Select a numeric field whose values are reduced to a single number using the configured calculation method. The result is displayed as the gauge's current value. |
+| **Value** | 選取一個數值欄位，其值會使用所設定的計算方式縮減為單一數字。結果會顯示為儀表的目前值。 |
 
-### Split
+### 分割
 
-In the **Split by** dropdown list, select a field to split the chart into separate elements by value. For more information, see [Split]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#split).
+在 **Split by** 下拉式清單中選取一個欄位，依其值將圖表分割為個別的元素。如需詳細資訊，請參閱[分割]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#split)。
 
-### Gauge
+### 儀表
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Use threshold colors** | When enabled, the central numeric value adopts the color of the threshold range that the current value falls within. |
-| **Show title** | Displays a label below the numeric value. Defaults to the field name, but you can override it with custom text. |
-| **Title** | Custom title text displayed below the value when **Show title** is enabled. If left blank, the field name is used. |
+| **Use threshold colors** | 啟用時，中央的數值會採用目前值所在之臨界值範圍的顏色。 |
+| **Show title** | 在數值下方顯示標籤。預設為欄位名稱，但您可以使用自訂文字加以覆寫。 |
+| **Title** | 啟用 **Show title** 時顯示於數值下方的自訂標題文字。若保留空白，則會使用欄位名稱。 |
 
-### Value options
+### 值選項
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Calculation** | Determines how multiple data points are reduced to the single value shown on the gauge. Supported values: **Last \***, **Last**, **First \***, **First**, **Min**, **Max**, **Mean**, **Median**, **Variance**, **Count**, **Distinct count**, **Total**. For more information, see [Value calculations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/value-calculations/). |
+| **Calculation** | 決定如何將多個資料點縮減為儀表上顯示的單一值。支援的值：**Last \***、**Last**、**First \***、**First**、**Min**、**Max**、**Mean**、**Median**、**Variance**、**Count**、**Distinct count**、**Total**。如需詳細資訊，請參閱[值計算]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/value-calculations/)。 |
 
-### Thresholds
+### 臨界值
 
-For information about configuring thresholds, see [Thresholds]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/).
+如需設定臨界值的相關資訊，請參閱[臨界值]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/)。
 
-### Standard options
+### 標準選項
 
-For information about configuring units, unit suffixes, decimal precision, and minimum and maximum values, see [Standard options]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/standard-options/).
+如需設定單位、單位後綴、小數精確度以及最小值與最大值的相關資訊，請參閱[標準選項]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/standard-options/)。

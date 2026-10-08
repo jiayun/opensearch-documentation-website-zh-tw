@@ -1,45 +1,46 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Ingest-attachment plugin
+title: "Ingest-attachment 外掛程式"
 parent: Additional plugins
 grand_parent: Managing OpenSearch plugins
 nav_order: 20
 
 ---
 
-# Ingest-attachment plugin
+# Ingest-attachment 外掛程式
 
-The `ingest-attachment` plugin enables OpenSearch to extract content and other information from files using the Apache text extraction library [Tika](https://tika.apache.org/).
-Supported document formats include PPT, PDF, RTF, ODF, and many more. See Tika [supported document formats](https://tika.apache.org/3.2.2/formats.html).
+`ingest-attachment` 外掛程式可讓 OpenSearch 使用 Apache 文字擷取程式庫 [Tika](https://tika.apache.org/)，從檔案中擷取內容及其他資訊。
+支援的文件格式包括 PPT、PDF、RTF、ODF 等等。請參閱 Tika [支援的文件格式](https://tika.apache.org/3.2.2/formats.html)。
 
-The input field must be a Base64-encoded binary.
+輸入欄位必須是 Base64 編碼的二進位資料。
 
-## Installing the plugin
+## 安裝外掛程式
 
-Install the `ingest-attachment` plugin using the following command:
+使用下列命令安裝 `ingest-attachment` 外掛程式：
 
 ```sh
 ./bin/opensearch-plugin install ingest-attachment
 ```
 
-## Attachment processor options
+## Attachment 處理器選項
 
-| Name | Required | Default | Description |
+| 名稱 | 必要 | 預設 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `field` | Yes | N/A | The field from which to get the Base64-encoded binary. |
-| `target_field` | No | Attachment | The field that stores the attachment information. |
-| `properties` | No | All properties | An array of properties that should be stored. Can be `content`, `language`, `date`, `title`, `author`, `keywords`, `content_type`, or `content_length`. |
-| `indexed_chars` | No | `100_000` | The number of characters used for extraction to prevent fields from becoming too large. Use `-1` for no limit. |
-| `indexed_chars_field` | No | `null` | The field name used to overwrite the number of chars being used for extraction, for example, `indexed_chars`. |
-| `ignore_missing` | No | `false` | When `true`, the processor exits without modifying the document when the specified field doesn't exist. |
+| `field` | 是 | N/A | 用來取得 Base64 編碼二進位資料的欄位。 |
+| `target_field` | 否 | Attachment | 儲存附件資訊的欄位。 |
+| `properties` | 否 | 所有屬性 | 應儲存的屬性陣列。可以是 `content`、`language`、`date`、`title`、`author`、`keywords`、`content_type` 或 `content_length`。 |
+| `indexed_chars` | 否 | `100_000` | 擷取時使用的字元數，用以避免欄位變得過大。使用 `-1` 表示不設限制。 |
+| `indexed_chars_field` | 否 | `null` | 用來覆寫擷取時使用之字元數的欄位名稱，例如 `indexed_chars`。 |
+| `ignore_missing` | 否 | `false` | 若為 `true`，當指定的欄位不存在時，處理器會直接結束，而不修改文件。 |
 
-## Example
+## 範例
 
-The following steps show you how to get started with the `ingest-attachment` plugin.
+下列步驟說明如何開始使用 `ingest-attachment` 外掛程式。
 
-### Step 1: Create an index for storing your attachments
+### 步驟 1：建立用來儲存附件的索引
 
-The following command creates an index for storing your attachments:
+下列命令會建立用來儲存附件的索引：
 
 ```json
 PUT /example-attachment-index
@@ -50,9 +51,9 @@ PUT /example-attachment-index
 }
 ```
 
-### Step 2: Create a pipeline 
+### 步驟 2：建立管線 
 
-The following command creates a pipeline containing the attachment processor:
+下列命令會建立包含 attachment 處理器的管線：
 
 ```json
 PUT _ingest/pipeline/attachment
@@ -68,16 +69,16 @@ PUT _ingest/pipeline/attachment
 }
 ```
 
-### Step 3: Store an attachment
+### 步驟 3：儲存附件
 
-Convert the attachment to a Base64 string to pass it as `data`.
-In this example the `base64` command converts the file `lorem.rtf`:
+將附件轉換為 Base64 字串，以便將其作為 `data` 傳遞。
+在此範例中，`base64` 命令會轉換檔案 `lorem.rtf`：
 
 ```sh
 base64 lorem.rtf
 ```
 
-Alternatively, you can use Node.js to read the file to `base64`, as shown in the following commands:
+或者，您也可以使用 Node.js 將檔案讀取為 `base64`，如下列命令所示：
 
 ```typescript
 import * as fs from "node:fs/promises";
@@ -89,10 +90,10 @@ const base64File = await fs.readFile(filePath, { encoding: "base64" });
 console.log(base64File);
 ```
 
-The`.rtf` file contains the following Base64 text:
+`.rtf` 檔案包含下列 Base64 文字：
 
-`Lorem ipsum dolor sit amet`:
-`e1xydGYxXGFuc2kNCkxvcmVtIGlwc3VtIGRvbG9yIHNpdCBhbWV0DQpccGFyIH0=`.
+`Lorem ipsum dolor sit amet`：
+`e1xydGYxXGFuc2kNCkxvcmVtIGlwc3VtIGRvbG9yIHNpdCBhbWV0DQpccGFyIH0=`。
 
 ```json
 PUT example-attachment-index/_doc/lorem_rtf?pipeline=attachment
@@ -101,9 +102,9 @@ PUT example-attachment-index/_doc/lorem_rtf?pipeline=attachment
 }
 ```
 
-### Query results
+### 查詢結果
 
-With the attachment processed, you can now search through the data using search queries, as shown in the following example:
+附件處理完成後，您現在可以使用搜尋查詢來搜尋資料，如下列範例所示：
 
 ```json
 POST example-attachment-index/_search
@@ -116,7 +117,7 @@ POST example-attachment-index/_search
 }
 ```
 
-OpenSearch responds with the following:
+OpenSearch 會傳回下列回應：
 
 ```json
 {
@@ -154,9 +155,9 @@ OpenSearch responds with the following:
 }
 ```
 
-## Extracted information
+## 擷取的資訊
 
-The following fields can be extracted using the plugin:
+使用此外掛程式可以擷取下列欄位：
 
 - `content`
 - `language`
@@ -167,8 +168,8 @@ The following fields can be extracted using the plugin:
 - `content_type`
 - `content_length`
 
-To extract only a subset of these fields, define them in the `properties` of the
-pipeline processor, as shown in the following example:
+若只要擷取這些欄位的子集，請在管線處理器的
+`properties` 中定義這些欄位，如下列範例所示：
 
 ```json
 PUT _ingest/pipeline/attachment
@@ -185,13 +186,13 @@ PUT _ingest/pipeline/attachment
 }
 ```
 
-## Limit the extracted content
+## 限制擷取的內容
 
-To prevent extracting too many characters and overloading the node memory, the default limit is `100_000`.
-You can change this value using the setting `indexed_chars`. For example, you can use `-1` for unlimited characters, but you need to make sure you have enough HEAP space on your OpenSearch node to extract the content of large documents.
+為了避免擷取過多字元而導致節點記憶體超載，預設限制為 `100_000`。
+您可以使用設定 `indexed_chars` 變更此值。例如，您可以使用 `-1` 表示不限制字元數，但您必須確保 OpenSearch 節點上有足夠的 HEAP 空間，才能擷取大型文件的內容。
 
-You can also define this limit per document using the `indexed_chars_field` request field.
-If a document contains `indexed_chars_field`, it will overwrite the `indexed_chars` setting, as shown in the following example:
+您也可以使用 `indexed_chars_field` 請求欄位，針對每份文件定義此限制。
+若文件包含 `indexed_chars_field`，則會覆寫 `indexed_chars` 設定，如下列範例所示：
 
 ```json
 PUT _ingest/pipeline/attachment
@@ -209,7 +210,7 @@ PUT _ingest/pipeline/attachment
 }
 ```
 
-With the attachment pipeline configured, you can extract the default `10` characters without specifying `max_chars` in the request, as shown in the following example:
+設定好 attachment 管線後，您無須在請求中指定 `max_chars`，即可擷取預設的 `10` 個字元，如下列範例所示：
 
 ```json
 PUT example-attachment-index/_doc/lorem_rtf?pipeline=attachment
@@ -218,7 +219,7 @@ PUT example-attachment-index/_doc/lorem_rtf?pipeline=attachment
 }
 ```
 
-Alternatively, you can change the `max_char` per document in order to extract up to `15` characters, as shown in the following example:
+或者，您也可以針對每份文件變更 `max_char`，以擷取最多 `15` 個字元，如下列範例所示：
 
 ```json
 PUT example-attachment-index/_doc/lorem_rtf?pipeline=attachment

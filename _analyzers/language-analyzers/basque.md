@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Basque
+title: "巴斯克語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 30
 ---
 
-# Basque analyzer
+# 巴斯克語分析器
 
-The built-in `basque` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `basque` 分析器套用至文字欄位：
 
 ```json
 PUT /basque-index
@@ -25,9 +26,9 @@ PUT /basque-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，搭配此語言分析器使用 `stem_exclusion`：
 
 ```json
 PUT index_with_stem_exclusion_basque_analyzer
@@ -46,21 +47,21 @@ PUT index_with_stem_exclusion_basque_analyzer
 ```
 {% include copy-curl.html %}
 
-## Basque analyzer internals
+## 巴斯克語分析器內部結構
 
-The `basque` analyzer is built using the following components:
+`basque` 分析器由下列元件建構而成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
+- 詞元篩選器：
   - lowercase
-  - stop (Basque)
+  - stop（巴斯克語）
   - keyword
-  - stemmer (Basque)
+  - stemmer（巴斯克語）
 
-## Custom Basque analyzer
+## 自訂巴斯克語分析器
 
-You can create a custom Basque analyzer using the following command:
+您可以使用下列命令建立自訂巴斯克語分析器：
 
 ```json
 PUT /basque-index
@@ -107,9 +108,9 @@ PUT /basque-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用此分析器產生的詞元：
 
 ```json
 POST /basque-index/_analyze
@@ -120,7 +121,7 @@ POST /basque-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

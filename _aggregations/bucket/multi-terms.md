@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Multi-terms
+title: "多詞彙"
 parent: Bucket aggregations
 nav_order: 130
 redirect_from:
@@ -8,41 +9,41 @@ redirect_from:
   - /query-dsl/aggregations/multi-terms/
 ---
 
-# Multi-terms aggregation
+# 多詞彙彙總
 
-The `multi_terms` aggregation creates buckets based on the combination of values from multiple fields. Each bucket represents a unique composite key, and documents are grouped by matching all specified term values simultaneously. This is useful when you need to find the top combinations ranked by document count or by a metric subaggregation.
+`multi_terms` 彙總會根據多個欄位值的組合來建立桶 (bucket)。每個桶代表一個唯一的複合鍵，文件必須同時符合所有指定的詞彙值，才會分到同一組。當您需要找出依文件計數或指標子彙總排名的前幾名組合時，這項功能非常實用。
 
-The `multi_terms` aggregation consumes more memory than a single `terms` aggregation because it builds composite keys across multiple fields.
+由於 `multi_terms` 彙總會跨多個欄位建立複合鍵，因此比單一 `terms` 彙總耗用更多記憶體。
 {: .note}
 
-## Parameters
+## 參數
 
-The `multi_terms` aggregation takes the following parameters.
+`multi_terms` 彙總接受下列參數。
 
-| Parameter | Required/Optional | Data type | Description |
+| 參數 | 必要/選用 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `terms` | Required | Array | An array of objects, each specifying a field or script that provides one part of the composite key. |
-| `size` | Optional | Integer | The number of composite buckets to return. Default is `10`. |
-| `shard_size` | Optional | Integer | The number of candidate buckets collected from each shard. Higher values improve accuracy at the cost of memory. Must be greater than or equal to `size`. Default is higher than `size` to improve accuracy. |
-| `min_doc_count` | Optional | Integer | The minimum document count required for a bucket to appear in the response. Default is `1`. |
-| `order` | Optional | Object | Controls how buckets are sorted. Accepts `_count`, `_key`, or the name of a subaggregation metric. Default is `{"_count": "desc"}`. |
-| `show_term_doc_count_error` | Optional | Boolean | When `true`, includes an error estimate for each term's document count. Default is `false`. |
+| `terms` | 必要 | 陣列 | 物件陣列，每個物件指定一個欄位或指令碼，用於提供複合鍵的其中一部分。 |
+| `size` | 選用 | 整數 | 要傳回的複合桶數量。預設為 `10`。 |
+| `shard_size` | 選用 | 整數 | 從每個分片收集的候選桶數量。數值越高可提升準確度，但會耗用更多記憶體。必須大於或等於 `size`。預設值高於 `size`，以提升準確度。 |
+| `min_doc_count` | 選用 | 整數 | 桶出現在回應中所需的最低文件計數。預設為 `1`。 |
+| `order` | 選用 | 物件 | 控制桶的排序方式。接受 `_count`、`_key` 或子彙總指標的名稱。預設為 `{"_count": "desc"}`。 |
+| `show_term_doc_count_error` | 選用 | 布林值 | 若為 `true`，則包含每個詞彙文件計數的誤差估計值。預設為 `false`。 |
 
-Each object in the `terms` array supports the following parameters.
+`terms` 陣列中的每個物件都支援下列參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `field` | String | The field to aggregate on. Must be a `keyword`, `numeric`, `ip`, `boolean`, or `date` field. Either `field` or `script` is required. |
-| `script` | Object | A script that generates the values to aggregate on. Either `field` or `script` is required. When used with `field`, the script acts as a value script and receives the field value as `_value`. |
-| `missing` | String or number | The value to use for documents that do not contain the field. By default, documents that do not contain the field are excluded from the aggregation. |
-| `exclude` | String or array of strings | The values to exclude from the aggregation. Specify an array of exact values or a regular expression. |
-| `format` | String | The format of the term in `key_as_string`, such as a date format for a `date` field. |
-| `time_zone` | String | The time zone used to format `date` values, such as `+05:00` or `America/New_York`. Default is `UTC`. |
-| `value_type` | String | The data type of the values produced by a `script`, such as `long` or `string`. |
+| `field` | 字串 | 要進行彙總的欄位。必須是 `keyword`、`numeric`、`ip`、`boolean` 或 `date` 欄位。必須提供 `field` 或 `script` 其中之一。 |
+| `script` | 物件 | 產生要彙總之值的指令碼。必須提供 `field` 或 `script` 其中之一。與 `field` 搭配使用時，指令碼會作為值指令碼，並以 `_value` 接收欄位值。 |
+| `missing` | 字串或數字 | 用於不含該欄位之文件的值。根據預設，不含該欄位的文件會從彙總中排除。 |
+| `exclude` | 字串或字串陣列 | 要從彙總中排除的值。請指定確切值的陣列或規則運算式。 |
+| `format` | 字串 | 詞彙在 `key_as_string` 中的格式，例如 `date` 欄位的日期格式。 |
+| `time_zone` | 字串 | 用於格式化 `date` 值的時區，例如 `+05:00` 或 `America/New_York`。預設為 `UTC`。 |
+| `value_type` | 字串 | 由 `script` 產生之值的資料類型，例如 `long` 或 `string`。 |
 
-## Example: Grouping by multiple fields
+## 範例：依多個欄位分組
 
-The following example identifies the most popular product categories for each gender by grouping orders on both `customer_gender` and `category` simultaneously. This query reveals the gender-category pairs that generate the most orders:
+下列範例同時依 `customer_gender` 與 `category` 將訂單分組，找出各性別最熱門的產品類別。此查詢會顯示產生最多訂單的性別與類別組合：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -63,7 +64,7 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-The response contains composite key buckets ordered by descending document count:
+回應包含依文件計數遞減排序的複合鍵桶：
 
 ```json
 {
@@ -119,9 +120,9 @@ The response contains composite key buckets ordered by descending document count
 }
 ```
 
-## Example: Ordering by a subaggregation metric
+## 範例：依子彙總指標排序
 
-The following example finds the gender-category combinations that produce the highest average order values:
+下列範例會找出平均訂單金額最高的性別與類別組合：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -148,7 +149,7 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-The response ranks buckets by the `avg_price` subaggregation rather than document count:
+回應會依 `avg_price` 子彙總 (而非文件計數) 對桶進行排名：
 
 ```json
 {
@@ -197,11 +198,11 @@ The response ranks buckets by the `avg_price` subaggregation rather than documen
 }
 ```
 
-## Example: Handling documents with missing fields
+## 範例：處理缺少欄位的文件
 
-By default, a document that does not contain one of the `terms` fields is excluded from the aggregation. To include these documents, specify a `missing` value for the field.
+根據預設，若文件不含其中一個 `terms` 欄位，就會從彙總中排除。若要納入這些文件，請為該欄位指定 `missing` 值。
 
-Create an index containing two `keyword` fields:
+建立包含兩個 `keyword` 欄位的索引：
 
 ```json
 PUT /products
@@ -216,7 +217,7 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-Index three documents. The second document does not contain a `color` field, and the third document does not contain a `brand` field:
+將三份文件編製索引。第二份文件不含 `color` 欄位，第三份文件不含 `brand` 欄位：
 
 ```json
 POST /products/_bulk?refresh=true
@@ -229,7 +230,7 @@ POST /products/_bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-The following request groups products by brand and color, assigning the value `unknown` to documents that do not contain a `color` field:
+下列請求會依品牌與顏色將產品分組，並將值 `unknown` 指派給不含 `color` 欄位的文件：
 
 ```json
 GET /products/_search
@@ -249,7 +250,7 @@ GET /products/_search
 ```
 {% include copy-curl.html %}
 
-The response contains a bucket for the document without a `color` field, using `unknown` as its color. The document without a `brand` field does not appear in any bucket because no `missing` value is specified for `brand`:
+回應中包含一個代表不含 `color` 欄位之文件的桶，並以 `unknown` 作為其顏色。由於未對 `brand` 指定 `missing` 值，因此不含 `brand` 欄位的文件不會出現在任何桶中：
 
 ```json
 {
@@ -281,15 +282,15 @@ The response contains a bucket for the document without a `color` field, using `
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response body fields.
+下表列出回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `doc_count_error_upper_bound` | Integer | The maximum potential error in document counts for any bucket not included in the response. |
-| `sum_other_doc_count` | Integer | The total document count of all buckets that did not make it into the top `size` results. |
-| `buckets` | Array | The composite key buckets, sorted according to `order`. |
-| `buckets.key` | Array | An array of values representing the composite key for this bucket, in the same order as the `terms` list. |
-| `buckets.key_as_string` | String | The composite key formatted as a pipe-delimited string. |
-| `buckets.doc_count` | Integer | The number of documents matching this key combination. |
+| `doc_count_error_upper_bound` | 整數 | 未包含在回應中的任何桶，其文件計數的最大潛在誤差。 |
+| `sum_other_doc_count` | 整數 | 未進入前 `size` 名結果之所有桶的文件總數。 |
+| `buckets` | 陣列 | 複合鍵桶，依據 `order` 排序。 |
+| `buckets.key` | 陣列 | 代表此桶複合鍵的值陣列，順序與 `terms` 清單相同。 |
+| `buckets.key_as_string` | 字串 | 格式化為以直線符號分隔之字串的複合鍵。 |
+| `buckets.doc_count` | 整數 | 符合此鍵組合的文件數量。 |

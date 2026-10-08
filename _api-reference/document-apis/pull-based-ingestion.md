@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Pull-based ingestion
+title: "提取式匯入"
 parent: Document APIs
 has_children: true
 nav_order: 90
 ---
 
-# Pull-based Ingestion API
-**Introduced 3.0**
+# 提取式匯入 API
+**3.0 版推出**
 {: .label .label-purple }
 
-Pull-based ingestion enables OpenSearch to ingest data from streaming sources such as Apache Kafka or Amazon Kinesis. Unlike traditional ingestion methods where clients actively push data to OpenSearch through REST APIs, pull-based ingestion allows OpenSearch to control the data flow by retrieving data directly from streaming sources. This approach provides native backpressure handling, helping prevent server overload during traffic spikes. Pull-based ingestion guarantees at-least-once ingestion semantics and uses external versioning to ensure data consistency.
+提取式匯入可讓 OpenSearch 從 Apache Kafka 或 Amazon Kinesis 等串流來源匯入資料。在傳統的匯入方式中，用戶端會透過 REST API 主動將資料推送至 OpenSearch。提取式匯入則不同，它讓 OpenSearch 直接從串流來源擷取資料，藉此控制資料流。此方法提供原生的背壓 (backpressure) 處理機制，有助於在流量激增時避免伺服器過載。提取式匯入保證「至少一次」(at-least-once) 的匯入語意，並使用外部版本控制來確保資料一致性。
 
-## Prerequisites
+## 先決條件
 
-Before using pull-based ingestion, ensure that the following prerequisites are met:
+使用提取式匯入之前，請確認已符合下列先決條件：
 
-* Install an ingestion plugin for your streaming source using the command `bin/opensearch-plugin install <plugin-name>`. For more information, see [Additional plugins]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/index/). OpenSearch supports the following ingestion plugins: 
+* 使用命令 `bin/opensearch-plugin install <plugin-name>` 為您的串流來源安裝匯入外掛程式。如需詳細資訊，請參閱[其他外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/index/)。OpenSearch 支援下列匯入外掛程式： 
   - `ingestion-kafka`
-  - `ingestion-kinesis` (experimental)
-* Configure pull-based ingestion during [index creation](#creating-an-index-for-pull-based-ingestion). You cannot convert an existing push-based index to a pull-based one.
+  - `ingestion-kinesis`（實驗性）
+* 在[建立索引](#creating-an-index-for-pull-based-ingestion)時設定提取式匯入。您無法將現有的推送式索引轉換為提取式索引。
 
-## Creating an index for pull-based ingestion
+## 為提取式匯入建立索引
 
-To ingest data from a streaming source, first create an index with pull-based ingestion settings. The following request creates an index that pulls data from a Kafka topic in the segment replication mode. For other available modes, see [Ingestion modes](#ingestion-modes):
+若要從串流來源匯入資料，請先建立具有提取式匯入設定的索引。下列請求會建立一個以區段複寫模式從 Kafka 主題提取資料的索引。如需其他可用的模式，請參閱[匯入模式](#ingestion-modes)：
 
 ```json
 PUT /my-index
@@ -57,91 +58,91 @@ PUT /my-index
 ```
 {% include copy-curl.html %}
 
-### Ingestion source settings
+### 匯入來源設定
 
-The `ingestion_source` settings control how OpenSearch pulls data from the streaming source. A _poll_ is an operation in which OpenSearch actively requests a batch of data from the streaming source. The following table lists all settings that `ingestion_source` supports.
+`ingestion_source` 設定控制 OpenSearch 如何從串流來源提取資料。_輪詢 (poll)_ 是 OpenSearch 主動向串流來源請求一批資料的作業。下表列出 `ingestion_source` 支援的所有設定。
 
-Dynamic settings can be updated using the [Update Settings API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/update-settings/) without restarting the ingestion process. Static settings cannot be changed after index creation. For more information about static and dynamic settings, see [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/).
+動態設定可以使用[更新設定 API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/update-settings/) 進行更新，無需重新啟動匯入程序。靜態設定在建立索引後即無法變更。如需靜態與動態設定的詳細資訊，請參閱[設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/)。
 {: .note}
 
-| Setting | Dynamic | Description |
+| 設定 | 動態 | 說明 |
 | :--- | :--- | :--- |
-| `type` | No | The streaming source type. Required. Valid values are `kafka` or `kinesis`. |
-| `pointer.init.reset` | No | Determines the stream location from which to start reading. Optional. Valid values are `earliest`, `latest`, `reset_by_offset`, `reset_by_timestamp`, or `none`. See [Stream position](#stream-position). |
-| `pointer.init.reset.value` | No | Required only for `reset_by_offset` or `reset_by_timestamp`. Specifies the offset value or timestamp in milliseconds. See [Stream position](#stream-position). |
-| `error_strategy` | Yes | How to handle failed messages. Optional. Valid values are `DROP` (failed messages are skipped and ingestion continues) and `BLOCK` (when a message fails, ingestion stops). Default is `DROP`. |
-| `poll.max_batch_size` | Yes | The maximum number of records to retrieve in each poll operation. Optional. |
-| `poll.timeout` | Yes | The maximum time to wait for data in each poll operation. Optional. |
-| `num_processor_threads` | No | The number of threads for processing ingested data. Optional. Default is 1. |
-| `internal_queue_size` | No | The size of the internal blocking queue for advanced tuning. Valid values are from 1 to 100,000, inclusive. Optional. Default is 100. |
-| `all_active` | No | Whether to enable the all-active ingestion mode. Cannot be enabled for indexes that use segment replication mode. Default is `false`. See [Ingestion modes](#ingestion-modes). |
-| `pointer_based_lag_update_interval` | No | The interval at which pointer-based lag is calculated. Accepts time units. Default is `10s`. Setting this value to `0` disables pointer-based lag calculation. |
-| `warmup.timeout` | Yes | The maximum amount of time to wait for the shard to catch up with the streaming source during the warmup phase after node restart or shard relocation. Shards will not serve queries until warmup completes or times out. Accepts time units. Optional. Default is `-1` (disabled). |
-| `warmup.lag_threshold` | Yes | The acceptable pointer-based lag threshold for warmup completion. Warmup completes when the lag is at or below this value. A value of `0` means that the shard is synchronized with the source. Optional. Default is `100`. |
-| `mapper_type` | No | Defines the mapper for the input message format. Valid values are `default` and `raw_payload`. See [Message format](#message-format). |
-| `param` | Yes | Source-specific configuration parameters. Required. <br>&ensp;&#x2022; The `ingest-kafka` plugin requires:<br>&ensp;&ensp;- `topic`: The Kafka topic to consume from<br>&ensp;&ensp;- `bootstrap_servers`: The Kafka server addresses<br>&ensp;&ensp;Optionally, you can provide additional standard Kafka consumer parameters (such as `fetch.min.bytes`). These parameters are passed directly to the Kafka consumer. <br>&ensp;&#x2022; The `ingest-kinesis` plugin requires:<br>&ensp;&ensp;- `stream`: The Kinesis stream name<br>&ensp;&ensp;- `region`: The AWS Region<br>&ensp;&ensp;- `access_key`: The AWS access key<br>&ensp;&ensp;- `secret_key`: The AWS secret key<br>&ensp;&ensp;Optionally, you can provide an `endpoint_override`. | 
+| `type` | 否 | 串流來源類型。必要。有效值為 `kafka` 或 `kinesis`。 |
+| `pointer.init.reset` | 否 | 決定從串流的哪個位置開始讀取。選用。有效值為 `earliest`、`latest`、`reset_by_offset`、`reset_by_timestamp` 或 `none`。請參閱[串流位置](#stream-position)。 |
+| `pointer.init.reset.value` | 否 | 僅在使用 `reset_by_offset` 或 `reset_by_timestamp` 時為必要。指定位移值或以毫秒為單位的時間戳記。請參閱[串流位置](#stream-position)。 |
+| `error_strategy` | 是 | 處理失敗訊息的方式。選用。有效值為 `DROP`（略過失敗的訊息並繼續匯入）和 `BLOCK`（訊息失敗時停止匯入）。預設為 `DROP`。 |
+| `poll.max_batch_size` | 是 | 每次輪詢作業所擷取的最大記錄數。選用。 |
+| `poll.timeout` | 是 | 每次輪詢作業等待資料的最長時間。選用。 |
+| `num_processor_threads` | 否 | 處理已匯入資料的執行緒數量。選用。預設為 1。 |
+| `internal_queue_size` | 否 | 用於進階調整的內部阻塞佇列大小。有效值為 1 到 100,000（含）。選用。預設為 100。 |
+| `all_active` | 否 | 是否啟用全主動 (all-active) 匯入模式。使用區段複寫模式的索引無法啟用此模式。預設為 `false`。請參閱[匯入模式](#ingestion-modes)。 |
+| `pointer_based_lag_update_interval` | 否 | 計算指標式延遲的間隔。接受時間單位。預設為 `10s`。將此值設為 `0` 會停用指標式延遲計算。 |
+| `warmup.timeout` | 是 | 在節點重新啟動或分片重新配置後的暖機階段，等待分片趕上串流來源的最長時間。在暖機完成或逾時之前，分片不會處理查詢。接受時間單位。選用。預設為 `-1`（停用）。 |
+| `warmup.lag_threshold` | 是 | 暖機完成時可接受的指標式延遲閾值。當延遲等於或低於此值時，暖機即完成。值為 `0` 表示分片已與來源同步。選用。預設為 `100`。 |
+| `mapper_type` | 否 | 定義輸入訊息格式的對應器。有效值為 `default` 和 `raw_payload`。請參閱[訊息格式](#message-format)。 |
+| `param` | 是 | 來源專屬的組態參數。必要。<br>&ensp;&#x2022; `ingest-kafka` 外掛程式需要：<br>&ensp;&ensp;- `topic`：要從中取用資料的 Kafka 主題<br>&ensp;&ensp;- `bootstrap_servers`：Kafka 伺服器位址<br>&ensp;&ensp;您也可以選擇性地提供其他標準 Kafka 取用者參數（例如 `fetch.min.bytes`）。這些參數會直接傳遞給 Kafka 取用者。<br>&ensp;&#x2022; `ingest-kinesis` 外掛程式需要：<br>&ensp;&ensp;- `stream`：Kinesis 串流名稱<br>&ensp;&ensp;- `region`：AWS 區域<br>&ensp;&ensp;- `access_key`：AWS 存取金鑰<br>&ensp;&ensp;- `secret_key`：AWS 秘密金鑰<br>&ensp;&ensp;您也可以選擇性地提供 `endpoint_override`。 | 
 
 
-### Other settings
+### 其他設定
 
-Pull-based ingestion supports the following OpenSearch settings.
+提取式匯入支援下列 OpenSearch 設定。
 
-| Setting | Dynamic | Description |
+| 設定 | 動態 | 說明 |
 | :--- | :--- | :--- |
-| `index.periodic_flush_interval` | Yes | The interval at which OpenSearch triggers a flush operation. Default for pull-based ingestion indexes is `10m`. See [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#periodic-flush-interval). |
+| `index.periodic_flush_interval` | 是 | OpenSearch 觸發排清 (flush) 作業的間隔。提取式匯入索引的預設值為 `10m`。請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#periodic-flush-interval)。 |
 
-### Ingestion modes
+### 匯入模式
 
-Pull-based ingestion supports the following modes.
+提取式匯入支援下列模式。
 
-#### Segment replication mode
+#### 區段複寫模式
 
-In segment replication mode, the primary shards ingest events from a streaming source and index the documents. The pull-based index is configured to use [segment replication]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/segment-replication/index/) to copy over the segment files from primary to replica shards, as shown in the following image.
+在區段複寫模式中，主要分片會從串流來源匯入事件，並將文件編製索引。提取式索引會設定為使用[區段複寫]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/segment-replication/index/)，將區段檔案從主要分片複製到副本分片，如下圖所示。
 
-![Pull-based ingestion segment replication mode]({{site.url}}{{site.baseurl}}/images/pull-based-ingestion/pull-based-segrep-mode.png){: width="50%" }
+![提取式匯入區段複寫模式]({{site.url}}{{site.baseurl}}/images/pull-based-ingestion/pull-based-segrep-mode.png){: width="50%" }
 
-We recommend using this mode with [remote-backed storage]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/index/).
+我們建議搭配[以遠端儲存空間為後端的儲存方式]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/index/)使用此模式。
 {: .tip}
 
-#### All-active mode
+#### 全主動模式
 
-Enabling all-active mode allows both primary and replica shards to independently ingest and index events from the streaming source, as shown in the following image.
+啟用全主動模式後，主要分片與副本分片都可以獨立地從串流來源匯入並編製索引事件，如下圖所示。
 
-![Pull-based ingestion all active mode]({{site.url}}{{site.baseurl}}/images/pull-based-ingestion/pull-based-all-active-mode.png){: width="50%" }
+![拉取式匯入的全主動模式]({{site.url}}{{site.baseurl}}/images/pull-based-ingestion/pull-based-all-active-mode.png){: width="50%" }
 
-There is no replication or coordination between the shards, although replica shards may fetch segment files from the primary shard during bootstrapping if a local copy is unavailable. This mode is not supported with segment replication.
+分片之間沒有複寫或協調機制，不過在引導程序期間，如果本機沒有可用的副本，副本分片可能會從主要分片擷取區段檔案。此模式不支援搭配區段複寫使用。
 
-### Stream position
+### 串流位置
 
-When creating an index, you can specify where OpenSearch should start reading from the stream by configuring the `pointer.init.reset` and `pointer.init.reset.value` settings in the `ingestion_source` parameter. OpenSearch will resume reading from the last committed position for existing indexes.
+建立索引時，您可以透過在 `ingestion_source` 參數中設定 `pointer.init.reset` 與 `pointer.init.reset.value` 設定，指定 OpenSearch 應從串流的哪個位置開始讀取。對於已存在的索引，OpenSearch 會從最後一次提交的位置繼續讀取。
 
-The following table provides the valid `pointer.init.reset` values and their corresponding `pointer.init.reset.value` values.
+下表列出有效的 `pointer.init.reset` 值及其對應的 `pointer.init.reset.value` 值。
 
-| `pointer.init.reset` | Starting ingestion point | `pointer.init.reset.value` | 
+| `pointer.init.reset` | 匯入起點 | `pointer.init.reset.value` | 
 | :--- | :--- | :--- | 
-| `earliest`           | The beginning of the stream | None | 
-| `latest`             | The current end of the stream | None | 
-| `reset_by_offset`    | A specific offset in the stream | A positive integer offset. Required. | 
-| `reset_by_timestamp` | A specific timestamp | A Unix timestamp in milliseconds. Required. <br> For Kafka streams, defaults to Kafka's `auto.offset.reset` policy if no messages are found for the given timestamp. |
-| `none`               | The last committed position for existing indexes | None | 
+| `earliest`           | 串流的起點 | None | 
+| `latest`             | 串流目前的結尾 | None | 
+| `reset_by_offset`    | 串流中的特定位移 | 正整數位移。必要。 | 
+| `reset_by_timestamp` | 特定時間戳記 | 以毫秒為單位的 Unix 時間戳記。必要。<br> 對於 Kafka 串流，若在給定時間戳記找不到任何訊息，則預設採用 Kafka 的 `auto.offset.reset` 政策。 |
+| `none`               | 已存在索引的最後提交位置 | None | 
 
-### Stream partitioning
+### 串流分割
 
-When using partitioned streams (such as Kafka topics or Kinesis shards), note the following relationships between stream partitions and OpenSearch shards:
+使用分割式串流（例如 Kafka 主題或 Kinesis 分片）時，請注意串流分割區與 OpenSearch 分片之間的下列關係：
 
-- OpenSearch shards map one-to-one to stream partitions.
-- The number of index shards must be greater than or equal to the number of stream partitions.
-- Extra shards beyond the number of partitions remain empty.
-- Documents must be sent to the same partition for successful updates.
+- OpenSearch 分片與串流分割區一對一對應。
+- 索引分片的數量必須大於或等於串流分割區的數量。
+- 超出分割區數量的多餘分片會保持空白。
+- 文件必須傳送到同一個分割區，更新才能成功。
 
-When using pull-based ingestion, traditional REST API--based ingestion is disabled for the index.
+使用拉取式匯入時，該索引的傳統 REST API 匯入方式會被停用。
 {: .note}
 
-### Updating the error policy
+### 更新錯誤政策
 
-You can use the [Update Settings API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/update-settings/) to dynamically update the error policy by setting `index.ingestion_source.error_strategy` to either `DROP` or `BLOCK`. 
+您可以使用 [Update Settings API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/update-settings/)，透過將 `index.ingestion_source.error_strategy` 設定為 `DROP` 或 `BLOCK` 來動態更新錯誤政策。
 
-The following example demonstrates how to update the error policy:
+下列範例示範如何更新錯誤政策：
 
 <!-- spec_insert_start
 component: example_code
@@ -175,56 +176,56 @@ response = client.indices.put_settings(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Message format
+## 訊息格式
 
-To be correctly processed by OpenSearch, messages in the streaming source must have the following format:
+串流來源中的訊息必須具備下列格式，才能被 OpenSearch 正確處理：
 
 ```json
 {"_id":"1", "_version":"1", "_source":{"name": "alice", "age": 30}, "_op_type": "index"}
 {"_id":"2", "_version":"2", "_source":{"name": "alice", "age": 30}, "_op_type": "delete"}
 ```
 
-Each data unit in the streaming source (Kafka message or Kinesis record) must include the following fields that specify how to create or modify an OpenSearch document. This is the default format supported by pull-based ingestion.
+串流來源中的每個資料單元（Kafka 訊息或 Kinesis 記錄）都必須包含下列欄位，用於指定如何建立或修改 OpenSearch 文件。這是拉取式匯入支援的預設格式。
 
-| Field | Data type | Required | Description |
+| 欄位 | 資料類型 | 必要 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `_id` | String | No | A unique identifier for a document. If not provided, OpenSearch auto-generates an ID. Required for document updates or deletions. |
-| `_version` | Long | No | A document version number, which must be maintained externally. If provided, OpenSearch drops messages with versions earlier than the current document version. If not provided, no version checking occurs. |
-| `_op_type` | String | No | The operation to perform. Valid values are:<br>- `index`: Creates a new document or updates an existing one.<br>- `create`: Creates a new document in append mode. Note that this will not update existing documents. <br>- `delete`: Soft deletes a document. |
-| `_source` | Object | Yes | The message payload containing the document data. |
+| `_id` | 字串 | 否 | 文件的唯一識別碼。若未提供，OpenSearch 會自動產生 ID。更新或刪除文件時必須提供。 |
+| `_version` | 長整數 | 否 | 文件版本號，必須在外部維護。若有提供，OpenSearch 會捨棄版本早於目前文件版本的訊息。若未提供，則不進行版本檢查。 |
+| `_op_type` | 字串 | 否 | 要執行的操作。有效值為：<br>- `index`：建立新文件或更新現有文件。<br>- `create`：以附加模式建立新文件。請注意，這不會更新現有文件。<br>- `delete`：軟刪除文件。 |
+| `_source` | 物件 | 是 | 包含文件資料的訊息承載。 |
 
-We recommend using the document `_id` field to prevent duplicates, since pull-based ingestion provides at-least-once ingestion semantics. If your producer cannot guarantee event ordering, also set `_version` field to ensure data consistency.
+由於拉取式匯入提供至少一次的匯入語意，我們建議使用文件的 `_id` 欄位以避免重複。如果您的生產者無法保證事件順序，也請設定 `_version` 欄位以確保資料一致性。
 {: .tip}
 
-Alternatively, pull-based ingestion supports indexing raw payloads in append-only mode without transformations. To enable this behavior, set `index.ingestion_source.mapper_type` to `raw_payload`. Note that in this mode, the index mappings must conform to the message structure because dynamic mapping is not supported. When using `raw_payload`, you must provide raw JSON objects exactly as they appear in the incoming data stream, as shown in the following example:
+或者，拉取式匯入也支援在僅附加模式下直接編製原始承載的索引，而不進行轉換。若要啟用此行為，請將 `index.ingestion_source.mapper_type` 設定為 `raw_payload`。請注意，在此模式下，索引對應必須符合訊息結構，因為不支援動態對應。使用 `raw_payload` 時，您必須提供與傳入資料串流中完全一致的原始 JSON 物件，如下列範例所示：
 
 ```json
 {"name": "alice", "age": 30}
 {"name": "bob", "age": 30}
 ```
 
-## Pull-based ingestion metrics
+## 拉取式匯入指標
 
-Pull-based ingestion provides metrics that can be used to monitor the ingestion process. The `polling_ingest_stats` metric is available at the shard level.
+拉取式匯入提供可用於監控匯入程序的指標。`polling_ingest_stats` 指標可在分片層級取得。
 
-The following table lists the available `polling_ingest_stats` metrics.
+下表列出可用的 `polling_ingest_stats` 指標。
 
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `message_processor_stats.total_processed_count` | The total number of messages processed by the message processor. |
-| `message_processor_stats.total_invalid_message_count` | The number of invalid messages encountered. |
-| `message_processor_stats.total_version_conflicts_count` | The number of version conflicts due to which older version messages will be dropped. |
-| `message_processor_stats.total_failed_count` | The total number of failed messages, which error out during processing. |
-| `message_processor_stats.total_failures_dropped_count` | The total number of failed messages, which are dropped after exhausting retries. Note that messages are only dropped when the DROP error policy is used. |
-| `message_processor_stats.total_processor_thread_interrupt_count` | Indicates the number of thread interruptions on the processor thread. |
-| `consumer_stats.total_polled_count` | The total number of messages polled from the stream consumer. |
-| `consumer_stats.total_consumer_error_count` | The total number of fatal consumer read errors. |
-| `consumer_stats.total_poller_message_failure_count` | The total number of failed messages on the poller. |
-| `consumer_stats.total_poller_message_dropped_count` | The total number of failed messages on the poller that were dropped. |
-| `consumer_stats.lag_in_millis` | Lag in milliseconds, computed as the time elapsed since the last processed message timestamp. |
-| `consumer_stats.pointer_based_lag` | The Apache Kafka offset-based lag, calculated as the difference between the latest available offset and the current message offset. This metric applies only when Apache Kafka is used as the streaming source. |
+| `message_processor_stats.total_processed_count` | 訊息處理器已處理的訊息總數。 |
+| `message_processor_stats.total_invalid_message_count` | 遇到的無效訊息數量。 |
+| `message_processor_stats.total_version_conflicts_count` | 因版本衝突而將被捨棄的舊版本訊息數量。 |
+| `message_processor_stats.total_failed_count` | 處理期間發生錯誤的失敗訊息總數。 |
+| `message_processor_stats.total_failures_dropped_count` | 在重試次數用盡後被捨棄的失敗訊息總數。請注意，只有在使用 DROP 錯誤政策時，訊息才會被捨棄。 |
+| `message_processor_stats.total_processor_thread_interrupt_count` | 表示處理器執行緒上發生的執行緒中斷次數。 |
+| `consumer_stats.total_polled_count` | 從串流消費者輪詢取得的訊息總數。 |
+| `consumer_stats.total_consumer_error_count` | 消費者讀取嚴重錯誤的總數。 |
+| `consumer_stats.total_poller_message_failure_count` | 輪詢器上的失敗訊息總數。 |
+| `consumer_stats.total_poller_message_dropped_count` | 輪詢器上被捨棄的失敗訊息總數。 |
+| `consumer_stats.lag_in_millis` | 以毫秒為單位的延遲，計算方式為自最後一個已處理訊息的時間戳記起經過的時間。 |
+| `consumer_stats.pointer_based_lag` | 以 Apache Kafka 位移為基準的延遲，計算方式為最新可用位移與目前訊息位移之間的差異。此指標僅在使用 Apache Kafka 作為串流來源時適用。 |
 
-To retrieve shard-level pull-based ingestion metrics, use the [Nodes Stats API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/):
+若要擷取分片層級的拉取式匯入指標，請使用 [Nodes Stats API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/)：
 
 <!-- spec_insert_start
 component: example_code
@@ -251,11 +252,11 @@ response = client.nodes.info(
 <!-- spec_insert_end -->
 
 
-## Limitations
+## 限制
 
-The following limitations apply when using pull-based ingestion:
+使用拉取式匯入時，適用下列限制：
 
-* [Ingest pipelines]({{site.url}}{{site.baseurl}}/ingest-pipelines/) are not compatible with pull-based ingestion.
-* [Dynamic mapping]({{site.url}}{{site.baseurl}}/mappings/) is not supported.
-* [Index rollover]({{site.url}}{{site.baseurl}}/api-reference/index-apis/rollover/) is not supported.
-* Operation listeners are not supported.
+* [資料匯入管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/) 與拉取式匯入不相容。
+* 不支援[動態對應]({{site.url}}{{site.baseurl}}/mappings/)。
+* 不支援[索引輪替]({{site.url}}{{site.baseurl}}/api-reference/index-apis/rollover/)。
+* 不支援作業監聽器。

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: CAT segments
 parent: CAT APIs
@@ -9,17 +10,17 @@ redirect_from:
 ---
 
 # CAT Segments API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The cat segments operation lists Lucene segment-level information for each index.
+cat segments 操作會列出每個索引的 Lucene 區段層級資訊。
 
 
 <!-- spec_insert_start
 api: cat.segments
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_cat/segments
 GET /_cat/segments/{index}
@@ -33,23 +34,23 @@ component: query_parameters
 columns: Parameter, Data type, Description, Default
 include_deprecated: false
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `bytes` | String | The units used to display byte values. <br> Valid values are: `b`, `kb`, `k`, `mb`, `m`, `gb`, `g`, `tb`, `t`, `pb`, and `p`. | N/A |
-| `cluster_manager_timeout` | String | The amount of time allowed to establish a connection to the cluster manager node. | N/A |
-| `format` | String | A short version of the `Accept` header, such as `json` or `yaml`. | N/A |
-| `h` | List | A comma-separated list of column names to display. | N/A |
-| `help` | Boolean | Returns help information. | `false` |
-| `s` | List | A comma-separated list of column names or column aliases to sort by. | N/A |
-| `v` | Boolean | Enables verbose mode, which displays column headers. | `false` |
+| `bytes` | 字串 | 用於顯示位元組值的單位。<br> 有效值為：`b`、`kb`、`k`、`mb`、`m`、`gb`、`g`、`tb`、`t`、`pb` 和 `p`。 | N/A |
+| `cluster_manager_timeout` | 字串 | 允許用於建立與叢集管理員節點連線的時間。 | N/A |
+| `format` | 字串 | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
+| `h` | 清單 | 要顯示的資料行名稱清單，以逗號分隔。 | N/A |
+| `help` | 布林值 | 傳回說明資訊。 | `false` |
+| `s` | 清單 | 用於排序的資料行名稱或資料行別名清單，以逗號分隔。 | N/A |
+| `v` | 布林值 | 啟用詳細模式，以顯示資料行標頭。 | `false` |
 
 <!-- spec_insert_end -->
 
-## Example requests
+## 請求範例
 
 <!-- spec_insert_start
 component: example_code
@@ -73,7 +74,7 @@ response = client.cat.segments(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To see only the information about segments of a specific index, add the index name after your query.
+若要僅查看特定索引的區段資訊，請在您的查詢後面加上索引名稱。
 
 <!-- spec_insert_start
 component: example_code
@@ -98,7 +99,7 @@ response = client.cat.segments(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-If you want to get information for more than one index, separate the indexes with commas:
+如果您想取得多個索引的資訊，請以逗號分隔索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -122,7 +123,7 @@ response = client.cat.segments(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
 ```json
 index | shard | prirep | ip | segment | generation | docs.count | docs.deleted | size | size.memory | committed | searchable | version | compound
@@ -130,10 +131,10 @@ movies | 0 | p | 172.18.0.4 | _0 | 0 | 1 | 0 | 3.5kb | 1364 | true | true | 8.7.
 movies | 0 | r | 172.18.0.3 | _0 | 0 | 1 | 0 | 3.5kb | 1364 | true | true | 8.7.0 | true
 ```
 
-## Limiting the response size
+## 限制回應大小
 
-To limit the number of indexes returned, configure the `cat.segments.response.limit.number_of_indices` setting. For more information, see [Cluster-level CAT response limit settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/cluster-settings/#cluster-level-cat-response-limit-settings).
+若要限制傳回的索引數量，請設定 `cat.segments.response.limit.number_of_indices` 設定。如需詳細資訊，請參閱[叢集層級 CAT 回應限制設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/cluster-settings/#cluster-level-cat-response-limit-settings)。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:monitor/segments`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`indices:monitor/segments`。

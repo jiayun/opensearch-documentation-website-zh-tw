@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: CAT plugins
 parent: CAT APIs
@@ -9,16 +10,16 @@ redirect_from:
 ---
 
 # CAT Plugins API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The CAT plugins operation lists the names, components, and versions of the installed plugins.
+CAT plugins 操作會列出已安裝外掛程式的名稱、元件與版本。
 
 <!-- spec_insert_start
 api: cat.plugins
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_cat/plugins
 ```
@@ -31,25 +32,25 @@ component: query_parameters
 columns: Parameter, Data type, Description, Default
 include_deprecated: false
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `cluster_manager_timeout` | String | The amount of time allowed to establish a connection to the cluster manager node. | N/A |
-| `format` | String | A short version of the `Accept` header, such as `json` or `yaml`. | N/A |
-| `h` | List | A comma-separated list of column names to display. | N/A |
-| `help` | Boolean | Returns help information. | `false` |
-| `local` | Boolean | Returns local information but does not retrieve the state from the cluster manager node. | `false` |
-| `s` | List | A comma-separated list of column names or column aliases to sort by. | N/A |
-| `v` | Boolean | Enables verbose mode, which displays column headers. | `false` |
+| `cluster_manager_timeout` | 字串 | 建立與叢集管理員節點連線所允許的時間。 | N/A |
+| `format` | 字串 | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
+| `h` | 清單 | 以逗號分隔、要顯示的欄位名稱清單。 | N/A |
+| `help` | 布林值 | 傳回說明資訊。 | `false` |
+| `local` | 布林值 | 傳回本機資訊，但不從叢集管理員節點擷取狀態。 | `false` |
+| `s` | 清單 | 以逗號分隔、用於排序的欄位名稱或欄位別名清單。 | N/A |
+| `v` | 布林值 | 啟用詳細模式，顯示欄位標題。 | `false` |
 
 <!-- spec_insert_end -->
 
-## Example request
+## 範例請求
 
-The following example request lists all installed plugins:
+下列範例請求會列出所有已安裝的外掛程式：
 
 <!-- spec_insert_start
 component: example_code
@@ -73,7 +74,7 @@ response = client.cat.plugins(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 name             component                            version
@@ -96,26 +97,26 @@ opensearch-node1 opensearch-security                  3.3.2.0
 opensearch-node1 opensearch-sql                       3.3.2.0
 ```
 
-## Response columns
+## 回應欄位
 
-The following table lists all response columns. In the `h` and `s` query parameters, specify either the column name or its alias. To return this list from your cluster, send `GET /_cat/plugins?help`.
+下表列出所有回應欄位。在 `h` 與 `s` 查詢參數中，可指定欄位名稱或其別名。若要從您的叢集傳回此清單，請傳送 `GET /_cat/plugins?help`。
 
-Column | Alias | Description
+欄位 | 別名 | 說明
 :--- | :--- | :---
-`id` | - | The unique node identifier.
-`name` | `n` | The node name.
-`component` | `c` | The plugin component name.
-`version` | `v` | The plugin version.
-`description` | `d` | The plugin description and details.
+`id` | - | 節點的唯一識別碼。
+`name` | `n` | 節點名稱。
+`component` | `c` | 外掛程式元件名稱。
+`version` | `v` | 外掛程式版本。
+`description` | `d` | 外掛程式的說明與詳細資訊。
 
-To display specific columns, use the `h` query parameter. The following example request returns only the node name, component, and version columns:
+若要顯示特定欄位，請使用 `h` 查詢參數。下列範例請求只會傳回節點名稱、元件與版本欄位：
 
 ```json
 GET /_cat/plugins?v&h=name,component,version
 ```
 {% include copy-curl.html %}
 
-The response contains only the requested columns:
+回應只包含所請求的欄位：
 
 ```json
 name             component                            version
@@ -125,14 +126,14 @@ opensearch-node1 opensearch-asynchronous-search       3.8.0.0
 ...
 ```
 
-The following example request uses column aliases to return the node ID, component, and plugin description:
+下列範例請求使用欄位別名來傳回節點 ID、元件與外掛程式說明：
 
 ```json
 GET /_cat/plugins?v&h=id,c,d
 ```
 {% include copy-curl.html %}
 
-The response contains the requested columns:
+回應包含所請求的欄位：
 
 ```json
 id                     c                                    d
@@ -142,6 +143,6 @@ id                     c                                    d
 ...
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:monitor/nodes/info`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:monitor/nodes/info`。

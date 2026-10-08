@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Italian
+title: "義大利文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 220
 ---
 
-# Italian analyzer
+# 義大利文分析器
 
-The built-in `italian` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `italian` 分析器套用至文字欄位：
 
 ```json
 PUT /italian-index
@@ -25,9 +26,9 @@ PUT /italian-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，搭配此語言分析器使用 `stem_exclusion`：
 
 ```json
 PUT index_with_stem_exclusion_italian_analyzer
@@ -46,22 +47,22 @@ PUT index_with_stem_exclusion_italian_analyzer
 ```
 {% include copy-curl.html %}
 
-## Italian analyzer internals
+## 義大利文分析器內部結構
 
-The `italian` analyzer is built using the following components:
+`italian` 分析器由下列元件組成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
-  - elision (Italian)
+- 詞元篩選器：
+  - elision（義大利文）
   - lowercase
-  - stop (Italian)
+  - stop（義大利文）
   - keyword
-  - stemmer (Italian)
+  - stemmer（義大利文）
 
-## Custom Italian analyzer
+## 自訂義大利文分析器
 
-You can create a custom Italian analyzer using the following command:
+您可以使用下列命令建立自訂義大利文分析器：
 
 ```json
 PUT /italian-index
@@ -119,9 +120,9 @@ PUT /italian-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器所產生的詞元：
 
 ```json
 POST /italian-index/_analyze
@@ -132,7 +133,7 @@ POST /italian-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

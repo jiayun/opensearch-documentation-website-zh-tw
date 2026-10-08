@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Simple analyzer
+title: "Simple 分析器"
 parent: Analyzers
 nav_order: 100
 ---
 
-# Simple analyzer
+# Simple 分析器
 
-The `simple` analyzer is a very basic analyzer that breaks text into terms at non-letter characters and lowercases the terms. Unlike the `standard` analyzer, the `simple` analyzer treats everything except for alphabetic characters as delimiters, meaning that it does not recognize numbers, punctuation, or special characters as part of the tokens.
+`simple` 分析器是一種非常基本的分析器，會在非字母字元處將文字拆分為詞彙，並將詞彙轉換為小寫。與 `standard` 分析器不同，`simple` 分析器會將字母字元以外的所有字元視為分隔符號，這表示它不會將數字、標點符號或特殊字元視為詞元的一部分。
 
-## Example 
+## 範例
 
-Use the following command to create an index named `my_simple_index` with a `simple` analyzer:
+使用下列命令建立名為 `my_simple_index` 且使用 `simple` 分析器的索引：
 
 ```json
 PUT /my_simple_index
@@ -28,9 +29,9 @@ PUT /my_simple_index
 ```
 {% include copy-curl.html %}
 
-## Configuring a custom analyzer
+## 設定自訂分析器
 
-Use the following command to configure an index with a custom analyzer that is equivalent to a `simple` analyzer with an added `html_strip` character filter:
+使用下列命令為索引設定自訂分析器，該分析器等同於加入 `html_strip` 字元篩選器的 `simple` 分析器：
 
 ```json
 PUT /my_custom_simple_index
@@ -69,9 +70,9 @@ PUT /my_custom_simple_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用該分析器所產生的詞元：
 
 ```json
 POST /my_custom_simple_index/_analyze
@@ -82,7 +83,7 @@ POST /my_custom_simple_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

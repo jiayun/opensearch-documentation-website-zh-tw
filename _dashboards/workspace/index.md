@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Getting started with workspaces
+title: "工作區入門"
 parent: Workspaces
 nav_order: 0
 redirect_from:
   - /dashboards/workspace/
 ---
 
-# Getting started with workspaces
-**Introduced 2.18**
+# 工作區入門
+**於 2.18 版引入**
 {: .label .label-purple }
 
-OpenSearch Dashboards 2.18 introduces an enhanced home page that provides a comprehensive view of all your workspaces.
+OpenSearch Dashboards 2.18 引入了強化版首頁，提供您所有工作區的完整檢視。
 
-The new home page includes the following features: 
+新首頁包含下列功能：
 
-1. A **Create workspace** button for [OpenSearch Dashboard admins]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace-acl/#configuring-dashboard-administrators) to navigate to the [create workspace]({{site.url}}{{site.baseurl}}/dashboards/workspace/create-workspace/) page.
-2. Workspace access time information and a link to the workspace overview page.
-3. A use case information icon that displays information about the workspace's purpose.
-4. A **View all workspaces** button that navigates to the [workspace management]({{site.url}}{{site.baseurl}}/dashboards/workspace/manage-workspace/#navigating-the-workspaces-list) page.
-5. Links to the latest OpenSearch documentation through the **Learn more from documentation** button and to [OpenSearch Playground](https://playground.opensearch.org/app/home#/) through the **Explore live demo environment at playground.opensearch.org** button.
+1. **Create workspace** 按鈕，供 [OpenSearch Dashboards 管理員]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace-acl/#configuring-dashboard-administrators)前往[建立工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/create-workspace/)頁面。
+2. 工作區存取時間資訊，以及工作區概觀頁面的連結。
+3. 使用案例資訊圖示，顯示工作區用途的相關資訊。
+4. **View all workspaces** 按鈕，可前往[工作區管理]({{site.url}}{{site.baseurl}}/dashboards/workspace/manage-workspace/#navigating-the-workspaces-list)頁面。
+5. 透過 **Learn more from documentation** 按鈕連結至最新的 OpenSearch 文件，並透過 **Explore live demo environment at playground.opensearch.org** 按鈕連結至 [OpenSearch Playground](https://playground.opensearch.org/app/home#/)。
 
-The navigation logic ensures a seamless user experience by directing you to the appropriate page based on your workspace access level:
+導覽邏輯會根據您的工作區存取層級，將您導向適當的頁面，以確保流暢的使用者體驗：
 
-- If a you have a default workspace configured, you are directed to the workspace overview page.
-- If a you have only one workspace, you are directed to the overview page of that workspace.
-- If a you have multiple workspaces, you are directed to the new home page.
-- If a you have no workspaces, you are directed to the new home page.
+- 如果您已設定預設工作區，系統會將您導向該工作區的概觀頁面。
+- 如果您只有一個工作區，系統會將您導向該工作區的概觀頁面。
+- 如果您有多個工作區，系統會將您導向新首頁。
+- 如果您沒有任何工作區，系統會將您導向新首頁。

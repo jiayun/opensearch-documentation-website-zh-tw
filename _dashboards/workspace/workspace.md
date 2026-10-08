@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Workspaces
+title: "工作區"
 nav_order: 120
 has_children: true
 ---
 
-# Workspaces
-**Introduced 2.18**
+# 工作區
+**於 2.18 版推出**
 {: .label .label-purple }
 
-Workspaces enable you to tailor your environment with use-case-specific configurations. For example, you can create dedicated workspaces for observability scenarios, allowing you to focus on relevant functionalities. Additionally, you can organize visual assets, such as dashboards and visualizations, within a workspace with isolated storage.
+工作區可讓您透過特定使用案例的組態來調整您的環境。例如，您可以為可觀測性情境建立專用的工作區，讓您專注於相關功能。此外，您可以在具有隔離儲存空間的工作區中整理視覺資產，例如儀表板和視覺化。
 
-## Workspace data model
+## 工作區資料模型
 
-The workspace data model is defined by the following structure: 
+工作區資料模型由以下結構定義：
 
 ```typescript
 interface Workspace {
@@ -27,18 +28,18 @@ interface Workspace {
 ```
 {% include copy.html %}
 
-The workspace data model is composed of the following key attributes:
+工作區資料模型由以下主要屬性組成：
 
-- `id`: String type; unique ID for each workspace.
-- `name`: String type; designates the name of the workspace.
-- `description`: Optional string type; provides contextual information for the workspace.
-- `features`: Optional array of strings; contains use case IDs linked to the workspace.
+- `id`：字串類型；每個工作區的唯一 ID。
+- `name`：字串類型；指定工作區的名稱。
+- `description`：選用的字串類型；提供工作區的背景資訊。
+- `features`：選用的字串陣列；包含與工作區連結的使用案例 ID。
 
 ---
 
-#### Example workspace object
+#### 工作區物件範例
 
-The following object shows a typical workspace configuration:
+以下物件顯示典型的工作區組態：
 
 ```typescript
 {
@@ -50,9 +51,9 @@ The following object shows a typical workspace configuration:
 ```
 {% include copy.html %}
 
-The configuration creates the `Analytics team` using the `use-case-observability` feature set. Use cases map to specific feature groups, limiting functionality to the defined set within each workspace. 
+此組態使用 `use-case-observability` 功能集建立 `Analytics team`。使用案例會對應至特定的功能群組，將每個工作區中的功能限制在所定義的功能集內。
 
-The following are predefined use case options:
+以下為預先定義的使用案例選項：
 
 - `use-case-observability`
 - `use-case-security-analytics`
@@ -62,13 +63,13 @@ The following are predefined use case options:
 
 ---
 
-## Associating saved objects with workspaces
+## 將已儲存物件與工作區建立關聯
 
-Saved objects in OpenSearch Dashboards, such as dashboards, visualizations, and index patterns, can be associated with specific workspaces, improving organization and accessibility as the volume of objects grows.
+OpenSearch Dashboards 中的已儲存物件（例如儀表板、視覺化和索引模式）可以與特定工作區建立關聯，隨著物件數量增加，能提升組織性與可存取性。
 
-The `workspaces` attribute, an array of strings, is added to saved objects to be linked with one or more workspaces. As a result, saved objects such as dashboards and visualizations are only accessible within their designated workspaces. 
+`workspaces` 屬性是一個字串陣列，會新增至已儲存物件，以將其與一個或多個工作區連結。因此，儀表板和視覺化等已儲存物件只能在其指定的工作區中存取。
 
-The following saved object shows a dashboard object associated with the workspace `M5NqCu`:
+以下已儲存物件顯示與工作區 `M5NqCu` 建立關聯的儀表板物件：
 
 ```typescript
 {
@@ -79,9 +80,9 @@ The following saved object shows a dashboard object associated with the workspac
 ```
 {% include copy.html %}
 
-Saved objects support association with multiple workspaces, facilitating cross-team collaboration and resource sharing. This feature is useful when an object is relevant to multiple teams, projects, or use cases. 
+已儲存物件支援與多個工作區建立關聯，有助於跨團隊協作與資源共用。當某個物件與多個團隊、專案或使用案例相關時，此功能非常實用。
 
-The following example shows a data source object linked to multiple workspaces:
+以下範例顯示連結至多個工作區的資料來源物件：
 
 ```typescript
 {
@@ -92,15 +93,15 @@ The following example shows a data source object linked to multiple workspaces:
 ```
 {% include copy.html %}
 
-## Non-workspace saved objects
+## 非工作區已儲存物件
 
-Not all saved objects in OpenSearch Dashboards are associated with a workspace. Some objects operate independently of the workspace framework. These objects lack `workspace` attributes and serve system-wide functions. For example, the global user interface settings object manages configurations affecting the entire OpenSearch Dashboards interface in order to maintain consistent functionality across all workspaces.
+並非 OpenSearch Dashboards 中的所有已儲存物件都與工作區相關聯。有些物件獨立於工作區架構之外運作。這些物件沒有 `workspace` 屬性，並提供全系統的功能。例如，全域使用者介面設定物件會管理影響整個 OpenSearch Dashboards 介面的組態，以便在所有工作區中維持一致的功能。
 
-This dual approach allows OpenSearch Dashboards to balance granular, context-specific customization with overall system consistency. 
+這種雙重方式讓 OpenSearch Dashboards 能在細緻、因應情境的自訂與整體系統一致性之間取得平衡。
 
-## Enabling workspaces
+## 啟用工作區
 
-In your `opensearch_dashboards.yml` file, set the following options:
+在您的 `opensearch_dashboards.yml` 檔案中，設定以下選項：
 
 ```yaml
 workspace.enabled: true
@@ -110,11 +111,11 @@ uiSettings:
 ```
 {% include copy.html %}
 
-If your cluster has the Security plugin installed, then multi-tenancy must be disabled to avoid conflicts with similar workspaces:
+如果您的叢集已安裝 Security 外掛程式，則必須停用多租用戶功能，以避免與類似的工作區發生衝突：
 
 ```yaml
 opensearch_security.multitenancy.enabled: false
 ```
 {% include copy.html %}
 
-After updating the configuration file, restart OpenSearch Dashboards for the changes to take effect.
+更新組態檔案後，請重新啟動 OpenSearch Dashboards 以使變更生效。

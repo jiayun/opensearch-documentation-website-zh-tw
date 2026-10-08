@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Logs
+title: "記錄檔"
 parent: Configuring OpenSearch
 nav_order: 190
 redirect_from:
@@ -8,25 +9,25 @@ redirect_from:
   - /monitoring-your-cluster/logs/
 ---
 
-# Logs
+# 記錄檔
 
-The OpenSearch logs include valuable information for monitoring cluster operations and troubleshooting issues. The location of the logs differs based on the installation type:
+OpenSearch 記錄檔包含寶貴的資訊，可用於監控叢集作業及疑難排解。記錄檔的位置會因安裝類型而異：
 
-- On Docker, OpenSearch writes most logs to the console and stores the remainder in `opensearch/logs/`. The tarball installation also uses `opensearch/logs/`.
-- On most Linux installations, OpenSearch writes logs to `/var/log/opensearch/`.
+- 在 Docker 上，OpenSearch 會將大部分記錄檔寫入主控台，其餘則儲存在 `opensearch/logs/`。tarball 安裝同樣使用 `opensearch/logs/`。
+- 在大多數 Linux 安裝中，OpenSearch 會將記錄檔寫入 `/var/log/opensearch/`。
 
-Logs are available as `.log` (plain text) and `.json` files. Permissions for the OpenSearch logs are `-rw-r--r--` by default, meaning that any user account on the node can read them. You can change this behavior _for each log type_ in `log4j2.properties` using the `filePermissions` option. For example, you might add `appender.rolling.filePermissions = rw-r-----` to change permissions for the JSON server log. For details, see the [Log4j 2 documentation](https://logging.apache.org/log4j/2.x/manual/appenders.html#RollingFileAppender).
+記錄檔提供 `.log`（純文字）與 `.json` 檔案兩種格式。OpenSearch 記錄檔的權限預設為 `-rw-r--r--`，表示節點上的任何使用者帳戶都能讀取這些記錄檔。您可以在 `log4j2.properties` 中使用 `filePermissions` 選項，_針對每種記錄檔類型_ 變更此行為。例如，您可以新增 `appender.rolling.filePermissions = rw-r-----` 來變更 JSON 伺服器記錄檔的權限。如需詳細資訊，請參閱 [Log4j 2 文件](https://logging.apache.org/log4j/2.x/manual/appenders.html#RollingFileAppender)。
 
 
-## Application logs
+## 應用程式記錄檔
 
-For its application logs, OpenSearch uses [Apache Log4j 2](https://logging.apache.org/log4j/2.x/) and its built-in log levels (from least to most severe). The following table describes the logging settings.
+OpenSearch 的應用程式記錄檔使用 [Apache Log4j 2](https://logging.apache.org/log4j/2.x/) 及其內建的記錄層級（由最不嚴重到最嚴重）。下表說明記錄設定。
 
-| Setting | Data type | Description |
+| 設定 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `logger.org.opensearch.discovery` | String | Loggers accept Log4j2’s built-in log levels: `OFF`, `FATAL`, `ERROR`, `WARN`, `INFO`, `DEBUG`, and `TRACE`. Default is `INFO`. |
+| `logger.org.opensearch.discovery` | 字串 | 記錄器接受 Log4j2 的內建記錄層級：`OFF`、`FATAL`、`ERROR`、`WARN`、`INFO`、`DEBUG` 和 `TRACE`。預設為 `INFO`。 |
 
-Rather than changing the default log level (`logger.level`), you change the log level for individual OpenSearch modules:
+與其變更預設記錄層級（`logger.level`），不如變更個別 OpenSearch 模組的記錄層級：
 
 ```json
 PUT /_cluster/settings
@@ -39,10 +40,10 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-Common categories can be found in [Common core logging categories](#common-core-logging-categories) and [Plugin logger categories](#plugin-logger-categories); however, the easiest way to identify modules is not in the logs, which abbreviate the path (for example, `o.o.i.r`), but in the [OpenSearch source code](https://github.com/opensearch-project/opensearch/tree/master/server/src/main/java/org/opensearch).
+常見類別可參閱[常見核心記錄類別](#common-core-logging-categories)與[外掛程式記錄器類別](#plugin-logger-categories)；不過，識別模組最簡單的方式不是查看記錄檔（記錄檔會縮寫路徑，例如 `o.o.i.r`），而是查看 [OpenSearch 原始碼](https://github.com/opensearch-project/opensearch/tree/master/server/src/main/java/org/opensearch)。
 {: .tip }
 
-After this sample change, OpenSearch emits much more detailed logs during reindex operations:
+完成此範例變更後，OpenSearch 在重新編製索引作業期間會輸出更詳細的記錄檔：
 
 ```
 [2019-10-18T16:52:51,184][DEBUG][o.o.i.r.TransportReindexAction] [node1] [1626]: starting
@@ -60,20 +61,20 @@ After this sample change, OpenSearch emits much more detailed logs during reinde
 [2019-10-18T16:52:51,395][DEBUG][o.o.i.r.TransportReindexAction] [node1] Freed [1] contexts
 ```
 
-The DEBUG and TRACE levels are extremely verbose. If you enable either one to troubleshoot a problem, disable it after you finish.
+DEBUG 與 TRACE 層級的輸出極為冗長。如果您為了疑難排解而啟用其中任一層級，請在完成後將其停用。
 
-There are other ways to change log levels:
+還有其他方式可以變更記錄層級：
 
-1. Add lines to `opensearch.yml`:
+1. 在 `opensearch.yml` 中新增幾行：
 
    ```yml
    logger.org.opensearch.index.reindex: debug
    ```
    {% include copy.html %}
 
-   Modifying `opensearch.yml` makes the most sense if you want to reuse your logging configuration across multiple clusters or debug startup issues with a single node.
+   如果您想在多個叢集之間重複使用記錄組態，或針對單一節點偵錯啟動問題，修改 `opensearch.yml` 是最合適的做法。
 
-2. Modify `log4j2.properties`:
+2. 修改 `log4j2.properties`：
 
    ```properties
    # Define a new logger with unique ID of reindex
@@ -83,63 +84,63 @@ There are other ways to change log levels:
    ```
    {% include copy.html %}
 
-   This approach is extremely flexible but requires familiarity with the [Log4j 2 property file syntax](https://logging.apache.org/log4j/2.x/manual/configuration.html#Properties). In general, the other options offer a simpler configuration experience.
+   此方法極具彈性，但需要熟悉 [Log4j 2 屬性檔案語法](https://logging.apache.org/log4j/2.x/manual/configuration.html#Properties)。一般而言，其他選項提供較簡單的組態體驗。
 
-   If you examine the default `log4j2.properties` file in the configuration directory, you can see a few OpenSearch-specific variables:
+   如果您檢查組態目錄中預設的 `log4j2.properties` 檔案，可以看到幾個 OpenSearch 特有的變數：
 
    ```properties
    appender.console.layout.pattern = [%d{ISO8601}][%-5p][%-25c{1.}] [%node_name]%marker %m%n
    appender.rolling_old.fileName = ${sys:opensearch.logs.base_path}${sys:file.separator}${sys:opensearch.logs.cluster_name}.log
    ```
 
-   - `${sys:opensearch.logs.base_path}` is the directory for logs (for example, `/var/log/opensearch/`).
-   - `${sys:opensearch.logs.cluster_name}` is the name of the cluster.
-   - `${sys:opensearch.logs.node_name}` is the name of the node.
-   - `[%node_name]` is the name of the node.
+   - `${sys:opensearch.logs.base_path}` 是記錄檔的目錄（例如 `/var/log/opensearch/`）。
+   - `${sys:opensearch.logs.cluster_name}` 是叢集的名稱。
+   - `${sys:opensearch.logs.node_name}` 是節點的名稱。
+   - `[%node_name]` 是節點的名稱。
 
-### Common core logging categories
+### 常見核心記錄類別
 
-The following table lists the common core logging categories.
+下表列出常見的核心記錄類別。
 
-| Logger key prefix             | Description  | 
+| 記錄器金鑰前置詞             | 說明  | 
 | :--------- | :------- 
-| `org.opensearch.action`       | Transport actions, such as `index`, `bulk`, `get`, or `cluster` actions. Useful when tracing request execution across nodes.        |
-| `org.opensearch.cluster`      | Cluster state publication, routing, and metadata updates. Turn on for cluster formation, routing, and allocation issues.     |
-| `org.opensearch.discovery`    | Node discovery and cluster coordination. Helpful during cluster formation or network partition tests. Sub-packages include cloud discovery.   |
-| `org.opensearch.gateway`      | Gateway, ClusterState, Recoveries and Allocations. Useful for node restarts, shard allocations and shard recovery from on-disk and remote storage.       |
-| `org.opensearch.http`         | Low-level HTTP layer request handling. Use for issues with HTTP communication and settings.       |
-| `org.opensearch.index`        | Per-index internals, such as engine, translog, or shard operations. Use for shard/engine behavior debugging.     |
-| `org.opensearch.indices`      | Cross-index services, such as recovery, storage, or cluster state services. Enable during shard recovery and indexing pressure analysis.   |
-| `org.opensearch.ingest`       | Ingest pipelines and processors. Turn on when debugging pipeline execution.        |
-| `org.opensearch.node`         | Node lifecycle and bootstrap. Useful for addressing boot up issues.   |
-| `org.opensearch.repositories` | Snapshot/restore repository interactions, such as with Amazon Simple Storage Service (Amazon S3), Amazon Elastic File System (Amazon EFS), and others. Use for repository errors and snapshot coordination.    |
-| `org.opensearch.rest`         | REST handlers and routing to actions. Helpful for REST API handling details.      |
-| `org.opensearch.script`       | Scripting engine. Use for script compilation and execution debugging.     |
-| `org.opensearch.search`       | Search phase, such as `query`, `fetch`, or `rewrite`. Turn on for query execution debugging.      |
-| `org.opensearch.snapshots`    | Snapshot and restore orchestration. Use when diagnosing a snapshot lifecycle.        |
-| `org.opensearch.threadpool`   | Thread pool execution. Helpful for understanding queuing and pool saturation.     |
-| `org.opensearch.transport`    | Inter-node transport TCP layer. Use for node-to-node communication issues.         |
-| `org.opensearch.deprecation`  | Deprecation warnings. Useful during upgrades for finding deprecated APIs and settings.        |
+| `org.opensearch.action`       | 傳輸動作，例如 `index`、`bulk`、`get` 或 `cluster` 動作。適用於追蹤跨節點的請求執行。        |
+| `org.opensearch.cluster`      | 叢集狀態發布、路由及中繼資料更新。處理叢集形成、路由及配置問題時可啟用。     |
+| `org.opensearch.discovery`    | 節點探索與叢集協調。在叢集形成或網路分割測試期間很有幫助。子套件包含雲端探索。   |
+| `org.opensearch.gateway`      | Gateway、ClusterState、復原與配置。適用於節點重新啟動、分片配置，以及從本機磁碟與遠端儲存空間復原分片。       |
+| `org.opensearch.http`         | 低階 HTTP 層的請求處理。用於處理 HTTP 通訊與設定相關問題。       |
+| `org.opensearch.index`        | 個別索引的內部運作，例如引擎、translog 或分片作業。用於偵錯分片／引擎行為。     |
+| `org.opensearch.indices`      | 跨索引服務，例如復原、儲存或叢集狀態服務。在分析分片復原與索引壓力時啟用。   |
+| `org.opensearch.ingest`       | 資料匯入管線與處理器。偵錯管線執行時可啟用。        |
+| `org.opensearch.node`         | 節點生命週期與啟動程序。適用於處理開機問題。   |
+| `org.opensearch.repositories` | 快照／還原儲存庫互動，例如與 Amazon Simple Storage Service (Amazon S3)、Amazon Elastic File System (Amazon EFS) 等的互動。用於處理儲存庫錯誤與快照協調。    |
+| `org.opensearch.rest`         | REST 處理常式及至動作的路由。有助於了解 REST API 處理細節。      |
+| `org.opensearch.script`       | 指令碼引擎。用於偵錯指令碼編譯與執行。     |
+| `org.opensearch.search`       | 搜尋階段，例如 `query`、`fetch` 或 `rewrite`。偵錯查詢執行時可啟用。      |
+| `org.opensearch.snapshots`    | 快照與還原的協調作業。用於診斷快照生命週期。        |
+| `org.opensearch.threadpool`   | 執行緒集區執行。有助於了解佇列與集區飽和情形。     |
+| `org.opensearch.transport`    | 節點間傳輸 TCP 層。用於處理節點對節點的通訊問題。         |
+| `org.opensearch.deprecation`  | 淘汰警告。在升級期間可用於找出已淘汰的 API 與設定。        |
 
 
-### Plugin logger categories
+### 外掛程式記錄器類別
 
-The following table lists the common plugin logger categories.
+下表列出常見的外掛程式記錄器類別。
 
-| Plugin           | Logger prefix example            | Description           |
+| 外掛程式           | 記錄器前置詞範例            | 說明           |
 | :--------- | :------- | :------ |
-| Security         | `org.opensearch.security`        | Used for debugging authentication, authorization, and TLS within the Security plugin.  |
-| k-NN             | `org.opensearch.knn`             | Used for debugging k-NN index building, search, and memory management.     |
-| ML Commons       | `org.opensearch.ml`              | Used for model registration, inference, and task runners.  |
-| Alerting         | `org.opensearch.alerting`        | Used to monitor execution and notifications.     |
-| Index Management | `org.opensearch.indexmanagement` | Used for Index State Management (ISM) policies, rollups, and transforms.    |
-| Discovery -- Amazon Elastic Compute Cloud (Amazon EC2)  | `org.opensearch.discovery.ec2`   | Cloud discovery information.       |
+| Security         | `org.opensearch.security`        | 用於對 Security 外掛程式中的驗證、授權和 TLS 進行偵錯。  |
+| k-NN             | `org.opensearch.knn`             | 用於對 k-NN 索引建置、搜尋和記憶體管理進行偵錯。     |
+| ML Commons       | `org.opensearch.ml`              | 用於模型註冊、推論和任務執行器。  |
+| Alerting         | `org.opensearch.alerting`        | 用於監視執行和通知。     |
+| Index Management | `org.opensearch.indexmanagement` | 用於 Index State Management (ISM) 原則、彙整 (rollup) 和轉換 (transform)。    |
+| Discovery -- Amazon Elastic Compute Cloud (Amazon EC2)  | `org.opensearch.discovery.ec2`   | 雲端探索資訊。       |
 
 
 
-## Error logs
+## 錯誤記錄檔
 
-OpenSearch logs errors at the `WARN`, `ERROR`, and `FATAL` levels. Additionally, certain exceptions from the `DEBUG` level are logged, including the following:
+OpenSearch 會記錄 `WARN`、`ERROR` 和 `FATAL` 層級的錯誤。此外，也會記錄 `DEBUG` 層級的某些例外狀況，包括下列項目：
 
 - `org.opensearch.index.mapper.MapperParsingException`
 - `org.opensearch.index.query.QueryShardException`
@@ -147,23 +148,23 @@ OpenSearch logs errors at the `WARN`, `ERROR`, and `FATAL` levels. Additionally,
 - `org.opensearch.common.util.concurrent.OpenSearchRejectedExecutionException`
 - `java.lang.IllegalArgumentException`
 
-Error logs can help with troubleshooting in many situations, including the following:
+錯誤記錄檔可協助您在許多情況下進行疑難排解，包括下列情況：
 
-- Painless script compilation issues
-- Invalid queries
-- Indexing issues
-- Snapshot failures
-- Index State Management migration failures
+- Painless 指令碼編譯問題
+- 無效的查詢
+- 編製索引問題
+- 快照失敗
+- Index State Management 遷移失敗
 
-### Mapper parsing exception scope
+### Mapper 剖析例外狀況的範圍
 
-Mapper parsing exceptions are logged only when they are triggered by explicit mapping requests, such as the [Put Mapping API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/put-mapping/) requests. They are not logged when triggered by document indexing operations, such as the [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) or the [Index API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/index-document/) requests. For example, if a document contains a field value that conflicts with the index mapping (for example, when you send a string value in an integer field), the Bulk API returns a `mapper_parsing_exception` in the response body, but this error is not written to the error logs. To identify documents causing a `mapper_parsing_exception` during bulk indexing, inspect the Bulk API response for errors rather than relying on error logs.
+只有在由明確的對應請求 (例如 [Put Mapping API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/put-mapping/) 請求) 觸發時，才會記錄 Mapper 剖析例外狀況。若是由文件編製索引作業 (例如 [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) 或 [Index API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/index-document/) 請求) 觸發，則不會記錄。例如，若文件包含與索引對應衝突的欄位值 (例如在整數欄位中傳送字串值)，Bulk API 會在回應本文中傳回 `mapper_parsing_exception`，但此錯誤不會寫入錯誤記錄檔。若要找出在大量編製索引期間造成 `mapper_parsing_exception` 的文件，請檢查 Bulk API 回應中的錯誤，而不要依賴錯誤記錄檔。
 
-## Search request slow logs
+## 搜尋請求慢速記錄檔
 
-New in version 2.12, OpenSearch offers request-level slow logs for search. These logs rely on thresholds to define what qualifies as "slow." All requests which exceed the threshold are logged.
+OpenSearch 自 2.12 版起提供搜尋的請求層級慢速記錄檔。這些記錄檔依據閾值來定義何謂「慢速」。所有超過閾值的請求都會被記錄。
 
-Search request slow logs are enabled dynamically through the [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/). Unlike shard slow logs, search request slow log thresholds are configured for total request took time. By default, logs are disabled (all thresholds are set to `-1`).
+搜尋請求慢速記錄檔是透過 [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/) 動態啟用的。與分片慢速記錄檔不同，搜尋請求慢速記錄檔的閾值是針對請求的總耗用時間 (took time) 設定的。記錄檔預設為停用 (所有閾值皆設為 `-1`)。
 
 ```json
 PUT /_cluster/settings
@@ -179,22 +180,22 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-A line from `opensearch_index_search_slowlog.log` might look like this:
+`opensearch_index_search_slowlog.log` 中的一行內容可能如下所示：
 
 ```plaintext
 [2023-10-30T15:47:42,630][TRACE][c.s.r.slowlog] [runTask-0] took[80.8ms], took_millis[80], phase_took_millis[{expand=0, query=39, fetch=22}], total_hits[4 hits], search_type[QUERY_THEN_FETCH], shards[{total: 10, successful: 10, skipped: 0, failed: 0}], indices[index_1, index_2, my_index_*], source[{"query":{"match_all":{"boost":1.0}}}], id[]
 ```
 
-Search request slow logs can consume considerable disk space and affect performance if you set low threshold values. Consider enabling them temporarily for troubleshooting or performance tuning. To disable search request slow logs, return all thresholds to `-1`.
+若您設定較低的閾值，搜尋請求慢速記錄檔可能會佔用大量磁碟空間並影響效能。建議您僅在疑難排解或效能調校時暫時啟用。若要停用搜尋請求慢速記錄檔，請將所有閾值恢復為 `-1`。
 {: .important}
 
-## Shard slow logs
+## 分片慢速記錄檔
 
-OpenSearch has two *shard slow logs*, logs that help you identify performance issues: the search slow log and the indexing slow log.
+OpenSearch 有兩種*分片慢速記錄檔*，可協助您找出效能問題：搜尋慢速記錄檔和編製索引慢速記錄檔。
 
-These logs rely on thresholds to define what qualifies as a "slow" search or "slow" indexing operation. For example, you might decide that a query is slow if it takes more than 15 seconds to complete. Unlike application logs, which you configure for modules, you configure slow logs for indexes. By default, both logs are disabled (all thresholds are set to `-1`).
+這些記錄檔依據閾值來定義何謂「慢速」搜尋或「慢速」編製索引作業。例如，您可以決定若查詢需要超過 15 秒才能完成，就視為慢速。與針對模組設定的應用程式記錄檔不同，慢速記錄檔是針對索引設定的。這兩種記錄檔預設皆為停用 (所有閾值皆設為 `-1`)。
 
-Unlike search request slow logs, shard slow log thresholds are configured for individual shard took time.
+與搜尋請求慢速記錄檔不同，分片慢速記錄檔的閾值是針對個別分片的耗用時間 (took time) 設定的。
 
 ```json
 GET {some-index}/_settings?include_defaults=true
@@ -237,7 +238,7 @@ GET {some-index}/_settings?include_defaults=true
 ```
 {% include copy-curl.html %}
 
-To enable these logs, increase one or more thresholds:
+若要啟用這些記錄檔，請提高一或多個閾值：
 
 ```json
 PUT {some-index}/_settings
@@ -260,26 +261,26 @@ PUT {some-index}/_settings
 ```
 {% include copy-curl.html %}
 
-In this example, OpenSearch logs indexing operations that take 15 seconds or longer at the WARN level and operations that take between 10 and 14.*x* seconds at the INFO level. If you set a threshold to 0 seconds, OpenSearch logs all operations, which can be useful for testing whether slow logs are indeed enabled.
+在此範例中，OpenSearch 會以 WARN 層級記錄耗時 15 秒以上的編製索引作業，並以 INFO 層級記錄耗時介於 10 到 14.*x* 秒之間的作業。若您將閾值設為 0 秒，OpenSearch 會記錄所有作業，這有助於測試慢速記錄檔是否確實已啟用。
 
-- `reformat` specifies whether to log the document `_source` field as a single line (`true`) or let it span multiple lines (`false`).
-- `source` is the number of characters of the document `_source` field to log.
-- `level` is the minimum log level to include.
+- `reformat` 指定是將文件的 `_source` 欄位記錄為單行 (`true`)，還是允許跨越多行 (`false`)。
+- `source` 是要記錄的文件 `_source` 欄位字元數。
+- `level` 是要納入的最低記錄層級。
 
-A line from `opensearch_index_indexing_slowlog.log` might look like this:
+`opensearch_index_indexing_slowlog.log` 中的一行內容可能如下所示：
 
 ```plaintext
 node1 | [2019-10-24T19:48:51,012][WARN][i.i.s.index] [node1] [some-index/i86iF5kyTyy-PS8zrdDeAA] took[3.4ms], took_millis[3], type[_doc], id[1], routing[], source[{"title":"Your Name", "Director":"Makoto Shinkai"}]
 ```
 
-Shard slow logs can consume considerable disk space and affect performance if you set low threshold values. The logs produced are more verbose than [Search request slow logs](#search-request-slow-logs). Consider enabling them temporarily for troubleshooting or performance tuning. To disable shard slow logs, return all thresholds to `-1`.
+若您設定較低的閾值，分片慢速記錄檔可能會佔用大量磁碟空間並影響效能。其產生的記錄比[搜尋請求慢速記錄檔](#search-request-slow-logs)更為詳細。建議您僅在疑難排解或效能調校時暫時啟用。若要停用分片慢速記錄檔，請將所有閾值恢復為 `-1`。
 {: .important}
 
-## Task logs
+## 任務記錄檔
 
-OpenSearch can log CPU time and memory utilization for the top N memory-expensive search tasks when task resource consumers are enabled. By default, task resource consumers will log the top 10 search tasks at 60 second intervals. These values can be configured in `opensearch.yml`.
+啟用任務資源取用者後，OpenSearch 可以記錄前 N 個最耗用記憶體的搜尋任務的 CPU 時間與記憶體使用率。預設情況下，任務資源取用者會每隔 60 秒記錄前 10 個搜尋任務。這些值可以在 `opensearch.yml` 中設定。
 
-Task logging is enabled dynamically through the [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/):
+任務記錄可透過 [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/) 動態啟用：
 
 ```json
 PUT _cluster/settings
@@ -291,12 +292,12 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-Enabling task resource consumers can have an impact on search latency.
+啟用任務資源取用者可能會影響搜尋延遲。
 {:.tip}
 
-Once enabled, logs will be written to `logs/opensearch_task_detailslog.json` and `logs/opensearch_task_detailslog.log`.
+啟用後，記錄檔會寫入 `logs/opensearch_task_detailslog.json` 和 `logs/opensearch_task_detailslog.log`。
 
-To configure the logging interval and the number of search tasks logged, add the following lines to `opensearch.yml`:
+若要設定記錄間隔及要記錄的搜尋任務數量，請將下列幾行新增至 `opensearch.yml`：
 
 ```yaml
 # Number of expensive search tasks to log
@@ -307,6 +308,6 @@ cluster.task.consumers.top_n.frequency:30s
 ```
 {% include copy.html %}
 
-## Deprecation logs
+## 棄用記錄檔
 
-Deprecation logs record when clients make deprecated API calls to your cluster. These logs can help you identify and fix issues prior to upgrading to a new major version. By default, OpenSearch logs deprecated API calls at the WARN level, which works well for almost all use cases. If desired, configure `logger.deprecation.level` using `_cluster/settings`, `opensearch.yml`, or `log4j2.properties`.
+棄用記錄檔會記錄用戶端何時對您的叢集發出已棄用的 API 呼叫。這些記錄檔可協助您在升級至新的主要版本之前找出並修正問題。預設情況下，OpenSearch 會以 WARN 層級記錄已棄用的 API 呼叫，這適用於幾乎所有使用案例。如有需要，可使用 `_cluster/settings`、`opensearch.yml` 或 `log4j2.properties` 設定 `logger.deprecation.level`。

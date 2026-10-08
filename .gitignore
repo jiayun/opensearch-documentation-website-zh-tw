@@ -1,3 +1,4 @@
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 _site
 .sass-cache
 .jekyll-metadata
@@ -15,3 +16,12 @@ node_modules
 cdk*
 .dev*
 CLAUDE.md
+
+# zh-TW translation pipeline working cache (logs, chunk results, journal)
+.translation-cache/
+
+# Reproducible zh-TW build dependencies
+!Gemfile.lock
+!.ruby-version
+__pycache__/
+*.pyc

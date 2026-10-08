@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Command flags
+title: "命令旗標"
 nav_order: 150
 parent: Command reference
 redirect_from:
@@ -8,352 +9,352 @@ redirect_from:
 grand_parent: Reference
 ---
 
-# Command flags
-OpenSearch Benchmark uses command line flags to change Benchmark's behavior. Not all flags can be used with each command. To find out which flags are supported by a specific command, enter `opensearch-benchmark <command> --h`.
+# 命令旗標
+OpenSearch Benchmark 使用命令列旗標來變更 Benchmark 的行為。並非所有旗標都能搭配每個命令使用。若要了解特定命令支援哪些旗標，請輸入 `opensearch-benchmark <command> --h`。
 
-All command flags are added to a command using the following syntax:
+所有命令旗標都使用下列語法加入命令中：
 
 ```bash
 opensearch-benchmark <command> --<command-flag>
 ```
 
-Flags that accept comma-separated values, such `--telemetry`, can also accept a JSON array. This can be defined by passing a file path ending in `.json` or inline as a JSON string.
+接受以逗號分隔值的旗標（例如 `--telemetry`）也可以接受 JSON 陣列。您可以傳入以 `.json` 結尾的檔案路徑，或以內嵌 JSON 字串的方式來定義。
 
-- Comma-seperated values: `opensearch-benchmark ... --test-procedure="ingest-only,search-aggregations"`
-- JSON file: `opensearch-benchmark ... --workload-params="params.json"`
-- JSON inline string: `opensearch-benchmark  ... --telemetry='["node-stats", "recovery-stats"]'`
+- 以逗號分隔的值：`opensearch-benchmark ... --test-procedure="ingest-only,search-aggregations"`
+- JSON 檔案：`opensearch-benchmark ... --workload-params="params.json"`
+- 內嵌 JSON 字串：`opensearch-benchmark  ... --telemetry='["node-stats", "recovery-stats"]'`
 
 <!-- vale off -->
 ## workload-path
 <!-- vale on -->
 
-This can be either a directory that contains a `workload.json` file or a `.json` file with an arbitrary name that contains a workload specification. `--workload-path` and `--workload-repository` as well as `--workload` are mutually exclusive.
+這可以是包含 `workload.json` 檔案的目錄，或是名稱任意且包含工作負載規格的 `.json` 檔案。`--workload-path`、`--workload-repository` 以及 `--workload` 彼此互斥。
 
 <!-- vale off -->
 ## workload-repositor
 <!-- vale on -->
 
-This defines the repository from which OpenSearch Benchmark loads workloads. `--workload-path` and `--workload-repository` as well as `--workload` are mutually exclusive.
+定義 OpenSearch Benchmark 載入工作負載的來源儲存庫。`--workload-path`、`--workload-repository` 以及 `--workload` 彼此互斥。
 
 <!-- vale off -->
 ## workload-revision
 <!-- vale on -->
 
-Defines a specific revision from the workload source tree that OpenSearch Benchmark should use.
+定義 OpenSearch Benchmark 應使用的工作負載來源樹特定修訂版本。
 
 <!-- vale off -->
 ## workload
 <!-- vale on -->
 
-Defines the workload to use based on the workload's name. You can find a list of preloaded workloads using `opensearch-benchmark list workloads`. `--workload-path` and `--workload-repository` as well as `--workload` are mutually exclusive.
+依據工作負載的名稱定義要使用的工作負載。您可以使用 `opensearch-benchmark list workloads` 查看預先載入的工作負載清單。`--workload-path`、`--workload-repository` 以及 `--workload` 彼此互斥。
 
 <!-- vale off -->
 ## workload-params
 <!-- vale on -->
 
-Defines the variables to inject into the workload. Injected variables must be available in the workload. You can pass parameters as a JSON file, inline JSON, or comma-separated key-value pairs. For more information, including template syntax, precedence, and common parameters for each workload, see [Workload parameters]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/parameters/).
+定義要注入工作負載的變數。注入的變數必須可在工作負載中使用。您可以將參數以 JSON 檔案、內嵌 JSON 或以逗號分隔的鍵值組傳入。如需詳細資訊（包括範本語法、優先順序以及各工作負載的常用參數），請參閱[工作負載參數]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/parameters/)。
 
 <!-- vale off -->
 ## test-procedure
 <!-- vale on -->
 
-Defines the test procedures to use with each workload. You can find a list of test procedures that the workload supports by specifying the workload in the `info` command, for example, `opensearch-benchmark info --workload=<workload_name>`. To look up information on a specific test procedure, use the command `opensearch-benchmark info --workload=<workload_name> --test-procedure=<test-procedure>`.
+定義每個工作負載要使用的測試程序。您可以在 `info` 命令中指定工作負載，以查看該工作負載支援的測試程序清單，例如 `opensearch-benchmark info --workload=<workload_name>`。若要查詢特定測試程序的資訊，請使用命令 `opensearch-benchmark info --workload=<workload_name> --test-procedure=<test-procedure>`。
 
 <!-- vale off -->
 ## test-execution-id
 <!-- vale on -->
 
-Defines a unique ID for the test run.
+定義測試執行的唯一 ID。
 
 <!-- vale off -->
 ## include-tasks
 <!-- vale on -->
 
-Defines a comma-separated list of test procedure tasks to run. By default, all tasks listed in a test procedure array are run.
+定義以逗號分隔的要執行測試程序任務清單。根據預設，會執行測試程序陣列中列出的所有任務。
 
-Tasks are run in the order they are defined in `test-procedure`---not in the order they are defined in the command.
+任務會依照其在 `test-procedure` 中定義的順序執行，而非依照其在命令中定義的順序。
 
-All task filters are case sensitive.
+所有任務篩選條件都會區分大小寫。
 
 <!-- vale off -->
 ## exclude-tasks
 <!-- vale on -->
 
-Defines a comma-separated list of test procedure tasks not to run.
+定義以逗號分隔的不執行測試程序任務清單。
 
 <!-- vale off -->
 ## baseline
 <!-- vale on -->
 
-The baseline TestRun ID used to compare the contender TestRun.
+用來與競爭者 TestRun 比較的基準 TestRun ID。
 
 <!-- vale off -->
 ## contender
 <!-- vale on -->
 
-The TestRun ID for the contender being compared to the baseline.
+要與基準進行比較的競爭者 TestRun ID。
 
 <!-- vale off -->
 ## results-format
 <!-- vale on -->
 
-Defines the output format for the command line results, either `markdown` or `csv`. Default is `markdown`.
+定義命令列結果的輸出格式，可為 `markdown` 或 `csv`。預設為 `markdown`。
 
 
 <!-- vale off -->
 ## results-number-align
 <!-- vale on -->
 
-Defines the column number alignment for when the `compare` command outputs results. Default is `right`.
+定義 `compare` 命令輸出結果時的欄位數字對齊方式。預設為 `right`。
 
 <!-- vale off -->
 ## results-file
 <!-- vale on -->
 
-When provided a file path, writes the compare results to the file indicated in the path.
+提供檔案路徑時，會將比較結果寫入路徑所指示的檔案。
 
 <!-- vale off -->
 ## show-in-results
 <!-- vale on -->
 
-Determines whether or not to include the comparison in the results file.
+決定是否要在結果檔案中包含比較內容。
 
 <!-- vale off -->
 ## cluster-config-repository
 <!-- vale on -->
 
-Defines the repository from which OpenSearch Benchmark loads `cluster-configs` and `cluster-config-instances`.
+定義 OpenSearch Benchmark 載入 `cluster-configs` 和 `cluster-config-instances` 的來源儲存庫。
 
 <!-- vale off -->
 ## cluster-config-revision
 <!-- vale on -->
 
-Defines the specific Git revision in the `cluster-config` that OpenSearch Benchmark should use.
+定義 OpenSearch Benchmark 應使用的 `cluster-config` 中特定 Git 修訂版本。
 
 <!-- vale off -->
 ## cluster-config-path
 <!-- vale on -->
 
-Defines the path to the `--cluster-config-instance` and any OpenSearch plugin configurations to use.
+定義要使用的 `--cluster-config-instance` 及任何 OpenSearch 外掛程式組態的路徑。
 
 <!-- vale off -->
 ## distribution-version
 <!-- vale on -->
 
-Downloads the specified OpenSearch distribution based on version number. For a list of released OpenSearch versions, see [Version history]({{site.url}}{{site.latesturl}}/version-history/).
+根據版本號碼下載指定的 OpenSearch 發行版本。如需已發行的 OpenSearch 版本清單，請參閱[版本歷程記錄]({{site.url}}{{site.latesturl}}/version-history/)。
 
 <!-- vale off -->
 ## distribution-repository
 <!-- vale on -->
 
-Defines the repository from which the OpenSearch distribution should be downloaded. Default is `release`.
+定義下載 OpenSearch 發行版本的來源儲存庫。預設為 `release`。
 
 <!-- vale off -->
 ## cluster-config-instance
 <!-- vale on -->
 
-Defines the `--cluster-config-instance` to use. You can view possible configuration instances by using the command `opensearch-benchmark list cluster-config-instances`.
+定義要使用的 `--cluster-config-instance`。您可以使用命令 `opensearch-benchmark list cluster-config-instances` 檢視可用的組態執行個體。
 
 <!-- vale off -->
 ## cluster-config-instance-params
 <!-- vale on -->
 
-A comma-separated list of key-value pairs injected verbatim as variables for the `cluster-config-instance`.
+以逗號分隔的鍵值組清單，會以原樣作為變數注入 `cluster-config-instance`。
 
 <!-- vale off -->
 ## target-hosts
 <!-- vale on -->
 
-Defines a comma-separated list of host-port pairs that should be targeted if using the pipeline `benchmark-only`. Default is `localhost:9200`.
+定義使用管線 `benchmark-only` 時應作為目標、以逗號分隔的主機與連接埠組清單。預設為 `localhost:9200`。
 
 <!-- vale off -->
 ## target-os
 <!-- vale on -->
 
-The target operating system for which the OpenSearch artifact should be downloaded. Default is the current operating system.
+要下載 OpenSearch 成品的目標作業系統。預設為目前的作業系統。
 
 <!-- vale off -->
 ## target-arch
 <!-- vale on -->
 
-The name of the CPU architecture for which an artifact should be downloaded.
+要下載成品的 CPU 架構名稱。
 
 <!-- vale off -->
 ## revision
 <!-- vale on -->
 
-Defines the current source code revision to use for running a benchmark test. Default is `current`.
+定義執行基準測試時要使用的目前原始碼修訂版本。預設為 `current`。
 
-This command flag can use the following options:
+此命令旗標可使用下列選項：
 
-   - `current`: Uses the source tree's current revision based on your OpenSearch distribution.
-   - `latest`: Fetches the latest revision from the main branch of the source tree.
+   - `current`：根據您的 OpenSearch 發行版本，使用來源樹的目前修訂版本。
+   - `latest`：從來源樹的 main 分支擷取最新修訂版本。
 
-You can also use a timestamp or commit ID from the source tree. When using a timestamp, specify `@ts`, where "ts" is a valid ISO 8601 timestamp, for example, `@2013-07-27T10:37:00Z`.
+您也可以使用來源樹中的時間戳記或 commit ID。使用時間戳記時，請指定 `@ts`，其中「ts」是有效的 ISO 8601 時間戳記，例如 `@2013-07-27T10:37:00Z`。
 
 <!-- vale off -->
 ## opensearch-plugins
 <!-- vale on -->
 
-Defines which [OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/) to install. By default, no plugins are installed.
+定義要安裝哪些 [OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)。根據預設，不會安裝任何外掛程式。
 
 <!-- vale off -->
 ## plugin-params
 <!-- vale on -->
 
-Defines a comma-separated list of key-value pairs that are injected verbatim into all plugins as variables.
+定義以逗號分隔的鍵值組清單，這些鍵值組會以原樣作為變數注入所有外掛程式。
 
 <!-- vale off -->
 ## runtime-jdk
 <!-- vale on -->
 
-The major version of JDK to use.
+要使用的 JDK 主要版本。
 
 
 <!-- vale off -->
 ## client-options
 <!-- vale on -->
 
-Defines a comma-separated list of clients to use. All options are passed to the OpenSearch Python client. Default is `timeout:60`.
+定義以逗號分隔的要使用用戶端清單。所有選項都會傳遞給 OpenSearch Python 用戶端。預設為 `timeout:60`。
 
 <!-- vale off -->
 ## worker-ips
 <!-- vale on -->
 
-Defines a comma-separated list of hosts that coordinate loads. Default is `localhost`.
+定義以逗號分隔的協調負載主機清單。預設為 `localhost`。
 
 <!-- vale off -->
 ## enable-worker-coordinator-profiling
 <!-- vale on -->
 
-Enables a performance analysis of OpenSearch Benchmark's worker coordinator. Default is `false`.
+啟用 OpenSearch Benchmark 工作者協調器的效能分析。預設為 `false`。
 
 <!-- vale off -->
 ## pipeline
 <!-- vale on -->
 
-The `--pipeline` option selects a pipeline to run. You can find a list of pipelines supported by OpenSearch Benchmark by running `opensearch-benchmark list pipelines`.
+`--pipeline` 選項會選取要執行的管線。您可以執行 `opensearch-benchmark list pipelines` 來查看 OpenSearch Benchmark 支援的管線清單。
 
 <!-- vale off -->
 ## telemetry
 <!-- vale on -->
 
-Enables the provided telemetry devices when the devices are provided using a comma-separated list. You can find a list of possible telemetry devices by using `opensearch-benchmark list telemetry`.
+以逗號分隔清單提供遙測裝置時，會啟用所提供的遙測裝置。您可以使用 `opensearch-benchmark list telemetry` 查看可用的遙測裝置清單。
 
 <!-- vale off -->
 ## telemetry-params
 <!-- vale on -->
 
-Enables setting parameters for telemetry devices. Accepts a list of comma-separated key-value pairs, each of which are delimited by a colon or a JSON file name.
+可為遙測裝置設定參數。接受以逗號分隔的鍵值組清單（每組鍵值以冒號分隔），或 JSON 檔案名稱。
 
 <!-- vale off -->
 ## on-error
 <!-- vale on -->
 
-Controls how OpenSearch Benchmark responds to errors. Default is `continue`.
+控制 OpenSearch Benchmark 如何回應錯誤。預設為 `continue`。
 
-You can use the following options with this command flag:
+您可以搭配此命令旗標使用下列選項：
 
-- `continue`: Continues to run the test despite the error.
-- `abort`: Aborts the test when an error occurs.
+- `continue`：即使發生錯誤仍繼續執行測試。
+- `abort`：發生錯誤時中止測試。
 
 <!-- vale off -->
 ## preserve-install
 <!-- vale on -->
 
-Keeps the Benchmark candidate and its index. Default is `false`.
+保留 Benchmark 候選項目及其索引。預設為 `false`。
 
 <!-- vale off -->
 ## kill-running-processes
 <!-- vale on -->
 
-When set to `true`, stops any OpenSearch Benchmark processes currently running and allows Benchmark to continue to run. Default is `false`.
+設為 `true` 時，會停止目前正在執行的所有 OpenSearch Benchmark 處理程序，並讓 Benchmark 繼續執行。預設為 `false`。
 
 <!-- vale off -->
 ## chart-spec-path
 <!-- vale on -->
 
-Sets the path to the JSON files containing chart specifications that can be used to generate charts.
+設定包含圖表規格的 JSON 檔案路徑，這些規格可用來產生圖表。
 
 <!-- vale off -->
 ## chart-type
 <!-- vale on -->
 
-Generates the indicated chart type, either `time-series` or `bar`. Default is `time-series`.
+產生指定的圖表類型，可為 `time-series` 或 `bar`。預設為 `time-series`。
 
 <!-- vale off -->
 ## output-path
 <!-- vale on -->
 
-The name and path used for the chart's output. Default is `stdout`.
+圖表輸出所使用的名稱與路徑。預設為 `stdout`。
 
 <!-- vale off -->
 ## limit
 <!-- vale on -->
 
-Limits the number of search results for recent test runs. Default is `10`.
+限制近期測試執行的搜尋結果數量。預設為 `10`。
 
 <!-- vale off -->
 ## latency-percentiles
 <!-- vale on -->
 
-Specifies a comma-separated list of latency percentiles to report after the workload runs. Accepts `ints` or `floats` with values between `0` and `100`, inclusive. Does not accept `min`, `median`, `mean`, or `max`. Default is `50,90,99,99.9,99.99,100`.
+指定以逗號分隔的延遲百分位數清單，在工作負載執行後回報。接受介於 `0` 與 `100` 之間（含）的 `ints` 或 `floats` 值。不接受 `min`、`median`、`mean` 或 `max`。預設為 `50,90,99,99.9,99.99,100`。
 
 <!-- vale off -->
 ## throughput-percentiles
 <!-- vale on -->
 
-Specifies a list of throughput percentiles to report after the workload runs. Like `--latency-percentiles`, the setting accepts `ints` or `floats` with values between `0` and `100`, inclusive. Does not accept `min`, `median`, `mean`, or `max`. Default is `None`.
+指定工作負載執行後要回報的輸送量百分位數清單。與 `--latency-percentiles` 相同，此設定接受介於 `0` 與 `100` 之間（含）的 `ints` 或 `floats` 值。不接受 `min`、`median`、`mean` 或 `max`。預設為 `None`。
 
 <!-- vale off -->
 ## randomization-enabled
 <!-- vale on -->
 
-Enables randomization of values in `range` queries, where the values are drawn from standard value functions registered with `register_standard_value_source` in the workload's `workload.py` file.
+啟用 `range` 查詢中值的隨機化，這些值取自在工作負載 `workload.py` 檔案中以 `register_standard_value_source` 註冊的標準值函式。
 
-A standard value function is a no-argument function that generates a random pair of values for a certain field, in a dict with keys `"gte"`, `"lte"`, and, optionally, `"format"`.
+標準值函式是不帶引數的函式，會為特定欄位產生一組隨機值，並以包含鍵 `"gte"`、`"lte"` 以及選用的 `"format"` 的 dict 傳回。
 
-If this argument is `True` but a search operation does not have a registered standard value function, OpenSearch Benchmark raises a `SystemSetupError`. Default is `False`.
+若此引數為 `True`，但某個搜尋作業沒有已註冊的標準值函式，OpenSearch Benchmark 會引發 `SystemSetupError`。預設為 `False`。
 
 
 <!-- vale off -->
 ## randomization-repeat-frequency
 <!-- vale on -->
 
-Sets what fraction of randomized query values can be repeated. Takes values between `0.0` and `1.0`. Default is `0.3`. This setting does not work when `--randomization-enabled` is not used.
+設定隨機化查詢值中可重複的比例。接受介於 `0.0` 與 `1.0` 之間的值。預設為 `0.3`。未使用 `--randomization-enabled` 時，此設定不會生效。
 
 <!-- vale off -->
 ## randomization-n
 <!-- vale on -->
 
-Sets how many distinct repeatable pair values are generated for each operation when randomization is used. Default is `5000`. This setting does not work when `--randomization-enabled` is not used.
+設定使用隨機化時，每個作業會產生多少組不同的可重複值組。預設為 `5000`。未使用 `--randomization-enabled` 時，此設定不會生效。
 
 <!-- vale off -->
 ## test-iterations
 <!-- vale on -->
 
-Specifies the number of times to run the workload. Default is `1`.
+指定執行工作負載的次數。預設為 `1`。
 
 <!-- vale off -->
 ## aggregate
 <!-- vale on -->
 
-Determines whether OpenSearch Benchmark should aggregate the results of multiple test runs.
+決定 OpenSearch Benchmark 是否應彙總多次測試執行的結果。
 
-When set to `true`, OpenSearch Benchmark will combine the results from all iterations into a single aggregated report. When set to `false`, results from each iteration will be reported separately.
+設為 `true` 時，OpenSearch Benchmark 會將所有反覆執行的結果合併成單一彙總報告。設為 `false` 時，會分別回報每次反覆執行的結果。
 
-Default is `true`.
+預設為 `true`。
 
 <!-- vale off -->
 ## sleep-timer
 <!-- vale on -->
 
-Specifies the number of seconds to sleep before starting the next test run. Default is `5`.
+指定開始下一次測試執行前要暫停的秒數。預設為 `5`。
 
 
 <!-- vale off -->
 ## cancel-on-error
 <!-- vale on -->
 
-When set, this flag instructs OpenSearch Benchmark to stop executing tests if an error occurs in one of the test iterations. Default is `false` (not set).
+設定此旗標時，會指示 OpenSearch Benchmark 在任一次測試反覆執行發生錯誤時停止執行測試。預設為 `false`（未設定）。
 

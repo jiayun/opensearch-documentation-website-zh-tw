@@ -1,58 +1,59 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using the OpenSearch MCP Server
+title: "使用 OpenSearch MCP Server"
 parent: OpenSearch MCP Server
 nav_order: 10
 ---
 
-# Using the OpenSearch MCP Server
+# 使用 OpenSearch MCP Server
 
-This guide shows you how to install the [OpenSearch MCP Server](https://github.com/opensearch-project/opensearch-mcp-server-py), connect it to an AI client or agent framework, and make your first tool call to an OpenSearch cluster.
+本指南說明如何安裝 [OpenSearch MCP Server](https://github.com/opensearch-project/opensearch-mcp-server-py)、將其連接至 AI 用戶端或代理程式架構，以及對 OpenSearch 叢集進行第一次工具呼叫。
 
-## Prerequisites
+## 先決條件
 
-Before using the OpenSearch MCP Server, ensure that you have the following components:
+使用 OpenSearch MCP Server 之前，請確認您已具備下列元件：
 
-- A running OpenSearch cluster reachable from the machine running the server.
-- Credentials for that cluster (basic authentication or mutual TLS (mTLS) certificates for self-managed clusters).
-- Python 3.11 or later.
-- One of the following tools:
-  - [`uv`](https://docs.astral.sh/uv/getting-started/installation/) (recommended) -- Runs the server using `uvx` without requiring a local installation.
-  - `pip` -- Installs the package into a Python environment.
+- 一個執行中的 OpenSearch 叢集，且可從執行伺服器的機器連線。
+- 該叢集的認證資訊（自行管理的叢集可使用基本驗證或雙向 TLS (mTLS) 憑證）。
+- Python 3.11 或更新版本。
+- 下列其中一項工具：
+  - [`uv`](https://docs.astral.sh/uv/getting-started/installation/)（建議）-- 使用 `uvx` 執行伺服器，不需要在本機安裝。
+  - `pip` -- 將套件安裝至 Python 環境。
 
-## Step 1: Configure the server
+## 步驟 1：設定伺服器
 
-Choose one of the following installation options:
+請選擇下列其中一種安裝方式：
 
-### Option 1: Run using `uvx` (recommended)
+### 方式 1：使用 `uvx` 執行（建議）
 
-Install `uv`, which provides the `uvx` command to run the server without installing the package:
+安裝 `uv`，它提供 `uvx` 命令，讓您不必安裝套件即可執行伺服器：
 
 ```bash
 pip install uv
 ```
 {% include copy.html %}
 
-With `uvx`, you can run the server directly without installing it into your Python environment. All configuration examples in this guide use `uvx`.
+使用 `uvx`，您可以直接執行伺服器，而不必將其安裝至 Python 環境。本指南中的所有組態範例皆使用 `uvx`。
 
-### Option 2: Install using pip
+### 方式 2：使用 pip 安裝
 
-Install the `opensearch-mcp-server-py` package directly into your Python environment:
+將 `opensearch-mcp-server-py` 套件直接安裝至您的 Python 環境：
 
 ```bash
 pip install opensearch-mcp-server-py
 ```
 {% include copy.html %}
 
-If you use this option, replace `"command": "uvx"` with `"command": "python"` and `"args": ["opensearch-mcp-server-py"]` with `"args": ["-m", "mcp_server_opensearch"]` in the configuration examples that follow.
+若您使用此方式，請在後續的組態範例中將 `"command": "uvx"` 替換為 `"command": "python"`，並將 `"args": ["opensearch-mcp-server-py"]` 替換為 `"args": ["-m", "mcp_server_opensearch"]`。
 
-## Step 2: Connect the server to a coding assistant
+## 步驟 2：將伺服器連接至程式設計助理
 
-Coding assistants such as Claude Desktop, Cursor, and Kiro read an `mcp.json` config file to discover MCP servers. The server is launched automatically as a child process when the assistant starts.
+Claude Desktop、Cursor 和 Kiro 等程式設計助理會讀取 `mcp.json` 組態檔案來探索 MCP 伺服器。助理啟動時，伺服器會自動以子處理程序的形式啟動。
 
 ### Claude Desktop
 
-To connect to Claude Desktop, open **Settings > Developer > Edit Config**. The configuration file is typically located at `~/Library/Application Support/Claude/claude_desktop_config.json` on macOS. Add the following entry:
+若要連接至 Claude Desktop，請開啟 **Settings > Developer > Edit Config**。在 macOS 上，組態檔案通常位於 `~/Library/Application Support/Claude/claude_desktop_config.json`。新增下列項目：
 ```json
 {
   "mcpServers": {
@@ -70,11 +71,11 @@ To connect to Claude Desktop, open **Settings > Developer > Edit Config**. The c
 }
 ```
 {% include copy.html %}
-Save the configuration file and restart Claude Desktop. After restart, the OpenSearch tools appear in the **Tools** panel.
+儲存組態檔案並重新啟動 Claude Desktop。重新啟動後，OpenSearch 工具會出現在 **Tools** 面板中。
 
 ### Cursor
 
-To connect to Cursor, open **Cursor Settings > MCP** and add a new server. Alternatively, edit the configuration file directly at `~/.cursor/mcp.json`:
+若要連接至 Cursor，請開啟 **Cursor Settings > MCP** 並新增伺服器。您也可以直接編輯位於 `~/.cursor/mcp.json` 的組態檔案：
 ```json
 {
   "mcpServers": {
@@ -95,7 +96,7 @@ To connect to Cursor, open **Cursor Settings > MCP** and add a new server. Alter
 
 ### Kiro
 
-To connect to Kiro, edit the configuration file at `.kiro/settings/mcp.json` in your workspace or `~/.kiro/settings/mcp.json` for a global configuration and add the following entry:
+若要連接至 Kiro，請編輯工作區中位於 `.kiro/settings/mcp.json` 的組態檔案，或編輯用於全域組態的 `~/.kiro/settings/mcp.json`，並新增下列項目：
 
 ```json
 {
@@ -115,9 +116,9 @@ To connect to Kiro, edit the configuration file at `.kiro/settings/mcp.json` in 
 ```
 {% include copy.html %}
 
-### Clusters without security
+### 未啟用安全性的叢集
 
-For a local development cluster started without security (for example, `docker run -p 9200:9200 opensearchproject/opensearch:latest -e "discovery.type=single-node" -e "DISABLE_SECURITY_PLUGIN=true"`), use `OPENSEARCH_NO_AUTH` instead of credentials:
+對於未啟用安全性而啟動的本機開發叢集（例如 `docker run -p 9200:9200 opensearchproject/opensearch:latest -e "discovery.type=single-node" -e "DISABLE_SECURITY_PLUGIN=true"`），請使用 `OPENSEARCH_NO_AUTH` 代替認證資訊：
 
 ```json
 {
@@ -135,33 +136,33 @@ For a local development cluster started without security (for example, `docker r
 ```
 {% include copy.html %}
 
-The preceding examples use default credentials for local development. Never use default credentials in production.
+上述範例使用本機開發用的預設認證資訊。請勿在正式環境中使用預設認證資訊。
 {: .warning}
 
-## Step 3: Test the connection
+## 步驟 3：測試連線
 
-With the client connected, ask a natural-language question. For example:
+用戶端連接後，請以自然語言提出問題。例如：
 
-> *What indexes are in my cluster, and which one has the most documents?*
+> *我的叢集中有哪些索引？哪一個索引的文件最多？*
 
-The AI selects the `ListIndexTool`, the server calls `_cat/indices`, and the result is returned to the model. For followup questions such as *"Search the `logs` index for errors in the last hour"*, the model selects the `SearchIndexTool` and builds the query DSL query automatically.
+AI 會選取 `ListIndexTool`，伺服器會呼叫 `_cat/indices`，並將結果傳回給模型。對於後續問題，例如 *「在 `logs` 索引中搜尋過去一小時內的錯誤」*，模型會選取 `SearchIndexTool` 並自動建立 Query DSL 查詢。
 
-## Agent framework integrations
+## 代理程式架構整合
 
-To build pipelines, chatbots, or automated workflows, you can connect the MCP server to an agent framework. The following examples use `stdio` transport, which allows the framework to launch the MCP server as a subprocess automatically.
+若要建置管線、聊天機器人或自動化工作流程，您可以將 MCP 伺服器連接至代理程式架構。下列範例使用 `stdio` 傳輸，讓架構能自動以子處理程序的形式啟動 MCP 伺服器。
 
 ### Strands Agents
 
-[Strands Agents](https://strandsagents.com/) is an open-source Python SDK for building AI agents. It connects to MCP servers using the `MCPClient` class. With stdio transport, the framework launches the MCP server as a subprocess.
+[Strands Agents](https://strandsagents.com/) 是用於建置 AI 代理程式的開放原始碼 Python SDK。它使用 `MCPClient` 類別連接至 MCP 伺服器。使用 stdio 傳輸時，架構會以子處理程序的形式啟動 MCP 伺服器。
 
-To connect to Strands Agents, follow these steps:
+若要連接至 Strands Agents，請依照下列步驟操作：
 
-1. Install the required packages:
+1. 安裝必要的套件：
     ```bash
     pip install strands-agents strands-agents-tools
     ```
     {% include copy.html %}
-1. Use the `MCPClient` class to connect to the OpenSearch MCP Server:
+1. 使用 `MCPClient` 類別連接至 OpenSearch MCP Server：
     ```python
     from mcp import StdioServerParameters
     from strands import Agent
@@ -198,16 +199,16 @@ To connect to Strands Agents, follow these steps:
 
 ### LangGraph
 
-[LangGraph](https://langchain-ai.github.io/langgraph/) is a framework for building stateful, multi-step agent workflows. Use `langchain-mcp-adapters` to connect MCP tools to LangGraph. With `stdio` transport, the framework manages the server process for you.
+[LangGraph](https://langchain-ai.github.io/langgraph/) 是用於建置具狀態、多步驟代理程式工作流程的架構。請使用 `langchain-mcp-adapters` 將 MCP 工具連接至 LangGraph。使用 `stdio` 傳輸時，架構會為您管理伺服器處理程序。
 
-To connect to LangGraph, follow these steps:
+若要連接至 LangGraph，請依照下列步驟操作：
 
-1. Install the required packages:
+1. 安裝必要的套件：
     ```bash
     pip install langgraph langchain-mcp-adapters langchain-openai
     ```
     {% include copy.html %}
-1. Use `langchain-mcp-adapters` to connect MCP tools to LangGraph:
+1. 使用 `langchain-mcp-adapters` 將 MCP 工具連接至 LangGraph：
     ```python
     import asyncio
     from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -254,9 +255,9 @@ To connect to LangGraph, follow these steps:
     ```
     {% include copy.html %}
 
-### LangChain (without LangGraph)
+### LangChain（不使用 LangGraph）
 
-To connect to LangChain for a single-agent setup without the graph abstraction, use the same packages from the LangGraph section and create a tool-calling agent:
+若要連接至 LangChain 以進行不使用圖形抽象層的單一代理程式設定，請使用 LangGraph 一節中的相同套件，並建立工具呼叫代理程式：
 
 ```python
 import asyncio
@@ -296,9 +297,9 @@ asyncio.run(main())
 ```
 {% include copy.html %}
 
-## Multi-cluster configuration
+## 多叢集組態
 
-To connect the MCP server to multiple clusters, create a `config.yml` file in a location of your choice:
+若要將 MCP 伺服器連接至多個叢集，請在您選擇的位置建立 `config.yml` 檔案：
 
 ```yaml
 version: "1.0"
@@ -318,47 +319,47 @@ clusters:
 ```
 {% include copy.html %}
 
-Start the server in multi mode, specifying the full path to your configuration file:
+以多叢集模式啟動伺服器，並指定組態檔案的完整路徑：
 
 ```bash
 python -m mcp_server_opensearch --mode multi --config /path/to/config.yml --transport stream
 ```
 {% include copy.html %}
 
-In multi-cluster mode, every tool call must include an `opensearch_cluster_name` parameter matching a key in the configuration file. When using a coding assistant, include the available cluster names in your system prompt.
+在多叢集模式下，每次工具呼叫都必須包含一個 `opensearch_cluster_name` 參數，且其值須與組態檔案中的某個鍵相符。使用程式設計助理時，請在系統提示中列出可用的叢集名稱。
 
-## Authentication options
+## 驗證選項
 
-The server attempts authentication methods in the following order:
+伺服器會依下列順序嘗試驗證方法：
 
-1. **No authentication** -- `OPENSEARCH_NO_AUTH=true` for open clusters.
-2. **Header-based authentication** -- `OPENSEARCH_HEADER_AUTH=true`. The server reads credentials from request headers for each call, allowing different credentials for each session when using streaming transport.
-3. **Basic authentication** -- `OPENSEARCH_USERNAME` and `OPENSEARCH_PASSWORD`.
-4. **Mutual TLS** -- `OPENSEARCH_CA_CERT_PATH`, `OPENSEARCH_CLIENT_CERT_PATH`, and `OPENSEARCH_CLIENT_KEY_PATH`. Can be used with or without basic authentication.
+1. **不驗證** -- `OPENSEARCH_NO_AUTH=true`，適用於開放式叢集。
+2. **以標頭為基礎的驗證** -- `OPENSEARCH_HEADER_AUTH=true`。伺服器會在每次呼叫時從請求標頭讀取認證資訊，因此在使用串流傳輸時，每個工作階段都可以使用不同的認證資訊。
+3. **基本驗證** -- `OPENSEARCH_USERNAME` 和 `OPENSEARCH_PASSWORD`。
+4. **雙向 TLS** -- `OPENSEARCH_CA_CERT_PATH`、`OPENSEARCH_CLIENT_CERT_PATH` 和 `OPENSEARCH_CLIENT_KEY_PATH`。可搭配或不搭配基本驗證使用。
 
-For information about IAM and AWS credential options, see the [`opensearch-mcp-server-py` repository](https://github.com/opensearch-project/opensearch-mcp-server-py/blob/main/USER_GUIDE.md#authentication).
+如需 IAM 和 AWS 認證資訊選項的相關資訊，請參閱 [`opensearch-mcp-server-py` 儲存庫](https://github.com/opensearch-project/opensearch-mcp-server-py/blob/main/USER_GUIDE.md#authentication)。
 
-## Transports: Stdio and streaming
+## 傳輸方式：Stdio 與串流
 
-The server supports the following transport options.
+伺服器支援下列傳輸選項。
 
-| Transport | When to use | How to start |
+| 傳輸方式 | 使用時機 | 啟動方式 |
 |-----------|-------------|--------------|
-| `stdio` (default) | Coding assistants (Claude Desktop, Cursor, Kiro). The client launches the server as a child process. | Configured in `mcp.json`. The server starts automatically when the client starts. |
-| `stream` (streamable-http) | Agent frameworks (Strands, LangGraph, LangChain) and remote/shared deployments. | `python -m mcp_server_opensearch --transport stream` |
+| `stdio`（預設） | 程式設計助理（Claude Desktop、Cursor、Kiro）。用戶端會將伺服器作為子處理序啟動。 | 在 `mcp.json` 中設定。伺服器會在用戶端啟動時自動啟動。 |
+| `stream`（streamable-http） | 代理程式框架（Strands、LangGraph、LangChain）以及遠端／共用部署。 | `python -m mcp_server_opensearch --transport stream` |
 
-The streaming transport binds to `0.0.0.0:9900` by default. To use a different host or port, specify `--host` and `--port`.
+串流傳輸預設會繫結至 `0.0.0.0:9900`。若要使用不同的主機或連接埠，請指定 `--host` 和 `--port`。
 
-## Common issues
+## 常見問題
 
-The following list describes common connection and configuration issues:
+下列清單說明常見的連線與組態問題：
 
-- **No tools appear in the client**: Check the client's MCP logs to verify that the server launched successfully. Verify that the OpenSearch cluster is reachable by running `curl http://localhost:9200`.
-- **Framework cannot connect to the streaming server**: Confirm that the server is up by running `curl http://localhost:9900/mcp`. Verify that the URL in your framework configuration matches the server URL exactly, including the `/mcp` path.
-- **The AI model selects the wrong cluster in multi-cluster mode**: In your system prompt, provide a list of available cluster names and their purposes.
+- **用戶端中未顯示任何工具**：請檢查用戶端的 MCP 記錄檔，確認伺服器已成功啟動。執行 `curl http://localhost:9200` 以確認可以連線至 OpenSearch 叢集。
+- **框架無法連線至串流伺服器**：執行 `curl http://localhost:9900/mcp` 以確認伺服器已啟動。確認框架組態中的 URL 與伺服器 URL 完全相符，包括 `/mcp` 路徑。
+- **在多叢集模式下，AI 模型選取了錯誤的叢集**：請在系統提示中提供可用叢集名稱及其用途的清單。
 
-## Next steps
+## 後續步驟
 
-- For information about Kubernetes deployment, structured logging, tool filtering, and tool customization, see the [`opensearch-mcp-server-py` repository](https://github.com/opensearch-project/opensearch-mcp-server-py/blob/main/USER_GUIDE.md).
-- To integrate MCP tools into an OpenSearch agent (instead of exposing OpenSearch to an external agent), see [Using MCP tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/).
-- For structured workflows that guide AI assistants through OpenSearch tasks, see [Agent skills]({{site.url}}{{site.baseurl}}/ai-agent-integrations/agent-skills/).
+- 如需 Kubernetes 部署、結構化記錄、工具篩選和工具自訂的相關資訊，請參閱 [`opensearch-mcp-server-py` 儲存庫](https://github.com/opensearch-project/opensearch-mcp-server-py/blob/main/USER_GUIDE.md)。
+- 若要將 MCP 工具整合至 OpenSearch 代理程式（而非將 OpenSearch 公開給外部代理程式），請參閱[使用 MCP 工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/)。
+- 如需引導 AI 助理完成 OpenSearch 任務的結構化工作流程，請參閱[代理程式技能]({{site.url}}{{site.baseurl}}/ai-agent-integrations/agent-skills/)。

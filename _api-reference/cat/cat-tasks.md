@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: CAT tasks
+title: "CAT 任務"
 parent: CAT APIs
 nav_order: 70
 has_children: false
@@ -9,16 +10,16 @@ redirect_from:
 ---
 
 # CAT Tasks API
-**Introduced 1.0**
+**於 1.0 版引入**
 {: .label .label-purple }
 
-The CAT tasks operation lists the progress of all tasks currently running on your cluster.
+CAT tasks 作業會列出目前在您叢集中執行的所有任務的進度。
 
 <!-- spec_insert_start
 api: cat.tasks
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_cat/tasks
 ```
@@ -31,28 +32,28 @@ component: query_parameters
 columns: Parameter, Data type, Description, Default
 include_deprecated: false
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `actions` | List | The task action names used to limit the response. | N/A |
-| `detailed` | Boolean | If `true`, the response includes detailed information about shard recoveries. | `false` |
-| `format` | String | A short version of the `Accept` header, such as `json` or `yaml`. | N/A |
-| `h` | List | A comma-separated list of column names to display. | N/A |
-| `help` | Boolean | Returns help information. | `false` |
-| `nodes` | List | A comma-separated list of node IDs or names used to limit the returned information.  Use `_local` to return information from the node to which you're connecting, specify a specific node from which to get information, or keep the parameter empty to get information from all nodes. | N/A |
-| `parent_task_id` | String | The parent task identifier, which is used to limit the response. | N/A |
-| `s` | List | A comma-separated list of column names or column aliases to sort by. | N/A |
-| `time` | String | Specifies the time units, for example, `5d` or `7h`. For more information, see [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/). <br> Valid values are: `nanos`, `micros`, `ms`, `s`, `m`, `h`, and `d`. | N/A |
-| `v` | Boolean | Enables verbose mode, which displays column headers. | `false` |
+| `actions` | 清單 | 用於限制回應的任務動作名稱。 | N/A |
+| `detailed` | 布林值 | 若為 `true`，回應會包含關於分片復原的詳細資訊。 | `false` |
+| `format` | 字串 | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
+| `h` | 清單 | 以逗號分隔、要顯示的欄位名稱清單。 | N/A |
+| `help` | 布林值 | 傳回說明資訊。 | `false` |
+| `nodes` | 清單 | 以逗號分隔的節點 ID 或名稱清單，用於限制傳回的資訊。  使用 `_local` 傳回您所連線節點的資訊、指定要取得資訊的特定節點，或將此參數留空以取得所有節點的資訊。 | N/A |
+| `parent_task_id` | 字串 | 用於限制回應的父任務識別碼。 | N/A |
+| `s` | 清單 | 以逗號分隔、用於排序的欄位名稱或欄位別名清單。 | N/A |
+| `time` | 字串 | 指定時間單位，例如 `5d` 或 `7h`。如需更多資訊，請參閱[支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。 <br> 有效值為：`nanos`、`micros`、`ms`、`s`、`m`、`h` 和 `d`。 | N/A |
+| `v` | 布林值 | 啟用詳細模式，以顯示欄位標題。 | `false` |
 
 <!-- spec_insert_end -->
 
-## Example request
+## 請求範例
 
-The following example request lists all tasks in progress:
+下列請求範例會列出所有進行中的任務：
 
 <!-- spec_insert_start
 component: example_code
@@ -77,13 +78,13 @@ response = client.cat.tasks(
 <!-- spec_insert_end -->
 
 
-## Example response
+## 回應範例
 
 ```json
 action | task_id | parent_task_id | type | start_time | timestamp | running_time | ip | node
 cluster:monitor/tasks/lists | 1vo54NuxSxOrbPEYdkSF0w:168062 | - | transport | 1624337809471 | 04:56:49 | 489.5ms | 172.18.0.4 | odfe-node1     
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:monitor/tasks/list`.
+若您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:monitor/tasks/list`。

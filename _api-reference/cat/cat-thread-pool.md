@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: CAT thread pool
+title: "CAT 執行緒集區"
 parent: CAT APIs
 nav_order: 75
 has_children: false
@@ -8,18 +9,18 @@ redirect_from:
 - /opensearch/rest-api/cat/cat-thread-pool/
 ---
 
-# CAT Thread Pool API
-**Introduced 1.0**
+# CAT 執行緒集區 API
+**於 1.0 版引入**
 {: .label .label-purple }
 
-The CAT thread pool operation lists the active, queued, and rejected threads of different thread pools on each node.
+CAT 執行緒集區操作會列出每個節點上不同執行緒集區中作用中、佇列中及遭拒絕的執行緒。
 
 
 <!-- spec_insert_start
 api: cat.thread_pool
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_cat/thread_pool
 GET /_cat/thread_pool/{thread_pool_patterns}
@@ -33,26 +34,26 @@ component: query_parameters
 columns: Parameter, Data type, Description, Default
 include_deprecated: false
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `cluster_manager_timeout` | String | A timeout for connection to the cluster manager node. | N/A |
-| `format` | String | A short version of the `Accept` header, such as `json` or `yaml`. | N/A |
-| `h` | List | A comma-separated list of column names to display. | N/A |
-| `help` | Boolean | Returns help information. | `false` |
-| `local` | Boolean | Returns local information but does not retrieve the state from the cluster manager node. | `false` |
-| `s` | List | A comma-separated list of column names or column aliases to sort by. | N/A |
-| `size` | Integer | The multiplier in which to display values. | N/A |
-| `v` | Boolean | Enables verbose mode, which displays column headers. | `false` |
+| `cluster_manager_timeout` | 字串 | 連線至叢集管理員節點的逾時時間。 | N/A |
+| `format` | 字串 | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
+| `h` | 清單 | 以逗號分隔的欄位名稱清單，用於指定要顯示的欄位。 | N/A |
+| `help` | 布林值 | 傳回說明資訊。 | `false` |
+| `local` | 布林值 | 傳回本機資訊，但不會從叢集管理員節點擷取狀態。 | `false` |
+| `s` | 清單 | 以逗號分隔的欄位名稱或欄位別名清單，用於指定排序依據。 | N/A |
+| `size` | 整數 | 顯示數值時所使用的乘數。 | N/A |
+| `v` | 布林值 | 啟用詳細模式，會顯示欄位標頭。 | `false` |
 
 <!-- spec_insert_end -->
 
-## Example requests
+## 範例請求
 
-The following example request gives information about thread pools on all nodes:
+下列範例請求會提供所有節點上執行緒集區的相關資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -76,7 +77,7 @@ response = client.cat.thread_pool(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-If you want to get information for more than one thread pool, separate the thread pool names with commas:
+如果您想取得多個執行緒集區的資訊，請以逗號分隔執行緒集區名稱：
 
 <!-- spec_insert_start
 component: example_code
@@ -100,7 +101,7 @@ response = client.cat.thread_pool(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-If you want to limit the information to a specific thread pool, add the thread pool name after your query:
+如果您想將資訊限制在特定的執行緒集區，請在查詢後方加上執行緒集區名稱：
 
 <!-- spec_insert_start
 component: example_code
@@ -126,7 +127,7 @@ response = client.cat.thread_pool(
 <!-- spec_insert_end -->
 
 
-## Example response
+## 範例回應
 
 ```json
 node_name  name                      active queue rejected
@@ -135,6 +136,6 @@ odfe-node2 ad-threadpool               0     0        0
 odfe-node2 analyze                     0     0        0s
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:monitor/nodes/info`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`cluster:monitor/nodes/info`。

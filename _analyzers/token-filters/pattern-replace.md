@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Pattern replace
+title: "模式取代"
 parent: Token filters
 nav_order: 320
 ---
 
-# Pattern replace token filter
+# 模式取代詞元篩選器
 
-The `pattern_replace` token filter allows you to modify tokens using regular expressions. This filter replaces patterns in tokens with the specified values, giving you flexibility in transforming or normalizing tokens before indexing them. It's particularly useful when you need to clean or standardize text during analysis.
+`pattern_replace` 詞元篩選器可讓您使用規則運算式修改詞元。此篩選器會以指定的值取代詞元中的模式，讓您在將詞元編製索引之前，能彈性地轉換或正規化詞元。當您需要在分析期間清理文字或將文字標準化時，此篩選器特別實用。
 
-## Parameters
+## 參數
 
-The `pattern_replace` token filter can be configured with the following parameters.
+`pattern_replace` 詞元篩選器可使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`pattern` | Required | String | A regular expression pattern that matches the text that needs to be replaced.
-`all` | Optional | Boolean | Whether to replace all pattern matches. If `false`, only the first match is replaced. Default is `true`.
-`replacement` | Optional | String | A string with which to replace the matched pattern. Default is an empty string.
+`pattern` | 必要 | 字串 | 規則運算式模式，用於比對需要取代的文字。
+`all` | 選用 | 布林值 | 是否取代所有符合模式的項目。若為 `false`，則只會取代第一個符合項目。預設為 `true`。
+`replacement` | 選用 | 字串 | 用來取代符合模式之內容的字串。預設為空字串。
 
 
-## Example
+## 範例
 
-The following example request creates a new index named `text_index` and configures an analyzer with a `pattern_replace` filter to replace tokens containing digits with the string `[NUM]`:
+下列範例請求會建立名為 `text_index` 的新索引，並設定一個使用 `pattern_replace` 篩選器的分析器，將包含數字的詞元取代為字串 `[NUM]`：
 
 ```json
 PUT /text_index
@@ -51,9 +52,9 @@ PUT /text_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器所產生的詞元：
 
 ```json
 POST /text_index/_analyze
@@ -64,7 +65,7 @@ POST /text_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

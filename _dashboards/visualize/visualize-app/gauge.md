@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Gauge visualization
+title: "儀表視覺化"
 parent: Visualization types
 grand_parent: Creating visualizations in the Visualize application
 great_grand_parent: Building data visualizations
@@ -9,72 +10,72 @@ redirect_from:
   - /dashboards/visualize/gauge/
 ---
 
-# Gauge visualization
+# 儀表視覺化
 
-A gauge visualization displays a data field in a simulated analog instrument like a speedometer. The gauge value can be instantly compared with marked ranges or thresholds. The visualization can show a single value or multiple bucketed values.
+儀表視覺化會以類似速度表的模擬類比儀器來顯示資料欄位。儀表值可以立即與標示的範圍或閾值進行比較。此視覺化可以顯示單一值，或多個分桶後的值。
 
-## When to use gauge visualizations
+## 何時使用儀表視覺化
 
-Use gauge visualizations to monitor a key indicator against an acceptable range in a dashboard.
+使用儀表視覺化，可在儀表板中監控關鍵指標是否處於可接受的範圍內。
 
-## Creating a gauge visualization
+## 建立儀表視覺化
 
-The examples on this page use the **Sample flight data** dataset. Before you begin, complete the [prerequisites]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites).
+本頁的範例使用 **Sample flight data** 資料集。開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites)。
 {: .note}
 
-To create a gauge visualization, follow these steps:
+若要建立儀表視覺化，請依照下列步驟操作：
 
-1. In the **New Visualization** dialog, select **Gauge**, then select your index pattern (for example, **opensearch_dashboards_sample_data_flights**).
+1. 在 **New Visualization** 對話方塊中，選取 **Gauge**，然後選取您的索引模式（例如 **opensearch_dashboards_sample_data_flights**）。
 
-   The visualization displays a gauge showing a count of the documents in the index pattern. For the `opensearch_dashboards_sample_data_flights` data, this is `13059` if the date range contains all the documents.
+   此視覺化會顯示一個儀表，呈現索引模式中的文件數量。對於 `opensearch_dashboards_sample_data_flights` 資料，若日期範圍包含所有文件，此值為 `13059`。
    {: .note}
 
-2. Under **Metrics**, expand **Metric count**.
-3. Set **Aggregation** to **Median** and **Field** to **FlightTimeMin**.
-4. Select **Update**.
+2. 在 **Metrics** 下，展開 **Metric count**。
+3. 將 **Aggregation** 設定為 **Median**，並將 **Field** 設定為 **FlightTimeMin**。
+4. 選取 **Update**。
 
-   The gauge displays `502.775`, presented as the full range of gauge.
+   儀表會顯示 `502.775`，並以儀表的完整範圍呈現。
 
-   If your visualization displays a different value, make sure that your [time filter]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/) window is large enough to encompass all the sample flight data.
+   如果您的視覺化顯示不同的值，請確認您的[時間篩選器]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/)時間範圍夠大，足以涵蓋所有範例航班資料。
    {: .note}
 
-5. Now that you have some idea of the magnitude of the data, change the display range so that the displayed value falls within it.
+5. 現在您已大致了解資料的量級，請變更顯示範圍，讓顯示的值落在範圍內。
 
-   1. Select the **Options** tab.
-   2. In the **Ranges** panel, edit the three default ranges as follows:
+   1. 選取 **Options** 索引標籤。
+   2. 在 **Ranges** 面板中，依下列方式編輯三個預設範圍：
 
-      | From | To |
+      | 起始 | 結束 |
       | :--- | :--- |
       | 0 | 250 |
       | 250 | 500 |
       | 500 | 750 |
 
-   3. Select **Update**.
+   3. 選取 **Update**。
 
-6. To compare two different conditions in one visualization, bucket the data.
+6. 若要在單一視覺化中比較兩種不同的情況，請將資料分桶。
 
-   1. Under **Buckets**, select **Add** > **Split group**.
-   2. Set **Aggregation** to **Terms** and **Field** to **FlightDelay**.
-   3. Select **Update**.
+   1. 在 **Buckets** 下，選取 **Add** > **Split group**。
+   2. 將 **Aggregation** 設定為 **Terms**，並將 **Field** 設定為 **FlightDelay**。
+   3. 選取 **Update**。
 
-   The visualization displays two gauges, with median flight times for delayed and non-delayed flights, as shown in the following image.
+   此視覺化會顯示兩個儀表，分別呈現延誤與未延誤航班的飛行時間中位數，如下圖所示。
 
-   ![Gauge showing median flight time split by delay status]({{site.url}}{{site.baseurl}}/images/dashboards/example-gauge-flight-time.png)
+   ![依延誤狀態分割的飛行時間中位數儀表]({{site.url}}{{site.baseurl}}/images/dashboards/example-gauge-flight-time.png)
 
-## Configuring a gauge visualization
+## 設定儀表視覺化
 
-For information about general visualization configuration, see [Configuring visualizations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-viz/).
+如需一般視覺化組態的相關資訊，請參閱[設定視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-viz/)。
 
-### Options tab
+### Options 索引標籤
 
-| Setting | Description |
+| 設定 | 說明 |
 | :--- | :--- |
-| **Ranges** | Defines the color-coded segments of the gauge arc. Each range has a start and end value. |
-| **Percentage mode** | When enabled, displays the value as a percentage of the maximum range value. |
-| **Show scale** | When enabled, displays tick marks on the gauge. |
-| **Color options** | Controls the colors assigned to each range segment. |
+| **Ranges** | 定義儀表弧線上以顏色區分的區段。每個範圍都有起始值和結束值。 |
+| **Percentage mode** | 啟用時，會將值顯示為最大範圍值的百分比。 |
+| **Show scale** | 啟用時，會在儀表上顯示刻度。 |
+| **Color options** | 控制指派給每個範圍區段的顏色。 |
 
-## Next steps
+## 後續步驟
 
-- To choose a different visualization type, see [Visualization types]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/).
-- To add this visualization to a dashboard, see [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/).
+- 若要選擇其他視覺化類型，請參閱[視覺化類型]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/)。
+- 若要將此視覺化新增至儀表板，請參閱[建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)。

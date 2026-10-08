@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Open index
+title: "開啟索引"
 parent: Core index APIs
 grand_parent: Index APIs
 nav_order: 50
@@ -9,40 +10,40 @@ redirect_from:
 ---
 
 # Open Index API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The open index API operation opens a closed index, letting you add or search for data within the index.
+開啟索引 API 操作會開啟已關閉的索引，讓您可以在索引中新增或搜尋資料。
 
 
-## Endpoints
+## 端點
 
 ```json
 POST /{index}/_open
 ```
 
-## Path parameters
+## 路徑參數
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-&lt;index&gt; | String | The index to open. Can be a comma-separated list of multiple index names. Use `_all` or * to open all indexes.
+&lt;index&gt; | 字串 | 要開啟的索引。可以是以逗號分隔的多個索引名稱清單。使用 `_all` 或 * 可開啟所有索引。
 
-## Query parameters
+## 查詢參數
 
-All parameters are optional.
+所有參數皆為選用。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`allow_no_indices` | Boolean | Whether to ignore wildcards that don't match any indexes. Default is `true`.
-`expand_wildcards` | String | Expands wildcard expressions to different indexes. Combine multiple values with commas. Available values are all (match all indexes), open (match open indexes), closed (match closed indexes), hidden (match hidden indexes), and none (do not accept wildcard expressions). Default is `open`.
-`ignore_unavailable` | Boolean | If true, OpenSearch does not search for missing or closed indexes. Default is `false`.
-`wait_for_active_shards` | String | Specifies the number of active shards that must be available before OpenSearch processes the request. Default is 1 (only the primary shard). Set to all or a positive integer. Values greater than 1 require replicas. For example, if you specify a value of 3, the index must have two replicas distributed across two additional nodes for the request to succeed.
-`cluster_manager_timeout` | Time | How long to wait for a connection to the cluster manager node. Default is `30s`.
-`timeout` | Time | How long to wait for a response from the cluster. Default is `30s`.
-`wait_for_completion` | Boolean | When set to `false`, the request returns immediately instead of after the operation is finished. To monitor the operation status, use the [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/) with the task ID returned by the request. Default is `true`.
-`task_execution_timeout` | Time | The explicit task execution timeout. Only useful when wait_for_completion is set to `false`. Default is `1h`.
+`allow_no_indices` | 布林值 | 是否忽略未符合任何索引的萬用字元。預設為 `true`。
+`expand_wildcards` | 字串 | 將萬用字元運算式展開為不同的索引。使用逗號組合多個值。可用值為 all（符合所有索引）、open（符合已開啟的索引）、closed（符合已關閉的索引）、hidden（符合隱藏的索引）及 none（不接受萬用字元運算式）。預設為 `open`。
+`ignore_unavailable` | 布林值 | 若為 true，OpenSearch 不會搜尋不存在或已關閉的索引。預設為 `false`。
+`wait_for_active_shards` | 字串 | 指定 OpenSearch 處理請求前必須可用的作用中分片數量。預設為 1（僅主要分片）。設定為 all 或正整數。大於 1 的值需要副本。例如，若您指定的值為 3，索引必須有兩個副本，分散在另外兩個節點上，請求才能成功。
+`cluster_manager_timeout` | 時間 | 等待連線至叢集管理員節點的時間。預設為 `30s`。
+`timeout` | 時間 | 等待叢集回應的時間。預設為 `30s`。
+`wait_for_completion` | 布林值 | 設定為 `false` 時，請求會立即傳回，而不會等到操作完成。若要監視操作狀態，請使用 [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/)，並提供請求傳回的任務 ID。預設為 `true`。
+`task_execution_timeout` | 時間 | 明確指定的任務執行逾時時間。僅在 wait_for_completion 設定為 `false` 時有用。預設為 `1h`。
 
-## Example request
+## 請求範例
 
 <!-- spec_insert_start
 component: example_code
@@ -67,7 +68,7 @@ response = client.indices.open(
 <!-- spec_insert_end -->
 
 
-## Example response
+## 回應範例
 ```json
 {
   "acknowledged": true,
@@ -75,6 +76,6 @@ response = client.indices.open(
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/open`.
+若您使用 Security 外掛程式，請確認您具備適當的權限：`indices:admin/open`。

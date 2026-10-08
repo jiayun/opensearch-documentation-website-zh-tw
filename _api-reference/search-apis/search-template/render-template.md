@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Render template
+title: "呈現範本"
 parent: Search templates
 grand_parent: Search APIs
 nav_order: 10
@@ -10,12 +11,12 @@ redirect_from:
 ---
 
 # Render Template API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Render Template API previews the final query generated from a [search template]({{site.url}}{{site.baseurl}}/search-plugins/search-template/) by substituting parameters without executing the search.
+Render Template API 會透過替換參數，預覽由[搜尋範本]({{site.url}}{{site.baseurl}}/search-plugins/search-template/)產生的最終查詢，而不執行搜尋。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_render/template
@@ -24,27 +25,27 @@ GET /_render/template/{id}
 POST /_render/template/{id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `id` | String | The ID of the search template to render. |
+| `id` | 字串 | 要呈現的搜尋範本 ID。 |
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Parameter | Required | Data type | Description | 
+| 參數 | 必要 | 資料類型 | 說明 | 
 | :--- | :--- | :--- | :--- |
-| `id` | Conditional | String | The ID of the search template to render. Is not required if the ID is provided in the path or if an inline template is specified by the `source`. | 
-| `params` | No | Object | A list of key-value pairs that replace Mustache variables found in the search template. The key-value pairs must exist in the documents being searched. |
-| `source` | Conditional | Object | An inline search template to render if a search template is not specified. Supports the same parameters as a [Search]({{site.url}}{{site.baseurl}}/api-reference/search/) API request and [Mustache](https://mustache.github.io/mustache.5.html) variables. | 
+| `id` | 視條件而定 | 字串 | 要呈現的搜尋範本 ID。若已在路徑中提供 ID，或已透過 `source` 指定內嵌範本，則不需要此參數。 | 
+| `params` | 否 | 物件 | 用於替換搜尋範本中 Mustache 變數的索引鍵值配對清單。這些索引鍵值配對必須存在於要搜尋的文件中。 |
+| `source` | 視條件而定 | 物件 | 未指定搜尋範本時，要呈現的內嵌搜尋範本。支援與 [Search]({{site.url}}{{site.baseurl}}/api-reference/search/) API 請求相同的參數，以及 [Mustache](https://mustache.github.io/mustache.5.html) 變數。 | 
 
-## Example request
+## 請求範例
 
-Both of the following request examples use the search template with the template ID `play_search_template`:
+以下兩個請求範例皆使用範本 ID 為 `play_search_template` 的搜尋範本：
 
 ```json
 {
@@ -62,9 +63,9 @@ Both of the following request examples use the search template with the template
 ```
 {% include copy.html %}
 
-### Render template using template ID
+### 使用範本 ID 呈現範本
 
-The following example request validates a search template with the ID `play_search_template`:
+以下請求範例會驗證 ID 為 `play_search_template` 的搜尋範本：
 
 <!-- spec_insert_start
 component: example_code
@@ -106,9 +107,9 @@ response = client.render_search_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Render template using `_source`
+### 使用 `_source` 呈現範本
 
-If you don't want to use a saved template, or want to test a template before saving, you can test a template with the `_source` parameter using [Mustache](https://mustache.github.io/mustache.5.html) variables, as shown in the following example:
+如果您不想使用已儲存的範本，或想在儲存前測試範本，可以透過 `_source` 參數搭配 [Mustache](https://mustache.github.io/mustache.5.html) 變數來測試範本，如以下範例所示：
 
 ```json
 {
@@ -128,9 +129,9 @@ If you don't want to use a saved template, or want to test a template before sav
 ```
 {% include copy.html %}
 
-## Example response
+## 回應範例
 
-OpenSearch responds with information about the template's output:
+OpenSearch 會回傳範本輸出的相關資訊：
 
 ```json
 {

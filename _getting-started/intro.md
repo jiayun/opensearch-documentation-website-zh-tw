@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Intro to OpenSearch
+title: "OpenSearch 簡介"
 nav_order: 2
-description: "An introduction to OpenSearch and how it works, including core concepts such as documents, indexes, clusters, nodes, shards, and how search results are ranked."
+description: "OpenSearch 及其運作方式的簡介，包括文件、索引、叢集、節點、分片等核心概念，以及搜尋結果的排序方式。"
 redirect_from: 
  - /intro/
 ---
 
-# Introduction to OpenSearch
+# OpenSearch 簡介
 
-OpenSearch is a distributed search and analytics engine that supports various use cases, from implementing a search box on a website to analyzing security data for threat detection. The term _distributed_ means that you can run OpenSearch on multiple computers. _Search and analytics_ means that you can search and analyze your data once you add it to OpenSearch. No matter your type of data, you can store and analyze it using OpenSearch.
+OpenSearch 是一個分散式搜尋與分析引擎，支援各種使用案例，從在網站上實作搜尋方塊，到分析安全性資料以偵測威脅。「_分散式_」一詞表示您可以在多部電腦上執行 OpenSearch。「_搜尋與分析_」表示將資料新增至 OpenSearch 後，您即可搜尋並分析這些資料。無論您的資料類型為何，都可以使用 OpenSearch 加以儲存與分析。
 
-## Watch a demo
+## 觀看示範
 
-Watch this video to learn key OpenSearch concepts and understand how OpenSearch organizes data and ranks search results.
+觀看此影片以了解 OpenSearch 的關鍵概念，並理解 OpenSearch 如何組織資料以及為搜尋結果排序。
 
 {% include youtube-player.html id='GbkRaxj-bJw' %}
 
-## Documents and indexes
+## 文件與索引
 
-OpenSearch stores data as documents and groups related documents into indexes.
+OpenSearch 將資料儲存為文件，並將相關的文件分組為索引。
 
-### Document
+### 文件
 
-A _document_ is a unit that stores information (text or structured data). In OpenSearch, documents are stored in [JSON](https://www.json.org/) format. 
+_文件_ 是儲存資訊（文字或結構化資料）的單位。在 OpenSearch 中，文件以 [JSON](https://www.json.org/) 格式儲存。
 
-You can think of a document in several ways:
+您可以從幾個角度來理解文件：
 
-- In a database of students, a document might represent one student.
-- When you search for information, OpenSearch returns documents related to your search.
-- A document represents a row in a traditional database.
+- 在學生資料庫中，一份文件可能代表一位學生。
+- 當您搜尋資訊時，OpenSearch 會傳回與您的搜尋相關的文件。
+- 文件相當於傳統資料庫中的一列。
 
-For example, in a school database, a document might represent one student and contain the following data.
+例如，在學校資料庫中，一份文件可能代表一位學生，並包含下列資料。
 
-ID | Name | GPA | Graduation year | 
+ID | 姓名 | GPA | 畢業年份 | 
 :--- | :--- | :--- | :--- | 
 1 | John Doe | 3.89 | 2022 | 
 
-Here is what this document looks like in JSON format:
+以下是此文件的 JSON 格式：
 
 ```json
 {
@@ -47,77 +48,77 @@ Here is what this document looks like in JSON format:
 }
 ```
 
-You'll learn about how document IDs are assigned in [Add and manage your data]({{site.url}}{{site.baseurl}}/getting-started/manage-data/#indexing-documents).
+您將在[新增與管理資料]({{site.url}}{{site.baseurl}}/getting-started/manage-data/#indexing-documents)中了解文件 ID 的指派方式。
 
-### Index
+### 索引
 
-An _index_ is a collection of documents.
+_索引_ 是文件的集合。
 
-You can think of an index in several ways:
+您可以從幾個角度來理解索引：
 
-- In a database of students, an index represents all students in the database.
-- When you search for information, you query data contained in an index.
-- An index represents a database table in a traditional database.
+- 在學生資料庫中，索引代表資料庫中的所有學生。
+- 當您搜尋資訊時，您會查詢索引中包含的資料。
+- 索引相當於傳統資料庫中的資料表。
 
-For example, in a school database, an index might contain all students in the school.
+例如，在學校資料庫中，索引可能包含學校的所有學生。
 
-ID | Name | GPA | Graduation year 
+ID | 姓名 | GPA | 畢業年份 
 :--- | :--- | :--- | :--- 
 1 | John Doe | 3.89 | 2022
 2 | Jonathan Powers | 3.85 | 2025
 3 | Jane Doe | 3.52 | 2024
 ... | | |
 
-## Cluster architecture
+## 叢集架構
 
-An OpenSearch cluster consists of one or more nodes. OpenSearch splits each index into shards and distributes those shards across the nodes in the cluster.
+OpenSearch 叢集由一個或多個節點組成。OpenSearch 會將每個索引分割成分片，並將這些分片分散到叢集中的各個節點。
 
-### Clusters and nodes
+### 叢集與節點
 
-OpenSearch is designed to be a distributed search engine, meaning that it can run on one or more _nodes_---servers that store your data and process search requests. An OpenSearch *cluster* is a collection of nodes. 
+OpenSearch 被設計為分散式搜尋引擎，這表示它可以在一個或多個 _節點_ 上執行，節點是儲存資料並處理搜尋請求的伺服器。OpenSearch *叢集* 是節點的集合。
 
-You can run OpenSearch locally on a laptop---its system requirements are minimal---but you can also scale a single cluster to hundreds of powerful machines in a data center.
+您可以在筆記型電腦上於本機執行 OpenSearch（其系統需求極低），也可以將單一叢集擴展到資料中心內數百部高效能機器。
 
-In a single-node cluster, such as one deployed on a laptop, one machine has to perform every task: manage the state of the cluster, preprocess incoming data, and add and search data. As a cluster grows, however, you can subdivide responsibilities. Nodes with fast disks and plenty of RAM might perform well when adding and searching data, whereas a node with plenty of CPU power and a tiny disk could manage cluster state. 
+在單節點叢集中（例如部署在筆記型電腦上的叢集），一部機器必須執行所有工作：管理叢集狀態、預先處理傳入的資料，以及新增與搜尋資料。然而，隨著叢集成長，您可以細分職責。具有快速磁碟和充足 RAM 的節點在新增與搜尋資料時可能表現良好，而具有充足 CPU 運算能力但磁碟很小的節點則可以管理叢集狀態。
 
-In each cluster, there is an elected _cluster manager_ node, which orchestrates cluster-level operations, such as creating an index. Nodes communicate with each other, so if your request is routed to a node, that node sends requests to other nodes, gathers the nodes' responses, and returns the final response.
+每個叢集中都有一個經選舉產生的 _叢集管理員_ 節點，負責協調叢集層級的作業，例如建立索引。節點之間會互相通訊，因此如果您的請求被路由到某個節點，該節點會將請求傳送到其他節點、收集這些節點的回應，並傳回最終回應。
 
-For more information about other node types, see [Creating a cluster]({{site.url}}{{site.baseurl}}/tuning-your-cluster/#nodes).
+如需其他節點類型的詳細資訊，請參閱[建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/#nodes)。
 
-### Shards
+### 分片
 
-OpenSearch splits indexes into _shards_. Each shard stores a subset of all documents in an index, as shown in the following image.
+OpenSearch 會將索引分割成 _分片_。每個分片儲存索引中所有文件的一部分，如下圖所示。
 
-![An index is split into shards]({{site.url}}{{site.baseurl}}/images/intro/index-shard.png){: width="450" }
+![索引被分割成分片]({{site.url}}{{site.baseurl}}/images/intro/index-shard.png){: width="450" }
 
-Shards are used for even distribution across nodes in a cluster. For example, a 400 GB index might be too large for any single node in your cluster to handle, but split into 10 shards of 40 GB each, OpenSearch can distribute the shards across 10 nodes and manage each shard individually. Consider a cluster with 2 indexes: index 1 and index 2. Index 1 is split into 2 shards, and index 2 is split into 4 shards. The shards are distributed across nodes 1 and 2, as shown in the following image.
+分片可讓資料平均分散到叢集中的各個節點。例如，400 GB 的索引可能太大，叢集中的任何單一節點都無法處理，但若將其分割成 10 個各 40 GB 的分片，OpenSearch 便可將這些分片分散到 10 個節點，並個別管理每個分片。假設有一個包含 2 個索引的叢集：索引 1 和索引 2。索引 1 分割成 2 個分片，索引 2 分割成 4 個分片。這些分片分散在節點 1 和節點 2 上，如下圖所示。
 
-![A cluster containing two indexes and two nodes]({{site.url}}{{site.baseurl}}/images/intro/cluster.png){: width="650" }
+![包含兩個索引和兩個節點的叢集]({{site.url}}{{site.baseurl}}/images/intro/cluster.png){: width="650" }
 
-Despite being one piece of an OpenSearch index, each shard is actually a full Lucene index. This detail is important because each instance of Lucene is a running process that consumes CPU and memory. More shards is not necessarily better. Splitting a 400 GB index into 1,000 shards, for example, would unnecessarily strain your cluster. A good rule of thumb is to limit shard size to 10--50 GB.
+儘管每個分片只是 OpenSearch 索引的一部分，但它實際上是一個完整的 Lucene 索引。這個細節很重要，因為每個 Lucene 執行個體都是會耗用 CPU 和記憶體的執行中處理程序。分片並非越多越好。例如，將 400 GB 的索引分割成 1,000 個分片，會對叢集造成不必要的負擔。一個不錯的經驗法則是將分片大小限制在 10 至 50 GB。
 
-### Primary and replica shards
+### 主要分片與副本分片
 
-Each shard is either a _primary shard_ (or, simply, _primary_)---the original copy of the data---or a _replica shard_ (or, simply, _replica_)---a copy of a primary shard. By default, OpenSearch creates a replica shard for each primary shard. Thus, if you split your index into 10 shards, OpenSearch creates 10 replica shards. For example, consider the cluster described in the previous section. If you add 1 replica for each shard of each index in the cluster, your cluster will contain a total of 2 primary shards and 2 replica shards for index 1 and 4 primary shards and 4 replica shards for index 2, as shown in the following image. 
+每個分片不是 _主要分片_（或簡稱 _主要_），也就是資料的原始版本，就是 _副本分片_（或簡稱 _副本_），也就是主要分片的複本。依預設，OpenSearch 會為每個主要分片建立一個副本分片。因此，如果您將索引分割成 10 個分片，OpenSearch 會建立 10 個副本分片。例如，以上一節所述的叢集為例。如果您為叢集中每個索引的每個分片新增 1 個副本，您的叢集總共將包含索引 1 的 2 個主要分片和 2 個副本分片，以及索引 2 的 4 個主要分片和 4 個副本分片，如下圖所示。
 
-![A cluster containing two indexes with one replica shard for each shard in the index]({{site.url}}{{site.baseurl}}/images/intro/cluster-replicas.png){: width="700" }
+![包含兩個索引的叢集，索引中的每個分片都有一個副本分片]({{site.url}}{{site.baseurl}}/images/intro/cluster-replicas.png){: width="700" }
 
-These replica shards act as backups in the event of a node failure---OpenSearch distributes replica shards to different nodes than their corresponding primary shards---but they also improve the speed at which the cluster processes search requests. You might specify more than one replica per index for a search-heavy workload.
+這些副本分片可在節點故障時作為備份（OpenSearch 會將副本分片分散到與其對應主要分片不同的節點上），同時也能提升叢集處理搜尋請求的速度。對於搜尋量大的工作負載，您可以為每個索引指定多個副本。
 
-## Searching data
+## 搜尋資料
 
-When you add a document to an index, OpenSearch records each word in a specialized data structure. When you search, OpenSearch uses this structure to quickly find the documents that contain your query words and then ranks those documents by how well they match.
+當您將文件新增至索引時，OpenSearch 會將每個字詞記錄在一種特殊的資料結構中。當您進行搜尋時，OpenSearch 會使用此結構快速找出包含查詢字詞的文件，然後依據相符程度為這些文件排序。
 
-### Inverted index
+### 反向索引
 
-An OpenSearch index uses a data structure called an _inverted index_. An inverted index maps words to the documents in which they occur. For example, consider an index containing the following two documents:
+OpenSearch 索引使用一種稱為 _反向索引_ 的資料結構。反向索引會將字詞對應到出現這些字詞的文件。例如，假設有一個包含下列兩份文件的索引：
 
-- Document 1: "Beauty is in the eye of the beholder"
-- Document 2: "Beauty and the beast"
+- 文件 1：「Beauty is in the eye of the beholder」
+- 文件 2：「Beauty and the beast」
 
-An inverted index for such an index maps the words to the documents in which they occur:
+此索引的反向索引會將字詞對應到出現這些字詞的文件：
 
-Word | Document
+字詞 | 文件
 :--- | :---
 `beauty` | 1, 2
 `is` | 1
@@ -129,24 +130,24 @@ Word | Document
 `and` | 2
 `beast` | 2 
 
-Notice that the word `Beauty` from the original documents appears as `beauty` (lowercase) in the inverted index. This is because OpenSearch uses a [text analyzer]({{site.url}}{{site.baseurl}}/analyzers/) to process text when you add documents. The default analyzer (the [standard analyzer]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/standard/)) makes all text lowercase so searches are case insensitive.
+請注意，原始文件中的字詞 `Beauty` 在反向索引中顯示為 `beauty`（小寫）。這是因為 OpenSearch 在您新增文件時，會使用[文字分析器]({{site.url}}{{site.baseurl}}/analyzers/)處理文字。預設分析器（[標準分析器]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/standard/)）會將所有文字轉換為小寫，因此搜尋不區分大小寫。
 
-In addition to the document ID, OpenSearch stores the position of the word within the document for running phrase queries, where words must appear next to each other.
+除了文件 ID 之外，OpenSearch 還會儲存字詞在文件中的位置，以便執行片語查詢，這類查詢要求字詞必須彼此相鄰出現。
 
-### Relevance
+### 相關性
 
-When you search for a document, OpenSearch matches the words in the query to the words in the documents. For example, if you search the index described in the previous section for the word `beauty`, OpenSearch will return documents 1 and 2. Each document is assigned a _relevance score_ that tells you how well the document matched the query.
+當您搜尋文件時，OpenSearch 會將查詢中的字詞與文件中的字詞進行比對。例如，如果您在上一節所述的索引中搜尋字詞 `beauty`，OpenSearch 會傳回文件 1 和 2。每份文件都會被指派一個 _相關性分數_，用以說明該文件與查詢的相符程度。
 
-Individual words in a search query are called search _terms_. Each search term is scored according to the following rules:
+搜尋查詢中的個別字詞稱為搜尋 _詞彙_。每個搜尋詞彙會依據下列規則計分：
 
-1. A search term that occurs more frequently in a document will tend to be scored higher. A document about dogs that uses the word `dog` many times is likely more relevant than a document that contains the word `dog` fewer times. This is the _term frequency_ component of the score.
+1. 在文件中出現越頻繁的搜尋詞彙，分數往往越高。一份多次使用字詞 `dog` 的關於狗的文件，可能比包含字詞 `dog` 次數較少的文件更相關。這是分數中的 _詞頻_ 元素。
 
-1. A search term that occurs in more documents will tend to be scored lower. A query for the terms `blue` and `axolotl` should prefer documents that contain `axolotl` over the likely more common word `blue`. This is the _inverse document frequency_ component of the score.
+1. 出現在越多文件中的搜尋詞彙，分數往往越低。查詢詞彙 `blue` 和 `axolotl` 時，應優先選擇包含 `axolotl` 的文件，而非包含可能更常見的字詞 `blue` 的文件。這是分數中的 _逆向文件頻率_ 元素。
 
-1. A match on a longer document should tend to be scored lower than a match on a shorter document. A document that contains a full dictionary would match on any word but is not very relevant to any particular word. This corresponds to the _length normalization_ component of the score.
+1. 在較長文件中的相符結果，分數往往應低於在較短文件中的相符結果。包含完整字典的文件會與任何字詞相符，但與任何特定字詞的相關性都不高。這對應於分數中的 _長度正規化_ 元素。
 
-OpenSearch uses the BM25 ranking algorithm to calculate document relevance scores and then returns the results sorted by relevance. To learn more, see [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25).
+OpenSearch 使用 BM25 排名演算法計算文件相關性分數，然後傳回依相關性排序的結果。若要進一步了解，請參閱 [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25)。
 
-## Next steps
+## 後續步驟
 
-- To install OpenSearch and OpenSearch Dashboards, see [Installation quickstart]({{site.url}}{{site.baseurl}}/getting-started/quickstart/).
+- 若要安裝 OpenSearch 和 OpenSearch Dashboards，請參閱[安裝快速入門]({{site.url}}{{site.baseurl}}/getting-started/quickstart/)。

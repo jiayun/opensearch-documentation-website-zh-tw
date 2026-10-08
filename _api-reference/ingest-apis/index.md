@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Ingest APIs
+title: "資料匯入 API"
 has_children: false
 nav_order: 70
 redirect_from:
@@ -8,26 +9,26 @@ redirect_from:
   - /api-reference/ingest-apis/
 ---
 
-# Ingest APIs
-**Introduced 1.0**
+# 資料匯入 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Ingest APIs are a valuable tool for loading data into a system. Ingest APIs work together with [ingest pipelines]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/ingest-pipelines/) and [ingest processors]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/ingest-processors/) to process or transform data from a variety of sources and in a variety of formats. 
+資料匯入 API 是將資料載入系統的實用工具。資料匯入 API 搭配[資料匯入管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/ingest-pipelines/)和[資料匯入處理器]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/ingest-processors/)，可處理或轉換來自各種來源且採用各種格式的資料。 
 
-## Ingest pipeline APIs
+## 資料匯入管線 API
 
-Simplify, secure, and scale your OpenSearch data ingestion with the following APIs:
+使用下列 API，簡化 OpenSearch 資料匯入作業、確保其安全性，並擴充其規模：
 
-- [Create pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/create-ingest/): Use this API to create or update a pipeline configuration.
-- [Get pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/get-ingest/): Use this API to retrieve a pipeline configuration.
-- [Simulate pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/simulate-ingest/): Use this pipeline to test a pipeline configuration.
-- [Access data in a pipeline]({{site.url}}{{site.baseurl}}/ingest-pipelines/accessing-data/): Use this API to access data in a pipeline.
-- [Delete pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/delete-ingest/): Use this API to delete a pipeline configuration.
+- [建立管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/create-ingest/)：使用此 API 建立或更新管線組態。
+- [取得管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/get-ingest/)：使用此 API 擷取管線組態。
+- [模擬管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/simulate-ingest/)：使用此管線測試管線組態。
+- [存取管線中的資料]({{site.url}}{{site.baseurl}}/ingest-pipelines/accessing-data/)：使用此 API 存取管線中的資料。
+- [刪除管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/delete-ingest/)：使用此 API 刪除管線組態。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions. The following permissions are required for this API:
+如果您使用 Security 外掛程式，請確認您擁有適當的權限。此 API 需要下列權限：
 
-- `cluster:admin/ingest/pipeline/get`: Required for getting pipelines
-- `cluster:admin/ingest/pipeline/put`: Required for creating or updating pipelines
-- `cluster:admin/ingest/pipeline/delete`: Required for deleting pipelines
+- `cluster:admin/ingest/pipeline/get`：取得管線所需的權限
+- `cluster:admin/ingest/pipeline/put`：建立或更新管線所需的權限
+- `cluster:admin/ingest/pipeline/delete`：刪除管線所需的權限

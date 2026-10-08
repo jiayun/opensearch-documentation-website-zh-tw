@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Flush
 parent: Index operations
@@ -8,16 +9,16 @@ nav_order: 30
 
 # Flush API
 
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Flush API stores all in-memory operations to segments on disk. Operations flushed to an index segment are no longer needed in transaction logs during a cluster restart because these operations are now stored in the Lucene index. 
+Flush API 會將所有記憶體內的作業儲存到磁碟上的區段。已沖寫至索引區段的作業，在叢集重新啟動期間不再需要保留於交易記錄檔中，因為這些作業現在已儲存在 Lucene 索引內。
 
-OpenSearch automatically performs flushes in the background based on conditions like transaction log size, which is controlled by the `index.translog.flush_threshold_size` setting. Use the Flush API sparingly, for example, for manual restarts or to free up memory.
+OpenSearch 會根據交易記錄檔大小等條件，在背景自動執行沖寫，此行為由 `index.translog.flush_threshold_size` 設定控制。請節制地使用 Flush API，例如在手動重新啟動或需要釋放記憶體時使用。
 
-## Endpoints
+## 端點
 
-The Flush API supports the following paths:
+Flush API 支援下列路徑：
 
 ```json
 GET /_flush
@@ -26,29 +27,29 @@ GET /{index}/_flush
 POST /{index}/_flush
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `<index>` | String | A comma-separated list of indexes, data streams, or index aliases to which the operation is applied. Supports wildcard expressions (`*`). Use `_all` or `*` to specify all indexes and data streams in a cluster. |
+| `<index>` | 字串 | 要套用此作業的索引、資料串流或索引別名的逗號分隔清單。支援萬用字元運算式 (`*`)。使用 `_all` 或 `*` 可指定叢集中的所有索引與資料串流。 |
 
-## Query parameters
+## 查詢參數
 
-All parameters are optional.
+所有參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `allow_no_indices` | Boolean | When `false`, the request returns an error if any wildcard expression or index alias targets any closed or missing indexes. Default is `true`. |
-| `expand_wildcards` | String | Specifies the types of indexes to which wildcard expressions can expand. Supports comma-separated values. Valid values are: <br> - `all`: Expand to all open and closed indexes, including hidden indexes. <br> - `open`: Expand to open indexes. <br> - `closed`: Expand to closed indexes. <br> - `hidden`: Include hidden indexes when expanding. Must be combined with `open`, `closed`, or both. <br> - `none`: Do not accept wildcard expressions. <br> Default is `open`. |
-| `force` | Boolean | When `true`, forces a flush to occur even when no changes to the index exist in-memory. Default is `true`. |
-| `ignore_unavailable` | Boolean | When `true`, OpenSearch ignores missing or closed indexes. If `false`, OpenSearch returns an error if the force merge operation encounters missing or closed indexes. Default is `false`. |
-| `wait_if_ongoing` | Boolean | When `true`, the Flush API does not run while another flush request is active. When `false`, OpenSearch returns an error if another flush request is active. Default is `true`. |
+| `allow_no_indices` | 布林值 | 設為 `false` 時，若任何萬用字元運算式或索引別名指向任何已關閉或遺失的索引，請求將回傳錯誤。預設為 `true`。 |
+| `expand_wildcards` | 字串 | 指定萬用字元運算式可展開的索引類型。支援逗號分隔值。有效值為：<br> - `all`：展開至所有開啟與關閉的索引，包括隱藏索引。<br> - `open`：展開至開啟的索引。<br> - `closed`：展開至關閉的索引。<br> - `hidden`：展開時包含隱藏索引。必須與 `open`、`closed` 或兩者一併使用。<br> - `none`：不接受萬用字元運算式。<br> 預設為 `open`。 |
+| `force` | 布林值 | 設為 `true` 時，即使記憶體內沒有索引變更，也會強制執行沖寫。預設為 `true`。 |
+| `ignore_unavailable` | 布林值 | 設為 `true` 時，OpenSearch 會忽略遺失或已關閉的索引。設為 `false` 時，若強制合併作業遇到遺失或已關閉的索引，OpenSearch 會回傳錯誤。預設為 `false`。 |
+| `wait_if_ongoing` | 布林值 | 設為 `true` 時，若有另一個沖寫請求正在執行，Flush API 不會執行。設為 `false` 時，若有另一個沖寫請求正在執行，OpenSearch 會回傳錯誤。預設為 `true`。 |
 
-## Example request: Flushing a specific index
+## 範例請求：沖寫特定索引
 
-The following example flushes an index named `shakespeare`:
+下列範例沖寫名為 `shakespeare` 的索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -75,9 +76,9 @@ response = client.indices.flush(
 <!-- spec_insert_end -->
 
 
-## Example request: Flushing all indexes
+## 範例請求：沖寫所有索引
 
-The following example flushes all indexes in a cluster:
+下列範例沖寫叢集中的所有索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -99,9 +100,9 @@ response = client.indices.flush()
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-OpenSearch responds with the number of shards that acknowledged the flush request, the number of shards that completed the request, and the number of shards that failed:
+OpenSearch 會回應確認沖寫請求的分片數量、完成請求的分片數量，以及失敗的分片數量：
 
 ```
 {
@@ -113,6 +114,6 @@ OpenSearch responds with the number of shards that acknowledged the flush reques
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/flush` and `indices:admin/flush*`.
+若您使用 Security 外掛程式，請確認您具備適當的權限：`indices:admin/flush` 與 `indices:admin/flush*`。

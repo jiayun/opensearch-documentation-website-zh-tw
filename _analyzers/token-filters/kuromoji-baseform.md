@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Kuromoji base form
+title: "Kuromoji 基本形"
 parent: Token filters
 nav_order: 230
 ---
 
-# Kuromoji base form token filter
+# Kuromoji 基本形詞元篩選器
 
-The `kuromoji_baseform` token filter replaces inflected Japanese tokens with their dictionary base form, acting as a lemmatizer.
+`kuromoji_baseform` 詞元篩選器會將經過詞形變化的日文詞元替換為其辭典基本形，作用如同詞形還原器 (lemmatizer)。
 
-The filter applies to tokens that carry dictionary form information from the Kuromoji tokenizer. Tokens without dictionary information (such as unknown words) are passed through unchanged.
+此篩選器適用於帶有 Kuromoji 斷詞器所提供之辭典形資訊的詞元。不具辭典資訊的詞元（例如未知詞）會原封不動地傳遞。
 
-Note that the Kuromoji tokenizer splits some conjugated forms into multiple tokens before this filter runs. For example, the past-tense *i*-adjective 美しかった (was beautiful) is split into 美しかっ and た. The filter normalizes 美しかっ to 美しい, but た remains as a separate token. To remove auxiliary verb tokens such as た, add [`kuromoji_part_of_speech`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-part-of-speech/) and [`ja_stop`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/ja-stop/) to the filter chain.
+請注意，Kuromoji 斷詞器會在此篩選器執行之前，將部分活用形分割為多個詞元。例如，過去式的*い*形容詞 美しかった（曾經很美）會被分割為 美しかっ 和 た。此篩選器會將 美しかっ 正規化為 美しい，但 た 仍會保留為獨立的詞元。若要移除 た 等助動詞詞元，請將 [`kuromoji_part_of_speech`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-part-of-speech/) 和 [`ja_stop`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/ja-stop/) 加入篩選器鏈。
 
-## Installation
+## 安裝
 
-The `kuromoji_baseform` token filter requires the `analysis-kuromoji` plugin. For installation instructions, see [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/).
+`kuromoji_baseform` 詞元篩選器需要 `analysis-kuromoji` 外掛程式。如需安裝說明，請參閱 [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)。
 
-## Parameters
+## 參數
 
-The `kuromoji_baseform` token filter has no configurable parameters.
+`kuromoji_baseform` 詞元篩選器沒有可設定的參數。
 
-## Example
+## 範例
 
-The following example creates an index with a custom analyzer that uses `kuromoji_baseform`:
+下列範例會建立一個索引，其中包含使用 `kuromoji_baseform` 的自訂分析器：
 
 ```json
 PUT /kuromoji-baseform-index
@@ -43,7 +44,7 @@ PUT /kuromoji-baseform-index
 ```
 {% include copy-curl.html %}
 
-Test the analyzer with a sentence that includes conjugated verbs (meaning "I ate sushi and drank tea"):
+使用包含活用動詞的句子（意思為「我吃了壽司並喝了茶」）測試分析器：
 
 ```json
 POST /kuromoji-baseform-index/_analyze
@@ -54,7 +55,7 @@ POST /kuromoji-baseform-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response shows the conjugated verbs normalized to their base forms. The particles を, て, and the auxiliary verb だ are retained because this analyzer uses only `kuromoji_baseform`:
+回應顯示活用動詞已正規化為其基本形。由於此分析器僅使用 `kuromoji_baseform`，因此助詞 を、て 以及助動詞 だ 都會保留：
 
 ```json
 {
@@ -119,11 +120,11 @@ The response shows the conjugated verbs normalized to their base forms. The part
 }
 ```
 
-The te-form 食べて and past-tense form 飲んだ are replaced with their base forms 食べる and 飲む. The particles を, て, and auxiliary verb だ remain in the token stream because `kuromoji_baseform` only normalizes inflection; it does not remove grammatical tokens.
+て形 食べて 和過去式 飲んだ 會被替換為其基本形 食べる 和 飲む。助詞 を、て 以及助動詞 だ 仍保留在詞元串流中，因為 `kuromoji_baseform` 只會正規化詞形變化，而不會移除文法詞元。
 
-## Example: Combining with part-of-speech and stop filters
+## 範例：與詞性篩選器和停用詞篩選器搭配使用
 
-To also remove particles and auxiliary verbs, add `kuromoji_part_of_speech` and `ja_stop` to the filter chain. The following example creates an index with a combined analyzer:
+若也要移除助詞和助動詞，請將 `kuromoji_part_of_speech` 和 `ja_stop` 加入篩選器鏈。下列範例會建立一個包含組合分析器的索引：
 
 ```json
 PUT /kuromoji-baseform-full-index
@@ -143,7 +144,7 @@ PUT /kuromoji-baseform-full-index
 ```
 {% include copy-curl.html %}
 
-Run the same sentence through the combined analyzer:
+使用組合分析器處理相同的句子：
 
 ```json
 POST /kuromoji-baseform-full-index/_analyze
@@ -154,7 +155,7 @@ POST /kuromoji-baseform-full-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response shows only the content words. The particles を, て, and the auxiliary verb だ are removed, and position gaps mark where they were:
+回應僅顯示實詞。助詞 を、て 以及助動詞 だ 已被移除，並以位置間隙標示其原本所在的位置：
 
 ```json
 {
@@ -191,9 +192,9 @@ The response shows only the content words. The particles を, て, and the auxil
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
-- [Kuromoji tokenizer]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/kuromoji/)
-- [Kuromoji part-of-speech token filter]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-part-of-speech/)
-- [Japanese stop token filter]({{site.url}}{{site.baseurl}}/analyzers/token-filters/ja-stop/)
+- [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
+- [Kuromoji 斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/kuromoji/)
+- [Kuromoji 詞性詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-part-of-speech/)
+- [日文停用詞詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/ja-stop/)

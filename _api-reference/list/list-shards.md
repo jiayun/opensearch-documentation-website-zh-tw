@@ -1,50 +1,51 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: List shards
+title: "列出分片"
 parent: List APIs
 nav_order: 20
 ---
 
 # List Shards API
-**Introduced 2.18**
+**2.18 版推出**
 {: .label .label-purple }
 
-The list shards operation outputs, in a paginated format, the state of all primary and replica shards and how they are distributed.
+列出分片操作會以分頁格式輸出所有主要分片與副本分片的狀態，以及其分布方式。
 
-## Endpoints
+## 端點
 
 ```json
 GET _list/shards
 GET _list/shards/{index}
 ```
 
-## Query parameters
+## 查詢參數
 
-All parameters are optional.
+所有參數皆為選用。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`bytes` | Byte size | Specifies the byte size units, for example, `7kb` or `6gb`. For more information, see [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/).
-`local` | Boolean | Whether to return information from the local node only instead of from the cluster manager node. Default is `false`.
-`cluster_manager_timeout` | Time | The amount of time to wait for a connection to the cluster manager node. Default is `30s`.
-`cancel_after_time_interval` | Time | The amount of time after which the shard request is canceled. Default is `-1` (no timeout).
-`time` | Time | Specifies the time units, for example, `5d` or `7h`. For more information, see [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/).
-`next_token` | String | Fetches the next page of indexes. When `null`, only provides the first page of indexes. Default is `null`.
-`size` | Integer | The maximum number of indexes to be displayed on a single page. The number of indexes on a single page of the response is not always equal to the specified `size`. Default and minimum value is `2000`. Maximum value is `20000`.
-`sort` | String | The order in which the indexes are displayed. If `desc`, then the most recently created indexes are displayed first. If `asc`, then the oldest indexes are displayed first. Default is `asc`.
+`bytes` | 位元組大小 | 指定位元組大小單位，例如 `7kb` 或 `6gb`。如需更多資訊，請參閱[支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。
+`local` | 布林值 | 是否僅從本機節點傳回資訊，而非從叢集管理員節點傳回。預設為 `false`。
+`cluster_manager_timeout` | 時間 | 等待連線至叢集管理員節點的時間長度。預設為 `30s`。
+`cancel_after_time_interval` | 時間 | 經過此時間長度後，分片請求即會取消。預設為 `-1`（無逾時）。
+`time` | 時間 | 指定時間單位，例如 `5d` 或 `7h`。如需更多資訊，請參閱[支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。
+`next_token` | 字串 | 擷取下一頁的索引。若為 `null`，則僅提供第一頁的索引。預設為 `null`。
+`size` | 整數 | 單一頁面上顯示的索引數量上限。回應中單一頁面上的索引數量不一定等於指定的 `size`。預設值與最小值為 `2000`。最大值為 `20000`。
+`sort` | 字串 | 索引的顯示順序。若為 `desc`，則最近建立的索引會優先顯示。若為 `asc`，則最舊的索引會優先顯示。預設為 `asc`。
 
-When using the `next_token` path parameter, use the token produced by the response to see the next page of indexes. After the API returns `null`, all indexes contained in the API have been returned.
+使用 `next_token` 路徑參數時，請使用回應所產生的權杖來檢視下一頁的索引。當 API 傳回 `null` 後，表示 API 中包含的所有索引皆已傳回。
 {: .tip }
 
-## Example requests
+## 請求範例
 
-To get information for all the indexes and shards, use the following query and keep specifying the `next_token` as received from response until its `null`:
+若要取得所有索引與分片的資訊，請使用下列查詢，並持續指定從回應中收到的 `next_token`，直到其為 `null` 為止：
 
 ```json
 GET _list/shards/{index}?v&next_token=token
 ```
 
-To limit the information to a specific index, add the index name after your query, as shown in the following example and keep specifying the `next_token` as received from response until its `null`:
+若要將資訊限制在特定索引，請在查詢後方加上索引名稱，如下列範例所示，並持續指定從回應中收到的 `next_token`，直到其為 `null` 為止：
 
 <!-- spec_insert_start
 component: example_code
@@ -69,7 +70,7 @@ response = client.list.shards(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-If you want to get information for more than one index, separate the indexes with commas, as shown in the following example:
+若要取得多個索引的資訊，請以逗號分隔各索引，如下列範例所示：
 
 <!-- spec_insert_start
 component: example_code
@@ -94,9 +95,9 @@ response = client.list.shards(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-**Plain text format**
+**純文字格式**
 
 ```json
 index | shard | prirep | state   | docs | store | ip |       | node
@@ -107,7 +108,7 @@ plugins | 0   |   r    | STARTED |   0  |  208b | 172.18.0.3 |  odfe-node2
 next_token MTcyOTE5NTQ5NjM5N3wub3BlbnNlYXJjaC1zYXAtbG9nLXR5cGVzLWNvbmZpZw==   
 ```
 
-**JSON format**
+**JSON 格式**
 
 ```json
 {

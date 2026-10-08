@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Reverse
 parent: Token filters
 nav_order: 360
 ---
 
-# Reverse token filter
+# Reverse 詞元篩選器
 
-The `reverse` token filter reverses the order of the characters in each token, making suffix information accessible at the beginning of the reversed tokens during analysis. 
+`reverse` 詞元篩選器會反轉每個詞元中的字元順序，讓字尾資訊在分析期間出現在反轉後詞元的開頭，以便存取。
 
-This is useful for suffix-based searches:
+這對以字尾為基礎的搜尋很有用：
 
-The `reverse` token filter is useful when you need to perform suffix-based searches, such as in the following scenarios:  
+當您需要執行以字尾為基礎的搜尋時，`reverse` 詞元篩選器就很有用，例如在下列情境中：
 
-- **Suffix matching**: Searching for words based on their suffixes, such as identifying words with a specific ending (for example, `-tion` or `-ing`).
-- **File extension searches**: Searching for files by their extensions, such as `.txt` or `.jpg`.
-- **Custom sorting or ranking**: By reversing tokens, you can implement unique sorting or ranking logic based on suffixes.  
-- **Autocomplete for suffixes**: Implementing autocomplete suggestions that use suffixes rather than prefixes.  
+- **字尾比對**：根據字尾搜尋字詞，例如找出具有特定結尾的字詞（例如 `-tion` 或 `-ing`）。
+- **副檔名搜尋**：依副檔名搜尋檔案，例如 `.txt` 或 `.jpg`。
+- **自訂排序或排名**：透過反轉詞元，您可以實作以字尾為基礎的獨特排序或排名邏輯。
+- **字尾自動完成**：實作使用字尾而非字首的自動完成建議。
 
 
-## Example
+## 範例
 
-The following example request creates a new index named `my-reverse-index` and configures an analyzer with a `reverse` filter:
+下列範例請求會建立名為 `my-reverse-index` 的新索引，並設定具有 `reverse` 篩選器的分析器：
 
 ```json
 PUT /my-reverse-index
@@ -49,9 +50,9 @@ PUT /my-reverse-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器產生的詞元：
 
 ```json
 GET /my-reverse-index/_analyze
@@ -62,7 +63,7 @@ GET /my-reverse-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

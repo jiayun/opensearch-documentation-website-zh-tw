@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Nested
 parent: Bucket aggregations
@@ -7,13 +8,13 @@ redirect_from:
   - /query-dsl/aggregations/bucket/nested/
 ---
 
-# Nested aggregation
+# Nested 彙總
 
-The `nested` aggregation lets you aggregate on fields inside a [nested]({{site.url}}{{site.baseurl}}/field-types/supported-field-types/nested/) object. The `nested` type is a specialized version of the `object` data type that indexes each element of an array of objects as a separate, hidden document. This preserves the relationship between fields within the same array element so they can be queried and aggregated together.
+`nested` 彙總可讓您對 [nested]({{site.url}}{{site.baseurl}}/field-types/supported-field-types/nested/) 物件內的欄位進行彙總。`nested` 類型是 `object` 資料類型的特殊版本，會將物件陣列中的每個元素編製索引為獨立的隱藏文件。這樣可以保留同一陣列元素內欄位之間的關聯，使這些欄位能一起被查詢及彙總。
 
-## Nested aggregation example
+## Nested 彙總範例
 
-To aggregate over fields inside a nested array, specify the `path` to the nested field and define subaggregations under it:
+若要對 nested 陣列內的欄位進行彙總，請指定 nested 欄位的 `path`，並在其下定義子彙總：
 
 ```json
 GET logs-nested/_search
@@ -33,7 +34,7 @@ GET logs-nested/_search
 ```
 {% include copy-curl.html %}
 
-The returned hit contains the requested aggregation:
+傳回的命中結果包含所請求的彙總：
 
 ```json
 "hits": {

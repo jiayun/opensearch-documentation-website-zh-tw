@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: German
+title: "德文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 170
 ---
 
-# German analyzer
+# 德文分析器
 
-The built-in `german` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `german` 分析器套用至文字欄位：
 
 ```json
 PUT /german-index
@@ -25,9 +26,9 @@ PUT /german-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，搭配此語言分析器使用 `stem_exclusion`：
 
 ```json
 PUT index_with_stem_exclusion_german_analyzer
@@ -46,22 +47,22 @@ PUT index_with_stem_exclusion_german_analyzer
 ```
 {% include copy-curl.html %}
 
-## German analyzer internals
+## 德文分析器內部結構
 
-The `german` analyzer is built using the following components:
+`german` 分析器由下列元件組成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
+- 詞元篩選器：
   - lowercase
-  - stop (German)
+  - stop（德文）
   - keyword
-  - normalization (German)
-  - stemmer (German)
+  - normalization（德文）
+  - stemmer（德文）
 
-## Custom German analyzer
+## 自訂德文分析器
 
-You can create a custom German analyzer using the following command:
+您可以使用下列命令建立自訂德文分析器：
 
 ```json
 PUT /german-index
@@ -109,9 +110,9 @@ PUT /german-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查分析器所產生的詞元：
 
 ```json
 POST /german-index/_analyze
@@ -122,7 +123,7 @@ POST /german-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

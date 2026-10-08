@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Workflow state access control
+title: "工作流程狀態存取控制"
 nav_order: 35
 ---
 
-# Workflow state access control
+# 工作流程狀態存取控制
 
-Flow Framework integrates with the Security plugin's resource sharing and access control framework to provide document-level authorization for workflow state records. This replaces the legacy `plugins.flow_framework.filter_by_backend_roles` setting with a more flexible sharing system that allows resource owners to grant specific access levels to users, roles, or backend roles.
+Flow Framework 與 Security 外掛程式的資源共用與存取控制架構整合，為工作流程狀態記錄提供文件層級的授權。這取代了舊版的 `plugins.flow_framework.filter_by_backend_roles` 設定，改用以更具彈性的共用系統，讓資源擁有者能將特定的存取層級授予使用者、角色或後端角色。
 
-For the end-to-end framework concepts and APIs, see [Resource sharing and access control]({{site.url}}{{site.baseurl}}/security/access-control/resources/).
+如需端對端架構概念與 API 的說明，請參閱[資源共用與存取控制]({{site.url}}{{site.baseurl}}/security/access-control/resources/)。
 {: .note}
 
-## Resource configuration
+## 資源組態
 
-The following table describes the workflow state resource configuration.
+下表說明工作流程狀態的資源組態。
 
-| Field | Value |
+| 欄位 | 值 |
 | :--- | :--- |
-| Resource type | `workflow-state` |
-| System index | `.plugins-flow-framework-state` |
-| Onboarded version | OpenSearch 3.4 |
+| 資源類型 | `workflow-state` |
+| 系統索引 | `.plugins-flow-framework-state` |
+| 導入版本 | OpenSearch 3.4 |
 
-When resource-level authorization is enabled for workflow states, each workflow state's visibility is governed by a central sharing record. Resource owners and users with sharing capabilities can grant or revoke access permissions for specific users, roles, or backend roles.
+為工作流程狀態啟用資源層級授權後，每個工作流程狀態的可見性會由一筆中央共用記錄控管。資源擁有者以及具備共用能力的使用者，可以授予或撤銷特定使用者、角色或後端角色的存取權限。
 
-## Enable workflow state resource sharing
+## 啟用工作流程狀態資源共用
 
-To enable resource sharing for workflow states, you must add the workflow-state resource type to the protected types list and enable resource sharing cluster-wide.
+若要為工作流程狀態啟用資源共用，您必須將 workflow-state 資源類型加入受保護類型清單，並在整個叢集啟用資源共用。
 
-Admin-only: These settings can be configured only by cluster administrators with superadmin privileges.
+僅限管理員：這些設定只能由具備超級管理員權限的叢集管理員進行設定。
 {: .important }
 
-### Configuration using opensearch.yml
+### 使用 opensearch.yml 進行組態設定
 
-Add the following settings to your `opensearch.yml` configuration file to enable resource sharing for workflow states:
+將下列設定加入您的 `opensearch.yml` 組態檔，以啟用工作流程狀態的資源共用：
 
 ```yaml
 plugins.security.resource_sharing.enabled: true
@@ -42,9 +43,9 @@ plugins.security.resource_sharing.protected_types:
 ```
 {% include copy.html %}
 
-### Configuration using the Cluster Settings API
+### 使用 Cluster Settings API 進行組態設定
 
-Alternatively, you can enable resource sharing dynamically using the Cluster Settings API:
+或者，您也可以使用 Cluster Settings API 動態啟用資源共用：
 
 ```json
 PUT _cluster/settings
@@ -57,16 +58,16 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-When adding the workflow-state resource type to an existing configuration, include all previously configured resource types in the `protected_types` array.
+將 workflow-state 資源類型加入現有組態時，請在 `protected_types` 陣列中包含所有先前已設定的資源類型。
 {: .note}
 
-## Workflow state access levels
+## 工作流程狀態存取層級
 
-Flow Framework provides three predefined access levels for workflow state documents. These access levels determine the specific permissions granted to users who have been granted access to a workflow state resource.
+Flow Framework 為工作流程狀態文件提供三種預先定義的存取層級。這些存取層級決定授予已取得工作流程狀態資源存取權之使用者的特定權限。
 
 ### workflow_state_read_only
 
-The `workflow_state_read_only` read-only access level grants users the ability to view and search shared workflow states but not modify them. This access level includes the following permissions:
+`workflow_state_read_only` 唯讀存取層級授予使用者檢視與搜尋共用工作流程狀態的能力，但無法修改它們。此存取層級包含下列權限：
 
 ```yaml
 - "cluster:admin/opensearch/flow_framework/workflow_state/get"
@@ -76,7 +77,7 @@ The `workflow_state_read_only` read-only access level grants users the ability t
 
 ### workflow_state_read_write
 
-The `workflow_state_read_write` read-write access level grants users full access to workflow state operations except for sharing capabilities. This access level includes all read permissions plus write operations:
+`workflow_state_read_write` 讀寫存取層級授予使用者對工作流程狀態作業的完整存取權，但共用功能除外。此存取層級包含所有讀取權限以及寫入作業：
 
 ```yaml
 - "cluster:admin/opensearch/flow_framework/workflow_state/*"
@@ -86,7 +87,7 @@ The `workflow_state_read_write` read-write access level grants users full access
 
 ### workflow_state_full_access
 
-The `workflow_state_full_access` full access level grants users complete control over a workflow state, including owner-like permissions such as sharing the resource with other users. This access level includes all workflow state operations plus resource sharing permissions:
+`workflow_state_full_access` 完整存取層級授予使用者對工作流程狀態的完整控制權，包括將資源與其他使用者共用等類似擁有者的權限。此存取層級包含所有工作流程狀態作業以及資源共用權限：
 
 ```yaml
 - "cluster:admin/opensearch/flow_framework/workflow_state/*"
@@ -95,17 +96,17 @@ The `workflow_state_full_access` full access level grants users complete control
 ```
 {% include copy.html %}
 
-These access levels are predefined and cannot be modified. To request additional access levels, create an issue in the [Flow Framework GitHub repository](https://github.com/opensearch-project/flow-framework/).
+這些存取層級為預先定義，無法修改。如需要求其他存取層級，請在 [Flow Framework GitHub 儲存庫](https://github.com/opensearch-project/flow-framework/)中建立 issue。
 {: .note}
 
-## Migrating from the legacy framework
+## 從舊版架構遷移
 
-After enabling resource sharing and marking workflow states as a protected resource type, cluster administrators must run the migration API to transfer existing workflow state sharing information from the legacy framework to the new resource sharing system.
+啟用資源共用並將工作流程狀態標記為受保護資源類型後，叢集管理員必須執行遷移 API，將現有的工作流程狀態共用資訊從舊版架構轉移至新的資源共用系統。
 
-Admin-only: The Migrate API can only be executed by cluster administrators with superadmin or REST admin privileges.
+僅限管理員：Migrate API 只能由具備超級管理員或 REST 管理員權限的叢集管理員執行。
 {: .important }
 
-Use the following API call to migrate legacy workflow state sharing data to the resource sharing framework:
+使用下列 API 呼叫，將舊版工作流程狀態共用資料遷移至資源共用架構：
 
 ```json
 POST _plugins/_security/api/resources/migrate
@@ -121,11 +122,11 @@ POST _plugins/_security/api/resources/migrate
 ```
 {% include copy-curl.html %}
 
-Replace `<replace-with-existing-user>` with the username of an existing user who should own workflow states without explicit ownership information. Replace `<select-appropriate-access-level>` with one of the available workflow state access levels: `workflow_state_read_only`, `workflow_state_read_write`, or `workflow_state_full_access`.
+將 `<replace-with-existing-user>` 取代為現有使用者的使用者名稱，該使用者應擁有沒有明確擁有權資訊的工作流程狀態。將 `<select-appropriate-access-level>` 取代為可用的工作流程狀態存取層級之一：`workflow_state_read_only`、`workflow_state_read_write` 或 `workflow_state_full_access`。
 
-## Related documentation
+## 相關文件
 
-- [Resource sharing and access control]({{site.url}}{{site.baseurl}}/security/access-control/resources/) -- Backend concepts, configuration, and setup
-- [Resource sharing APIs]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) -- REST API reference for programmatic management
-- [Resource access management]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI workflows and user guidance
-- [Workflow access control]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-access-control/) -- Access control for workflow templates
+- [資源共用與存取控制]({{site.url}}{{site.baseurl}}/security/access-control/resources/) -- 後端概念、組態與設定
+- [資源共用 API]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) -- 以程式化管理所需的 REST API 參考
+- [資源存取管理]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI 工作流程與使用者指引
+- [工作流程存取控制]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-access-control/) -- 工作流程範本的存取控制

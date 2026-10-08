@@ -1,103 +1,104 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Predict model stream (gRPC)
+title: "模型串流預測（gRPC）"
 parent: gRPC APIs
 nav_order: 40
 ---
 
-# Predict Model Stream API (gRPC)
-**Introduced 3.8**
+# Predict Model Stream API（gRPC）
+**於 3.8 版推出**
 {: .label .label-purple }
 
-The gRPC Predict Model Stream API provides a binary interface for streaming predictions from remote machine learning (ML) models using protocol buffers over gRPC. The server streams response chunks to the client as the underlying model generates them, so the client can begin processing output before inference completes. Use streaming for token-by-token generation from large language models (LLMs).
+ gRPC Predict Model Stream API 透過 gRPC 使用 protocol buffers，提供二進位介面，以串流方式傳送遠端機器學習（ML）模型的預測結果。底層模型產生回應區塊時，伺服器便會將區塊以串流方式傳送至用戶端，因此用戶端可在推論完成前開始處理輸出。大型語言模型（LLM）逐一產生詞元時，可使用串流。
 
-You can stream predictions over either REST or gRPC. Both transports return the same incrementally generated model output, so choose the one that best fits your client:
+您可以透過 REST 或 gRPC 以串流方式傳送預測結果。這兩種傳輸方式都會傳回相同的逐步產生模型輸出，因此請選擇最適合您用戶端的方式：
 
-- **REST streaming** uses server-sent events (SSE) over HTTP, which browsers, standard HTTP clients, and command line tools such as cURL support directly. This is an experimental feature and is not recommended for use in a production environment. For more information, see [Predict Stream API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict-stream/).
-- **gRPC streaming** uses protocol buffers over HTTP/2. This transport provides lower serialization overhead and smaller payloads, native server streaming semantics with HTTP/2 flow control and connection multiplexing, and a strongly typed schema from which you can generate clients in any [gRPC-supported language](https://grpc.io/docs/languages/).
+- **REST 串流**透過 HTTP 使用伺服器傳送事件（SSE），瀏覽器、標準 HTTP 用戶端，以及 cURL 等命令列工具都可直接支援。這是實驗性功能，不建議用於正式環境。如需詳細資訊，請參閱 [Predict Stream API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict-stream/)。
+- **gRPC 串流**透過 HTTP/2 使用 protocol buffers。此傳輸方式提供較低的序列化額外負擔與較小的承載資料、搭配 HTTP/2 流量控制與連線多工的原生伺服器串流語意，以及強型別結構描述，讓您能以任何 [gRPC 支援的語言](https://grpc.io/docs/languages/)產生用戶端。
 
-Streaming predictions are supported for the following externally hosted models:
+下列外部託管模型支援串流預測：
 
 - [OpenAI Chat Completion](https://platform.openai.com/docs/api-reference/completions)
 - [Amazon Bedrock Converse Stream](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ConverseStream.html)
 
-## Prerequisites
+## 先決條件
 
-Before using the gRPC Predict Model Stream API, ensure that you have fulfilled the following prerequisites:
+使用 gRPC Predict Model Stream API 前，請確認您已滿足下列先決條件：
 
-- Enable gRPC transport on the cluster. For more information, see [Using gRPC APIs]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/#how-to-use-grpc-apis).
-- Obtain the ML Commons protobufs on the client side. For ways to obtain the protobufs, see [Using gRPC APIs]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/#how-to-use-grpc-apis).
-- Configure an externally hosted model and streaming connector for a supported model type. For model and connector configuration, see [Predict Stream API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict-stream/#step-2-register-a-compatible-externally-hosted-model).
+- 在叢集上啟用 gRPC 傳輸。如需詳細資訊，請參閱[使用 gRPC API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/#how-to-use-grpc-apis)。
+- 在用戶端取得 ML Commons protobufs。如需取得 protobufs 的方式，請參閱[使用 gRPC API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/#how-to-use-grpc-apis)。
+- 為支援的模型類型設定外部託管模型與串流連接器。如需模型與連接器的組態資訊，請參閱 [Predict Stream API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict-stream/#step-2-register-a-compatible-externally-hosted-model)。
 
-## gRPC service and method
+## gRPC 服務與方法
 
-The gRPC Predict Model Stream API resides in the [`MLService`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/services/ml_service.proto#L22) service.
+ gRPC Predict Model Stream API 位於 [`MLService`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/services/ml_service.proto#L22) 服務中。
 
-You can submit streaming prediction requests by invoking the [`PredictModelStream`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/services/ml_service.proto#L24) method within the `MLService`. The method takes an [`MlPredictModelStreamRequest`](#mlpredictmodelstreamrequest-fields) and returns a stream of [`PredictResponse`](#response-fields) messages.
+您可以呼叫 `MLService` 中的 [`PredictModelStream`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/services/ml_service.proto#L24) 方法來提交串流預測請求。此方法接受一個 [`MlPredictModelStreamRequest`](#mlpredictmodelstreamrequest-fields)，並傳回由 [`PredictResponse`](#response-fields) 訊息組成的串流。
 
-`PredictModelStream` is a server streaming remote procedure call (RPC): the client sends a single request, and the server returns a sequence of response messages. The final message sets `is_last` to `true`, and the server then closes the stream.
+`PredictModelStream` 是伺服器串流遠端程序呼叫（RPC）：用戶端傳送單一請求，伺服器則傳回一連串回應訊息。最後一則訊息會將 `is_last` 設為 `true`，接著伺服器便會關閉串流。
 {: .note}
 
-## Request fields
+## 請求欄位
 
-The gRPC Predict Model Stream API supports the following request fields.
+ gRPC Predict Model Stream API 支援下列請求欄位。
 
-### MlPredictModelStreamRequest fields
+### MlPredictModelStreamRequest 欄位
 
-The [`MlPredictModelStreamRequest`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3406) message accepts the following fields.
+[`MlPredictModelStreamRequest`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3406) 訊息接受下列欄位。
 
-| Field | Protobuf type | Required | Description |
+| 欄位 | Protobuf 類型 | 必要 | 說明 |
 | :---- | :---- | :---- | :---- |
-| `model_id` | `string` | Required | The ID of the model to run predictions against. The model must be a supported externally hosted model. |
-| `ml_predict_model_stream_request_body` | [`MLPredictModelStreamRequestBody`](#mlpredictmodelstreamrequestbody-fields) | Required | The request payload containing the prediction parameters. |
+| `model_id` | `string` | 必要 | 要執行預測的模型 ID。模型必須是受支援的外部託管模型。 |
+| `ml_predict_model_stream_request_body` | [`MLPredictModelStreamRequestBody`](#mlpredictmodelstreamrequestbody-fields) | 必要 | 包含預測參數的請求承載資料。 |
 
 <!-- vale off -->
-### MLPredictModelStreamRequestBody fields
+### MLPredictModelStreamRequestBody 欄位
 <!-- vale on -->
 
-The [`MLPredictModelStreamRequestBody`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3323) message accepts the following fields.
+[`MLPredictModelStreamRequestBody`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3323) 訊息接受下列欄位。
 
-| Field | Protobuf type | Required | Description |
+| 欄位 | Protobuf 類型 | 必要 | 說明 |
 | :---- | :---- | :---- | :---- |
-| `parameters` | [`Parameters`](#parameters-fields) | Required | The input parameters passed to the remote model. |
+| `parameters` | [`Parameters`](#parameters-fields) | 必要 | 傳遞至遠端模型的輸入參數。 |
 
-### Parameters fields
+### Parameters 欄位
 
-For streaming predictions, the [`Parameters`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3356) message accepts the following fields. Provide the fields that match your model type.
+對於串流預測，[`Parameters`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3356) 訊息接受下列欄位。請提供符合您模型類型的欄位。
 
-| Field | Protobuf type | Description |
+| 欄位 | Protobuf 類型 | 說明 |
 | :---- | :---- | :---- |
-| `messages` | `repeated` [`Messages`](#messages-fields) | The conversation messages sent to a chat completion model, such as OpenAI Chat Completion. |
-| `inputs` | `string` | The input text sent to the model, for example, when using an Amazon Bedrock Converse Stream model. |
-| `x_llm_interface` | `string` | The LLM interface that corresponds to your model type. Valid values are `openai/v1/chat/completions` and `bedrock/converse/claude`. |
+| `messages` | `repeated` [`Messages`](#messages-fields) | 傳送至聊天完成模型（例如 OpenAI Chat Completion）的對話訊息。 |
+| `inputs` | `string` | 傳送至模型的輸入文字，例如使用 Amazon Bedrock Converse Stream 模型時。 |
+| `x_llm_interface` | `string` | 與您模型類型對應的 LLM 介面。有效值為 `openai/v1/chat/completions` 與 `bedrock/converse/claude`。 |
 
-### Messages fields
+### Messages 欄位
 
-The [`Messages`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3328) message accepts the following fields.
+[`Messages`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3328) 訊息接受下列欄位。
 
-| Field | Protobuf type | Description |
+| 欄位 | Protobuf 類型 | 說明 |
 | :---- | :---- | :---- |
-| `role` | `string` | The role of the message sender, for example, `system` or `user`. |
-| `content` | `string` | The message content. |
+| `role` | `string` | 訊息傳送者的角色，例如 `system` 或 `user`。 |
+| `content` | `string` | 訊息內容。 |
 
-## Response fields
+## 回應欄位
 
-The server streams a sequence of [`PredictResponse`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3367) messages. Each message carries one chunk of the generated output and provides the following fields.
+伺服器會以串流方式傳送一連串 [`PredictResponse`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.6.0/protos/schemas/common.proto#L3367) 訊息。每則訊息都包含一個產生的輸出區塊，並提供下列欄位。
 
-| Field | Protobuf type | Description |
+| 欄位 | Protobuf 類型 | 說明 |
 | :---- | :---- | :---- |
-| `inference_results` | `repeated InferenceResults` | The inference results for the chunk. |
-| `inference_results.output` | `repeated Output` | The output objects for each inference result. |
-| `inference_results.output.name` | `string` | The name of the output field (typically, `response`). |
-| `inference_results.output.data_as_map` | `DataAsMap` | The response content and metadata for the chunk. |
-| `inference_results.output.data_as_map.content` | `string` | The text content of the chunk. Concatenate the `content` values across chunks to reconstruct the full response. |
-| `inference_results.output.data_as_map.is_last` | `bool` | Whether this is the final chunk in the stream. When `true`, no further messages are sent. |
+| `inference_results` | `repeated InferenceResults` | 該區塊的推論結果。 |
+| `inference_results.output` | `repeated Output` | 每個推論結果的輸出物件。 |
+| `inference_results.output.name` | `string` | 輸出欄位的名稱（通常為 `response`）。 |
+| `inference_results.output.data_as_map` | `DataAsMap` | 該區塊的回應內容與中繼資料。 |
+| `inference_results.output.data_as_map.content` | `string` | 該區塊的文字內容。串接各區塊的 `content` 值，即可重建完整回應。 |
+| `inference_results.output.data_as_map.is_last` | `bool` | 這是否為串流中的最後一個區塊。當值為 `true` 時，便不會再傳送訊息。 |
 
-## Example request
+## 請求範例
 
-Both the field that carries the model input and the `x_llm_interface` value depend on the model type. The following examples show the JSON representation of the gRPC request message for each supported model type. In both examples, replace `model_id` with the ID of your registered model.
+承載模型輸入的欄位與 `x_llm_interface` 值都取決於模型類型。下列範例顯示各個受支援模型類型的 gRPC 請求訊息之 JSON 表示方式。在這兩個範例中，請將 `model_id` 替換為您已註冊模型的 ID。
 
-For an OpenAI Chat Completion model, provide the conversation in the `messages` field and set `x_llm_interface` to `openai/v1/chat/completions`:
+對於 OpenAI Chat Completion 模型，請在 `messages` 欄位中提供對話，並將 `x_llm_interface` 設為 `openai/v1/chat/completions`：
 
 ```json
 {
@@ -121,7 +122,7 @@ For an OpenAI Chat Completion model, provide the conversation in the `messages` 
 ```
 {% include copy.html %}
 
-For an Amazon Bedrock Converse Stream model, provide the input text in the `inputs` field and set `x_llm_interface` to `bedrock/converse/claude`:
+對於 Amazon Bedrock Converse Stream 模型，請在 `inputs` 欄位中提供輸入文字，並將 `x_llm_interface` 設為 `bedrock/converse/claude`：
 
 ```json
 {
@@ -136,7 +137,7 @@ For an Amazon Bedrock Converse Stream model, provide the input text in the `inpu
 ```
 {% include copy.html %}
 
-The following example shows a Java gRPC client that streams predictions from an OpenAI Chat Completion model. Replace the model ID and messages with values that match your model configuration:
+下列範例顯示一個 Java gRPC 用戶端，以串流方式接收 OpenAI Chat Completion 模型的預測結果。請將模型 ID 與訊息替換為符合您模型組態的值：
 
 ```java
 import org.opensearch.protobufs.*;
@@ -202,7 +203,7 @@ public class PredictModelStreamClient {
 ```
 {% include copy.html %}
 
-For an Amazon Bedrock Converse Stream model, build the request parameters using `setInputs` instead of `addMessages`. The rest of the client code is unchanged:
+對於 Amazon Bedrock Converse Stream 模型，請使用 `setInputs` 取代 `addMessages` 來建構請求參數。其餘用戶端程式碼維持不變：
 
 ```java
 Parameters parameters = Parameters.newBuilder()
@@ -219,9 +220,9 @@ MlPredictModelStreamRequest request = MlPredictModelStreamRequest.newBuilder()
 ```
 {% include copy.html %}
 
-## Example response
+## 範例回應
 
-The server returns a sequence of `PredictResponse` messages. Each message carries a chunk of generated text in the `content` field, and the final message sets `isLast` to `true`. The following example shows the JSON representation of a streamed chunk:
+伺服器會傳回一連串的 `PredictResponse` 訊息。每個訊息都在 `content` 欄位中攜帶一段產生的文字，而最後一個訊息會將 `isLast` 設為 `true`。以下範例顯示串流區塊的 JSON 表示法：
 
 ```json
 {
@@ -241,7 +242,7 @@ The server returns a sequence of `PredictResponse` messages. Each message carrie
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [Predict Stream API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict-stream/) -- The REST equivalent for streaming predictions
-- [Using gRPC APIs]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/) -- gRPC transport configuration and client requirements
+- [Predict Stream API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict-stream/) -- 串流預測的 REST 對應版本
+- [使用 gRPC API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/index/) -- gRPC 傳輸組態與用戶端需求

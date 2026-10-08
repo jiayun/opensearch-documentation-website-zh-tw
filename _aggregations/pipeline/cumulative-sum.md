@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cumulative sum
+title: "累計總和"
 parent: Pipeline aggregations
 has_children: false
 nav_order: 60
 ---
 
-# Cumulative sum aggregation
+# 累計總和彙總
 
-The `cumulative_sum` aggregation is a parent aggregation that calculates the cumulative sum across the buckets of a previous aggregation.
+`cumulative_sum` 彙總是一種父彙總，用於計算前一個彙總各個桶 (bucket) 的累計總和。
 
-A cumulative sum is a sequence of partial sums of a given sequence. For example, the cumulative sums of the sequence `{a,b,c,…}` are `a`, `a+b`, `a+b+c`, and so on. You can use the cumulative sum to visualize the rate of change of a field over time.
+累計總和是指定序列的部分和所組成的序列。例如，序列 `{a,b,c,…}` 的累計總和為 `a`、`a+b`、`a+b+c`，依此類推。您可以使用累計總和將欄位隨時間的變化率視覺化。
 
-## Parameters
+## 參數
 
-The `cumulative_sum` aggregation takes the following parameters.
+`cumulative_sum` 彙總接受下列參數。
 
-| Parameter             | Required/Optional | Data type       | Description |
+| 參數             | 必要/選用 | 資料類型       | 說明 |
 | :--                   | :--               |  :--            | :--         |
-| `buckets_path`        | Required          | String          | The path of the aggregation buckets to be aggregated. See [Buckets path]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path). |
-| `format`              | Optional          | String          | A [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) formatting string. Returns the formatted output in the aggregation's `value_as_string` property. |
+| `buckets_path`        | 必要          | 字串          | 要彙總之彙總桶的路徑。請參閱[桶路徑]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path)。 |
+| `format`              | 選用          | 字串          | [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) 格式字串。在彙總的 `value_as_string` 屬性中傳回格式化後的輸出。 |
 
 
-## Example
+## 範例
 
-The following example creates a date histogram with a one-month interval from the OpenSearch Dashboards e-commerce sample data. The `sum` subaggregation calculates the sum of all bytes for each month. Finally, the `cumulative_sum` aggregation calculates the cumulative number of bytes for each month's bucket:
+下列範例從 OpenSearch Dashboards 電子商務範例資料建立間隔為一個月的日期直方圖。`sum` 子彙總會計算每個月所有位元組的總和。最後，`cumulative_sum` 彙總會計算每個月份桶的累計位元組數：
 
 ```json
 GET opensearch_dashboards_sample_data_logs/_search
@@ -54,7 +55,7 @@ GET opensearch_dashboards_sample_data_logs/_search
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {

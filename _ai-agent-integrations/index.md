@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: AI agent integrations
+title: "AI 代理程式整合"
 nav_order: 1
 nav_exclude: true
 permalink: /ai-agent-integrations/
@@ -8,37 +9,37 @@ redirect_from:
   - /ai-agent-integrations/index/
 ---
 
-# AI agent integrations
+# AI 代理程式整合
 
-OpenSearch integrates with AI agents so you can use it as a data source for external AI tools or run agents inside the cluster. OpenSearch supports AI agents in two ways:
+OpenSearch 可與 AI 代理程式整合，讓您將其作為外部 AI 工具的資料來源，或在叢集內執行代理程式。OpenSearch 以兩種方式支援 AI 代理程式：
 
-- **External agents connecting to OpenSearch** (this section) -- AI tools run outside of your OpenSearch cluster and use OpenSearch as a data source. Examples include Claude Desktop with the MCP Server or Cursor with agent skills. Install these tools on your machine and configure your client.
-- **Internal agents running in OpenSearch** -- OpenSearch agents run inside the OpenSearch cluster and can call both internal tools and external MCP servers. Register these agents through ML Commons Agent APIs and configure cluster settings. For more information, see [Agents and tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/).
+- **連線至 OpenSearch 的外部代理程式**（本節）-- AI 工具在您的 OpenSearch 叢集之外執行，並將 OpenSearch 作為資料來源。範例包括搭配 MCP Server 的 Claude Desktop，或搭配代理程式技能的 Cursor。請在您的電腦上安裝這些工具並設定您的用戶端。
+- **在 OpenSearch 中執行的內部代理程式** -- OpenSearch 代理程式在 OpenSearch 叢集內執行，可同時呼叫內部工具與外部 MCP 伺服器。請透過 ML Commons Agent API 註冊這些代理程式並設定叢集設定。如需詳細資訊，請參閱[代理程式與工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/)。
 
-The following diagram illustrates how external and internal agents integrate with OpenSearch.
+下圖說明外部與內部代理程式如何與 OpenSearch 整合。
 
-![Diagram showing how external and internal agents integrate with OpenSearch]({{site.url}}{{site.baseurl}}/images/ai-agent-integrations/ai-integrations.png)
+![說明外部與內部代理程式如何與 OpenSearch 整合的圖表]({{site.url}}{{site.baseurl}}/images/ai-agent-integrations/ai-integrations.png)
 
-## External agent integrations
+## 外部代理程式整合
 
-External AI agents and coding assistants can connect to OpenSearch by using the following open-source projects that run outside the cluster:
+外部 AI 代理程式與程式設計助理可以使用下列在叢集外執行的開放原始碼專案連線至 OpenSearch：
 
-- [OpenSearch MCP Server]({{site.url}}{{site.baseurl}}/ai-agent-integrations/mcp-server/) -- A [Model Context Protocol (MCP) server](https://modelcontextprotocol.io/introduction) that exposes OpenSearch to MCP-compatible clients such as Claude Desktop, Cursor, and Kiro. The AI client makes natural-language requests; the server translates them into OpenSearch REST calls.
-- [Agent skills]({{site.url}}{{site.baseurl}}/ai-agent-integrations/agent-skills/) -- Installable skill bundles that teach AI coding assistants how to build search applications, analyze logs and traces, and deploy OpenSearch to AWS. Skills run inside the assistant and follow the [Agent Skills specification](https://agentskills.io/specification); no server is required.
+- [OpenSearch MCP Server]({{site.url}}{{site.baseurl}}/ai-agent-integrations/mcp-server/) -- 一個 [Model Context Protocol (MCP) 伺服器](https://modelcontextprotocol.io/introduction)，可將 OpenSearch 提供給與 MCP 相容的用戶端使用，例如 Claude Desktop、Cursor 和 Kiro。AI 用戶端提出自然語言請求，伺服器再將其轉譯為 OpenSearch REST 呼叫。
+- [代理程式技能]({{site.url}}{{site.baseurl}}/ai-agent-integrations/agent-skills/) -- 可安裝的技能套件，用於教導 AI 程式設計助理如何建置搜尋應用程式、分析記錄檔與追蹤，以及將 OpenSearch 部署至 AWS。技能在助理內執行，並遵循 [Agent Skills 規格](https://agentskills.io/specification)；不需要伺服器。
 
-## Related features
+## 相關功能
 
-OpenSearch also provides the following agent capabilities configured *inside* the cluster:
+OpenSearch 也提供下列在叢集*內部*設定的代理程式功能：
 
-- [Agents]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/) (flow, conversational, and plan-execute-reflect) registered through the ML Commons Agent APIs.
-- [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/) such as `VectorDBTool`, `ListIndexTool`, and `PPLTool` that OpenSearch agents can use.
-- The [in-cluster MCP connector]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/) that lets an OpenSearch agent call tools hosted on an *external* MCP server.
+- 透過 ML Commons Agent API 註冊的[代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)（flow、conversational 和 plan-execute-reflect）。
+- OpenSearch 代理程式可使用的[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/)，例如 `VectorDBTool`、`ListIndexTool` 和 `PPLTool`。
+- [叢集內 MCP 連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/)，可讓 OpenSearch 代理程式呼叫託管於*外部* MCP 伺服器上的工具。
 
-The following table describes when to use each feature.
+下表說明何時使用各項功能。
 
-| Use case | Feature |
+| 使用案例 | 功能 |
 | :--- | :--- |
-| Let an external AI assistant query OpenSearch | [OpenSearch MCP Server]({{site.url}}{{site.baseurl}}/ai-agent-integrations/mcp-server/) |
-| Teach a coding assistant how to work with OpenSearch | [Agent skills]({{site.url}}{{site.baseurl}}/ai-agent-integrations/agent-skills/) |
-| Run an agent that calls external tools *inside* OpenSearch  | [Using MCP tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/) |
-| Register and run agents inside the cluster | [Agents and tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/) |
+| 讓外部 AI 助理查詢 OpenSearch | [OpenSearch MCP Server]({{site.url}}{{site.baseurl}}/ai-agent-integrations/mcp-server/) |
+| 教導程式設計助理如何使用 OpenSearch | [代理程式技能]({{site.url}}{{site.baseurl}}/ai-agent-integrations/agent-skills/) |
+| 在 OpenSearch *內部*執行會呼叫外部工具的代理程式  | [使用 MCP 工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/) |
+| 在叢集內註冊並執行代理程式 | [代理程式與工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/) |

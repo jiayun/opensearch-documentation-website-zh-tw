@@ -1,0 +1,101 @@
+# Mainland China vocabulary that must not appear in zh-TW prose.
+#
+# Checked by `python3 scripts/translation.py check` and after every model
+# translation. Only prose is scanned: fenced code, inline code, Liquid,
+# URLs, HTML tags/comments and other protected regions are ignored.
+#
+# severity:
+#   error   - fails the translation (retranslated with findings) and the
+#             publish check.
+#   warning - reported only; the word has legitimate Taiwan usages, so the
+#             reviewer decides.
+# exceptions: phrases in which the term is correct Taiwan usage. An
+#   occurrence inside an exception phrase is ignored.
+
+terms:
+  - {term: 註釋, preferred: 註解}
+  - {term: 添加, preferred: 新增}
+  - {term: 本地, preferred: 本機, exceptions: [本地化]}
+  - {term: 軟件, preferred: 軟體}
+  - {term: 硬件, preferred: 硬體}
+  - {term: 信息, preferred: 資訊}
+  - {term: 網絡, preferred: 網路}
+  - {term: 默認, preferred: 預設}
+  - {term: 服務器, preferred: 伺服器}
+  - {term: 數據庫, preferred: 資料庫}
+  - {term: 元數據, preferred: 中繼資料}
+  - {term: 視頻, preferred: 影片}
+  - {term: 鏈接, preferred: 連結}
+  - {term: 鼠標, preferred: 滑鼠}
+  - {term: 屏幕, preferred: 螢幕}
+  - {term: 內存, preferred: 記憶體}
+  - {term: 緩存, preferred: 快取}
+  - {term: 字符串, preferred: 字串}
+  - {term: 字符, preferred: 字元}
+  - {term: 變量, preferred: 變數}
+  - {term: 集群, preferred: 叢集}
+  - {term: 搜索, preferred: 搜尋}
+  - {term: 線程, preferred: 執行緒}
+  - {term: 進程, preferred: 處理程序}
+  - {term: 端口, preferred: 連接埠}
+  - {term: 帶寬, preferred: 頻寬}
+  - {term: 插件, preferred: 外掛程式}
+  - {term: 源代碼, preferred: 原始碼}
+  - {term: 代碼, preferred: 程式碼}
+  - {term: 命令行, preferred: 命令列}
+  - {term: 文檔, preferred: 文件}
+  - {term: 博客, preferred: 部落格}
+  - {term: 磁盤, preferred: 磁碟}
+  - {term: 硬盤, preferred: 硬碟}
+  - {term: 激活, preferred: 啟用}
+  - {term: 菜單, preferred: 選單}
+  - {term: 字段, preferred: 欄位}
+  - {term: 矢量, preferred: 向量}
+  - {term: 模塊, preferred: 模組}
+  - {term: 兼容, preferred: 相容}
+  - {term: 布爾, preferred: 布林}
+  - {term: 標識符, preferred: 識別碼}
+  - {term: 運算符, preferred: 運算子}
+  - {term: 哈希, preferred: 雜湊}
+  - {term: 算法, preferred: 演算法, exceptions: [演算法]}
+  - {term: 回調, preferred: 回呼}
+  - {term: 實時, preferred: 即時}
+  - {term: 在線, preferred: 線上, exceptions: [在線上]}
+  - {term: 界面, preferred: 介面}
+  - {term: 分佈式, preferred: 分散式}
+  - {term: 分布式, preferred: 分散式}
+  - {term: 負載均衡, preferred: 負載平衡}
+  - {term: 異步, preferred: 非同步}
+  - {term: 調用, preferred: 呼叫}
+  - {term: 登錄, preferred: 登入, exceptions: [登錄檔]}
+  - {term: 創建, preferred: 建立}
+  - {term: 運行, preferred: 執行}
+  - {term: 支持, preferred: 支援, exceptions: [支持向量機, 支持向量]}
+  - {term: 質量, preferred: 品質}
+  - {term: 存儲, preferred: 儲存}
+  - {term: 數據, preferred: 資料, severity: warning, exceptions: [大數據]}
+  - {term: 對象, preferred: 物件, severity: warning}
+  - {term: 優化, preferred: 最佳化, severity: warning}
+  - {term: 設置, preferred: 設定, severity: warning}
+  - {term: 配置, preferred: 設定, severity: warning}
+  - {term: 項目, preferred: 專案, severity: warning}
+  - {term: 用戶, preferred: 使用者, severity: warning, exceptions: [用戶端, 租用戶]}
+  - {term: 打開, preferred: 開啟, severity: warning}
+  - {term: 獲取, preferred: 取得, severity: warning}
+  - {term: 文本, preferred: 文字, severity: warning}
+  - {term: 視圖, preferred: 檢視, severity: warning}
+  - {term: 腳本, preferred: 指令碼, severity: warning}
+  - {term: 日誌, preferred: 記錄, severity: warning}
+  - {term: 協議, preferred: 協定, severity: warning}
+  - {term: 異常, preferred: 例外狀況, severity: warning}
+  - {term: 函數, preferred: 函式, severity: warning}
+  - {term: 令牌, preferred: 權杖, severity: warning}
+  - {term: 實例, preferred: 執行個體, severity: warning}
+
+# Characters that exist only in Simplified Chinese. Any occurrence in prose is
+# an error. Characters that are also valid Traditional characters (系, 后, 里,
+# 于, 只, ...) are deliberately excluded.
+simplified_characters: 们这说时来过还发开关门问题应该对实现进动态组织联库软网络设计无图标页签输换选择处录环构层确认请将从为个数务储节点码类参资讯证权线执运书写读记视频显报错误启帮转载删创级档链结检词语义间么吗样让给并与种达区条头东车长单双历
+
+# Phrases in which a character above is intentionally kept (none yet).
+simplified_exceptions: []

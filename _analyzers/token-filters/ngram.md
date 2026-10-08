@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: N-gram
 parent: Token filters
 nav_order: 290
 ---
 
-# N-gram token filter
+# N-gram 詞元篩選器
 
-The `ngram` token filter is a powerful tool used to break down text into smaller components, known as _n-grams_, which can improve partial matching and fuzzy search capabilities. It works by splitting a token into smaller substrings of defined lengths. These filters are commonly used in search applications to support autocomplete, partial matches, and typo-tolerant search. For more information, see [Autocomplete functionality]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/autocomplete/) and [Did-you-mean]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/did-you-mean/).
+`ngram` 詞元篩選器是一項強大的工具，可將文字拆解為較小的組成單位，稱為 _n-gram_，藉此提升部分比對與模糊搜尋的能力。其運作方式是將詞元分割為指定長度的較短子字串。這類篩選器常用於搜尋應用程式中，以支援自動完成、部分比對及容錯拼字搜尋。如需更多資訊，請參閱[自動完成功能]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/autocomplete/)與[您是不是要找]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/did-you-mean/)。
 
-## Parameters
+## 參數
 
-The `ngram` token filter can be configured with the following parameters.
+`ngram` 詞元篩選器可使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`min_gram` | Optional | Integer | The minimum length of the n-grams. Default is `1`.
-`max_gram` | Optional | Integer | The maximum length of the n-grams. Default is `2`.
-`preserve_original` | Optional | Boolean | Whether to keep the original token as one of the outputs. Default is `false`.
+`min_gram` | 選用 | 整數 | n-gram 的最小長度。預設為 `1`。
+`max_gram` | 選用 | 整數 | n-gram 的最大長度。預設為 `2`。
+`preserve_original` | 選用 | 布林值 | 是否將原始詞元保留為輸出之一。預設為 `false`。
 
-## Example
+## 範例
 
-The following example request creates a new index named `ngram_example_index` and configures an analyzer with an `ngram` filter:
+下列範例請求會建立名為 `ngram_example_index` 的新索引，並設定具有 `ngram` 篩選器的分析器：
 
 ```json
 PUT /ngram_example_index
@@ -51,9 +52,9 @@ PUT /ngram_example_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢視使用該分析器所產生的詞元：
 
 ```json
 POST /ngram_example_index/_analyze
@@ -64,7 +65,7 @@ POST /ngram_example_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

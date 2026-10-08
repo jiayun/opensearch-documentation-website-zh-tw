@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Maximum
+title: "最大值"
 parent: Metric aggregations
 nav_order: 60
 redirect_from:
   - /query-dsl/aggregations/metric/maximum/
 ---
 
-# Maximum aggregation
+# 最大值彙總
 
-The `max` metric is a single-value metric that returns the maximum value of a field.
+`max` 指標是一種單值指標，會回傳某個欄位的最大值。
 
-The `max` aggregation compares numeric fields using a `double` (double-precision) representation. Results should be considered approximate for fields containing `long` or `unsigned_long` integer values greater than 2<sup>53</sup> because the number of significant bits in a `double` mantissa is 53.
+`max` 彙總使用 `double`（雙精度）表示法來比較數值欄位。對於包含大於 2<sup>53</sup> 的 `long` 或 `unsigned_long` 整數值的欄位，結果應被視為近似值，因為 `double` 尾數的有效位元數為 53。
 {: .note}
 
-## Parameters
+## 參數
 
-The `max` aggregation takes the following parameters.
+`max` 彙總使用以下參數。
 
-| Parameter | Required/Optional | Data type      | Description |
-| :--       | :--               | :--            | :--         |
-| `field`   | Required          | String         | The name of the field for which the maximum is computed.    |
-| `missing` | Optional          | Numeric        | The value to assign to missing instances of the field. If not provided, documents containing missing values are omitted from the aggregation. |
+| 參數 | 必要/選用 | 資料類型 | 說明 |
+| :-- | :-- | :-- | :-- |
+| `field` | 必要 | String | 要計算最大值的欄位名稱。 |
+| `missing` | 選用 | Numeric | 指派給遺漏該欄位之實例的值。如果未提供，則包含遺漏值的文件將從彙總中省略。 |
 
-## Example
+## 範例
 
-This following example request finds the most expensive item---the item with the maximum value of the `base_unit_price`---in the OpenSearch Dashboards e-commerce sample data:
+以下範例請求在 OpenSearch Dashboards 的電子商務範例資料中，尋找最昂貴的項目——即 `base_unit_price` 具有最大值的項目：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -42,9 +43,9 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-As shown in the following example response, the aggregation returns the maximum value of `products.base_unit_price`:
+如下方範例回應所示，該彙總回傳了 `products.base_unit_price` 的最大值：
 
 ```json
 {
@@ -72,10 +73,10 @@ As shown in the following example response, the aggregation returns the maximum 
 }
 ```
 
-You can use the aggregation name (`max_base_unit_price`) as a key to retrieve the aggregation from the response.
+您可以使用彙總名稱（`max_base_unit_price`）作為鍵，從回應中檢索該彙總。
 
-## Missing values
+## 遺漏值
 
-You can assign a value to missing instances of the aggregated field. See [Missing aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/missing/) for more information.
+您可以為彙總欄位遺漏的實例指派一個值。請參閱 [遺漏值彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/missing/) 以取得更多資訊。
 
-Missing values are normally ignored by `max`. If you use `missing` to assign a value greater than any existing value, `max` returns this replacement value as the maximum value.
+遺漏值通常會被 `max` 忽略。如果您使用 `missing` 指派一個大於任何現有值的數值，則 `max` 會將此替換值作為最大值回傳。

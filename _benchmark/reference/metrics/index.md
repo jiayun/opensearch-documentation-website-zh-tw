@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Metrics reference
+title: "指標參考"
 nav_order: 25
 has_children: true
 parent: Reference
@@ -10,17 +11,17 @@ redirect_from:
   - /benchmark/reference/metrics/
 ---
 
-# OpenSearch Benchmark metrics
+# OpenSearch Benchmark 指標
 
-After a workload completes, OpenSearch Benchmark stores all metric records within its metrics store. These metrics can be kept in memory or in an OpenSearch cluster.
+工作負載完成後，OpenSearch Benchmark 會將所有指標記錄儲存在其指標存放區中。這些指標可以保存在記憶體或 OpenSearch 叢集中。
 
-## Storing metrics
+## 儲存指標
 
-You can specify whether metrics are stored in memory or in a metrics store while running the benchmark by setting the [`datastore.type`]({{site.url}}{{site.baseurl}}/benchmark/configuring-benchmark/#reporting) parameter in your `benchmark.ini` file.
+您可以在 `benchmark.ini` 檔案中設定 [`datastore.type`]({{site.url}}{{site.baseurl}}/benchmark/configuring-benchmark/#reporting) 參數，指定執行基準測試時要將指標儲存在記憶體或指標存放區中。
 
-### In memory
+### 記憶體中
 
-If you want to store metrics in memory while running the benchmark, provide the following settings in the `reporting` section of `benchmark.ini`:
+如果您想在執行基準測試時將指標儲存在記憶體中，請在 `benchmark.ini` 的 `reporting` 區段中提供下列設定：
 
 ```ini
 [reporting]
@@ -35,7 +36,7 @@ datastore.password = <password>
 
 ### OpenSearch
 
-If you want to store metrics in an external OpenSearch memory store while running the benchmark, provide the following settings in the `reporting` section of `benchmark.ini`:
+如果您想在執行基準測試時將指標儲存在外部 OpenSearch 記憶體存放區中，請在 `benchmark.ini` 的 `reporting` 區段中提供下列設定：
 
 ```ini
 [reporting]
@@ -49,18 +50,18 @@ datastore.password = <opensearch basic auth password>
 datastore.number_of_replicas =
 datastore.number_of_shards =
 ```
-When neither `datastore.number_of_replicas` nor `datastore.number_of_shards` is provided, OpenSearch uses the default values: `0` for the number of replicas and `1` for the number of shards. If these settings are changed after the data store cluster is created, the new replica and shard settings will only apply when new result indexes are created at the end of the month.
+若未提供 `datastore.number_of_replicas` 和 `datastore.number_of_shards`，OpenSearch 會使用預設值：副本數為 `0`，分片數為 `1`。如果在建立資料存放區叢集後變更這些設定，新的副本和分片設定只會在月底建立新的結果索引時套用。
 
-After you run OpenSearch Benchmark configured to use OpenSearch as a data store, OpenSearch Benchmark creates three indexes:
+執行已設定為使用 OpenSearch 作為資料存放區的 OpenSearch Benchmark 後，OpenSearch Benchmark 會建立三個索引：
 
-- `benchmark-metrics-YYYY-MM`: Holds granular metric and telemetry data.
-- `benchmark-results-YYYY-MM`: Holds data based on final results.
-- `benchmark-test-executions-YYYY-MM`: Holds data about `execution-ids`.
+- `benchmark-metrics-YYYY-MM`：存放細粒度的指標和遙測資料。
+- `benchmark-results-YYYY-MM`：存放以最終結果為基礎的資料。
+- `benchmark-test-executions-YYYY-MM`：存放關於 `execution-ids` 的資料。
 
-You can visualize data inside these indexes in OpenSearch Dashboards.
+您可以在 OpenSearch Dashboards 中將這些索引內的資料視覺化。
 
 
-## Next steps
+## 後續步驟
 
-- For more information about how to design a metrics store, see [Metric records]({{site.url}}{{site.baseurl}}/benchmark/metrics/metric-records/).
-- For more information about what metrics are stored, see [Metric keys]({{site.url}}{{site.baseurl}}/benchmark/metrics/metric-keys/).
+- 如需如何設計指標存放區的更多資訊，請參閱 [指標記錄]({{site.url}}{{site.baseurl}}/benchmark/metrics/metric-records/)。
+- 如需儲存了哪些指標的更多資訊，請參閱 [指標鍵]({{site.url}}{{site.baseurl}}/benchmark/metrics/metric-keys/)。

@@ -1,18 +1,19 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Simulate index templates
+title: "模擬索引範本"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 50
 ---
 
 # Simulate Index Templates API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-You can use the Simulate Index Template API to preview how index templates will be applied to an index or simulate an index template before creating it.
+您可以使用 Simulate Index Template API 預覽索引範本將如何套用至索引，或在建立索引範本之前先進行模擬。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_index_template/_simulate
@@ -20,33 +21,33 @@ POST /_index_template/_simulate/{template_name}
 POST /_index_template/_simulate_index/{index_name}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `template_name` | String | The name of the index template to simulate. |
-| `index_name` | String | The name of the index to use for simulating template resolution. |
+| `template_name` | 字串 | 要模擬的索引範本名稱。 |
+| `index_name` | 字串 | 用於模擬範本解析的索引名稱。 |
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `index_patterns` | Array | The index patterns to which the template applies. |
-| `template` | Object | The template definition. |
-| `template.settings` | Object | The index settings to apply. |
-| `template.mappings` | Object | The field mappings to apply. |
-| `template.aliases` | Object | The aliases to apply. |
-| `priority` | Integer | The template's priority value, used to determine which template is applied when multiple templates match an index. Higher values take precedence. |
-| `version` | Integer | The template version. |
-| `_meta` | Object | Metadata for the template. |
+| `index_patterns` | 陣列 | 範本所套用的索引模式。 |
+| `template` | 物件 | 範本定義。 |
+| `template.settings` | 物件 | 要套用的索引設定。 |
+| `template.mappings` | 物件 | 要套用的欄位對應。 |
+| `template.aliases` | 物件 | 要套用的別名。 |
+| `priority` | 整數 | 範本的優先順序值，用於在多個範本符合同一個索引時，決定要套用哪個範本。值越高，優先順序越高。 |
+| `version` | 整數 | 範本版本。 |
+| `_meta` | 物件 | 範本的中繼資料。 |
 
-### Example request: Simulate a template
+### 範例請求：模擬範本
 
-Use the following request to simulate a template without creating it:
+使用下列請求，在不建立範本的情況下模擬範本：
 
 <!-- spec_insert_start
 component: example_code
@@ -71,7 +72,7 @@ response = client.indices.simulate_index_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Example request: Simulate a named template
+### 範例請求：模擬具名範本
 <!-- spec_insert_start
 component: example_code
 rest: POST /_index_template/_simulate/template_for_simulation
@@ -94,9 +95,9 @@ response = client.indices.simulate_template(
     rest=step1_rest
     python=step1_python %}
 <!-- spec_insert_end -->
-You can simulate a specific template by specifying the name of the template.
+您可以指定範本名稱，以模擬特定範本。
 
-First, create a template named `template_for_simulation` using the following request:
+首先，使用下列請求建立名為 `template_for_simulation` 的範本：
 
 <!-- spec_insert_start
 component: example_code
@@ -209,7 +210,7 @@ response = client.indices.put_index_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-You can now simulate the template named `template_for_simulation`:
+現在您可以模擬名為 `template_for_simulation` 的範本：
 
 <!-- spec_insert_start
 component: example_code
@@ -234,10 +235,10 @@ response = client.indices.simulate_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Example request: Simulate a template on a specific index
+### 範例請求：在特定索引上模擬範本
 
-Simulating a template on a specific index name is particularly useful for resolving conflicts or debugging priority issues among templates.
-The following request demonstrates how all applicable templates, with overlapping index patterns, will be applied to an index named `logs-sim-1`:
+在特定索引名稱上模擬範本，特別有助於解決範本之間的衝突或對優先順序問題進行偵錯。
+下列請求示範所有適用且索引模式重疊的範本，將如何套用至名為 `logs-sim-1` 的索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -262,7 +263,7 @@ response = client.indices.simulate_index_template(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -292,16 +293,16 @@ response = client.indices.simulate_index_template(
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `template` | Object | The template applied. |
-| `template.settings` | Object | The resolved index settings. |
-| `template.mappings` | Object | The resolved field mappings. |
-| `template.aliases` | Object | The resolved aliases. |
-| `overlapping` | Array | A list of other index templates that match the same index pattern but were not applied. |
+| `template` | 物件 | 所套用的範本。 |
+| `template.settings` | 物件 | 解析後的索引設定。 |
+| `template.mappings` | 物件 | 解析後的欄位對應。 |
+| `template.aliases` | 物件 | 解析後的別名。 |
+| `overlapping` | 陣列 | 符合相同索引模式但未被套用的其他索引範本清單。 |
 
-## Required permissions
+## 必要權限
 
-If you are using the Security plugin, make sure you have the appropriate permissions: `indices:admin/index_template/simulate`.
+如果您使用安全性外掛程式，請確保您具備適當的權限：`indices:admin/index_template/simulate`。

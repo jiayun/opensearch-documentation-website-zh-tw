@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Adjacency matrix
+title: "鄰接矩陣"
 parent: Bucket aggregations
 nav_order: 10
 redirect_from:
   - /query-dsl/aggregations/bucket/adjacency-matrix/
 ---
 
-# Adjacency matrix aggregation
+# 鄰接矩陣彙總
 
-The `adjacency_matrix` aggregation accepts a set of named filter expressions and returns buckets representing every pair of intersecting filters. Each bucket's document count indicates how many documents matched both filters simultaneously, making it possible to analyze relationships between different document groups.
+`adjacency_matrix` 彙總接受一組具名的篩選條件運算式，並傳回代表每一對相交篩選條件的桶 (bucket)。每個桶的文件計數表示有多少文件同時符合兩個篩選條件，讓您能夠分析不同文件群組之間的關係。
 
-Given three filters named `A`, `B`, and `C`, the response produces the following bucket structure:
+假設有三個分別名為 `A`、`B` 和 `C` 的篩選條件，回應會產生下列桶結構：
 
 |   | `A` | `B` | `C` |
 | :--- | :--- | :--- | :--- |
@@ -19,20 +20,20 @@ Given three filters named `A`, `B`, and `C`, the response produces the following
 | `B` |  | `B` | `B&C` |
 | `C` |  |  | `C` |
 
-The matrix is symmetric---the bucket `A&C` contains the same documents as `C&A`---so only the upper triangle is returned. Filter names are sorted alphabetically, and the name that comes first always appears on the left side of the `&` separator.
+此矩陣是對稱的（桶 `A&C` 包含的文件與 `C&A` 相同），因此只會傳回上三角部分。篩選條件名稱會依字母順序排序，排在前面的名稱一律出現在 `&` 分隔符號的左側。
 
-## Parameters
+## 參數
 
-The `adjacency_matrix` aggregation takes the following parameters.
+`adjacency_matrix` 彙總接受下列參數。
 
-| Parameter | Required/Optional | Data type | Description |
+| 參數 | 必要/選用 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `filters` | Required | Object | A set of named filters expressed as key-value pairs. Each key is the filter name and each value is a query object. |
-| `separator` | Optional | String | The character used to join filter names in intersection bucket keys. Default is `&`. |
+| `filters` | 必要 | 物件 | 以鍵值組表示的一組具名篩選條件。每個鍵是篩選條件名稱，每個值是一個查詢物件。 |
+| `separator` | 選用 | 字串 | 在相交桶的鍵中用來連接篩選條件名稱的字元。預設為 `&`。 |
 
-## Example
+## 範例
 
-The following example analyzes the e-commerce dataset to determine how often products from three manufacturers appear together in the same orders:
+下列範例分析電子商務資料集，以判斷三家製造商的產品出現在同一筆訂單中的頻率：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -65,7 +66,7 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -119,29 +120,29 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 }
 ```
 
-The intersection bucket `grpA&grpB` with `doc_count` of `590` indicates that 590 orders contain products from both Low Tide Media and Elitelligence.
+`doc_count` 為 `590` 的相交桶 `grpA&grpB` 表示有 590 筆訂單同時包含 Low Tide Media 和 Elitelligence 的產品。
 
-## Usage with child aggregations
+## 搭配子彙總使用
 
-Nesting a child aggregation such as `date_histogram` inside `adjacency_matrix` adds a time dimension to the relationship data, enabling dynamic network analysis where you can observe how interactions between groups evolve over time.
+在 `adjacency_matrix` 內巢狀使用 `date_histogram` 等子彙總，可為關係資料加入時間維度，進而實現動態網路分析，讓您觀察群組之間的互動如何隨時間演變。
 
-Intersection buckets with zero matching documents are omitted from the response.
+符合文件數為零的相交桶會從回應中省略。
 {: .note}
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response body fields.
+下表列出回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `buckets` | Array | A list of buckets representing individual filters and their pairwise intersections. |
-| `buckets.key` | String | The filter name for individual filter buckets, or two filter names joined by the separator for intersection buckets. |
-| `buckets.doc_count` | Integer | The number of documents matching the filter or filter pair. |
+| `buckets` | 陣列 | 代表個別篩選條件及其兩兩相交結果的桶清單。 |
+| `buckets.key` | 字串 | 個別篩選條件桶的篩選條件名稱，或相交桶中以分隔符號連接的兩個篩選條件名稱。 |
+| `buckets.doc_count` | 整數 | 符合該篩選條件或篩選條件組合的文件數。 |
 
-## Limitations
+## 限制
 
-The number of buckets grows quadratically with the number of filters. For `N` filters, up to `N(N+1)/2` buckets are produced (`N` individual buckets plus `N*(N-1)/2` intersection buckets). To prevent excessive memory use, the maximum number of filters defaults to `100`. You can adjust this limit per index using the `index.max_adjacency_matrix_filters` setting.
+桶的數量會隨篩選條件數量呈平方成長。對於 `N` 個篩選條件，最多會產生 `N(N+1)/2` 個桶（`N` 個個別桶加上 `N*(N-1)/2` 個相交桶）。為避免使用過多記憶體，篩選條件數量上限預設為 `100`。您可以使用 `index.max_adjacency_matrix_filters` 設定，針對每個索引調整此限制。
 
-## Related documentation
+## 相關文件
 
-- For a complete example of rendering adjacency matrix results as a network graph in OpenSearch Dashboards, see [Creating a Vega visualization]({{site.url}}{{site.baseurl}}/dashboards/visualize/vega/#creating-a-vega-visualization).
+- 如需在 OpenSearch Dashboards 中將鄰接矩陣結果呈現為網路圖的完整範例，請參閱[建立 Vega 視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/vega/#creating-a-vega-visualization)。

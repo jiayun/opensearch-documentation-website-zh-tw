@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Lowercase
+title: "小寫"
 parent: Tokenizers
 nav_order: 70
 ---
 
-# Lowercase tokenizer
+# 小寫斷詞器
 
-The `lowercase` tokenizer breaks text into terms at white space and then lowercases all the terms. Functionally, this is identical to configuring a `letter` tokenizer with a `lowercase` token filter. However, using a `lowercase` tokenizer is more efficient because the tokenizer actions are performed in a single step.
+`lowercase` 斷詞器會在空白字元處將文字分割成詞彙，然後將所有詞彙轉換為小寫。在功能上，這與設定搭配 `lowercase` 詞元篩選器的 `letter` 斷詞器相同。不過，使用 `lowercase` 斷詞器更有效率，因為斷詞器的動作會在單一步驟中完成。
 
-## Example usage
+## 使用範例
 
-The following example request creates a new index named `my-lowercase-index` and configures an analyzer with a `lowercase` tokenizer:
+下列範例請求會建立名為 `my-lowercase-index` 的新索引，並設定使用 `lowercase` 斷詞器的分析器：
 
 ```json
 PUT /my-lowercase-index
@@ -35,9 +36,9 @@ PUT /my-lowercase-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器產生的詞元：
 
 ```json
 POST /my-lowercase-index/_analyze
@@ -48,7 +49,7 @@ POST /my-lowercase-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

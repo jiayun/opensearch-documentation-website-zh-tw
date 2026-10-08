@@ -1,56 +1,57 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Word delimiter 
+title: "字詞分隔"
 parent: Token filters
 nav_order: 470
 ---
 
-# Word delimiter token filter
+# 字詞分隔詞元篩選器
 
-The `word_delimiter` token filter is used to splits token on predefined characters and also offers optional token normalization based on customizable rules. 
+`word_delimiter` 詞元篩選器會依據預先定義的字元分割詞元，並且可根據可自訂的規則選擇性地將詞元正規化。
 
-We recommend using the `word_delimiter_graph` filter instead of the `word_delimiter` filter whenever possible because the `word_delimiter` filter sometimes produces invalid token graphs. For more information about the differences between the two filters, see [Differences between the `word_delimiter_graph` and `word_delimiter` filters]({{site.url}}{{site.baseurl}}/analyzers/token-filters/word-delimiter-graph/#differences-between-the-word_delimiter_graph-and-word_delimiter-filters).
+建議您盡可能使用 `word_delimiter_graph` 篩選器取代 `word_delimiter` 篩選器，因為 `word_delimiter` 篩選器有時會產生無效的詞元圖。如需這兩種篩選器差異的詳細資訊，請參閱 [`word_delimiter_graph` 與 `word_delimiter` 篩選器之間的差異]({{site.url}}{{site.baseurl}}/analyzers/token-filters/word-delimiter-graph/#differences-between-the-word_delimiter_graph-and-word_delimiter-filters)。
 {: .important}
 
-The `word_delimiter` filter is used to remove punctuation from complex identifiers like part numbers or product IDs. In such cases, it is best used with the `keyword` tokenizer. For hyphenated words, use the `synonym_graph` token filter instead of the `word_delimiter` filter because users frequently search for these terms both with and without hyphens.
+`word_delimiter` 篩選器可用於移除複雜識別碼（例如零件編號或產品 ID）中的標點符號。在這類情況下，最好搭配 `keyword` 斷詞器使用。對於含連字號的字詞，請使用 `synonym_graph` 詞元篩選器，而非 `word_delimiter` 篩選器，因為使用者經常同時以含連字號與不含連字號的方式搜尋這些詞彙。
 {: .note}
 
-By default, the filter applies the following rules.
+根據預設，此篩選器會套用下列規則。
 
-| Description   | Input  | Output |
+| 說明   | 輸入  | 輸出 |
 |:---|:---|:---|
-| Treats non-alphanumeric characters as delimiters.  | `ultra-fast`    | `ultra`, `fast`   |
-| Removes delimiters at the beginning or end of tokens.    | `Z99++'Decoder'`| `Z99`, `Decoder`  |
-| Splits tokens when there is a transition between uppercase and lowercase letters. | `OpenSearch`    | `Open`, `Search`  |
-| Splits tokens when there is a transition between letters and numbers.  | `T1000`         | `T`, `1000`   |
-| Removes the possessive ('s) from the end of tokens.  | `John's`        | `John`  |
+| 將非英數字元視為分隔符號。  | `ultra-fast`    | `ultra`, `fast`   |
+| 移除詞元開頭或結尾的分隔符號。    | `Z99++'Decoder'`| `Z99`, `Decoder`  |
+| 在大寫與小寫字母轉換處分割詞元。 | `OpenSearch`    | `Open`, `Search`  |
+| 在字母與數字轉換處分割詞元。  | `T1000`         | `T`, `1000`   |
+| 移除詞元結尾的所有格（'s）。  | `John's`        | `John`  |
 
-It's important **not** to use tokenizers that strip punctuation, like the `standard` tokenizer, with this filter. Doing so may prevent proper token splitting and interfere with options like `catenate_all` or `preserve_original`. We recommend using this filter with a `keyword` or `whitespace` tokenizer.
+請務必**不要**將會移除標點符號的斷詞器（例如 `standard` 斷詞器）與此篩選器搭配使用。這樣做可能會導致無法正確分割詞元，並干擾 `catenate_all` 或 `preserve_original` 等選項。建議您將此篩選器搭配 `keyword` 或 `whitespace` 斷詞器使用。
 {: .important}
 
-## Parameters
+## 參數
 
-You can configure the `word_delimiter` token filter using the following parameters.
+您可以使用下列參數設定 `word_delimiter` 詞元篩選器。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`catenate_all` | Optional | Boolean | Produces concatenated tokens from a sequence of alphanumeric parts. For example, `"quick-fast-200"` becomes `[ quickfast200, quick, fast, 200 ]`. Default is `false`.
-`catenate_numbers` | Optional | Boolean | Concatenates numerical sequences. For example, `"10-20-30"` becomes `[ 102030, 10, 20, 30 ]`. Default is `false`.
-`catenate_words` | Optional | Boolean | Concatenates alphabetic words. For example, `"high-speed-level"` becomes `[ highspeedlevel, high, speed, level ]`. Default is `false`. 
-`generate_number_parts` | Optional | Boolean | If `true`, numeric tokens (tokens consisting of numbers only) are included in the output. Default is `true`.
-`generate_word_parts` | Optional | Boolean | If `true`, alphabetical tokens (tokens consisting of alphabetic characters only) are included in the output. Default is `true`.
-`preserve_original` | Optional | Boolean | Keeps the original token (which may include non-alphanumeric delimiters) alongside the generated tokens in the output. For example, `"auto-drive-300"` becomes `[ auto-drive-300, auto, drive, 300 ]`. If `true`, the filter generates multi-position tokens not supported by indexing, so do not use this filter in an index analyzer or use the `flatten_graph` filter after this filter. Default is `false`. 
-`protected_words` | Optional | Array of strings | Specifies tokens that should not be split.
-`protected_words_path` | Optional | String | Specifies a path (absolute or relative to the config directory) to a file containing tokens that should not be separated by new lines.
-`split_on_case_change` | Optional | Boolean | Splits tokens where consecutive letters have different cases (one is lowercase and the other is uppercase). For example, `"OpenSearch"` becomes `[ Open, Search ]`. Default is `true`.
-`split_on_numerics` | Optional | Boolean | Splits tokens where there are consecutive letters and numbers. For example `"v8engine"` will become `[ v, 8, engine ]`. Default is `true`.
-`stem_english_possessive` | Optional | Boolean | Removes English possessive endings, such as `'s`. Default is `true`.
-`type_table` | Optional | Array of strings | A custom map that specifies how to treat characters and whether to treat them as delimiters, which avoids unwanted splitting. For example, to treat a hyphen (`-`) as an alphanumeric character, specify `["- => ALPHA"]` so that words are not split on hyphens. Valid types are: <br> - `ALPHA`: alphabetical <br> - `ALPHANUM`: alphanumeric <br> - `DIGIT`: numeric <br> - `LOWER`: lowercase alphabetical <br> - `SUBWORD_DELIM`: non-alphanumeric delimiter <br> - `UPPER`: uppercase alphabetical
-`type_table_path` | Optional | String | Specifies a path (absolute or relative to the config directory) to a file containing a custom character map. The map specifies how to treat characters and whether to treat them as delimiters, which avoids unwanted splitting. For valid types, see `type_table`.
+`catenate_all` | 選用 | 布林值 | 從一連串英數部分產生串接的詞元。例如，`"quick-fast-200"` 會變成 `[ quickfast200, quick, fast, 200 ]`。預設為 `false`。
+`catenate_numbers` | 選用 | 布林值 | 串接數字序列。例如，`"10-20-30"` 會變成 `[ 102030, 10, 20, 30 ]`。預設為 `false`。
+`catenate_words` | 選用 | 布林值 | 串接字母組成的字詞。例如，`"high-speed-level"` 會變成 `[ highspeedlevel, high, speed, level ]`。預設為 `false`。 
+`generate_number_parts` | 選用 | 布林值 | 若為 `true`，則輸出中會包含數字詞元（僅由數字組成的詞元）。預設為 `true`。
+`generate_word_parts` | 選用 | 布林值 | 若為 `true`，則輸出中會包含字母詞元（僅由字母字元組成的詞元）。預設為 `true`。
+`preserve_original` | 選用 | 布林值 | 在輸出中保留原始詞元（可能包含非英數分隔符號）以及產生的詞元。例如，`"auto-drive-300"` 會變成 `[ auto-drive-300, auto, drive, 300 ]`。若為 `true`，此篩選器會產生編製索引時不支援的多位置詞元，因此請勿在索引分析器中使用此篩選器，或在此篩選器之後使用 `flatten_graph` 篩選器。預設為 `false`。 
+`protected_words` | 選用 | 字串陣列 | 指定不應分割的詞元。
+`protected_words_path` | 選用 | 字串 | 指定一個檔案路徑（絕對路徑或相對於 config 目錄的路徑），該檔案包含不應分割的詞元，並以換行分隔。
+`split_on_case_change` | 選用 | 布林值 | 在相鄰字母大小寫不同（一個為小寫、另一個為大寫）處分割詞元。例如，`"OpenSearch"` 會變成 `[ Open, Search ]`。預設為 `true`。
+`split_on_numerics` | 選用 | 布林值 | 在字母與數字相鄰處分割詞元。例如，`"v8engine"` 會變成 `[ v, 8, engine ]`。預設為 `true`。
+`stem_english_possessive` | 選用 | 布林值 | 移除英文所有格字尾，例如 `'s`。預設為 `true`。
+`type_table` | 選用 | 字串陣列 | 自訂對應表，用於指定如何處理字元，以及是否將其視為分隔符號，以避免不必要的分割。例如，若要將連字號（`-`）視為英數字元，請指定 `["- => ALPHA"]`，如此字詞就不會在連字號處分割。有效的類型如下：<br> - `ALPHA`：字母 <br> - `ALPHANUM`：英數 <br> - `DIGIT`：數字 <br> - `LOWER`：小寫字母 <br> - `SUBWORD_DELIM`：非英數分隔符號 <br> - `UPPER`：大寫字母
+`type_table_path` | 選用 | 字串 | 指定一個檔案路徑（絕對路徑或相對於 config 目錄的路徑），該檔案包含自訂字元對應表。此對應表指定如何處理字元，以及是否將其視為分隔符號，以避免不必要的分割。如需有效的類型，請參閱 `type_table`。
 
-## Example
+## 範例
 
-The following example request creates a new index named `my-custom-index` and configures an analyzer with a `word_delimiter` filter:
+下列範例請求會建立名為 `my-custom-index` 的新索引，並設定一個使用 `word_delimiter` 篩選器的分析器：
 
 ```json
 PUT /my-custom-index
@@ -77,9 +78,9 @@ PUT /my-custom-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用此分析器產生的詞元：
 
 ```json
 GET /my-custom-index/_analyze
@@ -90,7 +91,7 @@ GET /my-custom-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

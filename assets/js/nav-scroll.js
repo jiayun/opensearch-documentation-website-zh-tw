@@ -1,3 +1,4 @@
+/* Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations. */
 document.addEventListener('DOMContentLoaded', () => {
     const navParent = document.getElementById('site-nav');
     if (!navParent) {
@@ -7,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // The business logic on navigation items in layouts/default.html and _includes/nav.html 
     // is much too complex to reliably make this determination correctly without overly complicating 
     // something that is already overly complicated. So, this will make the corrections at runtime.
+    function initializeItems() {
     navParent.querySelectorAll('ul').forEach((element) => {
       const hasNestedList = element.querySelector('ul');
       if (hasNestedList) {
@@ -93,12 +95,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (activeRect.top < (parentRect.top + VERSION_WRAPPER_HEIGHT)) {
         const distanceToScroll = activeRect.top - parentRect.top - VERSION_WRAPPER_HEIGHT;
         navParent.scrollTo(0, distanceToScroll);
-      } else if (activeRect.bottom > window.visualViewport.height) {
-        const distanceToScroll = activeRect.bottom - window.visualViewport.height + VERSION_WRAPPER_HEIGHT;
+      } else if (activeRect.bottom > (window.visualViewport?.height || window.innerHeight)) {
+        const distanceToScroll = activeRect.bottom - (window.visualViewport?.height || window.innerHeight) + VERSION_WRAPPER_HEIGHT;
         navParent.scrollTo(0, distanceToScroll);
       }
     }
     
+    }
+    initializeItems();
+    document.addEventListener('docs-navigation-ready', initializeItems);
+
     navParent.addEventListener('keydown', (event) => {
 
       const handleSpaceKey = () => {

@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: ICU
 parent: Tokenizers
 nav_order: 45
 ---
 
-# ICU tokenizer
+# ICU 斷詞器
 
-The `icu_tokenizer` splits text into words using Unicode text segmentation rules defined in [Unicode Standard Annex #29](https://www.unicode.org/reports/tr29/). This tokenizer provides more accurate word boundary detection than the standard tokenizer, particularly for Asian languages that don't use spaces to separate words.
+`icu_tokenizer` 使用 [Unicode Standard Annex #29](https://www.unicode.org/reports/tr29/) 中定義的 Unicode 文字分段規則，將文字拆分為單字。此斷詞器比標準斷詞器提供更精確的字詞邊界偵測，特別適用於不使用空格分隔單字的亞洲語言。
 
-The `icu_tokenizer` employs dictionary-based tokenization for Chinese, Japanese, Korean, Thai, and Lao text, and applies specialized rules for segmenting Myanmar and Khmer scripts into syllables.
+`icu_tokenizer` 對中文、日文、韓文、泰文與寮文採用基於字典的斷詞方式，並套用專門規則將緬甸文與高棉文文字切分為音節。
 
-## Installation
+## 安裝
 
-The `icu_tokenizer` requires the `analysis-icu` plugin. For installation instructions, see [ICU analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/).
+`icu_tokenizer` 需要 `analysis-icu` 外掛程式。安裝說明請參閱 [ICU 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/)。
 
-## Example
+## 範例
 
-The following example demonstrates how to use the `icu_tokenizer`:
+下列範例示範如何使用 `icu_tokenizer`：
 
 ```json
 PUT /icu-tokenizer-index
@@ -35,9 +36,9 @@ PUT /icu-tokenizer-index
 ```
 {% include copy-curl.html %}
 
-## Testing the tokenizer
+## 測試斷詞器
 
-Use the following request to test the `icu_tokenizer`:
+使用下列請求來測試 `icu_tokenizer`：
 
 ```json
 POST /icu-tokenizer-index/_analyze
@@ -48,7 +49,7 @@ POST /icu-tokenizer-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The tokenizer correctly segments Thai text without spaces:
+斷詞器正確地切分了不含空格的泰文文字：
 
 ```json
 {
@@ -99,21 +100,21 @@ The tokenizer correctly segments Thai text without spaces:
 }
 ```
 
-## Customizing tokenization rules
+## 自訂斷詞規則
 
-Advanced users can customize the `icu_tokenizer` behavior by specifying per-script rule files using the Resource Bundle Break Iterator (RBBI) syntax. This feature is experimental in Lucene.
+進階使用者可以使用 Resource Bundle Break Iterator (RBBI) 語法，指定各文字系統專用的規則檔案，以自訂 `icu_tokenizer` 的行為。此功能在 Lucene 中仍屬實驗性。
 
-To apply custom rules, use the `rule_files` parameter with a comma-separated list of `script:filename` pairs. Script codes follow the [ISO 15924](https://unicode.org/iso15924/iso15924-codes.html) four-letter standard.
+若要套用自訂規則，請使用 `rule_files` 參數，並提供以逗號分隔的 `script:filename` 配對清單。文字系統程式碼遵循 [ISO 15924](https://unicode.org/iso15924/iso15924-codes.html) 四字母標準。
 
-### Example with custom rules
+### 自訂規則範例
 
-Save a custom rule file to your OpenSearch config directory (for example, `CustomRules.rbbi`):
+將自訂規則檔案儲存到您的 OpenSearch 組態目錄（例如 `CustomRules.rbbi`）：
 
 ```text
 .+ {200};
 ```
 
-Configure an analyzer to use this rule file:
+設定分析器以使用此規則檔案：
 
 ```json
 PUT /custom-icu-rules
@@ -137,7 +138,7 @@ PUT /custom-icu-rules
 ```
 {% include copy-curl.html %}
 
-Test the custom tokenizer:
+測試自訂斷詞器：
 
 ```json
 POST /custom-icu-rules/_analyze
@@ -148,15 +149,15 @@ POST /custom-icu-rules/_analyze
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-The following table lists the parameters for the `icu_tokenizer`.
+下表列出 `icu_tokenizer` 的參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`rule_files` | String | Comma-separated list of `script:rulefile` pairs that define custom tokenization rules for specific scripts. Rule files must be placed in the OpenSearch config directory. Optional.
+`rule_files` | 字串 | 以逗號分隔的 `script:rulefile` 配對清單，為特定文字系統定義自訂斷詞規則。規則檔案必須放置在 OpenSearch 組態目錄中。選用。
 
-## Related documentation
+## 相關文件
 
-- [ICU analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/)
-- [Standard tokenizer]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/standard/)
+- [ICU 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/)
+- [標準斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/standard/)

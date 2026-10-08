@@ -1,270 +1,42 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: table_wrappers
 ---
-
 <!DOCTYPE html>
-
-<html lang="{{ site.lang | default: 'en-US' }}">
+<html lang="{{ site.lang | default: 'zh-TW' }}" data-pagefind-ignore="all">
 {% include head.html %}
 <body>
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <symbol id="svg-arrow-right" viewBox="0 0 24 24">
-        <title>Expand</title>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
-            <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-    </symbol>
-</svg>
-
 {% include header.html %}
-
 <div class="main-content-wrap-home">
-    <div id="main-content" class="main-content" role="main">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Results Page Head from layout</title>
-      </head>
-  
-      <div class="search-page--wrapper">
-        <!-- Search input box at the top -->
-        <div class="search-page--input-container">
-            <div class="search-page--results--wrapper">
-                <input type="text" class="search-page--results--input-box" id="searchPageInput" placeholder="Search for anything" aria-label="Search" autocomplete="off">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="search-page--results--input-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-            </div>
-        </div>
-    
-        <div class="search-page">
-            <aside class="search-page--sidebar">
-            <h3>Filter results</h3>
-            <div class="version-selector-wrapper" id="version-panel">
-                <version-selector selected="{{ site.data.versions.current }}"></version-selector>
-            </div>
-            <form class="search-page--sidebar--category-filter">
-                <div class="search-page--sidebar--category-filter--checkbox">
-                <input type="checkbox" id="categoryAll" name="categoryGroup" value="All" class="category-checkbox" checked>
-                <label for="categoryAll">All</label>
-                </div>
-                <div class="search-page--sidebar--category-filter--checkbox-child">
-                <input type="checkbox" id="categoryDocumentation" name="categoryGroup" value="docs" class="category-checkbox" checked>
-                <label for="categoryDocumentation">Documentation</label>
-                </div>
-                <div class="search-page--sidebar--category-filter--checkbox-child">
-                <input type="checkbox" id="categoryAnnouncements" name="categoryGroup" value="announcements" class="category-checkbox" checked>
-                <label for="categoryAnnouncements">Announcements</label>
-                </div>
-                <div class="search-page--sidebar--category-filter--checkbox-child">
-                <input type="checkbox" id="categoryBlog" name="categoryGroup" value="blogs" class="category-checkbox" checked>
-                <label for="categoryBlog">Blogs</label>
-                </div>
-                <div class="search-page--sidebar--category-filter--checkbox-child">
-                <input type="checkbox" id="categoryNews" name="categoryGroup" value="news" class="category-checkbox" checked>
-                <label for="categoryNews">News</label>
-                </div>
-                <div class="search-page--sidebar--category-filter--checkbox-child">
-                <input type="checkbox" id="categoryEvent" name="categoryGroup" value="events" class="category-checkbox" checked>
-                <label for="categoryEvent">Events</label>
-                </div>
-            </form>
-            </aside>
-    
-            <!-- Search Results Section -->
-            <div class="search-page--results">
-            <main class="search-page--results--display">
-                <h2 class="search-page--results--display--header" id="searchPageResultsHeader">Search Results</h2>
-                <div class="search-page--results--display--container" id="searchPageResultsContainer">
-                <!-- API results will be displayed here -->
-                </div>
-            </main>
-            </div>
+  <div id="main-content" class="main-content" role="main">
+    <h1>搜尋 OpenSearch 3.9 文件</h1>
+    <div class="search-page--wrapper">
+      <div class="search-page--input-container">
+        <div class="search-page--results--wrapper">
+          <input type="search" class="search-page--results--input-box" id="searchPageInput" placeholder="搜尋文件" aria-label="搜尋字詞" autocomplete="off">
+          <button type="button" id="searchSubmit">搜尋</button>
         </div>
       </div>
-  
-      <a class="top-link" href="#top">
-        <svg viewBox="0 0 24 24">
-          <use xlink:href="#svg-arrow-right"></use>
-        </svg>
-      </a>
+      <div class="search-page">
+        <aside class="search-page--sidebar">
+          <h2>篩選結果</h2>
+          <label for="searchSection">文件分類</label>
+          <select id="searchSection"><option value="">所有文件</option></select>
+        </aside>
+        <div class="search-page--results">
+          <section class="search-page--results--display" aria-label="搜尋結果">
+            <h2 class="search-page--results--display--header" id="searchPageResultsHeader" aria-live="polite">請輸入搜尋字詞。</h2>
+            <div class="search-page--results--display--container" id="searchPageResultsContainer"></div>
+            <button type="button" id="searchMore" hidden>顯示更多結果</button>
+          </section>
+        </div>
+      </div>
     </div>
   </div>
-  
-
+</div>
 {% include footer.html %}
 <script src="{{ '/assets/js/theme-toggle.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/search.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/home-listener.js' | relative_url }}"></script>
-<script>
-    function truncateSentence(sentence, maxLength) {
-    if (sentence.length <= maxLength) return sentence;
-    let words = sentence.split(' ');
-    let truncatedSentence = '';
-
-    for (let i = 0; i < words.length; i++) {
-        if (truncatedSentence.length + words[i].length + 1 > maxLength) {
-            break;
-        }
-        if (i > 0) {
-            truncatedSentence += ' ';
-        }
-        truncatedSentence += words[i];
-    }
-    return truncatedSentence + (truncatedSentence.length < sentence.length ? '...' : '');
-}
-</script>
-<script>
-    const searchInput = document.getElementById('searchPageInput');
-    const checkboxes = document.querySelectorAll('.category-checkbox');
-
-    function getSelectedCategory() {
-        const allCheckbox = document.getElementById('categoryAll');
-        return document.querySelectorAll('input[name="categoryGroup"]:checked');
-    }
-
-    /* The query in the address bar, which is the query this page is showing results for. */
-    function getUrlQuery() {
-        return new URLSearchParams(window.location.search).get('q') || '';
-    }
-
-    /* Shows the results for a query and does nothing else. Separate from `triggerSearch` so that
-       going back to an earlier search can run it again without changing the history. */
-    function runSearch(query) {
-      const searchResultsHeader = document.getElementById('searchPageResultsHeader');
-      const resultsContainer = document.getElementById('searchPageResultsContainer');
-
-      if (!query) {
-        searchResultsHeader.textContent = 'Enter a search query.';
-        resultsContainer.innerHTML = '';
-        return;
-      }
-
-      if (getSelectedCategory().length === 0) {
-        searchResultsHeader.textContent = 'Select the result type for your search.';
-        resultsContainer.innerHTML = '';
-        return;
-      }
-
-      const searchType = Array.from(getSelectedCategory()).map(element => element.value).join(',');
-      searchResultsHeader.textContent = `Search results for "${truncateSentence(query, 20)}"`;
-      doResultsPageSearch(query, searchType, getDocsVersion());
-    }
-
-    /* Runs a search and puts it in the address bar, so a reload or a copied link shows the same
-       results. A new query adds a history entry, so the back button walks back through the searches;
-       the same query replaces it, because a category checkbox would otherwise add one per tick.
-       Comment in this style here, never with `//`: the build puts this script on a single line, which
-       would turn a line comment into a comment on everything after it. */
-    function triggerSearch(query) {
-      const previousQuery = getUrlQuery();
-      const url = new URL(window.location);
-
-      if (query) {
-        url.searchParams.set('q', query);
-      } else {
-        url.searchParams.delete('q');
-      }
-
-      if (query && query !== previousQuery) {
-        history.pushState({ q: query }, '', url);
-      } else {
-        history.replaceState({ q: query }, '', url);
-      }
-
-      runSearch(query);
-    }
-
-    /* Puts the search box and the results back in step with the address bar when the reader moves
-       between two searches with the back or forward button, which does not reload the page. */
-    window.addEventListener('popstate', () => {
-      searchInput.value = getUrlQuery();
-      runSearch(searchInput.value.trim());
-    });
-
-    searchInput.addEventListener('keydown', function(event) {
-      if (event.key === 'Enter') {
-          event.preventDefault();
-          triggerSearch(searchInput.value.trim());
-      }
-    });
-      
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const categoryAll = document.getElementById('categoryAll');
-        const categoryDocumentation = document.getElementById('categoryDocumentation');
-        const categoryBlog = document.getElementById('categoryBlog');
-        const categoryEvent = document.getElementById('categoryEvent');
-        const categoryAnnouncements = document.getElementById('categoryAnnouncements');
-        const categoryNews = document.getElementById('categoryNews');
-        const searchInput = document.getElementById('searchPageInput');
-
-        function updateAllCheckbox() {
-            if (categoryDocumentation.checked && categoryBlog.checked && categoryEvent.checked && categoryAnnouncements.checked && categoryNews.checked) {
-                categoryAll.checked = true;
-            } else {
-                categoryAll.checked = false;
-            }
-        }
-
-        function updateChildCheckboxes() {
-            if (categoryAll.checked) {
-                categoryDocumentation.checked = true;
-                categoryBlog.checked = true;
-                categoryEvent.checked = true;
-                categoryAnnouncements.checked = true;
-                categoryNews.checked = true;
-            } else {
-                categoryDocumentation.checked = false;
-                categoryBlog.checked = false;
-                categoryEvent.checked = false;
-                categoryAnnouncements.checked = false;
-                categoryNews.checked = false;
-            }
-        }
-
-        categoryAll.addEventListener('change', () => {
-            updateChildCheckboxes(); 
-            triggerSearch(searchInput.value.trim());
-        });
-        categoryDocumentation.addEventListener('change',  () => {
-            updateAllCheckbox(); 
-            triggerSearch(searchInput.value.trim());
-        });
-        categoryBlog.addEventListener('change', () => {
-            updateAllCheckbox(); 
-            triggerSearch(searchInput.value.trim());
-        });
-        categoryAnnouncements.addEventListener('change', () => {
-            updateAllCheckbox(); 
-            triggerSearch(searchInput.value.trim());
-        });
-        categoryNews.addEventListener('change', () => {
-            updateAllCheckbox(); 
-            triggerSearch(searchInput.value.trim());
-        });
-        categoryEvent.addEventListener('change', () => {
-            updateAllCheckbox(); 
-            triggerSearch(searchInput.value.trim());
-        });
-    });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const searchInput = document.getElementById('searchPageInput');
-
-      /* Fills the box from the address bar and searches, so that a copied link or a reload shows the
-         results it promises. `getUrlQuery` returns the query ready to use, decoded once, which is what
-         a query holding a percent sign needs: "100% recall". */
-      const searchQuery = getUrlQuery();
-
-      if (searchQuery) {
-        searchInput.value = searchQuery;
-        triggerSearch(searchInput.value.trim());
-      }
-    });
-</script>
 </body>
 </html>

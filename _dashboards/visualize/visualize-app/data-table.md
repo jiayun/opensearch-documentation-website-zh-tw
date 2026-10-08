@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Data table
+title: "資料表格"
 parent: Visualization types
 grand_parent: Creating visualizations in the Visualize application
 great_grand_parent: Building data visualizations
@@ -9,44 +10,44 @@ redirect_from:
   - /dashboards/visualize/data-table/
 ---
 
-# Data table
+# 資料表格
 
-A data table displays selected fields in row-column form. You can display one or more metrics as columns, bucketed into rows, and subdivide bucket data into separate tables.
+資料表格以列與欄的形式顯示選取的欄位。您可以將一或多個指標顯示為欄，並分桶為列，再將桶資料細分為不同的表格。
 
-## When to use data tables
+## 何時使用資料表格
 
-Use data tables to examine individual documents, verify data quality, or investigate details behind aggregate visualizations. You can sort, filter, and examine correlations between fields that might not be apparent in more abstract visualizations. Use data tables as drill-down targets to move from high-level visual summaries to specific record-level details.
+當您需要檢查個別文件、驗證資料品質，或調查彙總視覺化背後的細節時，請使用資料表格。您可以排序、篩選，並檢查欄位之間在較抽象的視覺化中可能不明顯的關聯性。您也可以將資料表格做為向下鑽研的目標，從高階的視覺化摘要深入到特定記錄層級的細節。
 
-## Creating a data table
+## 建立資料表格
 
-The examples on this page use the **Sample flight data** dataset. Before you begin, complete the [prerequisites]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites).
+本頁的範例使用 **Sample flight data** 資料集。開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites)。
 {: .note}
 
-To create a data table, follow these steps:
+若要建立資料表格，請依照下列步驟操作：
 
-1. In the **New Visualization** dialog, select **Data Table**, then select your index pattern (for example, **opensearch_dashboards_sample_data_flights**).
+1. 在 **New Visualization** 對話方塊中，選取 **Data Table**，然後選取您的索引模式（例如 **opensearch_dashboards_sample_data_flights**）。
 
-   By default, the visualization selects `Count` as the only metric to display. Since the data is not bucketed, it displays the total document count.
+   根據預設，此視覺化會選取 `Count` 做為唯一要顯示的指標。由於資料未分桶，因此會顯示文件總數。
 
-   For this dataset the count is `13,059` if none of the data has been filtered out. If your visualization displays a different value, make sure that your time filter window is large enough to encompass all the sample flight data. See [time filter]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/).
+   若未篩除任何資料，此資料集的計數為 `13,059`。如果您的視覺化顯示不同的值，請確認您的時間篩選範圍夠大，足以涵蓋所有範例航班資料。請參閱[時間篩選]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/)。
    {: .note}
 
-2. In the **Metrics** panel, expand **Metric Count**.
-3. Set **Aggregation** to **Average** and **Field** to **FlightDelayMin**.
-4. (Optional) Enter a **Custom label**, for example `Flight delay in minutes`.
-5. Select **Update**.
+2. 在 **Metrics** 面板中，展開 **Metric Count**。
+3. 將 **Aggregation** 設為 **Average**，並將 **Field** 設為 **FlightDelayMin**。
+4. （選用）輸入 **Custom label**，例如 `Flight delay in minutes`。
+5. 選取 **Update**。
 
-   The table displays a single value for all the data, `47.335`. This is the average flight delay for every document in the flight database, including zero-minute delays.
+   表格會顯示所有資料的單一值，`47.335`。這是航班資料庫中每份文件的平均航班延誤時間，包含零分鐘的延誤。
 
-6. In the **Buckets** panel, select **Add** > **Split rows**.
-7. Set **Aggregation** to **Terms** and **Field** to **FlightDelay**.
-8. Select **Update**.
+6. 在 **Buckets** 面板中，選取 **Add** > **Split rows**。
+7. 將 **Aggregation** 設為 **Terms**，並將 **Field** 設為 **FlightDelay**。
+8. 選取 **Update**。
 
-   The table shows that non-delayed flights averaged zero minutes of delay time. The nonzero flight delay bucket is considerably higher than the overall value because the zero delays are no longer part of that average.
+   表格顯示未延誤的航班平均延誤時間為零分鐘。非零航班延誤桶的值遠高於整體值，因為零延誤已不再計入該平均值。
    {: .note}
 
-9. Change the row buckets by choosing **Range** from the **Aggregation** dropdown and **DistanceMiles** from the **Field** dropdown.
-10. Configure the following ranges (select **Add range** for the third row):
+9. 從 **Aggregation** 下拉式清單中選擇 **Range**，並從 **Field** 下拉式清單中選擇 **DistanceMiles**，以變更列桶。
+10. 設定下列範圍（第三列請選取 **Add range**）：
 
     | From | To |
     | :--- | :--- |
@@ -54,64 +55,64 @@ To create a data table, follow these steps:
     | 4000 | 8000 |
     | 8000 | Infinity |
 
-11. In the **Metrics** panel, select **Add** > **Metric** and set **Aggregation** to **Count**.
+11. 在 **Metrics** 面板中，選取 **Add** > **Metric**，並將 **Aggregation** 設為 **Count**。
 
-    Select **Add** in the **Metrics** panel, not the **Buckets** panel.
+    請在 **Metrics** 面板中選取 **Add**，而非 **Buckets** 面板。
     {: .tip}
 
-12. Select **Update**.
+12. 選取 **Update**。
 
-    The table shows the average flight delay and count for each distance range, as shown in the following image.
+    表格會顯示每個距離範圍的平均航班延誤時間與計數，如下圖所示。
 
-    ![Data table showing flight delay by distance range]({{site.url}}{{site.baseurl}}/images/dashboards/example-table-flightdelay.png)
+    ![顯示依距離範圍區分之航班延誤的資料表格]({{site.url}}{{site.baseurl}}/images/dashboards/example-table-flightdelay.png)
 
-## Displaying multiple columns
+## 顯示多個欄
 
-A data table always includes at least one metric. When the **Metrics** panel contains a single metric, the panel provides no option to remove or disable it, so an aggregation-based data table cannot be built without a metric column. To display several columns, add a bucket or a **Top Hit** metric for each field.
+資料表格一律至少包含一個指標。當 **Metrics** 面板只含有一個指標時，面板不提供移除或停用該指標的選項，因此沒有指標欄就無法建立以彙總為基礎的資料表格。若要顯示多個欄，請為每個欄位新增一個桶或一個 **Top Hit** 指標。
 
-### Adding a column for each field you group by
+### 為每個分組依據的欄位新增一個欄
 
-Each **Split rows** bucket adds a column to the table.
+每個 **Split rows** 桶都會為表格新增一個欄。
 
-This example starts from a new data table that uses the default **Count** metric. If you continue from the previous procedure, the table retains the **DistanceMiles** bucket and both metrics, so it displays additional columns.
+本範例從使用預設 **Count** 指標的新資料表格開始。如果您從先前的程序繼續操作，表格會保留 **DistanceMiles** 桶與兩個指標，因此會顯示額外的欄。
 {: .note}
 
-To group flights by carrier and destination country, follow these steps:
+若要依航空公司與目的地國家將航班分組，請依照下列步驟操作：
 
-1. In the **Buckets** panel, select **Add** > **Split rows**.
-1. Set **Aggregation** to **Terms** and **Field** to **Carrier**.
-1. Select **Add** > **Split rows** a second time.
-1. Set **Aggregation** to **Terms** and **Field** to **DestCountry**.
-1. Select **Update**.
+1. 在 **Buckets** 面板中，選取 **Add** > **Split rows**。
+1. 將 **Aggregation** 設為 **Terms**，並將 **Field** 設為 **Carrier**。
+1. 再次選取 **Add** > **Split rows**。
+1. 將 **Aggregation** 設為 **Terms**，並將 **Field** 設為 **DestCountry**。
+1. 選取 **Update**。
 
-The table displays three columns: **Carrier: Descending**, **DestCountry: Descending**, and the metric column. A bucket column is labeled with the field name and the sort order of the bucket. The buckets are nested, so each row pairs one carrier with one of the destination countries that appears in its documents.
+表格會顯示三個欄：**Carrier: Descending**、**DestCountry: Descending** 以及指標欄。桶欄會以欄位名稱與桶的排序順序做為標籤。桶為巢狀結構，因此每一列會將一家航空公司與其文件中出現的其中一個目的地國家配對。
 
-### Adding a column of field values
+### 新增一個欄位值欄
 
-The **Top Hit** metric returns a value taken directly from a document, and in a data table it accepts string fields as well as numeric ones. Each **Top Hit** metric becomes a column of field values. To add the destination city of each group's most recent flight, follow these steps:
+**Top Hit** 指標會傳回直接取自文件的值，且在資料表格中除了數值欄位外，也接受字串欄位。每個 **Top Hit** 指標都會成為一個欄位值欄。若要新增各群組最近一班航班的目的地城市，請依照下列步驟操作：
 
-1. In the **Metrics** panel, select **Add** > **Metric**.
-1. From the **Aggregation** dropdown list, select **Top Hit**.
-1. From the **Field** dropdown list, select **DestCityName**.
-1. Verify that **Size** is set to `1`, **Sort on** is set to **timestamp**, and **Order** is set to **Descending**.
-1. Select **Update**.
+1. 在 **Metrics** 面板中，選取 **Add** > **Metric**。
+1. 從 **Aggregation** 下拉式清單中，選取 **Top Hit**。
+1. 從 **Field** 下拉式清單中，選取 **DestCityName**。
+1. 確認 **Size** 設為 `1`、**Sort on** 設為 **timestamp**，且 **Order** 設為 **Descending**。
+1. 選取 **Update**。
 
-The table now displays four columns: **Carrier: Descending**, **DestCountry: Descending**, **Count**, and **Last DestCityName**. Each row reports how many flights the carrier operated to that country and the city where its most recent flight landed, such as `Rome` or `San Antonio`. To add a column for each additional field, repeat these steps and select a different field.
+表格現在會顯示四個欄：**Carrier: Descending**、**DestCountry: Descending**、**Count** 以及 **Last DestCityName**。每一列會回報該航空公司飛往該國家的航班數，以及其最近一班航班降落的城市，例如 `Rome` 或 `San Antonio`。若要為每個額外欄位新增一個欄，請重複這些步驟並選取不同的欄位。
 
-**Top Hit** returns values from the documents in each row's bucket, so the table still groups documents. Raising **Size** returns that many values in one cell, but the documents in a bucket often repeat the same value, so the cell lists one city many times. To give each document its own row, see [Listing individual documents](#listing-individual-documents).
+**Top Hit** 會從每一列桶中的文件傳回值，因此表格仍會將文件分組。提高 **Size** 會在單一儲存格中傳回那麼多個值，但桶中的文件經常重複相同的值，因此該儲存格會列出同一個城市許多次。若要讓每份文件各自佔一列，請參閱[列出個別文件](#listing-individual-documents)。
 {: .note}
 
-## Listing individual documents
+## 列出個別文件
 
-To build a table in which each row is a single document and each column is a field, save a search in the **Discover** application instead of creating a data table. Discover returns documents without aggregating them, and a saved search can be added to a dashboard in the same **Add panels** dialog as a visualization.
+若要建立每一列為單一文件、每一欄為一個欄位的表格，請改在 **Discover** 應用程式中儲存搜尋，而非建立資料表格。Discover 會傳回文件而不進行彙總，且儲存的搜尋可與視覺化一樣，在相同的 **Add panels** 對話方塊中新增至儀表板。
 
-To choose which fields appear as columns, see [Using the field select tool]({{site.url}}{{site.baseurl}}/dashboards/discover/field-select/). To place the saved search on a dashboard, see [Adding a visualization to a dashboard]({{site.url}}{{site.baseurl}}/dashboards/dashboard/adding-a-viz/#adding-a-panel-to-a-dashboard).
+若要選擇哪些欄位顯示為欄，請參閱[使用欄位選取工具]({{site.url}}{{site.baseurl}}/dashboards/discover/field-select/)。若要將儲存的搜尋放到儀表板上，請參閱[將視覺化新增至儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/adding-a-viz/#adding-a-panel-to-a-dashboard)。
 
-## Configuring a data table
+## 設定資料表格
 
-For information about general visualization configuration, see [Configuring visualizations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-viz/).
+如需一般視覺化設定的相關資訊，請參閱[設定視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-viz/)。
 
-## Next steps
+## 後續步驟
 
-- To choose a different visualization type, see [Visualization types]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/).
-- To add this visualization to a dashboard, see [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/).
+- 若要選擇不同的視覺化類型，請參閱[視覺化類型]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/)。
+- 若要將此視覺化新增至儀表板，請參閱[建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)。

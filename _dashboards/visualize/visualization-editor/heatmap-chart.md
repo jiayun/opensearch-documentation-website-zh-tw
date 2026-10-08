@@ -1,118 +1,119 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Heatmap
+title: "熱圖"
 parent: Visualization types
 grand_parent: Creating visualizations using queries
 great_grand_parent: Building data visualizations
 nav_order: 30
 ---
 
-# Heatmaps in the visualization editor
+# 視覺化編輯器中的熱圖
 
-A heatmap uses color to represent the magnitude of values in a dataset. Each cell in the map corresponds to a combination of two dimensions, with the cell's color intensity reflecting the value associated with that combination.
+熱圖使用顏色來表示資料集中數值的大小。圖中的每個儲存格對應兩個維度的一種組合，而儲存格的顏色深淺則反映該組合所對應的數值。
 
-## Creating a heatmap
+## 建立熱圖
 
-The following examples build on each other, starting with a basic heatmap and adding complexity. Before you begin, complete the [prerequisites]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/#prerequisites).
+以下範例逐步延伸，從基本熱圖開始，並逐漸增加複雜度。開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/#prerequisites)。
 
-### Basic heatmap
+### 基本熱圖
 
-Start with a query that aggregates a numeric metric by two categorical fields:
+首先使用一個依兩個類別欄位彙總數值指標的查詢：
 
 ```sql
 source = opensearch_dashboards_sample_data_flights | where FlightDelay = true | stats avg(FlightDelayMin) as avg_delay by OriginWeather, DestWeather
 ```
 {% include copy.html %}
 
-After running this query, select **Heatmap** as the chart type. The fields are mapped as follows:
+執行此查詢後，選取 **Heatmap** 作為圖表類型。欄位的對應方式如下：
 
-- The **X-Axis** displays the `OriginWeather` field.
-- The **Y-Axis** displays the `DestWeather` field.
-- The **Value** displays the `avg_delay` field.
+- **X-Axis** 顯示 `OriginWeather` 欄位。
+- **Y-Axis** 顯示 `DestWeather` 欄位。
+- **Value** 顯示 `avg_delay` 欄位。
 
-The result is a grid of colored cells where each cell represents the average flight delay minutes for a specific origin-destination weather combination. Darker cells indicate higher values, as shown in the following image.
+結果會是一個由彩色儲存格組成的網格，其中每個儲存格代表特定出發地與目的地天氣組合的平均航班延誤分鐘數。顏色越深的儲存格表示數值越高，如下圖所示。
 
-![Basic heatmap showing average flight delay minutes by weather conditions]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/heatmap/heatmap-initial.png){: width="100%" }
+![依天氣狀況顯示平均航班延誤分鐘數的基本熱圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/heatmap/heatmap-initial.png){: width="100%" }
 
-### Customizing the color schema and scale
+### 自訂色彩配置與比例尺
 
-To better distinguish between values, change the color settings:
+為了更清楚地區分數值，請變更色彩設定：
 
-1. In the **Heatmap** section, change **Color schema** to a different palette (for example, **Yellow to Orange**) to improve contrast.
-2. Enable **Scale to data bounds** to map the color range to the actual min and max of your data rather than calculated bounds.
-3. Change **Max number of colors** to increase or decrease the granularity of color bins, as shown in the following image.
+1. 在 **Heatmap** 區段中，將 **Color schema** 變更為其他色盤（例如 **Yellow to Orange**）以提高對比度。
+2. 啟用 **Scale to data bounds**，將色彩範圍對應至資料的實際最小值與最大值，而非計算出的邊界。
+3. 變更 **Max number of colors** 以增加或減少色彩區間的精細程度，如下圖所示。
 
-![Heatmap with customized color schema and scale]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/heatmap/heatmap-custom-colors.png){: width="100%" }
+![使用自訂色彩配置與比例尺的熱圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/heatmap/heatmap-custom-colors.png){: width="100%" }
 
-### Enabling labels
+### 啟用標籤
 
-To display the numeric value inside each cell, enable **Show labels**. If cells are narrow, enable **Rotate** to angle the labels for better readability, as shown in the following image.
+若要在每個儲存格內顯示數值，請啟用 **Show labels**。如果儲存格較窄，請啟用 **Rotate** 將標籤傾斜，以提高可讀性，如下圖所示。
 
-![Heatmap with value labels displayed in cells]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/heatmap/heatmap-with-labels.png){: width="100%" }
+![在儲存格中顯示數值標籤的熱圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/heatmap/heatmap-with-labels.png){: width="100%" }
 
-## Configuring a heatmap
+## 設定熱圖
 
-You can configure the following settings in the configuration panel.
+您可以在組態面板中設定下列設定。
 
-### Fields
+### 欄位
 
-In the **Fields** section, configure the fields displayed on each axis.
+在 **Fields** 區段中，設定每個座標軸上顯示的欄位。
 
-| Field | Description |
+| 欄位 | 說明 |
 | --- | --- |
-| **X-Axis** | Select a categorical field to display along the horizontal axis. Each unique value becomes a column in the heatmap grid. |
-| **Y-Axis** | Select a categorical field to display along the vertical axis. Each unique value becomes a row in the heatmap grid. |
-| **Value** | Select a numeric field whose magnitude determines the color intensity of each cell. Each cell represents the intersection of one X-Axis category and one Y-Axis category. |
+| **X-Axis** | 選取要沿水平軸顯示的類別欄位。每個唯一值都會成為熱圖網格中的一欄。 |
+| **Y-Axis** | 選取要沿垂直軸顯示的類別欄位。每個唯一值都會成為熱圖網格中的一列。 |
+| **Value** | 選取一個數值欄位，其大小決定每個儲存格的顏色深淺。每個儲存格代表一個 X-Axis 類別與一個 Y-Axis 類別的交集。 |
 
-### Split
+### 分割
 
-In the **Split by** dropdown list, select a field to split the chart into separate elements by value. For more information, see [Split]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#split).
+在 **Split by** 下拉式清單中，選取一個欄位，依其值將圖表分割為個別元素。如需詳細資訊，請參閱[分割]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#split)。
 
 
-### Heatmap
+### 熱圖
 
-Use the following settings to customize the appearance of the heatmap.
+使用下列設定自訂熱圖的外觀。
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Use threshold colors** | When enabled, cell colors are determined by threshold ranges rather than the selected color schema. |
-| **Color schema** | Controls the color theme used to represent values across cells. Supported values: **Greens**, **Blues**, **Reds**, **Greys**, **Green to Blue**, **Yellow to Orange**. |
-| **Reverse schema** | When enabled, the color mapping is inverted: higher values are represented with lighter colors, and lower values with darker colors. |
-| **Color scale** | Defines how data values are mapped to colors. Supported values: **Linear**, **Log**, **Sqrt**. |
-| **Scale to data bounds** | When enabled, calculates the minimum and maximum values from the dataset and maps the color scale accordingly. |
-| **Percentage mode** | When enabled, values are converted to percentages and the color scale is normalized between 0 and 1. |
-| **Max number of colors** | Controls the maximum number of discrete color bins used in the color scale. |
-| **Show labels** | When enabled, displays the numeric value as a label inside each cell. |
+| **Use threshold colors** | 啟用時，儲存格顏色會依閾值範圍決定，而非依所選的色彩配置。 |
+| **Color schema** | 控制用於表示各儲存格數值的色彩主題。支援的值：**Greens**、**Blues**、**Reds**、**Greys**、**Green to Blue**、**Yellow to Orange**。 |
+| **Reverse schema** | 啟用時，色彩對應會反轉：較高的數值以較淺的顏色表示，較低的數值則以較深的顏色表示。 |
+| **Color scale** | 定義資料值對應至顏色的方式。支援的值：**Linear**、**Log**、**Sqrt**。 |
+| **Scale to data bounds** | 啟用時，會從資料集計算最小值與最大值，並據此對應色彩比例尺。 |
+| **Percentage mode** | 啟用時，數值會轉換為百分比，且色彩比例尺會正規化至 0 到 1 之間。 |
+| **Max number of colors** | 控制色彩比例尺中使用的離散色彩區間數量上限。 |
+| **Show labels** | 啟用時，會在每個儲存格內以標籤顯示數值。 |
 
-The following settings are available when **Show labels** is enabled.
+啟用 **Show labels** 時，可使用下列設定。
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Rotate** | When enabled, rotates the value labels by 45 degrees for better readability in narrow cells. |
-| **Overwrite automatic color** | When enabled, sets a custom label color. |
-| **Color** | Sets the custom label color when **Overwrite automatic color** is enabled. |
+| **Rotate** | 啟用時，會將數值標籤旋轉 45 度，以提高窄儲存格中的可讀性。 |
+| **Overwrite automatic color** | 啟用時，會設定自訂標籤顏色。 |
+| **Color** | 在啟用 **Overwrite automatic color** 時設定自訂標籤顏色。 |
 
-### Thresholds
+### 閾值
 
-For information about configuring thresholds, see [Thresholds]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/).
+如需設定閾值的相關資訊，請參閱[閾值]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/)。
 
-### Standard options
+### 標準選項
 
-For information about configuring units, unit suffixes, and decimal precision, see [Standard options]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/standard-options/).
+如需設定單位、單位後綴與小數精確度的相關資訊，請參閱[標準選項]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/standard-options/)。
 
-### Axes
+### 座標軸
 
-The X-axis and Y-axis share the same configuration options. For more information, see [Axes]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#axes).
+X 軸與 Y 軸共用相同的組態選項。如需詳細資訊，請參閱[座標軸]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#axes)。
 
-### Legend
+### 圖例
 
-The legend summarizes the visual color encodings used in the chart.
+圖例彙整了圖表中使用的視覺色彩編碼。
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Show legend** | Shows or hides the legend. |
-| **Position** | Controls where the legend appears relative to the chart. Supported values: **Left**, **Right**, **Top**, **Bottom**. |
+| **Show legend** | 顯示或隱藏圖例。 |
+| **Position** | 控制圖例相對於圖表的顯示位置。支援的值：**Left**、**Right**、**Top**、**Bottom**。 |
 
-### Tooltip
+### 工具提示
 
-Toggle the **Show tooltip** selector to enable or disable tooltips.
+切換 **Show tooltip** 選取器以啟用或停用工具提示。

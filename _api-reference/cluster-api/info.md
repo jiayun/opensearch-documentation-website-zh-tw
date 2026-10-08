@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cluster information
+title: "叢集資訊"
 nav_order: 45
 parent: Cluster APIs
 has_children: false
 ---
 
-# Cluster Information API
-**Introduced 1.0**
+# 叢集資訊 API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Cluster Information API (`/`) retrieves information about the running OpenSearch cluster and node, including version, build details, and cluster name. This is the simplest way to verify that a cluster is reachable and to discover the OpenSearch version.
+叢集資訊 API（`/`）會擷取執行中的 OpenSearch 叢集與節點的相關資訊，包括版本、建置詳細資料與叢集名稱。這是驗證叢集是否可連線，以及查詢 OpenSearch 版本最簡單的方式。
 
-## Endpoints
+## 端點
 
 ```json
 GET /
 HEAD /
 ```
 
-- `GET /` returns a JSON body containing cluster and version details.  
-- `HEAD /` returns only an HTTP status (200 if reachable), useful for lightweight health checks.
+- `GET /` 回傳包含叢集與版本詳細資料的 JSON 本文。  
+- `HEAD /` 僅回傳 HTTP 狀態（若可連線則為 200），適合用於輕量級健康狀態檢查。
 
-## Example request
+## 範例請求
 
-To get the version and build information for the cluster, send the following request:
+若要取得叢集的版本與建置資訊，請傳送下列請求：
 
 ```json
 GET /
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -53,21 +54,21 @@ GET /
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
 Field | Type | Description
 :--- | :--- | :---
-`name` | String | The name of the node that served the request.
-`cluster_name` | String | The name of the cluster.
-`cluster_uuid` | String | The universally unique identifier (UUID) of the cluster.
-`tagline` | String | The tagline string.
-`version` | Object | The object containing version and build metadata.
-`version.distribution` | String | The distribution identifier, typically `opensearch`.
-`version.number` | String | The OpenSearch version number, for example, `3.2.0`.
-`version.build_type` | String | The distribution type.
-`version.build_hash` | String | The commit hash the build was created from.
-`version.build_date` | String | The build timestamp in ISO 8601 format.
-`version.build_snapshot` | Boolean | Whether the build is a snapshot build.
-`version.lucene_version` | String | The Lucene version used by this build.
-`version.minimum_wire_compatibility_version` | String | The minimum compatible transport protocol version.
-`version.minimum_index_compatibility_version` | String | The minimum index version that can be read.
+`name` | String | 服務此請求的節點名稱。
+`cluster_name` | String | 叢集名稱。
+`cluster_uuid` | String | 叢集的通用唯一識別碼（UUID）。
+`tagline` | String | 標語字串。
+`version` | Object | 包含版本與建置中繼資料的物件。
+`version.distribution` | String | 發行版識別碼，通常為 `opensearch`。
+`version.number` | String | OpenSearch 版本號，例如 `3.2.0`。
+`version.build_type` | String | 發行版類型。
+`version.build_hash` | String | 建置所依據的提交雜湊值。
+`version.build_date` | String | 採用 ISO 8601 格式的建置時間戳記。
+`version.build_snapshot` | Boolean | 此建置是否為快照建置。
+`version.lucene_version` | String | 此建置使用的 Lucene 版本。
+`version.minimum_wire_compatibility_version` | String | 最低相容的傳輸協定版本。
+`version.minimum_index_compatibility_version` | String | 可讀取的最低索引版本。

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Controls
+title: "控制項"
 parent: Visualization types
 grand_parent: Creating visualizations in the Visualize application
 great_grand_parent: Building data visualizations
@@ -9,66 +10,66 @@ redirect_from:
   - /dashboards/visualize/controls/
 ---
 
-# Controls visualization
-**Experimental**
+# 控制項視覺化
+**實驗性**
 {: .label .label-purple }
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).
+這是一項實驗性功能，不建議在正式環境中使用。若要取得此功能的進度更新或提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/)上的討論。
 {: .warning}
 
-A controls visualization adds interactive filter panels to a dashboard. Controls let you filter data without modifying the dashboard itself.
+控制項視覺化會在儀表板中加入互動式篩選面板。控制項可讓您篩選資料，而無須修改儀表板本身。
 
-Controls do not require a data source. You configure the data source within each individual control.
+控制項不需要資料來源。您會在每個個別控制項中設定資料來源。
 
-## When to use controls
+## 何時使用控制項
 
-Use controls to filter data within a dashboard. Many visualizations have data selection filtering built in. Use controls with visualizations that don't already offer data selection or to enhance the data selection capability of an existing visualization.
+使用控制項來篩選儀表板中的資料。許多視覺化已內建資料選取篩選功能。對於尚未提供資料選取功能的視覺化，或要強化現有視覺化的資料選取功能時，請使用控制項。
 
-## Control types
+## 控制項類型
 
-Two types of controls are available:
+提供兩種類型的控制項：
 
-- **Range slider**: Defines minimum and maximum values for a numeric field.
-- **Options list**: Provides a dropdown to select values from a field.
+- **Range slider**：為數值欄位定義最小值與最大值。
+- **Options list**：提供下拉式選單，以從欄位中選取值。
 
-## Creating a controls visualization
+## 建立控制項視覺化
 
-To create a controls visualization, follow these steps:
+若要建立控制項視覺化，請依照下列步驟操作：
 
-1. In the **New Visualization** dialog, select **Controls**.
-2. Select the **Controls** tab.
-3. From the **Type** dropdown, select **Range slider** or **Options list**.
-4. Select **Add**.
+1. 在 **New Visualization** 對話方塊中，選取 **Controls**。
+2. 選取 **Controls** 索引標籤。
+3. 從 **Type** 下拉式選單中，選取 **Range slider** 或 **Options list**。
+4. 選取 **Add**。
 
-The following image shows a controls visualization with two Options list controls (Origin City and Destination City) and one Range slider control (Average Ticket Price).
+下圖顯示一個控制項視覺化，其中包含兩個 Options list 控制項（Origin City 與 Destination City）以及一個 Range slider 控制項（Average Ticket Price）。
 
-![Controls visualization with dropdown and range slider]({{site.url}}{{site.baseurl}}/images/dashboards/controls-example.png)
+![包含下拉式選單與範圍滑桿的控制項視覺化]({{site.url}}{{site.baseurl}}/images/dashboards/controls-example.png)
 
-### Configuring a range slider
+### 設定範圍滑桿
 
-1. In **Control Label**, enter the label that appears on the control.
-2. From **Index Pattern**, select the data source.
-3. From **Field**, select a numeric field.
-4. (Optional) Set a **Step Size** (minimum increment) and **Decimal Places**.
-5. Select **Update**.
+1. 在 **Control Label** 中，輸入顯示於控制項上的標籤。
+2. 從 **Index Pattern** 中選取資料來源。
+3. 從 **Field** 中選取數值欄位。
+4. （選用）設定 **Step Size**（最小增量）與 **Decimal Places**。
+5. 選取 **Update**。
 
-### Configuring an options list
+### 設定選項清單
 
-1. In **Control Label**, enter the label that appears on the control.
-2. From **Index Pattern**, select the data source.
-3. From **Field**, select the field to filter by.
-4. (Optional) Enable **Multi-select** to allow selecting multiple values.
-5. (Optional) Enable **Dynamic Options** to automatically scale the dropdown items (text fields only).
-6. If **Dynamic Options** is disabled, set the **Size** (number of items shown).
+1. 在 **Control Label** 中，輸入顯示於控制項上的標籤。
+2. 從 **Index Pattern** 中選取資料來源。
+3. 從 **Field** 中選取要作為篩選依據的欄位。
+4. （選用）啟用 **Multi-select**，以允許選取多個值。
+5. （選用）啟用 **Dynamic Options**，以自動調整下拉式選單項目（僅限文字欄位）。
+6. 若停用 **Dynamic Options**，請設定 **Size**（顯示的項目數量）。
 
-   The control displays only the top **Size** values, as determined by the data field's sorting method.
+   控制項只會顯示前 **Size** 個值，依資料欄位的排序方式決定。
    {: .note}
 
-7. Select **Update**.
+7. 選取 **Update**。
 
-You can add multiple controls to a single visualization by repeating the steps.
+您可以重複上述步驟，在單一視覺化中新增多個控制項。
 
-## Next steps
+## 後續步驟
 
-- To choose a different visualization type, see [Visualization types]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/).
-- To add this visualization to a dashboard, see [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/).
+- 若要選擇其他視覺化類型，請參閱[視覺化類型]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/)。
+- 若要將此視覺化新增至儀表板，請參閱[建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)。

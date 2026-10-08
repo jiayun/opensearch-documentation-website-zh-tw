@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Metric visualization
+title: "指標視覺化"
 parent: Visualization types
 grand_parent: Creating visualizations in the Visualize application
 great_grand_parent: Building data visualizations
@@ -9,42 +10,42 @@ redirect_from:
   - /dashboards/visualize/metric/
 ---
 
-# Metric visualization
+# 指標視覺化
 
-A metric visualization displays a single data field. The visualization can show a single value or multiple bucketed values. Use metric visualizations for key indicators on dashboards, especially values that update frequently.
+指標視覺化會顯示單一資料欄位。此視覺化可以顯示單一值，或多個分桶後的值。請在儀表板上使用指標視覺化來呈現關鍵指標，尤其是經常更新的值。
 
-## When to use metric visualizations
+## 何時使用指標視覺化
 
-Use metric visualizations to communicate key business or operational values at a glance, especially real-time or frequently updated values that require constant monitoring, such as system health, business performance, or operational status.
+使用指標視覺化可讓人一眼掌握關鍵的業務或營運數值，尤其是需要持續監控的即時或經常更新的值，例如系統健康狀態、業務效能或營運狀態。
 
-## Creating a metric visualization
+## 建立指標視覺化
 
-The examples on this page use the **Sample flight data** dataset. Before you begin, complete the [prerequisites]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites).
+本頁的範例使用 **Sample flight data** 資料集。開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites)。
 {: .note}
 
-To create a metric visualization, follow these steps:
+若要建立指標視覺化，請依照下列步驟操作：
 
-1. In the **New Visualization** dialog, select **Metric**, then select your index pattern (for example, **opensearch_dashboards_sample_data_flights**).
+1. 在 **New Visualization** 對話方塊中，選取 **Metric**，然後選取您的索引模式（例如 **opensearch_dashboards_sample_data_flights**）。
 
-   The visualization displays a count of the documents in the index pattern. For the `opensearch_dashboards_sample_data_flights` data, this is `13059` if the date range contains all the documents.
+   視覺化會顯示索引模式中的文件數量。對於 `opensearch_dashboards_sample_data_flights` 資料，若日期範圍涵蓋所有文件，此數量為 `13059`。
    {: .note}
 
-2. Under **Metrics**, expand **Metric Count**.
-3. Set **Aggregation** to **Average** and **Field** to **DistanceKilometers**.
-4. Select **Update**.
+2. 在 **Metrics** 下，展開 **Metric Count**。
+3. 將 **Aggregation** 設為 **Average**，並將 **Field** 設為 **DistanceKilometers**。
+4. 選取 **Update**。
 
-   The visualization displays `7092.142`, the average distance in kilometers for every document in the flight database.
+   視覺化會顯示 `7092.142`，即航班資料庫中所有文件的平均距離（以公里為單位）。
 
-   If your visualization displays a different value, make sure that your [time filter]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/) window is large enough to encompass all the sample flight data.
+   如果您的視覺化顯示不同的值，請確認您的[時間篩選器]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/)時間範圍夠大，足以涵蓋所有範例航班資料。
    {: .note}
 
-   ![Metric visualization showing average flight distance]({{site.url}}{{site.baseurl}}/images/dashboards/metric-example.png)
+   ![顯示平均航班距離的指標視覺化]({{site.url}}{{site.baseurl}}/images/dashboards/metric-example.png)
 
-## Configuring a metric visualization
+## 設定指標視覺化
 
-For information about general visualization configuration, see [Configuring visualizations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-viz/).
+如需一般視覺化組態的相關資訊，請參閱[設定視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-viz/)。
 
-## Next steps
+## 後續步驟
 
-- To choose a different visualization type, see [Visualization types]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/).
-- To add this visualization to a dashboard, see [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/).
+- 若要選擇其他視覺化類型，請參閱[視覺化類型]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/)。
+- 若要將此視覺化新增至儀表板，請參閱[建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)。

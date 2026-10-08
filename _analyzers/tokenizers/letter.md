@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Letter
 parent: Tokenizers
 nav_order: 60
 ---
 
-# Letter tokenizer
+# Letter 斷詞器
 
-The `letter` tokenizer splits text into words on any non-letter characters. It works well with many European languages but is ineffective with some Asian languages in which words aren't separated by spaces.
+`letter` 斷詞器會在任何非字母字元處將文字拆分為單字。它適用於許多歐洲語言，但對某些不以空格分隔單字的亞洲語言則沒有效果。
 
-## Example usage
+## 範例用法
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `letter` tokenizer:
+下列範例請求會建立一個名為 `my_index` 的新索引，並設定一個使用 `letter` 斷詞器的分析器：
 
 ```json
 PUT /my_index
@@ -38,9 +39,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢視使用該分析器所產生的詞元：
 
 ```json
 POST _analyze
@@ -52,7 +53,7 @@ POST _analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

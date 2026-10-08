@@ -1,137 +1,138 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Query panel
+title: "查詢面板"
 parent: Creating visualizations using queries
 grand_parent: Building data visualizations
 nav_order: 91
 ---
 
-# Query panel
+# 查詢面板
 
-Use the query panel to choose a query language and dataset, write or build a query, and run it to generate data for a visualization.
+使用查詢面板選擇查詢語言和資料集、撰寫或建構查詢，然後執行查詢以產生視覺化所需的資料。
 
-The query panel supports Piped Processing Language (PPL), Prometheus Query Language (PromQL), and, when enabled, SQL. To enable SQL, add the following setting to your `opensearch_dashboards.yml` file:
+查詢面板支援 Piped Processing Language (PPL)、Prometheus Query Language (PromQL)，以及在啟用時支援 SQL。若要啟用 SQL，請將下列設定新增至您的 `opensearch_dashboards.yml` 檔案：
 
 ```yaml
 explore.sqlSupport.enabled: true
 ```
 {% include copy.html %}
 
-AI query generation is available when prompt mode is enabled for the selected dataset.
+當所選資料集啟用提示模式時，即可使用 AI 查詢產生功能。
 
-## Query panel controls
+## 查詢面板控制項
 
-The query panel includes the following controls.
+查詢面板包含下列控制項。
 
-| Control | Description |
+| 控制項 | 說明 |
 | --- | --- |
-| **Language toggle** | Switches the editor between PPL, PromQL, SQL, and AI when those options are available. |
-| **Dataset selector** | Selects the dataset or data source queried by the editor. Available datasets depend on the selected language. |
-| **Saved queries** | Saves the current query or loads a previously saved query. |
-| **Query editor** | Provides the text editor, or the PromQL editor or builder when PromQL is selected. |
+| **Language toggle** | 在 PPL、PromQL、SQL 和 AI 選項可用時，於這些選項之間切換編輯器。 |
+| **Dataset selector** | 選取編輯器要查詢的資料集或資料來源。可用的資料集取決於所選的語言。 |
+| **Saved queries** | 儲存目前的查詢，或載入先前儲存的查詢。 |
+| **Query editor** | 提供文字編輯器；選取 PromQL 時，則提供 PromQL 編輯器或建構器。 |
 
-The following image shows the query panel with the language toggle, dataset selector, saved queries menu, and query editor.
+下圖顯示查詢面板，其中包含語言切換、資料集選取器、已儲存查詢選單和查詢編輯器。
 
-![Query panel showing the language toggle, dataset selector, saved queries menu, and query editor]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/query-panel/query-panel.png){: width="100%" }
+![顯示語言切換、資料集選取器、已儲存查詢選單和查詢編輯器的查詢面板]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/query-panel/query-panel.png){: width="100%" }
 
-## Selecting a query language
+## 選取查詢語言
 
-Use the language toggle to select the query language. The selected language determines which datasets are available and which editor features are shown.
+使用語言切換選取查詢語言。所選的語言決定可用的資料集，以及顯示哪些編輯器功能。
 
-| Language | Description |
+| 語言 | 說明 |
 | --- | --- |
-| **PPL** | Queries OpenSearch datasets using Piped Processing Language. |
-| **PromQL** | Queries Prometheus data sources and displays the PromQL multi-query editor. |
-| **SQL** | Queries OpenSearch datasets using SQL. This option appears only when `explore.sqlSupport.enabled` is set to `true`. |
-| **AI** | Generates a query from a natural language prompt. This option appears only when prompt mode is available. |
+| **PPL** | 使用 Piped Processing Language 查詢 OpenSearch 資料集。 |
+| **PromQL** | 查詢 Prometheus 資料來源，並顯示 PromQL 多重查詢編輯器。 |
+| **SQL** | 使用 SQL 查詢 OpenSearch 資料集。只有在 `explore.sqlSupport.enabled` 設為 `true` 時，才會顯示此選項。 |
+| **AI** | 從自然語言提示產生查詢。只有在提示模式可用時，才會顯示此選項。 |
 
-## Selecting a dataset
+## 選取資料集
 
-Use the dataset selector to choose the data queried by the visualization editor. Dataset availability depends on the selected query language:
+使用資料集選取器選擇視覺化編輯器要查詢的資料。資料集是否可用取決於所選的查詢語言：
 
-- **PPL** and **SQL** use OpenSearch datasets, such as indexes and index patterns.
-- **PromQL** uses Prometheus datasets.
+- **PPL** 和 **SQL** 使用 OpenSearch 資料集，例如索引和索引模式。
+- **PromQL** 使用 Prometheus 資料集。
 
-## Writing PPL queries
+## 撰寫 PPL 查詢
 
-After you select a dataset, you can write a PPL query. The visualization editor uses the selected dataset as the query source.
+選取資料集之後，您可以撰寫 PPL 查詢。視覺化編輯器會使用所選的資料集作為查詢來源。
 
-For example, if `opensearch_dashboards_sample_data_logs` is selected, you can enter the following query:
+例如，若選取了 `opensearch_dashboards_sample_data_logs`，您可以輸入下列查詢：
 
 ```sql
 | stats count() by response
 ```
 {% include copy.html %}
 
-You can also include the source explicitly:
+您也可以明確指定來源：
 
 ```sql
 source = opensearch_dashboards_sample_data_logs | stats count() by response
 ```
 {% include copy.html %}
 
-## Writing PromQL queries
+## 撰寫 PromQL 查詢
 
-When **PromQL** is selected, the editor displays a multi-query editor. Each query row can be written in **Builder** mode or **Code** mode.
+選取 **PromQL** 時，編輯器會顯示多重查詢編輯器。每個查詢列都可以在 **Builder** 模式或 **Code** 模式下撰寫。
 
-The following image shows the PromQL multi-query editor.
+下圖顯示 PromQL 多重查詢編輯器。
 
-![PromQL multi-query editor with one query row in Builder mode]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/query-panel/promql-panel.png)
+![PromQL 多重查詢編輯器，其中有一個處於 Builder 模式的查詢列]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/query-panel/promql-panel.png)
 
-Use **Builder** mode to build a PromQL query from metric names, label filters, and operations. Use **Code** mode to write PromQL directly. Some code queries cannot be represented in **Builder** mode, so switching back to **Builder** mode may not be available for complex queries.
+使用 **Builder** 模式，以指標名稱、標籤篩選條件和運算建構 PromQL 查詢。使用 **Code** 模式直接撰寫 PromQL。部分程式碼查詢無法以 **Builder** 模式呈現，因此對於複雜的查詢，可能無法切換回 **Builder** 模式。
 
-The following example uses **Builder** mode to write a PromQL query:
+下列範例使用 **Builder** 模式撰寫 PromQL 查詢：
 
 ```prometheus
 sum(rate(go_gc_heap_allocs_bytes_total[50060s]))
 ```
 {% include copy.html %}
 
-The following image shows the same query built in **Builder** mode from a `sum` aggregation, a `rate` function with a `50060s` window, and the `go_gc_heap_allocs_bytes_total` metric.
+下圖顯示在 **Builder** 模式中，以 `sum` 彙總、具有 `50060s` 時間範圍的 `rate` 函式，以及 `go_gc_heap_allocs_bytes_total` 指標所建構的相同查詢。
 
-![PromQL query built in Builder mode from a sum aggregation, a rate function, and a metric name, with the generated query shown below the controls]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/query-panel/promql-builder-case.png){: width="100%" }
+![在 Builder 模式中以 sum 彙總、rate 函式和指標名稱建構的 PromQL 查詢，產生的查詢顯示在控制項下方]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/query-panel/promql-builder-case.png){: width="100%" }
 
-You can manage PromQL query rows as follows:
+您可以依下列方式管理 PromQL 查詢列：
 
-- Select **Add query** to add another PromQL query row.
-- Select the remove icon to delete a query row.
-- Drag query rows to reorder them.
-- Select **Update** to run the query. In **Code** mode, you can also press Command+Enter (macOS) or Ctrl+Enter (Windows and Linux).
+- 選取 **Add query** 以新增另一個 PromQL 查詢列。
+- 選取移除圖示以刪除查詢列。
+- 拖曳查詢列以重新排序。
+- 選取 **Update** 以執行查詢。在 **Code** 模式中，您也可以按 Command+Enter (macOS) 或 Ctrl+Enter (Windows 和 Linux)。
 
-## PromQL query options
+## PromQL 查詢選項
 
-PromQL provides per-query options for each query row and shared options for all rows. To configure the options for a single query row, select the gear icon at the end of the row. To configure the options shared by all rows, select **Query options**.
+PromQL 為每個查詢列提供個別查詢選項，並為所有查詢列提供共用選項。若要設定單一查詢列的選項，請選取該列末端的齒輪圖示。若要設定所有查詢列共用的選項，請選取 **Query options**。
 
-The following image shows the per-query options for a PromQL query row.
+下圖顯示 PromQL 查詢列的個別查詢選項。
 
-![Per-query options for a PromQL query row, including Series name and Min step, with the estimated step and rate window]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/query-panel/per-query-option.png){: width="100%" }
+![PromQL 查詢列的個別查詢選項，包括 Series name 和 Min step，以及估計的步長和速率時間範圍]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/query-panel/per-query-option.png){: width="100%" }
 
-### Series name
+### 序列名稱
 
-Use **Series name** to customize the displayed series name. You can reference metric labels using double curly braces.
+使用 **Series name** 自訂顯示的序列名稱。您可以使用雙大括號參照指標標籤。
 
-For example, enter {% raw %}`{{job}}`{% endraw %} to name each series by its job label, or enter {% raw %}`{{job}}-{{instance}}`{% endraw %} to combine multiple labels.
+例如，輸入 {% raw %}`{{job}}`{% endraw %} 以依 job 標籤為每個序列命名，或輸入 {% raw %}`{{job}}-{{instance}}`{% endraw %} 以組合多個標籤。
 
-The following bar chart sets **Series name** to {% raw %}`{{operation}}`{% endraw %}, so the legend names each series by its operation label, `Read` and `Write`.
+下列長條圖將 **Series name** 設為 {% raw %}`{{operation}}`{% endraw %}，因此圖例會依 operation 標籤為每個序列命名，即 `Read` 和 `Write`。
 
-![Bar chart whose legend names each series by its operation label, Read and Write, with the Series name option set in the query row]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/query-panel/series-name-operation.png)
+![長條圖的圖例依 operation 標籤 Read 和 Write 為每個序列命名，並在查詢列中設定 Series name 選項]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/query-panel/series-name-operation.png)
 
-### Minimum step
+### 最小步長
 
-Use **Min step** to set the lower bound for the PromQL query step. Enter a duration with a unit, such as `15s`, `1m`, or `2h`. Match this value to your Prometheus scrape interval. The options panel shows the resulting step (`$__interval`) and rate window (`$__rate_interval`) as estimates; run the query to confirm the values.
+使用 **Min step** 設定 PromQL 查詢步長的下限。請輸入含單位的持續時間，例如 `15s`、`1m` 或 `2h`。請將此值設為與您的 Prometheus 擷取間隔相符。選項面板會以估計值顯示產生的步長 (`$__interval`) 和速率時間範圍 (`$__rate_interval`)；請執行查詢以確認這些值。
 
-### Maximum number of data points
+### 資料點數量上限
 
-Use **Max data points** to set the maximum number of points returned per series. This option is shared by all PromQL query rows. Leave this setting empty to use the automatic value.
+使用 **Max data points** 設定每個序列傳回的資料點數量上限。此選項由所有 PromQL 查詢列共用。將此設定留空即可使用自動值。
 
-The following image shows **Max data points** in the shared **Query options** panel, with the automatic value of `1440`.
+下圖顯示共用 **Query options** 面板中的 **Max data points**，其自動值為 `1440`。
 
-![Max data points set to the automatic value of 1440 in the shared Query options panel]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/query-panel/max-point.png)
+![在共用 Query options 面板中，Max data points 設為自動值 1440]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/query-panel/max-point.png)
 
-## Saving and reusing queries
+## 儲存並重複使用查詢
 
-To save a query for reuse, select **Saved queries** > **Save query**. To load a saved query, select **Saved queries** > **Open query**, and then choose the query to load.
+若要儲存查詢以便重複使用，請選取 **Saved queries** > **Save query**。若要載入已儲存的查詢，請選取 **Saved queries** > **Open query**，然後選擇要載入的查詢。
 
-The following image shows the **Saved queries** menu with the **Save query** and **Open query** options.
+下圖顯示 **Saved queries** 選單，其中包含 **Save query** 和 **Open query** 選項。
 
-![Saved queries menu expanded to show the Save query and Open query options]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/query-panel/open-saved-query.png){: width="60%" }
+![展開的 Saved queries 選單，顯示 Save query 和 Open query 選項]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/query-panel/open-saved-query.png){: width="60%" }

@@ -1,55 +1,56 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Query and visualize Amazon S3 data  
+title: "查詢並視覺化 Amazon S3 資料"
 parent: Connecting Amazon S3 to OpenSearch
 grand_parent: Connecting data sources
 nav_order: 10
 has_children: false
 ---
 
-# Query and visualize Amazon S3 data
-Introduced 2.11
+# 查詢並視覺化 Amazon S3 資料
+2.11 版推出
 {: .label .label-purple }
 
-This tutorial guides you through using the **Query data** use case for querying and visualizing your Amazon Simple Storage Service (Amazon S3) data using OpenSearch Dashboards.
+本教學將引導您使用 **Query data** 使用案例，透過 OpenSearch Dashboards 查詢並視覺化您的 Amazon Simple Storage Service (Amazon S3) 資料。
 
-## Prerequisites
+## 先決條件
 
-You must be using the `opensearch-security` plugin and have the appropriate role permissions. Contact your IT administrator to assign you the necessary permissions.  
+您必須使用 `opensearch-security` 外掛程式，並具備適當的角色權限。請聯絡您的 IT 管理員為您指派必要的權限。  
 
-## Get started with querying
+## 開始查詢
 
-To get started, follow these steps:
+若要開始，請依照下列步驟操作：
 
-1. On the **Manage data sources** page, select your data source from the list. 
-2. On the data source's detail page, select the **Query data** card. This option takes you to the **Observability** > **Logs** page.
-3. Select the **Event Explorer** button. This option creates and saves frequently searched queries and visualizations using [Piped Processing Language (PPL)]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) or [SQL]({{site.url}}{{site.baseurl}}/search-plugins/sql/index/), which connects to Spark SQL.
-4. Select the Amazon S3 data source from the dropdown menu in the upper-left corner.
-5. Enter the query in the **Enter PPL query** field. Note that the default language is SQL. To change the language, select PPL from the dropdown menu.
-6. Select the **Search** button. The **Query Processing** message is shown, confirming that your query is being processed.
-7. View the results, which are listed in a table on the **Events** tab. On this page, details such as available fields, source, and time are shown in a table format.
-8. (Optional) Create data visualizations.
+1. 在 **Manage data sources** 頁面上，從清單中選取您的資料來源。 
+2. 在資料來源的詳細資料頁面上，選取 **Query data** 卡片。此選項會將您帶往 **Observability** > **Logs** 頁面。
+3. 選取 **Event Explorer** 按鈕。此選項可使用 [Piped Processing Language (PPL)]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) 或 [SQL]({{site.url}}{{site.baseurl}}/search-plugins/sql/index/) 建立並儲存經常搜尋的查詢與視覺化，並連線至 Spark SQL。
+4. 從左上角的下拉式選單中選取 Amazon S3 資料來源。
+5. 在 **Enter PPL query** 欄位中輸入查詢。請注意，預設語言為 SQL。若要變更語言，請從下拉式選單中選取 PPL。
+6. 選取 **Search** 按鈕。畫面會顯示 **Query Processing** 訊息，確認您的查詢正在處理中。
+7. 檢視結果，結果會列於 **Events** 索引標籤上的表格中。在此頁面上，可用欄位、來源與時間等詳細資料會以表格格式顯示。
+8. （選用）建立資料視覺化。
 
-## Create visualizations of your Amazon S3 data
+## 建立 Amazon S3 資料的視覺化
 
-To create visualizations, follow these steps:
+若要建立視覺化，請依照下列步驟操作：
 
-1. On the **Explorer** page, select the **Visualizations** tab. 
-2. Select **Index data to visualize**. This option only creates [acceleration indexes]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/), which give you views of the data visualizations from the **Visualizations** tab. To create a visualization of your Amazon S3 data, go to **Discover**. See the [Discover documentation]({{site.url}}{{site.baseurl}}/dashboards/discover/index-discover/) for information and a tutorial.
+1. 在 **Explorer** 頁面上，選取 **Visualizations** 索引標籤。 
+2. 選取 **Index data to visualize**。此選項只會建立[加速索引]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/)，讓您能從 **Visualizations** 索引標籤檢視資料視覺化。若要建立 Amazon S3 資料的視覺化，請前往 **Discover**。如需相關資訊與教學，請參閱 [Discover 文件]({{site.url}}{{site.baseurl}}/dashboards/discover/index-discover/)。
 
-## Use Query Workbench with your Amazon S3 data source
+## 搭配 Amazon S3 資料來源使用 Query Workbench
 
-[Query Workbench]({{site.url}}{{site.baseurl}}/search-plugins/sql/workbench/) runs on-demand SQL queries, translates SQL into its REST equivalent, and views and saves results as text, JSON, JDBC, or CSV.
+[Query Workbench]({{site.url}}{{site.baseurl}}/search-plugins/sql/workbench/) 可執行隨選 SQL 查詢、將 SQL 轉譯為對應的 REST 等效內容，並以文字、JSON、JDBC 或 CSV 格式檢視及儲存結果。
 
-To use Query Workbench with your Amazon S3 data, follow these steps:
+若要搭配 Amazon S3 資料使用 Query Workbench，請依照下列步驟操作：
 
-1. From the OpenSearch Dashboards main menu, select **OpenSearch Plugins** > **Query Workbench**.
-2. From the **Data Sources** dropdown menu in the upper-left corner, choose your Amazon S3 data source. Your data begins loading the databases that are part of your data source. 
-3. View the databases listed in the left-side navigation menu and select a database to view its details. Any information about acceleration indexes is listed under **Acceleration index destination**. 
-4. Choose the **Describe Index** button to learn more about how data is stored in that particular index.
-5. Choose the **Drop index** button to delete and clear both the OpenSearch index and the Amazon S3 Spark job that refreshes the data.  
-6. Enter your SQL query and select **Run**.
+1. 從 OpenSearch Dashboards 主選單中，選取 **OpenSearch Plugins** > **Query Workbench**。
+2. 從左上角的 **Data Sources** 下拉式選單中，選擇您的 Amazon S3 資料來源。系統會開始載入屬於您資料來源的資料庫。 
+3. 檢視左側導覽選單中列出的資料庫，並選取某個資料庫以檢視其詳細資料。任何有關加速索引的資訊都會列於 **Acceleration index destination** 之下。 
+4. 選擇 **Describe Index** 按鈕，深入了解資料在該特定索引中的儲存方式。
+5. 選擇 **Drop index** 按鈕，以刪除並清除 OpenSearch 索引以及負責重新整理資料的 Amazon S3 Spark 作業。  
+6. 輸入您的 SQL 查詢，然後選取 **Run**。
 
-## Next steps
+## 後續步驟
 
-- Learn about [accelerating the query performance of your external data sources]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/).
+- 了解如何[加速外部資料來源的查詢效能]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/)。

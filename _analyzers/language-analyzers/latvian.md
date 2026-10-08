@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Latvian
+title: "拉脫維亞語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 230
 ---
 
-# Latvian analyzer
+# 拉脫維亞語分析器
 
-The built-in `latvian` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `latvian` 分析器套用至文字欄位：
 
 ```json
 PUT /latvian-index
@@ -25,9 +26,9 @@ PUT /latvian-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，搭配此語言分析器使用 `stem_exclusion`：
 
 ```json
 PUT index_with_stem_exclusion_latvian_analyzer
@@ -46,21 +47,21 @@ PUT index_with_stem_exclusion_latvian_analyzer
 ```
 {% include copy-curl.html %}
 
-## Latvian analyzer internals
+## 拉脫維亞語分析器內部結構
 
-The `latvian` analyzer is built using the following components:
+`latvian` 分析器由下列元件建構而成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
+- 詞元篩選器：
   - lowercase
-  - stop (Latvian)
+  - stop（拉脫維亞語）
   - keyword
-  - stemmer (Latvian)
+  - stemmer（拉脫維亞語）
 
-## Custom Latvian analyzer
+## 自訂拉脫維亞語分析器
 
-You can create a custom Latvian analyzer using the following command:
+您可以使用下列命令建立自訂的拉脫維亞語分析器：
 
 ```json
 PUT /latvian-index
@@ -107,9 +108,9 @@ PUT /latvian-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查分析器所產生的詞元：
 
 ```json
 POST /latvian-index/_analyze
@@ -120,7 +121,7 @@ POST /latvian-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

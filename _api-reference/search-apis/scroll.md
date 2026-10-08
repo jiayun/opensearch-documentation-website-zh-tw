@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Scroll
+title: "捲動"
 parent: Search APIs
 nav_order: 30
 redirect_from:
@@ -9,28 +10,28 @@ redirect_from:
 ---
 
 # Scroll API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-You can use the `scroll` operation to retrieve a large number of results. For example, for machine learning jobs, you can request an unlimited number of results in batches.
+您可以使用 `scroll` 操作擷取大量結果。例如，針對機器學習作業，您可以分批請求不限數量的結果。
 
-To use the `scroll` operation, add a `scroll` parameter to the request header with a search context to tell OpenSearch how long you need to keep scrolling. This search context needs to be long enough to process a single batch of results.
+若要使用 `scroll` 操作，請在請求標頭中加入 `scroll` 參數，指定搜尋情境，告知 OpenSearch 您需要持續捲動多久。此搜尋情境的持續時間必須足以處理單一批次的結果。
 
-Because search contexts consume a lot of memory, we suggest you don't use the `scroll` operation for frequent user queries. Instead, use the `sort` parameter with the `search_after` parameter to scroll responses for user queries.
+由於搜尋情境會消耗大量記憶體，我們建議您不要將 `scroll` 操作用於頻繁的使用者查詢。請改用 `sort` 參數搭配 `search_after` 參數，捲動擷取使用者查詢的回應。
 {: .note }
 
-Note the following performance considerations:
+請注意下列效能考量：
 
-- For the most efficient scrolling when you don't need relevance scoring, sort by `_doc`. This disables scoring and returns documents in their natural index order, which is the fastest way to iterate over all documents in an index.
-- Only the initial search response includes aggregation results. Subsequent scroll requests return only the next batch of hits.
-- Each open scroll context prevents segment merging on the associated shards and consumes file handles and heap memory. Close scroll contexts as soon as you no longer need them.
-- The maximum number of open scroll contexts is controlled by the `search.max_open_scroll_context` cluster setting, which defaults to 500.
+- 若不需要計算相關性分數，請依 `_doc` 排序，以達到最有效率的捲動。這會停用評分，並依文件在索引中的自然順序傳回文件，這是逐一處理索引中所有文件最快的方式。
+- 只有初始搜尋回應會包含彙總結果。後續捲動請求只會傳回下一批命中結果。
+- 每個開啟的捲動情境都會阻止相關分片上的區段合併，並消耗檔案控制代號和堆積記憶體。一旦不再需要捲動情境，請立即關閉。
+- 開啟的捲動情境數量上限由 `search.max_open_scroll_context` 叢集設定控制，預設為 500。
 
 <!-- spec_insert_start
 api: scroll
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET  /_search/scroll
 POST /_search/scroll
@@ -39,40 +40,40 @@ POST /_search/scroll/{scroll_id}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `scroll_id` | String | The scroll ID for the search. We recommend specifying the scroll ID in the request body instead because scroll IDs can be very long. |
+| `scroll_id` | 字串 | 搜尋的捲動 ID。由於捲動 ID 可能很長，我們建議改在請求本文中指定捲動 ID。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設值 |
 | :--- | :--- | :--- | :--- |
-| `scroll` | String | The amount of time to extend the search context. This value overrides the duration set in the original search request's `scroll` parameter. Cannot exceed the `search.max_keep_alive` cluster setting. | None |
-| `scroll_id` | String | The scroll ID for the search. We recommend specifying the scroll ID in the request body instead of as a query parameter because scroll IDs can be very long. | None |
-| `rest_total_hits_as_int` | Boolean | Whether the `hits.total` property is returned as an integer (`true`) or an object (`false`). | `false` |
+| `scroll` | 字串 | 延長搜尋情境的時間長度。此值會覆寫原始搜尋請求中 `scroll` 參數設定的持續時間。不得超過 `search.max_keep_alive` 叢集設定。 | 無 |
+| `scroll_id` | 字串 | 搜尋的捲動 ID。由於捲動 ID 可能很長，我們建議在請求本文中指定捲動 ID，而非使用查詢參數。 | 無 |
+| `rest_total_hits_as_int` | 布林值 | `hits.total` 屬性是以整數（`true`）還是物件（`false`）傳回。 | `false` |
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `scroll` | String | The amount of time to extend the search context for the next scroll request. If both the query parameter and request body field are specified, the query parameter takes precedence. |
-| `scroll_id` | String | Required. The scroll ID returned by the initial search request or the previous scroll request. |
+| `scroll` | 字串 | 為下一個捲動請求延長搜尋情境的時間長度。如果同時指定查詢參數和請求本文欄位，則查詢參數優先。 |
+| `scroll_id` | 字串 | 必要。初始搜尋請求或上一個捲動請求傳回的捲動 ID。 |
 
-## Example request
+## 請求範例
 
-The following example demonstrates the scroll workflow from initiating a scroll operation to retrieving all results.
+下列範例示範從啟動捲動操作到擷取所有結果的捲動工作流程。
 
-### Step 1: Start the scroll operation
+### 步驟 1：啟動捲動操作
 
-To begin scrolling, send an initial search query with a `scroll` parameter that specifies how long to keep the search context alive (for example, `10m` for 10 minutes). Use the `size` parameter to set how many results to return in each batch:
+若要開始捲動，請傳送包含 `scroll` 參數的初始搜尋查詢，指定搜尋情境的保留時間（例如，`10m` 表示 10 分鐘）。使用 `size` 參數設定每批傳回的結果數量：
 
 <!-- spec_insert_start
 component: example_code
@@ -107,15 +108,15 @@ response = client.search(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-OpenSearch caches the results and returns a scroll ID to access them in batches:
+OpenSearch 會快取結果，並傳回捲動 ID，讓您分批存取結果：
 
 ```json
 "_scroll_id" : "DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAAUWdmpUZDhnRFBUcWFtV21nMmFwUGJEQQ=="
 ```
 
-### Step 2: Retrieve subsequent batches
+### 步驟 2：擷取後續批次
 
-Pass this scroll ID to the `scroll` operation to get back the next batch of results:
+將此捲動 ID 傳遞給 `scroll` 操作，以取得下一批結果：
 
 <!-- spec_insert_start
 component: example_code
@@ -151,11 +152,11 @@ response = client.scroll(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Using this scroll ID, you get results in batches of 10,000 as long as the search context is still open. Typically, the scroll ID does not change between requests, but it *can* change, so make sure to always use the latest scroll ID. If you don't send the next scroll request within the set search context, the `scroll` operation does not return any results.
+使用此捲動 ID，只要搜尋情境仍開啟，您就能以每批 10,000 筆的方式取得結果。捲動 ID 通常不會在請求之間變更，但它*可能*變更，因此請務必始終使用最新的捲動 ID。如果您未在設定的搜尋情境持續時間內傳送下一個捲動請求，`scroll` 操作就不會傳回任何結果。
 
-### Detecting the end of results
+### 偵測結果結尾
 
-When you've scrolled through all results, the final batch contains an empty `hits` array:
+當您捲動完所有結果時，最後一批會包含空的 `hits` 陣列：
 
 ```json
 {
@@ -179,12 +180,12 @@ When you've scrolled through all results, the final batch contains an empty `hit
 }
 ```
 
-When `hits.hits` is an empty array, you've retrieved all available results and should stop scrolling. Make sure to close the scroll context to free up resources.
+當 `hits.hits` 為空陣列時，表示您已擷取所有可用結果，應停止捲動。請務必關閉捲動情境以釋放資源。
 
-### Using sliced scroll
+### 使用切片捲動
 
-If you expect billions of results, use a sliced scroll. Slicing allows you to perform multiple scroll operations for the same request, but in parallel.
-Set the ID and the maximum number of slices for the scroll:
+如果您預期會有數十億筆結果，請使用切片捲動。切片可讓您針對同一個請求平行執行多個捲動操作。
+設定捲動的 ID 和切片數量上限：
 
 <!-- spec_insert_start
 component: example_code
@@ -237,11 +238,11 @@ response = client.search(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Each slice produces its own independent scroll ID. With `"max": 10`, you initiate 10 separate scroll operations (IDs 0 through 9), each returning a distinct subset of the data. You then scroll each slice independently until all slices are exhausted. The number of slices is limited by the `index.max_slices_per_scroll` setting, which defaults to `1024`.
+每個切片都會產生各自獨立的捲動 ID。使用 `"max": 10` 時，您會啟動 10 個獨立的捲動操作（ID 為 0 到 9），每個操作都會傳回不同的資料子集。接著，您可以獨立捲動每個切片，直到所有切片的結果都已擷取完畢。切片數量受 `index.max_slices_per_scroll` 設定限制，其預設值為 `1024`。
 
-### Step 3: Close the scroll context
+### 步驟 3：關閉捲動情境
 
-Close the search context when you're done scrolling because the `scroll` operation continues to consume computing resources until the timeout:
+完成捲動後，請關閉搜尋情境，因為 `scroll` 操作會持續消耗運算資源，直到逾時：
 
 <!-- spec_insert_start
 component: example_code
@@ -266,7 +267,7 @@ response = client.clear_scroll(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To close all open scroll contexts:
+若要關閉所有開啟的捲動情境：
 
 <!-- spec_insert_start
 component: example_code
@@ -291,14 +292,14 @@ response = client.clear_scroll(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Results from a scrolling search reflect the state of the index at the time of the initial search request. Documents indexed or modified after the scroll was initiated do not appear in scroll results, even if they match the query.
+捲動搜尋的結果反映初始搜尋請求當下的索引狀態。在啟動捲動後才編製索引或修改的文件，即使符合查詢，也不會出現在捲動結果中。
 {: .important}
 
-## Example response
+## 回應範例
 
-The scroll operation returns the same response structure as the search API, including `_scroll_id`, `hits`, `_shards`, and timing information.
+捲動操作會傳回與搜尋 API 相同的回應結構，包括 `_scroll_id`、`hits`、`_shards` 和時間資訊。
 
-The clear scroll operation returns the following response:
+清除捲動操作會傳回下列回應：
 
 ```json
 {
@@ -307,30 +308,30 @@ The clear scroll operation returns the following response:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response body fields for the scroll operation.
+下表列出捲動操作的回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `_scroll_id` | String | The scroll ID to use for the next scroll request. This value may change between requests, so always use the most recently returned ID. |
-| `took` | Integer | The time, in milliseconds, that the request took to complete. |
-| `timed_out` | Boolean | Whether the request timed out before completing. |
-| `_shards` | Object | Information about the shards involved, including `total`, `successful`, `skipped`, and `failed` counts. |
-| `hits` | Object | The search results, including the `total` hit count and the array of matching documents. When scrolling is complete, `hits.hits` is an empty array. |
+| `_scroll_id` | 字串 | 下一個捲動請求要使用的捲動 ID。此值可能會在請求之間變更，因此請始終使用最近傳回的 ID。 |
+| `took` | 整數 | 請求完成所花費的時間，以毫秒為單位。 |
+| `timed_out` | 布林值 | 請求是否在完成前逾時。 |
+| `_shards` | 物件 | 參與操作的分片資訊，包括 `total`、`successful`、`skipped` 和 `failed` 的數量。 |
+| `hits` | 物件 | 搜尋結果，包括 `total` 命中數量和符合條件的文件陣列。捲動完成時，`hits.hits` 為空陣列。 |
 
-The following table lists the response body fields for the clear scroll operation.
+下表列出清除捲動操作的回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `succeeded` | Boolean | Whether the scroll context was successfully released. |
-| `num_freed` | Integer | The number of scroll contexts that were freed. |
+| `succeeded` | 布林值 | 是否已成功釋放捲動情境。 |
+| `num_freed` | 整數 | 已釋放的捲動情境數量。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:data/read/scroll` and `indices:data/read/scroll/clear`.
+如果您使用 Security 外掛程式，請確定您具備適當的權限：`indices:data/read/scroll` 和 `indices:data/read/scroll/clear`。
 
-## Related documentation
+## 相關文件
 
-- [Paginate results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/)
+- [分頁顯示結果]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/)
 - [Point in Time API]({{site.url}}{{site.baseurl}}/search-plugins/point-in-time-api/)

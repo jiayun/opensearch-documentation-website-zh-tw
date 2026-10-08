@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Stemmer override
+title: "詞幹還原覆寫"
 parent: Token filters
 nav_order: 400
 ---
 
-# Stemmer override token filter
+# 詞幹還原覆寫詞元篩選器
 
-The `stemmer_override` token filter allows you to define custom stemming rules that override the behavior of default stemmers like Porter or Snowball. This can be useful when you want to apply specific stemming behavior to certain words that might not be modified correctly by the standard stemming algorithms.
+`stemmer_override` 詞元篩選器可讓您定義自訂的詞幹還原規則，以覆寫 Porter 或 Snowball 等預設詞幹還原器的行為。當您想對某些標準詞幹還原演算法可能無法正確處理的單字套用特定的詞幹還原行為時，這項功能就很實用。
 
-## Parameters
+## 參數
 
-The `stemmer_override` token filter must be configured with exactly one of the following parameters.
+`stemmer_override` 詞元篩選器必須設定下列參數中的恰好一個。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :--- 
-`rules` | String | Defines the override rules directly in the settings.
-`rules_path` | String | Specifies the path to the file containing custom rules (mappings). The path can be either an absolute path or a path relative to the config directory.
+`rules` | 字串 | 直接在設定中定義覆寫規則。
+`rules_path` | 字串 | 指定包含自訂規則（對應）之檔案的路徑。路徑可以是絕對路徑，也可以是相對於 config 目錄的路徑。
 
-## Example
+## 範例
 
-The following example request creates a new index named `my-index` and configures an analyzer with a `stemmer_override` filter:
+下列範例請求會建立名為 `my-index` 的新索引，並設定一個使用 `stemmer_override` 篩選器的分析器：
 
 ```json
 PUT /my-index
@@ -53,9 +54,9 @@ PUT /my-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 GET /my-index/_analyze
@@ -66,7 +67,7 @@ GET /my-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

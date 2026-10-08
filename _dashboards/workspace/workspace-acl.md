@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Workspace access control lists
+title: "工作區存取控制清單"
 parent: Workspaces
 nav_order: 3
 ---
 
-# Workspace access control lists
-**Introduced 2.18**
+# 工作區存取控制清單
+**於 2.18 版推出**
 {: .label .label-purple }
 
-Workspace access control lists (ACLs) manage authorization for saved objects while relying on the [Security plugin]({{site.url}}{{site.baseurl}}/security/) for authentication.
+工作區存取控制清單 (ACL) 負責管理已儲存物件的授權，並仰賴 [Security 外掛程式]({{site.url}}{{site.baseurl}}/security/)進行驗證。
 
-## Personas
+## 角色類型
 
-**Workspace** use cases involve the following key personas:
+**工作區**使用案例涉及下列主要角色類型：
 
-* **Dashboard admin:** Has full access to all OpenSearch Dashboards functions and data.
-* **Workspace administrator (also called _owner_):** Has full control over a specific workspace, including its configuration and saved objects. When a workspace is created, its creator is automatically assigned the role of workspace owner.
-* **Workspace content producer:** Can view, create, and update saved objects within the workspace.
-* **Workspace viewer:** Has read-only access to saved objects in the workspace.
+* **儀表板管理員：**擁有所有 OpenSearch Dashboards 功能與資料的完整存取權。
+* **工作區管理員（亦稱為_擁有者_）：**對特定工作區擁有完整控制權，包括其組態與已儲存物件。建立工作區時，其建立者會自動被指派為工作區擁有者角色。
+* **工作區內容製作者：**可以檢視、建立及更新工作區內的已儲存物件。
+* **工作區檢視者：**對工作區中的已儲存物件擁有唯讀存取權。
 
- Roles are workspace specific, allowing users to assume different roles across workspaces.
- {: .note}
+ 角色因工作區而異，使用者可以在不同工作區中擔任不同角色。
+{: .note}
 
-## Enabling permission control
+## 啟用權限控制
 
-See [Enabling the ACL feature]({{site.url}}{{site.baseurl}}/dashboards/management/acl#enabling-the-acl-feature) for instructions. 
+如需相關說明，請參閱[啟用 ACL 功能]({{site.url}}{{site.baseurl}}/dashboards/management/acl#enabling-the-acl-feature)。
 
-## Configuring dashboard administrators
+## 設定儀表板管理員
 
-To grant full access to all workspaces and objects in OpenSearch Dashboards, configure the admin permissions. Edit the `opensearch_dashboards.yml` file to define the admin by user ID and backend role, as shown in the following configuration:
+若要授予 OpenSearch Dashboards 中所有工作區與物件的完整存取權，請設定管理員權限。編輯 `opensearch_dashboards.yml` 檔案，依使用者 ID 與後端角色定義管理員，如下列組態所示：
 
 ```yaml
 opensearchDashboards.dashboardAdmin.users: ["UserID"]
@@ -38,170 +39,170 @@ savedObjects.permission.enabled: true
 ```
 {% include copy.html %}
 
-By default, the configuration is set to `[]`, meaning that no users are designated as admins. If the Security plugin is not installed and `savedObjects.permission.enabled: false`, all users are granted admin permissions.
+根據預設，組態會設為 `[]`，表示沒有任何使用者被指定為管理員。若未安裝 Security 外掛程式且 `savedObjects.permission.enabled: false`，則所有使用者都會被授予管理員權限。
 
-### Configuring global admin access
+### 設定全域管理員存取權
 
-Set all users as admins with this wildcard setting:
+使用此萬用字元設定將所有使用者設為管理員：
 
 ```yaml
 opensearchDashboards.dashboardAdmin.users: ["*"]
 ```
 {% include copy.html %}
 
-### Configuring admin access for a single user
+### 為單一使用者設定管理員存取權
 
-Configure a user with the `admin-user-id` setting:
+使用 `admin-user-id` 設定來設定使用者：
 
 ```yaml
 opensearchDashboards.dashboardAdmin.users: ["admin-user-id"]
 ```
 {% include copy.html %}
 
-### Configuring admin access by backend role
+### 依後端角色設定管理員存取權
 
-Configure a user with the `admin-role` setting:
+使用 `admin-role` 設定來設定使用者：
 
 ```yaml
 opensearchDashboards.dashboardAdmin.groups: ["admin-role"]
 ```
 {% include copy.html %}
 
-### Admin-restricted operations
+### 僅限管理員的操作
 
-Admin-restricted operations include the following:
+僅限管理員的操作包括下列項目：
 
-- Workspace creation
-- Workspace deletion
-- Data source connections
-- Disconnecting data sources from workspaces
+- 建立工作區
+- 刪除工作區
+- 資料來源連線
+- 中斷資料來源與工作區的連線
 
-## Defining workspace collaborators
+## 定義工作區協作者
 
-Access to collaborator management is limited to admins. The **Collaborators** feature is only available when permission control is enabled. For instructions on activating permission control, see [Enabling permission control](#enabling-permission-control). Access levels include the following:
+協作者管理的存取權僅限管理員。**Collaborators** 功能僅在啟用權限控制時才可使用。如需啟用權限控制的說明，請參閱[啟用權限控制](#enabling-permission-control)。存取層級包括下列項目：
 
-- **Read only:** Grants permission to view the workspace and its assets.
-- **Read and write:** Allows viewing and editing of assets within the workspace.
-- **Admin:** Provides full access, including viewing and editing of assets within the workspace and updating workspace metadata, such as name, description, data sources, and collaborators.
+- **Read only：**授予檢視工作區及其資產的權限。
+- **Read and write：**允許檢視及編輯工作區內的資產。
+- **Admin：**提供完整存取權，包括檢視及編輯工作區內的資產，以及更新工作區中繼資料，例如名稱、描述、資料來源與協作者。
 
-#### Permission modes
+#### 權限模式
 
-When you assign collaborators through the UI, access levels are applied automatically. When you assign collaborators through the [Workspace APIs]({{site.url}}{{site.baseurl}}/dashboards/workspace/apis/), each access level corresponds to a specific combination of permission modes. The following table describes the available permission modes.
+當您透過 UI 指派協作者時，系統會自動套用存取層級。當您透過[工作區 API]({{site.url}}{{site.baseurl}}/dashboards/workspace/apis/) 指派協作者時，每個存取層級都對應特定的權限模式組合。下表說明可用的權限模式。
 
-| Permission mode | Target | Description |
+| 權限模式 | 目標 | 描述 |
 | :--- | :--- | :--- |
-| `read` | The workspace itself | The principal can open and view the workspace. |
-| `write` | The workspace itself | The principal can manage the workspace itself: edit its name, description, and settings, manage collaborators, and associate data sources. |
-| `library_read` | The saved objects (assets) in the workspace | The principal can view assets such as dashboards, visualizations, and index patterns. |
-| `library_write` | The saved objects (assets) in the workspace | The principal can create, edit, and delete assets in the workspace. |
+| `read` | 工作區本身 | 主體可以開啟並檢視工作區。 |
+| `write` | 工作區本身 | 主體可以管理工作區本身：編輯其名稱、描述與設定、管理協作者，以及關聯資料來源。 |
+| `library_read` | 工作區中的已儲存物件（資產） | 主體可以檢視儀表板、視覺化及索引模式等資產。 |
+| `library_write` | 工作區中的已儲存物件（資產） | 主體可以在工作區中建立、編輯及刪除資產。 |
 
-Each access level requires one permission mode for the workspace and one permission mode for the workspace's assets, as listed in the following table. If a user or group is assigned only a partial combination of permission modes (for example, `read` without `library_read`), that user or group does not appear as a collaborator.
+每個存取層級都需要一個針對工作區的權限模式，以及一個針對工作區資產的權限模式，如下表所列。若使用者或群組僅被指派部分的權限模式組合（例如有 `read` 但沒有 `library_read`），該使用者或群組就不會顯示為協作者。
 
-| Access level | Required permission modes |
+| 存取層級 | 必要的權限模式 |
 | :--- | :--- |
 | Read only | `library_read` + `read` |
 | Read and write | `library_write` + `read` |
 | Admin | `library_write` + `write` |
 
-From the **Collaborators** page, you can search by collaborator ID and filter results by collaborator type and access level.
+在 **Collaborators** 頁面中，您可以依協作者 ID 進行搜尋，並依協作者類型與存取層級篩選結果。
 
-### Adding collaborators
+### 新增協作者
 
-Workspace creators are granted the **Admin** access level as a collaborator. To add more collaborators, select the **Add collaborators** button, which displays a dropdown menu. Choose **Add Users** or **Add Groups** to access the corresponding modal for adding new collaborators.
+工作區建立者會以協作者身分被授予 **Admin** 存取層級。若要新增更多協作者，請選取 **Add collaborators** 按鈕，此時會顯示下拉式選單。選擇 **Add Users** 或 **Add Groups** 以開啟對應的對話方塊來新增協作者。
 
-#### Adding users
+#### 新增使用者
 
-To add users, follow these steps: 
+若要新增使用者，請依照下列步驟操作：
 
-1. Select the **Add Users** button to open the modal. The modal displays one empty `User ID` field by default.
-2. Choose an access level: **Read only**, **Read and write**, or **Admin**.
-3. Choose **Add another User** to add multiple users. Do not use duplicate or existing `User ID` fields to avoid errors.
-4. Resolve any errors before finalizing. Successfully added users appear in the collaborators table.
+1. 選取 **Add Users** 按鈕以開啟對話方塊。根據預設，對話方塊會顯示一個空白的 `User ID` 欄位。
+2. 選擇存取層級：**Read only**、**Read and write** 或 **Admin**。
+3. 選擇 **Add another User** 以新增多個使用者。請勿使用重複或已存在的 `User ID` 欄位，以免發生錯誤。
+4. 完成前請先解決所有錯誤。成功新增的使用者會顯示在協作者表格中。
 
-#### Adding groups
+#### 新增群組
 
-To add groups, follow these steps:
+若要新增群組，請依照下列步驟操作：
 
-1. Select the **Add Groups** button to open the modal. The modal displays one empty `Group ID` field by default.
-2. Choose an access level: **Read only**, **Read and write**, or **Admin**.
-3. Use **Add another group** to add multiple groups. Do not use duplicate or existing `Group ID` fields to avoid errors.
-4. Resolve any errors before finalizing. Successfully added groups appear in the collaborators table.
+1. 選取 **Add Groups** 按鈕以開啟對話方塊。根據預設，對話方塊會顯示一個空白的 `Group ID` 欄位。
+2. 選擇存取層級：**Read only**、**Read and write** 或 **Admin**。
+3. 使用 **Add another group** 以新增多個群組。請勿使用重複或已存在的 `Group ID` 欄位，以免發生錯誤。
+4. 完成前請先解決所有錯誤。成功新增的群組會顯示在協作者表格中。
 
-### Modifying access levels
+### 修改存取層級
 
-You can modify collaborators' access levels after adding them to the collaborators table if you have the required permissions. Collaborators can be assigned any access level. However, if all **Admin** collaborators are changed to lower access levels, then only admins can manage workspace collaboration.
+將協作者新增至協作者表格後，若您擁有必要的權限，即可修改其存取層級。協作者可以被指派任何存取層級。不過，若所有 **Admin** 協作者都被變更為較低的存取層級，則只有管理員能夠管理工作區協作。
 
-#### Modifying individual access levels
+#### 修改個別存取層級
 
-To modify a single collaborator's access level, follow these steps:
+若要修改單一協作者的存取層級，請依照下列步驟操作：
 
-1. Select the action icon on the right of the table row.
-2. Select **Change access level** from the dropdown menu.
-3. Choose the desired access level from the list. 
-4. Confirm the change in the modal that appears and select **Confirm**. The collaborator's access level is updated in the table upon confirmation.
+1. 選取表格列右側的動作圖示。
+2. 從下拉式選單中選取 **Change access level**。
+3. 從清單中選擇所需的存取層級。
+4. 在出現的對話方塊中確認變更，然後選取 **Confirm**。確認後，表格中該協作者的存取層級便會更新。
 
-#### Modifying access levels in batch
+#### 批次修改存取層級
 
-To change access levels for several collaborators simultaneously, follow these steps:
+若要同時變更多個協作者的存取層級，請依照下列步驟操作：
 
-1. Select the desired collaborator rows in the table. 
-2. Select the **Actions** button that appears.
-3. Select **Change access level** from the dropdown menu.
-4. Select the new access level from the list provided. 
-5. Review and confirm the changes in the modal that appears. The access levels for all selected collaborators are updated in the table upon confirmation.
+1. 在表格中選取所需的協作者列。
+2. 選取出現的 **Actions** 按鈕。
+3. 從下拉式選單中選取 **Change access level**。
+4. 從提供的清單中選取新的存取層級。
+5. 在出現的對話方塊中檢閱並確認變更。確認後，表格中所有已選取協作者的存取層級便會更新。
 
-### Deleting collaborators
+### 刪除協作者
 
-After adding collaborators to the table, you have the option to delete them. Be cautious when removing admin collaborators because deleting all of them restricts workspace collaborator management to admins only. A confirmation modal is displayed before finalizing this action.
+將協作者新增至表格後，您可以選擇將其刪除。移除管理員協作者時請謹慎，因為刪除所有管理員協作者後，工作區協作者管理將僅限管理員執行。完成此動作前會顯示確認對話方塊。
 
-#### Deleting individual collaborators
+#### 刪除個別協作者
 
-To delete an individual collaborator, follow these steps:
+若要刪除個別協作者，請依照下列步驟操作：
 
-1. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/} icon on the right of the table row to display a dropdown menu.
-2. Select **Delete collaborator** from the dropdown menu. A confirmation modal appears to verify your action.
-3. Select **Confirm** in the modal to remove the collaborator from the table.
+1. 選取表格列右側的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/} 圖示以顯示下拉式選單。
+2. 從下拉式選單中選取 **Delete collaborator**。此時會出現確認對話方塊以確認您的動作。
+3. 在對話方塊中選取 **Confirm**，即可從表格中移除該協作者。
 
-#### Deleting collaborators in batch
+#### 批次刪除協作者
 
-To remove several collaborators simultaneously, follow these steps:
+若要同時移除多個協作者，請依照下列步驟操作：
 
-1. Select the rows containing the collaborators you want to remove from the table. A "Delete x collaborators" button appears.
-2. Select the **Delete x collaborators** button.
-3. Review the confirmation modal that appears.
-4. Select **Confirm** to remove all selected collaborators from the table.
+1. 在表格中選取包含您要移除之協作者的列。此時會出現「Delete x collaborators」按鈕。
+2. 選取 **Delete x collaborators** 按鈕。
+3. 檢閱出現的確認對話方塊。
+4. 選取 **Confirm** 以從表格中移除所有已選取的協作者。
 
-## Configuring workspace privacy
+## 設定工作區隱私
 
-When permission control is enabled, workspace administrators can set one of the following three access levels:
+啟用權限控制時，工作區管理員可以設定下列三種存取層級之一：
 
-* **Private to collaborators (Default):** Only workspace collaborators can access the workspace. 
-* **Anyone can view:** Grants **Read only** permissions to all workspace users, allowing them to view workspace assets. 
-* **Anyone can edit:** Grants **Read and write** permissions to all users, allowing them to view, create, and update workspace assets.
+* **Private to collaborators（預設）：**只有工作區協作者可以存取工作區。
+* **Anyone can view：**授予所有工作區使用者 **Read only** 權限，讓他們能夠檢視工作區資產。
+* **Anyone can edit：**授予所有使用者 **Read and write** 權限，讓他們能夠檢視、建立及更新工作區資產。
 
-Collaborators receive whichever permission is higher: their individual access level or the workspace-wide privacy setting. For example, if workspace privacy is set to "Anyone can edit", a collaborator with read-only access can also edit workspace assets.
-You can set up workspace privacy on the **Create workspace** page as a **Dashboard admin**. You can also modify it on the **Collaborators** or **Workspace details** pages as a **Workspace admin** or **Dashboard admin**.
+協作者會取得兩者中較高的權限：其個別存取層級，或工作區層級的隱私設定。例如，若工作區隱私設為「Anyone can edit」，具有唯讀存取權的協作者也能編輯工作區資產。
+您可以以**儀表板管理員**身分在 **Create workspace** 頁面上設定工作區隱私。您也可以以**工作區管理員**或**儀表板管理員**身分，在 **Collaborators** 或 **Workspace details** 頁面上修改此設定。
 
-### Setting up workspace privacy during workspace creation
+### 在建立工作區時設定工作區隱私
 
-Use the following steps to change workspace privacy settings when creating a new workspace:
+建立新工作區時，請依照下列步驟變更工作區隱私設定：
 
-1. Choose the desired access level from the **Set up privacy** panel. 
-2. (Optional) Select the **Add collaborators after workspace creation** checkbox to add collaborators later.
-3. Select **Create workspace** to create the workspace.
+1. 從 **Set up privacy** 面板中選擇所需的存取層級。
+2. （選用）選取 **Add collaborators after workspace creation** 核取方塊，以便稍後新增協作者。
+3. 選取 **Create workspace** 以建立工作區。
 
-### Modifying workspace privacy on the **Collaborators** page
+### 在 **Collaborators** 頁面上修改工作區隱私
 
-Use the following steps to edit the workspace privacy settings on the **Collaborators** page:
+請依照下列步驟在 **Collaborators** 頁面上編輯工作區隱私設定：
 
-1. Next to **Workspace privacy**, select **Edit**. 
-2. Select the new access level from the dropdown menu.
-3. Select **Save changes** to apply the modifications.
+1. 在 **Workspace privacy** 旁，選取 **Edit**。
+2. 從下拉式選單中選取新的存取層級。
+3. 選取 **Save changes** 以套用修改。
 
-### Modifying workspace privacy on the **Workspace details** page
+### 在 **Workspace details** 頁面上修改工作區隱私
 
-Use the following steps to edit the workspace privacy settings on the **Workspace details** page:
+請依照下列步驟在 **Workspace details** 頁面上編輯工作區隱私設定：
 
-1. Select the **Edit** button in the upper-right corner of the **Details** panel. 
-2. Select the new access level from the dropdown menu.
-3. Select **Save** to apply the modifications.
+1. 選取 **Details** 面板右上角的 **Edit** 按鈕。
+2. 從下拉式選單中選取新的存取層級。
+3. 選取 **Save** 以套用修改。

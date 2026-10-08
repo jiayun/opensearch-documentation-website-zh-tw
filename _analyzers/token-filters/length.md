@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Length
+title: "長度"
 parent: Token filters
 nav_order: 240
 ---
 
-# Length token filter
+# 長度詞元篩選器
 
-The `length` token filter is used to remove tokens that don't meet specified length criteria (minimum and maximum values) from the token stream.
+`length` 詞元篩選器用於從詞元串流中移除不符合指定長度條件（最小值與最大值）的詞元。
 
-## Parameters
+## 參數
 
-The `length` token filter can be configured with the following parameters.
+您可以使用下列參數設定 `length` 詞元篩選器。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`min` | Optional | Integer | The minimum token length. Default is `0`.
-`max` | Optional | Integer | The maximum token length. Default is `Integer.MAX_VALUE` (`2147483647`).
+`min` | 選用 | 整數 | 詞元的最小長度。預設值為 `0`。
+`max` | 選用 | 整數 | 詞元的最大長度。預設值為 `Integer.MAX_VALUE`（`2147483647`）。
  
 
-## Example
+## 範例
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `length` filter:
+下列範例請求會建立名為 `my_index` 的新索引，並設定一個使用 `length` 篩選器的分析器：
 
 ```json
 PUT my_index
@@ -47,9 +48,9 @@ PUT my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器產生的詞元：
 
 ```json
 GET /my_index/_analyze
@@ -60,7 +61,7 @@ GET /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

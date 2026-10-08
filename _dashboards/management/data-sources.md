@@ -1,49 +1,50 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Connecting data sources
+title: "連接資料來源"
 nav_order: 30
 has_children: true
 ---
 
-# Data sources
+# 資料來源
 
-OpenSearch data sources are the applications that OpenSearch can connect to and ingest data from. Once your data sources have been connected and your data has been ingested, it can be indexed, searched, and analyzed using [REST APIs]({{site.url}}{{site.baseurl}}/api-reference/index/) or [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/).
+OpenSearch 資料來源是 OpenSearch 可以連接並從中匯入資料的應用程式。連接資料來源並匯入資料後，即可使用 [REST API]({{site.url}}{{site.baseurl}}/api-reference/index/) 或 [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/) 將資料編製索引、搜尋及分析。
 
-This documentation focuses on using the OpenSeach Dashboards web-based interface to connect and manage your data sources. For information about using an API to connect data sources, see the developer resources linked under [Next steps](#next-steps).
+本文件著重說明如何使用 OpenSearch Dashboards 網頁介面來連接及管理您的資料來源。如需使用 API 連接資料來源的相關資訊，請參閱[後續步驟](#next-steps)中所連結的開發人員資源。
 
-## Prerequisites
+## 先決條件
 
-The first step in connecting your data sources to OpenSearch is to install OpenSearch and OpenSearch Dashboards on your system. Refer to the [installation instructions]({{site.url}}{{site.baseurl}}/install-and-configure/index/) for information.
+將資料來源連接至 OpenSearch 的第一步，是在您的系統上安裝 OpenSearch 和 OpenSearch Dashboards。如需相關資訊，請參閱[安裝說明]({{site.url}}{{site.baseurl}}/install-and-configure/index/)。
 
-Once you have installed OpenSearch and OpenSearch Dashboards, you can use Dashboards to connect your data sources to OpenSearch and then use Dashboards to manage data sources, create index patterns based on those data sources, run queries against a specific data source, and combine visualizations in one dashboard.
+安裝 OpenSearch 和 OpenSearch Dashboards 後，您可以使用 Dashboards 將資料來源連接至 OpenSearch，接著使用 Dashboards 管理資料來源、根據這些資料來源建立索引模式、對特定資料來源執行查詢，以及將多個視覺化組合在同一個儀表板中。
 
-Configuration of the [YAML files]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/#configuration-file) and installation of the `dashboards-observability` and `opensearch-sql` plugins is necessary. For more information, see [OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/).
+您必須設定 [YAML 檔案]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/#configuration-file)，並安裝 `dashboards-observability` 和 `opensearch-sql` 外掛程式。如需詳細資訊，請參閱 [OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)。
 
-To securely store and encrypt data source connections in OpenSearch, you must add the following configuration to the `opensearch.yml` file on all the nodes:
+若要在 OpenSearch 中安全地儲存並加密資料來源連線，您必須在所有節點的 `opensearch.yml` 檔案中加入下列組態：
 
 `plugins.query.datasources.encryption.masterkey: "YOUR_GENERATED_MASTER_KEY_HERE"`
 
-The key must be 16, 24, or 32 characters. You can use the following command to generate a 24-character key:
+金鑰長度必須為 16、24 或 32 個字元。您可以使用下列命令產生 24 個字元的金鑰：
 
 `openssl rand -hex 12`
 
-Generating 12 bytes results in a hexadecimal string that is 12 * 2 = 24 characters.
+產生 12 個位元組會得到長度為 12 * 2 = 24 個字元的十六進位字串。
 {: .note}
 
-## Permissions
+## 權限
 
-To work with data sources in OpenSearch Dashboards, you must be assigned the correct cluster-level [data source permissions]({{site.url}}{{site.baseurl}}/security/access-control/permissions#data-source-permissions).
+若要在 OpenSearch Dashboards 中使用資料來源，您必須獲指派正確的叢集層級[資料來源權限]({{site.url}}{{site.baseurl}}/security/access-control/permissions#data-source-permissions)。
 
-## Types of data streams
+## 資料串流類型
 
-To configure data sources through OpenSearch Dashboards, go to **Management** > **Dashboards Management** > **Data sources**. This flow can be used for OpenSearch data stream connections. See [Configuring and using multiple data sources]({{site.url}}{{site.baseurl}}/dashboards/management/multi-data-sources/).
+若要透過 OpenSearch Dashboards 設定資料來源，請前往 **Management** > **Dashboards Management** > **Data sources**。此流程可用於 OpenSearch 資料串流連線。請參閱[設定及使用多個資料來源]({{site.url}}{{site.baseurl}}/dashboards/management/multi-data-sources/)。
 
-Alternatively, if you are running OpenSearch Dashboards 2.16 or later, go to **Management** > **Data sources**. This flow can be used to connect Amazon Simple Storage Service (Amazon S3) and Prometheus. See [Connecting Amazon S3 to OpenSearch]({{site.url}}{{site.baseurl}}/dashboards/management/S3-data-source/) and [Connecting Prometheus to OpenSearch]({{site.url}}{{site.baseurl}}/dashboards/management/connect-prometheus/) for more information.
+或者，如果您執行的是 OpenSearch Dashboards 2.16 或更新版本，請前往 **Management** > **Data sources**。此流程可用於連接 Amazon Simple Storage Service (Amazon S3) 和 Prometheus。如需詳細資訊，請參閱[將 Amazon S3 連接至 OpenSearch]({{site.url}}{{site.baseurl}}/dashboards/management/S3-data-source/) 和[將 Prometheus 連接至 OpenSearch]({{site.url}}{{site.baseurl}}/dashboards/management/connect-prometheus/)。
 
-## Next steps
+## 後續步驟
 
-- Learn about [managing index patterns]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/) through OpenSearch Dashboards.
-- Learn about [indexing data using Index Management]({{site.url}}{{site.baseurl}}/dashboards/im-dashboards/index/) through OpenSearch Dashboards.
-- Learn about how to connect [multiple data sources]({{site.url}}{{site.baseurl}}/dashboards/management/multi-data-sources/).
-- Learn about how to connect [OpenSearch and Amazon S3]({{site.url}}{{site.baseurl}}/dashboards/management/S3-data-source/) and [OpenSearch and Prometheus]({{site.url}}{{site.baseurl}}/dashboards/management/connect-prometheus/) using the OpenSearch Dashboards interface. 
-- Learn about the [Integrations]({{site.url}}{{site.baseurl}}/integrations/index/) plugin, which gives you the flexibility to use various data ingestion methods and connect data to OpenSearch Dashboards.
+- 了解如何透過 OpenSearch Dashboards [管理索引模式]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/)。
+- 了解如何透過 OpenSearch Dashboards [使用 Index Management 將資料編製索引]({{site.url}}{{site.baseurl}}/dashboards/im-dashboards/index/)。
+- 了解如何連接[多個資料來源]({{site.url}}{{site.baseurl}}/dashboards/management/multi-data-sources/)。
+- 了解如何使用 OpenSearch Dashboards 介面連接 [OpenSearch 與 Amazon S3]({{site.url}}{{site.baseurl}}/dashboards/management/S3-data-source/) 以及 [OpenSearch 與 Prometheus]({{site.url}}{{site.baseurl}}/dashboards/management/connect-prometheus/)。
+- 了解 [Integrations]({{site.url}}{{site.baseurl}}/integrations/index/) 外掛程式，此外掛程式可讓您彈性運用各種資料匯入方法，並將資料連接至 OpenSearch Dashboards。

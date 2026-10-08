@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get script contexts
+title: "取得指令碼執行環境"
 parent: Script APIs
 nav_order: 70
 ---
 
 # Get Script Contexts API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Retrieves all available contexts where scripts can be used, such as search, update, or aggregation contexts.
+擷取所有可使用指令碼的執行環境，例如搜尋、更新或彙總執行環境。
 
-## Example request
+## 請求範例
 
 <!-- spec_insert_start
 component: example_code
@@ -31,9 +32,9 @@ response = client.get_script_context()
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-The `GET _script_context` request returns the following fields:
+`GET _script_context` 請求會傳回下列欄位：
 
 ````json
 {
@@ -560,32 +561,32 @@ The `GET _script_context` request returns the following fields:
 }
 ````
 
-## Response body fields
+## 回應本文欄位
 
-The `GET _script_context` request returns the following response fields:
+`GET _script_context` 請求會傳回下列回應欄位：
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `contexts` | List | A list of all contexts. See [Script object](#script-context).  |
+| `contexts` | 清單 | 所有情境的清單。請參閱[指令碼物件](#script-context)。  |
 
-#### Script context
+#### 指令碼情境
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `name` | String | The context name. |
-| `methods` | List | List of the context's allowable methods. See [Script object](#context-methods). |
+| `name` | 字串 | 情境名稱。 |
+| `methods` | 清單 | 情境允許使用的方法清單。請參閱[指令碼物件](#context-methods)。 |
 
-#### Context methods
+#### 情境方法
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `name` | String | Method name. |
-| `name` | String | Type that the method returns (`boolean`, `object`, `number`, and so on). |
-| `params` | List | List of the parameters accepted by the method. See [Script object](#method-parameters). |
+| `name` | 字串 | 方法名稱。 |
+| `name` | 字串 | 方法傳回的類型（`boolean`、`object`、`number` 等）。 |
+| `params` | 清單 | 方法接受的參數清單。請參閱[指令碼物件](#method-parameters)。 |
 
-#### Method parameters 
+#### 方法參數 
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `type` | String | Parameter data type. | 
-| `name` | String | Parameter name. |
+| `type` | 字串 | 參數資料類型。 | 
+| `name` | 字串 | 參數名稱。 |

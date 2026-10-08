@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Geocentroid
 parent: Metric aggregations
 nav_order: 45
 ---
 
-# Geocentroid aggregation
+# Geocentroid 彙總
 
-The `geo_centroid` aggregation calculates the geographic center or focal point of a set of `geo_point` values. It returns the centroid location as a latitude-longitude pair.
+`geo_centroid` 彙總會計算一組 `geo_point` 值的地理中心或焦點。它會將中心點位置以經緯度對的形式傳回。
 
-## Parameters
+## 參數
 
-The `geo_centroid` aggregation takes the following parameter.
+`geo_centroid` 彙總使用以下參數。
 
-| Parameter        | Required/Optional | Data type      | Description |
-| :--              | :--               | :--            | :--         |
-| `field`          | Required          | String         | The name of the field containing the geopoints for which the geocentroid is computed. |
+| 參數 | 必要/選用 | 資料類型 | 說明 |
+| :-- | :-- | :-- | :-- |
+| `field` | 必要 | 字串 | 包含要計算 geocentroid 之 geopoints 的欄位名稱。 |
 
-## Example
+## 範例
 
-The following example returns the `geo_centroid` for the `geoip.location` of every order in the e-commerce sample data. Each `geoip.location` is a geopoint:
+以下範例會傳回電子商務範例資料中每筆訂單 `geoip.location` 的 `geo_centroid`。每個 `geoip.location` 都是一個 geopoint：
 
 
 ```json
@@ -37,9 +38,9 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-The response includes a `centroid` object with `lat` and `lon` properties representing the centroid location of all indexed data points:
+回應包含一個 `centroid` 物件，其中具有代表所有已編製索引資料點中心點位置的 `lat` 和 `lon` 屬性：
 
 ```json
 {
@@ -71,17 +72,17 @@ The response includes a `centroid` object with `lat` and `lon` properties repres
 }
 ```
 
-The centroid location is in the Atlantic Ocean north of Morocco. This is not very meaningful, given the wide geographical dispersion of orders in the database.
+中心點位置位於摩洛哥北部的大西洋。考慮到資料庫中訂單的地理分佈非常廣泛，這個結果並沒有太大的意義。
 
-## Nesting under other aggregations
+## 巢狀於其他彙總之下
 
-You can nest the `geo_centroid` aggregation inside bucket aggregations to calculate the centroid for subsets of your data.
+您可以將 `geo_centroid` 彙總巢狀於桶彙總中，以計算資料子集的中心點。
 
-### Example: Nesting under a terms aggregation
+### 範例：巢狀於 terms 彙總之下
 
-You can nest `geo_centroid` aggregations under `terms` buckets of a string field.
+您可以將 `geo_centroid` 彙總巢狀於字串欄位的 `terms` 桶中。
 
-To find the centroid location of `geoip` for the orders on each continent, sub-aggregate the centroid within the `geoip.continent_name` field:
+若要找出每個大洲訂單 `geoip` 的中心點位置，請在 `geoip.continent_name` 欄位內進行中心點的子彙總：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -105,11 +106,11 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-This returns a centroid location for each continent's bucket:
+這會為每個大洲的桶傳回一個中心點位置：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 

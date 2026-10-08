@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Nodes usage
+title: "節點使用情況"
 parent: Nodes APIs
 nav_order: 40
 ---
 
 # Nodes Usage API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The nodes usage endpoint returns low-level information about REST action usage on nodes.
+節點使用情況端點會傳回節點上 REST 動作使用情況的低階資訊。
 
-## Endpoints
+## 端點
 
 ```json
 GET _nodes/usage
@@ -20,27 +21,27 @@ GET _nodes/usage/{metric}
 GET _nodes/{node_id}/usage/{metric}
 ```
 
-## Path parameters
+## 路徑參數
 
-You can include the following optional path parameters in your request.
+您可以在請求中包含下列選用的路徑參數。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`node_id` | String | A comma-separated list of node IDs used to filter results. Supports [node filters]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/#node-filters). Defaults to `_all`.
-`metric` | String | The metrics that will be included in the response. You can set the string to either `_all` or `rest_actions`. `rest_actions` returns the total number of times an action has been called on the node. `_all` returns all stats from the node. Defaults to `_all`.
+`node_id` | 字串 | 用於篩選結果的節點 ID 清單，以逗號分隔。支援[節點篩選器]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/#node-filters)。預設為 `_all`。
+`metric` | 字串 | 回應中將包含的指標。您可以將字串設為 `_all` 或 `rest_actions`。`rest_actions` 會傳回動作在節點上被呼叫的總次數。`_all` 會傳回節點的所有統計資料。預設為 `_all`。
 
-## Query parameters
+## 查詢參數
 
-You can include the following optional query parameters in your request.
+您可以在請求中包含下列選用的查詢參數。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :---| :---
-`timeout` | Time | Sets the time limit for a response from the node. Default is `30s`.
-`cluster_manager_timeout` | Time | Sets the time limit for a response from the cluster manager. Default is `30s`.
+`timeout` | 時間 | 設定等待節點回應的時間限制。預設為 `30s`。
+`cluster_manager_timeout` | 時間 | 設定等待叢集管理員回應的時間限制。預設為 `30s`。
 
-## Example request
+## 請求範例
 
-The following request returns usage details for all nodes:
+下列請求會傳回所有節點的使用情況詳細資料：
 
 <!-- spec_insert_start
 component: example_code
@@ -64,9 +65,9 @@ response = client.nodes.info(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-The following is an example response:
+以下是回應範例：
 
 ```json
 {
@@ -109,6 +110,6 @@ The following is an example response:
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you set the following permissions: `cluster:manage/nodes` or `cluster:monitor/nodes`.
+如果您使用 Security 外掛程式，請確保設定下列權限：`cluster:manage/nodes` 或 `cluster:monitor/nodes`。

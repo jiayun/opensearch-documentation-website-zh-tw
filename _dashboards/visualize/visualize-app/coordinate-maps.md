@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Coordinate map
+title: "座標地圖"
 parent: Visualization types
 grand_parent: Creating visualizations in the Visualize application
 great_grand_parent: Building data visualizations
@@ -9,56 +10,56 @@ redirect_from:
   - /dashboards/visualize/coordinate-maps/
 ---
 
-# Coordinate map
+# 座標地圖
 
-A coordinate map plots geographic data points on a map using latitude and longitude coordinates. Each marker represents a document with a geo_point field, and marker size indicates the aggregated value at that location.
+座標地圖會使用緯度和經度座標，在地圖上標繪地理資料點。每個標記代表一份含有 geo_point 欄位的文件，標記大小則表示該位置的彙總值。
 
-## When to use coordinate maps
+## 何時使用座標地圖
 
-Use coordinate maps to reveal distribution patterns and spatial correlations over locations, such as customer locations, service coverage areas, incident distributions, or events with geographic coordinates. You can select geographic regions to filter other visualizations on the same dashboard. For multi-layer geographic visualizations, use the [Maps application]({{site.url}}{{site.baseurl}}/dashboards/visualize/maps/).
+使用座標地圖可呈現各地點的分布模式與空間相關性，例如客戶所在位置、服務涵蓋區域、事件分布，或具有地理座標的事件。您可以選取地理區域，以篩選同一儀表板上的其他視覺化。若要建立多圖層的地理視覺化，請使用 [Maps 應用程式]({{site.url}}{{site.baseurl}}/dashboards/visualize/maps/)。
 
-## Creating a coordinate map
+## 建立座標地圖
 
-The examples on this page use the **Sample flight data** dataset. Before you begin, complete the [prerequisites]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites).
+本頁的範例使用 **Sample flight data** 資料集。開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites)。
 {: .note}
 
-To create a coordinate map, follow these steps:
+若要建立座標地圖，請依照下列步驟操作：
 
-1. In the **New Visualization** dialog, select **Coordinate Map**, then select your index pattern (for example, **opensearch_dashboards_sample_data_flights**).
-2. Set the time filter to **Last 7 days**.
-3. Under **Buckets**, select **Add** > **Geo coordinates**.
-4. Set **Aggregation** to **Geohash** and **Field** to **OriginLocation**.
-5. Select **Update**.
+1. 在 **New Visualization** 對話方塊中，選取 **Coordinate Map**，然後選取您的索引模式（例如 **opensearch_dashboards_sample_data_flights**）。
+2. 將時間篩選器設定為 **Last 7 days**。
+3. 在 **Buckets** 下，選取 **Add** > **Geo coordinates**。
+4. 將 **Aggregation** 設定為 **Geohash**，並將 **Field** 設定為 **OriginLocation**。
+5. 選取 **Update**。
 
-The map displays markers at flight origin locations, with marker size proportional to the document count at each location, as shown in the following image.
+地圖會在航班出發地點顯示標記，標記大小與各地點的文件數量成正比，如下圖所示。
 
-![Coordinate map showing flight origins]({{site.url}}{{site.baseurl}}/images/dashboards/coordinate-map-example.png)
+![顯示航班出發地的座標地圖]({{site.url}}{{site.baseurl}}/images/dashboards/coordinate-map-example.png)
 
-### Customizing the map display
+### 自訂地圖顯示
 
-1. Select the **Options** tab.
-2. Under **Map type**, select a marker style: **Scaled Circle Markers**, **Shaded Circle Markers**, **Shaded Geohash Grid**, or **Heatmap**.
-3. Adjust **Precision** to control the geohash bucket size (higher precision = smaller, more numerous buckets).
-4. Select **Update**.
+1. 選取 **Options** 索引標籤。
+2. 在 **Map type** 下，選取標記樣式：**Scaled Circle Markers**、**Shaded Circle Markers**、**Shaded Geohash Grid** 或 **Heatmap**。
+3. 調整 **Precision** 以控制 geohash 桶 (bucket) 的大小（精確度越高，桶越小、數量越多）。
+4. 選取 **Update**。
 
-## Configuring a coordinate map
+## 設定座標地圖
 
-For information about general visualization configuration, see [Configuring visualizations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-viz/).
+如需一般視覺化組態的相關資訊，請參閱[設定視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-viz/)。
 
-### Options tab
+### Options 索引標籤
 
-| Setting | Description |
+| 設定 | 說明 |
 | :--- | :--- |
-| **Map type** | The marker style. Supported values: **Scaled Circle Markers** (sized by value), **Shaded Circle Markers** (colored by value), **Shaded Geohash Grid** (rectangular cells colored by value), **Heatmap** (continuous color gradient). |
-| **Precision** | Controls the geohash grid resolution. Higher values produce smaller, more numerous buckets. |
-| **Show tooltips** | When enabled, displays aggregation values on hover. |
-| **WMS compliant map server** | When enabled, uses a WMS server for the basemap. For more information, see [Configuring a Web Map Service]({{site.url}}{{site.baseurl}}/dashboards/visualize/maptiles/). |
+| **Map type** | 標記樣式。支援的值：**Scaled Circle Markers**（依值調整大小）、**Shaded Circle Markers**（依值著色）、**Shaded Geohash Grid**（依值著色的矩形網格）、**Heatmap**（連續的色彩漸層）。 |
+| **Precision** | 控制 geohash 網格的解析度。值越高，產生的桶越小、數量越多。 |
+| **Show tooltips** | 啟用時，滑鼠游標停留時會顯示彙總值。 |
+| **WMS compliant map server** | 啟用時，會使用 WMS 伺服器提供底圖。如需詳細資訊，請參閱[設定 Web Map Service]({{site.url}}{{site.baseurl}}/dashboards/visualize/maptiles/)。 |
 
-## Related documentation
+## 相關文件
 
-- [Configuring maps]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-maps/)
+- [設定地圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-maps/)
 
-## Next steps
+## 後續步驟
 
-- To choose a different visualization type, see [Visualization types]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/).
-- To add this visualization to a dashboard, see [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/).
+- 若要選擇其他視覺化類型，請參閱[視覺化類型]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/)。
+- 若要將此視覺化新增至儀表板，請參閱[建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)。

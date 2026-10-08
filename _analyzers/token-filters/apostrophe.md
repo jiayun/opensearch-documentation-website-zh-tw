@@ -1,18 +1,19 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Apostrophe
 parent: Token filters
 nav_order: 10
 ---
 
-# Apostrophe token filter
+# Apostrophe 詞元篩選器
 
-The `apostrophe` token filter's primary function is to remove possessive apostrophes and anything following them. This can be very useful in analyzing text in languages that rely heavily on apostrophes, such as Turkish, in which apostrophes separate the root word from suffixes, including possessive suffixes, case markers, and other grammatical endings.
+`apostrophe` 詞元篩選器的主要功能是移除所有格撇號及其後的所有內容。在分析大量使用撇號的語言文字時，這項功能非常實用，例如土耳其語。在土耳其語中，撇號用於分隔字根與字尾，包括所有格字尾、格標記及其他文法詞尾。
 
 
-## Example
+## 範例
 
-The following example request creates a new index named `custom_text_index` with a custom analyzer configured in `settings` and used in `mappings`:
+下列範例請求會建立名為 `custom_text_index` 的新索引，其中包含在 `settings` 中設定並在 `mappings` 中使用的自訂分析器：
 
 ```json
 PUT /custom_text_index
@@ -43,9 +44,9 @@ PUT /custom_text_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the created analyzer:
+使用下列請求來檢查使用所建立的分析器產生的詞元：
 
 ```json
 POST /custom_text_index/_analyze
@@ -56,7 +57,7 @@ POST /custom_text_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {
@@ -114,5 +115,5 @@ The response contains the generated tokens:
 }
 ```
 
-The built-in `apostrophe` token filter is not suitable for languages such as French, in which apostrophes are used at the beginning of words. For example, `"C'est l'amour de l'école"` will result in four tokens: "C", "l", "de", and "l".
+內建的 `apostrophe` 詞元篩選器不適用於法語等在字首使用撇號的語言。例如，`"C'est l'amour de l'école"` 會產生四個詞元：「C」、「l」、「de」和「l」。
 {: .note}

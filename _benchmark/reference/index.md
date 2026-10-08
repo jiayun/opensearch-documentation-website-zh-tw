@@ -1,13 +1,14 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reference
+title: "參考資料"
 nav_order: 75
 has_children: true
 redirect_from:
   - /benchmark/reference/
 ---
 
-# OpenSearch Benchmark reference
+# OpenSearch Benchmark 參考資料
 
-The following section contains reference materials for [commands]({{site.url}}{{site.baseurl}}/benchmark/reference/commands/) and [metrics]({{site.url}}{{site.baseurl}}/benchmark/reference/metrics/) for OpenSearch Benchmark. For the elements that make up a workload, see [Anatomy of a workload]({{site.url}}{{site.baseurl}}/benchmark/anatomy-of-a-workload/).
+以下章節包含 OpenSearch Benchmark 的[命令]({{site.url}}{{site.baseurl}}/benchmark/reference/commands/)和[指標]({{site.url}}{{site.baseurl}}/benchmark/reference/metrics/)參考資料。如需了解組成工作負載的各個元素，請參閱[工作負載剖析]({{site.url}}{{site.baseurl}}/benchmark/anatomy-of-a-workload/)。
 

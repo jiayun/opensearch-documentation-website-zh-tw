@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Hunspell
 parent: Token filters
 nav_order: 160
 ---
 
-# Hunspell token filter
+# Hunspell 詞元篩選器
 
-The `hunspell` token filter is used for stemming and morphological analysis of words in a specific language. This filter applies Hunspell dictionaries, which are widely used in spell checkers. It works by breaking down words into their root forms (stemming).
+`hunspell` 詞元篩選器用於對特定語言的單字進行詞幹提取與詞形分析。此篩選器會套用 Hunspell 字典，這類字典廣泛用於拼字檢查器。它的運作方式是將單字拆解為其字根形式（詞幹提取）。
 
-The Hunspell dictionary files are automatically loaded at startup from the `<OS_PATH_CONF>/hunspell/<locale>` directory. For example, the `en_GB` locale must have at least one `.aff` file and one or more `.dic` files in the `<OS_PATH_CONF>/hunspell/en_GB/` directory. 
+Hunspell 字典檔案會在啟動時自動從 `<OS_PATH_CONF>/hunspell/<locale>` 目錄載入。例如，`en_GB` 地區設定在 `<OS_PATH_CONF>/hunspell/en_GB/` 目錄中必須至少有一個 `.aff` 檔案，以及一個或多個 `.dic` 檔案。
 
-Alternatively, you can load dictionaries from a custom directory by using the `ref_path` parameter to maintain multiple independent dictionary sets for the same locale. For more information, see [Custom dictionary loading with ref_path](#custom-dictionary-loading).
+您也可以使用 `ref_path` 參數從自訂目錄載入字典，以便為同一個地區設定維護多組獨立的字典。如需詳細資訊，請參閱[使用 ref_path 載入自訂字典](#custom-dictionary-loading)。
 
-You can also hot-reload Hunspell dictionaries at runtime without restarting the node. For more information, see [Hot-reloading Hunspell dictionaries](#hot-reloading-hunspell-dictionaries).
+您也可以在執行階段熱重新載入 Hunspell 字典，而不需要重新啟動節點。如需詳細資訊，請參閱[熱重新載入 Hunspell 字典](#hot-reloading-hunspell-dictionaries)。
 
-You can download these files from [LibreOffice dictionaries](https://github.com/LibreOffice/dictionaries).
+您可以從 [LibreOffice 字典](https://github.com/LibreOffice/dictionaries)下載這些檔案。
 
-## Parameters
+## 參數
 
-The `hunspell` token filter can be configured with the following parameters.
+`hunspell` 詞元篩選器可使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`language/lang/locale` | At least one of the three is required | String | Specifies the language for the Hunspell dictionary. Can contain only alphanumeric characters, hyphens, and underscores (for example, `en_US`, `de_DE`).
-`ref_path` | Optional | String | Specifies a relative path used to load dictionaries from the `<OS_PATH_CONF>/<ref_path>/hunspell/<locale>/` directory instead of the default `<OS_PATH_CONF>/hunspell/<locale>/` directory. When specified, the `locale` parameter is required. The `ref_path` value can contain alphanumeric characters, hyphens, underscores, and forward slashes (for nested paths such as `analyzers/my-dict`). The `locale` value can contain only alphanumeric characters, hyphens, and underscores. See [Custom dictionary loading with ref_path](#custom-dictionary-loading). **Note**: `ref_path` resolves directly under `<OS_PATH_CONF>`. In OpenSearch 3.6 and earlier, it resolved under `<OS_PATH_CONF>/analyzers/`. To preserve the previous layout, prefix your `ref_path` value with `analyzers/` (for example, `analyzers/my-dict`).
-`dedup` | Optional | Boolean | Determines whether to remove multiple duplicate stemming terms for the same token. Default is `true`.
-`dictionary` | Optional | Array of strings | Configures the dictionary files to be used for the Hunspell dictionary. Default is all files in the `<OS_PATH_CONF>/hunspell/<locale>` directory if `ref_path` is not specified or all files in the `<OS_PATH_CONF>/<ref_path>/hunspell/<locale>/` directory when `ref_path` is specified. See [Custom dictionary loading with ref_path](#custom-dictionary-loading).
-`longest_only` | Optional | Boolean | Specifies whether only the longest stemmed version of the token should be returned. Default is `false`.
-`updateable` | Optional | Boolean | When set to `true`, the filter operates in search-time analysis mode, allowing dictionaries to be hot-reloaded by using the [Refresh search analyzer]({{site.url}}{{site.baseurl}}/im-plugin/refresh-analyzer/) API without restarting the node. Default is `false`. **Introduced 3.7.**
+`language/lang/locale` | 三者至少須提供其一 | 字串 | 指定 Hunspell 字典的語言。只能包含英數字元、連字號和底線（例如 `en_US`、`de_DE`）。
+`ref_path` | 選用 | 字串 | 指定用於從 `<OS_PATH_CONF>/<ref_path>/hunspell/<locale>/` 目錄載入字典的相對路徑，而非從預設的 `<OS_PATH_CONF>/hunspell/<locale>/` 目錄載入。指定此參數時，`locale` 參數為必要。`ref_path` 值可包含英數字元、連字號、底線和正斜線（用於巢狀路徑，例如 `analyzers/my-dict`）。`locale` 值只能包含英數字元、連字號和底線。請參閱[使用 ref_path 載入自訂字典](#custom-dictionary-loading)。**注意**：`ref_path` 會直接解析至 `<OS_PATH_CONF>` 底下。在 OpenSearch 3.6 及更早版本中，它會解析至 `<OS_PATH_CONF>/analyzers/` 底下。若要保留先前的配置，請在您的 `ref_path` 值前面加上 `analyzers/`（例如 `analyzers/my-dict`）。
+`dedup` | 選用 | 布林值 | 決定是否移除同一個詞元的多個重複詞幹詞彙。預設值為 `true`。
+`dictionary` | 選用 | 字串陣列 | 設定 Hunspell 字典要使用的字典檔案。若未指定 `ref_path`，預設為 `<OS_PATH_CONF>/hunspell/<locale>` 目錄中的所有檔案；若已指定 `ref_path`，則預設為 `<OS_PATH_CONF>/<ref_path>/hunspell/<locale>/` 目錄中的所有檔案。請參閱[使用 ref_path 載入自訂字典](#custom-dictionary-loading)。
+`longest_only` | 選用 | 布林值 | 指定是否只傳回詞元最長的詞幹版本。預設值為 `false`。
+`updateable` | 選用 | 布林值 | 設為 `true` 時，篩選器會以搜尋時分析模式運作，讓您可以使用 [Refresh search analyzer]({{site.url}}{{site.baseurl}}/im-plugin/refresh-analyzer/) API 熱重新載入字典，而不需要重新啟動節點。預設值為 `false`。**於 3.7 版推出。**
 
-## Example
+## 範例
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `hunspell` filter:
+下列範例請求會建立名為 `my_index` 的新索引，並設定一個使用 `hunspell` 篩選器的分析器：
 
 ```json
 PUT /my_index
@@ -63,14 +64,14 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Custom dictionary loading
+## 載入自訂字典
 
-When you specify a `ref_path` parameter, dictionaries are loaded from a custom directory instead of the default directory. This is useful when you need multiple independent dictionary sets for the same locale, for example, when different indexes require different custom dictionaries.
+當您指定 `ref_path` 參數時，字典會從自訂目錄載入，而非從預設目錄載入。當您需要為同一個地區設定使用多組獨立的字典時，這項功能非常實用，例如不同的索引需要不同的自訂字典時。
 
-The `ref_path` value is resolved relative to `<OS_PATH_CONF>` and can contain forward slashes for nested paths. In OpenSearch 3.6 and earlier, `ref_path` was resolved relative to `<OS_PATH_CONF>/analyzers/`. To preserve the previous directory layout when upgrading from 3.6 or earlier, prefix your existing `ref_path` value with `analyzers/`.
+`ref_path` 值會相對於 `<OS_PATH_CONF>` 進行解析，且可包含正斜線以表示巢狀路徑。在 OpenSearch 3.6 及更早版本中，`ref_path` 是相對於 `<OS_PATH_CONF>/analyzers/` 進行解析。從 3.6 或更早版本升級時，若要保留先前的目錄配置，請在您現有的 `ref_path` 值前面加上 `analyzers/`。
 {: .note}
 
-Place dictionary files in the following directory structure:
+請將字典檔案放在下列目錄結構中：
 
 ```xml
 <OS_PATH_CONF>/<ref_path>/hunspell/<locale>/
@@ -79,7 +80,7 @@ Place dictionary files in the following directory structure:
 └── <locale>_custom.dic
 ```
 
-The following example loads a Hunspell dictionary from `<OS_PATH_CONF>/analyzers/my-dict/hunspell/en_US/`:
+下列範例會從 `<OS_PATH_CONF>/analyzers/my-dict/hunspell/en_US/` 載入 Hunspell 字典：
 
 ```json
 PUT /my_index
@@ -109,7 +110,7 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-Multiple indexes can use different `ref_path` directories configured for the same locale. Each `ref_path` maintains its own independent dictionary cache:
+多個索引可以針對同一個地區設定使用不同的 `ref_path` 目錄。每個 `ref_path` 都會維護各自獨立的字典快取：
 
 ```json
 PUT /index_medical
@@ -147,15 +148,15 @@ PUT /index_legal
 ```
 {% include copy-curl.html %}
 
-## Hot-reloading Hunspell dictionaries
-**Introduced 3.7**
+## 熱重新載入 Hunspell 字典
+**於 3.7 版推出**
 {: .label .label-purple }
 
-You can update Hunspell dictionaries at runtime without restarting the node. To enable this, set the `updateable` parameter to `true` on the Hunspell token filter. This registers the filter in search-time analysis mode, so it can only be used at search time (for example, in a `search_analyzer`), not at index time.
+您可以在執行階段更新 Hunspell 字典，而不需要重新啟動節點。若要啟用此功能，請在 Hunspell 詞元篩選器上將 `updateable` 參數設為 `true`。這會以搜尋時分析模式註冊此篩選器，因此它只能在搜尋時使用（例如在 `search_analyzer` 中），而不能在編製索引時使用。
 
-To hot-reload a Hunspell dictionary, follow these steps:
+若要熱重新載入 Hunspell 字典，請依照下列步驟操作：
 
-1. Configure the Hunspell token filter with `updateable` set to `true`. The following example creates an index that uses a hot-reloadable Hunspell filter as a `search_analyzer`:
+1. 設定 Hunspell 詞元篩選器，並將 `updateable` 設為 `true`。下列範例會建立一個索引，並使用可熱重新載入的 Hunspell 篩選器作為 `search_analyzer`：
 
    ```json
    PUT /my_index
@@ -195,18 +196,18 @@ To hot-reload a Hunspell dictionary, follow these steps:
    ```
    {% include copy-curl.html %}
 
-1. Replace the `.aff` and `.dic` files on disk on every node that holds a shard for the index.
+1. 在每個持有該索引分片的節點上，替換磁碟上的 `.aff` 和 `.dic` 檔案。
 
-1. Call the [Refresh Search Analyzer API]({{site.url}}{{site.baseurl}}/im-plugin/refresh-analyzer/). When `reload_cached_resources` is `false` (the default), the API rebuilds analyzer factories but reuses the previously cached Hunspell dictionary. Specify `reload_cached_resources=true` to force the dictionary to be reloaded from disk:
+1. 呼叫 [Refresh Search Analyzer API]({{site.url}}{{site.baseurl}}/im-plugin/refresh-analyzer/)。當 `reload_cached_resources` 為 `false`（預設值）時，此 API 會重建分析器工廠，但會重複使用先前快取的 Hunspell 字典。請指定 `reload_cached_resources=true` 以強制從磁碟重新載入字典：
 
    ```json
    POST /_plugins/_refresh_search_analyzers/my_index?reload_cached_resources=true
    ```
    {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -217,7 +218,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

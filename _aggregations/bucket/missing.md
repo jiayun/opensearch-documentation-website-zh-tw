@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Missing
 parent: Bucket aggregations
@@ -7,21 +8,21 @@ redirect_from:
   - /query-dsl/aggregations/bucket/missing/
 ---
 
-# Missing aggregation
+# Missing 彙總
 
-The `missing` aggregation creates a single bucket containing all documents that do not have a value for a specified field. A document is considered missing if the field is absent entirely or contains a configured `NULL` value. This aggregation is commonly paired with other bucket aggregations to account for documents that cannot be placed in any other bucket because they lack the required field.
+`missing` 彙總會建立單一桶 (bucket)，其中包含指定欄位沒有值的所有文件。若欄位完全不存在，或包含已設定的 `NULL` 值，該文件即視為缺少該欄位。此彙總通常會與其他桶彙總搭配使用，以納入因缺少必要欄位而無法歸入任何其他桶的文件。
 
-## Parameters
+## 參數
 
-The `missing` aggregation takes the following parameters.
+`missing` 彙總接受下列參數。
 
-| Parameter | Required/Optional | Data type | Description |
+| 參數 | 必要/選用 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `field` | Required | String | The field to check for missing values. |
+| `field` | 必要 | 字串 | 要檢查缺少值的欄位。 |
 
-## Example
+## 範例
 
-The following example uses the `products` index (created in the [weighted average example]({{site.url}}{{site.baseurl}}/aggregations/metric/weighted-avg/#example)) which contains a document without the `rating` field. The aggregation counts how many products are missing a rating and includes a `terms` subaggregation to identify them:
+下列範例使用 `products` 索引（建立於[加權平均範例]({{site.url}}{{site.baseurl}}/aggregations/metric/weighted-avg/#example)中），其中包含一份沒有 `rating` 欄位的文件。此彙總會計算有多少產品缺少評分，並包含 `terms` 子彙總以找出這些產品：
 
 ```json
 GET /products/_search
@@ -45,9 +46,9 @@ GET /products/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-The response shows that one product (Product C) is missing the `rating` field:
+回應顯示有一項產品 (Product C) 缺少 `rating` 欄位：
 
 ```json
 {
@@ -86,10 +87,10 @@ The response shows that one product (Product C) is missing the `rating` field:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response body fields.
+下表列出回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `doc_count` | Integer | The number of documents missing the specified field. |
+| `doc_count` | 整數 | 缺少指定欄位的文件數量。 |

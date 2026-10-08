@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Additional plugins
+title: "其他外掛程式"
 parent: Managing OpenSearch plugins
 nav_order: 10
 has_children: true
@@ -9,13 +10,13 @@ redirect_from:
   - /install-and-configure/additional-plugins/
 ---
 
-# Additional plugins
+# 其他外掛程式
 
-There are many more plugins available in addition to those provided by the standard distribution of OpenSearch. These additional plugins have been built by OpenSearch developers or members of the OpenSearch community. Most are maintained in the [OpenSearch/plugins](https://github.com/opensearch-project/OpenSearch/tree/main/plugins) directory on GitHub and can be installed by name, for example, by running `bin/opensearch-plugin install <plugin-name>`. To list all plugins that you can install by name, run `bin/opensearch-plugin install --help`. Plugins maintained in a separate repository, such as `opensearch-jvector`, must be installed from a downloaded package.
+除了 OpenSearch 標準發行版本所提供的外掛程式之外，還有許多其他外掛程式可供使用。這些其他外掛程式由 OpenSearch 開發人員或 OpenSearch 社群成員所建置。其中大多數都維護於 GitHub 上的 [OpenSearch/plugins](https://github.com/opensearch-project/OpenSearch/tree/main/plugins) 目錄中，並且可以依名稱安裝，例如執行 `bin/opensearch-plugin install <plugin-name>`。若要列出所有可依名稱安裝的外掛程式，請執行 `bin/opensearch-plugin install --help`。維護於獨立儲存庫中的外掛程式（例如 `opensearch-jvector`）必須從下載的套件安裝。
 
-The following table lists commonly used additional plugins and the earliest OpenSearch version in which each is available.
+下表列出常用的其他外掛程式，以及每個外掛程式最早可用的 OpenSearch 版本。
 
-| Plugin name                                                                                                            | Earliest available version |
+| 外掛程式名稱                                                                                                           | 最早可用版本               |
 |:---|:---|
 | `analysis-icu`                                                                                                           | 1.0.0                      |
 | `analysis-kuromoji`                                                                                                      | 1.0.0                      |
@@ -43,9 +44,9 @@ The following table lists commonly used additional plugins and the earliest Open
 | `transport-grpc`                                                                                                         | 3.0.0                      |
 | `workload-management` | 2.18.0 |
 
-## Related documentation
+## 相關文件
 
-- [Managing OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)
-- [`ingest-attachment` plugin]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/ingest-attachment-plugin/)
-- [`mapper-size` plugin]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/mapper-size-plugin/)
-- [`opensearch-jvector` plugin]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/)
+- [管理 OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)
+- [`ingest-attachment` 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/ingest-attachment-plugin/)
+- [`mapper-size` 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/mapper-size-plugin/)
+- [`opensearch-jvector` 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/)

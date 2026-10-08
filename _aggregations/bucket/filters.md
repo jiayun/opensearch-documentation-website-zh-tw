@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Filters
 parent: Bucket aggregations
@@ -7,23 +8,23 @@ redirect_from:
   - /query-dsl/aggregations/bucket/filters/
 ---
 
-# Filters aggregation
+# Filters 彙總
 
-The `filters` aggregation creates multiple buckets, each associated with a named or anonymous filter query. Every document is evaluated against all filters, and a document can land in multiple buckets if it matches more than one filter. This differs from the singular [`filter` aggregation]({{site.url}}{{site.baseurl}}/aggregations/bucket/filter/), which produces only one bucket.
+`filters` 彙總會建立多個桶 (bucket)，每個桶都與一個具名或匿名的篩選查詢相關聯。每份文件都會依據所有篩選條件進行評估；如果文件符合多個篩選條件，就可能歸入多個桶。這與單數形式的 [`filter` 彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/filter/)不同，後者只會產生一個桶。
 
-## Parameters
+## 參數
 
-The `filters` aggregation takes the following parameters.
+`filters` 彙總接受下列參數。
 
-| Parameter | Required/Optional | Data type | Description |
+| 參數 | 必要/選用 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `filters` | Required | Object or Array | The filter definitions. Provide an object with named keys for labeled buckets, or an array for anonymous (positional) buckets. |
-| `other_bucket` | Optional | Boolean | When `true`, adds a bucket containing all documents that did not match any filter. Default is `false`. |
-| `other_bucket_key` | Optional | String | The key name for the other bucket. Setting this implicitly enables `other_bucket`. Default is `_other_`. |
+| `filters` | 必要 | 物件或陣列 | 篩選條件定義。若要建立帶有標籤的桶，請提供具有具名鍵的物件；若要建立匿名（依位置排列）的桶，請提供陣列。 |
+| `other_bucket` | 選用 | 布林值 | 設為 `true` 時，會新增一個桶，其中包含所有不符合任何篩選條件的文件。預設為 `false`。 |
+| `other_bucket_key` | 選用 | 字串 | 其他桶的鍵名稱。設定此參數會隱含啟用 `other_bucket`。預設為 `_other_`。 |
 
-## Example: Named filters
+## 範例：具名篩選條件
 
-When you provide filters as an object, each key becomes the bucket name in the response. The following example groups e-commerce orders into three price tiers:
+當您以物件形式提供篩選條件時，每個鍵都會成為回應中的桶名稱。下列範例將電子商務訂單分為三個價格層級：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -44,9 +45,9 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example: Anonymous filters
+## 範例：匿名篩選條件
 
-When you provide filters as an array, buckets are returned in the same order as the array. The following example uses anonymous filters:
+當您以陣列形式提供篩選條件時，桶會依照陣列中的相同順序傳回。下列範例使用匿名篩選條件：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -66,9 +67,9 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example: Other bucket
+## 範例：其他桶
 
-The `other_bucket` parameter captures all documents that did not match any of the defined filters. The following example uses `other_bucket_key` to assign a custom name to the catch-all bucket:
+`other_bucket` 參數會擷取所有不符合任何已定義篩選條件的文件。下列範例使用 `other_bucket_key` 為這個涵蓋其餘文件的桶指定自訂名稱：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -90,9 +91,9 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The following response corresponds to the other bucket example:
+下列回應對應於其他桶範例：
 
 ```json
 {
@@ -131,11 +132,11 @@ The following response corresponds to the other bucket example:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response body fields.
+下表列出回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `buckets` | Object or Array | An object with named keys when using named filters, or an array of objects when using anonymous filters. |
-| `buckets.<key>.doc_count` | Integer | The number of documents matching the filter for this bucket. |
+| `buckets` | 物件或陣列 | 使用具名篩選條件時為具有具名鍵的物件；使用匿名篩選條件時為物件陣列。 |
+| `buckets.<key>.doc_count` | 整數 | 此桶中符合篩選條件的文件數量。 |

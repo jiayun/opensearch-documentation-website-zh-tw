@@ -1,0 +1,173 @@
+---
+layout: default
+title: Common REST parameters
+nav_order: 160
+redirect_from:
+  - /opensearch/common-parameters/
+  - /monitoring-plugins/alerting/cron/
+  - /observing-your-data/alerting/cron/
+---
+
+# Common REST parameters 
+
+OpenSearch supports the following parameters for all REST operations:
+
+## Human-readable output
+
+To convert output units to human-readable values (for example, `1h` for 1 hour and `1kb` for 1,024 bytes), add `?human=true` to the request URL. For a list of supported units, see [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/).
+
+#### Example request
+
+The following request requires response values to be in human-readable format:
+
+```json
+
+GET {index_name}/_search?human=true
+```
+
+## Pretty result
+
+To get back JSON responses in a readable format, add `?pretty=true` to the request URL.  
+
+#### Example request
+
+The following request requires the response to be displayed in pretty JSON format:
+
+```json
+
+GET {index_name}/_search?pretty=true
+```
+
+## Content type
+
+To specify the type of content in the request body, use the `Content-Type` key name in the request header. Most operations support JSON, YAML, and CBOR formats.  
+
+#### Example request
+
+The following request specifies JSON format for the request body:
+
+```json
+
+curl -H "Content-type: application/json" -XGET localhost:9200/_scripts/<template_name>
+```
+
+## Request body in query string
+
+If the client library does not accept a request body for non-POST requests, use the `source` query string parameter to pass the request body. Also, specify the `source_content_type` parameter with a supported media type such as `application/json`.  
+
+
+#### Example request
+
+The following request searches the documents in the `shakespeare` index for a specific field and value:
+
+```json
+
+GET shakespeare/search?source={"query":{"exists":{"field":"speaker"}}}&source_content_type=application/json
+```
+
+## Stack traces
+
+To include the error stack trace in the response when an exception is raised, add `error_trace=true` to the request URL.  
+
+#### Example request
+
+The following request sets `error_trace` to `true` so that the response returns exception-triggered errors:
+
+```json
+
+GET {index_name}/_search?error_trace=true
+```
+
+## Filtered responses
+
+To reduce the response size use the `filter_path` parameter to filter the fields that are returned. This parameter takes a comma-separated list of filters. It supports using wildcards to match any field or part of a field's name. You can also exclude fields with `-`.  
+
+#### Example request
+
+The following request specifies filters to limit the fields returned in the response:
+
+```json
+
+GET _search?filter_path={field_name}.*,-{field_name}
+```
+
+## Cron expressions
+
+Several OpenSearch features accept cron expressions for scheduling, including [Index State Management]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/), [alerting]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/), and [anomaly detection]({{site.url}}{{site.baseurl}}/observing-your-data/ad/index/). OpenSearch uses the standard UNIX cron syntax. All schedule times are in UTC.
+
+A cron expression has the following format:
+
+```
+<minutes> <hours> <day_of_month> <month> <day_of_week>
+```
+
+The following table describes each field.
+
+| Field | Values | Special characters |
+| :--- | :--- | :--- |
+| Minutes | 0--59 | `, - * /` |
+| Hours | 0--23 | `, - * /` |
+| Day of month | 1--31 | `, - * /` |
+| Month | 1--12 or JAN--DEC (case-insensitive) | `, - * /` |
+| Day of week | 0--7 (0 and 7 are both Sunday) or SUN--SAT (case-insensitive) | `, - * /` |
+
+The following table describes the special characters.
+
+| Character | Description |
+| :--- | :--- |
+| `*` | Matches all values. For example, `*` in the hours field means every hour. |
+| `-` | Range. For example, `9-17` in hours means every hour from 9:00 to 17:00 UTC. |
+| `,` | Multiple values. For example, `1,3,5` in `day_of_week` means Monday, Wednesday, and Friday. |
+| `/` | Increment. For example, `0/15` in minutes means every 15 minutes starting at minute 0. |
+
+Two fields specify the day: `day_of_month` and `day_of_week`. If you use a non-wildcard value in both, the schedule runs whenever either field matches the time. For example, `15 2 1,15 * 1` runs at 2:15 AM UTC on the first day of the month, on the 15th day of the month, and every Monday. To schedule a single day, set one field and leave the other as `*`.
+
+### Examples
+
+| Expression | Description |
+| :--- | :--- |
+| `5 9 * * *` | 9:05 AM UTC every day |
+| `0/15 9 * * *` | Every 15 minutes from 9:00 to 9:45 AM UTC |
+| `5 9 * * 1-5` | 9:05 AM UTC Monday through Friday |
+| `5 9 * * MON-FRI` | 9:05 AM UTC Monday through Friday (using named days) |
+| `45 13 1-31/2 * *` | 1:45 PM UTC every other day |
+| `0/10 * * * 6-7` | Every 10 minutes on Saturday and Sunday |
+| `0 0-23/3 1 1-12/2 *` | Every 3 hours on the first day of every other month |
+
+
+<!-- vale off -->
+## X-Opaque-Id header
+<!-- vale on -->
+
+You can specify an opaque identifier for any request using the `X-Opaque-Id` header. This identifier is used to track tasks and deduplicate deprecation warnings in server-side logs. This identifier is used to differentiate between callers sending requests to your OpenSearch cluster. Do not specify a unique value per request.
+
+#### Example request
+
+The following request adds an opaque ID to the request:
+
+```bash
+curl -H "X-Opaque-Id: my-curl-client-1" -XGET localhost:9200/_tasks
+```
+{% include copy.html %}
+
+<!-- vale off -->
+## `X-Request-Id` header
+<!-- vale on -->
+
+You can specify a unique identifier for a search request using the `X-Request-Id` header. This identifier is used to track individual search requests and can be referenced in logs, such as slow logs, for troubleshooting and analysis. The value must be a 32-character hexadecimal string. 
+
+#### Example request
+
+The following request adds a request ID to a search request:
+
+```bash
+curl -X GET "http://localhost:9200/_search" \
+  -H "Content-Type: application/json" \
+  -H "X-Request-Id: 19d538d7c42d09240be001d1e4ff6201" \
+  -d '{"query": {"match_all": {}}}'
+```
+{% include copy.html %}
+
+## Related documentation
+
+- [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/)

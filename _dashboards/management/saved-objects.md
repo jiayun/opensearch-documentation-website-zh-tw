@@ -1,72 +1,73 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Saved objects
+title: "已儲存物件"
 parent: Dashboards management
 has_children: true
 nav_order: 12
 ---
 
-# Saved objects
+# 已儲存物件
 
-_Saved objects_ are the OpenSearch Dashboards resources that you create and reuse, including visualizations, dashboards, saved searches, index patterns, and maps. Export them to a file and import that file into another instance to copy a dashboard from a development cluster to a production one, to move objects between tenants or workspaces, or to keep a backup of your visualizations.
+_已儲存物件_是您在 OpenSearch Dashboards 中建立並重複使用的資源，包括視覺化、儀表板、已儲存的搜尋、索引模式和地圖。您可以將這些物件匯出至檔案，再將該檔案匯入另一個執行個體，藉此將儀表板從開發叢集複製到正式環境叢集、在租用戶或工作區之間移動物件，或備份您的視覺化。
 
-Objects depend on each other: a dashboard references its visualizations, and a visualization references its index pattern. Export an object together with the objects it references so that the export can be imported into an instance that does not already contain them.
+物件之間彼此相依：儀表板會參照其視覺化，而視覺化會參照其索引模式。請將物件連同其參照的物件一起匯出，如此一來，即使目標執行個體中尚未包含這些物件，也能匯入該匯出檔案。
 
-To perform these tasks programmatically, for example as part of a CI/CD pipeline, see [Saved Objects APIs]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects-api/).
+若要以程式設計方式執行這些工作（例如作為 CI/CD 管線的一部分），請參閱 [Saved Objects API]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects-api/)。
 
-## Exporting saved objects
+## 匯出已儲存物件
 
-To export specific objects, such as one dashboard and everything it displays, follow these steps:
+若要匯出特定物件（例如一個儀表板及其顯示的所有內容），請依照下列步驟操作：
 
-1. On the top menu, go to **Management** > **Dashboards Management** > **Saved objects**.
-1. Select the checkbox for each object to export. To narrow the list, enter a title in the search box or filter by **Type**.
-1. Select **Export**.
-1. Keep **Include related objects** selected so that the export also contains the objects that the selected objects reference.
-1. Select **Export** to download the file.
+1. 在頂端選單中，前往 **Management** > **Dashboards Management** > **Saved objects**。
+1. 選取每個要匯出之物件的核取方塊。若要縮小清單範圍，請在搜尋方塊中輸入標題，或依 **Type** 篩選。
+1. 選取 **Export**。
+1. 保持選取 **Include related objects**，讓匯出內容也包含所選物件參照的物件。
+1. 選取 **Export** 以下載檔案。
 
-To export the full contents of an instance, select **Export all objects**, choose the types to include, and then select **Export**.
+若要匯出執行個體的完整內容，請選取 **Export all objects**，選擇要包含的類型，然後選取 **Export**。
 
-The downloaded file uses the NDJSON format, with one object per line and a summary on the final line. This is the same format that the [Export Saved Objects API]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects-api/#export-saved-objects) produces, so a file exported from OpenSearch Dashboards can be imported using the API and a file exported using the API can be imported from OpenSearch Dashboards.
+下載的檔案採用 NDJSON 格式，每行一個物件，最後一行為摘要。此格式與 [Export Saved Objects API]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects-api/#export-saved-objects) 產生的格式相同，因此從 OpenSearch Dashboards 匯出的檔案可以使用 API 匯入，而使用 API 匯出的檔案也可以從 OpenSearch Dashboards 匯入。
 
-To review what an object references before you export it, select the **Relationships** action for that object.
+若要在匯出物件之前檢視該物件參照的內容，請選取該物件的 **Relationships** 動作。
 
-When multi-tenancy is enabled, each tenant has its own set of saved objects, and an export contains only the objects of the tenant that you are currently using. This applies to **Export all objects**, so to capture every object in an instance, switch to each tenant and export it separately. When the aggregate view is enabled, the list can show the objects of several tenants at once, but filtering the list by tenant does not change what an export contains. For more information, see [OpenSearch Dashboards multi-tenancy aggregate view for saved objects]({{site.url}}{{site.baseurl}}/security/multi-tenancy/mt-agg-view/).
+啟用多租用戶時，每個租用戶都有各自的一組已儲存物件，而匯出內容只會包含您目前所使用租用戶的物件。這也適用於 **Export all objects**，因此若要擷取執行個體中的所有物件，請切換至每個租用戶並分別匯出。啟用彙總檢視時，清單可以同時顯示多個租用戶的物件，但依租用戶篩選清單並不會改變匯出所包含的內容。如需詳細資訊，請參閱 [OpenSearch Dashboards 已儲存物件的多租用戶彙總檢視]({{site.url}}{{site.baseurl}}/security/multi-tenancy/mt-agg-view/)。
 
-When workspaces are enabled, an export that you start from within a workspace contains only the objects associated with that workspace. An export that you start from **Saved objects** outside any workspace covers every workspace: the list includes the objects of all workspaces that you can access, marks each one in the **Workspace** column, and **Export all objects** writes all of them to the file.
+啟用工作區時，從工作區內開始的匯出只會包含與該工作區相關聯的物件。從任何工作區之外的 **Saved objects** 開始的匯出則涵蓋所有工作區：清單會包含您可存取之所有工作區的物件，並在 **Workspace** 欄中標示每個物件，而 **Export all objects** 會將所有物件寫入檔案。
 
-To copy objects to another workspace in the same instance rather than export them, select the objects, select **Copy to**, and choose the target workspace. To copy every object in the current workspace, select **Copy all objects to**. To perform the same task programmatically, see [Duplicate saved objects]({{site.url}}{{site.baseurl}}/dashboards/workspace/apis/#duplicate-saved-objects).
+若要將物件複製到同一執行個體中的另一個工作區而非匯出，請選取物件，選取 **Copy to**，然後選擇目標工作區。若要複製目前工作區中的所有物件，請選取 **Copy all objects to**。若要以程式設計方式執行相同工作，請參閱[複製已儲存物件]({{site.url}}{{site.baseurl}}/dashboards/workspace/apis/#duplicate-saved-objects)。
 
-## Importing saved objects
+## 匯入已儲存物件
 
-To import saved objects, follow these steps:
+若要匯入已儲存物件，請依照下列步驟操作：
 
-1. On the top menu, go to **Management** > **Dashboards Management** > **Saved objects**.
-1. Select **Import**.
-1. Select **Select file** and choose the NDJSON file to import.
-1. In **Import options**, choose how to handle objects that already exist:
-   - **Create new objects with unique IDs** imports the objects as copies and leaves the existing objects unchanged.
-   - **Check for existing objects** compares the incoming objects with the objects already in the instance. Combine it with **Automatically overwrite conflicts** to replace existing objects, or with **Request action on conflict** to decide for each conflict.
-1. Select **Import**, and then select **Done**.
+1. 在頂端選單中，前往 **Management** > **Dashboards Management** > **Saved objects**。
+1. 選取 **Import**。
+1. 選取 **Select file**，然後選擇要匯入的 NDJSON 檔案。
+1. 在 **Import options** 中，選擇如何處理已存在的物件：
+   - **Create new objects with unique IDs** 會將物件匯入為副本，並保持現有物件不變。
+   - **Check for existing objects** 會將匯入的物件與執行個體中已有的物件進行比較。將其與 **Automatically overwrite conflicts** 搭配使用可取代現有物件，或與 **Request action on conflict** 搭配使用，以針對每個衝突個別決定。
+1. 選取 **Import**，然後選取 **Done**。
 
-If an object refers to an index pattern that the target instance does not have, OpenSearch Dashboards lists the affected objects and prompts you to select a different index pattern or create one.
+如果物件參照了目標執行個體中不存在的索引模式，OpenSearch Dashboards 會列出受影響的物件，並提示您選取其他索引模式或建立一個索引模式。
 
-When multi-tenancy is enabled, the objects are imported into the tenant that you are currently using, so switch to the target tenant before you import.
+啟用多租用戶時，物件會匯入至您目前所使用的租用戶，因此請在匯入前切換至目標租用戶。
 
-When workspaces are enabled, **Import** appears only within a workspace, and the imported objects are associated with that workspace. Open the target workspace before you import.
+啟用工作區時，**Import** 只會出現在工作區內，且匯入的物件會與該工作區相關聯。請在匯入前開啟目標工作區。
 
-## Copying a dashboard to another instance
+## 將儀表板複製到另一個執行個體
 
-To move a dashboard between two instances that index the same data, follow these steps:
+若要在兩個為相同資料編製索引的執行個體之間移動儀表板，請依照下列步驟操作：
 
-1. In the source instance, go to **Management** > **Dashboards Management** > **Saved objects** and select the checkbox for the dashboard.
-1. Select **Export**, keep **Include related objects** selected, and then select **Export**. The file contains the dashboard, its visualizations and saved searches, and their index patterns.
-1. In the target instance, go to **Management** > **Dashboards Management** > **Saved objects** and select **Import**.
-1. Select the downloaded file, choose an import option, and then select **Import**.
+1. 在來源執行個體中，前往 **Management** > **Dashboards Management** > **Saved objects**，然後選取該儀表板的核取方塊。
+1. 選取 **Export**，保持選取 **Include related objects**，然後選取 **Export**。該檔案包含儀表板、其視覺化和已儲存的搜尋，以及這些項目的索引模式。
+1. 在目標執行個體中，前往 **Management** > **Dashboards Management** > **Saved objects**，然後選取 **Import**。
+1. 選取下載的檔案，選擇匯入選項，然後選取 **Import**。
 
-Tenants and workspaces determine which objects each step covers. Select the source tenant or workspace before you export and the target tenant or workspace before you import. For more information, see [Exporting saved objects](#exporting-saved-objects) and [Importing saved objects](#importing-saved-objects).
+租用戶和工作區決定了每個步驟所涵蓋的物件。請在匯出前選取來源租用戶或工作區，並在匯入前選取目標租用戶或工作區。如需詳細資訊，請參閱[匯出已儲存物件](#exporting-saved-objects)和[匯入已儲存物件](#importing-saved-objects)。
 
-## Limitations
+## 限制
 
-An import from OpenSearch Dashboards accepts an `.ndjson` file, and it also accepts a legacy `.json` file exported by a version of OpenSearch Dashboards or Kibana that predates NDJSON. Support for `.json` files is deprecated, and the Saved Objects APIs accept only `.ndjson`. Re-export legacy files before you use them with the API.
+從 OpenSearch Dashboards 匯入時可接受 `.ndjson` 檔案，也可接受由早於 NDJSON 的 OpenSearch Dashboards 或 Kibana 版本所匯出的舊版 `.json` 檔案。對 `.json` 檔案的支援已淘汰，且 Saved Objects API 只接受 `.ndjson`。請先重新匯出舊版檔案，再將其用於 API。
 
-A single export or import is limited to 10,000 objects and to a request size of 25 MB. For the settings that control these limits, and for other caveats that apply to both OpenSearch Dashboards and the API, see [Limitations]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects-api/#limitations).
+單次匯出或匯入以 10,000 個物件及 25 MB 的請求大小為上限。如需控制這些限制的設定，以及同時適用於 OpenSearch Dashboards 和 API 的其他注意事項，請參閱[限制]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects-api/#limitations)。

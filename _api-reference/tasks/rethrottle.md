@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Rethrottle task
+title: "重新節流任務"
 parent: Tasks APIs
 nav_order: 50
 ---
 
-# Rethrottle Task API
-**Introduced 1.0**
+# 重新節流任務 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-You can use the following APIs to dynamically change the `requests_per_second` for [`_reindex`]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/), [`_update_by_query`]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-by-query/), or [`_delete_by_query`]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-by-query/) operations that are already running.
+您可以使用下列 API，動態變更已在執行的 [`_reindex`]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/)、[`_update_by_query`]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-by-query/) 或 [`_delete_by_query`]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-by-query/) 作業的 `requests_per_second`。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_delete_by_query/{task_id}/_rethrottle
@@ -19,19 +20,19 @@ POST /_reindex/{task_id}/_rethrottle
 POST /_update_by_query/{task_id}/_rethrottle
 ```
 
-## Path parameters
+## 路徑參數
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`task_id` | String | The unique identifier for the running task that you want to rethrottle.
+`task_id` | 字串 | 您要重新節流的執行中任務的唯一識別碼。
 
-## Query parameters
+## 查詢參數
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`requests_per_second` | Float | The new throttle value to apply to the task. Use `-1` to disable throttling. Optional.
+`requests_per_second` | 浮點數 | 要套用至任務的新節流值。使用 `-1` 可停用節流。選用。
 
-### Example request: Rethrottle a running delete by query task
+### 請求範例：重新節流執行中的依查詢刪除任務
 
 <!-- spec_insert_start
 component: example_code
@@ -57,7 +58,7 @@ response = client.delete_by_query_rethrottle(
 <!-- spec_insert_end -->
 
 
-### Example request: Rethrottle a running reindex task
+### 請求範例：重新節流執行中的重新編製索引任務
 
 <!-- spec_insert_start
 component: example_code
@@ -82,7 +83,7 @@ response = client.reindex_rethrottle(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Example request: Rethrottle a running update by query task
+### 請求範例：重新節流執行中的依查詢更新任務
 
 <!-- spec_insert_start
 component: example_code
@@ -107,9 +108,9 @@ response = client.update_by_query_rethrottle(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-The following response provides details regarding the active `update_by_query` task:
+下列回應提供執行中的 `update_by_query` 任務的詳細資訊：
 
 ```
 {
@@ -187,38 +188,38 @@ The following response provides details regarding the active `update_by_query` t
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response provides detailed task- and node-level information about the rethrottled operation.
+回應提供重新節流作業在任務層級與節點層級的詳細資訊。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `nodes` | Object | A map of node IDs to details about the task on each node. |
-| `nodes.<node_id>.name` | String | The name of the node on which the task is running. |
-| `nodes.<node_id>.transport_address` | String | The transport address of the node. |
-| `nodes.<node_id>.host` | String | The host IP address. |
-| `nodes.<node_id>.ip` | String | The IP address and port. |
-| `nodes.<node_id>.roles` | Array | The roles assigned to the node. |
-| `nodes.<node_id>.attributes` | Object | Node-level attributes. |
-| `nodes.<node_id>.tasks` | Object | A map of task IDs to detailed information about each task. |
-| `nodes.<node_id>.tasks.<task_id>.type` | String | The task type, such as `transport`. |
-| `nodes.<node_id>.tasks.<task_id>.action` | String | The specific action being performed (for example, `reindex`). |
-| `nodes.<node_id>.tasks.<task_id>.status` | Object | The current status of the task. |
-| `nodes.<node_id>.tasks.<task_id>.status.total` | Integer | The total number of documents to process. |
-| `nodes.<node_id>.tasks.<task_id>.status.created` | Integer | The number of documents created. |
-| `nodes.<node_id>.tasks.<task_id>.status.updated` | Integer | The number of documents updated. |
-| `nodes.<node_id>.tasks.<task_id>.status.deleted` | Integer | The number of documents deleted. |
-| `nodes.<node_id>.tasks.<task_id>.status.batches` | Integer | The number of batches processed. |
-| `nodes.<node_id>.tasks.<task_id>.status.version_conflicts` | Integer | The number of version conflicts. |
-| `nodes.<node_id>.tasks.<task_id>.status.noops` | Integer | The number of no-op updates. |
-| `nodes.<node_id>.tasks.<task_id>.status.retries` | Object | Retry stats for bulk and search operations. |
-| `nodes.<node_id>.tasks.<task_id>.status.requests_per_second` | Float | Current throttle rate in requests per second. |
-| `nodes.<node_id>.tasks.<task_id>.status.throttled_millis` | Integer | The time, in milliseconds, that the task was throttled. |
-| `nodes.<node_id>.tasks.<task_id>.status.throttled_until_millis` | Integer | The time, in milliseconds, that the task is expected to remain throttled. |
-| `nodes.<node_id>.tasks.<task_id>.description` | String | A human-readable description of the task. |
-| `nodes.<node_id>.tasks.<task_id>.start_time_in_millis` | Integer | The task start time in epoch milliseconds. |
-| `nodes.<node_id>.tasks.<task_id>.running_time_in_nanos` | Integer | The task runtime in nanoseconds. |
-| `nodes.<node_id>.tasks.<task_id>.cancellable` | Boolean | Whether the task can be canceled. |
-| `nodes.<node_id>.tasks.<task_id>.cancelled` | Boolean | Whether the task has been canceled. |
-| `nodes.<node_id>.tasks.<task_id>.headers` | Object | Optional HTTP headers associated with the task. |
-| `nodes.<node_id>.tasks.<task_id>.resource_stats` | Object | Statistics about resource usage. |
+| `nodes` | 物件 | 節點 ID 與各節點上任務詳細資訊的對應表。 |
+| `nodes.<node_id>.name` | 字串 | 執行任務的節點名稱。 |
+| `nodes.<node_id>.transport_address` | 字串 | 節點的傳輸位址。 |
+| `nodes.<node_id>.host` | 字串 | 主機的 IP 位址。 |
+| `nodes.<node_id>.ip` | 字串 | IP 位址與連接埠。 |
+| `nodes.<node_id>.roles` | 陣列 | 指派給節點的角色。 |
+| `nodes.<node_id>.attributes` | 物件 | 節點層級的屬性。 |
+| `nodes.<node_id>.tasks` | 物件 | 任務 ID 與各任務詳細資訊的對應表。 |
+| `nodes.<node_id>.tasks.<task_id>.type` | 字串 | 任務類型，例如 `transport`。 |
+| `nodes.<node_id>.tasks.<task_id>.action` | 字串 | 正在執行的特定動作（例如 `reindex`）。 |
+| `nodes.<node_id>.tasks.<task_id>.status` | 物件 | 任務目前的狀態。 |
+| `nodes.<node_id>.tasks.<task_id>.status.total` | 整數 | 要處理的文件總數。 |
+| `nodes.<node_id>.tasks.<task_id>.status.created` | 整數 | 已建立的文件數量。 |
+| `nodes.<node_id>.tasks.<task_id>.status.updated` | 整數 | 已更新的文件數量。 |
+| `nodes.<node_id>.tasks.<task_id>.status.deleted` | 整數 | 已刪除的文件數量。 |
+| `nodes.<node_id>.tasks.<task_id>.status.batches` | 整數 | 已處理的批次數量。 |
+| `nodes.<node_id>.tasks.<task_id>.status.version_conflicts` | 整數 | 版本衝突的次數。 |
+| `nodes.<node_id>.tasks.<task_id>.status.noops` | 整數 | 無變更更新的次數。 |
+| `nodes.<node_id>.tasks.<task_id>.status.retries` | 物件 | 大量作業與搜尋作業的重試統計資料。 |
+| `nodes.<node_id>.tasks.<task_id>.status.requests_per_second` | 浮點數 | 目前的節流速率，以每秒請求數表示。 |
+| `nodes.<node_id>.tasks.<task_id>.status.throttled_millis` | 整數 | 任務受到節流的時間，以毫秒為單位。 |
+| `nodes.<node_id>.tasks.<task_id>.status.throttled_until_millis` | 整數 | 預期任務仍會受到節流的時間，以毫秒為單位。 |
+| `nodes.<node_id>.tasks.<task_id>.description` | 字串 | 便於人員閱讀的任務說明。 |
+| `nodes.<node_id>.tasks.<task_id>.start_time_in_millis` | 整數 | 任務開始時間，以自 Unix 紀元起算的毫秒數表示。 |
+| `nodes.<node_id>.tasks.<task_id>.running_time_in_nanos` | 整數 | 任務執行時間，以奈秒為單位。 |
+| `nodes.<node_id>.tasks.<task_id>.cancellable` | 布林值 | 是否可以取消任務。 |
+| `nodes.<node_id>.tasks.<task_id>.cancelled` | 布林值 | 任務是否已取消。 |
+| `nodes.<node_id>.tasks.<task_id>.headers` | 物件 | 與任務相關聯的選用 HTTP 標頭。 |
+| `nodes.<node_id>.tasks.<task_id>.resource_stats` | 物件 | 資源使用量的統計資料。 |

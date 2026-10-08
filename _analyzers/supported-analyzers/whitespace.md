@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: White space analyzer
+title: "空白字元分析器"
 parent: Analyzers
 nav_order: 120
 ---
 
-# White space analyzer
+# 空白字元分析器
 
-The `whitespace` analyzer breaks text into tokens based only on white space characters (for example, spaces and tabs). It does not apply any transformations, such as lowercasing or removing stopwords, so the original case of the text is retained and punctuation is included as part of the tokens.
+`whitespace` 分析器僅根據空白字元（例如空格與定位字元）將文字拆分為詞元。它不會套用任何轉換，例如轉換為小寫或移除停用詞，因此會保留文字的原始大小寫，且標點符號會包含在詞元中。
 
-## Example
+## 範例
 
-Use the following command to create an index named `my_whitespace_index` with a `whitespace` analyzer:
+使用下列命令建立名為 `my_whitespace_index` 且具有 `whitespace` 分析器的索引：
 
 ```json
 PUT /my_whitespace_index
@@ -28,9 +29,9 @@ PUT /my_whitespace_index
 ```
 {% include copy-curl.html %}
 
-## Configuring a custom analyzer
+## 設定自訂分析器
 
-Use the following command to configure an index with a custom analyzer that is equivalent to a `whitespace` analyzer with an added `lowercase` character filter:
+使用下列命令為索引設定自訂分析器，該分析器等同於加上 `lowercase` 字元篩選器的 `whitespace` 分析器：
 
 ```json
 PUT /my_custom_whitespace_index
@@ -58,9 +59,9 @@ PUT /my_custom_whitespace_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用此分析器產生的詞元：
 
 ```json
 POST /my_custom_whitespace_index/_analyze
@@ -71,7 +72,7 @@ POST /my_custom_whitespace_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

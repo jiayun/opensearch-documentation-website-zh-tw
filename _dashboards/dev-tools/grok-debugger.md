@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Grok Debugger
 parent: Using Dev Tools
@@ -8,45 +9,45 @@ nav_order: 20
 
 # Grok Debugger
 
-Use the **Grok Debugger** tab in Dev Tools to build and test [Grok patterns]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/grok/) before using them in ingest pipelines. Grok patterns parse unstructured log data into structured fields. The Grok Debugger tests patterns against sample text you provide, so it doesn't require any indexed data.
+使用 Dev Tools 中的 **Grok Debugger** 索引標籤，在將 [Grok 模式]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/grok/) 用於資料匯入管線之前對其進行建立與測試。Grok 模式可將非結構化的記錄資料解析為結構化欄位。Grok Debugger 會根據您提供的範例文字測試模式，因此不需要任何已編製索引的資料。
 
-## Testing a Grok pattern
+## 測試 Grok 模式
 
-To test a Grok pattern, follow these steps:
+若要測試 Grok 模式，請依照下列步驟操作：
 
-1. Navigate to **Dev Tools** and select **Grok Debugger** at the top of the page.
-1. In the **Sample Log** field, enter a sample log message. For example, enter the following Apache access log entry:
+1. 前往 **Dev Tools**，然後選取頁面頂端的 **Grok Debugger**。
+1. 在 **Sample Log** 欄位中，輸入範例記錄訊息。例如，輸入下列 Apache 存取記錄項目：
 
       ```
       127.0.0.1 - alice [15/Mar/2026:10:32:41 -0700] "GET /products/1234 HTTP/1.1" 200 2326
       ```
       {% include copy.html %}
 
-1. In the **Grok Pattern** field, enter the pattern to test against the sample log:
+1. 在 **Grok Pattern** 欄位中，輸入要以範例記錄測試的模式：
 
    ```
    %{IPORHOST:client_ip} - %{USER:user} \[%{HTTPDATE:timestamp}\] "%{WORD:method} %{URIPATHPARAM:request} HTTP/%{NUMBER:http_version}" %{NUMBER:status} %{NUMBER:bytes}
    ```
    {% include copy.html %}
 
-1. Select **Simulate**.
+1. 選取 **Simulate**。
 
-The **Results** pane displays **Pattern matched** and lists the extracted fields and their values, as shown in the following image.
+**Results** 窗格會顯示 **Pattern matched**，並列出擷取的欄位及其值，如下圖所示。
 
 ![Grok Debugger]({{site.url}}{{site.baseurl}}/images/dev-tools/grok-debugger.png)
 
-To clear both fields and the results, select **Clear**.
+若要清除兩個欄位及結果，請選取 **Clear**。
 
-To open the Grok processor documentation, select **Grok documentation**.
+若要開啟 Grok 處理器說明文件，請選取 **Grok documentation**。
 
-## Configuring advanced settings
+## 設定進階設定
 
-To define your own patterns or return every match, select **Advanced settings**. You can configure the following settings:
+若要定義您自己的模式或回傳所有比對結果，請選取 **Advanced settings**。您可以設定下列設定：
 
-- **Custom pattern definitions**: Defines patterns that aren't included in the built-in pattern set. Enter one pattern per line in the format `PATTERN_NAME pattern_regex`. After you define a custom pattern, you can reference it in the **Grok Pattern** field using the `%{PATTERN_NAME:field_name}` syntax.
-- **Capture all matches**: Returns all matches for a pattern instead of only the first match.
+- **Custom pattern definitions**：定義未包含在內建模式集中的模式。請以 `PATTERN_NAME pattern_regex` 格式每行輸入一個模式。定義自訂模式後，您可以使用 `%{PATTERN_NAME:field_name}` 語法在 **Grok Pattern** 欄位中引用該模式。
+- **Capture all matches**：回傳模式的所有比對結果，而非僅回傳第一個比對結果。
 
-## Next steps
+## 後續步驟
 
-- For information about the Grok processor and the available built-in patterns, see [Grok processor]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/grok/).
-- For information about creating ingest pipelines, see [Ingest pipelines]({{site.url}}{{site.baseurl}}/ingest-pipelines/).
+- 如需關於 Grok 處理器及可用內建模式的資訊，請參閱 [Grok processor]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/grok/)。
+- 如需關於建立資料匯入管線的資訊，請參閱 [Ingest pipelines]({{site.url}}{{site.baseurl}}/ingest-pipelines/)。

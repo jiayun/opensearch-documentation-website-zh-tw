@@ -1,126 +1,127 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Configuring and using multiple data sources
+title: "設定和使用多個資料來源"
 parent: Connecting data sources
 nav_order: 20
 redirect_from:
   - /dashboards/discover/multi-data-sources/
 ---
 
-# Configuring and using multiple data sources in OpenSearch Dashboards
+# 在 OpenSearch Dashboards 中設定和使用多個資料來源
 
-You can ingest, process, and analyze data from multiple data sources in OpenSearch Dashboards. You configure the data sources under **Dashboards Management** > **Data sources**. This interface is shown in the following image.
+您可以在 OpenSearch Dashboards 中匯入、處理和分析來自多個資料來源的資料。您可以在 **Dashboards Management** > **Data sources** 下設定資料來源。下圖顯示此介面。
 
-![Dashboards Management data sources main screen]({{site.url}}{{site.baseurl}}/images/dashboards/data_sources_management.png){: width="700" }
+![Dashboards Management 資料來源主畫面]({{site.url}}{{site.baseurl}}/images/dashboards/data_sources_management.png){: width="700" }
 
-## Getting started
+## 入門
 
-The following tutorial guides you through configuring and using multiple data sources in OpenSearch Dashboards.
+下列教學將引導您在 OpenSearch Dashboards 中設定和使用多個資料來源。
 
-The following features are not supported when using multiple data sources: timeline visualization types.
+使用多個資料來源時，不支援下列功能：時間軸 (timeline) 視覺化類型。
 {: .note}
 
-### Step 1: Modify the YAML file settings
+### 步驟 1：修改 YAML 檔案設定
 
-To use multiple data sources, you must enable the `data_source.enabled` setting. It is disabled by default. To enable multiple data sources:
+若要使用多個資料來源，您必須啟用 `data_source.enabled` 設定。此設定預設為停用。若要啟用多個資料來源：
 
-1. Open your local copy of the OpenSearch Dashboards configuration file, `opensearch_dashboards.yml`. If you don't have a copy, [`opensearch_dashboards.yml`](https://github.com/opensearch-project/OpenSearch-Dashboards/blob/main/config/opensearch_dashboards.yml) is available on GitHub.
-2. Set `data_source.enabled:` to `true` and save the YAML file.
-3. Restart the OpenSearch Dashboards container.
-4. Verify that the configuration settings were configured properly by connecting to OpenSearch Dashboards and viewing the **Dashboards Management** navigation menu. **Data sources** appears in the sidebar. You'll see a view similar to the following image.
+1. 開啟您本機的 OpenSearch Dashboards 組態檔案 `opensearch_dashboards.yml`。如果您沒有此檔案，可以在 GitHub 上取得 [`opensearch_dashboards.yml`](https://github.com/opensearch-project/OpenSearch-Dashboards/blob/main/config/opensearch_dashboards.yml)。
+2. 將 `data_source.enabled:` 設為 `true`，然後儲存 YAML 檔案。
+3. 重新啟動 OpenSearch Dashboards 容器。
+4. 連線至 OpenSearch Dashboards 並檢視 **Dashboards Management** 導覽選單，以確認組態設定已正確設定。側邊欄中會出現 **Data sources**。您會看到類似下圖的畫面。
 
-![Data sources in sidebar within Dashboards Management]({{site.url}}{{site.baseurl}}/images/dashboards/data_sources_management.png){: width="700" }
+![Dashboards Management 側邊欄中的 Data sources]({{site.url}}{{site.baseurl}}/images/dashboards/data_sources_management.png){: width="700" }
 
-### Step 2: Create a new data source connection
+### 步驟 2：建立新的資料來源連線
 
-A data source connection specifies the parameters needed to connect to a data source. These parameters form a connection string for the data source.
+資料來源連線會指定連線至資料來源所需的參數。這些參數會組成資料來源的連線字串。
 
-To create a new data source connection:
+若要建立新的資料來源連線：
 
-1. From the OpenSearch Dashboards main menu, select **Dashboards Management** > **Data sources** > **Create data source connection**.
+1. 在 OpenSearch Dashboards 主選單中，選取 **Dashboards Management** > **Data sources** > **Create data source connection**。
 
-2. Add the required information to each field to configure the **Connection Details** and **Authentication Method**.
+2. 在每個欄位中新增必要資訊，以設定 **Connection Details** 和 **Authentication Method**。
 
-    - Under **Connection Details**, enter a title and endpoint URL. For this tutorial, use the URL `https://localhost:9200/`. Entering a description is optional.
+    - 在 **Connection Details** 下，輸入標題和端點 URL。在本教學中，請使用 URL `https://localhost:9200/`。輸入說明為選用。
 
-    - Under **Authentication Method**, select an authentication method from the dropdown list. Once an authentication method is selected, the applicable fields for that method appear. You can then enter the required details. The authentication method options are:
-        - **No authentication**: No authentication is used to connect to the data source.
-        - **Username & Password**: A basic username and password are used to connect to the data source.
-        - **AWS SigV4**: An AWS Signature Version 4 authenticating request is used to connect to the data source. AWS Signature Version 4 requires an access key and a secret key.
-            - For AWS Signature Version 4 authentication, first specify the **Region**. Next, select the OpenSearch service from the **Service Name** list. The options are **Amazon OpenSearch Service** and **Amazon OpenSearch Serverless**. Last, enter the **Access Key** and **Secret Key** for authorization.
+    - 在 **Authentication Method** 下，從下拉式清單中選取驗證方法。選取驗證方法後，會出現適用於該方法的欄位。接著您可以輸入必要的詳細資料。驗證方法選項如下：
+        - **No authentication**：連線至資料來源時不使用任何驗證。
+        - **Username & Password**：使用基本的使用者名稱和密碼連線至資料來源。
+        - **AWS SigV4**：使用 AWS Signature Version 4 驗證請求連線至資料來源。AWS Signature Version 4 需要存取金鑰和私密金鑰。
+            - 若要使用 AWS Signature Version 4 驗證，請先指定 **Region**。接著，從 **Service Name** 清單中選取 OpenSearch 服務。選項為 **Amazon OpenSearch Service** 和 **Amazon OpenSearch Serverless**。最後，輸入用於授權的 **Access Key** 和 **Secret Key**。
 
-      For information about available AWS Regions for AWS accounts, see [Available Regions](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions). For more information about AWS Signature Version 4 authentication requests, see [Authenticating Requests (AWS Signature Version 4)](https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html).
+      如需 AWS 帳戶可用的 AWS 區域相關資訊，請參閱[可用區域](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions)。如需 AWS Signature Version 4 驗證請求的詳細資訊，請參閱[驗證請求 (AWS Signature Version 4)](https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html)。
       {: .note}
 
-    - After you have entered the appropriate details in all of the required fields, the **Test connection** and **Create data source** buttons become active. You can select **Test connection** to confirm that the connection is valid.
+    - 在所有必要欄位中輸入適當的詳細資料後，**Test connection** 和 **Create data source** 按鈕會變成可用。您可以選取 **Test connection** 以確認連線有效。
 
-3. Select **Create data source** to save your settings. The connection is created, and the new data source appears in the list on the **Data Sources** main page. The first data source you create is marked as your default.
+3. 選取 **Create data source** 以儲存您的設定。連線建立後，新的資料來源會出現在 **Data Sources** 主頁面的清單中。您建立的第一個資料來源會標示為預設資料來源。
 
-4. Edit or update a data source connection.
+4. 編輯或更新資料來源連線。
 
-    - On the **Data Sources** main page, select the connection you want to modify. The **Connection Details** window opens.
+    - 在 **Data Sources** 主頁面上，選取您要修改的連線。**Connection Details** 視窗隨即開啟。
 
-    - To mark the selected data source as the default, select the **Set as default** option.
+    - 若要將所選資料來源標示為預設，請選取 **Set as default** 選項。
 
-    - To make changes to **Connection Details**, edit one or both of the **Title** and **Description** fields and select **Save changes** in the lower-right corner of the screen. You can also cancel changes here. To change the **Authentication Method**, choose a different authentication method, enter your credentials (if applicable), and then select **Save changes** in the lower-right corner of the screen. The changes are saved.
+    - 若要變更 **Connection Details**，請編輯 **Title** 和 **Description** 欄位的其中之一或兩者，然後選取畫面右下角的 **Save changes**。您也可以在此處取消變更。若要變更 **Authentication Method**，請選擇其他驗證方法，輸入您的認證資訊 (如適用)，然後選取畫面右下角的 **Save changes**。變更隨即儲存。
 
-        - When **Username & Password** is the selected authentication method, you can update the password by choosing **Update stored password** next to the **Password** field. In the pop-up window, enter a new password in the first field and then enter it again in the second field to confirm. Select **Update stored password** in the pop-up window. The new password is saved. Select **Test connection** to confirm that the connection is valid.
-        - When **AWS SigV4** is the selected authentication method, you can update the credentials by selecting **Update stored AWS credential**. In the pop-up window, enter a new access key in the first field and a new secret key in the second field. Select **Update stored AWS credential** in the pop-up window. The new credentials are saved. Select **Test connection** in the upper-right corner of the screen to confirm that the connection is valid.
+        - 當所選的驗證方法為 **Username & Password** 時，您可以選擇 **Password** 欄位旁的 **Update stored password** 來更新密碼。在彈出式視窗中，於第一個欄位輸入新密碼，然後在第二個欄位再次輸入以確認。在彈出式視窗中選取 **Update stored password**。新密碼隨即儲存。選取 **Test connection** 以確認連線有效。
+        - 當所選的驗證方法為 **AWS SigV4** 時，您可以選取 **Update stored AWS credential** 來更新認證資訊。在彈出式視窗中，於第一個欄位輸入新的存取金鑰，並在第二個欄位輸入新的私密金鑰。在彈出式視窗中選取 **Update stored AWS credential**。新的認證資訊隨即儲存。選取畫面右上角的 **Test connection** 以確認連線有效。
 
-5. Delete the data source connection by selecting the check box to the left of the title and then choosing **Delete 1 connection**. Selecting multiple check boxes for multiple connections is supported. Alternatively, select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards/trash-can-icon.png" class="inline-icon" alt="trash can icon"/>{:/} (trash can) icon.
+5. 選取標題左側的核取方塊，然後選擇 **Delete 1 connection**，即可刪除資料來源連線。支援為多個連線選取多個核取方塊。或者，您也可以選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards/trash-can-icon.png" class="inline-icon" alt="trash can icon"/>{:/} (垃圾桶) 圖示。
 
-A data source connection interface is shown in the following image.
+下圖顯示資料來源連線介面。
 
-![Data source connection screen]({{site.url}}{{site.baseurl}}/images/dashboards/data_source_connection.png){: width="700" }
+![資料來源連線畫面]({{site.url}}{{site.baseurl}}/images/dashboards/data_source_connection.png){: width="700" }
 
-### Selecting multiple data sources through the Dev Tools console
+### 透過 Dev Tools 主控台選取多個資料來源
 
-Alternatively, you can select multiple data sources through the [Dev Tools]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/index/) console. This option allows you to work with a broader range of data and gaining a deeper understanding of your code and applications.
+或者，您也可以透過 [Dev Tools]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/index/) 主控台選取多個資料來源。此選項可讓您處理更廣泛的資料，並更深入地了解您的程式碼和應用程式。
 
-Watch the following 10-second video to see it in action.
+請觀看下列 10 秒的影片，了解實際運作方式。
 
-![Multiple data sources in Dev Tools demo]({{site.url}}{{site.baseurl}}/images/dashboards/multidata-dev-tools.gif)
+![Dev Tools 中的多個資料來源示範]({{site.url}}{{site.baseurl}}/images/dashboards/multidata-dev-tools.gif)
 
-To select a data source through the Dev Tools console, follow these steps:
+若要透過 Dev Tools 主控台選取資料來源，請依照下列步驟操作：
 
-1. Locate your copy of `opensearch_dashboards.yml` and open it in the editor of your choice.
-2. Set `data_source.enabled` to `true`.
-3. Connect to OpenSearch Dashboards and select **Dev Tools** in the menu.
-4. Enter the following query in the editor pane of the **Console** and then select the play button:
+1. 找到您的 `opensearch_dashboards.yml` 檔案，並在您選擇的編輯器中開啟。
+2. 將 `data_source.enabled` 設為 `true`。
+3. 連線至 OpenSearch Dashboards，然後在選單中選取 **Dev Tools**。
+4. 在 **Console** 的編輯器窗格中輸入下列查詢，然後選取播放按鈕：
 
     ```json
     GET /_cat/indices
     ```
     {% include copy-curl.html %}
 
-5. From the **Data source** dropdown menu, select a data source and then query the source.
-6. Repeat the preceding steps for each data source you want to select.
+5. 從 **Data source** 下拉式選單中選取資料來源，然後查詢該來源。
+6. 針對您要選取的每個資料來源，重複上述步驟。
 
 ---
 
-## Uploading saved objects to a dashboard from connected data sources
+## 從已連線的資料來源將已儲存物件上傳至儀表板
 
-To upload saved objects from connected data sources to a dashboard with multiple data sources, export them as an NDJSON file from the data source's **Saved object management** page. Then upload the file to the dashboard's **Saved object management** page. This method can simplify the transfer of saved objects between dashboards. The following 20-second video shows this feature in action.
+若要將已連線資料來源中的已儲存物件上傳至具有多個資料來源的儀表板，請從該資料來源的 **Saved object management** 頁面將其匯出為 NDJSON 檔案，接著將該檔案上傳至儀表板的 **Saved object management** 頁面。此方法可簡化已儲存物件在儀表板之間的轉移。以下 20 秒的影片展示此功能的實際運作情形。
 
-![Multiple data sources in Saved object management]({{site.url}}{{site.baseurl}}/images/dashboards/import_saved_objects_with_file_upload.gif)
+![Saved object management 中的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/import_saved_objects_with_file_upload.gif)
 
-### Importing saved objects from a connected data source
+### 從已連線的資料來源匯入已儲存物件
 
-Follow these steps to import saved objects from a connected data source:
+請依照下列步驟，從已連線的資料來源匯入已儲存物件：
 
-1. Locate your `opensearch_dashboards.yml` file and open it in your preferred text editor.
-2. Set `data_source.enabled` to `true`.
-3. Connect to OpenSearch Dashboards and go to **Dashboards Management** > **Saved objects**.
-4. Select **Import** > **Select file** and upload the file acquired from the connected data source.
-5. Choose the appropriate **Data source** from the dropdown menu, set your **Conflict management** option, and then select the **Import** button.
+1. 找到您的 `opensearch_dashboards.yml` 檔案，並以您慣用的文字編輯器開啟。
+2. 將 `data_source.enabled` 設為 `true`。
+3. 連線至 OpenSearch Dashboards，然後前往 **Dashboards Management** > **Saved objects**。
+4. 選取 **Import** > **Select file**，並上傳從已連線資料來源取得的檔案。
+5. 從下拉式選單中選擇適當的 **Data source**，設定您的 **Conflict management** 選項，然後選取 **Import** 按鈕。
 
 ---
 
-## Showing or hiding authentication methods
-Introduced 2.13
+## 顯示或隱藏驗證方法
+於 2.13 版推出
 {: .label .label-purple }
 
-A feature flag in your `opensearch_dashboards.yml` file allows you to show or hide authentication methods within the `data_source` plugin. The following setting hides the authentication method for `AWSSigV4`.
+您可以透過 `opensearch_dashboards.yml` 檔案中的功能旗標，在 `data_source` 外掛程式中顯示或隱藏驗證方法。下列設定會隱藏 `AWSSigV4` 的驗證方法。
 
 ````
 # Set enabled to false to hide the authentication method from multiple data source in OpenSearch Dashboards.
@@ -135,212 +136,212 @@ data_source.authTypes:
      enabled: false
 ````
 
-The following demo shows this process.
+以下示範展示此流程。
 
-![Multiple data sources hide and show authentication]({{site.url}}{{site.baseurl}}/images/dashboards/multidata-hide-show-auth.gif)
+![多個資料來源隱藏與顯示驗證]({{site.url}}{{site.baseurl}}/images/dashboards/multidata-hide-show-auth.gif)
 
-## Showing or hiding the local cluster
-Introduced 2.13
+## 顯示或隱藏本機叢集
+於 2.13 版推出
 {: .label .label-purple }
 
-A feature flag in your `opensearch_dashboards.yml` file allows you to hide the local cluster option within the `data_source` plugin. This option hides the local cluster from the data source dropdown menu and index creation page, which is ideal for environments with or without a local OpenSearch cluster. The following example setting, shown in a 20-second demo, hides the local cluster:
+您可以透過 `opensearch_dashboards.yml` 檔案中的功能旗標，在 `data_source` 外掛程式中隱藏本機叢集選項。此選項會在資料來源下拉式選單及索引建立頁面中隱藏本機叢集，適用於具有或不具有本機 OpenSearch 叢集的環境。下列範例設定會隱藏本機叢集，如 20 秒示範所示：
 
 ````
 # hide local cluster in the data source dropdown and index pattern creation page.
 data_source.hideLocalCluster: true
 ````
 
-The following demo shows this process.
+以下示範展示此流程。
 
-![Multiple data sources hide local cluster]({{site.url}}{{site.baseurl}}/images/dashboards/multidata-hide-localcluster.gif)
+![多個資料來源隱藏本機叢集]({{site.url}}{{site.baseurl}}/images/dashboards/multidata-hide-localcluster.gif)
 
 ---
 
-## Using multiple data sources with external dashboards plugins
-Introduced 2.14
+## 搭配外部儀表板外掛程式使用多個資料來源
+於 2.14 版推出
 {: .label .label-purple}
 
-The following plugins now support multiple data sources.
+下列外掛程式現已支援多個資料來源。
 
-### Index management
+### 索引管理
 
-When you set `data_source.enabled:true`, you can view and select data sources and their associated indexes directly from the interface: 
+設定 `data_source.enabled:true` 後，您可以直接從介面檢視並選取資料來源及其相關聯的索引：
 
-1. Navigate to **Management** > **Index Management** under the main menu.
-2. Select **Indexes** from the sidebar menu and then select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} (database) icon on the upper-right menu bar.
-3. Choose the appropriate data source from the dropdown menu and then choose the appropriate index from the list. By default, the indexes from your default data source are displayed. You can choose any connected data source to view its corresponding indexes.
+1. 在主選單下前往 **Management** > **Index Management**。
+2. 從側邊欄選單中選取 **Indexes**，然後選取右上方選單列上的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/}（資料庫）圖示。
+3. 從下拉式選單中選擇適當的資料來源，然後從清單中選擇適當的索引。預設會顯示您預設資料來源中的索引。您可以選擇任何已連線的資料來源，以檢視其對應的索引。
 
-The following GIF illustrates these steps.
+下列 GIF 說明這些步驟。
 
-![Multiple data sources in ISM list page]({{site.url}}{{site.baseurl}}/images/dashboards/ism_mds1.gif)
+![ISM 清單頁面中的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/ism_mds1.gif)
 
-To perform operations on a specific index within a data source, select the individual index from the list. To create a new index, select the **Create Index** button, which opens a form. Enter the required information and select the **Create** button. The index is created within the selected data source. The following GIF illustrates these steps.
+若要對資料來源中的特定索引執行操作，請從清單中選取該索引。若要建立新索引，請選取 **Create Index** 按鈕以開啟表單。輸入必要資訊，然後選取 **Create** 按鈕。索引會建立在所選的資料來源中。下列 GIF 說明這些步驟。
 
-![Multiple data sources in ISM create page]({{site.url}}{{site.baseurl}}/images/dashboards/ism_mds2.gif)
+![ISM 建立頁面中的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/ism_mds2.gif)
 
-### Anomaly detection
+### 異常偵測
 
-When you set `data_source.enabled:true`, you can create or view detectors associated with a data source: 
+設定 `data_source.enabled:true` 後，您可以建立或檢視與資料來源相關聯的偵測器：
 
-1. Navigate to **OpenSearch Plugins** > **Anomaly Detection** under the main menu.
-2. Select the database icon on the upper-right menu bar to view a list of connected data sources.
-3. Select a data source to view a list of associated detectors. If the selected data source does not have detectors, then the **Create detector** button appears under the upper-right menu bar. See [Creating anomaly detectors]({{site.url}}{{site.baseurl}}/observing-your-data/ad/dashboards-anomaly-detection/#creating-anomaly-detectors) for instructions on creating detectors through the interface.
+1. 在主選單下前往 **OpenSearch Plugins** > **Anomaly Detection**。
+2. 選取右上方選單列上的資料庫圖示，以檢視已連線資料來源的清單。
+3. 選取資料來源，以檢視相關聯偵測器的清單。如果所選的資料來源沒有偵測器，右上方選單列下方會出現 **Create detector** 按鈕。如需透過介面建立偵測器的說明，請參閱[建立異常偵測器]({{site.url}}{{site.baseurl}}/observing-your-data/ad/dashboards-anomaly-detection/#creating-anomaly-detectors)。
 
-The following GIF illustrates these steps.
+下列 GIF 說明這些步驟。
 
-![Multiple data sources in Anomaly Detection dashboard page]({{site.url}}{{site.baseurl}}/images/dashboards/ad_mds1.gif)
+![異常偵測儀表板頁面中的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/ad_mds1.gif)
 
-You can edit the data source's associated detectors on the **Detectors** tab under the left side bar. 
+您可以在左側邊欄下的 **Detectors** 索引標籤中，編輯與資料來源相關聯的偵測器。
 
-1. Select **Detectors** and then select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} (database) icon on the upper-right menu bar.
-2. From the dropdown menu, select the appropriate data source. A list of associated detectors appears.
-3. Choose a detector from the list, select **Actions**, and then choose the appropriate edit option from the dropdown menu.
-4. Enter the applicable settings and configuration details.  
+1. 選取 **Detectors**，然後選取右上方選單列上的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/}（資料庫）圖示。
+2. 從下拉式選單中選取適當的資料來源。畫面會顯示相關聯偵測器的清單。
+3. 從清單中選擇偵測器，選取 **Actions**，然後從下拉式選單中選擇適當的編輯選項。
+4. 輸入適用的設定與組態詳細資料。
 
-The following GIF illustrates these steps.
+下列 GIF 說明這些步驟。
 
-![Multiple data sources in Anomaly Detection detector page]({{site.url}}{{site.baseurl}}/images/dashboards/ad_mds2.gif)
+![異常偵測偵測器頁面中的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/ad_mds2.gif)
 
-### Security
+### 安全性
 
-When you set `data_source.enabled:true`, you can view and manage roles for each connected data source: 
+設定 `data_source.enabled:true` 後，您可以檢視並管理每個已連線資料來源的角色：
 
-1. Navigate to **Management** > **Security** under the main menu. 
-2. Select **Roles** from the left sidebar menu and then select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} (database) icon on the upper-right menu bar. 
-3. From the dropdown menu, select the appropriate data source and then select the **Create role** button to add a new role.
-4. Enter the required configuration information and select the **Create** button to save. 
+1. 在主選單下前往 **Management** > **Security**。
+2. 從左側邊欄選單中選取 **Roles**，然後選取右上方選單列上的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/}（資料庫）圖示。
+3. 從下拉式選單中選取適當的資料來源，然後選取 **Create role** 按鈕以新增角色。
+4. 輸入必要的組態資訊，然後選取 **Create** 按鈕以儲存。
 
-The following GIF illustrates these steps.
+下列 GIF 說明這些步驟。
 
-![Multiple data sources in Security plugin]({{site.url}}{{site.baseurl}}/images/dashboards/security_mds1.gif)
+![Security 外掛程式中的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/security_mds1.gif)
 
-### Maps
+### 地圖
 
-When you set `data_source.enabled:true`, you can view all available data sources, including the ones currently used as layers, in a map:
+設定 `data_source.enabled:true` 後，您可以在地圖中檢視所有可用的資料來源，包括目前用作圖層的資料來源：
 
-1. Navigate to **OpenSearch Plugins** > **Maps** under the main menu.
-2. From the dropdown menu, select the appropriate data source to edit or create an associated map layer:
-  - Edit a map layer by selecting one from the **Layers** dropdown menu. In the pop-up window, view the settings and edit them as needed.
-  - Add a new layer by selecting the **Add layer** button from the dropdown menu and then selecting **Documents** in the pop-up window. Another pop-up window appears on the right. Enter the required information on the **Data** tab. Note that the data source name is prefixed to the index pattern name. The **Style** and **Settings** tabs include optional information.
-  - Select **Update** to save the settings.
-3. Select the **Save** button on the menu bar to save the edited or new layer.
-4. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} icon on the upper-right menu bar to verify that the new data source is listed in the dropdown menu.
+1. 在主選單下前往 **OpenSearch Plugins** > **Maps**。
+2. 從下拉式選單中選取適當的資料來源，以編輯或建立相關聯的地圖圖層：
+  - 從 **Layers** 下拉式選單中選取圖層以進行編輯。在快顯視窗中檢視設定，並視需要加以編輯。
+  - 從下拉式選單中選取 **Add layer** 按鈕，然後在快顯視窗中選取 **Documents**，即可新增圖層。右側會出現另一個快顯視窗。在 **Data** 索引標籤中輸入必要資訊。請注意，資料來源名稱會加在索引模式名稱前面作為前綴。**Style** 和 **Settings** 索引標籤包含選用資訊。
+  - 選取 **Update** 以儲存設定。
+3. 選取選單列上的 **Save** 按鈕，以儲存已編輯或新增的圖層。
+4. 選取右上方選單列上的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} 圖示，確認新的資料來源已列在下拉式選單中。
 
-The following GIF illustrates these steps.
+下列 GIF 說明這些步驟。
 
-![Multiple data sources in Maps plugin]({{site.url}}{{site.baseurl}}/images/dashboards/maps_mds1.gif)
+![Maps 外掛程式中的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/maps_mds1.gif)
 
-### Machine learning
+### 機器學習
 
-When you set `data_source.enabled:true`, you can view and manage machine learning models from different connected data sources: 
+當您設定 `data_source.enabled:true` 時，即可檢視及管理來自不同已連線資料來源的機器學習模型：
 
-1. Navigate to **OpenSearch Plugins** > **Machine Learning** under the main menu. 
-2. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} icon and choose a data source from the dropdown menu. A list of models associated with the selected data source is displayed.
-3. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/inspect-icon.png" class="inline-icon" alt="inspect icon"/>{:/} icon to the right of a listed model to view the model's configuration details for the selected data source.
+1. 在主選單中前往 **OpenSearch Plugins** > **Machine Learning**。
+2. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} 圖示，然後從下拉式選單中選擇資料來源。畫面上會顯示與所選資料來源相關聯的模型清單。
+3. 選取清單中模型右側的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/inspect-icon.png" class="inline-icon" alt="inspect icon"/>{:/} 圖示，即可檢視該模型在所選資料來源中的組態詳細資訊。
 
-The following GIF illustrates these steps.
+下列 GIF 示範了這些步驟。
 
-![Multiple data sources in Machine Learning Plugin]({{site.url}}{{site.baseurl}}/images/dashboards/ml_mds1.gif)
+![機器學習外掛程式中的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/ml_mds1.gif)
 
-### Notifications
+### 通知
 
-When you set `data_source.enabled:true`, you can view and manage notification channels for different data sources:
+當您設定 `data_source.enabled:true` 時，即可檢視及管理不同資料來源的通知管道：
 
-1. Navigate to **Management** > **Notifications** under the main menu.
-2. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} icon and choose a data source from the dropdown menu. A list of channels associated with the selected data source is displayed.
-3. Choose a channel from the list to view or manage its settings. 
-  - Edit the channel's settings by selecting the **Actions** button and choosing the **Edit** option. Enter the required information in the **Edit channel** panel and then choose **Save**.
-  - Send a test message to the channel by selecting the **Send test message** button in the **Edit channel** window. Alternatively, you can select the **Actions** button in the channel details window and then choose the **Send test message** option from the dropdown menu.
+1. 在主選單中前往 **Management** > **Notifications**。
+2. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} 圖示，然後從下拉式選單中選擇資料來源。畫面上會顯示與所選資料來源相關聯的管道清單。
+3. 從清單中選擇一個管道，以檢視或管理其設定。
+  - 若要編輯管道的設定，請選取 **Actions** 按鈕並選擇 **Edit** 選項。在 **Edit channel** 面板中輸入必要資訊，然後選擇 **Save**。
+  - 若要傳送測試訊息至管道，請在 **Edit channel** 視窗中選取 **Send test message** 按鈕。或者，您也可以在管道詳細資訊視窗中選取 **Actions** 按鈕，然後從下拉式選單中選擇 **Send test message** 選項。
 
-The following GIF illustrates these steps.
+下列 GIF 示範了這些步驟。
 
-![Multiple data sources in Notification plugin]({{site.url}}{{site.baseurl}}/images/dashboards/notification_mds1.gif)
+![通知外掛程式中的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/notification_mds1.gif)
 
-### Search relevance
+### 搜尋相關性
 
-When you set `data_source.enabled:true`, you can compare search results across indexes from different data sources: 
+當您設定 `data_source.enabled:true` 時，即可比較來自不同資料來源之索引的搜尋結果：
 
-1. Navigate to **OpenSearch Plugins** > **Search Relevance** under the main menu.
-2. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} icon and choose a data source from the dropdown menu. A list of available data sources is displayed.
-3. Under both **Query 1** and **Query 2**, select a data source and an index.
-4. Select the **Search** button to run the queries. The query results are displayed in their respective results panels. 
+1. 在主選單中前往 **OpenSearch Plugins** > **Search Relevance**。
+2. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} 圖示，然後從下拉式選單中選擇資料來源。畫面上會顯示可用資料來源的清單。
+3. 在 **Query 1** 和 **Query 2** 下方，分別選取資料來源和索引。
+4. 選取 **Search** 按鈕以執行查詢。查詢結果會顯示在各自的結果面板中。
 
-The following GIF illustrates these steps.
+下列 GIF 示範了這些步驟。
 
-![Multiple data sources in Search Relevance plugin]({{site.url}}{{site.baseurl}}/images/dashboards/searchrelevance_mds1.gif)
+![搜尋相關性外掛程式中的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/searchrelevance_mds1.gif)
 
 ### Security Analytics
-Introduced 2.15
+於 2.15 版推出
 {: .label .label-purple}
 
-When you set `data_source.enabled:true`, you can view and manage Security Analytics resources, such as detection rules, across multiple connected data sources:
+當您設定 `data_source.enabled:true` 時，即可跨多個已連線的資料來源檢視及管理 Security Analytics 資源，例如偵測規則：
 
-1. Navigate to **OpenSearch Plugins** > **Security Analytics** under the main menu.
-2. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} icon and choose a data source from the dropdown menu.
-3. Select **Detectors** > **Detection rules** from the navigation menu on the left. A list of detection rules is displayed.
-4. Select a rule to open a pop-up window containing more information about that rule.
+1. 在主選單中前往 **OpenSearch Plugins** > **Security Analytics**。
+2. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} 圖示，然後從下拉式選單中選擇資料來源。
+3. 從左側導覽選單中選取 **Detectors** > **Detection rules**。畫面上會顯示偵測規則清單。
+4. 選取一條規則，以開啟包含該規則詳細資訊的快顯視窗。
 
-The following GIF illustrates these steps.
+下列 GIF 示範了這些步驟。
 
-![Multiple data sources in Security Analytics list page]({{site.url}}{{site.baseurl}}/images/dashboards/mds_sa_detection_rules_view.gif)
+![Security Analytics 清單頁面中的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/mds_sa_detection_rules_view.gif)
 
-1. Navigate to **OpenSearch Plugins** > **Security analytics** under the main menu.
-2. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} icon and choose a data source from the dropdown menu.
-3. Select **Detectors** > **Detection rules** from the navigation menu on the left.
-4. Select the **Create detection rule** button on the upper right and then enter the required configuration details in the **Create detection rule** window. 
-5. Select the **Create detection rule** button on the lower right to save the rule. The rule is now associated with the data source.
+1. 在主選單中前往 **OpenSearch Plugins** > **Security analytics**。
+2. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} 圖示，然後從下拉式選單中選擇資料來源。
+3. 從左側導覽選單中選取 **Detectors** > **Detection rules**。
+4. 選取右上方的 **Create detection rule** 按鈕，然後在 **Create detection rule** 視窗中輸入必要的組態詳細資訊。
+5. 選取右下方的 **Create detection rule** 按鈕以儲存規則。該規則現在已與資料來源相關聯。
 
-The following GIF illustrates these steps.
+下列 GIF 示範了這些步驟。
 
-![Multiple data sources in Security Analytics create page]({{site.url}}{{site.baseurl}}/images/dashboards/mds_sa_detection_rules_create.gif)
+![Security Analytics 建立頁面中的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/mds_sa_detection_rules_create.gif)
 
-### Alerting
-Introduced 2.15
+### 警示
+於 2.15 版推出
 {: .label .label-purple }
 
-When you set `data_source.enabled:true`, you can you can view and manage alerting monitors across multiple connected data sources: 
+當您設定 `data_source.enabled:true` 時，即可跨多個已連線的資料來源檢視及管理警示監視器：
 
-1. Navigate to **OpenSearch Plugins** > **Alerting** under the main menu.
-2. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} icon and choose a data source from the dropdown menu. A list of associated monitors is displayed.
-3. Select a monitor to view its details.
+1. 在主選單中前往 **OpenSearch Plugins** > **Alerting**。
+2. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/database-icon.png" class="inline-icon" alt="database icon"/>{:/} 圖示，然後從下拉式選單中選擇資料來源。畫面上會顯示相關聯的監視器清單。
+3. 選取一個監視器以檢視其詳細資訊。
 
-The following GIF illustrates these steps.
+下列 GIF 示範了這些步驟。
 
-![Multiple data sources in Alerting list page]({{site.url}}{{site.baseurl}}/images/dashboards/mds_monitor_view.gif)
+![警示清單頁面中的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/mds_monitor_view.gif)
 
-To create a new monitor, select **Create monitor**. Fill out the form and select **Create**. The monitor is created within the selected data source.
+若要建立新的監視器，請選取 **Create monitor**。填寫表單後選取 **Create**。監視器會建立在所選的資料來源中。
 
-#### Managing alerting monitors from within the Dashboards application
+#### 從 Dashboards 應用程式中管理警示監視器
 
-To manage data source monitors from within **Dashboards**: 
+若要從 **Dashboards** 中管理資料來源監視器：
 
-1. Navigate to the **Dashboards** application under the main menu and then select a dashboard from the list.
-2. From the dashboard, select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/} (ellipsis) icon to open the **Options** dropdown menu and then choose **Alerting**.
-4. From the **Alerting** dropdown menu, choose **Associated monitors** to open the configuration window.
-5. Select a monitor from the list to view or edit its details.
+1. 在主選單中前往 **Dashboards** 應用程式，然後從清單中選取一個儀表板。
+2. 在儀表板中，選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/}（省略符號）圖示以開啟 **Options** 下拉式選單，然後選擇 **Alerting**。
+4. 從 **Alerting** 下拉式選單中選擇 **Associated monitors**，以開啟組態視窗。
+5. 從清單中選取一個監視器，以檢視或編輯其詳細資訊。
 
-The following GIF illustrates these steps.
+下列 GIF 示範了這些步驟。
 
-![Multiple data sources with Feature anywhere associated monitor]({{site.url}}{{site.baseurl}}/images/dashboards/mds_feature_anywhere_view_alerting.gif)
+![搭配 Feature anywhere 相關聯監視器的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/mds_feature_anywhere_view_alerting.gif)
 
-To associate a monitor with a data source: 
+若要將監視器與資料來源建立關聯：
 
-1. Navigate to the **Dashboards** application under the main menu and then select a dashboard from the list.
-2. From the dashboard, select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/} (ellipsis) icon to open the **Options** dropdown menu and then choose **Alerting**.
-3. From the **Alerting** dropdown menu, choose **Add alerting monitor** to open the configuration window.
-4. Enter the configuration information and then select the **Create monitor** button. The monitor is now associated with the data source.  
+1. 在主選單中前往 **Dashboards** 應用程式，然後從清單中選取一個儀表板。
+2. 在儀表板中，選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/}（省略符號）圖示以開啟 **Options** 下拉式選單，然後選擇 **Alerting**。
+3. 從 **Alerting** 下拉式選單中選擇 **Add alerting monitor**，以開啟組態視窗。
+4. 輸入組態資訊，然後選取 **Create monitor** 按鈕。該監視器現在已與資料來源相關聯。
 
-The following GIF illustrates these steps.
+下列 GIF 示範了這些步驟。
 
-![Multiple data sources with Feature anywhere add associated monitor]({{site.url}}{{site.baseurl}}/images/dashboards/mds_feature_anywhere_create_alerting.gif)
+![搭配 Feature anywhere 新增相關聯監視器的多個資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/mds_feature_anywhere_create_alerting.gif)
 
 ---
 
-## Next steps
+## 後續步驟
 
-After configuring multiple data sources, you can analyze the data from each source. See the following resources for more information:
+設定多個資料來源後，您可以分析來自每個來源的資料。如需詳細資訊，請參閱下列資源：
 
-- [Index patterns]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/) 
-- [Index Management]({{site.url}}{{site.baseurl}}/dashboards/im-dashboards/index/)
-- [Connecting OpenSearch and Amazon S3 through OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/management/S3-data-source/)
-- [OpenSearch Integrations]({{site.url}}{{site.baseurl}}/integrations/index/)
+- [索引模式]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/) 
+- [索引管理]({{site.url}}{{site.baseurl}}/dashboards/im-dashboards/index/)
+- [透過 OpenSearch Dashboards 連接 OpenSearch 與 Amazon S3]({{site.url}}{{site.baseurl}}/dashboards/management/S3-data-source/)
+- [OpenSearch 整合]({{site.url}}{{site.baseurl}}/integrations/index/)

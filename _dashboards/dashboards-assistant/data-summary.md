@@ -1,48 +1,49 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Data summary
+title: "資料摘要"
 parent: OpenSearch Assistant for OpenSearch Dashboards
 nav_order: 30
 has_children: false
 ---
 
-# Data summary
+# 資料摘要
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).    
+這是一項實驗性功能，不建議在正式環境中使用。如需取得此功能的最新進度，或想提供意見回饋，請至 [OpenSearch 論壇](https://forum.opensearch.org/)參與討論。
 {: .warning}
 
-The OpenSearch Dashboards Assistant data summary feature uses large language models (LLMs) to help you generate summaries for data stored in OpenSearch indexes. This tool provides an efficient way to gain insights from large datasets, making it easier to understand and act on the information contained in your OpenSearch indexes.
+OpenSearch Dashboards Assistant 的資料摘要功能使用大型語言模型 (LLM)，協助您為儲存在 OpenSearch 索引中的資料產生摘要。此工具提供一種有效率的方式，協助您從大型資料集中取得洞察，讓您更容易理解 OpenSearch 索引中的資訊，並據以採取行動。
 
-## Configuration
+## 組態
 
-To configure the data summary feature, use the following steps.
+若要設定資料摘要功能，請依照下列步驟操作。
 
-### Prerequisite
+### 先決條件
 
-Before using the data summary feature, enable query enhancements in OpenSearch Dashboards as follows:
+使用資料摘要功能之前，請依照下列方式在 OpenSearch Dashboards 中啟用查詢增強功能：
 
-1. On the top menu bar, go to **Management > Dashboards Management**. 
-1. In the left navigation pane, select **Advanced settings**.
-1. On the settings page, toggle **Enable query enhancements** to **On**.
+1. 在頂端選單列中，前往 **Management > Dashboards Management**。
+1. 在左側導覽窗格中，選取 **Advanced settings**。
+1. 在設定頁面上，將 **Enable query enhancements** 切換為 **On**。
 
-### Step 1: Enable the data summary feature
+### 步驟 1：啟用資料摘要功能
 
-To enable the data summary feature, configure the following `opensearch_dashboards.yml` setting:
+若要啟用資料摘要功能，請在 `opensearch_dashboards.yml` 中設定以下設定：
 
 ```yaml
 queryEnhancements.queryAssist.summary.enabled: true
 ```
 {% include copy.html %}
 
-### Step 2: Create a data summary agent
+### 步驟 2：建立資料摘要代理程式
 
-To orchestrate data summarization, create a data summary [agent]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/). To create an agent, send a `POST /_plugins/_flow_framework/workflow?provision=true` request and provide the agent template as a payload:
+若要協調資料摘要作業，請建立一個資料摘要[代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)。若要建立代理程式，請傳送 `POST /_plugins/_flow_framework/workflow?provision=true` 請求，並以代理程式範本作為承載資料 (payload)：
 
 <details markdown="block">
-  <summary>
-    Request
-  </summary>
-  {: .text-delta}
+<summary>
+    請求
+</summary>
+{: .text-delta}
 
 ```json
 POST /_plugins/_flow_framework/workflow?provision=true
@@ -145,11 +146,11 @@ POST /_plugins/_flow_framework/workflow?provision=true
 
 </details>
 
-For sample agent templates, see [Flow Framework sample templates](https://github.com/opensearch-project/flow-framework/tree/2.x/sample-templates). Note the agent ID; you'll use it in the following step.
+如需代理程式範本的範例，請參閱 [Flow Framework 範例範本](https://github.com/opensearch-project/flow-framework/tree/2.x/sample-templates)。請記下代理程式 ID，您將在下一個步驟中使用它。
 
-### Step 3: Create a root agent
+### 步驟 3：建立根代理程式
 
-Next, create a [root agent]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-tutorial/#root_agent) for the data summary agent created in the previous step:
+接著，為上一個步驟中建立的資料摘要代理程式建立一個[根代理程式]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-tutorial/#root_agent)：
 
 ```json
 POST /.plugins-ml-config/_doc/os_data2summary
@@ -162,12 +163,12 @@ POST /.plugins-ml-config/_doc/os_data2summary
 ```
 {% include copy-curl.html %}
 
-This example demonstrates a system index. In security-enabled domains, only superadmins have permissions to execute this code. For information about making superadmin calls, see [System indexes]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/). For access permissions, contact your system administrator.
+此範例示範的是系統索引。在已啟用安全性的網域中，只有超級管理員才有權限執行此程式碼。如需有關進行超級管理員呼叫的資訊，請參閱[系統索引]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/)。如需存取權限，請聯絡您的系統管理員。
 {: .warning}
 
-### Step 4: Test the agent
+### 步驟 4：測試代理程式
 
-You can verify that the data summary agent was created successfully by calling the agent with an example payload:
+您可以使用範例承載資料 (payload) 呼叫代理程式，以驗證資料摘要代理程式是否已成功建立：
 
 ```json
 POST /_plugins/_ml/agents/{DATA_SUMMARY_AGENT_ID}/_execute
@@ -182,9 +183,9 @@ POST /_plugins/_ml/agents/{DATA_SUMMARY_AGENT_ID}/_execute
 ```
 {% include copy-curl.html %}
 
-## Generating a data summary
+## 產生資料摘要
 
-You can generate a data summary by calling the `/api/assistant/data2summary` API endpoint. The `sample_count`, `total_count`, `question`, and `ppl` parameters are optional:
+您可以呼叫 `/api/assistant/data2summary` API 端點來產生資料摘要。`sample_count`、`total_count`、`question` 和 `ppl` 參數為選用：
 
 ```json
 POST /api/assistant/data2summary
@@ -198,22 +199,22 @@ POST /api/assistant/data2summary
 ```
 {% include copy-curl.html %}
 
-The following table describes the Assistant Data Summary API parameters.
+下表說明 Assistant Data Summary API 的參數。
 
-Parameter | Required/Optional | Description 
+參數 | 必要/選用 | 說明
 :--- | :--- | :---
-`sample_data` | Required | A sample of data returned by the specified query and used as input for summarization.
-`question` | Optional | The user's natural language question about the data, which guides the summary generation.
-`ppl` | Optional | The Piped Processing Language (PPL) query used to retrieve data; in query assistance, this is generated by the LLM using the user's natural language question.
-`sample_count` | Optional | The number of entries included in sample_data.
-`total_count` | Optional | The total number of entries in the full query result set.
+`sample_data` | 必要 | 由指定查詢傳回的資料樣本，用作摘要的輸入。
+`question` | 選用 | 使用者以自然語言提出的資料相關問題，用於引導摘要的產生。
+`ppl` | 選用 | 用於擷取資料的 Piped Processing Language (PPL) 查詢；在查詢輔助中，此查詢由 LLM 根據使用者的自然語言問題產生。
+`sample_count` | 選用 | sample_data 中包含的項目數。
+`total_count` | 選用 | 完整查詢結果集中的項目總數。
 
-## Viewing data summaries in OpenSearch Dashboards
+## 在 OpenSearch Dashboards 中檢視資料摘要
 
-To view alert insights in OpenSearch Dashboards, use the following steps:
+若要在 OpenSearch Dashboards 中檢視警示洞察，請依照下列步驟操作：
 
-1. On the top menu bar, go to **OpenSearch Dashboards > Discover**.
+1. 在頂端選單列中，前往 **OpenSearch Dashboards > Discover**。
 
-1. From the query language dropdown list, select **PPL**. You will see the generated data summary after the query text, as shown in the following image.
+1. 從查詢語言下拉式清單中，選取 **PPL**。您將會在查詢文字之後看到產生的資料摘要，如下圖所示。
 
-    ![data summary]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/data-summary.png)
+    ![資料摘要]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/data-summary.png)

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: CAT snapshots
+title: "CAT 快照"
 parent: CAT APIs
 nav_order: 65
 has_children: false
@@ -9,17 +10,17 @@ redirect_from:
 ---
 
 # CAT Snapshots API
-**Introduced 1.0**
+**1.0 版推出**
 {: .label .label-purple }
 
-The CAT snapshots operation lists all snapshots for a repository.
+CAT snapshots 操作會列出儲存庫的所有快照。
 
 
 <!-- spec_insert_start
 api: cat.snapshots
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_cat/snapshots
 GET /_cat/snapshots/{repository}
@@ -33,27 +34,27 @@ component: query_parameters
 columns: Parameter, Data type, Description, Default
 include_deprecated: false
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters.
+下表列出可用的查詢參數。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `repository` | List or String | **(Required)** A comma-separated list of snapshot repositories used to limit the request. Accepts wildcard expressions. `_all` returns all repositories. If any repository fails during the request, OpenSearch returns an error. | N/A |
-| `cluster_manager_timeout` | String | The amount of time allowed to establish a connection to the cluster manager node. | N/A |
-| `format` | String | A short version of the `Accept` header, such as `json` or `yaml`. | N/A |
-| `h` | List | A comma-separated list of column names to display. | N/A |
-| `help` | Boolean | Returns help information. | `false` |
-| `ignore_unavailable` | Boolean | When `true`, the response does not include information from unavailable snapshots. | `false` |
-| `s` | List | A comma-separated list of column names or column aliases to sort by. | N/A |
-| `time` | String | Specifies the time units, for example, `5d` or `7h`. For more information, see [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/). <br> Valid values are: `nanos`, `micros`, `ms`, `s`, `m`, `h`, and `d`. | N/A |
-| `v` | Boolean | Enables verbose mode, which displays column headers. | `false` |
+| `repository` | 清單或字串 | **（必要）** 以逗號分隔的快照儲存庫清單，用於限制請求。接受萬用字元運算式。`_all` 會傳回所有儲存庫。若請求期間有任何儲存庫失敗，OpenSearch 會傳回錯誤。 | N/A |
+| `cluster_manager_timeout` | 字串 | 允許建立與叢集管理員節點連線的時間長度。 | N/A |
+| `format` | 字串 | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
+| `h` | 清單 | 以逗號分隔的欄位名稱清單，用於指定要顯示的欄位。 | N/A |
+| `help` | 布林值 | 傳回說明資訊。 | `false` |
+| `ignore_unavailable` | 布林值 | 當設為 `true` 時，回應不會包含來自無法使用之快照的資訊。 | `false` |
+| `s` | 清單 | 以逗號分隔的欄位名稱或欄位別名清單，用於指定排序依據。 | N/A |
+| `time` | 字串 | 指定時間單位，例如 `5d` 或 `7h`。如需詳細資訊，請參閱[支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。<br> 有效值為：`nanos`、`micros`、`ms`、`s`、`m`、`h` 及 `d`。 | N/A |
+| `v` | 布林值 | 啟用詳細模式，會顯示欄位標頭。 | `false` |
 
 <!-- spec_insert_end -->
 
-## Example request
+## 請求範例
 
-The following example request lists all snapshots:
+以下請求範例會列出所有快照：
 
 <!-- spec_insert_start
 component: example_code
@@ -78,7 +79,7 @@ response = client.cat.snapshots(
 <!-- spec_insert_end -->
 
 
-## Example response
+## 回應範例
 
 ```json
 index | shard | prirep | state   | docs | store | ip |       | node
@@ -86,6 +87,6 @@ plugins | 0   |   p    | STARTED |   0  |  208b | 172.18.0.4 | odfe-node1
 plugins | 0   |   r    | STARTED |   0  |  208b | 172.18.0.3 |  odfe-node2          
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/snapshot/get`.
+如果您使用 Security 外掛程式，請確保您具備適當的權限：`cluster:admin/snapshot/get`。

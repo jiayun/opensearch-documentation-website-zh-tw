@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Generating data using custom logic
+title: "使用自訂邏輯產生資料"
 nav_order: 35
 parent: Synthetic data generation
 grand_parent: Additional features
 ---
 
-# Generating data using custom logic
+# 使用自訂邏輯產生資料
 
-You can generate synthetic data using custom logic defined in a Python module. This approach offers you the most granular control over how synthetic data is produced in OpenSearch Benchmark. This is especially useful if you understand the distribution of your data and the relationship between different fields.
+您可以使用定義於 Python 模組中的自訂邏輯來產生合成資料。這種方法可讓您對 OpenSearch Benchmark 產生合成資料的方式進行最細微的控制。如果您了解資料的分布以及不同欄位之間的關係，這種方法尤其實用。
 
-## The generate_synthetic_document function
+## generate_synthetic_document 函式
 
-Every custom module provided to OpenSearch Benchmark must define the `generate_synthetic_document(providers, **custom_lists)` function. This function defines how OpenSearch Benchmark generates each synthetic document.
+提供給 OpenSearch Benchmark 的每個自訂模組都必須定義 `generate_synthetic_document(providers, **custom_lists)` 函式。此函式會定義 OpenSearch Benchmark 如何產生每份合成文件。
 
-### Function parameters
+### 函式參數
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 |---|---|---|
-| `providers` | Required | A dictionary containing data generation tools. Available providers are `generic` (Mimesis [Generic provider](https://mimesis.name/master/api.html#generic-providers)) and `random` (Mimesis [Random class](https://mimesis.name/master/random_and_seed.html)). To add custom providers, see [Advanced configuration](#advanced-configuration). |
-| `custom_lists` | Optional | Keyword arguments containing predefined lists of values that you can use in your data generation logic. These are defined in your YAML configuration file under `custom_lists` and allow you to separate data values from your Python code. For example, if you define `dog_names: [Buddy, Max, Luna]` in YAML, you can access it as `custom_lists['dog_names']` in your function. This makes it easy to modify data values without changing your Python code. |
+| `providers` | 必要 | 包含資料產生工具的字典。可用的提供者有 `generic` (Mimesis [通用提供者](https://mimesis.name/master/api.html#generic-providers)) 和 `random` (Mimesis [Random 類別](https://mimesis.name/master/random_and_seed.html))。若要新增自訂提供者，請參閱[進階組態](#advanced-configuration)。 |
+| `custom_lists` | 選用 | 關鍵字引數，包含預先定義的值清單，您可以在資料產生邏輯中使用這些值。這些值定義於 YAML 組態檔中的 `custom_lists` 之下，可讓您將資料值與 Python 程式碼分開。例如，如果您在 YAML 中定義 `dog_names: [Buddy, Max, Luna]`，您可以在函式中以 `custom_lists['dog_names']` 存取它。這讓您不必變更 Python 程式碼就能輕鬆修改資料值。 |
 
-### Basic function template
+### 基本函式範本
 
 ```python
 def generate_synthetic_document(providers, **custom_lists):
@@ -45,19 +46,19 @@ def generate_synthetic_document(providers, **custom_lists):
 ```
 {% include copy.html %}
 
-For more information, see the [Mimesis documentation](https://mimesis.name/master/api.html).
+如需更多資訊，請參閱 [Mimesis 文件](https://mimesis.name/master/api.html)。
 
-## Python module example
+## Python 模組範例
 
-The following example Python module demonstrates custom logic for generating documents about dog drivers for a fictional ride-sharing company, *Pawber*, which uses OpenSearch to store and search large volumes of ride-sharing data.
+下列 Python 模組範例示範如何為一家虛構的共乘公司 *Pawber* 產生關於狗狗駕駛的文件，該公司使用 OpenSearch 來儲存及搜尋大量的共乘資料。
 
-This example showcases several advanced concepts:
-- **[Custom provider classes](#advanced-configuration)** (`NumericString`, `MultipleChoices`) that extend Mimesis functionality
-- **[Custom lists](#advanced-configuration)** for data values like dog names, breeds, and treats (referenced as `custom_lists['dog_names']`)
-- **Geographic clustering** logic for realistic location data
-- **Complex document structures** with nested objects and relationships
+此範例展示了幾項進階概念：
+- **[自訂提供者類別](#advanced-configuration)** (`NumericString`、`MultipleChoices`)，可擴充 Mimesis 功能
+- **[自訂清單](#advanced-configuration)**，用於狗狗名字、品種和零食等資料值 (以 `custom_lists['dog_names']` 參照)
+- **地理叢集**邏輯，用於產生逼真的位置資料
+- **複雜的文件結構**，包含巢狀物件與關聯性
 
-Save this code to a file called `pawber.py` in your desired directory (for example, `~/pawber.py`):
+將此程式碼儲存到您所需目錄中的 `pawber.py` 檔案 (例如 `~/pawber.py`)：
 
 ```python
 from mimesis.providers.base import BaseProvider
@@ -168,20 +169,20 @@ def generate_synthetic_document(providers, **custom_lists):
 ```
 {% include copy.html %}
 
-## Generating data
+## 產生資料
 
-To generate synthetic data using custom logic, use the `generate-data` subcommand and provide the required custom Python module, index name, output path, and total amount of data to generate:
+若要使用自訂邏輯產生合成資料，請使用 `generate-data` 子命令，並提供所需的自訂 Python 模組、索引名稱、輸出路徑，以及要產生的資料總量：
 
 ```shell
 osb generate-data --custom-module ~/pawber.py --index-name pawber-data --output-path ~/Desktop/sdg_outputs/ --total-size 2
 ```
 {% include copy.html %}
 
-For a complete list of available parameters and their descriptions, see the [`generate-data` command reference]({{site.url}}{{site.baseurl}}/benchmark/reference/commands/generate-data/).
+如需可用參數的完整清單及其說明，請參閱 [`generate-data` 命令參考]({{site.url}}{{site.baseurl}}/benchmark/reference/commands/generate-data/)。
 
-## Example output
+## 範例輸出
 
-The following is an example output when generating 100 GB of data:
+以下是產生 100 GB 資料時的範例輸出：
 
 ```
    ____                  _____                      __       ____                  __                         __
@@ -211,20 +212,20 @@ Generated 24271844660 docs in 12000 seconds. Total dataset size is 100.21GB.
 -----------------------------------
 ```
 
-## Advanced configuration
+## 進階組態
 
-You can optionally create a YAML configuration file to store custom data and providers. The configuration file must define a `CustomGenerationValues` parameter.
+您可以選擇性地建立 YAML 組態檔來儲存自訂資料與提供者。組態檔必須定義 `CustomGenerationValues` 參數。
 
-The following parameters are available in `CustomGenerationValues`. Both parameters are optional.
+`CustomGenerationValues` 中提供下列參數。這兩個參數皆為選用。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 |---|---|---|
-| `custom_lists` | Optional | Predefined arrays of values that you can reference in your Python module using `custom_lists['list_name']`. This allows you to separate data values from your code logic, making it easy to modify data values without changing your Python file. For example, `dog_names: [Buddy, Max, Luna]` becomes accessible as `custom_lists['dog_names']`. |
-| `custom_providers` | Optional | Custom data generation classes that extend Mimesis functionality. These should be defined as classes in your Python module (like `NumericString` or `MultipleChoices` in the [example](#python-module-example)) and then listed in this parameter by name. This allows you to create specialized data generators beyond what Mimesis provides by default. |
+| `custom_lists` | 選用 | 預先定義的值陣列，您可以在 Python 模組中使用 `custom_lists['list_name']` 來參照。這可讓您將資料值與程式碼邏輯分離，方便在不修改 Python 檔案的情況下變更資料值。例如，`dog_names: [Buddy, Max, Luna]` 會以 `custom_lists['dog_names']` 的形式存取。 |
+| `custom_providers` | 選用 | 擴充 Mimesis 功能的自訂資料產生類別。這些類別應定義在您的 Python 模組中（例如[範例](#python-module-example)中的 `NumericString` 或 `MultipleChoices`），然後在此參數中依名稱列出。這可讓您建立超出 Mimesis 預設功能的專門資料產生器。 |
 
-### Example configuration file
+### 範例組態檔
 
-Save your configuration in a YAML file:
+將您的組態儲存在 YAML 檔案中：
 
 ```yml
 CustomGenerationValues:
@@ -242,16 +243,16 @@ CustomGenerationValues:
 {% include copy.html %}
 
 
-### Using the configuration
+### 使用組態
 
-To use your configuration file, add the `--custom-config` parameter to the `generate-data` command:
+若要使用您的組態檔，請在 `generate-data` 命令中加入 `--custom-config` 參數：
 
 ```shell
 osb generate-data --custom-module ~/pawber.py --index-name pawber-data --output-path ~/Desktop/sdg_outputs/ --total-size 2 --custom-config ~/Desktop/sdg-config.yml
 ```
 {% include copy.html %}
 
-## Related documentation
+## 相關文件
 
-- [`generate-data` command reference]({{site.url}}{{site.baseurl}}/benchmark/reference/commands/generate-data/)
-- [Generating data using index mappings]({{site.url}}{{site.baseurl}}/benchmark/features/synthetic-data-generation/mapping-sdg/)
+- [`generate-data` 命令參考]({{site.url}}{{site.baseurl}}/benchmark/reference/commands/generate-data/)
+- [使用索引對應產生資料]({{site.url}}{{site.baseurl}}/benchmark/features/synthetic-data-generation/mapping-sdg/)

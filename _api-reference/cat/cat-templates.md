@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: CAT templates
+title: "CAT 範本"
 parent: CAT APIs
 nav_order: 70
 has_children: false
@@ -9,17 +10,17 @@ redirect_from:
 ---
 
 # CAT Templates API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The CAT templates operation lists the names, patterns, order numbers, and version numbers of index templates.
+CAT templates 操作會列出索引範本的名稱、模式、順序編號與版本編號。
 
 
 <!-- spec_insert_start
 api: cat.templates
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_cat/templates
 GET /_cat/templates/{name}
@@ -33,25 +34,25 @@ component: query_parameters
 columns: Parameter, Data type, Description, Default
 include_deprecated: false
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `cluster_manager_timeout` | String | The amount of time allowed to establish a connection to the cluster manager node. | N/A |
-| `format` | String | A short version of the `Accept` header, such as `json` or `yaml`. | N/A |
-| `h` | List | A comma-separated list of column names to display. | N/A |
-| `help` | Boolean | Returns help information. | `false` |
-| `local` | Boolean | Returns local information but does not retrieve the state from the cluster manager node. | `false` |
-| `s` | List | A comma-separated list of column names or column aliases to sort by. | N/A |
-| `v` | Boolean | Enables verbose mode, which displays column headers. | `false` |
+| `cluster_manager_timeout` | String | 建立與叢集管理員節點連線所允許的時間。 | N/A |
+| `format` | String | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
+| `h` | List | 以逗號分隔、要顯示的欄位名稱清單。 | N/A |
+| `help` | Boolean | 傳回說明資訊。 | `false` |
+| `local` | Boolean | 傳回本機資訊，但不從叢集管理員節點擷取狀態。 | `false` |
+| `s` | List | 以逗號分隔、用於排序的欄位名稱或欄位別名清單。 | N/A |
+| `v` | Boolean | 啟用詳細模式，顯示欄位標題。 | `false` |
 
 <!-- spec_insert_end -->
 
-## Example requests
+## 範例請求
 
-The following example request returns information about all templates:
+下列範例請求會傳回所有範本的資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -75,7 +76,7 @@ response = client.cat.templates(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-If you want to get information for a specific template or pattern:
+若要取得特定範本或模式的資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -100,15 +101,15 @@ response = client.cat.templates(
 <!-- spec_insert_end -->
 
 
-## Example response
+## 範例回應
 
 ```
 name | index_patterns order version composed_of
 tenant_template | [opensearch-dashboards*] | 0  |    
 ```
 
-To learn more about index templates, see [Index templates]({{site.url}}{{site.baseurl}}/opensearch/index-templates/).
+若要進一步了解索引範本，請參閱[索引範本]({{site.url}}{{site.baseurl}}/opensearch/index-templates/)。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/template/get`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`indices:admin/template/get`。

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: VisBuilder
 parent: Visualization types
@@ -12,37 +13,37 @@ redirect_from:
 
 # VisBuilder
 
-VisBuilder provides drag-and-drop visualization creation in OpenSearch Dashboards. With VisBuilder you have:
+VisBuilder 讓您在 OpenSearch Dashboards 中以拖放方式建立視覺化。使用 VisBuilder，您可以：
 
-* An immediate view of your data without the need to preselect the visualization output.
-* The flexibility to change visualization types and index patterns quickly.
-* The ability to easily navigate between multiple screens.
+* 立即檢視資料，不需要預先選取視覺化輸出。
+* 靈活且快速地變更視覺化類型與索引模式。
+* 輕鬆在多個畫面之間切換。
 
-## When to use VisBuilder
+## 何時使用 VisBuilder
 
-Use VisBuilder for rapid exploration of data relationships through an intuitive drag-and-drop interface, reducing the time required to test hypotheses and explore data patterns without needing query language knowledge.
+VisBuilder 透過直覺的拖放介面，讓您快速探索資料之間的關係。您不需要具備查詢語言知識，就能縮短驗證假設與探索資料模式所需的時間。
 
-## Creating a visualization using VisBuilder
+## 使用 VisBuilder 建立視覺化
 
-The examples on this page use the **Sample flight data** dataset. Before you begin, complete the [prerequisites]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites).
+本頁範例使用 **Sample flight data** 資料集。開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites)。
 {: .note}
 
-To create a visualization using VisBuilder, follow these steps:
+若要使用 VisBuilder 建立視覺化，請依照下列步驟操作：
 
-1. In the **New Visualization** dialog, select **VisBuilder**, as shown in the following image.
+1. 在 **New Visualization** 對話方塊中，選取 **VisBuilder**，如下圖所示。
 
-   ![VisBuilder new visualization start page]({{site.url}}{{site.baseurl}}/images/dashboards/vis-builder-2.png)
-2. From the **Data Source** dropdown, select **opensearch_dashboards_sample_data_flights**.
-3. In the **Configuration** panel, add fields to the chart by dragging them from the field list on the left or by selecting the **+** icon in each section:
-   - **Y-axis**: Select the **+** icon, set **Aggregation** to **Average**, and set **Field** to **AvgTicketPrice**.
-   - **X-axis**: Select the **+** icon, set **Aggregation** to **Terms**, set **Field** to **Carrier**, and set **Order** to **Descending**.
-   - **Split series**: Select the **+** icon, set **Aggregation** to **Terms**, and set **Field** to **FlightDelay**.
+   ![VisBuilder 新視覺化起始頁面]({{site.url}}{{site.baseurl}}/images/dashboards/vis-builder-2.png)
+2. 從 **Data Source** 下拉式選單中，選取 **opensearch_dashboards_sample_data_flights**。
+3. 在 **Configuration** 面板中，將欄位從左側的欄位清單拖曳到圖表上，或選取各區段中的 **+** 圖示，將欄位新增至圖表：
+   - **Y-axis**：選取 **+** 圖示，將 **Aggregation** 設為 **Average**，並將 **Field** 設為 **AvgTicketPrice**。
+   - **X-axis**：選取 **+** 圖示，將 **Aggregation** 設為 **Terms**，將 **Field** 設為 **Carrier**，並將 **Order** 設為 **Descending**。
+   - **Split series**：選取 **+** 圖示，將 **Aggregation** 設為 **Terms**，並將 **Field** 設為 **FlightDelay**。
 
-The chart updates automatically as you add fields. The **Split series** field divides each bar into color-coded subgroups. In this example, `FlightDelay` has two values (`true` and `false`), so each carrier shows two bars---one for delayed flights and one for non-delayed flights---in different colors, as shown in the following image.
+圖表會在您新增欄位時自動更新。**Split series** 欄位會將每個長條分成以顏色區分的子群組。在此範例中，`FlightDelay` 有兩個值（`true` 與 `false`），因此每家航空公司會以不同顏色顯示兩個長條：一個代表延誤的航班，另一個代表未延誤的航班，如下圖所示。
 
-![VisBuilder bar chart showing average ticket price by carrier split by flight delay]({{site.url}}{{site.baseurl}}/images/dashboards/visbuilder-example.png)
+![VisBuilder 長條圖，顯示各航空公司的平均票價，並依航班延誤狀態分組]({{site.url}}{{site.baseurl}}/images/dashboards/visbuilder-example.png)
 
-## Next steps
+## 後續步驟
 
-- To choose a different visualization type, see [Visualization types]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/).
-- To add this visualization to a dashboard, see [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/).
+- 若要選擇其他視覺化類型，請參閱[視覺化類型]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/)。
+- 若要將此視覺化新增至儀表板，請參閱[建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)。

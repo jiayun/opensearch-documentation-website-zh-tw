@@ -1,0 +1,126 @@
+name: Deploy zh-TW Site
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 3.9-zh-tw
+  pull_request:
+    branches:
+      - 3.9-zh-tw
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      complete: ${{ steps.check_translation.outputs.complete }}
+      preview_ready: ${{ steps.check_translation.outputs.preview_ready }}
+    env:
+      SITE_MODE: ${{ vars.PUBLISH_39_PREVIEW == 'true' && 'preview' || 'complete' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4.5'
+          bundler-cache: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          pip install -r requirements-translation.txt PyYAML
+
+      - name: Run Python tests
+        run: python -m unittest discover -s scripts/tests
+
+      - name: Run browser logic regression tests
+        run: node --test scripts/tests/test_search.cjs
+
+      - name: Check translation integrity
+        run: python scripts/translation.py check --allow-incomplete
+
+      - name: Build site
+        run: ./scripts/build-site.sh
+
+      - name: Check site
+        run: python scripts/check-site.py --site _site/3.9
+
+      - name: Check licenses
+        run: python scripts/license_check.py --require-modified-notices --site _site/3.9
+
+      - name: Check Translation Completion
+        id: check_translation
+        run: |
+          if [ ! -f "scripts/translation.py" ]; then
+            echo "Translation script not found, this is a hard error."
+            exit 1
+          fi
+          
+          if python scripts/translation.py check --complete; then
+            echo "complete=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "complete=false" >> "$GITHUB_OUTPUT"
+          fi
+          if [ "$SITE_MODE" = "preview" ]; then
+            python scripts/translation.py --root .translation-cache/site-source check --allow-incomplete
+            echo "preview_ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "preview_ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload artifact for preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: preview-site
+          path: _site
+
+  deploy:
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/3.9-zh-tw' && ((needs.build.outputs.complete == 'true' && vars.PUBLISH_39 == 'true') || (needs.build.outputs.preview_ready == 'true' && vars.PUBLISH_39_PREVIEW == 'true'))
+    needs: build
+    concurrency:
+      group: pages-3.9-zh-tw
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: preview-site
+          path: _site
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Hungarian
+title: "匈牙利文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 200
 ---
 
-# Hungarian analyzer
+# 匈牙利文分析器
 
-The built-in `hungarian` analyzer can be applied to a text field using the following command:
+您可以使用以下命令，將內建的 `hungarian` 分析器套用至文字欄位：
 
 ```json
 PUT /hungarian-index
@@ -25,9 +26,9 @@ PUT /hungarian-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用以下命令，搭配此語言分析器使用 `stem_exclusion`：
 
 ```json
 PUT index_with_stem_exclusion_hungarian_analyzer
@@ -46,21 +47,21 @@ PUT index_with_stem_exclusion_hungarian_analyzer
 ```
 {% include copy-curl.html %}
 
-## Hungarian analyzer internals
+## 匈牙利文分析器內部結構
 
-The `hungarian` analyzer is built using the following components:
+`hungarian` 分析器由以下元件組成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
+- 詞元篩選器：
   - lowercase
-  - stop (Hungarian)
+  - stop（匈牙利文）
   - keyword
-  - stemmer (Hungarian)
+  - stemmer（匈牙利文）
 
-## Custom Hungarian analyzer
+## 自訂匈牙利文分析器
 
-You can create a custom Hungarian analyzer using the following command:
+您可以使用以下命令建立自訂匈牙利文分析器：
 
 ```json
 PUT /hungarian-index
@@ -107,9 +108,9 @@ PUT /hungarian-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用以下請求檢查使用該分析器產生的詞元：
 
 ```json
 POST /hungarian-index/_analyze
@@ -120,7 +121,7 @@ POST /hungarian-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

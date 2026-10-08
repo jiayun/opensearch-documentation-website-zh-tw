@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Percentile ranks
+title: "百分位數排名"
 parent: Metric aggregations
 nav_order: 80
 redirect_from:
   - /query-dsl/aggregations/metric/percentile-ranks/
 ---
 
-# Percentile rank aggregation
+# 百分位數排名彙總
 
-The `percentile_ranks` aggregation estimates the percentage of observed values that fall below or at given thresholds. This is useful for understanding the relative standing of a particular value within a distribution of values.
+`percentile_ranks` 彙總會估算觀測值中小於或等於指定閾值的百分比。這有助於了解特定值在值分布中的相對位置。
 
-For example, you can use a percentile rank aggregation to learn how a transaction amount of `45` compares to other transaction values in a dataset. The percentile rank aggregation returns a value like `82.3`, which means 82.3% of transactions are less than or equal to `45`.
+例如，您可以使用百分位數排名彙總來了解 `45` 的交易金額與資料集中其他交易值相比的情況。百分位數排名彙總會傳回像 `82.3` 這樣的值，這表示 82.3% 的交易小於或等於 `45`。
 
-## Parameters
+## 參數
 
-The `percentile_ranks` aggregation takes the following parameters.
+`percentile_ranks` 彙總接受下列參數。
 
-| Parameter                                | Data type        | Required/Optional | Description                                                                                                                         |
+| 參數 | 資料類型 | 必要/選用 | 說明 |
 | ---------------------------------------- | ---------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `field`                                  | String           | Required          | The numeric field used to compute percentile ranks.                                                                                   |
-| `values`                                 | Array of doubles | Required          | The values used to calculate percentile ranks.                                                                                 |
-| `keyed`                                  | Boolean          | Optional          | If set to `false`, returns results as an array. Otherwise returns results as a JSON object. Default is `true`.                      |
-| `tdigest.compression`                    | Double           | Optional          | Controls accuracy and memory usage of the `tdigest` algorithm. See [Precision tuning with `tdigest`](#precision-tuning-with-tdigest). |
-| `hdr.number_of_significant_value_digits` | Integer          | Optional          | The precision setting for the HDR histogram. See [HDR histogram](#hdr-histogram).                                                       |
-| `missing`                                | Number           | Optional          | The default value used when the target field is missing in a document.                                                                |
-| `script`                                 | Object           | Optional          | The script used to compute custom values instead of using a field. Supports inline and stored scripts.                                        |
+| `field` | 字串 | 必要 | 用於計算百分位數排名的數值欄位。 |
+| `values` | double 陣列 | 必要 | 用於計算百分位數排名的值。 |
+| `keyed` | 布林值 | 選用 | 如果設定為 `false`，則以陣列傳回結果。否則以 JSON 物件傳回結果。預設值為 `true`。 |
+| `tdigest.compression` | Double | 選用 | 控制 `tdigest` 演算法的準確度和記憶體使用量。請參閱[使用 `tdigest` 進行精確度調整](#precision-tuning-with-tdigest)。 |
+| `hdr.number_of_significant_value_digits` | 整數 | 選用 | HDR 直方圖的精確度設定。請參閱 [HDR 直方圖](#hdr-histogram)。 |
+| `missing` | 數字 | 選用 | 當文件中缺少目標欄位時使用的預設值。 |
+| `script` | 物件 | 選用 | 用於計算自訂值（而非使用欄位）的指令碼。支援內嵌指令碼和預存指令碼。 |
 
 
-## Example
+## 範例
 
 
 
-First, create a sample index:
+首先，建立範例索引：
 
 ```json
 PUT /transaction_data
@@ -48,7 +49,7 @@ PUT /transaction_data
 ```
 {% include copy-curl.html %}
 
-Add sample numeric values to illustrate percentile rank calculations:
+新增範例數值，以說明百分位數排名的計算方式：
 
 ```json
 POST /transaction_data/_bulk
@@ -70,7 +71,7 @@ POST /transaction_data/_bulk
 {% include copy-curl.html %}
 
 
-Run a `percentile_ranks` aggregation to calculate how certain values compare to the overall distribution:
+執行 `percentile_ranks` 彙總，計算特定值與整體分布相比的情況：
 
 ```json
 GET /transaction_data/_search
@@ -88,7 +89,7 @@ GET /transaction_data/_search
 ```
 {% include copy-curl.html %}
 
-The response demonstrates that 28.6% of the values are less than or equal to `25` and 71.4% are less than or equal to `55`:
+回應顯示 28.6% 的值小於或等於 `25`，而 71.4% 的值小於或等於 `55`：
 
 ```json
 {
@@ -112,9 +113,9 @@ The response demonstrates that 28.6% of the values are less than or equal to `25
 }
 ```
 
-## Keyed response
+## 鍵值回應
 
-You can change the format of the returned aggregation from a JSON object to a list of key-value pairs by setting the `keyed` parameter to `false`:
+您可以將 `keyed` 參數設定為 `false`，將傳回的彙總格式從 JSON 物件變更為鍵值對清單：
 
 ```json
 GET /transaction_data/_search
@@ -133,7 +134,7 @@ GET /transaction_data/_search
 ```
 {% include copy-curl.html %}
 
-The response includes an array instead of an object:
+回應包含陣列而非物件：
 
 ```json
 {
@@ -165,13 +166,13 @@ The response includes an array instead of an object:
 
 <!-- vale off -->
 
-## Precision tuning with tdigest
+## 使用 tdigest 進行精確度調整
 
 <!-- vale on -->
 
-By default, percentile ranks are calculated using the `tdigest` algorithm. You can control the trade-off between accuracy and memory usage by specifying the `tdigest.compression` parameter. Higher values provide better accuracy but require more memory. For more information about how `tdigest` works, see [Precision tuning with `tdigest`]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile/#precision-tuning-with-tdigest).
+根據預設，百分位數排名是使用 `tdigest` 演算法計算。您可以指定 `tdigest.compression` 參數，以控制準確度與記憶體使用量之間的取捨。值越高，準確度越好，但需要更多記憶體。如需 `tdigest` 運作方式的詳細資訊，請參閱[使用 `tdigest` 進行精確度調整]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile/#precision-tuning-with-tdigest)。
 
-The following example is configured with `tdigest.compression` set to `200`:
+以下範例將 `tdigest.compression` 設定為 `200`：
 
 ```json
 GET /transaction_data/_search
@@ -192,22 +193,22 @@ GET /transaction_data/_search
 ```
 {% include copy-curl.html %}
 
-### HDR histogram
+### HDR 直方圖
 
-As an alternative to `tdigest`, you can use the High Dynamic Range (HDR) histogram algorithm, which is better suited for large numbers of buckets and fast processing. For more information about how the HDR histogram works, see [HDR histogram]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile/#hdr-histogram).
+除了 `tdigest` 之外，您也可以使用高動態範圍（HDR）直方圖演算法，此演算法較適合大量的桶 (bucket) 及快速處理。如需 HDR 直方圖運作方式的詳細資訊，請參閱 [HDR 直方圖]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile/#hdr-histogram)。
 
-You should use HDR if you:
+在下列情況下，您應該使用 HDR：
 
-* Are aggregating across many buckets.
-* Don't require extreme precision in the tail percentiles.
-* Have sufficient memory available.
+* 您要跨多個桶進行彙總。
+* 您不需要尾端百分位數具有極高的精確度。
+* 您有足夠的可用記憶體。
 
-You should avoid HDR if:
+在下列情況下，您應該避免使用 HDR：
 
-* Tail accuracy is important.
-* You're analyzing skewed or sparse data distributions.
+* 尾端準確度很重要。
+* 您要分析偏斜或稀疏的資料分布。
 
-The following example is configured with `hdr.number_of_significant_value_digits` set to `3`:
+以下範例將 `hdr.number_of_significant_value_digits` 設定為 `3`：
 
 ```json
 GET /transaction_data/_search
@@ -228,9 +229,9 @@ GET /transaction_data/_search
 ```
 {% include copy-curl.html %}
 
-### Missing values
+### 遺漏值
 
-If some documents are missing the target field, you can instruct the query to use a fallback value by setting the `missing` parameter. The following example ensures that documents without an `amount` field are treated as if their values are `0` and are included in the percentile ranks computation:
+如果某些文件缺少目標欄位，您可以設定 `missing` 參數，指示查詢使用備用值。以下範例確保沒有 `amount` 欄位的文件被視為其值為 `0`，並納入百分位數排名的計算中：
 
 ```json
 GET /transaction_data/_search
@@ -249,13 +250,13 @@ GET /transaction_data/_search
 ```
 {% include copy-curl.html %}
 
-### Script
+### 指令碼
 
-Instead of specifying a field, you can dynamically compute the value using a script. This is useful when you need to apply transformations, such as converting currencies or applying weights. 
+您可以使用指令碼動態計算值，而不是指定欄位。當您需要套用轉換（例如轉換貨幣或套用權重）時，這非常有用。
 
-#### Inline script
+#### 內嵌指令碼
 
-The following example uses an inline script to calculate the percentile ranks of the transformed values `30` and `60` against values from the `amount` field, increased by 10%:
+以下範例使用內嵌指令碼，計算轉換後的值 `30` 和 `60` 相對於 `amount` 欄位值（增加 10% 後）的百分位數排名：
 
 ```json
 GET /transaction_data/_search
@@ -275,10 +276,10 @@ GET /transaction_data/_search
 ```
 {% include copy-curl.html %}
 
-#### Stored script
+#### 預存指令碼
 
 
-To use a stored script, first create it using the following request:
+若要使用預存指令碼，請先使用以下請求建立它：
 
 ```json
 POST _scripts/percentile_script
@@ -291,7 +292,7 @@ POST _scripts/percentile_script
 ```
 {% include copy-curl.html %}
 
-Then use the stored script in the `percentile_ranks` aggregation:
+然後在 `percentile_ranks` 彙總中使用該預存指令碼：
 
 ```json
 GET /transaction_data/_search

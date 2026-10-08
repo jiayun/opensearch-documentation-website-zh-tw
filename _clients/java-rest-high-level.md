@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Java high-level REST client (deprecated)
+title: "Java 高階 REST 用戶端（已棄用）"
 nav_order: 190
 ---
 
-# Java high-level REST client
+# Java 高階 REST 用戶端
 
-The OpenSearch Java high-level REST client is deprecated. Support will be removed in a future version. We recommend switching to the [Java client]({{site.url}}{{site.baseurl}}/clients/java/) instead.
+OpenSearch Java 高階 REST 用戶端已棄用，未來版本將移除對其的支援。我們建議改用 [Java 用戶端]({{site.url}}{{site.baseurl}}/clients/java/)。
 {: .warning}
 
-The OpenSearch Java high-level REST client lets you interact with your OpenSearch clusters and indexes through Java methods and data structures rather than HTTP methods and JSON.
+OpenSearch Java 高階 REST 用戶端可讓您透過 Java 方法和資料結構與 OpenSearch 叢集和索引互動，而不必使用 HTTP 方法和 JSON。
 
-## Setup
+## 設定
 
-To start using the OpenSearch Java high-level REST client, ensure that you have the following dependency in your project's `pom.xml` file:
+若要開始使用 OpenSearch Java 高階 REST 用戶端，請確認您專案的 `pom.xml` 檔案中包含下列相依性：
 
 ```
 <dependency>
@@ -23,25 +24,25 @@ To start using the OpenSearch Java high-level REST client, ensure that you have 
 </dependency>
 ```
 
-You can now start your OpenSearch cluster. Use the version of the high-level REST client that matches your OpenSearch version.
+現在您可以啟動 OpenSearch 叢集。請使用與您的 OpenSearch 版本相符的高階 REST 用戶端版本。
 
-## Security
+## 安全性
 
-Before using the REST client in your Java application, you must configure the application's truststore to connect to the Security plugin. If you are using self-signed certificates or demo configurations, you can use the following command to create a custom truststore and add in root authority certificates.
+在 Java 應用程式中使用 REST 用戶端之前，您必須設定應用程式的信任存放區 (truststore)，才能連線至 Security 外掛程式。如果您使用自我簽署憑證或示範組態，可以使用下列命令建立自訂信任存放區，並加入根憑證授權單位憑證。
 
-If you're using certificates from a trusted Certificate Authority (CA), you don't need to configure the truststore.
+如果您使用的是受信任憑證授權單位 (CA) 所核發的憑證，則不需要設定信任存放區。
 
 ```bash
 keytool -importcert -file <path-to-root-ca-cert> -alias <alias> -keystore <truststore-name>
 ```
 
-You can now point your Java client to the truststore and set basic authentication credentials that can access a secure cluster (refer to the sample following code on how to do so).
+現在您可以將 Java 用戶端指向該信任存放區，並設定可存取安全叢集的基本驗證認證資訊（作法請參閱下方的範例程式碼）。
 
-If you run into issues when configuring security, see [Troubleshooting TLS]({{site.url}}{{site.baseurl}}/security/configuration/troubleshoot-tls/).
+如果您在設定安全性時遇到問題，請參閱 [TLS 疑難排解]({{site.url}}{{site.baseurl}}/security/configuration/troubleshoot-tls/)。
 
-## Sample program
+## 範例程式
 
-This code example uses the `admin` user. Replace `<custom-admin-password>` with the admin password that you set when you installed OpenSearch. Replace `/full/path/to/keystore` with the path to your truststore and `password-to-keystore` with the truststore password.
+此程式碼範例使用 `admin` 使用者。請將 `<custom-admin-password>` 替換為您安裝 OpenSearch 時設定的管理員密碼。請將 `/full/path/to/keystore` 替換為您信任存放區的路徑，並將 `password-to-keystore` 替換為信任存放區的密碼。
 
 ```java
 import org.apache.hc.client5.http.auth.AuthScope;
@@ -139,12 +140,12 @@ public class RESTClientSample {
 }
 ```
 
-## Elasticsearch OSS Java high-level REST client
+## Elasticsearch OSS Java 高階 REST 用戶端
 
-We recommend using the OpenSearch client to connect to OpenSearch clusters, but if you must use the Elasticsearch OSS Java high-level REST client, version 7.10.2 of the Elasticsearch OSS client also works with the 1.x versions of OpenSearch.
+我們建議使用 OpenSearch 用戶端連線至 OpenSearch 叢集，但如果您必須使用 Elasticsearch OSS Java 高階 REST 用戶端，Elasticsearch OSS 用戶端 7.10.2 版也可搭配 OpenSearch 1.x 版使用。
 
-### Migrating to the OpenSearch Java high-level REST client
+### 遷移至 OpenSearch Java 高階 REST 用戶端
 
-Migrating from the Elasticsearch OSS client to the OpenSearch high-level REST client is as simple as changing your Maven dependency to one that references [OpenSearch's dependency](#setup).
+從 Elasticsearch OSS 用戶端遷移至 OpenSearch 高階 REST 用戶端非常簡單，只需將您的 Maven 相依性變更為參照 [OpenSearch 的相依性](#setup) 即可。
 
-Afterward, change all references of `org.elasticsearch` to `org.opensearch`, and you're ready to start submitting requests to your OpenSearch cluster.
+之後，將所有 `org.elasticsearch` 的參照變更為 `org.opensearch`，即可開始向您的 OpenSearch 叢集提交請求。

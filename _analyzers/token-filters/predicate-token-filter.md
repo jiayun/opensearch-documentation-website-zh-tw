@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Predicate token filter
+title: "述詞詞元篩選器"
 parent: Token filters
 nav_order: 340
 ---
 
-# Predicate token filter
+# 述詞詞元篩選器
 
-The `predicate_token_filter` evaluates whether tokens should be kept or discarded, depending on the conditions defined in a custom script. The tokens are evaluated in the analysis predicate context. This filter supports only inline Painless scripts. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+`predicate_token_filter` 會根據自訂指令碼中定義的條件，評估應保留或捨棄詞元。詞元會在分析述詞情境中進行評估。此篩選器僅支援內嵌 Painless 指令碼。如需詳細資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-## Parameters
+## 參數
 
-The `predicate_token_filter` has one required parameter: `script`. This parameter provides a condition that is used to evaluate whether the token should be kept. 
+`predicate_token_filter` 有一個必要參數：`script`。此參數提供用來評估是否應保留詞元的條件。 
 
-## Example
+## 範例
 
-The following example request creates a new index named `predicate_index` and configures an analyzer with a `predicate_token_filter`. The filter specifies to only output tokens if they are longer than 7 characters:
+下列範例請求會建立名為 `predicate_index` 的新索引，並設定使用 `predicate_token_filter` 的分析器。此篩選器指定僅輸出長度超過 7 個字元的詞元：
 
 ```json
 PUT /predicate_index
@@ -45,9 +46,9 @@ PUT /predicate_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢視分析器產生的詞元：
 
 ```json
 POST /predicate_index/_analyze
@@ -58,7 +59,7 @@ POST /predicate_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

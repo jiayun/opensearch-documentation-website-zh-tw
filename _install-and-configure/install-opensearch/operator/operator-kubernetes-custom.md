@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Kubernetes deployment customization
+title: "Kubernetes 部署自訂"
 parent: OpenSearch Kubernetes Operator
 grand_parent: Installing OpenSearch
 nav_order: 40
 ---
 
-# Kubernetes deployment customization
+# Kubernetes 部署自訂
 
-Besides configuring OpenSearch itself, you can also customize how the operator deploys the OpenSearch and OpenSearch Dashboards pods.
+除了設定 OpenSearch 本身之外，您也可以自訂 operator 部署 OpenSearch 和 OpenSearch Dashboards Pod 的方式。
 
-## Data persistence
+## 資料持久性
 
-By default, the operator creates OpenSearch node pools with persistent storage from the default [Storage Class](https://kubernetes.io/docs/concepts/storage/storage-classes/). This behavior can be changed per node pool. You may supply an alternative storage class and access mode, or configure `hostPath` or `emptyDir` storage.
+根據預設，operator 會使用預設 [Storage Class](https://kubernetes.io/docs/concepts/storage/storage-classes/) 的持久性儲存空間來建立 OpenSearch 節點集區。您可以針對每個節點集區變更此行為。您可以提供其他的 storage class 和存取模式，或設定 `hostPath` 或 `emptyDir` 儲存空間。
 
-The available storage options are:
+可用的儲存空間選項如下：
 
 <!-- vale off -->
 ### Persistent Volume Claim (PVC)
 <!-- vale on -->
 
-The default option is persistent storage using PVCs. You can explicitly define the `storageClass`, `annotations`, and `labels` if needed:
+預設選項是使用 PVC 的持久性儲存空間。如有需要，您可以明確定義 `storageClass`、`annotations` 和 `labels`：
 
 ```yaml
 nodePools:
@@ -46,7 +47,7 @@ nodePools:
 ### emptyDir
 <!-- vale on -->
 
-If you do not want to use persistent storage, you can use the `emptyDir` option. Note that this can lead to data loss, so you should only use this option for testing or for data that is otherwise persisted.
+如果您不想使用持久性儲存空間，可以使用 `emptyDir` 選項。請注意，這可能導致資料遺失，因此您應僅在測試時，或針對已透過其他方式持久保存的資料使用此選項。
 
 ```yaml
 nodePools:
@@ -61,13 +62,13 @@ nodePools:
 ```
 {% include copy.html %}
 
-If you are using `emptyDir`, set `spec.general.drainDataNodes` to `true`. This ensures that shards are drained from the pods before rolling upgrades or restart operations are performed.
+如果您使用 `emptyDir`，請將 `spec.general.drainDataNodes` 設定為 `true`。這可確保在執行滾動升級或重新啟動作業之前，會先將分片從 Pod 中移出。
 
 <!-- vale off -->
 ### hostPath
 <!-- vale on -->
 
-As a last option, you can use `hostPath`. Using `hostPath` is strongly discouraged. By default, the operator applies pod anti-affinity to prevent multiple pods from scheduling on the same node, which helps when using `hostPath`. However, if you need stricter control, configure explicit affinity rules for the node pool to ensure that multiple pods do not schedule to the same Kubernetes host.
+最後一個選項是使用 `hostPath`。強烈不建議使用 `hostPath`。根據預設，operator 會套用 Pod 反親和性 (anti-affinity)，以防止多個 Pod 排程到同一個節點上，這在使用 `hostPath` 時有所幫助。不過，如果您需要更嚴格的控制，請為節點集區設定明確的親和性規則，以確保多個 Pod 不會排程到同一個 Kubernetes 主機上。
 
 ```yaml
 nodePools:
@@ -83,11 +84,11 @@ nodePools:
 ```
 {% include copy.html %}
 
-## Security context for pods and containers
+## Pod 與容器的安全性內容
 
-You can set the security context for the OpenSearch pods and the OpenSearch Dashboards pod to define privilege and access control settings. To specify security settings for pods, include the `podSecurityContext` field. For containers, include the `securityContext` field.
+您可以為 OpenSearch Pod 和 OpenSearch Dashboards Pod 設定安全性內容 (security context)，以定義權限與存取控制設定。若要為 Pod 指定安全性設定，請加入 `podSecurityContext` 欄位。若為容器，請加入 `securityContext` 欄位。
 
-The structure is the same for both OpenSearch pods (in `spec.general`) and the OpenSearch Dashboards pod (in `spec.dashboards`):
+OpenSearch Pod（位於 `spec.general`）和 OpenSearch Dashboards Pod（位於 `spec.dashboards`）的結構相同：
 
 ```yaml
 spec:
@@ -111,18 +112,18 @@ spec:
 ```
 {% include copy.html %}
 
-The OpenSearch pods by default launch an init container to configure the volume. This container needs to run with root permissions and does not use a defined `securityContext`. If your Kubernetes environment does not allow containers with the root user, [disable this init helper](#disabling-the-init-helper). In this situation, set `general.setVMMaxMapCount` to `false` because this feature also launches an init container with root.
+根據預設，OpenSearch Pod 會啟動一個 init 容器來設定磁碟區。此容器需要以 root 權限執行，且不會使用已定義的 `securityContext`。如果您的 Kubernetes 環境不允許使用 root 使用者的容器，請[停用此 init 輔助程式](#disabling-the-init-helper)。在這種情況下，請將 `general.setVMMaxMapCount` 設定為 `false`，因為此功能同樣會以 root 啟動 init 容器。
 
-The bootstrap pod started during initial cluster setup uses the same pod `securityContext` as the OpenSearch pods (with the same limitations for the init containers).
+在初始叢集設定期間啟動的 bootstrap Pod，會使用與 OpenSearch Pod 相同的 Pod `securityContext`（init 容器也有相同的限制）。
 {: .note}
 
-The bootstrap pod uses persistent storage (PVC) to maintain cluster state across restarts during initialization. This prevents cluster formation failures when the bootstrap pod restarts after the security configuration update job completes. The bootstrap PVC is automatically created and deleted along with the bootstrap pod.
+bootstrap Pod 會使用持久性儲存空間 (PVC)，在初始化期間的重新啟動之間保留叢集狀態。這可防止 bootstrap Pod 在安全性組態更新工作完成後重新啟動時，發生叢集形成失敗的情況。bootstrap PVC 會隨 bootstrap Pod 自動建立和刪除。
 
-## Labels or annotations on OpenSearch nodes
+## OpenSearch 節點上的標籤或註解
 
-You can add additional labels or annotations to the node pool configuration. This is useful for integration with other applications, such as a service mesh, or for configuring a Prometheus scrape endpoint.
+您可以在節點集區組態中加入額外的標籤 (label) 或註解 (annotation)。這有助於與其他應用程式整合（例如服務網格），或用於設定 Prometheus 擷取端點。
 
-Additionally, you can configure annotations globally using the `spec.general.annotations` field. These annotations apply not only to the node pool but also to Kubernetes services.
+此外，您也可以使用 `spec.general.annotations` 欄位全域設定註解。這些註解不僅會套用至節點集區，也會套用至 Kubernetes 服務。
 
 ```yaml
 spec:
@@ -148,11 +149,11 @@ spec:
 ```
 {% include copy.html %}
 
-Any annotations and labels defined are added directly to the node pool pods.
+所定義的任何註解和標籤都會直接加入節點集區的 Pod。
 
-## Add labels or annotations to the OpenSearch Dashboards deployment
+## 為 OpenSearch Dashboards 部署加入標籤或註解
 
-You can add labels or annotations to the OpenSearch Dashboards pod specification. This is helpful if you want OpenSearch Dashboards to be part of a service mesh or integrate with other applications that rely on labels or annotations.
+您可以在 OpenSearch Dashboards Pod 規格中加入標籤或註解。如果您希望 OpenSearch Dashboards 成為服務網格的一部分，或要與依賴標籤或註解的其他應用程式整合，這會很有幫助。
 
 ```yaml
 spec:
@@ -167,11 +168,11 @@ spec:
 ```
 {% include copy.html %}
 
-Any annotations and labels defined are added directly to the OpenSearch Dashboards pods.
+所定義的任何註解和標籤都會直接加入 OpenSearch Dashboards Pod。
 
-## Priority class on OpenSearch nodes
+## OpenSearch 節點上的優先順序類別
 
-You can configure OpenSearch nodes to use a `PriorityClass` by specifying the priority class name. This helps prevent unwanted evictions of your OpenSearch nodes.
+您可以透過指定優先順序類別名稱，將 OpenSearch 節點設定為使用 `PriorityClass`。這有助於避免 OpenSearch 節點遭到不必要的驅逐。
 
 ```yaml
 spec:
@@ -192,13 +193,13 @@ spec:
 ```
 {% include copy.html %}
 
-## Pod affinity
+## Pod 親和性
 
-By default, the operator applies pod anti-affinity rules to prevent multiple pods from the same OpenSearch cluster from being scheduled on the same node. This improves high availability by reducing the risk of multiple pods being affected by a single node failure.
+根據預設，operator 會套用 Pod 反親和性規則，以防止同一個 OpenSearch 叢集的多個 Pod 排程到同一個節點上。這可降低單一節點故障影響多個 Pod 的風險，進而提升高可用性。
 
-The default anti-affinity uses `PreferredDuringSchedulingIgnoredDuringExecution`, which is a soft preference that won't prevent scheduling if no other nodes are available, but will prefer to spread pods across nodes.
+預設的反親和性使用 `PreferredDuringSchedulingIgnoredDuringExecution`，這是一種軟性偏好設定：如果沒有其他可用節點，它不會阻止排程，但會優先將 Pod 分散到不同節點。
 
-You can override this default behavior by explicitly setting the `affinity` field in your node pool, bootstrap, or OpenSearch Dashboards configuration:
+您可以在節點集區、bootstrap 或 OpenSearch Dashboards 組態中明確設定 `affinity` 欄位，以覆寫此預設行為：
 
 ```yaml
 spec:
@@ -240,11 +241,11 @@ spec:
 ```
 {% include copy.html %}
 
-If you set an explicit `affinity`, it completely replaces the default anti-affinity behavior. To disable anti-affinity entirely, set `affinity: {}`.
+如果您設定了明確的 `affinity`，它會完全取代預設的反親和性行為。若要完全停用反親和性，請設定 `affinity: {}`。
 
-## Sidecar containers
+## Sidecar 容器
 
-You can deploy additional sidecar containers alongside OpenSearch in the same pod. This is useful for log shipping, monitoring agents, or other auxiliary services that need to run alongside OpenSearch nodes.
+您可以在同一個 Pod 中，與 OpenSearch 一起部署額外的 sidecar 容器。這適用於記錄檔傳送、監控代理程式，或其他需要與 OpenSearch 節點一起執行的輔助服務。
 
 ```yaml
 spec:
@@ -283,13 +284,13 @@ spec:
 ```
 {% include copy.html %}
 
-Sidecar containers share the same network namespace and storage volumes as the OpenSearch container because they run in the same pod.
+由於 sidecar 容器與 OpenSearch 容器在同一個 Pod 中執行，因此它們共用相同的網路命名空間與儲存磁碟區。
 
-## Additional volumes
+## 額外的磁碟區
 
-You can mount additional volumes into the OpenSearch pods to provide additional configuration (for example, plugin config files). Supported volume types include `ConfigMap`, `Secret`, `emptyDir`, projected volumes, and CSI volumes.
+您可以將額外的磁碟區掛載到 OpenSearch Pod 中，以提供額外的組態（例如外掛程式的組態檔案）。支援的磁碟區類型包括 `ConfigMap`、`Secret`、`emptyDir`、投射磁碟區（projected volume）以及 CSI 磁碟區。
 
-Provide an array of additional volumes in either `spec.general.additionalVolumes` or `spec.dashboards.additionalVolumes`:
+請在 `spec.general.additionalVolumes` 或 `spec.dashboards.additionalVolumes` 中提供額外磁碟區的陣列：
 
 ```yaml
 spec:
@@ -337,9 +338,9 @@ spec:
 ```
 {% include copy.html %}
 
-### NFS volume support
+### NFS 磁碟區支援
 
-NFS volumes can be mounted directly into OpenSearch pods without requiring external provisioners or CSI drivers. This is particularly useful for snapshot repositories stored on NFS shares. To configure an NFS volume, specify the `nfs` field with the required `server` and `path` parameters:
+NFS 磁碟區可以直接掛載到 OpenSearch Pod 中，不需要外部佈建程式或 CSI 驅動程式。這對於儲存在 NFS 共用上的快照儲存庫特別有用。若要設定 NFS 磁碟區，請指定 `nfs` 欄位，並提供必要的 `server` 與 `path` 參數：
 
 ```yaml
 spec:
@@ -354,7 +355,7 @@ spec:
 ```
 {% include copy.html %}
 
-This can be combined with snapshot repository configuration:
+這可以與快照儲存庫組態結合使用：
 
 ```yaml
 spec:
@@ -373,13 +374,13 @@ spec:
 ```
 {% include copy.html %}
 
-The operator adds the defined volumes to all pods of the OpenSearch cluster. It is currently not possible to define them per node pool (`nodePools`).
+Operator 會將定義的磁碟區新增至 OpenSearch 叢集的所有 Pod。目前無法針對個別節點集區（`nodePools`）定義磁碟區。
 
-## Adding environment variables to pods
+## 將環境變數新增至 Pod
 
-You can add your own environment variables to the OpenSearch pods and the OpenSearch Dashboards pods. You can provide the value as a string literal or mount it from a secret or `ConfigMap`.
+您可以將自己的環境變數新增至 OpenSearch Pod 與 OpenSearch Dashboards Pod。您可以將值提供為字串常值，或從 secret 或 `ConfigMap` 掛載。
 
-The structure is the same for both OpenSearch and OpenSearch Dashboards:
+OpenSearch 與 OpenSearch Dashboards 的結構相同：
 
 ```yaml
 spec:
@@ -406,9 +407,9 @@ spec:
 ```
 {% include copy.html %}
 
-## Custom cluster domain name
+## 自訂叢集網域名稱
 
-If your Kubernetes cluster is configured with a custom domain name (default is `cluster.local`), configure the operator accordingly for internal routing to work properly. Set `manager.dnsBase` in the Helm chart values.
+如果您的 Kubernetes 叢集設定了自訂網域名稱（預設為 `cluster.local`），請相應地設定 operator，內部路由才能正常運作。請在 Helm chart 值中設定 `manager.dnsBase`。
 
 ```yaml
 manager:
@@ -417,9 +418,9 @@ manager:
 ```
 {% include copy.html %}
 
-## Custom init helper
+## 自訂 init helper
 
-During cluster initialization, the operator uses init containers as helpers. For these containers, a `busybox` image is used (specifically `docker.io/busybox:latest`). If you are working in an offline environment and the cluster cannot access the registry or you want to customize the image, you can override the image used by specifying the `initHelper` image in your cluster `spec`:
+在叢集初始化期間，operator 會使用 init 容器作為輔助程式。這些容器使用 `busybox` 映像檔（具體而言為 `docker.io/busybox:latest`）。如果您在離線環境中工作，且叢集無法存取登錄檔，或者您想要自訂映像檔，可以在叢集 `spec` 中指定 `initHelper` 映像檔，以覆寫所使用的映像檔：
 
 ```yaml
 spec:
@@ -436,9 +437,9 @@ spec:
 ```
 {% include copy.html %}
 
-## Edit init container resources
+## 編輯 init 容器資源
 
-Init containers run without any resource constraints, but it's possible to specify resource requests and limits by adding a resources section to the YAML definition. You can control the amount of CPU and memory allocated to the init container, helping to ensure that it doesn't starve other containers, by setting appropriate resource limits.
+Init 容器在執行時沒有任何資源限制，但您可以在 YAML 定義中新增 resources 區段，以指定資源請求與限制。透過設定適當的資源限制，您可以控制配置給 init 容器的 CPU 與記憶體數量，有助於確保它不會讓其他容器資源匱乏。
 
 ```yaml
 spec:
@@ -453,10 +454,10 @@ spec:
 ```
 {% include copy.html %}
 
-## Disabling the init helper
+## 停用 init helper
 
-In some cases, you may want to avoid the `chmod` init container (for example, on OpenShift or if your cluster blocks containers running as `root`).
-It can be disabled by adding the following to your `values.yaml`:
+在某些情況下，您可能想要避免使用 `chmod` init 容器（例如在 OpenShift 上，或者您的叢集會封鎖以 `root` 身分執行的容器）。
+您可以在 `values.yaml` 中新增以下內容來停用它：
 
 ```yaml
 manager:
@@ -468,10 +469,10 @@ manager:
 
 ## PodDisruptionBudget
 
-The PDB (Pod Disruption Budget) is a Kubernetes resource that helps ensure the high availability of applications by defining the acceptable disruption level during maintenance or unexpected events.
-It specifies the minimum number of pods that must remain available to maintain the desired level of service.
-The PDB definition is unique for every node pool (`nodePools`).
-Provide either `minAvailable` or `maxUnavailable` to configure PDB, but not both.
+PDB（Pod Disruption Budget）是一種 Kubernetes 資源，透過定義維護期間或非預期事件發生時可接受的中斷程度，協助確保應用程式的高可用性。
+它會指定必須維持可用的最少 Pod 數量，以維持所需的服務水準。
+每個節點集區（`nodePools`）的 PDB 定義都是唯一的。
+請提供 `minAvailable` 或 `maxUnavailable` 其中之一來設定 PDB，但不能同時提供兩者。
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -494,11 +495,11 @@ spec:
 ```
 {% include copy.html %}
 
-## Exposing OpenSearch Dashboards
+## 公開 OpenSearch Dashboards
 
-To expose the OpenSearch Dashboards instance of your cluster for users or services outside of your Kubernetes cluster, the recommended way is to use ingress.
+若要將叢集的 OpenSearch Dashboards 執行個體公開給 Kubernetes 叢集外部的使用者或服務，建議的方式是使用 Ingress。
 
-A simple example:
+簡單範例：
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -524,20 +525,20 @@ spec:
 ```
 {% include copy.html %}
 
-If you have enabled HTTPS for OpenSearch Dashboards, instruct your ingress controller to use an HTTPS connection internally. This is specific to the controller you are using (for example, nginx-ingress or `traefik`).
+如果您已為 OpenSearch Dashboards 啟用 HTTPS，請指示您的 Ingress 控制器在內部使用 HTTPS 連線。這取決於您所使用的控制器（例如 nginx-ingress 或 `traefik`）。
 {: .note}
 
-## Configuring the OpenSearch Dashboards Kubernetes service
+## 設定 OpenSearch Dashboards Kubernetes 服務
 
-You can customize the Kubernetes Service object that the operator generates for the OpenSearch Dashboards deployment.
+您可以自訂 Operator 為 OpenSearch Dashboards 部署所產生的 Kubernetes Service 物件。
 
-Supported Service Types:
+支援的 Service 類型：
 
-- ClusterIP (default)
+- ClusterIP（預設）
 - NodePort
 - LoadBalancer
 
-When using type `LoadBalancer`, you can optionally set the load balancer source ranges.
+使用 `LoadBalancer` 類型時，您可以選擇性地設定負載平衡器的來源範圍。
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -551,14 +552,14 @@ spec:
 ```
 {% include copy.html %}
 
-## Exposing the OpenSearch cluster REST API
+## 公開 OpenSearch 叢集 REST API
 
-To expose the REST API of OpenSearch outside your Kubernetes cluster, the recommended way is to use ingress.
-Internally, use self-signed certificates (you can let the operator generate them) and then let the ingress use a certificate from an accepted CA (for example, Let's Encrypt or a company-internal CA). That way you do not have the hassle of supplying custom certificates to the OpenSearch cluster but your users still see valid certificates.
+若要將 OpenSearch 的 REST API 公開到 Kubernetes 叢集外部，建議的方式是使用 Ingress。
+在內部使用自我簽署憑證（您可以讓 Operator 產生這些憑證），然後讓 Ingress 使用由受信任 CA（例如 Let's Encrypt 或公司內部 CA）簽發的憑證。如此一來，您就不必費心為 OpenSearch 叢集提供自訂憑證，而您的使用者仍會看到有效的憑證。
 
-## Customizing probe timeouts and thresholds
+## 自訂探查逾時與閾值
 
-If the cluster nodes do not start before the threshold is reached and the pod restarts, you can configure the timeouts and thresholds per node as needed.
+如果叢集節點未在達到閾值之前啟動，導致 Pod 重新啟動，您可以視需要為每個節點設定逾時與閾值。
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -591,11 +592,11 @@ spec:
 ```
 {% include copy.html %}
 
-## Customize startup and readiness probe command
+## 自訂啟動與就緒探查命令
 
-While the `liveness` probe is a TCP check, the startup and readiness probes use the OpenSearch API with cURL.
+`liveness` 探查是 TCP 檢查，而啟動與就緒探查則是透過 cURL 使用 OpenSearch API。
 
-If you need to customize the startup or readiness probe commands, you can override them as shown in the following example:
+如果您需要自訂啟動或就緒探查命令，可以如下列範例所示覆寫這些命令：
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -617,11 +618,11 @@ spec:
 ```
 {% include copy.html %}
 
-## Configuring resource limits and requests
+## 設定資源限制與請求
 
-In addition to the information provided in the previous sections on how to specify resource requirements for the node pools, you can also specify resources for all entities created by the operator for more advanced use cases.
+除了前面各節中關於如何為節點集區指定資源需求的資訊之外，您也可以針對進階使用案例，為 Operator 所建立的所有實體指定資源。
 
-The operator generates many pods using resources such as jobs, stateful sets, and replica sets that use init containers. The following configuration lets you specify a default resources configuration for all init containers.
+Operator 會透過 Job、StatefulSet 和 ReplicaSet 等資源產生許多 Pod，而這些資源會使用 init 容器。下列組態可讓您為所有 init 容器指定預設的資源組態。
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -639,7 +640,7 @@ spec:
 ```
 {% include copy.html %}
 
-You can also configure the resources for the security update job as shown in the following example.
+您也可以如下列範例所示，設定安全性更新作業的資源。
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -659,5 +660,5 @@ spec:
 ```
 {% include copy.html %}
 
-The examples provided here do not reflect actual resource requirements. You may need to conduct further testing to properly adjust the resources based on your specific needs.
+此處提供的範例並未反映實際的資源需求。您可能需要進行進一步測試，才能根據您的特定需求適當調整資源。
 {: .note}

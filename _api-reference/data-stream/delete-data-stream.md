@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete data stream
+title: "刪除資料串流"
 parent: Data stream APIs
 nav_order: 40
 ---
 
-# Delete Data Stream API
-**Introduced 1.0**
+# 刪除資料串流 API
+**引進於 1.0**
 {: .label .label-purple }
 
-The Delete Data Stream API deletes a data stream and its backing indexes.
+刪除資料串流 API 會刪除資料串流及其後端索引。
 
 <!-- spec_insert_start
 api: indices.delete_data_stream
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 DELETE /_data_stream/{name}
 ```
@@ -25,31 +26,31 @@ DELETE /_data_stream/{name}
 api: indices.delete_data_stream
 component: path_parameters
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required | Data type | Description |
+| 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `name` | **Required** | List or String | A comma-separated list of data streams to delete. Wildcard (`*`) expressions are supported. |
+| `name` | **必要** | 清單或字串 | 以逗號分隔的資料串流清單，用於指定要刪除的資料串流。支援萬用字元 (`*`) 運算式。 |
 
 <!-- spec_insert_end -->
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `error_trace` | Boolean | Whether to include the stack trace of returned errors. | `false` |
-| `filter_path` | List or String | Used to reduce the response. This parameter takes a comma-separated list of filters. It supports using wildcards to match any field or part of a field’s name. You can also exclude fields with `-`. | N/A |
-| `human` | Boolean | Whether to return human-readable values for statistics. | `false` |
-| `pretty` | Boolean | Whether to pretty format the returned JSON response. | `false` |
-| `source` | String | The URL-encoded request definition. Useful for libraries that do not accept a request body for non-POST requests. | N/A |
+| `error_trace` | 布林值 | 是否包含所傳回錯誤的堆疊追蹤。 | `false` |
+| `filter_path` | 清單或字串 | 用於精簡回應。此參數接受以逗號分隔的篩選條件清單。支援使用萬用字元來比對任何欄位或欄位名稱的一部分。您也可以使用 `-` 排除欄位。 | N/A |
+| `human` | 布林值 | 是否傳回人類可讀的統計值。 | `false` |
+| `pretty` | 布林值 | 是否將傳回的 JSON 回應格式化為易讀的格式。 | `false` |
+| `source` | 字串 | 經 URL 編碼的請求定義。適用於不接受非 POST 請求帶有請求本文的程式庫。 | N/A |
 
-## Example request
+## 範例請求
 
-The following example request deletes the `logs-app` data stream and its backing indexes:
+下列範例請求會刪除 `logs-app` 資料串流及其後端索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -73,7 +74,7 @@ response = client.indices.delete_data_stream(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -81,11 +82,11 @@ response = client.indices.delete_data_stream(
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/data_stream/delete`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`indices:admin/data_stream/delete`。
 
-## Related documentation
+## 相關文件
 
-- [Data streams]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)
-- [Create or update a data stream]({{site.url}}{{site.baseurl}}/api-reference/data-stream/create-data-stream/)
+- [資料串流]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)
+- [建立或更新資料串流]({{site.url}}{{site.baseurl}}/api-reference/data-stream/create-data-stream/)

@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Min hash
 parent: Token filters
 nav_order: 270
 ---
 
-# Min hash token filter
+# Min hash 詞元篩選器
 
-The `min_hash` token filter is used to generate hashes for tokens based on a [MinHash](https://en.wikipedia.org/wiki/MinHash) approximation algorithm, which is useful for detecting similarity between documents. The `min_hash` token filter generates hashes for a set of tokens (typically from an analyzed field).
+`min_hash` 詞元篩選器會根據 [MinHash](https://en.wikipedia.org/wiki/MinHash) 近似演算法為詞元產生雜湊值，可用於偵測文件之間的相似度。`min_hash` 詞元篩選器會為一組詞元（通常來自經過分析的欄位）產生雜湊值。
 
-## Parameters
+## 參數
 
-The `min_hash` token filter can be configured with the following parameters.
+`min_hash` 詞元篩選器可以使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`hash_count` | Optional | Integer | The number of hash values to generate for each token. Increasing this value generally improves the accuracy of similarity estimation but increases the computational cost. Default is `1`.
-`bucket_count` | Optional | Integer | The number of hash buckets to use. This affects the granularity of the hashing. A larger number of buckets provides finer granularity and reduces hash collisions but requires more memory. Default is `512`.
-`hash_set_size` | Optional | Integer | The number of hashes to retain in each bucket. This can influence the hashing quality. Larger set sizes may lead to better similarity detection but consume more memory. Default is `1`.
-`with_rotation` | Optional | Boolean | When set to `true`, the filter populates empty buckets with the value from the first non-empty bucket found to its circular right, provided that the `hash_set_size` is `1`. If the `bucket_count` argument exceeds `1`, this setting automatically defaults to `true`; otherwise, it defaults to `false`.
+`hash_count` | 選用 | 整數 | 為每個詞元產生的雜湊值數量。增加此值通常可提高相似度估算的準確性，但會增加運算成本。預設值為 `1`。
+`bucket_count` | 選用 | 整數 | 要使用的雜湊桶 (bucket) 數量。這會影響雜湊的細緻度。桶的數量越多，細緻度越高，雜湊衝突也越少，但需要更多記憶體。預設值為 `512`。
+`hash_set_size` | 選用 | 整數 | 每個桶中要保留的雜湊值數量。這可能會影響雜湊品質。較大的集合大小可能帶來更好的相似度偵測效果，但會耗用更多記憶體。預設值為 `1`。
+`with_rotation` | 選用 | 布林值 | 設為 `true` 時，若 `hash_set_size` 為 `1`，篩選器會以循環方向往右找到的第一個非空桶的值，填入空的桶。若 `bucket_count` 引數超過 `1`，此設定會自動預設為 `true`；否則預設為 `false`。
 
-## Example
+## 範例
 
-The following example request creates a new index named `minhash_index` and configures an analyzer with a `min_hash` filter:
+下列範例請求會建立名為 `minhash_index` 的新索引，並設定一個使用 `min_hash` 篩選器的分析器：
 
 ```json
 PUT /minhash_index
@@ -53,9 +54,9 @@ PUT /minhash_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢視使用此分析器產生的詞元：
 
 ```json
 POST /minhash_index/_analyze
@@ -66,7 +67,7 @@ POST /minhash_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens (the tokens are not human readable because they represent hashes):
+回應中包含產生的詞元（這些詞元代表雜湊值，因此人類無法直接閱讀）：
 
 ```json
 {
@@ -88,7 +89,7 @@ The response contains the generated tokens (the tokens are not human readable be
     ...
 ```
 
-In order to demonstrate the usefulness of the `min_hash` token filter, you can use the following Python script to compare the two strings using the previously created analyzer:
+為了展示 `min_hash` 詞元篩選器的用處，您可以使用下列 Python 指令碼，透過先前建立的分析器比較這兩個字串：
 
 ```python
 from opensearchpy import OpenSearch
@@ -131,7 +132,7 @@ jaccard_similarity = len(shared_tokens) / len(set_1.union(set_2))
 print(f"Jaccard Similarity: {jaccard_similarity}")
 ```
 
-The response should contain the Jaccard similarity score:
+回應中應包含 Jaccard 相似度分數：
 
 ```yaml
 Jaccard Similarity: 0.8571428571428571

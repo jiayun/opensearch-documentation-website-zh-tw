@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Randomizing queries
+title: "將查詢隨機化"
 nav_order: 65
 has_math: true
 redirect_from:
   - /benchmark/user-guide/optimizing-benchmarks/randomizing-queries/
 ---
 
-# Randomizing queries
+# 將查詢隨機化
 
-By default, OpenSearch Benchmark runs identical queries for multiple benchmark iterations. However, running the same queries repeatedly isn't ideal in every test scenario. For example, simulating real-world caching with many iterations of the same query results in one cache miss followed by many hits. OpenSearch Benchmark lets you randomize queries in a configurable way. 
+預設情況下，OpenSearch Benchmark 會在多次基準測試迭代中執行相同的查詢。然而，反覆執行相同的查詢並非在每種測試情境下都適合。例如，使用多次相同查詢的迭代來模擬實際環境中的快取行為，會造成一次快取未命中，接著多次命中。OpenSearch Benchmark 可讓您以可設定的方式將查詢隨機化。 
 
-For example, changing `"gte"` and `"lt"` in the following `nyc_taxis` operation creates distinct queries, resulting in unique cache entries:
+例如，變更下列 `nyc_taxis` 作業中的 `"gte"` 和 `"lt"` 會建立不同的查詢，產生各自獨立的快取項目：
 
 ```json
 {
@@ -30,23 +31,23 @@ For example, changing `"gte"` and `"lt"` in the following `nyc_taxis` operation 
 }
 ```
 
-You can't completely randomize the values because the cache would not get any hits. To get cache hits, the cache must sometimes encounter the same values. To account for the same values while randomizing, OpenSearch Benchmark generates a number $$N$$ of value pairs for each randomized operation at the beginning of the benchmark. OpenSearch Benchmark stores these values in a saved list where each pair is assigned an index from $$1$$ to $$N$$.
+您無法將值完全隨機化，因為這樣快取就不會有任何命中。若要讓快取命中，快取必須偶爾遇到相同的值。為了在隨機化的同時納入相同的值，OpenSearch Benchmark 會在基準測試開始時，為每個隨機化作業產生 $$N$$ 組值配對。OpenSearch Benchmark 會將這些值儲存在已儲存的清單中，並為每組配對指派從 $$1$$ 到 $$N$$ 的索引。
 
-Every time OpenSearch sends a query, OpenSearch Benchmark decides whether to use a pair of values from this saved list in the query. It does this a configurable fraction of the time, called _repeat frequency_ (`rf`). If OpenSearch has encountered the value pair before, this might cause a cache hit. For example, if `rf` = 0.7, the cache hit ratio could be up to 70%. This ratio could cause a hit, depending on the benchmark's duration and cache size. 
+每次 OpenSearch 傳送查詢時，OpenSearch Benchmark 都會決定是否在查詢中使用這份已儲存清單中的一組值配對。它會依可設定的比例這樣做，此比例稱為 _重複頻率_（`rf`）。如果 OpenSearch 先前遇過該值配對，就可能造成快取命中。例如，如果 `rf` = 0.7，快取命中率最高可達 70%。此比例是否能造成命中，取決於基準測試的持續時間與快取大小。 
 
-OpenSearch Benchmark selects saved value pairs using the Zipf probability distribution, where the probability of selecting pair $$i$$ is proportional to $$1 \over i^\alpha$$. In this formula, $$i$$ represents the index of the saved value pair, and $$\alpha$$ controls how concentrated the distribution is. This distribution reflects usage patterns observed in real caches. Pairs with lower $$i$$ values (closer to $$1$$) are selected more frequently, while pairs with higher $$i$$ values (closer to $$N$$) are selected less often.
+OpenSearch Benchmark 使用 Zipf 機率分布來選取已儲存的值配對，其中選取配對 $$i$$ 的機率與 $$1 \over i^\alpha$$ 成正比。在此公式中，$$i$$ 代表已儲存值配對的索引，而 $$\alpha$$ 控制分布的集中程度。此分布反映了在實際快取中觀察到的使用模式。$$i$$ 值較低（較接近 $$1$$）的配對會更常被選取，而 $$i$$ 值較高（較接近 $$N$$）的配對則較少被選取。
 
-The other $$1 -$$ `rf` fraction of the time, a new random pair of values is generated. Because OpenSearch Benchmark has not encountered these value pairs before, the pairs should miss the cache.
+在其餘 $$1 -$$ `rf` 比例的時間內，會產生一組新的隨機值配對。由於 OpenSearch Benchmark 先前未遇過這些值配對，因此這些配對應該不會命中快取。
 
-## Usage
+## 使用方式
 
-To use this feature in a workload, you must make some changes to `workload.py` and supply some CLI flags when running OpenSearch Benchmark.
+若要在工作負載中使用此功能，您必須對 `workload.py` 做一些變更，並在執行 OpenSearch Benchmark 時提供一些 CLI 旗標。
 
-### Modifying `workload.py`
+### 修改 `workload.py`
 
-Specify how to generate the saved value pairs for each operation by registering a "standard value source" for that operation. This Python function accepts no arguments and returns a dictionary. The keys mirror those in the input query but are randomized. Finally, change the `register()` method so that it registers this function with the operation name and field name, which are randomized.
+為每個作業註冊「標準值來源」，以指定如何產生該作業的已儲存值配對。這個 Python 函式不接受任何引數，並傳回一個字典。其鍵與輸入查詢中的鍵相同，但值會隨機化。最後，變更 `register()` 方法，讓它以要隨機化的作業名稱和欄位名稱註冊此函式。
 
-For example, a standard value source used to randomize the `"total_amount"` field in the preceding `"range"` operation might appear similar to the following function: 
+例如，用於將前述 `"range"` 作業中的 `"total_amount"` 欄位隨機化的標準值來源，可能類似下列函式： 
 
 ```py
 def random_money_values(max_value):
@@ -61,20 +62,20 @@ def range_query_standard_value_source():
     return random_money_values(120.00)
 ```
 
-Similarly, you can randomize the registration behavior using the following function:
+同樣地，您可以使用下列函式將註冊行為隨機化：
 
 ```py
 def register(registry):
     registry.register_standard_value_source("range", "total_amount", range_query_standard_value_source)
 ```
 
-This function may already contain code. Retain it if so. If `workload.py` does not exist or lacks a `register(registry)` function, you can create them. 
+此函式可能已包含程式碼。若有，請保留。如果 `workload.py` 不存在或缺少 `register(registry)` 函式，您可以建立它們。 
 
-#### Randomizing non-range queries
+#### 將非範圍查詢隨機化
 
-By default, OpenSearch Benchmark assumes that the query to be randomized is a `"range"` query with values `"gte"`/`"gt"`, `"lte"`/`"lt"`, and, optionally, `"format"`. If this isn't the case, you can configure it to use a different query type name and different values. 
+預設情況下，OpenSearch Benchmark 假設要隨機化的查詢是 `"range"` 查詢，具有 `"gte"`/`"gt"`、`"lte"`/`"lt"` 值，以及選用的 `"format"`。如果情況並非如此，您可以設定它使用不同的查詢類型名稱和不同的值。 
 
-For example, to randomize the following workload operation: 
+例如，若要將下列工作負載作業隨機化： 
 
 ```json
 {
@@ -95,24 +96,24 @@ For example, to randomize the following workload operation:
 }
 ```
 
-You would register the following function in `workload.py`: 
+您會在 `workload.py` 中註冊下列函式： 
 
 ```py
 registry.register_query_randomization_info("bbox", "geo_bounding_box", [["top_left"], ["bottom_right"]], [])
 ```
 
-The first argument, `"bbox"`, is the operation's name. 
+第一個引數 `"bbox"` 是作業的名稱。 
 
-The second argument, `"geo_bounding_box"`, is the query type name.
+第二個引數 `"geo_bounding_box"` 是查詢類型名稱。
 
-The third argument is a list of lists: `[[“top_left”], [“bottom_right”]]`. The outer list's entries specify parameters for randomization because there might be different versions of the same name that represent roughly the same parameters, for example, `"gte"` or `"gt"`. Here, there's only one option for each parameter name. At least one version of each parameter's name must be present in the original query in order for it to be randomized.
+第三個引數是由多個清單組成的清單：`[[“top_left”], [“bottom_right”]]`。外層清單的項目指定要隨機化的參數，因為同一個名稱可能有不同版本，代表大致相同的參數，例如 `"gte"` 或 `"gt"`。此處每個參數名稱都只有一個選項。每個參數名稱至少必須有一個版本出現在原始查詢中，才能將該參數隨機化。
 
-The last argument is a list of optional parameters. If an optional parameter is present in the random standard value source, OpenSearch Benchmark inserts the parameter into the randomized version of the query. If it's not in the source, it's ignored. There are no optional parameters in the following example, but the typical use case would be `"format"` in a range query.
+最後一個引數是選用參數的清單。如果隨機標準值來源中存在某個選用參數，OpenSearch Benchmark 就會將該參數插入隨機化版本的查詢中。如果來源中沒有該參數，就會忽略它。下列範例沒有選用參數，但典型的使用案例是範圍查詢中的 `"format"`。
 
-If there is no registration, the default registration is used: `registry.register_query_randomization_info(<operation_name>, “range”, [[“gte”, “gt”], [“lte”, “lt”]], [“format”])`.
+如果沒有註冊，就會使用預設註冊：`registry.register_query_randomization_info(<operation_name>, “range”, [[“gte”, “gt”], [“lte”, “lt”]], [“format”])`。
 
 
-The `dict` returned by the standard value source should match the parameter names you are randomizing. For example, the following is the standard value source for the preceding example:
+標準值來源傳回的 `dict` 應與您要隨機化的參數名稱相符。例如，下列是前述範例的標準值來源：
 
 ```py
 def bounding_box_source(): 
@@ -130,14 +131,14 @@ def bounding_box_source():
 
 
 
-### CLI flags
+### CLI 旗標
 
-Use the following CLI flags to customize randomization:
+使用下列 CLI 旗標來自訂隨機化：
 
-- `--randomization-enabled` turns randomization on and off. If randomization is not enabled, none of the randomization flags will be applied.
+- `--randomization-enabled` 可啟用或停用隨機化。如果未啟用隨機化，就不會套用任何隨機化旗標。
 
-- `--randomization-repeat-frequency` or `-rf` sets the fraction of pairs drawn from the saved value pairs generated at the start of the benchmark. The value should be between `0.0` and `1.0`. Default is `0.3`. 
+- `--randomization-repeat-frequency` 或 `-rf` 設定從基準測試開始時產生的已儲存值配對中抽取配對的比例。此值應介於 `0.0` 和 `1.0` 之間。預設值為 `0.3`。 
 
-- `--randomization-n` sets the number `N` of value pairs generated for each operation. Default is `5000`. 
+- `--randomization-n` 設定為每個作業產生的值配對數量 `N`。預設值為 `5000`。 
 
-- `--randomization-alpha` sets the `alpha` parameter, which controls the spread of the `Zipf` distribution. The value should be `>=0`. Lower values increase the spread of the distribution. Default is `1.0`. 
+- `--randomization-alpha` 設定 `alpha` 參數，用來控制 `Zipf` 分布的分散程度。此值應為 `>=0`。較低的值會增加分布的分散程度。預設值為 `1.0`。 

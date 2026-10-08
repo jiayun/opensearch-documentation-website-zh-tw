@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: CAT PIT segments
+title: "CAT PIT 區段"
 parent: CAT APIs
 nav_order: 46
 ---
 
 # CAT Pit Segments API
-**Introduced 2.4**
+**於 2.4 版引入**
 {: .label .label-purple }
 
-The CAT Point in Time (PIT) segments operation provides low-level information about the disk utilization of a PIT by describing its Lucene segments. The PIT Segments API supports listing segment information for a specific PIT by ID or for all PITs at once.
+CAT 時間點（PIT）區段操作透過描述 PIT 的 Lucene 區段，提供該 PIT 磁碟使用情況的底層資訊。PIT Segments API 支援依 ID 列出特定 PIT 的區段資訊，或一次列出所有 PIT 的區段資訊。
 
-## Endpoints
+## 端點
 
 <!-- spec_insert_start
 api: cat.pit_segments
@@ -39,28 +40,28 @@ component: query_parameters
 columns: Parameter, Data type, Description, Default
 include_deprecated: false
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `bytes` | String | The units used to display byte values. <br> Valid values are: `b`, `kb`, `k`, `mb`, `m`, `gb`, `g`, `tb`, `t`, `pb`, and `p`. | N/A |
-| `format` | String | A short version of the `Accept` header, such as `json` or `yaml`. | N/A |
-| `h` | List | A comma-separated list of column names to display. | N/A |
-| `help` | Boolean | Returns help information. | `false` |
-| `s` | List | A comma-separated list of column names or column aliases to sort by. | N/A |
-| `v` | Boolean | Enables verbose mode, which displays column headers. | `false` |
+| `bytes` | 字串 | 用於顯示位元組值的單位。<br> 有效值為：`b`、`kb`、`k`、`mb`、`m`、`gb`、`g`、`tb`、`t`、`pb` 和 `p`。 | N/A |
+| `format` | 字串 | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
+| `h` | 清單 | 要顯示的欄名稱清單，以逗號分隔。 | N/A |
+| `help` | 布林值 | 傳回說明資訊。 | `false` |
+| `s` | 清單 | 用於排序的欄名稱或欄別名清單，以逗號分隔。 | N/A |
+| `v` | 布林值 | 啟用詳細模式，此模式會顯示欄標題。 | `false` |
 
 <!-- spec_insert_end -->
 
-## Request body fields
+## 請求本文欄位
 
-Field | Data type | Description  
+欄位 | 資料類型 | 說明  
 :--- | :--- | :---
-`pit_id` | [Base64-encoded binary]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/binary/) or an array of binaries | The PIT IDs of the PITs whose segments are to be listed. Required.
+`pit_id` | [Base64 編碼的二進位資料]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/binary/) 或二進位資料陣列 | 要列出區段的 PIT 所對應的 PIT ID。必要。
 
-## Example request: PIT segments for all PITs
+## 請求範例：所有 PIT 的 PIT 區段
 
 <!-- spec_insert_start
 component: example_code
@@ -80,11 +81,11 @@ response = client.cat.all_pit_segments()
     python=step1_python %}
 <!-- spec_insert_end -->
 
-If there are no segments (there is no data stored), the API does not return any information.
+如果沒有區段（未儲存任何資料），API 不會傳回任何資訊。
 
-## Example request: PIT segments for PITs by ID
+## 請求範例：依 ID 列出 PIT 的 PIT 區段
 
-To list segments for one or several PITs, specify their PIT IDs in the request body:
+若要列出一個或多個 PIT 的區段，請在請求本文中指定其 PIT ID：
 
 <!-- spec_insert_start
 component: example_code
@@ -126,7 +127,7 @@ response = client.cat.pit_segments(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
 ```json
 index  shard prirep ip            segment generation docs.count docs.deleted  size size.memory committed searchable version compound

@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Catalan
+title: "加泰隆尼亞語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 70
 ---
 
-# Catalan analyzer
+# 加泰隆尼亞語分析器
 
-The built-in `catalan` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `catalan` 分析器套用至文字欄位：
 
 ```json
 PUT /catalan-index
@@ -25,9 +26,9 @@ PUT /catalan-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，搭配此語言分析器使用 `stem_exclusion`：
 
 ```json
 PUT index_with_stem_exclusion_catalan_analyzer
@@ -46,22 +47,22 @@ PUT index_with_stem_exclusion_catalan_analyzer
 ```
 {% include copy-curl.html %}
 
-## Catalan analyzer internals
+## 加泰隆尼亞語分析器內部結構
 
-The `catalan` analyzer is built using the following components:
+`catalan` 分析器由下列元件建構而成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
-  - elision (Catalan)
+- 詞元篩選器：
+  - elision（加泰隆尼亞語）
   - lowercase
-  - stop (Catalan)
+  - stop（加泰隆尼亞語）
   - keyword
-  - stemmer (Catalan)
+  - stemmer（加泰隆尼亞語）
 
-## Custom Catalan analyzer
+## 自訂加泰隆尼亞語分析器
 
-You can create a custom Catalan analyzer using the following command:
+您可以使用下列命令建立自訂的加泰隆尼亞語分析器：
 
 ```json
 PUT /catalan-index
@@ -114,9 +115,9 @@ PUT /catalan-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器所產生的詞元：
 
 ```json
 POST /catalan-index/_analyze
@@ -127,7 +128,7 @@ POST /catalan-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

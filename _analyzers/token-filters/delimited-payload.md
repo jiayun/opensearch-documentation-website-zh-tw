@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delimited payload
+title: "分隔酬載"
 parent: Token filters
 nav_order: 90
 ---
 
-# Delimited payload token filter
+# 分隔酬載詞元篩選器
 
-The `delimited_payload` token filter is used to parse tokens containing payloads during the analysis process. For example, the string `red|1.5 fast|2.0 car|1.0` is parsed into the tokens `red` (with a payload of `1.5`), `fast` (with a payload of `2.0`), and `car` (with a payload of `1.0`). This is particularly useful when your tokens include additional associated data (like weights, scores, or other numeric values) that you can use for scoring or custom query logic. The filter can handle different types of payloads, including integers, floats, and strings, and attach payloads (extra metadata) to tokens.
+`delimited_payload` 詞元篩選器用於在分析過程中剖析包含酬載 (payload) 的詞元。例如，字串 `red|1.5 fast|2.0 car|1.0` 會被剖析為詞元 `red`（酬載為 `1.5`）、`fast`（酬載為 `2.0`）以及 `car`（酬載為 `1.0`）。當您的詞元包含額外的關聯資料（例如權重、分數或其他數值），且您可以將這些資料用於評分或自訂查詢邏輯時，此篩選器特別實用。此篩選器可以處理不同類型的酬載，包括整數、浮點數和字串，並將酬載（額外的中繼資料）附加至詞元。
 
-When analyzing text, the `delimited_payload` token filter parses each token, extracts the payload, and attaches it to the token. This payload can later be used in queries to influence scoring, boosting, or other custom behaviors.
+分析文字時，`delimited_payload` 詞元篩選器會剖析每個詞元、擷取酬載，並將其附加至詞元。之後可在查詢中使用此酬載來影響評分、提升權重 (boosting) 或其他自訂行為。
 
-Payloads are stored as Base64-encoded strings. By default, payloads are not returned in the query response along with the tokens. To return the payloads, you must configure additional parameters. For more information, see [Example with a stored payload]({{site.url}}{{site.baseurl}}/analyzers/token-filters/delimited-payload/#example-without-a-stored-payload).
+酬載會以 Base64 編碼字串的形式儲存。根據預設，查詢回應中不會隨詞元一起傳回酬載。若要傳回酬載，您必須設定其他參數。如需詳細資訊，請參閱[儲存酬載的範例]({{site.url}}{{site.baseurl}}/analyzers/token-filters/delimited-payload/#example-without-a-stored-payload)。
 
-## Parameters
+## 參數
 
-The `delimited_payload` token filter has two parameters.
+`delimited_payload` 詞元篩選器有兩個參數。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`encoding` | Optional | String | Specifies the data type of the payload attached to the tokens. This determines how the payload data is interpreted during analysis and querying.<br>Valid values are:<br><br>- `float`: The payload is interpreted as a 32-bit floating-point number using IEEE 754 format (for example, `2.5` in `car|2.5`).<br>- `identity`: The payload is interpreted as a sequence of characters (for example, in `user|admin`, `admin` is interpreted as a string).<br>- `int`: The payload is interpreted as a 32-bit integer (for example, `1` in `priority|1`).<br> Default is `float`.
-`delimiter` | Optional | String | Specifies the character that separates the token from its payload in the input text. Default is the pipe character (`|`).
+`encoding` | 選用 | 字串 | 指定附加至詞元之酬載的資料類型。這會決定在分析和查詢期間如何解讀酬載資料。<br>有效值為：<br><br>- `float`：酬載會以 IEEE 754 格式解讀為 32 位元浮點數（例如 `car|2.5` 中的 `2.5`）。<br>- `identity`：酬載會解讀為字元序列（例如在 `user|admin` 中，`admin` 會解讀為字串）。<br>- `int`：酬載會解讀為 32 位元整數（例如 `priority|1` 中的 `1`）。<br> 預設為 `float`。
+`delimiter` | 選用 | 字串 | 指定在輸入文字中分隔詞元與其酬載的字元。預設為管道字元（`|`）。
 
-## Example without a stored payload
+## 未儲存酬載的範例
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `delimited_payload` filter:
+下列範例請求會建立名為 `my_index` 的新索引，並設定使用 `delimited_payload` 篩選器的分析器：
 
 ```json
 PUT /my_index
@@ -51,9 +52,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -64,7 +65,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {
@@ -94,9 +95,9 @@ The response contains the generated tokens:
 }
 ```
 
-## Example with a stored payload
+## 儲存酬載的範例
 
-To configure the payload to be returned in the response, create an index that stores term vectors and set `term_vector` to `with_positions_payloads` or `with_positions_offsets_payloads` in the index mappings. For example, the following index is configured to store term vectors:
+若要設定在回應中傳回酬載，請建立會儲存詞項向量 (term vector) 的索引，並在索引對應中將 `term_vector` 設為 `with_positions_payloads` 或 `with_positions_offsets_payloads`。例如，下列索引已設定為儲存詞項向量：
 
 ```json
 PUT /visible_payloads
@@ -131,7 +132,7 @@ PUT /visible_payloads
 ```
 {% include copy-curl.html %}
 
-You can index a document into this index using the following request:
+您可以使用下列請求將文件編製索引至此索引：
 
 ```json
 PUT /visible_payloads/_doc/1
@@ -141,9 +142,9 @@ PUT /visible_payloads/_doc/1
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器產生的詞元：
 
 ```json
 GET /visible_payloads/_termvectors/1
@@ -153,7 +154,7 @@ GET /visible_payloads/_termvectors/1
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens, which include payloads:
+回應中包含產生的詞元，其中含有酬載：
 
 ```json
 {

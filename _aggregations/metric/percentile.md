@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Percentile
 parent: Metric aggregations
@@ -7,33 +8,33 @@ redirect_from:
   - /query-dsl/aggregations/metric/percentile/
 ---
 
-# Percentile aggregation
+# Percentile 彙總
 
-The `percentiles` aggregation estimates the value at a given percentile of a numeric field. This is useful for understanding distribution boundaries.
+`percentiles` 彙總用於估計數值欄位在給定百分位數的值。這對於理解分佈邊界非常有用。
 
-For example, a 95th percentile of `load_time` = `120ms` means that 95% of values are less than or equal to 120 ms.
+例如，`load_time` = `120ms` 的第 95 個百分位數意味著 95% 的值小於或等於 120 ms。
 
-Similarly to the [`cardinality`]({{site.url}}{{site.baseurl}}/aggregations/metric/cardinality/) metric, the `percentile` metric is approximate.
+與 [`cardinality`]({{site.url}}{{site.baseurl}}/aggregations/metric/cardinality/) 指標類似，`percentile` 指標是近似值。
 
-## Parameters
+## 參數
 
-The `percentiles` aggregation takes the following parameters.
+`percentiles` 彙總使用以下參數。
 
-| Parameter                                | Data type        | Required/Optional | Description                                                                                                                 |
+| 參數                                | 資料類型        | 必要/選用 | 說明                                                                                                                 |
 | ---------------------------------------- | ---------------- | -------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `field`                                  | String           | Required      | The numeric field used to compute percentiles.                                                                                    |
-| `percents`                               | Array of doubles | Optional       | The list of percentiles returned in the response. Default is `[1, 5, 25, 50, 75, 95, 99]`.                                                 |
-| `keyed`                                  | Boolean          | Optional       | If set to `false`, returns results as an array. Otherwise, returns results as a JSON object. Default is `true`. |
-| `tdigest.compression`                    | Double           | Optional       | Controls accuracy and memory usage of the `tdigest` algorithm. See [Precision tuning with `tdigest`](#precision-tuning-with-tdigest).                                      |
-| `hdr.number_of_significant_value_digits` | Integer          | Optional       | The precision setting for the HDR histogram. See [HDR histogram](#hdr-histogram).                                   |
-| `missing`                                | Number           | Optional       | The default value used when the target field is missing in a document.                                                                              |
-| `script`                                 | Object           | Optional       | The script used to compute custom values instead of using a field. Supports inline and stored scripts.                                |
+| `field`                                  | 字串           | 必要      | 用於計算百分位數的數值欄位。                                                                                    |
+| `percents`                               | Double 陣列 | 選用       | 回應中回傳的百分位數清單。預設為 `[1, 5, 25, 50, 75, 95, 99]`。                                                 |
+| `keyed`                                  | 布林值          | 選用       | 如果設定為 `false`，則將結果以陣列形式回傳。否則，將結果以 JSON 物件形式回傳。預設為 `true`。 |
+| `tdigest.compression`                    | Double           | 選用       | 控制 `tdigest` 演算法的準確度和記憶體使用量。請參閱 [使用 `tdigest` 調整精確度](#precision-tuning-with-tdigest)。                                      |
+| `hdr.number_of_significant_value_digits` | 整數          | 選用       | HDR 直方圖的精確度設定。請參閱 [HDR 直方圖](#hdr-histogram)。                                   |
+| `missing`                                | 數字           | 選用       | 當文件中缺少目標欄位時使用的預設值。                                                                              |
+| `script`                                 | 物件           | 選用       | 用於計算自訂值而非使用欄位的指令碼。支援內嵌指令碼和儲存指令碼。                                |
 
-## Example
+## 範例
 
 
 
-First, create an index:
+首先，建立一個索引：
 
 ```json
 PUT /latency_data
@@ -49,7 +50,7 @@ PUT /latency_data
 ```
 {% include copy-curl.html %}
 
-Add sample numeric values to illustrate percentile calculations:
+新增範例數值以說明百分位數計算：
 
 ```json
 POST /latency_data/_bulk
@@ -71,9 +72,9 @@ POST /latency_data/_bulk
 
 {% include copy-curl.html %}
 
-### Percentiles aggregation
+### Percentiles 彙總
 
-The following example calculates the default set of percentiles for the `load_time` field:
+以下範例計算 `load_time` 欄位的預設百分位數集：
 
 ```json
 GET /latency_data/_search
@@ -90,7 +91,7 @@ GET /latency_data/_search
 ```
 {% include copy-curl.html %}
 
-By default, the 1st, 5th, 25th, 50th, 75th, 95th, and 99th percentiles are returned:
+預設情況下，會回傳第 1、5、25、50、75、95 和 99 個百分位數：
 
 ```json
 {
@@ -111,9 +112,9 @@ By default, the 1st, 5th, 25th, 50th, 75th, 95th, and 99th percentiles are retur
 }
 ```
 
-## Custom percentiles
+## 自訂百分位數
 
-You can specify the exact percentiles using the `percents` array:
+您可以使用 `percents` 陣列指定確切的百分位數：
 
 ```json
 GET /latency_data/_search
@@ -131,7 +132,7 @@ GET /latency_data/_search
 ```
 {% include copy-curl.html %}
 
-The response includes only the three requested percentile aggregations:
+回應僅包含三個請求的百分位數彙總：
 
 ```json
 {
@@ -148,9 +149,9 @@ The response includes only the three requested percentile aggregations:
 }
 ```
 
-### Keyed response
+### 鍵值回應
 
-You can change the format of the returned aggregation from a JSON object to a list of key-value pairs by setting the `keyed` parameter to `false`:
+您可以透過將 `keyed` 參數設定為 `false`，將回傳彙總的格式從 JSON 物件更改為鍵值對清單：
 
 ```json
 GET /latency_data/_search
@@ -168,7 +169,7 @@ GET /latency_data/_search
 ```
 {% include copy-curl.html %}
 
-The response provides percentiles as an array of values:
+回應將百分位數以值陣列的形式提供：
 
 ```json
 {
@@ -212,30 +213,30 @@ The response provides percentiles as an array of values:
 
 <!-- vale off -->
 
-### Precision tuning with tdigest
+### 使用 tdigest 調整精確度
 
 <!-- vale on -->
 
-The `tdigest` algorithm is the default method used to calculate percentiles. It provides a memory-efficient way to estimate percentile ranks, especially when working with floating-point data such as response times or latencies.
+`tdigest` 演算法是計算百分位數的預設方法。它提供了一種記憶體效率高的方式來估計百分位數排名，特別是在處理回應時間或延遲等浮點數資料時。
 
-Unlike exact percentile calculations, `tdigest` uses a probabilistic approach that groups values into _centroids_---small clusters that summarize the distribution. This method enables accurate estimates for most percentiles without needing to store all the raw data in memory.
+與精確的百分位數計算不同，`tdigest` 使用機率方法將值分組為 _centroids_（質心）——即總結分佈的小型叢集。這種方法能夠在不需要將所有原始資料儲存在記憶體中的情況下，對大多數百分位數提供準確的估計。
 
-The algorithm is designed to be highly accurate near the tails of the distribution---the low percentiles (such as 1st) and high percentiles (such as 99th)---which are often the most important for performance analysis. You can control the precision of the results using the `compression` parameter.
+該演算法的設計旨在使分佈的尾端——低百分位數（例如第 1 個）和高百分位數（例如第 99 個）——具有高度準確性，這對於效能分析通常是最重要的。您可以使用 `compression` 參數控制結果的精確度。
 
-A higher `compression` value means that more centroids are used, which increases accuracy (especially in the tails) but requires more memory and CPU. A lower `compression` value reduces memory usage and speeds up execution, but the results may be less accurate.
+較高的 `compression` 值意味著使用更多的質心，這會增加準確度（尤其是在尾端），但需要更多的記憶體和 CPU。較低的 `compression` 值會減少記憶體使用量並加快執行速度，但結果的準確度可能會降低。
 
 
-Use `tdigest` when:
+在以下情況下使用 `tdigest`：
 
-* Your data includes floating-point values, such as response times, latency, or duration.
-* You need accurate results in the extreme percentiles, for example, the 1st or 99th.
+* 您的資料包含浮點數值，例如回應時間、延遲或持續時間。
+* 您需要在極端百分位數（例如第 1 或第 99 個）獲得準確的結果。
 
-Avoid `tdigest` when:
+在以下情況下避免使用 `tdigest`：
 
-* You are working only with integer data and want maximum speed.
-* You care less about accuracy in the distribution tails and prefer faster aggregation (consider using [`hdr`](#hdr-histogram) instead).
+* 您僅處理整數資料且希望獲得最高速度。
+* 您較不在意分佈尾端的準確度，而更偏好更快的彙總（請考慮改用 [`hdr`](#hdr-histogram)）。
 
- The following example sets `tdigest.compression` to `200`:
+ 以下範例將 `tdigest.compression` 設定為 `200`：
 
 ```json
 GET /latency_data/_search
@@ -255,38 +256,38 @@ GET /latency_data/_search
 ```
 {% include copy-curl.html %}
 
-### HDR histogram
+### HDR 直方圖
 
-The High Dynamic Range (HDR) histogram is an alternative to [`tdigest`](#precision-tuning-with-tdigest) for calculating percentiles. It is especially useful when dealing with large datasets and latency measurements. It is designed for speed and supports a wide dynamic range of values while maintaining a fixed, configurable level of precision.
+高動態範圍 (HDR) 直方圖是計算百分位數的另一種選擇，可用於替代 [`tdigest`](#precision-tuning-with-tdigest)。它在處理大型資料集和延遲測量時特別有用。它旨在提高速度，並在維持固定且可設定的精確度水準的同時，支援寬廣的數值動態範圍。
 
-Unlike [`tdigest`](#precision-tuning-with-tdigest), which offers more accuracy in the tails of a distribution (extreme percentiles), HDR prioritizes speed and uniform accuracy across the range. It works best when the number of buckets is large and extreme precision in rare values is not required.
+與 [`tdigest`](#precision-tuning-with-tdigest) 不同（後者在分佈的尾端即極端百分位數提供更高的準確度），HDR 優先考慮速度以及在整個範圍內的統一準確度。當桶 (bucket) 數量較多且不需要對罕見值進行極端精確計算時，其效果最佳。
 
-For example, if you're measuring response times ranging from 1 microsecond to 1 hour and configure HDR with 3 significant digits, it will record values with a precision of ±1 microsecond for values up to 1 millisecond and ±3.6 seconds for values near 1 hour.
+例如，如果您測量從 1 微秒到 1 小時的回應時間，並將 HDR 設定為 3 位有效數字，則對於最高 1 毫秒的值，其記錄精確度為 ±1 微秒；對於接近 1 小時的值，精確度為 ±3.6 秒。
 
-This trade-off makes HDR much faster and more memory-intensive than [`tdigest`](#precision-tuning-with-tdigest).
+這種權衡使得 HDR 比 [`tdigest`](#precision-tuning-with-tdigest) 快得多，且更消耗記憶體。
 
-The following table presents the breakdown of HDR significant digits.
+下表顯示了 HDR 有效數字的細分。
 
-| Significant digits | Relative precision (max error) |
+| 有效數字 | 相對精確度 (最大誤差) |
 | ------------------ | ------------------------------ |
-| 1                  | 1 part in 10       = 10%       |
-| 2                  | 1 part in 100      = 1%        |
-| 3                  | 1 part in 1,000    = 0.1%      |
-| 4                  | 1 part in 10,000   = 0.01%     |
-| 5                  | 1 part in 100,000  = 0.001%    |
+| 1                  | 10 分之 1       = 10%       |
+| 2                  | 100 分之 1      = 1%        |
+| 3                  | 1,000 分之 1    = 0.1%      |
+| 4                  | 10,000 分之 1   = 0.01%     |
+| 5                  | 100,000 分之 1  = 0.001%    |
 
-You should use HDR if you:
+如果您符合以下條件，應使用 HDR：
 
-* Are aggregating across many buckets.
-* Don't require extreme precision in the tail percentiles.
-* Have sufficient memory available.
+* 正在對許多桶進行彙總。
+* 不需要尾端百分位數的極端精確度。
+* 有足夠的可用記憶體。
 
-You should avoid HDR if:
+如果您符合以下條件，應避免使用 HDR：
 
-* Tail accuracy is important.
-* You are analyzing skewed or sparse data distributions.
+* 尾端準確度很重要。
+* 您正在分析偏斜或稀疏的資料分佈。
 
-The following example is configured with `hdr.number_of_significant_value_digits` set to `3`:
+以下範例將 `hdr.number_of_significant_value_digits` 設定為 `3`：
 
 ```json
 GET /latency_data/_search
@@ -306,9 +307,9 @@ GET /latency_data/_search
 ```
 {% include copy-curl.html %}
 
-### Missing values
+### 缺失值
 
-Use the `missing` setting to configure a fallback value for documents that do not contain the target field:
+使用 `missing` 設定來為不包含目標欄位的文件設定後備值：
 
 ```json
 GET /latency_data/_search
@@ -326,13 +327,13 @@ GET /latency_data/_search
 ```
 {% include copy-curl.html %}
 
-## Script
+## 指令碼
 
-Instead of specifying a field, you can dynamically compute the value using a script. This is useful when you need to apply transformations, such as converting currencies or applying weights. 
+您可以透過指令碼動態計算值，而不是指定欄位。當您需要套用轉換（例如轉換貨幣或套用權重）時，這非常有用。
 
-### Inline script
+### 內嵌指令碼
 
-Use a script to compute derived values:
+使用指令碼來計算衍生值：
 
 ```json
 GET /latency_data/_search
@@ -352,10 +353,10 @@ GET /latency_data/_search
 ```
 {% include copy-curl.html %}
 
-### Stored script
+### 儲存指令碼
 
 
-First, create a sample script using the following request:
+首先，使用以下請求建立一個範例指令碼：
 
 ```json
 POST _scripts/load_script
@@ -369,7 +370,7 @@ POST _scripts/load_script
 {% include copy-curl.html %}
 {% include copy-curl.html %}
 
-Then use the stored script in the `percentiles` aggregation, providing the `params` required by the stored script:
+然後在 `percentiles` 彙總中使用該儲存指令碼，並提供儲存指令碼所需的 `params`：
 
 ```json
 GET /latency_data/_search

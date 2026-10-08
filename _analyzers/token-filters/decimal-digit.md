@@ -1,18 +1,19 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Decimal digit
+title: "十進位數字"
 parent: Token filters
 nav_order: 80
 ---
 
-# Decimal digit token filter
+# 十進位數字詞元篩選器
 
-The `decimal_digit` token filter is used to normalize decimal digit characters (0--9) into their ASCII equivalents in various scripts. This is useful when you want to ensure that all digits are treated uniformly in text analysis, regardless of the script in which they are written.
+`decimal_digit` 詞元篩選器用於將各種文字系統中的十進位數字字元 (0--9) 正規化為對應的 ASCII 字元。若您希望在文字分析中統一處理所有數字，而不論其以何種文字系統書寫，此篩選器便十分實用。
 
 
-## Example
+## 範例
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `decimal_digit` filter:
+下列範例請求會建立名為 `my_index` 的新索引，並設定一個使用 `decimal_digit` 篩選器的分析器：
 
 ```json
 PUT /my_index
@@ -38,9 +39,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用此分析器所產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -51,13 +52,13 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-`text` breakdown:
+`text` 細分說明：
 
- - "123" (ASCII digits)
- - "١٢٣" (Arabic-Indic digits)
- - "१२३" (Devanagari digits)
+ - 「123」(ASCII 數字)
+ - 「١٢٣」(阿拉伯-印度數字)
+ - 「१२३」(天城文數字)
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

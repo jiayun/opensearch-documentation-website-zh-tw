@@ -1,59 +1,60 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Agent skills
+title: "代理程式技能"
 nav_order: 20
 ---
 
-# Agent skills
+# 代理程式技能
 
-Building applications using OpenSearch typically involves multiple steps: starting a cluster, designing an index mapping, choosing a search strategy, ingesting data, writing queries, and evaluating results. Without guidance, an AI assistant must infer each step independently, which can lead to inconsistent results and repeated requests for clarification.
+使用 OpenSearch 建置應用程式通常包含多個步驟：啟動叢集、設計索引對應、選擇搜尋策略、匯入資料、撰寫查詢，以及評估結果。若缺乏引導，AI 助理必須自行推斷每個步驟，可能導致結果不一致，且需要反覆請求釐清。
 
-[OpenSearch agent skills](https://github.com/opensearch-project/opensearch-agent-skills) are packaged workflows that teach AI coding assistants how to work with OpenSearch. Each skill bundles instructions, reference material, and executable scripts. You can ask a natural-language question (for example, *"build a semantic search app with OpenSearch"*) and receive working code, configured indexes, and runnable tests.
+[OpenSearch 代理程式技能](https://github.com/opensearch-project/opensearch-agent-skills)是封裝好的工作流程，可教導 AI 程式設計助理如何使用 OpenSearch。每項技能都包含指示、參考資料與可執行的指令碼。您可以用自然語言提問（例如 *「使用 OpenSearch 建置語意搜尋應用程式」*），即可取得可運作的程式碼、已設定的索引，以及可執行的測試。
 
-Skills follow the [Agent Skills specification](https://agentskills.io/specification) and work with any compatible client, including Claude Code, Cursor, and Kiro.
+技能遵循 [Agent Skills 規格](https://agentskills.io/specification)，可搭配任何相容的用戶端使用，包括 Claude Code、Cursor 與 Kiro。
 
-Agent skills have the following characteristics:
+代理程式技能具有下列特性：
 
-- Skills provide structured workflows that include embedding model selection, search pipeline configuration, and testing procedures.
-- Each skill follows a consistent implementation pattern, producing the same index mappings, search pipeline processors, and query templates.
-- Skills run inside the AI client. The assistant reads the skill instructions and executes bundled scripts on your local machine.
-- Skills can be used alongside the [OpenSearch MCP Server]({{site.url}}{{site.baseurl}}/ai-agent-integrations/mcp-server/). When both are configured, the assistant can follow the skill workflow and make direct API calls to inspect cluster state or verify configurations.
-- Skills are Markdown files that can be modified or extended for custom workflows.
+- 技能提供結構化的工作流程，涵蓋嵌入模型選擇、搜尋管線組態與測試程序。
+- 每項技能都遵循一致的實作模式，產生相同的索引對應、搜尋管線處理器與查詢範本。
+- 技能在 AI 用戶端內執行。助理會讀取技能指示，並在您的本機上執行隨附的指令碼。
+- 技能可與 [OpenSearch MCP Server]({{site.url}}{{site.baseurl}}/ai-agent-integrations/mcp-server/) 搭配使用。兩者皆已設定時，助理可以遵循技能工作流程，並直接呼叫 API 來檢查叢集狀態或驗證組態。
+- 技能是 Markdown 檔案，可依自訂工作流程進行修改或擴充。
 
-## Available skills
+## 可用的技能
 
-The following table lists the available skills.
+下表列出可用的技能。
 
-| Category | Skill | Function |
+| 類別 | 技能 | 功能 |
 |----------|-------|--------------|
-| Search | [`opensearch-launchpad`](https://github.com/opensearch-project/opensearch-agent-skills/tree/main/skills/opensearch-skills/search/opensearch-launchpad) | Builds search applications, such as BM25, semantic, hybrid, and agentic search. |
-| Observability | [`log-analytics`](https://github.com/opensearch-project/opensearch-agent-skills/tree/main/skills/opensearch-skills/observability/log-analytics) | Uses PPL to query and analyze logs, identify error patterns, and detect anomalies. |
-| Observability | [`trace-analytics`](https://github.com/opensearch-project/opensearch-agent-skills/tree/main/skills/opensearch-skills/observability/trace-analytics) | Investigates distributed traces, including slow spans, service maps, and agent invocations. |
-| Cloud | [`aws-setup`](https://github.com/opensearch-project/opensearch-agent-skills/tree/main/skills/opensearch-skills/cloud/aws-setup) | Deploys OpenSearch to Amazon OpenSearch Service or Amazon OpenSearch Serverless. |
+| 搜尋 | [`opensearch-launchpad`](https://github.com/opensearch-project/opensearch-agent-skills/tree/main/skills/opensearch-skills/search/opensearch-launchpad) | 建置搜尋應用程式，例如 BM25、語意、混合與代理式搜尋。 |
+| 可觀測性 | [`log-analytics`](https://github.com/opensearch-project/opensearch-agent-skills/tree/main/skills/opensearch-skills/observability/log-analytics) | 使用 PPL 查詢與分析記錄檔、識別錯誤模式並偵測異常。 |
+| 可觀測性 | [`trace-analytics`](https://github.com/opensearch-project/opensearch-agent-skills/tree/main/skills/opensearch-skills/observability/trace-analytics) | 調查分散式追蹤，包括緩慢的 span、服務對應圖與代理程式呼叫。 |
+| 雲端 | [`aws-setup`](https://github.com/opensearch-project/opensearch-agent-skills/tree/main/skills/opensearch-skills/cloud/aws-setup) | 將 OpenSearch 部署至 Amazon OpenSearch Service 或 Amazon OpenSearch Serverless。 |
 
-For a complete skill list, see the [skills repository](https://github.com/opensearch-project/opensearch-agent-skills).
+如需完整的技能清單，請參閱[技能儲存庫](https://github.com/opensearch-project/opensearch-agent-skills)。
 
-## Prerequisites
+## 先決條件
 
-Before using agent skills, ensure that you have the following components:
+使用代理程式技能之前，請確認您具備下列元件：
 
-- Python 3.11 or later.
-- [`uv`](https://docs.astral.sh/uv/getting-started/installation/).
-- Docker installed and running locally. Skills use Docker to launch OpenSearch for local experimentation.
-- AWS credentials, if you plan to use `aws-setup` to deploy OpenSearch to Amazon OpenSearch Service or Amazon OpenSearch Serverless.
+- Python 3.11 或更新版本。
+- [`uv`](https://docs.astral.sh/uv/getting-started/installation/)。
+- 已在本機安裝並執行 Docker。技能會使用 Docker 啟動 OpenSearch 以進行本機實驗。
+- AWS 認證資料，如果您打算使用 `aws-setup` 將 OpenSearch 部署至 Amazon OpenSearch Service 或 Amazon OpenSearch Serverless。
 
-## Installing skills
+## 安裝技能
 
-Use the [`npx skills`](https://agentskills.io) command to install skills. 
+使用 [`npx skills`](https://agentskills.io) 命令安裝技能。 
 
-To install all skills, run the following command:
+若要安裝所有技能，請執行下列命令：
 
 ```bash
 npx skills add opensearch-project/opensearch-agent-skills
 ```
 {% include copy.html %}
 
-To install a single skill, run the following command:
+若要安裝單一技能，請執行下列命令：
 
 ```bash
 npx skills add opensearch-project/opensearch-agent-skills@opensearch-launchpad --full-depth
@@ -63,76 +64,76 @@ npx skills add opensearch-project/opensearch-agent-skills@aws-setup --full-depth
 ```
 {% include copy.html %}
 
-### Installation options
+### 安裝選項
 
-The following table lists the available installation options.
+下表列出可用的安裝選項。
 
-| Option | Description | Example |
+| 選項 | 說明 | 範例 |
 | :--- | :--- | :--- |
-| `-a <agent>` | Installs skills for a specific agent. For a list of supported agents, see [agentskills.io](https://agentskills.io/). | `npx skills add opensearch-project/opensearch-agent-skills -a claude-code` |
-| `-g` | Installs skills globally so they are available for every project. | `npx skills add opensearch-project/opensearch-agent-skills -g` |
-| `--all` | Installs skills for every detected agent. | `npx skills add opensearch-project/opensearch-agent-skills --all` |
-| `--list` | Lists the available skills before installing. | `npx skills add opensearch-project/opensearch-agent-skills --list` |
+| `-a <agent>` | 為特定代理程式安裝技能。如需支援的代理程式清單，請參閱 [agentskills.io](https://agentskills.io/)。 | `npx skills add opensearch-project/opensearch-agent-skills -a claude-code` |
+| `-g` | 全域安裝技能，讓每個專案都能使用。 | `npx skills add opensearch-project/opensearch-agent-skills -g` |
+| `--all` | 為偵測到的每個代理程式安裝技能。 | `npx skills add opensearch-project/opensearch-agent-skills --all` |
+| `--list` | 在安裝前列出可用的技能。 | `npx skills add opensearch-project/opensearch-agent-skills --list` |
 
-## Using a skill
+## 使用技能
 
-After installing a skill, start a conversation with your AI assistant and describe your request. The assistant loads the skill's `SKILL.md` instructions and follows them. An MCP server is not required; the skill runs entirely inside the client.
+安裝技能後，請與您的 AI 助理開始對話並描述您的需求。助理會載入技能的 `SKILL.md` 指示並加以遵循。不需要 MCP 伺服器；技能完全在用戶端內執行。
 
-### Example: Building a semantic search application
+### 範例：建置語意搜尋應用程式
 
-The following walkthrough demonstrates a session using the `opensearch-launchpad` skill.
+下列逐步說明示範使用 `opensearch-launchpad` 技能的工作階段。
 
-**User**: I want to build a semantic search app with OpenSearch.
+**使用者**：我想使用 OpenSearch 建置語意搜尋應用程式。
 
-**Assistant**: I'll help you build a semantic search application. Let me start by checking if you have a running OpenSearch cluster.
+**助理**：我來協助您建置語意搜尋應用程式。首先，我會檢查您是否有正在執行的 OpenSearch 叢集。
 
 ```bash
 uv run python scripts/opensearch_ops.py preflight-check
 ```
 
-No cluster found. Starting one with Docker:
+找不到叢集。正在使用 Docker 啟動叢集：
 
 ```bash
 bash scripts/start_opensearch.sh
 ```
 
-OpenSearch is running at `http://localhost:9200`. What data do you want to search? You can provide a CSV, JSON, or PDF file, or I can load a sample dataset.
+OpenSearch 正在 `http://localhost:9200` 上執行。您想要搜尋哪些資料？您可以提供 CSV、JSON 或 PDF 檔案，或由我載入範例資料集。
 
 ---
 
-**User**: Use the sample e-commerce dataset.
+**使用者**：使用電子商務範例資料集。
 
-**Assistant**: Loading the sample dataset:
+**助理**：正在載入範例資料集：
 
 ```bash
 uv run python scripts/opensearch_ops.py load-sample --dataset ecommerce
 ```
 
-Loaded 4,675 documents into the `ecommerce` index. Now, which search strategy would you like?
+已將 4,675 份文件載入 `ecommerce` 索引。現在，您想使用哪一種搜尋策略？
 
-1. BM25 — keyword search, fast, no ML required
-2. Dense vector — semantic search using text embeddings
-3. Neural sparse — semantic search using learned sparse representations
-4. Hybrid — combines keyword and semantic scoring
-5. Agentic — LLM-driven multi-step retrieval (requires OpenSearch 3.2+)
-
----
-
-**User**: Hybrid search.
-
-**Assistant**: Good choice for e-commerce---hybrid search balances exact keyword matches (product names, SKUs) with semantic understanding (intent, synonyms). Here's the plan:
-
-- Embedding model: `amazon/titan-embed-text-v1` (using ML Commons)
-- Index: `ecommerce-hybrid` with both `text` and `embedding` fields
-- Search pipeline: normalization processor combining BM25 and k-NN scores
-
-Shall I proceed?
+1. BM25 — 關鍵字搜尋，速度快，不需要機器學習
+2. 密集向量 — 使用文字嵌入的語意搜尋
+3. 神經稀疏 — 使用學習式稀疏表示法的語意搜尋
+4. 混合 — 結合關鍵字與語意評分
+5. 代理式 — 由 LLM 驅動的多步驟檢索（需要 OpenSearch 3.2 以上版本）
 
 ---
 
-**User**: Yes.
+**使用者**：混合搜尋。
 
-**Assistant**: Setting up the hybrid search pipeline:
+**助理**：這很適合電子商務---混合搜尋能在精確的關鍵字比對（產品名稱、SKU）與語意理解（意圖、同義詞）之間取得平衡。計畫如下：
+
+- 嵌入模型：`amazon/titan-embed-text-v1`（使用 ML Commons）
+- 索引：`ecommerce-hybrid`，同時包含 `text` 與 `embedding` 欄位
+- 搜尋管線：結合 BM25 與 k-NN 分數的正規化處理器
+
+要繼續進行嗎？
+
+---
+
+**使用者**：是的。
+
+**助理**：正在設定混合搜尋管線：
 
 ```bash
 uv run python scripts/opensearch_ops.py setup-index \
@@ -141,28 +142,28 @@ uv run python scripts/opensearch_ops.py setup-index \
   --source-index ecommerce
 ```
 
-Done. Launching the Search Builder UI:
+完成。正在啟動 Search Builder UI：
 
 ```bash
 uv run python scripts/opensearch_ops.py launch-ui --index ecommerce-hybrid
 ```
 
-Your search app is live at `http://127.0.0.1:8765`. Try a query like *"comfortable running shoes under $100"* to see hybrid scoring in action.
+您的搜尋應用程式已在 `http://127.0.0.1:8765` 上線。試試看 *「100 美元以下的舒適跑鞋」* 這類查詢，即可看到混合評分的實際效果。
 
 ---
 
-### Other skill examples
+### 其他技能範例
 
-The following examples demonstrate other available skills:
+下列範例示範其他可用的技能：
 
-- Log analytics: *"Find the top 5 error patterns in my logs over the last 24 hours."* The `log-analytics` skill generates PPL queries, runs them against your logs index, and summarizes the patterns.
-- Trace analytics: *"Show me the slowest spans for the checkout service."* The `trace-analytics` skill queries the traces index for high-latency spans and renders a service map summary.
+- 記錄分析：*「找出過去 24 小時內我的記錄檔中前 5 名的錯誤模式。」* `log-analytics` 技能會產生 PPL 查詢、對您的記錄檔索引執行這些查詢，並摘要說明這些模式。
+- 追蹤分析：*「顯示結帳服務中最慢的 span。」* `trace-analytics` 技能會在追蹤索引中查詢高延遲的 span，並呈現服務對應圖摘要。
 
-### Using skills with the MCP server
+### 搭配 MCP 伺服器使用技能
 
-Skills are designed to work in conjunction with the MCP server. When using a skill with the MCP server configured, the assistant can follow the skill's structured workflow and make live API calls to inspect index state, run test queries, or verify mappings without leaving the conversation.
+技能的設計可與 MCP 伺服器搭配運作。在已設定 MCP 伺服器的情況下使用技能時，助理可以遵循技能的結構化工作流程，並即時呼叫 API 來檢查索引狀態、執行測試查詢或驗證對應，而無須離開對話。
 
-The `opensearch-launchpad` skill's `SKILL.md` includes an optional MCP server configuration block. You can add this block to your client configuration in order to provide the assistant with direct API access during the session:
+`opensearch-launchpad` 技能的 `SKILL.md` 包含一個選用的 MCP 伺服器組態區塊。您可以將此區塊新增至用戶端組態，讓助理在工作階段期間能直接存取 API：
 
 ```json
 {
@@ -182,9 +183,9 @@ The `opensearch-launchpad` skill's `SKILL.md` includes an optional MCP server co
 ```
 {% include copy.html %}
 
-## Related documentation
+## 相關文件
 
-- [`opensearch-agent-skills`](https://github.com/opensearch-project/opensearch-agent-skills) -- Agent skills repository on GitHub.
-- [Agent Skills specification](https://agentskills.io/specification) -- Specification documentation.
-- [OpenSearch MCP Server]({{site.url}}{{site.baseurl}}/ai-agent-integrations/mcp-server/) -- Direct API access from an AI client.
-- [Using MCP tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/) -- External MCP server integration from OpenSearch agents.
+- [`opensearch-agent-skills`](https://github.com/opensearch-project/opensearch-agent-skills) -- GitHub 上的代理程式技能儲存庫。
+- [Agent Skills 規格](https://agentskills.io/specification) -- 規格文件。
+- [OpenSearch MCP Server]({{site.url}}{{site.baseurl}}/ai-agent-integrations/mcp-server/) -- 從 AI 用戶端直接存取 API。
+- [使用 MCP 工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/) -- 從 OpenSearch 代理程式整合外部 MCP 伺服器。

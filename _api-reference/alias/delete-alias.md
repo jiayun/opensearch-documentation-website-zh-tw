@@ -1,45 +1,46 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete alias
+title: "刪除別名"
 parent: Alias APIs
 grand_parent: Index APIs
 nav_order: 30
 ---
 
 # Delete Index Alias API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Deletes an existing alias.
+刪除現有的別名。
 
-## Endpoints
+## 端點
 
 ```json
 DELETE /{index}/_alias/{alias}
 DELETE /{index}/_aliases/{alias}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are required.
+下表列出可用的路徑參數。所有路徑參數皆為必要參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `<index>` | String | Comma-separated list or wildcard expression of index names used to limit the request. To include all indexes in the cluster, use `_all` or `*`. |
-| `<alias>` | String | Comma-separated list or wildcard expression of alias names to delete. To delete all aliases, use `_all` or `*`. |
+| `<index>` | 字串 | 用於限制請求範圍的索引名稱清單（以逗號分隔）或萬用字元運算式。若要包含叢集中的所有索引，請使用 `_all` 或 `*`。 |
+| `<alias>` | 字串 | 要刪除的別名名稱清單（以逗號分隔）或萬用字元運算式。若要刪除所有別名，請使用 `_all` 或 `*`。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `cluster_manager_timeout` | Time | The amount of time to wait for a response from the cluster manager node. Default is `30s`. |
-| `timeout` | Time | The amount of time to wait for a response from the cluster. Default is `30s`. |
+| `cluster_manager_timeout` | 時間 | 等待叢集管理員節點回應的時間。預設為 `30s`。 |
+| `timeout` | 時間 | 等待叢集回應的時間。預設為 `30s`。 |
 
-## Example request
+## 請求範例
 
-The following request deletes the `alias1` alias from the `logs_20302801` index:
+下列請求會從 `logs_20302801` 索引中刪除 `alias1` 別名：
 
 <!-- spec_insert_start
 component: example_code
@@ -64,7 +65,7 @@ response = client.indices.delete_alias(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -72,18 +73,18 @@ response = client.indices.delete_alias(
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `acknowledged` | Boolean | Whether the request was received. |
+| `acknowledged` | 布林值 | 是否已收到請求。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/aliases`.
+如果您使用 Security 外掛程式，請確保您具有適當的權限：`indices:admin/aliases`。
 
-## Related documentation
+## 相關文件
 
-For more information about index aliases, see [Index aliases]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/).
+如需索引別名的詳細資訊，請參閱[索引別名]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/)。

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Install and configure OpenSearch
+title: "安裝與設定 OpenSearch"
 nav_order: 1
 has_children: false
 has_toc: false
@@ -10,26 +11,26 @@ redirect_from:
   - /install-and-configure/index/
 ---
 
-# Install and configure OpenSearch
+# 安裝與設定 OpenSearch
 
-You can install OpenSearch and OpenSearch Dashboards in containers, on Kubernetes, on Linux hosts, or on Windows. After installation, configure the cluster for your deployment and install any additional plugins that you need.
+您可以將 OpenSearch 和 OpenSearch Dashboards 安裝在容器、Kubernetes、Linux 主機或 Windows 上。安裝完成後，請針對您的部署設定叢集，並安裝任何您需要的額外外掛程式。
 
-## Trying OpenSearch
+## 試用 OpenSearch
 
-To try OpenSearch on your computer, see [Installation quickstart]({{site.url}}{{site.baseurl}}/getting-started/quickstart/). The quickstart starts OpenSearch and OpenSearch Dashboards using Docker Compose and is intended for testing, not for production.
+若要在您的電腦上試用 OpenSearch，請參閱 [安裝快速入門]({{site.url}}{{site.baseurl}}/getting-started/quickstart/)。快速入門使用 Docker Compose 啟動 OpenSearch 和 OpenSearch Dashboards，旨在用於測試而非生產環境。
 
-## Before installation
+## 安裝前準備
 
-Before you install OpenSearch, review the following information:
+在安裝 OpenSearch 之前，請查看以下資訊：
 
-- The host requirements and important settings in [Installing OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/)
-- The supported operating systems in [Compatible operating systems]({{site.url}}{{site.baseurl}}/install-and-configure/os-comp/)
+- [安裝 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/) 中的主機需求與重要設定
+- [相容的作業系統]({{site.url}}{{site.baseurl}}/install-and-configure/os-comp/) 中支援的作業系統
 
-## Choosing an installation method
+## 選擇安裝方法
 
-The following table lists the installation methods and links to the installation guides for each product. The OpenSearch Kubernetes Operator and the Ansible playbook install OpenSearch and OpenSearch Dashboards together, so each has one guide.
+下表列出了安裝方法以及每個產品的安裝指南連結。OpenSearch Kubernetes Operator 和 Ansible playbook 會將 OpenSearch 和 OpenSearch Dashboards 一併安裝，因此各僅有一份指南。
 
-| Method | Installation guides |
+| 方法 | 安裝指南 |
 | :--- | :--- |
 | Docker | [OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/docker/), [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/docker/) |
 | OpenSearch Kubernetes Operator | [OpenSearch and OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/) |
@@ -40,15 +41,15 @@ The following table lists the installation methods and links to the installation
 | Ansible playbook | [OpenSearch and OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/ansible/) |
 | Windows | [OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/windows/), [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/windows/) |
 
-## After installation
+## 安裝後步驟
 
-After you install OpenSearch, use the following guides to set up your deployment:
+安裝 OpenSearch 後，請使用以下指南來設定您的部署：
 
-- [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)
-- [Configuring OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-dashboards/)
-- [Managing OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)
-- [Managing OpenSearch Dashboards plugins]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/plugins/)
+- [設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)
+- [設定 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-dashboards/)
+- [管理 OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)
+- [管理 OpenSearch Dashboards 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/plugins/)
 
-## Related documentation
+## 相關文件
 
-- To upgrade an existing cluster, see [Migrate or upgrade]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/).
+- 若要升級現有叢集，請參閱 [遷移或升級]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/)。

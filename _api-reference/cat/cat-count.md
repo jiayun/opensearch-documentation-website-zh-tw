@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: CAT count
 parent: CAT APIs
@@ -10,17 +11,17 @@ redirect_from:
 ---
 
 # CAT Count API
-**Introduced 1.0**
+**1.0 版引入**
 {: .label .label-purple }
 
-The CAT count operation lists the number of documents in your cluster.
+CAT count 作業會列出叢集中的文件數量。
 
 
 <!-- spec_insert_start
 api: cat.count
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_cat/count
 GET /_cat/count/{index}
@@ -34,21 +35,21 @@ component: query_parameters
 columns: Parameter, Data type, Description, Default
 include_deprecated: false
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `format` | String | A short version of the `Accept` header, such as `json` or `yaml`. | N/A |
-| `h` | List | A comma-separated list of column names to display. | N/A |
-| `help` | Boolean | Returns help information. | `false` |
-| `s` | List | A comma-separated list of column names or column aliases to sort by. | N/A |
-| `v` | Boolean | Enables verbose mode, which displays column headers. | `false` |
+| `format` | String | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
+| `h` | List | 以逗號分隔的欄位名稱清單，用於指定要顯示的欄位。 | N/A |
+| `help` | Boolean | 傳回說明資訊。 | `false` |
+| `s` | List | 以逗號分隔的欄位名稱或欄位別名清單，用於排序。 | N/A |
+| `v` | Boolean | 啟用詳細模式，顯示欄位標題。 | `false` |
 
 <!-- spec_insert_end -->
 
-## Example requests
+## 範例請求
 
 <!-- spec_insert_start
 component: example_code
@@ -72,7 +73,7 @@ response = client.cat.count(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To see the number of documents in a specific index or alias, add the index or alias name after your query:
+若要查看特定索引或別名中的文件數量，請在查詢後加上索引或別名名稱：
 
 <!-- spec_insert_start
 component: example_code
@@ -97,7 +98,7 @@ response = client.cat.count(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-If you want to get information for more than one index or alias, separate the index or alias names with commas:
+若要取得多個索引或別名的資訊，請以逗號分隔索引或別名名稱：
 
 <!-- spec_insert_start
 component: example_code
@@ -121,15 +122,15 @@ response = client.cat.count(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-The following response shows the overall document count as 1625:
+下列回應顯示整體文件數量為 1625：
 
 ```json
 epoch      | timestamp | count
 1624237738 | 01:08:58  | 1625
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:data/read/search`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`indices:data/read/search`。

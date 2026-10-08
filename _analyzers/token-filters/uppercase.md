@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Uppercase
+title: "大寫"
 parent: Token filters
 nav_order: 460
 ---
 
-# Uppercase token filter
+# 大寫詞元篩選器
 
-The `uppercase` token filter is used to convert all tokens (words) to uppercase during analysis.
+`uppercase` 詞元篩選器可用於在分析期間將所有詞元 (單字) 轉換為大寫。
 
-## Example
+## 範例
 
-The following example request creates a new index named `uppercase_example` and configures an analyzer with an `uppercase` filter:
+下列範例請求會建立名為 `uppercase_example` 的新索引，並設定含有 `uppercase` 篩選器的分析器：
 
 ```json
 PUT /uppercase_example
@@ -39,9 +40,9 @@ PUT /uppercase_example
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 GET /uppercase_example/_analyze
@@ -52,7 +53,7 @@ GET /uppercase_example/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含所產生的詞元：
 
 ```json
 {

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Metric aggregations
+title: "指標彙總"
 has_children: true
 has_toc: false
 nav_order: 2
@@ -12,37 +13,37 @@ redirect_from:
   - /aggregations/metric/
 ---
 
-# Metric aggregations
+# 指標彙總
 
-Metric aggregations let you perform calculations such as finding the minimum, maximum, and average values of a field.
+指標彙總讓您能夠執行計算，例如尋找欄位的最小值、最大值和平均值。
 
-## Types of metric aggregations
+## 指標彙總的類型
 
-There are two types of metric aggregations: single-value metric aggregations and multi-value metric aggregations.
+指標彙總分為兩種類型：單值指標彙總和多值指標彙總。
 
-### Single-value metric aggregations
+### 單值指標彙總
 
-Single-value metric aggregations return a single metric, for example, `sum`, `min`, `max`, `avg`, `cardinality`, or `value_count`.
+單值指標彙總會回傳單一指標，例如 `sum`、`min`、`max`、`avg`、`cardinality` 或 `value_count`。
 
-### Multi-value metric aggregations
+### 多值指標彙總
 
-Multi-value metric aggregations return more than one metric. These include `stats`, `extended_stats`, `matrix_stats`, `percentile`, `percentile_ranks`, `geo_bound`, `top_hits`, and `scripted_metric`.
+多值指標彙總會回傳多個指標。這些包括 `stats`、`extended_stats`、`matrix_stats`、`percentile`、`percentile_ranks`、`geo_bound`、`top_hits` 和 `scripted_metric`。
 
-## Supported metric aggregations
+## 支援的指標彙總
 
-OpenSearch supports the following metric aggregations:
+OpenSearch 支援以下指標彙總：
 
-- [Average]({{site.url}}{{site.baseurl}}/aggregations/metric/average/)
-- [Cardinality]({{site.url}}{{site.baseurl}}/aggregations/metric/cardinality/)
-- [Extended stats]({{site.url}}{{site.baseurl}}/aggregations/metric/extended-stats/)
-- [Geobounds]({{site.url}}{{site.baseurl}}/aggregations/metric/geobounds/)
-- [Matrix stats]({{site.url}}{{site.baseurl}}/aggregations/metric/matrix-stats/)
-- [Maximum]({{site.url}}{{site.baseurl}}/aggregations/metric/maximum/)
-- [Minimum]({{site.url}}{{site.baseurl}}/aggregations/metric/minimum/)
-- [Percentile ranks]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile-ranks/)
-- [Percentile]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile/)
-- [Scripted metric]({{site.url}}{{site.baseurl}}/aggregations/metric/scripted-metric/)
-- [Stats]({{site.url}}{{site.baseurl}}/aggregations/metric/stats/)
-- [Sum]({{site.url}}{{site.baseurl}}/aggregations/metric/sum/)
-- [Top hits]({{site.url}}{{site.baseurl}}/aggregations/metric/top-hits/)
-- [Value count]({{site.url}}{{site.baseurl}}/aggregations/metric/value-count/)
+- [平均值]({{site.url}}{{site.baseurl}}/aggregations/metric/average/)
+- [基數]({{site.url}}{{site.baseurl}}/aggregations/metric/cardinality/)
+- [延伸統計]({{site.url}}{{site.baseurl}}/aggregations/metric/extended-stats/)
+- [地理邊界]({{site.url}}{{site.baseurl}}/aggregations/metric/geobounds/)
+- [矩陣統計]({{site.url}}{{site.baseurl}}/aggregations/metric/matrix-stats/)
+- [最大值]({{site.url}}{{site.baseurl}}/aggregations/metric/maximum/)
+- [最小值]({{site.url}}{{site.baseurl}}/aggregations/metric/minimum/)
+- [百分位數排名]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile-ranks/)
+- [百分位數]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile/)
+- [指令碼指標]({{site.url}}{{site.baseurl}}/aggregations/metric/scripted-metric/)
+- [統計]({{site.url}}{{site.baseurl}}/aggregations/metric/stats/)
+- [總和]({{site.url}}{{site.baseurl}}/aggregations/metric/sum/)
+- [熱門命中]({{site.url}}{{site.baseurl}}/aggregations/metric/top-hits/)
+- [值計數]({{site.url}}{{site.baseurl}}/aggregations/metric/value-count/)

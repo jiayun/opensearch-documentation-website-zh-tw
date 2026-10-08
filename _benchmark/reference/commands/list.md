@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: list
 nav_order: 80
@@ -9,28 +10,28 @@ redirect_from:
 ---
 
 <!-- vale off -->
-# list command
+# list 命令
 <!-- vale on -->
 
-The `list` command lists the following elements used by OpenSearch Benchmark:
+`list` 命令會列出 OpenSearch Benchmark 使用的下列元素：
 
-- `telemetry`: Telemetry devices
-- `workloads`: Workloads
-- `pipelines`: Pipelines
-- `test-runs`: Single run of a workload
-- `cluster-configs`: OpenSearch cluster configurations
-- `opensearch-plugins`: OpenSearch plugins
+- `telemetry`：遙測裝置
+- `workloads`：工作負載
+- `pipelines`：管線
+- `test-runs`：工作負載的單次執行
+- `cluster-configs`：OpenSearch 叢集組態
+- `opensearch-plugins`：OpenSearch 外掛程式
 
 
-## Usage
+## 用法
 
-The following example lists any workload test runs and detailed information about each test:
+下列範例會列出所有工作負載測試執行，以及每項測試的詳細資訊：
 
 ```
 `opensearch-benchmark list test-runs
 ```
 
-OpenSearch Benchmark returns information about each test.
+OpenSearch Benchmark 會傳回每項測試的相關資訊。
 
 ```
 opensearch-benchmark list test-runs
@@ -63,13 +64,13 @@ ba643ed3-0db5-452e-a680-2b0dc0350cf2  20230522T224450Z           geonames       
 ----------------------------------
 ```
 
-## Options
+## 選項
 
-You can use the following options with the `test` command:
+您可以在 `test` 命令中使用下列選項：
 
-- `--limit`: Limits the number of search results for recent test runs. Default is `10`.
-- `--workload-repository`: Defines the repository from where OpenSearch Benchmark loads workloads.
-- `--workload-path`: Defines the path to a downloaded or custom workload.
-- `--workload-revision`: Defines a specific revision from the workload source tree that OpenSearch Benchmark should use.
+- `--limit`：限制最近測試執行的搜尋結果數量。預設值為 `10`。
+- `--workload-repository`：定義 OpenSearch Benchmark 載入工作負載的儲存庫。
+- `--workload-path`：定義已下載或自訂工作負載的路徑。
+- `--workload-revision`：定義 OpenSearch Benchmark 應使用的工作負載原始碼樹中的特定修訂版本。
 
 

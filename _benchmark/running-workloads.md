@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Running a workload
+title: "執行工作負載"
 nav_order: 30
 redirect_from:
   - /benchmark/user-guide/running-workloads/
@@ -8,26 +9,26 @@ redirect_from:
   - /benchmark/user-guide/working-with-workloads/
 ---
 
-# Running a workload
+# 執行工作負載
 
-Once you have a complete understanding of the various components of an OpenSearch Benchmark [workload]({{site.url}}{{site.baseurl}}/benchmark/anatomy-of-a-workload/), you can run your first workload.
+當您完整了解 OpenSearch Benchmark [工作負載]({{site.url}}{{site.baseurl}}/benchmark/anatomy-of-a-workload/)的各個元件之後，就可以執行您的第一個工作負載。
 
-## Step 1: Find the workload name
+## 步驟 1：找出工作負載名稱
 
-To learn more about the standard workloads included with OpenSearch Benchmark, use the following command:
+若要進一步了解 OpenSearch Benchmark 隨附的標準工作負載，請使用下列命令：
 
 ```
 opensearch-benchmark list workloads
 ```
 {% include copy.html %}
 
-A list of all workloads supported by OpenSearch Benchmark appears. Review the list and select the workload that's most similar to your cluster's use case.
+畫面會顯示 OpenSearch Benchmark 支援的所有工作負載清單。請檢視該清單，並選取與您叢集使用案例最相似的工作負載。
 
-## Step 2: Running the test
+## 步驟 2：執行測試
 
-After you've selected the workload, you can invoke the workload using the `opensearch-benchmark run` command. Replace  `--target-host` with the `host:port` pairs for your cluster and `--client-options` with any authorization options required to access the cluster. The following example runs the `nyc_taxis` workload on a localhost for testing purposes.
+選取工作負載後，您可以使用 `opensearch-benchmark run` 命令來叫用該工作負載。將 `--target-host` 替換為您叢集的 `host:port` 組合，並將 `--client-options` 替換為存取叢集所需的任何授權選項。下列範例會在本機主機上執行 `nyc_taxis` 工作負載以進行測試。
 
-If you want to run a test on an external cluster, see [Running the workload on your own cluster](#running-a-workload-on-an-external-cluster).
+如果您想在外部叢集上執行測試，請參閱[在您自己的叢集上執行工作負載](#running-a-workload-on-an-external-cluster)。
 
 ```bash
 opensearch-benchmark run --pipeline=benchmark-only --workload=nyc_taxis --target-host=https://localhost:9200 --client-options=basic_auth_user:admin,basic_auth_password:admin,verify_certs:false
@@ -35,25 +36,25 @@ opensearch-benchmark run --pipeline=benchmark-only --workload=nyc_taxis --target
 {% include copy.html %}
 
 
-Results from the test appear in the directory set by the `--output-path` option in the `run` command.
+測試結果會顯示在 `run` 命令中由 `--output-path` 選項所設定的目錄內。
 
-### Test mode
+### 測試模式
 
-If you want to run the test in test mode to make sure that your workload operates as intended, add the `--test-mode` option to the `run` command. Test mode ingests only the first 1,000 documents from each index provided and runs query operations against them.
+如果您想以測試模式執行測試，以確保工作負載如預期運作，請在 `run` 命令中加入 `--test-mode` 選項。測試模式只會匯入每個所提供索引的前 1,000 份文件，並針對這些文件執行查詢作業。
 
-### Working with `--workload-params`
+### 使用 `--workload-params`
 
-You can customize the behavior of a workload by passing workload-specific parameters using the `--workload-params` option. This flag accepts a comma-separated list of key-value pairs that override default values defined in the workload's `workload.json` file.
+您可以使用 `--workload-params` 選項傳遞工作負載專屬參數，以自訂工作負載的行為。此旗標接受以逗號分隔的鍵值對清單，用來覆寫工作負載 `workload.json` 檔案中定義的預設值。
 
-For example, some workloads let you configure the number of documents indexed, the number of clients used for query execution, or the index name. These parameters can be critical for tailoring benchmarks to your specific use case or infrastructure constraints.
+例如，某些工作負載可讓您設定要編製索引的文件數量、用於執行查詢的用戶端數量，或索引名稱。這些參數對於依據您的特定使用案例或基礎架構限制來調整基準測試可能非常關鍵。
 
-To pass workload parameters, use the following syntax:
+若要傳遞工作負載參數，請使用下列語法：
 
 ```bash
 --workload-params="number_of_documents:100000,index_name:custom-index"
 ```
 
-Add this option to your `run` command, as shown in the following example:
+將此選項加入您的 `run` 命令，如下列範例所示：
 
 ```bash
 opensearch-benchmark run \
@@ -64,22 +65,22 @@ opensearch-benchmark run \
 --workload-params="bulk_size:500,index_name:nyc_custom"
 ```
 
-Available workload parameters can be found in the `README` of each workload in the [OpenSearch Benchmark Workloads GitHub repository](https://github.com/opensearch-project/opensearch-benchmark-workloads).
+可用的工作負載參數可在 [OpenSearch Benchmark Workloads GitHub 儲存庫](https://github.com/opensearch-project/opensearch-benchmark-workloads)中每個工作負載的 `README` 內找到。
 {: .tip}
 
 
 
 
-## Step 3: Validate the test
+## 步驟 3：驗證測試
 
-After running an OpenSearch Benchmark test, take the following steps to verify that it has run properly:
+執行 OpenSearch Benchmark 測試之後，請採取下列步驟來確認測試已正確執行：
 
-1. Note the number of documents in the OpenSearch or OpenSearch Dashboards index that you plan to run the benchmark against.
-2. In the results returned by OpenSearch Benchmark, compare the `workload.json` file for your specific workload and verify that the document count matches the number of documents. For example, based on the [nyc_taxis](https://github.com/opensearch-project/opensearch-benchmark-workloads/blob/main/nyc_taxis/workload.json#L20) `workload.json` file, you should expect to see `165346692` documents in your cluster.
+1. 記下您打算執行基準測試的 OpenSearch 或 OpenSearch Dashboards 索引中的文件數量。
+2. 在 OpenSearch Benchmark 傳回的結果中，比較您特定工作負載的 `workload.json` 檔案，並確認文件數量相符。例如，根據 [nyc_taxis](https://github.com/opensearch-project/opensearch-benchmark-workloads/blob/main/nyc_taxis/workload.json#L20) 的 `workload.json` 檔案，您的叢集中應該會有 `165346692` 份文件。
 
-## Expected results
+## 預期結果
 
-OSB returns the following response once the benchmark completes:
+基準測試完成後，OSB 會傳回下列回應：
 
 ```bash
 ------------------------------------------------------
@@ -182,17 +183,17 @@ OSB returns the following response once the benchmark completes:
 
 
 
-## Running a workload on an external cluster
+## 在外部叢集上執行工作負載
 
-Now that you're familiar with running OpenSearch Benchmark on a local cluster, you can run it on your external cluster, as described in the following steps:
+既然您已熟悉如何在本機叢集上執行 OpenSearch Benchmark，接下來可以依照下列步驟，在您的外部叢集上執行：
 
-1. Replace `https://localhost:9200` with your target cluster endpoint. This could be a Uniform Resource Identifier (URI), such as `https://search.mydomain.com`, or a `HOST:PORT` specification.
-2. If the cluster is configured with basic authentication, replace the username and password in the command line with the appropriate credentials.
-3. Remove the `verify_certs:false` directive if you are not specifying `localhost` as your target cluster. This directive is necessary solely for clusters without SSL certificates.
-4. If you are using a `HOST:PORT`specification and plan to use SSL or TLS, either specify `https://` or add the `use_ssl:true` directive to the `--client-options` string option.
-5. Remove the `--test-mode` flag to run the full workload rather than an abbreviated test.
+1. 將 `https://localhost:9200` 取代為您的目標叢集端點。這可以是統一資源識別碼 (URI)，例如 `https://search.mydomain.com`，或是 `HOST:PORT` 規格。
+2. 如果叢集已設定基本驗證，請將命令列中的使用者名稱和密碼取代為適當的認證資訊。
+3. 如果您並未將 `localhost` 指定為目標叢集，請移除 `verify_certs:false` 指示詞。此指示詞僅適用於沒有 SSL 憑證的叢集。
+4. 如果您使用 `HOST:PORT` 規格並打算使用 SSL 或 TLS，請指定 `https://`，或將 `use_ssl:true` 指示詞新增至 `--client-options` 字串選項。
+5. 移除 `--test-mode` 旗標，以執行完整的工作負載，而非簡化版測試。
 
-You can copy the following command template to use it in your own terminal:
+您可以複製下列命令範本，在您自己的終端機中使用：
 
 ```bash
 opensearch-benchmark run --pipeline=benchmark-only --workload=nyc_taxis --target-host=<OpenSearch Cluster Endpoint> --client-options=basic_auth_user:admin,basic_auth_password:admin

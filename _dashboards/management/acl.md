@@ -1,34 +1,35 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Access control lists for saved objects
+title: "已儲存物件的存取控制清單"
 parent: Saved objects
 grand_parent: Dashboards management
 nav_order: 20
 ---
 
-# Access control lists for saved objects
-Introduced 2.18
+# 已儲存物件的存取控制清單
+於 2.18 版引入
 {: .label .label-purple }
 
-You can use access control lists (ACLs) to manage permissions for your saved objects, providing authorization (AuthZ) capabilities without requiring backend plugin integration.
+您可以使用存取控制清單 (ACL) 管理已儲存物件的權限，無需整合後端外掛程式即可提供授權 (AuthZ) 功能。
 
-## Understanding ACL types
+## 了解 ACL 類型
 
-ACLs are applied at two levels:
+ACL 會在兩個層級套用：
 
-1. **Workspace ACL:** Workspace objects inherit permissions from their parent workspace. See [Workspace ACL]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace-acl/) for more information.
-2. **Objects ACL:** Each individual object can have its own ACL policy. All operations on these objects must pass ACL policy validation.
+1. **工作區 ACL：**工作區物件會繼承其上層工作區的權限。如需詳細資訊，請參閱[工作區 ACL]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace-acl/)。
+2. **物件 ACL：**每個個別物件都可以擁有自己的 ACL 政策。對這些物件執行的所有操作都必須通過 ACL 政策驗證。
 
-## Enabling the ACL feature
+## 啟用 ACL 功能
 
-The ACL feature must be enabled before you can define any access controls. Enable it by:
+您必須先啟用 ACL 功能，才能定義任何存取控制。請依下列步驟啟用：
 
-1. Opening your `opensearch_dashboards.yml` file.
-2. Enabling permissions with `savedObjects.permission.enabled: true`.
+1. 開啟您的 `opensearch_dashboards.yml` 檔案。
+2. 使用 `savedObjects.permission.enabled: true` 啟用權限。
 
-## Defining ACL permissions
+## 定義 ACL 權限
 
-ACL permissions are defined using the following schema: 
+ACL 權限使用下列結構描述定義：
 
 ```json
 {
@@ -42,9 +43,9 @@ ACL permissions are defined using the following schema:
 ```
 {% include copy-curl.html %}
 
-### Granting permissions to authenticated users
+### 將權限授予已驗證的使用者
 
-The wildcard character (`*`) grants permissions to all authenticated users. In the following example, the ACL grants workspace management permissions to the `finance_manager` group and dashboard creation permissions to the `finance_analyst` group:
+萬用字元 (`*`) 會將權限授予所有已驗證的使用者。在下列範例中，ACL 將工作區管理權限授予 `finance_manager` 群組，並將儀表板建立權限授予 `finance_analyst` 群組：
 
 ```json
 {
@@ -60,9 +61,9 @@ The wildcard character (`*`) grants permissions to all authenticated users. In t
 ```
 {% include copy-curl.html %}
 
-### Configuring mixed-level permissions
+### 設定混合層級權限
 
-To allow one user, `user-1` for example, to modify an object while giving read-only access to others, you can configure the ACL policy as follows:
+若要允許某個使用者（例如 `user-1`）修改物件，同時為其他使用者提供唯讀存取權，您可以依下列方式設定 ACL 政策：
 
 ```json
 {

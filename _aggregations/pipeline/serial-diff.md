@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Serial differencing
+title: "序列差分"
 parent: Pipeline aggregations
 nav_order: 180
 ---
 
-# Serial differencing aggregation
+# 序列差分彙總
 
-The `serial_diff` aggregation is a parent pipeline aggregation that calculates the difference between metric values in the current bucket and a previous bucket. It stores the result in the current bucket.
+`serial_diff` 彙總是一種父管線彙總，會計算目前桶 (bucket) 與先前某個桶中指標值之間的差異，並將結果儲存在目前的桶中。
 
-Use the `serial_diff` aggregation to compute changes between time periods with a specified lag. The `lag` parameter (a positive integer value) specifies which previous bucket value to subtract from the current one. The default `lag` value is `1`, meaning `serial_diff` subtracts the value in the immediately previous bucket from the value in the current bucket.
+使用 `serial_diff` 彙總，以指定的延遲計算不同時段之間的變化。`lag` 參數（正整數值）指定要從目前桶的值中減去哪一個先前桶的值。`lag` 的預設值為 `1`，表示 `serial_diff` 會從目前桶的值中減去緊接在前一個桶的值。
 
-## Parameters
+## 參數
 
-The `serial_diff` aggregation takes the following parameters.
+`serial_diff` 彙總接受下列參數。
 
-| Parameter             | Required/Optional | Data type       | Description |
+| 參數             | 必要/選用 | 資料類型       | 說明 |
 | :--                   | :--               |  :--            | :--         |
-| `buckets_path`        | Required          | String          | The path of the aggregation buckets to be aggregated. See [Buckets path]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path). |
-| `gap_policy`          | Optional          | String          | The policy to apply to missing data. Valid values are `skip` and `insert_zeros`. Default is `skip`. See [Data gaps]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#data-gaps). |
-| `format`              | Optional          | String          | A [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) formatting string. Returns the formatted output in the aggregation's `value_as_string` property. |
-| `lag`                 | Optional          | Integer         | The historical bucket to subtract from the current bucket. Must be a positive integer. Default is `1`. |
+| `buckets_path`        | 必要          | 字串          | 要彙總的彙總桶路徑。請參閱[桶路徑]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path)。 |
+| `gap_policy`          | 選用          | 字串          | 套用於缺漏資料的原則。有效值為 `skip` 和 `insert_zeros`。預設為 `skip`。請參閱[資料缺口]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#data-gaps)。 |
+| `format`              | 選用          | 字串          | [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) 格式字串。在彙總的 `value_as_string` 屬性中傳回格式化後的輸出。 |
+| `lag`                 | 選用          | 整數         | 要從目前桶中減去的歷史桶。必須為正整數。預設為 `1`。 |
 
-## Example
+## 範例
 
-The following example creates a date histogram with a one-month interval from the OpenSearch Dashboards logs sample data. The `sum` subaggregation calculates the sum of all bytes for each month. Finally, the `serial_diff` aggregation calculates month-to-month difference in total bytes from these sums:
+下列範例從 OpenSearch Dashboards 記錄檔範例資料建立間隔為一個月的日期直方圖。`sum` 子彙總會計算每個月所有位元組的總和。最後，`serial_diff` 彙總會根據這些總和計算總位元組數的逐月差異：
 
 ```json
 GET opensearch_dashboards_sample_data_logs/_search
@@ -55,7 +56,7 @@ GET opensearch_dashboards_sample_data_logs/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the month-to-month difference for the second and third months. (The first month `serial_diff` cannot be calculated because there's no previous month against which to compare it):
+回應包含第二個月和第三個月的逐月差異。（第一個月的 `serial_diff` 無法計算，因為沒有可供比較的前一個月）：
 
 ```json
 {
@@ -114,15 +115,15 @@ The response contains the month-to-month difference for the second and third mon
 }
 ```
 
-The following line chart shows the results of the `serial_diff` aggregation. The x-axis represents time, and the y-axis shows the month-over-month change in total bytes transferred. Each data point on the line reflects the difference between the total bytes in that month and the previous month. For example, a value of 5,000,000 means that the system transferred 5 million more bytes than the prior month; a negative value indicates a decrease. The first month is excluded from the line because there's no previous bucket against which to compare it (the difference is undefined). The line starts with the second month and continues across all available data. 
+下列折線圖顯示 `serial_diff` 彙總的結果。x 軸代表時間，y 軸顯示傳輸總位元組數的逐月變化。折線上的每個資料點反映該月份與前一個月份總位元組數之間的差異。例如，值為 5,000,000 表示系統傳輸的位元組數比前一個月多 500 萬；負值則表示減少。第一個月不會出現在折線中，因為沒有可供比較的前一個桶（差異未定義）。折線從第二個月開始，並延續涵蓋所有可用資料。 
 
-![Example serial difference aggregation visualization]({{site.url}}{{site.baseurl}}/images/serial-diff-agg-result.png)
+![序列差分彙總視覺化範例]({{site.url}}{{site.baseurl}}/images/serial-diff-agg-result.png)
 
-This visualization helps you quickly spot spikes, drops, or trends in data volume over time.
+此視覺化可協助您快速發現資料量隨時間出現的激增、下降或趨勢。
 
-## Example: Multi-period differences
+## 範例：多期差異
 
-Use a larger `lag` value to compare each bucket with one that occurred further in the past. The following example computes differences in weekly byte data with a lag of 4 (meaning each bucket is compared to the one from 4 weeks earlier). This has the effect of removing any variation with a period of 4 weeks:
+使用較大的 `lag` 值，將每個桶與更早之前的桶進行比較。下列範例以 4 的延遲計算每週位元組資料的差異（表示每個桶都會與 4 週前的桶進行比較）。這樣可以消除任何週期為 4 週的變化：
 
 ```json
 GET opensearch_dashboards_sample_data_logs/_search
@@ -153,13 +154,13 @@ GET opensearch_dashboards_sample_data_logs/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The response contains a list of weekly buckets. Note that the `serial_diff` aggregation does not begin until the fifth bucket, when a bucket with a `lag` of `4` becomes available:
+回應包含每週桶的清單。請注意，`serial_diff` 彙總要到第五個桶才會開始，此時 `lag` 為 `4` 的桶才可供使用：
 
 <details open markdown="block">
 <summary>
-  Response
+  回應
 </summary>
 
 ```json

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get index
+title: "取得索引"
 parent: Core index APIs
 grand_parent: Index APIs
 nav_order: 30
@@ -8,47 +9,47 @@ redirect_from:
   - /opensearch/rest-api/index-apis/get-index/
 ---
 
-# Get Index API
-**Introduced 1.0**
+# 取得索引 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The get index API operation returns information about one or more indexes, including their settings, mappings, and aliases.
+取得索引 API 操作會傳回一或多個索引的資訊，包括其設定、對應和別名。
 
 <!-- spec_insert_start
 api: indices.get
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /{index}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required | Data type | Description |
+| 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `index` | **Required** | String | The name of the index to retrieve. You can specify a single index, a comma-separated list of indexes, or a wildcard expression. Use `_all` or `*` to retrieve information for all indexes in the cluster. |
+| `index` | **必要** | 字串 | 要擷取的索引名稱。您可以指定單一索引、以逗號分隔的索引清單，或萬用字元運算式。使用 `_all` 或 `*` 可擷取叢集中所有索引的資訊。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設值 |
 | :--- | :--- | :--- | :--- |
-| `allow_no_indices` | Boolean | Specifies whether to ignore wildcards that do not match any indexes. If `false`, the request returns an error when wildcards do not match any indexes. | `true` |
-| `expand_wildcards` | String | Specifies the types of indexes to which wildcard expressions can expand. Supports comma-separated values. Valid values are: <br> - `all`: Match all indexes, including hidden indexes. <br> - `open`: Match open indexes. <br> - `closed`: Match closed indexes. <br> - `hidden`: Match hidden indexes. Must be combined with `open`, `closed`, or both. <br> - `none`: Do not accept wildcard expressions. | `open` |
-| `flat_settings` | Boolean | Specifies whether to return settings in flat format. When `true`, settings are returned in a flattened format (for example, `"index.creation_date": "123456789"`). When `false`, settings are returned in nested format (for example, `"index": {"creation_date": "123456789"}`). | `false` |
-| `include_defaults` | Boolean | Specifies whether to include default settings in the response. When `true`, the response includes default values for all settings, which can help you identify setting names and values to update. | `false` |
-| `ignore_unavailable` | Boolean | Specifies whether to ignore indexes that are unavailable (missing or closed). If `true`, missing or closed indexes are not included in the response. | `false` |
-| `local` | Boolean | Specifies whether to retrieve information from the local node only instead of from the cluster manager node. | `false` |
-| `cluster_manager_timeout` | String | The amount of time to wait for a connection to the cluster manager node. | `30s` |
+| `allow_no_indices` | 布林值 | 指定是否忽略未符合任何索引的萬用字元。若為 `false`，當萬用字元未符合任何索引時，請求會傳回錯誤。 | `true` |
+| `expand_wildcards` | 字串 | 指定萬用字元運算式可展開為哪些類型的索引。支援以逗號分隔的值。有效值為：<br> - `all`：符合所有索引，包括隱藏索引。<br> - `open`：符合開啟的索引。<br> - `closed`：符合關閉的索引。<br> - `hidden`：符合隱藏索引。必須與 `open`、`closed` 或兩者搭配使用。<br> - `none`：不接受萬用字元運算式。 | `open` |
+| `flat_settings` | 布林值 | 指定是否以平面格式傳回設定。當值為 `true` 時，設定會以扁平化格式傳回（例如，`"index.creation_date": "123456789"`）。當值為 `false` 時，設定會以巢狀格式傳回（例如，`"index": {"creation_date": "123456789"}`）。 | `false` |
+| `include_defaults` | 布林值 | 指定是否在回應中包含預設設定。當值為 `true` 時，回應會包含所有設定的預設值，可協助您識別要更新的設定名稱和值。 | `false` |
+| `ignore_unavailable` | 布林值 | 指定是否忽略無法使用（不存在或已關閉）的索引。若為 `true`，回應中不會包含不存在或已關閉的索引。 | `false` |
+| `local` | 布林值 | 指定是否僅從本機節點擷取資訊，而非從叢集管理員節點擷取。 | `false` |
+| `cluster_manager_timeout` | 字串 | 等待連線至叢集管理員節點的時間。 | `30s` |
 
-## Example request
+## 請求範例
 
-The following example request retrieves information for the `books` index:
+下列請求範例會擷取 `books` 索引的資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -72,9 +73,9 @@ response = client.indices.get(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-OpenSearch returns information for the requested index or indexes:
+OpenSearch 會傳回所請求的一或多個索引的資訊：
 
 ```json
 {
@@ -100,7 +101,7 @@ OpenSearch returns information for the requested index or indexes:
 }
 ```
 
-When you use the `flat_settings=true` query parameter, settings are returned in a flattened format:
+當您使用 `flat_settings=true` 查詢參數時，設定會以扁平化格式傳回：
 
 ```json
 {
@@ -120,16 +121,16 @@ When you use the `flat_settings=true` query parameter, settings are returned in 
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response contains a separate object for each index, for which the key is the index name. Each index object contains the following fields.
+回應會為每個索引包含一個獨立物件，其索引鍵為索引名稱。每個索引物件包含下列欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`aliases` | Object | Index aliases associated with the index. Each key is an alias name, and each value is an alias configuration object. For more information, see [Index aliases]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/).
-`mappings` | Object | Field mappings for documents in the index. Defines the data type and properties for each field. For more information, see [Mappings]({{site.url}}{{site.baseurl}}/field-types/).
-`settings` | Object | Index settings that control index behavior, such as the number of shards and replicas. For more information, see [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/).
+`aliases` | 物件 | 與索引相關聯的索引別名。每個索引鍵都是別名名稱，每個值都是別名組態物件。如需詳細資訊，請參閱[索引別名]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/)。
+`mappings` | 物件 | 索引中文件的欄位對應。定義每個欄位的資料類型和屬性。如需詳細資訊，請參閱[對應]({{site.url}}{{site.baseurl}}/field-types/)。
+`settings` | 物件 | 控制索引行為的索引設定，例如分片和副本的數量。如需詳細資訊，請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/get`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`indices:admin/get`。

@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Install OpenSearch Dashboards
+title: "安裝 OpenSearch Dashboards"
 parent: Getting started
 nav_order: 10
 ---
 
-# Install OpenSearch Dashboards
+# 安裝 OpenSearch Dashboards
 
-OpenSearch Dashboards is the user interface for OpenSearch. To follow the tutorials using your own instance, install OpenSearch and OpenSearch Dashboards by following these steps.
+OpenSearch Dashboards 是 OpenSearch 的使用者介面。若要使用您自己的執行個體跟著教學操作，請依照下列步驟安裝 OpenSearch 和 OpenSearch Dashboards。
 
-## Step 1: Install OpenSearch and OpenSearch Dashboards
+## 步驟 1：安裝 OpenSearch 和 OpenSearch Dashboards
 
-Choose one of the following options:
+請選擇下列其中一個選項：
 
-- To try OpenSearch and OpenSearch Dashboards using Docker, follow the [Installation quickstart]({{site.url}}{{site.baseurl}}/getting-started/quickstart/).
+- 若要使用 Docker 試用 OpenSearch 和 OpenSearch Dashboards，請依照[安裝快速入門]({{site.url}}{{site.baseurl}}/getting-started/quickstart/)操作。
 
-- To install OpenSearch Dashboards for production, first install OpenSearch using one of the methods in [Installing OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/), and then install OpenSearch Dashboards using one of the methods in [Installing OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/).
+- 若要在正式環境中安裝 OpenSearch Dashboards，請先使用[安裝 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/) 中的其中一種方法安裝 OpenSearch，再使用[安裝 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/) 中的其中一種方法安裝 OpenSearch Dashboards。
 
-## Step 2 (Optional): Configure OpenSearch Dashboards
+## 步驟 2（選用）：設定 OpenSearch Dashboards
 
-You can configure OpenSearch Dashboards settings in the `opensearch_dashboards.yml` file. This file controls server options, authentication, plugin settings, and features like [workspaces]({{site.url}}{{site.baseurl}}/dashboards/workspace/). After changing the configuration file, restart OpenSearch Dashboards for the changes to take effect.
+您可以在 `opensearch_dashboards.yml` 檔案中設定 OpenSearch Dashboards 的設定。此檔案控制伺服器選項、驗證、外掛程式設定，以及[工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/)等功能。變更組態檔案後，請重新啟動 OpenSearch Dashboards，變更才會生效。
 
-For a full list of settings, see [Configuring OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-dashboards/).
+如需完整的設定清單，請參閱[設定 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-dashboards/)。
 
-Some settings can also be changed in OpenSearch Dashboards without editing `opensearch_dashboards.yml`. For more information, see [Advanced settings]({{site.url}}{{site.baseurl}}/dashboards/management/advanced-settings/).
+部分設定也可以直接在 OpenSearch Dashboards 中變更，而不必編輯 `opensearch_dashboards.yml`。如需詳細資訊，請參閱[進階設定]({{site.url}}{{site.baseurl}}/dashboards/management/advanced-settings/)。
 
-## Next steps
+## 後續步驟
 
-- Learn how to navigate the interface in [Access OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/getting-started/access/).
+- 請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/getting-started/access/)，了解如何瀏覽介面。

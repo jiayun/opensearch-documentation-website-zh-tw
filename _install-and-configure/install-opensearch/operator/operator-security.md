@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: User and role management
+title: "使用者與角色管理"
 parent: OpenSearch Kubernetes Operator
 grand_parent: Installing OpenSearch
 nav_order: 60
 ---
 
-# User and role management
+# 使用者與角色管理
 
-User and role management is essential for controlling access to your OpenSearch cluster using the OpenSearch Security plugin. By default, the operator uses the included demo security configuration with default users. For production installations, replace this with your own configuration.
+若要使用 OpenSearch Security 外掛程式控制對 OpenSearch 叢集的存取，使用者與角色管理至關重要。Operator 預設會使用內建的示範安全性組態及預設使用者。在生產環境安裝中，請以您自己的組態取代。
 
-You can configure security in two ways:
+您可以透過兩種方式設定安全性：
 
-- Defining your own security configuration
-- Managing users and roles using Kubernetes resources
+- 定義您自己的安全性組態
+- 使用 Kubernetes 資源管理使用者與角色
 
-A combination of both approaches is not supported. After you start using CRDs, you cannot provide your own security configuration because they would overwrite each other.
+不支援同時使用這兩種方式。開始使用 CRD 之後，您就無法再提供自己的安全性組態，因為兩者會互相覆寫。
 {: .note}
 
-## Defining your own security configuration
+## 定義您自己的安全性組態
 
-You can provide your own [security configuration]({{site.url}}{{site.baseurl}}/security/configuration/yaml/) with custom users and roles. Provide a secret containing all required security configuration YAML files.
+您可以提供自己的[安全性組態]({{site.url}}{{site.baseurl}}/security/configuration/yaml/)，其中包含自訂的使用者與角色。請提供一個包含所有必要安全性組態 YAML 檔案的 Secret。
 
-Configure security using the following fields in the `OpenSearchCluster` custom resource:
+請在 `OpenSearchCluster` 自訂資源中使用下列欄位設定安全性：
 
 ```yaml
 # ...
@@ -39,17 +40,17 @@ spec:
 ```
 {% include copy.html %}
 
-Provide the name of the secret that contains your security configuration YAML files as `securityConfigSecret.name`. This secret acts as the authoritative configuration that you manage.
+請在 `securityConfigSecret.name` 中提供包含安全性組態 YAML 檔案的 Secret 名稱。此 Secret 是由您管理的權威組態。
 
-The operator creates its own runtime secret named `<cluster-name>-security-config-generated` and copies your files into it. If no secret is supplied, the operator uses the bundled defaults. The operator automatically updates the password hashes for the admin and OpenSearch Dashboards (`kibanaserver`) users before applying the configuration to the cluster.
+Operator 會建立自己的執行階段 Secret，名稱為 `<cluster-name>-security-config-generated`，並將您的檔案複製到其中。若未提供 Secret，Operator 會使用隨附的預設檔案。在將組態套用至叢集之前，Operator 會自動更新 admin 與 OpenSearch Dashboards（`kibanaserver`）使用者的密碼雜湊。
 
-You no longer need to provide password hashes for the `admin` or `kibanaserver` users in your security config secret. The operator automatically generates password hashes from the credentials secrets and overrides any hash values you provide in the security config secret for these users. This means you only need to manage passwords in one place (the credentials secrets), not in both the credentials secrets and the security config secret.
+您不再需要在安全性組態 Secret 中提供 `admin` 或 `kibanaserver` 使用者的密碼雜湊。Operator 會從憑證資訊 Secret 自動產生密碼雜湊，並覆寫您在安全性組態 Secret 中為這些使用者提供的任何雜湊值。這表示您只需要在一個地方（憑證資訊 Secret）管理密碼，而不需同時在憑證資訊 Secret 與安全性組態 Secret 中管理。
 {: .important}
 
-OpenSearch requires all the files to be applied when the cluster is first created. For the files that you do not provide in the security configuration secret, the operator uses the default files provided in the Security plugin.
+OpenSearch 要求在首次建立叢集時套用所有檔案。對於您未在安全性組態 Secret 中提供的檔案，Operator 會使用 Security 外掛程式所提供的預設檔案。
 {: .note}
 
-To avoid using the default files, provide at least a minimum configuration for each file:
+若要避免使用預設檔案，請至少為每個檔案提供最低限度的組態：
 
 ```yaml
 tenants.yml: |-
@@ -59,32 +60,32 @@ tenants.yml: |-
 ```
 {% include copy.html %}
 
-These minimum configuration files can later be removed from the secret so that you don't overwrite the resources created using the CRDs or the REST APIs when modifying other configuration files.
+之後可以從 Secret 中移除這些最低限度的組態檔案，如此在修改其他組態檔案時，就不會覆寫使用 CRD 或 REST API 建立的資源。
 
-You can provide a secret as `adminCredentialsSecret.name` with fields `username` and `password` for a user that the operator uses for communicating with OpenSearch. The operator uses this user for retrieving cluster status, performing health checks, and coordinating node draining during cluster scaling operations.
+您可以在 `adminCredentialsSecret.name` 中提供一個包含 `username` 與 `password` 欄位的 Secret，作為 Operator 與 OpenSearch 通訊時所使用的使用者。Operator 會使用此使用者擷取叢集狀態、執行健康狀態檢查，以及在叢集擴展作業期間協調節點排空。
 
-If you omit this field, the operator automatically creates `<cluster-name>-admin-password` with the default `admin` username and a random password. The operator then generates the password hash and adds it to the generated security configuration.
+若省略此欄位，Operator 會自動建立 `<cluster-name>-admin-password`，其中包含預設的 `admin` 使用者名稱及隨機密碼。接著，Operator 會產生密碼雜湊，並將其新增至產生的安全性組態中。
 
-If you provide your own secret, the operator reads the password from your secret, generates the hash, and adds it to the generated security configuration without modifying your source secret.
+若您提供自己的 Secret，Operator 會從您的 Secret 讀取密碼、產生雜湊，並將其新增至產生的安全性組態中，而不會修改您的來源 Secret。
 
-Similarly, for OpenSearch Dashboards, if you don't provide `dashboards.opensearchCredentialsSecret`, the operator automatically creates `<cluster-name>-dashboards-password` with a random password for the `kibanaserver` user and automatically generates the password hash and adds it to the generated security configuration.
+同樣地，對於 OpenSearch Dashboards，若您未提供 `dashboards.opensearchCredentialsSecret`，Operator 會自動建立 `<cluster-name>-dashboards-password`，其中包含 `kibanaserver` 使用者的隨機密碼，並自動產生密碼雜湊，再將其新增至產生的安全性組態中。
 
-You must also configure TLS for HTTP. You can either let the operator generate all needed certificates or supply them yourself. If you use your own certificates, you must also provide an admin certificate that the operator can use to apply the security configuration.
+您也必須為 HTTP 設定 TLS。您可以讓 Operator 產生所有需要的憑證，也可以自行提供。若您使用自己的憑證，還必須提供一個 admin 憑證，讓 Operator 能用來套用安全性組態。
 
-If you provide your own certificate for TLS over HTTP, you must also provide an admin client certificate (as a Kubernetes TLS secret with fields `ca.crt`, `tls.key`, and `tls.crt`) as `adminSecret.name`. The DN of the certificate must be listed under `security.tls.http.adminDn`.
+若您為 HTTP 上的 TLS 提供自己的憑證，還必須在 `adminSecret.name` 中提供 admin 用戶端憑證（以包含 `ca.crt`、`tls.key` 與 `tls.crt` 欄位的 Kubernetes TLS Secret 形式提供）。此憑證的 DN 必須列於 `security.tls.http.adminDn` 之下。
 
-The `adminDn` must be defined so that the admin certificate cannot be used or recognized as a node certificate. Otherwise, OpenSearch will reject any authentication request using the admin certificate.
+必須定義 `adminDn`，使 admin 憑證無法被當作節點憑證使用或辨識。否則，OpenSearch 會拒絕任何使用 admin 憑證的驗證請求。
 {: .important}
 
-To apply the security configuration to the OpenSearch cluster, the operator uses a separate Kubernetes job (named `<cluster-name>-securityconfig-update`). This job is run during the initial provisioning of the cluster. The operator also monitors the secret with the security configuration for any changes and then reruns the update job to apply the new config. Note that the operator only checks for changes in certain intervals, so it might take a minute or two for the changes to be applied. If the changes are not applied after a few minutes, use `kubectl` to check the logs of the pod of the `<cluster-name>-securityconfig-update` job. If you have an error in your configuration it will be reported there.
+為了將安全性組態套用至 OpenSearch 叢集，Operator 會使用一個獨立的 Kubernetes 作業（名為 `<cluster-name>-securityconfig-update`）。此作業會在叢集初始佈建期間執行。Operator 也會監視包含安全性組態的 Secret 是否有任何變更，並在有變更時重新執行更新作業以套用新的組態。請注意，Operator 只會每隔一段時間檢查變更，因此變更可能需要一到兩分鐘才會套用。若數分鐘後變更仍未套用，請使用 `kubectl` 查看 `<cluster-name>-securityconfig-update` 作業之 Pod 的記錄檔。若您的組態有錯誤，將會在該處回報。
 
-## Managing security configurations with Kubernetes resources
+## 使用 Kubernetes 資源管理安全性組態
 
-The operator provides custom Kubernetes resources that let you create, update, or manage security configuration resources such as users, roles, action groups, and tenants as Kubernetes objects.
+Operator 提供自訂 Kubernetes 資源，可讓您以 Kubernetes 物件的形式建立、更新或管理安全性組態資源，例如使用者、角色、動作群組與租用戶。
 
-### OpenSearch users
+### OpenSearch 使用者
 
-You can manage OpenSearch users in Kubernetes with the operator. The operator does not modify users that already exist. You can create an example user as follows:
+您可以透過 Operator 在 Kubernetes 中管理 OpenSearch 使用者。Operator 不會修改已存在的使用者。您可以依下列方式建立範例使用者：
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -103,16 +104,16 @@ spec:
 ```
 {% include copy.html %}
 
-The namespace of the `OpenSearchUser` must be the namespace the OpenSearch cluster itself is deployed in.
+`OpenSearchUser` 的命名空間必須是 OpenSearch 叢集本身所部署的命名空間。
 
-A secret called `sample-user-password` must exist in the `default` namespace with the Base64-encoded password in the `password` key.
+名為 `sample-user-password` 的 Secret 必須存在於 `default` 命名空間中，並在 `password` 鍵中包含 Base64 編碼的密碼。
 {: .note}
 
-You can also store multiple user passwords in the same secret. To do this, create a secret in which each key equals a user name and the value is the user password. Otherwise, changes in the secret do not trigger user reconciliation.
+您也可以將多個使用者密碼儲存在同一個 Secret 中。若要這麼做，請建立一個 Secret，其中每個鍵等於使用者名稱，值則為使用者密碼。否則，Secret 中的變更不會觸發使用者協調。
 
-### OpenSearch roles
+### OpenSearch 角色
 
-You can manage OpenSearch roles in Kubernetes with the operator. The operator does not modify roles that already exist. You can create an example role as follows:
+您可以透過 Operator 在 Kubernetes 中管理 OpenSearch 角色。Operator 不會修改已存在的角色。您可以依下列方式建立範例角色：
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -135,9 +136,9 @@ spec:
 ```
 {% include copy.html %}
 
-### Linking OpenSearch users and roles
+### 連結 OpenSearch 使用者與角色
 
-The operator allows you to link any number of users, backend roles, and roles with an OpensearchUserRoleBinding. Each user in the binding is granted each role:
+Operator 可讓您透過 OpensearchUserRoleBinding 連結任意數量的使用者、後端角色與角色。繫結中的每位使用者都會獲授予每個角色：
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -157,9 +158,9 @@ spec:
 ```
 {% include copy.html %}
 
-### OpenSearch action groups
+### OpenSearch 動作群組
 
-You can manage OpenSearch action groups in Kubernetes with the operator. The operator does not modify action groups that already exist. You can create an example action group as follows:
+您可以使用 Operator 在 Kubernetes 中管理 OpenSearch 動作群組。Operator 不會修改已存在的動作群組。您可以依下列方式建立範例動作群組：
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -178,9 +179,9 @@ spec:
 ```
 {% include copy.html %}
 
-### OpenSearch tenants
+### OpenSearch 租用戶
 
-You can manage OpenSearch tenants in Kubernetes with the operator. The operator does not modify tenants that already exist. You can create an example tenant as follows:
+您可以使用 Operator 在 Kubernetes 中管理 OpenSearch 租用戶。Operator 不會修改已存在的租用戶。您可以依下列方式建立範例租用戶：
 
 ```yaml
 apiVersion: opensearch.org/v1
@@ -195,11 +196,11 @@ spec:
 ```
 {% include copy.html %}
 
-## Custom admin user
+## 自訂管理員使用者
 
-To create your cluster with an admin user different from the default, provide your own admin credentials secret. The operator automatically generates the password hash and adds it to the security config, so you no longer need to manually generate and include the password hash in your security config secret.
+若要使用不同於預設值的管理員使用者建立叢集，請提供您自己的管理員認證 Secret。Operator 會自動產生密碼雜湊並將其加入安全性組態，因此您不再需要手動產生密碼雜湊並將其納入安全性組態 Secret 中。
 
-First, create a secret with your admin user configuration (in this example `admin-credentials-secret`):
+首先，使用您的管理員使用者組態建立 Secret（在此範例中為 `admin-credentials-secret`）：
 
 ```yaml
 apiVersion: v1
@@ -215,13 +216,13 @@ data:
 ```
 {% include copy.html %}
 
-> You do not need to include the password hash in your security config secret. The operator automatically:
-> 1. Reads the password from your `adminCredentialsSecret`
-> 2. Generates the `bcrypt` hash
-> 3. Overrides the `admin` user's hash in the generated security config secret (`<cluster-name>-security-config-generated`)
+> 您不需要在安全性組態 Secret 中納入密碼雜湊。Operator 會自動：
+> 1. 從您的 `adminCredentialsSecret` 讀取密碼
+> 2. 產生 `bcrypt` 雜湊
+> 3. 在產生的安全性組態 Secret（`<cluster-name>-security-config-generated`）中覆寫 `admin` 使用者的雜湊
 {: .important}
 
-If you provide your own security configuration secret, you can optionally include the admin user definition, but any hash you provide is automatically overridden by the operator:
+如果您提供自己的安全性組態 Secret，可以選擇性地納入管理員使用者定義，但您提供的任何雜湊都會由 Operator 自動覆寫：
 
 ```yaml
 internal_users.yml: |-
@@ -237,7 +238,7 @@ internal_users.yml: |-
 ```
 {% include copy.html %}
 
-Add the following security configuration to your `cluster.yaml` file:
+將下列安全性組態新增至您的 `cluster.yaml` 檔案：
 
 ```yaml
 security:
@@ -254,30 +255,30 @@ security:
 ```
 {% include copy.html %}
 
-At a minimum, the `security.tls` section is required for the cluster to start with security enabled. Setting `generate: true` for both `transport` and `http` instructs the operator to automatically generate the required TLS certificates. The operator also automatically creates the admin and OpenSearch Dashboards credentials secrets (`<cluster-name>-admin-password` and `<cluster-name>-dashboards-password`) when they are not explicitly specified.
+叢集若要在啟用安全性的情況下啟動，至少需要 `security.tls` 區段。為 `transport` 與 `http` 都設定 `generate: true`，會指示 Operator 自動產生所需的 TLS 憑證。若未明確指定管理員與 OpenSearch Dashboards 的認證 Secret（`<cluster-name>-admin-password` 與 `<cluster-name>-dashboards-password`），Operator 也會自動建立它們。
 {: .note}
 
-### Changing the admin password
+### 變更管理員密碼
 
-To change the admin password after the cluster has been created, update the password in your `admin-credentials-secret`. The operator automatically:
+若要在叢集建立後變更管理員密碼，請更新您 `admin-credentials-secret` 中的密碼。Operator 會自動：
 
-1. Detects the password change.
-2. Generates a new password hash.
-3. Updates the generated security config secret.
-4. Triggers a security config update job to apply the changes to OpenSearch.
+1. 偵測密碼變更。
+2. 產生新的密碼雜湊。
+3. 更新產生的安全性組態 Secret。
+4. 觸發安全性組態更新作業，將變更套用至 OpenSearch。
 
-You no longer need to manually update the password hash in the security config secret.
+您不再需要手動更新安全性組態 Secret 中的密碼雜湊。
 
-## Custom OpenSearch Dashboards user
+## 自訂 OpenSearch Dashboards 使用者
 
-OpenSearch Dashboards requires an OpenSearch user (typically `kibanaserver`) to connect to the cluster.
+OpenSearch Dashboards 需要一個 OpenSearch 使用者（通常為 `kibanaserver`）來連線至叢集。
 
-If you don't provide a custom credentials secret, the operator automatically:
-1. Creates a secret named `<cluster-name>-dashboards-password` with a random password for the `kibanaserver` user.
-2. Generates the password hash and automatically adds it to the generated security config secret.
-3. Configures OpenSearch Dashboards to use these credentials.
+如果您未提供自訂認證 Secret，Operator 會自動：
+1. 建立名為 `<cluster-name>-dashboards-password` 的 Secret，並為 `kibanaserver` 使用者設定隨機密碼。
+2. 產生密碼雜湊，並自動將其加入產生的安全性組態 Secret。
+3. 設定 OpenSearch Dashboards 使用這些認證。
 
-To use custom credentials, create a secret with keys `username` and `password` and supply it to the operator using the cluster `spec`:
+若要使用自訂認證，請建立包含 `username` 與 `password` 鍵的 Secret，並透過叢集 `spec` 將其提供給 Operator：
 
 ```yaml
 spec:
@@ -287,8 +288,8 @@ spec:
 ```
 {% include copy.html %}
 
-> Similarly to configuring the admin user, you do not need to include the password hash for the `kibanaserver` user in your security config secret. The operator automatically:
-> 1. Reads the password from your `opensearchCredentialsSecret` (or uses the generated random password if not provided)
-> 2. Generates the `bcrypt` hash
-> 3. Overrides the `kibanaserver` user's hash in the generated security config secret
+> 與設定管理員使用者類似，您不需要在安全性組態 Secret 中納入 `kibanaserver` 使用者的密碼雜湊。Operator 會自動：
+> 1. 從您的 `opensearchCredentialsSecret` 讀取密碼（若未提供，則使用產生的隨機密碼）
+> 2. 產生 `bcrypt` 雜湊
+> 3. 在產生的安全性組態 Secret 中覆寫 `kibanaserver` 使用者的雜湊
 {: .important}

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Point in Time
 nav_order: 25
@@ -12,45 +13,45 @@ redirect_from:
 
 # Point in Time API
 
-Use the [Point in Time (PIT)]({{site.url}}{{site.baseurl}}/opensearch/point-in-time/) APIs to manage PITs. 
+使用 [Point in Time (PIT)]({{site.url}}{{site.baseurl}}/opensearch/point-in-time/) API 來管理 PIT。
 
 ---
 
-#### Table of contents
+#### 目錄
 - TOC
 {:toc}
 
 ---
 
-## Create a PIT
-**Introduced 2.4**
+## 建立 PIT
+**自 2.4 版起推出**
 {: .label .label-purple }
 
-Creates a PIT. The `keep_alive` query parameter is required; it specifies how long to keep a PIT.
+建立 PIT。必須提供 `keep_alive` 查詢參數；此參數指定 PIT 的保留時間長度。
 
-### Endpoints
+### 端點
 
 ```json
 POST /{target_indexes}/_search/point_in_time?keep_alive=1h&routing=&expand_wildcards=&preference= 
 ```
 
-### Path parameters
+### 路徑參數
 
-Parameter | Data type | Description 
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`target_indexes` | String | The name(s) of the target index(es) for the PIT. May contain a comma-separated list or a wildcard index pattern.
+`target_indexes` | String | PIT 的目標索引名稱。可包含以逗號分隔的清單或萬用字元索引模式。
 
-### Query parameters
+### 查詢參數
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`keep_alive` | Time |  The amount of time to keep the PIT. Every time you access a PIT by using the Search API, the PIT lifetime is extended by the amount of time equal to the `keep_alive` parameter. Required.
-`preference` | String | The node or shard used to perform the search. Optional. Default is `random`.
-`routing` | String | Specifies to route search requests to a specific shard. Optional. Default is the document's `_id`. 
-`expand_wildcards` | String | The type of index that can match the wildcard pattern. Supports comma-separated values. Valid values are the following:<br>- `all`: Match any index or data stream, including hidden ones. <br>- `open`: Match open, non-hidden indexes or non-hidden data streams. <br>- `closed`: Match closed, non-hidden indexes or non-hidden data streams. <br>- `hidden`: Match hidden indexes or data streams. Must be combined with `open`, `closed` or both `open` and `closed`.<br>- `none`: No wildcard patterns are accepted.<br> Optional. Default is `open`.
-`allow_partial_pit_creation` | Boolean | Specifies whether to create a PIT with partial failures. Optional. Default is `true`.
+`keep_alive` | Time |  PIT 的保留時間長度。每次您使用 Search API 存取 PIT 時，PIT 的存留期會延長相當於 `keep_alive` 參數的時間長度。必要。
+`preference` | String | 用來執行搜尋的節點或分片。選用。預設為 `random`。
+`routing` | String | 指定將搜尋請求路由至特定分片。選用。預設為文件的 `_id`。
+`expand_wildcards` | String | 可符合萬用字元模式的索引類型。支援以逗號分隔的值。有效值如下：<br>- `all`：符合任何索引或資料串流，包括隱藏的索引或資料串流。 <br>- `open`：符合開啟且未隱藏的索引或未隱藏的資料串流。 <br>- `closed`：符合關閉且未隱藏的索引或未隱藏的資料串流。 <br>- `hidden`：符合隱藏的索引或資料串流。必須與 `open`、`closed` 或同時與 `open` 和 `closed` 合併使用。<br>- `none`：不接受任何萬用字元模式。<br> 選用。預設為 `open`。
+`allow_partial_pit_creation` | Boolean | 指定是否在部分失敗的情況下建立 PIT。選用。預設為 `true`。
 
-#### Example request
+#### 範例請求
 
 <!-- spec_insert_start
 component: example_code
@@ -75,7 +76,7 @@ response = client.create_pit(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -90,16 +91,16 @@ response = client.create_pit(
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-Field | Data type | Description 
-:--- | :--- | :---  
-`pit_id` | [Base64-encoded binary]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/binary/) | The PIT ID.
-`creation_time` | `long` | The time at which the PIT was created, in milliseconds since the epoch. 
+欄位 | 資料類型 | 說明
+:--- | :--- | :---
+`pit_id` | [Base64 編碼的二進位資料]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/binary/) | PIT ID。
+`creation_time` | `long` | 建立 PIT 的時間，以自 epoch 起算的毫秒數表示。
 
-## Extend a PIT time
+## 延長 PIT 時間
 
-You can extend a PIT time by providing a `keep_alive` parameter in the `pit` object when you perform a search:
+您可以在執行搜尋時，於 `pit` 物件中提供 `keep_alive` 參數來延長 PIT 時間：
 
 ```json
 GET /_search
@@ -123,20 +124,20 @@ GET /_search
 }
 ```
 
-The `keep_alive` parameter in a search request is optional. It specifies the amount by which to extend the time to keep a PIT.
+搜尋請求中的 `keep_alive` 參數為選用。此參數指定 PIT 保留時間要延長的長度。
 {: .note}
 
-## List all PITs
-**Introduced 2.4**
+## 列出所有 PIT
+**自 2.4 版起推出**
 {: .label .label-purple }
 
-Returns all PITs in the OpenSearch cluster.
+傳回 OpenSearch 叢集中的所有 PIT。
 
-### Cross-cluster behavior
+### 跨叢集行為
 
-The List All PITs API returns only local PITs or mixed PITs (PITs created in both local and remote clusters). It does not return fully remote PITs. 
+List All PITs API 只會傳回本機 PIT 或混合 PIT（同時在本機和遠端叢集中建立的 PIT）。它不會傳回完全遠端的 PIT。
 
-#### Example request
+#### 範例請求
 
 <!-- spec_insert_start
 component: example_code
@@ -156,7 +157,7 @@ response = client.get_all_pits()
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -175,33 +176,33 @@ response = client.get_all_pits()
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-Field | Data type | Description 
-:--- | :--- | :---  
-`pits` | Array of JSON objects | The list of all PITs. 
+欄位 | 資料類型 | 說明
+:--- | :--- | :---
+`pits` | JSON 物件陣列 | 所有 PIT 的清單。
 
-Each PIT object contains the following fields.
+每個 PIT 物件包含下列欄位。
 
-Field | Data type | Description 
-:--- | :--- | :---  
-`pit_id` | [Base64-encoded binary]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/binary/) | The PIT ID.
-`creation_time` | `long` | The time at which the PIT was created, in milliseconds since the epoch. 
-`keep_alive` | `long` |  The amount of time to keep the PIT, in milliseconds.
+欄位 | 資料類型 | 說明
+:--- | :--- | :---
+`pit_id` | [Base64 編碼的二進位資料]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/binary/) | PIT ID。
+`creation_time` | `long` | 建立 PIT 的時間，以自 epoch 起算的毫秒數表示。
+`keep_alive` | `long` |  PIT 的保留時間長度，以毫秒為單位。
 
-## Delete PITs
-**Introduced 2.4**
+## 刪除 PIT
+**自 2.4 版起推出**
 {: .label .label-purple }
 
-Deletes one, several, or all PITs. PITs are automatically deleted when the `keep_alive` time period elapses. However, to deallocate resources, you can delete a PIT using the Delete PIT API. The Delete PIT API supports deleting a list of PITs by ID or deleting all PITs at once.
+刪除一個、數個或所有 PIT。當 `keep_alive` 時間週期經過後，PIT 會自動刪除。不過，若要釋放資源，您可以使用 Delete PIT API 刪除 PIT。Delete PIT API 支援依 ID 刪除 PIT 清單，或一次刪除所有 PIT。
 
-### Cross-cluster behavior
+### 跨叢集行為
 
-The Delete PITs by ID API fully supports deleting cross-cluster PITs. 
+Delete PITs by ID API 完整支援刪除跨叢集 PIT。
 
-The Delete All PITs API deletes only local PITs or mixed PITs (PITs created in both local and remote clusters). It does not delete fully remote PITs. 
+Delete All PITs API 只會刪除本機 PIT 或混合 PIT（同時在本機和遠端叢集中建立的 PIT）。它不會刪除完全遠端的 PIT。
 
-#### Example request: Delete all PITs
+#### 範例請求：刪除所有 PIT
 
 <!-- spec_insert_start
 component: example_code
@@ -221,15 +222,15 @@ response = client.delete_all_pits()
     python=step1_python %}
 <!-- spec_insert_end -->
 
-If you want to delete one or several PITs, specify their PIT IDs in the request body.
+如果您想刪除一個或數個 PIT，請在請求本文中指定其 PIT ID。
 
-### Request body fields
+### 請求本文欄位
 
-Field | Data type | Description  
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`pit_id` | [Base64-encoded binary]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/binary/) or an array of binaries | The PIT IDs of the PITs to be deleted. Required.
+`pit_id` | [Base64 編碼的二進位資料]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/binary/) 或二進位資料陣列 | 要刪除之 PIT 的 PIT ID。必要。
 
-#### Example request: Delete PITs by ID
+#### 範例請求：依 ID 刪除 PIT
 
 <!-- spec_insert_start
 component: example_code
@@ -271,9 +272,9 @@ response = client.delete_pit(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Example response
+#### 範例回應
 
-For each PIT, the response contains a JSON object with a PIT ID and a `successful` field that specifies whether the deletion was successful. Partial failures are treated as failures. 
+回應會為每個 PIT 包含一個 JSON 物件，其中含有 PIT ID 和 `successful` 欄位，用來指定刪除是否成功。部分失敗會視為失敗。
 
 ```json
 {
@@ -290,18 +291,18 @@ For each PIT, the response contains a JSON object with a PIT ID and a `successfu
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-Field | Data type | Description  
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`successful` | Boolean | Whether the delete operation was successful.
-`pit_id` | [Base64-encoded binary]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/binary/)  | The PIT ID of the PIT to be deleted.
+`successful` | Boolean | 刪除操作是否成功。
+`pit_id` | [Base64 編碼的二進位資料]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/binary/)  | 要刪除之 PIT 的 PIT ID。
 
-## Security model
+## 安全性模型
 
-This section describes the permissions needed to use PIT API operations if you are running OpenSearch with the Security plugin enabled.
+本節說明當您在啟用 Security 外掛程式的情況下執行 OpenSearch 時，使用 PIT API 操作所需的權限。
 
-You can access all PIT API operations using the `point_in_time_full_access` role. If this role doesn't meet your needs, mix and match individual PIT permissions to suit your use case. Each action corresponds to an operation in the REST API. For example, the `indices:data/read/point_in_time/create` permission lets you create a PIT. The following are the possible permissions:
+您可以使用 `point_in_time_full_access` 角色來存取所有 PIT API 操作。如果此角色不符合您的需求，您可以混搭個別的 PIT 權限以符合您的使用情境。每個動作都對應 REST API 中的一項操作。例如，`indices:data/read/point_in_time/create` 權限可讓您建立 PIT。以下是可能的權限：
 
 - `indices:data/read/point_in_time/create` &ndash; Create API
 - `indices:data/read/point_in_time/delete` &ndash; Delete API
@@ -309,26 +310,26 @@ You can access all PIT API operations using the `point_in_time_full_access` role
 - `indices:data/read/search` &ndash; Search API
 - `indices:monitor/point_in_time/segments` &ndash; PIT Segments API
 
-For `all` API operations, such as list all and delete all, the user needs the all indexes (*) permission. For API operations such as search, create PIT, or delete list, the user only needs individual index permissions.
+對於 `all` API 操作（例如列出全部和刪除全部），使用者需要所有索引 (*) 權限。對於搜尋、建立 PIT 或刪除清單等 API 操作，使用者只需要個別索引權限。
 
-The PIT IDs always contain the underlying (resolved) indexes when saved. The following sections describe the required permissions for aliases and data streams.
+儲存時，PIT ID 一律會包含底層（已解析）索引。下列各節說明別名和資料串流所需的權限。
 
-### Alias permissions
+### 別名權限
 
-For aliases, users must have either index **or** alias permissions for any PIT operation.
+對於別名，使用者必須擁有索引**或**別名權限，才能執行任何 PIT 操作。
 
-### Data stream permissions
+### 資料串流權限
 
-For data streams, users must have both the data stream **and** the data stream's backing index permissions for any PIT operation. For example, the user must have permissions for the `data-stream-11` data stream and for its backing index `.ds-my-data-stream11-000001`.
+對於資料串流，使用者必須同時擁有資料串流**和**該資料串流底層索引的權限，才能執行任何 PIT 操作。例如，使用者必須擁有 `data-stream-11` 資料串流及其底層索引 `.ds-my-data-stream11-000001` 的權限。
 
-If users have the data stream permissions only, they will be able to create a PIT, but they will not be able to use the PIT ID for other operations, such as search, without the backing index permissions.
+如果使用者只有資料串流權限，他們將能夠建立 PIT，但若沒有底層索引權限，就無法將 PIT ID 用於搜尋等其他操作。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions. The following permissions are required for this API:
+如果您使用 Security 外掛程式，請確定您擁有適當的權限。此 API 需要下列權限：
 
-- `indices:data/read/point_in_time/create`: Required for creating a PIT
-- `indices:data/read/point_in_time/delete`: Required for deleting a PIT
-- `indices:data/read/search`: Required for searching with a PIT
+- `indices:data/read/point_in_time/create`：建立 PIT 時需要
+- `indices:data/read/point_in_time/delete`：刪除 PIT 時需要
+- `indices:data/read/search`：使用 PIT 搜尋時需要
 
-If users have the data stream permissions only, they will be able to create a PIT, but they will not be able to use the PIT ID for other operations, such as search, without the backing index permissions.
+如果使用者只有資料串流權限，他們將能夠建立 PIT，但若沒有底層索引權限，就無法將 PIT ID 用於搜尋等其他操作。

@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Multi term vectors
+title: "多重詞彙向量"
 parent: Document APIs
 nav_order: 80
 ---
 
-# Multi Term Vectors API
-**Introduced 1.0**
+# 多重詞彙向量 API
+**於 1.0 版引入**
 {: .label .label-purple }
 
-The `_mtermvectors` API retrieves term vector information for multiple documents in one request. Term vectors provide detailed information about the terms (words) in a document, including term frequency, positions, offsets, and payloads. This can be useful for applications such as relevance scoring, highlighting, or similarity calculations. For more information, see [Term vector parameter]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/#term-vector-parameter).
+`_mtermvectors` API 可在單一請求中擷取多份文件的詞彙向量資訊。詞彙向量提供文件中詞彙（單字）的詳細資訊，包括詞彙頻率、位置、位移和承載資料。這些資訊可用於相關性評分、醒目標示或相似度計算等應用。如需詳細資訊，請參閱[詞彙向量參數]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/#term-vector-parameter)。
 
 <!-- spec_insert_start
 api: mtermvectors
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET  /_mtermvectors
 POST /_mtermvectors
@@ -28,13 +29,13 @@ POST /{index}/_mtermvectors
 api: mtermvectors
 component: path_parameters
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `index` | String | The name of the index that contains the document. |
+| `index` | 字串 | 包含該文件的索引名稱。 |
 
 <!-- spec_insert_end -->
 
@@ -43,63 +44,63 @@ api: mtermvectors
 component: query_parameters
 columns: Parameter, Data type, Description
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `field_statistics` | Boolean | If `true`, the response includes the document count, sum of document frequencies, and sum of total term frequencies. _(Default: `true`)_ |
-| `fields` | List or String | A comma-separated list or a wildcard expression specifying the fields to include in the statistics. Used as the default list unless a specific field list is provided in the `completion_fields` or `fielddata_fields` parameters. |
-| `ids` | List | A comma-separated list of documents IDs. You must provide either the `docs` field in the request body or specify `ids` as a query parameter or in the request body. |
-| `offsets` | Boolean | If `true`, the response includes term offsets. _(Default: `true`)_ |
-| `payloads` | Boolean | If `true`, the response includes term payloads. _(Default: `true`)_ |
-| `positions` | Boolean | If `true`, the response includes term positions. _(Default: `true`)_ |
-| `preference` | String | Specifies the node or shard on which the operation should be performed. See [preference query parameter]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#the-preference-query-parameter) for a list of available options. By default the requests are routed randomly to available shard copies (primary or replica), with no guarantee of consistency across repeated queries. |
-| `realtime` | Boolean | If `true`, the request is real time as opposed to near real time. _(Default: `true`)_ |
-| `routing` | List or String | A custom value used to route operations to a specific shard. |
-| `term_statistics` | Boolean | If `true`, the response includes term frequency and document frequency. _(Default: `false`)_ |
-| `version` | Integer | If `true`, returns the document version as part of a hit. |
-| `version_type` | String | The specific version type. <br> Valid values are: <br> - `external`: The version number must be greater than the current version. <br> - `external_gte`: The version number must be greater than or equal to the current version. <br> - `internal`: The version number is managed internally by OpenSearch. |
+| `field_statistics` | 布林值 | 若為 `true`，回應會包含文件數、文件頻率總和，以及詞彙總頻率的總和。 _（預設：`true`）_ |
+| `fields` | 清單或字串 | 以逗號分隔的清單或萬用字元運算式，用來指定統計資料要包含的欄位。除非在 `completion_fields` 或 `fielddata_fields` 參數中提供特定欄位清單，否則會使用此清單作為預設清單。 |
+| `ids` | 清單 | 以逗號分隔的文件 ID 清單。您必須在請求本文中提供 `docs` 欄位，或將 `ids` 指定為查詢參數或放在請求本文中。 |
+| `offsets` | 布林值 | 若為 `true`，回應會包含詞彙位移。 _（預設：`true`）_ |
+| `payloads` | 布林值 | 若為 `true`，回應會包含詞彙承載資料。 _（預設：`true`）_ |
+| `positions` | 布林值 | 若為 `true`，回應會包含詞彙位置。 _（預設：`true`）_ |
+| `preference` | 字串 | 指定應執行操作的節點或分片。如需可用選項清單，請參閱 [preference 查詢參數]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#the-preference-query-parameter)。依預設，請求會隨機路由至可用的分片複本（主要分片或副本分片），且不保證重複查詢時的一致性。 |
+| `realtime` | 布林值 | 若為 `true`，請求會以即時而非近即時方式執行。 _（預設：`true`）_ |
+| `routing` | 清單或字串 | 用來將操作路由至特定分片的自訂值。 |
+| `term_statistics` | 布林值 | 若為 `true`，回應會包含詞彙頻率和文件頻率。 _（預設：`false`）_ |
+| `version` | 整數 | 若為 `true`，會將文件版本作為命中結果的一部分回傳。 |
+| `version_type` | 字串 | 特定的版本類型。<br> 有效值如下：<br> - `external`：版本號碼必須大於目前版本。<br> - `external_gte`：版本號碼必須大於或等於目前版本。<br> - `internal`：版本號碼由 OpenSearch 內部管理。 |
 
 <!-- spec_insert_end -->
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the fields that can be specified in the request body.
+下表列出可在請求本文中指定的欄位。
 
-| Field | Data type | Description |
-| `docs` | Array | An array of document specifications. |
-| `ids` | Array of strings | A list of document IDs to retrieve. Use only when all documents share the same index specified in the request path or query. |
-| `fields` | Array of strings | A list of field names for which to return term vectors. |
-| `offsets` | Boolean | If `true`, the response includes character offsets for each term. *(Default: `true`)* |
-| `payloads` | Boolean | If `true`, the response includes payloads for each term. *(Default: `true`)* |
-| `positions` | Boolean | If `true`, the response includes token positions. *(Default: `true`)* |
-| `field_statistics` | Boolean | If `true`, the response includes statistics such as document count, sum of document frequencies, and sum of total term frequencies. *(Default: `true`)* |
-| `term_statistics` | Boolean | If `true`, the response includes term frequency and document frequency. *(Default: `false`)* |
-| `routing` | String | A custom routing value used to identify the shard. Required if custom routing was used during indexing. |
-| `version` | Integer | The specific version of the document to retrieve. |
-| `version_type` | String | The type of versioning to use. Valid values: `internal`, `external`, `external_gte`. |
-| `filter` | Object | Filters tokens returned in the response (for example, by frequency or position). For supported fields, see [Filtering terms]({{site.url}}{{site.baseurl}}/api-reference/document-apis/mtermvectors/#filtering-terms). |
-| `per_field_analyzer` | Object | Specifies a custom analyzer to use per field. Format: `{ "field_name": "analyzer_name" }`. |
+| 欄位 | 資料類型 | 說明 |
+| `docs` | 陣列 | 文件規格的陣列。 |
+| `ids` | 字串陣列 | 要擷取的文件 ID 清單。僅在所有文件皆屬於請求路徑或查詢中指定的同一個索引時使用。 |
+| `fields` | 字串陣列 | 要回傳詞彙向量的欄位名稱清單。 |
+| `offsets` | 布林值 | 若為 `true`，回應會包含每個詞彙的字元位移。 *（預設：`true`）* |
+| `payloads` | 布林值 | 若為 `true`，回應會包含每個詞彙的承載資料。 *（預設：`true`）* |
+| `positions` | 布林值 | 若為 `true`，回應會包含詞元位置。 *（預設：`true`）* |
+| `field_statistics` | 布林值 | 若為 `true`，回應會包含文件數、文件頻率總和，以及詞彙總頻率的總和等統計資料。 *（預設：`true`）* |
+| `term_statistics` | 布林值 | 若為 `true`，回應會包含詞彙頻率和文件頻率。 *（預設：`false`）* |
+| `routing` | 字串 | 用來識別分片的自訂路由值。若在編製索引時使用自訂路由，則此欄位為必要。 |
+| `version` | 整數 | 要擷取的文件特定版本。 |
+| `version_type` | 字串 | 要使用的版本控制類型。有效值：`internal`、`external`、`external_gte`。 |
+| `filter` | 物件 | 篩選回應中回傳的詞元（例如依頻率或位置篩選）。如需支援的欄位，請參閱[篩選詞彙]({{site.url}}{{site.baseurl}}/api-reference/document-apis/mtermvectors/#filtering-terms)。 |
+| `per_field_analyzer` | 物件 | 指定各欄位要使用的自訂分析器。格式：`{ "field_name": "analyzer_name" }`。 |
 
-## Filtering terms
+## 篩選詞彙
 
-The `filter` object in the request body allows you to filter the tokens to include in the term vector response. The `filter` object supports the following fields.
+請求本文中的 `filter` 物件可讓您篩選要納入詞彙向量回應的詞元。`filter` 物件支援下列欄位。
 
-| Field | Data type | Description |
-| `max_num_terms` | Integer | The maximum number of terms to return. |
-| `min_term_freq` | Integer | The minimum term frequency in the document required for a term to be included. |
-| `max_term_freq` | Integer | The maximum term frequency in the document required for a term to be included. |
-| `min_doc_freq` | Integer | The minimum document frequency across the index required for a term to be included. |
-| `max_doc_freq` | Integer | The maximum document frequency across the index required for a term to be included. |
-| `min_word_length` | Integer | The minimum length of the term to be included. |
-| `max_word_length` | Integer | The maximum length of the term to be included. |
+| 欄位 | 資料類型 | 說明 |
+| `max_num_terms` | 整數 | 要回傳的詞彙數量上限。 |
+| `min_term_freq` | 整數 | 詞彙要被納入時，其在文件中的詞彙頻率下限。 |
+| `max_term_freq` | 整數 | 詞彙要被納入時，其在文件中的詞彙頻率上限。 |
+| `min_doc_freq` | 整數 | 詞彙要被納入時，其在整個索引中的文件頻率下限。 |
+| `max_doc_freq` | 整數 | 詞彙要被納入時，其在整個索引中的文件頻率上限。 |
+| `min_word_length` | 整數 | 要納入的詞彙長度下限。 |
+| `max_word_length` | 整數 | 要納入的詞彙長度上限。 |
 
-## Example requests
+## 請求範例
 
 
-Create an index with term vectors enabled:
+建立已啟用詞彙向量的索引：
 
 ```json
 PUT /my-index
@@ -116,7 +117,7 @@ PUT /my-index
 ```
 {% include copy-curl.html %}
 
-Index the first document:
+將第一份文件編製索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -151,7 +152,7 @@ response = client.index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Index the second document:
+將第二份文件編製索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -186,9 +187,9 @@ response = client.index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Example request
+### 請求範例
 
-Get term vectors for multiple documents:
+取得多份文件的詞項向量：
 
 <!-- spec_insert_start
 component: example_code
@@ -262,7 +263,7 @@ response = client.mtermvectors(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Alternatively, you can specify both `ids` and `fields` as query parameters:
+或者，您可以將 `ids` 和 `fields` 都指定為查詢參數：
 
 <!-- spec_insert_start
 component: example_code
@@ -288,7 +289,7 @@ response = client.mtermvectors(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-You can also provide document IDs in the `ids` array instead of specifying `docs`:
+您也可以在 `ids` 陣列中提供文件 ID，而不指定 `docs`：
 
 <!-- spec_insert_start
 component: example_code
@@ -331,9 +332,9 @@ response = client.mtermvectors(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-The response contains term vector information for the two documents:
+回應包含這兩份文件的詞項向量資訊：
 
 ```json
 {
@@ -468,26 +469,26 @@ The response contains term vector information for the two documents:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | -------- | --------- | ----------- |
-| `docs` | Array | A list of requested documents containing term vectors. |
+| `docs` | 陣列 | 請求的文件清單，包含詞項向量。 |
 
-Each element of the `docs` array contains the following fields.
+`docs` 陣列中的每個元素都包含下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | -------- | --------- | ----------- |
-| `term_vectors` | Object | Contains term vector data for each field. |
-| `term_vectors.<field>.field_statistics` | Object | Contains statistics about the field. |
-| `term_vectors.<field>.field_statistics.doc_count` | Integer | The number of documents that contain at least one term in the specified field. |
-| `term_vectors.<field>.field_statistics.sum_doc_freq` | Integer | The sum of document frequencies for all terms in the field. |
-| `term_vectors.<field>.field_statistics.sum_ttf` | Integer | The sum of total term frequencies for all terms in the field. |
-| `term_vectors.<field>.terms` | Object | A map of terms in the field, in which each term includes its frequency (`term_freq`) and associated token information. |
-| `term_vectors.<field>.terms.<term>.tokens` | Array | An array of token objects for each term, including the token's `position` in the text and its character offsets (`start_offset` and `end_offset`). |
+| `term_vectors` | 物件 | 包含各欄位的詞項向量資料。 |
+| `term_vectors.<field>.field_statistics` | 物件 | 包含欄位的統計資料。 |
+| `term_vectors.<field>.field_statistics.doc_count` | 整數 | 在指定欄位中包含至少一個詞項的文件數量。 |
+| `term_vectors.<field>.field_statistics.sum_doc_freq` | 整數 | 欄位中所有詞項的文件頻率總和。 |
+| `term_vectors.<field>.field_statistics.sum_ttf` | 整數 | 欄位中所有詞項的總詞項頻率總和。 |
+| `term_vectors.<field>.terms` | 物件 | 欄位中詞項的對應表，其中每個詞項都包含其頻率（`term_freq`）及相關的詞元資訊。 |
+| `term_vectors.<field>.terms.<term>.tokens` | 陣列 | 每個詞項的詞元物件陣列，包含詞元在文字中的 `position` 及其字元位移（`start_offset` 和 `end_offset`）。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:data/read/mtv` and `indices:data/read/mtv*`.
+如果您使用 Security 外掛程式，請確定您具備適當的權限：`indices:data/read/mtv` 和 `indices:data/read/mtv*`。

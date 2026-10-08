@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Maps Stats API
 nav_order: 20
@@ -11,35 +12,35 @@ redirect_from:
 ---
 
 # Maps Stats API
-Introduced 2.7
+於 2.7 版推出
 {: .label .label-purple }
 
-When you create and save a [map]({{site.url}}{{site.baseurl}}/dashboards/visualize/maps/) in OpenSearch Dashboards, the map becomes a saved object of type `map`. The Maps Stats API provides information about such saved objects in OpenSearch Dashboards. 
+當您在 OpenSearch Dashboards 中建立並儲存[地圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/maps/)時，該地圖會成為類型為 `map` 的已儲存物件。Maps Stats API 提供 OpenSearch Dashboards 中此類已儲存物件的資訊。
 
-#### Example request
+#### 範例請求
 
-You can access the Maps Stats API by providing its URL address in the following format:
+您可以透過以下格式提供 URL 位址來存取 Maps Stats API：
 
 ```
 {opensearch-dashboards-endpoint-address}/api/maps-dashboards/stats
 ```
 
-The OpenSearch Dashboards endpoint address may contain a port number if it is specified in the OpenSearch configuration file. The specific URL format depends on the type of OpenSearch deployment and the network environment in which it is hosted.
+OpenSearch Dashboards 端點位址可能包含連接埠號碼（若該號碼已在 OpenSearch 組態檔中指定）。具體的 URL 格式取決於 OpenSearch 部署的類型及其所在的網路環境。
 {: .note}  
 
-You can query the endpoint in two ways:
+您可以透過兩種方式查詢該端點：
   
-  - By accessing the endpoint address (for example, `http://localhost:5601/api/maps-dashboards/stats`) in a browser
+  - 在瀏覽器中存取端點位址（例如 `http://localhost:5601/api/maps-dashboards/stats`）
 
-  - By using the `curl` command in the terminal:
+  - 在終端機中使用 `curl` 命令：
     ```bash
     curl -X GET http://localhost:5601/api/maps-dashboards/stats
     ```
     {% include copy.html %}
 
-#### Example response
+#### 範例回應
 
-The following is the response for the preceding request:
+以下是前述請求的回應：
 
 ```json
 {
@@ -96,44 +97,44 @@ The following is the response for the preceding request:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response contains statistics for the following layer types:
+回應包含下列圖層類型的統計資料：
 
-- Basemaps: Either a default OpenSearch map or custom base layer maps.
+- 底圖：預設的 OpenSearch 地圖或自訂底層地圖。
 
-- WMS layers: Custom WMS base layer maps.
+- WMS 圖層：自訂的 WMS 底層地圖。
 
-- TMS layers: Custom TMS base layer maps.
+- TMS 圖層：自訂的 TMS 底層地圖。
 
-- Document layers: The map's data layers.
+- 文件圖層：地圖的資料圖層。
 
-For more information about the layer types, see [Adding layers]({{site.url}}{{site.baseurl}}/dashboards/visualize/maps/#adding-layers).
+如需圖層類型的更多資訊，請參閱[新增圖層]({{site.url}}{{site.baseurl}}/dashboards/visualize/maps/#adding-layers)。
 
-The following table lists all response fields.
+下表列出所有回應欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- | 
-| `maps_total` | Integer | The total number of maps registered as saved objects with the Maps plugin. |
-| `layers_filters_total` | Integer | The total number of filters for all layers in all maps. This includes [layer-level filters]({{site.url}}{{site.baseurl}}/dashboards/visualize/maps/#filtering-data-at-the-layer-level) but excludes global filters like [shape filters]({{site.url}}{{site.baseurl}}/dashboards/visualize/maps/#drawing-shapes-to-filter-data). |
-| `layers_total` | Object | Totals statistics for all layers in all maps. |
-| `layers_total.opensearch_vector_tile_map` | Integer | The total number of OpenSearch basemaps in all maps. |
-| `layers_total.documents` | Integer | The total number of document layers in all maps. |
-| `layers_total.wms` | Integer | The total number of WMS layers in all maps. |
-| `layers_total.tms` | Integer | The total number of TMS layers in all maps. |
-| `maps_list` | Array | A list of all maps saved in OpenSearch Dashboards. |
+| `maps_total` | 整數 | 已註冊為 Maps 外掛程式已儲存物件的地圖總數。 |
+| `layers_filters_total` | 整數 | 所有地圖中所有圖層的篩選器總數。這包括[圖層層級篩選器]({{site.url}}{{site.baseurl}}/dashboards/visualize/maps/#filtering-data-at-the-layer-level)，但不包括全域篩選器，例如[形狀篩選器]({{site.url}}{{site.baseurl}}/dashboards/visualize/maps/#drawing-shapes-to-filter-data)。 |
+| `layers_total` | 物件 | 所有地圖中所有圖層的彙總統計資料。 |
+| `layers_total.opensearch_vector_tile_map` | 整數 | 所有地圖中 OpenSearch 底圖的總數。 |
+| `layers_total.documents` | 整數 | 所有地圖中文件圖層的總數。 |
+| `layers_total.wms` | 整數 | 所有地圖中 WMS 圖層的總數。 |
+| `layers_total.tms` | 整數 | 所有地圖中 TMS 圖層的總數。 |
+| `maps_list` | 陣列 | 儲存在 OpenSearch Dashboards 中所有地圖的清單。 |
 
-Each map in the `map_list` contains the following fields.
+`map_list` 中的每個地圖都包含下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- | 
-| `id` | String | The map's saved object ID. |
-| `layers_filters_total` | Integer | The total number of filters for all layers in the map. This includes [layer-level filters]({{site.url}}{{site.baseurl}}/dashboards/visualize/maps/#filtering-data-at-the-layer-level) but excludes global filters like [shape filters]({{site.url}}{{site.baseurl}}/dashboards/visualize/maps/#drawing-shapes-to-filter-data) . |
-| `layers_total` | Object | Totals statistics for all layers in the map. |
-| `layers_total.opensearch_vector_tile_map` | Integer | The total number of OpenSearch basemaps in the map. |
-| `layers_total.documents` | Integer | The total number of document layers in the map. |
-| `layers_total.wms` | Integer | The total number of WMS layers in the map. |
-| `layers_total.tms` | Integer | The total number of TMS layers in the map. |
+| `id` | 字串 | 地圖的已儲存物件 ID。 |
+| `layers_filters_total` | 整數 | 該地圖中所有圖層的篩選器總數。這包括[圖層層級篩選器]({{site.url}}{{site.baseurl}}/dashboards/visualize/maps/#filtering-data-at-the-layer-level)，但不包括全域篩選器，例如[形狀篩選器]({{site.url}}{{site.baseurl}}/dashboards/visualize/maps/#drawing-shapes-to-filter-data)。 |
+| `layers_total` | 物件 | 該地圖中所有圖層的彙總統計資料。 |
+| `layers_total.opensearch_vector_tile_map` | 整數 | 該地圖中 OpenSearch 底圖的總數。 |
+| `layers_total.documents` | 整數 | 該地圖中文件圖層的總數。 |
+| `layers_total.wms` | 整數 | 該地圖中 WMS 圖層的總數。 |
+| `layers_total.tms` | 整數 | 該地圖中 TMS 圖層的總數。 |
 
-The saved object ID helps you navigate to a particular map because the ID is the last part of the map's URL. For example, in OpenSearch Playground, the address of the `[Flights] Flights Status on Maps Destination Location` map is `https://playground.opensearch.org/app/maps-dashboards/88a24e6c-0216-4f76-8bc7-c8db6c8705da`, where `88a24e6c-0216-4f76-8bc7-c8db6c8705da` is the saved object ID for this map.
+已儲存物件 ID 可協助您前往特定地圖，因為該 ID 是地圖 URL 的最後一部分。例如，在 OpenSearch Playground 中，`[Flights] Flights Status on Maps Destination Location` 地圖的位址是 `https://playground.opensearch.org/app/maps-dashboards/88a24e6c-0216-4f76-8bc7-c8db6c8705da`，其中 `88a24e6c-0216-4f76-8bc7-c8db6c8705da` 就是此地圖的已儲存物件 ID。
 {: .tip}

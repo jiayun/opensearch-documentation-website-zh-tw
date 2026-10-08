@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Dashboard sections
+title: "儀表板區段"
 parent: Creating dashboards
 nav_order: 35
 has_children: false
 ---
 
-# Dashboard sections
+# 儀表板區段
 **Introduced 3.9**
 {: .label .label-purple }
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).
+這是一項實驗性功能，不建議在生產環境中使用。如需了解此功能的進度更新或想要提供回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/) 的討論。
 {: .warning}
 
-Dashboard sections are collapsible containers that group visualization panels into named categories within a dashboard. Use sections to organize a dashboard that contains many panels and to reduce its initial load time by saving it with rarely used sections collapsed.
+儀表板區段是可摺疊的容器，可將儀表板內的視覺化面板分組為具名的類別。使用區段來組織包含許多面板的儀表板，並透過將較少使用的區段設定為摺疊狀態來儲存，以縮短其初始載入時間。
 
-The following image shows a dashboard containing a section of visualizations.
+下圖顯示了一個包含視覺化區段的儀表板。
 
-![Dashboard with a section containing four visualization panels]({{site.url}}{{site.baseurl}}/images/dashboard-sections/dashboard-with-sections.png)
+![包含四個視覺化面板區段的儀表板]({{site.url}}{{site.baseurl}}/images/dashboard-sections/dashboard-with-sections.png)
 
-## Enabling dashboard sections
+## 啟用儀表板區段
 
-To enable dashboard sections, add the following settings to your `opensearch_dashboards.yml` file:
+要啟用儀表板區段，請將以下設定新增至您的 `opensearch_dashboards.yml` 檔案：
 
 ```yaml
 uiSettings.overrides.home:useNewHomePage: true
@@ -29,148 +30,148 @@ dashboard.allowDashboardSections: true
 ```
 {% include copy.html %}
 
-Then restart OpenSearch Dashboards for the changes to take effect.
+然後重新啟動 OpenSearch Dashboards 以使變更生效。
 
-## Creating and managing sections
+## 建立與管理區段
 
-All section actions except collapsing and expanding require [edit mode]({{site.url}}{{site.baseurl}}/dashboards/dashboard/opening-a-dashboard/). In edit mode, select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/kebab-icon.png" class="inline-icon" alt="vertical ellipsis icon"/>{:/} (vertical ellipsis) icon on a section header to open the section context menu, or the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/gear-icon.png" class="inline-icon" alt="gear icon"/>{:/} (gear) icon on a panel to open the panel context menu.
+除了摺疊與展開之外，所有區段操作都需要 [編輯模式]({{site.url}}{{site.baseurl}}/dashboards/dashboard/opening-a-dashboard/)。在編輯模式中，選取區段標題上的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/kebab-icon.png" class="inline-icon" alt="vertical ellipsis icon"/>{:/} (垂直省略號) 圖示以開啟區段快顯功能表，或選取面板上的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/gear-icon.png" class="inline-icon" alt="gear icon"/>{:/} (齒輪) 圖示以開啟面板快顯功能表。
 
-Within a section, panels have their own grid layout, so you can drag and resize them as you would on a dashboard without sections. The section adjusts its height to fit its contents.
+在區段內，面板具有自己的格線佈局，因此您可以像在沒有區段的儀表板上一樣拖曳並調整其大小。區段會根據其內容自動調整高度。
 
-### Creating a section
+### 建立區段
 
-When you create the first section on a dashboard, all existing panels are grouped into that section so that the current layout is preserved. Later sections start empty.
+當您在儀表板上建立第一個區段時，所有現有面板都會被分組到該區段中，以保留目前的佈局。後續建立的區段初始狀態為空。
 
-To create a section, follow these steps:
+要建立區段，請執行以下步驟：
 
-1. Open a dashboard in edit mode.
-2. In the toolbar, select **Add**.
-3. Select **Section**.
+1. 在編輯模式下開啟儀表板。
+2. 在工具列中，選取 **Add**。
+3. 選取 **Section**。
 
-A section is added to the dashboard.
+區段將被新增至儀表板中。
 
-### Renaming a section
+### 重新命名區段
 
-To rename a section, follow these steps:
+要重新命名區段，請執行以下步驟：
 
-1. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/kebab-icon.png" class="inline-icon" alt="vertical ellipsis icon"/>{:/} (vertical ellipsis) icon on the section header.
-2. Select **Rename**.
-3. In the **Rename section** dialog, enter a name for the section.
-4. Select **Save**.
+1. 選取區段標題上的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/kebab-icon.png" class="inline-icon" alt="vertical ellipsis icon"/>{:/} (垂直省略號) 圖示。
+2. 選取 **Rename**。
+3. 在 **Rename section** 對話方塊中，輸入區段名稱。
+4. 選取 **Save**。
 
-Section names do not need to be unique, but distinct names make it easier to move panels between sections.
+區段名稱不需要唯一，但使用不同的名稱可以更輕鬆地在區段之間移動面板。
 {: .tip}
 
-### Collapsing and expanding sections
+### 摺疊與展開區段
 
-To collapse a section, select the arrow to the left of the section title. The section header remains visible, and the panels are hidden. To expand a collapsed section, select the arrow again.
+要摺疊區段，請選取區段標題左側的箭頭。區段標題將保持可見，而面板則會被隱藏。要展開已摺疊的區段，請再次選取該箭頭。
 
-### Reordering sections
+### 重新排序區段
 
-To reorder sections, follow these steps:
+要重新排序區段，請執行以下步驟：
 
-1. Select and hold the section header, which acts as the drag handle.
-2. Drag the section to a new position.
-3. Release the section to drop it into place.
+1. 選取並按住區段標題（其作為拖曳控制項）。
+2. 將區段拖曳到新位置。
+3. 放開區段以將其放置在該位置。
 
-### Moving a panel to another section
+### 將面板移動到另一個區段
 
-You can move a panel from one section to another or from the **Ungrouped** area into a section.
+您可以將面板從一個區段移動到另一個區段，或從 **Ungrouped** 區域移動到區段中。
 
-To move a panel, follow these steps:
+要移動面板，請執行以下步驟：
 
-1. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/gear-icon.png" class="inline-icon" alt="gear icon"/>{:/} (gear) icon in the panel's upper-right corner.
-2. Select **Move to section**.
-3. In the **Move to section** dialog, select the target section.
-4. Select **Move**.
+1. 選取面板右上角的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/gear-icon.png" class="inline-icon" alt="gear icon"/>{:/} (齒輪) 圖示。
+2. 選取 **Move to section**。
+3. 在 **Move to section** 對話方塊中，選取目標區段。
+4. 選取 **Move**。
 
-The panel is removed from its current section and added to the target section.
+面板將從目前的區段中移除並新增至目標區段。
 
-### Adding a new visualization to a section
+### 將新視覺化新增至區段
 
-To create a visualization and add it to a section, follow these steps:
+要建立視覺化並將其新增至區段，請執行以下步驟：
 
-1. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/kebab-icon.png" class="inline-icon" alt="vertical ellipsis icon"/>{:/} (vertical ellipsis) icon on the section header.
-2. Select **Create new visualization**.
-3. Build the visualization in the visualization editor.
-4. Select **Save and return**.
+1. 選取區段標題上的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/kebab-icon.png" class="inline-icon" alt="vertical ellipsis icon"/>{:/} (垂直省略號) 圖示。
+2. 選取 **Create new visualization**。
+3. 在視覺化編輯器中建立視覺化。
+4. 選取 **Save and return**。
 
-The visualization is added to the section as a panel.
+該視覺化將作為面板新增至區段中。
 
-### Adding a saved visualization to a section
+### 將已儲存的視覺化新增至區段
 
-To add an existing visualization from the library, follow these steps:
+要從程式庫新增現有的視覺化，請執行以下步驟：
 
-1. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/kebab-icon.png" class="inline-icon" alt="vertical ellipsis icon"/>{:/} (vertical ellipsis) icon on the section header.
-2. Select **Add from library**.
-3. Search for and select a saved visualization.
+1. 選取區段標題上的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/kebab-icon.png" class="inline-icon" alt="vertical ellipsis icon"/>{:/} (垂直省略號) 圖示。
+2. 選取 **Add from library**。
+3. 搜尋並選取已儲存的視覺化。
 
-The visualization is added to the section.
+該視覺化將被新增至區段中。
 
-### Deleting a section
+### 刪除區段
 
-To delete a section, follow these steps:
+要刪除區段，請執行以下步驟：
 
-1. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/kebab-icon.png" class="inline-icon" alt="vertical ellipsis icon"/>{:/} (vertical ellipsis) icon on the section header.
-2. Select **Delete section**.
-3. In the confirmation dialog, confirm the deletion.
+1. 選取區段標題上的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/kebab-icon.png" class="inline-icon" alt="vertical ellipsis icon"/>{:/} (垂直省略號) 圖示。
+2. 選取 **Delete section**。
+3. 在確認對話方塊中，確認刪除。
 
-Deleting a section permanently removes all panels in it. You cannot undo this after you save the dashboard. To keep the panels, move them to another section first.
+刪除區段會永久移除其中的所有面板。儲存儀表板後，此操作無法復原。若要保留面板，請先將其移動到另一個區段。
 {: .warning}
 
-### Removing all sections
+### 移除所有區段
 
-You can return all panels to a single grid and remove the section structure from the dashboard.
+您可以將所有面板恢復到單一格線，並從儀表板中移除區段結構。
 
-To remove all sections, follow these steps:
+要移除所有區段，請執行以下步驟：
 
-1. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/kebab-icon.png" class="inline-icon" alt="vertical ellipsis icon"/>{:/} (vertical ellipsis) icon on any section header.
-2. Select **Ungroup all sections**.
-3. In the confirmation dialog, confirm the action.
+1. 選取任何區段標題上的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/kebab-icon.png" class="inline-icon" alt="vertical ellipsis icon"/>{:/} (垂直省略號) 圖示。
+2. 選取 **Ungroup all sections**。
+3. 在確認對話方塊中，確認此操作。
 
-All panels are returned to a single grid, and the sections are removed.
+所有面板將恢復到單一格線，且區段將被移除。
 
-## Ungrouped panels
+## 未分組面板
 
-Panels that are not assigned to a section appear in an **Ungrouped** area at the bottom of the dashboard. To move an ungrouped panel into a section, use **Move to section** in the panel context menu. You cannot move a panel back into the **Ungrouped** area.
+未分配到任何區段的面板會顯示在儀表板底部的 **Ungrouped** 區域。要將未分組面板移動到區段中，請使用面板快顯功能表中的 **Move to section**。您無法將面板移回 **Ungrouped** 區域。
 
-## Collapsed sections and data loading
+## 摺疊區段與資料載入
 
-Collapsing a section hides its panels but does not remove them. A panel that has not yet been displayed requests no data while its section is collapsed; it fetches data when you expand the section and scroll the panel into view. A panel that has already been displayed continues to refresh with the rest of the dashboard even while the section is collapsed.
+摺疊區段會隱藏其面板，但不會將其移除。尚未顯示的面板在其區段摺疊時不會請求資料；當您展開區段並將面板捲動至可視範圍內時，它才會擷取資料。已經顯示過的面板即使在區段摺疊時，仍會隨儀表板其餘部分持續重新整理。
 
-On a dashboard with many visualizations, saving the dashboard with rarely used sections already collapsed reduces both the initial page load time and the load on your OpenSearch cluster.
+在包含許多視覺化的儀表板上，將較少使用的區段設定為摺疊狀態後儲存儀表板，可以縮短初始頁面載入時間，並減輕 OpenSearch 叢集的負載。
 {: .tip}
 
-## Example: Organizing a dashboard into sections
+## 範例：將儀表板組織成區段
 
-To follow along, go to the OpenSearch Dashboards home page, select **Add sample data**, and then select **Add data** for **Sample eCommerce orders**.
+若要跟隨此操作，請前往 OpenSearch Dashboards 首頁，選取 **Add sample data**，然後為 **Sample eCommerce orders** 選取 **Add data**。
 
-The following steps organize the sample e-commerce dashboard into two sections:
+以下步驟將範例電子商務儀表板組織成兩個區段：
 
-1. On the top menu, select **Dashboards**, and then select **[eCommerce] Revenue Dashboard**.
-2. Select the **Edit** toggle in the toolbar to enter edit mode.
-3. In the toolbar, select **Add** > **Section**. All existing panels are grouped into a section named **Section 1**.
-4. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/kebab-icon.png" class="inline-icon" alt="vertical ellipsis icon"/>{:/} (vertical ellipsis) icon on the **Section 1** header, select **Rename**, enter `Revenue and trends`, and then select **Save**.
-5. In the toolbar, select **Add** > **Section** again. An empty section appears below the first one, also named **Section 1** because the first section was renamed. Rename this section `Customer breakdown`.
-6. On the **[eCommerce] Sales by Gender** panel, select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/gear-icon.png" class="inline-icon" alt="gear icon"/>{:/} (gear) icon, and then select **Move to section**, as shown in the following image.
-    ![Panel Options menu with the Move to section action highlighted]({{site.url}}{{site.baseurl}}/images/dashboard-sections/panel-context-menu.png)
-7. In the **Move to section** dialog, select **Customer breakdown**, and then select **Move**.
-8. Repeat the previous two steps for the **[eCommerce] Sales Count Map** and **[eCommerce] Top Selling Products** panels.
-9. Select the arrow to the left of the **Customer breakdown** title to collapse the section.
-10. Select **Save**.
+1. 在頂端功能表上，選取 **Dashboards**，然後選取 **[eCommerce] Revenue Dashboard**。
+2. 選取工具列中的 **Edit** 切換按鈕以進入編輯模式。
+3. 在工具列中，選取 **Add** > **Section**。所有現有面板都會被分組到名為 **Section 1** 的區段中。
+4. 選取 **Section 1** 標題上的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/kebab-icon.png" class="inline-icon" alt="vertical ellipsis icon"/>{:/} (垂直省略號) 圖示，選取 **Rename**，輸入 `Revenue and trends`，然後選取 **Save**。
+5. 在工具列中，再次選取 **Add** > **Section**。第一個區段下方會出現一個空區段，同樣名為 **Section 1**（因為第一個區段已重新命名）。將此區段重新命名為 `Customer breakdown`。
+6. 在 **[eCommerce] Sales by Gender** 面板上，選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/gear-icon.png" class="inline-icon" alt="gear icon"/>{:/} (齒輪) 圖示，然後選取 **Move to section**，如下圖所示。
+    ![標示出 Move to section 操作的面板選項功能表]({{site.url}}{{site.baseurl}}/images/dashboard-sections/panel-context-menu.png)
+7. 在 **Move to section** 對話方塊中，選取 **Customer breakdown**，然後選取 **Move**。
+8. 對 **[eCommerce] Sales Count Map** 和 **[eCommerce] Top Selling Products** 面板重複前兩個步驟。
+9. 選取 **Customer breakdown** 標題左側的箭頭以摺疊該區段。
+10. 選取 **Save**。
 
-The dashboard now contains two sections that you can collapse, expand, and reorder independently, and the collapsed **Customer breakdown** section loads no data until you expand it.
+儀表板現在包含兩個區段，您可以獨立地摺疊、展開和重新排序，且摺疊的 **Customer breakdown** 區段在您展開之前不會載入任何資料。
 
-## Limitations
+## 限制
 
-Dashboard sections have the following limitations:
+儀表板區段有以下限制：
 
-- Dragging a panel from one section to another is not supported. To move a panel, use **Move to section** in the panel context menu.
-- Section-scoped filters and variables are not supported. All filters apply to the entire dashboard.
-- Adding, renaming, reordering, and deleting sections require edit mode. In view mode, you can only collapse and expand sections.
+- 不支援將面板從一個區段拖曳到另一個區段。要移動面板，請使用面板快顯功能表中的 **Move to section**。
+- 不支援區段範圍的篩選器和變數。所有篩選器均適用於整個儀表板。
+- 新增、重新命名、重新排序和刪除區段需要編輯模式。在檢視模式中，您只能摺疊和展開區段。
 
-## Related documentation
+## 相關文件
 
-- [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)
-- [Customizing a dashboard]({{site.url}}{{site.baseurl}}/dashboards/dashboard/customizing-a-dash/)
-- [Adding a visualization to a dashboard]({{site.url}}{{site.baseurl}}/dashboards/dashboard/adding-a-viz/)
+- [建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)
+- [自訂儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/customizing-a-dash/)
+- [將視覺化新增至儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/adding-a-viz/)

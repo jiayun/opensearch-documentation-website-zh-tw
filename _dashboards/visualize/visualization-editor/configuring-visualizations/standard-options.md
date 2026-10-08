@@ -1,91 +1,92 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Standard options
+title: "標準選項"
 parent: Configuring visualizations
 grand_parent: Creating visualizations using queries
 great_grand_parent: Building data visualizations
 nav_order: 30
 ---
 
-# Standard options
+# 標準選項
 
-Standard options control how numeric values are formatted in a visualization. Use them to set units, custom suffixes, decimal precision, and, for charts with a scale, minimum and maximum values.
+標準選項控制視覺化中數值的格式。您可以使用這些選項設定單位、自訂後綴、小數精確度；對於具有刻度的圖表，還可設定最小值與最大值。
 
-## Supported chart types
+## 支援的圖表類型
 
-The following table lists the standard options supported by each visualization type.
+下表列出各視覺化類型支援的標準選項。
 
-| Visualization type | Minimum and maximum | Units | Unit suffix | Decimals |
+| 視覺化類型 | 最小值與最大值 | 單位 | 單位後綴 | 小數位數 |
 | --- | --- | --- | --- | --- |
-| [Area chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/area-chart/) | Yes | Yes | Yes | Yes |
-| [Bar chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/bar-chart/) | Yes | Yes | Yes | Yes |
-| [Bar gauge chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/bar-gauge-chart/) | Yes | Yes | Yes | Yes |
-| [Gauge chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/gauge-chart/) | Yes | Yes | Yes | Yes |
-| [Heatmap]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/heatmap-chart/) | No | Yes | Yes | Yes |
-| [Histogram]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/histogram-chart/) | Yes | Yes | Yes | Yes |
-| [Line chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/line-chart/) | Yes | Yes | Yes | Yes |
-| [Metric chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/metric-chart/) | No | Yes | Yes | Yes |
-| [Pie chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/pie-chart/) | No | Yes | Yes | Yes |
-| [Scatter plot]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/scatter-chart/) | Yes | Yes | Yes | Yes |
-| [State timeline]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/state-timeline-chart/) | No | No | No | No |
-| [Table]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/table-chart/) | No | No | No | No |
+| [區域圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/area-chart/) | 是 | 是 | 是 | 是 |
+| [長條圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/bar-chart/) | 是 | 是 | 是 | 是 |
+| [長條量表圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/bar-gauge-chart/) | 是 | 是 | 是 | 是 |
+| [量表圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/gauge-chart/) | 是 | 是 | 是 | 是 |
+| [熱度圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/heatmap-chart/) | 否 | 是 | 是 | 是 |
+| [直方圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/histogram-chart/) | 是 | 是 | 是 | 是 |
+| [折線圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/line-chart/) | 是 | 是 | 是 | 是 |
+| [指標圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/metric-chart/) | 否 | 是 | 是 | 是 |
+| [圓餅圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/pie-chart/) | 否 | 是 | 是 | 是 |
+| [散佈圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/scatter-chart/) | 是 | 是 | 是 | 是 |
+| [狀態時間軸]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/state-timeline-chart/) | 否 | 否 | 否 | 否 |
+| [表格]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/table-chart/) | 否 | 否 | 否 | 否 |
 
-## Options
+## 選項
 
-The following table describes the available standard options.
+下表說明可用的標準選項。
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Min** | The lower bound of the value scale. For Cartesian charts, this sets the value-axis minimum. For gauge and bar gauge charts, this sets the scale minimum. |
-| **Max** | The upper bound of the value scale. For Cartesian charts, this sets the value-axis maximum. For gauge and bar gauge charts, this sets the scale maximum. |
-| **Units** | The unit displayed with the value. Some units, such as currency symbols, appear before the value. Other units appear after the value or scale the value automatically. |
-| **Unit suffix** | Custom text appended after the unit or value, for example, `/sec`. Use this setting to show custom units or rates. |
-| **Decimals** | The number of decimal places to display. Leave this setting empty to use automatic precision. |
+| **Min** | 數值刻度的下限。對於笛卡兒圖表，此設定會設定數值軸的最小值。對於量表圖與長條量表圖，此設定會設定刻度的最小值。 |
+| **Max** | 數值刻度的上限。對於笛卡兒圖表，此設定會設定數值軸的最大值。對於量表圖與長條量表圖，此設定會設定刻度的最大值。 |
+| **Units** | 與數值一起顯示的單位。部分單位（例如貨幣符號）會顯示在數值之前。其他單位則會顯示在數值之後，或自動換算數值。 |
+| **Unit suffix** | 附加在單位或數值之後的自訂文字，例如 `/sec`。使用此設定可顯示自訂單位或速率。 |
+| **Decimals** | 要顯示的小數位數。將此設定留空即可使用自動精確度。 |
 
-## Units
+## 單位
 
-The **Units** menu groups common formats such as numbers, percentages, currencies, data units, time units, mass units, and length units.
+**Units** 選單將常用格式分組，例如數字、百分比、貨幣、資料單位、時間單位、重量單位與長度單位。
 
-For unit groups that support scaling, the selected unit acts as the input unit, and the visualization converts the value to the most readable unit in the same group. For example, if **Units** is set to `bytes(B)`, a value of `1000` is displayed as `1 KB`.
+對於支援換算的單位群組，所選單位會作為輸入單位，視覺化會將數值轉換為同一群組中最易讀的單位。例如，若 **Units** 設為 `bytes(B)`，則數值 `1000` 會顯示為 `1 KB`。
 
-Some units only change the displayed label or symbol. For example, a currency unit can display a symbol before the value, while a percentage unit appends `%`.
+部分單位只會變更顯示的標籤或符號。例如，貨幣單位可在數值之前顯示符號，而百分比單位則會附加 `%`。
 
-The following metric chart displays an underlying value of `7911` with **Units** set to `bytes(B)`.
+下列指標圖在 **Units** 設為 `bytes(B)` 時，顯示底層數值 `7911`。
 
-![Metric chart displaying 7.91 KB for an underlying value of 7911 with the unit set to bytes]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/metric-chart-unit-byte.png)
+![單位設為位元組時，指標圖將底層數值 7911 顯示為 7.91 KB]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/metric-chart-unit-byte.png)
 
-## Unit suffix
+## 單位後綴
 
-Use **Unit suffix** to append custom text after the formatted value. This is useful for rates or custom units.
+使用 **Unit suffix** 可在格式化後的數值之後附加自訂文字。這對於速率或自訂單位很有用。
 
-For example, to display byte rates in a metric chart, set **Units** to `bytes(B)` and set **Unit suffix** to `/sec`. With **Decimals** set to automatic precision, an underlying value of `14074` total bytes is displayed as `14.07 KB/sec`.
+例如，若要在指標圖中顯示位元組速率，請將 **Units** 設為 `bytes(B)`，並將 **Unit suffix** 設為 `/sec`。當 **Decimals** 設為自動精確度時，總位元組數為 `14074` 的底層數值會顯示為 `14.07 KB/sec`。
 
-![Metric chart displaying 14.07 KB/sec for an underlying value of 14074 with the unit set to bytes and a unit suffix of /sec]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/metric-chart-unit-byte-suffix.png)
+![單位設為位元組且單位後綴為 /sec 時，指標圖將底層數值 14074 顯示為 14.07 KB/sec]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/metric-chart-unit-byte-suffix.png)
 
-## Decimals
+## 小數位數
 
-Use **Decimals** to control numeric precision. For example, enter `2` to display two decimal places. Leave this setting empty to let the visualization choose the precision automatically.
+使用 **Decimals** 可控制數值精確度。例如，輸入 `2` 即可顯示兩位小數。將此設定留空，即可讓視覺化自動選擇精確度。
 
-The following bar chart has **Units** set to `bits(b)` and **Decimals** set to `1`. For Cartesian charts, unit formatting also applies to axis labels.
+下列長條圖的 **Units** 設為 `bits(b)`，**Decimals** 設為 `1`。對於笛卡兒圖表，單位格式也會套用至軸標籤。
 
-![Bar chart with the unit set to bits and decimals set to 1]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/bar-chart-unit-bit-decimal-1.png)
+![單位設為位元且小數位數設為 1 的長條圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/bar-chart-unit-bit-decimal-1.png)
 
-## Minimum and maximum
+## 最小值與最大值
 
-Use **Min** and **Max** to define the displayed value range.
+使用 **Min** 與 **Max** 可定義顯示的數值範圍。
 
-For Cartesian charts, such as area, bar, histogram, line, and scatter charts, **Min** and **Max** set the value-axis range.
+對於笛卡兒圖表（例如區域圖、長條圖、直方圖、折線圖與散佈圖），**Min** 與 **Max** 會設定數值軸的範圍。
 
-The following bar chart has **Min** set to `100` and **Max** set to `300`. The bar baseline starts at `100`, so values below this range are clipped, and the value axis extends to `300`.
+下列長條圖的 **Min** 設為 `100`，**Max** 設為 `300`。長條的基準線從 `100` 開始，因此低於此範圍的數值會被截斷，而數值軸會延伸至 `300`。
 
-![Bar chart with the minimum set to 100 and the maximum set to 300]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/bar-chart-min-100-max-300.png)
+![最小值設為 100 且最大值設為 300 的長條圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/bar-chart-min-100-max-300.png)
 
-For gauge and bar gauge charts, **Min** and **Max** define the scale boundaries. Thresholds and filled ranges are calculated within this range. When left empty, the visualization calculates the range automatically.
+對於量表圖與長條量表圖，**Min** 與 **Max** 會定義刻度邊界。臨界值與填滿範圍都會在此範圍內計算。若留空，視覺化會自動計算範圍。
 
-The following image shows a threshold configuration with a base color and steps at `1000`, `1100`, `1700`, `1800`, `1900`, and `2100`.
+下圖顯示一個臨界值組態，其中包含基礎色彩，以及位於 `1000`、`1100`、`1700`、`1800`、`1900` 與 `2100` 的級距。
 
-![Threshold configuration with a base color and steps at 1000, 1100, 1700, 1800, 1900, and 2100]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/standard-options-threshold-config.png){: width="40%" }
+![包含基礎色彩及位於 1000、1100、1700、1800、1900 與 2100 級距的臨界值組態]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/standard-options-threshold-config.png){: width="40%" }
 
-The following gauge chart uses that threshold configuration with a value of `2000`, **Min** set to `1200`, and **Max** set to `2200`. The gauge scale uses this range to position the threshold segments.
+下列量表圖使用該臨界值組態，數值為 `2000`，**Min** 設為 `1200`，**Max** 設為 `2200`。量表刻度會使用此範圍來定位各臨界值區段。
 
-![Gauge chart displaying a value of 2000 with the minimum set to 1200 and the maximum set to 2200]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/gauge-min-1200-max-2200.png)
+![最小值設為 1200 且最大值設為 2200 時，顯示數值 2000 的量表圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/gauge-min-1200-max-2200.png)

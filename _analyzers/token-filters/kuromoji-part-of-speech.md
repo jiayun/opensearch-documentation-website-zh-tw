@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Kuromoji part of speech
+title: "Kuromoji 詞性"
 parent: Token filters
 nav_order: 233
 ---
 
-# Kuromoji part of speech token filter
+# Kuromoji 詞性詞元篩選器
 
-The `kuromoji_part_of_speech` token filter removes tokens whose part-of-speech (POS) tag matches an entry in a configured list of stop tags. The Kuromoji tokenizer assigns each token an IPAdic POS tag. This filter reads that tag and discards tokens that serve a grammatical function (such as particles, auxiliary verbs, and punctuation) rather than a content function.
+`kuromoji_part_of_speech` 詞元篩選器會移除詞性 (POS) 標記與已設定之停用標記清單中某個項目相符的詞元。Kuromoji 斷詞器會為每個詞元指派一個 IPAdic 詞性標記。此篩選器會讀取該標記，並捨棄具有文法功能（例如助詞、助動詞和標點符號）而非內容功能的詞元。
 
-## Installation
+## 安裝
 
-The `kuromoji_part_of_speech` token filter requires the `analysis-kuromoji` plugin. For installation instructions, see [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/).
+`kuromoji_part_of_speech` 詞元篩選器需要 `analysis-kuromoji` 外掛程式。如需安裝說明，請參閱 [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)。
 
-## Parameters
+## 參數
 
-The following table lists the parameters for the `kuromoji_part_of_speech` token filter.
+下表列出 `kuromoji_part_of_speech` 詞元篩選器的參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`stoptags` | Array of strings | A list of IPAdic part-of-speech tags to remove. Tokens whose POS tag exactly matches an entry in this list are discarded. Default is the built-in Japanese stop tag set.
+`stoptags` | 字串陣列 | 要移除的 IPAdic 詞性標記清單。詞性標記與此清單中某個項目完全相符的詞元會被捨棄。預設為內建的日文停用標記集。
 
-For the full list of available stop tags, see [stoptags.txt](https://github.com/apache/lucene/blob/main/lucene/analysis/kuromoji/src/resources/org/apache/lucene/analysis/ja/stoptags.txt) in the Lucene repository.
+如需可用停用標記的完整清單，請參閱 Lucene 儲存庫中的 [stoptags.txt](https://github.com/apache/lucene/blob/main/lucene/analysis/kuromoji/src/resources/org/apache/lucene/analysis/ja/stoptags.txt)。
 
-## Example: Default filter
+## 範例：預設篩選器
 
-The following example creates an index with an analyzer that uses the default stop tag list:
+下列範例會建立一個索引，其中包含使用預設停用標記清單的分析器：
 
 ```json
 PUT /kuromoji-pos-index
@@ -45,7 +46,7 @@ PUT /kuromoji-pos-index
 ```
 {% include copy-curl.html %}
 
-Test the analyzer with a sentence meaning "I eat sushi at the Tokyo restaurant":
+使用意思為「我在東京的餐廳吃壽司」的句子測試分析器：
 
 ```json
 POST /kuromoji-pos-index/_analyze
@@ -56,7 +57,7 @@ POST /kuromoji-pos-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response shows the particles の (genitive), で (locative), and を (accusative) removed:
+回應顯示助詞 の（所有格）、で（處所格）和 を（受格）已被移除：
 
 ```json
 {
@@ -93,9 +94,9 @@ The response shows the particles の (genitive), で (locative), and を (accusa
 }
 ```
 
-## Example: Custom stop tags
+## 範例：自訂停用標記
 
-The following example creates a filter that removes only auxiliary verbs (助動詞) while keeping all other grammatical tokens:
+下列範例會建立一個篩選器，僅移除助動詞 (助動詞)，同時保留所有其他文法詞元：
 
 ```json
 PUT /kuromoji-custom-pos-index
@@ -121,9 +122,9 @@ PUT /kuromoji-custom-pos-index
 ```
 {% include copy-curl.html %}
 
-## Related documentation
+## 相關文件
 
-- [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
-- [Kuromoji tokenizer]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/kuromoji/)
-- [Kuromoji base form token filter]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-baseform/)
-- [Japanese stop token filter]({{site.url}}{{site.baseurl}}/analyzers/token-filters/ja-stop/)
+- [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
+- [Kuromoji 斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/kuromoji/)
+- [Kuromoji 基本形詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-baseform/)
+- [日文停用詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/ja-stop/)

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Cardinality
 parent: Metric aggregations
@@ -7,27 +8,27 @@ redirect_from:
   - /query-dsl/aggregations/metric/cardinality/
 ---
 
-# Cardinality aggregation
+# Cardinality 彙總
 
-The `cardinality` aggregation is a single-value metric aggregation that counts the number of unique or distinct values of a field.
+`cardinality` 彙總是一種單值指標彙總，用於計算某個欄位中唯一或不重複值的數量。
 
 
-Cardinality count is approximate. See [Controlling precision](#controlling-precision) for more information.
+基數計數是近似值。更多資訊請參閱[控制精確度](#controlling-precision)。
 
-## Parameters
+## 參數
 
-The `cardinality` aggregation takes the following parameters.
+`cardinality` 彙總接受下列參數。
 
-| Parameter             | Required/Optional | Data type       | Description |
+| 參數             | 必要/選用 | 資料類型       | 說明 |
 | :--                   | :--               |  :--            | :--         |
-| `field`               | Required          | String          | The field for which the cardinality is estimated. |
-| `precision_threshold` | Optional          | Numeric         | The threshold below which counts are expected to be close to accurate. See [Controlling precision](#controlling-precision) for more information.     |
-| `execution_hint`      | Optional          | String          | How to run the aggregation. Valid values are `ordinals` and `direct`. |
-| `missing`             | Optional          | Same as `field`'s type | The bucket used to store missing instances of the field. If not provided, missing values are ignored. |
+| `field`               | 必要          | 字串          | 要估算基數的欄位。 |
+| `precision_threshold` | 選用          | 數值         | 低於此閾值時，計數預期會接近準確。更多資訊請參閱[控制精確度](#controlling-precision)。     |
+| `execution_hint`      | 選用          | 字串          | 彙總的執行方式。有效值為 `ordinals` 與 `direct`。 |
+| `missing`             | 選用          | 與 `field` 的類型相同 | 用於儲存欄位缺失實例的桶。若未提供，缺失值將被忽略。 |
 
-## Example
+## 範例
 
-The following example request finds the number of unique product IDs in the OpenSearch Dashboards sample e-commerce data:
+下列範例請求會找出 OpenSearch Dashboards 範例電子商務資料中不重複產品 ID 的數量：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -44,9 +45,9 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-As shown in the following example response, the aggregation returns the cardinality count in the `unique_products` variable:
+如下列範例回應所示，彙總會在 `unique_products` 變數中傳回基數計數：
 
 ```json
 {
@@ -74,23 +75,23 @@ As shown in the following example response, the aggregation returns the cardinal
 }
 ```
 
-## Controlling precision
+## 控制精確度
 
-An accurate cardinality calculation requires loading all the values into a hash set and returning its size. This approach doesn't scale well; it can require huge amounts of memory and cause high latencies.
+精確的基數計算需要將所有值載入雜湊集並傳回其大小。這種方法的擴充性不佳；可能需要大量記憶體並造成高延遲。
 
-You can control the trade-off between memory and accuracy by using the `precision_threshold` setting. This parameter sets the threshold below which counts are expected to be close to accurate. Counts higher than this value may be less accurate.
+您可以使用 `precision_threshold` 設定來控制記憶體與精確度之間的權衡。此參數會設定一個閾值，低於此閾值時，計數預期會接近準確。高於此值的計數可能較不準確。
 
-The default value of `precision_threshold` is 3,000. The maximum supported value is 40,000.
+`precision_threshold` 的預設值為 3,000。支援的最大值為 40,000。
 
-The cardinality aggregation uses the [HyperLogLog++ algorithm](https://static.googleusercontent.com/media/research.google.com/fr//pubs/archive/40671.pdf). Cardinality counts are typically very accurate up to the precision threshold and are within 6% of the true count in most other cases, even with a threshold of as low as 100.
+基數彙總使用 [HyperLogLog++ 演算法](https://static.googleusercontent.com/media/research.google.com/fr//pubs/archive/40671.pdf)。基數計數在精確度閾值內通常非常準確，在大多數其他情況下，即使閾值低至 100，誤差也在真實計數的 6% 以內。
 
-### Precomputing hashes
+### 預先計算雜湊值
 
-For high-cardinality string fields, storing hash values for the index field and computing the cardinality of the hash can save compute and memory resources. Use this approach with caution; it is more efficient only for sets with long strings and/or high cardinality. Numeric fields and less memory-consuming string sets are better processed directly.
+對於高基數字串欄位，為索引欄位儲存雜湊值並計算雜湊的基數，可以節省運算與記憶體資源。請謹慎使用此方法；它僅對包含長字串和/或高基數的集合更有效率。數值欄位以及耗用記憶體較少的字串集合，直接處理反而更好。
 
-### Example: Controlling precision
+### 範例：控制精確度
 
-Set the precision threshold to `10000` unique values:
+將精確度閾值設為 `10000` 個唯一值：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -108,26 +109,26 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-The response is similar to the result with the default threshold, but the returned value is slightly different. Vary the `precision_threshold` parameter to see how it affects the cardinality estimate.
+回應與使用預設閾值的結果類似，但傳回的值略有不同。調整 `precision_threshold` 參數，觀察它如何影響基數估算。
 
-## Configuring aggregation execution  
+## 設定彙總執行方式  
 
-You can control how an aggregation runs using the `execution_hint` setting. This setting supports two options:  
+您可以使用 `execution_hint` 設定來控制彙總的執行方式。此設定支援兩個選項：  
 
-- `direct` – Uses field values directly.  
-- `ordinals` – Uses ordinals of the field. 
+- `direct` – 直接使用欄位值。  
+- `ordinals` – 使用欄位的序數。 
 
-If you don't specify `execution_hint`, OpenSearch automatically chooses the best option for the field using the hybrid collector (enabled by default).
+若未指定 `execution_hint`，OpenSearch 會透過混合收集器（預設啟用）自動為該欄位選擇最佳選項。
 
-Setting `ordinals` on a non-ordinal field has no effect. Similarly, `direct` has no effect on ordinal fields.  
+在非序數欄位上設定 `ordinals` 不會產生任何效果。同樣地，`direct` 對序數欄位也沒有效果。  
 {: .note}
 
-This is an expert-level setting. Ordinals use byte arrays, where the array size depends on the field's cardinality. High-cardinality fields can consume significant heap memory, increasing the risk of out-of-memory errors.  
+這是專家級設定。序數使用位元組陣列，陣列大小取決於欄位的基數。高基數欄位可能耗用大量堆積記憶體，增加發生記憶體不足錯誤的風險。  
 {: .warning}
 
-### Example: Controlling execution
+### 範例：控制執行方式
 
-The following request runs a cardinality aggregation using ordinals: 
+下列請求使用序數執行基數彙總： 
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -145,20 +146,20 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```  
 {% include copy-curl.html %}
 
-## Hybrid collector
-**Introduced 3.4**
+## 混合收集器
+**3.4 版新增**
 {: .label .label-purple }
 
-By default, OpenSearch uses a _hybrid collector_ for cardinality aggregations to improve speed and manage memory. The hybrid collector begins with the faster ordinals collector and monitors memory use during execution. If usage exceeds a configurable threshold, it automatically switches to the direct collector, continuing from the data already computed.
+預設情況下，OpenSearch 會對基數彙總使用 _混合收集器_ ，以提升速度並管理記憶體。混合收集器從較快的序數收集器開始，並在執行期間監控記憶體使用量。若使用量超過可設定的閾值，它會自動切換至直接收集器，並從已計算的資料繼續。
 
-This approach provides faster performance when memory is available while maintaining safety for high-cardinality fields. It adapts dynamically to real memory conditions and avoids the overhead of restarting the aggregation when switching collectors.
+這種方法在記憶體可用時提供更快的效能，同時確保高基數欄位的安全性。它會動態適應實際記憶體狀況，並避免切換收集器時重新啟動彙總的額外負擔。
 
-To configure the hybrid collector, use the following cluster settings:
-- `search.aggregations.cardinality.hybrid_collector.enabled` (Dynamic, Boolean): Enables the hybrid collector. When disabled, OpenSearch uses the traditional logic to select between ordinals and direct collectors. Default is `true`.
-- `search.aggregations.cardinality.hybrid_collector.memory_threshold` (Dynamic, percentage or byte size): Sets the memory threshold for switching from ordinals to direct collectors. You can specify this setting as a percentage of JVM heap (for example, `1%`) or as an absolute value (for example, `10mb` or `1gb`). Default is `1%`.
+若要設定混合收集器，請使用下列叢集設定：
+- `search.aggregations.cardinality.hybrid_collector.enabled` (Dynamic, 布林值)：啟用混合收集器。停用時，OpenSearch 會使用傳統邏輯在序數收集器與直接收集器之間進行選擇。預設為 `true`。
+- `search.aggregations.cardinality.hybrid_collector.memory_threshold` (Dynamic, 百分比或位元組大小)：設定從序數收集器切換至直接收集器的記憶體閾值。您可以將此設定指定為 JVM 堆積的百分比（例如 `1%`）或絕對值（例如 `10mb` 或 `1gb`）。預設為 `1%`。
 
-## Missing values
+## 缺失值
 
-You can assign a value to missing instances of the aggregated field. See [Missing aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/missing/) for more information.
+您可以為彙總欄位的缺失實例指定一個值。更多資訊請參閱[缺失彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/missing/)。
 
-Replacing missing values in a cardinality aggregation adds the replacement value to the list of unique values, increasing the actual cardinality by one.
+在基數彙總中替換缺失值，會將替換值加入唯一值清單，使實際基數增加一。

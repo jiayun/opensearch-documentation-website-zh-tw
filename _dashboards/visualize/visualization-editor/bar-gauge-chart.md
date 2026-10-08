@@ -1,99 +1,100 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Bar gauge chart
+title: "長條量表圖"
 parent: Visualization types
 grand_parent: Creating visualizations using queries
 great_grand_parent: Building data visualizations
 nav_order: 20
 ---
 
-# Bar gauge charts in the visualization editor
+# 視覺化編輯器中的長條量表圖
 
-A bar gauge chart displays numeric values as horizontal or vertical bars against a scale, reducing each field to a single value. Unlike a bar chart, a bar gauge chart is designed for comparing values against defined thresholds.
+長條量表圖會將數值顯示為對照刻度的水平或垂直長條，並將每個欄位簡化為單一值。與長條圖不同，長條量表圖的設計目的是將數值與定義的閾值進行比較。
 
-## Creating a bar gauge chart
+## 建立長條量表圖
 
-The following examples build on each other, starting with a basic chart and adding complexity. Before you begin, complete the [prerequisites]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/#prerequisites).
+下列範例逐步延伸，從基本圖表開始，再逐漸增加複雜度。開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/#prerequisites)。
 
-### Basic bar gauge chart
+### 基本長條量表圖
 
-Start with a query that groups a numeric metric by a categorical field:
+首先使用依類別欄位將數值指標分組的查詢：
 
 ```sql
 source = opensearch_dashboards_sample_data_logs | stats avg(bytes) by machine.os
 ```
 {% include copy.html %}
 
-After running this query, select **Bar Gauge** as the chart type. The fields are mapped as follows:
+執行此查詢後，選取 **Bar Gauge** 作為圖表類型。欄位的對應方式如下：
 
-- The **X-Axis** displays the `machine.os` field (categorical).
-- The **Y-Axis** displays the `avg(bytes)` field (numerical).
+- **X-Axis** 顯示 `machine.os` 欄位（類別）。
+- **Y-Axis** 顯示 `avg(bytes)` 欄位（數值）。
 
-The result is a set of vertical bars, one for each operating system, showing the average bytes for each. The **Show unfilled area** toggle is enabled by default, displaying a grey background behind each bar to indicate the remaining distance to the maximum, as shown in the following image.
+結果是一組垂直長條，每個作業系統各一個，顯示各作業系統的平均位元組數。**Show unfilled area** 切換開關預設為啟用，會在每個長條後方顯示灰色背景，以表示距離最大值的剩餘差距，如下圖所示。
 
-![Basic bar gauge showing average bytes by operating system]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/bar-gauge/bar-gauge-initial.png){: width="100%" }
+![依作業系統顯示平均位元組數的基本長條量表]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/bar-gauge/bar-gauge-initial.png){: width="100%" }
 
-### Adding thresholds and display styles
+### 新增閾值與顯示樣式
 
-Open the **Thresholds** section and define breakpoints to color-code the bars. For example:
+開啟 **Thresholds** 區段並定義斷點，以便用顏色標示長條。例如：
 
-- Base color: green (values below 3000)
-- Threshold at 3000: orange (moderate range)
-- Threshold at 5000: red (high range)
+- 基礎顏色：綠色（低於 3000 的值）
+- 3000 的閾值：橘色（中等範圍）
+- 5000 的閾值：紅色（高範圍）
 
-Then in the **Bar Gauge** section, switch the **Display style** to see different visual treatments:
+接著在 **Bar Gauge** 區段中切換 **Display style**，以查看不同的視覺呈現方式：
 
-**Gradient**---Each bar fills with a smooth color transition through the thresholds it passes, as shown in the following image.
+**Gradient**---每個長條會以平滑的顏色漸變填滿，依序經過其所跨越的閾值，如下圖所示。
 
-![Bar gauge with gradient display style]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/bar-gauge/bar-gauge-gradient.png){: width="100%" }
+![使用漸層顯示樣式的長條量表]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/bar-gauge/bar-gauge-gradient.png){: width="100%" }
 
-**Stack**---Each bar is divided into distinct colored segments at threshold boundaries, as shown in the following image.
+**Stack**---每個長條會在閾值邊界處分割為不同顏色的區段，如下圖所示。
 
-![Bar gauge with stack display style]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/bar-gauge/bar-gauge-stack.png){: width="100%" }
+![使用堆疊顯示樣式的長條量表]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/bar-gauge/bar-gauge-stack.png){: width="100%" }
 
-**Basic**---Each bar uses a single solid color based on the highest threshold the value reaches, as shown in the following image.
+**Basic**---每個長條會根據數值所達到的最高閾值，使用單一純色，如下圖所示。
 
-![Bar gauge with basic display style]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/bar-gauge/bar-gauge-basic.png){: width="100%" }
+![使用基本顯示樣式的長條量表]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/bar-gauge/bar-gauge-basic.png){: width="100%" }
 
-## Configuring a bar gauge chart
+## 設定長條量表圖
 
-You can configure the following settings in the configuration panel.
+您可以在組態面板中設定下列設定。
 
-### Fields
+### 欄位
 
-In the **Fields** section, configure the fields displayed on each axis.
+在 **Fields** 區段中，設定各軸上顯示的欄位。
 
-| Field | Description |
+| 欄位 | 說明 |
 | --- | --- |
-| **X-Axis** | Select a categorical field (for category labels) or a numerical field (for bar values). |
-| **Y-Axis** | Select the complementary field. If X-Axis is categorical, select a numeric field for Y-Axis (and the other way around). |
+| **X-Axis** | 選取類別欄位（用於類別標籤）或數值欄位（用於長條值）。 |
+| **Y-Axis** | 選取互補的欄位。若 X-Axis 為類別欄位，請為 Y-Axis 選取數值欄位（反之亦然）。 |
 
-### Split
+### 分割
 
-In the **Split by** dropdown list, select a field to split the chart into separate elements by value. For more information, see [Split]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#split).
+在 **Split by** 下拉式清單中，選取一個欄位，依其值將圖表分割為個別元素。如需詳細資訊，請參閱[分割]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#split)。
 
-### Value options
+### 值選項
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Calculation** | Determines how multiple data points for the same category are reduced to a single value. Supported values: **Last \***, **Last**, **First \***, **First**, **Min**, **Max**, **Mean**, **Median**, **Variance**, **Count**, **Distinct count**, **Total**. For more information, see [Value calculations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/value-calculations/). |
+| **Calculation** | 決定如何將同一類別的多個資料點簡化為單一值。支援的值：**Last \***、**Last**、**First \***、**First**、**Min**、**Max**、**Mean**、**Median**、**Variance**、**Count**、**Distinct count**、**Total**。如需詳細資訊，請參閱[值計算]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/value-calculations/)。 |
 
-### Thresholds
+### 閾值
 
-For information about configuring thresholds, see [Thresholds]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/).
+如需設定閾值的相關資訊，請參閱[閾值]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/)。
 
-### Standard options
+### 標準選項
 
-For information about configuring units, unit suffixes, decimal precision, and minimum and maximum values, see [Standard options]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/standard-options/).
+如需設定單位、單位後綴、小數精確度，以及最小值和最大值的相關資訊，請參閱[標準選項]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/standard-options/)。
 
-### Bar gauge
+### 長條量表
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Display style** | Controls how the bar fill is rendered. **Gradient** fills the bar with a smooth color gradient generated from thresholds. **Stack** shows distinct colored segments for each threshold range. **Basic** fills the bar with a single solid color from the matching threshold. |
-| **Value display** | Controls how the numeric value label is colored. **Value Color** colors the text with the mapped threshold. **Text Color** uses the default text color. **Hidden** hides the value entirely. |
-| **Show unfilled area** | When enabled, displays a grey background behind the filled portion of each bar, making it easier to see the remaining distance to the maximum. |
+| **Display style** | 控制長條填滿的呈現方式。**Gradient** 會以根據閾值產生的平滑顏色漸層填滿長條。**Stack** 會為每個閾值範圍顯示不同顏色的區段。**Basic** 會以符合之閾值的單一純色填滿長條。 |
+| **Value display** | 控制數值標籤的顏色。**Value Color** 會以對應的閾值顏色為文字著色。**Text Color** 使用預設文字顏色。**Hidden** 會完全隱藏數值。 |
+| **Show unfilled area** | 啟用時，會在每個長條已填滿部分的後方顯示灰色背景，讓您更容易看出距離最大值的剩餘差距。 |
 
-### Tooltip
+### 工具提示
 
-Toggle the **Show tooltip** selector to enable or disable tooltips.
+切換 **Show tooltip** 選取器，以啟用或停用工具提示。

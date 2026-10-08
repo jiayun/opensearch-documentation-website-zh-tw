@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Aggregations
+title: "彙總"
 has_children: false
 nav_order: 5
 nav_exclude: true
@@ -12,17 +13,17 @@ redirect_from:
   - /aggregations/index/
 ---
 
-# Aggregations
+# 彙總
 
-OpenSearch is for more than search. Aggregations let you tap into OpenSearch's powerful analytics engine to analyze your data and extract statistics from it.
+OpenSearch 的用途不只是搜尋。彙總可讓您運用 OpenSearch 強大的分析引擎來分析您的資料，並從中擷取統計資料。
 
-The use cases of aggregations vary from analyzing data in real time to take some action to using OpenSearch Dashboards to create a visualization dashboard.
+彙總的使用案例相當多樣，從即時分析資料以採取行動，到使用 OpenSearch Dashboards 建立視覺化儀表板都有。
 
-OpenSearch can perform aggregations on massive datasets in milliseconds. Compared to queries, aggregations consume more CPU cycles and memory.
+OpenSearch 可以在數毫秒內對大量資料集執行彙總。與查詢相比，彙總會耗用更多 CPU 週期和記憶體。
 
-## General aggregation structure
+## 彙總的一般結構
 
-The structure of an aggregation query is as follows:
+彙總查詢的結構如下：
 
 ```json
 GET _search
@@ -37,17 +38,17 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-If you're only interested in the aggregation result and not in the results of the query, set `size` to `0`.
+如果您只想取得彙總結果，而不需要查詢結果，請將 `size` 設定為 `0`。
 
-In the `aggs` property (you can use `aggregations` if you want), you can define any number of aggregations. Each aggregation is defined by its name and one of the types of aggregations that OpenSearch supports.
+在 `aggs` 屬性中（您也可以視需要改用 `aggregations`），您可以定義任意數量的彙總。每個彙總都由其名稱以及 OpenSearch 支援的其中一種彙總類型來定義。
 
-The name of the aggregation helps you to distinguish between different aggregations in the response. The `<aggregation_type>` placeholder specifies the aggregation type, such as `sum` or `min`.
+彙總的名稱可協助您在回應中區分不同的彙總。`<aggregation_type>` 預留位置指定彙總類型，例如 `sum` 或 `min`。
 
-## Example aggregation
+## 彙總範例
 
-The following example uses the OpenSearch Dashboards sample e-commerce data. To add the sample data, log in to OpenSearch Dashboards, choose **Home**, and then choose **Try our sample data**. For **Sample eCommerce orders**, choose **Add data**.
+下列範例使用 OpenSearch Dashboards 的電子商務範例資料。若要新增範例資料，請登入 OpenSearch Dashboards，選擇 **Home**，然後選擇 **Try our sample data**。在 **Sample eCommerce orders** 中，選擇 **Add data**。
 
-This example uses the `avg` aggregation to find the average value of the `taxful_total_price` field:
+此範例使用 `avg` 彙總來找出 `taxful_total_price` 欄位的平均值：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -64,7 +65,7 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-The response includes an `aggregations` block containing the calculated average value:
+回應中包含一個 `aggregations` 區塊，其中含有計算出的平均值：
 
 ```json
 {
@@ -92,64 +93,64 @@ The response includes an `aggregations` block containing the calculated average 
 }
 ```
 
-## Aggregation types
+## 彙總類型
 
-There are three main aggregation types:
+彙總主要有三種類型：
 
-- [Metric aggregations](#metric-aggregations) -- Calculate metrics such as `sum`, `min`, `max`, and `avg` on numeric fields.
-- [Bucket aggregations](#bucket-aggregations) -- Sort query results into groups based on some criteria.
-- [Pipeline aggregations](#pipeline-aggregations) -- Pipe the output of one aggregation as an input to another.
+- [指標彙總](#metric-aggregations)：對數值欄位計算 `sum`、`min`、`max` 和 `avg` 等指標。
+- [桶 (bucket) 彙總](#bucket-aggregations)：根據特定條件將查詢結果分組。
+- [管線彙總](#pipeline-aggregations)：將某個彙總的輸出作為另一個彙總的輸入。
 
-### Metric aggregations
+### 指標彙總
 
-Metric aggregations calculate statistics on numeric field values:
+指標彙總會對數值欄位的值計算統計資料：
 
-- [`avg`]({{site.url}}{{site.baseurl}}/aggregations/metric/average/) -- Calculate average values.
-- [`cardinality`]({{site.url}}{{site.baseurl}}/aggregations/metric/cardinality/) -- Count unique values.
-- [`extended_stats`]({{site.url}}{{site.baseurl}}/aggregations/metric/extended-stats/) -- Get comprehensive statistics including standard deviation.
-- [`max`]({{site.url}}{{site.baseurl}}/aggregations/metric/maximum/) -- Find maximum values.
-- [`min`]({{site.url}}{{site.baseurl}}/aggregations/metric/minimum/) -- Find minimum values.
-- [`percentile`]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile/) -- Calculate percentiles (for example, median, 95th percentile).
-- [`stats`]({{site.url}}{{site.baseurl}}/aggregations/metric/stats/) -- Get basic statistics (`count`, `sum`, `min`, `max`, and `avg`).
-- [`sum`]({{site.url}}{{site.baseurl}}/aggregations/metric/sum/) -- Calculate sum of values.
-- [`value_count`]({{site.url}}{{site.baseurl}}/aggregations/metric/value-count/) -- Count non-null values.
+- [`avg`]({{site.url}}{{site.baseurl}}/aggregations/metric/average/)：計算平均值。
+- [`cardinality`]({{site.url}}{{site.baseurl}}/aggregations/metric/cardinality/)：計算不重複值的數量。
+- [`extended_stats`]({{site.url}}{{site.baseurl}}/aggregations/metric/extended-stats/)：取得包含標準差在內的完整統計資料。
+- [`max`]({{site.url}}{{site.baseurl}}/aggregations/metric/maximum/)：找出最大值。
+- [`min`]({{site.url}}{{site.baseurl}}/aggregations/metric/minimum/)：找出最小值。
+- [`percentile`]({{site.url}}{{site.baseurl}}/aggregations/metric/percentile/)：計算百分位數（例如中位數、第 95 百分位數）。
+- [`stats`]({{site.url}}{{site.baseurl}}/aggregations/metric/stats/)：取得基本統計資料（`count`、`sum`、`min`、`max` 和 `avg`）。
+- [`sum`]({{site.url}}{{site.baseurl}}/aggregations/metric/sum/)：計算值的總和。
+- [`value_count`]({{site.url}}{{site.baseurl}}/aggregations/metric/value-count/)：計算非 null 值的數量。
 
-For a complete list of metric aggregations, see [Metric aggregations]({{site.url}}{{site.baseurl}}/aggregations/metric/).
+完整的指標彙總清單，請參閱[指標彙總]({{site.url}}{{site.baseurl}}/aggregations/metric/)。
 
-### Bucket aggregations
+### 桶彙總
 
-Bucket aggregations group documents into buckets based on field values, ranges, or other criteria:
+桶彙總會根據欄位值、範圍或其他條件，將文件分組到不同的桶中：
 
-- [`terms`]({{site.url}}{{site.baseurl}}/aggregations/bucket/terms/) -- Group by unique field values.
-- [`date_histogram`]({{site.url}}{{site.baseurl}}/aggregations/bucket/date-histogram/) -- Group by time intervals.
-- [`histogram`]({{site.url}}{{site.baseurl}}/aggregations/bucket/histogram/) -- Group by numeric intervals.
-- [`range`]({{site.url}}{{site.baseurl}}/aggregations/bucket/range/) -- Group by numeric ranges.
-- [`filter`]({{site.url}}{{site.baseurl}}/aggregations/bucket/filter/) -- Create a single bucket matching a filter.
-- [`filters`]({{site.url}}{{site.baseurl}}/aggregations/bucket/filters/) -- Create multiple buckets, one for each filter.
-- [`missing`]({{site.url}}{{site.baseurl}}/aggregations/bucket/missing/) -- Group documents that are missing a field value.
-- [`significant_terms`]({{site.url}}{{site.baseurl}}/aggregations/bucket/significant-terms/) -- Find unusual or interesting terms in a dataset.
+- [`terms`]({{site.url}}{{site.baseurl}}/aggregations/bucket/terms/)：依不重複的欄位值分組。
+- [`date_histogram`]({{site.url}}{{site.baseurl}}/aggregations/bucket/date-histogram/)：依時間間隔分組。
+- [`histogram`]({{site.url}}{{site.baseurl}}/aggregations/bucket/histogram/)：依數值間隔分組。
+- [`range`]({{site.url}}{{site.baseurl}}/aggregations/bucket/range/)：依數值範圍分組。
+- [`filter`]({{site.url}}{{site.baseurl}}/aggregations/bucket/filter/)：建立單一個符合篩選條件的桶。
+- [`filters`]({{site.url}}{{site.baseurl}}/aggregations/bucket/filters/)：建立多個桶，每個篩選條件各一個。
+- [`missing`]({{site.url}}{{site.baseurl}}/aggregations/bucket/missing/)：將缺少某欄位值的文件分組。
+- [`significant_terms`]({{site.url}}{{site.baseurl}}/aggregations/bucket/significant-terms/)：在資料集中尋找不尋常或值得關注的詞彙。
 
-For a complete list of bucket aggregations, see [Bucket aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/).
+完整的桶彙總清單，請參閱[桶彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/)。
 
-### Pipeline aggregations
+### 管線彙總
 
-Pipeline aggregations process the output of other aggregations:
+管線彙總會處理其他彙總的輸出：
 
-- [`avg_bucket`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/avg-bucket/) -- Calculate the average across buckets.
-- [`cumulative_sum`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/cumulative-sum/) -- Calculate a running total across buckets.
-- [`bucket_sort`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/bucket-sort/) -- Sort and limit the number of buckets returned.
+- [`avg_bucket`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/avg-bucket/)：計算各桶之間的平均值。
+- [`cumulative_sum`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/cumulative-sum/)：計算各桶之間的累計總和。
+- [`bucket_sort`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/bucket-sort/)：排序並限制傳回的桶數量。
 
-For a complete list of pipeline aggregations, see [Pipeline aggregations]({{site.url}}{{site.baseurl}}/aggregations/pipeline/).
+完整的管線彙總清單，請參閱[管線彙總]({{site.url}}{{site.baseurl}}/aggregations/pipeline/)。
 
-## Nested aggregations
+## 巢狀彙總
 
-Aggregations within aggregations are called _nested aggregations_ or _subaggregations_.
+位於彙總之中的彙總稱為_巢狀彙總_或_子彙總_。
 
-Metric aggregations produce simple results and can't contain nested aggregations.
+指標彙總會產生簡單的結果，且不能包含巢狀彙總。
 
-Bucket aggregations produce buckets of documents that you can nest in other aggregations. You can perform complex analysis on your data by nesting metric and bucket aggregations within bucket aggregations.
+桶彙總會產生由文件組成的桶，您可以將其巢狀置於其他彙總中。透過在桶彙總中巢狀放置指標彙總和桶彙總，您可以對資料執行複雜的分析。
 
-### General nested aggregation syntax
+### 巢狀彙總的一般語法
 
 ```json
 {
@@ -170,11 +171,11 @@ Bucket aggregations produce buckets of documents that you can nest in other aggr
 }
 ```
 
-The inner `aggs` keyword begins a new nested aggregation. The syntax of the parent aggregation and the nested aggregation is the same. Nested aggregations run in the context of the preceding parent aggregations.
+內層的 `aggs` 關鍵字會開始一個新的巢狀彙總。父彙總與巢狀彙總的語法相同。巢狀彙總會在前面父彙總的情境中執行。
 
-### Nested aggregation example
+### 巢狀彙總範例
 
-The following example uses the OpenSearch Dashboards sample e-commerce data to group orders by category and calculate the average price within each category. This query returns the top 5 categories sorted in descending alphabetical order:
+下列範例使用 OpenSearch Dashboards 的電子商務範例資料，依類別將訂單分組，並計算每個類別內的平均價格。此查詢會傳回依字母降冪排序的前 5 個類別：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -202,7 +203,7 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-The response includes buckets for each category, sorted in descending alphabetical order, with the average price calculated within each bucket:
+回應中包含每個類別的桶，這些桶依字母降冪排序，且每個桶內都計算了平均價格：
 
 ```json
 {
@@ -268,41 +269,41 @@ The response includes buckets for each category, sorted in descending alphabetic
 }
 ```
 
-For more examples of nested aggregations, see [Pipeline aggregations]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#buckets-path).
+更多巢狀彙總範例，請參閱[管線彙總]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#buckets-path)。
 
-You can also pair your aggregations with search queries to narrow down the data you're analyzing before aggregating. If you don't add a query, OpenSearch implicitly uses the `match_all` query.
+您也可以將彙總與搜尋查詢搭配使用，在彙總之前先縮小要分析的資料範圍。如果您未新增查詢，OpenSearch 會隱含地使用 `match_all` 查詢。
 
-## Using aggregations
+## 使用彙總
 
-You can use aggregations through the OpenSearch API or through OpenSearch Dashboards.
+您可以透過 OpenSearch API 或 OpenSearch Dashboards 使用彙總。
 
-### Using the aggregations API
+### 使用彙總 API
 
-You can run aggregation requests from the command line using a tool such as cURL or from the OpenSearch Dashboards Dev Tools console. For more information about using the Dev Tools console, see [Running queries in the Dev Tools console]({{site.url}}{{site.baseurl}}/dashboards/visualize/run-queries/).
+您可以使用 cURL 等工具從命令列執行彙總請求，也可以從 OpenSearch Dashboards 的 Dev Tools 主控台執行。如需更多關於使用 Dev Tools 主控台的資訊，請參閱[在 Dev Tools 主控台中執行查詢]({{site.url}}{{site.baseurl}}/dashboards/visualize/run-queries/)。
 
-See the [Example aggregation](#example-aggregation) and [Nested aggregation example](#nested-aggregation-example) sections for sample API requests and responses. For detailed syntax and parameters for each aggregation type, see the type-specific documentation pages listed in the [Aggregation types](#aggregation-types) section. For a hands-on tutorial that runs aggregations against a sample dataset, see [Summarize data using aggregations]({{site.url}}{{site.baseurl}}/getting-started/analyze-data/#summarize-data-using-aggregations).
+如需 API 請求和回應的範例，請參閱[彙總範例](#example-aggregation)和[巢狀彙總範例](#nested-aggregation-example)區段。如需各種彙總類型的詳細語法和參數，請參閱[彙總類型](#aggregation-types)區段中列出的各類型專屬文件頁面。如需針對範例資料集執行彙總的實作教學，請參閱[使用彙總摘要資料]({{site.url}}{{site.baseurl}}/getting-started/analyze-data/#summarize-data-using-aggregations)。
 
-### Using aggregations in OpenSearch Dashboards
+### 在 OpenSearch Dashboards 中使用彙總
 
-Aggregations power many visualization types in OpenSearch Dashboards. When you create a visualization, OpenSearch Dashboards automatically generates aggregation queries based on your selections. If you're new to OpenSearch Dashboards, see [Getting started with OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/getting-started/).
+OpenSearch Dashboards 中的許多視覺化類型都由彙總驅動。當您建立視覺化時，OpenSearch Dashboards 會根據您的選取項目自動產生彙總查詢。如果您是 OpenSearch Dashboards 的新手，請參閱[OpenSearch Dashboards 入門]({{site.url}}{{site.baseurl}}/dashboards/getting-started/)。
 
-The metric and bucket options you see in the **Visualize** application correspond to the aggregation types described on this page. `Count` is the default Y-axis metric---it displays the number of documents in each bucket (`doc_count`) and requires no field selection.
+您在 **Visualize** 應用程式中看到的指標和桶 (bucket) 選項，對應於本頁所述的彙總類型。`Count` 是預設的 Y 軸指標，它會顯示每個桶中的文件數量 (`doc_count`)，而且不需要選取欄位。
 
-The following metrics are available in the **Visualize** application: `Count`, `Average`, `Max`, `Median`, `Min`, `Percentile Ranks`, `Percentiles`, `Standard Deviation`, `Sum`, `Top Hit`, `Unique Count`, `Cumulative Sum`, `Derivative`, `Moving Avg`, `Serial Diff`, `Average Bucket`, `Max Bucket`, `Min Bucket`, and `Sum Bucket`.
+**Visualize** 應用程式中提供下列指標：`Count`、`Average`、`Max`、`Median`、`Min`、`Percentile Ranks`、`Percentiles`、`Standard Deviation`、`Sum`、`Top Hit`、`Unique Count`、`Cumulative Sum`、`Derivative`、`Moving Avg`、`Serial Diff`、`Average Bucket`、`Max Bucket`、`Min Bucket` 以及 `Sum Bucket`。
 
-The following bucket aggregations are available in the **Visualize** application: `Date Histogram`, `Date Range`, `Filters`, `Histogram`, `IPv4 Range`, `Range`, `Significant Terms`, and `Terms`.
+**Visualize** 應用程式中提供下列桶彙總：`Date Histogram`、`Date Range`、`Filters`、`Histogram`、`IPv4 Range`、`Range`、`Significant Terms` 以及 `Terms`。
 
-For descriptions of each option and how they map to the Aggregations API, see [Configuring visualizations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-viz/#data-tab). For a hands-on tutorial, see [Creating aggregation-based visualizations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/aggregation-based-viz/). 
+如需各選項的說明，以及它們如何對應至 Aggregations API，請參閱[設定視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-viz/#data-tab)。如需實作教學，請參閱[建立以彙總為基礎的視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/aggregation-based-viz/)。
 
-## Aggregations on text fields
+## 文字欄位上的彙總
 
-By default, OpenSearch doesn't support aggregations on a [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) field. Because `text` fields are tokenized, an aggregation on a `text` field has to reverse the tokenization process back to its original string and then formulate an aggregation based on that. This kind of an operation consumes significant memory and degrades cluster performance.
+根據預設，OpenSearch 不支援對 [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 欄位進行彙總。由於 `text` 欄位會經過斷詞，對 `text` 欄位進行彙總時，必須將斷詞過程反轉回原始字串，然後再根據該字串建立彙總。這類操作會耗用大量記憶體，並降低叢集效能。
 
-While you can enable aggregations on `text` fields by setting the [`fielddata`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/#parameters) parameter to `true` in the mapping, the aggregations are still based on the tokenized words and not on the raw text.
+雖然您可以在對應中將 [`fielddata`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/#parameters) 參數設為 `true`，以啟用對 `text` 欄位的彙總，但彙總仍會以斷詞後的字詞為基礎，而非原始文字。
 
-We recommend keeping a raw version of the `text` field as a [`keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/keyword/) field that you can aggregate on.
+我們建議將 `text` 欄位的原始版本保留為 [`keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/keyword/) 欄位，以便對其進行彙總。
 
-The following example creates a `product_name` field with a `keyword` subfield named `raw`. You can perform aggregations on `product_name.raw` instead of on `product_name`:
+下列範例會建立一個 `product_name` 欄位，其中包含名為 `raw` 的 `keyword` 子欄位。您可以對 `product_name.raw` 進行彙總，而不是對 `product_name`：
 
 ```json
 PUT products
@@ -324,15 +325,15 @@ PUT products
 ```
 {% include copy-curl.html %}
 
-For more information about mappings, see [Mappings]({{site.url}}{{site.baseurl}}/mappings/).
+如需更多關於對應的資訊，請參閱[對應]({{site.url}}{{site.baseurl}}/mappings/)。
 
-## Limitations
+## 限制
 
-Because aggregators are processed using the `double` data type for all values, `long` values of 2<sup>53</sup> and greater are approximate.
+由於彙總器會使用 `double` 資料類型處理所有值，因此大於或等於 2<sup>53</sup> 的 `long` 值為近似值。
 
-## Next steps
+## 後續步驟
 
-- Explore [metric aggregations]({{site.url}}{{site.baseurl}}/aggregations/metric/) to calculate statistics on your data.
-- Learn about [bucket aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/) to group and analyze data by categories, ranges, or time intervals.
-- Discover [pipeline aggregations]({{site.url}}{{site.baseurl}}/aggregations/pipeline/) for advanced analysis using the output of other aggregations.
-- Create [visualizations in OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/visualize/viz-index/) using aggregations.
+- 探索[指標彙總]({{site.url}}{{site.baseurl}}/aggregations/metric/)，以計算資料的統計值。
+- 了解[桶彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/)，以依類別、範圍或時間間隔將資料分組並分析。
+- 探索[管線彙總]({{site.url}}{{site.baseurl}}/aggregations/pipeline/)，以使用其他彙總的輸出進行進階分析。
+- 使用彙總[在 OpenSearch Dashboards 中建立視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/viz-index/)。

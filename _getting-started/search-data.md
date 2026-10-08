@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search your data
+title: "搜尋您的資料"
 nav_order: 50
-description: "Learn about query languages available in OpenSearch and get started with searching data in using query string queries and query domain-specific language (DSL)."
+description: "了解 OpenSearch 中可用的查詢語言，並開始使用查詢字串查詢和查詢領域特定語言 (DSL) 搜尋資料。"
 ---
 
-# Search your data
+# 搜尋您的資料
 
-OpenSearch searches are built on [query domain-specific language (DSL)]({{site.url}}{{site.baseurl}}/query-dsl/index/), the primary OpenSearch query language, which you can use to create complex, fully customizable queries. An alternative, the [query string query language]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/), is a scaled-down language that you can use in a query parameter of a search request. This tutorial contains a brief introduction to searching using [query string queries](#query-string-queries) and [query DSL](#query-dsl). The examples query the `students` index that you created in [Ingest your data into OpenSearch]({{site.url}}{{site.baseurl}}/getting-started/ingest-data/).
+OpenSearch 搜尋建立在[查詢領域特定語言 (DSL)]({{site.url}}{{site.baseurl}}/query-dsl/index/) 之上。這是 OpenSearch 的主要查詢語言，可用來建立複雜且可完全自訂的查詢。另一種選擇是[查詢字串查詢語言]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/)，這是一種精簡的語言，可在搜尋請求的查詢參數中使用。本教學簡要介紹如何使用[查詢字串查詢](#query-string-queries)和 [Query DSL](#query-dsl) 進行搜尋。範例會查詢您在[將資料匯入 OpenSearch]({{site.url}}{{site.baseurl}}/getting-started/ingest-data/) 中建立的 `students` 索引。
 
-The searches in this tutorial match the text in your query against the text stored in your documents. OpenSearch also supports vector search, which matches the meaning rather than exact words. For more information, see [Vector search]({{site.url}}{{site.baseurl}}/vector-search/).
+本教學中的搜尋會將查詢中的文字與文件中儲存的文字進行比對。OpenSearch 也支援向量搜尋，比對的是語意而非確切的字詞。如需詳細資訊，請參閱[向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/)。
 
-## Retrieve all documents in an index
+## 擷取索引中的所有文件
 
-To retrieve all documents in an index, send the following request:
+若要擷取索引中的所有文件，請傳送下列請求：
 
 ```json
 GET /students/_search
 ```
 {% include copy-curl.html %}
 
-The preceding request is equivalent to the `match_all` query, which matches all documents in an index:
+上述請求等同於 `match_all` 查詢，會比對索引中的所有文件：
 
 ```json
 GET /students/_search
@@ -32,7 +33,7 @@ GET /students/_search
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns the matching documents:
+OpenSearch 會傳回相符的文件：
 
 ```json
 {
@@ -86,21 +87,21 @@ OpenSearch returns the matching documents:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The preceding response contains the following fields.
+上述回應包含下列欄位。
 
 <!-- vale off -->
 ### took
 <!-- vale on -->
 
-The `took` field contains the amount of time the query took to run, in milliseconds.
+`took` 欄位包含執行查詢所花費的時間，以毫秒為單位。
 
 <!-- vale off -->
 ### timed_out
 <!-- vale on -->
 
-This field indicates whether the request timed out. If a request timed out, then OpenSearch returns the results that were gathered before the timeout. You can set the desired timeout value by providing the `timeout` query parameter:
+此欄位表示請求是否逾時。如果請求逾時，OpenSearch 會傳回逾時前已收集到的結果。您可以提供 `timeout` 查詢參數來設定所需的逾時值：
 
 ```json
 GET /students/_search?timeout=20ms
@@ -111,26 +112,26 @@ GET /students/_search?timeout=20ms
 ### _shards
 <!-- vale on -->
 
-The `_shards` object specifies the total number of shards on which the query ran as well as the number of shards that succeeded or failed. A shard may fail if the shard itself and all its replicas are unavailable. If any of the involved shards fail, OpenSearch continues to run the query on the remaining shards.
+`_shards` 物件會指出執行查詢的分片總數，以及成功或失敗的分片數。如果分片本身及其所有副本都無法使用，該分片就可能失敗。如果任何相關分片失敗，OpenSearch 會繼續在其餘分片上執行查詢。
 
 <!-- vale off -->
 ### hits
 <!-- vale on -->
 
-The `hits` object contains the total number of matching documents and the documents themselves (listed in the `hits` array). Each matching document contains the `_index` and `_id` fields as well as the `_source` field, which contains the complete originally indexed document. 
+`hits` 物件包含相符文件的總數以及文件本身（列於 `hits` 陣列中）。每份相符文件都包含 `_index` 和 `_id` 欄位，以及 `_source` 欄位，後者包含最初編製索引的完整文件。
 
-Each document is given a relevance score in the `_score` field. Because you ran a `match_all` search, all document scores are set to `1` (there is no difference in their relevance). The `max_score` field contains the highest score of any matching document.
+每份文件都會在 `_score` 欄位中獲得一個相關性分數。由於您執行的是 `match_all` 搜尋，所有文件的分數都設為 `1`（它們的相關性沒有差異）。`max_score` 欄位包含所有相符文件中的最高分數。
 
-## Query string queries
+## 查詢字串查詢
 
-You can send a query string query as a `q` query parameter. For example, the following query searches for students with the name `john`:
+您可以將查詢字串查詢作為 `q` 查詢參數傳送。例如，下列查詢會搜尋名稱為 `john` 的學生：
 
 ```json
 GET /students/_search?q=name:john
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns the matching document:
+OpenSearch 會傳回相符的文件：
 
 ```json
 {
@@ -164,17 +165,17 @@ OpenSearch returns the matching document:
 }
 ```
 
-For more information about query string syntax, see [Query string query language]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/).
+如需查詢字串語法的詳細資訊，請參閱[查詢字串查詢語言]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/)。
 
 ## Query DSL
 
-Using Query DSL, you can create more complex and customized queries. 
+使用 Query DSL，您可以建立更複雜且自訂的查詢。
 
-### Full-text search
+### 全文搜尋
 
-You can run a full-text search on fields mapped as `text`. By default, text fields are analyzed by the `default` analyzer. The analyzer splits text into terms and changes it to lowercase. For more information about OpenSearch analyzers, see [Analyzers]({{site.url}}{{site.baseurl}}/analyzers/).
+您可以對對應為 `text` 的欄位執行全文搜尋。根據預設，文字欄位會由 `default` 分析器進行分析。分析器會將文字分割為詞彙，並將其轉換為小寫。如需 OpenSearch 分析器的詳細資訊，請參閱[分析器]({{site.url}}{{site.baseurl}}/analyzers/)。
 
-To see the terms that OpenSearch stores for a field, use the Analyze API. The following request analyzes the text `John Doe` using the analyzer configured for the `name` field:
+若要查看 OpenSearch 為某個欄位儲存的詞彙，請使用 Analyze API。下列請求會使用為 `name` 欄位設定的分析器來分析文字 `John Doe`：
 
 ```json
 GET /students/_analyze
@@ -185,7 +186,7 @@ GET /students/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains one token for each term:
+回應中的每個詞彙各對應一個詞元：
 
 ```json
 {
@@ -208,9 +209,9 @@ The response contains one token for each term:
 }
 ```
 
-OpenSearch stores the terms `john` and `doe`, both in lowercase. A `match` query analyzes the query text the same way, so `John`, `john`, and `JOHN` all produce the term `john` and match this document.
+OpenSearch 會儲存詞彙 `john` 和 `doe`，兩者皆為小寫。`match` 查詢會以相同方式分析查詢文字，因此 `John`、`john` 和 `JOHN` 都會產生詞彙 `john`，並與此文件相符。
 
-For example, the following query searches for students with the name `john`:
+例如，下列查詢會搜尋名稱為 `john` 的學生：
 
 ```json
 GET /students/_search
@@ -224,7 +225,7 @@ GET /students/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含相符的文件：
 
 ```json
 {
@@ -258,9 +259,9 @@ The response contains the matching document:
 }
 ```
 
-Notice that the query text is lowercase while the text in the field is not, but the query still returns the matching document. 
+請注意，查詢文字是小寫，而欄位中的文字不是，但查詢仍會傳回相符的文件。
 
-You can reorder the terms in the search string. For example, the following query searches for `doe john`:
+您可以重新排列搜尋字串中詞彙的順序。例如，下列查詢會搜尋 `doe john`：
 
 ```json
 GET /students/_search
@@ -274,7 +275,7 @@ GET /students/_search
 ```
 {% include copy-curl.html %}
 
-The response contains two matching documents:
+回應包含兩份相符的文件：
 
 ```json
 {
@@ -318,11 +319,11 @@ The response contains two matching documents:
 }
 ```
 
-The match query type uses `OR` as an operator by default, so the query is functionally `doe OR john`. Both `John Doe` and `Jane Doe` matched the word `doe`, but `John Doe` is scored higher because it also matched `john`. For an explanation of how OpenSearch calculates these scores, see [Relevance]({{site.url}}{{site.baseurl}}/getting-started/intro/#relevance).
+match 查詢類型預設使用 `OR` 作為運算子，因此此查詢在功能上等同於 `doe OR john`。`John Doe` 和 `Jane Doe` 都比對到字詞 `doe`，但 `John Doe` 的分數較高，因為它也比對到 `john`。如需 OpenSearch 如何計算這些分數的說明，請參閱[相關性]({{site.url}}{{site.baseurl}}/getting-started/intro/#relevance)。
 
-### Require every term to match
+### 要求每個詞彙都必須相符
 
-To return only the documents that contain all of the query terms, set `operator` to `and`:
+若只要傳回包含所有查詢詞彙的文件，請將 `operator` 設為 `and`：
 
 ```json
 GET /students/_search
@@ -339,7 +340,7 @@ GET /students/_search
 ```
 {% include copy-curl.html %}
 
-The response contains only `John Doe`, the one document that contains both terms:
+回應只包含 `John Doe`，也就是同時包含這兩個詞彙的唯一一份文件：
 
 ```json
 {
@@ -373,9 +374,9 @@ The response contains only `John Doe`, the one document that contains both terms
 }
 ```
 
-### Match a phrase
+### 比對片語
 
-A `match` query ignores the order of the terms. To require the terms to appear next to each other and in the order given, use a `match_phrase` query:
+`match` 查詢會忽略詞彙的順序。若要求詞彙必須相鄰且依照指定的順序出現，請使用 `match_phrase` 查詢：
 
 ```json
 GET /students/_search
@@ -389,7 +390,7 @@ GET /students/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含相符的文件：
 
 ```json
 {
@@ -423,13 +424,13 @@ The response contains the matching document:
 }
 ```
 
-Searching for `doe john` using the same query returns no results, because the terms appear in the opposite order in the field. 
+使用相同的查詢搜尋 `doe john` 不會傳回任何結果，因為這些詞彙在欄位中是以相反的順序出現。
 
-For more information, see [Match phrase query]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/).
+如需詳細資訊，請參閱[比對片語查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/)。
 
-### Match misspelled words
+### 比對拼錯的字詞
 
-The queries so far require the query term to match a stored term exactly. A search for `jhon` returns no results, even though the index contains `john`:
+到目前為止的查詢，都要求查詢詞彙與儲存的詞彙完全相符。即使索引中包含 `john`，搜尋 `jhon` 仍不會傳回任何結果：
 
 ```json
 GET /students/_search
@@ -443,7 +444,7 @@ GET /students/_search
 ```
 {% include copy-curl.html %}
 
-To match terms that are spelled similarly, set `fuzziness` to the number of single-character changes that OpenSearch is allowed to make to the query term when looking for a match. A change is an insertion, a deletion, a substitution, or a transposition of two adjacent characters. This number is called the _edit distance_. Turning `jhon` into `john` requires transposing `h` and `o`, so an edit distance of `1` is enough:
+若要比對拼法相近的詞彙，請將 `fuzziness` 設為 OpenSearch 在尋找相符項目時，可對查詢詞彙進行的單一字元變更次數。一次變更是指插入、刪除、替換一個字元，或對調兩個相鄰的字元。這個數字稱為「_編輯距離_」。將 `jhon` 變成 `john` 需要對調 `h` 與 `o`，因此編輯距離為 `1` 就已足夠：
 
 ```json
 GET /students/_search
@@ -460,7 +461,7 @@ GET /students/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document. The score is lower than the score for an exact match on `john` because OpenSearch penalizes fuzzy matches:
+回應包含相符的文件。由於 OpenSearch 會對模糊比對結果降低評分，因此其分數會低於完全符合 `john` 時的分數：
 
 ```json
 {
@@ -494,11 +495,11 @@ The response contains the matching document. The score is lower than the score f
 }
 ```
 
-Setting `fuzziness` to `AUTO` lets OpenSearch choose the edit distance based on the length of the query term, which avoids matching unrelated short words. For more information, see [Fuzziness]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match/#fuzziness).
+將 `fuzziness` 設為 `AUTO`，可讓 OpenSearch 根據查詢詞彙的長度選擇編輯距離，以避免比對到不相關的短字詞。如需詳細資訊，請參閱[模糊度]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match/#fuzziness)。
 
-### Keyword search
+### 關鍵字搜尋
 
-Because the bulk request in [Ingest data]({{site.url}}{{site.baseurl}}/getting-started/ingest-data/) let OpenSearch infer the field types, the `name` field contains a `name.keyword` subfield that OpenSearch added automatically. Try searching the `name.keyword` field in a manner similar to the previous request:
+由於[匯入資料]({{site.url}}{{site.baseurl}}/getting-started/ingest-data/)中的大量請求讓 OpenSearch 自行推斷欄位類型，因此 `name` 欄位包含一個由 OpenSearch 自動新增的 `name.keyword` 子欄位。請試著以類似前一個請求的方式搜尋 `name.keyword` 欄位：
 
 ```json
 GET /students/_search
@@ -512,9 +513,9 @@ GET /students/_search
 ```
 {% include copy-curl.html %}
 
-The request returns no results because the `keyword` fields must exactly match. 
+此請求不會傳回任何結果，因為 `keyword` 欄位必須完全相符。
 
-Now search for the exact text `John Doe`:
+現在請搜尋確切的文字 `John Doe`：
 
 ```json
 GET /students/_search
@@ -528,7 +529,7 @@ GET /students/_search
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns the matching document:
+OpenSearch 會傳回相符的文件：
 
 ```json
 {
@@ -562,11 +563,11 @@ OpenSearch returns the matching document:
 }
 ```
 
-### Filters
+### 篩選條件
 
-Using a Boolean query, you can add a filter clause to your query for fields with exact values.
+使用布林值查詢時，您可以針對具有確切值的欄位，在查詢中加入篩選子句。
 
-Term filters match specific terms. For example, the following Boolean query searches for students whose graduation year is 2022:
+詞彙篩選條件會比對特定詞彙。例如，下列布林值查詢會搜尋畢業年份為 2022 年的學生：
 
 ```json
 GET /students/_search
@@ -582,7 +583,7 @@ GET /students/_search
 ```
 {% include copy-curl.html %}
 
-With range filters, you can specify a range of values. For example, the following Boolean query searches for students whose GPA is greater than 3.6:
+使用範圍篩選條件，您可以指定值的範圍。例如，下列布林值查詢會搜尋 GPA 大於 3.6 的學生：
 
 ```json
 GET /students/_search
@@ -598,13 +599,13 @@ GET /students/_search
 ```
 {% include copy-curl.html %}
 
-For more information about filters, see [Query and filter context]({{site.url}}{{site.baseurl}}/query-dsl/query-filter-context/).
+如需篩選條件的詳細資訊，請參閱[查詢與篩選內容]({{site.url}}{{site.baseurl}}/query-dsl/query-filter-context/)。
 
-### Compound queries
+### 複合查詢
 
-A compound query lets you combine multiple query or filter clauses. A Boolean query is an example of a compound query.
+複合查詢可讓您結合多個查詢或篩選子句。布林值查詢就是複合查詢的一個範例。
 
-For example, to search for students whose name matches `doe` and filter by graduation year and GPA, use the following request:
+例如，若要搜尋名稱符合 `doe` 的學生，並依畢業年份和 GPA 進行篩選，請使用下列請求：
 
 ```json
 GET /students/_search
@@ -626,26 +627,26 @@ GET /students/_search
 ```
 {% include copy-curl.html %}
 
-For more information about Boolean and other compound queries, see [Compound queries]({{site.url}}{{site.baseurl}}/query-dsl/compound/index/).
+如需布林值查詢及其他複合查詢的詳細資訊，請參閱[複合查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/index/)。
 
-## Other query languages
+## 其他查詢語言
 
-Along with query DSL and query string queries, OpenSearch supports the following query languages:
+除了 Query DSL 和查詢字串查詢之外，OpenSearch 還支援下列查詢語言：
 
-- [SQL]({{site.url}}{{site.baseurl}}/search-plugins/sql/sql/index/): A traditional query language that bridges the gap between traditional relational database concepts and the flexibility of OpenSearch's document-oriented data storage.
-- [Piped Processing Language (PPL)]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/): The primary language used for observability in OpenSearch. PPL uses a pipe syntax that chains commands into a query.
-- [Dashboards Query Language (DQL)]({{site.url}}{{site.baseurl}}/dashboards/dql/): A text-based query language for filtering data in OpenSearch Dashboards.
+- [SQL]({{site.url}}{{site.baseurl}}/search-plugins/sql/sql/index/)：一種傳統的查詢語言，可銜接傳統關聯式資料庫概念與 OpenSearch 以文件為導向的資料儲存空間所具備的彈性。
+- [Piped Processing Language (PPL)]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/)：OpenSearch 中用於可觀測性的主要語言。PPL 使用管道語法，將多個命令串連成一個查詢。
+- [Dashboards Query Language (DQL)]({{site.url}}{{site.baseurl}}/dashboards/dql/)：一種以文字為基礎的查詢語言，用於在 OpenSearch Dashboards 中篩選資料。
 
-## Search methods
+## 搜尋方法
 
-Along with the traditional full-text search described in this tutorial, OpenSearch supports a range of machine learning (ML)-powered search methods, including vector search and AI-powered searches such as semantic, multimodal, sparse, hybrid, and conversational search. For information about all OpenSearch-supported search methods, see [Search]({{site.url}}{{site.baseurl}}/search-plugins/).
+除了本教學所述的傳統全文搜尋之外，OpenSearch 還支援多種由機器學習 (ML) 驅動的搜尋方法，包括向量搜尋，以及由 AI 驅動的搜尋，例如語意搜尋、多模態搜尋、稀疏搜尋、混合搜尋和對話式搜尋。如需 OpenSearch 支援的所有搜尋方法的相關資訊，請參閱[搜尋]({{site.url}}{{site.baseurl}}/search-plugins/)。
 
-## Further reading
+## 延伸閱讀
 
-- For information about available query types, see [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/index/).
-- For information about available search methods, see [Search]({{site.url}}{{site.baseurl}}/search-plugins/).
-- For information about vector search, see [Vector search]({{site.url}}{{site.baseurl}}/vector-search/).
+- 如需可用查詢類型的相關資訊，請參閱 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/index/)。
+- 如需可用搜尋方法的相關資訊，請參閱[搜尋]({{site.url}}{{site.baseurl}}/search-plugins/)。
+- 如需向量搜尋的相關資訊，請參閱[向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/)。
 
-## Next steps
+## 後續步驟
 
-- To load a larger sample dataset and summarize it, see [Analyze your data]({{site.url}}{{site.baseurl}}/getting-started/analyze-data/).
+- 若要載入較大的範例資料集並加以摘要，請參閱[分析您的資料]({{site.url}}{{site.baseurl}}/getting-started/analyze-data/)。

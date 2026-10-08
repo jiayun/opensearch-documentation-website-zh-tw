@@ -1,3 +1,4 @@
+/* Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations. */
 const copyLabels = document.querySelectorAll('.copy-label');
 const copyCurlLabels = document.querySelectorAll('.copy-curl-label');
 
@@ -13,9 +14,9 @@ function addButtons(labels, curl) {
 
         var buttonWrap = document.createElement('div');
         buttonWrap.className = 'copy-button-wrap';
-        buttonWrap.appendChild(createButton(text, 'Copy', 'Copy snippet to clipboard', false, security));
+        buttonWrap.appendChild(createButton(text, '複製', '將程式碼複製到剪貼簿', false, security));
         if (curl) {
-            buttonWrap.appendChild(createButton(text, 'Copy as cURL', 'Copy snippet as cURL', true, security));
+            buttonWrap.appendChild(createButton(text, '複製為 cURL', '以 cURL 格式複製程式碼', true, security));
         }
 
         // Check if the next sibling after the copy label is a playground label
@@ -24,8 +25,8 @@ function addButtons(labels, curl) {
             var playButton = document.createElement('button');
             playButton.className = 'copy-button playground-button';
             playButton.type = 'button';
-            playButton.innerText = 'Try in Playground';
-            playButton.ariaLabel = 'Open query in OpenSearch Playground';
+            playButton.innerText = '在 Playground 中嘗試 (Try in Playground)';
+            playButton.ariaLabel = '在 OpenSearch Playground 開啟查詢';
             playButton.setAttribute('data-action', 'open_playground');
             playButton.setAttribute('data-query', text);
             buttonWrap.appendChild(playButton);

@@ -1,44 +1,45 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Blocks
+title: "封鎖"
 parent: Index blocks and allocation
 grand_parent: Index APIs
 nav_order: 10
 ---
 
 # Blocks API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Use the Blocks API to limit certain operations on a specified index. Different types of blocks allow you to restrict index write, read, or metadata operations. 
-For example, adding a `write` block through the API ensures that all index shards have properly accounted for the block before returning a successful response. Any in-flight write operations to the index must be complete before the `write` block takes effect.
+使用 Blocks API 可限制指定索引上的特定作業。不同類型的封鎖可讓您限制索引的寫入、讀取或中繼資料作業。 
+例如，透過 API 新增 `write` 封鎖，可確保所有索引分片都已妥善處理該封鎖後，才傳回成功回應。對索引進行的任何尚未完成的寫入作業，都必須在 `write` 封鎖生效前完成。
 
-## Endpoints
+## 端點
 
 ```json
 PUT /{index}/_block/{block}
 ```
 
-## Path parameters
+## 路徑參數
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 :--- | :--- | :---
-| `index` | String | A comma-delimited list of index names. Wildcard expressions (`*`) are supported. To target all data streams and indexes in a cluster, use `_all` or `*`. Optional. |
-| `<block>` | String | Specifies the type of block to apply to the index. Valid values are: <br> - `metadata`: Blocks metadata changes, such as closing the index. <br> - `read`: Blocks read operations. <br> - `read_only`: Blocks write operations and metadata changes. <br> - `write`: Blocks write operations but allows metadata changes. <br> - `search_only`: Blocks indexing and write operations while allowing read-only access through search replicas. <br> OpenSearch automatically manages this block through the Scale API as part of the reader-writer separation mechanism. Therefore, do not set this parameter manually. |
+| `index` | 字串 | 以逗號分隔的索引名稱清單。支援萬用字元運算式（`*`）。若要以叢集中的所有資料串流和索引為目標，請使用 `_all` 或 `*`。選用。 |
+| `<block>` | 字串 | 指定要套用至索引的封鎖類型。有效值為：<br> - `metadata`：封鎖中繼資料變更，例如關閉索引。<br> - `read`：封鎖讀取作業。<br> - `read_only`：封鎖寫入作業和中繼資料變更。<br> - `write`：封鎖寫入作業，但允許中繼資料變更。<br> - `search_only`：封鎖編製索引和寫入作業，同時允許透過搜尋副本進行唯讀存取。<br> OpenSearch 會透過 Scale API 自動管理此封鎖，作為讀寫分離機制的一部分。因此，請勿手動設定此參數。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `ignore_unavailable` | Boolean | When `false`, the request returns an error when it targets a missing or closed index. Default is `false`.
-| `allow_no_indices` | Boolean | When `false`, the Refresh Index API returns an error when a wildcard expression, index alias, or `_all` targets only closed or missing indexes, even when the request is made against open indexes. Default is `true`. |
-| `expand_wildcards` | String | The type of index that the wildcard patterns can match. If the request targets data streams, this argument determines whether the wildcard expressions match any hidden data streams. Supports comma-separated values, such as `open,hidden`. Valid values are `all`, `open`, `closed`, `hidden`, and `none`. |
-`cluster_manager_timeout` | `Time` | The amount of time to wait for a connection to the cluster manager node. Default is `30s`.
-`timeout` | `Time` | The amount of time to wait for the request to return. Default is `30s`. |
+| `ignore_unavailable` | 布林值 | 當值為 `false` 時，若請求以不存在或已關閉的索引為目標，便會傳回錯誤。預設為 `false`。
+| `allow_no_indices` | 布林值 | 當值為 `false` 時，若萬用字元運算式、索引別名或 `_all` 僅以已關閉或不存在的索引為目標，即使請求是針對開啟的索引發出，Refresh Index API 也會傳回錯誤。預設為 `true`。 |
+| `expand_wildcards` | 字串 | 萬用字元模式可比對的索引類型。如果請求以資料串流為目標，此引數會決定萬用字元運算式是否比對任何隱藏的資料串流。支援以逗號分隔的值，例如 `open,hidden`。有效值為 `all`、`open`、`closed`、`hidden` 和 `none`。 |
+`cluster_manager_timeout` | `Time` | 等待連線至叢集管理員節點的時間。預設為 `30s`。
+`timeout` | `Time` | 等待請求傳回的時間。預設為 `30s`。 |
 
-## Example request
+## 請求範例
 <!-- spec_insert_start
 component: example_code
 rest: PUT /test-index/_block/write
@@ -62,7 +63,7 @@ response = client.indices.add_block(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The following example request disables any `write` operations made to the test index:
+以下請求範例會停用對測試索引執行的任何 `write` 作業：
 
 <!-- spec_insert_start
 component: example_code
@@ -87,7 +88,7 @@ response = client.indices.add_block(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
 ```json
 {

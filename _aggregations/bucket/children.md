@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Children
 parent: Bucket aggregations
 nav_order: 15
 ---
 
-# Children aggregation
+# Children 彙總
 
-The `children` aggregation is a bucket aggregation that creates a single bucket containing child documents, based on parent-child relationships defined in your index.
+`children` 彙總是一種桶 (bucket) 彙總，會根據索引中定義的父子關係，建立一個包含子文件的單一桶。
 
-The `children` aggregation works with the [join field type]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/) to aggregate child documents that are associated with parent documents.
+`children` 彙總搭配 [join 欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/) 使用，用於彙總與父文件相關聯的子文件。
 
-The `children` aggregation identifies child documents that match specific child relation name, whereas the [`parent` aggregation]({{site.url}}{{site.baseurl}}/aggregations/bucket/parent/) identifies parent documents that have matching child documents. Both aggregations take the child relation name as input.
+`children` 彙總會識別符合特定子關係名稱的子文件，而 [`parent` 彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/parent/) 則會識別具有相符子文件的父文件。這兩種彙總都以子關係名稱作為輸入。
 
-## Parameters
+## 參數
 
-The `children` aggregation takes the following parameters.
+`children` 彙總接受下列參數。
 
-| Parameter             | Required/Optional | Data type       | Description |
+| 參數             | 必要/選用 | 資料類型       | 說明 |
 | :--                   | :--               | :--             | :--         |
-| `type`                | Required          | String          | The name of the child type from the join field. This identifies the parent-child relationship to use. |
+| `type`                | 必要          | 字串          | join 欄位中子類型的名稱。用於識別要使用的父子關係。 |
 
 
-## Example
+## 範例
 
-The following example builds a small company database with three employees. The employee records each have a child `join` relationship with a parent department record.
+下列範例會建立一個包含三名員工的小型公司資料庫。每筆員工記錄都與一筆父部門記錄具有子 `join` 關係。
 
-First, create a `company` index with a `join` field that maps departments (parents) to employees (children):
+首先，建立一個 `company` 索引，其中包含一個將部門 (父) 對應至員工 (子) 的 `join` 欄位：
 
 ```json
 PUT /company
@@ -57,15 +58,15 @@ PUT /company
 ```
 {% include copy-curl.html %}
 
-Next, populate the data with three departments and three employees. The parent-child assignments are presented in the following table.
+接著，填入三個部門和三名員工的資料。父子指派關係如下表所示。
 
-| Department (parent) | Employees (children) |
+| 部門 (父) | 員工 (子) |
 | :-- | :-- |
-| `Accounting` | `Abel Anderson`, `Betty Billings` |
+| `Accounting` | `Abel Anderson`、`Betty Billings` |
 | `Engineering` | `Carl Carter` |
-| `HR` | none |
+| `HR` | 無 |
 
-The `routing` parameter ensures that both parent and child documents are stored on the same shard, which is required in order for parent-child relationships to function correctly in OpenSearch:
+`routing` 參數可確保父文件和子文件都儲存在同一個分片上，這是 OpenSearch 中父子關係正常運作的必要條件：
 
 ```json
 POST _bulk?routing=1
@@ -84,7 +85,7 @@ POST _bulk?routing=1
 ```
 {% include copy-curl.html %}
 
-The following request queries all the departments and then filters for the one named `Accounting`. It then uses the `children` aggregation to select the two documents that have a child relationship with the `Accounting` department. Finally, the `avg` subaggregation returns the average of the `Accounting` employees' salaries:
+下列請求會查詢所有部門，然後篩選出名為 `Accounting` 的部門。接著使用 `children` 彙總，選取與 `Accounting` 部門具有子關係的兩份文件。最後，`avg` 子彙總會傳回 `Accounting` 員工薪資的平均值：
 
 ```json
 GET /company/_search
@@ -124,9 +125,9 @@ GET /company/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-The response returns the selected department bucket, finds the `employee` type children of the department, and computes the `avg` of their salaries:
+回應會傳回所選取的部門桶，找出該部門的 `employee` 類型子項，並計算其薪資的 `avg`：
 
 ```json
 {

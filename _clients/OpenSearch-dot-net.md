@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Low-level .NET client
+title: "低階 .NET 用戶端"
 nav_order: 30
 has_children: false
 parent: .NET clients
 ---
 
-# Low-level .NET client (OpenSearch.Net)
+# 低階 .NET 用戶端 (OpenSearch.Net)
 
-OpenSearch.Net is a low-level .NET client that provides the foundational layer of communication with OpenSearch. It is dependency free, and it can handle round-robin load balancing, transport, and the basic request/response cycle. OpenSearch.Net contains all OpenSearch API endpoints as methods. When using OpenSearch.Net, you need to construct the queries yourself.
+OpenSearch.Net 是一個低階 .NET 用戶端，提供與 OpenSearch 通訊的基礎層。它沒有任何相依性，可以處理輪流負載平衡、傳輸以及基本的請求/回應循環。OpenSearch.Net 將所有 OpenSearch API 端點封裝為方法。使用 OpenSearch.Net 時，您需要自行建構查詢。
 
-This getting started guide illustrates how to connect to OpenSearch, index documents, and run queries. For the client source code, see the [`opensearch-net` repo](https://github.com/opensearch-project/opensearch-net).
+本入門指南說明如何連線至 OpenSearch、將文件編製索引，以及執行查詢。用戶端原始碼請參閱 [`opensearch-net` 儲存庫](https://github.com/opensearch-project/opensearch-net)。
 
-## Stable release
+## 穩定版本
 
-This documentation reflects the latest updates available in the [GitHub repository](https://github.com/opensearch-project/opensearch-net) and may include changes unavailable in the current stable release. The current stable release in NuGet is [2.2.0](https://www.nuget.org/packages/OpenSearch.Net/2.2.0). For information about supported OpenSearch versions and target frameworks, see [Compatibility]({{site.url}}{{site.baseurl}}/clients/dot-net/#compatibility).
+本文件反映 [GitHub 儲存庫](https://github.com/opensearch-project/opensearch-net) 中最新的更新，可能包含目前穩定版本尚未提供的變更。NuGet 上目前的穩定版本為 [2.2.0](https://www.nuget.org/packages/OpenSearch.Net/2.2.0)。如需支援的 OpenSearch 版本與目標架構的資訊，請參閱[相容性]({{site.url}}{{site.baseurl}}/clients/dot-net/#compatibility)。
 
-## Installing the OpenSearch.Net client
+## 安裝 OpenSearch.Net 用戶端
 
-To install OpenSearch.Net, download the [OpenSearch.Net NuGet package](https://www.nuget.org/packages/OpenSearch.Net) and add it to your project in an IDE of your choice. In Microsoft Visual Studio, use the following steps:
-- In the **Solution Explorer** panel, right-click on your solution or project and select **Manage NuGet Packages for Solution**.
-- Search for the OpenSearch.Net NuGet package, and select **Install**.
+若要安裝 OpenSearch.Net，請下載 [OpenSearch.Net NuGet 套件](https://www.nuget.org/packages/OpenSearch.Net)，並在您選擇的 IDE 中將其加入專案。在 Microsoft Visual Studio 中，請依照下列步驟操作：
+- 在 **Solution Explorer** 面板中，以滑鼠右鍵按一下您的方案或專案，然後選取 **Manage NuGet Packages for Solution**。
+- 搜尋 OpenSearch.Net NuGet 套件，然後選取 **Install**。
 
-Alternatively, add OpenSearch.Net to your project using the .NET CLI:
+或者，您也可以使用 .NET CLI 將 OpenSearch.Net 加入專案：
 
 ```bash
 dotnet add package OpenSearch.Net --version 2.2.0
 ```
 {% include copy.html %}
 
-You can also add OpenSearch.Net to your .csproj file:
+您也可以將 OpenSearch.Net 加入 .csproj 檔案：
 
 ```xml
 <Project>
@@ -41,9 +42,9 @@ You can also add OpenSearch.Net to your .csproj file:
 ```
 {% include copy.html %}
 
-## Sample data
+## 範例資料
 
-The examples on this page use the following `Student` class to represent one student, which is equivalent to one document in the index. The `ToString` method formats a `Student` for console output:
+本頁的範例使用下列 `Student` 類別來代表一位學生，相當於索引中的一份文件。`ToString` 方法會將 `Student` 格式化以供主控台輸出：
 
 ```cs
 using System.Globalization;
@@ -71,19 +72,19 @@ public class Student
 ```
 {% include copy.html %}
 
-By default, OpenSearch.Net serializes property names exactly as they are declared. The `DataMember` attributes specify the field names, so a `Student` is indexed as a document containing the `firstName`, `lastName`, `gpa`, and `gradDate` fields.
+預設情況下，OpenSearch.Net 會完全依照屬性名稱的宣告方式進行序列化。`DataMember` 屬性會指定欄位名稱，因此 `Student` 會被編製索引為包含 `firstName`、`lastName`、`gpa` 和 `gradDate` 欄位的文件。
 {: .note}
 
-## Connecting to OpenSearch
+## 連線至 OpenSearch
 
-Use the default constructor when creating an OpenSearchLowLevelClient object to connect to the default OpenSearch host (`http://localhost:9200`). 
+建立 OpenSearchLowLevelClient 物件以連線至預設 OpenSearch 主機 (`http://localhost:9200`) 時，請使用預設建構函式。
 
 ```cs
 var client  = new OpenSearchLowLevelClient();
 ```
 {% include copy.html %}
 
-To connect to your OpenSearch cluster through a single node with a known address, create a ConnectionConfiguration object with that address and pass it to the OpenSearch.Net constructor:
+若要透過位址已知的單一節點連線至您的 OpenSearch 叢集，請使用該位址建立 ConnectionConfiguration 物件，並將其傳遞給 OpenSearch.Net 建構函式：
 
 ```cs
 var nodeAddress = new Uri("http://myserver:9200");
@@ -92,7 +93,7 @@ var client = new OpenSearchLowLevelClient(config);
 ```
 {% include copy.html %}
 
-You can also use a [connection pool]({{site.url}}{{site.baseurl}}/clients/dot-net-conventions#connection-pools) to manage the nodes in the cluster. Additionally, you can set up a connection configuration to have OpenSearch return the response as formatted JSON.
+您也可以使用[連線集區]({{site.url}}{{site.baseurl}}/clients/dot-net-conventions#connection-pools)來管理叢集中的節點。此外，您還可以設定連線組態，讓 OpenSearch 以格式化的 JSON 傳回回應。
 
 ```cs
 var uri = new Uri("http://localhost:9200");
@@ -102,7 +103,7 @@ var client = new OpenSearchLowLevelClient(settings);
 ```
 {% include copy.html %}
 
-To connect to your OpenSearch cluster using multiple nodes, create a connection pool with their addresses. In this example, a [`SniffingConnectionPool`]({{site.url}}{{site.baseurl}}/clients/dot-net-conventions#connection-pools) is used because it keeps track of nodes being removed or added to the cluster, so it works best for clusters that scale automatically. 
+若要使用多個節點連線至您的 OpenSearch 叢集，請使用這些節點的位址建立連線集區。在此範例中，使用的是 [`SniffingConnectionPool`]({{site.url}}{{site.baseurl}}/clients/dot-net-conventions#connection-pools)，因為它會追蹤叢集中被移除或加入的節點，因此最適合會自動擴展的叢集。
 
 ```cs
 var uris = new[]
@@ -117,20 +118,20 @@ var client = new OpenSearchLowLevelClient(settings);
 ```
 {% include copy.html %}
 
-## Connecting to Amazon OpenSearch Service
+## 連線至 Amazon OpenSearch Service
 
-To sign requests to Amazon OpenSearch Service using AWS Signature Version 4, install the OpenSearch.Net.Auth.AwsSigV4 package. This package depends on OpenSearch.Net, so it also installs OpenSearch.Net:
+若要使用 AWS Signature Version 4 簽署對 Amazon OpenSearch Service 的請求，請安裝 OpenSearch.Net.Auth.AwsSigV4 套件。此套件相依於 OpenSearch.Net，因此也會一併安裝 OpenSearch.Net：
 
 ```bash
 dotnet add package OpenSearch.Net.Auth.AwsSigV4 --version 2.2.0
 ```
 {% include copy.html %}
 
-`AwsSigV4HttpConnection` signs requests using credentials from the default AWS credential provider chain. The Region that you pass to `AwsSigV4HttpConnection` must match the Region of your domain or collection. The following examples use the `us-east-1` Region.
+`AwsSigV4HttpConnection` 會使用預設 AWS 憑證供應商鏈中的憑證來簽署請求。您傳遞給 `AwsSigV4HttpConnection` 的 Region 必須與您的網域或集合的 Region 相符。下列範例使用 `us-east-1` Region。
 
-In the following example, replace the endpoint with your domain endpoint, which is listed on the domain's details page in the Amazon OpenSearch Service console.
+在下列範例中，請將端點替換為您的網域端點，該端點列於 Amazon OpenSearch Service 主控台中網域的詳細資料頁面。
 
-The following example illustrates connecting to Amazon OpenSearch Service:
+下列範例說明如何連線至 Amazon OpenSearch Service：
 
 ```cs
 using Amazon;
@@ -155,9 +156,9 @@ namespace Application
 ```
 {% include copy.html %}
 
-## Connecting to Amazon OpenSearch Serverless
+## 連線至 Amazon OpenSearch Serverless
 
-The following example illustrates connecting to Amazon OpenSearch Serverless. Replace the endpoint with your collection endpoint, which is listed on the collection's details page in the Amazon OpenSearch Service console:
+下列範例說明如何連線至 Amazon OpenSearch Serverless。請將端點替換為您的集合端點，該端點列於 Amazon OpenSearch Service 主控台中集合的詳細資料頁面：
 
 ```cs
 using Amazon;
@@ -182,15 +183,15 @@ namespace Application
 ```
 {% include copy.html %}
 
-Amazon OpenSearch Serverless supports a subset of OpenSearch API operations and does not support the `refresh` parameter used in the examples on this page. For more information, see [Supported operations and plugins in Amazon OpenSearch Serverless](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-genref.html).
+Amazon OpenSearch Serverless 支援 OpenSearch API 作業的子集，且不支援本頁範例中使用的 `refresh` 參數。如需更多資訊，請參閱 [Amazon OpenSearch Serverless 中支援的作業與外掛程式](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-genref.html)。
 {: .note}
 
-## Using ConnectionConfiguration
+## 使用 ConnectionConfiguration
 
-Use `ConnectionConfiguration` to pass configuration options to the OpenSearch.Net client. The following example uses `ConnectionConfiguration` to:
+使用 `ConnectionConfiguration` 將組態選項傳遞給 OpenSearch.Net 用戶端。下列範例使用 `ConnectionConfiguration` 來：
 
-- Enable gzip-compressed requests and responses.
-- Signal to OpenSearch to return formatted JSON.
+- 啟用 gzip 壓縮的請求與回應。
+- 通知 OpenSearch 傳回格式化的 JSON。
 
 ```cs
 var uri = new Uri("http://localhost:9200");
@@ -203,9 +204,9 @@ var client = new OpenSearchLowLevelClient(settings);
 ```
 {% include copy.html %}
 
-## Creating an index
+## 建立索引
 
-The following example creates an index with one primary shard and one replica. It explicitly maps the `gradDate` field as a `date` in the `yyyy-MM-dd` format. OpenSearch maps the other document fields dynamically when you index documents:
+下列範例會建立一個具有一個主要分片和一個副本的索引。此範例明確地將 `gradDate` 欄位對應為 `yyyy-MM-dd` 格式的 `date`。當您將文件編製索引時，OpenSearch 會動態對應其他文件欄位：
 
 ```cs
 var index = "students";
@@ -231,25 +232,25 @@ var createIndexResponse = client.Indices.Create<DynamicResponse>(index,
 ```
 {% include copy.html %}
 
-The generic type parameter of each method specifies the response type. `DynamicResponse` lets you read values from the response body by path, for example, `createIndexResponse.Get<string>("index")`. `StringResponse` returns the response body as a string.
+每個方法的泛型類型參數會指定回應類型。`DynamicResponse` 可讓您依路徑從回應本文讀取值，例如 `createIndexResponse.Get<string>("index")`。`StringResponse` 會以字串形式傳回回應本文。
 
-## Indexing one document
+## 將單一文件編製索引
 
-To index a document, first create an instance of the `Student` class:
+若要將文件編製索引，請先建立 `Student` 類別的執行個體：
 
 ```cs
 var student = new Student { FirstName = "John", LastName = "Doe", Gpa = 3.89, GradDate = "2022-05-15" };
 ```
 {% include copy.html %}
 
-Alternatively, you can create a student using an anonymous type. In this case, the property names are the field names:
+或者，您也可以使用匿名型別建立學生。在此情況下，屬性名稱即為欄位名稱：
 
 ```cs
 var student = new { firstName = "John", lastName = "Doe", gpa = 3.89, gradDate = "2022-05-15" };
 ```
 {% include copy.html %}
 
-Next, upload this student into the `students` index with the ID `1` using the `Index` method. Setting `Refresh` to `Refresh.True` makes the document immediately available for search:
+接著，使用 `Index` 方法將此學生上傳至 `students` 索引，ID 為 `1`。將 `Refresh` 設定為 `Refresh.True` 可讓文件立即可供搜尋：
 
 ```cs
 var indexResponse = client.Index<DynamicResponse>(index, "1",
@@ -258,9 +259,9 @@ var indexResponse = client.Index<DynamicResponse>(index, "1",
 ```
 {% include copy.html %}
 
-## Indexing many documents using the Bulk API
+## 使用 Bulk API 將多個文件編製索引
 
-To index many documents, use the Bulk API to bundle many operations into one request:
+若要將多個文件編製索引，請使用 Bulk API 將多項操作合併為一個請求：
 
 ```cs
 var bulkBody = new object[]
@@ -275,11 +276,11 @@ var bulkResponse = client.Bulk<StringResponse>(PostData.MultiJson(bulkBody),
 ```
 {% include copy.html %}
 
-You can send the request body as an anonymous object, string, byte array, or stream in APIs that take a body. For APIs that take multiline JSON, you can send the body as a list of bytes or a list of objects, like in the preceding example. The `PostData` class has static methods to send the body in all of these forms.
+在接受本文的 API 中，您可以將請求本文以匿名物件、字串、位元組陣列或資料流的形式傳送。對於接受多行 JSON 的 API，您可以將本文以位元組清單或物件清單的形式傳送，如上述範例所示。`PostData` 類別提供靜態方法，可用上述所有形式傳送本文。
 
-## Searching for documents
+## 搜尋文件
 
-To construct a Query DSL query, use anonymous types within the request body. The following query searches for all students:
+若要建構 Query DSL 查詢，請在請求本文中使用匿名型別。下列查詢會搜尋所有學生：
 
 ```cs
 var searchResponse = client.Search<StringResponse>(index,
@@ -288,7 +289,7 @@ Console.WriteLine(searchResponse.Body);
 ```
 {% include copy.html %}
 
-The following range query searches for students who graduated in 2019:
+下列範圍查詢會搜尋於 2019 年畢業的學生：
 
 ```cs
 var searchResponse = client.Search<StringResponse>(index,
@@ -306,7 +307,7 @@ Console.WriteLine(searchResponse.Body);
 ```
 {% include copy.html %}
 
-Alternatively, you can use strings to construct the request. When using strings, you have to escape the `"` character:
+或者，您也可以使用字串來建構請求。使用字串時，您必須逸出 `"` 字元：
 
 ```cs
 var searchResponse = client.Search<StringResponse>(index,
@@ -327,9 +328,9 @@ Console.WriteLine(searchResponse.Body);
 ```
 {% include copy.html %}
 
-## Paginating results
+## 將結果分頁
 
-To paginate results, use the `from` and `size` parameters. The following example sorts students by graduation date and retrieves the results two at a time. The first request returns the first page of results, and the second request returns the next page:
+若要將結果分頁，請使用 `from` 和 `size` 參數。下列範例會依畢業日期排序學生，並每次擷取兩筆結果。第一個請求會傳回第一頁結果，第二個請求則會傳回下一頁：
 
 ```cs
 var firstPageResponse = client.Search<StringResponse>(index,
@@ -354,11 +355,11 @@ Console.WriteLine(nextPageResponse.Body);
 ```
 {% include copy.html %}
 
-The `from` and `size` parameters work well for the first pages of results. To paginate through a large number of results, use point in time with `search_after`. For more information, see [Paginate results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/).
+`from` 和 `size` 參數適用於前幾頁的結果。若要對大量結果進行分頁，請搭配 `search_after` 使用時間點 (point in time)。如需詳細資訊，請參閱[將結果分頁]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/)。
 
-## Updating a document
+## 更新文件
 
-Update a document by sending a partial document in the `doc` field. Only the fields in the partial document are updated:
+在 `doc` 欄位中傳送部分文件即可更新文件。只有部分文件中的欄位會被更新：
 
 ```cs
 var updateResponse = client.Update<DynamicResponse>(index, "1",
@@ -366,9 +367,9 @@ var updateResponse = client.Update<DynamicResponse>(index, "1",
 ```
 {% include copy.html %}
 
-## Deleting a document
+## 刪除文件
 
-Delete a document using the following code:
+使用下列程式碼刪除文件：
 
 ```cs
 var deleteResponse = client.Delete<DynamicResponse>(index, "3",
@@ -376,18 +377,18 @@ var deleteResponse = client.Delete<DynamicResponse>(index, "3",
 ```
 {% include copy.html %}
 
-## Deleting an index
+## 刪除索引
 
-Delete an index using the following code:
+使用下列程式碼刪除索引：
 
 ```cs
 var deleteIndexResponse = client.Indices.Delete<DynamicResponse>(index);
 ```
 {% include copy.html %}
 
-## Using OpenSearch.Net methods asynchronously
+## 以非同步方式使用 OpenSearch.Net 方法
 
-For applications that require asynchronous code, all method calls in OpenSearch.Net have asynchronous counterparts:
+對於需要非同步程式碼的應用程式，OpenSearch.Net 中的所有方法呼叫都有對應的非同步版本：
 
 ```cs
 // synchronous method
@@ -400,9 +401,9 @@ var asyncResponse = await client.IndexAsync<StringResponse>(index, "1",
 ```
 {% include copy.html %}
 
-## Handling exceptions
+## 處理例外狀況
 
-By default, OpenSearch.Net does not throw exceptions when an operation is unsuccessful. For example, the following query searches for a document in an index that does not exist:
+根據預設，當操作失敗時，OpenSearch.Net 不會擲回例外狀況。例如，下列查詢會在不存在的索引中搜尋文件：
 
 ```cs
 var searchResponse = client.Search<StringResponse>("students1",
@@ -423,7 +424,7 @@ Console.WriteLine(searchResponse.Body);
 ```
 {% include copy.html %}
 
-The response contains the 404 error status code, but no exception is thrown. You can see the status code in the `status` field:
+回應包含 404 錯誤狀態碼，但不會擲回例外狀況。您可以在 `status` 欄位中查看狀態碼：
 
 ```json
 {
@@ -449,7 +450,7 @@ The response contains the 404 error status code, but no exception is thrown. You
 }
 ```
 
-To configure OpenSearch.Net to throw exceptions, turn on the `ThrowExceptions()` setting on `ConnectionConfiguration`:
+若要將 OpenSearch.Net 設定為擲回例外狀況，請在 `ConnectionConfiguration` 上開啟 `ThrowExceptions()` 設定：
 
 ```cs
 var uri = new Uri("http://localhost:9200");
@@ -460,7 +461,7 @@ var client = new OpenSearchLowLevelClient(settings);
 ```
 {% include copy.html %}
 
-To determine whether a request succeeded, use the following properties of the response object:
+若要判斷請求是否成功，請使用回應物件的下列屬性：
 
 ```cs
 Console.WriteLine("Success: " + searchResponse.Success);
@@ -469,18 +470,18 @@ Console.WriteLine("Original Exception: " + searchResponse.OriginalException);
 ```
 {% include copy.html %}
 
-- `Success` returns true if the response code is in the 2xx range or the response code has one of the expected values for this request.
-- `SuccessOrKnownError` returns true if the response is successful or the response code is in the 400–501 or 505–599 ranges. If SuccessOrKnownError is true, the request is not retried.
-- `OriginalException` holds the original exception for the unsuccessful responses.
+- 如果回應碼位於 2xx 範圍內，或回應碼為此請求的預期值之一，`Success` 會傳回 true。
+- 如果回應成功，或回應碼位於 400–501 或 505–599 範圍內，`SuccessOrKnownError` 會傳回 true。如果 SuccessOrKnownError 為 true，則不會重試該請求。
+- `OriginalException` 會保存失敗回應的原始例外狀況。
 
-## Sample program
+## 範例程式
 
-This sample program combines the code from the preceding sections. It connects to a cluster that has the Security plugin enabled. To connect to a cluster without the Security plugin, change the lines marked with `// Without security` comments. Before running the sample program, make sure that you have the `Student` class defined in your project. To print the returned documents, the sample program uses `System.Text.Json` to deserialize the `_source` of each document into a `Student`.
+此範例程式整合了前面幾節的程式碼。它連線至已啟用 Security 外掛程式的叢集。若要連線至未啟用 Security 外掛程式的叢集，請變更標有 `// Without security` 註解的程式碼行。在執行範例程式之前，請確認您的專案中已定義 `Student` 類別。為了列印傳回的文件，範例程式使用 `System.Text.Json` 將每個文件的 `_source` 反序列化為 `Student`。
 
-This sample program is for testing only. It specifies credentials in code and disables certificate validation so that it can connect to a cluster that uses self-signed certificates. In production, load credentials from a secure location and validate the cluster's certificate.
+此範例程式僅供測試之用。它在程式碼中指定認證資訊並停用憑證驗證，以便連線至使用自簽憑證的叢集。在正式環境中，請從安全的位置載入認證資訊，並驗證叢集的憑證。
 {: .warning}
 
-The following sample program creates a client, creates an index, indexes documents individually and in bulk, searches for documents, updates a document, deletes a document, and then deletes the index:
+下列範例程式會建立用戶端、建立索引、逐一及大量將文件編製索引、搜尋文件、更新文件、刪除文件，然後刪除索引：
 
 ```cs
 using System.Text.Json;
@@ -646,7 +647,7 @@ internal class Program
 ```
 {% include copy.html %}
 
-The sample program produces the following output:
+範例程式會產生下列輸出：
 
 ```text
 Creating index......
@@ -683,8 +684,8 @@ Deleting the index......
 Acknowledged: true
 ```
 
-## Related documentation
+## 相關文件
 
-- For more examples of using the client, see the [`opensearch-net` user guide](https://github.com/opensearch-project/opensearch-net/blob/main/USER_GUIDE.md).
-- For guides to specific tasks, such as bulk indexing and searching, see the [`opensearch-net` guides](https://github.com/opensearch-project/opensearch-net/tree/main/guides).
-- For complete sample applications, see the [`opensearch-net` samples](https://github.com/opensearch-project/opensearch-net/tree/main/samples).
+- 如需更多使用用戶端的範例，請參閱 [`opensearch-net` 使用者指南](https://github.com/opensearch-project/opensearch-net/blob/main/USER_GUIDE.md)。
+- 如需特定工作的指南，例如大量編製索引和搜尋，請參閱 [`opensearch-net` 指南](https://github.com/opensearch-project/opensearch-net/tree/main/guides)。
+- 如需完整的範例應用程式，請參閱 [`opensearch-net` 範例](https://github.com/opensearch-project/opensearch-net/tree/main/samples)。

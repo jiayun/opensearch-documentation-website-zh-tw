@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Fine-tuning custom workloads
+title: "微調自訂工作負載"
 parent: Creating custom workloads
 nav_order: 10
 redirect_from:
@@ -8,51 +9,51 @@ redirect_from:
   - /benchmark/user-guide/working-with-workloads/finetune-workloads/
 ---
 
-# Fine-tuning custom workloads
+# 微調自訂工作負載
 
-While custom workloads can help make benchmarks more specific to your application's needs, they sometimes require additional adjustments to make sure they closely resemble a production cluster.
+自訂工作負載雖然能讓基準測試更貼近您應用程式的需求，但有時仍需額外調整，以確保它們與生產叢集高度相似。
 
-You can fine-tune your custom workloads to more closely match your benchmarking needs by using the `create-workload` feature. `create-workload` can extract documents from all indexes or specific indexes selected by the user.
+您可以使用 `create-workload` 功能來微調自訂工作負載，使其更符合您的基準測試需求。`create-workload` 可以從所有索引或使用者選取的特定索引中擷取文件。
 
-## Characteristics to consider 
+## 需要考量的特性 
 
-When beginning to use `create-workload` to fine-tune a custom workload, consider the following characteristics of the workload:
+開始使用 `create-workload` 微調自訂工作負載時，請考量工作負載的下列特性：
 
-1. **Queries** -- Consider the kinds of documents and as well as indexes targeted by the queries and the fields the queries call.
-2. **Shard Size** -- Match the shard size of the workload with the shard size of your cluster, or the benchmark will not simulate the behavior of your application. Lucene operates based on shard sizes and does not have indexes. Calculate the shard size for any index that you want to include in the custom workload.
-3. **Shard count** -- Choose the number of shards according to how you want to size the workload and improve query performance. Because each use case is different, you can determine the shard count in two ways:
-    1. Divide the ideal index size by the shard size found in step 2.
-    2. Multiply the ideal number of shards by the shard size found in step 2.
-4. **Decide how many documents to extract (Recommended)** -- Now that the shard size is set and the number of shards needed in the final index decided, you can determine how many documents you want to extract. In some cases, users aren’t interested in retrieving the entire document corpus from an index because the corpus might be too big. Instead, you might want to generate a smaller corpus. However, the corpus of the generated index should be *representative* of the index in the production workload. In other words, it should contain documents from across the index and not only from a certain area, for example, the first half of the index or the last third of the index. To decide how many documents to extract:
-    1. Multiply the number of shards by the shard size. Because every document is created unequally, add a buffer to the number---an arbitrary number of additional documents. The buffer provides assistance when the number of documents extracted is lower than the expected number, which will not help to retain your shard size. The shard size should be lower than the number of documents extracted. 
-    2. Divide the store size by the product of the previous step. The value of the multiple is used to set the number of sample documents from the reference index. 
-5. **Target cluster configuration** -- Factor the configuration and characteristics of the target cluster into how you generate the workload.
+1. **查詢** -- 請考量查詢所鎖定的文件種類與索引，以及查詢所呼叫的欄位。
+2. **分片大小** -- 讓工作負載的分片大小與叢集的分片大小相符，否則基準測試將無法模擬您應用程式的行為。Lucene 依據分片大小運作，並沒有索引。請為您想納入自訂工作負載的任何索引計算分片大小。
+3. **分片數量** -- 依照您希望如何調整工作負載大小及改善查詢效能來選擇分片數量。由於每個使用案例各不相同，您可以用兩種方式決定分片數量：
+    1. 將理想索引大小除以步驟 2 中找到的分片大小。
+    2. 將理想分片數量乘以步驟 2 中找到的分片大小。
+4. **決定要擷取多少文件（建議）** -- 既然已設定分片大小，也決定了最終索引所需的分片數量，您就可以決定要擷取多少文件。在某些情況下，使用者不想從索引擷取整份文件語料庫，因為語料庫可能太大。此時您可能想產生較小的語料庫。不過，所產生索引的語料庫應該要能*代表*生產工作負載中的索引。換句話說，它應包含來自整個索引的文件，而不只是來自某個特定區域，例如索引的前半部或後三分之一。若要決定要擷取多少文件：
+    1. 將分片數量乘以分片大小。由於每份文件都不相同，請為該數字加上緩衝——也就是額外擷取任意數量的文件。當擷取的文件數量低於預期時，緩衝便能發揮作用；文件數量不足將無法維持所需的分片大小。分片大小應低於擷取的文件數量。 
+    2. 將儲存大小除以步驟 1 的乘積。此乘數值可用來設定從參照索引取樣的樣本文件數量。 
+5. **目標叢集組態** -- 將目標叢集的組態與特性納入您產生工作負載的方式中。
 
 
-## Example
+## 範例
 
-The following example contains an index named `stocks`. The `stocks` index includes documents containing statistics on all stocks being traded on the New York Stock Exchange (NYSE). OpenSearch Dashboards provides information about the `stocks` index, as shown in the following code example:
+下列範例包含一個名為 `stocks` 的索引。`stocks` 索引包含的文件帶有在紐約證券交易所（NYSE）交易的所有股票統計資料。OpenSearch Dashboards 提供 `stocks` 索引的相關資訊，如下列程式碼範例所示：
 
 ```
 health status index  uuid              pri rep docs.count docs.deleted store.size pri.store.size
 green  open   stocks asjdkfjacklajldf   12   1  997818020    232823733    720gb    360gb
 ```
 
-Using this information, you can start adjusting the workload to your specifications, as shown in the following steps:
+利用這項資訊，您就可以開始依您的規格調整工作負載，如下列步驟所示：
 
-1. **Fetch queries associated with this index** -- Obtain the queries needed to make requests to the `stocks` index.
-2. **Find the shard size for the index** -- To get the shard size of the index, divide the store size by the number of shards in the index: `720 / (12 + (12 * 1)) = 30`. 30 GB is the shard size. You can verify this by dividing the primary store size value by the number of primary shards.
-3. **Determine the number of index shards** -- Determine the number of shards needed in the index to represent your application under a production load. For example, if you want your index to hold 300 GB of documents, but 300 GB is too much for the benchmark, determine a number that makes sense. For example, 300 GB of documents divided by the 30 GB shard size determined in the last step, or `300 / 30 = 10`, produces 10 shards. These 10 shards can either be 10 primary shards and 0 replicas, 5 primary shards and 1 replica, or 2 primary shards and 4 replicas. The shard configuration depends on your cluster's index needs.
-4. **Decide how many documents to extract** -- To retain 30 GB and have 10 shards, you need to extract at least 300 GB of documents. To determine the number of documents to extract, divide the store size value by the index size value, in this example, `720 / 300 = 2.4`. Because you want to make sure you reach a value of 30 GB per shard, it is best to round down and choose 2 as the extraction multiple, which means that OpenSearch Benchmark will extract every other document.
-5. **Think about the target cluster configuration** -- Assess the cluster you're planning to work on. Consider the use case, the size of the cluster, and the number of nodes. While fine-tuning the workload, this could be an iterative process where small adjustments to the cluster are made according to the results of the workload runs.
+1. **擷取與此索引相關的查詢** -- 取得向 `stocks` 索引發出請求所需的查詢。
+2. **找出索引的分片大小** -- 若要取得索引的分片大小，請將儲存大小除以索引中的分片數量：`720 / (12 + (12 * 1)) = 30`。30 GB 即為分片大小。您可以將主要儲存大小值除以主要分片數量來驗證。
+3. **決定索引分片數量** -- 決定索引中需要多少分片，以代表生產負載下的應用程式。例如，如果您希望索引容納 300 GB 的文件，但 300 GB 對基準測試來說太多，請決定一個合理的數字。例如，將 300 GB 的文件除以步驟 2 中決定的 30 GB 分片大小，即 `300 / 30 = 10`，會得出 10 個分片。這 10 個分片可以是 10 個主要分片與 0 個副本、5 個主要分片與 1 個副本，或 2 個主要分片與 4 個副本。分片組態取決於您叢集的索引需求。
+4. **決定要擷取多少文件** -- 若要維持 30 GB 並擁有 10 個分片，您需要擷取至少 300 GB 的文件。若要決定要擷取多少文件，請將儲存大小值除以索引大小值，在此範例中為 `720 / 300 = 2.4`。由於您想確保每個分片達到 30 GB，最好向下捨入並選擇 2 作為擷取乘數，這表示 OpenSearch Benchmark 將每隔一份文件擷取一次。
+5. **思考目標叢集組態** -- 評估您打算作業的叢集。請考量使用案例、叢集大小及節點數量。在微調工作負載時，這可能是個反覆的過程，會根據工作負載執行的結果對叢集進行小幅調整。
 
 
-## Replicating metrics
+## 複製指標
 
-In many cases, a workload will not be able to exactly replicate the exact metrics of a production cluster. However, you can aim to get as close as possible to your ideal cluster metrics by replicating the following metrics:
+在許多情況下，工作負載無法完全複製生產叢集的確切指標。不過，您可以藉由複製下列指標，盡可能接近理想的叢集指標：
 
-* CPU utilization
-* Search request rates
-* Indexing rates 
+* CPU 使用率
+* 搜尋請求速率
+* 編製索引速率 
 
 

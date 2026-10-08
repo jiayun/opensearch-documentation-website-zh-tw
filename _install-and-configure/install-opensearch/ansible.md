@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Ansible playbook
 parent: Installing OpenSearch
@@ -7,39 +8,39 @@ redirect_from:
   - /opensearch/install/ansible/
 ---
 
-# Installing OpenSearch and OpenSearch Dashboards using Ansible
+# 使用 Ansible 安裝 OpenSearch 與 OpenSearch Dashboards
 
-You can use an Ansible playbook to install and configure a production-ready OpenSearch cluster along with OpenSearch Dashboards.
+您可以使用 Ansible playbook 來安裝並設定一個可用於生產環境的 OpenSearch 叢集以及 OpenSearch Dashboards。
 
-The Ansible playbook only supports deployment of OpenSearch and OpenSearch Dashboards to the most popular Linux distributions (CentOS 7, RHEL7, Amazon Linux 2, Ubuntu 20.04) hosts.
+此 Ansible playbook 僅支援將 OpenSearch 與 OpenSearch Dashboards 部署到最熱門的 Linux 發行版（CentOS 7、RHEL7、Amazon Linux 2、Ubuntu 20.04）主機。
 {: .note }
 
-## Prerequisites
+## 前置條件
 
-Make sure you have [Ansible](https://www.ansible.com/) and [Java 8](https://www.java.com/en/download/manual.jsp) installed.
+請確保您已安裝 [Ansible](https://www.ansible.com/) 與 [Java 8](https://www.java.com/en/download/manual.jsp)。
 
-## Configuration
+## 組態設定
 
-1. Clone the OpenSearch [`ansible-playbook`](https://github.com/opensearch-project/ansible-playbook) repository:
+1. 複製 OpenSearch [`ansible-playbook`](https://github.com/opensearch-project/ansible-playbook) 儲存庫：
 
    ```bash
    git clone https://github.com/opensearch-project/ansible-playbook
    ```
    {% include copy.html %}
 
-2. Configure the node properties in the `inventories/opensearch/hosts` file:
+2. 在 `inventories/opensearch/hosts` 檔案中設定節點屬性：
 
    ```bash
    ansible_host=<Public IP address> ansible_user=root ip=<Private IP address / 0.0.0.0>
    ```
    {% include copy.html %}
 
-   where:
+   其中：
 
-   - `ansible_host` is the IP address of the target node that you want the Ansible playbook to install OpenSearch and OpenSearch DashBoards on.
-   - `ip` is the IP address that you want OpenSearch and OpenSearch DashBoards to bind to. You can specify the private IP of the target node, or localhost, or 0.0.0.0.
+   - `ansible_host` 是您希望 Ansible playbook 安裝 OpenSearch 與 OpenSearch Dashboards 的目標節點 IP 位址。
+   - `ip` 是您希望 OpenSearch 與 OpenSearch Dashboards 綁定的 IP 位址。您可以指定目標節點的私有 IP、localhost 或 0.0.0.0。
 
-3. You can modify the default configuration values in the `inventories/opensearch/group_vars/all/all.yml` file. For example, you can increase the Java memory heap size:
+3. 您可以在 `inventories/opensearch/group_vars/all/all.yml` 檔案中修改預設的組態值。例如，您可以增加 Java 記憶體堆積大小：
 
    ```bash
    xms_value: 8
@@ -47,32 +48,32 @@ Make sure you have [Ansible](https://www.ansible.com/) and [Java 8](https://www.
    ```
    {% include copy.html %}
 
-Make sure you have direct SSH access into the root user of the target node.
+請確保您具有直接透過 SSH 存取目標節點 root 使用者的權限。
 {: .note }
 
-## Install OpenSearch and OpenSearch Dashboards using the Ansible playbook
+## 使用 Ansible playbook 安裝 OpenSearch 與 OpenSearch Dashboards
 
-1. Run the Ansible playbook with root privileges:
+1. 以 root 權限執行 Ansible playbook：
 
    ```bash
    ansible-playbook -i inventories/opensearch/hosts opensearch.yml --extra-vars "admin_password=Test@123 kibanaserver_password=Test@6789 logstash_password=Test@456"
    ```
    {% include copy.html %}
 
-   You can set the passwords for reserved users (`admin`, `kibanaserver`, and `logstash`) using the `admin_password`, `kibanaserver_password`, and `logstash_password` variables.
+   您可以使用 `admin_password`、`kibanaserver_password` 與 `logstash_password` 變數來設定保留使用者的密碼（`admin`、`kibanaserver` 與 `logstash`）。
 
-2. After the deployment process is complete, you can access OpenSearch and OpenSearch Dashboards with the username `admin` and the password that you set for the `admin_password` variable.
+2. 部署程序完成後，您可以使用使用者名稱 `admin` 以及您為 `admin_password` 變數設定的密碼來存取 OpenSearch 與 OpenSearch Dashboards。
 
-   If you bind `ip` to a private IP or localhost, make sure you're logged into the server that deployed the playbook to access OpenSearch and OpenSearch Dashboards:
+   如果您將 `ip` 綁定到私有 IP 或 localhost，請確保您已登入部署 playbook 的伺服器，以存取 OpenSearch 與 OpenSearch Dashboards：
 
    ```bash
    curl https://localhost:9200 -u 'admin:Test@123' --insecure
    ```
    {% include copy.html %}
 
-   If you bind `ip` to 0.0.0.0, then replace `localhost` with the public IP or the private IP (if it's in the same network).
+   如果您將 `ip` 綁定到 0.0.0.0，請將 `localhost` 替換為公有 IP 或私有 IP（如果在同一網路中）。
 
-## Related documentation
+## 相關文件
 
-- [Preparing a cluster for production]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#preparing-a-cluster-for-production)
-- [Preparing OpenSearch Dashboards for production]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#preparing-opensearch-dashboards-for-production)
+- [為生產環境準備叢集]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#preparing-a-cluster-for-production)
+- [為生產環境準備 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#preparing-opensearch-dashboards-for-production)

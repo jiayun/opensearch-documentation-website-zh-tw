@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Performance testing best practices
+title: "效能測試最佳實務"
 nav_order: 70
 redirect_from:
   - /benchmark/user-guide/optimizing-benchmarks/performance-testing-best-practices/
   - /benchmark/user-guide/optimizing-benchmarks/
 ---
 
-# Performance testing best practices
+# 效能測試最佳實務
 
-When conducting performance testing using OpenSearch Benchmark, it's crucial to follow some key best practices to ensure accurate, reliable, and meaningful results. These practices help in creating realistic test scenarios, minimizing external factors that could skew results, and generating comparable and reproducible benchmarks. By adhering to these guidelines, you can gain valuable insights into your cluster's performance, including identifying bottlenecks and making informed decisions about cluster configuration and optimization.
+使用 OpenSearch Benchmark 進行效能測試時，務必遵循一些關鍵的最佳實務，以確保結果準確、可靠且有意義。這些實務有助於建立貼近實際情況的測試情境、將可能使結果失真的外部因素降至最低，並產生可比較且可重現的基準測試。遵循這些準則，您就能深入瞭解叢集的效能，包括找出瓶頸，以及在叢集組態與最佳化方面做出有根據的決策。
 
-## Environment setup
+## 環境設定
 
-Performance testing requires careful attention to the testing environment. A properly configured environment is vital to obtaining reliable and reproducible results.
+效能測試需要仔細留意測試環境。正確設定環境對於取得可靠且可重現的結果至關重要。
 
-When setting up your testing environment, it's essential to use hardware that closely matches your production environment. Using development or underpowered hardware will not provide meaningful results that are translatable to production performance. Local machines often have limited hardware, and local development libraries can conflict with the workload's library, preventing the benchmark test from running effectively.
+設定測試環境時，務必使用與正式環境高度相近的硬體。使用開發用或效能不足的硬體，無法提供可反映正式環境效能的有意義結果。本機通常具有有限的硬體資源，且本機開發程式庫可能與工作負載的程式庫衝突，導致基準測試無法有效執行。
 
-For the best results, make sure that your load generation host or machine running OpenSearch Benchmark follows the minimum hardware requirements:
+為取得最佳結果，請確保您的負載產生主機或執行 OpenSearch Benchmark 的機器符合最低硬體需求：
 
-- CPU: 8+ cores
-- RAM: 32+ GB
-- Storage: Solid-state drive (SSD)/NVMe
-- Network: 10 Gbps
-
-
-We recommend provisioning a test cluster and configuring its settings to reflect what you are most likely to deploy in production.
+- CPU：8 核心以上
+- RAM：32 GB 以上
+- 儲存空間：固態硬碟（SSD）/NVMe
+- 網路：10 Gbps
 
 
-## Test configuration
+我們建議佈建測試叢集，並調整其設定，以反映您最可能在正式環境中部署的組態。
 
-Proper test configuration includes setting appropriate parameters for your test scenarios and ensuring that your cluster is configured optimally.
 
-### Basic setup
+## 測試組態
 
-The following example shows a basic benchmark configuration file. This configuration includes essential parameters such as warmup time, test duration, and the number of clients:
+正確的測試組態包括為測試情境設定適當的參數，以及確保叢集已完成最佳化設定。
+
+### 基本設定
+
+以下範例顯示基本的基準測試組態檔案。此組態包含暖機時間、測試持續時間及用戶端數量等必要參數：
 
 ```json
      {
@@ -52,9 +53,9 @@ The following example shows a basic benchmark configuration file. This configura
 ```
 {% include copy.html %}
 
-### Index settings
+### 索引設定
 
-Your OpenSearch index settings should be optimized for your specific use case. Try to set the number of shards per index to match your production cluster. However, if you're a developer who wants to focus on a single shard's performance and limit the variables impacting performance, use a single primary shard, as shown in the following example `index_settings`:
+您的 OpenSearch 索引設定應針對特定使用案例進行最佳化。請盡可能將每個索引的分片數量設定為與正式環境叢集相同。不過，如果您是開發人員，希望專注於單一分片的效能並限制影響效能的變數，請使用單一主要分片，如以下 `index_settings` 範例所示：
 
 ```json
 {
@@ -66,14 +67,14 @@ Your OpenSearch index settings should be optimized for your specific use case. T
 }
 ```
 
-These settings offer ample storage space for your documents and test results, with 3 shards and 1 replica per index.
+這些設定為您的文件和測試結果提供充足的儲存空間，每個索引有 3 個分片和 1 個副本。
 
 
-## Running tests
+## 執行測試
 
-Running benchmark tests involves monitoring the system during the test and ensuring consistent conditions across test runs.
+執行基準測試時，需要在測試期間監控系統，並確保各次測試執行的條件一致。
 
-While you can run a basic test, you can also customize your test run with additional [benchmark command options]({{site.url}}{{site.baseurl}}/benchmark/reference/commands/index/). The following example runs a `geonames` workload test that targets a specific host and outputs the test results as a `csv`, which can be used for further analysis of the benchmark's metrics:
+除了執行基本測試，您也可以使用其他[基準測試命令選項]({{site.url}}{{site.baseurl}}/benchmark/reference/commands/index/)來自訂測試執行方式。以下範例執行以特定主機為目標的 `geonames` 工作負載測試，並將測試結果輸出為 `csv`，以便進一步分析基準測試的指標：
 
 ```bash
 opensearch-benchmark run \
@@ -86,9 +87,9 @@ opensearch-benchmark run \
 ```
 {% include copy.html %}
 
-### Monitoring during tests
+### 測試期間的監控
 
-During a test run, it's essential to monitor various system metrics to ensure that the test is running correctly and to identify any potential bottlenecks. The following commands help you monitor different aspects of system performance:
+測試執行期間，務必監控各種系統指標，以確保測試正常執行並找出任何潛在瓶頸。以下命令可協助您監控系統效能的不同面向：
 
 ```bash
 # Monitor system resources
@@ -103,13 +104,13 @@ curl localhost:9200/_cluster/health?pretty
 ```
 {% include copy.html %}
 
-## Collecting metrics
+## 收集指標
 
-Collecting and storing appropriate metrics is important for analyzing test results and making informed decisions about performance optimizations.
+收集並儲存適當的指標，對於分析測試結果及做出有根據的效能最佳化決策相當重要。
 
-### Essential metrics
+### 必要指標
 
-Configure your benchmark to collect comprehensive metrics. The following example configuration shows you how to set up metric collection with file storage:
+請設定基準測試以收集完整的指標。以下組態範例示範如何設定指標收集，並使用檔案儲存：
 
 ```json
 {
@@ -125,9 +126,9 @@ Configure your benchmark to collect comprehensive metrics. The following example
 ```
 {% include copy.html %}
 
-### Sample metrics to track
+### 要追蹤的指標範例
 
-The following Python structure can be used as a template and includes a list of metrics that should be tracked during performance testing:
+以下 Python 結構可用作範本，其中包含效能測試期間應追蹤的指標清單：
 
 ```python
 metrics_to_track = {
@@ -150,50 +151,50 @@ metrics_to_track = {
 ```
 {% include copy.html %}
 
-### Calculating metrics
+### 計算指標
 
-OpenSearch Benchmark calculates metrics differently than traditional client-server systems. For detailed information about how metrics are calculated, see [Differences between OpenSearch Benchmark and a traditional client-server system]({{site.url}}{{site.baseurl}}/benchmark/user-guide/concepts/#differences-between-opensearch-benchmark-and-a-traditional-client-server-system).
+OpenSearch Benchmark 計算指標的方式與傳統用戶端與伺服器系統不同。如需指標計算方式的詳細資訊，請參閱 [OpenSearch Benchmark 與傳統用戶端與伺服器系統的差異]({{site.url}}{{site.baseurl}}/benchmark/user-guide/concepts/#differences-between-opensearch-benchmark-and-a-traditional-client-server-system)。
 
-## Integration with OpenSearch Dashboards
+## 與 OpenSearch Dashboards 整合
 
-To integrate OpenSearch Benchmark results with OpenSearch Dashboards, use the following steps:
+若要將 OpenSearch Benchmark 結果與 OpenSearch Dashboards 整合，請使用下列步驟：
 
-1. [Configure OpenSearch Benchmark]({{site.url}}{{site.baseurl}}/benchmark/user-guide/install-and-configure/configuring-benchmark/) to store results in OpenSearch.
-2. Create index patterns in OpenSearch Dashboards for the benchmark results.
-3. Create visualizations and dashboards to analyze the benchmark data.
+1. [設定 OpenSearch Benchmark]({{site.url}}{{site.baseurl}}/benchmark/user-guide/install-and-configure/configuring-benchmark/)，將結果儲存在 OpenSearch 中。
+2. 在 OpenSearch Dashboards 中為基準測試結果建立索引模式。
+3. 建立視覺化和儀表板，以分析基準測試資料。
 
 
-## Common pitfalls
+## 常見陷阱
 
-When conducting performance tests using OpenSearch Benchmark, it's important to be aware of some common pitfalls that can lead to inaccurate or misleading results.
+使用 OpenSearch Benchmark 進行效能測試時，請留意一些可能導致結果不準確或具有誤導性的常見陷阱。
 
-### Warmup intervals
+### 暖機時間
 
-Proper warmup is critical to accurate performance testing. Without an adequate warmup period, your test results may be skewed by initial system instabilities or caching effects.
+適當的暖機對於準確的效能測試至關重要。如果沒有足夠的暖機時間，您的測試結果可能會受到系統初始不穩定狀態或快取效應的影響而失真。
 
-Don't run tests without a warmup period.
+請勿在沒有暖機時間的情況下執行測試。
 
-Instead, always include an adequate warmup period in your tests. This allows the system to reach a steady state before measurements begin. In the following example, a `geonames` run is given a warmup period of `300s`:
+請務必在測試中納入足夠的暖機時間。這可讓系統在開始測量之前達到穩定狀態。以下範例為一次 `geonames` 執行設定了 `300s` 的暖機時間：
 
 ```python
 opensearch-benchmark run --workload=geonames --workload-params="warmup_time_period:300"
 ```
 
-The appropriate warmup period can vary depending on your specific workload and system configuration. Start with at least 5 minutes (300 seconds) and adjust as needed based on your observations.
+適當的暖機時間可能因您的特定工作負載和系統組態而異。請先設定至少 5 分鐘（300 秒），再根據觀察結果視需要調整。
 
-### Comparing results from different environments
+### 比較不同環境的結果
 
-One of the most common mistakes in performance testing is comparing results from different environments. Results obtained from a laptop or development machine are not comparable to those from a production server due to differences in hardware, network conditions, and other environmental factors.
+效能測試中最常見的錯誤之一，是比較不同環境的結果。由於硬體、網路條件及其他環境因素不同，從筆記型電腦或開發用機器取得的結果，無法與正式環境伺服器的結果相比。
 
-Instead, ensure that all comparisons are made using the same or identical environments. If you need to compare different configurations, make sure to change only one variable at a time while keeping the environment consistent.
+請確保所有比較都使用同一個環境或完全相同的環境。如果您需要比較不同的組態，請務必一次只變更一個變數，同時保持環境一致。
 
-### Documenting your test environment
+### 記錄測試環境
 
-Proper documentation of your test environment is crucial for reproducibility and accurate analysis. Without detailed environment information, it becomes difficult to interpret results or reproduce tests in the future.
+妥善記錄測試環境對於重現測試及準確分析至關重要。若缺乏詳細的環境資訊，日後將難以解讀結果或重現測試。
 
-Don't omit environment details from your test reports.
+請勿在測試報告中省略環境詳細資訊。
 
-Instead, always comprehensively document the details of your test environment. This should include hardware specifications, software versions, and any relevant configuration settings. The following example shows you how to add environment details when running OpenSearch Benchmark with a Python script:
+請務必完整記錄測試環境的詳細資訊。這應包含硬體規格、軟體版本及任何相關組態設定。以下範例示範如何在使用 Python 指令碼執行 OpenSearch Benchmark 時加入環境詳細資訊：
 
 ```python
 # DO: Document environment details
@@ -211,27 +212,27 @@ def run_benchmark():
 ```
 {% include copy.html %}
 
-By documenting these details, you ensure that your test results can be properly interpreted and that the tests can be reproduced if necessary.
+記錄這些詳細資訊，可確保您的測試結果能被正確解讀，並在必要時重現測試。
 
-### Troubleshooting with logs
+### 使用記錄檔進行疑難排解
 
-When encountering issues or unexpected results, OpenSearch Benchmark logs can provide valuable insights. Here's how to effectively use logs for troubleshooting:
+遇到問題或非預期的結果時，OpenSearch Benchmark 記錄檔可提供有價值的線索。以下說明如何有效使用記錄檔進行疑難排解：
 
-1. Navigate to the log file. The main log file is typically located at `~/.osb/logs/benchmark.log`.
+1. 前往記錄檔所在位置。主要記錄檔通常位於 `~/.osb/logs/benchmark.log`。
 
-2. Look for error messages. Search for lines containing "ERROR" or "WARNING" to identify potential issues.
+2. 尋找錯誤訊息。搜尋包含「ERROR」或「WARNING」的行，以找出潛在問題。
 
-3. Check for performance bottlenecks. Look for entries that indicate slow operations or resource constraints.
+3. 檢查效能瓶頸。尋找指出作業緩慢或資源受限的項目。
 
-4. Review configuration details, such as logs. Logs often include information about the test configuration, which can help verify that your intended settings were applied correctly.
+4. 檢閱組態詳細資訊，例如記錄檔。記錄檔通常包含測試組態的資訊，有助於驗證您預期的設定是否已正確套用。
 
-5. Pay attention to the duration of different phases of the benchmark, including warmup and measurement periods.
+5. 留意基準測試各階段的持續時間，包括暖機和測量期間。
 
-By carefully reviewing these logs, you can often identify the root cause of performance issues or unexpected benchmark results. If you encounter a log error that you do not recognize, create an issue in the [OpenSearch Benchmark repository](https://github.com/opensearch-project/opensearch-benchmark).
+仔細檢閱這些記錄檔，通常能找出效能問題或非預期基準測試結果的根本原因。如果您遇到不熟悉的記錄檔錯誤，請在 [OpenSearch Benchmark 儲存庫](https://github.com/opensearch-project/opensearch-benchmark)中建立議題。
 
-## Security considerations
+## 安全性考量
 
-In most cases, a basic authentication protocol should be sufficient for testing. However, you can use SSL for secure communication during benchmark testing, as shown in the following example `opensearch.yml` configuration:
+在多數情況下，基本驗證通訊協定應足以滿足測試需求。不過，您可以在基準測試期間使用 SSL 進行安全通訊，如以下 `opensearch.yml` 組態範例所示：
 
 ```yaml
 security:
@@ -244,11 +245,11 @@ security:
 ```
 {% include copy.html %}
 
-## Maintenance
+## 維護
 
-Regular maintenance of your benchmark environment and tools is essential for consistent and reliable testing over time.
+定期維護基準測試環境和工具，是長期維持一致且可靠測試的必要措施。
 
-Keep your benchmark tools and workloads up to date with the following commands:
+請使用以下命令，讓您的基準測試工具和工作負載保持最新：
 
 ```bash
 # Update OpenSearch Benchmark
@@ -262,6 +263,6 @@ opensearch-benchmark clean
 ```
 {% include copy.html %}
 
-## Amazon OpenSearch Serverless considerations
+## Amazon OpenSearch Serverless 考量
 
-When testing using Amazon OpenSearch Serverless, be aware that not all test procedures may be supported. Always check the `README.md` file of the [workload](https://github.com/opensearch-project/opensearch-benchmark-workloads) you're using to confirm whether it's compatible with OpenSearch Serverless. If compatibility information is not provided, you may need to test the procedures individually to determine which ones are supported.
+使用 Amazon OpenSearch Serverless 進行測試時，請注意，並非所有測試程序都受到支援。請務必檢查您使用的[工作負載](https://github.com/opensearch-project/opensearch-benchmark-workloads)中的 `README.md` 檔案，以確認其是否與 OpenSearch Serverless 相容。如果未提供相容性資訊，您可能需要逐一測試這些程序，以判斷哪些程序受到支援。

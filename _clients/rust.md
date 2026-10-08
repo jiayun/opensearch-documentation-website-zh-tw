@@ -1,18 +1,19 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Rust client
+title: "Rust 用戶端"
 nav_order: 100
 ---
 
-# Rust client
+# Rust 用戶端
 
-The OpenSearch Rust client lets you connect your Rust application with the data in your OpenSearch cluster. For the client's complete API documentation and additional examples, see the [OpenSearch docs.rs documentation](https://docs.rs/opensearch/).
+OpenSearch Rust 用戶端可讓您將 Rust 應用程式連線至 OpenSearch 叢集中的資料。如需用戶端的完整 API 文件與更多範例，請參閱 [OpenSearch docs.rs 文件](https://docs.rs/opensearch/)。
 
-This getting started guide illustrates how to connect to OpenSearch, index documents, and run queries. For the client source code, see the [`opensearch-rs` repo](https://github.com/opensearch-project/opensearch-rs).
+本入門指南說明如何連線至 OpenSearch、將文件編製索引，以及執行查詢。用戶端的原始碼請參閱 [`opensearch-rs` 儲存庫](https://github.com/opensearch-project/opensearch-rs)。
 
-## Installing the Rust client
+## 安裝 Rust 用戶端
 
-If you're starting a new project, add the `opensearch` crate to Cargo.toml:
+如果您要開始新專案，請將 `opensearch` crate 加入 Cargo.toml：
 
 ```toml
 [dependencies]
@@ -20,7 +21,7 @@ opensearch = "2.4.0"
 ```
 {% include copy.html %}
 
-Additionally, you may want to add the following `serde` dependencies that help serialize types to JSON and deserialize JSON responses. The `derive` feature lets you derive `Serialize` and `Deserialize` for your own structs:
+此外，您可能想要加入下列 `serde` 相依套件，以協助將型別序列化為 JSON，並將 JSON 回應還原序列化。`derive` 功能可讓您為自己的結構衍生 `Serialize` 與 `Deserialize`：
 
 ```toml
 serde = { version = "~1", features = ["derive"] }
@@ -28,25 +29,25 @@ serde_json = "~1"
 ```
 {% include copy.html %}
 
-The Rust client uses the higher-level [`reqwest`](https://crates.io/crates/reqwest) HTTP client library for HTTP requests, and `reqwest` uses the [`tokio`](https://crates.io/crates/tokio) platform to support asynchronous requests. If you are planning to use asynchronous functions, you need to add the `tokio` dependency to Cargo.toml:
+Rust 用戶端使用較高階的 [`reqwest`](https://crates.io/crates/reqwest) HTTP 用戶端程式庫來傳送 HTTP 請求，而 `reqwest` 則使用 [`tokio`](https://crates.io/crates/tokio) 平台來支援非同步請求。如果您打算使用非同步函式，則需要在 Cargo.toml 中加入 `tokio` 相依套件：
 
 ```toml
 tokio = { version = "1", features = ["full"] }
 ```
 {% include copy.html %}
 
-See the [Sample program](#sample-program) section for the complete Cargo.toml file.
+完整的 Cargo.toml 檔案請參閱[範例程式](#sample-program)一節。
 
-To use the Rust client API, import the modules, structs, and enums you need:
+若要使用 Rust 用戶端 API，請匯入您需要的模組、結構與列舉：
 
 ```rust
 use opensearch::OpenSearch;
 ```
 {% include copy.html %}
 
-## Sample data
+## 範例資料
 
-The examples on this page use a `Student` struct to represent documents. The `#[serde(rename_all = "camelCase")]` attribute serializes the struct fields to the `firstName`, `lastName`, `gpa`, and `gradDate` JSON fields:
+本頁的範例使用 `Student` 結構來表示文件。`#[serde(rename_all = "camelCase")]` 屬性會將結構欄位序列化為 `firstName`、`lastName`、`gpa` 與 `gradDate` JSON 欄位：
 
 ```rust
 use serde::{Deserialize, Serialize};
@@ -73,16 +74,16 @@ impl Student {
 ```
 {% include copy.html %}
 
-## Connecting to OpenSearch
+## 連線至 OpenSearch
 
-To connect to the default OpenSearch host, create a default client object that connects to OpenSearch at the address `http://localhost:9200`:
+若要連線至預設的 OpenSearch 主機，請建立一個預設的用戶端物件，該物件會連線至位於 `http://localhost:9200` 位址的 OpenSearch：
 
 ```rust
 let client = OpenSearch::default();
 ```
 {% include copy.html %}
 
-The remaining connection examples on this page require the following imports:
+本頁其餘的連線範例需要下列匯入：
 
 ```rust
 use opensearch::{
@@ -93,7 +94,7 @@ use opensearch::{
 ```
 {% include copy.html %}
 
-To connect to an OpenSearch host that is running at a different address, create a client with the specified address:
+若要連線至執行於不同位址的 OpenSearch 主機，請使用指定的位址建立用戶端：
 
 ```rust
 let transport = Transport::single_node("http://localhost:9200")?;
@@ -101,7 +102,7 @@ let client = OpenSearch::new(transport);
 ```
 {% include copy.html %}
 
-Alternatively, you can customize the URL and use a connection pool by creating a `TransportBuilder` struct and passing it to `OpenSearch::new` to create a new instance of the client: 
+或者，您可以建立 `TransportBuilder` 結構並將其傳遞給 `OpenSearch::new` 來建立新的用戶端執行個體，以自訂 URL 並使用連線集區：
 
 ```rust
 let url = Url::parse("http://localhost:9200")?;
@@ -111,7 +112,7 @@ let client = OpenSearch::new(transport);
 ```
 {% include copy.html %}
 
-To connect to a cluster that has the Security plugin enabled, use HTTPS and provide basic authentication credentials. The following example also disables certificate validation so that the client accepts the self-signed demo certificates. Import `Credentials` from `opensearch::auth` and `CertificateValidation` from `opensearch::cert`:
+若要連線至已啟用 Security 外掛程式的叢集，請使用 HTTPS 並提供基本驗證憑證。下列範例也會停用憑證驗證，讓用戶端接受自我簽署的示範憑證。請從 `opensearch::auth` 匯入 `Credentials`，並從 `opensearch::cert` 匯入 `CertificateValidation`：
 
 ```rust
 let url = Url::parse("https://localhost:9200")?;
@@ -129,9 +130,9 @@ let client = OpenSearch::new(transport);
 ```
 {% include copy.html %}
 
-## Connecting to Amazon OpenSearch Service
+## 連線至 Amazon OpenSearch Service
 
-To sign requests using AWS Signature Version 4, enable the `aws-auth` feature of the `opensearch` crate and add the `aws-config` dependency to Cargo.toml:
+若要使用 AWS Signature Version 4 簽署請求，請啟用 `opensearch` crate 的 `aws-auth` 功能，並在 Cargo.toml 中加入 `aws-config` 相依套件：
 
 ```toml
 opensearch = { version = "2.4.0", features = ["aws-auth"] }
@@ -139,16 +140,16 @@ aws-config = "1"
 ```
 {% include copy.html %}
 
-Then import the AWS configuration types:
+然後匯入 AWS 組態型別：
 
 ```rust
 use aws_config::{meta::region::RegionProviderChain, BehaviorVersion};
 ```
 {% include copy.html %}
 
-In the following example, replace the endpoint with your domain endpoint, which is listed on the domain's details page in the Amazon OpenSearch Service console.
+在下列範例中，請將端點替換為您的網域端點，該端點列於 Amazon OpenSearch Service 主控台中網域的詳細資料頁面。
 
-The following example illustrates connecting to Amazon OpenSearch Service:
+下列範例說明如何連線至 Amazon OpenSearch Service：
 
 ```rust
 let url = Url::parse("https://search-<domain-name>-<id>.us-east-1.es.amazonaws.com")?;
@@ -167,11 +168,11 @@ let client = OpenSearch::new(transport);
 ```
 {% include copy.html %}
 
-## Connecting to Amazon OpenSearch Serverless
+## 連線至 Amazon OpenSearch Serverless
 
-In the following example, replace the endpoint with your collection endpoint, which is listed on the collection's details page in the Amazon OpenSearch Service console.
+在下列範例中，請將端點替換為您的集合端點，該端點列於 Amazon OpenSearch Service 主控台中集合的詳細資料頁面。
 
-Connecting to Amazon OpenSearch Serverless requires the same `aws-auth` feature, `aws-config` dependency, and imports as [connecting to Amazon OpenSearch Service](#connecting-to-amazon-opensearch-service). The following example illustrates connecting to Amazon OpenSearch Serverless:
+連線至 Amazon OpenSearch Serverless 需要與[連線至 Amazon OpenSearch Service](#connecting-to-amazon-opensearch-service)相同的 `aws-auth` 功能、`aws-config` 相依套件與匯入。下列範例說明如何連線至 Amazon OpenSearch Serverless：
 
 ```rust
 let url = Url::parse("https://<collection-id>.us-east-1.aoss.amazonaws.com")?;
@@ -190,12 +191,12 @@ let client = OpenSearch::new(transport);
 ```
 {% include copy.html %}
 
-Amazon OpenSearch Serverless supports a subset of OpenSearch API operations and does not support the `refresh` parameter used in the examples on this page. For more information, see [Supported operations and plugins in Amazon OpenSearch Serverless](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-genref.html).
+Amazon OpenSearch Serverless 支援 OpenSearch API 操作的子集，且不支援本頁範例中使用的 `refresh` 參數。如需更多資訊，請參閱 [Amazon OpenSearch Serverless 支援的操作與外掛程式](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-genref.html)。
 {: .note}
 
-## Creating an index
+## 建立索引
 
-The following example creates an index with one primary shard and one replica. It explicitly maps the `gradDate` field as a `date` in the `yyyy-MM-dd` format. OpenSearch maps the other document fields dynamically when you index documents:
+下列範例會建立一個具有一個主要分片和一個副本的索引。此範例會將 `gradDate` 欄位明確對應為 `yyyy-MM-dd` 格式的 `date`。當您將文件編製索引時，OpenSearch 會動態對應其他文件欄位：
 
 ```rust
 let index = "students";
@@ -220,9 +221,9 @@ let response = client
 ```
 {% include copy.html %}
 
-## Indexing a document
+## 將文件編製索引
 
-You can index a document into OpenSearch using the client's `index` function. The `refresh(Refresh::True)` call makes the document immediately available for search. `Refresh` is defined in the `opensearch::params` module:
+您可以使用用戶端的 `index` 函式將文件編製索引到 OpenSearch 中。`refresh(Refresh::True)` 呼叫可讓文件立即可供搜尋。`Refresh` 定義於 `opensearch::params` 模組中：
 
 ```rust
 let student = Student::new("John", "Doe", 3.89, "2022-05-15");
@@ -235,9 +236,9 @@ let response = client
 ```
 {% include copy.html %}
 
-## Performing bulk operations
+## 執行大量操作
 
-You can perform several operations at the same time by using the client's `bulk` function. First, create the JSON body of a Bulk API call, and then pass it to the `bulk` function:
+您可以使用用戶端的 `bulk` 函式同時執行多項操作。首先，建立 Bulk API 呼叫的 JSON 本文，然後將其傳遞給 `bulk` 函式：
 
 ```rust
 let body: Vec<JsonBody<Value>> = vec![
@@ -255,9 +256,9 @@ let response = client
 ```
 {% include copy.html %}
 
-## Searching for documents
+## 搜尋文件
 
-To search for all documents in an index, send a search request without a query:
+若要搜尋索引中的所有文件，請傳送不含查詢的搜尋請求：
 
 ```rust
 let response = client
@@ -267,7 +268,7 @@ let response = client
 ```
 {% include copy.html %}
 
-You can then read the response body as JSON and iterate over the `hits` array to deserialize each `_source` document into a `Student`:
+接著，您可以將回應本文讀取為 JSON，並逐一處理 `hits` 陣列，將每個 `_source` 文件還原序列化為 `Student`：
 
 ```rust
 let response_body = response.json::<Value>().await?;
@@ -279,7 +280,7 @@ for hit in response_body["hits"]["hits"].as_array().unwrap_or(&vec![]) {
 ```
 {% include copy.html %}
 
-Each `_source` document deserializes into a `Student` struct, so the document fields are available as struct fields, such as `student.first_name`. Each hit contains the document ID in `hit["_id"]` and the document in `hit["_source"]`. To print the ID and fields of each document, use the following code:
+每個 `_source` 文件都會還原序列化為 `Student` 結構，因此文件欄位可作為結構欄位使用，例如 `student.first_name`。每個命中結果都在 `hit["_id"]` 中包含文件 ID，並在 `hit["_source"]` 中包含文件。若要列印每個文件的 ID 和欄位，請使用下列程式碼：
 
 ```rust
 for hit in response_body["hits"]["hits"].as_array().unwrap_or(&vec![]) {
@@ -293,7 +294,7 @@ for hit in response_body["hits"]["hits"].as_array().unwrap_or(&vec![]) {
 ```
 {% include copy.html %}
 
-To search for students who graduated in 2019, use a `range` query on the `gradDate` field:
+若要搜尋 2019 年畢業的學生，請對 `gradDate` 欄位使用 `range` 查詢：
 
 ```rust
 let response = client
@@ -313,9 +314,9 @@ let response = client
 ```
 {% include copy.html %}
 
-## Paginating results
+## 將結果分頁
 
-To paginate results, use the `from` and `size` parameters. The following example sorts students by graduation date and retrieves the results two at a time. The first request returns the first page of results, and the second request returns the next page:
+若要將結果分頁，請使用 `from` 和 `size` 參數。下列範例會依畢業日期排序學生，並每次擷取兩筆結果。第一個請求會傳回第一頁結果，第二個請求會傳回下一頁：
 
 ```rust
 let response = client
@@ -336,11 +337,11 @@ let next_page = client
 ```
 {% include copy.html %}
 
-The `from` and `size` parameters work well for the first pages of results. To paginate through a large number of results, use point in time with `search_after`. For more information, see [Paginate results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/).
+`from` 和 `size` 參數適用於結果的前幾頁。若要逐頁瀏覽大量結果，請搭配 `search_after` 使用時間點 (point in time)。如需詳細資訊，請參閱[將結果分頁]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/)。
 
-## Updating a document
+## 更新文件
 
-You can update a document using the client's `update` function. The following example sets the `gpa` field of the document with the ID `1` to `3.92`:
+您可以使用用戶端的 `update` 函式更新文件。下列範例會將 ID 為 `1` 之文件的 `gpa` 欄位設為 `3.92`：
 
 ```rust
 let response = client
@@ -355,7 +356,7 @@ let response = client
 ```
 {% include copy.html %}
 
-To retrieve the updated document, use the client's `get` function:
+若要擷取更新後的文件，請使用用戶端的 `get` 函式：
 
 ```rust
 let response = client
@@ -365,9 +366,9 @@ let response = client
 ```
 {% include copy.html %}
 
-## Deleting a document
+## 刪除文件
 
-You can delete a document using the client's `delete` function:
+您可以使用用戶端的 `delete` 函式刪除文件：
 
 ```rust
 let response = client
@@ -378,9 +379,9 @@ let response = client
 ```
 {% include copy.html %}
 
-## Deleting an index
+## 刪除索引
 
-You can delete an index using the `delete` function of the `opensearch::indices::Indices` struct:
+您可以使用 `opensearch::indices::Indices` 結構的 `delete` 函式刪除索引：
 
 ```rust
 let response = client
@@ -391,11 +392,11 @@ let response = client
 ```
 {% include copy.html %}
 
-## Sample program
+## 範例程式
 
-This sample program combines the code from the preceding sections. It connects to a cluster that has the Security plugin enabled. To connect to a cluster without the Security plugin, change the lines marked with `// Without security` comments.
+此範例程式結合了前述各節的程式碼。它會連線至已啟用 Security 外掛程式的叢集。若要連線至未使用 Security 外掛程式的叢集，請變更標有 `// Without security` 註解的程式行。
 
-The sample program uses the following Cargo.toml file with all dependencies described in the [Installing the Rust client](#installing-the-rust-client) section:
+此範例程式使用下列 Cargo.toml 檔案，其中包含[安裝 Rust 用戶端](#installing-the-rust-client)一節所述的所有相依項目：
 
 ```toml
 [package]
@@ -413,10 +414,10 @@ serde_json = "~1"
 ```
 {% include copy.html %}
 
-This sample program is for testing only. It specifies credentials in code and disables certificate validation so that it can connect to a cluster that uses self-signed certificates. In production, load credentials from a secure location and validate the cluster's certificate.
+此範例程式僅供測試使用。它在程式碼中指定認證資訊，並停用憑證驗證，以便連線至使用自我簽署憑證的叢集。在正式環境中，請從安全的位置載入認證資訊，並驗證叢集的憑證。
 {: .warning}
 
-The following sample program creates a client, creates an index, indexes documents individually and in bulk, searches for documents, updates a document, deletes a document, and then deletes the index:
+下列範例程式會建立用戶端、建立索引、個別及大量將文件編製索引、搜尋文件、更新文件、刪除文件，然後刪除索引：
 
 ```rust
 use opensearch::{
@@ -639,7 +640,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ```
 {% include copy.html %}
 
-The program produces the following output:
+程式會產生下列輸出：
 
 ```
 Creating index......
@@ -676,7 +677,7 @@ Deleting the index......
 Acknowledged: true
 ```
 
-## Related documentation
+## 相關文件
 
-- For more examples of using the client, see the [`opensearch-rs` user guide](https://github.com/opensearch-project/opensearch-rs/blob/main/USER_GUIDE.md).
-- For guides to specific tasks, such as bulk indexing and searching, see the [`opensearch-rs` guides](https://github.com/opensearch-project/opensearch-rs/tree/main/guides).
+- 如需更多使用用戶端的範例，請參閱 [`opensearch-rs` 使用者指南](https://github.com/opensearch-project/opensearch-rs/blob/main/USER_GUIDE.md)。
+- 如需大量編製索引與搜尋等特定工作的指南，請參閱 [`opensearch-rs` 指南](https://github.com/opensearch-project/opensearch-rs/tree/main/guides)。

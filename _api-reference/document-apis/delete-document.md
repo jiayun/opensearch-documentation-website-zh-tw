@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete document
+title: "刪除文件"
 parent: Document APIs
 nav_order: 15
 redirect_from:
  - /opensearch/rest-api/document-apis/delete-document/
 ---
 
-# Delete Document API
-**Introduced 1.0**
+# 刪除文件 API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Delete Document API removes a document from an index. You must specify both the index name and document ID. When a document is deleted, OpenSearch increments its version number and marks it for removal during the next segment merge.
+刪除文件 API 會從索引中移除文件。您必須同時指定索引名稱與文件 ID。文件被刪除時，OpenSearch 會遞增其版本號，並在下次區段合併時將其標記為待移除。
 
 <!-- spec_insert_start
 api: delete
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 DELETE /{index}/_doc/{id}
 ```
@@ -27,35 +28,35 @@ DELETE /{index}/_doc/{id}
 api: delete
 component: path_parameters
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required | Data type | Description |
+| 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `id` | **Required** | String | The unique identifier for the document. |
-| `index` | **Required** | String | Name of the target index. |
+| `id` | **必要** | 字串 | 文件的唯一識別碼。 |
+| `index` | **必要** | 字串 | 目標索引的名稱。 |
 
 <!-- spec_insert_end -->
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `if_seq_no` | Integer | Only perform the delete operation if the document has this sequence number. See [Optimistic concurrency control](#optimistic-concurrency-control). |
-| `if_primary_term` | Integer | Only perform the delete operation if the document has this primary term. See [Optimistic concurrency control](#optimistic-concurrency-control). |
-| `refresh` | Boolean or String | Controls when changes made by the delete operation become visible to search. Valid values are `true` (refresh immediately), `false` (default, do not refresh), and `wait_for` (wait for a refresh before responding). See [Refresh](#refresh). |
-| `routing` | String | A custom value used to route the operation to a specific shard. Required if the document was indexed with a routing value. See [Routing](#routing). |
-| `timeout` | Time | How long to wait for the primary shard to become available. Default is `1m` (1 minute). See [Timeout](#timeout). |
-| `version` | Integer | Explicit version number for concurrency control. The specified version must match the current version of the document for the request to succeed. See [Versioning](#versioning). |
-| `version_type` | Enum | Specifies the version type: `internal` (default), `external`, or `external_gte`. With `external`, the version number must be greater than the current version. With `external_gte`, it must be greater than or equal. See [Versioning](#versioning). |
-| `wait_for_active_shards` | String | The number of shard copies that must be active before proceeding with the operation. Default is `1` (only the primary shard). Set to `all` or any positive integer up to the total number of shards in the index (`number_of_replicas+1`). See [Wait for active shards](#wait-for-active-shards). |
+| `if_seq_no` | 整數 | 僅當文件具有此序號時才執行刪除操作。請參閱[樂觀並行控制](#optimistic-concurrency-control)。 |
+| `if_primary_term` | 整數 | 僅當文件具有此主要任期 (primary term) 時才執行刪除操作。請參閱[樂觀並行控制](#optimistic-concurrency-control)。 |
+| `refresh` | 布林值或字串 | 控制刪除操作所做的變更何時對搜尋可見。有效值為 `true`（立即重新整理）、`false`（預設，不重新整理）與 `wait_for`（在回應前等待重新整理）。請參閱[重新整理](#refresh)。 |
+| `routing` | 字串 | 用於將操作路由至特定分片的自訂值。若文件在編製索引時使用了路由值，則此參數為必要。請參閱[路由](#routing)。 |
+| `timeout` | 時間 | 等待主要分片變成可用的時間長度。預設為 `1m`（1 分鐘）。請參閱[逾時](#timeout)。 |
+| `version` | 整數 | 用於並行控制的明確版本號。指定的版本必須與文件目前的版本相符，請求才會成功。請參閱[版本控制](#versioning)。 |
+| `version_type` | 列舉 | 指定版本類型：`internal`（預設）、`external` 或 `external_gte`。使用 `external` 時，版本號必須大於目前的版本。使用 `external_gte` 時，則必須大於或等於。請參閱[版本控制](#versioning)。 |
+| `wait_for_active_shards` | 字串 | 在繼續進行操作之前必須處於作用中的分片複本數量。預設為 `1`（僅主要分片）。可設為 `all`，或設為最多為索引分片複本總數（`number_of_replicas+1`）的任何正整數。請參閱[等待作用中的分片](#wait-for-active-shards)。 |
 
-## Example request
+## 範例請求
 
-The following example request deletes a document with the ID `1` from the `products` index:
+下列範例請求會從 `products` 索引中刪除 ID 為 `1` 的文件：
 
 <!-- spec_insert_start
 component: example_code
@@ -80,9 +81,9 @@ response = client.delete(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-The following example response shows a successful delete operation:
+下列範例回應顯示成功的刪除操作：
 
 ```json
 {
@@ -100,28 +101,28 @@ The following example response shows a successful delete operation:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body contains information about the delete operation and the affected document.
+回應本文包含刪除操作與受影響文件的相關資訊。
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`_index` | The name of the index from which the document was deleted.
-`_id` | The unique identifier of the deleted document.
-`_version` | The new version number of the document after deletion. Each delete operation increments the version number.
-`result` | The result of the delete operation. Returns `deleted` if the document was successfully deleted or `not_found` if the document did not exist.
-`_shards` | Contains information about the shards involved in the delete operation.
-`_shards.total` | The total number of shards (primary and replicas) that should have acknowledged the delete operation.
-`_shards.successful` | The number of shards that successfully processed the delete operation.
-`_shards.failed` | The number of shards that failed to process the delete operation. When this value is greater than 0, the `failures` array contains details about the failures.
-`_seq_no` | The sequence number assigned to the delete operation. Sequence numbers are used for optimistic concurrency control.
-`_primary_term` | The primary term at the time of the delete operation. Combined with `_seq_no`, this value is used for optimistic concurrency control.
+`_index` | 文件被刪除的索引名稱。
+`_id` | 被刪除文件的唯一識別碼。
+`_version` | 文件刪除後的新版本號。每次刪除操作都會遞增版本號。
+`result` | 刪除操作的結果。若文件成功刪除則傳回 `deleted`，若文件不存在則傳回 `not_found`。
+`_shards` | 包含刪除操作所涉及分片的相關資訊。
+`_shards.total` | 應已確認刪除操作的分片總數（主要與副本）。
+`_shards.successful` | 成功處理刪除操作的分片數量。
+`_shards.failed` | 處理刪除操作失敗的分片數量。當此值大於 0 時，`failures` 陣列會包含失敗的詳細資訊。
+`_seq_no` | 指派給刪除操作的序號。序號用於樂觀並行控制。
+`_primary_term` | 刪除操作當下的主要任期。此值與 `_seq_no` 搭配用於樂觀並行控制。
 
-## Optimistic concurrency control
+## 樂觀並行控制
 
-Delete operations support optimistic concurrency control through the `if_seq_no` and `if_primary_term` parameters. When you specify these parameters, OpenSearch only performs the delete operation if the document's current sequence number and primary term match the provided values. If there is a mismatch, OpenSearch returns a `version_conflict_engine_exception` error with status code `409`, indicating that the document has been modified since you last retrieved it.
+刪除操作透過 `if_seq_no` 與 `if_primary_term` 參數支援樂觀並行控制。當您指定這些參數時，OpenSearch 只有在文件目前的序號與主要任期符合所提供的值時，才會執行刪除操作。若不相符，OpenSearch 會傳回狀態碼為 `409` 的 `version_conflict_engine_exception` 錯誤，表示文件自您上次擷取後已被修改。
 
-The following example request deletes a document only if its sequence number is `43` and its primary term is `1`:
+下列範例請求僅在文件的序號為 `43` 且主要任期為 `1` 時才刪除該文件：
 
 <!-- spec_insert_start
 component: example_code
@@ -147,17 +148,17 @@ response = client.delete(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-If the document's current sequence number or primary term does not match the specified values, OpenSearch returns a version conflict error with status code `409`.
+若文件目前的序號或主要任期與指定的值不符，OpenSearch 會傳回狀態碼為 `409` 的版本衝突錯誤。
 
-## Versioning
+## 版本控制
 
-Every write operation on a document, including deletions, increments the document's version number. After a document is deleted, its version number remains available for a short period to support concurrent operations. The duration for which this version information is retained is controlled by the `index.gc_deletes` index setting, which defaults to 60 seconds. This allows OpenSearch to properly handle concurrent delete requests and maintain consistency across replicas.
+對文件的每次寫入操作（包括刪除）都會遞增文件的版本號。文件被刪除後，其版本號會在短時間內保持可用，以支援並行操作。此版本資訊的保留時間由 `index.gc_deletes` 索引設定控制，預設為 60 秒。這讓 OpenSearch 能夠正確處理並行的刪除請求，並在所有副本之間維持一致性。
 
-## Automatic index creation
+## 自動建立索引
 
-When you use an external versioning variant (`version_type=external` or `version_type=external_gte`), the delete operation automatically creates the specified index if it does not exist. This behavior only occurs with external versioning types and does not apply to the default internal versioning.
+當您使用外部版本控制變體（`version_type=external` 或 `version_type=external_gte`）時，若指定的索引不存在，刪除操作會自動建立該索引。此行為僅發生於外部版本控制類型，不適用於預設的內部版本控制。
 
-The following example request creates the `auto-created-index` index automatically because it uses external versioning:
+下列範例請求會自動建立 `auto-created-index` 索引，因為它使用外部版本控制：
 
 <!-- spec_insert_start
 component: example_code
@@ -183,13 +184,13 @@ response = client.delete(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The operation returns a `not_found` result because the document does not exist, but the index is created as a side effect. Without external versioning, attempting to delete a document from a non-existent index returns an `index_not_found_exception` error.
+由於文件不存在，此操作會傳回 `not_found` 結果，但索引會作為副作用被建立。若未使用外部版本控制，嘗試從不存在的索引中刪除文件會傳回 `index_not_found_exception` 錯誤。
 
-## Routing
+## 路由
 
-When documents are indexed with a specific routing value, OpenSearch uses that value to determine which shard stores the document. To delete a routed document, you must provide the same routing value used during indexing. If your index has a mapping that sets `_routing` to `required` and you attempt to delete a document without specifying a routing value, OpenSearch rejects the request with a `RoutingMissingException`.
+當文件以特定路由值編製索引時，OpenSearch 會使用該值來決定由哪個分片儲存文件。若要刪除已路由的文件，您必須提供與編製索引時相同的路由值。若您的索引具有將 `_routing` 設為 `required` 的對應，而您嘗試在未指定路由值的情況下刪除文件，OpenSearch 會以 `RoutingMissingException` 拒絕該請求。
 
-The following example request deletes a document that was indexed with the routing value `electronics`:
+下列範例請求會刪除以路由值 `electronics` 編製索引的文件：
 
 <!-- spec_insert_start
 component: example_code
@@ -215,29 +216,29 @@ response = client.delete(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Without the correct routing value, OpenSearch cannot locate the document on the appropriate shard and the delete operation will fail.
+若沒有正確的路由值，OpenSearch 無法在適當的分片上找到文件，刪除操作將會失敗。
 
-## Distributed execution
+## 分散式執行
 
-When you send a delete request, OpenSearch hashes the document ID to determine the target shard. The request is then routed to the primary shard in that shard group. After the primary shard processes the delete operation, the changes are replicated to all replica shards in the same shard group, ensuring consistency across the cluster.
+當您傳送刪除請求時，OpenSearch 會對文件 ID 進行雜湊運算以決定目標分片。接著請求會被路由至該分片群組中的主要分片。主要分片處理完刪除操作後，變更會複製到同一分片群組中的所有副本分片，以確保叢集之間的一致性。
 
-## Refresh
+## 重新整理
 
-By default, deleted documents become visible to search operations only after the next index refresh, which occurs every second by default. You can control this behavior using the `refresh` parameter:
+預設情況下，被刪除的文件只有在下一次索引重新整理後才會對搜尋操作可見，而索引重新整理預設每秒執行一次。您可以使用 `refresh` 參數控制此行為：
 
-- `false` (default): The delete operation returns immediately, and the change becomes visible after the next automatic refresh.
-- `true`: OpenSearch refreshes all affected shards immediately after the delete operation, making the change visible to search operations right away. This option has a performance impact and should be used sparingly.
-- `wait_for`: The delete operation waits for the next automatic refresh before returning a response, ensuring that the change is visible when the API call completes.
+- `false`（預設）：刪除操作立即傳回，變更會在下一次自動重新整理後變為可見。
+- `true`：OpenSearch 在刪除操作後立即重新整理所有受影響的分片，使變更立即對搜尋操作可見。此選項會影響效能，應謹慎使用。
+- `wait_for`：刪除操作會等待下一次自動重新整理後才傳回回應，確保 API 呼叫完成時變更已可見。
 
-## Wait for active shards
+## 等待作用中的分片
 
-The `wait_for_active_shards` parameter controls how many shard copies must be available before OpenSearch processes a delete request. By default, this value is `1`, meaning only the primary shard must be active. You can set this to `all` to require all shard copies (primary and replicas) to be active, or specify a positive integer to require a specific number of active shards. This setting helps ensure data durability by waiting for replicas to be available before confirming the delete operation.
+`wait_for_active_shards` 參數控制 OpenSearch 在處理刪除請求之前必須有多少分片複本可用。預設值為 `1`，表示僅主要分片必須處於作用中。您可以將其設為 `all` 以要求所有分片複本（主要與副本）都處於作用中，或指定一個正整數以要求特定數量的作用中分片。此設定透過在確認刪除操作之前等待副本可用，有助於確保資料持久性。
 
-## Timeout
+## 逾時
 
-If the primary shard is unavailable when a delete request arrives (for example, during recovery or relocation), OpenSearch waits for the shard to become available. The `timeout` parameter specifies how long to wait before failing the request. The default timeout is 1 minute. If the primary shard does not become available within the specified timeout period, OpenSearch returns an error.
+若刪除請求送達時主要分片無法使用（例如在復原或遷移期間），OpenSearch 會等待該分片變成可用。`timeout` 參數指定在請求失敗之前要等待多久。預設逾時為 1 分鐘。若主要分片在指定的逾時期間內未變成可用，OpenSearch 會傳回錯誤。
 
-The following example request sets a custom timeout of 30 seconds:
+下列範例請求設定 30 秒的自訂逾時：
 
 <!-- spec_insert_start
 component: example_code
@@ -263,6 +264,6 @@ response = client.delete(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:data/write/delete`.
+若您使用 Security 外掛程式，請確保您具備適當的權限：`indices:data/write/delete`。

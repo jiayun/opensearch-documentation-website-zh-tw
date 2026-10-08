@@ -1,58 +1,59 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Stemmer
 parent: Token filters
 nav_order: 390
 ---
 
-# Stemmer token filter
+# Stemmer 詞元篩選器
 
-The `stemmer` token filter reduces words to their root or base form (also known as their _stem_).
+`stemmer` 詞元篩選器會將單字還原為其字根或基本形式（亦稱為「_詞幹_」）。
 
-## Parameters
+## 參數
 
-The `stemmer` token filter can be configured with a `language` parameter that accepts the following values:
+`stemmer` 詞元篩選器可以使用 `language` 參數進行設定，此參數接受下列值：
 
-- Arabic: `arabic`
-- Armenian: `armenian`
-- Basque: `basque`
-- Bengali: `bengali`
-- Brazilian Portuguese: `brazilian`
-- Bulgarian: `bulgarian`
-- Catalan: `catalan`
-- Czech: `czech`
-- Danish: `danish`
-- Dutch: `dutch, dutch_kp`
-- English: `english` (default), `light_english`, `lovins`, `minimal_english`, `porter2`, `possessive_english`
-- Estonian: `estonian`
-- Finnish: `finnish`, `light_finnish`
-- French: `light_french`, `french`, `minimal_french`
-- Galician: `galician`, `minimal_galician` (plural step only)
-- German: `light_german`, `german`, `german2`, `minimal_german`
-- Greek: `greek`
-- Hindi: `hindi`
-- Hungarian: `hungarian, light_hungarian`
-- Indonesian: `indonesian`
-- Irish: `irish`
-- Italian: `light_italian, italian`
-- Kurdish (Sorani): `sorani`
-- Latvian: `latvian`
-- Lithuanian: `lithuanian`
-- Norwegian (Bokmål): `norwegian`, `light_norwegian`, `minimal_norwegian`
-- Norwegian (Nynorsk): `light_nynorsk`, `minimal_nynorsk`
-- Portuguese: `light_portuguese`, `minimal_portuguese`, `portuguese`, `portuguese_rslp`
-- Romanian: `romanian`
-- Russian: `russian`, `light_russian`
-- Spanish: `light_spanish`, `spanish`
-- Swedish: `swedish`, `light_swedish`
-- Turkish: `turkish`
+- 阿拉伯文：`arabic`
+- 亞美尼亞文：`armenian`
+- 巴斯克文：`basque`
+- 孟加拉文：`bengali`
+- 巴西葡萄牙文：`brazilian`
+- 保加利亞文：`bulgarian`
+- 加泰隆尼亞文：`catalan`
+- 捷克文：`czech`
+- 丹麥文：`danish`
+- 荷蘭文：`dutch, dutch_kp`
+- 英文：`english`（預設）、`light_english`、`lovins`、`minimal_english`、`porter2`、`possessive_english`
+- 愛沙尼亞文：`estonian`
+- 芬蘭文：`finnish`、`light_finnish`
+- 法文：`light_french`、`french`、`minimal_french`
+- 加利西亞文：`galician`、`minimal_galician`（僅限複數步驟）
+- 德文：`light_german`、`german`、`german2`、`minimal_german`
+- 希臘文：`greek`
+- 印地文：`hindi`
+- 匈牙利文：`hungarian, light_hungarian`
+- 印尼文：`indonesian`
+- 愛爾蘭文：`irish`
+- 義大利文：`light_italian, italian`
+- 庫德文（索拉尼語）：`sorani`
+- 拉脫維亞文：`latvian`
+- 立陶宛文：`lithuanian`
+- 挪威文（Bokmål 書面挪威文）：`norwegian`、`light_norwegian`、`minimal_norwegian`
+- 挪威文（Nynorsk 新挪威文）：`light_nynorsk`、`minimal_nynorsk`
+- 葡萄牙文：`light_portuguese`、`minimal_portuguese`、`portuguese`、`portuguese_rslp`
+- 羅馬尼亞文：`romanian`
+- 俄文：`russian`、`light_russian`
+- 西班牙文：`light_spanish`、`spanish`
+- 瑞典文：`swedish`、`light_swedish`
+- 土耳其文：`turkish`
 
-You can also use the `name` parameter as an alias for the `language` parameter. If both are set, the `name` parameter is ignored.
+您也可以使用 `name` 參數作為 `language` 參數的別名。如果兩者皆已設定，則會忽略 `name` 參數。
 {: .note}
 
-## Example
+## 範例
 
-The following example request creates a new index named `my-stemmer-index` and configures an analyzer with a `stemmer` filter:
+下列範例請求會建立名為 `my-stemmer-index` 的新索引，並設定一個使用 `stemmer` 篩選器的分析器：
 
 ```json
 PUT /my-stemmer-index
@@ -81,9 +82,9 @@ PUT /my-stemmer-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 GET /my-stemmer-index/_analyze
@@ -94,7 +95,7 @@ GET /my-stemmer-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

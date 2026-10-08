@@ -1,3 +1,4 @@
+/* Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations. */
 @import "../../assets/fonts/open-sans/webfont.css";
 @import "../../assets/fonts/open-sans-condensed/webfont.css";
 @import "../../assets/fonts/noto-serif/webfont.css";
@@ -624,7 +625,7 @@ p.label {
 
 .toc-list {
   &:before {
-    content: "On this page";
+    content: "本頁內容";
     @extend %toc-font;
   }
   border: 1px solid var(--border-color);
@@ -1463,3 +1464,7 @@ body {
 @import "../footer.scss";
 @import "../_home.scss";
 @import "../web-embed";
+
+.community-translation-banner { color: #51431b; background: #fff3cd; border-left: 4px solid #b28b20; padding: 10px; margin-bottom: 20px; }
+[data-skin="dark"] .community-translation-banner { color: #e8ecf0; background: #263a47; border-color: #64b5de; }
+.community-translation-banner a { color: inherit; text-decoration: underline; }

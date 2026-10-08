@@ -1,0 +1,112 @@
+[
+  [
+    "/",
+    "size",
+    "published website must be smaller than 1 GB"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/api-reference/script-apis/exec-stored-script/",
+    "#Document-object",
+    "target fragment does not exist"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/api-reference/snapshots/get-snapshot-status/",
+    "https://jiayun.github.io/opensearch-documentation-website-zh-tw/3.9/tuning-your-cluster/availability-and-recovery/remote-store/snapshot-interoperability##shallow-snapshot-v2",
+    "target fragment does not exist"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/benchmark/common-operations/",
+    "/api-reference/document-apis/bulk/",
+    "same-origin link is outside the repository/version prefix"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/benchmark/common-operations/",
+    "/api-reference/index-apis/create-index/",
+    "same-origin link is outside the repository/version prefix"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/benchmark/common-operations/",
+    "/api-reference/search/",
+    "same-origin link is outside the repository/version prefix"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/benchmark/features/synthetic-data-generation/generating-vectors/",
+    "/benchmark/features/synthetic-data-generation/mapping-sdg/#advanced-configuration",
+    "same-origin link is outside the repository/version prefix"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/benchmark/features/synthetic-data-generation/mapping-sdg/",
+    "/benchmark/features/synthetic-data-generation/generating-vectors/",
+    "same-origin link is outside the repository/version prefix"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/classic/migration-assistant/migration-phases/migrate-metadata/handling-type-mapping-deprecation/",
+    "#Defaults",
+    "target fragment does not exist"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/data-prepper/pipelines/configuration/processors/date/",
+    "#Match",
+    "target fragment does not exist"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/data-prepper/pipelines/configuration/sources/atlassian-confluence/",
+    "#Authentication",
+    "target fragment does not exist"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/data-prepper/pipelines/configuration/sources/atlassian-confluence/",
+    "#Filter",
+    "target fragment does not exist"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/data-prepper/pipelines/configuration/sources/atlassian-jira/",
+    "#Authentication",
+    "target fragment does not exist"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/data-prepper/pipelines/configuration/sources/atlassian-jira/",
+    "#Filter",
+    "target fragment does not exist"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/mappings/supported-field-types/semantic/",
+    "ml-commons-plugin/pretrained-models/#sentence-transformers",
+    "target file does not exist"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/ml-commons-plugin/api/model-group-apis/register-model-group/",
+    "ml-commons-plugin/model-access-control/#model-access-control-prerequisites",
+    "target file does not exist"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/ml-commons-plugin/api/model-group-apis/update-model-group/",
+    "ml-commons-plugin/model-access-control/#model-access-control-prerequisites",
+    "target file does not exist"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/tuning-your-cluster/availability-and-recovery/remote-store/index/",
+    "/security-plugin/access-control/index/",
+    "same-origin link is outside the repository/version prefix"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/tutorials/gen-ai/chatbots/rag-chatbot/",
+    "ml-commons-plugin/api/memory-apis/get-message-traces/",
+    "target file does not exist"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/tutorials/gen-ai/chatbots/rag-conversational-agent/",
+    "ml-commons-plugin/api/memory-apis/get-memory/",
+    "target file does not exist"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/tutorials/gen-ai/chatbots/rag-conversational-agent/",
+    "ml-commons-plugin/api/memory-apis/get-message-traces/",
+    "target file does not exist"
+  ],
+  [
+    "/opensearch-documentation-website-zh-tw/3.9/tutorials/gen-ai/chatbots/rag-conversational-agent/",
+    "ml-commons-plugin/api/memory-apis/get-message/",
+    "target file does not exist"
+  ]
+]

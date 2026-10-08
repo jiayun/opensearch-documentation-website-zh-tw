@@ -1,95 +1,96 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Pie chart
+title: "圓餅圖"
 parent: Visualization types
 grand_parent: Creating visualizations using queries
 great_grand_parent: Building data visualizations
 nav_order: 50
 ---
 
-# Pie charts in the visualization editor
+# 視覺化編輯器中的圓餅圖
 
-A pie chart displays data as proportional slices of a circle. Use a pie chart to show part-to-whole relationships.
+圓餅圖以圓形中依比例分配的扇形區塊顯示資料。使用圓餅圖來呈現部分與整體之間的關係。
 
-## Creating a pie chart
+## 建立圓餅圖
 
-The following examples build on each other, starting with a basic chart and adding customization. Before you begin, complete the [prerequisites]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/#prerequisites).
+以下範例逐步延伸，從基本圖表開始，再加入自訂設定。開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/#prerequisites)。
 
-### Basic pie chart
+### 基本圓餅圖
 
-Start with an aggregation query that counts events by category:
+首先使用依類別計算事件數量的彙總查詢：
 
 ```sql
 source = opensearch_dashboards_sample_data_flights | stats count() by Carrier
 ```
 {% include copy.html %}
 
-After running this query, the visualization editor maps the fields automatically:
+執行此查詢後，視覺化編輯器會自動對應欄位：
 
-- The **Size** displays the `count()` field.
-- The **Color** displays the `Carrier` field.
+- **Size** 顯示 `count()` 欄位。
+- **Color** 顯示 `Carrier` 欄位。
 
-The default rendering is a **Donut** chart. Each airline carrier appears as a colored slice proportional to its event count, as shown in the following image.
+預設的呈現方式為 **Donut** 圖。每家航空公司會以彩色扇形區塊顯示，其大小與事件數量成比例，如下圖所示。
 
-![Donut chart showing count by carrier]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/pie-chart-donut-result.png){: width="100%" }
+![依航空公司顯示計數的環圈圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/pie-chart-donut-result.png){: width="100%" }
 
-### Customizing the pie chart
+### 自訂圓餅圖
 
-Open the **Pie** settings panel and configure the following options:
+開啟 **Pie** 設定面板，並設定下列選項：
 
-1. Change **Show as** from **Donut** to **Pie** to render a full circle without a center hole.
-1. Enable **Show values** to display the count on each slice.
-1. Enable **Show labels** to display the carrier name alongside each slice.
-1. Set **Truncate after** to `300` for longer label text, as shown in the following image.
+1. 將 **Show as** 從 **Donut** 變更為 **Pie**，以呈現中央沒有空心的完整圓形。
+1. 啟用 **Show values**，以在每個扇形區塊上顯示計數。
+1. 啟用 **Show labels**，以在每個扇形區塊旁顯示航空公司名稱。
+1. 將 **Truncate after** 設為 `300`，以容納較長的標籤文字，如下圖所示。
 
-![Pie chart settings with Pie mode, show values, and show labels enabled]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/pie-chart-settings-custom.png){: width="400" }
+![已啟用 Pie 模式、顯示數值與顯示標籤的圓餅圖設定]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/pie-chart-settings-custom.png){: width="400" }
 
-The result is a full pie chart with both category labels and numeric values displayed on each slice, as shown in the following image.
+結果是一個完整的圓餅圖，每個扇形區塊上都會顯示類別標籤與數值，如下圖所示。
 
-![Pie chart with labels and values shown]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/pie-chart-labels-result.png){: width="100%" }
+![顯示標籤與數值的圓餅圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/pie-chart-labels-result.png){: width="100%" }
 
-## Configuring a pie chart
+## 設定圓餅圖
 
-You can configure the following settings in the configuration panel.
+您可以在組態面板中設定下列設定。
 
-### Fields
+### 欄位
 
-In the **Fields** section, configure the data fields.
+在 **Fields** 區段中，設定資料欄位。
 
-| Field | Description |
+| 欄位 | 說明 |
 | --- | --- |
-| **Size** | Select a numeric field that determines the size of each slice. For example, `count()` makes each slice proportional to the number of events in that category. |
-| **Color** | Select a categorical field that splits the data into individual slices, each rendered in a different color. For example, use a `Carrier` field to display a slice for each airline. |
+| **Size** | 選取決定每個扇形區塊大小的數值欄位。例如，`count()` 會使每個扇形區塊與該類別中的事件數量成比例。 |
+| **Color** | 選取將資料分割成個別扇形區塊的類別欄位，每個區塊會以不同顏色呈現。例如，使用 `Carrier` 欄位為每家航空公司顯示一個扇形區塊。 |
 
-### Split
+### 分割
 
-In the **Split by** dropdown list, select a field to split the chart into separate elements by value. For more information, see [Split]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#split).
+在 **Split by** 下拉式清單中，選取一個欄位，依其值將圖表分割為個別元素。如需詳細資訊，請參閱[分割]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#split)。
 
 
-### Pie
+### 圓餅
 
-The following table describes the pie chart settings.
+下表說明圓餅圖的設定。
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Show as** | Controls whether the chart renders as a full pie or a **Donut** (ring) shape. **Donut** is the default. |
-| **Show values** | When enabled, shows the numeric value for each slice on the chart. |
-| **Show labels** | When enabled, shows the category label for each slice on the chart. |
-| **Truncate after** | Sets the maximum width in pixels for labels before truncation. Only visible when **Show labels** is enabled. |
+| **Show as** | 控制圖表要呈現為完整圓餅或 **Donut**（環圈）形狀。預設為 **Donut**。 |
+| **Show values** | 啟用時，會在圖表上顯示每個扇形區塊的數值。 |
+| **Show labels** | 啟用時，會在圖表上顯示每個扇形區塊的類別標籤。 |
+| **Truncate after** | 設定標籤在截斷前的最大寬度（以像素為單位）。僅在啟用 **Show labels** 時顯示。 |
 
-### Standard options
+### 標準選項
 
-For information about configuring units, unit suffixes, and decimal precision, see [Standard options]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/standard-options/).
+如需設定單位、單位後綴與小數精確度的相關資訊，請參閱[標準選項]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/standard-options/)。
 
-### Legend
+### 圖例
 
-The legend summarizes the visual color encodings used in the chart.
+圖例彙總圖表中使用的視覺色彩編碼。
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Show legend** | Shows or hides the legend. |
-| **Position** | Controls where the legend appears relative to the chart. Supported values: **Left**, **Right**, **Top**, **Bottom**. |
+| **Show legend** | 顯示或隱藏圖例。 |
+| **Position** | 控制圖例相對於圖表的顯示位置。支援的值：**Left**、**Right**、**Top**、**Bottom**。 |
 
-### Tooltip
+### 工具提示
 
-Toggle the **Show tooltip** selector to enable or disable tooltips.
+切換 **Show tooltip** 選取器，以啟用或停用工具提示。

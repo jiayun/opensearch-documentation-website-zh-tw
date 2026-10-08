@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: ICU normalization
+title: "ICU 正規化"
 parent: Character filters
 nav_order: 110
 ---
 
-# ICU normalization character filter
+# ICU 正規化字元篩選器
 
-The `icu_normalizer` character filter converts text into a canonical Unicode form by applying one of the normalization modes defined in [Unicode Standard Annex #15](http://unicode.org/reports/tr15/). This process standardizes character representations before tokenization, ensuring that equivalent characters are treated consistently.
+`icu_normalizer` 字元篩選器會套用 [Unicode Standard Annex #15](http://unicode.org/reports/tr15/) 中定義的其中一種正規化模式，將文字轉換為標準的 Unicode 形式。此程序會在斷詞之前將字元表示法標準化，確保等價的字元能獲得一致的處理。
 
-## Installation
+## 安裝
 
-The `icu_normalizer` character filter requires the `analysis-icu` plugin. For installation instructions, see [ICU analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/).
+`icu_normalizer` 字元篩選器需要 `analysis-icu` 外掛程式。如需安裝說明，請參閱 [ICU 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/)。
 
-## Normalization modes
+## 正規化模式
 
-The character filter supports the following Unicode normalization forms:
+此字元篩選器支援下列 Unicode 正規化形式：
 
-- `nfc` (Canonical Decomposition, followed by Canonical Composition): Decomposes combined characters, then recomposes them in a standard order. This is the most common normalization form.
-- `nfd` (Canonical Decomposition): Decomposes combined characters into their constituent parts. For example, `é` becomes `e` + combining acute accent.
-- `nfkc` (Compatibility Decomposition, followed by Canonical Composition): Applies compatibility decompositions (converting visually similar characters to a standard form), then canonical composition.
-- `nfkc_cf` (Default): Applies NFKC normalization with case folding. This mode normalizes both character representations and case.
+- `nfc`（標準分解，接著進行標準組合）：先分解組合字元，再以標準順序重新組合。這是最常用的正規化形式。
+- `nfd`（標準分解）：將組合字元分解為其組成部分。例如，`é` 會變成 `e` + 組合用尖音符號。
+- `nfkc`（相容性分解，接著進行標準組合）：先套用相容性分解（將外觀相似的字元轉換為標準形式），再進行標準組合。
+- `nfkc_cf`（預設）：套用含大小寫摺疊的 NFKC 正規化。此模式會同時將字元表示法與大小寫正規化。
 
-## Parameters
+## 參數
 
-The following table lists the parameters for the `icu_normalizer` character filter.
+下表列出 `icu_normalizer` 字元篩選器的參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`name` | String | The Unicode normalization form to apply. Valid values are `nfc`, `nfd`, `nfkc`, and `nfkc_cf`. Default is `nfkc_cf`.
-`mode` | String | The normalization mode. Valid values are `compose` (default) and `decompose`. When `decompose` is specified, `nfc` becomes `nfd` and `nfkc` becomes `nfkd`.
-`unicode_set_filter` | String | A [UnicodeSet](https://unicode-org.github.io/icu/userguide/strings/unicodeset.html) expression that specifies which characters to normalize. Optional. If not specified, all characters are normalized.
+`name` | 字串 | 要套用的 Unicode 正規化形式。有效值為 `nfc`、`nfd`、`nfkc` 和 `nfkc_cf`。預設為 `nfkc_cf`。
+`mode` | 字串 | 正規化模式。有效值為 `compose`（預設）和 `decompose`。指定 `decompose` 時，`nfc` 會變成 `nfd`，`nfkc` 會變成 `nfkd`。
+`unicode_set_filter` | 字串 | 指定要將哪些字元正規化的 [UnicodeSet](https://unicode-org.github.io/icu/userguide/strings/unicodeset.html) 運算式。選用。若未指定，則會將所有字元正規化。
 
-## Example: Default normalization
+## 範例：預設正規化
 
-The following example demonstrates using the default `nfkc_cf` normalization:
+下列範例示範如何使用預設的 `nfkc_cf` 正規化：
 
 ```json
 PUT /icu-norm-default
@@ -53,7 +54,7 @@ PUT /icu-norm-default
 ```
 {% include copy-curl.html %}
 
-Test the normalizer with text containing ligatures and case variations:
+使用包含連字與大小寫變化的文字測試正規化器：
 
 ```json
 POST /icu-norm-default/_analyze
@@ -64,7 +65,7 @@ POST /icu-norm-default/_analyze
 ```
 {% include copy-curl.html %}
 
-The response shows normalization and case folding:
+回應顯示了正規化與大小寫摺疊的結果：
 
 ```json
 {
@@ -80,9 +81,9 @@ The response shows normalization and case folding:
 }
 ```
 
-## Example: NFD (decomposed) normalization
+## 範例：NFD（分解）正規化
 
-The following example configures NFD normalization by setting `mode` to `decompose`:
+下列範例將 `mode` 設為 `decompose`，以設定 NFD 正規化：
 
 ```json
 PUT /icu-norm-nfd
@@ -108,7 +109,7 @@ PUT /icu-norm-nfd
 ```
 {% include copy-curl.html %}
 
-Test with accented characters:
+使用帶有重音符號的字元進行測試：
 
 ```json
 POST /icu-norm-nfd/_analyze
@@ -119,7 +120,7 @@ POST /icu-norm-nfd/_analyze
 ```
 {% include copy-curl.html %}
 
-The NFD normalization decomposes the accented character:
+NFD 正規化會分解帶有重音符號的字元：
 
 ```json
 {
@@ -135,12 +136,12 @@ The NFD normalization decomposes the accented character:
 }
 ```
 
-Note: While the visual representation appears the same, the underlying character encoding has changed from a single precomposed character to separate base and combining characters.
+注意：雖然外觀看起來相同，但底層的字元編碼已從單一預先組合字元，變更為分開的基本字元與組合字元。
 {: .note}
 
-## Example: Selective normalization with unicode_set_filter
+## 範例：使用 unicode_set_filter 進行選擇性正規化
 
-You can limit normalization to specific character ranges using the `unicode_set_filter` parameter:
+您可以使用 `unicode_set_filter` 參數，將正規化限制在特定的字元範圍：
 
 ```json
 PUT /icu-norm-selective
@@ -166,10 +167,10 @@ PUT /icu-norm-selective
 ```
 {% include copy-curl.html %}
 
-This configuration normalizes only Latin characters (Unicode range U+0000 to U+024F), leaving other scripts unchanged.
+此組態只會將拉丁字元（Unicode 範圍 U+0000 至 U+024F）正規化，其他文字系統則保持不變。
 
-## Related documentation
+## 相關文件
 
-- [ICU analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/)
-- [ICU tokenizer]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/icu-tokenizer/)
-- [ICU folding token filter]({{site.url}}{{site.baseurl}}/analyzers/token-filters/icu-folding/)
+- [ICU 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/)
+- [ICU 斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/icu-tokenizer/)
+- [ICU 摺疊詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/icu-folding/)

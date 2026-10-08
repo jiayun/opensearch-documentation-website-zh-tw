@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Synonym graph
+title: "同義詞圖"
 parent: Token filters
 nav_order: 420
 ---
 
-# Synonym graph token filter
+# 同義詞圖詞元篩選器
 
-The `synonym_graph` token filter is a more advanced version of the `synonym` token filter. It supports multiword synonyms and processes synonyms across multiple tokens, making it ideal for phrases or scenarios in which relationships between tokens are important.
+`synonym_graph` 詞元篩選器是 `synonym` 詞元篩選器的進階版本。它支援多字詞同義詞，並可跨多個詞元處理同義詞，因此非常適合用於片語，或詞元之間關係很重要的情境。
 
-## Parameters
+## 參數
 
-The `synonym_graph` token filter can be configured with the following parameters.
+`synonym_graph` 詞元篩選器可以使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`synonyms` | Either `synonyms` or `synonyms_path` must be specified | String | A list of synonym rules defined directly in the configuration.
-`synonyms_path` | Either `synonyms` or `synonyms_path` must be specified | String | The file path to a file containing synonym rules (either an absolute path or a path relative to the config directory).
-`lenient` | Optional | Boolean | Whether to ignore exceptions when loading the rule configurations. Default is `false`.
-`format` | Optional | String | Specifies the format used to determine how OpenSearch defines and interprets synonyms. Valid values are:<br>- `solr` <br>- [`wordnet`](https://wordnet.princeton.edu/). <br> Default is `solr`.
-`expand` | Optional | Boolean |  Whether to expand equivalent synonym rules. Default is `true`.<br><br>For example: <br>If `synonyms` are defined as `"quick, fast"` and `expand` is set to `true`, then the synonym rules are configured as follows:<br>- `quick => quick`<br>- `quick => fast`<br>- `fast => quick`<br>- `fast => fast`<br><br>If `expand` is set to `false`, the synonym rules are configured as follows:<br>- `quick => quick`<br>- `fast => quick`
-`synonym_analyzer` | Optional | String | The name of the analyzer that parses the synonym rules. Specify any analyzer available to the index: a built-in analyzer (such as `standard`, `simple`, `stop`, `whitespace`, or `keyword`), a language analyzer, an analyzer registered by a plugin, or a custom analyzer defined in the same index. If the named analyzer cannot be resolved, OpenSearch parses the rules using the analysis chain in which this filter is defined and returns no error. By default, the analysis chain is used.
+`synonyms` | 必須指定 `synonyms` 或 `synonyms_path` 其中之一 | 字串 | 直接在組態中定義的同義詞規則清單。
+`synonyms_path` | 必須指定 `synonyms` 或 `synonyms_path` 其中之一 | 字串 | 包含同義詞規則之檔案的檔案路徑（可以是絕對路徑，或相對於 config 目錄的路徑）。
+`lenient` | 選用 | 布林值 | 載入規則組態時是否忽略例外狀況。預設為 `false`。
+`format` | 選用 | 字串 | 指定用於決定 OpenSearch 如何定義及解譯同義詞的格式。有效值為：<br>- `solr` <br>- [`wordnet`](https://wordnet.princeton.edu/)。<br> 預設為 `solr`。
+`expand` | 選用 | 布林值 |  是否展開等效同義詞規則。預設為 `true`。<br><br>例如：<br>若 `synonyms` 定義為 `"quick, fast"`，且 `expand` 設定為 `true`，則同義詞規則會設定如下：<br>- `quick => quick`<br>- `quick => fast`<br>- `fast => quick`<br>- `fast => fast`<br><br>若 `expand` 設定為 `false`，則同義詞規則會設定如下：<br>- `quick => quick`<br>- `fast => quick`
+`synonym_analyzer` | 選用 | 字串 | 用於剖析同義詞規則的分析器名稱。您可以指定該索引可用的任何分析器：內建分析器（例如 `standard`、`simple`、`stop`、`whitespace` 或 `keyword`）、語言分析器、由外掛程式註冊的分析器，或在同一索引中定義的自訂分析器。若無法解析指定名稱的分析器，OpenSearch 會使用定義此篩選器的分析鏈來剖析規則，且不會傳回錯誤。預設會使用分析鏈。
 
-## Example: Solr format
+## 範例：Solr 格式
 
-The following example request creates a new index named `my-index` and configures an analyzer with a `synonym_graph` filter. The filter is configured with the default `solr` rule format:
+下列範例請求會建立名為 `my-index` 的新索引，並設定一個使用 `synonym_graph` 篩選器的分析器。此篩選器使用預設的 `solr` 規則格式進行設定：
 
 ```json
 PUT /my-index
@@ -59,9 +60,9 @@ PUT /my-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 GET /my-car-index/_analyze
@@ -72,7 +73,7 @@ GET /my-car-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {
@@ -97,9 +98,9 @@ The response contains the generated tokens:
 }
 ```
 
-## Example: WordNet format
+## 範例：WordNet 格式
 
-The following example request creates a new index named `my-wordnet-index` and configures an analyzer with a `synonym_graph` filter. The filter is configured with the [`wordnet`](https://wordnet.princeton.edu/) rule format:
+下列範例請求會建立名為 `my-wordnet-index` 的新索引，並設定一個使用 `synonym_graph` 篩選器的分析器。此篩選器使用 [`wordnet`](https://wordnet.princeton.edu/) 規則格式進行設定：
 
 ```json
 PUT /my-wordnet-index
@@ -134,9 +135,9 @@ PUT /my-wordnet-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 GET /my-wordnet-index/_analyze
@@ -147,7 +148,7 @@ GET /my-wordnet-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

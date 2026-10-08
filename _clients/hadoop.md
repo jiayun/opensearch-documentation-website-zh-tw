@@ -1,41 +1,42 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Hadoop connector
+title: "Hadoop 連接器"
 nav_order: 110
 ---
 
-# Hadoop connector
+# Hadoop 連接器
 
-The OpenSearch Hadoop connector lets you read and write data between [Apache Spark](http://spark.apache.org), [Apache Hive](http://hive.apache.org), Hadoop MapReduce, and OpenSearch. It enables Spark jobs to directly index data into OpenSearch and run queries against it, with parallel reads and writes across Spark partitions and OpenSearch shards for efficient distributed processing.
+OpenSearch Hadoop 連接器可讓您在 [Apache Spark](http://spark.apache.org)、[Apache Hive](http://hive.apache.org)、Hadoop MapReduce 與 OpenSearch 之間讀取和寫入資料。它使 Spark 工作能夠直接將資料編製索引至 OpenSearch 並對其執行查詢，並透過跨 Spark 分割區與 OpenSearch 分片的平行讀寫，實現有效率的分散式處理。
 
-For the source code, see the [OpenSearch Hadoop](https://github.com/opensearch-project/opensearch-hadoop) repository.
+原始碼請參閱 [OpenSearch Hadoop](https://github.com/opensearch-project/opensearch-hadoop) 儲存庫。
 
-## Setup
+## 設定
 
-Add the connector to your Spark application using `--packages`:
+使用 `--packages` 將連接器加入您的 Spark 應用程式：
 
-- For Spark 3.4.x, run the following command:
+- 若為 Spark 3.4.x，請執行以下命令：
 
 ```bash
 pyspark --packages org.opensearch.client:opensearch-spark-30_2.12:2.0.0
 ```
 {% include copy.html %}
 
-- For Spark 3.5.x, run the following command:
+- 若為 Spark 3.5.x，請執行以下命令：
 
 ```bash
 pyspark --packages org.opensearch.client:opensearch-spark-35_2.12:2.0.0
 ```
 {% include copy.html %}
 
-- For Spark 4.x, run the following command:
+- 若為 Spark 4.x，請執行以下命令：
 
 ```bash
 pyspark --packages org.opensearch.client:opensearch-spark-40_2.13:2.0.0
 ```
 {% include copy.html %}
 
-Alternatively, add Spark as a dependency in your build file:
+或者，在您的建置檔案中將 Spark 加入為相依性：
 
 ```xml
 <dependency>
@@ -46,9 +47,9 @@ Alternatively, add Spark as a dependency in your build file:
 ```
 {% include copy.html %}
 
-Choose the artifact that matches your Spark and Scala version listed in the following table.
+請從下表中選擇符合您 Spark 與 Scala 版本的成品。
 
-Spark version | Scala version | Artifact
+Spark 版本 | Scala 版本 | 成品
 :--- | :--- | :---
 3.4.x | 2.12 | `org.opensearch.client:opensearch-spark-30_2.12:2.0.0`
 3.4.x | 2.13 | `org.opensearch.client:opensearch-spark-30_2.13:2.0.0`
@@ -56,13 +57,13 @@ Spark version | Scala version | Artifact
 3.5.x | 2.13 | `org.opensearch.client:opensearch-spark-35_2.13:2.0.0`
 4.x | 2.13 | `org.opensearch.client:opensearch-spark-40_2.13:2.0.0`
 
-## Basic usage
+## 基本用法
 
-The following examples demonstrate basic read and write operations using the connector with different Spark APIs.
+以下範例示範如何使用連接器搭配不同的 Spark API 執行基本的讀取與寫入操作。
 
 ### PySpark
 
-No additional Python package is needed. The Java connector is loaded using `--packages` or `spark.jars`:
+不需要額外的 Python 套件。Java 連接器會透過 `--packages` 或 `spark.jars` 載入：
 
 ```python
 # Write (index documents into OpenSearch)
@@ -83,7 +84,7 @@ filtered = spark.read \
 
 ### Scala
 
-Use the Scala API to access helper methods like `saveToOpenSearch` for cleaner syntax:
+使用 Scala API 存取 `saveToOpenSearch` 等輔助方法，以取得更簡潔的語法：
 
 ```scala
 import org.opensearch.spark.sql._
@@ -106,7 +107,7 @@ val filtered = spark.read
 
 ### Java
 
-Use the `JavaOpenSearchSparkSQL` wrapper for Java applications:
+在 Java 應用程式中使用 `JavaOpenSearchSparkSQL` 包裝類別：
 
 ```java
 import org.opensearch.spark.sql.api.java.JavaOpenSearchSparkSQL;
@@ -123,7 +124,7 @@ result.show();
 
 ### Spark SQL
 
-You can register an OpenSearch index as a temporary view and query it using SQL:
+您可以將 OpenSearch 索引註冊為暫時檢視，並使用 SQL 查詢它：
 
 ```python
 spark.sql("""
@@ -136,13 +137,13 @@ spark.sql("SELECT * FROM people WHERE age > 25").show()
 ```
 {% include copy.html %}
 
-## Write operations
+## 寫入操作
 
-Configure how documents are written to OpenSearch indexes, including document IDs, write modes, and routing strategies.
+設定文件寫入 OpenSearch 索引的方式，包括文件 ID、寫入模式與路由策略。
 
-### Specifying a document ID
+### 指定文件 ID
 
-Use `opensearch.mapping.id` to control the `_id` of each document:
+使用 `opensearch.mapping.id` 控制每個文件的 `_id`：
 
 ```python
 df.write.format("opensearch") \
@@ -151,9 +152,9 @@ df.write.format("opensearch") \
 ```
 {% include copy.html %}
 
-### Write modes
+### 寫入模式
 
-Control how data is written to OpenSearch using Spark's write modes:
+使用 Spark 的寫入模式控制資料寫入 OpenSearch 的方式：
 
 ```python
 # Append (default): add documents to the index
@@ -166,7 +167,7 @@ df.write.format("opensearch").mode("overwrite").save("my-index")
 
 ### Upsert
 
-Update documents if they exist or insert them as new documents if they don't. This operation requires specifying a document ID field:
+若文件存在則更新，若不存在則插入為新文件。此操作需要指定文件 ID 欄位：
 
 ```python
 df.write.format("opensearch") \
@@ -176,9 +177,9 @@ df.write.format("opensearch") \
 ```
 {% include copy.html %}
 
-### Dynamic index routing
+### 動態索引路由
 
-Use placeholders in the index name to route documents to different indexes based on field values. This feature requires the Scala `saveToOpenSearch` method:
+在索引名稱中使用預留位置，即可根據欄位值將文件路由至不同的索引。此功能需要 Scala 的 `saveToOpenSearch` 方法：
 
 ```scala
 import org.opensearch.spark.sql._
@@ -194,13 +195,13 @@ df.saveToOpenSearch("logs-{timestamp|yyyy.MM.dd}")
 ```
 {% include copy.html %}
 
-## Read operations
+## 讀取操作
 
-Optimize data retrieval from OpenSearch by filtering queries and selecting specific fields to reduce data transfer.
+透過篩選查詢與選取特定欄位來最佳化從 OpenSearch 擷取資料的過程，以減少資料傳輸量。
 
-### Reading with a query
+### 使用查詢讀取
 
-Filter data at the OpenSearch level so only matching documents are loaded into Spark:
+在 OpenSearch 層級篩選資料，只將符合條件的文件載入 Spark：
 
 ```python
 # Query DSL
@@ -215,9 +216,9 @@ df = spark.read.format("opensearch") \
 ```
 {% include copy.html %}
 
-### Selecting fields
+### 選取欄位
 
-Load only specific fields to reduce data transfer:
+僅載入特定欄位以減少資料傳輸量：
 
 ```python
 df = spark.read.format("opensearch") \
@@ -226,13 +227,13 @@ df = spark.read.format("opensearch") \
 ```
 {% include copy.html %}
 
-## Security
+## 安全性
 
-Secure connections to OpenSearch clusters using authentication and encryption.
+使用驗證與加密保護 OpenSearch 叢集的連線安全。
 
-### Basic authentication
+### 基本驗證
 
-Provide credentials for OpenSearch clusters with authentication enabled:
+為已啟用驗證的 OpenSearch 叢集提供憑證：
 
 ```python
 df.write.format("opensearch") \
@@ -244,7 +245,7 @@ df.write.format("opensearch") \
 
 ### HTTPS
 
-Enable SSL/TLS encryption for secure connections:
+啟用 SSL/TLS 加密以確保連線安全：
 
 ```python
 df.write.format("opensearch") \
@@ -253,13 +254,13 @@ df.write.format("opensearch") \
 ```
 {% include copy.html %}
 
-## Advanced Spark features
+## 進階 Spark 功能
 
-Access low-level Spark APIs and streaming capabilities for specialized use cases.
+存取低階 Spark API 與串流功能，以應對特殊使用情境。
 
-### Spark resilient distributed dataset
+### Spark 彈性分散式資料集
 
-For low-level access, the connector provides resilient distributed dataset (RDD)-based read and write methods:
+若需低階存取，連接器提供以彈性分散式資料集 (RDD) 為基礎的讀取與寫入方法：
 
 ```scala
 import org.opensearch.spark._
@@ -282,7 +283,7 @@ val filtered = sc.opensearchRDD("people", "?q=name:John")
 
 ### Spark Structured Streaming
 
-The connector supports Spark Structured Streaming as a sink:
+此連接器支援將 Spark Structured Streaming 作為接收端：
 
 ```scala
 val query = streamingDF.writeStream
@@ -292,13 +293,13 @@ val query = streamingDF.writeStream
 ```
 {% include copy.html %}
 
-## Alternative interfaces
+## 替代介面
 
-Use the connector with Hadoop MapReduce and Apache Hive for alternative workflows.
+您可以將此連接器與 Hadoop MapReduce 和 Apache Hive 搭配使用，以進行替代工作流程。
 
 ### Hadoop MapReduce
 
-For Hadoop MapReduce jobs, the connector provides `OpenSearchInputFormat` and `OpenSearchOutputFormat`. Add `opensearch-hadoop-mr-2.0.0.jar` to your job `classpath`.
+對於 Hadoop MapReduce 工作，此連接器提供 `OpenSearchInputFormat` 和 `OpenSearchOutputFormat`。請將 `opensearch-hadoop-mr-2.0.0.jar` 加入您工作的 `classpath`。
 
 ```java
 // Writing
@@ -319,7 +320,7 @@ job.waitForCompletion(true);
 
 ### Apache Hive
 
-The connector provides an Apache Hive storage handler. Add `opensearch-hadoop-hive-2.0.0.jar` to your Hive classpath:
+此連接器提供 Apache Hive 儲存處理器。請將 `opensearch-hadoop-hive-2.0.0.jar` 加入您的 Hive classpath：
 
 ```sql
 ADD JAR /path/opensearch-hadoop-hive-2.0.0.jar;
@@ -334,9 +335,9 @@ SELECT * FROM people;
 ```
 {% include copy.html %}
 
-## Connecting to Amazon OpenSearch Service
+## 連線至 Amazon OpenSearch Service
 
-To connect to Amazon OpenSearch Service with IAM authentication, enable AWS Signature Version 4 signing and HTTPS:
+若要透過 IAM 驗證連線至 Amazon OpenSearch Service，請啟用 AWS Signature Version 4 簽署與 HTTPS：
 
 ```python
 df.write.format("opensearch") \
@@ -350,17 +351,17 @@ df.write.format("opensearch") \
 ```
 {% include copy.html %}
 
-The following AWS SDK v2 dependencies are required on the `classpath`:
-- `software.amazon.awssdk:auth:2.31.59` (or later)
-- `software.amazon.awssdk:regions:2.31.59` (or later)
-- `software.amazon.awssdk:http-client-spi:2.31.59` (or later)
-- `software.amazon.awssdk:identity-spi:2.31.59` (or later)
-- `software.amazon.awssdk:sdk-core:2.31.59` (or later)
-- `software.amazon.awssdk:utils:2.31.59` (or later)
+在 `classpath` 上需要下列 AWS SDK v2 相依套件：
+- `software.amazon.awssdk:auth:2.31.59` (或更新版本)
+- `software.amazon.awssdk:regions:2.31.59` (或更新版本)
+- `software.amazon.awssdk:http-client-spi:2.31.59` (或更新版本)
+- `software.amazon.awssdk:identity-spi:2.31.59` (或更新版本)
+- `software.amazon.awssdk:sdk-core:2.31.59` (或更新版本)
+- `software.amazon.awssdk:utils:2.31.59` (或更新版本)
 
-## Connecting to Amazon OpenSearch Serverless
+## 連線至 Amazon OpenSearch Serverless
 
-To connect to Amazon OpenSearch Serverless, add `opensearch.serverless` and set the Signature Version 4 service name to `aoss`:
+若要連線至 Amazon OpenSearch Serverless，請新增 `opensearch.serverless` 並將 Signature Version 4 服務名稱設定為 `aoss`：
 
 ```python
 df.write.format("opensearch") \
@@ -376,28 +377,28 @@ df.write.format("opensearch") \
 ```
 {% include copy.html %}
 
-## Configuration properties
+## 組態屬性
 
-All configuration properties start with the `opensearch` prefix. Properties can be set using Spark configuration (`--conf`), as options of the `DataFrame` reader/writer, or in the Hadoop configuration.
+所有組態屬性都以 `opensearch` 前綴開頭。屬性可以透過 Spark 組態 (`--conf`)、`DataFrame` 讀取器/寫入器的選項，或 Hadoop 組態來設定。
 
-Property | Default | Description
+屬性 | 預設值 | 說明
 :--- | :--- | :---
-`opensearch.resource` | (none) | The OpenSearch index name. Can also be specified as the argument to `saveToOpenSearch()` or `load()`.
-`opensearch.nodes` | `localhost` | The OpenSearch host address.
-`opensearch.port` | `9200` | The OpenSearch REST port.
-`opensearch.nodes.wan.only` | `false` | Set to `true` when connecting through a load balancer or proxy.
-`opensearch.query` | match all | A query DSL or Uniform Resource Identifier (URI) query for reading.
-`opensearch.net.ssl` | `false` | Enables HTTPS.
-`opensearch.mapping.id` | (none) | The document field to use as the `_id`.
-`opensearch.write.operation` | `index` | The write operation: `index`, `create`, `update`, or `upsert`.
-`opensearch.scroll.size` | `1000` | The number of documents fetched per batch when reading.
-`opensearch.read.field.include` | (none) | A comma-separated list of fields to read.
+`opensearch.resource` | (none) | OpenSearch 索引名稱。也可以指定為 `saveToOpenSearch()` 或 `load()` 的引數。
+`opensearch.nodes` | `localhost` | OpenSearch 主機位址。
+`opensearch.port` | `9200` | OpenSearch REST 連接埠。
+`opensearch.nodes.wan.only` | `false` | 透過負載平衡器或代理伺服器連線時，請設定為 `true`。
+`opensearch.query` | match all | 用於讀取的 Query DSL 或統一資源識別碼 (URI) 查詢。
+`opensearch.net.ssl` | `false` | 啟用 HTTPS。
+`opensearch.mapping.id` | (none) | 用作 `_id` 的文件欄位。
+`opensearch.write.operation` | `index` | 寫入操作：`index`、`create`、`update` 或 `upsert`。
+`opensearch.scroll.size` | `1000` | 讀取時每批擷取的文件數。
+`opensearch.read.field.include` | (none) | 要讀取的欄位清單，以逗號分隔。
 
-## Compatibility
+## 相容性
 
-The following table lists the connector versions and their compatible runtime versions.
+下表列出連接器版本及其相容的執行階段版本。
 
-Client version | Minimum Java runtime version | OpenSearch version | Spark version
+用戶端版本 | 最低 Java 執行階段版本 | OpenSearch 版本 | Spark 版本
 :--- | :--- | :--- | :---
 1.0.0--1.3.0 | Java 8 | 1.x, 2.x | 3.4.x
 2.0.0 | Java 11 | 1.x, 2.x, 3.x | 3.4.x, 3.5.x, 4.x

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Snapshot APIs
+title: "快照 API"
 has_children: true
 has_toc: false
 nav_order: 120
@@ -9,27 +10,27 @@ redirect_from:
   - /api-reference/snapshots/
 ---
 
-# Snapshot APIs
-**Introduced 1.0**
+# 快照 API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The snapshot APIs allow you to manage snapshots and snapshot repositories.
+快照 API 可讓您管理快照與快照儲存庫。
 
-## Snapshot API operations
+## 快照 API 操作
 
-The following snapshot API operations are available.
+下列快照 API 操作可供使用。
 
-### Repository management
-- [Create repository]({{site.url}}{{site.baseurl}}/api-reference/snapshots/create-repository/)
-- [Get snapshot repository]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot-repository/)
-- [Delete snapshot repository]({{site.url}}{{site.baseurl}}/api-reference/snapshots/delete-snapshot-repository/)
-- [Verify snapshot repository]({{site.url}}{{site.baseurl}}/api-reference/snapshots/verify-snapshot-repository/)
-- [Cleanup snapshot repository]({{site.url}}{{site.baseurl}}/api-reference/snapshots/cleanup-snapshot-repository/)
+### 儲存庫管理
+- [建立儲存庫]({{site.url}}{{site.baseurl}}/api-reference/snapshots/create-repository/)
+- [取得快照儲存庫]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot-repository/)
+- [刪除快照儲存庫]({{site.url}}{{site.baseurl}}/api-reference/snapshots/delete-snapshot-repository/)
+- [驗證快照儲存庫]({{site.url}}{{site.baseurl}}/api-reference/snapshots/verify-snapshot-repository/)
+- [清理快照儲存庫]({{site.url}}{{site.baseurl}}/api-reference/snapshots/cleanup-snapshot-repository/)
 
-### Snapshot management
-- [Create snapshot]({{site.url}}{{site.baseurl}}/api-reference/snapshots/create-snapshot/)
-- [Get snapshot]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot/)
-- [Get snapshot status]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot-status/)
-- [Delete snapshot]({{site.url}}{{site.baseurl}}/api-reference/snapshots/delete-snapshot/)
-- [Clone snapshot]({{site.url}}{{site.baseurl}}/api-reference/snapshots/clone-snapshot/)
-- [Restore snapshot]({{site.url}}{{site.baseurl}}/api-reference/snapshots/restore-snapshot/)
+### 快照管理
+- [建立快照]({{site.url}}{{site.baseurl}}/api-reference/snapshots/create-snapshot/)
+- [取得快照]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot/)
+- [取得快照狀態]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot-status/)
+- [刪除快照]({{site.url}}{{site.baseurl}}/api-reference/snapshots/delete-snapshot/)
+- [複製快照]({{site.url}}{{site.baseurl}}/api-reference/snapshots/clone-snapshot/)
+- [還原快照]({{site.url}}{{site.baseurl}}/api-reference/snapshots/restore-snapshot/)

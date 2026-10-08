@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: redline-test
 nav_order: 85
@@ -6,34 +7,34 @@ parent: Command reference
 grand_parent: Reference
 ---
 
-# Redline testing
+# Redline 測試
 
-The `--redline-test` command enables OpenSearch Benchmark to automatically determine the maximum request throughput your OpenSearch cluster can handle under increasing load. It dynamically adjusts the number of active clients based on real-time cluster performance, helping with capacity planning and identifying performance regressions.
+`--redline-test` 命令可讓 OpenSearch Benchmark 自動判斷您的 OpenSearch 叢集在負載逐漸增加時所能處理的最大請求輸送量。它會根據即時叢集效能動態調整作用中用戶端的數量，有助於進行容量規劃並找出效能退化問題。
 
-When the `--redline-test` flag is used, OpenSearch Benchmark performs the following steps:
+使用 `--redline-test` 旗標時，OpenSearch Benchmark 會執行下列步驟：
 
-1. **Client initialization**: OpenSearch Benchmark initializes a large number of clients (default: 1,000). You can override this with the optional `--redline-max-clients=<int>` flag.
-2. **Feedback mechanism**: OpenSearch Benchmark ramps up the number of active clients. A FeedbackActor monitors real-time request failures and adjusts the client count accordingly.
-3. **Shared state coordination**: OpenSearch Benchmark uses Python's multiprocessing library to manage shared dictionaries and queues for inter-process communication:
-   - **Workers** create and share client state maps with the WorkerCoordinatorActor.
-   - The **WorkerCoordinatorActor** aggregates client state and forwards it to the FeedbackActor.
-   - The **FeedbackActor** increases the number of clients until it detects request errors, then pauses clients, waits 30 seconds, and resumes testing.
+1. **用戶端初始化**：OpenSearch Benchmark 會初始化大量用戶端（預設：1,000）。您可以使用選用的 `--redline-max-clients=<int>` 旗標覆寫此值。
+2. **回饋機制**：OpenSearch Benchmark 會逐步增加作用中用戶端的數量。FeedbackActor 會即時監視請求失敗情形，並據此調整用戶端數量。
+3. **共用狀態協調**：OpenSearch Benchmark 使用 Python 的 multiprocessing 程式庫來管理用於處理程序間通訊的共用字典與佇列：
+   - **Workers** 會建立用戶端狀態對照表，並與 WorkerCoordinatorActor 共用。
+   - **WorkerCoordinatorActor** 會彙總用戶端狀態，並將其轉送至 FeedbackActor。
+   - **FeedbackActor** 會增加用戶端數量，直到偵測到請求錯誤為止，接著暫停用戶端、等待 30 秒，然後繼續測試。
 
-The following images provides a visual overview of the redline testing architecture.
+下圖提供 redline 測試架構的視覺化概觀。
 
-![Redline Overview]({{site.url}}{{site.baseurl}}/images/benchmark/osb-actor-system.png){: width="600" }
+![Redline 概觀]({{site.url}}{{site.baseurl}}/images/benchmark/osb-actor-system.png){: width="600" }
 
 
-## Usage
+## 使用方式
 
-To perform a redline test, use the `run` command with the `--redline-test` flag and a timed test procedure.
+若要執行 redline 測試，請使用 `run` 命令，並搭配 `--redline-test` 旗標與計時測試程序。
 
-This test procedure defines a timed workload using the keyword-terms operation. It runs in two phases:
+此測試程序使用 keyword-terms 操作定義計時工作負載。它分為兩個階段執行：
 
-- **Warmup phase**: The test begins with a warmup period (`warmup-time-period`) to stabilize performance metrics before measurement begins. This helps avoid skewing results with cold-start effects.
-- **Measurement phase**: During the `time-period`, OpenSearch Benchmark sends requests at a `target-throughput` (requests per second) using a specified number of clients. The redline test logic will scale the number of active clients from this baseline to determine the cluster's maximum sustainable load.
+- **暖機階段**：測試會先進行一段暖機期間（`warmup-time-period`），以便在開始量測前穩定效能指標。這有助於避免冷啟動效應使結果失真。
+- **量測階段**：在 `time-period` 期間，OpenSearch Benchmark 會使用指定數量的用戶端，以 `target-throughput`（每秒請求數）傳送請求。redline 測試邏輯會以此為基準調整作用中用戶端的數量，以判斷叢集的最大可持續負載。
 
-The following example timed test procedure is used as input to a redline test, which then dynamically adjusts the client load to find the maximum request throughput your cluster can handle without errors:
+下列計時測試程序範例會作為 redline 測試的輸入，redline 測試接著會動態調整用戶端負載，以找出您的叢集在不發生錯誤的情況下所能處理的最大請求輸送量：
 
 ```json
 {
@@ -51,7 +52,7 @@ The following example timed test procedure is used as input to a redline test, w
 ```
 {% include copy.html %}
 
-Run the following command to start a redline test using a timed test procedure against your OpenSearch cluster:
+執行下列命令，針對您的 OpenSearch 叢集使用計時測試程序啟動 redline 測試：
 
 ```bash
 opensearch-benchmark run \
@@ -63,60 +64,60 @@ opensearch-benchmark run \
 ```
 {% include copy.html %}
 
-## Latency- or CPU-based feedback
+## 以延遲或 CPU 為基礎的回饋
 
-OpenSearch Benchmark supports a `timeout` value per request, which cancels a request if it exceeds the specified duration. You can set this value using the `--client-options=timeout:<int>` flag. The default is 10 seconds.
+OpenSearch Benchmark 支援為每個請求設定 `timeout` 值，當請求超過指定的時間長度時便會取消該請求。您可以使用 `--client-options=timeout:<int>` 旗標設定此值。預設為 10 秒。
 
-You can adjust this value to define the maximum request latency that OpenSearch Benchmark should tolerate during redline testing. For example, to determine the highest load your cluster can handle without exceeding 15 seconds of latency, set the timeout in client options to `15`.
+您可以調整此值，以定義 OpenSearch Benchmark 在 redline 測試期間應容許的最大請求延遲。例如，若要判斷您的叢集在延遲不超過 15 秒的情況下所能處理的最高負載，請將用戶端選項中的逾時設為 `15`。
 
-Redline testing also supports CPU-based feedback in addition to latency and request error monitoring. This helps to prevent exceeding safe utilization limits for your cluster.
+除了延遲與請求錯誤監視之外，redline 測試也支援以 CPU 為基礎的回饋。這有助於避免超出叢集的安全使用率上限。
 
-### Requirements
+### 需求
 
-To use CPU-based feedback during redline testing, your setup must meet the following requirements:
+若要在 redline 測試期間使用以 CPU 為基礎的回饋，您的設定必須符合下列需求：
 
-- A metrics store must be configured. Using an in-memory store results in the following error:
+- 必須設定指標儲存區。使用以記憶體為基礎的儲存區會導致下列錯誤：
 
   ```bash
   [ERROR] Cannot run. Error in worker_coordinator (CPU-based feedback requires a metrics store. You are using an in-memory metrics store)
   ```
 
-- The `--redline-cpu-max-usage flag` is required. This flag sets the maximum allowed CPU usage (as a percentage) per node during testing.
-- The `node-stats` telemetry device is automatically enabled when CPU-based feedback is active.
+- `--redline-cpu-max-usage flag` 為必要項目。此旗標用於設定測試期間每個節點允許的最大 CPU 使用率（以百分比表示）。
+- 啟用以 CPU 為基礎的回饋時，會自動啟用 `node-stats` 遙測裝置。
 
-### Behavior
+### 行為
 
-The redline CPU feedback loop operates with the following behaviors:
+redline CPU 回饋迴圈的運作行為如下：
 
-- The `FeedbackActor` queries the metrics store at regular intervals to retrieve average CPU usage for each node.
-- If any node exceeds the threshold set by `--redline-cpu-max-usage`, the system initiates a scale-down.
-- After scaling down, the actor waits before attempting to scale up again.
+- `FeedbackActor` 會定期查詢指標儲存區，以擷取每個節點的平均 CPU 使用率。
+- 若任何節點超過 `--redline-cpu-max-usage` 所設定的閾值，系統便會開始縮減規模。
+- 縮減規模後，actor 會先等待一段時間，才會再次嘗試擴大規模。
 
 
-## Results
+## 結果
 
-During a redline test, OpenSearch Benchmark provides detailed logs with scaling decisions and request failures during the test. At the end of a redline test, OpenSearch Benchmark logs the maximum number of clients that your cluster supported without request errors.
+在 redline 測試期間，OpenSearch Benchmark 會提供詳細的記錄檔，內含測試期間的擴縮決策與請求失敗情形。redline 測試結束時，OpenSearch Benchmark 會記錄您的叢集在未發生請求錯誤的情況下所支援的最大用戶端數量。
 
-The following example log output indicates that the redline test detected a `15%` error rate for the keyword-terms operation and determined that the cluster's maximum stable client load before errors occurred was `410`:
+下列記錄檔輸出範例表示 redline 測試偵測到 keyword-terms 操作的錯誤率為 `15%`，並判斷叢集在發生錯誤前的最大穩定用戶端負載為 `410`：
 
 ```
 [WARNING] Error rate is 15.0 for operation 'keyword-terms'. Please check the logs.
 Redline test finished. Maximum stable client number reached: 410
 ```
 
-## Configuration tips and test behavior
+## 組態提示與測試行為
 
-Use the following optional command flags to better understand and customize a redline test run:
+使用下列選用命令旗標，以進一步了解並自訂 redline 測試執行：
 
-- `--redline-scale-step`: Specifies the number of clients to resume in each scaling iteration.
-- `--redline-scaledown-percentage`: Specifies the percentage of clients to pause when an error occurs.
-- `--redline-post-scaledown-sleep`: Specifies the number of seconds the feedback actor waits before initiating a scale-up after scaling down.
-- `--redline-max-clients`: Specifies the maximum number of clients allowed during redline testing. If unset, OpenSearch Benchmark defaults to the number of clients defined in the test procedure.
+- `--redline-scale-step`：指定每次擴大規模反覆運算中要恢復的用戶端數量。
+- `--redline-scaledown-percentage`：指定發生錯誤時要暫停的用戶端百分比。
+- `--redline-post-scaledown-sleep`：指定回饋 actor 在縮減規模後，開始擴大規模前要等待的秒數。
+- `--redline-max-clients`：指定 redline 測試期間允許的最大用戶端數量。若未設定，OpenSearch Benchmark 預設會使用測試程序中定義的用戶端數量。
 
-### For CPU-based feedback
+### 以 CPU 為基礎的回饋
 
-Use the following additional flags to configure CPU-based feedback:
+使用下列其他旗標來設定以 CPU 為基礎的回饋：
 
-- `--redline-cpu-max-usage`: (Required) Maximum allowed CPU load (as a percentage) per node before triggering a scale-down.
-- `--redline-cpu-window-seconds`: Duration (in seconds) over which to average CPU usage per node. Default is 30 seconds.
-- `--redline-cpu-check-interval`: Interval (in seconds) between CPU usage checks. Default is 30 seconds.
+- `--redline-cpu-max-usage`：（必要）觸發縮減規模前，每個節點允許的最大 CPU 負載（以百分比表示）。
+- `--redline-cpu-window-seconds`：計算每個節點平均 CPU 使用率的時間長度（以秒為單位）。預設為 30 秒。
+- `--redline-cpu-check-interval`：CPU 使用率檢查之間的間隔（以秒為單位）。預設為 30 秒。

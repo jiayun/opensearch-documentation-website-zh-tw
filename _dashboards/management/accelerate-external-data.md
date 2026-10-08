@@ -1,55 +1,56 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Optimizing query performance using OpenSearch indexing
+title: "使用 OpenSearch 索引最佳化查詢效能"
 parent: Connecting data sources
 nav_order: 40
 ---
 
-# Optimizing query performance using OpenSearch indexing
-Introduced 2.11
+# 使用 OpenSearch 索引最佳化查詢效能
+2.11 版引入
 {: .label .label-purple }
 
 
-Query performance can be slow when using external data sources for reasons such as network latency, data transformation, and data volume. You can optimize your query performance by using OpenSearch indexes, such as a skipping index or a covering index. 
+使用外部資料來源時，查詢效能可能因網路延遲、資料轉換和資料量等原因而變慢。您可以使用 OpenSearch 索引（例如略過索引或涵蓋索引）來最佳化查詢效能。
 
-- A _skipping index_ uses skip acceleration methods, such as partition, minimum and maximum values, and value sets, to ingest and create compact aggregate data structures. This makes them an economical option for direct querying scenarios. For more information, see [Skipping indexes]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#skipping-indexes).
-- A _covering index_ ingests all or some of the data from the source into OpenSearch and makes it possible to use all OpenSearch Dashboards and plugin functionality. For more information, see [Covering indexes]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#covering-indexes).
-- A _materialized view_ enhances query performance by storing precomputed and aggregated data from the source data. For more information, see [Materialized views]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#materialized-views).
+- _略過索引_ 使用略過加速方法（例如分割區、最小值與最大值，以及值集合）來匯入資料並建立精簡的彙總資料結構。這使其成為直接查詢情境中的經濟選擇。如需詳細資訊，請參閱[略過索引]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#skipping-indexes)。
+- _涵蓋索引_ 會將來源中的全部或部分資料匯入 OpenSearch，讓您能夠使用所有 OpenSearch Dashboards 和外掛程式功能。如需詳細資訊，請參閱[涵蓋索引]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#covering-indexes)。
+- _具體化檢視_ 透過儲存來源資料中預先計算和彙總的資料來提升查詢效能。如需詳細資訊，請參閱[具體化檢視]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#materialized-views)。
 
-For comprehensive guidance on each indexing process, see the [Flint Index Reference Manual](https://github.com/opensearch-project/opensearch-spark/blob/main/docs/index.md). 
+如需各索引編製程序的完整指引，請參閱 [Flint 索引參考手冊](https://github.com/opensearch-project/opensearch-spark/blob/main/docs/index.md)。
 
-## Data sources use case: Accelerate performance
+## 資料來源使用案例：加速效能
 
-To get started with accelerating query performance, perform the following steps:
+若要開始加速查詢效能，請執行下列步驟：
 
-1. Go to **OpenSearch Plugins** > **Query Workbench** and select your data source from the **Data sources** dropdown menu.
-2. From the navigation menu, select a database.
-3. View the results in the table and confirm that you have the correct data.
-4. Create an OpenSearch index by following these steps:
-    1. Select **Accelerate data**. A pop-up window appears. 
-    2. Enter your database and table details under **Select data fields**.
-5. For **Acceleration type**, select the type of acceleration according to your use case. Then, enter the information for your acceleration type. For more information, see the following sections:
-      - [Skipping indexes]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#skipping-indexes)
-      - [Covering indexes]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#covering-indexes)
-      - [Materialized views]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#materialized-views)
+1. 前往 **OpenSearch Plugins** > **Query Workbench**，然後從 **Data sources** 下拉式選單中選取您的資料來源。
+2. 從導覽選單中選取資料庫。
+3. 檢視表格中的結果，並確認資料正確無誤。
+4. 依照下列步驟建立 OpenSearch 索引：
+    1. 選取 **Accelerate data**。隨即出現快顯視窗。
+    2. 在 **Select data fields** 下輸入您的資料庫和資料表詳細資訊。
+5. 在 **Acceleration type** 中，根據您的使用案例選取加速類型。接著，輸入該加速類型的資訊。如需詳細資訊，請參閱下列章節：
+      - [略過索引]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#skipping-indexes)
+      - [涵蓋索引]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#covering-indexes)
+      - [具體化檢視]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/#materialized-views)
 
-## Skipping indexes
+## 略過索引
 
-A _skipping index_ uses skip acceleration methods, such as partition, min/max, and value sets, to ingest data using compact aggregate data structures. This makes them an economical option for direct querying scenarios.
+_略過索引_ 使用略過加速方法（例如分割區、最小值/最大值和值集合），透過精簡的彙總資料結構來匯入資料。這使其成為直接查詢情境中的經濟選擇。
 
-With a skipping index, you can index only the metadata of the data stored in Amazon S3. When you query a table with a skipping index, the query planner references the index and rewrites the query to efficiently locate the data, instead of scanning all partitions and files. This allows the skipping index to quickly narrow down the specific location of the stored data.
+使用略過索引時，您可以只為儲存在 Amazon S3 中的資料之中繼資料編製索引。當您查詢具有略過索引的資料表時，查詢規劃器會參考該索引並重寫查詢，以有效率地找出資料，而不必掃描所有分割區和檔案。這讓略過索引能夠快速縮小已儲存資料的特定位置範圍。
 
-### Define skipping index settings
+### 定義略過索引設定
 
-1. Under **Skipping index definition**, select **Generate** to automatically generate a skipping index. Alternately, to manually choose the fields you want to add, select **Add fields**. Choose from the following types:
-  - `Partition`: Uses data partition details to locate data. This type is best for partitioning-based columns such as year, month, day, hour.
-  - `MinMax`: Uses lower and upper bound of the indexed column to locate data. This type is best for numeric columns.
-  - `ValueSet`: Uses a unique value set to locate data. This type is best for columns with low to moderate cardinality that require exact matching.
-  - `BloomFilter`: Uses the bloom filter algorithm to locate data. This type is best for columns with high cardinality that do not require exact matching.
-2. Select **Create acceleration** to apply your skipping index settings. 
-3. View the skipping index query details and then click **Run**. OpenSearch adds your index to the left navigation pane.
+1. 在 **Skipping index definition** 下，選取 **Generate** 以自動產生略過索引。或者，若要手動選擇要新增的欄位，請選取 **Add fields**。可從下列類型中選擇：
+  - `Partition`：使用資料分割區詳細資訊來找出資料。此類型最適合以分割為基礎的資料行，例如年、月、日、時。
+  - `MinMax`：使用已編製索引之資料行的下限和上限來找出資料。此類型最適合數值資料行。
+  - `ValueSet`：使用唯一值集合來找出資料。此類型最適合基數為低至中等且需要完全相符的資料行。
+  - `BloomFilter`：使用 Bloom 篩選器演算法來找出資料。此類型最適合基數高且不需要完全相符的資料行。
+2. 選取 **Create acceleration** 以套用您的略過索引設定。
+3. 檢視略過索引查詢詳細資訊，然後按一下 **Run**。OpenSearch 會將您的索引新增至左側導覽窗格。
 
-Alternately, you can manually create a skipping index using Query Workbench. Select your data source from the dropdown and run a query like the following:
+或者，您也可以使用 Query Workbench 手動建立略過索引。從下拉式選單中選取您的資料來源，然後執行類似下列的查詢：
 
 ```sql
 CREATE SKIPPING INDEX
@@ -65,24 +66,24 @@ checkpoint_location = 's3://accountnum-vpcflow/AWSLogs/checkpoint'
 )
 ```
 
-## Covering indexes
+## 涵蓋索引
 
-A _covering index_ ingests all or some of the data from the source into OpenSearch and makes it possible to use all OpenSearch Dashboards and plugin functionality.
+_涵蓋索引_ 會將來源中的全部或部分資料匯入 OpenSearch，讓您能夠使用所有 OpenSearch Dashboards 和外掛程式功能。
 
-With a covering index, you can ingest data from a specified column in a table. This is the most performant of the three indexing types. Because OpenSearch ingests all data from your desired column, you get better performance and can perform advanced analytics.
+使用涵蓋索引時，您可以從資料表中的指定資料行匯入資料。這是三種索引類型中效能最佳的一種。由於 OpenSearch 會匯入您所需資料行中的所有資料，因此您可以獲得更好的效能，並能執行進階分析。
 
-OpenSearch creates a new index from the covering index data. You can use this new index to create visualizations, or for anomaly detection and geospatial capabilities. You can manage the covering view index with Index State Management. For more information, see [Index State Management]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/).
+OpenSearch 會從涵蓋索引資料建立新的索引。您可以使用這個新索引來建立視覺化，或用於異常偵測和地理空間功能。您可以使用 Index State Management 管理涵蓋檢視索引。如需詳細資訊，請參閱 [Index State Management]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/)。
 
-### Define covering index settings
+### 定義涵蓋索引設定
 
-1. For **Index name**, enter a valid index name. Note that each table can have multiple covering indexes.
-2. Choose a **Refresh type**. By default, OpenSearch automatically refreshes the index. Otherwise, you must manually trigger a refresh using a REFRESH statement.
-3. Enter a **Checkpoint location**, which is a path for refresh job checkpoints. The location must be a path in a file system compatible with the Hadoop Distributed File System (HDFS). For more information, see [Starting streaming queries](https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#starting-streaming-queries).
-4. Define the covering index fields by selecting **(add fields here)** under **Covering index definition**. 
-5. Select **Create acceleration** to apply your covering index settings.
-6. View the covering index query details and then click **Run**. OpenSearch adds your index to the left navigation pane.
+1. 在 **Index name** 中，輸入有效的索引名稱。請注意，每個資料表可以有多個涵蓋索引。
+2. 選擇 **Refresh type**。根據預設，OpenSearch 會自動重新整理索引。否則，您必須使用 REFRESH 陳述式手動觸發重新整理。
+3. 輸入 **Checkpoint location**，這是重新整理工作檢查點的路徑。此位置必須是與 Hadoop 分散式檔案系統 (HDFS) 相容之檔案系統中的路徑。如需詳細資訊，請參閱[啟動串流查詢](https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#starting-streaming-queries)。
+4. 在 **Covering index definition** 下選取 **(add fields here)**，以定義涵蓋索引欄位。
+5. 選取 **Create acceleration** 以套用您的涵蓋索引設定。
+6. 檢視涵蓋索引查詢詳細資訊，然後按一下 **Run**。OpenSearch 會將您的索引新增至左側導覽窗格。
 
-Alternately, you can manually create a covering index on your table using Query Workbench. Select your data source from the dropdown and run a query like the following:
+或者，您也可以使用 Query Workbench 在資料表上手動建立涵蓋索引。從下拉式選單中選取您的資料來源，然後執行類似下列的查詢：
 
 ```sql
 CREATE INDEX vpc_covering_index
@@ -98,21 +99,21 @@ WITH (
 )
 ```
 
-## Materialized views
+## 具體化檢視
 
-With _materialized views_, you can use complex queries, such as aggregations, to power Dashboards visualizations. Materialized views ingest a small amount of your data, depending on the query, into OpenSearch. OpenSearch then forms an index from the ingested data that you can use for visualizations. You can manage the materialized view index with Index State Management. For more information, see [Index State Management]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/).
+透過 _具體化檢視_，您可以使用複雜的查詢（例如彙總）來支援 Dashboards 視覺化。具體化檢視會依據查詢，將少量資料匯入 OpenSearch。接著，OpenSearch 會從匯入的資料形成索引，供您用於視覺化。您可以使用 Index State Management 管理具體化檢視索引。如需詳細資訊，請參閱 [Index State Management]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/)。
 
-### Define materialized view settings
+### 定義具體化檢視設定
 
-1. For **Index name**, enter a valid index name. Note that each table can have multiple covering indexes.
-2. Choose a **Refresh type**. By default, OpenSearch automatically refreshes the index. Otherwise, you must manually trigger a refresh using a `REFRESH` statement.
-3. Enter a **Checkpoint location**, which is a path for refresh job checkpoints. The location must be a path in an HDFS compatible file system. 
-4. Enter a **Watermark delay**, which defines how late data can come and still be processed, such as 1 minute or 10 seconds.
-5. Define the covering index fields under **Materialized view definition**.
-6. Select **Create acceleration** to apply your materialized view index settings.
-7. View the materialized view query details and then click **Run**. OpenSearch adds your index to the left navigation pane.
+1. 在 **Index name** 中，輸入有效的索引名稱。請注意，每個資料表可以有多個涵蓋索引。
+2. 選擇 **Refresh type**。根據預設，OpenSearch 會自動重新整理索引。否則，您必須使用 `REFRESH` 陳述式手動觸發重新整理。
+3. 輸入 **Checkpoint location**，這是重新整理作業檢查點的路徑。此位置必須是與 HDFS 相容之檔案系統中的路徑。
+4. 輸入 **Watermark delay**，此值定義資料最晚可延遲多久送達且仍會被處理，例如 1 分鐘或 10 秒。
+5. 在 **Materialized view definition** 下定義涵蓋索引欄位。
+6. 選取 **Create acceleration** 以套用您的具體化檢視索引設定。
+7. 檢視具體化檢視查詢的詳細資訊，然後按一下 **Run**。OpenSearch 會將您的索引新增至左側導覽窗格。
 
-Alternately, you can manually create a materialized view index on your table using Query Workbench. Select your data source from the dropdown and run a query like the following:
+或者，您也可以使用 Query Workbench 在資料表上手動建立具體化檢視索引。從下拉式選單中選取您的資料來源，然後執行如下的查詢：
 
 ```sql
 CREATE MATERIALIZED VIEW {table_name}__week_live_mview AS
@@ -177,6 +178,6 @@ WITH (
 )
 ```
 
-## Limitations
+## 限制
 
-This feature is still under development, so there are some limitations. For real-time updates, see the [developer documentation on GitHub](https://github.com/opensearch-project/opensearch-spark/blob/main/docs/index.md#limitations).
+此功能仍在開發中，因此有一些限制。如需即時更新，請參閱 [GitHub 上的開發人員文件](https://github.com/opensearch-project/opensearch-spark/blob/main/docs/index.md#limitations)。

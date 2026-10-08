@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Deprovision a workflow
+title: "取消佈建工作流程"
 parent: Workflow APIs
 nav_order: 70
 ---
 
 # Deprovision Workflow API
 
-When you no longer need a workflow, you can deprovision its resources. Most workflow steps that create a resource have corresponding workflow steps to reverse that action. To retrieve all resources currently created for a workflow, call the [Get Workflow Status API]({{site.url}}{{site.baseurl}}/automating-configurations/api/get-workflow-status/). When you call the Deprovision Workflow API, resources included in the `resources_created` field of the Get Workflow Status API response will be removed using a workflow step corresponding to the one that provisioned them.
+當您不再需要某個工作流程時，可以取消佈建其資源。大多數建立資源的工作流程步驟都有對應的工作流程步驟，可復原該動作。若要擷取目前為某個工作流程建立的所有資源，請呼叫 [Get Workflow Status API]({{site.url}}{{site.baseurl}}/automating-configurations/api/get-workflow-status/)。當您呼叫 Deprovision Workflow API 時，系統會使用與佈建步驟對應的工作流程步驟，移除 Get Workflow Status API 回應中 `resources_created` 欄位所包含的資源。
 
-The workflow executes the provisioning steps in reverse order. If a failure occurs because of a resource dependency, such as trying to delete a registered model that is still deployed, then the workflow retries the failing step as long as at least one resource was deleted.
+工作流程會以相反順序執行佈建步驟。如果因資源相依性而發生失敗，例如嘗試刪除仍處於部署狀態的已註冊模型，只要至少有一個資源已被刪除，工作流程就會重試失敗的步驟。
 
-To prevent data loss, resources created using the `create_index`, `create_search_pipeline`, and `create_ingest_pipeline` steps require the resource ID to be included in the `allow_delete` parameter.
+為防止資料遺失，使用 `create_index`、`create_search_pipeline` 和 `create_ingest_pipeline` 步驟建立的資源，必須將其資源 ID 納入 `allow_delete` 參數。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_flow_framework/workflow/{workflow_id}/_deprovision
 ``` 
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. 
+下表列出可用的路徑參數。 
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `workflow_id` | String | The ID of the workflow to be deprovisioned. Required. |
-| `allow-delete` | String | A comma-separated list of resource IDs to be deprovisioned. Required if deleting resources of type `index_name` or `pipeline_id`. |
+| `workflow_id` | 字串 | 要取消佈建的工作流程 ID。必要。 |
+| `allow-delete` | 字串 | 以逗號分隔的資源 ID 清單，列出要取消佈建的資源。刪除類型為 `index_name` 或 `pipeline_id` 的資源時為必要。 |
 
-### Example request
+### 請求範例
 
 ```json
 POST /_plugins/_flow_framework/workflow/8xL8bowB8y25Tqfenm50/_deprovision
 ``` 
 {% include copy-curl.html %}
 
-### Example response
+### 回應範例
 
-If deprovisioning is successful, OpenSearch responds with the same `workflow_id` that was used in the request: 
+如果取消佈建成功，OpenSearch 會回傳與請求中使用的相同 `workflow_id`： 
 
 ```json
 {
@@ -45,7 +46,7 @@ If deprovisioning is successful, OpenSearch responds with the same `workflow_id`
 }
 ```
 
-If deprovisioning did not completely remove all resources, OpenSearch responds with a `202 (ACCEPTED)` status and identifies the resources that were not deprovisioned:
+如果取消佈建未完全移除所有資源，OpenSearch 會回傳 `202 (ACCEPTED)` 狀態，並指出未取消佈建的資源：
 
 ```json
 {
@@ -53,10 +54,10 @@ If deprovisioning did not completely remove all resources, OpenSearch responds w
 }
 ```
 
-In some cases, the failure happens because of another dependent resource that took some time to be removed. In this case, you can attempt to send the same request again.
+在某些情況下，失敗是因為移除另一個相依資源需要一些時間。在這種情況下，您可以嘗試再次傳送相同的請求。
 {: .tip}
 
-If deprovisioning required the `allow_delete` parameter, then OpenSearch responds with a `403 (FORBIDDEN)` status and identifies the resources that were not deprovisioned:
+如果取消佈建需要 `allow_delete` 參數，OpenSearch 會回傳 `403 (FORBIDDEN)` 狀態，並指出未取消佈建的資源：
 
 ```json
 {
@@ -64,6 +65,6 @@ If deprovisioning required the `allow_delete` parameter, then OpenSearch respond
 }
 ```
 
-To obtain a more detailed deprovisioning status than is provided by the summary in the error response, query the [Get Workflow Status API]({{site.url}}{{site.baseurl}}/automating-configurations/api/get-workflow-status/). 
+若要取得比錯誤回應摘要更詳細的取消佈建狀態，請查詢 [Get Workflow Status API]({{site.url}}{{site.baseurl}}/automating-configurations/api/get-workflow-status/)。 
 
-On success, the workflow returns to a `NOT_STARTED` state. If some resources have not yet been removed, they are provided in the response.
+成功時，工作流程會回到 `NOT_STARTED` 狀態。如果某些資源尚未移除，回應中會列出這些資源。

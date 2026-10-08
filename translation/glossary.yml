@@ -1,0 +1,155 @@
+# zh-TW glossary for the OpenSearch documentation.
+#
+# Included verbatim in every translation and review prompt. Changing this file
+# changes the prompt version, which invalidates cached chunk translations.
+#
+# keep_in_english: names that are never translated.
+# terms: preferred Taiwan rendering. Where a note says "keep English", keep the
+#   English word (it is an API/product concept); add the Chinese gloss in
+#   parentheses only on first use when it helps the reader.
+
+keep_in_english:
+  - OpenSearch
+  - OpenSearch Dashboards
+  - OpenSearch Benchmark
+  - Data Prepper
+  - Query DSL
+  - PPL
+  - SQL
+  - REST API
+  - Dev Tools
+  - Docker
+  - Docker Compose
+  - Kubernetes
+  - Helm
+  - JSON
+  - YAML
+  - Lucene
+  - Elasticsearch
+  - k-NN
+  - Painless
+  - API, field, parameter, setting, plugin, processor and index names written in code
+
+terms:
+  - {en: index (noun), zh: 索引}
+  - {en: index (verb), zh: 編製索引, note: 例如「將文件編製索引」；亦可用「索引」}
+  - {en: document, zh: 文件}
+  - {en: file, zh: 檔案}
+  - {en: field, zh: 欄位}
+  - {en: mapping, zh: 對應, note: "index mapping → 索引對應；API 名稱保留英文"}
+  - {en: shard, zh: 分片}
+  - {en: primary shard, zh: 主要分片}
+  - {en: replica, zh: 副本}
+  - {en: replica shard, zh: 副本分片}
+  - {en: cluster, zh: 叢集}
+  - {en: node, zh: 節點}
+  - {en: cluster manager node, zh: 叢集管理員節點}
+  - {en: query, zh: 查詢}
+  - {en: search, zh: 搜尋}
+  - {en: full-text search, zh: 全文搜尋}
+  - {en: relevance, zh: 相關性}
+  - {en: relevance score, zh: 相關性分數}
+  - {en: analyzer, zh: 分析器}
+  - {en: tokenizer, zh: 斷詞器}
+  - {en: token, zh: 詞元, note: 文字分析語境；驗證語境用「權杖」}
+  - {en: token filter, zh: 詞元篩選器}
+  - {en: aggregation, zh: 彙總}
+  - {en: bucket (aggregation), zh: 桶, note: 首次出現可寫作「桶 (bucket)」}
+  - {en: pipeline, zh: 管線}
+  - {en: ingest pipeline, zh: 資料匯入管線}
+  - {en: ingest, zh: 匯入}
+  - {en: processor, zh: 處理器}
+  - {en: plugin, zh: 外掛程式}
+  - {en: setting, zh: 設定}
+  - {en: configuration, zh: 組態, note: 動詞 configure 用「設定」}
+  - {en: parameter, zh: 參數}
+  - {en: request, zh: 請求}
+  - {en: response, zh: 回應}
+  - {en: endpoint, zh: 端點}
+  - {en: request body, zh: 請求本文}
+  - {en: path parameter, zh: 路徑參數}
+  - {en: query parameter, zh: 查詢參數}
+  - {en: default, zh: 預設}
+  - {en: optional, zh: 選用}
+  - {en: required, zh: 必要}
+  - {en: data type, zh: 資料類型}
+  - {en: data, zh: 資料}
+  - {en: data stream, zh: 資料串流}
+  - {en: string, zh: 字串}
+  - {en: Boolean, zh: 布林值}
+  - {en: integer, zh: 整數}
+  - {en: array, zh: 陣列}
+  - {en: object, zh: 物件}
+  - {en: vector, zh: 向量}
+  - {en: vector search, zh: 向量搜尋}
+  - {en: embedding, zh: 嵌入}
+  - {en: semantic search, zh: 語意搜尋}
+  - {en: hybrid search, zh: 混合搜尋}
+  - {en: machine learning, zh: 機器學習}
+  - {en: model, zh: 模型}
+  - {en: agent, zh: 代理程式}
+  - {en: connector, zh: 連接器}
+  - {en: snapshot, zh: 快照}
+  - {en: repository (snapshot), zh: 儲存庫}
+  - {en: security, zh: 安全性}
+  - {en: authentication, zh: 驗證}
+  - {en: authorization, zh: 授權}
+  - {en: role, zh: 角色}
+  - {en: user, zh: 使用者}
+  - {en: tenant, zh: 租用戶}
+  - {en: certificate, zh: 憑證}
+  - {en: password, zh: 密碼}
+  - {en: dashboard, zh: 儀表板}
+  - {en: visualization, zh: 視覺化}
+  - {en: alerting, zh: 警示}
+  - {en: monitor, zh: 監視器}
+  - {en: log, zh: 記錄檔, note: "log data → 記錄資料；logging → 記錄"}
+  - {en: metrics, zh: 指標}
+  - {en: trace, zh: 追蹤}
+  - {en: observability, zh: 可觀測性}
+  - {en: performance, zh: 效能}
+  - {en: memory, zh: 記憶體}
+  - {en: cache, zh: 快取}
+  - {en: thread, zh: 執行緒}
+  - {en: thread pool, zh: 執行緒集區}
+  - {en: port, zh: 連接埠}
+  - {en: network, zh: 網路}
+  - {en: server, zh: 伺服器}
+  - {en: client, zh: 用戶端}
+  - {en: software, zh: 軟體}
+  - {en: hardware, zh: 硬體}
+  - {en: disk, zh: 磁碟}
+  - {en: storage, zh: 儲存空間}
+  - {en: command line, zh: 命令列}
+  - {en: terminal, zh: 終端機}
+  - {en: script, zh: 指令碼}
+  - {en: code, zh: 程式碼}
+  - {en: source code, zh: 原始碼}
+  - {en: function, zh: 函式}
+  - {en: variable, zh: 變數}
+  - {en: operator, zh: 運算子}
+  - {en: algorithm, zh: 演算法}
+  - {en: asynchronous, zh: 非同步}
+  - {en: real-time, zh: 即時}
+  - {en: online, zh: 線上}
+  - {en: upgrade, zh: 升級}
+  - {en: migration, zh: 遷移}
+  - {en: install, zh: 安裝}
+  - {en: uninstall, zh: 解除安裝}
+  - {en: enable, zh: 啟用}
+  - {en: disable, zh: 停用}
+  - {en: create, zh: 建立}
+  - {en: delete, zh: 刪除}
+  - {en: update, zh: 更新}
+  - {en: run, zh: 執行}
+  - {en: support, zh: 支援}
+  - {en: compatible, zh: 相容}
+  - {en: link, zh: 連結}
+  - {en: tutorial, zh: 教學}
+  - {en: quickstart, zh: 快速入門}
+  - {en: getting started, zh: 入門}
+  - {en: example, zh: 範例}
+  - {en: note, zh: 注意}
+  - {en: tip, zh: 提示}
+  - {en: warning, zh: 警告}
+  - {en: important, zh: 重要}

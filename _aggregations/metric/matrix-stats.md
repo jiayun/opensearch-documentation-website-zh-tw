@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Matrix stats
+title: "矩陣統計資料"
 parent: Metric aggregations
 nav_order: 50
 redirect_from:
   - /query-dsl/aggregations/metric/matrix-stats/
 ---
 
-# Matrix stats aggregation
+# 矩陣統計資料彙總
 
-The `matrix_stats` aggregation is a multi-value metric aggregation that generates covariance statistics for two or more fields in matrix form. 
+`matrix_stats` 彙總是一種多值指標彙總，會以矩陣形式為兩個或更多欄位產生共變異數統計資料。
 
-The `matrix_stats` aggregation does not support scripting.
+`matrix_stats` 彙總不支援指令碼。
 {: .note}
 
-## Parameters
+## 參數
 
-The `matrix_stats` aggregation takes the following parameters. 
+`matrix_stats` 彙總接受下列參數。
 
-| Parameter | Required/Optional | Data type      | Description |
+| 參數 | 必要/選用 | 資料類型 | 說明 |
 | :--       | :--               | :--            | :--         |
-| `fields`  | Required          | String         | An array of fields for which the matrix stats are computed. |
-| `missing`    | Optional          | Object         | The value to use in place of missing values. By default, missing values are ignored. See [Missing values](#missing-values). |
-| `mode`    | Optional          | String         | The value to use as a sample from a multi-valued or array field. Allowed values are `avg`, `min`, `max`, `sum`, and `median`. Default is `avg`. |
+| `fields`  | 必要          | 字串         | 要計算矩陣統計資料的欄位陣列。 |
+| `missing`    | 選用          | 物件         | 用來取代缺失值的值。預設會忽略缺失值。請參閱[缺失值](#missing-values)。 |
+| `mode`    | 選用          | 字串         | 從多值欄位或陣列欄位中作為樣本使用的值。允許的值為 `avg`、`min`、`max`、`sum` 和 `median`。預設為 `avg`。 |
 
-## Example
+## 範例
 
-The following example returns statistics for the `taxful_total_price` and `products.base_price` fields in the OpenSearch Dashboards e-commerce sample data:
+下列範例會傳回 OpenSearch Dashboards 電子商務範例資料中 `taxful_total_price` 和 `products.base_price` 欄位的統計資料：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -43,7 +44,7 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the aggregated results:
+回應包含彙總結果：
 
 ```json
 {
@@ -105,23 +106,23 @@ The response contains the aggregated results:
 }
 ```
 
-The following table describes the response fields.
+下表說明回應欄位。
 
-| Statistic    | Description |
+| 統計量    | 說明 |
 | :---         | :---        |
-| `count`      | The number of documents sampled for the aggregation. |
-| `mean`       | The average value of the field computed from the sample. |
-| `variance`   | The square of deviation from the mean, a measure of data spread. |
-| `skewness`   | A measure of the distribution's asymmetry relative to the mean. See [Skewness](https://en.wikipedia.org/wiki/Skewness). |
-| `kurtosis` | A measure of the tail-heaviness of a distribution. As the tails become lighter, kurtosis decreases. Kurtosis and skewness are evaluated to determine whether a population is likely to be [normally distributed](https://en.wikipedia.org/wiki/Normal_distribution). See [Kurtosis](https://en.wikipedia.org/wiki/Kurtosis).|
-| `covariance`  | A measure of the joint variability between two fields. A positive value means their values move in the same direction. |
-| `correlation` | The normalized covariance, a measure of the strength of the relationship between two fields. Possible values are from -1 to 1, inclusive, indicating perfect negative to perfect positive linear correlation. A value of 0 indicates no discernible relationship between the variables. |
+| `count`      | 為彙總取樣的文件數。 |
+| `mean`       | 從樣本計算出的欄位平均值。 |
+| `variance`   | 與平均值偏差的平方，用於衡量資料的分散程度。 |
+| `skewness`   | 衡量分布相對於平均值的不對稱性。請參閱[偏態](https://en.wikipedia.org/wiki/Skewness)。 |
+| `kurtosis` | 衡量分布尾部的厚重程度。尾部越輕，峰度就越低。透過評估峰度和偏態來判斷母體是否可能呈[常態分布](https://en.wikipedia.org/wiki/Normal_distribution)。請參閱[峰度](https://en.wikipedia.org/wiki/Kurtosis)。|
+| `covariance`  | 衡量兩個欄位之間的共同變異程度。正值表示兩者的值朝相同方向變動。 |
+| `correlation` | 標準化的共變異數，用於衡量兩個欄位之間關係的強度。可能的值介於 -1 到 1 之間（含兩端），代表從完全負線性相關到完全正線性相關。值為 0 表示變數之間沒有可辨識的關係。 |
 
-## Missing values
+## 缺失值
 
-To define how missing values are treated, use the `missing` parameter. By default, missing values are ignored. 
+若要定義缺失值的處理方式，請使用 `missing` 參數。預設會忽略缺失值。
 
-For example, create an index in which document 1 is missing the `gpa` and `class_grades` fields:
+例如，建立一個索引，其中文件 1 缺少 `gpa` 和 `class_grades` 欄位：
 
 ```json
 POST _bulk
@@ -134,7 +135,7 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-First, run a `matrix_stats` aggregation without providing a `missing` parameter:
+首先，在不提供 `missing` 參數的情況下執行 `matrix_stats` 彙總：
 
 ```json
 GET students/_search
@@ -155,7 +156,7 @@ GET students/_search
 ```
 {% include copy-curl.html %}
 
-OpenSearch ignores missing values when calculating the matrix statistics:
+OpenSearch 在計算矩陣統計資料時會忽略缺失值：
 
 ```json
 {
@@ -218,7 +219,7 @@ OpenSearch ignores missing values when calculating the matrix statistics:
 }
 ```
 
-To set the missing fields to `0`, provide the `missing` parameter as a key-value map. Even though `class_grades` is an array field, the `matrix_stats` aggregation flattens multi-valued numeric fields into a per-document average, so you must supply a single number as the missing value:
+若要將缺失的欄位設為 `0`，請以鍵值對應的形式提供 `missing` 參數。雖然 `class_grades` 是陣列欄位，但 `matrix_stats` 彙總會將多值數值欄位扁平化為每份文件的平均值，因此您必須提供單一數字作為缺失值：
 
 ```json
 GET students/_search
@@ -240,7 +241,7 @@ GET students/_search
 ```
 {% include copy-curl.html %}
 
-OpenSearch substitutes `0` for any missing `gpa` or `class_grades` values when calculating the matrix statistics:
+OpenSearch 在計算矩陣統計資料時，會以 `0` 取代任何缺失的 `gpa` 或 `class_grades` 值：
 
 ```json
 {

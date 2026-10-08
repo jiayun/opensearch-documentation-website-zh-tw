@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Document APIs
+title: "文件 API"
 has_children: true
 has_toc: false
 nav_order: 50
@@ -9,130 +10,130 @@ redirect_from:
   - /api-reference/document-apis/
 ---
 
-# Document APIs
-**Introduced 1.0**
+# 文件 API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-Document APIs allow you to perform create, read, update, and delete (CRUD) operations on documents stored in your indexes. Use these APIs to manage individual documents or process multiple documents efficiently in batch operations.
+文件 API 讓您能對儲存在索引中的文件執行建立、讀取、更新與刪除 (CRUD) 操作。您可以使用這些 API 管理個別文件，或在批次操作中有效率地處理多個文件。
 
-## Operation types
+## 操作類型
 
-OpenSearch document APIs are organized into the following categories based on the number of documents they process.
+OpenSearch 文件 API 依其處理的文件數量分為下列幾類。
 
-### Single-document operations
+### 單一文件操作
 
-Single-document operations work with one document at a time. Use these APIs when you need to perform targeted operations on specific documents or when working with individual records:
+單一文件操作一次處理一份文件。當您需要對特定文件執行目標式操作，或處理個別記錄時，請使用這些 API：
 
-- Use the Index Document API to add new documents or replace existing documents with the same ID.
-- Use the Get Document API to fetch documents by their unique ID.
-- Use the Update Document API to change specific fields in an existing document without reindexing the entire document.
-- Use the Delete Document API to remove documents from an index.
+- 使用 Index Document API 新增文件，或以相同 ID 取代現有文件。
+- 使用 Get Document API 依唯一 ID 取得文件。
+- 使用 Update Document API 變更現有文件中的特定欄位，而無需重新編製整份文件的索引。
+- 使用 Delete Document API 從索引中移除文件。
 
-### Multi-document operations
+### 多文件操作
 
-Multi-document operations process multiple documents in a single API request, offering significant performance advantages over submitting individual requests. When working with large datasets or batch operations, always prefer multi-document APIs because they:
+多文件操作在單一 API 請求中處理多個文件，相較於提交個別請求具有顯著的效能優勢。處理大型資料集或批次操作時，請一律優先使用多文件 API，因為它們：
 
-- Reduce network overhead by combining multiple operations into one request.
-- Improve throughput by allowing OpenSearch to optimize batch processing.
-- Minimize the number of round trips between your application and the cluster.
+- 將多個操作合併為一個請求，降低網路負擔。
+- 讓 OpenSearch 能夠最佳化批次處理，提升輸送量。
+- 減少應用程式與叢集之間的往返次數。
 
-Use multi-document operations for data ingestion pipelines, bulk updates, batch deletions, and any scenario where you need to process multiple documents efficiently.
+請在資料匯入管線、大量更新、批次刪除，以及任何需要有效率處理多個文件的情境中使用多文件操作。
 
-### Term vector operations
+### 詞向量操作
 
-Term vector operations retrieve information about the terms in a specific document field, including term frequencies, positions, and offsets. Use these operations for text analysis, relevance scoring, and custom similarity calculations.
+詞向量操作會擷取特定文件欄位中詞彙的資訊，包括詞頻、位置與位移。請將這些操作用於文字分析、相關性評分與自訂相似度計算。
 
-## Important considerations
+## 重要注意事項
 
-**Single-index limitation**: All document APIs operate on a single index at a time. The `index` parameter accepts only one index name or an alias that points to a single index. You cannot target multiple indexes in a single document API request. For operations across multiple indexes, you must submit separate requests for each index.
+**單一索引限制**：所有文件 API 一次只能操作一個索引。`index` 參數只接受一個索引名稱，或指向單一索引的別名。您無法在單一文件 API 請求中指定多個索引。若要跨多個索引操作，您必須為每個索引分別提交請求。
 
-**Document routing**: OpenSearch uses a routing algorithm to determine which shard stores each document. By default, documents are routed based on their ID, but you can specify custom routing values to control shard placement. When retrieving, updating, or deleting documents that were indexed with custom routing, you must provide the same routing value.
+**文件路由**：OpenSearch 使用路由演算法決定每份文件儲存在哪個分片。預設情況下，文件會依其 ID 進行路由，但您可以指定自訂路由值來控制分片放置。當您擷取、更新或刪除以自訂路由編製索引的文件時，必須提供相同的路由值。
 
-## Data replication model
+## 資料複寫模型
 
-OpenSearch maintains multiple copies of your data across shards to ensure fault tolerance and high availability. This replication model is based on the primary-backup pattern, where one shard copy acts as the primary and other copies serve as replicas.
+OpenSearch 會在多個分片間維護資料的多份複本，以確保容錯能力與高可用性。此複寫模型以主要-備援模式為基礎，其中一份分片複本作為主要分片，其他複本則作為副本分片。
 
-### Write operations
+### 寫入操作
 
-When you index, update, or delete a document, OpenSearch follows this process:
+當您對文件編製索引、更新或刪除文件時，OpenSearch 會遵循以下流程：
 
-1. **Routing**: The operation is routed to the appropriate primary shard based on the document ID or custom routing value.
-2. **Primary processing**: The primary shard validates and executes the operation locally.
-3. **Replication**: The primary shard forwards the operation to all active replica shards in parallel.
-4. **Acknowledgment**: After all in-sync replicas confirm the operation, the primary shard acknowledges success to the client.
+1. **路由**：操作會依據文件 ID 或自訂路由值被路由到適當的主要分片。
+2. **主要分片處理**：主要分片在本機驗證並執行該操作。
+3. **複寫**：主要分片將操作平行轉送給所有作用中的副本分片。
+4. **確認**：在所有同步中的副本分片確認操作後，主要分片才向用戶端回報成功。
 
-This process ensures that all shard copies remain synchronized and that acknowledged writes are durable across multiple nodes.
+此流程確保所有分片複本保持同步，並確保已確認的寫入在多個節點上具有持久性。
 
-### Read operations
+### 讀取操作
 
-Read operations can be served by any shard copy (primary or replica), which provides several benefits:
+讀取操作可由任何分片複本（主要分片或副本分片）提供服務，這帶來幾項好處：
 
-- **Load distribution**: Read requests are distributed across multiple shard copies, improving throughput and response times.
-- **High availability**: If one shard copy becomes unavailable, OpenSearch automatically routes requests to other copies.
-- **Consistency**: All shard copies contain the same data (except for in-flight operations), ensuring consistent read results.
+- **負載分散**：讀取請求會分散到多個分片複本，提升輸送量與回應時間。
+- **高可用性**：若某個分片複本無法使用，OpenSearch 會自動將請求路由到其他複本。
+- **一致性**：所有分片複本都包含相同的資料（進行中的操作除外），確保讀取結果一致。
 
-By default, OpenSearch uses round-robin distribution to select which shard copy handles each read request. You can influence this selection using the `preference` parameter available in many document APIs.
+預設情況下，OpenSearch 使用輪流分配方式選擇由哪個分片複本處理每個讀取請求。您可以透過許多文件 API 提供的 `preference` 參數影響此選擇。
 
-## Refresh behavior
+## 重新整理行為
 
-The Index, Update, Delete, and Bulk APIs support a `refresh` parameter that controls when changes become visible to search operations. Understanding refresh behavior is important for balancing data freshness with system performance.
+Index、Update、Delete 與 Bulk API 支援 `refresh` 參數，用於控制變更何時對搜尋操作可見。了解重新整理行為對於在資料新鮮度與系統效能之間取得平衡非常重要。
 
-### Refresh parameter values
+### 重新整理參數值
 
-The `refresh` parameter accepts the following values:
+`refresh` 參數接受下列值：
 
-- `false` (default): No refresh-related actions are taken. Changes become visible when the index is automatically refreshed based on the `index.refresh_interval` setting (default is 1 second).
-- `true`: Immediately refreshes the relevant primary and replica shards after the operation completes, making changes visible to search immediately. Use this option sparingly because it can significantly impact performance.
-- `wait_for`: Waits for the changes to become visible through a refresh before responding to the client. This option does not force an immediate refresh but waits for the next scheduled refresh or for another operation to trigger one.
+- `false`（預設）：不執行任何與重新整理相關的動作。變更會在索引依據 `index.refresh_interval` 設定自動重新整理時變為可見（預設為 1 秒）。
+- `true`：在操作完成後立即重新整理相關的主要分片與副本分片，讓變更立即對搜尋可見。請謹慎使用此選項，因為它可能對效能造成顯著影響。
+- `wait_for`：在回應用戶端之前，等待變更透過重新整理變為可見。此選項不會強制立即重新整理，而是等待下一次排定的重新整理，或等待其他操作觸發重新整理。
 
-### Choosing the right refresh setting
+### 選擇合適的重新整理設定
 
-For most use cases, use the default `refresh=false` to achieve the best performance. Consider the following guidelines:
+對大多數使用情境而言，請使用預設的 `refresh=false` 以獲得最佳效能。請參考下列準則：
 
-- **Use `false` (default)** for high-throughput indexing where near-real-time visibility (within 1 second) is acceptable.
-- **Use `wait_for`** when you need confirmation that changes are searchable but do not want to force an immediate refresh. This option is more efficient than `refresh=true` for batch operations.
-- **Use `true` sparingly** only when you absolutely need immediate visibility and understand the performance implications. Frequent refreshes create inefficient index segments that require more resources to search and merge.
+- **使用 `false`（預設）**：適用於高輸送量索引作業，且可接受近即時可見性（1 秒內）的情況。
+- **使用 `wait_for`**：當您需要確認變更已可搜尋，但不希望強制立即重新整理時。對批次操作而言，此選項比 `refresh=true` 更有效率。
+- **謹慎使用 `true`**：僅在您確實需要立即可見性，並了解其效能影響時使用。頻繁的重新整理會產生效率不佳的索引區段，需要更多資源才能搜尋與合併。
 
-Excessive use of `refresh=true` can significantly degrade cluster performance by creating many small segments and increasing merge overhead.
+過度使用 `refresh=true` 會產生大量小型區段並增加合併負擔，進而顯著降低叢集效能。
 
-## Optimistic concurrency control
+## 樂觀並行控制
 
-OpenSearch uses optimistic concurrency control to ensure that document updates do not overwrite newer changes with older data. This mechanism is essential in distributed systems where multiple operations may occur concurrently.
+OpenSearch 使用樂觀並行控制，確保文件更新不會以較舊的資料覆寫較新的變更。在多個操作可能同時發生的分散式系統中，此機制至關重要。
 
-Every operation that changes a document is assigned a sequence number (`_seq_no`) and a primary term (`_primary_term`) by the coordinating primary shard:
+每個變更文件的操作都會由負責的主要分片指派一個序號 (`_seq_no`) 與一個主要任期 (`_primary_term`)：
 
-- **Sequence number**: A strictly increasing number assigned to each operation. Newer operations always have higher sequence numbers than older ones.
-- **Primary term**: Identifies the current primary shard assignment. This value changes when a new primary shard is elected after a failure.
+- **序號**：指派給每個操作的嚴格遞增數字。較新的操作的序號一律高於較舊的操作。
+- **主要任期**：識別目前的主要分片指派。當故障後選出新主要分片時，此值會改變。
 
-Together, `_seq_no` and `_primary_term` uniquely identify each change to a document, allowing OpenSearch to detect and prevent out-of-order updates.
+`_seq_no` 與 `_primary_term` 共同唯一識別文件的每次變更，讓 OpenSearch 能夠偵測並防止順序錯亂的更新。
 
-### Using sequence numbers for conditional updates
+### 使用序號進行條件式更新
 
-You can use the `if_seq_no` and `if_primary_term` parameters with the Index, Update, and Delete APIs to ensure that operations only succeed if the document has not changed since you retrieved it. OpenSearch returns the current `_seq_no` and `_primary_term` values in Get API responses and search results (when requested).
+您可以將 `if_seq_no` 與 `if_primary_term` 參數搭配 Index、Update 與 Delete API 使用，確保只有在文件自您擷取後未曾變更時，操作才會成功。OpenSearch 會在 Get API 回應與搜尋結果中（若有要求）傳回目前的 `_seq_no` 與 `_primary_term` 值。
 
-This approach prevents lost updates in scenarios where multiple clients or processes modify the same document concurrently. If the sequence number or primary term does not match the current values, OpenSearch returns a version conflict error, allowing your application to retry the operation with the latest document version.
+此做法可防止多個用戶端或程序同時修改同一份文件時發生更新遺失。若序號或主要任期與目前值不符，OpenSearch 會回傳版本衝突錯誤，讓您的應用程式能以最新的文件版本重試該操作。
 
-## Single document operations
+## 單一文件操作
 
-- [Index document]({{site.url}}{{site.baseurl}}/api-reference/document-apis/index-document/)
-- [Get document]({{site.url}}{{site.baseurl}}/api-reference/document-apis/get-documents/)
-- [Update document]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-document/)
-- [Delete document]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-document/)
+- [編製文件索引]({{site.url}}{{site.baseurl}}/api-reference/document-apis/index-document/)
+- [取得文件]({{site.url}}{{site.baseurl}}/api-reference/document-apis/get-documents/)
+- [更新文件]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-document/)
+- [刪除文件]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-document/)
 
-## Multi-document operations
+## 多文件操作
 
-- [Bulk]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/)
-- [Streaming bulk]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk-streaming/)
-- [Multi-get documents]({{site.url}}{{site.baseurl}}/api-reference/document-apis/multi-get/)
-- [Update by query]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-by-query/)
-- [Delete by query]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-by-query/)
-- [Reindex documents]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/)
+- [大量操作 (Bulk)]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/)
+- [串流大量操作 (Streaming bulk)]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk-streaming/)
+- [多重取得文件]({{site.url}}{{site.baseurl}}/api-reference/document-apis/multi-get/)
+- [依查詢更新]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-by-query/)
+- [依查詢刪除]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-by-query/)
+- [重新編製文件索引]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/)
 
-## Term vector operations
+## 詞向量操作
 
-- [Term vector]({{site.url}}{{site.baseurl}}/api-reference/document-apis/termvector/)
-- [Multi term vectors]({{site.url}}{{site.baseurl}}/api-reference/document-apis/mtermvectors/)
+- [詞向量]({{site.url}}{{site.baseurl}}/api-reference/document-apis/termvector/)
+- [多重詞向量]({{site.url}}{{site.baseurl}}/api-reference/document-apis/mtermvectors/)
 
-## Pull-based ingestion
+## 提取式資料匯入
 
-- [Pull-based ingestion]({{site.url}}{{site.baseurl}}/api-reference/document-apis/pull-based-ingestion/)
+- [提取式資料匯入]({{site.url}}{{site.baseurl}}/api-reference/document-apis/pull-based-ingestion/)

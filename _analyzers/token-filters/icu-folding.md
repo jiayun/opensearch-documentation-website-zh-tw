@@ -1,36 +1,37 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: ICU folding
+title: "ICU 摺疊"
 parent: Token filters
 nav_order: 172
 ---
 
-# ICU folding token filter
+# ICU 摺疊詞元篩選器
 
-The `icu_folding` token filter applies Unicode normalization and case folding to tokens, converting them to a form suitable for case-insensitive matching. This filter provides more comprehensive character folding than the ASCII folding filter, handling characters from all Unicode scripts.
+`icu_folding` 詞元篩選器會對詞元套用 Unicode 正規化與大小寫摺疊，將其轉換為適合不區分大小寫比對的形式。此篩選器提供比 ASCII 摺疊篩選器更全面的字元摺疊，可處理所有 Unicode 文字系統中的字元。
 
-The filter implements case folding as defined in [Unicode Technical Report #30](https://www.unicode.org/reports/tr30/), which includes:
-- Converting uppercase letters to lowercase
-- Removing diacritical marks (accents)
-- Converting ligatures to their component letters
-- Normalizing character width (for example, full-width to half-width)
-- Converting certain punctuation and symbols to ASCII equivalents
+此篩選器依照 [Unicode Technical Report #30](https://www.unicode.org/reports/tr30/) 的定義實作大小寫摺疊，其中包括：
+- 將大寫字母轉換為小寫
+- 移除變音符號（重音符號）
+- 將連字轉換為其組成字母
+- 正規化字元寬度（例如，將全形轉換為半形）
+- 將特定標點符號與符號轉換為對應的 ASCII 字元
 
-## Installation
+## 安裝
 
-The `icu_folding` token filter requires the `analysis-icu` plugin. For installation instructions, see [ICU analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/).
+`icu_folding` 詞元篩選器需要 `analysis-icu` 外掛程式。如需安裝說明，請參閱 [ICU 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/)。
 
-## Parameters
+## 參數
 
-The following table lists the parameters for the `icu_folding` token filter.
+下表列出 `icu_folding` 詞元篩選器的參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`unicode_set_filter` | String | A [UnicodeSet](https://unicode-org.github.io/icu/userguide/strings/unicodeset.html) expression specifying which characters to fold. Characters outside this set are passed through unchanged. Optional. If not specified, all characters are folded.
+`unicode_set_filter` | 字串 | 一個 [UnicodeSet](https://unicode-org.github.io/icu/userguide/strings/unicodeset.html) 運算式，用於指定要摺疊的字元。此集合以外的字元會原封不動地傳遞。選用。若未指定，則會摺疊所有字元。
 
-## Example: Basic ICU folding
+## 範例：基本 ICU 摺疊
 
-The following example demonstrates the default `icu_folding` behavior:
+下列範例示範 `icu_folding` 的預設行為：
 
 ```json
 PUT /icu-folding-index
@@ -49,7 +50,7 @@ PUT /icu-folding-index
 ```
 {% include copy-curl.html %}
 
-Test the analyzer with text containing diacritics, ligatures, and mixed case:
+使用包含變音符號、連字及大小寫混合的文字測試分析器：
 
 ```json
 POST /icu-folding-index/_analyze
@@ -60,7 +61,7 @@ POST /icu-folding-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response shows normalization and folding:
+回應顯示正規化與摺疊的結果：
 
 ```json
 {
@@ -90,14 +91,14 @@ The response shows normalization and folding:
 }
 ```
 
-## Normalization included
+## 已包含正規化
 
-The `icu_folding` filter already performs Unicode normalization, so you don't need to add a separate normalization character filter or token filter when using `icu_folding`.
+`icu_folding` 篩選器已會執行 Unicode 正規化，因此使用 `icu_folding` 時，您不需要另外新增正規化字元篩選器或詞元篩選器。
 {: .note}
 
-## Example: Preserving specific characters
+## 範例：保留特定字元
 
-You can preserve specific characters from folding using the `unicode_set_filter` parameter. The following example preserves German umlauts and the Eszett character:
+您可以使用 `unicode_set_filter` 參數，讓特定字元不被摺疊。下列範例會保留德文母音變音字元與 Eszett 字元：
 
 ```json
 PUT /icu-folding-german
@@ -122,9 +123,9 @@ PUT /icu-folding-german
 ```
 {% include copy-curl.html %}
 
-The `unicode_set_filter` value `[^äöüÄÖÜß]` means "fold all characters except these German characters." The `lowercase` filter is added afterward to handle the preserved uppercase characters.
+`unicode_set_filter` 值 `[^äöüÄÖÜß]` 表示「摺疊這些德文字元以外的所有字元」。之後再加入 `lowercase` 篩選器，以處理被保留的大寫字元。
 
-Test the analyzer:
+測試分析器：
 
 ```json
 POST /icu-folding-german/_analyze
@@ -135,7 +136,7 @@ POST /icu-folding-german/_analyze
 ```
 {% include copy-curl.html %}
 
-The response preserves German characters while folding others:
+回應會保留德文字元，同時摺疊其他字元：
 
 ```json
 {
@@ -165,18 +166,18 @@ The response preserves German characters while folding others:
 }
 ```
 
-## Comparison with ASCII folding
+## 與 ASCII 摺疊的比較
 
-While the `asciifolding` token filter converts non-ASCII characters to ASCII equivalents, `icu_folding` provides more sophisticated normalization:
+`asciifolding` 詞元篩選器會將非 ASCII 字元轉換為對應的 ASCII 字元，而 `icu_folding` 則提供更精密的正規化：
 
-- **Broader character support**: Handles all Unicode scripts, not only Latin-based characters
-- **Language-aware**: Applies normalization rules appropriate for different writing systems
-- **Width normalization**: Converts full-width characters to half-width (important for CJK text)
-- **Ligature handling**: Properly decomposes ligatures across all scripts
+- **更廣泛的字元支援**：可處理所有 Unicode 文字系統，而不僅限於拉丁字元
+- **語言感知**：套用適合不同書寫系統的正規化規則
+- **寬度正規化**：將全形字元轉換為半形（對 CJK 文字而言很重要）
+- **連字處理**：在所有文字系統中正確分解連字
 
-## Related documentation
+## 相關文件
 
-- [ICU analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/)
-- [ICU tokenizer]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/icu-tokenizer/)
-- [ICU normalization character filter]({{site.url}}{{site.baseurl}}/analyzers/character-filters/icu-normalization/)
-- [ASCII folding token filter]({{site.url}}{{site.baseurl}}/analyzers/token-filters/asciifolding/)
+- [ICU 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/icu/)
+- [ICU 斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/icu-tokenizer/)
+- [ICU 正規化字元篩選器]({{site.url}}{{site.baseurl}}/analyzers/character-filters/icu-normalization/)
+- [ASCII 摺疊詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/asciifolding/)

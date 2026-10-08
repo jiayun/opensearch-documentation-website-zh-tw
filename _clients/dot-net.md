@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: .NET clients
+title: ".NET 用戶端"
 nav_order: 75
 has_children: true
 has_toc: false
 ---
 
-# .NET clients
+# .NET 用戶端
 
-OpenSearch has two .NET clients: a low-level [OpenSearch.Net]({{site.url}}{{site.baseurl}}/clients/OpenSearch-dot-net/) client and a high-level [OpenSearch.Client]({{site.url}}{{site.baseurl}}/clients/OSC-dot-net/) client.
+OpenSearch 有兩個 .NET 用戶端：低階的 [OpenSearch.Net]({{site.url}}{{site.baseurl}}/clients/OpenSearch-dot-net/) 用戶端，以及高階的 [OpenSearch.Client]({{site.url}}{{site.baseurl}}/clients/OSC-dot-net/) 用戶端。
 
-[OpenSearch.Net]({{site.url}}{{site.baseurl}}/clients/OpenSearch-dot-net/) is a low-level .NET client that provides the foundational layer of communication with OpenSearch. It is dependency free, and it can handle round-robin load balancing, transport, and the basic request/response cycle. OpenSearch.Net contains methods for all OpenSearch API endpoints.
+[OpenSearch.Net]({{site.url}}{{site.baseurl}}/clients/OpenSearch-dot-net/) 是低階的 .NET 用戶端，提供與 OpenSearch 通訊的基礎層。它沒有相依性，可處理輪詢式負載平衡、傳輸，以及基本的請求／回應循環。OpenSearch.Net 包含所有 OpenSearch API 端點的方法。
 
-[OpenSearch.Client]({{site.url}}{{site.baseurl}}/clients/OSC-dot-net/) is a high-level .NET client on top of OpenSearch.Net. It provides strongly typed requests and responses as well as Query DSL. It frees you from constructing raw JSON requests and parsing raw JSON responses by supplying models that parse and serialize/deserialize requests and responses automatically. OpenSearch.Client also exposes the OpenSearch.Net low-level client if you need it. OpenSearch.Client includes the following advanced functionality:
+[OpenSearch.Client]({{site.url}}{{site.baseurl}}/clients/OSC-dot-net/) 是建構於 OpenSearch.Net 之上的高階 .NET 用戶端。它提供強型別的請求和回應，以及 Query DSL。它提供可自動解析與序列化／還原序列化請求和回應的模型，讓您不必自行建構原始 JSON 請求和解析原始 JSON 回應。如有需要，OpenSearch.Client 也會公開 OpenSearch.Net 低階用戶端。OpenSearch.Client 包含下列進階功能：
 
-- Automapping: Given a C# type, OpenSearch.Client can infer the correct mapping to send to OpenSearch.
-- Operator overloading in queries.
-- Type and index inference.
+- 自動對應：給定 C# 類型，OpenSearch.Client 可推斷要傳送至 OpenSearch 的正確對應。
+- 查詢中的運算子多載。
+- 類型和索引推斷。
 
-You can use both .NET clients in a console program, a .NET Core application, an ASP.NET Core application, or a worker service.
+您可以在主控台程式、.NET Core 應用程式、ASP.NET Core 應用程式或背景工作服務中使用這兩個 .NET 用戶端。
 
-To get started with OpenSearch.Client, follow the instructions in [Getting started with the high-level .NET client]({{site.url}}{{site.baseurl}}/clients/OSC-dot-net#installing-opensearchclient) or in [More advanced features of the high-level .NET client]({{site.url}}{{site.baseurl}}/clients/OSC-example/), a slightly more advanced walkthrough.
+若要開始使用 OpenSearch.Client，請依照[高階 .NET 用戶端入門]({{site.url}}{{site.baseurl}}/clients/OSC-dot-net#installing-opensearchclient)或[高階 .NET 用戶端的更多進階功能]({{site.url}}{{site.baseurl}}/clients/OSC-example/)中的指示操作，後者是稍微更進階的逐步解說。
 
-## Compatibility
+## 相容性
 
-The following table lists the OpenSearch.Client and OpenSearch.Net versions that are compatible with each OpenSearch version.
+下表列出與各 OpenSearch 版本相容的 OpenSearch.Client 和 OpenSearch.Net 版本。
 
-| OpenSearch version | Client version |
+| OpenSearch 版本 | 用戶端版本 |
 |:---|:---|
 | 1.x | 1.0.0, 1.1.0 |
-| 2.x | 1.1.0 or later |
-| 3.x | 2.0.0 or later |
+| 2.x | 1.1.0 或更新版本 |
+| 3.x | 2.0.0 或更新版本 |
 
-The 2.x clients support .NET 8 or later and .NET Framework 4.7.2 or later. Both clients target .NET Standard 2.0 and .NET Standard 2.1. OpenSearch.Net and OpenSearch.Net.Auth.AwsSigV4 also target .NET 8 and .NET 10.
+2.x 用戶端支援 .NET 8 或更新版本，以及 .NET Framework 4.7.2 或更新版本。這兩個用戶端都以 .NET Standard 2.0 和 .NET Standard 2.1 為目標。OpenSearch.Net 和 OpenSearch.Net.Auth.AwsSigV4 也以 .NET 8 和 .NET 10 為目標。
 
-For the latest compatibility information, see the [`COMPATIBILITY.md`](https://github.com/opensearch-project/opensearch-net/blob/main/COMPATIBILITY.md) file in the client repository. For information about breaking changes between client versions, see the [upgrading guide](https://github.com/opensearch-project/opensearch-net/blob/main/UPGRADING.md).
+如需最新的相容性資訊，請參閱用戶端儲存庫中的 [`COMPATIBILITY.md`](https://github.com/opensearch-project/opensearch-net/blob/main/COMPATIBILITY.md) 檔案。如需用戶端版本之間重大變更的資訊，請參閱[升級指南](https://github.com/opensearch-project/opensearch-net/blob/main/UPGRADING.md)。

@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Elision
 parent: Token filters
 nav_order: 130
 ---
 
-# Elision token filter
+# Elision 詞元篩選器
 
-The `elision` token filter is used to remove elided characters from words in certain languages. Elision typically occurs in languages such as French, in which words are often contracted and combined with the following word, typically by omitting a vowel and replacing it with an apostrophe. 
+`elision` 詞元篩選器用於移除特定語言中單字的省略字元。省略 (elision) 通常出現在法文等語言中，這類語言的單字經常會縮寫並與後續單字結合，通常是省略一個母音，並以撇號取代。
 
-The `elision` token filter is already preconfigured in the following [language analyzers]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/): `catalan`, `french`, `irish`, and `italian`.
+`elision` 詞元篩選器已預先設定於下列[語言分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/)中：`catalan`、`french`、`irish` 和 `italian`。
 {: .note}
 
-## Parameters
+## 參數
 
-The custom `elision` token filter can be configured with the following parameters.
+自訂 `elision` 詞元篩選器可使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`articles` | Required if `articles_path` is not configured | Array of strings | Defines which articles or short words should be removed when they appear as part of an elision.
-`articles_path` | Required if `articles` is not configured | String | Specifies the path to a custom list of articles that should be removed during the analysis process. 
-`articles_case` | Optional | Boolean | Specifies whether the filter is case sensitive when matching elisions. Default is `false`.
+`articles` | 若未設定 `articles_path` 則為必要 | 字串陣列 | 定義當冠詞或短字作為省略的一部分出現時，應移除哪些冠詞或短字。
+`articles_path` | 若未設定 `articles` 則為必要 | 字串 | 指定自訂冠詞清單的路徑，清單中的冠詞會在分析過程中移除。
+`articles_case` | 選用 | 布林值 | 指定篩選器在比對省略時是否區分大小寫。預設為 `false`。
 
-## Example
+## 範例
 
-The default set of French elisions is `l'`, `m'`, `t'`, `qu'`, `n'`, `s'`, `j'`, `d'`, `c'`, `jusqu'`, `quoiqu'`, `lorsqu'`, and `puisqu'`. You can update this by configuring the `french_elision` token filter. The following example request creates a new index named `french_texts` and configures an analyzer with a `french_elision` filter:
+預設的法文省略集合為 `l'`、`m'`、`t'`、`qu'`、`n'`、`s'`、`j'`、`d'`、`c'`、`jusqu'`、`quoiqu'`、`lorsqu'` 和 `puisqu'`。您可以透過設定 `french_elision` 詞元篩選器來更新此集合。下列範例請求會建立名為 `french_texts` 的新索引，並設定一個使用 `french_elision` 篩選器的分析器：
 
 ```json
 PUT /french_texts
@@ -59,9 +60,9 @@ PUT /french_texts
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 POST /french_texts/_analyze
@@ -72,7 +73,7 @@ POST /french_texts/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

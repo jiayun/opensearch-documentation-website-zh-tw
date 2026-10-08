@@ -1,144 +1,145 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using dashboard variables
+title: "使用儀表板變數"
 parent: Dashboard variables
 grand_parent: Creating visualizations using queries
 great_grand_parent: Building data visualizations
 nav_order: 20
 ---
 
-# Using dashboard variables
+# 使用儀表板變數
 
-You can reference dashboard variables in queries in the visualization editor to create dynamic, interactive dashboards.
+您可以在視覺化編輯器的查詢中參照儀表板變數，以建立動態的互動式儀表板。
 
-## Variable syntax
+## 變數語法
 
-Dashboard variables can be referenced in queries using the following syntax options.
+您可以使用下列語法選項，在查詢中參照儀表板變數。
 
-### Basic syntax
+### 基本語法
 
-Use `$variableName` for most cases:
+大多數情況請使用 `$variableName`：
 
 ```sql
 source=logs | where service='$service' | stats count() by region
 ```
 {% include copy.html %}
 
-### Braced syntax
+### 大括號語法
 
-Use `${variableName}` when the variable name is followed by other characters without white space:
+當變數名稱後方緊接其他字元且沒有空白時，請使用 `${variableName}`：
 
 ```sql
 source = logs | where ${env}_level = "error"
 ```
 {% include copy.html %}
 
-Braced syntax ensures that the variable name is properly delimited. Without braces, `$env_level` is interpreted as a variable named `env_level` instead of `env`.
+大括號語法可確保變數名稱正確分隔。若未使用大括號，`$env_level` 會被解譯為名為 `env_level` 的變數，而非 `env`。
 
-## Using variables in queries
+## 在查詢中使用變數
 
-Dashboard variables support Piped Processing Language (PPL) and Prometheus Query Language (PromQL). The following examples use PPL.
+儀表板變數支援 Piped Processing Language (PPL) 和 Prometheus Query Language (PromQL)。下列範例使用 PPL。
 
-#### Single-value variable for filtering
+#### 用於篩選的單值變數
 
-The following query filters logs by a single-value variable:
+下列查詢會依單值變數篩選記錄檔：
 
 ```sql
 source=logs | where service='$service' | stats count() by status_code
 ```
 {% include copy.html %}
 
-When `service` is set to `api`, the query resolves to:
+當 `service` 設為 `api` 時，查詢會解析為：
 
 ```sql
 source=logs | where service='api' | stats count() by status_code
 ```
 
-#### Multi-value variable for filtering
+#### 用於篩選的多值變數
 
-The following query filters logs by a multi-value variable:
+下列查詢會依多值變數篩選記錄檔：
 
 ```sql
 source=logs | where region IN $region | stats count() by service
 ```
 {% include copy.html %}
 
-When `region` has multiple values selected (`us-east`, `us-west`), the query resolves to:
+當 `region` 選取了多個值（`us-east`、`us-west`）時，查詢會解析為：
 
 ```sql
 source=logs | where region IN ('us-east', 'us-west') | stats count() by service
 ```
 
-#### Multi-value with numbers
+#### 數值的多值變數
 
-When a query variable's options are detected as numeric or Boolean values, multi-values are formatted without quotes:
+當查詢變數的選項被偵測為數值或布林值時，多個值的格式不會加上引號：
 
 ```sql
 source=logs | where status_code IN $status | stats count()
 ```
 {% include copy.html %}
 
-When `status` has multiple numeric values selected, the query resolves to:
+當 `status` 選取了多個數值時，查詢會解析為：
 
 ```sql
 source=logs | where status_code IN (200, 404, 500) | stats count()
 ```
 
-#### Variable for grouping dimension
+#### 用於分組維度的變數
 
-The following query uses a variable to control the grouping dimension:
+下列查詢使用變數來控制分組維度：
 
 ```sql
 source=logs | stats count() by `$group_by`
 ```
 {% include copy.html %}
 
-When `group_by` is set to `region`, the query resolves to:
+當 `group_by` 設為 `region` 時，查詢會解析為：
 
 ```sql
 source=logs | stats count() by region
 ```
 
-#### Variable for time interval
+#### 用於時間間隔的變數
 
-The following query uses a variable to control the time interval:
+下列查詢使用變數來控制時間間隔：
 
 ```sql
 source=logs | stats count() by span(timestamp, $interval)
 ```
 {% include copy.html %}
 
-When `interval` is set to `5m`, the query resolves to:
+當 `interval` 設為 `5m` 時，查詢會解析為：
 
 ```sql
 source=logs | stats count() by span(timestamp, 5m)
 ```
 
-#### Variable for metric calculation
+#### 用於指標計算的變數
 
-The following query uses a variable to control which metric is calculated:
+下列查詢使用變數來控制要計算的指標：
 
 ```sql
 source=metrics | stats avg($metric) by service
 ```
 {% include copy.html %}
 
-When `metric` is set to `response_time`, the query resolves to:
+當 `metric` 設為 `response_time` 時，查詢會解析為：
 
 ```sql
 source=metrics | stats avg(response_time) by service
 ```
 
-### Multi-value variable formatting
+### 多值變數格式
 
-When a variable allows multiple selections, values are automatically formatted based on the query language.
+當變數允許多重選取時，系統會根據查詢語言自動格式化各個值。
 
 <table>
   <thead>
     <tr>
-      <th>Query language</th>
-      <th>String values</th>
-      <th>Numeric or Boolean values</th>
+      <th>查詢語言</th>
+      <th>字串值</th>
+      <th>數值或布林值</th>
     </tr>
   </thead>
   <tbody>
@@ -153,77 +154,77 @@ When a variable allows multiple selections, values are automatically formatted b
       <td><code>(value1|value2)</code></td>
     </tr>
     <tr>
-      <td>Other</td>
+      <td>其他</td>
       <td><code>value1, value2</code></td>
       <td><code>value1, value2</code></td>
     </tr>
   </tbody>
 </table>
 
-### Autocomplete suggestions
+### 自動完成建議
 
-Query editors in OpenSearch Dashboards provide autocomplete suggestions for dashboard variables.
+OpenSearch Dashboards 中的查詢編輯器會為儀表板變數提供自動完成建議。
 
-1. In the query editor, type `$`. A dropdown appears showing all available dashboard variables.
-1. Select a variable from the list or continue typing to filter, as shown in the following image.
+1. 在查詢編輯器中輸入 `$`。畫面上會出現下拉式清單，顯示所有可用的儀表板變數。
+1. 從清單中選取變數，或繼續輸入以進行篩選，如下圖所示。
 
-   ![Query editor showing autocomplete dropdown with available dashboard variables]({{site.url}}{{site.baseurl}}/images/dashboard-variables/variable_autocomplete.png)
-1. Press Enter or Tab to insert the variable.
+   ![查詢編輯器顯示含有可用儀表板變數的自動完成下拉式清單]({{site.url}}{{site.baseurl}}/images/dashboard-variables/variable_autocomplete.png)
+1. 按下 Enter 或 Tab 鍵以插入變數。
 
-## Using variables in visualizations
+## 在視覺化中使用變數
 
-Dashboard variables integrate with the OpenSearch Dashboards visualization editor, which provides full support for dashboard variables when editing visualizations from a dashboard.
+儀表板變數與 OpenSearch Dashboards 視覺化編輯器整合；從儀表板編輯視覺化時，視覺化編輯器完整支援儀表板變數。
 
-### Filtering by a variable value
+### 依變數值篩選
 
-Variables can serve as filtering conditions within your visualizations. Instead of applying filters to entire dashboards, embed variables directly into PPL queries to create targeted filtering for specific panels.
+變數可作為視覺化中的篩選條件。您不必將篩選條件套用至整個儀表板，而是可以將變數直接嵌入 PPL 查詢，針對特定面板進行篩選。
 
-To filter a visualization by a variable value, follow these steps:
+若要依變數值篩選視覺化，請依照下列步驟操作：
 
-1. Create a `machine_os` variable:
-   1. In your Observability workspace, select **Dashboards** in the left navigation.
-   1. Open an existing dashboard or select **Create** > **Dashboard** to create a new dashboard. If creating a new dashboard, save it first by entering a title and selecting **Save**.
-   1. At the top of the dashboard, select **Add variable**.
-   1. In the **Name**, enter `machine_os`. In the **Type**, select **Query**. In the **Options Query**, select `opensearch_dashboards_sample_data_logs`. In the query box, enter the following query:
+1. 建立 `machine_os` 變數：
+   1. 在您的 Observability 工作區中，選取左側導覽列中的 **Dashboards**。
+   1. 開啟現有的儀表板，或選取 **Create** > **Dashboard** 以建立新的儀表板。若要建立新的儀表板，請先輸入標題並選取 **Save** 加以儲存。
+   1. 在儀表板頂端選取 **Add variable**。
+   1. 在 **Name** 中輸入 `machine_os`。在 **Type** 中選取 **Query**。在 **Options Query** 中選取 `opensearch_dashboards_sample_data_logs`。在查詢方塊中輸入下列查詢：
    
       ```sql
       | FIELDS `machine.os`
       ```
       {% include copy.html %}
-   1. Select **Preview** and make sure that you see values such as `win 8`, `ios`, and `win xp` in the **Preview of values**. Then select **Add variable** to save.
+   1. 選取 **Preview**，並確認 **Preview of values** 中顯示 `win 8`、`ios` 和 `win xp` 等值。接著選取 **Add variable** 以儲存。
 
 
-1. Filter by a variable value:
-   1. Open a new visualization editor by selecting **Create new** in the dashboard and then selecting **Add visualization**. 
-   1. In the time filter, select **Last 30 days**.
-   1. In the query box, enter the following query:
+1. 依變數值篩選：
+   1. 在儀表板中選取 **Create new**，然後選取 **Add visualization**，以開啟新的視覺化編輯器。 
+   1. 在時間篩選器中選取 **Last 30 days**。
+   1. 在查詢方塊中輸入下列查詢：
 
    ```sql
    | WHERE `machine.os` = '${machine_os}' | STATS avg(memory) BY span(`@timestamp`, 1d) 
    ```
    {% include copy.html %}
 
-   To filter the visualization by `machine_os` values, select the value in the `machine_os` dropdown list (for example, select `win 8`), as shown in the following image.
+   若要依 `machine_os` 值篩選視覺化，請在 `machine_os` 下拉式清單中選取值（例如選取 `win 8`），如下圖所示。
 
-   ![Visualization editor showing average memory over time filtered by machine_os set to win 8]({{site.url}}{{site.baseurl}}/images/dashboard-variables/filter_case_variable.png)
+   ![視覺化編輯器顯示依 machine_os 設為 win 8 篩選後的平均記憶體隨時間變化]({{site.url}}{{site.baseurl}}/images/dashboard-variables/filter_case_variable.png)
    
-### Selecting a metric dynamically
+### 動態選取指標
 
-Use a variable to control which field is used in an aggregation. This lets you switch between metrics (for example, `memory` and `bytes`) without editing the query.
+使用變數來控制彙總中使用的欄位。如此一來，您無需編輯查詢，即可在不同指標之間切換（例如 `memory` 和 `bytes`）。
 
-To select a metric dynamically, follow these steps:
+若要動態選取指標，請依照下列步驟操作：
 
-1. Create a `log_metric` variable:
-   1. In your Observability workspace, select **Dashboards** in the left navigation.
-   1. Open an existing dashboard or select **Create** > **Dashboard** to create a new dashboard. If creating a new dashboard, save it first by entering a title and selecting **Save**.
-   1. At the top of the dashboard, select **Add variable**.
-   1. In the **Name**, enter `log_metric`. In the **Type**, select **Custom**. In the **Custom options**, enter `memory` and press **Enter** to add. Then enter `bytes` and press **Enter** to add. 
-   1. Select **Add variable** to save.
+1. 建立 `log_metric` 變數：
+   1. 在您的 Observability 工作區中，選取左側導覽列中的 **Dashboards**。
+   1. 開啟現有的儀表板，或選取 **Create** > **Dashboard** 以建立新的儀表板。若要建立新的儀表板，請先輸入標題並選取 **Save** 加以儲存。
+   1. 在儀表板頂端選取 **Add variable**。
+   1. 在 **Name** 中輸入 `log_metric`。在 **Type** 中選取 **Custom**。在 **Custom options** 中輸入 `memory`，然後按下 **Enter** 新增。接著輸入 `bytes`，然後按下 **Enter** 新增。 
+   1. 選取 **Add variable** 以儲存。
 
-1. Use the variable in a visualization:
-   1. Open a new visualization editor by selecting **Create new** in the dashboard and then selecting **Add visualization**. 
-   1. In the time filter, select **Last 30 days**.
-   1. In the query box, enter the following query:
+1. 在視覺化中使用變數：
+   1. 在儀表板中選取 **Create new**，然後選取 **Add visualization**，以開啟新的視覺化編輯器。 
+   1. 在時間篩選器中選取 **Last 30 days**。
+   1. 在查詢方塊中輸入下列查詢：
 
       ```sql
       source=opensearch_dashboards_sample_data_logs
@@ -231,108 +232,108 @@ To select a metric dynamically, follow these steps:
       ```
       {% include copy.html %}
 
-   To switch between metrics, select a value in the `log_metric` dropdown list (for example, select `memory` or `bytes`).
+   若要在不同指標之間切換，請在 `log_metric` 下拉式清單中選取值（例如選取 `memory` 或 `bytes`）。
 
-   ![Visualization editor showing average memory over time with the log_metric variable set to memory]({{site.url}}{{site.baseurl}}/images/dashboard-variables/metrics_case_variable.png)
+   ![視覺化編輯器顯示 log_metric 變數設為 memory 時的平均記憶體隨時間變化]({{site.url}}{{site.baseurl}}/images/dashboard-variables/metrics_case_variable.png)
 
-### Changing time intervals dynamically
+### 動態變更時間間隔
 
-Use a variable to let dashboard viewers switch between time aggregation intervals (for example, `1h`, `6h`, or `1d`) without editing the query.
+使用變數，讓儀表板檢視者無須編輯查詢，即可在不同的時間彙總間隔之間切換（例如 `1h`、`6h` 或 `1d`）。
 
-To change time intervals dynamically, follow these steps:
+若要動態變更時間間隔，請依照下列步驟操作：
 
-1. Create an `interval` variable:
-   1. In your Observability workspace, select **Dashboards** in the left navigation.
-   1. Open an existing dashboard or select **Create** > **Dashboard** to create a new dashboard. If creating a new dashboard, save it first by entering a title and selecting **Save**.
-   1. At the top of the dashboard, select **Add variable**.
-   1. In the **Name**, enter `interval`. In the **Type**, select **Custom**. In the **Custom options**, enter `1d` and press **Enter** to add. Repeat for `12h`, `6h`, and `1h`.
-   1. Select **Add variable** to save.
+1. 建立 `interval` 變數：
+   1. 在您的 Observability 工作區中，於左側導覽列選取 **Dashboards**。
+   1. 開啟現有的儀表板，或選取 **Create** > **Dashboard** 以建立新的儀表板。若要建立新的儀表板，請先輸入標題並選取 **Save** 加以儲存。
+   1. 在儀表板頂端，選取 **Add variable**。
+   1. 在 **Name** 中輸入 `interval`。在 **Type** 中選取 **Custom**。在 **Custom options** 中輸入 `1d`，然後按 **Enter** 加入。對 `12h`、`6h` 和 `1h` 重複此步驟。
+   1. 選取 **Add variable** 以儲存。
 
-1. Use the variable in a visualization:
-   1. Open a new visualization editor by selecting **Create new** in the dashboard and then selecting **Add visualization**.
-   1. In the time filter, select **Last 30 days**.
-   1. In the query box, enter the following query:
+1. 在視覺化中使用變數：
+   1. 在儀表板中選取 **Create new**，然後選取 **Add visualization**，以開啟新的視覺化編輯器。
+   1. 在時間篩選器中，選取 **Last 30 days**。
+   1. 在查詢方塊中，輸入下列查詢：
 
       ```sql
       source=opensearch_dashboards_sample_data_logs | stats AVG(`bytes`) as avg_bytes, MAX(`bytes`) as max_bytes by span(`timestamp`, $interval)
       ```
       {% include copy.html %}
 
-   To switch between intervals, select a value in the `interval` dropdown list (for example, select `6h`) and select **Update**. The visualization reflects the selected time bucketing, as shown in the following image.
+   若要在不同間隔之間切換，請在 `interval` 下拉式清單中選取一個值（例如選取 `6h`），然後選取 **Update**。視覺化會反映所選的時間分桶方式，如下圖所示。
 
-   ![Visualization editor showing avg_bytes and max_bytes over time with the interval variable set to 1d]({{site.url}}{{site.baseurl}}/images/dashboard-variables/interval_case_variable.png)
+   ![視覺化編輯器顯示 avg_bytes 和 max_bytes 隨時間的變化，interval 變數設為 1d]({{site.url}}{{site.baseurl}}/images/dashboard-variables/interval_case_variable.png)
 
-### Changing aggregation functions dynamically
+### 動態變更彙總函式
 
-Use a variable to let dashboard viewers switch between aggregation functions (for example, `avg`, `max`, or `min`) without editing the query.
+使用變數，讓儀表板檢視者無須編輯查詢，即可在不同的彙總函式之間切換（例如 `avg`、`max` 或 `min`）。
 
-To change aggregation functions dynamically, follow these steps:
+若要動態變更彙總函式，請依照下列步驟操作：
 
-1. Create a `function` variable:
-   1. In your Observability workspace, select **Dashboards** in the left navigation.
-   1. Open an existing dashboard or select **Create** > **Dashboard** to create a new dashboard. If creating a new dashboard, save it first by entering a title and selecting **Save**.
-   1. At the top of the dashboard, select **Add variable**.
-   1. In the **Name**, enter `function`. In the **Type**, select **Custom**. In the **Custom options**, enter `avg` and press **Enter** to add. Repeat for `max` and `min`.
-   1. Select **Add variable** to save.
+1. 建立 `function` 變數：
+   1. 在您的 Observability 工作區中，於左側導覽列選取 **Dashboards**。
+   1. 開啟現有的儀表板，或選取 **Create** > **Dashboard** 以建立新的儀表板。若要建立新的儀表板，請先輸入標題並選取 **Save** 加以儲存。
+   1. 在儀表板頂端，選取 **Add variable**。
+   1. 在 **Name** 中輸入 `function`。在 **Type** 中選取 **Custom**。在 **Custom options** 中輸入 `avg`，然後按 **Enter** 加入。對 `max` 和 `min` 重複此步驟。
+   1. 選取 **Add variable** 以儲存。
 
-1. Use the variable in a visualization:
-   1. Open a new visualization editor by selecting **Create new** in the dashboard and then selecting **Add visualization**.
-   1. In the time filter, select **Last 30 days**.
-   1. In the query box, enter the following query:
+1. 在視覺化中使用變數：
+   1. 在儀表板中選取 **Create new**，然後選取 **Add visualization**，以開啟新的視覺化編輯器。
+   1. 在時間篩選器中，選取 **Last 30 days**。
+   1. 在查詢方塊中，輸入下列查詢：
 
       ```sql
       | STATS ${function}(memory) BY span(`@timestamp`, 1d)
       ```
       {% include copy.html %}
 
-   To switch between functions, select a value in the `function` dropdown list (for example, select `max`) and select **Update**. The visualization reflects the selected aggregation function, as shown in the following image.
+   若要在不同函式之間切換，請在 `function` 下拉式清單中選取一個值（例如選取 `max`），然後選取 **Update**。視覺化會反映所選的彙總函式，如下圖所示。
 
-   ![Visualization editor showing average memory over time with the function variable set to avg]({{site.url}}{{site.baseurl}}/images/dashboard-variables/function_case_variable.png)
+   ![視覺化編輯器顯示平均記憶體隨時間的變化，function 變數設為 avg]({{site.url}}{{site.baseurl}}/images/dashboard-variables/function_case_variable.png)
 
-## Cascading and cross-panel variables
+## 串聯變數與跨面板變數
 
-The following sections describe advanced variable use cases.
+下列章節說明進階的變數使用案例。
 
-### Cascading variables
+### 串聯變數
 
-Create dependent variables for which one variable filters the options of another. For example, select a region first, then select from services available in that region.
+建立相依變數，讓一個變數篩選另一個變數的選項。例如，先選取區域，再從該區域中可用的服務進行選取。
 
-Create a `region` variable:
+建立 `region` 變數：
 
 ```sql
 source=logs | dedup region | fields region
 ```
 {% include copy.html %}
 
-Create a `service` variable that references `region`:
+建立參照 `region` 的 `service` 變數：
 
 ```sql
 source=logs | where region='$region' | dedup service | fields service
 ```
 {% include copy.html %}
 
-When the `region` value changes, the `service` variable automatically refreshes its options to show only services in the selected region.
+當 `region` 的值變更時，`service` 變數會自動重新整理其選項，僅顯示所選區域中的服務。
 
-### Cross-panel filtering
+### 跨面板篩選
 
-Use a single variable to filter multiple visualizations simultaneously. For example, create a `service` variable and reference it in multiple visualization editors.
+使用單一變數同時篩選多個視覺化。例如，建立 `service` 變數，並在多個視覺化編輯器中參照該變數。
 
-Visualization editor 1 (request count by service):
+視覺化編輯器 1（依服務統計的請求數）：
 
 ```sql
 source=logs | where service='$service' | stats count() by status_code
 ```
 {% include copy.html %}
 
-Visualization editor 2 (response time by service):
+視覺化編輯器 2（依服務統計的回應時間）：
 
 ```sql
 source=metrics | where service='$service' | stats avg(response_time)
 ```
 {% include copy.html %}
 
-Changing the `service` variable value updates both visualization editors at once.
+變更 `service` 變數的值，會同時更新這兩個視覺化編輯器。
 
-## Next steps
+## 後續步驟
 
-- [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)
+- [建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)

@@ -1,88 +1,89 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Availability and recovery settings
+title: "可用性與復原設定"
 parent: Configuring OpenSearch
 nav_order: 100
 ---
 
-# Availability and recovery settings
+# 可用性與復原設定
 
-Availability and recovery settings include settings for the following:
+可用性與復原設定包含下列項目的設定：
 
-- [General recovery settings](#general-recovery-settings)
-- [Snapshots](#snapshot-settings)
-- [Cluster manager task throttling](#cluster-manager-task-throttling-settings)
-- [Remote-backed storage](#remote-backed-storage-settings)
-- [Search backpressure](#search-backpressure-settings)
-- [Concurrency limits](#concurrency-limit-settings)
-- [Shard indexing backpressure](#shard-indexing-backpressure-settings)
-- [Segment replication](#segment-replication-settings)
-- [Cross-cluster replication](#cross-cluster-replication-settings)
+- [一般復原設定](#general-recovery-settings)
+- [快照](#snapshot-settings)
+- [叢集管理員任務節流](#cluster-manager-task-throttling-settings)
+- [遠端支援儲存空間](#remote-backed-storage-settings)
+- [搜尋背壓](#search-backpressure-settings)
+- [並行限制](#concurrency-limit-settings)
+- [分片索引背壓](#shard-indexing-backpressure-settings)
+- [區段複寫](#segment-replication-settings)
+- [跨叢集複寫](#cross-cluster-replication-settings)
 
-To learn how to apply these settings, see [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/).
+若要了解如何套用這些設定，請參閱[設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/)。
 
-## General recovery settings
+## 一般復原設定
 
-OpenSearch supports the following general recovery settings:
+OpenSearch 支援下列一般復原設定：
 
-- `indices.recovery.chunk_size` (Dynamic, byte unit): Controls the chunk size used when transferring data during index recovery operations. This setting affects the amount of data transferred in each network request during shard recovery. Larger chunk sizes can improve recovery speed but may increase memory usage. Default is `512kb`.
+- `indices.recovery.chunk_size`（動態，位元組單位）：控制索引復原作業期間傳輸資料時所使用的區塊大小。此設定會影響分片復原期間每個網路請求所傳輸的資料量。較大的區塊大小可以提升復原速度，但可能會增加記憶體使用量。預設值為 `512kb`。
 
-- `indices.recovery.recovery_activity_timeout` (Dynamic, time unit): Sets the timeout for individual recovery activities during shard recovery operations. If a recovery activity (such as transferring a file chunk) takes longer than this timeout, the recovery operation is considered failed and will be retried. Default is `30m`.
+- `indices.recovery.recovery_activity_timeout`（動態，時間單位）：設定分片復原作業期間個別復原活動的逾時時間。若復原活動（例如傳輸檔案區塊）所花費的時間超過此逾時時間，該復原作業即視為失敗並會重試。預設值為 `30m`。
 
-## Snapshot settings
+## 快照設定
 
-OpenSearch supports the following snapshot settings:
+OpenSearch 支援下列快照設定：
 
-- `snapshot.max_concurrent_operations` (Dynamic, integer): The maximum number of concurrent snapshot operations. Default is `1000`.
+- `snapshot.max_concurrent_operations`（動態，整數）：並行快照作業的數量上限。預設值為 `1000`。
 
-- `snapshot.repository_data.cache.threshold` (Static, byte size value or percentage): The maximum size of repository metadata that can be cached in memory. This setting improves snapshot operation performance by reducing the need to repeatedly download metadata during clone, restore, and status check operations. You can specify this value as an absolute size (for example, `2gb` or `500mb`) or as a percentage of heap memory (for example, `3%` or `1%`). Metadata that exceeds this threshold is not cached. Under heap memory pressure, cached data may be garbage collected automatically because it is stored using soft references. Default is 500 KB or 1% of heap memory, whichever is higher. 
+- `snapshot.repository_data.cache.threshold`（靜態，位元組大小值或百分比）：可快取於記憶體中的儲存庫中繼資料大小上限。此設定可減少在複製、還原和狀態檢查作業期間重複下載中繼資料的需求，藉此提升快照作業效能。您可以將此值指定為絕對大小（例如 `2gb` 或 `500mb`），或指定為堆積記憶體的百分比（例如 `3%` 或 `1%`）。超過此閾值的中繼資料不會被快取。由於快取資料是以軟參考 (soft reference) 儲存，因此在堆積記憶體壓力下，快取資料可能會被自動進行垃圾回收。預設值為 500 KB 或堆積記憶體的 1%，以較高者為準。
 
-### Security-related snapshot settings
+### 安全性相關快照設定
 
-For security-related snapshot settings, see [Security settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/security-settings/).
+如需安全性相關快照設定，請參閱[安全性設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/security-settings/)。
 
-### Shared file system
+### 共用檔案系統
 
-For information about using a shared file system, see [Shared file system]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/#shared-file-system).
+如需使用共用檔案系統的相關資訊，請參閱[共用檔案系統]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/#shared-file-system)。
 
-### Amazon S3 settings
+### Amazon S3 設定
 
-For information about Amazon S3 repository settings, see [Amazon S3]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/#amazon-s3).
+如需 Amazon S3 儲存庫設定的相關資訊，請參閱 [Amazon S3]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/#amazon-s3)。
 
-## Cluster manager task throttling settings
+## 叢集管理員任務節流設定
 
-For information about cluster manager task throttling settings, see [Setting throttling limits]({{site.url}}{{site.baseurl}}/tuning-your-cluster/cluster-manager-task-throttling/#setting-throttling-limits).
+如需叢集管理員任務節流設定的相關資訊，請參閱[設定節流限制]({{site.url}}{{site.baseurl}}/tuning-your-cluster/cluster-manager-task-throttling/#setting-throttling-limits)。
 
-## Remote-backed storage settings
+## 遠端支援儲存空間設定
 
-OpenSearch supports the following cluster-level remote-backed storage settings:
+OpenSearch 支援下列叢集層級的遠端支援儲存空間設定：
 
-- `cluster.remote_store.translog.buffer_interval` (Dynamic, time unit): The default value of the translog buffer interval used when performing periodic translog updates. This setting is only effective when the index setting `index.remote_store.translog.buffer_interval` is not present. 
+- `cluster.remote_store.translog.buffer_interval`（動態，時間單位）：執行定期 translog 更新時所使用的 translog 緩衝區間隔預設值。只有在索引設定 `index.remote_store.translog.buffer_interval` 不存在時，此設定才會生效。
 
-For more remote-backed storage settings, see [Remote-backed storage]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/index/) and [Configuring remote-backed storage]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/index/#configuring-remote-backed-storage).
+如需更多遠端支援儲存空間設定，請參閱[遠端支援儲存空間]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/index/)和[設定遠端支援儲存空間]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/index/#configuring-remote-backed-storage)。
 
-For remote segment backpressure settings, see [Remote segment backpressure settings]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-segment-backpressure/#remote-segment-backpressure-settings).
+如需遠端區段背壓設定，請參閱[遠端區段背壓設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-segment-backpressure/#remote-segment-backpressure-settings)。
 
-For remote segment warmer settings, see [Remote segment warmer settings]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-segment-warmer/#remote-segment-warmer-settings).
+如需遠端區段預熱設定，請參閱[遠端區段預熱設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-segment-warmer/#remote-segment-warmer-settings)。
 
-## Search backpressure settings
+## 搜尋背壓設定
 
-Search backpressure is a mechanism used to identify resource-intensive search requests and cancel them when the node is under duress. For more information, see [Search backpressure settings]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/search-backpressure/#search-backpressure-settings).
+搜尋背壓是一種機制，用於識別耗用大量資源的搜尋請求，並在節點承受壓力時取消這些請求。如需詳細資訊，請參閱[搜尋背壓設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/search-backpressure/#search-backpressure-settings)。
 
-## Concurrency limit settings
+## 並行限制設定
 
-Concurrency limits adaptively restrict the number of active requests for any transport action. For more information, see [Concurrency limit settings]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/concurrency-limits/#concurrency-limit-settings).
+並行限制會以自適應方式限制任何傳輸動作的作用中請求數量。如需詳細資訊，請參閱[並行限制設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/concurrency-limits/#concurrency-limit-settings)。
 
-## Shard indexing backpressure settings
+## 分片索引背壓設定
 
-Shard indexing backpressure is a smart rejection mechanism at a per-shard level that dynamically rejects indexing requests when your cluster is under strain. For more information, see shard indexing backpressure [settings]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/shard-indexing-settings/).
+分片索引背壓是一種以個別分片為層級的智慧拒絕機制，會在叢集負載過重時動態拒絕編製索引請求。如需詳細資訊，請參閱分片索引背壓[設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/shard-indexing-settings/)。
 
-## Segment replication settings
+## 區段複寫設定
 
-For information about segment replication settings, see [Segment replication]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/segment-replication/index/).
+如需區段複寫設定的相關資訊，請參閱[區段複寫]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/segment-replication/index/)。
 
-For information about segment replication backpressure settings, see [Segment replication backpressure]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/segment-replication/backpressure/).
+如需區段複寫背壓設定的相關資訊，請參閱[區段複寫背壓]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/segment-replication/backpressure/)。
 
-## Cross-cluster replication settings
+## 跨叢集複寫設定
 
-For information about cross-cluster replication settings, see [Replication settings]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/settings/).
+如需跨叢集複寫設定的相關資訊，請參閱[複寫設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/settings/)。

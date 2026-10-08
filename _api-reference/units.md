@@ -1,70 +1,71 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Supported units
+title: "支援的單位"
 nav_order: 150
 redirect_from:
   - /opensearch/units/
 ---
 
-# Supported units
+# 支援的單位
 
-OpenSearch supports the following units for all REST operations.
+OpenSearch 在所有 REST 操作中支援下列單位。
 
-## Time units
+## 時間單位
 
-The following table lists all supported time units.
+下表列出所有支援的時間單位。
 
-Units | Specify as
+單位 | 指定方式
 :--- | :---
-Days | `d`
-Hours | `h`
-Minutes | `m`
-Seconds | `s`
-Milliseconds | `ms`
-Microseconds | `micros`
-Nanoseconds | `nanos`
+天 | `d`
+小時 | `h`
+分鐘 | `m`
+秒 | `s`
+毫秒 | `ms`
+微秒 | `micros`
+奈秒 | `nanos`
 
-## Byte size units
+## 位元組大小單位
 
-The following table lists all supported byte size units. Units are case insensitive. Byte size units are base 2, so `1kb` is equal to 1,024 bytes and `1mb` is equal to 1,048,576 bytes.
+下表列出所有支援的位元組大小單位。單位不區分大小寫。位元組大小單位以 2 為基底，因此 `1kb` 等於 1,024 位元組，`1mb` 等於 1,048,576 位元組。
 
-Units | Specify as
+單位 | 指定方式
 :--- | :---
-Bytes | `b`
-Kibibytes | `kb` or `k`
-Mebibytes | `mb` or `m`
-Gibibytes | `gb` or `g`
-Tebibytes | `tb` or `t`
-Pebibytes | `pb` or `p`
+位元組 | `b`
+二進位千位元組 | `kb` 或 `k`
+二進位百萬位元組 | `mb` 或 `m`
+二進位十億位元組 | `gb` 或 `g`
+二進位兆位元組 | `tb` 或 `t`
+二進位千兆位元組 | `pb` 或 `p`
 
-## Distance units
+## 距離單位
 
-The following table lists all supported distance units.
+下表列出所有支援的距離單位。
 
-Units | Specify as
+單位 | 指定方式
 :--- | :---
-Miles | `mi` or `miles`
-Yards | `yd` or `yards`
-Feet | `ft` or `feet`
-Inches | `in` or `inch`
-Kilometers | `km` or `kilometers`
-Meters | `m` or `meters`
-Centimeters | `cm` or `centimeters`
-Millimeters | `mm` or `millimeters`
-Nautical miles | `NM`, `nmi`, or `nauticalmiles`
+英里 | `mi` 或 `miles`
+碼 | `yd` 或 `yards`
+英尺 | `ft` 或 `feet`
+英吋 | `in` 或 `inch`
+公里 | `km` 或 `kilometers`
+公尺 | `m` 或 `meters`
+公分 | `cm` 或 `centimeters`
+公釐 | `mm` 或 `millimeters`
+海浬 | `NM`、`nmi` 或 `nauticalmiles`
 
-## Quantities without units
+## 無單位的數量
 
-For large values that don't have a unit, such as document counts, use the following suffixes. For example, `5k` is equal to 5,000.
+對於沒有單位的大型數值，例如文件數量，請使用下列字尾。例如，`5k` 等於 5,000。
 
-Suffix | Multiplier
+字尾 | 倍數
 :--- | :---
-`k` | Kilo (1,000)
-`m` | Mega (1,000,000)
-`g` | Giga (1,000,000,000)
-`t` | Tera (1,000,000,000,000)
-`p` | Peta (1,000,000,000,000,000)
+`k` | 千（1,000）
+`m` | 百萬（1,000,000）
+`g` | 十億（1,000,000,000）
+`t` | 兆（1,000,000,000,000）
+`p` | 千兆（1,000,000,000,000,000）
 
-## Related documentation
+## 相關文件
 
-- [Common REST parameters]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/)
+- [常用 REST 參數]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/)

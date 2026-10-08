@@ -1,55 +1,56 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Word delimiter graph
+title: "詞彙分隔符圖"
 parent: Token filters
 nav_order: 480
 ---
 
-# Word delimiter graph token filter
+# 詞彙分隔符圖詞元篩選器
 
-The `word_delimiter_graph` token filter is used to splits token on predefined characters and also offers optional token normalization based on customizable rules.
+`word_delimiter_graph` 詞元篩選器用於依預先定義的字元分割詞元，也提供選用的詞元正規化功能，可依自訂規則進行正規化。
 
-The `word_delimiter_graph` filter is used to remove punctuation from complex identifiers like part numbers or product IDs. In such cases, it is best used with the `keyword` tokenizer. For hyphenated words, use the `synonym_graph` token filter instead of the `word_delimiter_graph` filter because users frequently search for these terms both with and without hyphens.
+`word_delimiter_graph` 篩選器用於移除零件編號或產品 ID 等複雜識別碼中的標點符號。在這些情況下，最好搭配 `keyword` 斷詞器使用。對於含有連字號的單字，請使用 `synonym_graph` 詞元篩選器取代 `word_delimiter_graph` 篩選器，因為使用者經常會搜尋含有及不含連字號的這些詞彙。
 {: .note}
 
-By default, the filter applies the following rules.
+依預設，此篩選器會套用下列規則。
 
-| Description   | Input  | Output |
+| 說明   | 輸入  | 輸出 |
 |:---|:---|:---|
-| Treats non-alphanumeric characters as delimiters.  | `ultra-fast`    | `ultra`, `fast`   |
-| Removes delimiters at the beginning or end of tokens.    | `Z99++'Decoder'`| `Z99`, `Decoder`  |
-| Splits tokens when there is a transition between uppercase and lowercase letters. | `OpenSearch`    | `Open`, `Search`  |
-| Splits tokens when there is a transition between letters and numbers.  | `T1000`         | `T`, `1000`   |
-| Removes the possessive ('s) from the end of tokens.  | `John's`        | `John`  |
+| 將非英數字元視為分隔符。  | `ultra-fast`    | `ultra`, `fast`   |
+| 移除詞元開頭或結尾的分隔符。    | `Z99++'Decoder'`| `Z99`, `Decoder`  |
+| 在大寫與小寫字母之間轉換時分割詞元。 | `OpenSearch`    | `Open`, `Search`  |
+| 在字母與數字之間轉換時分割詞元。  | `T1000`         | `T`, `1000`   |
+| 移除詞元結尾的所有格（'s）。  | `John's`        | `John`  |
 
-It's important **not** to use tokenizers that strip punctuation, like the `standard` tokenizer, with this filter. Doing so may prevent proper token splitting and interfere with options like `catenate_all` or `preserve_original`. We recommend using this filter with a `keyword` or `whitespace` tokenizer.
+請務必 **不要** 將會移除標點符號的斷詞器（例如 `standard` 斷詞器）與此篩選器搭配使用。這樣做可能會妨礙詞元正確分割，並干擾 `catenate_all` 或 `preserve_original` 等選項。我們建議將此篩選器與 `keyword` 或 `whitespace` 斷詞器搭配使用。
 {: .important}
 
-## Parameters
+## 參數
 
-You can configure the `word_delimiter_graph` token filter using the following parameters.
+您可以使用下列參數設定 `word_delimiter_graph` 詞元篩選器。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要／選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`adjust_offsets` | Optional | Boolean | Determines whether the token offsets should be recalculated for split or concatenated tokens. When `true`, the filter adjusts the token offsets to accurately represent the token's position within the token stream. This adjustment ensures that the token's location in the text aligns with its modified form after processing, which is particularly useful for applications like highlighting or phrase queries. When `false`, the offsets remain unchanged, which may result in misalignment when the processed tokens are mapped back to their positions in the original text. If your analyzer uses filters like `trim` that change the token lengths without changing their offsets, we recommend setting this parameter to `false`. Default is `true`.
-`catenate_all` | Optional | Boolean | Produces concatenated tokens from a sequence of alphanumeric parts. For example, `"quick-fast-200"` becomes `[ quickfast200, quick, fast, 200 ]`. Default is `false`.
-`catenate_numbers` | Optional | Boolean | Concatenates numerical sequences. For example, `"10-20-30"` becomes `[ 102030, 10, 20, 30 ]`. Default is `false`.
-`catenate_words` | Optional | Boolean | Concatenates alphabetic words. For example, `"high-speed-level"` becomes `[ highspeedlevel, high, speed, level ]`. Default is `false`. 
-`generate_number_parts` | Optional | Boolean | If `true`, numeric tokens (tokens consisting of numbers only) are included in the output. Default is `true`.
-`generate_word_parts` | Optional | Boolean | If `true`, alphabetical tokens (tokens consisting of alphabetic characters only) are included in the output. Default is `true`.
-`ignore_keywords` | Optional | Boolean | Whether to process tokens marked as keywords. Default is `false`.
-`preserve_original` | Optional | Boolean | Keeps the original token (which may include non-alphanumeric delimiters) alongside the generated tokens in the output. For example, `"auto-drive-300"` becomes `[ auto-drive-300, auto, drive, 300 ]`. If `true`, the filter generates multi-position tokens not supported by indexing, so do not use this filter in an index analyzer or use the `flatten_graph` filter after this filter. Default is `false`. 
-`protected_words` | Optional | Array of strings | Specifies tokens that should not be split.
-`protected_words_path` | Optional | String | Specifies a path (absolute or relative to the config directory) to a file containing tokens that should not be separated by new lines.
-`split_on_case_change` | Optional | Boolean | Splits tokens where consecutive letters have different cases (one is lowercase and the other is uppercase). For example, `"OpenSearch"` becomes `[ Open, Search ]`. Default is `true`.
-`split_on_numerics` | Optional | Boolean | Splits tokens where there are consecutive letters and numbers. For example `"v8engine"` will become `[ v, 8, engine ]`. Default is `true`.
-`stem_english_possessive` | Optional | Boolean | Removes English possessive endings, such as `'s`. Default is `true`.
-`type_table` | Optional | Array of strings | A custom map that specifies how to treat characters and whether to treat them as delimiters, which avoids unwanted splitting. For example, to treat a hyphen (`-`) as an alphanumeric character, specify `["- => ALPHA"]` so that words are not split on hyphens. Valid types are: <br> - `ALPHA`: alphabetical <br> - `ALPHANUM`: alphanumeric <br> - `DIGIT`: numeric <br> - `LOWER`: lowercase alphabetical <br> - `SUBWORD_DELIM`: non-alphanumeric delimiter <br> - `UPPER`: uppercase alphabetical
-`type_table_path` | Optional | String | Specifies a path (absolute or relative to the config directory) to a file containing a custom character map. The map specifies how to treat characters and whether to treat them as delimiters, which avoids unwanted splitting. For valid types, see `type_table`.
+`adjust_offsets` | 選用 | 布林值 | 決定是否應重新計算分割或串接後詞元的偏移量。設為 `true` 時，篩選器會調整詞元偏移量，以準確表示詞元在詞元串流中的位置。這項調整可確保詞元在文字中的位置與處理後的修改形式一致，對於醒目提示或片語查詢等應用尤其有用。設為 `false` 時，偏移量會保持不變，因此將處理後的詞元對應回原始文字中的位置時，可能會發生位置不一致的情況。如果您的分析器使用 `trim` 等會變更詞元長度但不變更偏移量的篩選器，我們建議將此參數設為 `false`。預設為 `true`。
+`catenate_all` | 選用 | 布林值 | 將一連串英數部分串接成詞元。例如，`"quick-fast-200"` 會變成 `[ quickfast200, quick, fast, 200 ]`。預設為 `false`。
+`catenate_numbers` | 選用 | 布林值 | 串接數字序列。例如，`"10-20-30"` 會變成 `[ 102030, 10, 20, 30 ]`。預設為 `false`。
+`catenate_words` | 選用 | 布林值 | 串接由字母組成的單字。例如，`"high-speed-level"` 會變成 `[ highspeedlevel, high, speed, level ]`。預設為 `false`。 
+`generate_number_parts` | 選用 | 布林值 | 若為 `true`，輸出會包含數字詞元（僅由數字組成的詞元）。預設為 `true`。
+`generate_word_parts` | 選用 | 布林值 | 若為 `true`，輸出會包含字母詞元（僅由字母字元組成的詞元）。預設為 `true`。
+`ignore_keywords` | 選用 | 布林值 | 是否處理標記為關鍵字的詞元。預設為 `false`。
+`preserve_original` | 選用 | 布林值 | 在輸出中保留原始詞元（可能包含非英數分隔符），並與產生的詞元一併輸出。例如，`"auto-drive-300"` 會變成 `[ auto-drive-300, auto, drive, 300 ]`。若為 `true`，篩選器會產生編製索引時不支援的多位置詞元，因此請勿在索引分析器中使用此篩選器，或在此篩選器之後使用 `flatten_graph` 篩選器。預設為 `false`。 
+`protected_words` | 選用 | 字串陣列 | 指定不應分割的詞元。
+`protected_words_path` | 選用 | 字串 | 指定檔案的路徑（絕對路徑或相對於 config 目錄的路徑），該檔案包含不應以換行分隔的詞元。
+`split_on_case_change` | 選用 | 布林值 | 在相鄰字母的大小寫不同（一個為小寫，另一個為大寫）時分割詞元。例如，`"OpenSearch"` 會變成 `[ Open, Search ]`。預設為 `true`。
+`split_on_numerics` | 選用 | 布林值 | 在字母與數字相鄰時分割詞元。例如，`"v8engine"` 會變成 `[ v, 8, engine ]`。預設為 `true`。
+`stem_english_possessive` | 選用 | 布林值 | 移除英文所有格字尾，例如 `'s`。預設為 `true`。
+`type_table` | 選用 | 字串陣列 | 自訂對應，指定如何處理字元，以及是否將字元視為分隔符，以避免不必要的分割。例如，若要將連字號（`-`）視為英數字元，請指定 `["- => ALPHA"]`，使單字不會在連字號處分割。有效類型為：<br> - `ALPHA`：字母 <br> - `ALPHANUM`：英數字元 <br> - `DIGIT`：數字 <br> - `LOWER`：小寫字母 <br> - `SUBWORD_DELIM`：非英數分隔符 <br> - `UPPER`：大寫字母
+`type_table_path` | 選用 | 字串 | 指定包含自訂字元對應的檔案路徑（絕對路徑或相對於 config 目錄的路徑）。此對應指定如何處理字元，以及是否將字元視為分隔符，以避免不必要的分割。如需有效類型，請參閱 `type_table`。
 
-## Example
+## 範例
 
-The following example request creates a new index named `my-custom-index` and configures an analyzer with a `word_delimiter_graph` filter:
+下列範例請求會建立名為 `my-custom-index` 的新索引，並設定使用 `word_delimiter_graph` 篩選器的分析器：
 
 ```json
 PUT /my-custom-index
@@ -76,9 +77,9 @@ PUT /my-custom-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查分析器產生的詞元：
 
 ```json
 GET /my-custom-index/_analyze
@@ -89,7 +90,7 @@ GET /my-custom-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {
@@ -127,38 +128,38 @@ The response contains the generated tokens:
 ```
 
 <!-- vale off-->
-## Differences between the word_delimiter_graph and word_delimiter filters
+## word_delimiter_graph 與 word_delimiter 篩選器的差異
 <!-- vale on-->
 
-Both the `word_delimiter_graph` and `word_delimiter` token filters generate tokens spanning multiple positions when any of the following parameters are set to `true`:
+當下列任一參數設為 `true` 時，`word_delimiter_graph` 與 `word_delimiter` 詞元篩選器都會產生跨越多個位置的詞元：
 
 - `catenate_all`  
 - `catenate_numbers`  
 - `catenate_words`  
 - `preserve_original`  
 
-To illustrate the differences between these filters, consider the input text `Pro-XT500`.
+若要說明這些篩選器的差異，請考慮輸入文字 `Pro-XT500`。
 
 <!-- vale off-->
 ### word_delimiter_graph
 <!-- vale on-->
 
-The `word_delimiter_graph` filter assigns a `positionLength` attribute to multi-position tokens, indicating how many positions a token spans. This ensures that the filter always generates valid token graphs, making it suitable for use in advanced token graph scenarios. Although token graphs with multi-position tokens are not supported for indexing, they can still be useful in search scenarios. For example, queries like `match_phrase` can use these graphs to generate multiple subqueries from a single input string. For the example input text, the `word_delimiter_graph` filter generates the following tokens:
+`word_delimiter_graph` 篩選器會為多位置詞元指派 `positionLength` 屬性，指出詞元跨越多少個位置。這可確保篩選器始終產生有效的詞元圖，使其適合用於進階詞元圖情境。雖然編製索引時不支援包含多位置詞元的詞元圖，但這些詞元圖仍可用於搜尋情境。例如，`match_phrase` 等查詢可以使用這些詞元圖，從單一輸入字串產生多個子查詢。對於範例輸入文字，`word_delimiter_graph` 篩選器會產生下列詞元：
 
-- `Pro` (position 1)  
-- `XT500` (position 2)  
-- `ProXT500` (position 1, `positionLength`: 2)
+- `Pro`（位置 1）  
+- `XT500`（位置 2）  
+- `ProXT500`（位置 1，`positionLength`：2）
 
-The `positionLength` attribute the production of a valid graph to be used in advanced queries.
+`positionLength` 屬性可確保產生有效的圖，以用於進階查詢。
 
 <!-- vale off-->
 ### word_delimiter
 <!-- vale on-->
 
-In contrast, the `word_delimiter` filter does not assign a `positionLength` attribute to multi-position tokens, leading to invalid graphs when these tokens are present. For the example input text, the `word_delimiter` filter generates the following tokens:
+相較之下，`word_delimiter` 篩選器不會為多位置詞元指派 `positionLength` 屬性，因此存在這些詞元時會產生無效的圖。對於範例輸入文字，`word_delimiter` 篩選器會產生下列詞元：
 
-- `Pro` (position 1)  
-- `XT500` (position 2)  
-- `ProXT500` (position 1, no `positionLength`)
+- `Pro`（位置 1）  
+- `XT500`（位置 2）  
+- `ProXT500`（位置 1，無 `positionLength`）
 
-The lack of a `positionLength` attribute results in a token graph that is invalid for token streams containing multi-position tokens.
+缺少 `positionLength` 屬性會導致包含多位置詞元的詞元串流產生無效的詞元圖。

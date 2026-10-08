@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Debian
 parent: Installing OpenSearch Dashboards
@@ -11,21 +12,21 @@ The following liquid syntax declares a variable, major_version_mask, which is tr
 {% assign version_parts = site.opensearch_major_minor_version | split: "." %}
 {% assign major_version_mask = version_parts[0] | append: ".x" %}
 
-# Installing OpenSearch Dashboards on Debian
+# 在 Debian 上安裝 OpenSearch Dashboards
 
-Installing OpenSearch Dashboards using the Advanced Packaging Tool (APT) package manager simplifies the process considerably compared to the [Tarball]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/tar/) method. For example, the package manager handles several technical considerations, such as the installation path, location of configuration files, and creation of a service managed by `systemd`.
+使用 Advanced Packaging Tool (APT) 套件管理員安裝 OpenSearch Dashboards，與 [Tarball]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/tar/) 方法相比，能大幅簡化安裝過程。例如，套件管理員會處理多項技術考量，例如安裝路徑、組態檔案位置以及建立由 `systemd` 管理的服務。
 
-This guide assumes that you are comfortable working from the Linux command line interface (CLI). You should understand how to input commands, navigate between directories, and edit text files. Some example commands reference the `vi` text editor, but you may use any text editor available.
+本指南假設您熟悉 Linux 命令列介面 (CLI) 的操作。您應該了解如何輸入命令、在目錄之間切換以及編輯文字檔案。部分範例命令參考了 `vi` 文字編輯器，但您可以使用任何可用的文字編輯器。
 {:.note}
 
-## Prerequisites
+## 前置條件
 
-Install OpenSearch. For more information, see [Installing OpenSearch on Debian]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/debian/).
+安裝 OpenSearch。如需更多資訊，請參閱 [在 Debian 上安裝 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/debian/)。
 
-## Install OpenSearch Dashboards from a package
+## 從套件安裝 OpenSearch Dashboards
 
-1. Download the Debian package for the desired version directly from the [OpenSearch downloads page](https://opensearch.org/downloads.html){:target='\_blank'}. The Debian package can be downloaded for both **x64** and **arm64** architectures.
-1. From the CLI, install using `dpkg`.
+1. 直接從 [OpenSearch 下載頁面](https://opensearch.org/downloads.html){:target='\_blank'}下載所需版本的 Debian 套件。Debian 套件支援 **x64** 和 **arm64** 架構。
+1. 從 CLI 使用 `dpkg` 進行安裝。
 
    x64:
    ```bash
@@ -39,288 +40,288 @@ Install OpenSearch. For more information, see [Installing OpenSearch on Debian](
    ```
    {% include copy.html %}
 
-   For new installations of OpenSearch Dashboards 3.7 and later, you can use the following environment variable to control the Security Dashboards plugin behavior:
+   對於 OpenSearch Dashboards 3.7 及後續版本的新安裝，您可以使用以下環境變數來控制 Security Dashboards 外掛程式的行為：
    ```bash
    DISABLE_SECURITY_DASHBOARDS_PLUGIN=true
    ```
    {% include copy.html %}
 
-1. After the installation completes, reload the `systemd` manager configuration:
+1. 安裝完成後，重新載入 `systemd` 管理員組態：
     ```bash
     sudo systemctl daemon-reload
     ```
     {% include copy.html %}
 
-1. Enable OpenSearch Dashboards as a service:
+1. 將 OpenSearch Dashboards 啟用為服務：
     ```bash
     sudo systemctl enable opensearch-dashboards
     ```
     {% include copy.html %}
 
-1. Start the OpenSearch Dashboards service:
+1. 啟動 OpenSearch Dashboards 服務：
     ```bash
     sudo systemctl start opensearch-dashboards
     ```
     {% include copy.html %}
 
-1. Verify that OpenSearch Dashboards launched correctly:
+1. 驗證 OpenSearch Dashboards 是否正確啟動：
     ```bash
     sudo systemctl status opensearch-dashboards
     ```
     {% include copy.html %}
 
-1. In a web browser, go to `http://localhost:5601` and log in as the `admin` user using the custom admin password that you set when you installed OpenSearch. If OpenSearch Dashboards runs on a remote host, replace `localhost` with the IP address or DNS name of that host. For more information, see [Accessing OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards).
+1. 在網頁瀏覽器中，前往 `http://localhost:5601` 並使用您在安裝 OpenSearch 時設定的自訂管理員密碼，以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行在遠端主機上，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱 [存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
 
-### Fingerprint verification
+### 指紋驗證
 
-The Debian package is not signed. If you would like to verify the fingerprint, the OpenSearch Project provides a `.sig` file as well as the `.deb` package for use with GNU Privacy Guard (GPG).
+Debian 套件未經過簽署。如果您想要驗證指紋，OpenSearch Project 提供了 `.sig` 檔案以及可用於 GNU Privacy Guard (GPG) 的 `.deb` 套件。
 
-1. Download the desired Debian package:
+1. 下載所需的 Debian 套件：
    ```bash
    curl -SLO https://artifacts.opensearch.org/releases/bundle/opensearch-dashboards/{{site.opensearch_dashboards_version}}/opensearch-dashboards-{{site.opensearch_dashboards_version}}-linux-x64.deb
    ```
    {% include copy.html %}
 
-1. Download the corresponding signature file:
+1. 下載對應的簽署檔案：
    ```bash
    curl -SLO https://artifacts.opensearch.org/releases/bundle/opensearch-dashboards/{{site.opensearch_dashboards_version}}/opensearch-dashboards-{{site.opensearch_dashboards_version}}-linux-x64.deb.sig
    ```
    {% include copy.html %}
 
-1. Download and import the GPG key:
+1. 下載並匯入 GPG 金鑰：
    ```bash
    curl -o- https://artifacts.opensearch.org/publickeys/opensearch-release.pgp | gpg --import -
    ```
    {% include copy.html %}
 
-1. Verify the signature:
+1. 驗證簽署：
    ```bash
    gpg --verify opensearch-dashboards-{{site.opensearch_dashboards_version}}-linux-x64.deb.sig opensearch-dashboards-{{site.opensearch_dashboards_version}}-linux-x64.deb
    ```
    {% include copy.html %}
 
-## Install OpenSearch Dashboards from an APT repository
+## 從 APT 儲存庫安裝 OpenSearch Dashboards
 
-APT, the primary package management tool for Debian–based operating systems, allows you to download and install the Debian package from the APT repository. 
+APT 是基於 Debian 的作業系統主要套件管理工具，允許您從 APT 儲存庫下載並安裝 Debian 套件。
 
-1. Install the necessary packages:
+1. 安裝必要套件：
    ```bash
    sudo apt-get update && sudo apt-get -y install lsb-release ca-certificates curl gnupg2
    ```
    {% include copy.html %}
 
-1. Create the keyrings directory if it doesn't already exist:
+1. 如果 keyrings 目錄尚不存在，請建立該目錄：
    ```bash
    sudo mkdir -p /etc/apt/keyrings
    ```
    {% include copy.html %}
 
-1. Import the public GPG key. This key is used to verify that the APT repository is signed.
+1. 匯入公開 GPG 金鑰。此金鑰用於驗證 APT 儲存庫是否經過簽署。
     ```bash
     curl -o- https://artifacts.opensearch.org/publickeys/opensearch-release.pgp | sudo gpg --dearmor --batch --yes -o /etc/apt/keyrings/opensearch-release-keyring
     ```
     {% include copy.html %}
 
-1. Create an APT repository for OpenSearch Dashboards:
+1. 為 OpenSearch Dashboards 建立 APT 儲存庫：
    ```bash
    echo "deb [signed-by=/etc/apt/keyrings/opensearch-release-keyring] https://artifacts.opensearch.org/releases/bundle/opensearch-dashboards/{{major_version_mask}}/apt stable main" | sudo tee /etc/apt/sources.list.d/opensearch-dashboards-{{major_version_mask}}.list
    ```
    {% include copy.html %}
 
-1. Verify that the repository was created successfully:
+1. 驗證儲存庫是否成功建立：
     ```bash
     sudo apt-get update
     ```
     {% include copy.html %}
 
-1. (Optional) As of May 22, 2024, the `Origin` and `Label` values of the APT repository were updated as part of [this change](https://github.com/opensearch-project/opensearch-build/issues/4485). If you created the APT repository before this date, run the following command to accept the updated release information:
+1. (選用) 自 2024 年 5 月 22 日起，APT 儲存庫的 `Origin` 和 `Label` 值已作為 [此變更](https://github.com/opensearch-project/opensearch-build/issues/4485) 的一部分進行更新。如果您在此日期之前建立了 APT 儲存庫，請執行以下命令以接受更新後的發行資訊：
     ```bash
     sudo apt-get update --allow-releaseinfo-change
     ```
     {% include copy.html %}
 
-1. With the repository information added, list all available versions of OpenSearch Dashboards:
+1. 在加入儲存庫資訊後，列出所有可用的 OpenSearch Dashboards 版本：
    ```bash
    sudo apt list -a opensearch-dashboards
    ```
    {% include copy.html %}
 
-1. Choose the version of OpenSearch Dashboards you want to install:
-   - Unless otherwise indicated, the latest available version of OpenSearch Dashboards is installed:
+1. 選擇您想要安裝的 OpenSearch Dashboards 版本：
+   - 除非另有說明，否則將安裝最新可用的 OpenSearch Dashboards 版本：
    ```bash
    sudo apt-get install opensearch-dashboards
    ```
    {% include copy.html %}
 
-   - To install a specific version of OpenSearch Dashboards, pass a version number after the package name:
+   - 若要安裝特定版本的 OpenSearch Dashboards，請在套件名稱後傳遞版本號碼：
    ```bash
    sudo apt-get install opensearch-dashboards={{site.opensearch_dashboards_version}}
    ```
    {% include copy.html %}
 
-1. Once complete, enable OpenSearch Dashboards:
+1. 完成後，啟用 OpenSearch Dashboards：
     ```bash
     sudo systemctl enable opensearch-dashboards
     ```
     {% include copy.html %}
 
-1. Start OpenSearch Dashboards:
+1. 啟動 OpenSearch Dashboards：
     ```bash
     sudo systemctl start opensearch-dashboards
     ```
     {% include copy.html %}
 
-1. Verify that OpenSearch Dashboards launched correctly:
+1. 驗證 OpenSearch Dashboards 是否正確啟動：
     ```bash
     sudo systemctl status opensearch-dashboards
     ```
     {% include copy.html %}
 
-1. In a web browser, go to `http://localhost:5601` and log in as the `admin` user using the custom admin password that you set when you installed OpenSearch. If OpenSearch Dashboards runs on a remote host, replace `localhost` with the IP address or DNS name of that host. For more information, see [Accessing OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards).
+1. 在網頁瀏覽器中，前往 `http://localhost:5601` 並使用您在安裝 OpenSearch 時設定的自訂管理員密碼，以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行在遠端主機上，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱 [存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
 
-## (Optional) Allow access from other hosts
+## (選用) 允許來自其他主機的存取
 
-By default, OpenSearch Dashboards, like OpenSearch, binds to `localhost` when you initially install it. As a result, OpenSearch Dashboards is not reachable from a remote host unless the configuration is updated.
+預設情況下，OpenSearch Dashboards 與 OpenSearch 一樣，在初次安裝時會綁定到 `localhost`。因此，除非更新組態，否則無法從遠端主機存取 OpenSearch Dashboards。
 
-1. Open `opensearch_dashboards.yml`:
+1. 開啟 `opensearch_dashboards.yml`：
     ```bash
     sudo vi /etc/opensearch-dashboards/opensearch_dashboards.yml
     ```
     {% include copy.html %}
 
-1. Specify a network interface that OpenSearch Dashboards should bind to. Use `0.0.0.0` to bind to any available interface:
+1. 指定 OpenSearch Dashboards 應綁定的網路介面。使用 `0.0.0.0` 可綁定到任何可用的介面：
     ```bash
     server.host: 0.0.0.0
     ```
     {% include copy.html %}
 
-1. Save and quit.
-1. Restart OpenSearch Dashboards to apply the configuration change:
+1. 儲存並退出。
+1. 重新啟動 OpenSearch Dashboards 以套用組態變更：
     ```bash
     sudo systemctl restart opensearch-dashboards
     ```
     {% include copy.html %}
 
-## Upgrade to a newer version
+## 升級至較新版本
 
-OpenSearch Dashboards instances installed using `dpkg` or `apt-get` can be upgraded to a newer version.
+使用 `dpkg` 或 `apt-get` 安裝的 OpenSearch Dashboards 執行個體可以升級至較新版本。
 
-Upgrade your OpenSearch cluster before you upgrade OpenSearch Dashboards. OpenSearch Dashboards must run the same version as the cluster it connects to, and installed plugins must match that version. For more information, see [Plugin compatibility]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/plugins/#plugin-compatibility).
+在升級 OpenSearch Dashboards 之前，請先升級您的 OpenSearch 叢集。OpenSearch Dashboards 必須執行與其連接的叢集相同的版本，且安裝的外掛程式必須與該版本相符。如需更多資訊，請參閱 [外掛程式相容性]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/plugins/#plugin-compatibility)。
 {: .important}
 
-### Prepare the host for an upgrade
+### 為升級準備主機
 
-The `opensearch-dashboards` package declares no dependencies on other Debian packages. An upgrade that fails with unresolved dependencies therefore points to the APT configuration on the host rather than to OpenSearch Dashboards itself. Complete the following steps before you run an upgrade command.
+`opensearch-dashboards` 套件不宣告對其他 Debian 套件的依賴關係。因此，若升級因未解決的依賴關係而失敗，則是指向主機上的 APT 組態而非 OpenSearch Dashboards 本身。在執行升級命令之前，請完成以下步驟。
 
-1. Install the packages that APT needs in order to read the OpenSearch Dashboards repository over HTTPS:
+1. 安裝 APT 用於透過 HTTPS 讀取 OpenSearch Dashboards 儲存庫所需的套件：
    ```bash
    sudo apt-get update && sudo apt-get -y install lsb-release ca-certificates curl gnupg2
    ```
    {% include copy.html %}
 
-1. Back up your configuration. The package registers the following files as configuration files, and `dpkg` prompts you to keep or replace each one that you edited:
+1. 備份您的組態。該套件將下列檔案註冊為組態檔案，且 `dpkg` 會提示您保留或替換每個您編輯過的檔案：
 
    - `/etc/opensearch-dashboards/opensearch_dashboards.yml`
    - `/etc/opensearch-dashboards/node.options`
    - `/etc/default/opensearch-dashboards`
    - `/etc/init.d/opensearch-dashboards`
 
-   To back up the main configuration file, run the following command:
+   若要備份主組態檔案，請執行下列命令：
    ```bash
    sudo cp /etc/opensearch-dashboards/opensearch_dashboards.yml /etc/opensearch-dashboards/opensearch_dashboards.yml.bak
    ```
    {% include copy.html %}
 
-   Run the upgrade from an interactive shell so that you can respond to these prompts. An unattended upgrade either stops at the prompt or applies the default answer configured in `Dpkg::Options` on the host.
+   請從互動式 shell 執行升級，以便您可以回應這些提示。非互動式升級會停在提示處，或套用主機上 `Dpkg::Options` 中設定的預設答案。
    {: .note}
 
-1. Refresh the package lists and confirm that a newer version is available:
+1. 重新整理套件清單並確認有可用之較新版本：
    ```bash
    sudo apt-get update && sudo apt list -a opensearch-dashboards
    ```
    {% include copy.html %}
 
-   If `apt-get update` reports that a public key is unavailable, or if the newest version listed is the version that you already have, see [Upgrade across major versions](#upgrade-across-major-versions).
+   如果 `apt-get update` 回報公鑰不可用，或者列出的最新版本是您已經擁有的版本，請參閱 [跨主版本升級](#upgrade-across-major-versions)。
 
-### Upgrade manually using `dpkg`
+### 使用 `dpkg` 手動升級
 
-Download the Debian package for the desired upgrade version directly from the [OpenSearch Project downloads page](https://opensearch.org/downloads.html){:target='\_blank'}.
+直接從 [OpenSearch Project 下載頁面](https://opensearch.org/downloads.html){:target='\_blank'}下載所需升級版本的 Debian 套件。
 
-Navigate to the directory containing the distribution and run the following command:
+導航至包含發行版本的目錄並執行下列命令：
 
 ```bash
 sudo dpkg -i opensearch-dashboards-{{site.opensearch_dashboards_version}}-linux-x64.deb
 ```
 {% include copy.html %}
 
-This method reads the package file directly and does not use an APT repository, so it also upgrades across major versions.
+此方法直接讀取套件檔案且不使用 APT 儲存庫，因此它也可以跨主版本升級。
 {: .tip}
 
-### Upgrade using `apt-get`
+### 使用 `apt-get` 升級
 
-To upgrade to the newest available version of OpenSearch Dashboards, run the following command:
+若要升級到最新可用版本的 OpenSearch Dashboards，請執行下列命令：
 
 ```bash
 sudo apt-get install --only-upgrade opensearch-dashboards
 ```
 {% include copy.html %}
 
-You can also upgrade to a specific OpenSearch Dashboards version by providing the version number:
+您也可以透過提供版本號碼來升級到特定的 OpenSearch Dashboards 版本：
 
 ```bash
 sudo apt-get install opensearch-dashboards=<version>
 ```
 {% include copy.html %}
 
-The `apt-get upgrade` subcommand acts on every installed package on the host and cannot install or remove packages, so an unrelated package that APT holds back stops the OpenSearch Dashboards upgrade. The `--only-upgrade` option limits the operation to the `opensearch-dashboards` package.
+`apt-get upgrade` 子命令作用於主機上每個已安裝的套件，且無法安裝或移除套件，因此若 APT 暫緩更新不相關的套件，會導致 OpenSearch Dashboards 升級停止。`--only-upgrade` 選項將操作限制在 `opensearch-dashboards` 套件。
 {: .note}
 
-### Upgrade across major versions
+### 跨主版本升級
 
-The repository definition that you create during installation is pinned to one major version, so APT reports no newer version when you try to move to a different major version. The repositories for different major versions are also signed with different GPG keys, so APT reports a missing public key when it reads the new repository using your existing keyring.
+您在安裝期間建立的儲存庫定義被固定在一個主版本，因此當您嘗試遷移到不同的主版本時，APT 會回報沒有較新版本。不同主版本的儲存庫也使用不同的 GPG 金鑰簽署，因此當 APT 使用您現有的金鑰環讀取新儲存庫時，會回報缺少公鑰。
 
-1. Import the public GPG key for the new repository:
+1. 匯入新儲存庫的公用 GPG 金鑰：
    ```bash
    curl -o- https://artifacts.opensearch.org/publickeys/opensearch-release.pgp | sudo gpg --dearmor --batch --yes -o /etc/apt/keyrings/opensearch-release-keyring
    ```
    {% include copy.html %}
 
-   Repositories for OpenSearch Dashboards 2.x are signed with the key published at `https://artifacts.opensearch.org/publickeys/opensearch.pgp`. Leave the keyring for that key in place until you remove the 2.x repository definition. Otherwise, `apt-get update` fails while reading the 2.x repository.
+   OpenSearch Dashboards 2.x 的儲存庫使用發佈在 `https://artifacts.opensearch.org/publickeys/opensearch.pgp` 的金鑰簽署。在您移除 2.x 儲存庫定義之前，請保留該金鑰的金鑰環。否則，`apt-get update` 在讀取 2.x 儲存庫時會失敗。
    {: .note}
 
-1. Add the repository for the new major version:
+1. 新增新主版本的儲存庫：
    ```bash
    echo "deb [signed-by=/etc/apt/keyrings/opensearch-release-keyring] https://artifacts.opensearch.org/releases/bundle/opensearch-dashboards/{{major_version_mask}}/apt stable main" | sudo tee /etc/apt/sources.list.d/opensearch-dashboards-{{major_version_mask}}.list
    ```
    {% include copy.html %}
 
-1. Remove the repository definition for your previous major version, replacing `<previous-major-version>` with a value such as `2.x`:
+1. 移除先前主版本的儲存庫定義，將 `<previous-major-version>` 替換為如 `2.x` 之類的值：
    ```bash
    sudo rm /etc/apt/sources.list.d/opensearch-dashboards-<previous-major-version>.list
    ```
    {% include copy.html %}
 
-1. Refresh the package lists and confirm that the new version appears:
+1. 重新整理套件清單並確認新版本已出現：
    ```bash
    sudo apt-get update && sudo apt list -a opensearch-dashboards
    ```
    {% include copy.html %}
 
-1. Install the new version:
+1. 安裝新版本：
    ```bash
    sudo apt-get install opensearch-dashboards=<version>
    ```
    {% include copy.html %}
 
-### Automatically restart the service after a package upgrade
+### 在套件升級後自動重新啟動服務
 
-To automatically restart OpenSearch Dashboards after a package upgrade, enable the `opensearch-dashboards.service` through `systemd`:
+若要在套件升級後自動重新啟動 OpenSearch Dashboards，請透過 `systemd` 啟用 `opensearch-dashboards.service`：
 
 ```bash
 sudo systemctl enable opensearch-dashboards.service
 ```
 {% include copy.html %}
 
-## Related documentation
+## 相關文件
 
-- [Preparing OpenSearch Dashboards for production]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#preparing-opensearch-dashboards-for-production)
+- [準備將 OpenSearch Dashboards 用於生產環境]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#preparing-opensearch-dashboards-for-production)

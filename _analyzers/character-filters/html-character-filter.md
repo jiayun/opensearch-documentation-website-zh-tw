@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: HTML strip
 parent: Character filters
 nav_order: 100
 ---
 
-# HTML strip character filter
+# HTML strip 字元篩選器
 
-The `html_strip` character filter removes HTML tags, such as `<div>`, `<p>`, and `<a>`, from the input text and renders plain text. The filter can be configured to preserve certain tags or decode specific HTML entities, such as `&nbsp;`, into spaces.
+`html_strip` 字元篩選器會從輸入文字中移除 HTML 標籤（例如 `<div>`、`<p>` 和 `<a>`），並產生純文字。您可以設定此篩選器保留特定標籤，或將特定 HTML 實體（例如 `&nbsp;`）解碼為空格。
 
-## Example
+## 範例
 
-The following request applies an `html_strip` character filter to the provided text:
+下列請求會將 `html_strip` 字元篩選器套用至提供的文字：
 
 ```json
 GET /_analyze
@@ -25,7 +26,7 @@ GET /_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the token in which HTML characters have been converted to their decoded values:
+回應中包含詞元，其中的 HTML 字元已轉換為解碼後的值：
 
 ```json
 {
@@ -43,17 +44,17 @@ Commonly used calculus symbols include α, β and θ
 }
 ```
 
-## Parameters
+## 參數
 
-The `html_strip` character filter can be configured with the following parameter.
+您可以使用下列參數設定 `html_strip` 字元篩選器。
 
-| Parameter       | Required/Optional | Data type | Description    |
+| 參數       | 必要/選用 | 資料類型 | 說明    |
 |:---|:---|:---|:---|
-| `escaped_tags` | Optional | Array of strings | An array of HTML element names, specified without the enclosing angle brackets (`< >`). The filter does not remove elements in this list when stripping HTML from the text. For example, setting the array to `["b", "i"]` will prevent the `<b>` and `<i>` elements from being stripped.|
+| `escaped_tags` | 選用 | 字串陣列 | HTML 元素名稱的陣列，指定時不含外圍的角括號（`< >`）。篩選器從文字中移除 HTML 時，不會移除此清單中的元素。例如，將陣列設定為 `["b", "i"]` 可防止 `<b>` 和 `<i>` 元素遭到移除。|
 
-## Example: Custom analyzer with lowercase filter
+## 範例：搭配小寫篩選器的自訂分析器
 
-The following example request creates a custom analyzer that strips HTML tags and converts the plain text to lowercase by using the `html_strip` analyzer and `lowercase` filter:
+下列範例請求會使用 `html_strip` 分析器和 `lowercase` 篩選器建立自訂分析器，以移除 HTML 標籤並將純文字轉換為小寫：
 
 ```json
 PUT /html_strip_and_lowercase_analyzer
@@ -79,7 +80,7 @@ PUT /html_strip_and_lowercase_analyzer
 ```
 {% include copy-curl.html %}
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用此分析器產生的詞元：
 
 ```json
 GET /html_strip_and_lowercase_analyzer/_analyze
@@ -90,7 +91,7 @@ GET /html_strip_and_lowercase_analyzer/_analyze
 ```
 {% include copy-curl.html %}
 
-In the response, the HTML tags have been removed and the plain text has been converted to lowercase:
+在回應中，HTML 標籤已被移除，且純文字已轉換為小寫：
 
 ```json
 {
@@ -120,9 +121,9 @@ In the response, the HTML tags have been removed and the plain text has been con
 }
 ```
 
-## Example: Custom analyzer that preserves HTML tags
+## 範例：保留 HTML 標籤的自訂分析器
 
-The following example request creates a custom analyzer that preserves HTML tags:
+下列範例請求會建立保留 HTML 標籤的自訂分析器：
 
 ```json
 PUT /html_strip_preserve_analyzer
@@ -148,7 +149,7 @@ PUT /html_strip_preserve_analyzer
 ```
 {% include copy-curl.html %}
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用此分析器產生的詞元：
 
 ```json
 GET /html_strip_preserve_analyzer/_analyze
@@ -159,7 +160,7 @@ GET /html_strip_preserve_analyzer/_analyze
 ```
 {% include copy-curl.html %}
 
-In the response, the `italic` and `bold` tags have been retained, as specified in the custom analyzer request:
+在回應中，`italic` 和 `bold` 標籤已依自訂分析器請求中的指定予以保留：
 
 ```json
 {

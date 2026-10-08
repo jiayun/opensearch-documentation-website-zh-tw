@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Truncate
 parent: Token filters
 nav_order: 440
 ---
 
-# Truncate token filter
+# Truncate 詞元篩選器
 
-The `truncate` token filter is used to shorten tokens exceeding a specified length. It trims tokens to a maximum number of characters, ensuring that tokens exceeding this limit are truncated. 
+`truncate` 詞元篩選器用於縮短超過指定長度的詞元。它會將詞元修剪至最大字元數，確保超過此限制的詞元會被截斷。
 
-## Parameters
+## 參數
 
-The `truncate` token filter can be configured with the following parameter.
+`truncate` 詞元篩選器可以使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`length` | Optional | Integer | Specifies the maximum length of the generated token. Default is `10`.
+`length` | 選用 | 整數 | 指定所產生詞元的最大長度。預設為 `10`。
 
-## Example
+## 範例
 
-The following example request creates a new index named `truncate_example` and configures an analyzer with a `truncate` filter:
+下列範例請求會建立名為 `truncate_example` 的新索引，並設定一個具有 `truncate` 篩選器的分析器：
 
 ```json
 PUT /truncate_example
@@ -48,9 +49,9 @@ PUT /truncate_example
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 GET /truncate_example/_analyze
@@ -62,7 +63,7 @@ GET /truncate_example/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

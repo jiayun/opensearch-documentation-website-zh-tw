@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Global
 parent: Bucket aggregations
@@ -7,16 +8,16 @@ redirect_from:
   - /query-dsl/aggregations/bucket/global/
 ---
 
-# Global aggregation
+# Global 彙總
 
-The `global` aggregation creates a single bucket containing all documents in the index, regardless of the search query. Subaggregations nested inside `global` operate on the full document set, allowing you to compare filtered metrics against overall metrics in the same request.
+`global` 彙總會建立單一桶 (bucket)，其中包含索引中的所有文件，不受搜尋查詢影響。巢狀於 `global` 內的子彙總會針對完整的文件集運作，讓您可以在同一個請求中比較篩選後的指標與整體指標。
 
-The `global` aggregation can only be placed as a top-level aggregation. Nesting it inside another bucket aggregation has no effect.
+`global` 彙總只能放置為最上層彙總。將其巢狀於其他桶彙總內不會有任何效果。
 {: .note}
 
-## Example
+## 範例
 
-The following example computes two averages in a single request: one scoped to the query (orders under $50) and one across all documents using the `global` aggregation:
+以下範例會在單一請求中計算兩個平均值：一個限定於查詢範圍 (低於 $50 的訂單)，另一個則使用 `global` 彙總計算所有文件的平均值：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -50,7 +51,7 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -84,12 +85,12 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 }
 ```
 
-The `total_avg_amount` aggregation reports the average across all 4,675 documents ($75.06), while `filtered_avg` reports the average only for the 1,633 documents matching the query ($38.36).
+`total_avg_amount` 彙總回報所有 4,675 份文件的平均值 ($75.06)，而 `filtered_avg` 僅回報符合查詢的 1,633 份文件的平均值 ($38.36)。
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response body fields.
+下表列出回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `doc_count` | Integer | The total number of documents in the index, independent of the search query. |
+| `doc_count` | 整數 | 索引中的文件總數，與搜尋查詢無關。 |

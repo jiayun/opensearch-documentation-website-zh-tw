@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Armenian
+title: "亞美尼亞語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 20
 ---
 
-# Armenian analyzer
+# 亞美尼亞語分析器
 
-The built-in `armenian` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `armenian` 分析器套用至文字欄位：
 
 ```json
 PUT /arabic-index
@@ -25,9 +26,9 @@ PUT /arabic-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，搭配此語言分析器使用 `stem_exclusion`：
 
 ```json
 PUT index_with_stem_exclusion_armenian_analyzer
@@ -46,21 +47,21 @@ PUT index_with_stem_exclusion_armenian_analyzer
 ```
 {% include copy-curl.html %}
 
-## Armenian analyzer internals
+## 亞美尼亞語分析器內部結構
 
-The `armenian` analyzer is built using the following components:
+`armenian` 分析器由下列元件建構而成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
+- 詞元篩選器：
   - lowercase
-  - stop (Armenian)
+  - stop（亞美尼亞語）
   - keyword
-  - stemmer (Armenian)
+  - stemmer（亞美尼亞語）
 
-## Custom Armenian analyzer
+## 自訂亞美尼亞語分析器
 
-You can create a custom Armenian analyzer using the following command:
+您可以使用下列命令建立自訂亞美尼亞語分析器：
 
 ```json
 PUT /armenian-index
@@ -107,9 +108,9 @@ PUT /armenian-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查分析器所產生的詞元：
 
 ```json
 GET armenian-index/_analyze
@@ -120,7 +121,7 @@ GET armenian-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

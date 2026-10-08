@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Modify data stream
+title: "修改資料串流"
 parent: Data stream APIs
 nav_order: 50
 redirect_from:
@@ -8,61 +9,61 @@ redirect_from:
 ---
 
 # Modify Data Stream API
-**Introduced 3.8**
+**於 3.8 版推出**
 {: .label .label-purple }
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, see the associated [GitHub issue](https://github.com/opensearch-project/OpenSearch/issues/8271).
+這是實驗性功能，不建議在正式環境中使用。若要瞭解此功能的最新進展或提供意見回饋，請參閱相關的 [GitHub 議題](https://github.com/opensearch-project/OpenSearch/issues/8271)。
 {: .warning}
 
-The Modify Data Stream API adds or removes backing indexes of a [data stream]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/). Use this API to migrate a pre-existing regular index into a data stream or to detach a backing index without deleting its data.
+Modify Data Stream API 可新增或移除[資料串流]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)的支援索引。使用此 API 可將既有的一般索引遷移至資料串流，或將支援索引從資料串流中分離而不刪除其資料。
 
-The following behaviors and restrictions apply when you add or remove backing indexes:
+新增或移除支援索引時，適用下列行為與限制：
 
-- Add and remove actions change only the data stream metadata; the index and its data remain unchanged. No shards are created, deleted, restored, or relocated.
-- You can include multiple add and remove actions in a request. All actions are applied atomically in a single cluster state update, and the result is independent of the action order.
-- The data stream generation is derived from its backing indexes (the highest backing-index counter is the write index) and cannot be set directly.
-- The write index cannot be removed, and removing the last backing index is rejected.
-- An added index must map the data stream's timestamp field as a `date` or `date_nanos`. An added index is marked as hidden; a removed index is made visible again.
-- An added index need not follow the `.ds-<data_stream>-NNNNNN` naming convention, which allows you to migrate a pre-existing regular index into a data stream.
-- An index cannot be a backing index of more than one data stream.
+- 新增和移除動作只會變更資料串流的中繼資料；索引及其資料維持不變。不會建立、刪除、還原或重新配置任何分片。
+- 您可以在一個請求中包含多個新增和移除動作。所有動作都會在單次叢集狀態更新中以不可分割的方式套用，且結果與動作順序無關。
+- 資料串流的世代由其支援索引推導而來（支援索引計數器值最高的索引即為寫入索引），無法直接設定。
+- 無法移除寫入索引，且移除最後一個支援索引的操作會遭到拒絕。
+- 新增的索引必須將資料串流的時間戳記欄位對應為 `date` 或 `date_nanos`。新增的索引會標記為隱藏；移除的索引則會恢復為可見。
+- 新增的索引不必遵循 `.ds-<data_stream>-NNNNNN` 命名慣例，因此您可以將既有的一般索引遷移至資料串流。
+- 一個索引不能作為多個資料串流的支援索引。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_data_stream/_modify
 ```
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `cluster_manager_timeout` | Time | The amount of time to wait for a response from the cluster manager node. Default is `30s`. |
-| `timeout` | Time | The amount of time to wait for a response from the cluster. Default is `30s`. |
+| `cluster_manager_timeout` | 時間 | 等待叢集管理員節點回應的時間。預設為 `30s`。 |
+| `timeout` | 時間 | 等待叢集回應的時間。預設為 `30s`。 |
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `actions` | Array | A list of actions to perform. You must provide at least one action. Required. |
+| `actions` | 陣列 | 要執行的動作清單。您必須提供至少一個動作。必要。 |
 
-Each element in the `actions` array is a single-key object that specifies one action. The following table lists the available action fields.
+`actions` 陣列中的每個元素都是指定單一動作的單一鍵物件。下表列出可用的動作欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `add_backing_index.data_stream` | String | The name of the data stream to modify. Required. |
-| `add_backing_index.index` | String | The name of the index to add as a backing index. Required. |
-| `remove_backing_index.data_stream` | String | The name of the data stream to modify. Required. |
-| `remove_backing_index.index` | String | The name of the backing index to remove. Required. |
-| `add_backing_index` | Object | Adds an existing index to the data stream as a backing index. Optional. |
-| `remove_backing_index` | Object | Removes a backing index from the data stream. Optional. |
+| `add_backing_index.data_stream` | 字串 | 要修改的資料串流名稱。必要。 |
+| `add_backing_index.index` | 字串 | 要新增為支援索引的索引名稱。必要。 |
+| `remove_backing_index.data_stream` | 字串 | 要修改的資料串流名稱。必要。 |
+| `remove_backing_index.index` | 字串 | 要移除的支援索引名稱。必要。 |
+| `add_backing_index` | 物件 | 將既有索引新增至資料串流，作為支援索引。選用。 |
+| `remove_backing_index` | 物件 | 從資料串流移除支援索引。選用。 |
 
-## Example request
+## 請求範例
 
-The following request removes a backing index from the `logs-foo` data stream and adds the pre-existing `legacy-logs-2023` index to it in a single atomic operation:
+下列請求會在單次不可分割的操作中，從 `logs-foo` 資料串流移除一個支援索引，並將既有的 `legacy-logs-2023` 索引新增至該資料串流：
 
 ```json
 POST /_data_stream/_modify
@@ -85,7 +86,7 @@ POST /_data_stream/_modify
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -93,11 +94,11 @@ POST /_data_stream/_modify
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/data_stream/modify`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`indices:admin/data_stream/modify`。
 
-## Related documentation
+## 相關文件
 
-- [Data streams]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)
+- [資料串流]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)
 - [Data Stream Stats API]({{site.url}}{{site.baseurl}}/api-reference/data-stream/data-stream-stats/)

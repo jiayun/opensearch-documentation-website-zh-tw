@@ -1,33 +1,34 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Common grams
 parent: Token filters
 nav_order: 60
 ---
 <!-- vale off -->
-# Common grams token filter
+# Common grams 詞元篩選器
 <!-- vale on -->
-The `common_grams` token filter improves search relevance by keeping commonly occurring phrases (common grams) in the text. This is useful when dealing with languages or datasets in which certain word combinations frequently occur as a unit and can impact search relevance if treated as separate tokens. If any common words are present in the input string, this token filter generates both their unigrams and bigrams.
+`common_grams` 詞元篩選器會保留文字中經常出現的片語（common grams），藉此提升搜尋相關性。當您處理的語言或資料集中，某些詞語組合經常以一個單位的形式出現，且若將其視為個別詞元會影響搜尋相關性時，這個篩選器就很有用。如果輸入字串中出現任何常見詞，此詞元篩選器會同時產生這些詞的 unigram 與 bigram。
 
-Using this token filter improves search relevance by keeping common phrases intact. This can help in matching queries more accurately, particularly for frequent word combinations. It also improves search precision by reducing the number of irrelevant matches.
+使用此詞元篩選器可保持常見片語的完整性，進而提升搜尋相關性。這有助於更精確地比對查詢，尤其是針對經常出現的詞語組合。它還能減少不相關的比對結果數量，進而提升搜尋精確度。
 
-When using this filter, you must carefully select and maintain the `common_words` list.
+使用此篩選器時，您必須謹慎選擇並維護 `common_words` 清單。
 {: .warning}
 
-## Parameters
+## 參數
 
-The `common_grams` token filter can be configured with the following parameters.
+`common_grams` 詞元篩選器可使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`common_words` | Required | List of strings | A list of words that should be treated as words that commonly appear together. These words will be used to generate common grams. If the `common_words` parameter is an empty list, the `common_grams` token filter becomes a no-op filter, meaning that it doesn't modify the input tokens at all.
-`ignore_case` | Optional | Boolean |  Indicates whether the filter should ignore case differences when matching common words. Default is `false`.
-`query_mode` | Optional | Boolean | When set to `true`, the following rules are applied:<br>- Unigrams that are generated from `common_words` are not included in the output.<br>- Bigrams in which a non-common word is followed by a common word are retained in the output.<br>- Unigrams of non-common words are excluded if they are immediately followed by a common word.<br>- If a non-common word appears at the end of the text and is preceded by a common word, its unigram is not included in the output.
+`common_words` | 必要 | 字串清單 | 應視為經常一起出現之詞語的清單。這些詞語將用於產生 common grams。如果 `common_words` 參數為空清單，`common_grams` 詞元篩選器就會成為不執行任何作業 (no-op) 的篩選器，也就是完全不會修改輸入詞元。
+`ignore_case` | 選用 | 布林值 | 指出篩選器在比對常見詞時是否應忽略大小寫差異。預設值為 `false`。
+`query_mode` | 選用 | 布林值 | 設為 `true` 時，會套用下列規則：<br>- 從 `common_words` 產生的 unigram 不會包含在輸出中。<br>- 非常見詞後接常見詞所形成的 bigram 會保留在輸出中。<br>- 若非常見詞後面緊接著常見詞，則會排除該非常見詞的 unigram。<br>- 若非常見詞出現在文字結尾，且前面是常見詞，則其 unigram 不會包含在輸出中。
 
 
-## Example
+## 範例
 
-The following example request creates a new index named `my_common_grams_index` and configures an analyzer with the `common_grams` filter:
+下列範例請求會建立名為 `my_common_grams_index` 的新索引，並設定使用 `common_grams` 篩選器的分析器：
 
 ```json
 PUT /my_common_grams_index
@@ -58,9 +59,9 @@ PUT /my_common_grams_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器所產生的詞元：
 
 ```json
 GET /my_common_grams_index/_analyze
@@ -71,7 +72,7 @@ GET /my_common_grams_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

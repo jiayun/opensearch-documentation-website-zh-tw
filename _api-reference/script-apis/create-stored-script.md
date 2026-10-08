@@ -1,57 +1,58 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create or update stored script
+title: "建立或更新預存指令碼"
 parent: Script APIs
 nav_order: 10
 ---
 
-# Create or Update Stored Script API
-**Introduced 1.0**
+# 建立或更新預存指令碼 API
+**1.0 版引入**
 {: .label .label-purple }
 
-Creates or updates a stored script or search template in the cluster state. Stored scripts are compiled once and can be reused across multiple requests for better performance.
+在叢集狀態中建立或更新預存指令碼或搜尋範本。預存指令碼只會編譯一次，且可在多個請求之間重複使用，以獲得更好的效能。
 
-For additional information about Painless scripting, see:
+如需 Painless 指令碼的更多資訊，請參閱：
 
-* [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+* [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-* [k-NN Painless Scripting extensions]({{site.url}}{{site.baseurl}}/search-plugins/knn/painless-functions/).
+* [k-NN Painless 指令碼擴充功能]({{site.url}}{{site.baseurl}}/search-plugins/knn/painless-functions/)。
 
-* [k-NN]({{site.url}}{{site.baseurl}}/search-plugins/knn/index/).
+* [k-NN]({{site.url}}{{site.baseurl}}/search-plugins/knn/index/)。
 
 
-## Path parameters
+## 路徑參數
 
-| Parameter | Data type | Description | 
+| 參數 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `script-id` | String | Stored script or search template ID. Must be unique across the cluster. Required. |
+| `script-id` | String | 預存指令碼或搜尋範本 ID。在整個叢集中必須是唯一的。必要。 |
 
-## Query parameters
+## 查詢參數
 
-All parameters are optional.
+所有參數皆為選用。
 
-| Parameter | Data type | Description | 
+| 參數 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `context` | String | Context in which the script or search template is to run. To prevent errors, the API immediately compiles the script or template in this context. |
-| `cluster_manager_timeout` | Time | Amount of time to wait for a connection to the cluster manager. Defaults to 30 seconds. |
-| `timeout` | Time | The period of time to wait for a response. If a response is not received before the timeout value, the request fails and returns an error. Defaults to 30 seconds.|
+| `context` | String | 指令碼或搜尋範本執行時所在的情境。為避免發生錯誤，API 會立即在此情境中編譯指令碼或範本。 |
+| `cluster_manager_timeout` | Time | 等待與叢集管理員建立連線的時間長度。預設為 30 秒。 |
+| `timeout` | Time | 等待回應的時間長度。若在逾時值之前未收到回應，請求即會失敗並傳回錯誤。預設為 30 秒。|
 
-## Request body fields
+## 請求本文欄位
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `script` | Object | Defines the script or search template, its parameters, and its language. See the following *Script object* section. |
+| `script` | Object | 定義指令碼或搜尋範本、其參數及其語言。請參閱下方的 *Script 物件* 一節。 |
 
-*Script object*
+*Script 物件*
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `lang` | String | Scripting language. Required. |
-| `source` | String or Object | Required. <br /> <br /> For scripts, a string with the contents of the script. <br /> <br /> For search templates, an object that defines the search template. Supports the same parameters as the [Search]({{site.url}}{{site.baseurl}}/api-reference/search/) API request body. Search templates also support Mustache variables. |
+| `lang` | String | 指令碼語言。必要。 |
+| `source` | String 或 Object | 必要。<br /> <br /> 對於指令碼，為包含指令碼內容的字串。<br /> <br /> 對於搜尋範本，為定義搜尋範本的物件。支援與 [Search]({{site.url}}{{site.baseurl}}/api-reference/search/) API 請求本文相同的參數。搜尋範本也支援 Mustache 變數。 |
 
-## Example request
+## 請求範例
 
-The following example requests uses an index called `books` with the following documents:
+下列請求範例使用名為 `books` 的索引，其中包含下列文件：
 
 <!-- spec_insert_start
 component: example_code
@@ -95,9 +96,9 @@ response = client.bulk(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Creating a Painless script
+### 建立 Painless 指令碼
 
-The following request creates the Painless script `my-first-script`. It sums the ratings for each book and displays the sum in the output.
+下列請求會建立 Painless 指令碼 `my-first-script`。此指令碼會加總每本書的評分，並在輸出中顯示總和。
 
 <!-- spec_insert_start
 component: example_code
@@ -160,10 +161,10 @@ response = client.put_script(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The preceding example uses the syntax of the Dev Tools console in OpenSearch Dashboards. You can also use a cURL request.
+上述範例使用 OpenSearch Dashboards 中 Dev Tools 主控台的語法。您也可以使用 cURL 請求。
 {: .note }
 
-The following cURL request is equivalent to the previous Dashboards console example:
+下列 cURL 請求等同於先前的 Dashboards 主控台範例：
 
 ````json
 curl -XPUT "http://opensearch:9200/_scripts/my-first-script" -H 'Content-Type: application/json' -d'
@@ -177,13 +178,13 @@ curl -XPUT "http://opensearch:9200/_scripts/my-first-script" -H 'Content-Type: a
 {% include copy.html %}
 
 
-See [Execute Painless stored script]({{site.url}}{{site.baseurl}}/api-reference/script-apis/exec-stored-script/) for information about running the script.
+如需執行指令碼的相關資訊，請參閱[執行 Painless 預存指令碼]({{site.url}}{{site.baseurl}}/api-reference/script-apis/exec-stored-script/)。
 
-### Creating or updating a stored script with parameters
+### 建立或更新含參數的預存指令碼
 
-The Painless script supports `params` to pass variables to the script. 
+Painless 指令碼支援使用 `params` 將變數傳遞給指令碼。 
 
-The following request creates the Painless script `multiplier-script`. The request sums the ratings for each book, multiplies the summed value by the `multiplier` parameter, and displays the result in the output:
+下列請求會建立 Painless 指令碼 `multiplier-script`。此請求會加總每本書的評分，將加總值乘以 `multiplier` 參數，並在輸出中顯示結果：
 
 <!-- spec_insert_start
 component: example_code
@@ -246,9 +247,9 @@ response = client.put_script(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-The `PUT _scripts/my-first-script` request returns the following field:
+`PUT _scripts/my-first-script` 請求會傳回下列欄位：
 
 ````json
 {
@@ -256,9 +257,9 @@ The `PUT _scripts/my-first-script` request returns the following field:
 }
 ````
 
-To determine whether the script was successfully created, use the [Get stored script]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-stored-script/) API, passing the script name as the `script` path parameter.
+若要確認指令碼是否已成功建立，請使用 [Get stored script]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-stored-script/) API，並將指令碼名稱作為 `script` 路徑參數傳入。
 {: .note}
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/script/put`.
+若您使用 Security 外掛程式，請確認您具有適當的權限：`cluster:admin/script/put`。

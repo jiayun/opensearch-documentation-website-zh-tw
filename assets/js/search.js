@@ -1,380 +1,151 @@
-// The first breadcrumb the indexer writes is the section the page belongs to. OpenSearch is the only
-// versioned section, so its crumb is the only one that gets a version number added.
-// Keep this wording the same as `OPENSEARCH_ROOT` in `_plugins/search-indexer.rb`.
-const OPENSEARCH_SECTION = 'OpenSearch';
-
-// Shared by the type-ahead dropdown and the results page, so it returns an array and each caller
-// escapes it its own way.
-const getBreadcrumbTrail = result => {
-    const crumbs = (result.ancestors || []).filter(crumb => crumb && crumb.trim());
-
-    if (result.type !== 'DOCS') {
-        if (result.type) crumbs.unshift(result.type);
-    } else if (crumbs[0] === OPENSEARCH_SECTION) {
-        crumbs[0] = `${OPENSEARCH_SECTION} ${result.versionLabel || result.version}`;
-    }
-
-    return crumbs;
-};
-
-// The API cuts the snippet at a fixed length, so it usually ends mid-word. Drop the half word and end
-// with an ellipsis instead. A snippet already ending in punctuation was not cut.
-// The ellipsis is a literal character, not `&hellip;`, because the results page sets this as text.
-const formatSnippet = text => {
-    if (!text) return '';
-
-    // The indexer separates blocks with a new line. Splitting on them keeps a heading from running
-    // into the text beneath it.
-    const blocks = String(text).split('\n')
-        .map(block => block.replace(/\s+/g, ' ').trim())
-        .filter(Boolean);
-    if (!blocks.length) return '';
-
-    // Only the last block can have been cut. The ellipsis goes there rather than at the very end, so
-    // a snippet that stops at a block boundary does not get two in a row.
-    const last = blocks.length - 1;
-    if (!/[.!?]["')\]]?$/.test(blocks[last])) {
-        blocks[last] = `${blocks[last].replace(/\s+\S*$/, '')}…`;
-    }
-
-    return blocks.join(' … ');
-};
-
-// The version being read, which chooses the index to search: "/2.19/..." searches the 2.19 docs and
-// "/latest/..." the current ones. Only the first part of the path is read, because page names hold
-// version numbers of their own: a looser match finds "8.11" in
-// /latest/migration-assistant/playbook-solr-8.11-to-opensearch-3/ and searches for a 8.11 index that
-// does not exist.
-const getDocsVersion = fallback => {
-    const [, segment] = window.location.pathname.split('/');
-    return /^\d+\.\d+$/.test(segment) ? segment : (fallback || 'latest');
-};
-
-(() => {
-    document.addEventListener('DOMContentLoaded', () => {
-        //
-        // Search field behaviors
-        //
-        const elInput = document.getElementById('search-input');
-        const elResults = document.getElementById('search-results')?.querySelector?.('.top-banner-search--field-with-results--field--wrapper--search-component--search-results-wrapper') ?? null;
-        const elOverlay = document.querySelector('.top-banner-search--overlay');
-        const elSpinner = document.querySelector('.top-banner-search--field-with-results--field--wrapper--search-component--search-spinner');
-        if (!elInput || !elResults || !elOverlay) return;
-        
-        const CLASSNAME_SPINNING = 'spinning';
-        const CLASSNAME_HIGHLIGHTED = 'highlighted';
-
-        const canSmoothScroll = 'scrollBehavior' in document.documentElement.style;
-
-        // Falls back to the attribute the header sets, which every build ships as "latest".
-        const docsVersion = getDocsVersion(elInput.getAttribute('data-docs-version'));
-
-        let _showingResults = false,
-            animationFrame,
-            debounceTimer,
-            lastQuery;
-
-        const abortControllers = [];
-
-        elInput.addEventListener('input', e => {
-            debounceInput();
-        });
-
-        elInput.addEventListener('keydown', e => {
-            switch (e.key) {
-                case 'Esc':
-                case 'Escape':
-                    hideResults(true);
-                    elInput.value = '';
-                    break;
-
-                case 'ArrowUp':
-                    e.preventDefault();
-                    highlightNextResult(false);
-                    break;
-
-                case 'ArrowDown':
-                    e.preventDefault();
-                    highlightNextResult();
-                    break;
-
-                case 'Enter':
-                    e.preventDefault();
-                    navToResult();
-                    break;
-            }
-        });
-
-        elInput.addEventListener('focus', e => {
-            if (!_showingResults && elResults.textContent) showResults();
-        });
-
-        elResults.addEventListener('pointerenter', e => {
-            cancelAnimationFrame(animationFrame);
-            animationFrame = requestAnimationFrame(() => {
-                highlightResult(e.target?.closest('.top-banner-search--field-with-results--field--wrapper--search-component--search-results--result'));
-            });
-        }, true);
-
-        elResults.addEventListener('focus', e => {
-            highlightResult(e.target?.closest('.top-banner-search--field-with-results--field--wrapper--search-component--search-results--result'));
-        }, true);
-
-        const debounceInput = () => {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(doSearch, 300);
-        };
-
-        const abortPreviousCalls = () => {
-            while (abortControllers.length) abortControllers.pop()?.abort?.();
-        };
-
-        // The element sits on its own line, so an empty one would leave a gap above the title.
-        const getBreadcrumbs = result => {
-            const trail = getBreadcrumbTrail(result);
-            return trail.length ? `<cite>${sanitizeText(trail.join(' › '))}</cite>` : '';
-        };
-
-        const doSearch = async () => {
-            const query = elInput.value.replace(/[^a-z0-9-_. ]+/ig, ' ');
-            if (query.length < 2) return hideResults(true);
-            if (query === lastQuery) return;
-
-            recordEvent('search', {
-                search_term: query,
-                docs_version: docsVersion
-            });
-
-            lastQuery = query;
-
-            abortPreviousCalls();
-
-            elSpinner?.classList.add(CLASSNAME_SPINNING);
-            if (!_showingResults) document.documentElement.classList.add('search-active');
-
-            try {
-                const controller = new AbortController();
-                abortControllers.unshift(abortControllers);
-                const startTime = Date.now();
-                const response = await fetch(`https://search-api.opensearch.org/search?q=${query}&v=${docsVersion}`, { signal: controller.signal });
-                const data = await response.json();
-                const searchResultClassName = 'top-banner-search--field-with-results--field--wrapper--search-component--search-results--result';
-                recordEvent('view_search_results', {
-                    search_term: query,
-                    docs_version: docsVersion,
-                    duration: Date.now() - startTime,
-                    results_num: data?.results?.length || 0
-                });
-
-                if (!Array.isArray(data?.results) || data.results.length === 0) {
-                    return showNoResults();
-                }
-                const chunks = data.results.map(result => result
-                    ? `
-                    <div class="${searchResultClassName}">
-                        <a href="${sanitizeAttribute(result.url)}">
-                            ${getBreadcrumbs(result)}
-                            ${sanitizeText(result.title || 'Unnamed Document')}
-                        </a>
-                        <span>${sanitizeText(formatSnippet(result.content))}</span>
-                    </div>
-                    `
-                    : ''
-                );
-
-                emptyResults();
-                elResults.appendChild(document.createRange().createContextualFragment(chunks.join('')));
-                showResults();
-            } catch (ex) {
-                showNoResults();
-            }
-
-            elSpinner?.classList.remove(CLASSNAME_SPINNING);
-        }
-
-        const hideResults = destroy => {
-            _showingResults = false;
-
-            elSpinner?.classList.remove(CLASSNAME_SPINNING);
-            document.documentElement.classList.remove('search-active');
-            elResults.setAttribute('aria-expanded', 'false');
-            document.body.removeEventListener('pointerdown', handlePointerDown, false);
-
-            if (destroy) {
-                abortPreviousCalls();
-                emptyResults();
-                lastQuery = '';
-            }
-        };
-
-        const showResults = () => {
-            if (!_showingResults) {
-                _showingResults = true;
-                document.documentElement.classList.add('search-active');
-                elResults.setAttribute('aria-expanded', 'true');
-                document.body.addEventListener('pointerdown', handlePointerDown, false);
-            }
-
-            elResults.scrollTo(0, 0);
-        };
-
-        const showNoResults = () => {
-            emptyResults();
-            const resultElement = document.createElement('div');
-            resultElement.classList.add('search-page--results--no-results');
-            resultElement.appendChild(document.createRange().createContextualFragment('<span>No results found.</span>'));
-            elResults.appendChild(resultElement);
-            showResults();
-            elSpinner?.classList.remove(CLASSNAME_SPINNING);
-        };
-
-        const emptyResults = () => elResults.replaceChildren();
-
-        const sanitizeText = text => {
-            return text?.replace?.(/</g, '&lt;');
-        };
-
-        const sanitizeAttribute = text => {
-            return text?.replace?.(/[>"]+/g, '');
-        };
-
-        const handlePointerDown = e => {
-            const matchSelectors = [
-                '.top-banner-search--field-with-results--field--wrapper--search-component--input-wrap',
-                '.top-banner-search--field-with-results--field--wrapper--search-component--input-wrap *',
-                '.top-banner-search--field-with-results--field--wrapper--search-component--search-results',
-                '.top-banner-search--field-with-results--field--wrapper--search-component--search-results *',
-            ].join(', ');
-            if (e.target.matches(matchSelectors)) return;
-
-            e.preventDefault();
-
-            elInput.blur();
-            hideResults();
-        };
-
-        const highlightResult = node => {
-            const searchResultClassName = 'top-banner-search--field-with-results--field--wrapper--search-component--search-results--result';
-            if (!node || !_showingResults || node.classList.contains(CLASSNAME_HIGHLIGHTED)) return;
-
-            elResults.querySelectorAll(`.${searchResultClassName}.highlighted`).forEach(el => {
-                el.classList.remove(CLASSNAME_HIGHLIGHTED);
-            });
-            node.classList.add(CLASSNAME_HIGHLIGHTED);
-            elInput.focus();
-        };
-
-        const highlightNextResult = (down = true) => {
-            const searchResultClassName = 'top-banner-search--field-with-results--field--wrapper--search-component--search-results--result';
-            const highlighted = elResults.querySelector(`.${searchResultClassName}.highlighted`);
-            let nextResult;
-            if (highlighted) {
-                highlighted.classList.remove(CLASSNAME_HIGHLIGHTED);
-                nextResult = highlighted[down ? 'nextElementSibling' : 'previousElementSibling']
-            } else {
-                nextResult = elResults.querySelector(`.${searchResultClassName}:${down ? 'first' : 'last'}-child`);
-            }
-
-            if (nextResult) {
-                nextResult.classList.add(CLASSNAME_HIGHLIGHTED);
-                if (down) {
-                    if (canSmoothScroll) {
-                        nextResult.scrollIntoView({ behavior: "smooth", block: "end" });
-                    } else {
-                        nextResult.scrollIntoView(false)
-                    }
-                } else if (
-                    nextResult.offsetTop < elResults.scrollTop ||
-                    nextResult.offsetTop + nextResult.clientHeight > elResults.scrollTop + elResults.clientHeight
-                ) {
-                    if (canSmoothScroll) {
-                        elResults.scrollTo({ behavior: "smooth", top: nextResult.offsetTop, left: 0 });
-                    } else {
-                        elResults.scrollTo(0, nextResult.offsetTop);
-                    }
-                }
-            } else {
-                elResults.scrollTo(0, 0);
-            }
-        };
-
-        const navToResultsPage = () => {
-            const query = encodeURIComponent(elInput.value);
-            window.location.href = `/${docsVersion}/search.html?q=${query}`;
-        }
-
-        const navToResult = () => {
-            const searchResultClassName = 'top-banner-search--field-with-results--field--wrapper--search-component--search-results--result';
-            const element = elResults.querySelector(`.${searchResultClassName}.highlighted a[href]`);
-            if (element) {
-                element.click?.();
-            } else {
-                navToResultsPage();
-            }
-        };
-
-        const recordEvent = (name, data) => {
-            try {
-                gtag?.('event', name, data);
-            } catch (e) {
-                // Do nothing
-            }
-        };
-    });
-})();
-
-
-window.doResultsPageSearch = async (query, type, version) => {
-    const searchResultsContainer = document.getElementById('searchPageResultsContainer');
-
+/* Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations. */
+(function () {
+  'use strict';
+  const defaultBase = '/opensearch-documentation-website-zh-tw/3.9';
+  const base = typeof document === 'undefined' ? defaultBase : (document.querySelector('meta[name="docs-baseurl"]')?.content || defaultBase);
+  let modulePromise;
+  function loadPagefind() {
+    if (!modulePromise) modulePromise = import(`${base}/pagefind/pagefind.js`).then(async engine => {
+      await engine.options({ baseUrl: base + '/' });
+      return engine;
+    }).catch(error => { modulePromise = undefined; throw error; });
+    return modulePromise;
+  }
+  function safeResultURL(value, origin = 'https://jiayun.github.io') {
     try {
-        // Clear any previous search results
-        searchResultsContainer.innerHTML = '';
+      const url = new URL(value, origin + base + '/');
+      return url.origin === origin && url.pathname.startsWith(base + '/') ? url.pathname + url.search + url.hash : null;
+    } catch { return null; }
+  }
+  function createController({ load = loadPagefind, results, error, loading }) {
+    let sequence = 0;
+    return {
+      cancel() { sequence++; loading?.(false); },
+      async search(query, options = {}, limit = 20) {
+        const current = ++sequence;
+        query = query.trim();
+        if (!query) { loading?.(false); results?.([], 0, query); return; }
+        loading?.(true);
+        try {
+          const engine = await load();
+          const response = await engine.search(query, options);
+          const items = await Promise.all(response.results.slice(0, limit).map(item => item.data()));
+          if (current === sequence) results?.(items, response.results.length, query);
+        } catch (failure) {
+          if (current === sequence) error?.(failure);
+        } finally { if (current === sequence) loading?.(false); }
+      }
+    };
+  }
+  const api = { createController, safeResultURL };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  if (typeof document === 'undefined') return;
 
-        // Display a loading message while fetching results
-        const loadingElement = document.createElement('div');
-        loadingElement.textContent = 'Loading...';
-        searchResultsContainer.appendChild(loadingElement);
-
-        const response = await fetch(`https://search-api.opensearch.org/search?q=${query}&v=${version}&t=${type}`);
-        const data = await response.json();
-
-        // Clear the loading message
-        searchResultsContainer.innerHTML = '';
-
-        if (data.results && data.results.length > 0) {
-            data.results.forEach(result => {
-              const resultElement = document.createElement('div');
-              resultElement.classList.add('search-page--results--display--container--item');
-
-              const trail = getBreadcrumbTrail(result);
-              const contentCite = document.createElement('cite');
-              contentCite.textContent = trail.join(' › ');
-              contentCite.style.fontSize = '.8em';
-
-              const titleLink = document.createElement('a');
-              titleLink.href = result.url;
-              titleLink.classList.add('search-page--results--display--container--item--link');
-              titleLink.textContent = result.title;
-              
-              const contentSpan = document.createElement('span');
-              contentSpan.textContent = formatSnippet(result.content);
-              contentSpan.style.display = 'block';
-
-              if (trail.length) resultElement.appendChild(contentCite);
-              resultElement.appendChild(titleLink);
-              resultElement.appendChild(contentSpan);
-
-              // Append the result element to the searchResultsContainer
-              searchResultsContainer.appendChild(resultElement);
-            });
-        } else {
-          const noResultsElement = document.createElement('div');
-          noResultsElement.textContent = 'No results found.';
-          searchResultsContainer.appendChild(noResultsElement);
+  function snippet(value) {
+    const fragment = document.createDocumentFragment();
+    const parsed = new DOMParser().parseFromString(String(value || ''), 'text/html');
+    function append(source, target) {
+      for (const node of source.childNodes) {
+        if (node.nodeType === 3) target.appendChild(document.createTextNode(node.textContent));
+        else if (node.nodeType === 1) {
+          if (node.tagName === 'MARK') { const mark = document.createElement('mark'); append(node, mark); target.appendChild(mark); }
+          else append(node, target);
         }
-    } catch (error) {
-        console.error('Error fetching search results:', error);
-        searchResultsContainer.innerHTML = 'An error occurred while fetching search results. Please try again later.';
+      }
     }
-}
+    append(parsed.body, fragment);
+    return fragment;
+  }
+  function message(container, text) {
+    const node = document.createElement('p'); node.className = 'search-page--results--no-results'; node.textContent = text; container.replaceChildren(node);
+  }
+  function render(container, items, dropdown) {
+    const nodes = [];
+    for (const item of items) {
+      const href = safeResultURL(item.url, location.origin);
+      if (!href) continue;
+      const row = document.createElement(dropdown ? 'div' : 'article');
+      row.className = dropdown ? 'top-banner-search--field-with-results--field--wrapper--search-component--search-results--result' : 'search-page--results--result';
+      const anchor = document.createElement('a'); anchor.href = href; anchor.textContent = item.meta?.title || '文件';
+      if (dropdown) row.appendChild(anchor);
+      else { const heading = document.createElement('h3'); heading.appendChild(anchor); row.appendChild(heading); }
+      const summary = document.createElement(dropdown ? 'span' : 'p'); summary.appendChild(snippet(item.excerpt)); row.appendChild(summary);
+      nodes.push(row);
+    }
+    container.replaceChildren(...nodes);
+    if (!nodes.length) message(container, '找不到符合的文件，請嘗試其他字詞。');
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('search-input');
+    const box = document.getElementById('search-results');
+    const output = box?.querySelector('.top-banner-search--field-with-results--field--wrapper--search-component--search-results-wrapper');
+    const spinner = document.querySelector('.top-banner-search--field-with-results--field--wrapper--search-component--search-spinner');
+    if (input && box && output) {
+      let composing = false, timer, selected = -1;
+      const close = () => { clearTimeout(timer); controller.cancel(); document.documentElement.classList.remove('search-active'); input.setAttribute('aria-expanded', 'false'); selected = -1; };
+      const open = () => { document.documentElement.classList.add('search-active'); input.setAttribute('aria-expanded', 'true'); };
+      const controller = createController({
+        results(items, total, query) { selected = -1; if (!query) { output.replaceChildren(); close(); return; } render(output, items, true); open(); },
+        error() { message(output, '搜尋暫時無法使用，請稍後再試。'); open(); },
+        loading(active) { spinner?.classList.toggle('spinning', active); }
+      });
+      input.setAttribute('aria-controls', 'search-results'); input.setAttribute('aria-expanded', 'false');
+      const schedule = () => { clearTimeout(timer); controller.cancel(); if (!input.value.trim()) { close(); output.replaceChildren(); return; } timer = setTimeout(() => controller.search(input.value, {}, 5), 250); };
+      input.addEventListener('compositionstart', () => { composing = true; clearTimeout(timer); controller.cancel(); });
+      input.addEventListener('compositionend', () => { composing = false; schedule(); });
+      input.addEventListener('input', event => { if (!composing && !event.isComposing) schedule(); });
+      input.addEventListener('keydown', event => {
+        if (composing || event.isComposing || event.keyCode === 229) return;
+        const rows = [...output.querySelectorAll('a[href]')];
+        if (event.key === 'Escape') { event.preventDefault(); close(); }
+        else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault(); if (!rows.length) return;
+          selected = (selected + (event.key === 'ArrowDown' ? 1 : -1) + rows.length) % rows.length;
+          rows.forEach((anchor, index) => anchor.parentElement.classList.toggle('highlighted', index === selected));
+          rows[selected].scrollIntoView({ block: 'nearest' });
+        } else if (event.key === 'Enter') {
+          event.preventDefault();
+          location.href = rows[selected]?.href || `${base}/search.html?q=${encodeURIComponent(input.value.trim())}`;
+        }
+      });
+      document.addEventListener('pointerdown', event => { if (!box.contains(event.target) && event.target !== input) close(); });
+      input.addEventListener('focus', () => { if (output.childNodes.length && input.value.trim()) open(); });
+    }
+
+    const pageInput = document.getElementById('searchPageInput');
+    const pageOutput = document.getElementById('searchPageResultsContainer');
+    const heading = document.getElementById('searchPageResultsHeader');
+    const section = document.getElementById('searchSection');
+    if (pageInput && pageOutput && heading && section) {
+      let pageLimit = 50;
+      const more = document.getElementById('searchMore');
+      const controller = createController({
+        results(items, total, query) { heading.textContent = query ? `「${query}」的搜尋結果（共 ${total} 筆）` : '請輸入搜尋字詞。'; if (query) render(pageOutput, items, false); else pageOutput.replaceChildren(); if (more) more.hidden = !query || items.length >= total; },
+        error() { heading.textContent = '搜尋暫時無法使用'; message(pageOutput, '請稍後再試。'); },
+        loading(active) { pageOutput.setAttribute('aria-busy', String(active)); if (active) heading.textContent = '搜尋中…'; }
+      });
+      function readURL() {
+        const params = new URLSearchParams(location.search); pageInput.value = params.get('q') || ''; section.value = params.get('section') || '';
+        const filters = section.value ? { filters: { section: section.value } } : {};
+        controller.search(pageInput.value, filters, pageLimit);
+      }
+      function submit() {
+        pageLimit = 50;
+        const url = new URL(location.href); const query = pageInput.value.trim();
+        if (query) url.searchParams.set('q', query); else url.searchParams.delete('q');
+        if (section.value) url.searchParams.set('section', section.value); else url.searchParams.delete('section');
+        if (url.href !== location.href) history.pushState({}, '', url);
+        readURL();
+      }
+      pageInput.addEventListener('keydown', event => { if (event.key === 'Enter' && !event.isComposing && event.keyCode !== 229) { event.preventDefault(); submit(); } });
+      document.getElementById('searchSubmit')?.addEventListener('click', submit);
+      more?.addEventListener('click', () => { pageLimit += 50; readURL(); });
+      section.addEventListener('change', submit);
+      window.addEventListener('popstate', () => { pageLimit = 50; readURL(); });
+      loadPagefind().then(engine => engine.filters()).then(filters => {
+        for (const name of Object.keys(filters.section || {}).sort()) { const option = document.createElement('option'); option.value = name; option.textContent = name; section.appendChild(option); }
+        readURL();
+      }).catch(() => { readURL(); });
+    }
+  });
+}());

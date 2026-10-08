@@ -1,56 +1,57 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get field mapping
+title: "取得欄位對應"
 parent: Index settings and mappings
 grand_parent: Index APIs
 nav_order: 25
 ---
 
 # Get Field Mapping API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Get Field Mapping API retrieves mapping definitions for one or more specific fields. This is useful when you need to inspect how particular fields are configured without retrieving the full index mapping, especially for indexes with many fields.
+Get Field Mapping API 可擷取一或多個特定欄位的對應定義。當您需要檢查特定欄位的設定方式，而不擷取完整的索引對應時，此 API 非常實用，尤其適用於包含許多欄位的索引。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_mapping/field/{field}
 GET /{index}/_mapping/field/{field}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required/Optional | Data type | Description |
+| 參數 | 必要／選用 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `index` | Optional | String | A comma-separated list of index names or wildcard expressions. Use `_all` or omit to target all indexes. |
-| `field` | Required | String | A comma-separated list of field names or wildcard expressions. Use dot notation for nested fields (for example, `author.name`). |
+| `index` | 選用 | 字串 | 以逗號分隔的索引名稱或萬用字元運算式清單。使用 `_all` 或省略此參數，即可指定所有索引。 |
+| `field` | 必要 | 字串 | 以逗號分隔的欄位名稱或萬用字元運算式清單。巢狀欄位請使用點號表示法（例如，`author.name`）。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters.
+下表列出可用的查詢參數。
 
-| Parameter | Required/Optional | Data type | Description |
+| 參數 | 必要／選用 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `include_defaults` | Optional | Boolean | When `true`, the response includes default mapping parameter values that are normally omitted. Default is `false`. |
-| `allow_no_indices` | Optional | Boolean | When `true`, the request does not return an error if a wildcard expression or `_all` resolves to no indexes. Default is `true`. |
-| `expand_wildcards` | Optional | String | Controls which index types wildcard expressions expand to. Valid values are `open`, `closed`, `hidden`, `none`, `all`. Default is `open`. |
-| `ignore_unavailable` | Optional | Boolean | When `true`, missing or closed indexes are ignored rather than returning an error. Default is `false`. |
+| `include_defaults` | 選用 | 布林值 | 設為 `true` 時，回應會包含通常省略的預設對應參數值。預設為 `false`。 |
+| `allow_no_indices` | 選用 | 布林值 | 設為 `true` 時，若萬用字元運算式或 `_all` 未解析出任何索引，請求不會傳回錯誤。預設為 `true`。 |
+| `expand_wildcards` | 選用 | 字串 | 控制萬用字元運算式展開後涵蓋的索引類型。有效值為 `open`、`closed`、`hidden`、`none`、`all`。預設為 `open`。 |
+| `ignore_unavailable` | 選用 | 布林值 | 設為 `true` 時，會忽略不存在或已關閉的索引，而不傳回錯誤。預設為 `false`。 |
 
-## Example request
+## 請求範例
 
-The following request retrieves the mapping for the `customer_gender` field:
+下列請求會擷取 `customer_gender` 欄位的對應：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_mapping/field/customer_gender
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The response contains the field's full name and its mapping configuration:
+回應包含欄位的完整名稱及其對應組態：
 
 ```json
 {
@@ -69,12 +70,12 @@ The response contains the field's full name and its mapping configuration:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response body fields.
+下表列出回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `{index}.mappings` | Object | A map of field names to their mapping details for the specified index. |
-| `{field}.full_name` | String | The fully qualified field name, including any parent object path. |
-| `{field}.mapping` | Object | The mapping configuration for the field, including its type and any parameters. |
+| `{index}.mappings` | 物件 | 指定索引中，欄位名稱與其對應詳細資訊之間的對照表。 |
+| `{field}.full_name` | 字串 | 完整限定的欄位名稱，包含任何父物件路徑。 |
+| `{field}.mapping` | 物件 | 欄位的對應組態，包含其類型及任何參數。 |

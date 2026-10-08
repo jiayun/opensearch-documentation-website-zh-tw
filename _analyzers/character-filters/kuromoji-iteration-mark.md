@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Kuromoji iteration mark
+title: "Kuromoji 疊字記號"
 parent: Character filters
 nav_order: 115
 ---
 
-# Kuromoji iteration mark character filter
+# Kuromoji 疊字記號字元篩選器
 
-The `kuromoji_iteration_mark` character filter normalizes Japanese horizontal iteration marks (odoriji) by replacing each mark with the character it repeats. Japanese writing uses iteration marks as shorthand for a repeated character:
+`kuromoji_iteration_mark` 字元篩選器會將日文的水平疊字記號（odoriji）正規化，方法是將每個記號取代為其所重複的字元。日文書寫中使用疊字記號作為重複字元的簡寫：
 
-- 々 (kanji iteration mark) -- Repeats the preceding kanji character without change, so 佐々木 becomes 佐佐木.
-- ゝ (hiragana iteration mark) -- Repeats the preceding hiragana character without change, so かゝ becomes かか.
-- ゞ (hiragana voiced iteration mark) -- Repeats the preceding hiragana character and applies voicing (dakuten). The preceding character must be unvoiced, so みすゞ becomes みすず, in which す is voiced to ず.
-- ヽ (katakana iteration mark) -- Repeats the preceding katakana character without change, so コヽア becomes ココア.
-- ヾ (katakana voiced iteration mark) -- Repeats the preceding katakana character and applies voicing (dakuten). The preceding character must be unvoiced, so カヾ becomes カガ.
+- 々（漢字疊字記號）-- 原樣重複前一個漢字字元，因此 佐々木 會變成 佐佐木。
+- ゝ（平假名疊字記號）-- 原樣重複前一個平假名字元，因此 かゝ 會變成 かか。
+- ゞ（平假名濁音疊字記號）-- 重複前一個平假名字元並加上濁音（dakuten）。前一個字元必須為清音，因此 みすゞ 會變成 みすず，其中 す 濁音化為 ず。
+- ヽ（片假名疊字記號）-- 原樣重複前一個片假名字元，因此 コヽア 會變成 ココア。
+- ヾ（片假名濁音疊字記號）-- 重複前一個片假名字元並加上濁音（dakuten）。前一個字元必須為清音，因此 カヾ 會變成 カガ。
 
-Expanding these marks before tokenization ensures that the resulting tokens are consistent regardless of whether the original text used iteration marks or spelled out the repeated characters.
+在斷詞之前展開這些記號，可確保無論原始文字使用疊字記號，還是直接寫出重複的字元，產生的詞元都會保持一致。
 
-## Installation
+## 安裝
 
-The `kuromoji_iteration_mark` character filter requires the `analysis-kuromoji` plugin. For installation instructions, see [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/).
+`kuromoji_iteration_mark` 字元篩選器需要 `analysis-kuromoji` 外掛程式。如需安裝指示，請參閱 [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)。
 
-## Parameters
+## 參數
 
-The following table lists the parameters for the `kuromoji_iteration_mark` character filter.
+下表列出 `kuromoji_iteration_mark` 字元篩選器的參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`normalize_kanji` | Boolean | When `true`, kanji iteration marks (々) are normalized. Default is `true`.
-`normalize_kana` | Boolean | When `true`, kana iteration marks (ゞ, ヾ, ゝ, and ヽ) are normalized. Default is `true`.
+`normalize_kanji` | 布林值 | 當 `true` 時，會將漢字疊字記號（々）正規化。預設為 `true`。
+`normalize_kana` | 布林值 | 當 `true` 時，會將假名疊字記號（ゞ、ヾ、ゝ 及 ヽ）正規化。預設為 `true`。
 
-## Example
+## 範例
 
-The following example creates an index with a custom analyzer that uses the `kuromoji_iteration_mark` character filter:
+下列範例會建立一個索引，其中包含使用 `kuromoji_iteration_mark` 字元篩選器的自訂分析器：
 
 ```json
 PUT /iteration-mark-index
@@ -59,7 +60,7 @@ PUT /iteration-mark-index
 ```
 {% include copy-curl.html %}
 
-Test the analyzer with text containing the kanji iteration mark. The name 佐々木 (Sasaki) uses 々 to repeat the preceding kanji 佐:
+使用包含漢字疊字記號的文字測試分析器。名稱 佐々木（Sasaki）使用 々 來重複前一個漢字 佐：
 
 ```json
 POST /iteration-mark-index/_analyze
@@ -70,7 +71,7 @@ POST /iteration-mark-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The character filter expands 佐々木 to 佐佐木 before tokenization:
+字元篩選器會在斷詞之前將 佐々木 展開為 佐佐木：
 
 ```json
 {
@@ -114,7 +115,7 @@ The character filter expands 佐々木 to 佐佐木 before tokenization:
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
-- [Kuromoji tokenizer]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/kuromoji/)
+- [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
+- [Kuromoji 斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/kuromoji/)

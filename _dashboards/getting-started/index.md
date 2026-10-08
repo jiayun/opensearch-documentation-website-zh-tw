@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Getting started
+title: "入門"
 nav_order: 10
 has_children: true
 has_toc: false
@@ -11,67 +12,67 @@ redirect_from:
   - /dashboards/browser-compatibility/
   - /dashboards/quickstart/
 install_items:
-  - heading: "Install OpenSearch Dashboards"
-    link: "/dashboards/getting-started/install/"
-  - heading: "Access OpenSearch Dashboards"
-    link: "/dashboards/getting-started/access/"
-  - heading: "Prepare your data"
-    link: "/dashboards/getting-started/data-setup/"
+- heading: 安裝 OpenSearch Dashboards
+  link: /dashboards/getting-started/install/
+- heading: 存取 OpenSearch Dashboards
+  link: /dashboards/getting-started/access/
+- heading: 準備您的資料
+  link: /dashboards/getting-started/data-setup/
 learn_items:
-  - heading: "Learn about the main applications"
-    description: "Explore what each application does and when to use it."
-    link: "/dashboards/getting-started/learn-dashboards/"
-  - heading: "Explore the Discover application"
-    description: "Search and filter data."
-    link: "/dashboards/getting-started/explore-discover/"
-  - heading: "Explore the Visualize application"
-    description: "Create a visualization."
-    link: "/dashboards/getting-started/explore-visualize/"
-  - heading: "Explore the Dashboards application"
-    description: "View and filter a dashboard."
-    link: "/dashboards/getting-started/explore-dashboards/"
-  - heading: "Run queries in the Dev Tools console"
-    description: "Send OpenSearch API requests using Query DSL."
-    link: "/dashboards/getting-started/explore-dev-tools/"
+- heading: 了解主要應用程式
+  description: 探索每個應用程式的功能及使用時機。
+  link: /dashboards/getting-started/learn-dashboards/
+- heading: 探索 Discover 應用程式
+  description: 搜尋及篩選資料。
+  link: /dashboards/getting-started/explore-discover/
+- heading: 探索 Visualize 應用程式
+  description: 建立視覺化。
+  link: /dashboards/getting-started/explore-visualize/
+- heading: 探索 Dashboards 應用程式
+  description: 檢視及篩選儀表板。
+  link: /dashboards/getting-started/explore-dashboards/
+- heading: 在 Dev Tools 主控台中執行查詢
+  description: 使用 Query DSL 傳送 OpenSearch API 請求。
+  link: /dashboards/getting-started/explore-dev-tools/
 workflow_items:
-  - heading: "Explore data with Discover"
-    description: "Search, filter, and examine your data interactively. Understand what fields are available, how data is distributed over time, and what patterns exist."
-    link: "/dashboards/discover/index-discover/"
-  - heading: "Build visualizations"
-    description: "Learn about ways to create charts, maps, tables, and other visual representations of your data."
-    link: "/dashboards/visualize/"
-  - heading: "Assemble dashboards"
-    description: "Combine multiple visualizations into a single page for monitoring and analysis."
-    link: "/dashboards/dashboard/"
+- heading: 使用 Discover 探索資料
+  description: 以互動方式搜尋、篩選及檢查您的資料。了解有哪些可用欄位、資料隨時間的分布情形，以及存在哪些模式。
+  link: /dashboards/discover/index-discover/
+- heading: 建置視覺化
+  description: 了解如何為您的資料建立圖表、地圖、表格及其他視覺化呈現方式。
+  link: /dashboards/visualize/
+- heading: 組合儀表板
+  description: 將多個視覺化組合到單一頁面中，以進行監控與分析。
+  link: /dashboards/dashboard/
 ---
 
-# Getting started with OpenSearch Dashboards
+# OpenSearch Dashboards 入門
 
-OpenSearch Dashboards is the web interface for OpenSearch. Use it to explore your data, build visualizations, assemble dashboards, and run queries.
+OpenSearch Dashboards 是 OpenSearch 的網頁介面。您可以使用它來探索資料、建置視覺化、組合儀表板及執行查詢。
 
-Before you begin, ensure that you're familiar with basic OpenSearch concepts like documents and indexes. For more information, see [Introduction to OpenSearch]({{site.url}}{{site.baseurl}}/getting-started/intro/).
+開始之前，請確認您已熟悉文件和索引等 OpenSearch 基本概念。如需詳細資訊，請參閱 [OpenSearch 簡介]({{site.url}}{{site.baseurl}}/getting-started/intro/)。
 {: .note}
 
-## Step 1: Set up OpenSearch Dashboards
+## 步驟 1：設定 OpenSearch Dashboards
 
-Choose one of the following options.
+請選擇下列其中一個選項。
 
-### Option 1: Use the OpenSearch Playground
+### 選項 1：使用 OpenSearch Playground
 
-Open the [OpenSearch Playground](https://playground.opensearch.org/app/home#/) in your browser. The Playground is read only and already includes the sample flight data, so you can start learning about the OpenSearch Dashboards applications in [Step 2](#step-2-explore-opensearch-dashboards-applications).
+在瀏覽器中開啟 [OpenSearch Playground](https://playground.opensearch.org/app/home#/)。Playground 為唯讀，且已包含範例航班資料，因此您可以直接從[步驟 2](#step-2-explore-opensearch-dashboards-applications) 開始了解 OpenSearch Dashboards 應用程式。
 
-### Option 2: Use your own installation
+### 選項 2：使用您自己的安裝
 
-To install OpenSearch Dashboards and add the sample data, follow these steps:
+若要安裝 OpenSearch Dashboards 並新增範例資料，請依照下列步驟操作：
 
 {% include list.html list_items=page.install_items %}
 
-## Step 2: Explore OpenSearch Dashboards applications
+## 步驟 2：探索 OpenSearch Dashboards 應用程式
 
 {% include list.html list_items=page.learn_items %}
 
-## Next steps
+## 後續步驟
 
-Once you're familiar with the applications, the standard approach to building dashboards follows three steps: explore your data, build individual visualizations, then assemble those visualizations into a dashboard. To learn about each step in detail, use the following links to explore the full documentation.
+熟悉這些應用程式後，建置儀表板的標準做法包含三個步驟：探索您的資料、建置個別視覺化，然後將這些視覺化組合成儀表板。若要詳細了解每個步驟，請使用下列連結瀏覽完整文件。
 
 {% include list.html list_items=page.workflow_items %}

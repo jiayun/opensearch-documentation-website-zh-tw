@@ -1,48 +1,49 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Anomaly detector suggestions
+title: "異常偵測器建議"
 parent: OpenSearch Assistant for OpenSearch Dashboards
 nav_order: 20
 has_children: false
 ---
 
-# Anomaly detector suggestions
+# 異常偵測器建議
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).    
+這是一項實驗性功能，不建議在正式環境中使用。若要了解此功能的最新進度或提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/)上的討論。    
 {: .warning}
 
-The OpenSearch Dashboards Assistant can use a large language model (LLM) to suggest the creation of an anomaly detector. The LLM analyzes data patterns in your OpenSearch indexes and recommends configuration settings for the anomaly detector, making it easier to identify unusual activity or trends in your data.
+OpenSearch Dashboards Assistant 可以使用大型語言模型 (LLM) 建議建立異常偵測器。LLM 會分析您 OpenSearch 索引中的資料模式，並為異常偵測器建議組態設定，讓您更容易識別資料中的異常活動或趨勢。
 
-## Configuration
+## 組態
 
-To configure anomaly detector suggestions, use the following steps.
+若要設定異常偵測器建議，請使用下列步驟。
 
-### Prerequisite
+### 先決條件
 
-Before using anomaly detector suggestions, enable query enhancements in OpenSearch Dashboards as follows:
+使用異常偵測器建議之前，請依下列方式在 OpenSearch Dashboards 中啟用查詢增強功能：
 
-1. On the top menu bar, go to **Management > Dashboards Management**. 
-1. In the left navigation pane, select **Advanced settings**.
-1. On the settings page, toggle **Enable query enhancements** to **On**.
+1. 在頂端選單列中，前往 **Management > Dashboards Management**。 
+1. 在左側導覽窗格中，選取 **Advanced settings**。
+1. 在設定頁面上，將 **Enable query enhancements** 切換為 **On**。
 
-### Step 1: Enable anomaly detector suggestions
+### 步驟 1：啟用異常偵測器建議
 
-To enable anomaly detector suggestions, configure the following `opensearch_dashboards.yml` setting:
+若要啟用異常偵測器建議，請在 `opensearch_dashboards.yml` 中進行以下設定：
 
 ```yaml
 assistant.smartAnomalyDetector.enabled: true
 ```
 {% include copy.html %}
 
-### Step 2: Create an anomaly detector suggestion agent
+### 步驟 2：建立異常偵測器建議代理程式
 
-To orchestrate anomaly detector suggestions, create an anomaly detector suggestion [agent]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/). To create an agent, send a `POST /_plugins/_flow_framework/workflow?provision=true` request and provide the agent template as a payload. For more information, see [Configuring OpenSearch Assistant]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/index/#configuring-opensearch-assistant).
+若要協調異常偵測器建議，請建立一個異常偵測器建議[代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)。若要建立代理程式，請傳送 `POST /_plugins/_flow_framework/workflow?provision=true` 請求，並以代理程式範本作為承載 (payload)。如需更多資訊，請參閱[設定 OpenSearch Assistant]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/index/#configuring-opensearch-assistant)。
 
-For sample agent templates, see [Flow Framework sample templates](https://github.com/opensearch-project/flow-framework/tree/2.x/sample-templates). Note the agent ID; you'll use it in the following step.
+如需代理程式範本範例，請參閱 [Flow Framework 範例範本](https://github.com/opensearch-project/flow-framework/tree/2.x/sample-templates)。請記下代理程式 ID，您將在下一個步驟中使用它。
 
-### Step 3: Configure the agent
+### 步驟 3：設定代理程式
 
-Next, configure the anomaly detector suggestion agent created in the previous step:
+接著，設定在上一個步驟中建立的異常偵測器建議代理程式：
 
 ```json
 POST /.plugins-ml-config/_doc/os_suggest_ad
@@ -55,12 +56,12 @@ POST /.plugins-ml-config/_doc/os_suggest_ad
 ```
 {% include copy-curl.html %}
 
-This example demonstrates a system index. In security-enabled domains, only superadmins have permissions to execute this code. For information about making superadmin calls, see [System indexes]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/). For access permissions, contact your system administrator.
+此範例示範的是系統索引。在已啟用安全性的網域中，只有超級管理員具有執行此程式碼的權限。如需進行超級管理員呼叫的相關資訊，請參閱[系統索引]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/)。如需存取權限，請聯絡您的系統管理員。
 {: .warning}
 
-### Step 4: Test the agent
+### 步驟 4：測試代理程式
 
-You can verify that the agent was created successfully by calling the agent with an example payload:
+您可以使用範例承載呼叫代理程式，以驗證代理程式是否已成功建立：
 
 ```json
 POST /_plugins/_ml/agents/{SUGGEST_ANOMALY_DETECTOR_AGENT_ID}/_execute
@@ -72,18 +73,18 @@ POST /_plugins/_ml/agents/{SUGGEST_ANOMALY_DETECTOR_AGENT_ID}/_execute
 ```
 {% include copy-curl.html %}
 
-## Viewing anomaly detector suggestions in OpenSearch Dashboards
+## 在 OpenSearch Dashboards 中檢視異常偵測器建議
 
-To view anomaly detector suggestions in OpenSearch Dashboards, use the following steps:
+若要在 OpenSearch Dashboards 中檢視異常偵測器建議，請使用下列步驟：
 
-1. On the top menu bar, go to **OpenSearch Dashboards > Discover**.
+1. 在頂端選單列中，前往 **OpenSearch Dashboards > Discover**。
 
-1. From the index pattern dropdown list, select an index pattern.
+1. 從索引模式下拉式清單中，選取一個索引模式。
 
-1. Select the **AI assistant** dropdown list and then select **Suggest anomaly detector**, as shown in the following image.
+1. 選取 **AI assistant** 下拉式清單，然後選取 **Suggest anomaly detector**，如下圖所示。
 
-    ![Click the Suggest anomaly detector action]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/suggestAD-button.png){: width="420px" }
+    ![按一下 Suggest anomaly detector 動作]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/suggestAD-button.png){: width="420px" }
 
-1. Wait for the LLM to populate the **Suggest anomaly detector** fields that will be used to create an anomaly detector for the index pattern. Then select the **Create detector** button to create an anomaly detector, as shown in the following image.
+1. 等待 LLM 填入 **Suggest anomaly detector** 欄位，這些欄位將用於為該索引模式建立異常偵測器。接著選取 **Create detector** 按鈕以建立異常偵測器，如下圖所示。
 
-    ![Suggested anomaly detector]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/suggestAD-UI.png){: width="800px" }
+    ![建議的異常偵測器]({{site.url}}{{site.baseurl}}/images/dashboards-assistant/suggestAD-UI.png){: width="800px" }

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Visualization types
+title: "視覺化類型"
 parent: Creating visualizations using queries
 grand_parent: Building data visualizations
 nav_order: 50
@@ -8,21 +9,21 @@ has_children: true
 has_toc: false
 ---
 
-# Query-based visualization types
+# 以查詢為基礎的視覺化類型
 
-The following table lists the visualization types supported by the visualization editor and their expected data shapes.
+下表列出視覺化編輯器支援的視覺化類型，以及各類型預期的資料形態。
 
-| Chart type | Data shape |
+| 圖表類型 | 資料形態 |
 | :--- | :--- |
-| [Area chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/area-chart/) | One date field + one or more numeric fields (supports stacking) |
-| [Bar chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/bar-chart/) | One or more categorical or date fields + one or more numeric fields |
-| [Bar gauge chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/bar-gauge-chart/) | One or more numeric fields (single values) |
-| [Gauge chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/gauge-chart/) | One numeric field (single value) |
-| [Heatmap]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/heatmap-chart/) | Two categorical or date fields + one numeric field |
-| [Histogram]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/histogram-chart/) | One numeric field (distribution) |
-| [Line chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/line-chart/) | One date field + one or more numeric fields |
-| [Metric chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/metric-chart/) | One numeric field (single value) |
-| [Pie chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/pie-chart/) | One categorical field + one numeric field |
-| [Scatter plot]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/scatter-chart/) | Two or more numeric fields |
-| [State timeline]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/state-timeline-chart/) | One date field + one categorical field (state values) |
-| [Table]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/table-chart/) | Any combination of fields (displays raw data) |
+| [區域圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/area-chart/) | 一個日期欄位 + 一個或多個數值欄位（支援堆疊） |
+| [長條圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/bar-chart/) | 一個或多個類別或日期欄位 + 一個或多個數值欄位 |
+| [長條量表圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/bar-gauge-chart/) | 一個或多個數值欄位（單一值） |
+| [量表圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/gauge-chart/) | 一個數值欄位（單一值） |
+| [熱度圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/heatmap-chart/) | 兩個類別或日期欄位 + 一個數值欄位 |
+| [直方圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/histogram-chart/) | 一個數值欄位（分布） |
+| [折線圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/line-chart/) | 一個日期欄位 + 一個或多個數值欄位 |
+| [指標圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/metric-chart/) | 一個數值欄位（單一值） |
+| [圓餅圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/pie-chart/) | 一個類別欄位 + 一個數值欄位 |
+| [散佈圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/scatter-chart/) | 兩個或多個數值欄位 |
+| [狀態時間軸]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/state-timeline-chart/) | 一個日期欄位 + 一個類別欄位（狀態值） |
+| [表格]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/table-chart/) | 任意欄位組合（顯示原始資料） |

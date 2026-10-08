@@ -1,55 +1,56 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Dangling indexes
+title: "懸空索引"
 parent: Index APIs
 nav_order: 90
 ---
 
-# Dangling indexes API
-**Introduced 1.0**
+# 懸空索引 API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-After a node joins a cluster, dangling indexes occur if any shards exist in the node's local directory that do not already exist in the cluster. Dangling indexes can be listed, deleted, or imported.
+當節點加入叢集後，如果節點的本機目錄中存在叢集中尚未存在的分片，就會產生懸空索引。懸空索引可以列出、刪除或匯入。
 
-## Endpoints
+## 端點
 
-List dangling indexes:
+列出懸空索引：
 
 ```json
 GET /_dangling
 ```
 
-Import a dangling index:
+匯入懸空索引：
 
 ```json
 POST /_dangling/{index-uuid}
 ```
 
-Delete a dangling index:
+刪除懸空索引：
 
 ```json
 DELETE /_dangling/{index-uuid}
 ```
 
-## Path parameters
+## 路徑參數
 
-Path parameters are required.
+路徑參數為必要。
 
-Path parameter | Description
+路徑參數 | 說明
 :--- | :---
-`index-uuid` | UUID of index.
+`index-uuid` | 索引的 UUID。
 
-## Query parameters
+## 查詢參數
 
-Query parameters are optional.
+查詢參數為選用。
 
-Query parameter | Data type | Description
+查詢參數 | 資料類型 | 說明
 :--- | :--- | :---
-`accept_data_loss` | Boolean | Must be set to `true` for an `import` or `delete` because OpenSearch is unaware of where the dangling index data came from.
-`timeout` | Time units | The amount of time to wait for a response. If no response is received in the defined time period, an error is returned. Default is `30` seconds.
-`cluster_manager_timeout` | Time units | The amount of time to wait for a connection to the cluster manager. If no response is received in the defined time period, an error is returned. Default is `30` seconds.
+`accept_data_loss` | 布林值 | 對於 `import` 或 `delete` 必須設定為 `true`，因為 OpenSearch 無法得知懸空索引資料的來源。
+`timeout` | 時間單位 | 等待回應的時間長度。如果在設定的時間內未收到回應，則會傳回錯誤。預設為 `30` 秒。
+`cluster_manager_timeout` | 時間單位 | 等待連線至叢集管理員節點的時間長度。如果在設定的時間內未收到回應，則會傳回錯誤。預設為 `30` 秒。
 
-## Example request: Listing dangling indexes
+## 範例請求：列出懸空索引
 
 <!-- spec_insert_start
 component: example_code
@@ -69,7 +70,7 @@ response = client.dangling_indices.list_dangling_indices()
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example request: Importing a dangling index
+## 範例請求：匯入懸空索引
 
 <!-- spec_insert_start
 component: example_code
@@ -95,7 +96,7 @@ response = client.dangling_indices.import_dangling_index(
 <!-- spec_insert_end -->
 
  
-## Example request: Deleting a dangling index
+## 範例請求：刪除懸空索引
 
 <!-- spec_insert_start
 component: example_code
@@ -120,7 +121,7 @@ response = client.dangling_indices.delete_dangling_index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response 
+## 範例回應 
 
 ````json
 {

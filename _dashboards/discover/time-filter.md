@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Time filter
+title: "時間篩選器"
 parent: Exploring data with Discover
 grand_parent: Exploring data
 nav_order: 10
@@ -8,169 +9,169 @@ redirect_from:
   - /dashboards/get-started/time-filter/
 ---
 
-# Using the time filter
+# 使用時間篩選器
 
-The time filter is located at the top of the **Dashboard**, **Discover**, and **Visualize** applications.
+時間篩選器位於 **Dashboard**、**Discover** 和 **Visualize** 應用程式的頂端。
 
-Use the time filter to select the time interval for the data that is displayed in the applications. The filter supports intervals in seconds, minutes, hours, days, weeks, months, or years.
+使用時間篩選器來選取應用程式中顯示資料的時間間隔。該篩選器支援秒、分、時、日、週、月或年的間隔。
 
-This page uses the terms _time range_ and _time interval_ interchangeably to refer generically to a filter interval, no matter what the magnitude, from seconds to years. _Time_ or _time value_ refers to the endpoint of a relative time interval in seconds, minutes, or hours, as distinct from date values in days, weeks, months, or years.
+本頁面交替使用 _時間範圍 (time range)_ 和 _時間間隔 (time interval)_ 這兩個術語來泛指篩選間隔，無論其量級是秒還是年。_時間 (Time)_ 或 _時間值 (time value)_ 指的是相對時間間隔（以秒、分或時為單位）的端點，與以日、週、月或年為單位的日期值有所區分。
 {: .note}
 
-You can select a _relative_ time interval (a fixed window of time relative to _now_), or an _absolute_ time interval (between two fixed times). A _refresh interval_ determines how often a relative time interval refreshes. The refresh interval is configurable, and defaults to one second (1 s). Absolute time intervals are unaffected by the refresh interval.
+您可以選取 _相對_ 時間間隔（相對於 _現在 (now)_ 的固定時間視窗）或 _絕對_ 時間間隔（兩個固定時間之間）。_重新整理間隔 (refresh interval)_ 決定了相對時間間隔重新整理的頻率。重新整理間隔可設定，預設為一秒 (1 s)。絕對時間間隔不受重新整理間隔的影響。
 
-While most applications (data logs, for example), deal with past dates and times, relative and absolute time intervals can encompass both past and future dates and times. For example, a relative time interval could be set to span _now_ to 24 hours in the future.
+雖然大多數應用程式（例如資料記錄檔）處理的是過去的日期和時間，但相對和絕對時間間隔可以同時包含過去和未來的日期和時間。例如，相對時間間隔可以設定為從 _現在_ 到未來 24 小時。
 
-The default time range is a relative interval of **Last 15 minutes**. You can change the default at [**Dashboards Management** > **Advanced Settings** > **Time filter defaults**]({{site.url}}{{site.baseurl}}/dashboards/management/advanced-settings/#general-settings), or select a time range at the application level as described in [Selecting a time range](#selecting-a-time-range).
+預設的時間範圍是相對間隔的 **Last 15 minutes**。您可以在 [**Dashboards Management** > **Advanced Settings** > **Time filter defaults**]({{site.url}}{{site.baseurl}}/dashboards/management/advanced-settings/#general-settings) 變更預設值，或按照 [Selecting a time range](#selecting-a-time-range) 中所述在應用程式層級選取時間範圍。
 {: .note}
 
-## Navigating the time filter
+## 操作時間篩選器
 
 ![Time filter interface]({{site.url}}{{site.baseurl}}/images/dashboards/time-filter-callouts.png)
 
-The following components make up the time filter.
+時間篩選器由下列元件組成：
 
-- The _shortcut selector_ (A) opens a dialog from which you can select a relative time interval or a recently used time interval, and set the time refresh interval.
-- The _time range display_ (B) shows the selected time range in absolute (for example, _Mar 22, 2024 @12:00:01.000 → now_) or relative (for example, _Last 2 years_) terms.
-- The **Show dates** link (C) forces the _time range display_ to show the time interval in _from → to_ format.
-- The **Refresh** button (D) updates the data displayed in the application based on new filter or query values. **Refresh** updates query and data filters as well as the time filter.
-
-
-## Selecting a time range
-
-You can select a [relative](#selecting-a-relative-time-interval) or [absolute](#selecting-an-absolute-time-interval) interval as the time range at the application level. Or, you can select a relative or absolute interval using the [shortcut selector](#using-the-time-interval-shortcuts).
+- _捷徑選取器 (shortcut selector)_ (A) 會開啟一個對話方塊，您可以在其中選取相對時間間隔或最近使用的時間間隔，並設定時間重新整理間隔。
+- _時間範圍顯示 (time range display)_ (B) 以絕對（例如：_Mar 22, 2024 @12:00:01.000 → now_）或相對（例如：_Last 2 years_）術語顯示選取的時間範圍。
+- **Show dates** 連結 (C) 會強制 _時間範圍顯示_ 以 _from → to_ 格式顯示時間間隔。
+- **Refresh** 按鈕 (D) 會根據新的篩選或查詢值更新應用程式中顯示的資料。**Refresh** 會更新查詢、資料篩選器以及時間篩選器。
 
 
-### Selecting an absolute time interval
+## 選取時間範圍
 
-To select an absolute time interval, follow these steps:
+您可以在應用程式層級選取 [相對](#selecting-a-relative-time-interval) 或 [絕對](#selecting-an-absolute-time-interval) 間隔作為時間範圍。或者，您可以使用 [捷徑選取器](#using-the-time-interval-shortcuts) 選取相對或絕對間隔。
 
-1. If necessary to display the interval in **from → to** form, select  **Show dates**.
 
-1. Select the displayed start time.
+### 選取絕對時間間隔
 
-1. In the time selection popover, choose the **Absolute** tab as shown in the following image.
+若要選取絕對時間間隔，請依照下列步驟操作：
+
+1. 如有必要以 **from → to** 形式顯示間隔，請選取 **Show dates**。
+
+1. 選取顯示的開始時間。
+
+1. 在時間選取彈出視窗中，選擇 **Absolute** 索引標籤，如下圖所示。
 
    ![Absolute time filter]({{site.url}}{{site.baseurl}}/images/dashboards/absolute-time-filter.png){: width="56%" }
 
-1. Use the calendar and time scroll tools to choose a start time, or edit the start time in the **Start date** text box.
+1. 使用日曆和時間捲動工具來選擇開始時間，或在 **Start date** 文字方塊中編輯開始時間。
 
-1. Select the displayed end time.
+1. 選取顯示的結束時間。
 
-1. In the time selection popover, choose the **Absolute** tab.
+1. 在時間選取彈出視窗中，選擇 **Absolute** 索引標籤。
 
-1. Use the calendar and time scroll tools to choose an end date and time, or edit the end date and time in the **End date** text box.
+1. 使用日曆和時間捲動工具來選擇結束日期和時間，或在 **End date** 文字方塊中編輯結束日期和時間。
 
-1. Choose the **Update** button to apply changes.
+1. 選擇 **Update** 按鈕以套用變更。
 
-   The data tables and visualizations displayed in the application automatically updates to reflect the new time interval filter.
+   應用程式中顯示的資料表和視覺化會自動更新，以反映新的時間間隔篩選條件。
 
 
-### Selecting a relative time interval
+### 選取相對時間間隔
 
-To select a relative time interval, follow these steps:
+若要選取相對時間間隔，請依照下列步驟操作：
 
-1. If necessary to display the interval in **from → to** form, select  **Show dates**.
+1. 如有必要以 **from → to** 形式顯示間隔，請選取 **Show dates**。
 
-1. Select the displayed start time.
+1. 選取顯示的開始時間。
 
-1. In the time selection popover, choose the **Relative** tab as shown in the following image.
+1. 在時間選取彈出視窗中，選擇 **Relative** 索引標籤，如下圖所示。
 
    ![Relative time filter]({{site.url}}{{site.baseurl}}/images/dashboards/relative-time-filter.png){: width="56%" }
 
-1. In the number combo box, select or enter the interval quantity.
+1. 在數字組合方塊中，選取或輸入間隔數量。
 
-1. In the interval dropdown, select the past (**ago**) or future (**from now**) start of the relative interval.
+1. 在間隔下拉式選單中，選取相對間隔的開始時間位於過去 (**ago**) 或未來 (**from now**)。
 
-   You can choose **Now** as the start time. In this case, the relative end time must be in the future (**from now**).
+   您可以選擇 **Now** 作為開始時間。在此情況下，相對結束時間必須位於未來 (**from now**)。
    {: .note}
 
-1. (Optional) Activate the **Round to** toggle. This rounds the start time to the beginning of the specified interval rather than calculating it as an offset from the exact time on the system clock.
+1. （選用）啟用 **Round to** 切換開關。這會將開始時間捨入至指定間隔的開頭，而不是以系統時鐘的確切時間計算偏移量。
 
-1. Select the displayed end time.
+1. 選取顯示的結束時間。
 
-1. Do one of the following:
+1. 執行下列其中一項操作：
 
-   Many, perhaps most, applications require a relative interval ending at the present. In this case, do the immediately following instructions.
+   許多（甚至可能是大多數）應用程式需要以目前時間結束的相對間隔。在這種情況下，請依照緊接在後的步驟操作。
 
-   1. Select the **Now** tab.
+   1. 選取 **Now** 索引標籤。
 
-   1. In the **Now** popover, select **Set end date and time to now**.
+   1. 在 **Now** 彈出視窗中，選取 **Set end date and time to now**。
 
-   If your application requires a relative end time that is not **now**, do the following:
+   如果您的應用程式需要的相對結束時間不是 **now**，請執行下列操作：
 
-   1. In the time selection popover, choose the **Relative** tab.
+   1. 在時間選取彈出視窗中，選擇 **Relative** 索引標籤。
 
-   1. In the number combo box, select or enter the interval quantity.
+   1. 在數字組合方塊中，選取或輸入間隔數量。
 
-   1. In the interval dropdown, select the past (**ago**) or future (**from now**) start of the relative interval.
+   1. 在間隔下拉式選單中，選取相對間隔的開始時間位於過去 (**ago**) 或未來 (**from now**)。
 
-      The end time must be after the start time. The interval displays in red if the interval is illegal.
+      結束時間必須晚於開始時間。如果間隔不合法，會以紅色顯示。
       {: .note}
 
-   1. (Optional) Activate the **Round to ...** toggle. This rounds the start time to the beginning of the specified interval rather than calculating it from the exact time on the system clock.
+   1. （選用）啟用 **Round to ...** 切換開關。這會將開始時間捨入至指定間隔的開頭，而不是根據系統時鐘的確切時間計算。
 
-1. Choose the **Update** button to apply changes.
+1. 選擇 **Update** 按鈕以套用變更。
 
-   The application updates the data in data tables and visualizations to reflect the new time interval filter.
+   應用程式會更新資料表和視覺化中的資料，以反映新的時間間隔篩選條件。
 
 
-### Using the time interval shortcuts
+### 使用時間間隔捷徑
 
-To select a time interval from common or previous interval values, follow these steps:
+若要從常用或先前的間隔值選取時間間隔，請依照下列步驟操作：
 
-1. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/calendar-icon.png" class="inline-icon" alt="calendar icon"/>{:/} (calendar) or {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/clock-icon.png" class="inline-icon" alt="clock icon"/>{:/} (clock) icon on the right of the search bar.
+1. 選取搜尋列右側的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/calendar-icon.png" class="inline-icon" alt="calendar icon"/>{:/}（日曆）或 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/clock-icon.png" class="inline-icon" alt="clock icon"/>{:/}（時鐘）圖示。
 
-1. From the shortcut popover, select one of the time filter options, as shown in the following image.
+1. 從捷徑彈出視窗中，選取時間篩選選項之一，如下圖所示。
 
    ![Time range interface]({{site.url}}{{site.baseurl}}/images/dashboards/time-range.png){: width="59%" }
 
-   - **Quick select**: Choose an interval spanning _now_ to a past (**Last**) or future (**Next**) time.
+   - **Quick select**：選擇從 _現在_ 到過去 (**Last**) 或未來 (**Next**) 時間的間隔。
 
-      1. In the **Last/Next** dropdown, select **Last** (past) or **Next** (future).
+      1. 在 **Last/Next** 下拉式選單中，選取 **Last**（過去）或 **Next**（未來）。
 
-      1. In the number combo box, select or enter the interval quantity.
+      1. 在數字組合方塊中，選取或輸入間隔數量。
 
-      1. In the interval dropdown, select the units for the relative interval.
+      1. 在間隔下拉式選單中，選取相對間隔的單位。
 
-      1. Choose **Apply**.
+      1. 選擇 **Apply**。
 
-   - **Commonly used**: Choose a common time range, for example **Today**, **Last 7 days**, or **Last 30 days**.
+   - **Commonly used**：選擇常用的時間範圍，例如 **Today**、**Last 7 days** 或 **Last 30 days**。
 
-   - **Recently used date ranges**: Select a previously used time range. The time range can be relative or absolute.
+   - **Recently used date ranges**：選取先前使用過的時間範圍。時間範圍可以是相對或絕對的。
 
-- (Optional) Change the refresh interval:
+- （選用）變更重新整理間隔：
 
-   1. In the **Refresh every** panel, select or enter the interval quantity in the number combo box.
+   1. 在 **Refresh every** 面板中，在數字組合方塊中選取或輸入間隔數量。
 
-   1. In the interval dropdown, select the interval unit (**seconds**, **minutes**, or **hours**).
+   1. 在間隔下拉式選單中，選取間隔單位 (**seconds**、**minutes** 或 **hours**)。
 
-   1. Select **Refresh**.
+   1. 選取 **Refresh**。
 
-## Starting and stopping data refresh
+## 開始和停止資料重新整理
 
-To start or stop the time interval refresh, follow these steps:
+若要開始或停止時間間隔重新整理，請依照下列步驟操作：
 
-1. From an OpenSearch Dashboards application (**Discover**, **Dashboards**, or **Visualize**), select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/calendar-icon.png" class="inline-icon" alt="calendar icon"/>{:/} (calendar) or {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/clock-icon.png" class="inline-icon" alt="clock icon"/>{:/} (clock) icon on the right of the search bar.
+1. 在 OpenSearch Dashboards 應用程式 (**Discover**、**Dashboards** 或 **Visualize**) 中，選取搜尋列右側的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/calendar-icon.png" class="inline-icon" alt="calendar icon"/>{:/}（日曆）或 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/clock-icon.png" class="inline-icon" alt="clock icon"/>{:/}（時鐘）圖示。
 
-1. In the **Refresh every** panel, select **Start** or **Stop**.
+1. 在 **Refresh every** 面板中，選取 **Start** 或 **Stop**。
 
-   - If the time interval is relative:
+   - 如果時間間隔是相對的：
 
-      - Starting data refresh causes the data selection to be updated approximately every _refresh interval_.
-      - Stopping data refresh "freezes" the selection interval until data refresh is restarted.
+      - 開始資料重新整理會使資料選取範圍大約每隔一個 _重新整理間隔_ 更新一次。
+      - 停止資料重新整理會「凍結」選取間隔，直到重新開始資料重新整理為止。
 
-   - If the time interval is absolute, then starting or stopping data refresh has no effect on the data selection.
+   - 如果時間間隔是絕對的，則開始或停止資料重新整理對資料選取範圍沒有任何影響。
 
-1. Select **Refresh**.
+1. 選取 **Refresh**。
 
-   The shortcut selector shows the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/calendar-icon.png" class="inline-icon" alt="calendar icon"/>{:/} (calendar) icon if the time interval refresh is stopped, or the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/clock-icon.png" class="inline-icon" alt="clock icon"/>{:/} (clock) icon if the time interval refresh is running.
+   如果時間間隔重新整理已停止，捷徑選取器會顯示 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/calendar-icon.png" class="inline-icon" alt="calendar icon"/>{:/}（日曆）圖示；如果時間間隔重新整理正在執行，則會顯示 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/clock-icon.png" class="inline-icon" alt="clock icon"/>{:/}（時鐘）圖示。
    {: .note}
 
-## Configuring the time zone
+## 設定時區
 
-By default, the time filter uses the time zone detected by your browser. To change the time zone, go to **Dashboards Management** > **Advanced settings** and update the **Timezone for date formatting** (**dateFormat:tz**) setting. For more information, see [Advanced settings]({{site.url}}{{site.baseurl}}/dashboards/management/advanced-settings/).
+預設情況下，時間篩選器使用您的瀏覽器偵測到的時區。若要變更時區，請前往 **Dashboards Management** > **Advanced settings** 並更新 **Timezone for date formatting** (**dateFormat:tz**) 設定。如需更多資訊，請參閱 [Advanced settings]({{site.url}}{{site.baseurl}}/dashboards/management/advanced-settings/)。
 
-## Related documentation
+## 相關文件
 
 - [Advanced settings]({{site.url}}{{site.baseurl}}/dashboards/management/advanced-settings/)

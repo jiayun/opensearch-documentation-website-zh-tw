@@ -1,53 +1,54 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Alias exists
+title: "別名是否存在"
 parent: Alias APIs
 grand_parent: Index APIs
 nav_order: 40
 ---
 
 # Index Alias Exists API
-**Introduced 1.0**
+**1.0 版推出**
 {: .label .label-purple }
 
-Checks if an alias exists.
+檢查別名是否存在。
 
-## Endpoints
+## 端點
 
 ```json
 HEAD /_alias/{alias}
 HEAD /{index}/_alias/{alias}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are required.
+下表列出可用的路徑參數。所有路徑參數皆為必要。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `<alias>` | String | Comma-separated list or wildcard expression of alias names to check. |
-| `<index>` | String | Comma-separated list or wildcard expression of index names used to limit the request. |
+| `<alias>` | 字串 | 要檢查的別名名稱，以逗號分隔的清單或萬用字元運算式表示。 |
+| `<index>` | 字串 | 用於限制請求範圍的索引名稱，以逗號分隔的清單或萬用字元運算式表示。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `expand_wildcards` | String | Type of index that wildcard expressions can match. Supports comma-separated values. Valid values are `all`, `open`, `closed`, `hidden`, and `none`. Default is `all`. |
-| `ignore_unavailable` | Boolean | Whether to ignore unavailable indexes. Default is `false`. |
-| `local` | Boolean | Whether to return information from the local node only instead of from the cluster manager node. Default is `false`. |
+| `expand_wildcards` | 字串 | 萬用字元運算式可比對的索引類型。支援以逗號分隔的值。有效值為 `all`、`open`、`closed`、`hidden` 和 `none`。預設為 `all`。 |
+| `ignore_unavailable` | 布林值 | 是否忽略無法使用的索引。預設為 `false`。 |
+| `local` | 布林值 | 是否僅從本機節點傳回資訊，而非從叢集管理員節點傳回。預設為 `false`。 |
 
-## Response codes
+## 回應碼
 
-The API returns one of the following response codes.
+API 會傳回下列其中一個回應碼。
 
-| Response code | Description |
+| 回應碼 | 說明 |
 | :--- | :--- |
-| `200` | Indicates that all specified aliases exist. |
-| `404` | Indicates that one or more specified aliases do not exist. |
+| `200` | 表示所有指定的別名皆存在。 |
+| `404` | 表示一個或多個指定的別名不存在。 |
 
-## Example requests
+## 請求範例
 
 <!-- spec_insert_start
 component: example_code
@@ -71,10 +72,10 @@ response = client.indices.exists_alias(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/aliases/get`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`indices:admin/aliases/get`。
 
-## Related documentation
+## 相關文件
 
-For more information about index aliases, see [Index aliases]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/).
+如需索引別名的詳細資訊，請參閱[索引別名]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/)。

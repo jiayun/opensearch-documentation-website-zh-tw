@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: compare
 nav_order: 20
@@ -9,14 +10,14 @@ redirect_from:
 ---
 
 <!-- vale off -->
-# compare command
+# compare 命令
 <!-- vale on -->
 
-The `compare` command helps you analyze the difference between two benchmark tests. This can help you analyze the performance impact of changes made from a previous test based on a specific Git revision.
+`compare` 命令可協助您分析兩次基準測試之間的差異。這能協助您根據特定 Git 修訂版本，分析相較於前一次測試所做的變更對效能的影響。
 
-## Usage
+## 用法
 
-You can compare two different workload tests using their `TestRun IDs`. To find a list of tests run from a specific workload, use `opensearch-benchmark list test-runs`. You should receive an output similar to the following:
+您可以使用 `TestRun IDs` 來比較兩個不同的工作負載測試。若要找出從特定工作負載執行的測試清單，請使用 `opensearch-benchmark list test-runs`。您應該會收到類似以下的輸出：
 
 
 ```
@@ -41,13 +42,13 @@ a33845cc-c2e5-4488-a2db-b0670741ff9b  20230523T213145Z           geonames       
 
 ```
 
-Then use `compare` to call a `--baseline` test and a  `--contender` test for comparison.
+然後使用 `compare` 來呼叫 `--baseline` 測試與 `--contender` 測試以進行比較。
 
 ```
 opensearch-benchmark compare --baseline=417ed42-6671-9i79-11a1-e367636068ce --contender=beb154e4-0a05-4f45-ad9f-e34f9a9e51f7
 ```
 
-You should receive the following response comparing the final benchmark metrics for both tests:
+您應該會收到以下回應，比較兩項測試的最終基準指標：
 
 ```
    ____                  _____                      __       ____                  __                         __
@@ -125,15 +126,15 @@ Query latency country_agg_cached (100.0 percentile) [ms]     3.42547      2.8681
                       Nodes Stats(100.0 percentile) [ms]     5.22527      5.66977    +0.44450
 ```
 
-## Options
+## 選項
 
-You can use the following options to customize the results of your test comparison:
+您可以使用下列選項來自訂測試比較的結果：
 
-- `--baseline`: The baseline TestRun ID used to compare the contender TestRun.
-- `--contender`: The TestRun ID for the contender being compared to the baseline.
-- `--results-format`: Defines the output format for the command line results, either `markdown` or `csv`. Default is `markdown`.
-- `--results-numbers-align`: Defines the column number alignment for when the `compare` command outputs results. Default is `right`.
-- `--results-file`: When provided a file path, writes the compare results to the file indicated in the path.
-- `--show-in-results`: Determines whether or not to include the comparison in the results file.
+- `--baseline`：用來與待比較的 TestRun 比較的基準 TestRun ID。
+- `--contender`：要與基準比較的 TestRun ID。
+- `--results-format`：定義命令列結果的輸出格式，可為 `markdown` 或 `csv`。預設為 `markdown`。
+- `--results-numbers-align`：定義 `compare` 命令輸出結果時，欄位中數字的對齊方式。預設為 `right`。
+- `--results-file`：提供檔案路徑時，將比較結果寫入該路徑所指定的檔案。
+- `--show-in-results`：決定是否將比較結果包含在結果檔案中。
 
 

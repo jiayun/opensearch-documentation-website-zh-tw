@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delimited term frequency
+title: "分隔詞頻"
 parent: Token filters
 nav_order: 100
 ---
 
-# Delimited term frequency token filter
+# 分隔詞頻詞元篩選器
 
-The `delimited_term_freq` token filter separates a token stream into tokens with corresponding term frequencies, based on a provided delimiter. A token consists of all characters before the delimiter, and a term frequency is the integer after the delimiter. For example, if the delimiter is `|`, then for the string `foo|5`, `foo` is the token and `5` is its term frequency. If there is no delimiter, the token filter does not modify the term frequency. 
+`delimited_term_freq` 詞元篩選器會根據提供的分隔符號，將詞元串流分隔為詞元及其對應的詞頻。詞元由分隔符號之前的所有字元組成，而詞頻則是分隔符號之後的整數。例如，若分隔符號為 `|`，則對於字串 `foo|5`，`foo` 是詞元，`5` 是其詞頻。若沒有分隔符號，詞元篩選器不會修改詞頻。
 
-You can either use a preconfigured `delimited_term_freq` token filter or create a custom one.
+您可以使用預先設定的 `delimited_term_freq` 詞元篩選器，或建立自訂的詞元篩選器。
 
-## Preconfigured `delimited_term_freq` token filter
+## 預先設定的 `delimited_term_freq` 詞元篩選器
 
-The preconfigured `delimited_term_freq` token filter uses the `|` default delimiter. To analyze text with the preconfigured token filter, send the following request to the `_analyze` endpoint:
+預先設定的 `delimited_term_freq` 詞元篩選器使用 `|` 預設分隔符號。若要使用預先設定的詞元篩選器分析文字，請將下列請求傳送至 `_analyze` 端點：
 
 ```json
 POST /_analyze
@@ -27,7 +28,7 @@ POST /_analyze
 ```
 {% include copy-curl.html %}
 
-The `attributes` array specifies that you want to filter the output of the `explain` parameter to return only `termFrequency`. The response contains both the original token and the parsed output of the token filter that includes the term frequency:
+`attributes` 陣列指定您要篩選 `explain` 參數的輸出，僅傳回 `termFrequency`。回應同時包含原始詞元，以及詞元篩選器剖析後包含詞頻的輸出：
 
 ```json
 {
@@ -66,9 +67,9 @@ The `attributes` array specifies that you want to filter the output of the `expl
 }
 ```
 
-## Custom `delimited_term_freq` token filter
+## 自訂 `delimited_term_freq` 詞元篩選器
 
-To configure a custom `delimited_term_freq` token filter, first specify the delimiter in the mapping request, in this example, `^`:
+若要設定自訂的 `delimited_term_freq` 詞元篩選器，請先在對應請求中指定分隔符號，本範例中為 `^`：
 
 ```json
 PUT /testindex
@@ -87,7 +88,7 @@ PUT /testindex
 ```
 {% include copy-curl.html %}
 
-Then analyze text with the custom token filter you created:
+接著使用您建立的自訂詞元篩選器分析文字：
 
 ```json
 POST /testindex/_analyze
@@ -101,7 +102,7 @@ POST /testindex/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains both the original token and the parsed version with the term frequency:
+回應同時包含原始詞元，以及剖析後包含詞頻的版本：
 
 ```json
 {
@@ -140,11 +141,11 @@ The response contains both the original token and the parsed version with the te
 }
 ```
 
-## Combining `delimited_token_filter` with scripts
+## 將 `delimited_token_filter` 與指令碼搭配使用
 
-You can write Painless scripts to calculate custom scores for the documents in the results. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+您可以撰寫 Painless 指令碼，為結果中的文件計算自訂分數。如需詳細資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-First, create an index and provide the following mappings and settings:
+首先，建立索引並提供下列對應與設定：
 
 ```json
 PUT /test
@@ -187,9 +188,9 @@ PUT /test
 ```
 {% include copy-curl.html %}
 
-The `test` index uses a keyword tokenizer, a delimited term frequency token filter (where the delimiter is `^`), and a custom analyzer that includes a keyword tokenizer and a delimited term frequency token filter. The mappings specify that the field `f1` is a keyword field and the field `f2` is a text field. The field `f2` uses the custom analyzer defined in the settings for text analysis. Additionally, specifying `index_options` signals to OpenSearch to add the term frequencies to the inverted index. You'll use the term frequencies to give documents with repeated terms a higher score.
+`test` 索引使用 keyword 斷詞器、分隔詞頻詞元篩選器（其分隔符號為 `^`），以及包含 keyword 斷詞器與分隔詞頻詞元篩選器的自訂分析器。對應指定欄位 `f1` 為 keyword 欄位，欄位 `f2` 為 text 欄位。欄位 `f2` 使用設定中定義的自訂分析器進行文字分析。此外，指定 `index_options` 會通知 OpenSearch 將詞頻加入反向索引。您將使用詞頻為含有重複詞彙的文件提供較高的分數。
 
-Next, index two documents using bulk upload:
+接著，使用大量上傳將兩份文件編製索引：
 
 ```json
 POST /_bulk?refresh=true
@@ -200,7 +201,7 @@ POST /_bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-The following query searches for all documents in the index and calculates document scores as the term frequency of the term `v1` in the field `f2`:
+下列查詢會搜尋索引中的所有文件，並以欄位 `f2` 中詞彙 `v1` 的詞頻作為文件分數：
 
 ```json
 GET /test/_search
@@ -225,7 +226,7 @@ GET /test/_search
 ```
 {% include copy-curl.html %}
 
-In the response, document 1 has a score of 30 because the term frequency of the term `v1` in the field `f2` is 30. Document 2 has a score of 0 because the term `v1` does not appear in `f2`:
+在回應中，文件 1 的分數為 30，因為欄位 `f2` 中詞彙 `v1` 的詞頻為 30。文件 2 的分數為 0，因為詞彙 `v1` 未出現在 `f2` 中：
 
 ```json
 {
@@ -266,10 +267,10 @@ In the response, document 1 has a score of 30 because the term frequency of the 
 }
 ```
 
-## Parameters
+## 參數
 
-The following table lists all parameters that the `delimited_term_freq` supports.
+下表列出 `delimited_term_freq` 支援的所有參數。
 
-Parameter | Required/Optional | Description
+參數 | 必要/選用 | 說明
 :--- | :--- | :---
-`delimiter` | Optional | The delimiter used to separate tokens from term frequencies. Must be a single non-null character. Default is `|`.
+`delimiter` | 選用 | 用於將詞元與詞頻分隔的分隔符號。必須是單一非 null 字元。預設為 `|`。

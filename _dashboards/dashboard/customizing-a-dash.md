@@ -1,126 +1,127 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Customizing a dashboard
+title: "自訂儀表板"
 parent: Creating dashboards
 nav_order: 30
 has_children: false
 ---
 
-# Customizing a dashboard
+# 自訂儀表板
 
-You can customize a dashboard in the following ways:
+您可以使用以下方式自訂儀表板：
 
-- [Resize panels](#resizing-a-panel).
-- [Move panels](#moving-a-panel).
-- [View a panel in full screen mode](#using-full-screen-mode)
-- [Customize](#customizing-a-visualization-panel) the title, legend, or colors in a visualization.
-
-
-## Prerequisites
-
-You can customize a dashboard only when you have the dashboard open for editing. See [Opening a dashboard]({{site.url}}{{site.baseurl}}/dashboards/dashboard/opening-a-dashboard/).
+- [調整面板大小](#resizing-a-panel)。
+- [移動面板](#moving-a-panel)。
+- [以全螢幕模式檢視面板](#using-full-screen-mode)
+- [自訂](#customizing-a-visualization-panel)視覺化圖表中的標題、圖例或顏色。
 
 
-### Resizing a panel
+## 前置條件
 
-To resize a panel, follow these steps:
-
-1. Select and hold the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/resize-icon.png" class="inline-icon" alt="resize icon"/>{:/} (resize) icon in the panel's lower-right corner.
-
-1. Drag to the new dimensions.
-
-   Other panels move out of the way to accommodate the new panel size.
+您只能在開啟儀表板進行編輯時自訂儀表板。請參閱 [開啟儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/opening-a-dashboard/)。
 
 
-### Moving a panel
+### 調整面板大小
 
-To move a panel, follow these steps:
+若要調整面板大小，請執行以下步驟：
 
-1. Select and hold the panel title or the top of the panel as shown in the following image.
+1. 選取並按住面板右下角的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/resize-icon.png" class="inline-icon" alt="resize icon"/>{:/} (調整大小) 圖示。
 
-![Dragging a panel in Dashboards]({{site.url}}{{site.baseurl}}/images/dashboards/dash-panel-grab.png){: width="50%" }
+1. 拖曳至新的尺寸。
 
-1. Drag the panel to the new location.
-
-   Other panels move out of the way to accommodate the new panel location.
-
-## Using full screen mode
-
-You can view a single visualization panel in full screen mode and then return to dashboard mode.
+   其他面板會自動移開以適應新的面板大小。
 
 
-### Viewing a panel in full screen mode
+### 移動面板
 
-To view a panel in full screen mode, follow these steps:
+若要移動面板，請執行以下步驟：
 
-1. Choose the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/more-icon.png" class="inline-icon" alt="ellipses icon"/>{:/} (ellipses) icon at the upper right of the panel.
+1. 選取並按住面板標題或面板頂部，如以下圖片所示。
 
-   The {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/more-icon.png" class="inline-icon" alt="ellipses icon"/>{:/} (ellipses) icon is visible only when you point to the visualization panel.
+![在 Dashboards 中拖曳面板]({{site.url}}{{site.baseurl}}/images/dashboards/dash-panel-grab.png){: width="50%" }
+
+1. 將面板拖曳至新位置。
+
+   其他面板會自動移開以適應新的面板位置。
+
+## 使用全螢幕模式
+
+您可以以全螢幕模式檢視單一視覺化面板，然後返回儀表板模式。
+
+
+### 以全螢幕模式檢視面板
+
+若要以全螢幕模式檢視面板，請執行以下步驟：
+
+1. 選擇面板右上角的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/more-icon.png" class="inline-icon" alt="ellipses icon"/>{:/} (省略號) 圖示。
+
+   只有在您將指標移至視覺化面板時，才會顯示 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/more-icon.png" class="inline-icon" alt="ellipses icon"/>{:/} (省略號) 圖示。
    {: .note}
 
-1. In the **Options** drop-down, select {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/maximize-icon.png" class="inline-icon" alt="maximize icon"/>{:/} (maximize) **Maximize panel**.
+1. 在 **Options** 下拉選單中，選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/maximize-icon.png" class="inline-icon" alt="maximize icon"/>{:/} (最大化) **Maximize panel**。
 
 
-### Reducing a panel from full screen mode
+### 將面板從全螢幕模式還原
 
-To reduce a panel from full screen mode, follow these steps:
+若要將面板從全螢幕模式還原，請執行以下步驟：
 
-1. Choose the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/more-icon.png" class="inline-icon" alt="ellipses icon"/>{:/} (ellipses) icon at the upper right of the panel.
+1. 選擇面板右上角的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/more-icon.png" class="inline-icon" alt="ellipses icon"/>{:/} (省略號) 圖示。
 
-   The {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/more-icon.png" class="inline-icon" alt="ellipses icon"/>{:/} (ellipses) icon is visible only when you point to the visualization panel.
+   只有在您將指標移至視覺化面板時，才會顯示 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/more-icon.png" class="inline-icon" alt="ellipses icon"/>{:/} (省略號) 圖示。
    {: .note}
 
-1. Select {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/minimize-icon.png" class="inline-icon" alt="minimize icon"/>{:/} (minimize) **Minimize**.
+1. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/minimize-icon.png" class="inline-icon" alt="minimize icon"/>{:/} (最小化) **Minimize**。
 
 
-## Customizing a visualization panel
+## 自訂視覺化面板
 
-You can customize the following aspects of a visualization panel in a dashboard:
+您可以自訂儀表板中視覺化面板的以下面向：
 
-- [Hide or display the legend](#hiding-and-displaying-the-legend).
-- [Change colors in the visualization](#changing-a-color).
-- [Change or hide the panel title](#changing-or-hiding-the-panel-title).
+- [隱藏或顯示圖例](#hiding-and-displaying-the-legend)。
+- [變更視覺化圖表中的顏色](#changing-a-color)。
+- [變更或隱藏面板標題](#changing-or-hiding-the-panel-title)。
 
-### Hiding and displaying the legend
+### 隱藏與顯示圖例
 
-To display or hide the panel legend:
+若要顯示或隱藏面板圖例：
 
-- Choose the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/list-icon.png" class="inline-icon" alt="list icon"/>{:/} (list) icon in the panel's lower left corner.
+- 選擇面板左下角的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/list-icon.png" class="inline-icon" alt="list icon"/>{:/} (清單) 圖示。
 
-### Changing a color
+### 變更顏色
 
-To change a color in the visualization, follow these steps:
+若要變更視覺化圖表中的顏色，請執行以下步驟：
 
-1. From the visualization legend, select a category.
+1. 從視覺化圖例中選取一個類別。
 
-1. From the flyout, select a color.
+1. 從彈出式選單中選取顏色。
 
-    The visualization graphic updates with your change.
+    視覺化圖形會根據您的變更而更新。
 
-    The color change is only saved for the current panel and dashboard. It does not affect the saved visualization.
+    顏色變更僅儲存於目前的面板和儀表板中，不會影響已儲存的視覺化圖表。
     
 <!--     To change the color in the visualization, see [Visualization colors]({{site.url}}{{site.baseurl}}/dashboards/visualize/viz-tool-ref/#visualization-colors).
     {: .note}
  -->
 
-### Changing or hiding the panel title
+### 變更或隱藏面板標題
 
-To display, hide, or customize the panel title, follow these steps:
+若要顯示、隱藏或自訂面板標題，請執行以下步驟：
 
-1. Choose the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/gear-icon.png" class="inline-icon" alt="gear icon"/>{:/} (gear) icon.
+1. 選擇 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/gear-icon.png" class="inline-icon" alt="gear icon"/>{:/} (齒輪) 圖示。
 
-1. From the **Options** window, select **Edit panel title**.
+1. 從 **Options** 視窗中，選取 **Edit panel title**。
 
-1. From the **Customize panel** dialog, enter a title under **Panel title**.
+1. 從 **Customize panel** 對話框中，在 **Panel title** 下輸入標題。
 
-1. (Optional) Toggle the **Show panel title** to hide the title.
+1. (選用) 切換 **Show panel title** 以隱藏標題。
 
-1. Choose **Save**.
+1. 選擇 **Save**。
 
-    Changing a panel title only affects the panel on the current dashboard. The change does not affect the visualization on any other dashboard nor any other panel containing that visualization.
+    變更面板標題僅會影響目前儀表板上的面板。此變更不會影響任何其他儀表板上的視覺化圖表，也不會影響包含該視覺化圖表的任何其他面板。
     {: .note}
 
 
-## Next steps
+## 後續步驟
 
-If you have made changes to the dashboard that you want to keep, save the dashboard. See [Saving a dashboard]({{site.url}}{{site.baseurl}}/dashboards/dashboard/managing-a-dash/#saving-a-dashboard).
+如果您對儀表板進行了想要保留的變更，請儲存儀表板。請參閱 [儲存儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/managing-a-dash/#saving-a-dashboard)。

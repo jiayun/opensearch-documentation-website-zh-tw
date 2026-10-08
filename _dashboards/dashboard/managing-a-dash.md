@@ -1,94 +1,95 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Managing dashboards
+title: "管理儀表板"
 parent: Creating dashboards
 nav_order: 40
 has_children: false
 ---
 
-# Managing dashboards
+# 管理儀表板
 
-Manage dashboards in OpenSearch Dashboards from the **Dashboards** application main page, shown in the following image.
+您可以從 **Dashboards** 應用程式主頁（如下圖所示）管理 OpenSearch Dashboards 中的儀表板。
 
 ![Dashboards landing page]({{site.url}}{{site.baseurl}}/images/dashboards/dash-landing-page.png)
 
-You can do the following:
+您可以執行以下操作：
 
-- [Save a dashboard](#saving-a-dashboard).
-- Create and edit a dashboard. See [Opening a dashboard]({{site.url}}{{site.baseurl}}/dashboards/dashboard/opening-a-dashboard/).
-- [Export a dashboard to a file](#exporting-a-dashboard).
-- [Delete dashboards](#deleting-dashboards).
+- [儲存儀表板](#saving-a-dashboard)。
+- 建立與編輯儀表板。請參閱 [開啟儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/opening-a-dashboard/)。
+- [將儀表板匯出至檔案](#exporting-a-dashboard)。
+- [刪除儀表板](#deleting-dashboards)。
 
-## Saving a dashboard
+## 儲存儀表板
 
-You can save a newly created dashboard or save changes to an existing dashboard.
+您可以儲存新建立的儀表板，或儲存對現有儀表板的變更。
 
-### Saving a new dashboard
+### 儲存新儀表板
 
-To save a new dashboard, follow these steps:
+若要儲存新儀表板，請按照以下步驟操作：
 
-1. In the application menu, select **Save**.
+1. 在應用程式選單中，選取 **Save**。
 
-   The application displays the **Save dashboard** dialog.
+   應用程式會顯示 **Save dashboard** 對話方塊。
 
-1. Enter a title for the dashboard in the **Title** box.
+1. 在 **Title** 欄位中輸入儀表板的標題。
 
-1. (Optional) Enter a **Description**.
+1. (選用) 輸入 **Description**。
 
-1. (Optional) To save the current time filter so it's applied when you reopen the dashboard, select **Store time with dashboard**.
+1. (選用) 若要儲存目前的時間篩選器，以便在重新開啟儀表板時套用，請選取 **Store time with dashboard**。
 
-1. Select **Save**.
+1. 選取 **Save**。
 
-### Saving an existing dashboard
+### 儲存現有儀表板
 
-You can save a dashboard at any time.
+您可以隨時儲存儀表板。
 
-To save an existing dashboard:
+若要儲存現有儀表板：
 
-1. Select **Save** in the upper right of the **Create** panel.
+1. 選取 **Create** 面板右上角的 **Save**。
 
-   The application displays the **Save dashboard** dialog. If you have previously saved the dashboard, the **Title** box contains the dashboard title.
+   應用程式會顯示 **Save dashboard** 對話方塊。如果您之前已儲存過該儀表板，**Title** 欄位將包含該儀表板的標題。
 
-1. (Optional) To change the dashboard name, enter a new title for the dashboard in the **Title** box.
+1. (選用) 若要變更儀表板名稱，請在 **Title** 欄位中為儀表板輸入新標題。
 
-   Saving an existing dashboard without selecting **Save as new dashboard** overwrites the previous state of the dashboard, even if you've renamed the dashboard.
+   在未選取 **Save as new dashboard** 的情況下儲存現有儀表板，會覆寫該儀表板之前的狀態，即使您已重新命名儀表板也是如此。
    {: .warning}
 
-1. (Optional) Update the **Description**.
+1. (選用) 更新 **Description**。
 
-1. (Optional) To leave the saved dashboard in its current state and save the changes as a new dashboard, select **Save as new dashboard**.
+1. (選用) 若要將儲存的儀表板保持在目前狀態，並將變更儲存為新儀表板，請選取 **Save as new dashboard**。
 
-1. (Optional) To save the current time filter so it's applied when you reopen the dashboard, select **Store time with dashboard**.
+1. (選用) 若要儲存目前的時間篩選器，以便在重新開啟儀表板時套用，請選取 **Store time with dashboard**。
 
-1. Select the **Save** button.
+1. 選取 **Save** 按鈕。
 
 
-## Exporting a dashboard
+## 匯出儀表板
 
-You can export a dashboard to a PDF file or PNG image file.
+您可以將儀表板匯出為 PDF 檔案或 PNG 圖片檔案。
 
-Exporting a dashboard is a Reporting feature. You must have the Reporting plugin active to export a file.
+匯出儀表板是一項 Reporting 功能。您必須啟用 Reporting 外掛程式才能匯出檔案。
 {: .note}
 
-This feature requires the Reporting plugin. See [Reporting using OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/reporting/report-dashboard-index/) for more information about reporting.
+此功能需要 Reporting 外掛程式。有關報告的更多資訊，請參閱 [Reporting using OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/reporting/report-dashboard-index/)。
 
-1. Select **Reporting** from the application menu.
+1. 從應用程式選單中選取 **Reporting**。
 
-1. From the drop-down menu, select **Download PDF** or **Download PNG**.
+1. 從下拉選單中，選取 **Download PDF** 或 **Download PNG**。
 
-   The application displays the **Generating report** dialog. The report can take several seconds to generate.
+   應用程式會顯示 **Generating report** 對話方塊。報告可能需要幾秒鐘才能產生。
 
-1. The report opens in your browser or downloads, depending on your browser preference.
+1. 根據您的瀏覽器偏好設定，報告將在瀏覽器中開啟或直接下載。
 
 
-## Deleting dashboards
+## 刪除儀表板
 
-To delete one or more dashboards, follow these steps:
+若要刪除一個或多個儀表板，請按照以下步驟操作：
 
-1. In the [navigation panel]({{site.url}}{{site.baseurl}}/dashboards/navigating-ui/#the-left-navigation-panel), select **OpenSearch Dashboards** > **Dashboards**.
+1. 在 [導覽面板]({{site.url}}{{site.baseurl}}/dashboards/navigating-ui/#the-left-navigation-panel) 中，選取 **OpenSearch Dashboards** > **Dashboards**。
 
-1. From the list in the **Dashboards** table, select the checkbox next to all the dashboards you want to delete.
+1. 從 **Dashboards** 表格的清單中，選取所有您要刪除的儀表板旁的核取方塊。
 
-1. Choose the **Delete N Dashboards** button (where **N** is the number of checked boxes) to the left of the **Search** box in the **Dashboards** panel.
+1. 在 **Dashboards** 面板的 **Search** 欄位左側，選擇 **Delete N Dashboards** 按鈕（其中 **N** 為已勾選的方塊數量）。
 
-1. In the confirmation dialog, choose **Delete**.
+1. 在確認對話方塊中，選擇 **Delete**。

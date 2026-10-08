@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Condition
 parent: Token filters
 nav_order: 70
 ---
 
-# Condition token filter
+# Condition 詞元篩選器
 
-The `condition` token filter is a special type of filter that allows you to apply other token filters conditionally based on certain criteria. This provides more control over when certain token filters should be applied during text analysis.
-Multiple filters can be configured and only applied when they meet the conditions you define. 
-This token filter can be very useful for language-specific processing and handling of special characters.
+`condition` 詞元篩選器是一種特殊類型的篩選器，可讓您根據特定條件有條件地套用其他詞元篩選器。這讓您在文字分析期間，能更精確地控制何時應套用特定詞元篩選器。
+您可以設定多個篩選器，且只有在符合您定義的條件時才會套用這些篩選器。 
+此詞元篩選器對於特定語言的處理及特殊字元的處理非常實用。
 
 
-## Parameters
+## 參數
 
-There are two parameters that must be configured in order to use the `condition` token filter.
+若要使用 `condition` 詞元篩選器，必須設定兩個參數。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`filter` | Required | Array | Specifies which token filters should be applied to the tokens when the specified condition (defined by the `script` parameter) is met.
-`script` | Required | Object | Configures an [inline script]({{site.url}}{{site.baseurl}}/api-reference/script-apis/exec-script/) that defines the condition that needs to be met in order for the filters specified in the `filter` parameter to be applied (only inline scripts are accepted).
+`filter` | 必要 | 陣列 | 指定在符合指定條件（由 `script` 參數定義）時，應對詞元套用哪些詞元篩選器。
+`script` | 必要 | 物件 | 設定一個[內嵌指令碼]({{site.url}}{{site.baseurl}}/api-reference/script-apis/exec-script/)，用於定義套用 `filter` 參數中指定的篩選器所需符合的條件（僅接受內嵌指令碼）。
 
 
-## Example
+## 範例
 
-The following example request creates a new index named `my_conditional_index` and configures an analyzer with a `condition` filter. This filter applies a `lowercase` filter to any tokens that contain the character sequence "um":
+以下範例請求會建立名為 `my_conditional_index` 的新索引，並設定一個具有 `condition` 篩選器的分析器。此篩選器會對任何包含字元序列「um」的詞元套用 `lowercase` 篩選器：
 
 ```json
 PUT /my_conditional_index
@@ -55,9 +56,9 @@ PUT /my_conditional_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用以下請求來檢查使用此分析器所產生的詞元：
 
 ```json
 GET /my_conditional_index/_analyze
@@ -68,7 +69,7 @@ GET /my_conditional_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

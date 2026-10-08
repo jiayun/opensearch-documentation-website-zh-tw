@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Kuromoji stemmer
+title: "Kuromoji 詞幹提取器"
 parent: Token filters
 nav_order: 235
 ---
 
-# Kuromoji stemmer token filter
+# Kuromoji 詞幹提取詞元篩選器
 
-The `kuromoji_stemmer` token filter normalizes katakana words by removing a trailing long vowel mark (ー) from words that meet a minimum length threshold. Many foreign loanwords in Japanese are written in katakana with a trailing ー that denotes a lengthened final vowel (for example, コンピューター, プリンター). In practice, Japanese speakers often drop the trailing ー in informal or technical writing, resulting in two surface forms for the same word. This filter collapses those variants to a single canonical form.
+`kuromoji_stemmer` 詞元篩選器會正規化片假名單字，方法是從達到最小長度門檻的單字中移除結尾的長音符號 (ー)。日文中許多外來語是以片假名書寫，並以結尾的 ー 表示延長的最後母音（例如：コンピューター、プリンター）。實務上，日語使用者在非正式或技術性的文字中經常省略結尾的 ー，導致同一個單字出現兩種表面形式。此篩選器會將這些變體合併為單一的標準形式。
 
-The filter makes conversions such as the following:
+此篩選器會進行如下的轉換：
 
-- コンピューター (computer) becomes コンピュータ.
-- プリンター (printer) becomes プリンタ.
+- コンピューター (computer) 會變成 コンピュータ。
+- プリンター (printer) 會變成 プリンタ。
 
-## Installation
+## 安裝
 
-The `kuromoji_stemmer` token filter requires the `analysis-kuromoji` plugin. For installation instructions, see [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/).
+`kuromoji_stemmer` 詞元篩選器需要 `analysis-kuromoji` 外掛程式。如需安裝說明，請參閱 [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)。
 
-## Parameters
+## 參數
 
-The following table lists the parameters for the `kuromoji_stemmer` token filter.
+下表列出 `kuromoji_stemmer` 詞元篩選器的參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`minimum_length` | Integer | The minimum number of characters a token must have for the trailing long vowel mark to be removed. Tokens shorter than this threshold are passed through unchanged. Default is `4`.
+`minimum_length` | 整數 | 詞元必須具備的最少字元數，達到此數量才會移除結尾的長音符號。短於此門檻的詞元會原封不動地傳遞。預設值為 `4`。
 
-The default minimum length of `4` prevents short words such as カー (car, two characters) from being incorrectly stemmed to カ.
+預設最小長度 `4` 可防止 カー (car，兩個字元) 等短單字被錯誤地提取詞幹為 カ。
 {: .note}
 
-## Example
+## 範例
 
-The following example creates an index with a custom analyzer that uses `kuromoji_stemmer`:
+下列範例會建立一個索引，其中包含使用 `kuromoji_stemmer` 的自訂分析器：
 
 ```json
 PUT /kuromoji-stemmer-index
@@ -57,7 +58,7 @@ PUT /kuromoji-stemmer-index
 ```
 {% include copy-curl.html %}
 
-Test the analyzer with katakana loanwords (meaning "I use a computer and printer"):
+使用片假名外來語測試分析器（意思為「我使用電腦和印表機」）：
 
 ```json
 POST /kuromoji-stemmer-index/_analyze
@@ -68,7 +69,7 @@ POST /kuromoji-stemmer-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response shows the trailing long vowel marks removed from both words:
+回應顯示兩個單字結尾的長音符號皆已移除：
 
 ```json
 {
@@ -112,8 +113,8 @@ The response shows the trailing long vowel marks removed from both words:
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
-- [Kuromoji tokenizer]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/kuromoji/)
-- [Kuromoji base form token filter]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-baseform/)
+- [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
+- [Kuromoji 斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/kuromoji/)
+- [Kuromoji 基本形式詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-baseform/)

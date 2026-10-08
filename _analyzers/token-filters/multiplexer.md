@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Multiplexer
 parent: Token filters
 nav_order: 280
 ---
 
-# Multiplexer token filter
+# Multiplexer 詞元篩選器
 
-The `multiplexer` token filter allows you to create multiple versions of the same token by applying different filters. This is useful when you want to analyze the same token in multiple ways. For example, you may want to analyze a token using different stemming, synonyms, or n-gram filters and use all of the generated tokens together. This token filter works by duplicating the token stream and applying different filters to each copy.
+`multiplexer` 詞元篩選器可讓您套用不同的篩選器，為同一個詞元建立多個版本。當您想以多種方式分析同一個詞元時，這項功能非常實用。例如，您可能想使用不同的詞幹提取、同義詞或 n-gram 篩選器來分析某個詞元，並一併使用所有產生的詞元。此詞元篩選器的運作方式是複製詞元串流，並對每個副本套用不同的篩選器。
 
-The `multiplexer` token filter removes duplicate tokens from the token stream.
+`multiplexer` 詞元篩選器會從詞元串流中移除重複的詞元。
 {: .important}
 
-The `multiplexer` token filter does not support multiword `synonym` or `synonym_graph` token filters or `shingle` token filters because they need to analyze not only the current token but also upcoming tokens in order to determine how to transform the input correctly.
+`multiplexer` 詞元篩選器不支援多字詞的 `synonym` 或 `synonym_graph` 詞元篩選器，也不支援 `shingle` 詞元篩選器，因為這些篩選器不僅需要分析目前的詞元，還需要分析後續的詞元，才能判斷如何正確轉換輸入。
 {: .important}
 
-## Parameters
+## 參數
 
-The `multiplexer` token filter can be configured with the following parameters.
+`multiplexer` 詞元篩選器可以使用下列參數進行設定。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`filters` | Optional | List of strings | A comma-separated list of token filters to apply to each copy of the token stream. Default is an empty list.
-`preserve_original` | Optional | Boolean | Whether to keep the original token as one of the outputs. Default is `true`.
+`filters` | 選用 | 字串清單 | 以逗號分隔的詞元篩選器清單，會套用至詞元串流的每個副本。預設為空清單。
+`preserve_original` | 選用 | 布林值 | 是否將原始詞元保留為輸出之一。預設為 `true`。
 
-## Example
+## 範例
 
-The following example request creates a new index named `multiplexer_index` and configures an analyzer with a `multiplexer` filter:
+下列範例請求會建立名為 `multiplexer_index` 的新索引，並設定一個使用 `multiplexer` 篩選器的分析器：
 
 ```json
 PUT /multiplexer_index
@@ -65,9 +66,9 @@ PUT /multiplexer_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用該分析器所產生的詞元：
 
 ```json
 POST /multiplexer_index/_analyze
@@ -78,7 +79,7 @@ POST /multiplexer_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

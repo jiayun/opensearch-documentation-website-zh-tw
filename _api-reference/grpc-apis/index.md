@@ -1,52 +1,53 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: gRPC APIs
+title: "gRPC API"
 has_children: true
 has_toc: false
 nav_order: 140
-description: "Reference for the OpenSearch gRPC APIs, including the bulk and k-NN search operations that use protocol buffers for high-performance communication."
+description: "OpenSearch gRPC API 的參考資料，包含使用 protocol buffers 進行高效能通訊的 bulk 與 k-NN 搜尋操作。"
 redirect_from:
   - /api-reference/grpc-apis/
 ---
 
-# gRPC APIs
-**Introduced 3.0**
+# gRPC API
+**於 3.0 版推出**
 {: .label .label-purple }
 
-**Bulk and k-NN search generally available 3.2**
+**Bulk 與 k-NN 搜尋於 3.2 版正式推出**
 {: .label .label-green }
 
-The gRPC [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/bulk/) and [k-NN search queries]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/knn/) are generally available. These use [protobuf version 1.2.0](https://github.com/opensearch-project/opensearch-protobufs/releases/tag/1.2.0). However, expect updates to the protobuf structure as the feature matures in upcoming versions. Other gRPC search functionality remains experimental and not recommended for production use. For updates on the progress of these features or to leave feedback, see the associated [GitHub issue](https://github.com/opensearch-project/OpenSearch/issues/16787).
+gRPC [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/bulk/) 與 [k-NN 搜尋查詢]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/knn/)已正式推出。這些功能使用 [protobuf 1.2.0 版](https://github.com/opensearch-project/opensearch-protobufs/releases/tag/1.2.0)。不過，隨著此功能在後續版本中逐漸成熟，protobuf 結構預期會有所更新。其他 gRPC 搜尋功能仍為實驗性，不建議用於正式環境。如需這些功能的進度更新或提供意見回饋，請參閱相關的 [GitHub issue](https://github.com/opensearch-project/OpenSearch/issues/16787)。
 {: .note}
 
-The OpenSearch gRPC functionality provides an alternative, high-performance transport layer using [gRPC](https://grpc.io/) for communication with OpenSearch. It uses protocol buffers over gRPC for lower overhead and faster serialization. This reduces overhead, speeds up serialization, and improves request-side latency, based on initial benchmarking results. For more information, see [Performance Benefits](#grpc-performance-benefits).
+OpenSearch gRPC 功能提供另一種高效能的傳輸層，使用 [gRPC](https://grpc.io/) 與 OpenSearch 通訊。它在 gRPC 上使用 protocol buffers，以降低額外負擔並加快序列化。根據初步的基準測試結果，這可降低額外負擔、加快序列化，並改善請求端的延遲。如需詳細資訊，請參閱[效能優勢](#grpc-performance-benefits)。
 
-## Supported APIs
+## 支援的 API
 
-The following gRPC APIs are supported:
-- [Bulk]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/bulk/) **Generally available 3.2**
-- [k-NN]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/knn/) **Generally available 3.2**
-- [Search]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/search/) (for select query types)
+支援下列 gRPC API：
+- [Bulk]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/bulk/) **於 3.2 版正式推出**
+- [k-NN]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/knn/) **於 3.2 版正式推出**
+- [Search]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/search/)（適用於特定查詢類型）
 - [Predict Model Stream]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/predict-model-stream/)
 - [Execute Agent Stream]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/execute-agent-stream/)
 
-## How to use gRPC APIs
+## 如何使用 gRPC API
 
-To use gRPC APIs, follow these steps:
-1. Enable gRPC transport by configuring the necessary [gRPC settings](#grpc-settings).
+若要使用 gRPC API，請依照下列步驟操作：
+1. 設定必要的 [gRPC 設定](#grpc-settings)以啟用 gRPC 傳輸。
 
-2. To submit gRPC requests, you must have a set of protobufs on the client side. You can obtain the protobufs in the following ways.
+2. 若要提交 gRPC 請求，您必須在用戶端備有一組 protobuf。您可以透過下列方式取得 protobuf。
 
-| Language | Distribution method | Instructions |
+| 語言 | 發佈方式 | 操作說明 |
 | :------- | :------------------ | :----------- |
-| Java | Maven Central repository | Download the `opensearch-protobufs` jar from the [Maven Central repository](https://repo1.maven.org/maven2/org/opensearch/protobufs/1.2.0). |
-| Python | PyPI repository | Download the `opensearch-protobufs` package from the [PyPI repository](https://pypi.org/project/opensearch-protobufs/1.2.0). |
-| Other languages | GitHub repository (raw protobufs) | Download the raw protobuf schema from the [OpenSearch Protobufs GitHub repository (v1.2.0)](https://github.com/opensearch-project/opensearch-protobufs/releases/tag/1.2.0). You can then generate client-side code using the protocol buffer compilers for the [supported languages](https://grpc.io/docs/languages/). |
+| Java | Maven Central 儲存庫 | 從 [Maven Central 儲存庫](https://repo1.maven.org/maven2/org/opensearch/protobufs/1.2.0)下載 `opensearch-protobufs` jar。 |
+| Python | PyPI 儲存庫 | 從 [PyPI 儲存庫](https://pypi.org/project/opensearch-protobufs/1.2.0)下載 `opensearch-protobufs` 套件。 |
+| 其他語言 | GitHub 儲存庫（原始 protobuf） | 從 [OpenSearch Protobufs GitHub 儲存庫（v1.2.0）](https://github.com/opensearch-project/opensearch-protobufs/releases/tag/1.2.0)下載原始 protobuf 結構描述。接著您可以使用 protocol buffer 編譯器為[支援的語言](https://grpc.io/docs/languages/)產生用戶端程式碼。 |
 
 
-## gRPC settings
+## gRPC 設定
 
-The `transport-grpc` module is included by default with OpenSearch installations. To enable it, add the following settings to `opensearch.yml`:
+`transport-grpc` 模組預設隨 OpenSearch 安裝一併包含。若要啟用它，請將下列設定新增至 `opensearch.yml`：
 
 ```yaml
 aux.transport.types: [transport-grpc]
@@ -54,7 +55,7 @@ aux.transport.transport-grpc.port: '9400-9500' // optional
 ```
 {% include copy.html %}
 
-Alternatively, configure a secure transport protocol using the following settings:
+或者，使用下列設定來設定安全的傳輸協定：
 
 ```yaml
 aux.transport.types: [secure-transport-grpc]
@@ -62,7 +63,7 @@ aux.transport.transport-grpc.port: '9400-9500' // optional
 ```
 {% include copy.html %}
 
-Configure additional settings if needed (see [Advanced gRPC settings](#advanced-grpc-settings)):
+視需要設定其他設定（請參閱[進階 gRPC 設定](#advanced-grpc-settings)）：
 
 ```yaml
 grpc.host: localhost
@@ -71,27 +72,27 @@ grpc.bind_host: 0.0.0.0
 ```
 {% include copy.html %}
 
-### Advanced gRPC settings
+### 進階 gRPC 設定
 
-OpenSearch supports the following advanced settings for gRPC communication. These settings can be configured in `opensearch.yml`.
+OpenSearch 支援下列用於 gRPC 通訊的進階設定。這些設定可在 `opensearch.yml` 中設定。
 
-| Setting name | Description | Example value | Default value |
+| 設定名稱 | 說明 | 範例值 | 預設值 |
 | :---- | :---- | :---- | :---- |
-| `grpc.publish_port` | The external port number that this node uses to publish itself to peers for gRPC transport. | `9400` | `-1` (disabled) |
-| `grpc.host` | A list of addresses the gRPC server will bind to. | `["0.0.0.0"]` | `[]` |
-| `grpc.bind_host` | A list of addresses to bind the gRPC server to. Can be distinct from publish hosts. | `["0.0.0.0", "::"]` | Value of `grpc.host` |
-| `grpc.publish_host` | A list of hostnames or IPs published to peers for client connections. | `["thisnode.example.com"]` | Value of `grpc.host` |
-| `grpc.netty.worker_count` | The number of Netty worker threads for the gRPC server. Controls concurrency and parallelism. | `2` | Number of processors |
-| `grpc.netty.executor_count` | The number of threads in the fork-join pool for processing gRPC service calls. Controls request processing parallelism. | `32` | `2 * number of processors` |
-| `grpc.netty.max_concurrent_connection_calls` | The maximum number of simultaneous in-flight requests allowed per client connection. | `200` | `100` |
-| `grpc.netty.max_connection_age` | The maximum age a connection can reach before being gracefully closed. Supports time units like `ms`, `s`, or `m`. See [Time units]({{site.url}}{{site.baseurl}}/api-reference/units/#time-units). | `500ms` | Not set (no limit) |
-| `grpc.netty.max_connection_idle` | The maximum duration for which a connection can be idle before being closed. Supports time units like `ms`, `s`, or `m`. See [Time units]({{site.url}}{{site.baseurl}}/api-reference/units/#time-units). | `2m` | Not set (no limit) |
-| `grpc.netty.keepalive_timeout` | The amount of time to wait for `keepalive` ping acknowledgment before closing the connection. Supports [time units]({{site.url}}{{site.baseurl}}/api-reference/units/#time-units). | `1s` | Not set |
-| `grpc.netty.max_msg_size` | The maximum inbound message size for gRPC requests. Supports units like `b`, `kb`, `mb`, or `gb`. See [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/). | `10mb` or `10485760` | `10mb` |
+| `grpc.publish_port` | 此節點用來向對等節點發佈自身以供 gRPC 傳輸使用的外部連接埠號。 | `9400` | `-1`（已停用） |
+| `grpc.host` | gRPC 伺服器將繫結的位址清單。 | `["0.0.0.0"]` | `[]` |
+| `grpc.bind_host` | 要將 gRPC 伺服器繫結的位址清單。可與發佈主機不同。 | `["0.0.0.0", "::"]` | `grpc.host` 的值 |
+| `grpc.publish_host` | 向對等節點發佈以供用戶端連線的主機名稱或 IP 清單。 | `["thisnode.example.com"]` | `grpc.host` 的值 |
+| `grpc.netty.worker_count` | gRPC 伺服器的 Netty 工作執行緒數目。控制並行與平行處理。 | `2` | 處理器數目 |
+| `grpc.netty.executor_count` | 用於處理 gRPC 服務呼叫的 fork-join 集區中的執行緒數目。控制請求處理的平行程度。 | `32` | `2 * number of processors` |
+| `grpc.netty.max_concurrent_connection_calls` | 每個用戶端連線允許同時進行中的請求數上限。 | `200` | `100` |
+| `grpc.netty.max_connection_age` | 連線在被正常關閉前可達到的最長存續時間。支援如 `ms`、`s` 或 `m` 等時間單位。請參閱[時間單位]({{site.url}}{{site.baseurl}}/api-reference/units/#time-units)。 | `500ms` | 未設定（無限制） |
+| `grpc.netty.max_connection_idle` | 連線在被關閉前可閒置的最長時間。支援如 `ms`、`s` 或 `m` 等時間單位。請參閱[時間單位]({{site.url}}{{site.baseurl}}/api-reference/units/#time-units)。 | `2m` | 未設定（無限制） |
+| `grpc.netty.keepalive_timeout` | 在關閉連線前等待 `keepalive` ping 確認的時間長度。支援[時間單位]({{site.url}}{{site.baseurl}}/api-reference/units/#time-units)。 | `1s` | 未設定 |
+| `grpc.netty.max_msg_size` | gRPC 請求的傳入訊息大小上限。支援如 `b`、`kb`、`mb` 或 `gb` 等單位。請參閱[支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。 | `10mb` 或 `10485760` | `10mb` |
 
-### Example configuration
+### 範例組態
 
-The following is an example of a complete gRPC configuration in `opensearch.yml`:
+以下是在 `opensearch.yml` 中完整 gRPC 組態的範例：
 
 ```yaml
 # Basic gRPC transport configuration
@@ -112,18 +113,18 @@ grpc.netty.max_msg_size: 10mb
 ```
 {% include copy.html %}
 
-These settings are similar to the [HTTP Network settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/network-settings/#advanced-http-settings) but specifically apply to gRPC communication.
+這些設定類似於 [HTTP 網路設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/network-settings/#advanced-http-settings)，但專門適用於 gRPC 通訊。
 
 
-## gRPC performance benefits
+## gRPC 效能優勢
 
-Using gRPC APIs provides several advantages over HTTP APIs:
+使用 gRPC API 相較於 HTTP API 提供多項優點：
 
-- **Reduced latency**: Binary protocol buffers eliminate JSON parsing overhead.
-- **Higher throughput**: More efficient network utilization for high-frequency queries.
-- **Lower CPU usage**: Reduced serialization and deserialization costs.
-- **Type safety**: Protocol buffer schemas provide compile-time validation.
-- **Smaller payload sizes**: Binary encoding reduces network traffic.
+- **降低延遲**：二進位 protocol buffers 可免除 JSON 剖析的額外負擔。
+- **更高輸送量**：為高頻率查詢提供更有效率的網路使用率。
+- **更低 CPU 使用率**：降低序列化與還原序列化的成本。
+- **型別安全**：protocol buffer 結構描述提供編譯期驗證。
+- **更小的承載大小**：二進位編碼可減少網路流量。
 
-### Additional performance tip
-Indexing documents as supported binary formats, such as SMILE, will usually incur lower latency than indexing/searching for them as JSON. Both indexing and searching latency should be reduced.
+### 額外的效能提示
+將文件編製索引為支援的二進位格式（例如 SMILE）時，通常會比以 JSON 格式編製索引／搜尋時產生更低的延遲。編製索引與搜尋的延遲都應會降低。

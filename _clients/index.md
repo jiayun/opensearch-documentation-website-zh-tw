@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Language clients
+title: "語言用戶端"
 nav_order: 1
 has_children: false
 nav_exclude: true
@@ -9,57 +10,57 @@ redirect_from:
   - /clients/index/
 ---
 
-# ![Clients icon]({{site.url}}{{site.baseurl}}/images/icons/OpenSearch-Clients-Icon.avif){: .heading-icon} OpenSearch language clients
+# ![用戶端圖示]({{site.url}}{{site.baseurl}}/images/icons/OpenSearch-Clients-Icon.avif){: .heading-icon} OpenSearch 語言用戶端
 
-OpenSearch clients let you work with OpenSearch from your application code. A client connects to your cluster, sends requests, and returns the responses as objects in your programming language, so you can create indexes, add documents, and search without building HTTP requests and parsing JSON yourself.
+OpenSearch 用戶端可讓您從應用程式的程式碼中使用 OpenSearch。用戶端會連線至您的叢集、傳送請求，並以您所用程式語言的物件形式傳回回應，因此您無須自行建構 HTTP 請求及剖析 JSON，即可建立索引、新增文件及進行搜尋。
 
-## OpenSearch clients
+## OpenSearch 用戶端
 
-OpenSearch provides clients for the following programming languages and platforms: 
+OpenSearch 為下列程式語言與平台提供用戶端：
 
 * **Python**
-  * [OpenSearch Python client]({{site.url}}{{site.baseurl}}/clients/python-low-level/)
-  * [OpenSearch Python ML client]({{site.url}}{{site.baseurl}}/clients/opensearch-py-ml/): Analyze data in OpenSearch indexes using DataFrames and upload machine learning (ML) models to OpenSearch.
+  * [OpenSearch Python 用戶端]({{site.url}}{{site.baseurl}}/clients/python-low-level/)
+  * [OpenSearch Python ML 用戶端]({{site.url}}{{site.baseurl}}/clients/opensearch-py-ml/)：使用 DataFrame 分析 OpenSearch 索引中的資料，並將機器學習 (ML) 模型上傳至 OpenSearch。
 * **Java**
-  * [OpenSearch Java client]({{site.url}}{{site.baseurl}}/clients/java/)
+  * [OpenSearch Java 用戶端]({{site.url}}{{site.baseurl}}/clients/java/)
 * **JavaScript**
-  * [OpenSearch JavaScript (Node.js) client]({{site.url}}{{site.baseurl}}/clients/javascript/index/)
+  * [OpenSearch JavaScript (Node.js) 用戶端]({{site.url}}{{site.baseurl}}/clients/javascript/index/)
 * **Go**
-  * [OpenSearch Go client]({{site.url}}{{site.baseurl}}/clients/go/)
+  * [OpenSearch Go 用戶端]({{site.url}}{{site.baseurl}}/clients/go/)
 * **Ruby**
-  * [OpenSearch Ruby client]({{site.url}}{{site.baseurl}}/clients/ruby/)
+  * [OpenSearch Ruby 用戶端]({{site.url}}{{site.baseurl}}/clients/ruby/)
 * **PHP**
-  * [OpenSearch PHP client]({{site.url}}{{site.baseurl}}/clients/php/)
+  * [OpenSearch PHP 用戶端]({{site.url}}{{site.baseurl}}/clients/php/)
 * **.NET**
-  * [OpenSearch .NET clients]({{site.url}}{{site.baseurl}}/clients/dot-net/)
+  * [OpenSearch .NET 用戶端]({{site.url}}{{site.baseurl}}/clients/dot-net/)
 * **Rust**
-  * [OpenSearch Rust client]({{site.url}}{{site.baseurl}}/clients/rust/)
+  * [OpenSearch Rust 用戶端]({{site.url}}{{site.baseurl}}/clients/rust/)
 * **Hadoop**
-  * [Hadoop connector (Apache Spark, Apache Hive, and Hadoop MapReduce)]({{site.url}}{{site.baseurl}}/clients/hadoop/)
+  * [Hadoop 連接器 (Apache Spark、Apache Hive 及 Hadoop MapReduce)]({{site.url}}{{site.baseurl}}/clients/hadoop/)
 
-## Deprecated clients
+## 已淘汰的用戶端
 
-The following clients have been deprecated:
+下列用戶端已淘汰：
 
-* [OpenSearch high-level Python client]({{site.url}}{{site.baseurl}}/clients/python-high-level/): Use the [OpenSearch Python client]({{site.url}}{{site.baseurl}}/clients/python-low-level/) instead.
-* [OpenSearch Java high-level REST client]({{site.url}}{{site.baseurl}}/clients/java-rest-high-level/): Use the [OpenSearch Java client]({{site.url}}{{site.baseurl}}/clients/java/) instead.
+* [OpenSearch 高階 Python 用戶端]({{site.url}}{{site.baseurl}}/clients/python-high-level/)：請改用 [OpenSearch Python 用戶端]({{site.url}}{{site.baseurl}}/clients/python-low-level/)。
+* [OpenSearch Java 高階 REST 用戶端]({{site.url}}{{site.baseurl}}/clients/java-rest-high-level/)：請改用 [OpenSearch Java 用戶端]({{site.url}}{{site.baseurl}}/clients/java/)。
 
 
-## Legacy clients
+## 舊版用戶端
 
-Clients that work with Elasticsearch OSS 7.10.2 should work with OpenSearch 1.x. The latest versions of those clients, however, might include license or version checks that artificially break compatibility. The following table provides recommendations for which client versions to use for best compatibility with OpenSearch 1.x. For OpenSearch 2.0 and later, no Elasticsearch clients are fully compatible with OpenSearch.
+可搭配 Elasticsearch OSS 7.10.2 使用的用戶端，應該也能搭配 OpenSearch 1.x 使用。不過，這些用戶端的最新版本可能包含授權或版本檢查，因而刻意破壞相容性。下表提供建議使用的用戶端版本，以便與 OpenSearch 1.x 達到最佳相容性。對於 OpenSearch 2.0 及更新版本，沒有任何 Elasticsearch 用戶端能與 OpenSearch 完全相容。
 
-While OpenSearch and Elasticsearch share several core features, mixing and matching the client and server has a high risk of errors and unexpected results. As OpenSearch and Elasticsearch continue to diverge, such risks may increase. Although your Elasticsearch client may continue working with your OpenSearch cluster, using OpenSearch clients for OpenSearch clusters is recommended.
+雖然 OpenSearch 與 Elasticsearch 共有數項核心功能，但混用兩者的用戶端與伺服器極有可能導致錯誤及非預期的結果。隨著 OpenSearch 與 Elasticsearch 持續分歧，此類風險可能會增加。儘管您的 Elasticsearch 用戶端或許仍可繼續搭配您的 OpenSearch 叢集使用，但建議您針對 OpenSearch 叢集使用 OpenSearch 用戶端。
 {: .warning}
 
-To view the compatibility matrix for a specific client, see the `COMPATIBILITY.md` file in the client's repository.
+若要檢視特定用戶端的相容性對照表，請參閱該用戶端儲存庫中的 `COMPATIBILITY.md` 檔案。
 
-Client | Recommended version
+用戶端 | 建議版本
 :--- | :---
-[Elasticsearch Java low-level REST client](https://central.sonatype.com/artifact/org.elasticsearch.client/elasticsearch-rest-client/7.13.4) | 7.13.4
-[Elasticsearch Java high-level REST client](https://central.sonatype.com/artifact/org.elasticsearch.client/elasticsearch-rest-high-level-client/7.13.4) | 7.13.4
-[Elasticsearch Python client](https://pypi.org/project/elasticsearch/7.13.4/) | 7.13.4
-[Elasticsearch Node.js client](https://www.npmjs.com/package/@elastic/elasticsearch/v/7.13.0) | 7.13.0
-[Elasticsearch Ruby client](https://rubygems.org/gems/elasticsearch/versions/7.13.0) | 7.13.0
+[Elasticsearch Java 低階 REST 用戶端](https://central.sonatype.com/artifact/org.elasticsearch.client/elasticsearch-rest-client/7.13.4) | 7.13.4
+[Elasticsearch Java 高階 REST 用戶端](https://central.sonatype.com/artifact/org.elasticsearch.client/elasticsearch-rest-high-level-client/7.13.4) | 7.13.4
+[Elasticsearch Python 用戶端](https://pypi.org/project/elasticsearch/7.13.4/) | 7.13.4
+[Elasticsearch Node.js 用戶端](https://www.npmjs.com/package/@elastic/elasticsearch/v/7.13.0) | 7.13.0
+[Elasticsearch Ruby 用戶端](https://rubygems.org/gems/elasticsearch/versions/7.13.0) | 7.13.0
 
-If you test a legacy client and verify that it works, [submit a PR](https://github.com/opensearch-project/documentation-website/pulls) and add it to this table.
+若您測試某個舊版用戶端並確認其可正常運作，請[提交 PR](https://github.com/opensearch-project/documentation-website/pulls) 並將其新增至此表。

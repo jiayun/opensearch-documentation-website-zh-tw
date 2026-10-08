@@ -1,50 +1,51 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Explore the Visualize application
+title: "探索 Visualize 應用程式"
 parent: Getting started
 nav_order: 35
 ---
 
-# Explore the Visualize application
+# 探索 Visualize 應用程式
 
-The **Visualize** application lets you create charts, maps, tables, and other visual representations of your data using a point-and-click interface.
+**Visualize** 應用程式讓您可以使用點擊介面來建立圖表、地圖、表格以及資料的其他視覺化表示方式。
 
-## Prerequisites
+## 前置條件
 
-The example on this page uses the [**Sample flight data**](https://playground.opensearch.org/app/home#/tutorial_directory) dataset that is already installed in [OpenSearch Playground](https://playground.opensearch.org/app/home#/).
+本頁面的範例使用了已安裝在 [OpenSearch Playground](https://playground.opensearch.org/app/home#/) 中的 [**Sample flight data**](https://playground.opensearch.org/app/home#/tutorial_directory) 資料集。
 
-If you're using a local installation of OpenSearch Dashboards and haven't added sample data yet, see [Prepare your data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
+如果您使用的是本機安裝的 OpenSearch Dashboards 且尚未加入範例資料，請參閱 [準備您的資料]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
 
-## Try it: Create a line chart with sample data
+## 動手試試：使用範例資料建立折線圖
 
-Follow these steps to use the **Visualize** application to create a line chart that shows flight count over time:
+請依照下列步驟，使用 **Visualize** 應用程式建立顯示航班數量隨時間變化的折線圖：
 
-1. In the left navigation menu, select **OpenSearch Dashboards** > **Visualize**.
-2. Select **Create visualization**.
-3. In the **New Visualization** dialog, select **Line**.
-4. In the **Choose a source** dialog, select **opensearch_dashboards_sample_data_flights**.
-5. Set the time filter to **Last 7 days**.
-6. Under **Buckets**, select **Add** > **X-axis**.
-7. Set **Aggregation** to **Date Histogram** and **Field** to **timestamp**.
-8. Select **Update**. The chart displays flight count per time interval, as shown in the following image.
+1. 在左側導覽選單中，選取 **OpenSearch Dashboards** > **Visualize**。
+2. 選取 **Create visualization**。
+3. 在 **New Visualization** 對話方塊中，選取 **Line**。
+4. 在 **Choose a source** 對話方塊中，選取 **opensearch_dashboards_sample_data_flights**。
+5. 將時間篩選條件設為 **Last 7 days**。
+6. 在 **Buckets** 下，選取 **Add** > **X-axis**。
+7. 將 **Aggregation** 設為 **Date Histogram**，並將 **Field** 設為 **timestamp**。
+8. 選取 **Update**。圖表會顯示每個時間間隔的航班數量，如下圖所示。
 
-   ![Line chart showing flight count over time]({{site.url}}{{site.baseurl}}/images/dashboards/visualize-app-line-chart-example.png)
+   ![顯示航班數量隨時間變化的折線圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualize-app-line-chart-example.png)
 
-9. From the toolbar, select **Save** (the disk icon).
+9. 在工具列中，選取 **Save**（磁碟圖示）。
 
-   Saving is not available in the OpenSearch Playground because it is read-only. 
+   由於 OpenSearch Playground 為唯讀，因此無法在其中儲存。
    {: .note}
-10. In the **Save visualization** dialog, enter `Flight count over time` as the title.
-11. Select **Save**.
+10. 在 **Save visualization** 對話方塊中，輸入 `Flight count over time` 作為標題。
+11. 選取 **Save**。
 
 
-The visualization is saved and appears in the **Visualizations** list.
+視覺化已儲存，並會顯示在 **Visualizations** 清單中。
 
-## Further reading
+## 進一步閱讀
 
-- For the full Visualize reference, see [Creating visualizations in the Visualize application]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/).
-- For a hands-on tutorial, see [Creating aggregation-based visualizations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/aggregation-based-viz/).
+- 如需完整的 Visualize 參考指南，請參閱 [在 Visualize 應用程式中建立視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/)。
+- 如需實作教學，請參閱 [建立以彙總為基礎的視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/aggregation-based-viz/)。
 
-## Next steps
+## 後續步驟
 
-- Assemble visualizations into a dashboard using [Explore the Dashboards application]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-dashboards/).
+- 使用 [探索 Dashboards 應用程式]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-dashboards/) 將視覺化元件組合至儀表板中。

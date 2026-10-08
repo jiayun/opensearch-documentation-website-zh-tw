@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Range
 parent: Bucket aggregations
@@ -7,25 +8,25 @@ redirect_from:
   - /query-dsl/aggregations/bucket/range/
 ---
 
-# Range aggregation
+# Range 彙總
 
-The `range` aggregation groups documents into buckets based on value ranges that you define. Each bucket captures documents whose field value falls within its specified `from` (inclusive) and `to` (exclusive) boundaries. Unlike the [`histogram` aggregation]({{site.url}}{{site.baseurl}}/aggregations/bucket/histogram/), which creates uniform intervals automatically, `range` lets you define arbitrary, non-uniform boundaries.
+`range` 彙總根據您定義的值範圍將文件分組到桶 (bucket) 中。每個桶會擷取其欄位值落在指定 `from` (包含) 與 `to` (不包含) 邊界內的文件。與自動建立均勻間隔的 [`histogram` 彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/histogram/) 不同，`range` 允許您定義任意的、非均勻的邊界。
 
-## Parameters
+## 參數
 
-The `range` aggregation takes the following parameters.
+`range` 彙總使用以下參數。
 
-| Parameter | Required/Optional | Data type | Description |
+| 參數 | 必要/選用 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `field` | Optional | String | The numeric field to aggregate on. Either `field` or `script` is required. |
-| `script` | Optional | Object | A script that produces the value to aggregate on. Either `field` or `script` is required. When used with `field`, the script acts as a value script and receives the field value as `_value`. |
-| `ranges` | Required | Array | A list of range boundaries. Each entry can include `from`, `to`, and optionally `key`. |
-| `keyed` | Optional | Boolean | When `true`, returns buckets as an object keyed by range name instead of an array. Default is `false`. |
-| `missing` | Optional | Number | The value to use for documents missing the target field. By default, missing documents are ignored. |
+| `field` | 選用 | 字串 | 要進行彙總的數值欄位。必須提供 `field` 或 `script` 其中之一。 |
+| `script` | 選用 | 物件 | 用於產生彙總值的指令碼。必須提供 `field` 或 `script` 其中之一。當與 `field` 搭配使用時，該指令碼作為值指令碼運作，並將欄位值作為 `_value` 接收。 |
+| `ranges` | 必要 | 陣列 | 範圍邊界的清單。每個項目可以包含 `from`、`to`，以及選用的 `key`。 |
+| `keyed` | 選用 | 布林值 | 當 `true` 時，會將桶以範圍名稱作為鍵的物件形式傳回，而非陣列。預設值為 `false`。 |
+| `missing` | 選用 | 數字 | 用於缺少目標欄位之文件的值。預設情況下，缺少該欄位的文件會被忽略。 |
 
-## Example: Custom-named price tiers with subaggregation
+## 範例：具有子彙總的自訂名稱價格分級
 
-The following example segments e-commerce orders into three price tiers and computes the average order value within each tier:
+以下範例將電子商務訂單分為三個價格分級，並計算每個分級內的平均訂單價值：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -53,7 +54,7 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-The response groups orders into labeled tiers with their average prices:
+回應將訂單分組到標記的分級中，並顯示其平均價格：
 
 ```json
 {
@@ -89,9 +90,9 @@ The response groups orders into labeled tiers with their average prices:
 }
 ```
 
-## Example: Using a script
+## 範例：使用指令碼
 
-You can use a script instead of a field to compute values on the fly. The following example applies a 10% markup to prices before bucketing:
+您可以使用指令碼代替欄位來即時計算值。以下範例在分桶之前對價格增加 10% 的加價：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -115,9 +116,9 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example: Transforming field values with a value script
+## 範例：使用值指令碼轉換欄位值
 
-When you specify both `field` and `script`, the script receives each field value as the `_value` variable. The following example converts USD prices to euros (at a 0.92 rate) before evaluating which range they fall into:
+當您同時指定 `field` 和 `script` 時，指令碼會將每個欄位值作為 `_value` 變數接收。以下範例在評估值落在哪個範圍之前，將美元價格轉換為歐元（匯率為 0.92）：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -142,14 +143,14 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response body fields.
+下表列出了回應本文的欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `buckets` | Array or Object | The range buckets. Returned as an array by default, or as an object when `keyed` is `true`. |
-| `buckets.key` | String | The auto-generated range label (for example, `*-50.0` or `50.0-100.0`), or a custom key if specified. |
-| `buckets.from` | Double | The lower bound of the range (inclusive). Omitted for open-ended ranges with no lower bound. |
-| `buckets.to` | Double | The upper bound of the range (exclusive). Omitted for open-ended ranges with no upper bound. |
-| `buckets.doc_count` | Integer | The number of documents falling within this range. |
+| `buckets` | 陣列或物件 | 範圍桶。預設以陣列形式傳回，當 `keyed` 為 `true` 時則以物件形式傳回。 |
+| `buckets.key` | 字串 | 自動產生的範圍標籤（例如 `*-50.0` 或 `50.0-100.0`），或指定的自訂鍵。 |
+| `buckets.from` | Double | 範圍的下限（包含）。對於沒有下限的開放式範圍，此欄位會被省略。 |
+| `buckets.to` | Double | 範圍的上限（不包含）。對於沒有上限的開放式範圍，此欄位會被省略。 |
+| `buckets.doc_count` | 整數 | 落在該範圍內的文件數量。 |

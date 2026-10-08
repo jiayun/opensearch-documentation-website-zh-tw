@@ -1,0 +1,22 @@
+{
+  "name": "opensearch-documentation-website-zh-tw",
+  "version": "1.0.0",
+  "description": "<img src=\"https://opensearch.org/assets/img/opensearch-logo-themed.svg\" height=\"64px\">",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiayun/opensearch-documentation-website-zh-tw.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jiayun/opensearch-documentation-website-zh-tw/issues"
+  },
+  "homepage": "https://github.com/jiayun/opensearch-documentation-website-zh-tw#readme",
+  "dependencies": {
+    "pagefind": "1.5.2"
+  }
+}

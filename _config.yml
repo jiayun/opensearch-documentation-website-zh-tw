@@ -1,3 +1,4 @@
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 title: OpenSearch Documentation
 description: >- # this means to ignore newlines until "baseurl:"
   Documentation for OpenSearch, the Apache 2.0 search, analytics, and visualization suite with advanced security, alerting, SQL support, automated index management, deep performance analysis, and more.
@@ -13,7 +14,7 @@ lucene_version: '10_5_1'
 
 # Build settings
 markdown: kramdown
-remote_theme: pmarsceill/just-the-docs@v0.3.3
+theme: just-the-docs
 
 # Kramdown settings
 kramdown:
@@ -328,7 +329,7 @@ search:
 
 # Google Analytics Tracking (optional)
 # e.g, UA-1234567-89
-ga_tracking: G-BQV14XK08F
+ga_tracking: null
 
 # Disable the just-the-docs theme anchor links in favor of our custom ones
 # See _includes/head_custom.html
@@ -348,7 +349,6 @@ plugins:
   - jekyll-remote-theme
   - jekyll-redirect-from
   - jekyll-sitemap
-  - jekyll-spec-insert
   # Registered so the just-the-docs theme suppresses its own <title> and
   # <meta name="Description"> tags (it emits them only `unless` jekyll-seo-tag
   # is in site.plugins). jekyll-seo-tag then owns those tags. See head.html in

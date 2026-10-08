@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Heat map
+title: "熱度圖"
 parent: Visualization types
 grand_parent: Creating visualizations in the Visualize application
 great_grand_parent: Building data visualizations
@@ -9,80 +10,80 @@ redirect_from:
   - /dashboards/visualize/heat-map/
 ---
 
-# Heat map
+# 熱度圖
 
-A heat map displays values represented as a color or saturation gradient on a two-dimensional grid, effectively rendering a three-dimensional data display. The X and Y dimensions can be the same, as in a spatial heat map, or different---for example, months against years in a record of average temperature at a location (thus separating the cyclic and trend data for the site).
+熱度圖會在二維網格上以顏色或飽和度漸層來呈現數值，實際上形成三維的資料顯示。X 與 Y 維度可以相同（例如空間熱度圖），也可以不同。例如，在某地點的平均氣溫紀錄中，以月份對應年份，藉此區分該地點的週期性資料與趨勢資料。
 
-## When to use heat maps
+## 何時使用熱度圖
 
-Use heat maps to reveal clusters, correlation strengths, and anomalies within multidimensional datasets. They make patterns visible that would be difficult to see in tabular format or in multiple two-dimensional plots.
+使用熱度圖可以揭示多維度資料集中的叢集、相關性強度與異常。它們能讓在表格格式或多個二維圖表中難以察覺的模式變得清晰可見。
 
-## Creating a heat map
+## 建立熱度圖
 
-The examples on this page use the **Sample flight data** dataset. Before you begin, complete the [prerequisites]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites).
+本頁範例使用 **Sample flight data** 資料集。開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites)。
 {: .note}
 
-To create a heat map, follow these steps:
+若要建立熱度圖，請依照下列步驟操作：
 
-1. In the **New Visualization** dialog, select **Heat Map**, then select your index pattern (for example, **opensearch_dashboards_sample_data_flights**).
-2. Under **Metrics**, expand **Value Count** and set **Aggregation** to **Count**.
-3. Under **Buckets**, select **Add** > **X-axis**.
-4. Set **Aggregation** to **Terms**, **Field** to **OriginWeather**, and **Size** to `8`.
-5. Select **Update**.
-6. Under **Buckets**, select **Add** > **Y-axis**.
-7. Set **Sub aggregation** to **Terms**, **Field** to **DestWeather**, and **Size** to `8`.
-8. Select **Update**.
+1. 在 **New Visualization** 對話方塊中，選取 **Heat Map**，然後選取您的索引模式（例如 **opensearch_dashboards_sample_data_flights**）。
+2. 在 **Metrics** 下，展開 **Value Count**，並將 **Aggregation** 設為 **Count**。
+3. 在 **Buckets** 下，選取 **Add** > **X-axis**。
+4. 將 **Aggregation** 設為 **Terms**、**Field** 設為 **OriginWeather**，並將 **Size** 設為 `8`。
+5. 選取 **Update**。
+6. 在 **Buckets** 下，選取 **Add** > **Y-axis**。
+7. 將 **Sub aggregation** 設為 **Terms**、**Field** 設為 **DestWeather**，並將 **Size** 設為 `8`。
+8. 選取 **Update**。
 
-### Customizing the display
+### 自訂顯示
 
-1. Select the **Options** tab.
-2. In **Heatmap settings**, set **Color schema** to **Greys** and **Number of colors** to `8`.
-3. In **Labels**, enable **Show labels**.
-4. Select **Update**.
+1. 選取 **Options** 索引標籤。
+2. 在 **Heatmap settings** 中，將 **Color schema** 設為 **Greys**，並將 **Number of colors** 設為 `8`。
+3. 在 **Labels** 中，啟用 **Show labels**。
+4. 選取 **Update**。
 
-   The heat map shows average flight delay mapped to origin and destination weather combinations, as shown in the following image.
+   熱度圖會顯示對應至起飛與目的地天氣組合的平均航班延誤，如下圖所示。
 
-   ![Heat map showing flight delay by weather conditions]({{site.url}}{{site.baseurl}}/images/dashboards/example-heatmap-flight-delay.png)
+   ![依天氣狀況顯示航班延誤的熱度圖]({{site.url}}{{site.baseurl}}/images/dashboards/example-heatmap-flight-delay.png)
 
-   Note the following:
-   - The heat map data is organized into four quadrants, corresponding to the four combinations of "good" (Cloudy, Rain, Clear, Sunny) and "bad" (Hail, Heavy Fog, Damaging Wind, Thunder & Lightning) weather conditions at the destination and origin.
-   - The longest delays occurred when the weather was good at both the origin and destination. The shortest delays occurred when the weather was bad at both locations.
+   請注意以下幾點：
+   - 熱度圖資料分為四個象限，對應目的地與起飛地「良好」（Cloudy、Rain、Clear、Sunny）與「惡劣」（Hail、Heavy Fog、Damaging Wind、Thunder & Lightning）天氣狀況的四種組合。
+   - 當起飛地與目的地天氣皆良好時，延誤時間最長；當兩地天氣皆惡劣時，延誤時間最短。
 
-### Filtering with split chart
+### 使用分割圖表進行篩選
 
-You can filter the data using the [filter tool]({{site.url}}{{site.baseurl}}/dashboards/discover/filter-tool/), but if the visualization is in a dashboard this filters the data for other visualizations as well. The following procedure limits the data only for this visualization.
+您可以使用[篩選工具]({{site.url}}{{site.baseurl}}/dashboards/discover/filter-tool/)篩選資料，但如果視覺化位於儀表板中，此操作也會篩選其他視覺化的資料。下列程序只會限制此視覺化的資料。
 {: .note}
 
-To limit the heat map to specific conditions (for example, only cancelled flights):
+若要將熱度圖限制為特定條件（例如僅限已取消的航班）：
 
-1. Under **Buckets**, select **Add** > **Split chart** > **Rows**.
-2. Set **Sub aggregation** to **Filters**.
-3. In the **Filter 1** box, enter `Cancelled: true`.
+1. 在 **Buckets** 下，選取 **Add** > **Split chart** > **Rows**。
+2. 將 **Sub aggregation** 設為 **Filters**。
+3. 在 **Filter 1** 方塊中，輸入 `Cancelled: true`。
 
-   The filter terms are case-sensitive.
+   篩選詞彙會區分大小寫。
    {: .tip}
 
-4. Select **Update**.
+4. 選取 **Update**。
 
-   The heat map now shows only cancelled flights. It shows that no cancellations occurred when the weather was good at both ends of the flight, as shown in the following image.
+   熱度圖現在僅顯示已取消的航班。結果顯示，當航班兩端的天氣皆良好時，未發生任何取消情況，如下圖所示。
 
-   ![Heat map showing cancelled flights by weather conditions]({{site.url}}{{site.baseurl}}/images/dashboards/example-heatmap-cancellation.png)
+   ![依天氣狀況顯示已取消航班的熱度圖]({{site.url}}{{site.baseurl}}/images/dashboards/example-heatmap-cancellation.png)
 
-## Configuring a heat map
+## 設定熱度圖
 
-For information about general visualization configuration, see [Configuring visualizations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-viz/).
+如需一般視覺化組態的資訊，請參閱[設定視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/configuring-viz/)。
 
-### Options tab
+### Options 索引標籤
 
-| Setting | Description |
+| 設定 | 說明 |
 | :--- | :--- |
-| **Color schema** | The color palette for the heat map (for example, **Greens**, **Blues**, **Greys**, **Yellow to Orange**). |
-| **Reverse schema** | Inverts the color mapping. |
-| **Number of colors** | The number of discrete color bins. |
-| **Show labels** | Displays values inside each cell. |
-| **Percentage mode** | Normalizes values between 0 and 1. |
+| **Color schema** | 熱度圖的色盤（例如 **Greens**、**Blues**、**Greys**、**Yellow to Orange**）。 |
+| **Reverse schema** | 反轉顏色對應。 |
+| **Number of colors** | 離散顏色區間的數量。 |
+| **Show labels** | 在每個儲存格內顯示數值。 |
+| **Percentage mode** | 將數值正規化為 0 到 1 之間。 |
 
-## Next steps
+## 後續步驟
 
-- To choose a different visualization type, see [Visualization types]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/).
-- To add this visualization to a dashboard, see [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/).
+- 若要選擇不同的視覺化類型，請參閱[視覺化類型]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/)。
+- 若要將此視覺化新增至儀表板，請參閱[建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)。

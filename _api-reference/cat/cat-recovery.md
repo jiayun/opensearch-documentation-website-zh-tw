@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: CAT recovery
 parent: CAT APIs
@@ -9,17 +10,17 @@ redirect_from:
 ---
 
 # CAT Recovery API
-**Introduced 1.0**
+**1.0 版導入**
 {: .label .label-purple }
 
-The CAT recovery operation lists all completed and ongoing index and shard recoveries.
+CAT recovery 操作會列出所有已完成與進行中的索引與分片復原。
 
 
 <!-- spec_insert_start
 api: cat.recovery
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_cat/recovery
 GET /_cat/recovery/{index}
@@ -33,26 +34,26 @@ component: query_parameters
 columns: Parameter, Data type, Description, Default
 include_deprecated: false
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `active_only` | Boolean | If `true`, the response only includes ongoing shard recoveries. | `false` |
-| `bytes` | String | The units used to display byte values. <br> Valid values are: `b`, `kb`, `k`, `mb`, `m`, `gb`, `g`, `tb`, `t`, `pb`, and `p`. | N/A |
-| `detailed` | Boolean | When `true`, includes detailed information about shard recoveries. | `false` |
-| `format` | String | A short version of the `Accept` header, such as `json` or `yaml`. | N/A |
-| `h` | List | A comma-separated list of column names to display. | N/A |
-| `help` | Boolean | Returns help information. | `false` |
-| `index` | List | A comma-separated list of data streams, indexes, and aliases used to limit the request. Supports wildcards (`*`). To target all data streams and indexes, omit this parameter or use `*` or `_all`. | N/A |
-| `s` | List | A comma-separated list of column names or column aliases to sort by. | N/A |
-| `time` | String | Specifies the time units, for example, `5d` or `7h`. For more information, see [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/). <br> Valid values are: `nanos`, `micros`, `ms`, `s`, `m`, `h`, and `d`. | N/A |
-| `v` | Boolean | Enables verbose mode, which displays column headers. | `false` |
+| `active_only` | 布林值 | 若為 `true`，回應僅包含進行中的分片復原。 | `false` |
+| `bytes` | 字串 | 用於顯示位元組值的單位。<br> 有效值為：`b`、`kb`、`k`、`mb`、`m`、`gb`、`g`、`tb`、`t`、`pb` 與 `p`。 | N/A |
+| `detailed` | 布林值 | 當為 `true` 時，包含分片復原的詳細資訊。 | `false` |
+| `format` | 字串 | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
+| `h` | 清單 | 以逗號分隔的欄位名稱清單，用於指定要顯示的欄。 | N/A |
+| `help` | 布林值 | 傳回說明資訊。 | `false` |
+| `index` | 清單 | 以逗號分隔的資料串流、索引與別名清單，用於限制請求範圍。支援萬用字元 (`*`)。若要指定所有資料串流與索引，請省略此參數或使用 `*` 或 `_all`。 | N/A |
+| `s` | 清單 | 以逗號分隔的欄位名稱或欄位別名清單，用於排序。 | N/A |
+| `time` | 字串 | 指定時間單位，例如 `5d` 或 `7h`。如需更多資訊，請參閱[支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。<br> 有效值為：`nanos`、`micros`、`ms`、`s`、`m`、`h` 與 `d`。 | N/A |
+| `v` | 布林值 | 啟用詳細模式，以顯示欄位標題。 | `false` |
 
 <!-- spec_insert_end -->
 
-## Example requests
+## 範例請求
 
 <!-- spec_insert_start
 component: example_code
@@ -76,7 +77,7 @@ response = client.cat.recovery(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To see only the recoveries of a specific index, add the index name after your query.
+若只要查看特定索引的復原情形，請在查詢後加上索引名稱。
 
 <!-- spec_insert_start
 component: example_code
@@ -101,7 +102,7 @@ response = client.cat.recovery(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-If you want to get information for more than one index, separate the indexes with commas:
+若要取得多個索引的資訊，請以逗號分隔索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -125,7 +126,7 @@ response = client.cat.recovery(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 index | shard | time | type | stage | source_host | source_node | target_host | target_node | repository | snapshot | files | files_recovered | files_percent | files_total | bytes | bytes_recovered | bytes_percent | bytes_total | translog_ops | translog_ops_recovered | translog_ops_percent
@@ -133,6 +134,6 @@ movies | 0 | 117ms | empty_store | done | n/a | n/a | 172.18.0.4 | odfe-node1 | 
 movies | 0 | 382ms | peer | done | 172.18.0.4 | odfe-node1 | 172.18.0.3 | odfe-node2 | n/a | n/a | 1 | 1 |  100.0% | 1 | 208 | 208 | 100.0% | 208 | 1 | 1 | 100.0%
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:monitor/recovery`.
+若您使用 Security 外掛程式，請確認您具備適當的權限：`indices:monitor/recovery`。

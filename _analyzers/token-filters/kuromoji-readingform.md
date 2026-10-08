@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Kuromoji reading form
+title: "Kuromoji 讀音形式"
 parent: Token filters
 nav_order: 234
 ---
 
-# Kuromoji reading form token filter
+# Kuromoji 讀音形式詞元篩選器
 
-The `kuromoji_readingform` token filter replaces each token with its reading form. Japanese characters (kanji) have multiple possible readings; this filter uses the reading information provided by the Kuromoji tokenizer to emit the phonetic form of each token. The filter can output readings in katakana (Japanese phonetic script) or in romaji (Latin script transliteration).
+`kuromoji_readingform` 詞元篩選器會將每個詞元取代為其讀音形式。日文字元（漢字）可能有多種讀法；此篩選器會使用 Kuromoji 斷詞器提供的讀音資訊，輸出每個詞元的讀音形式。此篩選器可以輸出片假名（日文表音文字）或羅馬字（拉丁字母轉寫）的讀音。
 
-## Installation
+## 安裝
 
-The `kuromoji_readingform` token filter requires the `analysis-kuromoji` plugin. For installation instructions, see [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/).
+`kuromoji_readingform` 詞元篩選器需要 `analysis-kuromoji` 外掛程式。如需安裝說明，請參閱 [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)。
 
-## Parameters
+## 參數
 
-The following table lists the parameters for the `kuromoji_readingform` token filter.
+下表列出 `kuromoji_readingform` 詞元篩選器的參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`use_romaji` | Boolean | When `false` (default), tokens are replaced with their katakana reading. When `true`, tokens are replaced with their romaji (Latin script) transliteration.
+`use_romaji` | 布林值 | 設為 `false`（預設）時，詞元會取代為其片假名讀音。設為 `true` 時，詞元會取代為其羅馬字（拉丁字母）轉寫。
 
-## Example: Katakana reading (default)
+## 範例：片假名讀音（預設）
 
-The following example creates an index with an analyzer that outputs katakana readings:
+下列範例會建立一個索引，其中包含輸出片假名讀音的分析器：
 
 ```json
 PUT /kuromoji-reading-katakana-index
@@ -49,7 +50,7 @@ PUT /kuromoji-reading-katakana-index
 ```
 {% include copy-curl.html %}
 
-Test the analyzer with a sentence meaning "Tokyo is the capital of Japan":
+使用意思為「東京是日本的首都」的句子測試分析器：
 
 ```json
 POST /kuromoji-reading-katakana-index/_analyze
@@ -60,7 +61,7 @@ POST /kuromoji-reading-katakana-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response shows kanji tokens replaced with their katakana readings:
+回應顯示漢字詞元已取代為其片假名讀音：
 
 ```json
 {
@@ -111,9 +112,9 @@ The response shows kanji tokens replaced with their katakana readings:
 }
 ```
 
-## Example: Romaji reading
+## 範例：羅馬字讀音
 
-The following example creates an analyzer that outputs romaji transliterations:
+下列範例會建立輸出羅馬字轉寫的分析器：
 
 ```json
 PUT /kuromoji-reading-romaji-index
@@ -139,7 +140,7 @@ PUT /kuromoji-reading-romaji-index
 ```
 {% include copy-curl.html %}
 
-Test with the same sentence:
+使用相同的句子進行測試：
 
 ```json
 POST /kuromoji-reading-romaji-index/_analyze
@@ -150,7 +151,7 @@ POST /kuromoji-reading-romaji-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response shows Latin-script transliterations:
+回應顯示拉丁字母轉寫結果：
 
 ```json
 {
@@ -201,11 +202,11 @@ The response shows Latin-script transliterations:
 }
 ```
 
-The reading form filter replaces the entire token content. If you need both the original form and the reading, use the `kuromoji_completion` token filter instead, which adds reading variants as additional tokens at the same position.
+讀音形式篩選器會取代整個詞元內容。如果您同時需要原始形式和讀音，請改用 `kuromoji_completion` 詞元篩選器，該篩選器會將讀音變體作為額外的詞元新增至相同位置。
 {: .tip}
 
-## Related documentation
+## 相關文件
 
-- [Kuromoji analyzer]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
-- [Kuromoji tokenizer]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/kuromoji/)
-- [Kuromoji completion token filter]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-completion/)
+- [Kuromoji 分析器]({{site.url}}{{site.baseurl}}/analyzers/language-analyzers/kuromoji/)
+- [Kuromoji 斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/kuromoji/)
+- [Kuromoji 自動完成詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/kuromoji-completion/)

@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Console
+title: "主控台 (Console)"
 parent: Using Dev Tools
 grand_parent: Exploring data
 nav_order: 10
 ---
 
-# Dev Tools console
+# Dev Tools 主控台 (Console)
 
-Use the **Console** tab in **Dev Tools** to send REST API requests to OpenSearch, including [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/) search queries, index management operations, and cluster administration commands.
+使用 **Dev Tools** 中的 **Console** 索引標籤，將 REST API 請求傳送到 OpenSearch，包括 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/) 搜尋查詢、索引管理作業和叢集管理命令。
 
-The console supports all OpenSearch REST APIs. For example, you can use the console to perform the following common operations:
+主控台支援所有 OpenSearch REST API。例如，您可以使用主控台執行下列常見作業：
 
-- Search for documents using [`match`]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match/), [`term`]({{site.url}}{{site.baseurl}}/query-dsl/term/term/), [`range`]({{site.url}}{{site.baseurl}}/query-dsl/term/range/), and other query types.
-- Retrieve all documents from an index using [`match_all`]({{site.url}}{{site.baseurl}}/query-dsl/match-all/) queries.
-- Count matching documents without retrieving them using the [`_count`]({{site.url}}{{site.baseurl}}/api-reference/search-apis/count/) endpoint.
-- Compute metrics, statistics, and summaries of your data using [aggregations]({{site.url}}{{site.baseurl}}/aggregations/).
-- Narrow down search results by [combining queries with filters]({{site.url}}{{site.baseurl}}/query-dsl/query-filter-context/).
+- 使用 [`match`]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match/)、[`term`]({{site.url}}{{site.baseurl}}/query-dsl/term/term/)、[`range`]({{site.url}}{{site.baseurl}}/query-dsl/term/range/) 和其他查詢類型搜尋文件。
+- 使用 [`match_all`]({{site.url}}{{site.baseurl}}/query-dsl/match-all/) 查詢從索引中擷取所有文件。
+- 使用 [`_count`]({{site.url}}{{site.baseurl}}/api-reference/search-apis/count/) 端點，在不擷取文件的情況下計算符合條件的文件數量。
+- 使用[彙總]({{site.url}}{{site.baseurl}}/aggregations/)計算資料的指標、統計資料和摘要。
+- 透過[結合查詢與篩選條件]({{site.url}}{{site.baseurl}}/query-dsl/query-filter-context/)縮小搜尋結果範圍。
 
-## Writing and sending requests
+## 撰寫與傳送請求
 
-Write your queries in the editor pane on the left side of the console. For example, enter the following request, which indexes one document into a `students` index:
+在主控台左側的編輯器窗格中撰寫查詢。例如，輸入下列請求，將一份文件編製索引到 `students` 索引中：
 
 ```json
 PUT students/_doc/1
@@ -32,18 +33,18 @@ PUT students/_doc/1
 ```
 {% include copy-curl.html %}
 
-For long queries, you can collapse and expand parts of your query by selecting the small triangles next to the line numbers.
+對於較長的查詢，您可以選取行號旁的小三角形，摺疊和展開查詢的各個部分。
 {: .tip}
 
-To send a query to OpenSearch, select the query by placing the cursor anywhere in the query text. Then choose the play icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dev-tools/play-icon.png" class="inline-icon" alt="play icon"/>{:/}) on the upper right of the request or press `Ctrl/Cmd+Enter`, as shown in the following image.
+若要將查詢傳送到 OpenSearch，請將游標放在查詢文字中的任意位置以選取該查詢。接著選擇請求右上方的播放圖示（{::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dev-tools/play-icon.png" class="inline-icon" alt="play icon"/>{:/}），或按下 `Ctrl/Cmd+Enter`，如下圖所示。
 
-![Send request]({{site.url}}{{site.baseurl}}/images/dev-tools/dev-tools-send.png)
+![傳送請求]({{site.url}}{{site.baseurl}}/images/dev-tools/dev-tools-send.png)
 
-OpenSearch displays the response in the response pane on the right side of the console. For the indexing request, the response confirms that the document was created, as shown in the following image.
+OpenSearch 會在主控台右側的回應窗格中顯示回應。對於編製索引請求，回應會確認文件已建立，如下圖所示。
 
-![Response pane]({{site.url}}{{site.baseurl}}/images/dev-tools/dev-tools-response.png)
+![回應窗格]({{site.url}}{{site.baseurl}}/images/dev-tools/dev-tools-response.png)
 
-To search for the document that you indexed, enter the following request:
+若要搜尋您已編製索引的文件，請輸入下列請求：
 
 ```json
 GET students/_search
@@ -57,15 +58,15 @@ GET students/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document in the `hits` array, as shown in the following image.
+回應會在 `hits` 陣列中包含符合條件的文件，如下圖所示。
 
-![Search response]({{site.url}}{{site.baseurl}}/images/dev-tools/dev-tools-search-response.png)
+![搜尋回應]({{site.url}}{{site.baseurl}}/images/dev-tools/dev-tools-search-response.png)
 
-### Working in the cURL and console formats
+### 使用 cURL 與主控台格式
 
-The console uses an easier syntax to format REST requests than the `curl` command.
+相較於 `curl` 命令，主控台使用更簡單的語法來格式化 REST 請求。
 
-For example, the following `curl` command runs a search query:
+例如，下列 `curl` 命令會執行搜尋查詢：
 
 ```bash
 curl -XGET http://localhost:9200/students/_search?pretty -H 'Content-Type: application/json' -d'
@@ -79,7 +80,7 @@ curl -XGET http://localhost:9200/students/_search?pretty -H 'Content-Type: appli
 ```
 {% include copy.html %}
 
-The same query has a simpler syntax in the console format:
+相同的查詢在主控台格式中語法更簡單：
 
 ```json
 GET students/_search
@@ -93,13 +94,13 @@ GET students/_search
 ```
 {% include copy-curl.html %}
 
-If you paste a `curl` command directly into the console, the command is automatically converted into the format the console uses. To convert a query in the console into cURL format, see [Copying a query as cURL](#copying-a-query-as-curl).
+如果您將 `curl` 命令直接貼到主控台中，該命令會自動轉換為主控台使用的格式。若要將主控台中的查詢轉換為 cURL 格式，請參閱[將查詢複製為 cURL](#copying-a-query-as-curl)。
 
-### Using triple quotation marks in queries
+### 在查詢中使用三引號
 
-When writing queries containing quotation marks (`"`) and backslash (`\`) characters, you can use triple quotation marks (`"""`) to avoid escaping the characters. This format improves readability and helps avoid escape characters when writing large or complex strings, especially when working with deeply nested JSON strings.
+撰寫包含引號（`"`）和反斜線（`\`）字元的查詢時，您可以使用三引號（`"""`）以避免對字元進行跳脫。此格式可提升可讀性，並有助於在撰寫大型或複雜字串時避免使用跳脫字元，尤其是處理深層巢狀的 JSON 字串時。
 
-You can index a document containing special characters by escaping each special character with a backslash:
+您可以使用反斜線跳脫每個特殊字元，將包含特殊字元的文件編製索引：
 
 ```json
 PUT /testindex/_doc/1
@@ -109,7 +110,7 @@ PUT /testindex/_doc/1
 ```
 {% include copy-curl.html %}
 
-Alternatively, you can use triple quotation marks for a simpler format:
+或者，您可以使用三引號，以更簡單的格式撰寫：
 
 ```json
 PUT /testindex/_doc/1
@@ -119,77 +120,77 @@ PUT /testindex/_doc/1
 ```
 {% include copy-curl.html %}
 
-Triple quotation marks are only supported in the console---not in `curl` or other HTTP clients. To convert a query containing triple quotation marks into a format that other clients accept, use **Copy as cURL**.
+三引號僅在主控台中受支援，`curl` 或其他 HTTP 用戶端則不支援。若要將包含三引號的查詢轉換為其他用戶端可接受的格式，請使用 **Copy as cURL**。
 {: .tip}
 
-If a response contains the `\n`, `\t`, `\`, or `"` special characters, the console formats the response using triple quotation marks. To turn off this behavior, select **Settings** from the top menu and toggle **JSON syntax**.
+如果回應包含 `\n`、`\t`、`\` 或 `"` 特殊字元，主控台會使用三引號格式化回應。若要關閉此行為，請從頂端選單選取 **Settings**，並切換 **JSON syntax**。
 {: .tip}
 
-### Submitting long-running operations
+### 提交長時間執行的作業
 
-When submitting long-running operations (such as reindexing or snapshot creation) to OpenSearch, you can make the request asynchronous by providing the `wait_for_completion=false` query parameter. If this parameter is not specified, the request runs synchronously. In that case, if the operation exceeds the OpenSearch request timeout value, the client might send a new request, which can lead to unexpected behavior. If the API does not support asynchronous execution through query parameters, consider using cURL to run the request directly.
+向 OpenSearch 提交長時間執行的作業（例如重新編製索引或建立快照）時，您可以提供 `wait_for_completion=false` 查詢參數，讓請求以非同步方式執行。如果未指定此參數，請求會以同步方式執行。在這種情況下，如果作業超過 OpenSearch 請求逾時值，用戶端可能會傳送新的請求，進而導致非預期的行為。如果 API 不支援透過查詢參數進行非同步執行，請考慮使用 cURL 直接執行請求。
 
-## Using the request options menu
+## 使用請求選項選單
 
-To open the request options menu, select the wrench icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dev-tools/wrench-icon.png" class="inline-icon" alt="wrench icon"/>{:/}) on the upper right of a request, as shown in the following image.
+若要開啟請求選項選單，請選取請求右上方的扳手圖示（{::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dev-tools/wrench-icon.png" class="inline-icon" alt="wrench icon"/>{:/}），如下圖所示。
 
-![Console tools]({{site.url}}{{site.baseurl}}/images/dev-tools/dev-tools-tools.png){: width="640" }
+![主控台工具]({{site.url}}{{site.baseurl}}/images/dev-tools/dev-tools-tools.png){: width="640" }
 
-### Copying a query as cURL
+### 將查詢複製為 cURL
 
-To copy a query in cURL format, select the query and choose **Copy as cURL** from the request options menu. You can then run the copied command in a terminal or paste it into another HTTP client.
+若要以 cURL 格式複製查詢，請選取該查詢，然後從請求選項選單中選擇 **Copy as cURL**。接著，您可以在終端機中執行複製的命令，或將其貼到其他 HTTP 用戶端中。
 
-### Viewing documentation
+### 查看說明文件
 
-To view the OpenSearch documentation for the selected request, choose **Open documentation** from the request options menu.
+若要查看所選請求的 OpenSearch 說明文件，請從請求選項選單中選擇 **Open documentation**。
 
-### Auto indenting
+### 自動縮排
 
-To use auto indent, select the queries that you want to format and choose **Auto indent** from the request options menu.
+若要使用自動縮排，請選取要格式化的查詢，然後從請求選項選單中選擇 **Auto indent**。
 
-Auto indenting a collapsed query expands it.
+對已摺疊的查詢進行自動縮排會將其展開。
 
-Auto indenting a well-formatted query puts the request body on a single line. This is useful for working with [bulk APIs]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/).
+對格式正確的查詢進行自動縮排，會將請求本文放在單一行中。這在使用 [bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) 時很有用。
 {: .tip}
 
-## Using the top menu
+## 使用頂端選單
 
-The top menu provides options for reusing queries, configuring the editor, and viewing keyboard shortcuts.
+頂端選單提供重複使用查詢、設定編輯器以及查看鍵盤快速鍵的選項。
 
-### Viewing your request history
+### 查看請求記錄
 
-You can view up to the 500 most recent requests that OpenSearch ran successfully. To view request history, select **History** from the top menu. If you select the request you want to view from the left pane, the query is shown in the right pane.
+您最多可以查看 OpenSearch 最近成功執行的 500 個請求。若要查看請求記錄，請從頂端選單選取 **History**。如果您從左側窗格選取要查看的請求，該查詢會顯示在右側窗格中。
 
-To copy the query into the editor pane, select the query text and then select **Apply**.
+若要將查詢複製到編輯器窗格中，請選取查詢文字，然後選取 **Apply**。
 
-To clear the history, select **Clear**.
+若要清除記錄，請選取 **Clear**。
 
-### Exporting and importing queries
+### 匯出與匯入查詢
 
-To save the queries in the editor pane to a file, select **Export** from the top menu. The console downloads the queries as a `sense.json` file.
+若要將編輯器窗格中的查詢儲存到檔案，請從頂端選單選取 **Export**。主控台會將查詢下載為 `sense.json` 檔案。
 
-To load queries from a file, select **Import** from the top menu, select the file, and then choose one of the following import options:
+若要從檔案載入查詢，請從頂端選單選取 **Import**，選取檔案，然後選擇下列其中一個匯入選項：
 
-- **Merge with existing queries**: Adds the imported queries to the queries already in the editor pane.
-- **Overwrite existing queries**: Replaces the contents of the editor pane with the imported queries.
+- **Merge with existing queries**：將匯入的查詢新增到編輯器窗格中既有的查詢。
+- **Overwrite existing queries**：以匯入的查詢取代編輯器窗格的內容。
 
-Select **Import** to complete the import.
+選取 **Import** 以完成匯入。
 
-### Updating the console settings
+### 更新主控台設定
 
-To update your preferences, select **Settings** from the top menu. You can configure the following settings:
+若要更新您的偏好設定，請從頂端選單選取 **Settings**。您可以設定下列設定：
 
-- **Font Size**: Sets the editor font size.
-- **Wrap long lines**: Wraps lines that exceed the editor width.
-- **JSON syntax**: Uses triple quotation marks in the response pane for responses containing special characters.
-- **Autocomplete**: Turns autocomplete suggestions on or off for **Fields**, **Indices & Aliases**, and **Templates**.
-- **Automatically refresh autocomplete suggestions**: Refreshes autocomplete suggestions by querying OpenSearch. Automatic refreshes may be an issue if you have a large cluster or network limitations. To refresh suggestions manually, select **Refresh autocomplete suggestions**.
+- **Font Size**：設定編輯器的字型大小。
+- **Wrap long lines**：將超過編輯器寬度的行換行。
+- **JSON syntax**：對於包含特殊字元的回應，在回應窗格中使用三引號。
+- **Autocomplete**：開啟或關閉 **Fields**、**Indices & Aliases** 和 **Templates** 的自動完成建議。
+- **Automatically refresh autocomplete suggestions**：透過查詢 OpenSearch 重新整理自動完成建議。如果您的叢集規模較大或有網路限制，自動重新整理可能會造成問題。若要手動重新整理建議，請選取 **Refresh autocomplete suggestions**。
 
-### Using keyboard shortcuts
+### 使用鍵盤快速鍵
 
-To view all available keyboard shortcuts, select **Help** from the top menu.
+若要查看所有可用的鍵盤快速鍵，請從頂端選單選取 **Help**。
 
-## Next steps
+## 後續步驟
 
-- To try running additional queries in the console, see [Ingest data]({{site.url}}{{site.baseurl}}/getting-started/ingest-data/) and [Search your data]({{site.url}}{{site.baseurl}}/getting-started/search-data/).
-- For information about writing queries, see [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/).
+- 若要嘗試在主控台中執行更多查詢，請參閱[匯入資料]({{site.url}}{{site.baseurl}}/getting-started/ingest-data/)和[搜尋您的資料]({{site.url}}{{site.baseurl}}/getting-started/search-data/)。
+- 如需撰寫查詢的相關資訊，請參閱 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/)。

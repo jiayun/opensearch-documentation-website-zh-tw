@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Count
+title: "計數"
 parent: Search APIs
 nav_order: 35
 redirect_from:
@@ -9,26 +10,26 @@ redirect_from:
 ---
 
 # Count API
-**Introduced 1.0**
+**於 1.0 版引入**
 {: .label .label-purple }
 
-The Count API returns the count of documents that match a query. You can use it to retrieve the document count of an index, a data stream, or a cluster. Common use cases include:
+Count API 會傳回符合查詢的文件數量。您可以使用此 API 取得索引、資料串流或叢集的文件數量。常見的使用案例包括：
 
-- Retrieving the total number of documents in an index or data stream without retrieving the actual documents.
-- Verifying that data has been indexed correctly by counting documents that match specific criteria.
-- Monitoring data growth over time by tracking document counts across different time periods.
-- Validating query results before running expensive search operations by first retrieving how many documents match.
+- 取得索引或資料串流中的文件總數，而不擷取實際文件。
+- 計算符合特定條件的文件數量，以驗證資料是否已正確編製索引。
+- 追蹤不同時間區間的文件數量，以監控資料隨時間的成長情形。
+- 在執行耗費資源的搜尋作業之前，先取得符合條件的文件數量，以驗證查詢結果。
 
-The Count API is more efficient than using the Search API with `size: 0` when you only need the document count because it is optimized specifically for counting operations. To improve performance, OpenSearch distributes the count query across all shards in parallel. Each shard processes the request using one of its available replicas, allowing horizontal scaling as the number of replicas increases.
+當您只需要文件數量時，Count API 比使用搭配 `size: 0` 的 Search API 更有效率，因為它專門針對計數作業進行最佳化。為了提升效能，OpenSearch 會將計數查詢分散到所有分片上平行執行。每個分片會使用其中一個可用副本來處理請求，因此可隨著副本數量增加而水平擴充。
 
-Alternatively, you can use the [CAT Indices API]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-indices/) or the [CAT Count API]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-count/) to retrieve the number of documents in each index or data stream.
+或者，您可以使用 [CAT Indices API]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-indices/) 或 [CAT Count API]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-count/) 取得每個索引或資料串流中的文件數量。
 {: .note }
 
 <!-- spec_insert_start
 api: count
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET  /_count
 POST /_count
@@ -41,13 +42,13 @@ POST /{index}/_count
 api: count
 component: path_parameters
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `index` | List or String | A comma-separated list of data streams, indexes, and aliases to search. Supports wildcards (`*`). To search all data streams and indexes, omit this parameter or use `*` or `_all`. |
+| `index` | 清單或字串 | 要搜尋的資料串流、索引和別名清單，以逗號分隔。支援萬用字元（`*`）。若要搜尋所有資料串流和索引，請省略此參數，或使用 `*` 或 `_all`。 |
 
 <!-- spec_insert_end -->
 
@@ -55,40 +56,40 @@ The following table lists the available path parameters. All path parameters are
 api: count
 component: query_parameters
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `allow_no_indices` | Boolean | If `false`, the request returns an error if any wildcard expression, index alias, or `_all` value targets only missing or closed indexes. This behavior applies even if the request targets other open indexes. | N/A |
-| `analyze_wildcard` | Boolean | If `true`, wildcard and prefix queries are analyzed. This parameter can only be used when the `q` query string parameter is specified. | `false` |
-| `analyzer` | String | Analyzer to use for the query string. This parameter can only be used when the `q` query string parameter is specified. | N/A |
-| `default_operator` | String | The default operator for query string query: `AND` or `OR`. This parameter can only be used when the `q` query string parameter is specified. <br> Valid values are: `and`, `AND`, `or`, and `OR`. | N/A |
-| `df` | String | Field to use as default where no field prefix is given in the query string. This parameter can only be used when the `q` query string parameter is specified. | N/A |
-| `expand_wildcards` | List or String | Specifies the type of index that wildcard expressions can match. Supports comma-separated values. <br> Valid values are: <br> - `all`: Match any index, including hidden ones. <br> - `closed`: Match closed, non-hidden indexes. <br> - `hidden`: Match hidden indexes. Must be combined with `open`, `closed`, or both. <br> - `none`: Wildcard expressions are not accepted. <br> - `open`: Match open, non-hidden indexes. | N/A |
-| `ignore_throttled` | Boolean | If `true`, concrete, expanded or aliased indexes are ignored when frozen. | N/A |
-| `ignore_unavailable` | Boolean | If `false`, the request returns an error if it targets a missing or closed index. | N/A |
-| `lenient` | Boolean | If `true`, format-based query failures (such as providing text to a numeric field) in the query string will be ignored. | N/A |
-| `min_score` | Float | Sets the minimum `_score` value that documents must have to be included in the result. | N/A |
-| `preference` | String | Specifies the node or shard the operation should be performed on. Random by default. | `random` |
-| `q` | String | Query in the Lucene query string syntax. | N/A |
-| `routing` | List or String | A custom value used to route operations to a specific shard. | N/A |
-| `terminate_after` | Integer | Maximum number of documents to collect for each shard. If a query reaches this limit, OpenSearch terminates the query early. OpenSearch collects documents before sorting. | N/A |
+| `allow_no_indices` | 布林值 | 若為 `false`，當任何萬用字元運算式、索引別名或 `_all` 值僅以不存在或已關閉的索引為目標時，請求會傳回錯誤。即使請求也以其他開啟的索引為目標，此行為仍適用。 | N/A |
+| `analyze_wildcard` | 布林值 | 若為 `true`，則會分析萬用字元和前綴查詢。只有在指定 `q` 查詢字串參數時，才能使用此參數。 | `false` |
+| `analyzer` | 字串 | 用於查詢字串的分析器。只有在指定 `q` 查詢字串參數時，才能使用此參數。 | N/A |
+| `default_operator` | 字串 | 查詢字串查詢的預設運算子：`AND` 或 `OR`。只有在指定 `q` 查詢字串參數時，才能使用此參數。<br> 有效值為：`and`、`AND`、`or` 和 `OR`。 | N/A |
+| `df` | 字串 | 當查詢字串中未提供欄位前綴時，作為預設使用的欄位。只有在指定 `q` 查詢字串參數時，才能使用此參數。 | N/A |
+| `expand_wildcards` | 清單或字串 | 指定萬用字元運算式可符合的索引類型。支援以逗號分隔的值。<br> 有效值為：<br> - `all`：符合任何索引，包括隱藏索引。<br> - `closed`：符合已關閉的非隱藏索引。<br> - `hidden`：符合隱藏索引。必須與 `open`、`closed` 或兩者搭配使用。<br> - `none`：不接受萬用字元運算式。<br> - `open`：符合開啟的非隱藏索引。 | N/A |
+| `ignore_throttled` | 布林值 | 若為 `true`，則會忽略已凍結的具體索引、展開後的索引或透過別名指定的索引。 | N/A |
+| `ignore_unavailable` | 布林值 | 若為 `false`，當請求以不存在或已關閉的索引為目標時，會傳回錯誤。 | N/A |
+| `lenient` | 布林值 | 若為 `true`，則會忽略查詢字串中因格式造成的查詢失敗（例如向數值欄位提供文字）。 | N/A |
+| `min_score` | 浮點數 | 設定文件必須具有的最低 `_score` 值，才會納入結果。 | N/A |
+| `preference` | 字串 | 指定應執行作業的節點或分片。預設為隨機選取。 | `random` |
+| `q` | 字串 | 使用 Lucene 查詢字串語法的查詢。 | N/A |
+| `routing` | 清單或字串 | 用於將作業路由至特定分片的自訂值。 | N/A |
+| `terminate_after` | 整數 | 每個分片要收集的文件數量上限。如果查詢達到此限制，OpenSearch 會提前終止查詢。OpenSearch 會先收集文件，再進行排序。 | N/A |
 
 <!-- spec_insert_end -->
 
-## Request body fields
+## 請求本文欄位
 
-The request body is optional. You can use it to restrict the results using a query defined with Query DSL.
+請求本文為選用。您可以使用 Query DSL 定義查詢，並透過請求本文限制結果。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`query` | Object | The query used to filter documents. If not specified, the `match_all` query is used to count all documents in the target. For more information about OpenSearch queries, see [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/).
+`query` | 物件 | 用於篩選文件的查詢。如果未指定，則會使用 `match_all` 查詢來計算目標中的所有文件。如需 OpenSearch 查詢的詳細資訊，請參閱 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/)。
 
-## Example: Counting all documents in a cluster
+## 範例：計算叢集中的所有文件
 
-The following example request returns the total count of all documents across the entire cluster:
+下列範例請求會傳回整個叢集中所有文件的總數：
 
 <!-- spec_insert_start
 component: example_code
@@ -112,9 +113,9 @@ response = client.count(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Counting all documents in several indexes
+## 範例：計算多個索引中的所有文件
 
-The following example request returns the total count of all documents in the `movies` and `tv_shows` indexes:
+下列範例請求會傳回 `movies` 和 `tv_shows` 索引中所有文件的總數：
 
 <!-- spec_insert_start
 component: example_code
@@ -139,9 +140,9 @@ response = client.count(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Counting documents that match a query
+## 範例：計算符合查詢的文件
 
-The following example request counts documents in the `movies` index in which the `genre` field is `drama`:
+下列範例請求會計算 `movies` 索引中 `genre` 欄位為 `drama` 的文件數量：
 
 <!-- spec_insert_start
 component: example_code
@@ -187,9 +188,9 @@ response = client.count(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Counting documents using a query string
+## 範例：使用查詢字串計算文件
 
-The following example request uses the `q` query parameter to count documents where the `genre` field is `drama`:
+下列範例請求會使用 `q` 查詢參數，計算 `genre` 欄位為 `drama` 的文件數量：
 
 <!-- spec_insert_start
 component: example_code
@@ -215,9 +216,9 @@ response = client.count(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Counting documents with early termination
+## 範例：提前終止文件計數
 
-The following example request uses the `terminate_after` parameter to stop counting after finding three matching documents:
+下列範例請求會使用 `terminate_after` 參數，在找到三份符合條件的文件後停止計數：
 
 <!-- spec_insert_start
 component: example_code
@@ -258,9 +259,9 @@ response = client.count(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-The following example response shows the document count and shard information:
+下列範例回應顯示文件數量和分片資訊：
 
 ```json
 {
@@ -274,7 +275,7 @@ The following example response shows the document count and shard information:
 }
 ```
 
-When using the `terminate_after` parameter, the response includes a `terminated_early` field:
+使用 `terminate_after` 參數時，回應會包含 `terminated_early` 欄位：
 
 ```json
 {
@@ -289,20 +290,20 @@ When using the `terminate_after` parameter, the response includes a `terminated_
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The Count API response contains the following fields.
+Count API 回應包含下列欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`count` | Integer | The total number of documents matching the query. If a query is not provided, this represents all documents in the specified target.
-`_shards` | Object | Contains information about the shards involved in the count operation.
-`_shards.total` | Integer | The total number of shards queried for the count operation.
-`_shards.successful` | Integer | The number of shards that successfully executed the count operation.
-`_shards.skipped` | Integer | The number of shards that were skipped during the count operation. Shards may be skipped if they do not contain any documents matching the query.
-`_shards.failed` | Integer | The number of shards that failed to execute the count operation. If this value is greater than 0, check your cluster health and shard allocation.
-`terminated_early` | Boolean | Appears only when the `terminate_after` query parameter is used. When `true`, indicates that the count operation was terminated before all matching documents were counted.
+`count` | 整數 | 符合查詢的文件總數。如果未提供查詢，則代表指定目標中的所有文件。
+`_shards` | 物件 | 包含參與計數作業的分片資訊。
+`_shards.total` | 整數 | 計數作業所查詢的分片總數。
+`_shards.successful` | 整數 | 成功執行計數作業的分片數量。
+`_shards.skipped` | 整數 | 計數作業期間略過的分片數量。如果分片不包含任何符合查詢的文件，則可能會略過該分片。
+`_shards.failed` | 整數 | 未能執行計數作業的分片數量。如果此值大於 0，請檢查您的叢集健康狀態和分片配置。
+`terminated_early` | 布林值 | 僅在使用 `terminate_after` 查詢參數時出現。當值為 `true` 時，表示計數作業在所有符合條件的文件計數完成之前就已終止。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:data/read/search`.
+如果您使用 Security 外掛程式，請確保您具備適當的權限：`indices:data/read/search`。

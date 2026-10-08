@@ -1,41 +1,42 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cleanup snapshot repository
+title: "清理快照儲存庫"
 parent: Snapshot APIs
 nav_order: 11
 ---
 
 # Cleanup Snapshot Repository API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Cleanup Snapshot Repository API clears a snapshot repository of data no longer referenced by any existing snapshot.
+Cleanup Snapshot Repository API 會清除快照儲存庫中不再被任何現有快照參照的資料。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_snapshot/{repository}/_cleanup
 ```
 
 
-## Path parameters
+## 路徑參數
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `repository` | String | The name of the snapshot repository. |
+| `repository` | 字串 | 快照儲存庫的名稱。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter |  Data type | Description |
+| 參數 |  資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `cluster_manager_timeout` | Time | The amount of time to wait for a response from the cluster manager node. Formerly called `master_timeout`. Optional. Default is 30 seconds. |
-| `timeout` | Time | The amount of time to wait for the operation to complete. Optional.|
+| `cluster_manager_timeout` | 時間 | 等待叢集管理員節點回應的時間。先前稱為 `master_timeout`。選用。預設為 30 秒。 |
+| `timeout` | 時間 | 等待操作完成的時間。選用。|
 
-## Example request
+## 請求範例
 
-The following request removes all stale data from the repository `my_backup`:
+下列請求會移除儲存庫 `my_backup` 中所有過時的資料：
 
 <!-- spec_insert_start
 component: example_code
@@ -60,7 +61,7 @@ response = client.snapshot.cleanup_repository(
 <!-- spec_insert_end -->
 
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -71,10 +72,10 @@ response = client.snapshot.cleanup_repository(
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `deleted_bytes` | Integer | The number of bytes made available in the snapshot after data deletion. |
-| `deleted_blobs` | Integer | The number of binary large objects (BLOBs) cleared from the repository by the request. |
+| `deleted_bytes` | 整數 | 刪除資料後，快照中釋出的位元組數。 |
+| `deleted_blobs` | 整數 | 此請求從儲存庫清除的二進位大型物件（BLOB）數量。 |
 

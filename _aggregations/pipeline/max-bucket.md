@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Maximum bucket
+title: "最大值桶"
 parent: Pipeline aggregations
 nav_order: 100
 ---
 
-# Maximum bucket aggregation
+# 最大值桶彙總
 
-The `max_bucket` aggregation is a sibling aggregation that calculates the maximum of a metric in each bucket of a previous aggregation.
+`max_bucket` 彙總是一種同層級彙總，可計算前一個彙總中每個桶 (bucket) 內指標的最大值。
 
-The specified metric must be numeric, and the sibling aggregation must be a multi-bucket aggregation.
+指定的指標必須是數值，且同層級彙總必須是多桶彙總。
 
-## Parameters
+## 參數
 
-The `max_bucket` aggregation takes the following parameters.
+`max_bucket` 彙總接受下列參數。
 
-| Parameter             | Required/Optional | Data type       | Description |
+| 參數             | 必要/選用 | 資料類型       | 說明 |
 | :--                   | :--               |  :--            | :--         |
-| `buckets_path`        | Required          | String          | The path of the aggregation buckets to be aggregated. See [Buckets path]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path). |
-| `gap_policy`          | Optional          | String          | The policy to apply to missing data. Valid values are `skip` and `insert_zeros`. Default is `skip`. See [Data gaps]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#data-gaps).|
-| `format`              | Optional          | String          | A [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) formatting string. Returns the formatted output in the aggregation's `value_as_string` property. |
+| `buckets_path`        | 必要          | 字串          | 要彙總之彙總桶的路徑。請參閱[桶路徑]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path)。 |
+| `gap_policy`          | 選用          | 字串          | 套用於缺漏資料的政策。有效值為 `skip` 和 `insert_zeros`。預設為 `skip`。請參閱[資料缺口]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#data-gaps)。|
+| `format`              | 選用          | 字串          | [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) 格式字串。會在彙總的 `value_as_string` 屬性中傳回格式化後的輸出。 |
 
-## Example
+## 範例
 
-The following example creates a date histogram with a one-month interval from the OpenSearch Dashboards e-commerce sample data. The `sum` subaggregation calculates the sum of bytes for each month. Finally, the `max_bucket` aggregation finds the maximum---the largest of these buckets:
+下列範例會從 OpenSearch Dashboards 電子商務範例資料建立間隔為一個月的日期長條圖。`sum` 子彙總會計算每個月的位元組總和。最後，`max_bucket` 彙總會找出最大值，也就是這些桶中最大的一個：
 
 ```json
 POST opensearch_dashboards_sample_data_logs/_search
@@ -53,9 +54,9 @@ POST opensearch_dashboards_sample_data_logs/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The `max_bucket` aggregation returns the maximum value from a specified metric across multiple buckets. In this example, it calculates the maximum number of bytes per month from the `sum_of_bytes` metric inside `visits_per_month`. The `value` field shows the maximum value found across all buckets. The `keys` array contains the keys of the buckets in which this maximum value was observed. It's an array because more than one bucket can have the same maximum value. In such cases, all matching bucket keys are included. This ensures that the result is accurate even if multiple time periods (or terms) have the same maximum value:
+`max_bucket` 彙總會傳回指定指標在多個桶中的最大值。在此範例中，它會從 `visits_per_month` 內的 `sum_of_bytes` 指標計算每月位元組數的最大值。`value` 欄位顯示在所有桶中找到的最大值。`keys` 陣列包含觀察到此最大值之桶的鍵。這是一個陣列，因為可能有多個桶具有相同的最大值。在這種情況下，所有相符的桶鍵都會包含在內。這可確保即使多個時間區段 (或詞彙) 具有相同的最大值，結果仍然準確：
 
 ```json
 {

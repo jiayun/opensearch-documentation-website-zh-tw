@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: FAQs
+title: "常見問題"
 nav_order: 115
 ---
 
-# OpenSearch Benchmark FAQs
+# OpenSearch Benchmark 常見問題
 
-This section provides answers to frequently asked questions.
-
-
-## How can I get more information about an error that I encountered?
-
-Check the end of the OpenSearch Benchmark log files to view messages from the latest run.
-
-If you need more help, you can:
-- [Post a question in the OpenSearch Benchmark Slack channel](https://opensearch.slack.com/archives/C082PLA3VPW).
-- [Attend a community meeting, office hours, or issue triage session](https://www.meetup.com/opensearch/events/309982456/?eventOrigin=group_upcoming_events).
+本節提供常見問題的解答。
 
 
-## Where are the OpenSearch Benchmark log files located?
+## 如何取得我遇到的錯誤的更多資訊？
 
-By default, the OpenSearch Benchmark log files are located in the your home directory, under `$HOME/.osb/osb.log`.
+請查看 OpenSearch Benchmark 記錄檔的結尾，以檢視最近一次執行的訊息。
+
+如果您需要更多協助，您可以：
+- [在 OpenSearch Benchmark Slack 頻道中發布問題](https://opensearch.slack.com/archives/C082PLA3VPW)。
+- [參加社群會議、辦公時間或問題分類會議](https://www.meetup.com/opensearch/events/309982456/?eventOrigin=group_upcoming_events)。
 
 
-## I'm looking for the latest updates to OpenSearch Benchmark. Where can I find the latest incremental build of OpenSearch Benchmark?
+## OpenSearch Benchmark 記錄檔位於何處？
 
-Incremental OpenSearch Benchmark builds are generated as Docker images when any new changes are merged into the codebase. They are available on the [OpenSearch Benchmark Docker Hub page](https://hub.docker.com/r/opensearchstaging/opensearch-benchmark/tags).
+根據預設，OpenSearch Benchmark 記錄檔位於您的主目錄中的 `$HOME/.osb/osb.log` 下。
+
+
+## 我正在尋找 OpenSearch Benchmark 的最新更新。在哪裡可以找到 OpenSearch Benchmark 的最新增量建置？
+
+每當有新的變更合併到程式碼庫時，系統就會以 Docker 映像檔的形式產生 OpenSearch Benchmark 增量建置。您可以在 [OpenSearch Benchmark Docker Hub 頁面](https://hub.docker.com/r/opensearchstaging/opensearch-benchmark/tags)上取得這些建置。

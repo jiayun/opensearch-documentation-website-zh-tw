@@ -1,222 +1,223 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Exploring data with Discover
+title: "使用 Discover 探索資料"
 parent: Exploring data
 nav_order: 10
 has_children: true
 has_toc: false
 ---
 
-# Exploring data with Discover
+# 使用 Discover 探索資料
 
-You can use the **Discover** application in **OpenSearch Dashboards** to explore and visualize your data in OpenSearch.
+您可以使用 **OpenSearch Dashboards** 中的 **Discover** 應用程式，探索 OpenSearch 中的資料並將其視覺化。
 
-If you're new to the Discover application, see [Explore the Discover application]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-discover/) for a hands-on introduction using sample data.
+如果您剛開始使用 Discover 應用程式，請參閱[探索 Discover 應用程式]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-discover/)，透過範例資料進行實作入門。
 {: .tip}
 
-## Prerequisites
+## 先決條件
 
-The examples on this page use the [**Sample flight data**](https://playground.opensearch.org/app/home#/tutorial_directory) dataset that is already installed in [OpenSearch Playground](https://playground.opensearch.org/app/home#/).
+本頁的範例使用已安裝於 [OpenSearch Playground](https://playground.opensearch.org/app/home#/) 的 [**Sample flight data**](https://playground.opensearch.org/app/home#/tutorial_directory) 資料集。
 
-If you've installed a local OpenSearch Dashboards instance, add the sample data by following these steps:
+如果您已安裝本機 OpenSearch Dashboards 執行個體，請依照下列步驟新增範例資料：
 
-1. On the OpenSearch Dashboards home page, select **Add sample data**.
-2. In the **Sample flight data** panel, select **Add data**.
+1. 在 OpenSearch Dashboards 首頁上，選取 **Add sample data**。
+2. 在 **Sample flight data** 面板中，選取 **Add data**。
 
-For more information, see [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
+如需詳細資訊，請參閱[新增範例資料]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
 
-## Navigating the Discover application UI
+## 瀏覽 Discover 應用程式使用者介面
 
-The following image shows the main components of the **Discover** application.
+下圖顯示 **Discover** 應用程式的主要元件。
 
-![Discover app default page]({{site.url}}{{site.baseurl}}/images/dashboards/discover-app-panel-callouts.png)
+![Discover 應用程式預設頁面]({{site.url}}{{site.baseurl}}/images/dashboards/discover-app-panel-callouts.png)
 
-- The _application menu_ (A) provides options for creating and saving Discover filters settings.
-- The _field select_ tool (B) determines which fields display in the **Discover** application panel. See [Using the field select tool]({{site.url}}{{site.baseurl}}/dashboards/discover/field-select/).
-- The _time filter_ (C) provides a graphical interface for selecting data values and ranges. See [Using the time filter]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/).
-- The _search_ bar (D) enables selection of data using a query language search. See [Using the search bar]({{site.url}}{{site.baseurl}}/dashboards/discover/search-bar/).
-- The _filter_ tool (E) contains frequently used commands and shortcuts. See [Using the filter tool]({{site.url}}{{site.baseurl}}/dashboards/discover/filter-tool/).
-- The **Discover** _application panel_ displays the following elements:
-  - The _date range display_ (F) specifies and selects a date-time range and determines the scale of the timeline visualization.
-  - The _timestamp histogram_ (G) displays the count of documents per time interval.
-  - The **Results** table (H) displays summaries of the selected documents. You can expand each document and view it in tabular or JSON form.
+- _應用程式選單_（A）提供建立和儲存 Discover 篩選器設定的選項。
+- _欄位選取_工具（B）決定哪些欄位會顯示在 **Discover** 應用程式面板中。請參閱[使用欄位選取工具]({{site.url}}{{site.baseurl}}/dashboards/discover/field-select/)。
+- _時間篩選器_（C）提供圖形介面，可用來選取資料值和範圍。請參閱[使用時間篩選器]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/)。
+- _搜尋_列（D）可讓您透過查詢語言搜尋來選取資料。請參閱[使用搜尋列]({{site.url}}{{site.baseurl}}/dashboards/discover/search-bar/)。
+- _篩選器_工具（E）包含常用命令和捷徑。請參閱[使用篩選器工具]({{site.url}}{{site.baseurl}}/dashboards/discover/filter-tool/)。
+- **Discover** _應用程式面板_顯示下列元素：
+  - _日期範圍顯示區_（F）可用來指定和選取日期時間範圍，並決定時間軸視覺化的刻度。
+  - _時間戳記直方圖_（G）顯示每個時間間隔的文件數量。
+  - **Results** 表格（H）顯示所選文件的摘要。您可以展開每份文件，並以表格或 JSON 格式檢視。
 
-  If there is no data selected, the application panel displays a **</> No Results** message. This often happens, especially with the OpenSearch Dashboards sample data, because all data falls outside the time filter interval.
+  如果未選取任何資料，應用程式面板會顯示 **</> No Results** 訊息。這種情況經常發生，尤其是在使用 OpenSearch Dashboards 範例資料時，因為所有資料都落在時間篩選器的時間間隔之外。
   {: .note}
 
-  The time filter interval defaults to **Last 15 minutes**. To change the time filter interval, [Expand the time range]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/#selecting-a-time-range) to include data.
+  時間篩選器的時間間隔預設為 **Last 15 minutes**。若要變更時間篩選器的時間間隔，請[擴大時間範圍]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/#selecting-a-time-range)以納入資料。
   {: .note}
 
-## Viewing the Results table
+## 檢視 Results 表格
 
-The **Results** table displays the selected data. Each row represents a single document, and each column contains document attributes.
+**Results** 表格顯示所選資料。每一列代表一份文件，每一欄則包含文件屬性。
 
-By default, the table shows all attributes for all selected documents.
+依預設，表格會顯示所有所選文件的全部屬性。
 
-To display documents in the **Discover** application, follow these steps:
+若要在 **Discover** 應用程式中顯示文件，請依照下列步驟操作：
 
-1. In the navigation panel, select **OpenSearch Dashboards** > **Discover**.
+1. 在導覽面板中，選取 **OpenSearch Dashboards** > **Discover**。
 
-1. Choose the data you want to work with from the **Index patterns** dropdown in the field select tool. See [Selecting an index pattern]({{site.url}}{{site.baseurl}}/dashboards/discover/field-select/#selecting-an-index-pattern).
+1. 從欄位選取工具的 **Index patterns** 下拉式選單中，選擇您要處理的資料。請參閱[選取索引模式]({{site.url}}{{site.baseurl}}/dashboards/discover/field-select/#selecting-an-index-pattern)。
 
-   For the following example, choose `opensearch_dashboards_sample_data_flights`.
+   在下列範例中，請選擇 `opensearch_dashboards_sample_data_flights`。
 
-1. Use the time filter to select the time interval of interest. See [Selecting a time range]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/#selecting-a-time-range).
+1. 使用時間篩選器選取您感興趣的時間間隔。請參閱[選取時間範圍]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/#selecting-a-time-range)。
 
-   For the example, select **Last 12 months**.
+   在此範例中，請選取 **Last 12 months**。
 
-   The following image shows the resulting display in the Discover app.
+   下圖顯示 Discover 應用程式中產生的畫面。
 
-   ![Discover interface showing search of flight sample data for last 90 days]({{site.url}}{{site.baseurl}}/images/dashboards/discover-display-flight-data-3-mo.png){: width="95%" }
+   ![Discover 介面顯示最近 90 天航班範例資料的搜尋結果]({{site.url}}{{site.baseurl}}/images/dashboards/discover-display-flight-data-3-mo.png){: width="95%" }
 
-1. Drag-select the narrow band of data from the timestamp histogram as shown in the following image.
+1. 如下圖所示，在時間戳記直方圖中拖曳選取狹窄的資料區段。
 
-   ![Discover interface showing drag-select]({{site.url}}{{site.baseurl}}/images/dashboards/discover-drag-select.png){: width="95%" }
+   ![Discover 介面顯示拖曳選取操作]({{site.url}}{{site.baseurl}}/images/dashboards/discover-drag-select.png){: width="95%" }
 
-   The data adjusts to span the width of the data display, and the scale adjusts automatically.
+   資料會調整為橫跨資料顯示區的寬度，刻度也會自動調整。
 
-   Selecting a date range interactively results in an absolute time interval.
+   以互動方式選取日期範圍會產生絕對時間間隔。
    {: .note}
 
-1. Select **Auto** from the date range display drop-down.
+1. 從日期範圍顯示區的下拉式選單中選取 **Auto**。
 
-   The resulting view should look like the following image.
+   產生的檢視畫面應如下圖所示。
 
-   ![Discover interface showing flight sample data scaled to display width]({{site.url}}{{site.baseurl}}/images/dashboards/discover-display-flight-data-adjusted.png){: width="95%" }
-
-
-## Filtering documents
-
-You can filter documents out of the selected index pattern in several ways:
-
-- By further refining the time interval
-- By entering a query language query
-- By selecting attribute values in a menu-based filter tool
-
-You can save any combination of these filters and re-apply them later to the same or a different index pattern. See [Saving a query]({{site.url}}{{site.baseurl}}/dashboards/discover/search-bar/#saving-a-query).
+   ![Discover 介面顯示縮放至顯示區寬度的航班範例資料]({{site.url}}{{site.baseurl}}/images/dashboards/discover-display-flight-data-adjusted.png){: width="95%" }
 
 
-### Refining the time interval
+## 篩選文件
 
-The **Discover** application displays only the documents that are included in the time filter's time interval. The time interval can be _relative_ (a fixed window of time relative to _now_), or _absolute_ (between two fixed times).
+您可以透過幾種方式，從所選索引模式中篩除文件：
 
-Some tools for changing the time interval are demonstrated in the previous example. To learn about others, see [Using the time filter]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/).
+- 進一步縮小時間間隔
+- 輸入查詢語言查詢
+- 在以選單操作的篩選器工具中選取屬性值
+
+您可以儲存這些篩選器的任意組合，之後再將其套用至相同或不同的索引模式。請參閱[儲存查詢]({{site.url}}{{site.baseurl}}/dashboards/discover/search-bar/#saving-a-query)。
 
 
-### Entering a query
+### 縮小時間間隔
 
-You can filter documents by entering a query string in the search bar using one of two query languages.
+**Discover** 應用程式只會顯示時間篩選器的時間間隔內所包含的文件。時間間隔可以是_相對_時間間隔（相對於_現在_的固定時間範圍），或_絕對_時間間隔（兩個固定時間之間）。
 
-- [Dashboards Query Language (DQL)]({{site.url}}{{site.baseurl}}/dashboards/discover/dql/) is the default query language in the search bar and is available only in **Dashboards**.
-- [Query string query language (Lucene)]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/) is based on the [Apache Lucene](https://lucene.apache.org/core/{{site.lucene_version}}/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description) query language.
+前面的範例示範了部分用來變更時間間隔的工具。若要瞭解其他工具，請參閱[使用時間篩選器]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/)。
 
-To filter documents using the search bar, see [Using the search bar]({{site.url}}{{site.baseurl}}/dashboards/discover/search-bar/).
 
-For example, using the _flights_ sample data, enter the following DQL search:
+### 輸入查詢
+
+您可以使用兩種查詢語言之一，在搜尋列中輸入查詢字串來篩選文件。
+
+- [Dashboards Query Language (DQL)]({{site.url}}{{site.baseurl}}/dashboards/discover/dql/) 是搜尋列中的預設查詢語言，僅在 **Dashboards** 中提供。
+- [查詢字串查詢語言（Lucene）]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/) 以 [Apache Lucene](https://lucene.apache.org/core/{{site.lucene_version}}/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description) 查詢語言為基礎。
+
+若要使用搜尋列篩選文件，請參閱[使用搜尋列]({{site.url}}{{site.baseurl}}/dashboards/discover/search-bar/)。
+
+例如，使用 _flights_ 範例資料時，請輸入下列 DQL 搜尋：
 
 ```
 Carrier: "OpenSearch-Air"
 ```
 
-### Selecting attribute values
+### 選取屬性值
 
-You can use the filter tool to add any number of discrete filters based on attribute values.
+您可以使用篩選器工具，根據屬性值新增任意數量的個別篩選器。
 
-You can turn filters on or off individually or all at once; reverse the inclusion-exclusion status of any filter; and pin the filters as a group so that they apply to the **Dashboards** and  **Visualization** applications.
+您可以逐一或一次啟用或停用所有篩選器；反轉任一篩選器的納入或排除狀態；並將篩選器整組釘選，使其套用至 **Dashboards** 和  **Visualization** 應用程式。
 
-To use the filter tool, see [Using the filter tool]({{site.url}}{{site.baseurl}}/dashboards/discover/filter-tool/).
+若要使用篩選器工具，請參閱[使用篩選器工具]({{site.url}}{{site.baseurl}}/dashboards/discover/filter-tool/)。
 
-For example, using the _flights_ sample data, use the filter tool to enter the following filter:
+例如，使用 _flights_ 範例資料時，請使用篩選器工具輸入下列篩選器：
 
-![A data filter]({{site.url}}{{site.baseurl}}/images/dashboards/filter-cancelled-true.png){: width="100" }
-
-
-## Choosing data fields
-
-By default, the **Discover** application displays all the fields in a document. You can choose to display one, more, or all fields in the **Results** table.
-
-To choose the fields to display in the **Results** table, see [Using the field select tool]({{site.url}}{{site.baseurl}}/dashboards/discover/field-select/).
-
-For example, select **Dest**, **FlightDelayMin**, and **FlightDelayType** in the field select tool. The **Results** table now displays only those fields (in addition to the **Time**).
+![資料篩選器]({{site.url}}{{site.baseurl}}/images/dashboards/filter-cancelled-true.png){: width="100" }
 
 
-## Examining a document
+## 選擇資料欄位
 
-To expand a single document and see a detailed view in the **Results** table, follow these steps:
+預設情況下，**Discover** 應用程式會顯示文件中的所有欄位。您可以選擇在 **Results** 表格中顯示一個、多個或所有欄位。
 
-1. From a row in the **Results** table's left column, select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/arrow-right-icon.png" class="inline-icon" alt="expand icon"/>{:/} (expand) icon. The expanded document is displayed below the row in the **Expanded document** area.
+若要選擇在 **Results** 表格中顯示的欄位，請參閱[使用欄位選取工具]({{site.url}}{{site.baseurl}}/dashboards/discover/field-select/)。
 
-1. (Optional) To display the document in JSON format, select the **JSON** tab.
+例如，在欄位選取工具中選取 **Dest**、**FlightDelayMin** 和 **FlightDelayType**。**Results** 表格現在只會顯示這些欄位（以及 **Time**）。
 
-1. To return to the (default) tabular view, select the **Table** tab.
 
-1. (Optional) To view documents preceding or following the current document, select **View surrounding documents**.
+## 檢視文件
 
-   The document, along with the five documents before and after by default, is displayed in a new browser tab or window.
+若要展開單一文件，並在 **Results** 表格中查看詳細內容，請依照下列步驟操作：
 
-   The number of surrounding documents is fewer if there are fewer documents immediately before or after.
+1. 在 **Results** 表格左側欄中的某一列，選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/arrow-right-icon.png" class="inline-icon" alt="expand icon"/>{:/}（展開）圖示。展開的文件會顯示在該列下方的 **Expanded document** 區域中。
+
+1. （選用）若要以 JSON 格式顯示文件，請選取 **JSON** 索引標籤。
+
+1. 若要返回（預設的）表格檢視，請選取 **Table** 索引標籤。
+
+1. （選用）若要檢視目前文件之前或之後的文件，請選取 **View surrounding documents**。
+
+   該文件會顯示在新的瀏覽器索引標籤或視窗中，預設也會一併顯示其前後各五份文件。
+
+   如果緊接在前或後的文件較少，顯示的周邊文件數量也會較少。
    {: .note}
 
-1. (Optional) To view the expanded document in isolation, select **View single document**.
+1. （選用）若要單獨檢視展開的文件，請選取 **View single document**。
 
-   The expanded document is displayed in a new browser tab or window.
+   展開的文件會顯示在新的瀏覽器索引標籤或視窗中。
 
-1. To collapse the expanded document, select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/arrow-down-icon.png" class="inline-icon" alt="collapse icon"/>{:/} (down arrow) icon.
+1. 若要收合展開的文件，請選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/arrow-down-icon.png" class="inline-icon" alt="collapse icon"/>{:/}（向下箭頭）圖示。
 
 
-## Visualizing data fields
+## 將資料欄位視覺化
 
-To visualize a data field, follow these steps:
+若要將資料欄位視覺化，請依照下列步驟操作：
 
-1. In the field select list, mouse over the field you want to visualize.
+1. 在欄位選取清單中，將滑鼠游標移至您要視覺化的欄位上。
 
-1. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/inspect-icon.png" class="inline-icon" alt="inspect icon"/>{:/} (inspect) icon to the right of the field name.
+1. 選取欄位名稱右側的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/inspect-icon.png" class="inline-icon" alt="inspect icon"/>{:/}（檢查）圖示。
 
-   The **Top 5 views popover** displays as shown in the following image.
+   **Top 5 views popover** 隨即顯示，如下圖所示。
    
-   ![top 5 values popover]({{site.url}}{{site.baseurl}}/images/dashboards/top-5-values.png){: width="51%" }
+   ![前 5 個值的彈出視窗]({{site.url}}{{site.baseurl}}/images/dashboards/top-5-values.png){: width="51%" }
 
-1. From the **Top 5 values** popover, select the **Visualize** button. The display changes to the **Visualize** application, showing a default visualization of the selected field.
+1. 在 **Top 5 values** 彈出視窗中，選取 **Visualize** 按鈕。畫面會切換至 **Visualize** 應用程式，顯示所選欄位的預設視覺化。
 
-   See [Building data visualizations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/) to learn how to edit the visualization display.
+   請參閱[建立資料視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/)，瞭解如何編輯視覺化的顯示方式。
 
 
-## Exporting data
+## 匯出資料
 
-You can export data from the **Results** table to a CSV file or copy a JSON object representing a single document. To export the same data on a schedule or from a script instead of from the interface, save your query as a saved search and generate a CSV report from it. For more information, see [Reporting API]({{site.url}}{{site.baseurl}}/reporting/api/).
+您可以將 **Results** 表格中的資料匯出至 CSV 檔案，或複製代表單一文件的 JSON 物件。若要依排程或透過指令碼匯出相同資料，請將您的查詢儲存為已儲存的搜尋，並從中產生 CSV 報表。這樣就能不經由介面匯出資料。如需詳細資訊，請參閱[報表 API]({{site.url}}{{site.baseurl}}/reporting/api/)。
 
-### Downloading data to a CSV file
+### 將資料下載至 CSV 檔案
 
-To download a CSV-formatted file of data from the **Results** table:
+若要將 **Results** 表格中的資料下載為 CSV 格式的檔案：
 
-1. Filter the data to the documents you want to export as described in [Filtering documents](#filtering-documents).
+1. 依照[篩選文件](#filtering-documents)中的說明，篩選出您要匯出的文件。
 
-1. Choose the data fields you want to export as described in [Choosing data fields](#choosing-data-fields).
+1. 依照[選擇資料欄位](#choosing-data-fields)中的說明，選擇您要匯出的資料欄位。
 
-1. Select **Download as CSV**.
+1. 選取 **Download as CSV**。
 
-1. In the **DOWNLOAD AS CSV** popover, choose whether you want to download only the documents **Visible** on the page, or the **Max available** (all selected documents, limited to 10,000 documents).
+1. 在 **DOWNLOAD AS CSV** 彈出視窗中，選擇僅下載頁面上 **Visible** 的文件，或下載 **Max available**（所有選取的文件，上限為 10,000 份文件）。
 
-1. Select the **Download CSV** button.
+1. 選取 **Download CSV** 按鈕。
 
-   The data is written to a CSV file at the file system's default location.
+   資料會寫入檔案系統預設位置中的 CSV 檔案。
 
-   If the selected fields include objects or arrays, the CSV documents will download as JSON objects. To download as discrete CSV values, select only single-value fields.
+   如果所選欄位包含物件或陣列，CSV 文件將以 JSON 物件的形式下載。若要下載為個別的 CSV 值，請只選取單值欄位。
    {: .tip}
 
-### Copying a JSON representation of a document
+### 複製文件的 JSON 表示形式
 
-To copy a JSON representation of a document, follow these steps:
+若要複製文件的 JSON 表示形式，請依照下列步驟操作：
 
-1. Select the individual document in the **Results** table. See [Examining a document](#examining-a-document).
+1. 在 **Results** 表格中選取個別文件。請參閱[檢視文件](#examining-a-document)。
 
-1. Select the JSON tab to view the document in JSON form.
+1. 選取 JSON 索引標籤，以 JSON 形式檢視文件。
 
-1. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/copy-icon.png" class="inline-icon" alt="copy icon"/>{:/} (copy) icon in the upper right of the JSON display area.
+1. 選取 JSON 顯示區域右上角的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/copy-icon.png" class="inline-icon" alt="copy icon"/>{:/}（複製）圖示。
 
-## Setting alerts
+## 設定警示
 
-You can set thresholds for data values and then set alerts to notify you when your data exceeds your thresholds.
+您可以為資料值設定閾值，然後設定警示，在資料超過閾值時通知您。
 
-To learn about creating and managing alerts, see [Alerting dashboards and visualizations]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/dashboards-alerting/).
+若要瞭解如何建立及管理警示，請參閱[為儀表板和視覺化設定警示]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/dashboards-alerting/)。
 

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: CAT node attributes
+title: "CAT 節點屬性"
 parent: CAT APIs
 nav_order: 35
 has_children: false
@@ -8,18 +9,18 @@ redirect_from:
 - /opensearch/rest-api/cat/cat-nodeattrs/
 ---
 
-# CAT Node Attributes API
-**Introduced 1.0**
+# CAT 節點屬性 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The CAT node attributes operation lists the attributes of custom nodes.
+CAT 節點屬性操作會列出自訂節點的屬性。
 
 
 <!-- spec_insert_start
 api: cat.nodeattrs
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_cat/nodeattrs
 ```
@@ -32,25 +33,25 @@ component: query_parameters
 columns: Parameter, Data type, Description, Default
 include_deprecated: false
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `cluster_manager_timeout` | String | The amount of time allowed to establish a connection to the cluster manager node. | N/A |
-| `format` | String | A short version of the `Accept` header, such as `json` or `yaml`. | N/A |
-| `h` | List | A comma-separated list of column names to display. | N/A |
-| `help` | Boolean | Returns help information. | `false` |
-| `local` | Boolean | Returns local information but does not retrieve the state from the cluster manager node. | `false` |
-| `s` | List | A comma-separated list of column names or column aliases to sort by. | N/A |
-| `v` | Boolean | Enables verbose mode, which displays column headers. | `false` |
+| `cluster_manager_timeout` | 字串 | 允許與叢集管理員節點建立連線的時間長度。 | 不適用 |
+| `format` | 字串 | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | 不適用 |
+| `h` | 清單 | 要顯示的欄名稱清單，以逗號分隔。 | 不適用 |
+| `help` | 布林值 | 傳回說明資訊。 | `false` |
+| `local` | 布林值 | 傳回本機資訊，但不會從叢集管理員節點擷取狀態。 | `false` |
+| `s` | 清單 | 用於排序的欄名稱或欄別名清單，以逗號分隔。 | 不適用 |
+| `v` | 布林值 | 啟用詳細模式，會顯示欄標頭。 | `false` |
 
 <!-- spec_insert_end -->
 
-## Example request
+## 請求範例
 
-The following example request returns attributes about custom nodes:
+下列範例請求會傳回自訂節點的屬性：
 
 <!-- spec_insert_start
 component: example_code
@@ -77,13 +78,13 @@ response = client.cat.nodeattrs(
 <!-- spec_insert_end -->
 
 
-## Example response
+## 回應範例
 
 ```json
 node | host | ip | attr | value
 odfe-node2 | 172.18.0.3 | 172.18.0.3 | testattr | test
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:monitor/nodes/info`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:monitor/nodes/info`。

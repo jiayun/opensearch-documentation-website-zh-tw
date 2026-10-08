@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cluster stats
+title: "叢集統計"
 nav_order: 60
 parent: Cluster APIs
 has_children: false
@@ -10,16 +11,16 @@ redirect_from:
 ---
 
 # Cluster Stats API
-**Introduced 1.0**
+**1.0 版新增**
 {: .label .label-purple }
 
-The Cluster Stats API returns high-level statistics about your cluster, including key index metrics such as shard counts, storage size, and memory usage. Additionally, it provides detailed information about cluster nodes, including node counts, node roles, operating systems, JVM versions, resource utilization (memory and CPU), and installed plugins.
+Cluster Stats API 會傳回叢集的高階統計資訊，包括分片數量、儲存空間大小與記憶體使用量等關鍵索引指標。此外，它還提供叢集節點的詳細資訊，包括節點數量、節點角色、作業系統、JVM 版本、資源使用情況（記憶體與 CPU）以及已安裝的外掛程式。
 
 <!-- spec_insert_start
 api: cluster.stats
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_cluster/stats
 GET /_cluster/stats/nodes/{node_id}
@@ -32,63 +33,63 @@ GET /_cluster/stats/{metric}/{index_metric}/nodes/{node_id}
 api: cluster.stats
 component: path_parameters
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `index_metric` | List | A comma-separated list of [index metric groups]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-stats/#index-metric-groups), for example, `docs,store`. |
-| `metric` | List | Limit the information returned to the specified metrics. |
-| `node_id` | List or String | A comma-separated list of node IDs used to filter results. Supports [node filters]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/#node-filters). |
+| `index_metric` | List | 以逗號分隔的[索引指標群組]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-stats/#index-metric-groups)清單，例如 `docs,store`。 |
+| `metric` | List | 將傳回的資訊限制為指定的指標。 |
+| `node_id` | List or String | 以逗號分隔的節點 ID 清單，用於篩選結果。支援[節點篩選器]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/#node-filters)。 |
 
 <!-- spec_insert_end -->
 
-Although the term `master` was deprecated in favor of `cluster_manager` subsequent to OpenSearch 2.0, the `master` field was retained for backward compatibility. If you have a node that has either a `master` role or a `cluster_manager` role, the `count` increases for both fields by 1. For an example node count increase, see the [example response](#example-response).
+雖然 `master` 一詞在 OpenSearch 2.0 之後已被 `cluster_manager` 取代而棄用，但 `master` 欄位仍為了回溯相容性而保留。如果您的節點具有 `master` 角色或 `cluster_manager` 角色，則 `count` 會為這兩個欄位各增加 1。關於節點數量增加的範例，請參閱[範例回應](#example-response)。
 {: .note }
 
 <!-- spec_insert_start
 api: cluster.stats
 component: query_parameters
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `flat_settings` | Boolean | Whether to return settings in the flat form, which can improve readability, especially for heavily nested settings. For example, the flat form of `"cluster": { "max_shards_per_node": 500 }` is `"cluster.max_shards_per_node": "500"`. _(Default: `false`)_ |
-| `timeout` | String | The amount of time to wait for each node to respond. If a node does not respond before its timeout expires, the response does not include its stats. However, timed out nodes are included in the response's `_nodes.failed` property. Defaults to no timeout. |
+| `flat_settings` | Boolean | 是否以扁平形式傳回設定，這可提升可讀性，特別是對於深度巢狀的設定。例如，`"cluster": { "max_shards_per_node": 500 }` 的扁平形式為 `"cluster.max_shards_per_node": "500"`。_(預設：`false`)_ |
+| `timeout` | String | 等待每個節點回應的時間量。如果節點在其逾時時間到期前未回應，回應將不包含其統計資訊。不過，逾時的節點仍會包含在回應的 `_nodes.failed` 屬性中。預設為不逾時。 |
 
 <!-- spec_insert_end -->
 
-### Metric groups
+### 指標群組
 
-The following table lists all available metric groups.
+下表列出所有可用的指標群組。
 
-Metric | Description
+Metric | 說明
 :--- |:----
-`indices` | Statistics about indexes in the cluster.
-`os` | Statistics about the operating system, including load and memory.
-`process` | Statistics about processes, including open file descriptors and CPU usage.
-`jvm` | Statistics about the JVM, including heap usage and threads.
-`fs` | Statistics about file system usage.
-`plugins` | Statistics about OpenSearch plugins integrated with the nodes.
-`network_types` | Statistics about the transport and HTTP networks connected to the nodes.
-`discovery_type` | Statistics about the discovery methods used by the nodes to find other nodes in the cluster.
-`packaging_types` | Statistics about each node's OpenSearch distribution.
-`ingest` | Statistics about ingest pipelines.
+`indices` | 叢集中索引的統計資訊。
+`os` | 作業系統的統計資訊，包括負載與記憶體。
+`process` | 程序的統計資訊，包括開啟的檔案描述元與 CPU 使用量。
+`jvm` | JVM 的統計資訊，包括堆積使用量與執行緒。
+`fs` | 檔案系統使用情況的統計資訊。
+`plugins` | 與節點整合的 OpenSearch 外掛程式的統計資訊。
+`network_types` | 連接到節點的傳輸與 HTTP 網路的統計資訊。
+`discovery_type` | 節點用來尋找叢集中其他節點的探索方法的統計資訊。
+`packaging_types` | 每個節點的 OpenSearch 發行版本的統計資訊。
+`ingest` | 資料匯入管線的統計資訊。
 
-### Index metric groups
+### 索引指標群組
 
-To filter the information returned for the `indices` metric, you can use specific `index_metric` values. These values are only supported when using the following query types:
+若要篩選 `indices` 指標所傳回的資訊，您可以使用特定的 `index_metric` 值。這些值僅在使用下列查詢類型時受支援：
 
 ```json
 GET _cluster/stats/_all/{index_metric}/nodes/{node_id}
 GET _cluster/stats/indices/{index_metric}/nodes/{node_id}
 ```
 
-The following index metrics are supported:
+支援下列索引指標：
 
 - `shards`
 - `docs`
@@ -100,9 +101,9 @@ The following index metrics are supported:
 - `mappings`
 - `analysis`
 
-## Example request: Retrieving specific index metrics
+## 範例請求：擷取特定索引指標
 
-The following example request retrieves statistics for `docs` and `segments` index metrics for all nodes:
+下列範例請求會擷取所有節點的 `docs` 與 `segments` 索引指標的統計資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -130,9 +131,9 @@ response = client.cluster.stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example request: Retrieving stats for specific nodes
+## 範例請求：擷取特定節點的統計資訊
 
-The following example request returns information about the cluster manager node:
+下列範例請求會傳回叢集管理員節點的資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -158,9 +159,9 @@ response = client.cluster.stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example request: Using human-readable output
+## 範例請求：使用人類可讀的輸出
 
-The following example request includes the `human` query parameter to return byte and size values in human-readable format:
+下列範例請求包含 `human` 查詢參數，以人類可讀的格式傳回位元組與大小值：
 
 <!-- spec_insert_start
 component: example_code
@@ -184,7 +185,7 @@ response = client.cluster.stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The `human` parameter adds human-readable fields to the response while preserving the original numeric values. For example, the `jvm.max_uptime_in_millis` field shows only the numeric value in the default response:
+`human` 參數會在回應中新增人類可讀的欄位，同時保留原始數值。例如，`jvm.max_uptime_in_millis` 欄位在預設回應中只顯示數值：
 
 ```json
 "jvm": {
@@ -192,7 +193,7 @@ The `human` parameter adds human-readable fields to the response while preservin
 }
 ```
 
-When you include the `human` parameter, the response includes both the human-readable `max_uptime` field and the original numeric field:
+當您包含 `human` 參數時，回應會同時包含人類可讀的 `max_uptime` 欄位與原始數值欄位：
 
 ```json
 "jvm": {
@@ -201,7 +202,7 @@ When you include the `human` parameter, the response includes both the human-rea
 }
 ```
 
-## Example response
+## 範例回應
 
 <details open markdown="block">
   <summary>
@@ -652,100 +653,100 @@ When you include the `human` parameter, the response includes both the human-rea
 ```
 </details>
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response fields.
+下表列出回應欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`_nodes` | Object | Provides a summary of node-level request results.
-`_nodes.total` | Integer | The total number of nodes included in the request.
-`_nodes.successful` | Integer | The number of nodes that successfully processed the request.
-`_nodes.failed` | Integer | The number of nodes that failed to respond or rejected the request. If nonzero, failure details are included in the response.
-`cluster_name` | String | The name of the cluster.
-`cluster_uuid` | String | The unique identifier of the cluster.
-`timestamp` | Long | The time when the cluster statistics were last updated, in milliseconds since epoch.
-`status` | String | The cluster health status: `green`, `yellow`, or `red`.
-`indices` | Object | Aggregated statistics for indexes with shards on the specified nodes.
-`indices.count` | Integer | The total number of indexes with shards on the specified nodes.
-`indices.shards` | Object | Aggregated shard statistics for the specified nodes.
-`indices.shards.total` | Integer | The total number of shards on the specified nodes.
-`indices.shards.primaries` | Integer | The number of primary shards on the specified nodes.
-`indices.shards.replication` | Float | The ratio of replica shards to primary shards across the specified nodes.
-`indices.shards.index.shards.min` | Integer | The minimum number of shards per index (considering only shards on the specified nodes).
-`indices.shards.index.shards.max` | Integer | The maximum number of shards per index (considering only shards on the specified nodes).
-`indices.shards.index.shards.avg` | Float | The average number of shards per index (considering only shards on the specified nodes).
-`indices.shards.index.primaries.min` | Integer | The minimum number of primary shards per index (considering only shards on the specified nodes).
-`indices.shards.index.primaries.max` | Integer | The maximum number of primary shards per index (considering only shards on the specified nodes).
-`indices.shards.index.primaries.avg` | Float | The average number of primary shards per index (considering only shards on the specified nodes).
-`indices.shards.index.replication.min` | Float | The minimum replication factor per index (considering only shards on the specified nodes).
-`indices.shards.index.replication.max` | Float | The maximum replication factor per index (considering only shards on the specified nodes).
-`indices.shards.index.replication.avg` | Float | The average replication factor per index (considering only shards on the specified nodes).
-`indices.docs` | Object | Document statistics for the specified nodes.
-`indices.docs.count` | Integer | The total number of non-deleted documents across all primary shards on the specified nodes. Includes documents in Lucene segments and may count nested documents.
-`indices.docs.deleted` | Integer | The total number of deleted documents across all primary shards on the specified nodes. Disk space is reclaimed during segment merges.
-`indices.store.size_in_bytes` | Long | The total storage size of all shards on the specified nodes, in bytes.
-`indices.store.reserved_in_bytes` | Long | The amount of disk space reserved for ongoing operations such as segment merges, in bytes.
-`indices.fielddata.memory_size_in_bytes` | Long | The total amount of memory used by the field data cache across the specified nodes, in bytes.
-`indices.fielddata.evictions` | Long | The number of field data cache evictions across the specified nodes.
-`indices.query_cache.memory_size_in_bytes` | Long | The total amount of memory used by the query cache across the specified nodes, in bytes.
-`indices.query_cache.total_count` | Long | The total number of query cache accesses (hits and misses) across the specified nodes.
-`indices.query_cache.hit_count` | Long | The number of query cache hits across the specified nodes.
-`indices.query_cache.miss_count` | Long | The number of query cache misses across the specified nodes.
-`indices.query_cache.cache_size` | Integer | The current number of entries in the query cache across the specified nodes.
-`indices.query_cache.cache_count` | Long | The total number of entries added to the query cache, including evicted entries.
-`indices.query_cache.evictions` | Long | The number of query cache evictions across the specified nodes.
-`indices.completion.size_in_bytes` | Long | The total amount of memory used for completion suggesters across the specified nodes, in bytes.
-`indices.segments` | Object | Segment statistics for the specified nodes.
-`indices.segments.count` | Integer | The total number of segments across all shards on the specified nodes.
-`indices.segments.memory_in_bytes` | Long | The total amount of memory used by segments across the specified nodes, in bytes.
-`indices.segments.terms_memory_in_bytes` | Long | The amount of memory used for term dictionaries across the specified nodes, in bytes.
-`indices.segments.stored_fields_memory_in_bytes` | Long | The amount of memory used for stored fields across the specified nodes, in bytes.
-`indices.segments.term_vectors_memory_in_bytes` | Long | The amount of memory used for term vectors across the specified nodes, in bytes.
-`indices.segments.norms_memory_in_bytes` | Long | The amount of memory used for normalization factors across the specified nodes, in bytes.
-`indices.segments.points_memory_in_bytes` | Long | The amount of memory used for point values (numeric or geographic) across the specified nodes, in bytes.
-`indices.segments.doc_values_memory_in_bytes` | Long | The amount of memory used for doc values across the specified nodes, in bytes.
-`indices.segments.index_writer_memory_in_bytes` | Long | The amount of memory used by index writers across the specified nodes, in bytes.
-`indices.segments.version_map_memory_in_bytes` | Long | The amount of memory used by version maps across the specified nodes, in bytes.
-`indices.segments.fixed_bit_set_memory_in_bytes` | Long | The amount of memory used by fixed bit sets (for nested and join fields) across the specified nodes, in bytes.
-`indices.segments.max_unsafe_auto_id_timestamp` | Long | The most recent timestamp of a retried indexing request, in milliseconds.
-`indices.segments.file_sizes` | Object | This object is not populated by the Cluster Stats API. To get information on segment files, use the [Nodes Stats API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/).
-`indices.mappings.field_types` | Array | Statistics about field data types used on the specified nodes.
-`indices.mappings.field_types.name` | String | The field data type.
-`indices.mappings.field_types.count` | Integer | The number of fields mapped to this data type.
-`indices.mappings.field_types.index_count` | Integer | The number of indexes that use this data type.
-`indices.analysis` | Object | Statistics about analyzers and analysis components used on the specified nodes.
-`nodes` | Object | Aggregated statistics for the specified nodes.
-`nodes.count.total` | Integer | The total number of nodes.
-`nodes.count.coordinating_only` | Integer | The number of nodes with no assigned roles (coordinating-only nodes).
-`nodes.count.<role>` | Integer | The number of nodes with a specific role (for example, `data`, `ingest`, `cluster_manager`).
-`nodes.versions` | Array | The OpenSearch versions running on the specified nodes.
-`nodes.os.available_processors` | Integer | The total number of processors available to the JVM across the specified nodes.
-`nodes.os.allocated_processors` | Integer | The number of processors used for thread pool sizing across the specified nodes (capped at 32).
-`nodes.os.mem.total_in_bytes` | Long | The total physical memory across the specified nodes, in bytes.
-`nodes.os.mem.free_in_bytes` | Long | The amount of free physical memory across the specified nodes, in bytes.
-`nodes.os.mem.used_in_bytes` | Long | The amount of used physical memory across the specified nodes, in bytes.
-`nodes.os.mem.free_percent` | Integer | The percentage of free physical memory across the specified nodes.
-`nodes.os.mem.used_percent` | Integer | The percentage of used physical memory across the specified nodes.
-`nodes.process.cpu.percent` | Integer | The CPU usage percentage across the specified nodes. Returns `-1` if not supported.
-`nodes.process.open_file_descriptors.min` | Integer | The minimum number of open file descriptors across the specified nodes. Returns `-1` if not supported.
-`nodes.process.open_file_descriptors.max` | Integer | The maximum number of open file descriptors across the specified nodes. Returns `-1` if not supported.
-`nodes.process.open_file_descriptors.avg` | Integer | The average number of open file descriptors across the specified nodes. Returns `-1` if not supported.
-`nodes.jvm.max_uptime_in_millis` | Long | The maximum JVM uptime, in milliseconds, across the specified nodes.
-`nodes.jvm.versions` | Array | Statistics about JVM versions running on the specified nodes.
-`nodes.jvm.mem.heap_used_in_bytes` | Long | The heap memory currently in use across the specified nodes, in bytes.
-`nodes.jvm.mem.heap_max_in_bytes` | Long | The maximum heap memory available across the specified nodes, in bytes.
-`nodes.jvm.threads` | Integer | The total number of active JVM threads across the specified nodes.
-`nodes.fs.total_in_bytes` | Long | The total filesystem capacity across the specified nodes, in bytes.
-`nodes.fs.free_in_bytes` | Long | The total unallocated disk space across the specified nodes, in bytes.
-`nodes.fs.available_in_bytes` | Long | The disk space available to the JVM across the specified nodes (may be less than free space because of operating system restrictions), in bytes.
-`nodes.plugins` | Array | Information about installed plugins and modules on the specified nodes.
-`nodes.network_types` | Object | Statistics about transport and HTTP network types used by the specified nodes.
-`nodes.discovery_types` | Object | Statistics about discovery mechanisms used by the specified nodes.
-`nodes.packaging_types` | Array | Information about the distribution types installed on the specified nodes.
-`nodes.ingest.number_of_pipelines` | Integer | The total number of ingest pipelines across the specified nodes.
-`nodes.ingest.processor_stats` | Object | Statistics about ingest processors used on the specified nodes.
+`_nodes` | Object | 提供節點層級請求結果的摘要。
+`_nodes.total` | Integer | 請求中包含的節點總數。
+`_nodes.successful` | Integer | 成功處理請求的節點數。
+`_nodes.failed` | Integer | 未能回應或拒絕請求的節點數。若非零，回應中會包含失敗詳細資料。
+`cluster_name` | String | 叢集的名稱。
+`cluster_uuid` | String | 叢集的唯一識別碼。
+`timestamp` | Long | 叢集統計資料上次更新的時間，以自 epoch 起算的毫秒數表示。
+`status` | String | 叢集健康狀態：`green`、`yellow` 或 `red`。
+`indices` | Object | 在指定節點上具有分片的索引的彙總統計資料。
+`indices.count` | Integer | 在指定節點上具有分片的索引總數。
+`indices.shards` | Object | 指定節點的分片彙總統計資料。
+`indices.shards.total` | Integer | 指定節點上的分片總數。
+`indices.shards.primaries` | Integer | 指定節點上的主要分片數。
+`indices.shards.replication` | Float | 指定節點上副本分片與主要分片的比例。
+`indices.shards.index.shards.min` | Integer | 每個索引的最小分片數 (僅計入指定節點上的分片)。
+`indices.shards.index.shards.max` | Integer | 每個索引的最大分片數 (僅計入指定節點上的分片)。
+`indices.shards.index.shards.avg` | Float | 每個索引的平均分片數 (僅計入指定節點上的分片)。
+`indices.shards.index.primaries.min` | Integer | 每個索引的最小主要分片數 (僅計入指定節點上的分片)。
+`indices.shards.index.primaries.max` | Integer | 每個索引的最大主要分片數 (僅計入指定節點上的分片)。
+`indices.shards.index.primaries.avg` | Float | 每個索引的平均主要分片數 (僅計入指定節點上的分片)。
+`indices.shards.index.replication.min` | Float | 每個索引的最小複寫因子 (僅計入指定節點上的分片)。
+`indices.shards.index.replication.max` | Float | 每個索引的最大複寫因子 (僅計入指定節點上的分片)。
+`indices.shards.index.replication.avg` | Float | 每個索引的平均複寫因子 (僅計入指定節點上的分片)。
+`indices.docs` | Object | 指定節點的文件統計資料。
+`indices.docs.count` | Integer | 指定節點上所有主要分片中未刪除文件的總數。包含 Lucene 區段中的文件，且可能計入巢狀文件。
+`indices.docs.deleted` | Integer | 指定節點上所有主要分片中已刪除文件的總數。磁碟空間會在區段合併期間回收。
+`indices.store.size_in_bytes` | Long | 指定節點上所有分片的總儲存空間大小，以位元組為單位。
+`indices.store.reserved_in_bytes` | Long | 為進行中的作業 (例如區段合併) 保留的磁碟空間量，以位元組為單位。
+`indices.fielddata.memory_size_in_bytes` | Long | 指定節點上欄位資料快取所使用的記憶體總量，以位元組為單位。
+`indices.fielddata.evictions` | Long | 指定節點上欄位資料快取的逐出次數。
+`indices.query_cache.memory_size_in_bytes` | Long | 指定節點上查詢快取所使用的記憶體總量，以位元組為單位。
+`indices.query_cache.total_count` | Long | 指定節點上查詢快取的存取總次數 (命中與未命中)。
+`indices.query_cache.hit_count` | Long | 指定節點上查詢快取的命中次數。
+`indices.query_cache.miss_count` | Long | 指定節點上查詢快取的未命中次數。
+`indices.query_cache.cache_size` | Integer | 指定節點上查詢快取目前的項目數。
+`indices.query_cache.cache_count` | Long | 新增至查詢快取的項目總數，包含已逐出的項目。
+`indices.query_cache.evictions` | Long | 指定節點上查詢快取的逐出次數。
+`indices.completion.size_in_bytes` | Long | 指定節點上用於自動完成建議器的記憶體總量，以位元組為單位。
+`indices.segments` | Object | 指定節點的區段統計資料。
+`indices.segments.count` | Integer | 指定節點上所有分片的區段總數。
+`indices.segments.memory_in_bytes` | Long | 指定節點上區段所使用的記憶體總量，以位元組為單位。
+`indices.segments.terms_memory_in_bytes` | Long | 指定節點上用於詞典的記憶體量，以位元組為單位。
+`indices.segments.stored_fields_memory_in_bytes` | Long | 指定節點上用於已儲存欄位的記憶體量，以位元組為單位。
+`indices.segments.term_vectors_memory_in_bytes` | Long | 指定節點上用於詞向量的記憶體量，以位元組為單位。
+`indices.segments.norms_memory_in_bytes` | Long | 指定節點上用於正規化因子的記憶體量，以位元組為單位。
+`indices.segments.points_memory_in_bytes` | Long | 指定節點上用於點值 (數值或地理) 的記憶體量，以位元組為單位。
+`indices.segments.doc_values_memory_in_bytes` | Long | 指定節點上用於 doc values 的記憶體量，以位元組為單位。
+`indices.segments.index_writer_memory_in_bytes` | Long | 指定節點上索引寫入器所使用的記憶體量，以位元組為單位。
+`indices.segments.version_map_memory_in_bytes` | Long | 指定節點上版本對應所使用的記憶體量，以位元組為單位。
+`indices.segments.fixed_bit_set_memory_in_bytes` | Long | 指定節點上固定位元集 (用於巢狀與 join 欄位) 所使用的記憶體量，以位元組為單位。
+`indices.segments.max_unsafe_auto_id_timestamp` | Long | 重試的索引請求最近一次的時間戳記，以毫秒為單位。
+`indices.segments.file_sizes` | Object | Cluster Stats API 不會填入此物件。若要取得區段檔案的相關資訊，請使用 [Nodes Stats API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/)。
+`indices.mappings.field_types` | Array | 指定節點上所用欄位資料類型的相關統計資料。
+`indices.mappings.field_types.name` | String | 欄位資料類型。
+`indices.mappings.field_types.count` | Integer | 對應至此資料類型的欄位數。
+`indices.mappings.field_types.index_count` | Integer | 使用此資料類型的索引數。
+`indices.analysis` | Object | 指定節點上所用分析器與分析元件的相關統計資料。
+`nodes` | Object | 指定節點的彙總統計資料。
+`nodes.count.total` | Integer | 節點總數。
+`nodes.count.coordinating_only` | Integer | 未指派角色的節點數 (僅協調節點)。
+`nodes.count.<role>` | Integer | 具有特定角色的節點數 (例如 `data`、`ingest`、`cluster_manager`)。
+`nodes.versions` | Array | 指定節點上執行的 OpenSearch 版本。
+`nodes.os.available_processors` | Integer | 指定節點上可供 JVM 使用的處理器總數。
+`nodes.os.allocated_processors` | Integer | 指定節點上用於決定執行緒集區大小的處理器數 (上限為 32)。
+`nodes.os.mem.total_in_bytes` | Long | 指定節點上的實體記憶體總量，以位元組為單位。
+`nodes.os.mem.free_in_bytes` | Long | 指定節點上的可用實體記憶體量，以位元組為單位。
+`nodes.os.mem.used_in_bytes` | Long | 指定節點上已使用的實體記憶體量，以位元組為單位。
+`nodes.os.mem.free_percent` | Integer | 指定節點上可用實體記憶體的百分比。
+`nodes.os.mem.used_percent` | Integer | 指定節點上已使用實體記憶體的百分比。
+`nodes.process.cpu.percent` | Integer | 指定節點上的 CPU 使用率百分比。若不支援，則傳回 `-1`。
+`nodes.process.open_file_descriptors.min` | Integer | 指定節點上開啟檔案描述元的最小數量。若不支援，則傳回 `-1`。
+`nodes.process.open_file_descriptors.max` | Integer | 指定節點上開啟檔案描述元的最大數量。若不支援，則傳回 `-1`。
+`nodes.process.open_file_descriptors.avg` | Integer | 指定節點上開啟檔案描述元的平均數量。若不支援，則傳回 `-1`。
+`nodes.jvm.max_uptime_in_millis` | Long | 指定節點上 JVM 的最長運作時間，以毫秒為單位。
+`nodes.jvm.versions` | Array | 指定節點上執行之 JVM 版本的相關統計資料。
+`nodes.jvm.mem.heap_used_in_bytes` | Long | 指定節點上目前使用中的堆積記憶體，以位元組為單位。
+`nodes.jvm.mem.heap_max_in_bytes` | Long | 指定節點上可用的最大堆積記憶體，以位元組為單位。
+`nodes.jvm.threads` | Integer | 指定節點上作用中 JVM 執行緒的總數。
+`nodes.fs.total_in_bytes` | Long | 指定節點上的檔案系統總容量，以位元組為單位。
+`nodes.fs.free_in_bytes` | Long | 指定節點上未配置的磁碟空間總量，以位元組為單位。
+`nodes.fs.available_in_bytes` | Long | 指定節點上可供 JVM 使用的磁碟空間 (可能因作業系統限制而少於可用空間)，以位元組為單位。
+`nodes.plugins` | Array | 指定節點上已安裝外掛程式與模組的相關資訊。
+`nodes.network_types` | Object | 指定節點所使用之傳輸與 HTTP 網路類型的相關統計資料。
+`nodes.discovery_types` | Object | 指定節點所使用之探索機制的相關統計資料。
+`nodes.packaging_types` | Array | 指定節點上已安裝發行版類型的相關資訊。
+`nodes.ingest.number_of_pipelines` | Integer | 指定節點上資料匯入管線的總數。
+`nodes.ingest.processor_stats` | Object | 指定節點上所用資料匯入處理器的相關統計資料。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:monitor/stats`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:monitor/stats`。

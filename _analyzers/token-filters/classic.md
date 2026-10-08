@@ -1,20 +1,21 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Classic
 parent: Token filters
 nav_order: 50
 ---
 
-# Classic token filter
+# Classic 詞元篩選器
 
-The primary function of the classic token filter is to work alongside the classic tokenizer. It processes tokens by applying the following common transformations, which aid in text analysis and search:
- - Removal of possessive endings such as *'s*. For example, *John's* becomes *John*.
- - Removal of periods from acronyms. For example, *D.A.R.P.A.* becomes *DARPA*.
+Classic 詞元篩選器的主要功能是搭配 classic 斷詞器使用。它會對詞元套用下列常見的轉換，以協助文字分析與搜尋：
+ - 移除所有格字尾，例如 *'s*。舉例來說，*John's* 會變成 *John*。
+ - 移除縮寫字中的句點。舉例來說，*D.A.R.P.A.* 會變成 *DARPA*。
 
 
-## Example
+## 範例
 
-The following example request creates a new index named `custom_classic_filter` and configures an analyzer with the `classic` filter:
+下列範例請求會建立名為 `custom_classic_filter` 的新索引，並設定一個使用 `classic` 篩選器的分析器：
 
 ```json
 PUT /custom_classic_filter
@@ -34,9 +35,9 @@ PUT /custom_classic_filter
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器所產生的詞元：
 
 ```json
 POST /custom_classic_filter/_analyze
@@ -47,7 +48,7 @@ POST /custom_classic_filter/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get snapshot repository
+title: "取得快照儲存庫"
 parent: Snapshot APIs
 nav_order: 2
 ---
 
-# Get Snapshot Repository API
-**Introduced 1.0**
+# 取得快照儲存庫 API
+**1.0 版推出**
 {: .label .label-purple }
 
-Retrieves information about a snapshot repository.
+擷取快照儲存庫的相關資訊。
 
-To learn more about repositories, see [Register repository]({{site.url}}{{site.baseurl}}/opensearch/snapshots/snapshot-restore#register-repository).
+若要進一步了解儲存庫，請參閱[註冊儲存庫]({{site.url}}{{site.baseurl}}/opensearch/snapshots/snapshot-restore#register-repository)。
 
-You can also get details about a snapshot during and after snapshot creation. See [Get snapshot status]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot-status/).
+您也可以在建立快照期間及之後取得快照的詳細資訊。請參閱[取得快照狀態]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot-status/)。
 {: .note}
 
-## Endpoints
+## 端點
 
 ```json
 GET /_snapshot/{repository}
 ```
 
-## Path parameters
+## 路徑參數
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `repository` | String | A comma-separated list of snapshot repository names to retrieve. Wildcard (`*`) expressions are supported including combining wildcards with exclude patterns starting with `-`. |
+| `repository` | 字串 | 要擷取的快照儲存庫名稱清單，以逗號分隔。支援萬用字元（`*`）運算式，包括將萬用字元與以 `-` 開頭的排除模式結合使用。 |
 
-## Query parameters
+## 查詢參數
 
-| Parameter | Data type | Description | 
+| 參數 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `local` | Boolean | Whether to get information from the local node. Optional, defaults to `false`.|
-| `cluster_manager_timeout` | Time | Amount of time to wait for a connection to the cluster manager node. Optional, defaults to 30 seconds. |
+| `local` | 布林值 | 是否從本機節點取得資訊。選用，預設為 `false`。|
+| `cluster_manager_timeout` | 時間 | 等待連線至叢集管理員節點的時間長度。選用，預設為 30 秒。 |
 
-## Example request
+## 範例請求
 
-The following request retrieves information for the `my-opensearch-repo` repository:
+下列請求會擷取 `my-opensearch-repo` 儲存庫的資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -61,9 +62,9 @@ response = client.snapshot.get_repository(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-Upon success, the response returns repositry information. This sample is for an `s3` repository type.
+成功時，回應會傳回儲存庫資訊。此範例適用於 `s3` 儲存庫類型。
 
 ````json
 {
@@ -77,14 +78,14 @@ Upon success, the response returns repositry information. This sample is for an 
 }
 ````
 
-## Response body fields
+## 回應本文欄位
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- | 
-| `type` | String | Bucket type: `fs` (file system) or `s3` (s3 bucket) |
-| `bucket` | String | S3 bucket name. |
-| `base_path` | String | Folder within the bucket where snapshots are stored. |
+| `type` | 字串 | 桶 (bucket) 類型：`fs`（檔案系統）或 `s3`（S3 桶） |
+| `bucket` | 字串 | S3 桶名稱。 |
+| `base_path` | 字串 | 桶內用於儲存快照的資料夾。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/repository/get`.
+如果您使用 Security 外掛程式，請確認您擁有適當的權限：`cluster:admin/repository/get`。

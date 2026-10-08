@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Configuring visualizations
+title: "設定視覺化"
 parent: Creating visualizations using queries
 grand_parent: Building data visualizations
 nav_order: 90
@@ -10,89 +11,89 @@ redirect_from:
   - /dashboards/visualize/visualization-editor/configuring-visualizations/
 ---
 
-# Configuring visualizations in the visualization editor
+# 在視覺化編輯器中設定視覺化
 
-The visualization editor provides shared configuration options that apply across multiple visualization types. Each visualization type page documents its specific options. The following configurations are common to most visualizations.
+視覺化編輯器提供適用於多種視覺化類型的共用組態選項。各視覺化類型的頁面會說明其專屬選項。以下組態是大多數視覺化共通的選項。
 
-## Fields
+## 欄位
 
-The **Fields** panel maps query result columns to chart axes. Select which fields to use for the X-axis, Y-axis, and optional dimensions like color or size. Available field mappings depend on the chart type.
+**Fields** 面板會將查詢結果的欄對應到圖表座標軸。請選取要用於 X 軸、Y 軸以及選用維度（例如顏色或大小）的欄位。可用的欄位對應取決於圖表類型。
 
-## Split
+## 分割
 
-Use the **Split** option when your data has more dimensions than a single chart can display. For example, if your query returns three dimensions but a line chart can only show two (X-axis and Y-axis), use Split to create multiple charts by splitting the data along the third dimension. Each resulting chart shows the same axes but filtered to a different value of the split field.
+當您的資料維度多於單一圖表所能顯示的維度時，請使用 **Split** 選項。例如，如果您的查詢傳回三個維度，但折線圖只能顯示兩個維度（X 軸和 Y 軸），請使用 Split 沿著第三個維度分割資料，以建立多個圖表。產生的每個圖表都顯示相同的座標軸，但會依分割欄位的不同值進行篩選。
 
-To create a split visualization, follow these steps:
+若要建立分割視覺化，請依照下列步驟操作：
 
-1. In the dashboard, select **Create new** > **Add visualization**.
-1. Select `opensearch_dashboards_sample_data_logs` as the dataset.
-1. In the query editor, enter the following query and select **Update**:
+1. 在儀表板中，選取 **Create new** > **Add visualization**。
+1. 選取 `opensearch_dashboards_sample_data_logs` 作為資料集。
+1. 在查詢編輯器中，輸入下列查詢並選取 **Update**：
 
    ```sql
    | stats count() by span(`@timestamp`, 1h), extension, `machine.os`
    ```
    {% include copy.html %}
 
-1. In the time filter, select **Last 15 days**.
-1. Set **Visualization type** to **Line**.
-1. In **Fields**, configure the following settings:
-   - **X-Axis**: Select `span(@timestamp,1h)`.
-   - **Y-Axis**: Select `count()`.
-1. In **Split**, configure the following settings:
-   - **Split by**: Select `machine.os`.
-   - Toggle **Show labels** to on.
+1. 在時間篩選器中，選取 **Last 15 days**。
+1. 將 **Visualization type** 設為 **Line**。
+1. 在 **Fields** 中，設定下列設定：
+   - **X-Axis**：選取 `span(@timestamp,1h)`。
+   - **Y-Axis**：選取 `count()`。
+1. 在 **Split** 中，設定下列設定：
+   - **Split by**：選取 `machine.os`。
+   - 將 **Show labels** 切換為開啟。
 
-The visualization displays a separate line chart for each `machine.os` value (for example, `win xp`, `osx`, `win 7`, `win 8`, `ios`), each showing the event count over time, as shown in the following image.
+此視覺化會針對每個 `machine.os` 值（例如 `win xp`、`osx`、`win 7`、`win 8`、`ios`）分別顯示一個折線圖，每個圖表都顯示事件數量隨時間的變化，如下圖所示。
 
-![Split visualization showing separate line charts for each machine.os value]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/split-example.png)
+![針對每個 machine.os 值分別顯示折線圖的分割視覺化]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/split-example.png)
 
-## Axes
+## 座標軸
 
-The X-axis and Y-axis share the same configuration options. Each axis can be independently customized.
+X 軸和 Y 軸共用相同的組態選項。每個座標軸都可以個別自訂。
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Show axis** | Shows or hides the axis. |
-| **Title** | A custom label for the axis. |
-| **Position** | Controls the placement of the axis relative to the chart. Supported values: X-axis: **Top**, **Bottom**. Y-axis: **Left**, **Right**. |
-| **Show grid lines** | When enabled, shows grid lines extending from the axis into the chart area. |
-| **Show labels** | When enabled, shows category labels along the axis. |
-| **Alignment** | Controls the rotation of axis labels: **Horizontal** (0°), **Vertical** (90°), or **Angled** (45°). |
-| **Truncate after** | Sets the maximum character length for axis labels before truncation. |
+| **Show axis** | 顯示或隱藏座標軸。 |
+| **Title** | 座標軸的自訂標籤。 |
+| **Position** | 控制座標軸相對於圖表的位置。支援的值：X 軸：**Top**、**Bottom**。Y 軸：**Left**、**Right**。 |
+| **Show grid lines** | 啟用時，會顯示從座標軸延伸至圖表區域的格線。 |
+| **Show labels** | 啟用時，會沿著座標軸顯示類別標籤。 |
+| **Alignment** | 控制座標軸標籤的旋轉角度：**Horizontal**（0°）、**Vertical**（90°）或 **Angled**（45°）。 |
+| **Truncate after** | 設定座標軸標籤在截斷前的最大字元長度。 |
 
-Axes are available in area, bar, heatmap, histogram, line, scatter, and state timeline charts.
+座標軸適用於區域圖、長條圖、熱度圖、直方圖、折線圖、散佈圖和狀態時間軸圖。
 
-## Tooltip
+## 工具提示
 
-The **Tooltip** panel controls what information appears when you hover over a data point. Options include showing all series values or only the hovered series.
+**Tooltip** 面板控制當您將游標停留在資料點上時所顯示的資訊。選項包括顯示所有數列的值，或只顯示游標所在的數列。
 
-Tooltips are available in area, bar, bar gauge, heatmap, histogram, line, pie, scatter, and state timeline charts.
+工具提示適用於區域圖、長條圖、長條量表圖、熱度圖、直方圖、折線圖、圓餅圖、散佈圖和狀態時間軸圖。
 
-## Legend
+## 圖例
 
-The **Legend** panel controls the display and position of the chart legend. Options include showing or hiding the legend and selecting its position (top, bottom, left, or right).
+**Legend** 面板控制圖表圖例的顯示方式與位置。選項包括顯示或隱藏圖例，以及選取其位置（上、下、左或右）。
 
-Legends are available in heatmap, pie, scatter, and state timeline charts.
+圖例適用於熱度圖、圓餅圖、散佈圖和狀態時間軸圖。
 
-## Standard options
+## 標準選項
 
-Standard options control how numeric values are formatted in the visualization. For details, see [Standard options]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/standard-options/).
+標準選項控制視覺化中數值的格式。如需詳細資訊，請參閱[標準選項]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/standard-options/)。
 
-## Value options
+## 值選項
 
-Value options control how values are calculated and displayed for single-value visualizations.
+值選項控制單一值視覺化中值的計算與顯示方式。
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Calculation** | The function used to reduce a series to a single value (for example, Last, Mean, Max, Min). For details, see [Value calculations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/value-calculations/). |
-| **Show** | Controls whether to display the calculated value, the value name, or both. |
+| **Calculation** | 用於將數列縮減為單一值的函式（例如 Last、Mean、Max、Min）。如需詳細資訊，請參閱[值計算]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/value-calculations/)。 |
+| **Show** | 控制要顯示計算值、值名稱，或兩者皆顯示。 |
 
-Value options are available in bar gauge, gauge, and metric charts.
+值選項適用於長條量表圖、量表圖和指標圖。
 
-## Thresholds
+## 臨界值
 
-Thresholds define color-coded boundaries that indicate when values cross important limits. For details, see [Thresholds]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/).
+臨界值定義以顏色標示的界限，用於指出值何時跨越重要界限。如需詳細資訊，請參閱[臨界值]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/)。
 
-## Value calculations
+## 值計算
 
-Value calculations determine how a series of values is reduced to a single number for display (for example, Last, Mean, Sum, Min, Max). For details, see [Value calculations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/value-calculations/).
+值計算決定如何將一系列的值縮減為單一數字以供顯示（例如 Last、Mean、Sum、Min、Max）。如需詳細資訊，請參閱[值計算]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/value-calculations/)。

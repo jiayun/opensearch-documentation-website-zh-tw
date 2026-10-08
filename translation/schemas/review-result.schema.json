@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "zh-tw-review-result/v1",
+  "type": "object",
+  "required": [
+    "approved",
+    "issues"
+  ],
+  "description": "approved=true with any major issue is treated as a rejection.",
+  "properties": {
+    "approved": {
+      "type": "boolean"
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "problem"
+        ],
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "severity": {
+            "enum": [
+              "major",
+              "minor"
+            ]
+          },
+          "problem": {
+            "type": "string",
+            "minLength": 1
+          },
+          "suggestion": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Geotile grid
+title: "Geotile 網格"
 parent: Bucket aggregations
 nav_order: 87
 redirect_from:
   - /query-dsl/aggregations/bucket/geotile-grid/
 ---
 
-# Geotile grid aggregation
+# Geotile 網格彙總
 
-The geotile grid aggregation groups documents into grid cells for geographical analysis. Each grid cell corresponds to a [map tile](https://en.wikipedia.org/wiki/Tiled_web_map) and is identified using the `{zoom}/{x}/{y}` format. You can aggregate documents on [geopoint]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-point/) or [geoshape]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-shape/) fields using a geotile grid aggregation. One notable difference is that a geopoint is only present in one bucket, but a geoshape is counted in all geotile grid cells with which it intersects.
+Geotile 網格彙總會將文件分組到網格單元中，以進行地理分析。每個網格單元都對應一個[地圖圖磚](https://en.wikipedia.org/wiki/Tiled_web_map)，並使用 `{zoom}/{x}/{y}` 格式來識別。您可以使用 geotile 網格彙總，對 [geopoint]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-point/) 或 [geoshape]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-shape/) 欄位中的文件進行彙總。一個值得注意的差異是，geopoint 只會出現在一個桶 (bucket) 中，而 geoshape 則會計入與其相交的所有 geotile 網格單元。
 
-## Precision
+## 精確度
 
-The `precision` parameter controls the level of granularity that determines the grid cell size. The lower the precision, the larger the grid cells. 
+`precision` 參數控制決定網格單元大小的細微程度。精確度越低，網格單元就越大。
 
-The following example illustrates low-precision and high-precision aggregation requests.
+下列範例說明低精確度和高精確度的彙總請求。
 
-To start, create an index and map the `location` field as a `geo_point`:
+首先，建立索引，並將 `location` 欄位對應為 `geo_point`：
 
 ```json
 PUT national_parks
@@ -33,7 +34,7 @@ PUT national_parks
 ```
 {% include copy-curl.html %}
 
-Index the following documents into the sample index:
+將下列文件編製索引到範例索引中：
 
 ```json
 PUT national_parks/_doc/1
@@ -62,12 +63,12 @@ PUT national_parks/_doc/3
 ```
 {% include copy-curl.html %}
 
-You can index geopoints in several formats. For a list of all supported formats, see the [geopoint documentation]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point#formats). 
+您可以使用多種格式為 geopoint 編製索引。如需所有支援格式的清單，請參閱 [geopoint 文件]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point#formats)。
 {: .note}
 
-## Low-precision requests
+## 低精確度請求
 
-Run a low-precision request that buckets all three documents together:
+執行一個將三份文件全部分到同一個桶的低精確度請求：
 
 ```json
 GET national_parks/_search
@@ -84,14 +85,14 @@ GET national_parks/_search
 ```
 {% include copy-curl.html %}
 
-You can use either the `GET` or `POST` HTTP method for geotile grid aggregation queries.
+您可以使用 `GET` 或 `POST` HTTP 方法來執行 geotile 網格彙總查詢。
 {: .note}
 
-The response groups all documents together because they are close enough to be bucketed in one grid cell:
+回應會將所有文件分在同一組，因為這些文件彼此距離夠近，可以分到同一個網格單元中：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -155,9 +156,9 @@ The response groups all documents together because they are close enough to be b
 ```
 </details>
 
-## High-precision requests
+## 高精確度請求
 
-Now run a high-precision request:
+現在執行一個高精確度請求：
 
 ```json
 GET national_parks/_search
@@ -174,11 +175,11 @@ GET national_parks/_search
 ```
 {% include copy-curl.html %}
 
-All three documents are bucketed separately because of higher granularity:
+由於細微程度較高，三份文件都會分別分到不同的桶中：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
   
@@ -250,7 +251,7 @@ All three documents are bucketed separately because of higher granularity:
 ```
 </details>
 
-You can also restrict the geographical area by providing the coordinates of the bounding envelope in the `bounds` parameter. Both `bounds` and `geo_bounding_box` coordinates can be specified in any of the [geopoint formats]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point#formats). The following query uses the well-known text (WKT) "POINT(`longitude` `latitude`)" format for the `bounds` parameter:
+您也可以在 `bounds` 參數中提供邊界範圍的座標，以限制地理區域。`bounds` 和 `geo_bounding_box` 座標都可以使用任何一種 [geopoint 格式]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point#formats) 來指定。下列查詢對 `bounds` 參數使用 well-known text (WKT) 「POINT(`longitude` `latitude`)」格式：
 
 ```json
 GET national_parks/_search
@@ -272,11 +273,11 @@ GET national_parks/_search
 ```
 {% include copy-curl.html %}
 
-The response contains only the two results that are within the specified bounds:
+回應只包含位於指定邊界內的兩筆結果：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
   
@@ -344,11 +345,11 @@ The response contains only the two results that are within the specified bounds:
 ```
 </details>
 
-The `bounds` parameter can be used with or without the `geo_bounding_box` filter; these two parameters are independent and can have any spatial relationship to each other.
+`bounds` 參數可以搭配或不搭配 `geo_bounding_box` 篩選器使用；這兩個參數彼此獨立，兩者之間可以有任何空間關係。
 
-## Aggregating geoshapes
+## 彙總 geoshape
 
-To run an aggregation on a geoshape field, first create an index and map the `location` field as a `geo_shape`:
+若要對 geoshape 欄位執行彙總，請先建立索引，並將 `location` 欄位對應為 `geo_shape`：
 
 ```json
 PUT national_parks
@@ -364,7 +365,7 @@ PUT national_parks
 ```
 {% include copy-curl.html %}
 
-Next, index some documents into the `national_parks` index:
+接著，將一些文件編製索引至 `national_parks` 索引：
 
 ```json
 PUT national_parks/_doc/1
@@ -396,7 +397,7 @@ PUT national_parks/_doc/3
 ```
 {% include copy-curl.html %}
 
-You can run an aggregation on the `location` field as follows:
+您可以依下列方式對 `location` 欄位執行彙總：
 
 ```json
 GET national_parks/_search
@@ -413,11 +414,11 @@ GET national_parks/_search
 ```
 {% include copy-curl.html %}
 
-When aggregating geoshapes, one geoshape can be counted for multiple buckets because it overlaps with multiple grid cells:
+彙總 geoshape 時，一個 geoshape 可能會計入多個桶，因為它與多個網格單元重疊：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -533,17 +534,17 @@ When aggregating geoshapes, one geoshape can be counted for multiple buckets bec
 ```
 </details>
 
-OpenSearch supports geoshape aggregation through the API but not in OpenSearch Dashboards visualizations. If you'd like to see geoshape aggregation implemented for visualizations, upvote the related [GitHub issue](https://github.com/opensearch-project/dashboards-maps/issues/250).
+OpenSearch 支援透過 API 進行 geoshape 彙總，但 OpenSearch Dashboards 視覺化尚不支援。如果您希望視覺化也能實作 geoshape 彙總，請為相關的 [GitHub 議題](https://github.com/opensearch-project/dashboards-maps/issues/250)投票。
 {: .note}
 
-## Supported parameters
+## 支援的參數
 
-Geotile grid aggregation requests support the following parameters.
+Geotile 網格彙總請求支援下列參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-field | String | The field that contains the geopoints. This field must be mapped as a `geo_point` field. If the field contains an array, all array values are aggregated. Required.
-`precision` | Integer | The granularity level used to determine grid cells for bucketing results. Cells cannot exceed the specified size (diagonal) of the required precision. Valid values are in the [0, 29] range. Optional. Default is 7. 
-`bounds` | Object | The bounding box for filtering geopoints. The bounding box is defined by the upper-left and lower-right vertices. The vertices are specified as geopoints in one of the following formats: <br>- An object with a latitude and longitude<br>- An array in the [`longitude`, `latitude`] format<br>- A string in the "`latitude`,`longitude`" format<br>- A geohash <br>- WKT<br> See the [geopoint formats]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point#formats) for formatting examples. Optional.
-`size` | Integer | The maximum number of buckets to return. When there are more buckets than `size`, OpenSearch returns buckets with more documents. Optional. Default is 10,000.
-`shard_size` | Integer | The maximum number of buckets to return from each shard. Optional. Default is max (10, `size` &middot; number of shards), which provides a more accurate count of more highly prioritized buckets.
+field | 字串 | 包含 geopoint 的欄位。此欄位必須對應為 `geo_point` 欄位。如果欄位包含陣列，則會彙總所有陣列值。必要。
+`precision` | 整數 | 用於決定網格單元以將結果分桶的精細度層級。單元不得超過所需精確度的指定大小（對角線）。有效值範圍為 [0, 29]。選用。預設值為 7。 
+`bounds` | 物件 | 用於篩選 geopoint 的邊界框。邊界框由左上角與右下角頂點定義。頂點以 geopoint 形式指定，可使用下列任一格式：<br>- 包含緯度與經度的物件<br>- [`longitude`, `latitude`] 格式的陣列<br>- 「`latitude`,`longitude`」格式的字串<br>- geohash <br>- WKT<br> 如需格式範例，請參閱 [geopoint 格式]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point#formats)。選用。
+`size` | 整數 | 要傳回的桶數上限。當桶數多於 `size` 時，OpenSearch 會傳回包含較多文件的桶。選用。預設值為 10,000。
+`shard_size` | 整數 | 從每個分片傳回的桶數上限。選用。預設值為 max (10, `size` &middot; 分片數量)，可為優先順序較高的桶提供較準確的計數。

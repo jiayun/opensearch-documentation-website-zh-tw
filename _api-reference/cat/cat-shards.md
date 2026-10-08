@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: CAT shards
 parent: CAT APIs
@@ -9,17 +10,17 @@ redirect_from:
 ---
 
 # CAT Shards API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The CAT shards operation lists the state of all primary and replica shards and how they are distributed.
+CAT shards 作業會列出所有主要分片與副本分片的狀態，以及它們的分佈方式。
 
 
 <!-- spec_insert_start
 api: cat.shards
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_cat/shards
 GET /_cat/shards/{index}
@@ -33,27 +34,27 @@ component: query_parameters
 columns: Parameter, Data type, Description, Default
 include_deprecated: false
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `bytes` | String | The units used to display byte values. <br> Valid values are: `b`, `kb`, `k`, `mb`, `m`, `gb`, `g`, `tb`, `t`, `pb`, and `p`. | N/A |
-| `cluster_manager_timeout` | String | The amount of time allowed to establish a connection to the cluster manager node. | N/A |
-| `format` | String | A short version of the `Accept` header, such as `json` or `yaml`. | N/A |
-| `h` | List | A comma-separated list of column names to display. | N/A |
-| `help` | Boolean | Returns help information. | `false` |
-| `local` | Boolean | Returns local information but does not retrieve the state from the cluster manager node. | `false` |
-| `s` | List | A comma-separated list of column names or column aliases to sort by. | N/A |
-| `time` | String | Specifies the time units, for example, `5d` or `7h`. For more information, see [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/). <br> Valid values are: `nanos`, `micros`, `ms`, `s`, `m`, `h`, and `d`. | N/A |
-| `v` | Boolean | Enables verbose mode, which displays column headers. | `false` |
+| `bytes` | String | 用於顯示位元組值的單位。<br> 有效值為：`b`、`kb`、`k`、`mb`、`m`、`gb`、`g`、`tb`、`t`、`pb` 與 `p`。 | N/A |
+| `cluster_manager_timeout` | String | 建立與叢集管理員節點連線所允許的時間。 | N/A |
+| `format` | String | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
+| `h` | List | 以逗號分隔、要顯示的欄位名稱清單。 | N/A |
+| `help` | Boolean | 傳回說明資訊。 | `false` |
+| `local` | Boolean | 傳回本機資訊，但不從叢集管理員節點擷取狀態。 | `false` |
+| `s` | List | 以逗號分隔、用於排序的欄位名稱或欄位別名清單。 | N/A |
+| `time` | String | 指定時間單位，例如 `5d` 或 `7h`。如需更多資訊，請參閱 [支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。<br> 有效值為：`nanos`、`micros`、`ms`、`s`、`m`、`h` 與 `d`。 | N/A |
+| `v` | Boolean | 啟用詳細模式，以顯示欄位標題。 | `false` |
 
 <!-- spec_insert_end -->
 
-## Example requests
+## 範例請求
 
-The following example requests returns information about shards:
+下列範例請求會傳回分片的相關資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -77,7 +78,7 @@ response = client.cat.shards(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To see only the information about shards of a specific index, add the index name after your query.
+若只要查看特定索引之分片的資訊，請在查詢後面加上索引名稱。
 
 <!-- spec_insert_start
 component: example_code
@@ -102,7 +103,7 @@ response = client.cat.shards(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-If you want to get information for more than one index, separate the indexes with commas:
+若要取得多個索引的資訊，請以逗號分隔各索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -126,7 +127,7 @@ response = client.cat.shards(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 index | shard | prirep | state   | docs | store | ip |       | node
@@ -134,10 +135,10 @@ plugins | 0   |   p    | STARTED |   0  |  208b | 172.18.0.4 | odfe-node1
 plugins | 0   |   r    | STARTED |   0  |  208b | 172.18.0.3 |  odfe-node2          
 ```
 
-## Limiting the response size
+## 限制回應大小
 
-To limit the number of shards returned, configure the `cat.shards.response.limit.number_of_shards` setting. For more information, see [Cluster-level CAT response limit settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/cluster-settings/#cluster-level-cat-response-limit-settings).
+若要限制傳回的分片數量，請設定 `cat.shards.response.limit.number_of_shards` 設定。如需更多資訊，請參閱 [叢集層級 CAT 回應限制設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/cluster-settings/#cluster-level-cat-response-limit-settings)。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:monitor/stats` and `cluster:monitor/state`.
+若您使用 Security 外掛程式，請確認您具備適當的權限：`indices:monitor/stats` 與 `cluster:monitor/state`。

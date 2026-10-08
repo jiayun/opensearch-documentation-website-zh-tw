@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: TSVB visualization
+title: "TSVB 視覺化"
 parent: Visualization types
 grand_parent: Creating visualizations in the Visualize application
 great_grand_parent: Building data visualizations
@@ -9,19 +10,19 @@ redirect_from:
   - /dashboards/visualize/tsvb/
 ---
 
-# TSVB visualization
+# TSVB 視覺化
 
-The Time-Series Visual Builder (TSVB) is a data visualization tool in OpenSearch Dashboards for creating detailed time-series visualizations. TSVB supports adding annotations or markers at specific time points based on index data, making connections between multiple indexes, and building visualizations that display data over time. TSVB supports the following visualization types: Area, Line, Metric, Gauge, Markdown, and Data Table.
+時間序列視覺化建構器 (TSVB) 是 OpenSearch Dashboards 中的資料視覺化工具，可用於建立詳細的時間序列視覺化。TSVB 支援根據索引資料在特定時間點新增註解或標記、在多個索引之間建立連結，以及建立隨時間顯示資料的視覺化。TSVB 支援下列視覺化類型：區域圖、折線圖、指標、量表、Markdown 和資料表。
 
-## When to use TSVB visualizations
+## 何時使用 TSVB 視覺化
 
-Use TSVB visualizations for time-series analysis that goes beyond basic chart capabilities, including advanced mathematical functions, multiple metric comparisons, and sophisticated temporal analysis.
+當時間序列分析的需求超出基本圖表功能時，請使用 TSVB 視覺化，包括進階數學函式、多指標比較，以及精密的時間分析。
 
-## Creating TSVB visualizations from multiple data sources
-Introduced 2.14
+## 從多個資料來源建立 TSVB 視覺化
+於 2.14 版推出
 {: .label .label-purple }
 
-Before proceeding, ensure that the following configuration settings are enabled in the `config/opensearch_dashboards.yaml` file:
+繼續之前，請確認已在 `config/opensearch_dashboards.yaml` 檔案中啟用下列組態設定：
 
 ```yaml
 data_source.enabled: true
@@ -29,55 +30,55 @@ vis_type_timeseries.enabled: true
 ```
 {% include copy.html %}
 
-Once you have configured [multiple data sources]({{site.url}}{{site.baseurl}}/dashboards/management/multi-data-sources/) in OpenSearch Dashboards, you can use TSVB to query those data sources. The following GIF shows the process of creating TSVB visualizations in OpenSearch Dashboards.
+在 OpenSearch Dashboards 中設定好[多個資料來源]({{site.url}}{{site.baseurl}}/dashboards/management/multi-data-sources/)之後，您就可以使用 TSVB 查詢這些資料來源。下列 GIF 顯示在 OpenSearch Dashboards 中建立 TSVB 視覺化的過程。
 
-![Process of creating TSVB visualizations in OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/images/dashboards/configure-tsvb.gif)
+![在 OpenSearch Dashboards 中建立 TSVB 視覺化的過程]({{site.url}}{{site.baseurl}}/images/dashboards/configure-tsvb.gif)
 
-**Step 1: Set up and connect data sources**
+**步驟 1：設定並連線資料來源**
 
-Open OpenSearch Dashboards and follow these steps:
+開啟 OpenSearch Dashboards 並依照下列步驟操作：
 
-1. Select **Dashboards Management** from the main menu on the left.
-2. Select **Data sources** and then select the **Create data source** button.
-3. On the **Create data source** page, enter the connection details and endpoint URL.
-4. On the home page, select **Add sample data** and then select the **Add data** button for the **Sample web logs** dataset.
+1. 從左側主選單中選取 **Dashboards Management**。
+2. 選取 **Data sources**，然後選取 **Create data source** 按鈕。
+3. 在 **Create data source** 頁面上，輸入連線詳細資料和端點 URL。
+4. 在首頁上，選取 **Add sample data**，然後為 **Sample web logs** 資料集選取 **Add data** 按鈕。
 
-The following GIF shows the steps required to set up and connect a data source.
+下列 GIF 顯示設定並連線資料來源所需的步驟。
 
-![Create data source]({{site.url}}{{site.baseurl}}/images/dashboards/create-datasource.gif)
+![建立資料來源]({{site.url}}{{site.baseurl}}/images/dashboards/create-datasource.gif)
 
-**Step 2: Create the visualization**
+**步驟 2：建立視覺化**
 
-Follow these steps to create the visualization:
+請依照下列步驟建立視覺化：
 
-1. From the menu on the left, select **Visualize**.
-2. On the **Visualizations** page, select **Create Visualization** and then select **TSVB** in the pop-up window.
+1. 從左側選單中選取 **Visualize**。
+2. 在 **Visualizations** 頁面上，選取 **Create Visualization**，然後在彈出式視窗中選取 **TSVB**。
 
-**Step 3: Specify data sources**
+**步驟 3：指定資料來源**
 
-After creating a TSVB visualization, data may appear based on your default index pattern. To change the index pattern or configure additional settings, follow these steps:
+建立 TSVB 視覺化之後，可能會根據您的預設索引模式顯示資料。若要變更索引模式或設定其他設定，請依照下列步驟操作：
 
-1. In the **Create** window, select **Panel options**.
-2. Under **Data source**, select the OpenSearch cluster from which to pull data. In this case, choose your newly created data source.
-3. Under **Index name**, enter `opensearch_dashboards_sample_data_logs`.
-4. Under **Time field**, select `@timestamp`. This setting specifies the time range for rendering the visualization.
+1. 在 **Create** 視窗中，選取 **Panel options**。
+2. 在 **Data source** 底下，選取要從中提取資料的 OpenSearch 叢集。在此情況下，請選擇您剛建立的資料來源。
+3. 在 **Index name** 底下，輸入 `opensearch_dashboards_sample_data_logs`。
+4. 在 **Time field** 底下，選取 `@timestamp`。此設定會指定呈現視覺化的時間範圍。
 
-**(Optional) Step 4: Add annotations**
+**（選用）步驟 4：新增註解**
 
-Annotations are markers that can be added to time-series visualizations. Follow these steps to add annotations:
+註解是可新增至時間序列視覺化的標記。請依照下列步驟新增註解：
 
-1. On the upper-left corner of the page, select **Time Series**.
-2. Select the **Annotations** tab and then **Add data source**.
-3. In the **Index** name field, specify the appropriate index. In this case, continue using the same index from the previous steps, that is, `opensearch_dashboards_sample_data_logs`.
-4. From **Time** field, select `@timestamp`.
-5. In the **Fields** field, enter `timestamp`.
-6. In the **Row template** field, enter `timestamp`.
+1. 在頁面左上角，選取 **Time Series**。
+2. 選取 **Annotations** 索引標籤，然後選取 **Add data source**。
+3. 在 **Index** 名稱欄位中，指定適當的索引。在此情況下，請繼續使用先前步驟中的相同索引，即 `opensearch_dashboards_sample_data_logs`。
+4. 在 **Time** 欄位中，選取 `@timestamp`。
+5. 在 **Fields** 欄位中，輸入 `timestamp`。
+6. 在 **Row template** 欄位中，輸入 `timestamp`。
 
-The visualization automatically updates to display your annotations, as shown in the following image.
+視覺化會自動更新以顯示您的註解，如下圖所示。
 
-  ![TSVB visualization with annotations]({{site.url}}{{site.baseurl}}/images/dashboards/tsvb-with-annotations.png){: width="700" }
+  ![含註解的 TSVB 視覺化]({{site.url}}{{site.baseurl}}/images/dashboards/tsvb-with-annotations.png){: width="700" }
 
-## Next steps
+## 後續步驟
 
-- To choose a different visualization type, see [Visualization types]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/).
-- To add this visualization to a dashboard, see [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/).
+- 若要選擇不同的視覺化類型，請參閱[視覺化類型]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/)。
+- 若要將此視覺化新增至儀表板，請參閱[建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)。

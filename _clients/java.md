@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Java client
+title: "Java 用戶端"
 nav_order: 30
 ---
 
-# Java client
+# Java 用戶端
 
-The OpenSearch Java client allows you to interact with your OpenSearch clusters through Java methods and data structures rather than HTTP methods and raw JSON. For example, you can submit requests to your cluster using objects to create indexes, add data to documents, or complete some other operation using the client's built-in methods. For the client's complete API documentation and additional examples, see the [javadoc](https://www.javadoc.io/doc/org.opensearch.client/opensearch-java/latest/index.html).
+OpenSearch Java 用戶端可讓您透過 Java 方法和資料結構與 OpenSearch 叢集互動，而不必使用 HTTP 方法和原始 JSON。例如，您可以使用物件向叢集提交請求，以建立索引、將資料新增至文件，或使用用戶端的內建方法完成其他操作。如需用戶端完整的 API 文件和其他範例，請參閱 [javadoc](https://www.javadoc.io/doc/org.opensearch.client/opensearch-java/latest/index.html)。
 
-This getting started guide illustrates how to connect to OpenSearch, index documents, and run queries. For the client source code, see the [`opensearch-java` repo](https://github.com/opensearch-project/opensearch-java).
+本入門指南說明如何連線至 OpenSearch、將文件編製索引及執行查詢。如需用戶端原始碼，請參閱 [`opensearch-java` 儲存庫](https://github.com/opensearch-project/opensearch-java)。
 
-## Installing the Java client
+## 安裝 Java 用戶端
 
-The Java client requires a transport in order to communicate with your cluster. `ApacheHttpClient5Transport` is the default transport and the recommended choice for new applications. The `RestClient` transport is deprecated and will be removed in a future release.
+Java 用戶端需要傳輸層才能與您的叢集通訊。`ApacheHttpClient5Transport` 是預設的傳輸層，也是新應用程式的建議選擇。`RestClient` 傳輸層已遭棄用，並將在未來的版本中移除。
 
-### Installing the client using Apache HttpClient 5 Transport
+### 使用 Apache HttpClient 5 Transport 安裝用戶端
 
-To start using the OpenSearch Java client, you need to provide a transport. The default `ApacheHttpClient5TransportBuilder` transport comes with the Java client. To use the OpenSearch Java client with the default transport, add it to your `pom.xml` file as a dependency:
+若要開始使用 OpenSearch Java 用戶端，您需要提供傳輸層。預設的 `ApacheHttpClient5TransportBuilder` 傳輸層隨附於 Java 用戶端。若要搭配預設傳輸層使用 OpenSearch Java 用戶端，請將其作為相依項目新增至您的 `pom.xml` 檔案：
 
 ```xml
 <dependency>
@@ -27,7 +28,7 @@ To start using the OpenSearch Java client, you need to provide a transport. The 
 ```
 {% include copy.html %}
 
-If you're using Gradle, add the following dependencies to your project:
+如果您使用 Gradle，請將下列相依項目新增至您的專案：
 
 ```groovy
 dependencies {
@@ -36,14 +37,14 @@ dependencies {
 ```
 {% include copy.html %}
 
-You can now start your OpenSearch cluster.
+現在您可以啟動 OpenSearch 叢集。
 
-### Installing the client using RestClient Transport (deprecated)
+### 使用 RestClient Transport 安裝用戶端（已棄用）
 
-The `RestClientTransport` transport and the `org.opensearch.client.RestClient` class that it wraps are deprecated and will be removed in a future release. Use [Apache HttpClient 5 Transport](#installing-the-client-using-apache-httpclient-5-transport) instead.
+`RestClientTransport` 傳輸層及其所包裝的 `org.opensearch.client.RestClient` 類別已遭棄用，並將在未來的版本中移除。請改用 [Apache HttpClient 5 Transport](#installing-the-client-using-apache-httpclient-5-transport)。
 {: .warning}
 
-Alternatively, you can create a Java client by using the `RestClient`-based transport. In this case, make sure that you have the following dependencies in your project's `pom.xml` file:
+或者，您也可以使用以 `RestClient` 為基礎的傳輸層建立 Java 用戶端。在此情況下，請確認您專案的 `pom.xml` 檔案中具有下列相依項目：
 
 ```xml
 <dependency>
@@ -60,7 +61,7 @@ Alternatively, you can create a Java client by using the `RestClient`-based tran
 ```
 {% include copy.html %}
 
-If you're using Gradle, add the following dependencies to your project:
+如果您使用 Gradle，請將下列相依項目新增至您的專案：
 
 ```groovy
 dependencies {
@@ -70,11 +71,11 @@ dependencies {
 ```
 {% include copy.html %}
 
-You can now start your OpenSearch cluster.
+現在您可以啟動 OpenSearch 叢集。
 
-## Sample data
+## 範例資料
 
-The sample programs in the following sections use a `Student` class to represent documents. Use the following wrapper class, which declares `gpa` as a boxed `Double` so that partial updates serialize correctly:
+以下各節中的範例程式使用 `Student` 類別來表示文件。請使用下列包裝類別，此類別將 `gpa` 宣告為 Boxed `Double`，使部分更新能正確序列化：
 
 ```java
 public class Student {
@@ -110,15 +111,15 @@ public class Student {
 ```
 {% include copy.html %}
 
-## Connecting to OpenSearch
+## 連線至 OpenSearch
 
-The following examples connect to a cluster that has the Security plugin enabled using either the Apache HttpClient 5 transport or the deprecated RestClient transport.
+下列範例會使用 Apache HttpClient 5 傳輸層或已棄用的 RestClient 傳輸層，連線至已啟用 Security 外掛程式的叢集。
 
-### Using Apache HttpClient 5 Transport
+### 使用 Apache HttpClient 5 Transport
 
-This code example uses the `admin` user. Replace `<custom-admin-password>` with the admin password that you set when you installed OpenSearch.
+此程式碼範例使用 `admin` 使用者。請將 `<custom-admin-password>` 替換為您安裝 OpenSearch 時設定的管理員密碼。
 
-The following sample code initializes a client with SSL and TLS enabled:
+下列範例程式碼會初始化已啟用 SSL 和 TLS 的用戶端：
 
 
 ```java
@@ -183,25 +184,25 @@ public class OpenSearchClientExample {
 ```
 {% include copy.html %}
 
-If you run into issues when configuring security, see [Troubleshooting TLS]({{site.url}}{{site.baseurl}}/security/configuration/troubleshoot-tls/).
+如果您在設定安全性時遇到問題，請參閱 [TLS 疑難排解]({{site.url}}{{site.baseurl}}/security/configuration/troubleshoot-tls/)。
 
-### Using RestClient Transport (deprecated)
+### 使用 RestClient 傳輸層（已棄用）
 
-The `RestClientTransport` transport and the `org.opensearch.client.RestClient` class that it wraps are deprecated and will be removed in a future release. Use [Apache HttpClient 5 Transport](#using-apache-httpclient-5-transport) instead.
+`RestClientTransport` 傳輸層及其封裝的 `org.opensearch.client.RestClient` 類別已棄用，將在未來版本中移除。請改用 [Apache HttpClient 5 傳輸層](#using-apache-httpclient-5-transport)。
 {: .warning}
 
-This code example uses the `admin` user. Replace `<custom-admin-password>` with the admin password that you set when you installed OpenSearch.
+此程式碼範例使用 `admin` 使用者。請將 `<custom-admin-password>` 替換為您安裝 OpenSearch 時設定的管理員密碼。
 
-The RestClient transport uses the Java truststore to validate the cluster's certificate. If you are using self-signed certificates or demo certificates, create a truststore that contains the root certificate authority (CA) certificate using the following command. When prompted, enter a password for the truststore:
+RestClient 傳輸層使用 Java 信任儲存庫來驗證叢集的憑證。如果您使用自我簽署憑證或示範憑證，請使用下列命令建立包含根憑證授權單位（CA）憑證的信任儲存庫。出現提示時，請輸入信任儲存庫的密碼：
 
 ```bash
 keytool -importcert -file <path-to-root-ca-cert> -alias <alias> -keystore <truststore-name>
 ```
 {% include copy.html %}
 
-If you're using certificates from a trusted CA, you don't need to configure the truststore.
+如果您使用受信任 CA 核發的憑證，就不需要設定信任儲存庫。
 
-In the following code, replace `/full/path/to/keystore` with the path to your truststore and `password-to-keystore` with the truststore password. The following sample code initializes a client with SSL and TLS enabled:
+在下列程式碼中，請將 `/full/path/to/keystore` 替換為您的信任儲存庫路徑，並將 `password-to-keystore` 替換為信任儲存庫密碼。下列範例程式碼會初始化已啟用 SSL 和 TLS 的用戶端：
 
 ```java
 import org.apache.hc.core5.http.HttpHost;
@@ -242,9 +243,9 @@ public class OpenSearchClientExample {
 ```
 {% include copy.html %}
 
-## Connecting to Amazon OpenSearch Service
+## 連線至 Amazon OpenSearch Service
 
-To connect to Amazon OpenSearch Service or Amazon OpenSearch Serverless, use `AwsSdk2Transport`, which signs requests using the AWS SDK for Java 2.x. Add the AWS SDK HTTP client and authentication modules to your `pom.xml` file in addition to `opensearch-java`:
+若要連線至 Amazon OpenSearch Service 或 Amazon OpenSearch Serverless，請使用 `AwsSdk2Transport`，它會使用 AWS SDK for Java 2.x 簽署請求。除了 `opensearch-java` 之外，也請將 AWS SDK HTTP 用戶端和驗證模組新增至您的 `pom.xml` 檔案：
 
 ```xml
 <dependency>
@@ -261,7 +262,7 @@ To connect to Amazon OpenSearch Service or Amazon OpenSearch Serverless, use `Aw
 ```
 {% include copy.html %}
 
-If you're using Gradle, add the following dependencies to your project:
+如果您使用 Gradle，請將下列相依項目新增至您的專案：
 
 ```groovy
 dependencies {
@@ -271,12 +272,12 @@ dependencies {
 ```
 {% include copy.html %}
 
-The examples use `AwsCrtHttpClient`. Avoid `ApacheHttpClient` from the AWS SDK because it does not support request bodies in `GET` or `DELETE` requests, so `AwsSdk2Transport` throws a `TransportException` for operations such as `clearScroll()` and `deletePit()`.
+這些範例使用 `AwsCrtHttpClient`。請避免使用 AWS SDK 的 `ApacheHttpClient`，因為它不支援 `GET` 或 `DELETE` 請求中的請求本文，因此 `AwsSdk2Transport` 在執行 `clearScroll()` 和 `deletePit()` 等操作時會擲回 `TransportException`。
 {: .note}
 
-In the following example, replace the endpoint with your domain endpoint, which is listed on the domain's details page in the Amazon OpenSearch Service console.
+在下列範例中，請將端點替換為您的網域端點，該端點列於 Amazon OpenSearch Service 主控台中的網域詳細資訊頁面。
 
-`AwsSdk2Transport` obtains AWS credentials from the AWS SDK default credentials provider chain. The following example illustrates connecting to Amazon OpenSearch Service:
+`AwsSdk2Transport` 會從 AWS SDK 預設憑證提供者鏈取得 AWS 憑證。下列範例示範如何連線至 Amazon OpenSearch Service：
 
 ```java
 import org.opensearch.client.opensearch.OpenSearchClient;
@@ -306,11 +307,11 @@ httpClient.close();
 ```
 {% include copy.html %}
 
-## Connecting to Amazon OpenSearch Serverless
+## 連線至 Amazon OpenSearch Serverless
 
-In the following example, replace the endpoint with your collection endpoint, which is listed on the collection's details page in the Amazon OpenSearch Service console.
+在下列範例中，請將端點替換為您的集合端點，該端點列於 Amazon OpenSearch Service 主控台中的集合詳細資訊頁面。
 
-The following example illustrates connecting to Amazon OpenSearch Serverless. Because Amazon OpenSearch Serverless does not support the root endpoint, the example checks whether an index exists:
+下列範例示範如何連線至 Amazon OpenSearch Serverless。由於 Amazon OpenSearch Serverless 不支援根端點，此範例會檢查索引是否存在：
 
 ```java
 import org.opensearch.client.opensearch.OpenSearchClient;
@@ -339,12 +340,12 @@ httpClient.close();
 ```
 {% include copy.html %}
 
-Amazon OpenSearch Serverless supports a subset of OpenSearch API operations and does not support the `refresh` parameter used in the examples on this page. For more information, see [Supported operations and plugins in Amazon OpenSearch Serverless](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-genref.html).
+Amazon OpenSearch Serverless 支援部分 OpenSearch API 操作，且不支援本頁範例中使用的 `refresh` 參數。如需詳細資訊，請參閱 [Amazon OpenSearch Serverless 支援的操作與外掛程式](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-genref.html)。
 {: .note}
 
-## Creating an index
+## 建立索引
 
-The following example creates an index with one primary shard and one replica. It explicitly maps the `gradDate` field as a `date` in the `yyyy-MM-dd` format. OpenSearch maps the other document fields dynamically when you index documents:
+下列範例會建立具有一個主要分片和一個副本的索引。它會將 `gradDate` 欄位明確對應為 `yyyy-MM-dd` 格式的 `date`。當您將文件編製索引時，OpenSearch 會動態對應其他文件欄位：
 
 ```java
 String index = "students";
@@ -360,9 +361,9 @@ client.indices().create(createIndexRequest);
 ```
 {% include copy.html %}
 
-## Indexing a document
+## 將文件編製索引
 
-Index a document using the following code:
+使用下列程式碼將文件編製索引：
 
 ```java
 Student student = new Student("John", "Doe", 3.89, "2022-05-15");
@@ -372,9 +373,9 @@ IndexResponse indexResponse = client.index(indexRequest);
 ```
 {% include copy.html %}
 
-## Bulk indexing
+## 大量編製索引
 
-Index multiple documents in a single request using the following code:
+使用下列程式碼，在單一請求中將多份文件編製索引：
 
 ```java
 List<BulkOperation> operations = new ArrayList<>();
@@ -394,9 +395,9 @@ BulkResponse bulkResponse = client.bulk(bulkRequest);
 ```
 {% include copy.html %}
 
-## Searching for documents
+## 搜尋文件
 
-Search for all documents in an index using the following code:
+使用下列程式碼搜尋索引中的所有文件：
 
 ```java
 SearchResponse<Student> searchResponse = client.search(s -> s.index(index), Student.class);
@@ -406,7 +407,7 @@ for (int i = 0; i < searchResponse.hits().hits().size(); i++) {
 ```
 {% include copy.html %}
 
-Each hit in `searchResponse.hits().hits()` is a `Hit<Student>` object that contains the document ID in `hit.id()` and the `Student` object in `hit.source()`, whose fields are available through getters. To use the `Hit` class, import `org.opensearch.client.opensearch.core.search.Hit`:
+`searchResponse.hits().hits()` 中的每個命中結果都是一個 `Hit<Student>` 物件，其中 `hit.id()` 包含文件 ID，`hit.source()` 包含 `Student` 物件，其欄位可透過 getter 存取。若要使用 `Hit` 類別，請匯入 `org.opensearch.client.opensearch.core.search.Hit`：
 
 ```java
 for (Hit<Student> hit : searchResponse.hits().hits()) {
@@ -417,7 +418,7 @@ for (Hit<Student> hit : searchResponse.hits().hits()) {
 ```
 {% include copy.html %}
 
-Search using a range query. The `gte` and `lte` bounds take `JsonData` values, so import `org.opensearch.client.json.JsonData`:
+使用範圍查詢進行搜尋。`gte` 和 `lte` 邊界接受 `JsonData` 值，因此請匯入 `org.opensearch.client.json.JsonData`：
 
 ```java
 SearchResponse<Student> searchResponse = client.search(s -> s
@@ -430,9 +431,9 @@ SearchResponse<Student> searchResponse = client.search(s -> s
 ```
 {% include copy.html %}
 
-## Paginating results
+## 將結果分頁
 
-To paginate results, use the `from` and `size` parameters. The following example sorts students by graduation date and retrieves the results two at a time. The first request returns the first page of results, and the second request returns the next page. To use the `SortOrder` enum, import `org.opensearch.client.opensearch._types.SortOrder`:
+若要將結果分頁，請使用 `from` 和 `size` 參數。下列範例會依畢業日期排序學生，並每次擷取兩筆結果。第一個請求會傳回第一頁結果，第二個請求會傳回下一頁。若要使用 `SortOrder` 列舉，請匯入 `org.opensearch.client.opensearch._types.SortOrder`：
 
 ```java
 SearchResponse<Student> firstPageResponse = client.search(s -> s
@@ -457,11 +458,11 @@ for (int i = 0; i < nextPageResponse.hits().hits().size(); i++) {
 ```
 {% include copy.html %}
 
-The `from` and `size` parameters work well for the first pages of results. To paginate through a large number of results, use point in time with `search_after`. For more information, see [Paginate results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/).
+`from` 和 `size` 參數適用於結果的前幾頁。若要在大量結果中分頁，請搭配 `search_after` 使用時間點 (point in time)。如需更多資訊，請參閱[將結果分頁]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/)。
 
-## Updating a document
+## 更新文件
 
-Update a document using a partial document object. Fields set to `null` are not sent, so only the specified fields are updated:
+使用部分文件物件更新文件。設為 `null` 的欄位不會被傳送，因此只會更新指定的欄位：
 
 ```java
 Student updatedFields = new Student();
@@ -472,18 +473,18 @@ UpdateResponse<Student> updateResponse = client.update(updateRequest, Student.cl
 ```
 {% include copy.html %}
 
-## Deleting a document
+## 刪除文件
 
-Delete a document using the following code:
+使用下列程式碼刪除文件：
 
 ```java
 client.delete(b -> b.index(index).id("3").refresh(Refresh.True));
 ```
 {% include copy.html %}
 
-## Deleting an index
+## 刪除索引
 
-Delete an index using the following code:
+使用下列程式碼刪除索引：
 
 ```java
 DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest.Builder().index(index).build();
@@ -491,14 +492,14 @@ DeleteIndexResponse deleteIndexResponse = client.indices().delete(deleteIndexReq
 ```
 {% include copy.html %}
 
-## Sample program
+## 範例程式
 
-This sample program combines the code from the preceding sections. It connects to a cluster that has the Security plugin enabled. To connect to a cluster without the Security plugin, change the lines marked with `// Without security` comments. Before running the sample program, make sure that you have the `Student` class defined in your project. Make sure to change the credentials to match your cluster configuration.
+此範例程式結合了前述各節的程式碼。它會連線至已啟用 Security 外掛程式的叢集。若要連線至未使用 Security 外掛程式的叢集，請變更標有 `// Without security` 註解的程式行。執行範例程式之前，請確認您已在專案中定義 `Student` 類別。請務必變更認證資訊，使其符合您的叢集組態。
 
-This sample program is for testing only. It specifies credentials in code and disables certificate validation so that it can connect to a cluster that uses self-signed certificates. In production, load credentials from a secure location and validate the cluster's certificate.
+此範例程式僅供測試使用。它會在程式碼中指定認證資訊並停用憑證驗證，以便連線至使用自我簽署憑證的叢集。在正式環境中，請從安全的位置載入認證資訊，並驗證叢集的憑證。
 {: .warning}
 
-The following sample program creates a client, creates an index, indexes documents individually and in bulk, searches for documents, updates a document, deletes a document, and then deletes the index:
+下列範例程式會建立用戶端、建立索引、逐一及大量將文件編製索引、搜尋文件、更新文件、刪除文件，然後刪除索引：
 
 ```java
 import javax.net.ssl.SSLContext;
@@ -687,7 +688,7 @@ public class OpenSearchClientExample {
 ```
 {% include copy.html %}
 
-The program produces the following output:
+程式會產生下列輸出：
 
 ```
 Creating index......
@@ -724,8 +725,8 @@ Deleting the index......
 Acknowledged: true
 ```
 
-## Related documentation
+## 相關文件
 
-- For more examples of using the client, see the [`opensearch-java` user guide](https://github.com/opensearch-project/opensearch-java/blob/main/USER_GUIDE.md).
-- For guides to specific tasks, such as bulk indexing and searching, see the [`opensearch-java` guides](https://github.com/opensearch-project/opensearch-java/tree/main/guides).
-- For complete sample applications, see the [`opensearch-java` samples](https://github.com/opensearch-project/opensearch-java/tree/main/samples).
+- 如需更多使用用戶端的範例，請參閱 [`opensearch-java` 使用者指南](https://github.com/opensearch-project/opensearch-java/blob/main/USER_GUIDE.md)。
+- 如需特定工作的指南，例如大量編製索引和搜尋，請參閱 [`opensearch-java` 指南](https://github.com/opensearch-project/opensearch-java/tree/main/guides)。
+- 如需完整的範例應用程式，請參閱 [`opensearch-java` 範例](https://github.com/opensearch-project/opensearch-java/tree/main/samples)。

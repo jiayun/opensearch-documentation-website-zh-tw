@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index shard stores
+title: "索引分片儲存"
 parent: Index operations
 grand_parent: Index APIs
 nav_order: 95
@@ -8,39 +9,39 @@ redirect_from:
   - /api-reference/cluster-api/shard-stores/
 ---
 
-# Index Shard Stores API
-**Introduced 1.0**
+# 索引分片儲存 API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The `_shard_stores` API provides information about the shard copies for one or more indexes. This API helps to diagnose issues with unallocated shards by indicating why shards are unassigned and providing their current states.
+`_shard_stores` API 提供一或多個索引之分片副本的資訊。此 API 會指出分片為何未指派，並提供其目前狀態，協助診斷未配置分片的問題。
 
-## Endpoints
+## 端點
 ```json
 GET /_shard_stores
 GET /{index}/_shard_stores
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `index` | List or String | List of data streams, indexes, and aliases used to limit the request. |
+| `index` | 清單或字串 | 用於限制請求範圍的資料串流、索引與別名清單。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
-| `allow_no_indices` | Boolean | If `false`, the request returns an error if any wildcard expression, index alias, or `_all` value targets only missing or closed indexes. This behavior applies even if the request targets other open indexes. | `false` |
-| `expand_wildcards` | List or String | Type of index that wildcard patterns can match. If the request can target data streams, this argument determines whether wildcard expressions match hidden data streams. <br> Valid values are: <br> - `all`: Match any index, including hidden ones. <br> - `closed`: Match closed, non-hidden indexes. <br> - `hidden`: Match hidden indexes. Must be combined with open, closed, or both. <br> - `none`: Wildcard expressions are not accepted. <br> - `open`: Match open, non-hidden indexes. | `open`  |
-| `ignore_unavailable` | Boolean | If `true`, missing or closed indexes are not included in the response. | `false` |
-| `status` | List or String | List of shard health statuses used to limit the request. <br> Valid values are: <br> - `all`: Return all shards, regardless of health status. <br> - `green`: The primary shard and all replica shards are assigned. <br> - `red`: The primary shard is unassigned. <br> - `yellow`: One or more replica shards are unassigned. | `yellow,red` |
+| 參數 | 資料類型 | 說明 | 預設 |
+| `allow_no_indices` | 布林值 | 若為 `false`，當任何萬用字元運算式、索引別名或 `_all` 值僅指向遺失或已關閉的索引時，請求會傳回錯誤。即使請求同時指向其他開啟的索引，此行為仍然適用。 | `false` |
+| `expand_wildcards` | 清單或字串 | 萬用字元模式可比對的索引類型。若請求可指向資料串流，此引數會決定萬用字元運算式是否比對隱藏的資料串流。<br> 有效值為：<br> - `all`：比對任何索引，包括隱藏的索引。<br> - `closed`：比對已關閉且非隱藏的索引。<br> - `hidden`：比對隱藏的索引。必須與 open、closed 或兩者合併使用。<br> - `none`：不接受萬用字元運算式。<br> - `open`：比對開啟且非隱藏的索引。 | `open`  |
+| `ignore_unavailable` | 布林值 | 若為 `true`，遺失或已關閉的索引不會包含在回應中。 | `false` |
+| `status` | 清單或字串 | 用於限制請求範圍的分片健康狀態清單。<br> 有效值為：<br> - `all`：傳回所有分片，不論健康狀態為何。<br> - `green`：主要分片與所有副本分片皆已指派。<br> - `red`：主要分片未指派。<br> - `yellow`：一或多個副本分片未指派。 | `yellow,red` |
 
-## Example requests
+## 範例請求
 
-Create an index with multiple primary shards on a single-node cluster:
+在單一節點叢集上建立具有多個主要分片的索引：
 
 ```json
 PUT /logs-shardstore
@@ -59,7 +60,7 @@ PUT /logs-shardstore
 ```
 {% include copy-curl.html %}
 
-Index a document:
+將文件編製索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -96,7 +97,7 @@ response = client.index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Get shard store status for the `logs-shardstore` index:
+取得 `logs-shardstore` 索引的分片儲存狀態：
 
 <!-- spec_insert_start
 component: example_code
@@ -121,9 +122,9 @@ response = client.indices.shard_stores(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-The response lists the stores that were assigned to each shard. If a shard has no assigned stores, it is marked `unassigned`:
+回應會列出指派給每個分片的儲存。若分片沒有已指派的儲存，則會標記為 `unassigned`：
 
 ```json
 {
@@ -155,21 +156,21 @@ The response lists the stores that were assigned to each shard. If a shard has n
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description|
-| `indices` | Object | Contains shard store information for each index. |
-| `indices.<index>.shards` | Object | Contains store data for each shard in the index. |
-| `shards.<shard_id>.stores` | Array |  A list of store entries for the shard.|
-| `stores[n].<node_id>` | Object | Node metadata, including name, transport address, and attributes. |
-| `stores[n].allocation` | String | The shard role on this node (`primary` or `replica`). |
-| `stores[n].allocation_id` | String | The unique allocation ID for this shard copy.|
-| `stores[n].store_exception` | Object (optional) | Stores exceptions encountered when reading the shard store. |
-| `stores[n].store_exception.type` | String | The type of exception.|
-| `stores[n].store_exception.reason` | String | The reason message for the exception.|
+| 欄位 | 資料類型 | 說明|
+| `indices` | 物件 | 包含每個索引的分片儲存資訊。 |
+| `indices.<index>.shards` | 物件 | 包含索引中每個分片的儲存資料。 |
+| `shards.<shard_id>.stores` | 陣列 | 該分片的儲存項目清單。|
+| `stores[n].<node_id>` | 物件 | 節點中繼資料，包括名稱、傳輸位址與屬性。 |
+| `stores[n].allocation` | 字串 | 此分片在該節點上的角色（`primary` 或 `replica`）。 |
+| `stores[n].allocation_id` | 字串 | 此分片副本的唯一配置 ID。|
+| `stores[n].store_exception` | 物件（選用） | 儲存讀取分片儲存時遇到的例外狀況。 |
+| `stores[n].store_exception.type` | 字串 | 例外狀況的類型。|
+| `stores[n].store_exception.reason` | 字串 | 例外狀況的原因訊息。|
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:monitor/shard_stores`.
+若您使用 Security 外掛程式，請確認您具備適當的權限：`indices:monitor/shard_stores`。

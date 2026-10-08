@@ -1,46 +1,47 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Workflow tutorial
+title: "工作流程教學"
 nav_order: 20
 ---
 
-# Workflow tutorial
+# 工作流程教學
 
-You can automate the setup of common use cases, such as conversational chat, using a Chain-of-Thought (CoT) agent. An _agent_ orchestrates and runs ML models and tools. A _tool_ performs a set of specific tasks. This page presents a complete example of setting up a CoT agent. For more information about agents and tools, see [Agents and tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/)
+您可以使用 Chain-of-Thought (CoT) 代理程式自動化常見使用案例的設定，例如對話式聊天。_代理程式_ 會協調並執行機器學習模型與工具。_工具_ 則執行一組特定任務。本頁面提供設定 CoT 代理程式的完整範例。如需代理程式與工具的更多資訊，請參閱 [代理程式與工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/)
 
-The setup requires the following sequence of API requests, with provisioned resources used in subsequent requests. The following list provides an overview of the steps required for this workflow. The step names correspond to the names in the template:
+此設定需要依序執行下列 API 請求，後續請求會使用已佈建的資源。下列清單概述此工作流程所需的步驟。步驟名稱與範本中的名稱相對應：
 
-1. **Deploy a model on the cluster**
-    * [`create_connector_1`](#create_connector_1): Create a connector to an externally hosted model.
-    * [`register_model_2`](#register_model_2): Register a model using the connector that you created.
-    * [`deploy_model_3`](#deploy_model_3): Deploy the model.
-1. **Use the deployed model for inference**
-    * Set up several tools that perform specific tasks:
-      * [`list_index_tool`](#list_index_tool): Set up a tool to obtain index information.
-      * [`ml_model_tool`](#ml_model_tool): Set up a machine learning (ML) model tool.
-    * Set up one or more agents that use some combination of the tools:
-      * [`sub_agent`](#sub_agent): Create an agent that uses the `list_index_tool`.
-    * Set up tools representing these agents:
-      * [`agent_tool`](#agent_tool): Wrap the `sub_agent` so that you can use it as a tool.
-    * [`root_agent`](#root_agent): Set up a root agent that may delegate the task to either a tool or another agent.
+1. **在叢集上部署模型**
+    * [`create_connector_1`](#create_connector_1)：建立連接至外部託管模型的連接器。
+    * [`register_model_2`](#register_model_2)：使用您建立的連接器註冊模型。
+    * [`deploy_model_3`](#deploy_model_3)：部署模型。
+1. **使用已部署的模型進行推論**
+    * 設定數個執行特定任務的工具：
+      * [`list_index_tool`](#list_index_tool)：設定取得索引資訊的工具。
+      * [`ml_model_tool`](#ml_model_tool)：設定機器學習 (ML) 模型工具。
+    * 設定一或多個使用這些工具組合的代理程式：
+      * [`sub_agent`](#sub_agent)：建立使用 `list_index_tool` 的代理程式。
+    * 設定代表這些代理程式的工具：
+      * [`agent_tool`](#agent_tool)：包裝 `sub_agent`，以便將其作為工具使用。
+    * [`root_agent`](#root_agent)：設定根代理程式，可將任務委派給工具或其他代理程式。
 
-The following sections describe the steps in detail. For the complete workflow template, see [Complete YAML workflow template](#complete-yaml-workflow-template).
+下列章節將詳細說明這些步驟。完整的工作流程範本請參閱 [完整的 YAML 工作流程範本](#complete-yaml-workflow-template)。
 
-## Workflow graph
+## 工作流程圖
 
-The workflow described in the previous section is organized into a [template](#complete-yaml-workflow-template). Note that you can order the steps in several ways. In the example template, the `ml_model_tool` step is specified right before the `root_agent` step, but you can specify it at any point after the `deploy_model_3` step and before the `root_agent` step. The following diagram shows the directed acyclic graph (DAG) that OpenSearch creates for all of the steps in the order specified in the template.
+上一節所述的工作流程會組織成一個 [範本](#complete-yaml-workflow-template)。請注意，您可以透過多種方式排列步驟順序。在範例範本中，`ml_model_tool` 步驟緊接在 `root_agent` 步驟之前指定，但您也可以在 `deploy_model_3` 步驟之後、`root_agent` 步驟之前的任何位置指定它。下圖顯示 OpenSearch 依範本中指定的順序，為所有步驟建立的有向非循環圖 (DAG)。
 
-![Example workflow steps graph]({{site.url}}{{site.baseurl}}/images/automatic-workflow-dag.png){:style="width: 100%; max-width: 600px;" class="img-centered"}
+![範例工作流程步驟圖]({{site.url}}{{site.baseurl}}/images/automatic-workflow-dag.png){:style="width: 100%; max-width: 600px;" class="img-centered"}
 
-## 1. Deploy a model on the cluster
+## 1. 在叢集上部署模型
 
-To deploy a model on the cluster, you need to create a connector to the model, register the model, and deploy the model.
+若要在叢集上部署模型，您需要建立連接至該模型的連接器、註冊模型，然後部署模型。
 
 <!-- vale off -->
 ### create_connector_1
 <!-- vale on -->
 
-The first step in the workflow is to create a connector to an externally hosted model (in the following example, this step is called `create_connector_1`). The content of the `user_inputs` field exactly matches the ML Commons [Create Connector API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/create-connector/):
+工作流程的第一步是建立連接至外部託管模型的連接器（在下列範例中，此步驟稱為 `create_connector_1`）。`user_inputs` 欄位的內容與 ML Commons [Create Connector API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/create-connector/) 完全相符：
 
 ```yaml
 nodes:
@@ -62,13 +63,13 @@ nodes:
       url: https://${parameters.endpoint}/v1/chat/completions
 ```
 
-When you create a connector, OpenSearch returns a `connector_id`, which you need in order to register the model. 
+建立連接器後，OpenSearch 會傳回 `connector_id`，您需要用它來註冊模型。
 
 <!-- vale off -->
 ### register_model_2
 <!-- vale on -->
 
-When registering a model, the `previous_node_inputs` field tells OpenSearch to obtain the required `connector_id` from the output of the `create_connector_1` step. Other inputs required by the [Register Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/) are included in the `user_inputs` field:
+註冊模型時，`previous_node_inputs` 欄位會告訴 OpenSearch 從 `create_connector_1` 步驟的輸出取得所需的 `connector_id`。[Register Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/) 所需的其他輸入則包含在 `user_inputs` 欄位中：
 
 ```yaml
 - id: register_model_2
@@ -81,13 +82,13 @@ When registering a model, the `previous_node_inputs` field tells OpenSearch to o
     description: test model
 ```
 
-The output of this step is a `model_id`. You must then deploy the registered model to the cluster. 
+此步驟的輸出是 `model_id`。接著您必須將已註冊的模型部署到叢集。
 
 <!-- vale off -->
 ### deploy_model_3
 <!-- vale on -->
 
-The [Deploy Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/deploy-model/) requires the `model_id` from the previous step, as specified in the `previous_node_inputs` field:
+[Deploy Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/deploy-model/) 需要上一個步驟的 `model_id`，如 `previous_node_inputs` 欄位中所指定：
 
 ```yaml
 - id: deploy_model_3
@@ -97,11 +98,11 @@ The [Deploy Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-
     register_model_2: model_id
 ```
 
-When using the Deploy Model API directly, a task ID is returned, requiring use of the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) to determine when the deployment is complete. The automated workflow eliminates the manual status check and returns the final `model_id` directly.
+直接使用 Deploy Model API 時，會傳回任務 ID，需要使用 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來判斷部署何時完成。自動化工作流程省去了手動檢查狀態的程序，並直接傳回最終的 `model_id`。
 
-### Ordering steps
+### 排列步驟順序
 
-To order these steps in a sequence, you must connect them by an edge in the graph. When a `previous_node_input` field is present in a step, OpenSearch automatically creates a node with `source` and `dest` fields for this step. The output of the `source` is required as input for the `dest`. For example, the `register_model_2` step requires the `connector_id` from the `create_connector_1` step. Similarly, the `deploy_model_3` step requires the `model_id` from the `register_model_2` step. Thus, OpenSearch creates the first two edges in the graph as follows in order to match the output with the required input and raise errors if the required input is missing:
+若要將這些步驟依序排列，您必須在圖形中以邊連接它們。當步驟中存在 `previous_node_input` 欄位時，OpenSearch 會自動為該步驟建立一個包含 `source` 與 `dest` 欄位的節點。`source` 的輸出是 `dest` 所需的輸入。例如，`register_model_2` 步驟需要 `create_connector_1` 步驟的 `connector_id`。同樣地，`deploy_model_3` 步驟需要 `register_model_2` 步驟的 `model_id`。因此，OpenSearch 會如下建立圖形中的前兩條邊，以將輸出與所需輸入相符，並在缺少所需輸入時引發錯誤：
 
 ```yaml
 edges:
@@ -111,18 +112,18 @@ edges:
   dest: deploy_model_3
 ```
 
-If you define `previous_node_inputs`, then defining edges is optional.
+如果您定義了 `previous_node_inputs`，則邊的定義是選用的。
 {: .note}
 
-## 2. Use the deployed model for inference
+## 2. 使用已部署的模型進行推論
 
-A CoT agent can use the deployed model in a tool. This step doesn’t strictly correspond to an API but represents a component of the body required by the [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/). This simplifies the register request and allows reuse of the same tool in multiple agents. For more information about agents and tools, see [Agents and tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/).
+CoT 代理程式可以在工具中使用已部署的模型。此步驟並不嚴格對應某個 API，而是代表 [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/) 所需請求本文中的一個元件。這可簡化註冊請求，並允許在多個代理程式中重複使用同一工具。如需代理程式與工具的更多資訊，請參閱 [代理程式與工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/)。
 
 <!-- vale off -->
 ### list_index_tool
 <!-- vale on -->
 
-You can configure other tools to be used by the CoT agent. For example, you can configure a `list_index_tool` as follows. This tool does not depend on any previous steps:
+您可以設定其他工具供 CoT 代理程式使用。例如，您可以如下設定 `list_index_tool`。此工具不依賴任何先前的步驟：
 
 ```yaml
 - id: list_index_tool
@@ -138,7 +139,7 @@ You can configure other tools to be used by the CoT agent. For example, you can 
 ### sub_agent
 <!-- vale on -->
 
-To use the `list_index_tool` in the agent configuration, specify it as one of the tools in the `previous_node_inputs` field of the agent. You can add other tools to `previous_node_inputs` as necessary. The agent also needs a large language model (LLM) in order to reason with the tools. The LLM is defined by the `llm.model_id` field. This example assumes that the `model_id` from the `deploy_model_3` step will be used. However, if another model is already deployed, the `model_id` of that previously deployed model could be included in the `user_inputs` field instead:
+若要在代理程式組態中使用 `list_index_tool`，請將其指定為代理程式 `previous_node_inputs` 欄位中的其中一個工具。您可以視需要將其他工具加入 `previous_node_inputs`。代理程式也需要一個大型語言模型 (LLM) 才能搭配工具進行推論。LLM 由 `llm.model_id` 欄位定義。此範例假設將使用 `deploy_model_3` 步驟的 `model_id`。不過，如果已有其他模型部署完成，則可以改將先前部署模型的 `model_id` 包含在 `user_inputs` 欄位中：
 
 ```yaml
 - id: sub_agent
@@ -161,7 +162,7 @@ To use the `list_index_tool` in the agent configuration, specify it as one of th
     app_type: chatbot
 ```
 
-OpenSearch will automatically create the following edges so that the agent can retrieve the fields from the previous node: 
+OpenSearch 會自動建立下列邊，讓代理程式能夠從上一個節點擷取欄位：
 
 ```yaml
 - source: list_index_tool
@@ -174,7 +175,7 @@ OpenSearch will automatically create the following edges so that the agent can r
 ### agent_tool
 <!-- vale on -->
 
-You can use an agent as a tool for another agent. Registering an agent produces an `agent_id` in the output. The following step defines a tool that uses the `agent_id` from the previous step:
+您可以將代理程式用作另一個代理程式的工具。註冊代理程式會在輸出中產生 `agent_id`。下列步驟定義一個使用上一步驟 `agent_id` 的工具：
 
 ```yaml
 - id: agent_tool
@@ -189,7 +190,7 @@ You can use an agent as a tool for another agent. Registering an agent produces 
       max_iteration: 5
 ```
 
-OpenSearch automatically creates an edge connection because this step specifies the `previous_node_input`:
+由於此步驟指定了 `previous_node_input`，OpenSearch 會自動建立邊緣連線：
 
 ```yaml
 - source: sub_agent
@@ -200,7 +201,7 @@ OpenSearch automatically creates an edge connection because this step specifies 
 ### ml_model_tool
 <!-- vale on -->
 
-A tool may reference an ML model. This example gets the required `model_id` from the model deployed in a previous step:
+工具可以參照 ML 模型。此範例從先前步驟中部署的模型取得所需的 `model_id`：
 
 ```yaml
 - id: ml_model_tool
@@ -217,7 +218,7 @@ A tool may reference an ML model. This example gets the required `model_id` from
       response_filter: choices[0].message.content
 ```
 
-OpenSearch automatically creates an edge in order to use the `previous_node_input`:
+OpenSearch 會自動建立邊緣以使用 `previous_node_input`：
 
 ```yaml
 - source: deploy-model-3
@@ -228,7 +229,7 @@ OpenSearch automatically creates an edge in order to use the `previous_node_inpu
 ### root_agent
 <!-- vale on -->
 
-A conversational chat application will communicate with a single root agent that includes the ML model tool and the agent tool in its `tools` field. It will also obtain the `llm.model_id` from the deployed model. Some agents require tools to be in a specific order, which can be enforced by including the `tools_order` field in the user inputs:
+對話式聊天應用程式將與單一根代理程式通訊，該代理程式在其 `tools` 欄位中包含 ML 模型工具與代理程式工具。它也會從已部署的模型取得 `llm.model_id`。某些代理程式要求工具必須以特定順序排列，這可以透過在使用者輸入中包含 `tools_order` 欄位來強制執行：
 
 ```yaml
 - id: root_agent
@@ -252,7 +253,7 @@ A conversational chat application will communicate with a single root agent that
     app_type: chatbot
 ```
 
-OpenSearch automatically creates edges for the `previous_node_input` sources:
+OpenSearch 會自動為 `previous_node_input` 來源建立邊緣：
 
 ```yaml
 - source: deploy-model-3
@@ -263,15 +264,15 @@ OpenSearch automatically creates edges for the `previous_node_input` sources:
   dest: root_agent
 ```
 
-For the complete DAG that OpenSearch creates for this workflow, see the [workflow graph](#workflow-graph).
+如需 OpenSearch 為此工作流程建立的完整 DAG，請參閱[工作流程圖](#workflow-graph)。
 
-## Complete YAML workflow template
+## 完整的 YAML 工作流程範本
 
-The following is the final template including all of the `provision` workflow steps in YAML format:
+以下是以 YAML 格式呈現、包含所有 `provision` 工作流程步驟的最終範本：
 
 <details open markdown="block">
   <summary>
-    YAML template
+    YAML 範本
   </summary>
   {: .text-delta}
 
@@ -411,13 +412,13 @@ workflows:
 ```
 </details>
 
-## Complete JSON workflow template
+## 完整的 JSON 工作流程範本
 
-The following is the same template in JSON format:
+以下是以 JSON 格式呈現的相同範本：
 
 <details open markdown="block">
   <summary>
-    JSON template
+    JSON 範本
   </summary>
   {: .text-delta}
 
@@ -615,6 +616,6 @@ The following is the same template in JSON format:
 ```
 </details>
 
-## Next steps
+## 後續步驟
 
-To learn more about agents and tools, see [Agents and tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/).
+若要進一步了解代理程式與工具，請參閱[代理程式與工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/)。

@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Pattern capture
+title: "模式擷取"
 parent: Token filters
 nav_order: 310
 ---
 
-# Pattern capture token filter
+# 模式擷取詞元篩選器
 
-The `pattern_capture` token filter is a powerful filter that uses regular expressions to capture and extract parts of text according to specific patterns. This filter can be useful when you want to extract particular parts of tokens, such as email domains, hashtags, or numbers, and reuse them for further analysis or indexing.
+`pattern_capture` 詞元篩選器是一種功能強大的篩選器，使用正規表示式根據特定模式擷取並取出文字的部分內容。當您想要取出詞元的特定部分，例如電子郵件網域、主題標籤或數字，並將其重複用於進一步分析或編製索引時，此篩選器非常實用。
 
-## Parameters
+## 參數
 
-The `pattern_capture` token filter can be configured with the following parameters.
+您可以使用下列參數設定 `pattern_capture` 詞元篩選器。
 
-Parameter | Required/Optional | Data type | Description
+參數 | 必要／選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`patterns` | Required | Array of strings | An array of regular expressions used to capture parts of text.
-`preserve_original` | Required | Boolean| Whether to keep the original token in the output. Default is `true`.
+`patterns` | 必要 | 字串陣列 | 用於擷取文字部分內容的正規表示式陣列。
+`preserve_original` | 必要 | 布林值| 是否在輸出中保留原始詞元。預設為 `true`。
 
 
-## Example
+## 範例
 
-The following example request creates a new index named `email_index` and configures an analyzer with a `pattern_capture` filter to extract the local part and domain name from an email address:
+下列範例請求會建立名為 `email_index` 的新索引，並設定含有 `pattern_capture` 篩選器的分析器，以從電子郵件地址中取出 @ 符號前的部分和網域名稱：
 
 ```json
 PUT /email_index
@@ -53,9 +54,9 @@ PUT /email_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查分析器產生的詞元：
 
 ```json
 POST /email_index/_analyze
@@ -66,7 +67,7 @@ POST /email_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應包含產生的詞元：
 
 ```json
 {

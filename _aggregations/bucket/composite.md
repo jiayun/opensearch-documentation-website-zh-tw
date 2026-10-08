@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Composite
+title: "複合"
 parent: Bucket aggregations
 nav_order: 17
 redirect_from:
   - /query-dsl/aggregations/bucket/composite/
 ---
 
-# Composite aggregation
+# 複合彙總
 
-The `composite` aggregation creates buckets based on one or more document fields or sources. The `composite` aggregation creates a bucket for every combination of individual source values. By default, combinations with a missing value in one or more individual fields are omitted from the results.
+`composite` 彙總會根據一或多個文件欄位或來源建立桶 (bucket)。`composite` 彙總會為個別來源值的每一種組合各建立一個桶。根據預設，若某個組合在一或多個個別欄位中有缺失值，該組合會從結果中省略。
 
-Each source has one of four types of aggregation:
+每個來源都屬於下列四種彙總類型之一：
 
-- The `terms` type groups by a unique (usually `String`) value.
-- The `histogram` type groups numerically in buckets of a specified width.
-- The `date_histogram` type groups by date or time ranges of a specified width.
-- The `geotile_grid` type groups geopoints into a grid with a specified resolution.
+- `terms` 類型依唯一值（通常為 `String`）分組。
+- `histogram` 類型以數值方式分組到指定寬度的桶中。
+- `date_histogram` 類型依指定寬度的日期或時間範圍分組。
+- `geotile_grid` 類型將地理點分組到具有指定解析度的網格中。
 
-The `composite` aggregation works by combining its source keys into buckets. The resulting buckets are ordered, both across and within the sources:
+`composite` 彙總的運作方式是將其來源鍵組合成桶。產生的桶在來源之間與來源之內都會排序：
 
-- **Across**: Buckets are nested in the order that the sources are ordered in the aggregation request.
-- **Within**: The order of values in each source determines the bucket order for that source. Ordering is alphabetical, numeric, date-time, or geo-tile, as appropriate to the source type.
+- **來源之間**：桶會依照來源在彙總請求中的排列順序巢狀排列。
+- **來源之內**：每個來源中值的順序決定該來源的桶順序。排序方式依來源類型而定，可能是字母、數值、日期時間或地理圖磚順序。
 
-Consider these fields from an index of marathon participants:
+請參考下列馬拉松參賽者索引中的欄位：
 
 ```json
 {... "city": "Albuquerque", "place": "Bronze" ...}
@@ -35,7 +36,7 @@ Consider these fields from an index of marathon participants:
 {... "city": "Chicago", "place": "Gold" ...}
 ```
 
-Assume the request specifies the sources as follows:
+假設請求如下指定來源：
 
 ```json
     ...
@@ -46,10 +47,10 @@ Assume the request specifies the sources as follows:
     ...
 ```
 
-You must assign a unique key name to each source.
+您必須為每個來源指派唯一的鍵名稱。
 {: .important}
 
-The resulting `composite` contains the following buckets, in order:
+產生的 `composite` 依序包含下列桶：
 
 ```json
 { "city": "Albuquerque", "place": "Bronze" }
@@ -61,31 +62,31 @@ The resulting `composite` contains the following buckets, in order:
 { "city": "Chicago", "place": "Silver" }
 ```
 
-Note that the `city` and `place` fields are both ordered alphabetically.
+請注意，`city` 和 `place` 欄位都是依字母順序排序。
 
-## Parameters
+## 參數
 
-The `composite` aggregation takes the following parameters.
+`composite` 彙總接受下列參數。
 
-| Parameter | Required/Optional | Data type  | Description |
+| 參數 | 必要/選用 | 資料類型  | 說明 |
 | :--       | :--               | :--        | :--         |
-| `sources` | Required          | Array      | An array of source objects. Valid types are [`terms`](#terms), [`histogram`](#histogram), [`date_histogram`](#date-histogram), and [`geotile_grid`](#geotile-grid). |
-| `size`    | Optional          | Numeric    | The number of `composite` buckets to return in the results. The default value is `10`. See [Paginating composite results](#paginating-composite-results). |
-| `after` | Optional | String | A key that specifies where to resume displaying paginated `composite` buckets. See [Paginating composite results](#paginating-composite-results). |
-| `order`   | Optional          | String     | For each source, whether to order the values in ascending or descending order. Valid values are `asc` and `desc`. Default is `asc`. |
-| `missing_bucket` | Optional    | Boolean   | For each source, whether to include documents with a missing value. The default value is `false`. If set to `true`, OpenSearch includes the documents, supplying `null` as the field's key. Null values rank first in ascending order. |
+| `sources` | 必要          | 陣列      | 來源物件的陣列。有效類型為 [`terms`](#terms)、[`histogram`](#histogram)、[`date_histogram`](#date-histogram) 和 [`geotile_grid`](#geotile-grid)。 |
+| `size`    | 選用          | 數值    | 要在結果中傳回的 `composite` 桶數量。預設值為 `10`。請參閱[將複合結果分頁](#paginating-composite-results)。 |
+| `after` | 選用 | 字串 | 指定要從何處繼續顯示分頁 `composite` 桶的鍵。請參閱[將複合結果分頁](#paginating-composite-results)。 |
+| `order`   | 選用          | 字串     | 針對每個來源，指定要以遞增或遞減順序排列值。有效值為 `asc` 和 `desc`。預設為 `asc`。 |
+| `missing_bucket` | 選用    | 布林值   | 針對每個來源，指定是否包含具有缺失值的文件。預設值為 `false`。若設為 `true`，OpenSearch 會包含這些文件，並以 `null` 作為該欄位的鍵。Null 值在遞增順序中排在最前面。 |
 
-For aggregation-specific parameters, see the corresponding aggregation documentation.
+如需彙總特定的參數，請參閱對應的彙總文件。
 {: .note}
 
-## Terms
+## 詞彙
 
-Use a `terms` aggregation for aggregating string or Boolean data. For more information, see [Terms aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/terms/).
+使用 `terms` 彙總來彙總字串或布林值資料。如需詳細資訊，請參閱[詞彙彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/terms/)。
 
-You can use `terms` sources to create composite buckets for any type of data. However, since `terms` sources create buckets for every unique value, you'll normally use `histogram` sources for numerical data instead.
+您可以使用 `terms` 來源為任何類型的資料建立複合桶。不過，由於 `terms` 來源會為每個唯一值建立桶，因此對於數值資料，您通常會改用 `histogram` 來源。
 {: .note}
 
-The following example request returns the first `4` composite buckets for day of the week and customer gender in the OpenSearch Dashboards sample e-commerce data:
+下列範例請求會傳回 OpenSearch Dashboards 範例電子商務資料中，依星期幾和客戶性別分組的前 `4` 個複合桶：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -106,9 +107,9 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-Since the dataset for this example contains valid data for every bucket, the aggregation generates a bucket for every combination of gender and day of the week, resulting in 14 total buckets.
+由於此範例的資料集在每個桶中都包含有效資料，因此彙總會為性別與星期幾的每種組合產生一個桶，總共產生 14 個桶。
 
-Because the request specifies a `size` of `4`, the response contains the first four composite buckets. Since the sources are `terms`, the buckets are ordered in ascending alphabetical order, both across and within the sources:
+由於請求將 `size` 指定為 `4`，因此回應包含前四個複合桶。由於來源為 `terms`，桶在來源之間與來源之內都會依字母遞增順序排序：
 
 ```json
 {
@@ -169,15 +170,15 @@ Because the request specifies a `size` of `4`, the response contains the first f
 }
 ```
 
-You can use the `after_key` returned in the response to view more results. See the example in the next section.
+您可以使用回應中傳回的 `after_key` 來檢視更多結果。請參閱下一節中的範例。
 
-## Histogram
+## 直方圖
 
-Use `histogram` sources to create composite aggregations of numerical data. For more information, see [Histogram aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/histogram/).
+使用 `histogram` 來源建立數值資料的複合彙總。如需詳細資訊，請參閱[直方圖彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/histogram/)。
 
-For `histogram` sources, the name used in each `composite` bucket key is the lowest value in the key's histogram interval. Each source histogram interval contains the values in the `[lower_bound, lower_bound + interval)` range. The name of the first interval is the lowest value in the source field (for ascending-value sources). 
+對於 `histogram` 來源，每個 `composite` 桶鍵中使用的名稱，是該鍵直方圖間隔中的最小值。每個來源直方圖間隔包含 `[lower_bound, lower_bound + interval)` 範圍內的值。第一個間隔的名稱是來源欄位中的最小值（適用於遞增值來源）。
 
-The following example request returns the first `6` composite buckets for quantity and base unit price in the OpenSearch Dashboards sample e-commerce data based on bucket widths of `1` and `50`, respectively:
+下列範例請求會根據寬度分別為 `1` 和 `50` 的桶，傳回 OpenSearch Dashboards 範例電子商務資料中數量與基本單價的前 `6` 個複合桶：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -198,7 +199,7 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-The aggregation returns the first `6` bucket keys and document counts for the two `histogram` sources. As in the `terms` example, the buckets are ordered across and within the source fields. In this case, however, the order is numerical and is based on the inclusive lower bound of each histogram width:
+彙總會傳回兩個 `histogram` 來源的前 `6` 個桶鍵和文件計數。與 `terms` 範例相同，桶會在來源欄位之間與之內排序。不過，在此情況下，排序為數值順序，並以每個直方圖寬度的包含下限為依據：
 
 ```json
 {
@@ -273,9 +274,9 @@ The aggregation returns the first `6` bucket keys and document counts for the tw
 }
 ```
 
-The bucket key for each field is the lower bound of the field interval. For example, the `unit_price` key for the first `composite` bucket is `0`.
+每個欄位的桶鍵是該欄位間隔的下限。例如，第一個 `composite` 桶的 `unit_price` 鍵為 `0`。
 
-To retrieve the next `6` buckets, supply the `after` parameter with the `after_key` object from the response as follows:
+若要擷取接下來的 `6` 個桶，請如下所示，在 `after` 參數中提供回應中的 `after_key` 物件：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -300,7 +301,7 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-There are only two buckets remaining:
+只剩下兩個桶：
 
 ```json
 {
@@ -347,15 +348,15 @@ There are only two buckets remaining:
 }
 ```
 
-## Date histogram
+## 日期直方圖
 
-To create composite aggregations of date ranges, use the `date_histogram` aggregation. For more information, see [Date histogram aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/date-histogram/).
+若要建立日期範圍的複合彙總，請使用 `date_histogram` 彙總。如需詳細資訊，請參閱[日期直方圖彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/date-histogram/)。
 
-OpenSearch represents dates, including `date_interval` bucket keys, as `long` integers representing milliseconds since the epoch in [Unix time](https://en.wikipedia.org/wiki/Unix_time). You can format the date output using the `format` parameter. This does not change the key order.
+OpenSearch 會將日期（包括 `date_interval` 桶 (bucket) 鍵）表示為 `long` 整數，代表自 [Unix 時間](https://en.wikipedia.org/wiki/Unix_time)紀元起算的毫秒數。您可以使用 `format` 參數格式化日期輸出。這不會變更鍵的順序。
 
-OpenSearch stores date-times in UTC. You can display output results in a different time zone using the `time_zone` parameter.
+OpenSearch 以 UTC 儲存日期時間。您可以使用 `time_zone` 參數，以不同的時區顯示輸出結果。
 
-The following example request returns the first `4` composite buckets for the year in which each sold product was created and the date on which it was sold in the OpenSearch Dashboards sample e-commerce data, based on bucket widths of 1 year and 1 day, respectively:
+以下範例請求會根據分別為 1 年和 1 天的桶寬度，傳回 OpenSearch Dashboards 範例電子商務資料中，每個已售出產品的建立年份及其售出日期的前 `4` 個複合桶：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -376,7 +377,7 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-The aggregation returns the formatted date-based bucket keys and counts. For the `date_interval` composite aggregation, field ordering is by date:
+此彙總會傳回已格式化的日期型桶鍵及計數。對於 `date_interval` 複合彙總，欄位會依日期排序：
 
 ```json
 {
@@ -437,13 +438,13 @@ The aggregation returns the formatted date-based bucket keys and counts. For the
 }
 ```
 
-## Geotile grid
+## Geotile 網格
 
-Use `geotile_grid` sources to aggregate `geo_point` values into buckets representing map tiles. As with the other composite aggregation sources, by default, results include only buckets containing data. For more information, see [Geotile grid aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/geotile-grid/).
+使用 `geotile_grid` 來源，將 `geo_point` 值彙總至代表地圖圖磚的桶中。與其他複合彙總來源一樣，結果預設只包含含有資料的桶。如需詳細資訊，請參閱 [Geotile 網格彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/geotile-grid/)。
 
-Each cell corresponds to a [map tile](https://en.wikipedia.org/wiki/Tiled_web_map). Cell labels use the `{zoom}/{x}/{y}` format.
+每個儲存格對應一個[地圖圖磚](https://en.wikipedia.org/wiki/Tiled_web_map)。儲存格標籤使用 `{zoom}/{x}/{y}` 格式。
 
-The following example request returns the first `6` tiles containing locations from the `geoip.location` field at a precision of `8`:
+以下範例請求會以 `8` 的精確度，傳回包含 `geoip.location` 欄位中位置的前 `6` 個圖磚：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -463,7 +464,7 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-The aggregation returns the specified `geo_tiles` and point counts:
+此彙總會傳回指定的 `geo_tiles` 及點計數：
 
 ```json
 {
@@ -519,11 +520,11 @@ The aggregation returns the specified `geo_tiles` and point counts:
 }
 ```
 
-## Combining sources
+## 結合來源
 
-You can combine two or more sources of any different type.
+您可以結合兩個或多個任意不同類型的來源。
 
-The following example request returns buckets composed of three different source types:
+以下範例請求會傳回由三種不同來源類型組成的桶：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -544,7 +545,7 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 }
 ```
 
-The aggregation returns the mixed-type `composite` buckets and document counts:
+此彙總會傳回混合類型的 `composite` 桶及文件計數：
 
 ```json
 {
@@ -642,11 +643,11 @@ The aggregation returns the mixed-type `composite` buckets and document counts:
 }
 ```
 
-## Subaggregations
+## 子彙總
 
-Composite aggregations are most useful when combined with subaggregations that reveal information about the documents in the `composite` buckets.
+複合彙總與子彙總結合使用時最為實用，子彙總可揭示 `composite` 桶中文件的相關資訊。
 
-The following example request compares average spending based on gender for each day of the week in the OpenSearch Dashboards sample e-commerce data:
+以下範例請求會比較 OpenSearch Dashboards 範例電子商務資料中，一週內每一天依性別區分的平均消費金額：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -671,7 +672,7 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 }
 ```
 
-The aggregation returns the average `taxful_total_price` of the first `6` buckets:
+此彙總會傳回前 `6` 個桶的平均 `taxful_total_price`：
 
 ```json
 {
@@ -764,18 +765,18 @@ The aggregation returns the average `taxful_total_price` of the first `6` bucket
 }
 ```
 
-## Paginating composite results
+## 將複合結果分頁
 
-If a request results in more than `size` buckets, then `size` buckets are returned. In this case, the results contain an `after_key` object containing the key of the next bucket in the list. To retrieve the next `size` buckets of the request, send the request again, supplying the `after_key` in the `after` parameter. For an example, see the request in [Histogram](#histogram).
+如果請求產生超過 `size` 個桶 (bucket)，則會傳回 `size` 個桶。在此情況下，結果會包含一個 `after_key` 物件，其中含有清單中下一個桶的鍵。若要擷取請求的下 `size` 個桶，請再次傳送請求，並在 `after` 參數中提供 `after_key`。如需範例，請參閱[直方圖](#histogram)中的請求。
 
-Always use the `after_key` rather than copying the last bucket to continue a paginated response. The two are sometimes different.
+若要繼續分頁回應，請一律使用 `after_key`，而不要複製最後一個桶。這兩者有時會不同。
 {: .important}
 
-## Improving performance with index sorting
+## 使用索引排序提升效能
 
-To speed up composite aggregations on large datasets, you can sort your index using the same fields and order used in your aggregation sources. When the `index.sort.field` and `index.sort.order` match the source fields and order used in the composite aggregation, OpenSearch can return results more efficiently and with less memory usage. While index sorting adds minor overhead during indexing, the query performance gains for composite aggregations are significant.
+若要加快大型資料集上的複合彙總速度，您可以使用與彙總來源相同的欄位和順序來排序索引。當 `index.sort.field` 和 `index.sort.order` 與複合彙總中使用的來源欄位和順序相符時，OpenSearch 可以更有效率地傳回結果，並使用較少的記憶體。雖然索引排序會在編製索引期間增加少量額外負擔，但複合彙總的查詢效能提升相當顯著。
 
-The following example request sets sort fields and a sort order for each of the fields in the `my-sorted-index` index:
+下列範例請求會為 `my-sorted-index` 索引中的每個欄位設定排序欄位和排序順序：
 
 ```json
 PUT /my-sorted-index
@@ -803,7 +804,7 @@ PUT /my-sorted-index
 ```
 {% include copy-curl.html %}
 
-The following request creates a composite aggregation on the `my-sorted-index` index. Because the index is sorted by `customer_id` in ascending order and `timestamp` in descending order and the aggregation sources match that sort order, this query runs faster and with reduced memory pressure:
+下列請求會在 `my-sorted-index` 索引上建立複合彙總。由於索引依 `customer_id` 遞增排序並依 `timestamp` 遞減排序，且彙總來源與該排序順序相符，因此此查詢的執行速度會更快，記憶體壓力也會降低：
 
 ```json
 GET /my-sorted-index/_search

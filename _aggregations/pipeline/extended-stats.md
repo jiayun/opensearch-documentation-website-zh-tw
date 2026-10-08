@@ -1,49 +1,50 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Extended stats bucket
+title: "延伸統計桶"
 parent: Pipeline aggregations
 nav_order: 80
 ---
 
-# Extended stats bucket aggregation
+# 延伸統計桶彙總
 
-The `extended_stats_bucket` aggregation is a more comprehensive version of the [`stats_bucket`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/stats-bucket/) sibling aggregation. As well as the basic statistical measures provided by `stats_bucket`, `extended_stats_bucket` calculates the following metrics:
+`extended_stats_bucket` 彙總是 [`stats_bucket`]({{site.url}}{{site.baseurl}}/aggregations/pipeline/stats-bucket/) 同層級彙總的更完整版本。除了 `stats_bucket` 提供的基本統計量之外，`extended_stats_bucket` 還會計算下列指標：
 
-- Sum of squares
-- Variance
-- Population variance
-- Sampling variance
-- Standard deviation
-- Population standard deviation
-- Sampling standard deviation
-- Standard deviation bounds:
-  - Upper
-  - Lower
-  - Population upper
-  - Population lower
-  - Sampling upper
-  - Sampling lower
+- 平方和
+- 變異數
+- 母體變異數
+- 樣本變異數
+- 標準差
+- 母體標準差
+- 樣本標準差
+- 標準差界限：
+  - 上限
+  - 下限
+  - 母體上限
+  - 母體下限
+  - 樣本上限
+  - 樣本下限
 
-The standard deviation and variance are population statistics; they are always equal to the population standard deviation and variance, respectively.
+標準差與變異數屬於母體統計量；兩者分別一律等於母體標準差與母體變異數。
 
-The `std_deviation_bounds` object defines a range that spans the specified number of standard deviations above and below the mean (default is two standard deviations). This object is always included in the output but is meaningful only for normally distributed data. Before interpreting these values, verify that your dataset follows a normal distribution.
+`std_deviation_bounds` 物件定義一個範圍，涵蓋平均值上下指定數量的標準差（預設為兩個標準差）。此物件一律會包含在輸出中，但僅對常態分布的資料有意義。在解讀這些值之前，請先確認您的資料集符合常態分布。
 
-The specified metric must be numeric, and the sibling aggregation must be a multi-bucket aggregation.
+指定的指標必須為數值，且同層級彙總必須是多桶（bucket）彙總。
 
-## Parameters
+## 參數
 
-The `extended_stats_bucket` aggregation takes the following parameters.
+`extended_stats_bucket` 彙總接受下列參數。
 
-| Parameter             | Required/Optional | Data type       | Description |
+| 參數             | 必要/選用 | 資料類型       | 說明 |
 | :--                   | :--               |  :--            | :--         |
-| `buckets_path`        | Required          | String          | The path of the aggregation buckets to be aggregated. See [Buckets path]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path). |
-| `gap_policy`          | Optional          | String          | The policy to apply to missing data. Valid values are `skip` and `insert_zeros`. Default is `skip`. See [Data gaps]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#data-gaps).|
-| `format`              | Optional          | String          | A [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) formatting string. Returns the formatted output in the aggregation's `<stat>_as_string` property. |
-| `sigma`   | Optional          | Double (non-negative) | The number of standard deviations above and below the mean used to calculate the `std_deviation_bounds` interval. Default is `2`. See [Defining bounds]({{site.url}}{{site.baseurl}}/aggregations/metric/extended-stats#defining-bounds) in `extended_stats`. |
+| `buckets_path`        | 必要          | 字串          | 要彙總之彙總桶的路徑。請參閱[桶路徑]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path)。 |
+| `gap_policy`          | 選用          | 字串          | 套用於缺失資料的原則。有效值為 `skip` 與 `insert_zeros`。預設為 `skip`。請參閱[資料缺口]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#data-gaps)。|
+| `format`              | 選用          | 字串          | [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) 格式字串。在彙總的 `<stat>_as_string` 屬性中傳回格式化後的輸出。 |
+| `sigma`   | 選用          | Double（非負數） | 用於計算 `std_deviation_bounds` 區間的平均值上下標準差數量。預設為 `2`。請參閱 `extended_stats` 中的[定義界限]({{site.url}}{{site.baseurl}}/aggregations/metric/extended-stats#defining-bounds)。 |
 
-## Example
+## 範例
 
-The following example creates a date histogram with a one-month interval using the OpenSearch Dashboards e-commerce sample data. The `sum` subaggregation calculates the sum of all bytes for each month. Finally, the `extended_stats_bucket` aggregation returns the extended stats for these sums:
+下列範例使用 OpenSearch Dashboards 電子商務範例資料，建立一個以一個月為間隔的日期直方圖。`sum` 子彙總會計算每個月所有位元組的總和。最後，`extended_stats_bucket` 彙總會傳回這些總和的延伸統計：
 
 ```json
 GET opensearch_dashboards_sample_data_logs/_search
@@ -75,13 +76,13 @@ GET opensearch_dashboards_sample_data_logs/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The response contains extended stats for the selected buckets. Note that the standard deviation bounds are for a three-sigma range; changing `sigma` (or letting it default to `2`) returns different results:
+回應包含所選桶的延伸統計。請注意，標準差界限是針對三個標準差（three-sigma）的範圍；變更 `sigma`（或讓其使用預設值 `2`）會傳回不同的結果：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
 
 ```json

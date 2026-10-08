@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Workload parameters
+title: "工作負載參數"
 parent: Anatomy of a workload
 nav_order: 60
 ---
 
-# Workload parameters
+# 工作負載參數
 
-Workload parameters let you customize workload behavior without editing the workload files directly. You can control settings such as bulk size, number of shards, index name, and search configuration by passing parameters at runtime.
+工作負載參數可讓您自訂工作負載的行為，而不必直接編輯工作負載檔案。您可以在執行階段傳遞參數，藉此控制大量處理大小、分片數量、索引名稱和搜尋組態等設定。
 
-OpenSearch Benchmark workloads use [Jinja2](https://jinja.palletsprojects.com/) templates. When you pass parameters using the `--workload-params` flag, OpenSearch Benchmark injects them into the workload JSON files before execution.
+OpenSearch Benchmark 工作負載使用 [Jinja2](https://jinja.palletsprojects.com/) 範本。當您使用 `--workload-params` 旗標傳遞參數時，OpenSearch Benchmark 會在執行前將這些參數注入工作負載 JSON 檔案中。
 
-For example, a workload's `index.json` might contain the following settings:
+例如，工作負載的 `index.json` 可能包含下列設定：
 
 ```json
 {
@@ -22,15 +23,15 @@ For example, a workload's `index.json` might contain the following settings:
 }
 ```
 
-When you run a benchmark with `--workload-params='{"number_of_shards": 3}'`, OpenSearch Benchmark replaces `{% raw %}{{ number_of_shards | default(1) }}{% endraw %}` with `3`. Parameters you don't override use their default values.
+當您使用 `--workload-params='{"number_of_shards": 3}'` 執行基準測試時，OpenSearch Benchmark 會將 `{% raw %}{{ number_of_shards | default(1) }}{% endraw %}` 取代為 `3`。您未覆寫的參數會使用其預設值。
 
-## Passing parameters
+## 傳遞參數
 
-You can pass parameters in the following ways.
+您可以透過下列方式傳遞參數。
 
-### JSON file (recommended for many parameters)
+### JSON 檔案（建議用於大量參數）
 
-Create a JSON file containing your parameters:
+建立包含參數的 JSON 檔案：
 
 ```json
 {
@@ -42,80 +43,80 @@ Create a JSON file containing your parameters:
 ```
 {% include copy.html %}
 
-Then reference it as follows:
+然後依下列方式參照該檔案：
 
 ```bash
 opensearch-benchmark run --workload=geonames --workload-params=my-params.json
 ```
 {% include copy.html %}
 
-### Inline JSON
+### 內嵌 JSON
 
-Pass parameters directly on the command line:
+直接在命令列上傳遞參數：
 
 ```bash
 opensearch-benchmark run --workload=geonames --workload-params='{"number_of_shards": 3, "bulk_size": 5000}'
 ```
 {% include copy.html %}
 
-### Comma-separated key-value pairs
+### 以逗號分隔的鍵值組
 
-Use the following format to pass key-value pairs:
+使用下列格式傳遞鍵值組：
 
 ```bash
 opensearch-benchmark run --workload=geonames --workload-params="number_of_shards:3,bulk_size:5000"
 ```
 {% include copy.html %}
 
-The comma-separated format only supports string values. Use JSON file or inline JSON for numbers, Boolean values, or nested objects.
+以逗號分隔的格式僅支援字串值。若要使用數字、布林值或巢狀物件，請使用 JSON 檔案或內嵌 JSON。
 {: .note}
 
-## Parameter precedence
+## 參數優先順序
 
-When the same parameter is defined in multiple sources, OpenSearch Benchmark applies them in the following order (highest priority first):
+當同一個參數在多個來源中定義時，OpenSearch Benchmark 會依下列順序套用（優先順序由高至低）：
 
-1. **`--workload-params`** (CLI flag): Overrides all other values.
-1. **Workload template defaults**: Default values specified in `{% raw %}{{ var | default(value) }}{% endraw %}` expressions in the workload JSON files (for example, `{% raw %}{{ number_of_shards | default(1) }}{% endraw %}`).
-1. **Undefined**: If no default is specified and the parameter is not provided, OpenSearch Benchmark raises a template rendering error.
+1. **`--workload-params`**（CLI 旗標）：覆寫所有其他值。
+1. **工作負載範本預設值**：在工作負載 JSON 檔案中以 `{% raw %}{{ var | default(value) }}{% endraw %}` 運算式指定的預設值（例如 `{% raw %}{{ number_of_shards | default(1) }}{% endraw %}`）。
+1. **未定義**：如果未指定預設值，也未提供該參數，OpenSearch Benchmark 會引發範本轉譯錯誤。
 
-## Template syntax
+## 範本語法
 
-This section describes the most common template patterns used in workload files.
+本節說明工作負載檔案中最常用的範本模式。
 
-### Variable with a default value
+### 具有預設值的變數
 
-Use the `default` filter to specify a fallback value when a parameter is not provided. For example, if `bulk_size` is not provided in `--workload-params`, the expression evaluates to `5000`:
+使用 `default` 篩選器，指定未提供參數時要使用的備用值。例如，如果 `--workload-params` 中未提供 `bulk_size`，運算式的求值結果為 `5000`：
 
 ```json
 {% raw %}{{ bulk_size | default(5000) }}{% endraw %}
 ```
 {% include copy.html %}
 
-### Boolean values
+### 布林值
 
-Use the `tojson` filter for Boolean values to ensure correct JSON output. For example, the following expression evaluates to `false` (without quotation marks), not `"false"`:
+對布林值使用 `tojson` 篩選器，以確保 JSON 輸出正確。例如，下列運算式的求值結果為 `false`（不含引號），而非 `"false"`：
 
 ```json
 {% raw %}{{ query_cache_enabled | default(false) | tojson }}{% endraw %}
 ```
 {% include copy.html %}
 
-### String values
+### 字串值
 
-Wrap string variables in quotation marks:
+以引號括住字串變數：
 
 ```json
 {% raw %}"{{ conflicts | default('random') }}"{% endraw %}
 ```
 {% include copy.html %}
 
-### Conditional sections
+### 條件式區段
 
-Use `{% raw %}{% if %}{% endraw %}` blocks to include or exclude sections based on whether a parameter is defined or on the parameter value.
+使用 `{% raw %}{% if %}{% endraw %}` 區塊，根據參數是否已定義或參數的值，納入或排除區段。
 
-#### Including a field only when defined
+#### 僅在已定義時納入欄位
 
-The following template conditionally includes the `target-throughput` field. If `target_throughput` is not provided using `--workload-params`, the entire field is omitted from the rendered output:
+下列範本會有條件地納入 `target-throughput` 欄位。如果未使用 `--workload-params` 提供 `target_throughput`，轉譯輸出中會省略整個欄位：
 
 ```json
 {% raw %}{% if target_throughput is defined %}
@@ -125,10 +126,10 @@ The following template conditionally includes the `target-throughput` field. If 
 {% include copy.html %}
 
 <!-- vale off -->
-#### If/else for alternative values
+#### 使用 If/else 提供替代值
 <!-- vale on -->
 
-Use `{% raw %}{% else %}{% endraw %}` to provide a fallback. For example, if `use_zstd` is set to `true` in `--workload-params`, the rendered output sets the `source-file` parameter to `documents.json.zst`. Otherwise, it sets the `source-file` to `documents.json.bz2`:
+使用 `{% raw %}{% else %}{% endraw %}` 提供備用值。例如，如果在 `--workload-params` 中將 `use_zstd` 設為 `true`，轉譯輸出會將 `source-file` 參數設為 `documents.json.zst`；否則會將 `source-file` 設為 `documents.json.bz2`：
 
 ```json
 {% raw %}{% if use_zstd %}
@@ -139,9 +140,9 @@ Use `{% raw %}{% else %}{% endraw %}` to provide a fallback. For example, if `us
 ```
 {% include copy.html %}
 
-#### Conditionally adding index fields
+#### 有條件地新增索引欄位
 
-This pattern is commonly used to define optional fields in `vectorsearch` workload templates. The `{% raw %}{%- endif %}{% endraw %}` (with the dash) trims trailing white space and newline characters, preventing empty lines from appearing and avoiding invalid JSON formatting (such as trailing commas or misaligned structure):
+此模式常用於在 `vectorsearch` 工作負載範本中定義選用欄位。`{% raw %}{%- endif %}{% endraw %}`（含破折號）會修剪結尾的空白字元和換行字元，避免出現空白行，並防止產生無效的 JSON 格式（例如結尾逗號或結構錯位）：
 
 ```json
 "properties": {
@@ -158,9 +159,9 @@ This pattern is commonly used to define optional fields in `vectorsearch` worklo
 ```
 {% include copy.html %}
 
-#### Version-based conditionals
+#### 以版本為依據的條件式
 
-Some workloads adapt their behavior based on `distribution_version`, which OpenSearch Benchmark sets automatically according to the target cluster. This pattern allows a single workload to support multiple OpenSearch versions by conditionally including version-specific operations or settings:
+部分工作負載會根據 `distribution_version` 調整其行為，此值由 OpenSearch Benchmark 依據目標叢集自動設定。此模式可讓單一工作負載有條件地納入特定版本的操作或設定，藉此支援多個 OpenSearch 版本：
 
 ```json
 {% raw %}{% if distribution_version is not defined %}
@@ -173,9 +174,9 @@ Some workloads adapt their behavior based on `distribution_version`, which OpenS
 ```
 {% include copy.html %}
 
-#### For loops
+#### For 迴圈
 
-Use `{% raw %}{% for %}{% endraw %}` loops to generate repeated structures:
+使用 `{% raw %}{% for %}{% endraw %}` 迴圈產生重複的結構：
 
 ```json
 {% raw %}{% for i in range(1, 101) %}
@@ -188,33 +189,33 @@ Use `{% raw %}{% for %}{% endraw %}` loops to generate repeated structures:
 ```
 {% include copy.html %}
 
-### Integer conversion
+### 整數轉換
 
-Use the `int` filter when a parameter must be an integer:
+當參數必須為整數時，請使用 `int` 篩選器：
 
 ```json
 {% raw %}{{ target_index_dimension | default(768) | int }}{% endraw %}
 ```
 {% include copy.html %}
 
-### Including external files
+### 納入外部檔案
 
-Workloads are typically organized into multiple files for readability. The `{% raw %}{{ benchmark.collect }}{% endraw %}` helper composes a single workload definition from multiple JSON files at render time.
+為了提高可讀性，工作負載通常會分成多個檔案。`{% raw %}{{ benchmark.collect }}{% endraw %}` 輔助程式會在轉譯時，將多個 JSON 檔案組合成單一工作負載定義。
 
-#### Importing the helper
+#### 匯入輔助程式
 
-Every `workload.json` that uses `benchmark.collect` must import it at the top of the file:
+每個使用 `benchmark.collect` 的 `workload.json` 都必須在檔案開頭匯入該輔助程式：
 
 ```json
 {% raw %}{% import "benchmark.helpers" as benchmark with context %}{% endraw %}
 ```
 {% include copy.html %}
 
-The `with context` clause ensures that all workload parameters are available in the included files.
+`with context` 子句可確保所有工作負載參數都能在納入的檔案中使用。
 
-#### Collecting operations and test procedures
+#### 收集操作與測試程序
 
-A typical `workload.json` delegates its operations and test procedures to separate files:
+典型的 `workload.json` 會將其操作和測試程序委派給個別的檔案：
 
 ```json
 {% raw %}{% import "benchmark.helpers" as benchmark with context %}{% endraw %}
@@ -233,11 +234,11 @@ A typical `workload.json` delegates its operations and test procedures to separa
 ```
 {% include copy.html %}
 
-The `parts` argument accepts glob patterns. The pattern `operations/*.json` matches all JSON files in the `operations/` directory and includes their contents, separated by commas. This keeps the main `workload.json` concise while the operation and test procedure definitions are defined in separate files.
+`parts` 引數接受 glob 模式。模式 `operations/*.json` 會比對 `operations/` 目錄中的所有 JSON 檔案，並納入其內容，以逗號分隔。如此一來，主要的 `workload.json` 能保持簡潔，而操作與測試程序的定義則放在個別的檔案中。
 
-#### Composing schedules from shared parts
+#### 以共用部分組成排程
 
-Test procedures can reuse common schedule fragments. For example, the `vectorsearch` workload has shared schedules under `test_procedures/common/`:
+測試程序可以重複使用通用的排程片段。例如，`vectorsearch` 工作負載在 `test_procedures/common/` 下有共用的排程：
 
 ```
 test_procedures/
@@ -250,7 +251,7 @@ test_procedures/
 ```
 {% include copy.html %}
 
-A test procedure in `default.json` composes its schedule from these parts:
+`default.json` 中的測試程序會以這些部分組成其排程：
 
 ```json
 {
@@ -265,11 +266,11 @@ A test procedure in `default.json` composes its schedule from these parts:
 ```
 {% include copy.html %}
 
-Each collected file contains one or more schedule entries. Parameters such as `{% raw %}{{ target_index_name }}{% endraw %}` in those files are resolved from the same `--workload-params` passed on the command line because the `with context` import propagates all parameters to the included files.
+每個收集的檔案都包含一或多個排程項目。這些檔案中的參數（例如 `{% raw %}{{ target_index_name }}{% endraw %}`）會從命令列上傳入的同一個 `--workload-params` 解析，因為 `with context` 匯入會將所有參數傳遞給所包含的檔案。
 
-#### Index body files
+#### 索引本文的檔案
 
-The `body` field in an index definition references a separate JSON file for mappings and settings:
+索引定義中的 `body` 欄位會參照一個獨立的 JSON 檔案，用於對應和設定：
 
 ```json
 "indices": [
@@ -281,7 +282,7 @@ The `body` field in an index definition references a separate JSON file for mapp
 ```
 {% include copy.html %}
 
-The `index.json` file is a Jinja2 template like any other workload file, so it can use parameters:
+`index.json` 檔案與其他工作負載檔案一樣是 Jinja2 範本，因此可以使用參數：
 
 ```json
 {
@@ -293,67 +294,67 @@ The `index.json` file is a Jinja2 template like any other workload file, so it c
 ```
 {% include copy.html %}
 
-## Discovering available parameters
+## 探索可用的參數
 
-To view the parameters supported by a workload, use the `info` command. This command lists the workload's test procedures along with their configurable parameters and default values:
+若要檢視工作負載支援的參數，請使用 `info` 命令。此命令會列出工作負載的測試程序，以及其可設定的參數和預設值：
 
 ```bash
 opensearch-benchmark info --workload=geonames
 ```
 {% include copy.html %}
 
-You can also inspect the workload source directly. Parameters appear as `{% raw %}{{ variable_name | default(value) }}{% endraw %}` in workload JSON files. The main workload files are the following:
+您也可以直接檢查工作負載的原始碼。參數在工作負載 JSON 檔案中以 `{% raw %}{{ variable_name | default(value) }}{% endraw %}` 的形式出現。主要的工作負載檔案如下：
 
-- `workload.json` -- The top-level workload definition.
-- `index.json` -- The index settings and mappings.
-- `test_procedures/default.json` -- The test procedure schedules.
-- `_operations/default.json` -- The operation definitions.
+- `workload.json` -- 最上層的工作負載定義。
+- `index.json` -- 索引設定和對應。
+- `test_procedures/default.json` -- 測試程序排程。
+- `_operations/default.json` -- 操作定義。
 
-## Common parameters
+## 常用參數
 
-The following parameters are supported by most official workloads.
+大多數官方工作負載都支援下列參數。
 
-| Parameter | Description | Default |
+| 參數 | 說明 | 預設值 |
 |-----------|-------------|-----------------|
-| `number_of_shards` | The primary shard count for created indexes. | `1` |
-| `number_of_replicas` | The replica count for created indexes. | `0` |
-| `bulk_size` | The number of documents per bulk request. | `5000` or `10000` |
-| `bulk_indexing_clients` | The number of concurrent bulk indexing clients. | `8` |
-| `ingest_percentage` | The percentage of the document corpus to ingest. | `100` |
-| `target_throughput` | The target number of operations per second per client. | Unthrottled |
-| `search_clients` | The number of concurrent search clients. | `1` |
-| `cluster_health` | The required cluster health status before proceeding. | `green` |
-| `source_enabled` | Whether to store the `_source` field. | `true` |
+| `number_of_shards` | 所建立索引的主要分片數量。 | `1` |
+| `number_of_replicas` | 所建立索引的副本數量。 | `0` |
+| `bulk_size` | 每個大量請求的文件數量。 | `5000` 或 `10000` |
+| `bulk_indexing_clients` | 並行大量編製索引用戶端的數量。 | `8` |
+| `ingest_percentage` | 要匯入的文件語料庫百分比。 | `100` |
+| `target_throughput` | 每個用戶端每秒的目標操作次數。 | 不限速 |
+| `search_clients` | 並行搜尋用戶端的數量。 | `1` |
+| `cluster_health` | 繼續進行前所需的叢集健康狀態。 | `green` |
+| `source_enabled` | 是否儲存 `_source` 欄位。 | `true` |
 
-## Vector search workload parameters
+## 向量搜尋工作負載參數
 
-The `vectorsearch` workload supports additional parameters for vector search benchmarking.
+`vectorsearch` 工作負載支援用於向量搜尋基準測試的其他參數。
 
-| Parameter | Description | Default |
+| 參數 | 說明 | 預設值 |
 |-----------|-------------|---------|
-| `target_index_name` | The vector index name. | `target_index` |
-| `target_field_name` | The vector field name.| `target_field` |
-| `target_index_dimension` | The number of vector dimensions. | `768` |
-| `target_index_space_type` | The distance metric. Valid values are `l2`, `innerproduct`, and `cosinesimil`. | Varies |
-| `target_index_body` | The path to index settings file. | `indices/faiss-index.json` |
-| `target_index_bulk_size` | The number of documents per bulk request. | `500` |
-| `target_index_bulk_index_data_set_format` | The corpus format. Valid values are `hdf5` and `bigann`. | `hdf5` |
-| `target_index_bulk_index_data_set_corpus` | The corpus name (for example, `cohere-1m`). | Varies |
-| `target_index_bulk_indexing_clients` | The number of concurrent indexing clients. | `10` |
-| `target_index_max_num_segments` | The number of segments after force merge. | `1` |
-| `hnsw_ef_construction` | The HNSW graph build-time exploration factor. | `256` |
-| `hnsw_ef_search` | The HNSW search-time exploration factor. | `256` |
-| `query_k` | The number of nearest neighbors to retrieve. | `100` |
-| `query_count` | The number of queries to run. Use `-1` for all queries. | `-1` |
-| `query_data_set_format` | The query vector format. Valid values are `hdf5` and `bigann`. | `hdf5` |
-| `query_data_set_corpus` | The query vector corpus name. | Varies |
-| `search_clients` | The number of concurrent search clients. | `1` |
-| `neighbors_data_set_corpus` | The ground-truth neighbors corpus used for recall evaluation.| Varies |
-| `neighbors_data_set_format` | The neighbors dataset format. | `hdf5` |
+| `target_index_name` | 向量索引名稱。 | `target_index` |
+| `target_field_name` | 向量欄位名稱。| `target_field` |
+| `target_index_dimension` | 向量維度數量。 | `768` |
+| `target_index_space_type` | 距離度量。有效值為 `l2`、`innerproduct` 和 `cosinesimil`。 | 視情況而定 |
+| `target_index_body` | 索引設定檔案的路徑。 | `indices/faiss-index.json` |
+| `target_index_bulk_size` | 每個大量請求的文件數量。 | `500` |
+| `target_index_bulk_index_data_set_format` | 語料庫格式。有效值為 `hdf5` 和 `bigann`。 | `hdf5` |
+| `target_index_bulk_index_data_set_corpus` | 語料庫名稱（例如 `cohere-1m`）。 | 視情況而定 |
+| `target_index_bulk_indexing_clients` | 並行編製索引用戶端的數量。 | `10` |
+| `target_index_max_num_segments` | 強制合併後的區段數量。 | `1` |
+| `hnsw_ef_construction` | HNSW 圖形建置時的探索因子。 | `256` |
+| `hnsw_ef_search` | HNSW 搜尋時的探索因子。 | `256` |
+| `query_k` | 要擷取的最近鄰數量。 | `100` |
+| `query_count` | 要執行的查詢數量。使用 `-1` 表示所有查詢。 | `-1` |
+| `query_data_set_format` | 查詢向量格式。有效值為 `hdf5` 和 `bigann`。 | `hdf5` |
+| `query_data_set_corpus` | 查詢向量語料庫名稱。 | 視情況而定 |
+| `search_clients` | 並行搜尋用戶端的數量。 | `1` |
+| `neighbors_data_set_corpus` | 用於召回率評估的真實鄰居語料庫。| 視情況而定 |
+| `neighbors_data_set_format` | 鄰居資料集格式。 | `hdf5` |
 
-### Example vector search parameter file
+### 向量搜尋參數檔案範例
 
-The following example shows a complete parameter file for a `vectorsearch` workload:
+以下範例顯示 `vectorsearch` 工作負載的完整參數檔案：
 
 ```json
 {
@@ -382,7 +383,7 @@ The following example shows a complete parameter file for a `vectorsearch` workl
 ```
 {% include copy.html %}
 
-To use this parameter file, save it as `params.json` and run the benchmark with the `--workload-params` flag:
+若要使用此參數檔案，請將其儲存為 `params.json`，並使用 `--workload-params` 旗標執行基準測試：
 
 ```bash
 opensearch-benchmark run \

@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Keyword repeat
+title: "關鍵字重複"
 parent: Token filters
 nav_order: 210
 ---
 
-# Keyword repeat token filter
+# 關鍵字重複詞元篩選器
 
-The `keyword_repeat` token filter emits the keyword version of a token into a token stream. This filter is typically used when you want to retain both the original token and its modified version after further token transformations, such as stemming or synonym expansion. The duplicated tokens allow the original, unchanged version of the token to remain in the final analysis alongside the modified versions.
+`keyword_repeat` 詞元篩選器會將詞元的關鍵字版本輸出至詞元串流中。當您希望在進一步的詞元轉換（例如詞幹提取或同義詞擴充）之後，同時保留原始詞元及其修改後的版本時，通常會使用此篩選器。重複的詞元可讓未經變更的原始詞元版本，與修改後的版本一同保留在最終分析結果中。
 
-The `keyword_repeat` token filter should be placed before stemming filters. Stemming is not applied to every token, thus you may have duplicate tokens in the same position after stemming. To remove duplicate tokens, use the `remove_duplicates` token filter after the stemmer.
+`keyword_repeat` 詞元篩選器應放置在詞幹提取篩選器之前。詞幹提取並不會套用至每個詞元，因此在詞幹提取之後，同一位置可能會出現重複的詞元。若要移除重複的詞元，請在詞幹提取器之後使用 `remove_duplicates` 詞元篩選器。
 {: .note} 
 
 
-## Example
+## 範例
 
-The following example request creates a new index named `my_index` and configures an analyzer with a `keyword_repeat` filter:
+下列範例請求會建立名為 `my_index` 的新索引，並設定含有 `keyword_repeat` 篩選器的分析器：
 
 ```json
 PUT /my_index
@@ -47,9 +48,9 @@ PUT /my_index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用該分析器所產生的詞元：
 
 ```json
 POST /my_index/_analyze
@@ -60,7 +61,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {
@@ -97,7 +98,7 @@ The response contains the generated tokens:
 }
 ```
 
-You can further examine the impact of the `keyword_repeat` token filter by adding the following parameters to the `_analyze` query:
+您可以在 `_analyze` 查詢中加入下列參數，以進一步檢查 `keyword_repeat` 詞元篩選器的影響：
 
 ```json
 POST /my_index/_analyze
@@ -110,7 +111,7 @@ POST /my_index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response includes detailed information, such as tokenization, filtering, and the application of specific token filters:
+回應中包含詳細資訊，例如斷詞、篩選，以及特定詞元篩選器的套用情形：
 
 ```json
 {

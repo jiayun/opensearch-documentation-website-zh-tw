@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Building data visualizations
+title: "建立資料視覺化"
 nav_order: 60
 has_children: true
 has_toc: false
@@ -9,45 +10,45 @@ redirect_from:
   - /dashboards/visualize/gantt/
 ---
 
-# Building data visualizations
+# 建立資料視覺化
 
-OpenSearch Dashboards provides two approaches for creating data visualizations: building visualizations visually and building visualizations using queries. Both produce charts that you can save and add to dashboards.
+OpenSearch Dashboards 提供兩種建立資料視覺化的方式：以視覺化方式建立視覺化，以及使用查詢建立視覺化。兩種方式產生的圖表都可以儲存並新增至儀表板。
 
-## Choosing a visualization approach
+## 選擇視覺化方式
 
-When you select **Create new** in a dashboard (or **Create new visualization** in the **Visualize** app), a dialog presents the available visualization types. The first option, **Add visualization**, opens the query-based visualization editor. All other options (such as **Area**, **Line**, or **Pie**) open the visual point-and-click tool.
+當您在儀表板中選取 **Create new**（或在 **Visualize** 應用程式中選取 **Create new visualization**）時，會出現一個對話方塊，列出可用的視覺化類型。第一個選項 **Add visualization** 會開啟以查詢為基礎的視覺化編輯器。其他所有選項（例如 **Area**、**Line** 或 **Pie**）則會開啟點選式的視覺化工具。
 
-The following table compares the two approaches. *Italicized* visualization types are unique to that approach.
+下表比較這兩種方式。以*斜體*標示的視覺化類型為該方式所獨有。
 
-If you're getting started, use the **Visualize** application to build visualizations visually---it's available by default in all installations. Building visualizations using queries requires additional configuration and PPL or PromQL knowledge.
+如果您剛開始使用，請使用 **Visualize** 應用程式以視覺化方式建立視覺化——所有安裝環境預設皆提供此應用程式。使用查詢建立視覺化則需要額外的組態，以及 PPL 或 PromQL 的相關知識。
 {: .tip}
 
-| | Creating visualizations in the Visualize application | Creating visualizations using queries |
+| | 在 Visualize 應用程式中建立視覺化 | 使用查詢建立視覺化 |
 | :--- | :--- | :--- |
-| **Entry point** | In the **Create new** dialog, select a chart type (Area, Line, Pie, and others) | In the **Create new** dialog, select **Add visualization** |
-| **Configuration** | Configure metrics and buckets using point-and-click panels. Use DQL in the search bar to filter data. | Write Piped Processing Language (PPL) or Prometheus Query Language (PromQL) queries to define the data. The editor automatically suggests a chart type. |
-| **Visualization types** | - Area<br>- Bar<br>- *Coordinate map*<br>- *Data table*<br>- Gauge<br>- Heatmap<br>- Line<br>- *Metric*<br>- Pie<br>- *Region map*<br>- *Tag cloud*<br>- *Timeline*<br>- *TSVB*<br>- *Vega*<br>- *VisBuilder* | - Area<br>- Bar<br>- *Bar gauge*<br>- Gauge<br>- Heatmap<br>- Line<br>- Pie<br>- *Scatter*<br>- *State timeline* |
-| **Prerequisites** | None (available by default in all installations) | Requires `workspace.enabled: true` and `explore.enabled: true` in `opensearch_dashboards.yml`. If these settings are not enabled by your administrator, the visualization editor is not available. |
-| **Best for** | Aggregation-based analysis without writing queries | Query-driven exploration where you need precise control over data shaping |
-| **Application** | [**Visualize** application]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/) | [Visualization editor]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/) |
+| **進入點** | 在 **Create new** 對話方塊中，選取圖表類型（Area、Line、Pie 等） | 在 **Create new** 對話方塊中，選取 **Add visualization** |
+| **組態** | 使用點選式面板設定指標和桶 (bucket)。在搜尋列中使用 DQL 篩選資料。 | 撰寫 Piped Processing Language (PPL) 或 Prometheus Query Language (PromQL) 查詢來定義資料。編輯器會自動建議圖表類型。 |
+| **視覺化類型** | - Area<br>- Bar<br>- *Coordinate map*<br>- *Data table*<br>- Gauge<br>- Heatmap<br>- Line<br>- *Metric*<br>- Pie<br>- *Region map*<br>- *Tag cloud*<br>- *Timeline*<br>- *TSVB*<br>- *Vega*<br>- *VisBuilder* | - Area<br>- Bar<br>- *Bar gauge*<br>- Gauge<br>- Heatmap<br>- Line<br>- Pie<br>- *Scatter*<br>- *State timeline* |
+| **先決條件** | 無（所有安裝環境預設皆提供） | 需要在 `opensearch_dashboards.yml` 中設定 `workspace.enabled: true` 和 `explore.enabled: true`。如果您的管理員未啟用這些設定，則無法使用視覺化編輯器。 |
+| **最適用於** | 無需撰寫查詢的彙總式分析 | 需要精確控制資料形塑方式的查詢導向探索 |
+| **應用程式** | [**Visualize** 應用程式]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/) | [視覺化編輯器]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/) |
 
-## Creating visualizations in the Visualize application
+## 在 Visualize 應用程式中建立視覺化
 
-The **Visualize** application uses a point-and-click interface to build visualizations from aggregations. Select a chart type, choose an index pattern, configure metrics and buckets, and render the result, as shown in the following image. Use the [DQL]({{site.url}}{{site.baseurl}}/dashboards/dql/) search bar to filter the underlying data.
+**Visualize** 應用程式使用點選式介面，從彙總建立視覺化。選取圖表類型、選擇索引模式、設定指標和桶，然後呈現結果，如下圖所示。使用 [DQL]({{site.url}}{{site.baseurl}}/dashboards/dql/) 搜尋列篩選基礎資料。
 
-![Visualize application showing a line chart with point-and-click configuration panels]({{site.url}}{{site.baseurl}}/images/dashboards/visualize-app-example.png)
+![Visualize 應用程式顯示折線圖及點選式組態面板]({{site.url}}{{site.baseurl}}/images/dashboards/visualize-app-example.png)
 
-For more information, see [Creating visualizations in the Visualize application]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/).
+如需詳細資訊，請參閱[在 Visualize 應用程式中建立視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/)。
 
-## Creating visualizations using queries
+## 使用查詢建立視覺化
 
-The visualization editor lets you write PPL or PromQL queries and map query results directly to chart fields. The editor automatically suggests a chart type based on the shape of your query results and maps fields to axes, as shown in the following image. This approach supports [dashboard variables]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/) for interactive filtering.
+視覺化編輯器可讓您撰寫 PPL 或 PromQL 查詢，並將查詢結果直接對應至圖表欄位。編輯器會根據查詢結果的結構自動建議圖表類型，並將欄位對應至座標軸，如下圖所示。此方式支援[儀表板變數]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/)，可進行互動式篩選。
 
-![Visualization editor showing a multi-line chart built from a PPL query with dashboard variables]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/visualization-editor-example.png)
+![視覺化編輯器顯示以 PPL 查詢和儀表板變數建立的多線折線圖]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/visualization-editor-example.png)
 
-For more information, see [Creating visualizations using queries]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/).
+如需詳細資訊，請參閱[使用查詢建立視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/)。
 
-## Related documentation
+## 相關文件
 
-- [Exploring data with Discover]({{site.url}}{{site.baseurl}}/dashboards/discover/index-discover/)
-- [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)
+- [使用 Discover 探索資料]({{site.url}}{{site.baseurl}}/dashboards/discover/index-discover/)
+- [建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)

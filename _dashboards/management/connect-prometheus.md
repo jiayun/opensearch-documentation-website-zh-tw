@@ -1,53 +1,54 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Connecting Prometheus to OpenSearch
+title: "將 Prometheus 連接至 OpenSearch"
 parent: Connecting data sources
 nav_order: 60
 ---
 
-# Connecting Prometheus to OpenSearch
-Introduced 2.16
+# 將 Prometheus 連接至 OpenSearch
+於 2.16 版引入
 {: .label .label-purple }
 
-This documentation covers the key steps to connect Prometheus to OpenSearch using the OpenSearch Dashboards interface, including setting up the data source connection, modifying the connection details, and creating an index pattern for the Prometheus data. 
+本文件說明如何使用 OpenSearch Dashboards 介面將 Prometheus 連接至 OpenSearch 的主要步驟，包括設定資料來源連線、修改連線詳細資料，以及為 Prometheus 資料建立索引模式。
 
-## Prerequisites and permissions
+## 先決條件與權限
 
-Before connecting a data source, ensure you have met the [Prerequisites]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/#prerequisites) and have the necessary [Permissions]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/#permissions).
+連接資料來源之前，請確認您已符合[先決條件]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/#prerequisites)並具備必要的[權限]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/#permissions)。
 
-## Create a Prometheus data source connection
+## 建立 Prometheus 資料來源連線
 
-A data source connection specifies the parameters needed to connect to a data source. These parameters form a connection string for the data source. Using OpenSearch Dashboards, you can add new **Prometheus** data source connections or manage existing ones.
+資料來源連線會指定連接至資料來源所需的參數。這些參數會組成該資料來源的連線字串。您可以使用 OpenSearch Dashboards 新增 **Prometheus** 資料來源連線，或管理現有的連線。
 
-Follow these steps to connect your data source:
+請依照下列步驟連接您的資料來源：
 
-1. From the OpenSearch Dashboards main menu, go to **Management** > **Data sources** > **New data source** > **Prometheus**. 
+1. 在 OpenSearch Dashboards 主選單中，前往 **Management** > **Data sources** > **New data source** > **Prometheus**。
 
-2. From the **Configure Prometheus data source** section: 
+2. 在 **Configure Prometheus data source** 區段中：
    
-   - Under **Data source details**, provide a title and optional description.
-   - Under **Prometheus data location**, enter the Prometheus URI.
-   - Under **Authentication details**, select the appropriate authentication method from the dropdown list and enter the required details:
-       - **Basic authentication**: Enter a username and password.
-       - **AWS Signature Version 4**: Specify the **Region**, select the OpenSearch service from the **Service Name** list (**Amazon OpenSearch Service** or **Amazon OpenSearch Serverless**), and enter the **Access Key** and **Secret Key**.
-   - Under **Query permissions**, choose the role needed to search and index data. If you select **Restricted**, an additional field will become available to configure the required role.
+   - 在 **Data source details** 下，提供標題及選用的描述。
+   - 在 **Prometheus data location** 下，輸入 Prometheus URI。
+   - 在 **Authentication details** 下，從下拉式清單中選取適當的驗證方法，並輸入必要的詳細資料：
+       - **Basic authentication**：輸入使用者名稱和密碼。
+       - **AWS Signature Version 4**：指定 **Region**，從 **Service Name** 清單中選取 OpenSearch 服務（**Amazon OpenSearch Service** 或 **Amazon OpenSearch Serverless**），然後輸入 **Access Key** 和 **Secret Key**。
+   - 在 **Query permissions** 下，選擇搜尋資料及將資料編製索引所需的角色。如果您選取 **Restricted**，將會出現一個額外的欄位，供您設定所需的角色。
 
-3. Select **Review Configuration** > **Connect to Prometheus** to save your settings. The new connection will appear in the list of data sources.
+3. 選取 **Review Configuration** > **Connect to Prometheus** 以儲存您的設定。新的連線將會出現在資料來源清單中。
 
-## Modify a data source connection
+## 修改資料來源連線
 
-To modify a data source connection, follow these steps: 
+若要修改資料來源連線，請依照下列步驟操作：
 
-1. Select the desired connection from the list on the **Data sources** main page. This will open the **Connection Details** window.
-2. Within the **Connection Details** window, edit the **Title** and **Description** fields. Select the **Save changes** button to apply the changes.
-3. To update the **Authentication Method**, choose the method from the dropdown list and enter any necessary credentials. Select **Save changes** to apply the changes.
-    - To update the **Basic authentication** authentication method, select the **Update stored password** button. Within the pop-up window, enter the updated password and confirm it and select **Update stored password** to save the changes. To test the connection, select the **Test connection** button.
-    - To update the **AWS Signature Version 4** authentication method, select the **Update stored AWS credential** button. Within the pop-up window, enter the updated access and secret keys and select **Update stored AWS credential** to save the changes. To test the connection, select the **Test connection** button.
+1. 在 **Data sources** 主頁面的清單中選取所需的連線。這會開啟 **Connection Details** 視窗。
+2. 在 **Connection Details** 視窗中，編輯 **Title** 和 **Description** 欄位。選取 **Save changes** 按鈕以套用變更。
+3. 若要更新 **Authentication Method**，請從下拉式清單中選擇方法，並輸入任何必要的憑證資訊。選取 **Save changes** 以套用變更。
+    - 若要更新 **Basic authentication** 驗證方法，請選取 **Update stored password** 按鈕。在快顯視窗中輸入更新後的密碼並加以確認，然後選取 **Update stored password** 以儲存變更。若要測試連線，請選取 **Test connection** 按鈕。
+    - 若要更新 **AWS Signature Version 4** 驗證方法，請選取 **Update stored AWS credential** 按鈕。在快顯視窗中輸入更新後的存取金鑰和秘密金鑰，然後選取 **Update stored AWS credential** 以儲存變更。若要測試連線，請選取 **Test connection** 按鈕。
 
-## Delete a data source connection
+## 刪除資料來源連線
 
-To delete the data source connection, select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards/trash-can-icon.png" class="inline-icon" alt="delete icon"/>{:/} (delete) icon.
+若要刪除資料來源連線，請選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards/trash-can-icon.png" class="inline-icon" alt="delete icon"/>{:/}（刪除）圖示。
 
-## Create an index pattern
+## 建立索引模式
 
-After creating a data source connection, the next step is to create an index pattern for that data source. For more information and a tutorial on index patterns, refer to [Index patterns]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/). 
+建立資料來源連線之後，下一步是為該資料來源建立索引模式。如需索引模式的詳細資訊和教學，請參閱[索引模式]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/)。 

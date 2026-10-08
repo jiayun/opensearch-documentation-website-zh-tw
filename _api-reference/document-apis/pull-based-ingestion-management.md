@@ -1,46 +1,47 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Pull-based ingestion management
+title: "提取式資料匯入管理"
 parent: Pull-based ingestion
 grand_parent: Document APIs
 has_children: false
 nav_order: 10
 ---
 
-# Pull-based Ingestion Management API
-**Introduced 3.0**
+# 提取式資料匯入管理 API
+**於 3.0 版推出**
 {: .label .label-purple }
 
-OpenSearch provides the following APIs to manage pull-based ingestion.
+OpenSearch 提供下列 API 來管理提取式資料匯入。
 
-## Pause ingestion
+## 暫停資料匯入
 
-Pauses ingestion for one or more indexes. When paused, OpenSearch stops consuming data from the streaming source for all shards in the specified indexes.
+暫停一或多個索引的資料匯入。暫停時，OpenSearch 會停止從串流來源取用指定索引中所有分片的資料。
 
-### Endpoint
+### 端點
 
 ```json
 POST /{index}/ingestion/_pause
 ```
 
-### Path parameters
+### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required/Optional | Description |
+| 參數 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `index` | String | Required | The index to pause. Can be a comma-separated list of multiple index names. |
+| `index` | String | 必要 | 要暫停的索引。可為以逗號分隔的多個索引名稱清單。 |
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- | 
-| `cluster_manager_timeout` | Time units | The amount of time to wait for a connection to the cluster manager node. Default is `30s`. |
-| `timeout` | Time units | The amount of time to wait for a response from the cluster. Default is `30s`. |
+| `cluster_manager_timeout` | Time units | 等待連線至叢集管理員節點的時間長度。預設為 `30s`。 |
+| `timeout` | Time units | 等待叢集回應的時間長度。預設為 `30s`。 |
 
-### Example request
+### 範例請求
 
 <!-- spec_insert_start
 component: example_code
@@ -64,49 +65,49 @@ response = client.ingestion.pause(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Resume ingestion
+## 繼續資料匯入
 
-Resumes ingestion for one or more indexes. When resumed, OpenSearch continues consuming data from the streaming source for all shards in the specified indexes.
+繼續一或多個索引的資料匯入。繼續時，OpenSearch 會繼續從串流來源取用指定索引中所有分片的資料。
 
-As part of the resume operation, you can optionally reset the stream consumer to start reading from a specific offset or timestamp. If reset settings are specified, all consumers for the selected shards are reset before the resume operation is applied to the index. Resetting a consumer also triggers an internal flush to persist the changes.
+在繼續作業中，您可以選擇性地重設串流消費者，使其從特定的位移量或時間戳記開始讀取。若指定了重設設定，則在對索引套用繼續作業之前，會先重設所選分片的所有消費者。重設消費者也會觸發內部重新整理，以保存變更。
 
-### Endpoint
+### 端點
 
 ```json
 POST /{index}/ingestion/_resume
 ```
 
-### Path parameters
+### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required/Optional | Description |
+| 參數 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `index` | String | Required | The index to resume ingestion for. Can be a comma-separated list of multiple index names. |
+| `index` | String | 必要 | 要繼續資料匯入的索引。可為以逗號分隔的多個索引名稱清單。 |
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type |  Description |
+| 參數 | 資料類型 |  說明 |
 | :--- | :--- | :--- | :--- |
-| `cluster_manager_timeout` | Time units | The amount of time to wait for a connection to the cluster manager node. Default is `30s`. |
-| `timeout` | Time units | The amount of time to wait for a response from the cluster. Default is `30s`. |
+| `cluster_manager_timeout` | Time units | 等待連線至叢集管理員節點的時間長度。預設為 `30s`。 |
+| `timeout` | Time units | 等待叢集回應的時間長度。預設為 `30s`。 |
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Required/Optional | Description |
+| 欄位 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `reset_settings` | Array | Optional | A list of reset settings for each shard. If not provided, OpenSearch resumes ingestion from the current position for each shard in the specified index. |
-| `reset_settings.shard` | Integer | Required | The shard to reset. |
-| `reset_settings.mode` | String | Required | The reset mode. Valid values are `offset` (a positive integer offset) and `timestamp` (a Unix timestamp in milliseconds). |
-| `reset_settings.value` | String | Required | &ensp;&#x2022; `offset`: The Apache Kafka offset or Amazon Kinesis sequence number<br>&ensp;&#x2022; `timestamp`: A Unix timestamp in milliseconds. |
+| `reset_settings` | Array | 選用 | 每個分片的重設設定清單。若未提供，OpenSearch 會從指定索引中每個分片的目前位置繼續資料匯入。 |
+| `reset_settings.shard` | Integer | 必要 | 要重設的分片。 |
+| `reset_settings.mode` | String | 必要 | 重設模式。有效值為 `offset` (正整數位移量) 與 `timestamp` (以毫秒為單位的 Unix 時間戳記)。 |
+| `reset_settings.value` | String | 必要 | &ensp;&#x2022; `offset`：Apache Kafka 位移量或 Amazon Kinesis 序號<br>&ensp;&#x2022; `timestamp`：以毫秒為單位的 Unix 時間戳記。 |
 
-### Example request
+### 範例請求
 
-To resume ingestion without specifying reset settings, send the following request:
+若要在不指定重設設定的情況下繼續資料匯入，請傳送下列請求：
 
 <!-- spec_insert_start
 component: example_code
@@ -131,7 +132,7 @@ response = client.ingestion.resume(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To provide reset settings when resuming ingestion, send the following request:
+若要在繼續資料匯入時提供重設設定，請傳送下列請求：
 
 <!-- spec_insert_start
 component: example_code
@@ -183,35 +184,35 @@ response = client.ingestion.resume(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Get ingestion state
+## 取得資料匯入狀態
 
-Returns the current ingestion state for one or more indexes. This API supports pagination.
+傳回一或多個索引目前的資料匯入狀態。此 API 支援分頁。
 
-### Endpoint
+### 端點
 
 ```json
 GET /{index}/ingestion/_state
 ```
 
-### Path parameters
+### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required/Optional | Description |
+| 參數 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `index` | String | Required | The index for which to return the ingestion state. Can be a comma-separated list of multiple index names. |
+| `index` | String | 必要 | 要傳回資料匯入狀態的索引。可為以逗號分隔的多個索引名稱清單。 |
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `timeout` | Time units | The amount of time to wait for a response from the cluster. Default is `30s`. |
+| `timeout` | Time units | 等待叢集回應的時間長度。預設為 `30s`。 |
 
-### Example request
+### 範例請求
 
-The following is a request with the default settings:
+以下是使用預設設定的請求：
 
 <!-- spec_insert_start
 component: example_code
@@ -235,7 +236,7 @@ response = client.ingestion.get_state(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The following example shows a request with a page size of 20:
+下列範例顯示頁面大小為 20 的請求：
 
 <!-- spec_insert_start
 component: example_code
@@ -260,7 +261,7 @@ response = client.ingestion.get_state(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The following example shows a request with a next page token:
+下列範例顯示帶有下一頁權杖的請求：
 
 <!-- spec_insert_start
 component: example_code
@@ -285,7 +286,7 @@ response = client.ingestion.get_state(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Example response
+### 範例回應
 
 ```json
 {

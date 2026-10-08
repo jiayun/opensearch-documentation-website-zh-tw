@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cancel tasks
+title: "取消任務"
 parent: Tasks APIs
 nav_order: 40
 ---
 
 # Cancel Tasks API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Cancel Tasks API cancels a task, stopping it from running in the cluster. Not all tasks can be canceled. To determine whether a task is cancelable, check the `cancellable` field in the Cancel Tasks API response.
+Cancel Tasks API 會取消任務，使其停止在叢集中執行。並非所有任務都可以取消。若要判斷任務是否可取消，請檢查 Cancel Tasks API 回應中的 `cancellable` 欄位。
 
 
 <!-- spec_insert_start
 api: tasks.cancel
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 POST /_tasks/_cancel
 POST /_tasks/{task_id}/_cancel
@@ -27,13 +28,13 @@ POST /_tasks/{task_id}/_cancel
 api: tasks.cancel
 component: path_parameters
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `task_id` | String | The task ID. |
+| `task_id` | String | 任務 ID。 |
 
 <!-- spec_insert_end -->
 
@@ -41,22 +42,22 @@ The following table lists the available path parameters. All path parameters are
 api: tasks.cancel
 component: query_parameters
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `actions` | List or String | A comma-separated list of actions that should be returned. Keep empty to return all. |
-| `nodes` | List | A comma-separated list of node IDs or names used to limit the returned information. Use `_local` to return information from the node you're connecting to, specify the node name to get information from a specific node, or keep the parameter empty to get information from all nodes. |
-| `parent_task_id` | String | Returns tasks with a specified parent task ID (`node_id:task_number`). Keep empty or set to -1 to return all. |
-| `wait_for_completion` | Boolean | Waits for the matching task to complete. When `true`, the request is blocked until the task has completed. _(Default: `false`)_ |
+| `actions` | List 或 String | 以逗號分隔的動作清單，指定應傳回的動作。保留空白即可傳回全部。 |
+| `nodes` | List | 以逗號分隔的節點 ID 或名稱清單，用於限制傳回的資訊。使用 `_local` 可傳回您所連線節點的資訊；指定節點名稱可取得特定節點的資訊；保留此參數空白則可取得所有節點的資訊。 |
+| `parent_task_id` | String | 傳回具有指定父任務 ID（`node_id:task_number`）的任務。保留空白或設為 -1 即可傳回全部。 |
+| `wait_for_completion` | Boolean | 等待相符的任務完成。設為 `true` 時，請求會持續等待，直到任務完成為止。_（預設值：`false`）_ |
 
 <!-- spec_insert_end -->
 
-## Example request
+## 範例請求
 
-The following request cancels any tasks currently running on `opensearch-node1` and `opensearch-node2`:
+下列請求會取消目前在 `opensearch-node1` 和 `opensearch-node2` 上執行的所有任務：
 
 <!-- spec_insert_start
 component: example_code
@@ -80,9 +81,9 @@ response = client.tasks.cancel(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-The following response shows that a bulk write and update task were canceled without a node failure and provides additional information about the canceled tasks:
+下列回應顯示，一個批次寫入任務和一個更新任務已在沒有節點失敗的情況下取消，並提供已取消任務的其他資訊：
 
 ```json
 {
@@ -146,6 +147,6 @@ The following response shows that a bulk write and update task were canceled wit
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/tasks/cancel`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:admin/tasks/cancel`。

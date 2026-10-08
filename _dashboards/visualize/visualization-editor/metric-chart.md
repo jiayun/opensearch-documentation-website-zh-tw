@@ -1,80 +1,81 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Metric chart
+title: "指標圖表"
 parent: Visualization types
 grand_parent: Creating visualizations using queries
 great_grand_parent: Building data visualizations
 nav_order: 45
 ---
 
-# Metric charts in the visualization editor
+# 視覺化編輯器中的指標圖表
 
-A metric chart displays a single numeric value prominently. Use a metric chart to show key performance indicators (KPIs) or summary statistics.
+指標圖表會醒目地顯示單一數值。使用指標圖表來顯示關鍵績效指標 (KPI) 或摘要統計資料。
 
-## Creating a metric chart
+## 建立指標圖表
 
-The following example demonstrates a basic metric visualization. Before you begin, complete the [prerequisites]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/#prerequisites).
+以下範例示範基本的指標視覺化。開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/#prerequisites)。
 
-### Basic metric chart
+### 基本指標圖表
 
-Start with a query that returns a numeric field:
+從傳回數值欄位的查詢開始：
 
 ```sql
 source = opensearch_dashboards_sample_data_flights | FIELDS AvgTicketPrice
 ```
 {% include copy.html %}
 
-After running this query, select **Metric** as the chart type. The editor maps the field as follows:
+執行此查詢後，選取 **Metric** 作為圖表類型。編輯器會依下列方式對應欄位：
 
-- The **Value** field displays the `AvgTicketPrice` field (using the **Last** calculation by default).
+- **Value** 欄位會顯示 `AvgTicketPrice` 欄位 (預設使用 **Last** 計算方式)。
 
-The result is a single large number displaying the last ticket price value, as shown in the following image.
+結果是一個顯示最後一筆票價值的單一大型數字，如下圖所示。
 
-![Metric chart displaying the last average ticket price]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/metric-chart-basic-result.png){: width="100%" }
+![顯示最後一筆平均票價的指標圖表]({{site.url}}{{site.baseurl}}/images/dashboards/visualization-editor/metric-chart-basic-result.png){: width="100%" }
 
-## Configuring a metric chart
+## 設定指標圖表
 
-You can configure the following settings in the configuration panel.
+您可以在組態面板中設定下列設定。
 
-### Fields
+### 欄位
 
-In the **Fields** section, configure the data fields.
+在 **Fields** 區段中，設定資料欄位。
 
-| Field | Description |
+| 欄位 | 說明 |
 | --- | --- |
-| **Value** | Select a numeric field to display as the metric value. The field is reduced to a single number using the configured calculation method. |
+| **Value** | 選取要顯示為指標值的數值欄位。此欄位會使用所設定的計算方式縮減為單一數字。 |
 
-### Split
+### 分割
 
-In the **Split by** dropdown list, select a field to split the chart into separate elements by value. For more information, see [Split]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#split).
+在 **Split by** 下拉式清單中，選取一個欄位，依值將圖表分割為個別元素。如需詳細資訊，請參閱[分割]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/#split)。
 
-### Metric
+### 指標
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Text display** | Controls what text is shown alongside the value. Supported values: **Value only**, **Name only**, **Value and Name**, **None**. |
-| **Color mode** | Controls how threshold colors are applied to the metric. Supported values: **None** (no color), **Value** (colors the value text), **Background gradient** (applies a gradient background), **Background solid** (applies a solid background color). |
-| **Show percentage** | When enabled, displays the value as a percentage of the maximum value. |
-| **Use threshold colors** | When enabled, applies threshold colors to the metric based on the current value. |
+| **Text display** | 控制與值一同顯示的文字。支援的值：**Value only**、**Name only**、**Value and Name**、**None**。 |
+| **Color mode** | 控制如何將閾值色彩套用至指標。支援的值：**None** (無色彩)、**Value** (為值文字上色)、**Background gradient** (套用漸層背景)、**Background solid** (套用純色背景)。 |
+| **Show percentage** | 啟用時，會將值顯示為最大值的百分比。 |
+| **Use threshold colors** | 啟用時，會根據目前的值將閾值色彩套用至指標。 |
 
-### Value options
+### 值選項
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Calculation** | Determines how multiple data points are reduced to a single value. Supported values: **Last \***, **Last**, **First \***, **First**, **Min**, **Max**, **Median**, **Variance**, **Distinct count**, **Count**, **Total**. For more information, see [Value calculations]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/value-calculations/). |
+| **Calculation** | 決定如何將多個資料點縮減為單一值。支援的值：**Last \***、**Last**、**First \***、**First**、**Min**、**Max**、**Median**、**Variance**、**Distinct count**、**Count**、**Total**。如需詳細資訊，請參閱[值計算]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/value-calculations/)。 |
 
-### Thresholds
+### 閾值
 
-For information about configuring thresholds, see [Thresholds]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/).
+如需設定閾值的相關資訊，請參閱[閾值]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/)。
 
-### Standard options
+### 標準選項
 
-For information about configuring units, unit suffixes, and decimal precision, see [Standard options]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/standard-options/).
+如需設定單位、單位後綴和小數精確度的相關資訊，請參閱[標準選項]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/configuring-visualizations/standard-options/)。
 
-### Text size
+### 文字大小
 
-| Setting | Description |
+| 設定 | 說明 |
 | --- | --- |
-| **Value size** | Controls the font size of the displayed value. |
-| **Title size** | Controls the font size of the metric title. |
-| **Percentage size** | Controls the font size of the percentage display (when **Show percentage** is enabled). |
+| **Value size** | 控制所顯示值的字型大小。 |
+| **Title size** | 控制指標標題的字型大小。 |
+| **Percentage size** | 控制百分比顯示的字型大小 (當 **Show percentage** 已啟用時)。 |

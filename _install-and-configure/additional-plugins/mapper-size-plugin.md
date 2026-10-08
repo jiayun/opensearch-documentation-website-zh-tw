@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Mapper-size plugin
+title: "Mapper-size 外掛程式"
 parent: Additional plugins
 grand_parent: Managing OpenSearch plugins
 nav_order: 25
 
 ---
 
-# Mapper-size plugin
+# Mapper-size 外掛程式
 
-The `mapper-size` plugin enables the use of the `_size` field in OpenSearch indexes. The `_size` field stores the size, in bytes, of each document.
+`mapper-size` 外掛程式可讓您在 OpenSearch 索引中使用 `_size` 欄位。`_size` 欄位會儲存每份文件的大小（以位元組為單位）。
 
-## Installing the plugin
+## 安裝外掛程式
 
-You can install the `mapper-size` plugin using the following command:
+您可以使用下列命令安裝 `mapper-size` 外掛程式：
 
 ```sh
 ./bin/opensearch-plugin install mapper-size
 ```
 
-## Examples
+## 範例
 
-After starting up a cluster, you can create an index with size mapping enabled, index a document, and search for documents, as shown in the following examples.
+啟動叢集後，您可以建立啟用大小對應的索引、將文件編製索引，以及搜尋文件，如下列範例所示。
 
-### Create an index with size mapping enabled
+### 建立啟用大小對應的索引
 
 ```sh
 curl -XPUT example-index -H "Content-Type: application/json" -d '{
@@ -43,7 +44,7 @@ curl -XPUT example-index -H "Content-Type: application/json" -d '{
 }'
 ```
 
-### Index a document
+### 將文件編製索引
 
 ```sh
 curl -XPOST example-index/_doc -H "Content-Type: application/json" -d '{
@@ -52,7 +53,7 @@ curl -XPOST example-index/_doc -H "Content-Type: application/json" -d '{
 }'
 ```
 
-### Query the index
+### 查詢索引
 
 ```sh
 curl -XGET example-index/_search -H "Content-Type: application/json" -d '{
@@ -63,9 +64,9 @@ curl -XGET example-index/_search -H "Content-Type: application/json" -d '{
 }'
 ```
 
-### Query results
+### 查詢結果
 
-In the following example, the `_size` field is included in the query results and shows the size, in bytes, of the indexed document:
+在下列範例中，查詢結果包含 `_size` 欄位，並顯示已編製索引之文件的大小（以位元組為單位）：
 
 ```json
 {

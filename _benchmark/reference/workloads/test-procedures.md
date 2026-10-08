@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: test_procedures
 parent: Anatomy of a workload
@@ -6,17 +7,17 @@ nav_order: 50
 ---
 
 <!-- vale off -->
-# test_procedures element
+# test_procedures 元素
 <!-- vale on -->
 
-A test procedure is a single benchmarking scenario. Each test procedure wraps a [`schedule`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/schedule/) and adds properties such as a name and description. Use the `test_procedures` element when a workload defines multiple scenarios. When a workload defines only one scenario, specify `schedule` at the top level of `workload.json` instead and omit `test_procedures`.
+測試程序是單一基準測試情境。每個測試程序都封裝一個 [`schedule`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/schedule/)，並新增名稱和說明等屬性。當工作負載定義多個情境時，請使用 `test_procedures` 元素。當工作負載僅定義一個情境時，請改在 `workload.json` 的最上層指定 `schedule`，並省略 `test_procedures`。
 
-A test procedure can reference all operations defined in the [`operations`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/operations/) element. Each test procedure supports the following parameters.
+測試程序可以參照 [`operations`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/operations/) 元素中定義的所有操作。每個測試程序都支援下列參數。
 
-Parameter | Required | Type | Description
+參數 | 是否必要 | 資料類型 | 說明
 :--- | :--- | :--- | :---
-`name` | Yes | String | The name of the test procedure. When naming the test procedure, do not use spaces; this ensures that the name can be easily entered on the command line.
-`description` | No | String |  Describes the test procedure in a human-readable format.
-`user-info` | No | String | Outputs a message at the start of the test to notify you about important test-related information, for example, deprecations.
-`default` | No | Boolean | When set to `true`, selects the default test procedure if you did not specify a test procedure on the command line. If the workload only defines one test procedure, it is implicitly selected as the default. Otherwise, you must define `"default": true` on exactly one challenge.
-[`schedule`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/schedule/) | Yes | Array | Defines the order in which workload tasks are run.
+`name` | 是 | 字串 | 測試程序的名稱。為測試程序命名時，請勿使用空格；這可確保您能輕鬆在命令列輸入名稱。
+`description` | 否 | 字串 |  以易於閱讀的格式描述測試程序。
+`user-info` | 否 | 字串 | 在測試開始時輸出訊息，通知您與測試相關的重要資訊，例如棄用事項。
+`default` | 否 | 布林值 | 設為 `true` 時，若您未在命令列指定測試程序，便會選取預設測試程序。如果工作負載僅定義一個測試程序，系統會自動將其選為預設值。否則，您必須僅在一個挑戰中定義 `"default": true`。
+[`schedule`]({{site.url}}{{site.baseurl}}/benchmark/reference/workloads/schedule/) | 是 | 陣列 | 定義工作負載任務的執行順序。

@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Remove duplicates
+title: "移除重複項目"
 parent: Token filters
 nav_order: 350
 ---
 
-# Remove duplicates token filter
+# 移除重複項目詞元篩選器
 
-The `remove_duplicates` token filter is used to remove duplicate tokens that are generated in the same position during analysis.
+`remove_duplicates` 詞元篩選器用於移除在分析期間於相同位置產生的重複詞元。
 
-## Example
+## 範例
 
-The following example request creates an index with a `keyword_repeat` token filter. The filter adds a `keyword` version of each token in the same position as the token itself and then uses a `kstem` to create a stemmed version of the token:
+下列範例請求會建立一個含有 `keyword_repeat` 詞元篩選器的索引。此篩選器會在與每個詞元相同的位置加入該詞元的 `keyword` 版本，接著使用 `kstem` 建立該詞元的詞幹化版本：
 
 ```json
 PUT /example-index
@@ -35,7 +36,7 @@ PUT /example-index
 ```
 {% include copy-curl.html %}
 
-Use the following request to analyze the string `Slower turtle`:
+使用下列請求分析字串 `Slower turtle`：
 
 ```json
 GET /example-index/_analyze
@@ -46,7 +47,7 @@ GET /example-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the token `turtle` twice in the same position:
+回應中在相同位置包含兩次詞元 `turtle`：
 
 ```json
 {
@@ -83,7 +84,7 @@ The response contains the token `turtle` twice in the same position:
 }
 ```
 
-The duplicate token can be removed by adding a `remove_duplicates` token filter to the index settings:
+您可以在索引設定中加入 `remove_duplicates` 詞元篩選器來移除重複的詞元：
 
 ```json
 PUT /index-remove-duplicate
@@ -108,9 +109,9 @@ PUT /index-remove-duplicate
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求檢查使用此分析器產生的詞元：
 
 ```json
 GET /index-remove-duplicate/_analyze
@@ -121,7 +122,7 @@ GET /index-remove-duplicate/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

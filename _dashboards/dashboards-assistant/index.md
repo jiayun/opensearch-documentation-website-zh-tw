@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: OpenSearch Assistant for OpenSearch Dashboards
+title: "適用於 OpenSearch Dashboards 的 OpenSearch Assistant"
 nav_order: 110
 has_children: true
 has_toc: false
@@ -8,25 +9,25 @@ redirect_from:
   - /dashboards/dashboards-assistant/
 ---
 
-Note that machine learning models are probabilistic and that some may perform better than others, so the OpenSearch Assistant may occasionally produce inaccurate information. We recommend evaluating outputs for accuracy as appropriate to your use case, including reviewing the output or combining it with other verification factors.
+請注意，機器學習模型具有機率性，且某些模型的表現可能優於其他模型，因此 OpenSearch Assistant 偶爾可能會產生不正確的資訊。我們建議您依據使用案例適當評估輸出的正確性，包括檢閱輸出內容，或將其與其他驗證因素結合使用。
 {: .important}
 
-# OpenSearch Assistant for OpenSearch Dashboards
-**Introduced 2.13**
+# 適用於 OpenSearch Dashboards 的 OpenSearch Assistant
+**於 2.13 版推出**
 {: .label .label-purple }
 
-The OpenSearch Assistant toolkit helps you create AI-powered assistants for OpenSearch Dashboards without requiring you to have specialized query tools or skills.
+OpenSearch Assistant 工具組可協助您為 OpenSearch Dashboards 建立 AI 驅動的助理，而不需要您具備專門的查詢工具或技能。
 
-## Enabling OpenSearch Assistant
+## 啟用 OpenSearch Assistant
 
-To enable **OpenSearch Assistant** in OpenSearch Dashboards, locate your copy of the `opensearch_dashboards.yml` file and set the following option:
+若要在 OpenSearch Dashboards 中啟用 **OpenSearch Assistant**，請找到您的 `opensearch_dashboards.yml` 檔案副本，並設定下列選項：
 
 ```yaml
 assistant.chat.enabled: true
 ```
 {% include copy.html %}
 
-Then configure the root `agent_id` through the following API:
+接著透過下列 API 設定根 `agent_id`：
 
 ```json
 PUT .plugins-ml-config/_doc/os_chat
@@ -39,111 +40,111 @@ PUT .plugins-ml-config/_doc/os_chat
 ```
 {% include copy-curl.html %}
 
-For more information about configuring the root agent, see the [Build your own chatbot tutorial]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/build-chatbot/#step-5-configure-a-root-chatbot-agent-in-opensearch-dashboards).
+如需設定根代理程式的詳細資訊，請參閱[建立您自己的聊天機器人教學]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/build-chatbot/#step-5-configure-a-root-chatbot-agent-in-opensearch-dashboards)。
 
-This example shows a system index. In security-enabled domains, only super admins have permission to execute this code. For information about making super admin calls, see the [System indexes]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/) guide. For access permission, contact your IT administrator.
+此範例顯示的是系統索引。在已啟用安全性的網域中，只有超級管理員才有權限執行此程式碼。如需進行超級管理員呼叫的相關資訊，請參閱[系統索引]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/)指南。如需存取權限，請聯絡您的 IT 管理員。
 {: .warning}
 
-Next, restart the OpenSearch Dashboards server. Following a successful restart, **OpenSearch Assistant** appears in the OpenSearch Dashboards interface. 
+接下來，請重新啟動 OpenSearch Dashboards 伺服器。成功重新啟動後，**OpenSearch Assistant** 會顯示在 OpenSearch Dashboards 介面中。
 
-A screenshot of the interface is shown in the following image.
+下圖顯示介面的螢幕擷取畫面。
 
-![OpenSearch Assistant interface]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-full-frame.png){: width="700" }
+![OpenSearch Assistant 介面]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-full-frame.png){: width="700" }
 
-## Configuring OpenSearch Assistant
+## 設定 OpenSearch Assistant
 
-You can use the OpenSearch Dashboards interface to configure OpenSearch Assistant. Go to the [Getting started guide](https://github.com/opensearch-project/dashboards-assistant/blob/main/GETTING_STARTED_GUIDE.md) for step-by-step instructions. For the chatbot template, go to the [Flow Framework plugin](https://github.com/opensearch-project/flow-framework) documentation. You can modify this template to use your own model and customize the chatbot tools. 
+您可以使用 OpenSearch Dashboards 介面來設定 OpenSearch Assistant。請前往[入門指南](https://github.com/opensearch-project/dashboards-assistant/blob/main/GETTING_STARTED_GUIDE.md)以取得逐步操作說明。如需聊天機器人範本，請前往 [Flow Framework 外掛程式](https://github.com/opensearch-project/flow-framework)文件。您可以修改此範本，以使用您自己的模型並自訂聊天機器人工具。
 
-For information about configuring OpenSearch Assistant through the REST API, see [OpenSearch Assistant Toolkit]({{site.url}}{{site.baseurl}}/ml-commons-plugin/opensearch-assistant/).
+如需透過 REST API 設定 OpenSearch Assistant 的相關資訊，請參閱 [OpenSearch Assistant 工具組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/opensearch-assistant/)。
 
-## Using OpenSearch Assistant in OpenSearch Dashboards
+## 在 OpenSearch Dashboards 中使用 OpenSearch Assistant
 
-The following tutorials guide you through using OpenSearch Assistant in OpenSearch Dashboards. OpenSearch Assistant can be viewed in full frame or in the sidebar. The default view is in the right sidebar. To view the assistant in the left sidebar or in full frame, select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/frame-icon.png" class="inline-icon" alt="frame icon"/>{:/} (frame) icon in the toolbar and choose the preferred option. 
+下列教學將引導您在 OpenSearch Dashboards 中使用 OpenSearch Assistant。OpenSearch Assistant 可以全畫面或在側邊欄中檢視。預設檢視位於右側邊欄。若要在左側邊欄或以全畫面檢視助理，請選取工具列中的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/frame-icon.png" class="inline-icon" alt="frame icon"/>{:/}（框架）圖示，然後選擇偏好的選項。
 
-### Start a conversation
+### 開始對話
 
-Start a conversation by entering a prompt in the **Ask a question** search box or by using the shortcut `ctrl + /`. Select **Go** to initiate the conversation. A response is generated.
+在 **Ask a question** 搜尋方塊中輸入提示，或使用快速鍵 `ctrl + /` 來開始對話。選取 **Go** 以開始對話。系統隨即產生回應。
 
-The following screenshot shows an example prompt and response.
+下列螢幕擷取畫面顯示提示與回應的範例。
 
-![Prompt and response using OpenSearch Assistant in OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-QandA.png){: width="700" }
+![在 OpenSearch Dashboards 中使用 OpenSearch Assistant 的提示與回應]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-QandA.png){: width="700" }
 
-### Regenerate a response
+### 重新產生回應
 
-Beneath the response, select the regenerate icon to generate an alternative answer to your original question. The new answer will replace the previous one, appearing in both the interface and the chat history. A regenerated example is shown in the following image.
+在回應下方，選取重新產生圖示，即可為您原本的問題產生另一個答案。新的答案會取代先前的答案，並同時顯示在介面和聊天記錄中。下圖顯示重新產生的範例。
 
-![Regenerated response]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-regenerate.png){: width="700" }
+![重新產生的回應]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-regenerate.png){: width="700" }
 
-### Suggested prompts
+### 建議的提示
 
-OpenSearch Assistant suggests prompts to help you get started, build upon your existing prompts, or explore other queries you may not have considered, among other reasons. Select a suggested prompt listed beneath the response field. A screenshot is shown in the following image.
+OpenSearch Assistant 會建議提示，以協助您入門、延伸您現有的提示，或探索您可能未曾考慮過的其他查詢等。請選取回應欄位下方列出的建議提示。下圖顯示螢幕擷取畫面。
 
-![Suggested prompts]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-suggestions.png){: width="700" }
+![建議的提示]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-suggestions.png){: width="700" }
 
-### Rate a response
+### 為回應評分
 
-To rate a response, select the thumbs up or thumbs down icon. A screenshot of the interface is shown in the following image. The feedback is stored in the `additional_info` field of the message index.
+若要為回應評分，請選取大拇指向上或大拇指向下圖示。下圖顯示介面的螢幕擷取畫面。意見回饋會儲存在訊息索引的 `additional_info` 欄位中。
 
-### Response generation
+### 回應產生
 
-Learn how a response is generated by selecting the **How was this generated?** option. This option is included within the available suggestions to help you understand which tools were involved in creating the response. If multiple tools were involved, each step will display the tool name and its input and output. This feature can be useful for troubleshooting. A screenshot is shown in the following image. 
+選取 **How was this generated?** 選項，即可了解回應是如何產生的。此選項包含在可用的建議中，可協助您了解建立回應時使用了哪些工具。如果使用了多個工具，每個步驟都會顯示工具名稱及其輸入和輸出。此功能有助於疑難排解。下圖顯示螢幕擷取畫面。
 
-![Response generation details]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-how-generated.png){: width="700" }
+![回應產生詳細資料]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-how-generated.png){: width="700" }
 
-### Resume previous conversations
+### 繼續之前的對話
 
-To view a previous conversation, select the clock icon to open the conversation history panel and display the chat history. The conversation history can also be searched by conversation name. A screenshot is shown in the following image.
+若要檢視之前的對話，請選取時鐘圖示以開啟對話記錄面板並顯示聊天記錄。您也可以依對話名稱搜尋對話記錄。下圖顯示螢幕擷取畫面。
 
-![Conversation history]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-conversation-history.png){: width="400" }
+![對話記錄]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-conversation-history.png){: width="400" }
 
-#### Edit and delete previous conversations
+#### 編輯和刪除之前的對話
 
-Select the pencil icon to edit a conversation name and rename it. Select the **Confirm name** button to save the new name. A screenshot is shown in the following image.
+選取鉛筆圖示以編輯對話名稱並重新命名。選取 **Confirm name** 按鈕以儲存新名稱。下圖顯示螢幕擷取畫面。
 
-![Editing a conversation name]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-edit-convo.png){: width="300" }
+![編輯對話名稱]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-edit-convo.png){: width="300" }
 
-Select the trash can icon to delete a conversation. Once the confirmation dialog appears, select **Delete conversation**. The conversation is now deleted from your chat history. A screenshot is shown in the following image.
+選取垃圾桶圖示以刪除對話。確認對話方塊出現後，選取 **Delete conversation**。該對話隨即會從您的聊天記錄中刪除。下圖顯示螢幕擷取畫面。
 
-![Deleting a conversation]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-delete-convo.png){: width="300" }
+![刪除對話]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-delete-convo.png){: width="300" }
 
-### Share a conversation through Notebooks
+### 透過 Notebooks 分享對話
 
-You can use [Notebooks]({{site.url}}{{site.baseurl}}/observing-your-data/notebooks/) to save your conversations. To use this option, select **Save to notebook** from the dropdown menu to the right of **OpenSearch Assistant**. Enter a name for the notebook, then select **Save**. A pop-up message in the lower-right corner confirms the conversation has been saved. 
+您可以使用 [Notebooks]({{site.url}}{{site.baseurl}}/observing-your-data/notebooks/) 來儲存您的對話。若要使用此選項，請從 **OpenSearch Assistant** 右側的下拉式選單中選取 **Save to notebook**。輸入 Notebook 的名稱，然後選取 **Save**。右下角會出現快顯訊息，確認對話已儲存。
 
-All conversations (prompts and responses/questions and answers) between you and the large language model (LLM) will be saved to this notebook.
+您與大型語言模型 (LLM) 之間的所有對話（提示與回應／問題與答案）都會儲存到此 Notebook。
 
-To open the saved notebook or view a list of other notebooks, select **Observability** > **Notebooks** from the OpenSeach Dashboards navigation menu. 
+若要開啟已儲存的 Notebook 或檢視其他 Notebook 清單，請從 OpenSearch Dashboards 導覽選單中選取 **Observability** > **Notebooks**。
 
-A screenshot of the Notebooks interface with a list of saved conversations is shown in the following image.
+下圖顯示包含已儲存對話清單的 Notebooks 介面螢幕擷取畫面。
 
-![Notebooks interface with saved OpenSearch Assistant conversations]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-notebooks.png){: width="700" }
+![包含已儲存 OpenSearch Assistant 對話的 Notebooks 介面]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-notebooks.png){: width="700" }
 
-The following screenshot shows a saved conversation, along with actions you can take for the saved conversation.
+下列螢幕擷取畫面顯示一個已儲存的對話，以及您可以對該已儲存對話執行的動作。
 
-![Notebooks interface with saved OpenSearch Assistant conversations]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-save-notebook.png){: width="700" }
+![包含已儲存 OpenSearch Assistant 對話的 Notebooks 介面]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-save-notebook.png){: width="700" }
 
-## Enabling Dashboards Assistant experimental features
-**Introduced 2.16**
+## 啟用 Dashboards Assistant 實驗性功能
+**於 2.16 版推出**
 {: .label .label-purple }
 
-To enable experimental assistant features, such as text to visualization, locate your copy of the `opensearch_dashboards.yml` file and set the following option:
+若要啟用實驗性助理功能（例如文字轉視覺化），請找到您的 `opensearch_dashboards.yml` 檔案副本，並設定下列選項：
 
 ```yaml
 assistant.next.enabled: true
 ```
 {% include copy-curl.html %}
 
-## Additional Dashboards Assistant capabilities
+## 其他 Dashboards Assistant 功能
 
-For information about additional Dashboards Assistant capabilities, see the following pages:
+如需其他 Dashboards Assistant 功能的相關資訊，請參閱下列頁面：
 
-- [Generating alert insights]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/alert-insight/)
-- [Generating data summaries]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/data-summary/)
-- [Generating anomaly detector suggestions]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/suggest-anomaly-detector/)
-- [Generating visualizations from text]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/text-to-visualization/)
+- [產生警示洞察]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/alert-insight/)
+- [產生資料摘要]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/data-summary/)
+- [產生異常偵測器建議]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/suggest-anomaly-detector/)
+- [從文字產生視覺化]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/text-to-visualization/)
 
-## Related documentation
+## 相關文件
 
-- [Getting started guide for OpenSearch Assistant in OpenSearch Dashboards](https://github.com/opensearch-project/dashboards-assistant/blob/main/GETTING_STARTED_GUIDE.md)
-- [OpenSearch Assistant configuration through the REST API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/opensearch-assistant/)
-- [Build your own chatbot]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/build-chatbot/)
+- [OpenSearch Dashboards 中 OpenSearch Assistant 的入門指南](https://github.com/opensearch-project/dashboards-assistant/blob/main/GETTING_STARTED_GUIDE.md)
+- [透過 REST API 設定 OpenSearch Assistant]({{site.url}}{{site.baseurl}}/ml-commons-plugin/opensearch-assistant/)
+- [建立您自己的聊天機器人]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/build-chatbot/)

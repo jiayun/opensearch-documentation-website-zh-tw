@@ -1,53 +1,54 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create a workspace
+title: "建立工作區"
 parent: Workspaces
 nav_order: 1
 ---
 
-# Create a workspace
-**Introduced 2.18**
+# 建立工作區
+**2.18 版推出**
 {: .label .label-purple }
 
-Before getting started with this tutorial, you must enable the workspace feature flag. See [Enabling workspaces]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace/#enabling-workspaces) for more information.
+開始本教學之前，您必須啟用工作區功能旗標。如需詳細資訊，請參閱[啟用工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace/#enabling-workspaces)。
 
-When the saved objects permission is enabled, only users with admin status can create workspaces. See [Configuring the dashboard admin]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace-acl/#configuring-dashboard-administrators) for more information. 
+啟用已儲存物件權限時，只有具備管理員身分的使用者才能建立工作區。如需詳細資訊，請參閱[設定儀表板管理員]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace-acl/#configuring-dashboard-administrators)。
 
-To create a workspace, follow these steps:
+若要建立工作區，請依照下列步驟操作：
 
-1. Open OpenSearch Dashboards.
-2. From the main page, choose the appropriate card for your use case, for example, **Observability**, **Security Analytics**, **Search**, **Essentials**, or **Analytics**. Alternatively, you can select the **Create workspace** button and choose the appropriate use case from the dropdown menu.
-3. Enter the required information in the **Workspace details** window.
-  - **Workspace name** is required. Valid characters are `a-z`, `A-Z`, `0-9`, parentheses (`()`), brackets (`[]`), underscore (`_`), hyphen (`-`), and spaces. Choose a unique workspace name within the character limit (40 characters). The **Create workspace** button is disabled when the workspace name already exists or exceeds the character limit, and an error message appears.
-  - **Use case and features** is required. Choose the use case that best fits your needs. If you are using Amazon OpenSearch Serverless and have enabled the [multiple data sources]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/) feature, **Essentials** is automatically assigned. 
-4. (Optional) Select the color picker to customize the color of your workspace icon.
-5. (Optional) Add a workspace description of up to 200 characters. This option is disabled when the description exceeds the character limit.
-6. (Optional) Enter a custom **Workspace ID**. If left blank, an ID is auto-generated. A custom ID must be 6--36 characters using only letters, numbers, underscores (`_`), and hyphens (`-`). If a workspace with the provided ID already exists, an error is returned.
-7. Save your workspace.
-  - The **Create workspace** button becomes active once you enter the information for all required fields. You become the workspace owner automatically. The system redirects you to either the collaborators page if the saved objects permission is enabled or the overview page if the saved objects permission is disabled. See [Configuring dashboard admin]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace-acl/#configuring-dashboard-administrators) for more information about permissions.
+1. 開啟 OpenSearch Dashboards。
+2. 在主頁面中，選擇適合您使用案例的卡片，例如 **Observability**、**Security Analytics**、**Search**、**Essentials** 或 **Analytics**。或者，您也可以選取 **Create workspace** 按鈕，然後從下拉式選單中選擇適當的使用案例。
+3. 在 **Workspace details** 視窗中輸入必要資訊。
+  - **Workspace name** 為必要項目。有效字元為 `a-z`、`A-Z`、`0-9`、圓括號 (`()`)、方括號 (`[]`)、底線 (`_`)、連字號 (`-`) 和空格。請在字元限制 (40 個字元) 內選擇唯一的工作區名稱。當工作區名稱已存在或超過字元限制時，**Create workspace** 按鈕會停用，並顯示錯誤訊息。
+  - **Use case and features** 為必要項目。請選擇最符合您需求的使用案例。如果您使用 Amazon OpenSearch Serverless 並已啟用[多個資料來源]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/)功能，系統會自動指派 **Essentials**。
+4. (選用) 選取色彩選擇器，以自訂工作區圖示的色彩。
+5. (選用) 新增最多 200 個字元的工作區說明。當說明超過字元限制時，此選項會停用。
+6. (選用) 輸入自訂的 **Workspace ID**。如果保留空白，系統會自動產生 ID。自訂 ID 必須為 6 到 36 個字元，且只能使用字母、數字、底線 (`_`) 和連字號 (`-`)。如果已存在具有所提供 ID 的工作區，系統會傳回錯誤。
+7. 儲存您的工作區。
+  - 當您輸入所有必要欄位的資訊後，**Create workspace** 按鈕就會變成可用狀態。您會自動成為工作區擁有者。如果已啟用已儲存物件權限，系統會將您重新導向至協作者頁面；如果已停用已儲存物件權限，則會重新導向至概觀頁面。如需權限的詳細資訊，請參閱[設定儀表板管理員]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace-acl/#configuring-dashboard-administrators)。
 
-To set up permissions, see [Workspace access control lists]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace-acl/) for more information.
+若要設定權限，請參閱[工作區存取控制清單]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace-acl/)以取得詳細資訊。
 
-## Associating data sources with a workspace
+## 將資料來源與工作區建立關聯
 
-The **Associate data source** option is only visible when the multiple data sources feature is enabled. Before creating your workspace, you must connect it with at least one data source. If you have not set up your data sources, see [Data sources]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/). Once your sources are connected, you can link them to your new workspace.
+只有在啟用多個資料來源功能時，才會顯示 **Associate data source** 選項。建立工作區之前，您必須將其連接至至少一個資料來源。如果您尚未設定資料來源，請參閱[資料來源]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/)。連接資料來源後，您就可以將其連結至新的工作區。
 {: .warning}
 
-### Associating OpenSearch data sources
+### 建立 OpenSearch 資料來源的關聯
 
-To associate OpenSearch data sources, follow these steps: 
+若要建立 OpenSearch 資料來源的關聯，請依照下列步驟操作：
 
-1. Select the **Associate OpenSearch Data Sources** button to open the selection modal.
-2. View the available data sources in the modal:
-  - Standard OpenSearch sources appear as single entries.
-  - Sources with direct query connections show a +N indicator.
-3. Select the appropriate data source name(s).
-4. Select the **Associate data sources** button to complete the association.
+1. 選取 **Associate OpenSearch Data Sources** 按鈕以開啟選取對話視窗。
+2. 在對話視窗中檢視可用的資料來源：
+  - 標準 OpenSearch 來源會顯示為單一項目。
+  - 具有直接查詢連線的來源會顯示 +N 指示符號。
+3. 選取適當的資料來源名稱。
+4. 選取 **Associate data sources** 按鈕以完成關聯。
 
-### Associating direct query sources
+### 建立直接查詢來源的關聯
 
-To associate direct query sources, follow these steps: 
+若要建立直接查詢來源的關聯，請依照下列步驟操作：
 
-1. Select the **Associate direct query data sources** button to open the selection modal. The modal displays only sources with direct query connections.
-2. Select a data source to automatically expand its direct query connections.
-3. Select the **Associate data sources** button to complete the association.
+1. 選取 **Associate direct query data sources** 按鈕以開啟選取對話視窗。對話視窗只會顯示具有直接查詢連線的來源。
+2. 選取資料來源，即可自動展開其直接查詢連線。
+3. 選取 **Associate data sources** 按鈕以完成關聯。

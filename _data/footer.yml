@@ -1,12 +1,13 @@
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 columns:
   -
-    title: 'Get Involved'
+    title: '參與其中'
     links:
       -
-        title: Code of Conduct
+        title: 行為準則
         url: 'https://opensearch.org/code-of-conduct/'
       -
-        title: 'Forum'
+        title: '論壇'
         url: 'https://forum.opensearch.org/'
       -
         title: 'GitHub'
@@ -15,34 +16,34 @@ columns:
         title: 'Slack'
         url: 'https://opensearch.org/slack/'
   -
-    title: 'Resources'
+    title: '資源'
     links:
       - 
-        title: About
+        title: 關於
         url: 'https://opensearch.org/about/'
       - 
-        title: Release Schedule
+        title: 發布時程
         url: 'https://opensearch.org/releases/#release-schedule'
       - 
-        title: Maintenance Policy
+        title: 維護政策
         url: 'https://opensearch.org/releases/#maintenance-policy'
       - 
-        title: FAQ
+        title: 常見問題
         url: 'https://opensearch.org/faq/'
       -
-        title: 'Testimonials'
+        title: '推薦與見證'
         url: 'https://opensearch.org/testimonials/'
       -
-        title: 'Trademark and Brand Policy'
+        title: '商標與品牌政策'
         url: 'https://opensearch.org/trademark-brand-policy/'
       -
-        title: 'Privacy'
+        title: '隱私權'
         url: 'https://aws.amazon.com/privacy/'
   -
-    title: 'Contact Us'
+    title: '聯絡我們'
     links:
       -
-        title: 'Connect'
+        title: '聯絡'
         url: 'https://opensearch.org/connect/'
       -
         title: 'Twitter'

@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Helper methods
+title: "輔助方法"
 parent: JavaScript client
 nav_order: 2
 ---
 
-# JavaScript helper methods
+# JavaScript 輔助方法
 
-JavaScript helper methods simplify the use of complicated API tasks. For complete helper documentation, see the [`opensearch-js` guides](https://github.com/opensearch-project/opensearch-js/tree/main/guides).
+JavaScript 輔助方法可簡化複雜的 API 任務。如需完整的輔助方法文件，請參閱 [`opensearch-js` 指南](https://github.com/opensearch-project/opensearch-js/tree/main/guides)。
 
-## Bulk helper
+## 批次輔助方法
 
-The bulk helper simplifies making complex bulk API requests. It splits the documents in the data source into batches, sends each batch to the Bulk API, and retries failed operations. Because the `onDocument` function returns the operation for each document, one call can combine `index`, `create`, `update`, and `delete` operations. To send a bulk request body that you construct yourself, use the `client.bulk` method. For more information, see the [Bulk guide](https://github.com/opensearch-project/opensearch-js/blob/main/guides/bulk.md).
+批次輔助方法可簡化複雜的批次 API 請求。它會將資料來源中的文件分成多個批次，將每個批次傳送至 Bulk API，並重試失敗的操作。由於 `onDocument` 函式會傳回每份文件的操作，因此一次呼叫即可結合 `index`、`create`、`update` 和 `delete` 操作。若要傳送您自行建構的批次請求本文，請使用 `client.bulk` 方法。如需詳細資訊，請參閱[批次指南](https://github.com/opensearch-project/opensearch-js/blob/main/guides/bulk.md)。
 
-### Usage
+### 使用方式
 
-The following code creates a bulk helper instance:
+下列程式碼會建立批次輔助方法執行個體：
 
 ```javascript
 const { Client } = require('@opensearch-project/opensearch')
@@ -36,7 +37,7 @@ console.log(result)
 ```
 {% include copy.html %}
 
-Bulk helper operations return an object with the following fields:
+批次輔助方法操作會傳回包含下列欄位的物件：
 
 ```json
 {
@@ -51,31 +52,31 @@ Bulk helper operations return an object with the following fields:
 }
 ```
 
-### Bulk helper configuration options
+### 批次輔助方法組態選項
 
-When creating a new bulk helper instance, you can use the following configuration options.
+建立新的批次輔助方法執行個體時，您可以使用下列組態選項。
 
-| Option | Data type | Required/Default | Description 
+| 選項 | 資料類型 | 必要／預設 | 說明 
 | :--- | :--- | :--- | :---
-| `datasource` | An array, asynchronous generator, or a readable stream of strings or objects | Required | Represents the documents you need to create, delete, index, or update. 
-| `onDocument` | Function | Required | A function to be invoked with each document in the given `datasource`. It returns the operation to be executed for this document. Optionally, the document can be manipulated for `create` and `index` operations by returning a new document as part of the function's result.
-| `concurrency` | Integer | Optional. Default is 5. | The number of requests to be executed in parallel. 
-| `flushBytes` | Integer |  Optional. Default is 5,000,000. | Maximum bulk body size to send in bytes.
-| `flushInterval` | Integer |  Optional. Default is 30,000. | Time in milliseconds to wait before flushing the body after the last document has been read.
-| `onDrop` | Function | Optional. Default is `noop`. | A function to be invoked for every document that can’t be indexed after reaching the maximum number of retries. 
-| `refreshOnCompletion` | Boolean or string | Optional. Default is `false`. | Whether a refresh should be run at the end of the bulk operation. Set to `true` to refresh all indexes or to an index name to refresh only that index. 
-| `retries` | Integer |  Optional. Defaults to the client's  `maxRetries` value. | The number of times an operation is retried before `onDrop` is called for that document.
-| `wait` | Integer |  Optional. Default is 5,000. | Time in milliseconds to wait before retrying an operation.
+| `datasource` | 陣列、非同步產生器，或由字串或物件組成的可讀取串流 | 必要 | 代表您需要建立、刪除、編製索引或更新的文件。 
+| `onDocument` | 函式 | 必要 | 針對指定 `datasource` 中的每份文件呼叫的函式。它會傳回要對此文件執行的操作。您也可以選擇將新文件作為函式結果的一部分傳回，以便在 `create` 和 `index` 操作中修改文件。
+| `concurrency` | 整數 | 選用。預設為 5。 | 要平行執行的請求數量。 
+| `flushBytes` | 整數 |  選用。預設為 5,000,000。 | 要傳送的批次本文大小上限，以位元組為單位。
+| `flushInterval` | 整數 |  選用。預設為 30,000。 | 讀取最後一份文件後，在送出本文之前等待的時間，以毫秒為單位。
+| `onDrop` | 函式 | 選用。預設為 `noop`。 | 針對達到重試次數上限後仍無法編製索引的每份文件呼叫的函式。 
+| `refreshOnCompletion` | 布林值或字串 | 選用。預設為 `false`。 | 是否應在批次操作結束時執行重新整理。設為 `true` 可重新整理所有索引，或設為索引名稱以僅重新整理該索引。 
+| `retries` | 整數 |  選用。預設為用戶端的  `maxRetries` 值。 | 在針對該文件呼叫 `onDrop` 之前，重試操作的次數。
+| `wait` | 整數 |  選用。預設為 5,000。 | 重試操作之前等待的時間，以毫秒為單位。
 
-### Examples
+### 範例
 
-The following examples illustrate the index, create, update, and delete bulk helper operations. For more information and advanced index actions, see the [`opensearch-js` guides](https://github.com/opensearch-project/opensearch-js/tree/main/guides) in GitHub.  
+下列範例說明編製索引、建立、更新及刪除的批次輔助方法操作。如需詳細資訊及進階索引動作，請參閱 GitHub 中的 [`opensearch-js` 指南](https://github.com/opensearch-project/opensearch-js/tree/main/guides)。  
 
-#### Index
+#### 編製索引
 
-The index operation creates a new document if it doesn’t exist and recreates the document if it already exists.
+編製索引操作會在文件不存在時建立新文件，並在文件已存在時重新建立文件。
 
-The following bulk operation indexes documents into `example-index`:
+下列批次操作會將文件編製索引至 `example-index`：
 
 ```javascript
 client.helpers.bulk({
@@ -89,7 +90,7 @@ client.helpers.bulk({
 ```
 {% include copy.html %}
 
-The following bulk operation indexes documents into `example-index` with document overwrite:
+下列批次操作會將文件編製索引至 `example-index`，並覆寫文件：
 
 ```javascript
 client.helpers.bulk({
@@ -106,11 +107,11 @@ client.helpers.bulk({
 ```
 {% include copy.html %}
 
-#### Create
+#### 建立
 
-The create operation creates a new document only if the document does not already exist.
+建立操作只會在文件尚未存在時建立新文件。
 
-The following bulk operation creates documents in the `example-index`:
+下列批次操作會在 `example-index` 中建立文件：
 
 ```javascript
 client.helpers.bulk({
@@ -124,7 +125,7 @@ client.helpers.bulk({
 ```
 {% include copy.html %}
 
-The following bulk operation creates documents in the `example-index` with document overwrite:
+下列批次操作會在 `example-index` 中建立文件，並覆寫文件：
 
 ```javascript
 client.helpers.bulk({
@@ -141,11 +142,11 @@ client.helpers.bulk({
 ```
 {% include copy.html %}
 
-#### Update
+#### 更新
 
-The update operation updates the document with the fields being sent. The document must already exist in the index.
+更新操作會使用傳送的欄位更新文件。文件必須已存在於索引中。
 
-The following bulk operation updates documents in `example-index`:
+下列批次操作會更新 `example-index` 中的文件：
 
 ```javascript
 client.helpers.bulk({
@@ -164,7 +165,7 @@ client.helpers.bulk({
 ```
 {% include copy.html %}
 
-The following bulk operation updates documents in `example-index` with document overwrite:
+下列批次操作會更新 `example-index` 中的文件，並覆寫文件：
 
 ```javascript
 client.helpers.bulk({
@@ -184,11 +185,11 @@ client.helpers.bulk({
 ```
 {% include copy.html %}
 
-#### Delete
+#### 刪除
 
-The delete operation deletes a document.
+刪除操作會刪除文件。
 
-The following bulk operation deletes documents from the `example-index`:
+下列批次操作會從 `example-index` 中刪除文件：
 
 ```javascript
 client.helpers.bulk({
@@ -202,7 +203,7 @@ client.helpers.bulk({
 ```
 {% include copy.html %}
 
-## Related documentation
+## 相關文件
 
-- For more helper documentation, such as that for indexing and multi-search, see the [`opensearch-js` guides](https://github.com/opensearch-project/opensearch-js/tree/main/guides).
-- For complete sample applications, see the [`opensearch-js` samples](https://github.com/opensearch-project/opensearch-js/tree/main/samples).
+- 如需更多輔助方法文件，例如編製索引和多重搜尋的文件，請參閱 [`opensearch-js` 指南](https://github.com/opensearch-project/opensearch-js/tree/main/guides)。
+- 如需完整的範例應用程式，請參閱 [`opensearch-js` 範例](https://github.com/opensearch-project/opensearch-js/tree/main/samples)。

@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Bengali
+title: "孟加拉語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 40
 ---
 
-# Bengali analyzer
+# 孟加拉語分析器
 
-The built-in `bengali` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `bengali` 分析器套用至文字欄位：
 
 ```json
 PUT /bengali-index
@@ -25,9 +26,9 @@ PUT /bengali-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，搭配此語言分析器使用 `stem_exclusion`：
 
 ```json
 PUT index_with_stem_exclusion_bengali_analyzer
@@ -46,24 +47,24 @@ PUT index_with_stem_exclusion_bengali_analyzer
 ```
 {% include copy-curl.html %}
 
-## Bengali analyzer internals
+## 孟加拉語分析器內部結構
 
-The `bengali` analyzer is built using the following components:
+`bengali` 分析器由下列元件建構而成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
+- 詞元篩選器：
   - lowercase
   - decimal_digit
   - indic_normalization
-  - normalization (Bengali)
-  - stop (Bengali)
+  - normalization（孟加拉語）
+  - stop（孟加拉語）
   - keyword
-  - stemmer (Bengali)
+  - stemmer（孟加拉語）
 
-## Custom Bengali analyzer
+## 自訂孟加拉語分析器
 
-You can create a custom Bengali analyzer using the following command:
+您可以使用下列命令建立自訂孟加拉語分析器：
 
 ```json
 PUT /bengali-index
@@ -113,9 +114,9 @@ PUT /bengali-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求來檢查使用此分析器產生的詞元：
 
 ```json
 POST /bengali-index/_analyze
@@ -126,7 +127,7 @@ POST /bengali-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

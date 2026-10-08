@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Minimum
+title: "最小值"
 parent: Metric aggregations
 nav_order: 70
 redirect_from:
   - /query-dsl/aggregations/metric/minimum/
 ---
 
-# Minimum aggregation
+# 最小值彙總
 
-The `min` metric is a single-value metric that returns the minimum value of a field.
+`min` 指標是一種單一值指標，會回傳欄位的最小值。
 
-The `min` aggregation compares numeric fields using a `double` (double-precision) representation. Results should be considered approximate for fields containing `long` or `unsigned_long` integers with absolute values greater than 2<sup>53</sup> because the number of significant bits in a `double` mantissa is 53.
+`min` 彙總會使用 `double`（雙精確度）表示法來比較數值欄位。由於 `double` 尾數的有效位元數為 53，對於包含絕對值大於 2<sup>53</sup> 的 `long` 或 `unsigned_long` 整數的欄位，結果應視為近似值。
 {: .note}
 
-## Parameters
+## 參數
 
-The `min` aggregation takes the following parameters.
+`min` 彙總接受下列參數。
 
-| Parameter | Required/Optional | Data type      | Description |
+| 參數 | 必要/選用 | 資料類型      | 說明 |
 | :--       | :--               | :--            | :--         |
-| `field`   | Required          | String         | The name of the field for which the minimum is computed.    |
-| `missing` | Optional          | Numeric        | The value to assign to missing instances of the field. If not provided, documents containing missing values are omitted from the aggregation. |
+| `field`   | 必要          | 字串         | 要計算最小值的欄位名稱。    |
+| `missing` | 選用          | 數值        | 指派給欄位缺失實例的值。若未提供，包含缺失值的文件將不納入彙總。 |
 
-## Example
+## 範例
 
-This following example request finds the least expensive item---the item with the minimum value of the `base_unit_price`---in the OpenSearch Dashboards e-commerce sample data:
+下列範例請求會在 OpenSearch Dashboards 電子商務範例資料中，找出最便宜的商品，也就是 `base_unit_price` 值最小的商品：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -42,9 +43,9 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-As shown in the following example response, the aggregation returns the minimum value of `products.base_unit_price`:
+如下列範例回應所示，彙總會回傳 `products.base_unit_price` 的最小值：
 
 ```json
 {
@@ -72,10 +73,10 @@ As shown in the following example response, the aggregation returns the minimum 
 }
 ```
 
-You can use the aggregation name (`min_base_unit_price`) as a key to retrieve the aggregation from the response.
+您可以使用彙總名稱（`min_base_unit_price`）作為鍵，從回應中取得該彙總。
 
-## Missing values
+## 缺失值
 
-You can assign a value to missing instances of the aggregated field. See [Missing aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/missing/) for more information.
+您可以為彙總欄位的缺失實例指派一個值。如需更多資訊，請參閱[缺失值彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/missing/)。
 
-Missing values are normally ignored by `min`. If you use `missing` to assign a value lower than any existing value, `min` returns this replacement value as the minimum value.
+`min` 通常會忽略缺失值。如果您使用 `missing` 指派一個比任何現有值都低的值，`min` 會將此替代值作為最小值回傳。

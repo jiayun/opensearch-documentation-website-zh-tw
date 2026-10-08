@@ -1,3 +1,4 @@
+/* Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations. */
 const THEME_KEY = 'opensearch-docs-theme';
 const DARK_THEME = 'dark';
 const LIGHT_THEME = 'light';
@@ -9,7 +10,7 @@ function getCurrentTheme() {
 function storeTheme(theme) {
   try {
     localStorage.setItem(THEME_KEY, theme);
-  } catch (e) {
+  } catch {
     // apply default light theme
   }
 }
@@ -26,7 +27,7 @@ function applyTheme(theme) {
 function updateToggleButton(theme) {
   const toggleButtons = document.querySelectorAll('#theme-toggle');
   toggleButtons.forEach(button => {
-    const title = theme === LIGHT_THEME ? 'Switch to dark mode' : 'Switch to light mode';
+    const title = theme === LIGHT_THEME ? '切換為深色模式' : '切換為亮色模式';
     button.setAttribute('title', title);
     button.setAttribute('aria-label', title);
   });

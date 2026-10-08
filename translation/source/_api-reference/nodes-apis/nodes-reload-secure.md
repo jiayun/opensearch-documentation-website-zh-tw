@@ -1,0 +1,87 @@
+---
+layout: default
+title: Nodes reload secure settings
+parent: Nodes APIs
+nav_order: 50
+---
+
+# Nodes Reload Secure Settings API
+**Introduced 1.0**
+{: .label .label-purple }
+
+The nodes reload secure settings endpoint allows you to change secure settings on a node and reload the secure settings without restarting the node.
+
+## Endpoints
+
+```json
+POST _nodes/reload_secure_settings
+POST _nodes/{node_id}/reload_secure_settings
+```
+
+## Path parameter
+
+You can include the following optional path parameter in your request.
+
+Parameter | Type | Description
+:--- | :--- | :---
+`node_id` | String | A comma-separated list of node IDs used to filter results. Supports [node filters]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/#node-filters). Defaults to `_all`.
+
+## Request body fields
+
+The request may include an optional object containing the password for the OpenSearch keystore.
+
+```json
+{
+  "secure_settings_password": "keystore_password"
+}
+```
+
+## Example request
+
+The following is an example API request:
+
+<!-- spec_insert_start
+component: example_code
+rest: POST /_nodes/reload_secure_settings
+-->
+{% capture step1_rest %}
+POST /_nodes/reload_secure_settings
+{% endcapture %}
+
+{% capture step1_python %}
+
+
+response = client.nodes.reload_secure_settings(
+  body = { "Insert body here" }
+)
+
+{% endcapture %}
+
+{% include code-block.html
+    rest=step1_rest
+    python=step1_python %}
+<!-- spec_insert_end -->
+
+## Example response
+
+The following is an example response:
+
+```json
+{
+  "_nodes" : {
+    "total" : 1,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "cluster_name" : "opensearch-cluster",
+  "nodes" : {
+    "t7uqHu4SSuWObK3ElkCRfw" : {
+      "name" : "opensearch-node1"
+    }
+  }
+}
+```
+
+## Required permissions
+
+If you use the Security plugin, make sure you set the following permissions: `cluster:manage/nodes`.

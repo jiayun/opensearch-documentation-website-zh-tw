@@ -1,62 +1,63 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Explore the Discover application
+title: "探索 Discover 應用程式"
 parent: Getting started
 nav_order: 30
 ---
 
-# Explore the Discover application
+# 探索 Discover 應用程式
 
-The **Discover** application lets you search, filter, and examine your data interactively. Use it to understand what fields are available, how data is distributed over time, and what patterns exist.
+**Discover** 應用程式可讓您以互動方式搜尋、篩選及檢視資料。您可以使用它來了解有哪些欄位可用、資料隨時間的分布情形，以及存在哪些模式。
 
-With **Discover**, you can:
+使用 **Discover**，您可以：
 
-- Choose data for analysis, set a time range for that data, search the data, and filter the results.
-- Analyze your data: query and filter data, view results in a table, and examine documents.
-- Create histograms to display the distribution of your data.
+- 選擇要分析的資料、設定該資料的時間範圍、搜尋資料，並篩選結果。
+- 分析資料：查詢及篩選資料、在表格中檢視結果，以及檢視文件。
+- 建立直方圖以顯示資料的分布情形。
 
-In the search bar of the Discover and Dashboards applications, you can write queries in [Dashboards Query Language (DQL)]({{site.url}}{{site.baseurl}}/dashboards/dql/)---a simple text-based language for filtering data using field names and values. You can also switch to [query string (Lucene) syntax]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/).
+在 Discover 和 Dashboards 應用程式的搜尋列中，您可以使用 [Dashboards Query Language (DQL)]({{site.url}}{{site.baseurl}}/dashboards/dql/) 撰寫查詢——這是一種簡單的文字型語言，可使用欄位名稱和值來篩選資料。您也可以切換為 [查詢字串 (Lucene) 語法]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/)。
 
-## Prerequisites
+## 前置條件
 
-The examples on this page use the [**Sample flight data**](https://playground.opensearch.org/app/home#/tutorial_directory) dataset that is already installed in [OpenSearch Playground](https://playground.opensearch.org/app/home#/).
+本頁面的範例使用已安裝在 [OpenSearch Playground](https://playground.opensearch.org/app/home#/) 中的 [**Sample flight data**](https://playground.opensearch.org/app/home#/tutorial_directory) 資料集。
 
-If you're using a local installation of OpenSearch Dashboards and haven't added sample data yet, see [Prepare your data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
+如果您使用的是本機安裝的 OpenSearch Dashboards 且尚未加入範例資料，請參閱 [Prepare your data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
 
-## Try it: Search and filter flight data
+## 動手試試：搜尋及篩選航班資料
 
-Follow these steps to use the **Discover** application:
+請依照下列步驟使用 **Discover** 應用程式：
 
-1. From the navigation panel, select **OpenSearch Dashboards** > **Discover**.
+1. 從導覽面板中，選取 **OpenSearch Dashboards** > **Discover**。
 
-1. On the **Discover** page, select the index pattern `opensearch_dashboards_sample_data_flights` from the dropdown menu on the upper left.
+1. 在 **Discover** 頁面上，從左上方的下拉式選單中選取索引模式 `opensearch_dashboards_sample_data_flights`。
 
-1. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/calendar-icon.png" class="inline-icon" alt="calendar icon"/>{:/} (calendar) icon to change the [time filter]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/) from the default of **Last 15 minutes** to **Last 7 days**.
+1. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/calendar-icon.png" class="inline-icon" alt="calendar icon"/>{:/}（日曆）圖示，將 [時間篩選器]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/) 從預設的 **Last 15 minutes** 變更為 **Last 7 days**。
 
-1. In the DQL search bar, enter the following query: 
+1. 在 DQL 搜尋列中，輸入下列查詢： 
 
     ```sql
     FlightDelay:true AND DestCountry: US AND FlightDelayMin >= 60
     ```
     {% include copy.html %}
 
-1. Select **Update**.
+1. 選取 **Update**。
 
-    Results are shown for US-bound flights delayed by 60 minutes or more.
+    結果會顯示飛往美國且延誤 60 分鐘以上的航班。
 
-1. Filter data by selecting {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/plus-icon.png" class="inline-icon" alt="plus icon"/>{:/} (plus) **Add filter** from the DQL **search bar** and then selecting a **Field**, **Operator**, and **Value** from the dropdown lists in the **Edit Filter** popover. For example, select `FlightDelayType`, **is**, and **Weather Delay**.
+1. 若要篩選資料，請從 DQL **搜尋列**選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/plus-icon.png" class="inline-icon" alt="plus icon"/>{:/}（加號）**Add filter**，然後在 **Edit Filter** 快顯視窗的下拉式清單中選取 **Field**、**Operator** 和 **Value**。例如，選取 `FlightDelayType`、**is** 和 **Weather Delay**。
 
-1. Select **Save**.
+1. 選取 **Save**。
 
-    The resulting view is shown in the following image.
+    產生的檢視畫面如下圖所示。
 
-    ![Discover output showing filtered flight data]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-dashboards-discover.png)
+    ![顯示已篩選航班資料的 Discover 輸出]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-dashboards-discover.png)
 
-## Further reading
+## 進一步閱讀
 
-- For the full Discover reference, see [Exploring data with Discover]({{site.url}}{{site.baseurl}}/dashboards/discover/index-discover/).
-- For a DQL reference, see [Dashboards Query Language]({{site.url}}{{site.baseurl}}/dashboards/dql/).
+- 如需完整的 Discover 參考指南，請參閱 [Exploring data with Discover]({{site.url}}{{site.baseurl}}/dashboards/discover/index-discover/)。
+- 如需 DQL 參考指南，請參閱 [Dashboards Query Language]({{site.url}}{{site.baseurl}}/dashboards/dql/)。
 
-## Next steps
+## 後續步驟
 
-- Create a visualization from your data using [Explore the Visualize application]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-visualize/).
+- 使用 [Explore the Visualize application]({{site.url}}{{site.baseurl}}/dashboards/getting-started/explore-visualize/) 從您的資料建立視覺化。

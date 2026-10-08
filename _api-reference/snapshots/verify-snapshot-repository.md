@@ -1,45 +1,46 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Verify snaphot repository
+title: "驗證快照儲存庫"
 parent: Snapshot APIs
 nav_order: 4
 ---
 
 # Verify Snapshot Repository API
-**Introduced 1.0**
+**自 1.0 版起提供**
 {: .label .label-purple }
 
-Verifies that a snapshot repository is functional. Verifies the repository on each node in a cluster.
+驗證快照儲存庫是否正常運作。在叢集中的每個節點上驗證儲存庫。
 
-If verification is successful, the Verify Snapshot Repository API returns a list of nodes connected to the snapshot repository. If verification fails, the API returns an error.
+如果驗證成功，Verify Snapshot Repository API 會傳回已連線至快照儲存庫的節點清單。如果驗證失敗，API 會傳回錯誤。
 
-If you use the Security plugin, you must have the `manage cluster` privilege.
+如果您使用 Security 外掛程式，您必須具備 `manage cluster` 權限。
 {: .note}
 
-## Endpoints
+## 端點
 
 ```json
 GET _snapshot/{repository}/
 ```
 
-## Path parameters
+## 路徑參數
 
-Path parameters are optional. 
+路徑參數為選用。 
 
-| Parameter | Data type | Description | 
+| 參數 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `repository` | String | Name of repository to verify. |
+| `repository` | 字串 | 要驗證的儲存庫名稱。 |
 
-## Query parameters
+## 查詢參數
 
-| Parameter | Data type | Description | 
+| 參數 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `cluster_manager_timeout` | Time | Amount of time to wait for a connection to the cluster manager node. Optional, defaults to `30s`. |
-| `timeout` | Time | The period of time to wait for a response. If a response is not received before the timeout value, the request fails and returns an error. Defaults to `30s`. |
+| `cluster_manager_timeout` | 時間 | 等待與叢集管理員節點建立連線的時間。選用，預設為 `30s`。 |
+| `timeout` | 時間 | 等待回應的時間。如果在逾時值所指定的時間內未收到回應，請求會失敗並傳回錯誤。預設為 `30s`。 |
 
-## Example request
+## 範例請求
 
-The following request verifies that the `my-opensearch-repo` is functional:
+下列請求會驗證 `my-opensearch-repo` 是否正常運作：
 
 <!-- spec_insert_start
 component: example_code
@@ -64,11 +65,11 @@ response = client.snapshot.verify_repository(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-The following example corresponds to the preceding [Example request](#example-request).
+下列範例對應至前述的[範例請求](#example-request)。
 
-The `POST /_snapshot/my-opensearch-repo/_verify?timeout=0s&cluster_manager_timeout=50s` request returns the following fields:
+`POST /_snapshot/my-opensearch-repo/_verify?timeout=0s&cluster_manager_timeout=50s` 請求會傳回下列欄位：
 
 ````json
 {
@@ -80,7 +81,7 @@ The `POST /_snapshot/my-opensearch-repo/_verify?timeout=0s&cluster_manager_timeo
 }
 ````
 
-In the preceding sample, one node is connected to the snapshot repository. If more were connected, you would see them in the response. Example:
+在前述範例中，有一個節點已連線至快照儲存庫。如果有更多節點已連線，您會在回應中看到這些節點。例如：
 
 ````json
 {
@@ -94,12 +95,12 @@ In the preceding sample, one node is connected to the snapshot repository. If mo
 }
 ````
 
-## Response body fields
+## 回應本文欄位
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `nodes` | Object | A list (not an array) of nodes connected to the snapshot repository. Each node itself is a property where the node ID is the key and the name has an ID (Object) and a name (String). |
+| `nodes` | 物件 | 已連線至快照儲存庫的節點清單（並非陣列）。每個節點本身都是一個屬性，其中節點 ID 是索引鍵，而名稱具有 ID（物件）和名稱（字串）。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/repository/verify`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:admin/repository/verify`。

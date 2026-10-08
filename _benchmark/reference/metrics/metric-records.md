@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Metric records
+title: "指標記錄"
 nav_order: 30
 parent: Metrics reference
 grand_parent: Reference
@@ -8,9 +9,9 @@ redirect_from:
   - /benchmark/metrics/metric-records/
 ---
 
-# Metric records
+# 指標記錄
 
-OpenSearch Benchmark stores metrics in the `benchmark-metrics-*` indexes. A new index is created each month. The following is an example metric record stored in the `benchmark-metrics-2023-08` index:
+OpenSearch Benchmark 會將指標儲存在 `benchmark-metrics-*` 索引中。每個月都會建立一個新索引。以下是儲存在 `benchmark-metrics-2023-08` 索引中的指標記錄範例：
 
 ```json
 {
@@ -67,74 +68,74 @@ OpenSearch Benchmark stores metrics in the `benchmark-metrics-*` indexes. A new 
 }
 ```
 
-The following fields found in the `_source` section of the metric's record are configurable in the `opensearch-benchmarks-metrics-*` file.
+指標記錄的 `_source` 區段中的下列欄位，可以在 `opensearch-benchmarks-metrics-*` 檔案中設定。
 
 <!-- vale off -->
 ## @timestamp
 <!-- vale on -->
 
-The timestamp of when the sample was taken since the epoch, in milliseconds. For request-related metrics, such as `latency` or `service_time`, this is the timestamp of when OpenSearch Benchmark issued the request.
+取樣時間的時間戳記，以自 epoch 起算的毫秒數表示。對於與請求相關的指標，例如 `latency` 或 `service_time`，此值為 OpenSearch Benchmark 發出請求時的時間戳記。
 
 <!-- vale off -->
 ## relative-time-ms
 <!-- vale on -->
 
-The relative time since the start of the benchmark, in milliseconds. This is useful for comparing time-series graphs across multiple tests. For example, you can compare the indexing throughput over time across multiple tests.
+自基準測試開始以來的相對時間，以毫秒為單位。這對於比較多個測試的時間序列圖表很有用。例如，您可以比較多個測試中索引處理量隨時間的變化。
 
 <!-- vale off -->
 ## test-execution-id
 <!-- vale on -->
 
-A UUID that changes on every invocation of the workload. It is intended to group all samples of a benchmarking run.
+每次叫用工作負載時都會變更的 UUID，用於將同一次基準測試執行的所有樣本分組。
 
 <!-- vale off -->
 ## test-execution-timestamp
 <!-- vale on -->
 
-The timestamp of when the workload was invoked (always in UTC).
+叫用工作負載時的時間戳記（一律為 UTC）。
 
 <!-- vale off -->
 ## environment
 <!-- vale on -->
 
-The `environment` describes the origin of a metric record. This is defined when initially [configuring]({{site.url}}{{site.baseurl}}/benchmark/configuring-benchmark/) OpenSearch Benchmark. You can use separate environments for different benchmarks but store the metric records in the same index.
+`environment` 描述指標記錄的來源。此值是在初次[設定]({{site.url}}{{site.baseurl}}/benchmark/configuring-benchmark/) OpenSearch Benchmark 時定義的。您可以為不同的基準測試使用不同的環境，但將指標記錄儲存在同一個索引中。
 
 <!-- vale off -->
 ## workload, test_procedure, cluster-config-instance
 <!-- vale on -->
 
-The workload, test procedures, and configuration instances for which the metrics are produced.
+產生這些指標的工作負載、測試程序和組態執行個體。
 
 <!-- vale off -->
 ## name, value, unit
 <!-- vale on -->
 
-The actual metric name and value, with an optional unit. Depending on the nature of a metric, it is either sampled periodically by OpenSearch Benchmark, for example, CPU utilization or query latency, or measured once, for example, the final size of the index.
+實際的指標名稱和值，以及選用的單位。根據指標的性質，指標可能由 OpenSearch Benchmark 定期取樣（例如 CPU 使用率或查詢延遲），也可能只測量一次（例如索引的最終大小）。
 
 <!-- vale off -->
 ## sample-type
 <!-- vale on -->
 
-Determines whether to configure a benchmark to run in warmup mode by setting it to `warmup` or `normal`. Only `normal` samples are considered for the results that are reported.
+透過將其設定為 `warmup` 或 `normal`，決定是否將基準測試設定為以暖機模式執行。只有 `normal` 樣本會納入所報告的結果中。
 
 <!-- vale off -->
 ## meta
 <!-- vale on -->
 
-The meta information for each metric record, including the following:
+每筆指標記錄的中繼資訊，包括下列項目：
 
-- CPU info: The number of physical and logical cores and the model name.
-- Operating system info: The name and version of the operating system.
-- Hostname.
-- Node name: A unique name given to each node when OpenSearch Benchmark provisions the cluster.
-- Source revision: The Git hash of the version of OpenSearch that is benchmarked.
-- Distribution version: The distribution version of OpenSearch that is benchmarked.
-- Custom tags: You can define custom tags by using the command line flag `--user-tags`. The tags are prefixed by `tag_` in order to avoid accidental clashes with OpenSearch Benchmark internal tags.
-- Operation specific: An optional substructure of the operation. For bulk requests, this may be the number of documents; for searches, the number of hits.
+- CPU 資訊：實體核心與邏輯核心的數量，以及型號名稱。
+- 作業系統資訊：作業系統的名稱和版本。
+- 主機名稱。
+- 節點名稱：OpenSearch Benchmark 佈建叢集時，為每個節點指定的唯一名稱。
+- 原始碼修訂版本：進行基準測試的 OpenSearch 版本的 Git 雜湊值。
+- 發行版本：進行基準測試的 OpenSearch 發行版本。
+- 自訂標籤：您可以使用命令列旗標 `--user-tags` 定義自訂標籤。標籤會加上 `tag_` 前置詞，以避免意外與 OpenSearch Benchmark 內部標籤衝突。
+- 作業特定資訊：作業的選用子結構。對於大量請求，這可能是文件數量；對於搜尋，則是命中數。
 
-Depending on the metric record, some meta information might be missing.
+根據指標記錄的不同，部分中繼資訊可能會缺少。
 
-## Next steps
+## 後續步驟
 
-- For more information about how to access OpenSearch Benchmark metrics, see [Metrics]({{site.url}}{{site.baseurl}}/benchmark/metrics/index/).
-- For more information about the metrics stored in OpenSearch Benchmark, see [Metric keys]({{site.url}}{{site.baseurl}}/benchmark/metrics/metric-keys/).
+- 如需有關如何存取 OpenSearch Benchmark 指標的詳細資訊，請參閱[指標]({{site.url}}{{site.baseurl}}/benchmark/metrics/index/)。
+- 如需有關 OpenSearch Benchmark 中所儲存指標的詳細資訊，請參閱[指標鍵]({{site.url}}{{site.baseurl}}/benchmark/metrics/metric-keys/)。

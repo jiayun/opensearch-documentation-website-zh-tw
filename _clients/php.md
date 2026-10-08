@@ -1,55 +1,56 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: PHP client
+title: "PHP 用戶端"
 nav_order: 70
 ---
 
-# PHP client
+# PHP 用戶端
 
-The OpenSearch PHP client provides a safer and easier way to interact with your OpenSearch cluster. Rather than using OpenSearch from a browser and potentially exposing your data to the public, you can build an OpenSearch client that takes care of sending requests to your cluster. The client contains a library of APIs that let you perform different operations on your cluster and return a standard response body.
+OpenSearch PHP 用戶端提供一種更安全、更簡單的方式來與您的 OpenSearch 叢集互動。與其在瀏覽器中使用 OpenSearch 而可能將資料暴露給公眾，您可以建立一個 OpenSearch 用戶端，由它負責向叢集傳送請求。該用戶端包含一個 API 程式庫，讓您能對叢集執行不同的操作並回傳標準的回應本文。
 
-This getting started guide illustrates how to connect to OpenSearch, index documents, and run queries. For the client source code, see the [`opensearch-php` repo](https://github.com/opensearch-project/opensearch-php).
+本入門指南說明如何連線至 OpenSearch、將文件編製索引，以及執行查詢。用戶端的原始碼請參閱 [`opensearch-php` 儲存庫](https://github.com/opensearch-project/opensearch-php)。
 
-## Installing the PHP client
+## 安裝 PHP 用戶端
 
-The client requires PHP 8.2 or later. To add the client to your project, install it using [Composer](https://getcomposer.org/):
+此用戶端需要 PHP 8.2 或更新版本。若要將用戶端加入您的專案，請使用 [Composer](https://getcomposer.org/) 安裝：
 
 ```bash
 composer require opensearch-project/opensearch-php
 ```
 {% include copy.html %}
 
-To install a specific version of the client, run the following command:
+若要安裝特定版本的用戶端，請執行以下命令：
 
 ```bash
 composer require opensearch-project/opensearch-php:<version>
 ```
 {% include copy.html %}
 
-The client sends requests through any HTTP client that implements [PSR-18](https://www.php-fig.org/psr/psr-18/), so you must also install one. To use [Guzzle](https://docs.guzzlephp.org/en/stable/), run the following command:
+用戶端會透過任何實作 [PSR-18](https://www.php-fig.org/psr/psr-18/) 的 HTTP 用戶端傳送請求，因此您也必須安裝一個。若要使用 [Guzzle](https://docs.guzzlephp.org/en/stable/)，請執行以下命令：
 
 ```bash
 composer require guzzlehttp/guzzle
 ```
 {% include copy.html %}
 
-To use the [Symfony HTTP client](https://symfony.com/doc/current/http_client.html), run the following command:
+若要使用 [Symfony HTTP 用戶端](https://symfony.com/doc/current/http_client.html)，請執行以下命令：
 
 ```bash
 composer require symfony/http-client
 ```
 {% include copy.html %}
 
-Then require the `autoload` file from `composer` in your code:
+然後在您的程式碼中 require `composer` 內的 `autoload` 檔案：
 
 ```php
 require __DIR__ . '/vendor/autoload.php';
 ```
 {% include copy.html %}
 
-## Connecting to OpenSearch
+## 連線至 OpenSearch
 
-Create a client using `GuzzleClientFactory` or `SymfonyClientFactory`. The `base_uri` option is required. The factory passes all other options to the underlying HTTP client. The following code connects to a cluster that does not have the Security plugin enabled:
+使用 `GuzzleClientFactory` 或 `SymfonyClientFactory` 建立用戶端。`base_uri` 選項為必要。工廠會將所有其他選項傳遞給底層的 HTTP 用戶端。以下程式碼連線至未啟用 Security 外掛程式的叢集：
 
 ```php
 $client = (new \OpenSearch\GuzzleClientFactory())->create([
@@ -58,7 +59,7 @@ $client = (new \OpenSearch\GuzzleClientFactory())->create([
 ```
 {% include copy.html %}
 
-To connect to a cluster that has the Security plugin enabled, provide credentials and TLS options:
+若要連線至已啟用 Security 外掛程式的叢集，請提供憑證與 TLS 選項：
 
 ```php
 $client = (new \OpenSearch\GuzzleClientFactory())->create([
@@ -70,7 +71,7 @@ $client = (new \OpenSearch\GuzzleClientFactory())->create([
 ```
 {% include copy.html %}
 
-The Symfony HTTP client accepts equivalent options:
+Symfony HTTP 用戶端接受等效的選項：
 
 ```php
 $client = (new \OpenSearch\SymfonyClientFactory())->create([
@@ -82,20 +83,20 @@ $client = (new \OpenSearch\SymfonyClientFactory())->create([
 ```
 {% include copy.html %}
 
-For more information about the supported PSR clients, see [Client factories](https://github.com/opensearch-project/opensearch-php/blob/main/USER_GUIDE.md#client-factories). For more information about basic authentication, see [Basic authentication using a PSR client](https://github.com/opensearch-project/opensearch-php/blob/main/guides/auth.md#using-a-psr-client).
+如需支援的 PSR 用戶端詳細資訊，請參閱 [用戶端工廠](https://github.com/opensearch-project/opensearch-php/blob/main/USER_GUIDE.md#client-factories)。如需基本驗證的詳細資訊，請參閱 [使用 PSR 用戶端進行基本驗證](https://github.com/opensearch-project/opensearch-php/blob/main/guides/auth.md#using-a-psr-client)。
 
-## Connecting to Amazon OpenSearch Service
+## 連線至 Amazon OpenSearch Service
 
-To sign requests using AWS Identity and Access Management (IAM) credentials, install the AWS SDK for PHP:
+若要使用 AWS Identity and Access Management (IAM) 憑證簽署請求，請安裝 AWS SDK for PHP：
 
 ```bash
 composer require aws/aws-sdk-php
 ```
 {% include copy.html %}
 
-In the following example, replace the endpoint with your domain endpoint, which is listed on the domain's details page in the Amazon OpenSearch Service console.
+在以下範例中，請將端點替換為您的網域端點，該端點列於 Amazon OpenSearch Service 主控台中網域的詳細資料頁面。
 
-Then pass the `auth_aws` option when you create the client:
+然後在建立用戶端時傳遞 `auth_aws` 選項：
 
 ```php
 $client = (new \OpenSearch\GuzzleClientFactory())->create([
@@ -108,9 +109,9 @@ $client = (new \OpenSearch\GuzzleClientFactory())->create([
 ```
 {% include copy.html %}
 
-Because the example does not specify `credentials`, the AWS SDK for PHP resolves credentials using the default credential provider chain. The chain checks environment variables, the shared AWS config and credentials files, and the IAM role of the Amazon EC2 instance or container in which the code runs.
+由於範例未指定 `credentials`，AWS SDK for PHP 會使用預設的憑證供應商鏈來解析憑證。該鏈會檢查環境變數、共用的 AWS 組態與憑證檔案，以及程式碼執行所在的 Amazon EC2 執行個體或容器的 IAM 角色。
 
-To pass credentials explicitly, add the `credentials` option. Specify `session_token` only when you use temporary credentials:
+若要明確傳遞憑證，請新增 `credentials` 選項。僅在使用暫時性憑證時才指定 `session_token`：
 
 ```php
 $client = (new \OpenSearch\GuzzleClientFactory())->create([
@@ -128,13 +129,13 @@ $client = (new \OpenSearch\GuzzleClientFactory())->create([
 ```
 {% include copy.html %}
 
-For more information, see [IAM authentication using a PSR client](https://github.com/opensearch-project/opensearch-php/blob/main/guides/auth.md#using-a-psr-client-1).
+如需詳細資訊，請參閱 [使用 PSR 用戶端進行 IAM 驗證](https://github.com/opensearch-project/opensearch-php/blob/main/guides/auth.md#using-a-psr-client-1)。
 
-## Connecting to Amazon OpenSearch Serverless
+## 連線至 Amazon OpenSearch Serverless
 
-In the following example, replace the endpoint with your collection endpoint, which is listed on the collection's details page in the Amazon OpenSearch Service console.
+在以下範例中，請將端點替換為您的集合端點，該端點列於 Amazon OpenSearch Service 主控台中集合的詳細資料頁面。
 
-To connect to Amazon OpenSearch Serverless, set `service` to `aoss` and specify your collection endpoint. The following example checks whether an index exists:
+若要連線至 Amazon OpenSearch Serverless，請將 `service` 設定為 `aoss` 並指定您的集合端點。以下範例檢查索引是否存在：
 
 ```php
 $client = (new \OpenSearch\GuzzleClientFactory())->create([
@@ -150,12 +151,12 @@ echo $exists ? 'Index exists' : 'Index does not exist', PHP_EOL;
 ```
 {% include copy.html %}
 
-Amazon OpenSearch Serverless supports a subset of OpenSearch API operations and does not support the `refresh` parameter used in the examples on this page. For more information, see [Supported operations and plugins in Amazon OpenSearch Serverless](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-genref.html).
+Amazon OpenSearch Serverless 支援 OpenSearch API 操作的子集，且不支援本頁範例中使用的 `refresh` 參數。如需詳細資訊，請參閱 [Amazon OpenSearch Serverless 支援的操作與外掛程式](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-genref.html)。
 {: .note}
 
-## Creating an index
+## 建立索引
 
-The following example creates an index with one primary shard and one replica. It explicitly maps the `gradDate` field as a `date` in the `yyyy-MM-dd` format. OpenSearch maps the other document fields dynamically when you index documents:
+以下範例建立一個具有一個主要分片與一個副本的索引。它將 `gradDate` 欄位明確對應為 `yyyy-MM-dd` 格式的 `date`。當您將文件編製索引時，OpenSearch 會動態對應其他文件欄位：
 
 ```php
 $index = 'students';
@@ -179,9 +180,9 @@ $client->indices()->create([
 ```
 {% include copy.html %}
 
-## Indexing a document
+## 將文件編製索引
 
-Index a document using the following code. Set `refresh` to `true` to make the document available for search immediately:
+使用以下程式碼將文件編製索引。將 `refresh` 設定為 `true`，讓文件立即可供搜尋：
 
 ```php
 $response = $client->index([
@@ -198,11 +199,11 @@ $response = $client->index([
 ```
 {% include copy.html %}
 
-To create a document only if its ID does not already exist, use `create()` instead of `index()`. A `create()` request for an existing ID returns a `409` response.
+若要只在文件 ID 尚不存在時建立文件，請使用 `create()` 而非 `index()`。對已存在的 ID 發出 `create()` 請求會回傳 `409` 回應。
 
-## Bulk indexing
+## 大量編製索引
 
-Index multiple documents in a single request using the following code. The request body alternates between an action line and the document to which the action applies:
+使用下列程式碼，在單一請求中將多份文件編製索引。請求本文會交替出現動作行，以及該動作所套用的文件：
 
 ```php
 $response = $client->bulk([
@@ -217,11 +218,11 @@ $response = $client->bulk([
 ```
 {% include copy.html %}
 
-A bulk request does not throw an exception when an individual action fails, so check the `errors` field of the response and the `items` array for per-action results.
+當個別動作失敗時，大量請求不會擲回例外狀況，因此請檢查回應的 `errors` 欄位與 `items` 陣列，以取得各個動作的結果。
 
-## Searching for documents
+## 搜尋文件
 
-Search for all documents in an index using the following code:
+使用下列程式碼搜尋索引中的所有文件：
 
 ```php
 $response = $client->search([
@@ -234,7 +235,7 @@ foreach ($response['hits']['hits'] as $hit) {
 ```
 {% include copy.html %}
 
-Search using a range query:
+使用範圍查詢進行搜尋：
 
 ```php
 $response = $client->search([
@@ -253,7 +254,7 @@ $response = $client->search([
 ```
 {% include copy.html %}
 
-To write the query in SQL, use the `sql()` namespace. The response contains a `schema` array describing the columns and a `datarows` array containing the matching rows:
+若要以 SQL 撰寫查詢，請使用 `sql()` 命名空間。回應包含描述各欄的 `schema` 陣列，以及包含相符資料列的 `datarows` 陣列：
 
 ```php
 $response = $client->sql()->query([
@@ -264,9 +265,9 @@ $response = $client->sql()->query([
 ```
 {% include copy.html %}
 
-## Paginating results
+## 將結果分頁
 
-To paginate results, use the `from` and `size` parameters. The following example sorts students by graduation date and retrieves the results two at a time. The first request returns the first page of results, and the second request returns the next page:
+若要將結果分頁，請使用 `from` 和 `size` 參數。下列範例依畢業日期排序學生，並每次擷取兩筆結果。第一個請求會傳回第一頁結果，第二個請求則傳回下一頁：
 
 ```php
 foreach ([0, 2] as $from) {
@@ -286,11 +287,11 @@ foreach ([0, 2] as $from) {
 ```
 {% include copy.html %}
 
-The `from` and `size` parameters work well for the first pages of results. To paginate through a large number of results, use point in time with `search_after`, as described in [Paginating using a point in time](#paginating-using-a-point-in-time).
+`from` 和 `size` 參數適用於結果的前幾頁。若要逐頁瀏覽大量結果，請搭配 `search_after` 使用時間點，如[使用時間點進行分頁](#paginating-using-a-point-in-time)中所述。
 
-### Paginating using a point in time
+### 使用時間點進行分頁
 
-To paginate through a large number of results or to page through a fixed view of the index, use a point in time (PIT) with `search_after`. Create a PIT, pass its ID in the search body, and use the `sort` values of the last hit as the `search_after` value for the next page:
+若要逐頁瀏覽大量結果，或逐頁瀏覽索引的固定檢視，請搭配 `search_after` 使用時間點 (PIT)。建立 PIT，在搜尋本文中傳入其 ID，並將最後一筆命中結果的 `sort` 值作為下一頁的 `search_after` 值：
 
 ```php
 $response = $client->createPit([
@@ -326,9 +327,9 @@ $client->deletePit([
 ```
 {% include copy.html %}
 
-## Updating a document
+## 更新文件
 
-Update a document by wrapping the changed fields in a `doc` object:
+將變更的欄位包裝在 `doc` 物件中，以更新文件：
 
 ```php
 $response = $client->update([
@@ -343,9 +344,9 @@ $response = $client->update([
 ```
 {% include copy.html %}
 
-## Deleting a document
+## 刪除文件
 
-Delete a document using the following code:
+使用下列程式碼刪除文件：
 
 ```php
 $response = $client->delete([
@@ -356,7 +357,7 @@ $response = $client->delete([
 ```
 {% include copy.html %}
 
-To delete all documents that match a query, use `deleteByQuery()`:
+若要刪除所有符合查詢的文件，請使用 `deleteByQuery()`：
 
 ```php
 $response = $client->deleteByQuery([
@@ -375,9 +376,9 @@ $response = $client->deleteByQuery([
 ```
 {% include copy.html %}
 
-## Deleting an index
+## 刪除索引
 
-Delete an index using the following code:
+使用下列程式碼刪除索引：
 
 ```php
 $response = $client->indices()->delete([
@@ -386,14 +387,14 @@ $response = $client->indices()->delete([
 ```
 {% include copy.html %}
 
-## Sample program
+## 範例程式
 
-This sample program combines the code from the preceding sections. It connects to a cluster that has the Security plugin enabled. To connect to a cluster without the Security plugin, change the lines marked with `// Without security` comments.
+此範例程式結合了前述各節的程式碼。它會連線至已啟用 Security 外掛程式的叢集。若要連線至未使用 Security 外掛程式的叢集，請變更標有 `// Without security` 註解的程式碼行。
 
-This sample program is for testing only. It specifies credentials in code and disables certificate validation so that it can connect to a cluster that uses self-signed certificates. In production, load credentials from a secure location and validate the cluster's certificate.
+此範例程式僅供測試使用。它在程式碼中指定認證資訊，並停用憑證驗證，以便連線至使用自我簽署憑證的叢集。在正式環境中，請從安全的位置載入認證資訊，並驗證叢集的憑證。
 {: .warning}
 
-The following sample program creates a client, creates an index, indexes documents individually and in bulk, searches for documents, updates a document, deletes a document, and then deletes the index:
+下列範例程式會建立用戶端、建立索引、逐一及大量將文件編製索引、搜尋文件、更新文件、刪除文件，最後刪除索引：
 
 ```php
 <?php
@@ -550,7 +551,7 @@ try {
 ```
 {% include copy.html %}
 
-The program produces the following output:
+此程式會產生下列輸出：
 
 ```
 Creating index......
@@ -587,8 +588,8 @@ Deleting the index......
 Acknowledged: true
 ```
 
-## Related documentation
+## 相關文件
 
-- For more examples of using the client, see the [`opensearch-php` user guide](https://github.com/opensearch-project/opensearch-php/blob/main/USER_GUIDE.md).
-- For guides to specific tasks, such as authentication and sending raw requests, see the [`opensearch-php` guides](https://github.com/opensearch-project/opensearch-php/tree/main/guides).
-- For complete sample applications, see the [`opensearch-php` samples](https://github.com/opensearch-project/opensearch-php/tree/main/samples).
+- 如需更多使用用戶端的範例，請參閱 [`opensearch-php` 使用者指南](https://github.com/opensearch-project/opensearch-php/blob/main/USER_GUIDE.md)。
+- 如需特定工作的指南，例如驗證與傳送原始請求，請參閱 [`opensearch-php` 指南](https://github.com/opensearch-project/opensearch-php/tree/main/guides)。
+- 如需完整的範例應用程式，請參閱 [`opensearch-php` 範例](https://github.com/opensearch-project/opensearch-php/tree/main/samples)。

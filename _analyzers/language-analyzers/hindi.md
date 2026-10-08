@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Hindi
+title: "印地語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 190
 ---
 
-# Hindi analyzer
+# 印地語分析器
 
-The built-in `hindi` analyzer can be applied to a text field using the following command:
+您可以使用下列命令，將內建的 `hindi` 分析器套用至文字欄位：
 
 ```json
 PUT /hindi-index
@@ -25,9 +26,9 @@ PUT /hindi-index
 ```
 {% include copy-curl.html %}
 
-## Stem exclusion
+## 詞幹排除
 
-You can use `stem_exclusion` with this language analyzer using the following command:
+您可以使用下列命令，在此語言分析器中使用 `stem_exclusion`：
 
 ```json
 PUT index_with_stem_exclusion_hindi_analyzer
@@ -46,24 +47,24 @@ PUT index_with_stem_exclusion_hindi_analyzer
 ```
 {% include copy-curl.html %}
 
-## Hindi analyzer internals
+## 印地語分析器內部結構
 
-The `hindi` analyzer is built using the following components:
+`hindi` 分析器由下列元件建構而成：
 
-- Tokenizer: `standard`
+- 斷詞器：`standard`
 
-- Token filters:
+- 詞元篩選器：
   - lowercase
   - decimal_digit
   - keyword
   - normalization (indic)
-  - normalization (Hindi)
-  - stop (Hindi)
-  - stemmer (Hindi)
+  - normalization（印地語）
+  - stop（印地語）
+  - stemmer（印地語）
 
-## Custom Hindi analyzer
+## 自訂印地語分析器
 
-You can create a custom Hindi analyzer using the following command:
+您可以使用下列命令建立自訂印地語分析器：
 
 ```json
 PUT /hindi-index
@@ -113,9 +114,9 @@ PUT /hindi-index
 ```
 {% include copy-curl.html %}
 
-## Generated tokens
+## 產生的詞元
 
-Use the following request to examine the tokens generated using the analyzer:
+使用下列請求，檢查使用此分析器產生的詞元：
 
 ```json
 POST /hindi-index/_analyze
@@ -126,7 +127,7 @@ POST /hindi-index/_analyze
 ```
 {% include copy-curl.html %}
 
-The response contains the generated tokens:
+回應中包含產生的詞元：
 
 ```json
 {

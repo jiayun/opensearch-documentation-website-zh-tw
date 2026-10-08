@@ -1,46 +1,47 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Nodes hot threads
+title: "節點熱門執行緒"
 parent: Nodes APIs
 nav_order: 30
 ---
 
 # Nodes Hot Threads API
-**Introduced 1.0**
+**1.0 版推出**
 {: .label .label-purple }
 
-The Nodes Hot Threads endpoint provides information about busy JVM threads for selected cluster nodes. It provides a unique view of the activity on each node.
+Nodes Hot Threads 端點提供所選叢集節點上忙碌 JVM 執行緒的相關資訊，讓您以獨特的角度檢視每個節點上的活動。
 
 
-## Endpoints
+## 端點
 
 ```json
 GET /_nodes/hot_threads
 GET /_nodes/{node_id}/hot_threads
 ```
 
-## Path parameters
+## 路徑參數
 
-You can include the following optional path parameter in your request. 
+您可以在請求中加入下列選用的路徑參數。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`node_id` | String | A comma-separated list of node IDs used to filter results. Supports [node filters]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/#node-filters). Defaults to `_all`.
+`node_id` | String | 以逗號分隔的節點 ID 清單，用於篩選結果。支援[節點篩選條件]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/#node-filters)。預設為 `_all`。
 
-## Query parameters
+## 查詢參數
 
-You can include the following query parameters in your request. All query parameters are optional.
+您可以在請求中加入下列查詢參數。所有查詢參數皆為選用。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :---| :---
-`snapshots` | Integer | The number of samples of thread stack traces. Defaults to `10`.
-`interval` | Time | The interval between consecutive samples. Defaults to `500ms`.
-`threads` | Integer | The number of the busiest threads to return information about. Defaults to `3`.
-`ignore_idle_threads` | Boolean   | Don’t show threads that are in known idle states, such as waiting on a socket select or pulling from an empty task queue. Defaults to `true`.
-type | String | Supported thread types are `cpu`, `wait`, or `block`. Defaults to `cpu`.
-`timeout` | Time | Sets the time limit for node response. Default value is `30s`.
+`snapshots` | Integer | 執行緒堆疊追蹤的取樣次數。預設為 `10`。
+`interval` | Time | 連續兩次取樣之間的間隔。預設為 `500ms`。
+`threads` | Integer | 要傳回資訊的最忙碌執行緒數量。預設為 `3`。
+`ignore_idle_threads` | Boolean   | 不顯示處於已知閒置狀態的執行緒，例如正在等待 socket select 或正從空的工作佇列中拉取工作的執行緒。預設為 `true`。
+type | String | 支援的執行緒類型為 `cpu`、`wait` 或 `block`。預設為 `cpu`。
+`timeout` | Time | 設定節點回應的時間限制。預設值為 `30s`。
 
-## Example request 
+## 範例請求
 
 <!-- spec_insert_start
 component: example_code
@@ -64,7 +65,7 @@ response = client.nodes.info(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```bash
 ::: {opensearch}{F-ByTQzVQ3GQeYzQJArJGQ}{GxbcLdCATPWggOuQHJAoCw}{127.0.0.1}{127.0.0.1:9300}{dimr}{shard_indexing_pressure_enabled=true}
@@ -76,26 +77,26 @@ response = client.nodes.info(
        org.opensearch.performanceanalyzer.collectors.ScheduledMetricCollectorsExecutor.run(ScheduledMetricCollectorsExecutor.java:100)
 ```
 
-## Example response
+## 範例回應
 
-Unlike the majority of OpenSearch API responses, this response is in a text format.
+與大多數 OpenSearch API 回應不同，此回應為文字格式。
 
-It consists of one section per each cluster node included in the response.
+回應中包含的每個叢集節點各有一個區段。
 
-Each section starts with a single line containing the following segments:
+每個區段都以單獨一行開頭，該行包含下列片段：
 
-Line segment | Description
+行片段 | 說明
 :--- |:-------
-<code>:::&nbsp;</code>  | Line start (a distinct visual symbol).
-`{global-eu-35}` | Node name.
-`{uFPbKLDOTlOmdnwUlKW8sw}` | NodeId.
-`{OAM8OT5CQAyasWuIDeVyUA}` | EphemeralId.
-`{global-eu-35.local}` | Hostname.
-`{[gdv2:a284:2acv:5fa6:0:3a2:7260:74cf]:9300}` | Host address.
-`{dimr}` | Node roles (d=data, i=ingest, m=cluster&nbsp;manager, r=remote&nbsp;cluster&nbsp;client).
-`{zone=west-a2, shard_indexing_pressure_enabled=true}` | Node attributes.
+<code>:::&nbsp;</code>  | 行首（一個易於辨識的視覺符號）。
+`{global-eu-35}` | 節點名稱。
+`{uFPbKLDOTlOmdnwUlKW8sw}` | NodeId。
+`{OAM8OT5CQAyasWuIDeVyUA}` | EphemeralId。
+`{global-eu-35.local}` | 主機名稱。
+`{[gdv2:a284:2acv:5fa6:0:3a2:7260:74cf]:9300}` | 主機位址。
+`{dimr}` | 節點角色（d=資料、i=匯入、m=叢集管理員、r=遠端叢集用戶端）。
+`{zone=west-a2, shard_indexing_pressure_enabled=true}` | 節點屬性。
 
-Then information about threads of the selected type is provided.
+接著會提供所選類型執行緒的相關資訊。
 
 ```bash
 ::: {global-eu-35}{uFPbKLDOTlOmdnwUlKW8sw}{OAM8OT5CQAyasWuIDeVyUA}{global-eu-35.local}{[gdv2:a284:2acv:5fa6:0:3a2:7260:74cf]:9300}{dimr}{zone=west-a2, shard_indexing_pressure_enabled=true}
@@ -133,6 +134,6 @@ Then information about threads of the selected type is provided.
        app//org.opensearch.transport.OutboundHan...
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you set the following permissions: `cluster:monitor/nodes/hot_threads`.
+如果您使用 Security 外掛程式，請確認您已設定下列權限：`cluster:monitor/nodes/hot_threads`。

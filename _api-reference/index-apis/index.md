@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index APIs
+title: "索引 API"
 has_children: true
 has_toc: false
 nav_order: 60
@@ -10,25 +11,25 @@ redirect_from:
   - /api-reference/index-apis/
 ---
 
-# Index APIs
-**Introduced 1.0**
+# 索引 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The index API operations let you interact with indexes in your cluster. Using these operations, you can create, delete, close, and complete other index-related operations.
+索引 API 操作可讓您與叢集中的索引互動。使用這些操作，您可以建立、刪除、關閉索引，以及完成其他索引相關操作。
 
-## Index API operations
+## 索引 API 操作
 
-The following index API operations are available, organized by category:
+下列索引 API 操作依類別整理如下：
 
-- [Alias APIs]({{site.url}}{{site.baseurl}}/api-reference/alias/) - Create, update, delete, and retrieve information about index aliases
-- [Core index APIs]({{site.url}}{{site.baseurl}}/api-reference/index-apis/core-index-apis/) - Fundamental operations for managing the lifecycle of indexes
-- [Index operations]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-operations/) - Advanced functionality for maintaining and optimizing indexes
-- [Index settings and mappings]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-settings-mappings/) - Configure and modify index behavior and structure
-- [Index templates]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-templates/) - Create and manage templates for automatic index configuration
-- [Index blocks and allocation]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-blocks-allocation/) - Control index access restrictions and shard allocation
-- [Dangling index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/dangling-index/) - Manage indexes that exist on disk but are not part of cluster state
+- [別名 API]({{site.url}}{{site.baseurl}}/api-reference/alias/) - 建立、更新、刪除索引別名，以及擷取索引別名的資訊
+- [核心索引 API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/core-index-apis/) - 管理索引生命週期的基本操作
+- [索引操作]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-operations/) - 維護及最佳化索引的進階功能
+- [索引設定與對應]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-settings-mappings/) - 設定及修改索引的行為與結構
+- [索引範本]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-templates/) - 建立及管理用於自動設定索引組態的範本
+- [索引封鎖與分配]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-blocks-allocation/) - 控制索引存取限制與分片分配
+- [懸置索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/dangling-index/) - 管理存在於磁碟上但不屬於叢集狀態的索引
 
-To manage data streams, use the [Data stream APIs]({{site.url}}{{site.baseurl}}/api-reference/data-stream/).
+若要管理資料串流，請使用[資料串流 API]({{site.url}}{{site.baseurl}}/api-reference/data-stream/)。
 
-If you use the Security plugin, make sure you have the appropriate permissions.
+如果您使用 Security 外掛程式，請確認您具備適當的權限。
 {: .note }

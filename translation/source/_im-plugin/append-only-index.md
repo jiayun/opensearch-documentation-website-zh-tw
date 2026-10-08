@@ -1,0 +1,103 @@
+---
+layout: default
+title: Append-only index
+nav_order: 30
+---
+
+# Append-only index
+
+An append-only index is an immutable index that only allows document ingestion (appending) while blocking all updates or deletions after initial document creation. When you enable the append-only setting for an index, OpenSearch prevents any modifications to existing documents. You can only add new documents to the index.
+
+When you configure an index as append-only, the following operations return an error:
+
+- Document update call (Update API)
+- Document delete call (Delete API)
+- Update by query call
+- Delete by query call
+- Bulk API calls made with the update, delete, or upsert actions
+- Bulk API calls containing an index action with a custom document ID
+
+Because an append-only index performs no updates or deletions, it skips soft deletes and version tracking, which reduces storage use and the work done during segment merges. Use an append-only index for data that is not modified after it is ingested, such as logs, metrics, observability data, or security events.
+
+## Creating an append-only index
+
+The following request creates a new index named `my-append-only-index` with all updates disabled:
+
+```json
+PUT /my-append-only-index
+{
+  "settings": {
+    "index.append_only.enabled": true
+  }
+}
+```
+{% include copy-curl.html %}
+
+After an index is set to append-only, it cannot be changed to another index type.
+{: .warning}
+
+
+To append data from an existing index to a new append-only index, use the Reindex API. Because append-only indexes don't support custom document IDs, you need to set the `ctx._id` of the source index to `null`. This allows documents to be added through reindexing.
+
+The following example reindexes documents from a source index (`my-source-index`) into the new append-only index. Create the source index first:
+
+```json
+POST /my-source-index/_doc?refresh=true
+{
+  "message": "login attempt"
+}
+```
+{% include copy-curl.html %}
+
+Then reindex its documents into the append-only index:
+
+```json
+POST /_reindex
+{
+  "source": {
+    "index": "my-source-index"
+  },
+  "dest": {
+    "index": "my-append-only-index"
+  },
+  "script": {
+    "source": "ctx._id = null",
+    "lang": "painless"
+  }
+}
+
+```
+{% include copy-curl.html %}
+
+## Adaptive shard selection for bulk indexing
+**Introduced 3.5**
+{: .label .label-purple }
+
+For append-only indexes, OpenSearch automatically generates a random `_id` for write routing when you don't explicitly specify one. In bulk writing, a single bulk entry may be split into dozens of sub-bulks and dispatched to different shards, which leads to significant long-tail latency and markedly degrades write performance.
+
+Adaptive shard selection guarantees that all sub-bulks of a single bulk entry are routed to the same shard, thereby achieving a substantial boost in bulk write performance.
+
+The `index.bulk.adaptive_shard_selection.enabled` setting is dynamic, so you can enable it on an existing append-only index:
+
+```json
+PUT /my-append-only-index/_settings
+{
+  "index.bulk.adaptive_shard_selection.enabled": "true"
+}
+```
+{% include copy-curl.html %}
+
+You can also set it when you create the index:
+
+```json
+PUT /my-new-append-only-index
+{
+  "settings": {
+    "index.append_only.enabled": "true",
+    "index.bulk.adaptive_shard_selection.enabled": "true"
+  }
+}
+```
+{% include copy-curl.html %}
+
+For more information, see [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/).

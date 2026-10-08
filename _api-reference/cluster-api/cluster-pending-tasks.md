@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cluster pending tasks
+title: "叢集擱置中任務"
 nav_order: 46
 parent: Cluster APIs
 has_children: false
 ---
 
 # Cluster Pending Tasks API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The `/_cluster/pending_tasks` API returns a list of cluster-level changes that have not yet been executed. These pending tasks are typically queued operations such as index creation, template updates, shard allocation changes, and other cluster state updates.
+`/_cluster/pending_tasks` API 會回傳尚未執行的叢集層級變更清單。這些擱置中的任務通常是排入佇列的操作，例如建立索引、更新範本、變更分片配置，以及其他叢集狀態更新。
 
-This API is useful for monitoring the state of the cluster and diagnosing delays in cluster state updates, especially when tasks are backed up or stuck.
+此 API 可用於監控叢集狀態，並診斷叢集狀態更新延遲的問題，尤其是在任務積壓或卡住時。
 
-## Endpoint
+## 端點
 
 ```json
 GET /_cluster/pending_tasks
 ```
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter        | Data type | Description                                                                                                             |
+| 參數        | 資料類型 | 說明                                                                                                             |
 | ---------------- | --------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `local` | Boolean | Whether to return information from the local node only instead of the elected cluster manager node. Default is `false`. |
-| `cluster_manager_timeout` | Time | Specifies the timeout for connecting to the cluster manager node. Default is `30s`.                                     |
+| `local` | 布林值 | 是否僅從本機節點回傳資訊，而非從選出的叢集管理員節點回傳。預設為 `false`。 |
+| `cluster_manager_timeout` | Time | 指定連線至叢集管理員節點的逾時時間。預設為 `30s`。                                     |
 
-## Example request
+## 範例請求
 
-The following request returns the list of currently pending cluster state update tasks:
+下列請求會回傳目前擱置中的叢集狀態更新任務清單：
 
 <!-- spec_insert_start
 component: example_code
@@ -51,7 +52,7 @@ response = client.cluster.pending_tasks()
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -76,23 +77,23 @@ response = client.cluster.pending_tasks()
 }
 ```
 
-The `_cluster/pending_tasks` API typically returns an empty array because the tasks are normally processed too quickly to be included in the response.
+`_cluster/pending_tasks` API 通常會回傳空陣列，因為任務通常處理得太快，而不會出現在回應中。
 {: .note}  
 
-## Response fields
+## 回應欄位
 
-The following table lists all response fields.
+下表列出所有回應欄位。
 
-| Field                           | Data type | Description                                                        |
+| 欄位                           | 資料類型 | 說明                                                        |
 | ------------------------------- | --------- | ------------------------------------------------------------------ |
-| `tasks` | Array | The list of pending cluster state update tasks.                        |
-| `tasks[n].insert_order` | Integer | The order in which the task was added to the queue.                    |
-| `tasks[n].priority` | String | The priority level of the task (for example, `HIGH`, `URGENT`).               |
-| `tasks[n].source` | String | The description of the operation that submitted the task.              |
-| `tasks[n].executing` | Boolean | Confirmation of whether the task is currently being executed.                      |
-| `tasks[n].time_in_queue_millis` | Integer | The amount of time the task has been waiting in the queue (in milliseconds). |
-| `tasks[n].time_in_queue` | String | A human-readable version of `time_in_queue_millis`.                  |
+| `tasks` | 陣列 | 擱置中的叢集狀態更新任務清單。                        |
+| `tasks[n].insert_order` | 整數 | 任務加入佇列的順序。                    |
+| `tasks[n].priority` | 字串 | 任務的優先順序層級 (例如 `HIGH`、`URGENT`)。               |
+| `tasks[n].source` | 字串 | 提交該任務之操作的說明。              |
+| `tasks[n].executing` | 布林值 | 確認任務目前是否正在執行。                      |
+| `tasks[n].time_in_queue_millis` | 整數 | 任務在佇列中等待的時間 (以毫秒為單位)。 |
+| `tasks[n].time_in_queue` | 字串 | `time_in_queue_millis` 的易讀版本。                  |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:monitor/task`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:monitor/task`。
