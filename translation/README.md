@@ -20,7 +20,7 @@ The source inventory contains 1,870 pages. Translation and independent review ru
 | `translation/schemas/*.json` | yes | JSON Schemas for the model request/result formats |
 | `.translation-cache/` | no (ignored) | Validated chunk results, approved reviews, commit journal, run logs |
 
-Baseline commit: `55880db68ce90d82cf6d83ac9a44bc0fc86a07a2`. Pages are all
+Baseline commit: `ea8f887557c3a673bbb1200837e750ca0d02de7a`. Pages are all
 `output: true` collections in the baseline `_config.yml` (files with front
 matter) plus `index.md`, `search.md` and `404.md`. `translation/` (including
 the inventory and source store) is excluded from the Jekyll build by
@@ -282,8 +282,13 @@ an `exceptions` phrase (for example 支持向量機, 在線上, 用戶端) is ig
   prompt rules. It runs in an empty temporary directory outside the
   repository with the prompt as its only input, so it has no workspace to
   read; `claude` runs with `--tools ''`. No permission-bypass flags are used.
-- A source sync needs a deliberate re-baseline: delete the inventory, run
-  `init` at the new commit, and retranslate changed pages.
+- An upstream sync needs a deliberate re-baseline under the runner's exclusive
+  lock; `init` does not migrate an existing baseline. Verify and back up the old
+  sources and translations, compare the two Git revisions, and reset only pages
+  whose source bytes changed. Preserve identical-source translations and their
+  review records. Update the source store, manifest, inventory, config, license
+  baseline, and validated navigation pins together. Retranslate and independently
+  review changed pages, then run the complete publication checks.
 
 ## Tests
 

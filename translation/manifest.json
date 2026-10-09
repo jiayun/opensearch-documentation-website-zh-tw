@@ -1,5 +1,5 @@
 {
- "baseline_commit": "55880db68ce90d82cf6d83ac9a44bc0fc86a07a2",
+ "baseline_commit": "ea8f887557c3a673bbb1200837e750ca0d02de7a",
  "pages": {
   "404.md": {
    "attempts": 1,
@@ -54685,26 +54685,26 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-09T02:26:58+00:00",
+    "at": "2026-10-09T08:54:18+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "d0921d61bacd7305",
     "provider": "codex-review",
-    "target_sha256": "71ddc9c6948e49cdc562839d3d7f3c5e942cff999c9f50703091a1f3245e1100"
+    "target_sha256": "fc6d479a9df95caff3b1cea963f497e9bffddba6b3e4572c7b4e2fa0a0233986"
    },
-   "source_sha256": "26160266ece9fe8e077732bb4ada060653c40db380ee1fcf4a18039a1b2dc7a5",
+   "source_sha256": "96dfee90e572840e7fafd8ec7d0580b8a93352cb916fb13911158195b046750c",
    "status": "reviewed",
-   "target_sha256": "71ddc9c6948e49cdc562839d3d7f3c5e942cff999c9f50703091a1f3245e1100",
-   "translated_source_sha256": "26160266ece9fe8e077732bb4ada060653c40db380ee1fcf4a18039a1b2dc7a5",
+   "target_sha256": "fc6d479a9df95caff3b1cea963f497e9bffddba6b3e4572c7b4e2fa0a0233986",
+   "translated_source_sha256": "96dfee90e572840e7fafd8ec7d0580b8a93352cb916fb13911158195b046750c",
    "translator": {
-    "at": "2026-10-09T01:21:26+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-09T08:53:23+00:00",
+    "prompt_version": "d0921d61bacd7305",
     "providers": [
      {
       "chunks": [
        0,
-       3,
+       2,
        4
       ],
       "family": "ollama",
@@ -54714,7 +54714,7 @@
      {
       "chunks": [
        1,
-       2
+       3
       ],
       "family": "ollama",
       "model": "glm-5.3-flash:cloud",
@@ -54733,6 +54733,7 @@
        "section.011",
        "section.013",
        "section.014",
+       "section.016",
        "section.017",
        "section.024",
        "section.026"
@@ -54748,7 +54749,7 @@
      }
     ]
    },
-   "updated_at": "2026-10-09T02:26:58+00:00"
+   "updated_at": "2026-10-09T08:54:18+00:00"
   },
   "_query-dsl/compound/hybrid.md": {
    "attempts": 1,
@@ -55032,7 +55033,7 @@
    "updated_at": "2026-10-09T01:24:04+00:00"
   },
   "_query-dsl/full-text/match-phrase-prefix.md": {
-   "attempts": 3,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "Full-text queries",
@@ -55040,52 +55041,45 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T22:29:21+00:00",
+    "at": "2026-10-09T08:50:43+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "d0921d61bacd7305",
     "provider": "codex-review",
-    "target_sha256": "7f7d4ec0b76ef7ce8f2ac6206f0184004c9bef415e2da3320eae59c05c51831c"
+    "target_sha256": "af131808b762758ad07394e14db850aee5c9afe533a4e293f480499c6e1d4950"
    },
-   "source_sha256": "7912cfac5803f17686dbee72052f432788d382a2319c956dadeb581ab861d01f",
+   "source_sha256": "e70e4cfdda498fd33bb55edf0bbf6b28c7e062eec07e37acd793fae2fddee88d",
    "status": "reviewed",
-   "target_sha256": "7f7d4ec0b76ef7ce8f2ac6206f0184004c9bef415e2da3320eae59c05c51831c",
-   "translated_source_sha256": "7912cfac5803f17686dbee72052f432788d382a2319c956dadeb581ab861d01f",
+   "target_sha256": "af131808b762758ad07394e14db850aee5c9afe533a4e293f480499c6e1d4950",
+   "translated_source_sha256": "e70e4cfdda498fd33bb55edf0bbf6b28c7e062eec07e37acd793fae2fddee88d",
    "translator": {
-    "at": "2026-10-08T22:27:33+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-09T08:49:12+00:00",
+    "prompt_version": "d0921d61bacd7305",
     "providers": [
      {
       "chunks": [
        0
       ],
       "family": "ollama",
-      "model": "glm-5.3-flash:cloud",
-      "provider": "ollama-cloud-glm"
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
      },
      {
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex",
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
       "repairs": [
        "front_matter",
        "section.001",
        "section.002",
-       "section.003"
-      ]
-     },
-     {
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex",
-      "repairs": [
-       "section.002"
+       "section.003",
+       "section.004"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-08T22:29:21+00:00"
+   "updated_at": "2026-10-09T08:50:43+00:00"
   },
   "_query-dsl/full-text/match-phrase.md": {
    "attempts": 2,
@@ -55176,7 +55170,7 @@
    "updated_at": "2026-10-07T15:17:03+00:00"
   },
   "_query-dsl/full-text/multi-match.md": {
-   "attempts": 2,
+   "attempts": 1,
    "last_error": null,
    "original_front_matter": {
     "parent": "Full-text queries",
@@ -55184,22 +55178,37 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T22:34:06+00:00",
+    "at": "2026-10-09T08:58:15+00:00",
     "family": "codex:gpt-6-sol",
-    "issues": [],
+    "issues": [
+     {
+      "id": "section.012",
+      "problem": "「term 查詢」中的查詢類型名稱缺少程式碼格式。",
+      "severity": "minor",
+      "suggestion": "改為「用於建構 `term` 查詢的詞彙」。"
+     }
+    ],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "d0921d61bacd7305",
     "provider": "codex-review",
-    "target_sha256": "147177da3f1c14801196ae3f85145ad4f0f4808508babbaee10e0a69c37e02e5"
+    "target_sha256": "65cb2aff67914c9aa4efe21725d7345d8588bd19f7c938531de006fdb3d2ebb4"
    },
-   "source_sha256": "75b97f56c02cd4cffc4868f93f2edd818571694807957aee631018a1f4f2f3be",
+   "source_sha256": "725eac02cc6e8905c592ff32ac4045f42fead4be440a58a409144bf07d933ed1",
    "status": "reviewed",
-   "target_sha256": "147177da3f1c14801196ae3f85145ad4f0f4808508babbaee10e0a69c37e02e5",
-   "translated_source_sha256": "75b97f56c02cd4cffc4868f93f2edd818571694807957aee631018a1f4f2f3be",
+   "target_sha256": "65cb2aff67914c9aa4efe21725d7345d8588bd19f7c938531de006fdb3d2ebb4",
+   "translated_source_sha256": "725eac02cc6e8905c592ff32ac4045f42fead4be440a58a409144bf07d933ed1",
    "translator": {
-    "at": "2026-10-08T22:32:02+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-09T08:57:38+00:00",
+    "prompt_version": "d0921d61bacd7305",
     "providers": [
+     {
+      "chunks": [
+       1
+      ],
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude"
+     },
      {
       "chunks": [
        2
@@ -55210,7 +55219,8 @@
      },
      {
       "chunks": [
-       1
+       3,
+       4
       ],
       "family": "ollama",
       "model": "deepseek-v4.1-flash:cloud",
@@ -55218,32 +55228,45 @@
      },
      {
       "chunks": [
-       0,
-       3
+       0
       ],
       "family": "ollama",
       "model": "glm-5.3-flash:cloud",
       "provider": "ollama-cloud-glm"
      },
      {
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex",
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
       "repairs": [
        "front_matter",
-       "section.001",
-       "section.002",
        "section.003",
        "section.004",
-       "section.005",
-       "section.007",
        "section.008",
+       "section.012",
+       "section.013"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.010",
        "section.012"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.001"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-08T22:34:06+00:00"
+   "updated_at": "2026-10-09T08:58:15+00:00"
   },
   "_query-dsl/full-text/query-string.md": {
    "attempts": 3,
@@ -55883,7 +55906,7 @@
    "updated_at": "2026-10-08T22:42:52+00:00"
   },
   "_query-dsl/joining/nested.md": {
-   "attempts": 2,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "parent": "Joining queries",
@@ -55891,44 +55914,50 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T22:45:10+00:00",
+    "at": "2026-10-09T08:51:41+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "d0921d61bacd7305",
     "provider": "codex-review",
-    "target_sha256": "cdd3c23068f990332748e5b94ddda430f9fa51c6fe89b5b604f77851fd88d095"
+    "target_sha256": "b010caa86b080f84d0f6ab64e5cfff6e5070a0c29b08a79f5fd4f614fc9403b3"
    },
-   "source_sha256": "588a4ecddf5c5262b93813e49c73f7078fbde7fa6bac42f01b2c4d83d8abd6f2",
+   "source_sha256": "2c2e27f78fdf81caa5beca1cbde84d9135ee25d120f29624453b7006cb05ec18",
    "status": "reviewed",
-   "target_sha256": "cdd3c23068f990332748e5b94ddda430f9fa51c6fe89b5b604f77851fd88d095",
-   "translated_source_sha256": "588a4ecddf5c5262b93813e49c73f7078fbde7fa6bac42f01b2c4d83d8abd6f2",
+   "target_sha256": "b010caa86b080f84d0f6ab64e5cfff6e5070a0c29b08a79f5fd4f614fc9403b3",
+   "translated_source_sha256": "2c2e27f78fdf81caa5beca1cbde84d9135ee25d120f29624453b7006cb05ec18",
    "translator": {
-    "at": "2026-10-08T22:44:28+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-09T08:51:03+00:00",
+    "prompt_version": "d0921d61bacd7305",
     "providers": [
      {
       "chunks": [
        0
       ],
       "family": "ollama",
-      "model": "deepseek-v4.1-flash:cloud",
-      "provider": "ollama-cloud"
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
      },
      {
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex",
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
       "repairs": [
        "front_matter",
-       "section.001",
-       "section.002",
        "section.003"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.001"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-08T22:45:10+00:00"
+   "updated_at": "2026-10-09T08:51:41+00:00"
   },
   "_query-dsl/joining/parent-id.md": {
    "attempts": 1,
@@ -57264,7 +57293,7 @@
    "updated_at": "2026-10-09T01:27:42+00:00"
   },
   "_query-dsl/specialized/percolate.md": {
-   "attempts": 3,
+   "attempts": 1,
    "last_error": null,
    "original_front_matter": {
     "parent": "Specialized queries",
@@ -57272,67 +57301,55 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-09T01:29:59+00:00",
+    "at": "2026-10-09T08:52:00+00:00",
     "family": "codex:gpt-6-sol",
-    "issues": [],
+    "issues": [
+     {
+      "id": "section.008",
+      "problem": "說明文字中的「slot」未翻譯，與後文「插槽」的用語不一致。",
+      "severity": "minor",
+      "suggestion": "將「slot 欄位名稱」改為「插槽欄位名稱」。"
+     },
+     {
+      "id": "section.009",
+      "problem": "表格中的「slot」未翻譯。",
+      "severity": "minor",
+      "suggestion": "將「相符 slot 的回應欄位」改為「相符插槽的回應欄位」。"
+     }
+    ],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "d0921d61bacd7305",
     "provider": "codex-review",
-    "target_sha256": "cc0e5a4f1707a879e0d80ca27ff05a8881d1e557e78b3c530c50cde7bef3070c"
+    "target_sha256": "fd2d3f229406154efa17e1f24a4fb276f7583c20f37186076bab0c54c3a7a988"
    },
-   "source_sha256": "85c5dcb4de813e56b4fe0014895be7e151bb941647d9a0e4eb0e719e4fb360e3",
+   "source_sha256": "4d21ccb8829bdb4cd883924a00100fb94af81173e8caaedf24f6746770b2e7e1",
    "status": "reviewed",
-   "target_sha256": "cc0e5a4f1707a879e0d80ca27ff05a8881d1e557e78b3c530c50cde7bef3070c",
-   "translated_source_sha256": "85c5dcb4de813e56b4fe0014895be7e151bb941647d9a0e4eb0e719e4fb360e3",
+   "target_sha256": "fd2d3f229406154efa17e1f24a4fb276f7583c20f37186076bab0c54c3a7a988",
+   "translated_source_sha256": "4d21ccb8829bdb4cd883924a00100fb94af81173e8caaedf24f6746770b2e7e1",
    "translator": {
-    "at": "2026-10-09T01:28:09+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-09T08:51:15+00:00",
+    "prompt_version": "d0921d61bacd7305",
     "providers": [
+     {
+      "chunks": [
+       1
+      ],
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude"
+     },
      {
       "chunks": [
        0,
        2
       ],
       "family": "ollama",
-      "model": "deepseek-v4.1-flash:cloud",
-      "provider": "ollama-cloud"
-     },
-     {
-      "chunks": [
-       1
-      ],
-      "family": "ollama",
       "model": "glm-5.3-flash:cloud",
       "provider": "ollama-cloud-glm"
-     },
-     {
-      "family": "claude",
-      "model": "claude-opus-5-5",
-      "provider": "claude",
-      "repairs": [
-       "section.001",
-       "section.002",
-       "section.005",
-       "section.006",
-       "section.007",
-       "section.008",
-       "section.009",
-       "section.010",
-       "section.013"
-      ]
-     },
-     {
-      "family": "claude",
-      "model": "claude-opus-5-5",
-      "provider": "claude",
-      "repairs": [
-       "section.001",
-       "section.006"
-      ]
      }
     ]
    },
-   "updated_at": "2026-10-09T01:29:59+00:00"
+   "updated_at": "2026-10-09T08:52:00+00:00"
   },
   "_query-dsl/specialized/rank-feature.md": {
    "attempts": 1,
@@ -57395,7 +57412,7 @@
    "updated_at": "2026-10-08T23:09:23+00:00"
   },
   "_query-dsl/specialized/script-score.md": {
-   "attempts": 2,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "parent": "Specialized queries",
@@ -57403,25 +57420,39 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T23:11:35+00:00",
+    "at": "2026-10-09T08:55:07+00:00",
     "family": "codex:gpt-6-sol",
-    "issues": [],
+    "issues": [
+     {
+      "id": "section.003",
+      "problem": "「將指令碼傳回的分數相乘」未明確指出乘數。",
+      "severity": "minor",
+      "suggestion": "以 `boost` 值乘以指令碼傳回的分數。"
+     },
+     {
+      "id": "section.023",
+      "problem": "標題使用「因數」，與本文其他處的「欄位值因子函式」不一致。",
+      "severity": "minor",
+      "suggestion": "### 欄位值因子函式"
+     }
+    ],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "d0921d61bacd7305",
     "provider": "codex-review",
-    "target_sha256": "f7a44ce6e4d89580be0bbdfd6097d7aeb923587a4b40cb1b81826910ef52eed0"
+    "target_sha256": "9749d2ee59c3d3d77fb6dcc11e9903a559894ad00510de0db0de0a11b69ad609"
    },
-   "source_sha256": "de8d37dff9e6f5230fffe8c2b613778d1c4475f24e14451c68f3f8f40bb83a0e",
+   "source_sha256": "1686cf5fd5e3935db4c1fc49cd3ec1d38fb15f228474d423d749b8152d921288",
    "status": "reviewed",
-   "target_sha256": "f7a44ce6e4d89580be0bbdfd6097d7aeb923587a4b40cb1b81826910ef52eed0",
-   "translated_source_sha256": "de8d37dff9e6f5230fffe8c2b613778d1c4475f24e14451c68f3f8f40bb83a0e",
+   "target_sha256": "9749d2ee59c3d3d77fb6dcc11e9903a559894ad00510de0db0de0a11b69ad609",
+   "translated_source_sha256": "1686cf5fd5e3935db4c1fc49cd3ec1d38fb15f228474d423d749b8152d921288",
    "translator": {
-    "at": "2026-10-08T23:10:41+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-09T08:54:16+00:00",
+    "prompt_version": "d0921d61bacd7305",
     "providers": [
      {
       "chunks": [
-       1
+       0,
+       2
       ],
       "family": "ollama",
       "model": "deepseek-v4.1-flash:cloud",
@@ -57429,31 +57460,35 @@
      },
      {
       "chunks": [
-       0
+       1
       ],
       "family": "ollama",
       "model": "glm-5.3-flash:cloud",
       "provider": "ollama-cloud-glm"
      },
      {
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex",
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
       "repairs": [
-       "front_matter",
        "section.003",
-       "section.004",
-       "section.005",
-       "section.007",
        "section.009",
        "section.011",
-       "section.017",
-       "section.020"
+       "section.015",
+       "section.022"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.013"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-08T23:11:35+00:00"
+   "updated_at": "2026-10-09T08:55:07+00:00"
   },
   "_query-dsl/specialized/script.md": {
    "attempts": 2,
