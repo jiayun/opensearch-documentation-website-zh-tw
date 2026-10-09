@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Nested
+title: "巢狀"
 parent: Joining queries
 nav_order: 5
 ---
 
-# Nested query
+# 巢狀查詢
 
-The `nested` query acts as a wrapper for other queries to search [nested]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/) fields. The nested field objects are searched as though they were indexed as separate documents. If an object matches the search, the `nested` query returns the parent document at the root level.
+`nested` 查詢可包裝其他查詢，用來搜尋 [nested]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/) 欄位。巢狀欄位物件會以彷彿個別文件編製索引的方式進行搜尋。若某個物件符合搜尋條件，`nested` 查詢會傳回根層級的父文件。
 
-## Example 
+## 範例 
 
-Before you can run a `nested` query, your index must contain a [nested]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/) field. 
+在執行 `nested` 查詢之前，您的索引必須包含 [nested]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/) 欄位。 
 
-To configure an example index containing nested fields, send the following request:
+若要設定包含巢狀欄位的範例索引，請傳送下列請求：
 
 ```json
 PUT /testindex 
@@ -37,7 +38,7 @@ PUT /testindex
 ```
 {% include copy-curl.html %}
 
-Next, index a document into the example index:
+接著，將文件編製索引至範例索引：
 
 ```json
 PUT /testindex/_doc/1
@@ -50,7 +51,7 @@ PUT /testindex/_doc/1
 ```
 {% include copy-curl.html %}
 
-To search the nested `patient` field, wrap your query in a `nested` query and provide the `path` to the nested field:
+若要搜尋巢狀 `patient` 欄位，請將您的查詢包裝在 `nested` 查詢中，並指定巢狀欄位的 `path`：
 
 ```json
 GET /testindex/_search
@@ -69,7 +70,7 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-The query returns the matching document:
+查詢會傳回相符的文件：
 
 ```json
 {
@@ -104,9 +105,9 @@ The query returns the matching document:
 }
 ```
 
-## Retrieving inner hits
+## 擷取內部命中
 
-To return inner hits that matched the query, provide the `inner_hits` parameter:
+若要傳回符合查詢的內部命中，請提供 `inner_hits` 參數：
 
 ```json
 GET /testindex/_search
@@ -126,9 +127,9 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the additional `inner_hits` field. The `_nested` field identifies the specific inner object from which the inner hit originated. It contains the nested hit and the offset relative to its position in the `_source`. Because of sorting and scoring, the position of the hit objects in `inner_hits` often differs from their original location in the nested object.
+回應包含額外的 `inner_hits` 欄位。`_nested` 欄位會識別內部命中源自哪個特定的內部物件。它包含巢狀命中，以及相對於其在 `_source` 中位置的位移。由於排序與評分，命中物件在 `inner_hits` 中的位置通常與其在巢狀物件中的原始位置不同。
 
-By default, the `_source` of the hit objects within `inner_hits` is returned relative to the `_nested` field. In this example, the `_source` within `inner_hits` contains the `name` and `age` fields as opposed to the top-level `_source`, which contains the whole `patient` object:
+根據預設，命中物件在 `inner_hits` 內的 `_source` 會相對於 `_nested` 欄位傳回。在此範例中，`inner_hits` 內的 `_source` 包含 `name` 與 `age` 欄位，而非包含整個 `patient` 物件的頂層 `_source`：
 
 ```json
 {
@@ -189,16 +190,16 @@ By default, the `_source` of the hit objects within `inner_hits` is returned rel
 }
 ```
 
-You can disable returning `_source` by configuring the `_source` field in the mappings. For more information, see [Source]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/source/).
+您可以透過在對應中設定 `_source` 欄位，來停用傳回 `_source`。如需更多資訊，請參閱 [來源]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/source/)。
 {: .tip}
 
-For more information about retrieving inner hits, see [Inner hits]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/).
+如需擷取內部命中的更多資訊，請參閱 [內部命中]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/)。
 
-## Multi-level nested queries
+## 多層巢狀查詢
 
-You can search documents that have nested objects inside other nested objects using multi-level nested queries. In this example, you'll query multiple layers of nested fields by specifying a nested query for each level of the hierarchy.
+您可以使用多層巢狀查詢，搜尋在其他巢狀物件內含有巢狀物件的文件。在此範例中，您將為階層的每一層指定巢狀查詢，以查詢多層巢狀欄位。
 
-First, create an index with multi-level nested fields:
+首先，建立具有多層巢狀欄位的索引：
 
 ```json
 PUT /patients
@@ -233,7 +234,7 @@ PUT /patients
 ```
 {% include copy-curl.html %}
 
-Next, index a document into the example index:
+接著，將文件編製索引至範例索引：
 
 ```json
 PUT /patients/_doc/1
@@ -257,7 +258,7 @@ PUT /patients/_doc/1
 ```
 {% include copy-curl.html %}
 
-To search the nested `patient` field, use a multi-level `nested` query. The following query searches for patients whose contact information includes a person named `Jane` with a relationship of `mother`:
+若要搜尋巢狀 `patient` 欄位，請使用多層 `nested` 查詢。下列查詢會搜尋聯絡資訊中包含名為 `Jane`、關係為 `mother` 之人的病患：
 
 ```json
 GET /patients/_search
@@ -284,7 +285,7 @@ GET /patients/_search
 ```
 {% include copy-curl.html %}
 
-The query returns the patient who has a contact entry matching these details:
+查詢會傳回聯絡項目符合這些詳細資料的病患：
 
 ```json
 {
@@ -330,18 +331,18 @@ The query returns the patient who has a contact entry matching these details:
 }
 ```
 
-## Parameters
+## 參數
 
-The following table lists all top-level parameters supported by `nested` queries.
+下表列出 `nested` 查詢支援的所有最上層參數。
 
-| Parameter  | Required/Optional | Description  |
+| 參數  | 必要/選用 | 說明  |
 |:---|:---|:---|
-| `path` | Required | Specifies the path to the nested object that you want to search. |
-| `query` | Required | The query to run on the nested objects within the specified `path`. If a nested object matches the query, the root parent document is returned. You can search nested fields using dot notation, such as `nested_object.subfield`. Multi-level nesting is supported and automatically detected. Thus, an inner `nested` query within another nested query automatically matches the correct nesting level, instead of the root. |
-| `ignore_unmapped` | Optional | Indicates whether to ignore unmapped `path` fields and not return documents instead of throwing an error. You can provide this parameter when querying multiple indexes, some of which may not contain the `path` field. Default is `false`. |
-| `score_mode` | Optional | Defines how scores of matching inner documents influence the parent document's score. Valid values are: <br> - `avg`: Uses the average relevance score of all matching inner documents. <br> - `max`: Assigns the highest relevance score from the matching inner documents to the parent. <br> - `min`: Assigns the lowest relevance score from the matching inner documents to the parent. <br> - `sum`: Sums the relevance scores of all matching inner documents. <br> - `none`: Ignores the relevance scores of inner documents and assigns a score of `0` to the parent document. <br> Default is `avg`. |
-| `inner_hits` | Optional | If provided, returns the underlying hits that matched the query. |
+| `path` | 必要 | 指定您要搜尋之巢狀物件的路徑。 |
+| `query` | 必要 | 要在指定 `path` 內的巢狀物件上執行的查詢。若巢狀物件符合查詢，則會傳回根父文件。您可以使用點標記法搜尋巢狀欄位，例如 `nested_object.subfield`。支援多層巢狀，且會自動偵測。因此，另一個巢狀查詢內的內部 `nested` 查詢會自動符合正確的巢狀層級，而非根層級。 |
+| `ignore_unmapped` | 選用 | 指出是否忽略未對應的 `path` 欄位並改為不傳回文件，而非擲回錯誤。當查詢多個索引時，若其中部分索引可能未包含 `path` 欄位，您可以提供此參數。預設為 `false`。 |
+| `score_mode` | 選用 | 定義相符內部文件的分數如何影響父文件的分數。有效值為：<br> - `avg`：使用所有相符內部文件的平均相關性分數。<br> - `max`：將相符內部文件中最高的相關性分數指派給父文件。<br> - `min`：將相符內部文件中最低的相關性分數指派給父文件。<br> - `sum`：加總所有相符內部文件的相關性分數。<br> - `none`：忽略內部文件的相關性分數，並將分數 `0` 指派給父文件。<br> 預設為 `avg`。 |
+| `inner_hits` | 選用 | 若提供，則傳回符合查詢的基礎命中。 |
 
-## Next steps
+## 後續步驟
 
-- Learn more about [retrieving inner hits]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/).
+- 進一步了解[擷取內部命中]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/)。

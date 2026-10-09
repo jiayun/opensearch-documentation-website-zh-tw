@@ -2,6 +2,40 @@ require 'nokogiri'
 require 'json'
 require 'kramdown'
 require 'uri'
+require 'digest'
+
+# Hash-pinned Markdown syntax repairs for malformed baseline sources; the same
+# rules as scripts/translation_pipeline/source_errata.py. The immutable files
+# in translation/source/ are never modified.
+module TranslationSourceErrata
+  def self.load(site)
+    path = File.join(site.source, 'translation', 'source-errata.json')
+    return {} unless File.exist?(path)
+    @cache ||= {}
+    @cache[[path, File.mtime(path)]] ||= begin
+      data = JSON.parse(File.read(path, encoding: 'UTF-8'))
+      unless data['schema_version'] == 1 && data['errata'].is_a?(Hash)
+        raise "#{path}: unsupported source errata file"
+      end
+      data['errata']
+    end
+  end
+
+  def self.apply(site, content, digest)
+    entry = load(site)[digest]
+    return content unless entry
+    replacements = entry['replacements']
+    raise "malformed source erratum #{digest}" unless replacements.is_a?(Array) && !replacements.empty?
+    replacements.reduce(content) do |text, item|
+      before = item['before']
+      after = item['after']
+      count = before.is_a?(String) && !before.empty? && after.is_a?(String) ? text.scan(before).size : 0
+      raise "source erratum pattern occurs #{count} times (expected exactly once): #{before.inspect}" unless count == 1
+      index = text.index(before)
+      text[0...index] + after + text[(index + before.length)..]
+    end
+  end
+end
 
 Jekyll::Hooks.register [:pages, :documents], :post_convert do |doc|
   site = doc.site
@@ -19,7 +53,12 @@ Jekyll::Hooks.register [:pages, :documents], :post_convert do |doc|
   next unless File.exist?(source_path)
   
   baseline_content = File.read(source_path)
-  
+  # Translations follow the repaired baseline, so its English heading IDs
+  # come from the same repaired text.
+  baseline_content = TranslationSourceErrata.apply(
+    site, baseline_content, Digest::SHA256.hexdigest(File.binread(source_path))
+  )
+
   if baseline_content =~ Jekyll::Document::YAML_FRONT_MATTER_REGEXP
     match = Regexp.last_match
     baseline_body = match.post_match

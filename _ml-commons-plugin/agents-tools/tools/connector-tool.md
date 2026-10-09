@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Connector tool
+title: "連接器工具"
 has_children: false
 has_toc: false
 nav_order: 20
@@ -9,20 +10,20 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# Connector tool
-**Introduced 2.15**
+# 連接器工具
+**於 2.15 版推出**
 {: .label .label-purple }
 <!-- vale on -->
 
-The `ConnectorTool` uses a [connector]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/) to call any REST API function. For example, you can use a `ConnectorTool` to call a Lambda function through its REST API interface.
+`ConnectorTool` 使用[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)來呼叫任何 REST API 函式。例如，您可以使用 `ConnectorTool` 透過其 REST API 介面呼叫 Lambda 函式。
 
-## Step 1: Register a connector with an execute action
+## 步驟 1：以 execute 動作註冊連接器
 
-The `ConnectorTool` can only run an `execute` action within a connector. Before you can create a `ConnectorTool`, you need to configure a connector and provide an `execute` action in the `actions` array. The `execute` action is used to invoke a function at a REST API endpoint. It is similar to the `predict` action, which is used to invoke a machine learning (ML) model. 
+`ConnectorTool` 只能在連接器內執行 `execute` 動作。在建立 `ConnectorTool` 之前，您需要設定連接器，並在 `actions` 陣列中提供 `execute` 動作。`execute` 動作用於呼叫 REST API 端點上的函式，類似於用於呼叫機器學習 (ML) 模型的 `predict` 動作。
 
-For this example, you'll create a connector for a simple AWS Lambda function that accepts two integers and returns their sum. This function is hosted on a dedicated endpoint with a specific URL, which you'll provide in the `url` parameter. For more information, see [Lambda function URLs](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html).
+在此範例中，您將為一個接受兩個整數並回傳其總和的簡單 AWS Lambda 函式建立連接器。此函式託管在具有特定 URL 的專用端點上，您將在 `url` 參數中提供該 URL。如需更多資訊，請參閱 [Lambda 函式 URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html)。
 
-To create a connector, send the following request:
+若要建立連接器，請傳送下列請求：
 
 ```json
 POST _plugins/_ml/connectors/_create
@@ -55,7 +56,7 @@ POST _plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %} 
 
-OpenSearch responds with a connector ID:
+OpenSearch 會回應連接器 ID：
 
 ```json
 {
@@ -63,9 +64,9 @@ OpenSearch responds with a connector ID:
 }
 ```
 
-## Step 2: Register a flow agent that will run the ConnectorTool
+## 步驟 2：註冊將執行 ConnectorTool 的流程代理程式
 
-For this example, the Lambda function adds the two input numbers and returns their sum in the `result` field:
+在此範例中，Lambda 函式會將兩個輸入數字相加，並在 `result` 欄位中回傳其總和：
 
 ```json
 {
@@ -73,9 +74,9 @@ For this example, the Lambda function adds the two input numbers and returns the
 }
 ```
 
-By default, the `ConnectorTool` expects the response from the Lambda function to contain a field named `response`. However, in this example the Lambda function response doesn't include a `response` field. To retrieve the result from the `result` field instead, you need to provide a `response_filter`, specifying the [JSON path](https://github.com/json-path/JsonPath) to the `result` field (`$.result`). Using the `response_filter`, the `ConnectorTool` will retrieve the result with the specified JSON path and return it in the `response` field.
+預設情況下，`ConnectorTool` 預期來自 Lambda 函式的回應包含名為 `response` 的欄位。然而，在此範例中，Lambda 函式的回應並未包含 `response` 欄位。若要改為從 `result` 欄位擷取結果，您需要提供 `response_filter`，指定指向 `result` 欄位的 [JSON 路徑](https://github.com/json-path/JsonPath)（`$.result`）。透過使用 `response_filter`，`ConnectorTool` 將以指定的 JSON 路徑擷取結果，並在 `response` 欄位中回傳。
 
-To configure the Lambda function workflow, create a flow agent. A flow agent runs a sequence of tools in order and returns the last tool's output. To create a flow agent, send the following register agent request, providing the connector ID from the previous step and a `response_filter`:
+若要設定 Lambda 函式的工作流程，請建立流程代理程式。流程代理程式會依序執行一連串工具，並回傳最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求，提供上一步驟的連接器 ID 以及 `response_filter`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -98,9 +99,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-For parameter descriptions, see [Register parameters](#register-parameters).
+如需參數說明，請參閱[註冊參數](#register-parameters)。
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -108,9 +109,9 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 3: Run the agent
+## 步驟 3：執行代理程式
 
-Then, run the agent by sending the following request:
+接著，傳送下列請求來執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
@@ -123,7 +124,7 @@ POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
 ```
 {% include copy-curl.html %} 
 
-OpenSearch returns the output of the Lambda function execution. In the output, the field name is `response`, and the `result` field contains the Lambda function result:
+OpenSearch 會回傳 Lambda 函式執行的輸出。在輸出中，欄位名稱為 `response`，而 `result` 欄位包含 Lambda 函式的結果：
 
 ```json
 {
@@ -140,18 +141,18 @@ OpenSearch returns the output of the Lambda function execution. In the output, t
 }
 ```
 
-## Register parameters
+## 註冊參數
 
-The following table lists all tool parameters that are available when registering an agent.
+下表列出註冊代理程式時可用的所有工具參數。
 
-Parameter | Type | Required/Optional | Description
+參數 | 類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`connector_id` | String | Required | A connector ID of a connector configured with an `execute` action that invokes an API.
-`response_filter` | String | Optional | A [JSON path](https://github.com/json-path/JsonPath) to the response field that contains the result of invoking the API. If a `response_filter` is not specified, then the `ConnectorTool` expects the API response to be in a field named `response`.
+`connector_id` | 字串 | 必要 | 連接器的連接器 ID，該連接器已設定用於呼叫 API 的 `execute` 動作。
+`response_filter` | 字串 | 選用 | 指向包含 API 呼叫結果之回應欄位的 [JSON 路徑](https://github.com/json-path/JsonPath)。若未指定 `response_filter`，則 `ConnectorTool` 會預期 API 回應位於名為 `response` 的欄位中。
 
-## Execute parameters
+## 執行參數
 
-When running the agent, you can define any parameter needed for the API call in the `request_body` of your connector's `execute` action. In this example, the parameters are `number1` and `number2`:
+執行代理程式時，您可以在連接器的 `execute` 動作的 `request_body` 中定義 API 呼叫所需的任何參數。在此範例中，參數為 `number1` 和 `number2`：
 
 ```json
 "actions": [
@@ -167,6 +168,6 @@ When running the agent, you can define any parameter needed for the API call in 
   ]
 ```
 
-## Testing the tool
+## 測試工具
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+您可以將此工具作為代理程式工作流程的一部分執行，或使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適用於測試個別工具或執行獨立操作。

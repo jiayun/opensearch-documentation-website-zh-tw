@@ -1,45 +1,46 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Alerts and findings APIs
+title: "警示與結果 API"
 parent: Security Analytics APIs
 nav_order: 50
 ---
 
 
-# Alerts and findings APIs
+# 警示與結果 API
 
-The following APIs can be used for tasks related to alerts and findings.
+下列 API 可用於處理與警示和結果相關的工作。
 
 ---
 
-## Get alerts
+## 取得警示
 
-Provides an option for retrieving alerts related to a specific detector type or detector ID.
+提供擷取與特定偵測器類型或偵測器 ID 相關之警示的選項。
 
-### Parameters
+### 參數
 
-You can specify the following parameters when requesting an alert.
+請求警示時，您可以指定下列參數。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :---
-`detector_id` | The ID of the detector used to fetch alerts. Optional when the `detectorType` is specified. Otherwise required.
-`detectorType` | The type of detector used to fetch alerts. Optional when the `detector_Id` is specified. Otherwise required.
-`severityLevel` | Used to filter by alert severity level. Optional.
-`alertState` | Used to filter by alert state. Possible values are ACTIVE, ACKNOWLEDGED, COMPLETED, ERROR, or DELETED. Optional.
-`sortString` | This field specifies which string Security Analytics uses to sort the alerts. Optional.
-`sortOrder` | The order used to sort the list of findings. Possible values are `asc` or `desc`. Optional.
-`missing` | A list of fields for which there are no found alias mappings. Optional.
-`size` | An optional limit for the maximum number of results returned in the response. Optional.
-`startIndex` | The pagination indicator. Optional.
-`searchString` | The alert attribute you want returned in the search. Optional.
+`detector_id` | 用於擷取警示的偵測器 ID。指定 `detectorType` 時為選用，否則為必要。
+`detectorType` | 用於擷取警示的偵測器類型。指定 `detector_Id` 時為選用，否則為必要。
+`severityLevel` | 用於依警示嚴重性等級篩選。選用。
+`alertState` | 用於依警示狀態篩選。可能的值為 ACTIVE、ACKNOWLEDGED、COMPLETED、ERROR 或 DELETED。選用。
+`sortString` | 此欄位指定 Security Analytics 用來排序警示的字串。選用。
+`sortOrder` | 用於排序結果清單的順序。可能的值為 `asc` 或 `desc`。選用。
+`missing` | 沒有找到別名對應的欄位清單。選用。
+`size` | 選用的限制，指定回應中傳回結果的最大數量。選用。
+`startIndex` | 分頁指標。選用。
+`searchString` | 您希望在搜尋中傳回的警示屬性。選用。
 
-### Example request
+### 範例請求
 
 ```json
 GET /_plugins/_security_analytics/alerts?detectorType=windows
 ```
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -71,25 +72,25 @@ GET /_plugins/_security_analytics/alerts?detectorType=windows
 }
 ```
 
-#### Response body fields
+#### 回應本文欄位
 
-Alerts persist until you resolve the root cause and have the following states:
+警示會持續存在，直到您解決根本原因為止，並具有下列狀態：
 
-State | Description
+狀態 | 說明
 :--- | :---
-`ACTIVE` | The alert is ongoing and unacknowledged. Alerts remain in this state until you acknowledge them, delete the trigger associated with the alert, or delete the monitor entirely.
-`ACKNOWLEDGED` | Someone has acknowledged the alert but not fixed the root cause.
-`COMPLETED` | The alert is no longer ongoing. Alerts enter this state after the corresponding trigger evaluates to false.
-`ERROR` | An error occurred while executing the trigger. This error is usually the result of a bad trigger or destination.
-`DELETED` | Someone deleted the detector or trigger associated with this alert while the alert was ongoing.
+`ACTIVE` | 警示仍在進行中且未經確認。警示會保持此狀態，直到您確認警示、刪除與警示相關聯的觸發條件，或完全刪除監視器為止。
+`ACKNOWLEDGED` | 有人已確認警示，但尚未修正根本原因。
+`COMPLETED` | 警示已不再進行中。在對應的觸發條件評估為 false 之後，警示會進入此狀態。
+`ERROR` | 執行觸發條件時發生錯誤。此錯誤通常是由於觸發條件或目的地設定不當所致。
+`DELETED` | 在警示進行期間，有人刪除了與此警示相關聯的偵測器或觸發條件。
 
 ---
 
-## Acknowledge alerts
+## 確認警示
 
-Sends an acknowledgment when an alert is triggered.
+在觸發警示時傳送確認。
 
-### Example request
+### 範例請求
 
 ```json
 POST /_plugins/_security_analytics/detectors/{detector_id}/_acknowledge/alerts
@@ -97,7 +98,7 @@ POST /_plugins/_security_analytics/detectors/{detector_id}/_acknowledge/alerts
 {"alerts":["4dc7f5a9-2c82-4786-81ca-433a209d5205"]}
 ```
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -139,25 +140,25 @@ POST /_plugins/_security_analytics/detectors/{detector_id}/_acknowledge/alerts
 
 ---
 
-## Get findings
+## 取得結果
 
-The Get Findings API returns findings based on the detector attributes.
+Get Findings API 會根據偵測器屬性傳回結果。
 
-### Parameters
+### 參數
 
-You can specify the following parameters when getting findings.
+取得結果時，您可以指定下列參數。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :---
-`detector_id` | The ID of the detector used to fetch alerts. Optional.
-`detectorType` | The type of detector used to fetch alerts. Optional.
-`sortOrder` | The order used to sort the list of findings. Possible values are `asc` or `desc`. Optional.
-`size` | An optional limit for the maximum number of results returned in the response. Optional.
-`startIndex` | The pagination indicator. Optional.
-`detectionType` |  The detection rule type that dictates the retrieval type for the findings. When the detection type is `threat`, it fetches threat intelligence feeds. When the detection type is `rule`, findings are fetched based on the detector's rule. Optional.
-`severity` |  The severity of the detector rule used to fetch alerts. Severity can be `critical`, `high`, `medium`, or `low`. Optional.
+`detector_id` | 用於擷取警示的偵測器 ID。選用。
+`detectorType` | 用於擷取警示的偵測器類型。選用。
+`sortOrder` | 用於排序結果清單的順序。可能的值為 `asc` 或 `desc`。選用。
+`size` | 選用的限制，指定回應中傳回結果的最大數量。選用。
+`startIndex` | 分頁指標。選用。
+`detectionType` |  決定結果擷取方式的偵測規則類型。當偵測類型為 `threat` 時，會擷取威脅情報資料來源。當偵測類型為 `rule` 時，會根據偵測器的規則擷取結果。選用。
+`severity` |  用於擷取警示的偵測器規則嚴重性。嚴重性可以是 `critical`、`high`、`medium` 或 `low`。選用。
 
-### Example request
+### 範例請求
 
 ```json
 GET /_plugins/_security_analytics/findings/_search

@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Flatten 
+title: "扁平化"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 140
 ---
 
-# Flatten processor
+# 扁平化處理器
 
-The `flatten` processor transforms nested objects inside of events into flattened structures. 
+`flatten` 處理器會將事件中的巢狀物件轉換為扁平化結構。
 
-## Configuration
+## 組態
 
-The following table describes configuration options for the `flatten` processor.
+下表說明 `flatten` 處理器的組態選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`source` | Yes | String | The source key on which to perform the operation. If set to an empty string (`""`), then the processor uses the root of the event as the source.
-`target` | Yes | String | The target key to put into the flattened fields. If set to an empty string (`""`), then the processor uses the root of the event as the target.
-`exclude_keys` | No | List | The keys from the source field that should be excluded from processing. Default is an empty list (`[]`).
-`remove_processed_fields` | No | Boolean | When `true`, the processor removes all processed fields from the source. Default is `false`.
-`remove_list_indices` | No | Boolean | When `true`, the processor converts the fields from the source map into lists and puts the lists into the target field. Default is `false`.
-`flatten_when` | No | String | A [conditional expression]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/), such as `/some-key == "test"'`, that determines whether the `flatten` processor will be run on the event. Default is `null`, which means that all events will be processed unless otherwise stated.
-`flatten_separator` | No | String | The character used to join nested key names into flattened keys. Must be a single character. Default is `.`.
-`tags_on_failure` | No | List | A list of tags to add to the event metadata when the event fails to process.
+`source` | 是 | 字串 | 要執行操作的來源鍵。若設為空字串 (`""`)，處理器會使用事件的根層級作為來源。
+`target` | 是 | 字串 | 要放入扁平化欄位的目標鍵。若設為空字串 (`""`)，處理器會使用事件的根層級作為目標。
+`exclude_keys` | 否 | 清單 | 來源欄位中應排除於處理之外的鍵。預設為空清單 (`[]`)。
+`remove_processed_fields` | 否 | 布林值 | 若為 `true`，處理器會從來源移除所有已處理的欄位。預設為 `false`。
+`remove_list_indices` | 否 | 布林值 | 若為 `true`，處理器會將來源對應中的欄位轉換為清單，並將這些清單放入目標欄位。預設為 `false`。
+`flatten_when` | 否 | 字串 | [條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，例如 `/some-key == "test"'`，用於決定是否要對事件執行 `flatten` 處理器。預設為 `null`，表示除非另有指定，否則會處理所有事件。
+`flatten_separator` | 否 | 字串 | 用於將巢狀鍵名稱連接成扁平化鍵的字元。必須是單一字元。預設為 `.`。
+`tags_on_failure` | 否 | 清單 | 事件處理失敗時，要新增至事件中繼資料的標籤清單。
 
-## Usage
+## 使用方式
 
-The following examples show how the `flatten` processor can be used in OpenSearch Data Prepper pipelines.
+下列範例說明如何在 OpenSearch Data Prepper 管線中使用 `flatten` 處理器。
 
-### Minimum configuration
+### 最低組態
 
-The following example shows only the parameters that are required for using the `flatten` processor, `source` and `target`:
+下列範例僅顯示使用 `flatten` 處理器所需的參數：`source` 和 `target`：
 
 ```yaml
 ...
@@ -43,7 +44,7 @@ The following example shows only the parameters that are required for using the 
 ```
 {% include copy.html %}
 
-For example, when the input event contains the following nested objects:
+例如，當輸入事件包含下列巢狀物件時：
 
 ```json
 {
@@ -56,7 +57,7 @@ For example, when the input event contains the following nested objects:
 }
 ```
 
-The `flatten` processor creates a flattened structure under the `flattened-key2` object, as shown in the following output:
+`flatten` 處理器會在 `flattened-key2` 物件下建立扁平化結構，如下列輸出所示：
 
 ```json
 {
@@ -72,9 +73,9 @@ The `flatten` processor creates a flattened structure under the `flattened-key2`
 }
 ```
 
-### Remove processed fields
+### 移除已處理的欄位
 
-Use the `remove_processed_fields` option when flattening all of an event's nested objects. This removes all the event's processed fields, as shown in the following example:
+將事件的所有巢狀物件扁平化時，請使用 `remove_processed_fields` 選項。這會移除事件中所有已處理的欄位，如下列範例所示：
 
 ```yaml
 ...
@@ -87,7 +88,7 @@ Use the `remove_processed_fields` option when flattening all of an event's neste
 ```
 {% include copy.html %}
 
-For example, when the input event contains the following nested objects:
+例如，當輸入事件包含下列巢狀物件時：
 
 ```json
 {
@@ -115,7 +116,7 @@ For example, when the input event contains the following nested objects:
 ```
 
 
-The `flatten` processor creates a flattened structure in which all processed fields are absent, as shown in the following output:
+`flatten` 處理器會建立不含任何已處理欄位的扁平化結構，如下列輸出所示：
 
 ```json
 {
@@ -128,9 +129,9 @@ The `flatten` processor creates a flattened structure in which all processed fie
 }
 ```
 
-### Exclude specific keys from flattening
+### 排除特定鍵不進行扁平化
 
-Use the `exclude_keys` option to prevent specific keys from being flattened in the output, as shown in the following example, where the `key2` value is excluded:
+請使用 `exclude_keys` 選項來防止特定鍵在輸出中被扁平化，如下列範例所示，其中排除了 `key2` 值：
 
 ```yaml
 ...
@@ -144,7 +145,7 @@ Use the `exclude_keys` option to prevent specific keys from being flattened in t
 ```
 {% include copy.html %}
 
-For example, when the input event contains the following nested objects:
+例如，當輸入事件包含下列巢狀物件時：
 
 ```json
 {
@@ -171,7 +172,7 @@ For example, when the input event contains the following nested objects:
 }
 ```
 
-All other nested objects in the input event, excluding the `key2` key, will be flattened, as shown in the following example:
+輸入事件中除了 `key2` 鍵以外的所有其他巢狀物件都會被扁平化，如下列範例所示：
 
 ```json
 {
@@ -188,9 +189,9 @@ All other nested objects in the input event, excluding the `key2` key, will be f
 }
 ```
 
-### Remove list indexes
+### 移除清單索引
 
-Use the `remove_list_indices` option to convert the fields from the source map into lists and put the lists into the target field, as shown in the following example:
+請使用 `remove_list_indices` 選項將來源對應中的欄位轉換為清單，並將這些清單放入目標欄位，如下列範例所示：
 
 ```yaml
 ...
@@ -204,7 +205,7 @@ Use the `remove_list_indices` option to convert the fields from the source map i
 ```
 {% include copy.html %}
 
-For example, when the input event contains the following nested objects:
+例如，當輸入事件包含下列巢狀物件時：
 
 ```json
 {
@@ -231,7 +232,7 @@ For example, when the input event contains the following nested objects:
 }
 ```
 
-The processor removes all indexes from the output and places them into the source map as a flattened, structured list, as shown in the following example:
+處理器會從輸出中移除所有清單索引，並將其以扁平化的結構化清單放入來源對應中，如下列範例所示：
 
 ```json
 {
@@ -242,9 +243,9 @@ The processor removes all indexes from the output and places them into the sourc
 }
 ```
 
-### Custom separator
+### 自訂分隔字元
 
-Use the `flatten_separator` option to specify a custom character for joining nested key names. The default separator is `.`, but you can use any single character, such as `_`, as shown in the following example:
+請使用 `flatten_separator` 選項來指定連接巢狀鍵名稱的自訂字元。預設分隔字元為 `.`，但您可以使用任何單一字元，例如 `_`，如下列範例所示：
 
 ```yaml
 ...
@@ -258,7 +259,7 @@ Use the `flatten_separator` option to specify a custom character for joining nes
 ```
 {% include copy.html %}
 
-Consider an input event that contains the following nested objects:
+假設輸入事件包含下列巢狀物件：
 
 ```json
 {
@@ -282,7 +283,7 @@ Consider an input event that contains the following nested objects:
 }
 ```
 
-The `flatten` processor flattens the `log` field using `_` as the separator and places the results at the root of the event, as shown in the following output:
+`flatten` 處理器會使用 `_` 作為分隔字元將 `log` 欄位扁平化，並將結果放在事件的根層級，如下列輸出所示：
 
 ```json
 {

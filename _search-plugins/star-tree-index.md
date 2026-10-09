@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Star-tree index
 parent: Improving search performance
@@ -7,21 +8,21 @@ nav_order: 50
 
 # Star-tree index
 
-A _star-tree index_ is a specialized index structure designed to improve aggregation performance by precomputing and storing aggregated values at different levels of granularity. This indexing technique enables faster aggregation execution, especially for multi-field aggregations.
+_star-tree index_（星狀樹索引）是一種專門設計的索引結構，透過在不同粒度層級預先計算並儲存彙總值來提升彙總效能。這種索引技術能加快彙總的執行速度，尤其是多欄位彙總。
 
-Once you enable star-tree indexes, OpenSearch automatically builds and uses star-tree indexes to optimize supported aggregations if the filter fields match the defined dimensions and the aggregation fields match the defined metrics in the star-tree mapping configuration. No changes to your query syntax or request parameters are required.
+啟用 star-tree 索引後，如果篩選欄位符合 star-tree 對應組態中定義的維度，且彙總欄位符合定義的指標，OpenSearch 會自動建立並使用 star-tree 索引來最佳化支援的彙總。您不需要變更查詢語法或請求參數。
 
-Use a star-tree index when you want to speed up aggregations:
+當您想加速彙總時，可以使用 star-tree 索引：
 
-- Star-tree indexes natively support multi-field aggregations.
-- Star-tree indexes are created in real time as part of the indexing process, so the data in a star-tree is always current.
-- A star-tree index aggregates data to improve paging efficiency and reduce disk I/O during search queries.
+- Star-tree 索引原生支援多欄位彙總。
+- Star-tree 索引會在編製索引程序中即時建立，因此 star-tree 中的資料永遠是最新的。
+- Star-tree 索引會彙總資料，以提升分頁效率並減少搜尋查詢時的磁碟 I/O。
 
-## Star-tree index structure
+## Star-tree 索引結構
 
-A star-tree index organizes and aggregates data across combinations of dimension fields and precomputes metric values for all the dimension combinations every time a segment is flushed or refreshed during ingestion. This structure enables OpenSearch to process aggregation queries quickly without scanning every document.
+Star-tree 索引會跨維度欄位組合來組織與彙總資料，並在匯入期間每次分段被排清或重新整理時，為所有維度組合預先計算指標值。這種結構讓 OpenSearch 能快速處理彙總查詢，而不需要掃描每份文件。
 
-The following is an example star-tree configuration:
+以下是 star-tree 組態範例：
 
 ```json
 "ordered_dimensions": [
@@ -48,91 +49,91 @@ The following is an example star-tree configuration:
 ]
 ```
 
-This configuration defines the following:
+此組態定義了以下內容：
 
-* Two dimension fields: `status` and `port`. The `ordered_dimension` field specifies how data is sorted (first by `status`, then by `port`).
-* Two metric fields: `size` and `latency` with their corresponding aggregations (`sum` and `avg`). For each unique dimension combination, metric values (`Sum(size)` and `Avg(latency)`) are pre-aggregated and stored in the star-tree structure.
+* 兩個維度欄位：`status` 與 `port`。`ordered_dimension` 欄位指定資料的排序方式（先依 `status`，再依 `port`）。
+* 兩個指標欄位：`size` 與 `latency`，以及對應的彙總（`sum` 與 `avg`）。對於每個不重複的維度組合，指標值（`Sum(size)` 與 `Avg(latency)`）會預先彙總並儲存在 star-tree 結構中。
 
-OpenSearch creates a star-tree index structure based on this configuration. Each node in the tree corresponds to a value (or wildcard `*`) for a dimension. At query time, OpenSearch traverses the tree based on the dimension values provided in the query.
+OpenSearch 會根據此組態建立 star-tree 索引結構。樹中的每個節點對應某個維度的一個值（或萬用字元 `*`）。查詢時，OpenSearch 會根據查詢中提供的維度值走訪這棵樹。
 
-### Leaf nodes
+### 葉節點
 
-Leaf nodes contain the precomputed metric aggregations for specific combinations of dimensions. These are stored as doc values and referenced by star-tree nodes.
+葉節點包含針對特定維度組合預先計算的指標彙總。這些值以 doc values 形式儲存，並由 star-tree 節點參照。
 
-The `max_leaf_docs` setting controls how many documents each leaf node can reference, which helps keep query latency predictable by limiting how many documents are scanned for any given node.
+`max_leaf_docs` 設定控制每個葉節點可參照的文件數量，透過限制任一節點掃描的文件數，有助於讓查詢延遲保持可預測。
 
-### Star nodes
+### Star 節點
 
-A _star node_ (marked as `*` in the following diagram) aggregates all values for a particular dimension. If a query doesn't specify a filter for that dimension, OpenSearch retrieves the precomputed aggregation from the star node instead of iterating over multiple leaf nodes. For example, if a query filters on `port` but not `status`, OpenSearch can use a star node that aggregates data for all status values.
+_star node_（星狀節點，在下圖中標記為 `*`）會彙總特定維度的所有值。如果查詢未指定該維度的篩選條件，OpenSearch 會從 star 節點擷取預先計算的彙總，而不是逐一迭代多個葉節點。例如，如果查詢篩選 `port` 但未篩選 `status`，OpenSearch 可以使用彙總所有狀態值資料的 star 節點。
 
-### How queries use the star-tree
+### 查詢如何使用 star-tree
 
-The following diagram shows a star-tree index created for this example and three example query paths. In the diagram, notice that each branch corresponds to a dimension (`status` and `port`). Some nodes contain precomputed aggregation values (for example, `Sum(size)`), allowing OpenSearch to skip unnecessary calculations at query time.
+下圖顯示為此範例建立的 star-tree 索引以及三個範例查詢路徑。請注意，圖中每個分支對應一個維度（`status` 與 `port`）。有些節點包含預先計算的彙總值（例如 `Sum(size)`），讓 OpenSearch 能在查詢時略過不必要的計算。
 
-![A star-tree index containing two dimensions and two metrics]({{site.url}}{{site.baseurl}}/images/star-tree-index.png)
+![包含兩個維度與兩個指標的 star-tree 索引]({{site.url}}{{site.baseurl}}/images/star-tree-index.png)
 
-The colored arrows show three query examples:
+彩色箭頭顯示三個查詢範例：
 
-* **Blue arrow**: Multi-term query with metric aggregation
-  The query filters on both `status = 200` and `port = 5600` and calculates the sum of request sizes.
+* **藍色箭頭**：多 term 查詢搭配指標彙總
+  該查詢同時篩選 `status = 200` 與 `port = 5600`，並計算請求大小的總和。
 
-  * OpenSearch follows this path: `Root → 200 → 5600`
-  * It retrieves the metric from Doc ID 1, where `Sum(size) = 988`
+  * OpenSearch 走訪此路徑：`Root → 200 → 5600`
+  * 它從 Doc ID 1 擷取指標，其中 `Sum(size) = 988`
 
-* **Green arrow**: Single-term query with metric aggregation
-  The query filters on `status = 200` only and computes the average request latency.
+* **綠色箭頭**：單一 term 查詢搭配指標彙總
+  該查詢僅篩選 `status = 200`，並計算請求延遲的平均值。
 
-  * OpenSearch follows this path: `Root → 200 → *`
-  * It retrieves the metric from Doc ID 5, where `Avg(latency) = 70`
+  * OpenSearch 走訪此路徑：`Root → 200 → *`
+  * 它從 Doc ID 5 擷取指標，其中 `Avg(latency) = 70`
 
-* **Red arrow**: Single-term query with metric aggregation
-  The query filters on `port = 8443` only and calculates the sum of request sizes.
+* **紅色箭頭**：單一 term 查詢搭配指標彙總
+  該查詢僅篩選 `port = 8443`，並計算請求大小的總和。
 
-  * OpenSearch follows this path: `Root → * → 8443`
-  * It retrieves the metric from Doc ID 7, where `Sum(size) = 1111`
+  * OpenSearch 走訪此路徑：`Root → * → 8443`
+  * 它從 Doc ID 7 擷取指標，其中 `Sum(size) = 1111`
 
-These examples show how OpenSearch selects the shortest path in the star-tree and uses pre-aggregated values to process queries efficiently.
+這些範例顯示 OpenSearch 如何在 star-tree 中選擇最短路徑，並使用預先彙總的值來有效率地處理查詢。
 
-## Limitations
+## 限制
 
-Note the following limitations of star-tree indexes:
+請注意 star-tree 索引的以下限制：
 
-- Star-tree indexes do not support updates or deletions. To use a star-tree index, data should be append-only. See [Enabling a star-tree index](#enabling-a-star-tree-index).
-- A star-tree index only works for aggregation queries that filter on dimension fields and aggregate metric fields defined in the index's star-tree configuration.
-- Any changes to a star-tree configuration require reindexing.
-- [Array values]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/index/#arrays) are not supported.
-- Only [specific queries and aggregations](#supported-queries-and-aggregations) are supported. 
-- Avoid using high-cardinality fields like `_id` as dimensions because they can significantly increase storage use and query latency.
+- Star-tree 索引不支援更新或刪除。若要使用 star-tree 索引，資料應僅限附加。請參閱[啟用 star-tree 索引](#enabling-a-star-tree-index)。
+- Star-tree 索引僅適用於以索引 star-tree 組態中定義的維度欄位進行篩選、並彙總所定義指標欄位的彙總查詢。
+- 對 star-tree 組態的任何變更都需要重新編製索引。
+- 不支援[陣列值]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/index/#arrays)。
+- 僅支援[特定查詢與彙總](#supported-queries-and-aggregations)。
+- 避免使用 `_id` 這類高基數欄位作為維度，因為它們會大幅增加儲存空間使用量與查詢延遲。
 
-## Enabling a star-tree index
+## 啟用 star-tree 索引
 
-Star-tree indexing behavior is controlled by the following cluster-level and index-level settings. Index-level settings take precedence over cluster settings.
+Star-tree 索引行為由下列叢集層級與索引層級設定控制。索引層級設定的優先順序高於叢集設定。
 
-| Setting                                     | Scope   | Default | Purpose                                                                                                                              |
+| 設定                                     | 範圍   | 預設值 | 用途                                                                                                                              |
 | ------------------------------------------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `indices.composite_index.star_tree.enabled` | Cluster | `true`  | Enables or disables star-tree search optimization across the cluster.  |
-| `index.composite_index`                     | Index   | None       | Enables star-tree indexing for a specific index. Must be set when creating the index.                                                |
-| `index.append_only.enabled`                 | Index   | None      | Required for star-tree indexes. Prevents updates and deletions. Must be `true`.                                                      |
-| `index.search.star_tree_index.enabled`      | Index   | `true`  | Enables or disables use of the star-tree index for search queries on the index.                                                 |
+| `indices.composite_index.star_tree.enabled` | 叢集 | `true`  | 在整個叢集中啟用或停用 star-tree 搜尋最佳化。  |
+| `index.composite_index`                     | 索引   | 無       | 為特定索引啟用 star-tree 索引。必須在建立索引時設定。                                                |
+| `index.append_only.enabled`                 | 索引   | 無      | Star-tree 索引的必要設定。防止更新與刪除。必須設為 `true`。                                                      |
+| `index.search.star_tree_index.enabled`      | 索引   | `true`  | 啟用或停用對該索引的搜尋查詢使用 star-tree 索引。                                                 |
 
-Setting `indices.composite_index.star_tree.enabled` to `false` prevents OpenSearch from using star-tree optimization during searches, but the star-tree index structures are still created. To completely remove star-tree structures, you must reindex your data without the star-tree mapping.
+將 `indices.composite_index.star_tree.enabled` 設為 `false` 會防止 OpenSearch 在搜尋時使用 star-tree 最佳化，但仍會建立 star-tree 索引結構。若要完全移除 star-tree 結構，您必須在不含 star-tree 對應的情況下重新編製資料索引。
 {: .note}
 
-## Advanced star-tree index settings
+## 進階 star-tree 索引設定
 
-The following index-level settings provide fine-grained control over star-tree index behavior. These settings are static, meaning they must be configured when creating the index and cannot be changed afterward.
+下列索引層級設定可對 star-tree 索引行為提供細緻的控制。這些設定是靜態的，表示必須在建立索引時設定，之後無法變更。
 
-| Setting                                                    | Default | Range      | Purpose                                                                                                                              |
+| 設定                                                    | 預設值 | 範圍      | 用途                                                                                                                              |
 | ---------------------------------------------------------- | ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `index.composite_index.star_tree.default.max_leaf_docs`   | `10000` | Min: `1`   | Sets the maximum number of documents allowed in a leaf node. Lower values improve query latency but increase storage requirements.  |
-| `index.composite_index.star_tree.field.default.metrics`   | `["value_count", "sum"]` | N/A | Defines the default metrics computed for star-tree aggregations. These metrics are pre-calculated to speed up aggregation queries. |
-| `index.composite_index.star_tree.field.max_base_metrics`  | `100`   | `4` to `100` | Controls the maximum number of base metrics that can be configured for star-tree fields. More metrics provide more aggregation options but increase index size. |
-| `index.composite_index.star_tree.field.max_dimensions`    | `10`    | `2` to `10`  | Sets the maximum number of dimensions that can be part of a star-tree index field. Affects star-tree index size and query performance. |
-| `index.composite_index.star_tree.field.max_date_intervals` | `3`     | `1` to `3`   | Specifies the maximum number of date intervals that can be configured for star-tree date fields. Controls temporal granularity options. |
-| `index.composite_index.star_tree.max_fields`              | `1`     | `1` to `1`   | Controls the maximum number star-tree fields per index. Only one star-tree field per index is supported.            |
+| `index.composite_index.star_tree.default.max_leaf_docs`   | `10000` | 最小值：`1`   | 設定葉節點允許的最大文件數。較低的值可改善查詢延遲，但會增加儲存需求。  |
+| `index.composite_index.star_tree.field.default.metrics`   | `["value_count", "sum"]` | 不適用 | 定義為 star-tree 彙總計算的預設指標。這些指標會預先計算，以加速彙總查詢。 |
+| `index.composite_index.star_tree.field.max_base_metrics`  | `100`   | `4` 至 `100` | 控制可為 star-tree 欄位設定的基礎指標數量上限。指標越多，可用的彙總選項越多，但會增加索引大小。 |
+| `index.composite_index.star_tree.field.max_dimensions`    | `10`    | `2` 至 `10`  | 設定可作為 star-tree 索引欄位的維度數量上限。會影響 star-tree 索引大小與查詢效能。 |
+| `index.composite_index.star_tree.field.max_date_intervals` | `3`     | `1` 至 `3`   | 指定可為 star-tree 日期欄位設定的日期區間數量上限。控制時間粒度選項。 |
+| `index.composite_index.star_tree.max_fields`              | `1`     | `1` 至 `1`   | 控制每個索引的 star-tree 欄位數量上限。每個索引僅支援一個 star-tree 欄位。            |
 
 
-To create an index that uses a star-tree index, send the following request:
+若要建立使用 star-tree 索引的索引，請傳送以下請求：
 
 ```json
 PUT /logs
@@ -145,15 +146,15 @@ PUT /logs
 ```
 {% include copy-curl.html %}
 
-Ensure that the `doc_values` parameter is enabled for the dimension and metric fields used in your star-tree mapping. This is enabled by default for most field types. For more information, see [Doc values]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/).
+請確保 star-tree 對應中使用的維度與指標欄位已啟用 `doc_values` 參數。大多數欄位類型預設已啟用此參數。如需更多資訊，請參閱 [Doc values]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。
 
-### Disabling star-tree usage
+### 停用 star-tree 使用
 
-By default, both the `indices.composite_index.star_tree.enabled` cluster setting and the `index.search.star_tree_index.enabled` index setting are set to `true`. To disable search using star-tree indexes, set both of these settings to `false`. Note that index settings take precedence over cluster settings. 
+根據預設，`indices.composite_index.star_tree.enabled` 叢集設定和 `index.search.star_tree_index.enabled` 索引設定都會設為 `true`。若要停用使用 star-tree 索引的搜尋，請將這兩個設定都設為 `false`。請注意，索引設定的優先順序高於叢集設定。
 
-## Example mapping
+## 對應範例
 
-The following example shows how to create a star-tree index that precomputes aggregations in the `logs` index. The `sum` and `average` aggregations are calculated on the `size` and `latency` fields , respectively, for all combinations of values in the dimension fields. The dimensions are ordered by `status`, then `port`, and finally `method`, which determines how the data is organized in the tree structure:
+以下範例顯示如何建立一個 star-tree 索引，在 `logs` 索引中預先計算彙總。`sum` 和 `average` 彙總分別針對 `size` 和 `latency` 欄位計算，涵蓋維度欄位中所有值的組合。維度的排序依序為 `status`、`port`，最後是 `method`，這決定了資料在樹狀結構中的組織方式：
 
 ```json
 PUT /logs
@@ -227,45 +228,45 @@ PUT /logs
 ```
 {% include copy.html %}
 
-For more information about star-tree index mappings and parameters, see [Star-tree field type]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/star-tree/).
+如需 star-tree 索引對應和參數的詳細資訊，請參閱 [Star-tree 欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/star-tree/)。
 
-## Supported queries and aggregations
+## 支援的查詢和彙總
 
-Star-tree indexes optimize aggregations. Every query must include at least one supported aggregation in order to use the star-tree optimization.
+Star-tree 索引會最佳化彙總。每個查詢都必須包含至少一個支援的彙總，才能使用 star-tree 最佳化。
 
-### Supported queries
+### 支援的查詢
 
-Queries without aggregations cannot use star-tree optimization. The query's fields must be present in the `ordered_dimensions` section of the star-tree configuration. The following queries are supported:
+沒有彙總的查詢無法使用 star-tree 最佳化。查詢的欄位必須存在於 star-tree 組態的 `ordered_dimensions` 區段中。支援下列查詢：
 
-- [Term query]({{site.url}}{{site.baseurl}}/query-dsl/term/term/)
-- [Terms query]({{site.url}}{{site.baseurl}}/query-dsl/term/terms/)
-- [Match all docs query]({{site.url}}{{site.baseurl}}/query-dsl/match-all/)
-- [Range query]({{site.url}}{{site.baseurl}}/query-dsl/term/range/)
-- [Boolean query]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/)
+- [Term 查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/term/)
+- [Terms 查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/terms/)
+- [Match all docs 查詢]({{site.url}}{{site.baseurl}}/query-dsl/match-all/)
+- [Range 查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/range/)
+- [Boolean 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/)
 
-#### Boolean query restrictions
+#### Boolean 查詢限制
 
-Boolean queries in star-tree indexes follow specific rules for each clause type:
+star-tree 索引中的 Boolean 查詢會針對每種子句類型遵循特定規則：
 
-* `must` and `filter` clauses:
-  - Are both supported and treated the same way because `filter` does not affect scoring.
-  - Can operate across different dimensions.
-  - Allow only one condition per dimension across all `must`/`filter` clauses, including nested ones.
-  - Support term, terms, and range queries.
+* `must` 和 `filter` 子句：
+  - 兩者都支援，且處理方式相同，因為 `filter` 不會影響評分。
+  - 可以跨不同維度運作。
+  - 在所有 `must`/`filter` 子句中，每個維度只允許一個條件，包括巢狀子句。
+  - 支援 term、terms 和 range 查詢。
 
-* `should` clauses:
-  - Must operate on the same dimension and cannot operate across different dimensions
-  - Can only use term, terms, and range queries.
+* `should` 子句：
+  - 必須在同一維度上運作，且不能跨不同維度運作
+  - 只能使用 term、terms 和 range 查詢。
 
-* `should` clauses inside `must` clauses:
-  - Act as a required condition.
-  - When operating on the same dimension as outer `must`: The union of `should` conditions is intersected with the outer `must` conditions.
-  - When operating on a different dimension: Processed normally as a required condition.
+* `should` 子句內的 `must` 子句：
+  - 做為必要條件。
+  - 與外層 `must` 在同一維度上運作時：`should` 條件的聯集會與外層 `must` 條件取交集。
+  - 在不同維度上運作時：會正常處理為必要條件。
 
-* `must_not` clauses are not supported.
-* Queries with the `minimum_should_match` parameter are not supported.
+* 不支援 `must_not` 子句。
+* 不支援帶有 `minimum_should_match` 參數的查詢。
 
-The following Boolean query is **supported** because it follows these restrictions:
+下列 Boolean 查詢**支援**，因為它遵循這些限制：
 
 ```json
 {
@@ -285,7 +286,7 @@ The following Boolean query is **supported** because it follows these restrictio
 ```
 {% include copy.html %}
 
-The following Boolean queries are **not** supported because they violate these restrictions:
+下列 Boolean 查詢**不**支援，因為它們違反這些限制：
 
 ```json
 {
@@ -311,13 +312,13 @@ The following Boolean queries are **not** supported because they violate these r
 }
 ```
 
-### Supported aggregations
+### 支援的彙總
 
-The following aggregations are supported by star-tree indexes.
+star-tree 索引支援下列彙總。
 
-#### Metric aggregations
+#### 指標彙總
  
-The following metric aggregations are supported:
+支援下列指標彙總：
 
 - [Sum]({{site.url}}{{site.baseurl}}/aggregations/metric/sum/)
 - [Minimum]({{site.url}}{{site.baseurl}}/aggregations/metric/minimum/)
@@ -325,12 +326,12 @@ The following metric aggregations are supported:
 - [Value count]({{site.url}}{{site.baseurl}}/aggregations/metric/value-count/)
 - [Average]({{site.url}}{{site.baseurl}}/aggregations/metric/average/)
 
-To use searchable aggregations with a star-tree index, make sure you fulfill the following prerequisites:
+若要在 star-tree 索引中使用可搜尋的彙總，請確定您符合下列先決條件：
 
-- The fields must be present in the `metrics` section of the star-tree configuration.
-- The metric aggregation type must be part of the `stats` parameter.
+- 欄位必須存在於 star-tree 組態的 `metrics` 區段中。
+- 指標彙總類型必須是 `stats` 參數的一部分。
 
-The following example gets the sum of all the values in the `size` field for all error logs with `status=500`, using the [example mapping](#example-mapping):
+下列範例使用[對應範例](#example-mapping)，取得所有具有 `status=500` 的錯誤記錄中 `size` 欄位所有值的總和：
 
 ```json
 POST /logs/_search
@@ -351,18 +352,18 @@ POST /logs/_search
 ```
 {% include copy.html %}
 
-Using a star-tree index, the result will be retrieved from a single aggregated document as it traverses the `status=500` node, as opposed to scanning through all of the matching documents. This results in lower query latency.
+使用 star-tree 索引時，結果會在走訪 `status=500` 節點時從單一彙總文件擷取，而不是掃描所有符合的文件。這可降低查詢延遲。
 
-#### Date histograms with metric aggregations
+#### 搭配指標彙總的日期直方圖
 
-You can use [date histograms]({{site.url}}{{site.baseurl}}/aggregations/bucket/date-histogram/) on calendar intervals with metric sub-aggregations.
+您可以在日曆間隔上使用[日期直方圖]({{site.url}}{{site.baseurl}}/aggregations/bucket/date-histogram/)搭配指標子彙總。
 
-To use date histogram aggregations and make them searchable in a star-tree index, remember the following requirements:
+若要在 star-tree 索引中使用日期直方圖彙總並使其可搜尋，請記住下列需求：
 
-- The calendar intervals in a star-tree mapping configuration can use either the request's calendar field or a field of lower granularity than the request field. For example, if an aggregation uses the `month` field, the star-tree search can still use lower-granularity fields such as `day`.
-- A metric subaggregation must be part of the aggregation request.
+- star-tree 對應組態中的日曆間隔可以使用請求的日曆欄位，或使用比請求欄位粒度更低的欄位。例如，如果彙總使用 `month` 欄位，star-tree 搜尋仍可使用 `day` 等較低粒度的欄位。
+- 指標子彙總必須是彙總請求的一部分。
 
-The following example filters logs to include only those with status codes between `200` and `400` and sets the `size` of the response to `0`, so that only aggregated results are returned. It then aggregates the filtered logs by calendar month and calculates the total `size` of the requests for each month:
+下列範例會篩選記錄，只包含狀態碼介於 `200` 和 `400` 之間的記錄，並將回應的 `size` 設為 `0`，以便只傳回彙總結果。接著，它會依日曆月份彙總篩選後的記錄，並計算每個月請求的 `size` 總計：
 
 ```json
 POST /logs/_search
@@ -395,16 +396,16 @@ POST /logs/_search
 ```
 {% include copy-curl.html %}
 
-#### Keyword and numeric terms aggregations
+#### 關鍵字與數值詞彙彙總
 
-You can use [terms aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/terms/) on both keyword and numeric fields with star-tree index search.
+您可以在關鍵字和數值欄位上，搭配 star-tree 索引搜尋使用[詞彙彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/terms/)。
 
-For star-tree search compatibility with terms aggregations, remember the following behaviors:
+若要讓 star-tree 搜尋與詞彙彙總相容，請記住下列行為：
 
-- The fields used in the terms aggregation should be part of the dimensions defined in the star-tree index.
-- Metric sub-aggregations are optional as long as the relevant metrics are part of the star-tree configuration.
+- 詞彙彙總中使用的欄位，應該是 star-tree 索引中所定義維度的一部分。
+- 只要相關指標是 star-tree 組態的一部分，指標子彙總即為選用。
 
-The following example aggregates logs by the `user_id` field and returns the counts for each unique user:
+下列範例依 `user_id` 欄位彙總記錄檔，並傳回每個不重複使用者的計數：
 
 ```json
 POST /logs/_search
@@ -421,7 +422,7 @@ POST /logs/_search
 ```
 {% include copy-curl.html %}
 
-The following example aggregates orders by the `order_quantity` and calculates the average `total_price` for each quantity:
+下列範例依 `order_quantity` 彙總訂單，並計算每個數量的平均 `total_price`：
 
 ```json
 POST /orders/_search
@@ -445,16 +446,16 @@ POST /orders/_search
 ```
 {% include copy-curl.html %}
 
-#### Range aggregations
+#### 範圍彙總
 
-You can use [range aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/range/) on numeric fields with star-tree index search.
+您可以在數值欄位上，搭配 star-tree 索引搜尋使用[範圍彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/range/)。
 
-For range aggregations to work effectively with a star-tree index, remember the following behaviors:
+若要讓範圍彙總與 star-tree 索引有效搭配運作，請記住下列行為：
 
-- The field used in the range aggregation should be part of the dimensions defined in the star-tree index.
-- You can include metric sub-aggregations to compute metrics within each defined range, as long as the relevant metrics are part of the star-tree configuration.
+- 範圍彙總中使用的欄位，應該是 star-tree 索引中所定義維度的一部分。
+- 只要相關指標是 star-tree 組態的一部分，您就可以加入指標子彙總，以在每個定義的範圍內計算指標。
 
-The following example aggregates documents based on predefined ranges of the `temperature` field:
+下列範例根據 `temperature` 欄位的預先定義範圍彙總文件：
 
 ```json
 POST /sensors/_search
@@ -476,7 +477,7 @@ POST /sensors/_search
 ```
 {% include copy-curl.html %}
 
-The following example aggregates sales data by price ranges and calculates the total `quantity` sold within each range:
+下列範例依價格範圍彙總銷售資料，並計算每個範圍內售出的 `quantity` 總數：
 
 ```json
 POST /sales/_search
@@ -505,14 +506,14 @@ POST /sales/_search
 ```
 {% include copy-curl.html %}
 
-#### Nested aggregations
+#### 巢狀彙總
 
-You can combine multiple supported bucket aggregations (such as `terms` and `range`) in a nested structure, and the star-tree index will optimize these nested aggregations. For more information about nested aggregations, see [Nested aggregations]({{site.url}}{{site.baseurl}}/aggregations/#nested-aggregations).
+您可以在巢狀結構中合併多個支援的桶彙總 (例如 `terms` 和 `range`)，star-tree 索引將會最佳化這些巢狀彙總。如需巢狀彙總的詳細資訊，請參閱[巢狀彙總]({{site.url}}{{site.baseurl}}/aggregations/#nested-aggregations)。
 
-#### Multi-terms aggregations
+#### 多重詞彙彙總
 
-A star-tree index optimizes `multi_terms` aggregations when the aggregation fields are defined as dimensions in the star-tree configuration. For more information about multi-terms aggregations, see [Multi-terms aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/multi-terms/).
+當彙總欄位在 star-tree 組態中定義為維度時，star-tree 索引會最佳化 `multi_terms` 彙總。如需多重詞彙彙總的詳細資訊，請參閱[多重詞彙彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/multi-terms/)。
 
-## Next steps
+## 後續步驟
 
-- [Star-tree field type]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/star-tree/)
+- [Star-tree 欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/star-tree/)

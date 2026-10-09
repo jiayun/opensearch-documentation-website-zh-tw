@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: AWS Lambda
 parent: Processors
@@ -6,48 +7,48 @@ grand_parent: Pipelines
 nav_order: 40
 ---
 
-# AWS Lambda processor
+# AWS Lambda 處理器
 
-The [AWS Lambda](https://aws.amazon.com/lambda/) integration allows you to use serverless computing capabilities within your OpenSearch Data Prepper pipelines for flexible event processing and data routing.
+[AWS Lambda](https://aws.amazon.com/lambda/) 整合可讓您在 OpenSearch Data Prepper 管線中使用無伺服器運算功能，實現彈性的事件處理與資料路由。
 
-## Configuration
+## 組態
 
-The `aws_lambda` processor enables invocation of an AWS Lambda function within your Data Prepper pipeline in order to process events. It supports both synchronous and asynchronous invocations based on your use case.
+`aws_lambda` 處理器可讓您在 Data Prepper 管線中呼叫 AWS Lambda 函式以處理事件。它可依據您的使用案例，支援同步與非同步呼叫。
 
-## Configuration fields
+## 組態欄位
 
-You can configure the processor using the following configuration options.
+您可以使用下列組態選項來設定此處理器。
 
-Field                | Type    | Required | Description                                                                 
+欄位 | 類型 | 必要 | 說明
 -------------------- | ------- | -------- | ---------------------------------------------------------------------------- 
-`function_name`      | String  | Required | The name of the AWS Lambda function to invoke. Must be 3--500 characters.                                         
-`aws.region`         | String  | Required | The AWS Region in which the Lambda function is located.                         
-`aws.sts_role_arn`   | String  | Optional | The Amazon Resource Name (ARN) of the role to assume before invoking the Lambda function. Must be 20--2048 characters.               
-`aws.sts_external_id` | String | Optional | An external ID for STS role assumption. Must be 2--1224 characters.
-`aws.sts_header_overrides` | Map | Optional | STS header overrides. Maximum of 5 headers supported.
-`client.max_retries` | Integer | Optional | The maximum number of retries for failed invocations. Default is `3`.             
-`client.api_call_timeout` | Duration | Optional | The API call timeout. Default is `60s`.
-`client.api_call_attempt_timeout` | Duration | Optional | The timeout for individual API call attempts. If not specified, AWS SDK defaults are used.
-`client.connection_timeout` | Duration | Optional | The SDK connection timeout. Default is `60s`.
-`client.read_timeout` | Duration | Optional | The amount of time the SDK waits for data to be read from an established connection. If not specified, AWS SDK defaults are used.
-`client.max_concurrency` | Integer | Optional | The maximum number of concurrent threads on the client. Default is `200`.
-`client.base_delay`  | Duration | Optional | The base delay for the exponential backoff. Default is `100ms`.
-`client.max_backoff` | Duration | Optional | The maximum backoff time for the exponential backoff. Default is `20s`.
-`client.retryable_status_codes` | List | Optional | A list of HTTP status codes that trigger a retry when returned by a Lambda invocation, for example `[500, 502, 503, 504]`. Default is an empty list (standard AWS SDK retry conditions only). Use for idempotent functions for which retrying transient server-side errors is safe.
-`batch`              | Object  | Optional | The batch settings for the Lambda invocations. Contains `key_name` (default: `"events"`) and `threshold` object with `event_count` (default: `100`), `maximum_size` (default: `"5mb"`), and `event_collect_timeout` (default: `10s`). See [Batch processing](#batch-processing) for details.                            
-`lambda_when`        | String  | Optional | A conditional expression that determines when to invoke the Lambda processor.     
-`response_codec`     | Object  | Optional |  A codec configuration for parsing Lambda responses. Default is `json`.
-`tags_on_failure`    | List    | Optional |  A list of tags to add to events when the Lambda function fails or encounters an exception.
-`response_events_match` | Boolean | Optional | Specifies how Data Prepper interprets and processes Lambda function responses. Default is `false`.
-`response_mode`      | String  | Optional | The response handling mode, either `replace` or `merge`. Default is `replace`.
-`keys`               | List    | Optional | Keys to send to the Lambda function.
-`cache`              | Object  | Optional | The cache configuration. Only valid when `response_mode` is `merge` and `keys` are specified.
-`cache.ttl`          | Long    | Optional | The cache time-to-live.
-`cache.max_size`     | Long    | Optional | The maximum cache size. Must be between 1048576 and 10485760.
-`circuit_breaker_retries` | Integer | Optional | The maximum number of circuit breaker checks before proceeding. Default is `0`.
-`circuit_breaker_wait_interval` | Long | Optional | The amount of time, in milliseconds, between circuit breaker checks. Default is `1000ms`.
+`function_name` | 字串 | 必要 | 要呼叫的 AWS Lambda 函式名稱。長度必須為 3--500 個字元。
+`aws.region` | 字串 | 必要 | Lambda 函式所在的 AWS 區域。
+`aws.sts_role_arn` | 字串 | 選用 | 呼叫 Lambda 函式前要擔任之角色的 Amazon 資源名稱（ARN）。長度必須為 20--2048 個字元。
+`aws.sts_external_id` | 字串 | 選用 | 用於 STS 角色擔任的外部 ID。長度必須為 2--1224 個字元。
+`aws.sts_header_overrides` | 對應表 | 選用 | STS 標頭覆寫。最多支援 5 個標頭。
+`client.max_retries` | 整數 | 選用 | 呼叫失敗時的最大重試次數。預設為 `3`。
+`client.api_call_timeout` | 持續時間 | 選用 | API 呼叫逾時。預設為 `60s`。
+`client.api_call_attempt_timeout` | 持續時間 | 選用 | 個別 API 呼叫嘗試的逾時。若未指定，則使用 AWS SDK 預設值。
+`client.connection_timeout` | 持續時間 | 選用 | SDK 連線逾時。預設為 `60s`。
+`client.read_timeout` | 持續時間 | 選用 | SDK 等待從已建立連線讀取資料的時間。若未指定，則使用 AWS SDK 預設值。
+`client.max_concurrency` | 整數 | 選用 | 用戶端上的最大並行執行緒數。預設為 `200`。
+`client.base_delay` | 持續時間 | 選用 | 指數退避的基本延遲。預設為 `100ms`。
+`client.max_backoff` | 持續時間 | 選用 | 指數退避的最大退避時間。預設為 `20s`。
+`client.retryable_status_codes` | 清單 | 選用 | Lambda 呼叫傳回時會觸發重試的 HTTP 狀態碼清單，例如 `[500, 502, 503, 504]`。預設為空清單（僅使用標準 AWS SDK 重試條件）。請用於可安全重試暫時性伺服器端錯誤的冪等函式。
+`batch` | 物件 | 選用 | Lambda 呼叫的批次設定。包含 `key_name`（預設值：`"events"`），以及含有 `event_count`（預設值：`100`）、`maximum_size`（預設值：`"5mb"`）和 `event_collect_timeout`（預設值：`10s`）的 `threshold` 物件。如需詳細資訊，請參閱[批次處理](#batch-processing)。
+`lambda_when` | 字串 | 選用 | 決定何時呼叫 Lambda 處理器的條件運算式。
+`response_codec` | 物件 | 選用 | 用於剖析 Lambda 回應的轉碼器組態。預設為 `json`。
+`tags_on_failure` | 清單 | 選用 | 當 Lambda 函式失敗或遇到例外狀況時，要新增至事件的標籤清單。
+`response_events_match` | 布林值 | 選用 | 指定 Data Prepper 如何解譯及處理 Lambda 函式回應。預設為 `false`。
+`response_mode` | 字串 | 選用 | 回應處理模式，可為 `replace` 或 `merge`。預設為 `replace`。
+`keys` | 清單 | 選用 | 要傳送至 Lambda 函式的索引鍵。
+`cache` | 物件 | 選用 | 快取組態。僅在 `response_mode` 為 `merge` 且已指定 `keys` 時有效。
+`cache.ttl` | 長整數 | 選用 | 快取存留時間。
+`cache.max_size` | 長整數 | 選用 | 快取大小上限。必須介於 1048576 與 10485760 之間。
+`circuit_breaker_retries` | 整數 | 選用 | 繼續執行前斷路器檢查的最大次數。預設為 `0`。
+`circuit_breaker_wait_interval` | 長整數 | 選用 | 斷路器檢查之間的間隔時間（以毫秒為單位）。預設為 `1000ms`。
 
-The following is an example configuration:
+以下是組態範例：
 
 ```yaml
 processors:
@@ -85,73 +86,73 @@ processors:
 ```
 {% include copy.html %}
 
-## Timeout configuration
+## 逾時組態
 
-The `aws_lambda` processor supports multiple timeout layers following AWS SDK best practices:
+`aws_lambda` 處理器依循 AWS SDK 最佳實務，支援多層逾時設定：
 
-- `api_call_timeout`: The total amount of time for the entire API call including all retries.
-- `api_call_attempt_timeout`: The time limit for each individual attempt.
-- `read_timeout`: The amount of time to wait for data from an established connection.
+- `api_call_timeout`：整個 API 呼叫（包含所有重試）的總時間。
+- `api_call_attempt_timeout`：每次個別嘗試的時間限制。
+- `read_timeout`：從已建立連線等待資料的時間。
 
-For Lambda functions that run for longer than 60 seconds, configure both `api_call_timeout` and `read_timeout` to appropriate values. The `api_call_attempt_timeout` enforces a per-attempt timeout, enabling fast failure of slow requests while preserving overall retry behavior.
+對於執行時間超過 60 秒的 Lambda 函式，請將 `api_call_timeout` 與 `read_timeout` 都設定為適當的值。`api_call_attempt_timeout` 會強制執行每次嘗試的逾時，讓緩慢的請求能快速失敗，同時保留整體的重試行為。
 
-## Usage
+## 使用方式
 
-The processor supports the following invocation types:
+此處理器支援下列呼叫類型：
 
-- `request-response`: The processor waits for Lambda function completion before proceeding.
-- `event`: The function is triggered asynchronously without waiting for a response.
+- `request-response`：處理器會等待 Lambda 函式完成後再繼續執行。
+- `event`：以非同步方式觸發函式，不等待回應。
 
-### Batch processing
+### 批次處理
 
-The `aws_lambda` processor batches events when invoking Lambda functions. The `batch` configuration allows you to configure the thresholds for bulk invocations.
+`aws_lambda` 處理器在呼叫 Lambda 函式時會將事件分批處理。`batch` 組態可讓您設定大量呼叫的閾值。
 
-The `batch` configuration has the following structure:
+`batch` 組態的結構如下：
 
-- `key_name`: The key under which events are grouped in the payload sent to Lambda (default: `"events"`).
-- `threshold`: An object containing batch threshold settings:
-  - `event_count`: Maximum number of events per batch (default: `100`).
-  - `maximum_size`: Maximum batch size (default: `5mb`).
-  - `event_collect_timeout`: Maximum time to wait for collecting events before sending the batch (default: `10s`). Must be between 1 second and 3600 seconds.
+- `key_name`：在傳送至 Lambda 的承載中，用來將事件分組的索引鍵（預設值：`"events"`）。
+- `threshold`：包含批次閾值設定的物件：
+  - `event_count`：每個批次的最大事件數（預設值：`100`）。
+  - `maximum_size`：批次大小上限（預設值：`5mb`）。
+  - `event_collect_timeout`：傳送批次前收集事件的最長等待時間（預設值：`10s`）。必須介於 1 秒與 3600 秒之間。
 
-**Important**: The `event_collect_timeout` parameter must be specified under `batch.threshold`, not directly under `batch`.
+**重要**：`event_collect_timeout` 參數必須指定在 `batch.threshold` 底下，而非直接指定在 `batch` 底下。
 
-### Response handling
+### 回應處理
 
-The processor supports two response modes:
-- `replace`: Lambda response replaces the original event data (default)
-- `merge`: Lambda response is merged with the original event data
+此處理器支援兩種回應模式：
+- `replace`：Lambda 回應取代原始事件資料（預設）
+- `merge`：Lambda 回應與原始事件資料合併
 
-### Caching
+### 快取
 
-When `response_mode` is set to `merge` and `keys` are specified, the processor can cache Lambda responses to improve performance for repeated requests.
+當 `response_mode` 設定為 `merge` 且指定了 `keys` 時，處理器可以快取 Lambda 回應，以提升重複請求的效能。
 
-### Circuit breaker
+### 斷路器
 
-The processor includes circuit breaker functionality to handle memory pressure situations gracefully.
+處理器包含斷路器功能，可從容處理記憶體壓力情況。
 
-### Tags on failure
+### 失敗時加上標籤
 
-Custom tags can be applied to events when Lambda processing fails or encounters exceptions using the `tags_on_failure` configuration.
+當 Lambda 處理失敗或發生例外狀況時，可以使用 `tags_on_failure` 組態為事件套用自訂標籤。
 
-## Behavior
+## 行為
 
-When configured for batching, the `aws_lambda` processor groups multiple events into a single request. This grouping is governed by batch thresholds, which can be based on the event count, size limit, or timeout. The processor then sends the entire batch to the Lambda function as a single payload.
+設定為批次處理時，`aws_lambda` 處理器會將多個事件分組為單一請求。此分組由批次閾值決定，可依據事件數量、大小限制或逾時時間。接著處理器會將整個批次作為單一承載傳送至 Lambda 函式。
 
-## Lambda response handling
+## Lambda 回應處理
 
-The `response_events_match` setting defines how Data Prepper handles the relationship between batch events sent to Lambda and the response received:
+`response_events_match` 設定定義了 Data Prepper 如何處理傳送至 Lambda 的批次事件與所收到回應之間的關係：
 
-- `true`: Lambda returns a JSON array with results for each batched event. Data Prepper maps this array back to its corresponding original event, ensuring that each event in the batch gets the corresponding part of the response from the array.
-- `false`: Lambda returns one or more events for the entire batch. Response events are not correlated with the original events. Original event metadata is not preserved in the response events. For example, when `response_events_match` is set to `true`, the Lambda function is expected to return the same number of response events as the number of original requests, maintaining the original order.
+- `true`：Lambda 傳回一個 JSON 陣列，其中包含每個批次事件的結果。Data Prepper 會將此陣列對應回其相應的原始事件，確保批次中的每個事件都取得陣列中對應的回應部分。
+- `false`：Lambda 針對整個批次傳回一或多個事件。回應事件與原始事件沒有關聯。原始事件的中繼資料不會保留在回應事件中。例如，當 `response_events_match` 設定為 `true` 時，Lambda 函式預期會傳回與原始請求數量相同的回應事件數，並維持原始順序。
 
-## Lambda function implementation
+## Lambda 函式實作
 
-When Data Prepper invokes your Lambda function it sends a JSON object with events grouped under the configured `key_name` (default: `"events"`).
+當 Data Prepper 呼叫您的 Lambda 函式時，會傳送一個 JSON 物件，其中事件分組在設定的 `key_name` 之下（預設：`"events"`）。
 
-### Input format
+### 輸入格式
 
-Your Lambda function receives the following input structure:
+您的 Lambda 函式會收到以下輸入結構：
 
 ```json
 {
@@ -163,15 +164,15 @@ Your Lambda function receives the following input structure:
 ```
 {% include copy.html %}
 
-The key name (`"events"` in this example) is configurable through the `batch.key_name` parameter.
+索引鍵名稱（在此範例中為 `"events"`）可透過 `batch.key_name` 參數設定。
 
-### Output format
+### 輸出格式
 
-The expected output format depends on the `response_events_match` setting:
+預期的輸出格式取決於 `response_events_match` 設定：
 
-#### When `response_events_match: false` (default)
+#### 當設定為 `response_events_match: false` 時（預設）
 
-Lambda can return one or more new events. The returned events don't need to match the input count. When `response_events_match: false`, the `aws_lambda` processor drops all input events and outputs only the events returned by the Lambda function, replacing the input data rather than combining it:
+Lambda 可以傳回一或多個新事件。傳回的事件不需要與輸入數量相符。當設定為 `response_events_match: false` 時，`aws_lambda` 處理器會捨棄所有輸入事件，僅輸出 Lambda 函式傳回的事件，以取代輸入資料而非與其合併：
 
 ```python
 def lambda_handler(event, context):
@@ -183,9 +184,9 @@ def lambda_handler(event, context):
 ```
 {% include copy.html %}
 
-#### When `response_events_match: true`
+#### 當設定為 `response_events_match: true` 時
 
-The following function sets a `status` key to the static value `processed` in each event:
+以下函式會在每個事件中將 `status` 索引鍵設定為靜態值 `processed`：
 
 ```python
 def lambda_handler(event, context):
@@ -208,10 +209,10 @@ def lambda_handler(event, context):
 {% include copy.html %}
 
 <!-- vale off -->
-### Example Lambda function
+### Lambda 函式範例
 <!-- vale on -->
 
-The following Lambda function transforms all string fields to uppercase:
+以下 Lambda 函式會將所有字串欄位轉換為大寫：
 
 ```python
 def lambda_handler(event, context):
@@ -234,16 +235,16 @@ def lambda_handler(event, context):
 ```
 {% include copy.html %}
 
-## Limitations
+## 限制
 
-Note the following limitations:
+請注意以下限制：
 
-- Payload limitation: 6 MB payload limit
-- Response codec: JSON-only codec support
+- 承載限制：6 MB 承載上限
+- 回應編碼器：僅支援 JSON 編碼器
 
-## Integration testing
+## 整合測試
 
-Integration tests for this plugin are executed separately from the main Data Prepper build process. Use the following Gradle command to run these tests:
+此外掛程式的整合測試與主要 Data Prepper 建置程序分開執行。請使用以下 Gradle 命令執行這些測試：
 
 ```bash
 ./gradlew :data-prepper-plugins:aws-lambda:integrationTest -Dtests.processor.lambda.region="us-east-1" -Dtests.processor.lambda.functionName="lambda_test_function"  -Dtests.processor.lambda.sts_role_arn="arn:aws:iam::123456789012:role/dataprepper-role

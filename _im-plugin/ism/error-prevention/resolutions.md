@@ -1,34 +1,35 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: ISM error prevention resolutions
+title: "ISM 錯誤預防解決方案"
 parent: ISM error prevention
 grand_parent: Index State Management
 nav_order: 10
 ---
 
-# ISM error prevention resolutions
+# ISM 錯誤預防解決方案
 
-Resolutions of errors for each validation rule action are listed in the following sections.
+各驗證規則動作的錯誤解決方案列於以下章節。
 
 ---
 
-#### Table of contents
+#### 目錄
 1. TOC
 {:toc}
 
 
 ---
 
-## The index is not the write index
+## 索引不是寫入索引
 
-To confirm that the index is a write index, run the following request:
+若要確認索引是否為寫入索引，請執行以下請求：
 
 ```json
 GET {index}/_alias?pretty
 ```
 {% include copy-curl.html %}
 
-The following example response shows that the index is a write index:
+以下範例回應顯示該索引是寫入索引：
 
 ```json
 {
@@ -42,7 +43,7 @@ The following example response shows that the index is a write index:
 }
 ```
 
-If `is_write_index` is not `true`, the index is not a write index. To set the index as a write index, run the following request:
+如果 `is_write_index` 不是 `true`，則該索引不是寫入索引。若要將索引設為寫入索引，請執行以下請求：
 
 ```json
 POST _aliases
@@ -60,9 +61,9 @@ POST _aliases
 ```
 {% include copy-curl.html %}
 
-## The index does not have an alias
+## 索引沒有別名
 
-If the index does not have an alias, you can add one by running the following request:
+如果索引沒有別名，您可以執行以下請求來新增一個：
 
 ```json
 POST _aliases
@@ -79,16 +80,16 @@ POST _aliases
 ```
 {% include copy-curl.html %}
 
-## Skipping rollover action is true
+## 略過輪替動作的設定為 true
 
-If the rollover action is being skipped, check the index settings by running the following request:
+如果輪替動作被略過，請執行以下請求檢查索引設定：
 
 ```json
 GET {index}/_settings?pretty
 ```
 {% include copy-curl.html %}
 
-The following example response shows that rollover is set to be skipped:
+以下範例回應顯示輪替已設定為略過：
 
 ```json
 {
@@ -107,7 +108,7 @@ The following example response shows that rollover is set to be skipped:
 }
 ```
 
-To reset the setting, run the following request:
+若要重設此設定，請執行以下請求：
 
 ```json
 PUT {index}/_settings
@@ -119,13 +120,13 @@ PUT {index}/_settings
 ```
 {% include copy-curl.html %}
 
-## This index has already been rolled over successfully
+## 此索引已成功輪替
 
-Remove the [rollover policy from the index]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/#remove-policy-from-index) to prevent this error from reoccurring.
+移除索引的[輪替政策]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/#remove-policy-from-index)，以防止此錯誤再次發生。
 
-## The rollover policy misses rollover_alias index setting
+## 輪替政策缺少 rollover_alias 索引設定
 
-Add a `rollover_alias` index setting to the rollover policy to resolve this issue. Run the following request:
+在輪替政策中新增 `rollover_alias` 索引設定以解決此問題。請執行以下請求：
 
 ```json
 PUT _index_template/ism_rollover
@@ -140,20 +141,20 @@ PUT _index_template/ism_rollover
 ```
 {% include copy-curl.html %}
 
-## Data too large and exceeding the threshold
+## 資料量過大且超過閾值
 
-Check the [JVM information]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-info/) and increase the heap memory.
+檢查 [JVM 資訊]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-info/)並增加堆積記憶體。
 
-## Maximum shards exceeded
+## 超過分片數量上限
 
-The shard limit per node, or per index, causes this issue to occur. Check whether there is a `total_shards_per_node` limit by running the following request:
+此問題是由於每個節點或每個索引的分片上限所造成。請執行以下請求，檢查是否有 `total_shards_per_node` 限制：
 
 ```json
 GET /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-If the response contains `total_shards_per_node`, increase its value temporarily by running the following request:
+如果回應包含 `total_shards_per_node`，請執行以下請求暫時增加其值：
 
 ```json
 PUT _cluster/settings
@@ -165,14 +166,14 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-To check whether there is a shard limit for an index, run the following request:
+若要檢查索引是否有分片限制，請執行以下請求：
 
 ```json
 GET {index}/_settings/index.routing.*
 ```
 {% include copy-curl.html %}
 
-The following example response shows a limit of 10 shards per node:
+以下範例回應顯示每個節點 10 個分片的限制：
 
 ```json
 {
@@ -190,7 +191,7 @@ The following example response shows a limit of 10 shards per node:
 }
 ```
 
-To increase the limit, or to set it to `-1` for unlimited shards, run the following request:
+若要增加限制，或將其設為 `-1` 以允許無限分片，請執行以下請求：
 
 ```json
 PUT {index}/_settings
@@ -200,21 +201,21 @@ PUT {index}/_settings
 ```
 {% include copy-curl.html %}
 
-## The index is a write index for some data stream
+## 索引是某個資料串流的寫入索引
 
-If you still want to delete the index, check your [data stream]({{site.url}}{{site.baseurl}}/opensearch/data-streams/) settings and change the write index.
+如果您仍想刪除該索引，請檢查您的[資料串流]({{site.url}}{{site.baseurl}}/opensearch/data-streams/)設定並變更寫入索引。
 
-## The index is blocked
+## 索引遭到封鎖
 
-Generally, the index is blocked because disk usage has exceeded the flood-stage watermark and the index has a `read-only-allow-delete` block. To resolve this issue, you can:
+一般而言，索引被封鎖是因為磁碟使用量已超過洪水階段浮水印，且索引有 `read-only-allow-delete` 封鎖。若要解決此問題，您可以：
 
-1. Remove the `index.blocks.read_only_allow_delete` parameter.
-1. Temporarily increase the disk watermarks.
-1. Temporarily disable the disk allocation threshold.
+1. 移除 `index.blocks.read_only_allow_delete` 參數。
+1. 暫時提高磁碟浮水印。
+1. 暫時停用磁碟分配閾值。
 
-To prevent the issue from reoccurring, it is better to reduce the usage of the disk by increasing disk space, adding new nodes, or removing data or indexes that are no longer needed. 
+若要防止此問題再次發生，建議透過增加磁碟空間、新增節點，或移除不再需要的資料或索引，來降低磁碟使用量。
 
-Remove `index.blocks.read_only_allow_delete` by running the following request:
+請執行以下請求移除 `index.blocks.read_only_allow_delete`：
 
 ```json
 PUT {index}/_settings
@@ -224,7 +225,7 @@ PUT {index}/_settings
 ```
 {% include copy-curl.html %}
 
-Increase the low disk watermarks by running the following request:
+請執行以下請求提高低磁碟浮水印：
 
 ```json
 PUT _cluster/settings
@@ -246,7 +247,7 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-Disable the disk allocation threshold by running the following request:
+請執行以下請求停用磁碟分配閾值：
 
 ```json
 PUT _cluster/settings
@@ -266,14 +267,14 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-## Remote store is not enabled
+## 未啟用遠端儲存
 
-The `search_only` action requires remote store to be enabled on the cluster. Remote store must be enabled at cluster creation time and cannot be enabled on an existing cluster. For more information, see [Remote-backed storage]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/index/).
+`search_only` 動作需要在叢集上啟用遠端儲存。遠端儲存必須在建立叢集時啟用，無法在現有叢集上啟用。如需更多資訊，請參閱 [遠端後端儲存]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/index/)。
 
-## Segment replication is not enabled
+## 未啟用分段複製
 
-The `search_only` action requires segment replication to be enabled for the index. Segment replication must be configured at index creation time. For more information, see [Segment replication]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/segment-replication/).
+`search_only` 動作需要為索引啟用分段複製。分段複製必須在建立索引時設定。如需更多資訊，請參閱 [分段複製]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/segment-replication/)。
 
-## No search replicas configured
+## 未設定搜尋副本
 
-The `search_only` action requires at least one search replica. For more information about configuring search replicas, see [Separate index and search workloads]({{site.url}}{{site.baseurl}}/tuning-your-cluster/separate-index-and-search-workloads/).
+`search_only` 動作需要至少一個搜尋副本。如需設定搜尋副本的更多資訊，請參閱 [分離編製索引與搜尋工作負載]({{site.url}}{{site.baseurl}}/tuning-your-cluster/separate-index-and-search-workloads/)。

@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Log enrichment
+title: "記錄檔擴充"
 parent: Common use cases
 nav_order: 35
 ---
 
-# Log enrichment
+# 記錄檔擴充
 
-You can perform different types of log enrichment with OpenSearch Data Prepper, including:
+您可以使用 OpenSearch Data Prepper 執行不同類型的記錄檔擴充，包括：
 
-- Filtering.
-- Extracting key-value pairs from strings.
-- Mutating events.
-- Mutating strings.
-- Converting lists to maps.
-- Processing incoming timestamps.
+- 篩選。
+- 從字串擷取鍵值配對。
+- 修改事件。
+- 修改字串。
+- 將清單轉換為映射表。
+- 處理傳入的時間戳記。
 
-## Filtering
+## 篩選
 
-Use the [`drop_events`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/drop-events/) processor to filter out specific log events before sending them to a sink. For example, if you're collecting web request logs and only want to store unsuccessful requests, you can create the following pipeline, which drops any requests for which the response is less than 400 so that only log events with HTTP status codes of 400 and higher remain.
+使用 [`drop_events`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/drop-events/) 處理器，在將記錄事件傳送至接收端之前，篩除特定事件。例如，如果您正在收集網頁請求記錄檔，且只想儲存未成功的請求，可以建立下列管線，捨棄回應狀態碼小於 400 的所有請求，僅保留 HTTP 狀態碼為 400 及以上的記錄事件。
 
 ```yaml
 log-pipeline:
@@ -37,20 +38,20 @@ log-pipeline:
 ```
 {% include copy-curl.html %}
 
-The `drop_when` option specifies which events to drop from the pipeline.
+`drop_when` 選項指定要從管線捨棄哪些事件。
 
-## Extracting key-value pairs from strings
+## 從字串擷取鍵值配對
 
-Log data often includes strings of key-value pairs. For example, if a user queries a URL that can be paginated, the HTTP logs might contain the following HTTP query string:
+記錄資料通常包含由鍵值配對組成的字串。例如，如果使用者查詢可分頁的 URL，HTTP 記錄檔可能包含下列 HTTP 查詢字串：
 
 ```json
 page=3&q=my-search-term
 ```
 {% include copy-curl.html %}
 
-To perform analysis using the search terms, you can extract the value of `q` from a query string. The [`key_value`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/key-value/) processor provides robust support for extracting keys and values from strings.
+若要使用搜尋詞彙進行分析，您可以從查詢字串擷取 `q` 的值。[`key_value`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/key-value/) 處理器為從字串擷取鍵和值提供強大的支援。
 
-The following example combines the `split_string` and `key_value` processors to extract query parameters from an Apache log line:
+下列範例結合 `split_string` 和 `key_value` 處理器，從 Apache 記錄檔的一行擷取查詢參數：
 
 ```yaml
 pipeline:
@@ -71,11 +72,11 @@ pipeline:
 ```
 {% include copy-curl.html %}
 
-## Mutating events
+## 修改事件
 
-The different [mutate event]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/mutate-event/) processors let you rename, copy, add, and delete event entries.
+各種[修改事件]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/mutate-event/)處理器可讓您重新命名、複製、新增及刪除事件項目。
 
-In this example, the first processor sets the value of the `debug` key to `true` if the key already exists in the event. The second processor only sets the `debug` key to `true` if the key doesn't exist in the event because `overwrite_if_key_exists` is set to `true`.
+在此範例中，如果事件中已存在 `debug` 鍵，第一個處理器會將其值設為 `true`。由於 `overwrite_if_key_exists` 設為 `true`，第二個處理器只會在事件中不存在 `debug` 鍵時，將該鍵設為 `true`。
 
 ```yaml
 ...
@@ -95,9 +96,9 @@ processor:
 ```
 {% include copy-curl.html %}
 
-You can also use a format string to construct new entries from existing events. For example, `${date}-${time}` will create a new entry based on the values of the existing entries `date` and `time`.
+您也可以使用格式字串，從現有事件建立新項目。例如，`${date}-${time}` 會根據現有項目 `date` 和 `time` 的值建立新項目。
 
-For example, the following pipeline adds new event entries dynamically from existing events:
+例如，下列管線會從現有事件動態新增事件項目：
 
 ```yaml
 processor:
@@ -108,7 +109,7 @@ processor:
 ```
 {% include copy-curl.html %}
 
-Consider the following incoming event:
+請考慮下列傳入事件：
 
 ```json
 {
@@ -118,7 +119,7 @@ Consider the following incoming event:
 ```
 {% include copy-curl.html %}
 
-The processor transforms it into an event with a new key named `key_three`, which combines values of other keys in the original event, as shown in the following example:
+處理器會將其轉換為具有名為 `key_three` 的新鍵的事件，此鍵結合原始事件中其他鍵的值，如下列範例所示：
 
 ```json
 {
@@ -129,9 +130,9 @@ The processor transforms it into an event with a new key named `key_three`, whic
 ```
 {% include copy-curl.html %}
 
-## Mutating strings
+## 修改字串
 
-The various [mutate string]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/mutate-string/) processors offer tools that you can use to manipulate strings in incoming data. For example, if you need to split a string into an array, you can use the `split_string` processor:
+各種[修改字串]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/mutate-string/)處理器提供工具，讓您操作傳入資料中的字串。例如，如果您需要將字串分割為陣列，可以使用 `split_string` 處理器：
 
 ```yaml
 ...
@@ -144,13 +145,13 @@ processor:
 ```
 {% include copy-curl.html %}
 
-The processor will transform a string such as `a&b&c` into `["a", "b", "c"]`.
+處理器會將 `a&b&c` 這類字串轉換為 `["a", "b", "c"]`。
 
-## Converting lists to maps
+## 將清單轉換為映射表
 
-The [`list_to_map`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/list-to-map/) processor, which is one of the mutate event processors, converts a list of objects in an event to a map.
+[`list_to_map`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/list-to-map/) 處理器是修改事件處理器之一，可將事件中的物件清單轉換為映射表。
 
-For example, consider the following processor configuration:
+例如，請考慮下列處理器組態：
 
 ```yaml
 ...
@@ -165,7 +166,7 @@ processor:
 ```
 {% include copy-curl.html %}
 
-The following processor will convert an event that contains a list of objects to a map like this:
+下列處理器會將包含物件清單的事件轉換為映射表，如下所示：
 
 ```json
 {
@@ -198,7 +199,7 @@ The following processor will convert an event that contains a list of objects to
 ```
 {% include copy-curl.html %}
 
-As another example, consider an incoming event with the following structure:
+另一個範例是具有下列結構的傳入事件：
 
 ```json
 {
@@ -228,7 +229,7 @@ As another example, consider an incoming event with the following structure:
 ```
 {% include copy-curl.html %}
 
-You can define the following options in the processor configuration:
+您可以在處理器組態中定義下列選項：
 
 ```yaml
 ...
@@ -242,7 +243,7 @@ processor:
 ```
 {% include copy-curl.html %}
 
-The processor modifies the event by adding the new `myobject` object:
+處理器會新增 `myobject` 物件來修改事件：
 
 ```json
 {
@@ -278,7 +279,7 @@ The processor modifies the event by adding the new `myobject` object:
 ```
 {% include copy-curl.html %}
 
-In many cases, you may want to flatten the array for each key. In these situations, you can choose which object to retain. The processor offers a choice of either first or last. For example, consider the following:
+在許多情況下，您可能想要將每個鍵的陣列扁平化。在這些情況下，您可以選擇要保留哪個物件。處理器提供保留第一個或最後一個物件的選擇。例如，請考慮下列內容：
 
 ```yaml
 ...
@@ -293,7 +294,7 @@ processor:
 ```
 {% include copy-curl.html %}
 
-The fields in the newly created `myobject` are then flattened accordingly:
+接著，新建立的 `myobject` 中的欄位會依此扁平化：
 
 ```json
 {
@@ -318,9 +319,9 @@ The fields in the newly created `myobject` are then flattened accordingly:
 ```
 {% include copy-curl.html %}
 
-## Processing incoming timestamps
+## 處理傳入的時間戳記
 
-The [`date`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/date/) processor parses the `timestamp` key from incoming events by converting it to International Organization for Standardization (ISO) 8601 format:
+[`date`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/date/) 處理器會解析傳入事件中的 `timestamp` 鍵，將其轉換為國際標準化組織（ISO）8601 格式：
 
 ```yaml
 ...
@@ -337,14 +338,14 @@ The [`date`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/p
 ```
 {% include copy-curl.html %}
 
-If the preceding pipeline processes the following event:
+如果上述管線處理下列事件：
 
 ```json
 {"timestamp": "10/Feb/2000:13:55:36"}
 ```
 {% include copy-curl.html %}
 
-It converts the event to the following format:
+它會將事件轉換為下列格式：
 
 ```json
 {
@@ -354,9 +355,9 @@ It converts the event to the following format:
 ```
 {% include copy-curl.html %}
 
-### Generating timestamps
+### 產生時間戳記
 
-The `date` processor can generate timestamps for incoming events if you specify `@timestamp` for the `destination` option:
+如果您為 `destination` 選項指定 `@timestamp`，`date` 處理器便可為傳入事件產生時間戳記：
 
 ```yaml
 ...
@@ -368,9 +369,9 @@ The `date` processor can generate timestamps for incoming events if you specify 
 ```
 {% include copy-curl.html %}
 
-### Deriving punctuation patterns
+### 推導標點符號模式
 
-The [`substitute_string`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/substitute-string/) processor (which is one of the mutate string processors) lets you derive a punctuation pattern from incoming events. In the following example pipeline, the processor will scan incoming Apache log events and derive punctuation patterns from them:
+[`substitute_string`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/substitute-string/) 處理器（修改字串處理器之一）可讓您從傳入事件推導標點符號模式。在下列管線範例中，處理器會掃描傳入的 Apache 記錄事件，並從中推導標點符號模式：
 
 ```yaml
 processor:  
@@ -385,16 +386,16 @@ processor:
 ```
 {% include copy-curl.html %}
 
-The following incoming Apache HTTP log:
+下列傳入的 Apache HTTP 記錄檔：
 
 ```json
 [{"message":"10.10.10.11 - admin [19/Feb/2015:15:50:36 -0500] \"GET /big2.pdf HTTP/1.1\" 200 33973115 0.202 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.111 Safari/537.36\""}]
 ```
 
-Generates the following punctuation pattern:
+會產生下列標點符號模式：
 ```json
 {"message":"..._-_[//:::_-]_\"_/._/.\"_._\"-\"_\"/._(;_)_/._(,_)_/..._/.\""}
 ```
 {% include copy-curl.html %}
 
-You can count these generated patterns by passing them through the [`aggregate`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/aggregate/) processor with the `count` action.
+您可以將這些產生的模式傳入使用 `count` 動作的 [`aggregate`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/aggregate/) 處理器，以計算這些模式的數量。

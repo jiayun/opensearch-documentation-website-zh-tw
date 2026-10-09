@@ -1,39 +1,40 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search configurations
+title: "搜尋組態"
 nav_order: 5
 parent: Search Relevance Workbench
 grand_parent: Optimizing search quality
 has_children: false
 ---
 
-# Search configurations
+# 搜尋組態
 
-A search configuration defines the query pattern used to run experiments, specifying how queries should be constructed and executed.
+搜尋組態會定義用於執行實驗的查詢模式，指定查詢應如何建構與執行。
 
-## Creating search configurations
+## 建立搜尋組態
 
-You can define a search configuration to describe how every query of a query set is run. Every search configuration has a name and consists of a query body (a query in OpenSearch query domain-specific language [DSL]) and the target index. You can optionally define a search pipeline for the search configuration.
+您可以定義搜尋組態，描述查詢集中每個查詢的執行方式。每個搜尋組態都有一個名稱，並由查詢本文 (OpenSearch 查詢領域特定語言 [DSL] 中的查詢) 與目標索引組成。您也可以選擇為搜尋組態定義搜尋管線。
 
-### Endpoint
+### 端點
 
 ```json
 PUT _plugins/_search_relevance/search_configurations
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available input parameters.
+下表列出可用的輸入參數。
 
-Field | Data type |  Description
+欄位 | 資料類型 |  說明
 :---  | :--- | :---
-`name` | String | The name of the search configuration.
-`description` | String | Description of the search configuration.
-`query` | Object | Defines the query in OpenSearch query DSL, provided as a JSON string with the inner quotation marks escaped (for example, `"query": "{\"query\":{\"multi_match\":{...}}}"`). Use the `%SearchText%` placeholder or [Mustache](https://mustache.github.io/) template variables (such as {% raw %}`{{queryText}}`{% endraw %}) to substitute query set values at runtime. For more information, see [Using Mustache templates](#using-mustache-templates).
-`index` | String | The target index queried by this search configuration.
-`searchPipeline` | String | Specifies an existing search pipeline. Optional.
+`name` | 字串 | 搜尋組態的名稱。
+`description` | 字串 | 搜尋組態的說明。
+`query` | 物件 | 以 OpenSearch query DSL 定義查詢，並以逸出內部引號的 JSON 字串提供（例如 `"query": "{\"query\":{\"multi_match\":{...}}}"`）。使用 `%SearchText%` 預留位置或 [Mustache](https://mustache.github.io/) 範本變數（例如 {% raw %}`{{queryText}}`{% endraw %}），在執行階段替代查詢集的值。如需更多資訊，請參閱[使用 Mustache 範本](#using-mustache-templates)。
+`index` | 字串 | 此搜尋組態所查詢的目標索引。
+`searchPipeline` | 字串 | 指定現有的搜尋管線。選用。
 
-### Example request: Creating a search configuration
+### 範例請求：建立搜尋組態
 
 ```json
 PUT _plugins/_search_relevance/search_configurations
@@ -45,21 +46,21 @@ PUT _plugins/_search_relevance/search_configurations
 }
 ```
 
-### Using Mustache templates
+### 使用 Mustache 範本
 
-Instead of the `%SearchText%` placeholder, you can use [Mustache](https://mustache.github.io/) template variables in a query. If the `query` parameter contains double curly braces ({% raw %}`{{}}`{% endraw %}), OpenSearch renders the `query` as a Mustache template; otherwise, OpenSearch substitutes the `%SearchText%` placeholder. Existing `%SearchText%` configurations continue to work unchanged.
+您可以在查詢中使用 [Mustache](https://mustache.github.io/) 範本變數，而不使用 `%SearchText%` 預留位置。如果 `query` 參數包含雙大括號 ({% raw %}`{{}}`{% endraw %})，OpenSearch 會將 `query` 轉譯為 Mustache 範本；否則，OpenSearch 會替代 `%SearchText%` 預留位置。現有的 `%SearchText%` 組態會繼續運作，不會有任何變更。
 
-When OpenSearch renders a template, the following variables are available:
+當 OpenSearch 轉譯範本時，可以使用下列變數：
 
-- {% raw %}`{{queryText}}`{% endraw %}: The `queryText` value from the current query set entry.
-- {% raw %}`{{<field_name>}}`{% endraw %}: Any custom field from the query set entry, referenced by its field name (for example, {% raw %}`{{category}}`{% endraw %}). For more information, see [Query sets]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/query-sets/).
+- {% raw %}`{{queryText}}`{% endraw %}：目前查詢集項目中的 `queryText` 值。
+- {% raw %}`{{<field_name>}}`{% endraw %}：查詢集項目中的任何自訂欄位，以其欄位名稱參照 (例如 {% raw %}`{{category}}`{% endraw %})。如需更多資訊，請參閱[查詢集]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/query-sets/)。
 
-OpenSearch automatically escapes substituted values, so query text that contains quotation marks or other special characters remains valid in JSON.
+OpenSearch 會自動逸出替代的值，因此包含引號或其他特殊字元的查詢文字在 JSON 中仍保持有效。
 
-Mustache partials ({% raw %}`{{>...}}`{% endraw %}) are not supported and cause the query to be rejected.
+不支援 Mustache 部分範本 ({% raw %}`{{>...}}`{% endraw %})，且會導致查詢遭到拒絕。
 {: .note}
 
-For example, the following request creates a search configuration that matches the user query against the `title` field and filters the results by the `category` custom field from each query set entry:
+例如，下列請求會建立搜尋組態，將使用者查詢與 `title` 欄位進行比對，並依每個查詢集項目中的 `category` 自訂欄位篩選結果：
 
 ```json
 PUT _plugins/_search_relevance/search_configurations
@@ -72,22 +73,22 @@ PUT _plugins/_search_relevance/search_configurations
 ```
 {% include copy-curl.html %}
 
-## Managing search configurations
+## 管理搜尋組態
 
-You can retrieve or delete configurations using the following APIs.
+您可以使用下列 API 擷取或刪除組態。
 
-### Retrieve search configurations
+### 擷取搜尋組態
 
- This API retrieves search configurations.
+ 此 API 會擷取搜尋組態。
 
-#### Endpoint
+#### 端點
 
 ```json
 GET _plugins/_search_relevance/search_configurations
 GET _plugins/_search_relevance/search_configurations/{search_configuration_id}
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -128,32 +129,32 @@ GET _plugins/_search_relevance/search_configurations/{search_configuration_id}
 }
 ```
 
-### Path parameters
+### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `search_configuration_id` | String | The ID of the search configuration to retrieve. Retrieves all search configurations when empty. |
+| `search_configuration_id` | 字串 | 要擷取的搜尋組態 ID。若為空，則擷取所有搜尋組態。 |
 
-### Delete a search configuration
+### 刪除搜尋組態
 
-You can delete a search configuration using the search configuration ID.
+您可以使用搜尋組態 ID 刪除搜尋組態。
 
-#### Endpoint
+#### 端點
 
 ```json
 DELETE _plugins/_search_relevance/search_configurations/{search_configuration_id}
 ```
 
-#### Example request
+#### 範例請求
 
 ```json
 DELETE _plugins/_search_relevance/search_configurations/bb45c4c4-48ce-461b-acbc-f154c0a17ec9
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -172,18 +173,18 @@ DELETE _plugins/_search_relevance/search_configurations/bb45c4c4-48ce-461b-acbc-
 }
 ```
 
-### Search for a search configuration
+### 搜尋搜尋組態
 
-You can search for available search configurations using query DSL.
+您可以使用 query DSL 搜尋可用的搜尋組態。
 
-#### Endpoint
+#### 端點
 
 ```json
 GET _plugins/_search_relevance/search_configurations/_search
 POST _plugins/_search_relevance/search_configurations/_search
 ```
 
-#### Example request: Searching for all search configurations
+#### 範例請求：搜尋所有搜尋組態
 
 ```json
 GET _plugins/_search_relevance/search_configurations/_search
@@ -196,7 +197,7 @@ GET _plugins/_search_relevance/search_configurations/_search
 ```
 {% include copy-curl.html %}
 
-#### Example request: Searching for a search configuration by name
+#### 範例請求：依名稱搜尋搜尋組態
 
 ```json
 GET _plugins/_search_relevance/search_configurations/_search
@@ -210,12 +211,12 @@ GET _plugins/_search_relevance/search_configurations/_search
 ```
 {% include copy-curl.html %}
 
-Note that the index storing the search configurations contains several fields of the type `keyword` that require exact matching.
+請注意，儲存搜尋組態的索引包含數個 `keyword` 類型的欄位，需要完全相符。
 {: .note}
 
-#### Example request: Searching for a search configuration using multiple criteria
+#### 範例請求：使用多個條件搜尋搜尋組態
 
-Search for a search configuration by a specific target index and query pattern:  
+依特定目標索引與查詢模式搜尋搜尋組態：  
 
 ```json
 GET _plugins/_search_relevance/search_configurations/_search
@@ -241,7 +242,7 @@ GET _plugins/_search_relevance/search_configurations/_search
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {

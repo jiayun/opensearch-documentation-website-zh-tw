@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: JSON Web Token
 parent: Authentication backends
@@ -7,34 +8,34 @@ redirect_from:
 ---
 
 
-# JSON Web Token authentication
+# JSON Web Token 驗證
 
-JSON Web Tokens (JWTs) are JSON-based access tokens that assert one or more claims. They are commonly used to implement single sign-on (SSO) solutions and fall in the category of token-based authentication systems. The basic information-transmission and identity-verification lifecycle for a JWT is described in the following steps:
+JSON Web Token (JWT) 是以 JSON 為基礎的存取權杖，用來主張一或多項宣告。它們常用於實作單一登入 (SSO) 解決方案，屬於權杖型驗證系統的一類。JWT 的基本資訊傳輸與身分驗證生命週期如下列步驟所述：
 
-1. A user logs in to an authentication server by providing credentials (for example, a username and password).
-1. The authentication server validates the credentials.
-1. The authentication server creates an access token and signs it.
-1. The authentication server returns the token to the user.
-1. The user stores the access token.
-1. The user sends the access token alongside every request to the service that it wants to use.
-1. The service verifies the token and grants or denies access.
-1. With granted access, the user has access until the expiration time of the token. The expiration time is typically set by the issuer in the token's payload.
+1. 使用者提供憑證（例如使用者名稱與密碼）登入驗證伺服器。
+1. 驗證伺服器驗證該憑證。
+1. 驗證伺服器建立存取權杖並加以簽署。
+1. 驗證伺服器將權杖傳回給使用者。
+1. 使用者儲存該存取權杖。
+1. 使用者在每次向想使用的服務發出請求時，都隨附該存取權杖。
+1. 服務驗證權杖並准許或拒絕存取。
+1. 取得存取授權後，使用者即可存取，直到權杖的到期時間為止。到期時間通常由簽發者在權杖的承載中設定。
 
-A JWT is self-contained in the sense that it carries within it all of the information necessary to verify a user. The tokens are Base64 encoded, signed JSON objects.
-
-
-## JWT elements
-
-JWTs consist of three parts:
-
-* Header
-* Payload
-* Signature
+JWT 是自包含的，也就是說它本身攜帶驗證使用者所需的全部資訊。這些權杖是經過 Base64 編碼並簽署的 JSON 物件。
 
 
-### Header
+## JWT 元素
 
-The header contains information about the signing mechanism being used, including the algorithm used for encoding the token. The following example shows typical properties and values for the header:
+JWT 由三個部分組成：
+
+* 標頭
+* 承載
+* 簽章
+
+
+### 標頭
+
+標頭包含所用簽署機制的相關資訊，包括編碼權杖所用的演算法。下列範例顯示標頭的典型屬性與值：
 
 ```json
 {
@@ -43,20 +44,20 @@ The header contains information about the signing mechanism being used, includin
 }
 ```
 
-In this case, the header states that the message was signed using the hashing algorithm HMAC-SHA256.
+在此範例中，標頭指出訊息是使用雜湊演算法 HMAC-SHA256 簽署的。
 
 
-### Payload
+### 承載
 
-The payload of a JWT contains the [JWT claims](https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-claims). A claim is a piece of information about a user of the token that serves as a unique identifier. This allows the issuer of the token to verify identity. Claims are name-value pairs, and a payload typically includes multiple claims. While the options for adding claims are numerous, it is a good practice to avoid adding too many and making the payload excessively large, which would defeat the purpose of the JWT being compact.
+JWT 的承載包含 [JWT 宣告](https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-claims)。宣告是關於權杖使用者的一段資訊，可作為唯一識別碼，讓權杖的簽發者能夠驗證身分。宣告是名稱-值對，承載通常包含多個宣告。雖然新增宣告的選項很多，但良好的做法是避免加入過多宣告而使承載過於龐大，否則會失去 JWT 精簡的目的。
 
-There are three types of claims:
+宣告有三種類型：
 
-* [Registered claims](https://www.iana.org/assignments/jwt/jwt.xhtml#claims) are defined by the JWT specification and comprise a set of standard claims with reserved names. Some examples of these claims include token issuer (`iss`), expiration time (`exp`), and subject (`sub`).
-* Public claims, on the other hand, are defined at the will of the parties sharing the token. They can contain arbitrary information, such as the username and the roles of the user. As a precaution, the specification advises either registering the name or, at least, ensuring that the name is [collision resistant](https://www.rfc-editor.org/rfc/rfc7519#section-4.2) with other claims.
-* Private claims provide another option for assigning custom information to the payload: for example, an email address. As such, they are also referred to as _custom_ claims. The two parties sharing the token must agree on their use because they are considered to be neither registered nor public claims. 
+* [註冊宣告](https://www.iana.org/assignments/jwt/jwt.xhtml#claims)由 JWT 規格定義，是一組具有保留名稱的標準宣告。例如權杖簽發者 (`iss`)、到期時間 (`exp`) 與主體 (`sub`)。
+* 公開宣告則由共用權杖的各方自行定義。它們可以包含任意資訊，例如使用者名稱與使用者的角色。為求謹慎，規格建議註冊該名稱，或至少確保該名稱與其他宣告[不易衝突](https://www.rfc-editor.org/rfc/rfc7519#section-4.2)。
+* 私人宣告提供另一種將自訂資訊加入承載的方式，例如電子郵件地址。因此它們也稱為_自訂_宣告。共用權杖的雙方必須就其用法達成共識，因為它們既不屬於註冊宣告，也不屬於公開宣告。
 
-The following example shows these JSON properties as name-value pairs:
+下列範例以名稱-值對的形式顯示這些 JSON 屬性：
 
 ```json
 {
@@ -67,11 +68,11 @@ The following example shows these JSON properties as name-value pairs:
 }
 ```
 
-### Signature
+### 簽章
 
-The issuer of the token generates the token's signature by applying a cryptographic hash function to the Base64-encoded header and payload. The client receiving the JWT decrypts and validates this signature in the final step of transmission.
+權杖的簽發者透過對 Base64 編碼的標頭與承載套用密碼學雜湊函式來產生權杖的簽章。接收 JWT 的用戶端會在傳輸的最後一步解密並驗證此簽章。
 
-These three parts---header, payload, and signature---are concatenated using periods to form a complete JWT:
+這三個部分---標頭、承載與簽章---以句點串接，形成完整的 JWT：
 
 ```
 encoded = base64UrlEncode(header) + "." + base64UrlEncode(payload)
@@ -79,18 +80,18 @@ signature = HMACSHA256(encoded, 'secretkey');
 jwt = encoded + "." + base64UrlEncode(signature)
 ```
 
-Example:
+範例：
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dnZWRJbkFzIjoiYWRtaW4iLCJpYXQiOjE0MjI3Nzk2Mzh9.gzSraSYS8EXBxLN_oWnFSRgCzcmJmMjLiuyu5CSpyHI
 ```
 
 
-## Configuring JWTs
+## 設定 JWT
 
-If you use a JWT as your only authentication method, disable the user cache by setting the `plugins.security.cache.ttl_minutes` property to `0`. For more information about this property, see [opensearch.yml]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#opensearchyml).
+如果您使用 JWT 作為唯一的驗證方式，請將 `plugins.security.cache.ttl_minutes` 屬性設為 `0` 以停用使用者快取。關於此屬性的更多資訊，請參閱 [opensearch.yml]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#opensearchyml)。
 {: .important }
 
-Set up an authentication domain and choose `jwt` as the HTTP authentication type. Because the tokens already contain all required information to verify the request, `challenge` must be set to `false` and `authentication_backend` to `noop`:
+建立一個驗證網域，並選擇 `jwt` 作為 HTTP 驗證類型。由於權杖已包含驗證請求所需的全部資訊，`challenge` 必須設為 `false`，`authentication_backend` 設為 `noop`：
 
 ```yml
 jwt_auth_domain:
@@ -113,25 +114,25 @@ jwt_auth_domain:
     type: noop
 ```
 
-The following table lists the configuration parameters.
+下表列出組態參數。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`signing_key` | The signing key(s) used to verify the token. If you use a symmetric key algorithm, this is the Base64-encoded shared secret. If you use an asymmetric algorithm, the algorithm contains the public key. To pass multiple keys, use a comma-separated list or enumerate the keys.
-`jwt_header` | The HTTP header in which the token is transmitted. This is typically the `Authorization` header with the `Bearer` schema,`Authorization: Bearer <token>`. Default is `Authorization`. Replacing this field with a value other than `Authorization` prevents the audit log from properly redacting the JWT header from audit messages. It is recommended that users only use  `Authorization` when using JWTs with audit logging. 
-`jwt_url_parameter` | If the token is not transmitted in the HTTP header but rather as an URL parameter, define the name of the parameter here.
-`subject_key` | The key in the JSON payload that stores the username. If not set, the [subject](https://tools.ietf.org/html/rfc7519#section-4.1.2) registered claim is used. To extract a username from nested JWT claims, you can configure `subject_key` as a list.
-`roles_key` | The key in the JSON payload that stores the user's roles. The value must be a comma-separated list of roles. You can configure `roles_key` as a list to extract roles from nested JWT claims.
-`required_audience` | The name of the audience that the JWT must specify. You can set a single value (for example, `project1`) or multiple comma-separated values (for example, `project1,admin`). If you set multiple values, the JWT must have at least one required audience. This parameter corresponds to the [`aud` claim of the JWT](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.3).
-`required_issuer` | The target issuer of JWT stored in the JSON payload. This corresponds to the [`iss` claim of the JWT](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.1).
-`jwt_clock_skew_tolerance_seconds` | Sets a window of time, in seconds, to compensate for any disparity between the JWT authentication server and OpenSearch node clock times, thereby preventing authentication failures due to the misalignment. Security sets 30 seconds as the default. Use this setting to apply a custom value.
+`signing_key` | 用於驗證權杖的簽署金鑰。若使用對稱金鑰演算法，此為 Base64 編碼的共用密鑰；若使用非對稱演算法，則包含公開金鑰。若要傳遞多個金鑰，請使用以逗號分隔的清單或逐一列舉金鑰。
+`jwt_header` | 傳輸權杖的 HTTP 標頭。通常是帶有 `Bearer` 架構的 `Authorization` 標頭，`Authorization: Bearer <token>`。預設為 `Authorization`。若將此欄位替換為 `Authorization` 以外的值，會導致稽核記錄無法正確遮蔽稽核訊息中的 JWT 標頭。建議使用者在搭配稽核記錄使用 JWT 時，僅使用 `Authorization`。
+`jwt_url_parameter` | 若權杖不是透過 HTTP 標頭傳輸，而是以 URL 參數傳輸，請在此定義參數名稱。
+`subject_key` | JSON 承載中儲存使用者名稱的金鑰。若未設定，則使用[主體](https://tools.ietf.org/html/rfc7519#section-4.1.2)註冊宣告。若要從巢狀 JWT 宣告中擷取使用者名稱，可將 `subject_key` 設定為清單。
+`roles_key` | JSON 承載中儲存使用者角色的金鑰。值必須是以逗號分隔的角色清單。可將 `roles_key` 設定為清單，以從巢狀 JWT 宣告中擷取角色。
+`required_audience` | JWT 必須指定的對象名稱。可設定單一值（例如 `project1`）或多個以逗號分隔的值（例如 `project1,admin`）。若設定多個值，JWT 必須至少包含其中一個必要的對象。此參數對應於 [JWT 的 `aud` 宣告](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.3)。
+`required_issuer` | 儲存在 JSON 承載中的 JWT 目標簽發者。此對應於 [JWT 的 `iss` 宣告](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.1)。
+`jwt_clock_skew_tolerance_seconds` | 設定一段以秒為單位的時間窗，用於補償 JWT 驗證伺服器與 OpenSearch 節點時鐘之間的任何差異，從而避免因時間不一致而導致驗證失敗。安全性功能預設為 30 秒。可使用此設定套用自訂值。
 
-Because JWTs are self-contained and the user is authenticated at the HTTP level, no additional `authentication_backend` is needed. Set this value to `noop`.
+由於 JWT 是自包含的，且使用者已在 HTTP 層級完成驗證，因此不需要額外的 `authentication_backend`。請將此值設為 `noop`。
 
 
-### Symmetric key algorithms: HMAC
+### 對稱金鑰演算法：HMAC
 
-Hash-based message authentication codes (HMACs) are a group of algorithms that provide a way of signing messages by means of a shared key. The key is shared between the authentication server and the Security plugin. It must be configured as a Base64-encoded value in the `signing_key` setting:
+雜湊式訊息驗證碼 (HMAC) 是一組演算法，可透過共用金鑰為訊息簽章。此金鑰由驗證伺服器與 Security 外掛程式共用。您必須在 `signing_key` 設定中將其設定為 Base64 編碼值：
 
 ```yml
 jwt_auth_domain:
@@ -142,13 +143,13 @@ jwt_auth_domain:
 ```
 
 
-### Asymmetric key algorithms: RSA and ECDSA
+### 非對稱金鑰演算法：RSA 與 ECDSA
 
-RSA and ECDSA are asymmetric encryption and digital signature algorithms that use a public/private key pair to sign and verify tokens. This means that they use a private key for signing the token, while the Security plugin needs to know only the public key to verify it.
+RSA 與 ECDSA 是使用公開/私密金鑰對來簽署及驗證權杖的非對稱加密與數位簽章演算法。這表示它們使用私密金鑰來簽署權杖，而 Security 外掛程式只需知道公開金鑰即可驗證權杖。
 
-Because you cannot issue new tokens with the public key---and because you can make valid assumptions about the creator of the token---RSA and ECDSA are considered to be more secure than HMAC.
+由於您無法使用公開金鑰簽發新權杖，且您可以對權杖的建立者做出有效的假設，因此 RSA 與 ECDSA 被認為比 HMAC 更安全。
 
-To use RS256, you need to configure only the (non-Base64-encoded) public RSA key as the `signing_key` in the JWT configuration:
+若要使用 RS256，您只需在 JWT 組態中將 (未經 Base64 編碼的) 公開 RSA 金鑰設定為 `signing_key`：
 
 ```yml
 jwt_auth_domain:
@@ -161,25 +162,25 @@ jwt_auth_domain:
       ...
 ```
 
-The Security plugin automatically detects the algorithm (RSA/ECDSA). If necessary, you can break the key into multiple lines.
+Security 外掛程式會自動偵測演算法 (RSA/ECDSA)。如有需要，您可以將金鑰分成多行。
 
 
-### Bearer authentication for HTTP requests
+### HTTP 請求的持有人驗證
 
-The most common way of transmitting a JWT in an HTTP request is to add it as an HTTP header with the bearer authentication schema:
+在 HTTP 請求中傳輸 JWT 最常見的方式，是使用持有人驗證結構將其新增為 HTTP 標頭：
 
 ```
 Authorization: Bearer <JWT>
 ```
 
-The default name of the header is `Authorization`. If required by your authentication server or proxy, you can also use a different HTTP header name using the `jwt_header` configuration key.
+標頭的預設名稱為 `Authorization`。若您的驗證伺服器或代理伺服器要求，您也可以使用 `jwt_header` 組態索引鍵來使用不同的 HTTP 標頭名稱。
 
-As with HTTP basic authentication, you should use HTTPS instead of HTTP when transmitting JWTs in HTTP requests.
+如同 HTTP 基本驗證，在 HTTP 請求中傳輸 JWT 時，您應使用 HTTPS 而非 HTTP。
 
 
-### Query parameters for HTTP requests
+### HTTP 請求的查詢參數
 
-Although the most common way to transmit JWTs in HTTP requests is to use a header field, the Security plugin also supports parameters. Configure the name of the `GET` parameter using the following key:
+雖然在 HTTP 請求中傳輸 JWT 最常見的方式是使用標頭欄位，但 Security 外掛程式也支援參數。請使用下列索引鍵設定 `GET` 參數的名稱：
 
 ```yml
     config:
@@ -189,21 +190,21 @@ Although the most common way to transmit JWTs in HTTP requests is to use a heade
       roles_key: ...
 ```
 
-As with HTTP basic authentication, you should use HTTPS instead of HTTP.
+如同 HTTP 基本驗證，您應使用 HTTPS 而非 HTTP。
 
 
-### Validated registered claims
+### 經驗證的註冊宣告
 
-The following registered claims are validated automatically:
+下列註冊宣告會自動驗證：
 
-* `iat` (Issued At) Claim
-* `nbf` (Not Before) Claim
-* `exp` (Expiration Time) Claim
+* `iat` (Issued At) 宣告
+* `nbf` (Not Before) 宣告
+* `exp` (Expiration Time) 宣告
 
 
-### Supported formats and algorithms
+### 支援的格式與演算法
 
-The Security plugin supports digitally signed, compact JWTs with all standard algorithms:
+Security 外掛程式支援使用所有標準演算法進行數位簽章的精簡 JWT：
 
 ```
 HS256: HMAC using SHA-256
@@ -221,17 +222,17 @@ ES512: ECDSA using P-521 and SHA-512
 ```
 
 
-## Using a JWKS endpoint to validate a JWT
+## 使用 JWKS 端點驗證 JWT
 
-Validating the signature of the signed JWT is the last step in granting user access. OpenSearch validates the signature when the client sends the JWT with a REST request. The signature is verified in every authentication request.
+驗證已簽署 JWT 的簽章是授予使用者存取權的最後一個步驟。當用戶端以 REST 請求傳送 JWT 時，OpenSearch 會驗證簽章。每個驗證請求都會驗證簽章。
 
-Rather than store the cryptographic key used for validation in the local `config.yml` file's `authc` section, you can specify a JSON Web Key Set (JWKS) endpoint to retrieve the key from its location on the issuer's server. This method of validating the JWT can help streamline management of public keys and certificates.
+您可以指定 JSON Web Key Set (JWKS) 端點，從簽發者伺服器上的位置擷取金鑰，而不必將用於驗證的密碼編譯金鑰儲存在本機 `config.yml` 檔案的 `authc` 區段中。這種驗證 JWT 的方法有助於簡化公開金鑰與憑證的管理。
 
-For more information about the content and format of JSON Web Keys, see [JSON Web Key (JWK) format](https://datatracker.ietf.org/doc/html/rfc7517#section-4).
+如需 JSON Web Key 內容與格式的詳細資訊，請參閱 [JSON Web Key (JWK) 格式](https://datatracker.ietf.org/doc/html/rfc7517#section-4)。
 
-### Configuring JWKS endpoints for JWT authentication
+### 為 JWT 驗證設定 JWKS 端點
 
-You can configure JWKS endpoints directly in the JWT authentication domain. This approach provides enhanced security through automated key rotation and dynamic key management:
+您可以直接在 JWT 驗證網域中設定 JWKS 端點。此方法透過自動金鑰輪替與動態金鑰管理來提供增強的安全性：
 
 ```yml
 jwt_auth_domain:
@@ -255,32 +256,32 @@ jwt_auth_domain:
 ```
 {% include copy.html %}
 
-### JWKS configuration parameters
+### JWKS 組態參數
 
-The following table describes the JWKS-specific configuration parameters.
+下表說明 JWKS 專屬的組態參數。
 
-Name | Description | Default
+名稱 | 說明 | 預設值
 :--- | :--- | :---
-`jwks_uri` | The JWKS endpoint URL. When specified, `signing_key` is ignored and keys are retrieved from this endpoint. | `null`
+`jwks_uri` | JWKS 端點 URL。指定後，會忽略 `signing_key`，並從此端點擷取金鑰。 | `null`
 
-### (Advanced) Security protection
+### (進階) 安全性保護
 
-To protect against denial-of-service (DoS) attacks and ensure secure JWKS operations, the Security plugin provides several protective measures, including request limits, timeouts, and response size restrictions. The following table describes the available settings for securing JWKS operations.
+為了防範阻斷服務 (DoS) 攻擊並確保 JWKS 作業安全，Security 外掛程式提供多項保護措施，包括請求限制、逾時及回應大小限制。下表說明可用於保護 JWKS 作業的設定。
 
-Name | Description | Default
+名稱 | 說明 | 預設值
 :--- | :--- | :---
-`max_jwks_keys` | The maximum number of keys to process from the JWKS response. Set to `-1` for unlimited. | `-1`
-`jwks_request_timeout_ms` | The maximum amount of time allowed for a single HTTP request to the JWKS endpoint, in milliseconds. | `5000`
-`jwks_queued_thread_timeout_ms` | The maximum amount of time a request can wait in the queue before being processed, in milliseconds. | `2500`
-`max_jwks_response_size_bytes` | The maximum size of JWKS endpoint responses, in bytes. | `1048576` (1 MB)
-`refresh_rate_limit_count` | The maximum number of JWKS refresh requests allowed within the time window. | `10`
-`refresh_rate_limit_time_window_ms` | The time window for rate limiting JWKS refresh requests, in milliseconds. | `10000` (10 seconds)
+`max_jwks_keys` | 要從 JWKS 回應處理的金鑰數量上限。設為 `-1` 表示無限制。 | `-1`
+`jwks_request_timeout_ms` | 對 JWKS 端點的單一 HTTP 請求允許的最長時間，以毫秒為單位。 | `5000`
+`jwks_queued_thread_timeout_ms` | 請求在處理前可在佇列中等待的最長時間，以毫秒為單位。 | `2500`
+`max_jwks_response_size_bytes` | JWKS 端點回應的大小上限，以位元組為單位。 | `1048576` (1 MB)
+`refresh_rate_limit_count` | 在時間範圍內允許的 JWKS 重新整理請求數量上限。 | `10`
+`refresh_rate_limit_time_window_ms` | JWKS 重新整理請求速率限制的時間範圍，以毫秒為單位。 | `10000` (10 秒)
 
 <!-- vale off -->
-### JWT header with Key ID
+### 含 Key ID 的 JWT 標頭
 <!-- vale on -->
 
-When using JWKS, your JWT header must include a key ID (`kid`) that identifies the specific key to use for verification:
+使用 JWKS 時，您的 JWT 標頭必須包含金鑰 ID (`kid`)，以識別要用於驗證的特定金鑰：
 
 ```json
 {
@@ -291,11 +292,11 @@ When using JWKS, your JWT header must include a key ID (`kid`) that identifies t
 ```
 {% include copy.html %}
 
-The `kid` parameter is required when using JWKS endpoints and must match a key identifier in the JWKS response.
+使用 JWKS 端點時必須提供 `kid` 參數，且其必須符合 JWKS 回應中的金鑰識別碼。
 
-### Example JWKS response
+### JWKS 回應範例
 
-The JWKS endpoint must return a JSON object containing an array of public keys. Each key must include metadata such as the key type (`kty`), usage (`use`), key ID (`kid`), and algorithm (`alg`):
+JWKS 端點必須傳回包含公開金鑰陣列的 JSON 物件。每個金鑰都必須包含中繼資料，例如金鑰類型 (`kty`)、用途 (`use`)、金鑰 ID (`kid`) 及演算法 (`alg`)：
 
 ```json
 {
@@ -313,35 +314,35 @@ The JWKS endpoint must return a JSON object containing an array of public keys. 
 ```
 {% include copy.html %}
 
-### Caching and performance
+### 快取與效能
 
-JWKS responses are cached to optimize performance:
+JWKS 回應會被快取以最佳化效能：
 
-- **Initial cache**: When JWKS is enabled, the system caches the JWKS endpoint response.
-- **Cache refresh triggers in the following situations**: 
-  - When a JWT contains a `kid` not found in the cache
-  - When cache entries expire based on HTTP cache headers
-  - During background refresh cycles
-- **Rate limiting**: Prevents excessive requests to the JWKS endpoint (by default, 10 requests per 10-second window).
+- **初始快取**：啟用 JWKS 時，系統會快取 JWKS 端點的回應。
+- **在下列情況會觸發快取重新整理**：
+  - 當 JWT 包含快取中找不到的 `kid` 時
+  - 當快取項目依據 HTTP 快取標頭到期時
+  - 在背景重新整理週期期間
+- **速率限制**：防止對 JWKS 端點發出過多請求（預設為每 10 秒時間範圍 10 個請求）。
 
-### Backward compatibility
+### 回溯相容性
 
-JWT authentication supports direct JWKS endpoint configuration starting with OpenSearch 3.3. The feature maintains full backward compatibility:
+從 OpenSearch 3.3 開始，JWT 驗證支援直接設定 JWKS 端點。此功能維持完整的回溯相容性：
 
-- When `jwks_uri` is not specified or set to `null`, the system uses the existing static `signing_key` mechanism.
-- Existing JWT configurations continue to work without modification.
-- You can switch between static keys and JWKS by updating the configuration.
-- When both `jwks_uri` and `signing_key` are configured, `jwks_uri` takes precedence and `signing_key` is ignored.
+- 當未指定 `jwks_uri` 或將其設為 `null` 時，系統會使用現有的靜態 `signing_key` 機制。
+- 現有的 JWT 組態無需修改即可繼續運作。
+- 您可以透過更新組態，在靜態金鑰與 JWKS 之間切換。
+- 當 `jwks_uri` 與 `signing_key` 同時設定時，`jwks_uri` 具有優先權，而 `signing_key` 會被忽略。
 
 <!-- vale off -->
-## Using JWT with Teleport
+## 搭配 Teleport 使用 JWT
 <!-- vale on -->
 
-You can use JWT tokens issued by Teleport to authenticate users in OpenSearch Dashboards. This integration maps Teleport roles to OpenSearch backend roles for access control.
+您可以使用 Teleport 簽發的 JWT 權杖，在 OpenSearch Dashboards 中驗證使用者。此整合會將 Teleport 角色對應至 OpenSearch 後端角色，以進行存取控制。
 
-### Teleport configuration
+### Teleport 組態
 
-In Teleport, you need to create a role that has the same name as a backend role from your OpenSearch instance:
+在 Teleport 中，您需要建立一個角色，其名稱與 OpenSearch 執行個體中的某個後端角色相同：
 
 ```yaml
 apiVersion: resources.teleport.dev/v1
@@ -356,15 +357,15 @@ spec:
 ```
 {% include copy.html %}
 
-Then apply this role to users you want to use the role.
+然後將此角色套用至您要使用該角色的使用者。
 
-### OpenSearch Dashboards configuration
+### OpenSearch Dashboards 組態
 
-To configure OpenSearch for using Teleport, perform these actions.
+若要設定 OpenSearch 以使用 Teleport，請執行下列動作。
 
-#### Teleport configuration
+#### Teleport 組態
 
-In the agent configuration file (typically located at `/etc/teleport.yaml`), configure the application service to automatically include the JWT in a request header:
+在代理程式組態檔（通常位於 `/etc/teleport.yaml`）中，設定應用程式服務以自動將 JWT 包含在請求標頭中：
 
 ```yaml
 # [...]
@@ -382,16 +383,16 @@ app_service:
 ```
 {% include copy.html %}
 
-Then apply the new configuration by running this command:
+然後執行此命令以套用新組態：
 
 ```bash
 systemctl restart teleport
 ```
 {% include copy.html %}
 
-#### OpenSearch Dashboards configuration
+#### OpenSearch Dashboards 組態
 
-In the OpenSearch Dashboards configuration file (typically located at `/usr/share/opensearch-dashboards/config/opensearch_dashboards.yml`), enable JWT authentication and retain basic HTTP authentication as a fallback method:
+在 OpenSearch Dashboards 組態檔（通常位於 `/usr/share/opensearch-dashboards/config/opensearch_dashboards.yml`）中，啟用 JWT 驗證，並保留基本 HTTP 驗證作為後備方法：
 
 ```yaml
 opensearch_security.auth.multiple_auth_enabled: true
@@ -399,16 +400,16 @@ opensearch_security.auth.type: ["basicauth", "jwt"]
 ```
 {% include copy.html %}
 
-Then apply the new configuration by running this command:
+然後執行此命令以套用新組態：
 
 ```bash
 systemctl restart dashboards
 ```
 {% include copy.html %}
 
-### Security node configuration
+### Security 節點組態
 
-On the node where you run the `securityadmin.sh` script, update the Security plugin configuration file (for example, `/usr/share/opensearch/config/opensearch-security/config.yml`) to configure both authentication methods:
+在執行 `securityadmin.sh` 指令碼的節點上，更新 Security 外掛程式組態檔（例如 `/usr/share/opensearch/config/opensearch-security/config.yml`），以設定兩種驗證方法：
 
 ```yaml
 _meta:
@@ -450,9 +451,9 @@ config:
 ```
 {% include copy.html %}
 
-Ensure that the basic authentication is configured using `order: 1` and `challenge: true` and that the JWT authentication is configured using `order: 0` and `challenge: false`. Otherwise, direct API calls will fail unless the JWT header is explicitly included.
+請確保基本驗證是使用 `order: 1` 與 `challenge: true` 設定，且 JWT 驗證是使用 `order: 0` 與 `challenge: false` 設定。否則，除非明確包含 JWT 標頭，直接 API 呼叫將會失敗。
 
-To apply the new configuration, run the following command:
+若要套用新組態，請執行以下命令：
 
 ```bash
 {% raw %}
@@ -469,32 +470,32 @@ bash [OPENSEARCH_INSTALL_DIR]/plugins/opensearch-security/tools/securityadmin.sh
 ```
 {% include copy.html %}
 
-## Using JWT authentication with gRPC
-**Introduced 3.5**
+## 搭配 gRPC 使用 JWT 驗證
+**於 3.5 版導入**
 {: .label .label-purple }
 
-JWT authentication is supported over the gRPC transport. The gRPC transport shares the same authentication domains as the HTTP layer, so JWT tokens are validated against the same authentication backend configuration. You can provide the same JWT headers over gRPC as you would when using the REST API.
+JWT 驗證支援透過 gRPC 傳輸進行。gRPC 傳輸與 HTTP 層共用相同的驗證網域，因此 JWT 權杖會依據相同的驗證後端組態進行驗證。您可以透過 gRPC 提供與使用 REST API 時相同的 JWT 標頭。
 
-When transmitting JWTs over gRPC, you must enable TLS. For information about configuring TLS for gRPC, see [Configuring TLS certificates for gRPC]({{site.url}}{{site.baseurl}}/security/configuration/tls/#configuring-tls-certificates-for-grpc).
+透過 gRPC 傳輸 JWT 時，您必須啟用 TLS。有關為 gRPC 設定 TLS 的資訊，請參閱[為 gRPC 設定 TLS 憑證]({{site.url}}{{site.baseurl}}/security/configuration/tls/#configuring-tls-certificates-for-grpc)。
 
-Note the following limitations:
+請注意以下限制：
 
-- Superuser authentication (client certificate authentication) is not supported over gRPC. Configuration changes requiring superuser privileges must use the REST API.
-- Anonymous authentication is not supported over gRPC. Requests with anonymous authentication headers are rejected as unauthorized.
+- gRPC 不支援超級使用者驗證（用戶端憑證驗證）。需要超級使用者權限的組態變更必須使用 REST API。
+- gRPC 不支援匿名驗證。帶有匿名驗證標頭的請求會被拒絕，視為未授權。
 
-## Troubleshooting common issues
+## 疑難排解常見問題
 
-This section details how to troubleshoot common issues with your security configuration.
-
-
-### Verify correct claims
-
-Ensure that the JWT token contains the correct `iat` (issued at), `nbf` (not before), and `exp` (expiry) claims, all of which OpenSearch validates automatically.
+本節詳細說明如何疑難排解安全性組態的常見問題。
 
 
-### JWT URL parameter
+### 驗證宣告是否正確
 
-When using the JWT URL parameter containing the default admin role `all_access` (for example, `curl http://localhost:9200?jwtToken=<jwt-token>`), the request fails and throws the following error:
+請確保 JWT 權杖包含正確的 `iat`（簽發時間）、`nbf`（生效時間）與 `exp`（到期時間）宣告，OpenSearch 會自動驗證這些項目。
+
+
+### JWT URL 參數
+
+當使用包含預設管理員角色 `all_access` 的 JWT URL 參數時（例如 `curl http://localhost:9200?jwtToken=<jwt-token>`），請求會失敗並擲回以下錯誤：
 
 ```json
 {
@@ -512,20 +513,20 @@ When using the JWT URL parameter containing the default admin role `all_access` 
 }
 ```
 
-To correct this, ensure that the role `all_access` is mapped directly to the internal user and not to a backend role. To do this, navigate to **Security > Roles > all_access** and select the **Mapped users** tab. Select **Manage mapping** and add "admin" to the **Users** section.
+若要修正此問題，請確保角色 `all_access` 直接對應至內部使用者，而非對應至後端角色。若要這麼做，請前往 **Security > Roles > all_access**，然後選取 **Mapped users** 索引標籤。選取 **Manage mapping**，並在 **Users** 區段中新增 "admin"。
 
-![image](https://user-images.githubusercontent.com/5849965/179158704-b2bd6d48-8816-4b03-a960-8c612465cf75.png)
+![在 Users 區段中新增 admin 的對應管理畫面](https://user-images.githubusercontent.com/5849965/179158704-b2bd6d48-8816-4b03-a960-8c612465cf75.png)
 
-The user should then appear on the **Mapped Users** tab.
+使用者隨後應會出現在 **Mapped Users** 索引標籤上。
 
-![image](https://user-images.githubusercontent.com/5849965/179158750-1bb5e232-dd61-449a-a561-0613b71bfd68.png)
+![Mapped Users 索引標籤中顯示已對應的使用者](https://user-images.githubusercontent.com/5849965/179158750-1bb5e232-dd61-449a-a561-0613b71bfd68.png)
 
 
-### OpenSearch Dashboards configuration
+### OpenSearch Dashboards 組態
 
-Even though JWT URL parameter authentication works when querying OpenSearch directly, it fails when used to access OpenSearch Dashboards. 
+雖然 JWT URL 參數驗證在直接查詢 OpenSearch 時可正常運作，但用於存取 OpenSearch Dashboards 時會失敗。
 
-**Solution:** Ensure the following lines are present in the `opensearch_dashboards.yml` configuration file:
+**解決方案：** 請確認 `opensearch_dashboards.yml` 組態檔案中包含下列幾行：
 
 ```yml
 opensearch_security.auth.type: "jwt"

@@ -1,20 +1,21 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Geodistance
+title: "地理距離"
 parent: Geographic and xy queries
 nav_order: 20
 ---
 
-# Geodistance query
+# 地理距離查詢
 
-A geodistance query returns documents with geopoints that are within a specified distance from the provided geopoint. A document with multiple geopoints matches the query if at least one geopoint matches the query.
+地理距離查詢會傳回包含地理座標點的文件，且這些座標點位於所提供地理座標點的指定距離內。若文件包含多個地理座標點，只要至少一個地理座標點符合查詢，該文件就符合查詢。
 
-The searched document field must be mapped as `geo_point`.
+搜尋的文件欄位必須對應為 `geo_point`。
 {: .note}
 
-## Example
+## 範例
 
-Create a mapping with the `point` field mapped as `geo_point`:
+建立對應，將 `point` 欄位對應為 `geo_point`：
 
 ```json
 PUT testindex1
@@ -30,7 +31,7 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-Index a geopoint, specifying its latitude and longitude:
+為地理座標點編製索引，並指定其緯度與經度：
 
 ```json
 PUT testindex1/_doc/1
@@ -43,7 +44,7 @@ PUT testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-Search for documents whose `point` objects are within the specified `distance` from the specified `point`:
+搜尋文件，其 `point` 物件位於指定 `point` 的指定 `distance` 範圍內：
 
 ```json
 GET /testindex1/_search
@@ -68,7 +69,7 @@ GET /testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含符合條件的文件：
 
 ```json
 {
@@ -103,18 +104,18 @@ The response contains the matching document:
 }
 ```
 
-## Parameters
+## 參數
 
-Geodistance queries accept the following parameters.
+地理距離查詢接受下列參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :--- 
-`_name` | String | The name of the filter. Optional.
-`distance` | String | The distance within which to match the points. This distance is the radius of a circle centered at the specified point. For supported distance units, see [Distance units]({{site.url}}{{site.baseurl}}/api-reference/units/#distance-units). Required.
-`distance_type` | String | Specifies how to calculate the distance. Valid values are `arc` or `plane` (faster but inaccurate for long distances or points close to the poles). Optional. Default is `arc`.
-`validation_method` | String | The validation method. Valid values are `IGNORE_MALFORMED` (accept geopoints with invalid coordinates), `COERCE` (try to coerce coordinates to valid values), and `STRICT` (return an error when coordinates are invalid). Optional. Default is `STRICT`.
-`ignore_unmapped` | Boolean | Specifies whether to ignore an unmapped field. If set to `true`, then the query does not return any documents that contain an unmapped field. If set to `false`, then an exception is thrown when the field is unmapped. Optional. Default is `false`.
+`_name` | 字串 | 篩選器的名稱。選用。
+`distance` | 字串 | 座標點符合條件的距離範圍。此距離是以指定座標點為圓心的圓半徑。如需支援的距離單位，請參閱[距離單位]({{site.url}}{{site.baseurl}}/api-reference/units/#distance-units)。必要。
+`distance_type` | 字串 | 指定距離的計算方式。有效值為 `arc` 或 `plane`（速度較快，但對於長距離或接近兩極的座標點不準確）。選用。預設為 `arc`。
+`validation_method` | 字串 | 驗證方法。有效值為 `IGNORE_MALFORMED`（接受座標無效的地理座標點）、`COERCE`（嘗試將座標強制轉換為有效值）和 `STRICT`（座標無效時傳回錯誤）。選用。預設為 `STRICT`。
+`ignore_unmapped` | 布林值 | 指定是否忽略未對應的欄位。若設為 `true`，查詢就不會傳回任何包含未對應欄位的文件。若設為 `false`，則會在欄位未對應時擲回例外。選用。預設為 `false`。
 
-## Accepted formats
+## 接受的格式
 
-You can specify the geopoint coordinates when indexing a document and searching for documents in any [format]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point#formats) accepted by the geopoint field type.  
+您可以在為文件編製索引及搜尋文件時，以地理座標點欄位類型接受的任何[格式]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point#formats)指定地理座標點的座標。  

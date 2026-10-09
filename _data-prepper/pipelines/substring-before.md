@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: substringBefore()
 parent: Functions
@@ -7,41 +8,41 @@ nav_order: 80
 ---
 
 <!-- vale off -->
-# substringBefore() function
+# substringBefore() 函式
 <!-- vale on -->
 
-The `substringBefore()` function is used to extract the portion of a string that precedes the first occurrence of a specified delimiter. It takes two arguments:
+`substringBefore()` 函式用於擷取字串中第一個出現的指定分隔符號之前的部分。它接受兩個引數：
 
-1. The first argument is either a literal string or a JSON pointer that represents the source string.
+1. 第一個引數是常值字串或代表來源字串的 JSON 指標。
 
-1. The second argument is the delimiter string to search for within the first argument.
+1. 第二個引數是要在第一個引數中搜尋的分隔符號字串。
 
-If the delimiter is found, the function returns the portion of the string before the first occurrence of the delimiter. If the delimiter is not found, the original string is returned. If the source resolves to `null`, the function returns `null`. If the delimiter is `null` or empty, the original string is returned.
+如果找到分隔符號，函式會傳回字串中第一個出現的分隔符號之前的部分。如果找不到分隔符號，則傳回原始字串。如果來源解析為 `null`，函式會傳回 `null`。如果分隔符號為 `null` 或空字串，則傳回原始字串。
 
-For example, to extract the username from an email address field, use the `substringBefore()` function as follows:
+例如，若要從電子郵件地址欄位擷取使用者名稱，請使用 `substringBefore()` 函式，如下所示：
 
 ```
 'substringBefore(/email, "@")'
 ```
 {% include copy.html %}
 
-If the `/email` field contains `user@example.com`, the function returns `user`.
+如果 `/email` 欄位包含 `user@example.com`，函式會傳回 `user`。
 
-Alternatively, you can use a literal string as the first argument:
+或者，您可以使用常值字串作為第一個引數：
 
 ```
 'substringBefore("hello-world-foo", "-")'
 ```
 {% include copy.html %}
 
-The function returns `hello` because it extracts the portion of the string before the first `-` character.
+函式會傳回 `hello`，因為它擷取字串中第一個 `-` 字元之前的部分。
 
-The `substringBefore()` function performs a case-sensitive search.
+`substringBefore()` 函式會執行區分大小寫的搜尋。
 {: .note}
 
-## Example
+## 範例
 
-The following pipeline uses the `substringBefore()` function to extract the URL protocol from a URL field. It adds the extracted protocol as a new field called `protocol`:
+下列管線使用 `substringBefore()` 函式從 URL 欄位擷取 URL 通訊協定。它會將擷取出的通訊協定新增為名為 `protocol` 的新欄位：
 
 ```yaml
 substring-before-demo:
@@ -66,7 +67,7 @@ substring-before-demo:
 ```
 {% include copy.html %}
 
-You can test the pipeline using the following command:
+您可以使用下列命令測試管線：
 
 ```bash
 curl -sS -X POST "http://localhost:2021/log/ingest" \
@@ -78,7 +79,7 @@ curl -sS -X POST "http://localhost:2021/log/ingest" \
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 {

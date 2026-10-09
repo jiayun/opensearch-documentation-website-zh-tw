@@ -1,99 +1,100 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Unified alerts view
+title: "統一的警示檢視"
 parent: Alerting dashboards and visualizations
 grand_parent: Alerting
 nav_order: 10
 ---
 
-# Unified alerts view
-**Introduced 3.7**
+# 統一的警示檢視
+**於 3.7 版推出**
 {: .label .label-purple }
 
-The unified alerts view consolidates alerts from OpenSearch monitors and Prometheus alerting rules into a single view, so you can triage alerts across data sources without switching between tools. In OpenSearch Dashboards, the view appears as the **Alerts** page under **Observability**.
+統一的警示檢視會將 OpenSearch 監視器與 Prometheus 警示規則的警示彙整到單一檢視中，讓您不必在不同工具之間切換，就能跨資料來源分流處理警示。在 OpenSearch Dashboards 中，此檢視會顯示為 **Observability** 底下的 **Alerts** 頁面。
 
-The **Alerts** page can also show anomaly detection and forecasting resources, so you can investigate alerts, anomalies, detectors, and forecasters on one page.
+**Alerts** 頁面也可以顯示異常偵測與預測資源，讓您在同一頁面調查警示、異常、偵測器與預測器。
 
-## Enabling the unified alerts view
+## 啟用統一的警示檢視
 
-The unified alerts view is disabled by default. To enable it, add the following line to `opensearch_dashboards.yml`:
+統一的警示檢視預設為停用。若要啟用，請將下列這一行加入 `opensearch_dashboards.yml`：
 
 ```yaml
 observability.alertManager.enabled: true
 ```
 {% include copy.html %}
 
-Then restart OpenSearch Dashboards. After the restart, an **Alerts** option appears in the OpenSearch Dashboards main menu under **Observability**.
+接著重新啟動 OpenSearch Dashboards。重新啟動後，OpenSearch Dashboards 主選單的 **Observability** 底下會出現 **Alerts** 選項。
 
-## Investigating an alert
+## 調查警示
 
-The **Alerts** tab displays an alert timeline for the selected time range, a faceted filter panel, and a table of individual alerts and anomalies. You can filter the table by data source, type, severity, state, and label.
+**Alerts** 索引標籤會顯示所選時間範圍的警示時間軸、多面向篩選面板，以及個別警示與異常的表格。您可以依資料來源、類型、嚴重性、狀態與標籤篩選表格。
 
-To investigate an alert, select it in the table to open the alert detail flyout. The flyout shows alert metadata and its source monitor.
+若要調查警示，請在表格中選取該警示，以開啟警示詳細資料飛出視窗。飛出視窗會顯示警示中繼資料及其來源監視器。
 
-The view supports the following alert states: `active`, `pending`, `acknowledged`, `silenced`, `resolved`, and `error`. The supported severity levels are `critical`, `high`, `medium`, `low`, and `info`.
+此檢視支援下列警示狀態：`active`、`pending`、`acknowledged`、`silenced`、`resolved` 及 `error`。支援的嚴重性層級為 `critical`、`high`、`medium`、`low` 及 `info`。
 
-## Investigating anomalies
+## 調查異常
 
-The **Alerts** tab includes anomaly results from real-time anomaly detectors. Anomalies appear in the same table as alerts and use the `anomaly` state.
+**Alerts** 索引標籤包含來自即時異常偵測器的異常結果。異常會與警示出現在同一個表格中，並使用 `anomaly` 狀態。
 
-When multiple anomaly occurrences belong to the same detector and entity, the table groups them into a single row. Expand the row to inspect individual occurrences, then select an occurrence to open the anomaly detail flyout.
+當多個異常事件屬於同一個偵測器與實體時，表格會將它們分組為單一資料列。展開該資料列以檢查個別事件，然後選取某個事件以開啟異常詳細資料飛出視窗。
 
-The anomaly detail flyout shows detector and anomaly metadata, anomaly grade, confidence, start time, duration, and feature data. For high-cardinality detectors, the flyout includes detector result context for the selected entity. For single-entity detectors, the flyout shows metric context for the selected anomaly.
+異常詳細資料飛出視窗會顯示偵測器與異常中繼資料、異常等級、信賴度、開始時間、持續時間及特徵資料。對於高基數偵測器，飛出視窗會包含所選實體的偵測器結果內容。對於單一實體偵測器，飛出視窗會顯示所選異常的指標內容。
 
-If an alert is associated with an anomaly result, the alert detail flyout also shows anomaly context so you can review the anomaly that contributed to the alert without leaving the **Alerts** page.
+如果警示與異常結果相關聯，警示詳細資料飛出視窗也會顯示異常內容，讓您不必離開 **Alerts** 頁面，就能檢閱造成該警示的異常。
 
-## Acknowledging alerts
+## 確認警示
 
-From the **Alerts** tab, you can acknowledge one or more active OpenSearch alerts. Select the alerts in the table and select **Acknowledge**.
+在 **Alerts** 索引標籤中，您可以確認一或多個作用中的 OpenSearch 警示。在表格中選取這些警示，然後選取 **Acknowledge**。
 
-For Prometheus data sources, the view is read-only. You cannot acknowledge Prometheus alerts from the unified alerts view.
+對於 Prometheus 資料來源，此檢視為唯讀。您無法從統一的警示檢視確認 Prometheus 警示。
 {: .note}
 
-## Rules
+## 規則
 
-The **Rules** tab lists alerting rules, monitors, anomaly detectors, and forecasters across the selected data sources. You can filter rules by type and status.
+**Rules** 索引標籤會列出所選資料來源中的警示規則、監視器、異常偵測器與預測器。您可以依類型與狀態篩選規則。
 
-If no resources are configured for the selected data sources, the page provides options for creating the following:
+如果所選資料來源未設定任何資源，頁面會提供建立下列項目的選項：
 
-- Log or metric alerts
-- Anomaly detectors
-- Forecasters
+- 記錄檔或指標警示
+- 異常偵測器
+- 預測器
 
-The anomaly detection and forecasting options are enabled only when an OpenSearch data source is selected in the data source filter.
+只有在資料來源篩選器中選取 OpenSearch 資料來源時，才會啟用異常偵測與預測選項。
 
-### Anomaly detectors
+### 異常偵測器
 
-Detectors appear with the **Anomaly Detector** type in the **Type** column. Select a detector to open a flyout that shows the following information:
+偵測器在 **Type** 欄中會以 **Anomaly Detector** 類型顯示。選取偵測器以開啟飛出視窗，其中顯示下列資訊：
 
-- Detector and model configuration
-- Current status and health
+- 偵測器與模型組態
+- 目前狀態與健全狀態
 
-To manage the detector lifecycle from this page, use one of the following options:
+若要從此頁面管理偵測器生命週期，請使用下列其中一個選項：
 
-- Select one or more detectors and then select **Start** or **Stop** in the action bar.
-- Select **Start** or **Stop** in the detector flyout.
+- 選取一或多個偵測器，然後在動作列中選取 **Start** 或 **Stop**。
+- 在偵測器飛出視窗中選取 **Start** 或 **Stop**。
 
-### Forecasters
+### 預測器
 
-Forecasters appear with the **Forecaster** type. Select a forecaster to open a flyout that shows the following information:
+預測器會以 **Forecaster** 類型顯示。選取預測器以開啟飛出視窗，其中顯示下列資訊：
 
-- Forecaster description, index details, and feature definition
-- Forecast horizon and interval configuration
-- Forecast status and health
+- 預測器描述、索引詳細資料及特徵定義
+- 預測範圍與間隔組態
+- 預測狀態與健全狀態
 
-From the flyout, you can start or stop the forecaster. To start or stop several forecasters at once, select them in the **Rules** table and then select **Start** or **Stop**.
+您可以從飛出視窗啟動或停止預測器。若要一次啟動或停止多個預測器，請在 **Rules** 表格中選取它們，然後選取 **Start** 或 **Stop**。
 
-Forecasters produce forecast output for trend and capacity planning. They don't create alert records in the **Alerts** timeline.
+預測器會產生趨勢與容量規劃的預測輸出。它們不會在 **Alerts** 時間軸中建立警示記錄。
 
-## Notification routing
+## 通知路由
 
-The **Routing** tab shows how alerts from the selected data sources map to notification channels.
+**Routing** 索引標籤會顯示所選資料來源的警示如何對應至通知管道。
 
-## Related documentation
+## 相關文件
 
-- [Alerting]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/index/)
-- [Alerting dashboards and visualizations]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/dashboards-alerting/)
-- [Monitors]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/)
-- [Anomaly detection]({{site.url}}{{site.baseurl}}/observing-your-data/ad/index/)
-- [Forecasting]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/index/)
+- [警示]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/index/)
+- [警示儀表板與視覺化]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/dashboards-alerting/)
+- [監視器]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/)
+- [異常偵測]({{site.url}}{{site.baseurl}}/observing-your-data/ad/index/)
+- [預測]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/index/)

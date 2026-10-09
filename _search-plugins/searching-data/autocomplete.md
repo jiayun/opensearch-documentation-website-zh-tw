@@ -1,34 +1,35 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Autocomplete
+title: "自動完成"
 parent: Customizing search results
 nav_order: 80
 redirect_from:
   - /opensearch/search/autocomplete/
 ---
 
-# Autocomplete
+# 自動完成
 
-Autocomplete shows suggestions to users while they type.
+自動完成會在使用者輸入時顯示建議。
 
-For example, if a user types "pop," OpenSearch provides suggestions like "popcorn" or "popsicles." These suggestions preempt your user's intention and lead them to a possible search term more quickly.
+例如，當使用者輸入 "pop" 時，OpenSearch 會提供 "popcorn" 或 "popsicles" 之類的建議。這些建議能預先掌握使用者的意圖，更快引導他們找到可能的搜尋詞彙。
 
-OpenSearch lets you design autocomplete that updates with each keystroke, provides a few relevant suggestions, and tolerates typos.
+OpenSearch 讓您設計的自動完成能隨著每次按鍵更新、提供幾個相關的建議，並容許拼字錯誤。
 
-Implement autocomplete using one of the following methods:
+請使用下列其中一種方法來實作自動完成：
 
-- [Prefix matching](#prefix-matching)
-- [Edge n-gram matching](#edge-n-gram-matching)
-- [Search as you type](#search-as-you-type)
-- [Completion suggesters](#completion-suggester)
+- [前綴比對](#prefix-matching)
+- [邊緣 n-gram 比對](#edge-n-gram-matching)
+- [邊輸入邊搜尋](#search-as-you-type)
+- [完成建議器](#completion-suggester)
 
-While prefix matching happens at query time, the other three methods happen at index time. All methods are described in the following sections.
+前綴比對發生在查詢時，其他三種方法則發生在索引時。所有方法都會在下列章節中說明。
 
-## Prefix matching
+## 前綴比對
 
-Prefix matching finds documents that match the last term in a query string.
+前綴比對會找出與查詢字串中最後一個詞彙相符的文件。
 
-For example, assume that the user types “qui” into a search UI. To autocomplete this phrase, use the `match_phrase_prefix` query to search for all `text_entry` field values that begin with the prefix "qui":
+例如，假設使用者在搜尋介面中輸入 "qui"。若要自動完成這個詞組，請使用 `match_phrase_prefix` 查詢來搜尋所有以前綴 "qui" 開頭的 `text_entry` 欄位值：
 
 ```json
 GET shakespeare/_search
@@ -44,11 +45,11 @@ GET shakespeare/_search
 }
 ```
 
-To make the word order and relative positions flexible, specify a `slop` value. To learn about the `slop` option, see [Slop]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase#slop).
+若要讓字詞順序和相對位置保持彈性，請指定 `slop` 值。若要了解 `slop` 選項，請參閱 [Slop]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase#slop)。
 
-Prefix matching doesn’t require any special mappings. It works with your data as is.
-However, it’s a fairly resource-intensive operation. A prefix of `a` could match hundreds of thousands of terms and not be useful to your user.
-To limit the impact of prefix expansion, set `max_expansions` to a reasonable number:
+前綴比對不需要任何特殊的對應，可直接搭配您現有的資料使用。
+不過，這是相當耗費資源的操作。`a` 這樣的前綴可能會比對到數十萬個詞彙，反而對使用者沒有幫助。
+若要限制前綴展開的影響，請將 `max_expansions` 設定為合理的數值：
 
 ```json
 GET shakespeare/_search
@@ -65,18 +66,18 @@ GET shakespeare/_search
 }
 ```
 
-The maximum number of terms to which the query can expand. Queries “expand” search terms to a number of matching terms that are within the distance specified in `fuzziness`. 
+這是查詢可展開的詞彙數量上限。查詢會將搜尋詞彙「展開」為 `fuzziness` 所指定距離內的多個相符詞彙。
 
-The ease of implementing query-time autocomplete comes at the cost of performance.
-When implementing this feature on a large scale, we recommend an index-time solution. With an index-time solution, you might experience slower indexing, but it’s a price you pay only once and not for every query. The edge n-gram, search-as-you-type, and completion suggester methods are index-time solutions.
+在查詢時實作自動完成雖然容易，但代價是效能。
+若要大規模實作此功能，我們建議採用索引時的解決方案。使用索引時的解決方案，索引速度可能會變慢，但這個代價只需支付一次，而不是每次查詢都要支付。邊緣 n-gram、邊輸入邊搜尋和完成建議器方法都是索引時的解決方案。
 
-## Edge n-gram matching
+## 邊緣 n-gram 比對
 
-During indexing, edge n-grams split a word into a sequence of n characters to support a faster lookup of partial search terms.
+在編製索引期間，邊緣 n-gram 會將一個單字拆解成 n 個字元的序列，以支援更快速地查詢部分搜尋詞彙。
 
-If you n-gram the word "quick," the results depend on the value of n.
+若對 "quick" 這個單字進行 n-gram 處理，結果取決於 n 的值。
 
-n | Type | n-gram
+n | 類型 | n-gram
 :--- | :--- | :---
 1 | Unigram | [ `q`, `u`, `i`, `c`, `k` ]
 2 | Bigram | [ `qu`, `ui`, `ic`, `ck` ]
@@ -84,9 +85,9 @@ n | Type | n-gram
 4 | Four-gram | [ `quic`, `uick` ]
 5 | Five-gram | [ `quick` ]
 
-Autocomplete needs only the beginning n-grams of a search phrase, so OpenSearch uses a special type of n-gram called *edge n-gram*.
+自動完成只需要搜尋詞組開頭的 n-gram，因此 OpenSearch 使用一種稱為*邊緣 n-gram* 的特殊 n-gram 類型。
 
-Edge n-gramming the word "quick" results in the following:
+對 "quick" 進行邊緣 n-gram 處理的結果如下：
 
 - `q`
 - `qu`
@@ -94,9 +95,9 @@ Edge n-gramming the word "quick" results in the following:
 - `quic`
 - `quick`
 
-This follows the same sequence the user types.
+這與使用者輸入的順序一致。
 
-To configure a field to use edge n-grams, create an autocomplete analyzer with an `edge_ngram` filter:
+若要將欄位設定為使用邊緣 n-gram，請建立一個帶有 `edge_ngram` 篩選器的自動完成分析器：
 
 
 ```json
@@ -134,13 +135,13 @@ PUT shakespeare
 }
 ```
 
-This example creates the index and instantiates the edge n-gram filter and analyzer.
+此範例會建立索引，並具體化邊緣 n-gram 篩選器與分析器。
 
-The `edge_ngram_filter` produces edge n-grams with a minimum n-gram length of 1 (a single letter) and a maximum length of 20. So it offers suggestions for words of up to 20 letters.
+`edge_ngram_filter` 會產生最小 n-gram 長度為 1（單一字母）、最大長度為 20 的邊緣 n-gram。因此它可為最多 20 個字母的單字提供建議。
 
-The `autocomplete` analyzer tokenizes a string into individual terms, lowercases the terms, and then produces edge n-grams for each term using the `edge_ngram_filter`.
+`autocomplete` 分析器會將字串斷詞成個別詞彙、將詞彙轉為小寫，然後使用 `edge_ngram_filter` 為每個詞彙產生邊緣 n-gram。
 
-Use the `analyze` operation to test this analyzer:
+請使用 `analyze` 操作來測試此分析器：
 
 ```json
 POST shakespeare/_analyze
@@ -150,7 +151,7 @@ POST shakespeare/_analyze
 }
 ```
 
-It returns edge n-grams as tokens:
+它會以詞元形式傳回邊緣 n-gram：
 
 * `q`
 * `qu`
@@ -158,8 +159,8 @@ It returns edge n-grams as tokens:
 * `quic`
 * `quick`
 
-Use the `standard` analyzer at search time. Otherwise, the search query splits into edge n-grams and you get results for everything that matches `q`, `u`, and `i`.
-This is one of the few occasions when you use different analyzers at index time and at query time:
+請在搜尋時使用 `standard` 分析器。否則，搜尋查詢會被拆解成邊緣 n-gram，您會得到所有符合 `q`、`u` 和 `i` 的結果。
+這是少數幾個在索引時和查詢時使用不同分析器的情況之一：
 
 ```json
 GET shakespeare/_search
@@ -175,7 +176,7 @@ GET shakespeare/_search
 }
 ```
 
-The response contains the matching documents:
+回應包含相符的文件：
 
 ```json
 {
@@ -228,7 +229,7 @@ The response contains the matching documents:
 }
 ```
 
-Alternatively, specify the `search_analyzer` in the mapping itself:
+或者，您也可以直接在對應中指定 `search_analyzer`：
 
 ```json
 "mappings": {
@@ -242,15 +243,15 @@ Alternatively, specify the `search_analyzer` in the mapping itself:
 }
 ```
 
-## Completion suggester
+## 完成建議器
 
-The completion suggester accepts a list of suggestions and builds them into a finite-state transducer (FST), an optimized data structure that is essentially a graph. This data structure lives in memory and is optimized for fast prefix lookups. To learn more about FSTs, see [Wikipedia](https://en.wikipedia.org/wiki/Finite-state_transducer).
+完成建議器會接受一份建議清單，並將其建構成有限狀態轉換器 (FST)，這是一種本質上為圖形的最佳化資料結構。此資料結構存放在記憶體中，並針對快速的前綴查詢進行最佳化。若要進一步了解 FST，請參閱 [Wikipedia](https://en.wikipedia.org/wiki/Finite-state_transducer)。
 
-As the user types, the completion suggester moves through the FST graph one character at a time along a matching path. After it runs out of user input, it examines the remaining endings to produce a list of suggestions.
+當使用者輸入時，完成建議器會沿著相符路徑在 FST 圖形中一次移動一個字元。當使用者輸入用完後，它會檢查剩餘的結尾，以產生建議清單。
 
-The completion suggester makes your autocomplete solution as efficient as possible and lets you have explicit control over its suggestions.
+完成建議器能讓您的自動完成解決方案盡可能高效，並讓您明確控制其建議內容。
 
-Use a dedicated field type called [`completion`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/completion/), which stores the FST-like data structures in the index:
+請使用名為 [`completion`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/completion/) 的專用欄位類型，它會將類似 FST 的資料結構儲存在索引中：
 
 ```json
 PUT shakespeare
@@ -265,7 +266,7 @@ PUT shakespeare
 }
 ```
 
-To get suggestions, use the `search` endpoint with the `suggest` parameter:
+若要取得建議，請使用 `search` 端點搭配 `suggest` 參數：
 
 ```json
 GET shakespeare/_search
@@ -281,7 +282,7 @@ GET shakespeare/_search
 }
 ```
 
-The phrase "to be" is prefix matched with the FST of the `text_entry` field:
+詞組 "to be" 會與 `text_entry` 欄位的 FST 進行前綴比對：
 
 ```json
 {
@@ -390,7 +391,7 @@ The phrase "to be" is prefix matched with the FST of the `text_entry` field:
 }
 ```
 
-To specify the number of suggestions that you want to return, use the `size` parameter:
+若要指定要傳回的建議數量，請使用 `size` 參數：
 
 ```json
 GET shakespeare/_search
@@ -407,7 +408,7 @@ GET shakespeare/_search
 }
 ```
 
-The maximum of three documents is returned:
+最多會傳回三份文件：
 
 ```json
 {
@@ -486,10 +487,10 @@ The maximum of three documents is returned:
 }
 ```
 
-The `suggest` parameter finds suggestions using only prefix matching.
-For example, the document "To be, or not to be" is not part of the results. If you want specific documents returned as suggestions, you can manually add curated suggestions and add weights to prioritize your suggestions.
+`suggest` 參數只使用前綴比對來尋找建議。
+例如，文件「To be, or not to be」不會出現在結果中。如果您想要特定文件以建議的形式傳回，可以手動新增精選建議，並新增權重來排定建議的優先順序。
 
-Index a document with input suggestions and assign a weight:
+將含有輸入建議的文件編製索引並指派權重：
 
 ```json
 PUT shakespeare/_doc/1?refresh=true
@@ -503,7 +504,7 @@ PUT shakespeare/_doc/1?refresh=true
 }
 ```
 
-Perform the same search:
+執行相同的搜尋：
 
 ```json
 GET shakespeare/_search
@@ -520,7 +521,7 @@ GET shakespeare/_search
 }
 ```
 
-You see the indexed document as the first result:
+您會看到已編製索引的文件成為第一個結果：
 
 ```json
 {
@@ -599,7 +600,7 @@ You see the indexed document as the first result:
 }
 ```
 
-You can also allow for misspellings in queries by specifying the `fuzzy` parameter:
+您也可以在查詢中允許拼字錯誤，方法是指定 `fuzzy` 參數：
 
 ```json
 GET shakespeare/_search
@@ -619,7 +620,7 @@ GET shakespeare/_search
 }
 ```
 
-The result matches the correct spelling:
+結果會符合正確的拼字：
 
 ```json
 {
@@ -668,7 +669,7 @@ The result matches the correct spelling:
 }
 ```
 
-You can use a regular expression to define the prefix for the completion suggester query:
+您可以使用規則運算式來定義完成建議器查詢的前綴：
 
 ```json
 GET shakespeare/_search
@@ -685,13 +686,13 @@ GET shakespeare/_search
 }
 ```
 
-For more information, see the [`completion` field type documentation]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/completion/).
+如需詳細資訊，請參閱 [`completion` 欄位類型文件]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/completion/)。
 
-## Search as you type
+## 邊輸入邊搜尋
 
-OpenSearch has a dedicated [`search_as_you_type`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/search-as-you-type/) field type that is optimized for search-as-you-type functionality and can match terms using both prefix and infix completion. The `search_as_you_type` field does not require you to set up a custom analyzer or index suggestions beforehand. 
+OpenSearch 有專用的 [`search_as_you_type`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/search-as-you-type/) 欄位類型，已針對邊輸入邊搜尋功能最佳化，並可使用前綴與中綴完成來比對詞彙。`search_as_you_type` 欄位不需要您事先設定自訂分析器，也不需要事先將建議編製索引。
 
-First, map the field as `search_as_you_type`:
+首先，將欄位對應為 `search_as_you_type`：
 
 ```json
 PUT shakespeare
@@ -706,7 +707,7 @@ PUT shakespeare
 }
 ```
 
-After you index a document, OpenSearch automatically creates and stores its n-grams and edge n-grams. For example, consider the string `that is the question`. First, it is split into terms using the standard analyzer, and the terms are stored in the `text_entry` field:
+將文件編製索引後，OpenSearch 會自動建立並儲存其 n-gram 與邊緣 n-gram。例如，假設有字串 `that is the question`。首先，會使用標準分析器將其分割成詞彙，並將這些詞彙儲存在 `text_entry` 欄位中：
 
 ```json
 [
@@ -717,7 +718,7 @@ After you index a document, OpenSearch automatically creates and stores its n-gr
 ]
 ```
 
-In addition to storing these terms, the following 2-grams for this field are stored in the field `text_entry._2gram`:
+除了儲存這些詞彙之外，此欄位的下列 2-gram 會儲存在 `text_entry._2gram` 欄位中：
 
 ```json
 [
@@ -727,7 +728,7 @@ In addition to storing these terms, the following 2-grams for this field are sto
 ]
 ```
 
-The following 3-grams for this field are stored in the field `text_entry._3gram`:
+此欄位的下列 3-gram 會儲存在 `text_entry._3gram` 欄位中：
 
 ```json
 [
@@ -736,7 +737,7 @@ The following 3-grams for this field are stored in the field `text_entry._3gram`
 ]
 ```
 
-Finally, after an edge n-gram token filter is applied, the resulting terms are stored in the `text_entry._index_prefix` field:
+最後，套用邊緣 n-gram 詞元篩選器之後，產生的詞彙會儲存在 `text_entry._index_prefix` 欄位中：
 
 ```json
 [
@@ -748,7 +749,7 @@ Finally, after an edge n-gram token filter is applied, the resulting terms are s
 ]
 ```
 
-You can then match terms in any order using the `bool_prefix` type of a `multi-match` query:
+接著，您可以使用 `multi-match` 查詢的 `bool_prefix` 類型，以任何順序比對詞彙：
 
 ```json
 GET shakespeare/_search
@@ -768,7 +769,7 @@ GET shakespeare/_search
 }
 ```
 
-The documents in which the words appear in the same order as in the query are ranked higher in the results:
+在結果中，字詞出現順序與查詢中相同的文件會排在較前面：
 
 ```json
 {
@@ -834,7 +835,7 @@ The documents in which the words appear in the same order as in the query are ra
 }
 ```
 
-To match terms in order, you can use a `match_phrase_prefix` query:
+若要依序比對詞彙，您可以使用 `match_phrase_prefix` 查詢：
 
 ```json
 GET shakespeare/_search
@@ -848,7 +849,7 @@ GET shakespeare/_search
 }
 ```
 
-The response contains documents that match the prefix:
+回應會包含符合前綴的文件：
 
 ```json
 {
@@ -914,7 +915,7 @@ The response contains documents that match the prefix:
 }
 ```
 
-Finally, to match the last term exactly and not as a prefix, you can use a `match_phrase` query:
+最後，若要完全比對最後一個詞彙而非以前綴比對，您可以使用 `match_phrase` 查詢：
 
 ```json
 GET shakespeare/_search
@@ -928,7 +929,7 @@ GET shakespeare/_search
 }
 ```
 
-The response contains exact matches:
+回應會包含完全相符的項目：
 
 ```json
 {
@@ -994,7 +995,7 @@ The response contains exact matches:
 }
 ```
 
-If you modify the text in the previous `match_phrase` query and omit the last letter, none of the documents in the previous response are returned:
+如果您修改前一個 `match_phrase` 查詢中的文字並省略最後一個字母，則前一個回應中的所有文件都不會被傳回：
 
 ```json
 GET shakespeare/_search
@@ -1007,7 +1008,7 @@ GET shakespeare/_search
 }
 ```
 
-The result is empty:
+結果為空：
 
 ```json
 {
@@ -1030,4 +1031,4 @@ The result is empty:
 }
 ```
 
-For more information, see the [`search_as_you_type` field type documentation]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/search-as-you-type/).
+如需更多資訊，請參閱 [`search_as_you_type` 欄位類型文件]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/search-as-you-type/)。

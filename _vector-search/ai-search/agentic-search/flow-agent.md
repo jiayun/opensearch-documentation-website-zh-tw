@@ -1,33 +1,34 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using flow agents
+title: "使用流程代理程式"
 parent: Agentic search
 grand_parent: AI search
 nav_order: 20
 has_children: false
 ---
 
-# Using flow agents for agentic search
+# 使用流程代理程式進行代理式搜尋
 
-Flow agents provide a streamlined alternative to conversational agents. While conversational agents use multiple tools for flexible, context-aware search, flow agents focus solely on query planning. This reduces large language model (LLM) calls, improves response times, and lowers costs.
+流程代理程式提供了一種比對話式代理程式更精簡的替代方案。對話式代理程式使用多種工具進行靈活、具情境感知的搜尋，而流程代理程式則僅專注於查詢規劃。這可減少大型語言模型 (LLM) 呼叫次數、縮短回應時間並降低成本。
 
-Flow agents are sufficient for most use cases. Use flow agents when low latency and cost efficiency are priorities, queries are simple, and conversation memory isn't required. Use conversational agents for complex searches, multi-tool workflows, persistent context, or the highest query quality.
+流程代理程式已足以因應大多數使用案例。當低延遲與成本效益是優先考量、查詢很簡單，且不需要對話記憶時，請使用流程代理程式。若需要複雜搜尋、多工具工作流程、持續性情境或最高查詢品質，請使用對話式代理程式。
 
-Flow agents differ from conversational agents in the following ways:
+流程代理程式與對話式代理程式的差異如下：
 
-- Flow agents use only one tool---the `QueryPlanningTool`.
-- You must explicitly specify the target index name in the search request.
-- Flow agents don't provide agent step summaries or reasoning traces (only the generated query domain-specific language [DSL] query is available when using the `agentic_context` response processor).
-- Flow agents don't have conversation memory and cannot maintain context across multiple interactions.
+- 流程代理程式只使用一種工具---`QueryPlanningTool`。
+- 您必須在搜尋請求中明確指定目標索引名稱。
+- 流程代理程式不提供代理程式步驟摘要或推理追蹤 (使用 `agentic_context` 回應處理器時，只會提供產生的查詢領域特定語言 [DSL] 查詢)。
+- 流程代理程式沒有對話記憶，無法在多次互動之間維持情境。
 
-There are two ways to configure agentic search with a flow agent:
+使用流程代理程式設定代理式搜尋有兩種方式：
 
-- [**Automated workflow**](#automated-workflow) (Recommended for quick setup): Automatically create all agentic search resources except the index using a single API call.
-- [**Manual setup**](#manual-setup) (Recommended for custom configurations): Manually configure each component for greater flexibility and control.
+- [**自動化工作流程**](#automated-workflow) (建議用於快速設定)：使用單一 API 呼叫自動建立索引以外的所有代理式搜尋資源。
+- [**手動設定**](#manual-setup) (建議用於自訂組態)：手動設定每個元件，以獲得更大的靈活性與控制權。
 
-## Automated workflow
+## 自動化工作流程
 
-OpenSearch provides a [workflow template]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates#agentic-search-with-a-flow-agent) that automatically creates an Amazon Bedrock connector, a remote chat model, a `QueryPlanningTool`, a flow agent, and a search pipeline. Review the workflow template [defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/agentic-search-with-flow-agent-defaults.json) to determine whether you need to update any of the parameters. To create the default agentic search workflow with a flow agent, send the following request:
+OpenSearch 提供一個[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates#agentic-search-with-a-flow-agent)，會自動建立 Amazon Bedrock 連接器、遠端聊天模型、`QueryPlanningTool`、流程代理程式及搜尋管線。請檢閱工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/agentic-search-with-flow-agent-defaults.json)，以判斷您是否需要更新任何參數。若要使用流程代理程式建立預設的代理式搜尋工作流程，請傳送下列請求：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=agentic_search_with_flow_agent&provision=true
@@ -39,7 +40,7 @@ POST /_plugins/_flow_framework/workflow?use_case=agentic_search_with_flow_agent&
 ```
 {% include copy-curl.html %}
 
-OpenSearch responds with a workflow ID for the created workflow:
+OpenSearch 會回應所建立工作流程的工作流程 ID：
 
 ```json
 {
@@ -47,22 +48,22 @@ OpenSearch responds with a workflow ID for the created workflow:
 }
 ```
 
-To check the workflow status, send the following request:
+若要檢查工作流程狀態，請傳送下列請求：
 
 ```json
 GET /_plugins/_flow_framework/workflow/abc123/_status
 ```
 {% include copy-curl.html %}
 
-Once the workflow completes, the `state` changes to `COMPLETED`. The workflow creates the agentic search resources but does not create an index. You can query any existing index using the provisioned search pipeline. For an example query, see [Step 6](#step-6-run-an-agentic-search).
+工作流程完成後，`state` 會變更為 `COMPLETED`。工作流程會建立代理式搜尋資源，但不會建立索引。您可以使用佈建的搜尋管線查詢任何現有索引。如需查詢範例，請參閱[步驟 6](#step-6-run-an-agentic-search)。
 
-## Manual setup
+## 手動設定
 
-Use the following steps to set up an agentic search flow manually.
+請使用下列步驟手動設定代理式搜尋流程。
 
-## Step 1: Create a product index
+## 步驟 1：建立產品索引
 
-Create a sample index with product data that includes various attributes like name, price, color, and category:
+建立包含產品資料的範例索引，其中包含名稱、價格、顏色及類別等各種屬性：
 
 ```json
 PUT /products-index
@@ -91,9 +92,9 @@ PUT /products-index
 ```
 {% include copy-curl.html %}
 
-## Step 2: Ingest sample data
+## 步驟 2：匯入範例資料
 
-Add sample product documents to the index:
+將範例產品文件新增至索引：
 
 ```json
 POST _bulk
@@ -108,9 +109,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Step 3: Create a model for the agent and QueryPlanningTool
+## 步驟 3：為代理程式與 QueryPlanningTool 建立模型
 
-Register a single model that will be used by both the conversational agent and the `QueryPlanningTool`. This model analyzes natural language questions, coordinates tool usage, and generates the OpenSearch DSL. For available model options, see [Model configurations]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/#model-configuration):
+註冊一個同時供對話式代理程式與 `QueryPlanningTool` 使用的模型。此模型會分析自然語言問題、協調工具使用情形，並產生 OpenSearch DSL。如需可用的模型選項，請參閱[模型組態]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/#model-configuration)：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -145,9 +146,9 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-## Step 4: Register a flow agent
+## 步驟 4：註冊流程代理程式
 
-Next, register a flow agent. You must include a `response_filter` in the `QueryPlanningTool` parameters so the agent extracts the generated DSL correctly from your model provider's response:
+接著，註冊流程代理程式。您必須在 `QueryPlanningTool` 參數中包含 `response_filter`，代理程式才能從您的模型供應商回應中正確擷取產生的 DSL：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -168,14 +169,14 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-Use the following response filters based on your model provider:
+請根據您的模型供應商使用下列回應篩選條件：
 
-- **OpenAI**: `"response_filter": "$.choices[0].message.content"`
-- **Anthropic Claude (Amazon Bedrock Converse API)**: `"response_filter": "$.output.message.content[0].text"`
+- **OpenAI**：`"response_filter": "$.choices[0].message.content"`
+- **Anthropic Claude (Amazon Bedrock Converse API)**：`"response_filter": "$.output.message.content[0].text"`
 
-## Step 5: Create an agentic pipeline with the flow agent
+## 步驟 5：使用流程代理程式建立代理式管線
 
-Create a search pipeline that uses your flow agent to translate natural language queries into DSL. You can optionally include a response processor to view the generated DSL query:
+建立使用您流程代理程式將自然語言查詢轉譯為 DSL 的搜尋管線。您可以選擇性加入回應處理器，以檢視產生的 DSL 查詢：
 
 ```json
 PUT _search/pipeline/agentic-pipeline
@@ -198,9 +199,9 @@ PUT _search/pipeline/agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-## Step 6: Run an agentic search
+## 步驟 6：執行代理式搜尋
 
-To run an agentic search, use the `agentic` query clause. Flow agents *require the index name*, so you must include it in your search request. Flow agents don't support conversation memory, so you cannot include the `memory_id` parameter:
+若要執行代理式搜尋，請使用 `agentic` 查詢子句。流程代理程式*要求索引名稱*，因此您必須在搜尋請求中包含該名稱。流程代理程式不支援對話記憶，因此您不能包含 `memory_id` 參數：
 
 ```json
 GET products-index/_search?search_pipeline=agentic-pipeline
@@ -214,7 +215,7 @@ GET products-index/_search?search_pipeline=agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-The flow agent processes the natural language query and returns matching products along with the generated DSL query in the response:
+流程代理程式會處理自然語言查詢，並在回應中傳回相符的產品以及產生的 DSL 查詢：
 
 ```json
 {

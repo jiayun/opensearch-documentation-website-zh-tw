@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create or update distinguished name
+title: "建立或更新辨別名稱"
 parent: Distinguished name APIs
 grand_parent: Security APIs
 nav_order: 10
 ---
 
-# Create or Update Distinguished Name API
-**Introduced 1.0**
+# 建立或更新辨別名稱 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Adds or updates the specified distinguished names in the cluster's or node's allow list.
+在叢集或節點的允許清單中新增或更新指定的辨別名稱。
 
-This API is reserved for a superadmin. Authenticate with an admin certificate rather than with a user name and password. For more information, see [Access control for the API]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api).
+此 API 保留給超級管理員使用。請使用管理員憑證進行驗證，而非使用者名稱與密碼。如需更多資訊，請參閱[API 的存取控制]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api)。
 {: .note}
 
 <!-- spec_insert_start
 api: security.update_distinguished_name
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PUT /_plugins/_security/api/nodesdn/{cluster_name}
 ```
 <!-- spec_insert_end -->
 
-## Example request
+## 範例請求
 
 ```json
 PUT _plugins/_security/api/nodesdn/cluster1
@@ -37,7 +38,7 @@ PUT _plugins/_security/api/nodesdn/cluster1
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {

@@ -1,13 +1,14 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Terms
+title: "詞彙"
 parent: Term-level queries
 nav_order: 20
 ---
 
-# Terms query
+# 詞彙查詢
 
-Use the `terms` query to search for multiple terms in the same field. For example, the following query searches for lines with the IDs `61809` and `61810`:
+使用 `terms` 查詢，在同一個欄位中搜尋多個詞彙。例如，下列查詢會搜尋 ID 為 `61809` 和 `61810` 的行：
 
 ```json
 GET shakespeare/_search
@@ -24,39 +25,39 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-A document is returned if it matches any of the terms in the array.
+如果文件符合陣列中的任一詞彙，就會傳回該文件。
 
-By default, the maximum number of terms allowed in a `terms` query is 65,536. To change the maximum number of terms, update the `index.max_terms_count` setting.
+預設情況下，`terms` 查詢允許的詞彙數量上限為 65,536。若要變更詞彙數量上限，請更新 `index.max_terms_count` 設定。
 
-For better query performance, pass long arrays containing terms in sorted order (ordered by UTF-8 byte values, ascending).
+為了提升查詢效能，請將包含大量詞彙的陣列依排序順序傳入（依 UTF-8 位元組值遞增排序）。
 {: .tip}
 
 
-The ability to [highlight results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/) for terms queries may not be guaranteed, depending on the highlighter type and the number of terms in the query.
+詞彙查詢是否能[醒目提示結果]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/)，取決於醒目提示器的類型和查詢中的詞彙數量，因此可能無法保證。
 {: .note}
 
-## Parameters
+## 參數
 
-The query accepts the following parameters. All parameters are optional.
+此查詢接受下列參數。所有參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`<field>` | String | The field in which to search. A document is returned in the results only if its field value exactly matches at least one term, with the correct spacing and capitalization.
-`boost` | Floating-point | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field’s relevance. Values between 0.0 and 1.0 decrease the field’s relevance. Default is 1.0.
-`_name` | String | The name of the query for query tagging. Optional.
-`value_type` | String | Specifies the types of values used for filtering. Valid values are `default` and `bitmap`. If omitted, the value defaults to `default`.
+`<field>` | 字串 | 要搜尋的欄位。只有當文件的欄位值與至少一個詞彙完全相符，且空格和大小寫皆正確時，才會在結果中傳回該文件。
+`boost` | 浮點數 | 指定此欄位對相關性分數之權重的浮點數值。大於 1.0 的值會提高欄位的相關性。介於 0.0 和 1.0 之間的值會降低欄位的相關性。預設為 1.0。
+`_name` | 字串 | 用於查詢標記的查詢名稱。選用。
+`value_type` | 字串 | 指定用於篩選的值類型。有效值為 `default` 和 `bitmap`。若省略，則預設值為 `default`。
 
-## Terms lookup
+## 詞彙查找
 
-Terms lookup retrieves the field values of a single document and uses them as search terms. You can use terms lookup to search for a large number of terms.
+詞彙查找會擷取單一文件的欄位值，並將其用作搜尋詞彙。您可以使用詞彙查找來搜尋大量詞彙。
 
-To use terms lookup, you must enable the `_source` mapping field because terms lookup fetches values from a document. The `_source` field is enabled by default.
+若要使用詞彙查找，您必須啟用 `_source` 對應欄位，因為詞彙查找會從文件擷取值。`_source` 欄位預設為啟用。
 
-Terms lookup tries to fetch the document field values from a shard on a local data node. Thus, using an index with a single primary shard that has full replicas on all applicable data nodes reduces network traffic.
+詞彙查找會嘗試從本機資料節點上的分片擷取文件欄位值。因此，使用具有單一主要分片，且在所有適用資料節點上都有完整副本的索引，可減少網路流量。
 
-### Example
+### 範例
 
-As an example, create an index that contains student data, mapping `student_id` as a `keyword`:
+舉例來說，建立包含學生資料的索引，並將 `student_id` 對應為 `keyword`：
 
 ```json
 PUT students
@@ -70,7 +71,7 @@ PUT students
 ```
 {% include copy-curl.html %}
 
-Next, index three documents that correspond to students:
+接著，將三份對應學生的文件編製索引：
 
 ```json
 PUT students/_doc/1
@@ -99,7 +100,7 @@ PUT students/_doc/3
 ```
 {% include copy-curl.html %}
 
-Create a separate index that contains class information, including the class name and an array of student IDs corresponding to the students enrolled in the class:
+建立另一個索引，包含課程資訊，其中包括課程名稱，以及由修讀該課程之學生的 ID 所組成的陣列：
 
 ```json
 PUT classes/_doc/101
@@ -110,7 +111,7 @@ PUT classes/_doc/101
 ```
 {% include copy-curl.html %}
 
-To search for students enrolled in the `CS101` class, specify the document ID of the document that corresponds to the class, the index of that document, and the path of the field in which the terms are located:
+若要搜尋修讀 `CS101` 課程的學生，請指定對應該課程之文件的文件 ID、該文件的索引，以及詞彙所在欄位的路徑：
 
 ```json
 GET students/_search
@@ -128,7 +129,7 @@ GET students/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the documents in the `students` index for every student whose ID matches one of the values in the `enrolled` array:
+回應會包含 `students` 索引中所有 ID 與 `enrolled` 陣列中任一值相符之學生的文件：
 
 ```json
 {
@@ -170,9 +171,9 @@ The response contains the documents in the `students` index for every student wh
 }
 ```
 
-### Example: Nested fields
+### 範例：巢狀欄位
 
-The second example demonstrates querying nested fields. Consider an index with the following document:
+第二個範例示範如何查詢巢狀欄位。假設有一個索引包含下列文件：
 
 ```json
 PUT classes/_doc/102
@@ -185,7 +186,7 @@ PUT classes/_doc/102
 ```
 {% include copy-curl.html %}
 
-To search for students enrolled in `CS102`, use the dot path notation to specify the full path to the field in the `path` parameter:
+若要搜尋修讀 `CS102` 的學生，請使用點號路徑表示法，在 `path` 參數中指定欄位的完整路徑：
 
 ```json
 GET students/_search
@@ -203,7 +204,7 @@ GET students/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents:
+回應會包含相符的文件：
 
 ```json
 {
@@ -245,46 +246,46 @@ The response contains the matching documents:
 }
 ```
 
-### Parameters
+### 參數
 
-The following table lists the terms lookup parameters.
+下表列出詞彙查找參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`index` | String | The name of the index in which to fetch field values. Required.
-`id` | String | The document ID of the document from which to fetch field values. Required.
-`query` | Object | A query object used to select multiple documents from which to fetch field values. Required if `id` is not supplied.
-`path` | String | The name of the field from which to fetch field values. Specify nested fields using dot path notation. Required.
-`routing` | String | Custom routing value of the document from which to fetch field values. Optional. Required if a custom routing value was provided when the document was indexed.
-`store` | Boolean | Whether to perform the lookup on the stored field instead of `_source`. Optional.
+`index` | 字串 | 要從中擷取欄位值的索引名稱。必要。
+`id` | 字串 | 要從中擷取欄位值之文件的文件 ID。必要。
+`query` | 物件 | 用於選取多份文件以擷取欄位值的查詢物件。若未提供 `id`，則為必要。
+`path` | 字串 | 要從中擷取欄位值的欄位名稱。使用點號路徑表示法指定巢狀欄位。必要。
+`routing` | 字串 | 要從中擷取欄位值之文件的自訂路由值。選用。若在將文件編製索引時提供了自訂路由值，則為必要。
+`store` | 布林值 | 是否對儲存的欄位執行查找，而非對 `_source` 執行查找。選用。
 
-## Terms lookup by query
-**Introduced 3.2**
+## 透過查詢進行詞彙查找
+**於 3.2 版推出**
 {: .label .label-purple}
 
-You can use a query to dynamically extract values from multiple documents and use them in a `terms` query. Instead of specifying a document ID, the `query` parameter lets you match documents and collect all values for a specified field across those matches.
+您可以使用查詢，動態擷取多份文件中的值，並將其用於 `terms` 查詢。`query` 參數讓您無須指定文件 ID，即可比對文件，並收集所有相符文件中指定欄位的全部值。
 
-This is useful when you want to search one index based on field values from documents in another index.
+當您想根據另一個索引中文件的欄位值來搜尋某個索引時，這項功能很有用。
 
-For a list of supported parameters, see [terms lookup parameters](#parameters-1). To use terms lookup by query, you must provide the `query` parameter instead of `id` in the terms lookup object.  
+如需支援的參數清單，請參閱[詞彙查找參數](#parameters-1)。若要透過查詢進行詞彙查找，您必須在詞彙查找物件中提供 `query` 參數，而非 `id`。  
 
-### How values are collected
+### 值的收集方式
 
-The behavior of the terms lookup depends on how the target field appears in the matched documents:
+詞彙查閱的行為取決於目標欄位在符合的文件中出現的方式：
 
-- If a document matching the query does not contain the specified field, the document is ignored for terms extraction.
-- If the field is a list, all its items are collected.
-- If the field is a scalar, its value is collected.
-- If the same field is a single value or a list for different documents, all values are flattened into a single list and deduplicated.
-- Multiple lists are flattened into a single list.
-- If the field is missing, `null`, or an empty list, it is skipped.
-- Duplicates from multiple documents are deduplicated.
-- If no documents match the query, the `terms` query acts as if no values were specified (typically, matches nothing).
-- If none of the matched documents contain the field, the query does not match anything.
+- 如果符合查詢的文件未包含指定的欄位，則該文件會被忽略，不進行詞彙擷取。
+- 如果欄位是清單，則會收集其所有項目。
+- 如果欄位是純量，則會收集其值。
+- 如果同一個欄位在不同文件中是單一值或清單，則所有值會扁平化為單一清單並去除重複。
+- 多個清單會扁平化為單一清單。
+- 如果欄位缺少、`null` 或為空清單，則會略過。
+- 來自多個文件的重複項目會去除重複。
+- 如果沒有文件符合查詢，則 `terms` 查詢的行為就如同未指定任何值（通常不會符合任何項目）。
+- 如果符合的文件中沒有任何一個包含該欄位，則查詢不會符合任何項目。
 
-### Example
+### 範例
 
-First, create an index named `users`, which contains user information:
+首先，建立名為 `users` 的索引，其中包含使用者資訊：
 
 ```json
 PUT /users
@@ -298,7 +299,7 @@ PUT /users
 ```
 {% include copy-curl.html %}
 
-Add user data to the index:
+將使用者資料新增至索引：
 
 ```json
 PUT users/_doc/u1
@@ -324,7 +325,7 @@ PUT users/_doc/u4
 ```
 {% include copy-curl.html %}
 
-Next, create an index containing group memberships:
+接著，建立包含群組成員資格的索引：
 
 ```json
 PUT groups
@@ -339,7 +340,7 @@ PUT groups
 ```
 {% include copy-curl.html %}
 
-Add group membership data to the index:
+將群組成員資格資料新增至索引：
 
 ```json
 PUT groups/_doc/1
@@ -394,7 +395,7 @@ PUT groups/_doc/6
 ```
 {% include copy-curl.html %}
 
-To search the `users` index for all users who are members of the `g1` group, use the following request:
+若要在 `users` 索引中搜尋所有屬於 `g1` 群組的成員使用者，請使用下列請求：
 
 ```json
 GET /users/_search
@@ -414,7 +415,7 @@ GET /users/_search
 ```
 {% include copy-curl.html %}
 
-This query collects all values from the `members` field of documents in `groups` whose `group` is set to `g1` and uses them as terms for the `username` field in the `users` index:
+此查詢會從 `groups` 中文件的 `members` 欄位收集所有值，這些文件的 `group` 設為 `g1`，並將這些值用作 `users` 索引中 `username` 欄位的詞彙：
 
 ```json
 {
@@ -429,27 +430,27 @@ This query collects all values from the `members` field of documents in `groups`
 }
 ```
 
-This query processes matching documents as follows:
+此查詢會以下列方式處理符合的文件：
 
-- The lookup query matches documents 1, 2, 3, 4, and 5 (all specify group `g1`).
-- Doc 6 (using a different group, `g2`) is ignored by the query.
-- The `members` field for each matching document is processed as follows:
-    - Doc 1: `["alice", "bob"]` (list) → both `alice` and `bob` are collected.
-    - Doc 2: `"carol"` (scalar) → `carol` is collected.
-    - Doc 3: missing `members` field → ignored.
-    - Doc 4: empty list → ignored.
-    - Doc 5: null → ignored.
-- All collected values are flattened and deduplicated, so the final result is `["alice", "bob", "carol"]`.
+- 查閱查詢符合文件 1、2、3、4 和 5（全都指定群組 `g1`）。
+- 文件 6（使用不同的群組 `g2`）會被查詢忽略。
+- 每個符合文件的 `members` 欄位會以下列方式處理：
+    - 文件 1：`["alice", "bob"]`（清單）→ 同時收集 `alice` 和 `bob`。
+    - 文件 2：`"carol"`（純量）→ 收集 `carol`。
+    - 文件 3：缺少 `members` 欄位 → 忽略。
+    - 文件 4：空清單 → 忽略。
+    - 文件 5：null → 忽略。
+- 所有收集到的值都會扁平化並去除重複，因此最終結果為 `["alice", "bob", "carol"]`。
 
-## Bitmap filtering
-**Introduced 2.17**
+## 點陣圖篩選
+**於 2.17 版推出**
 {: .label .label-purple }
 
-The `terms` query can filter for multiple terms simultaneously. However, when the number of terms in the input filter increases to a large value (around 10,000), the resulting network and memory overhead can become significant, making the query inefficient. In such cases, consider encoding your large terms filter using a [roaring bitmap](https://github.com/RoaringBitmap/RoaringBitmap) for more efficient filtering.
+`terms` 查詢可以同時篩選多個詞彙。然而，當輸入篩選條件中的詞彙數量增加到很大的值（約 10,000 個）時，隨之而來的網路和記憶體額外負荷可能會變得相當可觀，導致查詢效率低落。在這種情況下，請考慮使用 [roaring bitmap](https://github.com/RoaringBitmap/RoaringBitmap) 來編碼您的大型詞彙篩選條件，以獲得更有效率的篩選。
 
-The following example assumes that you have two indexes: a `products` index, which contains all the products sold by a company, and a `customers` index, which stores filters representing customers who own specific products.
+下列範例假設您有兩個索引：`products` 索引，其中包含某家公司販售的所有產品，以及 `customers` 索引，其中儲存代表擁有特定產品之客戶的篩選條件。
 
-First, create a `products` index and map `product_id` as an integer:
+首先，建立 `products` 索引並將 `product_id` 對應為整數：
 
 ```json
 PUT /products
@@ -463,7 +464,7 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-Next, index three documents that correspond to products:
+接著，將三個對應至產品的文件編製索引：
 
 ```json
 PUT /products/_doc/1
@@ -492,7 +493,7 @@ PUT /products/_doc/3
 ```
 {% include copy-curl.html %}
 
-To store customer bitmap filters, you'll create a `customer_filter` [binary field]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/binary/) in the `customers` index. Specify `store` as `true` to store the field:
+若要儲存客戶點陣圖篩選條件，您將在 `customers` 索引中建立 `customer_filter` [二進位欄位]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/binary/)。指定 `store` 為 `true` 以儲存該欄位：
 
 ```json
 PUT /customers
@@ -509,9 +510,9 @@ PUT /customers
 ```
 {% include copy-curl.html %}
 
-For each customer, you need to generate a bitmap that represents the product IDs of the products the customer owns. This bitmap effectively encodes the filter criteria for that customer. In this example, you'll create a `terms` filter for a customer whose ID is `customer123` and who owns products `111`, `222`, and `333`.
+針對每位客戶，您需要產生一個點陣圖，代表該客戶擁有之產品的產品 ID。此點陣圖會有效地編碼該客戶的篩選條件。在此範例中，您將為 ID 為 `customer123` 且擁有產品 `111`、`222` 和 `333` 的客戶建立 `terms` 篩選條件。
 
-To encode a `terms` filter for the customer, first create a roaring bitmap for the filter. This example creates a bitmap using the [PyRoaringBitMap] library, so first run `pip install pyroaring` to install the library. Then serialize the bitmap and encode it using a [Base64](https://en.wikipedia.org/wiki/Base64) encoding scheme:
+若要為該客戶編碼 `terms` 篩選條件，請先為該篩選條件建立 roaring bitmap。此範例使用 [PyRoaringBitMap] 程式庫建立點陣圖，因此請先執行 `pip install pyroaring` 來安裝該程式庫。然後將點陣圖序列化，並使用 [Base64](https://en.wikipedia.org/wiki/Base64) 編碼配置進行編碼：
 
 ```py
 from pyroaring import BitMap
@@ -529,7 +530,7 @@ print(f"Encoded Bitmap: {encoded_bm_str}")
 ```
 {% include copy.html %}
 
-Next, index the customer filter into the `customers` index. The document ID for the filter is the same as the ID for the corresponding customer (in this example, `customer123`). The `customer_filter` field contains the bitmap you generated for this customer:
+接著，將客戶篩選條件編製索引至 `customers` 索引。篩選條件的文件 ID 與對應客戶的 ID 相同（在此範例中為 `customer123`）。`customer_filter` 欄位包含您為此客戶產生的點陣圖：
 
 ```json
 POST customers/_doc/customer123
@@ -539,7 +540,7 @@ POST customers/_doc/customer123
 ```
 {% include copy-curl.html %}
 
-Now you can run a `terms` query on the `products` index to look up a specific customer in the `customers` index. Because you're looking up a stored field instead of `_source`, set `store` to `true`. In the `value_type` field, specify the data type of the `terms` input as `bitmap`:
+現在您可以在 `products` 索引上執行 `terms` 查詢，以在 `customers` 索引中查閱特定客戶。因為您查閱的是已儲存的欄位而非 `_source`，請將 `store` 設為 `true`。在 `value_type` 欄位中，將 `terms` 輸入的資料類型指定為 `bitmap`：
 
 ```json
 POST /products/_search
@@ -559,7 +560,7 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-You can also directly pass the bitmap to the `terms` query. In this example, the `product_id` field contains the customer filter bitmap for the customer whose ID is `customer123`:
+您也可以直接將點陣圖傳遞至 `terms` 查詢。在此範例中，`product_id` 欄位包含 ID 為 `customer123` 之客戶的客戶篩選條件點陣圖：
 
 ```json
 POST /products/_search

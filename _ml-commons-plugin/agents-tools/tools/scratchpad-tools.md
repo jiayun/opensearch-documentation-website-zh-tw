@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Scratchpad tools
+title: "Scratchpad 工具"
 has_children: false
 has_toc: false
 nav_order: 60
@@ -9,47 +10,47 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# Scratchpad tools
-**Introduced 3.3**
+# Scratchpad 工具
+**於 3.3 版推出**
 {: .label .label-purple }
 <!-- vale on -->
 
-The scratchpad tools consist of `WriteToScratchPadTool` and `ReadFromScratchPadTool`, which enable agents to store and retrieve intermediate thoughts and results during runtime. These tools serve as temporary memory for a single agent execution session, allowing agents to take notes and store important findings during tool executions.
+Scratchpad 工具包含 `WriteToScratchPadTool` 與 `ReadFromScratchPadTool`，可讓代理程式在執行階段儲存及擷取中間的想法與結果。這些工具可做為單一代理程式執行工作階段的暫時記憶體，讓代理程式在工具執行期間記筆記並儲存重要發現。
 
-The scratchpad acts as runtime memory that persists only during a single agent execution. When you call the agent's `_execute` API, a new scratchpad is created for that session. All notes and data, except `persistent_notes`, are cleared when the execution completes, ensuring each execution starts with a fresh scratchpad.
+Scratchpad 可做為執行階段記憶體，僅在單一代理程式執行期間持續存在。當您呼叫代理程式的 `_execute` API 時，會為該工作階段建立新的 scratchpad。除了 `persistent_notes` 之外，所有筆記與資料都會在執行完成時清除，確保每次執行都從全新的 scratchpad 開始。
 {: .important}
 
-## Use cases
+## 使用案例
 
-- **Task decomposition**: Store research plans, intermediate findings, and progress notes during multi-step operations within a single execution.
-- **Temporary state management**: Maintain context and accumulated knowledge during the current agent execution session.
-- **Multi-step workflows**: Save key findings after searches to build comprehensive responses in complex tasks.
-- **Execution planning**: Store and reference step-by-step plans during complex operations.
+- **工作分解**：在單一執行內的多步驟作業期間，儲存研究計畫、中間發現與進度筆記。
+- **暫時狀態管理**：在目前的代理程式執行工作階段期間，維護脈絡與累積的知識。
+- **多步驟工作流程**：在搜尋後儲存重要發現，以在複雜工作中建立完整的回應。
+- **執行規劃**：在複雜作業期間儲存並參考逐步計畫。
 
-## Scratchpad lifecycle
+## Scratchpad 生命週期
 
-The scratchpad follows a simple lifecycle:
+Scratchpad 遵循簡單的生命週期：
 
-1. **Creation**: A new, empty scratchpad is created when an agent execution begins.
-2. **Usage**: During execution, the agent can read from and write to the scratchpad multiple times.
-3. **Cleanup**: The scratchpad is automatically cleared when execution completes.
+1. **建立**：代理程式執行開始時，會建立全新且空的 scratchpad。
+2. **使用**：在執行期間，代理程式可以多次讀取及寫入 scratchpad。
+3. **清理**：執行完成時，scratchpad 會自動清除。
 
-Each call to the agent's `_execute` API creates a fresh scratchpad, ensuring executions are isolated from each other.
+每次呼叫代理程式的 `_execute` API 都會建立全新的 scratchpad，確保各次執行彼此隔離。
 
-## Best practices
+## 最佳實務
 
-- **Structured notes**: Encourage agents to maintain organized, structured notes in the scratchpad.
-- **Regular updates**: Have agents update the scratchpad after each significant step or finding.
-- **Session awareness**: Remember that scratchpad content is temporary and specific to the current execution.
-- **Efficient usage**: Use the scratchpad for intermediate results that need to be referenced multiple times during execution.
+- **結構化筆記**：鼓勵代理程式在 scratchpad 中維護有條理、結構化的筆記。
+- **定期更新**：讓代理程式在每個重要步驟或發現之後更新 scratchpad。
+- **工作階段感知**：請記住，scratchpad 內容是暫時的，且專屬於目前的執行。
+- **有效率地使用**：將 scratchpad 用於執行期間需要多次參考的中間結果。
 
-## Example: Building a research agent with scratchpad tools
+## 範例：使用 scratchpad 工具建置研究代理程式
 
-Use the following steps to build a research agent with scratchpad tools.
+使用下列步驟，以 scratchpad 工具建置研究代理程式。
 
-### Step 1: Register and deploy a model
+### 步驟 1：註冊並部署模型
 
-Register a conversational model that supports the agent framework. The following example uses Anthropic Claude:
+註冊支援代理程式架構的對話模型。下列範例使用 Anthropic Claude：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -88,9 +89,9 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-### Step 2: Register an agent with scratchpad tools
+### 步驟 2：註冊含 scratchpad 工具的代理程式
 
-Register a conversational agent that includes both scratchpad tools and other research tools:
+註冊同時包含 scratchpad 工具與其他研究工具的對話代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -139,9 +140,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### Step 3: Execute the agent
+### 步驟 3：執行代理程式
 
-Execute the agent with a research question:
+以研究問題執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/{your-agent-id}/_execute?async=true
@@ -154,53 +155,53 @@ POST /_plugins/_ml/agents/{your-agent-id}/_execute?async=true
 {% include copy-curl.html %}
 
 
-The agent will:
-1. Read from its scratchpad to check for existing relevant information (starts empty for new executions).
-2. Create and save a research plan to the scratchpad.
-3. Execute searches and update the scratchpad with findings.
-4. Provide a comprehensive answer based on accumulated research.
+代理程式將會：
+1. 從其 scratchpad 讀取，以檢查是否有現有的相關資訊（新執行會從空白開始）。
+2. 建立研究計畫並儲存至 scratchpad。
+3. 執行搜尋，並以發現更新 scratchpad。
+4. 根據累積的研究提供完整的答案。
 
-When using the `agents/<your-agent-id>/_execute` API, you will get a `parent_interaction_id` and `memory_id` in the response. Note the `parent_interaction_id` for later tracing steps. For more information, see [Viewing scratchpad activity](#viewing-scratchpad-activity).
+使用 `agents/<your-agent-id>/_execute` API 時，您會在回應中取得 `parent_interaction_id` 與 `memory_id`。請記下 `parent_interaction_id`，以供後續追蹤步驟使用。如需更多資訊，請參閱[檢視 scratchpad 活動](#viewing-scratchpad-activity)。
 
-## Tool parameters
+## 工具參數
 
-The following are the parameters for the scratchpad tools.
+以下是 scratchpad 工具的參數。
 
 ### ReadFromScratchPadTool
 
-The following are the **registration parameters** used when adding to an agent.
+以下是新增至代理程式時所使用的**註冊參數**。
 
-Parameter | Type | Required/Optional | Description
+參數 | 資料類型 | 必要／選用 | 說明
 :--- | :--- | :--- | :---
-`persistent_notes` | String | Optional | Initial notes or instructions to store in the scratchpad when first created.
+`persistent_notes` | 字串 | 選用 | 首次建立時要儲存至 scratchpad 的初始筆記或指示。
 
-The following are the **execution parameters** used when calling the tool directly.
+以下是直接呼叫工具時所使用的**執行參數**。
 
-Parameter | Type | Required/Optional | Description
+參數 | 資料類型 | 必要／選用 | 說明
 :--- | :--- |:------------------| :---
-`persistent_notes` | String | Required          | Initial notes or instructions to store in the scratchpad.
+`persistent_notes` | 字串 | 必要          | 要儲存至 scratchpad 的初始筆記或指示。
 
 ### WriteToScratchPadTool
 
-The following **registration parameters** are used when adding to an agent.
+下列**註冊參數**用於將工具加入代理程式時。
 
-Parameter | Type | Required/Optional | Description
+參數 | 資料類型 | 必要／選用 | 說明
 :--- | :--- | :--- | :---
-`return_history` | Boolean | Optional | When set to `true`, returns the full scratchpad content after writing. When `false` or omitted (default), returns the newly added note with confirmation.
+`return_history` | 布林值 | 選用 | 設定為 `true` 時，寫入後回傳完整的 scratchpad 內容。設為 `false` 或省略（預設）時，回傳新增的筆記及確認訊息。
 
-The following **execution parameters**  are used when calling the tool directly.
+下列**執行參數**用於直接呼叫工具時。
 
-Parameter | Type | Required/Optional | Description
+參數 | 資料類型 | 必要／選用 | 說明
 :--- | :--- | :--- | :---
-`notes` | String | Required | The content to write to the scratchpad.
-`return_history` | Boolean | Optional | When set to `true`, returns the full scratchpad content after writing. When `false` or omitted (default), returns the newly added note with confirmation.
+`notes` | 字串 | 必要 | 要寫入 scratchpad 的內容。
+`return_history` | 布林值 | 選用 | 設定為 `true` 時，寫入後回傳完整的 scratchpad 內容。設為 `false` 或省略（預設）時，回傳新增的筆記及確認訊息。
 
 
-## Testing the tools
+## 測試工具
 
-You can use the Tools API directly to execute both scratchpad tools and test their responses before registering them with your agents.
+您可以直接使用 Tools API 執行這兩個 scratchpad 工具，並在向代理程式註冊之前測試其回應。
 
-### Testing the ReadFromScratchPadTool
+### 測試 ReadFromScratchPadTool
 
 ```json
 POST /_plugins/_ml/tools/_execute/ReadFromScratchPadTool
@@ -212,7 +213,7 @@ POST /_plugins/_ml/tools/_execute/ReadFromScratchPadTool
 ```
 {% include copy-curl.html %}
 
-When provided `persistent_notes`, the tool attempts to show the persistent notes in the response:
+提供 `persistent_notes` 時，工具會嘗試在回應中顯示持續保存的筆記：
 
 ```json
 {
@@ -230,7 +231,7 @@ When provided `persistent_notes`, the tool attempts to show the persistent notes
 }
 ```
 
-You can also test with an empty `persistent_notes` field:
+您也可以使用空的 `persistent_notes` 欄位進行測試：
 
 ```json 
 POST /_plugins/_ml/tools/_execute/ReadFromScratchPadTool
@@ -242,7 +243,7 @@ POST /_plugins/_ml/tools/_execute/ReadFromScratchPadTool
 ```
 {% include copy-curl.html %}
 
-The response indicates that the scratchpad is empty:
+回應表示 scratchpad 為空：
 
 ```json
 {
@@ -259,9 +260,9 @@ The response indicates that the scratchpad is empty:
 }
 ```
 
-### Testing the WriteToScratchPadTool
+### 測試 WriteToScratchPadTool
 
-You can use the Tools API directly to execute the `WriteToScratchPadTool` and test the tool response before registering it with your agents.
+您可以直接使用 Tools API 執行 `WriteToScratchPadTool`，並在向代理程式註冊之前測試工具回應。
 
 ```json
 POST /_plugins/_ml/tools/_execute/WriteToScratchPadTool
@@ -273,7 +274,7 @@ POST /_plugins/_ml/tools/_execute/WriteToScratchPadTool
 ```
 {% include copy-curl.html %}
 
-The following is the example response from the tool output:
+以下是工具輸出的範例回應：
 
 ```json
 {
@@ -290,7 +291,7 @@ The following is the example response from the tool output:
 }
 ```
 
-You can set the `return_history` parameter to `true` to get the full scratchpad content after writing:
+您可以將 `return_history` 參數設定為 `true`，以在寫入後取得完整的 scratchpad 內容：
 
 ```json
 POST /_plugins/_ml/tools/_execute/WriteToScratchPadTool
@@ -303,7 +304,7 @@ POST /_plugins/_ml/tools/_execute/WriteToScratchPadTool
 ```
 {% include copy-curl.html %}
 
-The response contains the full scratchpad content:
+回應包含完整的 scratchpad 內容：
 
 ```json
 {
@@ -321,18 +322,18 @@ The response contains the full scratchpad content:
 }
 ```
 
-## Viewing scratchpad activity
+## 檢視 scratchpad 活動
 
-You can monitor how the agent uses the scratchpad by examining the execution traces:
+您可以透過檢查執行追蹤來監視代理程式如何使用 scratchpad：
 
 ```json
 GET /_plugins/_ml/memory/message/{parent_interaction_id}/traces?next_token=0
 ```
 {% include copy-curl.html %}
 
-The traces show the sequence of scratchpad reads and writes, demonstrating how the agent accumulates knowledge during the execution session.
+這些追蹤顯示 scratchpad 讀取與寫入的順序，說明代理程式在執行工作階段期間如何累積知識。
 
-## Related documentation
+## 相關文件
 
-- [Agents and tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/)
-- [Conversational agents]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)
+- [代理程式與工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/)
+- [對話式代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)

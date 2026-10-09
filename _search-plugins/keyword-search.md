@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Keyword search
+title: "關鍵字搜尋"
 has_children: false
 nav_order: 10
 ---
 
-# Keyword search
+# 關鍵字搜尋
 
-By default, OpenSearch calculates document scores using the [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) algorithm. BM25 is a keyword-based algorithm that performs lexical search for words that appear in the query. 
+根據預設，OpenSearch 會使用 [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) 演算法計算文件分數。BM25 是一種以關鍵字為基礎的演算法，會針對查詢中出現的詞彙執行詞彙搜尋。
 
-When determining a document's relevance, BM25 considers [term frequency/inverse document frequency (TF/IDF)](https://en.wikipedia.org/wiki/Tf%E2%80%93idf):
+在判斷文件的相關性時，BM25 會考量[詞頻／逆文件頻率 (TF/IDF)](https://en.wikipedia.org/wiki/Tf%E2%80%93idf)：
 
-- _Term frequency_ stipulates that documents in which the search term appears more frequently are more relevant. 
+- _詞頻_ 指出搜尋詞彙出現頻率越高的文件越相關。
 
-- _Inverse document frequency_ gives less weight to the words that commonly appear in all documents in the corpus (for example, articles like "the"). 
+- _逆文件頻率_ 會降低語料庫中所有文件常見詞彙（例如「the」這類冠詞）的權重。
 
-## Example
+## 範例
 
-The following example query searches for the words `long live king` in the `shakespeare` index:
+下列範例查詢會在 `shakespeare` 索引中搜尋 `long live king` 這些詞彙：
 
 ```json
 GET shakespeare/_search
@@ -31,7 +32,7 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents, each with a relevance score in the `_score` field:
+回應會包含相符的文件，每份文件在 `_score` 欄位中都有相關性分數：
 
 ```json
 {
@@ -112,38 +113,38 @@ The response contains the matching documents, each with a relevance score in the
 }
 ```
 
-## Similarity algorithms
+## 相似度演算法
 
-The following table lists the supported similarity algorithms.
+下表列出支援的相似度演算法。
 
-Algorithm | Description
-`BM25` | The default OpenSearch [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) similarity algorithm. 
-`LegacyBM25` (Deprecated) | The older [LegacyBM25Similarity](https://github.com/opensearch-project/OpenSearch/blob/main/server/src/main/java/org/opensearch/lucene/similarity/LegacyBM25Similarity.java) implementation. Kept for backward compatibility.
-`boolean` | Assigns terms a score equal to their boost value. Use `boolean` similarity when you want the document scores to be based on the binary value of whether the terms match.
-
-
-### Important changes to BM25 scoring in OpenSearch 3.0
-
-In OpenSearch 3.0, the default similarity algorithm changed from `LegacyBM25Similarity` to Lucene's native `BM25Similarity`.
-
-This change improves alignment with Lucene standards and simplifies scoring behavior, but it introduces an important difference:
-
-- In `LegacyBM25Similarity`, scores included an extra constant factor of `k₁ + 1` in the numerator of the `BM25` formula.
-
-- In `BM25Similarity`, this constant was removed for cleaner normalization (see [BM25](https://en.wikipedia.org/wiki/Okapi_BM25) and the corresponding [Lucene GitHub issue](https://github.com/apache/lucene/issues/9609)).
-
-- Scores produced by `BM25Similarity` are lower than those produced by `LegacyBM25Similarity`, typically by a factor of about `2.2`.
-
-- Ranking is unaffected because the constant factor does not change the relative order of documents.
-
-- To retain the old scoring behavior, explicitly configure your field or index to use `LegacyBM25` (see [Configuring legacy BM25 similarity](#configuring-legacy-bm25-similarity)).
+演算法 | 說明
+`BM25` | 預設的 OpenSearch [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) 相似度演算法。
+`LegacyBM25` (已棄用) | 較舊的 [LegacyBM25Similarity](https://github.com/opensearch-project/OpenSearch/blob/main/server/src/main/java/org/opensearch/lucene/similarity/LegacyBM25Similarity.java) 實作。為回溯相容性而保留。
+`boolean` | 為詞彙指派等於其 boost 值的分數。當您希望文件分數取決於詞彙是否相符的二元值時，請使用 `boolean` 相似度。
 
 
-## Specifying similarity
+### OpenSearch 3.0 中 BM25 計分的重要變更
 
-You can specify the similarity algorithm in the `similarity` parameter when configuring mappings at the field level.
+在 OpenSearch 3.0 中，預設相似度演算法已從 `LegacyBM25Similarity` 變更為 Lucene 原生的 `BM25Similarity`。
 
-For example, the following query specifies the `boolean` similarity for the `boolean_field`. The `bm25_field` is assigned the default `BM25` similarity:
+這項變更提升了與 Lucene 標準的一致性，並簡化了計分行為，但引進了一項重要差異：
+
+- 在 `LegacyBM25Similarity` 中，分數在 `BM25` 公式的分子中包含了額外的常數因子 `k₁ + 1`。
+
+- 在 `BM25Similarity` 中，此常數已移除，以獲得更簡潔的正規化（請參閱 [BM25](https://en.wikipedia.org/wiki/Okapi_BM25) 及對應的 [Lucene GitHub 問題](https://github.com/apache/lucene/issues/9609)）。
+
+- `BM25Similarity` 產生的分數低於 `LegacyBM25Similarity` 產生的分數，通常相差約 `2.2` 倍。
+
+- 排名不受影響，因為此常數因子不會改變文件的相對順序。
+
+- 若要保留舊的計分行為，請明確地將您的欄位或索引設定為使用 `LegacyBM25`（請參閱[設定舊版 BM25 相似度](#configuring-legacy-bm25-similarity)）。
+
+
+## 指定相似度
+
+您可以在欄位層級設定對應時，於 `similarity` 參數中指定相似度演算法。
+
+例如，下列查詢會為 `boolean_field` 指定 `boolean` 相似度。`bm25_field` 則會指派預設的 `BM25` 相似度：
 
 ```json
 PUT /testindex
@@ -163,9 +164,9 @@ PUT /testindex
 ```
 {% include copy-curl.html %}
 
-## Configuring BM25 similarity 
+## 設定 BM25 相似度
 
-You can configure BM25 similarity parameters at the index level as follows:
+您可以在索引層級設定 BM25 相似度參數，如下所示：
 
 ```json
 PUT /testindex
@@ -185,17 +186,17 @@ PUT /testindex
 }
 ```
 
-`BM25` similarity supports the following parameters.
+`BM25` 相似度支援下列參數。
 
-Parameter | Data type | Description
-`k1` | Float | Determines non-linear term frequency normalization (saturation) properties. The default value is `1.2`.
-`b` | Float | Determines the degree to which document length normalizes TF values. The default value is `0.75`.
-`discount_overlaps` | Boolean | Determines whether overlap tokens (tokens with zero position increment) are ignored when computing the norm. Default is `true` (overlap tokens do not count when computing the norm). 
+參數 | 資料類型 | 說明
+`k1` | 浮點數 | 決定非線性詞頻正規化（飽和）屬性。預設值為 `1.2`。
+`b` | 浮點數 | 決定文件長度將 TF 值正規化的程度。預設值為 `0.75`。
+`discount_overlaps` | 布林值 | 決定計算正規化值時是否忽略重疊詞元（位置增量為零的詞元）。預設為 `true`（計算正規化值時不計入重疊詞元）。
 
 
-## Configuring legacy BM25 similarity 
+## 設定舊版 BM25 相似度
 
-If you want to retain the older similarity behavior, specify `LegacyBM25` as the similarity `type`:
+如果您想保留較舊的相似度行為，請將 `LegacyBM25` 指定為相似度 `type`：
 
 ```json
 PUT /testindex
@@ -217,7 +218,7 @@ PUT /testindex
 
 ---
 
-## Next steps
+## 後續步驟
 
-- Learn about [query and filter context]({{site.url}}{{site.baseurl}}/query-dsl/query-filter-context/).
-- Learn about the [query types]({{site.url}}{{site.baseurl}}/query-dsl/index/) OpenSearch supports.
+- 瞭解[查詢與篩選情境]({{site.url}}{{site.baseurl}}/query-dsl/query-filter-context/)。
+- 瞭解 OpenSearch 支援的[查詢類型]({{site.url}}{{site.baseurl}}/query-dsl/index/)。

@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Other log type mappings
+title: "其他記錄檔類型對應"
 parent: Supported log types
 nav_order: 110
 ---
 
-# Other log type mappings
+# 其他記錄檔類型對應
 
-Security Analytics supports field mappings that are not specific to a single service or system. These mapping types are separated into the following categories: 
+Security Analytics 支援非特定於單一服務或系統的欄位對應。這些對應類型分為以下幾類：
 
-- Application: Records application logs.
-- Advanced Persistent Threat (APT): Records logs commonly associated with APT attacks.
-- Compliance: Records logs related to compliance.
-- macOS: Records event logs when using a Mac device to access a network.
-- Proxy: Records logs related to proxy events.
-- Web: Records logs related to network access from the web.
+- Application：記錄應用程式記錄檔。
+- Advanced Persistent Threat (APT)：記錄通常與 APT 攻擊相關的記錄檔。
+- Compliance：記錄與合規性相關的記錄檔。
+- macOS：記錄使用 Mac 裝置存取網路時的事件記錄檔。
+- Proxy：記錄與代理伺服器事件相關的記錄檔。
+- Web：記錄與透過 Web 存取網路相關的記錄檔。
 
-Each log type contains the same field mappings, as shown in the following code snippet:
+每種記錄檔類型都包含相同的欄位對應，如下列程式碼片段所示：
 
 ```json
   "mappings": [

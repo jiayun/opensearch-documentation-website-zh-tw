@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Analyzer
+title: "分析器"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/analyzer/
@@ -9,34 +10,34 @@ has_children: false
 has_toc: false
 ---
 
-# Analyzer mapping parameter
+# 分析器對應參數
 
-The `analyzer` mapping parameter specifies the analyzer to use for text analysis when indexing or searching a `text` field. Unless overridden by the `search_analyzer` mapping parameter, this analyzer handles both index-time and search-time analysis. For more information about analyzers, see [Text analysis]({{site.url}}{{site.baseurl}}/analyzers/).
+`analyzer` 對應參數指定在為 `text` 欄位編製索引或搜尋該欄位時，用於文字分析的分析器。除非由 `search_analyzer` 對應參數覆寫，否則此分析器會同時處理索引時與搜尋時的分析。如需分析器的詳細資訊，請參閱[文字分析]({{site.url}}{{site.baseurl}}/analyzers/)。
 
-Only `text` fields support the `analyzer` mapping parameter.
+只有 `text` 欄位支援 `analyzer` 對應參數。
 {: .important}
 
-The `analyzer` parameter cannot be updated on existing fields using the Update Mapping API. To change the analyzer for an existing field, you must reindex your data.
+無法使用 Update Mapping API 更新現有欄位的 `analyzer` 參數。若要變更現有欄位的分析器，您必須重新為資料編製索引。
 {: .warning}
 
-We recommend testing analyzers before deploying them to production environments.
+建議您先測試分析器，再將其部署至正式環境。
 {: .tip}
 
-## Search quote analyzer
+## 搜尋引號分析器
 
-The `search_quote_analyzer` parameter allows you to specify a different analyzer specifically for phrase queries. This proves especially valuable when you need to handle stop words differently for phrase searches compared to regular term searches.
+`search_quote_analyzer` 參數可讓您專門為片語查詢指定不同的分析器。當您需要在片語搜尋與一般詞彙搜尋中以不同方式處理停用詞時，這項功能特別實用。
 
-For effective phrase query handling with stop words, configure three analyzer settings:
+若要有效處理含有停用詞的片語查詢，請設定三項分析器設定：
 
-1. An `analyzer` for indexing that preserves all terms, including stop words.
-2. A `search_analyzer` for regular queries that filters out stop words.
-3. A `search_quote_analyzer` for phrase queries that retains stop words.
+1. 用於編製索引的 `analyzer`，保留所有詞彙，包括停用詞。
+2. 用於一般查詢的 `search_analyzer`，篩除停用詞。
+3. 用於片語查詢的 `search_quote_analyzer`，保留停用詞。
 
-## Example
+## 範例
 
-The following example demonstrates how to use the `search_quote_analyzer` to handle stop words differently in phrase queries compared to term queries.
+以下範例示範如何使用 `search_quote_analyzer`，在片語查詢與詞彙查詢中以不同方式處理停用詞。
 
-First, create an index with all three analyzer types. The `index_analyzer` preserves all terms during indexing, including stop words like "the" and "a". The `search_analyzer` removes stop words from regular term queries. The `search_quote_analyzer` uses the same analyzer that was used during document indexing, ensuring exact phrase matching works correctly:
+首先，建立具有全部三種分析器類型的索引。`index_analyzer` 會在編製索引時保留所有詞彙，包括「the」和「a」等停用詞。`search_analyzer` 會移除一般詞彙查詢中的停用詞。`search_quote_analyzer` 使用與文件編製索引時相同的分析器，確保精確片語比對能正確運作：
 
 ```json
 PUT /product_catalog
@@ -82,7 +83,7 @@ PUT /product_catalog
 ```
 {% include copy-curl.html %}
 
-Next, add sample documents to the index:
+接著，將範例文件新增至索引：
 
 ```json
 PUT /product_catalog/_doc/1
@@ -100,7 +101,7 @@ PUT /product_catalog/_doc/2
 ```
 {% include copy-curl.html %}
 
-Search your index for the phrase "the smart watch" (in quotation marks):
+在您的索引中搜尋片語「the smart watch」（加上引號）：
 
 ```json
 GET /product_catalog/_search
@@ -115,7 +116,7 @@ GET /product_catalog/_search
 ```
 {% include copy-curl.html %}
 
-Because the query is enclosed in quotation marks, it becomes a phrase query, which is equivalent to the following query:
+由於查詢以引號括住，因此會成為片語查詢，等同於以下查詢：
 
 ```json
 GET /product_catalog/_search
@@ -128,7 +129,7 @@ GET /product_catalog/_search
 }
 ```
 
-Phrase queries use the `search_quote_analyzer`, which preserves stop words. As a result, the query "the smart watch" matches only documents containing that exact phrase, so the response includes only the first document:
+片語查詢使用 `search_quote_analyzer`，會保留停用詞。因此，查詢「the smart watch」只會比對包含該完整片語的文件，所以回應只包含第一份文件：
 
 ```json
 {
@@ -160,7 +161,7 @@ Phrase queries use the `search_quote_analyzer`, which preserves stop words. As a
 }
 ```
 
-Now, search for the text matching "the smart watch" (without quotation marks):
+現在，搜尋符合「the smart watch」的文字（不加引號）：
 
 ```json
 GET /product_catalog/_search
@@ -175,7 +176,7 @@ GET /product_catalog/_search
 ```
 {% include copy-curl.html %}
 
-Because the query is not enclosed in quotation marks, it is a term-level query, which is equivalent to the following query:
+由於查詢未以引號括住，因此是詞彙層級查詢，等同於以下查詢：
 
 ```json
 GET /product_catalog/_search
@@ -188,7 +189,7 @@ GET /product_catalog/_search
 }
 ```
 
-Term-level queries use the `search_analyzer`, which tokenizes the text and removes stop words. As a result, the query is analyzed into the tokens `[smart, watch]` and matches both documents:
+詞彙層級查詢使用 `search_analyzer`，會將文字斷詞並移除停用詞。因此，查詢會被分析成詞元 `[smart, watch]`，並比對到兩份文件：
 
 ```json
 {
@@ -229,8 +230,8 @@ Term-level queries use the `search_analyzer`, which tokenizes the text and remov
 ```
 
 
-## Related documentation
+## 相關文件
 
-- [Text analysis]({{site.url}}{{site.baseurl}}/analyzers/)
-- [Search analyzers]({{site.url}}{{site.baseurl}}/analyzers/search-analyzers/)
-- [Query string queries]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/)
+- [文字分析]({{site.url}}{{site.baseurl}}/analyzers/)
+- [搜尋分析器]({{site.url}}{{site.baseurl}}/analyzers/search-analyzers/)
+- [查詢字串查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/)

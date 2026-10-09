@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Match phrase
+title: "詞組比對"
 parent: Full-text queries
 nav_order: 20
 ---
 
-# Match phrase query
+# 詞組比對查詢
 
-Use the `match_phrase` query to match documents that contain an exact phrase in a specified order. You can add flexibility to phrase matching by providing the `slop` parameter.
+使用 `match_phrase` 查詢來比對包含指定順序之確切詞組的文件。您可以提供 `slop` 參數，讓詞組比對更有彈性。
 
-The `match_phrase` query creates a [phrase query](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/PhraseQuery.html) that matches a sequence of terms.
+`match_phrase` 查詢會建立一個[詞組查詢](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/PhraseQuery.html)，用來比對一連串的詞元。
 
-The following example shows a basic `match_phrase` query:
+下列範例顯示基本的 `match_phrase` 查詢：
 
 ```json
 GET _search
@@ -25,7 +26,7 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-To pass additional parameters, you can use the expanded syntax:
+若要傳遞其他參數，您可以使用擴充語法：
 
 ```json
 GET _search
@@ -42,9 +43,9 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-## Example
+## 範例
 
-For example, consider an index with the following documents:
+舉例來說，假設某個索引含有下列文件：
 
 ```json
 PUT testindex/_doc/1
@@ -63,7 +64,7 @@ PUT testindex/_doc/2
 ```
 {% include copy-curl.html %}
 
-The following `match_phrase` query searches for the phrase `wind rises`, where the word `wind` is followed by the word `rises`:
+下列 `match_phrase` 查詢會搜尋詞組 `wind rises`，其中 `wind` 這個字後面接著 `rises` 這個字：
 
 ```json
 GET testindex/_search
@@ -77,11 +78,11 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含相符的文件：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -117,9 +118,9 @@ The response contains the matching document:
 ```
 </details>
 
-## Analyzer
+## 分析器
 
-By default, when you run a query on a `text` field, the search text is analyzed using the index analyzer associated with the field. You can specify a different search analyzer in the `analyzer` parameter. For example, the following query uses the `english` analyzer:
+根據預設，當您對 `text` 欄位執行查詢時，搜尋文字會使用與該欄位相關聯的索引分析器進行分析。您可以在 `analyzer` 參數中指定不同的搜尋分析器。例如，下列查詢使用 `english` 分析器：
 
 ```json
 GET testindex/_search
@@ -136,11 +137,11 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The `english` analyzer removes the stopword `the` and performs stemming, producing the token `wind`. Both documents match this token and are returned in the results:
+`english` 分析器會移除停用詞 `the` 並執行詞幹擷取，產生詞元 `wind`。兩份文件都符合這個詞元，並會出現在結果中：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -185,7 +186,7 @@ The `english` analyzer removes the stopword `the` and performs stemming, produci
 
 ## Slop
 
-If you provide a `slop` parameter, the query tolerates reorderings of the search terms. Slop specifies the number of other words permitted between words in a query phrase. For example, in the following query, the search text is reordered compared to the document text:
+如果您提供 `slop` 參數，查詢會容忍搜尋詞彙重新排序。Slop 會指定查詢詞組中允許的單字之間可插入多少個其他單字。例如，在下列查詢中，搜尋文字與文件文字相比經過重新排序：
 
 ```json
 GET _search
@@ -201,11 +202,11 @@ GET _search
 }
 ```
 
-The query still returns the matching document:
+查詢仍會傳回相符的文件：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -240,13 +241,13 @@ The query still returns the matching document:
 ```
 </details>
 
-## Empty query
+## 空查詢
 
-For information about a possible empty query, see the corresponding [match query section]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match/#empty-query).
+如需可能出現空查詢的相關資訊，請參閱對應的 [match 查詢小節]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match/#empty-query)。
 
-## Parameters
+## 參數
 
-The query accepts the name of the field (`<field>`) as a top-level parameter:
+此查詢接受欄位名稱 (`<field>`) 作為最上層參數：
 
 ```json
 GET _search
@@ -263,11 +264,11 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-The `<field>` accepts the following parameters. All parameters except `query` are optional.
+`<field>` 接受下列參數。除了 `query` 之外，所有參數都是選用的。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`query` | String | The query string to use for search. Required.
-`analyzer` | String | The [analyzer]({{site.url}}{{site.baseurl}}/analyzers/index/) used to tokenize the query string text. Default is the index-time analyzer specified for the `default_field`. If no analyzer is specified for the `default_field`, the `analyzer` is the default analyzer for the index. For more information about `index.query.default_field`, see [Dynamic index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings).
-`slop` | `0` (default) or a positive integer | Controls the degree to which words in a query can be misordered and still be considered a match. From the [Lucene documentation](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/PhraseQuery.html#getSlop--): "The number of other words permitted between words in query phrase. For example, to switch the order of two words requires two moves (the first move places the words atop one another), so to permit reorderings of phrases, the slop must be at least two. A value of zero requires an exact match."
-`zero_terms_query` | String | In some cases, the analyzer removes all terms from a query string. For example, the `stop` analyzer removes all terms from the string `an but this`. In those cases, `zero_terms_query` specifies whether to match no documents (`none`) or all documents (`all`). Valid values are `none` and `all`. Default is `none`.
+`query` | 字串 | 要用於搜尋的查詢字串。必要。
+`analyzer` | 字串 | 用來將查詢字串文字斷詞的[分析器]({{site.url}}{{site.baseurl}}/analyzers/index/)。預設是為 `default_field` 指定的索引時間分析器。如果沒有為 `default_field` 指定分析器，則 `analyzer` 是索引的預設分析器。如需 `index.query.default_field` 的詳細資訊，請參閱[動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)。
+`slop` | `0` (預設) 或正整數 | 控制查詢中的單字可以錯序到什麼程度仍被視為相符。根據 [Lucene 文件](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/PhraseQuery.html#getSlop--)：「查詢詞組中允許的單字之間可插入多少個其他單字。例如，要交換兩個單字的順序需要移動兩次 (第一次移動會將兩個單字放在彼此上方)，因此若要允許詞組重新排序，slop 至少必須為二。值為零則要求完全相符。」
+`zero_terms_query` | 字串 | 在某些情況下，分析器會從查詢字串中移除所有詞彙。例如，`stop` 分析器會從字串 `an but this` 中移除所有詞彙。在這些情況下，`zero_terms_query` 會指定要比對沒有文件 (`none`) 還是所有文件 (`all`)。有效值為 `none` 和 `all`。預設為 `none`。

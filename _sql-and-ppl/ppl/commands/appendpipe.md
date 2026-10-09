@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: appendpipe
 parent: Commands
@@ -8,34 +9,34 @@ nav_order: 7
 
 <!-- vale off -->
 
-# appendpipe command
+# appendpipe 命令
 
 <!-- vale on -->
 
-The `appendpipe` command appends the results of a subpipeline to the search results. Unlike a subsearch, the subpipeline is not executed first; it runs only when the search reaches the `appendpipe` command.
+`appendpipe` 命令會將子管線的結果附加到搜尋結果中。與子搜尋不同，子管線不會先執行；只有在搜尋執行到 `appendpipe` 命令時，子管線才會執行。
 
-The command aligns columns that have the same field names and types. For columns that exist in only the main search or subpipeline, `NULL` values are inserted into the missing fields for the respective rows.
+此命令會對齊具有相同欄位名稱與類型的欄。對於只存在於主搜尋或子管線中的欄，`NULL` 值會插入至各列缺少的欄位中。
 
-## Syntax
+## 語法
 
-The `appendpipe` command has the following syntax:
+`appendpipe` 命令的語法如下：
 
 ```sql
 appendpipe [<subpipeline>]
 ```
 
-## Parameters
+## 參數
 
-The `appendpipe` command supports the following parameters.
+`appendpipe` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<subpipeline>` | Required | A list of commands applied to the search results produced by the commands that precede the `appendpipe` command. |
+| `<subpipeline>` | 必要 | 套用至搜尋結果的命令清單，這些搜尋結果是由 `appendpipe` 命令之前的命令所產生。 |
   
 
-## Example 1: Appending a total row to aggregated results  
+## 範例 1：將總計列附加至彙總結果  
 
-The following query counts logs by severity level, then appends a total row. This is useful for building summary reports that include both breakdowns and totals:
+下列查詢會依嚴重性層級計算記錄資料筆數，然後附加一列總計。這對於建立同時包含分項與總計的摘要報告很有用：
   
 ```sql
 source=otellogs
@@ -47,7 +48,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -62,9 +63,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Appending summary statistics to detail rows  
+## 範例 2：將摘要統計資料附加至明細列  
 
-The following query shows error counts per service, then appends the overall average error count across all services:
+下列查詢會顯示各服務的錯誤計數，然後附加所有服務的整體平均錯誤計數：
   
 ```sql
 source=otellogs
@@ -77,7 +78,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -93,8 +94,8 @@ The query returns the following results:
 <!-- vale on -->
 
 
-## Limitations
+## 限制
 
-The `appendpipe` command has the following limitations:
+`appendpipe` 命令有下列限制：
 
-* **Schema compatibility**: When fields with the same name exist in both the main search and the subpipeline but have incompatible types, the query fails with an error. To avoid type conflicts, ensure that fields with the same name share the same data type. Alternatively, use different field names. You can rename the conflicting fields using `eval` or select non-conflicting columns using `fields`.
+* **結構相容性**：當主搜尋與子管線中同時存在名稱相同但類型不相容的欄位時，查詢會失敗並傳回錯誤。為避免類型衝突，請確保名稱相同的欄位共用相同的資料類型。或者，使用不同的欄位名稱。您可以使用 `eval` 重新命名衝突的欄位，或使用 `fields` 選取不衝突的欄。

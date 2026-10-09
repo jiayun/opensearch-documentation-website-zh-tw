@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: ML Model tool
+title: "ML Model 工具"
 has_children: false
 has_toc: false
 nav_order: 40
@@ -9,16 +10,16 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# ML Model tool
+# ML Model 工具
 plugins.ml_commons.rag_pipeline_feature_enabled: true
 {: .label .label-purple }
 <!-- vale on -->
 
-The `MLModelTool` runs a machine learning (ML) model and returns inference results.
+`MLModelTool` 會執行機器學習 (ML) 模型並回傳推論結果。
 
-## Step 1: Create a connector for a model
+## 步驟 1：為模型建立連接器
 
-The following example request creates a connector for a model hosted on [Amazon SageMaker](https://aws.amazon.com/pm/sagemaker/):
+下列範例請求會為託管於 [Amazon SageMaker](https://aws.amazon.com/pm/sagemaker/) 的模型建立連接器：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -50,7 +51,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %} 
 
-OpenSearch responds with a connector ID:
+OpenSearch 會回應連接器 ID：
 
 ```json
 {
@@ -58,9 +59,9 @@ OpenSearch responds with a connector ID:
 }
 ```
 
-## Step 2: Register and deploy the model 
+## 步驟 2：註冊並部署模型
 
-To register and deploy the model to OpenSearch, send the following request, providing the connector ID from the previous step:
+若要將模型註冊並部署到 OpenSearch，請傳送下列請求，並提供上一步驟取得的連接器 ID：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -73,7 +74,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %} 
 
-OpenSearch responds with a model ID:
+OpenSearch 會回應模型 ID：
 
 ```json
 {
@@ -83,9 +84,9 @@ OpenSearch responds with a model ID:
 }
 ```
 
-## Step 3: Register a flow agent that will run the MLModelTool
+## 步驟 3：註冊將執行 MLModelTool 的流程代理程式
 
-A flow agent runs a sequence of tools in order and returns the last tool's output. To create a flow agent, send the following register agent request, providing the model ID in the `model_id` parameter:
+流程代理程式會依序執行一連串工具，並回傳最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求，並在 `model_id` 參數中提供模型 ID：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -107,9 +108,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-For parameter descriptions, see [Register parameters](#register-parameters).
+參數說明請參閱 [Register parameters](#register-parameters)。
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -117,9 +118,9 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 4: Run the agent
+## 步驟 4：執行代理程式
 
-Run the agent by sending the following request:
+傳送下列請求以執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
@@ -131,7 +132,7 @@ POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
 ```
 {% include copy-curl.html %} 
 
-OpenSearch returns the inference results:
+OpenSearch 會回傳推論結果：
 
 ```json
 {
@@ -148,24 +149,24 @@ OpenSearch returns the inference results:
 }
 ```
 
-## Register parameters
+## 註冊參數
 
-The following table lists all tool parameters that are available when registering an agent.
-
-Parameter	| Type | Required/Optional | Description	
-:--- | :--- | :--- | :---
-`model_id` | String | Required | The model ID of the large language model (LLM) to use for generating the response.
-`prompt` | String | Optional | The prompt to provide to the LLM.
-`response_field` | String | Optional | The name of the response field. Default is `response`.
-
-## Execute parameters
-
-The following table lists all tool parameters that are available when running the agent.
+下表列出註冊代理程式時可用的所有工具參數。
 
 Parameter	| Type | Required/Optional | Description	
 :--- | :--- | :--- | :---
-`question` | String | Required | The natural language question to send to the LLM. 
+`model_id` | String | 必要 | 用於產生回應的大型語言模型 (LLM) 之模型 ID。
+`prompt` | String | 選用 | 提供給 LLM 的提示詞。
+`response_field` | String | 選用 | 回應欄位的名稱。預設為 `response`。
 
-## Testing the tool
+## 執行參數
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+下表列出執行代理程式時可用的所有工具參數。
+
+Parameter	| Type | Required/Optional | Description	
+:--- | :--- | :--- | :---
+`question` | String | 必要 | 要傳送給 LLM 的自然語言問題。 
+
+## 測試工具
+
+您可以將此工具作為代理程式工作流程的一部分執行，也可以使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適合用來測試個別工具或執行獨立作業。

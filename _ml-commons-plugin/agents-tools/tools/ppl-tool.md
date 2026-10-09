@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: PPL tool
+title: "PPL 工具"
 has_children: false
 has_toc: false
 nav_order: 60
@@ -8,19 +9,19 @@ parent: Tools
 grand_parent: Agents and tools
 ---
 
-# PPL tool
-**Introduced 2.13**
+# PPL 工具
+**於 2.13 版推出**
 {: .label .label-purple }
 
-The `PPLTool` translates natural language into a Piped Processing Language (PPL) query. The tool provides an `execute` flag to specify whether to run the query. If you set the flag to `true`, the `PPLTool` runs the query and returns the query and the results.
+`PPLTool` 會將自然語言轉換為 Piped Processing Language (PPL) 查詢。此工具提供 `execute` 旗標，用於指定是否執行查詢。如果您將該旗標設為 `true`，`PPLTool` 會執行查詢並回傳查詢與結果。
 
-## Prerequisite
+## 必要條件
 
-To create a PPL tool, you need a fine-tuned model that translates natural language into PPL queries. Alternatively, you can use large language models for prompt-based translation. The PPL tool supports the Anthropic Claude and OpenAI models.
+若要建立 PPL 工具，您需要一個能將自然語言轉換為 PPL 查詢的微調模型。或者，您也可以使用大型語言模型進行以提示詞為基礎的轉換。PPL 工具支援 Anthropic Claude 與 OpenAI 模型。
 
-## Step 1: Create a connector for a model
+## 步驟 1：為模型建立連接器
 
-The following example request creates a connector for a model hosted on Amazon SageMaker:
+下列範例請求會為託管於 Amazon SageMaker 上的模型建立連接器：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -52,7 +53,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %} 
 
-OpenSearch responds with a connector ID:
+OpenSearch 會回應連接器 ID：
 
 ```json
 {
@@ -60,11 +61,11 @@ OpenSearch responds with a connector ID:
 }
 ```
 
-For information about connecting to an Anthropic Claude model or OpenAI models, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/). 
+如需連線至 Anthropic Claude 模型或 OpenAI 模型的資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-## Step 2: Register and deploy the model 
+## 步驟 2：註冊並部署模型
 
-To register and deploy the model to OpenSearch, send the following request, providing the connector ID from the previous step:
+若要將模型註冊並部署至 OpenSearch，請傳送下列請求，並提供上一步驟取得的連接器 ID：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -77,7 +78,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %} 
 
-OpenSearch responds with a model ID:
+OpenSearch 會回應模型 ID：
 
 ```json
 {
@@ -88,10 +89,10 @@ OpenSearch responds with a model ID:
 ```
 
 <!-- vale off -->
-## Step 3: Register a flow agent that will run the PPLTool
+## 步驟 3：註冊將執行 PPLTool 的流程代理程式
 <!-- vale on -->
 
-A flow agent runs a sequence of tools in order and returns the last tool's output. To create a flow agent, send the following register agent request, providing the model ID in the `model_id` parameter. To run the generated query, set `execute` to `true`:
+流程代理程式會依序執行一連串工具，並回傳最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求，並在 `model_id` 參數中提供模型 ID。若要執行產生的查詢，請將 `execute` 設為 `true`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -118,9 +119,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-For parameter descriptions, see [Register parameters](#register-parameters).
+如需參數說明，請參閱[註冊參數](#register-parameters)。
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -128,11 +129,11 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 4: Run the agent
+## 步驟 4：執行代理程式
 
-Before you run the agent, make sure that you add the sample OpenSearch Dashboards `Sample web logs` dataset. To learn more, see [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
+在執行代理程式之前，請確認您已新增 OpenSearch Dashboards 的 `Sample web logs` 範例資料集。若要進一步了解，請參閱[新增範例資料]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
 
-Then, run the agent by sending the following request:
+接著，傳送下列請求來執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
@@ -146,7 +147,7 @@ POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
 ```
 {% include copy-curl.html %} 
 
-OpenSearch returns the PPL query and the query results:
+OpenSearch 會回傳 PPL 查詢與查詢結果：
 
 ```json
 {
@@ -163,7 +164,7 @@ OpenSearch returns the PPL query and the query results:
 }
 ```
 
-If you set `execute` to `false`, OpenSearch only returns the query but does not run it:
+如果您將 `execute` 設為 `false`，OpenSearch 只會回傳查詢，但不會執行它：
 
 ```json
 {
@@ -180,29 +181,29 @@ If you set `execute` to `false`, OpenSearch only returns the query but does not 
 }
 ```
 
-## Register parameters
+## 註冊參數
 
-The following table lists all tool parameters that are available when registering an agent.
+下表列出註冊代理程式時可使用的所有工具參數。
 
-Parameter	| Type | Required/Optional | Description	
+參數	| 類型 | 必要／選用 | 說明	
 :--- | :--- | :--- | :---
-`model_id` | String | Required | The model ID of the large language model (LLM) to use for translating text into a PPL query.
-`model_type` | String | Optional | The model type. Valid values are `CLAUDE` (Anthropic Claude model), `OPENAI` (OpenAI models), and `FINETUNE` (custom fine-tuned model). 
-`prompt` | String | Optional | The prompt to provide to the LLM.
-`execute` | Boolean | Optional | Specifies whether to run the PPL query. Default is `true`.
-`input` | Object | Optional | Contains two parameters that specify the index to search and the question for the LLM. For example, `"input": "{\"index\": \"${parameters.index}\", \"question\": ${parameters.question} }"`.
-`head` | Integer | Optional | Limits the number of returned execution results if `execute` is set to `true`. Default is `-1` (no limit).
+`model_id` | 字串 | 必要 | 用於將文字轉換為 PPL 查詢的大型語言模型 (LLM) 模型 ID。
+`model_type` | 字串 | 選用 | 模型類型。有效值為 `CLAUDE` (Anthropic Claude 模型)、`OPENAI` (OpenAI 模型) 與 `FINETUNE` (自訂微調模型)。
+`prompt` | 字串 | 選用 | 提供給 LLM 的提示詞。
+`execute` | 布林值 | 選用 | 指定是否執行 PPL 查詢。預設為 `true`。
+`input` | 物件 | 選用 | 包含兩個參數，分別指定要搜尋的索引以及要提供給 LLM 的問題。例如 `"input": "{\"index\": \"${parameters.index}\", \"question\": ${parameters.question} }"`。
+`head` | 整數 | 選用 | 當 `execute` 設為 `true` 時，限制回傳的執行結果數量。預設為 `-1` (無限制)。
 
-## Execute parameters
+## 執行參數
 
-The following table lists all tool parameters that are available when running the agent.
+下表列出執行代理程式時可使用的所有工具參數。
 
-Parameter	| Type | Required/Optional | Description	
+參數	| 類型 | 必要／選用 | 說明	
 :--- | :--- | :--- | :---
-`index` | String | Required | The index on which to run the PPL query.
-`question` | String | Required | The natural language question to send to the LLM. 
-`verbose` | Boolean | Optional | Whether to provide verbose output. Default is `false`.
+`index` | 字串 | 必要 | 要在其上執行 PPL 查詢的索引。
+`question` | 字串 | 必要 | 要傳送給 LLM 的自然語言問題。
+`verbose` | 布林值 | 選用 | 是否提供詳細輸出。預設為 `false`。
 
-## Testing the tool
+## 測試工具
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+您可以將此工具作為代理程式工作流程的一部分執行，也可以使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適合用於測試個別工具或執行獨立作業。

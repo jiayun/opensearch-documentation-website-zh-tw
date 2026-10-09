@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Generating embeddings automatically
+title: "自動產生嵌入"
 parent: Getting started
 nav_order: 30
 ---
 
-# Generating embeddings automatically
+# 自動產生嵌入
 
-You can generate embeddings dynamically during ingestion within OpenSearch. This method provides a simplified workflow by converting data to vectors automatically.
+您可以在 OpenSearch 中於匯入期間動態產生嵌入。此方法會自動將資料轉換為向量，提供簡化的工作流程。
 
-OpenSearch can automatically generate embeddings from your text data using two approaches:
+OpenSearch 可以透過兩種方式從您的文字資料自動產生嵌入：
 
-- [**Manual setup**](#manual-setup) (Recommended for custom configurations): Configure each component individually for full control over the implementation.
-- [**Automated workflow**](#using-automated-workflows) (Recommended for quick setup): Use defaults and workflows for quick implementation with minimal configuration.
+- [**手動設定**](#manual-setup)（建議用於自訂組態）：逐一設定每個元件，以完全掌控實作。
+- [**自動化工作流程**](#using-automated-workflows)（建議用於快速設定）：使用預設值與工作流程，以最少的組態快速完成實作。
 
-## Prerequisites
+## 必要條件
 
-For this simple setup, you'll use an OpenSearch-provided machine learning (ML) model and a cluster with no dedicated ML nodes. To ensure that this basic local setup works, send the following request to update ML-related cluster settings:
+在這個簡單的設定中，您將使用 OpenSearch 提供的機器學習 (ML) 模型，以及一個沒有專用 ML 節點的叢集。為確保這個基本的本機設定能正常運作，請傳送下列請求以更新 ML 相關的叢集設定：
 
 ```json
 PUT _cluster/settings
@@ -29,33 +30,33 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-### Choose an ML model
+### 選擇 ML 模型
 
-Generating embeddings automatically requires configuring a language model that will convert text to embeddings both at ingestion time and query time. 
+自動產生嵌入需要設定一個語言模型，該模型會在匯入時與查詢時將文字轉換為嵌入。
 
-When selecting a model, you have the following options:
+選擇模型時，您有下列選項：
 
-- Use a pretrained model provided by OpenSearch. For more information, see [OpenSearch-provided pretrained models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/).
+- 使用 OpenSearch 提供的預先訓練模型。如需更多資訊，請參閱 [OpenSearch 提供的預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)。
 
-- Upload your own model to OpenSearch. For more information, see [Custom local models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/).
+- 將您自己的模型上傳至 OpenSearch。如需更多資訊，請參閱[自訂本機模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)。
 
-- Connect to a foundation model hosted on an external platform. For more information, see [Connecting to remote models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/).
+- 連接至託管在外部平台的基礎模型。如需更多資訊，請參閱[連接至遠端模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
 
-In this example, you'll use the [DistilBERT](https://huggingface.co/docs/transformers/model_doc/distilbert) model from Hugging Face, which is one of the [pretrained models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#sentence-transformers) available in OpenSearch. For more information, see [Integrating ML models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/).
+在本範例中，您將使用 Hugging Face 的 [DistilBERT](https://huggingface.co/docs/transformers/model_doc/distilbert) 模型，這是 OpenSearch 中可用的[預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#sentence-transformers)之一。如需更多資訊，請參閱[整合 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/)。
 
-Take note of the dimensionality of the model because you'll need it when you set up a vector index.
+請記下模型的維度，因為在設定向量索引時會需要用到。
 {: .important}
 
-**Token limits and truncation**: Text embedding models have maximum token limits (typically 512 tokens for BERT-based models). When a document exceeds this limit, the model automatically truncates the text, and the truncated content is not represented in the embeddings. This can significantly impact search relevance because documents may not be returned in search results if the relevant content was truncated. To avoid this issue, split long documents into smaller chunks before generating embeddings. 
+**詞元限制與截斷**：文字嵌入模型有最大詞元限制（以 BERT 為基礎的模型通常為 512 個詞元）。當文件超過此限制時，模型會自動截斷文字，而被截斷的內容不會反映在嵌入中。這可能會大幅影響搜尋相關性，因為如果相關內容被截斷，文件可能不會出現在搜尋結果中。為避免此問題，請在產生嵌入之前將長文件分割成較小的區塊。
 {: .warning}
 
-## Manual setup
+## 手動設定
 
-For more control over the configuration, you can set up each component manually using the following steps.
+若要更充分掌控組態，您可以依照下列步驟手動設定每個元件。
 
-### Step 1: Register and deploy the model 
+### 步驟 1：註冊並部署模型
 
-To register and deploy the model, send the following request:
+若要註冊並部署模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -67,7 +68,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Registering a model is an asynchronous task. OpenSearch returns a task ID for this task:
+註冊模型是一項非同步工作。OpenSearch 會傳回此工作的任務 ID：
 
 ```json
 {
@@ -76,14 +77,14 @@ Registering a model is an asynchronous task. OpenSearch returns a task ID for th
 }
 ```
 
-You can check the status of the task by using the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+您可以使用 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 檢查任務的狀態：
 
 ```json
 GET /_plugins/_ml/tasks/aFeif4oB5Vm0Tdw8yoN7
 ```
 {% include copy-curl.html %}
 
-Once the task is complete, the task state will change to `COMPLETED` and the ML Tasks API response will contain a model ID for the registered model:
+任務完成後，任務狀態會變為 `COMPLETED`，且 ML Tasks API 的回應會包含已註冊模型的模型 ID：
 
 ```json
 {
@@ -100,11 +101,11 @@ Once the task is complete, the task state will change to `COMPLETED` and the ML 
 }
 ```
 
-You'll need the model ID in order to use this model for several of the following steps.
+在後續的多個步驟中，您都需要使用此模型 ID。
 
-### Step 2: Create an ingest pipeline
+### 步驟 2：建立資料匯入管線
 
-First, you need to create an [ingest pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/) that contains one processor: a task that transforms document fields before documents are ingested into an index. You'll set up a `text_embedding` processor that creates vector embeddings from text. You'll need the `model_id` of the model you set up in the previous section and a `field_map`, which specifies the name of the field from which to take the text (`passage`) and the name of the field in which to record embeddings (`passage_embedding`):
+首先，您需要建立一個[資料匯入管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)，其中包含一個處理器：處理器是在文件匯入索引之前轉換文件欄位的工作。您將設定一個 `text_embedding` 處理器，從文字建立向量嵌入。您需要上一節所設定模型的 `model_id`，以及一個 `field_map`，後者指定要擷取文字的來源欄位名稱（`passage`）與記錄嵌入的目標欄位名稱（`passage_embedding`）：
 
 ```json
 PUT /_ingest/pipeline/nlp-ingest-pipeline
@@ -124,9 +125,9 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 3: Create a vector index
+### 步驟 3：建立向量索引
 
-Now you'll create a vector index by setting `index.knn` to `true`. In the index, the field named `passage` contains an image description, and a [`knn_vector`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/) field named `passage_embedding` contains the vector embedding of the text. The vector field `dimension` must match the dimensionality of the model you configured in Step 2. Additionally, set the default ingest pipeline to the `nlp-ingest-pipeline` you created in the previous step:
+現在您將透過將 `index.knn` 設定為 `true` 來建立向量索引。在此索引中，名為 `passage` 的欄位包含影像描述，而名為 `passage_embedding` 的 [`knn_vector`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/) 欄位包含文字的向量嵌入。向量欄位 `dimension` 必須符合您在步驟 2 中所設定模型的維度。此外，請將預設資料匯入管線設定為您在上一步建立的 `nlp-ingest-pipeline`：
 
 
 ```json
@@ -152,11 +153,11 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-Setting up a vector index allows you to later perform a vector search on the `passage_embedding` field.
+設定向量索引可讓您稍後對 `passage_embedding` 欄位執行向量搜尋。
 
-### Step 4: Ingest documents into the index
+### 步驟 4：將文件匯入索引
 
-In this step, you'll ingest several sample documents into the index. The sample data is taken from the [Flickr image dataset](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset). Each document contains a `passage` field corresponding to the image description and an `id` field corresponding to the image ID:
+在此步驟中，您會將數個範例文件匯入索引。範例資料取自 [Flickr 影像資料集](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset)。每個文件都包含對應影像描述的 `passage` 欄位，以及對應影像 ID 的 `id` 欄位：
 
 ```json
 PUT /my-nlp-index/_doc/1
@@ -182,9 +183,9 @@ PUT /my-nlp-index/_doc/3
 ```
 {% include copy-curl.html %}
 
-### Step 5: Search the data
+### 步驟 5：搜尋資料
 
-Now you'll search the index using semantic search. To automatically generate vector embeddings from query text, use a `neural` query and provide the model ID of the model you set up earlier so that vector embeddings for the query text are generated with the model used at ingestion time:
+現在您將使用語意搜尋來搜尋索引。若要從查詢文字自動產生向量嵌入，請使用 `neural` 查詢，並提供您稍早設定之模型的模型 ID，以便使用與匯入時相同的模型來產生查詢文字的向量嵌入：
 
 ```json
 GET /my-nlp-index/_search
@@ -207,7 +208,7 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents:
+回應包含符合的文件：
 
 ```json
 {
@@ -255,19 +256,19 @@ The response contains the matching documents:
 }
 ```
 
-## Using automated workflows
+## 使用自動化工作流程
 
-You can quickly set up automatic embedding generation using [_automated workflows_]({{site.url}}{{site.baseurl}}/automating-configurations/). This approach automatically creates and provisions all necessary resources. For more information, see [Workflow templates]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/).
+您可以使用[_自動化工作流程_]({{site.url}}{{site.baseurl}}/automating-configurations/)快速設定自動嵌入生成。此方法會自動建立並佈建所有必要的資源。如需更多資訊，請參閱[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/)。
 
-You can use automated workflows to create and deploy externally hosted models and create resources for various AI search types. In this example, you'll create the same search you've already created following manual steps.
+您可以使用自動化工作流程來建立及部署外部託管的模型，並為各種 AI 搜尋類型建立資源。在此範例中，您將建立與您依照手動步驟所建立的相同搜尋。
 
-### Step 1: Register and deploy the model
+### 步驟 1：註冊並部署模型
 
-To register and deploy a model, select the built-in workflow template for the model provider. For more information, see [Supported workflow templates]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/#supported-workflow-templates). Alternatively, to configure a custom model, use [Step 1 of the manual setup](#step-1-register-and-deploy-the-model). Note the model ID; you'll use it in the next step.
+若要註冊並部署模型，請選取該模型供應商的內建工作流程範本。如需更多資訊，請參閱[支援的工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/#supported-workflow-templates)。或者，若要設定自訂模型，請使用[手動設定的步驟 1](#step-1-register-and-deploy-the-model)。請記下模型 ID；您將在下一個步驟中使用它。
 
-### Step 2: Configure a workflow
+### 步驟 2：設定工作流程
 
-Create and provision a semantic search workflow. You must provide the model ID for the model deployed in the previous step. Review your selected workflow template [defaults](https://github.com/opensearch-project/flow-framework/blob/2.13/src/main/resources/defaults/semantic-search-defaults.json) to determine whether you need to update any of the parameters. For example, if the model dimensionality is different from the default (`1024`), specify the dimensionality of your model in the `output_dimension` parameter. Change the workflow template default text field from `passage_text` to `passage` in order to match the manual example:
+建立並佈建語意搜尋工作流程。您必須提供前一個步驟中所部署模型的模型 ID。請檢閱您所選工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/2.13/src/main/resources/defaults/semantic-search-defaults.json)，以判斷是否需要更新任何參數。例如，如果模型維度與預設值 (`1024`) 不同，請在 `output_dimension` 參數中指定您模型的維度。將工作流程範本的預設文字欄位從 `passage_text` 變更為 `passage`，以符合手動範例：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=semantic_search&provision=true
@@ -279,7 +280,7 @@ POST /_plugins/_flow_framework/workflow?use_case=semantic_search&provision=true
 ```
 {% include copy-curl.html %}
 
-OpenSearch responds with a workflow ID for the created workflow:
+OpenSearch 會回應所建立工作流程的工作流程 ID：
 
 ```json
 {
@@ -287,14 +288,14 @@ OpenSearch responds with a workflow ID for the created workflow:
 }
 ```
 
-To check the workflow status, send the following request:
+若要檢查工作流程狀態，請傳送下列請求：
 
 ```json
 GET /_plugins/_flow_framework/workflow/U_nMXJUBq_4FYQzMOS4B/_status
 ```
 {% include copy-curl.html %}
 
-Once the workflow completes, the `state` changes to `COMPLETED`. The workflow has created an ingest pipeline and an index called `my-nlp-index`:
+工作流程完成後，`state` 會變更為 `COMPLETED`。此工作流程已建立資料匯入管線及名為 `my-nlp-index` 的索引：
 
 ```json
 {
@@ -317,9 +318,9 @@ Once the workflow completes, the `state` changes to `COMPLETED`. The workflow ha
 }
 ```
 
-You can now continue with [steps 4 and 5](#step-4-ingest-documents-into-the-index) to ingest documents into the index and search the index.
+您現在可以繼續進行[步驟 4 和 5](#step-4-ingest-documents-into-the-index)，將文件匯入索引並搜尋該索引。
 
-## Next steps
+## 後續步驟
 
-- See [Getting started with semantic and hybrid search]({{site.url}}{{site.baseurl}}/vector-search/tutorials/neural-search-tutorial/) to learn about configuring semantic and hybrid search.
-- See [AI search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/) to learn about the supported types of AI search.
+- 請參閱[開始使用語意與混合搜尋]({{site.url}}{{site.baseurl}}/vector-search/tutorials/neural-search-tutorial/)，以了解如何設定語意與混合搜尋。
+- 請參閱[AI 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/)，以了解支援的 AI 搜尋類型。

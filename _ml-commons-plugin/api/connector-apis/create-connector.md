@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create connector
+title: "建立連接器"
 parent: Connector APIs
 grand_parent: ML Commons APIs
 nav_order: 10
 ---
 
-# Create Connector API
+# 建立連接器 API
 
-Creates a standalone connector. For more information, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/).
+建立獨立的連接器。如需更多資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/connectors/_create
 ```
 
-## Request body fields
+## 請求本文欄位
 
-For a list of request fields, see [Request body fields]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints#request-body-fields).
+如需請求欄位的清單，請參閱[請求本文欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints#request-body-fields)。
 
-## Example request
+## 範例請求
 
-To create a standalone connector, send a request to the `connectors/_create` endpoint and provide all of the parameters described in [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/):
+若要建立獨立的連接器，請將請求傳送至 `connectors/_create` 端點，並提供[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)中所述的所有參數：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -53,7 +54,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {

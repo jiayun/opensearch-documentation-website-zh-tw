@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Tools
+title: "工具"
 nav_order: 50
 has_children: false
 nav_exclude: true
@@ -10,25 +11,25 @@ redirect_from:
   - /tools/index/
 ---
 
-# OpenSearch tools
+# OpenSearch 工具
 
-OpenSearch provides command-line tools and utilities for ingesting data, managing clusters, and migrating from other search engines. Supported tools include:
+OpenSearch 提供命令列工具與公用程式，用於匯入資料、管理叢集，以及從其他搜尋引擎遷移。支援的工具包括：
 
-- [Agents and ingestion tools](#agents-and-ingestion-tools)
+- [代理程式與資料匯入工具](#agents-and-ingestion-tools)
 - [OpenSearch CLI](#opensearch-cli)
 - [OpenSearch Kubernetes operator]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/)
-- [OpenSearch upgrade, migration, and comparison tools](#opensearch-upgrade-migration-and-comparison-tools)
-- [Sycamore](#sycamore) for AI-powered extract, transform, load (ETL) on complex documents for vector and hybrid search
+- [OpenSearch 升級、遷移與比較工具](#opensearch-upgrade-migration-and-comparison-tools)
+- [Sycamore](#sycamore)，用於對複雜文件執行 AI 驅動的擷取、轉換、載入 (ETL)，以進行向量搜尋與混合搜尋
 
-For information about Data Prepper, the server-side data collector for filtering, enriching, transforming, normalizing, and aggregating data for downstream analytics and visualization, see [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/index/).
+如需 Data Prepper 的相關資訊，這是用於篩選、充實、轉換、正規化及彙總資料，以供下游分析與視覺化使用的伺服器端資料收集器，請參閱 [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/index/)。
 
-## Agents and ingestion tools
+## 代理程式與資料匯入工具
 
-Historically, many multiple popular agents and ingestion tools have worked with Elasticsearch OSS, such as Beats, Logstash, Fluentd, FluentBit, and OpenTelemetry. OpenSearch aims to continue to support a broad set of agents and ingestion tools, but not all have been tested or have explicitly added OpenSearch compatibility.
+過去以來，許多熱門的代理程式與資料匯入工具都能與 Elasticsearch OSS 搭配運作，例如 Beats、Logstash、Fluentd、FluentBit 與 OpenTelemetry。OpenSearch 的目標是持續支援廣泛的代理程式與資料匯入工具，但並非所有工具都經過測試或已明確加入 OpenSearch 相容性。
 
-As an intermediate compatibility solution, OpenSearch 1.x and 2.x provide a setting that instructs the cluster to return version 7.10.2 rather than its actual version.
+作為中繼相容性解決方案，OpenSearch 1.x 與 2.x 提供一項設定，指示叢集回傳版本 7.10.2 而非其實際版本。
 
-If you use clients that include a version check, such as versions of Logstash OSS or Filebeat OSS between 7.x - 7.12.x, enable the setting:
+如果您使用的用戶端包含版本檢查，例如 7.x 至 7.12.x 之間的 Logstash OSS 或 Filebeat OSS 版本，請啟用該設定：
 
 ```json
 PUT _cluster/settings
@@ -41,23 +42,23 @@ PUT _cluster/settings
 }
 ```
 
-[Like any other setting]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/), the alternative is to add the following line to `opensearch.yml` on each node and then restart the node:
+[如同任何其他設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)，另一種做法是在每個節點的 `opensearch.yml` 中加入以下一行，然後重新啟動節點：
 
 ```yml
 compatibility.override_main_response_version: true
 ```
 
-Logstash OSS 8.0 introduces a breaking change where all plugins run in ECS compatibility mode by default. If you use a compatible [OSS client](#compatibility-matrices) you must override the default value to maintain legacy behavior:
+Logstash OSS 8.0 導入一項重大變更：所有外掛程式預設都在 ECS 相容模式下執行。如果您使用相容的 [OSS 用戶端](#compatibility-matrices)，則必須覆寫預設值以維持舊有行為：
 
 ```yml
 ecs_compatibility => disabled
 ```
 
-### Downloads
+### 下載
 
-You can download the OpenSearch output plugin for Logstash from [OpenSearch downloads](https://opensearch.org/downloads.html). The Logstash output plugin is compatible with OpenSearch and Elasticsearch OSS (7.10.2 or lower).
+您可以從 [OpenSearch 下載頁面](https://opensearch.org/downloads.html)下載適用於 Logstash 的 OpenSearch output 外掛程式。該 Logstash output 外掛程式與 OpenSearch 及 Elasticsearch OSS (7.10.2 或更低版本) 相容。
 
-These are the latest versions of Beats OSS with OpenSearch compatibility. For more information, see the following Compatibility matrices section.
+以下為具 OpenSearch 相容性的最新 Beats OSS 版本。如需更多資訊，請參閱下方的相容性矩陣一節。
 
 - [Filebeat OSS 7.12.1](https://www.elastic.co/downloads/past-releases/filebeat-oss-7-12-1)
 - [Metricbeat OSS 7.12.1](https://www.elastic.co/downloads/past-releases/metricbeat-oss-7-12-1)
@@ -66,69 +67,69 @@ These are the latest versions of Beats OSS with OpenSearch compatibility. For mo
 - [Winlogbeat OSS 7.12.1](https://www.elastic.co/downloads/past-releases/winlogbeat-oss-7-12-1)
 - [Auditbeat OSS 7.12.1](https://elastic.co/downloads/past-releases/auditbeat-oss-7-12-1)
 
-Some users report compatibility issues with ingest pipelines on these versions of Beats. If you use ingest pipelines with OpenSearch, consider using the 7.10.2 versions of Beats instead.
+有使用者反映這些版本的 Beats 在資料匯入管線方面有相容性問題。如果您在 OpenSearch 中使用資料匯入管線，請考慮改用 7.10.2 版的 Beats。
 {: .note }
 
 
-## Compatibility matrices
+## 相容性矩陣
 
-*Italicized* cells are untested, but indicate what a value theoretically should be based on existing information.
+*斜體*儲存格表示未經測試，但根據現有資訊指出該值理論上應有的結果。
 
 
-### Compatibility matrix for Logstash
+### Logstash 相容性矩陣
 
-| | Logstash OSS 7.0.0 to 7.11.x | Logstash OSS 7.12.x\* | Logstash 7.13.x-7.16.x without OpenSearch output plugin | Logstash 7.13.x-7.16.x with OpenSearch output plugin | Logstash 8.x+ with OpenSearch output plugin 
+| | Logstash OSS 7.0.0 至 7.11.x | Logstash OSS 7.12.x\* | Logstash 7.13.x-7.16.x (不含 OpenSearch output 外掛程式) | Logstash 7.13.x-7.16.x (含 OpenSearch output 外掛程式) | Logstash 8.x+ (含 OpenSearch output 外掛程式) 
 | :---| :--- | :--- | :--- | :--- | :--- |
-| Elasticsearch OSS 7.0.0 to 7.9.x | *Yes* | *Yes* | *No* | *Yes* | *Yes* |
-| Elasticsearch OSS 7.10.2 | *Yes* | *Yes* | *No* | *Yes* | *Yes* |
-| ODFE 1.0 to 1.12 | *Yes* | *Yes* | *No* | *Yes* | *Yes* |
-| ODFE 1.13 | *Yes* | *Yes* | *No* | *Yes* | *Yes* |
-| OpenSearch 1.x to 2.x | Yes through version setting | Yes through version setting | *No* | *Yes* | Yes, with Elastic Common Schema Setting |
-| OpenSearch 3.x | *No* | *No* | *No* | *Yes* | Yes, with Elastic Common Schema Setting |
+| Elasticsearch OSS 7.0.0 至 7.9.x | *是* | *是* | *否* | *是* | *是* |
+| Elasticsearch OSS 7.10.2 | *是* | *是* | *否* | *是* | *是* |
+| ODFE 1.0 至 1.12 | *是* | *是* | *否* | *是* | *是* |
+| ODFE 1.13 | *是* | *是* | *否* | *是* | *是* |
+| OpenSearch 1.x 至 2.x | 透過版本設定可支援 | 透過版本設定可支援 | *否* | *是* | 是，需使用 Elastic Common Schema 設定 |
+| OpenSearch 3.x | *否* | *否* | *否* | *是* | 是，需使用 Elastic Common Schema 設定 |
 
-\* Most current compatible version with Elasticsearch OSS.
+\* 與 Elasticsearch OSS 相容的最新版本。
 
 
 <!-- vale off -->
-### Compatibility matrix for Beats
+### Beats 相容性矩陣
 <!-- vale on -->
 
-| | Beats OSS 7.0.0 to 7.11.x\*\* | Beats OSS 7.12.x\* | Beats 7.13.x |
+| | Beats OSS 7.0.0 至 7.11.x\*\* | Beats OSS 7.12.x\* | Beats 7.13.x |
 | :--- | :--- | :--- | :--- |
-| Elasticsearch OSS 7.0.0 to 7.9.x | *Yes* | *Yes* | No |
-| Elasticsearch OSS 7.10.2 | *Yes* | *Yes* | No |
-| ODFE 1.0 to 1.12 | *Yes* | *Yes* | No |
-| ODFE 1.13 | *Yes* | *Yes* | No |
-| OpenSearch 1.x to 2.x | Yes through version setting | Yes through version setting | No |
-| Logstash OSS 7.0.0 to 7.11.x | *Yes* | *Yes* | *Yes* |
-| Logstash OSS 7.12.x\* | *Yes* | *Yes* | *Yes* |
-| Logstash 7.13.x with OpenSearch output plugin | *Yes* | *Yes* | *Yes* |
+| Elasticsearch OSS 7.0.0 至 7.9.x | *是* | *是* | 否 |
+| Elasticsearch OSS 7.10.2 | *是* | *是* | 否 |
+| ODFE 1.0 至 1.12 | *是* | *是* | 否 |
+| ODFE 1.13 | *是* | *是* | 否 |
+| OpenSearch 1.x 至 2.x | 透過版本設定可支援 | 透過版本設定可支援 | 否 |
+| Logstash OSS 7.0.0 至 7.11.x | *是* | *是* | *是* |
+| Logstash OSS 7.12.x\* | *是* | *是* | *是* |
+| Logstash 7.13.x (含 OpenSearch output 外掛程式) | *是* | *是* | *是* |
 
-\* Most current compatible version with Elasticsearch OSS.
+\* 與 Elasticsearch OSS 相容的最新版本。
 
-\*\* Beats OSS includes all Apache 2.0 Beats agents (that is, Filebeat, Metricbeat, Auditbeat, Heartbeat, Winlogbeat, and Packetbeat).
+\*\* Beats OSS 包含所有 Apache 2.0 授權的 Beats 代理程式 (即 Filebeat、Metricbeat、Auditbeat、Heartbeat、Winlogbeat 與 Packetbeat)。
 
-Beats versions newer than 7.12.x are not supported by OpenSearch. If you must update the Beats agent(s) in your environment to a newer version, you can work around the incompatibility by directing traffic from Beats to Logstash and using the Logstash Output plugin to ingest the data to OpenSearch.
+OpenSearch 不支援 7.12.x 以後的 Beats 版本。如果您必須將環境中的 Beats 代理程式更新至較新版本，可以將流量從 Beats 導向 Logstash，並使用 Logstash Output 外掛程式將資料匯入 OpenSearch，以避開此不相容問題。
 {: .warning }
 
-For recommendations about log and metrics collection tools, see the [Frequently Asked Questions](https://opensearch.org/faq/#q1.20).
+如需記錄檔與指標收集工具的建議，請參閱[常見問題](https://opensearch.org/faq/#q1.20)。
 
 ## OpenSearch CLI
 
-The OpenSearch CLI command line interface (`opensearch-cli`) lets you manage your OpenSearch cluster from the command line and automate tasks. For more information about OpenSearch CLI, see [OpenSearch CLI]({{site.url}}{{site.baseurl}}/tools/cli/).
+OpenSearch CLI 命令列介面 (`opensearch-cli`) 讓您能從命令列管理 OpenSearch 叢集並自動化工作。如需 OpenSearch CLI 的更多資訊，請參閱 [OpenSearch CLI]({{site.url}}{{site.baseurl}}/tools/cli/)。
 
 ## OpenSearch Kubernetes operator
 
-The OpenSearch Kubernetes Operator is an open-source Kubernetes operator that helps automate the deployment and provisioning of OpenSearch and OpenSearch Dashboards in a containerized environment. For information about how to use the operator, see [OpenSearch Kubernetes Operator]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/).
+OpenSearch Kubernetes Operator 是一個開放原始碼的 Kubernetes operator，可協助在容器化環境中自動化部署與供應 OpenSearch 及 OpenSearch Dashboards。如需如何使用該 operator 的資訊，請參閱 [OpenSearch Kubernetes Operator]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/)。
 
-## OpenSearch upgrade, migration, and comparison tools
+## OpenSearch 升級、遷移與比較工具
 
-OpenSearch migration tools facilitate migrations to OpenSearch and upgrades to newer versions of OpenSearch. These can help you can set up a proof-of-concept environment locally using Docker containers or deploy to AWS using a one-click deployment script. This empowers you to fine-tune cluster configurations and manage workloads more effectively before migration. 
+OpenSearch 遷移工具可協助遷移至 OpenSearch，以及升級至較新版本的 OpenSearch。這些工具可協助您使用 Docker 容器在本機建立概念驗證環境，或使用一鍵部署指令碼部署至 AWS。這讓您能在遷移前更有效地微調叢集組態並管理工作負載。
 
-For more information about OpenSearch migration tools, see [OpenSearch Migration Assistant]({{site.url}}{{site.baseurl}}/migration-assistant/).
+如需 OpenSearch 遷移工具的更多資訊，請參閱 [OpenSearch Migration Assistant]({{site.url}}{{site.baseurl}}/migration-assistant/)。
 
 ## Sycamore 
 
-[Sycamore](https://github.com/aryn-ai/sycamore) is an open-source, AI-powered document processing engine designed to prepare unstructured data for retrieval-augmented generation (RAG) and semantic search using Python. Sycamore supports chunking and enriching a wide range of complex document types, including reports, presentations, transcripts, and manuals. Additionally, Sycamore can extract and process embedded elements, such as tables, figures, graphs, and other infographics. It can then load the data into target indexes, including vector and keyword indexes, using an [OpenSearch connector](https://sycamore.readthedocs.io/en/stable/sycamore/connectors/opensearch.html). 
+[Sycamore](https://github.com/aryn-ai/sycamore) 是一個開放原始碼、AI 驅動的文件處理引擎，旨在使用 Python 為擷取增強生成 (RAG) 與語意搜尋準備非結構化資料。Sycamore 支援對多種複雜文件類型進行分塊與充實，包括報告、簡報、逐字稿與手冊。此外，Sycamore 可以擷取並處理內嵌元素，例如表格、圖形、圖表及其他資訊圖表。接著，它可以使用 [OpenSearch 連接器](https://sycamore.readthedocs.io/en/stable/sycamore/connectors/opensearch.html)將資料載入目標索引，包括向量索引與關鍵字索引。
 
-For more information, see [Sycamore]({{site.url}}{{site.baseurl}}/tools/sycamore/).
+如需更多資訊，請參閱 [Sycamore]({{site.url}}{{site.baseurl}}/tools/sycamore/)。

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Copy values 
 parent: Processors
@@ -6,42 +7,42 @@ grand_parent: Pipelines
 nav_order: 60
 ---
 
-# Copy values processor
+# Copy values 處理器
 
-The `copy_values` processor copies values within an event and is a [mutate event]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/mutate-event/) processor. 
+`copy_values` 處理器會複製事件中的值，是一種[變更事件]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/mutate-event/)處理器。
 
-## Configuration
+## 組態
 
-You can configure the `copy_values` processor with the following options.
+您可以使用下列選項來設定 `copy_values` 處理器。
 
-| Option | Required | Type | Description |
+| 選項 | 必要 | 類型 | 說明 |
 :--- | :--- | :--- | :---
-| `entries` | Yes | [entry](#entry) | A list of entries to be copied in an event. See [entry](#entry) for more information. |
-| `from_list` | No | String | The key for the list of objects to be copied. |
-| `to_list` | No | String | The key for the new list to be added. |
-| `overwrite_if_to_list_exists` | No | Boolean | When set to `true`, the existing value is overwritten if the `key` specified by `to_list` already exists in the event. Default is `false`. |
+| `entries` | 是 | [entry](#entry) | 要在事件中複製的項目清單。如需更多資訊，請參閱 [entry](#entry)。 |
+| `from_list` | 否 | 字串 | 要複製的物件清單的鍵。 |
+| `to_list` | 否 | 字串 | 要新增的新清單的鍵。 |
+| `overwrite_if_to_list_exists` | 否 | 布林值 | 設定為 `true` 時，如果 `to_list` 指定的 `key` 已存在於事件中，則會覆寫現有的值。預設為 `false`。 |
 
 <!-- vale off -->
 ## entry
 <!-- vale on -->
 
-For each entry, you can configure the following options.
+對於每個項目，您可以設定下列選項。
 
-| Option | Required | Type | Description |
+| 選項 | 必要 | 類型 | 說明 |
 :--- | :--- | :--- | :---
-| `from_key` | Yes | String | The key for the entry to be copied. |
-| `to_key` | Yes | String | The key for the new entry to be added. |
-| `overwrite_if_to_key_exists` | No | Boolean | When set to `true`, the existing value is overwritten if the `key` already exists in the event. Default is `false`. |
-| `copy_when` | No | String | Specifies a condition for performing the `copy_values` operation using a [Data Prepper expression]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/). If specified, the `copy_values` operation will only run when the expression evaluates to `true`. |
+| `from_key` | 是 | 字串 | 要複製的項目的鍵。 |
+| `to_key` | 是 | 字串 | 要新增的新項目的鍵。 |
+| `overwrite_if_to_key_exists` | 否 | 布林值 | 設定為 `true` 時，如果 `key` 已存在於事件中，則會覆寫現有的值。預設為 `false`。 |
+| `copy_when` | 否 | 字串 | 使用 [Data Prepper 運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)指定執行 `copy_values` 操作的條件。若有指定，則只有當運算式評估為 `true` 時，`copy_values` 操作才會執行。 |
 
 
-## Usage
+## 用法
 
-The following examples show you how to use the `copy_values` processor.
+下列範例示範如何使用 `copy_values` 處理器。
 
-### Example: Copy values and skip existing fields
+### 範例：複製值並略過現有欄位
 
-The following example shows you how to configure the processor to copy values and skip existing fields:
+下列範例示範如何設定處理器以複製值並略過現有欄位：
 
 ```yaml
 ...
@@ -56,21 +57,21 @@ The following example shows you how to configure the processor to copy values an
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 
 ```json
 {"message1": "hello", "message2": "bye"}
 ```
 
-The processor copies "message1" to "message3" but not to "message2" because "message2" already exists. The processed event contains the following data:
+處理器會將 "message1" 複製到 "message3"，但不會複製到 "message2"，因為 "message2" 已經存在。處理後的事件包含下列資料：
 
 ```json
 {"message1": "hello", "message2": "bye", "message3": "hello"}
 ```
 
-### Example: Copy values with overwrites
+### 範例：複製值並覆寫
 
-The following example shows you how to configure the processor to copy values:
+下列範例示範如何設定處理器以複製值：
 
 ```yaml
 ...
@@ -86,21 +87,21 @@ The following example shows you how to configure the processor to copy values:
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 
 ```json
 {"message1": "hello", "message2": "bye"}
 ```
 
-The processor copies "message1" to both "message2" and "message3", overwriting the existing value in "message2". The processed event contains the following data:
+處理器會將 "message1" 複製到 "message2" 和 "message3"，並覆寫 "message2" 中現有的值。處理後的事件包含下列資料：
 
 ```json
 {"message1": "hello", "message2": "hello", "message3": "hello"}
 ```
 
-### Example: Selectively copy values between two lists of objects
+### 範例：在兩個物件清單之間選擇性複製值
 
-The following example shows you how to configure the processor to copy values between lists:
+下列範例示範如何設定處理器以在清單之間複製值：
 
 ```yaml
 ...
@@ -115,7 +116,7 @@ The following example shows you how to configure the processor to copy values be
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 
 ```json
 {
@@ -126,7 +127,7 @@ When the input event contains the following data:
 }
 ```
 
-The processed event contains a `newlist` with selectively copied fields:
+處理後的事件包含一個 `newlist`，其中含有選擇性複製的欄位：
 
 ```json
 {

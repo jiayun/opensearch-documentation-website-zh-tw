@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search ML tasks
+title: "搜尋 ML 任務"
 parent: ML Tasks APIs
 grand_parent: ML Commons APIs
 nav_order: 15
 ---
 
-# Search ML Tasks API
+# 搜尋 ML 任務 API
 
-Searches machine learning (ML) tasks based on parameters indicated in the request body.
+根據請求本文中指定的參數搜尋機器學習 (ML) 任務。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/tasks/_search
 ```
 
-## Example request: Search for a task in which `function_name` is `KMEANS`
+## 範例請求：搜尋 `function_name` 為 `KMEANS` 的任務
 
 ```json
 GET /_plugins/_ml/tasks/_search
@@ -36,7 +37,7 @@ GET /_plugins/_ml/tasks/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {

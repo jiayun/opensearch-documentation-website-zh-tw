@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Mathematical functions
+title: "數學函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 10
 ---
 
-# Mathematical functions
+# 數學函式
 
-The following mathematical functions are supported in PPL.
+PPL 支援下列數學函式。
 
 ## ABS
 
-**Usage**: `ABS(x)`
+**用法**：`ABS(x)`
 
-Calculates the absolute value of `x`.
+計算 `x` 的絕對值。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` (same type as input)
+**傳回類型**：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` (與輸入相同類型)
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -31,7 +32,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -43,20 +44,20 @@ The query returns the following results:
   
 ## ADD
 
-**Usage**: `ADD(x, y)`
+**用法**：`ADD(x, y)`
 
-Calculates the sum of `x` and `y`.
+計算 `x` 與 `y` 的和。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
-- `y` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
+- `y` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: The wider numeric type between `x` and `y`
+**傳回類型**：`x` 與 `y` 之間較寬的數值類型
 
-**Synonyms**: Addition Symbol (`+`)
+**同義詞**：加號 (`+`)
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -65,7 +66,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -77,20 +78,20 @@ The query returns the following results:
   
 ## SUBTRACT
 
-**Usage**: `SUBTRACT(x, y)`
+**用法**：`SUBTRACT(x, y)`
 
-Calculates `x` minus `y`.
+計算 `x` 減 `y`。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
-- `y` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
+- `y` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: The wider numeric type between `x` and `y`
+**傳回類型**：`x` 與 `y` 之間較寬的數值類型
 
-**Synonyms**: Subtraction Symbol (`-`)
+**同義詞**：減號 (`-`)
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -99,7 +100,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -111,20 +112,20 @@ The query returns the following results:
   
 ## MULTIPLY
 
-**Usage**: `MULTIPLY(x, y)`
+**用法**：`MULTIPLY(x, y)`
 
-Calculates the product of `x` and `y`.
+計算 `x` 與 `y` 的乘積。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
-- `y` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
+- `y` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: The wider numeric type between `x` and `y`
+**傳回類型**：`x` 與 `y` 之間較寬的數值類型
 
-**Synonyms**: Multiplication Symbol (`*`)
+**同義詞**：乘號 (`*`)
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -133,7 +134,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -145,20 +146,20 @@ The query returns the following results:
   
 ## DIVIDE
 
-**Usage**: `DIVIDE(x, y)`
+**用法**：`DIVIDE(x, y)`
 
-Calculates `x` divided by `y`.
+計算 `x` 除以 `y`。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
-- `y` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
+- `y` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: The wider numeric type between `x` and `y`
+**傳回類型**：`x` 與 `y` 之間較寬的數值類型
 
-**Synonyms**: Division Symbol (`/`)
+**同義詞**：除號 (`/`)
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -167,7 +168,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -179,20 +180,20 @@ The query returns the following results:
   
 ## SUM
 
-**Usage**: `SUM(x, y, ...)`
+**用法**：`SUM(x, y, ...)`
 
-Calculates the sum of all provided arguments. This function accepts a variable number of arguments.
+計算所有提供之引數的總和。此函式接受可變數量的引數。
 
-This function is only available in the `eval` command context and is rewritten to arithmetic addition during query parsing.
+此函式僅適用於 `eval` 命令情境，並在查詢解析期間改寫為算術加法。
 {: .note}
 
-**Parameters**:
+**參數**：
 
-- `x, y, ...` (Required): Variable number of `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` arguments.
+- `x, y, ...` (必要)：可變數量的 `INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 引數。
 
-**Return type**: The widest numeric type among all arguments
+**傳回類型**：所有引數中最寬的數值類型
 
-### Example
+### 範例
   
 ```sql
 source=accounts
@@ -201,7 +202,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -221,7 +222,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -236,20 +237,20 @@ The query returns the following results:
   
 ## AVG
 
-**Usage**: `AVG(x, y, ...)`
+**用法**：`AVG(x, y, ...)`
 
-Calculates the average (arithmetic mean) of all provided arguments. This function accepts a variable number of arguments.
+計算所有提供之引數的平均值 (算術平均數)。此函式接受可變數量的引數。
 
-This function is only available in the `eval` command context and is rewritten to an arithmetic expression (sum or count) during query parsing.
+此函式僅適用於 `eval` 命令情境，並在查詢解析期間改寫為算術運算式 (總和或計數)。
 {: .note}
 
-**Parameters**:
+**參數**：
 
-- `x, y, ...` (Required): Variable number of `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` arguments.
+- `x, y, ...` (必要)：可變數量的 `INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 引數。
 
-**Return type**: `DOUBLE`
+**傳回類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=accounts
@@ -258,7 +259,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -278,7 +279,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -293,17 +294,17 @@ The query returns the following results:
   
 ## ACOS
 
-**Usage**: `ACOS(x)`
+**用法**：`ACOS(x)`
 
-Calculates the arccosine of `x`. Returns `NULL` if `x` is not in the `[-1, 1]` range.
+計算 `x` 的反餘弦。若 `x` 不在 `[-1, 1]` 範圍內，則傳回 `NULL`。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**傳回類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -312,7 +313,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -324,17 +325,17 @@ The query returns the following results:
   
 ## ASIN
 
-**Usage**: `ASIN(x)`
+**用法**：`ASIN(x)`
 
-Calculates the arcsine of `x`. Returns `NULL` if `x` is not in the `[-1, 1]` range.
+計算 `x` 的反正弦。若 `x` 不在 `[-1, 1]` 範圍內，則傳回 `NULL`。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**傳回類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -343,7 +344,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -355,18 +356,18 @@ The query returns the following results:
   
 ## ATAN
 
-**Usage**: `ATAN(x)`, `ATAN(y, x)`
+**用法**：`ATAN(x)`、`ATAN(y, x)`
 
-Calculates the arctangent of `x`. `ATAN(y, x)` calculates the arctangent of the quotient `y / x`, using the signs of both arguments to determine the quadrant of the result.
+計算 `x` 的反正切。`ATAN(y, x)` 會計算商 `y / x` 的反正切，並使用兩個引數的正負號來判斷結果所在的象限。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
-- `y` (Optional): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value (when using two-argument form).
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
+- `y` (選用)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值 (使用雙引數形式時)。
 
-**Return type**: `DOUBLE`
+**傳回類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -375,7 +376,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -387,18 +388,18 @@ The query returns the following results:
   
 ## ATAN2
 
-**Usage**: `ATAN2(y, x)`
+**用法**：`ATAN2(y, x)`
 
-Calculates the arctangent of the quotient `y / x`, using the signs of both arguments to determine the quadrant of the result.
+計算商 `y / x` 的反正切，並使用兩個引數的正負號來判斷結果所在的象限。
 
-**Parameters**:
+**參數**：
 
-- `y` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `y` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**傳回類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -407,7 +408,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -419,36 +420,36 @@ The query returns the following results:
   
 ## CEIL
 
-**Usage**: `CEIL(x)`
+**用法**：`CEIL(x)`
 
-Returns the ceiling of the value `x`.
+傳回數值 `x` 向上取整後的值。
 
-An alias for [CEILING](#ceiling) function.
+[CEILING](#ceiling) 函式的別名。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: Same type as input
+**傳回類型**：與輸入相同類型
 
 ## CEILING
 
-**Usage**: `CEILING(x)`
+**用法**：`CEILING(x)`
 
-Returns the ceiling of the value `x`.
+傳回數值 `x` 的天花板值（向上取整）。
 
-The [`CEIL`](#ceil) and `CEILING` functions have the same implementation and functionality.
+[`CEIL`](#ceil) 與 `CEILING` 函式具有相同的實作與功能。
 {: .note}
 
-Limitation: `CEILING` only works as expected when the IEEE 754 double type displays a decimal when stored.
+限制：`CEILING` 只有在 IEEE 754 double 類型儲存時會顯示小數的情況下才能正常運作。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：一個 `INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: Same type as input
+**回傳類型**：與輸入相同類型
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -457,7 +458,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -474,7 +475,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -486,19 +487,19 @@ The query returns the following results:
   
 ## CONV
 
-**Usage**: `CONV(x, a, b)`
+**用法**：`CONV(x, a, b)`
 
-Converts the number `x` from base `a` to base `b`.
+將數字 `x` 從 `a` 進位制轉換為 `b` 進位制。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): A `STRING` value.
-- `a` (Required): An `INTEGER` value.
-- `b` (Required): An `INTEGER` value.
+- `x`（必要）：一個 `STRING` 值。
+- `a`（必要）：一個 `INTEGER` 值。
+- `b`（必要）：一個 `INTEGER` 值。
 
-**Return type**: `STRING`
+**回傳類型**：`STRING`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -507,7 +508,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -519,17 +520,17 @@ The query returns the following results:
   
 ## COS
 
-**Usage**: `COS(x)`
+**用法**：`COS(x)`
 
-Calculates the cosine of `x`, where `x` is given in radians.
+計算 `x` 的餘弦值，其中 `x` 以弧度為單位。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：一個 `INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -538,7 +539,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -550,17 +551,17 @@ The query returns the following results:
   
 ## COSH
 
-**Usage**: `COSH(x)`
+**用法**：`COSH(x)`
 
-Calculates the hyperbolic cosine of `x`, defined as (((e^x) + (e^(-x))) / 2).
+計算 `x` 的雙曲餘弦值，定義為 (((e^x) + (e^(-x))) / 2)。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：一個 `INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -569,7 +570,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -581,17 +582,17 @@ The query returns the following results:
   
 ## COT
 
-**Usage**: `COT(x)`
+**用法**：`COT(x)`
 
-Calculates the cotangent of `x`. Returns an error if `x` equals 0.
+計算 `x` 的餘切值。若 `x` 等於 0 則傳回錯誤。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：一個 `INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -600,7 +601,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -612,17 +613,17 @@ The query returns the following results:
   
 ## CRC32
 
-**Usage**: `CRC32(expr)`
+**用法**：`CRC32(expr)`
 
-Calculates a cyclic redundancy check value and returns a 32-bit unsigned value.
+計算循環冗餘檢查（CRC）值，並傳回一個 32 位元無符號值。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): A `STRING` value.
+- `expr`（必要）：一個 `STRING` 值。
 
-**Return type**: `LONG`
+**回傳類型**：`LONG`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -631,7 +632,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -643,17 +644,17 @@ The query returns the following results:
   
 ## DEGREES
 
-**Usage**: `DEGREES(x)`
+**用法**：`DEGREES(x)`
 
-Converts `x` from radians to degrees.
+將 `x` 從弧度轉換為角度。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：一個 `INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -662,7 +663,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -674,15 +675,15 @@ The query returns the following results:
   
 ## E
 
-**Usage**: `E()`
+**用法**：`E()`
 
-Returns Euler's number (e ≈ 2.718281828459045).
+傳回歐拉數（e ≈ 2.718281828459045）。
 
-**Parameters**: None
+**參數**：無
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -691,7 +692,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -703,17 +704,17 @@ The query returns the following results:
   
 ## EXP
 
-**Usage**: `EXP(x)`
+**用法**：`EXP(x)`
 
-Returns e raised to the power of `x`.
+傳回 e 的 `x` 次方。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：一個 `INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -722,7 +723,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -734,17 +735,17 @@ The query returns the following results:
   
 ## EXPM1
 
-**Usage**: `EXPM1(x)`
+**用法**：`EXPM1(x)`
 
-Returns e^x - 1 (exponential of `x` minus 1).
+傳回 e^x - 1（`x` 的指數減 1）。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：一個 `INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -753,7 +754,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -765,19 +766,19 @@ The query returns the following results:
   
 ## FLOOR
 
-**Usage**: `FLOOR(x)`
+**用法**：`FLOOR(x)`
 
-Returns the floor of the value `x`.
+傳回數值 `x` 的地板值（向下取整）。
 
-Limitation: `FLOOR` only works as expected when the IEEE 754 double type displays a decimal when stored.
+限制：`FLOOR` 只有在 IEEE 754 double 類型儲存時會顯示小數的情況下才能正常運作。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：一個 `INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: Same type as input
+**回傳類型**：與輸入相同類型
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -786,7 +787,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -803,7 +804,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -820,7 +821,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -832,17 +833,17 @@ The query returns the following results:
   
 ## LN
 
-**Usage**: `LN(x)`
+**用法**：`LN(x)`
 
-Returns the natural logarithm of `x`.
+傳回 `x` 的自然對數。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -851,7 +852,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -863,18 +864,18 @@ The query returns the following results:
   
 ## LOG
 
-**Usage**: `LOG(x)`, `LOG(B, x)`
+**用法**：`LOG(x)`、`LOG(B, x)`
 
-Returns the natural logarithm of `x` (base e logarithm). `LOG(B, x)` is equivalent to log(x)/log(B).
+傳回 `x` 的自然對數（以 e 為底的對數）。`LOG(B, x)` 等同於 log(x)/log(B)。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
-- `B` (Optional): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value (when using two-argument form).
+- `x`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
+- `B`（選用）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值（使用雙參數形式時）。
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -883,7 +884,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -895,17 +896,17 @@ The query returns the following results:
   
 ## LOG2
 
-**Usage**: `LOG2(x)`
+**用法**：`LOG2(x)`
 
-Returns the base-2 logarithm of `x`. Equivalent to log(x)/log(2).
+傳回 `x` 以 2 為底的對數。等同於 log(x)/log(2)。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -914,7 +915,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -926,17 +927,17 @@ The query returns the following results:
   
 ## LOG10
 
-**Usage**: `LOG10(x)`
+**用法**：`LOG10(x)`
 
-Returns the base-10 logarithm of `x`. Equivalent to log(x)/log(10).
+傳回 `x` 以 10 為底的對數。等同於 log(x)/log(10)。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -945,7 +946,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -957,18 +958,18 @@ The query returns the following results:
   
 ## MOD
 
-**Usage**: `MOD(n, m)`
+**用法**：`MOD(n, m)`
 
-Calculates the remainder of the number `n` divided by `m`.
+計算數字 `n` 除以 `m` 的餘數。
 
-**Parameters**:
+**參數**：
 
-- `n` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
-- `m` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `n`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
+- `m`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: The wider type between `n` and `m` if `m` is nonzero value. If `m` equals `0`, then returns `NULL`.
+**回傳類型**：若 `m` 為非零值，則傳回 `n` 與 `m` 之間較寬的類型。若 `m` 等於 `0`，則傳回 `NULL`。
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -977,7 +978,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -989,18 +990,18 @@ The query returns the following results:
   
 ## MODULUS
 
-**Usage**: `MODULUS(n, m)`
+**用法**：`MODULUS(n, m)`
 
-Calculates the remainder of the number `n` divided by `m`.
+計算數字 `n` 除以 `m` 的餘數。
 
-**Parameters**:
+**參數**：
 
-- `n` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
-- `m` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `n`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
+- `m`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: The wider type between `n` and `m` if `m` is nonzero value. If `m` equals `0`, then returns `NULL`.
+**回傳類型**：若 `m` 為非零值，則傳回 `n` 與 `m` 之間較寬的類型。若 `m` 等於 `0`，則傳回 `NULL`。
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -1009,7 +1010,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -1021,15 +1022,15 @@ The query returns the following results:
   
 ## PI
 
-**Usage**: `PI()`
+**用法**：`PI()`
 
-Returns the mathematical constant π (pi ≈ 3.141592653589793).
+傳回數學常數 π（pi ≈ 3.141592653589793）。
 
-**Parameters**: None
+**參數**：無
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -1038,7 +1039,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -1050,20 +1051,20 @@ The query returns the following results:
   
 ## POW
 
-**Usage**: `POW(x, y)`
+**用法**：`POW(x, y)`
 
-Calculates the value of `x` raised to the power of `y`. Invalid inputs return `NULL`.
+計算 `x` 的 `y` 次方值。無效的輸入會傳回 `NULL`。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
-- `y` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
+- `y`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-**Synonyms**: [POWER](#power)
+**同義詞**：[POWER](#power)
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -1072,7 +1073,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -1084,20 +1085,20 @@ The query returns the following results:
   
 ## POWER
 
-**Usage**: `POWER(x, y)`
+**用法**：`POWER(x, y)`
 
-Calculates the value of `x` raised to the power of `y`. Invalid inputs return `NULL`.
+計算 `x` 的 `y` 次方值。無效的輸入會傳回 `NULL`。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
-- `y` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
+- `y`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-**Synonyms**: [POW](#pow)
+**同義詞**：[POW](#pow)
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -1106,7 +1107,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -1118,17 +1119,17 @@ The query returns the following results:
   
 ## RADIANS
 
-**Usage**: `RADIANS(x)`
+**用法**：`RADIANS(x)`
 
-Converts x from degrees to radians.
+將 x 從角度轉換為弧度。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**回傳類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -1137,7 +1138,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -1149,17 +1150,17 @@ The query returns the following results:
   
 ## RAND
 
-**Usage**: `RAND()`, `RAND(N)`
+**用法**：`RAND()`、`RAND(N)`
 
-Returns a random floating-point value in the `[0, 1)` range. If an integer `N` is specified, the seed is initialized prior to execution. As a result, calling `RAND(N)` with the same value of `N` always returns the same result, producing a repeatable sequence of column values.
+傳回 `[0, 1)` 範圍內的隨機浮點數值。若指定整數 `N`，則會在執行前初始化種子。因此，以相同的 `N` 值呼叫 `RAND(N)` 時，一律會傳回相同的結果，產生可重複的欄位值序列。
 
-**Parameters**:
+**參數**：
 
-- `N` (Optional): An `INTEGER` value.
+- `N`（選用）：`INTEGER` 值。
 
-**Return type**: `FLOAT`
+**回傳類型**：`FLOAT`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -1168,7 +1169,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -1180,20 +1181,20 @@ The query returns the following results:
   
 ## ROUND
 
-**Usage**: `ROUND(x, d)`
+**用法**：`ROUND(x, d)`
 
-Rounds the argument `x` to `d` decimal places. `d` defaults to `0`.
+將參數 `x` 四捨五入到 `d` 位小數。`d` 預設為 `0`。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
-- `d` (Optional): An `INTEGER` value.
+- `x`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
+- `d`（選用）：`INTEGER` 值。
 
-**Return type**:
-- `(INTEGER/LONG [,INTEGER])` -> `LONG`.
-- `(FLOAT/DOUBLE [,INTEGER])` -> `LONG`.
+**回傳類型**：
+- `(INTEGER/LONG [,INTEGER])` -> `LONG`。
+- `(FLOAT/DOUBLE [,INTEGER])` -> `LONG`。
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -1202,7 +1203,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -1214,17 +1215,17 @@ The query returns the following results:
   
 ## SIGN
 
-**Usage**: `SIGN(x)`
+**用法**：`SIGN(x)`
 
-Returns the sign of the argument as `-1`, `0`, or `1`, depending on whether the number is negative, zero, or positive.
+視數字為負數、零或正數，分別以 `-1`、`0` 或 `1` 傳回該參數的正負號。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x`（必要）：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: Same type as input
+**回傳類型**：與輸入相同的類型
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -1233,7 +1234,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1245,19 +1246,19 @@ The query returns the following results:
   
 ## SIGNUM
 
-**Usage**: `SIGNUM(x)`
+**用法**：`SIGNUM(x)`
 
-Returns the sign of the argument as `-1`, `0`, or `1`, depending on whether the number is negative, zero, or positive.
+傳回引數的正負號，會是 `-1`、`0` 或 `1`，取決於該數字為負數、零或正數。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-**Synonyms**: `SIGN`
+**同義詞**：`SIGN`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -1266,7 +1267,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1278,17 +1279,17 @@ The query returns the following results:
   
 ## SIN
 
-**Usage**: `SIN(x)`
+**用法**：`SIN(x)`
 
-Calculates the sine of `x`, where `x` is given in radians.
+計算 `x` 的正弦，其中 `x` 以弧度為單位。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**傳回類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -1297,7 +1298,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1309,17 +1310,17 @@ The query returns the following results:
   
 ## SINH
 
-**Usage**: `SINH(x)`
+**用法**：`SINH(x)`
 
-Calculates the hyperbolic sine of `x`, defined as (((e^x) - (e^(-x))) / 2).
+計算 `x` 的雙曲正弦，定義為 (((e^x) - (e^(-x))) / 2)。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**傳回類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -1328,7 +1329,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1340,19 +1341,19 @@ The query returns the following results:
   
 ## SQRT
 
-**Usage**: `SQRT(x)`
+**用法**：`SQRT(x)`
 
-Calculates the square root of a non-negative number `x`.
+計算非負數 `x` 的平方根。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**:
-- `(Non-negative) INTEGER/LONG/FLOAT/DOUBLE` -> `DOUBLE`.
-- `(Negative) INTEGER/LONG/FLOAT/DOUBLE` -> `NULL`.
+**傳回類型**：
+- `(Non-negative) INTEGER/LONG/FLOAT/DOUBLE` -> `DOUBLE`。
+- `(Negative) INTEGER/LONG/FLOAT/DOUBLE` -> `NULL`。
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -1361,7 +1362,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1373,17 +1374,17 @@ The query returns the following results:
   
 ## CBRT
 
-**Usage**: `CBRT(x)`
+**用法**：`CBRT(x)`
 
-Calculates the cube root of a number `x`.
+計算數字 `x` 的立方根。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**傳回類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=location
@@ -1392,7 +1393,7 @@ source=location
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1405,17 +1406,17 @@ The query returns the following results:
   
 ## RINT
 
-**Usage**: `RINT(x)`
+**用法**：`RINT(x)`
 
-Returns `x` rounded to the nearest integer.
+傳回 `x` 四捨五入至最接近的整數。
 
-**Parameters**:
+**參數**：
 
-- `x` (Required): An `INTEGER`, `LONG`, `FLOAT`, or `DOUBLE` value.
+- `x` (必要)：`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE` 值。
 
-**Return type**: `DOUBLE`
+**傳回類型**：`DOUBLE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -1424,7 +1425,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 

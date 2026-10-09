@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: eventstats
 parent: Commands
@@ -8,31 +9,31 @@ nav_order: 14
 
 <!-- vale off -->
 
-# eventstats command
+# eventstats 命令
 
 <!-- vale on -->
 
-The `eventstats` command enriches your event data with calculated summary statistics. It analyzes the specified fields within your events, computes various statistical measures, and then appends these results as new fields to each original event.
+`eventstats` 命令會以計算得出的摘要統計資料來豐富您的事件資料。它會分析事件中指定的欄位，計算各種統計量值，然後將這些結果作為新欄位附加到每個原始事件。
 
-The `eventstats` command operates in the following way:
+`eventstats` 命令的運作方式如下：
 
-1. It performs calculations across the entire search results or within defined groups.
-2. The original events remain intact, with new fields added to contain the statistical results.
-3. The command is particularly useful for comparative analysis, identifying outliers, and providing additional context to individual events.
+1. 它會對整個搜尋結果或定義的群組執行計算。
+2. 原始事件保持不變，並新增欄位來存放統計結果。
+3. 此命令對於比較分析、識別離群值，以及為個別事件提供額外脈絡特別有用。
 
-## Comparing stats commands
+## 比較 stats 命令
 
-For a comprehensive comparison of `stats`, `eventstats`, and `streamstats` commands, including their differences in transformation behavior, output format, aggregation scope, and use cases, see [Comparing `stats`, `eventstats`, and `streamstats`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/streamstats/#comparing-stats-eventstats-and-streamstats).
+如需 `stats`、`eventstats` 與 `streamstats` 命令的完整比較，包括它們在轉換行為、輸出格式、彙總範圍與使用案例上的差異，請參閱[比較 `stats`、`eventstats` 與 `streamstats`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/streamstats/#comparing-stats-eventstats-and-streamstats)。
 
-## Syntax
+## 語法
 
-The `eventstats` command has the following syntax:
+`eventstats` 命令的語法如下：
 
 ```sql
 eventstats [bucket_nullable=bool] <function>... [by-clause]
 ```
 
-The following are examples of the `eventstats` command syntax:
+以下是 `eventstats` 命令語法的範例：
 
 ```sql
 source = table | eventstats avg(a)
@@ -43,53 +44,53 @@ source = table | eventstats dc(field) as distinct_count
 source = table | eventstats distinct_count(category) by region
 ```
 
-## Parameters
+## 參數
 
-The `eventstats` command supports the following parameters.
+`eventstats` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<function>` | Required | An aggregation function or window function. |
-| `bucket_nullable` | Optional | Controls whether the `eventstats` command considers `null` buckets as a valid group in group-by aggregations. When set to `false`, it does not treat `null` group-by values as a distinct group during aggregation. Default is determined by `plugins.ppl.syntax.legacy.preferred`. |
-| `<by-clause>` | Optional | Groups results by specified fields or expressions. Syntax: `by [span-expression,] [field,]...` Default is aggregating over the entire search results. |
-| `<span-expression>` | Optional | Splits a field into buckets by intervals (at most one). Syntax: `span(field_expr, interval_expr)`. For example, `span(age, 10)` creates 10-year age buckets, while `span(timestamp, 1h)` creates hourly buckets. |
+| `<function>` | 必要 | 彙總函式或視窗函式。 |
+| `bucket_nullable` | 選用 | 控制 `eventstats` 命令在 group-by 彙總中是否將 `null` 桶視為有效群組。設為 `false` 時，彙總期間不會將 `null` 的 group-by 值視為不同群組。預設值由 `plugins.ppl.syntax.legacy.preferred` 決定。 |
+| `<by-clause>` | 選用 | 依指定的欄位或運算式分組結果。語法：`by [span-expression,] [field,]...` 預設為對整個搜尋結果進行彙總。 |
+| `<span-expression>` | 選用 | 依區間將欄位切分為多個桶；最多只能指定一個 span 運算式。語法：`span(field_expr, interval_expr)`。例如，`span(age, 10)` 會建立 10 年為一單位的年齡桶，而 `span(timestamp, 1h)` 會建立每小時的桶。 |
 
-### Time units
+### 時間單位
 
-The following time units are available for span expressions:
+span 運算式可使用下列時間單位：
 
-* Milliseconds (`ms`)
-* Seconds (`s`)
-* Minutes (`m`, case sensitive)
-* Hours (`h`)
-* Days (`d`)
-* Weeks (`w`)
-* Months (`M`, case sensitive)
-* Quarters (`q`)
-* Years (`y`)  
+* 毫秒 (`ms`)
+* 秒 (`s`)
+* 分鐘 (`m`，區分大小寫)
+* 小時 (`h`)
+* 天 (`d`)
+* 週 (`w`)
+* 月 (`M`，區分大小寫)
+* 季 (`q`)
+* 年 (`y`)  
 
-## Aggregation functions
+## 彙總函式
 
-The `eventstats` command supports the following aggregation functions:
+`eventstats` 命令支援下列彙總函式：
 
-* `COUNT` -- Count of values
-* `SUM` -- Sum of numeric values
-* `AVG` -- Average of numeric values
-* `MAX` -- Maximum value
-* `MIN` -- Minimum value
-* `VAR_SAMP` -- Sample variance
-* `VAR_POP` -- Population variance
-* `STDDEV_SAMP` -- Sample standard deviation
-* `STDDEV_POP` -- Population standard deviation
-* `DISTINCT_COUNT`/`DC` -- Distinct count of values
-* `EARLIEST` -- Earliest value by timestamp
-* `LATEST` -- Latest value by timestamp  
+* `COUNT` -- 值的計數
+* `SUM` -- 數值的總和
+* `AVG` -- 數值的平均值
+* `MAX` -- 最大值
+* `MIN` -- 最小值
+* `VAR_SAMP` -- 樣本變異數
+* `VAR_POP` -- 母體變異數
+* `STDDEV_SAMP` -- 樣本標準差
+* `STDDEV_POP` -- 母體標準差
+* `DISTINCT_COUNT`/`DC` -- 值的不重複計數
+* `EARLIEST` -- 依時間戳記取得最早的值
+* `LATEST` -- 依時間戳記取得最新的值  
 
-For detailed documentation of each function, see [Functions]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/functions/aggregations/).  
+每個函式的詳細說明文件，請參閱[函式]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/functions/aggregations/)。  
 
-## Example 1: Enriching logs with per-service counts  
+## 範例 1：以每個服務的計數豐富記錄檔  
 
-The following query adds the total log count for each service to every log entry, letting you see how active each service is alongside individual log details:
+下列查詢會將每個服務的記錄總數新增到每筆記錄項目，讓您在檢視個別記錄詳細資料的同時，也能了解每個服務的活躍程度：
   
 ```sql
 source=otellogs
@@ -102,7 +103,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -115,9 +116,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Calculating severity statistics by group  
+## 範例 2：依群組計算嚴重性統計  
 
-The following query adds the average severity and error count per service to each log entry:
+下列查詢會將每個服務的平均嚴重性與錯誤計數新增到每筆記錄項目：
   
 ```sql
 source=otellogs
@@ -129,7 +130,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -146,9 +147,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Null bucket handling
+## 範例 3：Null 桶處理
 
-The following query uses `bucket_nullable=false` to exclude null values from the group-by aggregation:
+下列查詢使用 `bucket_nullable=false` 從 group-by 彙總中排除 null 值：
 
 ```sql
 source=otellogs
@@ -160,7 +161,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 

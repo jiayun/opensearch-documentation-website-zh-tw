@@ -1,117 +1,118 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Field select tool
+title: "欄位選取工具"
 parent: Exploring data with Discover
 grand_parent: Exploring data
 nav_order: 40
 ---
 
-# Using the field select tool
+# 使用欄位選取工具
 
-By default, the Discover application's **Results** table displays all fields for every document in the table. In the field select tool, you can select which data fields appear in the **Results** table.
+根據預設，Discover 應用程式的 **Results** 表格會顯示表格中每份文件的所有欄位。在欄位選取工具中，您可以選取要在 **Results** 表格中顯示哪些資料欄位。
 
-The field select tool is in the vertical panel to the immediate left of the [Discover]({{site.url}}{{site.baseurl}}/dashboards/discover/index-discover/) application pane. It is available only in the **Discover** application.
+欄位選取工具位於 [Discover]({{site.url}}{{site.baseurl}}/dashboards/discover/index-discover/) 應用程式窗格正左方的垂直面板中。它僅在 **Discover** 應用程式中提供。
 
 
-## Navigating the field select tool
+## 導覽欄位選取工具
 
 ![Field select tool]({{site.url}}{{site.baseurl}}/images/dashboards/field-select-collapsed-callouts.png){: width="44%" }
 
-The following components make up the field select tool.
+欄位選取工具由下列元件組成。
 
-- The **Index patterns** dropdown (A) presents all available index patterns. The selected index pattern determines what data is loaded and therefore which fields are available in the field select tool.
-- The **Search field names** (B) box narrows the fields available in the select tool by matching field names to your search string.
-- The **Filter by type** dropdown (C) narrows the fields available based on data properties such as data type and searchability.
-- The **Selected fields** list (D) is a collapsible list of all selected fields.
-- The **Popular fields** list (E) is a collapsible list of recently selected fields.
-- The **Available fields** list (F) is a collapsible list of all fields that have not been selected.
+- **Index patterns** 下拉式選單 (A) 顯示所有可用的索引模式。所選的索引模式決定載入哪些資料，因此也決定欄位選取工具中有哪些欄位可用。
+- **Search field names** (B) 方塊會將欄位名稱與您的搜尋字串比對，以縮小選取工具中可用欄位的範圍。
+- **Filter by type** 下拉式選單 (C) 會根據資料屬性 (例如資料類型和可搜尋性) 縮小可用欄位的範圍。
+- **Selected fields** 清單 (D) 是所有已選取欄位的可摺疊清單。
+- **Popular fields** 清單 (E) 是最近選取欄位的可摺疊清單。
+- **Available fields** 清單 (F) 是所有尚未選取欄位的可摺疊清單。
 
-The **Selected fields**, **Popular fields**, and **Available fields** lists are mutually exclusive. A field appears in only one of these collapsible lists.
+**Selected fields**、**Popular fields** 和 **Available fields** 清單互斥。一個欄位只會出現在這些可摺疊清單的其中一個。
 {: .important}
 
 
-## Selecting an index pattern
+## 選取索引模式
 
-Before exploring and visualizing data, you must select an index pattern.
+在探索和視覺化資料之前，您必須先選取一個索引模式。
 
-An index pattern is equivalent to a table view in a traditional relational database system. It defines the dataset that you are interested in exploring and visualizing. For information about creating index patterns, see [Index patterns]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/).
+索引模式等同於傳統關聯式資料庫系統中的表格檢視。它定義了您想要探索和視覺化的資料集。如需建立索引模式的資訊，請參閱 [Index patterns]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/)。
 
-To select an index pattern, follow these steps:
+若要選取索引模式，請依照下列步驟操作：
 
-1. In the field select tool, select an index pattern from the **Index patterns** dropdown.
+1. 在欄位選取工具中，從 **Index patterns** 下拉式選單選取一個索引模式。
 
 
-## Selecting fields to display
+## 選取要顯示的欄位
 
-To select a field for display in the **Results** table, follow these steps:
+若要選取要在 **Results** 表格中顯示的欄位，請依照下列步驟操作：
 
-1. Select {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/arrow-right-icon.png" class="inline-icon" alt="expand icon"/>{:/} (expand) **Available fields** to expand the **Available fields**.
+1. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/arrow-right-icon.png" class="inline-icon" alt="expand icon"/>{:/} (展開) **Available fields** 以展開 **Available fields**。
 
-   If the field has been used recently, it might be in the **Popular fields** list instead of **Available fields**.
+   如果該欄位最近曾經使用過，它可能會出現在 **Popular fields** 清單中，而非 **Available fields**。
    {: .note}
 
-1. (Optional) [Use the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/funnel-icon.png" class="inline-icon" alt="funnel icon"/>{:/} **Filter by type**](#filtering-fields-by-type   ) popover to narrow the available fields by type.
+1. (選用) [使用 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/funnel-icon.png" class="inline-icon" alt="funnel icon"/>{:/} **Filter by type**](#filtering-fields-by-type   ) 彈出視窗，依類型縮小可用欄位的範圍。
 
-1. (Optional) Enter text in the **Search field names** box to narrow the list of available fields.
+1. (選用) 在 **Search field names** 方塊中輸入文字，以縮小可用欄位清單的範圍。
 
-1. Select a field in the **Available fields** or **Popular fields** list.
+1. 在 **Available fields** 或 **Popular fields** 清單中選取一個欄位。
 
-1. Choose the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/green-plus-icon.png" class="inline-icon" alt="green plus icon"/>{:/} (add) icon of the selected field.
+1. 選擇所選欄位的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/green-plus-icon.png" class="inline-icon" alt="green plus icon"/>{:/} (新增) 圖示。
 
-   The field is added as a column in the **Results** table in the **Discover** application pane.
+   該欄位會以資料欄的形式新增至 **Discover** 應用程式窗格中的 **Results** 表格。
 
-## Removing fields
+## 移除欄位
 
-To remove a field from display in the **Results** table, follow these steps:
+若要從 **Results** 表格的顯示中移除欄位，請依照下列步驟操作：
 
-1. Select {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/arrow-right-icon.png" class="inline-icon" alt="expand icon"/>{:/} (expand) **Selected fields** to expand the **Selected fields**.
+1. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/arrow-right-icon.png" class="inline-icon" alt="expand icon"/>{:/} (展開) **Selected fields** 以展開 **Selected fields**。
 
-1. Choose a field in the **Selected fields** list.
+1. 在 **Selected fields** 清單中選擇一個欄位。
 
-1. Choose the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/red-cross-icon.png" class="inline-icon" alt="red cross icon"/>{:/} (remove) icon of the selected field.
+1. 選擇所選欄位的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/red-cross-icon.png" class="inline-icon" alt="red cross icon"/>{:/} (移除) 圖示。
 
-   The field is removed from the **Results** table in the **Discover** application pane.
+   該欄位會從 **Discover** 應用程式窗格中的 **Results** 表格移除。
 
-   If the removed field was the last selected field, the **Results** table defaults back to displaying all fields.
+   如果移除的欄位是最後一個已選取的欄位，**Results** 表格會恢復預設，顯示所有欄位。
    {: .note}
 
 
-## Filtering fields by type
+## 依類型篩選欄位
 
-Often the list of available fields is long. To avoid scrolling through the list, filter fields in the field select tool by data type and by whether they are aggregatable or searchable.
+可用欄位的清單通常很長。為了避免捲動整份清單，可以在欄位選取工具中依資料類型，以及欄位是否可彙總或可搜尋來篩選欄位。
 
-The number to the right of {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/funnel-icon.png" class="inline-icon" alt="funnel icon"/>{:/} **Filter by type** indicates the number of active type filters.
+{::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/funnel-icon.png" class="inline-icon" alt="funnel icon"/>{:/} **Filter by type** 右側的數字表示目前啟用的類型篩選數量。
 {: .tip}
 
-### Filtering fields by data type
+### 依資料類型篩選欄位
 
-To narrow the fields in the field select tool by data type, follow these steps:
+若要在欄位選取工具中依資料類型縮小欄位範圍，請依照下列步驟操作：
 
-1. Select {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/funnel-icon.png" class="inline-icon" alt="funnel icon"/>{:/} **Filter by type**.
+1. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/funnel-icon.png" class="inline-icon" alt="funnel icon"/>{:/} **Filter by type**。
 
-1. In the **Filter by type** popover, select a data type from the **Type** dropdown.
+1. 在 **Filter by type** 彈出視窗中，從 **Type** 下拉式選單選取一種資料類型。
 
-   The fields are restricted to the selected type.
+   欄位會限定為所選的類型。
 
-   Fields are restricted in all the lists: **Selected fields**, **Popular fields**, and **Available fields**.
+   所有清單中的欄位都會受到限定：**Selected fields**、**Popular fields** 和 **Available fields**。
    {: .note}
 
-### Filtering fields by property
+### 依屬性篩選欄位
 
-To filter fields by property, follow these steps:
+若要依屬性篩選欄位，請依照下列步驟操作：
 
-1. Select {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/funnel-icon.png" class="inline-icon" alt="funnel icon"/>{:/} **Filter by type**.
+1. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/funnel-icon.png" class="inline-icon" alt="funnel icon"/>{:/} **Filter by type**。
 
-1. In the **Filter by type** popover, select an **Aggregatable** option. For example, selecting **yes** filters out all non-aggregatable fields.
+1. 在 **Filter by type** 彈出視窗中，選取一個 **Aggregatable** 選項。例如，選取 **yes** 會篩選掉所有不可彙總的欄位。
 
-1. In the **Filter by type** popover, select a **Searchable** option. For example, selecting **yes** filters out all non-searchable fields.
+1. 在 **Filter by type** 彈出視窗中，選取一個 **Searchable** 選項。例如，選取 **yes** 會篩選掉所有不可搜尋的欄位。
 
-   Searchable fields are fields that are included in the inverted index and are available for search. For more information, see [Index]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/).
+   可搜尋的欄位是指包含在反向索引中並可供搜尋的欄位。如需更多資訊，請參閱 [Index]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/)。
 
-### Filtering missing fields
+### 篩選缺少資料的欄位
 
-To filter out fields with missing data, follow these steps:
+若要篩選掉缺少資料的欄位，請依照下列步驟操作：
 
-1. Select {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/funnel-icon.png" class="inline-icon" alt="funnel icon"/>{:/} **Filter by type**.
+1. 選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/funnel-icon.png" class="inline-icon" alt="funnel icon"/>{:/} **Filter by type**。
 
-1. In the **Filter by type** popover, activate the **Hide missing fields** toggle.
+1. 在 **Filter by type** 彈出視窗中，啟用 **Hide missing fields** 切換開關。

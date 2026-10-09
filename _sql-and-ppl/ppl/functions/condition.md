@@ -1,33 +1,34 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Conditional functions
+title: "條件式函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 3
 ---
 
-# Conditional functions
+# 條件式函式
 
-PPL conditional functions enable global filtering of query results based on specific conditions, such as `WHERE` or `HAVING` clauses. These functions use the search capabilities of the OpenSearch engine but don't execute directly within the OpenSearch plugin's memory. 
+PPL 條件式函式可根據特定條件（例如 `WHERE` 或 `HAVING` 子句）對查詢結果進行全域篩選。這些函式使用 OpenSearch 引擎的搜尋功能，但不會直接在 OpenSearch 外掛程式的記憶體中執行。
 
 ## ISNULL
 
-**Usage**: `isnull(field)`
+**用法**：`isnull(field)`
 
-Returns `TRUE` if the field is `NULL`, `FALSE` otherwise.
+若欄位為 `NULL`，則傳回 `TRUE`，否則傳回 `FALSE`。
 
-The `isnull()` function is commonly used:
-- In `eval` expressions to create conditional fields.
-- With the `if()` function to provide default values.
-- In `where` clauses to filter null records.
+`isnull()` 函式常用於：
+- 在 `eval` 運算式中建立條件式欄位。
+- 搭配 `if()` 函式提供預設值。
+- 在 `where` 子句中篩選 null 記錄。
 
-**Parameters**:
+**參數**：
 
-- `field` (Required): The field to check for null values.
+- `field` (必要)：要檢查 null 值的欄位。
 
-**Return type**: `BOOLEAN`
+**傳回類型**：`BOOLEAN`
 
-#### Example
+#### 範例
   
 ```sql
 source=accounts
@@ -36,7 +37,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -53,7 +54,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example demonstrates using `isnull` with the `if` function to create conditional labels:
+下列範例示範如何使用 `isnull` 搭配 `if` 函式建立條件式標籤：
 
 ```sql
 source=accounts
@@ -62,7 +63,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -79,7 +80,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The following example filters records using `isnull` in a `where` clause:
+下列範例在 `where` 子句中使用 `isnull` 篩選記錄：
 
 ```sql
 source=accounts
@@ -88,7 +89,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -104,25 +105,25 @@ The query returns the following results:
   
 ## ISNOTNULL
 
-**Usage**: `isnotnull(field)`
+**用法**：`isnotnull(field)`
 
-Returns `TRUE` if the field is NOT `NULL`, `FALSE` otherwise.
+若欄位「不是」`NULL`，則傳回 `TRUE`，否則傳回 `FALSE`。
 
-The `isnotnull()` function is commonly used:
-- In `eval` expressions to create Boolean flags.
-- In `where` clauses to filter out null values.
-- With the `if()` function for conditional logic.
-- To validate data presence.
+`isnotnull()` 函式常用於：
+- 在 `eval` 運算式中建立布林值旗標。
+- 在 `where` 子句中篩除 null 值。
+- 搭配 `if()` 函式進行條件式邏輯。
+- 驗證資料是否存在。
 
-**Synonyms**: [ISPRESENT](#ispresent)
+**同義詞**：[ISPRESENT](#ispresent)
 
-**Parameters**:
+**參數**：
 
-- `field` (Required): The field to check for non-null values.
+- `field` (必要)：要檢查非 null 值的欄位。
 
-**Return type**: `BOOLEAN`
+**傳回類型**：`BOOLEAN`
 
-#### Example
+#### 範例
   
 ```sql
 source=accounts
@@ -131,7 +132,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -148,7 +149,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows how to filter records using `isnotnull` in a `where` clause:
+下列範例示範如何在 `where` 子句中使用 `isnotnull` 篩選記錄：
 
 ```sql
 source=accounts
@@ -157,7 +158,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -171,7 +172,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example demonstrates using `isnotnull` with the `if` function to create validation messages:
+下列範例示範如何使用 `isnotnull` 搭配 `if` 函式建立驗證訊息：
 
 ```sql
 source=accounts
@@ -180,7 +181,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -199,13 +200,13 @@ The query returns the following results:
   
 ## EXISTS
 
-**Usage**: Use `isnull(field)` or `isnotnull(field)` to test field existence
+**用法**：使用 `isnull(field)` 或 `isnotnull(field)` 測試欄位是否存在
 
-Since OpenSearch doesn't differentiate between null and missing values, functions like `ismissing`/`isnotmissing` are not available. Use `isnull`/`isnotnull` to test field existence instead.
+由於 OpenSearch 不會區分 null 與缺少的值，因此無法使用 `ismissing`/`isnotmissing` 等函式。請改用 `isnull`/`isnotnull` 測試欄位是否存在。
 
-#### Example
+#### 範例
 
-The following example shows account 13, which doesn't contain an `email` field:
+下列範例顯示帳號 13，其中不含 `email` 欄位：
   
 ```sql
 source=accounts
@@ -214,7 +215,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -230,18 +231,18 @@ The query returns the following results:
   
 ## IFNULL
 
-**Usage**: `ifnull(field1, field2)`
+**用法**：`ifnull(field1, field2)`
 
-Returns `field2` if `field1` is `NULL`.
+若 `field1` 為 `NULL`，則傳回 `field2`。
 
-**Parameters**:
+**參數**：
 
-- `field1` (Required): The field to check for `NULL` values.
-- `field2` (Required): The value to return if `field1` is `NULL`.
+- `field1` (必要)：要檢查 `NULL` 值的欄位。
+- `field2` (必要)：若 `field1` 為 `NULL` 時要傳回的值。
 
-**Return type**: Any (matches input types)
+**傳回類型**：Any (符合輸入類型)
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -250,7 +251,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -267,12 +268,12 @@ The query returns the following results:
 
 <!-- vale on -->
   
-#### Nested `ifnull` pattern
+#### 巢狀 `ifnull` 模式
 
-For OpenSearch versions prior to 3.1, `coalesce`-like functionality can be achieved using nested `ifnull` statements. This pattern is particularly useful in observability use cases where field names may vary across different data sources.
-Usage: `ifnull(field1, ifnull(field2, ifnull(field3, default_value)))`
+在 3.1 之前的 OpenSearch 版本中，可使用巢狀 `ifnull` 陳述式達成類似 `coalesce` 的功能。此模式在可觀測性使用案例中特別實用，因為欄位名稱可能因不同資料來源而異。
+用法：`ifnull(field1, ifnull(field2, ifnull(field3, default_value)))`
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -281,7 +282,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -300,18 +301,18 @@ The query returns the following results:
   
 ## NULLIF
 
-**Usage**: `nullif(field1, field2)`
+**用法**：`nullif(field1, field2)`
 
-Returns `NULL` if the two parameters are the same, otherwise returns `field1`.
+若兩個參數相同，則傳回 `NULL`，否則傳回 `field1`。
 
-**Parameters**:
+**參數**：
 
-- `field1` (Required): The field to return if different from `field2`.
-- `field2` (Required): The value to compare against `field1`.
+- `field1` (必要)：若與 `field2` 不同時要傳回的欄位。
+- `field2` (必要)：要與 `field1` 比較的值。
 
-**Return type**: Any (matches `field1` type)
+**傳回類型**：Any (符合 `field1` 類型)
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -320,7 +321,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -339,21 +340,21 @@ The query returns the following results:
   
 ## IF
 
-**Usage**: `if(condition, expr1, expr2)`
+**用法**：`if(condition, expr1, expr2)`
 
-Returns `expr1` if the condition is `true`, otherwise returns `expr2`.
+若條件為 `true`，則傳回 `expr1`，否則傳回 `expr2`。
 
-**Parameters**:
+**參數**：
 
-- `condition` (Required): The Boolean expression to evaluate.
-- `expr1` (Required): The value to return if the condition is `true`.
-- `expr2` (Required): The value to return if the condition is `false`.
+- `condition` (必要)：要評估的布林運算式。
+- `expr1` (必要)：若條件為 `true` 時要傳回的值。
+- `expr2` (必要)：若條件為 `false` 時要傳回的值。
 
-**Return type**: Least restrictive common type of `expr1` and `expr2`
+**傳回類型**：`expr1` 與 `expr2` 中限制最少的共同類型
 
-#### Example
+#### 範例
 
-The following example returns the first name when the condition is `true`:
+下列範例在條件為 `true` 時傳回名字 (first name)：
 
 ```sql
 source=accounts
@@ -362,7 +363,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -379,7 +380,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example returns the last name when the condition is `false`:
+下列範例在條件為 `false` 時傳回姓氏 (last name)：
 
 ```sql
 source=accounts
@@ -388,7 +389,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -405,7 +406,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example uses a complex condition to determine VIP status:
+下列範例使用複雜條件來判斷 VIP 身分：
 
 ```sql
 source=accounts
@@ -414,7 +415,7 @@ source=accounts
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -433,27 +434,27 @@ The query returns the following results:
   
 ## CASE
 
-**Usage**: `case(condition1, expr1, condition2, expr2, ... conditionN, exprN else default)`
+**用法**：`case(condition1, expr1, condition2, expr2, ... conditionN, exprN else default)`
 
-Returns `expr1` if `condition1` is `true`, `expr2` if `condition2` is `true`, and so on. If no condition is `true`, returns the value of the `else` clause. If the `else` clause is not defined, returns `NULL`.
+當 `condition1` 為 `true` 時傳回 `expr1`，當 `condition2` 為 `true` 時傳回 `expr2`，依此類推。如果沒有任何條件為 `true`，則傳回 `else` 子句的值。如果未定義 `else` 子句，則傳回 `NULL`。
 
-**Parameters**:
+**參數**：
 
-- `condition1, condition2, ..., conditionN` (Required): Boolean expressions to evaluate in sequence.
-- `expr1, expr2, ..., exprN` (Required): Values to return when the corresponding condition is `true`.
-- `default` (Optional): The value to return when no condition is `true`. If not specified, returns `NULL`.
+- `condition1, condition2, ..., conditionN` (必要)：依序評估的布林運算式。
+- `expr1, expr2, ..., exprN` (必要)：當對應條件為 `true` 時要傳回的值。
+- `default` (選用)：當沒有任何條件為 `true` 時要傳回的值。如果未指定，則傳回 `NULL`。
 
-**Return type**: Least restrictive common type of all result expressions
+**回傳類型**：所有結果運算式中限制最少的共同類型
 
-#### Limitations
+#### 限制
 
-When each condition is a field comparison against a numeric literal and each result expression is a string literal, the query is optimized as [range aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/range/) if push-down optimization is enabled. However, this optimization has the following limitations:
-- `NULL` values are not grouped into any bucket of a range aggregation and are ignored.
-- The default `else` clauses use the string literal `"null"` instead of actual NULL values.
+當每個條件都是欄位與數值實字的比較，且每個結果運算式都是字串實字時，如果已啟用 push-down 最佳化，查詢會最佳化為[範圍彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/range/)。不過，此最佳化有下列限制：
+- `NULL` 值不會被歸入範圍彙總的任何桶，並會被忽略。
+- 預設的 `else` 子句會使用字串實字 `"null"`，而非實際的 NULL 值。
   
-#### Example
+#### 範例
 
-The following example demonstrates a case statement with an else clause:
+下列範例示範帶有 else 子句的 case 敘述：
 
 ```sql
 source=accounts
@@ -462,7 +463,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -479,7 +480,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example demonstrates a case statement without an else clause:
+下列範例示範不帶 else 子句的 case 敘述：
 
 ```sql
 source=accounts
@@ -488,7 +489,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -505,7 +506,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example uses case in a where clause to filter records:
+下列範例在 where 子句中使用 case 來篩選記錄：
 
 ```sql
 source=accounts
@@ -514,7 +515,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -531,34 +532,34 @@ The query returns the following results:
   
 ## COALESCE
 
-**Usage**: `coalesce(field1, field2, ...)`
+**用法**：`coalesce(field1, field2, ...)`
 
-Returns the first non-null, non-missing value in the parameter list.
+傳回參數清單中第一個非 null 且非缺失的值。
 
-**Parameters**:
+**參數**：
 
-- `field1, field2, ...` (Required): Fields or expressions to evaluate for non-null values.
+- `field1, field2, ...` (必要)：要評估非 null 值的欄位或運算式。
 
-**Return type**: Least restrictive common type of all input parameters
+**回傳類型**：所有輸入參數中限制最少的共同類型
 
-**Behavior**:
-- Returns the first value that is not `NULL` and not missing (missing includes non-existent fields).
-- Empty strings (`""`) and white space strings (`" "`) are considered valid values.
-- If all parameters are `NULL` or missing, returns `NULL`.
-- Automatic type coercion is applied to match the determined return type.
-- If type conversion fails, the value is converted to string representation.
-- For best results, use parameters of the same data type to avoid unexpected type conversions.
+**行為**：
+- 傳回第一個不為 `NULL` 且不缺失的值 (缺失包括不存在的欄位)。
+- 空字串 (`""`) 與空白字串 (`" "`) 視為有效值。
+- 如果所有參數皆為 `NULL` 或缺失，則傳回 `NULL`。
+- 會套用自動型別強制轉換，以符合決定的回傳類型。
+- 如果型別轉換失敗，該值會轉換為字串表示法。
+- 為獲得最佳結果，請使用相同資料類型的參數，以避免非預期的型別轉換。
 
-**Performance considerations**:
-- Optimized for multiple field evaluation, more efficient than nested `ifnull` patterns.
-- Evaluates parameters sequentially, stopping at the first non-null value.
-- Consider field order based on likelihood of containing values to minimize evaluation overhead.
+**效能考量**：
+- 針對多欄位評估進行最佳化，比巢狀 `ifnull` 模式更有效率。
+- 依序評估參數，在第一個非 null 值處停止。
+- 請依包含值的可能性考量欄位順序，以將評估負擔降至最低。
 
-**Limitations**:
-- Type coercion may result in unexpected string conversions for incompatible types.
-- Performance may degrade when using large numbers of arguments.
+**限制**：
+- 型別強制轉換可能導致不相容類型發生非預期的字串轉換。
+- 使用大量引數時，效能可能會降低。
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -567,7 +568,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -584,7 +585,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-#### Empty string handling examples
+#### 空字串處理範例
   
 ```sql
 source=accounts
@@ -594,7 +595,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -618,7 +619,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -635,7 +636,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-#### Mixed data types with auto coercion
+#### 混合資料類型與自動強制轉換
   
 ```sql
 source=accounts
@@ -644,7 +645,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -661,7 +662,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-#### Non-existent field handling
+#### 不存在欄位的處理
   
 ```sql
 source=accounts
@@ -670,7 +671,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -689,19 +690,19 @@ The query returns the following results:
   
 ## ISPRESENT
 
-**Usage**: `ispresent(field)`
+**用法**：`ispresent(field)`
 
-Returns `TRUE` if the field exists, `FALSE` otherwise.
+若欄位存在則傳回 `TRUE`，否則傳回 `FALSE`。
 
-**Parameters**:
+**參數**：
 
-- `field` (Required): The field to check for existence.
+- `field` (必要)：要檢查是否存在的欄位。
 
-**Return type**: `BOOLEAN`
+**傳回類型**：`BOOLEAN`
 
-**Synonyms**: [ISNOTNULL](#isnotnull)
+**同義詞**：[ISNOTNULL](#isnotnull)
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -710,7 +711,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -728,17 +729,17 @@ The query returns the following results:
   
 ## ISBLANK
 
-**Usage**: `isblank(field)`
+**用法**：`isblank(field)`
 
-Returns `TRUE` if the field is `NULL`, an empty string, or contains only white space.
+若欄位為 `NULL`、空字串或僅包含空白字元，則傳回 `TRUE`。
 
-**Parameters**:
+**參數**：
 
-- `field` (Required): The field to check for blank values.
+- `field` (必要)：要檢查是否為空白值的欄位。
 
-**Return type**: `BOOLEAN`
+**傳回類型**：`BOOLEAN`
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -748,7 +749,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -767,17 +768,17 @@ The query returns the following results:
   
 ## ISEMPTY
 
-**Usage**: `isempty(field)`
+**用法**：`isempty(field)`
 
-Returns `TRUE` if the field is `NULL` or is an empty string.
+若欄位為 `NULL` 或空字串，則傳回 `TRUE`。
 
-**Parameters**:
+**參數**：
 
-- `field` (Required): The field to check for empty values.
+- `field` (必要)：要檢查是否為空值的欄位。
 
-**Return type**: `BOOLEAN`
+**傳回類型**：`BOOLEAN`
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -787,7 +788,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -806,35 +807,35 @@ The query returns the following results:
   
 ## EARLIEST
 
-**Usage**: `earliest(relative_string, field)`
+**用法**：`earliest(relative_string, field)`
 
-Returns `TRUE` if the field value is after the timestamp derived from `relative_string` relative to the current time, `FALSE` otherwise.
+若欄位值晚於從 `relative_string` 相對於目前時間所推算出的時間戳記，則傳回 `TRUE`，否則傳回 `FALSE`。
 
-**Parameters**:
+**參數**：
 
-- `relative_string` (Required): The reference time specification in one of the supported formats.
-- `field` (Required): The timestamp field to compare against the reference time.
+- `relative_string` (必要)：支援格式之一的參考時間規格。
+- `field` (必要)：要與參考時間比較的時間戳記欄位。
 
-**Return type**: `BOOLEAN`
+**傳回類型**：`BOOLEAN`
 
-**Relative string formats**:
-1. `"now"` or `"now()"`: Uses the current system time.
-2. Absolute format (`MM/dd/yyyy:HH:mm:ss` or `yyyy-MM-dd HH:mm:ss`): Converts the string to a timestamp and compares it against the field value.
-3. Relative format: `(+|-)<time_integer><time_unit>[+<...>]@<snap_unit>`
+**相對字串格式**：
+1. `"now"` 或 `"now()"`：使用目前的系統時間。
+2. 絕對格式 (`MM/dd/yyyy:HH:mm:ss` 或 `yyyy-MM-dd HH:mm:ss`)：將字串轉換為時間戳記，並與欄位值比較。
+3. 相對格式：`(+|-)<time_integer><time_unit>[+<...>]@<snap_unit>`
 
-**Steps to specify a relative time**:
-- **Time offset**: Indicate the offset from the current time using `+` or `-`.
-- **Time amount**: Provide a numeric value followed by a time unit (`s`, `m`, `h`, `d`, `w`, `M`, `y`).
-- **Snap to unit**: Optionally, specify a snap unit using `@<unit>` to round the result down to the nearest unit (for example, hour, day, month).
+**指定相對時間的步驟**：
+- **時間位移**：使用 `+` 或 `-` 指出與目前時間的位移。
+- **時間量**：提供數值，後接時間單位 (`s`、`m`、`h`、`d`、`w`、`M`、`y`)。
+- **對齊單位**：可選擇使用 `@<unit>` 指定對齊單位，將結果向下捨入至最接近的單位 (例如小時、日、月)。
 
-**Examples** (assuming current time is `2025-05-28 14:28:34`):
-- `-3d+2y` → `2027-05-25 14:28:34`.
-- `+1d@m` → `2025-05-29 14:28:00`.
-- `-3M+1y@M` → `2026-02-01 00:00:00`.
+**範例** (假設目前時間為 `2025-05-28 14:28:34`)：
+- `-3d+2y` → `2027-05-25 14:28:34`。
+- `+1d@m` → `2025-05-29 14:28:00`。
+- `-3M+1y@M` → `2026-02-01 00:00:00`。
 
-#### Example
+#### 範例
 
-The following example compares timestamps against current time and relative time:
+下列範例會將時間戳記與目前時間及相對時間比較：
 
 ```sql
 source=accounts
@@ -845,7 +846,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -859,7 +860,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example filters records using an absolute time format:
+下列範例使用絕對時間格式篩選記錄：
 
 ```sql
 source=nyc_taxi
@@ -868,7 +869,7 @@ source=nyc_taxi
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -884,20 +885,20 @@ The query returns the following results:
   
 ## LATEST
 
-**Usage**: `latest(relative_string, field)`
+**用法**：`latest(relative_string, field)`
 
-Returns `TRUE` if the field value is before the timestamp derived from `relative_string` relative to the current time, `FALSE` otherwise.
+若欄位值早於從 `relative_string` 相對於目前時間所推算出的時間戳記，則傳回 `TRUE`，否則傳回 `FALSE`。
 
-**Parameters**:
+**參數**：
 
-- `relative_string` (Required): The reference time specification in one of the supported formats.
-- `field` (Required): The timestamp field to compare against the reference time.
+- `relative_string` (必要)：支援格式之一的參考時間規格。
+- `field` (必要)：要與參考時間比較的時間戳記欄位。
 
-**Return type**: `BOOLEAN`
+**傳回類型**：`BOOLEAN`
 
-#### Example
+#### 範例
 
-The following example compares timestamps using the latest function:
+下列範例使用 latest 函式比較時間戳記：
 
 ```sql
 source=accounts
@@ -908,7 +909,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -922,7 +923,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example filters records using latest with an absolute time format:
+下列範例使用 latest 搭配絕對時間格式篩選記錄：
 
 ```sql
 source=nyc_taxi
@@ -931,7 +932,7 @@ source=nyc_taxi
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -947,20 +948,20 @@ The query returns the following results:
   
 ## REGEXP_MATCH
 
-**Usage**: `regexp_match(string, pattern)`
+**用法**：`regexp_match(string, pattern)`
 
-Returns `TRUE` if the regular expression pattern finds a match against any substring of the string value, otherwise returns `FALSE`. The function uses Java regular expression syntax for the pattern.
+若規則運算式模式在字串值的任何子字串中找到相符項，則傳回 `TRUE`，否則傳回 `FALSE`。此函式使用 Java 規則運算式語法做為模式。
 
-**Parameters**:
+**參數**：
 
-- `string` (Required): The string to search within.
-- `pattern` (Required): The regular expression pattern to match against.
+- `string` (必要)：要在其中搜尋的字串。
+- `pattern` (必要)：要比對的規則運算式模式。
 
-**Return type**: `BOOLEAN`
+**傳回類型**：`BOOLEAN`
 
-#### Example
+#### 範例
 
-The following example filters log messages using a regex pattern:
+下列範例使用 regex 模式篩選記錄訊息：
 
 ```sql
 source=logs
@@ -979,7 +980,7 @@ source=logs
 
 <!-- vale on -->
 
-The following example uses regex to validate email addresses:
+下列範例使用 regex 驗證電子郵件地址：
 
 ```sql
 source=users
@@ -997,7 +998,7 @@ source=users
 
 <!-- vale on -->
 
-The following example filters for valid public IP addresses using regex:
+下列範例使用 regex 篩選有效的公用 IP 位址：
 
 ```sql
 source=network
@@ -1015,7 +1016,7 @@ source=network
 
 <!-- vale on -->
 
-The following example uses regex for product categorization with case-insensitive matching:
+下列範例使用 regex 進行產品分類，並以不區分大小寫的方式比對：
 
 ```sql
 source=products

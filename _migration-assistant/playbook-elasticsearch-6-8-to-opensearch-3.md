@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "Elasticsearch 6.8 → OpenSearch 3.5"
 nav_order: 1
@@ -8,128 +9,128 @@ redirect_from:
   - /migration-assistant/playbook-elasticsearch-6-8-to-opensearch-3-Kubernetes/
 ---
 
-# Playbook: Elasticsearch 6.8 to OpenSearch 3.5 on EKS (existing VPC)
+# 操作手冊：在 EKS 上從 Elasticsearch 6.8 遷移至 OpenSearch 3.5 (現有 VPC)
 
-This playbook turns a common AWS migration pattern into one concrete runbook: moving from a self-managed Elasticsearch 6.8 cluster running on Amazon Elastic Kubernetes Service (EKS) to Amazon OpenSearch Service 3.5, with Migration Assistant deployed into an existing virtual private cloud (VPC).
+本操作手冊將常見的 AWS 遷移模式轉化為一份具體的執行手冊：從執行於 Amazon Elastic Kubernetes Service (EKS) 上的自我管理 Elasticsearch 6.8 叢集，遷移至 Amazon OpenSearch Service 3.5，並將 Migration Assistant 部署到現有的虛擬私人雲端 (VPC) 中。
 
-This pattern applies when migrating from a self-managed search cluster with self-managed plugins, self-signed certificates, and application-owned credentials to a managed target with VPC isolation, AWS Identity and Access Management (IAM)-based access, and reduced ongoing maintenance.
+此模式適用於從具備自我管理外掛程式、自簽憑證及應用程式自有憑證的自我管理搜尋叢集，遷移至具備 VPC 隔離、以 AWS Identity and Access Management (IAM) 為基礎的存取控制，並降低持續維運負擔的受管目標環境。
 
-The playbook is intentionally end-to-end. It includes source preparation, EKS deployment, workflow configuration, pilot migration, full migration, validation, cutover, and removal.
+本操作手冊刻意設計為端對端流程，涵蓋來源準備、EKS 部署、工作流程組態、試驗遷移、完整遷移、驗證、切換及移除。
 
-## Example placeholders
+## 範例預留位置
 
-Replace the following placeholders with values from your environment.
+請將下列預留位置替換為您環境中的實際值。
 
-| Placeholder | Meaning |
+| 預留位置 | 意義 |
 |:------------|:--------|
-| `<ACCOUNT_ID>` | AWS account ID hosting the migration environment |
-| `<REGION>` | AWS Region such as `us-east-2` |
-| `<STAGE>` | Deployment label such as `dev` or `prod` |
-| `<YOUR_VPC_ID>` | Existing VPC where Migration Assistant is deployed |
-| `<SUBNET_1>,<SUBNET_2>` | At least two subnets in different Availability Zones |
-| `<SOURCE_ENDPOINT>` | Elasticsearch endpoint or Network Load Balancer DNS name |
-| `<TARGET_DOMAIN_NAME>` | OpenSearch Service domain name |
-| `<TARGET_DOMAIN_ENDPOINT>` | OpenSearch Service domain endpoint |
-| `<PILOT_INDEX_NAME>` | A small noncritical index for the pilot run |
+| `<ACCOUNT_ID>` | 託管遷移環境的 AWS 帳戶 ID |
+| `<REGION>` | AWS 區域，例如 `us-east-2` |
+| `<STAGE>` | 部署標籤，例如 `dev` 或 `prod` |
+| `<YOUR_VPC_ID>` | 部署 Migration Assistant 的現有 VPC |
+| `<SUBNET_1>,<SUBNET_2>` | 位於不同可用區的至少兩個子網路 |
+| `<SOURCE_ENDPOINT>` | Elasticsearch 端點或 Network Load Balancer 的 DNS 名稱 |
+| `<TARGET_DOMAIN_NAME>` | OpenSearch Service 網域名稱 |
+| `<TARGET_DOMAIN_ENDPOINT>` | OpenSearch Service 網域端點 |
+| `<PILOT_INDEX_NAME>` | 用於試驗執行的小型非關鍵索引 |
 
-## Estimated timing
+## 預估時間
 
-The following table provides estimated durations for each phase of the migration.
+下表提供遷移各個階段的預估持續時間。
 
-| Phase | Typical duration |
+| 階段 | 一般持續時間 |
 |:------|:-----------------|
-| Source preparation (plugin, S3 access, snapshot repo) | 15 to 25 minutes |
-| Deploy Migration Assistant on EKS | 15 to 25 minutes |
-| Build configuration and test connectivity | 5 to 10 minutes |
-| Pilot migration | 15 to 20 minutes |
-| Full backfill-only migration | Depends on data size and target ingest capacity |
-| Full zero-downtime migration | Backfill duration plus replay catch-up time |
+| 來源準備 (外掛程式、S3 存取、快照儲存庫) | 15 至 25 分鐘 |
+| 在 EKS 上部署 Migration Assistant | 15 至 25 分鐘 |
+| 建立組態並測試連線能力 | 5 至 10 分鐘 |
+| 試驗遷移 | 15 至 20 分鐘 |
+| 僅回填的完整遷移 | 取決於資料量與目標匯入容量 |
+| 零停機的完整遷移 | 回填持續時間加上重播追趕時間 |
 
-For zero-downtime migrations, replay duration depends on the volume of traffic accumulated during backfill and the `speedupFactor` configured for the Replayer. A typical starting value is `1.5` to `2.0`. Monitor the target cluster to confirm it can sustain the replay rate.
+對於零停機遷移，重播持續時間取決於回填期間累積的流量量，以及為 Replayer 設定的 `speedupFactor`。一般起始值為 `1.5` 至 `2.0`。請監控目標叢集，確認其能夠承受重播速率。
 
-## Before you start
+## 開始之前
 
-In addition to the [general playbook prerequisites]({{site.url}}{{site.baseurl}}/migration-assistant/playbooks/), verify the following before starting the migration. If your environment differs, adjust the network and identity configuration accordingly.
+除了[一般操作手冊先決條件]({{site.url}}{{site.baseurl}}/migration-assistant/playbooks/)之外，請在開始遷移前確認下列事項。如果您的環境有所不同，請據此調整網路與身分組態。
 
-### Source cluster requirements
+### 來源叢集需求
 
-Your source cluster must meet all of the following requirements:
+您的來源叢集必須符合下列所有需求：
 
-- It is reachable from the VPC where Migration Assistant runs.
-- You know the source endpoint.
-- You know the source authentication method.
-- It can write snapshots to Amazon S3.
-- It contains the `repository-s3` plugin.
+- 可從 Migration Assistant 執行所在的 VPC 存取。
+- 您知道來源端點。
+- 您知道來源驗證方法。
+- 可將快照寫入 Amazon S3。
+- 已包含 `repository-s3` 外掛程式。
 
-If the source uses self-signed certificates, plan to set `allowInsecure: true` in the workflow configuration.
+如果來源使用自簽憑證，請規劃在工作流程組態中設定 `allowInsecure: true`。
 
-### Target cluster requirements
+### 目標叢集需求
 
-Your Amazon OpenSearch Service 3.5 domain must meet all of the following requirements:
+您的 Amazon OpenSearch Service 3.5 網域必須符合下列所有需求：
 
-- It already exists.
-- It is reachable from the same VPC, or routable from that VPC.
-- You know the domain endpoint.
-- If fine-grained access control is enabled, the Migration Assistant IAM role is mapped with sufficient permissions.
+- 已經存在。
+- 可從同一個 VPC 存取，或可從該 VPC 路由連線。
+- 您知道網域端點。
+- 如果已啟用細微存取控制，Migration Assistant IAM 角色已對應具備足夠的權限。
 
-### Infrastructure requirements
+### 基礎架構需求
 
-The following infrastructure is required:
+需要下列基礎架構：
 
-- An existing VPC ID.
-- At least two subnets in different Availability Zones.
-- AWS CLI v2 and `kubectl`, or AWS CloudShell.
-- Permissions to deploy EKS, AWS CloudFormation, IAM, S3, and OpenSearch resources.
+- 現有的 VPC ID。
+- 位於不同可用區的至少兩個子網路。
+- AWS CLI v2 與 `kubectl`，或 AWS CloudShell。
+- 部署 EKS、AWS CloudFormation、IAM、S3 及 OpenSearch 資源的權限。
 
-## Step 1: Choose the migration style
+## 步驟 1：選擇遷移方式
 
-Select one of the following migration approaches before configuring the workflow.
+在設定工作流程之前，請選擇下列其中一種遷移方式。
 
-### Option A: Planned downtime
+### 選項 A：計畫性停機
 
-For a planned downtime migration, follow these steps:
+若採用計畫性停機遷移，請遵循下列步驟：
 
-1. Pause writes to Elasticsearch.
-2. Create a snapshot.
-3. Migrate metadata.
-4. Backfill documents.
-5. Validate the target.
-6. Point clients to OpenSearch.
+1. 暫停對 Elasticsearch 的寫入。
+2. 建立快照。
+3. 遷移中繼資料。
+4. 回填文件。
+5. 驗證目標。
+6. 將用戶端指向 OpenSearch。
 
-If you are unsure which approach to select, use planned downtime because it involves fewer components and lower risk.
+如果您不確定該選擇哪種方式，請使用計畫性停機，因為它涉及的元件較少且風險較低。
 {: .note }
 
-### Option B: Zero downtime
+### 選項 B：零停機
 
-For a zero-downtime migration, follow these steps:
+若採用零停機遷移，請遵循下列步驟：
 
-1. Start the capture.
-2. Route clients to the capture proxy.
-3. Create a snapshot.
-4. Migrate metadata.
-5. Backfill documents.
-6. Replay captured traffic until the target catches up.
-7. Validate the target.
-8. Switch clients to OpenSearch.
+1. 啟動擷取。
+2. 將用戶端路由至 capture proxy。
+3. 建立快照。
+4. 遷移中繼資料。
+5. 回填文件。
+6. 重播擷取的流量，直到目標追趕上為止。
+7. 驗證目標。
+8. 將用戶端切換至 OpenSearch。
 
-If your application depends on auto-generated document IDs, test Capture and Replay thoroughly before selecting the zero-downtime approach. Auto-generated IDs are not preserved during replay.
+如果您的應用程式依賴自動產生的文件 ID，請在選擇零停機方式之前徹底測試 Capture 與 Replay。自動產生的 ID 在重播期間不會保留。
 
-## Step 2: Prepare the source cluster
+## 步驟 2：準備來源叢集
 
-Prepare the source cluster, including installing the `repository-s3` plugin and registering a snapshot repository.
+準備來源叢集，包括安裝 `repository-s3` 外掛程式及註冊快照儲存庫。
 
-### Install the repository-s3 plugin
+### 安裝 repository-s3 外掛程式
 
-Migration Assistant uses snapshots for backfill, so the source must support S3 snapshots. For general information about the `repository-s3` plugin, see [Snapshot and restore]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/#amazon-s3).
+Migration Assistant 使用快照進行回填，因此來源必須支援 S3 快照。有關 `repository-s3` 外掛程式的一般資訊，請參閱[快照與還原]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/#amazon-s3)。
 
-Verify the current plugin state:
+驗證目前的外掛程式狀態：
 
 ```bash
 curl -sk -u <SOURCE_USERNAME>:<SOURCE_PASSWORD> https://<SOURCE_ENDPOINT>:9200/_cat/plugins?v
 ```
 {% include copy.html %}
 
-If `repository-s3` is missing and your source is running in Kubernetes, a common pattern is to install it using an init container so it persists across pod restarts:
+如果缺少 `repository-s3`，且您的來源執行於 Kubernetes 中，常見的做法是使用 init container 進行安裝，使其在 pod 重新啟動後仍持續存在：
 
 ```bash
 kubectl patch statefulset elasticsearch-master -n elasticsearch --type=strategic -p '{
@@ -162,27 +163,27 @@ kubectl patch statefulset elasticsearch-master -n elasticsearch --type=strategic
 ```
 {% include copy.html %}
 
-Then wait for the rollout:
+然後等待部署完成：
 
 ```bash
 kubectl rollout status statefulset/elasticsearch-master -n elasticsearch --timeout=300s
 ```
 {% include copy.html %}
 
-Verify that the plugin is loaded:
+驗證外掛程式已載入：
 
 ```bash
 curl -sk -u <SOURCE_USERNAME>:<SOURCE_PASSWORD> https://<SOURCE_ENDPOINT>:9200/_cat/plugins?v
 ```
 {% include copy.html %}
 
-### Grant S3 access to the source cluster
+### 授予來源叢集 S3 存取權限
 
-The source cluster needs AWS credentials to write snapshots.
+來源叢集需要 AWS 憑證才能寫入快照。
 
-For a self-managed Elasticsearch cluster in EKS, configure S3 access by performing the following steps:
+對於 EKS 中的自我管理 Elasticsearch 叢集，請執行下列步驟來設定 S3 存取：
 
-1. Add an inline S3 policy to the IAM role:
+1. 將內嵌 S3 政策新增至 IAM 角色：
 
    ```bash
    aws iam put-role-policy \
@@ -206,7 +207,7 @@ For a self-managed Elasticsearch cluster in EKS, configure S3 access by performi
    ```
    {% include copy.html %}
 
-1. Create a temporary helper pod:
+1. 建立暫時性輔助 pod：
 
    ```bash
    kubectl apply -f - <<'EOF'
@@ -228,7 +229,7 @@ For a self-managed Elasticsearch cluster in EKS, configure S3 access by performi
    ```
    {% include copy.html %}
 
-1. Extract the temporary credentials:
+1. 擷取暫時性憑證：
 
    ```bash
    ACCESS_KEY=$(kubectl exec creds-helper -n elasticsearch -- \
@@ -242,7 +243,7 @@ For a self-managed Elasticsearch cluster in EKS, configure S3 access by performi
    ```
    {% include copy.html %}
 
-1. Load the credentials into the Elasticsearch keystore on each pod:
+1. 將憑證載入每個 pod 上的 Elasticsearch keystore：
 
    ```bash
    for pod in elasticsearch-master-0 elasticsearch-master-1 elasticsearch-master-2; do
@@ -256,7 +257,7 @@ For a self-managed Elasticsearch cluster in EKS, configure S3 access by performi
    ```
    {% include copy.html %}
 
-1. Reload the secure settings:
+1. 重新載入安全設定：
 
    ```bash
    curl -sk -X POST -u <SOURCE_USERNAME>:<SOURCE_PASSWORD> \
@@ -264,19 +265,19 @@ For a self-managed Elasticsearch cluster in EKS, configure S3 access by performi
    ```
    {% include copy.html %}
 
-1. Remove the helper pod:
+1. 移除輔助 pod：
 
    ```bash
    kubectl delete pod creds-helper -n elasticsearch --force
    ```
    {% include copy.html %}
 
-For permanent production setups, prefer a durable identity approach for the source cluster rather than temporary credential injection.
+對於正式環境的永久設定，建議為來源叢集採用持久性身分識別方式，而非暫時性憑證注入。
 {: .note }
 
-### Register a snapshot repository
+### 註冊快照儲存庫
 
-Register a repository on the source cluster with a dedicated `base_path` for this migration:
+在來源叢集上註冊一個儲存庫，並為此次遷移使用專用的 `base_path`：
 
 ```bash
 curl -sk -X PUT -u <SOURCE_USERNAME>:<SOURCE_PASSWORD> \
@@ -293,7 +294,7 @@ curl -sk -X PUT -u <SOURCE_USERNAME>:<SOURCE_PASSWORD> \
 ```
 {% include copy.html %}
 
-Verify the repository:
+驗證儲存庫：
 
 ```bash
 curl -sk -X POST -u <SOURCE_USERNAME>:<SOURCE_PASSWORD> \
@@ -301,12 +302,12 @@ curl -sk -X POST -u <SOURCE_USERNAME>:<SOURCE_PASSWORD> \
 ```
 {% include copy.html %}
 
-Although the workflow supports externally managed snapshots, the recommended approach for production migrations is to let Migration Assistant create the snapshot. This ensures that snapshot creation, metadata migration, and backfill remain in a single repeatable workflow with consistent approval, validation, and recovery steps. Externally managed snapshots are appropriate for test migrations, troubleshooting, or recovery scenarios.
+雖然此工作流程支援外部管理的快照，但對於正式環境遷移，建議的做法是讓 Migration Assistant 建立快照。這可確保快照建立、中繼資料遷移與回填保持在單一可重複的工作流程中，並具有一致的核准、驗證與復原步驟。外部管理的快照適合用於測試遷移、疑難排解或復原情境。
 {: .note }
 
-## Step 3: Gather your VPC information
+## 步驟 3：蒐集您的 VPC 資訊
 
-Find your VPC:
+尋找您的 VPC：
 
 ```bash
 aws ec2 describe-vpcs \
@@ -316,7 +317,7 @@ aws ec2 describe-vpcs \
 ```
 {% include copy.html %}
 
-To find the subnets in the VPC, run the following command:
+若要尋找 VPC 中的子網路，請執行以下命令：
 
 ```bash
 aws ec2 describe-subnets \
@@ -327,11 +328,11 @@ aws ec2 describe-subnets \
 ```
 {% include copy.html %}
 
-Choose at least two subnets in different Availability Zones.
+請選擇位於不同可用區域中的至少兩個子網路。
 
-## Step 4: Deploy Migration Assistant on EKS
+## 步驟 4：在 EKS 上部署 Migration Assistant
 
-Download the bootstrap script:
+下載 bootstrap 指令碼：
 
 ```bash
 curl -sL -o aws-bootstrap.sh \
@@ -340,7 +341,7 @@ curl -sL -o aws-bootstrap.sh \
 ```
 {% include copy.html %}
 
-Deploy Migration Assistant into the existing VPC:
+將 Migration Assistant 部署到現有的 VPC：
 
 ```bash
 ./aws-bootstrap.sh \
@@ -354,9 +355,9 @@ Deploy Migration Assistant into the existing VPC:
 {% include copy.html %}
 
 <details markdown="block">
-<summary><strong>For isolated subnets</strong></summary>
+<summary><strong>適用於隔離的子網路</strong></summary>
 
-If the subnets do not have direct internet egress, add the VPC endpoint flag:
+如果子網路沒有直接的網際網路對外連線，請新增 VPC 端點旗標：
 
 ```bash
 ./aws-bootstrap.sh \
@@ -372,7 +373,7 @@ If the subnets do not have direct internet egress, add the VPC endpoint flag:
 
 </details>
 
-Verify the deployment:
+驗證部署：
 
 ```bash
 aws eks update-kubeconfig --region <REGION> --name migration-eks-cluster-<STAGE>-<REGION>
@@ -380,11 +381,11 @@ kubectl get pods -n ma
 ```
 {% include copy.html %}
 
-All core pods should be running.
+所有核心 pod 都應處於執行中狀態。
 
-## Step 5: Confirm outputs and map target access
+## 步驟 5：確認輸出並對應目標存取權
 
-Read the CloudFormation outputs:
+讀取 CloudFormation 輸出：
 
 ```bash
 aws cloudformation describe-stacks \
@@ -395,14 +396,14 @@ aws cloudformation describe-stacks \
 ```
 {% include copy.html %}
 
-The output contains the following values:
+輸出包含以下值：
 
-- The EKS cluster name
-- The snapshot role ARN
-- The migration IAM role information
-- The EKS cluster security group
+- EKS 叢集名稱
+- 快照角色 ARN
+- 遷移 IAM 角色資訊
+- EKS 叢集安全群組
 
-If your target domain uses fine-grained access control, map the Migration Assistant IAM role with sufficient permissions. One option is to set it as the `MasterUserARN`:
+如果您的目標網域使用細微存取控制，請將 Migration Assistant IAM 角色對應到具有足夠權限的角色。其中一種做法是將其設定為 `MasterUserARN`：
 
 ```bash
 aws opensearch update-domain-config \
@@ -417,7 +418,7 @@ aws opensearch update-domain-config \
 ```
 {% include copy.html %}
 
-Wait until domain processing returns `false` before continuing. To verify the status, run the following command:
+請等待網域處理回傳 `false` 後再繼續。若要驗證狀態，請執行以下命令：
 
 ```bash
 aws opensearch describe-domain \
@@ -427,12 +428,12 @@ aws opensearch describe-domain \
 ```
 {% include copy.html %}
 
-To preserve an existing `MasterUserARN` configuration, map the role to an appropriate backend role instead of replacing it.
+若要保留現有的 `MasterUserARN` 組態，請將該角色對應到適當的後端角色，而不是取代它。
 {: .warning }
 
-## Step 6: Allow network access
+## 步驟 6：允許網路存取
 
-Find the EKS cluster security group:
+尋找 EKS 叢集安全群組：
 
 ```bash
 aws eks describe-cluster \
@@ -443,7 +444,7 @@ aws eks describe-cluster \
 ```
 {% include copy.html %}
 
-Then add inbound rules so Migration Assistant can reach the source and target clusters:
+然後新增輸入規則，讓 Migration Assistant 可以連線來源與目標叢集：
 
 ```bash
 aws ec2 authorize-security-group-ingress \
@@ -462,25 +463,25 @@ aws ec2 authorize-security-group-ingress \
 ```
 {% include copy.html %}
 
-If the source and target clusters are in different VPCs, verify that routing and security policies allow cross-VPC communication.
+如果來源與目標叢集位於不同的 VPC 中，請確認路由與安全性政策允許跨 VPC 通訊。
 
-## Step 7: Connect to the Migration Console and create secrets
+## 步驟 7：連線至 Migration Console 並建立 Kubernetes Secret
 
-Open the Migration Console:
+開啟 Migration Console：
 
 ```bash
 kubectl exec -it migration-console-0 -n ma -- /bin/bash
 ```
 {% include copy.html %}
 
-Verify the installed version:
+驗證已安裝的版本：
 
 ```bash
 console --version
 ```
 {% include copy.html %}
 
-If the source uses basic authentication, create the Kubernetes secret:
+如果來源使用基本驗證，請建立 Kubernetes Secret：
 
 ```bash
 kubectl create secret generic source-credentials \
@@ -490,11 +491,11 @@ kubectl create secret generic source-credentials \
 ```
 {% include copy.html %}
 
-For an OpenSearch Service target using AWS Signature Version 4, you do not need a target credential secret. The Migration Assistant pods use AWS identity.
+對於使用 AWS Signature Version 4 的 OpenSearch Service 目標，您不需要目標憑證的 Secret。Migration Assistant 的 pod 會使用 AWS 身分。
 
-## Step 8: Build the pilot workflow configuration
+## 步驟 8：建置試驗工作流程組態
 
-Start from the current schema sample:
+從目前的 schema 範例開始：
 
 ```bash
 workflow configure sample --load
@@ -502,9 +503,9 @@ workflow configure edit
 ```
 {% include copy.html %}
 
-For an interactive reference of all available fields, their types, defaults, and descriptions, see the [Migration Assistant Schema Viewer](https://opensearch-project.github.io/opensearch-migrations/).
+如需所有可用欄位、其類型、預設值與描述的互動式參考，請參閱 [Migration Assistant Schema Viewer](https://opensearch-project.github.io/opensearch-migrations/)。
 
-Use a pilot configuration similar to the following:
+使用類似以下的試驗組態：
 
 ```json
 {
@@ -574,17 +575,17 @@ Use a pilot configuration similar to the following:
 ```
 {% include copy.html %}
 
-The following are notable configuration details in this example:
+此範例中值得注意的組態細節如下：
 
-- The source uses HTTPS with `allowInsecure: true` because self-managed Elasticsearch on EKS often uses self-signed certificates.
-- The source version is `ES 6.8`.
-- The target uses AWS Signature Version 4 with service `es`.
-- The `multiTypeBehavior` set to `UNION` is a practical starting point for Elasticsearch 6.8 sources.
-- The pilot limits snapshot creation, metadata migration, and backfill to one small index.
+- 來源使用 HTTPS 與 `allowInsecure: true`，因為 EKS 上的自我管理 Elasticsearch 通常使用自簽憑證。
+- 來源版本為 `ES 6.8`。
+- 目標使用 AWS Signature Version 4，服務為 `es`。
+- 將 `multiTypeBehavior` 設定為 `UNION` 是 Elasticsearch 6.8 來源的實用起點。
+- 試驗會將快照建立、中繼資料遷移與回填限制在一個小型索引。
 
-## Step 9: Test connectivity
+## 步驟 9：測試連線
 
-Run the built-in connectivity tests:
+執行內建的連線測試：
 
 ```bash
 console clusters connection-check
@@ -593,11 +594,11 @@ console clusters curl target /
 ```
 {% include copy.html %}
 
-Both source and target cluster should connect successfully. If the target cluster returns a `403`, then the target IAM mapping has not completed.
+來源與目標叢集都應成功連線。如果目標叢集回傳 `403`，表示目標 IAM 對應尚未完成。
 
-## Step 10: Run the pilot migration
+## 步驟 10：執行試驗遷移
 
-Submit the workflow:
+提交工作流程：
 
 ```bash
 workflow submit
@@ -605,7 +606,7 @@ workflow manage
 ```
 {% include copy.html %}
 
-Use `workflow manage` as the primary interface. If approvals appear, validate and approve the output, or use the CLI directly:
+使用 `workflow manage` 作為主要介面。如果出現核准項目，請驗證並核准輸出，或直接使用 CLI：
 
 ```bash
 workflow approve step "*.evaluateMetadata"
@@ -613,7 +614,7 @@ workflow approve step "*.migrateMetadata"
 ```
 {% include copy.html %}
 
-After the pilot completes, validate the target cluster:
+試驗完成後，請驗證目標叢集：
 
 ```bash
 console clusters curl target /_cat/indices?v
@@ -623,19 +624,19 @@ console clusters curl target /<PILOT_INDEX_NAME>/_search?size=5&pretty
 ```
 {% include copy.html %}
 
-Do not start the full migration until the pilot looks clean.
+在試驗結果看起來沒有問題之前，請勿開始完整遷移。
 {: .note }
 
-## Step 11: Run the full migration
+## 步驟 11：執行完整遷移
 
-To expand the migration to all indexes, edit the workflow configuration:
+若要將遷移擴展到所有索引，請編輯工作流程組態：
 
 ```bash
 workflow configure edit
 ```
 {% include copy.html %}
 
-For a full-cluster backfill-only migration, update the configuration as follows:
+若要進行僅回填的整叢集遷移，請依照下列方式更新組態：
 
 ```json
 "config": {
@@ -663,25 +664,25 @@ For a full-cluster backfill-only migration, update the configuration as follows:
 ```
 {% include copy.html %}
 
-An empty metadata or RFS `indexAllowlist` specifies all eligible indexes from the snapshot.
+中繼資料或 RFS 的 `indexAllowlist` 為空時，表示選取快照中所有符合條件的索引。
 
-The following sections describe the steps for each migration approach. Follow the section that corresponds to the approach you selected in Step 1.
+下列章節說明各種遷移方式的步驟。請依照您在步驟 1 中選擇的方式，閱讀對應的章節。
 
-### Planned downtime path
+### 計劃性停機路徑
 
-For a planned downtime migration, follow these steps:
+若採用計劃性停機遷移，請依照下列步驟：
 
-1. Stop writes to Elasticsearch.
-2. Submit the workflow.
-3. Monitor and approve gates as needed.
-4. Validate the target.
-5. Recreate anything Migration Assistant does not move automatically, such as security configuration, ISM or ILM, dashboards, pipelines, and cluster tuning.
-6. Point clients to the target.
-7. Resume writes.
+1. 停止寫入 Elasticsearch。
+2. 提交工作流程。
+3. 視需要監視並核准關卡。
+4. 驗證目標。
+5. 重建 Migration Assistant 未自動搬移的項目，例如安全性組態、ISM 或 ILM、儀表板、管線，以及叢集調校。
+6. 將用戶端指向目標。
+7. 恢復寫入。
 
-### Zero-downtime path
+### 零停機路徑
 
-For a zero-downtime migration, add a traffic section to the workflow configuration. This section configures the capture proxy and Replayer:
+若採用零停機遷移，請在工作流程組態中加入流量區段。此區段會設定 capture proxy 與 Replayer：
 
 ```json
 "traffic": {
@@ -715,38 +716,38 @@ For a zero-downtime migration, add a traffic section to the workflow configurati
 ```
 {% include copy.html %}
 
-To expose the proxy outside the VPC, set `internetFacing` to `true` in the workflow configuration before submitting. Do not modify the Kubernetes Service resource after submission.
+若要在 VPC 外公開 proxy，請在提交前於工作流程組態中將 `internetFacing` 設為 `true`。提交後請勿修改 Kubernetes Service 資源。
 
-Then follow these steps:
+然後依照下列步驟：
 
-1. Submit the workflow.
-2. Wait for the capture proxy Kubernetes Service to become available.
-3. Route clients to the proxy before the snapshot and backfill window begins.
-4. Allow snapshot, metadata migration, and backfill to complete.
-5. Wait for replay to reach the live edge.
-6. Validate the target.
-7. Switch clients from the proxy to the target endpoint.
+1. 提交工作流程。
+2. 等待 capture proxy Kubernetes Service 變為可用。
+3. 在快照與回填時段開始前，將用戶端路由至 proxy。
+4. 等待快照、中繼資料遷移與回填完成。
+5. 等待重播追上最新流量。
+6. 驗證目標。
+7. 將用戶端從 proxy 切換到目標端點。
 
-Find the proxy endpoint:
+尋找 proxy 端點：
 
 ```bash
 kubectl get svc -n ma
 ```
 {% include copy.html %}
 
-Replay duration depends on the volume of traffic accumulated during backfill and the configured `speedupFactor`.
+重播所需時間取決於回填期間累積的流量，以及設定的 `speedupFactor`。
 
-## Step 12: Validate and switch traffic
+## 步驟 12：驗證並切換流量
 
-Before switching traffic, validate the following:
+切換流量之前，請驗證下列項目：
 
-- Target cluster health.
-- Target index list.
-- Document counts.
-- Representative search results.
-- Mapping behavior for migrated multi-type data.
+- 目標叢集健康狀態。
+- 目標索引清單。
+- 文件數量。
+- 具代表性的搜尋結果。
+- 已遷移多類型資料的對應行為。
 
-To validate, run the following commands:
+若要驗證，請執行下列命令：
 
 ```bash
 console clusters curl source /_cat/indices?v
@@ -757,36 +758,36 @@ console clusters curl target /_cluster/health
 {% include copy.html %}
 
 <details markdown="block">
-<summary><strong>Optional: advanced validation on EKS</strong></summary>
+<summary><strong>選用：EKS 上的進階驗證</strong></summary>
 
-On EKS, you can review additional replay and comparison telemetry in Amazon CloudWatch. Inspect the following:
+在 EKS 上，您可以在 Amazon CloudWatch 中檢視額外的重播與比較遙測資料。請檢查下列項目：
 
-- Replay heartbeat logs to confirm replay is progressing.
-- `tupleComparison` metrics to compare source and target response behavior.
-- Target-side errors for write mismatches.
+- 重播心跳記錄檔，以確認重播持續進行。
+- `tupleComparison` 指標，用於比較來源與目標的回應行為。
+- 目標端的錯誤，以找出寫入不一致的情況。
 
-This validation is particularly important for zero-downtime migrations that require more thorough verification than document-count comparison alone.
+此驗證對零停機遷移尤其重要，因為這類遷移需要比僅比較文件數量更徹底的驗證。
 
 </details>
 
-After validation confirms the target is correct, redirect clients to the OpenSearch Service domain endpoint.
+驗證確認目標正確後，請將用戶端重新導向至 OpenSearch Service 網域端點。
 
-## Step 13: Keep the source available as a fallback
+## 步驟 13：保留來源作為備援
 
-Do not remove the source cluster immediately after switching traffic. Keep the source available until you confirm the following:
+切換流量後請勿立即移除來源叢集。在確認下列事項之前，請保留來源可用：
 
-- Production traffic is stable on the target.
-- Application error rates are within expected ranges.
-- Dashboards and operational tooling function correctly.
-- All clients are redirected away from the capture proxy.
+- 生產流量在目標上運作穩定。
+- 應用程式錯誤率在預期範圍內。
+- 儀表板與維運工具正常運作。
+- 所有用戶端都已重新導向，不再使用 capture proxy。
 
-A rollback window of 24 to 72 hours is recommended.
+建議保留 24 至 72 小時的回復時限。
 
-## Step 14: Remove the migration infrastructure
+## 步驟 14：移除遷移基礎架構
 
-Only remove infrastructure after the rollback window has passed.
+只有在回復時限過後才能移除基礎架構。
 
-Remove the Helm release and namespace:
+移除 Helm release 與命名空間：
 
 ```bash
 helm uninstall -n ma ma
@@ -795,7 +796,7 @@ kubectl delete namespace ma --timeout=120s
 ```
 {% include copy.html %}
 
-Delete the CloudFormation stack:
+刪除 CloudFormation 堆疊：
 
 ```bash
 aws cloudformation delete-stack --region <REGION> --stack-name MA
@@ -803,46 +804,46 @@ aws cloudformation wait stack-delete-complete --region <REGION> --stack-name MA
 ```
 {% include copy.html %}
 
-This removes the Migration Assistant EKS environment. It does not remove your source cluster, target domain, or snapshot data automatically.
+這會移除 Migration Assistant 的 EKS 環境。它不會自動移除您的來源叢集、目標網域或快照資料。
 
-If you no longer need the snapshot bucket, delete it by running the following command:
+如果不再需要快照儲存桶，請執行下列命令將其刪除：
 
 ```bash
 aws s3 rb s3://migrations-default-<ACCOUNT_ID>-<STAGE>-<REGION> --force
 ```
 {% include copy.html %}
 
-## Troubleshooting
+## 疑難排解
 
-The following are common issues and their resolutions.
+以下是常見問題及其解決方法。
 
-### Bootstrap fails during CloudFormation
+### CloudFormation 期間啟動程序失敗
 
-To verify the CloudFormation stack status, run the following command:
+若要確認 CloudFormation 堆疊狀態，請執行下列命令：
 
 ```bash
 aws cloudformation describe-stacks --region <REGION> --stack-name MA --query "Stacks[0].StackStatus"
 ```
 {% include copy.html %}
 
-If the stack status is `ROLLBACK_COMPLETE` or `CREATE_FAILED`, delete the stack and rerun the bootstrap script.
+如果堆疊狀態為 `ROLLBACK_COMPLETE` 或 `CREATE_FAILED`，請刪除堆疊並重新執行啟動程序指令碼。
 
-### Bootstrap fails after CloudFormation but before Helm deployment
+### CloudFormation 之後、Helm 部署之前啟動程序失敗
 
-Rerun the bootstrap script:
+重新執行啟動程序指令碼：
 
 ```bash
 ./aws-bootstrap.sh --skip-cfn-deploy --stage <STAGE> --region <REGION>
 ```
 {% include copy.html %}
 
-### Target returns 403
+### 目標回傳 403
 
-The Migration Assistant IAM role does not have sufficient permissions on the target domain. Map the role to an appropriate backend role in the target cluster security configuration.
+Migration Assistant 的 IAM 角色在目標網域上沒有足夠的權限。請在目標叢集的安全性組態中，將該角色對應至適當的後端角色。
 
-### Snapshot creation fails with ExpiredToken
+### 快照建立失敗，出現 ExpiredToken
 
-The temporary S3 credentials on the source cluster have expired. Refresh the credentials and reload the secure settings:
+來源叢集上的暫時 S3 憑證已過期。更新憑證並重新載入安全設定：
 
 ```bash
 curl -sk -X POST -u <SOURCE_USERNAME>:<SOURCE_PASSWORD> \
@@ -850,16 +851,16 @@ curl -sk -X POST -u <SOURCE_USERNAME>:<SOURCE_PASSWORD> \
 ```
 {% include copy.html %}
 
-### Pilot succeeds from console but workflow fails
+### 從主控台執行試行作業成功，但工作流程失敗
 
-This issue indicates a difference between console pod access and workflow executor pod access. On EKS, verify that the workflow executor service accounts have the required AWS identity and network access.
+此問題表示主控台 Pod 與工作流程執行器 Pod 的存取權限有所差異。在 EKS 上，請確認工作流程執行器的服務帳戶具備必要的 AWS 身分與網路存取權限。
 
-## Related documentation
+## 相關文件
 
-For more information, see the following resources:
+如需詳細資訊，請參閱下列資源：
 
-- [Choose your deployment]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/)
-- [Using the Workflow CLI]({{site.url}}{{site.baseurl}}/migration-assistant/workflow-cli/getting-started/)
-- [Troubleshooting]({{site.url}}{{site.baseurl}}/migration-assistant/troubleshooting/)
-- [Migrate metadata]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/migrate-metadata/)
-- [Migration Assistant Schema Viewer](https://opensearch-project.github.io/opensearch-migrations/)
+- [選擇您的部署方式]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/)
+- [使用 Workflow CLI]({{site.url}}{{site.baseurl}}/migration-assistant/workflow-cli/getting-started/)
+- [疑難排解]({{site.url}}{{site.baseurl}}/migration-assistant/troubleshooting/)
+- [遷移中繼資料]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/migrate-metadata/)
+- [Migration Assistant 結構描述檢視器](https://opensearch-project.github.io/opensearch-migrations/)

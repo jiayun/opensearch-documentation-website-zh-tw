@@ -1,82 +1,83 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Command reference
+title: "命令參考"
 nav_order: 2
 parent: Migration Console
 permalink: /classic/migration-assistant/migration-console/migration-console-command-reference/
 ---
 
-# Migration Console command reference
+# Migration Console 命令參考
 
-Migration Console commands follow this syntax: `console [component] [action]`. The components include `clusters`, `backfill`, `snapshot`, `metadata`, and `replay`. The console is configured with a registry of the deployed services and the source and target cluster, generated from the `cdk.context.json` values.
+Migration Console 命令遵循以下語法：`console [component] [action]`。其組成元件包括 `clusters`、`backfill`、`snapshot`、`metadata` 和 `replay`。主控台會以已部署服務的註冊資訊，以及來源與目標叢集進行設定，這些資訊由 `cdk.context.json` 值產生。
 
-## Commonly used commands
+## 常用命令
 
-The exact commands used will depend heavily on use-case and goals, but the following are a series of common commands with a quick description of what they do.
+實際使用的命令會因使用情境與目標而有很大差異，以下是一系列常見命令及其用途的簡要說明。
 
-### Check connection
+### 檢查連線
 
-Reports whether both the source and target clusters can be reached and provides their versions.
+回報來源與目標叢集是否皆可連線，並提供其版本。
 
 ```sh
 console clusters connection-check
 ```
 {% include copy.html %}
 
-### Run `cat-indices`
+### 執行 `cat-indices`
 
-Runs the `cat-indices` API on the cluster.
+在叢集上執行 `cat-indices` API。
 
 ```sh
 console clusters cat-indices
 ```
 {% include copy.html %}
 
-### Execute HTTP requests against clusters
+### 對叢集執行 HTTP 請求
 
-To run OpenSearch or Elasticsearch APIs directly against the configured source or target cluster, use a `curl`-like interface. Authentication, TLS, and endpoints are obtained from your console configuration.
+若要直接對已設定的來源或目標叢集呼叫 OpenSearch 或 Elasticsearch API，請使用類似 `curl` 的介面。驗證、TLS 與端點皆取自您的主控台組態。
 
 ```sh
 console clusters curl <source_cluster|target_cluster> <path> [OPTIONS]
 ```
 {% include copy.html %}
 
-#### Arguments
+#### 引數
 
-* `<source_cluster|target_cluster>` — Specify `source_cluster` or `target_cluster` to call.
-* `<path>` — The API endpoint to call on the cluster (for example, `/_cat/indexes` or `/my-index/_search`).
+* `<source_cluster|target_cluster>` — 指定要呼叫的 `source_cluster` 或 `target_cluster`。
+* `<path>` — 要在叢集上呼叫的 API 端點（例如 `/_cat/indexes` 或 `/my-index/_search`）。
 
-#### Options
+#### 選項
 
-* `--json <JSON_DATA>` — Send a JSON body and automatically set `Content-Type: application/json`.
-* `-X, --request <METHOD>` — The HTTP method (`GET`, `POST`, `PUT`, `DELETE`, or `HEAD`). Default is `GET`.
-* `-H, --header <HEADER>` — A custom header, for example, `-H 'Accept: application/json'`. You can specify multiple headers, for example, `-H 'Accept: application/json' -H 'Authorization: Bearer TOKEN'`.
-* `-d, --data <DATA>` — The raw request body.
+* `--json <JSON_DATA>` — 傳送 JSON 本文並自動設定 `Content-Type: application/json`。
+* `-X, --request <METHOD>` — HTTP 方法（`GET`、`POST`、`PUT`、`DELETE` 或 `HEAD`）。預設為 `GET`。
+* `-H, --header <HEADER>` — 自訂標頭，例如 `-H 'Accept: application/json'`。您可以指定多個標頭，例如 `-H 'Accept: application/json' -H 'Authorization: Bearer TOKEN'`。
+* `-d, --data <DATA>` — 原始請求本文。
 
-#### Examples
+#### 範例
 
-*Get cluster health*:
+*取得叢集健康狀態*：
 
 ```sh
 console clusters curl source_cluster /_cluster/health
 ```
 {% include copy.html %}
 
-*List indexes as JSON*:
+*以 JSON 格式列出索引*：
 
 ```sh
 console clusters curl source_cluster "/_cat/indexes?format=json&v=true"
 ```
 {% include copy.html %}
 
-*Create an index*:
+*建立索引*：
 
 ```sh
 console clusters curl target_cluster /my-new-index --json '{"settings":{"number_of_shards":3,"number_of_replicas":1}}'
 ```
 {% include copy.html %}
 
-*Run a query containing a body*:
+*執行含本文的查詢*：
 
 ```sh
 console clusters curl source_cluster /_search --json '{"query":{"match_all":{}}}'
@@ -84,18 +85,18 @@ console clusters curl source_cluster /_search --json '{"query":{"match_all":{}}}
 {% include copy.html %}
 
 
-### Create a snapshot
+### 建立快照
 
-Creates a snapshot of the source cluster and stores it in a preconfigured Amazon Simple Storage Service (Amazon S3) bucket.
+建立來源叢集的快照，並將其儲存在預先設定的 Amazon Simple Storage Service (Amazon S3) 儲存桶中。
 
 ```sh
 console snapshot create
 ```
 {% include copy.html %}
 
-### Check snapshot status
+### 檢查快照狀態
 
-Runs a detailed check on the snapshot creation status, including estimated completion time:
+對快照建立狀態執行詳細檢查，包括預估完成時間：
 
 ```sh
 console snapshot status --deep-check
@@ -103,9 +104,9 @@ console snapshot status --deep-check
 
 {% include copy.html %}
 
-### Evaluate metadata
+### 評估中繼資料
 
-Performs a dry run of metadata migration, showing which indexes, templates, and other objects will be migrated to the target cluster.
+執行中繼資料遷移的試執行，顯示哪些索引、範本及其他物件將被遷移至目標叢集。
 
 ```sh
 console metadata evaluate
@@ -113,9 +114,9 @@ console metadata evaluate
 
 {% include copy.html %}
 
-### Migrate metadata
+### 遷移中繼資料
 
-Migrates the metadata from the source cluster to the target cluster.
+將中繼資料從來源叢集遷移至目標叢集。
 
 ```sh
 console metadata migrate
@@ -123,11 +124,11 @@ console metadata migrate
 
 {% include copy.html %}
 
-### Start a backfill
+### 啟動回填
 
-If `Reindex-From-Snapshot` (RFS) is enabled, this command starts an instance of the service to begin moving documents to the target cluster:
+若已啟用 `Reindex-From-Snapshot` (RFS)，此命令會啟動該服務的一個執行個體，開始將文件移動至目標叢集：
 
-There are similar `scale UNITS` and `stop` commands to change the number of active instances for RFS.
+另有類似的 `scale UNITS` 與 `stop` 命令，可變更 RFS 的作用中執行個體數量。
 
 
 ```sh
@@ -135,46 +136,46 @@ console backfill start
 ```
 {% include copy.html %}
 
-### Check backfill status
+### 檢查回填狀態
 
-Gets the current status of the backfill migration, including the number of operating instances and the progress of the shards.
+取得回填遷移的目前狀態，包括運作中的執行個體數量與分片的進度。
 
 ```sh
 console backfill status
 ```
 {% include copy.html %}
 
-### Start Traffic Replayer
+### 啟動 Traffic Replayer
 
-If Traffic Replayer is enabled, this command starts an instance of Traffic Replayer to begin replaying traffic against the target cluster.
-The `stop` command stops all active instances.
+若已啟用 Traffic Replayer，此命令會啟動一個 Traffic Replayer 執行個體，開始對目標叢集重播流量。
+`stop` 命令會停止所有作用中的執行個體。
 
 ```sh
 console replay start
 ```
 {% include copy.html %}
 
-### Read logs
+### 讀取記錄檔
 
-Reads any logs that exist when running Traffic Replayer. Use tab completion on the path to fill in the available `NODE_IDs` and, if applicable, log file names. The tuple logs roll over at a certain size threshold, so there may be many files named with timestamps. The `jq` command pretty-prints each line of the tuple output before writing it to file.
+讀取執行 Traffic Replayer 時產生的所有記錄檔。使用路徑的 Tab 鍵自動補全來填入可用的 `NODE_IDs`，以及（若適用）記錄檔案名稱。元組記錄會在達到特定大小門檻時輪替，因此可能會有許多以時間戳記命名的檔案。`jq` 命令會在將元組輸出寫入檔案前，先將每一行格式化輸出。
 
 ```sh
 console tuples show --in /shared-logs-output/traffic-Replayer-default/[NODE_ID]/tuples/console.log | jq > readable_tuples.json
 ```
 {% include copy.html %}
 
-### Show version
+### 顯示版本
 
-Displays the version of the currently installed Migration Assistant.
+顯示目前安裝的 Migration Assistant 版本。
 
 ```sh
 console --version
 ```
 {% include copy.html %}
 
-### Help option
+### Help 選項
 
-All commands and options can be explored within the tool itself by using the `--help` option, either for the entire `console` application or for individual components (for example, `console backfill --help`). For example:
+所有命令與選項都可以在工具本身內探索，方法是使用 `--help` 選項，可用於整個 `console` 應用程式或個別元件（例如 `console backfill --help`）。例如：
 
 ```sh
 $ console --help

@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cluster bootstrapping
+title: "叢集引導"
 parent: Discovery and cluster formation
 nav_order: 40
 ---
 
-# Cluster bootstrapping
+# 叢集引導
 
-When starting an OpenSearch cluster for the very first time, you must explicitly define the initial set of cluster-manager-eligible nodes that will participate in the first cluster manager election. This process is called _cluster bootstrapping_ and is critical for preventing split-brain scenarios during initial cluster formation.
+在首次啟動 OpenSearch 叢集時，您必須明確定義將參與第一次叢集管理員選舉的初始叢集管理員候選節點集合。此程序稱為 _叢集引導_ (cluster bootstrapping)，對於防止叢集初始形成期間發生腦裂 (split-brain) 情境至關重要。
 
-Cluster bootstrapping is required in the following situations:
+在下列情況中需要進行叢集引導：
 
-- Starting a brand-new cluster for the very first time.
-- No existing cluster state exists on any node.
-- Initial cluster manager election needs to take place.
+- 首次啟動全新的叢集。
+- 任何節點上都不存在現有的叢集狀態。
+- 需要進行初始叢集管理員選舉。
 
-Bootstrapping is not required in the following situations:
+在下列情況中不需要進行引導：
 
-- Nodes joining an existing cluster: They get their configuration from the current cluster manager.
-- Cluster restarts: Nodes that have previously joined a cluster store the necessary information.
-- Full cluster restarts: Existing cluster state is preserved and used for recovery.
+- 節點加入現有叢集：它們會從目前的叢集管理員取得組態。
+- 叢集重新啟動：先前已加入叢集的節點會儲存必要的資訊。
+- 叢集完整重新啟動：現有的叢集狀態會被保留並用於復原。
 
-## Configuring the bootstrap nodes
+## 設定引導節點
 
-Use the `cluster.initial_cluster_manager_nodes` setting to define which nodes should participate in the initial cluster manager election. Set this configuration in `opensearch.yml` on each cluster-manager-eligible node:
+使用 `cluster.initial_cluster_manager_nodes` 設定來定義哪些節點應參與初始叢集管理員選舉。在每個叢集管理員候選節點的 `opensearch.yml` 中設定此組態：
 
 ```yaml
 cluster.initial_cluster_manager_nodes:
@@ -33,16 +34,16 @@ cluster.initial_cluster_manager_nodes:
 ```
 {% include copy.html %}
 
-Alternatively, you can specify the bootstrap configuration when starting OpenSearch:
+或者，您可以在啟動 OpenSearch 時指定引導組態：
 
 ```bash
 ./bin/opensearch -Ecluster.initial_cluster_manager_nodes=cluster-manager-1,cluster-manager-2,cluster-manager-3
 ```
 {% include copy.html %}
 
-You can identify nodes in the bootstrap configuration using any of these methods:
+您可以使用下列任一方法來識別引導組態中的節點：
 
-1. Use the value of `node.name` (recommended): 
+1. 使用 `node.name` 的值 (建議)：
 
    ```yaml
    cluster.initial_cluster_manager_nodes:
@@ -51,7 +52,7 @@ You can identify nodes in the bootstrap configuration using any of these methods
    ```
    {% include copy.html %}
 
-2. Use the node's hostname if `node.name` is not explicitly set:
+2. 若未明確設定 `node.name`，則使用節點的主機名稱：
 
    ```yaml
    cluster.initial_cluster_manager_nodes:
@@ -60,7 +61,7 @@ You can identify nodes in the bootstrap configuration using any of these methods
    ```
    {% include copy.html %}
 
-3. Use the node's public IP address:
+3. 使用節點的公用 IP 位址：
 
    ```yaml
    cluster.initial_cluster_manager_nodes:
@@ -69,7 +70,7 @@ You can identify nodes in the bootstrap configuration using any of these methods
    ```
    {% include copy.html %}
 
-4. Use the node's IP address and port when multiple nodes share the same IP:
+4. 當多個節點共用同一個 IP 時，使用節點的 IP 位址與連接埠：
 
    ```yaml
    cluster.initial_cluster_manager_nodes:
@@ -78,15 +79,15 @@ You can identify nodes in the bootstrap configuration using any of these methods
    ```
    {% include copy.html %}
 
-## Critical bootstrapping requirements
+## 關鍵引導需求
 
-Proper bootstrapping ensures that all cluster-manager-eligible nodes start with a consistent and accurate configuration, preventing cluster splits and ensuring a stable initial election process.
+正確的引導可確保所有叢集管理員候選節點以一致且正確的組態啟動，防止叢集分裂並確保初始選舉程序穩定。
 
-### Identical configuration across all nodes
+### 所有節點的組態必須完全相同
 
-All cluster-manager-eligible nodes must have the same `cluster.initial_cluster_manager_nodes` setting. This ensures that only one cluster forms during bootstrapping.
+所有叢集管理員候選節點都必須具有相同的 `cluster.initial_cluster_manager_nodes` 設定。這可確保在引導期間只形成一個叢集。
 
-**Correct configuration**:
+**正確的組態**：
 
 ```yaml
 # Node 1
@@ -109,7 +110,7 @@ cluster.initial_cluster_manager_nodes:
 ```
 {% include copy.html %}
 
-**Incorrect configuration**:
+**不正確的組態**：
 
 ```yaml
 # Node 1 – different list
@@ -123,19 +124,19 @@ cluster.initial_cluster_manager_nodes:
   - cluster-manager-3
 ```
 
-When nodes have inconsistent bootstrap lists, multiple independent clusters may form.
+當節點的引導清單不一致時，可能會形成多個獨立的叢集。
 
-### Exact name matching
+### 名稱必須完全相符
 
-Node names in the bootstrap configuration must exactly match each node's `node.name` value.
+引導組態中的節點名稱必須與每個節點的 `node.name` 值完全相符。
 
-**Common naming issues**:
+**常見的命名問題**：
 
-* If a node's name is `server1.example.com`, the bootstrap list must also use `server1.example.com`, not `server1`.
-* Node names are case sensitive.
-* The names must match exactly, with no added characters or white space.
+* 如果節點的名稱是 `server1.example.com`，引導清單也必須使用 `server1.example.com`，而不是 `server1`。
+* 節點名稱區分大小寫。
+* 名稱必須完全相符，不得加入任何額外字元或空白。
 
-If a node's name does not exactly match an entry in the bootstrap configuration, the log will contain an error message. In this example, the node name `cluster-manager-1.example.com` does not match the bootstrap entry `cluster-manager-1`:
+如果節點的名稱與引導組態中的項目不完全相符，記錄檔將包含錯誤訊息。在此範例中，節點名稱 `cluster-manager-1.example.com` 與引導項目 `cluster-manager-1` 不相符：
 
 ```
 [cluster-manager-1.example.com] cluster manager not discovered yet, this node has
@@ -144,79 +145,79 @@ cluster-manager-eligible nodes [cluster-manager-1, cluster-manager-2] to
 bootstrap a cluster: have discovered [{cluster-manager-2.example.com}...]
 ```
 
-## Naming your cluster
+## 為叢集命名
 
-Choose a descriptive cluster name to distinguish your cluster from others:
+請選擇一個描述性的叢集名稱，以便將您的叢集與其他叢集區別開來：
 
 ```yaml
 cluster.name: production-search-cluster
 ```
 {% include copy.html %}
 
-When naming your cluster, follow these guidelines:
+為叢集命名時，請遵循下列準則：
 
-- Each cluster must have a unique name to avoid conflicts.
+- 每個叢集都必須有唯一的名稱，以避免衝突。
 
-- Ensure that all nodes verify that the cluster name matches before joining.
+- 確保所有節點在加入前都會驗證叢集名稱是否相符。
 
-- Avoid the default `opensearch` name in production environments.
+- 在生產環境中避免使用預設的 `opensearch` 名稱。
 
-- Choose descriptive names that reflect the cluster's purpose.
+- 選擇能反映叢集用途的描述性名稱。
 
-## Development mode auto-bootstrapping
+## 開發模式自動引導
 
-OpenSearch can automatically bootstrap clusters in development environments under the following conditions:
+在下列條件下，OpenSearch 可以在開發環境中自動引導叢集：
 
-- No discovery settings are explicitly configured.
-- Multiple nodes are running on the same machine.
-- OpenSearch detects that it is running in a development environment.
+- 未明確設定任何探索設定。
+- 多個節點在同一台機器上執行。
+- OpenSearch 偵測到它正在開發環境中執行。
 
-### Settings that disable auto-bootstrapping
+### 停用自動引導的設定
 
-If any of these settings are configured, you must explicitly configure `cluster.initial_cluster_manager_nodes`:
+如果設定了下列任一設定，您就必須明確設定 `cluster.initial_cluster_manager_nodes`：
 
 - `discovery.seed_providers`
 - `discovery.seed_hosts`
 - `cluster.initial_cluster_manager_nodes`
 
-### Auto-bootstrapping limitations
+### 自動引導的限制
 
-Auto-bootstrapping is intended only for development. Do not use it in production because:
+自動引導僅適用於開發用途。請勿在生產環境中使用，原因如下：
 
-- Nodes may not discover each other quickly enough, leading to delays.
+- 節點可能無法及時互相探索，導致延遲。
 
-- Network conditions can cause discovery to fail.
+- 網路狀況可能導致探索失敗。
 
-- Behavior can be unpredictable and is not guaranteed.
+- 行為可能無法預測，且不受保證。
 
-- There is a risk of forming multiple clusters, resulting in split-brain scenarios.
+- 有形成多個叢集的風險，導致腦裂情境。
 
-## Troubleshooting bootstrap issues
+## 疑難排解引導問題
 
-If you accidentally start nodes on different hosts without proper configuration, they may form separate clusters. You can detect this by checking cluster UUIDs:
+如果您在沒有正確組態的情況下，意外在不同主機上啟動節點，它們可能會形成個別的叢集。您可以透過檢查叢集 UUID 來偵測這種情況：
 
 ```bash
 curl -X GET "localhost:9200/"
 ```
 {% include copy.html %}
 
-If each node reports a different `cluster_uuid`, they belong to separate clusters. To correct this and form a single cluster, use the following steps:
+如果每個節點回報的 `cluster_uuid` 不同，表示它們屬於不同的叢集。若要修正此問題並形成單一叢集，請依照下列步驟操作：
 
-1. Stop all nodes.
-2. Delete all data from each node's data directory.
-3. Configure proper bootstrap settings.
-4. Restart all nodes and verify single cluster formation.
+1. 停止所有節點。
+2. 刪除每個節點資料目錄中的所有資料。
+3. 設定正確的引導設定。
+4. 重新啟動所有節點，並驗證是否形成單一叢集。
 
-## Bootstrap verification
+## 引導驗證
 
-After starting your cluster, verify successful bootstrapping using the [monitoring commands]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/#monitoring-discovery-and-cluster-formation) for checking cluster health and formation:
+啟動叢集後，請使用[監視命令]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/#monitoring-discovery-and-cluster-formation)來檢查叢集健康狀態與形成情況，以驗證引導是否成功：
 
-- Verify cluster health status and node count.
-- Confirm that one node is elected as cluster manager.
-- Ensure that all nodes report the same cluster UUID.
+- 驗證叢集健康狀態與節點數量。
+- 確認已選出一個節點作為叢集管理員。
+- 確保所有節點回報相同的叢集 UUID。
 
-## Related documentation
+## 相關文件
 
-- [Voting configuration management]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/voting-configuration/): How OpenSearch manages voting after bootstrapping
-- [Discovery and cluster formation settings]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/settings/): Complete settings reference
-- [Creating a cluster]({{site.url}}{{site.baseurl}}/tuning-your-cluster/): Step-by-step cluster setup guide
+- [投票組態管理]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/voting-configuration/)：OpenSearch 如何在引導後管理投票
+- [探索與叢集形成設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/settings/)：完整的設定參考
+- [建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)：逐步叢集設定指南

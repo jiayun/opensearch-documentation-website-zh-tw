@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: HTTP authentication
+title: "HTTP 驗證"
 has_children: false
 nav_order: 40
 parent: Connectors
@@ -8,13 +9,13 @@ grand_parent: Connecting to externally hosted models
 great_grand_parent: Integrating ML models
 ---
 
-# HTTP authentication
+# HTTP 驗證
 
-Connectors that use the `http` protocol authenticate to an externally hosted model using the values in the connector's `credential` object. Most endpoints accept a token, such as an API key, which the connector passes in a request header. Endpoints that require mutual TLS (mTLS) accept a client certificate instead.
+使用 `http` 通訊協定的連接器會使用連接器 `credential` 物件中的值，向外部託管的模型進行驗證。大多數端點會接受權杖，例如 API 金鑰，連接器會將其放在請求標頭中傳遞。需要雙向 TLS (mTLS) 的端點則改為接受用戶端憑證。
 
-## Token authentication
+## 權杖驗證
 
-To authenticate with a token, provide the token in the `credential` object and reference it from a request header using a `${credential.*}` placeholder. The field name is arbitrary---the blueprint for your platform specifies which name to use, such as `openAI_key` or `cohere_key`:
+若要使用權杖進行驗證，請在 `credential` 物件中提供權杖，並使用 `${credential.*}` 預留位置從請求標頭中參照它。欄位名稱可任意指定——您平台的藍圖會指定要使用的名稱，例如 `openAI_key` 或 `cohere_key`：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -45,53 +46,53 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-For the token field name and header format that your platform expects, see the blueprint for your platform and model in [OpenSearch-provided connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/).
+如需您平台預期的權杖欄位名稱與標頭格式，請參閱 [OpenSearch 提供的連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/) 中您平台與模型的藍圖。
 
-## Client certificate authentication
-**Introduced 3.9**
+## 用戶端憑證驗證
+**於 3.9 版推出**
 {: .label .label-purple }
 
-Client certificate authentication, also called mutual TLS (mTLS), allows a connector to present a client certificate when connecting to an externally hosted model. Both sides of the connection authenticate each other during the TLS handshake: the endpoint proves its identity with a server certificate, and the connector proves its identity with a client certificate. Use mTLS when the model endpoint requires a client certificate rather than a token passed in a request header.
+用戶端憑證驗證也稱為雙向 TLS (mTLS)，可讓連接器在連線至外部託管的模型時出示用戶端憑證。連線的雙方會在 TLS 握手期間互相驗證：端點以伺服器憑證證明其身分，連接器則以用戶端憑證證明其身分。當模型端點要求用戶端憑證，而非在請求標頭中傳遞的權杖時，請使用 mTLS。
 
-To enable mTLS, set `mutual_tls_enabled` to `true` in the connector's `client_config` object and provide the certificate material in the connector's `credential` object.
+若要啟用 mTLS，請在連接器的 `client_config` 物件中將 `mutual_tls_enabled` 設為 `true`，並在連接器的 `credential` 物件中提供憑證資料。
 
-### Request body fields
+### 請求本文欄位
 
-When `mutual_tls_enabled` is set to `true`, the `credential` object supports the following certificate fields. Provide the certificate content itself, either as PEM text with newlines escaped as `\n` or as Base64-encoded content; file paths are not supported. OpenSearch encrypts these fields in the same way as any other credential and makes them available on every node, so you don't need to copy certificate files to individual nodes.
+當 `mutual_tls_enabled` 設為 `true` 時，`credential` 物件支援下列憑證欄位。請提供憑證內容本身，可以是將換行逸出為 `\n` 的 PEM 文字，或是 Base64 編碼的內容；不支援檔案路徑。OpenSearch 會以與其他任何認證相同的方式加密這些欄位，並讓它們在每個節點上都能使用，因此您不需要將憑證檔案複製到個別節點。
 
-| Field  | Data type | Required/Optional | Description |
+| 欄位 | 資料類型 | 必要/選用 | 說明 |
 |:---|:---|:---|:---|
-| `client_cert_pem` | String | Required when `keystore_type` is `PEM` | The client certificate in PEM format. To present a certificate issued by an intermediate certificate authority (CA), include the full chain, ordered leaf certificate first. |
-| `client_key_pem` | String | Required when `keystore_type` is `PEM` | The client private key in PEM format. Must be a non-encrypted PKCS #8 key (`-----BEGIN PRIVATE KEY-----`); PKCS #1 keys are not supported. |
-| `client_cert_pkcs12` | String | Required when `keystore_type` is `PKCS12` | The Base64-encoded PKCS12 keystore containing the client certificate and private key. |
-| `keystore_password` | String | Optional | The password protecting the PKCS12 keystore. Omit it for a keystore that has no password. |
-| `ca_cert_pem` | String | Optional | One or more CA certificates, in PEM format, used to validate the endpoint's server certificate. Accepts a bundle of intermediate and root certificates. If omitted, the Java default truststore is used. Provide this field when the endpoint uses a private CA. |
+| `client_cert_pem` | 字串 | 當 `keystore_type` 為 `PEM` 時為必要 | PEM 格式的用戶端憑證。若要出示由中繼憑證授權單位 (CA) 簽發的憑證，請包含完整鏈結，並以葉憑證排在最前面。 |
+| `client_key_pem` | 字串 | 當 `keystore_type` 為 `PEM` 時為必要 | PEM 格式的用戶端私密金鑰。必須是未加密的 PKCS #8 金鑰 (`-----BEGIN PRIVATE KEY-----`)；不支援 PKCS #1 金鑰。 |
+| `client_cert_pkcs12` | 字串 | 當 `keystore_type` 為 `PKCS12` 時為必要 | 包含用戶端憑證與私密金鑰的 Base64 編碼 PKCS12 金鑰庫。 |
+| `keystore_password` | 字串 | 選用 | 保護 PKCS12 金鑰庫的密碼。若金鑰庫沒有密碼，請省略此欄位。 |
+| `ca_cert_pem` | 字串 | 選用 | 一或多個 PEM 格式的 CA 憑證，用於驗證端點的伺服器憑證。可接受中繼與根憑證的組合。若省略，則使用 Java 預設信任存放區。當端點使用私人 CA 時，請提供此欄位。 |
 
-The `mutual_tls_enabled` and `keystore_type` fields belong to the connector's `client_config` object. For descriptions of both, see [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields).
+`mutual_tls_enabled` 與 `keystore_type` 欄位屬於連接器的 `client_config` 物件。如需兩者的說明，請參閱 [連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields)。
 
-### Prerequisites
+### 先決條件
 
-Before you configure mTLS, ensure that the following requirements are met:
+設定 mTLS 之前，請確認符合下列需求：
 
-- The connector uses the `http` protocol. For more information, see [Restrictions](#restrictions).
-- The endpoint URL matches a trusted endpoint. For more information, see [Adding trusted endpoints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index#adding-trusted-endpoints).
-- Private keys in PEM format are non-encrypted and use PKCS #8 encoding (`-----BEGIN PRIVATE KEY-----`). PKCS #1 keys (`-----BEGIN RSA PRIVATE KEY-----`) are not supported. To convert a PKCS #1 key to PKCS #8, use the following command:
+- 連接器使用 `http` 通訊協定。如需詳細資訊，請參閱 [限制](#restrictions)。
+- 端點 URL 符合受信任的端點。如需詳細資訊，請參閱 [新增受信任的端點]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index#adding-trusted-endpoints)。
+- PEM 格式的私密金鑰未加密，並使用 PKCS #8 編碼 (`-----BEGIN PRIVATE KEY-----`)。不支援 PKCS #1 金鑰 (`-----BEGIN RSA PRIVATE KEY-----`)。若要將 PKCS #1 金鑰轉換為 PKCS #8，請使用下列命令：
 
 ```bash
 openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in rsa_key.pem -out pkcs8_key.pem
 ```
 {% include copy.html %}
 
-Base64-encoded PEM values are detected and decoded automatically. Because Base64 encoding avoids escaping newlines by hand, it is the more convenient option for multiline certificates. To Base64-encode a certificate or key, use the following command:
+Base64 編碼的 PEM 值會自動偵測並解碼。由於 Base64 編碼可避免手動逸出換行，因此對多行憑證而言是較方便的選項。若要將憑證或金鑰進行 Base64 編碼，請使用下列命令：
 
 ```bash
 base64 -i client-cert.pem
 ```
 {% include copy.html %}
 
-### Using PEM certificates
+### 使用 PEM 憑證
 
-To authenticate with a PEM certificate and private key, set `keystore_type` to `PEM` and provide `client_cert_pem` and `client_key_pem`:
+若要使用 PEM 憑證與私密金鑰進行驗證，請將 `keystore_type` 設為 `PEM`，並提供 `client_cert_pem` 與 `client_key_pem`：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -127,12 +128,12 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-Because `PEM` is the default, you can omit `keystore_type` when using PEM certificates.
+由於 `PEM` 是預設值，因此使用 PEM 憑證時可以省略 `keystore_type`。
 {: .note}
 
-### Using a PKCS12 keystore
+### 使用 PKCS12 金鑰庫
 
-To authenticate with a PKCS12 keystore, set `keystore_type` to `PKCS12` and provide the Base64-encoded keystore in `client_cert_pkcs12`. A PKCS12 keystore is binary, so it must always be Base64 encoded:
+若要使用 PKCS12 金鑰庫進行驗證，請將 `keystore_type` 設為 `PKCS12`，並在 `client_cert_pkcs12` 中提供 Base64 編碼的金鑰庫。PKCS12 金鑰庫是二進位格式，因此必須一律以 Base64 編碼：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -168,7 +169,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-To create a PKCS12 keystore from an existing PEM certificate and key and then Base64-encode it, use the following commands:
+若要從現有的 PEM 憑證與金鑰建立 PKCS12 金鑰庫，再將其進行 Base64 編碼，請使用下列命令：
 
 ```bash
 openssl pkcs12 -export -in client-cert.pem -inkey client-key.pem -out client.p12 -name client
@@ -176,36 +177,36 @@ base64 -i client.p12
 ```
 {% include copy.html %}
 
-### Certificate chains and custom CA certificates
+### 憑證鏈結與自訂 CA 憑證
 
-If your client certificate is issued by an intermediate certificate authority (CA), include the full chain in `client_cert_pem`. Order the chain leaf first, followed by each issuing intermediate certificate, so that every certificate is issued by the one that follows it. A misordered chain is rejected with an error that identifies the certificates involved.
+如果您的用戶端憑證是由中繼憑證授權單位 (CA) 簽發，請在 `client_cert_pem` 中包含完整鏈結。鏈結的順序以葉憑證排在最前面，接著是每個簽發的中繼憑證，讓每個憑證都是由其後方的憑證所簽發。順序錯誤的鏈結會被拒絕，並顯示指出相關憑證的錯誤。
 
-The `ca_cert_pem` field is optional and controls how the endpoint's server certificate is validated:
+`ca_cert_pem` 欄位是選用的，可控制如何驗證端點的伺服器憑證：
 
-- If you provide `ca_cert_pem`, OpenSearch validates the server certificate against only the certificates it contains. The field accepts a bundle, so you can include both intermediate and root certificates. Provide this field when the endpoint uses a private CA.
-- If you omit `ca_cert_pem`, OpenSearch validates the server certificate against the Java default truststore.
+- 如果您提供 `ca_cert_pem`，OpenSearch 只會依據其中包含的憑證來驗證伺服器憑證。此欄位可接受組合，因此您可以同時包含中繼與根憑證。當端點使用私人 CA 時，請提供此欄位。
+- 如果您省略 `ca_cert_pem`，OpenSearch 會依據 Java 預設信任存放區來驗證伺服器憑證。
 
-Because a private CA is usually not present in the default truststore, provide `ca_cert_pem` rather than setting `skip_ssl_verification` to `true`. Skipping verification is rejected when mTLS is enabled.
+由於私人 CA 通常不存在於預設信任存放區中，請提供 `ca_cert_pem`，而不要將 `skip_ssl_verification` 設為 `true`。啟用 mTLS 時，會拒絕略過驗證。
 {: .important}
 
-### Rotating certificates
+### 輪替憑證
 
-To rotate an expiring certificate, send the new certificate material in an update request, as described in [Updating connector credentials]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#updating-connector-credentials). You don't need to undeploy the model or restart any nodes.
+若要輪替即將到期的憑證，請在更新請求中傳送新的憑證資料，如 [更新連接器認證]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#updating-connector-credentials) 所述。您不需要取消部署模型，也不需要重新啟動任何節點。
 
-OpenSearch detects the change and builds a new HTTP client for subsequent predict requests. The replaced client is closed after a grace period, so requests already in flight complete against the previous certificate.
+OpenSearch 會偵測到變更，並為後續的預測請求建立新的 HTTP 用戶端。被取代的用戶端會在寬限期後關閉，因此已在進行中的請求會使用先前的憑證完成。
 
-### Restrictions
+### 限制
 
-The following restrictions apply to client certificate authentication:
+下列限制適用於用戶端憑證驗證：
 
-- mTLS applies only to connectors that use the `http` protocol. Connectors that use the `aws_sigv4`, `mcp_sse`, or `mcp_streamable_http` protocol accept `mutual_tls_enabled` when they are created but ignore it at runtime.
-- `skip_ssl_verification` and `mutual_tls_enabled` cannot both be set to `true`. Disabling server certificate validation removes the mutual part of mutual TLS, so provide `ca_cert_pem` to validate the server certificate against a private CA.
-- The `credential` object cannot contain `api_key` when mTLS is enabled. OpenSearch enforces certificate-only authentication and rejects mixed authentication methods.
-- File paths are not supported in certificate fields. Provide the certificate content itself.
-- Certificate material is validated on the first predict request. A connector with an invalid certificate configuration is created successfully and fails when it is first used.
+- mTLS 僅適用於使用 `http` 通訊協定的連接器。使用 `aws_sigv4`、`mcp_sse` 或 `mcp_streamable_http` 通訊協定的連接器在建立時會接受 `mutual_tls_enabled`，但在執行階段會忽略它。
+- `skip_ssl_verification` 與 `mutual_tls_enabled` 不能同時設為 `true`。停用伺服器憑證驗證會移除雙向 TLS 中的雙向部分，因此請提供 `ca_cert_pem`，以依據私人 CA 驗證伺服器憑證。
+- 啟用 mTLS 時，`credential` 物件不能包含 `api_key`。OpenSearch 會強制僅使用憑證驗證，並拒絕混合的驗證方法。
+- 憑證欄位不支援檔案路徑。請提供憑證內容本身。
+- 憑證資料會在第一次預測請求時驗證。憑證組態無效的連接器可以成功建立，但在第一次使用時會失敗。
 
-## Next steps
+## 後續步驟
 
-- To find the blueprint for your platform and model, see [OpenSearch-provided connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/).
-- To register and deploy a model that uses this connector, see [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/).
-- For descriptions of all connector fields, including the `client_config` object, see [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields).
+- 若要尋找您平台與模型的藍圖，請參閱 [OpenSearch 提供的連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/)。
+- 若要註冊並部署使用此連接器的模型，請參閱 [連線至外部託管的模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
+- 如需所有連接器欄位 (包括 `client_config` 物件) 的說明，請參閱 [連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields)。

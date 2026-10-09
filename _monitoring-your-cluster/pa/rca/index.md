@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Root Cause Analysis
+title: "根本原因分析"
 nav_order: 50
 parent: Performance Analyzer
 has_children: true
@@ -9,12 +10,12 @@ redirect_from:
   - /monitoring-your-cluster/pa/rca/
 ---
 
-# Root cause analysis
+# 根本原因分析
 
-The OpenSearch Performance Analyzer plugin (PA) captures OpenSearch and JVM activity, plus their lower-level resource usage (e.g. disk, network, CPU, and memory). Based on this instrumentation, Performance Analyzer computes and exposes diagnostic metrics so that administrators can measure and understand the bottlenecks in their OpenSearch clusters.
+OpenSearch Performance Analyzer 外掛程式 (PA) 會擷取 OpenSearch 與 JVM 的活動，以及它們的底層資源使用情況（例如磁碟、網路、CPU 和記憶體）。根據這些量測資料，Performance Analyzer 會計算並提供診斷指標，讓管理員能夠測量並了解其 OpenSearch 叢集中的瓶頸。
 
-The Root Cause Analysis framework (RCA) uses the information from PA to alert administrators about the root cause of performance and availability issues that their clusters might be experiencing.
+根本原因分析框架 (RCA) 會使用 PA 的資訊，在叢集可能發生效能或可用性問題時，向管理員警示問題的根本原因。
 
-In broad strokes, the framework helps you access data streams from OpenSearch nodes running Performance Analyzer. You write snippets of Java to choose the streams that matter to you and evaluate the streams' PA metrics against certain thresholds. As RCA runs, you can access the state of each analysis using the REST API.
+簡而言之，此框架可協助您存取執行 Performance Analyzer 的 OpenSearch 節點所產生的資料串流。您可以撰寫 Java 程式碼片段，選擇您關注的串流，並根據特定門檻評估這些串流的 PA 指標。當 RCA 執行時，您可以使用 REST API 存取每項分析的狀態。
 
-To learn more about Root Cause Analysis, see [its repository on GitHub](https://github.com/opensearch-project/performance-analyzer-rca).
+若要進一步了解根本原因分析，請參閱[其在 GitHub 上的儲存庫](https://github.com/opensearch-project/performance-analyzer-rca)。

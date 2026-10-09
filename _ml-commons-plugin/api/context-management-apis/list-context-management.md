@@ -1,47 +1,48 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: List context management
+title: "列出脈絡管理"
 parent: Context management APIs
 grand_parent: ML Commons APIs
 nav_order: 50
 ---
 
 # List Context Management API
-**Introduced 3.5**
+**3.5 版新增**
 {: .label .label-purple }
 
-Use this API to retrieve a list of all context management configurations in the cluster.
+使用此 API 擷取叢集中所有脈絡管理組態的清單。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/context_management
 ```
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters.
+下表列出可用的查詢參數。
 
-Parameter | Data type | Required/Optional | Description
+參數 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`size` | Integer | Optional | The maximum number of results to return. Default is `10`.
-`from` | Integer | Optional | The starting index for pagination. Default is `0`.
+`size` | 整數 | 選用 | 要傳回的最大結果數量。預設為 `10`。
+`from` | 整數 | 選用 | 分頁的起始索引。預設為 `0`。
 
-## Example request
+## 範例請求
 
 ```json
 GET /_plugins/_ml/context_management
 ```
 {% include copy-curl.html %}
 
-## Example request with pagination
+## 含分頁的範例請求
 
 ```json
 GET /_plugins/_ml/context_management?size=20&from=0
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -81,6 +82,6 @@ GET /_plugins/_ml/context_management?size=20&from=0
 }
 ```
 
-## Related documentation
+## 相關文件
 
-For more information, see [Context management]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/).
+如需更多資訊，請參閱[脈絡管理]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/)。

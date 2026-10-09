@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: kmeans
 parent: Commands
@@ -8,40 +9,40 @@ nav_order: 26
 
 <!-- vale off -->
 
-# kmeans command (Deprecated)
+# kmeans 命令（已棄用）
 
 <!-- vale on -->
 
-The `kmeans` command is deprecated in favor of the [`ml` command]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/ml/).
+`kmeans` 命令已棄用，請改用 [`ml` 命令]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/ml/)。
 {: .warning}
 
-The `kmeans` command applies the k-means algorithm in the ML Commons plugin on the search results returned by a PPL command.
+`kmeans` 命令會將 ML Commons 外掛程式中的 k-means 演算法套用至 PPL 命令傳回的搜尋結果。
 
-To use the `kmeans` command, `plugins.calcite.enabled` must be set to `false`.
+若要使用 `kmeans` 命令，必須將 `plugins.calcite.enabled` 設為 `false`。
 {: .note}
 
-## Syntax
+## 語法
 
-The `kmeans` command has the following syntax:
+`kmeans` 命令的語法如下：
 
 ```sql
 kmeans <centroids> <iterations> <distance_type>
 ```
 
-## Parameters
+## 參數
 
-The `kmeans` command supports the following parameters.
+`kmeans` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要／選用 | 說明 |
 | --- | --- | --- |
-| `<centroids>` | Optional | The number of clusters to group data points into. Default is `2`. |
-| `<iterations>` | Optional | The number of iterations. Default is `10`. |
-| `<distance_type>` | Optional | The distance type. Valid values are `COSINE`, `L1`, and `EUCLIDEAN`. Default is `EUCLIDEAN`. |  
+| `<centroids>` | 選用 | 將資料點分組成的叢集數量。預設為 `2`。 |
+| `<iterations>` | 選用 | 迭代次數。預設為 `10`。 |
+| `<distance_type>` | 選用 | 距離類型。有效值為 `COSINE`、`L1` 和 `EUCLIDEAN`。預設為 `EUCLIDEAN`。 |  
   
 
-## Example: Clustering of the Iris dataset  
+## 範例：Iris 資料集的分群  
 
-The following query classifies three Iris species (Iris setosa, Iris virginica, and Iris versicolor) based on the combination of four features measured from each sample (the lengths and widths of sepals and petals):
+下列查詢根據每個樣本測得的四項特徵（萼片和花瓣的長度與寬度）組合，將三種鳶尾花（Iris setosa、Iris virginica 和 Iris versicolor）分類：
   
 ```sql
 source=iris_data
@@ -50,7 +51,7 @@ source=iris_data
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 

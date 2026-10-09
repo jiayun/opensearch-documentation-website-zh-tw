@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Neural sparse ANN explain
+title: "Neural sparse ANN 說明"
 parent: Neural sparse
 grand_parent: AI and vector search queries
 nav_order: 10
 ---
 
-# Neural sparse ANN query explain
-**Introduced 3.5**
+# Neural sparse ANN 查詢說明
+**3.5 版推出**
 {: .label .label-purple }
 
-You can provide the `explain` parameter to understand how scores are calculated in neural sparse approximate nearest neighbor (ANN) queries. When enabled, it provides detailed information about the scoring process for each search result, including query token pruning, quantized dot product calculations, quantization rescaling, and filter application. This comprehensive insight makes it easier to understand and optimize your neural sparse ANN query results. For more information about `explain`, see [Explain API]({{site.url}}{{site.baseurl}}/api-reference/explain/).
+您可以提供 `explain` 參數，以瞭解 neural sparse 近似最近鄰 (ANN) 查詢的分數計算方式。啟用後，它會提供每個搜尋結果評分程序的詳細資訊，包括查詢詞元修剪、量化點積計算、量化重新縮放，以及篩選器的套用。這種全面的洞察讓您更容易理解並最佳化 neural sparse ANN 查詢結果。如需 `explain` 的更多資訊，請參閱 [Explain API]({{site.url}}{{site.baseurl}}/api-reference/explain/)。
 
-`explain` is an expensive operation in terms of both resources and time. For production clusters, we recommend using it sparingly for the purpose of troubleshooting.
+`explain` 在資源與時間方面都是昂貴的操作。對於生產環境叢集，我們建議僅在疑難排解時少量使用。
 {: .warning }
 
-The examples and field descriptions on this page describe the explanation output of the Lucene engine, which is the default engine for a `sparse_vector` field. The native engine's explanation reports query token pruning and an exact dot product score and doesn't include a quantization rescaling component. Both engines quantize token weights to 8 bits using the `quantization_ceiling_ingest` and `quantization_ceiling_search` mapping parameters, so both parameters are meaningful for either engine. The engines differ only in the explanation breakdown. For more information about engines, see [Engines]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines).
+本頁的範例與欄位說明描述的是 Lucene 引擎的說明輸出，該引擎是 `sparse_vector` 欄位的預設引擎。原生引擎的說明會報告查詢詞元修剪與精確點積分數，但不包含量化重新縮放元件。兩種引擎都會使用 `quantization_ceiling_ingest` 與 `quantization_ceiling_search` 對應參數將詞元權重量化為 8 位元，因此這兩個參數對任一引擎都有意義。兩種引擎的差異僅在於說明的細項。如需引擎的更多資訊，請參閱 [引擎]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines)。
 
-The explanation includes the neural sparse ANN components described on this page only for segments containing at least `approximate_threshold` documents (by default, `1000000`). Queries against smaller segments return the standard `rank_features` explanation. For more information, see [Hybrid indexing]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#hybrid-indexing).
+只有當分段至少包含 `approximate_threshold` 份文件 (預設為 `1000000`) 時，說明才會包含本頁所述的 neural sparse ANN 元件。對較小分段的查詢會回傳標準的 `rank_features` 說明。如需更多資訊，請參閱 [混合索引編製]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#hybrid-indexing)。
 {: .note}
 
-You can provide the `explain` parameter in a URL when running a neural sparse ANN query using the following syntax:
+您可以在執行 neural sparse ANN 查詢時，使用下列語法在 URL 中提供 `explain` 參數：
 
 ```json
 GET {index}/_search?explain=true
 POST {index}/_search?explain=true
 ```
 
-The `explain` parameter works for the following types of neural sparse ANN search:
+`explain` 參數適用於下列類型的 neural sparse ANN 搜尋：
 
-- Basic neural sparse ANN search
-- Neural sparse ANN search with filters
+- 基本 neural sparse ANN 搜尋
+- 含篩選器的 neural sparse ANN 搜尋
 
-You can provide the `explain` parameter as a query parameter:
+您可以將 `explain` 參數作為查詢參數提供：
 
 ```json
 GET my-sparse-index/_search?explain=true
@@ -55,7 +56,7 @@ GET my-sparse-index/_search?explain=true
 ```
 {% include copy-curl.html %}
 
-Alternatively, you can provide the `explain` parameter in the request body:
+或者，您也可以在請求本文中提供 `explain` 參數：
 
 ```json
 GET my-sparse-index/_search
@@ -79,7 +80,7 @@ GET my-sparse-index/_search
 ```
 {% include copy-curl.html %}
 
-## Example: Basic neural sparse ANN search
+## 範例：基本 neural sparse ANN 搜尋
 
 ```json
 GET my-sparse-index/_search?explain=true
@@ -106,7 +107,7 @@ GET my-sparse-index/_search?explain=true
 
 <details markdown="block">
   <summary>
-    Example response
+    範例回應
   </summary>
   {: .text-delta}
 
@@ -211,7 +212,7 @@ GET my-sparse-index/_search?explain=true
 ```
 </details>
 
-## Example: Neural sparse ANN search with filter
+## 範例：含篩選器的 neural sparse ANN 搜尋
 
 ```json
 GET hotels-index/_search?explain=true
@@ -243,7 +244,7 @@ GET hotels-index/_search?explain=true
 
 <details markdown="block">
   <summary>
-    Example response
+    範例回應
   </summary>
   {: .text-delta}
 
@@ -351,40 +352,40 @@ GET hotels-index/_search?explain=true
 ```
 </details>
 
-## Response body fields
+## 回應本文欄位
 
-The following table describes the fields in the explanation response.
+下表說明解釋回應中的欄位。
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`explanation` | The `explanation` object contains the following fields: <br> - `value`: Contains the calculation result.<br> - `description`: Explains what type of calculation was performed. <br> - `details`: Shows any subcalculations performed.
+`explanation` | `explanation` 物件包含下列欄位：<br> - `value`：包含計算結果。<br> - `description`：說明執行了何種計算。<br> - `details`：顯示執行的任何子計算。
 
-### Explanation components
+### 解釋元件
 
-The `details` array in the explanation contains the following components based on the neural sparse ANN scoring process.
+解釋中的 `details` 陣列會根據 neural sparse ANN 評分流程包含下列元件。
 
-Component | Description
+元件 | 說明
 :--- | :---
-Query token pruning | Shows the number of query tokens retained after pruning based on the `top_n` parameter. If no pruning occurs, indicates that all tokens were kept.
-Raw dot product score | The quantized dot product score before rescaling. Contains nested details showing each token's contribution as `query_weight * doc_weight`.
-Quantization rescaling | (Lucene engine only) Explains how the raw quantized score is converted to the final float score using the formula: `boost * ceiling_ingest * ceiling_search / 255 / 255`. Contains details about each parameter used in the calculation.
-Filter explanation | (When filters are applied) Shows filter criteria and search mode. Indicates whether exact search mode was used when the number of filtered documents is fewer than or equal to `k`.
+查詢詞元剪除 | 顯示根據 `top_n` 參數剪除後保留的查詢詞元數量。若未進行剪除，表示所有詞元皆保留。
+原始內積分數 | 重新縮放前的量化內積分數。包含巢狀詳細資料，顯示每個詞元的貢獻為 `query_weight * doc_weight`。
+量化重新縮放 | （僅限 Lucene 引擎）說明如何使用下列公式將原始量化分數轉換為最終浮點分數：`boost * ceiling_ingest * ceiling_search / 255 / 255`。包含計算中使用之每個參數的詳細資料。
+篩選解釋 | （套用篩選時）顯示篩選條件與搜尋模式。指出當篩選後的文件數小於或等於 `k` 時，是否使用精確搜尋模式。
 
-### Quantization parameters
+### 量化參數
 
-Neural sparse ANN search uses unsigned byte quantization to reduce memory usage and improve search performance. The Lucene engine's quantization rescaling section includes the following parameters. The native engine applies the same quantization but reports an exact dot product score, so this section doesn't appear in its explanations.
+Neural sparse ANN 搜尋使用無正負號位元組量化來減少記憶體用量並改善搜尋效能。Lucene 引擎的量化重新縮放區段包含下列參數。原生引擎會套用相同的量化，但會回報精確的內積分數，因此其解釋中不會出現此區段。
 
-Parameter | Description
+參數 | 說明
 :--- | :---
-`original boost` | The boost value applied to the query. Default is 1.0.
-`ceiling_ingest` | The quantization ceiling parameter used during document ingestion.
-`ceiling_search` | The quantization ceiling parameter used during search.
-`MAX_UNSIGNED_BYTE_VALUE` | The maximum value for unsigned byte quantization (255).
+`original boost` | 套用至查詢的提升值。預設為 1.0。
+`ceiling_ingest` | 文件匯入期間使用的量化上限參數。
+`ceiling_search` | 搜尋期間使用的量化上限參數。
+`MAX_UNSIGNED_BYTE_VALUE` | 無正負號位元組量化的最大值 (255)。
 
-During ingestion, float token weights are converted to unsigned bytes (0--255) by dividing each weight by `ceiling_ingest` and scaling to the byte range. Similarly, during search, query token weights are quantized using `ceiling_search`. The raw dot product is computed using these quantized byte values. To recover the approximate original score, the result is rescaled using the formula `final_score = raw_quantized_score * boost * ceiling_ingest * ceiling_search / 255 / 255`. The ceiling parameters determine the maximum weight value that can be represented without clipping---weights exceeding the ceiling are capped at 255.
+匯入期間，浮點詞元權重會除以 `ceiling_ingest` 並縮放至位元組範圍，藉此轉換為無正負號位元組 (0--255)。同樣地，搜尋期間會使用 `ceiling_search` 將查詢詞元權重量化。原始內積會使用這些量化後的位元組值計算。為了還原近似的原始分數，會使用公式 `final_score = raw_quantized_score * boost * ceiling_ingest * ceiling_search / 255 / 255` 重新縮放結果。上限參數決定可表示而不裁切的最大權重值——超過上限的權重會以 255 為上限。
 
-## Next steps
+## 後續步驟
 
-- For more information about neural sparse ANN search, see [Neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/).
-- For more information about the Explain API, see [Explain API]({{site.url}}{{site.baseurl}}/api-reference/explain/).
-- For information about filtering in neural sparse ANN search, see [Filtering in neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/filtering-in-sparse-search/).
+- 如需 neural sparse ANN 搜尋的詳細資訊，請參閱 [Neural sparse ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)。
+- 如需 Explain API 的詳細資訊，請參閱 [Explain API]({{site.url}}{{site.baseurl}}/api-reference/explain/)。
+- 如需 neural sparse ANN 搜尋中篩選的相關資訊，請參閱 [Neural sparse ANN 搜尋中的篩選]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/filtering-in-sparse-search/)。

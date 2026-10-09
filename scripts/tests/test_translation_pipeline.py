@@ -248,9 +248,59 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(runner.run([MATCH]), {"reviewed": 1})
         self.assertEqual(self.entry(MATCH)["attempts"], 2)
         self.assertIn("Mistranslated heading", json.dumps(request_payload(claude.calls[-1])["previous_issues"]))
+        repair = request_payload(claude.calls[-1])
+        self.assertEqual(repair['metadata']['task'], 'repair')
+        self.assertTrue(all('draft' in segment for segment in repair['segments']))
+        self.assertEqual([segment['id'] for segment in repair['segments']], ['body.001'])
+        self.assertNotIn('## Parameters', repair['segments'][0]['text'])
         review_items = request_payload(agy.calls[0])["items"]
         self.assertTrue(any("```json" in item["source"] for item in review_items), "reviewer sees full original")
         self.assertTrue(any("```json" in item["translation"] for item in review_items))
+
+    def test_section_repair_keeps_unaffected_draft_bytes_and_full_review(self):
+        def reviewer(prompt, number):
+            if number == 1:
+                return json.dumps({'approved': False, 'issues': [{'id': 'section.002', 'severity': 'major',
+                    'problem': 'Correct the parameter heading', 'suggestion': 'Use 參數說明'}]})
+            return approve(prompt)
+        drafts = []
+        def translator(prompt, number):
+            payload = request_payload(prompt)
+            if payload['metadata'].get('task') == 'repair':
+                self.assertEqual([s['id'] for s in payload['segments']], ['body.002'])
+                return json.dumps({'segments': [{'id': s['id'], 'text': s['draft'].replace('## 譯', '## 參數說明', 1)}
+                                                for s in payload['segments']]}, ensure_ascii=False)
+            response = good_translation(prompt)
+            drafts.append(response)
+            return response
+        claude, agy = self.claude(translator), self.agy(reviewer)
+        runner = self.runner([claude], [agy])
+        self.assertEqual(runner.run([MATCH]), {'reviewed': 1})
+        first_items = request_payload(agy.calls[0])['items']
+        last_items = request_payload(agy.calls[1])['items']
+        for before, after in zip(first_items, last_items):
+            if before['id'] != 'section.002':
+                self.assertEqual(before['translation'], after['translation'])
+        self.assertIn('## 參數說明', self.read(MATCH))
+        self.assertEqual(len(claude.calls), 2)
+
+    def test_null_review_location_falls_back_without_unsafe_section_patch(self):
+        def reviewer(prompt, number):
+            if number == 1:
+                return json.dumps({'approved': False, 'issues': [{'id': None, 'severity': 'major',
+                                                               'problem': 'Global consistency problem'}]})
+            return approve(prompt)
+        claude = self.claude()
+        self.assertEqual(self.runner([claude], [self.agy(reviewer)]).run([MATCH]), {'reviewed': 1})
+        self.assertNotEqual(request_payload(claude.calls[-1])['metadata'].get('task'), 'repair')
+
+    def test_review_payload_explicitly_identifies_protected_legal_attribution(self):
+        from translation_pipeline.pipeline import build_work
+        notice = 'Tiles are generated per [Copyright and License for OpenStreetMap](https://www.openstreetmap.org/copyright).'
+        baseline = '---\ntitle: License\n---\n\n# License\n\n' + notice + '\n'
+        work = build_work('license.md', baseline.encode(), sha256_bytes(baseline.encode()))
+        items = self.runner([self.claude()], [self.agy()]).review_items(work, baseline)
+        self.assertTrue(any(notice in item.get('protected_legal_notices', []) for item in items))
 
     def test_rejection_is_bounded_and_leaves_file_untouched(self):
         runner = self.runner([self.claude()], [self.agy(lambda p, n: reject(p))])
@@ -354,6 +404,49 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(claude.calls, [])
         self.assertTrue(self.read(MATCH).endswith("Hand edit.\n"))
         self.assertIn("refusing to overwrite", self.entry(MATCH)["last_error"])
+
+    def test_retry_resumes_rejected_draft_and_repairs_before_full_review(self):
+        first = self.runner([self.claude()], [self.agy(lambda p, n: reject(p))])
+        with mock.patch.object(config, "MAX_PAGE_ATTEMPTS", 1):
+            self.assertEqual(first.run([MATCH]), {"failed": 1})
+        saved = first.cache.get("pending-repairs", Cache.key(MATCH, self.entry(MATCH)["source_sha256"]))
+        self.assertTrue(saved["translator"]["providers"])
+        self.assertFalse(saved["review"]["approved"])
+        translator, reviewer = self.claude(), self.agy()
+        second = self.runner([translator], [reviewer], reset_attempts=True)
+        from translation_pipeline.pipeline import Candidate
+        with mock.patch.object(second, "repair", return_value=Candidate(saved["text"], saved["translator"])) as repair:
+            self.assertEqual(second.run([MATCH]), {"reviewed": 1})
+        repair.assert_called_once()
+        self.assertEqual(translator.calls, [])
+        self.assertEqual(len(reviewer.calls), 1, "resumption still requires independent full review")
+
+    def test_changed_policy_rereviews_saved_draft_without_reusing_issue_ids(self):
+        first = self.runner([self.claude()], [self.agy(lambda p, n: reject(p))])
+        with mock.patch.object(config, "MAX_PAGE_ATTEMPTS", 1):
+            first.run([MATCH])
+        translator, reviewer = self.claude(), self.agy()
+        second = self.runner([translator], [reviewer], reset_attempts=True)
+        second.prompts.version = "changed-policy"
+        with mock.patch.object(second, "repair") as repair:
+            self.assertEqual(second.run([MATCH]), {"reviewed": 1})
+        repair.assert_not_called()
+        self.assertEqual(translator.calls, [])
+        self.assertEqual(len(reviewer.calls), 1)
+
+    def test_rejected_checkpoint_with_changed_code_is_not_resumed(self):
+        first = self.runner([self.claude()], [self.agy(lambda p, n: reject(p))])
+        with mock.patch.object(config, "MAX_PAGE_ATTEMPTS", 1):
+            first.run([MATCH])
+        key = Cache.key(MATCH, self.entry(MATCH)["source_sha256"])
+        saved = first.cache.get("pending-repairs", key)
+        saved["text"] = saved["text"].replace('"wind"', '"breeze"')
+        first.cache.put("pending-repairs", key, saved)
+        second = self.runner([self.claude()], [self.agy()], reset_attempts=True)
+        with mock.patch.object(second, "repair") as repair, mock.patch.object(second, "translate", wraps=second.translate) as translate:
+            self.assertEqual(second.run([MATCH]), {"reviewed": 1})
+        repair.assert_not_called()
+        translate.assert_called_once()
 
     # -- publish check tampering ---------------------------------------------------------------------
     def test_check_detects_tampering_and_bad_provenance(self):

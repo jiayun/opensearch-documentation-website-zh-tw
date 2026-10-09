@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: SSL info
+title: "SSL 資訊"
 parent: Authentication APIs
 grand_parent: Security APIs
 nav_order: 50
 ---
 
 # SSL Info API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Retrieves information about the SSL configuration.
+擷取 SSL 組態的相關資訊。
 
 <!-- spec_insert_start
 api: security.get_sslinfo
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_opendistro/_security/sslinfo
 ```
@@ -26,24 +27,24 @@ GET /_opendistro/_security/sslinfo
 api: security.get_sslinfo
 component: query_parameters
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `show_dn` | Boolean or String | Whether to include all domain names in the response. |
+| `show_dn` | 布林值或字串 | 是否在回應中包含所有網域名稱。 |
 
 <!-- spec_insert_end -->
 
-## Example request
+## 範例請求
 
 ```json
 GET _opendistro/_security/sslinfo
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -57,18 +58,18 @@ GET _opendistro/_security/sslinfo
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文是包含下列欄位的 JSON 物件。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `principal` | String | The distinguished name of the client certificate that authenticated the request, or `null` when the request authenticated another way. |
-| `peer_certificates` | String | The number of certificates that the client presented, returned as a string. A request that presents no client certificate returns `0`. |
-| `ssl_protocol` | String | The TLS protocol version negotiated for the request. |
-| `ssl_cipher` | String | The cipher suite negotiated for the request. |
-| `ssl_provider_http` | String | The TLS provider in use on the HTTP layer. |
-| `ssl_provider_transport_server` | String | The TLS provider in use for incoming transport layer connections. |
-| `ssl_provider_transport_client` | String | The TLS provider in use for outgoing transport layer connections. |
-| `peer_certificates_list` | Array of Strings | The distinguished names of the certificates that the client presented, or `null` when the client presented none. Returned only when `show_dn` is `true`. |
-| `local_certificates_list` | Array of Strings | The distinguished names of the certificates that the node presented. Returned only when `show_dn` is `true`. |
+| `principal` | 字串 | 驗證該請求的用戶端憑證辨別名稱，或當請求以其他方式驗證時為 `null`。 |
+| `peer_certificates` | 字串 | 用戶端提供的憑證數量，以字串形式傳回。未提供任何用戶端憑證的請求會傳回 `0`。 |
+| `ssl_protocol` | 字串 | 為該請求協商出的 TLS 通訊協定版本。 |
+| `ssl_cipher` | 字串 | 為該請求協商出的加密套件。 |
+| `ssl_provider_http` | 字串 | HTTP 層所使用的 TLS 提供者。 |
+| `ssl_provider_transport_server` | 字串 | 傳入傳輸層連線所使用的 TLS 提供者。 |
+| `ssl_provider_transport_client` | 字串 | 傳出傳輸層連線所使用的 TLS 提供者。 |
+| `peer_certificates_list` | 字串陣列 | 用戶端所提供憑證的辨別名稱，或當用戶端未提供任何憑證時為 `null`。僅當 `show_dn` 為 `true` 時傳回。 |
+| `local_certificates_list` | 字串陣列 | 節點所提供憑證的辨別名稱。僅當 `show_dn` 為 `true` 時傳回。 |

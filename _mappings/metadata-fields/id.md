@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: ID
 parent: Metadata fields
@@ -7,16 +8,16 @@ redirect_from:
   - /field-types/metadata-fields/id/
 ---
 
-# ID metadata field
+# ID 中繼資料欄位
 
-Each document in OpenSearch has a unique `_id` field. This field is indexed, allowing you to retrieve documents using the GET API or the [`ids` query]({{site.url}}{{site.baseurl}}/query-dsl/term/ids/).
+OpenSearch 中的每份文件都有一個唯一的 `_id` 欄位。此欄位會被編製索引，讓您能夠使用 GET API 或 [`ids` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/ids/)來擷取文件。
 
-If you do not provide an `_id` value, then OpenSearch automatically generates one for the document.
+如果您未提供 `_id` 值，OpenSearch 會自動為該文件產生一個。
 {: .note}
 
-The following example requests create an index named `test-index1` and add two documents with different `_id` values.
+下列範例請求會建立一個名為 `test-index1` 的索引，並新增兩份具有不同 `_id` 值的文件。
 
-The first request adds a document with an `_id` of `1`:
+第一個請求新增一份 `_id` 為 `1` 的文件：
 
 ```json
 PUT test-index1/_doc/1
@@ -26,7 +27,7 @@ PUT test-index1/_doc/1
 ```
 {% include copy-curl.html %}
 
-The second request adds a document with an `_id` of `2` and refreshes the index so that both documents are immediately searchable:
+第二個請求新增一份 `_id` 為 `2` 的文件，並重新整理索引，讓兩份文件都能立即被搜尋：
 
 ```json
 PUT test-index1/_doc/2?refresh=true
@@ -36,7 +37,7 @@ PUT test-index1/_doc/2?refresh=true
 ```
 {% include copy-curl.html %}
 
-You can then query the documents using the `_id` field, as shown in the following example request:
+接著，您可以使用 `_id` 欄位查詢這些文件，如下列範例請求所示：
 
 ```json
 GET test-index1/_search
@@ -50,7 +51,7 @@ GET test-index1/_search
 ```
 {% include copy-curl.html %}
 
-The response returns both documents with `_id` values of `1` and `2`:
+回應會傳回兩份 `_id` 值分別為 `1` 和 `2` 的文件：
 
 ```json
 {
@@ -90,6 +91,6 @@ The response returns both documents with `_id` values of `1` and `2`:
 ```
 {% include copy-curl.html %}
 
-## Limitations of the `_id` field
+## `_id` 欄位的限制
 
-While the `_id` field can be used in various queries, it is restricted from use in aggregations, sorting, and scripting. If you need to sort or aggregate on the `_id` field, it is recommended to duplicate the `_id` content into another field with `doc_values` enabled. Refer to [IDs query]({{site.url}}{{site.baseurl}}/query-dsl/term/ids/) for an example.
+雖然 `_id` 欄位可用於各種查詢，但不得用於彙總、排序和指令碼。如果您需要依 `_id` 欄位進行排序或彙總，建議將 `_id` 內容複製到另一個啟用 `doc_values` 的欄位。範例請參閱 [IDs 查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/ids/)。

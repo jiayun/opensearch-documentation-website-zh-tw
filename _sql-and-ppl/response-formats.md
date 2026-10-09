@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Response formats
+title: "回應格式"
 nav_order: 2
 redirect_from:
   - /search-plugins/sql/response-formats/
 ---
 
-# SQL and PPL query response formats
+# SQL 與 PPL 查詢回應格式
 
-OpenSearch provides the `jdbc`, `csv`, `raw`, and `json` response formats for SQL and PPL queries, each useful for different purposes. The `jdbc` format is widely used because it provides the schema information and adds more functionality, such as pagination. Besides the JDBC driver, various clients can benefit from a detailed and well-formatted response.
+OpenSearch 為 SQL 與 PPL 查詢提供 `jdbc`、`csv`、`raw` 與 `json` 回應格式，各有不同的用途。`jdbc` 格式被廣泛使用，因為它提供結構描述資訊，並增加更多功能，例如分頁。除了 JDBC 驅動程式之外，各種用戶端都能受益於詳細且格式良好的回應。
 
-## JDBC format
+## JDBC 格式
 
-By default, the SQL plugin returns the response in the standard JDBC format. This format is provided for the JDBC driver and clients that need both the schema and the result set to be well formatted.
+預設情況下，SQL 外掛程式會以標準 JDBC 格式傳回回應。此格式是為 JDBC 驅動程式以及需要結構描述與結果集都格式良好的用戶端所提供。
 
-#### Example request
+#### 範例請求
 
-The following query does not specify the response format, so the format is set to `jdbc`:
+下列查詢未指定回應格式，因此格式設定為 `jdbc`：
 
 ```json
 POST _plugins/_sql
@@ -26,9 +27,9 @@ POST _plugins/_sql
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
-In the response, the `schema` contains the field names and types, and the `datarows` field contains the The query returns the following results:
+在回應中，`schema` 包含欄位名稱與類型，而 `datarows` 欄位包含查詢傳回的下列結果：
 
 ```json
 {
@@ -63,9 +64,9 @@ In the response, the `schema` contains the field names and types, and the `datar
 }
 ```
 
-If an error of any type occurs, OpenSearch returns the error message.
+如果發生任何類型的錯誤，OpenSearch 會傳回錯誤訊息。
 
-The following query searches for a non-existent field `unknown`:
+下列查詢搜尋不存在的欄位 `unknown`：
 
 ```json
 POST /_plugins/_sql
@@ -75,7 +76,7 @@ POST /_plugins/_sql
 ```
 {% include copy-curl.html %}
 
-The response contains the error message and the cause of the error:
+回應包含錯誤訊息與錯誤原因：
 
 ```json
 {
@@ -88,13 +89,13 @@ The response contains the error message and the cause of the error:
 }
 ```
 
-## OpenSearch DSL JSON format
+## OpenSearch DSL JSON 格式
 
-If you set the format to `json`, the original OpenSearch response is returned in JSON format. Because this is the native response from OpenSearch, extra effort is needed to parse and interpret it.
+如果您將格式設定為 `json`，則會以 JSON 格式傳回原始的 OpenSearch 回應。由於這是來自 OpenSearch 的原生回應，因此需要額外的功夫來解析與解讀。
 
-#### Example request
+#### 範例請求
 
-The following query sets the response format to `json`:
+下列查詢將回應格式設定為 `json`：
 
 ```json
 POST _plugins/_sql?format=json
@@ -104,9 +105,9 @@ POST _plugins/_sql?format=json
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
-The response is the original response from OpenSearch:
+回應是來自 OpenSearch 的原始回應：
 
 ```json
 {
@@ -157,11 +158,11 @@ The response is the original response from OpenSearch:
 }
 ```
 
-## CSV format
+## CSV 格式
 
-You can also specify to return results in CSV format. 
+您也可以指定以 CSV 格式傳回結果。
 
-#### Example request
+#### 範例請求
 
 ```json
 POST /_plugins/_sql?format=csv
@@ -171,7 +172,7 @@ POST /_plugins/_sql?format=csv
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```text
 firstname,lastname,age
@@ -180,16 +181,16 @@ Amber,Duke,32
 Dale,Adams,33
 Hattie,Bond,36
 ```
-### Sanitizing results in CSV format
+### 清理 CSV 格式的結果
 
-By default, OpenSearch sanitizes header cells (field names) and data cells (field contents) according to the following rules:
+預設情況下，OpenSearch 會依據下列規則清理標題儲存格 (欄位名稱) 與資料儲存格 (欄位內容)：
 
-- If a cell starts with `+`, `-`, `=` , or `@`, the sanitizer inserts a single quote (`'`) at the start of the cell.
-- If a cell contains one or more commas (`,`), the sanitizer surrounds the cell with double quotes (`"`).
+- 如果儲存格以 `+`、`-`、`=` 或 `@` 開頭，清理器會在儲存格開頭插入單引號 (`'`)。
+- 如果儲存格包含一或多個逗號 (`,`)，清理器會以雙引號 (`"`) 包圍該儲存格。
 
-### Example 
+### 範例
 
-The following query indexes a document with cells that either start with special characters or contain commas:
+下列查詢將一份文件編製索引，其儲存格以特殊字元開頭或包含逗號：
 
 ```json
 PUT /userdata/_doc/1?refresh=true
@@ -201,7 +202,7 @@ PUT /userdata/_doc/1?refresh=true
 ```
 {% include copy-curl.html %}
 
-You can use the following query to request results in CSV format:
+您可以使用下列查詢以 CSV 格式請求結果：
 
 ```json
 POST /_plugins/_sql?format=csv
@@ -211,14 +212,14 @@ POST /_plugins/_sql?format=csv
 ```
 {% include copy-curl.html %}
 
-In the response, cells that start with special characters are prefixed with `'`. The cell that has commas is surrounded with quotation marks:
+在回應中，以特殊字元開頭的儲存格會加上 `'` 前綴。包含逗號的儲存格會以引號包圍：
 
 ```text
 '+firstname,'=lastname,address
 'Hattie,'@Bond,"671 Bristol Street, Dente, TN"
 ```
 
-To skip sanitizing, set the `sanitize` query parameter to false:
+若要略過清理，請將 `sanitize` 查詢參數設定為 false：
 
 ```json
 POST /_plugins/_sql?format=csvandsanitize=false
@@ -228,18 +229,18 @@ POST /_plugins/_sql?format=csvandsanitize=false
 ```
 {% include copy-curl.html %}
 
-The response contains the results in the original CSV format:
+回應包含原始 CSV 格式的結果：
 
 ```text
 =lastname,address,+firstname
 @Bond,"671 Bristol Street, Dente, TN",-Hattie
 ```
 
-## Raw format
+## Raw 格式
 
-You can use the raw format to pipe the results to other command line tools for post-processing.
+您可以使用 raw 格式將結果導向其他命令列工具進行後續處理。
 
-#### Example request
+#### 範例請求
 
 ```json
 POST /_plugins/_sql?format=raw
@@ -249,7 +250,7 @@ POST /_plugins/_sql?format=raw
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```text
 Nanette|Bates|28
@@ -258,13 +259,13 @@ Dale|Adams|33
 Hattie|Bond|36
 ```
 
-By default, OpenSearch sanitizes results in `raw` format according to the following rule:
+預設情況下，OpenSearch 會依據下列規則清理 `raw` 格式的結果：
 
-- If a data cell contains one or more pipe characters (`|`), the sanitizer surrounds the cell with double quotes.
+- 如果資料儲存格包含一或多個直立線字元 (`|`)，清理器會以雙引號包圍該儲存格。
 
-### Example 
+### 範例
 
-The following query indexes a document with pipe characters (`|`) in its fields:
+下列查詢將欄位中包含直立線字元 (`|`) 的文件編製索引：
 
 ```json
 PUT /userdata/_doc/1?refresh=true
@@ -276,7 +277,7 @@ PUT /userdata/_doc/1?refresh=true
 ```
 {% include copy-curl.html %}
 
-You can use the following query to request results in `raw` format:
+您可以使用下列查詢以 `raw` 格式請求結果：
 
 ```json
 POST /_plugins/_sql?format=raw
@@ -286,7 +287,7 @@ POST /_plugins/_sql?format=raw
 ```
 {% include copy-curl.html %}
 
-The query returns cells with the `|` character surrounded by quotation marks:
+查詢傳回含有 `|` 字元的儲存格，並以雙引號包圍整個儲存格：
 
 ```text
 "|address"|=lastname|+firstname

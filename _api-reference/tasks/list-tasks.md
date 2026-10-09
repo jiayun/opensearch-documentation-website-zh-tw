@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: List tasks
+title: "列出工作"
 parent: Tasks APIs
 nav_order: 10
 ---
 
-# List Tasks API
-**Introduced 1.0**
+# 列出工作 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The List Tasks API returns a list of tasks running in the cluster. 
+列出工作 API 會傳回叢集中正在執行的工作清單。 
 
 <!-- spec_insert_start
 api: tasks.list
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_tasks
 ```
@@ -25,25 +26,25 @@ GET /_tasks
 api: tasks.list
 component: query_parameters
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `actions` | List or String | A comma-separated list of actions that should be returned. Keep empty to return all. | N/A |
-| `detailed` | Boolean | When `true`, the response includes detailed information about shard recoveries. | `false` |
-| `group_by` | String | Groups tasks by parent/child relationships or nodes. <br> Valid values are: `nodes`, `none`, and `parents`. | `nodes` |
-| `nodes` | List | A comma-separated list of node IDs or names used to limit the returned information. Use `_local` to return information from the node you're connecting to, specify the node name to get information from a specific node, or keep the parameter empty to get information from all nodes. | N/A |
-| `parent_task_id` | String | Returns tasks with a specified parent task ID (`node_id:task_number`). Keep empty or set to -1 to return all. | N/A |
-| `timeout` | String | The amount of time to wait for a response. | N/A |
-| `wait_for_completion` | Boolean | Waits for the matching task to complete. When `true`, the request is blocked until the task has completed. | `false` |
+| `actions` | 清單或字串 | 要傳回的動作清單，以逗號分隔。保留空白可傳回所有動作。 | N/A |
+| `detailed` | 布林值 | 當值為 `true` 時，回應會包含分片復原的詳細資訊。 | `false` |
+| `group_by` | 字串 | 依父子關係或節點將工作分組。<br> 有效值為：`nodes`、`none` 和 `parents`。 | `nodes` |
+| `nodes` | 清單 | 以逗號分隔的節點 ID 或名稱清單，用於限制傳回的資訊。使用 `_local` 可傳回您正在連線的節點資訊；指定節點名稱可取得特定節點的資訊；將參數保留空白可取得所有節點的資訊。 | N/A |
+| `parent_task_id` | 字串 | 傳回具有指定父工作 ID（`node_id:task_number`）的工作。保留空白或設為 -1 可傳回所有工作。 | N/A |
+| `timeout` | 字串 | 等待回應的時間長度。 | N/A |
+| `wait_for_completion` | 布林值 | 等待符合條件的工作完成。當值為 `true` 時，請求會持續等待，直到工作完成。 | `false` |
 
 <!-- spec_insert_end -->
 
-## Example request
+## 請求範例
 
-The following request returns tasks currently running on a node named `opensearch-node1`:
+下列請求會傳回目前在名為 `opensearch-node1` 的節點上執行的工作：
 
 <!-- spec_insert_start
 component: example_code
@@ -67,9 +68,9 @@ response = client.tasks.list(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-The following response provides information about running tasks:
+下列回應提供正在執行的工作資訊：
 
 ```json
 {
@@ -113,22 +114,22 @@ The following response provides information about running tasks:
 }
 ```
 
-### The `resource_stats` object
+### `resource_stats` 物件
 
-The `resource_stats` object is only updated for tasks that support resource tracking. These statistics are computed based on scheduled thread executions, including both threads that have finished working on the task and threads currently working on the task. Because the same thread may be scheduled to work on the same task multiple times, each instance of a given thread being scheduled to work on a given task is considered to be a single thread execution.
+`resource_stats` 物件僅會針對支援資源追蹤的工作更新。這些統計資料根據排程的執行緒執行次數計算，涵蓋已完成工作及目前正在處理工作的執行緒。由於同一執行緒可能多次被排程處理同一工作，因此特定執行緒每次被排程處理特定工作，都視為一次執行緒執行。
 
-The following table lists all response fields in the `resource_stats` object. 
+下表列出 `resource_stats` 物件中的所有回應欄位。 
 
-Response field | Description |
+回應欄位 | 說明 |
 :--- | :--- |
-`average` | The average resource usage across all scheduled thread executions. |
-`total` | The total resource usage across all scheduled thread executions. |
-`min` | The minimum resource usage across all scheduled thread executions. |
-`max` | The maximum resource usage across all scheduled thread executions. |
-`thread_info` | Thread-count-related statistics.|
-`thread_info.active_threads` | The number of threads currently working on the task. |
-`thread_info.thread_executions` | The number of threads that have been scheduled to work on the task. |
+`average` | 所有排程的執行緒執行所使用的平均資源量。 |
+`total` | 所有排程的執行緒執行所使用的資源總量。 |
+`min` | 所有排程的執行緒執行所使用的最小資源量。 |
+`max` | 所有排程的執行緒執行所使用的最大資源量。 |
+`thread_info` | 與執行緒數量相關的統計資料。|
+`thread_info.active_threads` | 目前正在處理工作的執行緒數量。 |
+`thread_info.thread_executions` | 已被排程處理工作的執行緒數量。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:monitor/tasks/list`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:monitor/tasks/list`。

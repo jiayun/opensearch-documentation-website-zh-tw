@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Collapse search results
+title: "收合搜尋結果"
 parent: Customizing search results
 nav_order: 40
 redirect_from:
   - /search-plugins/collapse-search/
 ---
 
-# Collapse search results
+# 收合搜尋結果
 
-The `collapse` parameter groups search results by a particular field value. This returns only the top document within each group, which helps reduce redundancy by eliminating duplicates.
+`collapse` 參數會依特定欄位值將搜尋結果分組。這只會傳回每個群組中最頂端的文件，藉由移除重複項目來協助減少冗餘。
 
-The `collapse` parameter requires the field being collapsed to be of either a `keyword` or a `numeric` type.
+`collapse` 參數要求被收合的欄位必須是 `keyword` 或 `numeric` 類型。
 
 ---
 
-## Collapsing search results
+## 收合搜尋結果
 
-To populate an index with data, define the index mappings and an `item` field indexed as a `keyword`. The following example request shows you how to define index mappings, populate an index, and then search it.
+若要將資料填入索引，請定義索引對應，以及一個索引為 `keyword` 的 `item` 欄位。下列範例請求說明如何定義索引對應、填入索引，然後搜尋該索引。
 
-#### Define index mappings
+#### 定義索引對應
 
 ```json
 PUT /bakery-items
@@ -43,7 +44,7 @@ PUT /bakery-items
 }
 ```
 
-#### Populate an index
+#### 填入索引
 
 ```json
 POST /bakery-items/_bulk
@@ -55,7 +56,7 @@ POST /bakery-items/_bulk
 { "item": "Vanilla Cake", "category": "cakes", "price": 12, "baked_date": "2023-07-02T00:00:00Z" }
 ```
 
-#### Search the index, returning all results
+#### 搜尋索引，傳回所有結果
 
 ```json
 GET /bakery-items/_search
@@ -69,13 +70,13 @@ GET /bakery-items/_search
 }
 ```
 
-This query returns the non-collapsed search results, showing all documents, including both entries for "Chocolate Cake".
+此查詢會傳回未收合的搜尋結果，顯示所有文件，包括「Chocolate Cake」的兩個項目。
 
-#### Search the index and collapse the results
+#### 搜尋索引並收合結果
 
-To group search results by the `item` field and sort them by `price`, you can use the following query:
+若要依 `item` 欄位將搜尋結果分組，並依 `price` 排序，您可以使用下列查詢：
 
-**Collapsed `item` field search results**
+**收合後的 `item` 欄位搜尋結果**
 
 ```json
 GET /bakery-items/_search
@@ -92,7 +93,7 @@ GET /bakery-items/_search
 }
 ```
 
-**Response**
+**回應**
 
 ```json
 {
@@ -156,17 +157,17 @@ GET /bakery-items/_search
 }
 ```
 
-The collapsed search results will show only one "Chocolate Cake" entry, demonstrating how the `collapse` parameter reduces redundancy.
+收合後的搜尋結果只會顯示一個「Chocolate Cake」項目，示範 `collapse` 參數如何減少冗餘。
 
-The `collapse` parameter affects only the top search results and does not change any aggregation results. The total number of hits shown in the response reflects all matching documents before the parameter is applied, including duplicates. However, the response doesn't indicate the exact number of unique groups formed by the operation.
+`collapse` 參數只會影響最頂端的搜尋結果，不會變更任何彙總結果。回應中顯示的命中總數反映套用參數前的所有相符文件，包括重複項目。不過，回應並不會指出此操作所形成之唯一群組的確切數量。
 
 ---
 
-## Collapse with search_after
+## 搭配 search_after 收合
 
-You can paginate collapsed search results using the `search_after` parameter. The collapsed field and sort field must be the same, and only one sort field can be specified.
+您可以使用 `search_after` 參數，為收合後的搜尋結果分頁。收合的欄位與排序欄位必須相同，且只能指定一個排序欄位。
 
-The following example shows how to use `collapse` with `search_after`:
+下列範例說明如何搭配 `search_after` 使用 `collapse`：
 
 ```json
 GET /bakery-items/_search
@@ -189,11 +190,11 @@ GET /bakery-items/_search
 ```
 {% include copy-curl.html %}
 
-## Expanding collapsed results
+## 展開收合後的結果
 
-You can expand each collapsed top hit with the `inner_hits` property. 
+您可以使用 `inner_hits` 屬性展開每個收合後的最頂端命中。
 
-The following example request applies `inner_hits` to retrieve the lowest-priced and most recent item, for each type of cake:
+下列範例請求會套用 `inner_hits`，為每種蛋糕分別擷取價格最低的項目和最新的項目：
 
 ```json
 GET /bakery-items/_search
@@ -223,9 +224,9 @@ GET /bakery-items/_search
 
 ```
 
-### Multiple inner hits for each collapsed hit
+### 為每個收合後的命中取得多個內部命中
 
-To obtain several groups of inner hits for each collapsed result, you can set different criteria for each group. For example, lets request the three most recent items for every bakery item:
+若要為每個收合後的結果取得多組內部命中，您可以為每個群組設定不同的準則。例如，讓我們為每個烘焙項目要求三個最新的項目：
 
 ```json
 GET /bakery-items/_search
@@ -254,6 +255,6 @@ GET /bakery-items/_search
 }
 ```
 
-This query searches for documents in the `cakes` category and groups the search results by the `item_name` field. For each `item_name`, it retrieves the top three lowest-priced items and the top three most recent items, sorted by `baked_date` in descending order.
+此查詢會搜尋 `cakes` 類別中的文件，並依 `item_name` 欄位將搜尋結果分組。針對每個 `item_name`，它會擷取三個價格最低的項目，以及三個最新的項目，並依 `baked_date` 遞減排序。
 
-You can expand the groups by sending an additional query for each inner hit request corresponding to each collapsed hit in the response. This can significantly slow down the process if there are too many groups or inner hit requests. The `max_concurrent_group_searches` request parameter can be used to control the maximum number of concurrent searches allowed in this phase. The default is based on the number of data nodes and the default search thread pool size.
+您可以為回應中每個收合後命中對應的每個內部命中請求，傳送額外的查詢來展開群組。如果群組或內部命中請求太多，這可能會大幅拖慢處理程序。您可以使用 `max_concurrent_group_searches` 請求參數，控制此階段允許的最大並行搜尋數。預設值取決於資料節點數目，以及預設搜尋執行緒集區大小。

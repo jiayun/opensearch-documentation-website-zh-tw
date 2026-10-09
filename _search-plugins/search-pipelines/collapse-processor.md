@@ -1,44 +1,45 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Collapse
+title: "摺疊"
 nav_order: 10
 has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
 ---
 
-# Collapse processor
-Introduced 2.12
+# 摺疊處理器
+於 2.12 版推出
 {: .label .label-purple }
 
-The `collapse` response processor discards hits that have the same value for a particular field as a previous document in the result set.
-This is similar to passing the `collapse` parameter in a search request, but the response processor is applied to the
-response after fetching from all shards. The `collapse` response processor may be used in conjunction with the `rescore` search
-request parameter or may be applied after a reranking response processor.
+`collapse` 回應處理器會捨棄與結果集中先前文件在特定欄位具有相同值的命中結果。
+這類似於在搜尋請求中傳遞 `collapse` 參數，但回應處理器是在從所有分片擷取後才套用至
+回應。`collapse` 回應處理器可與 `rescore` 搜尋
+請求參數搭配使用，也可在重新排序回應處理器之後套用。
 
-Using the `collapse` response processor will likely result in fewer than `size` results being returned because hits are discarded 
-from a set whose size is already less than or equal to `size`. To increase the likelihood of returning `size` hits, use the 
-`oversample` request processor and `truncate_hits` response processor, as shown in [this example]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/truncate-hits-processor/#oversample-collapse-and-truncate-hits).
+使用 `collapse` 回應處理器時，傳回的結果可能會少於 `size` 筆，因為命中結果會被捨棄，
+而該集合的大小已小於或等於 `size`。若要提高傳回 `size` 筆命中結果的可能性，請使用
+`oversample` 請求處理器和 `truncate_hits` 回應處理器，如[此範例]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/truncate-hits-processor/#oversample-collapse-and-truncate-hits)所示。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists all request fields.
+下表列出所有請求欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`field` | String | The field whose value will be read from each returned search hit. Only the first hit for each given field value will be returned in the search response. Required.
-`context_prefix` | String | May be used to read the `original_size` variable from a specific scope in order to avoid collisions. Optional.
-`tag` | String | The processor's identifier. Optional.
-`description` | String | A description of the processor. Optional.
-`ignore_failure` | Boolean | If `true`, OpenSearch [ignores any failure]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures) of this processor and continues to run the remaining processors in the search pipeline. Optional. Default is `false`.
+`field` | 字串 | 將從每個傳回的搜尋命中結果讀取其值的欄位。搜尋回應中只會傳回每個指定欄位值的第一筆命中結果。必要。
+`context_prefix` | 字串 | 可用來從特定範圍讀取 `original_size` 變數，以避免衝突。選用。
+`tag` | 字串 | 處理器的識別碼。選用。
+`description` | 字串 | 處理器的說明。選用。
+`ignore_failure` | 布林值 | 若為 `true`，OpenSearch 會[忽略此處理器的任何失敗]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures)並繼續執行搜尋管線中的其餘處理器。選用。預設為 `false`。
 
-## Example
+## 範例
 
-The following example demonstrates using a search pipeline with a `collapse` processor.
+以下範例示範使用含有 `collapse` 處理器的搜尋管線。
 
-### Setup
+### 設定
 
-Create many documents containing a field to use for collapsing:
+建立許多包含要用於摺疊之欄位的文件：
 
 ```json
 POST /_bulk
@@ -65,7 +66,7 @@ POST /_bulk
 ``` 
 {% include copy-curl.html %}
 
-Create a pipeline that only collapses on the `color` field:
+建立僅在 `color` 欄位上摺疊的管線：
 
 ```json
 PUT /_search/pipeline/collapse_pipeline
@@ -81,10 +82,10 @@ PUT /_search/pipeline/collapse_pipeline
 ```
 {% include copy-curl.html %}
 
-### Using a search pipeline
+### 使用搜尋管線
 
-In this example, you request the top three documents before collapsing on the `color` field. Because the first two documents have the same `color`, the second one is discarded,
-and the request returns the first and third documents:
+在此範例中，您請求前三份文件，然後在 `color` 欄位上摺疊。由於前兩份文件具有相同的 `color`，因此第二份文件會被捨棄，
+而請求會傳回第一份和第三份文件：
 
 ```json
 POST /my_index/_search?search_pipeline=collapse_pipeline
@@ -97,7 +98,7 @@ POST /my_index/_search?search_pipeline=collapse_pipeline
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
   

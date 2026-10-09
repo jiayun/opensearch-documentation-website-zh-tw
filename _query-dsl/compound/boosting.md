@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Boosting
+title: "加權"
 parent: Compound queries
 nav_order: 30
 redirect_from:
   - /query-dsl/query-dsl/compound/boosting/
 ---
 
-# Boosting query
+# Boosting 查詢
 
-If you're searching for the word "pitcher", your results may relate to either baseball players or containers for liquids. For a search in the context of baseball, you might want to completely exclude results that contain the words "glass" or "water" by using the `must_not` clause. However, if you want to keep those results but downgrade them in relevance, you can do so with `boosting` queries. 
+如果您要搜尋「pitcher」這個詞，您的結果可能與棒球投手或盛裝液體的容器有關。若是在棒球的脈絡下搜尋，您可能會想使用 `must_not` 子句，完全排除包含「glass」或「water」等詞的結果。不過，如果您想保留這些結果，但降低它們的相關性，則可以使用 `boosting` 查詢來達成。
 
-A `boosting` query returns documents that match a `positive` query. Among those documents, the ones that also match the `negative` query are scored lower in relevance (their relevance score is multiplied by the negative boosting factor).
+`boosting` 查詢會傳回符合 `positive` 查詢的文件。在這些文件中，同時符合 `negative` 查詢的文件，其相關性分數會較低（其相關性分數會乘以負向加權係數）。
 
-## Example
+## 範例
 
-Consider an index with two documents that you index as follows:
+假設有一個索引包含兩份文件，您將它們編製索引如下：
 
 ```json
 PUT testindex/_doc/1
@@ -31,7 +32,7 @@ PUT testindex/_doc/2
 }
 ```
 
-Use the following match query to search for documents containing the word "pitcher":
+使用下列 match 查詢來搜尋包含「pitcher」這個詞的文件：
 
 ```json
 GET testindex/_search
@@ -44,7 +45,7 @@ GET testindex/_search
 }
 ```
 
-Both returned documents have the same relevance score:
+傳回的兩份文件具有相同的相關性分數：
 
 ```json
 {
@@ -84,7 +85,7 @@ Both returned documents have the same relevance score:
 }
 ```
 
-Now use the following `boosting` query to search for documents containing the word "pitcher" but downgrade the documents that contain the words "glass", "crystal", or "water":
+現在使用下列 `boosting` 查詢來搜尋包含「pitcher」這個詞的文件，但降低包含「glass」、「crystal」或「water」等詞之文件的相關性：
 
 ```json
 GET testindex/_search
@@ -108,7 +109,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-Both documents are still returned, but the document with the word "glass" has a relevance score that is 10 times lower than in the previous case:
+兩份文件仍會傳回，但包含「glass」這個詞的文件，其相關性分數比前一個情況低 10 倍：
 
 ```json
 {
@@ -148,12 +149,12 @@ Both documents are still returned, but the document with the word "glass" has a 
 }
 ```
 
-## Parameters
+## 參數
 
-The following table lists all top-level parameters supported by `boosting` queries.
+下表列出 `boosting` 查詢支援的所有最上層參數。
 
-Parameter | Description
+參數 | 說明
 :--- | :---
-`positive` | The query that a document must match to be returned in the results. Required.
-`negative` | If a document in the results matches this query, its relevance score is reduced by multiplying its original relevance score (produced by the `positive` query) by the `negative_boost` parameter. Required.
-`negative_boost` | A floating-point factor between 0 and 1.0 that the original relevance score is multiplied by in order to reduce the relevance of documents that match the `negative` query. Required.
+`positive` | 文件必須符合此查詢，才會出現在結果中。必要。
+`negative` | 如果結果中的文件符合此查詢，其相關性分數會降低，方式是將其原始相關性分數（由 `positive` 查詢產生）乘以 `negative_boost` 參數。必要。
+`negative_boost` | 介於 0 與 1.0 之間的浮點數因數，用來乘以原始相關性分數，以降低符合 `negative` 查詢之文件的相關性。必要。

@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Script
+title: "指令碼"
 nav_order: 120
 has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
 ---
 
-# Script search processor
-Introduced 2.8
+# 指令碼搜尋處理器
+於 2.8 版推出
 {: .label .label-purple }
 
-The `script` search request processor intercepts a search request and adds an inline [Painless]({{site.url}}{{site.baseurl}}/scripting/painless/) script that is run on incoming requests. The script can only run on the following request fields:
+`script` 搜尋請求處理器會攔截搜尋請求，並加入在傳入請求上執行的內嵌 [Painless]({{site.url}}{{site.baseurl}}/scripting/painless/) 指令碼。此指令碼只能對下列請求欄位執行：
 
 - `from` 
 - `size` 
@@ -24,23 +25,23 @@ The `script` search request processor intercepts a search request and adds an in
 - `terminate_after` 
 - `profile` 
 
-For request field definitions, see [search request fields]({{site.url}}{{site.baseurl}}/api-reference/search#request-body).
+如需請求欄位的定義，請參閱[搜尋請求欄位]({{site.url}}{{site.baseurl}}/api-reference/search#request-body)。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists all available request fields.
+下表列出所有可用的請求欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`source` | Inline script | The script to run. Required.
-`lang` | String | The script language. Optional. Only `painless` is supported.
-`tag` | String | The processor's identifier. Optional.
-`description` | String | A description of the processor. Optional.
-`ignore_failure` | Boolean | If `true`, OpenSearch [ignores any failure]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures) of this processor and continues to run the remaining processors in the search pipeline. Optional. Default is `false`.
+`source` | 內嵌指令碼 | 要執行的指令碼。必要。
+`lang` | 字串 | 指令碼語言。選用。僅支援 `painless`。
+`tag` | 字串 | 處理器的識別碼。選用。
+`description` | 字串 | 處理器的說明。選用。
+`ignore_failure` | 布林值 | 若為 `true`，OpenSearch 會[忽略此處理器的任何失敗]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures)，並繼續執行搜尋管線中的其餘處理器。選用。預設為 `false`。
 
-## Example 
+## 範例 
 
-The following request creates a search pipeline with a `script` request processor. The script limits score explanation to only one document because `explain` is an expensive operation:
+下列請求會建立包含 `script` 請求處理器的搜尋管線。此指令碼將分數解釋限制為僅針對一份文件，因為 `explain` 是一項耗費資源的作業：
 
 ```json
 PUT /_search/pipeline/explain_one_result

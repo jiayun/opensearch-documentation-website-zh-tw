@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index aliases
+title: "索引別名"
 nav_order: 20
 redirect_from:
   - /opensearch/index-alias/
 ---
 
-# Index aliases
+# 索引別名
 
-An alias is a virtual index name that points to one or more indexes. Query the alias and OpenSearch resolves it to the indexes behind it, so your clients can keep using one stable name while the indexes it covers change.
+別名是指向一或多個索引的虛擬索引名稱。查詢別名時，OpenSearch 會將它解析為背後的索引，因此即使別名涵蓋的索引有所變動，您的用戶端仍可持續使用同一個穩定的名稱。
 
-For example, if you store logs in monthly indexes and you usually query the last two months, create a `last_2_months` alias and update the indexes it points to each month. The queries in your application never change.
+例如，如果您將記錄檔儲存在每月建立的索引中，而且通常查詢最近兩個月的資料，可以建立一個 `last_2_months` 別名，並在每個月更新它所指向的索引。應用程式中的查詢永遠不需要改變。
 
-Aliases are also how you do the following:
+別名也可用於執行下列操作：
 
-- Switch from one index to another with no downtime, such as when you reindex into a new mapping and cut over once the copy is complete.
-- Serve different views of the same data by attaching a filter to the alias.
-- Keep environment-specific names, such as `production-data` and `staging-data`, independent of the indexes they resolve to.
-- Route the requests that go through the alias to specific shards, so that a search reads fewer shards. For more information, see [Manage aliases]({{site.url}}{{site.baseurl}}/api-reference/alias/aliases-api/#example-basic-routing).
-- Roll over time-series indexes behind a single write target. See [Rolling over an index]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/#rolling-over-an-index).
+- 在不停機的情況下從一個索引切換到另一個索引，例如將資料重新編製索引至採用新對應的索引，並在複製完成後切換。
+- 在別名上附加篩選器，以提供相同資料的不同檢視。
+- 保留環境專屬名稱，例如 `production-data` 和 `staging-data`，使其與解析到的索引互相獨立。
+- 將經由別名的請求路由到特定分片，讓搜尋讀取較少的分片。如需更多資訊，請參閱[管理別名]({{site.url}}{{site.baseurl}}/api-reference/alias/aliases-api/#example-basic-routing)。
+- 對單一寫入目標背後的時間序列索引執行輪替。請參閱[輪替索引]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/#rolling-over-an-index)。
 
-Aliases have the following characteristics:
+別名具有下列特性：
 
-- Alias changes are atomic. An alias never points to an unintended set of indexes, even for a moment.
-- A wildcard pattern is resolved when the alias is created. Indexes created later that match the pattern are not added automatically.
-- To write to an alias that points to more than one index, designate one of them as the write index.
-- The filter on a filtered alias applies to all search, count, and delete-by-query operations through that alias.
+- 別名變更是原子性的。別名永遠不會指向非預期的索引集合，即使只有一瞬間也不會。
+- 萬用字元模式會在建立別名時解析。之後建立且符合該模式的索引不會自動加入。
+- 若要寫入指向多個索引的別名，必須將其中一個索引指定為寫入索引。
+- 篩選別名上的篩選器適用於透過該別名執行的所有搜尋、計數與依查詢刪除操作。
 
-## Creating an alias
+## 建立別名
 
-The examples in this section use two indexes, which you can create with the following requests:
+本節的範例使用兩個索引，您可以使用下列請求建立它們：
 
 ```json
 PUT /logs-2024-01
@@ -41,7 +42,7 @@ PUT /logs-2024-02
 ```
 {% include copy-curl.html %}
 
-The most basic alias points to a single index:
+最基本的別名指向單一索引：
 
 ```json
 POST /_aliases
@@ -58,7 +59,7 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-You can also attach aliases when you create the index:
+您也可以在建立索引時附加別名：
 
 ```json
 PUT /logs-2024-03
@@ -71,9 +72,9 @@ PUT /logs-2024-03
 ```
 {% include copy-curl.html %}
 
-## Switching an alias to a different index
+## 將別名切換到不同的索引
 
-Combine `remove` and `add` in one request so that the alias moves between indexes in a single atomic step:
+在同一個請求中結合 `remove` 與 `add`，讓別名在單一原子性步驟中於索引之間移動：
 
 ```json
 POST /_aliases
@@ -96,9 +97,9 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-## Pointing an alias to multiple indexes
+## 將別名指向多個索引
 
-Use the `indices` field to cover several indexes with one alias:
+使用 `indices` 欄位，讓一個別名涵蓋多個索引：
 
 ```json
 POST /_aliases
@@ -115,9 +116,9 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-## Designating a write index
+## 指定寫入索引
 
-An alias that points to multiple indexes rejects indexing requests until one of those indexes is marked as the write index:
+指向多個索引的別名會拒絕編製索引的請求，直到其中一個索引被標記為寫入索引：
 
 ```json
 POST /_aliases
@@ -141,9 +142,9 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-## Filtering an alias
+## 篩選別名
 
-Attach a filter to an alias to expose a subset of an index under its own name. Create an index with a `level` field to filter on:
+在別名上附加篩選器，即可用別名自己的名稱公開索引的子集。建立一個帶有 `level` 欄位以供篩選的索引：
 
 ```json
 PUT /application-logs
@@ -159,7 +160,7 @@ PUT /application-logs
 ```
 {% include copy-curl.html %}
 
-The following alias returns only the documents in `application-logs` whose `level` field is `ERROR`:
+下列別名只會傳回 `application-logs` 中 `level` 欄位為 `ERROR` 的文件：
 
 ```json
 POST /_aliases
@@ -181,66 +182,66 @@ POST /_aliases
 ```
 {% include copy-curl.html %}
 
-## Inspecting and querying aliases
+## 檢視與查詢別名
 
-The following table lists common alias requests.
+下表列出常見的別名請求。
 
-| Task | Request |
+| 任務 | 請求 |
 | :--- | :--- |
-| List all aliases | `GET /_cat/aliases?v` |
-| Get one alias | `GET /_alias/current-logs` |
-| Check whether an alias exists | `HEAD /_alias/current-logs` |
-| Search through an alias | `GET /current-logs/_search` |
+| 列出所有別名 | `GET /_cat/aliases?v` |
+| 取得單一別名 | `GET /_alias/current-logs` |
+| 檢查別名是否存在 | `HEAD /_alias/current-logs` |
+| 透過別名搜尋 | `GET /current-logs/_search` |
 
-For all alias operations and their parameters, see [Alias APIs]({{site.url}}{{site.baseurl}}/api-reference/alias/).
+如需所有別名操作及其參數，請參閱[別名 API]({{site.url}}{{site.baseurl}}/api-reference/alias/)。
 
-## Index aliases in OpenSearch Dashboards
+## OpenSearch Dashboards 中的索引別名
 
-To navigate to the **Index Management** page, go to **Management > Index Management** on the top menu. Select **Aliases** to list the aliases in your cluster, with the write index and the indexes of each one.
+若要前往 **Index Management** 頁面，請在頂端選單中前往 **Management > Index Management**。選取 **Aliases** 以列出叢集中的別名，以及每個別名的寫入索引與所屬索引。
 
-The following image shows the **Aliases** page.
+下圖顯示 **Aliases** 頁面。
 
-![Aliases page]({{site.url}}{{site.baseurl}}/images/admin-ui-index/aliases-list.png)
+![Aliases 頁面]({{site.url}}{{site.baseurl}}/images/admin-ui-index/aliases-list.png)
 
-### Creating an alias
+### 建立別名
 
-An alias covers at least one index, so create the indexes before the alias. To create an index, see [Creating an index]({{site.url}}{{site.baseurl}}/im-plugin/index-operations/#creating-an-index-1).
+別名至少涵蓋一個索引，因此請先建立索引再建立別名。若要建立索引，請參閱[建立索引]({{site.url}}{{site.baseurl}}/im-plugin/index-operations/#creating-an-index-1)。
 
-1. In **Index Management**, select **Aliases**, and then select **Create alias**.
-1. Enter a name for the alias.
-1. In **Indexes or index patterns**, select or enter the indexes and index patterns that the alias covers.
-1. Select **Create alias**.
+1. 在 **Index Management** 中，選取 **Aliases**，然後選取 **Create alias**。
+1. 輸入別名的名稱。
+1. 在 **Indexes or index patterns** 中，選取或輸入別名涵蓋的索引與索引模式。
+1. 選取 **Create alias**。
 
-### Editing an alias
+### 編輯別名
 
-1. In **Index Management**, select **Aliases**.
-1. Select the alias name in the **Alias name** column.
-1. In **Indexes or index patterns**, add or remove indexes and index patterns. You cannot rename an existing alias.
-1. Select **Save changes**.
+1. 在 **Index Management** 中，選取 **Aliases**。
+1. 在 **Alias name** 欄中選取別名名稱。
+1. 在 **Indexes or index patterns** 中，新增或移除索引與索引模式。您無法重新命名現有的別名。
+1. 選取 **Save changes**。
 
-### Deleting an alias
+### 刪除別名
 
-1. In **Index Management**, select **Aliases**.
-1. Select the checkbox next to each alias that you want to delete.
-1. Select **Actions**, and then select **Delete**.
-1. Enter `delete` in the confirmation dialog, and then select **Delete**.
+1. 在 **Index Management** 中，選取 **Aliases**。
+1. 勾選每個要刪除之別名旁的核取方塊。
+1. 選取 **Actions**，然後選取 **Delete**。
+1. 在確認對話方塊中輸入 `delete`，然後選取 **Delete**。
 
-Deleting an alias does not delete the indexes behind it.
+刪除別名不會刪除其背後的索引。
 
-### Rolling over an alias
+### 輪替別名
 
-1. In **Index Management**, select **Aliases**.
-1. Select **Actions**, and then select **Roll over**.
-1. In **Configure source**, select the alias to roll over. Its current write index is displayed as **Assigned source index**.
-1. In **Configure new rollover index**, enter a name for the new write index, then enter its definition, settings, and mappings. To reuse the configuration of the current write index, select **Import from old write index**.
-1. Select **Roll over**.
+1. 在 **Index Management** 中，選取 **Aliases**。
+1. 選取 **Actions**，然後選取 **Roll over**。
+1. 在 **Configure source** 中，選取要輪替的別名。其目前的寫入索引會顯示為 **Assigned source index**。
+1. 在 **Configure new rollover index** 中，輸入新寫入索引的名稱，然後輸入其定義、設定與對應。若要重複使用目前寫入索引的組態，請選取 **Import from old write index**。
+1. 選取 **Roll over**。
 
-The **Write index** column shows the new write index, and the **Index name** column lists all of the indexes in the alias.
+**Write index** 欄會顯示新的寫入索引，而 **Index name** 欄會列出別名中的所有索引。
 
-Refresh, flush, clear cache, and force merge are also available from the **Aliases** page and apply to the open backing indexes of the selected aliases. For those procedures, see [Index maintenance in OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/#index-maintenance-in-opensearch-dashboards).
+重新整理、排清、清除快取與強制合併也可以從 **Aliases** 頁面執行，並套用至所選別名的開啟後端索引。相關程序請參閱[OpenSearch Dashboards 中的索引維護]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/#index-maintenance-in-opensearch-dashboards)。
 
-## Related documentation
+## 相關文件
 
-- [Alias APIs]({{site.url}}{{site.baseurl}}/api-reference/alias/)
-- [Data streams]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)
-- [Index maintenance]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/)
+- [別名 API]({{site.url}}{{site.baseurl}}/api-reference/alias/)
+- [資料串流]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)
+- [索引維護]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/)

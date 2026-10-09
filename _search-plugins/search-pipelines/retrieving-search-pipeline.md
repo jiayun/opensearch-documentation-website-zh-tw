@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Retrieving search pipelines
+title: "擷取搜尋管線"
 nav_order: 25
 has_children: false
 parent: Search pipelines
 ---
 
-# Retrieving search pipelines
+# 擷取搜尋管線
 
-To retrieve the details of an existing search pipeline, use the Search Pipeline API. 
+若要擷取現有搜尋管線的詳細資訊，請使用 Search Pipeline API。
 
-To view all search pipelines, use the following request:
+若要檢視所有搜尋管線，請使用下列請求：
 
 ```json
 GET /_search/pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains the pipeline that you set up in the previous section:
+回應包含您在上一節中設定的管線：
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -45,14 +46,14 @@ The response contains the pipeline that you set up in the previous section:
 ```
 </details>
 
-To view a particular pipeline, specify the pipeline name as a path parameter:
+若要檢視特定管線，請將管線名稱指定為路徑參數：
 
 ```json
 GET /_search/pipeline/my_pipeline
 ```
 {% include copy-curl.html %}
 
-You can also use wildcard patterns to view a subset of pipelines, for example:
+您也可以使用萬用字元模式來檢視部分管線，例如：
 
 ```json
 GET /_search/pipeline/my*

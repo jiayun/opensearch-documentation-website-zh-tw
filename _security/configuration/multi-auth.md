@@ -1,39 +1,40 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Configuring sign-in options
+title: "設定登入選項"
 parent: Configuration
 nav_order: 45
 ---
 
-# Configuring Dashboards sign-in for multiple authentication options
+# 為多種驗證選項設定 Dashboards 登入
 
-You can configure the sign-in window for OpenSearch Dashboards to provide either a single option for authenticating users at sign-in or multiple options. Dashboards supports basic authentication, OpenID Connect, and SAML as the multiple options.
+您可以設定 OpenSearch Dashboards 的登入視窗，在登入時提供單一的使用者驗證選項或多個選項。Dashboards 支援基本驗證、OpenID Connect 及 SAML 作為多個選項。
 
-## General steps for configuring multiple authentication options
+## 設定多種驗證選項的一般步驟
 
-Consider the following sequence of steps before configuring the sign-in window for multiple authentication options. 
+在為多種驗證選項設定登入視窗之前，請先考量下列步驟順序。
 
-1. Decide which types of authentication to make available at sign-in.
-1. Configure each authentication type, including an authentication domain for the identity provider (IdP) and the essential settings that give each type sign-in access to OpenSearch Dashboards. For OpenID Connect backend configuration, see [OpenID Connect]({{site.url}}{{site.baseurl}}/security/authentication-backends/openid-connect/). For SAML backend configuration, see [SAML]({{site.url}}{{site.baseurl}}/security/authentication-backends/saml/).
-1. Add, enable, and configure multiple option authentication settings in the `opensearch_dashboards.yml` file.
+1. 決定要在登入時提供哪些類型的驗證。
+1. 設定每種驗證類型，包括身分提供者 (IdP) 的驗證網域，以及讓每種類型都能登入 OpenSearch Dashboards 的必要設定。如需 OpenID Connect 後端組態，請參閱 [OpenID Connect]({{site.url}}{{site.baseurl}}/security/authentication-backends/openid-connect/)。如需 SAML 後端組態，請參閱 [SAML]({{site.url}}{{site.baseurl}}/security/authentication-backends/saml/)。
+1. 在 `opensearch_dashboards.yml` 檔案中新增、啟用並設定多選項驗證設定。
 
-## Enabling multiple authentication options
+## 啟用多種驗證選項
 
-By default, Dashboards provides basic authentication for sign-in. To enable multiple options for authentication, begin by adding `opensearch_security.auth.multiple_auth_enabled` to the `opensearch_dashboards.yml` file and setting it to `true`.
+根據預設，Dashboards 提供基本驗證以供登入。若要啟用多種驗證選項，請先在 `opensearch_dashboards.yml` 檔案中新增 `opensearch_security.auth.multiple_auth_enabled` 並將其設為 `true`。
 
-To specify the multiple authentication types as options during sign-in, add the `opensearch_security.auth.type` setting to the `opensearch_dashboards.yml` file and enter multiple types as values. When more than one authentication type is added to the setting, the Dashboards sign-in window recognizes multiple types and adjusts to accommodate the sign-in options.
+若要在登入時將多種驗證類型指定為選項，請在 `opensearch_dashboards.yml` 檔案中新增 `opensearch_security.auth.type` 設定，並輸入多個類型作為值。當設定中新增多個驗證類型時，Dashboards 登入視窗會辨識多個類型並進行調整，以容納這些登入選項。
 
-When setting up Dashboards to provide multiple authentication options, basic authentication is always required as one of the values for the setting.
+將 Dashboards 設定為提供多種驗證選項時，一律必須將基本驗證作為該設定的其中一個值。
 {: .note }
 
-Add a single value to the setting when only one authentication type is needed.
+當只需要一種驗證類型時，請為該設定新增單一值。
 
 ```yml
 opensearch_security.auth.type: "openid"
 ```
 {% include copy.html %}
 
-For multiple authentication options, add values to the setting as an array separated by commas. OpenSearch Dashboards supports a combination of basic authentication, OpenID Connect, and SAML as a valid set of values. In the setting, these values are expressed as `"basicauth"`, `"openid"`, and `"saml"`.
+如需多種驗證選項，請以逗號分隔的陣列形式為該設定新增多個值。OpenSearch Dashboards 支援基本驗證、OpenID Connect 及 SAML 的組合，作為一組有效的值。在該設定中，這些值表示為 `"basicauth"`、`"openid"` 及 `"saml"`。
 
 ```yml
 opensearch_security.auth.type: ["basicauth","openid"]
@@ -53,19 +54,19 @@ opensearch_security.auth.multiple_auth_enabled: true
 ```
 {% include copy.html %}
 
-When the `opensearch_security.auth.type` setting contains `basicauth` and one other authentication type, the sign-in window appears as in the following example.
+當 `opensearch_security.auth.type` 設定包含 `basicauth` 及另一種驗證類型時，登入視窗會如下列範例所示。
 
-![Basic authentication and one other type in the sign-in window]({{site.url}}{{site.baseurl}}/images/Security/OneOptionWithoutLogo.png){: width="350" }
+![登入視窗中的基本驗證及另一種類型]({{site.url}}{{site.baseurl}}/images/Security/OneOptionWithoutLogo.png){: width="350" }
 
-With all three valid authentication types specified, the sign-in window appears as in the following example.
+指定全部三種有效的驗證類型後，登入視窗會如下列範例所示。
 
-![All three authentication types specified in the sign-in window]({{site.url}}{{site.baseurl}}/images/Security/TwoOptionWithoutLogo.png){: width="350" }
+![登入視窗中指定全部三種驗證類型]({{site.url}}{{site.baseurl}}/images/Security/TwoOptionWithoutLogo.png){: width="350" }
 
-## Configuring a default redirect authentication type
+## 設定預設的重新導向驗證類型
 
-When multiple authentication types are enabled, you can configure one of the redirect-based authentication types (SAML or OpenID Connect) to be used for automatic redirection by default. This is useful when you want most users to authenticate through an IdP while still allowing alternative authentication methods.
+啟用多種驗證類型後，您可以將其中一種以重新導向為基礎的驗證類型 (SAML 或 OpenID Connect) 設定為預設用於自動重新導向。當您希望大多數使用者透過 IdP 進行驗證，同時仍允許其他驗證方法時，這會很有用。
 
-To configure a default redirect authentication type, add the `opensearch_security.auth.default_redirect_auth_type` setting to the `opensearch_dashboards.yml` file:
+若要設定預設的重新導向驗證類型，請在 `opensearch_dashboards.yml` 檔案中新增 `opensearch_security.auth.default_redirect_auth_type` 設定：
 
 ```yml
 opensearch_security.auth.type: ["basicauth","saml"]
@@ -74,58 +75,58 @@ opensearch_security.auth.default_redirect_auth_type: "saml"
 ```
 {% include copy.html %}
 
-With this configuration, unauthenticated users are automatically redirected to the SAML IdP for authentication instead of being shown the OpenSearch Dashboards login page.
+使用此組態時，未驗證的使用者會自動重新導向至 SAML IdP 進行驗證，而不是顯示 OpenSearch Dashboards 登入頁面。
 
-The `default_redirect_auth_type` value must be either `saml` or `openid` and must also be included in the `opensearch_security.auth.type` array.
+`default_redirect_auth_type` 值必須是 `saml` 或 `openid`，且也必須包含在 `opensearch_security.auth.type` 陣列中。
 {: .note }
 
-### Bypassing automatic redirection
+### 略過自動重新導向
 
-When a default redirect authentication type is configured, you can bypass the automatic redirection and display the login page instead by appending `?auto_login=false` to the OpenSearch Dashboards URL. For example:
+設定預設的重新導向驗證類型後，您可以在 OpenSearch Dashboards URL 後方附加 `?auto_login=false`，以略過自動重新導向並改為顯示登入頁面。例如：
 
 ```
 https://<dashboards-host>:5601/app/dashboards?auto_login=false
 ```
 
-This is useful for administrators who need to authenticate using basic authentication (for example, as a cluster administrator) when the default redirect is configured to use SAML or OpenID Connect.
+當預設重新導向設定為使用 SAML 或 OpenID Connect 時，這對需要使用基本驗證進行驗證 (例如以叢集管理員身分) 的管理員很有用。
 
-## Customizing the sign-in environment
+## 自訂登入環境
 
-In addition to the essential sign-in settings for each authentication type, you can configure additional settings in the `opensearch_dashboards.yml` file to customize the sign-in window so that it clearly represents the options that are available. For example, you can replace the label on the sign-in button with the name and icon of the IdP. Refer to the settings and descriptions that follow.
+除了每種驗證類型的必要登入設定外，您還可以在 `opensearch_dashboards.yml` 檔案中設定其他設定，以自訂登入視窗，使其清楚呈現可用的選項。例如，您可以將登入按鈕上的標籤替換為 IdP 的名稱及圖示。請參閱下列設定及說明。
 
-![Multi-option sign-in window with some customization]({{site.url}}{{site.baseurl}}/images/Security/TwoOptionWithLogo.png){: width="350" }
+![經過部分自訂的多選項登入視窗]({{site.url}}{{site.baseurl}}/images/Security/TwoOptionWithLogo.png){: width="350" }
 
-### Basic authentication settings
+### 基本驗證設定
 
-These settings allow you to customize the basic username and password sign-in button.
+這些設定可讓您自訂基本的使用者名稱及密碼登入按鈕。
 
-Setting | Description
+設定 | 說明
 :--- | :--- |:--- |:--- |
-`opensearch_security.ui.basicauth.login.brandimage` |  Login button logo. Supported file types are SVG, PNG, and GIF.
-`opensearch_security.ui.basicauth.login.showbrandimage` |  Determines whether a logo for the login button is displayed or not. Default is `true`. 
+`opensearch_security.ui.basicauth.login.brandimage` |  登入按鈕標誌。支援的檔案類型為 SVG、PNG 及 GIF。
+`opensearch_security.ui.basicauth.login.showbrandimage` |  決定是否顯示登入按鈕的標誌。預設為 `true`。
 
-### OpenID Connect authentication settings
+### OpenID Connect 驗證設定
 
-These settings allow you to customize the sign-in button associated with OpenID Connect authentication. For the essential settings required to use OpenID Connect as a single sign-in option, see [OpenSearch Dashboards single sign-on]({{site.url}}{{site.baseurl}}/security/authentication-backends/openid-connect/#opensearch-dashboards-single-sign-on).
+這些設定可讓您自訂與 OpenID Connect 驗證相關聯的登入按鈕。如需使用 OpenID Connect 作為單一登入選項所需的必要設定，請參閱 [OpenSearch Dashboards 單一登入]({{site.url}}{{site.baseurl}}/security/authentication-backends/openid-connect/#opensearch-dashboards-single-sign-on)。
 
-Setting | Description
+設定 | 說明
 :--- | :--- |:--- |:--- |
-`opensearch_security.ui.openid.login.buttonname` |  Display name for the login button. "Log in with single sign-on" by default.
-`opensearch_security.ui.openid.login.brandimage` |  Login button logo. Supported file types are SVG, PNG, and GIF.
-`opensearch_security.ui.openid.login.showbrandimage` |  Determines whether a logo for the login button is displayed or not. Default is `false`.
+`opensearch_security.ui.openid.login.buttonname` |  登入按鈕的顯示名稱。預設為「Log in with single sign-on」。
+`opensearch_security.ui.openid.login.brandimage` |  登入按鈕標誌。支援的檔案類型為 SVG、PNG 及 GIF。
+`opensearch_security.ui.openid.login.showbrandimage` |  決定是否顯示登入按鈕的標誌。預設為 `false`。
 
-### SAML authentication settings
+### SAML 驗證設定
 
-These settings allow you to customize the sign-in button associated with SAML authentication. For the essential settings required to use SAML as a sign-in option, see [OpenSearch Dashboards configuration]({{site.url}}{{site.baseurl}}/security/authentication-backends/saml/#opensearch-dashboards-configuration).
+這些設定可讓您自訂與 SAML 驗證相關聯的登入按鈕。如需使用 SAML 作為登入選項所需的必要設定，請參閱 [OpenSearch Dashboards 組態]({{site.url}}{{site.baseurl}}/security/authentication-backends/saml/#opensearch-dashboards-configuration)。
 
-Setting | Description
+設定 | 說明
 :--- | :--- |:--- |:--- |
-`opensearch_security.ui.saml.login.buttonname` |  Display name for the login button. "Log in with single sign-on" by default.
-`opensearch_security.ui.saml.login.brandimage` |  Login button logo. Supported file types are SVG, PNG, and GIF.
-`opensearch_security.ui.saml.login.showbrandimage` |  Determines whether a logo for the login button is displayed or not. Default is `false`.
+`opensearch_security.ui.saml.login.buttonname` |  登入按鈕的顯示名稱。預設為「Log in with single sign-on」。
+`opensearch_security.ui.saml.login.brandimage` |  登入按鈕標誌。支援的檔案類型為 SVG、PNG 及 GIF。
+`opensearch_security.ui.saml.login.showbrandimage` |  決定是否顯示登入按鈕的標誌。預設為 `false`。
 
-## Sample setup
-The following example shows basic settings in the `opensearch_dashboards.yml` file  when it is configured for two types of authentication at sign-in.
+## 範例設定
+下列範例顯示當 `opensearch_dashboards.yml` 檔案設定為在登入時使用兩種驗證類型時的基本設定。
 
 ```yml
 # The several settings directly below are typical of all `opensearch_dashboards.yml` configurations. #

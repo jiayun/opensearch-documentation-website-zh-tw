@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Text chunking
+title: "文字分段"
 parent: Ingesting data
 nav_order: 80
 redirect_from:
   - /search-plugins/text-chunking/
 ---
 
-# Text chunking
+# 文字分段
 Introduced 2.13
 {: .label .label-purple }
 
-When working with large text documents in [AI search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/), it's often necessary to split them into smaller passages because most embedding models have token length limitations. This process, called _text chunking_, helps maintain the quality and relevance of vector search results by ensuring that each embedding represents a focused piece of content that fits within model constraints. 
+在 [AI 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/) 中處理大型文字文件時，通常需要將其分割成較小的段落，因為大多數嵌入模型都有詞元長度限制。這個稱為_文字分段_的流程，可確保每個嵌入都代表一段符合模型限制的聚焦內容，藉此維持向量搜尋結果的品質與相關性。
 
-To split long text into passages, you can use a `text_chunking` processor as a preprocessing step for a `text_embedding` or `sparse_encoding` processor in order to obtain embeddings for each chunked passage. For more information about the processor parameters, see [Text chunking processor]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-chunking/). Before you start, follow the steps outlined in the [pretrained model documentation]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/) to register an embedding model. The following examples preprocess text by splitting it into passages and then produce embeddings using a `text_embedding` or `sparse_encoding` processor.
+若要將長文字分割成段落，您可以使用 `text_chunking` 處理器，作為 `text_embedding` 或 `sparse_encoding` 處理器的前置處理步驟，以取得每個分段段落的嵌入。如需處理器參數的詳細資訊，請參閱[文字分段處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-chunking/)。開始之前，請依照[預先訓練模型文件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)中概述的步驟註冊嵌入模型。下列範例會先將文字分割成段落進行前置處理，然後使用 `text_embedding` 或 `sparse_encoding` 處理器產生嵌入。
 
-## Text chunking using a text embedding processor
+## 使用文字嵌入處理器進行文字分段
 
-The following example uses a text embedding processor to perform text chunking.
+下列範例使用文字嵌入處理器來執行文字分段。
 
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
 
-The following example request creates an ingest pipeline that converts the text in the `passage_text` field into chunked passages, which will be stored in the `passage_chunk` field. The text in the `passage_chunk` field is then converted into text embeddings, and the embeddings are stored in the `passage_chunk_embedding` field:
+下列範例請求會建立資料匯入管線，將 `passage_text` 欄位中的文字轉換為分段段落，並儲存在 `passage_chunk` 欄位中。接著將 `passage_chunk` 欄位中的文字轉換為文字嵌入，並將嵌入儲存在 `passage_chunk_embedding` 欄位中：
 
 ```json
 PUT _ingest/pipeline/text-chunking-embedding-ingest-pipeline
@@ -56,9 +57,9 @@ PUT _ingest/pipeline/text-chunking-embedding-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2: Create an index for ingestion
+### 步驟 2：建立用於匯入的索引
 
-In order to use the ingest pipeline, you need to create a vector index. The `passage_chunk_embedding` field must be of the `nested` type. The `knn.dimension` field must contain the number of dimensions for your model:
+若要使用資料匯入管線，您需要建立向量索引。`passage_chunk_embedding` 欄位必須是 `nested` 類型。`knn.dimension` 欄位必須包含模型的維度數量：
 
 ```json
 PUT testindex
@@ -88,9 +89,9 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-### Step 3: Ingest documents into the index
+### 步驟 3：將文件匯入索引
 
-To ingest a document into the index created in the previous step, send the following request:
+若要將文件匯入上一個步驟中建立的索引，請傳送下列請求：
 
 ```json
 POST testindex/_doc?pipeline=text-chunking-embedding-ingest-pipeline
@@ -100,9 +101,9 @@ POST testindex/_doc?pipeline=text-chunking-embedding-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 4: Search the index
+### 步驟 4：搜尋索引
 
-You can use a `nested` query to perform vector search on your index. We recommend setting `score_mode` to `max`, where the document score is set to the highest score out of all passage embeddings:
+您可以使用 `nested` 查詢對索引執行向量搜尋。我們建議將 `score_mode` 設為 `max`，如此文件分數會設為所有段落嵌入中的最高分數：
 
 ```json
 GET testindex/_search
@@ -125,14 +126,14 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-## Text chunking using a sparse encoding processor
+## 使用稀疏編碼處理器進行文字分段
 
-The following example uses a sparse encoding processor to perform text chunking.
+下列範例使用稀疏編碼處理器來執行文字分段。
 
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
 
-The following example request creates an ingest pipeline that converts the text in the `passage_text` field into chunked passages, which will be stored in the `passage_chunk` field. The text in the `passage_chunk` field is then converted into text embeddings, and the embeddings are stored in the `passage_chunk_embedding` field:
+下列範例請求會建立資料匯入管線，將 `passage_text` 欄位中的文字轉換為分段段落，並儲存在 `passage_chunk` 欄位中。接著將 `passage_chunk` 欄位中的文字轉換為文字嵌入，並將嵌入儲存在 `passage_chunk_embedding` 欄位中：
 
 ```json
 PUT _ingest/pipeline/text-chunking-embedding-ingest-pipeline
@@ -166,9 +167,9 @@ PUT _ingest/pipeline/text-chunking-embedding-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2: Create an index for ingestion
+### 步驟 2：建立用於匯入的索引
 
-In order to use the ingest pipeline, you need to create an index that supports sparse embeddings. The `passage_chunk_embedding` field must be of the `nested` type. For conventional [neural sparse search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-search/), the `sparse_encoding` field must be of the `rank_features` type:
+若要使用資料匯入管線，您需要建立支援稀疏嵌入的索引。`passage_chunk_embedding` 欄位必須是 `nested` 類型。對於傳統的[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-search/)，`sparse_encoding` 欄位必須是 `rank_features` 類型：
 
 ```json
 PUT /testindex
@@ -192,7 +193,7 @@ PUT /testindex
 ```
 {% include copy-curl.html %}
 
-For [neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/), the `index.sparse` setting must be set to `true` and the `sparse_encoding` field must be of the `sparse_vector` type:
+對於[神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)，`index.sparse` 設定必須設為 `true`，且 `sparse_encoding` 欄位必須是 `sparse_vector` 類型：
 
 ```json
 PUT /testindex
@@ -227,9 +228,9 @@ PUT /testindex
 ```
 {% include copy-curl.html %}
 
-### Step 3: Ingest documents into the index
+### 步驟 3：將文件匯入索引
 
-To ingest a document into the index created in the previous step, send the following request:
+若要將文件匯入上一個步驟中建立的索引，請傳送下列請求：
 
 ```json
 POST testindex/_doc?pipeline=text-chunking-embedding-ingest-pipeline
@@ -239,9 +240,9 @@ POST testindex/_doc?pipeline=text-chunking-embedding-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 4: Search the index
+### 步驟 4：搜尋索引
 
-You can use a `nested` query to perform vector search on your index. We recommend setting `score_mode` to `max` so the document score is set to the highest score out of all passage embeddings:
+您可以使用 `nested` 查詢對索引執行向量搜尋。我們建議將 `score_mode` 設為 `max`，如此文件分數會設為所有段落嵌入中的最高分數：
 
 ```json
 GET /testindex/_search
@@ -264,6 +265,6 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-## Next steps
+## 後續步驟
 
-- Explore our [tutorials]({{site.url}}{{site.baseurl}}/vector-search/tutorials/) to learn how to build AI search applications. 
+- 探索我們的[教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/)，了解如何建置 AI 搜尋應用程式。 

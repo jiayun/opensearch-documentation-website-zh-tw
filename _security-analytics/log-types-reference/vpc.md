@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: VPC Flow
 parent: Supported log types
@@ -6,12 +7,12 @@ nav_order: 90
 ---
 
 <!-- vale off -->
-# VPC Flow log type
+# VPC Flow 記錄類型
 <!-- vale on -->
 
-The `vpcflow` log type records data about the IP traffic flowing to and from the network interfaces within a virtual private cloud (VPC). This data is stored using the [VPC Flow Logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html) feature.
+`vpcflow` 記錄類型會記錄流入與流出虛擬私人雲端 (VPC) 內網路介面之 IP 流量的資料。這些資料透過 [VPC Flow Logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html) 功能儲存。
 
-The following code snippet contains all the `raw_field`, `ecs`, and `ocsf` mappings for this log type:
+下列程式碼片段包含此記錄類型的所有 `raw_field`、`ecs` 與 `ocsf` 對應：
 
 ```json
  "mappings": [

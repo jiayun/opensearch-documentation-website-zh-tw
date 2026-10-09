@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: API
 parent: Root Cause Analysis
@@ -10,9 +11,9 @@ redirect_from:
 
 # RCA API
 
-Use the following API to retrieve root cause analysis (RCA) results.
+使用下列 API 擷取根因分析 (RCA) 結果。
 
-## Example request
+## 範例請求
 
 ```
 # Request all available RCAs
@@ -23,7 +24,7 @@ GET localhost:9600/_plugins/_performanceanalyzer/rca?name=HighHeapUsageClusterRc
 ```
 
 
-## Example response
+## 範例回應
 
 ```json
 {

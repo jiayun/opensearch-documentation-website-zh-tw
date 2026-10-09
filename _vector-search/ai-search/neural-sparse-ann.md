@@ -1,84 +1,85 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Neural sparse ANN search
+title: "神經稀疏 ANN 搜尋"
 parent: Neural sparse search
 grand_parent: AI search
 nav_order: 60
 has_children: false
 ---
 
-# Neural sparse ANN search
-**Introduced 3.3**
+# 神經稀疏 ANN 搜尋
+**於 3.3 版推出**
 {: .label .label-purple }
 
-Neural sparse approximate nearest neighbor (ANN) search improves query efficiency by balancing accuracy and latency. Unlike traditional neural sparse search, which performs exact search on `rank_features` fields, neural sparse ANN search uses the Spilled Clustering of Inverted Lists with Summaries for Maximum Inner Product Search (SEISMIC) algorithm on `sparse_vector` fields to provide optimized query performance using approximate search techniques.
+神經稀疏近似最近鄰 (ANN) 搜尋透過在準確度與延遲之間取得平衡，來提升查詢效率。傳統的神經稀疏搜尋會在 `rank_features` 欄位上執行精確搜尋，神經稀疏 ANN 搜尋則不同，它會在 `sparse_vector` 欄位上使用 Spilled Clustering of Inverted Lists with Summaries for Maximum Inner Product Search (SEISMIC) 演算法，運用近似搜尋技術提供最佳化的查詢效能。
 
-Neural sparse ANN search provides the following advantages over traditional neural sparse search:
+相較於傳統的神經稀疏搜尋，神經稀疏 ANN 搜尋提供下列優點：
 
-- **Query performance improvement**: Achieves significant query speed improvements compared to two-phase queries under ≥90% recall conditions with better than linear performance scaling as dataset size increases.
-- **Scalability**: Maintains consistent query performance as datasets scale to 50 million vectors on a single node.
-- **Memory efficiency**: Uses byte quantization to reduce index size. Depending on the engine, memory is managed by a JVM heap cache with a circuit breaker or by off-heap memory-mapped files, which prevents resource exhaustion.
-- **Hybrid approach**: Automatically selects the optimal indexing strategy based on segment size, with minimal impact on indexing performance.
-- **Search flexibility**: Provides tunable trade-offs between high recall and low latency using query parameters.
-- **Engine choice**: Uses either the Lucene engine or the native engine, which builds and searches the index in off-heap memory. For more information, see [Engines](#engines).
+- **查詢效能提升**：在召回率 ≥90% 的條件下，相較於兩階段查詢可大幅提升查詢速度，且隨著資料集規模成長，效能擴展優於線性。
+- **可擴展性**：當資料集在單一節點上擴展至 5,000 萬個向量時，仍能維持一致的查詢效能。
+- **記憶體效率**：使用位元組量化來縮減索引大小。視引擎而定，記憶體由具備斷路器的 JVM 堆積快取管理，或由堆積外的記憶體對應檔案管理，可避免資源耗盡。
+- **混合式做法**：根據分段大小自動選取最佳的索引策略，對索引效能影響極小。
+- **搜尋彈性**：使用查詢參數，在高召回率與低延遲之間提供可調整的取捨。
+- **引擎選擇**：可使用 Lucene 引擎或原生引擎，後者會在堆積外記憶體中建立及搜尋索引。如需更多資訊，請參閱[引擎](#engines)。
 
-Consider neural sparse ANN search when you need the efficiency of sparse retrieval but require better performance than traditional neural sparse search methods can provide at scale:
+當您需要稀疏擷取的效率，但同時需要比傳統神經稀疏搜尋方法在大規模下所能提供的更好效能時，請考慮使用神經稀疏 ANN 搜尋：
 
-- **Large-scale applications**: Datasets with millions to billions of documents in which query performance is critical.
-- **High-throughput scenarios**: Applications requiring fast response times under heavy query loads.
+- **大規模應用**：包含數百萬至數十億份文件，且查詢效能至關重要的資料集。
+- **高輸送量情境**：需要在大量查詢負載下快速回應的應用。
 
-## How neural sparse ANN search works
+## 神經稀疏 ANN 搜尋的運作方式
 
-Neural sparse ANN search implements several techniques to optimize both indexing and querying of neural sparse vectors.
+神經稀疏 ANN 搜尋實作了多項技術，以同時最佳化神經稀疏向量的索引編製與查詢。
 
-### Indexing
+### 索引編製
 
-During the indexing phase, neural sparse ANN search implements several key optimizations:
+在索引編製階段，神經稀疏 ANN 搜尋實作了幾項關鍵最佳化：
 
-1. **Posting list clustering**: For each term in the inverted index, the algorithm performs the following actions:
-   - Sorts documents by their token weights in descending order.
-   - Retains only the top `n_postings` documents with the highest weights.
-   - Applies a clustering algorithm to group similar documents into one cluster. The native engine uses `clustering_batch_size` to split each posting list into batches and cluster each batch separately, which reduces the memory needed to build the index at the cost of a longer build time.
-   - Generates summary sparse vectors for each cluster, keeping only the highest-weighted tokens.
+1. **張貼清單分群**：對於倒排索引中的每個詞彙，演算法會執行下列動作：
+   - 依詞元權重由高至低排序文件。
+   - 僅保留權重最高的前 `n_postings` 份文件。
+   - 套用分群演算法，將相似的文件歸為同一叢集。原生引擎使用 `clustering_batch_size` 將每個張貼清單分割成批次，並分別對每個批次分群，如此可減少建立索引所需的記憶體，但代價是建置時間較長。
+   - 為每個叢集產生摘要稀疏向量，僅保留權重最高的詞元。
 
-2. **Forward index maintenance**: Neural sparse ANN search maintains both the clustered inverted index and a forward index that stores complete sparse vectors organized by document ID for efficient access during query processing. 
+2. **正向索引維護**：神經稀疏 ANN 搜尋同時維護分群的倒排索引，以及一份正向索引，後者依文件 ID 儲存完整的稀疏向量，以便在查詢處理期間有效率地存取。 
 
-### Query processing
+### 查詢處理
 
-During query execution, neural sparse ANN search employs an efficient retrieval process:
+在查詢執行期間，神經稀疏 ANN 搜尋採用高效率的擷取流程：
 
-1. **Token-level pruning**: For a given query, all tokens are sorted based on their weights. Only the `top_n` tokens with the highest weights are kept so that fewer posting lists are visited.
+1. **詞元層級剪枝**：對於指定的查詢，所有詞元會依其權重排序。僅保留權重最高的 `top_n` 個詞元，以減少造訪的張貼清單數量。
 
-2. **Cluster-level pruning**: The algorithm first computes dot product scores between the query vector and cluster summary vectors. Only clusters with scores above a dynamic threshold are selected for detailed examination.
+2. **叢集層級剪枝**：演算法會先計算查詢向量與叢集摘要向量之間的內積分數。僅選取分數高於動態閾值的叢集進行詳細檢查。
 
-3. **Document-level scoring**: For selected clusters, neural sparse ANN search examines individual documents within those clusters, computing exact dot product scores between the query and document vectors retrieved from the forward index.
+3. **文件層級評分**：對於選取的叢集，神經稀疏 ANN 搜尋會檢查這些叢集中的個別文件，計算查詢與從正向索引擷取之文件向量之間的精確內積分數。
 
-This approach dramatically reduces the number of documents that need to be scored, resulting in significant performance improvements while maintaining high accuracy.
+此做法可大幅減少需要評分的文件數量，在維持高準確度的同時帶來顯著的效能提升。
 
-### Hybrid indexing
+### 混合式索引編製
 
-Neural sparse ANN search is a hybrid indexing approach that depends on the document count in each segment to balance indexing and query performance:
+神經稀疏 ANN 搜尋是一種混合式索引編製做法，會依據每個分段中的文件數量來平衡索引編製與查詢效能：
 
-- Segments with fewer documents than `approximate_threshold`: Indexed without clustering, so queries against them score every matching document. The Lucene engine indexes these segments as plain neural sparse (`rank_features`) segments and queries them using the standard neural sparse query. The native engine indexes them as an equivalent inverted index built in its native format.
+- 文件數少於 `approximate_threshold` 的分段：不進行分群即編製索引，因此對這些分段的查詢會為每份相符的文件評分。Lucene 引擎會將這些分段編製為一般的神經稀疏 (`rank_features`) 分段，並使用標準神經稀疏查詢來查詢。原生引擎則會將它們編製為以其原生格式建立的等效倒排索引。
 
-- Segments with more documents than `approximate_threshold`: Indexed as neural sparse ANN segments and queried using the sparse ANN query.
+- 文件數多於 `approximate_threshold` 的分段：編製為神經稀疏 ANN 分段，並使用稀疏 ANN 查詢來查詢。
 
-This hybrid approach balances indexing performance with query speed. Small segments avoid the overhead of clustering, while large segments benefit from approximate search optimizations. The system maintains backward compatibility by supporting both traditional neural sparse queries and neural sparse ANN queries within the same index.
+此混合式做法可平衡索引編製效能與查詢速度。小型分段可避免分群的額外負擔，大型分段則可受益於近似搜尋最佳化。系統支援傳統神經稀疏查詢與神經稀疏 ANN 查詢並存於同一索引中，以維持回溯相容性。
 
-For more information about the SEISMIC algorithm, see [Efficient Inverted Indexes for Approximate Retrieval over Learned Sparse Representations](https://arxiv.org/abs/2404.18812).
+如需 SEISMIC 演算法的更多資訊，請參閱 [Efficient Inverted Indexes for Approximate Retrieval over Learned Sparse Representations](https://arxiv.org/abs/2404.18812)。
 
-## Engines
-**Introduced 3.9**
+## 引擎
+**於 3.9 版推出**
 {: .label .label-purple }
 
-An _engine_ is the implementation that builds the neural sparse ANN index and runs queries against it. Both engines implement the SEISMIC algorithm and accept the same algorithm and query parameters; they differ in the location of the index and the method of managing its memory.
+_引擎_ 是負責建立神經稀疏 ANN 索引並對其執行查詢的實作。兩種引擎都實作 SEISMIC 演算法，並接受相同的演算法與查詢參數；它們的差異在於索引的位置以及管理其記憶體的方式。
 
-OpenSearch supports the following engines:
+OpenSearch 支援下列引擎：
 
-- [Lucene](#lucene-engine): Builds the clustered posting lists and forward index in JVM heap and serves queries from a plugin-managed cache. This is the default.
-- [Native](#native-engine): Builds the index into a memory-mapped file on disk and serves queries from off-heap memory.
+- [Lucene](#lucene-engine)：在 JVM 堆積中建立分群的張貼清單與正向索引，並由外掛程式管理的快取提供查詢服務。此為預設值。
+- [原生](#native-engine)：將索引建立到磁碟上的記憶體對應檔案，並由堆積外記憶體提供查詢服務。
 
-Select an engine using the `engine` parameter in the field's `method` object:
+使用欄位之 `method` 物件中的 `engine` 參數來選取引擎：
 
 ```json
 PUT /my-sparse-ann-index
@@ -109,56 +110,56 @@ PUT /my-sparse-ann-index
 ```
 {% include copy-curl.html %}
 
-The `method` object cannot be updated after the field is created. To change the engine, create a new index with the intended mapping and reindex your data.
+欄位建立後即無法更新 `method` 物件。若要變更引擎，請以所需的對應建立新索引，並重新將資料編製索引。
 {: .important}
 
-### Comparing the engines
+### 比較引擎
 
-The following table compares the two engines.
+下表比較這兩種引擎。
 
-| Characteristic | Lucene engine | Native engine |
+| 特性 | Lucene 引擎 | 原生引擎 |
 |:--- |:--- |:--- |
-| `engine` value | `lucene` | `native` |
-| Enabled by default | Yes | No. See [Enabling the native engine](#enabling-the-native-engine). |
-| Query performance | Baseline | Higher search throughput and lower query latency |
-| Index build performance | Baseline | Faster segment and force merge builds |
-| Where the index is held | JVM heap, in a plugin-managed cache | A memory-mapped file on disk, read from off-heap memory |
-| Memory bounded by | The `plugins.neural_search.circuit_breaker.limit` setting, with least recently used cache eviction | The operating system page cache, with no configurable limit and no eviction by OpenSearch |
-| JVM heap required | Proportional to the working set of sparse segments served by the node | Minimal, because the index is not held in heap |
-| Disk layout | Managed by Lucene | A dedicated engine file, memory mapped at query time, whose size depends on the [forward index layout](#choosing-a-forward-index-layout) |
-| Filtering | Post-filtering | Pre-filtering. See [Filtering support](#filtering-support). |
-| Format of segments with fewer documents than `approximate_threshold` | `rank_features`, queried using the standard neural sparse query | An inverted index equivalent to `rank_features`, built in the engine's native format |
-| Warm Up and Clear Cache APIs | Supported | Not applicable |
-| Sparse memory statistics | Reported | Not reported |
+| `engine` 值 | `lucene` | `native` |
+| 預設啟用 | 是 | 否。請參閱[啟用原生引擎](#enabling-the-native-engine)。 |
+| 查詢效能 | 基準 | 更高的搜尋輸送量與更低的查詢延遲 |
+| 索引建置效能 | 基準 | 更快的分段與強制合併建置 |
+| 索引的存放位置 | JVM 堆積，位於外掛程式管理的快取中 | 磁碟上的記憶體對應檔案，從堆積外記憶體讀取 |
+| 記憶體上限受何者限制 | `plugins.neural_search.circuit_breaker.limit` 設定，並採用最近最少使用快取逐出 | 作業系統分頁快取，沒有可設定的上限，且 OpenSearch 不會逐出 |
+| 所需的 JVM 堆積 | 與節點所服務之稀疏分段的工作集成正比 | 極少，因為索引不存放在堆積中 |
+| 磁碟配置 | 由 Lucene 管理 | 專用的引擎檔案，於查詢時進行記憶體對應，其大小取決於[正向索引配置](#choosing-a-forward-index-layout) |
+| 篩選 | 後置篩選 | 前置篩選。請參閱[篩選支援](#filtering-support)。 |
+| 文件數少於 `approximate_threshold` 之分段的格式 | `rank_features`，使用標準神經稀疏查詢來查詢 | 等效於 `rank_features` 的倒排索引，以引擎的原生格式建立 |
+| Warm Up 與 Clear Cache API | 支援 | 不適用 |
+| 稀疏記憶體統計資料 | 會回報 | 不會回報 |
 
-For guidance on choosing between the engines, see [Choosing an engine]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning-sparse/#choosing-an-engine).
+如需在兩種引擎之間選擇的指引，請參閱[選擇引擎]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning-sparse/#choosing-an-engine)。
 
-### Lucene engine
+### Lucene 引擎
 
-The Lucene engine is the default and requires no additional configuration. It stores clustered posting lists and forward index data in JVM heap. Memory usage is bounded by a circuit breaker, and data is evicted from the cache when the limit is reached. For more information, see [Memory and caching settings](#memory-and-caching-settings).
+Lucene 引擎是預設引擎，不需要額外組態。它將分群的張貼清單和正向索引資料儲存在 JVM 堆積中。記憶體用量受斷路器限制，達到上限時，資料會從快取中逐出。如需更多資訊，請參閱[記憶體與快取設定](#memory-and-caching-settings)。
 
-Because the index is held in heap, a node running the Lucene engine at scale needs a JVM heap large enough to hold the working set of every sparse segment it serves.
+由於索引保存在堆積中，大規模執行 Lucene 引擎的節點需要足夠大的 JVM 堆積，以容納其提供服務的每個稀疏分段的工作集。
 
-### Native engine
+### 原生引擎
 
-The native engine writes the SEISMIC index to a file that OpenSearch memory maps at query time and reads in place. The on-disk layout is the runtime layout, so nothing is reconstructed when the index is loaded. This has the following consequences:
+原生引擎將 SEISMIC 索引寫入檔案，OpenSearch 會在查詢時將該檔案對應至記憶體，並直接讀取。磁碟上的配置就是執行階段的配置，因此載入索引時不會重建任何內容。這會產生下列影響：
 
-- The index does not consume JVM heap and adds no garbage collection pressure, so a node can serve large sparse indexes with a comparatively small heap.
-- Index memory is reclaimable operating system page cache, so the operating system reclaims it under memory pressure. No circuit breaker or eviction policy is involved.
-- The first query against a segment pays a one-time cost to establish the memory mapping. Later queries reuse it. This cost grows with segment size.
+- 索引不會耗用 JVM 堆積，也不會增加垃圾回收壓力，因此節點可以使用相對較小的堆積，為大型稀疏索引提供服務。
+- 索引記憶體屬於可回收的作業系統分頁快取，因此作業系統會在記憶體壓力下回收它。此過程不涉及斷路器或逐出原則。
+- 首次對分段進行查詢時，會產生建立記憶體對應的一次性成本。後續查詢會重複使用該對應。此成本會隨分段大小增加。
 
-The native engine relies on the operating system page cache, and no setting bounds the amount of memory that its index uses. To size a node for the native engine, leave enough RAM for the page cache, the same as for any other memory-mapped Lucene data.
+原生引擎依賴作業系統分頁快取，且沒有任何設定會限制其索引使用的記憶體量。規劃原生引擎節點的容量時，請為分頁快取保留足夠的 RAM，就如同處理其他任何對應至記憶體的 Lucene 資料一樣。
 
-#### Enabling the native engine
+#### 啟用原生引擎
 
-The native engine is disabled by default. Both of the following cluster settings must be `true` before a field can use the native engine:
+原生引擎預設為停用。欄位要使用原生引擎，下列兩個叢集設定都必須為 `true`：
 
-| Setting | Static/Dynamic | Default | Description |
+| 設定 | 靜態／動態 | 預設 | 說明 |
 |:--- |:--- |:--- |:--- |
-| `plugins.neural_search.sparse.native_engine_feature_enabled` | Static | `true` | Whether the native engine is available. Because this setting is static, configure it in `opensearch.yml` on each node; changing it requires a node restart. |
-| `plugins.neural_search.sparse.native_engine_enabled` | Dynamic | `false` | Whether the native engine is enabled at runtime. |
+| `plugins.neural_search.sparse.native_engine_feature_enabled` | 靜態 | `true` | 原生引擎是否可用。由於此設定是靜態設定，請在每個節點的 `opensearch.yml` 中設定；變更此設定需要重新啟動節點。 |
+| `plugins.neural_search.sparse.native_engine_enabled` | 動態 | `false` | 是否在執行階段啟用原生引擎。 |
 
-To enable the native engine, send the following request:
+若要啟用原生引擎，請傳送下列請求：
 
 ```json
 PUT _cluster/settings
@@ -170,41 +171,41 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-If either setting is `false`, OpenSearch rejects attempts to create a field with `engine` set to `native`, to index documents into an existing native engine field, and to query one. OpenSearch does not fall back to the Lucene engine, because the field's mapping specifies the native engine.
+如果任一設定為 `false`，OpenSearch 會拒絕建立將 `engine` 設為 `native` 的欄位、將文件編製索引至現有的原生引擎欄位，以及查詢此類欄位的嘗試。OpenSearch 不會退回使用 Lucene 引擎，因為欄位的對應指定了原生引擎。
 
-While the native engine is disabled, OpenSearch skips building the native index during segment flush and merge. Raw vectors are still written to disk, so re-enabling the engine and then force merging the affected indexes rebuilds the native index.
+原生引擎停用期間，OpenSearch 會在分段排清與合併時略過建立原生索引。原始向量仍會寫入磁碟，因此重新啟用引擎，再對受影響的索引執行強制合併，就會重建原生索引。
 {: .note}
 
-#### Choosing a forward index layout
+#### 選擇正向索引配置
 
-The `forward_index` algorithm parameter controls how the native engine stores the forward index. Specify it in the field's `method.parameters` object. The following table describes the available layouts.
+`forward_index` 演算法參數控制原生引擎儲存正向索引的方式。請在欄位的 `method.parameters` 物件中指定此參數。下表說明可用的配置。
 
-| Value | Description | Trade-off |
+| 值 | 說明 | 取捨 |
 |:--- |:--- |:--- |
-| `shared` (default) | One contiguous forward index for the field. | Lower disk usage. |
-| `per_block` | Each block's vectors are stored inline with the block, so a query reads only the blocks it selects. | Lower query latency, higher disk usage. |
+| `shared`（預設） | 欄位使用單一連續的正向索引。 | 磁碟用量較低。 |
+| `per_block` | 每個區塊的向量都與該區塊一起以內嵌方式儲存，因此查詢只會讀取所選的區塊。 | 查詢延遲較低，磁碟用量較高。 |
 
-Both layouts are memory mapped and apply the same quantization. The `forward_index` parameter selects where forward index data is placed; the precision at which it is stored is the same for both layouts.
+兩種配置都會對應至記憶體，並套用相同的量化方式。`forward_index` 參數選擇正向索引資料的放置位置；兩種配置儲存資料的精確度相同。
 
-If you set `engine` to `lucene` and specify a `forward_index` value other than `shared`, the request is rejected.
+如果您將 `engine` 設為 `lucene`，並指定 `shared` 以外的 `forward_index` 值，請求就會遭到拒絕。
 {: .warning}
 
-#### Considerations for the native engine
+#### 原生引擎的注意事項
 
-Before choosing the native engine, note the following:
+選擇原生引擎之前，請注意下列事項：
 
-- The [Warm Up]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#warm-up) and [Clear Cache]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#clear-cache) APIs operate on the Lucene engine's cache and do not apply to the native engine.
-- The sparse memory statistics returned by the [Neural Search Stats API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#stats) report Lucene engine cache usage only. They do not account for native engine index memory.
-- The `plugins.neural_search.circuit_breaker.limit` setting has no effect on the native engine.
-- The native engine requires an index whose data is stored on the local filesystem.
+- [Warm Up]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#warm-up) 和 [Clear Cache]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#clear-cache) API 操作的是 Lucene 引擎的快取，不適用於原生引擎。
+- [Neural Search Stats API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#stats) 傳回的稀疏記憶體統計資料只會回報 Lucene 引擎的快取用量，不包含原生引擎索引的記憶體用量。
+- `plugins.neural_search.circuit_breaker.limit` 設定對原生引擎沒有影響。
+- 原生引擎要求索引的資料儲存在本機檔案系統上。
 
-## Step 1: Create an index
+## 步驟 1：建立索引
 
-To use neural sparse ANN search, you must enable the `sparse` setting at the index level and use `sparse_vector` as the field type.
+若要使用神經稀疏 ANN 搜尋，您必須在索引層級啟用 `sparse` 設定，並使用 `sparse_vector` 作為欄位類型。
 
-### Index settings
+### 索引設定
 
-Set `index.sparse: true` to enable neural sparse ANN search functionality:
+設定 `index.sparse: true` 以啟用神經稀疏 ANN 搜尋功能：
 
 ```json
 PUT /my-sparse-ann-index
@@ -239,13 +240,13 @@ PUT /my-sparse-ann-index
 ```
 {% include copy-curl.html %}
 
-This example omits the `engine` parameter, so the field uses the default Lucene engine. To use the native engine instead, see [Engines](#engines).
+此範例省略了 `engine` 參數，因此欄位會使用預設的 Lucene 引擎。若要改用原生引擎，請參閱[引擎](#engines)。
 
-For parameter information, see [Sparse vector]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/sparse-vector/).
+如需參數資訊，請參閱[稀疏向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/sparse-vector/)。
 
-## Step 2: Ingest data
+## 步驟 2：匯入資料
 
-Ingest documents with sparse embeddings where tokens are represented as integers with corresponding weights:
+匯入含有稀疏嵌入的文件，其中詞元以整數表示，並具有對應的權重：
 
 ```json
 POST _bulk
@@ -256,18 +257,18 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-You can also use [ingest pipelines]({{site.url}}{{site.baseurl}}/ingest-pipelines/) to automatically format tokens as integers.
+您也可以使用[資料匯入管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/)，自動將詞元格式化為整數。
 
-## Step 3: Query the index
+## 步驟 3：查詢索引
 
-Query neural sparse ANN search using the `neural_sparse` query with `method_parameters` for performance tuning.
+使用 `neural_sparse` 查詢執行神經稀疏 ANN 搜尋，並透過 `method_parameters` 調整效能。
 
-Do not combine neural sparse ANN search with [two-phase]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-sparse-query-two-phase-processor/) pipelines.
+請勿將神經稀疏 ANN 搜尋與[兩階段]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-sparse-query-two-phase-processor/)管線搭配使用。
 {: .important}
 
-### Query using natural language
+### 使用自然語言查詢
 
-Query using natural language text, which requires a deployed sparse encoding model to convert the text into sparse vectors:
+使用自然語言文字進行查詢，需要已部署的稀疏編碼模型將文字轉換為稀疏向量：
 
 ```json
 GET /my-sparse-ann-index/_search
@@ -289,9 +290,9 @@ GET /my-sparse-ann-index/_search
 ```
 {% include copy-curl.html %}
 
-### Query using raw vectors
+### 使用原始向量查詢
 
-Query using precomputed sparse vectors, where tokens are specified as integers with their corresponding weights:
+使用預先計算的稀疏向量進行查詢，其中詞元以整數及其對應權重指定：
 
 ```json
 GET /my-sparse-ann-index/_search
@@ -315,36 +316,36 @@ GET /my-sparse-ann-index/_search
 ```
 {% include copy-curl.html %}
 
-### Query parameters
+### 查詢參數
 
-| Parameter | Description |
+| 參數 | 說明 |
 |:--- |:--- |
-| `k` | The number of top nearest results to return |
-| `top_n` | The number of query tokens with the highest weights to retain |
-| `heap_factor` | Controls recall compared to performance trade-off |
-| `filter` | Optional Boolean filter for pre-filtering or post-filtering |
+| `k` | 要傳回的最相近前幾筆結果數量 |
+| `top_n` | 要保留的最高權重查詢詞元數量 |
+| `heap_factor` | 控制召回率與效能之間的取捨 |
+| `filter` | 用於預先篩選或事後篩選的選用布林值篩選器 |
 
-The query syntax and these parameters are the same for both engines. You select the engine in the field mapping. For more information, see [Engines](#engines).
+兩種引擎的查詢語法與這些參數皆相同。您會在欄位對應中選取引擎。如需更多資訊，請參閱[引擎](#engines)。
 {: .note}
 
-## Filtering support
+## 篩選支援
 
-Neural sparse ANN search supports filtering. If the filter matches fewer documents than `k`, both engines run an exact search over the filtered documents. Otherwise, the two engines apply the filter at different points:
+神經稀疏 ANN 搜尋支援篩選。如果篩選器符合的文件數少於 `k`，兩種引擎都會對篩選後的文件執行精確搜尋。否則，兩種引擎會在不同的階段套用篩選器：
 
-- The Lucene engine applies the filter after approximate retrieval (post-filtering). The results are the intersection of the top matches and the filter, so a selective filter can return fewer than `k` results.
-- The native engine pushes the filter down as a candidate set before retrieval (pre-filtering). Retrieval runs within the filtered set, so the query can return the full `k` results.
+- Lucene 引擎在近似擷取之後套用篩選器（事後篩選）。結果是前幾筆相符項目與篩選器的交集，因此選擇性篩選器可能傳回少於 `k` 筆結果。
+- 原生引擎在擷取之前將篩選器下推為候選集合（預先篩選）。擷取會在篩選後的集合內進行，因此查詢可以傳回完整的 `k` 筆結果。
 
-For more information, see [Filtering in neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/filtering-in-sparse-search/).
+如需更多資訊，請參閱[神經稀疏 ANN 搜尋中的篩選]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/filtering-in-sparse-search/)。
 
-## Cluster settings
+## 叢集設定
 
-Neural sparse ANN search supports the following cluster settings.
+神經稀疏 ANN 搜尋支援下列叢集設定。
 
-### Thread pool configuration
+### 執行緒集區組態
 
-Building a clustered inverted index structure requires intensive computation. By default, the algorithm uses a single-threaded thread pool to build clusters. You can increase the thread pool size to build clusters in parallel, using more CPU cores and reducing index build time. This setting applies to both engines.
+建立叢集化倒排索引結構需要大量運算。預設情況下，演算法使用單執行緒的執行緒集區來建立叢集。您可以增加執行緒集區大小以平行方式建立叢集，使用更多 CPU 核心並縮短索引建立時間。此設定適用於兩種引擎。
 
-To configure the thread pool size, update the `plugins.neural_search.sparse.algo_param.index_thread_qty` setting:
+若要設定執行緒集區大小，請更新 `plugins.neural_search.sparse.algo_param.index_thread_qty` 設定：
 
 ```json
 PUT /_cluster/settings
@@ -356,13 +357,13 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-### Memory and caching settings
+### 記憶體與快取設定
 
-The Lucene engine provides a circuit breaker that prevents the algorithm from using excessive memory and ensures that other OpenSearch operations remain unaffected. The default value of `circuit_breaker.limit` is `10%`. You can adjust this setting to control the total memory allocated to the algorithm. When memory usage reaches the defined limit, a cache eviction occurs, removing the least recently used data. 
+Lucene 引擎提供斷路器，可防止演算法使用過多記憶體，並確保其他 OpenSearch 作業不受影響。`circuit_breaker.limit` 的預設值為 `10%`。您可以調整此設定來控制配置給演算法的總記憶體。當記憶體使用量達到定義的限制時，會發生快取逐出，移除最近最少使用的資料。
 
-A higher circuit breaker limit allows more memory usage and reduces the frequency of cache evictions but may impact other OpenSearch operations. A lower limit provides greater safety but can result in more frequent cache evictions.
+較高的斷路器限制允許更多記憶體使用量並降低快取逐出的頻率，但可能影響其他 OpenSearch 作業。較低的限制提供更高的安全性，但可能導致更頻繁的快取逐出。
 
-To configure the circuit breaker limit, send the following request:
+若要設定斷路器限制，請傳送下列請求：
 
 ```json
 PUT _cluster/settings
@@ -374,25 +375,25 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-The circuit breaker bounds the Lucene engine's JVM heap cache. It has no effect on the native engine, which holds its index in a memory-mapped file managed by the operating system. For more information, see [Native engine](#native-engine).
+斷路器限制 Lucene 引擎的 JVM 堆積快取。它對原生引擎沒有效果，原生引擎將其索引保存在由作業系統管理的記憶體對應檔案中。如需更多資訊，請參閱[原生引擎](#native-engine)。
 {: .note}
 
-For more information, see [Neural Search plugin settings]({{site.url}}{{site.baseurl}}/vector-search/settings/#neural-search-plugin-settings).
+如需更多資訊，請參閱[Neural Search 外掛程式設定]({{site.url}}{{site.baseurl}}/vector-search/settings/#neural-search-plugin-settings)。
 
-### Monitoring
+### 監控
 
-Monitor memory usage and query statistics using the [Neural Search Stats API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#stats).
+使用 [Neural Search Stats API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#stats) 監控記憶體使用量與查詢統計資料。
 
-The sparse memory statistics report Lucene engine cache usage only. Native engine index memory is held in the operating system page cache and is not reflected in these statistics.
+稀疏記憶體統計資料僅報告 Lucene 引擎的快取使用量。原生引擎的索引記憶體保存在作業系統的分頁快取中，不會反映在這些統計資料中。
 {: .note}
 
-## Performance tuning
+## 效能調校
 
-Neural sparse ANN search provides multiple parameters for balancing search accuracy and query speed. For comprehensive tuning guidance, see [Neural sparse ANN search performance tuning]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning-sparse/).
+神經稀疏 ANN 搜尋提供多個參數，用於平衡搜尋精確度與查詢速度。如需完整的調校指引，請參閱[神經稀疏 ANN 搜尋效能調校]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning-sparse/)。
 
-## Next steps
+## 後續步驟
 
-- For query syntax, see [Neural sparse query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural-sparse/).
-- For field type information, see [Sparse vector]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/sparse-vector/).
-- For performance optimization, see [Neural sparse ANN search performance tuning]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning-sparse/).
-- For filtering options, see [Filtering in neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/filtering-in-sparse-search/).
+- 如需查詢語法，請參閱[神經稀疏查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural-sparse/)。
+- 如需欄位類型資訊，請參閱[稀疏向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/sparse-vector/)。
+- 如需效能最佳化，請參閱[神經稀疏 ANN 搜尋效能調校]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning-sparse/)。
+- 如需篩選選項，請參閱[神經稀疏 ANN 搜尋中的篩選]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/filtering-in-sparse-search/)。

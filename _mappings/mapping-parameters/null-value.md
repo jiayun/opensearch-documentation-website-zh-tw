@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Null value
+title: "Null 值"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/null-value/
@@ -9,16 +10,16 @@ has_children: false
 has_toc: false
 ---
 
-# Null value mapping parameter
+# Null 值對應參數
 
-The `null_value` mapping parameter allows you to replace explicit `null` values with a predefined substitute during indexing. By default, if a field is set to `null`, it is not indexed and cannot be searched. With `null_value` defined, the specified replacement value is indexed instead. This allows you to query or aggregate documents in which a field was originally `null` without modifying the document `_source`.
+`null_value` 對應參數可讓您在編製索引期間，以預先定義的替代值取代明確的 `null` 值。根據預設，若欄位設為 `null`，就不會編製索引，也無法搜尋。若定義了 `null_value`，則會改為將指定的替代值編製索引。這可讓您查詢或彙總欄位原本為 `null` 的文件，而不需修改文件 `_source`。
 
-The `null_value` must be of the same type as the field it is applied to. For instance, a `date` field cannot use a `boolean` such as `true` as its `null_value`; the `null_value` must be a valid date string.
+`null_value` 的類型必須與其所套用的欄位相同。例如，`date` 欄位不能使用 `true` 這類 `boolean` 作為其 `null_value`；`null_value` 必須是有效的日期字串。
 {: .important}
 
-## Setting a null_value on a field
+## 在欄位上設定 null_value
 
-The following request creates an index named `products`. The `category` field is of type `keyword` and replaces `null` values with `"unknown"` during indexing:
+下列請求會建立名為 `products` 的索引。`category` 欄位的類型為 `keyword`，並在編製索引期間以 `"unknown"` 取代 `null` 值：
 
 ```json
 PUT /products
@@ -35,9 +36,9 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-## Indexing a document with a null value
+## 為含有 null 值的文件編製索引
 
-Use the following command to index a document in which the `category` field is set to `null`:
+使用下列命令為 `category` 欄位設為 `null` 的文件編製索引：
 
 ```json
 PUT /products/_doc/1
@@ -47,9 +48,9 @@ PUT /products/_doc/1
 ```
 {% include copy-curl.html %}
 
-## Querying the null substitute
+## 查詢 null 替代值
 
-Use the following command to search for documents in which the `category` field was previously `null`:
+使用下列命令搜尋 `category` 欄位先前為 `null` 的文件：
 
 ```json
 POST /products/_search
@@ -63,7 +64,7 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含相符的文件：
 
 ```json
 {
@@ -88,9 +89,9 @@ The response contains the matching document:
 }
 ```
 
-## Aggregating on a null substitute
+## 彙總 null 替代值
 
-Because the null replacement is indexed, it also appears in aggregations. Use the following command to perform a `terms` aggregation on the `category` field:
+由於 null 替代值已編製索引，因此也會出現在彙總中。使用下列命令對 `category` 欄位執行 `terms` 彙總：
 
 ```json
 POST /products/_search
@@ -107,7 +108,7 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-The response contains aggregated results:
+回應包含彙總結果：
 
 ```json
 {

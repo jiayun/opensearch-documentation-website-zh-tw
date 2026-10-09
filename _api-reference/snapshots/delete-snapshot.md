@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete snapshot
+title: "刪除快照"
 parent: Snapshot APIs
 nav_order: 7
 ---
 
-# Delete Snapshot API
-**Introduced 1.0**
+# 刪除快照 API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-Deletes a snapshot from a repository.
+從儲存庫刪除快照。
 
-Deleting a snapshot that is in progress stops the snapshot operation and deletes the partially created snapshot.
+刪除正在進行中的快照會停止快照作業，並刪除已部分建立的快照。
 
-* To learn more about snapshots, see [Snapshots]({{site.url}}{{site.baseurl}}/opensearch/snapshots/index/).
+* 若要進一步了解快照，請參閱 [快照]({{site.url}}{{site.baseurl}}/opensearch/snapshots/index/)。
 
-* To view a list of your repositories, see [cat repositories]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-repositories/).
+* 若要檢視儲存庫清單，請參閱 [cat repositories]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-repositories/)。
 
-* To view a list of your snapshots, see [cat snapshots]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-snapshots/).
+* 若要檢視快照清單，請參閱 [cat snapshots]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-snapshots/)。
 
-## Path and HTTP method
+## 路徑與 HTTP 方法
 
 ```json
 DELETE _snapshot/{repository}/{snapshot}
 ```
 
-## Path parameters
+## 路徑參數
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`repository` | String | Repository that contains the snapshot. |
-`snapshot` | String | Snapshot to delete. |
+`repository` | 字串 | 包含快照的儲存庫。 |
+`snapshot` | 字串 | 要刪除的快照。 |
 
-## Example request
+## 範例請求
 
-The following request deletes a snapshot called `my-first-snapshot` from the `my-opensearch-repo` repository:
+下列請求從 `my-opensearch-repo` 儲存庫刪除名為 `my-first-snapshot` 的快照：
 
 <!-- spec_insert_start
 component: example_code
@@ -59,9 +60,9 @@ response = client.snapshot.delete(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-Upon success, the response returns the following JSON object:
+成功時，回應會傳回下列 JSON 物件：
 
 ```json
 {
@@ -69,9 +70,9 @@ Upon success, the response returns the following JSON object:
 }
 ```
 
-To verify that the snapshot was deleted, use the [Get snapshot]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot/) API, passing the snapshot name as the `snapshot` path parameter.
+若要驗證快照是否已刪除，請使用 [Get snapshot]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot/) API，並將快照名稱作為 `snapshot` 路徑參數傳入。
 {: .note}
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/snapshot/delete`.
+如果您使用 Security 外掛程式，請確保您具備適當的權限：`cluster:admin/snapshot/delete`。

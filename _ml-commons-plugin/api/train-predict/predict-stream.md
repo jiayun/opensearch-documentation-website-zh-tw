@@ -1,44 +1,45 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Predict stream
+title: "預測串流"
 parent: Model APIs
 grand_parent: ML Commons APIs
 nav_order: 65
 ---
 
 # Predict Stream API
-**Introduced 3.3**
+**於 3.3 版推出**
 {: .label .label-purple }
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).    
+這是實驗性功能，不建議在正式環境中使用。若要了解此功能的最新進展，或想要提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/)上的討論。    
 {: .warning}
 
-The Predict Stream API provides the same functionality as the [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) but returns responses in a streaming format, delivering data in chunks as it becomes available. This streaming approach is particularly beneficial for large language model interactions with lengthy responses, allowing you to see partial results immediately rather than waiting for the complete response.
+Predict Stream API 提供與 [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 相同的功能，但會以串流格式傳回回應，在資料可用時分段傳送。這種串流方式特別適合回應內容冗長的大型語言模型互動，讓您能立即看到部分結果，而不必等待完整回應。
 
-Alternatively, you can stream predictions over gRPC. For more information, see [gRPC Predict Model Stream API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/predict-model-stream/).
+您也可以改透過 gRPC 串流預測結果。如需詳細資訊，請參閱 [gRPC Predict Model Stream API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/predict-model-stream/)。
 {: .note}
 
-This API supports the following remote model types:
+此 API 支援下列遠端模型類型：
 - [OpenAI Chat Completion](https://platform.openai.com/docs/api-reference/completions)
 - [Amazon Bedrock Converse Stream](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ConverseStream.html)
 
-## Endpoint
+## 端點
 
 ```json
 POST /_plugins/_ml/models/{model_id}/_predict/stream
 ```
 
-## Prerequisites
+## 先決條件
 
-Before using this API, ensure that you have fulfilled the following prerequisites.
+使用此 API 之前，請確認您已符合下列先決條件。
 
-### Set up your cluster
+### 設定叢集
 
-Follow these steps to set up your cluster.
+請依照下列步驟設定叢集。
 
-#### Step 1: Install the required plugins
+#### 步驟 1：安裝必要的外掛程式
 
-The Predict Stream API depends on the following plugins, which are included in the OpenSearch distribution but must be explicitly installed as follows:
+Predict Stream API 相依於下列外掛程式。這些外掛程式包含在 OpenSearch 發行版本中，但必須依下列方式明確安裝：
 
 ```bash
 bin/opensearch-plugin install transport-reactor-netty4
@@ -46,11 +47,11 @@ bin/opensearch-plugin install arrow-base
 bin/opensearch-plugin install arrow-flight-rpc
 ```
 
-For more information, see [Managing OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/).
+如需詳細資訊，請參閱[管理 OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)。
 
-#### Step 2: Configure OpenSearch settings
+#### 步驟 2：設定 OpenSearch 設定
 
-Add these settings to your `opensearch.yml` file or Docker Compose configuration:
+將下列設定新增至您的 `opensearch.yml` 檔案或 Docker Compose 組態：
 
 ```yaml
 opensearch.experimental.feature.transport.stream.enabled: true
@@ -71,14 +72,14 @@ transport.ssl.enforce_hostname_verification: false
 ```
 {% include copy.html %}
 
-If you're using the security demo certificates, change `plugins.security.ssl.transport.enforce_hostname_verification: false` to `transport.ssl.enforce_hostname_verification: false` in your `opensearch.yml` file.
+如果您使用安全性示範憑證，請在 `opensearch.yml` 檔案中將 `plugins.security.ssl.transport.enforce_hostname_verification: false` 變更為 `transport.ssl.enforce_hostname_verification: false`。
 {: .note}
 
-For more information about enabling experimental features, see [Experimental feature flags]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/experimental/).
+如需啟用實驗性功能的詳細資訊，請參閱[實驗性功能旗標]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/experimental/)。
 
-#### Step 3: Configure JVM options
+#### 步驟 3：設定 JVM 選項
 
-Add these settings to your `jvm.options` file:
+將下列設定新增至您的 `jvm.options` 檔案：
 
 ```yaml
 -Dio.netty.allocator.numDirectArenas=1
@@ -89,13 +90,13 @@ Add these settings to your `jvm.options` file:
 ```
 {% include copy.html %}
 
-### Configure the necessary APIs
+### 設定必要的 API
 
-Configure the API using the following steps.
+請依照下列步驟設定 API。
 
-#### Step 1: Enable the streaming feature flag
+#### 步驟 1：啟用串流功能旗標
 
-To enable the streaming feature flag, update the cluster settings as follows:
+若要啟用串流功能旗標，請依下列方式更新叢集設定：
 
 ```json
 PUT _cluster/settings
@@ -107,9 +108,9 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-#### Step 2: Register a compatible externally hosted model
+#### 步驟 2：註冊相容的外部託管模型
 
-To register an OpenAI Chat Completion model, send the following request:
+若要註冊 OpenAI Chat Completion 模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -146,7 +147,7 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-To register an Amazon Bedrock Converse Stream model, send the following request:
+若要註冊 Amazon Bedrock Converse Stream 模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -186,13 +187,13 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-## Example request
+## 請求範例
 
-To use the Predict Stream API, you must include the `_llm_interface` parameter that corresponds to your model type:
-- OpenAI Chat Completion: `openai/v1/chat/completions`
-- Amazon Bedrock Converse Stream: `bedrock/converse/claude`
+若要使用 Predict Stream API，您必須加入與模型類型對應的 `_llm_interface` 參數：
+- OpenAI Chat Completion：`openai/v1/chat/completions`
+- Amazon Bedrock Converse Stream：`bedrock/converse/claude`
 
-For OpenAI Chat Completion, send the following request:
+若為 OpenAI Chat Completion，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/{model_id}/_predict/stream
@@ -214,7 +215,7 @@ POST /_plugins/_ml/models/{model_id}/_predict/stream
 ```
 {% include copy-curl.html %}
 
-For Amazon Bedrock Converse Stream, send the following request:
+若為 Amazon Bedrock Converse Stream，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/{model_id}/_predict/stream
@@ -227,9 +228,9 @@ POST /_plugins/_ml/models/{model_id}/_predict/stream
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The streaming format uses Server-Sent Events (SSE), with each chunk containing a portion of the model's response, and an `is_last` flag to indicate completion.
+串流格式使用 Server-Sent Events (SSE)，每個區塊包含模型回應的一部分，並以 `is_last` 旗標表示是否完成。
 
 ```json
 data: {"inference_results":[{"output":[{"name":"response","dataAsMap":{"content":"Sure","is_last":false}}]}]}
@@ -247,15 +248,15 @@ data: {"inference_results":[{"output":[{"name":"response","dataAsMap":{"content"
 data: {"inference_results":[{"output":[{"name":"response","dataAsMap":{"content":"","is_last":true}}]}]}
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description                                                                                                 |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- |:------------------------------------------------------------------------------------------------------------|
-| `inference_results` | Array | Contains the streaming response data returned by the model.                                                        |
-| `inference_results.output` | Array | Contains output objects for each inference result.                                                      |
-| `inference_results.output.name` | String | The name of the output field (typically, `response`).                                                         |
-| `inference_results.output.dataAsMap` | Object | Contains the response content and metadata.                                                             |
-| `inference_results.output.dataAsMap.content` | String | The text content chunk from the model's response.                                                           |
-| `inference_results.output.dataAsMap.is_last` | Boolean | Indicates whether this is the final chunk in the stream: `true` for the last chunk, `false` if there are more chunks. |
+| `inference_results` | 陣列 | 包含模型傳回的串流回應資料。 |
+| `inference_results.output` | 陣列 | 包含每個推論結果的輸出物件。 |
+| `inference_results.output.name` | 字串 | 輸出欄位的名稱 (通常為 `response`)。 |
+| `inference_results.output.dataAsMap` | 物件 | 包含回應內容與中繼資料。 |
+| `inference_results.output.dataAsMap.content` | 字串 | 模型回應中的文字內容區塊。 |
+| `inference_results.output.dataAsMap.is_last` | 布林值 | 表示此區塊是否為串流中的最後一個區塊：最後一個區塊為 `true`，若還有更多區塊則為 `false`。 |

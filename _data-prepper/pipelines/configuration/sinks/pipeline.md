@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Pipeline 
+title: "管線"
 parent: Sinks
 grand_parent: Pipelines
 nav_order: 55
 ---
 
-# Pipeline sink
+# 管線接收器
 
-Use the `pipeline` sink to write to another pipeline.
+使用 `pipeline` 接收器寫入另一個管線。
 
-## Configuration options
+## 組態選項
 
-The `pipeline` sink supports the following configuration options.
+`pipeline` 接收器支援下列組態選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-name | Yes | String | Name of the pipeline to write to.
+name | 是 | 字串 | 要寫入的管線名稱。
 
-## Usage
+## 使用方式
 
-The following example configures a `pipeline` sink that writes to a pipeline named `movies`:
+下列範例設定一個 `pipeline` 接收器，寫入名為 `movies` 的管線：
 
 ```yaml
 sample-pipeline:

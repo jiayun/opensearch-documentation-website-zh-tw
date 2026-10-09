@@ -1,34 +1,35 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Transform flattened fields to flat_object
+title: "將 flattened 欄位轉換為 flat_object"
 nav_order: 3
 parent: Migrate metadata
 grand_parent: Migration phases
 permalink: /classic/migration-assistant/migration-phases/migrate-metadata/transform-flattened-flat-object/
 ---
 
-# Transform flattened fields to flat_object
+# 將 flattened 欄位轉換為 flat_object
 
-This guide explains how Migration Assistant automatically transforms the `flattened` field type during migration to OpenSearch.
+本指南說明 Migration Assistant 在遷移至 OpenSearch 期間如何自動轉換 `flattened` 欄位類型。
 
-## Overview
+## 概觀
 
-The `flattened` field type was introduced in Elasticsearch 7.3 as an X-Pack feature. It allows you to store an entire JSON object as a single field value, which can be useful for objects with a large or unknown number of unique keys.
+`flattened` 欄位類型是在 Elasticsearch 7.3 中以 X-Pack 功能的形式推出。它可讓您將整個 JSON 物件儲存為單一欄位值，這對於具有大量或未知數量唯一鍵的物件很有用。
 
-When migrating to OpenSearch 2.7 or later, Migration Assistant automatically converts `flattened` field types to OpenSearch's equivalent `flat_object` type. This transformation requires no configuration or user intervention.
+遷移至 OpenSearch 2.7 或更新版本時，Migration Assistant 會自動將 `flattened` 欄位類型轉換為 OpenSearch 的對等類型 `flat_object`。此轉換不需要任何組態或使用者介入。
 
-To determine whether an Elasticsearch cluster uses `flattened` field types, make a call to your source cluster's `GET /_mapping` API. In the Migration Console, run `console clusters curl source_cluster "/_mapping"`. If you see `"type":"flattened"`, then this transformation is applicable and these fields will be automatically transformed during migration.
+若要判斷 Elasticsearch 叢集是否使用 `flattened` 欄位類型，請呼叫來源叢集的 `GET /_mapping` API。在 Migration Console 中，執行 `console clusters curl source_cluster "/_mapping"`。如果您看到 `"type":"flattened"`，表示此轉換適用，且這些欄位將在遷移期間自動轉換。
 
-## Compatibility
+## 相容性
 
-The `flattened` to `flat_object` field type transformation applies to:
-- **Source clusters**: Elasticsearch 7.3+
-- **Target clusters**: OpenSearch 2.7+
-- **Automatic conversion**: No configuration required during metadata
+`flattened` 至 `flat_object` 欄位類型轉換適用於：
+- **來源叢集**：Elasticsearch 7.3+
+- **目標叢集**：OpenSearch 2.7+
+- **自動轉換**：中繼資料期間不需要任何組態
 
-## Automatic migration
+## 自動遷移
 
-When migrating to OpenSearch 2.7 or later, Migration Assistant automatically detects `flattened` field types and converts them to `flat_object` fields. During the migration process, you'll see this transformation in the output:
+遷移至 OpenSearch 2.7 或更新版本時，Migration Assistant 會自動偵測 `flattened` 欄位類型，並將其轉換為 `flat_object` 欄位。在遷移過程中，您會在輸出中看到此轉換：
 
 ```
 Transformations:
@@ -36,13 +37,13 @@ Transformations:
       Convert field data type flattened to OpenSearch flat_object
 ```
 
-### Example transformation
+### 轉換範例
 
 <table style="border-collapse: collapse; border: 1px solid #ddd;">
   <thead>
     <tr>
-      <th style="border: 1px solid #ddd; padding: 8px;">Source field type</th>
-      <th style="border: 1px solid #ddd; padding: 8px;">Target field type</th>
+      <th style="border: 1px solid #ddd; padding: 8px;">來源欄位類型</th>
+      <th style="border: 1px solid #ddd; padding: 8px;">目標欄位類型</th>
     </tr>
   </thead>
   <tbody>
@@ -75,42 +76,42 @@ Transformations:
   </tbody>
 </table>
 
-## Transformation behavior across versions
+## 各版本的轉換行為
 
-Migration Assistant automatically converts all `flattened` fields to `flat_object` fields. No additional configuration is required.
+Migration Assistant 會自動將所有 `flattened` 欄位轉換為 `flat_object` 欄位。不需要任何額外的組態。
 
-If you're migrating to OpenSearch versions earlier than 2.7, indexes containing `flattened` field types will fail to migrate. You have several options:
+如果您要遷移至早於 2.7 的 OpenSearch 版本，包含 `flattened` 欄位類型的索引將無法遷移。您有幾個選項：
 
-1. **Upgrade target cluster**: Upgrade your target OpenSearch cluster to version 2.7 or later to support the automatic conversion.
+1. **升級目標叢集**：將您的目標 OpenSearch 叢集升級至 2.7 或更新版本，以支援自動轉換。
 
-2. **Custom transformation**: Use the [field type transformation framework]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/migrate-metadata/handling-field-type-breaking-changes/) to convert `flattened` to another supported type (for example, `object` or `nested`).
+2. **自訂轉換**：使用[欄位類型轉換架構]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/migrate-metadata/handling-field-type-breaking-changes/)將 `flattened` 轉換為其他支援的類型（例如 `object` 或 `nested`）。
 
-## Differences between flattened and flat_object
+## flattened 與 flat_object 的差異
 
-While `flat_object` in OpenSearch provides similar functionality to Elasticsearch's `flattened` type, there are some minor differences:
+雖然 OpenSearch 中的 `flat_object` 提供與 Elasticsearch 的 `flattened` 類型類似的功能，但仍有若干細微差異：
 
-- **Query syntax**: Both support dot notation for accessing nested fields.
-- **Performance**: Similar performance characteristics for indexing and searching.
-- **Storage**: Both store the entire object as a single Lucene field.
-- **Limitations**: Both have similar limitations on aggregations and sorting.
+- **查詢語法**：兩者都支援使用點標記法存取巢狀欄位。
+- **效能**：編製索引與搜尋的效能特性類似。
+- **儲存空間**：兩者都將整個物件儲存為單一 Lucene 欄位。
+- **限制**：兩者在彙總與排序方面有類似的限制。
 
-## Troubleshooting
+## 疑難排解
 
-If you encounter issues with `flattened` field migration:
+如果您在 `flattened` 欄位遷移時遇到問題：
 
-1. **Verify target version** -- Ensure your target OpenSearch cluster is running version 2.7 or later.
+1. **確認目標版本** -- 確保您的目標 OpenSearch 叢集執行的是 2.7 或更新版本。
 
-2. **Check migration logs** -- Review the detailed migration logs for any warnings or errors:
+2. **檢查遷移記錄檔** -- 檢閱詳細的遷移記錄檔，查看是否有任何警告或錯誤：
    ```bash
    cat /shared-logs-output/migration-console-default/*/metadata/*.log
    ```
 
-3. **Validate mappings** -- After migration, verify that the field types have been correctly converted:
+3. **驗證對應** -- 遷移後，確認欄位類型已正確轉換：
    ```bash
    GET /your-index/_mapping
    ```
 
-## Related documentation
+## 相關文件
 
-- [Transform field types documentation]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/migrate-metadata/handling-field-type-breaking-changes/) -- Configure custom field type transformations.
-- [flat_object field type documentation]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/flat-object/) -- Learn about flat_object field type.
+- [轉換欄位類型文件]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/migrate-metadata/handling-field-type-breaking-changes/) -- 設定自訂欄位類型轉換。
+- [flat_object 欄位類型文件]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/flat-object/) -- 了解 flat_object 欄位類型。

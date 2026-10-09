@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Ingest pipelines
+title: "資料匯入管線"
 nav_order: 5
 nav_exclude: true
 has_toc: true
@@ -10,33 +11,33 @@ redirect_from:
    - /ingest-pipelines/index/
 ---
 
-# Ingest pipelines
+# 資料匯入管線
 
-An _ingest pipeline_ is a sequence of _processors_ that are applied to documents as they are ingested into an index. Each [processor]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/index-processors/) in a pipeline performs a specific task, such as filtering, transforming, or enriching data. 
+_資料匯入管線_ (ingest pipeline) 是一連串的_處理器_ (processor)，在文件匯入索引時套用於文件。管線中的每個[處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/index-processors/)執行特定任務，例如篩選、轉換或充實資料。
 
-Processors are customizable tasks that run in a sequential order as they appear in the request body. This order is important, as each processor depends on the output of the previous processor. The modified documents appear in your index after the processors are applied.
+處理器是可自訂的任務，依照請求本文中出現的順序依序執行。此順序非常重要，因為每個處理器都依賴前一個處理器的輸出。處理器套用完成後，修改過的文件就會出現在您的索引中。
 
-## OpenSearch ingest pipelines compared to Data Prepper
+## OpenSearch 資料匯入管線與 Data Prepper 的比較
 
-OpenSearch ingest pipelines run within the OpenSearch cluster, whereas [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) is an external component that runs on the OpenSearch cluster. 
+OpenSearch 資料匯入管線在 OpenSearch 叢集內執行，而 [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) 則是在 OpenSearch 叢集上執行的外部元件。
 
-OpenSearch ingest pipelines perform actions on indexes and are preferred for use cases involving pre-processing simple datasets, [machine learning (ML) processors]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/sparse-encoding/), and [vector embedding processors]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-image-embedding/). OpenSearch ingest pipelines are recommended for simple data pre-processing and small datasets. 
+OpenSearch 資料匯入管線對索引執行動作，適合用於簡單資料集的預先處理、[機器學習 (ML) 處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/sparse-encoding/)以及[向量嵌入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-image-embedding/)等使用情境。建議在簡單的資料預先處理和小型資料集使用 OpenSearch 資料匯入管線。
 
-Data Prepper is recommended for any data processing tasks it supports, particularly when dealing with large datasets and complex data pre-processing requirements. It streamlines the process of transferring and fetching large datasets while providing robust capabilities for intricate data preparation and transformation operations. Refer to the [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) documentation for more information.      
+Data Prepper 則建議用於其支援的任何資料處理任務，尤其是處理大型資料集和複雜的資料預先處理需求時。它能簡化大型資料集的傳輸與擷取流程，同時提供強大的功能來執行複雜的資料準備與轉換作業。如需更多資訊，請參閱 [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) 文件。
 
-OpenSearch ingest pipelines can only be managed using [Ingest API operations]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/).
+OpenSearch 資料匯入管線只能透過 [Ingest API 操作]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)來管理。
 {: .note}
 
-## Prerequisites 
+## 必要條件
 
-The following are prerequisites for using OpenSearch ingest pipelines:
+以下是使用 OpenSearch 資料匯入管線的必要條件：
 
-- When using ingestion in a production environment, your cluster should contain at least one node with the node roles permission set to `ingest`. For information about setting up node roles within a cluster, see [Cluster Formation]({{site.url}}{{site.baseurl}}/opensearch/cluster/).
-- If the OpenSearch Security plugin is enabled, you must have the `cluster_manage_pipelines` permission to manage ingest pipelines.
+- 在正式環境中使用匯入功能時，您的叢集應至少包含一個節點角色權限設定為 `ingest` 的節點。如需在叢集內設定節點角色的相關資訊，請參閱 [叢集形成]({{site.url}}{{site.baseurl}}/opensearch/cluster/)。
+- 若已啟用 OpenSearch Security 外掛程式，您必須具備 `cluster_manage_pipelines` 權限才能管理資料匯入管線。
 
-## Define a pipeline
+## 定義管線
 
-A _pipeline definition_ describes the sequence of an ingest pipeline and can be written in JSON format. An ingest pipeline consists of the following:
+_管線定義_ (pipeline definition) 描述資料匯入管線的順序，可以使用 JSON 格式撰寫。資料匯入管線包含下列項目：
 
 ```json
 {
@@ -45,20 +46,20 @@ A _pipeline definition_ describes the sequence of an ingest pipeline and can be 
 }
 ```
 
-#### Request body fields
+#### 請求本文欄位
 
-Field | Required | Type | Description
+欄位 | 必要性 | 類型 | 說明
 :--- | :--- | :--- | :---
-`processors` | Required | Array of processor objects | A component that performs a specific data processing task as the data is being ingested into OpenSearch.
-`description` | Optional | String | A description of the ingest pipeline. 
+`processors` | 必要 | 處理器物件的陣列 | 在資料匯入 OpenSearch 時執行特定資料處理任務的元件。
+`description` | 選用 | 字串 | 資料匯入管線的描述。
 
-## Next steps
+## 後續步驟
 
-Learn how to:
+了解如何：
 
-- [Create a pipeline]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/).
-- [Test a pipeline]({{site.url}}{{site.baseurl}}/ingest-pipelines/simulate-ingest/).
-- [Retrieve information about a pipeline]({{site.url}}{{site.baseurl}}/ingest-pipelines/get-ingest/).
-- [Delete a pipeline]({{site.url}}{{site.baseurl}}/ingest-pipelines/delete-ingest/). 
-- [Use ingest processors in OpenSearch]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/index-processors/)
-- [Use conditional execution]({{site.url}}{{site.baseurl}}/ingest-pipelines/conditional-execution/)
+- [建立管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/)。
+- [測試管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/simulate-ingest/)。
+- [擷取管線資訊]({{site.url}}{{site.baseurl}}/ingest-pipelines/get-ingest/)。
+- [刪除管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/delete-ingest/)。
+- [在 OpenSearch 中使用匯入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/index-processors/)
+- [使用條件式執行]({{site.url}}{{site.baseurl}}/ingest-pipelines/conditional-execution/)

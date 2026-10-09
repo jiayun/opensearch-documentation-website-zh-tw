@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Search Relevance Workbench
 nav_order: 20
@@ -7,38 +8,38 @@ has_children: true
 ---
 
 # Search Relevance Workbench
-Introduced 3.1
+3.1 版引進
 {: .label .label-purple }
 
-In search applications, tuning relevance is a constant, iterative exercise intended to provide the right search results to your end users. The tooling in Search Relevance Workbench helps search relevance engineers and business users create the best search experience possible for application users. It does this without hiding internal information, enabling engineers to experiment and investigate details as necessary.
+在搜尋應用程式中，調校相關性是一項持續且反覆進行的工作，目的是為終端使用者提供正確的搜尋結果。Search Relevance Workbench 中的工具可協助搜尋相關性工程師與業務使用者為應用程式使用者打造最佳的搜尋體驗。它不會隱藏內部資訊，讓工程師能夠視需要進行實驗並調查細節。
 
-Search Relevance Workbench consists of a [frontend component](https://github.com/opensearch-project/dashboards-search-relevance) that simplifies the process of evaluating search quality.
-The frontend uses the [OpenSearch Search Relevance plugin](https://github.com/opensearch-project/search-relevance) as a backend to manage the resources for each tool provided. For example, most use cases involve creating and using search configurations, query sets, and judgment lists. All of these resources are created, updated, deleted, and maintained by the Search Relevance plugin. When you are satisfied with the relevance improvements, you can take the output of the experimentation and manually deploy the changes into your search application.
+Search Relevance Workbench 包含一個[前端元件](https://github.com/opensearch-project/dashboards-search-relevance)，可簡化評估搜尋品質的流程。
+該前端使用 [OpenSearch Search Relevance 外掛程式](https://github.com/opensearch-project/search-relevance)作為後端，以管理每個工具的資源。例如，大多數使用情境都涉及建立與使用搜尋組態、查詢集和判斷清單。這些資源全部都由 Search Relevance 外掛程式建立、更新、刪除與維護。當您對相關性改善感到滿意時，可以將實驗的輸出手動部署到您的搜尋應用程式中。
 
-You can quickly analyze a single query using the [Single query comparison UI]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/compare-search-results/) before moving to more structured experiments.
+在進行更結構化的實驗之前，您可以使用[單一查詢比較 UI]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/compare-search-results/) 快速分析單一查詢。
 
-## Key relevance concepts
+## 關鍵相關性概念
 
-Search Relevance Workbench relies on different components for the different kinds of experiments that it offers:
+Search Relevance Workbench 針對它所提供的不同實驗類型，依賴不同的元件：
 
-* [Query set]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/query-sets/): A _query set_ is a collection of queries. These queries are used in experiments for search relevance evaluation.
-* [Search configuration]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/search-configurations/): A _search configuration_ describes the pattern to use to run queries for experiments.
-* [Judgment list]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/judgments/): A _judgment_ is a rating that describes the relevance of one particular document for a given query. Multiple judgments are grouped together into judgment lists.
-* [Experiments]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/experiments/): An _experiment_ is a controlled test designed to assess the effectiveness of an algorithm. There are multiple types of experiments offered.
+* [查詢集]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/query-sets/)：_查詢集_ 是查詢的集合。這些查詢會在實驗中用於搜尋相關性評估。
+* [搜尋組態]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/search-configurations/)：_搜尋組態_ 描述實驗中執行查詢時所使用的模式。
+* [判斷清單]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/judgments/)：_判斷_ 是一種評分，描述某個特定文件對於指定查詢的相關性。多個判斷會被歸組成判斷清單。
+* [實驗]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/experiments/)：_實驗_ 是一種受控測試，旨在評估演算法的有效性。系統提供多種實驗類型。
 
-## Available search result quality experiments
+## 可用的搜尋結果品質實驗
 
-Search Relevance Workbench offers three types of experiments:
+Search Relevance Workbench 提供三種實驗類型：
 
-* [Search result comparison]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/comparing-search-results/): Compare results of two search configurations.
-* [Search quality evaluation]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/evaluate-search-quality/): Evaluate the retrieval quality for one particular search configuration by calculating search quality metrics based on retrieved results and a judgment list.
-* [Hybrid search optimization]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/optimize-hybrid-search/): Identify the best parameter set for your hybrid search query.
+* [搜尋結果比較]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/comparing-search-results/)：比較兩個搜尋組態的結果。
+* [搜尋品質評估]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/evaluate-search-quality/)：根據擷取的結果與判斷清單計算搜尋品質指標，以評估某個特定搜尋組態的擷取品質。
+* [混合搜尋最佳化]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/optimize-hybrid-search/)：為您的混合搜尋查詢找出最佳參數組合。
 
-## Creating a query set
+## 建立查詢集
 
-To compare search configurations, create a set of queries to run the search. If you have access to search behavior data adhering to the User Behavior Insights (UBI) specification, you can send a request to the `_plugins/search_relevance/query_sets/create` endpoint.
+若要比較搜尋組態，請建立一組查詢來執行搜尋。如果您有權存取符合 User Behavior Insights (UBI) 規格的搜尋行為資料，可以傳送請求至 `_plugins/search_relevance/query_sets/create` 端點。
 
-The following example request uploads a manually defined query set to Search Relevance Workbench:
+以下範例請求會將手動定義的查詢集上傳至 Search Relevance Workbench：
 
 
 ```json
@@ -60,7 +61,7 @@ PUT _plugins/_search_relevance/query_sets
 {% include copy-curl.html %}
 
 
-The response contains the `query_set_id` of the query set with which you'll experiment:
+回應包含您要用於實驗的查詢集 `query_set_id`：
 
 ```json
 {
@@ -69,14 +70,14 @@ The response contains the `query_set_id` of the query set with which you'll expe
 }
 ```
 
-## Creating search configurations
+## 建立搜尋組態
 
-Search configurations specify how each query of the query set is run. To create a search configuration, you can send a search request to the `_plugins/search_relevance/search_configurations` endpoint.
-Every search configuration contains a `search_configuration_name` and a `query_body`.
+搜尋組態會指定查詢集中的每個查詢如何執行。若要建立搜尋組態，您可以傳送搜尋請求至 `_plugins/search_relevance/search_configurations` 端點。
+每個搜尋組態都包含一個 `search_configuration_name` 和一個 `query_body`。
 
-### Example: Creating two search configurations
+### 範例：建立兩個搜尋組態
 
-For your first experiment, you'll explore how adding a weight of `10` to the `title` field affects your search configuration. First, upload your current search configuration to OpenSearch:
+在您的第一個實驗中，您將探索為 `title` 欄位新增權重 `10` 會如何影響您的搜尋組態。首先，將您目前的搜尋組態上傳至 OpenSearch：
 
 ```json
 PUT _plugins/_search_relevance/search_configurations
@@ -88,7 +89,7 @@ PUT _plugins/_search_relevance/search_configurations
 ```
 {% include copy-curl.html %}
 
-The response contains the search configuration ID:
+回應包含搜尋組態 ID：
 
 ```json
 {
@@ -97,7 +98,7 @@ The response contains the search configuration ID:
 }
 ```
 
-Next, create another search configuration and apply a weight of `10` to the `title` field:
+接著，建立另一個搜尋組態，並為 `title` 欄位套用權重 `10`：
 
 ```json
 PUT _plugins/_search_relevance/search_configurations
@@ -109,7 +110,7 @@ PUT _plugins/_search_relevance/search_configurations
 ```
 {% include copy-curl.html %}
 
-The response contains the ID of the boosted search configuration and indicates whether it was created successfully:
+回應包含已調升權重之搜尋組態的 ID，並指出是否成功建立：
 
 ```json
 {
@@ -118,9 +119,9 @@ The response contains the ID of the boosted search configuration and indicates w
 }
 ```
 
-## Running the search result list comparison experiment
+## 執行搜尋結果清單比較實驗
 
-To run your first experiment, you need a query set and two search configurations (and a corresponding index). By comparing search results, you can gauge how modifying the search configurations affects the search results. To create an experiment, send a request to the  `_plugins/search_relevance/experiments` endpoint:
+若要執行您的第一個實驗，您需要一個查詢集和兩個搜尋組態（以及對應的索引）。透過比較搜尋結果，您可以評估修改搜尋組態對搜尋結果的影響。若要建立實驗，請傳送請求至 `_plugins/search_relevance/experiments` 端點：
 
 
 ```json
@@ -134,7 +135,7 @@ PUT _plugins/_search_relevance/experiments
 ```
 {% include copy-curl.html %}
 
-The response contains the experiment ID:
+回應包含實驗 ID：
 
 ```json
 {
@@ -143,19 +144,19 @@ The response contains the experiment ID:
 }
 ```
 
-To retrieve the experiment results, use the returned `experiment_id`:
+若要擷取實驗結果，請使用傳回的 `experiment_id`：
 
 ```json
 GET _plugins/_search_relevance/experiments/dbae9786-6ea0-413d-a500-a14ef69ef7e1
 ```
 {% include copy-curl.html %}
 
-The response provides the detailed experiment results:
+回應會提供詳細的實驗結果：
 
 <details open markdown="block">
-  <summary>
-    Response
-  </summary>
+<summary>
+    回應
+</summary>
 
 ```json
 {
@@ -307,27 +308,27 @@ The response provides the detailed experiment results:
 
 </details>
 
-## Using Search Relevance Workbench in OpenSearch Dashboards
+## 在 OpenSearch Dashboards 中使用 Search Relevance Workbench
 
-You can create all Search Relevance Workbench components and visualize the experiment results in OpenSearch Dashboards.
-In this example, you'll create the same experiment and review its results.
+您可以在 OpenSearch Dashboards 中建立所有 Search Relevance Workbench 元件，並將實驗結果視覺化。
+在此範例中，您將建立相同的實驗並檢閱其結果。
 
-In the left navigation pane, select **OpenSearch Plugins** > **Search Relevance** and then select **Query Set Comparison**, as shown in the following image.
+在左側導覽窗格中，選取 **OpenSearch Plugins** > **Search Relevance**，然後選取 **Query Set Comparison**，如下圖所示。
 
-![Select Query Set Comparison Experiment]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/select_query_set_comparison.png)
+![選取 Query Set Comparison 實驗]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/select_query_set_comparison.png)
 
-Select the query set you created (`TVs`) and the search configurations (`my_production_config`, `title_boost`), and then select **Start Evaluation**, as shown in the following image.
+選取您建立的查詢集 (`TVs`) 以及搜尋組態 (`my_production_config`、`title_boost`)，然後選取 **Start Evaluation**，如下圖所示。
 
-![Define Query Set Comparison Experiment]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/query_set_comparison_experiment_definition.png)
+![定義 Query Set Comparison 實驗]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/query_set_comparison_experiment_definition.png)
 
-You are automatically directed to the experiment overview table, shown in the following image.
+系統會自動將您導向實驗總覽表格，如下圖所示。
 
-![Experiment Overview Table]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/experiment_table_overview.png)
+![實驗總覽表格]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/experiment_table_overview.png)
 
-To review the results, select the topmost (most recent) experiment. The experiment view page shows three elements:
-1. The experiment parameters.
-2. The aggregate metrics resulting from the experiment, shown in the following image.
-![Aggregate Metrics for Comparison Experiment]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/aggregate_metrics_comparison_experiment.png)
-3. The individual metrics per query.
+若要檢閱結果，請選取最上方 (最近) 的實驗。實驗檢視頁面會顯示三個元素：
+1. 實驗參數。
+2. 實驗產生的彙總指標，如下圖所示。
+![比較實驗的彙總指標]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/aggregate_metrics_comparison_experiment.png)
+3. 每個查詢的個別指標。
 
-To visually assess the differences between two result sets, select a query event.
+若要視覺化評估兩個結果集之間的差異，請選取查詢事件。

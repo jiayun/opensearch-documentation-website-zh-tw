@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delay
+title: "延遲"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 100
 ---
 
-# Delay processor
+# 延遲處理器
 
-This processor will add a delay into the processor chain. Typically, you should use this only for testing, experimenting, and debugging.
+此處理器會在處理器鏈中加入延遲。一般而言，您應該只在測試、實驗和偵錯時使用此處理器。
 
-## Configuration
+## 組態
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`for` | No | Duration | The duration of time to delay. Defaults to `1s`.
+`for` | 否 | 持續時間 | 延遲的持續時間。預設為 `1s`。
 
-## Usage
+## 使用方式
 
-The following example shows using the `delay` processor to delay for 2 seconds.
+下列範例示範如何使用 `delay` 處理器延遲 2 秒。
 
 ```yaml
 processor:

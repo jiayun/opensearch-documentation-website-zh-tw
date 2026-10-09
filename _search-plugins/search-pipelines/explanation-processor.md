@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Hybrid score explanation
+title: "混合分數說明"
 nav_order: 15
 has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
 ---
 
-# Hybrid score explanation processor
-Introduced 2.19
+# 混合分數說明處理器
+2.19 版推出
 {: .label .label-purple }
 
-The `hybrid_score_explanation` response processor adds the normalization and combination results to the returned search response. You can use it as a debugging tool to understand the score normalization process. For more information, see [Hybrid query]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/).
+`hybrid_score_explanation` 回應處理器會將正規化與合併結果加入傳回的搜尋回應中。您可以使用它作為偵錯工具，以了解分數正規化的過程。如需更多資訊，請參閱[混合查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/)。
 
-To use the `explain` parameter, you must configure the `hybrid_score_explanation` response processor in your search pipeline.
+若要使用 `explain` 參數，您必須在搜尋管線中設定 `hybrid_score_explanation` 回應處理器。
 {: .important}
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists all request fields.
+下表列出所有請求欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`tag` | String | The processor's identifier. Optional.
-`description` | String | A description of the processor. Optional.
-`ignore_failure` | Boolean | If `true`, OpenSearch [ignores any failure]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures) of this processor and continues to run the remaining processors in the search pipeline. Optional. Default is `false`.
+`tag` | 字串 | 處理器的識別碼。選用。
+`description` | 字串 | 處理器的說明。選用。
+`ignore_failure` | 布林值 | 若為 `true`，OpenSearch 會[忽略此處理器的任何失敗]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures)並繼續執行搜尋管線中剩餘的處理器。選用。預設為 `false`。
 
-## Example
+## 範例
 
-The following example demonstrates using a search pipeline with a `hybrid_score_explanation` processor.
+下列範例示範使用含有 `hybrid_score_explanation` 處理器的搜尋管線。
 
-For a comprehensive example, follow the [Getting started with semantic and hybrid search]({{site.url}}{{site.baseurl}}/ml-commons-plugin/semantic-search#tutorial).
+如需完整的範例，請依照[語意與混合搜尋入門]({{site.url}}{{site.baseurl}}/ml-commons-plugin/semantic-search#tutorial)。
 
-### Creating a search pipeline 
+### 建立搜尋管線 
 
-The following request creates a search pipeline containing a `normalization-processor` and a `hybrid_score_explanation` processor:
+下列請求會建立含有 `normalization-processor` 與 `hybrid_score_explanation` 處理器的搜尋管線：
 
 ```json
 PUT /_search/pipeline/nlp-search-pipeline
@@ -61,9 +62,9 @@ PUT /_search/pipeline/nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-### Using a search pipeline
+### 使用搜尋管線
 
-To see explanation information, specify `explain=true` in your search request:
+若要查看說明資訊，請在搜尋請求中指定 `explain=true`：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline&explain=true
@@ -99,7 +100,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline&explain=true
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -217,4 +218,4 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline&explain=true
 ...
 ```
 
-For more information about setting up hybrid search, see [Hybrid search]({{site.url}}{{site.baseurl}}/search-plugins/hybrid-search/).
+如需設定混合搜尋的更多資訊，請參閱[混合搜尋]({{site.url}}{{site.baseurl}}/search-plugins/hybrid-search/)。

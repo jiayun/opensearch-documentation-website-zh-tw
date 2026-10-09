@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using Security Analytics
+title: "使用 Security Analytics"
 nav_order: 20
 has_children: true
 has_toc: false
@@ -9,15 +10,15 @@ redirect_from:
 ---
 
 <!-- vale off -->
-# Using Security Analytics
+# 使用 Security Analytics
 <!-- vale on -->
 
-Security Analytics provides visualizations and tools to investigate and manage findings, create alerts and notifications, import or customize detection rules, and edit detectors. Use the following links to learn about each feature:
+Security Analytics 提供視覺化與工具，可用來調查及管理發現項目、建立警示與通知、匯入或自訂偵測規則，以及編輯偵測器。請使用下列連結來了解各項功能：
 
-* [The Overview page]({{site.url}}{{site.baseurl}}/security-analytics/usage/overview/)
-* [Working with detectors]({{site.url}}{{site.baseurl}}/security-analytics/usage/detectors/)
-* [Working with findings]({{site.url}}{{site.baseurl}}/security-analytics/usage/findings/)
-* [Working with detection rules]({{site.url}}{{site.baseurl}}/security-analytics/usage/rules/)
-* [Working with the correlation graph]({{site.url}}{{site.baseurl}}/security-analytics/usage/correlation-graph/)
-* [Working with alerts]({{site.url}}{{site.baseurl}}/security-analytics/usage/alerts/)
+* [概觀頁面]({{site.url}}{{site.baseurl}}/security-analytics/usage/overview/)
+* [使用偵測器]({{site.url}}{{site.baseurl}}/security-analytics/usage/detectors/)
+* [使用發現項目]({{site.url}}{{site.baseurl}}/security-analytics/usage/findings/)
+* [使用偵測規則]({{site.url}}{{site.baseurl}}/security-analytics/usage/rules/)
+* [使用關聯圖]({{site.url}}{{site.baseurl}}/security-analytics/usage/correlation-graph/)
+* [使用警示]({{site.url}}{{site.baseurl}}/security-analytics/usage/alerts/)
 

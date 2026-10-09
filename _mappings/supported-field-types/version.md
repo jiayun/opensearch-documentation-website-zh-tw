@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Version
+title: "版本"
 parent: String field types
 grand_parent: Supported field types
 nav_order: 75
@@ -9,39 +10,39 @@ redirect_from:
   - /field-types/supported-field-types/version/
 ---
 
-# Version field type
-**Introduced 3.2**
+# 版本欄位類型
+**於 3.2 版引入**
 {: .label .label-purple }
 
-The `version` field type is designed for indexing and querying version strings that follow [Semantic Versioning (SemVer)](https://semver.org/) specifications. This field type enables proper ordering and comparison of version strings such as `1.0.0`, `2.1.0-alpha`, `1.3.0+build.1`, and others.
+`version` 欄位類型專為符合[語意化版本（SemVer）](https://semver.org/)規範的版本字串編製索引與查詢而設計。此欄位類型可正確排序與比較版本字串，例如 `1.0.0`、`2.1.0-alpha`、`1.3.0+build.1` 等。
 
-The `version` field type provides the following functionality:
+`version` 欄位類型提供下列功能：
 
-- Correctly parses semantic version strings with major, minor, and patch components
-- Handles pre-release identifiers like `-alpha`, `-beta`, and `-rc.1`
-- Accepts build metadata like `+build.123` but ignores it for ordering (per SemVer specification)
-- Versions are sorted according to semantic versioning rules (for example, `1.0.0-alpha < 1.0.0-beta < 1.0.0`)
-- Compatible with various query types, including range, term, terms, wildcard, prefix, and more
+- 正確剖析包含主要版本、次要版本與修補版本組成部分的語意化版本字串
+- 處理預發行識別碼，例如 `-alpha`、`-beta` 和 `-rc.1`
+- 接受建置中繼資料，例如 `+build.123`，但排序時會忽略這些資料（依據 SemVer 規範）
+- 依據語意化版本規則排序版本（例如 `1.0.0-alpha < 1.0.0-beta < 1.0.0`）
+- 與各種查詢類型相容，包括範圍、詞彙、多詞彙、萬用字元、前綴等查詢
 
-## Version format
+## 版本格式
 
-Version strings must follow the semantic versioning format:
+版本字串必須遵循語意化版本格式：
 
 ```
 <major>.<minor>.<patch>[-<pre-release>][+<build-metadata>]
 ```
 
-The variables in the preceding format must be provided as follows.
+上述格式中的變數必須依下列方式提供。
 
-| Component | Required/Optional | Description | Example |
+| 組成部分 | 必要／選用 | 說明 | 範例 |
 |:----------|:------------------|:------------|:--------|
-| `major`, `minor`, `patch` | Required | Non-negative integers representing the core version number | `1.2.3` |
-| `pre-release` | Optional | Alphanumeric identifiers separated by dots, indicating a pre-release version | `-alpha`, `-beta.1`, `-rc.2` |
-| `build-metadata` | Optional | Alphanumeric identifiers separated by dots, providing build information (ignored for ordering) | `+build.123`, `+20230815` |
+| `major`、`minor`、`patch` | 必要 | 表示核心版本號碼的非負整數 | `1.2.3` |
+| `pre-release` | 選用 | 以點分隔的英數字識別碼，表示預發行版本 | `-alpha`、`-beta.1`、`-rc.2` |
+| `build-metadata` | 選用 | 以點分隔的英數字識別碼，提供建置資訊（排序時會忽略） | `+build.123`、`+20230815` |
 
-## Example mapping
+## 對應範例
 
-Create an index with a version field:
+建立包含版本欄位的索引：
 
 ```json
 PUT test_versions
@@ -67,9 +68,9 @@ PUT test_versions
 {% include copy-curl.html %}
 
 
-## Indexing version data
+## 為版本資料編製索引
 
-Index documents with version fields:
+將包含版本欄位的文件編製索引：
 
 ```json
 POST test_versions/_bulk
@@ -96,13 +97,13 @@ POST test_versions/_bulk
 ```
 {% include copy-curl.html %}
 
-## Querying version fields
+## 查詢版本欄位
 
-The version field type supports various query types.
+版本欄位類型支援各種查詢類型。
 
-### Term query
+### 詞彙查詢
 
-Find documents with a specific version:
+尋找具有特定版本的文件：
 
 ```json
 GET test_versions/_search
@@ -114,7 +115,7 @@ GET test_versions/_search
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
 ```json
 {
@@ -149,9 +150,9 @@ GET test_versions/_search
 }
 ```
 
-### Range query
+### 範圍查詢
 
-Find versions within a specific range:
+尋找特定範圍內的版本：
 
 ```json
 GET test_versions/_search
@@ -165,7 +166,7 @@ GET test_versions/_search
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
 ```json
 {
@@ -200,9 +201,9 @@ GET test_versions/_search
 }
 ```
 
-### Terms query
+### 多詞彙查詢
 
-Find documents matching multiple specific versions:
+尋找符合多個特定版本的文件：
 
 ```json
 GET test_versions/_search
@@ -216,9 +217,9 @@ GET test_versions/_search
 ```
 {% include copy-curl.html %}
 
-### Wildcard query
+### 萬用字元查詢
 
-Find versions matching a pattern:
+尋找符合模式的版本：
 
 ```json
 GET test_versions/_search
@@ -232,9 +233,9 @@ GET test_versions/_search
 ```
 {% include copy-curl.html %}
 
-### Prefix query
+### 前綴查詢
 
-Find versions with a specific prefix:
+尋找具有特定前綴的版本：
 
 ```json
 GET test_versions/_search
@@ -250,9 +251,9 @@ GET test_versions/_search
 ```
 {% include copy-curl.html %}
 
-## Sorting by version
+## 依版本排序
 
-To sort by version, provide the `sort` parameter in the request. Versions are sorted according to semantic versioning rules:
+若要依版本排序，請在請求中提供 `sort` 參數。版本會依據語意化版本規則排序：
 
 ```json
 GET test_versions/_search
@@ -265,30 +266,30 @@ GET test_versions/_search
 ```
 {% include copy-curl.html %}
 
-This request returns documents sorted in version order, with pre-release versions appearing before their corresponding stable versions: `0.9.0`, `1.0.0-alpha`, `1.0.0-alpha.1`, `1.0.0-beta`, `1.0.0-rc.1`, `1.0.0+20230815`, `1.0.1`, `1.1.0`, `2.0.0`.
+此請求會傳回依版本順序排序的文件，預發行版本會出現在其對應的穩定版本之前：`0.9.0`、`1.0.0-alpha`、`1.0.0-alpha.1`、`1.0.0-beta`、`1.0.0-rc.1`、`1.0.0+20230815`、`1.0.1`、`1.1.0`、`2.0.0`。
 
-## Version comparison rules
+## 版本比較規則
 
-The version field follows semantic versioning comparison rules:
+版本欄位遵循語意化版本比較規則：
 
-1. `major`, `minor`, `patch`: Compared numerically (`1.2.3` < `1.2.4` < `1.3.0` < `2.0.0`).
-2. Pre-release precedence: Pre-release versions have lower precedence than normal versions (`1.0.0-alpha` < `1.0.0`).
-3. Pre-release comparison: When both versions are pre-releases, they are compared lexically by each dot-separated identifier (`1.0.0-alpha` < `1.0.0-alpha.1` < `1.0.0-beta`).
-4. Build metadata ignored: Build metadata does not affect version precedence (`1.0.0+build.1` equals `1.0.0+build.2` for sorting purposes).
+1. `major`、`minor`、`patch`：以數值比較（`1.2.3` < `1.2.4` < `1.3.0` < `2.0.0`）。
+2. 預發行版本優先順序：預發行版本的優先順序低於正式版本（`1.0.0-alpha` < `1.0.0`）。
+3. 預發行版本比較：當兩個版本都是預發行版本時，會依字典順序逐一比較以點分隔的識別碼（`1.0.0-alpha` < `1.0.0-alpha.1` < `1.0.0-beta`）。
+4. 忽略建置中繼資料：建置中繼資料不會影響版本優先順序（就排序而言，`1.0.0+build.1` 等於 `1.0.0+build.2`）。
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by version field types. All parameters are optional.
+下表列出版本欄位類型接受的參數。所有參數皆為選用。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :--- 
-`doc_values` | A Boolean value that specifies whether the field should be stored on disk so that it can be used for aggregations, sorting, or scripting. Default is `true`.
-`index` | A Boolean value that specifies whether the field should be searchable. Default is `true`.
-`meta` | Accepts metadata for this field.
-`store` | A Boolean value that specifies whether the field value should be stored and can be retrieved separately from the `_source` field. Default is `false`.
+`doc_values` | 布林值，指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `true`。
+`index` | 布林值，指定欄位是否可供搜尋。預設為 `true`。
+`meta` | 接受此欄位的中繼資料。
+`store` | 布林值，指定是否應儲存欄位值，並可獨立於 `_source` 欄位擷取。預設為 `false`。
 
-## Limitations
+## 限制
 
-- Version strings must follow the semantic versioning format. Invalid version strings will cause indexing to fail.
-- Build metadata is accepted but ignored during comparisons and sorting.
-- The field does not support advanced version range specifications like `^1.2.3` or `~1.2.0`; use [`range` queries]({{site.url}}{{site.baseurl}}/query-dsl/term/range/) instead.
+- 版本字串必須遵循語意化版本格式。無效的版本字串會導致編製索引失敗。
+- 接受建置中繼資料，但比較與排序時會忽略這些資料。
+- 此欄位不支援進階版本範圍規格，例如 `^1.2.3` 或 `~1.2.0`；請改用 [`range` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/range/)。

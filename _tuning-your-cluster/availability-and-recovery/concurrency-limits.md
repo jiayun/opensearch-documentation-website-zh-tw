@@ -1,88 +1,89 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Concurrency limits
+title: "並行限制"
 nav_order: 65
 has_children: false
 parent: Availability and recovery
 ---
 
-# Concurrency limits
-**Introduced 3.9**
+# 並行限制
+**於 3.9 版導入**
 {: .label .label-purple }
 
-Concurrency limits restrict the number of requests that a given action can process at the same time, so that a node does not accept more requests than it can complete. Each limit adapts continuously to observed latency: it increases while the node maintains throughput and decreases when round-trip times rise or downstream components start rejecting requests. When the limit is reached, additional requests are rejected with an HTTP `429 Too Many Requests` response.
+並行限制會限制特定動作可同時處理的請求數量，讓節點不會接受超出其可完成數量的請求。每個限制會持續根據觀察到的延遲進行調整：當節點維持輸送量時限制會增加，而當往返時間上升或下游元件開始拒絕請求時則會減少。達到限制時，額外的請求會被拒絕並回傳 HTTP `429 Too Many Requests` 回應。
 
-By default, concurrency limits are disabled. [Configure a concurrency limit](#concurrency-limit-settings) for any transport action, such as `indices:data/read/search` or `indices:data/write/bulk`. Each limit that you configure creates a _limiter_: the component that tracks the action's requests, adjusts the limit, and rejects requests that exceed it. No code changes or restarts are required. For the first five minutes after you configure or change a limit, the limiter calibrates without rejecting requests; adjust this period using `warmup_duration`.
+預設情況下，並行限制為停用狀態。您可以為任何傳輸動作設定並行限制，例如 `indices:data/read/search` 或 `indices:data/write/bulk`，請參閱[設定並行限制](#concurrency-limit-settings)。您設定的每個限制都會建立一個 _限制器_：這是追蹤該動作請求、調整限制並拒絕超出限制之請求的元件。不需要修改程式碼或重新啟動。在您設定或變更限制後的前五分鐘，限制器會進行校準而不拒絕請求；可使用 `warmup_duration` 調整此期間。
 
-## Concurrency limit settings
+## 並行限制設定
 
-All concurrency limit settings are dynamic. For information about updating dynamic settings, see [Dynamic settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/#dynamic-settings).
+所有並行限制設定皆為動態設定。關於更新動態設定的資訊，請參閱[動態設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/#dynamic-settings)。
 
-The settings follow the pattern `concurrency_limit.action.<limiter_name>.<setting>`, in which `<limiter_name>` is a name that you choose. The name groups the settings that belong to one limiter and has no meaning of its own; the `action_name` setting specifies the action that is limited. You can configure any number of limiters.
+這些設定遵循 `concurrency_limit.action.<limiter_name>.<setting>` 的模式，其中 `<limiter_name>` 是您自行選擇的名稱。該名稱將屬於同一個限制器的設定分組，本身沒有意義；`action_name` 設定則指定要限制的動作。您可以設定任意數量的限制器。
 
-Each limiter supports the following settings:
+每個限制器支援下列設定：
 
-- `concurrency_limit.action.<limiter_name>.action_name` (Dynamic, string): The name of the transport action to limit, for example, `indices:data/read/search` or `indices:data/write/bulk`. Required. Clearing this setting removes the limiter.
+- `concurrency_limit.action.<limiter_name>.action_name` (動態，字串)：要限制的傳輸動作名稱，例如 `indices:data/read/search` 或 `indices:data/write/bulk`。必要。清除此設定會移除該限制器。
 
-- `concurrency_limit.action.<limiter_name>.mode` (Dynamic, string): The [mode](#modes) of the limiter. Valid values are `disabled`, `monitor_only`, and `enforced`. Default is `disabled`.
+- `concurrency_limit.action.<limiter_name>.mode` (動態，字串)：限制器的[模式](#modes)。有效值為 `disabled`、`monitor_only` 與 `enforced`。預設為 `disabled`。
 
-- `concurrency_limit.action.<limiter_name>.algorithm` (Dynamic, string): The [algorithm](#algorithms) used to adapt the limit. Valid values are `vegas`, `gradient2`, and `aimd`. Default is `vegas`.
+- `concurrency_limit.action.<limiter_name>.algorithm` (動態，字串)：用於調整限制的[演算法](#algorithms)。有效值為 `vegas`、`gradient2` 與 `aimd`。預設為 `vegas`。
 
-- `concurrency_limit.action.<limiter_name>.limit.initial` (Dynamic, integer): The starting concurrency limit. Must be at least `1` and at most `limit.max`. Default is `20`.
+- `concurrency_limit.action.<limiter_name>.limit.initial` (動態，整數)：起始並行限制。必須至少為 `1` 且最多為 `limit.max`。預設為 `20`。
 
-- `concurrency_limit.action.<limiter_name>.limit.max` (Dynamic, integer): The maximum concurrency limit that the algorithm can reach. Must be at least `1` and at least `limit.initial`. Default is `200`.
+- `concurrency_limit.action.<limiter_name>.limit.max` (動態，整數)：演算法可達到的最大並行限制。必須至少為 `1` 且至少為 `limit.initial`。預設為 `200`。
 
-- `concurrency_limit.action.<limiter_name>.warmup_duration` (Dynamic, time unit): The period after configuration during which the limiter calibrates without rejecting requests. Must be at least `0`. Default is `5m`.
+- `concurrency_limit.action.<limiter_name>.warmup_duration` (動態，時間單位)：設定後限制器進行校準而不拒絕請求的期間。必須至少為 `0`。預設為 `5m`。
 
-- `concurrency_limit.action.<limiter_name>.vegas.updrift_factor` (Dynamic, integer): Multiplies the amount by which the Vegas algorithm raises the limit. Must be at least `1`. Default is `1`, which matches standard Vegas behavior.
+- `concurrency_limit.action.<limiter_name>.vegas.updrift_factor` (動態，整數)：乘以 Vegas 演算法提高限制的幅度。必須至少為 `1`。預設為 `1`，此值符合標準 Vegas 行為。
 
-- `concurrency_limit.action.<limiter_name>.vegas.increase_barrier` (Dynamic, integer): The number of consecutive qualifying samples required before the Vegas algorithm increases the limit. Must be at least `1`. Default is `1`.
+- `concurrency_limit.action.<limiter_name>.vegas.increase_barrier` (動態，整數)：Vegas 演算法提高限制前所需的連續合格樣本數。必須至少為 `1`。預設為 `1`。
 
-- `concurrency_limit.action.<limiter_name>.vegas.decrease_barrier` (Dynamic, integer): The number of consecutive qualifying samples required before the Vegas algorithm decreases the limit. Must be at least `1`. Drops bypass this barrier and reduce the limit immediately. Default is `1`.
+- `concurrency_limit.action.<limiter_name>.vegas.decrease_barrier` (動態，整數)：Vegas 演算法降低限制前所需的連續合格樣本數。必須至少為 `1`。請求遭丟棄時，會略過此門檻並立即降低限制。預設為 `1`。
 
-- `concurrency_limit.action.<limiter_name>.vegas.baseline_reset_load_threshold` (Dynamic, double): The maximum number of active requests, as a fraction of the current limit, that allows a probe to reset the no-load latency baseline. The value range is [0, 1]. Default is `0.5`.
+- `concurrency_limit.action.<limiter_name>.vegas.baseline_reset_load_threshold` (動態，雙精確度數)：允許探測 (probe) 重設無負載延遲基準的作用中請求數上限，以目前限制的比例表示。數值範圍為 [0, 1]。預設為 `0.5`。
 
-- `concurrency_limit.action.<limiter_name>.gradient2.rtt_tolerance` (Dynamic, double): How far the short-term round-trip time may exceed the long-term round-trip time before the Gradient2 algorithm reduces the limit. Must be at least `1.0`. Default is `1.5`.
+- `concurrency_limit.action.<limiter_name>.gradient2.rtt_tolerance` (動態，雙精確度數)：短期往返時間可超出長期往返時間多遠，超過後 Gradient2 演算法便會降低限制。必須至少為 `1.0`。預設為 `1.5`。
 
-- `concurrency_limit.action.<limiter_name>.aimd.backoff_ratio` (Dynamic, double): The factor by which the AIMD algorithm multiplies the limit when a request is dropped. Must be at least `0.5` and less than `1.0`. Default is `0.9`.
+- `concurrency_limit.action.<limiter_name>.aimd.backoff_ratio` (動態，雙精確度數)：當請求被丟棄時，AIMD 演算法乘以限制的因數。必須至少為 `0.5` 且小於 `1.0`。預設為 `0.9`。
 
-- `concurrency_limit.action.<limiter_name>.burst.capacity` (Dynamic, integer): The extra [burst capacity](#burst-capacity) added on top of the adaptive limit while the burst window is open. Must be at least `0`. Default is `0`, which disables bursting.
+- `concurrency_limit.action.<limiter_name>.burst.capacity` (動態，整數)：突發視窗開啟期間，在自適應限制之上額外新增的[突發容量](#burst-capacity)。必須至少為 `0`。預設為 `0`，此值會停用突發。
 
-- `concurrency_limit.action.<limiter_name>.burst.close_after` (Dynamic, integer): The number of consecutive saturated samples after which the burst window closes. Must be at least `1`. Default is `5`.
+- `concurrency_limit.action.<limiter_name>.burst.close_after` (動態，整數)：突發視窗關閉前所需的連續飽和樣本數。必須至少為 `1`。預設為 `5`。
 
-- `concurrency_limit.action.<limiter_name>.burst.open_after` (Dynamic, integer): The number of consecutive unsaturated samples after which the burst window reopens. Must be at least `1`. Default is `5`.
+- `concurrency_limit.action.<limiter_name>.burst.open_after` (動態，整數)：突發視窗重新開啟前所需的連續未飽和樣本數。必須至少為 `1`。預設為 `5`。
 
-- `concurrency_limit.action.<limiter_name>.partitions` (Dynamic, list): The list of [partition](#partitions) names. When this list is not empty, `partition.resolver` is required. Default is an empty list.
+- `concurrency_limit.action.<limiter_name>.partitions` (動態，清單)：[分割區](#partitions)名稱的清單。當此清單不為空時，`partition.resolver` 為必要。預設為空清單。
 
-- `concurrency_limit.action.<limiter_name>.partition.<name>.percent` (Dynamic, double): The share of the total limit reserved for the partition `<name>`. The value range is [0, 1], and the shares of all partitions must sum to at most `1.0`. Default is `0.0`.
+- `concurrency_limit.action.<limiter_name>.partition.<name>.percent` (動態，雙精確度數)：為分割區 `<name>` 保留的總限制比例。數值範圍為 [0, 1]，且所有分割區的比例總和不得超過 `1.0`。預設為 `0.0`。
 
-- `concurrency_limit.action.<limiter_name>.partition.<name>.delay_ms` (Dynamic, integer): The time, in milliseconds, to pause before rejecting a request that exceeds the share of the partition `<name>`. The request is rejected either way; the pause holds the calling thread in order to slow the rate at which the client sends requests. A maximum of 100 requests per limiter are paused at the same time. Additional requests are rejected without a pause. Must be at least `0`. Default is `0`, which rejects immediately.
+- `concurrency_limit.action.<limiter_name>.partition.<name>.delay_ms` (動態，整數)：拒絕超出分割區 `<name>` 比例的請求前暫停的時間，以毫秒為單位。無論如何該請求都會被拒絕；暫停會佔住呼叫執行緒，以減緩用戶端傳送請求的速率。每個限制器最多同時暫停 100 個請求。額外的請求會直接拒絕而不暫停。必須至少為 `0`。預設為 `0`，此值會立即拒絕。
 
-- `concurrency_limit.action.<limiter_name>.partition.resolver` (Dynamic, string): The resolver that maps requests to partitions. Valid values are `byHeader`, `fixed`, and `bySearchType`. Required when `partitions` is not empty.
+- `concurrency_limit.action.<limiter_name>.partition.resolver` (動態，字串)：將請求對應到分割區的解析器。有效值為 `byHeader`、`fixed` 與 `bySearchType`。當 `partitions` 不為空時為必要。
 
-- `concurrency_limit.action.<limiter_name>.partition.resolver.fixed.partition` (Dynamic, string): The partition that receives all requests when the resolver is `fixed`. Must be one of the names listed in `partitions`. Default is `default`.
+- `concurrency_limit.action.<limiter_name>.partition.resolver.fixed.partition` (動態，字串)：當解析器為 `fixed` 時接收所有請求的分割區。必須是 `partitions` 中列出的名稱之一。預設為 `default`。
 
-- `concurrency_limit.action.<limiter_name>.partition.resolver.bySearchType.aggregation` (Dynamic, string): The partition that receives search requests containing aggregations when the resolver is `bySearchType`. Default is `aggregation`.
+- `concurrency_limit.action.<limiter_name>.partition.resolver.bySearchType.aggregation` (動態，字串)：當解析器為 `bySearchType` 時，接收包含彙總之搜尋請求的分割區。預設為 `aggregation`。
 
-- `concurrency_limit.action.<limiter_name>.partition.resolver.bySearchType.filter` (Dynamic, string): The partition that receives all other search requests when the resolver is `bySearchType`. Default is `filter`.
+- `concurrency_limit.action.<limiter_name>.partition.resolver.bySearchType.filter` (動態，字串)：當解析器為 `bySearchType` 時，接收所有其他搜尋請求的分割區。預設為 `filter`。
 
-The [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/) validates every value and rejects the update if a value is out of range, if the partition shares sum to more than `1.0`, or if `partitions` is set without a `partition.resolver`. To stop limiting an action, set its `mode` to `disabled` or remove the limiter's `action_name` setting.
+[Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/) 會驗證每個數值，若數值超出範圍、分割區比例總和超過 `1.0`，或在未設定 `partition.resolver` 的情況下設定了 `partitions`，則會拒絕更新。若要停止限制某個動作，請將其 `mode` 設為 `disabled`，或移除該限制器的 `action_name` 設定。
 {: .note}
 
-## Modes
+## 模式
 
-Each limiter runs in one of three modes, set using the `mode` setting:
+每個限制器會以三種模式之一執行，使用 `mode` 設定來設定：
 
-- `disabled` (default): The limiter is inactive. Requests are not tracked or rejected.
-- `monitor_only`: The limiter tracks requests and adapts its limit but never rejects them. Requests that would have been rejected are counted in the `total_rejected` statistic. Use this mode to observe a limit before enforcing it.
-- `enforced`: The limiter rejects requests once the limit is reached and the warm-up period has elapsed.
+- `disabled` (預設)：限制器未啟用。請求不會被追蹤或拒絕。
+- `monitor_only`：限制器會追蹤請求並調整其限制，但絕不會拒絕請求。原本會被拒絕的請求會計入 `total_rejected` 統計資料中。使用此模式可在強制執行限制之前先觀察限制。
+- `enforced`：一旦達到限制且暖機期間已過，限制器就會拒絕請求。
 
-We recommend starting in `monitor_only` mode, [monitoring](#monitoring-concurrency-limits) the `current_limit` and `total_rejected` statistics, and switching to `enforced` once the limit settles at a reasonable value.
+我們建議從 `monitor_only` 模式開始，[監視](#monitoring-concurrency-limits) `current_limit` 與 `total_rejected` 統計資料，並在限制穩定於合理值後切換至 `enforced`。
 {: .tip}
 
-## Rejected requests
+## 被拒絕的請求
 
-A rejected request fails with HTTP status `429` and a `rejected_execution_exception`. The response resembles the following:
+被拒絕的請求會以 HTTP 狀態 `429` 及 `rejected_execution_exception` 失敗。回應類似下列內容：
 
 ```json
 {
@@ -100,56 +101,56 @@ A rejected request fails with HTTP status `429` and a `rejected_execution_except
 }
 ```
 
-OpenSearch does not add a `Retry-After` header to these responses. Configure clients to retry using exponential backoff.
+OpenSearch 不會在這些回應中加入 `Retry-After` 標頭。請設定用戶端使用指數退避來重試。
 
-## Algorithms
+## 演算法
 
-The `algorithm` setting selects how the limit adapts. All three algorithms are provided by the [Netflix concurrency-limits](https://github.com/Netflix/concurrency-limits) library. The limit always stays between `limit.initial` and `limit.max`.
+`algorithm` 設定會選擇限制的調整方式。這三種演算法皆由 [Netflix concurrency-limits](https://github.com/Netflix/concurrency-limits) 程式庫提供。限制一律維持在 `limit.initial` 與 `limit.max` 之間。
 
-Each completed request produces one _sample_, consisting of the request's round-trip time and whether the request succeeded. The algorithms adjust the limit based on these samples: a successful completion allows the limit to increase, and a downstream `rejected_execution_exception`, such as a thread pool rejection, counts as a drop and reduces the limit. Other failures do not affect the limit.
+每個完成的請求會產生一個 _取樣_，包含該請求的來回時間以及該請求是否成功。演算法會根據這些取樣調整限制：成功完成可讓限制增加，而下游的 `rejected_execution_exception` (例如執行緒集區拒絕) 會計為一次丟棄並降低限制。其他失敗不會影響限制。
 
 ### Vegas
 
-The default `vegas` algorithm is based on TCP Vegas congestion control. It records the lowest observed round-trip time as a no-load baseline and compares each new sample against it. When latency stays close to the baseline, the limit increases; when latency rises, the limit decreases. Vegas suits most workloads and is the default.
+預設的 `vegas` 演算法是以 TCP Vegas 壅塞控制為基礎。它會記錄觀察到的最低來回時間作為無負載基準，並將每個新取樣與其比較。當延遲維持接近基準時，限制會增加；當延遲上升時，限制會降低。Vegas 適合大多數工作負載，且為預設值。
 
-The following table lists the settings that configure the Vegas algorithm.
+下表列出設定 Vegas 演算法的設定。
 
-Setting | Description
+設定 | 說明
 :--- | :---
-`vegas.updrift_factor` | Multiplies the amount by which the algorithm raises the limit, which suits workloads with short traffic spikes. The default value of `1` matches the standard Vegas behavior.
-`vegas.increase_barrier` | Requires several consecutive qualifying samples before the limit increases, which reduces oscillation.
-`vegas.decrease_barrier` | Requires several consecutive qualifying samples before the limit decreases, which reduces oscillation. Drops bypass this barrier and reduce the limit immediately.
-`vegas.baseline_reset_load_threshold` | Prevents latency measured under heavy load from replacing the no-load baseline. A probe only resets the baseline when the number of active requests is below this fraction of the current limit.
+`vegas.updrift_factor` | 將演算法提高限制的量乘以一個倍數，適合有短暫流量尖峰的工作負載。預設值 `1` 符合標準 Vegas 行為。
+`vegas.increase_barrier` | 要求連續數個符合條件的取樣後才提高限制，可減少震盪。
+`vegas.decrease_barrier` | 要求連續數個符合條件的取樣後才降低限制，可減少震盪。丟棄會略過此障礙並立即降低限制。
+`vegas.baseline_reset_load_threshold` | 防止在高負載下測得的延遲取代無負載基準。只有在作用中請求數低於目前限制的此比例時，探測才會重設基準。
 
 ### Gradient2
 
-The `gradient2` algorithm compares a short-term round-trip time average against a long-term average. When the short-term latency rises above the long-term latency by more than `gradient2.rtt_tolerance`, the limiter reduces the limit. It reacts more smoothly than Vegas to gradual latency drift and suits workloads whose baseline latency changes over time.
+`gradient2` 演算法會比較短期來回時間平均值與長期平均值。當短期延遲高於長期延遲超過 `gradient2.rtt_tolerance` 時，限制器會降低限制。對於逐漸的延遲漂移，它的反應比 Vegas 更平順，適合基準延遲會隨時間變化的工作負載。
 
 ### AIMD
 
-The `aimd` algorithm uses additive increase and multiplicative decrease. The limit increases by one on each successful sample and is multiplied by `aimd.backoff_ratio` whenever a request is dropped. It is simple and predictable but reacts only to drops, not to rising latency, so it is best suited to actions whose downstream components reject requests explicitly when they are saturated.
+`aimd` 演算法採用加法增加與乘法減少。每有一個成功的取樣，限制就增加 1；每當請求遭丟棄，限制就乘以 `aimd.backoff_ratio`。此演算法簡單且可預測，但只會對請求遭丟棄作出反應，不會對延遲上升作出反應，因此最適合下游元件在飽和時會明確拒絕請求的動作。
 
-## Burst capacity
+## 暴衝容量
 
-The `burst.capacity` setting adds a fixed amount of headroom on top of the adaptive limit so that short spikes are absorbed rather than rejected. The burst window starts open, so the effective limit is the adaptive limit plus `burst.capacity`. The window closes after `burst.close_after` consecutive samples in which the number of active requests reached the adaptive limit, and reopens after `burst.open_after` consecutive samples in which it stayed below the adaptive limit. Setting `burst.capacity` to `0` (the default) disables bursting.
+`burst.capacity` 設定會在調適性限制之上加入固定的餘裕量，讓短暫尖峰被吸收而非被拒絕。暴衝視窗一開始是開啟的，因此有效限制為調適性限制加上 `burst.capacity`。在連續 `burst.close_after` 個取樣中作用中請求數達到調適性限制後，視窗會關閉；而在連續 `burst.open_after` 個取樣中作用中請求數維持低於調適性限制後，視窗會重新開啟。將 `burst.capacity` 設為 `0` (預設值) 會停用暴衝。
 
-## Partitions
+## 分割區
 
-Divide the concurrency limit into named sub-pools so that one class of traffic cannot exhaust the capacity available to another. List the pool names in `partitions` and give each a share of the total limit using `partition.<name>.percent`. The shares must sum to at most `1.0`. Requests that do not match a named partition are routed to a built-in unknown pool, which admits only one request at a time once the overall limit is reached. Any share that you leave unallocated is not available to any partition under load, so in most cases the shares should sum to `1.0`.
+將並行限制劃分為具名的子集區，讓某一類流量無法耗盡另一類可用的容量。在 `partitions` 中列出集區名稱，並使用 `partition.<name>.percent` 為每個集區指定總限制的份額。這些份額的總和最多必須為 `1.0`。不符合具名分割區的請求會路由至內建的未知集區，一旦達到整體限制，該集區一次只允許一個請求。您未分配的份額在高負載下不會提供給任何分割區使用，因此在大多數情況下，份額的總和應為 `1.0`。
 
-Partition shares are enforced only while the limiter is at its overall limit. Below the overall limit, a partition can use spare capacity beyond its share. Once the overall limit is reached, each partition is held to its own share. Every partition, including one with a `0.0` share, is guaranteed at least one concurrent request, so a `0.0` share allows one request at a time under load rather than none.
+分割區份額只有在限制器達到其整體限制時才會強制執行。低於整體限制時，分割區可以使用超出其份額的備用容量。一旦達到整體限制，每個分割區就會被限制在其自己的份額內。每個分割區 (包括份額為 `0.0` 的分割區) 都保證至少有一個並行請求，因此份額為 `0.0` 的分割區在高負載下一次允許一個請求，而非完全沒有。
 
-When `partitions` is set, you must also choose a `partition.resolver` that maps each request to a partition. The following table lists the available resolvers.
+設定 `partitions` 時，您也必須選擇一個 `partition.resolver`，將每個請求對應至分割區。下表列出可用的解析器。
 
-Resolver | Description
+解析器 | 說明
 :--- | :---
-`byHeader` | Reads the `X-Request-Tier` request header and routes the request to the partition whose name exactly matches the header value. The match is case sensitive. Requests without the header, or with an unrecognized value, go to the unknown pool. You cannot change the header name.
-`fixed` | Routes every request to the single partition named in `partition.resolver.fixed.partition`.
-`bySearchType` | Routes search requests that contain aggregations to the partition named in `partition.resolver.bySearchType.aggregation` and all other searches to the partition named in `partition.resolver.bySearchType.filter`. Non-search requests go to the unknown pool.
+`byHeader` | 讀取 `X-Request-Tier` 請求標頭，並將請求路由至名稱與標頭值完全相符的分割區。比對會區分大小寫。沒有此標頭或帶有無法辨識值的請求會前往未知集區。您無法變更標頭名稱。
+`fixed` | 將每個請求路由至 `partition.resolver.fixed.partition` 中指定的單一分割區。
+`bySearchType` | 將包含彙總的搜尋請求路由至 `partition.resolver.bySearchType.aggregation` 中指定的分割區，並將所有其他搜尋路由至 `partition.resolver.bySearchType.filter` 中指定的分割區。非搜尋請求會前往未知集區。
 
-### Example: Reserve capacity for premium traffic
+### 範例：為高階流量保留容量
 
-The following request limits search requests and reserves 70% of the limit for requests that carry `X-Request-Tier: premium`, leaving 30% for requests that carry `X-Request-Tier: standard`:
+下列請求會限制搜尋請求，並為帶有 `X-Request-Tier: premium` 的請求保留 70% 的限制，留下 30% 給帶有 `X-Request-Tier: standard` 的請求：
 
 ```json
 PUT /_cluster/settings
@@ -166,7 +167,7 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-Clients then set the header on each search request:
+用戶端接著在每個搜尋請求上設定標頭：
 
 ```bash
 curl -X GET "http://localhost:9200/my-index/_search" \
@@ -176,16 +177,16 @@ curl -X GET "http://localhost:9200/my-index/_search" \
 ```
 {% include copy.html %}
 
-## Monitoring concurrency limits
+## 監控並行限制
 
-To monitor every configured limiter on each node, request the `concurrency_limiter` metric from the [Nodes Stats API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/):
+若要監控每個節點上所有已設定的限制器，請向 [Nodes Stats API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/) 請求 `concurrency_limiter` 指標：
 
 ```json
 GET _nodes/stats/concurrency_limiter
 ```
 {% include copy-curl.html %}
 
-The statistics appear in the response under the `concurrency_limiters` key. For a description of each statistic, see [`concurrency_limiters`]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/#concurrency_limiters):
+統計資料會顯示在回應中的 `concurrency_limiters` 鍵下。如需各項統計資料的說明，請參閱 [`concurrency_limiters`]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/#concurrency_limiters)：
 
 ```json
 {
@@ -228,14 +229,14 @@ The statistics appear in the response under the `concurrency_limiters` key. For 
 }
 ```
 
-The Cluster Stats API does not include concurrency limiter statistics.
+Cluster Stats API 不包含並行限制器的統計資料。
 {: .note}
 
-## Metrics
+## 指標
 
-The [metrics framework]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/metrics/getting-started/) is an experimental feature that exports OpenSearch telemetry to an external monitoring backend. When it is enabled, each active limiter publishes the following gauges, which report the same values as the corresponding statistics.
+[指標架構]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/metrics/getting-started/) 是一項實驗性功能，可將 OpenSearch 遙測資料匯出至外部監控後端。啟用後，每個作用中的限制器都會發布下列量測指標，其回報的值與對應統計資料的值相同。
 
-Gauge | Corresponding statistic
+量測指標 | 對應統計資料
 :--- | :---
 `concurrency_limit.current_limit` | `current_limit`
 `concurrency_limit.in_flight` | `in_flight`
@@ -243,4 +244,4 @@ Gauge | Corresponding statistic
 `concurrency_limit.last_rtt` | `last_rtt_millis`
 `concurrency_limit.rtt_noload` | `rtt_no_load_millis`
 
-Every gauge carries the `action_name`, `mode`, and `algorithm` attributes, along with an `alias` attribute containing the limiter name.
+每個量測指標都帶有 `action_name`、`mode` 和 `algorithm` 屬性，以及包含限制器名稱的 `alias` 屬性。

@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Range
+title: "範圍"
 parent: Term-level queries
 nav_order: 50
 ---
 
-# Range query
+# 範圍查詢
 
-You can search for a range of values in a field with the `range` query.
+您可以使用 `range` 查詢來搜尋某個欄位中的值範圍。
 
-To search for documents in which the `line_id` value is >= 10 and <= 20, use the following request:
+若要搜尋 `line_id` 值 >= 10 且 <= 20 的文件，請使用以下請求：
 
 ```json
 GET shakespeare/_search
@@ -26,18 +27,18 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-## Operators
+## 運算子
 
-The field parameter in the range query accepts the following optional operator parameters:
+範圍查詢中的欄位參數接受以下選用的運算子參數：
 
-- `gte`: Greater than or equal to
-- `gt`: Greater than
-- `lte`: Less than or equal to
-- `lt`: Less than
+- `gte`：大於或等於
+- `gt`：大於
+- `lte`：小於或等於
+- `lt`：小於
 
-## Date fields
+## 日期欄位
 
-You can use range queries on fields containing dates. For example, assume that you have a `products` index and you want to find all the products that were added in the year 2019:
+您可以對包含日期的欄位使用範圍查詢。例如，假設您有一個 `products` 索引，並想找出 2019 年新增的所有產品：
 
 ```json
 GET products/_search
@@ -54,13 +55,13 @@ GET products/_search
 ```
 {% include copy-curl.html %}
 
-For more information about supported date formats, see [Formats]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/#formats).
+如需支援的日期格式的更多資訊，請參閱 [格式]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/#formats)。
 
-### Format
+### 格式
 
-To use a date format other than the field's mapped format in a query, specify it in the `format` field.
+若要在查詢中使用與欄位對應格式不同的日期格式，請在 `format` 欄位中指定。
 
-For example, if the `products` index maps the `created` field as `strict_date_optional_time`, you can specify a different format for a query date as follows:
+例如，如果 `products` 索引將 `created` 欄位對應為 `strict_date_optional_time`，您可以為查詢日期指定不同的格式，如下所示：
 
 ```json
 GET /products/_search
@@ -78,20 +79,20 @@ GET /products/_search
 ```
 {% include copy-curl.html %}
 
-### Missing date components
+### 缺少的日期組成部分
 
-OpenSearch populates missing date components with the following values:
+OpenSearch 會使用以下值填補缺少的日期組成部分：
 
-- `MONTH_OF_YEAR`: `01`
-- `DAY_OF_MONTH`: `01`
-- `HOUR_OF_DAY`: `23`
-- `MINUTE_OF_HOUR`: `59`
-- `SECOND_OF_MINUTE`: `59`
-- `NANO_OF_SECOND`: `999_999_999`
+- `MONTH_OF_YEAR`：`01`
+- `DAY_OF_MONTH`：`01`
+- `HOUR_OF_DAY`：`23`
+- `MINUTE_OF_HOUR`：`59`
+- `SECOND_OF_MINUTE`：`59`
+- `NANO_OF_SECOND`：`999_999_999`
 
-If the year is missing, it is not populated.
+如果缺少年份，則不會填補。
 
-For example, consider the following request that specifies only the year in the start date:
+例如，請考慮以下只在開始日期中指定年份的請求：
 
 ```json
 GET /products/_search
@@ -108,13 +109,13 @@ GET /products/_search
 ```
 {% include copy-curl.html %}
 
-The start date is populated with the default values, so the `gte` parameter used is `2022-01-01T23:59:59.999999999Z`.
+開始日期會以預設值填補，因此使用的 `gte` 參數為 `2022-01-01T23:59:59.999999999Z`。
 
-### Relative dates
+### 相對日期
 
-You can specify relative dates by using [date math]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/#date-math).
+您可以使用 [日期運算]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/#date-math) 來指定相對日期。
 
-To subtract 1 year and 1 day from the specified date, use the following query:
+若要從指定日期減去 1 年又 1 天，請使用以下查詢：
 
 ```json
 GET products/_search
@@ -130,11 +131,11 @@ GET products/_search
 ```
 {% include copy-curl.html %}
 
-In the preceding example, `2019/01/01` is the anchor date (the starting point) for the date math. After the two pipe characters (`||`), you are specifying a mathematical expression relative to the anchor date. In this example, you are subtracting 1 year (`-1y`) and 1 day (`-1d`).
+在前面的範例中，`2019/01/01` 是日期運算的錨定日期（起點）。在兩個直立線符號（`||`）之後，您指定的是相對於錨定日期的數學運算式。在此範例中，您減去了 1 年（`-1y`）和 1 天（`-1d`）。
 
-You can also round off dates by adding a forward slash to the date or time unit.
+您也可以在日期或時間單位後加上斜線來將日期捨入。
 
-To find products added within the last year, rounded off by month, use the following query:
+若要找出過去一年內（以月為單位捨入）新增的產品，請使用以下查詢：
 
 ```json
 GET products/_search
@@ -150,23 +151,23 @@ GET products/_search
 ```
 {% include copy-curl.html %}
 
-The keyword `now` refers to the current date and time.
+關鍵字 `now` 代表目前的日期與時間。
 {: .tip}
 
-### Rounding relative dates
+### 相對日期的捨入
 
-The following table specifies how relative dates are rounded.
+下表指定相對日期的捨入方式。
 
-Parameter | Rounding rule | Example: The value `2022-05-18||/M` is rounded to
+參數 | 捨入規則 | 範例：值 `2022-05-18||/M` 捨入為
 :--- | :--- | :---
-`gt` | Rounds up to the first millisecond that is not in the rounding interval. | `2022-06-01T00:00:00.000`
-`gte` | Rounds down to the first millisecond. | `2022-05-01T00:00:00.000`
-`lt` | Rounds down to the last millisecond before the rounded date. | `2022-04-30T23:59:59.999`
-`lte` | Rounds up to the last millisecond in the rounding interval. | `2022-05-31T23:59:59.999`
+`gt` | 向上捨入至不在捨入區間內的第一個毫秒。 | `2022-06-01T00:00:00.000`
+`gte` | 向下捨入至第一個毫秒。 | `2022-05-01T00:00:00.000`
+`lt` | 向下捨入至捨入日期之前的最後一個毫秒。 | `2022-04-30T23:59:59.999`
+`lte` | 向上捨入至捨入區間內的最後一個毫秒。 | `2022-05-31T23:59:59.999`
 
-### Time zone
+### 時區
 
-By default, dates are assumed to be in [Coordinated Universal Time (UTC)](https://en.wikipedia.org/wiki/Coordinated_Universal_Time). If you specify a `time_zone` parameter in the query, the provided date values are converted to UTC. You can specify the `time_zone` parameter as a [UTC offset](https://en.wikipedia.org/wiki/UTC_offset), such as `-04:00`, or an [IANA time zone ID](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), such as `America/New_York`. For example, the following query specifies that the `gte` date provided in the query is in the `-04:00` time zone:
+預設情況下，系統會假設日期採用 [世界協調時間（UTC）](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)。如果您在查詢中指定 `time_zone` 參數，提供的日期值會轉換為 UTC。您可以將 `time_zone` 參數指定為 [UTC 偏移](https://en.wikipedia.org/wiki/UTC_offset)，例如 `-04:00`，或 [IANA 時區 ID](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)，例如 `America/New_York`。例如，以下查詢指定查詢中提供的 `gte` 日期位於 `-04:00` 時區：
 
 ```json
 GET /products/_search
@@ -183,14 +184,14 @@ GET /products/_search
 ```
 {% include copy-curl.html %}
 
-The `gte` parameter in the preceding query is converted to `2022-04-17T10:00:00 UTC`, which is the UTC equivalent of `2022-04-17T06:00:00-04:00`.
+前面查詢中的 `gte` 參數會轉換為 `2022-04-17T10:00:00 UTC`，這是 `2022-04-17T06:00:00-04:00` 的 UTC 對應值。
 
-The `time_zone` parameter does not affect the `now` value because `now` always corresponds to the current system time in UTC.
+`time_zone` 參數不會影響 `now` 值，因為 `now` 一律對應於 UTC 的目前系統時間。
 {: .note}
 
-## Parameters
+## 參數
 
-The query accepts the name of the field (`<field>`) as a top-level parameter:
+此查詢接受欄位名稱（`<field>`）作為頂層參數：
 
 ```json
 GET _search
@@ -208,14 +209,14 @@ GET _search
 {% include copy-curl.html %}
 
 
-In addition to [operators](#operators), you can specify the following optional parameters for the `<field>`.
+除了[運算子](#operators)之外，您還可以為 `<field>` 指定以下選用參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 描述
 :--- | :--- | :---
-`format` | String | A [format]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/#formats) for dates in this query. Default is the field's mapped format.
-`relation` | String | Indicates how the range query matches values for [`range`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/range/) fields. Valid values are:<br> - `INTERSECTS` (default): Matches documents whose `range` field value intersects the range provided in the query.  <br> - `CONTAINS`: Matches documents whose `range` field value contains the entire range provided in the query. <br> - `WITHIN`: Matches documents whose `range` field value is entirely within the range provided in the query.
-`boost` | Floating-point | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field’s relevance. Values between 0.0 and 1.0 decrease the field’s relevance. Default is 1.0.
-`time_zone` | String | The time zone used to convert [`date`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/) values to UTC in the query. Valid values are ISO 8601 [UTC offsets](https://en.wikipedia.org/wiki/List_of_UTC_offsets) and [IANA time zone IDs](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). For more information, see [Time zone](#time-zone).
+`format` | 字串 | 此查詢中日期的[格式]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/#formats)。預設為欄位的對應格式。
+`relation` | 字串 | 指示範圍查詢如何比對 [`range`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/range/) 欄位的值。有效值為：<br> - `INTERSECTS`（預設）：比對 `range` 欄位值與查詢中提供的範圍相交的文件。  <br> - `CONTAINS`：比對 `range` 欄位值包含查詢中提供的整個範圍的文件。 <br> - `WITHIN`：比對 `range` 欄位值完全位於查詢中提供的範圍內的文件。
+`boost` | 浮點數 | 指定此欄位對相關性分數權重的浮點數值。高於 1.0 的值會提高該欄位的相關性；介於 0.0 與 1.0 之間的值會降低該欄位的相關性。預設為 1.0。
+`time_zone` | 字串 | 在查詢中用於將 [`date`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/) 值轉換為 UTC 的時區。有效值為 ISO 8601 [UTC 偏移](https://en.wikipedia.org/wiki/List_of_UTC_offsets)和 [IANA 時區 ID](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)。如需更多資訊，請參閱[時區](#time-zone)。
 
-If [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/index/#expensive-queries) is set to `false`, then range queries on [`text`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/text/) and [`keyword`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/keyword/) fields are not executed.
+如果 [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/index/#expensive-queries) 設定為 `false`，則不會對 [`text`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/text/) 和 [`keyword`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/keyword/) 欄位執行範圍查詢。
 {: .important}

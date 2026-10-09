@@ -1,46 +1,47 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Aggregation functions
+title: "彙總函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 1
 ---
 
-# Aggregation functions
+# 彙總函式
 
-Aggregation functions perform calculations across multiple rows to return a single result value. These functions are used with the `stats`, `eventstats`, and `streamstats` commands to analyze and summarize data.
+彙總函式會跨多個資料列進行計算，並傳回單一結果值。這些函式會搭配 `stats`、`eventstats` 及 `streamstats` 命令使用，以分析及彙總資料。
 
-The following table shows how `NULL` and missing values are handled by aggregation functions.
+下表顯示彙總函式如何處理 `NULL` 及遺漏值。
 
-| Function | `null` | Missing |
+| 函式 | `null` | 遺漏值 |
 | --- | --- | --- |
-| `COUNT` | Not counted | Not counted |
-| `SUM` | Ignored | Ignored |
-| `AVG` | Ignored | Ignored |
-| `MAX` | Ignored | Ignored |
-| `MIN` | Ignored | Ignored |
-| `FIRST` | Ignored | Ignored |
-| `LAST` | Ignored | Ignored |
-| `LIST` | Ignored | Ignored |
-| `VALUES` | Ignored | Ignored |
+| `COUNT` | 不計入 | 不計入 |
+| `SUM` | 忽略 | 忽略 |
+| `AVG` | 忽略 | 忽略 |
+| `MAX` | 忽略 | 忽略 |
+| `MIN` | 忽略 | 忽略 |
+| `FIRST` | 忽略 | 忽略 |
+| `LAST` | 忽略 | 忽略 |
+| `LIST` | 忽略 | 忽略 |
+| `VALUES` | 忽略 | 忽略 |
   
-## Functions
+## 函式
 
-The following aggregation functions are available in PPL for data analysis and summarization.
+PPL 提供下列彙總函式，可用於資料分析與彙總。
 
 ### COUNT
 
-**Usage**: `COUNT(expr)`, `C(expr)`, `c(expr)`, `count(expr)`
+**用法**：`COUNT(expr)`、`C(expr)`、`c(expr)`、`count(expr)`
 
-Counts the number of `expr` values in the retrieved rows. `C()`, `c()`, and `count()` are available as abbreviations for `COUNT()`. For filtered counting, use an `eval` expression to specify the filtering condition.
+計算所擷取資料列中 `expr` 值的數量。`C()`、`c()` 及 `count()` 可作為 `COUNT()` 的縮寫。若要進行篩選計數，請使用 `eval` 運算式指定篩選條件。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Optional): The expression whose values are to be counted.
+- `expr` (選用)：要計算其值的運算式。
 
-**Return type**: `LONG`
+**傳回類型**：`LONG`
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -48,7 +49,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -58,7 +59,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The following example counts only records that match a specific condition:
+下列範例只會計算符合特定條件的記錄：
 
 ```sql
 source=accounts
@@ -66,7 +67,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -78,17 +79,17 @@ The query returns the following results:
   
 ### SUM
 
-**Usage**: `SUM(expr)`
+**用法**：`SUM(expr)`
 
-Returns the sum of `expr` values.
+傳回 `expr` 值的總和。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression whose values are to be summed.
+- `expr` (必要)：要加總其值的運算式。
 
-**Return type**: Same as input type (`INTEGER`, `LONG`, `FLOAT`, or `DOUBLE`)
+**傳回類型**：與輸入類型相同 (`INTEGER`、`LONG`、`FLOAT` 或 `DOUBLE`)
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -96,7 +97,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -109,17 +110,17 @@ The query returns the following results:
   
 ### AVG
 
-**Usage**: `AVG(expr)`
+**用法**：`AVG(expr)`
 
-Returns the average value of `expr`.
+傳回 `expr` 的平均值。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression whose values are to be averaged.
+- `expr` (必要)：要計算其平均值的運算式。
 
-**Return type**: `DOUBLE` for numeric inputs; same as input type for `DATE`, `TIME`, or `TIMESTAMP` inputs
+**傳回類型**：數值輸入為 `DOUBLE`；`DATE`、`TIME` 或 `TIMESTAMP` 輸入則與輸入類型相同
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -127,7 +128,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -140,17 +141,17 @@ The query returns the following results:
   
 ### MAX
 
-**Usage**: `MAX(expr)`
+**用法**：`MAX(expr)`
 
-Returns the maximum value of `expr`. For non-numeric fields, this function returns the value that comes last in alphabetical order.
+傳回 `expr` 的最大值。對於非數值欄位，此函式會傳回依字母順序排列時最後的值。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression for which to find the maximum value.
+- `expr` (必要)：要找出最大值的運算式。
 
-**Return type**: Same as input type
+**傳回類型**：與輸入類型相同
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -158,7 +159,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -168,7 +169,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example returns the value from the `firstname` text field that comes last in alphabetical order:
+下列範例會傳回 `firstname` 文字欄位中依字母順序排列時最後的值：
 
 ```sql
 source=accounts
@@ -176,7 +177,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -188,17 +189,17 @@ The query returns the following results:
   
 ### MIN
 
-**Usage**: `MIN(expr)`
+**用法**：`MIN(expr)`
 
-Returns the minimum value of `expr`. For non-numeric fields, this function returns the value that comes first in alphabetical order.
+傳回 `expr` 的最小值。對於非數值欄位，此函式會傳回依字母順序排列時最前的值。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression for which to find the minimum value.
+- `expr` (必要)：要找出最小值的運算式。
 
-**Return type**: Same as input type
+**傳回類型**：與輸入類型相同
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -206,7 +207,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -216,7 +217,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example returns the value from the `firstname` text field that comes first in alphabetical order:
+下列範例會傳回 `firstname` 文字欄位中依字母順序排列時最前的值：
 
 ```sql
 source=accounts
@@ -224,7 +225,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -236,17 +237,17 @@ The query returns the following results:
   
 ### VAR_SAMP
 
-**Usage**: `VAR_SAMP(expr)`
+**用法**：`VAR_SAMP(expr)`
 
-Returns the sample variance of `expr`.
+傳回 `expr` 的樣本變異數。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression for which to calculate the sample variance.
+- `expr` (必要)：要計算樣本變異數的運算式。
 
-**Return type**: `DOUBLE`
+**傳回類型**：`DOUBLE`
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -254,7 +255,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -266,17 +267,17 @@ The query returns the following results:
   
 ### VAR_POP
 
-**Usage**: `VAR_POP(expr)`
+**用法**：`VAR_POP(expr)`
 
-Returns the population variance of `expr`.
+傳回 `expr` 的母體變異數。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression for which to calculate the population variance.
+- `expr` (必要)：要計算母體變異數的運算式。
 
-**Return type**: `DOUBLE`
+**傳回類型**：`DOUBLE`
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -284,7 +285,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -296,17 +297,17 @@ The query returns the following results:
   
 ### STDDEV_SAMP
 
-**Usage**: `STDDEV_SAMP(expr)`
+**用法**：`STDDEV_SAMP(expr)`
 
-Returns the sample standard deviation of `expr`.
+傳回 `expr` 的樣本標準差。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression for which to calculate the sample standard deviation.
+- `expr` (必要)：要計算樣本標準差的運算式。
 
-**Return type**: `DOUBLE`
+**傳回類型**：`DOUBLE`
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -314,7 +315,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -326,17 +327,17 @@ The query returns the following results:
   
 ### STDDEV_POP
 
-**Usage**: `STDDEV_POP(expr)`
+**用法**：`STDDEV_POP(expr)`
 
-Returns the population standard deviation of `expr`.
+傳回 `expr` 的母體標準差。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression for which to calculate the population standard deviation.
+- `expr` (必要)：要計算母體標準差的運算式。
 
-**Return type**: `DOUBLE`
+**傳回類型**：`DOUBLE`
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -344,7 +345,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -356,17 +357,17 @@ The query returns the following results:
   
 ### DISTINCT_COUNT, DC
 
-**Usage**: `DISTINCT_COUNT(expr)`, `DC(expr)`
+**用法**：`DISTINCT_COUNT(expr)`、`DC(expr)`
 
-Returns the approximate number of distinct values using the `HyperLogLog++` algorithm. Both functions are equivalent. For more information about algorithm accuracy and precision control, see [Controlling precision]({{site.url}}{{site.baseurl}}/aggregations/metric/cardinality/#controlling-precision).
+使用 `HyperLogLog++` 演算法傳回相異值的近似數量。這兩個函式功能相同。如需演算法準確度與精確度控制的詳細資訊，請參閱[控制精確度]({{site.url}}{{site.baseurl}}/aggregations/metric/cardinality/#controlling-precision)。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression for which to count distinct values.
+- `expr` (必要)：要計算相異值數量的運算式。
 
-**Return type**: `LONG`
+**傳回類型**：`LONG`
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -374,7 +375,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -387,17 +388,17 @@ The query returns the following results:
   
 ### DISTINCT_COUNT_APPROX
 
-**Usage**: `DISTINCT_COUNT_APPROX(expr)`
+**用法**：`DISTINCT_COUNT_APPROX(expr)`
 
-Returns the approximate count of distinct values in `expr` using the `HyperLogLog++` algorithm.
+使用 `HyperLogLog++` 演算法傳回 `expr` 中相異值的近似數量。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression for which to count approximate distinct values.
+- `expr` (必要)：要計算近似相異值數量的運算式。
 
-**Return type**: `LONG`
+**傳回類型**：`LONG`
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -405,7 +406,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -417,18 +418,18 @@ The query returns the following results:
   
 ### EARLIEST
 
-**Usage**: `EARLIEST(field [, time_field])`
+**用法**：`EARLIEST(field [, time_field])`
 
-Returns the earliest value of a `field` based on timestamp ordering.
+根據時間戳記排序，傳回 `field` 的最早值。
 
-**Parameters**:
+**參數**：
 
-- `field` (Required): The field for which to return the earliest value.
-- `time_field` (Optional): The field to use for time-based ordering. Defaults to `@timestamp` if not specified.
+- `field`（必要）：要傳回最早值的欄位。
+- `time_field`（選用）：用於時間排序的欄位。若未指定，預設為 `@timestamp`。
 
-**Return type**: Same as input field type
+**回傳類型**：與輸入欄位類型相同
 
-#### Example
+#### 範例
 
 ```sql
 source=events
@@ -437,7 +438,7 @@ source=events
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -448,7 +449,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example uses a custom time field instead of the default `@timestamp` field for ordering:
+下列範例使用自訂時間欄位取代預設的 `@timestamp` 欄位進行排序：
 
 ```sql
 source=events
@@ -457,7 +458,7 @@ source=events
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -470,18 +471,18 @@ The query returns the following results:
   
 ### LATEST
 
-**Usage**: `LATEST(field [, time_field])`
+**用法**：`LATEST(field [, time_field])`
 
-Returns the latest value of a `field` based on timestamp ordering.
+根據時間戳記排序，傳回 `field` 的最晚值。
 
-**Parameters**:
+**參數**：
 
-- `field` (Required): The field for which to return the latest value.
-- `time_field` (Optional): The field to use for time-based ordering. Defaults to `@timestamp` if not specified.
+- `field`（必要）：要傳回最晚值的欄位。
+- `time_field`（選用）：用於時間排序的欄位。若未指定，預設為 `@timestamp`。
 
-**Return type**: Same as input field type
+**回傳類型**：與輸入欄位類型相同
 
-#### Example
+#### 範例
 
 ```sql
 source=events
@@ -490,7 +491,7 @@ source=events
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -501,7 +502,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example uses a custom time field instead of the default `@timestamp` field for ordering:
+下列範例使用自訂時間欄位取代預設的 `@timestamp` 欄位進行排序：
 
 ```sql
 source=events
@@ -510,7 +511,7 @@ source=events
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -523,18 +524,18 @@ The query returns the following results:
   
 ### TAKE
 
-**Usage**: `TAKE(field [, size])`
+**用法**：`TAKE(field [, size])`
 
-Returns the original values from a field. This function does not guarantee the order of the returned values.
+傳回欄位的原始值。此函式不保證傳回值的順序。
 
-**Parameters**:
+**參數**：
 
-- `field` (Required): A text field from which to extract values.
-- `size` (Optional): The number of values to return. Defaults to `10`.
+- `field`（必要）：要擷取值的文字欄位。
+- `size`（選用）：要傳回的值數量。預設為 `10`。
 
-**Return type**: `ARRAY`
+**回傳類型**：`ARRAY`
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -542,7 +543,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -554,21 +555,21 @@ The query returns the following results:
   
 ### PERCENTILE, PERCENTILE_APPROX
 
-**Usage**: `PERCENTILE(expr, percent)`, `PERCENTILE_APPROX(expr, percent)`
+**用法**：`PERCENTILE(expr, percent)`、`PERCENTILE_APPROX(expr, percent)`
 
-Returns the approximate percentile value of `expr` at the specified percentage.
+傳回 `expr` 在指定百分比的近似百分位數值。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression for which to calculate the percentile.
-- `percent` (Required): A constant number between `0` and `100`.
+- `expr`（必要）：要計算百分位數的運算式。
+- `percent`（必要）：介於 `0` 與 `100` 之間的常數數值。
 
-**Return type**: Same as input type
+**回傳類型**：與輸入類型相同
 
-Starting in version 3.1.0, the percentile implementation switched from `AVLTreeDigest` to `MergingDigest`. For more information, see the [corresponding issue](https://github.com/opensearch-project/OpenSearch/issues/18122).
+從 3.1.0 版開始，百分位數的實作從 `AVLTreeDigest` 切換為 `MergingDigest`。如需更多資訊，請參閱[對應的議題](https://github.com/opensearch-project/OpenSearch/issues/18122)。
 {: .note}
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -576,7 +577,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -587,13 +588,13 @@ The query returns the following results:
 
 <!-- vale on -->
   
-#### Percentile shortcut functions
+#### 百分位數捷徑函式
 
-For convenience, OpenSearch PPL provides shortcut functions for common percentiles:
-- `PERC<percent>(expr)` - Equivalent to `PERCENTILE(expr, <percent>)`.
-- `P<percent>(expr)` - Equivalent to `PERCENTILE(expr, <percent>)`.
+為方便起見，OpenSearch PPL 為常用的百分位數提供捷徑函式：
+- `PERC<percent>(expr)` - 等同於 `PERCENTILE(expr, <percent>)`。
+- `P<percent>(expr)` - 等同於 `PERCENTILE(expr, <percent>)`。
 
-Both integer and decimal percentiles from `0` to `100` are supported (for example, `PERC95`, `P99.5`):
+支援從 `0` 到 `100` 的整數與小數百分位數（例如 `PERC95`、`P99.5`）：
   
 ```sql
 source=accounts 
@@ -601,7 +602,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -617,7 +618,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -629,17 +630,17 @@ The query returns the following results:
   
 ### MEDIAN
 
-**Usage**: `MEDIAN(expr)`
+**用法**：`MEDIAN(expr)`
 
-Returns the median (50th percentile) value of `expr`. This is equivalent to `PERCENTILE(expr, 50)`.
+傳回 `expr` 的中位數（第 50 百分位數）值。這等同於 `PERCENTILE(expr, 50)`。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression for which to calculate the median.
+- `expr`（必要）：要計算中位數的運算式。
 
-**Return type**: Same as input type
+**回傳類型**：與輸入類型相同
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -647,7 +648,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -659,17 +660,17 @@ The query returns the following results:
   
 ### FIRST
 
-**Usage**: `FIRST(field)`
+**用法**：`FIRST(field)`
 
-Returns the first non-null value of a `field` based on natural document order. Returns `NULL` if no records exist or if all records have `NULL` values for the `field`.
+根據文件的自然順序，傳回 `field` 的第一個非空值 (null)。若沒有任何記錄存在，或所有記錄在 `field` 上都是 `NULL` 值，則傳回 `NULL`。
 
-**Parameters**:
+**參數**：
 
-- `field` (Required): The field for which to return the first value.
+- `field`（必要）：要傳回第一個值的欄位。
 
-**Return type**: Same as input field type
+**回傳類型**：與輸入欄位類型相同
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -677,7 +678,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -690,17 +691,17 @@ The query returns the following results:
   
 ### LAST
 
-**Usage**: `LAST(field)`
+**用法**：`LAST(field)`
 
-Returns the last non-null value of a `field` based on natural document order. Returns `NULL` if no records exist or if all records have `NULL` values for the `field`.
+根據文件的自然順序，傳回 `field` 的最後一個非空值 (null)。若沒有任何記錄存在，或所有記錄在 `field` 上都是 `NULL` 值，則傳回 `NULL`。
 
-**Parameters**:
+**參數**：
 
-- `field` (Required): The field for which to return the last value.
+- `field`（必要）：要傳回最後一個值的欄位。
 
-**Return type**: Same as input field type
+**回傳類型**：與輸入欄位類型相同
 
-#### Example
+#### 範例
 
 ```sql
 source=accounts
@@ -708,7 +709,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -721,22 +722,22 @@ The query returns the following results:
   
 ### LIST
 
-**Usage**: `LIST(expr)`
+**用法**：`LIST(expr)`
 
-Collects all values from the specified expression into an array. Values are converted to strings, `NULL` values are filtered out, and duplicates are preserved. This function returns up to `100` values without a guaranteed order.
+將指定運算式的所有值收集到一個陣列中。值會轉換為字串，`NULL` 值會被過濾掉，且重複值會保留。此函式最多傳回 `100` 個值，且不保證順序。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The field expression from which to collect values.
+- `expr`（必要）：要收集值的欄位運算式。
 
-**Return type**: `ARRAY`
+**回傳類型**：`ARRAY`
 
-This aggregation function does not support array, struct, or object field types.
+此彙總函式不支援 array、struct 或 object 欄位類型。
 {: .note}
 
-#### Example
+#### 範例
 
-The following example collects all values from a string field into an array:
+下列範例將字串欄位的所有值收集到一個陣列中：
 
 ```sql
 source=accounts
@@ -744,7 +745,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -756,19 +757,19 @@ The query returns the following results:
   
 ### VALUES
 
-**Usage**: `VALUES(expr)`
+**用法**：`VALUES(expr)`
 
-Collects all unique values from the specified expression into a sorted array. Values are converted to strings, `NULL` values are filtered out, and duplicates are removed.
+將指定運算式的所有唯一值收集到一個排序後的陣列中。值會轉換為字串，`NULL` 值會被過濾掉，且重複值會被移除。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression from which to collect unique values.
+- `expr`（必要）：要收集唯一值的運算式。
 
-**Return type**: `ARRAY`
+**回傳類型**：`ARRAY`
 
-> The `plugins.ppl.values.max.limit` setting controls the maximum number of unique values returned:
-> - The default value is 0, which returns an unlimited number of values.
-> - Setting this to any positive integer limits the number of unique values.
+> `plugins.ppl.values.max.limit` 設定可控制傳回的唯一值數量上限：
+> - 預設值為 0，表示傳回不限數量的值。
+> - 將此設定為任何正整數，即可限制唯一值的數量。
 {: .note}
 
 <!-- temporarily commented out because the admin section is not ported
@@ -776,9 +777,9 @@ Collects all unique values from the specified expression into a sorted array. Va
 * See the [PPL Settings]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/admin/settings#plugins-ppl-values-max-limit) documentation for more details
 -->
 
-#### Example
+#### 範例
 
-The following example collects unique values from a string field into a sorted array:
+下列範例將字串欄位中的唯一值收集到排序後的陣列中：
 
 ```sql
 source=accounts
@@ -786,7 +787,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 

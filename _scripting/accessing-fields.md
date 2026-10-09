@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Accessing document fields in scripts
+title: "在指令碼中存取文件欄位"
 nav_order: 20
 ---
 
-# Accessing document fields in scripts
+# 在指令碼中存取文件欄位
 
-A script reads document data through variables that OpenSearch injects before running the script. The variables available to a script depend on its context: a script that modifies a document during an update receives a different set of variables than one that scores a search result. Choosing the right access path matters for performance, because a search or aggregation script runs once per candidate document and reading the `_source` field requires far more resources per document than reading doc values.
+指令碼透過 OpenSearch 在執行指令碼前注入的變數來讀取文件資料。指令碼可用的變數取決於其情境：在更新期間修改文件的指令碼，與為搜尋結果評分的指令碼，會收到不同的變數集。選擇正確的存取路徑對效能至關重要，因為搜尋或彙總指令碼會針對每個候選文件執行一次，而讀取 `_source` 欄位所需的每份文件資源遠多於讀取 doc values。
 
-This page describes the access paths and the variables that the main context families provide. For the variables and return type of every individual context, see [Script contexts]({{site.url}}{{site.baseurl}}/scripting/script-contexts/).
+本頁說明存取路徑，以及主要情境系列所提供的變數。如需每個個別情境的變數與傳回類型，請參閱[指令碼情境]({{site.url}}{{site.baseurl}}/scripting/script-contexts/)。
 
-The examples on this page use the `scripting-products` index. To create it, see [Test setup]({{site.url}}{{site.baseurl}}/scripting/using-scripts/#test-setup).
+本頁的範例使用 `scripting-products` 索引。若要建立它，請參閱[測試設定]({{site.url}}{{site.baseurl}}/scripting/using-scripts/#test-setup)。
 
-## Update scripts
+## 更新指令碼
 
-Scripts in the [Update Document]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-document/), [Update By Query]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-by-query/), and [Reindex]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/) APIs receive a single `ctx` variable. The following table lists the `ctx` fields.
+[Update Document]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-document/)、[Update By Query]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-by-query/) 和 [Reindex]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/) API 中的指令碼會收到單一 `ctx` 變數。下表列出 `ctx` 欄位。
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`ctx._source` | The document [`_source`]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/source/), as a modifiable map. Assign to its entries to change the document that OpenSearch writes.
-`ctx.op` | The operation to apply to the document. Set it to `index` to write the modified document, `delete` to remove it, or `noop` to leave it unchanged and skip the write.
-`ctx._index`, `ctx._id`, and other [metadata fields]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/index/) | Metadata for the document being processed. Some of these are read-only.
+`ctx._source` | 文件 [`_source`]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/source/)，為可修改的 map。對其項目賦值，即可變更 OpenSearch 寫入的文件。
+`ctx.op` | 要套用至文件的操作。將其設為 `index` 以寫入修改後的文件，設為 `delete` 以移除文件，或設為 `noop` 以保持不變並略過寫入。
+`ctx._index`、`ctx._id` 及其他[中繼資料欄位]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/index/) | 正在處理之文件的中繼資料。其中部分為唯讀。
 
-The following update records a delivery for document `4`, which has a `quantity` of `0`. The script reads `ctx._source.quantity`, adds the received units to it, and derives `on_sale` from the resulting value. If no units were received, it sets `ctx.op` to `noop` so that OpenSearch skips the write:
+下列更新會為文件 `4` 記錄一筆交貨，該文件的 `quantity` 為 `0`。指令碼會讀取 `ctx._source.quantity`，將收到的單位數加到其中，並從產生的值推導出 `on_sale`。若未收到任何單位，則將 `ctx.op` 設為 `noop`，讓 OpenSearch 略過寫入：
 
 ```json
 POST scripting-products/_update/4
@@ -36,11 +37,11 @@ POST scripting-products/_update/4
 ```
 {% include copy-curl.html %}
 
-The `result` field reports that the document was written, and `_version` is incremented:
+`result` 欄位回報文件已寫入，且 `_version` 會遞增：
 
 <details open markdown="block">
 <summary>
-  Response
+  回應
 </summary>
 
 ```json
@@ -60,32 +61,32 @@ The `result` field reports that the document was written, and `_version` is incr
 ```
 </details>
 
-The document now has a `quantity` of `25` and an `on_sale` value of `true`. Sending the same request with `"received": 0` takes the `noop` branch, which returns `"result": "noop"` and leaves `_version` unchanged.
+該文件現在的 `quantity` 為 `25`，且 `on_sale` 值為 `true`。以 `"received": 0` 傳送相同的請求會走 `noop` 分支，其會傳回 `"result": "noop"` 並使 `_version` 保持不變。
 
-An update script reads and modifies document data only through `ctx._source`. None of the three access paths described in the following sections are available to it: `doc` fails to compile with `cannot resolve symbol [doc]`, and `params._source` and `params._fields` are `null`, so reading a field from either one fails at runtime with a `null_pointer_exception`.
+更新指令碼僅透過 `ctx._source` 讀取及修改文件資料。下列各節所述的三種存取路徑皆無法供其使用：`doc` 會因 `cannot resolve symbol [doc]` 而無法編譯，而 `params._source` 與 `params._fields` 為 `null`，因此從其中任一者讀取欄位會在執行階段失敗並產生 `null_pointer_exception`。
 {: .note}
 
-## Search and aggregation scripts
+## 搜尋與彙總指令碼
 
-Scripts in searches and aggregations run once for every document that could match, which on a large index means the script executes millions of times for a single request. [Script fields]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#using-scripted-fields) are the exception: they run once per returned result, so they are bound by the page size rather than the index size.
+搜尋與彙總中的指令碼會針對每個可能相符的文件執行一次，這在大型索引上意味著單一請求會執行指令碼數百萬次。[指令碼欄位]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#using-scripted-fields)是例外：它們會針對每個傳回的結果執行一次，因此其執行次數受頁面大小而非索引大小限制。
 
-These scripts read field values through doc values, the `_source` field, or stored fields. The following table summarizes the three access types.
+這些指令碼透過 doc values、`_source` 欄位或已儲存的欄位讀取欄位值。下表摘要說明這三種存取類型。
 
-Access type | Syntax | Resource usage | Use when
+存取類型 | 語法 | 資源用量 | 適用情況
 :--- | :--- | :--- | :---
-Doc values | `doc['field']` | Lowest | Scoring, sorting, filtering, or aggregating on numbers, dates, geopoints, or keywords.
-`_source` | `params._source.field` | Highest | A script field needs a JSON object, a `text` field, or exact original values for the results on one page.
-Stored fields | `params._fields['field'].value` | High | The `_source` is large and the script needs only a few small fields from it.
+文件值（doc values） | `doc['field']` | 最低 | 對數字、日期、地理點或關鍵字進行評分、排序、篩選或彙總。
+`_source` | `params._source.field` | 最高 | 指令碼欄位需要 JSON 物件、`text` 欄位，或單一頁面上結果的確切原始值。
+已儲存的欄位 | `params._fields['field'].value` | 高 | `_source` 很大，而指令碼只需要其中幾個小欄位。
 
-Scripts that contribute to scoring or sorting also receive `_score`, the relevance score of the current document.
+對評分或排序有貢獻的指令碼也會收到 `_score`，即目前文件的相關性分數。
 
-### Doc values
+### 文件值（doc values）
 
-The fastest way to read a field in a script is by using [doc values]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/). Doc values store field values in a column-oriented structure that is built at index time and read directly from disk, which is the access pattern a script needs: one field, many documents. Access a field using the `doc['field_name']` syntax.
+在指令碼中讀取欄位最快的方式是使用[文件值]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。Doc values 會將欄位值儲存在一個以欄為導向的結構中，該結構在建立索引時建置，並直接從磁碟讀取，這正是指令碼所需的存取模式：一個欄位、多份文件。使用 `doc['field_name']` 語法存取欄位。
 
-Doc values are enabled by default on every field type except analyzed [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) fields.
+除了經過分析的 [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 欄位外，所有欄位類型預設都會啟用 doc values。
 
-The following search computes the total inventory value of each audio product by multiplying its price by the number of items in stock. It reads both variables from doc values:
+下列搜尋會將每個音訊產品的價格乘以其庫存數量，以計算其總庫存價值。它會從 doc values 讀取這兩個變數：
 
 ```json
 GET scripting-products/_search
@@ -104,11 +105,11 @@ GET scripting-products/_search
 ```
 {% include copy-curl.html %}
 
-Each result includes the computed field:
+每個結果都包含計算出的欄位：
 
 <details open markdown="block">
 <summary>
-  Response
+  回應
 </summary>
 
 ```json
@@ -154,29 +155,29 @@ Each result includes the computed field:
 ```
 </details>
 
-Doc values return scalar values, such as numbers, dates, geopoints, and terms, or arrays of scalars for a multi-valued field. They cannot return a JSON object, so a script that needs the structure of a nested object must read the `_source` instead.
+Doc values 會傳回純量值，例如數字、日期、地理點和詞彙，或針對多值欄位傳回純量陣列。它們無法傳回 JSON 物件，因此需要巢狀物件結構的指令碼必須改為讀取 `_source`。
 
-#### Handling missing fields
+#### 處理缺少的欄位
 
-Reading `doc['field']` for a field that is absent from the mapping raises a `script_exception` with the reason `runtime error`, caused by `No field found for [discount] in mapping`. In Painless, guard the access with `doc.containsKey('field')`:
+若讀取對應中不存在之欄位的 `doc['field']`，會引發 `script_exception`，原因為 `runtime error`，肇因於 `No field found for [discount] in mapping`。在 Painless 中，請使用 `doc.containsKey('field')` 保護該存取：
 
 ```json
 "source": "doc.containsKey('discount') ? doc['discount'].value : 0"
 ```
 
-An `expression` script has no equivalent guard, because the language provides no way to test whether a field exists in the mapping. It can only distinguish a field that is mapped but absent from the current document, using `doc['field'].empty`. For more information, see [Lucene expression language]({{site.url}}{{site.baseurl}}/scripting/expressions/).
+`expression` 指令碼沒有對等的保護機制，因為該語言未提供任何方法來測試欄位是否存在於對應中。它只能使用 `doc['field'].empty` 來區分已對應但不存在於目前文件中的欄位。如需更多資訊，請參閱 [Lucene 運算式語言]({{site.url}}{{site.baseurl}}/scripting/expressions/)。
 {: .note}
 
-#### Reading text fields
+#### 讀取文字欄位
 
-In Painless, the `doc['field']` syntax works on an analyzed `text` field only when [`fielddata`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/field-data/) is enabled on it, and it returns the analyzed terms rather than the original string. Enabling `fielddata` loads every term in the field into the JVM heap, which consumes both memory and CPU and can destabilize a node. Map a `keyword` subfield and have the script read the subfield instead.
+在 Painless 中，`doc['field']` 語法僅在已分析的 `text` 欄位上啟用 [`fielddata`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/field-data/) 時才能運作，且它會傳回分析後的詞元，而非原始字串。啟用 `fielddata` 會將欄位中的每個詞元載入 JVM 堆積，這會同時消耗記憶體與 CPU，並可能導致節點不穩定。請對應一個 `keyword` 子欄位，並讓指令碼改為讀取該子欄位。
 {: .warning}
 
-### The document source
+### 文件來源
 
-The `_source` field contains the original JSON document body that was indexed. To read the `_source`, use the `params._source.field_name` syntax. To read a nested field, use the full path. For example, the `warehouse` field of the test index is a `geo_point` indexed as `{"lat": 47.6062, "lon": -122.3321}`, so its latitude is read as `params._source.warehouse.lat`.
+`_source` 欄位包含已編製索引的原始 JSON 文件本文。若要讀取 `_source`，請使用 `params._source.field_name` 語法。若要讀取巢狀欄位，請使用完整路徑。例如，測試索引的 `warehouse` 欄位是一個以 `{"lat": 47.6062, "lon": -122.3321}` 編製索引的 `geo_point`，因此其緯度會讀取為 `params._source.warehouse.lat`。
 
-The following search assembles a catalog label from two `_source` fields:
+下列搜尋會從兩個 `_source` 欄位組出一個型錄標籤：
 
 ```json
 GET scripting-products/_search
@@ -195,11 +196,11 @@ GET scripting-products/_search
 ```
 {% include copy-curl.html %}
 
-The concatenated label is returned with the result:
+串接後的標籤會隨結果一併傳回：
 
 <details open markdown="block">
 <summary>
-  Response
+  回應
 </summary>
 
 ```json
@@ -235,19 +236,19 @@ The concatenated label is returned with the result:
 ```
 </details>
 
-Reading `_source` is much slower than reading doc values because OpenSearch must load and parse the entire stored JSON body to read one field. The `_source` field is optimized for returning many fields from a few documents; doc values are optimized for returning one field from many documents.
+讀取 `_source` 比讀取 doc values 慢得多，因為 OpenSearch 必須載入並剖析整個已儲存的 JSON 本文才能讀取一個欄位。`_source` 欄位經過最佳化，適合從少數文件中傳回許多欄位；doc values 則經過最佳化，適合從許多文件中傳回單一欄位。
 
-Use `_source` when a script field builds output for the results on a single page, and when the value you need is a JSON object or a `text` field that doc values cannot supply. For scoring, sorting, filtering, and aggregating, use doc values.
+當指令碼欄位為單一頁面的結果建立輸出，且您需要的值是 JSON 物件或 doc values 無法提供的 `text` 欄位時，請使用 `_source`。若用於評分、排序、篩選及彙總，請使用 doc values。
 {: .note}
 
-### Stored fields
+### 已儲存的欄位
 
-A field mapped using [`"store": true`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/) is written to the index separately from the `_source` and can be read with the `params._fields['field_name'].value` syntax. In the test index, `sku` and `brand` are stored fields.
+使用 [`"store": true`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/) 對應的欄位會與 `_source` 分開寫入索引，並可使用 `params._fields['field_name'].value` 語法讀取。在測試索引中，`sku` 與 `brand` 是已儲存的欄位。
 
-The `.value` suffix is required. `params._fields['field_name']` on its own returns the internal field lookup object rather than a value, and returning it from a script field fails with `cannot write xcontent for unknown value of type`. Use `.value` for the first value and `.values` for the full list when the field has more than one value.
+必須加上 `.value` 後置字元。單獨使用 `params._fields['field_name']` 會傳回內部的欄位查閱物件而非值，且從指令碼欄位傳回它會失敗並出現 `cannot write xcontent for unknown value of type`。當欄位有多個值時，請使用 `.value` 取得第一個值，並使用 `.values` 取得完整清單。
 {: .note}
 
-The following search combines the `brand` and `sku` stored fields into a single identifier:
+下列搜尋會將 `brand` 與 `sku` 這兩個已儲存的欄位合併成單一識別碼：
 
 ```json
 GET scripting-products/_search
@@ -266,11 +267,11 @@ GET scripting-products/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the combined value:
+回應中包含合併後的值：
 
 <details open markdown="block">
 <summary>
-  Response
+  回應
 </summary>
 
 ```json
@@ -306,15 +307,15 @@ The response contains the combined value:
 ```
 </details>
 
-The `_source` field is itself a stored field, so reading a stored field requires approximately the same amount of time and memory as reading `_source`. Unlike a stored field, `_source` returns the exact JSON that was indexed: it preserves the difference between `null` and an absent field, and between a single-element array and a scalar.
+`_source` 欄位本身即為已儲存的欄位，因此讀取已儲存的欄位所需花費的時間與記憶體，與讀取 `_source` 大致相同。與已儲存的欄位不同，`_source` 會傳回編製索引當時的完整 JSON：它會保留 `null` 與欄位不存在之間的差異，以及單一元素陣列與純量之間的差異。
 
-Stored fields reduce read time when the `_source` is large but the script needs a few small values from it: storing those values individually avoids loading the whole body. In all other cases, marking a field as stored increases index size without reducing read time.
+當 `_source` 很大，但指令碼只需要其中幾個小值時，已儲存的欄位可縮短讀取時間：將這些值個別儲存可避免載入整個本文。在其他所有情況下，將欄位標示為已儲存會增加索引大小，卻不會縮短讀取時間。
 
-### Accessing the relevance score
+### 存取相關性分數
 
-Scripts in a [`script_score` query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/script-score/), a [`function_score` query]({{site.url}}{{site.baseurl}}/query-dsl/compound/function-score/), a [script-based sort]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/), and aggregations receive a `_score`, the relevance score that the enclosing query computed for the current document. Reading `_score` lets a script adjust the ranking that the query produced, so textual relevance still contributes to the final order.
+[`script_score` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/script-score/)、[`function_score` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/function-score/)、[以指令碼為基礎的排序]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/) 及彙總中的指令碼會收到 `_score`，也就是外層查詢為目前文件計算出的相關性分數。讀取 `_score` 可讓指令碼調整查詢產生的排名，因此文字相關性仍會影響最終順序。
 
-The following search scales each product's text relevance by the number of items in stock, promoting products that both match the query and are available in quantity. Dividing the quantity by 10 keeps the boost proportionate, so the number in stock shifts the ranking without dominating it:
+下列搜尋會依庫存項目數調整每項產品的文字相關性，提升同時符合查詢且有充足庫存的產品。將數量除以 10 可讓加成維持在合理比例，因此庫存數量會影響排名，但不會主導排名：
 
 ```json
 GET scripting-products/_search
@@ -335,11 +336,11 @@ GET scripting-products/_search
 ```
 {% include copy-curl.html %}
 
-The headphones outrank the earbuds despite a weaker text match, because far more headphones are in stock:
+儘管耳罩式耳機的文字比對較弱，仍因庫存遠多於入耳式耳機而排名較前：
 
 <details open markdown="block">
 <summary>
-  Response
+  回應
 </summary>
 
 ```json
@@ -383,7 +384,7 @@ The headphones outrank the earbuds despite a weaker text match, because far more
 ```
 </details>
 
-## Related documentation
+## 相關文件
 
-- [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/)
-- [Lucene expression language]({{site.url}}{{site.baseurl}}/scripting/expressions/)
+- [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)
+- [Lucene 運算式語言]({{site.url}}{{site.baseurl}}/scripting/expressions/)

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cross-cluster replication
+title: "跨叢集複寫"
 nav_order: 12
 has_children: true
 redirect_from:
@@ -9,17 +10,17 @@ redirect_from:
   - /tuning-your-cluster/replication-plugin/
 ---
 
-# Cross-cluster replication
+# 跨叢集複寫
 
-The cross-cluster replication (CCR) plugin lets you replicate indexes, mappings, and metadata from one OpenSearch cluster to another. Cross-cluster replication has the following benefits:
-- By replicating your indexes, you ensure that you can continue to handle search requests if there's an outage.
-- Replicating data across geographically distant data centers minimizes the distance between the data and the application server. This reduces expensive latencies.
-- You can replicate data from multiple smaller clusters to a centralized reporting cluster, which is useful when it's inefficient to query across a large network.
+跨叢集複寫 (CCR) 外掛程式可讓您將索引、對應與中繼資料從一個 OpenSearch 叢集複寫到另一個叢集。跨叢集複寫具有下列優點：
+- 藉由複寫索引，您可以確保在中斷時仍能繼續處理搜尋請求。
+- 在地理位置相距遙遠的資料中心之間複寫資料，可縮短資料與應用程式伺服器之間的距離，從而降低高昂的延遲。
+- 您可以將多個較小叢集的資料複寫到集中式報告叢集，這在跨大型網路查詢效率不彰時特別有用。
 
-Replication follows an active-passive model where the follower index (where the data is replicated) pulls data from the leader (remote) index.
+複寫採用主動-被動模式，由跟隨者索引 (接收複寫資料的一方) 從領導者 (遠端) 索引提取資料。
 
-The replication plugin supports replication of indexes using wildcard pattern matching and provides commands to pause, resume, and stop replication. Once replication starts on an index, it initiates persistent background tasks on all primary shards on the follower cluster, which continuously poll corresponding shards from the leader cluster for updates.
+複寫外掛程式支援使用萬用字元模式比對來複寫索引，並提供暫停、恢復與停止複寫的命令。一旦索引開始複寫，系統會在跟隨者叢集的所有主要分片上啟動持續性背景工作，持續向領導者叢集的對應分片輪詢更新。
 
-You can use the replication plugin with the Security plugin to encrypt cross-cluster traffic with node-to-node encryption and control access to replication activities.
+您可以將複寫外掛程式與 Security 外掛程式搭配使用，透過節點對節點加密來加密跨叢集流量，並控制對複寫活動的存取。
 
-To start, see [Get started with cross-cluster replication]({{site.url}}{{site.baseurl}}/replication-plugin/get-started/).
+若要開始使用，請參閱[跨叢集複寫入門]({{site.url}}{{site.baseurl}}/replication-plugin/get-started/)。

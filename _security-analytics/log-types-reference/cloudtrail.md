@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: AWS CloudTrail
 parent: Supported log types
 nav_order: 28
 ---
 
-# AWS CloudTrail log type
+# AWS CloudTrail 記錄檔類型
 
-The `cloudtrail` log type monitors events from the [AWS CloudTrail](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html) accounts. OpenSearch can ingest AWS CloudTrail log data from both [Amazon Simple Storage Service](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) (Amazon S3) accounts and [Amazon Security Lake](https://docs.aws.amazon.com/security-lake/latest/userguide/what-is-security-lake.html) accounts.
+`cloudtrail` 記錄檔類型會監視來自 [AWS CloudTrail](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html) 帳戶的事件。OpenSearch 可以從 [Amazon Simple Storage Service](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) (Amazon S3) 帳戶和 [Amazon Security Lake](https://docs.aws.amazon.com/security-lake/latest/userguide/what-is-security-lake.html) 帳戶匯入 AWS CloudTrail 記錄資料。
 
-The following code snippet contains all the `raw_field`, `ecs`, and `ocsf` mappings for this log type:
+下列程式碼片段包含此記錄檔類型的所有 `raw_field`、`ecs` 和 `ocsf` 對應：
 
 ```json
   "mappings": [

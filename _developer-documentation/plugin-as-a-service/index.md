@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Plugin as a service
+title: "外掛程式即服務"
 nav_order: 5
 has_children: false
 has_toc: false
@@ -8,59 +9,59 @@ redirect_from:
   - /developer-documentation/plugin-as-a-service/
 ---
 
-# Plugin as a service 
-Introduced 2.19
+# 外掛程式即服務 
+於 2.19 版推出
 {: .label .label-purple }
 
-To extend core features, OpenSearch uses plugins, which have several limitations:
-- They operate in the same JVM as a cluster, sharing storage, memory, and state.
-- They require strict version compatibility.
-- They are restricted to a single tenant.
+為了擴充核心功能，OpenSearch 使用外掛程式，而外掛程式有幾項限制：
+- 它們與叢集執行於同一個 JVM，共用儲存空間、記憶體與狀態。
+- 它們要求嚴格的版本相容性。
+- 它們僅限於單一租用戶。
 
-To address these challenges, you can use a _remote metadata SDK client_, which enables stateless OpenSearch plugins using external data stores, such as a remote OpenSearch cluster or cloud storage services. Using the client improves scalability and makes plugins more adaptable for large workloads. For more information about the client, see [SDK Client Repository](https://github.com/opensearch-project/opensearch-remote-metadata-sdk).
+為了因應這些挑戰，您可以使用 _遠端中繼資料 SDK 用戶端_，讓無狀態的 OpenSearch 外掛程式得以使用外部資料存放區，例如遠端 OpenSearch 叢集或雲端儲存服務。使用此用戶端可提升擴充性，並讓外掛程式更能適應大型工作負載。如需此用戶端的詳細資訊，請參閱 [SDK 用戶端儲存庫](https://github.com/opensearch-project/opensearch-remote-metadata-sdk)。
 
-## Remote metadata storage
+## 遠端中繼資料儲存
 
-Remote metadata storage allows OpenSearch plugins to operate in a stateless manner, without relying on local JVM or cluster resources, by using external storage solutions. Instead of storing metadata within the OpenSearch cluster, plugins can save it in remote locations such as other OpenSearch clusters or cloud storage services. This approach improves scalability, reduces resource contention, and enables plugins to function independently of the core OpenSearch cluster.  
+遠端中繼資料儲存讓 OpenSearch 外掛程式能以無狀態的方式運作，不需依賴本機 JVM 或叢集資源，而是使用外部儲存解決方案。外掛程式可以將中繼資料儲存在遠端位置，例如其他 OpenSearch 叢集或雲端儲存服務，而非儲存在 OpenSearch 叢集內。這種做法可提升擴充性、減少資源競爭，並讓外掛程式能獨立於核心 OpenSearch 叢集運作。  
 
-Remote metadata storage offers the following benefits:
+遠端中繼資料儲存提供下列優點：
 
-- **Scalability**: Offloading metadata storage to an external system reduces OpenSearch cluster memory and CPU usage.  
-- **Multi-tenancy support**: Tenant-based storage separation enables cloud providers to offer more flexible plugin solutions, logically separating resources using tenant IDs. 
+- **擴充性**：將中繼資料儲存卸載至外部系統，可減少 OpenSearch 叢集的記憶體與 CPU 使用量。  
+- **多租用戶支援**：以租用戶為基礎的儲存空間分隔，讓雲端供應商能提供更有彈性的外掛程式解決方案，並使用租用戶 ID 在邏輯上分隔資源。 
 
-### Supported storage backends
+### 支援的儲存後端
 
-Remote metadata storage can be configured to use the following external backends:
+遠端中繼資料儲存可設定為使用下列外部後端：
 
-- Remote OpenSearch clusters
+- 遠端 OpenSearch 叢集
 - Amazon DynamoDB
 
-## Enabling multi-tenancy
+## 啟用多租用戶
  
-To enable multi-tenancy in a plugin, update the following static settings. After the update, restart the cluster in order for the changes to take effect. For more information about ways to update the settings, see [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/).
+若要在外掛程式中啟用多租用戶，請更新下列靜態設定。更新後，請重新啟動叢集，變更才會生效。如需更新設定的各種方式，請參閱 [設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)。
 
-###  Multi-tenancy setting
+###  多租用戶設定
 
-The following table lists the multi-tenancy setting.
+下表列出多租用戶設定。
 
-| Setting | Data type | Description |
+| 設定 | 資料類型 | 說明 |
 |:---|:---|:---|
-| `multi_tenancy_enabled` | Boolean | Enables multi-tenancy for the plugin. |
+| `multi_tenancy_enabled` | 布林值 | 為此外掛程式啟用多租用戶。 |
 
-###  Remote metadata storage settings
+###  遠端中繼資料儲存設定
 
-The following table lists settings related to remote metadata storage configuration.
+下表列出與遠端中繼資料儲存組態相關的設定。
 
-| Setting | Data type | Description |
+| 設定 | 資料類型 | 說明 |
 |:---|:---|:---|
-| `remote_metadata_type` | String | The remote metadata storage type. Valid values are: <br> - `RemoteOpenSearch`: A remote OpenSearch cluster compatible with OpenSearch Java Client. <br> - `AWSDynamoDB` : Amazon DynamoDB with zero-ETL replication to OpenSearch. <br> - `AWSOpenSearchService`: Amazon OpenSearch Service using AWS SDK v2. |
-| `remote_metadata_endpoint` | String | The remote metadata endpoint URL. |
-| `remote_metadata_region` | String | The AWS region in which metadata is stored. |
-| `remote_metadata_service_name` | String | The remote metadata service name. |
+| `remote_metadata_type` | 字串 | 遠端中繼資料儲存類型。有效值為：<br> - `RemoteOpenSearch`：與 OpenSearch Java Client 相容的遠端 OpenSearch 叢集。<br> - `AWSDynamoDB`：具備零 ETL 複寫至 OpenSearch 的 Amazon DynamoDB。<br> - `AWSOpenSearchService`：使用 AWS SDK v2 的 Amazon OpenSearch Service。 |
+| `remote_metadata_endpoint` | 字串 | 遠端中繼資料端點 URL。 |
+| `remote_metadata_region` | 字串 | 儲存中繼資料的 AWS 區域。 |
+| `remote_metadata_service_name` | 字串 | 遠端中繼資料服務名稱。 |
 
-## Example
+## 範例
 
-The following configuration enables multi-tenancy using a remote OpenSearch cluster:
+下列組態使用遠端 OpenSearch 叢集啟用多租用戶：
 
 ```yaml
 plugins.<plugin_name>.multi_tenancy_enabled: true
@@ -71,21 +72,21 @@ plugins.<plugin_name>.remote_metadata_service_name: "remote-store-service"
 ```
 {% include copy.html %}
 
-## Supported plugins
+## 支援的外掛程式
 
-OpenSearch supports multi-tenancy for the following plugins.
+OpenSearch 支援下列外掛程式的多租用戶。
 
-### ML Commons plugin
+### ML Commons 外掛程式
 
-The ML Commons plugin supports multi-tenancy for the following components:
+ML Commons 外掛程式支援下列元件的多租用戶：
 
-- [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)
-- [Model groups]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/#model-groups)
-- [Models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/) (externally hosted only)
-- [Agents]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)
-- [Tasks]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/index/)
+- [連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)
+- [模型群組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/#model-groups)
+- [模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/)（僅限外部託管）
+- [代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)
+- [工作]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/index/)
 
-The following example configures multi-tenancy for the ML Commons plugin:
+下列範例為 ML Commons 外掛程式設定多租用戶：
 
 ```yaml
 plugins.ml_commons.multi_tenancy_enabled: true
@@ -96,9 +97,9 @@ plugins.ml_commons.remote_metadata_service_name: <SERVICE_NAME>
 ```
 {% include copy.html %}
 
-### Flow Framework plugin
+### Flow Framework 外掛程式
 
-The following example configures multi-tenancy for the Flow Framework plugin:
+下列範例為 Flow Framework 外掛程式設定多租用戶：
 
 ```yaml
 plugins.flow_framework.multi_tenancy_enabled: true

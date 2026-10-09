@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search Alerts tool
+title: "Search Alerts 工具"
 has_children: false
 has_toc: false
 nav_order: 67
@@ -9,16 +10,16 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# Search Alerts tool
-**Introduced 2.13**
+# Search Alerts 工具
+**於 2.13 版推出**
 {: .label .label-purple }
 <!-- vale on -->
 
-The `SearchAlertsTool` retrieves information about generated alerts. For more information about alerts, see [Alerting]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/index/).
+`SearchAlertsTool` 會擷取所產生警示的相關資訊。如需警示的詳細資訊，請參閱 [Alerting]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/index/)。
 
-## Step 1: Register a flow agent that will run the SearchAlertsTool
+## 步驟 1：註冊將執行 SearchAlertsTool 的流程代理程式
 
-A flow agent runs a sequence of tools in order and returns the last tool's output. To create a flow agent, send the following register agent request:
+流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -40,9 +41,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-For parameter descriptions, see [Register parameters](#register-parameters).
+如需參數說明，請參閱[註冊參數](#register-parameters)。
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -50,9 +51,9 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 2: Run the agent
+## 步驟 2：執行代理程式
 
-Run the agent by sending the following request:
+傳送下列請求以執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/EuJYYo0B9RaBCvhuy1q8/_execute
@@ -64,7 +65,7 @@ POST /_plugins/_ml/agents/EuJYYo0B9RaBCvhuy1q8/_execute
 ```
 {% include copy-curl.html %} 
 
-OpenSearch responds with a list of generated alerts and the total number of alerts:
+OpenSearch 會回應所產生警示的清單以及警示總數：
 
 ```json
 {
@@ -81,7 +82,7 @@ OpenSearch responds with a list of generated alerts and the total number of aler
 }
 ```
 
-If no alerts are found, OpenSearch responds with an empty array in the results:
+若找不到任何警示，OpenSearch 會在結果中回應空陣列：
 
 ```json
 {
@@ -98,33 +99,33 @@ If no alerts are found, OpenSearch responds with an empty array in the results:
 }
 ```
 
-## Register parameters
+## 註冊參數
 
-The following table lists all tool parameters that are available when registering an agent. All parameters are optional.
+下表列出註冊代理程式時可用的所有工具參數。所有參數皆為選用。
 
 Parameter	| Type | Description	
 :--- | :--- | :---
-`alertIds`	| Array	| The ID of the alert to search for.
-`alertIndex` | String | The name of the alert index to search (default is `null`).
-`monitorId`	| String	| The ID of the monitor by which to filter the alerts.
-`monitorIds` | Array | A list of monitor IDs by which to filter the alerts.
-`workflowIds`	| Array | A list of workflow IDs by which to filter the alerts.
-`alertState` |	String	| The alert state by which to filter the alerts. Valid values are `ALL`, `ACTIVE`, `ERROR`, `COMPLETED`, and `ACKNOWLEDGED`. Default is `ALL`.
-`severityLevel` | String| The severity level by which to filter the alerts. Valid values are `ALL`, `1`, `2`, and `3`. Default is `ALL`.
-`searchString` | String	| The search string to use for searching for a specific alert.
-`sortOrder`| String | The sort order of the results. Valid values are `asc` (ascending) and `desc` (descending). Default is `asc`. 
-`sortString`| String |	Specifies the monitor field by which to sort the results. Default is `monitor_name.keyword`.
-`size`	| Integer |	The number of results to return. Default is `20`.
-`startIndex`| Integer |	The paginated index of the alert to start from. Default is `0`.
+`alertIds`	| Array	| 要搜尋的警示 ID。
+`alertIndex` | String | 要搜尋的警示索引名稱（預設為 `null`）。
+`monitorId`	| String	| 用來篩選警示的監視器 ID。
+`monitorIds` | Array | 用來篩選警示的監視器 ID 清單。
+`workflowIds`	| Array | 用來篩選警示的工作流程 ID 清單。
+`alertState` |	String	| 用來篩選警示的警示狀態。有效值為 `ALL`、`ACTIVE`、`ERROR`、`COMPLETED` 及 `ACKNOWLEDGED`。預設為 `ALL`。
+`severityLevel` | String| 用來篩選警示的嚴重性層級。有效值為 `ALL`、`1`、`2` 及 `3`。預設為 `ALL`。
+`searchString` | String	| 用來搜尋特定警示的搜尋字串。
+`sortOrder`| String | 結果的排序順序。有效值為 `asc`（遞增）及 `desc`（遞減）。預設為 `asc`。 
+`sortString`| String |	指定用來排序結果的監視器欄位。預設為 `monitor_name.keyword`。
+`size`	| Integer |	要傳回的結果數。預設為 `20`。
+`startIndex`| Integer |	要開始的警示分頁索引。預設為 `0`。
 
-## Execute parameters
+## 執行參數
 
-The following table lists all tool parameters that are available when running the agent.
+下表列出執行代理程式時可用的所有工具參數。
 
 Parameter	| Type | Required/Optional | Description	
 :--- | :--- | :--- | :---
-`question` | String | Required | The natural language question to send to the LLM. 
+`question` | String | Required | 要傳送給 LLM 的自然語言問題。 
 
-## Testing the tool
+## 測試工具
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+您可以將此工具做為代理程式工作流程的一部分執行，或使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適合用來測試個別工具或執行獨立作業。

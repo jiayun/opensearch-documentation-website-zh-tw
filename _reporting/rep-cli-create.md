@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create and request visualization reports
+title: "建立與請求視覺化報告"
 nav_order: 15
 parent: Reporting using the CLI
 grand_parent: Reporting
@@ -8,44 +9,44 @@ redirect_from:
   - /dashboards/reporting-cli/rep-cli-create/
 ---
 
-# Create and request visualization reports
+# 建立與請求視覺化報告
 
-First, you need to get the URL for the visualization that you want to download as an image file or PDF.
+首先，您需要取得要下載為圖片檔或 PDF 的視覺化 URL。
 
-To generate a visualization report, you need to specify the Dashboards URL.
+若要產生視覺化報告，您需要指定 Dashboards URL。
 
-Open the visualization for which you want to generate a report, and select **Share >  Permalinks > Generate link as Snapshot > Short URL > Copy link**, as shown in the following image.
+開啟您要產生報告的視覺化，然後依序選取 **Share >  Permalinks > Generate link as Snapshot > Short URL > Copy link**，如下圖所示。
 
-![Copy link]({{site.url}}{{site.baseurl}}/images/dashboards/dash-url.png)
+![複製連結]({{site.url}}{{site.baseurl}}/images/dashboards/dash-url.png)
 
-You will need to add the URL with the `-u` argument when you request the report in the CLI.
+在 CLI 中請求報告時，您需要使用 `-u` 引數指定該 URL。
 
-#### Example: Requesting a PNG file
+#### 範例：請求 PNG 檔案
 
-The following command requests a report in PNG format with basic authentication and sends the report to an email address using Amazon SES:
+下列命令會以基本驗證請求 PNG 格式的報告，並使用 Amazon SES 將報告傳送至電子郵件地址：
 
 ```
 opensearch-reporting-cli -u https://localhost:5601/app/dashboards#/view/7adfa750-4c81-11e8-b3d7-01146121b73d -a basic -c admin:Test@1234 -e ses -s <email address>  -r <email address> -f png
 ```
 
-#### Example: Requesting a PDF file
+#### 範例：請求 PDF 檔案
 
-The following command requests a PDF file and specifies the recipient's email address:
+下列命令會請求 PDF 檔案並指定收件者的電子郵件地址：
 
 ```
 opensearch-reporting-cli -u https://localhost:5601/app/dashboards#/view/7adfa750-4c81-11e8-b3d7-01146121b73d -a basic -c admin:Test@1234 -e ses -s <email address> -r <email address> -f pdf
 ```
 
-Upon success, the file will be sent to the specified email address. The following image shows an example PDF report.
+成功後，檔案將傳送至指定的電子郵件地址。下圖顯示 PDF 報告範例。
 
-![PDF example]({{site.url}}{{site.baseurl}}/images/dashboards/cli-pdf-report.png)
+![PDF 範例]({{site.url}}{{site.baseurl}}/images/dashboards/cli-pdf-report.png)
 
-#### Example: Requesting a CSV file
+#### 範例：請求 CSV 檔案
 
-The following command generates a report that contains all table content in CSV format and sends the report to an email address using Amazon SES transport:
+下列命令會產生包含 CSV 格式所有表格內容的報告，並使用 Amazon SES 傳輸方式將報告傳送至電子郵件地址：
 
 ```
 opensearch-reporting-cli -u https://localhost:5601/app/dashboards#/view/7adfa750-4c81-11e8-b3d7-01146121b73d -f csv -a basic -c admin:Test@1234 -e ses -s <email address> -r <email address>
 ```
 
-Upon success, the email will be sent to the specified email address with the CSV file attached.
+成功後，電子郵件將傳送至指定的電子郵件地址，並附上 CSV 檔案。

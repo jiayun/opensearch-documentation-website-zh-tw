@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: WAF
 parent: Supported log types
 nav_order: 95
 ---
 
-# WAF log type
+# WAF 記錄檔類型
 
-The `waf` log type monitors web application firewall (WAF) logs. The role of a WAF is to monitor and filter HTTP traffic flowing between a web application and the internet. A WAF prevents common security attacks, such as cross-site scripting (XSS) and SQL injection (SQLi).
+`waf` 記錄檔類型會監視網頁應用程式防火牆 (WAF) 記錄檔。WAF 的作用是監視並篩選網頁應用程式與網際網路之間流動的 HTTP 流量。WAF 可防禦常見的安全性攻擊，例如跨網站指令碼 (XSS) 和 SQL 資料隱碼 (SQLi)。
 
-The following code snippet contains all the `raw_field` and `ecs` mappings for this log type:
+下列程式碼片段包含此記錄檔類型的所有 `raw_field` 和 `ecs` 對應：
 
 ```json
   "mappings": [

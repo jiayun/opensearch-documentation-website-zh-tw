@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "Amazon OpenSearch Service → Amazon OpenSearch Serverless NextGen"
 nav_order: 2
@@ -6,86 +7,86 @@ parent: Playbooks
 permalink: /migration-assistant/playbook-amazon-opensearch-service-to-serverless/
 ---
 
-# Playbook: Amazon OpenSearch Service to Amazon OpenSearch Serverless NextGen (vector search)
+# 操作手冊：從 Amazon OpenSearch Service 遷移至 Amazon OpenSearch Serverless NextGen（向量搜尋）
 
-This playbook describes migrating an Amazon OpenSearch Service domain running Elasticsearch 7.10 to an Amazon OpenSearch Serverless NextGen vector search collection using Migration Assistant. 
+本操作手冊說明如何使用 Migration Assistant，將執行 Elasticsearch 7.10 的 Amazon OpenSearch Service 網域遷移至 Amazon OpenSearch Serverless NextGen 向量搜尋集合。
 
-Amazon OpenSearch Serverless NextGen with the `VECTORSEARCH` collection type provides the following benefits:
+採用 `VECTORSEARCH` 集合類型的 Amazon OpenSearch Serverless NextGen 提供下列優點：
 
-- **No cluster management** -- No nodes to size, patch, or scale. AWS manages capacity automatically.
-- **Built-in vector engine** -- Designed for k-NN search, semantic search, and retrieval-augmented generation (RAG) workloads.
-- **Pay-per-use pricing** -- OpenSearch Compute Unit (OCU)-based billing means you pay for what you use rather than for idle capacity.
-- **Automatic scaling** -- Scales indexing and search capacity independently based on demand.
-- **Built-in encryption and access control** -- Encryption at rest, in transit, and fine-grained data access policies without managing security plugins.
+- **無需叢集管理** -- 無需調整、修補或擴充任何節點。AWS 會自動管理容量。
+- **內建向量引擎** -- 專為 k-NN 搜尋、語意搜尋以及檢索增強生成（RAG）工作負載而設計。
+- **按用量計費** -- 以 OpenSearch Compute Unit（OCU）為基礎的計費方式，您只需為實際用量付費，而非閒置容量。
+- **自動擴充** -- 依需求獨立擴充索引與搜尋容量。
+- **內建加密與存取控制** -- 靜態與傳輸中加密，以及細緻的資料存取政策，無需管理安全性外掛程式。
 
-If you are running vector or k-NN workloads on an Amazon OpenSearch Service domain, Serverless NextGen eliminates the need to manually select and scale instance types for vector workloads, which are memory- and compute-intensive.
+如果您在 Amazon OpenSearch Service 網域上執行向量或 k-NN 工作負載，Serverless NextGen 可免除為這類耗用大量記憶體與運算資源的向量工作負載手動選擇及擴充執行個體類型的需求。
 {: .note }
 
-## OpenSearch Service compared to OpenSearch Serverless NextGen
+## OpenSearch Service 與 OpenSearch Serverless NextGen 的比較
 
-The following table lists key differences between Amazon OpenSearch Service and Amazon OpenSearch Serverless NextGen.
+下表列出 Amazon OpenSearch Service 與 Amazon OpenSearch Serverless NextGen 之間的主要差異。
 
-| Feature | Amazon OpenSearch Service | Amazon OpenSearch Serverless NextGen |
+| 功能 | Amazon OpenSearch Service | Amazon OpenSearch Serverless NextGen |
 |:---------|:---------------------------|:----------------------|
-| Cluster settings | Full `_cluster/settings` API | Not supported |
-| Snapshot/restore | Supported | Not supported (use Migration Assistant backfill) |
-| ISM/ILM policies | Supported | Not supported |
-| Ingest pipelines | Supported | Not supported |
-| Custom plugins | Supported | Not supported |
-| Security model | Fine-grained access control (FGAC) | Data access policies (IAM-based) |
-| Authentication | Basic authentication, Security Assertion Markup Language (SAML), IAM | IAM AWS Signature Version 4 only |
-| Index templates | Supported | Supported (with limitations) |
-| Aliases | Supported | Supported |
-| Max index size | No hard limit | 1 TB per index |
+| 叢集設定 | 完整的 `_cluster/settings` API | 不支援 |
+| 快照/還原 | 支援 | 不支援（請使用 Migration Assistant 回填） |
+| ISM/ILM 政策 | 支援 | 不支援 |
+| 資料匯入管線 | 支援 | 不支援 |
+| 自訂外掛程式 | 支援 | 不支援 |
+| 安全性模型 | 細緻存取控制（FGAC） | 資料存取政策（以 IAM 為基礎） |
+| 驗證 | 基本驗證、Security Assertion Markup Language（SAML）、IAM | 僅支援 IAM AWS Signature Version 4 |
+| 索引範本 | 支援 | 支援（有限制） |
+| 別名 | 支援 | 支援 |
+| 索引大小上限 | 無硬性限制 | 每個索引 1 TB |
 
-Migration Assistant migrates data only (metadata, documents, and live traffic). You must manually recreate ISM policies, ingest pipelines, and dashboards on the target after migration.
+Migration Assistant 僅遷移資料（中繼資料、文件與即時流量）。遷移後，您必須在目標端手動重建 ISM 政策、資料匯入管線與儀表板。
 {: .warning }
 
-## Example placeholders
+## 範例預留位置
 
-The following table lists the example values used in this playbook.
+下表列出本操作手冊使用的範例值。
 
-| Setting | Value |
+| 設定 | 值 |
 |---------|-------|
-| AWS account | `111122223333` |
-| Region | `us-east-2` |
-| AWS Identity and Access Management (IAM) role | Admin |
-| Source | Amazon OpenSearch Service domain (`my-source-domain`, Elasticsearch 7.10) |
-| Target | Amazon OpenSearch Serverless NextGen collection (`my-target-collection`, VECTORSEARCH) |
-| Deployment | "Launch into existing virtual private cloud (VPC)" CloudFormation template |
-| Stage | `dev` |
+| AWS 帳戶 | `111122223333` |
+| 區域 | `us-east-2` |
+| AWS Identity and Access Management（IAM）角色 | Admin |
+| 來源 | Amazon OpenSearch Service 網域（`my-source-domain`，Elasticsearch 7.10） |
+| 目標 | Amazon OpenSearch Serverless NextGen 集合（`my-target-collection`，VECTORSEARCH） |
+| 部署 | 「Launch into existing virtual private cloud（VPC）」CloudFormation 範本 |
+| 階段 | `dev` |
 
-The account IDs, domain names, and endpoints in this playbook are examples. Replace them with values from your environment.
+本操作手冊中的帳戶 ID、網域名稱與端點皆為範例。請以您環境中的實際值取代。
 {: .note }
 
-## Estimated timing
+## 預估時間
 
-The following table provides approximate durations for each phase of the migration.
+下表提供遷移各階段的預估時間。
 
-| Phase | Duration |
+| 階段 | 時間 |
 |-------|----------|
-| Prerequisites (Amazon OpenSearch Serverless NextGen collection, collection group, policies, IAM, VPC peering) | 15--20 min |
-| Step 3: Deploy Migration Assistant (CloudFormation + Helm) | 15--25 min |
-| Steps 4--9: Configure and test connectivity | 5--10 min |
-| Step 10: Pilot migration (small index) | 15--20 min |
-| Step 11: Full migration with change data capture (CDC) | 20--30 min + replay catch-up time |
-| Total end-to-end | ~90 min for a small cluster |
+| 先決條件（Amazon OpenSearch Serverless NextGen 集合、集合群組、政策、IAM、VPC 對等連線） | 15--20 分鐘 |
+| 步驟 3：部署 Migration Assistant（CloudFormation + Helm） | 15--25 分鐘 |
+| 步驟 4--9：設定並測試連線 | 5--10 分鐘 |
+| 步驟 10：試驗性遷移（小型索引） | 15--20 分鐘 |
+| 步驟 11：透過變更資料擷取（CDC）進行完整遷移 | 20--30 分鐘 + 追趕重播時間 |
+| 端對端總計 | 小型叢集約 90 分鐘 |
 
 
-## Before you start
+## 開始之前
 
-In addition to the [general playbook prerequisites]({{site.url}}{{site.baseurl}}/migration-assistant/playbooks/), verify the following before starting the migration. 
+除了[操作手冊的一般先決條件]({{site.url}}{{site.baseurl}}/migration-assistant/playbooks/)之外，開始遷移前請先確認下列事項。
 
-### Source cluster requirements
+### 來源叢集需求
 
-Your Amazon OpenSearch Service domain must meet all of the following requirements:
+您的 Amazon OpenSearch Service 網域必須符合下列所有需求：
 
-- The domain is running Elasticsearch 7.10 (or any [supported source version]({{site.url}}{{site.baseurl}}/migration-assistant/is-migration-assistant-right-for-you/)).
-- The domain is in a VPC and is reachable from the VPC where you deploy Migration Assistant.
-- You know the domain's VPC endpoint (for example, `https://vpc-my-source-domain-abc123example.us-east-2.es.amazonaws.com`).
-- If fine-grained access control (FGAC) is enabled, map the Migration Assistant IAM role as the `MasterUserARN`.
+- 網域執行 Elasticsearch 7.10（或任何[支援的來源版本]({{site.url}}{{site.baseurl}}/migration-assistant/is-migration-assistant-right-for-you/)）。
+- 網域位於 VPC 中，且可從您部署 Migration Assistant 的 VPC 存取。
+- 您知道網域的 VPC 端點（例如 `https://vpc-my-source-domain-abc123example.us-east-2.es.amazonaws.com`）。
+- 若已啟用細緻存取控制（FGAC），請將 Migration Assistant 的 IAM 角色對應為 `MasterUserARN`。
 
-Confirm the source domain details by running the following command:
+執行下列命令以確認來源網域詳細資訊：
 
 ```bash
 aws opensearch describe-domain \
@@ -96,7 +97,7 @@ aws opensearch describe-domain \
 ```
 {% include copy.html %}
 
-Expected output:
+預期輸出：
 
 ```
 -----------------------------------------------------------
@@ -109,36 +110,36 @@ Expected output:
 +-----------------+---------------------------------------+
 ```
 
-### Target collection requirements
+### 目標集合需求
 
-The target Amazon OpenSearch Serverless NextGen collection must be configured as follows:
+目標 Amazon OpenSearch Serverless NextGen 集合必須依下列方式設定：
 
-- **Type** -- `VECTORSEARCH` for this playbook. For other workloads, use `SEARCH`. `TIMESERIES` is not supported on NextGen at launch (available with Classic).
-- **Encryption policy** -- At least one encryption policy covering the collection.
-- **Network policy** -- Public or VPC access depending on your requirements.
-- **Data access policy** -- Grants the Migration Assistant IAM role full index read and write access.
+- **類型** -- 本操作手冊使用 `VECTORSEARCH`。若是其他工作負載，請使用 `SEARCH`。上市時 NextGen 不支援 `TIMESERIES`（Classic 版本可用）。
+- **加密政策** -- 至少一個涵蓋該集合的加密政策。
+- **網路政策** -- 依您的需求選擇公用或 VPC 存取。
+- **資料存取政策** -- 授權 Migration Assistant 的 IAM 角色完整的索引讀寫權限。
 
-If you already have a collection, skip to [Step 5: Map the Migration Assistant IAM role](#step-5-map-the-migration-assistant-iam-role). Otherwise, [create a collection](#prerequisite-create-a-collection). 
+如果您已有集合，請直接前往[步驟 5：對應 Migration Assistant 的 IAM 角色](#step-5-map-the-migration-assistant-iam-role)。否則，請[建立集合](#prerequisite-create-a-collection)。
 
-### Infrastructure requirements
+### 基礎架構需求
 
-The following infrastructure is required:
+需要下列基礎架構：
 
-- You have the VPC ID and at least two subnet IDs (each in a different Availability Zone) for the VPC where the source domain resides.
-- The subnets have NAT gateway access (or you will use the `--create-vpc-endpoints` flag).
-- You have AWS CLI 2.x and `kubectl` installed, or you are using AWS CloudShell.
-- Your AWS credentials have Admin permissions in account `111122223333`.
+- 您擁有來源網域所在 VPC 的 VPC ID，以及至少兩個子網路 ID（各自位於不同的可用區）。
+- 子網路具有 NAT 閘道存取權（否則您將使用 `--create-vpc-endpoints` 旗標）。
+- 您已安裝 AWS CLI 2.x 與 `kubectl`，或您正在使用 AWS CloudShell。
+- 您的 AWS 憑證在帳戶 `111122223333` 中具有 Admin 權限。
 
-If any of the preceding items is not ready, complete the preparation before continuing.
+若上述任一項尚未就緒，請先完成準備工作再繼續。
 {: .warning }
 
-## Prerequisite: Create a collection
+## 先決條件：建立集合
 
-Create a collection by completing the following steps.
+完成下列步驟以建立集合。
 
-### Step 1: Create the encryption policy
+### 步驟 1：建立加密政策
 
-To create the encryption policy, run the following command:
+若要建立加密政策，請執行下列命令：
 
 ```bash
 aws opensearchserverless create-security-policy \
@@ -157,9 +158,9 @@ aws opensearchserverless create-security-policy \
 ```
 {% include copy.html %}
 
-### Step 2: Create the network policy
+### 步驟 2：建立網路政策
 
-This playbook uses public access. For production environments, consider VPC access. To create the network policy, run the following command:
+本操作手冊使用公開存取。在正式環境中，請考慮使用 VPC 存取。若要建立網路政策，請執行下列命令：
 
 ```bash
 aws opensearchserverless create-security-policy \
@@ -182,9 +183,9 @@ aws opensearchserverless create-security-policy \
 ```
 {% include copy.html %}
 
-### Step 3: Create the data access policy
+### 步驟 3：建立資料存取政策
 
-This policy grants the account root, Admin role, and the Migration Assistant roles access to the collection. To create the data access policy, run the following command:
+此政策會授予帳戶根使用者、Admin 角色及 Migration Assistant 角色存取集合的權限。若要建立資料存取政策，請執行下列命令：
 
 ```bash
 aws opensearchserverless create-access-policy \
@@ -224,9 +225,9 @@ aws opensearchserverless create-access-policy \
 ```
 {% include copy.html %}
 
-### Step 4: Create the collection group
+### 步驟 4：建立集合群組
 
-NextGen collections must belong to a collection group. To create one, run the following command:
+NextGen 集合必須隸屬於某個集合群組。若要建立一個，請執行下列命令：
 
 ```bash
 aws opensearchserverless create-collection-group \
@@ -237,9 +238,9 @@ aws opensearchserverless create-collection-group \
 ```
 {% include copy.html %}
 
-### Step 5: Create the collection
+### 步驟 5：建立集合
 
-To create the collection, run the following command:
+若要建立集合，請執行下列命令：
 
 ```bash
 aws opensearchserverless create-collection \
@@ -250,7 +251,7 @@ aws opensearchserverless create-collection \
 ```
 {% include copy.html %}
 
-Wait for the collection to become ACTIVE (about 2--3 minutes):
+等待集合變成 ACTIVE（約 2--3 分鐘）：
 
 ```bash
 watch -n 10 "aws opensearchserverless batch-get-collection \
@@ -261,22 +262,22 @@ watch -n 10 "aws opensearchserverless batch-get-collection \
 ```
 {% include copy.html %}
 
-When `Status` shows `ACTIVE`, record the endpoint. The following example shows the expected output for this playbook:
+當 `Status` 顯示 `ACTIVE` 時，請記錄端點。下列範例顯示本操作手冊的預期輸出：
 
 ```
 https://3nbrhts7rv9jxatilz9e.aoss.us-east-2.on.aws
 ```
 
-### Step 6: Verify that you can reach the collection
+### 步驟 6：驗證您能否連線至集合
 
-If you do not have `awscurl` installed, install it by running the following command: 
+如果您尚未安裝 `awscurl`，請執行下列命令來安裝： 
 
 ```bash
 pip install awscurl
 ```
 {% include copy.html %} 
 
-To verify that you can reach the collection, run the following command:
+若要驗證您能否連線至集合，請執行下列命令：
 
 ```bash
 awscurl --service aoss --region us-east-2 \
@@ -284,48 +285,48 @@ awscurl --service aoss --region us-east-2 \
 ```
 {% include copy.html %}
 
-You should see a JSON response containing the OpenSearch version.
+您應該會看到包含 OpenSearch 版本的 JSON 回應。
 
-## Step 1: Choose the migration style
+## 步驟 1：選擇遷移方式
 
-Select one of the following migration approaches before configuring the workflow.
+在設定工作流程之前，請先選取下列其中一種遷移方式。
 
-### Option A: Planned downtime
+### 選項 A：計畫性停機
 
-For a planned downtime migration, follow these steps:
+若採用計畫性停機遷移，請依照下列步驟進行：
 
-1. Stop writes to the source domain.
-2. Take a snapshot.
-3. Migrate metadata.
-4. Backfill documents.
-5. Validate the target.
-6. Point clients to the Serverless NextGen collection endpoint.
+1. 停止對來源網域的寫入。
+2. 建立快照。
+3. 遷移中繼資料。
+4. 回填文件。
+5. 驗證目標。
+6. 將用戶端指向 Serverless NextGen 集合端點。
 
-If you are unsure which approach to select, use planned downtime because it involves fewer components and lower risk.
+如果您不確定該選取哪種方式，請使用計畫性停機，因為它涉及的元件較少且風險較低。
 {: .note }
 
-### Option B: Zero downtime
+### 選項 B：零停機
 
-For a zero-downtime migration, follow these steps:
+若採用零停機遷移，請依照下列步驟進行：
 
-1. Start capture first.
-2. Route clients to the capture proxy.
-3. Take a snapshot.
-4. Migrate metadata.
-5. Backfill documents.
-6. Replay captured traffic until the target catches up.
-7. Validate the target.
-8. Switch clients to the Serverless NextGen collection endpoint.
+1. 先開始擷取。
+2. 將用戶端路由至擷取代理。
+3. 建立快照。
+4. 遷移中繼資料。
+5. 回填文件。
+6. 重播擷取的流量，直到目標趕上進度。
+7. 驗證目標。
+8. 將用戶端切換至 Serverless NextGen 集合端點。
 
-If you choose this option, your clients must send **explicit document IDs** for index and update operations. If your application depends on autogenerated IDs, do not use Capture and Replay.
+如果您選擇此選項，您的用戶端必須為索引與更新作業傳送**明確的文件 ID**。如果您的應用程式依賴自動產生的 ID，請勿使用 Capture and Replay。
 {: .warning }
 
 
-## Step 2: Gather your VPC information
+## 步驟 2：收集您的 VPC 資訊
 
-Gather the VPC and subnet information that the Migration Assistant deployment reuses.
+收集 Migration Assistant 部署會重複使用的 VPC 與子網路資訊。
 
-Find the source domain's VPC:
+尋找來源網域的 VPC：
 
 ```bash
 aws opensearch describe-domain \
@@ -336,9 +337,9 @@ aws opensearch describe-domain \
 ```
 {% include copy.html %}
 
-Record the VPC ID (`vpc-009ea0f461cc426c6`) and subnet IDs.
+記錄 VPC ID（`vpc-009ea0f461cc426c6`）與子網路 ID。
 
-Find subnet details:
+尋找子網路詳細資料：
 
 ```bash
 aws ec2 describe-subnets \
@@ -349,17 +350,17 @@ aws ec2 describe-subnets \
 ```
 {% include copy.html %}
 
-Select at least two private subnets, each in a different Availability Zone. Record them as a comma-separated string.
+請至少選取兩個私有子網路，且每個子網路位於不同的可用區域。將它們記錄為以逗號分隔的字串。
 
-You can deploy Migration Assistant into the **same VPC** as the source domain or into a **different VPC** using VPC peering. Deploying Migration Assistant into the same VPC requires less configuration. If you deploy into a different VPC, see the [troubleshooting section](#source-and-target-are-in-different-vpcs).
+您可以將 Migration Assistant 部署到與來源網域**相同的 VPC**，或使用 VPC 對等互連部署到**不同的 VPC**。將 Migration Assistant 部署到相同的 VPC 所需的組態較少。如果您部署到不同的 VPC，請參閱[疑難排解章節](#source-and-target-are-in-different-vpcs)。
 {: .note }
 
 
-## Step 3: Deploy Migration Assistant on EKS
+## 步驟 3：在 EKS 上部署 Migration Assistant
 
-This step deploys Migration Assistant on Amazon Elastic Kubernetes Service (EKS) using the bootstrap script.
+此步驟會使用啟動指令碼將 Migration Assistant 部署到 Amazon Elastic Kubernetes Service (EKS)。
 
-Download the bootstrap script:
+下載啟動指令碼：
 
 ```bash
 curl -sL -o aws-bootstrap.sh \
@@ -368,7 +369,7 @@ curl -sL -o aws-bootstrap.sh \
 ```
 {% include copy.html %}
 
-Deploy into the **same VPC** as the source domain:
+部署到與來源網域**相同的 VPC**：
 
 ```bash
 ./aws-bootstrap.sh \
@@ -381,12 +382,12 @@ Deploy into the **same VPC** as the source domain:
 ```
 {% include copy.html %}
 
-This deploys a CloudFormation stack that creates an Amazon EKS cluster, Amazon Elastic Container Registry (Amazon ECR) repository, IAM roles, and then installs the Migration Assistant Helm chart. The deployment takes approximately 15--25 minutes.
+這會部署 CloudFormation 堆疊，建立 Amazon EKS 叢集、Amazon Elastic Container Registry (Amazon ECR) 儲存庫、IAM 角色，然後安裝 Migration Assistant Helm chart。部署約需 15--25 分鐘。
 
 <details>
-<summary><strong>For isolated subnets (no NAT gateway/no internet)</strong></summary>
+<summary><strong>適用於隔離子網路（無 NAT 閘道／無網際網路）</strong></summary>
 
-Add the `--create-vpc-endpoints` flag:
+新增 `--create-vpc-endpoints` 旗標：
 
 ```bash
 ./aws-bootstrap.sh \
@@ -402,7 +403,7 @@ Add the `--create-vpc-endpoints` flag:
 
 </details>
 
-Verify the deployment:
+驗證部署：
 
 ```bash
 aws eks update-kubeconfig --region us-east-2 --name migration-eks-cluster-dev-us-east-2
@@ -410,12 +411,12 @@ kubectl get pods -n ma
 ```
 {% include copy.html %}
 
-All pods should show `Running` with `1/1` ready.
+所有 Pod 都應顯示 `Running`，且 `1/1` 就緒。
 
 
-## Step 4: Confirm CloudFormation output
+## 步驟 4：確認 CloudFormation 輸出
 
-To confirm CloudFormation output, run the following command:
+若要確認 CloudFormation 輸出，請執行下列命令：
 
 ```bash
 aws cloudformation describe-stacks \
@@ -426,24 +427,24 @@ aws cloudformation describe-stacks \
 ```
 {% include copy.html %}
 
-The following table lists the key output values.
+下表列出主要的輸出值。
 
-| Variable | Expected value |
+| 變數 | 預期值 |
 |----------|---------------|
 | `MIGRATIONS_EKS_CLUSTER_NAME` | `migration-eks-cluster-dev-us-east-2` |
 | `SNAPSHOT_ROLE` | `arn:aws:iam::111122223333:role/migration-eks-cluster-dev-us-east-2-snapshot-role` |
-| `EKS_CLUSTER_SECURITY_GROUP` | The security group ID for the new EKS cluster |
+| `EKS_CLUSTER_SECURITY_GROUP` | 新 EKS 叢集的安全群組 ID |
 
-The default Amazon Simple Storage Service (Amazon S3) bucket is `s3://migrations-default-111122223333-dev-us-east-2`.
+預設的 Amazon Simple Storage Service (Amazon S3) 儲存貯體為 `s3://migrations-default-111122223333-dev-us-east-2`。
 
 
-## Step 5: Map the Migration Assistant IAM role
+## 步驟 5：對應 Migration Assistant IAM 角色
 
-After deployment, grant the Migration Assistant IAM role access to both the source and target by completing the following steps.
+部署後，請完成下列步驟，將來源與目標的存取權授予 Migration Assistant IAM 角色。
 
-### Step 1: Update the Amazon OpenSearch Serverless NextGen data access policy
+### 步驟 1：更新 Amazon OpenSearch Serverless NextGen 資料存取原則
 
-After deploying Migration Assistant, add the `migrations-role` and `snapshot-role` to the Amazon OpenSearch Serverless NextGen data access policy:
+部署 Migration Assistant 後，將 `migrations-role` 和 `snapshot-role` 新增至 Amazon OpenSearch Serverless NextGen 資料存取原則：
 
 ```bash
 # Get the current policy version
@@ -494,9 +495,9 @@ aws opensearchserverless update-access-policy \
 ```
 {% include copy.html %}
 
-### Step 2: Map the Migration Assistant role on the source domain
+### 步驟 2：在來源網域上對應 Migration Assistant 角色
 
-If the source domain has fine-grained access control (FGAC) enabled, the Migration Assistant role must be configured as the `MasterUserARN`:
+如果來源網域已啟用精細存取控制 (FGAC)，則必須將 Migration Assistant 角色設定為 `MasterUserARN`：
 
 ```bash
 aws opensearch update-domain-config \
@@ -511,7 +512,7 @@ aws opensearch update-domain-config \
 ```
 {% include copy.html %}
 
-Wait for the domain update to finish:
+等待網域更新完成：
 
 ```bash
 watch -n 10 "aws opensearch describe-domain \
@@ -521,15 +522,15 @@ watch -n 10 "aws opensearch describe-domain \
 ```
 {% include copy.html %}
 
-When `Processing` returns `False`, the domain is ready.
+當 `Processing` 傳回 `False` 時，表示網域已就緒。
 
-This replaces any existing `MasterUserARN`. If you need to preserve the existing configuration, map the Migration Assistant role to the `all_access` backend role through the OpenSearch Security API instead.
+這會取代任何現有的 `MasterUserARN`。如果您需要保留現有的組態，請改為透過 OpenSearch Security API 將 Migration Assistant 角色對應至 `all_access` 後端角色。
 {: .warning }
 
 
-## Step 6: Configure security group access
+## 步驟 6：設定安全群組存取
 
-Find the Migration Assistant EKS cluster security group:
+尋找 Migration Assistant EKS 叢集安全群組：
 
 ```bash
 MA_SG=$(aws eks describe-cluster \
@@ -541,7 +542,7 @@ echo "MA EKS Security Group: $MA_SG"
 ```
 {% include copy.html %}
 
-Add an inbound rule so Migration Assistant can reach the source domain on port 443:
+新增輸入規則，讓 Migration Assistant 可以透過連接埠 443 連線至來源網域：
 
 ```bash
 aws ec2 authorize-security-group-ingress \
@@ -553,31 +554,31 @@ aws ec2 authorize-security-group-ingress \
 ```
 {% include copy.html %}
 
-The target is an Amazon OpenSearch Serverless NextGen collection with public network access, so no security group rule is needed for the target. If you configured VPC access for the collection, add an inbound rule to the collection's VPC endpoint security group as well.
+目標是具備公開網路存取權的 Amazon OpenSearch Serverless NextGen 集合，因此目標不需要安全群組規則。如果您為該集合設定了 VPC 存取，請同時為該集合的 VPC 端點安全群組新增輸入規則。
 {: .note }
 
 
-## Step 7: Connect to the Migration Console
+## 步驟 7：連線至 Migration Console
 
-Connect to the Migration Console:
+連線至 Migration Console：
 
 ```bash
 kubectl exec -it migration-console-0 -n ma -- /bin/bash
 ```
 {% include copy.html %}
 
-Verify the installed version:
+確認已安裝的版本：
 
 ```bash
 console --version
 ```
 {% include copy.html %}
 
-Expected output: `Migration Assistant 3.1.1` (or later).
+預期輸出：`Migration Assistant 3.1.1` (或更新版本)。
 
-### Register the Amazon S3 snapshot repository on the source domain
+### 在來源網域上註冊 Amazon S3 快照儲存庫
 
-Amazon OpenSearch Service requires a `snapshot-role` to write to Amazon S3. Register the repository using the `snapshot-role` from the CloudFormation outputs:
+Amazon OpenSearch Service 需要 `snapshot-role` 才能寫入 Amazon S3。請使用 CloudFormation 輸出中的 `snapshot-role` 註冊儲存庫：
 
 ```bash
 console clusters curl source /_snapshot/migration-repo \
@@ -594,22 +595,22 @@ console clusters curl source /_snapshot/migration-repo \
 ```
 {% include copy.html %}
 
-Verify the repository:
+確認儲存庫：
 
 ```bash
 console clusters curl source /_snapshot/migration-repo/_verify?pretty
 ```
 {% include copy.html %}
 
-All nodes should appear in the output.
+所有節點都應出現在輸出中。
 
-Unlike self-managed Elasticsearch, Amazon OpenSearch Service uses an IAM `role_arn` for Amazon S3 access instead of keystore credentials. The `snapshot-role` must have a trust policy that allows the OpenSearch Service `Principal` (`es.amazonaws.com`) to assume it.
+與自行管理的 Elasticsearch 不同，Amazon OpenSearch Service 使用 IAM `role_arn` 來存取 Amazon S3，而非使用金鑰庫憑證。`snapshot-role` 必須具有信任原則，允許 OpenSearch Service `Principal` (`es.amazonaws.com`) 擔任該角色。
 {: .note }
 
 
-## Step 8: Build the workflow configuration
+## 步驟 8：建立工作流程組態
 
-To load the version-matched sample and open the editor, run the following commands:
+若要載入版本相符的範例並開啟編輯器，請執行下列命令：
 
 ```bash
 workflow configure sample --load
@@ -617,9 +618,9 @@ workflow configure edit
 ```
 {% include copy.html %}
 
-For an interactive reference of all available fields, their types, defaults, and descriptions, see the [Migration Assistant Schema Viewer](https://opensearch-project.github.io/opensearch-migrations/).
+如需所有可用欄位、其類型、預設值與說明的互動式參考，請參閱 [Migration Assistant Schema Viewer](https://opensearch-project.github.io/opensearch-migrations/)。
 
-Replace the workflow configuration file contents with the following configuration. Replace `<PILOT_INDEX_NAME>` with the name of one small, noncritical index (for example, `test-index`):
+將工作流程組態檔案的內容取代為下列組態。將 `<PILOT_INDEX_NAME>` 取代為一個小型且非關鍵索引的名稱 (例如 `test-index`)：
 
 ```json
 {
@@ -690,14 +691,14 @@ Replace the workflow configuration file contents with the following configuratio
 ```
 {% include copy.html %}
 
-The following are key differences from domain-to-domain migrations:
+以下是與網域對網域遷移的主要差異：
 
-- **Source** uses `sigv4` with `service: "es"`: Amazon OpenSearch Service uses IAM authentication rather than basic authentication.
-- **Target** uses `sigv4` with `service: "aoss"`: Amazon OpenSearch Serverless NextGen requires the `aoss` service name for AWS Signature Version 4 signing.
-- **`s3RoleArn`** is required: Amazon OpenSearch Service needs an IAM role to write snapshots to Amazon S3 (unlike self-managed Elasticsearch which uses keystore credentials).
-- **No `multiTypeBehavior`**: Elasticsearch 7.10 already uses single-type indexes, so no type mapping transformation is needed.
+- **來源**使用 `sigv4` 搭配 `service: "es"`：Amazon OpenSearch Service 使用 IAM 驗證，而非基本驗證。
+- **目標**使用 `sigv4` 搭配 `service: "aoss"`：Amazon OpenSearch Serverless NextGen 需要 `aoss` 服務名稱，才能進行 AWS Signature Version 4 簽署。
+- **必須要有 `s3RoleArn`**：Amazon OpenSearch Service 需要 IAM 角色才能將快照寫入 Amazon S3 (與使用金鑰庫憑證的自行管理 Elasticsearch 不同)。
+- **沒有 `multiTypeBehavior`**：Elasticsearch 7.10 已使用單一類型索引，因此不需要類型對應轉換。
 
-Verify the configuration:
+確認組態：
 
 ```bash
 workflow configure view
@@ -705,28 +706,28 @@ workflow configure view
 {% include copy.html %}
 
 
-## Step 9: Test connectivity
+## 步驟 9：測試連線
 
-To verify that the Migration Console can reach both the source and target, run the following command:
+若要驗證 Migration Console 是否能連線至來源與目標，請執行以下命令：
 
 ```bash
 console clusters connection-check
 ```
 {% include copy.html %}
 
-Both source and target should show `Successfully connected!`.
+來源與目標都應顯示 `Successfully connected!`。
 
-If the source returns a connection timeout, verify the following:
+如果來源回傳連線逾時，請驗證以下項目：
 
-1. Migration Assistant is deployed in the same VPC as the source domain (or VPC peering is configured).
-2. The source domain's security group allows inbound TCP 443 from the Migration Assistant EKS cluster security group.
+1. Migration Assistant 已部署在與來源網域相同的 VPC 中（或已設定 VPC 對等連線）。
+2. 來源網域的安全性群組允許來自 Migration Assistant EKS 叢集安全性群組的 TCP 443 入站流量。
 
-If the target returns 403, verify the following:
+如果目標回傳 403，請驗證以下項目：
 
-1. The Amazon OpenSearch Serverless NextGen data access policy includes the Migration Assistant migrations role.
-2. The network policy allows access from the Migration Assistant pods.
+1. Amazon OpenSearch Serverless NextGen 資料存取政策包含 Migration Assistant 的 migrations 角色。
+2. 網路政策允許來自 Migration Assistant pod 的存取。
 
-To test connectivity manually, run the following commands:
+若要手動測試連線，請執行以下命令：
 
 ```bash
 console clusters curl source /
@@ -735,11 +736,11 @@ console clusters curl target /
 {% include copy.html %}
 
 
-## Step 10: Run a pilot migration
+## 步驟 10：執行試驗遷移
 
-Run a pilot migration on one small index before migrating all indexes.
+在遷移所有索引之前，先在一個小型索引上執行試驗遷移。
 
-Submit the workflow:
+提交工作流程：
 
 ```bash
 workflow submit
@@ -747,9 +748,9 @@ workflow manage
 ```
 {% include copy.html %}
 
-The `workflow manage` command opens an interactive text-based user interface (TUI). Use it to monitor progress, view logs, and approve gates.
+`workflow manage` 命令會開啟互動式文字使用者介面 (TUI)。請使用它來監控進度、檢視記錄檔，以及核准關卡。
 
-When the workflow pauses at an approval gate (shown as `⟳`), review and approve the output:
+當工作流程在核准關卡暫停時（顯示為 `⟳`），請檢閱並核准輸出：
 
 ```bash
 # Approve metadata evaluation
@@ -760,10 +761,10 @@ workflow approve step "*.migratemetadata"
 ```
 {% include copy.html %}
 
-Gate names are **lowercase**. Alternatively, approve gates directly in the `workflow manage` TUI.
+關卡名稱為**小寫**。您也可以直接在 `workflow manage` TUI 中核准關卡。
 {: .note }
 
-After the workflow completes, verify metadata and documents:
+工作流程完成後，請驗證中繼資料與文件：
 
 ```bash
 console clusters curl target /_cat/indices?v
@@ -773,9 +774,9 @@ console clusters curl target /<PILOT_INDEX_NAME>/_search?size=5&pretty
 ```
 {% include copy.html %}
 
-Verify that the document counts on the source and target match.
+請確認來源與目標上的文件數量一致。
 
-If the pilot migration fails, edit the configuration and resubmit:
+如果試驗遷移失敗，請編輯組態並重新提交：
 
 ```bash
 workflow configure edit
@@ -784,20 +785,20 @@ workflow manage
 ```
 {% include copy.html %}
 
-Do not start the full migration until the pilot migration completes successfully.
+在試驗遷移成功完成之前，請勿開始完整遷移。
 {: .note }
 
 
-## Step 11: Run the full migration
+## 步驟 11：執行完整遷移
 
-Edit the configuration to expand the allow list:
+編輯組態以擴充允許清單：
 
 ```bash
 workflow configure edit
 ```
 {% include copy.html %}
 
-Set `indexAllowlist` to an empty array to migrate all indexes:
+將 `indexAllowlist` 設為空陣列以遷移所有索引：
 
 ```json
 "metadataMigrationConfig": {
@@ -806,7 +807,7 @@ Set `indexAllowlist` to an empty array to migrate all indexes:
 ```
 {% include copy.html %}
 
-Update the `createSnapshotConfig`:
+更新 `createSnapshotConfig`：
 
 ```json
 "createSnapshotConfig": {
@@ -816,14 +817,14 @@ Update the `createSnapshotConfig`:
 ```
 {% include copy.html %}
 
-The following sections describe the steps for each migration approach. Follow the section that corresponds to the approach you selected in Step 1.
+以下章節說明各種遷移方式的步驟。請依照您在步驟 1 中所選方式對應的章節操作。
 
-### Planned downtime path
+### 計劃性停機路徑
 
-For a planned downtime migration, follow these steps:
+若採用計劃性停機遷移，請依照以下步驟：
 
-1. **Stop writes to the source domain.**
-2. Submit the workflow:
+1. **停止對來源網域的寫入。**
+2. 提交工作流程：
 
    ```bash
    workflow submit
@@ -831,8 +832,8 @@ For a planned downtime migration, follow these steps:
    ```
    {% include copy.html %}
 
-3. Approve gates after verifying each phase.
-4. After backfill completes, verify the target:
+3. 在驗證每個階段後核准關卡。
+4. 回填完成後，驗證目標：
 
    ```bash
    console clusters curl target /_cat/indices?v
@@ -840,24 +841,24 @@ For a planned downtime migration, follow these steps:
    ```
    {% include copy.html %}
 
-5. Review components that Migration Assistant does not migrate (ISM or ILM policies, ingest pipelines, dashboards, cluster settings). Amazon OpenSearch Serverless NextGen does not support these features. Determine whether your workload requires alternatives before proceeding.
-6. Point clients to the Serverless NextGen collection endpoint: `https://3nbrhts7rv9jxatilz9e.aoss.us-east-2.on.aws`.
-7. Update client authentication from basic authentication or IAM AWS Signature Version 4 with `service: es` to IAM AWS Signature Version 4 with `service: aoss`.
+5. 檢閱 Migration Assistant 不會遷移的元件（ISM 或 ILM 政策、資料匯入管線、儀表板、叢集設定）。Amazon OpenSearch Serverless NextGen 不支援這些功能。在繼續之前，請判斷您的工作負載是否需要替代方案。
+6. 將用戶端指向 Serverless NextGen 集合端點：`https://3nbrhts7rv9jxatilz9e.aoss.us-east-2.on.aws`。
+7. 將用戶端驗證從基本驗證或使用 `service: es` 的 IAM AWS Signature Version 4，更新為使用 `service: aoss` 的 IAM AWS Signature Version 4。
 
-### Zero-downtime path
+### 零停機路徑
 
-For a zero-downtime migration, complete the following sections in order.
+若採用零停機遷移，請依序完成以下章節。
 
-#### Step 1: Configure the traffic section
+#### 步驟 1：設定 traffic 區段
 
-To add a `traffic` section to the workflow configuration, open the editor:
+若要在工作流程組態中新增 `traffic` 區段，請開啟編輯器：
 
 ```bash
 workflow configure edit
 ```
 {% include copy.html %}
 
-Add the following `traffic` block at the same level as `sourceClusters`, `targetClusters`, and `snapshotMigrationConfigs`:
+在與 `sourceClusters`、`targetClusters` 和 `snapshotMigrationConfigs` 相同的層級新增以下 `traffic` 區塊：
 
 ```json
 "traffic": {
@@ -890,7 +891,7 @@ Add the following `traffic` block at the same level as `sourceClusters`, `target
 ```
 {% include copy.html %}
 
-Set `indexAllowlist` to an empty array to migrate all indexes:
+將 `indexAllowlist` 設為空陣列以遷移所有索引：
 
 ```json
 "metadataMigrationConfig": {
@@ -899,9 +900,9 @@ Set `indexAllowlist` to an empty array to migrate all indexes:
 ```
 {% include copy.html %}
 
-#### Step 2: Submit the workflow
+#### 步驟 2：提交工作流程
 
-To submit the workflow and open the monitoring interface, run the following commands:
+若要提交工作流程並開啟監控介面，請執行以下命令：
 
 ```bash
 workflow submit
@@ -909,25 +910,25 @@ workflow manage
 ```
 {% include copy.html %}
 
-The workflow creates five parallel tracks: an Apache Kafka cluster, a capture proxy, a snapshot, a snapshot migration, and a Traffic Replayer. The snapshot waits for the capture proxy to be ready before proceeding.
+工作流程會建立五條平行軌道：Apache Kafka 叢集、擷取代理程式、快照、快照遷移，以及 Traffic Replayer。快照會等待擷取代理程式就緒後才繼續。
 
-#### Step 3: Find the capture proxy endpoint
+#### 步驟 3：尋找擷取代理程式端點
 
-The capture proxy uses the source domain's port (443 for Amazon OpenSearch Service). To find the endpoint, run the following command:
+擷取代理程式使用來源網域的連接埠（Amazon OpenSearch Service 為 443）。若要尋找端點，請執行以下命令：
 
 ```bash
 kubectl get svc capture -n ma
 ```
 {% include copy.html %}
 
-The `EXTERNAL-IP` column shows the Network Load Balancer endpoint. Redirect your application clients to this endpoint.
+`EXTERNAL-IP` 欄位會顯示 Network Load Balancer 端點。請將您的應用程式用戶端重新導向至此端點。
 
-The capture proxy forwards all requests to the source domain and simultaneously records them to Kafka for replay. The proxy uses AWS Signature Version 4 to authenticate to the source, so your clients can continue using their existing authentication method.
+擷取代理程式會將所有請求轉送至來源網域，並同時將其記錄到 Kafka 以供重播。擷取代理程式使用 AWS Signature Version 4 對來源進行驗證，因此您的用戶端可以繼續使用其現有的驗證方式。
 {: .note }
 
-#### Step 4: Approve workflow steps
+#### 步驟 4：核准工作流程步驟
 
-To perform the approve action, run the following commands:
+若要執行核准動作，請執行以下命令：
 
 ```bash
 workflow approve step "*.evaluatemetadata"
@@ -935,33 +936,33 @@ workflow approve step "*.migratemetadata"
 ```
 {% include copy.html %}
 
-#### Step 5: Monitor replay progress
+#### 步驟 5：監控重播進度
 
-After backfill completes, the Replayer starts processing captured traffic:
+回填完成後，Replayer 會開始處理擷取的流量：
 
 ```bash
 kubectl logs deployment/capture-target-replay -n ma --tail=5
 ```
 {% include copy.html %}
 
-Locate the `ReplayHeartbeat` line:
+找出 `ReplayHeartbeat` 一行：
 
 ```log
 ReplayHeartbeat - tasksOutstanding=437 schedulingLag=1s lastCompletedSourceTime=2026-05-03T16:01:16.565Z targetResponses={}
 ```
 
-The following table describes the fields in the heartbeat output.
+下表說明心跳輸出中的欄位。
 
-| Field | Meaning |
+| 欄位 | 意義 |
 |-------|---------|
-| `tasksOutstanding` | Captured requests still being replayed. Should decrease toward 0. |
-| `lastCompletedSourceTime` | Timestamp of the most recently replayed request. Should approach current time. |
-| `targetResponses` | HTTP response codes from the target. Empty `{}` means no write requests replayed yet. |
-| `schedulingLag` | The delay between the Replayer and live traffic. Should approach 0 when replay is complete. |
+| `tasksOutstanding` | 仍在重播中的已擷取請求。應逐漸減少至 0。 |
+| `lastCompletedSourceTime` | 最近重播之請求的時間戳記。應接近目前時間。 |
+| `targetResponses` | 來自目標的 HTTP 回應碼。空的 `{}` 表示尚未重播任何寫入請求。 |
+| `schedulingLag` | Replayer 與即時流量之間的延遲。重播完成時應接近 0。 |
 
-#### Step 6: Verify that document counts match
+#### 步驟 6：驗證文件數量是否相符
 
-To compare document counts between the source and target, run the following commands:
+若要比較來源與目標之間的文件數量，請執行下列命令：
 
 ```bash
 console clusters curl source /_cat/indices?v
@@ -969,39 +970,39 @@ console clusters curl target /_cat/indices?v
 ```
 {% include copy.html %}
 
-When the replay is complete, document counts on the target should match the source.
+重播完成後，目標上的文件數量應與來源相符。
 
-#### Step 7: Switch traffic to the target
+#### 步驟 7：將流量切換至目標
 
-When replay is complete and validation confirms the target is correct, switch your application clients from the capture proxy to the Serverless NextGen collection endpoint directly:
+當重播完成且驗證確認目標正確後，請將應用程式用戶端從擷取代理程式直接切換至 Serverless NextGen 集合端點：
 
 ```
 https://3nbrhts7rv9jxatilz9e.aoss.us-east-2.on.aws
 ```
 
-Update your client's AWS Signature Version 4 signing from `service: es` to `service: aoss`.
+將用戶端的 AWS Signature Version 4 簽署從 `service: es` 更新為 `service: aoss`。
 
 
-## Step 12: Keep the source available as a fallback
+## 步驟 12：保留來源作為備援
 
-Do not delete the source domain immediately after cutover. Keep it available for at least 24 to 72 hours while you watch target collection health, application error rates, and operational tooling.
+切換後請勿立即刪除來源網域。請保留來源至少 24 至 72 小時，同時觀察目標集合健康狀態、應用程式錯誤率及作業工具。
 
 
-## Step 13: Remove migration infrastructure
+## 步驟 13：移除遷移基礎設施
 
-Before removing Migration Assistant, confirm all of the following:
+移除 Migration Assistant 之前，請確認下列所有事項：
 
-1. All client traffic is pointing directly at the Serverless NextGen collection and no longer at the capture proxy.
-2. The capture proxy and Replayer are no longer needed.
-3. You have kept the source domain available as a fallback for at least 24--72 hours.
-4. The target collection is healthy and application error rates are normal.
+1. 所有用戶端流量都直接指向 Serverless NextGen 集合，不再指向擷取代理程式。
+2. 不再需要擷取代理程式與 Replayer。
+3. 您已保留來源網域作為備援至少 24--72 小時。
+4. 目標集合健康狀態良好，且應用程式錯誤率正常。
 
-If any client is still sending traffic to the capture proxy endpoint, that traffic will be lost when you remove Migration Assistant. Verify that all clients have been redirected to the target before proceeding.
+若有任何用戶端仍將流量傳送至擷取代理程式端點，當您移除 Migration Assistant 時，該流量將會遺失。繼續進行之前，請確認所有用戶端都已重新導向至目標。
 {: .warning }
 
-### Step 1: Remove the Helm release and namespace
+### 步驟 1：移除 Helm release 與命名空間
 
-To remove the Migration Assistant Helm release and delete the namespace, run the following commands:
+若要移除 Migration Assistant Helm release 並刪除命名空間，請執行下列命令：
 
 ```bash
 helm uninstall -n ma ma
@@ -1010,9 +1011,9 @@ kubectl delete namespace ma --timeout=120s
 ```
 {% include copy.html %}
 
-### Step 2: Delete the CloudFormation stack
+### 步驟 2：刪除 CloudFormation 堆疊
 
-To delete the CloudFormation stack and all associated resources, run the following commands:
+若要刪除 CloudFormation 堆疊及所有相關資源，請執行下列命令：
 
 ```bash
 aws cloudformation delete-stack --region us-east-2 --stack-name MA
@@ -1020,20 +1021,20 @@ aws cloudformation wait stack-delete-complete --region us-east-2 --stack-name MA
 ```
 {% include copy.html %}
 
-This deletes the Amazon EKS cluster, Amazon ECR repository, IAM roles, and VPC endpoints created by Migration Assistant. It does **not** delete the source domain, the Serverless NextGen collection, or the Amazon S3 snapshot bucket.
+這會刪除 Migration Assistant 所建立的 Amazon EKS 叢集、Amazon ECR 儲存庫、IAM 角色及 VPC 端點。它**不會**刪除來源網域、Serverless NextGen 集合或 Amazon S3 快照儲存貯體。
 
-### Step 3 (Optional): Delete the snapshot bucket
+### 步驟 3 (選用)：刪除快照儲存貯體
 
-To delete the snapshot bucket, run the following command:
+若要刪除快照儲存貯體，請執行下列命令：
 
 ```bash
 aws s3 rb s3://migrations-default-111122223333-dev-us-east-2 --force
 ```
 {% include copy.html %}
 
-### Step 4 (Optional): Delete the Amazon OpenSearch Serverless NextGen collection
+### 步驟 4 (選用)：刪除 Amazon OpenSearch Serverless NextGen 集合
 
-If you created the collection for testing and no longer need it, run the following command:
+若您為了測試而建立該集合，且不再需要它，請執行下列命令：
 
 ```bash
 aws opensearchserverless delete-collection \
@@ -1042,7 +1043,7 @@ aws opensearchserverless delete-collection \
 ```
 {% include copy.html %}
 
-Then remove the policies:
+接著移除政策：
 
 ```bash
 aws opensearchserverless delete-access-policy \
@@ -1057,13 +1058,13 @@ aws opensearchserverless delete-security-policy \
 {% include copy.html %}
 
 
-## Validation
+## 驗證
 
-After the workflow completes, validate the migration at three levels.
+工作流程完成後，請從三個層級驗證遷移。
 
-### Level 1: Document count comparison
+### 層級 1：文件數量比較
 
-Compare document counts between source and target for every user index:
+針對每個使用者索引，比較來源與目標之間的文件數量：
 
 ```bash
 console clusters curl source /_cat/indices?v
@@ -1071,7 +1072,7 @@ console clusters curl target /_cat/indices?v
 ```
 {% include copy.html %}
 
-For each user index, verify that the count matches:
+針對每個使用者索引，驗證數量是否相符：
 
 ```bash
 console clusters curl source /<INDEX_NAME>/_count
@@ -1079,9 +1080,9 @@ console clusters curl target /<INDEX_NAME>/_count
 ```
 {% include copy.html %}
 
-### Level 2: Status code comparison (tuple metrics)
+### 層級 2：狀態碼比較 (tuple 指標)
 
-If you used the zero-downtime path, the Replayer writes `tupleComparison` metrics to CloudWatch:
+若您使用了零停機路徑，Replayer 會將 `tupleComparison` 指標寫入 CloudWatch：
 
 ```bash
 aws logs start-query \
@@ -1097,18 +1098,18 @@ aws logs start-query \
 ```
 {% include copy.html %}
 
-Wait a few seconds, then retrieve the results:
+等待幾秒鐘，然後擷取結果：
 
 ```bash
 aws logs get-query-results --region us-east-2 --query-id <QUERY_ID>
 ```
 {% include copy.html %}
 
-Investigate mismatches that involve `POST` or `PUT` methods---those are write operations for which a mismatch could indicate data loss.
+請調查涉及 `POST` 或 `PUT` 方法的任何不相符情形---這些是寫入作業，若不相符可能代表資料遺失。
 
-### Level 3: Sample query comparison
+### 層級 3：範例查詢比較
 
-Run a representative query on both clusters and compare the results:
+在兩個叢集上執行具代表性的查詢並比較結果：
 
 ```bash
 console clusters curl source /<INDEX_NAME>/_search?size=5&pretty
@@ -1116,18 +1117,18 @@ console clusters curl target /<INDEX_NAME>/_search?size=5&pretty
 ```
 {% include copy.html %}
 
-### Mapping verification
+### 對應驗證
 
-Verify that index mappings were migrated correctly:
+驗證索引對應是否已正確遷移：
 
 ```bash
 console clusters curl target /<INDEX_NAME>/_mapping
 ```
 {% include copy.html %}
 
-## Reconnecting to the Migration Console
+## 重新連線至 Migration Console
 
-If you need to reconnect to the Migration Console in a new shell session, run the following commands:
+若您需要在新的 shell 工作階段中重新連線至 Migration Console，請執行下列命令：
 
 ```bash
 aws eks update-kubeconfig --region us-east-2 --name migration-eks-cluster-dev-us-east-2
@@ -1135,13 +1136,13 @@ kubectl exec -it migration-console-0 -n ma -- /bin/bash
 ```
 {% include copy.html %}
 
-## Troubleshooting
+## 疑難排解
 
-The following are common issues and their resolutions.
+以下是常見問題及其解決方式。
 
-### Target returns 403 forbidden
+### 目標傳回 403 forbidden
 
-The Migration Assistant IAM role is not included in the Amazon OpenSearch Serverless NextGen data access policy. Update the policy:
+Migration Assistant IAM 角色未包含在 Amazon OpenSearch Serverless NextGen 資料存取政策中。請更新政策：
 
 ```bash
 POLICY_VERSION=$(aws opensearchserverless get-access-policy \
@@ -1152,11 +1153,11 @@ echo "Current policy version: $POLICY_VERSION"
 ```
 {% include copy.html %}
 
-Then rerun the `update-access-policy` command from [Step 5: Map the Migration Assistant IAM role](#step-5-map-the-migration-assistant-iam-role) with the correct policy version.
+接著使用正確的政策版本，從[步驟 5：對應 Migration Assistant IAM 角色](#step-5-map-the-migration-assistant-iam-role)重新執行 `update-access-policy` 命令。
 
-### Source returns a connection timeout
+### 來源傳回連線逾時
 
-1. Verify that Migration Assistant is in the same VPC as the source domain:
+1. 驗證 Migration Assistant 與來源網域位於相同的 VPC：
 
    ```bash
    aws eks describe-cluster \
@@ -1167,11 +1168,11 @@ Then rerun the `update-access-policy` command from [Step 5: Map the Migration As
    ```
    {% include copy.html %}
 
-2. Verify that the source domain's security group allows the Migration Assistant EKS cluster security group on port 443.
+2. 驗證來源網域的安全群組允許 Migration Assistant EKS 叢集安全群組在連接埠 443 上進行連線。
 
-### Source and target are in different VPCs
+### 來源與目標位於不同的 VPC
 
-If Migration Assistant is in a different VPC than the source domain, create a VPC peering connection:
+若 Migration Assistant 與來源網域位於不同的 VPC，請建立 VPC 對等互連連線：
 
 ```bash
 PEERING_ID=$(aws ec2 create-vpc-peering-connection \
@@ -1200,16 +1201,16 @@ aws ec2 create-route \
 ```
 {% include copy.html %}
 
-Then add the Migration Assistant EKS cluster security group to the source domain's security group inbound rules ([Step 6: Configure security group access](#step-6-configure-security-group-access)). Use the Migration Assistant VPC CIDR instead of a security group reference because cross-VPC security group references require the peering connection.
+接著將 Migration Assistant EKS 叢集安全群組新增至來源網域的安全群組輸入規則 ([步驟 6：設定安全群組存取](#step-6-configure-security-group-access))。請使用 Migration Assistant VPC CIDR 而非安全群組參照，因為跨 VPC 安全群組參照需要對等互連連線。
 
-### Snapshot repository registration fails
+### 快照儲存庫註冊失敗
 
-For Amazon OpenSearch Service, the snapshot role must:
-1. Include an IAM policy allowing `s3:ListBucket`, `s3:GetObject`, `s3:PutObject`, `s3:DeleteObject` on the snapshot bucket.
-2. Include a trust policy allowing `es.amazonaws.com` to assume it.
-3. Be passed to the `_snapshot` API through the `role_arn` setting.
+對於 Amazon OpenSearch Service，快照角色必須：
+1. 包含允許對快照儲存貯體執行 `s3:ListBucket`、`s3:GetObject`、`s3:PutObject`、`s3:DeleteObject` 的 IAM 政策。
+2. 包含允許 `es.amazonaws.com` 擔任該角色的信任政策。
+3. 透過 `role_arn` 設定傳遞給 `_snapshot` API。
 
-Verify the snapshot role trust policy:
+驗證快照角色的信任政策：
 
 ```bash
 aws iam get-role \
@@ -1219,9 +1220,9 @@ aws iam get-role \
 ```
 {% include copy.html %}
 
-### Consistency guard error on resubmit
+### 重新提交時的一致性防護錯誤
 
-First, delete stale custom resources:
+首先，刪除過期的自訂資源：
 
 ```bash
 kubectl delete snapshotmigration --all -n ma
@@ -1233,33 +1234,33 @@ kubectl delete kafkacluster --all -n ma
 ```
 {% include copy.html %}
 
-Then resubmit the workflow:
+然後重新提交工作流程：
 
 ```bash
 workflow submit
 ```
 {% include copy.html %}
 
-### Amazon OpenSearch Serverless NextGen errors
+### Amazon OpenSearch Serverless NextGen 錯誤
 
-The following errors are specific to Amazon OpenSearch Serverless NextGen targets.
+下列錯誤是 Amazon OpenSearch Serverless NextGen 目標特有的。
 
-#### Index not found exception on the target
+#### 目標上發生 Index not found 例外
 
-Amazon OpenSearch Serverless NextGen does not support the `_cluster/settings` API or automatic index creation through templates in the same way as Amazon OpenSearch Service. Verify that metadata migration completed successfully before backfill:
+Amazon OpenSearch Serverless NextGen 不支援 `_cluster/settings` API，也不像 Amazon OpenSearch Service 那樣支援透過範本自動建立索引。請在回填之前確認中繼資料遷移已成功完成：
 
 ```bash
 console clusters curl target /_cat/indices?v
 ```
 {% include copy.html %}
 
-#### Security exception with a permissions error
+#### 發生安全性例外與權限錯誤
 
-The Amazon OpenSearch Serverless NextGen data access policy is missing permissions. Ensure that the policy includes both collection- and index-level permissions for the Migration Assistant role.
+Amazon OpenSearch Serverless NextGen 資料存取政策缺少權限。請確保該政策同時包含 Migration Assistant 角色的集合層級與索引層級權限。
 
-#### Bulk indexing returns 413: Request too large
+#### 大量編製索引傳回 413：請求過大
 
-Amazon OpenSearch Serverless NextGen has a 10-MB request payload limit. If your documents are large, reduce the bulk batch size in the workflow configuration:
+Amazon OpenSearch Serverless NextGen 有 10 MB 的請求承載限制。如果您的文件很大，請在工作流程組態中減少大量批次大小：
 
 ```json
 "documentBackfillConfig": {
@@ -1271,15 +1272,15 @@ Amazon OpenSearch Serverless NextGen has a 10-MB request payload limit. If your 
 
 
 
-## Related documentation
+## 相關文件
 
-For more information, see the following resources:
+如需更多資訊，請參閱下列資源：
 
-- [Is Migration Assistant right for you?]({{site.url}}{{site.baseurl}}/migration-assistant/is-migration-assistant-right-for-you/)
-- [Migrate to OpenSearch Serverless NextGen]({{site.url}}{{site.baseurl}}/migration-assistant/amazon-opensearch-serverless/)
-- [Deploying to EKS]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-eks/)
-- [Using the Workflow CLI]({{site.url}}{{site.baseurl}}/migration-assistant/workflow-cli/getting-started/)
-- [Backfill]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/backfill/)
-- [Removing Migration Assistant]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/remove-migration-infrastructure/)
-- [Elasticsearch 6.8 → OpenSearch 3.5 playbook]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-elasticsearch-6-8-to-opensearch-3/)
+- [Migration Assistant 是否適合您？]({{site.url}}{{site.baseurl}}/migration-assistant/is-migration-assistant-right-for-you/)
+- [遷移至 OpenSearch Serverless NextGen]({{site.url}}{{site.baseurl}}/migration-assistant/amazon-opensearch-serverless/)
+- [部署至 EKS]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-eks/)
+- [使用 Workflow CLI]({{site.url}}{{site.baseurl}}/migration-assistant/workflow-cli/getting-started/)
+- [回填]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/backfill/)
+- [移除 Migration Assistant]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/remove-migration-infrastructure/)
+- [Elasticsearch 6.8 → OpenSearch 3.5 操作手冊]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-elasticsearch-6-8-to-opensearch-3/)
 - [Migration Assistant Schema Viewer](https://opensearch-project.github.io/opensearch-migrations/)

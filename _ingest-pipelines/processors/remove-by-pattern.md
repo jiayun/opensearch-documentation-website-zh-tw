@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Remove by pattern
+title: "依模式移除"
 parent: Ingest processors
 nav_order: 225
 redirect_from:
    - /ingest-pipelines/processors/remove_by_pattern/
 ---
 
-# Remove by pattern processor
+# 依模式移除處理器
 
-The `remove_by_pattern` processor removes the root-level fields from a document by using specified wildcard patterns. 
+`remove_by_pattern` 處理器會使用指定的萬用字元模式，從文件中移除根層級的欄位。
 
-## Syntax
+## 語法
 
-The following is the syntax for the `remove_by_pattern` processor: 
+以下是 `remove_by_pattern` 處理器的語法：
 
 ```json
 {
@@ -24,27 +25,27 @@ The following is the syntax for the `remove_by_pattern` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `remove_by_pattern` processor.
+下表列出 `remove_by_pattern` 處理器的必要與選用參數。
 
-| Parameter  | Required/Optional  | Description  |
+| 參數  | 必要/選用  | 說明  |
 |---|---|---|
-`field_pattern`  | Optional  | Removes fields that match the specified pattern. All of the metadata fields, such as `_index`, `_version`, `_version_type`, and `_id`, are ignored if they match the pattern. This option only supports the root-level fields in the document. |
-`exclude_field_pattern`  | Optional  | Removes fields that do not match the specified pattern. All of the metadata fields, such as `_index`, `_version`, `_version_type`, and `_id`, are ignored if they do not match the pattern. This option only supports the root-level fields in the document. The `field_pattern` and `exclude_field_pattern` options are mutually exclusive. |
-`description`  | Optional  | A brief description of the processor.  |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | Specifies whether the processor continues execution even if it encounters errors. If set to `true`, the failure is ignored. Default is `false`. |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |
+`field_pattern`  | 選用  | 移除符合指定模式的欄位。所有中繼資料欄位（例如 `_index`、`_version`、`_version_type` 和 `_id`）即使符合模式也會被忽略。此選項僅支援文件中的根層級欄位。 |
+`exclude_field_pattern`  | 選用  | 移除不符合指定模式的欄位。所有中繼資料欄位（例如 `_index`、`_version`、`_version_type` 和 `_id`）即使不符合模式也會被忽略。此選項僅支援文件中的根層級欄位。`field_pattern` 與 `exclude_field_pattern` 選項互斥。 |
+`description`  | 選用  | 處理器的簡要說明。  |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤仍繼續執行。若設定為 `true`，則會忽略失敗。預設為 `false`。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。 |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+依照下列步驟在管線中使用處理器。
 
-**Step 1: Create a pipeline** 
+**步驟 1：建立管線**
 
-The following query creates a pipeline named `remove_fields_by_pattern` that removes the fields that match the pattern `foo*`: 
+下列查詢會建立名為 `remove_fields_by_pattern` 的管線，移除符合模式 `foo*` 的欄位：
 
 ```json
 PUT /_ingest/pipeline/remove_fields_by_pattern
@@ -61,12 +62,12 @@ PUT /_ingest/pipeline/remove_fields_by_pattern
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline**
+**步驟 2（選用）：測試管線**
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/remove_fields_by_pattern/_simulate
@@ -86,9 +87,9 @@ POST _ingest/pipeline/remove_fields_by_pattern/_simulate
 ```
 {% include copy-curl.html %}
 
-**Response**
+**回應**
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -109,9 +110,9 @@ The following example response confirms that the pipeline is working as expected
 }
 ```
 
-**Step 3: Ingest a document**
+**步驟 3：匯入文件**
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=remove_fields_by_pattern
@@ -123,9 +124,9 @@ PUT testindex1/_doc/1?pipeline=remove_fields_by_pattern
 ```
 {% include copy-curl.html %}
 
-**Step 4 (Optional): Retrieve the document**
+**步驟 4（選用）：擷取文件**
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1

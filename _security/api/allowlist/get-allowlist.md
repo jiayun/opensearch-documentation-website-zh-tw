@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get allow list
+title: "取得允許清單"
 parent: Allow list APIs
 grand_parent: Security APIs
 nav_order: 30
 ---
 
 # Get Allow List API
-**Introduced 2.1**
+**於 2.1 版推出**
 {: .label .label-purple }
 
-Retrieves the current allow list configuration.
+擷取目前的允許清單組態。
 
-This API is reserved for a superadmin. Authenticate with an admin certificate rather than with a user name and password. For more information, see [Access control for the API]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api).
+此 API 僅供超級管理員使用。請使用管理員憑證進行驗證，而非使用使用者名稱和密碼。如需詳細資訊，請參閱 [API 的存取控制]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api)。
 {: .note}
 
 <!-- spec_insert_start
 api: security.get_allowlist
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_plugins/_security/api/allowlist
 ```
 <!-- spec_insert_end -->
 
-## Example request
+## 請求範例
 
 ```json
 GET _plugins/_security/api/allowlist
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 回應範例
 
 ```json
 {

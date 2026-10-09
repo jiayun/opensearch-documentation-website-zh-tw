@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Log Pattern Analysis tool
+title: "記錄檔模式分析工具"
 has_children: false
 has_toc: false
 nav_order: 38
@@ -9,30 +10,30 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# Log Pattern Analysis tool
-**Introduced 3.3.0**
+# 記錄檔模式分析工具
+**於 3.3.0 版推出**
 {: .label .label-purple }
 <!-- vale on -->
 
-The `LogPatternAnalysisTool` performs an advanced log analysis by detecting anomalous log patterns and sequences through comparative analysis between baseline and selection time ranges. It supports the following analysis modes:
+`LogPatternAnalysisTool` 會透過比較基準與選取時間範圍之間的差異，偵測異常的記錄檔模式與序列，藉此執行進階記錄檔分析。它支援下列分析模式：
 
-- Log sequence analysis (with trace correlation)
-- Log pattern difference analysis
-- Log insights analysis for error detection
+- 記錄檔序列分析 (含追蹤關聯)
+- 記錄檔模式差異分析
+- 用於錯誤偵測的記錄檔洞察分析
 
-The tool uses machine learning clustering algorithms and statistical methods to identify anomalous patterns that appear significantly more frequently in the selection period compared to the baseline period, helping detect system issues and performance anomalies.
+此工具使用機器學習分群演算法與統計方法，找出在選取期間出現頻率明顯高於基準期間的異常模式，協助偵測系統問題與效能異常。
 
-## Analysis modes
+## 分析模式
 
-The tool automatically selects the appropriate analysis mode based on the provided parameters:
+此工具會根據提供的參數自動選取適當的分析模式：
 
-- **Log sequence analysis**: When both a trace field and a baseline time range are provided, the tool analyzes trace-correlated log sequences to identify anomalous execution paths.
-- **Log pattern difference analysis**: When a baseline time range is provided without a trace field, the tool compares log patterns between baseline and selection periods to detect anomalous patterns.
-- **Log insights analysis**: When only a selection time range is provided, the tool performs pattern analysis based on error keywords in order to identify critical issues.
+- **記錄檔序列分析**：同時提供追蹤欄位與基準時間範圍時，此工具會分析與追蹤相關的記錄檔序列，以找出異常的執行路徑。
+- **記錄檔模式差異分析**：提供基準時間範圍但未提供追蹤欄位時，此工具會比較基準期間與選取期間的記錄檔模式，以偵測異常模式。
+- **記錄檔洞察分析**：僅提供選取時間範圍時，此工具會根據錯誤關鍵字執行模式分析，以找出重大問題。
 
-## Step 1: Register a flow agent that will run the LogPatternAnalysisTool
+## 步驟 1：註冊將執行 LogPatternAnalysisTool 的流程代理程式
 
-A flow agent runs a sequence of tools in order, returning the last tool's output. To create a flow agent, send the following register agent request:
+流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -53,9 +54,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-No parameters are required to register the tool. The tool uses dynamic parameter validation at execution time. 
+註冊此工具不需要任何參數。此工具會在執行時使用動態參數驗證。 
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -63,13 +64,13 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 2: Run the agent
+## 步驟 2：執行代理程式
 
-Run the agent to perform various analysis types.
+執行代理程式以進行各種分析類型。
 
-### Log sequence analysis 
+### 記錄檔序列分析 
 
-To perform a trace-based sequence analysis, provide a `traceFieldName`, `baseTimeRangeStart`, and `baseTimeRangeEnd`:
+若要執行以追蹤為基礎的序列分析，請提供 `traceFieldName`、`baseTimeRangeStart` 及 `baseTimeRangeEnd`：
 
 ```json
 POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
@@ -88,7 +89,7 @@ POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns exceptional trace sequences that differ significantly from baseline patterns:
+OpenSearch 會傳回與基準模式有顯著差異的異常追蹤序列：
 
 ```json
 {
@@ -105,9 +106,9 @@ OpenSearch returns exceptional trace sequences that differ significantly from ba
 }
 ```
 
-### Log pattern difference analysis
+### 記錄檔模式差異分析
 
-To perform a pattern comparison analysis, provide a `baseTimeRangeStart` and `baseTimeRangeEnd`:
+若要執行模式比較分析，請提供 `baseTimeRangeStart` 與 `baseTimeRangeEnd`：
 
 ```json
 POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
@@ -125,7 +126,7 @@ POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns patterns with significant frequency changes between time periods:
+OpenSearch 會傳回在各時間區段之間頻率有顯著變化的模式：
 
 ```json
 {
@@ -142,9 +143,9 @@ OpenSearch returns patterns with significant frequency changes between time peri
 }
 ```
 
-### Log insights analysis
+### 記錄檔洞察分析
 
-To perform an error pattern detection, provide only a selection time range:
+若要執行錯誤模式偵測，請僅提供選取時間範圍：
 
 ```json
 POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
@@ -160,7 +161,7 @@ POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns error patterns with sample logs:
+OpenSearch 會傳回附有範例記錄檔的錯誤模式：
 
 ```json
 {
@@ -177,30 +178,30 @@ OpenSearch returns error patterns with sample logs:
 }
 ```
 
-## Execute parameters
+## 執行參數
 
-The following table lists the available tool parameters for running the agent.
+下表列出可用於執行代理程式的工具參數。
 
 | Parameter | Type | Required/Optional | Description |
 |:----------|:-----|:------------------|:------------|
-| `index` | String | Required | The name of the OpenSearch index containing log data (for example, `ss4o_logs-otel-2025.06.24`). |
-| `timeField` | String | Required | A date/time field in the index mapping used for time-based filtering. |
-| `logFieldName` | String | Required | The field containing raw log messages to analyze (for example, `body`, `message`, or `log`). |
-| `traceFieldName` | String | Optional | The field containing a trace ID or correlation ID to enable sequence analysis (for example, `traceId` or `correlationId`). Required for the log sequence analysis mode. |
-| `baseTimeRangeStart` | String | Optional | The start time for the baseline comparison period, in UTC date string format (for example, `2025-06-24 07:33:05`). Required for the sequence and pattern difference analysis modes. |
-| `baseTimeRangeEnd` | String | Optional | The end time for the baseline comparison period, in UTC date string format (for example, `2025-06-24 07:51:27`). Required for the sequence and pattern difference analysis modes. |
-| `selectionTimeRangeStart` | String | Required | The start time for the analysis target period, in UTC date string format (for example, `2025-06-24 07:50:26`). |
-| `selectionTimeRangeEnd` | String | Required | The end time for the analysis target period, in UTC date string format (for example, `2025-06-24 07:55:56`). |
+| `index` | String | Required | 包含記錄資料的 OpenSearch 索引名稱 (例如 `ss4o_logs-otel-2025.06.24`)。 |
+| `timeField` | String | Required | 索引對應中用於時間篩選的日期/時間欄位。 |
+| `logFieldName` | String | Required | 包含要分析之原始記錄訊息的欄位 (例如 `body`、`message` 或 `log`)。 |
+| `traceFieldName` | String | Optional | 包含追蹤 ID 或關聯 ID 以啟用序列分析的欄位 (例如 `traceId` 或 `correlationId`)。記錄檔序列分析模式必要。 |
+| `baseTimeRangeStart` | String | Optional | 基準比較期間的開始時間，格式為 UTC 日期字串 (例如 `2025-06-24 07:33:05`)。序列與模式差異分析模式必要。 |
+| `baseTimeRangeEnd` | String | Optional | 基準比較期間的結束時間，格式為 UTC 日期字串 (例如 `2025-06-24 07:51:27`)。序列與模式差異分析模式必要。 |
+| `selectionTimeRangeStart` | String | Required | 分析目標期間的開始時間，格式為 UTC 日期字串 (例如 `2025-06-24 07:50:26`)。 |
+| `selectionTimeRangeEnd` | String | Required | 分析目標期間的結束時間，格式為 UTC 日期字串 (例如 `2025-06-24 07:55:56`)。 |
 
-## Testing the tool
+## 測試工具
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+您可以將此工具做為代理程式工作流程的一部分執行，或使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適合用來測試個別工具或執行獨立作業。
 
-## Limitations
+## 限制
 
-The Log Pattern Analysis tool has the following limitations:
+記錄檔模式分析工具具有下列限制：
 
-- **Log volume**: The tool processes logs through PPL queries with a maximum limit of 10,000 documents per query. For optimal performance, limit analysis to specific time ranges.
-- **Result limits**:
-  - Pattern difference analysis: Returns the top 10 significant patterns.
-  - Log insights analysis: Returns the top 5 error patterns, with up to 2 sample logs each.
+- **記錄檔量**：此工具會透過 PPL 查詢處理記錄檔，每個查詢最多 10,000 份文件。為達到最佳效能，請將分析限制在特定時間範圍。
+- **結果限制**：
+  - 模式差異分析：傳回前 10 個顯著模式。
+  - 記錄檔洞察分析：傳回前 5 個錯誤模式，每個模式最多附 2 筆範例記錄檔。

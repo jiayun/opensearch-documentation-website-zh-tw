@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Agents and tools tutorial
+title: "代理程式與工具教學"
 parent: Agents and tools
 grand_parent: ML Commons APIs
 nav_order: 5
 ---
 
-# Agents and tools tutorial
-**Introduced 2.13**
+# 代理程式與工具教學
+**於 2.13 版推出**
 {: .label .label-purple }
 
-The following tutorial illustrates creating a flow agent for retrieval-augmented generation (RAG). A flow agent runs its configured tools sequentially, in the order specified. In this example, you'll create an agent with two tools:
+下列教學說明如何建立用於檢索增強生成 (RAG) 的流程代理程式。流程代理程式會依指定的順序，循序執行其設定好的工具。在此範例中，您將建立一個含有兩個工具的代理程式：
 
-1. `VectorDBTool`: The agent will use this tool to retrieve OpenSearch documents relevant to the user question. You'll ingest supplementary information into an OpenSearch index. To facilitate vector search, you'll deploy a text embedding model that translates text into vector embeddings. OpenSearch will translate the ingested documents into embeddings and store them in the index. When you provide a user question to the agent, the agent will construct a query from the question, run vector search on the OpenSearch index, and pass the relevant retrieved documents to the `MLModelTool`.
-1. `MLModelTool`: The agent will run this tool to connect to a large language model (LLM) and send the user query augmented with OpenSearch documents to the model. In this example, you'll use the [Anthropic Claude model hosted on Amazon Bedrock](https://aws.amazon.com/bedrock/claude/). The LLM will then answer the question based on its knowledge and the provided documents.
+1. `VectorDBTool`：代理程式將使用此工具擷取與使用者問題相關的 OpenSearch 文件。您會將補充資訊匯入 OpenSearch 索引。為了協助向量搜尋，您將部署文字嵌入模型，將文字轉譯為向量嵌入。OpenSearch 會將匯入的文件轉譯為嵌入，並儲存在索引中。當您向代理程式提供使用者問題時，代理程式會根據該問題建構查詢、在 OpenSearch 索引上執行向量搜尋，並將擷取到的相關文件傳遞給 `MLModelTool`。
+1. `MLModelTool`：代理程式將執行此工具以連線至大型語言模型 (LLM)，並將以 OpenSearch 文件增補的使用者查詢傳送給模型。在此範例中，您將使用 [託管於 Amazon Bedrock 的 Anthropic Claude 模型](https://aws.amazon.com/bedrock/claude/)。LLM 接著會根據其知識與提供的文件回答問題。
 
-## Prerequisites
+## 先決條件
 
-To use the memory feature, first configure the following cluster settings. This tutorial assumes that you have no dedicated machine learning (ML) nodes:
+若要使用記憶功能，請先設定下列叢集設定。本教學假設您沒有專用的機器學習 (ML) 節點：
 
 ```json
 PUT _cluster/settings
@@ -30,13 +31,13 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-For more information, see [ML Commons cluster settings]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/).
+如需更多資訊，請參閱 [ML Commons 叢集設定]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/)。
 
-## Step 1: Register and deploy a text embedding model
+## 步驟 1：註冊並部署文字嵌入模型
 
-You need a text embedding model to facilitate vector search. For this tutorial, you'll use one of the OpenSearch-provided pretrained models. When selecting a model, note its dimensionality because you'll need to provide it when creating an index. 
+您需要文字嵌入模型來協助向量搜尋。本教學將使用 OpenSearch 提供的其中一個預先訓練模型。選取模型時，請留意其維度，因為建立索引時必須提供該維度。
 
-In this tutorial, you'll use the `huggingface/sentence-transformers/all-MiniLM-L12-v2` model, which generates 384-dimensional dense vector embeddings. To register and deploy the model, send the following request:
+在本教學中，您將使用 `huggingface/sentence-transformers/all-MiniLM-L12-v2` 模型，其會產生 384 維的稠密向量嵌入。若要註冊並部署模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -48,7 +49,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Registering a model is an asynchronous task. OpenSearch returns a task ID for this task:
+註冊模型是非同步工作。OpenSearch 會傳回此工作的任務 ID：
 
 ```json
 {
@@ -57,14 +58,14 @@ Registering a model is an asynchronous task. OpenSearch returns a task ID for th
 }
 ```
 
-You can check the status of the task by calling the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+您可以呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來查看工作狀態：
 
 ```json
 GET /_plugins/_ml/tasks/aFeif4oB5Vm0Tdw8yoN7
 ```
 {% include copy-curl.html %}
 
-Once the task is complete, the task state changes to `COMPLETED` and the ML Tasks API response includes a model ID for the deployed model:
+工作完成後，工作狀態會變更為 `COMPLETED`，且 ML Tasks API 回應會包含已部署模型的模型 ID：
 
 ```json
 {
@@ -81,9 +82,9 @@ Once the task is complete, the task state changes to `COMPLETED` and the ML Task
 }
 ```
 
-## Step 2: Create an ingest pipeline
+## 步驟 2：建立資料匯入管線
 
-To translate text into vector embeddings, you'll set up an ingest pipeline. The pipeline translates the `text` field and writes the resulting vector embeddings into the `embedding` field. Create the pipeline by specifying the `model_id` from the previous step in the following request:
+若要將文字轉譯為向量嵌入，您將設定資料匯入管線。此管線會轉譯 `text` 欄位，並將產生的向量嵌入寫入 `embedding` 欄位。請在下列請求中指定前一步驟的 `model_id` 來建立管線：
 
 ```json
 PUT /_ingest/pipeline/test-pipeline-local-model
@@ -103,9 +104,9 @@ PUT /_ingest/pipeline/test-pipeline-local-model
 ```
 {% include copy-curl.html %}
 
-## Step 3: Create a vector index and ingest data
+## 步驟 3：建立向量索引並匯入資料
 
-Now you'll ingest supplementary data into an OpenSearch index. In OpenSearch, vectors are stored in a vector index. You can create a [vector index]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/) by sending the following request:
+現在您將把補充資料匯入 OpenSearch 索引。在 OpenSearch 中，向量會儲存在向量索引中。您可以傳送下列請求來建立[向量索引]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/)：
 
 ```json
 PUT my_test_data
@@ -132,7 +133,7 @@ PUT my_test_data
 ```
 {% include copy-curl.html %}
 
-Then, ingest data into the index by using a bulk request:
+接著，使用大量請求將資料匯入索引：
 
 ```json
 POST _bulk
@@ -151,9 +152,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Step 4: Create a connector to an externally hosted model
+## 步驟 4：建立外部託管模型的連接器
 
-You'll need an LLM to generate responses to user questions. An LLM is too large for an OpenSearch cluster, so you'll create a connection to an externally hosted LLM. For this example, you'll create a connector to the Anthropic Claude model hosted on Amazon Bedrock:
+您需要一個 LLM 來產生對使用者問題的回應。LLM 對 OpenSearch 叢集而言太過龐大，因此您將建立與外部託管 LLM 的連線。在本範例中，您將建立連接器，連線至託管於 Amazon Bedrock 的 Anthropic Claude 模型：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -194,7 +195,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-The response contains the connector ID for the newly created connector:
+回應包含新建連接器的連接器 ID：
 
 ```json
 {
@@ -202,9 +203,9 @@ The response contains the connector ID for the newly created connector:
 }
 ```
 
-## Step 5: Register and deploy the externally hosted model
+## 步驟 5：註冊並部署外部託管模型
 
-Like the text embedding model, an LLM needs to be registered and deployed to OpenSearch. To set up the externally hosted model, first create a model group for this model:
+如同文字嵌入模型，LLM 也需要註冊並部署到 OpenSearch。若要設定外部託管模型，請先為此模型建立模型群組：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -215,7 +216,7 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-The response contains the model group ID that you’ll use to register a model to this model group:
+回應包含模型群組 ID，您將使用它將模型註冊到此模型群組：
 
 ```json
 {
@@ -225,7 +226,7 @@ The response contains the model group ID that you’ll use to register a model t
 
 ```
 
-Next, register and deploy the externally hosted Claude model:
+接下來，註冊並部署外部託管的 Claude 模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -239,7 +240,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Similarly to [Step 1](#step-1-register-and-deploy-a-text-embedding-model), the response contains a task ID that you can use to check the status of the deployment. Once the model is deployed, the status changes to `COMPLETED` and the response includes the model ID for the Claude model:
+與[步驟 1](#step-1-register-and-deploy-a-text-embedding-model)類似，回應包含一個任務 ID，您可以用它來檢查部署狀態。模型部署完成後，狀態會變更為 `COMPLETED`，且回應會包含 Claude 模型的模型 ID：
 
 ```json
 {
@@ -256,7 +257,7 @@ Similarly to [Step 1](#step-1-register-and-deploy-a-text-embedding-model), the r
 }
 ```
 
-To test the LLM, send the following predict request:
+若要測試 LLM，請傳送下列 predict 請求：
 
 ```json
 POST /_plugins/_ml/models/NWR9YIsBUysqmzBdifVJ/_predict
@@ -268,9 +269,9 @@ POST /_plugins/_ml/models/NWR9YIsBUysqmzBdifVJ/_predict
 ```
 {% include copy-curl.html %}
 
-## Step 6: Register and execute an agent
+## 步驟 6：註冊並執行代理程式
 
-Finally, you'll use the text embedding model created in Step 1 and the Claude model created in Step 5 to create a flow agent. This flow agent will run a `VectorDBTool` and then an `MLModelTool`. The `VectorDBTool` is configured with the model ID for the text embedding model created in Step 1 for vector search. The `MLModelTool` is configured with the Claude model created in step 5:
+最後，您將使用步驟 1 建立的文字嵌入模型與步驟 5 建立的 Claude 模型來建立流程代理程式。此流程代理程式會先執行 `VectorDBTool`，再執行 `MLModelTool`。`VectorDBTool` 已設定為使用步驟 1 建立的文字嵌入模型的模型 ID，以進行向量搜尋。`MLModelTool` 則設定為使用步驟 5 建立的 Claude 模型：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -302,7 +303,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns an agent ID for the newly created agent:
+OpenSearch 會為新建的代理程式傳回代理程式 ID：
 
 ```json
 {
@@ -310,14 +311,14 @@ OpenSearch returns an agent ID for the newly created agent:
 }
 ```
 
-You can inspect the agent by sending a request to the `agents` endpoint and providing the agent ID:
+您可以向 `agents` 端點傳送請求並提供代理程式 ID，以檢視該代理程式：
 
 ```json
 GET /_plugins/_ml/agents/879v9YwBjWKCe6Kg12Tx
 ```
 {% include copy-curl.html %}
 
-To execute the agent, send the following request. When registering the agent, you configured it to take in `parameters.question`, so you need to provide this parameter in the request. This parameter represents a human-generated user question:
+若要執行代理程式，請傳送下列請求。註冊代理程式時，您已將其設定為接受 `parameters.question`，因此您必須在請求中提供此參數。此參數代表由人工產生的使用者問題：
 
 ```json
 POST /_plugins/_ml/agents/879v9YwBjWKCe6Kg12Tx/_execute
@@ -329,7 +330,7 @@ POST /_plugins/_ml/agents/879v9YwBjWKCe6Kg12Tx/_execute
 ```
 {% include copy-curl.html %}
 
-The LLM does not have the recent information in its knowledge base, so it infers the response to the question based on the ingested data, demonstrating RAG:
+LLM 的知識庫中沒有最新資訊，因此它會根據已匯入的資料推論問題的回應，這展示了 RAG：
 
 ```json
 {

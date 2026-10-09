@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Evaluating search quality
+title: "評估搜尋品質"
 nav_order: 50
 parent: Search Relevance Workbench
 grand_parent: Optimizing search quality
 has_children: false
 ---
 
-# Evaluating search quality
+# 評估搜尋品質
 
-Search Relevance Workbench can run pointwise experiments to evaluate search configuration quality using provided queries and relevance judgments.
+Search Relevance Workbench 可執行逐點實驗，使用提供的查詢與相關性判斷來評估搜尋組態的品質。
 
-For more information about creating a query set, see [Query sets]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/query-sets/).
+如需建立查詢集的詳細資訊，請參閱[查詢集]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/query-sets/)。
 
-For more information about creating search configurations, see [Search Configurations]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/search-configurations/).
+如需建立搜尋組態的詳細資訊，請參閱[搜尋組態]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/search-configurations/)。
 
-For more information about creating judgments, see [Judgments]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/judgments/).
+如需建立判斷的詳細資訊，請參閱[判斷]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/judgments/)。
 
-## Creating a pointwise experiment
+## 建立逐點實驗
 
-A pointwise experiment compares your search configuration results against provided relevance judgments to evaluate search quality.
+逐點實驗會將您的搜尋組態結果與提供的相關性判斷進行比較，以評估搜尋品質。
 
-### Example request
+### 範例請求
 
 ```json
 PUT _plugins/_search_relevance/experiments
@@ -34,19 +35,19 @@ PUT _plugins/_search_relevance/experiments
 }
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available input parameters.
+下表列出可用的輸入參數。
 
-Field | Data type |  Description
+欄位 | 資料類型 | 說明
 :---  | :--- | :---
-`querySetId` | String |	The ID of the query set.
-`searchConfigurationList` | List | A list of search configuration IDs to use for comparison.
-`judgmentList` | Array[String] | A list of judgment IDs to use for evaluating search accuracy.
-`size` | Integer | The number of documents to return in the results.
-`type` | String | The type of experiment to run. Valid values are `PAIRWISE_COMPARISON`, `HYBRID_OPTIMIZER`, or `POINTWISE_EVALUATION`. Depending on the experiment type, you must provide different body fields in the request. `PAIRWISE_COMPARISON` is for comparing two search configurations against a query set and is used [here]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/compare-query-sets/). `HYBRID_OPTIMIZER` is for combining results and is used [here]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/optimize-hybrid-search/). `POINTWISE_EVALUATION` is for evaluating a search configuration against judgments and is used [here]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/evaluate-search-quality/).
+`querySetId` | 字串 |	查詢集的 ID。
+`searchConfigurationList` | 清單 | 要用於比較的搜尋組態 ID 清單。
+`judgmentList` | 字串陣列 | 要用於評估搜尋準確度的判斷 ID 清單。
+`size` | 整數 | 結果中要傳回的文件數。
+`type` | 字串 | 要執行的實驗類型。有效值為 `PAIRWISE_COMPARISON`、`HYBRID_OPTIMIZER` 或 `POINTWISE_EVALUATION`。視實驗類型而定，您必須在請求中提供不同的本文欄位。`PAIRWISE_COMPARISON` 用於將兩個搜尋組態與查詢集進行比較，用法請見[這裡]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/compare-query-sets/)。`HYBRID_OPTIMIZER` 用於合併結果，用法請見[這裡]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/optimize-hybrid-search/)。`POINTWISE_EVALUATION` 用於根據判斷評估搜尋組態，用法請見[這裡]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/evaluate-search-quality/)。
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -55,15 +56,15 @@ Field | Data type |  Description
 }
 ```
 
-## Managing the results
+## 管理結果
 
-To retrieve experiment results, follow the same process used for [comparing query sets]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/compare-query-sets/) in pairwise experiments.
+若要擷取實驗結果，請遵循用於配對實驗中[比較查詢集]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/compare-query-sets/)的相同流程。
 
-The following is an example completed response:
+以下是完成的回應範例：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
 
 ```json
@@ -121,13 +122,13 @@ The following is an example completed response:
 
 </details>
 
-The results include an evaluation result ID for each search configuration. To view detailed results, query the `search-relevance-evaluation-result` index using this ID.
+結果包含每個搜尋組態的評估結果 ID。若要檢視詳細結果，請使用此 ID 查詢 `search-relevance-evaluation-result` 索引。
 
-The following is an example of the detailed results:
+以下是詳細結果的範例：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
 
 ```json
@@ -196,17 +197,17 @@ The following is an example of the detailed results:
 
 </details>
 
-The results include the original request parameters along with the following metric values:
+結果包含原始請求參數以及下列指標值：
 
-- `Coverage@k`: The proportion of scored documents from the judgment set, calculated as the number of documents with scores divided by the total number of documents.
+- `Coverage@k`：判斷集中已評分文件的比例，計算方式為有分數的文件數除以文件總數。
 
 
-- `Precision@k`: The proportion of documents with nonzero judgment scores out of k (or out of the total number of returned documents, if lower).
+- `Precision@k`：判斷分數非零的文件在 k 個文件中所占的比例 (若傳回的文件總數較少，則以傳回的文件總數為準)。
 
-- `MAP@k`: The Mean Average Precision, which calculates the average precision across all documents. For more information, see [Average precision](https://en.wikipedia.org/wiki/Evaluation_measures_(information_retrieval)#Average_precision).
+- `MAP@k`：平均精確度 (Mean Average Precision)，計算所有文件的平均精確度。如需詳細資訊，請參閱[平均精確度](https://en.wikipedia.org/wiki/Evaluation_measures_(information_retrieval)#Average_precision)。
 
-- `NDCG@k`: The Normalized Discounted Cumulative Gain, which compares the actual ranking of results against a perfect ranking, with higher weights given to top results. This measures the quality of result ordering.
+- `NDCG@k`：正規化折損累積增益 (Normalized Discounted Cumulative Gain)，將結果的實際排名與完美排名進行比較，並對排名前面的結果賦予較高權重。這可衡量結果排序的品質。
 
-To review these results visually, see [Exploring search evaluation results]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/explore-experiment-results/).
+若要以視覺化方式檢閱這些結果，請參閱[探索搜尋評估結果]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/explore-experiment-results/)。
 
-To schedule automatic evaluations, see [Monitoring search quality]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/regularly-scheduled-experiments/).
+若要排定自動評估，請參閱[監控搜尋品質]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/regularly-scheduled-experiments/)。

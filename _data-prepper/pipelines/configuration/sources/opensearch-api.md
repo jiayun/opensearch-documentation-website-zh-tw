@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: OpenSearch API
 parent: Sources
@@ -6,49 +7,49 @@ grand_parent: Pipelines
 nav_order: 55
 ---
 
-# OpenSearch API source
+# OpenSearch API 來源
 
-The `opensearch_api` source accepts HTTP requests compatible with the [OpenSearch Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/). Standard OpenSearch clients like [Apache Flink OpenSearch Connector](https://nightlies.apache.org/flink/flink-docs-stable/docs/connectors/datastream/opensearch/), Logstash, and [`opensearch-py`]({{site.url}}{{site.baseurl}}/clients/python-low-level/) can send data to Data Prepper through this source.
+`opensearch_api` 來源接受與 [OpenSearch Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) 相容的 HTTP 請求。標準 OpenSearch 用戶端（例如 [Apache Flink OpenSearch Connector](https://nightlies.apache.org/flink/flink-docs-stable/docs/connectors/datastream/opensearch/)、Logstash 及 [`opensearch-py`]({{site.url}}{{site.baseurl}}/clients/python-low-level/)）可透過此來源將資料傳送至 Data Prepper。
 
-Unlike the OpenSearch Bulk API, this source writes asynchronously. Events are buffered for downstream processing rather than written directly to OpenSearch. When the `zero` buffer is used, events pass directly to the sink. Regardless of buffer type, the response is synthetic and does not reflect actual indexing results from OpenSearch.
+與 OpenSearch Bulk API 不同，此來源以非同步方式寫入。事件會先緩衝以供下游處理，而非直接寫入 OpenSearch。使用 `zero` 緩衝區時，事件會直接傳遞至接收器。無論緩衝區類型為何，回應皆為合成的，並不反映 OpenSearch 的實際索引結果。
 
-## Usage
+## 使用方式
 
-The `opensearch_api` source supports the following endpoints:
+`opensearch_api` 來源支援下列端點：
 
 ```json
 POST /{path}/_bulk
 POST /{path}/{index}/_bulk
 ```
 
-## Configuration
+## 組態
 
-The following table lists the configuration options for the `opensearch_api` source.
+下表列出 `opensearch_api` 來源的組態選項。
 
-| Parameter | Type | Required | Default | Description |
+| 參數 | 類型 | 必要 | 預設 | 說明 |
 |-----------|------|----------|---------|-------------|
-| `port` | Integer | No | `9200` | The port the source listens on. Must be 0--65535. |
-| `path` | String | No | `/` | The URI path for the endpoint. Must start with `/`. Supports the `${pipelineName}` placeholder. |
-| `request_timeout` | Integer | No | `10000` | The request timeout, in milliseconds. |
-| `thread_count` | Integer | No | `200` | The number of threads in the scheduled thread pool. |
-| `max_connection_count` | Integer | No | `500` | The maximum number of open connections. |
-| `max_pending_requests` | Integer | No | `1024` | The maximum number of tasks in the work queue. |
-| `health_check_service` | Boolean | No | `false` | Enables a `/health` endpoint on the configured port. |
-| `unauthenticated_health_check` | Boolean | No | `false` | If `true`, the health endpoint does not require authentication. |
-| `compression` | String | No | `none` | The compression applied to the request payload. Valid values are `none` and `gzip`. |
-| `authentication` | Object | No | Unauthenticated | The authentication configuration. See [Authentication](#authentication). |
-| `ssl` | Boolean | No | `false` | Enables TLS/SSL. |
-| `ssl_certificate_file` | String | Conditional | — | The path to the SSL certificate file. Required if `ssl` is `true` and `use_acm_certificate_for_ssl` is `false`. Supports Amazon Simple Storage Service (Amazon S3) paths (`s3://bucket/path`). |
-| `ssl_key_file` | String | Conditional | — | The path to the SSL key file (decrypted). Required if `ssl` is `true` and `use_acm_certificate_for_ssl` is `false`. Supports Amazon S3 paths. |
-| `use_acm_certificate_for_ssl` | Boolean | No | `false` | When `true`, uses AWS Certificate Manager (ACM) for TLS certificates. |
-| `acm_certificate_arn` | String | Conditional | — | The ACM certificate Amazon Resource Name (ARN). Required if `use_acm_certificate_for_ssl` is `true`. |
-| `acm_private_key_password` | String | No | Random | The password to decrypt the ACM private key. |
-| `acm_certificate_timeout_millis` | Integer | No | `120000` | The timeout for ACM certificate retrieval, in milliseconds. |
-| `aws_region` | String | Conditional | — | The AWS Region for ACM or Amazon S3 certificate access. |
+| `port` | 整數 | 否 | `9200` | 來源接聽的連接埠。必須介於 0--65535。 |
+| `path` | 字串 | 否 | `/` | 端點的 URI 路徑。必須以 `/` 開頭。支援 `${pipelineName}` 預留位置。 |
+| `request_timeout` | 整數 | 否 | `10000` | 請求逾時，單位為毫秒。 |
+| `thread_count` | 整數 | 否 | `200` | 排程執行緒集區中的執行緒數目。 |
+| `max_connection_count` | 整數 | 否 | `500` | 開啟連線數上限。 |
+| `max_pending_requests` | 整數 | 否 | `1024` | 工作佇列中的工作數上限。 |
+| `health_check_service` | 布林值 | 否 | `false` | 在設定的連接埠上啟用 `/health` 端點。 |
+| `unauthenticated_health_check` | 布林值 | 否 | `false` | 若為 `true`，健康狀態端點不需要驗證。 |
+| `compression` | 字串 | 否 | `none` | 套用至請求承載的壓縮。有效值為 `none` 與 `gzip`。 |
+| `authentication` | 物件 | 否 | 未驗證 | 驗證組態。請參閱[驗證](#authentication)。 |
+| `ssl` | 布林值 | 否 | `false` | 啟用 TLS/SSL。 |
+| `ssl_certificate_file` | 字串 | 視情況而定 | — | SSL 憑證檔案的路徑。若 `ssl` 為 `true` 且 `use_acm_certificate_for_ssl` 為 `false`，則為必要。支援 Amazon Simple Storage Service (Amazon S3) 路徑 (`s3://bucket/path`)。 |
+| `ssl_key_file` | 字串 | 視情況而定 | — | SSL 金鑰檔案的路徑（已解密）。若 `ssl` 為 `true` 且 `use_acm_certificate_for_ssl` 為 `false`，則為必要。支援 Amazon S3 路徑。 |
+| `use_acm_certificate_for_ssl` | 布林值 | 否 | `false` | 若為 `true`，則使用 AWS Certificate Manager (ACM) 取得 TLS 憑證。 |
+| `acm_certificate_arn` | 字串 | 視情況而定 | — | ACM 憑證的 Amazon Resource Name (ARN)。若 `use_acm_certificate_for_ssl` 為 `true`，則為必要。 |
+| `acm_private_key_password` | 字串 | 否 | 隨機 | 用於解密 ACM 私密金鑰的密碼。 |
+| `acm_certificate_timeout_millis` | 整數 | 否 | `120000` | 擷取 ACM 憑證的逾時，單位為毫秒。 |
+| `aws_region` | 字串 | 視情況而定 | — | 用於存取 ACM 或 Amazon S3 憑證的 AWS 區域。 |
 
-## Authentication
+## 驗證
 
-By default, the source runs without authentication. To make this explicit in your configuration, use the `unauthenticated` key:
+根據預設，此來源在沒有驗證的情況下執行。若要在組態中明確表示，請使用 `unauthenticated` 索引鍵：
 
 ```yaml
 source:
@@ -58,9 +59,9 @@ source:
 ```
 {% include copy.html %}
 
-### HTTP basic authentication
+### HTTP 基本驗證
 
-The following example configures HTTP basic authentication with a username and password:
+下列範例使用使用者名稱與密碼設定 HTTP 基本驗證：
 
 ```yaml
 source:
@@ -72,27 +73,27 @@ source:
 ```
 {% include copy.html %}
 
-### Custom authentication
+### 自訂驗證
 
-To provide custom authentication, create a plugin that implements the [`ArmeriaHttpAuthenticationProvider`](https://github.com/opensearch-project/data-prepper/blob/main/data-prepper-plugins/armeria-common/src/main/java/org/opensearch/dataprepper/armeria/authentication/ArmeriaHttpAuthenticationProvider.java) interface.
+若要提供自訂驗證，請建立實作 [`ArmeriaHttpAuthenticationProvider`](https://github.com/opensearch-project/data-prepper/blob/main/data-prepper-plugins/armeria-common/src/main/java/org/opensearch/dataprepper/armeria/authentication/ArmeriaHttpAuthenticationProvider.java) 介面的外掛程式。
 
-## Event metadata attributes
+## 事件中繼資料屬性
 
-For each action in the bulk request, the source creates a Data Prepper event with the following metadata attributes.
+對於大量請求中的每個動作，來源會建立具有下列中繼資料屬性的 Data Prepper 事件。
 
-| Attribute | Description | Example |
+| 屬性 | 說明 | 範例 |
 |-----------|-------------|---------|
-| `opensearch_action` | The bulk action type | `index`, `create`, `update`, `delete` |
-| `opensearch_index` | Target index name | `my-index` |
-| `opensearch_id` | Document ID (if provided) | `doc-123` |
-| `opensearch_routing` | Routing value (if provided) | `user-456` |
-| `opensearch_pipeline` | Ingest pipeline (if provided) | `my-pipeline` |
+| `opensearch_action` | 大量動作類型 | `index`、`create`、`update`、`delete` |
+| `opensearch_index` | 目標索引名稱 | `my-index` |
+| `opensearch_id` | 文件 ID（若有提供） | `doc-123` |
+| `opensearch_routing` | 路由值（若有提供） | `user-456` |
+| `opensearch_pipeline` | 資料匯入管線（若有提供） | `my-pipeline` |
 
-You can reference these attributes in processors and sinks using the `getMetadata` method or `${metadata_key}` syntax.
+您可以使用 `getMetadata` 方法或 `${metadata_key}` 語法，在處理器與接收器中參照這些屬性。
 
-## Response format
+## 回應格式
 
-On success, the source returns a JSON response with an empty `items` array:
+成功時，來源會傳回含有空 `items` 陣列的 JSON 回應：
 
 ```json
 {
@@ -102,77 +103,77 @@ On success, the source returns a JSON response with an empty `items` array:
 }
 ```
 
-The following table lists the response fields.
+下表列出回應欄位。
 
-| Field | Description |
+| 欄位 | 說明 |
 |-------|-------------|
-| `took` | The actual processing time, measured from request receipt to buffer write completion, in milliseconds. |
-| `errors` | Indicates whether any errors occurred. Always `false` when all data is successfully written to the buffer. |
-| `items` | Always an empty array. Because Data Prepper buffers documents for downstream processing rather than indexing them directly, per-item results are not available at request time. |
+| `took` | 實際處理時間，從收到請求到完成緩衝區寫入為止，單位為毫秒。 |
+| `errors` | 指出是否發生任何錯誤。當所有資料都成功寫入緩衝區時，一律為 `false`。 |
+| `items` | 一律為空陣列。由於 Data Prepper 會緩衝文件以供下游處理，而非直接編製索引，因此請求時無法取得個別項目的結果。 |
 
-## Response status codes
+## 回應狀態碼
 
-The following table lists the possible response status codes.
+下表列出可能的回應狀態碼。
 
-| Status | Description |
+| 狀態 | 說明 |
 |--------|-------------|
-| `200` | Request data successfully written to the buffer. |
-| `400` | Request data is malformed or uses an unsupported format. |
-| `408` | Request timed out writing to the buffer. |
-| `413` | Request payload exceeds the configured buffer capacity. |
-| `429` | Source is at full capacity; request rejected. |
+| `200` | 請求資料已成功寫入緩衝區。 |
+| `400` | 請求資料格式錯誤或使用不支援的格式。 |
+| `408` | 請求寫入緩衝區時逾時。 |
+| `413` | 請求承載超過設定的緩衝區容量。 |
+| `429` | 來源已達容量上限；請求遭拒。 |
 
-## Buffer compatibility
+## 緩衝區相容性
 
-The `opensearch_api` source works with the following buffer types.
+`opensearch_api` 來源可搭配下列緩衝區類型使用。
 
-| Buffer | Supported | Notes |
+| 緩衝區 | 支援 | 備註 |
 |--------|-----------|-------|
-| [`bounded_blocking`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/buffers/bounded-blocking/) | Yes | Default. Events are stored in an in-memory blocking queue. |
-| [`kafka`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/buffers/kafka/) | Yes | Requires Data Prepper 2.x. Events are serialized to Apache Kafka and reconstructed on the consumer side. |
-| `zero` | Yes | Events pass directly to the sink with no buffering. |
+| [`bounded_blocking`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/buffers/bounded-blocking/) | 是 | 預設。事件會儲存在記憶體內封鎖佇列中。 |
+| [`kafka`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/buffers/kafka/) | 是 | 需要 Data Prepper 2.x。事件會序列化至 Apache Kafka，並在取用端重建。 |
+| `zero` | 是 | 事件會直接傳遞至接收器，不進行緩衝。 |
 
-## Metrics
+## 指標
 
-The `opensearch_api` source emits the following metrics.
+`opensearch_api` 來源會發出下列指標。
 
-### Counters
+### 計數器
 
-The following table lists the counter metrics.
+下表列出計數器指標。
 
-| Metric | Description |
+| 指標 | 說明 |
 |--------|-------------|
-| `requestsReceived` | The total number of requests received by the endpoint. |
-| `successRequests` | The total number of requests successfully processed (200). |
-| `badRequests` | The total number of requests with invalid format (400). |
-| `requestTimeouts` | The total number of requests that timed out (408). |
-| `requestsTooLarge` | The total number of requests exceeding buffer capacity (413). |
-| `requestsRejected` | The total number of requests rejected due to full capacity (429). |
-| `internalServerError` | The total number of requests with internal errors (500). |
+| `requestsReceived` | 端點收到的請求總數。 |
+| `successRequests` | 成功處理的請求總數 (200)。 |
+| `badRequests` | 格式無效的請求總數 (400)。 |
+| `requestTimeouts` | 逾時的請求總數 (408)。 |
+| `requestsTooLarge` | 超過緩衝區容量的請求總數 (413)。 |
+| `requestsRejected` | 因容量已滿而遭拒的請求總數 (429)。 |
+| `internalServerError` | 發生內部錯誤的請求總數 (500)。 |
 
-### Timer
+### 計時器
 
-The following table lists the timer metric.
+下表列出計時器指標。
 
-| Metric | Description |
+| 指標 | 說明 |
 |--------|-------------|
-| `requestProcessDuration` | The request processing latency, in seconds. |
+| `requestProcessDuration` | 請求處理延遲，單位為秒。 |
 
-### Distribution summary
+### 分佈摘要
 
-The following table lists the distribution summary metric.
+下表列出分佈摘要指標。
 
-| Metric | Description |
+| 指標 | 說明 |
 |--------|-------------|
-| `payloadSize` | The distribution of incoming request payload sizes, in bytes. |
+| `payloadSize` | 傳入請求承載大小的分佈，單位為位元組。 |
 
-## Examples
+## 範例
 
-The following examples demonstrate common configurations for the `opensearch_api` source.
+下列範例示範 `opensearch_api` 來源的常見組態。
 
-### Basic pipeline with an OpenSearch sink
+### 搭配 OpenSearch 接收器的基本管線
 
-The following example configures a pipeline that receives bulk requests and writes events to an OpenSearch sink using metadata attributes:
+下列範例設定一個管線，用於接收大量請求，並使用中繼資料屬性將事件寫入 OpenSearch 接收器：
 
 ```yaml
 opensearch-pipeline:
@@ -190,9 +191,9 @@ opensearch-pipeline:
 ```
 {% include copy.html %}
 
-### SSL enabled
+### 已啟用 SSL
 
-The following example enables SSL with HTTP basic authentication:
+下列範例使用 HTTP 基本驗證啟用 SSL：
 
 ```yaml
 opensearch-pipeline:
@@ -214,9 +215,9 @@ opensearch-pipeline:
 ```
 {% include copy.html %}
 
-### Sending data using cURL
+### 使用 cURL 傳送資料
 
-The following example sends a bulk request to the `opensearch_api` source using cURL:
+下列範例使用 cURL 將大量請求傳送至 `opensearch_api` 來源：
 
 ```bash
 curl -XPOST "http://localhost:9202/opensearch/_bulk" \
@@ -229,10 +230,10 @@ curl -XPOST "http://localhost:9202/opensearch/_bulk" \
 {% include copy.html %}
 
 <!-- vale off -->
-### Sending data using opensearch-py
+### 使用 opensearch-py 傳送資料
 <!-- vale on -->
 
-The following example sends a bulk request using the `opensearch-py` client:
+下列範例使用 `opensearch-py` 用戶端傳送大量請求：
 
 ```python
 from opensearchpy import OpenSearch

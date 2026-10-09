@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Store
+title: "儲存"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/store/
@@ -9,15 +10,15 @@ has_children: false
 has_toc: false
 ---
 
-# Store mapping parameter
+# Store 對應參數
 
-The `store` mapping parameter determines whether the value of a field should be stored separately from the `_source` and made directly retrievable using the `stored_fields` option in a search request.
+`store` 對應參數決定是否將欄位值與 `_source` 分開儲存，並讓您可使用搜尋請求中的 `stored_fields` 選項直接擷取該值。
 
-By default, `store` is set to `false`, meaning that field values are not stored individually and are only available as part of the document `_source`. If `store` is set to `true`, you can disable the `_source` to save disk space and still [retrieve specific fields]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/).
+預設情況下，`store` 設為 `false`，表示欄位值不會個別儲存，只能作為文件 `_source` 的一部分存取。如果將 `store` 設為 `true`，您可以停用 `_source` 以節省磁碟空間，同時仍可[擷取特定欄位]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/)。
 
-## Example: Enabling `store` on a field
+## 範例：在欄位上啟用 `store`
 
-The following request creates an index named `products` in which the `model` field is stored separately from the `_source`:
+下列請求會建立名為 `products` 的索引，其中 `model` 欄位會與 `_source` 分開儲存：
 
 ```json
 PUT /products
@@ -37,7 +38,7 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-Ingest a document into the index:
+將文件匯入索引：
 
 ```json
 PUT /products/_doc/1
@@ -48,7 +49,7 @@ PUT /products/_doc/1
 ```
 {% include copy-curl.html %}
 
-Retrieve only the stored field:
+僅擷取已儲存的欄位：
 
 ```json
 POST /products/_search
@@ -63,13 +64,13 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-This query returns the `model` field stored separately even though the `_source` is still available.
+此查詢會傳回分開儲存的 `model` 欄位，即使 `_source` 仍可存取。
 
 ---
 
-## Example: Storing fields with `_source` disabled
+## 範例：在停用 `_source` 的情況下儲存欄位
 
-If you want to save disk space and don't need to access the full original document later (for example, for reindexing or updates), you can disable `_source` and store only necessary fields:
+如果您想節省磁碟空間，且之後不需要存取完整的原始文件（例如，用於重新編製索引或更新），可以停用 `_source`，只儲存必要的欄位：
 
 ```json
 PUT /products_no_source
@@ -92,7 +93,7 @@ PUT /products_no_source
 ```
 {% include copy-curl.html %}
 
-Ingest a document into the index:
+將文件匯入索引：
 
 ```json
 PUT /products_no_source/_doc/1
@@ -103,7 +104,7 @@ PUT /products_no_source/_doc/1
 ```
 {% include copy-curl.html %}
 
-Retrieve the stored field:
+擷取已儲存的欄位：
 
 ```json
 POST /products_no_source/_search
@@ -118,15 +119,15 @@ POST /products_no_source/_search
 ```
 {% include copy-curl.html %}
 
-This query returns the `model` field retrieved from `stored_fields` without accessing the `_source`.
+此查詢會傳回從 `stored_fields` 擷取的 `model` 欄位，且不會存取 `_source`。
 
-If you attempt to retrieve the `_source` as follows:
+如果您嘗試以下列方式擷取 `_source`：
 
 ```json
 GET /products_no_source/_doc/1
 ```
 
-Then the `_source` in the response will be `null`. This demonstrates that the full document is no longer available and that only stored fields can be retrieved because `_source` is disabled:
+則回應中的 `_source` 會是 `null`。這表示完整文件已無法存取，且由於 `_source` 已停用，因此只能擷取已儲存的欄位：
 
 ```json
 {

@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Network
+title: "網路"
 parent: Supported log types
 nav_order: 70
 ---
 
-# Network log type
+# 網路記錄檔類型
 
-The `network` log type records events that happen in a system's network, such as login attempts and application events.
+`network` 記錄檔類型會記錄系統網路中發生的事件，例如登入嘗試與應用程式事件。
 
-The following code snippet contains all the `raw_field` and `ecs` mappings for this log type:
+下列程式碼片段包含此記錄檔類型的所有 `raw_field` 與 `ecs` 對應：
 
 ```json
  "mappings": [

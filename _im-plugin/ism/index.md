@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index State Management
+title: "索引狀態管理"
 nav_order: 40
 has_children: true
 redirect_from:
@@ -8,27 +9,27 @@ redirect_from:
 has_toc: false
 ---
 
-# Index State Management
+# 索引狀態管理
 
-Index State Management (ISM) runs administrative operations on an index for you, triggered by the index's age, size, or document count. Use it for the periodic work that time-series data creates: rolling over an index once it reaches a size, reducing its replica count as it ages, force merging it during off-peak hours, taking a snapshot of it, and deleting it when it is no longer needed.
+索引狀態管理 (ISM) 會為您對索引執行管理作業，並由索引的存留時間、大小或文件計數觸發。您可以用它來處理時間序列資料所產生的週期性工作：在索引達到特定大小時將其輪替、隨著索引存留時間增加而減少其副本數、在離峰時段強制合併索引、為索引建立快照，並在不再需要時將其刪除。
 
-For example, a policy can move an index into a `read_only` state after 30 days, snapshot it after 60, delete it after 90, and send you a notification each time it changes state.
+舉例來說，政策可以在 30 天後將索引移至 `read_only` 狀態、在 60 天後為其建立快照、在 90 天後將其刪除，並在每次狀態變更時傳送通知給您。
 
-## Policies, states, actions, and transitions
+## 政策、狀態、動作與轉換
 
-A *policy* is a JSON document that describes how an index is managed. It is a state machine built from three parts:
+*政策* 是描述索引管理方式的 JSON 文件。它是由三個部分組成的狀態機器：
 
-- A *state* is a status that a managed index can be in, such as `hot`, `warm`, or `delete`. An index is in exactly one state at a time.
-- An *action* is an operation that ISM runs when the index enters a state, such as `rollover`, `force_merge`, or `snapshot`. Actions run in the order in which you define them.
-- A *transition* is a condition that moves the index from one state to the next, such as reaching a minimum age or document count.
+- *狀態* 是受管理索引可能處於的狀態，例如 `hot`、`warm` 或 `delete`。索引一次只會處於一個狀態。
+- *動作* 是索引進入某個狀態時 ISM 所執行的作業，例如 `rollover`、`force_merge` 或 `snapshot`。動作會依您定義的順序執行。
+- *轉換* 是將索引從一個狀態移至下一個狀態的條件，例如達到最小存留時間或文件計數。
 
-A policy can define any number of states, any number of actions in each state, and a transition between any two states, including from a state to itself. For the full policy structure, see [Policies]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/).
+政策可以定義任意數量的狀態、每個狀態中任意數量的動作，以及任兩個狀態之間的轉換，包括從某個狀態轉換至其本身。如需完整的政策結構，請參閱[政策]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/)。
 
-After a policy is attached to an index, ISM creates a job that runs every 5 minutes by default. Each run performs the actions of the current state, evaluates the transition conditions, and moves the index to its next state. To change the interval, see [Settings]({{site.url}}{{site.baseurl}}/im-plugin/ism/settings/). ISM does not run jobs while the cluster state is red.
+將政策附加至索引後，ISM 會建立一個預設每 5 分鐘執行一次的作業。每次執行都會執行目前狀態的動作、評估轉換條件，並將索引移至下一個狀態。如需變更間隔，請參閱[設定]({{site.url}}{{site.baseurl}}/im-plugin/ism/settings/)。當叢集狀態為紅色時，ISM 不會執行作業。
 
-## Attaching a policy to new indexes
+## 將政策附加至新索引
 
-Add an `ism_template` object to a policy so that ISM attaches the policy to each new index whose name matches one of the patterns. The following policy is attached to every index created with a name beginning with `index_name-`:
+在政策中新增 `ism_template` 物件，讓 ISM 將政策附加至名稱符合其中一個模式的每個新索引。下列政策會附加至每個以 `index_name-` 開頭的名稱所建立的索引：
 
 ```json
 PUT _plugins/_ism/policies/example_policy
@@ -52,28 +53,28 @@ PUT _plugins/_ism/policies/example_policy
 ```
 {% include copy-curl.html %}
 
-An index pattern cannot contain any of the following characters: `:`, `"`, `+`, `/`, `\`, `|`, `?`, `#`, `>`, or `<`. When more than one template matches the name of a new index, ISM applies the template with the highest `priority`.
+索引模式不能包含下列任何字元：`:`、`"`、`+`、`/`、`\`、`|`、`?`、`#`、`>` 或 `<`。當多個範本符合新索引的名稱時，ISM 會套用 `priority` 最高的範本。
 
-For a complete example, see [Sample policy with ISM template for auto rollover]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies-examples/#sample-policy-with-ism-template-for-auto-rollover).
+如需完整範例，請參閱[含 ISM 範本的自動輪替範例政策]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies-examples/#sample-policy-with-ism-template-for-auto-rollover)。
 
-An `ism_template` applies only to indexes created after it. To attach a policy to indexes that already exist, see [Managed indexes]({{site.url}}{{site.baseurl}}/im-plugin/ism/managedindexes/) or [Applying a policy]({{site.url}}{{site.baseurl}}/im-plugin/index-operations/#applying-a-policy).
+`ism_template` 只會套用至在其之後建立的索引。若要將政策附加至已存在的索引，請參閱[受管理索引]({{site.url}}{{site.baseurl}}/im-plugin/ism/managedindexes/)或[套用政策]({{site.url}}{{site.baseurl}}/im-plugin/index-operations/#applying-a-policy)。
 
-The `opendistro.index_state_management.policy_id` index setting, which attached a policy through an index template, is deprecated. Use `ism_template` instead.
+透過索引範本附加政策的 `opendistro.index_state_management.policy_id` 索引設定已棄用。請改用 `ism_template`。
 {: .note}
 
-## In this section
+## 本節內容
 
-| Topic | Description |
+| 主題 | 說明 |
 | :--- | :--- |
-| [Policies]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/) | The structure of a policy, the operations that an action can perform, and complete policy examples. |
-| [Managed indexes]({{site.url}}{{site.baseurl}}/im-plugin/ism/managedindexes/) | Change, remove, and retry the policy that manages an index. |
-| [ISM API]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/) | Create policies, attach and detach them, and explain the state of a managed index. |
-| [ISM error prevention]({{site.url}}{{site.baseurl}}/im-plugin/ism/error-prevention/index/) | Validate actions before they run and resolve the validation messages. |
-| [Settings]({{site.url}}{{site.baseurl}}/im-plugin/ism/settings/) | Cluster settings that control the job interval, history, and validation. |
+| [政策]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/) | 政策的結構、動作可執行的作業，以及完整的政策範例。 |
+| [受管理索引]({{site.url}}{{site.baseurl}}/im-plugin/ism/managedindexes/) | 變更、移除及重試管理索引的政策。 |
+| [ISM API]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/) | 建立政策、附加及分離政策，以及說明受管理索引的狀態。 |
+| [ISM 錯誤預防]({{site.url}}{{site.baseurl}}/im-plugin/ism/error-prevention/index/) | 在動作執行前進行驗證，並解決驗證訊息。 |
+| [設定]({{site.url}}{{site.baseurl}}/im-plugin/ism/settings/) | 控制作業間隔、歷程記錄及驗證的叢集設定。 |
 
-## Related documentation
+## 相關文件
 
-- [Index maintenance]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/)
-- [Data streams]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)
-- [Snapshots]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/index/)
-- [Index management security]({{site.url}}{{site.baseurl}}/im-plugin/security/)
+- [索引維護]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/)
+- [資料串流]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)
+- [快照]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/index/)
+- [索引管理安全性]({{site.url}}{{site.baseurl}}/im-plugin/security/)

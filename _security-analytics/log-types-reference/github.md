@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: GitHub
 parent: Supported log types
 nav_order: 40
 ---
 
-# GitHub log type
+# GitHub 記錄類型
 
-The `github` log type monitors workflows created by [GitHub Actions](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions).
+`github` 記錄類型會監視由 [GitHub Actions](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) 建立的工作流程。
 
-The following code snippet contains all the `raw_field` and `ecs` mappings for this log type:
+下列程式碼片段包含此記錄類型的所有 `raw_field` 和 `ecs` 對應：
 
 ```json
   "mappings": [

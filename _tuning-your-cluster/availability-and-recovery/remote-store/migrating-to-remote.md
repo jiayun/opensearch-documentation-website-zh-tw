@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Migrating to remote-backed storage
+title: "遷移至以遠端儲存空間為後端的儲存架構"
 nav_order: 5
 parent: Remote-backed storage
 grand_parent: Availability and recovery
 ---
 
-# Migrating to remote-backed storage
+# 遷移至以遠端儲存空間為後端的儲存架構
 
-Introduced 2.15
+於 2.15 版導入
 {: .label .label-purple }
 
-Remote-backed storage offers a new way to protect against data loss by automatically creating backups of all index transactions and sending them to remote storage. To use this feature, [segment replication]({{site.url}}{{site.baseurl}}/opensearch/segment-replication/) must be enabled.
+以遠端儲存空間為後端的儲存架構提供一種防止資料遺失的新方式，會自動建立所有索引交易的備份，並將其傳送至遠端儲存空間。若要使用此功能，必須啟用[分段複製]({{site.url}}{{site.baseurl}}/opensearch/segment-replication/)。
 
-You can migrate a document-replication-based cluster to remote-backed storage through the rolling upgrade mechanism.
+您可以透過滾動升級機制，將以文件複製為基礎的叢集遷移至以遠端儲存空間為後端的儲存架構。
 
-Rolling upgrades, sometimes referred to as *node replacement upgrades*, can be performed on running clusters with virtually no downtime. Nodes are individually stopped and migrated in place. Alternatively, nodes can be stopped and replaced, one at a time, by remote-backed hosts. During this process you can continue to index and query data in your cluster.
+滾動升級，有時稱為*節點替換升級*，幾乎可以在不停機的情況下於執行中的叢集上進行。節點會個別停止並就地遷移。或者，節點也可以一次一個地停止，並由使用遠端儲存空間的主機取代。在此過程中，您仍可繼續在叢集中編製索引與查詢資料。
 
-## Preparing to migrate
+## 準備遷移
 
-Review [Upgrading OpenSearch]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/index/) for recommendations about backing up your configuration files and creating a snapshot of the cluster state and indexes before you make any changes to your OpenSearch cluster.
+在對 OpenSearch 叢集進行任何變更之前，請先檢閱[升級 OpenSearch]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/index/)，以了解有關備份組態檔以及建立叢集狀態與索引快照的建議。
 
-Before migrating to remote-backed storage, upgrade to OpenSearch 2.15 or later.
+在遷移至以遠端儲存空間為後端的儲存架構之前，請先升級至 OpenSearch 2.15 或更新版本。
 
-Before upgrading to OpenSearch 2.15, take a cluster snapshot and store it remotely. OpenSearch 2.15 nodes cannot revert to document replication. If a migration needs to be undone, perform a fresh OpenSearch installation and restore from the remote snapshot. Storing the snapshot remotely allows you to retrieve and restore it if issues arise during migration.
+在升級至 OpenSearch 2.15 之前，請先建立叢集快照並將其儲存在遠端。OpenSearch 2.15 節點無法還原為文件複製。如果需要復原遷移，請執行全新的 OpenSearch 安裝，並從遠端快照還原。將快照儲存在遠端，可在遷移過程中發生問題時供您擷取並還原。
 {: .important}
 
-## Performing the upgrade
+## 執行升級
 
-1. Verify the health of your OpenSearch cluster before you begin using the [Cluster Health API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/). Resolve any index or shard allocation issues prior to upgrading to ensure that your data is preserved. A status of **green** indicates that all primary and replica shards are allocated. You can query the `_cluster/health` API endpoint using a command similar to the following:
+1. 在開始之前，使用 [Cluster Health API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/) 驗證 OpenSearch 叢集的健康狀態。請在升級前解決任何索引或分片配置問題，以確保資料受到保存。狀態為 **green** 表示所有主要與副本分片皆已配置。您可以使用類似下列的命令查詢 `_cluster/health` API 端點：
 
    ```json
    GET "/_cluster/health?pretty"
    ```
 
-   You should receive a response similar to the following:
+   您應該會收到類似下列的回應：
 
    ```json
    {
@@ -56,7 +57,7 @@ Before upgrading to OpenSearch 2.15, take a cluster snapshot and store it remote
    }
    ```
    
-1. Disable shard replication to prevent shard replicas from being created while nodes are being taken offline. This stops the movement of Lucene index segments on nodes in your cluster. You can disable shard replication by querying the `_cluster/settings` API endpoint, as shown in the following example:
+1. 停用分片複製，以防止在節點離線時建立分片副本。這會停止叢集中節點上 Lucene 索引分段的移動。您可以透過查詢 `_cluster/settings` API 端點來停用分片複製，如下列範例所示：
 
    ```json
    PUT "/_cluster/settings?pretty"
@@ -66,7 +67,7 @@ Before upgrading to OpenSearch 2.15, take a cluster snapshot and store it remote
        }
    }
    ```
-   You should receive a response similar to the following:
+   您應該會收到類似下列的回應：
    
    ```json
    {
@@ -84,13 +85,13 @@ Before upgrading to OpenSearch 2.15, take a cluster snapshot and store it remote
    }
    ```
 
-1. Perform the following flush operation on the cluster to commit transaction log entries to the Lucene index:
+1. 在叢集上執行下列排清作業，將交易記錄項目提交至 Lucene 索引：
 
    ```json
    POST "/_flush?pretty"
    ```
 
-   You should receive a response similar to the following:
+   您應該會收到類似下列的回應：
    
    ```json
    {
@@ -102,7 +103,7 @@ Before upgrading to OpenSearch 2.15, take a cluster snapshot and store it remote
    }
    ```
 
-1. Set the `cluster.remote_store.compatibility_mode` setting to `mixed` to allow remote-backed storage nodes to join the cluster. Then set `cluster.migration.direction` to `remote_store`, which allocates new indexes to remote-backed data nodes. The following example updates the aforementioned setting using the Cluster Settings API:
+1. 將 `cluster.remote_store.compatibility_mode` 設定設為 `mixed`，以允許使用遠端儲存空間的節點加入叢集。接著將 `cluster.migration.direction` 設為 `remote_store`，這會將新索引配置至使用遠端儲存空間的資料節點。下列範例使用 Cluster Settings API 更新前述設定：
 
    ```json
    PUT "/_cluster/settings?pretty"
@@ -113,7 +114,7 @@ Before upgrading to OpenSearch 2.15, take a cluster snapshot and store it remote
        }
    }
    ```
-   You should receive a response similar to the following:
+   您應該會收到類似下列的回應：
    
    ```json
    {
@@ -130,8 +131,8 @@ Before upgrading to OpenSearch 2.15, take a cluster snapshot and store it remote
    }
    ```
    
-1. Review your cluster and identify the first node to be upgraded.
-1. Provide the remote store repository details as node attributes in `opensearch.yml`, as shown in the following example:
+1. 檢查您的叢集，並找出第一個要升級的節點。
+1. 在 `opensearch.yml` 中以節點屬性的形式提供遠端儲存庫詳細資訊，如下列範例所示：
 
    ```yml
    # Repository name
@@ -162,15 +163,15 @@ Before upgrading to OpenSearch 2.15, take a cluster snapshot and store it remote
    
    ```
 
-1. Stop the node you are migrating. Do not delete the volume associated with the container when you delete the container. The new OpenSearch container will use the existing volume. **Deleting the volume will result in data loss**.
+1. 停止要遷移的節點。刪除容器時，請勿刪除與該容器關聯的磁碟區。新的 OpenSearch 容器將使用現有的磁碟區。**刪除磁碟區將導致資料遺失**。
 
-1. Deploy a new container running the same version of OpenSearch and mapped to the same volume as the container you deleted.
+1. 部署一個執行相同版本 OpenSearch 的新容器，並將其對應至與您刪除的容器相同的磁碟區。
 
-1. Query the `_cat/nodes` endpoint after OpenSearch is running on the new node to confirm that it has joined the cluster. Wait for the cluster to become green again.
+1. 在新節點上執行 OpenSearch 後，查詢 `_cat/nodes` 端點以確認其已加入叢集。等待叢集再次變為 green。
 
-1. Repeat steps 6 through 9 for each node in your cluster. 
+1. 對叢集中的每個節點重複步驟 6 至 9。 
 
-1. Reenable shard replication, using a command similar to the following:
+1. 使用類似下列的命令重新啟用分片複製：
 
    ```json
    PUT _cluster/settings?pretty
@@ -181,7 +182,7 @@ Before upgrading to OpenSearch 2.15, take a cluster snapshot and store it remote
    }
    ```
    
-   You should receive a response similar to the following:
+   您應該會收到類似下列的回應：
    
    ```json
    {
@@ -199,12 +200,12 @@ Before upgrading to OpenSearch 2.15, take a cluster snapshot and store it remote
    }
    ```
    
-1. Confirm that the cluster is healthy by using the Cluster Health API, as shown in the following command:
+1. 使用 Cluster Health API 確認叢集健康狀態，如下列命令所示：
 
    ```bash
    GET _cluster/health?pretty
    ```
-   You should receive a response similar to the following:
+   您應該會收到類似下列的回應：
    ```json
    {
      "cluster_name" : "opensearch-dev-cluster",
@@ -226,7 +227,7 @@ Before upgrading to OpenSearch 2.15, take a cluster snapshot and store it remote
    }
    ```
    
-1. Clear the `remote_store.compatibility_mode` and `migration.direction` settings by using the following command so that non-remote nodes are not allowed to join the cluster:
+1. 使用下列命令清除 `remote_store.compatibility_mode` 與 `migration.direction` 設定，以避免非遠端節點加入叢集：
  
    ```json
    PUT "/_cluster/settings?pretty"
@@ -238,7 +239,7 @@ Before upgrading to OpenSearch 2.15, take a cluster snapshot and store it remote
    }
    ```
 
-   You should receive a response similar to the following:
+   您應該會收到類似下列的回應：
    ```json
    {
      "acknowledged" : true,
@@ -250,15 +251,15 @@ Before upgrading to OpenSearch 2.15, take a cluster snapshot and store it remote
    }
    ```
    
-The migration to the remote store is now complete. 
+遷移至遠端儲存空間的程序現已完成。
 
 
-## Related cluster settings
+## 相關叢集設定
 
-Use the following cluster settings to enable migration to a remote-backed cluster.
+使用下列叢集設定來啟用遷移至以遠端儲存空間為後端的叢集。
 
-| Field                                     | Data type | Description |
+| 欄位                                      | 資料類型 | 說明 |
 |:------------------------------------------|:--- |:---|
-| `cluster.remote_store.compatibility_mode` | String  | When set to `strict`, only allows the creation of either non-remote or remote nodes, depending on the initial cluster type. When set to `mixed`, allows both remote and non-remote nodes to join the cluster. Default is `strict`. |  
-| `cluster.migration.direction`             | String |  Creates new shards only on remote-backed storage nodes. Default is `None`. |                                                                                                                                                                                            
+| `cluster.remote_store.compatibility_mode` | 字串  | 設為 `strict` 時，僅允許建立非遠端或遠端節點（依初始叢集類型而定）。設為 `mixed` 時，允許遠端與非遠端節點加入叢集。預設為 `strict`。 |  
+| `cluster.migration.direction`             | 字串 |  僅在使用遠端儲存空間的節點上建立新分片。預設為 `None`。 |                                                                                                                                                                                            
 

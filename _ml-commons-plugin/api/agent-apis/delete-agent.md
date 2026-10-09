@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete agent
+title: "刪除代理程式"
 parent: Agent APIs
 grand_parent: ML Commons APIs
 nav_order: 40
 ---
 
-# Delete Agent API
-**Introduced 2.13**
+# 刪除代理程式 API
+**2.13 版新增**
 {: .label .label-purple }
 
-You can use this API to delete an agent based on the `agent_id`.
+您可以使用此 API 根據 `agent_id` 刪除代理程式。
 
-## Endpoints
+## 端點
 
 ```json
 DELETE /_plugins/_ml/agents/{agent_id}
 ```
 
-## Example request
+## 範例請求
 
 ```json
 DELETE /_plugins/_ml/agents/MzcIJX8BA7mbufL6DOwl
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -43,9 +44,9 @@ DELETE /_plugins/_ml/agents/MzcIJX8BA7mbufL6DOwl
 }
 ```
 
-## Error responses
+## 錯誤回應
 
-If you attempt to delete an agent that doesn't exist, OpenSearch returns a 404 error:
+如果您嘗試刪除不存在的代理程式，OpenSearch 會傳回 404 錯誤：
 
 ```json
 {

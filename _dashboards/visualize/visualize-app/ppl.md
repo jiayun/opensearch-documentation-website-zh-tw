@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: PPL visualization
+title: "PPL 視覺化"
 parent: Visualization types
 grand_parent: Creating visualizations in the Visualize application
 great_grand_parent: Building data visualizations
@@ -9,44 +10,44 @@ redirect_from:
   - /dashboards/visualize/ppl/
 ---
 
-# PPL visualization
+# PPL 視覺化
 
-Piped Processing Language (PPL) visualizations enable data processing and visualization using PPL queries. Selecting **PPL** from the **New Visualization** dialog opens the Observability Logs Explorer, where you write a PPL query and map the results to a chart.
+Piped Processing Language (PPL) 視覺化可讓您使用 PPL 查詢來處理資料並建立視覺化。在 **New Visualization** 對話方塊中選取 **PPL**，即可開啟 Observability Logs Explorer。您可以在其中撰寫 PPL 查詢，並將結果對應至圖表。
 
-## When to use PPL visualizations
+## 何時使用 PPL 視覺化
 
-Use PPL visualizations when you want to write queries directly using the PPL pipeline syntax rather than configuring aggregations through the point-and-click interface. For more information, see [Observability]({{site.url}}{{site.baseurl}}/observing-your-data/) and [Exploring data]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/index/).
+如果您想直接使用 PPL 管線語法撰寫查詢，而不是透過點選式介面設定彙總，請使用 PPL 視覺化。如需詳細資訊，請參閱[可觀測性]({{site.url}}{{site.baseurl}}/observing-your-data/)和[探索資料]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/index/)。
 
-## Creating a PPL visualization
+## 建立 PPL 視覺化
 
-The examples on this page use the **Sample flight data** dataset. Before you begin, complete the [prerequisites]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites).
+本頁的範例使用 **Sample flight data** 資料集。開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/#prerequisites)。
 {: .note}
 
-To create a PPL visualization, follow these steps:
+若要建立 PPL 視覺化，請依照下列步驟操作：
 
-1. In the **New Visualization** dialog, select **PPL**. The Observability Logs Explorer opens.
-2. In the PPL query bar, enter a query. For example:
+1. 在 **New Visualization** 對話方塊中，選取 **PPL**。Observability Logs Explorer 隨即開啟。
+2. 在 PPL 查詢列中輸入查詢。例如：
 
    ```sql
    source = opensearch_dashboards_sample_data_flights | stats count() by Carrier
    ```
    {% include copy.html %}
 
-3. Set the time filter to a range that contains data (for example, select **Last 7 days**).
-4. Select **Run**.
-5. Select the **Visualizations** tab to view the chart.
-6. (Optional) Use the chart type selector on the right to change the chart type (for example, **Pie**).
+3. 將時間篩選器設定為包含資料的範圍（例如選取 **Last 7 days**）。
+4. 選取 **Run**。
+5. 選取 **Visualizations** 索引標籤以檢視圖表。
+6. （選用）使用右側的圖表類型選取器變更圖表類型（例如 **Pie**）。
 
-The explorer automatically maps query result fields to the chart. The **Configuration** panel shows **Series** (the metric) and **Dimensions** (the grouping field), as shown in the following image.
+Explorer 會自動將查詢結果欄位對應至圖表。**Configuration** 面板會顯示 **Series**（指標）和 **Dimensions**（分組欄位），如下圖所示。
 
-![PPL visualization showing flight count by carrier as a pie chart]({{site.url}}{{site.baseurl}}/images/dashboards/ppl-example.png)
+![以圓餅圖顯示各航空公司航班數的 PPL 視覺化]({{site.url}}{{site.baseurl}}/images/dashboards/ppl-example.png)
 
 
-## Related documentation
+## 相關文件
 
-- [Creating visualizations using queries]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/)
+- [使用查詢建立視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/)
 
-## Next steps
+## 後續步驟
 
-- To choose a different visualization type, see [Visualization types]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/).
-- To add this visualization to a dashboard, see [Creating dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboard/).
+- 若要選擇其他視覺化類型，請參閱[視覺化類型]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/viz-types/)。
+- 若要將此視覺化新增至儀表板，請參閱[建立儀表板]({{site.url}}{{site.baseurl}}/dashboards/dashboard/)。

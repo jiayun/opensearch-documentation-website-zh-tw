@@ -1,39 +1,40 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Disable objects
+title: "停用物件"
 parent: Mapping parameters
 nav_order: 27
 has_children: false
 has_toc: false
 ---
 
-# Disable objects mapping parameter
+# 停用物件對應參數
 
-By default, OpenSearch interprets field names containing dots (`.`) as hierarchical object paths. For example, a field named `metrics.cpu.usage` is expanded into a nested object structure with `metrics` as the top-level object containing a `cpu` object, which in turn contains a `usage` field.
+根據預設，OpenSearch 會將包含點 (`.`) 的欄位名稱解讀為階層式物件路徑。例如，名為 `metrics.cpu.usage` 的欄位會展開為巢狀物件結構，其中 `metrics` 為最上層物件，內含 `cpu` 物件，而該物件又內含 `usage` 欄位。
 
-This behavior can cause mapping conflicts in analytics and metrics workloads where dotted names represent flat field identifiers rather than nested objects. For example, many ingestion pipelines generate flat metric-style fields such as `metrics.cpu.usage`, `metrics.cpu.idle`, or `system.memory.free`. Without intervention, OpenSearch's automatic expansion of these dotted fields into nested objects can cause mapping conflicts when the same path prefix is used as both a value field and an object, non-deterministic failures depending on ingestion order, and bulk ingestion instability.
+在分析與指標工作負載中，帶點的名稱代表扁平欄位識別碼而非巢狀物件，因此這種行為可能導致對應衝突。例如，許多資料匯入管線會產生扁平的指標樣式欄位，例如 `metrics.cpu.usage`、`metrics.cpu.idle` 或 `system.memory.free`。若不加以處理，OpenSearch 將這些帶點欄位自動展開為巢狀物件，可能會在相同路徑前置字元同時做為值欄位與物件時導致對應衝突、依匯入順序而產生非確定性的失敗，以及大量匯入不穩定。
 
-The `disable_objects` mapping parameter prevents this expansion. When enabled, dotted field names are stored as literal flat identifiers, nested JSON input is automatically flattened into dotted field names at ingestion time, and ingestion order does not affect mapping results.
+`disable_objects` 對應參數可避免這種展開。啟用後，帶點欄位名稱會以字面扁平識別碼的形式儲存，巢狀 JSON 輸入會在匯入時自動扁平化為帶點欄位名稱，且匯入順序不會影響對應結果。
 
-The `disable_objects` parameter can be set at multiple levels. When multiple levels are configured, the following precedence applies (highest to lowest):
+`disable_objects` 參數可設定於多個層級。設定多個層級時，適用下列優先順序 (由高至低)：
 
-1. Field level
-2. Object level
-3. Index-level mapping definition (`"mappings": { "disable_objects": true }`)
-4. Global default (`false`)
+1. 欄位層級
+2. 物件層級
+3. 索引層級對應定義 (`"mappings": { "disable_objects": true }`)
+4. 全域預設 (`false`)
 
-## Parameters
+## 參數
 
-The following table lists the values accepted by the `disable_objects` parameter.
+下表列出 `disable_objects` 參數接受的值。
 
-Parameter | Description
+參數 | 說明
 :--- | :---
-`false` (Default) | Dotted field names are expanded into nested object structures.
-`true` | Dotted field names are treated as literal flat field identifiers. No object mappers are created for intermediate path segments.
+`false` (預設) | 帶點欄位名稱會展開為巢狀物件結構。
+`true` | 帶點欄位名稱會視為字面扁平欄位識別碼。不會為中繼路徑分段建立物件對應器。
 
-## Example: Index-level configuration
+## 範例：索引層級組態
 
-To enable flat dotted field semantics for an entire index, set `disable_objects` at the index level of the mappings definition:
+若要為整個索引啟用扁平帶點欄位語意，請在對應定義的索引層級設定 `disable_objects`：
 
 ```json
 PUT /metrics-index
@@ -45,7 +46,7 @@ PUT /metrics-index
 ```
 {% include copy-curl.html %}
 
-The following request indexes a document using a dotted field name:
+下列請求使用帶點欄位名稱將文件編製索引：
 
 ```json
 POST /metrics-index/_doc
@@ -55,9 +56,9 @@ POST /metrics-index/_doc
 ```
 {% include copy-curl.html %}
 
-The field `metrics.cpu.usage` is stored as a single flat field. No object mapper is created for `metrics` or `metrics.cpu`.
+欄位 `metrics.cpu.usage` 會儲存為單一扁平欄位。不會為 `metrics` 或 `metrics.cpu` 建立物件對應器。
 
-The following request indexes a document using nested JSON:
+下列請求使用巢狀 JSON 將文件編製索引：
 
 ```json
 POST /metrics-index/_doc
@@ -71,16 +72,16 @@ POST /metrics-index/_doc
 ```
 {% include copy-curl.html %}
 
-The nested input is automatically flattened to `metrics.cpu.usage` and set to `0.65`, producing the same flat field as the previous document.
+巢狀輸入會自動扁平化為 `metrics.cpu.usage` 並設為 `0.65`，產生與前一份文件相同的扁平欄位。
 
-The following request retrieves the mapping to confirm that no nested objects were created:
+下列請求會擷取對應，以確認未建立任何巢狀物件：
 
 ```json
 GET /metrics-index/_mapping
 ```
 {% include copy-curl.html %}
 
-The response shows that `metrics.cpu.usage` is stored as a flat field:
+回應顯示 `metrics.cpu.usage` 儲存為扁平欄位：
 
 ```json
 {
@@ -96,9 +97,9 @@ The response shows that `metrics.cpu.usage` is stored as a flat field:
 }
 ```
 
-## Example: Object-level configuration
+## 範例：物件層級組態
 
-To apply flat semantics only to fields under a specific object, set `disable_objects` on that object field:
+若只要將扁平語意套用至特定物件下的欄位，請在該物件欄位上設定 `disable_objects`：
 
 ```json
 PUT /my-index
@@ -115,11 +116,11 @@ PUT /my-index
 ```
 {% include copy-curl.html %}
 
-Only fields under `metrics` are treated as flat dotted fields. Other fields in the index retain the default object expansion behavior.
+只有 `metrics` 下的欄位會視為扁平帶點欄位。索引中的其他欄位會保留預設的物件展開行為。
 
-## Example: Field-level configuration
+## 範例：欄位層級組態
 
-To override index-level and object-level defaults, apply `disable_objects` to a specific field:
+若要覆寫索引層級與物件層級的預設值，請將 `disable_objects` 套用至特定欄位：
 
 ```json
 PUT /my-index
@@ -136,13 +137,13 @@ PUT /my-index
 ```
 {% include copy-curl.html %}
 
-## Searching dotted fields
+## 搜尋帶點欄位
 
-When `disable_objects` is enabled, OpenSearch supports both full-path and short-name searches on dotted fields. Because dotted fields are stored as flat literal identifiers rather than nested objects, search behavior differs from the default object expansion mode: both full-path and short-name searches resolve to the same flat field.
+啟用 `disable_objects` 時，OpenSearch 支援對帶點欄位進行完整路徑與簡短名稱搜尋。由於帶點欄位是以字面扁平識別碼而非巢狀物件的形式儲存，搜尋行為與預設的物件展開模式不同：完整路徑與簡短名稱搜尋都會解析至相同的扁平欄位。
 
-### Full-path search
+### 完整路徑搜尋
 
-For a full-path search, provide the full dotted field name in the query:
+進行完整路徑搜尋時，請在查詢中提供完整的帶點欄位名稱：
 
 ```json
 POST /metrics-index/_search
@@ -158,9 +159,9 @@ POST /metrics-index/_search
 ```
 {% include copy-curl.html %}
 
-### Short-name search
+### 簡短名稱搜尋
 
-For a short-name search, provide only the last segment of the field name in the query:
+進行簡短名稱搜尋時，請在查詢中只提供欄位名稱的最後一個分段：
 
 ```json
 POST /metrics-index/_search
@@ -176,19 +177,19 @@ POST /metrics-index/_search
 ```
 {% include copy-curl.html %}
 
-When using short-name searches, ambiguity can arise if multiple dotted fields share the same last segment. For example, if an index contains both `metrics.cpu.usage` and `metrics.memory.usage`, a short-name search for `usage` may not resolve to the intended field. In such cases, use the full field path to avoid ambiguity.
+使用簡短名稱搜尋時，若多個帶點欄位共用相同的最後一個分段，可能會產生歧義。例如，若索引同時包含 `metrics.cpu.usage` 與 `metrics.memory.usage`，則對 `usage` 的簡短名稱搜尋可能無法解析至預期的欄位。在這種情況下，請使用完整欄位路徑以避免歧義。
 {: .note}
 
-## Limitations
+## 限制
 
-The following limitations apply to the `disable_objects` parameter:
+下列限制適用於 `disable_objects` 參數：
 
-- The `disable_objects` parameter cannot be changed after index creation.
-- Nested queries and object-based field grouping are not supported when `disable_objects` is enabled.
-- When a concrete field name (for example, `address`) shares a prefix with an existing dotted field (for example, `address.city`), both are stored as independent flat fields. No conflict occurs because no object mapper is created for the shared prefix.
+- `disable_objects` 參數在建立索引後即無法變更。
+- 啟用 `disable_objects` 時，不支援巢狀查詢與以物件為基礎的欄位分組。
+- 當具體欄位名稱 (例如 `address`) 與現有帶點欄位 (例如 `address.city`) 共用前置字元時，兩者會儲存為各自獨立的扁平欄位。由於不會為共用的前置字元建立物件對應器，因此不會發生衝突。
 
-## Related documentation
+## 相關文件
 
-- [Object field type]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/object/)
-- [Flat object field type]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/flat-object/)
-- [Nested field type]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/)
+- [物件欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/object/)
+- [扁平物件欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/flat-object/)
+- [巢狀欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/)

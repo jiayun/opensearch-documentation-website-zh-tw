@@ -654,6 +654,12 @@ class ProviderPool:
         weights = {"translate": config.TRANSLATION_WEIGHTS,
                    "review": config.REVIEW_WEIGHTS}
         available = self.available(chain)
+        if purpose == 'repair':
+            # Most bulk work stays on Cloud. Fix semantic mistakes with a
+            # stronger available model instead of alternating fresh drafts.
+            preferred = next((n for n in ('claude', 'codex') if n in available), None)
+            if preferred:
+                return [preferred] + [n for n in chain if n != preferred]
         if purpose == "review" and prompt_chars > 45000 and "agy-opus" in available:
             return ["agy-opus"] + [n for n in chain if n != "agy-opus"]
         choices = [n for n in weights.get(purpose, []) if n in available]

@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: File
+title: "檔案"
 parent: Sinks
 grand_parent: Pipelines
 nav_order: 45
 ---
 
-# File sink
+# 檔案輸出端
 
-Use the `file` sink to create a flat file output, usually a `.log` file.
+使用 `file` 輸出端建立平面檔案輸出，通常是 `.log` 檔案。
 
-## Configuration options
+## 組態選項
 
-The following table describes options you can configure for the `file` sink.
+下表說明您可以為 `file` 輸出端設定的選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`path` | Yes | String | Path for the output file (e.g. `logs/my-transformed-log.log`).
-`append` | No | Boolean | When `true`, the sink file is opened in append mode.
+`path` | 是 | 字串 | 輸出檔案的路徑（例如 `logs/my-transformed-log.log`）。
+`append` | 否 | 布林值 | 當 `true` 時，輸出端檔案會以附加模式開啟。
 
-## Usage
+## 用法
 
-The following example shows basic usage of the `file` sink:
+以下範例展示 `file` 輸出端的基本用法：
 
 ```yaml
 sample-pipeline:

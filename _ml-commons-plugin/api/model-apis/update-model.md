@@ -1,46 +1,47 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Update model
+title: "更新模型"
 parent: Model APIs
 grand_parent: ML Commons APIs
 nav_order: 40
 ---
 
 # Update Model API
-**Introduced 2.12**
+**於 2.12 版推出**
 {: .label .label-purple }
 
-Updates a model based on the `model_ID`.
+根據 `model_ID` 更新模型。
 
-For information about user access for this API, see [Model access control considerations]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations).
+有關此 API 的使用者存取權資訊，請參閱[模型存取控制注意事項]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
 
-## Endpoints
+## 端點
 
 ```json
 PUT /_plugins/_ml/models/{model_id}
 ```
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the updatable fields. Not all request fields are applicable to all models. To determine whether the field is applicable to your model type, see [Register Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/).
+下表列出可更新的欄位。並非所有請求欄位都適用於所有模型。若要判斷該欄位是否適用於您的模型類型，請參閱 [Register Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/)。
 
-Field | Data type |  Description
+欄位 | 資料類型 |  說明
 :---  | :--- | :--- 
-`batch_inference_config` | Object | Configures batch inference for an externally hosted model. For more information, see [The `batch_inference_config` parameter]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-batch_inference_config-parameter).
-`connector` | Object | Contains specifications for a connector for a model hosted on a third-party platform. For more information, see [Creating a connector for a specific model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-connector-for-a-specific-model). For information about the updatable fields within a connector, see [Update Connector API request fields]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/update-connector/#request-body-fields).
-`connector_id` | String | The connector ID of a standalone connector for a model hosted on a third-party platform. For more information, see [Standalone connector]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-standalone-connector). To update a standalone connector, you must undeploy the model, update the connector, and then redeploy the model.
-`description` | String | The model description. 
-`is_enabled`| Boolean | Specifies whether the model is enabled. Disabling the model makes it unavailable for Predict API requests, regardless of the model's deployment status. Default is `true`.
-`model_config` | Object | The model's configuration, including the `model_type`, `embedding_dimension`, and `framework_type`. `all_config` is an optional JSON string that contains all model configurations. For more information, see [The `model_config` object]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model#the-model_config-object). |
-`model_group_id` | String | The model group ID of the model group to which to register this model. 
-`name`| String | The model name. 
-`rate_limiter` | Object | Limits the number of times any user can call the Predict API on the model. For more information, see [Rate limiting inference calls]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#rate-limiting-inference-calls).
-`rate_limiter.limit` | Integer | The maximum number of times any user can call the Predict API on the model per `unit` of time. By default, there is no limit on the number of Predict API calls. Once you set a limit, you cannot reset it to no limit. As an alternative, you can specify a high limit value and a small time unit, for example, 1 request per nanosecond.
-`rate_limiter.unit` | String | The unit of time for the rate limiter. Valid values are `DAYS`, `HOURS`, `MICROSECONDS`, `MILLISECONDS`, `MINUTES`, `NANOSECONDS`, and `SECONDS`.
-`guardrails`| Object | The guardrails for the model.
-`interface`| Object | The interface for the model.
+`batch_inference_config` | 物件 | 為外部託管的模型設定批次推論。如需更多資訊，請參閱[`batch_inference_config` 參數]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-batch_inference_config-parameter)。
+`connector` | 物件 | 包含第三方平台上託管模型之連接器的規格。如需更多資訊，請參閱[為特定模型建立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-connector-for-a-specific-model)。有關連接器內可更新欄位的資訊，請參閱 [Update Connector API 請求欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/update-connector/#request-body-fields)。
+`connector_id` | 字串 | 第三方平台上託管模型之獨立連接器的連接器 ID。如需更多資訊，請參閱[獨立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-standalone-connector)。若要更新獨立連接器，您必須先取消部署模型、更新連接器，然後重新部署模型。
+`description` | 字串 | 模型描述。
+`is_enabled`| 布林值 | 指定模型是否已啟用。停用模型會使其無法用於 Predict API 請求，無論模型的部署狀態為何。預設為 `true`。
+`model_config` | 物件 | 模型的組態，包括 `model_type`、`embedding_dimension` 和 `framework_type`。`all_config` 是包含所有模型組態的選用 JSON 字串。如需更多資訊，請參閱[`model_config` 物件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model#the-model_config-object)。 |
+`model_group_id` | 字串 | 要註冊此模型之模型群組的模型群組 ID。
+`name`| 字串 | 模型名稱。
+`rate_limiter` | 物件 | 限制任何使用者可以呼叫模型 Predict API 的次數。如需更多資訊，請參閱[限制推論呼叫速率]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#rate-limiting-inference-calls)。
+`rate_limiter.limit` | 整數 | 任何使用者在每 `unit` 時間內可以呼叫模型 Predict API 的最大次數。預設情況下，Predict API 呼叫次數沒有限制。一旦設定限制，就無法重設為無限制。替代做法是指定一個高限制值和一個小的時間單位，例如每奈秒 1 個請求。
+`rate_limiter.unit` | 字串 | 速率限制器的時間單位。有效值為 `DAYS`、`HOURS`、`MICROSECONDS`、`MILLISECONDS`、`MINUTES`、`NANOSECONDS` 和 `SECONDS`。
+`guardrails`| 物件 | 模型的防護機制。
+`interface`| 物件 | 模型的介面。
 
-## Example request: Disabling a model
+## 範例請求：停用模型
 
 ```json
 PUT /_plugins/_ml/models/MzcIJX8BA7mbufL6DOwl
@@ -50,9 +51,9 @@ PUT /_plugins/_ml/models/MzcIJX8BA7mbufL6DOwl
 ```
 {% include copy-curl.html %}
 
-## Example request: Rate limiting inference calls for a model
+## 範例請求：限制模型的推論呼叫速率
 
-The following request limits the number of times you can call the Predict API on the model to 4 Predict API calls per minute:
+下列請求將您可對模型呼叫 Predict API 的次數限制為每分鐘 4 次 Predict API 呼叫：
 
 ```json
 PUT /_plugins/_ml/models/T_S-cY0BKCJ3ot9qr0aP
@@ -65,7 +66,7 @@ PUT /_plugins/_ml/models/T_S-cY0BKCJ3ot9qr0aP
 ```
 {% include copy-curl.html %}
 
-## Example requests: Updating the guardrails
+## 範例請求：更新防護機制
 
 ```json
 PUT /_plugins/_ml/models/MzcIJX8BA7mbufL6DOwl
@@ -113,7 +114,7 @@ PUT /_plugins/_ml/models/9uGdCJABjaMXYrp14YRj
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -131,11 +132,11 @@ PUT /_plugins/_ml/models/9uGdCJABjaMXYrp14YRj
 }
 ```
 
-## Example request: Updating the model interface 
+## 範例請求：更新模型介面
 
-You can update a model's interface to define input and output schemas. This is useful when working with models that lack a default interface or require customization. For more information about model interfaces, see [The `Interface` parameter]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-interface-parameter). 
+您可以更新模型的介面以定義輸入和輸出結構描述。這在處理缺少預設介面或需要自訂的模型時非常有用。如需模型介面的更多資訊，請參閱[`Interface` 參數]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-interface-parameter)。
 
-The following example request specifies the output schema for an [AI21 Labs Jurassic model](https://aws.amazon.com/bedrock/ai21/) that was registered without a post-processing function:
+下列範例請求為註冊時未包含後處理函式的 [AI21 Labs Jurassic 模型](https://aws.amazon.com/bedrock/ai21/)指定輸出結構描述：
 
 ```json
 PUT /_plugins/_ml/models/IMcNB5UB7judm8f45nXo
@@ -147,10 +148,10 @@ PUT /_plugins/_ml/models/IMcNB5UB7judm8f45nXo
 ```
 {% include copy-curl.html %}
 
-If the model was registered using the [Amazon Bedrock AI21 Labs Jurassic blueprint](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_ai21labs_jurassic_blueprint.md), a default interface is applied automatically.
+如果模型是使用 [Amazon Bedrock AI21 Labs Jurassic 藍圖](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_ai21labs_jurassic_blueprint.md)註冊的，則會自動套用預設介面。
 {: .note}
 
-If the model interface is no longer needed, you can remove both the input and output schemas in order to bypass model schema validation:
+如果不再需要模型介面，您可以移除輸入和輸出結構描述，以略過模型結構描述驗證：
 
 ```json
 PUT /_plugins/_ml/models/IMcNB5UB7judm8f45nXo
@@ -163,7 +164,7 @@ PUT /_plugins/_ml/models/IMcNB5UB7judm8f45nXo
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {

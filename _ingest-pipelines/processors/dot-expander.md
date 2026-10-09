@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Dot expander
+title: "點號展開器"
 parent: Ingest processors
 nav_order: 65
 ---
 
-# Dot expander 
+# 點號展開器
 
-The `dot_expander` processor is a tool that helps you work with hierarchical data. It transforms fields containing dots into object fields, making them accessible to other processors in the pipeline. Without this transformation, fields with dots cannot be processed.
+`dot_expander` 處理器是一項工具，可協助您處理階層式資料。它會將包含點號的欄位轉換為物件欄位，使其可供管線中的其他處理器存取。若沒有這項轉換，包含點號的欄位將無法被處理。
 
-The following is the syntax for the `dot_expander` processor:
+以下是 `dot_expander` 處理器的語法：
 
 ```json
 {
@@ -20,27 +21,27 @@ The following is the syntax for the `dot_expander` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `dot_expander` processor.
+下表列出 `dot_expander` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | Required  | The field to be expanded into an object field. |
-`path` | Optional | This field is only required if the field to be expanded is nested within another object field. This is because the `field` parameter only recognizes leaf fields. |
-`description`  | Optional  | A brief description of the processor. |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | If set to `true`, failures are ignored. Default is `false`. |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |
+`field`  | 必要  | 要展開為物件欄位的欄位。 |
+`path` | 選用 | 只有在要展開的欄位巢狀地位於另一個物件欄位內時，才需要此欄位。這是因為 `field` 參數只會辨識葉節點欄位。 |
+`description`  | 選用  | 處理器的簡短說明。 |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 若設為 `true`，則會忽略失敗。預設為 `false`。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯，以區分相同類型的處理器。 |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+請依照下列步驟在管線中使用處理器。
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
  
-The following query creates a `dot_expander` processor that will expand two fields named `user.address.city` and `user.address.state` into nested objects:
+下列查詢會建立 `dot_expander` 處理器，將名為 `user.address.city` 和 `user.address.state` 的兩個欄位展開為巢狀物件：
 
 ```json
 PUT /_ingest/pipeline/dot-expander-pipeline
@@ -62,12 +63,12 @@ PUT /_ingest/pipeline/dot-expander-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2 (Optional): Test the pipeline
+### 步驟 2 (選用)：測試管線
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/dot-expander-pipeline/_simulate
@@ -86,9 +87,9 @@ POST _ingest/pipeline/dot-expander-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線運作正常：
 
 ```json
 {
@@ -114,9 +115,9 @@ The following example response confirms that the pipeline is working as expected
 }
 ```
 
-### Step 3: Ingest a document
+### 步驟 3：匯入文件
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=dot-expander-pipeline
@@ -127,18 +128,18 @@ PUT testindex1/_doc/1?pipeline=dot-expander-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 4 (Optional): Retrieve the document
+### 步驟 4 (選用)：擷取文件
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following response confirms that the specified fields were expanded into nested fields:
+下列回應確認指定的欄位已展開為巢狀欄位：
 
 ```json
 {
@@ -159,9 +160,9 @@ The following response confirms that the specified fields were expanded into nes
 }
 ```
 
-## The `path` parameter
+## `path` 參數
 
-You can use the `path` parameter to specify the path to a dotted field within an object. For example, the following pipeline specifies the `address.city` field that is located within the `user` object: 
+您可以使用 `path` 參數來指定物件內含點號欄位的路徑。例如，下列管線會指定位於 `user` 物件內的 `address.city` 欄位：
 
 ```json
 PUT /_ingest/pipeline/dot-expander-pipeline
@@ -185,7 +186,7 @@ PUT /_ingest/pipeline/dot-expander-pipeline
 ```
 {% include copy-curl.html %}
 
-You can simulate the pipeline as follows: 
+您可以如下模擬管線：
 
 ```json
 POST _ingest/pipeline/dot-expander-pipeline/_simulate
@@ -206,7 +207,7 @@ POST _ingest/pipeline/dot-expander-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-The `dot_expander` processor transforms the document into the following structure:
+`dot_expander` 處理器會將文件轉換為下列結構：
 
 ```json
 {
@@ -219,11 +220,11 @@ The `dot_expander` processor transforms the document into the following structur
 }
 ```
 
-## Field name conflicts
+## 欄位名稱衝突
 
-If a field already exists with the same path as the path to which the `dot_expander` processor should expand the value, the processor merges the two values into an array.
+如果某個欄位已存在，且其路徑與 `dot_expander` 處理器應展開值的目的路徑相同，則處理器會將這兩個值合併為陣列。
 
-Consider the following pipeline that expands the field `user.name`:
+請考慮下列會展開 `user.name` 欄位的管線：
 
 ```json
 PUT /_ingest/pipeline/dot-expander-pipeline
@@ -240,7 +241,7 @@ PUT /_ingest/pipeline/dot-expander-pipeline
 ```
 {% include copy-curl.html %}
 
-You can simulate the pipeline with a document containing two values with the exact same path `user.name`:
+您可以使用包含兩個路徑完全相同 `user.name` 之值的文件來模擬管線：
 
 ```json
 POST _ingest/pipeline/dot-expander-pipeline/_simulate
@@ -261,7 +262,7 @@ POST _ingest/pipeline/dot-expander-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-The response confirms that the values were merged into an array:
+回應確認這些值已合併為陣列：
 
 ```json
 {
@@ -287,7 +288,7 @@ The response confirms that the values were merged into an array:
 }
 ```
 
-If a field contains the same name but a different path, then the field needs to be renamed. For example, the following `_simulate` call returns a parse exception:
+如果欄位包含相同名稱但路徑不同，則需要重新命名該欄位。例如，下列 `_simulate` 呼叫會傳回剖析例外狀況：
 
 ```json
 POST _ingest/pipeline/dot-expander-pipeline/_simulate
@@ -305,7 +306,7 @@ POST _ingest/pipeline/dot-expander-pipeline/_simulate
 }
 ```
 
-To avoid the parse exception, first rename the field by using the `rename` processor:
+若要避免剖析例外狀況，請先使用 `rename` 處理器重新命名欄位：
 
 ```json
 PUT /_ingest/pipeline/dot-expander-pipeline
@@ -327,7 +328,7 @@ PUT /_ingest/pipeline/dot-expander-pipeline
 ```
 {% include copy-curl.html %}
 
-Now you can simulate the pipeline:
+現在您可以模擬管線：
 
 ```json
 POST _ingest/pipeline/dot-expander-pipeline/_simulate
@@ -346,7 +347,7 @@ POST _ingest/pipeline/dot-expander-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-The response confirms that the fields were merged:
+回應確認這些欄位已合併：
 
 ```json
 {

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Undeploy model
+title: "取消部署模型"
 parent: Model APIs
 grand_parent: ML Commons APIs
 nav_order: 45
@@ -8,24 +9,24 @@ nav_order: 45
 
 # Undeploy Model API
 
-To undeploy a model from memory, use the undeploy operation.
+若要從記憶體中取消部署模型，請使用 undeploy 操作。
 
-For information about user access for this API, see [Model access control considerations]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations).
+如需此 API 的使用者存取權限資訊，請參閱[模型存取控制注意事項]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
 
-### Endpoints
+### 端點
 
 ```json
 POST /_plugins/_ml/models/{model_id}/_undeploy
 ```
 
-## Example request: Undeploying a model from all ML nodes
+## 請求範例：從所有 ML 節點取消部署模型
 
 ```json
 POST /_plugins/_ml/models/MGqJhYMBbbh0ushjm8p_/_undeploy
 ```
 {% include copy-curl.html %}
 
-## Example request: Undeploying specific models from specific nodes
+## 請求範例：從特定節點取消部署特定模型
 
 ```json
 POST /_plugins/_ml/models/_undeploy
@@ -36,7 +37,7 @@ POST /_plugins/_ml/models/_undeploy
 ```
 {% include copy-curl.html %}
 
-## Example request: Undeploying specific models from all nodes
+## 請求範例：從所有節點取消部署特定模型
 
 ```json
 {
@@ -45,7 +46,7 @@ POST /_plugins/_ml/models/_undeploy
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -56,9 +57,9 @@ POST /_plugins/_ml/models/_undeploy
   }
 }
 ```
-### Automatically undeploy a model based on TTL
+### 根據 TTL 自動取消部署模型
 
-Models can be automatically undeployed from memory based on the predefined time-to-live (TTL) when the model was last accessed or used. To define a TTL that automatically undeploys a model, include the following `ModelDeploySetting` in your machine learning (ML) model. Note that model TTLs are checked periodically by a `syn_up` cron job, so the maximum time that a model lives in memory could be TTL + the `sync_up_job_` interval. The default cron job interval is 10 seconds. To update the cron job internally, use the following cluster setting:
+模型可以根據預先定義的存留時間（TTL），從最後一次存取或使用模型的時間起算，自動從記憶體中取消部署。若要定義可自動取消部署模型的 TTL，請在您的機器學習（ML）模型中加入下列 `ModelDeploySetting`。請注意，`syn_up` cron 工作會定期檢查模型的 TTL，因此模型保留在記憶體中的最長時間可能是 TTL 加上 `sync_up_job_` 間隔。預設 cron 工作間隔為 10 秒。若要更新 cron 工作的內部設定，請使用下列叢集設定：
 
 ```json
 PUT /_cluster/settings
@@ -69,7 +70,7 @@ PUT /_cluster/settings
 }
 ```
 
-## Example request: Creating a model with a TTL
+## 請求範例：建立具有 TTL 的模型
 ```json
 POST /_plugins/_ml/models/_register
  {
@@ -81,7 +82,7 @@ POST /_plugins/_ml/models/_register
  }
 ```
 
-## Example request: Updating a model with a TTL when the model is undeployed
+## 請求範例：在模型已取消部署時更新模型的 TTL
 ```json
 PUT /_plugins/_ml/models/COj7K48BZzNMh1sWedLK
 {

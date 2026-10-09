@@ -1,47 +1,48 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Hybrid search explain
+title: "混合搜尋說明"
 parent: Hybrid search
 grand_parent: AI search
 has_children: false
 nav_order: 70
 ---
 
-# Hybrid search explain
-**Introduced 2.19**
+# 混合搜尋說明
+**2.19 版新增**
 {: .label .label-purple }
 
-You can provide the `explain` parameter to understand how scores are calculated, normalized, and combined in hybrid queries. When enabled, it provides detailed information about the scoring process for each search result. This includes revealing the score normalization techniques used, how different scores were combined, and the calculations for individual subquery scores. This comprehensive insight makes it easier to understand and optimize your hybrid query results. For more information about `explain`, see [Explain API]({{site.url}}{{site.baseurl}}/api-reference/explain/). 
+您可以提供 `explain` 參數，以了解混合查詢中分數的計算、正規化與合併方式。啟用後，它會提供每個搜尋結果評分程序的詳細資訊，包括所使用的分數正規化技術、不同分數的合併方式，以及各個子查詢分數的計算過程。這些完整的深入資訊能讓您更輕鬆地了解並最佳化混合查詢結果。如需 `explain` 的更多資訊，請參閱 [Explain API]({{site.url}}{{site.baseurl}}/api-reference/explain/)。
 
-`explain` is an expensive operation in terms of both resources and time. For production clusters, we recommend using it sparingly for the purpose of troubleshooting.
+`explain` 無論在資源或時間上都是昂貴的操作。對於正式環境叢集，我們建議僅在疑難排解時少量使用。
 {: .warning }
 
-You can provide the `explain` parameter in a URL when running a complete hybrid query using the following syntax:
+您可以在執行完整混合查詢時，使用下列語法在 URL 中提供 `explain` 參數：
 
 ```json
 GET {index}/_search?search_pipeline={search_pipeline}&explain=true
 POST {index}/_search?search_pipeline={search_pipeline}&explain=true
 ```
 
-To use the `explain` parameter, you must configure the `hybrid_score_explanation` response processor in your search pipeline. For more information, see [Hybrid score explanation processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/explanation-processor/). 
+若要使用 `explain` 參數，您必須在搜尋管線中設定 `hybrid_score_explanation` 回應處理器。如需更多資訊，請參閱 [Hybrid score explanation processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/explanation-processor/)。
 
-### Explain by document ID
+### 依文件 ID 說明
 
-You can use the [Explain API]({{site.url}}{{site.baseurl}}/api-reference/explain/) with a hybrid query to get scoring details for a single document:
+您可以將 [Explain API]({{site.url}}{{site.baseurl}}/api-reference/explain/) 與混合查詢搭配使用，以取得單一文件的評分詳細資訊：
 
 ```json
 GET {index}/_explain/{id}
 POST {index}/_explain/{id}
 ```
 
-In this case, the result contains only raw Lucene-level scoring information, for example, [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) scores for text-based subqueries such as `term` or `match`. For an example response, see [Explain API example response]({{site.url}}{{site.baseurl}}/api-reference/explain/#example-response).
+在此情況下，結果只會包含原始的 Lucene 層級評分資訊，例如 `term` 或 `match` 等文字型子查詢的 [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) 分數。如需回應範例，請參閱 [Explain API example response]({{site.url}}{{site.baseurl}}/api-reference/explain/#example-response)。
 
-The Explain API has the following limitations when used with hybrid queries:
+Explain API 與混合查詢搭配使用時有下列限制：
 
-- The `_explain` endpoint does not support the `search_pipeline` query parameter, either inline or as a query parameter. Providing a `search_pipeline` parameter results in a `parsing_exception` error. This limitation applies to all query types, not only hybrid queries.
-- Score normalization techniques (such as `min_max`, `l2`, or `z_score`) and combination techniques (such as `arithmetic_mean`) require scores from all matching documents to compute statistics. Because the Explain API operates on a single document, it cannot provide normalization context. The `hybrid_score_explanation` response processor is not invoked and no normalized scoring details are returned.
+- `_explain` 端點不支援 `search_pipeline` 查詢參數，無論是內嵌還是作為查詢參數。提供 `search_pipeline` 參數會導致 `parsing_exception` 錯誤。此限制適用於所有查詢類型，並非僅限混合查詢。
+- 分數正規化技術（例如 `min_max`、`l2` 或 `z_score`）與合併技術（例如 `arithmetic_mean`）需要所有相符文件的分數才能計算統計值。由於 Explain API 只針對單一文件運作，因此無法提供正規化情境。`hybrid_score_explanation` 回應處理器不會被呼叫，也不會傳回任何正規化後的評分詳細資訊。
 
-To get a full hybrid query explanation with normalization and combination details for a specific document, use the Search API with `explain=true` and filter the query for the desired document ID:
+若要取得特定文件的完整混合查詢說明（包含正規化與合併詳細資訊），請使用 Search API 搭配 `explain=true`，並在查詢中篩選出所需的文件 ID：
 
 ```json
 GET {index}/_search?search_pipeline={search_pipeline}&explain=true
@@ -60,7 +61,7 @@ GET {index}/_search?search_pipeline={search_pipeline}&explain=true
 ```
 {% include copy-curl.html %}
 
-To see the `explain` output for all results, set the parameter to `true` either in the URL or in the request body:
+若要查看所有結果的 `explain` 輸出，請在 URL 或請求本文中將該參數設為 `true`：
 
 ```json
 POST my-nlp-index/_search?search_pipeline=my_pipeline&explain=true
@@ -96,7 +97,7 @@ POST my-nlp-index/_search?search_pipeline=my_pipeline&explain=true
 ```
 {% include copy-curl.html %}
 
-The response contains scoring information:
+回應包含評分資訊：
 
 <details markdown="block">
   <summary>
@@ -221,12 +222,12 @@ The response contains scoring information:
 ```
 </details>
 
-## Response body fields
+## 回應本文欄位
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`explanation` | The `explanation` object has three properties: `value`, `description`, and `details`. The `value` property shows the result of the calculation, `description` explains what type of calculation was performed, and `details` shows any subcalculations performed. For score normalization, the information in the `description` property includes the technique used for normalization or combination and the corresponding score. 
+`explanation` | `explanation` 物件有三個屬性：`value`、`description` 與 `details`。`value` 屬性顯示計算結果，`description` 說明所執行的計算類型，`details` 則顯示任何已執行的子計算。對於分數正規化，`description` 屬性中的資訊包含用於正規化或合併的技術，以及對應的分數。
 
-## Next steps
+## 後續步驟
 
-- To learn how to use `explain` with inner hits, see [Using inner hits in hybrid queries]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/inner-hits/).
+- 若要了解如何將 `explain` 與 inner hits 搭配使用，請參閱 [Using inner hits in hybrid queries]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/inner-hits/)。

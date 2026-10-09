@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: transpose
 parent: Commands
@@ -8,32 +9,32 @@ nav_order: 51
 
 <!-- vale off -->
 
-# transpose command
+# transpose 命令
 
 <!-- vale on -->
 
-The `transpose` command outputs the requested number of rows as columns, converting each result row into a corresponding column of field values.
+`transpose` 命令會將所要求數量的資料列輸出為欄位，並將每個結果資料列轉換為由欄位值組成的對應欄位。
 
-## Syntax
+## 語法
 
-The `transpose` command has the following syntax:
+`transpose` 命令的語法如下：
 
 ```sql
 transpose [int] [column_name=<string>]
 ```
 
-## Parameters
+## 參數
 
-The `transpose` command supports the following parameters.
+`transpose` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 |---|---|---|
-| `<int>` | Optional | The number of rows to transform into columns. Default is `5`. Maximum is `10000`. |
-| `column_name=<string>` | Optional | The name of the first column to use when transposing rows. This column holds the field names. |
+| `<int>` | 選用 | 要轉換為欄位的資料列數。預設為 `5`。最大值為 `10000`。 |
+| `column_name=<string>` | 選用 | 轉置資料列時使用的第一個欄位名稱。此欄位存放各欄位的名稱。 |
 
-## Example 1: Transposing a severity breakdown
+## 範例 1：轉置嚴重性分佈
 
-The following query transposes a severity breakdown into a columnar format. This is useful for creating compact summary views:
+下列查詢會將嚴重性分佈轉置為直欄格式。這對於建立精簡的摘要檢視很有用：
 
 ```sql
 source=otellogs
@@ -44,7 +45,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -55,9 +56,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 2: Transposing a limited number of rows
+## 範例 2：轉置有限數量的資料列
 
-The following query transposes only the first three severity levels:
+下列查詢只會轉置前三個嚴重性層級：
 
 ```sql
 source=otellogs
@@ -68,7 +69,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -79,6 +80,6 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Limitations
+## 限制
 
-The `transpose` command converts a specified number of rows into columns. If fewer rows are available, the missing values are represented as `null` columns.
+`transpose` 命令會將指定數量的資料列轉換為欄位。如果可用的資料列較少，缺少的值會以 `null` 欄位表示。

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Query string
+title: "查詢字串"
 parent: Full-text queries
 nav_order: 80
 redirect_from:
@@ -8,23 +9,23 @@ redirect_from:
   - /query-dsl/query-dsl/full-text/query-string/
 ---
 
-# Query string query
+# 查詢字串查詢
 
-A `query_string` query parses the query string based on the [query string syntax](#query-string-syntax). It provides for creating powerful yet concise queries that can incorporate wildcards and search multiple fields.
+`query_string` 查詢會根據[查詢字串語法](#query-string-syntax)剖析查詢字串。它可用於建立功能強大卻精簡的查詢，這些查詢可以納入萬用字元並搜尋多個欄位。
 
-Searches with `query_string` queries do not return nested documents. To search nested fields, use the [`nested` query]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/).
+使用 `query_string` 查詢進行搜尋不會傳回巢狀文件。若要搜尋巢狀欄位，請使用 [`nested` 查詢]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/)。
 {: .note}
 
-Query string query has a strict syntax and returns an error in case of invalid syntax. Therefore, it does not work well for search box applications. For a less strict alternative, consider using [`simple_query_string` query]({{site.url}}{{site.baseurl}}/query-dsl/full-text/simple-query-string/). If you don't need query syntax support, use the [`match` query]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match/).
+查詢字串查詢具有嚴格的語法，若語法無效會傳回錯誤。因此，它不適合用於搜尋方塊應用程式。若需要較寬鬆的替代方案，請考慮使用 [`simple_query_string` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/simple-query-string/)。如果您不需要查詢語法支援，請使用 [`match` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match/)。
 {: .important}
 
-## Query string syntax
+## 查詢字串語法
 
-Query string syntax is based on [Apache Lucene query syntax](https://lucene.apache.org/core/{{site.lucene_version}}/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description).
+查詢字串語法是以 [Apache Lucene 查詢語法](https://lucene.apache.org/core/{{site.lucene_version}}/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description)為基礎。
 
-You can use query string syntax in the following cases:
+您可以在下列情況使用查詢字串語法：
 
-1. In a `query_string` query, for example:
+1. 在 `query_string` 查詢中，例如：
     ```json
     GET _search
     {
@@ -37,20 +38,20 @@ You can use query string syntax in the following cases:
     ```
     {% include copy-curl.html %}
 
-1. In the OpenSearch Dashboards Discover or Dashboard apps, if you turn off DQL, as shown in the following image.
-  ![Using query string syntax in OpenSearch Dashboards Discover]({{site.url}}{{site.baseurl}}/images/discover-lucene-syntax.png)
+1. 在 OpenSearch Dashboards 的 Discover 或 Dashboard 應用程式中，如果您關閉 DQL，如下圖所示。
+  ![在 OpenSearch Dashboards Discover 中使用查詢字串語法]({{site.url}}{{site.baseurl}}/images/discover-lucene-syntax.png)
   
-    DQL and Query string query (Lucene) language are the two search bar language options in Discover and Dashboards. To compare these language options, see [DQL and query string query quick reference]({{site.url}}{{site.baseurl}}/dashboards/dql/#dql-and-query-string-query-quick-reference). 
+    DQL 與查詢字串查詢 (Lucene) 語言是 Discover 和 Dashboards 中兩個搜尋列語言選項。若要比較這些語言選項，請參閱 [DQL 與查詢字串查詢快速參考]({{site.url}}{{site.baseurl}}/dashboards/dql/#dql-and-query-string-query-quick-reference)。 
     {: .tip}
 
-1. If you search using the HTTP request query parameters, for example: 
+1. 如果您使用 HTTP 請求查詢參數進行搜尋，例如： 
   ```json
     GET _search?q=wind
   ```
 
-A query string consists of _terms_ and _operators_. A term is a single word (for example, in the query `wind rises`, the terms are `wind` and `rises`). If several terms are surrounded by quotation marks, they are treated as one phrase where words are matched in the order they appear (for example, `"wind rises"`). Operators (such as `OR`, `AND`, and `NOT`) specify the Boolean logic used to interpret text in the query string. 
+查詢字串是由_詞彙_和_運算子_組成。詞彙是單一單字 (例如，在查詢 `wind rises` 中，詞彙是 `wind` 和 `rises`)。如果多個詞彙被引號包圍，它們會被視為一個詞組，其中的單字會依出現順序進行比對 (例如，`"wind rises"`)。運算子 (例如 `OR`、`AND` 和 `NOT`) 會指定用於解譯查詢字串中文字的布林邏輯。 
 
-The examples in this section use an index containing the following mapping and documents:
+本節的範例使用包含下列對應和文件的索引：
 
 ```json
 PUT /testindex
@@ -105,16 +106,16 @@ PUT /testindex/_doc/4
 ```
 {% include copy-curl.html %}
 
-## Reserved characters
+## 保留字元
 
-The following is a list of reserved characters for the query string query: 
+以下是查詢字串查詢的保留字元清單： 
 
-`+`, `-`, `=`, `&&`, `||`, `>`, `<`, `!`, `(`, `)`,`{`, `}`, `[`, `]`, `^`, `"`, `~`, `*`, `?`, `:`, `\`, `/`
+`+`、`-`、`=`、`&&`、`||`、`>`、`<`、`!`、`(`、`)`、`{`、`}`、`[`、`]`、`^`、`"`、`~`、`*`、`?`、`:`、`\`、`/`
 
-Escape reserved characters with a backslash (`\`). When sending a JSON request, use a double backslash (`\\`) to escape reserved characters (because the backslash character is itself reserved, you must escape the backslash with another backslash). 
+使用反斜線 (`\`) 逸出保留字元。傳送 JSON 請求時，請使用雙反斜線 (`\\`) 來逸出保留字元 (因為反斜線字元本身即為保留字元，您必須使用另一個反斜線來逸出反斜線)。 
 {: .tip}
 
-For example, to search for an expression `2*3`, specify the query string: `2\\*3`:
+例如，若要搜尋運算式 `2*3`，請指定查詢字串：`2\\*3`：
 
 ```json
 GET /testindex/_search
@@ -128,33 +129,33 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-The `>` and `<` signs cannot be escaped. They are interpreted as a range query. 
+`>` 和 `<` 符號無法逸出。它們會被解譯為範圍查詢。 
 {: .important}
 
-## White space characters and empty queries
+## 空白字元和空查詢
 
-White space characters are not considered operators. If a query string is empty or only contains white space characters, the query does not return results.
+空白字元不會被視為運算子。如果查詢字串為空或僅包含空白字元，查詢不會傳回結果。
 
-## Field names
+## 欄位名稱
 
-Specify the field name before the colon. The following table contains example queries with field names.
+在冒號前指定欄位名稱。下表包含帶有欄位名稱的範例查詢。
 
-Query in the `query_string` query | Query in Discover | Criterion for a document to match | Matching documents from the `testindex` index
+`query_string` 查詢中的查詢 | Discover 中的查詢 | 文件相符的準則 | `testindex` 索引中的相符文件
 :--- | :--- | :--- | :---
-`title: wind` | `title: wind` | The `title` field contains the word `wind`. | 1, 2
-`title: (wind OR windy)` | `title: (wind OR windy)` | The `title` field contains the word `wind` or the word `windy`. | 1, 2, 3
-`title: \"wind rises\"` | `title: "wind rises"` | The `title` field contains the phrase `wind rises`. Escape quotation marks with a backslash. | 1
-`article\\ title: wind` | `article\ title: wind` | The `article title` field contains the word `wind`. Escape the space character with a backslash. | 4
-`title.\\*: rise` | `title.\*: rise` | Every field that begins with `title.` (in this example, `title.english`) contains the word `rise`. Escape the wildcard character with a backslash. | 1
-`_exists_: description` | `_exists_: description` | The field `description` exists. | 2
+`title: wind` | `title: wind` | `title` 欄位包含單字 `wind`。 | 1、2
+`title: (wind OR windy)` | `title: (wind OR windy)` | `title` 欄位包含單字 `wind` 或單字 `windy`。 | 1、2、3
+`title: \"wind rises\"` | `title: "wind rises"` | `title` 欄位包含詞組 `wind rises`。使用反斜線逸出引號。 | 1
+`article\\ title: wind` | `article\ title: wind` | `article title` 欄位包含單字 `wind`。使用反斜線逸出空格字元。 | 4
+`title.\\*: rise` | `title.\*: rise` | 每個以 `title.` 開頭的欄位 (在此範例中為 `title.english`) 都包含單字 `rise`。使用反斜線逸出萬用字元。 | 1
+`_exists_: description` | `_exists_: description` | 欄位 `description` 存在。 | 2
 
-## Wildcard expressions
+## 萬用字元運算式
 
-You can specify wildcard expressions using special characters: `?` replaces a single character and `*` replaces zero or more characters.
+您可以使用特殊字元指定萬用字元運算式：`?` 會取代單一字元，而 `*` 會取代零個或多個字元。
 
-#### Example
+#### 範例
 
-The following query searches for the title containing the word `gone` and a description that contains a word starting with `hist`:
+下列查詢會搜尋標題包含單字 `gone` 且描述包含以 `hist` 開頭之單字的文件：
 
 ```json
 GET /testindex/_search
@@ -168,34 +169,34 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-Wildcard queries can use a significant amount of memory, which can degrade performance. Wildcards at the beginning of a word (for example, `*cal`) are the most expensive because matching documents on such wildcards requires examining all terms in the index. To disable leading wildcards, set `allow_leading_wildcard` to `false`.
+萬用字元查詢可能會使用大量記憶體，進而降低效能。位於單字開頭的萬用字元 (例如 `*cal`) 成本最高，因為在該類萬用字元上比對文件需要檢查索引中的所有詞彙。若要停用前置萬用字元，請將 `allow_leading_wildcard` 設為 `false`。
 {: .warning}
 
-For efficiency, pure wildcards such as `*` are rewritten as `exists` queries. Therefore, the `description: *` wildcard will match documents containing an empty value in the `description` field but will not match documents in which the `description` field is either missing or has a `null` value.
+為了提升效率，`*` 這類純萬用字元會改寫為 `exists` 查詢。因此，`description: *` 萬用字元會比對 `description` 欄位中包含空字串值的文件，但不會比對 `description` 欄位遺漏或具有 `null` 值的文件。
 
-If you set `analyze_wildcard` to `true`, OpenSearch will analyze queries that end with a `*` (such as `hist*`). Consequently, OpenSearch will build a Boolean query comprising the resulting tokens by taking exact matches on the first n-1 tokens and a prefix match on the last token.
+如果您將 `analyze_wildcard` 設為 `true`，OpenSearch 會分析以 `*` 結尾的查詢 (例如 `hist*`)。因此，OpenSearch 會建立一個布林查詢，其中包含對前 n-1 個詞元進行完全相符，以及對最後一個詞元進行前置字元相符所產生的詞元。
 
-## Regular expressions
+## 正規表示式
 
-To specify regular expression patterns in a query string, surround them with forward slashes (`/`), for example `title: /w[a-z]nd/`.
+若要在查詢字串中指定正規表示式模式，請以正斜線 (`/`) 包圍它們，例如 `title: /w[a-z]nd/`。
 
-The `allow_leading_wildcard` parameter does not apply to regular expressions. For example, a query string such as  `/.*d/` will examine all terms in the index. 
+`allow_leading_wildcard` 參數不適用於正規表示式。例如，`/.*d/` 這類查詢字串會檢查索引中的所有詞彙。 
 {: .important}
 
-## Fuzziness
+## 模糊比對
 
-You can run fuzzy queries using the `~` operator, for example `title: rise~`.
+您可以使用 `~` 運算子執行模糊查詢，例如 `title: rise~`。
 
-The query searches for documents containing terms that are similar to the search term within the maximum allowed edit distance. The edit distance is defined as the [Damerau-Levenshtein distance](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance), which measures the number of one-character changes (insertions, deletions, substitutions, or transpositions) needed to change one term to another term.
+此查詢會搜尋包含與搜尋詞彙在允許的最大編輯距離內相似之詞彙的文件。編輯距離定義為 [Damerau-Levenshtein 距離](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance)，用於衡量將一個詞彙變更為另一個詞彙所需的單一字元變更次數 (插入、刪除、取代或調換)。
 
-The default edit distance of 2 should catch 80% of misspellings. To change the default edit distance, specify the new edit distance after the `~` operator. For example, to set the edit distance to `1`, use the query `title: rise~1`.
+預設編輯距離 2 應可涵蓋 80% 的拼字錯誤。若要變更預設編輯距離，請在 `~` 運算子後指定新的編輯距離。例如，若要將編輯距離設為 `1`，請使用查詢 `title: rise~1`。
 
-Do not mix fuzzy and wildcard operators. If you specify both fuzzy and wildcard operators, one of the operators will not be applied. For example, if you can search for `wnid*~1`, the wildcard operator `*` will be applied but the fuzzy operator `~1` will not be applied.
+請勿混用模糊和萬用字元運算子。如果您同時指定模糊和萬用字元運算子，其中一個運算子將不會套用。例如，如果您可以搜尋 `wnid*~1`，則會套用萬用字元運算子 `*`，但不會套用模糊運算子 `~1`。
 {: .important}
 
-## Proximity queries
+## 鄰近查詢
 
-A proximity query does not require the search phrase to be in the specified order. It allows the words in the phrase to be in a different order or separated by other words. A proximity query specifies a maximum edit distance of words in a phrase. For example, the following query allows an edit distance of 4 when matching the words in the specified phrase:
+鄰近查詢不要求搜尋片語必須依照指定的順序排列。它允許片語中的詞以不同的順序出現，或由其他詞分隔。鄰近查詢會指定片語中詞的最大編輯距離。例如，下列查詢在比對指定片語中的詞時，允許編輯距離為 4：
 
 ```json
 GET /testindex/_search
@@ -209,48 +210,48 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-When OpenSearch matches documents, the closer the words in the document to the word order specified in the query (the less the edit distance), the higher the document's relevance score.  
+當 OpenSearch 比對文件時，文件中的詞愈接近查詢中指定的詞序（編輯距離愈小），文件的相關性分數就愈高。  
 
-## Ranges
+## 範圍
 
-To specify a range for a numeric, string, or date field, use square brackets (`[min TO max]`) for an inclusive range and curly braces (`{min TO max}`) for an exclusive range. You can also mix square brackets and curly braces to include or exclude the lower and upper bound (for example, `{min TO max]`). 
+若要為數值、字串或日期欄位指定範圍，請使用方括號 (`[min TO max]`) 表示包含範圍，並使用大括號 (`{min TO max}`) 表示排除範圍。您也可以混用方括號與大括號，以包含或排除下限與上限（例如 `{min TO max]`）。 
 
-The dates for a date range must be provided in the format that you used when mapping the field containing the date. For more information about supported date formats, see [Formats]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/#formats).
+日期範圍的日期必須以您對應包含該日期的欄位時所使用的格式提供。如需支援的日期格式詳細資訊，請參閱[格式]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/#formats)。
 
-The following table provides range syntax examples.
+下表提供範圍語法的範例。
 
-Data type | Query | Query string
+資料類型 | 查詢 | 查詢字串
 :--- | :--- | :---
-Numeric | Documents whose account numbers are from 1 to 15, inclusive. | `account_number: [1 TO 15]` or <br> `account_number: (>=1 AND <=15)` or <br> `account_number: (+>=1 +<=15)`
-| Documents whose account numbers are 15 and greater. | `account_number: [15 TO *]` or <br> `account_number: >=15` (note no space after the `>=` sign)
-String | Documents where last name is from Bates, inclusive, to Duke, exclusive. | `lastname: [Bates TO Duke}` or <br> `lastname: (>=Bates AND <Duke)`
-| Documents where last name precedes Bates alphabetically. | `lastname: {* TO Bates}` or <br> `lastname: <Bates` (note no space after the `<` sign)
-Date | Documents where the release date is between 03/21/2023 and 09/25/2023, inclusive. | `release_date: [03/21/2023 TO 09/25/2023]`
+數值 | 帳號從 1 到 15（含）的文件。 | `account_number: [1 TO 15]` 或 <br> `account_number: (>=1 AND <=15)` 或 <br> `account_number: (+>=1 +<=15)`
+| 帳號為 15 及以上的文件。 | `account_number: [15 TO *]` 或 <br> `account_number: >=15`（請注意 `>=` 符號後沒有空格）
+字串 | 姓氏從 Bates（含）到 Duke（不含）的文件。 | `lastname: [Bates TO Duke}` 或 <br> `lastname: (>=Bates AND <Duke)`
+| 姓氏依字母順序排在 Bates 之前的文件。 | `lastname: {* TO Bates}` 或 <br> `lastname: <Bates`（請注意 `<` 符號後沒有空格）
+日期 | 發行日期介於 03/21/2023 與 09/25/2023 之間（含）的文件。 | `release_date: [03/21/2023 TO 09/25/2023]`
 
-As an alternative to specifying a range in a query string, you can use a [range query]({{site.url}}{{site.baseurl}}/query-dsl/term/range/), which provides a more reliable syntax.
+除了在查詢字串中指定範圍之外，您也可以使用[範圍查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/range/)，它提供更可靠的語法。
 {: .tip}
 
-## Boosting
+## 提升
 
-Use the caret (`^`) boost operator to boost the relevance score of documents by a multiplier. Values in the [0, 1) range decrease relevance, and values greater than 1 increase relevance. Default is `1`. 
+使用插入號 (`^`) 提升運算子，以乘數提升文件的相關性分數。[0, 1) 範圍內的值會降低相關性，而大於 1 的值會提高相關性。預設值為 `1`。 
 
-The following table provides boost examples.
+下表提供提升的範例。
 
-Type | Description | Query string
+類型 | 說明 | 查詢字串
 :--- | :--- | :---
-Word boost | Find all addresses containing the word `street` and boost the ones containing the word `Madison`. | `address: Madison^2 street`
-Phrase boost | Find documents with the title containing the phrase `wind rises`, boosted by 2. | `title: \"wind rises\"^2` 
-| Find documents with the title containing the words `wind rises`, and boost the documents containing the phrase `wind rises` by 2. | `title: (wind rises)^2`
+詞提升 | 尋找所有包含詞 `street` 的地址，並提升包含詞 `Madison` 的地址。 | `address: Madison^2 street`
+片語提升 | 尋找標題包含片語 `wind rises` 的文件，並提升 2 倍。 | `title: \"wind rises\"^2` 
+| 尋找標題包含詞 `wind rises` 的文件，並將包含片語 `wind rises` 的文件提升 2 倍。 | `title: (wind rises)^2`
 
-## Boolean operators
+## 布林運算子
 
-When you provide search terms in the query, by default, the query returns documents containing at least one of the provided terms. You can use the `default_operator` parameter to specify an operator for all terms. Thus, if you set the `default_operator` to `AND`, all terms will be required, whereas if you set it to `OR`, all terms will be optional. 
+當您在查詢中提供搜尋詞時，依預設，查詢會傳回至少包含其中一個所提供詞的文件。您可以使用 `default_operator` 參數為所有詞指定運算子。因此，如果您將 `default_operator` 設為 `AND`，則所有詞都是必要的；而如果您將它設為 `OR`，則所有詞都是選用的。 
 
-### `+` and `-` operators
+### `+` 與 `-` 運算子
 
-If you want more granular control over the required and optional terms, you can use the `+` and `-` operators. The `+` operator makes the term following it required, while the `-` operator excludes the term following it.
+如果您想要更精細地控制必要與選用的詞，可以使用 `+` 與 `-` 運算子。`+` 運算子會使其後的詞成為必要，而 `-` 運算子則會排除其後的詞。
 
-For example, in the query string `title: (gone +wind -turbines)` specifies that the term `gone` is optional, the term `wind` must be present and the term `turbines` must not be present in the title of the matching documents:
+例如，在查詢字串 `title: (gone +wind -turbines)` 中，指定詞 `gone` 為選用、詞 `wind` 必須存在，且詞 `turbines` 不得存在於相符文件的標題中：
 
 ```json
 GET /testindex/_search
@@ -264,7 +265,7 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-The query returns two matching documents:
+此查詢會傳回兩份相符的文件：
 
 ```json
 {
@@ -286,7 +287,7 @@ The query returns two matching documents:
 }
 ```
 
-The preceding query is equivalent to the following Boolean query:
+上述查詢等同於下列布林查詢：
 
 ```json
 GET testindex/_search
@@ -313,13 +314,13 @@ GET testindex/_search
 }
 ```
 
-### Conventional Boolean operators
+### 傳統布林運算子
 
-Alternatively, you can use the following Boolean operators: `AND`, `&&`, `OR`, `||`, `NOT`, `!`. However, these operators do not follow the precedence rules, so you must use parentheses to specify precedence when using multiple Boolean operators. For example, the query string `title: (gone +wind -turbines)` can be rewritten as follows using Boolean operators:
+或者，您可以使用下列布林運算子：`AND`、`&&`、`OR`、`||`、`NOT`、`!`。不過，這些運算子不遵循優先順序規則，因此當您使用多個布林運算子時，必須使用括號來指定優先順序。例如，查詢字串 `title: (gone +wind -turbines)` 可以使用布林運算子改寫如下：
 
 `title: ((gone AND wind) OR wind) AND NOT turbines`
 
-Run the following query that contains the rewritten query string:
+執行下列包含改寫後查詢字串的查詢：
 
 ```json
 GET testindex/_search
@@ -333,7 +334,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The query returns the same results as the query that uses the `+` and `-` operators. However, note that the relevance scores of the matching documents are not the same as in the previous results:
+此查詢傳回的結果與使用 `+` 與 `-` 運算子的查詢相同。不過請注意，相符文件的相關性分數與先前的結果不同：
 
 ```json
 {
@@ -356,9 +357,9 @@ The query returns the same results as the query that uses the `+` and `-` operat
 ```
 {% include copy-curl.html %}
 
-### Grouping
+### 分組
 
-Group multiple clauses or terms into subqueries using parentheses. For example, the following query searches for documents containing the words `gone` or `rises` that must contain the word `wind` in the title:
+使用括號將多個子句或詞分組為子查詢。例如，下列查詢會搜尋標題中包含詞 `gone` 或 `rises`，且必須包含詞 `wind` 的文件：
 
 ```json
 GET testindex/_search
@@ -371,7 +372,7 @@ GET testindex/_search
 }
 ```
 
-The results contain the two matching documents:
+結果包含兩份相符的文件：
 
 ```json
 {
@@ -393,13 +394,13 @@ The results contain the two matching documents:
 }
 ```
 
-You can also use grouping to boost subquery results or to target the specified field, for example `title:(gone AND wind) description:(historical film)^2`.
+您也可以使用分組來提升子查詢結果，或指定目標欄位，例如 `title:(gone AND wind) description:(historical film)^2`。
 
-## Searching multiple fields
+## 搜尋多個欄位
 
-To search multiple fields, use the `fields` parameter. When you provide the `fields` parameter, the query is rewritten as `field_1: query OR field_2: query ...`. 
+若要搜尋多個欄位，請使用 `fields` 參數。當您提供 `fields` 參數時，查詢會改寫為 `field_1: query OR field_2: query ...`。 
 
-For example, the following query searches for the terms `wind` or `film` in the `title` and `description` fields:
+例如，下列查詢會在 `title` 與 `description` 欄位中搜尋詞 `wind` 或 `film`：
 
 ```json
 GET testindex/_search
@@ -414,7 +415,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The preceding query is equivalent to the following query that does not provide the `fields` parameter:
+上述查詢等同於下列未提供 `fields` 參數的查詢：
 
 ```json
 GET testindex/_search
@@ -427,9 +428,9 @@ GET testindex/_search
 }
 ```
 
-### Searching multiple subfields of a field
+### 搜尋欄位的多個子欄位
 
-To search all inner fields of a field, you can use a wildcard. For example, to search all subfields within the `address` field, use the following query:
+若要搜尋欄位的所有內部欄位，您可以使用萬用字元。例如，若要搜尋 `address` 欄位內的所有子欄位，請使用下列查詢：
 
 ```json
 GET /testindex/_search
@@ -444,7 +445,7 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-The preceding query is equivalent to the following query that does not provide the `fields` parameter (note that the `*` is escaped with `\\`):
+上述查詢等同於下列未提供 `fields` 參數的查詢 (請注意，`*` 已使用 `\\` 逸出)：
 
 ```json
 GET /testindex/_search
@@ -457,9 +458,9 @@ GET /testindex/_search
 }
 ```
 
-### Boosting
+### 加權 (Boosting)
 
-The subqueries that are generated from each search term are combined using a [`dis_max` query]({{site.url}}{{site.baseurl}}/query-dsl/compound/disjunction-max/) with a `tie_breaker`. To boost individual fields, use the `^` operator. For example, the following query boosts the `title` field by a factor of 2:
+由每個搜尋詞彙產生的子查詢會使用帶有 `tie_breaker` 的 [`dis_max` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/disjunction-max/) 來合併。若要對個別欄位加權，請使用 `^` 運算子。例如，下列查詢將 `title` 欄位加權 2 倍：
 
 ```json
 GET testindex/_search
@@ -474,7 +475,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-To boost all subfields of a field, specify the boost operator after the wildcard:
+若要對欄位的所有子欄位加權，請在萬用字元之後指定加權運算子：
 
 ```json
 GET /testindex/_search
@@ -488,23 +489,23 @@ GET /testindex/_search
 }
 ```
 
-### Parameters for multiple field searches
+### 多欄位搜尋的參數
 
-When searching multiple fields, you can pass the additional optional `type` parameter to the `query_string` query. 
+搜尋多個欄位時，您可以將額外的選用參數 `type` 傳遞給 `query_string` 查詢。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`type` | String | Determines how OpenSearch executes the query and scores the results. Valid values are `best_fields`, `bool_prefix`, `most_fields`, `cross_fields`, `phrase`, and `phrase_prefix`. Default is `best_fields`. For descriptions of valid values, see [Multi-match query types]({{site.url}}{{site.baseurl}}/query-dsl/full-text/multi-match/#multi-match-query-types). 
+`type` | 字串 | 決定 OpenSearch 如何執行查詢並為結果評分。有效值為 `best_fields`、`bool_prefix`、`most_fields`、`cross_fields`、`phrase` 和 `phrase_prefix`。預設值為 `best_fields`。有效值的說明請參閱 [多重比對查詢類型]({{site.url}}{{site.baseurl}}/query-dsl/full-text/multi-match/#multi-match-query-types)。
 
-## Synonyms in the `query_string` query
+## `query_string` 查詢中的同義詞
 
-The `query_string` query supports multi-term synonym expansion with the `synonym_graph` token filter. If you use the `synonym_graph` token filter, OpenSearch creates a [match phrase query]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/) for each synonym. 
+`query_string` 查詢支援使用 `synonym_graph` 詞元篩選器進行多詞彙同義詞擴展。如果您使用 `synonym_graph` 詞元篩選器，OpenSearch 會為每個同義詞建立 [片語比對查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/)。
 
-The `auto_generate_synonyms_phrase_query` parameter specifies whether to create a match phrase query automatically for multi-term synonyms. By default, `auto_generate_synonyms_phrase_query` is `true`, so if you specify `ml, machine learning` as synonyms and search for `ml`, OpenSearch searches for `ml OR "machine learning"`. 
+`auto_generate_synonyms_phrase_query` 參數指定是否自動為多詞彙同義詞建立片語比對查詢。預設情況下，`auto_generate_synonyms_phrase_query` 為 `true`，因此如果您指定 `ml, machine learning` 作為同義詞並搜尋 `ml`，OpenSearch 會搜尋 `ml OR "machine learning"`。
 
-Alternatively, you can match multi-term synonyms using conjunctions. If you set `auto_generate_synonyms_phrase_query` to `false`, OpenSearch searches for `ml OR (machine AND learning)`. 
+或者，您可以使用連接詞來比對多詞彙同義詞。如果您將 `auto_generate_synonyms_phrase_query` 設定為 `false`，OpenSearch 會搜尋 `ml OR (machine AND learning)`。
 
-For example, the following query searches for the text `ml models` and specifies not to auto-generate a match phrase query for each synonym:
+例如，下列查詢搜尋文字 `ml models`，並指定不為每個同義詞自動產生片語比對查詢：
 
 ```json
 GET /testindex/_search
@@ -520,11 +521,11 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-For this query, OpenSearch creates the following Boolean query: `(ml OR (machine AND learning)) models`.
+對於此查詢，OpenSearch 會建立下列布林查詢：`(ml OR (machine AND learning)) models`。
 
-## Minimum should match
+## 最低相符數量
 
-The `query_string` query splits the query around each operator and creates a Boolean query for the entire input. The [`minimum_should_match` parameter]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/) specifies the minimum number of terms a document must match to be returned in search results. For example, the following query specifies that the `description` field must match at least two terms for each search result:
+`query_string` 查詢會在每個運算子周圍分割查詢，並為整個輸入建立布林查詢。[`minimum_should_match` 參數]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/) 指定文件必須比對的最少詞彙數量，才會出現在搜尋結果中。例如，下列查詢要求每份傳回的文件，其 `description` 欄位都必須至少符合兩個詞彙：
 
 ```json
 GET /testindex/_search
@@ -542,13 +543,13 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-For this query, OpenSearch creates the following Boolean query: `(description:historical description:epic description:film)~2`.
+對於此查詢，OpenSearch 會建立下列布林查詢：`(description:historical description:epic description:film)~2`。
 
-### Minimum should match with multiple fields
+### 搭配多個欄位使用最低相符數量
 
-If you specify multiple fields in a `query_string` query, OpenSearch creates a [`dis_max` query]({{site.url}}{{site.baseurl}}/query-dsl/compound/disjunction-max/) for the specified fields. If you don't explicitly specify an operator for the query terms, the whole query text is treated as one clause. OpenSearch builds a query for each field using this single clause. The final Boolean query contains a single clause that corresponds to the `dis_max` query for all fields, therefore the `minimum_should_match` parameter is not applied.
+如果您在 `query_string` 查詢中指定多個欄位，OpenSearch 會為指定的欄位建立 [`dis_max` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/disjunction-max/)。如果您未明確為查詢詞彙指定運算子，整個查詢文字會被視為一個子句。OpenSearch 會使用此單一子句為每個欄位建立查詢。最終的布林查詢包含一個對應於所有欄位之 `dis_max` 查詢的單一子句，因此不會套用 `minimum_should_match` 參數。
 
-For example, in the following query, `historical epic heroic` is treated as a single clause:
+例如，在下列查詢中，`historical epic heroic` 被視為單一子句：
 
 ```json
 GET /testindex/_search
@@ -567,9 +568,9 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-For this query, OpenSearch creates the following Boolean query: `((title:historical title:epic title:heroic) | (description:historical description:epic description:heroic))`.
+對於此查詢，OpenSearch 會建立下列布林查詢：`((title:historical title:epic title:heroic) | (description:historical description:epic description:heroic))`。
 
-If you add explicit operators (`AND` or `OR`) to the query terms, each term is considered a separate clause, to which the `minimum_should_match` parameter can be applied. For example, in the following query, `historical`, `epic`, and `heroic` are considered separate clauses:
+如果您在查詢詞彙中加入明確的運算子 (`AND` 或 `OR`)，每個詞彙都會被視為獨立的子句，並可對其套用 `minimum_should_match` 參數。例如，在下列查詢中，`historical`、`epic` 和 `heroic` 被視為獨立的子句：
 
 ```json
 GET /testindex/_search
@@ -588,9 +589,9 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-For this query, OpenSearch creates the following Boolean query: `((title:historical | description:historical) (description:epic | title:epic) (description:heroic | title:heroic))~2`. The query matches at least two of the three clauses. Each clause represents a `dis_max` query on both the `title` and `description` fields for each term.
+對於此查詢，OpenSearch 會建立下列布林查詢：`((title:historical | description:historical) (description:epic | title:epic) (description:heroic | title:heroic))~2`。此查詢至少比對三個子句中的兩個。每個子句代表針對每個詞彙，在 `title` 和 `description` 兩個欄位上執行的 `dis_max` 查詢。
 
-Alternatively, to ensure that `minimum_should_match` can be applied, you can set the `type` parameter to `cross_fields`. This indicates that the fields with the same analyzer should be grouped together when the input text is analyzed:
+或者，若要確保可以套用 `minimum_should_match`，您可以將 `type` 參數設定為 `cross_fields`。這表示在分析輸入文字時，使用相同分析器的欄位應分為同一組：
 
 ```json
 GET /testindex/_search
@@ -610,37 +611,37 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-For this query, OpenSearch creates the following Boolean query: `((title:historical | description:historical) (description:epic | title:epic) (description:heroic | title:heroic))~2`. 
+對於此查詢，OpenSearch 會建立下列布林查詢：`((title:historical | description:historical) (description:epic | title:epic) (description:heroic | title:heroic))~2`。
 
-However, if you use different analyzers, you must use explicit operators in the query to ensure that the `minimum_should_match` parameter is applied to each term.
+不過，如果您使用不同的分析器，則必須在查詢中使用明確的運算子，以確保 `minimum_should_match` 參數套用至每個詞彙。
 
-## Parameters
+## 參數
 
-The following table lists the parameters that `query_string` query supports. All parameters except `query` are optional.
+下表列出 `query_string` 查詢支援的參數。除了 `query` 以外，所有參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`query` | String | The text that may contain expressions in the [query string syntax](#query-string-syntax) to use for search. Required.
-`allow_leading_wildcard` | Boolean | Specifies whether `*` and `?` are allowed as first characters of a search term. Default is `true`.
-`analyze_wildcard` | Boolean | Specifies whether OpenSearch should attempt to analyze wildcard terms. Default is `false`.
-`analyzer` | String | The [analyzer]({{site.url}}{{site.baseurl}}/analyzers/index/) used to tokenize the query string text. Default is the index-time analyzer specified for the `default_field`. If no analyzer is specified for the `default_field`, the `analyzer` is the default analyzer for the index. For more information about `index.query.default_field`, see [Dynamic index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings).
-`auto_generate_synonyms_phrase_query` | Boolean | Specifies whether to create a [match phrase query]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/) automatically for multi-term synonyms. For example, if you specify `ba, batting average` as synonyms and search for `ba`, OpenSearch searches for `ba OR "batting average"` (if this option is `true`) or `ba OR (batting AND average)` (if this option is `false`). Default is `true`.
-`boost` | Floating-point | Boosts the clause by the given multiplier. Useful for weighing clauses in compound queries. Values in the [0, 1) range decrease relevance, and values greater than 1 increase relevance. Default is `1`. 
-`default_field` | String | The field in which to search if the field is not specified in the query string. Supports wildcards. Defaults to the value specified in the `index.query. Default_field` index setting. By default, the `index.query. Default_field` is `*`, which means extract all fields eligible for term query and filter the metadata fields. The extracted fields are combined into a query if the `prefix` is not specified. Eligible fields do not include nested documents. Searching all eligible fields could be a resource-intensive operation. The `indices.query.bool.max_clause_count` search setting defines the maximum value for the product of the number of fields and the number of terms that can be queried at one time. The default value for `indices.query.bool.max_clause_count` is 1,024.
-`default_operator`| String | If the query string contains multiple search terms, whether all terms need to match (`AND`) or only one term needs to match (`OR`) for a document to be considered a match. Valid values are:<br>- `OR`: The string `to be` is interpreted as `to OR be`<br>- `AND`: The string `to be` is interpreted as `to AND be`<br> Default is `OR`.
-`enable_position_increments` | Boolean | When `true`, resulting queries are aware of position increments. This setting is useful when the removal of stop words leaves an unwanted "gap" between terms. Default is `true`.
-`fields` | String array | The list of fields to search (for example, `"fields": ["title^4", "description"]`). Supports wildcards. If unspecified, defaults to the `index.query. Default_field` setting, which defaults to `["*"]`.
-`fuzziness` | String | The number of character edits (insert, delete, substitute) that it takes to change one word to another when determining whether a term matched a value. For example, the distance between `wined` and `wind` is 1. Valid values are non-negative integers or `AUTO`. The default, `AUTO`, dynamically selects the edit distance based on the search term's length. You can customize the thresholds using the syntax `AUTO:[low],[high]`, where `low` and `high` define the character length boundaries. When omitted, OpenSearch uses `AUTO:3,6` as the default, which applies the following rules: <br>- Terms containing 0--2 characters: Requires an exact match (0 edits). <br>- Terms containing 3--5 characters: Allows a maximum of 1 edit. <br>- Terms containing 6 or more characters: Allows a maximum of 2 edits. <br>For example, `AUTO:4,7` requires exact matches for terms containing 0--3 characters, allows a maximum of 1 edit for terms containing 4--6 characters, and allows a maximum of 2 edits for terms containing 7 or more characters. Using `AUTO` is recommended for most scenarios.
-`fuzzy_max_expansions` | Positive integer | The maximum number of terms to which the query can expand. Fuzzy queries “expand to” a number of matching terms that are within the distance specified in `fuzziness`. Then OpenSearch tries to match those terms. Default is `50`.
-`fuzzy_transpositions` | Boolean | Setting `fuzzy_transpositions` to `true` (default) adds swaps of adjacent characters to the insert, delete, and substitute operations of the `fuzziness` option. For example, the distance between `wind` and `wnid` is 1 if `fuzzy_transpositions` is true (swap "n" and "i") and 2 if it is false (delete "n", insert "n"). If `fuzzy_transpositions` is false, `rewind` and `wnid` have the same distance (2) from `wind`, despite the more human-centric opinion that `wnid` is an obvious typo. The default is a good choice for most use cases.
-`lenient` | Boolean | Setting `lenient` to `true` ignores data type mismatches between the query and the document field. For example, a query string of `"8.2"` could match a field of type `float`. Default is `false`.
-`max_determinized_states` | Positive integer | The maximum number of "[states](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/util/automaton/Operations.html#DEFAULT_MAX_DETERMINIZED_STATES)" (a measure of complexity) that Lucene can create for query strings that contain regular expressions (for example, `"query": "/wind.+?/"`). Larger numbers allow for queries that use more memory. Default is 10,000.
-`minimum_should_match` | Positive or negative integer, positive or negative percentage, combination | If the query string contains multiple search terms and you use the `or` operator, the number of terms that need to match for the document to be considered a match. For example, if `minimum_should_match` is 2, `wind often rising` does not match `The Wind Rises.` If `minimum_should_match` is `1`, it matches. For details, see [Minimum should match]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/).
-`phrase_slop` | Integer | The maximum number of words that are allowed between the matched words. If `phrase_slop` is 2, a maximum of two words is allowed between matched words in a phrase. Transposed words have a slop of 2. Default is `0` (an exact phrase match where matched words must be next to each other).
-`quote_analyzer` | String | The analyzer used to tokenize quoted text in the query string. Overrides the `analyzer` parameter for quoted text. Default is the `search_quote_analyzer` specified for the `default_field`. 
-`quote_field_suffix` | String | This option supports searching for exact matches (surrounded with quotation marks) using a different analysis method than non-exact matches use. For example, if `quote_field_suffix` is `.exact` and you search for `\"lightly\"` in the `title` field, OpenSearch searches for the word `lightly` in the `title.exact` field. This second field might use a different type (for example, `keyword` rather than `text`) or a different analyzer.  
-`rewrite` | String | Determines how OpenSearch rewrites and scores multi-term queries. Valid values are `constant_score`, `scoring_boolean`, `constant_score_boolean`, `top_terms_N`, `top_terms_boost_N`, and `top_terms_blended_freqs_N`. Default is `constant_score`.
-`time_zone` | String | Specifies the number of hours to offset the desired time zone from `UTC`. You need to indicate the time zone offset number if the query string contains a date range. For example, set `time_zone": "-08:00"` for a query with a date range such as `"query": "wind rises release_date[2012-01-01 TO 2014-01-01]"`). The default time zone format used to specify number of offset hours is `UTC`.
+`query` | 字串 | 可能包含 [查詢字串語法](#query-string-syntax) 中用於搜尋之運算式的文字。必要。
+`allow_leading_wildcard` | 布林值 | 指定是否允許 `*` 和 `?` 作為搜尋詞彙的第一個字元。預設為 `true`。
+`analyze_wildcard` | 布林值 | 指定 OpenSearch 是否應嘗試分析萬用字元詞彙。預設為 `false`。
+`analyzer` | 字串 | 用來對查詢字串文字進行斷詞的[分析器]({{site.url}}{{site.baseurl}}/analyzers/index/)。預設為為 `default_field` 指定的索引時分析器。如果未為 `default_field` 指定分析器，則 `analyzer` 是索引的預設分析器。有關 `index.query.default_field` 的更多資訊，請參閱 [動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)。
+`auto_generate_synonyms_phrase_query` | 布林值 | 指定是否為多詞彙同義詞自動建立 [片語比對查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/)。例如，如果您指定 `ba, batting average` 作為同義詞並搜尋 `ba`，則 OpenSearch 會搜尋 `ba OR "batting average"` (若此選項為 `true`) 或 `ba OR (batting AND average)` (若此選項為 `false`)。預設為 `true`。
+`boost` | 浮點數 | 以給定的倍數提升子句的權重。適合用於在複合查詢中為子句加權。[0, 1) 範圍內的值會降低相關性，大於 1 的值會提高相關性。預設為 `1`。
+`default_field` | 字串 | 當查詢字串中未指定欄位時要搜尋的欄位。支援萬用字元。預設為 `index.query. Default_field` 索引設定中指定的值。預設情況下，`index.query. Default_field` 為 `*`，表示擷取所有適合詞彙查詢的欄位並篩除中繼資料欄位。如果未指定 `prefix`，擷取的欄位會合併成一個查詢。適用欄位不包含巢狀文件。搜尋所有適用欄位可能是耗用大量資源的作業。`indices.query.bool.max_clause_count` 搜尋設定定義了一次可查詢的欄位數與詞彙數乘積的最大值。`indices.query.bool.max_clause_count` 的預設值為 1,024。
+`default_operator`| 字串 | 如果查詢字串包含多個搜尋詞彙，指定文件被視為符合時，是所有詞彙都必須符合 (`AND`) 還是只需一個詞彙符合 (`OR`)。有效值為：<br>- `OR`：字串 `to be` 會被解譯為 `to OR be`<br>- `AND`：字串 `to be` 會被解譯為 `to AND be`<br> 預設為 `OR`。
+`enable_position_increments` | 布林值 | 當為 `true` 時，產生的查詢會感知位置增量。當移除停用詞後在詞彙之間留下不想要的「間隙」時，此設定很有用。預設為 `true`。
+`fields` | 字串陣列 | 要搜尋的欄位清單 (例如 `"fields": ["title^4", "description"]`)。支援萬用字元。若未指定，預設為 `index.query. Default_field` 設定，其預設值為 `["*"]`。
+`fuzziness` | 字串 | 在判斷詞彙是否符合某個值時，將一個單字變更為另一個單字所需的字元編輯次數 (插入、刪除、替換)。例如，`wined` 與 `wind` 之間的距離為 1。有效值為非負整數或 `AUTO`。預設值 `AUTO` 會根據搜尋詞彙的長度動態選擇編輯距離。您可以使用 `AUTO:[low],[high]` 語法自訂門檻，其中 `low` 和 `high` 定義字元長度邊界。若省略，OpenSearch 會使用 `AUTO:3,6` 作為預設值，套用下列規則：<br>- 包含 0--2 個字元的詞彙：需要完全符合 (0 次編輯)。<br>- 包含 3--5 個字元的詞彙：最多允許 1 次編輯。<br>- 包含 6 個以上字元的詞彙：最多允許 2 次編輯。<br>例如，`AUTO:4,7` 要求包含 0--3 個字元的詞彙完全符合，包含 4--6 個字元的詞彙最多允許 1 次編輯，包含 7 個以上字元的詞彙最多允許 2 次編輯。大多數情況建議使用 `AUTO`。
+`fuzzy_max_expansions` | 正整數 | 查詢可展開的最大詞彙數。模糊查詢會「展開至」`fuzziness` 指定距離內的多個符合詞彙，然後 OpenSearch 會嘗試比對這些詞彙。預設為 `50`。
+`fuzzy_transpositions` | 布林值 | 將 `fuzzy_transpositions` 設為 `true` (預設) 會在 `fuzziness` 選項的插入、刪除和替換作業中加入相鄰字元交換。例如，若 `fuzzy_transpositions` 為 true (交換 "n" 和 "i")，`wind` 與 `wnid` 之間的距離為 1；若為 false (刪除 "n"、插入 "n")，則距離為 2。若 `fuzzy_transpositions` 為 false，`rewind` 和 `wnid` 與 `wind` 的距離相同 (2)，儘管從以人為本的角度來看 `wnid` 顯然是拼字錯誤。預設值適合大多數使用情境。
+`lenient` | 布林值 | 將 `lenient` 設為 `true` 會忽略查詢與文件欄位之間的資料類型不符。例如，查詢字串 `"8.2"` 可以符合 `float` 類型的欄位。預設為 `false`。
+`max_determinized_states` | 正整數 | Lucene 可為包含正規表示式的查詢字串 (例如 `"query": "/wind.+?/"`) 建立的「[狀態](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/util/automaton/Operations.html#DEFAULT_MAX_DETERMINIZED_STATES)」數上限 (複雜度的度量)。數字越大，允許的查詢會使用越多記憶體。預設為 10,000。
+`minimum_should_match` | 正或負整數、正或負百分比、組合 | 如果查詢字串包含多個搜尋詞彙且您使用 `or` 運算子，此為文件被視為符合時需要符合的詞彙數。例如，若 `minimum_should_match` 為 2，`wind often rising` 不符合 `The Wind Rises.`；若 `minimum_should_match` 為 `1`，則符合。詳細資訊請參閱 [最低相符數量]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/)。
+`phrase_slop` | 整數 | 符合單字之間允許的最大單字數。若 `phrase_slop` 為 2，片語中符合單字之間最多允許兩個單字。調換順序的單字其 slop 為 2。預設為 `0` (完全片語符合，符合的單字必須相鄰)。
+`quote_analyzer` | 字串 | 用來對查詢字串中引號內文字進行斷詞的分析器。會針對引號內文字覆寫 `analyzer` 參數。預設為為 `default_field` 指定的 `search_quote_analyzer`。
+`quote_field_suffix` | 字串 | 此選項支援使用與非精確符合不同的分析方法來搜尋精確符合 (以引號包圍)。例如，若 `quote_field_suffix` 為 `.exact`，且您在 `title` 欄位中搜尋 `\"lightly\"`，OpenSearch 會在 `title.exact` 欄位中搜尋單字 `lightly`。此第二個欄位可能使用不同的類型 (例如 `keyword` 而非 `text`) 或不同的分析器。
+`rewrite` | 字串 | 決定 OpenSearch 如何改寫與評分多詞彙查詢。有效值為 `constant_score`、`scoring_boolean`、`constant_score_boolean`、`top_terms_N`、`top_terms_boost_N` 和 `top_terms_blended_freqs_N`。預設為 `constant_score`。
+`time_zone` | 字串 | 指定所需時區相對於 `UTC` 的偏移時數。如果查詢字串包含日期範圍，您需要指定時區偏移數。例如，對於包含 `"query": "wind rises release_date[2012-01-01 TO 2014-01-01]"` 之類日期範圍的查詢，請設定 `time_zone": "-08:00"`。用於指定偏移時數的預設時區格式為 `UTC`。
 
-Query string queries may be internally converted into [prefix queries]({{site.url}}{{site.baseurl}}/query-dsl/term/prefix/). If [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/index/#expensive-queries) is set to `false`, prefix queries are not executed. If `index_prefixes` is enabled, the `search.allow_expensive_queries` setting is ignored and an optimized query is built and executed.
+查詢字串查詢可能會在內部轉換為 [前綴查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/prefix/)。如果 [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/index/#expensive-queries) 設為 `false`，則不會執行前綴查詢。如果啟用 `index_prefixes`，則會忽略 `search.allow_expensive_queries` 設定，並建立並執行最佳化的查詢。
 {: .important}

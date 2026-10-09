@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Log type APIs
+title: "記錄類型 API"
 parent: Security Analytics APIs
 nav_order: 56
 ---
 
-# Log type APIs
+# 記錄類型 API
 
-The log type APIs allow you to create a custom log type, search custom log types, update custom log types, and delete custom log types.
-
-
-## Create log type
-
-Creating a new custom log type involves entering a name and a description and specifying the source as `Custom`.
+記錄類型 API 可讓您建立自訂記錄類型、搜尋自訂記錄類型、更新自訂記錄類型，以及刪除自訂記錄類型。
 
 
-### Example request
+## 建立記錄類型
+
+建立新的自訂記錄類型時，需要輸入名稱與描述，並將來源指定為 `Custom`。
+
+
+### 範例請求
 
 ```json
 POST /_plugins/_security_analytics/logtype
@@ -28,7 +29,7 @@ POST /_plugins/_security_analytics/logtype
 {% include copy-curl.html %}
 
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -46,12 +47,12 @@ POST /_plugins/_security_analytics/logtype
 ```
 
 
-## Search custom log types
+## 搜尋自訂記錄類型
 
-This API allows you to search log types in the system.
+此 API 可讓您搜尋系統中的記錄類型。
 
 
-### Example request
+### 範例請求
 
 ```json
 POST /_plugins/_security_analytics/logtype/_search
@@ -64,7 +65,7 @@ POST /_plugins/_security_analytics/logtype/_search
 {% include copy-curl.html %}
 
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -165,16 +166,16 @@ POST /_plugins/_security_analytics/logtype/_search
 ```
 
 
-## Update custom log type
+## 更新自訂記錄類型
 
-This API allows you to update existing custom log types. Use the log type's ID in the route to specify the log type, as shown in the following example:
+此 API 可讓您更新現有的自訂記錄類型。請在路由中使用記錄類型的 ID 來指定記錄類型，如下列範例所示：
 
 ```json
 PUT /_plugins/_security_analytics/logtype/{log_type_id}
 ```
 
 
-### Example request
+### 範例請求
 
 ```json
 PUT /_plugins/_security_analytics/logtype/m98uk4kBlb9cbROIpEj2
@@ -187,7 +188,7 @@ PUT /_plugins/_security_analytics/logtype/m98uk4kBlb9cbROIpEj2
 {% include copy-curl.html %}
 
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -205,16 +206,16 @@ PUT /_plugins/_security_analytics/logtype/m98uk4kBlb9cbROIpEj2
 ```
 
 
-## Delete custom log type
+## 刪除自訂記錄類型
 
-This API is used to delete a custom log type. Specify the log type's ID in the route to run the operation:
+此 API 用於刪除自訂記錄類型。請在路由中指定記錄類型的 ID 以執行此操作：
 
 ```json
 DELETE /_plugins/_security_analytics/logtype/{log_type_id}
 ```
 
 
-### Example request
+### 範例請求
 
 ```json
 DELETE /_plugins/_security_analytics/logtype/m98uk4kBlb9cbROIpEj2
@@ -222,7 +223,7 @@ DELETE /_plugins/_security_analytics/logtype/m98uk4kBlb9cbROIpEj2
 {% include copy-curl.html %}
 
 
-### Example response
+### 範例回應
 
 ```json
 200 OK
@@ -232,6 +233,6 @@ DELETE /_plugins/_security_analytics/logtype/m98uk4kBlb9cbROIpEj2
 }
 ```
 
-Only custom log types can be deleted. Trying to delete a standard OpenSearch-defined log type results in an error.
+只有自訂記錄類型可以刪除。嘗試刪除 OpenSearch 定義的標準記錄類型會導致錯誤。
 {: .note }
 

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Action group APIs
+title: "動作群組 API"
 parent: Security APIs
 nav_order: 60
 has_children: true
@@ -9,15 +10,15 @@ redirect_from:
   - /security/api/action-groups/
 ---
 
-# Action group APIs
+# 動作群組 API
 
-The action group APIs create, retrieve, modify, and delete action groups, which are reusable collections of permissions.
+動作群組 API 可建立、擷取、修改及刪除動作群組，動作群組是可重複使用的權限集合。
 
-OpenSearch supports the following action group APIs.
+OpenSearch 支援下列動作群組 API。
 
-| API | Description |
+| API | 說明 |
 | :--- | :--- |
-| [Create or Update Action Group API]({{site.url}}{{site.baseurl}}/security/api/action-groups/create-action-group/) | Creates or replaces the specified action group. |
-| [Patch Action Groups API]({{site.url}}{{site.baseurl}}/security/api/action-groups/patch-action-groups/) | Updates individual attributes of one action group, or creates, updates, or deletes multiple action groups in a single call. |
-| [Get Action Groups API]({{site.url}}{{site.baseurl}}/security/api/action-groups/get-action-groups/) | Retrieves one action group or all action groups. |
-| [Delete Action Group API]({{site.url}}{{site.baseurl}}/security/api/action-groups/delete-action-group/) | Deletes the specified action group. |
+| [Create or Update Action Group API]({{site.url}}{{site.baseurl}}/security/api/action-groups/create-action-group/) | 建立或取代指定的動作群組。 |
+| [Patch Action Groups API]({{site.url}}{{site.baseurl}}/security/api/action-groups/patch-action-groups/) | 更新單一動作群組的個別屬性，或在單次呼叫中建立、更新或刪除多個動作群組。 |
+| [Get Action Groups API]({{site.url}}{{site.baseurl}}/security/api/action-groups/get-action-groups/) | 擷取單一動作群組或所有動作群組。 |
+| [Delete Action Group API]({{site.url}}{{site.baseurl}}/security/api/action-groups/delete-action-group/) | 刪除指定的動作群組。 |

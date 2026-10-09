@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Schedule reports with AWS Lambda
+title: "使用 AWS Lambda 排程報告"
 nav_order: 30
 parent: Reporting using the CLI
 grand_parent: Reporting
@@ -9,25 +10,25 @@ redirect_from:
 ---
 
 <!-- vale off -->
-# Scheduling reports with AWS Lambda
+# 使用 AWS Lambda 排程報告
 <!-- vale on -->
 
-You can use AWS Lambda with the Reporting CLI tool to specify an AWS Lambda function to trigger the report generation.
+您可以將 AWS Lambda 與 Reporting CLI 工具搭配使用，指定一個 AWS Lambda 函式來觸發報告的產生。
 
-This requires that you use an AMD64 system and Docker.
+這需要您使用 AMD64 系統與 Docker。
 
-### Prerequisites
+### 必要條件
 
-To use the Reporting CLI with AWS Lambda, you need to do the following preliminary steps.
+若要將 Reporting CLI 與 AWS Lambda 搭配使用，您需要先完成以下前置步驟。
 
-- Get an AWS account. For instructions, see [Creating an AWS account](https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-creating.html) in the AWS Account Management reference guide.
-- Set up an Amazon Elastic Container Registry (ECR). For instructions, see [Getting started with Amazon ECR using the AWS Management Console](https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-console.html).
+- 取得 AWS 帳戶。相關說明請參閱 AWS Account Management 參考指南中的 [建立 AWS 帳戶](https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-creating.html)。
+- 設定 Amazon Elastic Container Registry (ECR)。相關說明請參閱 [使用 AWS Management Console 開始使用 Amazon ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-console.html)。
 
-## Step 1: Create a container image with a Dockerfile
+## 步驟 1：使用 Dockerfile 建立容器映像
 
-You need to assemble the container image by running a Dockerfile. When you run the Dockerfile, it downloads the OpenSearch artifact required to use the Reporting CLI. To learn more about Dockerfiles, see [Dockerfile reference](https://docs.docker.com/engine/reference/builder/).
+您需要透過執行 Dockerfile 來組裝容器映像。執行 Dockerfile 時，它會下載使用 Reporting CLI 所需的 OpenSearch 成品。若要進一步了解 Dockerfile，請參閱 [Dockerfile 參考文件](https://docs.docker.com/engine/reference/builder/)。
 
-Copy the following sample configurations into a Dockerfile:
+將下列範例組態複製到 Dockerfile 中：
 
 ```dockerfile
 # Define function directory
@@ -86,51 +87,51 @@ CMD [ "/function/node_modules/@opensearch-project/reporting-cli/src/index.handle
 
 ```
 
-Next, run the following build command within the same directory that contains the Dockerfile:
+接著，在包含 Dockerfile 的同一個目錄中執行以下建置命令：
 
 ```
 docker build -t opensearch-reporting-cli .
 ```
 
-## Step 2: Create a private repository with Amazon ECR
+## 步驟 2：使用 Amazon ECR 建立私有儲存庫
 
-You need to follow the instructions to create an image repository, see [Getting started with Amazon ECR using the AWS Management Console](https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-console.html).
+您需要依照說明建立映像儲存庫，請參閱 [使用 AWS Management Console 開始使用 Amazon ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-console.html)。
 
-Give your repository the name `opensearch-reporting-cli`.
+將您的儲存庫命名為 `opensearch-reporting-cli`。
 
-In addition to the Amazon ECR instructions, you need to make several adjustments for the Reporting CLI to function properly as described in the following steps in this procedure.
+除了 Amazon ECR 的說明之外，您還需要進行幾項調整，讓 Reporting CLI 能正常運作，詳情請參閱本程序中的後續步驟。
 
-## Step 3: Push the image to the private repository
+## 步驟 3：將映像推送至私有儲存庫
 
-You need to get several commands from the AWS ECR Console to run within the Dockerfile directory.
+您需要從 AWS ECR 主控台取得數個命令，並在 Dockerfile 目錄中執行。
 
-1. After you create your repository, select it from **Private repositories**.
-1. Choose **view push commands**.
-1. Copy and run each command shown in **Push commands for `opensearch-reporting-cli`** sequentially in the Dockerfile directory.
+1. 建立儲存庫後，從 **Private repositories** 中選取它。
+1. 選擇 **view push commands**。
+1. 在 Dockerfile 目錄中，依序複製並執行 **Push commands for `opensearch-reporting-cli`** 中顯示的每個命令。
 
-For more details about Docker push commands, see [Pushing a Docker image](https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html) in the Amazon ECR user guide.
+如需 Docker 推送命令的更多詳細資訊，請參閱 Amazon ECR 使用者指南中的 [推送 Docker 映像](https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html)。
 
-## Step 4: Create a Lambda function with the container image
+## 步驟 4：使用容器映像建立 Lambda 函式
 
-Now that you have a container image created for the Reporting CLI, you need to create a function defined as the container image.
+現在您已為 Reporting CLI 建立了容器映像，接下來需要建立一個定義為該容器映像的函式。
 
-1. Open the AWS Lambda console and choose [Functions](https://us-west-2.console.aws.amazon.com/lambda/home?region=us-west-2#/functions).
-1. Choose **Create function**, then choose **Container image** and fill in a name for the function.
-1. In **Container image URI**, choose **Browse images** and select `opensearch-reporting-cli` for the image repository.
-1. In **Images** select the image, and choose **Select image**.
-1. In **Architecture**, choose **x86_64**.
-1. Choose **Create function**.
-1. Go to **Lambda** > **functions** and choose the function you created.
-1. Choose **Configuration > General configuration > Edit timeout** and set the timeout in Lambda to 5 minutes to allow the Reporting CLI to generate the report.
-1. Change the **Ephemeral storage** setting to at least 1024 MB. The default setting is not a sufficient storage amount to support report generation.
+1. 開啟 AWS Lambda 主控台，並選擇 [Functions](https://us-west-2.console.aws.amazon.com/lambda/home?region=us-west-2#/functions)。
+1. 選擇 **Create function**，然後選擇 **Container image**，並填入函式名稱。
+1. 在 **Container image URI** 中，選擇 **Browse images**，並為映像儲存庫選取 `opensearch-reporting-cli`。
+1. 在 **Images** 中選取映像，然後選擇 **Select image**。
+1. 在 **Architecture** 中，選擇 **x86_64**。
+1. 選擇 **Create function**。
+1. 前往 **Lambda** > **functions**，並選擇您建立的函式。
+1. 選擇 **Configuration > General configuration > Edit timeout**，將 Lambda 的逾時時間設為 5 分鐘，讓 Reporting CLI 有足夠時間產生報告。
+1. 將 **Ephemeral storage** 設定變更為至少 1024 MB。預設設定的儲存空間不足以支援報告產生。
 
-1. Next, test the function either by providing values JSON format or by providing AWS Lambda environment variables.
+1. 接著，透過提供 JSON 格式的值或提供 AWS Lambda 環境變數來測試函式。
 
-- If the function contains fixed values, such as email address you do not need a JSON file. You can specify an environment variable in AWS Lambda.
-- If the function takes a variable key-value pair, then you need to specify the values in the JSON with the same naming convention as command options, for example the `--credentials` option requires the username and password.
+- 如果函式包含固定值，例如電子郵件地址，則不需要 JSON 檔案。您可以在 AWS Lambda 中指定環境變數。
+- 如果函式接受可變的鍵值對，則需要在 JSON 中以與命令選項相同的命名慣例指定值，例如 `--credentials` 選項需要使用者名稱與密碼。
 {: .note }
 
- The following example shows fixed values provided for the sender and recipient email addresses:
+ 以下範例顯示為寄件人與收件人電子郵件地址提供的固定值：
 
 ```json
 {
@@ -142,25 +143,25 @@ Now that you have a container image created for the Reporting CLI, you need to c
 }
 ```
 
-To learn more about AWS Lambda functions, see [Deploying Lambda functions as container images](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-images.html) in the AWS Lambda documentation.
-## Step 5: Add the trigger to start the AWS Lambda function
+若要進一步了解 AWS Lambda 函式，請參閱 AWS Lambda 文件中的 [將 Lambda 函式部署為容器映像](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-images.html)。
+## 步驟 5：新增觸發條件以啟動 AWS Lambda 函式
 
-Set the trigger to start running the report. AWS Lambda can use any AWS service as a trigger, such as SNS, S3, or an AWS CloudWatch EventBridge.
+設定觸發條件以開始執行報告。AWS Lambda 可以使用任何 AWS 服務作為觸發條件，例如 SNS、S3 或 AWS CloudWatch EventBridge。
 
-1. In the **Triggers** section, choose **Add trigger**.
-1. Select a trigger from the list. For example, you can set an AWS CloudWatch Event. To learn more about Amazon ECR events you can schedule, see [Sample events from Amazon ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/ecr-eventbridge.html#ecr-eventbridge-bus).
-1. Choose **Test** to initiate the function.
+1. 在 **Triggers** 區段中，選擇 **Add trigger**。
+1. 從清單中選取一個觸發條件。例如，您可以設定 AWS CloudWatch Event。若要進一步了解可排程的 Amazon ECR 事件，請參閱 [Amazon ECR 的事件範例](https://docs.aws.amazon.com/AmazonECR/latest/userguide/ecr-eventbridge.html#ecr-eventbridge-bus)。
+1. 選擇 **Test** 以啟動函式。
 
-## (Optional) Step 6: Add the role permission for Amazon SES
+## (選用) 步驟 6：為 Amazon SES 新增角色權限
 
-If you want to use Amazon SES for the email transport, you need to set up permissions.
+如果您想使用 Amazon SES 作為電子郵件傳輸方式，您需要設定權限。
 
-1. Select **Configuration** and choose **Execution role**.
-1. In **Summary**, choose **Permissions**.
-1. Select **{}JSON** to open the JSON policy editor.
-1. Add the permissions for the Amazon SES resource that you want to use.
+1. 選取 **Configuration**，並選擇 **Execution role**。
+1. 在 **Summary** 中，選擇 **Permissions**。
+1. 選取 **{}JSON** 以開啟 JSON 政策編輯器。
+1. 為您要使用的 Amazon SES 資源新增權限。
 
-The following example provides the resource ARN for the send email action:
+以下範例提供傳送電子郵件動作的資源 ARN：
 
 ```json
 {
@@ -173,4 +174,4 @@ The following example provides the resource ARN for the send email action:
 }
 ```
 
-To learn more about setting role permissions, see [Permissions](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-images.html#gettingstarted-images-permissions) in the AWS Lambda user guide.
+若要進一步了解如何設定角色權限，請參閱 AWS Lambda 使用者指南中的 [權限](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-images.html#gettingstarted-images-permissions)。

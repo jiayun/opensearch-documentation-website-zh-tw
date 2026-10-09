@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Allow list APIs
+title: "允許清單 API"
 parent: Security APIs
 nav_order: 100
 has_children: true
@@ -9,25 +10,25 @@ redirect_from:
   - /security/api/allowlist/
 ---
 
-# Allow list APIs
+# 允許清單 API
 
-The allow list APIs control which APIs a user without administrator privileges can access.
+允許清單 API 可控制不具管理員權限的使用者可以存取哪些 API。
 
-OpenSearch supports the following allow list APIs.
+OpenSearch 支援下列允許清單 API。
 
-| API | Description |
+| API | 說明 |
 | :--- | :--- |
-| [Create or Update Allow List API]({{site.url}}{{site.baseurl}}/security/api/allowlist/create-allowlist/) | Creates or replaces the allow list configuration. |
-| [Patch Allow List API]({{site.url}}{{site.baseurl}}/security/api/allowlist/patch-allowlist/) | Updates individual fields in the allow list configuration. |
-| [Get Allow List API]({{site.url}}{{site.baseurl}}/security/api/allowlist/get-allowlist/) | Retrieves the current allow list configuration. |
+| [建立或更新允許清單 API]({{site.url}}{{site.baseurl}}/security/api/allowlist/create-allowlist/) | 建立或取代允許清單組態。 |
+| [修補允許清單 API]({{site.url}}{{site.baseurl}}/security/api/allowlist/patch-allowlist/) | 更新允許清單組態中的個別欄位。 |
+| [取得允許清單 API]({{site.url}}{{site.baseurl}}/security/api/allowlist/get-allowlist/) | 擷取目前的允許清單組態。 |
 
-## Required permissions
+## 必要權限
 
-The allow list APIs are restricted to a super admin. Being mapped to a role listed in `plugins.security.restapi.roles_enabled` is not sufficient on its own: a user with the `all_access` role receives `403 Forbidden`. To call these APIs, use one of the following approaches:
+允許清單 API 僅限超級管理員使用。僅對應至 `plugins.security.restapi.roles_enabled` 中列出的角色並不足夠：具有 `all_access` 角色的使用者會收到 `403 Forbidden`。若要呼叫這些 API，請使用下列其中一種方法：
 
-- Authenticate with an admin certificate. For more information, see [Configuring an admin certificate]({{site.url}}{{site.baseurl}}/security/configuration/tls/#configuring-admin-certificates).
-- Grant a role the `restapi:admin/allowlist` cluster permission and set `plugins.security.restapi.admin.enabled` to `true` in `opensearch.yml`. This permission is an independent grant, so the role does not also need to be listed in `plugins.security.restapi.roles_enabled`.
+- 使用管理員憑證進行驗證。如需詳細資訊，請參閱[設定管理員憑證]({{site.url}}{{site.baseurl}}/security/configuration/tls/#configuring-admin-certificates)。
+- 授予角色 `restapi:admin/allowlist` 叢集權限，並在 `opensearch.yml` 中將 `plugins.security.restapi.admin.enabled` 設為 `true`。此權限是獨立授予的，因此該角色不需要同時列在 `plugins.security.restapi.roles_enabled` 中。
 
-The reserved `security_rest_api_full_access` role includes `restapi:admin/allowlist`. A role that contains any `restapi:admin` permission cannot be created or modified through the [Role APIs]({{site.url}}{{site.baseurl}}/security/api/roles/), so define your own such role in `roles.yml` and apply it with `securityadmin.sh`. For more information, see [Applying changes to configuration files]({{site.url}}{{site.baseurl}}/security/configuration/security-admin/).
+保留的 `security_rest_api_full_access` 角色包含 `restapi:admin/allowlist`。包含任何 `restapi:admin` 權限的角色無法透過[角色 API]({{site.url}}{{site.baseurl}}/security/api/roles/) 建立或修改，因此請在 `roles.yml` 中定義您自己的這類角色，並使用 `securityadmin.sh` 套用。如需詳細資訊，請參閱[將變更套用至組態檔案]({{site.url}}{{site.baseurl}}/security/configuration/security-admin/)。
 
-To prevent a role from using these APIs, disable the `ALLOWLIST` endpoint for that role using `plugins.security.restapi.endpoints_disabled`.
+若要防止角色使用這些 API，請使用 `plugins.security.restapi.endpoints_disabled` 為該角色停用 `ALLOWLIST` 端點。

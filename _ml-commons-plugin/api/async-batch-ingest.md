@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Asynchronous batch ingestion
+title: "非同步批次匯入"
 parent: ML Commons APIs
 has_children: false
 has_toc: false
 nav_order: 80
 ---
 
-# Asynchronous Batch Ingestion API
-**Deprecated 3.0**
+# 非同步批次匯入 API
+**已於 3.0 棄用**
 {: .label .label-red }
 
-This feature is deprecated. For similar functionality, use [OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/). If you'd like to see this feature reinstated, [create an issue](https://github.com/opensearch-project/ml-commons/issues) in the ML Commons repository.
+此功能已棄用。若需要類似功能，請使用 [OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/)。如果您希望此功能重新提供，請在 ML Commons 儲存庫中[建立 issue](https://github.com/opensearch-project/ml-commons/issues)。
 {: .warning}
 
 
-Use the Asynchronous Batch Ingestion API to ingest data into your OpenSearch cluster from your files on remote file servers, such as Amazon Simple Storage Service (Amazon S3) or OpenAI. For detailed configuration steps, see [Asynchronous batch ingestion]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/async-batch-ingestion/).
+使用非同步批次匯入 API，將遠端檔案伺服器（例如 Amazon Simple Storage Service (Amazon S3) 或 OpenAI）上的檔案資料匯入您的 OpenSearch 叢集。詳細的設定步驟請參閱[非同步批次匯入]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/async-batch-ingestion/)。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/_batch_ingestion
 ```
 
-#### Request body fields
+#### 請求本文欄位
 
-The following table lists the available request fields.
+下表列出可用的請求欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要／選用 | 說明
 :---  | :--- | :--- 
-`index_name`| String | Required | The index name. 
-`field_map` | Object | Required | Maps fields from the source file to specific fields in an OpenSearch index for ingestion. 
-`ingest_fields` | Array | Optional | Lists fields from the source file that should be ingested directly into the OpenSearch index without any additional mapping. 
-`credential` | Object | Required | Contains the authentication information for accessing external data sources, such as Amazon S3 or OpenAI.
-`data_source` | Object | Required | Specifies the type and location of the external file(s) from which the data is ingested.
-`data_source.type` | String | Required | Specifies the type of the external data source. Valid values are `s3` and `openAI`.
-`data_source.source` | Array | Required | Specifies one or more file locations from which the data is ingested. For `s3`, specify the file path to the Amazon S3 bucket (for example, `["s3://offlinebatch/output/sagemaker_batch.json.out"]`). For `openAI`, specify the file IDs for input or output files (for example, `["file-<your output file id>", "file-<your input file id>", "file-<your other file>"]`).
+`index_name`| 字串 | 必要 | 索引名稱。 
+`field_map` | 物件 | 必要 | 將來源檔案中的欄位對應至 OpenSearch 索引中要匯入的特定欄位。 
+`ingest_fields` | 陣列 | 選用 | 列出來源檔案中不需額外對應即可直接匯入 OpenSearch 索引的欄位。 
+`credential` | 物件 | 必要 | 包含存取外部資料來源（例如 Amazon S3 或 OpenAI）所需的驗證資訊。
+`data_source` | 物件 | 必要 | 指定匯入資料的外部檔案之類型與位置。
+`data_source.type` | 字串 | 必要 | 指定外部資料來源的類型。有效值為 `s3` 與 `openAI`。
+`data_source.source` | 陣列 | 必要 | 指定一或多個匯入資料的檔案位置。對於 `s3`，請指定 Amazon S3 桶的檔案路徑（例如 `["s3://offlinebatch/output/sagemaker_batch.json.out"]`）。對於 `openAI`，請指定輸入或輸出檔案的檔案 ID（例如 `["file-<your output file id>", "file-<your input file id>", "file-<your other file>"]`）。
 
-## Example request: Ingesting a single file
+## 範例請求：匯入單一檔案
 
 ```json
 POST /_plugins/_ml/_batch_ingestion
@@ -65,7 +66,7 @@ POST /_plugins/_ml/_batch_ingestion
 ```
 {% include copy-curl.html %}
 
-## Example request: Ingesting multiple files
+## 範例請求：匯入多個檔案
 
 ```json
 POST /_plugins/_ml/_batch_ingestion
@@ -90,7 +91,7 @@ POST /_plugins/_ml/_batch_ingestion
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {

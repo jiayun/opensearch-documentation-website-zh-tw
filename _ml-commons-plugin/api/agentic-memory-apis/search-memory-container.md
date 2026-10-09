@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search memory containers
+title: "搜尋記憶容器"
 parent: Agentic memory APIs
 grand_parent: ML Commons APIs
 nav_order: 25
 ---
 
-# Search Memory Containers API
-**Introduced 3.3**
+# 搜尋記憶容器 API
+**3.3 版新增**
 {: .label .label-purple }
 
-Use this API to search for memory containers using OpenSearch query domain-specific language (DSL).
+使用此 API，透過 OpenSearch Query DSL 搜尋記憶容器。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/memory_containers/_search
 POST /_plugins/_ml/memory_containers/_search
 ```
 
-## Request fields
+## 請求欄位
 
-The request body supports standard OpenSearch query DSL. For more information, see [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/).
+請求本文支援標準的 OpenSearch Query DSL。如需更多資訊，請參閱 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/)。
 
-## Example request
+## 請求範例
 
 ```json
 GET /_plugins/_ml/memory_containers/_search
@@ -35,7 +36,7 @@ GET /_plugins/_ml/memory_containers/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -82,14 +83,14 @@ GET /_plugins/_ml/memory_containers/_search
 }
 ```
 
-## Response fields
+## 回應欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `name` | String | The name of the memory container. |
-| `description` | String | The description of the memory container. |
-| `configuration` | Object | The memory container configuration, including models and strategies. |
-| `created_time` | Long | The timestamp of when the container was created. |
-| `last_updated_time` | Long | The timestamp of when the container was last updated. |
+| `name` | 字串 | 記憶容器的名稱。 |
+| `description` | 字串 | 記憶容器的描述。 |
+| `configuration` | 物件 | 記憶容器的組態，包括模型與策略。 |
+| `created_time` | Long | 容器建立的時間戳記。 |
+| `last_updated_time` | Long | 容器最後更新的時間戳記。 |

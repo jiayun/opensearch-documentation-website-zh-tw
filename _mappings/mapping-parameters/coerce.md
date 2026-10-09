@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Coerce
 parent: Mapping parameters
@@ -9,27 +10,27 @@ has_children: false
 has_toc: false
 ---
 
-# Coerce mapping parameter
+# Coerce 對應參數
 
-The `coerce` mapping parameter controls whether OpenSearch attempts to normalize and convert values to match the field's data type during indexing.
+`coerce` 對應參數可控制 OpenSearch 在編製索引期間是否嘗試將值正規化並轉換，以符合欄位的資料類型。
 
-Data is not always consistent. Depending on how it's produced, a number might be rendered as a true JSON number like 10, but it might also be rendered as a string like "10". Similarly, a number that should be an integer might be rendered as a floating point like 10.0 or even as a string like "10.0".
+資料不一定總是一致。視產生方式而定，數字可能呈現為真正的 JSON 數字，例如 10，但也可能呈現為字串，例如 "10"。同樣地，應該是整數的數字可能呈現為浮點數，例如 10.0，甚至呈現為字串，例如 "10.0"。
 
-Coercion attempts to transform these inconsistencies to fit the field's data type:
+強制轉型會嘗試轉換這些不一致之處，以符合欄位的資料類型：
 
-- **Strings are coerced to numbers**: `"10"` becomes `10`.
-- **Floating-point numbers are coerced to integers by truncating**: `10.0` becomes `10`.
+- **字串會強制轉型為數字**：`"10"` 會變成 `10`。
+- **浮點數會以截斷方式強制轉型為整數**：`10.0` 會變成 `10`。
 
-The `coerce` parameter can be updated on existing fields using the Update Mapping API.
+`coerce` 參數可使用 Update Mapping API 在現有欄位上更新。
 {: .tip}
 
-## Examples
+## 範例
 
-The following examples demonstrate how to use the `coerce` mapping parameter.
+下列範例示範如何使用 `coerce` 對應參數。
 
-### Field-level coercion
+### 欄位層級的強制轉型
 
-Create an index with different coercion settings for comparison. Coercion is enabled by default:
+建立具有不同強制轉型設定的索引以進行比較。強制轉型預設為啟用：
 
 ```json
 PUT /data_quality_demo
@@ -49,7 +50,7 @@ PUT /data_quality_demo
 ```
 {% include copy-curl.html %}
 
-Index a document with coercion enabled:
+在啟用強制轉型的情況下將文件編製索引：
 
 ```json
 PUT /data_quality_demo/_doc/1
@@ -59,9 +60,9 @@ PUT /data_quality_demo/_doc/1
 ```
 {% include copy-curl.html %}
 
-To match the integer field type, the string `"10"` is is successfully converted to the integer `10`.
+為了符合整數欄位類型，字串 `"10"` 已成功轉換為整數 `10`。
 
-Attempt to index a document with coercion disabled:
+嘗試在停用強制轉型的情況下將文件編製索引：
 
 ```json
 PUT /data_quality_demo/_doc/2
@@ -71,11 +72,11 @@ PUT /data_quality_demo/_doc/2
 ```
 {% include copy-curl.html %}
 
-This document is rejected because coercion is disabled and the string `"10"` doesn't match the expected integer type.
+此文件遭到拒絕，因為強制轉型已停用，且字串 `"10"` 不符合預期的整數類型。
 
-### Index-level coercion setting
+### 索引層級的強制轉型設定
 
-You can set a default coercion policy for the entire index as follows:
+您可以為整個索引設定預設的強制轉型原則，如下所示：
 
 ```json
 PUT /strict_data_index
@@ -98,7 +99,7 @@ PUT /strict_data_index
 ```
 {% include copy-curl.html %}
 
-Index a document containing a `flexible_field`:
+將包含 `flexible_field` 的文件編製索引：
 
 ```json
 PUT /strict_data_index/_doc/1
@@ -108,9 +109,9 @@ PUT /strict_data_index/_doc/1
 ```
 {% include copy-curl.html %}
 
-The `flexible_field` overrides the index-level setting and enables coercion, so the string `"10"` is successfully converted to the integer `10`.
+`flexible_field` 會覆寫索引層級的設定並啟用強制轉型，因此字串 `"10"` 會成功轉換為整數 `10`。
 
-Index another document containing a `strict_field`:
+將另一個包含 `strict_field` 的文件編製索引：
 
 ```json
 PUT /strict_data_index/_doc/2
@@ -120,4 +121,4 @@ PUT /strict_data_index/_doc/2
 ```
 {% include copy-curl.html %}
 
-This document is rejected because the `strict_field` inherits the index-level coercion setting (`false`), and the string `"10"` cannot be stored in an integer field without coercion.
+此文件遭到拒絕，因為 `strict_field` 會繼承索引層級的強制轉型設定 (`false`)，且字串 `"10"` 在沒有強制轉型的情況下無法儲存於整數欄位中。

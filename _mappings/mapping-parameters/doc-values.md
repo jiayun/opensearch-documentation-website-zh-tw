@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Doc values
+title: "文件值"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/doc-values/
@@ -9,19 +10,19 @@ has_children: false
 has_toc: false
 ---
 
-# Doc values mapping parameter
+# 文件值對應參數
 
-By default, most fields are indexed and searchable using the inverted index. The inverted index works by storing a unique sorted list of terms and mapping each term to the documents that contain it.
+預設情況下，大多數欄位會使用反向索引來編製索引並供搜尋。反向索引的運作方式是儲存一份經過排序的唯一詞彙清單，並將每個詞彙對應到包含它的文件。
 
-Sorting, aggregations, and field access in scripts, however, require a different approach. Instead of finding documents from terms, these operations need to retrieve terms from specific documents.
+然而，排序、彙總以及在指令碼中存取欄位，需要不同的方法。這些操作不是從詞彙找出文件，而是需要從特定文件擷取詞彙。
 
-Doc values make these operations possible. They are an on-disk, column-oriented data structure created at index time. Although they store the same values as the `_source` field, their format is optimized for fast sorting and aggregations.
+文件值讓這些操作得以實現。它們是在編製索引時建立的磁碟上、以欄為導向的資料結構。雖然它們儲存的值與 `_source` 欄位相同，但其格式經過最佳化，可快速執行排序與彙總。
 
-Doc values are enabled by default on nearly all field types, except for `text` fields. If you know that a field won't be used for sorting, aggregations, or scripting, you can disable doc values in order to reduce disk usage.
+幾乎所有欄位類型預設都會啟用文件值，`text` 欄位除外。如果您確定某個欄位不會用於排序、彙總或指令碼，可以停用文件值以減少磁碟用量。
 
-## Example
+## 範例
 
-To understand how `doc_values` affect fields, create a sample index. In this index, the `status_code` field  has `doc_values` enabled by default, allowing it to support sorting and aggregations. The `session_id` field has `doc_values` disabled, so it does not support sorting or aggregations but can still be queried:
+若要了解 `doc_values` 如何影響欄位，請建立一個範例索引。在此索引中，`status_code` 欄位預設啟用 `doc_values`，因此支援排序與彙總。`session_id` 欄位則停用 `doc_values`，因此不支援排序或彙總，但仍可查詢：
 
 ```json
 PUT /web_analytics
@@ -41,7 +42,7 @@ PUT /web_analytics
 ```
 {% include copy-curl.html %}
 
-Add some sample data to the index:
+將一些範例資料加入索引：
 
 ```json
 PUT /web_analytics/_doc/1
@@ -70,7 +71,7 @@ PUT /web_analytics/_doc/3
 ```
 {% include copy-curl.html %}
 
-Perform an aggregation on the `status_code` field:
+對 `status_code` 欄位執行彙總：
 
 ```json
 GET /web_analytics/_search
@@ -87,7 +88,7 @@ GET /web_analytics/_search
 ```
 {% include copy-curl.html %}
 
-This aggregation returns correct results because `status_code` has `doc_values` enabled:
+此彙總會傳回正確的結果，因為 `status_code` 已啟用 `doc_values`：
 
 ```json
 {
@@ -127,7 +128,7 @@ This aggregation returns correct results because `status_code` has `doc_values` 
 }
 ```
 
-Attempt to aggregate on the `session_id` field:
+嘗試對 `session_id` 欄位進行彙總：
 
 ```json
 GET /web_analytics/_search
@@ -144,4 +145,4 @@ GET /web_analytics/_search
 ```
 {% include copy-curl.html %}
 
-This aggregation fails because `session_id` has `doc_values` disabled, preventing the document-to-field lookup required for aggregations.
+此彙總會失敗，因為 `session_id` 已停用 `doc_values`，導致彙總所需的文件對欄位查詢無法執行。

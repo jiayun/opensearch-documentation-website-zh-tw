@@ -1,33 +1,34 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Comparing search results
+title: "比較搜尋結果"
 nav_order: 11
 parent: Search Relevance Workbench
 grand_parent: Optimizing search quality
 ---
 
-# Comparing search results
+# 比較搜尋結果
 
-Comparing search results, also called a _pairwise experiment_, in OpenSearch Dashboards allows you to compare results of multiple search configurations. Using this tool helps assess how results change when applying different search configurations to queries.
+在 OpenSearch Dashboards 中比較搜尋結果（也稱為 _成對實驗_）可讓您比較多種搜尋組態的結果。使用此工具有助於評估對查詢套用不同搜尋組態時，結果會如何變化。
 
-For example, you can see how results change when you apply one of the following query changes:
+例如，您可以查看套用下列其中一項查詢變更時，結果會如何變化：
 
-- Weighting fields differently
-- Different stemming or lemmatization strategies
-- Shingling
+- 以不同方式加權欄位
+- 不同的詞幹提取或詞形還原策略
+- 產生詞元組合
 
-## Comparing search results of a single query
+## 比較單一查詢的搜尋結果
 
-The UI for comparing the search results of a single query lets you define two different search configurations for an individual query in order to view and compare the results side by side. Specifically, you can determine how many shared and unique documents are contained in the result lists and how their positions changed, as shown in the following image.
+比較單一查詢搜尋結果的 UI 可讓您為個別查詢定義兩種不同的搜尋組態，以便並排檢視與比較結果。具體來說，您可以了解結果清單中有多少共用與唯一的文件，以及它們的位置如何變化，如下圖所示。
 
-![Compare search results]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/comparing_search_results.png)
+![比較搜尋結果]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/comparing_search_results.png)
 
-For more information about using the search result comparison tool for a single query, see [Comparing single queries]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/compare-search-results/).
+如需有關使用單一查詢搜尋結果比較工具的更多資訊，請參閱 [比較單一查詢]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/compare-search-results/)。
 
-## Comparing search results of a query set
+## 比較查詢集的搜尋結果
 
-Typically, viewing search result changes for two configurations is the first step in the testing process. You can then scale from one query to many in Search Relevance Workbench. You can group queries into a query set, create [search configurations]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/search-configurations/), and compare search results on a larger scale by looking at aggregate metrics across all queries, as shown in the following image.
+一般而言，檢視兩種組態的搜尋結果變化是測試流程的第一步。接著，您可以在 Search Relevance Workbench 中從單一查詢擴展到多個查詢。您可以將查詢分組為查詢集、建立 [搜尋組態]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/search-configurations/)，並透過檢視所有查詢的彙總指標，以更大規模比較搜尋結果，如下圖所示。
 
-![Compare search results]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/comparing-search-results-query-sets.png)
+![比較搜尋結果]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/comparing-search-results-query-sets.png)
 
-For more information about using the search result comparison tool for a query set, see [Comparing single queries]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/compare-query-sets/).
+如需有關使用查詢集搜尋結果比較工具的更多資訊，請參閱 [比較單一查詢]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/compare-query-sets/)。

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Search as you type
 nav_order: 53
@@ -11,17 +12,17 @@ redirect_from:
   - /field-types/search-as-you-type/
 ---
 
-# Search-as-you-type field type
-**Introduced 1.0**
+# Search-as-you-type 欄位類型
+**於 1.0 版導入**
 {: .label .label-purple }
 
-A search-as-you-type field type provides search-as-you-type functionality using both prefix and infix completion. 
+search-as-you-type 欄位類型透過前綴與中綴補全提供即時輸入搜尋功能。
 
-## Example
+## 範例
 
-Mapping a search-as-you-type field creates n-gram subfields of this field, where n is in the range [2, `max_shingle_size`]. Additionally, it creates an index prefix subfield.
+為 search-as-you-type 欄位建立對應時，會產生此欄位的 n-gram 子欄位，其中 n 的範圍為 [2, `max_shingle_size`]。此外，還會建立一個索引前綴子欄位。
 
-Create a mapping with a search-as-you-type field:
+建立一個包含 search-as-you-type 欄位的對應：
 
 ```json
 PUT books
@@ -37,9 +38,9 @@ PUT books
 ```
 {% include copy-curl.html %}
 
-In addition to the `suggestions` field, this creates `suggestions._2gram`, `suggestions._3gram`, and `suggestions._index_prefix` fields. 
+除了 `suggestions` 欄位之外，這也會建立 `suggestions._2gram`、`suggestions._3gram` 和 `suggestions._index_prefix` 欄位。
 
-Index a document with a search-as-you-type field:
+為包含 search-as-you-type 欄位的文件編製索引：
 
 ```json
 PUT books/_doc/1
@@ -49,7 +50,7 @@ PUT books/_doc/1
 ```
 {% include copy-curl.html %}
 
-To match terms in any order, use a bool_prefix or multi-match query. These queries rank the documents in which search terms are in the specified order higher than the documents in which terms are out of order.
+若要以任意順序比對詞元，請使用 bool_prefix 或 multi-match 查詢。這些查詢會將搜尋詞元依指定順序出現的文件，排在詞元順序不符的文件之前。
 
 ```json
 GET books/_search
@@ -69,7 +70,7 @@ GET books/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含相符的文件：
 
 ```json
 {
@@ -102,7 +103,7 @@ The response contains the matching document:
 }
 ```
 
-To match terms in order, use a match_phrase_prefix query:
+若要依順序比對詞元，請使用 match_phrase_prefix 查詢：
 
 ```json
 GET books/_search
@@ -116,7 +117,7 @@ GET books/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含相符的文件：
 
 ```json
 {
@@ -149,7 +150,7 @@ The response contains the matching document:
 }
 ```
 
-To match the last terms exactly, use a match_phrase query:
+若要精確比對最後的詞元，請使用 match_phrase 查詢：
 
 ```json
 GET books/_search
@@ -163,7 +164,7 @@ GET books/_search
 ```
 {% include copy-curl.html %}
 
-Response:
+回應：
 
 ```json
 {
@@ -196,19 +197,19 @@ Response:
 }
 ```
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by search-as-you-type field types. All parameters are optional.
+下表列出 search-as-you-type 欄位類型接受的參數。所有參數皆為選用。
 
 Parameter | Description 
 :--- | :---
-`analyzer` | The analyzer to be used for this field. By default, it will be used at index time and at search time. To override it at search time, set the `search_analyzer` parameter. Default is the `standard` analyzer, which uses grammar-based tokenization and is based on the [Unicode Text Segmentation](https://unicode.org/reports/tr29/) algorithm. Configures the root field and subfields.
-`index` | A Boolean value that specifies whether the field should be searchable. Default is `true`. Configures the root field and subfields.
-`index_options` | Specifies the information to be stored in the index for search and highlighting. Valid values: `docs` (doc number only), `freqs` (doc number and term frequencies), `positions` (doc number, term frequencies, and term positions), `offsets` (doc number, term frequencies, term positions, and start and end character offsets). Default is `positions`. Configures the root field and subfields.
-`max_shingle_size` | An integer that specifies the maximum n-gram size. Valid values are in the range [2, 4]. N-grams to be created are in the range [2, `max_shingle_size`]. Default is 3, which creates a 2-gram and a 3-gram. Larger `max_shingle_size` values work better for more specific queries but lead to a larger index size. 
-`norms` | A Boolean value that specifies whether the field length should be used when calculating relevance scores. Configures the root field and n-gram subfields (default is `false`). Does not configure the prefix subfield (in the prefix subfield, `norms` is `false`). 
-`search_analyzer` | The analyzer to be used at search time. Default is the analyzer specified in the `analyzer` parameter. Configures the root field and subfields.
-`search_quote_analyzer` | The analyzer to be used at search time with phrases. Default is the analyzer specified in the `analyzer` parameter. Configures the root field and subfields.
-`similarity` | The ranking algorithm for calculating relevance scores. Default is `BM25`. Configures the root field and subfields.
-`store` | A Boolean value that specifies whether the field value should be stored and can be retrieved separately from the `_source` field. Default is `false`. Configures the root field only.
-[`term_vector`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/text#term-vector-parameter) | A Boolean value that specifies whether a term vector for this field should be stored. Default is `no`. Configures the root field and n-gram subfields. Does not configure the prefix subfield. 
+`analyzer` | 用於此欄位的分析器。預設會在編製索引時與搜尋時使用。若要在搜尋時覆寫，請設定 `search_analyzer` 參數。預設為 `standard` 分析器，該分析器使用基於文法的斷詞，並以 [Unicode Text Segmentation](https://unicode.org/reports/tr29/) 演算法為基礎。設定根欄位與子欄位。
+`index` | 指定此欄位是否可搜尋的布林值。預設為 `true`。設定根欄位與子欄位。
+`index_options` | 指定要在索引中儲存哪些資訊以供搜尋與突顯。有效值：`docs`（僅文件編號）、`freqs`（文件編號與詞元頻率）、`positions`（文件編號、詞元頻率與詞元位置）、`offsets`（文件編號、詞元頻率、詞元位置，以及起始與結束字元位移）。預設為 `positions`。設定根欄位與子欄位。
+`max_shingle_size` | 指定 n-gram 最大長度的整數。有效值範圍為 [2, 4]。建立的 n-gram 範圍為 [2, `max_shingle_size`]。預設為 3，會建立 2-gram 與 3-gram。較大的 `max_shingle_size` 值對更具體的查詢效果較佳，但會導致索引大小增加。
+`norms` | 指定計算相關性分數時是否使用欄位長度的布林值。設定根欄位與 n-gram 子欄位（預設為 `false`）。不設定前綴子欄位（在前綴子欄位中，`norms` 為 `false`）。
+`search_analyzer` | 搜尋時使用的分析器。預設為 `analyzer` 參數中指定的分析器。設定根欄位與子欄位。
+`search_quote_analyzer` | 搜尋時用於片語的分析器。預設為 `analyzer` 參數中指定的分析器。設定根欄位與子欄位。
+`similarity` | 用於計算相關性分數的排名演算法。預設為 `BM25`。設定根欄位與子欄位。
+`store` | 指定是否儲存欄位值，以及是否能從 `_source` 欄位另外擷取的布林值。預設為 `false`。僅設定根欄位。
+[`term_vector`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/text#term-vector-parameter) | 指定是否儲存此欄位之詞元向量的布林值。預設為 `no`。設定根欄位與 n-gram 子欄位。不設定前綴子欄位。 

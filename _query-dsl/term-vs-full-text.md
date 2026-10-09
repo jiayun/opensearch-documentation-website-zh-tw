@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Term-level and full-text queries compared
+title: "詞彙層級查詢與全文查詢的比較"
 nav_order: 10
 redirect_from:
   - /query-dsl/query-dsl/term-vs-full-text/
   - /opensearch/query-dsl/term-vs-full-text/
 ---
 
-# Term-level and full-text queries compared
+# 詞彙層級查詢與全文查詢的比較
 
-You can use both term-level and full-text queries to search text, but while term-level queries are usually used to search structured data, full-text queries are used for full-text search. The main difference between term-level and full-text queries is that term-level queries search documents for an exact specified term, while full-text queries [analyze]({{site.url}}{{site.baseurl}}/analyzers/) the query string. The following table summarizes the differences between term-level and full-text queries.
+您可以使用詞彙層級查詢和全文查詢來搜尋文字，但詞彙層級查詢通常用於搜尋結構化資料，而全文查詢則用於全文搜尋。詞彙層級查詢與全文查詢的主要差異在於，詞彙層級查詢會在文件中搜尋完全相符的指定詞彙，而全文查詢則會[分析]({{site.url}}{{site.baseurl}}/analyzers/)查詢字串。下表摘要說明詞彙層級查詢與全文查詢之間的差異。
 
-| | Term-level queries | Full-text queries
+| | 詞彙層級查詢 | 全文查詢
 :--- | :--- | :---
-*Description* | Term-level queries answer which documents match a query. | Full-text queries answer how well the documents match a query.
-*Analyzer* | The search term isn't analyzed. This means that the term query searches for your search term as it is.  | The search term is analyzed by the same analyzer that was used for the specific document field at the time it was indexed. This means that your search term goes through the same analysis process as the document's field.
-*Relevance* | Term-level queries return documents that match without sorting them based on the relevance score. They still calculate the relevance score, but this score is the same for all the documents that are returned. | Full-text queries calculate a relevance score for each match and sort the results by decreasing order of relevance.
-*Use Case* | Use term-level queries when you want to match exact values such as numbers, dates, or tags and don't need the matches to be sorted by relevance. | Use full-text queries to match text fields and sort by relevance after taking into account factors like casing and stemming variants.
+*說明* | 詞彙層級查詢回答哪些文件符合查詢。 | 全文查詢回答文件與查詢的相符程度。
+*分析器* | 搜尋詞彙不會經過分析。這表示詞彙查詢會依搜尋詞彙的原樣進行搜尋。  | 搜尋詞彙會由該特定文件欄位在編製索引時所使用的相同分析器進行分析。這表示您的搜尋詞彙會經歷與文件欄位相同的分析流程。
+*相關性* | 詞彙層級查詢會傳回相符的文件，而不會根據相關性分數加以排序。它們仍會計算相關性分數，但此分數對所有傳回的文件都相同。 | 全文查詢會為每個相符項目計算相關性分數，並依相關性遞減的順序排序結果。
+*使用案例* | 當您想要比對數字、日期或標籤等確切值，且不需要依相關性排序相符項目時，請使用詞彙層級查詢。 | 當您要比對文字欄位，並在考量大小寫與詞幹變化等因素後依相關性排序時，請使用全文查詢。
 
-OpenSearch uses the BM25 ranking algorithm to calculate relevance scores. To learn more, see [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25).
+OpenSearch 使用 BM25 排名演算法來計算相關性分數。若要深入瞭解，請參閱 [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25)。
 {: .note }
 
-## Should I use a full-text or a term-level query
+## 我應該使用全文查詢還是詞彙層級查詢
 
-To clarify the difference between full-text and term-level queries, consider the following two examples that search for a specific text phrase. The complete works of Shakespeare are indexed in an OpenSearch cluster.
+為了釐清全文查詢與詞彙層級查詢之間的差異，請考量下列兩個搜尋特定文字詞組的範例。莎士比亞全集已編製索引至 OpenSearch 叢集中。
 
-### Example: Phrase search
+### 範例：詞組搜尋
 
-In this example, you'll search the complete works of Shakespeare for the phrase "To be, or not to be" in the `text_entry` field. 
+在此範例中，您將在 `text_entry` 欄位中，於莎士比亞全集中搜尋「To be, or not to be」這個詞組。 
 
-First, use a **term-level query** for this search:
+首先，使用**詞彙層級查詢**進行此搜尋：
 
 ```json
 GET shakespeare/_search
@@ -42,7 +43,7 @@ GET shakespeare/_search
 }
 ```
 
-The response contains no matches, indicated by zero `hits`:
+回應中沒有任何相符項目，由零個 `hits` 表示：
 
 ```json
 {
@@ -65,9 +66,9 @@ The response contains no matches, indicated by zero `hits`:
 }
 ```
 
-This is because the term “To be, or not to be” is searched literally in the inverted index, where only the analyzed values of the text fields are stored. Term-level queries aren’t suited for searching analyzed text fields because they often yield unexpected results. When working with text data, use term-level queries only for fields mapped as `keyword`.
+這是因為「To be, or not to be」這個詞彙會在反向索引中以字面方式搜尋，而反向索引中只會儲存文字欄位經過分析的值。詞彙層級查詢不適合用來搜尋經過分析的文字欄位，因為它們經常產生非預期的結果。處理文字資料時，請僅針對對應為 `keyword` 的欄位使用詞彙層級查詢。
 
-Now search for the same phrase using a **full-text query**:
+現在使用**全文查詢**搜尋相同的詞組：
 
 ```json
 GET shakespeare/_search
@@ -80,7 +81,7 @@ GET shakespeare/_search
 }
 ```
 
-The search query “To be, or not to be” is analyzed and tokenized into an array of tokens, the same as the `text_entry` field of the documents. The full-text query takes an intersection of tokens between the search query and the `text_entry` fields for all the documents and then sorts the results by relevance score:
+搜尋查詢「To be, or not to be」會經過分析並斷詞為詞元陣列，與文件的 `text_entry` 欄位相同。全文查詢會對所有文件取得搜尋查詢與 `text_entry` 欄位之間詞元的交集，然後依相關性分數排序結果：
 
 ```json
 {
@@ -147,11 +148,11 @@ The search query “To be, or not to be” is analyzed and tokenized into an arr
 ...
 ```
 
-For a list of all full-text queries, see [Full-text queries]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/full-text/index/).
+如需所有全文查詢的清單，請參閱[全文查詢]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/full-text/index/)。
 
-### Example: Exact term search
+### 範例：確切詞彙搜尋
 
-If you want to search for an exact term like “HAMLET” in the `speaker` field and don't need the results to be sorted by relevance score, a term-level query is more efficient:
+如果您想要在 `speaker` 欄位中搜尋「HAMLET」這類確切詞彙，且不需要依相關性分數排序結果，則詞彙層級查詢更有效率：
 
 ```json
 GET shakespeare/_search
@@ -164,7 +165,7 @@ GET shakespeare/_search
 }
 ```
 
-The response contains document matches:
+回應中包含相符的文件：
 
 ```json
 {
@@ -231,5 +232,5 @@ The response contains document matches:
 ...
 ```
 
-The term-level queries provide exact matches. So if you search for “Hamlet”, you don’t receive any matches, because “HAMLET” is a keyword field and is stored in OpenSearch literally and not in an analyzed form.
-The search query “HAMLET” is also searched literally. So to get a match for this field, we need to enter the exact same characters.
+詞彙層級查詢提供確切的相符項目。因此，如果您搜尋「Hamlet」，不會取得任何相符項目，因為「HAMLET」是 keyword 欄位，會以字面方式儲存在 OpenSearch 中，而非以經過分析的形式儲存。
+搜尋查詢「HAMLET」也會以字面方式搜尋。因此，若要讓此欄位相符，我們需要輸入完全相同的字元。

@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete role mapping
+title: "刪除角色對應"
 parent: Role mapping APIs
 grand_parent: Security APIs
 nav_order: 40
 ---
 
-# Delete Role Mapping API
-**Introduced 1.0**
+# 刪除角色對應 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Deletes the specified role mapping.
+刪除指定的角色對應。
 
 <!-- spec_insert_start
 api: security.delete_role_mapping
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 DELETE /_plugins/_security/api/rolesmapping/{role}
 ```
 <!-- spec_insert_end -->
 
-## Example request
+## 範例請求
 
 ```json
 DELETE _plugins/_security/api/rolesmapping/test-role
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {

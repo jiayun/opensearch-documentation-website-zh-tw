@@ -1,51 +1,52 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get message
+title: "取得訊息"
 parent: Memory APIs
 grand_parent: ML Commons APIs
 nav_order: 50
 ---
 
 # Get Message API
-**Introduced 2.12**
+**於 2.12 版推出**
 {: .label .label-purple }
 
-Use this API to retrieve message information for [conversational search]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/). 
+使用此 API 來擷取[對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)的訊息資訊。
 
-To retrieve message information, you can:
+若要擷取訊息資訊，您可以：
 
-- [Get a message by ID](#get-a-message-by-id).
-- [Get all messages within a memory](#get-all-messages-within-a-memory).
+- [依 ID 取得訊息](#get-a-message-by-id)。
+- [取得記憶內的所有訊息](#get-all-messages-within-a-memory)。
 
-When the Security plugin is enabled, all memories exist in a `private` security mode. Only the user who created a memory can interact with that memory and its messages.
+當 Security 外掛程式啟用時，所有記憶都存在於 `private` 安全性模式中。只有建立記憶的使用者才能與該記憶及其訊息互動。
 {: .important}
 
-## Get a message by ID
+## 依 ID 取得訊息
 
-You can retrieve message information by using the `message_id`.
+您可以使用 `message_id` 來擷取訊息資訊。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_ml/memory/message/{message_id}
 ```
 
-### Path parameters
+### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`message_id` | String | The ID of the message to retrieve.
+`message_id` | 字串 | 要擷取的訊息 ID。
 
-## Example request
+## 範例請求
 
 ```json
 GET /_plugins/_ml/memory/message/0m8ya40BfUsSoeNTj-pU
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -63,45 +64,45 @@ GET /_plugins/_ml/memory/message/0m8ya40BfUsSoeNTj-pU
 }
 ```
 
-For information about response fields, see [Create Message request fields]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/create-message#request-body-fields).
+如需回應欄位的相關資訊，請參閱 [Create Message 請求欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/create-message#request-body-fields)。
 
-## Get all messages within a memory
+## 取得記憶內的所有訊息
 
-Use this command to get a list of messages for a certain memory.
+使用此命令來取得特定記憶的訊息清單。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_ml/memory/{memory_id}/messages
 ```
 
-### Path parameters
+### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`memory_id` | String | The ID of the memory for which to retrieve messages.
+`memory_id` | 字串 | 要擷取訊息的記憶 ID。
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the available response fields.
+下表列出可用的回應欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `memory_id` | String | The memory ID. |
-| `message_id` | String | The message ID. |
-| `create_time` | String | The time at which the message was created. |
-| `updated_time` | String | The time at which the message was last updated. |
-| `input` | String | The question in the message (human input).  |
-| `prompt_template` | String | The prompt template that was used for the message. |
-| `response` | String | The answer to the question (generative AI output). |
-| `origin` | String | The name of the AI or other system that generated the response. |
-| `additional_info` | Object | Any other information that was sent to the `origin`. |
-| `parent_message_id` | String | The ID of the parent message (for trace messages). |
-| `trace_number` | Integer | The trace number (for trace messages). |
+| `memory_id` | 字串 | 記憶 ID。 |
+| `message_id` | 字串 | 訊息 ID。 |
+| `create_time` | 字串 | 訊息建立的時間。 |
+| `updated_time` | 字串 | 訊息最後更新的時間。 |
+| `input` | 字串 | 訊息中的問題 (人類輸入)。 |
+| `prompt_template` | 字串 | 訊息所使用的提示範本。 |
+| `response` | 字串 | 問題的答案 (生成式 AI 輸出)。 |
+| `origin` | 字串 | 產生回應的 AI 或其他系統名稱。 |
+| `additional_info` | 物件 | 傳送至 `origin` 的任何其他資訊。 |
+| `parent_message_id` | 字串 | 父訊息的 ID (適用於追蹤訊息)。 |
+| `trace_number` | 整數 | 追蹤編號 (適用於追蹤訊息)。 |
 
-## Example request
+## 範例請求
 
 ```json
 GET /_plugins/_ml/memory/gW8Aa40BfUsSoeNTvOKI/messages
@@ -119,7 +120,7 @@ POST /_plugins/_ml/message/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: addcoltotals
 parent: Commands
@@ -8,36 +9,36 @@ nav_order: 3
 
 <!-- vale off -->
 
-# addcoltotals command
+# addcoltotals 命令
 
 <!-- vale on -->
 
-The `addcoltotals` command computes the sum of each column and adds a summary row showing the total for each column. This command is equivalent to using `addtotals` with `row=false` and `col=true`, making it useful for creating summary reports with column totals.
+`addcoltotals` 命令會計算每個資料行的總和，並新增一個摘要列，顯示每個資料行的總計。此命令等同於將 `addtotals` 搭配 `row=false` 和 `col=true` 使用，因此適合用來建立包含資料行總計的摘要報表。
 
-The command only processes numeric fields (integers, floats, doubles). Non-numeric fields are ignored regardless of whether they are explicitly specified in the field list.
+此命令只會處理數值欄位（整數、浮點數、雙精度浮點數）。無論非數值欄位是否明確列在欄位清單中，都會被忽略。
 
 
-## Syntax
+## 語法
 
-The `addcoltotals` command has the following syntax:
+`addcoltotals` 命令的語法如下：
 
 ```sql
 addcoltotals [field-list] [label=<string>] [labelfield=<field>]
 ```
 
-## Parameters
+## 參數
 
-The `addcoltotals` command supports the following parameters.
+`addcoltotals` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<field-list>` | Optional | A comma-separated list of numeric fields to add. By default, all numeric fields are added. |
-| `labelfield` | Optional | The field in which the label is placed. If the field does not exist, it is created and the label is shown in the summary row (last row) of the new field. |
-| `label` | Optional | The text that appears in the summary row (last row) to identify the computed totals. When used with `labelfield`, this text is placed in the specified field in the summary row. Default is `Total`. |
+| `<field-list>` | 選用 | 要加總的數值欄位清單，以逗號分隔。預設會加總所有數值欄位。 |
+| `labelfield` | 選用 | 放置標籤的欄位。如果該欄位不存在，系統會建立該欄位，並在新欄位的摘要列（最後一列）中顯示標籤。 |
+| `label` | 選用 | 顯示在摘要列（最後一列）中、用來識別計算總計的文字。與 `labelfield` 搭配使用時，此文字會放在摘要列的指定欄位中。預設為 `Total`。 |
 
-## Example 1: Adding column totals to a severity breakdown
+## 範例 1：為嚴重性分類新增資料行總計
 
-The following query adds a total row to a severity breakdown, showing the grand total of all log entries:
+下列查詢會為嚴重性分類新增一個總計列，顯示所有記錄檔項目的總計：
 
 ```sql
 source=otellogs
@@ -49,7 +50,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -63,9 +64,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 2: Adding column totals with a custom label
+## 範例 2：使用自訂標籤新增資料行總計
 
-The following query adds totals to error counts per service with a custom summary label:
+下列查詢會為每個服務的錯誤計數新增總計，並使用自訂的摘要標籤：
 
 ```sql
 source=otellogs
@@ -77,7 +78,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -92,9 +93,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 3: Using all options
+## 範例 3：使用所有選項
 
-The following query uses the `addcoltotals` command with all options set, totaling only the specified numeric fields and placing the summary label in a new column:
+下列查詢使用 `addcoltotals` 命令並設定所有選項，只加總指定的數值欄位，並將摘要標籤放在新的資料行中：
 
 ```sql
 source=otellogs
@@ -107,7 +108,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 

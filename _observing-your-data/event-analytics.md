@@ -1,45 +1,46 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Event analytics
+title: "事件分析"
 nav_order: 20
 redirect_from:
   - /observability-plugin/event-analytics/
 ---
 
-# Event analytics
+# 事件分析
 
-Event analytics in OpenSearch Observability allow you to create data visualizations using [Piped Processing Language]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) (PPL) queries.
+OpenSearch Observability 中的事件分析可讓您使用 [Piped Processing Language]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) (PPL) 查詢建立資料視覺化。
 
-## Getting started with event analytics
+## 事件分析入門
 
-To get started, choose **Observability** in OpenSearch Dashboards and then choose **Logs**. If you want to start exploring without adding your own data, choose **Add samples**. Dashboards adds sample visualizations you can interact with. You can also try out preconfigured analytics in [OpenSearch Playground](https://playground.opensearch.org/app/observability-logs#/).
+若要開始使用，請在 OpenSearch Dashboards 中選擇 **Observability**，然後選擇 **Logs**。如果您想在不新增自有資料的情況下開始探索，請選擇 **Add samples**。Dashboards 會新增可供您互動的範例視覺化。您也可以在 [OpenSearch Playground](https://playground.opensearch.org/app/observability-logs#/) 中試用預先設定的分析。
 
-## Building a query
+## 建立查詢
 
-To generate custom visualizations, you must first specify a PPL query. OpenSearch Dashboards then automatically creates a visualization based on your query results.
+若要產生自訂視覺化，您必須先指定 PPL 查詢。接著，OpenSearch Dashboards 會根據您的查詢結果自動建立視覺化。
 
-For example, the following PPL query returns a count of how many host addresses are currently in your data.
+例如，下列 PPL 查詢會傳回您資料中目前有多少個主機位址的計數。
 
 ```
 source = opensearch_dashboards_sample_data_logs | fields host | stats count()
 ```
 
-By default, Dashboards shows results from the last 15 minutes of your data. To see data from a different time frame, use the date and time selector to choose the desired settings.
+根據預設，Dashboards 會顯示您資料中最近 15 分鐘的結果。若要查看不同時間範圍的資料，請使用日期與時間選擇器選擇所需的設定。
 
-For more information about building PPL queries, see [Piped Processing Language]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/).
+如需有關建立 PPL 查詢的詳細資訊，請參閱 [Piped Processing Language]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/)。
 
-### OpenSearch Dashboards query assistant
+### OpenSearch Dashboards 查詢助理
 
-Note that machine learning models are probabilistic and that some may perform better than others, so the OpenSearch Assistant may occasionally produce inaccurate information. We recommend evaluating outputs for accuracy as appropriate to your use case, including reviewing the output or combining it with other verification factors.
+請注意，機器學習模型具有機率性，且部分模型的表現可能優於其他模型，因此 OpenSearch Assistant 偶爾可能會產生不正確的資訊。我們建議您依據使用案例適當評估輸出的正確性，包括檢閱輸出內容或將其與其他驗證因素結合。
 {: .important}
 
-To simplify query building, the **OpenSearch Assistant** toolkit offers an assistant that converts natural language queries into PPL. A screenshot is shown in the following image. 
+為了簡化查詢的建立，**OpenSearch Assistant** 工具組提供了一個可將自然語言查詢轉換為 PPL 的助理。下圖顯示了螢幕擷取畫面。
 
-![Sample OpenSearch Query Assist screen view]({{site.url}}{{site.baseurl}}/images/log-explorer-query-assist.png)
+![OpenSearch Query Assist 範例畫面]({{site.url}}{{site.baseurl}}/images/log-explorer-query-assist.png)
 
-#### Enabling query assistant
+#### 啟用查詢助理
 
-By default, **Query Assistant** is enabled in OpenSearch Dashboards. To enable summarization of responses, locate your copy of the `opensearch_dashboards.yml` file and set the following option:
+根據預設，OpenSearch Dashboards 中已啟用 **Query Assistant**。若要啟用回應摘要功能，請找到您的 `opensearch_dashboards.yml` 檔案副本並設定下列選項：
 
 ```yaml
 observability.summarize.enabled: true
@@ -47,75 +48,75 @@ observability.summarize.response_summary_agent_name: "Response summary agent"
 observability.summarize.error_summary_agent_name: "Error summary agent"
 ```
 
-To disable Query Assistant, add `observability.query_assist.enabled: false` to your `opensearch_dashboards.yml`. 
+若要停用 Query Assistant，請將 `observability.query_assist.enabled: false` 新增至您的 `opensearch_dashboards.yml`。
 
-#### Setting up query assistant
+#### 設定查詢助理
 
-To set up **Query Assistant**, follow the steps in the [Getting started guide](https://github.com/opensearch-project/dashboards-assistant/blob/main/GETTING_STARTED_GUIDE.md) on GitHub. This guide provides step-by-step setup instructions for **OpenSearch Assistant** and **Query Assistant**. To set up **Query Assistant** only, use the `query-assist-agent` template included in the guide.
+若要設定 **Query Assistant**，請依照 GitHub 上 [入門指南](https://github.com/opensearch-project/dashboards-assistant/blob/main/GETTING_STARTED_GUIDE.md) 中的步驟操作。本指南提供 **OpenSearch Assistant** 與 **Query Assistant** 的逐步設定說明。若只要設定 **Query Assistant**，請使用指南中所附的 `query-assist-agent` 範本。
 
-## Saving a visualization
+## 儲存視覺化
 
-After Dashboards generates a visualization, save it if you want to revisit it or include it in an [operational panel]({{site.url}}{{site.baseurl}}/observing-your-data/operational-panels/). To save a visualization, expand the **Save** dropdown menu in the upper-right corner, enter a name for the visualization, and then select the **Save** button. You can reopen saved visualizations on the event analytics page.
+Dashboards 產生視覺化之後，如果您想再次查看它，或將它納入 [作業面板]({{site.url}}{{site.baseurl}}/observing-your-data/operational-panels/)，請將其儲存。若要儲存視覺化，請展開右上角的 **Save** 下拉式選單，輸入視覺化的名稱，然後選取 **Save** 按鈕。您可以在事件分析頁面上重新開啟已儲存的視覺化。
 
-## Creating event analytics visualizations and adding them to dashboards
+## 建立事件分析視覺化並將其新增至儀表板
 
-This feature is available in OpenSearch Dashboards 2.7 and later. It works with new visualizations that use PPL to query data from OpenSearch or federated data sources such as Prometheus.
+此功能適用於 OpenSearch Dashboards 2.7 及更新版本。它適用於使用 PPL 從 OpenSearch 或聯合資料來源 (例如 Prometheus) 查詢資料的新視覺化。
 {: .note}
 
-To create a PPL visualization, follow these steps:
+若要建立 PPL 視覺化，請依照下列步驟操作：
 
-1. On the main menu, choose **Visualize** > **PPL**.
-2. From the **Observability** > **Logs** > **Explorer** window, enter the index source in the **PPL query** field, for example, `source = opensearch_dashboards_sample_data_flights | stats count() by DestCountry`. You must enter the query using PPL syntax. 
-3. Set the time filter, for example, **This week**, and then select **Refresh**.
-4. Choose the visualization type, for example, **Pie**, from the sidebar dropdown menu to the right.  
-5. Select **Save** and enter a name for the visualization.
+1. 在主選單上，選擇 **Visualize** > **PPL**。
+2. 在 **Observability** > **Logs** > **Explorer** 視窗中，於 **PPL query** 欄位輸入索引來源，例如 `source = opensearch_dashboards_sample_data_flights | stats count() by DestCountry`。您必須使用 PPL 語法輸入查詢。
+3. 設定時間篩選條件，例如 **This week**，然後選取 **Refresh**。
+4. 從右側的側邊欄下拉式選單中選擇視覺化類型，例如 **Pie**。
+5. 選取 **Save** 並輸入視覺化的名稱。
 
-You've now created a new visualization that can be added to a new or existing dashboard. To add a PPL query to a dashboard, follow these steps:  
+您現在已建立一個新的視覺化，可將其新增至新的或現有的儀表板。若要將 PPL 查詢新增至儀表板，請依照下列步驟操作：
 
-1. Select **Dashboards** from the main menu.
-2. In the **Dashboards** window, select **Create** > **Dashboard**.
-3. In the **Editing New Dashboard** window, choose **Add an existing**.
-4. In the **Add panels** window, choose **PPL** from the **Types** dropdown menu, and then select the visualization. It is now displayed on your dashboard.
-5. Select **Save** and enter a name for the dashboard.
-6. To add more visualizations to the dashboard, choose **Select existing visualization** and follow steps 1--5. Alternatively, choose **Create new** and then select **PPL** in the **New Visualization** window. You'll return to the event analytics page and follow steps 1--5 in the preceding instructions.
+1. 從主選單選取 **Dashboards**。
+2. 在 **Dashboards** 視窗中，選取 **Create** > **Dashboard**。
+3. 在 **Editing New Dashboard** 視窗中，選擇 **Add an existing**。
+4. 在 **Add panels** 視窗中，從 **Types** 下拉式選單選擇 **PPL**，然後選取視覺化。該視覺化現在會顯示在您的儀表板上。
+5. 選取 **Save** 並輸入儀表板的名稱。
+6. 若要將更多視覺化新增至儀表板，請選擇 **Select existing visualization** 並依照步驟 1--5 操作。或者，選擇 **Create new**，然後在 **New Visualization** 視窗中選取 **PPL**。您將返回事件分析頁面，並依照前述說明中的步驟 1--5 操作。
 
-The following demo provides an overview of creating event analytics visualizations and adding them to a dashboard.
+下列示範概述如何建立事件分析視覺化並將其新增至儀表板。
 
-![Demo of creating event analytics visualizations and adding them to a dashboard]({{site.url}}{{site.baseurl}}/images/dashboards/event-analytics-dashboard.gif)
+![建立事件分析視覺化並將其新增至儀表板的示範]({{site.url}}{{site.baseurl}}/images/dashboards/event-analytics-dashboard.gif)
 
-### Limitations of event analytics visualizations
+### 事件分析視覺化的限制
 
-Event analytics visualizations do not support [Dashboards Query Language (DQL)]({{site.url}}{{site.baseurl}}/dashboards/discover/dql/) or [query domain-specific language (DSL)]({{site.url}}{{site.baseurl}}/query-dsl/index/), and they do not use index patterns. Note the following limitations: 
+事件分析視覺化不支援 [Dashboards Query Language (DQL)]({{site.url}}{{site.baseurl}}/dashboards/discover/dql/) 或 [查詢領域特定語言 (DSL)]({{site.url}}{{site.baseurl}}/query-dsl/index/)，且不使用索引模式。請注意下列限制：
 
-- Event analytics visualizations only use filters created using the dropdown interface. If you have DQL query or DSL filters in a dashboard, the visualizations do not use them.
-- The **Dashboard** filter dropdown interface only shows fields from the default index pattern or index patterns used by other visualizations in the same dashboard.
+- 事件分析視覺化僅使用透過下拉式介面建立的篩選條件。如果您的儀表板中有 DQL 查詢或 DSL 篩選條件，視覺化不會使用它們。
+- **Dashboard** 篩選條件下拉式介面僅顯示預設索引模式中的欄位，或同一儀表板中其他視覺化所使用之索引模式中的欄位。
 
-## Viewing logs
+## 檢視記錄檔
 
-The following are methods you can use to view logs.
+以下是您可用來檢視記錄檔的方法。
 
-### Correlating logs and traces
+### 關聯記錄檔與追蹤
 
-If you regularly track events across applications, you can correlate logs and traces. To view correlations, you must index the traces according to OpenTelemetry standards, similarly to [trace analytics]({{site.url}}{{site.baseurl}}/observing-your-data/trace/index/). Once you add a `TraceId` field to your logs, you can view the correlated trace information in the event explorer log details. This method correlates logs and traces that correspond to the same execution context. The following demo shows this feature in action.
+如果您經常追蹤跨應用程式的事件，可以將記錄檔與追蹤建立關聯。若要檢視關聯，您必須依照 OpenTelemetry 標準為追蹤編製索引，與 [追蹤分析]({{site.url}}{{site.baseurl}}/observing-your-data/trace/index/) 類似。在記錄檔中新增 `TraceId` 欄位後，即可在事件總管的記錄檔詳細資料中檢視相關聯的追蹤資訊。此方法會將對應至相同執行內容的記錄檔與追蹤建立關聯。下列示範展示此功能的實際運作情形。
 
-![Trace Log Correlation]({{site.url}}{{site.baseurl}}/images/trace_log_correlation.gif)
+![追蹤與記錄檔關聯]({{site.url}}{{site.baseurl}}/images/trace_log_correlation.gif)
 
-### Viewing surrounding events
+### 檢視周邊事件
 
-If you need more information about a log event, you can select **View surrounding events** to gain a more comprehensive understanding of the context around the time of interest. The following demo shows this feature in action. 
+如果您需要更多有關某個記錄檔事件的資訊，可以選取 **View surrounding events**，以更全面地了解所關注時間點前後的情境。下列示範展示此功能的實際運作情形。
 
-![Surrounding Events]({{site.url}}{{site.baseurl}}/images/surrounding_events.gif)
+![周邊事件]({{site.url}}{{site.baseurl}}/images/surrounding_events.gif)
 
-### Livestreaming logs
+### 即時串流記錄檔
 
-If you prefer real-time monitoring, you can set up an interval at which event analytics content will be automatically refreshed. With Live Tail, you can stream logs directly to OpenSearch Observability event analytics using the specified PPL query while leveraging robust features like filters. This can enhance your debugging process and enables seamless real-time monitoring of logs without the need to manually refresh content.
+如果您偏好即時監控，可以設定事件分析內容自動重新整理的間隔。透過 Live Tail，您可以使用指定的 PPL 查詢將記錄檔直接串流至 OpenSearch Observability 事件分析，同時運用篩選條件等強大功能。這可以改善您的偵錯流程，並讓您無須手動重新整理內容，即可順暢地即時監控記錄檔。
 
-With Live Tail, you can select intervals and seamlessly switch between them to control the frequency of live log streaming. This functionality is similar to the `tail -f` CLI command, as it retrieves only the most recent live logs, potentially eliminating a significant portion of live logs. Live Tail displays the total number of live logs received by OpenSearch during the live stream, offering insight into incoming traffic patterns. The following demo shows this feature in action. 
+透過 Live Tail，您可以選取間隔並在各間隔之間順暢切換，以控制即時記錄檔串流的頻率。此功能類似於 `tail -f` CLI 命令，因為它只會擷取最新的即時記錄檔，可能會略過相當大一部分的即時記錄檔。Live Tail 會顯示 OpenSearch 在即時串流期間收到的即時記錄檔總數，讓您深入了解傳入流量的模式。下列示範展示此功能的實際運作情形。
 
 ![Live Tail]({{site.url}}{{site.baseurl}}/images/live_tail.gif)
 
-## Related documentation
+## 相關文件
 
-- [Demonstrating the OpenSearch Assistant toolkit](https://www.youtube.com/watch?v=VTiJtGI2Sr4&t=152s)
-- [Getting started guide for OpenSearch Assistant in OpenSearch Dashboards](https://github.com/opensearch-project/dashboards-assistant/blob/main/GETTING_STARTED_GUIDE.md)
-- OpenSearch Assistant configuration through the REST API
+- [OpenSearch Assistant 工具組示範](https://www.youtube.com/watch?v=VTiJtGI2Sr4&t=152s)
+- [OpenSearch Dashboards 中的 OpenSearch Assistant 入門指南](https://github.com/opensearch-project/dashboards-assistant/blob/main/GETTING_STARTED_GUIDE.md)
+- 透過 REST API 進行 OpenSearch Assistant 組態

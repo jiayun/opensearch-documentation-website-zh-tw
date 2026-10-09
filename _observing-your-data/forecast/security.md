@@ -1,41 +1,42 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Forecasting security
+title: "預測安全性"
 nav_order: 10
 parent: Forecasting
 has_children: false
 ---
 
-# Forecasting security
+# 預測安全性
 
-Forecasting uses the same security framework as anomaly detection. This page explains how to configure permissions for users to create, run, and view forecasters; how to restrict access to system indexes; and how to isolate forecast results across teams.
+預測功能使用與異常偵測相同的安全性框架。本頁面說明如何設定權限，讓使用者能夠建立、執行及檢視預測器；如何限制對系統索引的存取；以及如何在各團隊之間隔離預測結果。
 
-In all examples, replace credentials, index names, and role names with values appropriate for your environment.
+在所有範例中，請將憑證、索引名稱和角色名稱替換為適合您環境的值。
 {: .note}
 
-## Indexes created by forecasting
+## 預測功能建立的索引
 
-The following table describes the indexes used by the Forecasting API and their visibility to regular users.
+下表說明 Forecasting API 所使用的索引，以及一般使用者對這些索引的可見性。
 
-| Index pattern | Purpose | Visible to regular users? |
+| 索引模式 | 用途 | 一般使用者可見？ |
 |---------------|---------|---------------------------|
-| `.opensearch-forecasters` | Stores forecaster configuration. | No |
-| `.opensearch-forecast-checkpoints` | Stores model snapshots (checkpoints). | No |
-| `.opensearch-forecast-state` | Stores task metadata for real-time and run-once forecasting. | No |
-| `opensearch-forecast-result*` | Stores forecast results from both backtests and real-time forecasting. | Yes |
+| `.opensearch-forecasters` | 儲存預測器組態。 | 否 |
+| `.opensearch-forecast-checkpoints` | 儲存模型快照 (檢查點)。 | 否 |
+| `.opensearch-forecast-state` | 儲存即時與單次執行預測的工作中繼資料。 | 否 |
+| `opensearch-forecast-result*` | 儲存回溯測試與即時預測的預測結果。 | 是 |
 
-Users do not need direct access to `.opensearch-forecast-checkpoints`; it is used internally by the plugin.  
+使用者不需要直接存取 `.opensearch-forecast-checkpoints`；該索引由外掛程式在內部使用。  
 
-To view `.opensearch-forecasters`, use the [Get forecaster]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#get-forecaster) or [Search forecasters]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#search-forecasters) APIs.
+若要檢視 `.opensearch-forecasters`，請使用 [Get forecaster]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#get-forecaster) 或 [Search forecasters]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#search-forecasters) API。
 
-To view `.opensearch-forecast-state`, use the [Get forecaster]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#get-forecaster) API with the `?task=true` query parameter or call the [Search tasks]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#search-tasks) API directly.
+若要檢視 `.opensearch-forecast-state`，請使用帶有 `?task=true` 查詢參數的 [Get forecaster]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#get-forecaster) API，或直接呼叫 [Search tasks]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#search-tasks) API。
 
 
-## Cluster permissions
+## 叢集權限
 
-Each Forecasting API route maps to a specific cluster-level permission, as shown in the following table. You must grant these permissions to roles that manage or interact with forecasters.
+每個 Forecasting API 路由都對應到特定的叢集層級權限，如下表所示。您必須將這些權限授予管理或與預測器互動的角色。
 
-| Route | Required permission |
+| 路由 | 必要權限 |
 |:------------|:---------------------|
 | `POST /_plugins/_forecast/forecasters` | `cluster:admin/plugin/forecast/forecaster/write` |
 | `PUT /_plugins/_forecast/forecasters/{id}` | `cluster:admin/plugin/forecast/forecaster/write` |
@@ -52,37 +53,37 @@ Each Forecasting API route maps to a specific cluster-level permission, as shown
 | `GET /_plugins/_forecast/stats` | `cluster:admin/plugin/forecast/forecaster/stats` |
 | `GET /_plugins/_forecast/forecasters/count` <br>`GET /_plugins/_forecast/forecasters/match` | `cluster:admin/plugin/forecast/forecaster/info` |
 
-## Required roles
+## 必要角色
 
-A forecasting user needs three types of privileges, based on the following responsibilities:
+預測使用者需要三種類型的權限，分別對應下列職責：
 
-- Managing the forecasting job
-- Reading the source data
-- Accessing the forecast results
+- 管理預測工作
+- 讀取來源資料
+- 存取預測結果
 
-These responsibilities correspond to three distinct security layers, as shown in the following table.
+這些職責對應到三個不同的安全層，如下表所示。
 
-| Layer | What it controls | Typical role |
+| 層級 | 控制內容 | 典型角色 |
 |-------|------------------|--------------|
-| **Forecaster control** | Permissions to create, edit, start, stop, delete, or view a forecaster's configuration. | `forecast_full_access` <br>(manage lifecycle)<br>or<br>`forecast_read_access` <br>(view only) |
-| **Data-source read** | Grants the forecaster permission to query the raw metrics index it uses for training and prediction. | Custom role, such as `data_source_read` |
-| **Result read** | Grants users and Alerting monitors access to documents in `opensearch-forecast-result*`. | Custom role, such as `forecast_result_read` |
+| **預測器控制** | 建立、編輯、啟動、停止、刪除或檢視預測器組態的權限。 | `forecast_full_access` <br>(管理生命週期)<br>或<br>`forecast_read_access` <br>(僅檢視) |
+| **資料來源讀取** | 授予預測器查詢其用於訓練與預測的原始指標索引的權限。 | 自訂角色，例如 `data_source_read` |
+| **結果讀取** | 授予使用者和警示監視器存取 `opensearch-forecast-result*` 中文件的權限。 | 自訂角色，例如 `forecast_result_read` |
 
 
-The built-in roles `forecast_full_access` and `forecast_read_access` apply only to Forecasting APIs. They do **not** include permissions for source or result indexes—those must be granted separately.
+內建角色 `forecast_full_access` 和 `forecast_read_access` 僅適用於 Forecasting API。它們**不**包含來源索引或結果索引的權限——這些權限必須另行授予。
 {: .note}
 
 
-### Forecaster control roles
+### 預測器控制角色
 
-The Forecasting API includes two built-in roles that you can use as is or use as templates for creating custom roles:
+Forecasting API 包含兩個內建角色，您可以直接使用，或作為建立自訂角色的範本：
 
-- `forecast_read_access` – For analysts who need read-only access to forecasters. This role allows users to view forecaster details and results but not create, modify, start, stop, or delete forecasters.
+- `forecast_read_access` – 適用於需要預測器唯讀存取權的分析師。此角色允許使用者檢視預測器的詳細資訊與結果，但無法建立、修改、啟動、停止或刪除預測器。
 
 
-- `forecast_full_access` – For users responsible for managing the full lifecycle of forecasters, including creating, editing, starting, stopping, and deleting them. This role does **not** grant access to the source index. To create a forecaster, users must also have index-level permissions that include the `search` action on any index or alias the forecaster reads from.
+- `forecast_full_access` – 適用於負責管理預測器完整生命週期的使用者，包括建立、編輯、啟動、停止及刪除預測器。此角色**不**授予來源索引的存取權。若要建立預測器，使用者還必須具備索引層級權限，包含對預測器讀取的任何索引或別名執行 `search` 動作的權限。
 
-The following example shows how these roles are defined:
+下列範例顯示這些角色的定義方式：
 
 ```yaml
 forecast_read_access:
@@ -129,13 +130,13 @@ forecast_full_access:
 ```
 {% include copy.html %}
 
-These roles do not include default `index_permissions` for specific source or result indexes. This is intentional, allowing you to add your own patterns based on your data access requirements.
+這些角色不包含針對特定來源或結果索引的預設 `index_permissions`。這是有意為之，讓您可以根據自己的資料存取需求新增自己的模式。
 
-### Data source `read` role
+### 資料來源 `read` 角色
 
-Each forecaster uses the creating user's credentials to query the source index. To enable this, you must grant that user read permissions for your own data index.
+每個預測器都會使用建立者的使用者認證來查詢來源索引。若要啟用此功能，您必須授予該使用者對您自有資料索引的讀取權限。
 
-The following example request creates a minimal role that allows read access to the `network-metrics` index:
+下列範例請求會建立一個最小權限角色，允許讀取 `network-metrics` 索引：
 
 ```json
 PUT _plugins/_security/api/roles/data_source_read
@@ -148,13 +149,13 @@ PUT _plugins/_security/api/roles/data_source_read
 ```
 {% include copy-curl.html %}
 
-You can modify the `index_patterns` to match your actual data source.
+您可以修改 `index_patterns`，使其符合您實際的資料來源。
 
-### Result-read role
+### 結果讀取角色
 
-The `forecast_result_read` role allows users to view forecast results and configure Alerting monitors that query those results.
+`forecast_result_read` 角色可讓使用者檢視預測結果，並設定查詢這些結果的 Alerting 監視器。
 
-The following example request defines a role that grants read access to all indexes matching the `opensearch-forecast-result*` pattern:
+下列範例請求定義了一個角色，授予對所有符合 `opensearch-forecast-result*` 模式之索引的讀取權限：
 
 ```json
 PUT _plugins/_security/api/roles/forecast_result_read
@@ -167,11 +168,11 @@ PUT _plugins/_security/api/roles/forecast_result_read
 ```
 {% include copy-curl.html %}
 
-If you need to isolate result data between teams, you can enhance this role using document-level security (DLS) with a backend role filter, as shown in the following section.
+若您需要在不同團隊之間隔離結果資料，可以搭配後端角色篩選條件，使用文件層級安全性 (DLS) 強化此角色，如下一節所示。
 
-### Example security role configuration
+### 安全性角色組態範例
 
-The following example request creates a `devOpsEngineer` user and assigns all three required roles for forecasting:
+下列範例請求會建立 `devOpsEngineer` 使用者，並指派預測功能所需的全部三個角色：
 
 ```json
 PUT _plugins/_security/api/internalusers/devOpsEngineer
@@ -186,31 +187,31 @@ PUT _plugins/_security/api/internalusers/devOpsEngineer
 ```
 {% include copy-curl.html %}
 
-This configuration enables the following:
+此組態可實現以下功能：
 
-- `devOpsEngineer` can manage forecasters (`forecast_full_access`).
-- Forecasters can query the source index successfully (`data_source_read`).
-- The user and any configured monitors can read forecast results (`forecast_result_read`).
+- `devOpsEngineer` 可以管理預測器 (`forecast_full_access`)。
+- 預測器可以成功查詢來源索引 (`data_source_read`)。
+- 使用者及任何已設定的監視器都可以讀取預測結果 (`forecast_result_read`)。
 
-To grant read-only access to forecaster configurations, replace `forecast_full_access` with `forecast_read_access`.
+若要授予預測器組態的唯讀存取權，請將 `forecast_full_access` 替換為 `forecast_read_access`。
 
 ---
 
-## (Advanced) Limit access by backend role
+## (進階) 依後端角色限制存取
 
-You can use backend roles to enforce **team-specific isolation**. This pattern allows different teams to operate forecasters independently while separating configurations and results.
+您可以使用後端角色來實施**團隊專屬的隔離**。此模式可讓不同團隊各自獨立操作預測器，同時將組態與結果分開。
 
-The model includes three layers:
+此模型包含三個層次：
 
-1. **Configuration isolation** – Forecasting APIs are restricted to users with a matching backend role.
-2. **Result isolation** – DLS limits access to forecast results in `opensearch-forecast-result*`.
-3. **Source data access** – A minimal read-only role enables each forecaster to scan its own index.
+1. **組態隔離**：預測 API 僅限具有相符後端角色的使用者使用。
+2. **結果隔離**：DLS 會限制對 `opensearch-forecast-result*` 中預測結果的存取。
+3. **來源資料存取**：最小權限的唯讀角色可讓每個預測器掃描其自身的索引。
 
-The following sections explain how to configure each layer.
+以下各節說明如何設定每個層次。
 
-### Assign backend roles to users
+### 為使用者指派後端角色
 
-In most environments, backend roles are assigned through LDAP or SAML. However, if you are using the internal user database, you can set them manually, as shown in the following example:
+在大多數環境中，後端角色是透過 LDAP 或 SAML 指派的。不過，若您使用的是內部使用者資料庫，則可以手動設定，如下列範例所示：
 
 ```json
 # Analyst
@@ -228,11 +229,11 @@ PUT _plugins/_security/api/internalusers/bob
 }
 ```
 
-These backend roles can then be used to control access to forecasters and forecast results on a per-team basis.
+接著，即可使用這些後端角色，依團隊控制對預測器及預測結果的存取。
 
-### Enable backend-role filtering for configuration access
+### 啟用組態存取的後端角色篩選
 
-To isolate forecaster configurations by team, enable backend-role filtering at the cluster level:
+若要依團隊隔離預測器組態，請在叢集層級啟用後端角色篩選：
 
 
 ```bash
@@ -245,13 +246,13 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-When this setting is enabled, OpenSearch records the creator's backend roles in each forecaster document. Only users with a matching backend role can view, edit, or delete that forecaster.
+啟用此設定後，OpenSearch 會在每個預測器文件中記錄建立者的後端角色。只有具有相符後端角色的使用者，才能檢視、編輯或刪除該預測器。
 
-### Create a `result‑access` role per team
+### 為每個團隊建立 `result‑access` 角色
 
-Forecast results are stored in shared indexes, so use DLS to restrict access by backend role.
+預測結果儲存在共用索引中，因此請使用 DLS 依後端角色限制存取。
 
-The following example request creates a role that allows users with the `analyst` backend role to read and to write only their team's forecast results:
+下列範例請求會建立一個角色，僅允許具有 `analyst` 後端角色的使用者讀取及寫入其所屬團隊的預測結果：
 
 
 ```json
@@ -281,17 +282,17 @@ PUT _plugins/_security/api/roles/forecast_analyst_result_access
 ```
 {% include copy-curl.html %}
 
-To isolate results for another team, such as `human-resources`, create a separate role (for example, `forecast_human_resources_result_access`) and update the term value to match the appropriate backend role.
+若要為其他團隊 (例如 `human-resources`) 隔離結果，請建立另一個角色 (例如 `forecast_human_resources_result_access`)，並更新 term 值，使其符合對應的後端角色。
 
-### Define `data-source` read access
+### 定義 `data-source` 讀取權限
 
-The `data_source_read` role is defined in the same way as in earlier examples. It grants minimal read access to the metrics index that each forecaster uses for training and prediction.
+`data_source_read` 角色的定義方式與先前範例相同。它會授予對每個預測器用於訓練及預測之指標索引的最小讀取權限。
 
-You can reuse this role across teams or create separate versions if you need per-index restrictions.
+您可以在各團隊之間重複使用此角色；若需要針對個別索引進行限制，也可以建立不同版本。
 
-### Map a user to three roles
+### 將使用者對應至三個角色
 
-The following example maps the user `alice` to all three required roles—`full_access`, `result_access`, and `data_source_read`—using the `analyst` backend role:
+下列範例使用 `analyst` 後端角色，將使用者 `alice` 對應至全部三個必要角色：`full_access`、`result_access` 及 `data_source_read`：
 
 ```json
 PUT _plugins/_security/api/internalusers/alice
@@ -307,32 +308,32 @@ PUT _plugins/_security/api/internalusers/alice
 ```
 {% include copy-curl.html %}
 
-With this configuration, Alice can:
+透過此組態，Alice 可以：
 
-- Create, start, stop, and delete only forecasters tagged with the `analyst` backend role.
-- View only forecast results tagged with the `analyst` backend role.
-- Read the `network-metrics` index as the source for her forecasters.
+- 僅建立、啟動、停止及刪除標記有 `analyst` 後端角色的預測器。
+- 僅檢視標記有 `analyst` 後端角色的預測結果。
+- 讀取 `network-metrics` 索引，作為其預測器的來源。
 
-To configure a second user, such as `bob` from the HR team, use a parallel setup with the `human-resources` backend role and `forecast_human_resources_result_access`.
+若要設定第二位使用者 (例如人資團隊的 `bob`)，請使用 `human-resources` 後端角色及 `forecast_human_resources_result_access` 進行對等設定。
 
-### Users without backend roles
+### 沒有後端角色的使用者
 
-If a user has the `forecast_read_access` role but no backend roles, they cannot view any forecasters. Backend-role filtering enforces strict matching and prevents access to configurations that do not align with the user's roles.
+若使用者具有 `forecast_read_access` 角色但沒有任何後端角色，則無法檢視任何預測器。後端角色篩選會強制執行嚴格比對，並阻止存取與使用者角色不符的組態。
 
 ---
 
-## Selecting remote indexes with fine-grained access control
+## 搭配精細存取控制選取遠端索引
 
-To use a remote index as a data source for a forecaster, follow the steps outlined in the [Authentication flow]({{site.url}}{{site.baseurl}}/search-plugins/cross-cluster-search/#authentication-flow) section of the [Cross-cluster search]({{site.url}}{{site.baseurl}}/search-plugins/cross-cluster-search/) documentation.
+若要使用遠端索引作為預測器的資料來源，請依照[跨叢集搜尋]({{site.url}}{{site.baseurl}}/search-plugins/cross-cluster-search/)文件中[驗證流程]({{site.url}}{{site.baseurl}}/search-plugins/cross-cluster-search/#authentication-flow)一節所述的步驟操作。
 
-To succeed, the user must:
+若要成功完成，使用者必須：
 
-- Use a security role that exists in both the local and remote clusters.
-- Have that role mapped to the same username in both clusters.
+- 使用同時存在於本機叢集與遠端叢集的安全性角色。
+- 在兩個叢集中，將該角色對應至相同的使用者名稱。
 
-### Example: Create a new user in the local cluster
+### 範例：在本機叢集中建立新使用者
 
-Using the following command, create a new user in the local cluster who can create the forecaster:
+使用下列命令，在本機叢集中建立可建立預測器的新使用者：
 
 ```bash
 curl -XPUT -k -u 'admin:<custom-admin-password>' \
@@ -342,7 +343,7 @@ curl -XPUT -k -u 'admin:<custom-admin-password>' \
 ```
 {% include copy.html %}
 
-Using the following command, map the new user to the `forecast_full_access` role:
+使用下列命令，將新使用者對應至 `forecast_full_access` 角色：
 
 ```
 curl -XPUT -k -u 'admin:<custom-admin-password>' \
@@ -352,7 +353,7 @@ curl -XPUT -k -u 'admin:<custom-admin-password>' \
 ```
 {% include copy.html %}
 
-In the remote cluster, create the same user and map `forecast_full_access` to that role, as shown in the following command:
+在遠端叢集中，建立相同的使用者並將 `forecast_full_access` 對應至該角色，如下列命令所示：
 
 ```bash
 # Create the user
@@ -369,12 +370,12 @@ curl -XPUT -k -u 'admin:<custom-admin-password>' \
 ```
 {% include copy-curl.html %}
 
-### Grant source index read access in both clusters
+### 在兩個叢集中授予來源索引讀取權限
 
-To create a forecaster, the user also needs index-level permissions for the `search` or `read` [action groups]({{site.url}}{{site.baseurl}}/security/access-control/default-action-groups/) on every source index, alias, or pattern that the forecaster reads. The permission check occurs in both clusters when reading a remote index. Define and map the same role in both locations.
+若要建立預測器，使用者還需要對預測器讀取的每個來源索引、別名或模式，具備 `search` 或 `read` [動作群組]({{site.url}}{{site.baseurl}}/security/access-control/default-action-groups/) 的索引層級權限。讀取遠端索引時，權限檢查會在兩個叢集中進行。請在兩處定義並對應相同的角色。
 
 
-In the local cluster, define a `read` role that grants access to the source index and map it to the forecasting user, as shown in the following command:
+在本機叢集中，定義一個 `read` 角色以授予來源索引的存取權，並將其對應到預測使用者，如下列命令所示：
 
 ```bash
 # Create a role that can search the data
@@ -396,7 +397,7 @@ curl -XPUT -k -u 'admin:<custom-admin-password>' \
 ```
 {% include copy-curl.html %}
 
-In the remote cluster, define the same role and map it to the same user to ensure that permissions are mirrored across clusters, as shown in the following command:
+在遠端叢集中，定義相同的角色並將其對應到相同的使用者，以確保權限在叢集之間保持一致，如下列命令所示：
 
 ```
 # Create the identical role
@@ -419,11 +420,11 @@ curl -XPUT -k -u 'admin:<custom-admin-password>' \
 {% include copy-curl.html %}
 
 
-### Register the remote cluster with the local cluster
+### 向本機叢集註冊遠端叢集
 
-Register the remote cluster with the local cluster using a seed node under the `cluster.remote.<alias>.seeds` setting. In OpenSearch, this is called adding a `follower` cluster.
+使用 `cluster.remote.<alias>.seeds` 設定下的種子節點，將遠端叢集註冊到本機叢集。在 OpenSearch 中，這稱為新增 `follower` 叢集。
 
-Assuming that the remote cluster is listening on transport port `9350`, run the following command in the local cluster:
+假設遠端叢集正在傳輸連接埠 `9350` 上監聽，請在本機叢集中執行下列命令：
 
 ```
 curl -X PUT "https://localhost:9200/_cluster/settings" \
@@ -442,27 +443,27 @@ curl -X PUT "https://localhost:9200/_cluster/settings" \
 {% include copy.html %}
 
 
-- Replace `127.0.0.1` with the remote node's transport layer IP if it's located on a different host.
-- The alias `follower` can be any name you choose and will be used when referencing remote indexes or configuring cross-cluster replication.
+- 如果遠端節點位於不同的主機上，請將 `127.0.0.1` 替換為該節點傳輸層的 IP。
+- 別名 `follower` 可以是您選擇的任何名稱，將在參照遠端索引或設定跨叢集複寫時使用。
 {: .note}
 
 ---
 
-## Custom result index permissions
+## 自訂結果索引權限
 
-You can specify a custom index for forecast results instead of using the default result index. If the custom index does not already exist, it will be created automatically when you create a forecaster and start a real-time analysis or test run.
+您可以為預測結果指定自訂索引，而不使用預設的結果索引。如果自訂索引尚不存在，系統會在您建立預測器並開始即時分析或測試執行時自動建立。
 
-If the custom index already exists, the Forecasting API checks that the index mapping matches the expected forecast result structure. To ensure compatibility, the index must conform to the schema defined in the [`forecast-results.json`](https://github.com/opensearch-project/anomaly-detection/blob/main/src/main/resources/mappings/forecast-results.json) file.
+如果自訂索引已存在，Forecasting API 會檢查索引對應是否符合預期的預測結果結構。為確保相容性，索引必須符合 [`forecast-results.json`](https://github.com/opensearch-project/anomaly-detection/blob/main/src/main/resources/mappings/forecast-results.json) 檔案中定義的架構。
 
-When a user creates a forecaster—either in OpenSearch Dashboards or by calling the Forecasting API—the system verifies that the user has the following index-level permissions for the custom index:
+當使用者建立預測器時（無論是透過 OpenSearch Dashboards 或呼叫 Forecasting API），系統會驗證使用者是否具備自訂索引的下列索引層級權限：
 
-- `indices:admin/create` – Required to create and roll over the custom result index.
-- `indices:admin/aliases` – Required to create and manage the index alias.
-- `indices:data/write/index` – Required to write forecast results to the index (single-stream forecasters).
-- `indices:data/read/search` – Required to search the custom index when displaying forecast results.
-- `indices:data/write/delete` – Required to delete older forecast results and manage disk usage.
-- `indices:data/write/bulk*` – Required because the plugin writes results using the Bulk API.
+- `indices:admin/create` – 建立及輪替自訂結果索引時需要。
+- `indices:admin/aliases` – 建立及管理索引別名時需要。
+- `indices:data/write/index` – 將預測結果寫入索引時需要（單一串流預測器）。
+- `indices:data/read/search` – 顯示預測結果時搜尋自訂索引需要。
+- `indices:data/write/delete` – 刪除較舊的預測結果及管理磁碟用量時需要。
+- `indices:data/write/bulk*` – 由於外掛程式使用 Bulk API 寫入結果，因此需要。
 
-## Next step
+## 下一步
 
-For more information about TLS, authentication backends, tenant isolation, and audit logging, see the [Security plugin documentation]({{site.url}}{{site.baseurl}}/security/).
+如需有關 TLS、驗證後端、租用戶隔離與稽核記錄的更多資訊，請參閱[安全性外掛程式文件]({{site.url}}{{site.baseurl}}/security/)。

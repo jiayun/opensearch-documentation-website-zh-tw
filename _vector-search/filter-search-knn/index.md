@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Filtering data
+title: "篩選資料"
 nav_order: 50
 has_children: true
 redirect_from:
@@ -8,48 +9,48 @@ redirect_from:
   - /vector-search/filter-search-knn/
 ---
 
-# Filtering vector search results
+# 篩選向量搜尋結果
 
-To refine vector search results, you can filter a vector search using one of the following methods:
+若要精確調整向量搜尋結果，您可以使用下列其中一種方法篩選向量搜尋：
 
-- [Efficient k-nearest neighbors (k-NN) filtering]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/efficient-knn-filtering/): This approach applies filtering _during_ the vector search, as opposed to before or after the vector search, which ensures that `k` results are returned (if there are at least `k` results in total). This approach is supported by the following engines:
-  - Lucene engine with a Hierarchical Navigable Small World (HNSW) algorithm (OpenSearch version 2.4 and later)
-  - Faiss engine with an HNSW algorithm (OpenSearch version 2.9 and later) or IVF algorithm (OpenSearch version 2.10 and later). In OpenSearch version 3.1 and later, when using the Faiss engine and HNSW, the [Lucene ACORN filtering optimization](https://github.com/apache/lucene/pull/14160) is applied during HNSW traversal when [memory-optimized search]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/memory-optimized-search/) is enabled.
-  - JVector engine, provided by the [`opensearch-jvector` plugin]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/), which supports inline filters inside the `knn` query clause using the same syntax as the Lucene and Faiss efficient filters.
+- [高效率 k 最近鄰（k-NN）篩選]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/efficient-knn-filtering/)：此方法在向量搜尋_期間_套用篩選，而非在向量搜尋之前或之後套用，以確保傳回 `k` 筆結果（如果總共有至少 `k` 筆結果）。下列引擎支援此方法：
+  - 使用階層式可導航小世界（HNSW）演算法的 Lucene 引擎（OpenSearch 2.4 版及更新版本）
+  - 使用 HNSW 演算法（OpenSearch 2.9 版及更新版本）或 IVF 演算法（OpenSearch 2.10 版及更新版本）的 Faiss 引擎。在 OpenSearch 3.1 版及更新版本中，使用 Faiss 引擎和 HNSW 時，若啟用[記憶體最佳化搜尋]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/memory-optimized-search/)，便會在 HNSW 遍歷期間套用 [Lucene ACORN 篩選最佳化](https://github.com/apache/lucene/pull/14160)。
+  - 由 [`opensearch-jvector` 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/)提供的 JVector 引擎，支援在 `knn` 查詢子句內使用內嵌篩選器，語法與 Lucene 和 Faiss 的高效率篩選器相同。
 
--  [Post-filtering]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/post-filtering/): Because it is performed after the vector search, this approach may return significantly fewer than `k` results for a restrictive filter. You can use the following two filtering strategies for this approach:
-    - [Boolean post-filter]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/post-filtering/#boolean-filter-with-ann-search): This approach runs an [approximate nearest neighbor (ANN)]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/) search and then applies a filter to the results. The two query parts are executed independently, and then the results are combined based on the query operator (`should`, `must`, and so on) provided in the query. 
-    - [The `post_filter` parameter]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/post-filtering/#the-post_filter-parameter): This approach runs an [ANN]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/) search on the full dataset and then applies the filter to the k-NN results.
+-  [後置篩選]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/post-filtering/)：由於此方法在向量搜尋之後執行，對於限制嚴格的篩選器，傳回的結果數可能遠少於 `k` 筆。您可以使用下列兩種篩選策略來採用此方法：
+    - [布林後置篩選器]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/post-filtering/#boolean-filter-with-ann-search)：此方法會執行[近似最近鄰（ANN）]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/)搜尋，然後對結果套用篩選器。查詢的兩個部分會獨立執行，接著根據查詢中提供的查詢運算子（`should`、`must` 等）合併結果。 
+    - [`post_filter` 參數]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/post-filtering/#the-post_filter-parameter)：此方法會對完整資料集執行 [ANN]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/) 搜尋，然後對 k-NN 結果套用篩選器。
 
-- [Scoring script filter]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/scoring-script-filter/): This approach involves pre-filtering a document set and then running an exact k-NN search on the filtered subset. It may have high latency and does not scale when filtered subsets are large. 
+- [評分指令碼篩選器]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/scoring-script-filter/)：此方法會先對文件集進行前置篩選，再對篩選後的子集執行精確 k-NN 搜尋。此方法可能有較高的延遲，且當篩選後的子集較大時無法擴展。 
 
-- [Filtering in sparse vector search]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/filtering-in-sparse-search/): This approach applies filtering to approximate sparse vector search.
+- [稀疏向量搜尋中的篩選]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/filtering-in-sparse-search/)：此方法會對近似稀疏向量搜尋套用篩選。
 
-The following table summarizes the preceding filtering use cases.
+下表彙整上述篩選使用案例。
 
-Filter | When the filter is applied | Type of search | Supported engines and methods | Where to place the `filter` clause
+篩選器 | 套用篩選器的時機 | 搜尋類型 | 支援的引擎與方法 | `filter` 子句的放置位置
 :--- | :--- | :--- | :---
-Efficient k-NN filtering | During search (a hybrid of pre- and post-filtering) | Approximate | - `lucene` (`hnsw`) <br> - `faiss` (`hnsw`, `ivf`) | Inside the k-NN query clause.
-Boolean filter | After search (post-filtering) | Approximate | - `lucene` <br> - `faiss` <br> - `nmslib` (deprecated)  | Outside the k-NN query clause. Must be a leaf clause.
-The `post_filter` parameter | After search (post-filtering) | Approximate | - `lucene`<br> - `faiss` <br> - `nmslib` (deprecated) | Outside the k-NN query clause. 
-Scoring script filter | Before search (pre-filtering) | Exact | N/A | Inside the script score query clause.
-Filtering in neural sparse vector search | After search (post-filtering) | Approximate | N/A | In the `method_parameters` field of the `neural_sparse` query.
+高效率 k-NN 篩選 | 搜尋期間（前置與後置篩選的混合） | 近似 | - `lucene`（`hnsw`） <br> - `faiss`（`hnsw`、`ivf`） | 在 k-NN 查詢子句內。
+布林篩選器 | 搜尋之後（後置篩選） | 近似 | - `lucene` <br> - `faiss` <br> - `nmslib`（已棄用）  | 在 k-NN 查詢子句外。必須是葉節點子句。
+`post_filter` 參數 | 搜尋之後（後置篩選） | 近似 | - `lucene`<br> - `faiss` <br> - `nmslib`（已棄用） | 在 k-NN 查詢子句外。 
+評分指令碼篩選器 | 搜尋之前（前置篩選） | 精確 | 不適用 | 在指令碼評分查詢子句內。
+神經稀疏向量搜尋中的篩選 | 搜尋之後（後置篩選） | 近似 | 不適用 | 在 `neural_sparse` 查詢的 `method_parameters` 欄位中。
 
-## Filtered search optimization
+## 篩選搜尋最佳化
 
-Depending on your dataset and use case, you might be more interested in maximizing recall or minimizing latency. The following table provides guidance on various k-NN search configurations and the filtering methods used to optimize for higher recall or lower latency. The first three columns of the table provide several example k-NN search configurations. A search configuration consists of:
+視您的資料集和使用案例而定，您可能更注重最大化召回率或最小化延遲。下表提供各種 k-NN 搜尋組態的指引，以及用於最佳化以提高召回率或降低延遲的篩選方法。表格的前三欄提供數個 k-NN 搜尋組態範例。搜尋組態包含：
 
-- The number of documents in an index, where one OpenSearch document corresponds to one k-NN vector.
-- The percentage of documents left in the results after filtering. This value depends on the restrictiveness of the filter that you provide in the query. The most restrictive filter in the table returns 2.5% of documents in the index, while the least restrictive filter returns 80% of documents.
-- The desired number of returned results (k). 
+- 索引中的文件數量，其中一份 OpenSearch 文件對應一個 k-NN 向量。
+- 篩選後結果中剩餘文件的百分比。此值取決於您在查詢中提供的篩選器限制程度。表格中限制最嚴格的篩選器會傳回索引中 2.5% 的文件，而限制最寬鬆的篩選器會傳回 80% 的文件。
+- 希望傳回的結果數量（k）。 
 
-Once you've estimated the number of documents in your index, the restrictiveness of your filter, and the desired number of nearest neighbors, use the following table to choose a filtering method that optimizes for recall or latency.
+估算索引中的文件數量、篩選器的限制程度，以及所需的最近鄰數量後，請使用下表選擇可最佳化召回率或延遲的篩選方法。
 
-| Number of documents in an index | Percentage of documents the filter returns | k | Filtering method to use for higher recall | Filtering method to use for lower latency |
+| 索引中的文件數量 | 篩選器傳回的文件百分比 | k | 用於提高召回率的篩選方法 | 用於降低延遲的篩選方法 |
 | :-- | :-- | :-- | :-- | :-- |
-| 10M | 2.5 | 100 | Efficient k-NN filtering/Scoring script | Scoring script |
-| 10M | 38 | 100 | Efficient k-NN filtering | Efficient k-NN filtering |
-| 10M | 80 | 100 | Efficient k-NN filtering | Efficient k-NN filtering |
-| 1M | 2.5 | 100 | Efficient k-NN filtering/Scoring script | Scoring script |
-| 1M | 38 | 100 | Efficient k-NN filtering | Efficient k-NN filtering |
-| 1M | 80 | 100 | Efficient k-NN filtering | Efficient k-NN filtering |
+| 10M | 2.5 | 100 | 高效率 k-NN 篩選/評分指令碼 | 評分指令碼 |
+| 10M | 38 | 100 | 高效率 k-NN 篩選 | 高效率 k-NN 篩選 |
+| 10M | 80 | 100 | 高效率 k-NN 篩選 | 高效率 k-NN 篩選 |
+| 1M | 2.5 | 100 | 高效率 k-NN 篩選/評分指令碼 | 評分指令碼 |
+| 1M | 38 | 100 | 高效率 k-NN 篩選 | 高效率 k-NN 篩選 |
+| 1M | 80 | 100 | 高效率 k-NN 篩選 | 高效率 k-NN 篩選 |

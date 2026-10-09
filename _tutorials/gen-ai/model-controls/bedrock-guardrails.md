@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Amazon Bedrock model guardrails 
+title: "Amazon Bedrock 模型護欄"
 parent: Model guardrails
 grand_parent: Generative AI
 nav_order: 170
@@ -9,29 +10,29 @@ redirect_from:
   - /vector-search/tutorials/model-controls/bedrock-guardrails/
 ---
 
-# Amazon Bedrock model guardrails 
+# Amazon Bedrock 模型護欄 
 
-This tutorial shows you how to apply Amazon Bedrock guardrails to your externally hosted models in two ways:
+本教學說明如何以兩種方式將 Amazon Bedrock 護欄套用至您外部託管的模型：
 
-- [Using the Amazon Bedrock Guardrails standalone API](#using-the-amazon-bedrock-guardrails-standalone-api)
-- [Using guardrails embedded in the Amazon Bedrock Model Inference API](#using-guardrails-embedded-in-the-amazon-bedrock-model-inference-api)
+- [使用 Amazon Bedrock Guardrails 獨立 API](#using-the-amazon-bedrock-guardrails-standalone-api)
+- [使用內嵌於 Amazon Bedrock Model Inference API 的護欄](#using-guardrails-embedded-in-the-amazon-bedrock-model-inference-api)
 
-For more information about guardrails, see [Configuring model guardrails]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/).
+如需護欄的詳細資訊，請參閱[設定模型護欄]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/)。
 
-Replace the placeholders starting with the prefix `your_` with your own values.
+請將開頭為前綴 `your_` 的預留位置取代為您自己的值。
 {: .note}
 
-## Prerequisites
+## 先決條件
 
-Before you begin, you must create your Amazon Bedrock guardrails. For detailed instructions, see [Create a guardrail](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-create.html).
+開始之前，您必須建立 Amazon Bedrock 護欄。如需詳細指示，請參閱[建立護欄](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-create.html)。
 
-## Using the Amazon Bedrock Guardrails standalone API
+## 使用 Amazon Bedrock Guardrails 獨立 API
 
-Use the following steps to call the Amazon Bedrock Guardrails standalone API.
+請使用下列步驟呼叫 Amazon Bedrock Guardrails 獨立 API。
 
-### Step 1: Create a connector for your Amazon Bedrock guardrail endpoint
+### 步驟 1：為您的 Amazon Bedrock 護欄端點建立連接器
 
-First, create a connector that will interface with your Amazon Bedrock guardrail endpoint. This connector will handle authentication and communication with the guardrail service:
+首先，建立將與您的 Amazon Bedrock 護欄端點介接的連接器。此連接器將處理與護欄服務的驗證與通訊：
 
 ```json
 POST _plugins/_ml/connectors/_create
@@ -65,9 +66,9 @@ POST _plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-### Step 2: Register the guardrail model
+### 步驟 2：註冊護欄模型
 
-Now that you've created a connector, register it as a remote guardrail model that will be used to validate inputs:
+現在您已建立連接器，請將其註冊為將用於驗證輸入的遠端護欄模型：
 
 ```json
 POST _plugins/_ml/models/_register
@@ -80,9 +81,9 @@ POST _plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-### Step 3: Test the guardrail model
+### 步驟 3：測試護欄模型
 
-Verify that the guardrail is properly filtering inappropriate content:
+確認護欄已正確篩選不當內容：
 
 ```json
 POST _plugins/_ml/models/your_model_id/_predict
@@ -94,7 +95,7 @@ POST _plugins/_ml/models/your_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-The response shows that the guardrail blocks the request when it detects inappropriate content:
+回應顯示護欄在偵測到不當內容時會封鎖請求：
 
 ```json
 {
@@ -159,9 +160,9 @@ The response shows that the guardrail blocks the request when it detects inappro
 }
 ```
 
-### Step 4: Create a Claude model connector
+### 步驟 4：建立 Claude 模型連接器
 
-To use the guardrails with an Amazon Bedrock Claude model, first create a connector for the Claude endpoint:
+若要將護欄與 Amazon Bedrock Claude 模型搭配使用，請先為 Claude 端點建立連接器：
 
 ```json
 POST _plugins/_ml/connectors/_create
@@ -199,9 +200,9 @@ POST _plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-### Step 5: Register the Claude model
+### 步驟 5：註冊 Claude 模型
 
-Register the Claude model with input guardrails enabled. This configuration ensures that all requests sent to the model are first validated by the guardrails:
+註冊已啟用輸入護欄的 Claude 模型。此組態可確保傳送至模型的所有請求都會先由護欄驗證：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -222,9 +223,9 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-### Step 6: Test the model
+### 步驟 6：測試模型
 
-First, test the model with acceptable input:
+首先，以可接受的輸入測試模型：
 
 ```json
 POST /_plugins/_ml/models/your_model_id/_predict
@@ -237,7 +238,7 @@ POST /_plugins/_ml/models/your_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-The response shows that the call was successful:
+回應顯示呼叫成功：
 
 ```json
 {
@@ -257,7 +258,7 @@ The response shows that the call was successful:
 }
 ```
 
-Next, test the model with inappropriate input:
+接著，以不當的輸入測試模型：
 
 ```json
 POST /_plugins/_ml/models/your_model_id/_predict
@@ -270,7 +271,7 @@ POST /_plugins/_ml/models/your_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-The response shows that the inappropriate input was blocked:
+回應顯示不當的輸入已遭封鎖：
 
 ```json
 {
@@ -288,13 +289,13 @@ The response shows that the inappropriate input was blocked:
 }
 ```
 
-## Using guardrails embedded in the Amazon Bedrock Model Inference API
+## 使用內嵌於 Amazon Bedrock Model Inference API 的護欄
 
-Use the following steps to use the guardrails embedded in the Model Inference API.
+請使用下列步驟來使用內嵌於 Model Inference API 的護欄。
 
-### Step 1: Create a connector for an Amazon Bedrock model containing guardrail headers
+### 步驟 1：為包含護欄標頭的 Amazon Bedrock 模型建立連接器
 
-Create a connector that includes guardrail headers in its configuration. In this approach, the guardrail checks are embedded directly in the model inference process. The `post_process_function` is required in order to define the logic used by the model to block inappropriate input:
+建立在其組態中包含護欄標頭的連接器。在此方法中，護欄檢查會直接內嵌於模型推論程序中。需要 `post_process_function` 才能定義模型用來封鎖不當輸入的邏輯：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -334,9 +335,9 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-### Step 2: Register the model
+### 步驟 2：註冊模型
 
-Register the model using the connector with embedded guardrails:
+使用具有內嵌護欄的連接器註冊模型：
 
 ```json
 POST _plugins/_ml/models/_register
@@ -349,9 +350,9 @@ POST _plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-### Step 3: Test the model
+### 步驟 3：測試模型
 
-Verify that the embedded guardrails are functioning by testing them with potentially inappropriate input:
+以可能不當的輸入進行測試，確認內嵌護欄正常運作：
 
 ```json
 POST _plugins/_ml/models/your_model_id/_predict
@@ -363,7 +364,7 @@ POST _plugins/_ml/models/your_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-The response shows that the inappropriate input was blocked:
+回應顯示不當的輸入已遭封鎖：
 
 ```json
 {

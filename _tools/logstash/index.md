@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Logstash
 nav_order: 150
@@ -12,21 +13,21 @@ redirect_from:
 
 # Logstash
 
-Logstash is a real-time event processing engine. It's part of the OpenSearch stack which includes OpenSearch, Beats, and OpenSearch Dashboards.
+Logstash 是即時事件處理引擎。它是 OpenSearch 技術堆疊的一部分，此堆疊包含 OpenSearch、Beats 和 OpenSearch Dashboards。
 
-You can send events to Logstash from many different sources. Logstash processes the events and sends it one or more destinations. For example, you can send access logs from a web server to Logstash. Logstash extracts useful information from each log and sends it to a destination like OpenSearch.
+您可以從許多不同來源將事件傳送至 Logstash。Logstash 會處理事件，並將其傳送至一個或多個目的地。例如，您可以將網頁伺服器的存取記錄檔傳送至 Logstash。Logstash 會從每筆記錄擷取有用的資訊，並將其傳送至 OpenSearch 等目的地。
 
-Sending events to Logstash lets you decouple event processing from your app. Your app only needs to send events to Logstash and doesn’t need to know anything about what happens to the events afterwards.
+將事件傳送至 Logstash 可讓您將事件處理與應用程式分離。您的應用程式只需要將事件傳送至 Logstash，不需要知道事件後續如何處理。
 
-The open-source community originally built Logstash for processing log data but now you can process any type of events, including events in XML or JSON format.
+開放原始碼社群最初建立 Logstash 是為了處理記錄資料，但現在您可以處理任何類型的事件，包括 XML 或 JSON 格式的事件。
 
-## Structure of a pipeline
+## 管線結構
 
-The way that Logstash works is that you configure a pipeline that has three phases⁠---inputs, filters, and outputs.
+Logstash 的運作方式是由您設定包含三個階段的管線：輸入、篩選和輸出。
 
-Each phase uses one or more plugins. Logstash has over 200 built-in plugins so chances are that you’ll find what you need. Apart from the built-in plugins, you can use plugins from the community or even write your own.
+每個階段會使用一個或多個外掛程式。Logstash 有超過 200 個內建外掛程式，因此您很可能找到所需的外掛程式。除了內建外掛程式，您也可以使用社群提供的外掛程式，甚至自行撰寫。
 
-The structure of a pipeline is as follows:
+管線的結構如下：
 
 ```yml
 input {
@@ -42,44 +43,44 @@ output {
 }
 ```
 
-where:
+其中：
 
-* `input` receives events like logs from multiple sources simultaneously. Logstash supports a number of input plugins for TCP/UDP, files, syslog, Microsoft Windows EventLogs, `stdin`, HTTP, and so on. You can also use an open source collection of input tools called Beats to gather events. The input plugin sends the events to a filter.
-* `filter` parses and enriches the events in one way or the other. Logstash has a large collection of filter plugins that modify events and pass them on to an output. For example, a `grok` filter parses unstructured events into fields and a `mutate` filter changes fields. Filters are executed sequentially.
-* `output` ships the filtered events to one or more destinations. Logstash supports a wide range of output plugins for destinations like OpenSearch, TCP/UDP, emails, files, `stdout`, HTTP, Nagios, and so on.
+* `input` 同時接收來自多個來源的事件，例如記錄檔。Logstash 支援多種輸入外掛程式，可用於 TCP/UDP、檔案、syslog、Microsoft Windows EventLogs、`stdin`、HTTP 等。您也可以使用稱為 Beats 的開放原始碼輸入工具集合來收集事件。輸入外掛程式會將事件傳送至篩選器。
+* `filter` 以各種方式剖析事件並豐富事件內容。Logstash 有大量篩選器外掛程式，可修改事件並將其傳送至輸出。例如，`grok` 篩選器會將非結構化事件剖析為欄位，而 `mutate` 篩選器會變更欄位。篩選器會依序執行。
+* `output` 將篩選後的事件傳送至一個或多個目的地。Logstash 支援多種輸出外掛程式，可用於 OpenSearch、TCP/UDP、電子郵件、檔案、`stdout`、HTTP、Nagios 等目的地。
 
-Both the input and output phases support codecs to process events as they enter or exit the pipeline.
-Some of the popular codecs are `json` and `multiline`. The `json` codec processes data that’s in JSON format and the `multiline` codec merges multiple line events into a single line.
+輸入和輸出階段都支援編解碼器，可在事件進入或離開管線時處理事件。
+常用的編解碼器包括 `json` 和 `multiline`。`json` 編解碼器會處理 JSON 格式的資料，而 `multiline` 編解碼器會將多行事件合併為單行。
 
-You can also write conditional statements within pipeline configurations to perform certain actions, if a certain criteria is met.
+您也可以在管線組態中撰寫條件陳述式，在符合特定條件時執行某些動作。
 
-## Install Logstash
+## 安裝 Logstash
 
-To install Logstash on OpenSearch, first install Logstash on your cluster, then the OpenSearch Logstash plugin, as described in the following steps.
+若要在 OpenSearch 上安裝 Logstash，請先在您的叢集上安裝 Logstash，再安裝 OpenSearch Logstash 外掛程式，如下列步驟所述。
 
-### Tarball
+### tar 封存檔
 
-Make sure you have [Java Development Kit (JDK)](https://www.oracle.com/java/technologies/javase-downloads.html) version 8 or 11 installed.
+請確認您已安裝 [Java Development Kit（JDK）](https://www.oracle.com/java/technologies/javase-downloads.html) 8 或 11 版。
 
-1. Download the Logstash tarball from [Logstash downloads](https://www.elastic.co/downloads/logstash).
+1. 從 [Logstash 下載頁面](https://www.elastic.co/downloads/logstash)下載 Logstash tar 封存檔。
 
-2. Navigate to the downloaded folder in the terminal and extract the files. Make sure that your version of Logstash and platform matches the one downloaded:
+2. 在終端機中前往下載的資料夾，並解壓縮檔案。請確認您的 Logstash 版本和平台與下載的版本和平台相符：
 
      ```bash
      tar -zxvf logstash-8.8.2-linux-x86_64.tar.gz
      ```
      {% include copy.html %}
 
-3. Navigate to the `logstash-8.8.2` directory.
+3. 前往 `logstash-8.8.2` 目錄。
 
-4. Use the following command to install the plugin:
+4. 使用下列命令安裝外掛程式：
 
      ```bash
      bin/logstash-plugin install logstash-output-opensearch
      ```
      {% include copy.html %}
   
-   You should receive the following output:
+   您應該會收到下列輸出：
 
      ```
      Validating logstash-output-opensearch
@@ -90,15 +91,15 @@ Make sure you have [Java Development Kit (JDK)](https://www.oracle.com/java/tech
      Installation successful
      ```
 
-You can add your pipeline configurations to the `config` directory. Logstash saves any data from the plugins in the `data` directory. The `bin` directory contains the binaries for starting Logstash and managing plugins.
+您可以將管線組態新增至 `config` 目錄。Logstash 會將外掛程式的所有資料儲存在 `data` 目錄中。`bin` 目錄包含用於啟動 Logstash 和管理外掛程式的二進位檔。
 
 ### Docker
 
-You can either use a custom Dockerfile to build a Logstash image or use the standard Logstash image.
+您可以使用自訂 Dockerfile 建置 Logstash 映像檔，或使用標準 Logstash 映像檔。
 
-#### Option 1: Using a custom Dockerfile (recommended)
+#### 選項 1：使用自訂 Dockerfile（建議）
 
-1. Create a custom Dockerfile to build a Logstash image with the required OpenSearch plugins:
+1. 建立自訂 Dockerfile，以建置包含必要 OpenSearch 外掛程式的 Logstash 映像檔：
 
     ```
     FROM logstash:<LATEST_VERSION>
@@ -107,37 +108,37 @@ You can either use a custom Dockerfile to build a Logstash image or use the stan
     ```
     {% include copy.html %}
 
-1. Build the image:
+1. 建置映像檔：
 
     ```
     docker build -t logstash-with-opensearch-plugins .
     ```
     {% include copy.html %}
 
-#### Option 2: Using the standard Logstash image
+#### 選項 2：使用標準 Logstash 映像檔
 
-1. Pull the latest Logstash image as stated in the [Logstash downloads](https://www.elastic.co/downloads/logstash).
+1. 依照 [Logstash 下載頁面](https://www.elastic.co/downloads/logstash)所述，下載最新的 Logstash 映像檔。
 
     ```
     docker pull docker.elastic.co/logstash/logstash:8.8.2
     ```
     {% include copy.html %}
 
-1. Create a Docker network:
+1. 建立 Docker 網路：
 
     ```
     docker network create test
     ```
     {% include copy.html %}
 
-1. Start OpenSearch with this network:
+1. 使用此網路啟動 OpenSearch：
 
     ```
     docker run -p 9200:9200 -p 9600:9600 --name opensearch --net test -e "discovery.type=single-node" opensearchproject/opensearch:1.2.0
     ```
     {% include copy.html %}
 
-1. Start Logstash:
+1. 啟動 Logstash：
 
     ```
     docker run -it --rm --name logstash --net test opensearchproject/logstash-oss-with-opensearch-output-plugin:7.16.2 -e 'input { stdin { } } output {
@@ -153,22 +154,22 @@ You can either use a custom Dockerfile to build a Logstash image or use the stan
     ```
     {% include copy.html %}
 
-## Process text from the terminal
+## 處理終端機中的文字
 
-You can define a pipeline that listens for events on `stdin` and outputs events on `stdout`. `stdin` and `stdout` refer to the terminal in which you’re running Logstash.
+您可以定義管線，在 `stdin` 接聽事件，並在 `stdout` 輸出事件。`stdin` 和 `stdout` 指的是您執行 Logstash 的終端機。
 
-To enter some text in the terminal and see the event data in the output:
+若要在終端機中輸入一些文字，並在輸出中查看事件資料：
 
-1. Use the `-e` argument to pass a pipeline configuration directly to the Logstash binary. In this case, `stdin` is the input plugin and `stdout` is the output plugin:
+1. 使用 `-e` 引數，將管線組態直接傳遞至 Logstash 二進位檔。在此情況下，`stdin` 是輸入外掛程式，而 `stdout` 是輸出外掛程式：
 
     ```bash
     bin/logstash -e "input { stdin { } } output { stdout { } }"
     ```
     {% include copy.html %}
 
-    Add the `—debug` flag to see a more detailed output.
+    新增 `—debug` 旗標，以查看更詳細的輸出。
 
-2. Enter "hello world" in your terminal. Logstash processes the text and outputs it back to the terminal:
+2. 在您的終端機中輸入「hello world」。Logstash 會處理文字，並將其輸出回終端機：
 
     ```yml
     {
@@ -179,15 +180,15 @@ To enter some text in the terminal and see the event data in the output:
     }
     ```
 
-    The `message` field contains your raw input. The `host` field is an IP address when you don’t run Logstash locally. `@timestamp` shows the date and time for when the event is processed. Logstash uses the `@version` field for internal processing.
+    `message` 欄位包含您的原始輸入。當您未在本機執行 Logstash 時，`host` 欄位是 IP 位址。`@timestamp` 顯示事件處理時的日期和時間。Logstash 使用 `@version` 欄位進行內部處理。
 
-3. Press `Ctrl + C` to shut down Logstash.
+3. 按下 `Ctrl + C` 以關閉 Logstash。
 
-### Troubleshooting
+### 疑難排解
 
-If you already have a Logstash process running, you’ll get an error. To fix this issue:
+如果您已經有正在執行的 Logstash 程序，就會收到錯誤。若要修正此問題：
 
-1. Delete the `.lock` file from the `data` directory:
+1. 從 `data` 目錄刪除 `.lock` 檔案：
 
     ```bash
     cd data
@@ -195,13 +196,13 @@ If you already have a Logstash process running, you’ll get an error. To fix th
     ```
     {% include copy.html %}
 
-2. Restart Logstash.
+2. 重新啟動 Logstash。
 
-## Process JSON or HTTP input and output it to a file
+## 處理 JSON 或 HTTP 輸入並將其輸出至檔案
 
-To define a pipeline that handles JSON requests:
+若要定義處理 JSON 請求的管線：
 
-1. Open the `config/pipeline.conf` file in any text editor you like. You can create a pipeline configuration file with any extension, the `.conf` extension is a Logstash convention. Add the `json` codec to accept JSON as the input and the `file` plugin to output the processed events to a `.txt` file:
+1. 用您喜歡的任何文字編輯器開啟 `config/pipeline.conf` 檔案。您可以用任何副檔名建立管線組態檔，`.conf` 副檔名是 Logstash 的慣例。新增 `json` 編解碼器以接受 JSON 作為輸入，並新增 `file` 外掛程式，將處理後的事件輸出至 `.txt` 檔案：
 
     ```json
     input {
@@ -217,7 +218,7 @@ To define a pipeline that handles JSON requests:
     ```
     {% include copy.html %}
 
-    To process inputs from a file, add an input file to the `events-data` directory and then pass its path to the `file` plugin at the input:
+    若要處理來自檔案的輸入，請將輸入檔案新增至 `events-data` 目錄，然後在輸入時將其路徑傳遞給 `file` 外掛程式：
 
     ```json
     input {
@@ -228,25 +229,25 @@ To define a pipeline that handles JSON requests:
     ```
     {% include copy.html %}
 
-2. Start Logstash:
+2. 啟動 Logstash：
 
     ```bash
     bin/logstash -f config/pipeline.conf
     ```
     {% include copy.html %}
 
-    `config/pipeline.conf` is a relative path to the `pipeline.conf` file. You can use an absolute path as well.
+    `config/pipeline.conf` 是 `pipeline.conf` 檔案的相對路徑。您也可以使用絕對路徑。
 
-3. Add a JSON object in the terminal:
+3. 在終端機中新增 JSON 物件：
 
     ```json
     { "amount": 10, "quantity": 2}
     ```
     {% include copy.html %}
 
-    The pipeline only handles a single line of input. If you paste some JSON that spans multiple lines, you’ll get an error.
+    此管線只會處理單行輸入。如果您貼上跨越多行的 JSON，就會收到錯誤。
 
-4. Check that the fields from the JSON object are added to the `output.txt` file:
+4. 檢查 JSON 物件中的欄位是否已新增至 `output.txt` 檔案：
 
     ```bash
     cat output.txt
@@ -263,11 +264,11 @@ To define a pipeline that handles JSON requests:
     }
     ```
 
-    If you type in some invalid JSON as the input, you'll see a JSON parsing error. Logstash doesn't discard the invalid JSON because you still might want to do something with it. For example, you can trigger an email or send a notification to a Slack channel.
+    如果您輸入一些無效的 JSON 作為輸入，就會看到 JSON 剖析錯誤。Logstash 不會捨棄無效的 JSON，因為您可能仍想對它做些處理。例如，您可以觸發電子郵件或傳送通知至 Slack 頻道。
 
-To define a pipeline that handles HTTP requests:
+若要定義處理 HTTP 請求的管線：
 
-1. Use the `http` plugin to send events to Logstash through HTTP:
+1. 使用 `http` 外掛程式，透過 HTTP 將事件傳送至 Logstash：
 
     ```json
     input {
@@ -285,16 +286,16 @@ To define a pipeline that handles HTTP requests:
     ```
     {% include copy.html %}
 
-    If you don’t specify any options, the `http` plugin binds to `localhost` and listens on port 8080.
+    如果您未指定任何選項，`http` 外掛程式會繫結至 `localhost` 並在連接埠 8080 上接聽。
 
-2. Start Logstash:
+2. 啟動 Logstash：
 
     ```bash
     bin/logstash -f config/pipeline.conf
     ```
     {% include copy.html %}
 
-3. Use Postman to send an HTTP request. Set `Content-Type` to an HTTP header with a value of `application/json`:
+3. 使用 Postman 傳送 HTTP 請求。將 `Content-Type` 設為 HTTP 標頭，其值為 `application/json`：
 
     ```json
     PUT 127.0.0.1:8080
@@ -305,17 +306,17 @@ To define a pipeline that handles HTTP requests:
     ```
     {% include copy.html %}
 
-    Or, you can use the `curl` command:
+    或者，您可以使用 `curl` 命令：
 
     ```bash
     curl -XPUT -H "Content-Type: application/json" -d ' {"amount": 7, "quantity": 3 }' http://localhost:8080 (http://localhost:8080/)
     ```
     {% include copy.html %}
 
-    Even though we haven't added the `json` plugin to the input, the pipeline configuration still works because the HTTP plugin automatically applies the appropriate codec based on the `Content-Type` header.
-    If you specify a value of `applications/json`, Logstash parses the request body as JSON.
+    即使我們未將 `json` 外掛程式新增至輸入，管線組態仍可運作，因為 HTTP 外掛程式會根據 `Content-Type` 標頭自動套用適當的編解碼器。
+    如果您指定值為 `applications/json`，Logstash 會將請求本文剖析為 JSON。
 
-    The `headers` field contains the HTTP headers that Logstash receives:
+    `headers` 欄位包含 Logstash 收到的 HTTP 標頭：
 
     ```json
     {
@@ -342,14 +343,14 @@ To define a pipeline that handles HTTP requests:
     ```
 
 
-## Automatically reload the pipeline configuration
+## 自動重新載入管線組態
 
-You can configure Logstash to detect any changes to the pipeline configuration file or the input log file and automatically reload the configuration.
+您可以設定 Logstash 偵測管線組態檔或輸入記錄檔的任何變更，並自動重新載入組態。
 
-The `stdin` plugin doesn’t supporting automatic reloading.
+`stdin` 外掛程式不支援自動重新載入。
 {: .note }
 
-1. Add an option named `start_position` with a value of `beginning` to the input plugin:
+1. 在輸入外掛程式中新增名為 `start_position` 的選項，其值為 `beginning`：
 
     ```json
     input {
@@ -361,11 +362,11 @@ The `stdin` plugin doesn’t supporting automatic reloading.
     ```
     {% include copy.html %}
 
-    Logstash only processes any new events added to the input file and ignores the ones that it has already processed to avoid processing the same event more than once on restart.
+    Logstash 只會處理新增至輸入檔案的新事件，並忽略已處理過的事件，以避免在重新啟動時重複處理相同的事件。
 
-    Logstash records its progress in a file that's referred to as a `sinceDB` file. Logstash creates a `sinceDB` file for each file that it watches for changes.
+    Logstash 會將其進度記錄在稱為 `sinceDB` 檔案的檔案中。Logstash 會為其監看的每個檔案建立一個 `sinceDB` 檔案。
 
-2. Open the `sinceDB` file to check how much of the input files are processed:
+2. 開啟 `sinceDB` 檔案，以檢查輸入檔案已處理多少：
 
     ```bash
     cd data/plugins/inputs/file/
@@ -379,25 +380,25 @@ The `stdin` plugin doesn’t supporting automatic reloading.
     ```
     {% include copy.html %}
 
-    The last number in the `sinceDB` file (7727) is the byte offset of the last known event processed.
+    `sinceDB` 檔案中的最後一個數字 (7727) 是上次已知已處理事件的位元組位移。
 
-5. To process the input file from the beginning, delete the `sinceDB` file:
+5. 若要從頭開始處理輸入檔案，請刪除 `sinceDB` 檔案：
 
     ```bash
     rm .sincedb_*
     ```
     {% include copy.html %}
 
-2. Start Logstash with a `—-config.reload.automatic` argument:
+2. 使用 `—-config.reload.automatic` 引數啟動 Logstash：
 
     ```bash
     bin/logstash -f config/pipeline.conf --config.reload.automatic
     ```
     {% include copy.html %}
 
-    The `reload` option only reloads if you add a new line at the end of the pipeline configuration file.
+    只有在您於管線組態檔結尾新增一行時，`reload` 選項才會重新載入。
 
-    Sample output:
+    範例輸出：
 
     ```json
     {
@@ -416,8 +417,8 @@ The `stdin` plugin doesn’t supporting automatic reloading.
     }
     ```
 
-7. Add a new line to the input file.
-    - Logstash immediately detects the change and processes the new line as an event.
+7. 在輸入檔案中新增一行。
+    - Logstash 會立即偵測到變更，並將新行處理為事件。
 
-8. Make a change to the `pipeline.conf` file.
-    - Logstash immediately detects the change and reloads the modified pipeline.
+8. 變更 `pipeline.conf` 檔案。
+    - Logstash 會立即偵測到變更，並重新載入修改後的管線。

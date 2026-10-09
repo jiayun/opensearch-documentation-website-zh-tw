@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search model
+title: "搜尋模型"
 parent: Model APIs
 grand_parent: ML Commons APIs
 nav_order: 35
@@ -8,24 +9,24 @@ nav_order: 35
 
 # Search Model API
 
-You can use this command to search for models you've already created.
+您可以使用此命令來搜尋您已建立的模型。
 
-The response will contain only those model versions to which you have access. For example, if you send a `match_all` query, model versions for the following model group types will be returned:
+回應只會包含您有權存取的模型版本。例如，如果您傳送 `match_all` 查詢，將會傳回下列模型群組類型的模型版本：
 
-- All public model groups in the index
-- Private model groups for which you are the model owner
-- Model groups that share at least one backend role with your backend roles
+- 索引中的所有公開模型群組
+- 您是模型擁有者的私人模型群組
+- 與您的後端角色至少共用一個後端角色的模型群組
 
-For information about user access for this API, see [Model access control considerations]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations).
+如需此 API 的使用者存取相關資訊，請參閱[模型存取控制考量]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/models/_search
 POST /_plugins/_ml/models/_search
 ```
 
-## Example request: Searching for all models
+## 範例請求：搜尋所有模型
 
 ```json
 POST /_plugins/_ml/models/_search
@@ -38,7 +39,7 @@ POST /_plugins/_ml/models/_search
 ```
 {% include copy-curl.html %}
 
-## Example request: Searching for models with the algorithm "FIT_RCF"
+## 範例請求：搜尋演算法為「FIT_RCF」的模型
 
 ```json
 POST /_plugins/_ml/models/_search
@@ -54,7 +55,7 @@ POST /_plugins/_ml/models/_search
 ```
 {% include copy-curl.html %}
 
-#### Example: Excluding model chunks
+#### 範例：排除模型區塊
 
 ```json
 GET /_plugins/_ml/models/_search
@@ -79,9 +80,9 @@ GET /_plugins/_ml/models/_search
 ```
 {% include copy-curl.html %}
 
-#### Example: Searching for all model chunks
+#### 範例：搜尋所有模型區塊
 
-The following query searches for all chunks of the model with the ID `979y9YwBjWKCe6KgNGTm` and sorts the chunks in ascending order:
+下列查詢會搜尋 ID 為 `979y9YwBjWKCe6KgNGTm` 的模型的所有區塊，並以遞增順序排序這些區塊：
 
 ```json
 GET /_plugins/_ml/models/_search
@@ -108,7 +109,7 @@ GET /_plugins/_ml/models/_search
 ```
 {% include copy-curl.html %}
 
-#### Example: Searching for a model by description
+#### 範例：依描述搜尋模型
 
 ```json
 GET _plugins/_ml/models/_search
@@ -134,7 +135,7 @@ GET _plugins/_ml/models/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {

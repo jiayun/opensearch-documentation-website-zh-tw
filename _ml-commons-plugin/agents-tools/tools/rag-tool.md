@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: RAG tool
+title: "RAG 工具"
 has_children: false
 has_toc: false
 nav_order: 65
@@ -9,31 +10,31 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# RAG tool
-**Introduced 2.13**
+# RAG 工具
+**於 2.13 版導入**
 {: .label .label-purple }
 <!-- vale on -->
 
-The `RAGTool` performs retrieval-augmented generation (RAG). For more information about RAG, see [Conversational search]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/).
+`RAGTool` 會執行檢索增強生成 (RAG)。如需 RAG 的更多資訊，請參閱[對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)。
 
-RAG calls a large language model (LLM) and supplements its knowledge by providing relevant OpenSearch documents along with the user question. To retrieve relevant documents from an OpenSearch index, you'll need a text embedding model that facilitates vector search.
+RAG 會呼叫大型語言模型 (LLM)，並透過在使用者問題之外一併提供相關的 OpenSearch 文件來補充其知識。若要從 OpenSearch 索引擷取相關文件，您需要一個能協助向量搜尋的文字嵌入模型。
 
-The RAG tool supports the following search methods:
+RAG 工具支援下列搜尋方法：
 
-- [Neural search]({{site.url}}{{site.baseurl}}/search-plugins/neural-search/): Dense vector retrieval, which uses a text embedding model.
-- [Neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/): Sparse vector retrieval, which uses a sparse encoding model.
+- [神經搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-search/)：密集向量擷取，使用文字嵌入模型。
+- [神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)：稀疏向量擷取，使用稀疏編碼模型。
 
-## Before you start
+## 開始之前
 
-To register and deploy a text embedding model and an LLM and ingest data into an index, perform Steps 1--5 of the [Agents and tools tutorial]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents-tools-tutorial/).
+若要註冊並部署文字嵌入模型與 LLM，並將資料匯入索引，請執行[代理程式與工具教學]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents-tools-tutorial/)的步驟 1 至 5。
 
-The following example uses neural search. To configure neural sparse search and deploy a sparse encoding model, see [Neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/).
+下列範例使用神經搜尋。若要設定神經稀疏搜尋並部署稀疏編碼模型，請參閱[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
 
 <!-- vale off -->
-## Step 1: Register a flow agent that will run the RAGTool
+## 步驟 1：註冊將執行 RAGTool 的流程代理程式
 <!-- vale on -->
 
-A flow agent runs a sequence of tools in order and returns the last tool's output. To create a flow agent, send the following request, providing the text embedding model ID in the `embedding_model_id` parameter and the LLM model ID in the `inference_model_id` parameter:
+流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列請求，並在 `embedding_model_id` 參數中提供文字嵌入模型 ID，在 `inference_model_id` 參數中提供 LLM 模型 ID：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -63,9 +64,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-For parameter descriptions, see [Register parameters](#register-parameters).
+參數說明請參閱[註冊參數](#register-parameters)。
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應一個代理程式 ID：
 
 ```json
 {
@@ -73,13 +74,13 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-To create a conversational agent containing a `RAGTool`, see [Conversational agents]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/).
+若要建立包含 `RAGTool` 的對話式代理程式，請參閱[對話式代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/)。
 
-## Step 2: Run the agent
+## 步驟 2：執行代理程式
 
-Before you run the agent, make sure that you add the sample OpenSearch Dashboards `Sample web logs` dataset. To learn more, see [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
+在執行代理程式之前，請確認您已新增 OpenSearch Dashboards 的 `Sample web logs` 範例資料集。若要進一步了解，請參閱[新增範例資料]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
 
-Then, run the agent by sending the following request:
+接著，傳送下列請求來執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
@@ -91,7 +92,7 @@ POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
 ```
 {% include copy-curl.html %} 
 
-OpenSearch performs vector search and returns the relevant documents:
+OpenSearch 會執行向量搜尋並傳回相關文件：
 
 ```json
 {
@@ -118,34 +119,34 @@ OpenSearch performs vector search and returns the relevant documents:
 }
 ```
 
-## Register parameters
+## 註冊參數
 
-The following table lists all tool parameters that are available when registering an agent.
-
-Parameter	| Type | Required/Optional | Description	
-:--- | :--- | :--- | :---
-`embedding_model_id` | String | Required | The model ID of the model to use for generating vector embeddings.
-`inference_model_id` | String | Required | The model ID of the LLM to use for inference.
-`index` | String | Required | The index from which to retrieve relevant documents to pass to the LLM.
-`embedding_field` | String | Required | When the model encodes raw text documents, the encoding result is saved in a field. Specify this field as the `embedding_field`. Neural search matches documents to the query by calculating the similarity score between the query text and the text in the document's `embedding_field`.
-`source_field` | String | Required | The document field or fields to return. You can provide a list of multiple fields as an array of strings, for example, `["field1", "field2"]`.
-`input` | String | Required for flow agent | Runtime input sourced from flow agent parameters. If using an LLM, this field is populated with the LLM response.
-`output_field` | String | Optional | The name of the output field. Default is `response`.
-`query_type` | String | Optional | Specifies the type of query to run to perform neural search. Valid values are `neural` (for dense retrieval) and `neural_sparse` (for sparse retrieval). Default is `neural`.
-`doc_size` | Integer | Optional | The number of documents to fetch. Default is `2`.
-`prompt` | String | Optional | The prompt to provide to the LLM.
-`k` | Integer | Optional | The number of nearest neighbors to search for when performing neural search. Default is 10.
-`enable_Content_Generation` | Boolean | Optional | If `true`, returns results generated by an LLM. If `false`, returns results directly without LLM-assisted content generation. Default is `true`.
-`nested_path` | String | Optional | The path to the nested object for the nested query. Only used for nested fields. Default is `null`.
-
-## Execute parameters
-
-The following table lists all tool parameters that are available when running the agent.
+下表列出註冊代理程式時可用的所有工具參數。
 
 Parameter	| Type | Required/Optional | Description	
 :--- | :--- | :--- | :---
-`question` | String | Required | The natural language question to send to the LLM. 
+`embedding_model_id` | String | 必要 | 用於產生向量嵌入的模型 ID。
+`inference_model_id` | String | 必要 | 用於推論的 LLM 模型 ID。
+`index` | String | 必要 | 從中擷取相關文件以傳遞給 LLM 的索引。
+`embedding_field` | String | 必要 | 當模型對原始文字文件進行編碼時，編碼結果會儲存在一個欄位中。請將此欄位指定為 `embedding_field`。神經搜尋會透過計算查詢文字與文件 `embedding_field` 中文字之間的相似度分數，將文件與查詢進行比對。
+`source_field` | String | 必要 | 要傳回的文件欄位。您可以字串陣列的形式提供多個欄位的清單，例如 `["field1", "field2"]`。
+`input` | String | 流程代理程式必要 | 來自流程代理程式參數的執行階段輸入。若使用 LLM，此欄位會填入 LLM 的回應。
+`output_field` | String | 選用 | 輸出欄位的名稱。預設為 `response`。
+`query_type` | String | 選用 | 指定執行神經搜尋時要執行的查詢類型。有效值為 `neural` (用於密集擷取) 與 `neural_sparse` (用於稀疏擷取)。預設為 `neural`。
+`doc_size` | Integer | 選用 | 要擷取的文件數量。預設為 `2`。
+`prompt` | String | 選用 | 提供給 LLM 的提示。
+`k` | Integer | 選用 | 執行神經搜尋時要搜尋的最近鄰居數量。預設為 10。
+`enable_Content_Generation` | Boolean | 選用 | 若為 `true`，則傳回由 LLM 產生的結果。若為 `false`，則直接傳回結果，不進行 LLM 輔助的內容生成。預設為 `true`。
+`nested_path` | String | 選用 | 巢狀查詢所用的巢狀物件路徑。僅用於巢狀欄位。預設為 `null`。
 
-## Testing the tool
+## 執行參數
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+下表列出執行代理程式時可用的所有工具參數。
+
+Parameter	| Type | Required/Optional | Description	
+:--- | :--- | :--- | :---
+`question` | String | 必要 | 要傳送給 LLM 的自然語言問題。 
+
+## 測試工具
+
+您可以將此工具作為代理程式工作流程的一部分執行，也可以使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適合用於測試個別工具或執行獨立作業。

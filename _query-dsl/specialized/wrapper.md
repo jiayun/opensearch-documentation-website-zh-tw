@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 
 layout: default
 title: Wrapper
@@ -6,15 +7,15 @@ parent: Specialized queries
 nav_order: 80
 ---
 
-# Wrapper query
+# Wrapper 查詢
 
-The `wrapper` query lets you submit a complete query in Base64-encoded JSON format. It is useful when the query must be embedded in contexts that only support string values.
+`wrapper` 查詢可讓您以 Base64 編碼的 JSON 格式提交完整查詢。當查詢必須嵌入僅支援字串值的情境時，此查詢非常實用。
 
-Use this query only when you need to manage system constraints. For readability and maintainability, it's better to use standard JSON-based queries when possible.
+只有在需要處理系統限制時才使用此查詢。為了可讀性與可維護性，建議盡可能使用標準的 JSON 查詢。
 
-## Example
+## 範例
 
-Create an index named `products` with the following mappings:
+使用下列對應建立名為 `products` 的索引：
 
 ```json
 PUT /products
@@ -28,7 +29,7 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-Index sample documents:
+將範例文件編製索引：
 
 ```json
 POST /products/_bulk
@@ -41,14 +42,14 @@ POST /products/_bulk
 ```
 {% include copy-curl.html %}
 
-Encode the following query in Base64 format:
+以 Base64 格式編碼下列查詢：
 
 ```bash
 echo -n '{ "match": { "title": "headphones" } }' | base64
 ```
 {% include copy.html %}
 
-Execute the encoded query:
+執行編碼後的查詢：
 
 ```json
 POST /products/_search
@@ -62,7 +63,7 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the two matching documents:
+回應包含兩筆符合的文件：
 
 ```json
 {

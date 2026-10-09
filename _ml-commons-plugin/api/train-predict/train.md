@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Train 
+title: "訓練"
 parent: Model APIs
 grand_parent: ML Commons APIs
 nav_order: 50
@@ -8,13 +9,13 @@ nav_order: 50
 
 # Train API
 
-The train API operation trains a model based on a selected algorithm. Training can occur both synchronously and asynchronously.
+Train API 操作會根據選取的演算法訓練模型。訓練可以同步或非同步方式進行。
 
-## Example request 
+## 範例請求 
 
-The following examples use the k-means algorithm to train index data.
+下列範例使用 k-means 演算法訓練索引資料。
 
-**Train with k-means synchronously** 
+**以 k-means 同步訓練** 
 
 ```json
 POST /_plugins/_ml/_train/kmeans
@@ -35,7 +36,7 @@ POST /_plugins/_ml/_train/kmeans
 ```
 {% include copy-curl.html %}
 
-**Train with k-means asynchronously**
+**以 k-means 非同步訓練**
 
 ```json
 POST /_plugins/_ml/_train/kmeans?async=true
@@ -56,11 +57,11 @@ POST /_plugins/_ml/_train/kmeans?async=true
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-**Synchronous**
+**同步**
 
-For synchronous responses, the API returns the `model_id`, which can be used to get or delete a model.
+同步回應時，API 會傳回 `model_id`，可用於取得或刪除模型。
 
 ```json
 {
@@ -69,9 +70,9 @@ For synchronous responses, the API returns the `model_id`, which can be used to 
 }
 ```
 
-**Asynchronous**
+**非同步**
 
-For asynchronous responses, the API returns the `task_id`, which can be used to get or delete a task.
+非同步回應時，API 會傳回 `task_id`，可用於取得或刪除任務。
 
 ```json
 {

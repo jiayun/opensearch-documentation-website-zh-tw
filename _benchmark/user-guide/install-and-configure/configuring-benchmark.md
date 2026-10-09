@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Configuring
+title: "設定"
 nav_order: 7
 grand_parent: User guide
 parent: Install and configure OpenSearch Benchmark
@@ -10,34 +11,34 @@ redirect_from:
   - /benchmark/tutorials/sigv4/
 ---
 
-# Configuring OpenSearch Benchmark
+# 設定 OpenSearch Benchmark
 
-OpenSearch Benchmark configuration data is stored in `~/.benchmark/benchmark.ini`, which is automatically created the first time OpenSearch Benchmark runs.
+OpenSearch Benchmark 的組態資料儲存於 `~/.benchmark/benchmark.ini`，該檔案會在 OpenSearch Benchmark 首次執行時自動建立。
 
-The file is separated into the following sections, which you can customize based on the needs of your cluster.
+該檔案分為以下幾個區段，您可以依據叢集的需求進行自訂。
 
 ## client_options
 
-This section explains how to customize client-level settings during benchmark execution using the `--client-options` command line flag.
+本節說明如何在執行基準測試期間，使用 `--client-options` 命令列旗標來自訂用戶端層級的設定。
 
-You can pass client-specific parameters to OpenSearch Benchmark using the `--client-options` flag. These parameters let you control low-level client behavior such as timeouts, authentication methods, and SSL settings.
+您可以使用 `--client-options` 旗標將用戶端專屬的參數傳遞給 OpenSearch Benchmark。這些參數可讓您控制低階用戶端行為，例如逾時、驗證方法及 SSL 設定。
 
-The `--client-options` flag accepts a comma-separated list of key-value pairs, as shown in the following example:
+`--client-options` 旗標接受以逗號分隔的鍵值對清單，如下列範例所示：
 
 ```bash
 --client-options=timeout:120,verify_certs:false
 ```
 
-You can customize `--client-options` with the following settings.
+您可以使用下列設定來自訂 `--client-options`。
 
-| Option | Type | Description |
+| 選項 | 類型 | 說明 |
 | :---- | :---- | :---- |
-| `timeout` | Integer | Sets the request timeout value in seconds. |
-| `verify_certs` | Boolean | Determines whether to verify SSL certificates when connecting to the OpenSearch cluster. |
-| `basic_auth_user` | String | The username used to authenticate with the OpenSearch cluster (if authentication is enabled). |
-| `basic_auth_password` | String | The password used to authenticate with the OpenSearch cluster (if authentication is enabled). |
+| `timeout` | 整數 | 設定請求逾時值，單位為秒。 |
+| `verify_certs` | 布林值 | 決定連線至 OpenSearch 叢集時是否驗證 SSL 憑證。 |
+| `basic_auth_user` | 字串 | 用於向 OpenSearch 叢集驗證的使用者名稱 (若已啟用驗證)。 |
+| `basic_auth_password` | 字串 | 用於向 OpenSearch 叢集驗證的密碼 (若已啟用驗證)。 |
 
-This example runs a benchmark with a 2-minute timeout and disabled certificate verification:
+下列範例會執行基準測試，並設定 2 分鐘逾時及停用憑證驗證：
 
 ```bash
 opensearch-benchmark run \
@@ -51,96 +52,96 @@ opensearch-benchmark run \
 ## meta
 <!-- vale on -->
 
-This section contains meta information about the configuration file.
+本節包含組態檔的相關中繼資訊。
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | :---- | :---- | :---- |
-| `config.version` | Integer |  The version of the configuration file format. This property is managed by OpenSearch Benchmark and should not be changed. |
+| `config.version` | 整數 |  組態檔格式的版本。此屬性由 OpenSearch Benchmark 管理，不應變更。 |
 
 <!-- vale off -->
 ## system
 <!-- vale on -->
 
-This section contains global information for the current benchmark environment. This information should be identical on all machines on which OpenSearch Benchmark is installed.
+本節包含目前基準測試環境的全域資訊。在安裝 OpenSearch Benchmark 的所有機器上，此資訊應完全相同。
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | :---- | :---- | :---- |
-| `env.name` | String | The name of the benchmark environment used as metadata in metrics documents when an OpenSearch metrics store is configured. Only alphanumeric characters are allowed. Default is `local`. |
-| `available.cores` | Integer | Determines the number of available CPU cores. OpenSearch Benchmark aims to create one `asyncio` event loop per core and distributes it to clients evenly across event loops. Defaults to the number of logical CPU cores for your cluster. |
-| `async.debug` | Boolean | Enables debug mode on OpenSearch Benchmark's `asyncio` event loop. Default is `false`. |
-| `passenv` | String | A comma-separated list of environment variable names that should be passed to OpenSearch for processing. |
+| `env.name` | 字串 | 基準測試環境的名稱，當設定了 OpenSearch 指標儲存區時，會作為指標文件中的中繼資料。僅允許英數字元。預設值為 `local`。 |
+| `available.cores` | 整數 | 決定可用的 CPU 核心數。OpenSearch Benchmark 的目標是為每個核心建立一個 `asyncio` 事件迴圈，並將其平均分配給各事件迴圈上的用戶端。預設值為您叢集的邏輯 CPU 核心數。 |
+| `async.debug` | 布林值 | 在 OpenSearch Benchmark 的 `asyncio` 事件迴圈上啟用偵錯模式。預設值為 `false`。 |
+| `passenv` | 字串 | 以逗號分隔的環境變數名稱清單，這些變數應傳遞給 OpenSearch 進行處理。 |
 
 <!-- vale off -->
 ## node
 <!-- vale on -->
 
-This section contains node-specific information that can be customized according to the needs of your cluster.
+本節包含節點專屬的資訊，可依據叢集的需求進行自訂。
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | :---- | :---- | :---- |
-| `root.dir` | String | The directory that stores all OpenSearch Benchmark data. OpenSearch Benchmark assumes control over this directory and all its subdirectories. |
-| `src.root.dir` | String | The directory from which the OpenSearch source code and any OpenSearch plugins are called. Only relevant for benchmarks from [sources](#source). |
+| `root.dir` | 字串 | 儲存所有 OpenSearch Benchmark 資料的目錄。OpenSearch Benchmark 會掌控此目錄及其所有子目錄。 |
+| `src.root.dir` | 字串 | 呼叫 OpenSearch 原始碼及任何 OpenSearch 外掛程式的來源目錄。僅與來自 [sources](#source) 的基準測試相關。 |
 
 <!-- vale off -->
 ## source
 <!-- vale on -->
 
-This section contains more details about the OpenSearch source tree.
+本節包含 OpenSearch 原始碼樹狀結構的更多詳細資料。
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | :---- | :---- | :---- |
-| `remote.repo.url` | URL | The URL from which to check out OpenSearch. Default is `https://github.com/opensearch-project/OpenSearch.git`.
-| `opensearch.src.subdir` | String | The local path relative to the `src.root.dir` of the OpenSearch search tree. Default is `OpenSearch`.
-| `cache` | Boolean | Enables OpenSearch's internal source artifact cache, `opensearch*.tar.gz`, and any plugin zip files. Artifacts are cached based on their Git revision. Default is `true`. |
-| `cache.days` | Integer | The number of days that an artifact should be kept in the source artifact cache. Default is `7`. |
+| `remote.repo.url` | URL | 用於簽出 OpenSearch 的 URL。預設值為 `https://github.com/opensearch-project/OpenSearch.git`。
+| `opensearch.src.subdir` | 字串 | 相對於 OpenSearch 搜尋樹狀結構 `src.root.dir` 的本機路徑。預設值為 `OpenSearch`。
+| `cache` | 布林值 | 啟用 OpenSearch 的內部原始碼成品快取 `opensearch*.tar.gz`，以及任何外掛程式 zip 檔案。成品會依其 Git 修訂版本進行快取。預設值為 `true`。 |
+| `cache.days` | 整數 | 成品應保留在原始碼成品快取中的天數。預設值為 `7`。 |
 
 <!-- vale off -->
 ## benchmarks
 <!-- vale on -->
 
-This section contains the settings that can be customized in the OpenSearch Benchmark data directory.
+本節包含可在 OpenSearch Benchmark 資料目錄中自訂的設定。
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | :---- | :---- | :---- |
-| `local.dataset.cache` | String | The directory in which benchmark datasets are stored. Depending on the benchmarks that are run, this directory may contain hundreds of GB of data. Default path is `$HOME/.benchmark/benchmarks/data`. |
+| `local.dataset.cache` | 字串 | 儲存基準測試資料集的目錄。視執行的基準測試而定，此目錄可能包含數百 GB 的資料。預設路徑為 `$HOME/.benchmark/benchmarks/data`。 |
 
 <!-- vale off -->
 ## reporting
 <!-- vale on -->
 
-This section defines how benchmark metrics are stored.
+本節定義基準測試指標的儲存方式。
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | :---- | :---- | :---- |
-| `datastore.type` | String | If set to `in-memory` all metrics are kept in memory while running the benchmark. If set to `opensearch` all metrics are instead written to a persistent metrics store and the data is made available for further analysis. Default is `in-memory`. |
-| `sample.queue.size` | Function | The number of metric samples that can be stored in OpenSearch Benchmark's in-memory queue. Default is `2^20`. |
-| metrics.request.downsample.factor | Integer| (default: 1): Determines how many service time and latency samples are saved in the metrics store. By default, all values are saved. If you want to, for example. keep only every 100th sample, specify `100`. This is useful to avoid overwhelming the metrics store in benchmarks with many clients. Default is `1`. |
-| `output.processingtime` | Boolean | If set to `true`, OpenSearch shows the additional metric processing time in the command line report. Default is `false`. |
+| `datastore.type` | 字串 | 若設為 `in-memory`，執行基準測試期間所有指標都會保留在記憶體中。若設為 `opensearch`，所有指標則會改寫入持續性指標儲存區，並提供資料供進一步分析。預設值為 `in-memory`。 |
+| `sample.queue.size` | 函式 | 可儲存在 OpenSearch Benchmark 記憶體內佇列中的指標樣本數。預設值為 `2^20`。 |
+| metrics.request.downsample.factor | 整數| (預設值：1)：決定指標儲存區中會儲存多少服務時間與延遲樣本。根據預設，所有值都會儲存。若您想只保留每 100 個樣本，請指定 `100`。這在用戶端眾多的基準測試中，有助於避免指標儲存區不堪負荷。預設值為 `1`。 |
+| `output.processingtime` | 布林值 | 若設為 `true`，OpenSearch 會在命令列報告中顯示額外的指標處理時間。預設值為 `false`。 |
 
 <!-- vale off -->
-### `datastore.type` parameters
+### `datastore.type` 參數
 <!-- vale on -->
 
-When `datastore.type` is set to `opensearch`, the following reporting settings can be customized.
+當 `datastore.type` 設為 `opensearch` 時，可自訂下列報告設定。
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | :---- | :---- | :---- |
-| `datastore.host` | IP address | The hostname of the metrics store, for example, `124.340.200.22`. |
-| `datastore.port`| Port | The port number of the metrics store, for example, `9200`. |
-| `datastore.secure` | Boolean | If set to `false`, OpenSearch assumes an HTTP connection. If set to true, it assumes an HTTPS connection. |
-| `datastore.ssl.verification_mode` | String | When set to the default `full`, the metrics store’s SSL certificate is checked. To disable certificate verification, set this value to `none`. |
-| `datastore.ssl.certificate_authorities` | String | Determines the local file system path to the certificate authority’s signing certificate.
-| `datastore.user` | Username | Sets the username for the metrics store |
-| `datastore.password` | String | Sets the password for the metrics store. Alternatively, this password can be configured using the `OSB_DATASTORE_PASSWORD` environment variable, which avoids storing credentials in a plain text file. The environment variable takes precedence over the config file if both define a password. |
-| `datastore.probe.cluster_version` | String | Enables automatic detection of the metrics store’s version. Default is `true`. |
-| `datastore.number_of_shards` | Integer | The number of primary shards that the `opensearch-*` indexes should have. Any updates to this setting after initial index creation will only be applied to new `opensearch-*` indexes. Default is the [OpenSearch static index value]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#static-index-settings). |
-| `datastore.number_of_replicas` | Integer | The number of replicas each primary shard in the datastore contains. Any updates to this setting after initial index creation will only be applied to new `opensearch-* `indexes. Default is the [OpenSearch static index value]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#static-index-settings). |
+| `datastore.host` | IP 位址 | 指標儲存區的主機名稱，例如 `124.340.200.22`。 |
+| `datastore.port`| 連接埠 | 指標儲存區的連接埠號碼，例如 `9200`。 |
+| `datastore.secure` | 布林值 | 若設為 `false`，OpenSearch 會採用 HTTP 連線。若設為 true，則會採用 HTTPS 連線。 |
+| `datastore.ssl.verification_mode` | 字串 | 設為預設值 `full` 時，會檢查指標儲存區的 SSL 憑證。若要停用憑證驗證，請將此值設為 `none`。 |
+| `datastore.ssl.certificate_authorities` | 字串 | 決定憑證授權單位簽署憑證的本機檔案系統路徑。
+| `datastore.user` | 使用者名稱 | 設定指標儲存區的使用者名稱 |
+| `datastore.password` | 字串 | 設定指標儲存區的密碼。或者，可使用 `OSB_DATASTORE_PASSWORD` 環境變數來設定此密碼，以避免將認證儲存在純文字檔案中。若兩者皆定義密碼，環境變數的優先順序高於組態檔。 |
+| `datastore.probe.cluster_version` | 字串 | 啟用指標儲存區版本的自動偵測。預設值為 `true`。 |
+| `datastore.number_of_shards` | 整數 | `opensearch-*` 索引應有的主要分片數。初始索引建立後對此設定的任何更新，僅會套用至新的 `opensearch-*` 索引。預設值為 [OpenSearch 靜態索引值]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#static-index-settings)。 |
+| `datastore.number_of_replicas` | 整數 | 資料儲存區中每個主要分片所含的副本數。初始索引建立後對此設定的任何更新，僅會套用至新的 `opensearch-* `索引。預設值為 [OpenSearch 靜態索引值]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#static-index-settings)。 |
 
-### Examples
+### 範例
 
-You can use the following examples to set reporting values in your cluster.
+您可以使用下列範例，在叢集中設定報告值。
 
-This example defines an unprotected metrics store in the local network:
+此範例定義本機網路中未受保護的指標儲存區：
 
 ```
 [reporting]
@@ -152,7 +153,7 @@ datastore.user =
 datastore.password =
 ```
 
-This example defines a secure connection to a metrics store in the local network with a self-signed certificate:
+此範例定義使用自我簽署憑證，安全連線至本機網路中的指標儲存區：
 
 ```
 [reporting]
@@ -169,41 +170,41 @@ datastore.password = the-password-to-your-cluster
 ## workloads
 <!-- vale on -->
 
-This section defines how workloads are retrieved. All keys are read by OpenSearch using the syntax `<<workload-repository-name>>.url`, which you can select using the OpenSearch Benchmark CLI `--workload-repository=workload-repository-name"` option. By default, OpenSearch chooses the workload repository using the `default.url` `https://github.com/opensearch-project/opensearch-benchmark-workloads`.
+本節定義如何擷取工作負載。OpenSearch 使用 `<<workload-repository-name>>.url` 語法讀取所有索引鍵，您可以使用 OpenSearch Benchmark CLI 的 `--workload-repository=workload-repository-name"` 選項選取該語法。依預設，OpenSearch 使用 `default.url` `https://github.com/opensearch-project/opensearch-benchmark-workloads` 選擇工作負載儲存庫。
 
 <!-- vale off -->
 ## defaults
 <!-- vale on -->
 
-This section defines the default values of certain OpenSearch Benchmark CLI parameters.
+本節定義特定 OpenSearch Benchmark CLI 參數的預設值。
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | :---- | :---- | :---- |
-| `preserve_benchmark_candidate` | Boolean | Determines whether OpenSearch installations are preserved or wiped by default after a benchmark. To preserve an installation for a single benchmark, use the command line flag `--preserve-install`. Default is `false`.
+| `preserve_benchmark_candidate` | 布林值 | 決定基準測試結束後，預設要保留還是清除 OpenSearch 安裝。若要為單次基準測試保留安裝，請使用命令列旗標 `--preserve-install`。預設值為 `false`。
 
 <!-- vale off -->
 ## distributions
 <!-- vale on -->
 
-This section defines how OpenSearch versions are distributed.
+本節定義 OpenSearch 版本的散布方式。
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | :---- | :---- | :---- |
-| `release.cache` | Boolean | Determines whether newly released OpenSearch versions should be cached locally. |
+| `release.cache` | 布林值 | 決定是否應在本機快取新發行的 OpenSearch 版本。 |
 
-## Running OpenSearch Benchmark with AWS Signature Version 4
+## 使用 AWS Signature Version 4 執行 OpenSearch Benchmark
 
-OpenSearch Benchmark supports AWS Signature Version 4 authentication. To run OpenSearch Benchmark with AWS Signature Version 4, you need to set up an [AWS Identity and Access Management (IAM) user or role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create.html) and provide it access to the OpenSearch cluster using AWS Signature Version 4 authentication.
+OpenSearch Benchmark 支援 AWS Signature Version 4 驗證。若要使用 AWS Signature Version 4 執行 OpenSearch Benchmark，您需要設定 [AWS Identity and Access Management（IAM）使用者或角色](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create.html)，並允許其透過 AWS Signature Version 4 驗證存取 OpenSearch 叢集。
 
-Whether to use an IAM role or user depends on your test cluster's access management requirements. For more information about whether to use an IAM role or user, see [When to create an IAM user (instead of a role)](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html#id_which-to-choose).
+要使用 IAM 角色還是使用者，取決於測試叢集的存取管理需求。如需進一步瞭解何時使用 IAM 角色或使用者，請參閱[何時建立 IAM 使用者（而非角色）](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html#id_which-to-choose)。
 
-### OpenSearch Benchmark version 1.15.0 and later
+### OpenSearch Benchmark 1.15.0 版及更新版本
 
-Starting with OpenSearch Benchmark version 1.15.0, you can use session-based authentication that automatically handles temporary credential generation and refresh. This method eliminates the need to manually export AWS credentials:
+從 OpenSearch Benchmark 1.15.0 版開始，您可以使用以工作階段為基礎的驗證，自動處理臨時憑證的產生與重新整理。此方法可免除手動匯出 AWS 憑證的需求：
 
-1. Create an IAM role or user in the AWS Management Console that has the necessary permissions to access your OpenSearch cluster. Ensure that the role or user has the required policies attached for OpenSearch access.
+1. 在 AWS Management Console 中建立具有存取 OpenSearch 叢集所需權限的 IAM 角色或使用者。確保該角色或使用者已附加存取 OpenSearch 所需的政策。
 
-2. Run the following `execute-test` command with the `--client-options=amazon_aws_log_in:session` flag. OpenSearch Benchmark will automatically generate temporary credentials and handle auto-refresh:
+2. 執行下列 `execute-test` 命令，並加上 `--client-options=amazon_aws_log_in:session` 旗標。OpenSearch Benchmark 會自動產生臨時憑證並處理自動重新整理：
 
    ```bash
    opensearch-benchmark execute-test \
@@ -214,15 +215,15 @@ Starting with OpenSearch Benchmark version 1.15.0, you can use session-based aut
    ```
    {% include copy.html %}
 
-### OpenSearch Benchmark version 1.14.0 and earlier
+### OpenSearch Benchmark 1.14.0 版及更早版本
 
-For OpenSearch Benchmark versions prior to 1.15.0, use the environment variable method:
+對於 OpenSearch Benchmark 1.15.0 版之前的版本，請使用環境變數方法：
 
-1. Create an IAM role or user in the AWS Management Console.
+1. 在 AWS Management Console 中建立 IAM 角色或使用者。
 
-2. Set up your environment variables. If you're testing using Amazon OpenSearch Serverless, set `OSB_SERVICE` to `aoss`.
+2. 設定您的環境變數。如果您使用 Amazon OpenSearch Serverless 進行測試，請將 `OSB_SERVICE` 設為 `aoss`。
 
-   - For an IAM user, configure the following environment variables:
+   - 對於 IAM 使用者，請設定下列環境變數：
 
    ```bash
    export OSB_AWS_ACCESS_KEY_ID=<IAM USER AWS ACCESS KEY ID>
@@ -232,7 +233,7 @@ For OpenSearch Benchmark versions prior to 1.15.0, use the environment variable 
    ```
    {% include copy.html %}
 
-   - For an IAM role, configure the following environment variables:
+   - 對於 IAM 角色，請設定下列環境變數：
 
    ```bash
    export OSB_AWS_ACCESS_KEY_ID=<IAM Role AWS ACCESS KEY ID>
@@ -244,7 +245,7 @@ For OpenSearch Benchmark versions prior to 1.15.0, use the environment variable 
    {% include copy.html %}
 
 
-3. Customize and run the following `run` command with the `--client-options=amazon_aws_log_in:environment` flag. This flag provides the location of your exported credentials to OpenSearch Benchmark.
+3. 自訂並執行下列 `run` 命令，並加上 `--client-options=amazon_aws_log_in:environment` 旗標。此旗標會向 OpenSearch Benchmark 提供您匯出憑證的位置。
 
    ```bash
    opensearch-benchmark run \
@@ -256,59 +257,59 @@ For OpenSearch Benchmark versions prior to 1.15.0, use the environment variable 
    {% include copy.html %}
 
 
-## Proxy configurations
+## Proxy 組態
 
-OpenSearch automatically downloads all the necessary proxy data for you, including:
+OpenSearch 會自動為您下載所有必要的 Proxy 資料，包括：
 
-- OpenSearch distributions, when you specify `--distribution-version=<OPENSEARCH-VERSION>`.
-- OpenSearch source code, when you specify a Git revision number, for example, `--revision=1e04b2w`.
-- Any metadata tracked from the [OpenSearch GitHub repository](https://github.com/opensearch-project/OpenSearch).
+- 當您指定 `--distribution-version=<OPENSEARCH-VERSION>` 時，下載 OpenSearch 發行套件。
+- 當您指定 Git 修訂編號（例如 `--revision=1e04b2w`）時，下載 OpenSearch 原始碼。
+- 從 [OpenSearch GitHub 儲存庫](https://github.com/opensearch-project/OpenSearch)追蹤的任何中繼資料。
 
-As of OpenSearch Benchmark 0.5.0, only `http_proxy` is supported.
+截至 OpenSearch Benchmark 0.5.0 版，僅支援 `http_proxy`。
 {: .warning}
 
-You can use an `http_proxy` to connect OpenSearch Benchmark to a specific proxy and connect the proxy to a benchmark workload. To add the proxy:
+您可以使用 `http_proxy` 將 OpenSearch Benchmark 連線至特定 Proxy，並將 Proxy 連線至基準測試工作負載。若要新增 Proxy：
 
 
-1. Add your proxy URL to your shell profile:
+1. 將您的 Proxy URL 新增至 shell 設定檔：
 
    ```
    export http_proxy=http://proxy.proxy.org:4444/
    ```
 
-2. Source your shell profile and verify that the proxy URL is set correctly:
+2. 載入您的 shell 設定檔，並確認 Proxy URL 設定正確：
 
    ```
    source ~/.bash_profile ; echo $http_proxy
    ```
 
-3. Configure Git to connect to your proxy by using the following command. For more information, see the [Git documentation](https://git-scm.com/docs/git-config).
+3. 使用下列命令設定 Git，使其連線至您的 Proxy。如需詳細資訊，請參閱 [Git 文件](https://git-scm.com/docs/git-config)。
 
    ```
    git config --global http_proxy $http_proxy
    ```
 
-4. Use `git clone` to clone the workloads repository by using the following command. If the proxy configured correctly, the clone is successful.
+4. 使用 `git clone`，透過下列命令複製工作負載儲存庫。如果 Proxy 設定正確，複製就會成功。
 
    ```
    git clone http://github.com/opensearch-project/opensearch-benchmark-workloads.git
    ```
 
-5. Lastly, verify that OpenSearch Benchmark can connect to the proxy server by checking the `/.benchmark/logs/benchmark.log` log. When OpenSearch Benchmark starts, you should see the following at the top of the log:
+5. 最後，檢查 `/.benchmark/logs/benchmark.log` 記錄檔，確認 OpenSearch Benchmark 可以連線至 Proxy 伺服器。當 OpenSearch Benchmark 啟動時，您應該會在記錄檔頂端看到下列內容：
 
     ```
     Connecting via proxy URL [http://proxy.proxy.org:4444/] to the Internet (picked up from the environment variable [http_proxy]).
     ```
 
-## Logging
+## 記錄
 
-Logs from OpenSearch Benchmark can be configured in the `~/.benchmark/logging.json` file. For more information about how to format the log file, see the following Python documentation:
+您可以在 `~/.benchmark/logging.json` 檔案中設定 OpenSearch Benchmark 的記錄檔。如需進一步瞭解如何設定記錄檔格式，請參閱下列 Python 文件：
 
-- For general tips and tricks, use the [Python Logging Cookbook](https://docs.python.org/3/howto/logging-cookbook.html).
-- For the file format, see the Python [logging configuration schema](https://docs.python.org/3/library/logging.config.html#logging-config-dictschema).
-- For instructions on how to customize where the log output is written, see the [logging handlers documentation](https://docs.python.org/3/library/logging.handlers.html).
+- 如需一般提示與技巧，請參閱 [Python 記錄實用指南](https://docs.python.org/3/howto/logging-cookbook.html)。
+- 如需檔案格式，請參閱 Python 的[記錄組態結構描述](https://docs.python.org/3/library/logging.config.html#logging-config-dictschema)。
+- 如需自訂記錄輸出寫入位置的指示，請參閱[記錄處理常式文件](https://docs.python.org/3/library/logging.handlers.html)。
 
-By default, OpenSearch Benchmark logs all output to `~/.benchmark/logs/benchmark.log`.
+依預設，OpenSearch Benchmark 會將所有輸出記錄至 `~/.benchmark/logs/benchmark.log`。
 
 
 

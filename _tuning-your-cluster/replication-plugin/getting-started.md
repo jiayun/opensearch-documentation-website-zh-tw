@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Getting started
+title: "入門"
 nav_order: 15
 parent: Cross-cluster replication
 redirect_from:
   - /replication-plugin/get-started/
 ---
 
-# Getting started with cross-cluster replication
+# 跨叢集複製入門
 
-With cross-cluster replication, you index data to a leader index, and OpenSearch replicates that data to one or more read-only follower indexes. All subsequent operations on the leader are replicated on the follower, such as creating, updating, or deleting documents.
+透過跨叢集複製，您可以將資料編製索引到領導者索引，OpenSearch 會將該資料複製到一或多個唯讀的追隨者索引。領導者索引上的所有後續操作都會複製到追隨者索引，例如建立、更新或刪除文件。
 
-## Prerequisites
+## 先決條件
 
-Before configuring cross-cluster replication, ensure that the following prerequisites are met:
+在設定跨叢集複製之前，請確保符合下列先決條件：
 
-- Both the leader and follower cluster must have the replication plugin installed.
-- If you've overridden `node.roles` in `opensearch.yml` for any node in the follower cluster, ensure that the `node.roles` setting includes the `remote_cluster_client` role:
+- 領導者叢集與追隨者叢集都必須安裝 replication 外掛程式。
+- 如果您在追隨者叢集中為任何節點覆寫了 `node.roles`（位於 `opensearch.yml` 中），請確保 `node.roles` 設定包含 `remote_cluster_client` 角色：
 
    ```yaml
    node.roles: [<other_roles>, remote_cluster_client]
    ```
    {% include copy.html %}
 
-## Permissions
+## 權限
 
-Make sure the Security plugin is either enabled on both clusters or disabled on both clusters. If you disabled the Security plugin, you can skip this section. However, we strongly recommend enabling the Security plugin in production scenarios.
+請確保 Security 外掛程式在兩個叢集上都啟用，或在兩個叢集上都停用。如果您已停用 Security 外掛程式，可以略過本節。不過，我們強烈建議在正式環境中啟用 Security 外掛程式。
 
-If the Security plugin is enabled, make sure that non-admin users are mapped to the appropriate permissions so they can perform replication actions. For index and cluster-level permissions requirements, see [Cross-cluster replication permissions]({{site.url}}{{site.baseurl}}/replication-plugin/permissions/).
+如果 Security 外掛程式已啟用，請確保非管理員使用者已對應到適當的權限，以便他們能執行複製操作。關於索引與叢集層級權限的需求，請參閱[跨叢集複製權限]({{site.url}}{{site.baseurl}}/replication-plugin/permissions/)。
 
-In addition, verify and add the distinguished names (DNs) of each follower cluster node on the leader cluster to allow connections from the followers to the leader.
+此外，請在領導者叢集上驗證並新增每個追隨者叢集節點的辨別名稱 (DN)，以允許追隨者連線到領導者。
 
-First, get the node's DN from each follower cluster:
+首先，從每個追隨者叢集取得節點的 DN：
 
   ```bash
 curl -XGET -k -u 'admin:<custom-admin-password>' 'https://localhost:9200/_opendistro/_security/api/ssl/certs?pretty'
@@ -48,16 +49,16 @@ curl -XGET -k -u 'admin:<custom-admin-password>' 'https://localhost:9200/_opendi
 }
   ```
 
-Then verify that it's part of the leader cluster configuration in `opensearch.yml`. Otherwise, add it under the following setting:
+然後驗證它是否屬於 `opensearch.yml` 中領導者叢集組態的一部分。否則，請在下列設定下新增它：
 
   ```yaml
 plugins.security.nodes_dn:
   - "CN=*.leader.com, OU=SSL, O=Test, L=Test, C=DE" # Already part of the configuration
   - "CN=follower.test.com" # From the above response from follower
   ```
-## Example setup
+## 範例設定
 
-To start two single-node clusters on the same network, save this sample file as `docker-compose.yml` and run `docker compose up`:
+若要在同一網路上啟動兩個單一節點叢集，請將此範例檔案儲存為 `docker-compose.yml` 並執行 `docker compose up`：
 
 ```yml
 version: '3'
@@ -109,7 +110,7 @@ networks:
   opensearch-net:
 ```
 
-After the clusters start, verify the names of each:
+叢集啟動後，驗證每個叢集的名稱：
 
 ```bash
 curl -XGET -u 'admin:<custom-admin-password>' -k 'https://localhost:9201'
@@ -125,9 +126,9 @@ curl -XGET -u 'admin:<custom-admin-password>' -k 'https://localhost:9200'
 }
 ```
 
-For this example, use port 9201 (`replication-node1`) as the leader and port 9200 (`replication-node2`) as the follower cluster.
+在本範例中，使用連接埠 9201（`replication-node1`）作為領導者叢集，連接埠 9200（`replication-node2`）作為追隨者叢集。
 
-To get the IP address for the leader cluster, first identify its container ID:
+若要取得領導者叢集的 IP 位址，請先識別其容器 ID：
 
 ```bash
 docker ps
@@ -136,24 +137,24 @@ CONTAINER ID    IMAGE                                       PORTS               
 731f5e8b0f4b    opensearchproject/opensearch:{{site.opensearch_version}}   9300/tcp, 0.0.0.0:9201->9200/tcp, 0.0.0.0:9700->9600/tcp   replication-node1
 ```
 
-Then get that container's IP address:
+然後取得該容器的 IP 位址：
 
 ```bash
 docker inspect --format='{% raw %}{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}{% endraw %}' 731f5e8b0f4b
 172.22.0.3
 ```
 
-## Set up a cross-cluster connection
+## 建立跨叢集連線
 
-Cross-cluster replication follows a "pull" model, so most changes occur on the follower cluster, not the leader cluster. 
+跨叢集複製採用「提取」模型，因此大多數變更發生在追隨者叢集，而非領導者叢集。
 
-### Connection modes to a remote cluster
+### 遠端叢集的連線模式
 
-The connection modes include _sniff mode_ and _proxy mode_.
+連線模式包括 _sniff mode_ 與 _proxy mode_。
 
-In sniff mode, the follower cluster establishes a remote connection to the leader cluster by specifying a name and a list of seed nodes from the leader cluster. During the connection setup, the follower cluster retrieves the leader cluster's state from one of the provided seed nodes. This mode requires that the publish addresses of the seed nodes in the leader cluster are accessible from the follower cluster. Sniff mode is the default connection mode.
+在 sniff 模式中，追隨者叢集透過指定名稱以及來自領導者叢集的種子節點清單，建立與領導者叢集的遠端連線。在連線設定期間，追隨者叢集會從其中一個提供的種子節點擷取領導者叢集的狀態。此模式要求領導者叢集中種子節點的發布位址必須可從追隨者叢集存取。Sniff 模式是預設的連線模式。
 
-On the follower cluster, add the IP address (with port 9300) for each seed node. Because this is a single-node cluster, you only have one seed node. Provide a descriptive name for the connection, which you'll use in the request to start replication:
+在追隨者叢集上，為每個種子節點新增 IP 位址（含連接埠 9300）。由於這是單一節點叢集，您只有一個種子節點。請為連線提供一個描述性名稱，您將在啟動複製的請求中使用它：
 
 ```bash
 curl -XPUT -k -H 'Content-Type: application/json' -u 'admin:<custom-admin-password>' 'https://localhost:9200/_cluster/settings?pretty' -d '
@@ -171,7 +172,7 @@ curl -XPUT -k -H 'Content-Type: application/json' -u 'admin:<custom-admin-passwo
 ```
 
 
-In proxy mode, the follower cluster establishes a remote connection to the leader cluster by specifying a name and a single proxy address. During the connection setup, a configurable number of socket connections to the provided proxy address are opened. The proxy's responsibility is to direct these connections to the appropriate nodes in the leader cluster. Unlike other connection modes, proxy mode does not require the nodes in the leader cluster to have publicly accessible publish addresses: 
+在 proxy 模式中，追隨者叢集透過指定名稱與單一 proxy 位址，建立與領導者叢集的遠端連線。在連線設定期間，會開啟可設定的數量的 socket 連線到提供的 proxy 位址。proxy 的職責是將這些連線導向領導者叢集中適當的節點。與其他連線模式不同，proxy 模式不要求領導者叢集中的節點具有可公開存取的發布位址：
 
 ```bash
 curl -XPUT -k -H 'Content-Type: application/json' -u 'admin:<custom-admin-password>' 'https://localhost:9200/_cluster/settings?pretty' -d '
@@ -189,15 +190,15 @@ curl -XPUT -k -H 'Content-Type: application/json' -u 'admin:<custom-admin-passwo
 }'
 ```
 
-## Start replication
+## 啟動複製
 
-To get started, create an index called `leader-01` on the leader cluster:
+首先，在領導者叢集上建立名為 `leader-01` 的索引：
 
 ```bash
 curl -XPUT -k -H 'Content-Type: application/json' -u 'admin:<custom-admin-password>' 'https://localhost:9201/leader-01?pretty'
 ```
 
-Then start replication from the follower cluster. In the request body, provide the connection name and leader index that you want to replicate, along with the security roles you want to use:
+然後從追隨者叢集啟動複製。在請求本文中，提供連線名稱與您要複製的領導者索引，以及您要使用的安全性角色：
 
 ```bash
 curl -XPUT -k -H 'Content-Type: application/json' -u 'admin:<custom-admin-password>' 'https://localhost:9200/_plugins/_replication/follower-01/_start?pretty' -d '
@@ -211,14 +212,14 @@ curl -XPUT -k -H 'Content-Type: application/json' -u 'admin:<custom-admin-passwo
 }'
 ```
 
-If the Security plugin is disabled, omit the `use_roles` parameter. If it's enabled, however, you must specify the leader and follower cluster roles that OpenSearch will use to authenticate the request. This example uses `all_access` for simplicity, but we recommend creating a replication user on each cluster and [mapping it accordingly]({{site.url}}{{site.baseurl}}/replication-plugin/permissions/#map-the-leader-and-follower-cluster-roles).
+如果 Security 外掛程式已停用，請省略 `use_roles` 參數。但如果已啟用，您必須指定 OpenSearch 用來驗證請求的領導者與追隨者叢集角色。本範例為簡化起見使用 `all_access`，但我們建議在每個叢集上建立複製使用者並[進行相應對應]({{site.url}}{{site.baseurl}}/replication-plugin/permissions/#map-the-leader-and-follower-cluster-roles)。
 {: .tip }
 
-This command creates an identical read-only index named `follower-01` on the follower cluster that continuously stays updated with changes to the `leader-01` index on the leader cluster. Starting replication creates a new follower index---you can't convert an existing index to a follower index. 
+此命令會在追隨者叢集上建立一個名為 `follower-01` 的相同唯讀索引，該索引會持續隨領導者叢集上 `leader-01` 索引的變更保持更新。啟動複製會建立新的追隨者索引——您無法將現有索引轉換為追隨者索引。 
 
-## Confirm replication
+## 確認複寫
 
-After replication starts, get the status:
+複寫開始後，取得狀態：
 
 ```bash
 curl -XGET -k -u 'admin:<custom-admin-password>' 'https://localhost:9200/_plugins/_replication/follower-01/_status?pretty'
@@ -237,17 +238,17 @@ curl -XGET -k -u 'admin:<custom-admin-password>' 'https://localhost:9200/_plugin
 }
 ```
 
-Possible statuses are `SYNCING`, `BOOTSTRAPPING`, `PAUSED`, and `REPLICATION NOT IN PROGRESS`. 
+可能的狀態有 `SYNCING`、`BOOTSTRAPPING`、`PAUSED` 和 `REPLICATION NOT IN PROGRESS`。
 
-The leader and follower checkpoint values begin as negative numbers and reflect the shard count (-1 for one shard, -5 for five shards, and so on). The values increment with each change and illustrate how many updates the follower is behind the leader. If the indexes are fully synced, the values are the same.
+領導者和追隨者的檢查點值一開始為負數，並反映分片數量（一個分片為 -1，五個分片為 -5，依此類推）。這些值會隨著每次變更而遞增，並顯示追隨者落後領導者多少個更新。如果索引已完全同步，這些值會相同。
 
-To confirm that replication is actually happening, add a document to the leader index:
+若要確認複寫確實正在進行，請在領導者索引中新增一份文件：
 
 ```bash
 curl -XPUT -k -H 'Content-Type: application/json' -u 'admin:<custom-admin-password>' 'https://localhost:9201/leader-01/_doc/1?pretty' -d '{"The Shining": "Stephen King"}'
 ```
 
-Then validate the replicated content on the follower index:
+然後在追隨者索引上驗證複寫的內容：
 
 ```bash
 curl -XGET -k -u 'admin:<custom-admin-password>' 'https://localhost:9200/follower-01/_search?pretty'
@@ -264,24 +265,24 @@ curl -XGET -k -u 'admin:<custom-admin-password>' 'https://localhost:9200/followe
   }]
 }
 ```
-### The `.replication-metadata-store` index
+### `.replication-metadata-store` 索引
 
-The `.replication-metadata-store` index is a persistent data store for replication-related metadata and auto-follow rules inside of a cluster. It stores the replication metadata of each index being replicated from the leader cluster to the follower cluster.
+`.replication-metadata-store` 索引是叢集內複寫相關中繼資料與自動跟隨規則的持久資料存放區。它會儲存從領導者叢集複寫到追隨者叢集的每個索引的複寫中繼資料。
 
-After the first replication API trigger, the `.replication-metadata-store` index is created inside the follower cluster. Any updates or additions to replication jobs or rules are also updated in the index. This enables the plugin to maintain a comprehensive record of replication status and rules across clusters.
+在第一次觸發複寫 API 之後，`.replication-metadata-store` 索引會在追隨者叢集內建立。複寫任務或規則的任何更新或新增也會更新到該索引中。這讓外掛程式能夠維護跨叢集的複寫狀態與規則的完整記錄。
    
- `.replication-metdata-store` is a hidden index.
+ `.replication-metdata-store` 是隱藏索引。
  {: .note}
 
-## Pause and resume replication
+## 暫停與繼續複寫
 
-You can temporarily pause replication of an index if you need to remediate issues or reduce load on the leader cluster:
+如果您需要修正問題或降低領導者叢集的負載，可以暫時暫停索引的複寫：
 
 ```bash
 curl -XPOST -k -H 'Content-Type: application/json' -u 'admin:<custom-admin-password>' 'https://localhost:9200/_plugins/_replication/follower-01/_pause?pretty' -d '{}'
 ```
 
-To confirm that replication is paused, get the status:
+若要確認複寫已暫停，取得狀態：
 
 ```bash
 curl -XGET -k -u 'admin:<custom-admin-password>' 'https://localhost:9200/_plugins/_replication/follower-01/_status?pretty'
@@ -295,27 +296,27 @@ curl -XGET -k -u 'admin:<custom-admin-password>' 'https://localhost:9200/_plugin
 }
 ```
 
-When you're done making changes, resume replication:
+完成變更後，繼續複寫：
 
 ```bash
 curl -XPOST -k -H 'Content-Type: application/json' -u 'admin:<custom-admin-password>' 'https://localhost:9200/_plugins/_replication/follower-01/_resume?pretty' -d '{}'
 ```
 
-When replication resumes, the follower index picks up any changes that were made to the leader index while replication was paused.
+複寫繼續後，追隨者索引會接續複寫暫停期間對領導者索引所做的任何變更。
 
-You can't resume replication after it's been paused longer than the retention lease period because the retention lease expires. To recover, use force-resume, which restores the follower index from a snapshot of the leader. For more information, see [Force-resume replication]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/force-resume/).
+如果複寫暫停的時間超過保留租約期間，您就無法繼續複寫，因為保留租約會過期。若要復原，請使用強制繼續，這會從領導者的快照還原追隨者索引。如需詳細資訊，請參閱[強制繼續複寫]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/force-resume/)。
 
-## Stop replication
+## 停止複寫
 
-When you no longer need to replicate an index, terminate replication from the follower cluster:
+當您不再需要複寫某個索引時，請從追隨者叢集終止複寫：
 
 ```bash
 curl -XPOST -k -H 'Content-Type: application/json' -u 'admin:<custom-admin-password>' 'https://localhost:9200/_plugins/_replication/follower-01/_stop?pretty' -d '{}'
 ```
 
-When you stop replication, the follower index un-follows the leader and becomes a standard index that you can write to. You can't restart replication after stopping it. 
+當您停止複寫時，追隨者索引會取消跟隨領導者，並成為您可寫入的標準索引。停止複寫後就無法重新開始複寫。
 
-Get the status to confirm that the index is no longer being replicated:
+取得狀態以確認該索引不再被複寫：
 
 ```bash
 curl -XGET -k -u 'admin:<custom-admin-password>' 'https://localhost:9200/_plugins/_replication/follower-01/_status?pretty'
@@ -325,6 +326,6 @@ curl -XGET -k -u 'admin:<custom-admin-password>' 'https://localhost:9200/_plugin
 }
 ```
 
-You can further confirm that replication is stopped by making modifications to the leader index and confirming they don't show up on the follower index.
+您也可以對領導者索引進行修改，並確認這些修改不會出現在追隨者索引上，進一步確認複寫已停止。
 
 

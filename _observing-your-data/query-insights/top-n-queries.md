@@ -1,39 +1,40 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Top N queries
+title: "前 N 筆查詢"
 parent: Query insights
 nav_order: 10
 ---
 
-# Top N queries
+# 前 N 筆查詢
 
-Monitoring the top N queries using query insights allows you to gain real-time visibility into the queries with the highest latency or resource consumption in a specified time period (for example, the last hour).
+使用查詢洞察監視前 N 筆查詢，可讓您即時掌握指定時間範圍內 (例如過去一小時) 延遲最高或資源耗用最多的查詢。
 
-## Configuring top N query monitoring
+## 設定前 N 筆查詢監視
 
-You can configure top N query monitoring by the following metric types:
+您可以依下列指標類型設定前 N 筆查詢監視：
 
 - `latency`
 - `cpu`
 - `memory`
 
-Each metric has a set of corresponding settings:
+每個指標都有一組對應的設定：
 
-- `search.insights.top_queries.<metric>.enabled`: Set to `true` to [enable top N query monitoring](#enabling-top-n-query-monitoring) by the metric.
-- `search.insights.top_queries.<metric>.window_size`: [Configure the window size of the top N queries](#configuring-the-window-size) by the metric.
-- `search.insights.top_queries.<metric>.top_n_size`: [Specify the value of N for the top N queries by the metric](#configuring-the-value-of-n).
+- `search.insights.top_queries.<metric>.enabled`：設為 `true` 以依該指標[啟用前 N 筆查詢監視](#enabling-top-n-query-monitoring)。
+- `search.insights.top_queries.<metric>.window_size`：[設定該指標前 N 筆查詢的視窗大小](#configuring-the-window-size)。
+- `search.insights.top_queries.<metric>.top_n_size`：[指定該指標前 N 筆查詢的 N 值](#configuring-the-value-of-n)。
 
-For example, to enable top N query monitoring by CPU usage, set `search.insights.top_queries.cpu.enabled` to `true`. For more information about ways to specify dynamic settings, see [Dynamic settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/#dynamic-settings).
+例如，若要依 CPU 使用率啟用前 N 筆查詢監視，請將 `search.insights.top_queries.cpu.enabled` 設為 `true`。如需指定動態設定的各種方式詳細資訊，請參閱[動態設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/#dynamic-settings)。
 
-For production deployments requiring fine-grained API access control (such as dashboard nodes with network segmentation), use the [Query Insights Settings API]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/settings-api/) instead of the Cluster Settings API shown on this page. The Query Insights Settings API provides equivalent functionality with enhanced security and a simplified structure.
+若為需要細緻 API 存取控制的正式環境部署 (例如具有網路區隔的儀表板節點)，請改用 [Query Insights Settings API]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/settings-api/)，而非本頁所示的 Cluster Settings API。Query Insights Settings API 提供同等功能，並具備更強的安全性與更簡化的結構。
 {: .tip}
 
-It's important to exercise caution when enabling this feature because it can consume system resources.
+啟用此功能時請務必謹慎，因為它可能耗用系統資源。
 {: .important}
 
-## Enabling top N query monitoring 
+## 啟用前 N 筆查詢監視 
 
-When you install the `query-insights` plugin, top N query monitoring is enabled by default. To disable top N query monitoring, update the dynamic cluster settings for the desired metric types. For example, to disable monitoring of top N queries by latency, update the `search.insights.top_queries.latency.enabled` setting:
+當您安裝 `query-insights` 外掛程式時，前 N 筆查詢監視預設為啟用。若要停用前 N 筆查詢監視，請更新所需指標類型的動態叢集設定。例如，若要停用依延遲監視前 N 筆查詢，請更新 `search.insights.top_queries.latency.enabled` 設定：
 
 ```json
 PUT _cluster/settings
@@ -45,9 +46,9 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-## Configuring the window size
+## 設定視窗大小
 
-To configure the monitoring window size, update the `window_size` setting for the desired metric type. The default `window_size` is `5m`. For example, to collect the top N queries by latency in a 60-minute window, update the `search.insights.top_queries.latency.window_size` setting:
+若要設定監視視窗大小，請更新所需指標類型的 `window_size` 設定。預設的 `window_size` 為 `5m`。例如，若要在 60 分鐘的視窗內收集依延遲排序的前 N 筆查詢，請更新 `search.insights.top_queries.latency.window_size` 設定：
 
 ```json
 PUT _cluster/settings
@@ -59,9 +60,9 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-## Configuring the value of N 
+## 設定 N 值 
 
-To configure the value of N, update the `top_n_size` setting for the desired metric type. The default `top_n_size` is `10`. For example, to collect the top 20 queries by latency, update the `insights.top_queries.latency.top_n_size` setting:
+若要設定 N 值，請更新所需指標類型的 `top_n_size` 設定。預設的 `top_n_size` 為 `10`。例如，若要收集依延遲排序的前 20 筆查詢，請更新 `insights.top_queries.latency.top_n_size` 設定：
 
 ```json
 PUT _cluster/settings
@@ -73,9 +74,9 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-## Configuring source truncation
+## 設定來源截斷
 
-To optimize storage usage, you can configure the maximum length (in characters) of the query source stored in top N query records. The default `max_source_length` is `524288` characters (1 MB). For example, to limit the source length to 1000 characters, update the `search.insights.top_queries.max_source_length` setting:
+為最佳化儲存空間使用量，您可以設定前 N 筆查詢記錄中所儲存查詢來源的最大長度 (以字元為單位)。預設的 `max_source_length` 為 `524288` 個字元 (1 MB)。例如，若要將來源長度限制為 1000 個字元，請更新 `search.insights.top_queries.max_source_length` 設定：
 
 ```json
 PUT _cluster/settings
@@ -87,36 +88,36 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-Setting this value to `0` completely truncates the source, storing no query source information. When the source exceeds the maximum length, it is truncated exactly at the character limit, and the `source_truncated` field in the response is set to `true`.
+將此值設為 `0` 會完全截斷來源，不儲存任何查詢來源資訊。當來源超過最大長度時，會剛好在字元限制處截斷，且回應中的 `source_truncated` 欄位會設為 `true`。
 {: .note}
 
 
-## Monitoring current top N queries 
+## 監視目前的前 N 筆查詢 
 
-You can use the Insights API endpoint to retrieve the top N queries for the current time window. This API returns top N `latency` results by default.
+您可以使用 Insights API 端點，擷取目前時間視窗的前 N 筆查詢。此 API 預設會傳回前 N 筆 `latency` 結果。
 
 ```json
 GET /_insights/top_queries
 ```
 {% include copy-curl.html %}
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-Parameter | Data type     | Description
+參數 | 資料類型     | 說明
 :--- |:---------| :---
-`type`    | String   | The metric type for which to retrieve top N query data. Results will be sorted in descending order based on this metric. Valid values are `latency`, `cpu`, and `memory`. Default is `latency`.
-`from`    | String | The start of the time range for fetching historical top N queries. For more information, see [Monitoring historical top N queries](#monitoring-historical-top-n-queries).
-`to`      | String | The end of the time range for fetching historical top N queries. For more information, see [Monitoring historical top N queries](#monitoring-historical-top-n-queries).
-`id`      | String   | The ID of a specific top query record to retrieve.
-`verbose` | Boolean  | Indicates whether to return verbose output. Default is `true`.
+`type`    | 字串   | 要擷取前 N 筆查詢資料的指標類型。結果將依此指標以遞減順序排序。有效值為 `latency`、`cpu` 及 `memory`。預設為 `latency`。
+`from`    | 字串 | 擷取歷史前 N 筆查詢之時間範圍的開始時間。如需詳細資訊，請參閱[監視歷史前 N 筆查詢](#monitoring-historical-top-n-queries)。
+`to`      | 字串 | 擷取歷史前 N 筆查詢之時間範圍的結束時間。如需詳細資訊，請參閱[監視歷史前 N 筆查詢](#monitoring-historical-top-n-queries)。
+`id`      | 字串   | 要擷取之特定前 N 筆查詢記錄的 ID。
+`verbose` | 布林值  | 指出是否傳回詳細輸出。預設為 `true`。
 
-### Example response
+### 範例回應
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -259,32 +260,32 @@ Parameter | Data type     | Description
 
 </details>
 
-If your query returns no results, ensure that top N query monitoring is enabled for the target metric type and that search requests were made within the current [time window](#configuring-the-window-size).
+如果您的查詢未傳回任何結果，請確認目標指標類型已啟用前 N 筆查詢監視，且搜尋請求是在目前的[時間視窗](#configuring-the-window-size)內發出。
 {: .important}
 
-## Monitoring historical top N queries
+## 監視歷史前 N 筆查詢
 
-To query historical top N results, specify a time range with the `from` and `to` parameters in ISO 8601 format: `YYYY-MM-DD'T'HH:mm:ss.SSSZ`.
-For example, to retrieve the top N queries from August 25, 2024, at 15:00 UTC to August 30, 2024, at 17:00 UTC, send the following request: 
+若要查詢歷史前 N 筆結果，請使用 `from` 與 `to` 參數以 ISO 8601 格式指定時間範圍：`YYYY-MM-DD'T'HH:mm:ss.SSSZ`。
+例如，若要擷取 2024 年 8 月 25 日 15:00 UTC 至 2024 年 8 月 30 日 17:00 UTC 之間的前 N 筆查詢，請傳送以下請求：
 
 ```json
 GET /_insights/top_queries?from=2024-08-25T15:00:00.000Z&to=2024-08-30T17:00:00.000Z
 ```
 {% include copy-curl.html %}
 
-To view historical query data, the exporter type must be set to `local_index`. For more information, see [Configuring a local index exporter](#configuring-a-local-index-exporter).
+若要檢視歷史查詢資料，匯出器類型必須設定為 `local_index`。如需更多資訊，請參閱[設定本機索引匯出器](#configuring-a-local-index-exporter)。
 {: .important}
 
-## Exporting top N query data
+## 匯出前 N 筆查詢資料
 
-You can configure your desired exporter to export top N query data to different sinks, allowing for better monitoring and analysis of your OpenSearch queries. The following exporters are supported:
-- [Debug exporter](#configuring-a-debug-exporter)
-- [Local index exporter](#configuring-a-local-index-exporter)
-- [Remote repository exporter](#configuring-a-remote-repository-exporter)
+您可以設定所需的匯出器，將前 N 筆查詢資料匯出至不同的接收端，以便更好地監視與分析您的 OpenSearch 查詢。支援下列匯出器：
+- [Debug 匯出器](#configuring-a-debug-exporter)
+- [本機索引匯出器](#configuring-a-local-index-exporter)
+- [遠端儲存庫匯出器](#configuring-a-remote-repository-exporter)
 
-### Configuring a debug exporter
+### 設定 debug 匯出器
 
-To use the debug exporter, set the exporter type to `debug`:
+若要使用 debug 匯出器，請將匯出器類型設定為 `debug`：
 
 ```json
 PUT _cluster/settings
@@ -296,11 +297,11 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-### Configuring a local index exporter
+### 設定本機索引匯出器
 
-The default exporter is `local_index`. A local index exporter allows you to save top N query data to indexes that are automatically created in your OpenSearch domain. Query Insights creates these indexes following the naming pattern `top_queries-YYYY.MM.dd-hashcode`, where `hashcode` is a 5-digit number generated based on the current UTC date. A new index is created daily. For historical top N lookups using the Top Queries API or the Query Insights dashboard, you must enable the local index exporter.
+預設匯出器為 `local_index`。本機索引匯出器可讓您將前 N 筆查詢資料儲存至在 OpenSearch 網域中自動建立的索引。Query Insights 會依照命名模式 `top_queries-YYYY.MM.dd-hashcode` 建立這些索引，其中 `hashcode` 是根據目前 UTC 日期產生的 5 位數數字。每天會建立一個新索引。若要使用 Top Queries API 或 Query Insights 儀表板查詢歷史前 N 筆資料，您必須啟用本機索引匯出器。
 
-To use the local index exporter, set the exporter type to `local_index`:
+若要使用本機索引匯出器，請將匯出器類型設定為 `local_index`：
 
 ```json
 PUT _cluster/settings
@@ -312,9 +313,9 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-Use the `delete_after_days` setting (integer) to specify the number of days after which local indexes are automatically deleted. Query Insights runs a job once per day at 00:05 UTC to delete top N local indexes older than the specified number of days. The default value for `delete_after_days` is 7, with valid values ranging from `1` to `180`.
+使用 `delete_after_days` 設定（整數）指定本機索引在多少天後自動刪除。Query Insights 每天於 00:05 UTC 執行一次工作，刪除超過指定天數、存放前 N 筆查詢資料的本機索引。`delete_after_days` 的預設值為 7，有效值範圍為 `1` 至 `180`。
 
-For example, to delete local indexes older than 10 days, send the following request:
+例如，若要刪除超過 10 天的本機索引，請傳送以下請求：
 
 ```json
 PUT _cluster/settings
@@ -326,16 +327,16 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-### Configuring a remote repository exporter
+### 設定遠端儲存庫匯出器
 
-The remote repository exporter allows you to export top N query insights data to remote blob store repositories, operating independently alongside existing local index and debug exporters. Exported data is organized in JSON files by timestamp following the pattern `{path}/top-queries/yyyy/MM/dd/HH/mm'UTC'/{node-id}-{metric-type}.json`. This option provides a cheaper, longer-term storage solution compared to local indexes. Query Insights does not read from or rely on remote repository data, so you can use the exported data to build custom dashboards or export it for other use cases. Data retention is managed by the bucket configuration, not OpenSearch.
+遠端儲存庫匯出器可讓您將前 N 筆查詢洞察資料匯出至遠端 blob 儲存庫，並與現有的本機索引匯出器和 debug 匯出器獨立並行運作。匯出的資料會依時間戳記以 JSON 檔案組織，遵循模式 `{path}/top-queries/yyyy/MM/dd/HH/mm'UTC'/{node-id}-{metric-type}.json`。相較於本機索引，此選項提供更便宜、更長期的儲存解決方案。Query Insights 不會讀取或依賴遠端儲存庫資料，因此您可以使用匯出的資料建立自訂儀表板，或將其匯出以供其他用途使用。資料保留由儲存貯體組態管理，而非由 OpenSearch 管理。
 
-The remote repository exporter supports only Amazon S3 repositories.
+遠端儲存庫匯出器僅支援 Amazon S3 儲存庫。
 {: .note}
 
-Before configuring the remote repository exporter, you must register the remote repository. For more information, see [Register repository]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/#register-repository).
+在設定遠端儲存庫匯出器之前，您必須先註冊遠端儲存庫。如需更多資訊，請參閱[註冊儲存庫]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/#register-repository)。
 
-After registering the repository, configure the remote exporter using the following cluster settings:
+註冊儲存庫後，請使用下列叢集設定來設定遠端匯出器：
 
 ```json
 PUT _cluster/settings
@@ -349,21 +350,21 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-The following table lists the available remote exporter settings.
+下表列出可用的遠端匯出器設定。
 
-Setting | Data type | Default | Description
+設定 | 資料類型 | 預設值 | 說明
 :--- | :--- | :--- | :---
-`search.insights.top_queries.exporter.remote.enabled` | Boolean | `false` | Enables the remote repository exporter.
-`search.insights.top_queries.exporter.remote.repository` | String | `null` | The name of the registered snapshot repository to use for exporting data. Required when remote export is enabled.
-`search.insights.top_queries.exporter.remote.path` | String | `query-insights` | The base path within the repository for organizing exported files.
+`search.insights.top_queries.exporter.remote.enabled` | 布林值 | `false` | 啟用遠端儲存庫匯出器。
+`search.insights.top_queries.exporter.remote.repository` | 字串 | `null` | 用於匯出資料的已註冊快照儲存庫名稱。啟用遠端匯出時為必要。
+`search.insights.top_queries.exporter.remote.path` | 字串 | `query-insights` | 儲存庫內用於組織匯出檔案的基本路徑。
 
-## Excluding indexes from top N queries
+## 從前 N 筆查詢中排除索引
 
-You can exclude search queries from the top N query list based on the indexes they target. This is useful when certain indexes are known to have long-running queries and don't need to be monitored.
+您可以根據搜尋查詢的目標索引，將其從前 N 筆查詢清單中排除。當已知某些索引存在長時間執行的查詢且不需要監視時，這項功能非常實用。
 
-A query is excluded if it searches any shard that belongs to an index listed in `excluded_indices`.
+如果查詢搜尋了屬於 `excluded_indices` 所列索引的任何分片，則該查詢會被排除。
 
-By default, this setting is `null` (all indexes are included). To exclude specific indexes, provide a comma-separated list of index names in the `search.insights.top_queries.excluded_indices` setting:
+預設情況下，此設定為 `null`（包含所有索引）。若要排除特定索引，請在 `search.insights.top_queries.excluded_indices` 設定中提供以逗號分隔的索引名稱清單：
 
 ```json
 PUT _cluster/settings

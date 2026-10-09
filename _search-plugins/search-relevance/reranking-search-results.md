@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reranking search results
+title: "重新排序搜尋結果"
 parent: Optimizing search quality
 has_children: true
 nav_order: 50
 ---
 
-# Reranking search results
-**Introduced 2.12**
+# 重新排序搜尋結果
+**於 2.12 版推出**
 {: .label .label-purple }
 
-You can rerank search results using a [`rerank` processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) in order to improve search relevance. To implement reranking, you need to configure a [search pipeline]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/) that runs at search time. The search pipeline intercepts search results and applies the `rerank` processor to them. The `rerank` processor evaluates the search results and sorts them based on the new scores.
+您可以使用 [`rerank` 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) 重新排序搜尋結果，以改善搜尋相關性。若要實作重新排序，您需要設定一個在搜尋時執行的 [搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/)。搜尋管線會攔截搜尋結果，並對其套用 `rerank` 處理器。`rerank` 處理器會評估搜尋結果，並根據新的分數加以排序。
 
-You can rerank results in the following ways:
+您可以透過下列方式重新排序結果：
 
-- [Using a cross-encoder model]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-cross-encoder/)
-- [By a document field]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field/)
-- [By a field using a cross-encoder]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-cross-encoder/)
-- [By a field using a late interaction model]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-late-interaction/)
+- [使用 cross-encoder 模型]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-cross-encoder/)
+- [依據文件欄位]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field/)
+- [依據使用 cross-encoder 的欄位]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-cross-encoder/)
+- [依據使用 late interaction 模型的欄位]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-late-interaction/)
 
-## Reranking in agentic search
+## 代理程式搜尋中的重新排序
 
-If you're using agentic search, see [Reranking agentic search results]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/rerank-agentic-search-results/) for information about reranking search results within agentic search pipelines.
+如果您使用代理程式搜尋，請參閱[重新排序代理程式搜尋結果]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/rerank-agentic-search-results/)，以瞭解在代理程式搜尋管線中重新排序搜尋結果的相關資訊。
 
-## Using rerank and normalization processors together
+## 同時使用 rerank 與 normalization 處理器
 
-When you use a rerank processor in conjunction with a [normalization processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/) and a hybrid query, the rerank processor alters the final document scores. This is because the rerank processor operates after the normalization processor in the search pipeline.
+當您將 rerank 處理器與 [normalization 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/)及混合查詢搭配使用時，rerank 處理器會改變最終的文件分數。這是因為在搜尋管線中，rerank 處理器是在 normalization 處理器之後執行。
 {: .note}
 
-The processing order is as follows:
+處理順序如下：
 
-- Normalization processor: This processor normalizes the document scores based on the configured normalization method. For more information, see [Normalization processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/).
-- Rerank processor: Following normalization, the rerank processor further adjusts the document scores. This adjustment can significantly impact the final ordering of search results.
+- Normalization 處理器：此處理器會根據設定的 normalization 方法將文件分數標準化。如需更多資訊，請參閱 [normalization 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/)。
+- Rerank 處理器：在 normalization 之後，rerank 處理器會進一步調整文件分數。此調整可能會大幅影響搜尋結果的最終排序。
 
-This processing order has the following implications:
+此處理順序具有下列影響：
 
-- Score modification: The rerank processor modifies the scores that were initially adjusted by the normalization processor, potentially leading to different ranking results than initially expected.
-- Hybrid queries: In the context of hybrid queries, where multiple types of queries and scoring mechanisms are combined, this behavior is particularly noteworthy. The combined scores from the initial query are normalized first and then reranked, resulting in a two-phase scoring modification.
+- 分數修改：rerank 處理器會修改先前由 normalization 處理器調整過的分數，可能導致與最初預期不同的排序結果。
+- 混合查詢：在混合查詢的情境中，多種查詢類型與評分機制會結合在一起，此行為尤其值得注意。初始查詢產生的合併分數會先標準化，然後再重新排序，形成兩階段的分數修改。
 

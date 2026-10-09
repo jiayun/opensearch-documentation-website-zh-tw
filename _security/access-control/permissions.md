@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Permissions
+title: "權限"
 parent: Access control
 nav_order: 75
 redirect_from:
   - /security-plugin/access-control/permissions/
 ---
 
-# Security permissions
+# 安全性權限
 
-Each permission in the Security plugin controls access to some action that the OpenSearch cluster can perform, such as indexing a document or checking cluster health.
+Security 外掛程式中的每個權限會控制對 OpenSearch 叢集可執行之特定動作的存取，例如將文件編製索引或檢查叢集健康狀態。
 
-Most permissions are self-describing. For example, `cluster:admin/ingest/pipeline/get` lets you retrieve information about ingest pipelines. _In many cases_, a permission correlates to a specific REST API operation, such as `GET _ingest/pipeline`.
+大多數權限的名稱本身即說明其用途。例如，`cluster:admin/ingest/pipeline/get` 可讓您擷取資料匯入管線的相關資訊。_在許多情況下_，權限會對應到特定的 REST API 操作，例如 `GET _ingest/pipeline`。
 
-Despite this correlation, permissions do **not** directly map to REST API operations. Operations such as `POST _bulk` and `GET _msearch` can access many indexes and perform many actions in a single request. Even a simple request, such as `GET _cat/nodes`, performs several actions in order to generate its response.
+儘管有此對應關係，權限**不會**直接對應到 REST API 操作。`POST _bulk` 和 `GET _msearch` 等操作可在單一請求中存取多個索引並執行多個動作。即使是像 `GET _cat/nodes` 這樣的簡單請求，也會執行多個動作才能產生其回應。
 
-In short, controlling access to the REST API is insufficient. Instead, the Security plugin controls access to the underlying OpenSearch actions.
+簡而言之，僅控制對 REST API 的存取並不足夠。反之，Security 外掛程式控制的是對底層 OpenSearch 動作的存取。
 
-For example, consider the following `_bulk` request:
+例如，請考慮下列 `_bulk` 請求：
 
 ```json
 POST _bulk
@@ -31,19 +32,19 @@ POST _bulk
 
 ```
 
-For this request to succeed, you must have the following permissions for `test-index`:
+若要讓此請求成功，您必須具備 `test-index` 的下列權限：
 
 - `indices:data/write/bulk*`
 - `indices:data/write/delete`
 - `indices:data/write/index`
 - `indices:data/write/update`
 
-These permissions also allow you add, update, or delete documents (e.g. `PUT test-index/_doc/tt0816711`), because they govern the underlying OpenSearch actions of indexing and deleting documents rather than a specific API path and HTTP method.
+這些權限也可讓您新增、更新或刪除文件（例如 `PUT test-index/_doc/tt0816711`），因為它們控管的是將文件編製索引及刪除文件等底層 OpenSearch 動作，而非特定的 API 路徑與 HTTP 方法。
 
 
-## Test permissions
+## 測試權限
 
-If you want a user to have the absolute minimum set of permissions necessary to perform some function—the [principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege)—the best way is to send representative requests to your cluster as a new test user. In the case of a permissions error, the Security plugin is very explicit about which permissions are missing. Consider this request and response:
+如果您想讓使用者只擁有執行某項功能所需的絕對最低權限組合——即[最小權限原則](https://en.wikipedia.org/wiki/Principle_of_least_privilege)——最好的做法是以新的測試使用者身分，將具代表性的請求傳送至您的叢集。發生權限錯誤時，Security 外掛程式會非常明確地指出缺少哪些權限。請考慮下列請求和回應：
 
 ```json
 GET _cat/shards?v
@@ -59,7 +60,7 @@ GET _cat/shards?v
 }
 ```
 
-The preceding request runs the actual operation to test permissions. To simulate the check without executing the operation, set the `perform_permission_check` query parameter to `true`:
+上述請求會執行實際操作來測試權限。若要在不執行操作的情況下模擬檢查，請將 `perform_permission_check` 查詢參數設為 `true`：
 
 ```json
 PUT /my_index/_doc/1?perform_permission_check=true
@@ -69,9 +70,9 @@ PUT /my_index/_doc/1?perform_permission_check=true
 ```
 {% include copy-curl.html security=true %}
 
-The response indicates whether the user has sufficient permissions to perform the operation and lists any missing privileges. This option is particularly useful for safely testing operations such as `POST`, `PUT`, and `DELETE`.
+回應會指出使用者是否具備足夠權限可執行該操作，並列出任何缺少的權限。此選項特別適合安全地測試 `POST`、`PUT` 和 `DELETE` 等操作。
 
-When the user has sufficient permissions, the response appears similar to the following:
+當使用者具備足夠權限時，回應會類似下列內容：
 
 ```json
 {
@@ -80,7 +81,7 @@ When the user has sufficient permissions, the response appears similar to the fo
 }
 ```
 
-When the user does not have sufficient permissions, the response lists the missing privileges:
+當使用者不具備足夠權限時，回應會列出缺少的權限：
 
 ```json
 {
@@ -89,19 +90,19 @@ When the user does not have sufficient permissions, the response lists the missi
 }
 ```
 
-[Create a user and a role]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/), map the role to the user, and start sending signed requests using cURL, Postman, or any other client. Then gradually add permissions to the role as you encounter errors. Even after you resolve one permissions error, the same request might generate new errors; the plugin only returns the first error it encounters, so keep trying until the request succeeds.
+[建立使用者和角色]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/)、將角色對應到使用者，然後開始使用 cURL、Postman 或任何其他用戶端傳送已簽署的請求。接著在遇到錯誤時，逐步將權限新增至角色。即使您解決了一個權限錯誤，同一個請求仍可能產生新的錯誤；此外掛程式只會傳回它遇到的第一個錯誤，因此請持續嘗試，直到請求成功為止。
 
-Rather than individual permissions, you can often achieve your desired security posture using a combination of the default action groups. See [Default action groups]({{site.url}}{{site.baseurl}}/security/access-control/default-action-groups/) for descriptions of the permissions that each group grants.
+您通常可以使用預設動作群組的組合來達成所需的安全性態勢，而不必逐一設定個別權限。如需各群組所授予權限的說明，請參閱[預設動作群組]({{site.url}}{{site.baseurl}}/security/access-control/default-action-groups/)。
 {: .tip }
 
 
-## System index permissions
+## 系統索引權限
 
-System index permissions are unique among other permissions in that they extend some traditional admin-only accessibility to non-admin users. These permissions give normal users the ability to modify any system index specified in the role or roles to which they are mapped. The exception to this is the security system index, `.opendistro_security`, which is used to store the Security plugin's configuration YAML files and remains accessible only to admins with an admin certificate.
+系統索引權限與其他權限不同之處，在於它們會將部分傳統上僅限管理員使用的存取權延伸給非管理員使用者。這些權限可讓一般使用者修改其對應角色中所指定的任何系統索引。唯一的例外是安全性系統索引 `.opendistro_security`，該索引用於儲存 Security 外掛程式的組態 YAML 檔案，且僅供持有管理員憑證的管理員存取。
 
-Along with standard index permissions, you specify system index permissions in the `roles.yml` configuration file under `index_permissions` (see [roles.yml]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#rolesyml)). This involves a two-step process: 1) adding the system index in the `index_patterns` section and 2) specifying `system:admin/system_index` in the role's `allowed_actions` section.
+除了標準索引權限之外，您還可以在 `roles.yml` 組態檔的 `index_permissions` 下指定系統索引權限（請參閱 [roles.yml]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#rolesyml)）。這涉及兩個步驟：1) 在 `index_patterns` 區段中新增系統索引，以及 2) 在角色的 `allowed_actions` 區段中指定 `system:admin/system_index`。
 
-For example, the system index permission that gives a user permission to modify the system index that stores configurations for the Alerting plugin is defined by the index pattern `.opendistro-alerting-config`, and its allowed action is defined as `system:admin/system_index`. The following role shows how this system index permission is configured along with other attributes:
+例如，授予使用者修改儲存 Alerting 外掛程式組態之系統索引權限的系統索引權限，是由索引模式 `.opendistro-alerting-config` 所定義，而其允許的動作則定義為 `system:admin/system_index`。下列角色顯示此系統索引權限如何與其他屬性一起設定：
 
 ```yml
 alerting-role:
@@ -118,16 +119,16 @@ alerting-role:
 ```
 {% include copy.html %}
 
-System index permissions also work with the wildcard to include all variations of a partial system index name. This can be useful, but it should be used with caution to avoid giving unintentional access to system indexes. When specifying system indexes for roles, keep the following considerations in mind:
+系統索引權限也可搭配萬用字元使用，以包含部分系統索引名稱的所有變化形式。這可能很有用，但應謹慎使用，以免無意間授予系統索引的存取權。為角色指定系統索引時，請留意下列考量事項：
 
-* Specifying the full name of a system index limits access to only that index: `.opendistro-alerting-config`.
-* Specifying a partial name for a system index along with the wildcard provides access to all system indexes that begin with that name: `.opendistro-anomaly-detector*`.
-* Although not recommended---given the wide-reaching access granted by this role definition---using `*` for the index pattern along with `system:admin/system_index` as an allowed action grants access to all system indexes.
+* 指定系統索引的完整名稱會將存取權限制為僅該索引：`.opendistro-alerting-config`。
+* 指定系統索引的部分名稱並搭配萬用字元，會授予開頭為該名稱之所有系統索引的存取權：`.opendistro-anomaly-detector*`。
+* 雖然不建議——因為此角色定義會授予廣泛的存取權——但使用 `*` 作為索引模式並以 `system:admin/system_index` 作為允許的動作，會授予所有系統索引的存取權。
 
-  Entering the wildcard `*` by itself under `allowed_actions` does not automatically grant access to system indexes. The allowed action `system:admin/system_index` must be explicitly added.
+  僅在 `allowed_actions` 下輸入萬用字元 `*` 並不會自動授予系統索引的存取權。必須明確新增允許的動作 `system:admin/system_index`。
   {: .note }
 
-The following example shows a role that grants access to all system indexes:
+下列範例顯示授予所有系統索引存取權的角色：
 
 ```yml
 index_permissions:
@@ -138,11 +139,11 @@ index_permissions:
 ```
 
 
-### Verifying system index access
+### 驗證系統索引存取
 
-You can use the [CAT indices]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-indices/) operation to see all indexes associated with any index pattern in your permissions configuration and verify that the permissions provide the access you intended. For example, if you want to verify a permission that includes system indexes beginning with the prefix `.kibana`, you can run the `GET /_cat/indices/.kibana*` call to return all indexes associated with that prefix.
+您可以使用 [CAT indices]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-indices/) 操作，查看與權限組態中任何索引模式相關聯的所有索引，並驗證權限是否提供您預期的存取權。例如，如果您想驗證包含開頭為前置詞 `.kibana` 之系統索引的權限，可以執行 `GET /_cat/indices/.kibana*` 呼叫，以傳回與該前置詞相關聯的所有索引。
 
-The following example response shows the three system indexes associated with the index pattern `.kibana*`:
+下列範例回應顯示與索引模式 `.kibana*` 相關聯的三個系統索引：
 
 ```json
 health | status | index | uuid | pri | rep | docs.count | docs.deleted | store.size | pri.store.size
@@ -152,16 +153,16 @@ green open .kibana_3 XmTePICFRoSNf5O5uLgwRw 1 1 220 0 468.3kb 232.1kb
 ```
 
 
-### Enabling system index permissions
+### 啟用系統索引權限
 
-Users that have the permission [`restapi:admin/roles`]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api) are able to map system index permissions to all users in the same way they would for a cluster or index permission in the `roles.yml` file. However, to preserve some control over this permission, the `plugins.security.system_indices.permission.enabled` setting allows you to enable or disable the system index permissions feature. This setting is disabled by default. To enable the system index permissions feature, set `plugins.security.system_indices.permissions.enabled` to `true`. For more information about this setting, see [Enabling user access to system indexes]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#enabling-user-access-to-system-indexes).
+具有 [`restapi:admin/roles`]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api) 權限的使用者，可以在 `roles.yml` 檔案中，使用與叢集或索引權限相同的方式，將系統索引權限對應至所有使用者。不過，為了保留對此權限的一定控制，`plugins.security.system_indices.permission.enabled` 設定可讓您啟用或停用系統索引權限功能。此設定預設為停用。若要啟用系統索引權限功能，請將 `plugins.security.system_indices.permissions.enabled` 設為 `true`。如需此設定的詳細資訊，請參閱[啟用使用者對系統索引的存取權]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#enabling-user-access-to-system-indexes)。
 
-Keep in mind that enabling this feature and mapping system index permissions to normal users gives those users access to indexes that may contain sensitive information and configurations essential to a cluster's health. We also recommend caution when mapping users to `restapi:admin/roles` because this permission gives a user not only the ability to assign the system index permission to another user but also the ability to self-assign access to any system index.
+請留意，啟用此功能並將系統索引權限對應至一般使用者，會讓這些使用者能夠存取可能包含敏感資訊及對叢集健全狀態至關重要之組態的索引。我們也建議您在將使用者對應至 `restapi:admin/roles` 時謹慎操作，因為此權限不僅讓使用者能將系統索引權限指派給其他使用者，也能自行指派任何系統索引的存取權給自己。
 {: .warning }
 
 ### `do_not_fail_on_forbidden`
 
-If a user attempts to query multiple indexes, some of which they lack permissions for, by default they get an `error` in OpenSearch Dashboards or an `exception` when using `cURL` or an API. If you instead want the user to receive the search results for any of the indexes for which they _do_ have permissions, you can set the option `do_not_fail_on_forbidden` to `true` in `config.yml`. See the following example:
+如果使用者嘗試查詢多個索引，但沒有其中部分索引的權限，依預設，他們會在 OpenSearch Dashboards 中收到 `error`，或在使用 `cURL` 或 API 時收到 `exception`。如果您希望使用者收到他們_確實_具有權限之索引的搜尋結果，可以在 `config.yml` 中將 `do_not_fail_on_forbidden` 選項設為 `true`。請參閱下列範例：
 
 ```
 _meta:
@@ -179,12 +180,12 @@ config:
       basic_internal_auth_domain:
       ...
 ```
-It is important to remember that if this option is set to `true`, then the user is served the data as if it is the complete dataset. There is no indication that some data may be omitted.
+請務必記住，如果此選項設為 `true`，提供給使用者的資料會被視為完整資料集。系統不會顯示任何提示，告知使用者可能有部分資料遭到省略。
 {: .warning }
 
 ### `do_not_fail_on_forbidden_empty`
 
-When a user attempts to view a visualization for which they lack index permissions, they will see `error` in place of the visualization. To change this behavior to display `No results displayed because all values equal 0.`, you can set `do_not_fail_on_forbidden_empty` to `true` in `config.yml`. This option is only valid if `do_not_fail_on_forbidden` is also set to `true`. See the following example:
+當使用者嘗試檢視其沒有索引權限的視覺化時，會看到 `error` 取代該視覺化。若要變更此行為以顯示 `No results displayed because all values equal 0.`，您可以在 `config.yml` 中將 `do_not_fail_on_forbidden_empty` 設為 `true`。只有在 `do_not_fail_on_forbidden` 也設為 `true` 時，此選項才有效。請參閱下列範例：
 
 ```
 _meta:
@@ -204,37 +205,37 @@ config:
       ...
 ```
 
-## Cluster permissions
+## 叢集權限
 
-These permissions are for the cluster and can't be applied granularly. For example, you either have permissions to take snapshots (`cluster:admin/snapshot/create`) or you don't. The cluster permission, therefore, cannot grant a user privileges to take snapshots of a select set of indexes while preventing the user from taking snapshots of others.
+這些權限適用於叢集，無法以細粒度套用。例如，您只有具備或不具備建立快照（`cluster:admin/snapshot/create`）的權限這兩種情況。因此，叢集權限無法授予使用者為特定一組索引建立快照的權限，同時禁止使用者為其他索引建立快照。
 
-Cross-references to API documentation in the permissions that follow are only intended to provide an understanding of the permissions. As stated at the beginning of this section, permissions often correlate to APIs but do not map directly to them.
+以下權限中提供的 API 文件交叉參照，僅旨在協助您瞭解這些權限。如本節開頭所述，權限通常與 API 相關，但並非直接對應至 API。
 {: .note }
 
 
-### Cluster wide index permissions
+### 全叢集索引權限
 
-| **Permission** | **Description** |
+| **權限** | **說明** |
 | :--- | :--- |
-| `indices:admin/template/delete` |  Permission to [delete index templates]({{site.url}}{{site.baseurl}}/api-reference/index-apis/delete-index-template/). |
-| `indices:admin/template/get` |  Permission to [get index templates]({{site.url}}{{site.baseurl}}/api-reference/index-apis/get-index-template/). |
-| `indices:admin/template/put` |  Permission to [create index templates]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index-template/). |
-| `indices:data/read/scroll` |  Permission to scroll through data. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/read/scroll/clear` | Permission to clear the scroll object. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/read/mget` |  Permission to run [multiple GET operations]({{site.url}}{{site.baseurl}}/api-reference/document-apis/multi-get/) in one request. |
-| `indices:data/read/mget*` |  Permission to run multiple GET operations in one request. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/read/msearch` |  Permission to run [multiple search]({{site.url}}{{site.baseurl}}/api-reference/multi-search/) requests in a single API request. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/read/msearch/template` |  Permission to bundle [multiple search templates]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/index/#multiple-search-templates) and send them to your OpenSearch cluster in a single request. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/read/mtv` |  Permission to retrieve multiple term vectors with a single request. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/read/mtv*` |  Permission to retrieve multiple term vectors with a single request. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/read/search/template/render` |  Permission to render search templates. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/write/bulk` |  Permission to run a [bulk]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) request. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/write/bulk*` |  Permission to run a bulk request. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/write/reindex` |  Permission to run a [reindex]({{site.url}}{{site.baseurl}}/im-plugin/reindex-data/) operation. |
+| `indices:admin/template/delete` |  [刪除索引範本]({{site.url}}{{site.baseurl}}/api-reference/index-apis/delete-index-template/)的權限。 |
+| `indices:admin/template/get` |  [取得索引範本]({{site.url}}{{site.baseurl}}/api-reference/index-apis/get-index-template/)的權限。 |
+| `indices:admin/template/put` |  [建立索引範本]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index-template/)的權限。 |
+| `indices:data/read/scroll` |  捲動瀏覽資料的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
+| `indices:data/read/scroll/clear` | 清除捲動物件的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
+| `indices:data/read/mget` |  在一個請求中執行[多個 GET 操作]({{site.url}}{{site.baseurl}}/api-reference/document-apis/multi-get/)的權限。 |
+| `indices:data/read/mget*` |  在一個請求中執行多個 GET 操作的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
+| `indices:data/read/msearch` |  在單一 API 請求中執行[多個搜尋]({{site.url}}{{site.baseurl}}/api-reference/multi-search/)請求的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
+| `indices:data/read/msearch/template` |  將[多個搜尋範本]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/index/#multiple-search-templates)組合起來，並在單一請求中傳送至您的 OpenSearch 叢集的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
+| `indices:data/read/mtv` |  透過單一請求擷取多個詞彙向量的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
+| `indices:data/read/mtv*` |  透過單一請求擷取多個詞彙向量的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
+| `indices:data/read/search/template/render` |  呈現搜尋範本的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
+| `indices:data/write/bulk` |  執行 [bulk]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) 請求的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
+| `indices:data/write/bulk*` |  執行 bulk 請求的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
+| `indices:data/write/reindex` |  執行[重新編製索引]({{site.url}}{{site.baseurl}}/im-plugin/reindex-data/)操作的權限。 |
 
-### Ingest API permissions
+### Ingest API 權限
 
-See [Ingest APIs]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/).
+請參閱 [Ingest APIs]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)。
 
 - `cluster:admin/ingest/pipeline/delete`
 - `cluster:admin/ingest/pipeline/get`
@@ -242,9 +243,9 @@ See [Ingest APIs]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)
 - `cluster:admin/ingest/pipeline/simulate`
 - `cluster:admin/ingest/processor/grok/get`
 
-### Anomaly detection permissions
+### 異常偵測權限
 
-See [Anomaly Detection API]({{site.url}}{{site.baseurl}}/observing-your-data/ad/api/).
+請參閱 [Anomaly Detection API]({{site.url}}{{site.baseurl}}/observing-your-data/ad/api/)。
 
 - `cluster:admin/opendistro/ad/detector/delete`
 - `cluster:admin/opendistro/ad/detector/info`
@@ -260,9 +261,9 @@ See [Anomaly Detection API]({{site.url}}{{site.baseurl}}/observing-your-data/ad/
 - `cluster:admin/opendistro/ad/result/topAnomalies`
 - `cluster:admin/opendistro/ad/tasks/search`
 
-### Alerting permissions
+### 警示權限
 
-See [Alerting API]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/api/).
+請參閱 [Alerting API]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/api/)。
 
 - `cluster:admin/opendistro/alerting/alerts/ack`
 - `cluster:admin/opendistro/alerting/alerts/get`
@@ -284,18 +285,18 @@ See [Alerting API]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/api
 - `cluster:admin/opendistro/alerting/monitor/write`
 - `cluster:admin/opensearch/alerting/remote/indexes/get`
 
-### Asynchronous search permissions
+### 非同步搜尋權限
 
-See [Asynchronous search]({{site.url}}{{site.baseurl}}/search-plugins/async/index/).
+請參閱 [非同步搜尋]({{site.url}}{{site.baseurl}}/search-plugins/async/index/)。
 
 - `cluster:admin/opendistro/asynchronous_search/stats`
 - `cluster:admin/opendistro/asynchronous_search/delete`
 - `cluster:admin/opendistro/asynchronous_search/get`
 - `cluster:admin/opendistro/asynchronous_search/submit`
 
-### Index State Management permissions
+### 索引狀態管理權限
 
-See [ISM API]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/).
+請參閱 [ISM API]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/)。
 
 - `cluster:indices:admin/opensearch/ism/managedindex`
 - `cluster:admin/opendistro/ism/managedindex/add`
@@ -308,9 +309,9 @@ See [ISM API]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/).
 - `cluster:admin/opendistro/ism/policy/search`
 - `cluster:admin/opendistro/ism/policy/delete`
 
-### Index rollups permissions
+### 索引 rollup 權限
 
-See [Index rollups API]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rollup-api/).
+請參閱 [Index rollups API]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rollup-api/)。
 
 - `cluster:admin/opendistro/rollup/index`
 - `cluster:admin/opendistro/rollup/get`
@@ -320,9 +321,9 @@ See [Index rollups API]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rol
 - `cluster:admin/opendistro/rollup/stop`
 - `cluster:admin/opendistro/rollup/explain`
 
-### Reporting permissions
+### 報告權限
 
-See [Creating reports with the Dashboards interface]({{site.url}}{{site.baseurl}}/dashboards/reporting/).
+請參閱 [使用 Dashboards 介面建立報告]({{site.url}}{{site.baseurl}}/dashboards/reporting/)。
 
 - `cluster:admin/opendistro/reports/definition/create`
 - `cluster:admin/opendistro/reports/definition/update`
@@ -334,9 +335,9 @@ See [Creating reports with the Dashboards interface]({{site.url}}{{site.baseurl}
 - `cluster:admin/opendistro/reports/instance/get`
 - `cluster:admin/opendistro/reports/menu/download`
 
-### Transform job permissions
+### 轉換任務權限
 
-See [Transforms APIs]({{site.url}}{{site.baseurl}}/im-plugin/index-transforms/transforms-apis/)
+請參閱 [Transforms API]({{site.url}}{{site.baseurl}}/im-plugin/index-transforms/transforms-apis/)
 
 - `cluster:admin/opendistro/transform/index`
 - `cluster:admin/opendistro/transform/get`
@@ -346,59 +347,59 @@ See [Transforms APIs]({{site.url}}{{site.baseurl}}/im-plugin/index-transforms/tr
 - `cluster:admin/opendistro/transform/stop`
 - `cluster:admin/opendistro/transform/explain`
 
-### Observability permissions
+### 可觀測性權限
 
-See [Observability security]({{site.url}}{{site.baseurl}}/observing-your-data/observability-security/).
+請參閱 [可觀測性安全性]({{site.url}}{{site.baseurl}}/observing-your-data/observability-security/)。
 
 - `cluster:admin/opensearch/observability/create`
 - `cluster:admin/opensearch/observability/update`
 - `cluster:admin/opensearch/observability/delete`
 - `cluster:admin/opensearch/observability/get`
 
-### Cross-cluster replication
+### 跨叢集複寫
 
-See [Cross-cluster replication security]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/permissions/).
+請參閱 [跨叢集複寫安全性]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/permissions/)。
 
 - `cluster:admin/plugins/replication/autofollow/update`
 
-### Reindex
+### 重新索引
 
-See [Reindex document]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/).
+請參閱 [Reindex 文件]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/)。
 
 - `cluster:admin/reindex/rethrottle`
 
-### Snapshot repository permissions
+### 快照儲存庫權限
 
-See [Snapshot APIs]({{site.url}}{{site.baseurl}}/api-reference/snapshots/index/).
+請參閱 [Snapshot API]({{site.url}}{{site.baseurl}}/api-reference/snapshots/index/)。
 
 - `cluster:admin/repository/delete`
 - `cluster:admin/repository/get`
 - `cluster:admin/repository/put`
 - `cluster:admin/repository/verify`
 
-### Reroute
+### 重新路由
 
-See [Cluster manager task throttling]({{site.url}}{{site.baseurl}}/tuning-your-cluster/cluster-manager-task-throttling/).
+請參閱 [叢集管理員任務節流]({{site.url}}{{site.baseurl}}/tuning-your-cluster/cluster-manager-task-throttling/)。
 
 - `cluster:admin/reroute`
 
-### Script permissions
+### 指令碼權限
 
-See [Script APIs]({{site.url}}{{site.baseurl}}/api-reference/script-apis/index/).
+請參閱 [Script API]({{site.url}}{{site.baseurl}}/api-reference/script-apis/index/)。
 
 - `cluster:admin/script/delete`
 - `cluster:admin/script/get`
 - `cluster:admin/script/put`
 
-### Update settings permission
+### 更新設定權限
 
-See [Update settings]({{site.url}}{{site.baseurl}}/api-reference/index-apis/update-settings/) on the Index APIs page.
+請參閱 Index API 頁面上的 [更新設定]({{site.url}}{{site.baseurl}}/api-reference/index-apis/update-settings/)。
 
 - `cluster:admin/settings/update`
 
-### Snapshot permissions
+### 快照權限
 
-See [Snapshot APIs]({{site.url}}{{site.baseurl}}/api-reference/snapshots/index/).
+請參閱 [Snapshot API]({{site.url}}{{site.baseurl}}/api-reference/snapshots/index/)。
 
 - `cluster:admin/snapshot/create`
 - `cluster:admin/snapshot/delete`
@@ -407,17 +408,17 @@ See [Snapshot APIs]({{site.url}}{{site.baseurl}}/api-reference/snapshots/index/)
 - `cluster:admin/snapshot/status`
 - `cluster:admin/snapshot/status*`
 
-### Task permissions
+### 任務權限
 
-See [Tasks]({{site.url}}{{site.baseurl}}/api-reference/tasks/) in the API Reference section.
+請參閱 API Reference 章節中的 [Tasks]({{site.url}}{{site.baseurl}}/api-reference/tasks/)。
 
 - `cluster:admin/tasks/cancel`
 - `cluster:admin/tasks/test`
 - `cluster:admin/tasks/testunblock`
 
-### Data source permissions
+### 資料來源權限
 
-See [Data sources]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/)
+請參閱 [資料來源]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/)
 
 - `cluster:admin/opensearch/ql/datasources/create`
 - `cluster:admin/opensearch/ql/datasources/read`
@@ -428,34 +429,34 @@ See [Data sources]({{site.url}}{{site.baseurl}}/dashboards/management/data-sourc
 - `cluster:admin/opensearch/ql/async_query/result`
 - `cluster:admin/opensearch/ql/async_query/delete`
 
-### Security Analytics permissions
+### 安全性分析權限
 
-See [API tools]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/index/).
+請參閱 [API 工具]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/index/)。
 
-| **Permission** | **Description** |
+| **權限** | **說明** |
 | :--- | :--- |
-| `cluster:admin/opensearch/securityanalytics/alerts/get` | Permission to get alerts |
-| `cluster:admin/opensearch/securityanalytics/alerts/ack` | Permission to acknowledge alerts |
-| `cluster:admin/opensearch/securityanalytics/detector/get` | Permission to get detectors |
-| `cluster:admin/opensearch/securityanalytics/detector/search` | Permission to search detectors |
-| `cluster:admin/opensearch/securityanalytics/detector/write` | Permission to create and update detectors |
-| `cluster:admin/opensearch/securityanalytics/detector/delete` | Permission to delete detectors |
-| `cluster:admin/opensearch/securityanalytics/findings/get` | Permission to get findings |
-| `cluster:admin/opensearch/securityanalytics/mapping/get` | Permission to get field mappings by index |
-| `cluster:admin/opensearch/securityanalytics/mapping/view/get` | Permission to get field mappings by index and view mapped and unmapped fields |
-| `cluster:admin/opensearch/securityanalytics/mapping/create` | Permission to create field mappings |
-| `cluster:admin/opensearch/securityanalytics/mapping/update` | Permission to update field mappings |
-| `cluster:admin/opensearch/securityanalytics/rules/categories` | Permission to get all rule categories |
-| `cluster:admin/opensearch/securityanalytics/rule/write` | Permission to create and update rules |
-| `cluster:admin/opensearch/securityanalytics/rule/search` | Permission to search for rules |
-| `cluster:admin/opensearch/securityanalytics/rules/validate` | Permission to validate rules |
-| `cluster:admin/opensearch/securityanalytics/rule/delete` | Permission to delete rules |
+| `cluster:admin/opensearch/securityanalytics/alerts/get` | 取得警示的權限 |
+| `cluster:admin/opensearch/securityanalytics/alerts/ack` | 確認警示的權限 |
+| `cluster:admin/opensearch/securityanalytics/detector/get` | 取得偵測器的權限 |
+| `cluster:admin/opensearch/securityanalytics/detector/search` | 搜尋偵測器的權限 |
+| `cluster:admin/opensearch/securityanalytics/detector/write` | 建立及更新偵測器的權限 |
+| `cluster:admin/opensearch/securityanalytics/detector/delete` | 刪除偵測器的權限 |
+| `cluster:admin/opensearch/securityanalytics/findings/get` | 取得發現項目的權限 |
+| `cluster:admin/opensearch/securityanalytics/mapping/get` | 依索引取得欄位對應的權限 |
+| `cluster:admin/opensearch/securityanalytics/mapping/view/get` | 依索引取得欄位對應並檢視已對應與未對應欄位的權限 |
+| `cluster:admin/opensearch/securityanalytics/mapping/create` | 建立欄位對應的權限 |
+| `cluster:admin/opensearch/securityanalytics/mapping/update` | 更新欄位對應的權限 |
+| `cluster:admin/opensearch/securityanalytics/rules/categories` | 取得所有規則類別的權限 |
+| `cluster:admin/opensearch/securityanalytics/rule/write` | 建立及更新規則的權限 |
+| `cluster:admin/opensearch/securityanalytics/rule/search` | 搜尋規則的權限 |
+| `cluster:admin/opensearch/securityanalytics/rules/validate` | 驗證規則的權限 |
+| `cluster:admin/opensearch/securityanalytics/rule/delete` | 刪除規則的權限 |
 
-### Monitoring permissions
+### 監控權限
 
-Cluster permissions for monitoring the cluster apply to read-only operations, such as checking cluster health and getting information about usage on nodes or tasks running in the cluster.
+用於監控叢集的叢集權限適用於唯讀作業，例如檢查叢集健康狀態，以及取得節點使用情況或叢集中執行之任務的相關資訊。
 
-See [REST API reference]({{site.url}}{{site.baseurl}}/api-reference/index/).
+請參閱 [REST API 參考]({{site.url}}{{site.baseurl}}/api-reference/index/)。
 
 - `cluster:monitor/allocation/explain`
 - `cluster:monitor/health`
@@ -472,11 +473,11 @@ See [REST API reference]({{site.url}}{{site.baseurl}}/api-reference/index/).
 - `cluster:monitor/task/get`
 - `cluster:monitor/tasks/lists`
 
-### Index templates
+### 索引範本
 
-The index template permissions are for indexes but apply globally to the cluster.
+索引範本權限雖然針對索引，但會全域套用至叢集。
 
-See [Index templates]({{site.url}}{{site.baseurl}}/im-plugin/index-templates/).
+請參閱[索引範本]({{site.url}}{{site.baseurl}}/im-plugin/index-templates/)。
 
 - `indices:admin/index_template/delete`
 - `indices:admin/index_template/get`
@@ -485,89 +486,89 @@ See [Index templates]({{site.url}}{{site.baseurl}}/im-plugin/index-templates/).
 - `indices:admin/index_template/simulate_index`
 
 
-## Index permissions
+## 索引權限
 
-These permissions apply to an index or index pattern. You might want a user to have read access to all indexes (that is, `*`), but write access to only a few (for example, `web-logs` and `product-catalog`).
+這些權限適用於索引或索引模式。您可能希望使用者擁有所有索引的讀取權限（即 `*`），但只擁有少數索引的寫入權限（例如 `web-logs` 和 `product-catalog`）。
 
-| **Permission** | **Description** |
+| **權限** | **說明** |
 | :--- | :--- |
-| `indices:admin/aliases` |  Permissions for [index aliases]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/). |
-| `indices:admin/aliases/get` |  Permission to get [index aliases]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/). |
-| `indices:admin/analyze` |  Permission to use the [Analyze API]({{site.url}}{{site.baseurl}}/api-reference/analyze-apis/). |
-| `indices:admin/cache/clear` |  Permission to [clear cache]({{site.url}}{{site.baseurl}}/api-reference/index-apis/clear-index-cache/). |
-| `indices:admin/close` |  Permission to [close an index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/close-index/). |
-| `indices:admin/close*` |  Permission to [close an index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/close-index/). |
-| `indices:admin/create` |  Permission to [create indexes]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/). |
-| `indices:admin/data_stream/create` |  Permission to create [data streams]({{site.url}}{{site.baseurl}}/api-reference/data-stream/create-data-stream/). |
-| `indices:admin/data_stream/delete` |  Permission to [delete data streams]({{site.url}}{{site.baseurl}}/api-reference/data-stream/delete-data-stream/). |
-| `indices:admin/data_stream/get` |  Permission to [get data streams]({{site.url}}{{site.baseurl}}/api-reference/data-stream/data-stream-info/). |
-| `indices:admin/delete` |  Permission to [delete indexes]({{site.url}}{{site.baseurl}}/api-reference/index-apis/delete-index/). |
-| `indices:admin/exists` |  Permission to use [exists query]({{site.url}}{{site.baseurl}}/query-dsl/term/exists/). |
-| `indices:admin/flush` |  Permission to [flush an index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/flush/). |
-| `indices:admin/flush*` |  Permission to [flush an index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/flush/). |
-| `indices:admin/forcemerge` |  Permission to force merge indexes and data streams. |
-| `indices:admin/get` |  Permission to get index and mapping. |
-| `indices:admin/mapping/put` |  Permission to add new mappings and fields to an index. |
-| `indices:admin/mappings/fields/get` |  Permission to get mappings fields. |
-| `indices:admin/mappings/fields/get*` |  Permission to get mappings fields. |
-| `indices:admin/mappings/get` |  Permission to [get mappings]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/mappings-api/#get-mappings).  |
-| `indices:admin/open` |  Permission to [open an index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/open-index/). |
-| `indices:admin/plugins/replication/index/setup/validate` |  Permission to validate a connection to a [remote cluster]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/getting-started/#set-up-a-cross-cluster-connection). |
-| `indices:admin/plugins/replication/index/start` |  Permission to [start cross-cluster replication]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/getting-started/#start-replication). |
-| `indices:admin/plugins/replication/index/pause` |  Permission to pause cross-cluster replication. |
-| `indices:admin/plugins/replication/index/resume` |  Permission to resume cross-cluster replication. |
-| `indices:admin/plugins/replication/index/stop` |  Permission to stop cross-cluster replication. |
-| `indices:admin/plugins/replication/index/update` |  Permission to update cross-cluster replication settings. |
-| `indices:admin/plugins/replication/index/status_check` |  Permission to check the status of cross-cluster replication. |
-| `indices:admin/refresh` |  Permission to use the [Refresh Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/refresh/). |
-| `indices:admin/refresh*` |  Permission to use the index refresh API. |
-| `indices:admin/resolve/index` |  Permission to resolve index names, index aliases and data streams. |
-| `indices:admin/rollover` |  Permission to perform [index rollover]({{site.url}}{{site.baseurl}}/api-reference/index-apis/rollover/). |
-| `indices:admin/seq_no/global_checkpoint_sync` | Permission to perform a global checkpoint sync. |
-| `indices:admin/settings/update` |  Permission to [update index settings]({{site.url}}{{site.baseurl}}/api-reference/index-apis/update-settings/). |
-| `indices:admin/shards/search_shards` |  Permission to perform [cross cluster search]({{site.url}}{{site.baseurl}}/security/access-control/cross-cluster-search/). |
-| `indices:admin/upgrade` | Permission for administrators to perform upgrades. |
-| `indices:admin/validate/query` |  Permission to validate a specific query. |
-| `indices:data/read/explain` |  Permission to run the [Explain API]({{site.url}}{{site.baseurl}}/api-reference/explain/). |
-| `indices:data/read/field_caps` |  Permission to run the [Field Capabilities API]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/alias/#using-aliases-in-field-capabilities-api-operations). |
-| `indices:data/read/field_caps*` |  Permission to run the Field Capabilities API. |
-| `indices:data/read/get` |  Permission to read index data. |
-| `indices:data/read/mget` |  Permission to run [multiple GET operations]({{site.url}}{{site.baseurl}}/api-reference/document-apis/multi-get/) in one request. |
-| `indices:data/read/mget*` |  Permission to run multiple GET operations in one request. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/read/msearch` |  Permission to run [multiple search]({{site.url}}{{site.baseurl}}/api-reference/multi-search/)  requests in a single request. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/read/msearch/template` |  Permission to bundle [multiple search templates]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/index/#multiple-search-templates) and send them to your OpenSearch cluster in a single request. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/read/mtv` |  Permission to retrieve multiple term vectors with a single request. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/read/mtv*` |  Permission to retrieve multiple term vectors with a single request. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/read/plugins/replication/file_chunk` | Permission to check files during segment replication. |
-| `indices:data/read/plugins/replication/changes` | Permission to make changes to segment replication settings. |
-| `indices:data/read/scroll` |  Permission to scroll through data. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/read/scroll/clear` | Permission to clear the scroll object. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/read/search` |  Permission to [search]({{site.url}}{{site.baseurl}}/api-reference/search/) data. |
-| `indices:data/read/search*` |  Permission to search data. |
-| `indices:data/read/search/template` |  Permission to read a search template. |
-| `indices:data/read/tv` |  Permission to retrieve information and statistics for terms in the fields of a particular document. |
-| `indices:data/write/delete` |  Permission to [delete documents]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-document/). |
-| `indices:data/write/delete/byquery` |  Permission to delete all documents that [match a query]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-by-query/). |
-| `indices:data/write/plugins/replication/changes` |  Permission to change data replication configurations and settings within indexes. |
-| `indices:data/write/bulk` |  Permission to run a [bulk]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) request. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/write/bulk*` |  Permission to run a bulk request. This setting must be configured as both a cluster- and index-level permission. |
-| `indices:data/write/index` |  Permission to add documents to existing indexes. See also [Index document]( {{site.url}}{{site.baseurl}}/api-reference/document-apis/index-document/ ). |
-| `indices:data/write/update` | Permission to update an index. |
-| `indices:data/write/update/byquery` |  Permission to run the script to update all of the documents that [match the query]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-by-query/). |
-| `indices:monitor/data_stream/stats` | Permission to stream stats.  |
-| `indices:monitor/recovery` | Permission to access recovery stats. |
-| `indices:monitor/segments` |  Permission to access segment stats. |
-| `indices:monitor/settings/get` | Permission to get monitor settings.  |
-| `indices:monitor/shard_stores` |  Permission to access shard store stats. |
-| `indices:monitor/stats` | Permission to access monitoring stats.  |
-| `indices:monitor/upgrade` | Permission to access upgrade stats.  |
+| `indices:admin/aliases` |  [索引別名]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/)的權限。 |
+| `indices:admin/aliases/get` |  取得[索引別名]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/)的權限。 |
+| `indices:admin/analyze` |  使用 [Analyze API]({{site.url}}{{site.baseurl}}/api-reference/analyze-apis/) 的權限。 |
+| `indices:admin/cache/clear` |  [清除快取]({{site.url}}{{site.baseurl}}/api-reference/index-apis/clear-index-cache/)的權限。 |
+| `indices:admin/close` |  [關閉索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/close-index/)的權限。 |
+| `indices:admin/close*` |  [關閉索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/close-index/)的權限。 |
+| `indices:admin/create` |  [建立索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/)的權限。 |
+| `indices:admin/data_stream/create` |  建立[資料串流]({{site.url}}{{site.baseurl}}/api-reference/data-stream/create-data-stream/)的權限。 |
+| `indices:admin/data_stream/delete` |  [刪除資料串流]({{site.url}}{{site.baseurl}}/api-reference/data-stream/delete-data-stream/)的權限。 |
+| `indices:admin/data_stream/get` |  [取得資料串流]({{site.url}}{{site.baseurl}}/api-reference/data-stream/data-stream-info/)的權限。 |
+| `indices:admin/delete` |  [刪除索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/delete-index/)的權限。 |
+| `indices:admin/exists` |  使用 [exists 查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/exists/)的權限。 |
+| `indices:admin/flush` |  [排清索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/flush/)的權限。 |
+| `indices:admin/flush*` |  [排清索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/flush/)的權限。 |
+| `indices:admin/forcemerge` |  強制合併索引和資料串流的權限。 |
+| `indices:admin/get` |  取得索引和對應的權限。 |
+| `indices:admin/mapping/put` |  將新對應和欄位新增至索引的權限。 |
+| `indices:admin/mappings/fields/get` |  取得對應欄位的權限。 |
+| `indices:admin/mappings/fields/get*` |  取得對應欄位的權限。 |
+| `indices:admin/mappings/get` |  [取得對應]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/mappings-api/#get-mappings)的權限。  |
+| `indices:admin/open` |  [開啟索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/open-index/)的權限。 |
+| `indices:admin/plugins/replication/index/setup/validate` |  驗證與[遠端叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/getting-started/#set-up-a-cross-cluster-connection)之連線的權限。 |
+| `indices:admin/plugins/replication/index/start` |  [啟動跨叢集複寫]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/getting-started/#start-replication)的權限。 |
+| `indices:admin/plugins/replication/index/pause` |  暫停跨叢集複寫的權限。 |
+| `indices:admin/plugins/replication/index/resume` |  繼續跨叢集複寫的權限。 |
+| `indices:admin/plugins/replication/index/stop` |  停止跨叢集複寫的權限。 |
+| `indices:admin/plugins/replication/index/update` |  更新跨叢集複寫設定的權限。 |
+| `indices:admin/plugins/replication/index/status_check` |  檢查跨叢集複寫狀態的權限。 |
+| `indices:admin/refresh` |  使用 [Refresh Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/refresh/) 的權限。 |
+| `indices:admin/refresh*` |  使用索引重新整理 API 的權限。 |
+| `indices:admin/resolve/index` |  解析索引名稱、索引別名和資料串流的權限。 |
+| `indices:admin/rollover` |  執行[索引輪替]({{site.url}}{{site.baseurl}}/api-reference/index-apis/rollover/)的權限。 |
+| `indices:admin/seq_no/global_checkpoint_sync` | 執行全域檢查點同步的權限。 |
+| `indices:admin/settings/update` |  [更新索引設定]({{site.url}}{{site.baseurl}}/api-reference/index-apis/update-settings/)的權限。 |
+| `indices:admin/shards/search_shards` |  執行[跨叢集搜尋]({{site.url}}{{site.baseurl}}/security/access-control/cross-cluster-search/)的權限。 |
+| `indices:admin/upgrade` | 供管理員執行升級的權限。 |
+| `indices:admin/validate/query` |  驗證特定查詢的權限。 |
+| `indices:data/read/explain` |  執行 [Explain API]({{site.url}}{{site.baseurl}}/api-reference/explain/) 的權限。 |
+| `indices:data/read/field_caps` |  執行 [Field Capabilities API]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/alias/#using-aliases-in-field-capabilities-api-operations) 的權限。 |
+| `indices:data/read/field_caps*` |  執行 Field Capabilities API 的權限。 |
+| `indices:data/read/get` |  讀取索引資料的權限。 |
+| `indices:data/read/mget` |  在單一請求中執行[多個 GET 作業]({{site.url}}{{site.baseurl}}/api-reference/document-apis/multi-get/)的權限。 |
+| `indices:data/read/mget*` |  在單一請求中執行多個 GET 作業的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
+| `indices:data/read/msearch` |  在單一請求中執行[多個搜尋]({{site.url}}{{site.baseurl}}/api-reference/multi-search/)請求的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
+| `indices:data/read/msearch/template` |  將[多個搜尋範本]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/index/#multiple-search-templates)組合在一起，並以單一請求傳送至您的 OpenSearch 叢集的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
+| `indices:data/read/mtv` |  以單一請求擷取多個詞彙向量 (term vector) 的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
+| `indices:data/read/mtv*` |  以單一請求擷取多個詞彙向量 (term vector) 的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
+| `indices:data/read/plugins/replication/file_chunk` | 在分段複寫期間檢查檔案的權限。 |
+| `indices:data/read/plugins/replication/changes` | 變更分段複寫設定的權限。 |
+| `indices:data/read/scroll` |  捲動瀏覽資料的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
+| `indices:data/read/scroll/clear` | 清除 scroll 物件的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
+| `indices:data/read/search` |  [搜尋]({{site.url}}{{site.baseurl}}/api-reference/search/)資料的權限。 |
+| `indices:data/read/search*` |  搜尋資料的權限。 |
+| `indices:data/read/search/template` |  讀取搜尋範本的權限。 |
+| `indices:data/read/tv` |  擷取特定文件欄位中詞彙之資訊與統計資料的權限。 |
+| `indices:data/write/delete` |  [刪除文件]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-document/)的權限。 |
+| `indices:data/write/delete/byquery` |  刪除所有[符合查詢]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-by-query/)之文件的權限。 |
+| `indices:data/write/plugins/replication/changes` |  變更索引內資料複寫組態與設定的權限。 |
+| `indices:data/write/bulk` |  執行 [bulk]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) 請求的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
+| `indices:data/write/bulk*` |  執行 bulk 請求的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
+| `indices:data/write/index` |  將文件新增至現有索引的權限。另請參閱[將文件編製索引]( {{site.url}}{{site.baseurl}}/api-reference/document-apis/index-document/ )。 |
+| `indices:data/write/update` | 更新索引的權限。 |
+| `indices:data/write/update/byquery` |  執行指令碼以更新所有[符合查詢]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-by-query/)之文件的權限。 |
+| `indices:monitor/data_stream/stats` | 串流統計資料的權限。  |
+| `indices:monitor/recovery` | 存取復原統計資料的權限。 |
+| `indices:monitor/segments` |  存取分段統計資料的權限。 |
+| `indices:monitor/settings/get` | 取得監視器設定的權限。  |
+| `indices:monitor/shard_stores` |  存取分片儲存區統計資料的權限。 |
+| `indices:monitor/stats` | 存取監控統計資料的權限。  |
+| `indices:monitor/upgrade` | 存取升級統計資料的權限。  |
 
-## Security REST permissions
+## 安全性 REST 權限
 
-Allowing access to these endpoints has the potential to trigger operational changes in the cluster. Proceed with caution.
+允許存取這些端點可能會觸發叢集中的營運變更。請謹慎操作。
 {: .warning }
 
-The following REST API permissions control access to the endpoints. Granting access to any of these APIs allows a user to change fundamental operational components of the Security plugin:
+下列 REST API 權限控制對端點的存取。授予任何這些 API 的存取權，即允許使用者變更安全性外掛程式的基本營運元件：
 
 - `restapi:admin/actiongroups`
 - `restapi:admin/allowlist`

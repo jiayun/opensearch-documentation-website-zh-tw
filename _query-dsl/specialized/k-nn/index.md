@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: k-NN
 parent: AI and vector search queries
@@ -8,22 +9,22 @@ redirect_from:
   - /query-dsl/specialized/k-nn/
 ---
 
-# k-NN query
+# k-NN 查詢
 
-Use the `knn` query for running nearest neighbor searches on vector fields.
+使用 `knn` 查詢在向量欄位上執行最近鄰搜尋。
 
-## Transport protocols
+## 傳輸通訊協定
 
-k-NN queries can be executed using two transport protocols:
+k-NN 查詢可使用兩種傳輸通訊協定執行：
 
-- **HTTP/REST API**: The standard approach documented in this section.
-- **gRPC API** (Generally available 3.2): High-performance binary protocol with the [k-NN (gRPC) API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/knn/).
+- **HTTP/REST API**：本節所記載的標準做法。
+- **gRPC API**（自 3.2 起正式推出）：高效能二進位通訊協定，搭配 [k-NN (gRPC) API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/knn/)。
 
-For high-throughput vector search applications, consider using the gRPC k-NN API, which provides lower latency and higher throughput compared to HTTP-based queries.
+對於高輸送量的向量搜尋應用程式，請考慮使用 gRPC k-NN API，相較於以 HTTP 為基礎的查詢，它能提供更低的延遲與更高的輸送量。
 
-## Request body fields
+## 請求本文欄位
 
-Provide a vector field in the `knn` query and specify additional request fields in the vector field object:
+在 `knn` 查詢中提供向量欄位，並在向量欄位物件中指定其他請求欄位：
 
 ```json
 "knn": {
@@ -35,20 +36,20 @@ Provide a vector field in the `knn` query and specify additional request fields 
 }
 ```
 
-The top-level `vector_field` specifies the vector field against which to run a search query. The following table lists all supported request fields.
+最上層的 `vector_field` 會指定要對其執行搜尋查詢的向量欄位。下表列出所有支援的請求欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`vector` | Array of floats or bytes | Required | The query vector to use for vector search. The data type of the vector elements must match the data type of vectors indexed in the [`knn_vector` field]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/) searched.
-`k` | Integer | Optional | The number of nearest neighbors to return. Valid values are in the [1, 10,000] range. Required if either `max_distance` or `min_score` is not specified.
-`max_distance` | Float | Optional | The maximum distance threshold for search results. Only one of `k`, `max_distance`, or `min_score` can be specified. For more information, see [Radial search]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/radial-search-knn/).
-`min_score` | Float | Optional | The minimum score threshold for search results. Only one of `k`, `max_distance`, or `min_score` can be specified. For more information, see [Radial search]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/radial-search-knn/).
-`filter` | Object | Optional | A filter to apply to the k-NN search. For more information, see [Vector search with filters]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/). **Important**: A filter can only be used with the `faiss` or `lucene` engines.
-`method_parameters` | Object | Optional | Additional parameters for fine-tuning the search:<br>- `ef_search` (Integer): The number of vectors to examine (for the `hnsw` method)<br>- `nprobes` (Integer): The number of buckets to examine (for the `ivf` method). For more information, see [Specifying method parameters in the query](#specifying-method-parameters-in-the-query).
-`rescore` | Object or Boolean | Optional | Parameters for configuring rescoring functionality:<br>- `oversample_factor` (Float): Controls how many candidate vectors are retrieved before rescoring. Valid values are in the `[1.0, 100.0]` range. Default is `false` for fields with `in_memory` mode (no rescoring) and enabled (with dynamic values) for fields with `on_disk` mode. In `on_disk` mode, the default `oversample_factor` is determined by the `compression_level`. For more information, see the [compression level table]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#rescoring-quantized-results-to-full-precision). To explicitly enable rescoring with the default `oversample_factor` of `1.0`, set `rescore` to `true`. For more information, see [Rescoring results](#rescoring-results).
-`expand_nested_docs` | Boolean | Optional | When `true`, retrieves scores for all nested field documents within each parent document. Used with nested queries. For more information, see [Vector search with nested fields]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/nested-search-knn/).
+`vector` | 浮點數或位元組陣列 | 必要 | 用於向量搜尋的查詢向量。向量元素的資料類型必須與所搜尋之 [`knn_vector` 欄位]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/) 中編製索引的向量資料類型相符。
+`k` | 整數 | 選用 | 要傳回的最近鄰數目。有效值範圍為 [1, 10,000]。若未指定 `max_distance` 或 `min_score`，則此欄位為必要。
+`max_distance` | 浮點數 | 選用 | 搜尋結果的最大距離臨界值。`k`、`max_distance` 或 `min_score` 僅能指定其中一個。如需詳細資訊，請參閱[徑向搜尋]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/radial-search-knn/)。
+`min_score` | 浮點數 | 選用 | 搜尋結果的最低分數臨界值。`k`、`max_distance` 或 `min_score` 僅能指定其中一個。如需詳細資訊，請參閱[徑向搜尋]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/radial-search-knn/)。
+`filter` | 物件 | 選用 | 套用至 k-NN 搜尋的篩選條件。如需詳細資訊，請參閱[使用篩選條件的向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/)。**重要**：篩選條件僅能與 `faiss` 或 `lucene` 引擎搭配使用。
+`method_parameters` | 物件 | 選用 | 用於微調搜尋的其他參數：<br>- `ef_search` (整數)：要檢查的向量數目 (適用於 `hnsw` 方法)<br>- `nprobes` (整數)：要檢查的桶數 (適用於 `ivf` 方法)。如需詳細資訊，請參閱[在查詢中指定方法參數](#specifying-method-parameters-in-the-query)。
+`rescore` | 物件或布林值 | 選用 | 用於設定重新評分功能的參數：<br>- `oversample_factor` (浮點數)：控制在重新評分前要擷取多少候選向量。有效值範圍為 `[1.0, 100.0]`。對於 `in_memory` 模式的欄位，預設值為 `false` (不重新評分)；對於 `on_disk` 模式的欄位，則為啟用 (含動態值)。在 `on_disk` 模式下，預設的 `oversample_factor` 由 `compression_level` 決定。如需詳細資訊，請參閱[壓縮層級表]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#rescoring-quantized-results-to-full-precision)。若要使用預設的 `1.0` 之 `oversample_factor` 明確啟用重新評分，請將 `rescore` 設為 `true`。如需詳細資訊，請參閱[重新評分結果](#rescoring-results)。
+`expand_nested_docs` | 布林值 | 選用 | 當設為 `true` 時，會擷取每個父文件內所有巢狀欄位文件的分數。用於巢狀查詢。如需詳細資訊，請參閱[使用巢狀欄位的向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/nested-search-knn/)。
 
-## Example request
+## 範例請求
 
 ```json
 GET /my-vector-index/_search
@@ -65,7 +66,7 @@ GET /my-vector-index/_search
 ```
 {% include copy-curl.html %}
 
-## Example request: Nested fields
+## 範例請求：巢狀欄位
 
 ```json
 GET /my-vector-index/_search
@@ -94,9 +95,9 @@ GET /my-vector-index/_search
 ```
 {% include copy-curl.html %}
 
-## Example request: Radial search with max_distance
+## 範例請求：使用 max_distance 的徑向搜尋
 
-The following example shows a radial search performed with `max_distance`:
+下列範例顯示使用 `max_distance` 執行的徑向搜尋：
 
 ```json
 GET /my-vector-index/_search
@@ -117,9 +118,9 @@ GET /my-vector-index/_search
 {% include copy-curl.html %}
 
 
-## Example request: Radial search with min_score
+## 範例請求：使用 min_score 的徑向搜尋
 
-The following example shows a radial search performed with `min_score`:
+下列範例顯示使用 `min_score` 執行的徑向搜尋：
 
 ```json
 GET /my-vector-index/_search
@@ -136,9 +137,9 @@ GET /my-vector-index/_search
 ```
 {% include copy-curl.html %}
 
-## Specifying method parameters in the query
+## 在查詢中指定方法參數
 
-You can provide `method_parameters` in a search request:
+您可以在搜尋請求中提供 `method_parameters`：
 
 ```json
 GET /my-vector-index/_search
@@ -159,39 +160,39 @@ GET /my-vector-index/_search
 ```
 {% include copy-curl.html %}
 
-These parameters are dependent on the combination of engine and method used to create the index. The following sections provide information about the supported `method_parameters`.
+這些參數取決於建立索引時所使用的引擎與方法組合。下列各節提供支援的 `method_parameters` 相關資訊。
 
 ### ef_search
 
-You can provide the `ef_search` parameter when searching an index created using the `hnsw` method. The `ef_search` parameter specifies the number of vectors to examine in order to find the top k nearest neighbors. Higher `ef_search` values improve recall at the cost of increased search latency. The value must be positive.
+搜尋使用 `hnsw` 方法建立的索引時，您可以提供 `ef_search` 參數。`ef_search` 參數會指定為了找出前 k 個最近鄰而要檢查的向量數目。較高的 `ef_search` 值可提升召回率，但會增加搜尋延遲。此值必須為正數。
 
-The following table provides information about the `ef_search` parameter for the supported engines.
+下表提供支援的引擎其 `ef_search` 參數相關資訊。
 
-Engine | Radial query support | Notes
+引擎 | 徑向查詢支援 | 備註
 :--- | :--- | :---
-`nmslib` (Deprecated) | No | If `ef_search` is present in a query, it overrides the `index.knn.algo_param.ef_search` index setting.
-`faiss` | Yes | If `ef_search` is present in a query, it overrides the `index.knn.algo_param.ef_search` index setting.
-`lucene` | No | When creating a search query, you must specify `k`. If you provide both `k` and `ef_search`, then the larger value is passed to the engine. If `ef_search` is larger than `k`, you can provide the `size` parameter to limit the final number of results to `k`.
+`nmslib` (已棄用) | 否 | 若查詢中包含 `ef_search`，它會覆寫 `index.knn.algo_param.ef_search` 索引設定。
+`faiss` | 是 | 若查詢中包含 `ef_search`，它會覆寫 `index.knn.algo_param.ef_search` 索引設定。
+`lucene` | 否 | 建立搜尋查詢時，您必須指定 `k`。若同時提供 `k` 與 `ef_search`，則會將較大的值傳遞給引擎。若 `ef_search` 大於 `k`，您可以提供 `size` 參數，將最終結果數目限制為 `k`。
 
 <!-- vale off -->
 ### nprobes
 <!-- vale on -->
 
-You can provide the `nprobes` parameter when searching an index created using the `ivf` method. The `nprobes` parameter specifies the number of buckets to examine in order to find the top k nearest neighbors. Higher `nprobes` values improve recall at the cost of increased search latency. The value must be positive.
+搜尋使用 `ivf` 方法建立的索引時，您可以提供 `nprobes` 參數。`nprobes` 參數會指定為了找出前 k 個最近鄰而要檢查的桶數。較高的 `nprobes` 值可提升召回率，但會增加搜尋延遲。此值必須為正數。
 
-The following table provides information about the `nprobes` parameter for the supported engines.
+下表提供支援的引擎其 `nprobes` 參數相關資訊。
 
-Engine | Notes
+引擎 | 備註
 :--- | :---
-`faiss` | If `nprobes` is present in a query, it overrides the value provided when creating the index.
+`faiss` | 若查詢中包含 `nprobes`，它會覆寫建立索引時所提供的值。
 
-## Rescoring results
+## 重新評分結果
 
-You can fine-tune search by providing the `ef_search` and `oversample_factor` parameters.
+您可以提供 `ef_search` 與 `oversample_factor` 參數來微調搜尋。
 
-The `oversample_factor` parameter controls the factor by which the search oversamples the candidate vectors before ranking them. Using a higher oversample factor means that more candidates will be considered before ranking, improving accuracy but also increasing search time. When selecting the `oversample_factor` value, consider the trade-off between accuracy and efficiency. For example, setting the `oversample_factor` to `2.0` will double the number of candidates considered during the ranking phase, which may help achieve better results.
+`oversample_factor` 參數會控制搜尋在為候選向量排名前過度取樣的倍數。使用較高的過度取樣倍數表示在排名前會考量更多候選向量，可提升準確度，但也會增加搜尋時間。選擇 `oversample_factor` 值時，請考量準確度與效率之間的取捨。例如，將 `oversample_factor` 設為 `2.0` 會使排名階段考量的候選向量數目加倍，這可能有助於獲得更佳的結果。
 
-The following request specifies the `ef_search` and `oversample_factor` parameters:
+下列請求指定了 `ef_search` 與 `oversample_factor` 參數：
 
 ```json
 GET /my-vector-index/_search
@@ -215,7 +216,7 @@ GET /my-vector-index/_search
 ```
 {% include copy-curl.html %}
 
-## Next steps
+## 後續步驟
 
-- [k-NN vector]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)
-- [Rescoring quantized results to full precision]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#rescoring-quantized-results-to-full-precision)
+- [k-NN 向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)
+- [將量化結果重新評分至完整精確度]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#rescoring-quantized-results-to-full-precision)

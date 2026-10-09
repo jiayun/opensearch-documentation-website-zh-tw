@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get model group
+title: "取得模型群組"
 parent: Model group APIs
 grand_parent: ML Commons APIs
 nav_order: 30
@@ -8,35 +9,35 @@ nav_order: 30
 
 # Get Model Group API
 
-Introduced 2.12
+於 2.12 版推出
 {: .label .label-purple }
 
-The Get Model Group API returns information about a model group based on that group's ID. 
+Get Model Group API 會依據模型群組的 ID 傳回該群組的相關資訊。
 
-If model access control is enabled on your cluster, only the owner or users with matching backend roles can get private model groups. Any user can get any public model group.
+若您的叢集已啟用模型存取控制，則只有擁有者或具有相符後端角色的使用者可以取得私有模型群組。任何使用者都可以取得任何公開模型群組。
 
-If model access control is disabled on your cluster, users with the `get model group API` permission can get any model group.
+若您的叢集已停用模型存取控制，則具有 `get model group API` 權限的使用者可以取得任何模型群組。
 
-For more information, see [Model access control]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/).
+如需更多資訊，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
 
-## Path and HTTP method
+## 路徑與 HTTP 方法
 
 ```json
 GET /_plugins/_ml/model_groups/{model_group_id}
 ```
 
-### Example request
+### 範例請求
 
-The following example request gets a model group based on that group's ID:
+下列範例請求會依據模型群組的 ID 取得該群組：
 
 ```json
 GET /_plugins/_ml/model_groups/{model_group_id}
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
-The following response returns the model group information, including the model group's name, version, description, access level, and creation information:
+下列回應會傳回模型群組資訊，包括模型群組的名稱、版本、描述、存取層級及建立資訊：
 
 ```json
 {

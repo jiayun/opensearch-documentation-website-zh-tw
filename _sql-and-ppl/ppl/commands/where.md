@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: where
 parent: Commands
@@ -8,31 +9,31 @@ nav_order: 53
 
 <!-- vale off -->
 
-# where command
+# where 命令
 
 <!-- vale on -->
 
-The `where` command filters the search results. It only returns results that match the specified conditions.
+`where` 命令用於篩選搜尋結果，只會傳回符合指定條件的結果。
 
-## Syntax
+## 語法
 
-The `where` command has the following syntax:
+`where` 命令的語法如下：
 
 ```sql
 where <boolean-expression>
 ```
 
-## Parameters
+## 參數
 
-The `where` command supports the following parameters.
+`where` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要／選用 | 說明 |
 | --- | --- | --- |
-| `<boolean-expression>` | Required | The condition used to filter the results. Only rows in which this condition evaluates to `true` are returned. |
+| `<boolean-expression>` | 必要 | 用於篩選結果的條件。只會傳回此條件評估為 `true` 的資料列。 |
 
-## Example 1: Filtering by severity level
+## 範例 1：依嚴重性等級篩選
 
-The following query finds all log entries with a severity level higher than `INFO` (severityNumber > 9), filtering out routine logs to focus on warnings and errors:
+下列查詢會找出所有嚴重性等級高於 `INFO` (severityNumber > 9) 的記錄項目，篩除例行記錄檔，以聚焦於警告與錯誤：
 
 ```sql
 source=otellogs
@@ -43,7 +44,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -63,9 +64,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 2: Filtering using combined criteria
+## 範例 2：使用組合條件篩選
 
-The following query narrows down errors to a specific service during an incident investigation, combining severity and service name conditions with `AND`:
+下列查詢在事件調查期間，使用 `AND` 結合嚴重性與服務名稱條件，將錯誤縮小至特定服務：
 
 ```sql
 source=otellogs
@@ -75,7 +76,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -87,9 +88,9 @@ The query returns the following results:
 <!-- vale on -->
 
 
-## Example 3: Filtering with multiple possible values
+## 範例 3：以多個可能值篩選
 
-The following query retrieves all warnings and errors using `OR` to match either condition:
+下列查詢使用 `OR` 同時比對任一條件，擷取所有警告與錯誤：
 
 ```sql
 source=otellogs
@@ -100,7 +101,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -115,13 +116,13 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 4: Filtering by text patterns 
+## 範例 4：依文字模式篩選 
 
-The `LIKE` operator enables pattern matching on string fields using wildcards.
+`LIKE` 運算子可使用萬用字元對字串欄位進行模式比對。
 
-### Matching with a prefix pattern
+### 以字首模式比對
 
-The following query uses a percent sign (`%`) to find all services starting with `frontend`:
+下列查詢使用百分比符號 (`%`) 找出所有以 `frontend` 開頭的服務：
 
 ```sql
 source=otellogs
@@ -132,9 +133,9 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-### Matching with a wildcard pattern
+### 以萬用字元模式比對
 
-The following query finds all logs from services containing `product` in their name:
+下列查詢會找出名稱中包含 `product` 的所有服務記錄檔：
 
 ```sql
 source=otellogs
@@ -145,7 +146,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -157,9 +158,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 5: Filtering by excluding specific values  
+## 範例 5：排除特定值進行篩選  
 
-The following query uses a `NOT` operator to exclude routine informational and debug logs, focusing on warnings and errors that need attention:
+下列查詢使用 `NOT` 運算子排除例行的資訊與偵錯記錄檔，聚焦於需要留意的警告與錯誤：
   
 ```sql
 source=otellogs
@@ -171,7 +172,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -185,9 +186,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 6: Filtering using value lists  
+## 範例 6：使用值清單篩選  
 
-The following query uses an `IN` operator to match multiple severity levels at once, retrieving all errors and warnings for incident response:
+下列查詢使用 `IN` 運算子一次比對多個嚴重性等級，擷取事件回應所需的所有錯誤與警告：
   
 ```sql
 source=otellogs
@@ -198,7 +199,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -219,9 +220,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 7: Filtering records with missing data  
+## 範例 7：篩選缺少資料的記錄  
 
-The following query finds logs that have instrumentation scope metadata:
+下列查詢會找出具有儀表化範圍中繼資料的記錄檔：
   
 ```sql
 source=otellogs
@@ -231,7 +232,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -245,9 +246,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 8: Filtering using grouped conditions  
+## 範例 8：使用分組條件篩選  
 
-The following query investigates a specific service's errors by combining severity conditions with a service filter, using parentheses to control evaluation order:
+下列查詢透過結合嚴重性條件與服務篩選條件來調查特定服務的錯誤，並使用括號控制評估順序：
   
 ```sql
 source=otellogs
@@ -258,7 +259,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 

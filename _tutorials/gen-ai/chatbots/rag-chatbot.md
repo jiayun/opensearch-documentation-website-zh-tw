@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: RAG chatbot
+title: "RAG 聊天機器人"
 parent: Chatbots
 grand_parent: Generative AI
 nav_order: 150
@@ -11,24 +12,24 @@ redirect_from:
   - /vector-search/tutorials/chatbots/rag-chatbot/
 ---
 
-# RAG chatbot
+# RAG 聊天機器人
 
-One of the known limitations of large language models (LLMs) is that their knowledge base only contains information from the period of time during which they were trained. LLMs have no knowledge of recent events or of your internal data. You can augment the LLM knowledge base by using retrieval-augmented generation (RAG).
+大型語言模型 (LLM) 的已知限制之一，是其知識庫僅包含訓練期間的資訊。LLM 不了解近期事件，也不知道您的內部資料。您可以使用檢索增強生成 (RAG) 來擴充 LLM 的知識庫。
 
-This tutorial shows you how to build your own chatbot using [agents and tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/index/) and RAG. RAG supplements the LLM knowledge base with information contained in OpenSearch indexes.
+本教學說明如何使用[代理程式與工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/index/)以及 RAG 來建立您自己的聊天機器人。RAG 會以 OpenSearch 索引中的資訊補充 LLM 知識庫。
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將以 `your_` 前綴開頭的預留位置替換為您自己的值。
 {: .note}
 
-## Prerequisite
+## 必要條件
 
-Meet the prerequisite and follow Step 1 of the [RAG with a conversational flow agent tutorial]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/rag-conversational-agent/) to set up the `test_population_data` knowledge base index, which contains US city population data.
+請符合必要條件，並依照[使用對話流程代理程式的 RAG 教學]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/rag-conversational-agent/)的步驟 1，設定包含美國城市人口資料的 `test_population_data` 知識庫索引。
 
-Note the embedding model ID; you'll use it in the following steps. 
+請記下嵌入模型 ID；您將在後續步驟中使用它。
 
-## Step 1: Set up a knowledge base
+## 步驟 1：設定知識庫
 
-First, create an ingest pipeline:
+首先，建立資料匯入管線：
 
 ```json
 PUT /_ingest/pipeline/test_tech_news_pipeline
@@ -48,7 +49,7 @@ PUT /_ingest/pipeline/test_tech_news_pipeline
 ```
 {% include copy-curl.html %}
 
-Next, create an index named `test_tech_news`, which contains recent tech news:
+接著，建立名為 `test_tech_news` 的索引，其中包含近期科技新聞：
 
 ```json
 PUT test_tech_news
@@ -75,7 +76,7 @@ PUT test_tech_news
 ```
 {% include copy-curl.html %}
 
-Ingest data into the index:
+將資料匯入索引：
 
 ```json
 POST _bulk
@@ -88,32 +89,32 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Step 2: Prepare an LLM
+## 步驟 2：準備 LLM
 
-Follow [step 2 of the RAG with a conversational flow agent tutorial]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/rag-conversational-agent/#step-2-prepare-an-llm) to configure the Amazon Bedrock Claude model.
+請依照 [使用對話流程代理程式的 RAG 教學中的步驟 2]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/rag-conversational-agent/#step-2-prepare-an-llm) 來設定 Amazon Bedrock Claude 模型。
 
-Note the model ID; you'll use it in the following steps.
+請記下模型 ID；您將在後續步驟中使用它。
 
-## Step 3: Create an agent
+## 步驟 3：建立代理程式
 
-For this tutorial, you will create an agent of the `conversational` type. 
+在本教學中，您將建立 `conversational` 類型的代理程式。
 
-Both the `conversational_flow` and `conversational` agents support conversation history.
+`conversational_flow` 和 `conversational` 代理程式都支援對話歷史記錄。
 
-The `conversational_flow` and `conversational` agents differ in the following ways:
+`conversational_flow` 和 `conversational` 代理程式有下列差異：
 
-- A `conversational_flow` agent runs tools sequentially, in a predefined order.
-- A `conversational` agent dynamically chooses which tool to run next.
+- `conversational_flow` 代理程式會依預先定義的順序循序執行工具。
+- `conversational` 代理程式會動態選擇接下來要執行哪個工具。
 
-In this tutorial, the agent includes two tools: One provides recent population data, and the other contains tech news.
+在本教學中，代理程式包含兩個工具：一個提供近期人口資料，另一個包含科技新聞。
 
-The agent has the following parameters:
+代理程式具有下列參數：
 
-- `"max_iteration": 5`: The agent runs the LLM a maximum of five times.
-- `"response_filter": "$.completion"`: Needed to retrieve the LLM answer from the Amazon Bedrock Claude model response.
-- `"doc_size": 3` (in `population_data_knowledge_base`): Specifies to return the top three documents.
+- `"max_iteration": 5`：代理程式最多執行 LLM 五次。
+- `"response_filter": "$.completion"`：需要此參數才能從 Amazon Bedrock Claude 模型回應中擷取 LLM 答案。
+- `"doc_size": 3` (在 `population_data_knowledge_base` 中)：指定傳回前三個文件。
 
-Create an agent with the preceding specifications:
+使用上述規格建立代理程式：
 
 ```json
 POST _plugins/_ml/agents/_register
@@ -168,22 +169,22 @@ POST _plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-Note the agent ID; you'll use it in the next step.
+請記下代理程式 ID；您將在下一步中使用它。
 
-## Step 4: Test the agent
+## 步驟 4：測試代理程式
 
-The `conversational` agent supports a `verbose` option. You can set `verbose` to `true` to obtain detailed steps.
+`conversational` 代理程式支援 `verbose` 選項。您可以將 `verbose` 設為 `true` 以取得詳細步驟。
 
-Alternatively, you can call the [Get Message Traces API](ml-commons-plugin/api/memory-apis/get-message-traces/):
+或者，您可以呼叫 [Get Message Traces API](ml-commons-plugin/api/memory-apis/get-message-traces/)：
 
 ```json
 GET _plugins/_ml/memory/message/message_id/traces
 ```
 {% include copy-curl.html %}
 
-### Start a conversation
+### 開始對話
 
-Ask a question related to tech news:
+詢問與科技新聞相關的問題：
 
 ```json
 POST _plugins/_ml/agents/your_agent_id/_execute
@@ -196,7 +197,7 @@ POST _plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-In the response, note that the agent runs the `tech_news_knowledge_base` tool to obtain the top two documents. The agent then passes these documents as context to the LLM. The LLM uses the context to produce the answer:
+在回應中，請注意代理程式會執行 `tech_news_knowledge_base` 工具以取得前兩個文件。代理程式接著會將這些文件作為上下文傳遞給 LLM。LLM 會使用該上下文產生答案：
 
 ```json
 {
@@ -235,14 +236,14 @@ In the response, note that the agent runs the `tech_news_knowledge_base` tool to
 }
 ```
 
-You can trace the detailed steps by using the Get Traces API:
+您可以使用 Get Traces API 追蹤詳細步驟：
 
 ```
 GET _plugins/_ml/memory/message/ebVSxI0B8vrNLhb9nxty/traces
 ```
 {% include copy-curl.html %}
 
-Ask a question related to the population data:
+詢問與人口資料相關的問題：
 
 ```json
 POST _plugins/_ml/agents/your_agent_id/_execute
@@ -255,7 +256,7 @@ POST _plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-In the response, note that the agent runs the `population_data_knowledge_base` tool to obtain the top three documents. The agent then passes these documents as context to the LLM. The LLM uses the context to produce the answer: 
+在回應中，請注意代理程式會執行 `population_data_knowledge_base` 工具以取得前三個文件。代理程式接著會將這些文件作為上下文傳遞給 LLM。LLM 會使用該上下文產生答案：
 
 ```json
 {
@@ -295,9 +296,9 @@ In the response, note that the agent runs the `population_data_knowledge_base` t
 }
 ```
 
-### Continue a conversation
+### 繼續對話
 
-To continue a previous conversation, provide its conversation ID in the `memory_id` parameter:
+若要繼續先前的對話，請在 `memory_id` 參數中提供該對話的 ID：
 
 ```json
 POST _plugins/_ml/agents/your_agent_id/_execute
@@ -311,7 +312,7 @@ POST _plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-In the response, note that the `population_data_knowledge_base` doesn't return the population of Seattle. Instead, the agent learns the population of Seattle by referencing historical messages:
+請注意，回應中的 `population_data_knowledge_base` 並未傳回西雅圖的人口數。代理程式會透過參考歷史訊息來得知西雅圖的人口數：
 
 ```json
 {

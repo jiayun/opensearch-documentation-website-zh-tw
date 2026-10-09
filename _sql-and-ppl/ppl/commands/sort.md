@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: sort
 parent: Commands
@@ -8,47 +9,47 @@ nav_order: 43
 
 <!-- vale off -->
 
-# sort command
+# sort 命令
 
 <!-- vale on -->
 
-The `sort` command sorts the search results by the specified fields.
+`sort` 命令會依指定的欄位排序搜尋結果。
 
 
-## Syntax
+## 語法
 
-The `sort` command supports two syntax notations. You must use one notation consistently within a single `sort` command.
+`sort` 命令支援兩種語法標記法。在單一 `sort` 命令中，您必須一致地使用其中一種標記法。
 
-### Prefix notation
+### 前置標記法
 
-The `sort` command has the following syntax in prefix notation:
+`sort` 命令使用前置標記法時語法如下：
 
 ```sql
 sort [<count>] [+|-] <field> [, [+|-] <field>]...
 ```
 
-### Suffix notation
+### 後置標記法
 
-The `sort` command has the following syntax in suffix notation:
+`sort` 命令使用後置標記法時語法如下：
 
 ```sql
 sort [<count>] <field> [asc|desc|a|d] [, <field> [asc|desc|a|d]]...
 ```
 
-## Parameters
+## 參數
 
-The `sort` command supports the following parameters.
+`sort` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<field>` | Required | The field used to sort. Use `auto(field)`, `str(field)`, `ip(field)`, or `num(field)` to specify how to interpret field values. Multiple fields can be specified as a comma-separated list. |
-| `<count>` | Optional | The number of results to return. A value of `0` or less returns all results. Default is `0`. |
-| `[+|-]` | Optional | **Prefix notation only.** The plus sign (`+`) specifies ascending order, and the minus sign (`-`) specifies descending order. Default is ascending order. |
-| `[asc|desc|a|d]` | Optional | **Suffix notation only.** Specifies the sort order: `asc`/`a` for ascending, `desc`/`d` for descending. Default is ascending order. |
+| `<field>` | 必要 | 用於排序的欄位。使用 `auto(field)`、`str(field)`、`ip(field)` 或 `num(field)` 指定如何解讀欄位值。可以逗號分隔的清單指定多個欄位。 |
+| `<count>` | 選用 | 要傳回的結果數。值為 `0` 或更少時會傳回所有結果。預設為 `0`。 |
+| `[+|-]` | 選用 | **僅限前置標記法。** 加號 (`+`) 指定遞增順序，減號 (`-`) 指定遞減順序。預設為遞增順序。 |
+| `[asc|desc|a|d]` | 選用 | **僅限後置標記法。** 指定排序順序：`asc`/`a` 為遞增，`desc`/`d` 為遞減。預設為遞增順序。 |
 
-## Example 1: Sorting by one field
+## 範例 1：依單一欄位排序
 
-The following query sorts logs by severity number in ascending order, showing the least severe entries first:
+下列查詢依嚴重性編號遞增排序記錄檔，先顯示嚴重性最低的項目：
 
 ```sql
 source=otellogs
@@ -59,7 +60,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -73,9 +74,9 @@ The query returns the following results:
 <!-- vale on -->
 
 
-## Example 2: Sorting by one field in descending order
+## 範例 2：依單一欄位遞減排序
 
-The following query sorts logs by severity in descending order to surface the most critical issues first. You can use either prefix notation (`- severityNumber`) or suffix notation (`severityNumber desc`):
+下列查詢依嚴重性遞減排序記錄檔，以優先呈現最嚴重的問題。您可以使用前置標記法 (`- severityNumber`) 或後置標記法 (`severityNumber desc`)：
 
 ```sql
 source=otellogs
@@ -86,7 +87,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-This query is equivalent to the following query:
+此查詢等同於下列查詢：
 
 ```sql
 source=otellogs
@@ -97,7 +98,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -111,9 +112,9 @@ The query returns the following results:
 <!-- vale on -->
 
 
-## Example 3: Sorting by multiple fields
+## 範例 3：依多個欄位排序
 
-The following query sorts errors by severity descending and service name ascending, so the most critical issues appear first and services are alphabetical within each severity level. You can use either prefix notation (`+`/`-`) or suffix notation (`asc`/`desc`):
+下列查詢依嚴重性遞減及服務名稱遞增排序錯誤，因此最嚴重的問題會先出現，且在每個嚴重性層級內服務會依字母順序排列。您可以使用前置標記法 (`+`/`-`) 或後置標記法 (`asc`/`desc`)：
   
 ```sql
 source=otellogs
@@ -125,7 +126,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -139,7 +140,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The equivalent query using suffix notation is:
+使用後置標記法的等效查詢為：
 
 ```sql
 source=otellogs
@@ -151,7 +152,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -166,9 +167,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 4: Sorting fields with null values
+## 範例 4：排序含 null 值的欄位
 
-The default ascending order lists null values first. The following query sorts by the `instrumentationScope.name` field, showing that logs without instrumentation metadata appear before instrumented ones:
+預設的遞增順序會先列出 null 值。下列查詢依 `instrumentationScope.name` 欄位排序，顯示沒有檢測中繼資料的記錄檔會出現在已加入檢測資訊的記錄檔之前：
   
 ```sql
 source=otellogs
@@ -179,7 +180,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -195,9 +196,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 6: Specifying the number of sorted documents to return  
+## 範例 6：指定要傳回的已排序文件數  
 
-The following query sorts all logs by severity and returns only the 3 least severe entries:
+下列查詢依嚴重性排序所有記錄檔，並只傳回嚴重性最低的 3 個項目：
   
 ```sql
 source=otellogs
@@ -207,7 +208,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -220,9 +221,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 7: Sorting by specifying field type
+## 範例 7：指定欄位類型進行排序
 
-The following query uses `str()` to sort severity numbers lexicographically instead of numerically. Notice that `5` and `9` appear after `21` because string sorting compares character by character:
+下列查詢使用 `str()` 以字典順序而非數值順序排序嚴重性編號。請注意，`5` 和 `9` 會出現在 `21` 之後，因為字串排序會逐字元比較：
 
 ```sql
 source=otellogs
@@ -233,7 +234,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 

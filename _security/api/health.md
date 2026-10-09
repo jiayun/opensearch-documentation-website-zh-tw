@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Security plugin health
+title: "安全性外掛程式健康狀態"
 parent: Security APIs
 nav_order: 170
 ---
 
-# Security Plugin Health API
-**Introduced 1.0**
+# 安全性外掛程式健康狀態 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Checks whether the Security plugin is up and running. This operation does not require a signed request, so you can use it as the health check for a load balancer that fronts the cluster.
+檢查 Security 外掛程式是否已啟動並正在執行。此操作不需要已簽署的請求，因此您可以將其用於位於叢集前方的負載平衡器健康檢查。
 
 <!-- spec_insert_start
 api: security.health
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET  /_plugins/_security/health
 POST /_plugins/_security/health
 ```
 <!-- spec_insert_end -->
 
-## Example request
+## 範例請求
 
 ```json
 GET _plugins/_security/health
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -42,13 +43,13 @@ GET _plugins/_security/health
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文是包含下列欄位的 JSON 物件。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `status` | String | The status of the Security plugin. `UP` indicates that the plugin is initialized and ready to authorize requests. |
-| `mode` | String | The operating mode of the plugin. A cluster that enforces authentication and authorization returns `strict`. |
-| `message` | String | Additional information about the status, or `null` when the plugin is running normally. |
-| `settings` | Object | The Security plugin settings that are reported with the health check. |
+| `status` | 字串 | Security 外掛程式的狀態。`UP` 表示此外掛程式已初始化，並準備好授權請求。 |
+| `mode` | 字串 | 此外掛程式的運作模式。強制執行驗證與授權的叢集會傳回 `strict`。 |
+| `message` | 字串 | 狀態的其他資訊，或在外掛程式正常執行時為 `null`。 |
+| `settings` | 物件 | 隨健康檢查回報的 Security 外掛程式設定。 |

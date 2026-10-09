@@ -1,52 +1,53 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Tracking and remediating failed documents
+title: "追蹤與補救失敗的文件"
 parent: Backfill
 grand_parent: Migration workflows
 nav_order: 10
 permalink: /migration-assistant/migration-phases/tracking-failed-documents/
 ---
 
-# Tracking and remediating failed documents
+# 追蹤與補救失敗的文件
 
-During a [backfill]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/backfill/), Reindex-from-Snapshot (RFS) retries most document errors automatically. A document counts as failed only when the error is terminal, either because the error is non-retryable or because RFS exhausted the retry limit. You can list which documents failed, determine why they failed, and remediate them.
+在[回填]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/backfill/)期間，Reindex-from-Snapshot (RFS) 會自動重試大多數的文件錯誤。只有在錯誤為終止性時，文件才會被視為失敗，原因可能是錯誤無法重試，或是 RFS 已用盡重試次數上限。您可以列出哪些文件失敗、判斷失敗原因，並進行補救。
 
-## Where failures are recorded
+## 失敗記錄的位置
 
-Terminal document failures are recorded in two places:
+終止性文件失敗會記錄在兩個地方：
 
-- The failed document stream is a durable inventory of terminal failures written to Amazon S3 as gzip-compressed NDJSON. Each record identifies the document and captures enough detail to diagnose or resubmit it without returning to the source cluster.
-- The RFS worker logs contain lower-level diagnostic detail. The workers log each failed bulk request, including the target index, failed item count, root cause, and the request and response bodies.
+- 失敗文件串流是終止性失敗的持久清單，以 gzip 壓縮的 NDJSON 格式寫入 Amazon S3。每筆記錄都會識別文件，並擷取足夠的詳細資訊，讓您不需回到來源叢集即可診斷或重新提交該文件。
+- RFS 工作程式記錄包含較低層級的診斷詳細資訊。工作程式會記錄每個失敗的大量請求，包括目標索引、失敗項目計數、根本原因，以及請求和回應本文。
 
 {: .warning }
-> The failed document stream is **off by default**. If you do not enable it before running the backfill, a failed migration leaves no durable inventory of which documents did not land; you would be limited to the worker logs. Enable it as described in [Enabling the failed document stream](#enabling-the-failed-document-stream) before you start the backfill.
+> 失敗文件串流**預設為關閉**。如果您在執行回填前未啟用，失敗的遷移將不會留下任何持久清單，說明哪些文件未成功寫入；您只能依賴工作程式記錄。請在開始回填前，依照[啟用失敗文件串流](#enabling-the-failed-document-stream)所述啟用。
 
-## Enabling the failed document stream
+## 啟用失敗文件串流
 
-Setting an S3 bucket in the migration's `documentBackfillConfig` enables the stream. There is no separate enable flag, and the stream does not fall back to the deployment's default bucket, so you must name a bucket explicitly. Complete these steps from a Migration Console shell before you start the backfill:
+在遷移的 `documentBackfillConfig` 中設定 S3 儲存貯體即可啟用串流。沒有個別的啟用旗標，且串流不會退回部署的預設儲存貯體，因此您必須明確指定儲存貯體名稱。請在開始回填前，從 Migration Console 殼層完成下列步驟：
 
-1. Choose a bucket. On Amazon EKS, you can use the deployment's default bucket, `migrations-default-<ACCOUNT_ID>-<STAGE>-<REGION>`, to which Migration Assistant can write. The following command lists the default bucket for every Migration Assistant deployment in the account, so choose the one that matches your stage and Region:
+1. 選擇儲存貯體。在 Amazon EKS 上，您可以使用部署的預設儲存貯體 `migrations-default-<ACCOUNT_ID>-<STAGE>-<REGION>`，Migration Assistant 可寫入該儲存貯體。下列命令會列出帳戶中每個 Migration Assistant 部署的預設儲存貯體，請選擇符合您階段與 Region 的儲存貯體：
 
    ```bash
    aws s3 ls | grep migrations-default
    ```
    {% include copy.html %}
 
-   Alternatively, create a bucket in the same AWS account:
+   或者，在相同的 AWS 帳戶中建立儲存貯體：
 
    ```bash
    aws s3 mb s3://<BUCKET_NAME> --region <REGION>
    ```
    {% include copy.html %}
 
-1. Open the workflow configuration:
+1. 開啟工作流程組態：
 
    ```bash
    workflow configure edit
    ```
    {% include copy.html %}
 
-1. Add the bucket to each migration's `documentBackfillConfig` and then save:
+1. 將儲存貯體新增至每個遷移的 `documentBackfillConfig`，然後儲存：
 
    ```yaml
    snapshotMigrationConfigs:
@@ -58,48 +59,48 @@ Setting an S3 bucket in the migration's `documentBackfillConfig` enables the str
    ```
    {% include copy.html %}
 
-1. Submit the workflow:
+1. 提交工作流程：
 
    ```bash
    workflow submit
    ```
    {% include copy.html %}
 
-1. After the backfill starts, confirm the stream location:
+1. 回填開始後，確認串流位置：
 
    ```bash
    console failed-document-stream location
    ```
    {% include copy.html %}
 
-To use a bucket in another AWS account or a bucket encrypted with a KMS key that you manage, also grant the Migration Assistant pod role access in the bucket policy or KMS key policy. On Amazon EKS, uninstalling Migration Assistant empties and deletes the default bucket by default. Copy any records that you want to keep before uninstalling Migration Assistant.
+若要使用另一個 AWS 帳戶中的儲存貯體，或使用由您管理的 KMS 金鑰加密的儲存貯體，還需在儲存貯體政策或 KMS 金鑰政策中授予 Migration Assistant pod 角色存取權。在 Amazon EKS 上，解除安裝 Migration Assistant 預設會清空並刪除預設儲存貯體。請在解除安裝 Migration Assistant 前，複製任何您想保留的記錄。
 {: .note }
 
-The following table lists the options that configure the failed document stream.
+下表列出設定失敗文件串流的選項。
 
-| Option | Default | Description |
+| 選項 | 預設 | 說明 |
 | :-- | :-- | :-- |
-| `failedDocumentStreamS3Bucket` | None | The bucket that stores the records. Setting it enables the stream. |
-| `failedDocumentStreamS3Prefix` | `rfs-failed-document-stream/` | The key prefix. Each run has a session root at `<prefix>session=<uid>/`; individual objects are nested under that root by target index and worker. |
-| `failedDocumentStreamS3Region` | Resolved from the configuration | The AWS Region of the bucket. Ignored when no bucket is set. |
-| `failedDocumentStreamS3Endpoint` | Resolved from the configuration | An endpoint override, for example, LocalStack. Ignored when no bucket is set. |
-| `failedDocumentStreamMaxBufferBytes` | `67108864` (64 MiB) | The maximum number of in-memory bytes per index before rotating to a new object. |
+| `failedDocumentStreamS3Bucket` | None | 儲存記錄的儲存貯體。設定此項即會啟用串流。 |
+| `failedDocumentStreamS3Prefix` | `rfs-failed-document-stream/` | 索引鍵前置詞。每次執行在 `<prefix>session=<uid>/` 都有工作階段根目錄；個別物件會依目標索引與工作程式嵌套在該根目錄下。 |
+| `failedDocumentStreamS3Region` | 從組態解析 | 儲存貯體的 AWS Region。未設定儲存貯體時會忽略。 |
+| `failedDocumentStreamS3Endpoint` | 從組態解析 | 端點覆寫，例如 LocalStack。未設定儲存貯體時會忽略。 |
+| `failedDocumentStreamMaxBufferBytes` | `67108864` (64 MiB) | 每個索引在輪替至新物件前的記憶體內位元組數上限。 |
 
-The console reports the session root:
+主控台會報告工作階段根目錄：
 
 ```
 s3://<bucket>/<prefix>session=<migration-UID>/
 ```
 
-The individual gzip-compressed NDJSON objects are stored beneath that root:
+個別的 gzip 壓縮 NDJSON 物件會儲存在該根目錄下：
 
 ```
 s3://<bucket>/<prefix>session=<migration-UID>/index=<targetIndex>/worker=<workerId>/failed-document-stream-<timestamp>-<sequence>.ndjson.gz
 ```
 
-## Checking whether any documents failed
+## 檢查是否有任何文件失敗
 
-After the backfill finishes, run the following commands from a Migration Console shell:
+回填完成後，請從 Migration Console 殼層執行下列命令：
 
 ```bash
 workflow status
@@ -111,14 +112,14 @@ console failed-document-stream count
 ```
 {% include copy.html %}
 
-A count greater than `0` means that documents failed. `workflow status` can report the backfill as completed even when documents failed, so check the count rather than relying on the workflow status alone.
+計數大於 `0` 表示有文件失敗。`workflow status` 即使文件失敗，仍可能將回填回報為已完成，因此請檢查計數，而不要只依賴工作流程狀態。
 
 {: .note }
-> If the stream is configured but cannot be read, for example, because of missing S3 permissions, the console command fails rather than reporting no failures.
+> 如果已設定串流但無法讀取，例如因為缺少 S3 權限，主控台命令會失敗，而不是回報沒有失敗。
 
-## Inspecting failed documents
+## 檢查失敗的文件
 
-Run the following commands from a Migration Console shell. When more than one migration exists, add `--migration <name>` to select one:
+請從 Migration Console 殼層執行下列命令。當存在多個遷移時，請新增 `--migration <name>` 以選取其中一個：
 
 ```bash
 # S3 location for the current session
@@ -136,58 +137,58 @@ console --json failed-document-stream list --limit 100
 ```
 {% include copy.html %}
 
-The following table lists the fields included in each record.
+下表列出每筆記錄包含的欄位。
 
-| Field | Description |
+| 欄位 | 說明 |
 | :-- | :-- |
-| `targetIndex` | The index the document was being written to. |
-| `documentId` | The document's ID. |
-| `failureClass` | How the document reached the stream: `NON_RETRYABLE` for errors that are never retried, or `RETRYABLE_EXHAUSTED` when retries were exhausted. |
-| `failureType` | The OpenSearch error type, for example `mapper_parsing_exception`. |
-| `timestamp` | The time when the failure was recorded. |
-| `sessionId` | The session the record belongs to. This matches the migration UID in the stream location. |
-| `workerId` | The RFS worker that produced the failure. |
-| `workItemId` | The shard work item that produced the failure. |
-| `requestItem` | The captured bulk request item. When the original source document is available, the source content is stored under `document` so you can diagnose the problem or resubmit the request without retrieving the document from the source cluster. |
-| `responseItem` | The OpenSearch bulk response item, including the error type and reason. |
+| `targetIndex` | 文件寫入的目標索引。 |
+| `documentId` | 文件的 ID。 |
+| `failureClass` | 文件如何到達串流：`NON_RETRYABLE` 表示永不重試的錯誤，`RETRYABLE_EXHAUSTED` 表示已用盡重試次數。 |
+| `failureType` | OpenSearch 錯誤類型，例如 `mapper_parsing_exception`。 |
+| `timestamp` | 記錄失敗的時間。 |
+| `sessionId` | 記錄所屬的工作階段。這會與串流位置中的遷移 UID 相符。 |
+| `workerId` | 產生失敗的 RFS 工作程式。 |
+| `workItemId` | 產生失敗的分片工作項目。 |
+| `requestItem` | 擷取的大量請求項目。當原始來源文件可用時，來源內容會儲存在 `document` 下，讓您不需從來源叢集擷取文件即可診斷問題或重新提交請求。 |
+| `responseItem` | OpenSearch 大量回應項目，包括錯誤類型與原因。 |
 
-A document can appear in the stream more than once, so the console deduplicates records on read by `targetIndex` and `documentId`. Counts therefore reflect the number of distinct failed documents.
+文件可能會在串流中出現多次，因此主控台在讀取時會依 `targetIndex` 與 `documentId` 去除重複記錄。因此計數會反映不同失敗文件的數量。
 
-## Reading the RFS worker logs
+## 讀取 RFS 工作程式記錄
 
-For lower-level detail, inspect the RFS worker logs. Each failed bulk request produces an error entry with the target index, failed item count, root cause, and the OpenSearch response body, plus a structured entry under the `FailedRequestsLogger` category containing the request and response bodies.
+如需較低層級的詳細資訊，請檢查 RFS 工作程式記錄。每個失敗的大量請求都會產生一筆錯誤項目，包含目標索引、失敗項目計數、根本原因，以及 OpenSearch 回應本文，並在 `FailedRequestsLogger` 類別下產生一筆結構化項目，包含請求和回應本文。
 
 {: .note }
-> Individual failed-item bodies are deliberately omitted from the general worker log to avoid leaking document data; the full request body is emitted only to the dedicated `FailedRequestsLogger` category.
+> 個別失敗項目的本文刻意從一般工作程式記錄中省略，以避免洩漏文件資料；完整的請求本文只會輸出至專用的 `FailedRequestsLogger` 類別。
 
-## Remediating failures
+## 補救失敗
 
-Use the failed document stream to identify the main cause before retrying any documents.
+在重試任何文件之前，請使用失敗文件串流找出主要原因。
 
-### Identifying the failure type
+### 識別失敗類型
 
-Group the failures returned by `list` by `failureType` to identify the cause, and use `failureClass` to determine whether the error was non-retryable or became terminal only after retries were exhausted. The following table lists common failure types and the recommended remediation for each.
+將 `list` 傳回的失敗依 `failureType` 分組以找出原因，並使用 `failureClass` 判斷錯誤是無法重試，還是只有在用盡重試次數後才變成終止性。下表列出常見的失敗類型及各自的建議補救方式。
 
-| `failureType` | Typical cause | Remediation |
+| `failureType` | 常見原因 | 補救方式 |
 | :-- | :-- | :-- |
-| `mapper_parsing_exception` | Document doesn't match the target index mapping. | Fix the target mapping or add/correct a transform, then resubmit. |
-| `version_conflict_engine_exception` | A newer version of the document already exists at the target. | Usually safe to leave; resubmit only if the source version should win. |
-| `es_rejected_execution_exception` (often with `failureClass=RETRYABLE_EXHAUSTED`) | Target was overloaded or briefly unavailable. | Address target capacity, then resubmit the affected documents. |
+| `mapper_parsing_exception` | 文件與目標索引對應不符。 | 修正目標對應，或新增/更正轉換，然後重新提交。 |
+| `version_conflict_engine_exception` | 目標上已存在較新版本的文件。 | 通常可安全保留；只有在來源版本應優先時才重新提交。 |
+| `es_rejected_execution_exception` (通常伴隨 `failureClass=RETRYABLE_EXHAUSTED`) | 目標超載或短暫無法使用。 | 處理目標容量問題，然後重新提交受影響的文件。 |
 
-### Resubmitting the failed documents
+### 重新提交失敗的文件
 
-The `console --json failed-document-stream list` output contains each failed document's `requestItem`, so you can correct the root cause, such as a mapping or a transform, and then resubmit those documents to the target. When the original source document was available, `requestItem` holds that source content. It is not guaranteed to hold the exact transformed payload that was sent on the failed write.
+`console --json failed-document-stream list` 輸出包含每個失敗文件的 `requestItem`，因此您可以修正根本原因 (例如對應或轉換)，然後將這些文件重新提交至目標。當原始來源文件可用時，`requestItem` 會保留該來源內容。但不保證會保留失敗寫入時所傳送的確切轉換後承載內容。
 
-## Deleting failed document records
+## 刪除失敗文件記錄
 
-The Migration Console doesn't provide a command to delete failed document records. To delete the current session's records, remove the session location returned by the `console failed-document-stream location` command. This deletion is irreversible:
+Migration Console 不提供刪除失敗文件記錄的命令。若要刪除目前工作階段的記錄，請移除 `console failed-document-stream location` 命令傳回的工作階段位置。此刪除作業無法復原：
 
 ```bash
 aws s3 rm --recursive s3://<BUCKET>/<PREFIX>session=<migration-UID>/
 ```
 {% include copy.html %}
 
-## Related documentation
+## 相關文件
 
-- [Backfill]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/backfill/)
-- [Troubleshooting]({{site.url}}{{site.baseurl}}/migration-assistant/troubleshooting/)
+- [回填]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/backfill/)
+- [疑難排解]({{site.url}}{{site.baseurl}}/migration-assistant/troubleshooting/)

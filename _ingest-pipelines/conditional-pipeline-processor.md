@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Conditionals with the pipeline processor
+title: "使用管線處理器的條件式"
 parent: Conditional execution
 nav_order: 60
 ---
 
-# Conditionals with the pipeline processor
+# 使用管線處理器的條件式
 
-The `pipeline` processor in ingest pipelines allows conditional execution of different sub-pipelines based on document contents. This provides powerful flexibility when different types of documents require separate processing logic. You can use the `if` parameter in the `pipeline` processor to direct documents to different pipelines based on field values, data types, or content structure. Each pipeline can then apply its own set of processors independently. This approach keeps your pipelines modular and maintainable by applying logic only where it's relevant.
+資料匯入管線中的 `pipeline` 處理器可根據文件內容，有條件地執行不同的子管線。當不同類型的文件需要各自的處理邏輯時，這提供了強大的彈性。您可以在 `pipeline` 處理器中使用 `if` 參數，根據欄位值、資料類型或內容結構，將文件導向不同的管線。接著，每個管線都能獨立套用自己的一組處理器。這種做法只在相關的地方套用邏輯，讓管線保持模組化且易於維護。
 
-## Example: Route logs by service
+## 範例：依服務路由記錄檔
 
-The following example demonstrates how to route logs to different sub-pipelines depending on the `service.name` field in the document.
+以下範例示範如何根據文件中的 `service.name` 欄位，將記錄檔路由到不同的子管線。
 
-Create the first pipeline named `webapp_logs`:
+建立名為 `webapp_logs` 的第一個管線：
 
 ```json
 PUT _ingest/pipeline/webapp_logs
@@ -25,7 +26,7 @@ PUT _ingest/pipeline/webapp_logs
 ```
 {% include copy-curl.html %}
 
-Create the second pipeline named `api_logs`:
+建立名為 `api_logs` 的第二個管線：
 
 ```json
 PUT _ingest/pipeline/api_logs
@@ -37,7 +38,7 @@ PUT _ingest/pipeline/api_logs
 ```
 {% include copy-curl.html %}
 
-Create the main routing pipeline named `service_router`, which routes the documents to the corresponding pipelines based on `service.name`:
+建立名為 `service_router` 的主要路由管線，它會根據 `service.name` 將文件路由到對應的管線：
 
 ```json
 PUT _ingest/pipeline/service_router
@@ -60,7 +61,7 @@ PUT _ingest/pipeline/service_router
 ```
 {% include copy-curl.html %}
 
-Use the following request to simulate the pipelines:
+使用下列請求來模擬這些管線：
 
 ```json
 POST _ingest/pipeline/service_router/_simulate
@@ -74,7 +75,7 @@ POST _ingest/pipeline/service_router/_simulate
 ```
 {% include copy-curl.html %}
 
-The response confirms that the first document was processed by the `webapp_logs` pipeline and the second document was processed by the `api_logs` pipeline. The third document remains unchanged because it doesn't match any conditions:
+回應確認第一份文件是由 `webapp_logs` 管線處理，第二份文件是由 `api_logs` 管線處理。第三份文件則保持不變，因為它不符合任何條件：
 
 ```json
 {
@@ -130,11 +131,11 @@ The response confirms that the first document was processed by the `webapp_logs`
 }
 ```
 
-## Example: Type-specific processing
+## 範例：依類型處理
 
-You can also use the pipeline processor to apply type-specific pipelines. The following pipeline directs logs to a `numeric_handler` if the `code` field is a number and to a `string_handler` if it is of type `String`.
+您也可以使用管線處理器來套用依類型區分的管線。下列管線會在 `code` 欄位是數字時，將記錄檔導向 `numeric_handler`；若該欄位為 `String` 類型，則導向 `string_handler`。
 
-Create the first pipeline named `numeric_handler`:
+建立名為 `numeric_handler` 的第一個管線：
 
 ```json
 PUT _ingest/pipeline/numeric_handler
@@ -146,7 +147,7 @@ PUT _ingest/pipeline/numeric_handler
 ```
 {% include copy-curl.html %}
 
-Create the second pipeline named `string_handler`:
+建立名為 `string_handler` 的第二個管線：
 
 ```json
 PUT _ingest/pipeline/string_handler
@@ -158,7 +159,7 @@ PUT _ingest/pipeline/string_handler
 ```
 {% include copy-curl.html %}
 
-Create the main routing pipeline named `type_router`, which routes the documents to the corresponding pipelines based on the `code` field:
+建立名為 `type_router` 的主要路由管線，它會根據 `code` 欄位將文件路由到對應的管線：
 
 ```json
 PUT _ingest/pipeline/type_router
@@ -181,7 +182,7 @@ PUT _ingest/pipeline/type_router
 ```
 {% include copy-curl.html %}
 
-Use the following request to simulate the pipelines:
+使用下列請求來模擬這些管線：
 
 ```json
 POST _ingest/pipeline/type_router/_simulate
@@ -194,7 +195,7 @@ POST _ingest/pipeline/type_router/_simulate
 ```
 {% include copy-curl.html %}
 
-The returned documents have the new field `code_type` added by individual sub-pipelines:
+傳回的文件含有由個別子管線新增的 `code_type` 欄位：
 
 ```json
 {

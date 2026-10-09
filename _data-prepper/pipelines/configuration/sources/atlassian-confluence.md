@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Atlassian Confluence
 parent: Sources
@@ -6,20 +7,20 @@ grand_parent: Pipelines
 nav_order: 5
 ---
 
-# Atlassian Confluence source
+# Atlassian Confluence 來源
 
-You can use the OpenSearch Data Prepper `confluence` source to ingest records from one or more [Atlassian Confluence](https://www.atlassian.com/software/confluence) spaces.
+您可以使用 OpenSearch Data Prepper `confluence` 來源，從一或多個 [Atlassian Confluence](https://www.atlassian.com/software/confluence) 空間匯入記錄。
 
-## Usage
+## 使用方式
 
-Set up Confluence project access credentials by choosing one of the following options:
+請選擇下列其中一種方式，設定 Confluence 專案存取憑證：
 
-- **Basic authentication** (API key authentication): Follow [these instructions](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/).
-- **OAuth 2.0 authentication**: Follow [these instructions](https://developer.atlassian.com/cloud/jira/platform/oauth-2-3lo-apps/#faq-rrt-config).
+- **基本驗證** (API 金鑰驗證)：請依照[這些指示](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)。
+- **OAuth 2.0 驗證**：請依照[這些指示](https://developer.atlassian.com/cloud/jira/platform/oauth-2-3lo-apps/#faq-rrt-config)。
 
-As an additional optional step, store the credentials in AWS Secrets Manager. If you don't store the credentials in AWS Secrets Manager, then you must provide plain-text credentials directly in the pipeline configuration.
+您也可以選擇將憑證存放在 AWS Secrets Manager 中。如果您未將憑證存放在 AWS Secrets Manager，則必須直接在管線組態中提供純文字憑證。
 
-The following example pipeline specifies `confluence` as a source. The pipeline ingests data from multiple Confluence spaces named `space1` and `space2` and applies filters to select wiki content (pages and blog posts) from these projects as a source:
+下列範例管線將 `confluence` 指定為來源。此管線會從名為 `space1` 和 `space2` 的多個 Confluence 空間匯入資料，並套用篩選條件，從這些專案中選取 wiki 內容 (頁面和部落格文章) 作為來源：
 
 ```yaml
 version: "2"
@@ -73,73 +74,73 @@ atlassian-confluence-pipeline:
 ```
 {% include copy.html %}
 
-## Configuration options
+## 組態選項
 
-The `confluence` source supports the following configuration options.
+`confluence` 來源支援下列組態選項。
 
-| Option            | Required | Type                              | Description                                                                                                                                                                                                                         |
+| 選項            | 必要 | 類型                              | 說明                                                                                                                                                                                                                         |
 |:------------------|:---------|:----------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `hosts`           | Yes      | List                              | The Atlassian Confluence hostname. Currently, only one host is supported, so this list is expected to be of size 1.                                                                                                                 |
-| `acknowledgments` | No       | Boolean                           | When set to `true`, enables the `confluence` source to receive [end-to-end acknowledgments]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/pipelines#end-to-end-acknowledgments) when events are received by OpenSearch sinks. |
-| `preserve_formatting` | No       | Boolean                           | When set to `true`, Confluence content formatting markup tags are kept as is. Default is `false` (remove markup tags and convert to plain text).                                                                 |
-| `authentication`  | Yes      | [authentication](#Authentication) | Configures the authentication method used to access `confluence` source records from the specified host.                                                                                                                            |
-| `filter`          | No       | [filter](#Filter)                 | Applies specific filter criteria while extracting Confluence content.                                                                                                                                                               |
+| `hosts`           | 是      | List                              | Atlassian Confluence 主機名稱。目前僅支援一部主機，因此此清單預期大小為 1。                                                                                                                 |
+| `acknowledgments` | 否       | Boolean                           | 設為 `true` 時，可讓 `confluence` 來源在 OpenSearch 接收端收到事件時接收[端對端確認]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/pipelines#end-to-end-acknowledgments)。 |
+| `preserve_formatting` | 否       | Boolean                           | 設為 `true` 時，Confluence 內容格式標記標籤會保持原樣。預設為 `false` (移除標記標籤並轉換為純文字)。                                                                 |
+| `authentication`  | 是      | [authentication](#Authentication) | 設定用來從指定主機存取 `confluence` 來源記錄的驗證方法。                                                                                                                            |
+| `filter`          | 否       | [filter](#Filter)                 | 在擷取 Confluence 內容時套用特定的篩選條件。                                                                                                                                                               |
 
-### Authentication
+### 驗證
 
-You can use one of the following authentication methods to access a Confluence host. You must provide one of the following parameters.
+您可以使用下列其中一種驗證方法來存取 Confluence 主機。您必須提供下列其中一個參數。
 
-| Option   | Required | Type              | Description                                                  |
+| 選項   | 必要 | 類型              | 說明                                                  |
 |:---------|:---------|:------------------|:-------------------------------------------------------------|
-| `basic`  | Yes      | [Basic](#basic-authentication)  | Basic authentication credentials used to access a Confluence host.  |
-| `oauth2` | Yes      | [OAuth 2.0](#oauth-20-authentication) | OAuth 2.0 authentication credentials used to access a Confluence host. |
+| `basic`  | 是      | [Basic](#basic-authentication)  | 用來存取 Confluence 主機的基本驗證憑證。  |
+| `oauth2` | 是      | [OAuth 2.0](#oauth-20-authentication) | 用來存取 Confluence 主機的 OAuth 2.0 驗證憑證。 |
 
-#### Basic authentication
+#### 基本驗證
 
-Either basic or OAuth 2.0 credentials are required to access the Confluence site. If you use `basic` authentication, the following fields are required.
+存取 Confluence 網站需要基本或 OAuth 2.0 憑證。如果您使用 `basic` 驗證，則需要下列欄位。
 
-| Option     | Required | Type   | Description                                                                                     |
+| 選項     | 必要 | 類型   | 說明                                                                                     |
 |:-----------|:---------|:-------|:------------------------------------------------------------------------------------------------|
-| `username` | Yes      | String | A username or reference to the secret key storing the username.           |
-| `password` | Yes      | String | A password (API key) or reference to the secret key storing the password. |
+| `username` | 是      | String | 使用者名稱，或儲存該使用者名稱的私密金鑰參照。           |
+| `password` | 是      | String | 密碼 (API 金鑰)，或儲存該密碼的私密金鑰參照。 |
 
-#### OAuth 2.0 authentication
+#### OAuth 2.0 驗證
 
-Either basic or OAuth 2.0 credentials are required to access the Confluence site. If you use OAuth 2.0, the following fields are required.
+存取 Confluence 網站需要基本或 OAuth 2.0 憑證。如果您使用 OAuth 2.0，則需要下列欄位。
 
-| Option          | Required | Type   | Description                                                                                     |
+| 選項          | 必要 | 類型   | 說明                                                                                     |
 |:----------------|:---------|:-------|:------------------------------------------------------------------------------------------------|
-| `client_id`     | Yes      | String | A `client_id` or reference to the secret key storing the `client_id`.         |
-| `client_secret` | Yes      | String | A `client_secret` or reference to the secret key storing the `client_secret`. |
-| `access_token`  | Yes      | String | An `access_token` or reference to the secret key storing the `access_token`.   |
-| `refresh_token` | Yes      | String | A `refresh_token` or reference to the secret key storing the `refresh_token`. |
+| `client_id`     | 是      | String | `client_id`，或儲存該 `client_id` 的私密金鑰參照。         |
+| `client_secret` | 是      | String | `client_secret`，或儲存該 `client_secret` 的私密金鑰參照。 |
+| `access_token`  | 是      | String | `access_token`，或儲存該 `access_token` 的私密金鑰參照。   |
+| `refresh_token` | 是      | String | `refresh_token`，或儲存該 `refresh_token` 的私密金鑰參照。 |
 
-### Filter
+### 篩選
 
-Optionally, you can specify filters to select specific content, shown in the following table. If no filters are specified, all the spaces and content visible for the specified credentials are extracted and sent to the specified sink in the pipeline.
+您可以選擇指定篩選條件來選取特定內容，如下表所示。如果未指定任何篩選條件，則會擷取指定憑證可見的所有空間和內容，並傳送至管線中指定的接收端。
 
-| Option      | Required | Type   | Description                                   |
+| 選項      | 必要 | 類型   | 說明                                   |
 |:------------|:---------|:-------|:----------------------------------------------|
-| `space`     | No       | String | A list of space keys to include or exclude.         |
-| `page_type` | No       | String | A list of page type filters to include or exclude. |
+| `space`     | 否       | String | 要包含或排除的空間索引鍵清單。         |
+| `page_type` | 否       | String | 要包含或排除的頁面類型篩選條件清單。 |
 
-### AWS secrets
+### AWS 秘密
 
-You can use the following options in the `aws` secrets configuration if you plan to store the credentials in AWS Secrets Manager. Storing secrets in AWS Secrets Manager is optional. If AWS Secrets Manager is not used, credentials must be specified in the pipeline YAML itself, in plain text.
+如果您打算將憑證存放在 AWS Secrets Manager 中，可以在 `aws` 秘密組態中使用下列選項。將秘密存放在 AWS Secrets Manager 中是選用的。如果未使用 AWS Secrets Manager，則必須在管線 YAML 本身中以純文字指定憑證。
 
-If OAuth 2.0 authentication is used in combination with `aws` secrets, this source requires write permissions to AWS Secrets Manager to be able to write back the updated (or renewed) access token once the current token expires.
+如果 OAuth 2.0 驗證與 `aws` 秘密搭配使用，則此來源需要 AWS Secrets Manager 的寫入權限，才能在目前權杖過期後寫回更新 (或續約) 的存取權杖。
 
-| Option         | Required | Type   | Description                                                                                                                                                                                                                                                                                    |
+| 選項         | 必要 | 類型   | 說明                                                                                                                                                                                                                                                                                    |
 |:---------------|:---------|:-------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `region`       | Yes      | String | The AWS Region to use for credentials. Defaults to the [standard SDK behavior for determining the Region](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html).                                                                                         |
-| `sts_role_arn` | Yes      | String | The AWS Security Token Service (AWS STS) role to assume for requests to Atlassian Confluence. Defaults to `null`, which uses the [standard SDK behavior for credentials](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html). |
-| `secret_id`    | Yes      | Map    | The Amazon Resource Name (ARN) of the secret where the credentials are stored.                                                                                                                                                                                                                            |
+| `region`       | 是      | String | 要用於憑證的 AWS 區域。預設為[決定區域的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html)。                                                                                         |
+| `sts_role_arn` | 是      | String | 對 Atlassian Confluence 提出請求時要擔任的 AWS Security Token Service (AWS STS) 角色。預設為 `null`，其使用[憑證的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html)。 |
+| `secret_id`    | 是      | Map    | 儲存憑證之秘密的 Amazon Resource Name (ARN)。                                                                                                                                                                                                                            |
 
-## Metrics
+## 指標
 
-The `confluence` source includes the following metrics (counters):
+`confluence` 來源包含下列指標 (計數器)：
 
-* `crawlingTime`: The amount of time taken to crawl through all the new changes in Confluence.
-* `pageFetchLatency`: The page fetch API operation latency.
-* `searchCallLatency`: The search API operation latency.
-* `searchResultsFound`: The number of pages found in a specified search API call.
+* `crawlingTime`：在 Confluence 中爬梳所有新變更所花費的時間量。
+* `pageFetchLatency`：頁面擷取 API 作業延遲。
+* `searchCallLatency`：搜尋 API 作業延遲。
+* `searchResultsFound`：在指定搜尋 API 呼叫中找到的頁面數。

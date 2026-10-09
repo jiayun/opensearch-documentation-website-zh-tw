@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: System functions
+title: "系統函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 14
 ---
 
-# System functions
+# 系統函式
 
-The following system functions are supported in PPL.
+PPL 支援下列系統函式。
 
 ## TYPEOF
 
-**Usage**: `TYPEOF(expr)`
+**用法**：`TYPEOF(expr)`
 
-Returns the data type of the given expression. This is useful for troubleshooting or dynamically constructing SQL queries.
+傳回給定運算式的資料類型。這對疑難排解或動態建構 SQL 查詢很有用。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression to determine the data type for. Can be any data type.
+- `expr` (必要)：要判斷資料類型的運算式。可以是任何資料類型。
 
-**Return type**: `STRING`
+**回傳類型**：`STRING`
 
-### Example  
+### 範例  
   
 ```sql
 source=people
@@ -31,7 +32,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 

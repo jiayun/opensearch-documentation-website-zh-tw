@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get certificates
+title: "取得憑證"
 parent: Certificate APIs
 grand_parent: Security APIs
 nav_order: 10
 ---
 
-# Get Certificates API
-**Introduced 2.0**
+# 取得憑證 API
+**於 2.0 版導入**
 {: .label .label-purple }
 
-Retrieves the HTTP and transport certificates in use on the node that receives the request. To retrieve the certificates in use on every node in the cluster, use the [Get All Certificates API]({{site.url}}{{site.baseurl}}/security/api/certificates/get-all-certificates/).
+擷取接收請求的節點上正在使用的 HTTP 與傳輸層憑證。若要擷取叢集中每個節點上正在使用的憑證，請使用 [Get All Certificates API]({{site.url}}{{site.baseurl}}/security/api/certificates/get-all-certificates/)。
 
-This API is reserved for a superadmin. Authenticate with an admin certificate rather than with a user name and password. For more information, see [Access control for the API]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api).
+此 API 僅供超級管理員（superadmin）使用。請使用管理員憑證進行驗證，而非使用者名稱與密碼。如需更多資訊，請參閱 [API 的存取控制]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api)。
 {: .note}
 
 <!-- spec_insert_start
 api: security.get_certificates
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_plugins/_security/api/ssl/certs
 ```
 <!-- spec_insert_end -->
 
-## Example request
+## 範例請求
 
 ```json
 GET _plugins/_security/api/ssl/certs
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -57,21 +58,21 @@ GET _plugins/_security/api/ssl/certs
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文是一個包含下列欄位的 JSON 物件。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `http_certificates_list` | Array of objects | The certificates that secure the REST layer. |
-| `transport_certificates_list` | Array of objects | The certificates that secure the transport layer. |
+| `http_certificates_list` | 物件陣列 | 保護 REST 層的憑證。 |
+| `transport_certificates_list` | 物件陣列 | 保護傳輸層的憑證。 |
 
-Each certificate contains the following fields.
+每個憑證包含下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `issuer_dn` | String | The distinguished name of the certificate authority that issued the certificate. |
-| `subject_dn` | String | The distinguished name of the certificate's subject. |
-| `san` | String | The subject alternative names in the certificate. |
-| `not_before` | String | The date and time when the certificate becomes valid. |
-| `not_after` | String | The date and time when the certificate expires. |
+| `issuer_dn` | 字串 | 簽發該憑證的憑證授權單位的辨別名稱。 |
+| `subject_dn` | 字串 | 憑證主體的辨別名稱。 |
+| `san` | 字串 | 憑證中的主體別名。 |
+| `not_before` | 字串 | 憑證生效的日期與時間。 |
+| `not_after` | 字串 | 憑證到期的日期與時間。 |

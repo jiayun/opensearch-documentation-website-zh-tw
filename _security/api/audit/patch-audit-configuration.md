@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Patch audit configuration
+title: "修補稽核組態"
 parent: Audit log APIs
 grand_parent: Security APIs
 nav_order: 20
 ---
 
-# Patch Audit Configuration API
-**Introduced 1.0**
+# 修補稽核組態 API
+**1.0 版推出**
 {: .label .label-purple }
 
-Updates specified fields in the audit configuration. This method requires an operation, a path, and a value to complete a valid request. For details on using the `PATCH` method, see the [Patching resources](https://en.wikipedia.org/wiki/PATCH_%28HTTP%29#Patching_resources) description at Wikipedia.
+更新稽核組態中指定的欄位。此方法需要操作、路徑及值，才能完成有效的請求。如需使用 `PATCH` 方法的詳細資訊，請參閱 Wikipedia 上的[修補資源](https://en.wikipedia.org/wiki/PATCH_%28HTTP%29#Patching_resources)說明。
 
-Using the `PATCH` method also requires a user to have a security configuration that includes admin certificates for encryption. To find out more about these certificates, see [Configuring admin certificates]({{site.url}}{{site.baseurl}}/security/configuration/tls/#configuring-admin-certificates).
+使用 `PATCH` 方法也需要使用者具備包含用於加密的管理員憑證的安全性組態。如需深入了解這些憑證，請參閱[設定管理員憑證]({{site.url}}{{site.baseurl}}/security/configuration/tls/#configuring-admin-certificates)。
 
 <!-- spec_insert_start
 api: security.patch_audit_configuration
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PATCH /_plugins/_security/api/audit
 ```
 <!-- spec_insert_end -->
 
-## Example request
+## 請求範例
 
 ```json
 PATCH _plugins/_security/api/audit
@@ -38,7 +39,7 @@ PATCH _plugins/_security/api/audit
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -53,11 +54,11 @@ content-type: application/json; charset=UTF-8
 content-length: 45
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文是 JSON 物件，包含下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `status` | String | The status of the request. A successful request returns `OK`. |
-| `message` | String | A message describing the result of the operation. |
+| `status` | 字串 | 請求的狀態。成功的請求會傳回 `OK`。 |
+| `message` | 字串 | 說明操作結果的訊息。 |

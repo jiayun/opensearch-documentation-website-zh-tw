@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Filter results
+title: "篩選結果"
 parent: Customizing search results
 nav_order: 36
 ---
 
-# Filter search results
+# 篩選搜尋結果
 
-You can filter searches using different methods, each suited to specific scenarios. You can apply filters at the query level, using `boolean` query clauses and `post_filter` and `aggregation` level filters, as follows:
+您可以使用不同的方法來篩選搜尋，每種方法適用於特定情境。您可以在查詢層級套用篩選條件，使用 `boolean` 查詢子句以及 `post_filter` 和 `aggregation` 層級的篩選條件，如下所示：
 
-- **Query-level filtering:** Apply `boolean` query filter clauses to filter search hits and aggregations, such as to narrow results to specific categories or brands.
-- **Post-filter filtering:** Use `post_filter` to refine search hits based on user selections while preserving all aggregation options.
-- **Aggregation-level filtering:** Adjust specific aggregations based on selected filters without impacting other aggregations.
+- **查詢層級篩選：** 套用 `boolean` 查詢篩選子句來篩選搜尋命中結果和彙總，例如將結果縮小至特定類別或品牌。
+- **後置篩選：** 使用 `post_filter` 根據使用者的選擇來精簡搜尋命中結果，同時保留所有彙總選項。
+- **彙總層級篩選：** 根據選取的篩選條件調整特定彙總，而不影響其他彙總。
 
-## Query-level filtering with Boolean queries
+## 使用布林查詢進行查詢層級篩選
 
-Use a `boolean` query with a filter clause to apply filters to both search hits and aggregations. For example, if a shopper searches for `smartphones` from `BrandA`, a Boolean query can restrict results to only those smartphones from `BrandA`. The following steps guide you through query-level filtering. 
+使用具有篩選子句的 `boolean` 查詢，將篩選條件同時套用至搜尋命中結果和彙總。例如，如果購物者從 `BrandA` 搜尋 `smartphones`，布林查詢可以將結果限制為僅來自 `BrandA` 的那些智慧型手機。下列步驟將引導您完成查詢層級篩選。
 
-1. Create an index `electronics` and provide the mapping using the following request:
+1. 建立索引 `electronics` 並使用下列請求提供對應：
 
 ```json
 PUT /electronics
@@ -34,7 +35,7 @@ PUT /electronics
 ```
 {% include copy-curl.html %}
 
-2. Add documents to the `electronics` index using the following request:
+2. 使用下列請求將文件新增至 `electronics` 索引：
 
 ```json
 POST /_bulk?refresh
@@ -47,7 +48,7 @@ POST /_bulk?refresh
 ```
 {% include copy-curl.html %}
 
-3. Apply a `boolean` filter query to display only `smartphones` from `BrandA` using the following request:
+3. 使用下列請求套用 `boolean` 篩選查詢，以僅顯示來自 `BrandA` 的 `smartphones`：
 
 ```json
 GET /electronics/_search
@@ -64,9 +65,9 @@ GET /electronics/_search
 ```
 {% include copy-curl.html %}
 
-## Narrowing results using `post-filter` while preserving aggregation visibility
+## 使用 `post-filter` 縮小結果範圍同時保留彙總可見性
 
-Use `post_filter` to limit search hits while preserving all aggregation options. For example, if a shopper selects `BrandA`, results are filtered to show only `BrandA` products while maintaining the visibility of all brand options in the aggregations, as shown in the following example request:
+使用 `post_filter` 限制搜尋命中結果，同時保留所有彙總選項。例如，如果購物者選取 `BrandA`，結果會經過篩選，僅顯示 `BrandA` 產品，同時維持彙總中所有品牌選項的可見性，如下列範例請求所示：
 
 ```json
 GET /electronics/_search
@@ -88,13 +89,13 @@ GET /electronics/_search
 ```
 {% include copy-curl.html %}
 
-The result should show `BrandA` smartphones in the search hits and all brands in the aggregations.
+結果應在搜尋命中結果中顯示 `BrandA` 智慧型手機，並在彙總中顯示所有品牌。
 
-## Refining aggregations with aggregation-level filtering
+## 使用彙總層級篩選來精簡彙總
 
-You can use aggregation-level filtering to apply filters to specific aggregations without affecting the main aggregation to which they belong. 
+您可以使用彙總層級篩選，將篩選條件套用至特定彙總，而不影響其所屬的主要彙總。
 
-For example, you can use aggregation-level filtering to filter the `price_ranges` aggregation based on selected brands, `BrandA` and `BrandB`, without affecting the main `price_ranges` aggregation, as shown in the following example request. This displays price ranges relevant to the selected brands while also displaying overall price ranges for all products.
+例如，您可以使用彙總層級篩選，根據選取的品牌 `BrandA` 和 `BrandB` 來篩選 `price_ranges` 彙總，而不影響主要的 `price_ranges` 彙總，如下列範例請求所示。這會顯示與所選品牌相關的價格範圍，同時也會顯示所有產品的整體價格範圍。
 
 ```json
 GET /electronics/_search

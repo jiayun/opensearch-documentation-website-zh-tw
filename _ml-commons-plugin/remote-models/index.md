@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Connecting to externally hosted models 
+title: "連線至外部託管的模型"
 parent: Integrating ML models
 has_children: true
 has_toc: false
@@ -10,26 +11,26 @@ redirect_from:
   - /ml-commons-plugin/remote-models/
 ---
 
-# Connecting to externally hosted models
-**Introduced 2.9**
+# 連線至外部託管的模型
+**於 2.9 版推出**
 {: .label .label-purple }
 
-Integrations with machine learning (ML) models hosted on third-party platforms allow system administrators and data scientists to run ML workloads outside of their OpenSearch cluster. Connecting to externally hosted models enables ML developers to create integrations with other ML services, such as Amazon SageMaker or OpenAI. 
+與託管於第三方平台的機器學習 (ML) 模型整合，可讓系統管理員與資料科學家在 OpenSearch 叢集之外執行 ML 工作負載。連線至外部託管的模型，可讓 ML 開發人員建立與其他 ML 服務的整合，例如 Amazon SageMaker 或 OpenAI。
 
-To integrate a model hosted on a third-party platform, choose from the following options:
+若要整合託管於第三方平台的模型，請從下列選項中選擇：
 
-- If you're an ML developer wanting to create integrations with your specific ML services, see [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/).
-- If you're a system administrator or data scientist wanting to create a connection to an ML service, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/).
+- 如果您是想與特定 ML 服務建立整合的 ML 開發人員，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)。
+- 如果您是想建立與 ML 服務連線的系統管理員或資料科學家，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-## Prerequisites
+## 必要條件
 
-If you're an admin deploying an ML connector, make sure that the target model of the connector has already been deployed on your chosen platform. Furthermore, make sure that you have permissions to send and receive data to the third-party API for your connector. 
+如果您是部署 ML 連接器的管理員，請確認連接器的目標模型已部署在您選擇的平台上。此外，請確認您有權限向連接器的第三方 API 傳送與接收資料。
 
-When access control is enabled on your third-party platform, you can enter your security settings using the `authorization` or `credential` settings inside the connector API.
+當您的第三方平台啟用存取控制時，您可以在連接器 API 內使用 `authorization` 或 `credential` 設定來輸入安全性設定。
 
-### Adding trusted endpoints
+### 新增信任的端點
 
-To configure connectors in OpenSearch, add the trusted endpoints to your cluster settings by using the `plugins.ml_commons.trusted_connector_endpoints_regex` setting, which supports Java regex expressions:
+若要在 OpenSearch 中設定連接器，請使用 `plugins.ml_commons.trusted_connector_endpoints_regex` 設定將信任的端點新增至叢集設定，該設定支援 Java regex 運算式：
 
 ```json
 PUT /_cluster/settings
@@ -47,17 +48,17 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-This setting replaces the entire list of trusted endpoints, so include every pattern your cluster needs.
+此設定會取代整份信任端點清單，因此請包含叢集所需的每個模式。
 {: .note}
 
 
 
-### Setting up connector access control
+### 設定連接器存取控制
 
-If you plan on using a remote connector, make sure to use an OpenSearch cluster with the Security plugin enabled. Using the Security plugin gives you access to connector access control, which is required when using a remote connector.
+如果您打算使用遠端連接器，請務必使用已啟用 Security 外掛程式的 OpenSearch 叢集。使用 Security 外掛程式可讓您使用連接器存取控制，這是使用遠端連接器時的必要條件。
 {: .warning}
 
-If you require granular access control for your connectors, use the following cluster setting:
+如果您需要連接器的細微存取控制，請使用下列叢集設定：
 
 ```json
 PUT /_cluster/settings
@@ -69,7 +70,7 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-When access control is enabled, you can install the [Security plugin]({{site.url}}{{site.baseurl}}/security/index/). This makes the `backend_roles`, `add_all_backend_roles`, or `access_model` options required in order to use the connector API. If successful, OpenSearch returns the following response:
+啟用存取控制後，您即可安裝 [Security 外掛程式]({{site.url}}{{site.baseurl}}/security/index/)。這會使 `backend_roles`、`add_all_backend_roles` 或 `access_model` 選項變為必要，才能使用連接器 API。若成功，OpenSearch 會傳回下列回應：
 
 ```json
 {
@@ -85,14 +86,14 @@ When access control is enabled, you can install the [Security plugin]({{site.url
 }
 ```
 
-## Step 1: Register a model group
+## 步驟 1：註冊模型群組
 
-To register a model, you have the following options:
+若要註冊模型，您有下列選項：
 
-- You can use `model_group_id` to register a model version to an existing model group.
-- If you do not use `model_group_id`, ML Commons creates a model with a new model group.
+- 您可以使用 `model_group_id` 將模型版本註冊到現有的模型群組。
+- 如果您不使用 `model_group_id`，ML Commons 會以新的模型群組建立模型。
 
-To register a model group, send the following request:
+若要註冊模型群組，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -103,7 +104,7 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-The response contains the model group ID that you'll use to register a model to this model group:
+回應包含模型群組 ID，您將使用它把模型註冊到此模型群組：
 
 ```json
 {
@@ -112,16 +113,16 @@ The response contains the model group ID that you'll use to register a model to 
 }
 ```
 
-To learn more about model groups, see [Model access control]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/).
+若要進一步了解模型群組，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
 
-## Step 2: Create a connector
+## 步驟 2：建立連接器
 
-You can create a standalone connector that can be reused by multiple model registrations in OpenSearch that share the same external endpoint and configuration. Alternatively, you can specify a connector when creating a model so that it can be used only for that model. For more information and example connectors, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/).
+您可以建立獨立連接器，供 OpenSearch 中共用相同外部端點與組態的多個模型註冊重複使用。或者，您也可以在建立模型時指定連接器，使其僅能用於該模型。如需更多資訊與範例連接器，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-If you're using Amazon OpenSearch Service, the process for creating connectors differs. For more information, see [Creating connectors in Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html).
+如果您使用的是 Amazon OpenSearch Service，建立連接器的程序有所不同。如需更多資訊，請參閱[在 Amazon OpenSearch Service 中建立連接器](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)。
 {: .note}
 
-The Connectors Create API, `/_plugins/_ml/connectors/_create`, creates connectors that facilitate registering and deploying external models in OpenSearch. Using the `endpoint` parameter, you can connect ML Commons to any supported ML tool by using its specific API endpoint. For example, you can connect to a ChatGPT model by using the `api.openai.com` endpoint:
+Connectors Create API（`/_plugins/_ml/connectors/_create`）會建立連接器，協助在 OpenSearch 中註冊與部署外部模型。使用 `endpoint` 參數，您可以透過其特定的 API 端點將 ML Commons 連線至任何支援的 ML 工具。例如，您可以使用 `api.openai.com` 端點連線至 ChatGPT 模型：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -152,7 +153,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-The response contains the connector ID for the newly created connector:
+回應包含新建立連接器的連接器 ID：
 
 ```json
 {
@@ -160,9 +161,9 @@ The response contains the connector ID for the newly created connector:
 }
 ```
 
-## Step 3: Register an externally hosted model
+## 步驟 3：註冊外部託管的模型
 
-To register an externally hosted model to the model group created in step 1, provide the model group ID from step 1 and the connector ID from step 2 in the following request. You must specify the `function_name` as `remote`:
+若要將外部託管的模型註冊到步驟 1 建立的模型群組，請在下列請求中提供步驟 1 的模型群組 ID 與步驟 2 的連接器 ID。您必須將 `function_name` 指定為 `remote`：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -176,7 +177,7 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns the task ID of the register operation:
+OpenSearch 會傳回註冊作業的工作 ID：
 
 ```json
 {
@@ -185,14 +186,14 @@ OpenSearch returns the task ID of the register operation:
 }
 ```
 
-To check the status of the operation, provide the task ID to the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+若要檢查作業狀態，請將工作 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
 ```bash
 GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 ```
 {% include copy-curl.html %}
 
-When the operation is complete, the state changes to `COMPLETED`:
+當作業完成時，狀態會變為 `COMPLETED`：
 
 ```json
 {
@@ -209,11 +210,11 @@ When the operation is complete, the state changes to `COMPLETED`:
 }
 ```
 
-Take note of the returned `model_id` because you’ll need it to deploy the model.
+請記下傳回的 `model_id`，因為部署模型時需要用到它。
 
-## Step 4: Deploy the model
+## 步驟 4：部署模型
 
-Externally hosted models are deployed automatically by default when you send a Predict API request for the first time. To disable automatic deployment for an externally hosted model, set `plugins.ml_commons.model_auto_deploy.enable` to `false`:
+依預設，當您第一次傳送 Predict API 請求時，外部託管的模型會自動部署。若要停用外部託管模型的自動部署，請將 `plugins.ml_commons.model_auto_deploy.enable` 設為 `false`：
 ```json
 PUT _cluster/settings
 {
@@ -224,14 +225,14 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-To deploy the model, use the [Deploy API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/deploy-model/).
+若要部署模型，請使用 [Deploy API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/deploy-model/)。
 
 ```bash
 POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_deploy
 ```
 {% include copy-curl.html %}
 
-The response contains the task ID that you can use to check the status of the deploy operation:
+回應包含工作 ID，您可以用它來檢查部署作業的狀態：
 
 ```json
 {
@@ -240,14 +241,14 @@ The response contains the task ID that you can use to check the status of the de
 }
 ```
 
-As in the previous step, check the status of the operation by calling the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+如同上一個步驟，呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來檢查作業狀態：
 
 ```bash
 GET /_plugins/_ml/tasks/vVePb4kBJ1eYAeTM7ljG
 ```
 {% include copy-curl.html %}
 
-When the operation is complete, the state changes to `COMPLETED`:
+當作業完成時，狀態會變為 `COMPLETED`：
 
 ```json
 {
@@ -264,9 +265,9 @@ When the operation is complete, the state changes to `COMPLETED`:
 }
 ```
 
-## Step 5 (Optional): Test the model
+## 步驟 5（選用）：測試模型
 
-Use the [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) to test the model:
+使用 [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 來測試模型：
 
 ```json
 POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_predict
@@ -287,9 +288,9 @@ POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_predict
 ```
 {% include copy-curl.html %}
 
-To learn more about chat functionality within OpenAI, see the [OpenAI Chat API](https://platform.openai.com/docs/api-reference/chat).
+若要進一步了解 OpenAI 內的聊天功能，請參閱 [OpenAI Chat API](https://platform.openai.com/docs/api-reference/chat)。
 
-The response contains the inference results provided by the OpenAI model:
+回應包含 OpenAI 模型提供的推論結果：
 
 ```json
 {
@@ -325,22 +326,22 @@ The response contains the inference results provided by the OpenAI model:
   ]
 }
 ```
-## Step 6: Use the model for batch ingestion
+## 步驟 6：使用模型進行批次匯入
 
-To learn how to use the model for batch ingestion in order to improve ingestion performance, see [Using externally hosted ML models for batch ingestion]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/batch-ingestion/).
+若要了解如何使用模型進行批次匯入以提升匯入效能，請參閱[使用外部託管的 ML 模型進行批次匯入]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/batch-ingestion/)。
 
-## Step 7: Use the model for search
+## 步驟 7：使用模型進行搜尋
 
-To learn how to use the model for vector search, see [AI search methods]({{site.url}}{{site.baseurl}}/vector-search/ai-search/#ai-search-methods).
+若要了解如何使用模型進行向量搜尋，請參閱[AI 搜尋方法]({{site.url}}{{site.baseurl}}/vector-search/ai-search/#ai-search-methods)。
 
-## Step 8 (Optional): Undeploy the model 
+## 步驟 8（選用）：取消部署模型
 
-You can undeploy the model automatically by defining a TTL in the model settings or by using the Undeploy API to undeploy the model manually. For more information, see [Undeploy API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/undeploy-model/).
+您可以透過在模型設定中定義 TTL 來自動取消部署模型，或使用 Undeploy API 手動取消部署模型。如需更多資訊，請參閱 [Undeploy API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/undeploy-model/)。
 
-## Next steps
+## 後續步驟
 
-- For more information about connectors, including example connectors, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/).
-- For more information about connector fields, see [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/).
-- For more information about managing ML models in OpenSearch, see [Using ML models within OpenSearch]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-serving-framework/).
-- For more information about interacting with ML models in OpenSearch, see [Managing ML models in OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/ml-commons-plugin/ml-dashboard/)
-For instructions on how to configure model guardrails, see [Guardrails]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/).
+- 如需連接器的更多資訊（包括範例連接器），請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
+- 如需連接器欄位的更多資訊，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)。
+- 如需在 OpenSearch 中管理 ML 模型的更多資訊，請參閱[在 OpenSearch 中使用 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-serving-framework/)。
+- 如需在 OpenSearch 中與 ML 模型互動的更多資訊，請參閱[在 OpenSearch Dashboards 中管理 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/ml-dashboard/)
+如需如何設定模型防護機制的說明，請參閱[防護機制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/)。

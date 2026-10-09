@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Pipeline
+title: "管線"
 parent: Ingest processors
 nav_order: 220
 ---
 
-# Pipeline processor
+# 管線處理器
 
-The `pipeline` processor allows a pipeline to reference and include another predefined pipeline. This can be useful when you have a set of common processors that need to be shared across multiple pipelines. Instead of redefining those common processors in each pipeline, you can create a separate base pipeline containing the shared processors and then reference that base pipeline from other pipelines using the pipeline processor.
+`pipeline` 處理器可讓管線參考並包含另一個預先定義的管線。當您有一組需要在多個管線之間共用的常用處理器時，這會很有用。您不需要在每個管線中重新定義那些常用處理器，而是可以建立一個包含共用處理器的獨立基礎管線，然後使用管線處理器從其他管線參考該基礎管線。
 
-The following is the syntax for the `pipeline` processor:
+以下是 `pipeline` 處理器的語法：
 
 ```json
 {
@@ -20,26 +21,26 @@ The following is the syntax for the `pipeline` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `pipeline` processor.
+下表列出 `pipeline` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`name` | Required	| The name of the pipeline to execute.
-`description` | Optional | A description of the processor's purpose or configuration.
-`if` | Optional | Specifies to conditionally execute the processor.
-`ignore_failure` | Optional | Specifies to ignore processor failures. See [Handling pipeline failures]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/).
-`on_failure` | Optional | Specifies to handle processor failures. See [Handling pipeline failures]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/).
-`tag` | Optional | An identifier for the processor. Useful for debugging and metrics.
+`name` | 必要	| 要執行之管線的名稱。
+`description` | 選用 | 處理器用途或組態的說明。
+`if` | 選用 | 指定以條件方式執行處理器。
+`ignore_failure` | 選用 | 指定忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`on_failure` | 選用 | 指定處理處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`tag` | 選用 | 處理器的識別碼。適用於偵錯與指標。
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+請依照下列步驟在管線中使用處理器。
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
 
-The following query creates a general pipeline named `general-pipeline` and then creates a new pipeline named `outer-pipeline`, which references the `general-pipeline`: 
+下列查詢會建立名為 `general-pipeline` 的一般管線，然後建立名為 `outer-pipeline` 的新管線，其會參考 `general-pipeline`：
 
 ```json
 PUT _ingest/pipeline/general_pipeline  
@@ -74,12 +75,12 @@ PUT _ingest/pipeline/outer-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2 (Optional): Test the pipeline
+### 步驟 2 (選用)：測試管線
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/outer-pipeline/_simulate
@@ -96,9 +97,9 @@ POST _ingest/pipeline/outer-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線如預期運作：
 
 ```json
 {  
@@ -120,9 +121,9 @@ The following example response confirms that the pipeline is working as expected
 ```
 {% include copy-curl.html %}
 
-### Step 3: Ingest a document 
+### 步驟 3：匯入文件
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 POST testindex1/_doc/1?pipeline=outer-pipeline  
@@ -133,9 +134,9 @@ POST testindex1/_doc/1?pipeline=outer-pipeline
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The request indexes the document with the `protocol` field converted to uppercase and the field name removed from the index `testindex1`, as shown in the following response:
+此請求會將文件編製索引，將 `protocol` 欄位的值轉換為大寫，並從 `testindex1` 索引中的文件移除 name 欄位，如下列回應所示：
 
 ```json
 {  
@@ -154,18 +155,18 @@ The request indexes the document with the `protocol` field converted to uppercas
 ```
 {% include copy-curl.html %}
 
-### Step 4 (Optional): Retrieve the document
+### 步驟 4 (選用)：擷取文件
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The response shows the document with the `protocol` field converted to uppercase and the field name removed:
+回應顯示文件中的 `protocol` 欄位值已轉換為大寫，且 name 欄位已移除：
 
 ```json
 {  

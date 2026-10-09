@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Join
 parent: Ingest processors
 nav_order: 160
 ---
 
-# Join processor
+# Join 處理器
 
-The `join` processor concatenates the elements of an array into a single string value, using a specified separator between each element. It throws an exception if the provided input is not an array.
+`join` 處理器會將陣列的元素串接成單一字串值，並在每個元素之間使用指定的分隔符。如果提供的輸入不是陣列，則會擲回例外。
 
-The following is the syntax for the `join` processor:
+以下是 `join` 處理器的語法：
 
 ```json
 {
@@ -21,28 +22,28 @@ The following is the syntax for the `join` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `join` processor.
+下表列出 `join` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`field` | Required | The name of the field to which the join operator is applied. Must be an array.
-`separator` | Required | A string separator to use when joining field values. If not specified, then the values are concatenated without a separator.
-`target_field` | Optional | The field to assign the cleaned value to. If not specified, then the field is updated in place.
-`description` | Optional | A description of the processor's purpose or configuration.
-`if` | Optional | Specifies to conditionally execute the processor.
-`ignore_failure` | Optional | Specifies to ignore failures for the processor. See [Handling pipeline failures]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/).
-`on_failure` | Optional | Specifies to handle failures for the processor. See [Handling pipeline failures]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/).
-`tag` | Optional | An identifier for the processor. Useful for debugging and metrics.
+`field` | 必要 | 要套用 join 運算子的欄位名稱。必須是陣列。
+`separator` | 必要 | 串接欄位值時使用的字串分隔符。若未指定，則值會在沒有分隔符的情況下直接串接。
+`target_field` | 選用 | 要指派清理後值的欄位。若未指定，則會就地更新該欄位。
+`description` | 選用 | 處理器用途或組態的描述。
+`if` | 選用 | 指定要有條件地執行處理器。
+`ignore_failure` | 選用 | 指定忽略處理器的失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`on_failure` | 選用 | 指定處理處理器的失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`tag` | 選用 | 處理器的識別碼。對偵錯與指標很有用。
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+請依照下列步驟在管線中使用處理器。
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
 
-The following query creates a pipeline named `example-join-pipeline` that uses the `join` processor to concatenate all the values of the `uri`  field, separating them with the specified separator `/`: 
+下列查詢會建立名為 `example-join-pipeline` 的管線，使用 `join` 處理器串接 `uri` 欄位的所有值，並以指定的分隔符 `/` 分隔：
 
 ```json
 PUT _ingest/pipeline/example-join-pipeline  
@@ -60,12 +61,12 @@ PUT _ingest/pipeline/example-join-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2 (Optional): Test the pipeline
+### 步驟 2（選用）：測試管線
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/example-join-pipeline/_simulate  
@@ -85,9 +86,9 @@ POST _ingest/pipeline/example-join-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線如預期運作：
 
 ```json
 {  
@@ -109,9 +110,9 @@ The following example response confirms that the pipeline is working as expected
 ```
 {% include copy-curl.html %}
 
-### Step 3: Ingest a document 
+### 步驟 3：匯入文件
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 POST testindex1/_doc/1?pipeline=example-join-pipeline  
@@ -125,9 +126,9 @@ POST testindex1/_doc/1?pipeline=example-join-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 4 (Optional): Retrieve the document
+### 步驟 4（選用）：擷取文件
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1

@@ -1,39 +1,40 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get audit configuration
+title: "取得稽核組態"
 parent: Audit log APIs
 grand_parent: Security APIs
 nav_order: 30
 ---
 
-# Get Audit Configuration API
-**Introduced 1.0**
+# 取得稽核組態 API
+**於 1.0 版引入**
 {: .label .label-purple }
 
-Retrieves the audit logging and compliance configuration.
+擷取稽核記錄與合規組態。
 
-For details on using audit logging to track access to OpenSearch clusters, as well as information on further configurations, see [Audit logs]({{site.url}}{{site.baseurl}}/security/audit-logs/index/).
+如需使用稽核記錄追蹤 OpenSearch 叢集存取情形的詳細資訊，以及其他組態的資訊，請參閱[稽核記錄檔]({{site.url}}{{site.baseurl}}/security/audit-logs/index/)。
 
 <!-- spec_insert_start
 api: security.get_audit_configuration
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_plugins/_security/api/audit
 ```
 <!-- spec_insert_end -->
 
-## Example request
+## 請求範例
 
 ```json
 GET _plugins/_security/api/audit
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 回應範例
 
-The response is abbreviated here:
+此處的回應已省略部分內容：
 
 ```json
 {
@@ -42,6 +43,6 @@ The response is abbreviated here:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The `_readonly` field lists the configuration paths that cannot be modified. Changes to these paths result in a 409 error. The `config` field contains the current audit and compliance settings. For descriptions of the individual settings, see [Update Audit Configuration API]({{site.url}}{{site.baseurl}}/security/api/audit/update-audit-configuration/#request-body-fields).
+`_readonly` 欄位列出無法修改的組態路徑。變更這些路徑會導致 409 錯誤。`config` 欄位包含目前的稽核與合規設定。如需各項設定的說明，請參閱[更新稽核組態 API]({{site.url}}{{site.baseurl}}/security/api/audit/update-audit-configuration/#request-body-fields)。

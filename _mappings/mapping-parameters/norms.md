@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Norms
 parent: Mapping parameters
@@ -9,15 +10,15 @@ has_children: false
 has_toc: false
 ---
 
-# Norms mapping parameter
+# Norms 對應參數
 
-The `norms` mapping parameter controls whether normalization factors are computed and stored for a field. These factors are used during query scoring to adjust the relevance of the search results. However, storing `norms` increases the index size and consumes additional memory.
+`norms` 對應參數控制是否為欄位計算並儲存正規化因子。這些因子會在查詢評分時用於調整搜尋結果的相關性。然而，儲存 `norms` 會增加索引大小並消耗額外的記憶體。
 
-By default, `norms` is enabled on `text` fields, for which relevance scoring is important. Fields that do not require these scoring features, such as `keyword` fields used only for filtering, are configured with `norms` disabled.
+預設情況下，`norms` 在 `text` 欄位上是啟用的，因為這類欄位的相關性評分非常重要。不需要這些評分功能的欄位，例如僅用於篩選的 `keyword` 欄位，則設定為停用 `norms`。
 
-## Disabling `norms` on a field
+## 在欄位上停用 `norms`
 
-The following request creates an index named `products` with the `description` field as a `text` field with `norms` disabled:
+下列請求會建立一個名為 `products` 的索引，其中 `description` 欄位為 `text` 欄位並停用 `norms`：
 
 ```json
 PUT /products
@@ -34,7 +35,7 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-To disable `norms` on a field in an existing index, use the following request:
+若要在現有索引的欄位上停用 `norms`，請使用下列請求：
 
 ```json
 PUT /products/_mapping
@@ -49,7 +50,7 @@ PUT /products/_mapping
 ```
 {% include copy-curl.html %}
 
-Enabling `norms` on a field that has `norms` disabled is impossible and will result in the following error:
+在已停用 `norms` 的欄位上啟用 `norms` 是不可能的，並會導致下列錯誤：
 
 ```json
 {

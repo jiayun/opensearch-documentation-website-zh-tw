@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Format
+title: "格式"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/format/
@@ -9,13 +10,13 @@ has_children: false
 has_toc: false
 ---
 
-# Format mapping parameter
+# Format 對應參數
 
-The `format` mapping parameter specifies the [built-in date formats]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#built-in-formats) that a date field can accept during indexing. By defining the expected date formats, you ensure that date values are correctly parsed and stored, facilitating accurate search and aggregation operations.
+`format` 對應參數會指定日期欄位在編製索引期間可接受的[內建日期格式]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#built-in-formats)。透過定義預期的日期格式，您可確保日期值正確剖析並儲存，以利進行精確的搜尋與彙總作業。
 
-## Example: Defining a custom date format
+## 範例：定義自訂日期格式
 
-Create an `events` index with the `event_date` field configured to a custom `yyyy-MM-dd HH:mm:ss` date format:
+建立 `events` 索引，並將 `event_date` 欄位設定為自訂的 `yyyy-MM-dd HH:mm:ss` 日期格式：
 
 ```json
 PUT events
@@ -32,7 +33,7 @@ PUT events
 ```
 {% include copy-curl.html %}
 
-Index a document using the specified format for the `event_date` field:
+使用指定的格式為 `event_date` 欄位編製文件索引：
 
 ```json
 PUT events/_doc/1
@@ -43,9 +44,9 @@ PUT events/_doc/1
 ```
 {% include copy-curl.html %}
 
-## Example: Using multiple date formats
+## 範例：使用多種日期格式
 
-Create an index containing a `log_timestamp` field, which accepts both the custom `yyyy-MM-dd HH:mm:ss` date format and the `epoch_millis` format:
+建立包含 `log_timestamp` 欄位的索引，該欄位同時接受自訂的 `yyyy-MM-dd HH:mm:ss` 日期格式與 `epoch_millis` 格式：
 
 ```json
 PUT logs
@@ -62,7 +63,7 @@ PUT logs
 ```
 {% include copy-curl.html %}
 
-Index the first document using the custom format:
+使用自訂格式為第一份文件編製索引：
 
 ```json
 PUT logs/_doc/1
@@ -73,7 +74,7 @@ PUT logs/_doc/1
 ```
 {% include copy-curl.html %}
 
-Index the second document using the millisecond format:
+使用毫秒格式為第二份文件編製索引：
 
 ```json
 PUT logs/_doc/2
@@ -84,6 +85,6 @@ PUT logs/_doc/2
 ```
 {% include copy-curl.html %}
 
-## Built-in date formats
+## 內建日期格式
 
-For a comprehensive list of built-in date formats, see [Built-in formats]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#built-in-formats).
+如需完整的內建日期格式清單，請參閱[內建格式]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#built-in-formats)。

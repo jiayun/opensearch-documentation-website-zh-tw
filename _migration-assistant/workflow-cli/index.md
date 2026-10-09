@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Workflow CLI
 nav_order: 50
@@ -9,113 +10,113 @@ permalink: /migration-assistant/workflow-cli/
 
 # Workflow CLI
 
-The Workflow CLI is the operator interface for Migration Assistant. It provides a repeatable way to run migrations without manually chaining individual infrastructure commands.
+Workflow CLI 是 Migration Assistant 的操作介面。它提供可重複執行遷移的方式，無需手動串接個別基礎架構命令。
 
-Migration Assistant runs each migration as an [Argo Workflows](https://argo-workflows.readthedocs.io/en/latest/) job. Argo is a Kubernetes-native workflow engine that schedules each step (snapshot, metadata migration, backfill, replay, validation) as a pod and tracks its status. You don't need to know Argo to operate Migration Assistant; the Workflow CLI is the layer you interact with.
+Migration Assistant 將每個遷移作為 [Argo Workflows](https://argo-workflows.readthedocs.io/en/latest/) 工作執行。Argo 是 Kubernetes 原生的工作流程引擎，會將每個步驟（快照、中繼資料遷移、回填、重播、驗證）排程為一個 pod 並追蹤其狀態。您不需要了解 Argo 也能操作 Migration Assistant；Workflow CLI 就是您互動的層級。
 
-## Design principles
+## 設計原則
 
-Migration Assistant uses Kubernetes and workflows to achieve the following:
+Migration Assistant 使用 Kubernetes 與工作流程來達成以下目標：
 
-- Describe the migration once instead of typing one-time commands.
-- Let the platform orchestrate long-running steps.
-- Make progress visible.
-- Pause at approval gates when human validation matters.
-- Resubmit the workflow safely after configuration changes without rebuilding the environment.
+- 一次描述遷移，而不是輸入一次性的命令。
+- 讓平台協調長時間執行的步驟。
+- 讓進度清晰可見。
+- 在需要人工驗證時於核准關卡暫停。
+- 在組態變更後安全地重新提交工作流程，而無需重建環境。
 
-## Standard operator workflow
+## 標準操作流程
 
-Most migrations follow the same pattern:
+大多數遷移都遵循相同的模式：
 
-1. Open the Migration Console.
-2. Verify the installed version by running `console --version`.
-3. Load the version-matched sample config by running `workflow configure sample --load`.
-4. Edit only the fields that describe your environment and migration path.
-5. Validate connectivity by running `console clusters connection-check`.
-6. Submit a pilot workflow.
-7. Watch progress and approvals by running `workflow manage`.
-8. Validate the pilot, then run the full migration.
+1. 開啟 Migration Console。
+2. 執行 `console --version` 以確認安裝的版本。
+3. 執行 `workflow configure sample --load` 載入與版本相符的範例組態。
+4. 只編輯描述您的環境與遷移路徑的欄位。
+5. 執行 `console clusters connection-check` 驗證連線能力。
+6. 提交試驗工作流程。
+7. 執行 `workflow manage` 觀察進度與核准事項。
+8. 驗證試驗結果，然後執行完整遷移。
 
-## Core commands
+## 核心命令
 
-The Workflow CLI groups commands into the following sections.
+Workflow CLI 將命令分為以下幾個區段。
 
-### Console commands
+### Console 命令
 
-The `console` CLI groups operations by component. The `workflow` CLI orchestrates a full migration; the `console` CLI is what you use to inspect or manually drive a single component during validation and troubleshooting.
+`console` CLI 依元件將操作分組。`workflow` CLI 負責協調完整遷移；`console` CLI 則是您在驗證與疑難排解期間用來檢視或手動驅動單一元件的工具。
 
-#### Cluster inspection commands
+#### 叢集檢查命令
 
 <table>
 <thead>
-<tr><th>Command</th><th>Description</th></tr>
+<tr><th>命令</th><th>說明</th></tr>
 </thead>
 <tbody>
-<tr><td><code>console --version</code></td><td>Confirms which schema and behavior your console is running.</td></tr>
-<tr><td><code>console clusters connection-check</code></td><td>Verifies the console can reach and authenticate to source and target clusters.</td></tr>
-<tr><td><code>console clusters connection-check --cluster source|target|proxy</code></td><td>Restricts the check to one cluster.</td></tr>
-<tr><td><code>console clusters cat-indices [--refresh] [--cluster source|target|proxy]</code></td><td>Lists indexes on one or both clusters.</td></tr>
-<tr><td><code>console clusters curl source /_cat/indices?v</code></td><td>Issues a direct API request against the named cluster (path is positional).</td></tr>
-<tr><td><code>console clusters curl target /_search -X POST --json '{"query":{"match_all":{}}}'</code></td><td>Sends a <code>POST</code> request with a JSON body.</td></tr>
-<tr><td><code>console clusters clear-indexes --cluster target --acknowledge-risk</code></td><td><strong>Destructive</strong>. Deletes all indexes on the named cluster.</td></tr>
+<tr><td><code>console --version</code></td><td>確認您的 console 正在執行的結構描述與行為。</td></tr>
+<tr><td><code>console clusters connection-check</code></td><td>驗證 console 能連線並對來源與目標叢集完成驗證。</td></tr>
+<tr><td><code>console clusters connection-check --cluster source|target|proxy</code></td><td>將檢查限制在單一叢集。</td></tr>
+<tr><td><code>console clusters cat-indices [--refresh] [--cluster source|target|proxy]</code></td><td>列出單一或兩個叢集上的索引。</td></tr>
+<tr><td><code>console clusters curl source /_cat/indices?v</code></td><td>對指定叢集直接發出 API 請求（路徑為位置參數）。</td></tr>
+<tr><td><code>console clusters curl target /_search -X POST --json '{"query":{"match_all":{}}}'</code></td><td>傳送帶有 JSON 本文的 <code>POST</code> 請求。</td></tr>
+<tr><td><code>console clusters clear-indexes --cluster target --acknowledge-risk</code></td><td><strong>破壞性操作</strong>。刪除指定叢集上的所有索引。</td></tr>
 </tbody>
 </table>
 
-#### Metrics and Apache Kafka commands
+#### 指標與 Apache Kafka 命令
 
-| Group | Commands |
+| 群組 | 命令 |
 |:------|:---------|
 | `console metrics` | `list`, `get-data` |
 | `console kafka` | `create-topic`, `list-topics`, `delete-topic`, `describe-consumer-group`, `list-consumer-groups`, `describe-topic-records` |
 
-### Configuration commands
+### 組態命令
 
-| Command | Why you use it |
+| 命令 | 用途 |
 |:--------|:---------------|
-| `workflow configure sample` | Shows the sample schema for your installed version |
-| `workflow configure sample --load` | Loads that sample as your starting point |
-| `workflow configure edit` | Opens the workflow config in your editor (`$EDITOR`, defaults to `vi`) |
-| `workflow configure edit --stdin` | Reads YAML from `stdin` instead of opening an editor---useful in scripts and CI |
-| `workflow configure view` | Prints the current config |
-| `workflow configure clear` | Clears the current config and lets you start over |
+| `workflow configure sample` | 顯示您安裝版本的範例結構描述 |
+| `workflow configure sample --load` | 載入該範例作為起點 |
+| `workflow configure edit` | 在您的編輯器中開啟工作流程組態（`$EDITOR`，預設為 `vi`） |
+| `workflow configure edit --stdin` | 從 `stdin` 讀取 YAML 而不是開啟編輯器---適用於指令碼與 CI |
+| `workflow configure view` | 顯示目前的組態 |
+| `workflow configure clear` | 清除目前的組態，讓您重新開始 |
 
-### Execution and monitoring commands
+### 執行與監控命令
 
 <table>
 <thead>
-<tr><th>Command</th><th>Description</th></tr>
+<tr><th>命令</th><th>說明</th></tr>
 </thead>
 <tbody>
-<tr><td><code>workflow submit</code></td><td>Starts the migration workflow (auto-stops and replaces an existing one with the same name).</td></tr>
-<tr><td><code>workflow submit --wait --timeout 300</code></td><td>Submits and blocks until the workflow completes or the timeout is reached.</td></tr>
-<tr><td><code>workflow manage</code></td><td>Primary interface for monitoring, approvals, and logs (interactive TUI).</td></tr>
-<tr><td><code>workflow status</code></td><td>Shows the current workflow tree in a non-interactive form.</td></tr>
-<tr><td><code>workflow status --all</code></td><td>Shows running and completed workflows.</td></tr>
-<tr><td><code>workflow status --live-status</code></td><td>Adds live snapshot/backfill status checks per node.</td></tr>
-<tr><td><code>workflow log all</code></td><td>Shows logs across workflow pods (uses pod labels to find them).</td></tr>
-<tr><td><code>workflow log all --follow</code></td><td>Streams logs live (uses <code>stern</code> internally).</td></tr>
-<tr><td><code>workflow log filter -l source=src,target=tgt</code></td><td>Filters by label selector.</td></tr>
-<tr><td><code>workflow approve step &lt;PATTERN&gt; [&lt;PATTERN&gt; ...]</code></td><td>Approves pending gates that match exact names or globs (for example, <code>*.evaluateMetadata</code>).</td></tr>
-<tr><td><code>workflow reset</code></td><td>Lists migration CRDs and lets you delete them safely. Use this instead of <code>kubectl delete workflow ...</code>.</td></tr>
-<tr><td><code>workflow reset --all</code></td><td>Deletes all migration CRDs (capture proxies are protected by default; add <code>--include-proxies</code> to remove them).</td></tr>
-<tr><td><code>workflow reset &lt;NAME&gt; --cascade</code></td><td>Deletes a specific resource and its dependents.</td></tr>
-<tr><td><code>workflow util completions &lt;bash|zsh|fish&gt;</code></td><td>Generates a shell completion script.</td></tr>
+<tr><td><code>workflow submit</code></td><td>啟動遷移工作流程（會自動停止並取代同名的工作流程）。</td></tr>
+<tr><td><code>workflow submit --wait --timeout 300</code></td><td>提交並封鎖直到工作流程完成或達到逾時時間。</td></tr>
+<tr><td><code>workflow manage</code></td><td>監控、核准與記錄檔的主要介面（互動式 TUI）。</td></tr>
+<tr><td><code>workflow status</code></td><td>以非互動形式顯示目前的工作流程樹。</td></tr>
+<tr><td><code>workflow status --all</code></td><td>顯示執行中與已完成的工作流程。</td></tr>
+<tr><td><code>workflow status --live-status</code></td><td>為每個節點新增即時快照／回填狀態檢查。</td></tr>
+<tr><td><code>workflow log all</code></td><td>顯示工作流程各 pod 的記錄檔（使用 pod 標籤來尋找）。</td></tr>
+<tr><td><code>workflow log all --follow</code></td><td>即時串流記錄檔（內部使用 <code>stern</code>）。</td></tr>
+<tr><td><code>workflow log filter -l source=src,target=tgt</code></td><td>依標籤選擇器篩選。</td></tr>
+<tr><td><code>workflow approve step &lt;PATTERN&gt; [&lt;PATTERN&gt; ...]</code></td><td>核准符合確切名稱或 glob 模式的待處理關卡（例如 <code>*.evaluateMetadata</code>）。</td></tr>
+<tr><td><code>workflow reset</code></td><td>列出遷移 CRD 並讓您安全地刪除它們。請使用此命令而非 <code>kubectl delete workflow ...</code>。</td></tr>
+<tr><td><code>workflow reset --all</code></td><td>刪除所有遷移 CRD（擷取代理程式預設受到保護；新增 <code>--include-proxies</code> 可一併移除）。</td></tr>
+<tr><td><code>workflow reset &lt;NAME&gt; --cascade</code></td><td>刪除特定資源及其相依項目。</td></tr>
+<tr><td><code>workflow util completions &lt;bash|zsh|fish&gt;</code></td><td>產生 shell 自動完成指令碼。</td></tr>
 </tbody>
 </table>
 
-## The workflow manage command
+## workflow manage 命令
 
-The `workflow manage` command opens a full-screen terminal user interface (TUI) for monitoring and managing workflow execution. It provides the following capabilities:
+`workflow manage` 命令會開啟全螢幕終端機使用者介面（TUI），用於監控與管理工作流程執行。它提供以下功能：
 
-- Viewing step-by-step workflow status (waiting, running, or failed).
-- Opening logs without switching tools.
-- Approving gated steps when they are ready.
+- 檢視逐步的工作流程狀態（等待中、執行中或失敗）。
+- 無需切換工具即可開啟記錄檔。
+- 在關卡步驟就緒時予以核准。
 
-## Approval gates
+## 核准關卡
 
-Not every migration step should run without human review. Approval gates let the workflow stop at meaningful checkpoints so you can validate before continuing.
+並非每個遷移步驟都應在沒有人工審核的情況下執行。核准關卡讓工作流程在有意義的檢查點停止，讓您能在繼續之前進行驗證。
 
-Typical approval points include transitions after metadata migration, backfill milestones, and cutover-sensitive steps. To view and approve gates, run the following commands:
+典型的核准點包括中繼資料遷移之後的轉換、回填里程碑，以及對切換敏感的步驟。若要檢視與核准關卡，請執行以下命令：
 
 ```bash
 workflow manage
@@ -123,21 +124,21 @@ workflow approve step <STEP_NAME>
 ```
 {% include copy.html %}
 
-## Status symbols
+## 狀態符號
 
-The following table describes the symbols displayed in workflow status output.
+下表說明工作流程狀態輸出中顯示的符號。
 
-| Symbol | Meaning |
+| 符號 | 意義 |
 |:-------|:--------|
-| `✓` | Succeeded |
-| `▶` | Running |
-| `○` | Pending |
-| `✗` | Failed |
-| `⟳` | Waiting for approval |
+| `✓` | 成功 |
+| `▶` | 執行中 |
+| `○` | 擱置中 |
+| `✗` | 失敗 |
+| `⟳` | 等待核准 |
 
-## Version-matched sample configuration
+## 版本相符的範例組態
 
-The workflow schema changes between releases. Always load the sample configuration that matches your installed version rather than writing the configuration manually. To load the sample and edit it, run the following commands:
+工作流程結構描述會隨版本而變動。請務必載入與您安裝版本相符的範例組態，而不是手動撰寫組態。若要載入範例並加以編輯，請執行以下命令：
 
 ```bash
 console --version
@@ -147,26 +148,26 @@ workflow configure edit
 {% include copy.html %}
 
 
-## Schema-aware editing
+## 結構描述感知編輯
 
-Each release publishes a `workflowMigration.schema.json` asset. The console also keeps the active schema locally so your editor and validation can stay aligned with the installed version.
+每個版本都會發布 `workflowMigration.schema.json` 資產。console 也會在本機保留作用中的結構描述，讓您的編輯器與驗證能與安裝的版本保持一致。
 
-On the Migration Console, the schema is available at:
+在 Migration Console 上，結構描述位於：
 
 ```text
 /root/.workflowUser.schema.json
 ```
 
-The CLI uses this schema automatically when editing and validating configurations, so no separate download is required.
+CLI 在編輯與驗證組態時會自動使用此結構描述，因此無需另外下載。
 
-For an interactive reference of all available fields, their types, defaults, and descriptions, see the [Migration Assistant Schema Viewer](https://opensearch-project.github.io/opensearch-migrations/).
+若要以互動方式參考所有可用欄位及其類型、預設值與說明，請參閱 [Migration Assistant Schema Viewer](https://opensearch-project.github.io/opensearch-migrations/)。
 
-## Related documentation
+## 相關文件
 
-| Topic | Link |
+| 主題 | 連結 |
 |:------|:-----|
-| First workflow | [Using the Workflow CLI]({{site.url}}{{site.baseurl}}/migration-assistant/workflow-cli/getting-started/) |
-| Deployment choice | [Choose your deployment]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/) |
-| Elasticsearch 6.8 to OpenSearch 3.5 | [Playbook]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-elasticsearch-6-8-to-opensearch-3/) |
-| Amazon OpenSearch Service to Serverless NextGen | [Playbook]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-amazon-opensearch-service-to-serverless/) |
-| Interactive schema reference | [Migration Assistant Schema Viewer](https://opensearch-project.github.io/opensearch-migrations/) |
+| 第一個工作流程 | [使用 Workflow CLI]({{site.url}}{{site.baseurl}}/migration-assistant/workflow-cli/getting-started/) |
+| 部署選擇 | [選擇您的部署方式]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/) |
+| Elasticsearch 6.8 至 OpenSearch 3.5 | [Playbook]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-elasticsearch-6-8-to-opensearch-3/) |
+| Amazon OpenSearch Service 至 Serverless NextGen | [Playbook]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-amazon-opensearch-service-to-serverless/) |
+| 互動式結構描述參考 | [Migration Assistant Schema Viewer](https://opensearch-project.github.io/opensearch-migrations/) |

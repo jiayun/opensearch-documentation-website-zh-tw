@@ -1,64 +1,65 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create or update a workflow
+title: "建立或更新工作流程"
 parent: Workflow APIs
 nav_order: 10
 ---
 
-# Create or Update Workflow API
+# 建立或更新工作流程 API
 
-Creating a workflow adds the content of a workflow template to the flow framework system index. You can provide workflows in JSON format (by specifying `Content-Type: application/json`) or YAML format (by specifying `Content-Type: application/yaml`). By default, the workflow is validated to help identify invalid configurations, including:
+建立工作流程會將工作流程範本的內容新增至 flow framework 系統索引。您可以使用 JSON 格式（指定 `Content-Type: application/json`）或 YAML 格式（指定 `Content-Type: application/yaml`）提供工作流程。根據預設，系統會驗證工作流程，以協助找出無效的組態，包括：
 
-* Workflow steps requiring an OpenSearch plugin that is not installed.
-* Workflow steps relying on previous node input that is provided by those steps.
-* Workflow step fields with invalid values.
-* Workflow graph (node/edge) configurations containing cycles or with duplicate IDs.
+* 工作流程步驟需要尚未安裝的 OpenSearch 外掛程式。
+* 工作流程步驟依賴由這些步驟本身提供的先前節點輸入。
+* 工作流程步驟欄位含有無效的值。
+* 工作流程圖（節點/邊）組態包含循環或具有重複的 ID。
 
-To obtain the validation template for workflow steps, call the [Get Workflow Steps API]({{site.url}}{{site.baseurl}}/automating-configurations/api/get-workflow-steps/).
+若要取得工作流程步驟的驗證範本，請呼叫 [Get Workflow Steps API]({{site.url}}{{site.baseurl}}/automating-configurations/api/get-workflow-steps/)。
 
-You can include placeholder expressions in the value of workflow step fields. For example, you can specify a credential field in a template as {% raw %}`openAI_key: '${{ openai_key }}'`{% endraw %}. The expression will be substituted with the user-provided value during provisioning, using the format {% raw %}`${{ <value> }}`{% endraw %}. You can pass the actual key as a parameter by using the [Provision Workflow API]({{site.url}}{{site.baseurl}}/automating-configurations/api/provision-workflow/) or by using this API with the `provision` parameter set to `true`.
+您可以在工作流程步驟欄位的值中加入預留位置運算式。例如，您可以在範本中將認證資訊欄位指定為 {% raw %}`openAI_key: '${{ openai_key }}'`{% endraw %}。在佈建期間，此運算式會以使用者提供的值取代，格式為 {% raw %}`${{ <value> }}`{% endraw %}。您可以使用 [Provision Workflow API]({{site.url}}{{site.baseurl}}/automating-configurations/api/provision-workflow/)，或使用此 API 並將 `provision` 參數設為 `true`，以參數形式傳遞實際的金鑰。
 
-Once a workflow is created, provide its `workflow_id` to other APIs.
+建立工作流程後，請將其 `workflow_id` 提供給其他 API。
 
-The `POST` method creates a new workflow. The `PUT` method updates an existing workflow. You can specify the `update_fields` parameter to update specific fields.
+`POST` 方法會建立新的工作流程。`PUT` 方法會更新現有的工作流程。您可以指定 `update_fields` 參數來更新特定欄位。
 
-You can only update a complete workflow if it has not yet been provisioned.
+只有在工作流程尚未佈建時，您才能更新完整的工作流程。
 {: .note}
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_flow_framework/workflow
 PUT /_plugins/_flow_framework/workflow/{workflow_id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. 
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `workflow_id` | String | The ID of the workflow to be updated. Required for the `PUT` method. |
+| `workflow_id` | 字串 | 要更新的工作流程 ID。`PUT` 方法的必要參數。 |
 
-## Query parameters
+## 查詢參數
 
-Workflows are normally created and provisioned in separate steps. However, once you have thoroughly tested the workflow, you can combine the create and provision steps by including the `provision` query parameter:
+工作流程通常會在不同的步驟中建立及佈建。不過，在您徹底測試工作流程後，可以加入 `provision` 查詢參數，將建立與佈建步驟合併：
 
 ```json
 POST /_plugins/_flow_framework/workflow?provision=true
 ```
 {% include copy-curl.html %}
 
-When set to `true`, the [Provision Workflow API]({{site.url}}{{site.baseurl}}/automating-configurations/api/provision-workflow/) is executed immediately following creation. 
+設為 `true` 時，會在建立後立即執行 [Provision Workflow API]({{site.url}}{{site.baseurl}}/automating-configurations/api/provision-workflow/)。
 
-By default, workflows are validated when they are created to ensure that the syntax is valid and that the graph does not contain cycles. This behavior can be controlled with the `validation` query parameter. If `validation` is set to `all`, OpenSearch performs a complete template validation. Any other value of the `validation` parameter suppresses validation, allowing an incomplete/work-in-progress template to be saved. To disable template validation, set `validation` to `none`:
+根據預設，工作流程在建立時會經過驗證，以確保語法有效且圖形不包含循環。您可以使用 `validation` 查詢參數控制此行為。若將 `validation` 設為 `all`，OpenSearch 會執行完整的範本驗證。`validation` 參數的任何其他值都會略過驗證，讓您能儲存不完整或仍在進行中的範本。若要停用範本驗證，請將 `validation` 設為 `none`：
 
 ```json
 POST /_plugins/_flow_framework/workflow?validation=none
 ```
 {% include copy-curl.html %}
 
-In a workflow that has not been provisioned, you can update fields other than the `workflows` field. For example, you can update the `name` and `description` fields as follows:
+在尚未佈建的工作流程中，您可以更新 `workflows` 欄位以外的欄位。例如，您可以依下列方式更新 `name` 和 `description` 欄位：
 
 ```json
 PUT /_plugins/_flow_framework/workflow/{workflow_id}?update_fields=true
@@ -69,10 +70,10 @@ PUT /_plugins/_flow_framework/workflow/{workflow_id}?update_fields=true
 ```
 {% include copy-curl.html %}
 
-You cannot specify both the `provision` and `update_fields` parameters at the same time.
+您無法同時指定 `provision` 和 `update_fields` 參數。
 {: .note}
 
-If a workflow has been provisioned, you can update and reprovision the full template:
+若工作流程已佈建，您可以更新並重新佈建完整範本：
 
 ```json
 PUT /_plugins/_flow_framework/workflow/{workflow_id}?reprovision=true
@@ -81,10 +82,10 @@ PUT /_plugins/_flow_framework/workflow/{workflow_id}?reprovision=true
 }
 ```
 
-You can add new steps to the workflow but cannot delete them. Only index setting, search pipeline, and ingest pipeline steps can currently be updated.
+您可以在工作流程中新增步驟，但無法刪除步驟。目前只能更新索引設定、搜尋管線及資料匯入管線步驟。
 {: .note}
 
-To control how long the request waits for the provisioning and reprovisioning process to complete, use the `wait_for_completion_timeout` parameter:
+若要控制請求等待佈建與重新佈建程序完成的時間長度，請使用 `wait_for_completion_timeout` 參數：
 
 ```json
 POST /_plugins/_flow_framework/workflow/?provision=true&wait_for_completion_timeout=2s
@@ -96,13 +97,13 @@ PUT /_plugins/_flow_framework/workflow/{workflow_id}/?reprovision=true&wait_for_
 ```
 {% include copy-curl.html %}
 
-If the operation does not complete within the specified amount of time, the response returns the current workflow status while execution continues asynchronously.
+若作業未在指定時間內完成，回應會傳回目前的工作流程狀態，而執行作業會以非同步方式繼續進行。
 
-The `wait_for_completion_timeout` parameter can only be used when either `provision` or `reprovision` is set to `true`
+只有在 `provision` 或 `reprovision` 設為 `true` 時，才能使用 `wait_for_completion_timeout` 參數
 {: .note}
 
-For example, the following request provisions a workflow and waits for up to 2 seconds for completion:
-You can create and provision a workflow using a [workflow template]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/) as follows:
+例如，下列請求會佈建工作流程，並最多等待 2 秒讓其完成：
+您可以依下列方式，使用[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/)建立及佈建工作流程：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case={use_case}&provision=true
@@ -112,42 +113,42 @@ POST /_plugins/_flow_framework/workflow?use_case={use_case}&provision=true
 ```
 {% include copy-curl.html %}
 
-The following table lists the available query parameters. All query parameters are optional. User-provided parameters are only allowed if the `provision` parameter is set to `true`.
+下表列出可用的查詢參數。所有查詢參數皆為選用。只有在 `provision` 參數設為 `true` 時，才允許使用者提供的參數。
 
-| Parameter                              | Data type | Description                                                                                                                                                                                                                                                                                                                               |
+| 參數 | 資料類型 | 說明 |
 |:---------------------------------------|:----------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `provision`                            | Boolean   | Whether to provision the workflow as part of the request. Default is `false`.                                                                                                                                                                                                                                                             |
-| `update_fields`                        | Boolean   | Whether to update only the fields included in the request body. Default is `false`.                                                                                                                                                                                                                                                       |
-| `reprovision`                          | Boolean   | Whether to reprovision the entire template if it has already been provisioned. A complete template must be provided in the request body. Default is `false`.                                                                                                                                                                              |
-| `validation`                           | String    | Whether to validate the workflow. Valid values are `all` (validate the template) and `none` (do not validate the template). Default is `all`.                                                                                                                                                                                             |
-| `use_case`                             | String    | The name of the [workflow template]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/#supported-workflow-templates) to use when creating the workflow.                                                                                                                                                           |
-| `wait_for_completion_timeout`          | Time value | Specifies the maximum wait time for synchronous provisioning or reprovisioning. If the timeout is exceeded, the request returns the current workflow status while execution continues asynchronously.|
-| User-provided substitution expressions | String    | Parameters matching substitution expressions in the template. Only allowed if `provision` is set to `true`. Optional. If `provision` is set to `false`, you can pass these parameters in the [Provision Workflow API query parameters]({{site.url}}{{site.baseurl}}/automating-configurations/api/provision-workflow/#query-parameters).  |
+| `provision` | 布林值 | 是否在請求中一併佈建工作流程。預設為 `false`。 |
+| `update_fields` | 布林值 | 是否只更新請求本文中包含的欄位。預設為 `false`。 |
+| `reprovision` | 布林值 | 若範本已佈建，是否重新佈建整個範本。必須在請求本文中提供完整範本。預設為 `false`。 |
+| `validation` | 字串 | 是否驗證工作流程。有效值為 `all`（驗證範本）和 `none`（不驗證範本）。預設為 `all`。 |
+| `use_case` | 字串 | 建立工作流程時要使用的[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/#supported-workflow-templates)名稱。 |
+| `wait_for_completion_timeout` | 時間值 | 指定同步佈建或重新佈建的最長等待時間。若超過逾時時間，請求會傳回目前的工作流程狀態，而執行作業會以非同步方式繼續進行。|
+| 使用者提供的替代運算式 | 字串 | 與範本中替代運算式相符的參數。只有在 `provision` 設為 `true` 時才允許使用。選用。若 `provision` 設為 `false`，您可以在 [Provision Workflow API 查詢參數]({{site.url}}{{site.baseurl}}/automating-configurations/api/provision-workflow/#query-parameters)中傳遞這些參數。 |
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request fields.
+下表列出可用的請求欄位。
 
-|Field	|Data type	|Required/Optional	|Description	|
+|欄位	|資料類型	|必要/選用	|說明	|
 |:---	|:---	|:---	|:---	|
-|`name`	|String	|Required	|The name of the workflow.	|
-|`description`	|String	|Optional	|A description of the workflow.	|
-|`use_case`	|String	|Optional	| A user-provided use case, which can be used with the [Search Workflow API]({{site.url}}{{site.baseurl}}/automating-configurations/api/search-workflow/) to find related workflows. You can use this field to specify custom values. This is distinct from the `use_case` query parameter. |
-|`version`	|Object	|Optional	| A key-value map with two fields: `template`, which identifies the template version, and `compatibility`, which identifies a list of minimum required OpenSearch versions.	|
-|`workflows`	|Object	|Optional	|A map of workflows. Only the `provision` key is supported. The value for the workflow key is a key-value map that includes fields for `user_params` and lists of `nodes` and `edges`.	|
+|`name`	|字串	|必要	|工作流程的名稱。	|
+|`description`	|字串	|選用	|工作流程的說明。	|
+|`use_case`	|字串	|選用	| 使用者提供的使用案例，可搭配 [Search Workflow API]({{site.url}}{{site.baseurl}}/automating-configurations/api/search-workflow/) 尋找相關工作流程。您可以使用此欄位指定自訂值。這與 `use_case` 查詢參數不同。 |
+|`version`	|物件	|選用	| 包含兩個欄位的鍵值對應表：`template` 用於識別範本版本，而 `compatibility` 用於識別最低必要 OpenSearch 版本的清單。	|
+|`workflows`	|物件	|選用	|工作流程的對應表。僅支援 `provision` 鍵。工作流程鍵的值是鍵值對應表，其中包含 `user_params` 的欄位，以及 `nodes` 和 `edges` 的清單。	|
 
-## Example request: Register and deploy an externally hosted model in YAML
+## 請求範例：以 YAML 註冊並部署外部託管的模型
 
-To provide a template in YAML format, specify `Content-Type: application/yaml` in the request header:
+若要提供 YAML 格式的範本，請在請求標頭中指定 `Content-Type: application/yaml`：
 
 ```bash
 curl -XPOST "http://localhost:9200/_plugins/_flow_framework/workflow" -H 'Content-Type: application/yaml'
 ```
 
-YAML templates permit comments. 
+YAML 範本允許註解。 
 {: .tip}
 
-The following is an example YAML template for registering and deploying an externally hosted model:
+以下是用於註冊並部署外部託管模型的 YAML 範本範例：
 
 ```yaml
 # This Name Is Required API
@@ -216,14 +217,14 @@ workflows:
 ```
 {% include copy-curl.html %}
 
-## Example request: Register and deploy a remote model (JSON)
+## 請求範例：註冊並部署遠端模型（JSON）
 
-To provide a template in JSON format, specify `Content-Type: application/json` in the request header:
+若要提供 JSON 格式的範本，請在請求標頭中指定 `Content-Type: application/json`：
 
 ```bash
 curl -XPOST "http://localhost:9200/_plugins/_flow_framework/workflow" -H 'Content-Type: application/json'
 ```
-The following JSON template is equivalent to the YAML template provided in the previous section: 
+以下 JSON 範本與上一節提供的 YAML 範本等效： 
 
 ```json
 {
@@ -300,9 +301,9 @@ The following JSON template is equivalent to the YAML template provided in the p
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-OpenSearch responds with the `workflow_id`:
+OpenSearch 回應中會包含 `workflow_id`：
 
 ```json
 {
@@ -310,9 +311,9 @@ OpenSearch responds with the `workflow_id`:
 }
 ```
 
-Once you have created a workflow, you can use other workflow APIs with the `workflow_id`.
+建立工作流程後，您可以搭配 `workflow_id` 使用其他工作流程 API。
 
-## Example response with wait_for_completion_timeout enabled
+## 啟用 wait_for_completion_timeout 時的回應範例
 
 ```json
 {

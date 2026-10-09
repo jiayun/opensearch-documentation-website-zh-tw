@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete
+title: "刪除"
 parent: SQL
 nav_order: 12
 redirect_from:
@@ -9,14 +10,14 @@ redirect_from:
 ---
 
 
-# SQL DELETE statement
+# SQL DELETE 陳述式
 
-The `DELETE` statement deletes documents that satisfy the predicates in the `WHERE` clause.
-If you don't specify the `WHERE` clause, all documents are deleted.
+`DELETE` 陳述式會刪除符合 `WHERE` 子句中述詞的文件。
+如果您未指定 `WHERE` 子句，則會刪除所有文件。
 
-### Setting
+### 設定
 
-The `DELETE` statement is disabled by default. To enable the `DELETE` functionality in SQL, you need to update the configuration by sending the following request:
+`DELETE` 陳述式預設為停用。若要在 SQL 中啟用 `DELETE` 功能，您需要傳送下列請求來更新組態：
 
 ```json
 PUT _plugins/_query/settings
@@ -28,15 +29,15 @@ PUT _plugins/_query/settings
 ```
 {% include copy-curl.html %}
 
-### Syntax
+### 語法
 
-Rule `singleDeleteStatement`:
+規則 `singleDeleteStatement`：
 
 ![singleDeleteStatement]({{site.url}}{{site.baseurl}}/images/singleDeleteStatement.png)
 
-### Example
+### 範例
 
-SQL query:
+SQL 查詢：
 
 ```sql
 DELETE FROM accounts
@@ -45,7 +46,7 @@ WHERE age > 30
 {% include copy.html %}
 
 
-Explain:
+說明：
 
 ```json
 {
@@ -73,7 +74,7 @@ Explain:
 }
 ```
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```json
 {
@@ -94,4 +95,4 @@ The query returns the following results:
 }
 ```
 
-The `datarows` field shows the number of documents deleted.
+`datarows` 欄位會顯示已刪除的文件數。

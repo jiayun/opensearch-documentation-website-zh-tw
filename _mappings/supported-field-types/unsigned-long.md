@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Unsigned long
+title: "無號長整數"
 parent: Numeric field types
 grand_parent: Supported field types
 redirect_from:
@@ -9,11 +10,11 @@ nav_order: 15
 has_children: false
 ---
 
-# Unsigned long field type
-**Introduced 2.8**
+# 無號長整數欄位類型
+**自 2.8 版起推出**
 {: .label .label-purple }
 
-The `unsigned_long` field type is a numeric field type that represents an unsigned 64-bit integer with a minimum value of 0 and a maximum value of 2<sup>64</sup> &minus; 1. In the following example, `counter` is mapped as an `unsigned_long` field:
+`unsigned_long` 欄位類型是一種數值欄位類型，代表不帶正負號的 64 位元整數，最小值為 0，最大值為 2<sup>64</sup> &minus; 1。在下列範例中，`counter` 會對應為 `unsigned_long` 欄位：
 
 
 ```json
@@ -30,9 +31,9 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-## Indexing  
+## 編製索引
 
-To index a document with an `unsigned_long` value, use the following request:
+若要將含有 `unsigned_long` 值的文件編製索引，請使用下列請求：
 
 ```json
 PUT testindex/_doc/1 
@@ -42,7 +43,7 @@ PUT testindex/_doc/1
 ```
 {% include copy-curl.html %}
 
-Alternatively, you can use the [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) as follows:
+或者，您也可以使用 [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/)，如下所示：
 
 ```json
 POST _bulk
@@ -51,12 +52,12 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-If a field of type `unsigned_long` has the `store` parameter set to `true` (that is, the field is a stored field), it will be stored and returned as a string. `unsigned_long` values do not support the decimal part, so, if supplied, the decimal part is truncated.
+如果 `unsigned_long` 類型的欄位將 `store` 參數設為 `true` (也就是該欄位是已儲存的欄位)，則會以字串形式儲存並傳回。`unsigned_long` 值不支援小數部分，因此若有提供小數部分，會將其截斷。
 {: .note}
 
-## Querying
+## 查詢
 
-`unsigned_long` fields support most of the queries that other numeric types support. For example, you can use a term query on `unsigned_long` fields:
+`unsigned_long` 欄位支援其他數值類型所支援的大多數查詢。例如，您可以對 `unsigned_long` 欄位使用詞項查詢：
 
 ```json
 POST _search
@@ -72,7 +73,7 @@ POST _search
 ```
 {% include copy-curl.html %}
 
-You can also use a range query:
+您也可以使用範圍查詢：
 
 ```json
 POST _search
@@ -88,9 +89,9 @@ POST _search
 ```
 {% include copy-curl.html %}
 
-## Sorting
+## 排序
 
-You can use `sort` values with `unsigned_long` fields to order the search results, for example:
+您可以將 `sort` 值與 `unsigned_long` 欄位搭配使用，以排序搜尋結果，例如：
 
 ```json
 POST _search
@@ -114,12 +115,12 @@ POST _search
 {% include copy-curl.html %}
 
 
-An `unsigned_long` field cannot be used as an index sort field (in the `sort.field` index setting).
+`unsigned_long` 欄位不能做為索引排序欄位 (在 `sort.field` 索引設定中)。
 {: .warning}
 
-## Aggregations
+## 彙總
 
-Like other numeric fields, `unsigned_long` fields support aggregations. For `terms` and `multi_terms` aggregations, `unsigned_long` values are used as is, but for other aggregation types, the values are converted to the `double` type (with possible loss of precision). The following is an example of the `terms` aggregation:
+與其他數值欄位一樣，`unsigned_long` 欄位支援彙總。對於 `terms` 和 `multi_terms` 彙總，`unsigned_long` 值會依原樣使用，但對於其他彙總類型，這些值會轉換為 `double` 類型 (可能損失精確度)。以下是 `terms` 彙總的範例：
 
 ```json
 POST _search
@@ -138,9 +139,9 @@ POST _search
 ```
 {% include copy-curl.html %}
 
-## Scripting
+## 指令碼
 
-In scripts, `unsigned_long` fields are returned as instances of the `BigInteger` class: 
+在指令碼中，`unsigned_long` 欄位會以 `BigInteger` 類別的執行個體形式傳回：
 
 ```json
 POST _search
@@ -159,10 +160,10 @@ POST _search
 {% include copy-curl.html %}
 
 
-## Limitations
+## 限制
 
-Note the following limitations of the `unsigned_long` field type:
+請注意 `unsigned_long` 欄位類型的下列限制：
 
-- When aggregations are performed across different numeric types and one of the types is `unsigned_long`, the values are converted to the `double` type and `double` arithmetic is used, with high likelihood of precision loss.
+- 當跨不同數值類型執行彙總，且其中一個類型是 `unsigned_long` 時，這些值會轉換為 `double` 類型，並使用 `double` 算術，很可能會損失精確度。
 
-- An `unsigned_long` field cannot be used as an index sort field (in the `sort.field` index setting). This limitation also applies when a search is performed on multiple indexes and the results are sorted by the field that has the `unsigned_long` type in at least one of the indexes but a different numeric type or types in others. 
+- `unsigned_long` 欄位不能做為索引排序欄位 (在 `sort.field` 索引設定中)。當對多個索引執行搜尋，且結果依至少其中一個索引中具有 `unsigned_long` 類型、但其他索引中具有不同數值類型的欄位排序時，這項限制也適用。 

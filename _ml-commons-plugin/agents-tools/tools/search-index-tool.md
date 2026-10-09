@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search Index tool
+title: "Search Index 工具"
 has_children: false
 has_toc: false
 nav_order: 90
@@ -9,16 +10,16 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# Search Index tool
-**Introduced 2.13**
+# Search Index 工具
+**於 2.13 版推出**
 {: .label .label-purple }
 <!-- vale on -->
 
-The `SearchIndexTool` searches an index using a query written in query domain-specific language (DSL) and returns the query results.
+`SearchIndexTool` 會使用以查詢領域特定語言 (DSL) 撰寫的查詢來搜尋索引，並傳回查詢結果。
 
-## Step 1: Register a flow agent that will run the SearchIndexTool
+## 步驟 1：註冊將執行 SearchIndexTool 的流程代理程式
 
-A flow agent runs a sequence of tools in order and returns the last tool's output. To create a flow agent, send the following register agent request:
+流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -38,7 +39,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -46,11 +47,11 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 2: Run the agent
+## 步驟 2：執行代理程式
 
-Before you run the agent, make sure that you add the sample OpenSearch Dashboards `Sample eCommerce orders` dataset. To learn more, see [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
+執行代理程式之前，請確認您已新增範例 OpenSearch Dashboards `Sample eCommerce orders` 資料集。若要進一步了解，請參閱[新增範例資料]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
 
-Then, run the agent by sending the following request. The `SearchIndexTool` takes one parameter named `input`. This parameter includes the index name and the query:
+接著，傳送下列請求來執行代理程式。`SearchIndexTool` 接受一個名為 `input` 的參數。此參數包含索引名稱與查詢：
 
 ```json
 POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
@@ -62,9 +63,9 @@ POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
 ```
 {% include copy-curl.html %} 
 
-For parameter descriptions, see [Execute parameters](#execute-parameters).
+如需參數說明，請參閱[執行參數](#execute-parameters)。
 
-The query passed in the previous request is equivalent to the following query:
+前一個請求中傳入的查詢等同於下列查詢：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -74,7 +75,7 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 }
 ```
 
-OpenSearch returns the query results:
+OpenSearch 會傳回查詢結果：
 
 ```json
 {
@@ -111,14 +112,14 @@ OpenSearch returns the query results:
 }
 ```
 
-## Execute parameters
+## 執行參數
 
-The following table lists all tool parameters that are available when registering an agent. 
+下表列出註冊代理程式時可用的所有工具參數。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`input`| String | The index name and the query to use for search, in JSON format. The `index` parameter contains the name of the index, and the `query` parameter contains the query formatted in Query DSL. For example, `"{\"index\": \"opensearch_dashboards_sample_data_ecommerce\", \"query\": {\"size\": 22,  \"_source\": \"category\"}}"`. The `input` parameter and the `index` and `query` parameters it contains are required.
+`input`| 字串 | 要用於搜尋的索引名稱與查詢，格式為 JSON。`index` 參數包含索引名稱，而 `query` 參數包含以 Query DSL 格式化的查詢。例如，`"{\"index\": \"opensearch_dashboards_sample_data_ecommerce\", \"query\": {\"size\": 22,  \"_source\": \"category\"}}"`。`input` 參數及其包含的 `index` 與 `query` 參數為必要。
 
-## Testing the tool
+## 測試工具
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+您可以將此工具做為代理程式工作流程的一部分來執行，或使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適合用來測試個別工具或執行獨立作業。

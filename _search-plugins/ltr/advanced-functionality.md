@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Advanced functionality
+title: "進階功能"
 nav_order: 80
 parent: Learning to Rank
 grand_parent: Optimizing search quality
 has_children: false
 ---
 
-# Advanced LTR functionality
+# 進階 LTR 功能
 
-OpenSearch Learning to Rank (LTR) offers additional functionality. It is recommended that you have a foundational understanding of OpenSearch LTR before working with these features.
+OpenSearch Learning to Rank (LTR) 提供額外的功能。建議您在使用這些功能之前，先對 OpenSearch LTR 有基礎的了解。
 
-## Reusable features
+## 可重複使用的特徵
 
-[Building features]({{site.url}}{{site.baseurl}}/search-plugins/ltr/working-with-features/) involves uploading a list of features. To avoid repeating common features across multiple sets, you can maintain a library of reusable features.
+[建立特徵]({{site.url}}{{site.baseurl}}/search-plugins/ltr/working-with-features/)包含上傳一份特徵清單。為避免在多個特徵集中重複定義相同的常用特徵，您可以維護一個可重複使用的特徵庫。
 	
-For example, if a title field query is frequently used in your feature sets, then you can create a reusable title query using the feature API:
+例如，如果 title 欄位查詢在您的特徵集中經常使用，您可以使用 feature API 建立可重複使用的 title 查詢：
 
 ```json
     POST _ltr/_feature/titleSearch
@@ -35,7 +36,7 @@ For example, if a title field query is frequently used in your feature sets, the
 ```
 {% include copy-curl.html %}
 
-Normal CRUD operations apply, so you can delete a feature by using the following operation: 
+一般的 CRUD 操作皆適用，因此您可以使用下列操作刪除特徵：
 
 ```json
 DELETE _ltr/_feature/titleSearch
@@ -43,54 +44,53 @@ DELETE _ltr/_feature/titleSearch
 {% include copy-curl.html %}
 
 
-To fetch an individual feature, you can use the following request:
+若要擷取單一特徵，您可以使用下列請求：
 
 ```json
 GET _ltr/_feature/titleSearch
 ```
 {% include copy-curl.html %}
 
-To view a list of all features filtered by name prefix, you can use the following request:
+若要檢視依名稱前綴篩選的所有特徵清單，您可以使用下列請求：
 
 ```json
 GET /_ltr/_feature?prefix=t
 ```
 {% include copy-curl.html %}
 
-To create or update a feature set, you can refer to the `titleSearch` feature by using the following request:
+若要建立或更新特徵集，您可以使用下列請求參照 `titleSearch` 特徵：
 
 ```json
 POST /_ltr/_featureset/my_featureset/_addfeatures/titleSearch
 ```
 {% include copy-curl.html %}
 
-This adds the `titleSearch` feature to the next ordinal position within the `my_featureset` feature set.
+這會將 `titleSearch` 特徵新增至 `my_featureset` 特徵集中的下一個序號位置。
 
-## Derived features
+## 衍生特徵
 
-Derived features are those that build upon other features. These can be expressed as [Lucene expressions](http://lucene.apache.org/core/{{site.lucene_version}}/expressions/index.html?org/apache/lucene/expressions/js/package-summary.html) and are identified by the `"template_language": "derived_expression"`. 
+衍生特徵是建構在其他特徵之上的特徵。這些特徵可以表示為 [Lucene 運算式](http://lucene.apache.org/core/{{site.lucene_version}}/expressions/index.html?org/apache/lucene/expressions/js/package-summary.html)，並透過 `"template_language": "derived_expression"` 識別。
 
-Additionally, derived features can accept query-time variables of type [`Number`](https://docs.oracle.com/javase/8/docs/api/java/lang/Number.html), as described in [Creating feature sets]({{site.url}}{{site.baseurl}}/search-plugins/ltr/working-with-features#creating-feature-sets).
+此外，衍生特徵可以接受 [`Number`](https://docs.oracle.com/javase/8/docs/api/java/lang/Number.html) 類型的查詢時間變數，如 [建立特徵集]({{site.url}}{{site.baseurl}}/search-plugins/ltr/working-with-features#creating-feature-sets) 所述。
 
-### Script features
+### 指令碼特徵
 
-Script features are a type of [derived feature](#derived-features). These features have access to the `feature_vector`, but they are implemented as native or Painless OpenSearch scripts rather than as [Lucene
-expressions](http://lucene.apache.org/core/{{site.lucene_version}}/expressions/index.html?org/apache/lucene/expressions/js/package-summary.html). 
+指令碼特徵是 [衍生特徵](#derived-features) 的一種。這些特徵可以存取 `feature_vector`，但它們是以原生或 Painless OpenSearch 指令碼實作，而非 [Lucene 運算式](http://lucene.apache.org/core/{{site.lucene_version}}/expressions/index.html?org/apache/lucene/expressions/js/package-summary.html)。
 
-To identify these features, set the `"template_language": "script_feature""`. The custom script can access the `feature_vector` through the [Java Map](https://docs.oracle.com/javase/8/docs/api/java/util/Map.html), as described in [Create a feature set]({{site.url}}{{site.baseurl}}/search-plugins/ltr/working-with-features#creating-feature-sets).
+若要識別這些特徵，請設定 `"template_language": "script_feature""`。自訂指令碼可以透過 [Java Map](https://docs.oracle.com/javase/8/docs/api/java/util/Map.html) 存取 `feature_vector`，如 [建立特徵集]({{site.url}}{{site.baseurl}}/search-plugins/ltr/working-with-features#creating-feature-sets) 所述。
 
-Script-based features may impact the performance of your OpenSearch cluster, so it is best to avoid them if you require highly performant queries.
+以指令碼為基礎的特徵可能會影響 OpenSearch 叢集的效能，因此如果您需要高效能的查詢，最好避免使用它們。
 {: .warning}
 
-### Script feature parameters
+### 指令碼特徵參數
 
-Script features are native or Painless scripts within the context of LTR. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/). These script features can accept parameters as described in the [OpenSearch script documentation]({{site.url}}{{site.baseurl}}/api-reference/script-apis/index/). When working with LTR scripts, you can override parameter values and names. The priority for parameterization, in increasing order, is as follows:
+指令碼特徵是 LTR 情境中的原生或 Painless 指令碼。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。這些指令碼特徵可以接受參數，如 [OpenSearch 指令碼文件]({{site.url}}{{site.baseurl}}/api-reference/script-apis/index/) 所述。使用 LTR 指令碼時，您可以覆寫參數值與名稱。參數化的優先順序由低至高如下：
 
-- The parameter name and value are passed directly to the source script, but not in the LTR script parameters. These cannot be configured at query time. 
-- The parameter name is passed to both the `sltr` query and the source script, allowing the script parameter values to be overridden at query time.
-- The LTR script parameter name to native script parameter name indirection allows you to use different parameter names in your LTR feature definition than those in the underlying native script. This gives you flexibility in how you define and use scripts within the LTR context.
+- 參數名稱與值會直接傳遞至原始指令碼，但不會傳遞至 LTR 指令碼參數。這些無法在查詢時間設定。
+- 參數名稱會同時傳遞至 `sltr` 查詢與原始指令碼，讓指令碼參數值可以在查詢時間被覆寫。
+- LTR 指令碼參數名稱與原生指令碼參數名稱之間的間接對應，讓您在 LTR 特徵定義中可以使用與底層原生指令碼不同的參數名稱。這讓您在 LTR 情境中定義與使用指令碼時更具彈性。
 
-For example, to set up a customizable way to rank movies in search results, considering both the title match and other adjustable factors, you can use the following request:
+例如，若要建立一個可自訂的方式，在搜尋結果中對電影進行排名，同時考量 title 符合度與其他可調整因素，您可以使用下列請求：
 
 ```json
 POST _ltr/_featureset/more_movie_features
@@ -134,18 +134,18 @@ POST _ltr/_featureset/more_movie_features
 ```
 {% include copy-curl.html %}
 
-## Multiple feature stores
+## 多重特徵儲存庫
 
-A feature store corresponds to an independent LTR system, including features, feature sets, and models backed by a single index and cache. A feature store typically represents a single search problem or application, like Wikipedia or Wiktionary. To use multiple feature stores in your OpenSearch cluster, you can create and manage them using the provided API.
+特徵儲存庫對應一個獨立的 LTR 系統，包括由單一索引與快取支援的特徵、特徵集與模型。特徵儲存庫通常代表單一搜尋問題或應用程式，例如 Wikipedia 或 Wiktionary。若要在 OpenSearch 叢集中使用多個特徵儲存庫，您可以使用提供的 API 建立與管理它們。
 
-For example, first create the `wikipedia` feature store:
+例如，先建立 `wikipedia` 特徵儲存庫：
 
 ```json
 PUT _ltr/wikipedia
 ```
 {% include copy-curl.html %}
 
-Then create a feature set in that store:
+然後在該儲存庫中建立特徵集：
 
 ```json
 POST _ltr/wikipedia/_featureset/attempt_1
@@ -170,7 +170,7 @@ POST _ltr/wikipedia/_featureset/attempt_1
 ```
 {% include copy-curl.html %}
 
-When logging features, you can specify the feature store using the `store` parameter in the `sltr` section of your query, as shown in the following example structure. If you do not provide a `store` parameter, the default store is used to look up the feature set.
+記錄特徵時，您可以在查詢的 `sltr` 區段中使用 `store` 參數指定特徵儲存庫，如下列範例結構所示。如果您未提供 `store` 參數，則會使用預設儲存庫來查詢特徵集。
 
 ```json
 {
@@ -186,30 +186,30 @@ When logging features, you can specify the feature store using the `store` param
 ```
 {% include copy-curl.html %}
 
-To delete the feature set, you can use the following operation:
+若要刪除特徵集，您可以使用下列操作：
 
 ```json
 DELETE _ltr/wikipedia/_featureset/attempt_1
 ```
 {% include copy-curl.html %}
 
-## Model caching
+## 模型快取
 
-The Model Caching plugin uses an internal cache for compiled models. To force the models to be recompiled, you can clear the cache for a feature store:
+Model Caching 外掛程式使用內部快取來儲存已編譯的模型。若要強制重新編譯模型，您可以清除特徵儲存庫的快取：
 
 ```json
 POST /_ltr/_clearcache
 ```
 {% include copy-curl.html %}
 
-To get cluster-wide cache statistics for a specific store, use the following request:
+若要取得特定儲存庫的整個叢集快取統計資料，請使用下列請求：
 
 ```json
 GET /_ltr/_cachestats
 ```
 {% include copy-curl.html %}
 
-You can control the characteristics of the internal cache by using the following node settings:
+您可以使用下列節點設定來控制內部快取的特性：
 
 ```
 # limit cache usage to 12 megabytes (defaults to 10mb or max_heap/10 if lower) ltr.caches.max_mem: 12mb
@@ -218,11 +218,11 @@ You can control the characteristics of the internal cache by using the following
 ```
 {% include copy.html %}
 
-## Extra logging
+## 額外記錄
 
-As described in [Logging features]({{site.url}}{{site.baseurl}}/search-plugins/ltr/logging-features/), you can use the logging extension to return feature values with each document. For native scripts, you can also return additional arbitrary information along with the logged features. 
+如[記錄特徵]({{site.url}}{{site.baseurl}}/search-plugins/ltr/logging-features/)所述，您可以使用記錄擴充功能，為每份文件傳回特徵值。對於原生指令碼，您也可以隨記錄的特徵一併傳回其他任意資訊。
 
-For native scripts, the `extra_logging` parameter is injected into the script parameters. This parameter is a [`Supplier<Map<String,Object>>`](https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html), which provides a non-null `Map<String,Object>` only during the logging fetch phase. Any values you add to this map are returned alongside the logged features:
+對於原生指令碼，`extra_logging` 參數會注入指令碼參數中。此參數是 [`Supplier<Map<String,Object>>`](https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html)，僅在記錄擷取階段提供非 null 的 `Map<String,Object>`。您加入此 Map 的任何值，都會隨記錄的特徵一併傳回：
 
 ```java
 {
@@ -240,7 +240,7 @@ For native scripts, the `extra_logging` parameter is injected into the script pa
 ```
 {% include copy-curl.html %}
 
-If the extra logging map is accessed, it is returned as an additional entry with the logged features. The format of the logged features, including the extra logging information, will appear similar to the following example:
+若存取了額外記錄 Map，它會以額外項目的形式隨記錄的特徵一併傳回。記錄特徵的格式 (包含額外記錄資訊) 會類似下列範例：
 
 ```json
   {
@@ -269,11 +269,11 @@ If the extra logging map is accessed, it is returned as an additional entry with
 ```
 {% include copy-curl.html %}
 
-## Feature score caching
+## 特徵分數快取
 
-By default, the Feature Score Caching plugin calculates feature scores for both model inference and feature score logging. For example, if you write a query to rescore the top 100 documents and return the top 10 with feature scores, then the plugin calculates the feature scores of the top 100 documents for model inference and then calculates and logs the scores for the top 10 documents.
+根據預設，Feature Score Caching 外掛程式會同時為模型推論與特徵分數記錄計算特徵分數。例如，若您撰寫查詢以重新評分前 100 份文件，並傳回前 10 份文件及其特徵分數，則此外掛程式會為模型推論計算前 100 份文件的特徵分數，接著計算並記錄前 10 份文件的分數。
 
-The following query shows this behavior: 
+下列查詢顯示此行為：
 
 ```json
 POST tmdb/_search
@@ -309,8 +309,8 @@ POST tmdb/_search
 ```
 {% include copy-curl.html %}
 
-In some environments, it may be faster to cache the feature scores for model inference and reuse them for logging. To enable feature score caching, add the `cache: "true"`
-flag to the `sltr` query that is the target of feature score logging, as shown in the following example:
+在某些環境中，快取模型推論的特徵分數並將其重複用於記錄，可能會更快。若要啟用特徵分數快取，請將 `cache: "true"`
+旗標加入作為特徵分數記錄目標的 `sltr` 查詢，如下列範例所示：
 
 ```json
 {
@@ -325,16 +325,16 @@ flag to the `sltr` query that is the target of feature score logging, as shown i
 ```
 {% include copy-curl.html %}
 
-## Stats
+## 統計資料
 
-You can use the Stats API to retrieve the plugin's overall status and statistics. To do this, send the following request:
+您可以使用 Stats API 擷取此外掛程式的整體狀態與統計資料。若要這麼做，請傳送下列請求：
 
 ```json
 GET /_plugins/_ltr/stats
 ```
 {% include copy-curl.html %}
 
-The response includes information about the cluster, configured stores, cache statistics for various plugin components, and request counts:
+回應包含叢集相關資訊、已設定的儲存庫、各種外掛程式元件的快取統計資料，以及請求計數：
 
 ```json
 {
@@ -386,37 +386,37 @@ The response includes information about the cluster, configured stores, cache st
 ```
 {% include copy-curl.html %}
 
-You can use filters to retrieve a single statistic by sending the following request:
+您可以使用篩選條件，傳送下列請求來擷取單一統計資料：
 
 ```json
 GET /_plugins/_ltr/stats/{stat}
 ```
 {% include copy-curl.html %}
 
-The following table lists the available `stat` values.
+下表列出可用的 `stat` 值。
 
-Stat | Description
+統計項目 | 說明
 :--- | :---
-`stores` | Information about configured feature stores.
-`status` | The overall plugin status.
-`cache` | Per-node cache statistics for various plugin components (features, feature sets, and models).
-`request_total_count` | Per-node counter of the number of LTR queries executed.
-`request_error_count` | Per-node counter of the number of LTR queries that failed.
+`stores` | 已設定特徵儲存庫的相關資訊。
+`status` | 此外掛程式的整體狀態。
+`cache` | 各種外掛程式元件 (特徵、特徵集與模型) 的每節點快取統計資料。
+`request_total_count` | 每節點已執行 LTR 查詢數目的計數器。
+`request_error_count` | 每節點失敗 LTR 查詢數目的計數器。
 
-You can limit the information to a single node in the cluster by sending the following requests:
+您可以傳送下列請求，將資訊限制在叢集中的單一節點：
 
 ```json
 GET /_plugins/_ltr/{nodeId}/stats
 GET /_plugins/_ltr/{nodeId}/stats/{stat}
 ```
 
-## TermStat query
-Experimental
+## TermStat 查詢
+實驗性
 {: .label .label-red }
 
-The `TermStatQuery` is in an experimental stage, and the Domain-Specific Language (DSL) may change as the code advances. For stable term-statistic access, see [ExplorerQuery]{.title-ref}.
+`TermStatQuery` 處於實驗階段，且其領域特定語言 (DSL) 可能會隨著程式碼演進而變更。如需穩定的詞項統計資料存取，請參閱 [ExplorerQuery]{.title-ref}。
 
-The `TermStatQuery` is a redesigned version of the legacy `ExplorerQuery`. It provides a clearer way to specify terms and offers more flexibility for experimentation. This query surfaces the same data as the [ExplorerQuery]{.title-ref}, but it allows you to specify a custom Lucene expression to retrieve the desired data, such as in the following example:
+`TermStatQuery` 是舊版 `ExplorerQuery` 重新設計的版本。它提供更清楚的方式來指定詞項，並為實驗提供更大的彈性。此查詢呈現的資料與 [ExplorerQuery]{.title-ref} 相同，但它允許您指定自訂的 Lucene 運算式來擷取所需的資料，如下列範例所示：
 
 ```json
 POST tmdb/_search
@@ -433,36 +433,36 @@ POST tmdb/_search
 ```
 {% include copy-curl.html %}
 
-The `expr` parameter is used to specify a Lucene expression. This expression is run on a per-term basis. The expression can be a simple stat type or a custom formula with multiple stat types, such as `(tf * idf) / 2`. Available stat types in the Lucene expression context are listed in the following table.
+`expr` 參數用於指定 Lucene 運算式。此運算式會以每個詞項為基礎執行。運算式可以是簡單的統計類型，或是包含多種統計類型的自訂公式，例如 `(tf * idf) / 2`。Lucene 運算式內容中可用的統計類型列於下表。
 
-Type | Description
+類型 | 說明
 :---| :---
-`df` | The direct document frequency for a term. For example, if `rambo` occurs in three movie titles across multiple documents, then the value would be `3`.
-`idf` | The inverse document frequency (IDF) calculation using the formula `log((NUM_DOCS+1)/(raw_df+1)) + 1`.
-`tf` | The term frequency for a document. For example, if `rambo` occurs three times in a movie synopsis in the same document, then the value would be `3`.
-`tp` | The term positions for a document. Multiple positions can be returned for a single term, so you should review the behavior of the `pos_aggr` parameter.
-`ttf` | The total term frequency for a term across an index. For example, if `rambo` is mentioned a total of 100 times in the `overview` field across all documents, then the value would be `100`.
+`df` | 詞項的直接文件頻率。例如，若 `rambo` 出現在多份文件中的三個電影標題中，則該值會是 `3`。
+`idf` | 使用公式 `log((NUM_DOCS+1)/(raw_df+1)) + 1` 計算的逆文件頻率 (IDF)。
+`tf` | 文件中的詞項頻率。例如，若 `rambo` 在同一份文件的電影簡介中出現三次，則該值會是 `3`。
+`tp` | 文件中的詞項位置。單一詞項可能傳回多個位置，因此您應檢閱 `pos_aggr` 參數的行為。
+`ttf` | 詞項在整個索引中的總詞項頻率。例如，若 `rambo` 在所有文件的 `overview` 欄位中共被提及 100 次，則該值會是 `100`。
 
-The `aggr` parameter specifies the type of aggregation to be applied to the collected statistics from the `expr`. For example, if you specify the terms `rambo` and `rocky`, then the query gathers statistics for both terms. Because you can only return a single value, you need to decide which statistical calculation to use. The available aggregation types are `min`, `max`, `avg`, `sum`, and `stddev`. The query also provides the following counts: `matches` (the number of terms that matched in the current document) and `unique` (the unique number of terms that were passed in the query).
+`aggr` 參數指定要套用至從 `expr` 收集之統計資料的彙總類型。例如，若您指定詞項 `rambo` 與 `rocky`，則查詢會收集這兩個詞項的統計資料。由於您只能傳回單一值，因此需要決定要使用哪一種統計計算。可用的彙總類型有 `min`、`max`、`avg`、`sum` 與 `stddev`。此查詢也提供下列計數：`matches` (目前文件中相符的詞項數目) 與 `unique` (查詢中傳入的唯一詞項數目)。
 
-The `terms` parameter specifies an array of terms for which you want to gather statistics. Only single terms are supported, with no support for phrases or span queries. If your field is tokenized, you can pass multiple terms in one string in the array.
+`terms` 參數指定您要收集統計資料的詞項陣列。僅支援單一詞項，不支援片語或跨度查詢。若您的欄位已斷詞，您可以在陣列中以單一字串傳入多個詞項。
 
-The `fields` parameter specifies the fields to check for the specified `terms`. If no `analyzer` is specified, then the configured `search_analyzer` for each field is used.
+`fields` 參數指定要檢查所指定 `terms` 的欄位。若未指定 `analyzer`，則會使用每個欄位已設定的 `search_analyzer`。
 
-The optional parameters are listed in the following table.
+選用參數列於下表。
 
-Type | Description
+類型 | 說明
 :---| :---
-`analyzer` | If specified, this analyzer is used instead of the configured `search_analyzer` for each field.
-`pos_aggr` | Because each term can have multiple positions, you can use this parameter to specify the aggregation to apply to the term positions. This supports the same values as the `aggr` parameter and defaults to `avg`.
+`analyzer` | 若指定，則會使用此分析器，而非每個欄位已設定的 `search_analyzer`。
+`pos_aggr` | 由於每個詞項可以有多個位置，您可以使用此參數指定要套用至詞項位置的彙總。這支援與 `aggr` 參數相同的值，且預設為 `avg`。
 
-### Script injection
+### 指令碼注入
 
-Script injection provides the ability to inject term statistics into a scripting context. When working with `ScriptFeatures`, you can pass a `term_stat` object with the `terms`, `fields`, and `analyzer` parameters. An injected variable named `termStats` then provides access to the raw values in your custom script. This enables advanced feature engineering by giving you access to all the underlying data.
+指令碼注入可將詞彙統計資料注入指令碼執行環境。使用 `ScriptFeatures` 時，您可以傳入包含 `terms`、`fields` 和 `analyzer` 參數的 `term_stat` 物件。接著，名為 `termStats` 的注入變數可讓您在自訂指令碼中存取原始值。這可讓您存取所有底層資料，進而進行進階特徵工程。
 
-To access the count of matched tokens, use [`params.matchCount.get`]{.title-ref}. To access the unique token count, use [`params.uniqueTerms`]{.title-ref}.
+若要存取相符詞元的數量，請使用 [`params.matchCount.get`]{.title-ref}。若要存取不重複詞元的數量，請使用 [`params.uniqueTerms`]{.title-ref}。
 
-You can either hardcode the `term_stat` parameter in your script definition or pass the parameter to be set at query time. For example, the following example query defines a feature set with a script feature that uses hardcoded `term_stat` parameters:
+您可以在指令碼定義中將 `term_stat` 參數寫死，也可以傳入參數，在查詢時設定。例如，下列範例查詢定義了一個特徵集，其中的指令碼特徵使用寫死的 `term_stat` 參數：
 
 ```json
 POST _ltr/_featureset/test
@@ -490,10 +490,10 @@ POST _ltr/_featureset/test
 ```
 {% include copy-curl.html %}
 
-Analyzer names must be prefixed with a bang(!) when specifying them locally. Otherwise, they are treated as the parameter lookup value.
+直接指定分析器名稱時，名稱前必須加上驚嘆號（!）。否則，該名稱會被視為用來查找參數值的名稱。
 {: .note}
 
-To set parameter lookups, you can pass the name of the parameter from which you want to pull the value, as shown in the following example request:
+若要設定參數查找，您可以傳入要從中取得值的參數名稱，如下列範例請求所示：
 
 ```json
 POST _ltr/_featureset/test
@@ -521,7 +521,7 @@ POST _ltr/_featureset/test
 ```
 {% include copy-curl.html %}
 
-Alternatively, you can pass the `term_stat` parameters as query-time parameters, as shown in the following request:
+或者，您可以將 `term_stat` 參數作為查詢時參數傳入，如下列請求所示：
 
 ```json
 POST tmdb/_search

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Boost
 parent: Mapping parameters
@@ -9,36 +10,36 @@ has_children: false
 has_toc: false
 ---
 
-# Boost mapping parameter
+# Boost 對應參數
 
-The `boost` mapping parameter is used to increase or decrease the relevance score of a field during search queries. It allows you to apply more or less weight to specific fields when calculating the overall relevance score of a document.
+`boost` 對應參數用於在搜尋查詢期間提高或降低欄位的相關性分數。它可讓您在計算文件的整體相關性分數時，對特定欄位施加更多或更少的權重。
 
-The `boost` parameter is applied as a multiplier to the score of a field. For example, if a field has a `boost` value of `2`, then the score contribution of that field is doubled. Conversely, a `boost` value of `0.5` would halve the score contribution of that field.
+`boost` 參數會以乘數方式套用至欄位的分數。例如，如果某欄位的 `boost` 值為 `2`，則該欄位的分數貢獻會加倍。相反地，`boost` 值為 `0.5` 則會將該欄位的分數貢獻減半。
 
-When using the `boost` parameter, it is recommended that you start with small values (1.5 or 2) and test the effect on your search results. Overly high boost values can skew the relevance scores and lead to unexpected or undesirable search results.
+使用 `boost` 參數時，建議您從較小的值 (1.5 或 2) 開始，並測試其對搜尋結果的影響。過高的 boost 值可能會使相關性分數產生偏差，導致非預期或不理想的搜尋結果。
 
-The boost parameter only applies to [term-level queries]({{site.url}}{{site.baseurl}}/query-dsl/term/). It does not apply to `prefix`, `range`, or `fuzzy` term-level queries.
+boost 參數僅適用於[詞彙層級查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/)。它不適用於 `prefix`、`range` 或 `fuzzy` 詞彙層級查詢。
 {: .note}
 
-## Index-time and query-time boosting
+## 索引時與查詢時加權
 
-While you can set boost values in field mappings (index-time boosting), this is not recommended. Instead, use query-time boosting, which offers several advantages:
+雖然您可以在欄位對應中設定 boost 值 (索引時加權)，但並不建議這麼做。建議改用查詢時加權，它具有以下幾項優點：
 
-- **Flexibility**: Query-time boosting allows you to adjust boost values without reindexing documents.
+- **彈性**：查詢時加權可讓您調整 boost 值，而無需重新為文件編製索引。
 
-- **Precision**: Index-time boosts are stored as part of the [`norms`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/norms/), which uses only 1 byte. This can reduce the resolution of field length normalization.
+- **精確度**：索引時加權會儲存為 [`norms`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/norms/) 的一部分，而該結構僅使用 1 個位元組。這可能會降低欄位長度正規化的解析度。
 
-- **Dynamic control**: Query-time boosting gives you the ability to experiment with different boost values for different use cases.
+- **動態控制**：查詢時加權讓您能夠針對不同的使用情境實驗不同的 boost 值。
 
-## Example
+## 範例
 
-Use the `boost` parameter to give more weight to certain fields. For instance, boosting the `title` field more than the `description` field can improve results if the title is a stronger indicator of relevance.
+使用 `boost` 參數可為特定欄位賦予更多權重。例如，若標題是相關性的較強指標，將 `title` 欄位的權重提高得比 `description` 欄位更多，可以改善搜尋結果。
 
-In this example, the `title` field has a boost of `2`, so it contributes twice as much to the relevance score than the `description` field (which has a default boost of `1`). 
+在此範例中，`title` 欄位的 boost 為 `2`，因此它對相關性分數的貢獻是 `description` 欄位 (其預設 boost 為 `1`) 的兩倍。
 
-### Index-time boosting (not recommended)
+### 索引時加權 (不建議)
 
-Create an index with boosted fields (for demonstration purposes only):
+建立一個包含加權欄位的索引 (僅供示範之用)：
 
 ```json
 PUT /article_index
@@ -58,7 +59,7 @@ PUT /article_index
 ```
 {% include copy-curl.html %}
 
-Add some sample documents to the index:
+將一些範例文件加入索引：
 
 ```json
 PUT /article_index/_doc/1
@@ -78,7 +79,7 @@ PUT /article_index/_doc/2
 ```
 {% include copy-curl.html %}
 
-Search across both fields using index-time boosting:
+使用索引時加權搜尋這兩個欄位：
 
 ```json
 POST /article_index/_search
@@ -93,7 +94,7 @@ POST /article_index/_search
 ```
 {% include copy-curl.html %}
 
-Document 1 is scored higher because "machine learning" appears in the boosted `title` field. Document 2 is scored lower because "machine learning" appears in the unboosted `description` field. Both documents contain "algorithms", which contributes to their scores:
+文件 1 的分數較高，因為 "machine learning" 出現在已加權的 `title` 欄位中。文件 2 的分數較低，因為 "machine learning" 出現在未加權的 `description` 欄位中。兩份文件都包含 "algorithms"，這也對它們的分數有所貢獻：
 
 <p id="index-time-response"></p>
 
@@ -137,11 +138,11 @@ Document 1 is scored higher because "machine learning" appears in the boosted `t
 }
 ```
 
-### Query-time boosting (recommended)
+### 查詢時加權 (建議)
 
-Instead of index-time boosting, use query-time boosting for better control and flexibility. Query-time boosting doesn't require any special field mappings to be configured.
+請改用查詢時加權取代索引時加權，以獲得更好的控制與彈性。查詢時加權不需要設定任何特殊的欄位對應。
 
-Add some sample documents to the index:
+將一些範例文件加入索引：
 
 ```json
 PUT /article_index_2/_doc/1
@@ -161,7 +162,7 @@ PUT /article_index_2/_doc/2
 ```
 {% include copy-curl.html %}
 
-First, search the `title` field without boosting:
+首先，不加權搜尋 `title` 欄位：
 
 ```json
 POST /article_index_2/_search
@@ -177,7 +178,7 @@ POST /article_index_2/_search
 ```
 {% include copy-curl.html %}
 
-The matching document has a score of 0.59:
+符合的文件分數為 0.59：
 
 ```json
 {
@@ -210,7 +211,7 @@ The matching document has a score of 0.59:
 }
 ```
 
-Next, search the same field with boosting:
+接著，以加權方式搜尋同一欄位：
 
 ```json
 POST /article_index_2/_search
@@ -227,7 +228,7 @@ POST /article_index_2/_search
 ```
 {% include copy-curl.html %}
 
-The document score is doubled:
+文件分數加倍：
 
 ```json
 {
@@ -260,7 +261,7 @@ The document score is doubled:
 }
 ```
 
-To get a baseline for searching both the `title` and `description` fields, first search without boosting:
+若要取得搜尋 `title` 與 `description` 兩個欄位的基準，請先不加權搜尋：
 
 ```json
 POST /article_index_2/_search
@@ -275,7 +276,7 @@ POST /article_index_2/_search
 ```
 {% include copy-curl.html %}
 
-Document 2 is scored higher than Document 1:
+文件 2 的分數高於文件 1：
 
 ```json
 {
@@ -317,7 +318,7 @@ Document 2 is scored higher than Document 1:
 }
 ```
 
-To compare index-time boosting with query-time boosting, search multiple fields with query-time boosting:
+若要比較索引時加權與查詢時加權，請使用查詢時加權搜尋多個欄位：
 
 ```json
 POST /article_index_2/_search
@@ -332,7 +333,7 @@ POST /article_index_2/_search
 ```
 {% include copy-curl.html %}
 
-This query produces the same response as the [index-time boosting query](#index-time-response), with Document 1 now scoring higher than Document 2:
+此查詢產生的回應與[索引時加權查詢](#index-time-response)相同，且文件 1 的分數現在高於文件 2：
 
 ```json
 {

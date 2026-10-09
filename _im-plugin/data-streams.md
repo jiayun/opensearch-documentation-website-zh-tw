@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Data streams
+title: "資料串流"
 nav_order: 25
 redirect_from:
   - /opensearch/data-streams/
@@ -8,26 +9,26 @@ redirect_from:
   - /dashboards/admin-ui-index/datastream/
 ---
 
-# Data streams
+# 資料串流
 
-A data stream is a single name that you write to and search, backed by a series of hidden indexes that OpenSearch rolls over for you. Indexing requests go to the current write index, and search requests go to all of the backing indexes.
+資料串流是您寫入及搜尋的單一名稱，背後由一系列 OpenSearch 為您輪替的隱藏索引所支援。索引請求會傳送至目前的寫入索引，而搜尋請求則會傳送至所有後端索引。
 
-Data streams are for continuously generated time-series data, such as logs, events, and metrics, where documents accumulate quickly and older documents are never updated. Managing that data as plain indexes means creating a rollover alias, designating a write index, and repeating the same mappings and settings for each new index. A data stream does this from one index template.
+資料串流適用於持續產生的時間序列資料，例如記錄資料、事件及指標，這類資料的文件會快速累積，且較舊的文件永遠不會更新。將這類資料當作一般索引來管理，意味著要建立輪替別名、指定寫入索引，並為每個新索引重複相同的對應與設定。資料串流只需一個索引範本就能完成這些事。
 
-Data streams have the following characteristics:
+資料串流具有下列特性：
 
-- Every document must contain a timestamp field. A document without one is rejected.
-- A data stream is append-only. You cannot update or delete individual documents through the data stream name; you must address the backing index directly.
-- Backing indexes are named `.ds-<data-stream>-<generation>` and are hidden. The generation number increases with each rollover.
-- A data stream can only be created from an index template that contains a `data_stream` object.
+- 每份文件都必須包含時間戳記欄位。沒有時間戳記欄位的文件會被拒絕。
+- 資料串流僅能附加。您無法透過資料串流名稱更新或刪除個別文件；您必須直接指定後端索引。
+- 後端索引的名稱為 `.ds-<data-stream>-<generation>` 且為隱藏。世代編號會隨著每次輪替而增加。
+- 資料串流只能從包含 `data_stream` 物件的索引範本建立。
 
-Attach an [Index State Management (ISM)]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/) policy to automate rollover and deletion of the backing indexes based on their age, size, or document count. The policy is applied to each backing index when it is created, so attaching a policy to a data stream affects only its future backing indexes. You do not need to provide the `rollover_alias` setting because the policy takes that information from the backing index.
+附加 [Index State Management (ISM)]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/) 政策，即可根據後端索引的年齡、大小或文件數量，自動輪替及刪除後端索引。該政策會在每個後端索引建立時套用至該索引，因此將政策附加至資料串流只會影響其未來的後端索引。您不需要提供 `rollover_alias` 設定，因為該政策會從後端索引取得該資訊。
 
-To define granular permissions for a data stream, use its name as you would an index name. For more information, see [Permissions]({{site.url}}{{site.baseurl}}/security/access-control/permissions/).
+若要為資料串流定義精細的權限，請像使用索引名稱一樣使用其名稱。如需更多資訊，請參閱[權限]({{site.url}}{{site.baseurl}}/security/access-control/permissions/)。
 
-## Creating an index template for a data stream
+## 為資料串流建立索引範本
 
-A data stream is defined by an index template that contains a `data_stream` object. The template's index patterns must match the names of the data streams that you intend to create:
+資料串流是由包含 `data_stream` 物件的索引範本所定義。範本的索引模式必須符合您打算建立的資料串流名稱：
 
 ```json
 PUT _index_template/logs-template
@@ -41,10 +42,10 @@ PUT _index_template/logs-template
 ```
 {% include copy-curl.html %}
 
-A data stream template claims its index patterns exclusively. While this template exists, creating a regular index whose name starts with `logs-` fails with `cannot create index with name [...], because it matches with template [logs-template] that creates data streams only`. Choose patterns narrow enough that they do not overlap with your regular indexes.
+資料串流範本會獨佔其索引模式。當此範本存在時，建立名稱開頭為 `logs-` 的一般索引會失敗並出現 `cannot create index with name [...], because it matches with template [logs-template] that creates data streams only`。請選擇足夠狹窄的模式，使其不與您的一般索引重疊。
 {: .note}
 
-Documents indexed into a data stream created from this template must contain an `@timestamp` field. To use a different field name, specify it in `timestamp_field`. The `template` object accepts the same settings, mappings, and aliases as a regular index template and applies them to each backing index:
+索引至從此範本建立之資料串流的文件必須包含 `@timestamp` 欄位。若要使用不同的欄位名稱，請在 `timestamp_field` 中指定。`template` 物件接受與一般索引範本相同的設定、對應及別名，並將其套用至每個後端索引：
 
 ```json
 PUT _index_template/logs-nginx-template
@@ -68,18 +69,18 @@ PUT _index_template/logs-nginx-template
 ```
 {% include copy-curl.html %}
 
-The name `logs-nginx` matches both templates. OpenSearch applies `logs-nginx-template` because it has the higher priority. For more information, see [Index templates]({{site.url}}{{site.baseurl}}/im-plugin/index-templates/).
+名稱 `logs-nginx` 同時符合這兩個範本。OpenSearch 會套用 `logs-nginx-template`，因為其優先順序較高。如需更多資訊，請參閱[索引範本]({{site.url}}{{site.baseurl}}/im-plugin/index-templates/)。
 
-## Creating a data stream
+## 建立資料串流
 
-Create the data stream explicitly to initialize its first backing index:
+明確建立資料串流以初始化其第一個後端索引：
 
 ```json
 PUT _data_stream/logs-redis
 ```
 {% include copy-curl.html %}
 
-You can also skip this step and start indexing. Because a matching template contains a `data_stream` object, OpenSearch creates the data stream on the first indexing request:
+您也可以略過此步驟並開始編製索引。由於符合的範本包含 `data_stream` 物件，OpenSearch 會在第一個索引請求時建立資料串流：
 
 ```json
 POST logs-staging/_doc
@@ -90,9 +91,9 @@ POST logs-staging/_doc
 ```
 {% include copy-curl.html %}
 
-## Ingesting data into a data stream
+## 將資料匯入資料串流
 
-Index documents into a data stream by name, using the same [Document APIs]({{site.url}}{{site.baseurl}}/api-reference/document-apis/index/) that you use for a regular index. Each document must contain the timestamp field defined by the template:
+使用與一般索引相同的 [Document APIs]({{site.url}}{{site.baseurl}}/api-reference/document-apis/index/)，依名稱將文件編製索引至資料串流。每份文件都必須包含範本所定義的時間戳記欄位：
 
 ```json
 POST logs-redis/_doc?refresh=true
@@ -103,13 +104,13 @@ POST logs-redis/_doc?refresh=true
 ```
 {% include copy-curl.html %}
 
-The `refresh=true` parameter makes the document searchable immediately, so that the search in the next section returns it. Omit it in production, where the [refresh interval]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/) handles this.
+`refresh=true` 參數可讓文件立即可供搜尋，以便下一節的搜尋能傳回該文件。在正式環境中請省略此參數，由[重新整理間隔]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/)處理。
 
-A data stream accepts `create` operations only. An `index` operation that would overwrite a document, or an update or delete addressed to the data stream name, is rejected.
+資料串流僅接受 `create` 作業。會覆寫文件的 `index` 作業，或指定至資料串流名稱的更新或刪除，都會被拒絕。
 
-## Searching a data stream
+## 搜尋資料串流
 
-Search a data stream as you would an index or an alias. The request covers all of the backing indexes:
+搜尋資料串流的方式與搜尋索引或別名相同。請求會涵蓋所有後端索引：
 
 ```json
 GET logs-redis/_search
@@ -123,11 +124,11 @@ GET logs-redis/_search
 ```
 {% include copy-curl.html %}
 
-The `_index` field of each hit contains the name of the backing index that holds the document:
+每個命中項目的 `_index` 欄位包含存放該文件之後端索引的名稱：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -163,11 +164,11 @@ The `_index` field of each hit contains the name of the backing index that holds
 ```
 </details>
 
-You can also query a data stream using [asynchronous search]({{site.url}}{{site.baseurl}}/search-plugins/async/index/), [SQL]({{site.url}}{{site.baseurl}}/search-plugins/sql/index/), or [PPL]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/), and build visualizations on it as you would on an index or an alias.
+您也可以使用[非同步搜尋]({{site.url}}{{site.baseurl}}/search-plugins/async/index/)、[SQL]({{site.url}}{{site.baseurl}}/search-plugins/sql/index/) 或 [PPL]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) 查詢資料串流，並像在索引或別名上那樣在其上建立視覺化。
 
-## Rolling over a data stream
+## 輪替資料串流
 
-A rollover creates a new backing index and makes it the write index of the data stream. Roll over manually with the following request:
+輪替會建立新的後端索引，並使其成為資料串流的寫入索引。使用下列請求手動輪替：
 
 ```json
 POST logs-redis/_rollover
@@ -176,7 +177,7 @@ POST logs-redis/_rollover
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -193,20 +194,20 @@ POST logs-redis/_rollover
 ```
 </details>
 
-The generation number of the data stream increases with each rollover. For rollover conditions and parameters, see [Roll Over API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/rollover/). To roll over automatically, use an [ISM policy]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/).
+資料串流的世代編號會隨著每次輪替而增加。如需輪替條件與參數，請參閱 [Roll Over API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/rollover/)。若要自動輪替，請使用 [ISM 政策]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/)。
 
-## Inspecting data streams
+## 檢查資料串流
 
-The following table lists common data stream requests. The response to a get request contains the timestamp field name, the backing indexes, the generation number, the template that created the data stream, and its status, which is the lowest status of its backing indexes.
+下表列出常見的資料串流請求。取得請求的回應包含時間戳記欄位名稱、後端索引、世代編號、建立該資料串流的範本，以及其狀態，也就是其後端索引中最低的狀態。
 
-| Task | Request |
+| 工作 | 請求 |
 | :--- | :--- |
-| List all data streams | `GET _data_stream` |
-| Get one data stream | `GET _data_stream/logs-redis` |
-| Get statistics for a data stream | `GET _data_stream/logs-redis/_stats` |
-| Delete a data stream and its backing indexes | `DELETE _data_stream/logs-redis` |
+| 列出所有資料串流 | `GET _data_stream` |
+| 取得一個資料串流 | `GET _data_stream/logs-redis` |
+| 取得資料串流的統計資料 | `GET _data_stream/logs-redis/_stats` |
+| 刪除資料串流及其後端索引 | `DELETE _data_stream/logs-redis` |
 
-For example, the following request returns the `logs-redis` data stream after one rollover:
+例如，下列請求會在輪替一次後傳回 `logs-redis` 資料串流：
 
 ```json
 GET _data_stream/logs-redis
@@ -215,7 +216,7 @@ GET _data_stream/logs-redis
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -246,81 +247,81 @@ GET _data_stream/logs-redis
 ```
 </details>
 
-You can use wildcards to address more than one data stream. Deleting a data stream deletes its backing indexes and cannot be undone; to remove data on a schedule, use an ISM policy instead.
+您可以使用萬用字元來指定多個資料串流。刪除資料串流會刪除其後端索引且無法復原；若要依排程移除資料，請改用 ISM 政策。
 {: .warning}
 
-For all data stream operations and their parameters, see [Data stream APIs]({{site.url}}{{site.baseurl}}/api-reference/data-stream/).
+如需所有資料串流作業及其參數，請參閱[資料串流 API]({{site.url}}{{site.baseurl}}/api-reference/data-stream/)。
 
-## Modifying the backing indexes of a data stream
+## 修改資料串流的後端索引
 
-Add or remove the backing indexes of an existing data stream using the [Modify Data Stream API]({{site.url}}{{site.baseurl}}/api-reference/data-stream/modify-data-stream/). This is a metadata-only operation, so you can migrate an existing regular index into a data stream, or detach a backing index without deleting its data. To attach a restored backing index to a data stream during a snapshot restore, set `attach_to_data_stream` to `true` in the [Restore Snapshot API]({{site.url}}{{site.baseurl}}/api-reference/snapshots/restore-snapshot/).
+使用 [Modify Data Stream API]({{site.url}}{{site.baseurl}}/api-reference/data-stream/modify-data-stream/) 新增或移除現有資料串流的後端索引。此操作僅涉及中繼資料，因此您可以將現有的一般索引遷移至資料串流，或將後端索引與資料串流分離而不刪除其資料。若要在還原快照時將還原的後端索引附加至資料串流，請在 [Restore Snapshot API]({{site.url}}{{site.baseurl}}/api-reference/snapshots/restore-snapshot/) 中將 `attach_to_data_stream` 設為 `true`。
 
-## Data streams in OpenSearch Dashboards
+## OpenSearch Dashboards 中的資料串流
 
-To navigate to the **Index Management** page, go to **Management > Index Management** on the top menu. Select **Data streams** to list the data streams in your cluster.
+若要前往 **Index Management** 頁面，請在頂端選單中前往 **Management > Index Management**。選取 **Data streams**，以列出叢集中的資料串流。
 
-The **Data streams** table contains the following columns.
+**Data streams** 表格包含下列欄位。
 
-| Column | Description |
+| 欄位 | 說明 |
 | :--- | :--- |
-| **Data stream name** | The name of the data stream. |
-| **Status** | The lowest health status of the data stream's backing indexes: green if all primary and replica shards are assigned, yellow if at least one replica shard is unassigned, and red if at least one primary shard is unassigned. |
-| **Template** | The index template that created the data stream. |
-| **Backing indexes count** | The number of backing indexes that hold the data. |
-| **Total size** | The storage used by the data stream across all primary and replica shards. |
+| **Data stream name** | 資料串流的名稱。 |
+| **Status** | 資料串流後端索引中最低的健康狀態：如果所有主要分片和副本分片都已指派，則為綠色；如果至少有一個副本分片未指派，則為黃色；如果至少有一個主要分片未指派，則為紅色。 |
+| **Template** | 建立資料串流的索引範本。 |
+| **Backing indexes count** | 儲存資料的後端索引數量。 |
+| **Total size** | 資料串流的所有主要分片和副本分片使用的儲存空間。 |
 
-The following image shows the **Data streams** page.
+下圖顯示 **Data streams** 頁面。
 
-![Data streams page]({{site.url}}{{site.baseurl}}/images/admin-ui-index/data-streams-list.png)
+![資料串流頁面]({{site.url}}{{site.baseurl}}/images/admin-ui-index/data-streams-list.png)
 
-### Viewing a data stream
+### 檢視資料串流
 
-Select the data stream in the **Data stream name** column. **Data stream details** shows its name, status, template, number of backing indexes, and timestamp field name. **Backing indexes** lists each backing index with its health, status, size, document counts, shard counts, whether it is the write index, and whether an ISM policy manages it. Select a backing index to see its details in the same form as a regular index. For more information, see [Viewing index details]({{site.url}}{{site.baseurl}}/im-plugin/index-operations/#viewing-index-details).
+在 **Data stream name** 欄位中選取資料串流。**Data stream details** 會顯示其名稱、狀態、範本、後端索引數量及時間戳記欄位名稱。**Backing indexes** 會列出每個後端索引及其健康狀態、狀態、大小、文件數量、分片數量、是否為寫入索引，以及是否由 ISM 原則管理。選取後端索引，即可檢視其詳細資訊，呈現形式與一般索引相同。如需詳細資訊，請參閱[檢視索引詳細資訊]({{site.url}}{{site.baseurl}}/im-plugin/index-operations/#viewing-index-details)。
 
-### Viewing backing indexes in the Indexes list
+### 在 Indexes 清單中檢視後端索引
 
-Backing indexes are hidden from the **Indexes** table by default:
+預設情況下，**Indexes** 表格會隱藏後端索引：
 
-1. In **Index Management**, select **Indexes**.
-1. Select **Show data stream indexes**. A **Data stream** column is added to the table, showing which data stream each backing index belongs to, and a **Data streams** list is added to the table header.
-1. Optionally, select one or more data streams from the **Data streams** list to show only their backing indexes.
+1. 在 **Index Management** 中，選取 **Indexes**。
+1. 選取 **Show data stream indexes**。表格會新增 **Data stream** 欄位，顯示每個後端索引所屬的資料串流，並在表格標頭新增 **Data streams** 清單。
+1. 您可以選擇從 **Data streams** 清單中選取一個或多個資料串流，以僅顯示其後端索引。
 
-### Creating a data stream
+### 建立資料串流
 
-A data stream can only be created from an index template whose type is **Data streams**. To create one, see [Creating an index template]({{site.url}}{{site.baseurl}}/im-plugin/index-templates/#creating-an-index-template-1).
+資料串流只能從類型為 **Data streams** 的索引範本建立。若要建立這類範本，請參閱[建立索引範本]({{site.url}}{{site.baseurl}}/im-plugin/index-templates/#creating-an-index-template-1)。
 
-1. In **Index Management**, select **Data streams**, and then select **Create data stream**.
-1. In **Data stream name**, start entering a name. As you type, a list of matching index patterns and their index templates appears.
-1. Select an index pattern from the list, and then complete the name so that it matches the pattern.
+1. 在 **Index Management** 中，選取 **Data streams**，然後選取 **Create data stream**。
+1. 在 **Data stream name** 中，開始輸入名稱。輸入時，會出現符合的索引模式及其索引範本清單。
+1. 從清單中選取索引模式，然後完成名稱，使其符合該模式。
 
-   **Matching template** shows the index template that contains the pattern. The values in **Inherited settings from template** are read-only.
+   **Matching template** 會顯示包含該模式的索引範本。**Inherited settings from template** 中的值為唯讀。
 
-1. Select **Create data stream**.
+1. 選取 **Create data stream**。
 
-### Deleting a data stream
+### 刪除資料串流
 
-1. In **Index Management**, select **Data streams**.
-1. Select the checkbox next to each data stream that you want to delete.
-1. Select **Actions**, and then select **Delete**.
-1. Enter `delete` in the confirmation dialog, and then select **Delete**.
+1. 在 **Index Management** 中，選取 **Data streams**。
+1. 勾選您要刪除的每個資料串流旁的核取方塊。
+1. 選取 **Actions**，然後選取 **Delete**。
+1. 在確認對話方塊中輸入 `delete`，然後選取 **Delete**。
 
-Deleting a data stream deletes its backing indexes. The data cannot be recovered.
+刪除資料串流會刪除其後端索引。資料無法復原。
 {: .warning}
 
-### Rolling over a data stream
+### 輪替資料串流
 
-1. In **Index Management**, select **Data streams**.
-1. Select **Actions**, and then select **Roll over**.
-1. In **Configure source**, select the data stream to roll over.
-1. Select **Roll over**.
+1. 在 **Index Management** 中，選取 **Data streams**。
+1. 選取 **Actions**，然後選取 **Roll over**。
+1. 在 **Configure source** 中，選取要輪替的資料串流。
+1. 選取 **Roll over**。
 
-The **Backing indexes** table on the details page of the data stream contains the new write index.
+資料串流詳細資訊頁面上的 **Backing indexes** 表格會包含新的寫入索引。
 
-Refresh, flush, clear cache, and force merge are also available from the **Data streams** page and apply to the backing indexes of the selected data streams. For those procedures, see [Index maintenance in OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/#index-maintenance-in-opensearch-dashboards).
+您也可以從 **Data streams** 頁面執行重新整理、排清、清除快取及強制合併，這些操作會套用至所選資料串流的後端索引。如需這些操作的程序，請參閱 [OpenSearch Dashboards 中的索引維護]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/#index-maintenance-in-opensearch-dashboards)。
 
-## Related documentation
+## 相關文件
 
-- [Data stream APIs]({{site.url}}{{site.baseurl}}/api-reference/data-stream/)
-- [Index templates]({{site.url}}{{site.baseurl}}/im-plugin/index-templates/)
-- [Index State Management]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/)
-- [Index maintenance]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/)
+- [資料串流 API]({{site.url}}{{site.baseurl}}/api-reference/data-stream/)
+- [索引範本]({{site.url}}{{site.baseurl}}/im-plugin/index-templates/)
+- [索引狀態管理]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/)
+- [索引維護]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/)

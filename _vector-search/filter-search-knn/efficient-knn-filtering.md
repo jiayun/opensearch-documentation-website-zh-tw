@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Efficient k-NN filtering
+title: "高效的 k-NN 篩選"
 parent: Filtering data
 nav_order: 10
 ---
 
-# Efficient k-NN filtering
+# 高效的 k-NN 篩選
 
-You can perform efficient k-NN filtering with the `lucene`, `faiss`, or `jvector` engines.
+您可以使用 `lucene`、`faiss` 或 `jvector` 引擎來執行高效的 k-NN 篩選。
 
-## Lucene k-NN filter implementation
+## Lucene k-NN 篩選實作
 
-The Lucene engine supports Lucene filters for k-NN searches that use HNSW graphs.
+Lucene 引擎支援使用 HNSW 圖形的 k-NN 搜尋的 Lucene 篩選器。
 
-When you specify a Lucene filter for a k-NN search, the Lucene algorithm decides whether to perform an exact k-NN search with pre-filtering or an approximate search with modified post-filtering. The algorithm uses the following variables:
+當您為 k-NN 搜尋指定 Lucene 篩選器時，Lucene 演算法會決定要執行搭配預先篩選的精確 k-NN 搜尋，還是執行搭配經修改的後置篩選的近似搜尋。此演算法使用下列變數：
 
-- N: The number of documents in the index.
-- P: The number of documents in the document subset after the filter is applied (P <= N).
-- k: The maximum number of vectors to return in the response.
+- N：索引中的文件數。
+- P：套用篩選器後文件子集中的文件數 (P <= N)。
+- k：回應中要傳回的向量數上限。
 
-The following flow chart outlines the Lucene algorithm.
+下列流程圖概述 Lucene 演算法。
 
-![Lucene algorithm for filtering]({{site.url}}{{site.baseurl}}/images/lucene-algorithm.png)
+![用於篩選的 Lucene 演算法]({{site.url}}{{site.baseurl}}/images/lucene-algorithm.png)
 
-For more information about the Lucene filtering implementation and the underlying `KnnFloatVectorQuery`, see the [Apache Lucene documentation](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/KnnFloatVectorQuery.html).
+如需 Lucene 篩選實作及基礎 `KnnFloatVectorQuery` 的詳細資訊，請參閱 [Apache Lucene 文件](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/KnnFloatVectorQuery.html)。
 
-## Using a Lucene k-NN filter
+## 使用 Lucene k-NN 篩選器
 
-Consider a dataset that includes 12 documents containing hotel information. The following image shows all hotels on an xy coordinate plane by location. Additionally, the points for hotels that have a rating between 8 and 10, inclusive, are depicted with orange dots, and hotels that provide parking are depicted with green circles. The search point is colored in red:
+請考慮一個包含 12 份飯店資訊文件的資料集。下圖依位置顯示 xy 座標平面上的所有飯店。此外，評分介於 8 到 10 (含) 之間的飯店以橘色圓點表示，提供停車位的飯店則以綠色圓圈表示。搜尋點以紅色標示：
 
-![Graph of documents with filter criteria]({{site.url}}{{site.baseurl}}/images/knn-doc-set-for-filtering.png)
+![含篩選條件的文件圖形]({{site.url}}{{site.baseurl}}/images/knn-doc-set-for-filtering.png)
 
-In this example, you will create an index and search for the three hotels with high ratings and parking that are the closest to the search location.
+在此範例中，您將建立索引，並搜尋最接近搜尋位置、評分高且提供停車位的前三家飯店。
 
-### Step 1: Create a new index
+### 步驟 1：建立新索引
 
-Before you can run a k-NN search with a filter, you need to create an index with a `knn_vector` field. For this field, you need to specify `lucene` as the engine and `hnsw` as the `method` in the mapping.
+您必須先建立含有 `knn_vector` 欄位的索引，才能執行帶有篩選器的 k-NN 搜尋。針對此欄位，您需要在對應中指定 `lucene` 作為引擎，並指定 `hnsw` 作為 `method`。
 
-The following request creates a new index called `hotels-index` with a `knn-filter` field called `location`:
+下列請求會建立名為 `hotels-index` 的新索引，其中含有名為 `location` 的 `knn-filter` 欄位：
 
 ```json
 PUT /hotels-index
@@ -71,11 +72,11 @@ PUT /hotels-index
 ```
 {% include copy-curl.html %}
 
-### Step 2: Add data to your index
+### 步驟 2：將資料新增至您的索引
 
-Next, add data to your index.
+接著，將資料新增至您的索引。
 
-The following request adds 12 documents that contain hotel location, rating, and parking information:
+下列請求會新增 12 份包含飯店位置、評分及停車資訊的文件：
 
 ```json
 POST /_bulk
@@ -106,11 +107,11 @@ POST /_bulk
 ```
 {% include copy-curl.html %}
 
-### Step 3: Search your data with a filter
+### 步驟 3：使用篩選器搜尋您的資料
 
-Now you can create a k-NN search with filters. In the k-NN query clause, include the point of interest that is used to search for nearest neighbors, the number of nearest neighbors to return (`k`), and a filter with the restriction criteria. Depending on how restrictive you want your filter to be, you can add multiple query clauses to a single request.
+現在您可以建立帶有篩選器的 k-NN 搜尋。在 k-NN 查詢子句中，加入用來搜尋最近鄰的目標點、要傳回的最近鄰數目 (`k`)，以及含有限制條件的篩選器。視您希望篩選器的限制程度而定，您可以在單一請求中新增多個查詢子句。
 
-The following request creates a k-NN query that searches for the top three hotels near the location with the coordinates `[5, 4]` that are rated between 8 and 10, inclusive, and provide parking:
+下列請求會建立 k-NN 查詢，搜尋座標為 `[5, 4]` 的位置附近、評分介於 8 到 10 (含) 之間且提供停車位的前三家飯店：
 
 ```json
 POST /hotels-index/_search
@@ -150,7 +151,7 @@ POST /hotels-index/_search
 ```
 {% include copy-curl.html %}
 
-The response returns the three hotels that are nearest to the search point and have met the filter criteria:
+回應會傳回最接近搜尋點且符合篩選條件的前三家飯店：
 
 ```json
 {
@@ -204,46 +205,46 @@ The response returns the three hotels that are nearest to the search point and h
 }
 ```
 
-For more ways to construct a filter, see [Constructing a filter](#constructing-a-filter).
+如需更多建構篩選器的方式，請參閱[建構篩選器](#constructing-a-filter)。
 
-## Faiss k-NN filter implementation
+## Faiss k-NN 篩選實作
 
-For k-NN searches, you can use `faiss` filters with an HNSW algorithm (OpenSearch version 2.9 and later) or IVF algorithm (OpenSearch version 2.10 and later).
+針對 k-NN 搜尋，您可以搭配 HNSW 演算法 (OpenSearch 2.9 版及更新版本) 或 IVF 演算法 (OpenSearch 2.10 版及更新版本) 使用 `faiss` 篩選器。
 
-When you specify a Faiss filter for a k-NN search, the Faiss algorithm decides whether to perform an exact k-NN search with pre-filtering or an approximate search with modified post-filtering. The algorithm uses the following variables:
+當您為 k-NN 搜尋指定 Faiss 篩選器時，Faiss 演算法會決定要執行搭配預先篩選的精確 k-NN 搜尋，還是執行搭配經修改的後置篩選的近似搜尋。此演算法使用下列變數：
 
-- N: The number of documents in the index.
-- P: The number of documents in the document subset after the filter is applied (P <= N).
-- k: The maximum number of vectors to return in the response.
-- R: The number of results returned after performing the filtered approximate nearest neighbor search.
-- FT (filtered threshold): An index-level threshold defined in the [`knn.advanced.filtered_exact_search_threshold` setting]({{site.url}}{{site.baseurl}}/search-plugins/knn/settings/) that specifies to switch to exact search.
-- MDC (max distance computations): The maximum number of distance computations allowed in exact search if `FT` (filtered threshold) is not set. This value cannot be changed.
+- N：索引中的文件數。
+- P：套用篩選器後文件子集中的文件數 (P <= N)。
+- k：回應中要傳回的向量數上限。
+- R：執行經過篩選的近似最近鄰搜尋後所傳回的結果數。
+- FT (篩選閾值)：定義於 [`knn.advanced.filtered_exact_search_threshold` 設定]({{site.url}}{{site.baseurl}}/search-plugins/knn/settings/) 中的索引層級閾值，指定切換為精確搜尋。
+- MDC (最大距離計算次數)：若未設定 `FT` (篩選閾值)，精確搜尋中允許的最大距離計算次數。此值無法變更。
 
-The following flow chart outlines the Faiss algorithm.
+下列流程圖概述 Faiss 演算法。
 
-![Faiss algorithm for filtering]({{site.url}}{{site.baseurl}}/images/faiss-algorithm.jpg)
+![用於篩選的 Faiss 演算法]({{site.url}}{{site.baseurl}}/images/faiss-algorithm.jpg)
 
-### Disabling the exact search fallback
+### 停用精確搜尋後備機制
 
-**Introduced 3.5**
+**3.5 版新增**
 {: .label .label-purple }
 
-When a Faiss efficient-filtered ANN search returns fewer than `k` results (R < k) even though more than `k` documents match the filter (P ≥ k), the algorithm falls back to an exact search over the filtered document IDs to ensure that `k` results are returned.
+當 Faiss 高效篩選 ANN 搜尋傳回的結果少於 `k` 筆 (R < k)，即使有超過 `k` 份文件符合篩選條件 (P ≥ k)，演算法會退回對已篩選文件 ID 執行精確搜尋，以確保傳回 `k` 筆結果。
 
-For latency-sensitive workloads in which fewer than `k` results are acceptable, you can disable this fallback by setting the `index.knn.faiss.efficient_filter.disable_exact_search` index setting to `true`. When this setting is enabled, the search returns only approximate results and skips the additional exact search.
-For more information about this setting, see [Vector search settings]({{site.url}}{{site.baseurl}}/vector-search/settings/).
+對於可接受少於 `k` 筆結果的延遲敏感工作負載，您可以將 `index.knn.faiss.efficient_filter.disable_exact_search` 索引設定設為 `true` 來停用此後備機制。啟用此設定後，搜尋只會傳回近似結果，並略過額外的精確搜尋。
+如需此設定的更多資訊，請參閱 [向量搜尋設定]({{site.url}}{{site.baseurl}}/vector-search/settings/)。
 
-## Using a Faiss efficient filter
+## 使用 Faiss 高效篩選器
 
-Consider an index that contains information about different shirts for an e-commerce application. You want to find the top-rated shirts that are similar to the one you already have but would like to restrict the results by shirt size.
+假設有一個為電子商務應用程式儲存各種襯衫資訊的索引。您想找出與您現有襯衫相似的評分最高襯衫，但希望依襯衫尺寸限制結果。
 
-In this example, you will create an index and search for shirts that are similar to the shirt you provide.
+在此範例中，您將建立一個索引，並搜尋與您提供的襯衫相似的襯衫。
 
-### Step 1: Create a new index
+### 步驟 1：建立新索引
 
-Before you can run a k-NN search with a filter, you need to create an index with a `knn_vector` field. For this field, you need to specify `faiss` and `hnsw` as the `method` in the mapping.
+在執行帶篩選器的 k-NN 搜尋之前，您需要建立一個含有 `knn_vector` 欄位的索引。對於此欄位，您需要在對應中將 `faiss` 和 `hnsw` 指定為 `method`。
 
-The following request creates an index that contains vector representations of shirts:
+下列請求會建立一個包含襯衫向量表示的索引：
 
 ```json
 PUT /products-shirts
@@ -270,11 +271,11 @@ PUT /products-shirts
 ```
 {% include copy-curl.html %}
 
-### Step 2: Add data to your index
+### 步驟 2：將資料加入索引
 
-Next, add data to your index.
+接下來，將資料加入您的索引。
 
-The following request adds 12 documents that contain information about shirts, including their vector representation, size, and rating:
+下列請求會加入 12 份包含襯衫資訊的文件，包括其向量表示、尺寸與評分：
 
 ```json
 POST /_bulk?refresh
@@ -306,11 +307,11 @@ POST /_bulk?refresh
 ```
 {% include copy-curl.html %}
 
-### Step 3: Search your data with a filter
+### 步驟 3：使用篩選器搜尋資料
 
-Now you can create a k-NN search with filters. In the k-NN query clause, include the vector representation of the shirt that is used to search for similar ones, the number of nearest neighbors to return (`k`), and a filter by size and rating.
+現在您可以建立帶篩選器的 k-NN 搜尋。在 k-NN 查詢子句中，加入用於搜尋相似襯衫的襯衫向量表示、要傳回的最近鄰居數量 (`k`)，以及依尺寸與評分的篩選器。
 
-The following request searches for size small shirts rated between 7 and 10, inclusive:
+下列請求會搜尋評分介於 7 到 10 (含) 之間的小尺寸襯衫：
 
 ```json
 POST /products-shirts/_search
@@ -349,7 +350,7 @@ POST /products-shirts/_search
 ```
 {% include copy-curl.html %}
 
-The response returns the two matching documents:
+回應會傳回兩份符合的文件：
 
 ```json
 {
@@ -393,27 +394,27 @@ The response returns the two matching documents:
 }
 ```
 
-For more ways to construct a filter, see [Constructing a filter](#constructing-a-filter).
+如需更多建構篩選器的方式，請參閱 [建構篩選器](#constructing-a-filter)。
 
-### ACORN filtering optimization
+### ACORN 篩選最佳化
 
-Introduced 3.1
+3.1 版新增
 {: .label .label-purple }
-The ACORN filtering optimization modifies the baseline algorithm to score and explore only vectors that match the filtering criteria. When filtering increases graph sparsity, the search expands to include neighbors of neighbors. The extent of this additional exploration depends on the percentage of neighbors filtered out, with more restrictive filters resulting in a wider search.
+ACORN 篩選最佳化會修改基準演算法，僅對符合篩選條件的向量進行評分與探索。當篩選導致圖形稀疏度增加時，搜尋會擴展以包含鄰居的鄰居。此額外探索的程度取決於被篩選掉的鄰居百分比，篩選條件越嚴格，搜尋範圍越廣。
 
-The algorithm bypasses these optimizations entirely when filtering is minimal. By default, this threshold is 60%. Extended neighbor exploration occurs only if fewer than 90% of the current neighbors match the filter.
+當篩選程度極小時，演算法會完全略過這些最佳化。預設情況下，此門檻為 60%。只有當目前鄰居中符合篩選條件者少於 90% 時，才會進行擴展的鄰居探索。
 
-When [memory-optimized search]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/memory-optimized-search/) is enabled, the efficient filter framework continues to apply filtering within HNSW. The ACORN filtering optimization is applied only when the number of filtered documents is 60% or fewer of the total number of documents in the current search space being considered by the HNSW algorithm.
+啟用[記憶體最佳化搜尋]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/memory-optimized-search/)時，高效篩選器架構會繼續在 HNSW 內套用篩選。只有當被篩選的文件數量為 HNSW 演算法目前考慮的搜尋空間中文件總數的 60% 或更少時，才會套用 ACORN 篩選最佳化。
 
-## Using a JVector efficient filter
+## 使用 JVector 高效篩選器
 
-The [`opensearch-jvector` plugin]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/) supports filtering using the `jvector` engine with the `disk_ann` method. An inline `filter` inside the `knn` query clause restricts candidates during graph traversal. Post-filtering using the `post_filter` parameter is also supported but may return fewer than `k` results when the filter is restrictive.
+[`opensearch-jvector` 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/)支援使用 `jvector` 引擎搭配 `disk_ann` 方法的篩選。`knn` 查詢子句中的內嵌 `filter` 會在圖形遍歷期間限制候選項目。也支援使用 `post_filter` 參數的事後篩選，但當篩選條件嚴格時，可能傳回少於 `k` 筆結果。
 
-In this example, you will create an index using the `jvector` engine and search for the three closest hotels that have high ratings and provide parking.
+在此範例中，您將使用 `jvector` 引擎建立索引，並搜尋評分高且提供停車場的三家最近飯店。
 
-### Step 1: Create a new index
+### 步驟 1：建立新索引
 
-Create an index with a `knn_vector` field, specifying `jvector` as the engine and `disk_ann` as the method:
+建立一個含有 `knn_vector` 欄位的索引，將 `jvector` 指定為引擎，`disk_ann` 指定為方法：
 
 ```json
 PUT /hotels-jvector-index
@@ -446,9 +447,9 @@ PUT /hotels-jvector-index
 ```
 {% include copy-curl.html %}
 
-### Step 2: Add data to your index
+### 步驟 2：將資料新增至您的索引
 
-Add 12 documents containing hotel location, rating, and parking information:
+新增 12 份包含飯店位置、評分和停車資訊的文件：
 
 ```json
 POST /_bulk
@@ -479,9 +480,9 @@ POST /_bulk
 ```
 {% include copy-curl.html %}
 
-### Step 3: Search your data with a filter
+### 步驟 3：使用篩選條件搜尋您的資料
 
-Place the `filter` inside the `knn` query clause to restrict candidates during graph traversal. The following request searches for the top three hotels near `[5, 4]` that are rated between 8 and 10 and provide parking:
+將 `filter` 放在 `knn` 查詢子句中，以在圖形遍歷期間限制候選項目。以下請求會搜尋 `[5, 4]` 附近評分介於 8 到 10 之間且提供停車位的前三家飯店：
 
 ```json
 POST /hotels-jvector-index/_search
@@ -518,11 +519,11 @@ POST /hotels-jvector-index/_search
 ```
 {% include copy-curl.html %}
 
-### Step 4: Search your data with post-filtering
+### 步驟 4：使用後置篩選搜尋您的資料
 
-You can also apply filtering after the ANN search using `post_filter`. Because `post_filter` runs after ANN retrieval, the final result count may be fewer than `k` when the filter is restrictive. To compensate, set `k` to a value larger than the number of results you need.
+您也可以在 ANN 搜尋之後使用 `post_filter` 套用篩選。由於 `post_filter` 是在 ANN 擷取之後執行，當篩選條件較嚴格時，最終結果數量可能會少於 `k`。為了補償，請將 `k` 設定為大於您所需結果數量的值。
 
-The following request retrieves the 20 nearest hotels and then restricts the results to those rated 8 or higher that provide parking:
+以下請求會擷取最接近的 20 家飯店，然後將結果限制為評分 8 以上且提供停車位的飯店：
 
 ```json
 POST /hotels-jvector-index/_search
@@ -559,16 +560,16 @@ POST /hotels-jvector-index/_search
 ```
 {% include copy-curl.html %}
 
-## Constructing a filter
+## 建構篩選器
 
-There are multiple ways to construct a filter for the same condition. For example, you can use the following constructs to create a filter that returns hotels that provide parking:
+針對相同條件，有多種方式可以建構篩選器。例如，您可以使用下列結構來建立篩選器，以傳回提供停車位的飯店：
 
-- A `term` query clause in the `should` clause
-- A `wildcard` query clause in the `should` clause
-- A `regexp` query clause in the `should` clause
-- A `must_not` clause to eliminate hotels with `parking` set to `false`.
+- 在 `should` 子句中使用 `term` 查詢子句
+- 在 `should` 子句中使用 `wildcard` 查詢子句
+- 在 `should` 子句中使用 `regexp` 查詢子句
+- 使用 `must_not` 子句來排除 `parking` 設為 `false` 的飯店。
 
-The following request illustrates these four different ways of searching for hotels with parking:
+以下請求示範了這四種搜尋提供停車位飯店的不同方式：
 
 ```json
 POST /hotels-index/_search

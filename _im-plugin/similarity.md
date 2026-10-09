@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Similarity
+title: "相似度"
 parent: Tuning indexes
 nav_order: 40
 ---
 
-# Similarity
+# 相似度
 
-A similarity defines how matching documents are scored and ranked during search operations. OpenSearch uses similarity algorithms to calculate relevance scores that determine the order of search results.
+相似度定義了搜尋作業期間符合的文件如何計分及排名。OpenSearch 使用相似度演算法來計算相關性分數，以決定搜尋結果的順序。
 
-Each field can have its own similarity configuration, allowing fine-tuned control over how different types of content are scored. You can define custom similarity algorithms in your index settings at the index level. Once configured, you can apply these algorithms to specific fields using the [`similarity` mapping parameter]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/similarity/).
+每個欄位都可以有自己的相似度組態，讓您能精細控制不同類型的內容如何計分。您可以在索引層級的索引設定中定義自訂相似度演算法。設定完成後，您可以使用 [`similarity` 對應參數]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/similarity/) 將這些演算法套用至特定欄位。
 
-Configuring custom similarity settings is an advanced feature. The built-in similarities are sufficient for most use cases.
+設定自訂相似度設定是進階功能。內建相似度已足以因應大多數使用情境。
 
-## Configuring similarity at the index level
+## 在索引層級設定相似度
 
-OpenSearch uses BM25 as the default similarity for all fields. You can change the default similarity for an index to apply a single similarity algorithm to all fields in that index.
+OpenSearch 對所有欄位使用 BM25 作為預設相似度。您可以變更索引的預設相似度，將單一相似度演算法套用至該索引中的所有欄位。
 
-### Setting default similarity at index creation
+### 在建立索引時設定預設相似度
 
-You can set the default similarity when creating an index:
+您可以在建立索引時設定預設相似度：
 
 ```json
 PUT /product_catalog
@@ -37,20 +38,20 @@ PUT /product_catalog
 ```
 {% include copy-curl.html %}
 
-When you use the special `default` name, the similarity is automatically applied to all fields in the index. You don't need to specify the similarity in individual field mappings.
+當您使用特殊的 `default` 名稱時，相似度會自動套用至索引中的所有欄位。您不需要在個別欄位對應中指定相似度。
 
-### Changing default similarity after index creation
+### 在建立索引後變更預設相似度
 
-Similarity settings are not dynamic, so updating them on an open index fails. To change the default similarity after index creation, close the index, update the settings, and then reopen it.
+相似度設定不是動態的，因此在開啟的索引上更新這些設定會失敗。若要在建立索引後變更預設相似度，請關閉索引、更新設定，然後重新開啟索引。
 
-First, close the index:
+首先，關閉索引：
 
 ```json
 POST /product_catalog/_close
 ```
 {% include copy-curl.html %}
 
-Next, update the default similarity:
+接著，更新預設相似度：
 
 ```json
 PUT /product_catalog/_settings
@@ -70,21 +71,21 @@ PUT /product_catalog/_settings
 ```
 {% include copy-curl.html %}
 
-Finally, reopen the index:
+最後，重新開啟索引：
 
 ```json
 POST /product_catalog/_open
 ```
 {% include copy-curl.html %}
 
-To verify that the default similarity has changed, send the following request:
+若要確認預設相似度已變更，請傳送下列請求：
 
 ```json
 GET /product_catalog/_settings
 ```
 {% include copy-curl.html %}
 
-The response confirms that the default similarity has been updated:
+回應會確認預設相似度已更新：
 
 ```json
 {
@@ -119,18 +120,18 @@ The response confirms that the default similarity has been updated:
 }
 ```
 
-### Parameter persistence when changing similarity types
+### 變更相似度類型時的參數持續性
 
-When changing from one similarity type to another, OpenSearch retains the parameters from the previous configuration. If the new similarity type doesn't support these parameters, the update fails.
+從一種相似度類型變更為另一種時，OpenSearch 會保留先前組態的參數。如果新的相似度類型不支援這些參數，更新就會失敗。
 
-For example, change the default similarity from `DFR` to `boolean`. First, close the index:
+例如，將預設相似度從 `DFR` 變更為 `boolean`。首先，關閉索引：
 
 ```json
 POST /product_catalog/_close
 ```
 {% include copy-curl.html %}
 
-Then update the default similarity:
+然後更新預設相似度：
 
 ```json
 PUT /product_catalog/_settings
@@ -146,7 +147,7 @@ PUT /product_catalog/_settings
 ```
 {% include copy-curl.html %}
 
-The request fails because the `DFR` parameters are still set:
+請求會失敗，因為 `DFR` 參數仍已設定：
 
 ```json
 {
@@ -164,7 +165,7 @@ The request fails because the `DFR` parameters are still set:
 }
 ```
 
-To resolve this, explicitly set the old parameters to `null` in the same request:
+若要解決此問題，請在同一個請求中將舊參數明確設為 `null`：
 
 ```json
 PUT /product_catalog/_settings
@@ -184,16 +185,16 @@ PUT /product_catalog/_settings
 ```
 {% include copy-curl.html %}
 
-Then reopen the index:
+然後重新開啟索引：
 
 ```json
 POST /product_catalog/_open
 ```
 {% include copy-curl.html %}
 
-## Configuring a built-in similarity at the field level
+## 在欄位層級設定內建相似度
 
-OpenSearch provides built-in similarity algorithms (`BM25` and `boolean`) that can be used directly in field mappings. To configure a similarity at the field level, apply it to the field when creating the index. The following example applies a `boolean` similarity to the `content` field:
+OpenSearch 提供內建相似度演算法 (`BM25` 和 `boolean`)，可直接用於欄位對應。若要在欄位層級設定相似度，請在建立索引時將其套用至欄位。下列範例將 `boolean` 相似度套用至 `content` 欄位：
 
 ```json
 PUT /blog_posts_2/
@@ -210,20 +211,20 @@ PUT /blog_posts_2/
 ```
 {% include copy-curl.html %}
 
-In this example, only the `content` field uses a `boolean` similarity. Other fields in the index will use the default `BM25` similarity.
+在此範例中，只有 `content` 欄位使用 `boolean` 相似度。索引中的其他欄位將使用預設的 `BM25` 相似度。
 
-## Configuring a custom similarity
+## 設定自訂相似度
 
-For more advanced use cases, you can define named custom similarities that can be applied to specific fields. This approach provides greater flexibility when different fields in your index need different scoring algorithms.
+若為更進階的使用情境，您可以定義具名的自訂相似度，並將其套用至特定欄位。當索引中的不同欄位需要不同的計分演算法時，此做法可提供更大的彈性。
 
-Configuring named custom similarities requires a two-step process:
+設定具名的自訂相似度需要兩個步驟：
 
-1. Define the similarity in the index settings with a custom name.
-2. Apply the similarity to specific fields in mappings.
+1. 在索引設定中以自訂名稱定義相似度。
+2. 在對應中將相似度套用至特定欄位。
 
-### Step 1: Define a custom similarity
+### 步驟 1：定義自訂相似度
 
-The following example creates an index with a custom `DFR` similarity configuration:
+下列範例建立具有自訂 `DFR` 相似度組態的索引：
 
 ```json
 PUT /blog_posts
@@ -245,9 +246,9 @@ PUT /blog_posts
 ```
 {% include copy-curl.html %}
 
-### Step 2: Apply the custom similarity to fields
+### 步驟 2：將自訂相似度套用至欄位
 
-After defining the similarity, you must explicitly apply it to specific fields in your mappings. Unlike the default similarity, custom similarities are not automatically applied to all fields:
+定義相似度之後，您必須在對應中明確地將其套用至特定欄位。與預設相似度不同，自訂相似度不會自動套用至所有欄位：
 
 ```json
 PUT /blog_posts/_mapping
@@ -262,119 +263,119 @@ PUT /blog_posts/_mapping
 ```
 {% include copy-curl.html %}
 
-In this example, only the `content` field uses the custom `blog_similarity`. Other fields in the index (if any) continue using the default `BM25` similarity unless explicitly configured otherwise.
+在此範例中，只有 `content` 欄位使用自訂的 `blog_similarity`。索引中的其他欄位 (若有) 會繼續使用預設的 `BM25` 相似度，除非另有明確設定。
 
-## Available similarity types
+## 可用的相似度類型
 
-OpenSearch supports the following similarity types.
+OpenSearch 支援下列相似度類型。
 
-### BM25 similarity (default)
+### BM25 相似度 (預設)
 
-The `BM25` similarity is based on TF/IDF and includes built-in term frequency normalization. It works well for most text fields, particularly shorter fields like titles and names.
+`BM25` 相似度以 TF/IDF 為基礎，並包含內建的詞頻正規化。它適用於大多數文字欄位，尤其是標題和名稱等較短的欄位。
 
-The `BM25` similarity supports the following parameters.
+`BM25` 相似度支援下列參數。
 
-| Parameter | Description | Default | Required |
+| 參數 | 說明 | 預設 | 必要 |
 |-----------|-------------|---------|----------|
-| `k1` | Controls non-linear term frequency normalization (saturation). | `1.2` | No |
-| `b` | Controls how much document length normalizes term frequency values. | `0.75` | No |
-| `discount_overlaps` | Determines whether overlap tokens (tokens with 0 position increment) are ignored when computing norms. | `true` (ignore overlap tokens when computing norms) | No |
+| `k1` | 控制非線性的詞頻正規化 (飽和)。 | `1.2` | 否 |
+| `b` | 控制文件長度對詞頻值的正規化程度。 | `0.75` | 否 |
+| `discount_overlaps` | 決定計算範數時是否忽略重疊詞元 (位置增量為 0 的詞元)。 | `true` (計算範數時忽略重疊詞元) | 否 |
 
-### Boolean similarity
+### 布林相似度
 
-The built-in `boolean` similarity assigns all matching documents the same constant score, which is useful when you only need to determine whether documents match rather than how relevant they are. This similarity ignores term frequency, document length, and other scoring factors.
+內建的 `boolean` 相似度會為所有相符文件指定相同的固定分數，適用於您只需要判斷文件是否相符，而不需要判斷其相關性高低的情況。此相似度會忽略詞頻、文件長度及其他評分因素。
 
-The `boolean` similarity does not support parameters.
+`boolean` 相似度不支援參數。
 
-### DFR similarity
+### DFR 相似度
 
-The `DFR` similarity implements the [divergence from randomness](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/DFRSimilarity.html) framework for document scoring.
+`DFR` 相似度實作了[偏離隨機性](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/DFRSimilarity.html)框架，用於文件評分。
 
-The `DFR` similarity supports the following parameters.
+`DFR` 相似度支援下列參數。
 
-| Parameter | Description | Valid values | Required |
+| 參數 | 說明 | 有效值 | 必要 |
 |-----------|-------------|------------------|----------|
-| `basic_model` | Basic model for the DFR framework. | [`g`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/BasicModelG.html), [`if`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/BasicModelIF.html), [`in`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/BasicModelIn.html), [`ine`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/BasicModelIne.html) | Yes |
-| `after_effect` | After effect model for the DFR framework. | [`b`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/AfterEffectB.html), [`l`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/AfterEffectL.html) | Yes |
-| `normalization` | Normalization model for the DFR framework. `h1`, `h2`, and `h3` accept an optional `c` parameter, specified as `normalization.h1.c`, `normalization.h2.c`, or `normalization.h3.c`. `z` accepts an optional `z` parameter, specified as `normalization.z.z`, whose value must be greater than 0 and less than 0.5. `no` accepts no parameter. | [`no`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/Normalization.NoNormalization.html), [`h1`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/NormalizationH1.html), [`h2`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/NormalizationH2.html), [`h3`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/NormalizationH3.html), [`z`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/NormalizationZ.html) | Yes |
+| `basic_model` | DFR 框架的基本模型。 | [`g`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/BasicModelG.html), [`if`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/BasicModelIF.html), [`in`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/BasicModelIn.html), [`ine`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/BasicModelIne.html) | 是 |
+| `after_effect` | DFR 框架的後效模型。 | [`b`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/AfterEffectB.html), [`l`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/AfterEffectL.html) | 是 |
+| `normalization` | DFR 框架的正規化模型。`h1`、`h2` 和 `h3` 接受選用的 `c` 參數，以 `normalization.h1.c`、`normalization.h2.c` 或 `normalization.h3.c` 指定。`z` 接受選用的 `z` 參數，以 `normalization.z.z` 指定，其值必須大於 0 且小於 0.5。`no` 不接受任何參數。 | [`no`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/Normalization.NoNormalization.html), [`h1`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/NormalizationH1.html), [`h2`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/NormalizationH2.html), [`h3`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/NormalizationH3.html), [`z`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/NormalizationZ.html) | 是 |
 
-### DFI similarity
+### DFI 相似度
 
-The `DFI` similarity implements the [divergence from independence (DFI)](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/DFISimilarity.html) model.
+`DFI` 相似度實作了[偏離獨立性（DFI）](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/DFISimilarity.html)模型。
 
-The `DFI` similarity supports the following parameters.
+`DFI` 相似度支援下列參數。
 
-| Parameter | Description | Valid values | Required |
+| 參數 | 說明 | 有效值 | 必要 |
 |-----------|-------------|------------------|----------|
-| `independence_measure` | Independence measure for the DFI model. | [`standardized`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/IndependenceStandardized.html), [`saturated`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/IndependenceSaturated.html), [`chisquared`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/IndependenceChiSquared.html) | Yes |
+| `independence_measure` | DFI 模型的獨立性度量。 | [`standardized`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/IndependenceStandardized.html), [`saturated`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/IndependenceSaturated.html), [`chisquared`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/IndependenceChiSquared.html) | 是 |
 
-When using `DFI` similarity, avoid removing stop words for optimal relevance. Terms with a frequency that is lower than expected will receive a score of 0.
+使用 `DFI` 相似度時，請避免移除停用詞，以獲得最佳相關性。頻率低於預期的詞彙會得到 0 分。
 
-### IB similarity
+### IB 相似度
 
-The `IB` similarity uses the [information-based model](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/IBSimilarity.html), which analyzes the repetitive usage of basic elements in symbolic distributions.
+`IB` 相似度使用[以資訊為基礎的模型](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/IBSimilarity.html)，此模型會分析符號分布中基本元素的重複使用情形。
 
-The `IB` similarity supports the following parameters.
+`IB` 相似度支援下列參數。
 
-| Parameter | Description | Valid values | Required |
+| 參數 | 說明 | 有效值 | 必要 |
 |-----------|-------------|------------------|----------|
-| `distribution` | Distribution model for the `IB` framework. | [`ll`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/DistributionLL.html), [`spl`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/DistributionSPL.html) | Yes |
-| `lambda` | Lambda model for the `IB` framework. | [`df`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/LambdaDF.html), [`ttf`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/LambdaTTF.html) | Yes |
-| `normalization` | Normalization model for the `IB` framework. | Same options as `DFR` similarity | Yes |
+| `distribution` | `IB` 框架的分布模型。 | [`ll`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/DistributionLL.html), [`spl`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/DistributionSPL.html) | 是 |
+| `lambda` | `IB` 框架的 Lambda 模型。 | [`df`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/LambdaDF.html), [`ttf`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/LambdaTTF.html) | 是 |
+| `normalization` | `IB` 框架的正規化模型。 | 與 `DFR` 相似度的選項相同 | 是 |
 
 <!-- vale off -->
-### LM Dirichlet similarity
+### LM Dirichlet 相似度
 <!-- vale on -->
 
-The `LMDirichlet` similarity uses [language model similarity](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/LMDirichletSimilarity.html) with Dirichlet smoothing.
+`LMDirichlet` 相似度使用採用 Dirichlet 平滑的[語言模型相似度](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/LMDirichletSimilarity.html)。
 
-The `LMDirichlet` similarity supports the following parameters.
+`LMDirichlet` 相似度支援下列參數。
 
-| Parameter | Description | Default | Required |
+| 參數 | 說明 | 預設 | 必要 |
 |-----------|-------------|---------|----------|
-| `mu` | Smoothing parameter. | `2000` | No |
+| `mu` | 平滑參數。 | `2000` | 否 |
 
-Terms with fewer occurrences than predicted by the language model receive a score of 0.
+出現次數少於語言模型預測值的詞彙會得到 0 分。
 
 <!-- vale off -->
-### LM Jelinek Mercer similarity
+### LM Jelinek Mercer 相似度
 <!-- vale on -->
 
-The `LMJelinekMercer` similarity uses [language model similarity](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/LMJelinekMercerSimilarity.html) with Jelinek-Mercer smoothing.
+`LMJelinekMercer` 相似度使用採用 Jelinek-Mercer 平滑的[語言模型相似度](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/similarities/LMJelinekMercerSimilarity.html)。
 
-The `LMJelinekMercer` similarity supports the following parameters.
+`LMJelinekMercer` 相似度支援下列參數。
 
-| Parameter | Description | Default | Required |
+| 參數 | 說明 | 預設 | 必要 |
 |-----------|-------------|---------|----------|
-| `lambda` | Interpolation parameter. Values around `0.1` work well for title queries, while `0.7` is better for longer queries. | `0.1` | No |
+| `lambda` | 內插參數。接近 `0.1` 的值適用於標題查詢，而 `0.7` 更適合較長的查詢。 | `0.1` | 否 |
 
-### Scripted similarity
+### 指令碼相似度
 
-The `scripted` similarity allows custom scoring logic using OpenSearch's scripting capabilities.
+`scripted` 相似度可讓您使用 OpenSearch 的指令碼功能來自訂評分邏輯。
 
-When writing scripts for `scripted` similarities, you have access to the following variables. These variables allow you to implement custom scoring algorithms based on term frequency, document frequency, field statistics, and document characteristics.
+為 `scripted` 相似度撰寫指令碼時，您可以存取下列變數。這些變數可讓您根據詞頻、文件頻率、欄位統計資料及文件特性，實作自訂評分演算法。
 
-| Variable | Description |
+| 變數 | 說明 |
 |----------|-------------|
-| `weight` | A document-independent weight (obtained from the `weight_script` if provided, otherwise `1.0`). |
-| `query.boost` | A query-level boost factor applied to the term. |
-| `field.docCount` | The total number of documents that have this field. |
-| `field.sumDocFreq` | The sum of document frequencies across all terms in this field. |
-| `field.sumTotalTermFreq` | The sum of total term frequencies across all terms in this field. |
-| `term.docFreq` | The number of documents containing this specific term. |
-| `term.totalTermFreq` | The total number of occurrences of this term across all documents. |
-| `doc.freq` | The frequency of this term in the current document. |
-| `doc.length` | The total number of terms in the current document. |
+| `weight` | 與文件無關的權重（若有提供 `weight_script`，則從中取得，否則為 `1.0`）。 |
+| `query.boost` | 套用至詞彙的查詢層級加權因子。 |
+| `field.docCount` | 具有此欄位的文件總數。 |
+| `field.sumDocFreq` | 此欄位中所有詞彙的文件頻率總和。 |
+| `field.sumTotalTermFreq` | 此欄位中所有詞彙的總詞頻之和。 |
+| `term.docFreq` | 包含此特定詞彙的文件數量。 |
+| `term.totalTermFreq` | 此詞彙在所有文件中的出現總次數。 |
+| `doc.freq` | 此詞彙在目前文件中的頻率。 |
+| `doc.length` | 目前文件中的詞彙總數。 |
 
-To ensure correct search behavior, `scripted` similarities must follow these rules:
+為確保搜尋行為正確，`scripted` 相似度必須遵循下列規則：
 
-- Returned scores must be positive.
-- Scores must not decrease when `doc.freq` increases and all other variables remain the same.
-- Scores must not increase when `doc.length` increases and all other variables remain the same.
+- 傳回的分數必須為正值。
+- 當 `doc.freq` 增加且所有其他變數維持不變時，分數不得降低。
+- 當 `doc.length` 增加且所有其他變數維持不變時，分數不得增加。
 
-The following example shows a custom TF-IDF implementation.
+下列範例示範自訂的 TF-IDF 實作。
 
-First, create an index and define a script to calculate similarity:
+首先，建立索引並定義用於計算相似度的指令碼：
 
 ```json
 PUT /research_papers
@@ -402,7 +403,7 @@ PUT /research_papers
 ```
 {% include copy-curl.html %}
 
-Index sample documents:
+將範例文件編製索引：
 
 ```json
 PUT /research_papers/_doc/1
@@ -420,14 +421,14 @@ PUT /research_papers/_doc/2
 ```
 {% include copy-curl.html %}
 
-Refresh the index:
+重新整理索引：
 
 ```json
 POST /research_papers/_refresh
 ```
 {% include copy-curl.html %}
 
-Now you can search the index and request scoring explanations:
+現在您可以搜尋索引並要求提供評分說明：
 
 ```json
 GET /research_papers/_search?explain=true
@@ -448,7 +449,7 @@ GET /research_papers/_search?explain=true
 ```
 {% include copy-curl.html %}
 
-The response shows the custom TF-IDF calculation with a score of `1.2570862` for the matching document. The `_explanation` section reveals all the variables available to your script and their values for this specific search:
+回應會顯示自訂的 TF-IDF 計算結果，相符文件的分數為 `1.2570862`。`_explanation` 區段會顯示指令碼可使用的所有變數，以及這些變數在此次特定搜尋中的值：
 
 ```json
 {
@@ -539,7 +540,7 @@ The response shows the custom TF-IDF calculation with a score of `1.2570862` for
 }
 ```
 
-You can improve performance by separating document-independent calculations into another script named `weight_script`. For queries matching many documents, the `weight_script` runs once per term, while the main `script` runs once per document. The score produced by the `weight_script` is available in the `weight` variable:
+您可以將與文件無關的計算分離到另一個名為 `weight_script` 的指令碼中，以改善效能。對於符合許多文件的查詢，`weight_script` 會針對每個詞彙執行一次，而主要的 `script` 則會針對每份文件執行一次。`weight_script` 產生的分數可在 `weight` 變數中取得：
 
 ```json
 PUT /research_papers_optimized
@@ -570,7 +571,7 @@ PUT /research_papers_optimized
 ```
 {% include copy-curl.html %}
 
-Index the same sample documents into `research_papers_optimized`, refresh the index, and run the same query. The response shows how the optimized similarity works:
+將相同的範例文件編製索引至 `research_papers_optimized`、重新整理索引，然後執行相同的查詢。回應會顯示最佳化相似度如何運作：
 
 ```json
 {
@@ -661,15 +662,15 @@ Index the same sample documents into `research_papers_optimized`, refresh the in
 }
 ```
 
-In this optimized example:
+在這個最佳化範例中：
 
-- The `weight_script` calculates the score of `2.8109303` (IDF + query boost, same for all documents).
-- The main `script` calculates document-specific factors using the precalculated `weight` value.
-- The final score is `1.2570862` (identical to the single-script approach but more efficient).
+- `weight_script` 會計算 `2.8109303` 的分數 (IDF + 查詢加成，對所有文件都相同)。
+- 主要的 `script` 會使用預先計算的 `weight` 值來計算各文件專屬的因子。
+- 最終分數為 `1.2570862` (與單一指令碼方法相同，但更有效率)。
 
-The `weight_script` parameter name is reserved and cannot be changed. The result is always available in the `weight` variable within your main script.
+`weight_script` 參數名稱為保留名稱，無法變更。結果一律可在主要指令碼中的 `weight` 變數中取得。
 {: .note}
 
-## Related documentation
+## 相關文件
 
-- [`similarity` mapping parameter]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/similarity/)
+- [`similarity` 對應參數]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/similarity/)

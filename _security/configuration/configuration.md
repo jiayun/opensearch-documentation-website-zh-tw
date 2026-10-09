@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Configuring the security backend
+title: "設定安全性後端"
 parent: Configuration
 nav_order: 20
 redirect_from:
  - /security-plugin/configuration/configuration/
 ---
 
-# Configuring the security backend
+# 設定安全性後端
 
-One of the first steps when setting up the Security plugin is deciding which authentication backend to use. The role played by the backend in authentication is covered in [steps 2 and 3 of the authentication flow]({{site.url}}{{site.baseurl}}/security/authentication-backends/authc-index/#authentication-flow). The plugin has an internal user database, but many people prefer to use an existing authentication backend, such as an LDAP server, or some combination of the two.
+設定 Security 外掛程式的第一步之一，就是決定要使用哪一個驗證後端。後端在驗證中所扮演的角色，已於[驗證流程的步驟 2 和步驟 3]({{site.url}}{{site.baseurl}}/security/authentication-backends/authc-index/#authentication-flow)中說明。此外掛程式具有內部使用者資料庫，但許多人偏好使用現有的驗證後端，例如 LDAP 伺服器，或結合兩者使用。
 
-The primary file used to configure the authentication and authorization backend is `/usr/share/opensearch/config/opensearch-security/config.yml`. This file defines how the Security plugin retrieves user credentials, how the plugin verifies the credentials, and how the plugin fetches additional roles when the backend selected for authentication and authorization supports this feature. This topic provides a basic overview of the configuration file and its requirements for setting up security. For information about configuring a specific backend, see [Authentication backends]({{site.url}}{{site.baseurl}}/security/authentication-backends/authc-index/).
+用於設定驗證與授權後端的主要檔案是 `/usr/share/opensearch/config/opensearch-security/config.yml`。此檔案定義了 Security 外掛程式如何擷取使用者憑證、外掛程式如何驗證憑證，以及當選用於驗證與授權的後端支援此功能時，外掛程式如何擷取其他角色。本主題提供組態檔的基本概觀，以及設定安全性時對組態檔的要求。如需設定特定後端的相關資訊，請參閱[驗證後端]({{site.url}}{{site.baseurl}}/security/authentication-backends/authc-index/)。
 
-The `config.yml` file includes three main parts:
+`config.yml` 檔案包含三個主要部分：
 
 ```yml
 config:
@@ -26,12 +27,12 @@ config:
       ...
 ```
 
-The sections that follow describe the main elements in each part of the `config.yml` file and provide basic examples of their configuration. For a more detailed example, see the [sample file on GitHub](https://github.com/opensearch-project/security/blob/main/config/config.yml).
+以下各節說明 `config.yml` 檔案各部分的主要元素，並提供其組態的基本範例。如需更詳細的範例，請參閱 [GitHub 上的範例檔案](https://github.com/opensearch-project/security/blob/main/config/config.yml)。
 
 
 ## HTTP
 
-The `http` section includes the following format:
+`http` 區段包含下列格式：
 
 ```yml
 http:
@@ -44,19 +45,19 @@ http:
     trustedProxies: <string> # Regex pattern
 ```
 
-The settings used in this configuration are described in the following table.
+此組態中使用的設定如下表所述。
 
-| Setting | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| 設定 | 說明                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | :--- |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `anonymous_auth_enabled` | Either enables or disables anonymous authentication. When `true`, HTTP authenticators try to find user credentials in the HTTP request. If credentials are found, the user is authenticated. If none are found, the user is authenticated as an _anonymous_ user. This user then has the username `anonymous` and one role named `anonymous_backendrole`. When you enable anonymous authentication, all defined HTTP authenticators are non-challenging. For more information, see [The challenge setting]({{site.url}}{{site.baseurl}}/security/authentication-backends/basic-authc/#the-challenge-setting). |
-| `xff` | Used to configure proxy-based authentication. For more information about this backend, see [Proxy-based authentication]({{site.url}}{{site.baseurl}}/security/authentication-backends/proxy/).                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `anonymous_auth_enabled` | 啟用或停用匿名驗證。當 `true` 時，HTTP 驗證器會嘗試在 HTTP 請求中尋找使用者憑證。若找到憑證，則會驗證該使用者。若找不到任何憑證，則會將使用者驗證為 _匿名_ 使用者。此使用者接著會有使用者名稱 `anonymous` 以及一個名為 `anonymous_backendrole` 的角色。當您啟用匿名驗證時，所有已定義的 HTTP 驗證器都會是非挑戰式的。如需詳細資訊，請參閱[挑戰設定]({{site.url}}{{site.baseurl}}/security/authentication-backends/basic-authc/#the-challenge-setting)。 |
+| `xff` | 用於設定以 Proxy 為基礎的驗證。如需此後端的詳細資訊，請參閱[以 Proxy 為基礎的驗證]({{site.url}}{{site.baseurl}}/security/authentication-backends/proxy/)。                                                                                                                                                                                                                                                                                                                                                                                                                           |
 
-For instructions on how to configure anonymous authentication, see [Anonymous authentication]({{site.url}}{{site.baseurl}}/security/access-control/anonymous-authentication/).  
+如需如何設定匿名驗證的指示，請參閱[匿名驗證]({{site.url}}{{site.baseurl}}/security/access-control/anonymous-authentication/)。  
 {: .important }
 
-## Authentication
+## 驗證
 
-The `authc` section has the following format:
+`authc` 區段具有下列格式：
 
 ```yml
 authc:
@@ -70,19 +71,19 @@ authc:
       ...
 ```
 
-An entry in the `authc` section is called an *authentication domain*. It specifies where to get the user credentials and against which backend they should be authenticated.
+`authc` 區段中的項目稱為*驗證網域*。它會指定從何處取得使用者憑證，以及應對哪個後端進行驗證。
 
-You can use more than one authentication domain. Each authentication domain has a name (for example, `basic_auth_internal`), settings for enabling the domain on the REST and transport layers, and an `order`. The order makes it possible to chain authentication domains together. The Security plugin uses them in the order that you provide. If the user successfully authenticates with one domain, the Security plugin skips the remaining domains.
+您可以使用多個驗證網域。每個驗證網域都有一個名稱 (例如 `basic_auth_internal`)、用於在 REST 與傳輸層啟用該網域的設定，以及一個 `order`。此順序可讓您將驗證網域串接在一起。Security 外掛程式會依您提供的順序使用它們。若使用者成功通過某個網域的驗證，Security 外掛程式就會略過其餘網域。
 
-Settings that are typically found in this part of the configuration are included in the following table.
+此部分組態中常見的設定如下表所示。
 
-| Setting | Description |
+| 設定 | 說明 |
 | :--- | :--- |
-| `http_enabled` | Enables or disables authentication on the REST layer. Default is `true` (enabled). |
-| `transport_enabled` | Enables or disables authentication on the transport layer. Default is `true` (enabled). |
-| `order` | Determines the order in which an authentication domain is queried with an authentication request when multiple backends are configured in combination. Once authentication succeeds, any remaining domains do not need to be queried. Its value is an integer. |
+| `http_enabled` | 啟用或停用 REST 層的驗證。預設為 `true` (啟用)。 |
+| `transport_enabled` | 啟用或停用傳輸層的驗證。預設為 `true` (啟用)。 |
+| `order` | 當組合設定多個後端時，決定驗證請求查詢驗證網域的順序。一旦驗證成功，就不需要再查詢其餘任何網域。其值為整數。 |
 
-The `http_authenticator` definition specifies the authentication method for the HTTP layer. The following example shows the syntax used for defining an HTTP authenticator:
+`http_authenticator` 定義會指定 HTTP 層的驗證方法。下列範例顯示用於定義 HTTP 驗證器的語法：
 
 ```yml
 http_authenticator:
@@ -92,19 +93,19 @@ http_authenticator:
     ...
 ```
 
-The `type` setting for `http_authenticator` accepts the following values. For more information about each of the authentication options, see the links to authentication backends in [Next steps](#next-steps).
+`http_authenticator` 的 `type` 設定接受下列值。如需每個驗證選項的詳細資訊，請參閱[後續步驟](#next-steps)中的驗證後端連結。
 
-| Value | Description |
+| 值 | 說明 |
 | :--- | :--- |
-| `basic` | HTTP basic authentication. For more information about using basic authentication, see the HTTP basic authentication documentation. |
-| `kerberos` | Kerberos authentication. See the Kerberos documentation for additional configuration information. |
-| `jwt` | JSON Web Token (JWT) authentication. See the JSON Web Token documentation for additional configuration information. |
-| `openid` | OpenID Connect authentication. See the OpenID Connect documentation for additional configuration information. |
-| `saml` | SAML authentication. See the SAML documentation for additional configuration information. |
-| `proxy`, `extended-proxy` | Proxy-based authentication. The `extended-proxy` type authenticator allows you to pass additional user attributes for use with document-level security. See the Proxy-based authentication documentation for additional configuration information. |
-| `clientcert` | Authentication through a client TLS certificate. This certificate must be trusted by one of the root certificate authorities (CAs) in the truststore of your nodes. See the Client certificate authentication documentation for additional configuration information. |
+| `basic` | HTTP 基本驗證。如需使用基本驗證的詳細資訊，請參閱 HTTP 基本驗證文件。 |
+| `kerberos` | Kerberos 驗證。如需其他組態資訊，請參閱 Kerberos 文件。 |
+| `jwt` | JSON Web Token (JWT) 驗證。如需其他組態資訊，請參閱 JSON Web Token 文件。 |
+| `openid` | OpenID Connect 驗證。如需其他組態資訊，請參閱 OpenID Connect 文件。 |
+| `saml` | SAML 驗證。如需其他組態資訊，請參閱 SAML 文件。 |
+| `proxy`、`extended-proxy` | 以 Proxy 為基礎的驗證。`extended-proxy` 類型的驗證器可讓您傳遞其他使用者屬性，以供文件層級安全性使用。如需其他組態資訊，請參閱以 Proxy 為基礎的驗證文件。 |
+| `clientcert` | 透過用戶端 TLS 憑證進行驗證。此憑證必須受到您節點信任存放區中其中一個根憑證授權單位 (CA) 的信任。如需其他組態資訊，請參閱用戶端憑證驗證文件。 |
 
-After setting an HTTP authenticator, you must specify against which backend system you want to authenticate the user:
+設定 HTTP 驗證器之後，您必須指定要對哪個後端系統驗證使用者：
 
 ```yml
 authentication_backend:
@@ -113,18 +114,18 @@ authentication_backend:
     ...
 ```
 
-The following table shows the possible values for the `type` setting under `authentication_backend`.
+下表顯示 `authentication_backend` 下 `type` 設定的可能值。
 
-| Value | Description |
+| 值 | 說明 |
 | :--- | :--- |
-| `noop` | No further authentication against any backend system is performed. Use `noop` if the HTTP authenticator has already authenticated the user completely, as in the case of JWT or client certificate authentication. |
-| `internal` | Use the users and roles defined in `internal_users.yml` for authentication. |
-| `ldap` | Authenticate users against an LDAP server. This setting requires [additional LDAP-specific configuration settings]({{site.url}}{{site.baseurl}}/security/authentication-backends/ldap/). |
+| `noop` | 不會對任何後端系統執行進一步驗證。若 HTTP 驗證器已完整驗證使用者，例如 JWT 或用戶端憑證驗證的情況，請使用 `noop`。 |
+| `internal` | 使用 `internal_users.yml` 中定義的使用者與角色進行驗證。 |
+| `ldap` | 對 LDAP 伺服器驗證使用者。此設定需要[其他 LDAP 專屬組態設定]({{site.url}}{{site.baseurl}}/security/authentication-backends/ldap/)。 |
 
 
-## Authorization
+## 授權
 
-The `authz` configuration is used to extract backend roles from an LDAP implementation. After the user has been authenticated, the Security plugin can optionally collect additional roles from the backend system. The authorization configuration has the following format:
+`authz` 組態用於從 LDAP 實作中擷取後端角色。使用者通過驗證之後，Security 外掛程式可選擇性地從後端系統收集其他角色。授權組態具有下列格式：
 
 ```yml
 authz:
@@ -137,36 +138,36 @@ authz:
         ...
 ```
 
-You can define multiple entries in this section, as with authentication entries. In this case, however, the execution order is not relevant and the `order` setting is not used.
+您可以在此區段中定義多個項目，如同驗證項目一樣。不過，在此情況下，執行順序並不重要，且不會使用 `order` 設定。
 
-The following table shows the possible values for the `type` setting under `authorization_backend`.
+下表顯示 `authorization_backend` 下 `type` 設定的可能值。
 
-| Value | Description |
+| 值 | 說明 |
 | :--- | :--- |
-| `noop` | Skips the authorization configuration step altogether. |
-| `ldap` | Fetches additional roles from an LDAP server. This setting requires [additional LDAP-specific configuration settings]({{site.url}}{{site.baseurl}}/security/authentication-backends/ldap/). |
+| `noop` | 完全略過授權組態步驟。 |
+| `ldap` | 從 LDAP 伺服器擷取其他角色。此設定需要[其他 LDAP 專屬組態設定]({{site.url}}{{site.baseurl}}/security/authentication-backends/ldap/)。 |
 
 
-## Backend configuration examples
+## 後端組態範例
 
-The default `config/opensearch-security/config.yml` file included in your OpenSearch distribution contains many configuration examples. Use these examples as a starting point and customize them to your needs. 
+您的 OpenSearch 發行版中包含的預設 `config/opensearch-security/config.yml` 檔案含有許多組態範例。請以這些範例為起點，並依您的需求加以自訂。 
 
 
-## Authentication and authorization over gRPC
-**Introduced 3.5**
+## 透過 gRPC 進行驗證與授權
+**於 3.5 版推出**
 {: .label .label-purple }
 
-When the Security plugin is enabled and not running in SSL-only mode, requests over gRPC are subject to authentication and authorization. The gRPC transport shares all authentication backends with the HTTP layer and respects the `http_enabled` setting in authentication domains. Only JWT authentication is supported over gRPC. For more information, see [Using JWT authentication with gRPC]({{site.url}}{{site.baseurl}}/security/authentication-backends/jwt/#using-jwt-authentication-with-grpc).
+當 Security 外掛程式已啟用且並非以僅限 SSL 模式執行時，透過 gRPC 的請求會受到驗證與授權的規範。gRPC 傳輸會與 HTTP 層共用所有驗證後端，並遵循驗證網域中的 `http_enabled` 設定。透過 gRPC 僅支援 JWT 驗證。如需詳細資訊，請參閱[搭配 gRPC 使用 JWT 驗證]({{site.url}}{{site.baseurl}}/security/authentication-backends/jwt/#using-jwt-authentication-with-grpc)。
 
-## Next steps
+## 後續步驟
 
-To learn about configuring the authentication backends, see the [Authentication backends]({{site.url}}{{site.baseurl}}/security/authentication-backends/) documentation. Alternatively, you can view documentation for a specific backend by using the links in the following list of topics:
+若要瞭解如何設定驗證後端，請參閱[驗證後端]({{site.url}}{{site.baseurl}}/security/authentication-backends/)文件。或者，您也可以使用下列主題清單中的連結，檢視特定後端的文件：
 
-* [HTTP basic authentication]({{site.url}}{{site.baseurl}}/security/authentication-backends/basic-authc/)
+* [HTTP 基本驗證]({{site.url}}{{site.baseurl}}/security/authentication-backends/basic-authc/)
 * [JSON Web Token]({{site.url}}{{site.baseurl}}/security/authentication-backends/jwt/)
 * [OpenID Connect]({{site.url}}{{site.baseurl}}/security/authentication-backends/openid-connect/)
 * [SAML]({{site.url}}{{site.baseurl}}/security/authentication-backends/saml/)
-* [Active Directory and LDAP]({{site.url}}{{site.baseurl}}/security/authentication-backends/ldap/)
-* [Proxy-based authentication]({{site.url}}{{site.baseurl}}/security/authentication-backends/proxy/)
-* [Client certificate authentication]({{site.url}}{{site.baseurl}}/security/authentication-backends/client-auth/)
-* [Kerberos authentication]({{site.url}}{{site.baseurl}}/security/authentication-backends/kerberos/)
+* [Active Directory 與 LDAP]({{site.url}}{{site.baseurl}}/security/authentication-backends/ldap/)
+* [以 Proxy 為基礎的驗證]({{site.url}}{{site.baseurl}}/security/authentication-backends/proxy/)
+* [用戶端憑證驗證]({{site.url}}{{site.baseurl}}/security/authentication-backends/client-auth/)
+* [Kerberos 驗證]({{site.url}}{{site.baseurl}}/security/authentication-backends/kerberos/)

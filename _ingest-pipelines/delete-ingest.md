@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete pipeline
+title: "刪除管線"
 nav_order: 13
 redirect_from:
   - /opensearch/rest-api/ingest-apis/delete-ingest/
   - /api-reference/ingest-apis/delete-ingest/
 ---
 
-# Delete pipeline
-**Introduced 1.0**
+# 刪除管線
+**1.0 版推出**
 {: .label .label-purple }
 
-Use the following request to delete a pipeline. 
+使用下列請求來刪除管線。
 
-To delete a specific pipeline, pass the pipeline ID as a parameter:
+若要刪除特定的管線，請將管線 ID 作為參數傳入：
 
 ```json
 DELETE /_ingest/pipeline/{pipeline-id}
 ```
 {% include copy-curl.html %}
 
-To delete all pipelines in a cluster, use the wildcard character (`*`):
+若要刪除叢集中的所有管線，請使用萬用字元 (`*`)：
 
 ```json
 DELETE /_ingest/pipeline/*

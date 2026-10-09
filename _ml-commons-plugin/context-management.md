@@ -1,41 +1,42 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Context management
+title: "上下文管理"
 parent: Memory and context
 nav_order: 20
 ---
 
-# Context management
-**Introduced 3.5**
+# 上下文管理
+**於 3.5 版導入**
 {: .label .label-purple }
 
-Context management enables OpenSearch agents to dynamically optimize their context before sending requests to large language models (LLMs). This flexible feature helps prevent context window overflow, reduces token usage, and enables long-running agents by intelligently managing conversation history, tool interactions, and other contextual information.
+上下文管理讓 OpenSearch 代理程式能夠在向大型語言模型（LLM）傳送請求之前，動態最佳化其上下文。這項彈性功能有助於防止上下文視窗溢出、減少詞元用量，並透過智慧化管理對話歷史、工具互動及其他上下文資訊，支援長時間執行的代理程式。
 
-Using context management, you can build AI agents that can:
+使用上下文管理，您可以建置能夠執行下列動作的 AI 代理程式：
 
-- Automatically truncate a long tool output when approaching token limits.
-- Summarize lengthy tool interactions to preserve essential information.
-- Apply sliding window approaches to maintain recent context.
-- Implement custom context optimization strategies based on specific use cases.
-- Hook into different stages of agent execution for context transformation.
+- 在接近詞元上限時自動截斷過長的工具輸出。
+- 摘要冗長的工具互動以保留重要資訊。
+- 套用滑動視窗方式以維持最近的上下文。
+- 依據特定使用案例實作自訂的上下文最佳化策略。
+- 在代理程式執行的不同階段掛鉤以轉換上下文。
 
-Context management uses a hook-based system that allows pluggable context managers to inspect and transform agent context at specific execution points. You can experiment with different configurations and combinations to find the optimal setup for your specific use case.
+上下文管理採用以掛鉤為基礎的系統，允許可插拔的上下文管理器在特定執行點檢查並轉換代理程式的上下文。您可以嘗試不同的組態與組合，為您的特定使用案例找出最佳設定。
 
-## Configuring context management
+## 設定上下文管理
 
-Context management organizes teams of _context managers_ that work together to optimize agent context at specific execution points during the agent lifecycle. The system is highly configurable, allowing you to tailor its behavior to your specific requirements.
+上下文管理會將上下文管理器組成團隊，使其在代理程式生命週期的特定執行點共同最佳化上下文。此系統具有高度可設定性，可讓您依據特定需求調整其行為。
 
-Each context management can be configured with the following components:
+每個上下文管理可以使用下列元件進行設定：
 
-- **Name**: Unique identifier for the context management. 
-- **Description**: Human-readable description of the context management's purpose.
-- **Hooks**: Different execution points where context managers operate.
-- **Context managers**: Individual components that perform specific context transformations.
-- **Activation rules**: Conditions that determine when context managers should execute.
+- **名稱**：上下文管理的唯一識別碼。
+- **描述**：以人類可讀方式描述上下文管理的用途。
+- **掛鉤**：上下文管理器運作的各種執行點。
+- **上下文管理器**：執行特定上下文轉換的個別元件。
+- **啟動規則**：決定上下文管理器何時執行的條件。
 
-You can mix and match different context managers, adjust their parameters, and experiment with various activation thresholds to achieve optimal performance for your use case.
+您可以混搭不同的上下文管理器、調整其參數，並嘗試各種啟動門檻，以在您的使用案例中達到最佳效能。
 
-For example, to create a context management named `token-aware-truncation` with a `ToolsOutputTruncateManager` and a `SlidingWindowManager`, send the following request:
+例如，若要建立一個名為 `token-aware-truncation` 且包含 `ToolsOutputTruncateManager` 與 `SlidingWindowManager` 的上下文管理，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/context_management/token-aware-truncation
@@ -66,26 +67,26 @@ POST /_plugins/_ml/context_management/token-aware-truncation
 ```
 {% include copy-curl.html %}
 
-## The hook system
+## 掛鉤系統
 
-Context management uses a hook-based architecture that allows teams of context managers to execute at specific points during agent execution. The supported hooks are:
+上下文管理採用以掛鉤為基礎的架構，讓上下文管理器團隊能在代理程式執行期間的特定時間點執行。支援的掛鉤如下：
 
-- `pre_llm` -- Runs before sending requests to the LLM.
-- `post_tool` -- Runs after tool execution completes.
+- `pre_llm` -- 在向 LLM 傳送請求之前執行。
+- `post_tool` -- 在工具執行完成之後執行。
 
-Context managers registered for each hook are executed in the order in which they are defined in the context management configuration.
+為每個掛鉤註冊的上下文管理器，會依照其在上下文管理組態中定義的順序執行。
 
-These hooks are supported in OpenSearch [conversational agents]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/) and [plan-and-execute agents]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/). 
+這些掛鉤在 OpenSearch 的[對話式代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/)與[規劃與執行代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/)中均受支援。
 
-## Activation rules
+## 啟動規則
 
-Activation rules determine when context managers execute during agent interactions. These rules help you control resource usage and optimize performance by triggering context optimization only when needed. If no activation rules are specified, context managers execute on every interaction at their configured hooks.
+啟動規則決定上下文管理器在代理程式互動期間何時執行。這些規則可協助您控制資源用量並最佳化效能，只在需要時才觸發上下文最佳化。若未指定任何啟動規則，上下文管理器會在其設定的掛鉤上於每次互動時執行。
 
-Context managers support several types of activation rules that can be used individually or combined.
+上下文管理器支援數種啟動規則類型，可單獨使用或合併使用。
 
-### Always activate
+### 一律啟動
 
-Use the `always` rule type to activate a context manager on every execution at its configured hook, regardless of conversation state:
+使用 `always` 規則類型，在其設定的掛鉤上於每次執行時啟動上下文管理器，無論對話狀態為何：
 
 ```json
 {
@@ -95,11 +96,11 @@ Use the `always` rule type to activate a context manager on every execution at i
 }
 ```
 
-This is equivalent to not specifying any activation rules and is useful when you want explicit control over activation behavior.
+這等同於不指定任何啟動規則，當您想要明確控制啟動行為時非常實用。
 
-### Message count threshold
+### 訊息數量門檻
 
-Use `message_count_exceed` to activate a context manager when the conversation history exceeds a specified number of messages:
+使用 `message_count_exceed` 在對話歷史超過指定的訊息數量時啟動上下文管理器：
 
 ```json
 {
@@ -109,11 +110,11 @@ Use `message_count_exceed` to activate a context manager when the conversation h
 }
 ```
 
-This rule is useful for applying context optimization strategies like sliding windows or summarization when conversations become lengthy.
+當對話變得冗長時，此規則適合用來套用滑動視窗或摘要等上下文最佳化策略。
 
-### Token count threshold
+### 詞元數量門檻
 
-Use `tokens_exceed` to activate a context manager when the estimated token count of the entire context window exceeds a threshold. The context window includes the system prompt, user prompt, chat history (memory), and tool interactions:
+使用 `tokens_exceed` 在整個上下文視窗的估計詞元數量超過門檻時啟動上下文管理器。上下文視窗包含系統提示、使用者提示、聊天歷史（對話記憶）以及工具互動：
 
 ```json
 {
@@ -123,11 +124,11 @@ Use `tokens_exceed` to activate a context manager when the estimated token count
 }
 ```
 
-This rule helps to prevent context window overflow and to manage LLM API costs by triggering optimization strategies before exceeding model limits.
+此規則有助於防止上下文視窗溢出，並在超過模型上限之前觸發最佳化策略，以管理 LLM API 成本。
 
-### Combining multiple rules
+### 合併多項規則
 
-You can combine multiple activation rules using AND logic. The context manager executes only when all specified conditions are met:
+您可以使用 AND 邏輯合併多項啟動規則。上下文管理器只有在所有指定條件都符合時才會執行：
 
 ```json
 {
@@ -138,15 +139,15 @@ You can combine multiple activation rules using AND logic. The context manager e
 }
 ```
 
-This example activates the context manager only when both the message count exceeds 15 AND the token count exceeds 200,000, providing fine-grained control over when optimization occurs.
+此範例只有在訊息數量超過 15 且詞元數量超過 200,000 時才啟動上下文管理器，可對最佳化發生的時機提供精細控制。
 
-## Context manager types
+## 上下文管理器類型
 
-OpenSearch provides the following context manager types. For complete configuration parameter details, see [Context manager configurations]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/#context-manager-configurations).
+OpenSearch 提供下列上下文管理器類型。如需完整的組態參數詳細資訊，請參閱[上下文管理器組態]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/#context-manager-configurations)。
 
 ### SlidingWindowManager
 
-Implements a sliding window approach that keeps only the most recent N interactions to prevent context window overflow. This example shows a sliding window manager that retains the 6 most recent messages and activates when the conversation exceeds 12 messages:
+實作滑動視窗方式，僅保留最近的 N 次互動，以防止上下文視窗溢出。此範例展示一個滑動視窗管理器，保留最近的 6 則訊息，並在對話超過 12 則訊息時啟動：
 
 ```json
 {
@@ -160,11 +161,11 @@ Implements a sliding window approach that keeps only the most recent N interacti
 }
 ```
 
-For more information, see [SlidingWindowManager]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/#slidingwindowmanager).
+如需更多資訊，請參閱 [SlidingWindowManager]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/#slidingwindowmanager)。
 
 ### SummarizationManager
 
-Summarizes lengthy conversations or tool interactions when token limits are approached. This example shows a summarization manager that summarizes 30% of the conversation history while preserving the 10 most recent messages, activating when the context exceeds 200,000 tokens:
+在接近詞元上限時摘要冗長的對話或工具互動。此範例展示一個摘要管理器，在保留最近 10 則訊息的同時摘要 30% 的對話歷史，並在上下文超過 200,000 個詞元時啟動：
 
 ```json
 {
@@ -180,11 +181,11 @@ Summarizes lengthy conversations or tool interactions when token limits are appr
 }
 ```
 
-For more information, see [SummarizationManager]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/#summarizationmanager).
+如需更多資訊，請參閱 [SummarizationManager]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/#summarizationmanager)。
 
 ### ToolsOutputTruncateManager
 
-Truncates tool output when it exceeds specified limits in order to prevent context overflow. This example shows a truncation manager that limits tool output to 40,000 characters and activates when the context exceeds 150,000 tokens:
+在工具輸出超過指定上限時加以截斷，以防止上下文溢出。此範例展示一個截斷管理器，將工具輸出限制為 40,000 個字元，並在上下文超過 150,000 個詞元時啟動：
 
 ```json
 {
@@ -198,15 +199,15 @@ Truncates tool output when it exceeds specified limits in order to prevent conte
 }
 ```
 
-For more information, see [ToolsOutputTruncateManager]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/#toolsoutputtruncatemanager).
+如需更多資訊，請參閱 [ToolsOutputTruncateManager]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/#toolsoutputtruncatemanager)。
 
-## Agent integration
+## 代理程式整合
 
-Context management can be applied to agents either during agent registration or during agent execution.
+上下文管理可以在代理程式註冊期間或代理程式執行期間套用至代理程式。
 
-### During agent registration
+### 在代理程式註冊期間
 
-To apply context management to agents during agent registration, include the context management name when registering an agent:
+若要在代理程式註冊期間將上下文管理套用至代理程式，請在註冊代理程式時包含上下文管理名稱：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -221,9 +222,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### During agent execution
+### 在代理程式執行期間
 
-To apply context management to agents during agent execution, specify the context management name in the execution request. If you specify a different context management name in the execution request than the name that was configured during agent registration, the execution request overrides the registered setting: 
+若要在代理程式執行期間將上下文管理套用至代理程式，請在執行請求中指定上下文管理名稱。如果您在執行請求中指定的上下文管理名稱與代理程式註冊期間設定的名稱不同，執行請求會覆寫已註冊的設定：
 
 ```json
 POST /_plugins/_ml/agents/agent-id/_execute
@@ -236,48 +237,48 @@ POST /_plugins/_ml/agents/agent-id/_execute
 ```
 {% include copy-curl.html %}
 
-## Example use cases
+## 使用案例範例
 
-The following examples demonstrate how you can use context management.
+下列範例示範如何使用上下文管理。
 
-### Long conversations
+### 長篇對話
 
-To support long conversations, configure context management that maintains recent conversation flow while preventing context overflow:
+若要支援長篇對話，請設定上下文管理以維持最近的對話流程，同時防止上下文溢出：
 
-- Use a `SlidingWindowManager` to keep the most recent N number of messages.
-- Hook into `pre_llm` to optimize before LLM calls.
+- 使用 `SlidingWindowManager` 保留最近的 N 則訊息。
+- 掛鉤至 `pre_llm` 以在呼叫 LLM 之前進行最佳化。
 
-### Tool-heavy agents
+### 大量使用工具的代理程式
 
-Configure context management for agents that use many tools:
+為使用大量工具的代理程式設定上下文管理：
 
-- Use a `ToolsOutputTruncateManager` to limit tool output size.
-- Apply a `SlidingWindowManager` for tool interaction history.
-- Hook into `post_tool` to clean up after tool execution.
+- 使用 `ToolsOutputTruncateManager` 限制工具輸出大小。
+- 套用 `SlidingWindowManager` 處理工具互動歷史。
+- 掛鉤至 `post_tool` 以在工具執行後進行清理。
 
-### Tool-heavy agents with summarization
+### 大量使用工具並搭配摘要的代理程式
 
-Configure context management for agents with extensive tool interactions:
+為具有大量工具互動的代理程式設定上下文管理：
 
-- Use `ToolsOutputTruncateManager` to limit tool output size.
-- Apply `SlidingWindowManager` for tool interaction history.
-- Use `SummarizationManager` to summarize earlier tool interactions.
-- Hook into `pre_llm` to optimize before LLM calls.
+- 使用 `ToolsOutputTruncateManager` 限制工具輸出大小。
+- 套用 `SlidingWindowManager` 處理工具互動歷史。
+- 使用 `SummarizationManager` 摘要較早的工具互動。
+- 掛鉤至 `pre_llm` 以在呼叫 LLM 之前進行最佳化。
 
-## Getting started
+## 入門
 
-To implement context management in your agents:
+若要在您的代理程式中實作上下文管理：
 
-1. **[Create a context management]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/)** containing appropriate managers and hooks.
-2. **[Register an agent]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)** with the context management or specify it during execution.
-3. **[Execute the agent]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/)** and observe context optimization in action.
-4. **[Monitor and adjust]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/update-context-management/)** context management configurations based on performance.
+1. **[建立上下文管理]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/)**，包含適當的管理器與掛鉤。
+2. **[註冊代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)**，指定上下文管理或在執行時指定。
+3. **[執行代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/)**，並觀察上下文最佳化的實際運作。
+4. **[監控與調整]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/update-context-management/)** 上下文管理組態，依據效能進行調整。
 
-Start with conservative settings and gradually adjust thresholds, manager combinations, and activation rules to find the optimal configuration for your specific workload and performance requirements.
+從保守的設定開始，逐步調整門檻、管理器組合與啟動規則，為您的特定工作負載與效能需求找出最佳組態。
 {: .tip}
 
-## Next steps
+## 後續步驟
 
-- Explore [context management configuration]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/) options.
-- Review the complete [Context Management API reference]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/).
-- Learn about [agent integration]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/) with context management.
+- 探索[上下文管理組態]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/)選項。
+- 檢閱完整的[上下文管理 API 參考]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/)。
+- 了解[代理程式整合]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)與上下文管理的搭配使用。

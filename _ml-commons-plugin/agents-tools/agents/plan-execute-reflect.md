@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Plan-execute-reflect agents
+title: "Plan-execute-reflect 代理程式"
 has_children: false
 has_toc: false
 nav_order: 40
@@ -8,27 +9,27 @@ parent: Agents
 grand_parent: Agents and tools
 ---
 
-# Plan-execute-reflect agents
-**Introduced 3.0**
+# Plan-execute-reflect 代理程式
+**3.0 版新增**
 {: .label .label-purple }
 
-Plan-execute-reflect agents are designed to solve complex tasks that require iterative reasoning and step-by-step execution. These agents use one large language model (LLM)---the _planner_---to create and update a plan and another LLM (or the same one by default) to execute each individual step using a built-in conversational agent.
+Plan-execute-reflect 代理程式專為解決需要反覆推理與逐步執行的複雜任務而設計。這類代理程式使用一個大型語言模型 (LLM)——即 _planner_——來建立與更新計畫，並使用另一個 LLM（預設為同一個模型）透過內建的對話代理程式執行每個步驟。
 
-A plan-execute-reflect agent works in three phases:
+Plan-execute-reflect 代理程式的運作分為三個階段：
 
-- **Planning** – The planner LLM generates an initial step-by-step plan using the available tools.
-- **Execution** – Each step is executed sequentially using the conversational agent and the available tools.
-- **Re-evaluation** – After executing each step, the planner LLM re-evaluates the plan using intermediate results. The LLM can adjust the plan dynamically to skip, add, or change steps based on new context.
+- **規劃** – Planner LLM 使用可用的工具產生初始的逐步計畫。
+- **執行** – 使用對話代理程式與可用的工具依序執行每個步驟。
+- **重新評估** – 執行每個步驟後，Planner LLM 會使用中間結果重新評估計畫。LLM 可以根據新的情境動態調整計畫，以跳過、新增或變更步驟。
 
-Similarly to a conversational agent, the plan-execute-reflect agent stores the interaction between the LLM and the agent in a memory index. In the following example, the agent uses a `conversation_index` to persist the execution history, including the user's question, intermediate results, and final outputs.
+與對話代理程式類似，plan-execute-reflect 代理程式會將 LLM 與代理程式之間的互動儲存在記憶索引中。在以下範例中，代理程式使用 `conversation_index` 來保存執行歷程，包括使用者的問題、中間結果與最終輸出。
 
-The agent automatically selects the most appropriate tool for each step based on the tool descriptions and current context.
+代理程式會根據工具描述與目前情境，自動為每個步驟選擇最合適的工具。
 
-The agent supports re-evaluation only after each step. This allows the agent to dynamically adapt the plan based on intermediate results before proceeding to the next step.
+代理程式僅在每個步驟完成後支援重新評估。這讓代理程式能在進行下一個步驟之前，根據中間結果動態調整計畫。
 
-## Creating a plan-execute-reflect agent
+## 建立 plan-execute-reflect 代理程式
 
-The following example request creates a plan-execute-reflect agent with three tools:
+以下範例請求會建立一個具有三個工具的 plan-execute-reflect 代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -57,24 +58,24 @@ POST /_plugins/_ml/agents/_register
 }
 ```
 
-It is important to provide thorough descriptions of the tools so that the LLM can decide in which situations to use those tools.
+請務必提供詳盡的工具描述，讓 LLM 能判斷在哪些情況下使用這些工具。
 {: .tip}
 
-For more information about the Register Agent API request fields, see [Request body fields]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/#request-body-fields).
+如需 Register Agent API 請求欄位的詳細資訊，請參閱 [請求本文欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/#request-body-fields)。
 
-## Supported LLMs
+## 支援的 LLM
 
-The plan-execute-reflect agent provides built-in function calling interfaces for the following LLMs:
+Plan-execute-reflect 代理程式為下列 LLM 提供內建的函式呼叫介面：
 
-- [Anthropic Claude 3.7 model hosted on Amazon Bedrock](https://aws.amazon.com/bedrock/claude/)
-- OpenAI GPT-4o model
-- DeepSeek-R1 model hosted on Amazon Bedrock
+- [託管於 Amazon Bedrock 的 Anthropic Claude 3.7 模型](https://aws.amazon.com/bedrock/claude/)
+- OpenAI GPT-4o 模型
+- 託管於 Amazon Bedrock 的 DeepSeek-R1 模型
 
-To request default support for an LLM, [create a feature request issue in the ML Commons repository](https://github.com/opensearch-project/ml-commons/issues).
+若要為某個 LLM 請求預設支援，請[在 ML Commons 儲存庫中建立功能請求 issue](https://github.com/opensearch-project/ml-commons/issues)。
 
-For a step-by-step tutorial on using a plan-execute-reflect agent, see [Building a plan-execute-reflect agent]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/agents/build-plan-execute-reflect-agent/).
+如需使用 plan-execute-reflect 代理程式的逐步教學，請參閱 [建立 plan-execute-reflect 代理程式]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/agents/build-plan-execute-reflect-agent/)。
 
-To configure a plan-execute-reflect agent with a particular model, you need to modify the connector in [Step 1(a): Create a connector]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/agents/build-plan-execute-reflect-agent/#step-1a-create-a-connector) and provide a model-specific `llm_interface` parameter in [Step 2: Create an agent]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/agents/build-plan-execute-reflect-agent/#step-2-create-an-agent): 
+若要使用特定模型設定 plan-execute-reflect 代理程式，您需要修改 [步驟 1(a)：建立連接器]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/agents/build-plan-execute-reflect-agent/#step-1a-create-a-connector) 中的連接器，並在 [步驟 2：建立代理程式]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/agents/build-plan-execute-reflect-agent/#step-2-create-an-agent) 中提供模型專屬的 `llm_interface` 參數： 
 
 ```json
 "parameters": {
@@ -82,13 +83,13 @@ To configure a plan-execute-reflect agent with a particular model, you need to m
 }
 ```
 
-For valid values of the `_llm_interface` field, see [Request body fields]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/#request-body-fields).
+如需 `_llm_interface` 欄位的有效值，請參閱 [請求本文欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/#request-body-fields)。
 
-The following examples provide the connector and agent creation requests for the supported models.
+以下範例提供支援模型的連接器與代理程式建立請求。
 
-### Anthropic Claude on Amazon Bedrock
+### Amazon Bedrock 上的 Anthropic Claude
 
-To create a connector for the Anthropic Claude 3.7 Sonnet model hosted on Amazon Bedrock, use the following request:
+若要為託管於 Amazon Bedrock 的 Anthropic Claude 3.7 Sonnet 模型建立連接器，請使用以下請求：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -122,7 +123,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-To create a plan-execute-reflect agent with the Anthropic Claude 3.7 Sonnet model, use the following request:
+若要使用 Anthropic Claude 3.7 Sonnet 模型建立 plan-execute-reflect 代理程式，請使用以下請求：
 
 ```json
 POST _plugins/_ml/agents/_register
@@ -158,7 +159,7 @@ POST _plugins/_ml/agents/_register
 
 ### OpenAI GPT-4o
 
-To create a connector for an OpenAI GPT-4o model, use the following request: 
+若要為 OpenAI GPT-4o 模型建立連接器，請使用以下請求：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -188,11 +189,11 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-Then register the model and register an agent, specifying `openai/v1/chat/completions` in the `_llm_interface` field.
+接著註冊模型並註冊代理程式，在 `_llm_interface` 欄位中指定 `openai/v1/chat/completions`。
 
-### Deepseek-R1 on Amazon Bedrock
+### Amazon Bedrock 上的 Deepseek-R1
 
-To create a connector for a DeepSeek-R1 model hosted on Amazon Bedrock, use the following request:
+若要為託管於 Amazon Bedrock 的 DeepSeek-R1 模型建立連接器，請使用以下請求：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -226,71 +227,71 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-Then register the model and register an agent, specifying `bedrock/converse/deepseek_r1` in the `_llm_interface` field.
+接著註冊模型並註冊代理程式，在 `_llm_interface` 欄位中指定 `bedrock/converse/deepseek_r1`。
  
-Because the Deepseek-R1 model hosted on Amazon Bedrock lacks default function-calling support, provide the following prompt as an `executor_system_prompt` during agent registration:
+由於託管於 Amazon Bedrock 的 Deepseek-R1 模型缺乏預設的函式呼叫支援，請在註冊代理程式時提供以下提示作為 `executor_system_prompt`：
 
 ```json
 "You are a helpful assistant. You can ask Human to use tools to look up information that may be helpful in answering the users original question. The tools the human can use are:\n[${parameters._tools.toString()}]\n\nIf need to use tool, return which tool should be used and the input to user is enough. User will run the tool to get information. To make it easier for user to parse the response to know whether they should invoke a tool or not, please also return \"stop_reason\", it only return one of two enum values: [end_turn, tool_use], add a random tool call id to differenciate in case same tool invoked multiple times. Tool call id follow this pattern \"tool_use_<random string>\". The random string should be some UUID.\n\nFor example, you should return a json like this if need to use tool:\n{\"stop_reason\": \"tool_use\", \"tool_calls\": [{\"id\":\"tool_use_IIHBxMgOTjGb6ascCiOILg\",tool_name\":\"search_opensearch_index\",\"input\": {\"index\":\"population_data\",\"query\":{\"query\":{\"match\":{\"city\":\"New York City\"}}}}}]}\n\nIf don't need to use tool, return a json like this:\n{\"stop_reason\": \"end_turn\", \"message\": {\"role\":\"user\",\"content\":[{\"text\":\"What is the most popular song on WZPZ?\"}]}}\n\nNOTE: Don't wrap response in markdown ```json<response>```. For example don't return ```json\\n{\"stop_reason\": \"end_turn\", \"message\": {\"role\":\"user\",\"content\":[{\"text\":\"What is the most popular song on WZPZ?\"}]}}```\n"
 ```
 {% include copy.html %}
 
-## Tracking agent execution and memory
+## 追蹤代理程式執行與記憶體
 
-When you execute a plan-execute-reflect agent asynchronously using the [Agent Execute API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/), the API returns the `memory_id` and the `parent_interaction_id` of the planner agent once the agent is started.
+當您使用 [Agent Execute API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/) 以非同步方式執行 plan-execute-reflect 代理程式時，代理程式啟動後，API 會傳回規劃器代理程式的 `memory_id` 與 `parent_interaction_id`。
 
-In the final response, the API also returns the `executor_agent_memory_id` and `executor_agent_parent_interaction_id`, which correspond to the internal executor agent responsible for carrying out each step of the plan. The `executor_agent_memory_id` and `executor_agent_parent_interaction_id` are updated in the task as soon as they are available, even before the agent has completed execution. This enables real-time tracking of the execution process.
+在最終回應中，API 也會傳回 `executor_agent_memory_id` 與 `executor_agent_parent_interaction_id`，其對應於負責執行計畫中每個步驟的內部執行器代理程式。`executor_agent_memory_id` 與 `executor_agent_parent_interaction_id` 會在可用時立即於任務中更新，甚至在代理程式完成執行之前就會更新。這可讓您即時追蹤執行程序。
 
-For a complete example, see [Building a plan-execute-reflect agent]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/agents/build-plan-execute-reflect-agent/#test-the-agent).
+如需完整範例，請參閱[建立 plan-execute-reflect 代理程式]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/agents/build-plan-execute-reflect-agent/#test-the-agent)。
 
-## Default prompts
+## 預設提示
 
-The plan-execute-reflect agent uses the following predefined prompts. You can customize the prompts by providing new ones in the following ways:
+plan-execute-reflect 代理程式使用下列預先定義的提示。您可以透過下列方式提供新的提示來自訂提示：
 
-- During agent registration in the `parameters` object
-- Dynamically during agent execution
+- 在註冊代理程式期間，於 `parameters` 物件中
+- 在代理程式執行期間動態提供
 
-### Planner template and prompt
+### 規劃器範本與提示
 
-To create a custom planner prompt template, modify the `planner_prompt_template` parameter. The following template is used to ask the LLM to devise a plan for the given task:
+若要建立自訂的規劃器提示範本，請修改 `planner_prompt_template` 參數。下列範本用於要求 LLM 為指定任務設計計畫：
 
 ```json
 ${parameters.tools_prompt} \n${parameters.planner_prompt} \nObjective: ${parameters.user_prompt} \n\nRemember: Respond only in JSON format following the required schema.
 ```
 
-To create a custom planner prompt, modify the `planner_prompt` parameter.
-The following prompt is used to ask the LLM to devise a plan for the given task:
+若要建立自訂的規劃器提示，請修改 `planner_prompt` 參數。
+下列提示用於要求 LLM 為指定任務設計計畫：
 
 ```
 For the given objective, generate a step-by-step plan composed of simple, self-contained steps. The final step should directly yield the final answer. Avoid unnecessary steps.
 ```
 
-### Planner prompt with a history template
+### 含歷史記錄範本的規劃器提示
 
-To create a custom planner prompt with a history template, modify the `planner_with_history_template` parameter. The following template is used when `memory_id` is provided during agent execution to give the LLM context about the previous task::
+若要建立含歷史記錄範本的自訂規劃器提示，請修改 `planner_with_history_template` 參數。當代理程式執行期間提供 `memory_id` 時，會使用下列範本，為 LLM 提供先前任務的相關內容：
 
 ```json
 ${parameters.tools_prompt} \n${parameters.planner_prompt} \nObjective: ```${parameters.user_prompt}``` \n\nYou have currently executed the following steps: \n[${parameters.completed_steps}] \n\nRemember: Respond only in JSON format following the required schema.
 ```
 
-### Reflection prompt and template
+### 反思提示與範本
 
-To create a custom reflection prompt template, modify the `reflect_prompt_template` parameter. The following template is used to ask the LLM to rethink the original plan based on completed steps:
+若要建立自訂的反思提示範本，請修改 `reflect_prompt_template` 參數。下列範本用於要求 LLM 根據已完成的步驟重新思考原始計畫：
 
 ```json
 ${parameters.tools_prompt} \n${parameters.planner_prompt} \n\nObjective: ```${parameters.user_prompt}```\n\nOriginal plan:\n[${parameters.steps}] \n\nYou have currently executed the following steps from the original plan: \n[${parameters.completed_steps}] \n\n${parameters.reflect_prompt} \n\n.Remember: Respond only in JSON format following the required schema.
 ```
 
-To create a custom reflection prompt, modify the `reflect_prompt` parameter.
-The following prompt is used to ask the LLM to rethink the original plan:
+若要建立自訂的反思提示，請修改 `reflect_prompt` 參數。
+下列提示用於要求 LLM 重新思考原始計畫：
 
 ```
 Update your plan based on the latest step results. If the task is complete, return the final answer. Otherwise, include only the remaining steps. Do not repeat previously completed steps.
 ```
 
-### Planner system prompt
+### 規劃器系統提示
 
-To create a custom planner system prompt, modify the `system_prompt` parameter. The following is the planner system prompt:
+若要建立自訂的規劃器系統提示，請修改 `system_prompt` 參數。以下是規劃器系統提示：
 
 ```
 You are a thoughtful and analytical planner agent in a plan-execute-reflect framework. Your job is to design a clear, step-by-step plan for a given objective.
@@ -346,12 +347,12 @@ When you deliver your final result, include a comprehensive report. This report 
 6. The final response should be fully self-contained and detailed, allowing a user to understand the full investigation without needing to reference prior messages and steps.
 ```
 
-We do not recommend modifying the response format instructions. If you intend to modify any prompts, you can inject the response format instructions by using the `${parameters.plan_execute_reflect_response_format}` parameter.
+我們不建議修改回應格式指示。如果您打算修改任何提示，可以使用 `${parameters.plan_execute_reflect_response_format}` 參數來插入回應格式指示。
 {: .tip}
 
-### Executor system prompt
+### 執行者系統提示詞
 
-To create a custom executor system prompt, modify the `executor_system_prompt` parameter. The following is the executor system prompt:
+若要建立自訂的執行者系統提示詞，請修改 `executor_system_prompt` 參數。以下是執行者系統提示詞：
 
 ```
 You are a precise and reliable executor agent in a plan-execute-reflect framework. Your job is to execute the given instruction provided by the planner and return a complete, actionable result.
@@ -367,9 +368,9 @@ Instructions:
 - Break complex searches into simpler queries when appropriate.
 ```
 
-## Modifying default prompts
+## 修改預設提示詞
 
-To modify the prompts, provide them during agent registration:
+若要修改提示詞，請在註冊代理程式時提供提示詞：
 
 ```json
 POST _plugins/_ml/agents/_register
@@ -410,7 +411,7 @@ POST _plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-You can also modify the prompts during agent execution:
+您也可以在代理程式執行時修改提示詞：
 
 ```json
 POST _plugins/_ml/agents/your_agent_id/_execute?async=true
@@ -424,18 +425,18 @@ POST _plugins/_ml/agents/your_agent_id/_execute?async=true
 ```
 {% include copy-curl.html %}
 
-## Tracking token usage
-**Introduced 3.6**
+## 追蹤詞元使用量
+**3.6 版新增**
 {: .label .label-purple }
 
-Plan-execute-reflect agents support token usage tracking, which provides detailed metrics about token consumption for each LLM call during agent execution, including planning, execution (using a subagent), and reflection LLM calls. Subagent token data is automatically merged into the parent agent's token usage report.
+Plan-execute-reflect 代理程式支援詞元使用量追蹤，可提供代理程式執行期間每次 LLM 呼叫的詞元消耗詳細指標，包括規劃、執行（使用子代理程式）與反思的 LLM 呼叫。子代理程式的詞元資料會自動合併至父代理程式的詞元使用量報告中。
 
-To enable token usage tracking, set the `include_token_usage` parameter to `true` when executing the agent. The response will include a `token_usage` output with per-turn and per-model aggregated metrics. For detailed information about token usage fields and how tokens are calculated by different model providers, see [Tracking token usage]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#tracking-token-usage) in the Execute Agent API documentation.
+若要啟用詞元使用量追蹤，請在執行代理程式時將 `include_token_usage` 參數設為 `true`。回應將包含 `token_usage` 輸出，其中提供每輪與每個模型的彙總指標。有關詞元使用量欄位的詳細資訊，以及不同模型供應商如何計算詞元，請參閱 Execute Agent API 文件中的 [追蹤詞元使用量]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#tracking-token-usage)。
 
-## Next steps
+## 後續步驟
 
-- To learn more about registering agents, see [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/).
-- For a list of supported tools, see [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/).
-- For a step-by-step tutorial on using a plan-execute-reflect agent, see [Building a plan-execute-reflect agent]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/agents/build-plan-execute-reflect-agent/).
-- For supported APIs, see [Agent APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/).
-- To use agents and tools in configuration automation, see [Automating configurations]({{site.url}}{{site.baseurl}}/automating-configurations/index/).
+- 若要進一步了解如何註冊代理程式，請參閱 [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)。
+- 如需支援的工具清單，請參閱 [工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
+- 如需使用 plan-execute-reflect 代理程式的逐步教學，請參閱 [建立 plan-execute-reflect 代理程式]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/agents/build-plan-execute-reflect-agent/)。
+- 如需支援的 API，請參閱 [代理程式 API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/)。
+- 若要在組態自動化中使用代理程式與工具，請參閱 [組態自動化]({{site.url}}{{site.baseurl}}/automating-configurations/index/)。

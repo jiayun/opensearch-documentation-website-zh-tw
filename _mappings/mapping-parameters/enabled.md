@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Enabled
+title: "啟用"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/enabled/
@@ -9,25 +10,25 @@ has_children: false
 has_toc: false
 ---
 
-# Enabled mapping parameter
+# 啟用對應參數
 
-OpenSearch tries to index all fields you provide, but sometimes you may want to store a field without making it searchable. For example, if you use OpenSearch as a web session store, you might index the session ID and last update time but store the session data itself without indexing it, since you don't need to search or aggregate this data.
+OpenSearch 會嘗試將您提供的所有欄位編製索引，但有時您可能想要儲存某個欄位而不使其可供搜尋。舉例來說，如果您使用 OpenSearch 作為網站工作階段儲存區，您可能會將工作階段 ID 和上次更新時間編製索引，但儲存工作階段資料本身而不將其編製索引，因為您不需要搜尋或彙總這些資料。
 
-Setting the `enabled` parameter to `false` causes OpenSearch to skip parsing of the field contents entirely. OpenSearch still stores the field's value in the `_source` field but does not index or parse its contents, so the field is not searchable. This parameter can be applied only to the top-level mapping definition and to object fields. 
+將 `enabled` 參數設為 `false` 會讓 OpenSearch 完全略過剖析欄位內容。OpenSearch 仍會將欄位的值儲存在 `_source` 欄位中，但不會將其內容編製索引或剖析，因此該欄位無法搜尋。此參數只能套用於最上層的對應定義和物件欄位。
 
-The `enabled` parameter accepts the following values. 
+`enabled` 參數接受下列值。
 
-Parameter | Description
+參數 | 說明
 :--- | :---
-`true` (Default) | The field is parsed and indexed.
-`false` | The field is not parsed or indexed but is still retrievable from the `_source` field. 
+`true` (預設) | 欄位會被剖析並編製索引。
+`false` | 欄位不會被剖析或編製索引，但仍可從 `_source` 欄位擷取。
 
-The `enabled` parameter for existing fields and the top-level mapping definition cannot be updated.
+現有欄位和最上層對應定義的 `enabled` 參數無法更新。
 {: .warning}
 
-## Disabling object fields
+## 停用物件欄位
 
-Create an index with a disabled `session_data` object field. OpenSearch stores its contents in the `_source` field but does not index or parse it:
+建立一個含有已停用 `session_data` 物件欄位的索引。OpenSearch 會將其內容儲存在 `_source` 欄位中，但不會將其編製索引或剖析：
 
 ```json
 PUT /session_store
@@ -50,7 +51,7 @@ PUT /session_store
 ```
 {% include copy-curl.html %}
 
-Index documents with different types of data in the disabled field:
+在已停用的欄位中，為含有不同類型資料的文件編製索引：
 
 ```json
 PUT /session_store/_doc/session_1
@@ -76,11 +77,11 @@ PUT /session_store/_doc/session_2
 ```
 {% include copy-curl.html %}
 
-The `session_data` field accepts any arbitrary data because OpenSearch completely skips parsing its contents. Both object and non-object data is accepted.
+`session_data` 欄位可接受任何任意資料，因為 OpenSearch 會完全略過剖析其內容。物件和非物件資料皆可接受。
 
-## Disabling entire mappings
+## 停用整個對應
 
-Disable the entire mapping to store documents without indexing any fields:
+停用整個對應，以儲存文件而不將任何欄位編製索引：
 
 ```json
 PUT /raw_storage
@@ -92,7 +93,7 @@ PUT /raw_storage
 ```
 {% include copy-curl.html %}
 
-Index a document in the disabled mapping:
+在已停用的對應中為文件編製索引：
 
 ```json
 PUT /raw_storage/_doc/doc_1
@@ -108,14 +109,14 @@ PUT /raw_storage/_doc/doc_1
 ```
 {% include copy-curl.html %}
 
-To verify that the document was stored, retrieve the document:
+若要確認文件已儲存，請擷取該文件：
 
 ```json
 GET /raw_storage/_doc/doc_1
 ```
 {% include copy-curl.html %}
 
-The response shows that the document was successfully stored and can be retrieved from the `_source` field:
+回應顯示文件已成功儲存，且可從 `_source` 欄位擷取：
 
 ```json
 {
@@ -143,14 +144,14 @@ The response shows that the document was successfully stored and can be retrieve
 }
 ```
 
-Verify the mapping to confirm that no fields were added:
+確認對應，以驗證未新增任何欄位：
 
 ```json
 GET /raw_storage/_mapping
 ```
 {% include copy-curl.html %}
 
-The document can be retrieved from `_source`, but none of its contents are indexed, so no fields appear in the mapping and the document cannot be searched:
+文件可從 `_source` 擷取，但其內容皆未編製索引，因此對應中不會出現任何欄位，且該文件無法搜尋：
 
 ```json
 {

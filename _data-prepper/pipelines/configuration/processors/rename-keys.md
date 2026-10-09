@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Rename keys
+title: "重新命名鍵"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 310
 ---
 
-# Rename keys processor
+# 重新命名鍵處理器
 
-The `rename_keys` processor renames keys in an event.
+`rename_keys` 處理器會重新命名事件中的鍵。
 
-## Configuration
+## 組態
 
-You can configure the `rename_keys` processor with the following options.
+您可以使用下列選項設定 `rename_keys` 處理器。
 
-| Option | Required | Description |
+| 選項 | 必要 | 說明 |
 | :--- | :--- | :--- |
-| `entries` | Yes | A list of event entries to rename. |
-| `from_key` | Yes | The key of the entry to be renamed. |
-| `to_key` | Yes | The new key of the entry. |
-| `overwrite_if_to_key_exists` | No | When set to `true`, the existing value is overwritten if `key` already exists in the event. The default value is `false`. |
+| `entries` | 是 | 要重新命名的事件項目清單。 |
+| `from_key` | 是 | 要重新命名的項目之鍵。 |
+| `to_key` | 是 | 項目的新鍵。 |
+| `overwrite_if_to_key_exists` | 否 | 設為 `true` 時，若事件中已存在 `key`，則會覆寫現有值。預設值為 `false`。 |
 
-## Usage
+## 使用方式
 
-To get started, create the following `pipeline.yaml` file:
+若要開始使用，請建立下列 `pipeline.yaml` 檔案：
 
 ```yaml
 rename-keys-nested-pipeline:
@@ -59,7 +60,7 @@ rename-keys-nested-pipeline:
 ```
 {% include copy.html %}
 
-You can test this pipeline using the following command:
+您可以使用下列命令測試此管線：
 
 ```bash
 curl -sS -X POST "http://localhost:2021/logs" \
@@ -82,7 +83,7 @@ curl -sS -X POST "http://localhost:2021/logs" \
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 {
@@ -137,9 +138,9 @@ The documents stored in OpenSearch contain the following information:
 }
 ```
 
-## Special considerations
+## 特殊考量
 
-Renaming operations occur in the order that the key-value pair entries are listed in the `pipeline.yaml` file. This means that chaining (where key-value pairs are renamed in sequence) is implicit in the `rename_keys` processor. See the following example `pipeline.yaml` file:
+重新命名作業會依照 `pipeline.yaml` 檔案中鍵值對項目的列出順序執行。這表示 `rename_keys` 處理器會隱含地進行鏈結（依序重新命名鍵值對）。請參閱下列 `pipeline.yaml` 檔案範例：
 
 ```yaml
   processor:
@@ -151,7 +152,7 @@ Renaming operations occur in the order that the key-value pair entries are liste
           to_key: "message3"
 ```
 
-If the processor receives `{"message": "hello"}`, the resulting output is as follows:
+如果處理器收到 `{"message": "hello"}`，產生的輸出如下：
 
 ```json
 {"message3": "hello"}

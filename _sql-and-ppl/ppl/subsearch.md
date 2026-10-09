@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Subsearch
+title: "子搜尋"
 parent: PPL
 nav_order: 3
 redirect_from:
   - /search-plugins/sql/ppl/subsearch/
 ---
 
-# Subsearch in PPL queries
+# PPL 查詢中的子搜尋
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).    
+這是實驗性功能，不建議在正式環境中使用。若要瞭解此功能的最新進度或提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/)上的討論。    
 {: .warning}
 
-A subsearch (also known as a subquery) allows you to use the results of one query within another query. OpenSearch Piped Processing Language (PPL) supports four types of subsearch commands: 
+子搜尋（也稱為子查詢）可讓您在另一個查詢中使用某個查詢的結果。OpenSearch 管線處理語言（PPL）支援四種類型的子搜尋命令： 
 
 - [`in`](#in)
 - [`exists`](#exists)
 - [`scalar`](#scalar)
 - [`relation`](#relation) 
 
-The first three subsearch commands (`in`, `exists`, and `scalar`) are expressions that you can use in the `where` command (`where <boolean expression>`) and search filter (`search source=* <boolean expression>`). The `relation` subsearch command is a statement that be used in a `join` operation.
+前三個子搜尋命令（`in`、`exists` 和 `scalar`）是運算式，可用於 `where` 命令（`where <boolean expression>`）和搜尋篩選條件（`search source=* <boolean expression>`）。`relation` 子搜尋命令是可用於 `join` 作業的陳述式。
 
 ## `in`
 
-An `in` subsearch allows you to check whether a field's value exists in the results of another query. This is useful when you want to filter your results based on data from another index or query.
+`in` 子搜尋可讓您檢查欄位值是否存在於另一個查詢的結果中。當您想根據其他索引或查詢的資料來篩選結果時，這項功能很有用。
 
-### Syntax
+### 語法
 
 ```sql
 where <field> [not] in [ search source=... | ... | ... ]
@@ -33,7 +34,7 @@ where <field> [not] in [ search source=... | ... | ... ]
 {% include copy.html %}
 
 
-### Usage
+### 用法
 
 ```sql
 source = outer | where a in [ source = inner | fields b ]
@@ -52,9 +53,9 @@ source = table1 | inner join left = l right = r on l.a = r.a AND r.a in [ source
 
 ## `exists`
 
-An `exists` subsearch checks whether any results are returned by the subsearch query. This is particularly useful for correlated subqueries where you want to check the existence of related records.
+`exists` 子搜尋會檢查子搜尋查詢是否傳回任何結果。當您想在關聯子查詢中檢查相關記錄是否存在時，這項功能特別有用。
 
-### Syntax
+### 語法
 
 ```sql
 where [not] exists [ search source=... | ... | ... ]
@@ -62,19 +63,19 @@ where [not] exists [ search source=... | ... | ... ]
 {% include copy.html %}
 
 
-### Usage
+### 用法
 
-The following examples demonstrate different ways to implement `exists` subsearches, from simple aggregation comparisons to complex nested calculations.
+以下範例示範實作 `exists` 子搜尋的不同方式，從簡單的彙總比較到複雜的巢狀計算。
 
-They are created with the following assumptions: 
+這些範例根據下列假設建立： 
 
-- `a` and `b` are fields of table outer.
-- `c` and `d` are fields of table inner.
-- `e` and `f` are fields of table nested.
+- `a` 和 `b` 是資料表 outer 的欄位。
+- `c` 和 `d` 是資料表 inner 的欄位。
+- `e` 和 `f` 是資料表 nested 的欄位。
 
-#### Correlated
+#### 關聯
 
-In the following example, the inner query references fields from the outer query (such as when a = c), creating a dependency between the queries. The subsearch is evaluated once for each row in the outer query:
+在以下範例中，內層查詢會參照外層查詢的欄位（例如當 a = c 時），在查詢之間建立相依關係。外層查詢的每一列都會執行一次子搜尋求值：
 
 
 ```sql
@@ -90,9 +91,9 @@ source = table as t1 exists [ source = table as t2 | where t1.a = t2.a ]
 
 
 
-#### Uncorrelated
+#### 非關聯
 
-In the following example, the subsearches are independent of the outer query. The inner query doesn't reference any fields from the outer query, so it's evaluated only once, regardless of how many rows are in the outer query:
+在以下範例中，子搜尋獨立於外層查詢。內層查詢不會參照外層查詢的任何欄位，因此無論外層查詢有多少列，都只會執行一次求值：
 
 ```sql
 source = outer | where exists [ source = inner | where c > 10 ]
@@ -101,9 +102,9 @@ source = outer | where not exists [ source = inner | where c > 10 ]
 {% include copy.html %}
 
 
-#### Nested
+#### 巢狀
 
-The following example demonstrates how to nest one subsearch within another, creating multiple levels of query complexity. This approach is useful for complex filtering scenarios that require multiple conditions from different data sources:
+以下範例示範如何將一個子搜尋巢狀置於另一個子搜尋中，建立多層次的複雜查詢。這種方式適用於需要來自不同資料來源的多個條件的複雜篩選情境：
 
 ```sql
 source = outer | where exists [ source = inner1 | where a = c and exists [ source = nested | where c = e ] ]
@@ -114,9 +115,9 @@ source = outer | where exists [ source = inner1 | where a = c | where exists [ s
 
 ## `scalar`
 
-A `scalar` subsearch returns a single value that you can use in comparisons or calculations. This is useful when you need to compare a field against an aggregated value from another query.
+`scalar` 子搜尋會傳回單一值，供您在比較或計算中使用。當您需要將欄位與另一個查詢的彙總值進行比較時，這項功能很有用。
 
-### Syntax
+### 語法
 
 ```sql
 where <field> = [ search source=... | ... | ... ]
@@ -124,13 +125,13 @@ where <field> = [ search source=... | ... | ... ]
 {% include copy.html %}
 
 
-### Usage
+### 用法
 
-The following examples demonstrate different ways to implement `scalar` subsearches, from simple aggregation comparisons to complex nested calculations.
+以下範例示範實作 `scalar` 子搜尋的不同方式，從簡單的彙總比較到複雜的巢狀計算。
 
-#### Uncorrelated
+#### 非關聯
 
-In the following example, the `scalar` subsearch is independent of the outer query. These subsearches retrieve a single value that can be used in calculations or comparisons:
+在以下範例中，`scalar` 子搜尋獨立於外層查詢。這些子搜尋會擷取可用於計算或比較的單一值：
 
 ```sql
 source = outer | eval m = [ source = inner | stats max(c) ] | fields m, a
@@ -141,9 +142,9 @@ source = outer a > [ source = inner | stats min(c) ] | fields a
 {% include copy.html %}
 
 
-#### Correlated
+#### 關聯
 
-In the following example, the `scalar` subsearch references fields from the outer query, creating a dependency where the inner query result depends on each row of the outer query:
+在以下範例中，`scalar` 子搜尋會參照外層查詢的欄位，建立相依關係，使內層查詢的結果取決於外層查詢的每一列：
 
 ```sql
 source = outer | eval m = [ source = inner | where outer.b = inner.d | stats max(c) ] | fields m, a
@@ -158,9 +159,9 @@ source = outer [ source = inner | where outer.b = inner.d OR inner.d = 1 | stats
 {% include copy.html %}
 
 
-#### Nested
+#### 巢狀
 
-The following example demonstrates how to nest multiple `scalar` subsearches to create complex comparisons or use one subsearch result within another:
+以下範例示範如何以巢狀方式使用多個 `scalar` 子搜尋，以建立複雜的比較，或在另一個子搜尋中使用某個子搜尋的結果：
 
 ```sql
 source = outer | where a = [ source = inner | stats max(c) | sort c ] OR b = [ source = inner | where c = 1 | stats min(d) | sort d ]
@@ -171,9 +172,9 @@ source = outer | where a = [ source = inner | where c =  [ source = nested | sta
 
 ## `relation`
 
-A `relation` subsearch allows you to use a query result as a dataset in a join operation. This is useful when you need to join with a filtered or transformed dataset rather than joining directly with a static index.
+`relation` 子搜尋可讓您在聯結作業中將查詢結果用作資料集。當您需要與經過篩選或轉換的資料集聯結，而非直接與靜態索引聯結時，這項功能很有用。
 
-### Syntax
+### 語法
 
 ```sql
 join on <condition> [ search source=... | ... | ... ] [as alias]
@@ -181,9 +182,9 @@ join on <condition> [ search source=... | ... | ... ] [as alias]
 {% include copy.html %}
 
 
-### Usage
+### 用法
 
-The following example demonstrates how to use `relation` subsearches in join operations. The first example shows how to join with a filtered dataset, while the second shows how to nest a `relation` subsearch within another query:
+以下範例示範如何在聯結作業中使用 `relation` 子搜尋。第一個範例示範如何與經過篩選的資料集聯結，第二個範例則示範如何將 `relation` 子搜尋巢狀置於另一個查詢中：
 
 ```sql
 source = table1 | join left = l right = r on condition [ source = table2 | where d > 10 | head 5 ] //subquery in join right side
@@ -192,17 +193,17 @@ source = [ source = table1 | join left = l right = r [ source = table2 | where d
 {% include copy.html %}
 
           
-## Examples
+## 範例
 
-The following examples demonstrate how different subsearch types work together in query scenarios, such as multi-level queries or nesting multiple subsearch types.
+以下範例示範不同子搜尋類型如何在查詢情境中搭配運作，例如多層次查詢或以巢狀方式使用多種子搜尋類型。
 
-### Complex query examples
+### 複雜查詢範例
 
-The following examples demonstrate how to combine different types of subsearches in complex queries.
+以下範例示範如何在複雜查詢中結合不同類型的子搜尋。
 
-**Example 1: Query with `in` and `scalar` subsearches**
+**範例 1：使用 `in` 和 `scalar` 子搜尋的查詢**
 
-The following query uses both `in` and `scalar` subsearches to find suppliers from Canada who supply parts with names starting with "forest" and have availability quantities greater than half of the total quantity ordered in 1994:
+以下查詢同時使用 `in` 和 `scalar` 子搜尋，尋找來自加拿大、供應名稱以「forest」開頭的零件，且可供應數量大於 1994 年訂購總數量一半的供應商：
 
 ```sql
 source = supplier
@@ -230,9 +231,9 @@ source = supplier
 {% include copy.html %}
 
 
-**Example 2: Query with `relation`, `scalar`, and `exists` subsearches**
+**範例 2：使用 `relation`、`scalar` 和 `exists` 子搜尋的查詢**
 
-The following query uses `relation`, `scalar`, and `exists` subsearches to find customers from specific country codes with higher-than-average account balances who have not placed any orders:
+以下查詢使用 `relation`、`scalar` 和 `exists` 子搜尋，尋找來自特定國家編碼、帳戶餘額高於平均值，且未曾下過任何訂單的客戶：
 
 ```sql
 source = [  /* relation subsearch */
@@ -257,6 +258,6 @@ source = [  /* relation subsearch */
 {% include copy.html %}
 
 
-## Limitations
+## 限制
 
-PPL subsearch works only when `plugins.calcite.enabled` is set to `true`.
+PPL 子搜尋僅在 `plugins.calcite.enabled` 設為 `true` 時才能運作。

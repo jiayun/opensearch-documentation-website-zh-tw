@@ -1,56 +1,57 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Execute agent
+title: "執行代理程式"
 parent: Agent APIs
 grand_parent: ML Commons APIs
 nav_order: 20
 ---
 
-# Execute Agent API
-**Introduced 2.13**
+# 執行 Agent API
+**於 2.13 版推出**
 {: .label .label-purple }
 
-When an agent is executed, it runs the tools with which it is configured. You can execute an agent asynchronously by setting the `async` query parameter to `true`.
+執行代理程式時，它會執行其設定中所配置的工具。您可以將 `async` 查詢參數設為 `true`，以非同步方式執行代理程式。
 
-Agents created using the [unified registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method) support a standardized `input` field that accepts plain text, multimodal content, or message-based conversations. This requires the `plugins.ml_commons.unified_agent_api_enabled` cluster setting to be enabled.
+使用[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)建立的代理程式支援標準化的 `input` 欄位，可接受純文字、多模態內容或訊息式對話。這需要啟用 `plugins.ml_commons.unified_agent_api_enabled` 叢集設定。
 {: .note}
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/agents/{agent_id}/_execute
 ```
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters.
+下表列出可用的查詢參數。
 
-Parameter | Data type | Required/Optional | Description
+參數 | 資料類型 | 必要/選用 | 說明
 :---  | :--- | :--- 
-`async` | Boolean | Optional | If `true`, executes the agent asynchronously and returns a `task_id` to track execution. To check the status of the task, use the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/). Default is `false`.
+`async` | 布林值 | 選用 | 若為 `true`，則以非同步方式執行代理程式，並傳回 `task_id` 以追蹤執行情形。若要檢查任務狀態，請使用 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)。預設值為 `false`。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request fields.
+下表列出可用的請求欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :---  | :--- | :--- | :---
-`parameters`| Object | Optional | The parameters required by the agent. Any agent parameters configured during registration can be overridden using this field. Use with the [regular registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/).
-`parameters.question`| String | Optional | The question to ask the agent. Use with the [regular registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/).
-`parameters.verbose`| Boolean | Optional | Provides verbose output.
-`parameters.memory_id` | String | Optional | The memory session ID used to continue an existing conversation. This field is supported for conversational memory backends, including `conversation_index` and `agentic_memory`. To start a new session, omit this parameter.
-`parameters.memory_container_id` | String | Optional | Overrides the configured memory container for this execution when the agent uses `agentic_memory`.
-`parameters.include_token_usage` | Boolean | Optional | When set to `true`, includes detailed token consumption metrics for each large language model (LLM) call in the response. Supported for `conversational` (v1), `plan-execute-reflect`, and `AG-UI` agents. The `conversational_v2` agent always includes token usage in its response format and does not require this parameter. Default is `false`. See [Tracking token usage](#tracking-token-usage).
-`input` | String or Array | Optional | A standardized input field supporting plain text, multimodal content blocks, or message-based conversations. Use with the [unified registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method).
+`parameters`| 物件 | 選用 | 代理程式所需的參數。註冊期間所設定的任何代理程式參數，皆可使用此欄位覆寫。請搭配[一般註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)使用。
+`parameters.question`| 字串 | 選用 | 要向代理程式提出的問題。請搭配[一般註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)使用。
+`parameters.verbose`| 布林值 | 選用 | 提供詳細輸出。
+`parameters.memory_id` | 字串 | 選用 | 用於接續現有對話的記憶體工作階段 ID。此欄位支援對話式記憶體後端，包括 `conversation_index` 與 `agentic_memory`。若要開始新的工作階段，請省略此參數。
+`parameters.memory_container_id` | 字串 | 選用 | 當代理程式使用 `agentic_memory` 時，針對此次執行覆寫所設定的記憶體容器。
+`parameters.include_token_usage` | 布林值 | 選用 | 設為 `true` 時，會在回應中包含每次大型語言模型 (LLM) 呼叫的詳細詞元用量指標。支援 `conversational` (v1)、`plan-execute-reflect` 與 `AG-UI` 代理程式。`conversational_v2` 代理程式一律會在其回應格式中包含詞元用量，不需要此參數。預設值為 `false`。請參閱[追蹤詞元用量](#tracking-token-usage)。
+`input` | 字串或陣列 | 選用 | 標準化輸入欄位，支援純文字、多模態內容區塊或訊息式對話。請搭配[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)使用。
 
-> When `conversation_index` or `agentic_memory` is configured, the response includes a `memory_id`. To continue the same session, include the `memory_id` in subsequent requests. Omit the `memory_id` to start a new session.
+> 設定 `conversation_index` 或 `agentic_memory` 時，回應會包含 `memory_id`。若要接續相同的工作階段，請在後續請求中包含 `memory_id`。省略 `memory_id` 即可開始新的工作階段。
 >
-> When using `agentic_memory`, you must also provide a memory container ID. Specify it either during agent registration (`memory.memory_container_id`) or in each request (`parameters.memory_container_id`). If a memory container ID is not provided, the request fails.
+> 使用 `agentic_memory` 時，您也必須提供記憶體容器 ID。請在代理程式註冊期間 (`memory.memory_container_id`) 或每次請求中 (`parameters.memory_container_id`) 指定。若未提供記憶體容器 ID，請求會失敗。
 {: .note}
 
-## Regular agent execution
+## 一般代理程式執行
 
-For agents created using the regular registration method (the [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/) multi-step process), use the `parameters` field:
+對於使用一般註冊方法（[Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/) 多步驟程序）建立的代理程式，請使用 `parameters` 欄位：
 
 ```json
 POST /_plugins/_ml/agents/879v9YwBjWKCe6Kg12Tx/_execute
@@ -62,7 +63,7 @@ POST /_plugins/_ml/agents/879v9YwBjWKCe6Kg12Tx/_execute
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -87,30 +88,30 @@ Therefore, the population increase of Seattle from 2021 to 2023 is 58,000."""
 }
 ```
 
-## Response fields
+## 回應欄位
 
-The following table lists the base response fields for agent execution.
+下表列出代理程式執行的基本回應欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `inference_results` | Array | Contains the agent's execution results. |
-| `inference_results.output` | Array | Contains output objects with name-value pairs. |
-| `inference_results.output.name` | String | The output field name. Common values: `response`, `memory_id`, `parent_interaction_id`, `token_usage`. |
-| `inference_results.output.result` | String | The output value for simple string results (present when `name` is `response`, `memory_id`, or `parent_interaction_id`). |
-| `inference_results.output.dataAsMap` | Object | The output value for structured results. See [Token usage response fields](#token-usage-response-fields) and [The `conversational_v2` agent response format](#the-conversational_v2-agent-response-format). |
+| `inference_results` | 陣列 | 包含代理程式的執行結果。 |
+| `inference_results.output` | 陣列 | 包含具有名稱值對的輸出物件。 |
+| `inference_results.output.name` | 字串 | 輸出欄位名稱。常見值：`response`、`memory_id`、`parent_interaction_id`、`token_usage`。 |
+| `inference_results.output.result` | 字串 | 簡單字串結果的輸出值（當 `name` 為 `response`、`memory_id` 或 `parent_interaction_id` 時會出現）。 |
+| `inference_results.output.dataAsMap` | 物件 | 結構化結果的輸出值。請參閱[詞元用量回應欄位](#token-usage-response-fields)與[`conversational_v2` 代理程式回應格式](#the-conversational_v2-agent-response-format)。 |
 
-## Unified agent execution
-**Introduced 3.5**
+## 統一代理程式執行
+**於 3.5 版推出**
 {: .label .label-purple }
 
-For agents created using the [unified registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method), use the `input` field. The supported input formats depend on the agent type:
+對於使用[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)建立的代理程式，請使用 `input` 欄位。支援的輸入格式取決於代理程式類型：
 
-- **`conversational` and other V1 agent types**: Support plain text input only.
-- **`conversational_v2`** (Introduced 3.6): Supports all three input formats — plain text, multimodal content blocks, and message-based conversations.
+- **`conversational` 與其他 V1 代理程式類型**：僅支援純文字輸入。
+- **`conversational_v2`**（於 3.6 版推出）：支援全部三種輸入格式 — 純文字、多模態內容區塊與訊息式對話。
 
-### Plain text input
+### 純文字輸入
 
-All unified agents support plain text input. For simple text prompts, pass a string directly to the `input` field:
+所有統一代理程式皆支援純文字輸入。若為簡單的文字提示，請直接將字串傳遞至 `input` 欄位：
 
 ```json
 POST /_plugins/_ml/agents/{agent_id}/_execute
@@ -120,7 +121,7 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
 ```
 {% include copy-curl.html %}
 
-#### Example response: Plain text input
+#### 範例回應：純文字輸入
 
 ```json
 {
@@ -136,12 +137,12 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
 }
 ```
 
-### Multimodal content blocks
+### 多模態內容區塊
 
-When using the [unified registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method), multimodal content block and message-based inputs require a `conversational_v2` agent. All other unified agent types accept only plain text input. When using the [regular registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#regular-registration-method), multimodal support is possible if the connector is configured to pass multimodal content to the LLM, with the input format determined by the connector configuration.
+使用[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)時，多模態內容區塊與訊息式輸入需要 `conversational_v2` 代理程式。所有其他統一代理程式類型僅接受純文字輸入。使用[一般註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#regular-registration-method)時，若連接器設定為將多模態內容傳遞至 LLM，則可支援多模態，輸入格式取決於連接器組態。
 {: .note}
 
-For multimodal inputs (text, images, documents), use an array of content blocks:
+若為多模態輸入（文字、圖片、文件），請使用內容區塊陣列：
 
 ```json
 POST /_plugins/_ml/agents/{agent_id}/_execute
@@ -164,20 +165,20 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
 ```
 {% include copy-curl.html %}
 
-#### Supported content types
+#### 支援的內容類型
 
-The following table lists the supported content types.
+下表列出支援的內容類型。
 
-| Content type | Description | Fields |
+| 內容類型 | 說明 | 欄位 |
 | :--- | :--- | :--- |
-| `text` | Plain text content | `text`: The text string.|
-| `image` | Image data | `image.type`: The source type. Valid value is `base64`. <br>`image.format`: The image format (for example, `jpeg`, `png`, `gif`, or `webp`).<br>`image.data`: Base64-encoded image data. |
-| `video` | Video data | `video.type`: The source type. Valid value is `base64`. <br>`video.format`: The video format (for example, `mp4`, `mov`, or `avi`).<br>`video.data`: Base64-encoded video data. |
-| `document` | Document data | `document.type`: The source type. Valid value is `base64`. <br>`document.format`: The document format (for example, `pdf`, `docx`, or `txt`).<br>`document.data`: Base64-encoded document data. |
+| `text` | 純文字內容 | `text`：文字字串。|
+| `image` | 影像資料 | `image.type`：來源類型。有效值為 `base64`。<br>`image.format`：影像格式 (例如 `jpeg`、`png`、`gif` 或 `webp`)。<br>`image.data`：Base64 編碼的影像資料。 |
+| `video` | 影片資料 | `video.type`：來源類型。有效值為 `base64`。<br>`video.format`：影片格式 (例如 `mp4`、`mov` 或 `avi`)。<br>`video.data`：Base64 編碼的影片資料。 |
+| `document` | 文件資料 | `document.type`：來源類型。有效值為 `base64`。<br>`document.format`：文件格式 (例如 `pdf`、`docx` 或 `txt`)。<br>`document.data`：Base64 編碼的文件資料。 |
 
-### Message-based conversations
+### 以訊息為基礎的對話
 
-For multi-turn conversations, provide an array of messages with roles:
+若為多輪對話，請提供含有角色的訊息陣列：
 
 ```json
 POST /_plugins/_ml/agents/{agent_id}/_execute
@@ -215,20 +216,20 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
 ```
 {% include copy-curl.html %}
 
-These messages are stored in the agent's memory. 
+這些訊息會儲存在代理程式的記憶體中。
 
-#### Message fields
+#### 訊息欄位
 
-The following table lists the supported message fields.
+下表列出支援的訊息欄位。
 
-| Field | Data type | Required/Optional | Description |
+| 欄位 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `role` | String | Required | The message role. Valid values: `user`, `assistant`. |
-| `content` | Array | Required | An array of content blocks (text, image, and so on). |
+| `role` | 字串 | 必要 | 訊息角色。有效值：`user`、`assistant`。 |
+| `content` | 陣列 | 必要 | 內容區塊的陣列 (文字、影像等)。 |
 
-#### Example response: Message-based conversation
+#### 範例回應：以訊息為基礎的對話
 
-The agent remembers context from previous messages:
+代理程式會記住先前訊息的內容：
 
 ```json
 {
@@ -253,9 +254,9 @@ The agent remembers context from previous messages:
 }
 ```
 
-### The `conversational_v2` agent response format
+### `conversational_v2` 代理程式回應格式
 
-The `conversational_v2` agents return the following standardized response format:
+`conversational_v2` 代理程式會傳回下列標準化回應格式：
 
 ```json
 {
@@ -290,39 +291,39 @@ The `conversational_v2` agents return the following standardized response format
 }
 ```
 
-The following table lists the `conversational_v2` agent response fields.
+下表列出 `conversational_v2` 代理程式回應欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `stop_reason` | String | The reason the agent stopped generating a response. Valid values are `end_turn` (normal completion), `max_iterations` (iteration limit reached), and `tool_use` (stopped while invoking a tool). |
-| `message` | Object | The assistant's final response message. |
-| `message.role` | String | Always `assistant`. |
-| `message.content` | Array | An array of content blocks containing the response text or other content. |
-| `memory_id` | String | The memory session ID. Include this ID in subsequent requests in the `parameters.memory_id` field to continue the conversation. |
-| `metrics.total_usage.inputTokens` | Integer | The number of input tokens consumed. |
-| `metrics.total_usage.outputTokens` | Integer | The number of output tokens generated. |
-| `metrics.total_usage.totalTokens` | Integer | The total number of tokens used. |
+| `stop_reason` | 字串 | 代理程式停止產生回應的原因。有效值為 `end_turn` (正常完成)、`max_iterations` (已達反覆運算上限)，以及 `tool_use` (在叫用工具時停止)。 |
+| `message` | 物件 | 助理的最終回應訊息。 |
+| `message.role` | 字串 | 一律為 `assistant`。 |
+| `message.content` | 陣列 | 包含回應文字或其他內容的內容區塊陣列。 |
+| `memory_id` | 字串 | 記憶體工作階段 ID。請在後續請求的 `parameters.memory_id` 欄位中包含此 ID，以繼續對話。 |
+| `metrics.total_usage.inputTokens` | 整數 | 取用的輸入詞元數。 |
+| `metrics.total_usage.outputTokens` | 整數 | 產生的輸出詞元數。 |
+| `metrics.total_usage.totalTokens` | 整數 | 使用的詞元總數。 |
 
-For more information about the unified registration method and input formats, see [Unified registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method).
+如需統一註冊方法和輸入格式的詳細資訊，請參閱[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)。
 
-## Tracking token usage
-**Introduced 3.6**
+## 追蹤詞元使用量
+**於 3.6 版推出**
 {: .label .label-purple }
 
-When `include_token_usage` is set to `true`, the response includes detailed token consumption metrics that help you monitor costs, debug performance, and compare model efficiency. This parameter is supported for `conversational` (v1), `plan-execute-reflect`, and `AG-UI` agents using both regular and unified registration methods.
+當 `include_token_usage` 設為 `true` 時，回應會包含詳細的詞元耗用指標，協助您監控成本、偵錯效能，以及比較模型效率。此參數支援使用一般和統一註冊方法的 `conversational` (v1)、`plan-execute-reflect` 和 `AG-UI` 代理程式。
 
-The `conversational_v2` agent automatically includes token usage in its response format through the `metrics` field and does not require this parameter. For details, see [The `conversational_v2` agent response format](#the-conversational_v2-agent-response-format).
+`conversational_v2` 代理程式會透過 `metrics` 欄位自動在其回應格式中包含詞元使用量，不需要此參數。如需詳細資訊，請參閱[`conversational_v2` 代理程式回應格式](#the-conversational_v2-agent-response-format)。
 {: .note}
 
-### Example request: Regular registration
-**Introduced 3.6**
+### 範例請求：一般註冊
+**於 3.6 版推出**
 {: .label .label-purple }
 
-For agents created using regular registration, set `include_token_usage` to `true` in the `parameters` object.
+若為使用一般註冊建立的代理程式，請在 `parameters` 物件中將 `include_token_usage` 設為 `true`。
 
-This example demonstrates a multi-turn agent execution where the agent is a conversational agent configured with the `WebSearchTool`. Multi-turn execution occurs because the agent:
-1. **Turn 1**: Receives the question, reasons about what information is needed, and decides to use the `WebSearchTool` to find population data.
-2. **Turn 2**: Receives the tool results and generates a final answer by analyzing and synthesizing the search results.
+此範例示範多輪代理程式執行，其中代理程式是使用 `WebSearchTool` 設定的對話式代理程式。會發生多輪執行是因為代理程式：
+1. **第 1 輪**：收到問題，推斷需要哪些資訊，並決定使用 `WebSearchTool` 尋找人口資料。
+2. **第 2 輪**：收到工具結果，並透過分析和綜合搜尋結果產生最終答案。
 
 ```json
 POST /_plugins/_ml/agents/879v9YwBjWKCe6Kg12Tx/_execute
@@ -335,11 +336,11 @@ POST /_plugins/_ml/agents/879v9YwBjWKCe6Kg12Tx/_execute
 ```
 {% include copy-curl.html %}
 
-### Example request: Unified registration
-**Introduced 3.6**
+### 範例請求：統一註冊
+**於 3.6 版推出**
 {: .label .label-purple }
 
-For agents created using unified registration, pass both the `input` field and the `parameters` object with `include_token_usage` set to `true`:
+若為使用統一註冊建立的代理程式，請同時傳遞 `input` 欄位和 `parameters` 物件，並將 `include_token_usage` 設為 `true`：
 
 ```json
 POST /_plugins/_ml/agents/{agent_id}/_execute
@@ -352,7 +353,7 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
 ```
 {% include copy-curl.html %}
 
-### Example response: Tracking token usage
+### 範例回應：追蹤詞元使用量
 
 ```json
 {
@@ -420,36 +421,36 @@ Therefore, the population increase of Seattle from 2021 to 2023 is 58,000."""
 }
 ```
 
-### The token usage output response fields
+### 詞元使用量輸出回應欄位
 
-The `token_usage` output contains the following fields.
+`token_usage` 輸出包含下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `per_turn_usage` | Array | An array of token usage records for each LLM call (turn) within a single agent execution. Multiple turns occur when an agent needs to reason, use tools, and then generate a final response—each LLM interaction counts as one turn. See [Token usage response fields](#token-usage-response-fields). |
-| `per_model_usage` | Array | Aggregated token usage grouped by model. See [Token usage response fields](#token-usage-response-fields). |
+| `per_turn_usage` | 陣列 | 單次代理程式執行中，每次 LLM 呼叫 (回合) 的詞元使用量記錄陣列。當代理程式需要推理、使用工具，然後產生最終回應時，會發生多個回合——每次 LLM 互動都算一個回合。請參閱[詞元使用量回應欄位](#token-usage-response-fields)。 |
+| `per_model_usage` | 陣列 | 依模型分組的彙總詞元使用量。請參閱[詞元使用量回應欄位](#token-usage-response-fields)。 |
 
-### Token usage response fields
+### 詞元使用量回應欄位
 
-The following table lists the fields that appear in the `per_turn_usage` and `per_model_usage` arrays.
+下表列出 `per_turn_usage` 和 `per_model_usage` 陣列中出現的欄位。
 
-Field | Data type | Present in | Description
+欄位 | 資料類型 | 出現於 | 說明
 :---  | :--- | :--- | :---
-`input_tokens` | Integer | Both | The number of tokens in the input/prompt sent to the model.
-`output_tokens` | Integer | Both | The number of tokens in the model's output/completion.
-`total_tokens` | Integer | Both | The total number of tokens (input + output).
-`cache_read_input_tokens` | Integer | Both | The number of input tokens served from the prompt cache. Supported by Anthropic (through Bedrock), OpenAI, and Gemini. Cached tokens are often cheaper than regular input tokens.
-`cache_creation_input_tokens` | Integer | Both | The number of tokens used to create new cache entries. Supported by Anthropic (through Bedrock).
-`reasoning_tokens` | Integer | Both | The number of tokens used for reasoning or thinking. Only extracted for OpenAI models (from `completion_tokens_details.reasoning_tokens`) and Gemini models (from `thoughtsTokenCount`).
-`turn` | Integer | `per_turn_usage` | The sequence number of this LLM call within the agent execution.
-`call_count` | Integer | `per_model_usage` | The total number of LLM calls made using this model.
-`model_id` | String | Both | The internal OpenSearch model ID.
-`model_name` | String | Both | The human-readable model name (for example, `Sonnet 4`, `GPT-4`).
-`model_url` | String | Both | The endpoint URL for the model service.
+`input_tokens` | 整數 | 兩者 | 傳送給模型之輸入/提示中的詞元數。
+`output_tokens` | 整數 | 兩者 | 模型輸出/完成內容中的詞元數。
+`total_tokens` | 整數 | 兩者 | 詞元總數 (輸入 + 輸出)。
+`cache_read_input_tokens` | 整數 | 兩者 | 由提示快取提供的輸入詞元數。支援 Anthropic (透過 Bedrock)、OpenAI 和 Gemini。快取的詞元通常比一般輸入詞元便宜。
+`cache_creation_input_tokens` | 整數 | 兩者 | 用於建立新快取項目的詞元數。支援 Anthropic (透過 Bedrock)。
+`reasoning_tokens` | 整數 | 兩者 | 用於推理或思考的詞元數。僅針對 OpenAI 模型 (從 `completion_tokens_details.reasoning_tokens`) 和 Gemini 模型 (從 `thoughtsTokenCount`) 擷取。
+`turn` | 整數 | `per_turn_usage` | 此 LLM 呼叫在代理程式執行中的序號。
+`call_count` | 整數 | `per_model_usage` | 使用此模型進行的 LLM 呼叫總數。
+`model_id` | 字串 | 兩者 | 內部 OpenSearch 模型 ID。
+`model_name` | 字串 | 兩者 | 人類可讀的模型名稱 (例如 `Sonnet 4`、`GPT-4`)。
+`model_url` | 字串 | 兩者 | 模型服務的端點 URL。
 
-### How tokens are calculated
+### 詞元如何計算
 
-Token counts are calculated by the model provider and may vary based on tokenization methods. For more information about how tokens are calculated, refer to your model provider's documentation:
+詞元計數由模型供應商計算，並可能因斷詞方法而異。如需詞元計算方式的詳細資訊，請參閱您的模型供應商說明文件：
 - [Amazon Bedrock TokenUsage](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_TokenUsage.html)
 - [OpenAI tokenization](https://platform.openai.com/docs/guides/tokenization)
 - [Google Gemini token counting](https://ai.google.dev/gemini-api/docs/tokens)

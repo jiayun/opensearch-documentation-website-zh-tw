@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Experiments
+title: "實驗"
 nav_order: 9
 parent: Search Relevance Workbench
 grand_parent: Optimizing search quality
@@ -8,38 +9,38 @@ has_children: false
 has_toc: false
 ---
 
-# Experiments
+# 實驗
 
-An _experiment_ is a controlled test designed to assess the effectiveness, relevance, or performance of a search engine or its algorithms. These experiments are typically conducted in order to evaluate how well a search system delivers useful results for specific queries.
+_實驗_ (experiment) 是一種受控測試，旨在評估搜尋引擎或其演算法的有效性、相關性或效能。這些實驗通常是為了評估搜尋系統針對特定查詢提供有用結果的表現。
 
-Search Relevance Workbench offers multiple types of experiments. For more information, see [Available search result quality experiments]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/using-search-relevance-workbench/#available-search-result-quality-experiments).
+Search Relevance Workbench 提供多種類型的實驗。如需更多資訊，請參閱[可用的搜尋結果品質實驗]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/using-search-relevance-workbench/#available-search-result-quality-experiments)。
 
-## Creating experiments
+## 建立實驗
 
-You can create an experiment to test search configurations using the following API.
+您可以使用下列 API 建立實驗，以測試搜尋組態。
 
-### Endpoint
+### 端點
 
 ```json
 POST _plugins/_search_relevance/experiment
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 描述
 :--- | :--- | :---
-`name` | String | The name of the experiment.
-`description` | String | A description of the experiment.
-`type` | String | The experiment type. Valid values are `PAIRWISE_COMPARISON`, `POINTWISE_EVALUATION`, and `HYBRID_OPTIMIZER`.
-`querySetId` | String | The ID of the query set to use in the experiment.
-`searchConfigurationList` | Array | A list of search configuration IDs to use in the experiment.
-`judgmentList` | Array | A list of judgment IDs to use for evaluation. Optional.
-`size` | Integer | The number of results to retrieve for each query. Default is `10`.
-`isScheduled` | Boolean | Whether the experiment is scheduled to run periodically. Default is `false`.
+`name` | 字串 | 實驗的名稱。
+`description` | 字串 | 實驗的描述。
+`type` | 字串 | 實驗類型。有效值為 `PAIRWISE_COMPARISON`、`POINTWISE_EVALUATION` 和 `HYBRID_OPTIMIZER`。
+`querySetId` | 字串 | 實驗中要使用的查詢集 ID。
+`searchConfigurationList` | 陣列 | 實驗中要使用的搜尋組態 ID 清單。
+`judgmentList` | 陣列 | 用於評估的判斷 (judgment) ID 清單。選用。
+`size` | 整數 | 每個查詢要擷取的結果數量。預設為 `10`。
+`isScheduled` | 布林值 | 實驗是否排定為定期執行。預設為 `false`。
 
-### Example request
+### 範例請求
 
 ```json
 POST _plugins/_search_relevance/experiment
@@ -55,7 +56,7 @@ POST _plugins/_search_relevance/experiment
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -64,41 +65,41 @@ POST _plugins/_search_relevance/experiment
 }
 ```
 
-## Managing experiments
+## 管理實驗
 
-You can retrieve or delete experiments using the following APIs.
+您可以使用下列 API 擷取或刪除實驗。
 
-### View an experiment
+### 檢視實驗
 
-You can retrieve an experiment using the experiment ID.
+您可以使用實驗 ID 擷取實驗。
 
-#### Endpoint
+#### 端點
 
 ```json
 GET _plugins/_search_relevance/experiments/{experiment_id}
 ```
 
-### Path parameters
+### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 描述 |
 | :--- | :--- | :--- |
-| `experiment_id` | String | The ID of the experiment to retrieve. |
+| `experiment_id` | 字串 | 要擷取的實驗 ID。 |
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_search_relevance/experiments/b54f791a-3b02-49cb-a06c-46ab650b2ade
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 <details open markdown="block">
-  <summary>
-    Response
-  </summary>
+<summary>
+    回應
+</summary>
 
 ```json
 {
@@ -252,24 +253,24 @@ GET _plugins/_search_relevance/experiments/b54f791a-3b02-49cb-a06c-46ab650b2ade
 
 </details>
 
-### Delete an experiment
+### 刪除實驗
 
-You can delete an experiment using the experiment ID.
+您可以使用實驗 ID 刪除實驗。
 
-#### Endpoint
+#### 端點
 
 ```json
 DELETE _plugins/_search_relevance/experiments/{experiment_id}
 ```
 
-#### Example request
+#### 範例請求
 
 ```json
 DELETE _plugins/_search_relevance/experiments/47cc3861-c37b-43cc-99c4
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -288,20 +289,20 @@ DELETE _plugins/_search_relevance/experiments/47cc3861-c37b-43cc-99c4
 }
 ```
 
-### Search for an experiment
+### 搜尋實驗
 
-You can search for available experiments using query domain-specific language (DSL). By default, the `results` data is not returned in the response. To include the `results` data, specify the `_source` field in the query.
+您可以使用 Query DSL 搜尋可用的實驗。預設情況下，回應中不會傳回 `results` 資料。若要包含 `results` 資料，請在查詢中指定 `_source` 欄位。
 
-#### Endpoints
+#### 端點
 
 ```json
 GET _plugins/_search_relevance/experiments/_search
 POST _plugins/_search_relevance/experiments/_search
 ```
 
-#### Example request
+#### 範例請求
 
-Search for experiments that use a specific query set in order to measure search relevance performance:
+搜尋使用特定查詢集以測量搜尋相關性效能的實驗：
 
 ```json
 GET _plugins/_search_relevance/experiments/_search
@@ -313,7 +314,7 @@ GET _plugins/_search_relevance/experiments/_search
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {

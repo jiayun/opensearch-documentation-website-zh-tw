@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get pipeline
+title: "取得管線"
 nav_order: 12
 redirect_from:
   - /opensearch/rest-api/ingest-apis/get-ingest/
   - /api-reference/ingest-apis/get-ingest/
 ---
 
-# Get pipeline
-**Introduced 1.0**
+# 取得管線
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Use the get ingest pipeline API operation to retrieve all the information about the pipeline.
+使用取得資料匯入管線的 API 操作，擷取管線的所有資訊。
 
-## Retrieving information about all pipelines
+## 擷取所有管線的資訊
 
-The following example request returns information about all ingest pipelines:
+下列範例請求會傳回所有資料匯入管線的資訊：
 
 ```json
 GET _ingest/pipeline/
 ```
 {% include copy-curl.html %}
 
-## Retrieving information about a specific pipeline
+## 擷取特定管線的資訊
 
-The following example request returns information about a specific pipeline, which for this example is `my-pipeline`: 
+下列範例請求會傳回特定管線的資訊，本範例中的管線為 `my-pipeline`： 
 
 ```json
 GET _ingest/pipeline/my-pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains the pipeline information:
+回應包含管線資訊：
 
 ```json
 {

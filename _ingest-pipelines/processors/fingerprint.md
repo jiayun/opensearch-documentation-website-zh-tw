@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Fingerprint
+title: "指紋"
 parent: Ingest processors
 nav_order: 105
 ---
 
-# Fingerprint processor
-Introduced 2.16
+# 指紋處理器
+於 2.16 版推出
 {: .label .label-purple }
 
-The `fingerprint` processor is used to generate a hash value for either certain specified fields or all fields in a document. The hash value can be used to deduplicate documents within an index and collapse search results.
+`fingerprint` 處理器用於針對文件中的特定指定欄位或所有欄位產生雜湊值。此雜湊值可用於移除索引中的重複文件，以及摺疊搜尋結果。
 
-For each field, the field name, the length of the field value, and the field value itself are concatenated and separated by the pipe character `|`. For example, if the field name is `field1` and the value is `value1`, then the concatenated string would be `|field1|3:value1|field2|10:value2|`. For object fields, the field name is flattened by joining the nested field names with a period `.`. For instance, if the object field is `root_field` with a sub-field `sub_field1` having the value `value1` and another sub-field `sub_field2` with the value `value2`, then the concatenated string would be `|root_field.sub_field1|1:value1|root_field.sub_field2|100:value2|`.
+針對每個欄位，會將欄位名稱、欄位值的長度及欄位值本身串接起來，並以豎線字元 `|` 分隔。例如，如果欄位名稱為 `field1`，值為 `value1`，則串接後的字串為 `|field1|3:value1|field2|10:value2|`。對於物件欄位，會以句點 `.` 連接巢狀欄位名稱，將欄位名稱攤平。例如，如果物件欄位為 `root_field`，其中子欄位 `sub_field1` 的值為 `value1`，另一個子欄位 `sub_field2` 的值為 `value2`，則串接後的字串為 `|root_field.sub_field1|1:value1|root_field.sub_field2|100:value2|`。
 
-The following is the syntax for the `fingerprint` processor:
+以下是 `fingerprint` 處理器的語法：
 
 ```json
 {
@@ -26,30 +27,30 @@ The following is the syntax for the `fingerprint` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `fingerprint` processor.
+下表列出 `fingerprint` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`fields`  | Optional  | A list of fields used to generate a hash value.  |
-`exclude_fields`  | Optional  | Specifies the fields to be excluded from hash value generation. It is mutually exclusive with the `fields` parameter; if both `exclude_fields` and `fields` are empty or null, then all fields are included in the hash value calculation. |
-`hash_method`  | Optional  | Specifies the hashing algorithm to be used, with options being `MD5@2.16.0`, `SHA-1@2.16.0`, `SHA-256@2.16.0`, or `SHA3-256@2.16.0`. Default is `SHA-1@2.16.0`. The version number is appended to ensure consistent hashing across OpenSearch versions, and new versions will support new hash methods. |
-`target_field`  | Optional  | Specifies the name of the field in which the generated hash value will be stored. If not provided, then the hash value is stored in the `fingerprint` field by default. |
-`ignore_missing`  | Optional  | Specifies whether the processor should exit quietly if one of the required fields is missing. Default is `false`. |
-`description`  | Optional  | A brief description of the processor.  |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | If set to `true`, then failures are ignored. Default is `false`. |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |
+`fields`  | 選用  | 用於產生雜湊值的欄位清單。  |
+`exclude_fields`  | 選用  | 指定產生雜湊值時要排除的欄位。此參數與 `fields` 參數互斥；如果 `exclude_fields` 和 `fields` 皆為空或 null，則計算雜湊值時會納入所有欄位。 |
+`hash_method`  | 選用  | 指定要使用的雜湊演算法，可選擇 `MD5@2.16.0`、`SHA-1@2.16.0`、`SHA-256@2.16.0` 或 `SHA3-256@2.16.0`。預設為 `SHA-1@2.16.0`。附加版本號碼是為了確保各個 OpenSearch 版本的雜湊運算一致，而新版本將支援新的雜湊方法。 |
+`target_field`  | 選用  | 指定用於儲存所產生雜湊值的欄位名稱。如果未提供，則雜湊值預設會儲存在 `fingerprint` 欄位中。 |
+`ignore_missing`  | 選用  | 指定當其中一個必要欄位遺失時，處理器是否應無提示地結束。預設為 `false`。 |
+`description`  | 選用  | 處理器的簡短說明。  |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 如果設為 `true`，則會忽略失敗。預設為 `false`。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別標籤。可在偵錯時用於區分相同類型的處理器。 |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+依照下列步驟，在管線中使用處理器。
 
-**Step 1: Create a pipeline**
+**步驟 1：建立管線**
 
-The following query creates a pipeline named `fingerprint_pipeline` that uses the `fingerprint` processor to generate a hash value for specified fields in the document: 
+下列查詢會建立名為 `fingerprint_pipeline` 的管線，使用 `fingerprint` 處理器針對文件中的指定欄位產生雜湊值： 
 
 ```json
 PUT /_ingest/pipeline/fingerprint_pipeline
@@ -66,12 +67,12 @@ PUT /_ingest/pipeline/fingerprint_pipeline
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline**
+**步驟 2（選用）：測試管線**
 
-It is recommended that you test your pipeline before ingesting documents.
+建議您在匯入文件前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/fingerprint_pipeline/_simulate
@@ -90,9 +91,9 @@ POST _ingest/pipeline/fingerprint_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -115,9 +116,9 @@ The following example response confirms that the pipeline is working as expected
 }
 ```
 
-**Step 3: Ingest a document**
+**步驟 3：匯入文件**
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=fingerprint_pipeline
@@ -128,9 +129,9 @@ PUT testindex1/_doc/1?pipeline=fingerprint_pipeline
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The request indexes the document into the `testindex1` index:
+此請求會將文件編製索引至 `testindex1` 索引：
 
 ```json
 {
@@ -148,9 +149,9 @@ The request indexes the document into the `testindex1` index:
 }
 ```
 
-**Step 4 (Optional): Retrieve the document**
+**步驟 4（選用）：擷取文件**
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1

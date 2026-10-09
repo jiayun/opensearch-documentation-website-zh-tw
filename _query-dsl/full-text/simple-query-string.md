@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Simple query string
+title: "簡易查詢字串"
 parent: Full-text queries
 nav_order: 70
 ---
 
-# Simple query string query
+# Simple query string 查詢
 
-Use the `simple_query_string` type to specify multiple arguments delineated by regular expressions directly in the query string. Simple query string has a less strict syntax than query string because it discards any invalid portions of the string and does not return errors for invalid syntax.
+使用 `simple_query_string` 類型，直接在查詢字串中指定多個以正規表示式分隔的引數。Simple query string 的語法比 query string 寬鬆，因為它會捨棄字串中任何無效的部分，且不會因語法無效而回傳錯誤。
 
-This query uses a [simple syntax](#simple-query-string-syntax) to parse the query string based on special operators and split the string into terms. After parsing, the query analyzes each term independently and then returns matching documents.
+此查詢使用[簡單語法](#simple-query-string-syntax)，根據特殊運算子剖析查詢字串，並將字串拆分為詞元。剖析之後，查詢會獨立分析每個詞元，然後回傳符合的文件。
 
-The following query performs fuzzy search on the `title` field:
+以下查詢對 `title` 欄位執行模糊搜尋：
 
 ```json
 GET _search
@@ -26,29 +27,29 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-## Simple query string syntax
+## Simple query string 語法
 
-A query string consists of _terms_ and _operators_. A term is a single word (for example, in the query `wind rises`, the terms are `wind` and `rises`). If several terms are surrounded by quotation marks, they are treated as one phrase where words are marched in the order they appear (for example, `"wind rises"`). Operators such as `+`, `|`, and `-` specify the Boolean logic used to interpret text in the query string. 
+查詢字串由 _詞元_ 和 _運算子_ 組成。詞元是單一單字（例如，在查詢 `wind rises` 中，詞元為 `wind` 和 `rises`）。如果多個詞元被引號包圍，則視為一個片語，其中的單字會依出現順序進行比對（例如 `"wind rises"`）。`+`、`|` 和 `-` 等運算子指定用來解讀查詢字串中文字的布林邏輯。
 
-## Operators
+## 運算子
 
-Simple query string syntax supports the following operators.
+簡易查詢字串語法支援下列運算子。
 
-Operator | Description
+運算子 | 說明
 :--- | :---
-`+` | Acts as the `AND` operator.
-`|` | Acts as the `OR` operator.
-`*` | When used at the end of a term, signifies a prefix query.
-`"` | Wraps several terms into a phrase (for example, `"wind rises"`).
-`(`, `)` | Wrap a clause for precedence (for example, `wind + (rises | rising)`).
-`~n` | When used after a term (for example, `wnid~3`), sets `fuzziness`. When used after a phrase, sets `slop`. 
-`-` | Negates the term.
+`+` | 作為 `AND` 運算子。
+`|` | 作為 `OR` 運算子。
+`*` | 用於詞元結尾時，表示前綴查詢。
+`"` | 將多個詞元包裝成片語（例如 `"wind rises"`）。
+`(`, `)` | 為優先順序包裝子句（例如 `wind + (rises | rising)`）。
+`~n` | 用於詞元之後（例如 `wnid~3`）時，設定 `fuzziness`。用於片語之後時，設定 `slop`。 
+`-` | 否定該詞元。
 
-All of the preceding operators are reserved characters. To refer to them as raw characters and not operators, escape any of them with a backslash. When sending a JSON request, use `\\` to escape reserved characters (because the backslash character is itself reserved, you must escape the backslash with another backslash).
+上述所有運算子都是保留字元。若要將它們當作原始字元而非運算子使用，請以反斜線逸出其中任何字元。傳送 JSON 請求時，請使用 `\\` 來逸出保留字元（因為反斜線字元本身也是保留字元，您必須用另一個反斜線來逸出反斜線）。
 
-## Default operator
+## 預設運算子
 
-The default operator is `OR` (unless you set the `default_operator` to `AND`). The default operator dictates the overall query behavior. For example, consider an index containing the following documents:
+預設運算子為 `OR`（除非您將 `default_operator` 設定為 `AND`）。預設運算子決定整體查詢行為。例如，考慮一個包含下列文件的索引：
 
 ```json
 PUT /customers/_doc/1
@@ -90,7 +91,7 @@ PUT /customers/_doc/4
 ```
 {% include copy-curl.html %}
 
-The following query attempts to find documents, for which the address contains the words `street` or `st` and does not contain the word `madison`:
+以下查詢嘗試尋找 address 包含 `street` 或 `st` 這些單字、且不包含 `madison` 這個單字的文件：
 
 ```json
 GET /customers/_search
@@ -106,11 +107,11 @@ GET /customers/_search
 ```
 {% include copy-curl.html %}
 
-However, the results include not only the expected document, but all four documents:
+然而，結果不僅包含預期的文件，還包含全部四份文件：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -177,9 +178,9 @@ However, the results include not only the expected document, but all four docume
 ```
 </details>
 
-Because the default operator is `OR`, this query includes documents that contain the words `street` or `st` (documents 2 and 3) and documents that do not contain the word `madison` (documents 1 and 4).
+因為預設運算子是 `OR`，此查詢會包含包含 `street` 或 `st` 這些單字的文件（文件 2 和 3），以及不包含 `madison` 這個單字的文件（文件 1 和 4）。
 
-To express the query intent correctly, precede `-madison` with `+`:
+若要正確表達查詢意圖，請在 `-madison` 前面加上 `+`：
 
 ```json
 GET /customers/_search
@@ -194,7 +195,7 @@ GET /customers/_search
 ```
 {% include copy-curl.html %}
 
-Alternatively, specify `AND` as the default operator and use disjunction for the words `street` and `st`:
+或者，將 `AND` 指定為預設運算子，並對 `street` 和 `st` 這兩個單字使用邏輯或運算：
 
 ```json
 GET /customers/_search
@@ -210,11 +211,11 @@ GET /customers/_search
 ```
 {% include copy-curl.html %}
 
-The preceding query returns document 2:
+上述查詢回傳文件 2：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -251,9 +252,9 @@ The preceding query returns document 2:
 ```
 </details>
 
-## Limit operators
+## 限制運算子
 
-To limit the supported operators for the simple query string parser, include the operators that you want to support, separated by `|`, in the `flags` parameter. For example, the following query enables only `OR`, `AND`, and `FUZZY` operators:
+若要限制簡易查詢字串剖析器支援的運算子，請在 `flags` 參數中包含您想要支援的運算子，並以 `|` 分隔。例如，以下查詢僅啟用 `OR`、`AND` 和 `FUZZY` 運算子：
 
 ```json
 GET /customers/_search
@@ -269,27 +270,27 @@ GET /customers/_search
 ```
 {% include copy-curl.html %}
 
-The following table lists all available operator flags.
+下表列出所有可用的運算子旗標。
 
-Flag | Description
+旗標 | 說明
 :--- | :--- 
-`ALL` (default) | Enables all operators. 
-`AND` | Enables the `+` (`AND`) operator. 
-`ESCAPE` | Enables the `\` as an escape character. 
-`FUZZY` | Enables the `~n` operator after a word, where `n` is an integer denoting the allowed edit distance for matching.
-`NEAR` | Enables the `~n` operator after a phrase, where `n` is the maximum number of positions allowed between matching tokens. Same as `SLOP`. 
-`NONE` | Disables all operators. 
-`NOT` | Enables the `-` (`NOT`) operator. 
-`OR` | Enables the `|` (`OR`) operator. 
-`PHRASE` | Enables the `"` (quotation marks) for phrase search. 
-`PRECEDENCE` | Enables the `(` and `)` (parentheses) operators for operator precedence. 
-`PREFIX` | Enables the `*` (prefix) operator. 
-`SLOP` | Enables the `~n` operator after a phrase, where `n` is the maximum number of positions allowed between matching tokens. Same as `NEAR`. 
-`WHITESPACE` | Enables white space characters as characters on which the text is split. 
+`ALL`（預設） | 啟用所有運算子。 
+`AND` | 啟用 `+`（`AND`）運算子。 
+`ESCAPE` | 啟用 `\` 作為逸出字元。 
+`FUZZY` | 在單字之後啟用 `~n` 運算子，其中 `n` 是表示比對允許編輯距離的整數。
+`NEAR` | 在片語之後啟用 `~n` 運算子，其中 `n` 是比對詞元之間允許的最大位置數。等同於 `SLOP`。 
+`NONE` | 停用所有運算子。 
+`NOT` | 啟用 `-`（`NOT`）運算子。 
+`OR` | 啟用 `|`（`OR`）運算子。 
+`PHRASE` | 啟用 `"`（引號）用於片語搜尋。 
+`PRECEDENCE` | 啟用 `(` 和 `)`（括號）運算子以進行運算子優先順序處理。 
+`PREFIX` | 啟用 `*`（前綴）運算子。 
+`SLOP` | 在片語之後啟用 `~n` 運算子，其中 `n` 是比對詞元之間允許的最大位置數。等同於 `NEAR`。 
+`WHITESPACE` | 啟用空白字元作為文字分割的依據。 
 
-## Wildcard expressions
+## 萬用字元運算式
 
-You can specify wildcard expressions using the `*` special character, which replaces zero or more characters. For example, the following query searches in all fields that end with `name`:
+您可以使用 `*` 特殊字元指定萬用字元運算式，該字元會取代零個或多個字元。例如，下列查詢會搜尋所有以 `name` 結尾的欄位：
 
 ```json
 GET /customers/_search
@@ -304,11 +305,11 @@ GET /customers/_search
 ```
 {% include copy-curl.html %}
 
-## Boosting
+## 提升
 
-Use the caret (`^`) boost operator to boost the relevance score of a field by a multiplier. Values in the [0, 1) range decrease relevance, and values greater than 1 increase relevance. Default is `1`. 
+使用插入號 (`^`) 提升運算子，以乘數提升欄位的相關性分數。值在 [0, 1) 範圍內會降低相關性，而大於 1 的值會提高相關性。預設為 `1`。
 
-For example, the following query searches the `first_name` and `last_name` fields and boosts matches from the `first_name` field by a factor of 2:
+例如，下列查詢會搜尋 `first_name` 和 `last_name` 欄位，並將 `first_name` 欄位的相符項目提升 2 倍：
 
 ```json
 GET /customers/_search
@@ -323,13 +324,13 @@ GET /customers/_search
 ```
 {% include copy-curl.html %}
 
-## Multi-position tokens
+## 多重位置詞元
 
-For multi-position tokens, simple query string creates a [match phrase query]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/). Thus, if you specify `ml, machine learning` as synonyms and search for `ml`, OpenSearch searches for `ml OR "machine learning"`. 
+對於多重位置詞元，簡易查詢字串會建立 [match phrase 查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/)。因此，如果您將 `ml, machine learning` 指定為同義字並搜尋 `ml`，OpenSearch 會搜尋 `ml OR "machine learning"`。 
 
-Alternatively, you can match multi-position tokens using conjunctions. If you set `auto_generate_synonyms_phrase_query` to `false`, OpenSearch searches for `ml OR (machine AND learning)`. 
+或者，您可以使用 AND 運算來比對多重位置詞元。如果您將 `auto_generate_synonyms_phrase_query` 設為 `false`，OpenSearch 會搜尋 `ml OR (machine AND learning)`。 
 
-For example, the following query searches for the text `ml models` and specifies not to auto-generate a match phrase query for each synonym:
+例如，下列查詢會搜尋文字 `ml models`，並指定不要為每個同義字自動產生 match phrase 查詢：
 
 ```json
 GET /testindex/_search
@@ -345,24 +346,24 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-For this query, OpenSearch creates the following Boolean query: `(ml OR (machine AND learning)) models`.
+對於此查詢，OpenSearch 會建立下列布林查詢：`(ml OR (machine AND learning)) models`。
 
-## Parameters
+## 參數
 
-The following table lists the top-level parameters that `simple_query_string` query supports. All parameters except `query` are optional.
+下表列出 `simple_query_string` 查詢支援的最上層參數。除了 `query` 之外，所有參數都是選用的。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`query`| String | The text that may contain expressions in the [simple query string syntax](#simple-query-string-syntax) to use for search. Required.
-`analyze_wildcard` | Boolean | Specifies whether OpenSearch should attempt to analyze wildcard terms. Default is `false`.
-`analyzer` | String | The analyzer used to tokenize the query string text. Default is the index-time analyzer specified for the `default_field`. If no analyzer is specified for the `default_field`, the `analyzer` is the default analyzer for the index. For more information about `index.query.default_field`, see [Dynamic index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings).
-`auto_generate_synonyms_phrase_query` | Boolean | Specifies whether to create [match_phrase queries]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match/) automatically for multi-term synonyms. Default is `true`.
-`default_operator`| String | If the query string contains multiple search terms, whether all terms need to match (`AND`) or only one term needs to match (`OR`) for a document to be considered a match. Valid values are:<br>- `OR`: The string `to be` is interpreted as `to OR be`<br>- `AND`: The string `to be` is interpreted as `to AND be`<br> Default is `OR`.
-`fields` | String array | The list of fields to search (for example, `"fields": ["title^4", "description"]`). Supports wildcards. You can boost relevance for matches in specific fields using the caret (`^`) notation. If unspecified, the query defaults to the `index.query.default_field` setting, which defaults to `["*"]` (all fields eligible for term queries are included, while metadata fields are filtered out). You can override the index setting or explicitly set `default_field` in the query. For example, to return all titles, set `"default_field": "title"`. The maximum number of fields that can be searched at once is defined by `indices.query.bool.max_clause_count`, which defaults to 1,024.
-`flags` | String | A `|`-delimited string of [flags](#limit-operators) to enable (for example, `AND|OR|NOT`). Default is `ALL`. 
-`fuzzy_max_expansions` | Positive integer | The maximum number of terms to which the query can expand. Fuzzy queries “expand to” a number of matching terms that are within the distance specified in `fuzziness`. Then OpenSearch tries to match those terms. Default is `50`.
-`fuzzy_transpositions` | Boolean | Setting `fuzzy_transpositions` to `true` (default) adds swaps of adjacent characters to the insert, delete, and substitute operations of the `fuzziness` option. For example, the distance between `wind` and `wnid` is 1 if `fuzzy_transpositions` is true (swap "n" and "i") and 2 if it is false (delete "n", insert "n"). If `fuzzy_transpositions` is false, `rewind` and `wnid` have the same distance (2) from `wind`, despite the more human-centric opinion that `wnid` is an obvious typo. The default is a good choice for most use cases.
-`fuzzy_prefix_length`| Integer | The number of beginning characters left unchanged for fuzzy matching. Default is 0. 
-`lenient` | Boolean | Setting `lenient` to `true` ignores data type mismatches between the query and the document field. For example, a query string of `"8.2"` could match a field of type `float`. Default is `false`.
-`minimum_should_match` | Positive or negative integer, positive or negative percentage, combination | If the query string contains multiple search terms and you use the `or` operator, the number of terms that need to match for the document to be considered a match. For example, if `minimum_should_match` is 2, `wind often rising` does not match `The Wind Rises.` If `minimum_should_match` is `1`, it matches. For details, see [Minimum should match]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/).
-`quote_field_suffix` | String | This option supports searching for exact matches (surrounded with quotation marks) using a different analysis method than non-exact matches use. For example, if `quote_field_suffix` is `.exact` and you search for `\"lightly\"` in the `title` field, OpenSearch searches for the word `lightly` in the `title.exact` field. This second field might use a different type (for example, `keyword` rather than `text`) or a different analyzer.
+`query`| 字串 | 可能包含 [simple query string 語法](#simple-query-string-syntax) 運算式以供搜尋的文字。必要。
+`analyze_wildcard` | 布林值 | 指定 OpenSearch 是否應嘗試分析萬用字元詞彙。預設為 `false`。
+`analyzer` | 字串 | 用來將查詢字串文字斷詞的分析器。預設為針對 `default_field` 指定的索引時間分析器。如果未針對 `default_field` 指定分析器，則 `analyzer` 是索引的預設分析器。如需 `index.query.default_field` 的詳細資訊，請參閱[動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)。
+`auto_generate_synonyms_phrase_query` | 布林值 | 指定是否要為多重詞彙同義字自動建立 [match_phrase 查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match/)。預設為 `true`。
+`default_operator`| 字串 | 如果查詢字串包含多個搜尋詞彙，文件必須符合所有詞彙 (`AND`) 或只需符合一個詞彙 (`OR`) 才視為相符。有效值為：<br>- `OR`：字串 `to be` 會解讀為 `to OR be`<br>- `AND`：字串 `to be` 會解讀為 `to AND be`<br> 預設為 `OR`。
+`fields` | 字串陣列 | 要搜尋的欄位清單 (例如 `"fields": ["title^4", "description"]`)。支援萬用字元。您可以使用插入號 (`^`) 標記法，提升特定欄位中相符項目的相關性。如果未指定，查詢會預設為 `index.query.default_field` 設定，其預設為 `["*"]` (包含所有符合詞彙查詢資格的欄位，並篩除中繼資料欄位)。您可以覆寫索引設定，或在查詢中明確設定 `default_field`。例如，若要傳回所有標題，請設定 `"default_field": "title"`。一次可搜尋的欄位數上限由 `indices.query.bool.max_clause_count` 定義，其預設為 1,024。
+`flags` | 字串 | 以 `|` 分隔的[旗標](#limit-operators)字串，用於啟用 (例如 `AND|OR|NOT`)。預設為 `ALL`。
+`fuzzy_max_expansions` | 正整數 | 查詢可擴充的詞彙數上限。模糊查詢會「擴充」為若干符合的詞彙，這些詞彙位於 `fuzziness` 中指定的距離內。接著 OpenSearch 會嘗試比對這些詞彙。預設為 `50`。
+`fuzzy_transpositions` | 布林值 | 將 `fuzzy_transpositions` 設為 `true` (預設) 會將相鄰字元互換加入 `fuzziness` 選項的插入、刪除和取代作業。例如，如果 `fuzzy_transpositions` 為 true，則 `wind` 與 `wnid` 之間的距離為 1 (互換「n」和「i」)；如果為 false，則距離為 2 (刪除「n」、插入「n」)。如果 `fuzzy_transpositions` 為 false，則 `rewind` 和 `wnid` 與 `wind` 的距離相同 (2)，儘管以人為本的觀點認為 `wnid` 是明顯的打字錯誤。預設值對大多數使用案例而言是很好的選擇。
+`fuzzy_prefix_length`| 整數 | 模糊比對時保持不變的開頭字元數。預設為 0。
+`lenient` | 布林值 | 將 `lenient` 設為 `true` 會忽略查詢與文件欄位之間的資料類型不符。例如，查詢字串 `"8.2"` 可能符合類型為 `float` 的欄位。預設為 `false`。
+`minimum_should_match` | 正整數或負整數、正百分比或負百分比、組合 | 如果查詢字串包含多個搜尋詞彙，且您使用 `or` 運算子，則文件必須符合的詞彙數才視為相符。例如，如果 `minimum_should_match` 為 2，則 `wind often rising` 不符合 `The Wind Rises.`。如果 `minimum_should_match` 為 `1`，則會相符。如需詳細資訊，請參閱[最少應符合]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/)。
+`quote_field_suffix` | 字串 | 此選項支援使用與非完全相符不同的分析方法，搜尋完全相符 (以引號括住)。例如，如果 `quote_field_suffix` 為 `.exact`，且您在 `title` 欄位中搜尋 `\"lightly\"`，OpenSearch 會在 `title.exact` 欄位中搜尋 `lightly` 這個字。第二個欄位可能使用不同的類型 (例如 `keyword` 而非 `text`) 或不同的分析器。

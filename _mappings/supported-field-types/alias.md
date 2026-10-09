@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Alias
+title: "別名"
 nav_order: 10
 has_children: false
 parent: Supported field types
@@ -10,13 +11,13 @@ redirect_from:
   - /field-types/alias/
 ---
 
-# Alias field type
-**Introduced 1.0**
+# Alias 欄位類型
+**1.0 版新增**
 {: .label .label-purple }
 
-An alias field type creates another name for an existing field. You can use aliases in the [search](#using-aliases-in-search-api-operations) and [field capabilities](#using-aliases-in-field-capabilities-api-operations) API operations, with some [exceptions](#exceptions). To set up an [alias](#alias-field), you need to specify the [original field](#original-field) name in the `path` parameter.
+alias 欄位類型會為現有欄位建立另一個名稱。您可以在 [search](#using-aliases-in-search-api-operations) 與 [field capabilities](#using-aliases-in-field-capabilities-api-operations) API 操作中使用別名，但有若干[例外](#exceptions)。若要設定[別名](#alias-field)，您必須在 `path` 參數中指定[原始欄位](#original-field)的名稱。
 
-## Example
+## 範例
 
 ```json
 PUT movies 
@@ -36,61 +37,61 @@ PUT movies
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-Parameter | Description 
+參數 | 說明 
 :--- | :--- 
-`path` | The full path to the original field, including all parent objects. For example, parent.child.field_name. Required.
+`path` | 原始欄位的完整路徑，包括所有父物件。例如 parent.child.field_name。必要。
 
-## Alias field
+## 別名欄位
 
-Alias fields must obey the following rules:
+別名欄位必須遵守下列規則：
 
-- An alias field can only have one original field.
-- In nested objects, the alias must have the same nesting level as the original field.
+- 一個別名欄位只能對應一個原始欄位。
+- 在巢狀物件中，別名的巢狀層級必須與原始欄位相同。
 
-To change the field that the alias references, update the mappings. Note that aliases in any previously stored percolator queries will still reference the original field.
+若要變更別名所參照的欄位，請更新對應。請注意，先前已儲存的 percolator 查詢中的別名仍會參照原始欄位。
 {: .note }
 
-## Original field
+## 原始欄位
 
-The original field for an alias must obey the following rules:
-- The original field must be created before the alias is created.
-- The original field cannot be an object or another alias.
+別名的原始欄位必須遵守下列規則：
+- 原始欄位必須在建立別名之前建立。
+- 原始欄位不能是物件或另一個別名。
 
-## Using aliases in search API operations
+## 在 search API 操作中使用別名
 
-You can use aliases in the following read operations of the search API:
-- Queries
-- Sorts
-- Aggregations
+您可以在 search API 的下列讀取操作中使用別名：
+- 查詢
+- 排序
+- 彙總
 - `stored_fields`
 - `docvalue_fields`
-- Suggestions
-- Highlights
-- Scripts that access field values
+- 建議
+- 醒目顯示
+- 存取欄位值的指令碼
 
-## Using aliases in field capabilities API operations
+## 在 field capabilities API 操作中使用別名
 
-To use an alias in the field capabilities API, specify it in the fields parameter.
+若要在 field capabilities API 中使用別名，請在 fields 參數中指定它。
 
 ```json
 GET movies/_field_caps?fields=release_date
 ```
 {% include copy-curl.html %}
 
-## Exceptions
+## 例外
 
-You cannot use aliases in the following situations:
-- In write requests, such as update requests.
-- In multi-fields or as a target of `copy_to`.
-- As a `_source` parameter for filtering results.
-- In APIs that take field names, such as term vectors.
-- In `terms`, `more_like_this`, and `geo_shape` queries (aliases are not supported when retrieving documents).
+您無法在下列情況中使用別名：
+- 在寫入請求中，例如更新請求。
+- 在多重欄位中，或作為 `copy_to` 的目標。
+- 作為用於篩選結果的 `_source` 參數。
+- 在接受欄位名稱的 API 中，例如詞項向量 API。
+- 在 `terms`、`more_like_this` 與 `geo_shape` 查詢中（擷取文件時不支援別名）。
 
-## Wildcards
+## 萬用字元
 
-In search and field capabilities wildcard queries, both the original field and the alias are matched against the wildcard pattern. 
+在 search 與 field capabilities 的萬用字元查詢中，原始欄位與別名都會與萬用字元模式進行比對。
 
 ```json
 GET movies/_field_caps?fields=release*

@@ -1,107 +1,108 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Settings
+title: "設定"
 nav_order: 90
 redirect_from:
   - /search-plugins/knn/settings/
 ---
 
-# Vector search settings
+# 向量搜尋設定
 
-OpenSearch supports the following vector search settings. Dynamic settings are updated using the [Cluster Settings API]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/#updating-cluster-settings-using-the-api); static settings must be configured in `opensearch.yml` on each node. To learn more about static and dynamic settings, see [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/).
+OpenSearch 支援下列向量搜尋設定。動態設定可透過 [Cluster Settings API]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/#updating-cluster-settings-using-the-api) 更新；靜態設定則必須在每個節點的 `opensearch.yml` 中設定。若要進一步了解靜態與動態設定，請參閱[設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/)。
 
-## k-NN plugin settings
+## k-NN 外掛程式設定
 
-The k-NN plugin supports the following settings.
+k-NN 外掛程式支援下列設定。
 
-### Cluster settings
+### 叢集設定
 
-The following k-NN plugin settings apply at the cluster level:
+下列 k-NN 外掛程式設定適用於叢集層級：
 
-- `knn.algo_param.index_thread_qty` (Dynamic, integer): The number of threads used for native library and Lucene library (for OpenSearch version 2.19 and later) index creation. Keeping this value low reduces the CPU impact of the k-NN plugin but also reduces indexing performance. Default is `1` for systems with fewer than 32 CPU cores and `4` for systems with 32 or more cores.
+- `knn.algo_param.index_thread_qty` (動態，整數)：用於原生程式庫與 Lucene 程式庫 (適用於 OpenSearch 2.19 及更新版本) 索引建立的執行緒數量。將此值保持在較低可減少 k-NN 外掛程式對 CPU 的影響，但也會降低編製索引的效能。在 CPU 核心少於 32 個的系統上預設為 `1`，在具有 32 個或更多核心的系統上預設為 `4`。
 
-- `knn.cache.item.expiry.enabled` (Dynamic, Boolean): Whether to remove native library indexes that have not been accessed for a specified period of time from memory. Default is `false`.
+- `knn.cache.item.expiry.enabled` (動態，布林值)：是否將在指定時間內未被存取的原生程式庫索引從記憶體中移除。預設為 `false`。
 
-- `knn.cache.item.expiry.minutes` (Dynamic, time unit): The amount of idle time before a native library index is removed from memory. Takes effect only when `knn.cache.item.expiry.enabled` is `true`. Default is `3h`.
+- `knn.cache.item.expiry.minutes` (動態，時間單位)：原生程式庫索引從記憶體中移除前的閒置時間。僅在 `knn.cache.item.expiry.enabled` 為 `true` 時生效。預設為 `3h`。
 
-- `knn.circuit_breaker.unset.percentage` (Dynamic, percentage): The native memory usage threshold for the circuit breaker. Memory usage must be lower than this percentage of `knn.memory.circuit_breaker.limit` for `knn.circuit_breaker.triggered` to remain `false`. Default is `75`.
+- `knn.circuit_breaker.unset.percentage` (動態，百分比)：斷路器的原生記憶體使用量門檻。記憶體使用量必須低於 `knn.memory.circuit_breaker.limit` 的此百分比，`knn.circuit_breaker.triggered` 才能維持 `false`。預設為 `75`。
 
-- `knn.circuit_breaker.triggered` (Dynamic, Boolean): Set to `true` when memory usage exceeds the `knn.circuit_breaker.unset.percentage` value. Default is `false`.
+- `knn.circuit_breaker.triggered` (動態，布林值)：當記憶體使用量超過 `knn.circuit_breaker.unset.percentage` 值時設為 `true`。預設為 `false`。
 
-- `knn.memory.circuit_breaker.limit` (Dynamic, percentage or byte unit): The native memory limit for native library indexes. At the default value, if a machine has 100 GB of memory and the JVM uses 32 GB, then the k-NN plugin uses 50% of the remaining 68 GB (34 GB). If memory usage exceeds this value, then the plugin removes the native library indexes used least recently. To configure this limit at the node level, add `node.attr.knn_cb_tier: "<tier-name>"` in `opensearch.yml` and set `knn.memory.circuit_breaker.limit.<tier-name>` in the cluster settings. For example, define a node tier as `node.attr.knn_cb_tier: "integ"` and set `knn.memory.circuit_breaker.limit.integ: "80%"`. Nodes use their tier's circuit breaker limit if one is configured and the cluster-wide setting if no node-specific value is set. Default is `50%`.
+- `knn.memory.circuit_breaker.limit` (動態，百分比或位元組單位)：原生程式庫索引的原生記憶體限制。在預設值下，若機器有 100 GB 記憶體且 JVM 使用 32 GB，則 k-NN 外掛程式會使用剩餘 68 GB 的 50% (34 GB)。若記憶體使用量超過此值，外掛程式會移除最近最少使用的原生程式庫索引。若要在節點層級設定此限制，請在 `opensearch.yml` 中加入 `node.attr.knn_cb_tier: "<tier-name>"`，並在叢集設定中設定 `knn.memory.circuit_breaker.limit.<tier-name>`。例如，將節點層級定義為 `node.attr.knn_cb_tier: "integ"` 並設定 `knn.memory.circuit_breaker.limit.integ: "80%"`。若已設定節點層級的斷路器限制，節點會使用該限制；若未設定節點專屬值，則使用叢集範圍的設定。預設為 `50%`。
 
-- `knn.memory.circuit_breaker.enabled` (Dynamic, Boolean): Whether to enable the k-NN memory circuit breaker. Default is `true`.
+- `knn.memory.circuit_breaker.enabled` (動態，布林值)：是否啟用 k-NN 記憶體斷路器。預設為 `true`。
 
-- `knn.model.index.number_of_shards` (Dynamic, integer): The number of shards to use for the model system index, which is the OpenSearch index that stores the models used for approximate nearest neighbor (ANN) search. Default is `1`.
+- `knn.model.index.number_of_shards` (動態，整數)：模型系統索引所使用的分片數量，該索引是用於儲存近似最近鄰 (ANN) 搜尋所用模型的 OpenSearch 索引。預設為 `1`。
 
-- `knn.model.index.number_of_replicas` (Dynamic, integer): The number of replica shards to use for the model system index. In a multi-node cluster, set this value to at least `1` to increase stability. Default is `1`.
+- `knn.model.index.number_of_replicas` (動態，整數)：模型系統索引所使用的副本分片數量。在多節點叢集中，請將此值至少設為 `1` 以提高穩定性。預設為 `1`。
 
-- `knn.model.cache.size.limit` (Dynamic, percentage): The model cache limit, which cannot exceed 25% of the JVM heap. Default is `10%`.
+- `knn.model.cache.size.limit` (動態，百分比)：模型快取限制，不得超過 JVM 堆積的 25%。預設為 `10%`。
 
-- `knn.faiss.avx2.disabled` (Static, Boolean): Whether to disable the SIMD-based `libopensearchknn_faiss_avx2.so` library and load the non-optimized `libopensearchknn_faiss.so` library for the Faiss engine on machines with x64 architecture. Default is `false`. For more information, see [Single Instruction Multiple Data (SIMD) optimization]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#simd-optimization).
+- `knn.faiss.avx2.disabled` (靜態，布林值)：是否在 x64 架構的機器上，為 Faiss 引擎停用基於 SIMD 的 `libopensearchknn_faiss_avx2.so` 程式庫並載入未最佳化的 `libopensearchknn_faiss.so` 程式庫。預設為 `false`。如需更多資訊，請參閱[單一指令多重資料 (SIMD) 最佳化]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#simd-optimization)。
 
-- `knn.faiss.avx512.disabled` (Static, Boolean): Whether to disable the SIMD-based `libopensearchknn_faiss_avx512.so` library and load either the `libopensearchknn_faiss_avx2.so` or the non-optimized `libopensearchknn_faiss.so` library for the Faiss engine on machines with x64 architecture. Default is `false`. For more information, see [SIMD optimization]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#simd-optimization).
+- `knn.faiss.avx512.disabled` (靜態，布林值)：是否在 x64 架構的機器上，為 Faiss 引擎停用基於 SIMD 的 `libopensearchknn_faiss_avx512.so` 程式庫，並載入 `libopensearchknn_faiss_avx2.so` 或未最佳化的 `libopensearchknn_faiss.so` 程式庫。預設為 `false`。如需更多資訊，請參閱 [SIMD 最佳化]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#simd-optimization)。
 
-- `knn.faiss.avx512_spr.disabled` (Static, Boolean): Whether to disable the SIMD-based `libopensearchknn_faiss_avx512_spr.so` library and load either the `libopensearchknn_faiss_avx512.so`, `libopensearchknn_faiss_avx2.so`, or the non-optimized `libopensearchknn_faiss.so` library for the Faiss engine on machines with x64 architecture. Default is `false`. For more information, see [SIMD optimization]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#simd-optimization).
+- `knn.faiss.avx512_spr.disabled` (靜態，布林值)：是否在 x64 架構的機器上，為 Faiss 引擎停用基於 SIMD 的 `libopensearchknn_faiss_avx512_spr.so` 程式庫，並載入 `libopensearchknn_faiss_avx512.so`、`libopensearchknn_faiss_avx2.so` 或未最佳化的 `libopensearchknn_faiss.so` 程式庫。預設為 `false`。如需更多資訊，請參閱 [SIMD 最佳化]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#simd-optimization)。
 
-- `knn.dynamic_mapping.enabled` (Dynamic, Boolean): Whether to enable [dynamic mapping]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/#dynamic-mapping) of `knn_vector` fields, including inference of unmapped flat numeric arrays and dynamic templates that reference `knn_vector` as `match_mapping_type`. Default is `false`.
+- `knn.dynamic_mapping.enabled` (動態，布林值)：是否啟用 `knn_vector` 欄位的[動態對應]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/#dynamic-mapping)，包括推斷未對應的扁平數值陣列，以及將 `knn_vector` 指定為 `match_mapping_type` 的動態範本。預設為 `false`。
 
-### Index settings
+### 索引設定
 
-Several parameters defined in the index settings are currently in the deprecation process. Set those parameters in the mapping instead of in the index settings. Parameters set in the mapping override the parameters set in the index settings and allow an index to have multiple `knn_vector` fields with different parameters.
+索引設定中定義的多個參數目前正處於淘汰程序中。請在對應中設定這些參數，而非在索引設定中。在對應中設定的參數會覆寫索引設定中的參數，並允許索引擁有多個具有不同參數的 `knn_vector` 欄位。
 
-The following k-NN plugin settings apply at the index level. For information about updating these settings, see [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/):
+下列 k-NN 外掛程式設定適用於索引層級。如需更新這些設定的資訊，請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)：
 
-- `index.knn` (Static, Boolean): Whether the index builds native library indexes for its `knn_vector` fields. If `false`, the `knn_vector` fields are stored in doc values, but approximate k-NN search is disabled. Default is `false`.
+- `index.knn` (靜態，布林值)：索引是否為其 `knn_vector` 欄位建立原生程式庫索引。若為 `false`，`knn_vector` 欄位會儲存在 doc values 中，但近似 k-NN 搜尋會停用。預設為 `false`。
 
-- `index.knn.algo_param.ef_search` (Dynamic, integer): The size of the dynamic list of nearest neighbors used during a search (`ef`, or `efSearch`). Higher values produce a more accurate but slower search. This value cannot be lower than the number of queried nearest neighbors, `k`, and can be any value between `k` and the size of the dataset. Default is `100`.
+- `index.knn.algo_param.ef_search` (動態，整數)：搜尋期間使用的最近鄰動態清單大小 (`ef`，即 `efSearch`)。數值越高，搜尋越精確但越慢。此值不得低於查詢的最近鄰數量 `k`，且可為 `k` 至資料集大小之間的任何值。預設為 `100`。
 
-- `index.knn.advanced.approximate_threshold` (Dynamic, integer): The number of vectors that a segment must contain before OpenSearch creates specialized data structures for ANN search. Set to `-1` to disable building vector data structures and to `0` to always build them. Default is `0`.
+- `index.knn.advanced.approximate_threshold` (動態，整數)：OpenSearch 為 ANN 搜尋建立專用資料結構前，一個分段必須包含的向量數量。設為 `-1` 可停用向量資料結構的建立，設為 `0` 則一律建立。預設為 `0`。
 
-- `index.knn.advanced.filtered_exact_search_threshold` (Dynamic, integer): The filtered ID threshold at which OpenSearch switches to exact search during filtered ANN search. If the number of filtered IDs in a segment is lower than this value, then exact search is performed on the filtered IDs. Default is `-1`, which applies no threshold.
+- `index.knn.advanced.filtered_exact_search_threshold` (動態，整數)：在篩選式 ANN 搜尋期間，OpenSearch 切換至精確搜尋的篩選 ID 門檻。若分段中的篩選 ID 數量低於此值，則會對篩選 ID 執行精確搜尋。預設為 `-1`，表示不套用任何門檻。
 
-- `index.knn.faiss.efficient_filter.disable_exact_search` (Dynamic, Boolean): When `true`, disables the exact search fallback that occurs when a Faiss efficient-filtered approximate nearest neighbor (ANN) search returns fewer than `k` results. Default is `false`. For more information, see [Disabling the exact search fallback]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/efficient-knn-filtering/#disabling-the-exact-search-fallback).
+- `index.knn.faiss.efficient_filter.disable_exact_search` (動態，布林值)：設為 `true` 時，停用當 Faiss 高效篩選式近似最近鄰 (ANN) 搜尋傳回少於 `k` 筆結果時所發生的精確搜尋後備機制。預設為 `false`。如需更多資訊，請參閱[停用精確搜尋後備機制]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/efficient-knn-filtering/#disabling-the-exact-search-fallback)。
 
-- `index.knn.derived_source.enabled` (Static, Boolean): Prevents vectors from being stored in `_source`, reducing disk usage for vector indexes. Default is `true` for an index created with `index.knn` set to `true` and `false` for all other indexes.
+- `index.knn.derived_source.enabled` (靜態，布林值)：防止向量儲存在 `_source` 中，以減少向量索引的磁碟用量。對於建立時將 `index.knn` 設為 `true` 的索引，預設為 `true`；對於所有其他索引，預設為 `false`。
 
-- `index.knn.memory_optimized_search` (Static, Boolean): Enables [memory-optimized search]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/memory-optimized-search/) on an index. Default is `false`.
+- `index.knn.memory_optimized_search` (靜態，布林值)：在索引上啟用[記憶體最佳化搜尋]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/memory-optimized-search/)。預設為 `false`。
 
-An index created in OpenSearch version 2.11 or earlier still uses the previous `ef_construction` and `ef_search` values (`512`).
+在 OpenSearch 2.11 或更早版本中建立的索引，仍會使用先前的 `ef_construction` 與 `ef_search` 值 (`512`)。
 {: .note}
 
-When you create an index with `index.knn` set to `true`, the k-NN plugin also lowers two [tiered merge policy settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#tiered-merge-policy-settings) so that merges compete less with search for CPU: it sets `index.merge.policy.max_merge_at_once` to `10` rather than the default of `30` and `index.merge.policy.floor_segment` to `2mb` rather than the default of `16mb`. Both settings are dynamic, so you can change them after creating the index.
+當您建立索引並將 `index.knn` 設為 `true` 時，k-NN 外掛程式也會降低兩項[分層合併原則設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#tiered-merge-policy-settings)，以減少合併與搜尋之間的 CPU 競爭：它會將 `index.merge.policy.max_merge_at_once` 設為 `10` 而非預設的 `30`，並將 `index.merge.policy.floor_segment` 設為 `2mb` 而非預設的 `16mb`。這兩項設定都是動態的，因此您可以在建立索引後變更它們。
 
-### Remote index build settings
+### 遠端索引建置設定
 
-The following settings control [remote vector index building]({{site.url}}{{site.baseurl}}/vector-search/remote-index-build/).
+下列設定用於控制[遠端向量索引建置]({{site.url}}{{site.baseurl}}/vector-search/remote-index-build/)。
 
-#### Cluster settings
+#### 叢集設定
 
-The following remote index build settings apply at the cluster level:
+下列遠端索引建置設定適用於叢集層級：
 
-- `knn.remote_index_build.enabled` (Dynamic, Boolean): Enables remote vector index building for the cluster. Default is `false`.
+- `knn.remote_index_build.enabled` (動態，布林值)：為叢集啟用遠端向量索引建置。預設值為 `false`。
 
-- `knn.remote_index_build.repository` (Dynamic, string): The name of the registered repository to which the remote index builder writes. No default value; you must set this setting before using the remote index build service.
+- `knn.remote_index_build.repository` (動態，字串)：遠端索引建置器寫入的已註冊儲存庫名稱。沒有預設值；您必須先設定此設定，才能使用遠端索引建置服務。
 
-- `knn.remote_index_build.service.endpoint` (Dynamic, string): The endpoint URL of the remote build service. No default value; you must set this setting before using the remote index build service.
+- `knn.remote_index_build.service.endpoint` (動態，字串)：遠端建置服務的端點 URL。沒有預設值；您必須先設定此設定，才能使用遠端索引建置服務。
 
-- `knn.remote_index_build.poll.interval` (Dynamic, time unit): How frequently the client polls the remote build service for job status. Default is `5s`.
+- `knn.remote_index_build.poll.interval` (動態，時間單位)：用戶端向遠端建置服務輪詢工作狀態的頻率。預設值為 `5s`。
 
-- `knn.remote_index_build.client.timeout` (Dynamic, time unit): The maximum amount of time to wait for the remote build to complete. If the build does not complete within this time, OpenSearch builds the index locally on the CPU. Default is `60m`.
+- `knn.remote_index_build.client.timeout` (動態，時間單位)：等待遠端建置完成的最長時間。如果建置未在此時間內完成，OpenSearch 會改在本機 CPU 上建置索引。預設值為 `60m`。
 
-- `knn.remote_index_build.size.max` (Dynamic, byte unit): The maximum segment size that the remote index build service accepts. Set this setting according to the constraints of your remote build service implementation. Default is `0`, which places no upper bound on segment size.
+- `knn.remote_index_build.size.max` (動態，位元組單位)：遠端索引建置服務接受的最大分段大小。請依據您的遠端建置服務實作的限制來設定此設定。預設值為 `0`，表示分段大小沒有上限。
 
-#### Index settings
+#### 索引設定
 
-The following remote index build settings apply at the index level. For information about updating these settings, see [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/):
+下列遠端索引建置設定適用於索引層級。關於更新這些設定的資訊，請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)：
 
-- `index.knn.remote_index_build.enabled` (Dynamic, Boolean): Enables remote index building for the index. Takes effect only when `knn.remote_index_build.enabled` is `true`. Default is `true`.
+- `index.knn.remote_index_build.enabled` (動態，布林值)：為索引啟用遠端索引建置。僅在 `knn.remote_index_build.enabled` 為 `true` 時生效。預設值為 `true`。
 
-- `index.knn.remote_index_build.size.min` (Dynamic, byte unit): The minimum segment size for which OpenSearch uses the remote index build service. Smaller segments are built locally. Default is `50mb`.
+- `index.knn.remote_index_build.size.min` (動態，位元組單位)：OpenSearch 使用遠端索引建置服務的最小分段大小。較小的分段會在本機建置。預設值為 `50mb`。
 
-#### Remote build authentication
+#### 遠端建置驗證
 
-The remote build service username and password are secure settings that must be set in the [OpenSearch keystore]({{site.url}}{{site.baseurl}}/security/configuration/opensearch-keystore/) as follows:
+遠端建置服務的使用者名稱與密碼是安全設定，必須依照下列方式在 [OpenSearch keystore]({{site.url}}{{site.baseurl}}/security/configuration/opensearch-keystore/) 中設定：
 
 ```bash
 ./bin/opensearch-keystore add knn.remote_index_build.service.username
@@ -109,32 +110,32 @@ The remote build service username and password are secure settings that must be 
 ```
 {% include copy.html %}
 
-You can reload the secure settings without restarting the node by using the [Nodes Reload Secure Settings API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-reload-secure/).
+您可以使用 [Nodes Reload Secure Settings API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-reload-secure/) 重新載入安全設定，而無需重新啟動節點。
 
-## Neural Search plugin settings
+## Neural Search 外掛程式設定
 
-The Neural Search plugin supports the following settings.
+Neural Search 外掛程式支援下列設定。
 
-### Cluster settings
+### 叢集設定
 
-The following Neural Search plugin settings apply at the cluster level. Dynamic settings are updated using the [Cluster Settings API]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/#updating-cluster-settings-using-the-api); static settings must be configured in `opensearch.yml` on each node:
+下列 Neural Search 外掛程式設定適用於叢集層級。動態設定可透過 [Cluster Settings API]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/#updating-cluster-settings-using-the-api) 更新；靜態設定則必須在每個節點的 `opensearch.yml` 中設定：
 
-- `plugins.neural_search.stats_enabled` (Dynamic, Boolean): Enables the [Neural Search Stats API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#stats). Default is `false`.
-- `plugins.neural_search.circuit_breaker.limit` (Dynamic, percentage): Specifies the JVM memory limit for the [neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/) circuit breaker. This limit bounds the JVM heap caches used by the Lucene engine only and has no effect on the native engine, which relies on the operating system page cache. Default is `10%` of the JVM heap. For more information, see [Memory and caching settings]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#memory-and-caching-settings).
-- `plugins.neural_search.circuit_breaker.overhead` (Dynamic, Float): A multiplier used to adjust memory usage estimates for [neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/). Higher values provide more conservative memory estimates. Like `plugins.neural_search.circuit_breaker.limit`, this setting applies to the Lucene engine only. Default is `1.0`. 
-- `plugins.neural_search.sparse.algo_param.index_thread_qty` (Dynamic, Integer): The number of threads used for building indexes for [neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/). Increasing this value allocates more CPUs to the index build job and boosts indexing performance. Valid values are in the range from `1` to `1024`. This setting applies to both the Lucene engine and the native engine. Default is `1`. For more information, see [Thread pool configuration]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#thread-pool-configuration).
-- `plugins.neural_search.sparse.native_engine_feature_enabled` (Static, Boolean): Whether the [native engine]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#native-engine) for neural sparse ANN search is available. Because this setting is static, configure it in `opensearch.yml` on each node; changing it requires a node restart. Default is `true`.
-- `plugins.neural_search.sparse.native_engine_enabled` (Dynamic, Boolean): Whether the [native engine]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#native-engine) for neural sparse ANN search is enabled at runtime. Both this setting and `plugins.neural_search.sparse.native_engine_feature_enabled` must be `true` before a field can use the native engine. Default is `false`. For more information, see [Enabling the native engine]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#enabling-the-native-engine).
+- `plugins.neural_search.stats_enabled` (動態，布林值)：啟用 [Neural Search Stats API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#stats)。預設值為 `false`。
+- `plugins.neural_search.circuit_breaker.limit` (動態，百分比)：指定[神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)斷路器的 JVM 記憶體限制。此限制僅約束 Lucene 引擎使用的 JVM 堆積快取，對依賴作業系統分頁快取的原生引擎沒有影響。預設值為 JVM 堆積的 `10%`。如需更多資訊，請參閱[記憶體與快取設定]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#memory-and-caching-settings)。
+- `plugins.neural_search.circuit_breaker.overhead` (動態，浮點數)：用於調整[神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)記憶體用量估算值的乘數。數值越高，記憶體估算越保守。與 `plugins.neural_search.circuit_breaker.limit` 一樣，此設定僅適用於 Lucene 引擎。預設值為 `1.0`。
+- `plugins.neural_search.sparse.algo_param.index_thread_qty` (動態，整數)：用於為[神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)建置索引的執行緒數量。增加此值會為索引建置工作配置更多 CPU，並提升編製索引的效能。有效值範圍為 `1` 至 `1024`。此設定同時適用於 Lucene 引擎與原生引擎。預設值為 `1`。如需更多資訊，請參閱[執行緒集區組態]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#thread-pool-configuration)。
+- `plugins.neural_search.sparse.native_engine_feature_enabled` (靜態，布林值)：是否提供適用於神經稀疏 ANN 搜尋的[原生引擎]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#native-engine)。由於此設定為靜態，請在每個節點的 `opensearch.yml` 中設定；變更此設定需要重新啟動節點。預設值為 `true`。
+- `plugins.neural_search.sparse.native_engine_enabled` (動態，布林值)：適用於神經稀疏 ANN 搜尋的[原生引擎]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#native-engine)是否在執行階段啟用。在欄位可以使用原生引擎之前，此設定與 `plugins.neural_search.sparse.native_engine_feature_enabled` 都必須為 `true`。預設值為 `false`。如需更多資訊，請參閱[啟用原生引擎]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#enabling-the-native-engine)。
 
-No setting bounds the amount of memory that a native engine index uses. The native engine reads its index from a memory-mapped file, so to size a node for the native engine, leave enough RAM for the operating system page cache, the same as for any other memory-mapped Lucene data.
+沒有任何設定會限制原生引擎索引使用的記憶體量。原生引擎會從記憶體對應檔案讀取其索引，因此若要為原生引擎調整節點大小，請為作業系統分頁快取保留足夠的 RAM，與其他任何記憶體對應的 Lucene 資料相同。
 {: .note}
 
-### Index settings
+### 索引設定
 
-The following Neural Search plugin settings apply at the index level:
+下列 Neural Search 外掛程式設定適用於索引層級：
 
-- `index.neural_search.semantic_ingest_batch_size` (Dynamic, integer): Specifies the number of documents batched together when generating embeddings for `semantic` fields during ingestion. Default is `10`. 
+- `index.neural_search.semantic_ingest_batch_size` (動態，整數)：指定在匯入期間為 `semantic` 欄位產生嵌入時批次處理的文件數量。預設值為 `10`。
 
 <p id="hybrid-collapse-docs-per-group"></p>
 
-- `index.neural_search.hybrid_collapse_docs_per_group_per_subquery` (_Deprecated_):  This setting is deprecated and no longer has any impact. The number of documents returned is controlled entirely by the `size` parameter.
+- `index.neural_search.hybrid_collapse_docs_per_group_per_subquery` (_已棄用_)：此設定已棄用，不再有任何影響。傳回的文件數量完全由 `size` 參數控制。

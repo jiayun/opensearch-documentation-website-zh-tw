@@ -1,49 +1,50 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Analyzing Jaeger trace data 
+title: "分析 Jaeger 追蹤資料"
 parent: Trace analytics
 nav_order: 55
 redirect_from:
   - /observability-plugin/trace/trace-analytics-jaeger/
 ---
 
-# Analyzing Jaeger trace data
+# 分析 Jaeger 追蹤資料
 
-Introduced 2.5
+於 2.5 版推出
 {: .label .label-purple }
 
-If you use OpenSearch as the storage backend for [Jaeger](https://www.jaegertracing.io/), you can analyze Jaeger trace data using trace analytics in OpenSearch Dashboards. Trace analytics shows the error rates and latency of your services and operations. You can filter traces and examine the spans of an individual trace to locate service issues.
+如果您使用 OpenSearch 作為 [Jaeger](https://www.jaegertracing.io/) 的儲存後端，您可以使用 OpenSearch Dashboards 中的追蹤分析來分析 Jaeger 追蹤資料。追蹤分析會顯示您的服務與作業的錯誤率和延遲。您可以篩選追蹤，並檢查個別追蹤的跨度，以找出服務問題。
 
-Trace analytics supports two data sources. Select **Data Prepper** to analyze trace data that OpenSearch Data Prepper ingested into OpenSearch. Select **Jaeger** to analyze trace data that Jaeger stored in OpenSearch.
+追蹤分析支援兩種資料來源。選取 **Data Prepper** 以分析 OpenSearch Data Prepper 匯入至 OpenSearch 的追蹤資料。選取 **Jaeger** 以分析 Jaeger 儲存在 OpenSearch 中的追蹤資料。
 
-## Jaeger indexes
+## Jaeger 索引
 
-Jaeger and Data Prepper store trace data in different indexes. Data Prepper writes to indexes named `otel-v1-apm-span-*` and `otel-v1-apm-service-map*`. Jaeger writes to indexes named `jaeger-span-*` and `jaeger-service-*`. By default, Jaeger creates a new span index and a new service index each day.
+Jaeger 和 Data Prepper 會將追蹤資料儲存在不同的索引中。Data Prepper 會寫入名為 `otel-v1-apm-span-*` 和 `otel-v1-apm-service-map*` 的索引。Jaeger 會寫入名為 `jaeger-span-*` 和 `jaeger-service-*` 的索引。根據預設，Jaeger 每天會建立新的跨度索引和新的服務索引。
 
-## Error data requirements
+## 錯誤資料需求
 
-Trace analytics identifies spans that contain errors using the `tag.error` field. Jaeger v2 always stores the `error` tag as a field in the span document, so error data is available without additional configuration.
+追蹤分析會使用 `tag.error` 欄位來識別包含錯誤的跨度。Jaeger v2 一律會將 `error` 標籤儲存為跨度文件中的欄位，因此不需要額外的組態即可取得錯誤資料。
 
-Earlier Jaeger collectors store tags in a nested array by default. If you use one of these collectors, set the `ES_TAGS_AS_FIELDS_ALL` environment variable to `true`. Otherwise, error data is not available in trace analytics.
+較舊的 Jaeger 收集器預設會將標籤儲存在巢狀陣列中。如果您使用其中一種收集器，請將 `ES_TAGS_AS_FIELDS_ALL` 環境變數設為 `true`。否則，追蹤分析中將無法取得錯誤資料。
 
-## Setting up OpenSearch to use Jaeger data
+## 設定 OpenSearch 以使用 Jaeger 資料
 
-The following example uses Docker Compose to run a single-node OpenSearch cluster, OpenSearch Dashboards, Jaeger, and the Jaeger HotROD sample application. HotROD sends trace data to Jaeger using the OpenTelemetry Protocol (OTLP), and Jaeger stores the data in OpenSearch.
+下列範例使用 Docker Compose 執行單一節點 OpenSearch 叢集、OpenSearch Dashboards、Jaeger 以及 Jaeger HotROD 範例應用程式。HotROD 會使用 OpenTelemetry Protocol (OTLP) 將追蹤資料傳送至 Jaeger，而 Jaeger 會將資料儲存在 OpenSearch 中。
 
-### Step 1: Set the admin password
+### 步驟 1：設定管理員密碼
 
-OpenSearch requires a custom password for the `admin` user. In an empty directory, create a file named `.env` containing the following line, replacing `<custom-admin-password>` with a strong password:
+OpenSearch 需要為 `admin` 使用者設定自訂密碼。在空目錄中，建立名為 `.env` 的檔案，其中包含下列這一行，並將 `<custom-admin-password>` 取代為高強度密碼：
 
 ```bash
 OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>
 ```
 {% include copy.html %}
 
-Docker Compose reads this file and passes the password to both OpenSearch and Jaeger. For more information, see [Admin password requirements]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements).
+Docker Compose 會讀取此檔案，並將密碼傳遞給 OpenSearch 和 Jaeger。如需詳細資訊，請參閱[管理員密碼需求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)。
 
-### Step 2: Configure Jaeger
+### 步驟 2：設定 Jaeger
 
-In the same directory, create a file named `jaeger-config.yaml` containing the following configuration. It configures Jaeger to receive OTLP data and store it in OpenSearch:
+在同一個目錄中，建立名為 `jaeger-config.yaml` 的檔案，其中包含下列組態。此組態會設定 Jaeger 接收 OTLP 資料並將其儲存在 OpenSearch 中：
 
 ```yaml
 service:
@@ -89,9 +90,9 @@ exporters:
 ```
 {% include copy.html %}
 
-### Step 3: Create the Docker Compose file
+### 步驟 3：建立 Docker Compose 檔案
 
-In the same directory, create a file named `docker-compose.yml` containing the following configuration:
+在同一個目錄中，建立名為 `docker-compose.yml` 的檔案，其中包含下列組態：
 
 ```yaml
 services:
@@ -169,79 +170,79 @@ networks:
 ```
 {% include copy.html %}
 
-### Step 4: Start the containers
+### 步驟 4：啟動容器
 
-To start the containers, run the following command:
+若要啟動容器，請執行下列命令：
 
 ```bash
 docker compose up -d
 ```
 {% include copy.html %}
 
-Jaeger and HotROD start after the OpenSearch cluster reports a `green` or `yellow` health status, which can take a minute or longer.
+Jaeger 和 HotROD 會在 OpenSearch 叢集回報 `green` 或 `yellow` 健康狀態後啟動，這可能需要一分鐘或更久。
 
-To stop the containers and delete their data, run the following command:
+若要停止容器並刪除其資料，請執行下列命令：
 
 ```bash
 docker compose down -v
 ```
 {% include copy.html %}
 
-### Step 5: Generate sample data
+### 步驟 5：產生範例資料
 
-To open the HotROD sample application, go to [http://localhost:8080](http://localhost:8080). Each time you select a customer, HotROD generates a trace. Some of the traces contain errors, so the error views in trace analytics display data.
+若要開啟 HotROD 範例應用程式，請前往 [http://localhost:8080](http://localhost:8080)。每次您選取客戶時，HotROD 就會產生一個追蹤。部分追蹤包含錯誤，因此追蹤分析中的錯誤檢視會顯示資料。
 
-![HotROD sample application]({{site.url}}{{site.baseurl}}/images/trace-analytics/sample-app.png)
+![HotROD 範例應用程式]({{site.url}}{{site.baseurl}}/images/trace-analytics/sample-app.png)
 
-To confirm that Jaeger stored the trace data in OpenSearch, list the Jaeger indexes:
+若要確認 Jaeger 已將追蹤資料儲存在 OpenSearch 中，請列出 Jaeger 索引：
 
 ```bash
 curl -sk -u admin:<custom-admin-password> "https://localhost:9200/_cat/indices/jaeger-*?v"
 ```
 {% include copy.html %}
 
-The response contains a `jaeger-span-*` index and a `jaeger-service-*` index for the current day.
+回應會包含當天的 `jaeger-span-*` 索引和 `jaeger-service-*` 索引。
 
-### Step 6: View trace data in OpenSearch Dashboards
+### 步驟 6：在 OpenSearch Dashboards 中檢視追蹤資料
 
-Go to [http://localhost:5601](http://localhost:5601) and log in as the `admin` user with the password you set in Step 1. On the top menu, go to **Observability** > **Traces**.
+前往 [http://localhost:5601](http://localhost:5601)，並以您在步驟 1 中設定的密碼登入 `admin` 使用者。在頂端功能表中，前往 **Observability** > **Traces**。
 
-## Selecting the data source
+## 選取資料來源
 
-To analyze Jaeger data, select **Jaeger** from the data source selector at the top of the **Trace analytics** page.
+若要分析 Jaeger 資料，請從 **Trace analytics** 頁面頂端的資料來源選取器中選取 **Jaeger**。
 
-![Selecting Jaeger as the trace analytics data source]({{site.url}}{{site.baseurl}}/images/trace-analytics/select-data.png)
+![選取 Jaeger 作為追蹤分析資料來源]({{site.url}}{{site.baseurl}}/images/trace-analytics/select-data.png)
 
-Trace analytics displays data only for the selected time range. The default time range is the last 5 minutes. If no traces appear, generate new data in the sample application or select a longer time range.
+追蹤分析只會顯示所選時間範圍的資料。預設時間範圍是過去 5 分鐘。如果沒有出現任何追蹤，請在範例應用程式中產生新資料，或選取更長的時間範圍。
 
-## Traces
+## 追蹤
 
-The **Traces** page lists the traces in the selected time range. For each trace, the list shows the trace ID, latency, whether the trace contains errors, and the time it was last updated.
+**Traces** 頁面會列出所選時間範圍內的追蹤。對於每個追蹤，清單會顯示追蹤 ID、延遲、追蹤是否包含錯誤，以及上次更新的時間。
 
-![Jaeger traces list]({{site.url}}{{site.baseurl}}/images/trace-analytics/service-trace-data.png)
+![Jaeger 追蹤清單]({{site.url}}{{site.baseurl}}/images/trace-analytics/service-trace-data.png)
 
-### Error rate
+### 錯誤率
 
-To view error data, expand **Service and Operations** below the traces list and select **Errors**. The chart shows the trace error rate over time. The **Top 5 Service and Operation Errors** table lists the service and operation combinations that have the highest error rates.
+若要檢視錯誤資料，請展開追蹤清單下方的 **Service and Operations**，然後選取 **Errors**。圖表會顯示一段時間內的追蹤錯誤率。**Top 5 Service and Operation Errors** 表格會列出錯誤率最高的服務與作業組合。
 
-![Trace error rate over time]({{site.url}}{{site.baseurl}}/images/trace-analytics/error-rate.png)
+![一段時間內的追蹤錯誤率]({{site.url}}{{site.baseurl}}/images/trace-analytics/error-rate.png)
 
-### Request rate
+### 請求率
 
-To view throughput, select **Request rate**. The chart shows the number of traces over time. The **Top 5 Service and Operation Latency** table lists the service and operation combinations that have the highest latency.
+若要檢視輸送量，請選取 **Request rate**。圖表會顯示一段時間內的追蹤數量。**Top 5 Service and Operation Latency** 表格會列出延遲最高的服務與作業組合。
 
-![Traces over time and the operations that have the highest latency]({{site.url}}{{site.baseurl}}/images/trace-analytics/throughput.png)
+![一段時間內的追蹤以及延遲最高的作業]({{site.url}}{{site.baseurl}}/images/trace-analytics/throughput.png)
 
-In either table, select a service and operation name to filter the traces list by that service and operation.
+在任一表格中，選取服務和作業名稱，即可依該服務和作業篩選追蹤清單。
 
-### Trace details
+### 追蹤詳細資料
 
-To view the details of a trace, select its trace ID. The trace details page shows the time spent by each service and the spans of the trace as a timeline, a list, or a tree. The **Payload** section shows the span documents in JSON format.
+若要檢視追蹤的詳細資料，請選取其追蹤 ID。追蹤詳細資料頁面會以時間軸、清單或樹狀結構顯示每個服務花費的時間以及追蹤的跨度。**Payload** 區段會以 JSON 格式顯示跨度文件。
 
-![Jaeger trace details]({{site.url}}{{site.baseurl}}/images/trace-analytics/trace-details.png)
+![Jaeger 追蹤詳細資料]({{site.url}}{{site.baseurl}}/images/trace-analytics/trace-details.png)
 
-## Services
+## 服務
 
-To view the average duration, error rate, request rate, and number of traces for each service, select **Services**.
+若要檢視每個服務的平均持續時間、錯誤率、請求率和追蹤數量，請選取 **Services**。
 
-![Jaeger services list]({{site.url}}{{site.baseurl}}/images/trace-analytics/services-jaeger.png)
+![Jaeger 服務清單]({{site.url}}{{site.baseurl}}/images/trace-analytics/services-jaeger.png)

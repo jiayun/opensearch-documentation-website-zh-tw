@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: explain
 parent: Commands
@@ -8,32 +9,32 @@ nav_order: 16
 
 <!-- vale off -->
 
-# explain command
+# explain 命令
 
 <!-- vale on -->
 
-The `explain` command displays the execution plan of a query, which is often used for query translation and troubleshooting. The `explain` command can only be used as the first command in the PPL query.
+`explain` 命令會顯示查詢的執行計畫，常用於查詢轉換與疑難排解。`explain` 命令只能作為 PPL 查詢中的第一個命令。
 
-## Syntax
+## 語法
 
-The `explain` command has the following syntax:
+`explain` 命令具有下列語法：
 
 ```sql
 explain <mode> queryStatement
 ```
 
-## Parameters
+## 參數
 
-The `explain` command supports the following parameters.
+`explain` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<queryStatement>` | Required | A PPL query to explain. |
-| `<mode>` | Optional | The explain mode. Valid values are: <br> - `standard`: Displays the logical and physical plan along with push-down information (query domain-specific language [DSL]). Available in both v2 and v3 engines. <br> - `simple`: Displays the logical plan tree without attributes. Requires the v3 engine (`plugins.calcite.enabled` = `true`). <br> - `cost`: Displays the standard information plus plan cost attributes. Requires the v3 engine (`plugins.calcite.enabled` = `true`). <br> - `extended`: Displays the standard information plus the generated code. If the whole plan is able to push-down, it is equal to the standard mode. Requires the v3 engine (`plugins.calcite.enabled` = `true`). <br><br> Default is `standard`. |
+| `<queryStatement>` | 必要 | 要解釋的 PPL 查詢。 |
+| `<mode>` | 選用 | 解釋模式。有效值為：<br> - `standard`：顯示邏輯與實體計畫以及下推資訊（查詢領域特定語言 [DSL]）。v2 與 v3 引擎皆可使用。<br> - `simple`：顯示不含屬性的邏輯計畫樹。需要 v3 引擎（`plugins.calcite.enabled` = `true`）。<br> - `cost`：顯示標準資訊加上計畫成本屬性。需要 v3 引擎（`plugins.calcite.enabled` = `true`）。<br> - `extended`：顯示標準資訊加上產生的程式碼。如果整個計畫都能下推，則等同於標準模式。需要 v3 引擎（`plugins.calcite.enabled` = `true`）。<br><br> 預設為 `standard`。 |
 
-## Example 1: Explaining a PPL query in the v2 engine  
+## 範例 1：在 v2 引擎中解釋 PPL 查詢  
 
-When Apache Calcite is disabled (`plugins.calcite.enabled` is set to `false`), `explain` obtains its physical plan and push-down information from the v2 engine:
+當 Apache Calcite 停用時（`plugins.calcite.enabled` 設為 `false`），`explain` 會從 v2 引擎取得其實體計畫與下推資訊：
   
 ```sql
 explain source=state_country
@@ -42,7 +43,7 @@ explain source=state_country
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 ```json
 {
@@ -65,9 +66,9 @@ The query returns the following results:
 ```
   
 
-## Example 2: Explaining a PPL query in the v3 engine  
+## 範例 2：在 v3 引擎中解釋 PPL 查詢  
 
-When Apache Calcite is enabled (`plugins.calcite.enabled` is set to `true`), `explain` obtains its logical and physical plan and push-down information from the v3 engine:  
+當 Apache Calcite 啟用時（`plugins.calcite.enabled` 設為 `true`），`explain` 會從 v3 引擎取得其邏輯與實體計畫以及下推資訊：  
   
 ```sql
 explain source=state_country
@@ -76,7 +77,7 @@ explain source=state_country
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```json
 {
@@ -94,9 +95,9 @@ The query returns the following results:
 ```
   
 
-## Example 3: Explaining a PPL query in the simple mode  
+## 範例 3：以 simple 模式解釋 PPL 查詢  
 
-The following query uses the `explain` command in the `simple` mode to show a simplified logical plan tree: 
+下列查詢以 `simple` 模式使用 `explain` 命令來顯示簡化的邏輯計畫樹： 
   
 ```sql
 explain simple source=state_country
@@ -105,7 +106,7 @@ explain simple source=state_country
 ```
 {% include copy.html %}
   
-The query returns the following results: 
+查詢會傳回下列結果： 
   
 ```json
 {
@@ -120,9 +121,9 @@ The query returns the following results:
 ```
   
 
-## Example 4: Explaining a PPL query in the cost mode  
+## 範例 4：以 cost 模式解釋 PPL 查詢  
 
-The following query uses the `explain` command in the `cost` mode to show plan cost attributes:
+下列查詢以 `cost` 模式使用 `explain` 命令來顯示計畫成本屬性：
   
 ```sql
 explain cost source=state_country
@@ -131,7 +132,7 @@ explain cost source=state_country
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```json
 {
@@ -149,9 +150,9 @@ The query returns the following results:
 ```
   
 
-## Example 5: Explaining a PPL query in the extended mode
+## 範例 5：以 extended 模式解釋 PPL 查詢
 
-The following query uses the `explain` command in the `extended` mode to show the generated code:
+下列查詢以 `extended` 模式使用 `explain` 命令來顯示產生的程式碼：
 
 ```sql
 explain extended source=state_country
@@ -160,7 +161,7 @@ explain extended source=state_country
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```json
 {

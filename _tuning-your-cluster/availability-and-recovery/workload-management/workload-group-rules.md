@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Workload group rules
+title: "工作負載群組規則"
 nav_order: 25
 parent: Workload management
 grand_parent: Availability and recovery
@@ -8,13 +9,13 @@ redirect_from:
   - /tuning-your-cluster/availability-and-recovery/workload-management/create-workload-group-rules-api/
 ---
 
-# Workload group rules
+# 工作負載群組規則
 
-Workload group rules allow you to automatically assign workload group IDs to incoming queries. When a query matches the attributes specified in a rule, OpenSearch tags the query with the corresponding workload group ID. This eliminates the need for clients to manually include the workload group ID in each request. For more information about auto-tagging requests, see [Rule-based auto-tagging]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/rule-based-autotagging/autotagging/).
+工作負載群組規則可讓您自動將工作負載群組 ID 指派給傳入的查詢。當查詢符合規則中指定的屬性時，OpenSearch 會以對應的工作負載群組 ID 標記該查詢。如此一來，用戶端便不必在每個請求中手動加入工作負載群組 ID。如需自動標記請求的詳細資訊，請參閱[以規則為基礎的自動標記]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/rule-based-autotagging/autotagging/)。
 
-## Creating a rule
+## 建立規則
 
-To create a rule for a workload group, provide the workload group ID in the `workload_group` parameter. The following example creates a rule that assigns the given workload group to requests matching both the `index_pattern` and `principal.username` attributes:
+若要為工作負載群組建立規則，請在 `workload_group` 參數中提供工作負載群組 ID。下列範例會建立一個規則，將指定的工作負載群組指派給同時符合 `index_pattern` 和 `principal.username` 屬性的請求：
 
 ```json
 PUT _rules/workload_group
@@ -29,7 +30,7 @@ PUT _rules/workload_group
 ```
 {% include copy-curl.html %}
 
-The response contains the rule ID:
+回應包含規則 ID：
 
 ```json
 {
@@ -44,41 +45,41 @@ The response contains the rule ID:
 }
 ```
 
-## Attributes
+## 屬性
 
-The `workload_group` feature type contains the following attributes. Each rule must contain at least one of these attributes.
+`workload_group` 功能類型包含下列屬性。每個規則必須至少包含其中一個屬性。
 
-The table lists the attributes in order of priority, from highest to lowest. This priority is predefined and cannot be changed by the user. When multiple rules match a request, the rule containing the highest-priority attribute is applied.
+下表依優先順序由高到低列出屬性。此優先順序已預先定義，使用者無法變更。當多個規則符合請求時，會套用包含最高優先順序屬性的規則。
 
-| Attribute            | Data type | Description                                                                                                                                                                                                                   |
+| 屬性            | 資料類型 | 說明                                                                                                                                                                                                                   |
 |:---------------------|:----------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `principal.username` | List      | A list of usernames to be matched to this rule. Supports exact matches (for example, `user1`) and trailing wildcard patterns (for example, `user*`). This attribute is available only when the Security plugin is enabled on the domain.                                 |
-| `principal.role`     | List      | A list of roles to be matched to this rule. Supports exact matches (for example, `role1`) and trailing wildcard patterns (for example, `role*`). This attribute is available only when the Security plugin is enabled on the domain.                                     |
-| `index_pattern`      | List      | A list of target indexes for incoming queries. Supports exact matches (for example, `logs-2025`) and trailing wildcard patterns (for example, `logs*`).                                |
+| `principal.username` | 清單      | 要與此規則比對的使用者名稱清單。支援完全相符（例如，`user1`）及尾端萬用字元模式（例如，`user*`）。只有在網域上啟用 Security 外掛程式時，才能使用此屬性。                                 |
+| `principal.role`     | 清單      | 要與此規則比對的角色清單。支援完全相符（例如，`role1`）及尾端萬用字元模式（例如，`role*`）。只有在網域上啟用 Security 外掛程式時，才能使用此屬性。                                     |
+| `index_pattern`      | 清單      | 傳入查詢的目標索引清單。支援完全相符（例如，`logs-2025`）及尾端萬用字元模式（例如，`logs*`）。                                |
 
-## Parameters
+## 參數
 
-The `workload_group` feature type contains the following parameters.
+`workload_group` 功能類型包含下列參數。
 
-| Parameter        | Data type | Description                                                                                             |
+| 參數        | 資料類型 | 說明                                                                                             |
 |:-----------------|:----------|:--------------------------------------------------------------------------------------------------------|
-| attribute        | Object    | A rule must contain at least one attribute (`index_pattern`, `principal.username`, or `principal.role`). |
-| `description`    | String    | A description of the rule.                                                                              |
-| `workload_group` | String    | The workload group ID to apply to the requests matching this rule.                                      |
+| attribute        | 物件    | 規則必須至少包含一個屬性（`index_pattern`、`principal.username` 或 `principal.role`）。 |
+| `description`    | 字串    | 規則的說明。                                                                              |
+| `workload_group` | 字串    | 要套用至符合此規則之請求的工作負載群組 ID。                                      |
 
-## Rule matching and precedence
+## 規則比對與優先順序
 
-A single request can match more than one rule. OpenSearch evaluates each rule against the request and then uses precedence logic to decide which workload group to assign. 
-If no rule matches, the request runs without a workload group.
+單一請求可能符合多個規則。OpenSearch 會將每個規則與請求進行比對，再使用優先順序邏輯決定要指派哪個工作負載群組。 
+如果沒有符合的規則，請求會在未指派工作負載群組的情況下執行。
 
-### Matching within a single rule
+### 單一規則內的比對
 
-A rule matches a request only when every attribute in the rule matches, so multiple attributes in one rule form a logical `AND`. Within a single attribute, the listed values form a logical `OR`: the attribute matches when the request satisfies any one of its values. For example, a rule containing `"principal": { "role": ["role1", "role2"] }` matches a request in which a user has `role1` or `role2`.
+只有當規則中的每個屬性都符合時，該規則才會符合請求，因此同一規則中的多個屬性會形成邏輯 `AND`。在單一屬性內，列出的值會形成邏輯 `OR`：只要請求符合其中任一個值，該屬性就會符合。例如，包含 `"principal": { "role": ["role1", "role2"] }` 的規則會符合使用者具有 `role1` 或 `role2` 的請求。
 
-To match a request only when it carries a specific combination of values (a logical `AND` within a single attribute), create separate rules for each required value. Listing multiple values under one attribute always applies `OR` semantics.
+若要僅在請求包含特定值組合時才符合請求（單一屬性內的邏輯 `AND`），請為每個必要值建立個別規則。在同一屬性下列出多個值時，一律會套用 `OR` 語意。
 {: .note}
 
-Because `principal.username` and `principal.role` are subfields of the single `principal` attribute, all of their values are combined using `OR` (not `AND`). The following example shows a rule with both `principal` and `index_pattern` attributes:
+由於 `principal.username` 和 `principal.role` 是單一 `principal` 屬性的子欄位，因此其所有值都會使用 `OR`（而非 `AND`）合併。下列範例顯示同時具有 `principal` 和 `index_pattern` 屬性的規則：
 
 ```json
 {
@@ -91,23 +92,23 @@ Because `principal.username` and `principal.role` are subfields of the single `p
 }
 ```
 
-This rule matches a request that contains at least one `principal` value (a username or a role) and at least one `index_pattern` value:
+此規則會符合包含至少一個 `principal` 值（使用者名稱或角色）及至少一個 `index_pattern` 值的請求：
 
 ```
 (user1 OR user2 OR role1 OR role2 OR role3) AND (index-1 OR index-2 OR logs-*)
 ```
 
-### Choosing between multiple matching rules
+### 在多個符合的規則之間選擇
 
-When a request matches multiple rules that resolve to different workload groups, OpenSearch selects a single group in the following order:
+當請求符合多個規則，而這些規則對應至不同的工作負載群組時，OpenSearch 會依下列順序選取單一群組：
 
-1. **Attribute priority**: The workload group matched through the highest-priority attribute is preferred. Priority is fixed and follows the order shown in the [Attributes](#attributes) table (`principal.username`, then `principal.role`, then `index_pattern`).
-1. **Match score**: If the choice is still ambiguous, OpenSearch compares match scores. An exact match is scored higher than a shorter prefix (wildcard) match, and a workload group matched by more of the request's values receives a higher cumulative score. For example, if a request carries three roles and one group's rules match all three while another group's rules match only two, the group matching three roles is selected.
-1. **No assignment for an unresolved tie**: If two or more workload groups remain tied after all attributes are compared (for example, two rules that each match the request through a single, equally specific role), then OpenSearch assigns no workload group. The request runs without a workload group rather than having one chosen arbitrarily.
+1. **屬性優先順序**：優先選擇透過最高優先順序屬性比對成功的工作負載群組。優先順序固定不變，並依照[屬性](#attributes)表中所示的順序（先 `principal.username`，再 `principal.role`，最後是 `index_pattern`）。
+1. **比對分數**：如果仍無法明確選擇，OpenSearch 會比較比對分數。完全相符的分數高於較短的前綴（萬用字元）相符，而符合請求中更多值的工作負載群組會獲得較高的累計分數。例如，如果請求包含三個角色，且一個群組的規則符合全部三個角色，另一個群組的規則只符合兩個角色，則會選取符合三個角色的群組。
+1. **無法判定平手時不指派**：如果比較所有屬性後，仍有兩個以上的工作負載群組平手（例如，兩個規則各自透過單一且具體程度相同的角色符合請求），OpenSearch 就不會指派任何工作負載群組。請求會在未指派工作負載群組的情況下執行，而不是任意選擇一個群組。
 
-## Updating a rule
+## 更新規則
 
-To update a rule, provide its ID in the path parameter and the updated fields in the request body. When you update a rule, only the parameters you specify are changed; all others stay the same. The following request updates a rule description and index pattern for the rule with the ID `176fd554-43e7-39eb-92cc-56615d287eae`:
+若要更新規則，請在路徑參數中提供其 ID，並在請求本文中提供更新後的欄位。更新規則時，只會變更您指定的參數；其餘參數皆維持不變。下列請求會更新 ID 為 `176fd554-43e7-39eb-92cc-56615d287eae` 之規則的說明與索引模式：
 
 ```json
 PUT _rules/workload_group/176fd554-43e7-39eb-92cc-56615d287eae
@@ -118,7 +119,7 @@ PUT _rules/workload_group/176fd554-43e7-39eb-92cc-56615d287eae
 ```
 {% include copy-curl.html %}
 
-The response shows the updated fields:
+回應顯示更新後的欄位：
 
 ```json
 {
@@ -133,32 +134,32 @@ The response shows the updated fields:
 }
 ```
 
-## Retrieving a rule
+## 擷取規則
 
-You can retrieve rules by rule ID or attribute filters. You can paginate through the list of returned rules.
+您可以依規則 ID 或屬性篩選條件擷取規則。您可以分頁瀏覽傳回的規則清單。
 
-The following request retrieves all rules for the `workload_group` feature type:
+下列請求會擷取 `workload_group` 功能類型的所有規則：
 
 ```json
 GET /_rules/workload_group
 ```
 {% include copy-curl.html %}
 
-The following request retrieves a rule by ID for the `workload_group` feature type:
+下列請求會依 ID 擷取 `workload_group` 功能類型的規則：
 
 ```json
 GET /_rules/workload_group/{rule_id}
 ```
 {% include copy-curl.html %}
 
-The following request retrieves all `workload_group` rules matching the specified `index_pattern` and `principal.username`:
+下列請求會擷取符合指定 `index_pattern` 和 `principal.username` 的所有 `workload_group` 規則：
 
 ```json
 GET /_rules/workload_group?index_pattern=log*,event*&principal.username=admin
 ```
 {% include copy-curl.html %}
 
-If the response contains more results than can fit on a single page, OpenSearch paginates the results and includes a `search_after` value in the response:
+如果回應包含的結果超過單一頁面可容納的數量，OpenSearch 會將結果分頁，並在回應中包含 `search_after` 值：
 
 ```json
 {
@@ -176,18 +177,18 @@ If the response contains more results than can fit on a single page, OpenSearch 
 }
 ```
 
-To retrieve the next page, send another request to the same endpoint using the same filters and include the `search_after` value from the previous response as a query parameter.
+若要擷取下一頁，請使用相同的篩選條件，向同一端點傳送另一個請求，並將前一個回應中的 `search_after` 值納入查詢參數。
 
-The following request provides the next page of rules from the same workload group:
+下列請求會提供同一工作負載群組的下一頁規則：
 
 ```json
 GET /_rules/workload_group?index_pattern=log*,event*&search_after=z1MJApUB0zgMcDmz-UQq
 ```
 {% include copy-curl.html %}
 
-## Deleting a rule
+## 刪除規則
 
-To delete a rule, provide the rule's ID:
+若要刪除規則，請提供規則的 ID：
 
 ```json
 DELETE /_rules/workload_group/{rule_id}

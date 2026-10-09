@@ -1,18 +1,19 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 parent: Customizing search results
-title: Retrieve specific fields
+title: "擷取特定欄位"
 nav_order: 50
 ---
 
-# Retrieve specific fields
+# 擷取特定欄位
 
-When you run a basic search in OpenSearch, by default, the original JSON objects that were used during indexing are also returned in the response for each hit in the `_source` object. This can lead to large amounts of data being transferred through the network, increasing latency and costs. There are several ways to limit the responses to only the required information.
+當您在 OpenSearch 中執行基本搜尋時，預設也會在回應中，於每筆命中結果的 `_source` 物件內傳回編製索引時所使用的原始 JSON 物件。這可能導致透過網路傳輸大量資料，增加延遲與成本。有數種方法可將回應限制為僅包含所需的資訊。
 
 <!-- vale off -->
-## Disabling _source
+## 停用 _source
 <!-- vale on -->
-You can set `_source` to `false` in a search request to exclude the `_source` field from the response:
+您可以在搜尋請求中將 `_source` 設定為 `false`，以便從回應中排除 `_source` 欄位：
 
 ```json
 GET /index1/_search
@@ -25,7 +26,7 @@ GET /index1/_search
 ```
 {% include copy-curl.html %}
 
-Because no fields were selected in the preceding search, the retrieved hits will only include the `_index`, `_id` and `_score` of the hits:
+由於先前的搜尋未選取任何欄位，擷取到的命中結果只會包含每個命中的 `_index`、`_id` 與 `_score`：
 
 ```json
 {
@@ -51,7 +52,7 @@ Because no fields were selected in the preceding search, the retrieved hits will
 }
 ```
 
-The `_source` can also be disabled in index mappings by using the following configuration:
+您也可以在索引對應中使用下列組態來停用 `_source`：
 
 ```json
 "mappings": {
@@ -62,12 +63,12 @@ The `_source` can also be disabled in index mappings by using the following conf
 ```
 
 <!-- vale off -->
-If `_source` is disabled in the index mappings, [searching with docvalue fields]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#searching-with-doc-value-fields) and [searching with stored fields]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#searching-with-stored-fields) become extremely useful.
+如果 `_source` 在索引對應中已停用，[使用 docvalue 欄位搜尋]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#searching-with-doc-value-fields)與[使用 stored 欄位搜尋]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#searching-with-stored-fields)就會變得非常有用。
 <!-- vale on -->
 
-## Specifying the fields to retrieve
+## 指定要擷取的欄位
 
-You can list the fields you want to retrieve in the `fields` parameter. Wildcard patterns are also accepted:
+您可以在 `fields` 參數中列出想要擷取的欄位。也接受萬用字元模式：
 
 ```json
 GET /index1/_search
@@ -81,7 +82,7 @@ GET /index1/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the `name` and `age` fields:
+回應包含 `name` 與 `age` 欄位：
 
 ```json
 {
@@ -123,11 +124,11 @@ The response contains the `name` and `age` fields:
 }
 ```
 
-### Extracting fields with a custom format
+### 以自訂格式擷取欄位
 
-You can also use object notation to apply a custom format to the chosen field.
+您也可以使用物件表示法，為所選欄位套用自訂格式。
 
-If you have the following document:
+如果您有下列文件：
 
 ```json
 {
@@ -141,7 +142,7 @@ If you have the following document:
 }
 ```
 
-Then you can query using the `fields` parameter and a custom format:
+則您可以使用 `fields` 參數與自訂格式進行查詢：
 
 ```json
 GET /my_index/_search
@@ -160,16 +161,16 @@ GET /my_index/_search
 ```
 {% include copy-curl.html %}
 
-Additionally, you can use [most fields]({{site.url}}{{site.baseurl}}/query-dsl/full-text/multi-match/#most-fields) and [field aliases]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/alias/) in the `fields` parameter because it queries both the document `_source` and `_mappings` of the index.
+此外，您可以在 `fields` 參數中使用[大多數欄位]({{site.url}}{{site.baseurl}}/query-dsl/full-text/multi-match/#most-fields)與[欄位別名]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/alias/)，因為它會同時查詢文件的 `_source` 與索引的 `_mappings`。
 
-## Searching with doc value fields
+## 使用 doc value 欄位搜尋
 
-To retrieve specific fields from the index, you can also use the `docvalue_fields` parameter. This parameter works slightly differently as compared to the `fields` parameter. It retrieves information from doc values rather than from the `_source` field, which is more efficient for fields that are not analyzed, like keyword, date, and numeric fields. Doc values have a columnar storage format optimized for efficient sorting and aggregations. It stores the values on disk in a way that is easy to read. When you use `docvalue_fields`, OpenSearch reads the values directly from this optimized storage format. It is useful for retrieving values of fields that are primarily used for sorting, aggregations, and for use in scripts.
+若要從索引擷取特定欄位，您也可以使用 `docvalue_fields` 參數。此參數的運作方式與 `fields` 參數略有不同。它從 doc values 而非 `_source` 欄位擷取資訊，對於未經分析的欄位（例如 keyword、date 與數值欄位）而言更有效率。Doc values 採用針對高效排序與彙總最佳化的欄式儲存格式。它以易於讀取的方式將值儲存在磁碟上。當您使用 `docvalue_fields` 時，OpenSearch 會直接從這個最佳化的儲存格式讀取值。它適合用來擷取主要用於排序、彙總以及指令碼中的欄位值。
 
-The following example demonstrates how to use the `docvalue_fields` parameter.
+下列範例示範如何使用 `docvalue_fields` 參數。
 
 
-1. Create an index with the following mappings:
+1. 使用下列對應建立索引：
 
     ```json
     PUT /my_index
@@ -186,7 +187,7 @@ The following example demonstrates how to use the `docvalue_fields` parameter.
     ```
     {% include copy-curl.html %}
 
-2. Index the following documents into the newly created index:
+2. 將下列文件編製索引到新建立的索引中：
 
     ```json
     POST /my_index/_doc/1
@@ -210,7 +211,7 @@ The following example demonstrates how to use the `docvalue_fields` parameter.
     ```
     {% include copy-curl.html %}
 
-3. Retrieve only the `author` and `publication_date` fields using `docvalue_fields`:
+3. 使用 `docvalue_fields` 僅擷取 `author` 與 `publication_date` 欄位：
 
     ```json
     POST /my_index/_search
@@ -224,7 +225,7 @@ The following example demonstrates how to use the `docvalue_fields` parameter.
     ```
     {% include copy-curl.html %}
 
-The response contains the `author` and `publication_date` fields:
+回應包含 `author` 與 `publication_date` 欄位：
 
 ```json
 {
@@ -258,27 +259,27 @@ The response contains the `author` and `publication_date` fields:
 }
 ```
 <!-- vale off -->
-### Retrieving vector fields using docvalue_fields
+### 使用 docvalue_fields 擷取向量欄位
 <!-- vale on -->
-**Introduced 3.7**
+**3.7 版新增**
 {: .label .label-purple }
 
-You can retrieve `knn_vector` fields using `docvalue_fields` instead of the `_source`. This is faster because OpenSearch reads the vector directly from `doc_values` rather than parsing the full `_source` document.
+您可以使用 `docvalue_fields` 而非 `_source` 來擷取 `knn_vector` 欄位。這樣速度更快，因為 OpenSearch 直接從 `doc_values` 讀取向量，而不是剖析完整的 `_source` 文件。
 
-Retrieving `knn_vector` fields from `doc_values` supports all vector data types (`float`, `byte`, and `binary`), all compression levels, and all k-NN engines (Lucene, Faiss, and NMSLIB). You can use it on existing indexes without reindexing.
+從 `doc_values` 擷取 `knn_vector` 欄位支援所有向量資料類型（`float`、`byte` 與 `binary`）、所有壓縮層級，以及所有 k-NN 引擎（Lucene、Faiss 與 NMSLIB）。您可以在現有索引上使用它，無需重新編製索引。
 
-For performance tuning guidance, see [Retrieve vectors using doc values]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning-search/#retrieve-vectors-using-doc-values).
+如需效能調校指引，請參閱[使用 doc values 擷取向量]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning-search/#retrieve-vectors-using-doc-values)。
 
-The following output formats are supported.
+支援下列輸出格式。
 
-| Format | Description |
+| 格式 | 說明 |
 | :--- | :--- |
-| `binary` (Default) | Returns vectors as Base64-encoded little-endian byte strings. Provides approximately 2x throughput improvement over the `array` format for JSON transport and reduces response payload size by 30--40%. |
-| `array` | Returns vectors as JSON numeric arrays. |
+| `binary`（預設） | 以 Base64 編碼的小端序位元組字串傳回向量。在 JSON 傳輸時，相較於 `array` 格式可提供約 2 倍的輸送量提升，並將回應承載大小減少 30--40%。 |
+| `array` | 以 JSON 數值陣列傳回向量。 |
 
-To retrieve a vector field using `docvalue_fields`, follow these steps:
+若要使用 `docvalue_fields` 擷取向量欄位，請依照下列步驟操作：
 
-1. Create an index with a `knn_vector` field:
+1. 建立含有 `knn_vector` 欄位的索引：
 
     ```json
     PUT /my_vector_index
@@ -301,7 +302,7 @@ To retrieve a vector field using `docvalue_fields`, follow these steps:
     ```
     {% include copy-curl.html %}
 
-2. Index a document:
+2. 編製索引一份文件：
 
     ```json
     POST /my_vector_index/_doc/1
@@ -312,7 +313,7 @@ To retrieve a vector field using `docvalue_fields`, follow these steps:
     ```
     {% include copy-curl.html %}
 
-3. Retrieve the vector using `docvalue_fields` using the default `binary` format:
+3. 使用 `docvalue_fields` 以預設的 `binary` 格式擷取向量：
 
     ```json
     POST /my_vector_index/_search
@@ -331,7 +332,7 @@ To retrieve a vector field using `docvalue_fields`, follow these steps:
     ```
     {% include copy-curl.html %}
 
-    The response returns the vector as a Base64-encoded string:
+    回應會以 Base64 編碼字串傳回向量：
 
     ```json
     {
@@ -349,7 +350,7 @@ To retrieve a vector field using `docvalue_fields`, follow these steps:
     }
     ```
 
-4. To retrieve the vector as a JSON numeric array, specify the `array` format:
+4. 若要以 JSON 數值陣列擷取向量，請指定 `array` 格式：
 
     ```json
     POST /my_vector_index/_search
@@ -368,7 +369,7 @@ To retrieve a vector field using `docvalue_fields`, follow these steps:
     ```
     {% include copy-curl.html %}
 
-    The response returns the vector as a numeric array:
+    回應會以數值陣列傳回向量：
 
     ```json
     {
@@ -386,7 +387,7 @@ To retrieve a vector field using `docvalue_fields`, follow these steps:
     }
     ```
 
-To retrieve other document fields from the `_source` while retrieving vectors using `doc_values`, exclude the vector field from the `_source`:
+若要在使用 `doc_values` 擷取向量的同時，從 `_source` 擷取其他文件欄位，請將向量欄位從 `_source` 中排除：
 
 ```json
 POST /my_vector_index/_search
@@ -408,12 +409,12 @@ POST /my_vector_index/_search
 {% include copy-curl.html %}
 
 <!-- vale off -->
-### Using docvalue_fields with nested objects
+### 搭配巢狀物件使用 docvalue_fields
 <!-- vale on -->
 
-In OpenSearch, if you want to retrieve doc values for nested objects, you cannot directly use the `docvalue_fields` parameter because it will return an empty array. Instead, you should use the `inner_hits` parameter with its own `docvalue_fields` property, as shown in the following example.
+在 OpenSearch 中，如果您想擷取巢狀物件的 doc values，不能直接使用 `docvalue_fields` 參數，因為它會傳回空陣列。您應改用 `inner_hits` 參數並搭配其自身的 `docvalue_fields` 屬性，如下列範例所示。
 
-1. Define the index mappings:
+1. 定義索引對應：
 
     ```json
     PUT /my_index
@@ -436,7 +437,7 @@ In OpenSearch, if you want to retrieve doc values for nested objects, you cannot
     ```
     {% include copy-curl.html %}
 
-2. Index your data:
+2. 將您的資料編製索引：
 
     ```json
     POST /my_index/_doc/1
@@ -459,7 +460,7 @@ In OpenSearch, if you want to retrieve doc values for nested objects, you cannot
     ```
     {% include copy-curl.html %}
 
-3. Perform a search with `inner_hits` and `docvalue_fields`:
+3. 使用 `inner_hits` 和 `docvalue_fields` 執行搜尋：
 
     ```json
     POST /my_index/_search
@@ -479,7 +480,7 @@ In OpenSearch, if you want to retrieve doc values for nested objects, you cannot
     ```
     {% include copy-curl.html %}
 
-The following is the expected response:
+以下是預期的回應：
 
 ```json
 {
@@ -553,13 +554,13 @@ The following is the expected response:
 }
 ```
 
-## Searching with stored fields
+## 使用已儲存欄位搜尋
 
-By default, OpenSearch stores the entire document in the `_source` field and uses it to return document contents in search results. However, you might also want to store certain fields separately for more efficient retrieval. You can explicitly store and retrieve specific document fields separately from the `_source` field by using `stored_fields`. 
+根據預設，OpenSearch 會將整份文件儲存在 `_source` 欄位中，並用它來在搜尋結果中傳回文件內容。不過，您可能也想個別儲存特定欄位，以提升擷取效率。您可以使用 `stored_fields`，將特定文件欄位與 `_source` 欄位分開個別儲存及擷取。
 
-Unlike `_source`, `stored_fields` must be explicitly defined in the mappings for fields you want to store separately. It can be useful if you frequently need to retrieve only a small subset of fields and want to avoid retrieving the entire `_source` field. The following example demonstrates how to use the `stored_fields` parameter.
+與 `_source` 不同，`stored_fields` 必須在您想個別儲存的欄位對應中明確定義。如果您經常只需要擷取一小部分的欄位，並想避免擷取整個 `_source` 欄位，這個做法就很實用。下列範例示範如何使用 `stored_fields` 參數。
 
-1. Create an index with the following mappings:
+1. 使用下列對應建立索引：
 
     ```json
     PUT /my_index
@@ -586,7 +587,7 @@ Unlike `_source`, `stored_fields` must be explicitly defined in the mappings for
     ```
     {% include copy-curl.html %}
 
-2. Index your data:
+2. 將您的資料編製索引：
 
     ```json
     POST /my_index/_doc/1
@@ -610,7 +611,7 @@ Unlike `_source`, `stored_fields` must be explicitly defined in the mappings for
     ```
     {% include copy-curl.html %}
 
-3. Perform a search with `stored_fields`:
+3. 使用 `stored_fields` 執行搜尋：
 
     ```json
     POST /my_index/_search
@@ -624,7 +625,7 @@ Unlike `_source`, `stored_fields` must be explicitly defined in the mappings for
     ```
     {% include copy-curl.html %}
 
-The following is the expected response:
+以下是預期的回應：
 
 ```json
 {
@@ -658,13 +659,13 @@ The following is the expected response:
 }
 ```
 
-The `stored_fields` parameter can be disabled completely by setting `stored_fields` to `_none_`.
+將 `stored_fields` 設為 `_none_`，即可完全停用 `stored_fields` 參數。
 {: .note}
-### Searching stored fields with nested objects
+### 使用巢狀物件搜尋已儲存欄位
 
-In OpenSearch, if you want to retrieve `stored_fields` for nested objects, you cannot directly use the `stored_fields` parameter because no data will be returned. Instead, you should use the `inner_hits` parameter with its own `stored_fields` property, as shown in the following example.
+在 OpenSearch 中，如果您想擷取巢狀物件的 `stored_fields`，不能直接使用 `stored_fields` 參數，因為不會傳回任何資料。您應改用 `inner_hits` 參數並搭配其自身的 `stored_fields` 屬性，如下列範例所示。
 
-1. Create an index with the following mappings:
+1. 使用下列對應建立索引：
 
     ```json
     PUT /my_index
@@ -687,7 +688,7 @@ In OpenSearch, if you want to retrieve `stored_fields` for nested objects, you c
     ```
     {% include copy-curl.html %}
 
-2. Index your data:
+2. 將您的資料編製索引：
 
     ```json
     POST /my_index/_doc/1
@@ -710,7 +711,7 @@ In OpenSearch, if you want to retrieve `stored_fields` for nested objects, you c
     ```
     {% include copy-curl.html %}
 
-3. Perform a search with `inner_hits` and `stored_fields`:
+3. 使用 `inner_hits` 和 `stored_fields` 執行搜尋：
 
     ```json
     POST /my_index/_search
@@ -731,7 +732,7 @@ In OpenSearch, if you want to retrieve `stored_fields` for nested objects, you c
     ```
     {% include copy-curl.html %}
 
-The following is the expected response:
+以下是預期的回應：
 
 ```json
 {
@@ -791,13 +792,13 @@ The following is the expected response:
 }
 ```
 
-## Using source filtering
+## 使用來源篩選
 
-Source filtering is a way to control which parts of the `_source` field are included in the search response. Including only the necessary fields in the response can help reduce the amount of data transferred over the network and improve performance.
+來源篩選是一種控制搜尋回應中包含 `_source` 欄位哪些部分的方式。在回應中只包含必要的欄位，有助於減少透過網路傳輸的資料量並提升效能。
 
-You can include or exclude specific fields from the `_source` field in the search response using complete field names or simple wildcard patterns. The following example demonstrates how to include specific fields.
+您可以使用完整欄位名稱或簡單的萬用字元模式，在搜尋回應中包含或排除 `_source` 欄位中的特定欄位。以下範例示範如何包含特定欄位。
 
-1. Index your data:
+1. 將資料編製索引：
 
     ```json
     PUT /my_index/_doc/1
@@ -810,7 +811,7 @@ You can include or exclude specific fields from the `_source` field in the searc
     ```
     {% include copy-curl.html %}
 
-2. Perform a search using source filtering:
+2. 使用來源篩選執行搜尋：
 
     ```json
     POST /my_index/_search
@@ -823,7 +824,7 @@ You can include or exclude specific fields from the `_source` field in the searc
     ```
     {% include copy-curl.html %}
 
-The following is the expected response:
+以下是預期的回應：
 
 ```json
 {
@@ -848,9 +849,9 @@ The following is the expected response:
 }
 ```
 
-### Excluding fields with source filtering
+### 使用來源篩選排除欄位
 
-You can choose to exclude fields by using the `"excludes"` parameter in a search request, as shown in the following example:
+您可以選擇在搜尋請求中使用 `"excludes"` 參數來排除欄位，如下列範例所示：
 
 ```json
 POST /my_index/_search
@@ -865,7 +866,7 @@ POST /my_index/_search
 ```
 {% include copy-curl.html %}
 
-The following is the expected response:
+以下是預期的回應：
 
 ```json
 {
@@ -891,11 +892,11 @@ The following is the expected response:
 }
 ```
 
-### Including and excluding fields in the same search
+### 在同一個搜尋中包含與排除欄位
 
-In some cases, both the `include` and `exclude` parameters may be necessary. When a field matches a pattern in both lists, OpenSearch omits the field because `excludes` takes precedence over `includes`. The following examples demonstrate how to include and exclude fields in the same search.
+在某些情況下，可能需要同時使用 `include` 與 `exclude` 參數。當某個欄位同時符合兩個清單中的模式時，OpenSearch 會省略該欄位，因為 `excludes` 的優先順序高於 `includes`。以下範例示範如何在同一個搜尋中包含與排除欄位。
 
-Consider a `products` index containing the following document:
+假設有一個包含下列文件的 `products` 索引：
 
 ```json
 {
@@ -934,7 +935,7 @@ Consider a `products` index containing the following document:
 }
 ```
 
-To perform a search on this index while including only the `name`, `price`, `reviews`, and `supplier` fields in the response, and excluding the `contact_email` field from the `supplier` object and the `comment` field from the `reviews` object, execute the following search:
+若要在這個索引上執行搜尋，並且在回應中只包含 `name`、`price`、`reviews` 和 `supplier` 欄位，同時排除 `supplier` 物件中的 `contact_email` 欄位以及 `reviews` 物件中的 `comment` 欄位，請執行下列搜尋：
 
 ```json
 GET /products/_search
@@ -952,7 +953,7 @@ GET /products/_search
 ```
 {% include copy-curl.html %}
 
-The following is the expected response:
+以下是預期的回應：
 
 ```json
 {
@@ -989,20 +990,20 @@ The following is the expected response:
 }
 ```
 
-### Source filtering limitations
+### 來源篩選的限制
 
-Source filtering matches the field names in the original JSON document, so it cannot return values that OpenSearch derives during indexing. Multi-fields, [field aliases]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/alias/), and fields populated by `copy_to` are not part of the source, and a request for those fields returns an empty `_source` object.
+來源篩選會比對原始 JSON 文件中的欄位名稱，因此無法傳回 OpenSearch 在編製索引期間衍生的值。多欄位（multi-fields）、[欄位別名]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/alias/)以及由 `copy_to` 填入的欄位都不是來源的一部分，對這些欄位的請求會傳回空的 `_source` 物件。
 
-OpenSearch loads and parses the entire source document even when the request asks for only a few fields, so source filtering reduces network transfer but not disk reads. To read individual fields directly from the index, use [`docvalue_fields`](#searching-with-doc-value-fields) or [`stored_fields`](#searching-with-stored-fields).
+即使請求只要求少數幾個欄位，OpenSearch 仍會載入並解析整個來源文件，因此來源篩選能減少網路傳輸量，但無法減少磁碟讀取。若要直接從索引讀取個別欄位，請使用 [`docvalue_fields`](#searching-with-doc-value-fields) 或 [`stored_fields`](#searching-with-stored-fields)。
 
-## Using scripted fields
+## 使用指令碼欄位
 
-The `script_fields` parameter allows you to include custom fields whose values are computed using scripts in your search results. This can be useful for calculating values dynamically based on the document data. You can also retrieve `derived fields` by using a similar approach. For more information, see [Retrieving fields]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/derived/#retrieving-fields).
+`script_fields` 參數可讓您在搜尋結果中包含自訂欄位，其值是使用指令碼計算而得。這對於根據文件資料動態計算數值非常有用。您也可以使用類似的方式擷取 `derived fields`。如需更多資訊，請參閱[擷取欄位]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/derived/#retrieving-fields)。
 
-If you have an index of products, where each product document contains the `price` and `discount_percentage` fields. You can use `script_fields` parameter to include a custom field in the search results that displays the discounted price of each product. The following example demonstrates how to use the `script_fields` parameter:
+假設您有一個產品索引，其中每個產品文件都包含 `price` 和 `discount_percentage` 欄位。您可以使用 `script_fields` 參數，在搜尋結果中包含一個顯示每項產品折扣價格的自訂欄位。以下範例示範如何使用 `script_fields` 參數：
 
 
-1. Index the data:
+1. 將資料編製索引：
 
     ```json
     PUT /products/_doc/123
@@ -1017,7 +1018,7 @@ If you have an index of products, where each product document contains the `pric
     ```
     {% include copy-curl.html %}
 
-2. Use the `script_fields` parameter to include a custom field called `discounted_price` in the search results. This field will be calculated based on the `price` and `discount_percentage` fields using a script:
+2. 使用 `script_fields` 參數，在搜尋結果中包含名為 `discounted_price` 的自訂欄位。此欄位將使用指令碼根據 `price` 和 `discount_percentage` 欄位計算而得：
 
     ```json
     GET /products/_search
@@ -1040,7 +1041,7 @@ If you have an index of products, where each product document contains the `pric
     ```
     {% include copy-curl.html %}
 
-You should receive the following response:
+您應該會收到下列回應：
 
 ```json
 {

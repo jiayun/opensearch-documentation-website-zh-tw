@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Deploy on Amazon EKS
+title: "在 Amazon EKS 上部署"
 nav_order: 2
 grand_parent: Migration workflows
 parent: Choose your deployment
 permalink: /migration-assistant/migration-phases/deploy/deploying-to-eks/
 ---
 
-# Deploy on Amazon EKS
+# 在 Amazon EKS 上部署
 
-Amazon Elastic Kubernetes Service (EKS) is the recommended production path on AWS. An EKS deployment runs the same Migration Assistant engine and workflows as a [generic Kubernetes deployment]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-kubernetes/), and the bootstrap script provisions the surrounding AWS infrastructure for you.
+Amazon Elastic Kubernetes Service (EKS) 是 AWS 上建議的正式環境部署方式。EKS 部署會執行與[一般 Kubernetes 部署]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-kubernetes/)相同的 Migration Assistant 引擎與工作流程，並由 bootstrap 指令碼為您佈建周邊的 AWS 基礎架構。
 
-## EKS deployment components
+## EKS 部署元件
 
-The bootstrap path prepares AWS infrastructure around the workflow engine, including:
+bootstrap 流程會為工作流程引擎準備周邊的 AWS 基礎架構，包括：
 
-- EKS cluster deployment into a new or existing virtual private cloud (VPC).
-- Pod identity for the Migration Console and workflow pods.
-- Image mirroring and VPC endpoint support for isolated subnets.
-- Default Amazon Simple Storage Service (Amazon S3) bucket and snapshot-role helpers.
-- Amazon CloudWatch logging and dashboards.
-- AWS-aware storage and node-pool defaults.
+- 將 EKS 叢集部署到新的或現有的虛擬私人雲端 (VPC)。
+- 為 Migration Console 與工作流程 Pod 提供 Pod 身分。
+- 針對隔離子網路提供映像檔鏡射與 VPC 端點支援。
+- 預設的 Amazon Simple Storage Service (Amazon S3) 儲存貯體與快照角色輔助工具。
+- Amazon CloudWatch 記錄與儀表板。
+- 具備 AWS 感知能力的儲存空間與節點集區預設值。
 
-If you are migrating to or from Amazon OpenSearch Service, this is usually the shortest path to a working production setup.
+如果您要遷移至或遷移自 Amazon OpenSearch Service，這通常是建立可用正式環境的最短路徑。
 
-## Prerequisites
+## 先決條件
 
-Before you begin, make sure you have the following:
+開始之前，請確認您具備下列項目：
 
-- An AWS account with permissions for AWS CloudFormation, Amazon EKS, AWS Identity and Access Management (IAM), Amazon Elastic Compute Cloud (Amazon EC2), Amazon Elastic Container Registry (Amazon ECR), Amazon S3, Amazon CloudWatch, and related services.
-- Either AWS CloudShell or a local terminal with AWS CLI v2, `kubectl`, and Helm installed. AWS CloudShell is recommended because it comes preconfigured with the required tools and avoids platform-specific issues (for example, the `tac` command used by the bootstrap script is not available on macOS by default).
+- 一個 AWS 帳戶，並具有 AWS CloudFormation、Amazon EKS、AWS Identity and Access Management (IAM)、Amazon Elastic Compute Cloud (Amazon EC2)、Amazon Elastic Container Registry (Amazon ECR)、Amazon S3、Amazon CloudWatch 及相關服務的權限。
+- AWS CloudShell，或已安裝 AWS CLI v2、`kubectl` 與 Helm 的本機終端機。建議使用 AWS CloudShell，因為它已預先設定好必要的工具，並可避免特定平台的問題 (例如，bootstrap 指令碼使用的 `tac` 命令在 macOS 上預設無法使用)。
 
-## Deployment label
+## 部署標籤
 
-Throughout this guide, `<STAGE>` is a short label such as `dev`, `staging`, or `prod`. It is used in cluster and resource names so you can keep multiple deployments separate.
+在本指南中，`<STAGE>` 是一個簡短標籤，例如 `dev`、`staging` 或 `prod`。它會用於叢集與資源名稱中，方便您區分多個部署。
 
-## Step 1: Download the bootstrap script
+## 步驟 1：下載 bootstrap 指令碼
 
-Download the bootstrap script:
+下載 bootstrap 指令碼：
 
 ```bash
 curl -sL -o aws-bootstrap.sh \
@@ -46,31 +47,31 @@ curl -sL -o aws-bootstrap.sh \
 ```
 {% include copy.html %}
 
-### Bootstrap flag reference
+### Bootstrap 旗標參考
 
-The following table lists the most commonly used flags. To see all available options for the version you downloaded, run `./aws-bootstrap.sh --help`.
+下表列出最常用的旗標。若要查看您所下載版本的所有可用選項，請執行 `./aws-bootstrap.sh --help`。
 
-| Group | Flag | Typical use |
+| 群組 | 旗標 | 典型用途 |
 |:------|:-----|:------------|
-| Mode | `--deploy-create-vpc-cfn` | Create a new VPC and EKS cluster |
-| | `--deploy-import-vpc-cfn` | Reuse an existing VPC with `--vpc-id` and `--subnet-ids` |
-| | `--skip-cfn-deploy` | Re-bootstrap an existing cluster without rerunning CloudFormation |
-| Identity | `--stack-name <name>` | Set the CloudFormation stack name for `--deploy-*-cfn` |
-| | `--stage <name>` | Set the environment label used in resource names |
-| | `--region <region>` | Choose the AWS Region |
-| Networking | `--vpc-id <id>` | Identify the existing VPC to reuse |
-| | `--subnet-ids <id1,id2>` | Provide subnets in different Availability Zones |
-| Access | `--grant-eks-access-only` | Grant access to an existing cluster and exit |
-| | `--eks-access-principal-arn <arn>` | Specify the IAM principal to grant `cluster-admin` access |
-| Versioning | `--version <tag>` | Pin to a specific published release for reproducible deployments. For available tags, see [Releases](https://github.com/opensearch-project/opensearch-migrations/releases) |
+| 模式 | `--deploy-create-vpc-cfn` | 建立新的 VPC 與 EKS 叢集 |
+| | `--deploy-import-vpc-cfn` | 搭配 `--vpc-id` 與 `--subnet-ids` 重複使用現有的 VPC |
+| | `--skip-cfn-deploy` | 重新 bootstrap 現有叢集，而不重新執行 CloudFormation |
+| 身分 | `--stack-name <name>` | 為 `--deploy-*-cfn` 設定 CloudFormation 堆疊名稱 |
+| | `--stage <name>` | 設定用於資源名稱的環境標籤 |
+| | `--region <region>` | 選擇 AWS 區域 |
+| 網路 | `--vpc-id <id>` | 指定要重複使用的現有 VPC |
+| | `--subnet-ids <id1,id2>` | 提供位於不同可用區域的子網路 |
+| 存取 | `--grant-eks-access-only` | 授權存取現有叢集後結束 |
+| | `--eks-access-principal-arn <arn>` | 指定要授予 `cluster-admin` 存取權的 IAM 主體 |
+| 版本 | `--version <tag>` | 釘選至特定已發布版本，以確保部署可重現。可用標籤請參閱 [發行版本](https://github.com/opensearch-project/opensearch-migrations/releases) |
 
-## Step 2: Deploy into a new or existing VPC
+## 步驟 2：部署到新的或現有的 VPC
 
-Deploy Migration Assistant into either a new VPC or an existing VPC.
+將 Migration Assistant 部署到新的 VPC 或現有的 VPC。
 
-### New VPC using the latest published release
+### 使用最新已發布版本部署到新的 VPC
 
-To deploy into a new VPC using the latest published release, run the following command:
+若要使用最新已發布版本部署到新的 VPC，請執行下列命令：
 
 ```bash
 ./aws-bootstrap.sh \
@@ -81,9 +82,9 @@ To deploy into a new VPC using the latest published release, run the following c
 ```
 {% include copy.html %}
 
-### New VPC pinned to a specific release
+### 釘選至特定版本部署到新的 VPC
 
-To pin the deployment to a specific release version, run the following command:
+若要將部署釘選至特定版本，請執行下列命令：
 
 ```bash
 ./aws-bootstrap.sh \
@@ -95,12 +96,12 @@ To pin the deployment to a specific release version, run the following command:
 ```
 {% include copy.html %}
 
-Pinning a version makes the deployment reproducible. If you need to deploy the same artifacts again or deploy through continuous integration (CI), always pass `--version`.
+釘選版本可讓部署可重現。如果您需要再次部署相同的成品，或透過持續整合 (CI) 進行部署，請一律傳入 `--version`。
 {: .note }
 
-### Existing VPC
+### 現有的 VPC
 
-To deploy into an existing VPC, run the following command:
+若要部署到現有的 VPC，請執行下列命令：
 
 ```bash
 ./aws-bootstrap.sh \
@@ -113,52 +114,52 @@ To deploy into an existing VPC, run the following command:
 ```
 {% include copy.html %}
 
-When the script finishes, it has installed the Helm chart and configured the Migration Console, the Argo workflow controller, and the Argo server.
+指令碼執行完成後，即已安裝 Helm chart，並設定好 Migration Console、Argo 工作流程控制器與 Argo 伺服器。
 
-## Step 3: Verify the deployment
+## 步驟 3：驗證部署
 
-First, point `kubectl` at the new cluster:
+首先，將 `kubectl` 指向新的叢集：
 
 ```bash
 aws eks update-kubeconfig --region <REGION> --name migration-eks-cluster-<STAGE>-<REGION>
 ```
 {% include copy.html %}
 
-Then list the pods in the `ma` namespace:
+接著列出 `ma` 命名空間中的 Pod：
 
 ```bash
 kubectl get pods -n ma
 ```
 {% include copy.html %}
 
-You should see the Migration Console, the Argo workflow controller, and the Argo server in `Running` state.
+您應該會看到 Migration Console、Argo 工作流程控制器與 Argo 伺服器處於 `Running` 狀態。
 
-## Step 4: Access the Migration Console
+## 步驟 4：存取 Migration Console
 
-Access the Migration Console:
+存取 Migration Console：
 
 ```bash
 kubectl exec -it migration-console-0 -n ma -- /bin/bash
 ```
 {% include copy.html %}
 
-After you access the console, the migration flow is the same as for any other deployment: verify the version, load the sample configuration, run a pilot migration, validate it, and then run the full migration.
+存取主控台後，遷移流程與其他任何部署相同：驗證版本、載入範例組態、執行試驗遷移、驗證結果，然後執行完整遷移。
 
-## Step 5: Use the AWS resources created by the deployment
+## 步驟 5：使用部署所建立的 AWS 資源
 
-The EKS path provides a default snapshot bucket and related configuration so you do not have to build it manually.
+EKS 路徑會提供預設的快照儲存貯體與相關組態，因此您不必手動建立。
 
-### Default S3 bucket
+### 預設 S3 儲存貯體
 
-The deployment creates a default S3 bucket for migration artifacts and snapshots:
+部署會為遷移成品與快照建立預設的 S3 儲存貯體：
 
 ```text
 s3://migrations-default-<ACCOUNT_ID>-<STAGE>-<REGION>
 ```
 
-### Snapshot role output
+### 快照角色輸出
 
-If your workflow needs a snapshot role Amazon Resource Name (ARN), look it up from the CloudFormation outputs:
+如果您的工作流程需要快照角色的 Amazon Resource Name (ARN)，可從 CloudFormation 輸出中查詢：
 
 ```bash
 aws cloudformation describe-stacks \
@@ -168,26 +169,26 @@ aws cloudformation describe-stacks \
 ```
 {% include copy.html %}
 
-## Authentication on EKS
+## EKS 上的驗證
 
-Migration Assistant supports the following authentication methods on EKS.
+Migration Assistant 在 EKS 上支援下列驗證方法。
 
-### Basic authentication
+### 基本驗證
 
-Basic authentication works the same way as generic Kubernetes: create Kubernetes secrets and reference them in `authConfig.basic.secretName`.
+基本驗證的運作方式與一般 Kubernetes 相同：建立 Kubernetes secrets 並在 `authConfig.basic.secretName` 中參照它們。
 
-### Authenticate with AWS Signature Version 4
+### 使用 AWS Signature Version 4 進行驗證
 
-For sources or targets authenticated using AWS Signature Version 4, the EKS stack uses [IAM Roles for Service Accounts (IRSA)](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html) to assign an AWS identity to two sets of pods:
+對於使用 AWS Signature Version 4 進行驗證的來源或目標，EKS 堆疊會使用 [IAM Roles for Service Accounts (IRSA)](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html) 為兩組 Pod 指派 AWS 身分：
 
-- The Migration Console pod (`migration-console-0`), which runs under the `migration-console-access-role` service account.
-- The Argo workflow executor pods, which run under the `argo-workflow-executor` service account.
+- Migration Console Pod (`migration-console-0`)，在 `migration-console-access-role` 服務帳戶下執行。
+- Argo 工作流程執行器 Pod，在 `argo-workflow-executor` 服務帳戶下執行。
 
-The console and the migration jobs authenticate to Amazon OpenSearch Service and other AWS services without requiring you to distribute long-lived AWS credentials.
+主控台與遷移工作會對 Amazon OpenSearch Service 及其他 AWS 服務進行驗證，而不需要您散發長期有效的 AWS 憑證。
 
-## Private or isolated networks
+## 私人或隔離網路
 
-If your subnets do not have direct internet access, the bootstrap script mirrors images into private ECR by default and creates the VPC endpoints needed to pull from inside the cluster:
+如果您的子網路沒有直接的網際網路存取能力，bootstrap 指令碼預設會將映像檔鏡射到私有 ECR，並建立從叢集內部提取所需的 VPC 端點：
 
 ```bash
 ./aws-bootstrap.sh \
@@ -202,17 +203,17 @@ If your subnets do not have direct internet access, the bootstrap script mirrors
 ```
 {% include copy.html %}
 
-The mirroring step runs from your machine, which must have internet access, and copies the release images and Helm charts to Amazon ECR. The EKS cluster then pulls everything through VPC endpoints. The script creates endpoints for Amazon S3, Amazon ECR API, Amazon ECR Docker, CloudWatch Logs, and Amazon Elastic File System (Amazon EFS).
+鏡射步驟會從您的機器執行，該機器必須能連上網際網路，並將發布的映像檔與 Helm chart 複製到 Amazon ECR。EKS 叢集接著會透過 VPC 端點提取所有內容。指令碼會為 Amazon S3、Amazon ECR API、Amazon ECR Docker、CloudWatch Logs 與 Amazon Elastic File System (Amazon EFS) 建立端點。
 
-If your deployment also requires AWS Security Token Service (AWS STS) or EKS Authentication endpoints (for example, for IRSA or EKS Pod Identity), create those separately before running the bootstrap script.
+如果您的部署還需要 AWS Security Token Service (AWS STS) 或 EKS 驗證端點 (例如，用於 IRSA 或 EKS Pod Identity)，請在執行 bootstrap 指令碼之前另行建立。
 
-If you prefer to manage VPC endpoints using another tool, omit `--create-vpc-endpoints`. The script still mirrors images and uses your existing endpoints.
+如果您偏好使用其他工具管理 VPC 端點，請省略 `--create-vpc-endpoints`。指令碼仍會鏡射映像檔並使用您現有的端點。
 
 <!-- vale off -->
-## Grant kubectl access to a CI role or teammate
+## 授權 kubectl 存取權給 CI 角色或團隊成員
 <!-- vale on -->
 
-After the cluster is bootstrapped, run the script in grant-only mode to add a second admin principal:
+叢集完成 bootstrap 之後，以僅授權模式執行指令碼，即可新增第二個管理員主體：
 
 ```bash
 ./aws-bootstrap.sh \
@@ -223,9 +224,9 @@ After the cluster is bootstrapped, run the script in grant-only mode to add a se
 ```
 {% include copy.html %}
 
-The script applies the EKS access entry and policy association for the principal and then exits. It does not redeploy CloudFormation, mirror images, run Helm, or update your `kubeconfig`, and it skips the `jq`, `kubectl`, and `helm` prerequisite checks.
+指令碼會為該主體套用 EKS 存取項目與政策關聯，然後結束。它不會重新部署 CloudFormation、鏡射映像檔、執行 Helm 或更新您的 `kubeconfig`，並會跳過 `jq`、`kubectl` 與 `helm` 先決條件檢查。
 
-From the cluster-owning account, verify the access entry and its associated policies:
+從擁有叢集的帳戶，驗證存取項目及其關聯的政策：
 
 ```bash
 aws eks list-access-entries \
@@ -239,16 +240,16 @@ aws eks list-associated-access-policies \
 ```
 {% include copy.html %}
 
-## Recovery if bootstrap fails
+## bootstrap 失敗時的復原
 
-If CloudFormation fails, verify the stack status:
+如果 CloudFormation 失敗，請驗證堆疊狀態：
 
 ```bash
 aws cloudformation describe-stacks --stack-name <STACK_NAME> --query "Stacks[0].StackStatus"
 ```
 {% include copy.html %}
 
-If the stack is stuck in `ROLLBACK_COMPLETE` or `CREATE_FAILED`, delete it and rerun the bootstrap script:
+如果堆疊卡在 `ROLLBACK_COMPLETE` 或 `CREATE_FAILED` 狀態，請刪除它並重新執行 bootstrap 指令碼：
 
 ```bash
 aws cloudformation delete-stack --stack-name <STACK_NAME>
@@ -256,16 +257,16 @@ aws cloudformation wait stack-delete-complete --stack-name <STACK_NAME>
 ```
 {% include copy.html %}
 
-If CloudFormation succeeded but the Helm portion failed, rerun only the bootstrap's cluster-side steps:
+如果 CloudFormation 成功但 Helm 部分失敗，請僅重新執行 bootstrap 的叢集端步驟：
 
 ```bash
 ./aws-bootstrap.sh --skip-cfn-deploy --stage <STAGE> --region <REGION>
 ```
 {% include copy.html %}
 
-## Removal
+## 移除
 
-To remove Migration Assistant from EKS, run the following commands:
+若要從 EKS 移除 Migration Assistant，請執行下列命令：
 
 ```bash
 helm uninstall -n ma ma
@@ -275,11 +276,11 @@ aws cloudformation wait stack-delete-complete --stack-name <STACK_NAME>
 ```
 {% include copy.html %}
 
-## Next steps
+## 後續步驟
 
-1. Open the Migration Console and run `console --version`.
-2. Load the sample workflow with `workflow configure sample --load`.
-3. Run `console clusters connection-check`.
-4. Continue with [Using the Workflow CLI]({{site.url}}{{site.baseurl}}/migration-assistant/workflow-cli/getting-started/).
+1. 開啟 Migration Console 並執行 `console --version`。
+2. 使用 `workflow configure sample --load` 載入範例工作流程。
+3. 執行 `console clusters connection-check`。
+4. 繼續閱讀 [使用 Workflow CLI]({{site.url}}{{site.baseurl}}/migration-assistant/workflow-cli/getting-started/)。
 
 {% include migration-phase-navigation.html %}

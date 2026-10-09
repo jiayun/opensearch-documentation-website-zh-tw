@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Span within
+title: "Span within 查詢"
 parent: Span queries
 grand_parent: Query DSL
 nav_order: 90
 ---
 
-# Span within query
+# Span within 查詢
 
-The `span_within` query matches spans that are enclosed by another span query. It is the opposite of [`span_containing`]({{site.url}}{{site.baseurl}}/query-dsl/span/span-containing/): `span_containing` returns larger spans containing smaller ones, whereas `span_within` returns smaller spans enclosed by larger ones.
+`span_within` 查詢會比對被另一個 span 查詢所包圍的 span。它與 [`span_containing`]({{site.url}}{{site.baseurl}}/query-dsl/span/span-containing/) 相反：`span_containing` 會傳回包含較小 span 的較大 span，而 `span_within` 則會傳回被較大 span 包圍的較小 span。
 
-For example, you can use the `span_within` query to:
-- Find shorter phrases that appear within longer phrases.
-- Match terms that occur within specific contexts.
-- Identify smaller patterns enclosed by larger patterns.
+例如，您可以使用 `span_within` 查詢來：
+- 尋找出現在較長片語內的較短片語。
+- 比對出現在特定情境內的詞彙。
+- 找出被較大模式包圍的較小模式。
 
-## Example
+## 範例
 
-To try the examples in this section, complete the [setup steps]({{site.url}}{{site.baseurl}}/query-dsl/span/#setup).
+若要試用本節的範例，請完成[設定步驟]({{site.url}}{{site.baseurl}}/query-dsl/span/#setup)。
 {: .tip}
 
-The following query searches for the word "dress" when it appears within a span containing "shirt" and "long":
+下列查詢會搜尋 "dress" 這個字，當它出現在包含 "shirt" 與 "long" 的 span 內時：
 
 ```json
 GET /clothing/_search
@@ -56,13 +57,13 @@ GET /clothing/_search
 ```
 {% include copy-curl.html %}
 
-The query matches document 1 because:
-- The word "dress" appears within a larger span ("Long-sleeved dress shirt...").
-- The larger span contains "shirt" and "long" within 2 words of each other (there are 2 words between them).
+此查詢會比對文件 1，因為：
+- "dress" 這個字出現在較大的 span 內（"Long-sleeved dress shirt..."）。
+- 較大的 span 包含 "shirt" 與 "long"，且兩者相距 2 個字以內（它們之間有 2 個字）。
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -97,11 +98,11 @@ The query matches document 1 because:
 ```
 </details>
 
-## Parameters
+## 參數
 
-The following table lists all top-level parameters supported by `span_within` queries. All parameters are required.
+下表列出 `span_within` 查詢支援的所有最上層參數。所有參數皆為必要。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 |:----------|:-----|:------------|
-| `little` | Object | The span query that must be contained within the `big` span. This defines the span you're searching for within a larger context. |
-| `big` | Object | The containing span query that defines the boundaries within which the `little` span must appear. This establishes the context for your search. |
+| `little` | 物件 | 必須包含在 `big` span 內的 span 查詢。這會定義您在較大情境中搜尋的 span。 |
+| `big` | 物件 | 定義 `little` span 必須出現之範圍的包含 span 查詢。這會為您的搜尋建立情境。 |

@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: More like this
+title: "更多相似內容"
 parent: Specialized queries
 nav_order: 45
 has_math: false
 ---
 
-# More like this
+# 更多相似內容
 
-Use a `more_like_this` query to find documents that are similar to one or more given documents. This is useful for recommendation engines, content discovery, and identifying related items in a dataset.
+使用 `more_like_this` 查詢來尋找與一或多份指定文件相似的文件。這對推薦引擎、內容探索，以及識別資料集中的相關項目非常有用。
 
-The `more_like_this` query analyzes the input documents or texts and selects terms that best characterize them. It then searches for other documents that contain those significant terms.
+`more_like_this` 查詢會分析輸入的文件或文字，並選出最能代表其特性的詞彙，然後搜尋包含這些重要詞彙的其他文件。
 
-## Prerequisites
+## 必要條件
 
-Before you use a `more_like_this` query, ensure that the fields you target are indexed and their data type is either [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) or [`keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/keyword/). 
+使用 `more_like_this` 查詢之前，請確定目標欄位已編製索引，且其資料類型為 [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 或 [`keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/keyword/)。
 
-If you reference documents in the `like` section, OpenSearch needs access to their content. This is typically done through the `_source` field, which is enabled by default. If `_source` is disabled, you must either store the fields individually or configure them to save [`term_vector`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/term-vector/) data. 
+如果您在 `like` 區段中參照文件，OpenSearch 需要能夠存取其內容。這通常是透過 `_source` 欄位完成，該欄位預設為啟用。如果 `_source` 已停用，您必須個別儲存這些欄位，或將它們設定為儲存 [`term_vector`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/term-vector/) 資料。
 
-Saving [`term_vector`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/term-vector/) information when indexing documents can greatly accelerate `more_like_this` queries because the engine can directly retrieve the important terms without reanalyzing the field text at query time.
+在為文件編製索引時儲存 [`term_vector`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/term-vector/) 資訊，可以大幅加速 `more_like_this` 查詢，因為引擎可以直接擷取重要詞彙，而不必在查詢時重新分析欄位文字。
 {: .note}
 
-## Example: No term vector optimization
+## 範例：無詞彙向量最佳化
 
-Create an index named `articles-basic` using the following mapping:
+使用下列對應建立名為 `articles-basic` 的索引：
 
 ```json
 PUT /articles-basic
@@ -38,7 +39,7 @@ PUT /articles-basic
 ```
 {% include copy-curl.html %}
 
-Add sample documents:
+新增範例文件：
 
 ```json
 POST /articles-basic/_bulk
@@ -51,7 +52,7 @@ POST /articles-basic/_bulk
 ```
 {% include copy-curl.html %}
 
-Query using the following request:
+使用下列請求進行查詢：
 
 ```json
 GET /articles-basic/_search
@@ -68,7 +69,7 @@ GET /articles-basic/_search
 ```
 {% include copy-curl.html %}
 
-The `more_like_this` query searches for the terms `jungle` and `wildlife` in the `content` field, which matches only one document:
+`more_like_this` 查詢會在 `content` 欄位中搜尋詞彙 `jungle` 和 `wildlife`，結果只符合一份文件：
 
 ```json
 {
@@ -94,9 +95,9 @@ The `more_like_this` query searches for the terms `jungle` and `wildlife` in the
 }
 ```
 
-## Example: Term vector optimization
+## 範例：詞彙向量最佳化
 
-Create an index named `articles-optimized` using the following mapping:
+使用下列對應建立名為 `articles-optimized` 的索引：
 
 ```json
 PUT /articles-optimized
@@ -121,7 +122,7 @@ PUT /articles-optimized
 ```
 {% include copy-curl.html %}
 
-Insert sample documents into the optimized index:
+將範例文件插入已最佳化的索引：
 
 ```json
 POST /articles-optimized/_bulk
@@ -134,7 +135,7 @@ POST /articles-optimized/_bulk
 ```
 {% include copy-curl.html %}
 
-Find documents in which the `quote` field contains terms similar to "dark" and "night":
+尋找 `quote` 欄位中包含與 "dark" 和 "night" 相似詞彙的文件：
 
 ```json
 GET /articles-optimized/_search
@@ -151,7 +152,7 @@ GET /articles-optimized/_search
 ```
 {% include copy-curl.html %}
 
-The `more_like_this` query searches for the terms `dark` and `night` and returns the following hit:
+`more_like_this` 查詢會搜尋詞彙 `dark` 和 `night`，並傳回下列命中結果：
 
 ```json
 {
@@ -178,11 +179,11 @@ The `more_like_this` query searches for the terms `dark` and `night` and returns
 }
 ```
 
-## Example: Using multiple documents and text input
+## 範例：使用多份文件與文字輸入
 
-The `more_like_this` query allows you to provide multiple sources in the `like` parameter. You can combine free text with documents from the index. This is useful if you want the search to combine relevance signals from several examples.
+`more_like_this` 查詢允許您在 `like` 參數中提供多個來源。您可以將自由文字與索引中的文件結合。當您希望搜尋結合多個範例的相關性訊號時，這非常有用。
 
-In the following example, a custom document is provided directly. Additionally, an existing document with the ID `5` from the `heroes` index is included:
+在下列範例中，直接提供了一份自訂文件。此外，也包含了 `heroes` 索引中 ID 為 `5` 的現有文件：
 
 ```json
 GET /articles-optimized/_search
@@ -212,7 +213,7 @@ GET /articles-optimized/_search
 ```
 {% include copy-curl.html %}
 
-The returned results contain articles most similar to the `name` and `alias` fields provided in the query:
+傳回的結果包含與查詢中提供的 `name` 和 `alias` 欄位最相似的文章：
 
 ```json
 {
@@ -249,42 +250,42 @@ The returned results contain articles most similar to the `name` and `alias` fie
 }
 ```
 
-Use this pattern when you want to boost results based on a new concept that is not yet fully indexed but also want to combine it with knowledge from existing indexed documents.
+當您想根據尚未完全編製索引的新概念來提升結果，同時又想將其與現有已編製索引文件的知識結合時，可以使用此模式。
 {: .note}
 
-# Parameters
+# 參數
 
-The only required parameter for a `more_like_this` query is `like`. The rest of the parameters have default values but allow fine-tuning. The following are the main parameter categories.
+`more_like_this` 查詢唯一必要的參數是 `like`。其餘參數都有預設值，但允許進行微調。以下是主要的參數類別。
 
-## Document input parameters
+## 文件輸入參數
 
-The following table specifies document input parameters.
+下表列出文件輸入參數。
 
-| Parameter | Required/Optional | Data type | Description |
+| 參數 | 必要／選用 | 資料類型 | 說明 |
 | :--- |  :--- |  :--- |  :--- | 
-| `like`| Required| Array of strings or objects | Defines the text or documents for which to find similar documents. You can input free text, real documents from the index, or artificial documents. The analyzer associated with the field processes the text unless overridden. |
-| `unlike`| Optional| Array of strings or objects | Provides text or documents whose terms should be *excluded* from influencing the query. Useful for specifying negative examples.|
-| `fields`| Optional| Array of strings| Lists fields to use when analyzing text. If not specified, all fields are used. |
+| `like`| 必要| 字串或物件陣列 | 定義要為其尋找相似文件的文字或文件。您可以輸入自由文字、索引中的實際文件，或人工建立的文件。除非另行覆寫，否則文字會由與該欄位關聯的分析器處理。 |
+| `unlike`| 選用| 字串或物件陣列 | 提供其詞彙應*排除*在影響查詢之外的文字或文件。適合用於指定負面範例。|
+| `fields`| 選用| 字串陣列| 列出分析文字時要使用的欄位。如果未指定，則使用所有欄位。 |
 
-## Term selection parameters
+## 詞彙選取參數
 
-| Parameter | Required/Optional | Data type| Description|
+| 參數 | 必要／選用 | 資料類型| 說明|
 | :--- |  :--- |  :--- |  :--- | 
-| `max_query_terms` | Optional| Integer| Sets the maximum number of terms to select from the input. A higher value increases precision but slows down execution. Default is `25`. |
-| `min_term_freq` | Optional| Integer| Terms appearing fewer times than this in the input will be ignored. Default is `2`.|
-| `min_doc_freq`| Optional| Integer| Terms appearing in fewer documents than this value will be ignored. Default is `5`.|
-| `max_doc_freq`| Optional| Integer| Terms appearing in more documents than this limit are ignored. Useful for avoiding very common words. Default is unlimited (2<sup>31</sup> - 1). |
-| `min_word_length` | Optional| Integer| Ignore words shorter than this value. Default is `0`.|
-| `max_word_length` | Optional| Integer| Ignore words longer than this value. Default is unlimited. |
-| `stop_words`| Optional| Array of strings | Defines a list of words that are ignored completely when selecting terms.|
-| `analyzer`| Optional| String | The custom analyzer to use for processing input text. Defaults to the analyzer of the first field listed in `fields`.|
+| `max_query_terms` | 選用| 整數| 設定從輸入中選取的詞彙數量上限。較高的值會提高精確度，但會降低執行速度。預設為 `25`。 |
+| `min_term_freq` | 選用| 整數| 在輸入中出現次數少於此值的詞彙將被忽略。預設為 `2`。|
+| `min_doc_freq`| 選用| 整數| 出現的文件數少於此值的詞彙將被忽略。預設為 `5`。|
+| `max_doc_freq`| 選用| 整數| 出現的文件數超過此上限的詞彙將被忽略。有助於避免非常常見的字詞。預設為無上限 (2<sup>31</sup> - 1)。 |
+| `min_word_length` | 選用| 整數| 忽略長度短於此值的字詞。預設為 `0`。|
+| `max_word_length` | 選用| 整數| 忽略長度長於此值的字詞。預設為無上限。 |
+| `stop_words`| 選用| 字串陣列 | 定義在選取詞彙時完全忽略的字詞清單。|
+| `analyzer`| 選用| 字串 | 用於處理輸入文字的自訂分析器。預設為 `fields` 中所列第一個欄位的分析器。|
 
-## Query formation parameters
+## 查詢建構參數
 
-| Parameter | Required/Optional | Data type | Description |
+| 參數 | 必要／選用 | 資料類型 | 說明 |
 | :--- |  :--- |  :--- |  :--- |
-| `minimum_should_match`| Optional | String | Specifies the minimum number of terms that must match in the final query. The value can be a percentage or a fixed number. Helps fine-tune the balance between recall and precision. Default is `30%` |
-| `fail_on_unsupported_field` | Optional | Boolean | Determines whether to throw an error if one of the target fields is not of a compatible type (`text` or `keyword`). Set to `false` to silently skip unsupported fields. Default is `true`. |
-| `boost_terms` | Optional | Float | Applies a boost to selected terms based on their term frequency–inverse document frequency (TF–IDF) weight. Any value greater than `0` activates term boosting using the specified factor. Default is `0`. |
-| `include` | Optional | Boolean | If `true`, the source documents provided in `like` are included in the result hits. Default is `false`. |
-| `boost` | Optional | Float | Multiplies the relevance score of the entire `more_like_this` query. Default is `1.0`. |
+| `minimum_should_match`| 選用 | 字串 | 指定最終查詢中必須符合的詞彙數量下限。此值可以是百分比或固定數字。有助於微調召回率與精確度之間的平衡。預設為 `30%` |
+| `fail_on_unsupported_field` | 選用 | 布林值 | 決定當任一目標欄位不是相容類型（`text` 或 `keyword`）時，是否擲回錯誤。設為 `false` 可靜默略過不支援的欄位。預設為 `true`。 |
+| `boost_terms` | 選用 | 浮點數 | 根據詞彙的詞頻–反文件頻率 (TF–IDF) 權重，對選取的詞彙套用加權。任何大於 `0` 的值都會啟用使用指定因子的詞彙加權。預設為 `0`。 |
+| `include` | 選用 | 布林值 | 若為 `true`，`like` 中提供的來源文件會包含在結果的命中項目中。預設為 `false`。 |
+| `boost` | 選用 | 浮點數 | 將整個 `more_like_this` 查詢的相關性分數乘以指定值。預設為 `1.0`。 |

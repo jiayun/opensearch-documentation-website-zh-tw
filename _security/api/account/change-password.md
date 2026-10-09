@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Change password
+title: "變更密碼"
 parent: Account APIs
 grand_parent: Security APIs
 nav_order: 10
@@ -8,32 +9,32 @@ redirect_from:
   - /api-reference/security/authentication/change-password/
 ---
 
-# Change Password API
-**Introduced 1.0**
+# 變更密碼 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Changes the password for the current user.
+變更目前使用者的密碼。
 
 <!-- spec_insert_start
 api: security.change_password
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PUT /_plugins/_security/api/account
 ```
 <!-- spec_insert_end -->
 
-## Request body fields
+## 請求本文欄位
 
-The request body is required. It is a JSON object with the following fields.
+請求本文為必要。其為包含下列欄位的 JSON 物件。
 
-| Field | Data type | Description | Required |
+| 欄位 | 資料類型 | 說明 | 必要 |
 | :--- | :--- | :--- | :--- |
-| `current_password` | String | The user's current password. | Yes |
-| `password` | String | The new password. It must satisfy the password policy set by `plugins.security.restapi.password_validation_regex` and must not be too similar to the user name. | Yes |
+| `current_password` | 字串 | 使用者目前的密碼。 | 是 |
+| `password` | 字串 | 新密碼。其必須符合由 `plugins.security.restapi.password_validation_regex` 設定的密碼原則，且不得與使用者名稱過於相似。 | 是 |
 
-## Example request
+## 請求範例
 
 ```json
 PUT /_plugins/_security/api/account
@@ -44,7 +45,7 @@ PUT /_plugins/_security/api/account
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -53,11 +54,11 @@ PUT /_plugins/_security/api/account
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文為包含下列欄位的 JSON 物件。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `status` | String | The status of the request. A successful request returns `OK`. |
-| `message` | String | A message naming the user whose password was changed. |
+| `status` | 字串 | 請求的狀態。成功的請求會傳回 `OK`。 |
+| `message` | 字串 | 指出密碼已變更之使用者名稱的訊息。 |

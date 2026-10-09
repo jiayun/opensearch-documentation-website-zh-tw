@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Anonymous authentication
+title: "匿名驗證"
 parent: Access control
 nav_order: 130
 ---
 
-# Anonymous authentication
+# 匿名驗證
 
-The Security plugin supports anonymous authentication, through which a user is able to access a cluster without providing credentials. This is useful in cases where you want lots of people to be able to access your cluster with a common set of privileges. 
+Security 外掛程式支援匿名驗證，讓使用者無需提供憑證即可存取叢集。當您希望讓大量使用者以一組共同的權限存取叢集時，這項功能非常實用。
 
-## Configuration
+## 組態
 
-To enable anonymous authentication, you need to modify the `config.yml` file inside the `opensearch-security` configuration subdirectory of your cluster.
+若要啟用匿名驗證，您需要修改叢集 `opensearch-security` 組態子目錄中的 `config.yml` 檔案。
 
-In the `config.yml` file, there is an `http` section, which includes the `anonymous_auth_enabled` setting: 
+在 `config.yml` 檔案中，有一個 `http` 區段，其中包含 `anonymous_auth_enabled` 設定：
 
 ```yml
 http:
@@ -21,40 +22,40 @@ http:
   ...
 ```
 
-The following table describes the `anonymous_auth_enabled` setting. For more information, see the [configuration]({{site.url}}{{site.baseurl}}/security/configuration/configuration/) file overview. 
+下表說明 `anonymous_auth_enabled` 設定。如需更多資訊，請參閱[組態]({{site.url}}{{site.baseurl}}/security/configuration/configuration/)檔案概觀。
 
-| Setting | Description                                                                                                                                                                                                                                                                                   |
+| 設定 | 說明                                                                                                                                                                                                                                                                                   |
 | :--- |:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `anonymous_auth_enabled` | Either enables or disables anonymous authentication. When you enable anonymous authentication, all defined HTTP authenticators are non-challenging. See [The challenge setting]({{site.url}}{{site.baseurl}}/security/authentication-backends/basic-authc/#the-challenge-setting). |
+| `anonymous_auth_enabled` | 啟用或停用匿名驗證。當您啟用匿名驗證時，所有已定義的 HTTP 驗證器都是非質詢型。請參閱[質詢設定]({{site.url}}{{site.baseurl}}/security/authentication-backends/basic-authc/#the-challenge-setting)。 |
 
-If you disable anonymous authentication, you must provide at least one `authc` in order for the Security plugin to initialize successfully.
+如果您停用匿名驗證，則必須提供至少一個 `authc`，Security 外掛程式才能成功初始化。
 {: .important }
 
-## OpenSearch Dashboards configuration
+## OpenSearch Dashboards 組態
 
-To enable anonymous authentication for OpenSearch Dashboards, you need to modify the `opensearch_dashboards.yml` file in the configuration directory of your OpenSearch Dashboards installation.
+若要為 OpenSearch Dashboards 啟用匿名驗證，您需要修改 OpenSearch Dashboards 安裝目錄中組態目錄內的 `opensearch_dashboards.yml` 檔案。
 
-Add the following setting to `opensearch_dashboards.yml`:
+將以下設定加入 `opensearch_dashboards.yml`：
 
 ```yml
 opensearch_security.auth.anonymous_auth_enabled: true
 ```
 
-Anonymous login for OpenSearch Dashboards requires anonymous authentication to be enabled on the OpenSearch cluster.
+OpenSearch Dashboards 的匿名登入需要在 OpenSearch 叢集上啟用匿名驗證。
 {: .important}
 
-## Defining anonymous authentication privileges
+## 定義匿名驗證權限
 
-When anonymous authentication is enabled, your defined HTTP authenticators still try to find user credentials inside your HTTP request. If credentials are found, the user is authenticated. If none are found, the user is authenticated as an `anonymous` user.
+啟用匿名驗證後，您定義的 HTTP 驗證器仍會嘗試在 HTTP 請求中尋找使用者憑證。如果找到憑證，該使用者就會通過驗證。如果找不到任何憑證，該使用者會以 `anonymous` 使用者的身分通過驗證。
 
-All anonymous users have the username `anonymous` and a single role named `anonymous_backendrole`.
+所有匿名使用者的使用者名稱都是 `anonymous`，並且擁有一個名為 `anonymous_backendrole` 的單一角色。
 
-You can configure the privileges associated with the `opendistro_security_anonymous_backendrole` in the [roles.yml]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/) file. 
+您可以在 [roles.yml]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/) 檔案中設定與 `opendistro_security_anonymous_backendrole` 相關聯的權限。
 
-We recommend that your defined role have very limited privileges. Generally, an anonymous user should **never** be able to write to your cluster.
+我們建議您定義的角色應具有非常有限的權限。一般而言，匿名使用者**絕不**應該能夠寫入您的叢集。
 {: .important}
 
-The following is an example role definition for an `anonymous_users_role`. You can use this example as a reference for defining your own role in the `roles.yml` file:
+以下是 `anonymous_users_role` 的角色定義範例。您可以將此範例作為參考，在 `roles.yml` 檔案中定義您自己的角色：
 
 ```yaml
 anonymous_users_role:
@@ -70,7 +71,7 @@ anonymous_users_role:
 ```
 {% include copy.html %}
 
-Then, in the `roles_mapping.yml` file, you can define the appropriate mapping for this new role:
+接著，在 `roles_mapping.yml` 檔案中，您可以為這個新角色定義適當的對應：
 
 ```yaml
 anonymous_users_role:
@@ -81,7 +82,7 @@ anonymous_users_role:
 ```
 {% include copy.html %}
 
-Notice that the role is mapped to `opendistro_security_anonymous_backendrole`, which means that all users with the anonymous user backend role will have these privileges. 
+請注意，該角色被對應至 `opendistro_security_anonymous_backendrole`，這表示所有具有匿名使用者後端角色的使用者都將擁有這些權限。
 
-Alternatively, you can complete these steps using the REST API or OpenSearch Dashboards. 
+或者，您也可以使用 REST API 或 OpenSearch Dashboards 完成這些步驟。 
 

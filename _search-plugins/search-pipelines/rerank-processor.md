@@ -1,63 +1,64 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Rerank
+title: "重新排序"
 nav_order: 110
 has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
 ---
 
-# Rerank processor
-Introduced 2.12
+# 重新排序處理器
+於 2.12 版推出
 {: .label .label-purple }
 
-The `rerank` search response processor intercepts and reranks search results. The processor orders documents in the search results based on their new scores. 
+`rerank` 搜尋回應處理器會攔截搜尋結果並重新排序。此處理器會根據文件的新分數來排序搜尋結果中的文件。
 
-OpenSearch supports the following rerank types.
+OpenSearch 支援下列重新排序類型。
 
-Type | Description | Earliest available version
+類型 | 說明 | 最早可用版本
 :--- | :--- | :---
-[`ml_opensearch`](#the-ml_opensearch-rerank-type) | Applies an OpenSearch-provided cross-encoder model. | 2.12
-[`by_field`](#the-by_field-rerank-type) | Applies reranking based on a user-provided field. | 2.18
+[`ml_opensearch`](#the-ml_opensearch-rerank-type) | 套用 OpenSearch 提供的交叉編碼器模型。 | 2.12
+[`by_field`](#the-by_field-rerank-type) | 根據使用者提供的欄位套用重新排序。 | 2.18
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists all available request fields.
+下表列出所有可用的請求欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`rerank_type` | Object | Required | The rerank type for document reranking. Valid values are `ml-opensearch` and `by_field`.
-`context` | Object |  Required for the `ml_opensearch` rerank type. Optional and does not affect the results for the `by_field` rerank type. | Provides the `rerank` processor with information necessary for reranking at query time. 
-`tag` | String | Optional | The processor's identifier.
-`description` | String | Optional | A description of the processor.
-`ignore_failure` | Boolean | Optional | If `true`, OpenSearch [ignores any failure]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures) of this processor and continues to run the remaining processors in the search pipeline. Default is `false`.
+`rerank_type` | 物件 | 必要 | 用於文件重新排序的重新排序類型。有效值為 `ml-opensearch` 和 `by_field`。
+`context` | 物件 |  `ml_opensearch` 重新排序類型為必要。`by_field` 重新排序類型為選用，且不會影響結果。 | 為 `rerank` 處理器提供在查詢時重新排序所需的資訊。
+`tag` | 字串 | 選用 | 處理器的識別碼。
+`description` | 字串 | 選用 | 處理器的說明。
+`ignore_failure` | 布林值 | 選用 | 若為 `true`，OpenSearch [會忽略此處理器的任何失敗]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures)，並繼續執行搜尋管線中的其餘處理器。預設為 `false`。
 
 <!-- vale off -->
-## The ml_opensearch rerank type
+## ml_opensearch 重新排序類型
 <!-- vale on -->
-Introduced 2.12
+於 2.12 版推出
 {: .label .label-purple }
 
-To rerank results using a cross-encoder model, specify the `ml_opensearch` rerank type.
+若要使用交叉編碼器模型重新排序結果，請指定 `ml_opensearch` 重新排序類型。
 
-### Prerequisite
+### 先決條件
 
-Before using the `ml_opensearch` rerank type, you must configure a cross-encoder model. For information about using an OpenSearch-provided model, see [Cross-encoder models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#cross-encoder-models). For information about using a custom model, see [Custom local models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/).
+使用 `ml_opensearch` 重新排序類型之前，您必須設定交叉編碼器模型。如需使用 OpenSearch 所提供模型的相關資訊，請參閱[交叉編碼器模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#cross-encoder-models)。如需使用自訂模型的相關資訊，請參閱[自訂本機模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)。
 
-The `ml_opensearch` rerank type supports the following fields. All fields are required.
+`ml_opensearch` 重新排序類型支援下列欄位。所有欄位皆為必要。
 
-Field  | Data type | Description
+欄位  | 資料類型 | 說明
 :--- | :---  | :--- 
-`ml_opensearch.model_id` | String | The model ID of the cross-encoder model for reranking. For more information, see [Using ML models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/).
-`context.document_fields` | Array | An array of document fields that specifies the fields from which to retrieve context for the cross-encoder model. 
+`ml_opensearch.model_id` | 字串 | 用於重新排序的交叉編碼器模型 ID。如需詳細資訊，請參閱[使用 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。
+`context.document_fields` | 陣列 | 文件欄位陣列，指定要從哪些欄位擷取提供給交叉編碼器模型的上下文。
 
-### Example 
+### 範例
 
-The following example demonstrates using a search pipeline with a `rerank` processor implemented using the `ml_opensearch` rerank type. For a complete example, see [Reranking using a cross-encoder model]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-cross-encoder/).
+下列範例示範如何使用含有 `rerank` 處理器的搜尋管線，該處理器使用 `ml_opensearch` 重新排序類型實作。如需完整範例，請參閱[使用交叉編碼器模型重新排序]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-cross-encoder/)。
 
-### Creating a search pipeline
+### 建立搜尋管線
 
-The following request creates a search pipeline with a `rerank` response processor:
+下列請求會建立含有 `rerank` 回應處理器的搜尋管線：
 
 ```json
 PUT /_search/pipeline/rerank_pipeline
@@ -78,9 +79,9 @@ PUT /_search/pipeline/rerank_pipeline
 ```
 {% include copy-curl.html %}
 
-### Using a search pipeline
+### 使用搜尋管線
 
-Combine an OpenSearch query with an `ext` object that contains the query context for the large language model (LLM). Provide the `query_text` that will be used to rerank the results:
+將 OpenSearch 查詢與包含大型語言模型（LLM）查詢上下文的 `ext` 物件合併。提供將用於重新排序結果的 `query_text`：
 
 ```json
 POST /_search?search_pipeline=rerank_pipeline
@@ -101,7 +102,7 @@ POST /_search?search_pipeline=rerank_pipeline
 ```
 {% include copy-curl.html %}
 
-Instead of specifying `query_text`, you can provide a full path to the field containing text to use for reranking. For example, if you specify a subfield `query` in the `text_representation` object, specify its path in the `query_text_path` parameter:
+您可以提供包含重新排序所用文字之欄位的完整路徑，以取代 `query_text`。例如，若您在 `text_representation` 物件中指定子欄位 `query`，請在 `query_text_path` 參數中指定其路徑：
 
 ```json
 POST /_search?search_pipeline=rerank_pipeline
@@ -124,42 +125,42 @@ POST /_search?search_pipeline=rerank_pipeline
 ```
 {% include copy-curl.html %}
 
-The `query_context` object contains the following fields. You must provide either `query_text` or `query_text_path` but cannot provide both simultaneously.
+`query_context` 物件包含下列欄位。您必須提供 `query_text` 或 `query_text_path` 其中之一，但不能同時提供兩者。
 
-Field name | Required/Optional | Description
+欄位名稱 | 必要/選用 | 說明
 :--- | :--- | :---  
-`query_text` | Exactly one of `query_text` or `query_text_path` is required. | The natural language text of the question that you want to use to rerank the search results. 
-`query_text_path` | Exactly one of `query_text` or `query_text_path` is required. | The full JSON path to the text of the question that you want to use to rerank the search results. The maximum number of characters allowed in the path is `1000`.
+`query_text` | `query_text` 或 `query_text_path` 必須擇一提供。 | 您要用來重新排序搜尋結果之問題的自然語言文字。
+`query_text_path` | `query_text` 或 `query_text_path` 必須擇一提供。 | 您要用來重新排序搜尋結果之問題文字的完整 JSON 路徑。路徑中允許的字元數上限為 `1000`。
 
 
 <!-- vale off -->
-## The by_field rerank type
+## by_field 重新排序類型
 <!-- vale on -->
-Introduced 2.18
+於 2.18 版推出
 {: .label .label-purple }
 
-To rerank results by a document field, specify the `by_field` rerank type.
+若要依文件欄位重新排序結果，請指定 `by_field` 重新排序類型。
 
-The `by_field` object supports the following fields.
+`by_field` 物件支援下列欄位。
 
-Field  | Data type | Required/Optional | Description
+欄位  | 資料類型 | 必要/選用 | 說明
 :--- | :---  | :--- | :--- 
-`target_field` | String | Required |  Specifies the field name or a dot path to the field containing the score to use for reranking. 
-`remove_target_field` | Boolean | Optional | If `true`, the response does not include the `target_field` used to perform reranking. Default is `false`.
-`keep_previous_score` | Boolean | Optional | If `true`, the response includes a field containing the score calculated before reranking. The field name is specified by `previous_score_field`. This can be useful when debugging. Default is `false`.
-`previous_score_field` | String | Optional | The field name used to store the score calculated before reranking when `keep_previous_score` is `true`. Default is `previous_score`. Only used when `keep_previous_score` is `true`.
+`target_field` | 字串 | 必要 |  指定欄位名稱，或包含要用於重新排序之分數的欄位點路徑。
+`remove_target_field` | 布林值 | 選用 | 若為 `true`，回應不會包含用於執行重新排序的 `target_field`。預設為 `false`。
+`keep_previous_score` | 布林值 | 選用 | 若為 `true`，回應會包含一個欄位，其中含有重新排序前計算的分數。欄位名稱由 `previous_score_field` 指定。這在偵錯時可能很有用。預設為 `false`。
+`previous_score_field` | 字串 | 選用 | 當 `keep_previous_score` 為 `true` 時，用來儲存重新排序前計算之分數的欄位名稱。預設為 `previous_score`。僅在 `keep_previous_score` 為 `true` 時使用。
 
-If your index already defines a `previous_score` document field, set `previous_score_field` to a different name (for example, `original_query_score`) to avoid overwriting the existing field value in search results.
+若您的索引已定義 `previous_score` 文件欄位，請將 `previous_score_field` 設為不同的名稱（例如 `original_query_score`），以避免覆寫搜尋結果中現有的欄位值。
 {: .note}
 
 
-### Example 
+### 範例
 
-The following example demonstrates using a search pipeline with a `rerank` processor implemented using the `by_field` rerank type. For a complete example, see [Reranking by a document field]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field/).
+下列範例示範如何使用含有 `rerank` 處理器的搜尋管線，該處理器使用 `by_field` 重新排序類型實作。如需完整範例，請參閱[依文件欄位重新排序]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field/)。
 
-### Creating a search pipeline
+### 建立搜尋管線
 
-The following request creates a search pipeline with a `by_field` rerank type response processor that ranks the documents by the `reviews.stars` field and specifies to return the original document score:
+下列請求會建立含有 `by_field` 重新排序類型回應處理器的搜尋管線，該處理器會依 `reviews.stars` 欄位排序文件，並指定傳回原始文件分數：
 
 ```json
 PUT /_search/pipeline/rerank_byfield_pipeline
@@ -178,9 +179,9 @@ PUT /_search/pipeline/rerank_byfield_pipeline
 ```
 {% include copy-curl.html %}
 
-### Using the search pipeline
+### 使用搜尋管線
 
-To apply the search pipeline to a query, provide the search pipeline name in the query parameter:
+若要將搜尋管線套用至查詢，請在查詢參數中提供搜尋管線名稱：
 
 ```json
 POST /book-index/_search?search_pipeline=rerank_byfield_pipeline
@@ -192,9 +193,9 @@ POST /book-index/_search?search_pipeline=rerank_byfield_pipeline
 ```
 {% include copy-curl.html %}
 
-## Next steps
+## 後續步驟
 
-- Learn more about [reranking search results]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/).
-- See a complete example of [reranking using a cross-encoder model]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-cross-encoder/).
-- See a complete example of [reranking by a document field]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field/).
-- See a comprehensive example of [reranking by a field using an externally hosted cross-encoder model]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-cross-encoder/).
+- 進一步了解[重新排序搜尋結果]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)。
+- 參閱[使用交叉編碼器模型重新排序]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-cross-encoder/)的完整範例。
+- 參閱[依文件欄位重新排序]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field/)的完整範例。
+- 參閱[使用外部託管的交叉編碼器模型依欄位重新排序]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-cross-encoder/)的完整範例。

@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Rename
+title: "重新命名"
 parent: Ingest processors
 nav_order: 227
 redirect_from:
    - /api-reference/ingest-apis/processors/rename/
 ---
 
-# Rename processor
+# Rename 處理器
 
-The `rename` processor is used to rename an existing field, which can also be used to move a field from one object to another object or to the root level.
+`rename` 處理器用於重新命名現有的欄位，也可以用來將欄位從一個物件移動到另一個物件或根層級。
 
-## Syntax
+## 語法
 
-The following is the syntax for the `rename` processor: 
+以下是 `rename` 處理器的語法：
 
 ```json
 {
@@ -25,29 +26,29 @@ The following is the syntax for the `rename` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `rename` processor.
+下表列出 `rename` 處理器的必要與選用參數。
 
-Parameter  | Required/Optional  | Description  |
+參數  | 必要／選用  | 說明  |
 ---|---|---|
-`field`  | Required  | The field name containing the data to be removed. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets). |
-`target_field`  | Required  | The new name of the field. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets). |
-`ignore_missing`  | Optional  | Specifies whether the processor should ignore documents that do not contain the specified `field`. If set to `true`, the processor does not modify the document if the `field` does not exist. Default is `false`. |
-`override_target`  | Optional  | Determines what happens when `target_field` exists in the document. If set to `true`, the processor overwrites the existing `target_field` value with the new value. If set to `false`, the existing value remains and the processor does not overwrite it. Default is `false`. |
-`description`  | Optional  | A brief description of the processor.  |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | Specifies whether the processor continues execution even if it encounters an error. If set to `true`, failures are ignored. Default is `false`. |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |
+`field`  | 必要  | 包含要移除之資料的欄位名稱。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
+`target_field`  | 必要  | 欄位的新名稱。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
+`ignore_missing`  | 選用  | 指定處理器是否應忽略不含指定 `field` 的文件。若設為 `true`，當 `field` 不存在時，處理器不會修改文件。預設為 `false`。 |
+`override_target`  | 選用  | 決定當文件中已存在 `target_field` 時的處理方式。若設為 `true`，處理器會以新值覆寫現有的 `target_field` 值。若設為 `false`，則保留現有值，處理器不會覆寫。預設為 `false`。 |
+`description`  | 選用  | 處理器的簡短描述。  |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤也繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
+`on_failure` | 選用 | 當處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。 |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+依照下列步驟在管線中使用處理器。
 
-**Step 1: Create a pipeline** 
+**步驟 1：建立管線**
 
-The following query creates a pipeline named `rename_field` that moves a field in an object to the root level: 
+下列查詢會建立名為 `rename_field` 的管線，將物件中的欄位移動到根層級：
 
 ```json
 PUT /_ingest/pipeline/rename_field
@@ -65,12 +66,12 @@ PUT /_ingest/pipeline/rename_field
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline**
+**步驟 2 (選用)：測試管線**
 
-It is recommended that you test your pipeline before ingesting documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/rename_field/_simulate
@@ -91,9 +92,9 @@ POST _ingest/pipeline/rename_field/_simulate
 ```
 {% include copy-curl.html %}
 
-**Response**
+**回應**
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -117,9 +118,9 @@ The following example response confirms that the pipeline is working as expected
 }
 ```
 
-**Step 3: Ingest a document**
+**步驟 3：匯入文件**
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=rename_field
@@ -132,9 +133,9 @@ PUT testindex1/_doc/1?pipeline=rename_field
 ```
 {% include copy-curl.html %}
 
-**Step 4 (Optional): Retrieve the document**
+**步驟 4 (選用)：擷取文件**
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1

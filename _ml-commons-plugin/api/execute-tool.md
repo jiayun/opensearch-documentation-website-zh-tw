@@ -1,64 +1,65 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Execute tool 
+title: "執行工具"
 parent: ML Commons APIs
 nav_order: 100
 ---
 
 # Execute Tool API
-**Introduced 3.3**
+**於 3.3 版推出**
 {: .label .label-purple }
 
-The Execute Tool API allows you to run individual tools directly without creating an agent first. This API is particularly beneficial for applications requiring quick, single-tool operations where the overhead of agent creation and management is unnecessary.
+Execute Tool API 讓您無須先建立代理程式，即可直接執行個別工具。此 API 特別適合需要快速執行單一工具操作的應用程式，這類應用程式不需要建立及管理代理程式所帶來的額外負擔。
 
-## Use cases
+## 使用案例
 
-The Execute Tool API is ideal for:
+Execute Tool API 適合以下用途：
 
-- **Direct tool execution**: Run specific tools like search, data analysis, or retrieval operations without agent setup.
-- **Testing and debugging**: Quickly test tool functionality during development.
-- **Lightweight integrations**: Integrate specific OpenSearch capabilities into applications without full agent workflows.
-- **Standalone operations**: Perform single tasks that don't require conversation memory or complex orchestration.
+- **直接執行工具**：無須設定代理程式，即可執行搜尋、資料分析或擷取作業等特定工具。
+- **測試與偵錯**：在開發期間快速測試工具功能。
+- **輕量整合**：將特定 OpenSearch 功能整合至應用程式，無須使用完整的代理程式工作流程。
+- **獨立作業**：執行不需要對話記憶或複雜協調的單一任務。
 
-## Supported tools
+## 支援的工具
 
-This API supports all available OpenSearch tools. Each tool can be executed independently with its specific parameters.
+此 API 支援所有可用的 OpenSearch 工具。每個工具都可以使用其特定參數獨立執行。
 
-For more information regarding the list of available tools, see [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/).
+如需可用工具清單的詳細資訊，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
 
-## Endpoint
+## 端點
 
 ```json
 POST /_plugins/_ml/tools/_execute/{tool_name}
 ```
 
-The `<tool_name>` parameter refers to the predefined tool type name, such as `PPLTool`, `SearchIndexTool`, or `VectorDBTool`,---not a custom tool name that you define.
+`<tool_name>` 參數是指預先定義的工具類型名稱，例如 `PPLTool`、`SearchIndexTool` 或 `VectorDBTool`，而非您定義的自訂工具名稱。
 {: .note}
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists all request body fields.
+下表列出所有請求本文欄位。
 
-| Field | Data type | Required | Description |
+| 欄位 | 資料類型 | 必要 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `parameters` | Object | Yes | Contains tool-specific parameters that vary depending on the tool being executed. Each tool requires different parameters based on its functionality. |
+| `parameters` | 物件 | 是 | 包含工具專屬的參數，這些參數會依執行的工具而異。每個工具會根據其功能需要不同的參數。 |
 
-### Parameter structure
+### 參數結構
 
-The `parameters` object combines the parameters used during tool registration and tool execution. The specific fields depend on the tool being executed.
+`parameters` 物件結合了工具註冊與工具執行期間使用的參數。具體欄位取決於執行的工具。
 
-To determine the required parameters for a specific tool, refer to the individual tool documentation in the [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/) section.
+若要確定特定工具所需的參數，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)一節中的個別工具文件。
 
-| Component                | Description                                    |
+| 元件                | 說明                                    |
 |:-------------------------|:-----------------------------------------------|
-| Tool registration parameters | Parameters specified during tool registration. |
-| Tool execution parameters  | Parameters specified during tool execution.    |
+| 工具註冊參數 | 工具註冊期間指定的參數。 |
+| 工具執行參數  | 工具執行期間指定的參數。    |
 
-## Example requests
+## 請求範例
 
-The following are examples of both simple and complex tool execution.
+以下提供簡單與複雜工具執行的範例。
 
-### Example 1: Simple tool execution
+### 範例 1：簡單工具執行
 
 ```json
 POST /_plugins/_ml/tools/_execute/ListIndexTool
@@ -70,7 +71,7 @@ POST /_plugins/_ml/tools/_execute/ListIndexTool
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 回應範例
 
 ```json
 {
@@ -91,7 +92,7 @@ POST /_plugins/_ml/tools/_execute/ListIndexTool
 }
 ```
 
-### Example 2: Complex tool execution
+### 範例 2：複雜工具執行
 
 ```json
 POST /_plugins/_ml/tools/_execute/PPLTool
@@ -106,7 +107,7 @@ POST /_plugins/_ml/tools/_execute/PPLTool
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 回應範例
 
 ```json
 {

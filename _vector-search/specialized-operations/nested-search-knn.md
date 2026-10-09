@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Nested field search
+title: "巢狀欄位搜尋"
 nav_order: 40
 parent: Specialized vector search
 has_children: false
@@ -9,20 +10,20 @@ redirect_from:
   - /search-plugins/knn/nested-search-knn/ 
 ---
 
-# Nested field search
+# 巢狀欄位搜尋
 
-Using [nested fields]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/) in a vector index, you can store multiple vectors in a single document. For example, if your document consists of various components, you can generate a vector value for each component and store each vector in a nested field.
+在向量索引中使用[巢狀欄位]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/)，您可以將多個向量儲存在單一文件中。例如，如果您的文件由多個元件組成，您可以為每個元件產生向量值，並將每個向量儲存在巢狀欄位中。
 
-A vector search operates at the field level. For a document with nested fields, OpenSearch examines only the vector nearest to the query vector to decide whether to include the document in the results. For example, consider an index containing documents `A` and `B`. Document `A` is represented by vectors `A1` and `A2`, and document `B` is represented by vector `B1`. Further, the similarity order for a query Q is `A1`, `A2`, `B1`. If you search using query Q with a k value of 2, the search will return both documents `A` and `B` instead of only document `A`.
+向量搜尋是在欄位層級運作。對於包含巢狀欄位的文件，OpenSearch 只會檢查最接近查詢向量的向量，以決定是否將該文件納入結果中。例如，考慮一個包含文件 `A` 和 `B` 的索引。文件 `A` 由向量 `A1` 和 `A2` 表示，文件 `B` 由向量 `B1` 表示。此外，查詢 Q 的相似度順序為 `A1`、`A2`、`B1`。如果您使用 k 值為 2 的查詢 Q 進行搜尋，搜尋將會同時傳回文件 `A` 和 `B`，而不只是文件 `A`。
 
-Note that in the case of an approximate search, the results are approximations and not exact matches.
+請注意，在近似搜尋的情況下，結果是近似值，並非完全相符。
 
-Vector search with nested fields is supported by the HNSW algorithm for the Lucene and Faiss engines. 
+Lucene 和 Faiss 引擎的 HNSW 演算法支援搭配巢狀欄位的向量搜尋。
 
 
-## Indexing and searching nested fields
+## 巢狀欄位的索引編製與搜尋
 
-To use vector search with nested fields, you must create a vector index by setting `index.knn` to `true`. Create a nested field by setting its `type` to `nested` and specify one or more fields of the `knn_vector` data type within the nested field. In this example, the `knn_vector` field `my_vector` is nested inside the `nested_field` field:
+若要搭配巢狀欄位使用向量搜尋，您必須將 `index.knn` 設定為 `true` 來建立向量索引。將巢狀欄位的 `type` 設定為 `nested` 來建立巢狀欄位，並在該巢狀欄位內指定一或多個 `knn_vector` 資料類型的欄位。在此範例中，`knn_vector` 欄位 `my_vector` 巢狀於 `nested_field` 欄位內：
 
 ```json
 PUT my-knn-index-1
@@ -62,7 +63,7 @@ PUT my-knn-index-1
 ```
 {% include copy-curl.html %}
 
-After you create the index, add some data to it:
+建立索引後，請新增一些資料：
 
 ```json
 PUT _bulk?refresh=true
@@ -73,7 +74,7 @@ PUT _bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-Then run a vector search on the data by using the `knn` query type:
+然後使用 `knn` 查詢類型對資料執行向量搜尋：
 
 ```json
 GET my-knn-index-1/_search
@@ -95,7 +96,7 @@ GET my-knn-index-1/_search
 ```
 {% include copy-curl.html %}
 
-Even though all three vectors nearest to the query vector are in document 1, the query returns both documents 1 and 2 because k is set to 2:
+即使最接近查詢向量的三個向量都在文件 1 中，由於 k 設定為 2，查詢仍會傳回文件 1 和 2：
 
 ```json
 {
@@ -185,9 +186,9 @@ Even though all three vectors nearest to the query vector are in document 1, the
 }
 ```
 
-## Inner hits 
+## 內部命中
 
-When you retrieve documents based on matches in nested fields, by default, the response does not contain information about which inner objects matched the query. Thus, it is not apparent why the document is a match. To include information about the matching nested fields in the response, you can provide the `inner_hits` object in your query. To return only certain fields of the matching documents within `inner_hits`, specify the document fields in the `fields` array. Generally, you should also exclude `_source` from the results to avoid returning the whole document. The following example returns only the `color` inner field of the `nested_field`:
+當您根據巢狀欄位中的相符項目擷取文件時，預設情況下，回應不會包含哪些內部物件與查詢相符的資訊。因此，無法明確看出文件為何相符。若要在回應中包含相符巢狀欄位的資訊，您可以在查詢中提供 `inner_hits` 物件。若只要傳回 `inner_hits` 中相符文件的特定欄位，請在 `fields` 陣列中指定文件欄位。一般而言，您也應該從結果中排除 `_source`，以避免傳回整份文件。下列範例只傳回 `nested_field` 的 `color` 內部欄位：
 
 ```json
 GET my-knn-index-1/_search
@@ -214,7 +215,7 @@ GET my-knn-index-1/_search
 ```
 {% include copy-curl.html %}
 
-The response contains matching documents. For each matching document, the `inner_hits` object contains only the `nested_field.color` fields of the matched documents in the `fields` array:
+回應包含相符的文件。對於每個相符的文件，`inner_hits` 物件在 `fields` 陣列中只包含相符文件的 `nested_field.color` 欄位：
 
 ```json
 {
@@ -302,9 +303,9 @@ The response contains matching documents. For each matching document, the `inner
 }
 ```
 
-## Retrieving all nested hits
+## 擷取所有巢狀命中
 
-By default, only the highest-scoring nested document is considered when you query nested fields. To retrieve the scores for all nested field documents within each parent document, set `expand_nested_docs` to `true` in your query. The parent document's score is calculated as the average of their scores. To use the highest score among the nested field documents as the parent document's score, set `score_mode` to `max`:
+根據預設，當您查詢巢狀欄位時，只會考量分數最高的巢狀文件。若要擷取每個父文件內所有巢狀欄位文件的分數，請在查詢中將 `expand_nested_docs` 設為 `true`。父文件的分數會以其分數的平均值計算。若要使用巢狀欄位文件中分數最高者作為父文件的分數，請將 `score_mode` 設為 `max`：
 
 ```json
 GET my-knn-index-1/_search
@@ -333,7 +334,7 @@ GET my-knn-index-1/_search
 ```
 {% include copy-curl.html %}
 
-The response contains all matching documents:
+回應會包含所有相符的文件：
 
 ```json
 {
@@ -477,13 +478,13 @@ The response contains all matching documents:
 }
 ```
 
-## Vector search with filtering on nested fields
+## 對巢狀欄位套用篩選的向量搜尋
 
-You can apply a filter to a vector search with nested fields. A filter can be applied to either a top-level field or a field inside a nested field.
+您可以對具有巢狀欄位的向量搜尋套用篩選條件。篩選條件可套用於最上層欄位或巢狀欄位內的欄位。
 
-The following example applies a filter to a top-level field. 
+下列範例會對最上層欄位套用篩選條件。
 
-First, create a vector index with a nested field:
+首先，建立具有巢狀欄位的向量索引：
 
 ```json
 PUT my-knn-index-1
@@ -519,7 +520,7 @@ PUT my-knn-index-1
 ```
 {% include copy-curl.html %}
 
-After you create the index, add some data to it:
+建立索引之後，對其新增一些資料：
 
 ```json
 PUT _bulk?refresh=true
@@ -532,7 +533,7 @@ PUT _bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-Then run a vector search on the data using the `knn` query type with a filter. The following query returns documents whose `parking` field is set to `true`:
+接著使用 `knn` 查詢類型搭配篩選條件，對資料執行向量搜尋。下列查詢會傳回其 `parking` 欄位設為 `true` 的文件：
 
 ```json
 GET my-knn-index-1/_search
@@ -563,7 +564,7 @@ GET my-knn-index-1/_search
 ```
 {% include copy-curl.html %}
 
-Even though all three vectors nearest to the query vector are in document 1, the query returns documents 2 and 3 because document 1 is filtered out:
+即使最接近查詢向量的三個向量都位於文件 1 中，查詢仍會傳回文件 2 和 3，因為文件 1 已被篩選掉：
 
 ```json
 {

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Ignore above
+title: "忽略超過上限的值"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/ignore-above/
@@ -9,15 +10,15 @@ has_children: false
 has_toc: false
 ---
 
-# Ignore above mapping parameter
+# ignore_above 對應參數
 
-The `ignore_above` mapping parameter limits the maximum number of characters for an indexed string. If a string's length exceeds the specified threshold, the value is stored with the document but is not indexed. This can help prevent the index from bloating with unusually long values and can ensure efficient queries.
+`ignore_above` 對應參數可限制已編製索引字串的最大字元數。若字串長度超過指定的門檻值，該值會隨文件一併儲存，但不會被編製索引。這有助於防止索引因異常長的值而膨脹，並可確保查詢效率。
 
-By default, if you do not specify `ignore_above`, all string values will be fully indexed.
+預設情況下，若未指定 `ignore_above`，所有字串值都會完整編製索引。
 
-## Example: Without ignore_above
+## 範例：不使用 ignore_above
 
-Create an index with a `keyword` field without specifying the `ignore_above` parameter:
+建立一個含有 `keyword` 欄位但未指定 `ignore_above` 參數的索引：
 
 ```json
 PUT /test-no-ignore
@@ -33,7 +34,7 @@ PUT /test-no-ignore
 ```
 {% include copy-curl.html %}
 
-Index a document with a long string value:
+將含有長字串值的文件編製索引：
 
 ```json
 PUT /test-no-ignore/_doc/1
@@ -43,7 +44,7 @@ PUT /test-no-ignore/_doc/1
 ```
 {% include copy-curl.html %}
 
-Run a term query for the full string:
+對完整字串執行 term 查詢：
 
 ```json
 POST /test-no-ignore/_search
@@ -57,7 +58,7 @@ POST /test-no-ignore/_search
 ```
 {% include copy-curl.html %}
 
-The document is returned because the `sentence` field was indexed:
+文件會被傳回，因為 `sentence` 欄位已被編製索引：
 
 ```json
 {
@@ -82,9 +83,9 @@ The document is returned because the `sentence` field was indexed:
 }
 ```
 
-## Example: With ignore_above
+## 範例：使用 ignore_above
 
-Create an index with the `ignore_above` parameter set to `10` on the same field:
+在同一欄位上建立索引，並將 `ignore_above` 參數設為 `10`：
 
 ```json
 PUT /test-ignore
@@ -101,7 +102,7 @@ PUT /test-ignore
 ```
 {% include copy-curl.html %}
 
-Index the same document with the long string value:
+將同一份含有長字串值的文件編製索引：
 
 ```json
 PUT /test-ignore/_doc/1
@@ -111,7 +112,7 @@ PUT /test-ignore/_doc/1
 ```
 {% include copy-curl.html %}
 
-Run a term query for the full string:
+對完整字串執行 term 查詢：
 
 ```json
 POST /test-ignore/_search
@@ -125,7 +126,7 @@ POST /test-ignore/_search
 ```
 {% include copy-curl.html %}
 
-No results are returned because the string in the `sentence` field exceeded the `ignore_above` threshold and was not indexed:
+沒有傳回任何結果，因為 `sentence` 欄位中的字串超過了 `ignore_above` 門檻值，因此未被編製索引：
 
 ```json
 {
@@ -148,14 +149,14 @@ No results are returned because the string in the `sentence` field exceeded the 
 }
 ```
 
-However, the document is still present, which can be confirmed using the following request:
+不過，文件仍然存在，可使用下列請求確認：
 
 ```json
 GET test-ignore/_search
 ```
 {% include copy-curl.html %}
 
-The returned hits include the document:
+傳回的命中結果包含該文件：
 
 ```json
 {

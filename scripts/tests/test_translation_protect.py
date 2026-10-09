@@ -52,6 +52,103 @@ class ProtectTests(unittest.TestCase):
         self.assertEqual(len(tokens_in(protected)), 1)
         self.assertEqual(p.restore(protected), text)
 
+    def test_get_settings_response_captures_expose_prose_only(self):
+        text = (REPO / config.SOURCE_STORE_DIR / "_api-reference/index-apis/get-settings.md").read_text(encoding="utf-8")
+        p, protected = self.protect(text)
+        self.assertEqual(p.restore(protected), text)
+        for prose in ("## Example response \n", "By default, settings are returned in nested format:",
+                      "## Example response: Flat format", "settings are returned in flattened format:"):
+            self.assertIn(prose, protected)
+        for fragment in ("GET /books/_settings", "client.indices.get_settings", "number_of_shards",
+                         "capture", "default_response", "flat_settings=true", "{{", "{%"):
+            self.assertNotIn(fragment, protected)
+        # Captures rendered by code-block.html stay one block each.
+        originals = set(p.protected_originals(protected))
+        self.assertIn("{% capture step1_rest %}\nGET /books/_settings\n{% endcapture %}", originals)
+        self.assertTrue(any(o.startswith("{% capture step1_python %}") and o.endswith("{% endcapture %}")
+                            for o in originals))
+        tags = [t for t in tokens_in(protected)
+                if p.store[t] in ("{% capture default_response %}", "{% capture flat_response %}", "{% endcapture %}")]
+        self.assertEqual(len(tags), 4)
+        self.assertTrue(all(t in p.block_tokens for t in tags))
+        moved = protected.replace(tags[-1], "說明 " + tags[-1])
+        self.assertTrue(any("own line" in x for x in placeholder_problems(protected, moved, p.block_tokens)))
+
+        translated = (text.replace("## Example response \n", "## 範例回應\n")
+                      .replace("By default, settings are returned in nested format:", "預設情況下，設定會以巢狀格式傳回：")
+                      .replace("## Example response: Flat format", "## 範例回應：扁平格式")
+                      .replace("When you specify `flat_settings=true`, settings are returned in flattened format:",
+                               "指定 `flat_settings=true` 時，設定會以扁平格式傳回："))
+        self.assertEqual(translated.count("By default"), 0)
+        self.assertEqual(protected_inventory(translated), protected_inventory(text))
+        changed_json = translated.replace('"number_of_shards": "2"', '"number_of_shards": "3"', 1)
+        self.assertNotEqual(protected_inventory(changed_json), protected_inventory(text))
+        changed_rest = translated.replace("{% capture step1_rest %}\nGET /books/_settings",
+                                          "{% capture step1_rest %}\nGET /books/_mapping")
+        self.assertNotEqual(protected_inventory(changed_rest), protected_inventory(text))
+        changed_tag = translated.replace("{{ flat_response }}", "{{ flat_responses }}")
+        self.assertNotEqual(protected_inventory(changed_tag), protected_inventory(text))
+
+    def test_code_captures_and_comments_stay_whole(self):
+        cases = {
+            "{% capture step1_rest %}\n## Heading\n\nThis is a sentence of prose.\n{% endcapture %}\n"
+            "{% include code-block.html\n    rest=step1_rest %}\n": "This is a sentence",
+            "{% capture req %}\nGET /_cat/indices?v\n{% endcapture %}\n{{ req }}\n": "GET",
+            "{% capture snippet %}\nresponse = client.search(index = \"books\")\nprint(response)\n"
+            "{% endcapture %}\n{{ snippet }}\n": "client.search",
+            "{% comment %}\n## Hidden\n\nThis note is for maintainers only.\n{% endcomment %}\n": "maintainers",
+        }
+        for text, hidden in cases.items():
+            p, protected = self.protect(text)
+            self.assertNotIn(hidden, protected, text)
+            self.assertEqual(p.restore(protected), text)
+
+    def test_prose_capture_without_heading_is_translatable(self):
+        text = "{% capture note %}\nThis setting applies to all indexes.\n{% endcapture %}\n{{ note }}\n"
+        p, protected = self.protect(text)
+        self.assertIn("This setting applies to all indexes.", protected)
+        self.assertEqual(p.restore(protected), text)
+        translated = text.replace("This setting applies to all indexes.", "此設定適用於所有索引。")
+        self.assertEqual(protected_inventory(translated), protected_inventory(text))
+
+    def test_raw_with_code_literals_exposes_only_conjunction(self):
+        text = (REPO / config.SOURCE_STORE_DIR / "_ingest-pipelines/accessing-data.md").read_text(encoding="utf-8")
+        line = ("Use triple curly braces ({% raw %}`{{{` and `}}}`{% endraw %}) for unescaped field values.")
+        self.assertIn(line, text)
+        p, protected = self.protect(text)
+        self.assertEqual(p.restore(protected), text)
+        self.assertRegex(protected, r"Use triple curly braces \(⟦P\d+⟧ and ⟦P\d+⟧\) for unescaped field values\.")
+        self.assertNotIn("{{{", protected)
+        self.assertNotIn("}}}", protected)
+        originals = p.protected_originals(protected)
+        self.assertIn("{% raw %}`{{{`", originals)
+        self.assertIn("`}}}`{% endraw %}", originals)
+
+        translated = text.replace(line, "使用三層大括號（{% raw %}`{{{` 與 `}}}`{% endraw %}）插入未逸出的欄位值。")
+        self.assertEqual(protected_inventory(translated), protected_inventory(text))
+        moved = text.replace(line, "使用三層大括號（{% raw %}`{{{` 與{% endraw %} `}}}`）插入未逸出的欄位值。")
+        self.assertNotEqual(protected_inventory(moved), protected_inventory(text))
+        changed = text.replace(line, "使用三層大括號（{% raw %}`{{{` 與 `}}`{% endraw %}）插入未逸出的欄位值。")
+        self.assertNotEqual(protected_inventory(changed), protected_inventory(text))
+
+    def test_raw_with_liquid_syntax_stays_whole(self):
+        for raw in ("{% raw %}`{{leader_index}}`{% endraw %}",
+                    "{% raw %}{{a}} and {{b}}{% endraw %}",
+                    "{% raw %}`{{a}}` and {{b}} or `{{c}}`{% endraw %}",
+                    "{% raw %}`{{a}}` / `{{b}}`{% endraw %}"):
+            text = f"Use {raw} here.\n"
+            p, protected = self.protect(text)
+            self.assertRegex(protected, r"^Use ⟦P\d+⟧ here\.\n$", raw)
+            self.assertIn(raw, p.protected_originals(protected))
+
+    def test_liquid_block_pages_round_trip(self):
+        for path in sorted((REPO / config.SOURCE_STORE_DIR).rglob("*.md")):
+            text = path.read_text(encoding="utf-8")
+            if "{% raw" not in text and "{% capture" not in text:
+                continue
+            p, protected = self.protect(text)
+            self.assertEqual(p.restore(protected), text, path)
+
     def test_link_destinations_ref_labels_and_urls(self):
         text = ("See [the docs]({{site.url}}{{site.baseurl}}/api/#path \"Title\") and ![img](/a.png).\n"
                 "Use [ref link][my-ref] or <https://example.com>. Visit https://opensearch.org/x.\n\n"

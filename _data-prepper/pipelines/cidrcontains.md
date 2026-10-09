@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: cidrContains()
 parent: Functions
@@ -7,27 +8,27 @@ nav_order: 5
 ---
 
 <!-- vale off -->
-# cidrContains() function
+# cidrContains() 函式
 <!-- vale on -->
 
-The `cidrContains()` function is used to check if an IP address is contained within a specified Classless Inter-Domain Routing (CIDR) block or range of CIDR blocks. It accepts two or more arguments:
+`cidrContains()` 函式用於檢查 IP 位址是否包含在指定的無類別網域間路由（CIDR）區塊或 CIDR 區塊範圍內。此函式接受兩個或更多引數：
 
-- The first argument is a JSON pointer, which represents the key or path to the field containing the IP address to be checked. It supports both IPv4 and IPv6 address formats.
+- 第一個引數是 JSON 指標，代表包含待檢查 IP 位址的欄位所對應的鍵或路徑。它支援 IPv4 和 IPv6 位址格式。
 
-- The subsequent arguments are strings representing one or more CIDR blocks or IP address ranges. The function checks if the IP address specified in the first argument matches or is contained within any of these CIDR blocks.
+- 後續引數是代表一個或多個 CIDR 區塊或 IP 位址範圍的字串。此函式會檢查第一個引數指定的 IP 位址是否符合或包含在這些 CIDR 區塊中的任一個內。
 
-For example, if your data contains an IP address field named `client.ip` and you want to check if it belongs to the CIDR blocks `192.168.0.0/16` or `10.0.0.0/8`, you can use the `cidrContains()` function as follows:
+例如，如果您的資料包含名為 `client.ip` 的 IP 位址欄位，且您想檢查它是否屬於 CIDR 區塊 `192.168.0.0/16` 或 `10.0.0.0/8`，您可以如下使用 `cidrContains()` 函式：
 
 ```
 cidrContains('/client.ip', '192.168.0.0/16', '10.0.0.0/8')
 ```
 {% include copy.html %}
 
-This function returns `true` if the IP address matches any of the specified CIDR blocks or `false` if it does not.
+如果 IP 位址符合任一指定的 CIDR 區塊，此函式會傳回 `true`；如果不符合，則傳回 `false`。
 
-## Example
+## 範例
 
-The following pipeline discards any documents that are not part of the specified CIDR blocks:
+下列管線會捨棄不屬於指定 CIDR 區塊的所有文件：
 
 ```yaml
 cidr-allowlist-pipeline:
@@ -52,7 +53,7 @@ cidr-allowlist-pipeline:
 ```
 {% include copy.html %}
 
-You can test this pipeline using the following command:
+您可以使用下列命令測試此管線：
 
 ```bash
 curl -ksS -X POST "https://localhost:2021/events" \
@@ -65,7 +66,7 @@ curl -ksS -X POST "https://localhost:2021/events" \
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 {

@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Refresh index
+title: "重新整理索引"
 parent: Index operations
 grand_parent: Index APIs
 nav_order: 60
 ---
 
-# Refresh Index API
-**Introduced 1.0**
+# 重新整理索引 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Refresh Index API refreshes one or more indexes, making all operations performed on those indexes since the last refresh available for search. When you index a document, it is first written to a translog and added to in-memory buffers. The document is not searchable until a refresh operation converts these in-memory structures into searchable segments on disk. In the case of data streams, the Refresh Index API refreshes a stream's backing indexes.
+重新整理索引 API 會重新整理一或多個索引，使自上次重新整理以來對這些索引執行的所有作業可供搜尋。當您將文件編製索引時，文件會先寫入 translog 並加入記憶體內緩衝區。在重新整理作業將這些記憶體內結構轉換為磁碟上可搜尋的分段之前，文件無法被搜尋。對於資料串流，重新整理索引 API 會重新整理串流的支援索引。
 
-For a conceptual overview of how refresh operations work in OpenSearch, see [Refresh]({{site.url}}{{site.baseurl}}/getting-started/concepts/#refresh).
+如需重新整理作業在 OpenSearch 中運作方式的概念概觀，請參閱[重新整理]({{site.url}}{{site.baseurl}}/getting-started/concepts/#refresh)。
 
-## Refresh interval
+## 重新整理間隔
 
-The `index.refresh_interval` setting controls how often an index refreshes automatically. OpenSearch's refresh behavior depends on whether `index.refresh_interval` is set:
+`index.refresh_interval` 設定可控制索引自動重新整理的頻率。OpenSearch 的重新整理行為取決於是否已設定 `index.refresh_interval`：
 
-- When set, indexes are refreshed based on the `index.refresh_interval` setting (in seconds). For more information about `index.refresh_interval` settings, see [Dynamic index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings).
-- When not set, refreshes occur every second until the shard receives no search requests for at least the amount of time specified by the `index.search.idle.after` setting (in seconds). Default is `30s`. 
+- 已設定時，索引會根據 `index.refresh_interval` 設定（以秒為單位）重新整理。如需 `index.refresh_interval` 設定的詳細資訊，請參閱[動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)。
+- 未設定時，每秒會重新整理一次，直到分片在至少 `index.search.idle.after` 設定（以秒為單位）所指定的時間內未收到任何搜尋請求為止。預設為 `30s`。
 
-After a shard becomes idle, the indexes will not refresh until either the next search request or a Refresh Index API request is sent. The first search request on an idle shard will wait for the refresh operation to complete. 
+分片閒置後，索引不會重新整理，直到傳送下一個搜尋請求或重新整理索引 API 請求。閒置分片上的第一個搜尋請求會等待重新整理作業完成。
 
-To use the Refresh Index API, you must have write access to the indexes you want to refresh.
+若要使用重新整理索引 API，您必須對要重新整理的索引具備寫入權限。
 
-## Refresh request behavior
+## 重新整理請求行為
 
-The Refresh Index API call is synchronous. The response is returned only after all targeted shards have been refreshed.
+重新整理索引 API 呼叫是同步的。只有在所有目標分片都重新整理完成後，才會傳回回應。
 
-## Best practices
+## 最佳做法
 
-Refresh operations are resource intensive and can impact cluster performance. To ensure optimal cluster performance, we recommend the following best practices:
+重新整理作業會耗用大量資源，並可能影響叢集效能。為確保最佳叢集效能，我們建議遵循下列最佳做法：
 
-- **Rely on automatic refreshes**: Wait for OpenSearch's periodic refresh (controlled by `index.refresh_interval`) rather than performing explicit refreshes when possible.
-- **Use `refresh=wait_for` for indexing workflows**: If your application indexes documents and then immediately searches for them, use the `refresh=wait_for` query parameter on indexing operations instead of calling the Refresh API. This option ensures the indexing operation waits for a periodic refresh before returning, without forcing an immediate refresh. For more information, see [The `refresh` query parameter](#the-refresh-query-parameter).
-- **Avoid `refresh=true` in production**: Using `refresh=true` on index, update, or delete operations forces an immediate refresh and creates inefficient index structures (small segments) that must later be merged, impacting both indexing and search performance.
+- **依賴自動重新整理**：盡可能等待 OpenSearch 的定期重新整理（由 `index.refresh_interval` 控制），而不要執行明確的重新整理。
+- **在索引工作流程中使用 `refresh=wait_for`**：如果您的應用程式將文件編製索引後立即搜尋這些文件，請在索引作業上使用 `refresh=wait_for` 查詢參數，而不要呼叫重新整理 API。此選項可確保索引作業在傳回前等待定期重新整理，而不會強制立即重新整理。如需詳細資訊，請參閱[`refresh` 查詢參數](#the-refresh-query-parameter)。
+- **避免在正式環境中使用 `refresh=true`**：在索引、更新或刪除作業上使用 `refresh=true` 會強制立即重新整理，並產生稍後必須合併的低效索引結構（小型分段），同時影響索引與搜尋效能。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_refresh
@@ -46,28 +47,28 @@ POST /{index}/_refresh
 GET /{index}/_refresh
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `index` | String | A comma-separated list of index names to be refreshed. Wildcards are accepted.|
+| `index` | 字串 | 要重新整理的索引名稱清單，以逗號分隔。可使用萬用字元。|
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `ignore_unavailable` | Boolean | When `false`, the request returns an error when it targets a missing or closed index. Default is `false`.
-| `allow_no_indices` | Boolean | When `false`, the Refresh Index API returns an error when a wildcard expression, index alias, or `_all` targets only closed or missing indexes, even when the request is made against open indexes. Default is `true`. |
-| `expand_wildcards` | String | The type of index that the wildcard patterns can match. If the request targets data streams, this argument determines whether the wildcard expressions match any hidden data streams. Supports comma-separated values, such as `open,hidden`. Valid values are `all`, `open`, `closed`, `hidden`, and `none`.
+| `ignore_unavailable` | 布林值 | 設為 `false` 時，若請求目標為遺失或已關閉的索引，則傳回錯誤。預設為 `false`。
+| `allow_no_indices` | 布林值 | 設為 `false` 時，若萬用字元運算式、索引別名或 `_all` 僅目標為已關閉或遺失的索引，即使請求是針對開啟的索引提出，重新整理索引 API 也會傳回錯誤。預設為 `true`。 |
+| `expand_wildcards` | 字串 | 萬用字元模式可比對的索引類型。若請求目標為資料串流，此引數會決定萬用字元運算式是否比對任何隱藏的資料串流。支援以逗號分隔的值，例如 `open,hidden`。有效值為 `all`、`open`、`closed`、`hidden` 與 `none`。
 
 
-## Example request: Refreshing several data streams or indexes
+## 範例請求：重新整理多個資料串流或索引
 
-The following example request refreshes two indexes named `my-index-A` and `my-index-B`:
+下列範例請求會重新整理名為 `my-index-A` 與 `my-index-B` 的兩個索引：
 
 
 <!-- spec_insert_start
@@ -92,32 +93,32 @@ response = client.indices.refresh(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example request: Refreshing all data streams and indexes
+## 範例請求：重新整理所有資料串流與索引
 
-The following request refreshes all data streams and indexes in a cluster:
+下列請求會重新整理叢集中的所有資料串流與索引：
 
 ```json
 POST /_refresh
 ```
 {% include copy-curl.html %}
 
-## Example request: Refreshing using the GET method
+## 範例請求：使用 GET 方法重新整理
 
-You can also use the `GET` method to refresh indexes. The following example uses `GET` to refresh a specific index:
+您也可以使用 `GET` 方法來重新整理索引。下列範例使用 `GET` 重新整理特定索引：
 
 ```json
 GET /my-index/_refresh
 ```
 {% include copy-curl.html %}
 
-The `GET` method works identically to the `POST` method and is useful in environments where `POST` requests may be restricted or when you prefer to use `GET` for read-like operations.
+`GET` 方法的運作方式與 `POST` 方法完全相同，適用於 `POST` 請求可能受到限制的環境，或您偏好使用 `GET` 執行類似讀取作業的情況。
 
-## The refresh query parameter
+## refresh 查詢參數
 
-The document APIs such as Index, Update, Delete, and Bulk APIs support a `refresh` query parameter that controls when changes made by the request are made visible to search. This parameter provides an alternative to calling the Refresh Index API explicitly. 
+Index、Update、Delete 與 Bulk API 等文件 API 支援 `refresh` 查詢參數，可控制請求所做的變更何時可供搜尋。此參數可作為明確呼叫重新整理索引 API 的替代方案。
 
-For more information about the `refresh` parameter, see the [Index Document API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/index-document/), [Update Document API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-document/), [Delete Document API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-document/), and [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) documentation.
+如需 `refresh` 參數的詳細資訊，請參閱 [Index Document API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/index-document/)、[Update Document API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-document/)、[Delete Document API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-document/) 與 [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) 文件。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/refresh` and `indices:admin/refresh*`.
+如果您使用 Security 外掛程式，請確保您具備適當的權限：`indices:admin/refresh` 與 `indices:admin/refresh*`。

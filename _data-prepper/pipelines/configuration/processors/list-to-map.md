@@ -1,42 +1,43 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: List to map 
+title: "清單轉對應"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 180
 ---
 
-# List to map processor
+# List to map 處理器
 
-The `list_to_map` processor converts a list of objects from an event, where each object contains a `key` field, into a map of target keys.
+`list_to_map` 處理器會將事件中的物件清單轉換為目標鍵的對應，其中每個物件都包含 `key` 欄位。
 
-## Configuration
+## 組態
 
-The following table describes the configuration options used to generate target keys for the mappings.
+下表說明用於為對應產生目標鍵的組態選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`source` | Yes | String | The list of objects with `key` fields to be converted into keys for the generated map.
-`target` | No | String | The target for the generated map. When not specified, the generated map will be placed in the root node.
-`key` | Conditionally | String | The key of the fields to be extracted as keys in the generated mappings. Must be specified if `use_source_key` is `false`.
-`use_source_key` | No | Boolean | When `true`, keys in the generated map will use original keys from the source. Default is `false`.
-`value_key` | No | String | When specified, values given a `value_key` in objects contained in the source list will be extracted and converted into the value specified by this option based on the generated map. When not specified, objects contained in the source list retain their original value when mapped.
-`extract_value` | No | Boolean | When `true`, object values from the source list will be extracted and added to the generated map. When `false`, object values from the source list are added to the generated map as they appear in the source list. Default is `false`
-`flatten` | No | Boolean | When `true`, values in the generated map output flatten into single items based on the `flattened_element`. Otherwise, objects mapped to values from the generated map appear as lists.
-`flattened_element` | Conditionally | String | The element to keep, either `first` or `last`, when `flatten` is set to `true`.
+`source` | 是 | 字串 | 含有 `key` 欄位、要轉換為所產生對應之鍵的物件清單。
+`target` | 否 | 字串 | 所產生對應的目標。未指定時，所產生的對應會放置在根節點中。
+`key` | 有條件 | 字串 | 要擷取為所產生對應中之鍵的欄位鍵。當 `use_source_key` 為 `false` 時必須指定。
+`use_source_key` | 否 | 布林值 | 當 `true` 時，所產生對應中的鍵會使用來源的原始鍵。預設為 `false`。
+`value_key` | 否 | 字串 | 指定時，來源清單所含物件中具有 `value_key` 的值會被擷取，並根據所產生的對應轉換為此選項指定的值。未指定時，來源清單所含的物件在對應時會保留其原始值。
+`extract_value` | 否 | 布林值 | 當 `true` 時，會擷取來源清單的物件值並加入所產生的對應。當 `false` 時，來源清單的物件值會依其在來源清單中的順序加入所產生的對應。預設為 `false`
+`flatten` | 否 | 布林值 | 當 `true` 時，所產生對應輸出中的值會根據 `flattened_element` 扁平化為單一項目。否則，對應至所產生對應中值的物件會以清單形式呈現。
+`flattened_element` | 有條件 | 字串 | 當 `flatten` 設為 `true` 時要保留的元素，可為 `first` 或 `last`。
 
-## Usage
+## 使用方式
 
-The following example shows how to test the usage of the `list_to_map` processor before using the processor on your own source. 
+下列範例說明如何在您自己的來源上使用 `list_to_map` 處理器之前，先測試其使用方式。
 
-Create a source file named `logs_json.log`. Because the `file` source reads each line in the `.log` file as an event, the object list appears as one line even though it contains multiple objects:
+建立名為 `logs_json.log` 的來源檔案。由於 `file` 來源會將 `.log` 檔案中的每一行讀取為一個事件，因此物件清單即使包含多個物件，仍會顯示為一行：
 
 ```json
 {"mylist":[{"name":"a","value":"val-a"},{"name":"b","value":"val-b1"},{"name":"b",  "value":"val-b2"},{"name":"c","value":"val-c"}]}
 ```
 {% include copy.html %}
 
-Next, create a `pipeline.yaml` file that uses the `logs_json.log` file as the `source` by pointing to the `.log` file's correct path:  
+接著，建立一個 `pipeline.yaml` 檔案，將 `logs_json.log` 檔案用作 `source`，並指向 `.log` 檔案的正確路徑：
 
 ```yaml
 pipeline:
@@ -56,7 +57,7 @@ pipeline:
 ```
 {% include copy.html %}
 
-Run the pipeline. If successful, the processor returns the generated map with objects mapped according to their `value_key`. Similar to the original source, which contains one line and therefore one event, the processor returns the following JSON as one line. For readability, the following example and all subsequent JSON examples have been adjusted to span multiple lines:
+執行管線。若成功，處理器會傳回所產生的對應，其中的物件會依其 `value_key` 進行對應。與原始來源類似，原始來源只包含一行，因此只有一個事件，處理器會傳回下列 JSON 作為一行。為方便閱讀，下列範例及後續所有 JSON 範例均已調整為跨越多行：
 
 ```json
 {
@@ -84,9 +85,9 @@ Run the pipeline. If successful, the processor returns the generated map with ob
 }
 ```
 
-### Example: Maps set to `target`
+### 範例：對應設為 `target`
 
-The following example `pipeline.yaml` file shows the `list_to_map` processor when set to a specified target, `mymap`:
+下列範例 `pipeline.yaml` 檔案顯示 `list_to_map` 處理器設為指定目標 `mymap` 時的情形：
 
 ```yaml
 pipeline:
@@ -107,7 +108,7 @@ pipeline:
 ```
 {% include copy.html %}
 
-The generated map appears under the target key:
+所產生的對應會顯示在目標鍵之下：
 
 ```json
 {
@@ -137,9 +138,9 @@ The generated map appears under the target key:
 }
 ```
 
-### Example: No `value_key` specified
+### 範例：未指定 `value_key`
 
-The follow example `pipeline.yaml` file shows the `list_to_map` processor with no `value_key` specified. Because `key` is set to `name`, the processor extracts the object names to use as keys in the map. 
+下列範例 `pipeline.yaml` 檔案顯示未指定 `value_key` 的 `list_to_map` 處理器。由於 `key` 設為 `name`，處理器會擷取物件名稱以用作對應中的鍵。
 
 ```yaml
 pipeline:
@@ -158,7 +159,7 @@ pipeline:
 ```
 {% include copy.html %}
 
-The values from the generated map appear as original objects from the `.log` source, as shown in the following example response:
+所產生對應中的值會以 `.log` 來源的原始物件形式呈現，如下列範例回應所示：
 
 ```json
 {
@@ -195,9 +196,9 @@ The values from the generated map appear as original objects from the `.log` sou
 }
 ```
 
-### Example: `flattened_element` set to `last`
+### 範例：`flattened_element` 設為 `last`
 
-The following example `pipeline.yaml` file sets the `flattened_element` to last, therefore flattening the processor output based on each value's last element: 
+下列範例 `pipeline.yaml` 檔案將 `flattened_element` 設為 last，因此會根據每個值的最後一個元素，將處理器輸出扁平化：
 
 ```yaml
 pipeline:
@@ -219,7 +220,7 @@ pipeline:
 ```
 {% include copy.html %}
 
-The processor maps object `b` to value `val-b2` because `val-b2` is the last element in object `b`, as shown in the following output:
+處理器會將物件 `b` 對應至值 `val-b2`，因為 `val-b2` 是物件 `b` 中的最後一個元素，如下列輸出所示：
 
 ```json
 {
@@ -248,9 +249,9 @@ The processor maps object `b` to value `val-b2` because `val-b2` is the last ele
 ```
 
 
-### Example: `flatten` set to false
+### 範例：`flatten` 設為 false
 
-The following example `pipeline.yaml` file sets `flatten` to `false`, causing the processor to output values from the generated map as a list: 
+下列範例 `pipeline.yaml` 檔案將 `flatten` 設為 `false`，使處理器將所產生對應中的值以清單形式輸出：
 
 ```yaml
 pipeline:
@@ -271,7 +272,7 @@ pipeline:
 ```
 {% include copy.html %}
 
-Some objects in the response may have more than one element in their values, as shown in the following response:
+回應中的部分物件，其值可能包含多個元素，如下列回應所示：
 
 ```json
 {
@@ -306,9 +307,9 @@ Some objects in the response may have more than one element in their values, as 
 }
 ```
 
-### Example: `use_source_key` and `extract_value` set to `true`
+### 範例：`use_source_key` 與 `extract_value` 設為 `true`
 
-The following example `pipeline.yaml` file sets `flatten` to `false`, causing the processor to output values from the generated map as a list:
+下列範例 `pipeline.yaml` 檔案將 `flatten` 設為 `false`，使處理器將所產生對應中的值以清單形式輸出：
 
 ```yaml
 pipeline:
@@ -327,7 +328,7 @@ pipeline:
 ```
 {% include copy.html %}
 
-Object values from `mylist` are extracted and added to fields with the source keys `name` and `value`, as shown in the following response:
+來自 `mylist` 的物件值會被擷取，並加入具有來源鍵 `name` 與 `value` 的欄位，如下列回應所示：
 
 ```json
 {

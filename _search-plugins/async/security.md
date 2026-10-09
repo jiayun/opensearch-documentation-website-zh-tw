@@ -1,42 +1,43 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Asynchronous search security
+title: "非同步搜尋安全性"
 nav_order: 2
 parent: Asynchronous search
 grand_parent: Improving search performance
 has_children: false
 ---
 
-# Asynchronous search security
+# 非同步搜尋安全性
 
-You can use the Security plugin with asynchronous searches to limit non-admin users to specific actions. For example, you might want some users to only be able to submit or delete asynchronous searches, while you might want others to only view the results.
+您可以搭配非同步搜尋使用 Security 外掛程式，將非管理員使用者限制為只能執行特定動作。例如，您可能希望某些使用者只能提交或刪除非同步搜尋，而其他使用者只能檢視結果。
 
-All asynchronous search indexes are protected as system indexes. Only a super admin user or an admin user with a Transport Layer Security (TLS) certificate can access system indexes. For more information, see [System indexes]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/).
+所有非同步搜尋索引都作為系統索引受到保護。只有超級管理員使用者或具有傳輸層安全性（TLS）憑證的管理員使用者才能存取系統索引。如需詳細資訊，請參閱[系統索引]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/)。
 
-## Basic permissions
+## 基本權限
 
-As an admin user, you can use the Security plugin to assign specific permissions to users based on which API operations they need access to. For a list of supported APIs operations, see [Asynchronous search]({{site.url}}{{site.baseurl}}/).
+身為管理員使用者，您可以使用 Security 外掛程式，根據使用者需要存取的 API 操作，為他們指派特定權限。如需支援的 API 操作清單，請參閱[非同步搜尋]({{site.url}}{{site.baseurl}}/)。
 
-The Security plugin has two built-in roles that cover most asynchronous search use cases: `asynchronous_search_full_access` and `asynchronous_search_read_access`. For descriptions of each, see [Predefined roles]({{site.url}}{{site.baseurl}}/security/access-control/users-roles#predefined-roles).
+Security 外掛程式有兩個內建角色，涵蓋大多數非同步搜尋使用案例：`asynchronous_search_full_access` 和 `asynchronous_search_read_access`。如需各角色的說明，請參閱[預先定義的角色]({{site.url}}{{site.baseurl}}/security/access-control/users-roles#predefined-roles)。
 
-If these roles don’t meet your needs, mix and match individual asynchronous search permissions to suit your use case. Each action corresponds to an operation in the REST API. For example, the `cluster:admin/opensearch/asynchronous_search/delete` permission lets you delete a previously submitted asynchronous search.
+如果這些角色無法滿足您的需求，請混合搭配個別非同步搜尋權限，以符合您的使用案例。每個動作都對應至 REST API 中的一項操作。例如，`cluster:admin/opensearch/asynchronous_search/delete` 權限可讓您刪除先前提交的非同步搜尋。
 
-### A note on asynchronous search and fine-grained access control
+### 關於非同步搜尋與細緻存取控制的注意事項
 
-By design, the Asynchronous Search plugin extracts data from a target index and stores the data in a separate index to make search results available to users with the proper permissions. Although a user with either the `asynchronous_search_read_access` or `cluster:admin/opensearch/asynchronous_search/get` permission cannot submit the asynchronous search request itself, that user can get and view the search results using the associated search ID. [Document-level security]({{site.url}}{{site.baseurl}}/security/access-control/document-level-security/) (DLS) and [field-level security]({{site.url}}{{site.baseurl}}/security/access-control/field-level-security/) (FLS) access controls are designed to protect the data in the target index. But once the data is stored outside this index, users with these access permissions are able to use search IDs to get and view asynchronous search results, which may include data that is otherwise concealed by DLS and FLS access control in the target index.
+依照設計，Asynchronous Search 外掛程式會從目標索引擷取資料，並將資料儲存在另一個索引中，讓具有適當權限的使用者能夠取得搜尋結果。雖然具有 `asynchronous_search_read_access` 或 `cluster:admin/opensearch/asynchronous_search/get` 權限的使用者無法提交非同步搜尋請求本身，但該使用者可以使用相關聯的搜尋 ID 取得並檢視搜尋結果。[文件層級安全性]({{site.url}}{{site.baseurl}}/security/access-control/document-level-security/)（DLS）與[欄位層級安全性]({{site.url}}{{site.baseurl}}/security/access-control/field-level-security/)（FLS）存取控制旨在保護目標索引中的資料。但是，一旦資料儲存在此索引之外，具有這些存取權限的使用者就能使用搜尋 ID 取得並檢視非同步搜尋結果，而這些結果可能包含原本由目標索引中的 DLS 與 FLS 存取控制隱藏的資料。
 
-To reduce the chances of unintended users viewing search results that could describe an index, we recommend that administrators enable role-based access control and keep these kinds of design elements in mind when assigning permissions to the intended group of users. See [Limit access by backend role](#advanced-limit-access-by-backend-role) for details.
+為了降低非預期使用者檢視可能揭露索引內容之搜尋結果的機會，我們建議管理員啟用以角色為基礎的存取控制，並在為預定的使用者群組指派權限時，將這類設計要素納入考量。如需詳細資訊，請參閱[依後端角色限制存取](#advanced-limit-access-by-backend-role)。
 
-## (Advanced) Limit access by backend role
+## （進階）依後端角色限制存取
 
-Use backend roles to configure fine-grained access to asynchronous searches based on roles. For example, users of different departments in an organization can view asynchronous searches owned by their own department.
+使用後端角色，根據角色設定對非同步搜尋的細緻存取權限。例如，組織中不同部門的使用者可以檢視所屬部門擁有的非同步搜尋。
 
-First, make sure your users have the appropriate [backend roles]({{site.url}}{{site.baseurl}}/security/access-control/index/). Backend roles usually come from an [LDAP server]({{site.url}}{{site.baseurl}}/security/configuration/ldap/) or [SAML provider]({{site.url}}{{site.baseurl}}/security/configuration/saml/). However, if you use the internal user database, you can use the REST API to [add them manually]({{site.url}}{{site.baseurl}}/security/api/users/create-user/).
+首先，請確認您的使用者具有適當的[後端角色]({{site.url}}{{site.baseurl}}/security/access-control/index/)。後端角色通常來自 [LDAP 伺服器]({{site.url}}{{site.baseurl}}/security/configuration/ldap/)或 [SAML 提供者]({{site.url}}{{site.baseurl}}/security/configuration/saml/)。不過，如果您使用內部使用者資料庫，就可以使用 REST API [手動新增後端角色]({{site.url}}{{site.baseurl}}/security/api/users/create-user/)。
 
-Now when users view asynchronous search resources in OpenSearch Dashboards (or make REST API calls), they only see asynchronous searches submitted by users who have a subset of the backend role.
-For example, consider two users: `judy` and `elon`.
+現在，當使用者在 OpenSearch Dashboards 中檢視非同步搜尋資源（或呼叫 REST API）時，他們只會看到由後端角色為其後端角色子集的使用者所提交的非同步搜尋。
+例如，假設有兩位使用者：`judy` 和 `elon`。
 
-`judy` has an IT backend role:
+`judy` 具有 IT 後端角色：
 
 ```json
 PUT _plugins/_security/api/internalusers/judy
@@ -49,7 +50,7 @@ PUT _plugins/_security/api/internalusers/judy
 }
 ```
 
-`elon` has an admin backend role:
+`elon` 具有 admin 後端角色：
 
 ```json
 PUT _plugins/_security/api/internalusers/elon
@@ -62,7 +63,7 @@ PUT _plugins/_security/api/internalusers/elon
 }
 ```
 
-Both `judy` and `elon` have full access to asynchronous search:
+`judy` 和 `elon` 都具有非同步搜尋的完整存取權限：
 
 ```json
 PUT _plugins/_security/api/rolesmapping/async_full_access
@@ -76,17 +77,17 @@ PUT _plugins/_security/api/rolesmapping/async_full_access
 }
 ```
 
-Because they have different backend roles, an asynchronous search submitted by `judy` will not be visible to `elon` and the other way around.
+由於他們具有不同的後端角色，`elon` 無法看到 `judy` 提交的非同步搜尋，反之亦然。
 
-`judy` needs to have at least the superset of all roles that `elon` has to see `elon`'s asynchronous searches.
+`judy` 至少需要具有涵蓋 `elon` 所有角色的超集合，才能看到 `elon` 的非同步搜尋。
 
-For example, if `judy` has five backend roles and `elon` has one of these roles, then `judy` can see asynchronous searches submitted by `elon`, but `elon` can’t see the asynchronous searches submitted by `judy`. This means that `judy` can perform GET and DELETE operations on asynchronous searches submitted by `elon`, but not the reverse.
+例如，如果 `judy` 具有五個後端角色，而 `elon` 具有其中一個角色，則 `judy` 可以看到 `elon` 提交的非同步搜尋，但 `elon` 無法看到 `judy` 提交的非同步搜尋。這表示 `judy` 可以對 `elon` 提交的非同步搜尋執行 GET 和 DELETE 操作，但反過來則不行。
 
-If none of the users have any backend roles, all three will be able to see the others' searches.
+如果所有使用者都沒有任何後端角色，這三位使用者都能看到其他人的搜尋。
 
-For example, consider three users: `judy`, `elon`, and `jack`.
+例如，假設有三位使用者：`judy`、`elon` 和 `jack`。
 
-`judy`, `elon`, and `jack` have no backend roles set up:
+`judy`、`elon` 和 `jack` 都未設定後端角色：
 
 ```json
 PUT _plugins/_security/api/internalusers/judy
@@ -115,7 +116,7 @@ PUT _plugins/_security/api/internalusers/jack
 }
 ```
 
-Both `judy` and `elon` have full access to asynchronous search:
+`judy` 和 `elon` 都具有非同步搜尋的完整存取權限：
 
 ```json
 PUT _plugins/_security/api/rolesmapping/async_full_access
@@ -126,7 +127,7 @@ PUT _plugins/_security/api/rolesmapping/async_full_access
 }
 ```
 
-`jack` has read access to asynchronous search results:
+`jack` 具有非同步搜尋結果的讀取權限：
 
 ```json
 PUT _plugins/_security/api/rolesmapping/async_read_access
@@ -137,4 +138,4 @@ PUT _plugins/_security/api/rolesmapping/async_read_access
 }
 ```
 
-Because none of the users have backend roles, they will be able to see each other's asynchronous searches. So, if `judy` submits an asynchronous search, `elon`, who has full access, will be able to see that search. `jack`, who has read access, will also be able to see `judy`'s asynchronous search.
+由於所有使用者都沒有後端角色，他們可以看到彼此的非同步搜尋。因此，如果 `judy` 提交非同步搜尋，具有完整存取權限的 `elon` 就能看到該搜尋。具有讀取權限的 `jack` 也能看到 `judy` 的非同步搜尋。

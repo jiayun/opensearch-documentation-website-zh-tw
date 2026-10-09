@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Geopolygon
 parent: Geographic and xy queries
 nav_order: 30
 ---
 
-# Geopolygon query
+# Geopolygon 查詢
 
-A geopolygon query returns documents containing geopoints that are within the specified polygon. A document containing multiple geopoints matches the query if at least one geopoint matches the query.
+geopolygon 查詢會回傳包含位於指定多邊形內之地理點的文件。包含多個地理點的文件，只要至少有一個地理點符合查詢條件，即視為符合該查詢。
 
-A polygon is specified by a list of vertices in coordinate form. Unlike specifying a polygon for a geoshape field, the polygon does not have to be closed (specifying the first and last points at the same is unnecessary). Though points do not have to follow either clockwise or counterclockwise order, it is recommended that you list them in either of these orders. This will ensure that the correct polygon is captured.
+多邊形以座標形式的頂點清單來指定。與為 geoshape 欄位指定多邊形不同，此多邊形不必封閉（無須將第一點與最後一點指定為同一點）。雖然頂點不必依順時針或逆時針順序排列，但建議您以其中一種順序列出，以確保能正確擷取多邊形。
 
-The searched document field must be mapped as `geo_point`.
+被搜尋的文件欄位必須對應為 `geo_point`。
 {: .note}
 
-## Example
+## 範例
 
-Create a mapping with the `point` field mapped as `geo_point`:
+建立一個對應，將 `point` 欄位對應為 `geo_point`：
 
 ```json
 PUT /testindex1
@@ -32,7 +33,7 @@ PUT /testindex1
 ```
 {% include copy-curl.html %}
 
-Index a geopoint, specifying its latitude and longitude:
+編製索引一個地理點，並指定其緯度與經度：
 
 ```json
 PUT testindex1/_doc/1
@@ -45,7 +46,7 @@ PUT testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-Search for documents whose `point` objects are within the specified `geo_polygon`:
+搜尋 `point` 物件位於指定 `geo_polygon` 內的文件：
 
 ```json
 GET /testindex1/_search
@@ -73,11 +74,11 @@ GET /testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The polygon specified in the preceding request is the quadrilateral depicted in the following image. The matching document is within this quadrilateral. The coordinates of the quadrilateral vertices are specified in `(latitude, longitude)` format.
+前一個請求中指定的多邊形是下圖所描繪的四邊形。符合條件的文件位於此四邊形內。四邊形頂點的座標以 `(latitude, longitude)` 格式指定。
 
-![Search for points within the specified quadrilateral]({{site.url}}{{site.baseurl}}/images/geopolygon-query.png)
+![搜尋位於指定四邊形內的點]({{site.url}}{{site.baseurl}}/images/geopolygon-query.png)
 
-The response contains the matching document:
+回應包含符合條件的文件：
 
 ```json
 {
@@ -112,7 +113,7 @@ The response contains the matching document:
 }
 ```
 
-In the preceding search request, you specified the polygon vertices in clockwise order:
+在前述搜尋請求中，您以順時針順序指定多邊形頂點：
 
 ```json
 "geo_polygon": {
@@ -127,7 +128,7 @@ In the preceding search request, you specified the polygon vertices in clockwise
 }
 ```
 
-Alternatively, you can specify the vertices in counterclockwise order:
+或者，您也可以以逆時針順序指定頂點：
 
 ```json
 "geo_polygon": {
@@ -142,9 +143,9 @@ Alternatively, you can specify the vertices in counterclockwise order:
 }
 ```
 
-The resulting query response contains the same matching document.
+產生的查詢回應會包含同一個符合條件的文件。
 
-However, if you specify the vertices in the following order:
+不過，如果您以下列順序指定頂點：
 
 ```json
 "geo_polygon": {
@@ -159,18 +160,18 @@ However, if you specify the vertices in the following order:
 }
 ```
 
-The response returns no results.
+回應將不會傳回任何結果。
 
-## Parameters
+## 參數
 
-Geopolygon queries accept the following parameters.
+Geopolygon 查詢接受下列參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :--- 
-`_name` | String | The name of the filter. Optional.
-`validation_method` | String | The validation method. Valid values are `IGNORE_MALFORMED` (accept geopoints with invalid coordinates), `COERCE` (try to coerce coordinates to valid values), and `STRICT` (return an error when coordinates are invalid). Optional. Default is `STRICT`.
-`ignore_unmapped` | Boolean | Specifies whether to ignore an unmapped field. If set to `true`, then the query does not return any documents that contain an unmapped field. If set to `false`, then an exception is thrown when the field is unmapped. Optional. Default is `false`.
+`_name` | 字串 | 篩選器的名稱。選用。
+`validation_method` | 字串 | 驗證方法。有效值為 `IGNORE_MALFORMED`（接受座標無效的地理點）、`COERCE`（嘗試將座標強制轉換為有效值），以及 `STRICT`（當座標無效時回傳錯誤）。選用。預設為 `STRICT`。
+`ignore_unmapped` | 布林值 | 指定是否忽略未對應的欄位。若設為 `true`，則查詢不會回傳任何包含未對應欄位的文件。若設為 `false`，則當欄位未對應時會擲回例外狀況。選用。預設為 `false`。
 
-## Accepted formats
+## 接受的格式
 
-You can specify the geopoint coordinates when indexing a document and searching for documents in any [format]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point#formats) accepted by the geopoint field type.  
+您可以在為文件編製索引及搜尋文件時，以 geopoint 欄位類型接受的任何[格式]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point#formats)指定地理點座標。  

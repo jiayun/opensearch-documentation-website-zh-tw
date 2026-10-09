@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Notebooks
+title: "筆記本"
 nav_order: 90
 redirect_from:
   - /dashboards/notebooks/
@@ -8,119 +9,119 @@ redirect_from:
 has_children: false
 ---
 
-# Notebooks
+# 筆記本
 
-An OpenSearch Dashboards notebook is an interface that lets you easily combine code snippets, live visualizations, and narrative text in a single notebook interface.
+OpenSearch Dashboards 筆記本是一種介面，可讓您輕鬆地在單一筆記本介面中結合程式碼片段、即時視覺化與敘述文字。
 
-Notebooks let you interactively explore data by running different visualizations that you can share with team members to collaborate on a project.
+筆記本可讓您以互動方式探索資料，方法是執行不同的視覺化，並可與團隊成員分享，以便在專案上協作。
 
-A notebook is a document composed of two elements: code blocks (Markdown/SQL/Piped Processing Language (PPL)) and visualizations. Choose multiple timelines to compare and contrast visualizations.
+筆記本是由兩種元素組成的文件：程式碼區塊 (Markdown/SQL/Piped Processing Language (PPL)) 與視覺化。您可以選擇多個時間軸來比較與對照視覺化。
 
-You can also generate [reports]({{site.url}}{{site.baseurl}}/dashboards/reporting/) directly from your notebooks.
+您也可以直接從筆記本產生[報告]({{site.url}}{{site.baseurl}}/dashboards/reporting/)。
 
-Common use cases include creating postmortem reports, designing runbooks, building live infrastructure reports, and writing documentation.
+常見的使用案例包括建立事後檢討報告、設計執行手冊、建置即時基礎架構報告，以及撰寫文件。
 
-Tenants in OpenSearch Dashboards are spaces for saving notebooks and other OpenSearch Dashboards objects. For more information, see [OpenSearch Dashboards multi-tenancy]({{site.url}}{{site.baseurl}}/security/multi-tenancy/tenant-index/).
+OpenSearch Dashboards 中的租用戶是儲存筆記本與其他 OpenSearch Dashboards 物件的空間。如需詳細資訊，請參閱 [OpenSearch Dashboards 多租用戶]({{site.url}}{{site.baseurl}}/security/multi-tenancy/tenant-index/)。
 {: .note }
 
 
-## Get started with notebooks
+## 筆記本入門
 
-To get started, choose **Notebooks** within OpenSearch Dashboards.
+若要開始使用，請在 OpenSearch Dashboards 中選擇 **Notebooks**。
 
 
-### Step 1: Create a notebook
+### 步驟 1：建立筆記本
 
-A notebook is an interface for creating reports.
+筆記本是用於建立報告的介面。
 
-1. Choose **Create notebook** and enter a descriptive name.
-1. Choose **Create**.
+1. 選擇 **Create notebook** 並輸入具描述性的名稱。
+1. 選擇 **Create**。
 
-Choose **Actions** to rename, duplicate, or delete a notebook.
+選擇 **Actions** 可重新命名、複製或刪除筆記本。
 
-![Create notebook]({{site.url}}{{site.baseurl}}/images/create_notebook.gif)
+![建立筆記本]({{site.url}}{{site.baseurl}}/images/create_notebook.gif)
 
-### Step 2: Add a paragraph
+### 步驟 2：新增段落
 
-Paragraphs combine code blocks and visualizations for describing data.
+段落結合程式碼區塊與視覺化，用來描述資料。
 
-#### Add a code block
+#### 新增程式碼區塊
 
-Code blocks support Markdown, SQL, and PPL languages.
+程式碼區塊支援 Markdown、SQL 與 PPL 語言。
 
-Specify the input language on the first line using `%[language type]` syntax.
-For example, type `%md` for Markdown, `%sql` for SQL, and `%ppl` for PPL.
+請使用 `%[language type]` 語法，在第一行指定輸入語言。
+例如，Markdown 請輸入 `%md`，SQL 請輸入 `%sql`，PPL 請輸入 `%ppl`。
 
-##### Sample Markdown block
+##### Markdown 區塊範例
 
 ```
 %md
 Add in text formatted in Markdown.
 ```
 
-![Markdown paragraph]({{site.url}}{{site.baseurl}}/images/markdown_notebooks.gif)
+![Markdown 段落]({{site.url}}{{site.baseurl}}/images/markdown_notebooks.gif)
 
-##### Sample SQL block
+##### SQL 區塊範例
 
 ```sql
 %sql
 Select * from opensearch_dashboards_sample_data_flights limit 20;
 ```
 
-![SQL paragraph]({{site.url}}{{site.baseurl}}/images/sql_notebooks.gif)
+![SQL 段落]({{site.url}}{{site.baseurl}}/images/sql_notebooks.gif)
 
-##### Sample PPL block
+##### PPL 區塊範例
 
 ```
 %ppl
 source=opensearch_dashboards_sample_data_logs | head 20
 ```
 
-![PPL paragraph]({{site.url}}{{site.baseurl}}/images/ppl_notebooks.gif)
+![PPL 段落]({{site.url}}{{site.baseurl}}/images/ppl_notebooks.gif)
 
 
-#### Add a visualization
+#### 新增視覺化
 
-1. To add a visualization, choose **Add paragraph** and select **Visualization**.
-1. In **Title**, select your visualization and choose a date range. You can choose multiple timelines to compare and contrast visualizations.
-1. To run and save a paragraph, choose **Run**.
+1. 若要新增視覺化，請選擇 **Add paragraph** 並選取 **Visualization**。
+1. 在 **Title** 中，選取您的視覺化並選擇日期範圍。您可以選擇多個時間軸來比較與對照視覺化。
+1. 若要執行並儲存段落，請選擇 **Run**。
 
-![Visualization paragraph]({{site.url}}{{site.baseurl}}/images/visualization_notebooks.gif)
+![視覺化段落]({{site.url}}{{site.baseurl}}/images/visualization_notebooks.gif)
 
-## Paragraph actions
+## 段落動作
 
-You can perform the following actions on paragraphs:
+您可以對段落執行下列動作：
 
-- Add a new paragraph to the top of a report.
-- Add a new paragraph to the bottom of a report.
-- Run all the paragraphs at the same time.
-- Clear the outputs of all paragraphs.
-- Delete all the paragraphs.
+- 在報告頂端新增段落。
+- 在報告底部新增段落。
+- 同時執行所有段落。
+- 清除所有段落的輸出。
+- 刪除所有段落。
 
-![Sample notebooks]({{site.url}}{{site.baseurl}}/images/paragraphs_notebooks.gif)
+![範例筆記本]({{site.url}}{{site.baseurl}}/images/paragraphs_notebooks.gif)
 
-## Sample notebooks
+## 範例筆記本
 
-We prepared the following sample notebooks that showcase a variety of use cases:
+我們準備了下列範例筆記本，展示各種使用案例：
 
-- Using SQL to query the OpenSearch Dashboards sample flight data.
-- Using PPL to query the OpenSearch Dashboards sample web logs data.
-- Using PPL and visualizations to perform sample root cause event analysis on the OpenSearch Dashboards sample web logs data.
+- 使用 SQL 查詢 OpenSearch Dashboards 的範例航班資料。
+- 使用 PPL 查詢 OpenSearch Dashboards 的範例網頁記錄資料。
+- 使用 PPL 與視覺化，對 OpenSearch Dashboards 的範例網頁記錄資料執行範例根本原因事件分析。
 
-To add a sample notebook, choose **Actions** and select **Add sample notebooks**.
+若要新增範例筆記本，請選擇 **Actions** 並選取 **Add sample notebooks**。
 
-![Sample notebooks]({{site.url}}{{site.baseurl}}/images/sample_notebooks.gif)
+![範例筆記本]({{site.url}}{{site.baseurl}}/images/sample_notebooks.gif)
 
-## Create a report
+## 建立報告
 
-You can use notebooks to create PNG and PDF reports:
+您可以使用筆記本建立 PNG 與 PDF 報告：
 
-1. From the top menu bar, choose **Reporting actions**.
-1. You can choose to **Download PDF** or **Download PNG**.
+1. 從頂端功能表列，選擇 **Reporting actions**。
+1. 您可以選擇 **Download PDF** 或 **Download PNG**。
 
-   Reports generate asynchronously in the background and might take a few minutes, depending on the size of the report. A notification appears when your report is ready to download.
+   報告會在背景以非同步方式產生，視報告大小而定，可能需要幾分鐘。報告可供下載時會出現通知。
 
-1. To create a schedule-based report, choose **Create report definition**. For steps to create a report definition, see [Create reports using a definition]({{site.url}}{{site.baseurl}}/dashboards/reporting#creating-reports-using-a-definition).
-1. To see all your reports, choose **View all reports**.
+1. 若要建立以排程為基礎的報告，請選擇 **Create report definition**。如需建立報告定義的步驟，請參閱[使用定義建立報告]({{site.url}}{{site.baseurl}}/dashboards/reporting#creating-reports-using-a-definition)。
+1. 若要查看您的所有報告，請選擇 **View all reports**。
 
-![Report notebooks]({{site.url}}{{site.baseurl}}/images/report_notebooks.gif)
+![報告筆記本]({{site.url}}{{site.baseurl}}/images/report_notebooks.gif)

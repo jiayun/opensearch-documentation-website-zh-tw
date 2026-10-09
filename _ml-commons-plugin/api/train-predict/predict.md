@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Predict
+title: "預測"
 parent: Model APIs
 grand_parent: ML Commons APIs
 nav_order: 60
@@ -8,29 +9,29 @@ nav_order: 60
 
 # Predict API
 
-ML Commons can predict new data with your trained model either from indexed data or a data frame. To use the Predict API, the `model_id` is required.
+ML Commons 可以使用您訓練好的模型，從已編製索引的資料或資料框預測新資料。若要使用 Predict API，需要 `model_id`。
 
-For information about user access for this API, see [Model access control considerations]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations).
+有關此 API 的使用者存取權資訊，請參閱[模型存取控制注意事項]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/_predict/{algorithm_name}/{model_id}
 ```
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request fields.
+下表列出可用的請求欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要／選用 | 說明
 :---  | :--- | :--- | :---
-`parameters` | Object | Optional | Model-specific parameters for prediction.
-`parameters.input_processors` | Array | Optional | A list of processors used to transform the input data before sending it to the model. For more information, see [Processor chain]({{site.url}}{{site.baseurl}}/ml-commons-plugin/processor-chain/).
-`parameters.output_processors` | Array | Optional | A list of processors used to transform the model's output data. For more information, see [Processor chain]({{site.url}}{{site.baseurl}}/ml-commons-plugin/processor-chain/).
+`parameters` | 物件 | 選用 | 用於預測的模型專屬參數。
+`parameters.input_processors` | 陣列 | 選用 | 在將輸入資料傳送至模型之前，用來轉換輸入資料的處理器清單。如需更多資訊，請參閱[處理器鏈]({{site.url}}{{site.baseurl}}/ml-commons-plugin/processor-chain/)。
+`parameters.output_processors` | 陣列 | 選用 | 用來轉換模型輸出資料的處理器清單。如需更多資訊，請參閱[處理器鏈]({{site.url}}{{site.baseurl}}/ml-commons-plugin/processor-chain/)。
 
-For externally hosted models, the actual input fields depend on the model's connector configuration. For more information, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/).
+對於外部託管的模型，實際的輸入欄位取決於模型的連接器組態。如需更多資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-## Example request
+## 範例請求
 
 ```json
 POST /_plugins/_ml/_predict/kmeans/{model-id}
@@ -46,7 +47,7 @@ POST /_plugins/_ml/_predict/kmeans/{model-id}
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {

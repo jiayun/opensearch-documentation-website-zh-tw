@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Modifying the YAML files
+title: "修改 YAML 檔案"
 parent: Configuration
 nav_order: 15
 redirect_from: 
   - /security-plugin/configuration/yaml/
 ---
 
-# Modifying the security YAML files
+# 修改安全性 YAML 檔案
 
-The Security installation provides a number of YAML configuration files that are used to store the necessary settings that define the way the Security plugin manages users, roles, and activity within the cluster. These settings range from configurations for authentication backends to lists of allowed endpoints and HTTP requests. 
+Security 安裝提供多個 YAML 組態檔案，用來儲存必要的設定，這些設定定義了 Security 外掛程式如何管理叢集內的使用者、角色和活動。這些設定涵蓋範圍從驗證後端的組態，到允許的端點和 HTTP 請求清單。
 
-Before running [`securityadmin.sh`]({{site.url}}{{site.baseurl}}/security/configuration/security-admin/) to load the settings into the `.opendistro_security` index, perform an initial configuration of the YAML files. The files can be found in the `config/opensearch-security` directory. It's also good practice to back up these files so that you can reuse them for other clusters.
+在執行 [`securityadmin.sh`]({{site.url}}{{site.baseurl}}/security/configuration/security-admin/) 將設定載入 `.opendistro_security` 索引之前，請先對 YAML 檔案進行初始組態。這些檔案位於 `config/opensearch-security` 目錄中。備份這些檔案也是良好的做法，如此一來，您就能在其他叢集中重複使用這些檔案。
 
-The approach we recommend for using the YAML files is to first configure [reserved and hidden resources]({{site.url}}{{site.baseurl}}/security/access-control/api#reserved-and-hidden-resources), such as the `admin` and `kibanaserver` users. Thereafter you can create other users, roles, mappings, action groups, and tenants using OpenSearch Dashboards or the REST API.
+我們建議的 YAML 檔案使用方式，是先設定[保留和隱藏的資源]({{site.url}}{{site.baseurl}}/security/access-control/api#reserved-and-hidden-resources)，例如 `admin` 和 `kibanaserver` 使用者。之後，您可以使用 OpenSearch Dashboards 或 REST API 建立其他使用者、角色、對應、動作群組和租用戶。
 
 ## action_groups.yml
 
-This file contains any role mappings required for your security configuration. You can find the `role_mapping.yml` file in `<OPENSEARCH_HOME>/config/opensearch-security/roles_mapping.yml`.
+此檔案包含您的安全性組態所需的任何角色對應。您可以在 `<OPENSEARCH_HOME>/config/opensearch-security/roles_mapping.yml` 中找到 `role_mapping.yml` 檔案。
 
-Aside from some metadata, the default file is empty, because the Security plugin has a number of static action groups that it adds automatically. These static action groups cover a wide variety of use cases and are a great way to get started with the plugin.
+除了部分中繼資料之外，預設檔案是空的，因為 Security 外掛程式有許多會自動新增的靜態動作群組。這些靜態動作群組涵蓋各式各樣的使用案例，是開始使用此外掛程式的絕佳方式。
 
 ```yml
 ---
@@ -41,11 +42,11 @@ _meta:
 
 ## allowlist.yml
 
-You can use `allowlist.yml` to add any endpoints and HTTP requests to a list of allowed endpoints and requests. If enabled, all users except the super admin are allowed access to only the specified endpoints and HTTP requests, and all other HTTP requests associated with the endpoint are denied. For example, if GET `_cluster/settings` is added to the allow list, users cannot submit PUT requests to `_cluster/settings` to update cluster settings.
+您可以使用 `allowlist.yml` 將任何端點和 HTTP 請求新增至允許的端點和請求清單。若已啟用，除了超級管理員之外，所有使用者都只能存取指定的端點和 HTTP 請求，而與該端點相關的所有其他 HTTP 請求都會遭到拒絕。例如，若將 GET `_cluster/settings` 新增至允許清單，使用者便無法向 `_cluster/settings` 提交 PUT 請求來更新叢集設定。
 
-You can find the `allowlist.yml` file in `<OPENSEARCH_HOME>/config/opensearch-security/allowlist.yml`.
+您可以在 `<OPENSEARCH_HOME>/config/opensearch-security/allowlist.yml` 中找到 `allowlist.yml` 檔案。
 
-Note that while you can configure access to endpoints this way, for most cases, it is still best to configure permissions using the Security plugin's users and roles, which have more granular settings.
+請注意，雖然您可以透過這種方式設定端點的存取權，但在大多數情況下，最好還是使用 Security 外掛程式的使用者和角色來設定權限，因為它們具有更精細的設定。
 
 ```yml
 ---
@@ -73,7 +74,7 @@ config:
       - GET
 ```
 
-To enable PUT requests to cluster settings, add PUT to the list of allowed operations under `/_cluster/settings`.
+若要啟用對叢集設定的 PUT 請求，請將 PUT 新增至 `/_cluster/settings` 下的允許操作清單。
 
 ```yml
 requests:
@@ -82,7 +83,7 @@ requests:
     - PUT
 ```
 
-You can also add custom indexes to the allow list. `allowlist.yml` doesn't support wildcards, so you must manually specify all of the indexes you want to add.
+您也可以將自訂索引新增至允許清單。`allowlist.yml` 不支援萬用字元，因此您必須手動指定所有要新增的索引。
 
 ```yml
 requests: # Only allow GET requests to /sample-index1/_doc/1 and /sample-index2/_doc/1
@@ -94,9 +95,9 @@ requests: # Only allow GET requests to /sample-index1/_doc/1 and /sample-index2/
 
 ## internal_users.yml
 
-This file contains any initial users that you want to add to the Security plugin's internal user database. You can find this file in `<OPENSEARCH_HOME>/config/opensearch-security/internal_users.yml`.
+此檔案包含您要新增至 Security 外掛程式內部使用者資料庫的任何初始使用者。您可以在 `<OPENSEARCH_HOME>/config/opensearch-security/internal_users.yml` 中找到此檔案。
 
-The file format requires a hashed password. To generate one, run `plugins/opensearch-security/tools/hash.sh -p <new-password>`. If you decide to keep any of the demo users, *change their passwords* and re-run [securityadmin.sh]({{site.url}}{{site.baseurl}}/security/configuration/security-admin/) to apply the new passwords.
+此檔案格式需要雜湊處理過的密碼。若要產生雜湊密碼，請執行 `plugins/opensearch-security/tools/hash.sh -p <new-password>`。若您決定保留任何示範使用者，請*變更其密碼*，並重新執行 [securityadmin.sh]({{site.url}}{{site.baseurl}}/security/configuration/security-admin/) 以套用新密碼。
 
 ```yml
 ---
@@ -170,9 +171,9 @@ snapshotrestore:
 
 ## nodes_dn.yml
 
-`nodes_dn.yml` lets you add a certificate's [distinguished name (DN)]({{site.url}}{{site.baseurl}}/security/configuration/generate-certificates/#add-distinguished-names-to-opensearchyml) to an allow list to enable communication between any number of nodes or clusters. For example, a node that has the DN `CN=node1.example.com` in its allow list accepts communication from any other node or certificate that uses that DN.
+`nodes_dn.yml` 可讓您將憑證的[辨別名稱 (DN)]({{site.url}}{{site.baseurl}}/security/configuration/generate-certificates/#add-distinguished-names-to-opensearchyml) 新增至允許清單，以啟用任意數量的節點或叢集之間的通訊。例如，允許清單中具有 DN `CN=node1.example.com` 的節點，會接受來自使用該 DN 的任何其他節點或憑證的通訊。
 
-The DNs get indexed into a [system index]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/) that only a super admin or an admin with a Transport Layer Security (TLS) certificate can access. If you want to programmatically add DNs to your allow lists, use the [REST API]({{site.url}}{{site.baseurl}}/security/api/distinguished-names/).
+這些 DN 會編製索引至[系統索引]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/)，只有超級管理員或具有傳輸層安全性 (TLS) 憑證的管理員才能存取。若您想以程式設計方式將 DN 新增至允許清單，請使用 [REST API]({{site.url}}{{site.baseurl}}/security/api/distinguished-names/)。
 
 ```yml
 ---
@@ -265,7 +266,7 @@ kibana_server:
 
 ## roles.yml
 
-This file contains any initial roles that you want to add to the Security plugin. By default, this file contains predefined roles that grant usage to plugins within the default distribution of OpenSearch. The Security plugin will also add a number static roles automatically.
+此檔案包含您想新增至 Security 外掛程式的任何初始角色。預設情況下，此檔案包含預先定義的角色，這些角色會授權使用 OpenSearch 預設發行版中的外掛程式。Security 外掛程式也會自動新增多個靜態角色。
 
 ```yml
 ---
@@ -299,9 +300,9 @@ _meta:
 
 ## tenants.yml
 
-You can use this file to specify and add any number of OpenSearch Dashboards tenants to your OpenSearch cluster. For more information about tenants, see [OpenSearch Dashboards multi-tenancy]({{site.url}}{{site.baseurl}}/security/multi-tenancy/tenant-index/).
+您可以使用此檔案指定並新增任意數量的 OpenSearch Dashboards 租用戶至您的 OpenSearch 叢集。如需租用戶的更多資訊，請參閱 [OpenSearch Dashboards 多租用戶]({{site.url}}{{site.baseurl}}/security/multi-tenancy/tenant-index/)。
 
-Like all of the other YAML files, we recommend you use `tenants.yml` to add any tenants you must have in your cluster, and then use OpenSearch Dashboards or the [REST API]({{site.url}}{{site.baseurl}}/security/api/tenants/) if you need to further configure or create any other tenants.
+與所有其他 YAML 檔案一樣，我們建議您使用 `tenants.yml` 來新增叢集中必須具備的租用戶，然後在需要進一步設定或建立其他租用戶時，使用 OpenSearch Dashboards 或 [REST API]({{site.url}}{{site.baseurl}}/security/api/tenants/)。
 
 ```yml
 ---
@@ -315,7 +316,7 @@ admin_tenant:
 
 ## opensearch.yml
 
-In addition to many OpenSearch settings, the `opensearch.yml` file contains paths to TLS certificates and their attributes, such as distinguished names and trusted certificate authorities. You can find this file in  `<OPENSEARCH_HOME>/config/`.
+除了許多 OpenSearch 設定之外，`opensearch.yml` 檔案還包含 TLS 憑證及其屬性的路徑，例如辨別名稱與信任的憑證授權單位。您可以在 `<OPENSEARCH_HOME>/config/` 找到此檔案。
 
 ```yml
 plugins.security.ssl.transport.pemcert_filepath: esnode.pem
@@ -341,73 +342,73 @@ plugins.security.system_indices.indices: [".opendistro-alerting-config", ".opend
 node.max_local_storage_nodes: 3
 ```
 
-For a full list of `opensearch.yml` Security plugin settings, see [Security settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/security-settings/).
+如需 `opensearch.yml` Security 外掛程式設定的完整清單，請參閱[安全性設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/security-settings/)。
 {: .note}
 
-### Refining your configuration
+### 微調您的組態
 
-The `plugins.security.allow_default_init_securityindex` setting, when set to `true`, sets the Security plugin to its default security settings if an attempt to create the security index fails when OpenSearch launches. Default security settings are stored in YAML files contained in the `opensearch-project/security/config` directory. By default, this setting is `false`.
+`plugins.security.allow_default_init_securityindex` 設定在設為 `true` 時，若 OpenSearch 啟動時建立安全性索引失敗，會將 Security 外掛程式設回其預設安全性設定。預設安全性設定儲存在 `opensearch-project/security/config` 目錄中的 YAML 檔案內。預設情況下，此設定為 `false`。
 
 ```yml
 plugins.security.allow_default_init_securityindex: true
 ```
 
-An authentication cache for the Security plugin exists to help speed up authentication by temporarily storing user objects returned from the backend so that the Security plugin is not required to make repeated requests for them. To determine how long it takes for caching to time out, you can use the `plugins.security.cache.ttl_minutes` property to set a value in minutes. The default is `60`. You can disable caching by setting the value to `0`.
+Security 外掛程式具有驗證快取，可透過暫時儲存從後端傳回的使用者物件來加速驗證，讓 Security 外掛程式不必重複請求這些物件。若要判斷快取逾時所需的時間，您可以使用 `plugins.security.cache.ttl_minutes` 屬性以分鐘為單位設定值。預設值為 `60`。您可以將值設為 `0` 來停用快取。
 
 ```yml
 plugins.security.cache.ttl_minutes: 60
 ```
 
-### Enabling user access to system indexes
+### 啟用使用者對系統索引的存取
 
-Mapping a system index permission to a user allows that user to modify the system index specified in the permission's name (the one exception is the Security plugin's [system index]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/)). The `plugins.security.system_indices.permission.enabled` setting provides a way for administrators to make this permission available for or hidden from role mapping.
+將系統索引權限對應至使用者，可讓該使用者修改權限名稱中指定的系統索引（唯一的例外是 Security 外掛程式的[系統索引]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/)）。`plugins.security.system_indices.permission.enabled` 設定提供一種方式，讓管理員在角色對應中提供或隱藏此權限。
 
-When set to `true`, the feature is enabled and users with permission to modify roles can create roles that include permissions that grant access to system indexes:
+設為 `true` 時，此功能會啟用，具有修改角色權限的使用者可以建立包含授予系統索引存取權之權限的角色：
 
 ```yml
 plugins.security.system_indices.permission.enabled: true
 ```
 
-When set to `false`, the permission is disabled and only admins with an admin certificate can make changes to system indexes. By default, the permission is set to `false` in a new cluster.
+設為 `false` 時，此權限會停用，只有具備管理員憑證的管理員才能對系統索引進行變更。在新叢集中，此權限預設設為 `false`。
 
-To learn more about system index permissions, see [System index permissions]({{site.url}}{{site.baseurl}}/security/access-control/permissions/#system-index-permissions).
+若要進一步了解系統索引權限，請參閱[系統索引權限]({{site.url}}{{site.baseurl}}/security/access-control/permissions/#system-index-permissions)。
 
 
-### Password settings
+### 密碼設定
 
-If you want to run your users' passwords against some validation, specify a regular expression (regex) in this file. You can also include an error message that loads when passwords don't pass validation. The following example demonstrates how to include a regex so OpenSearch requires new passwords to be a minimum of eight characters with at least one uppercase, one lowercase, one digit, and one special character.
+如果您想對使用者的密碼執行某種驗證，請在此檔案中指定正規表示式 (regex)。您也可以加入密碼未通過驗證時載入的錯誤訊息。下列範例示範如何加入正規表示式，讓 OpenSearch 要求新密碼至少為八個字元，並且至少包含一個大寫字母、一個小寫字母、一個數字與一個特殊字元。
 
-Note that OpenSearch validates only users and passwords created through OpenSearch Dashboards or the REST API. The initial admin password that the demo configuration installer requires is validated against a separate, fixed set of rules. For more information, see [Admin password requirements]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements) and [Managing passwords]({{site.url}}{{site.baseurl}}/security/configuration/passwords/).
+請注意，OpenSearch 只會驗證透過 OpenSearch Dashboards 或 REST API 建立的使用者與密碼。示範組態安裝程式所需的初始管理員密碼，會依據另一組固定的規則進行驗證。如需更多資訊，請參閱[管理員密碼要求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)與[管理密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/)。
 
 ```yml
 plugins.security.restapi.password_validation_regex: '(?=.*[A-Z])(?=.*[^a-zA-Z\d])(?=.*[0-9])(?=.*[a-z]).{8,}'
 plugins.security.restapi.password_validation_error_message: "Password must be minimum 8 characters long and must contain at least one uppercase letter, one lowercase letter, one digit, and one special character."
 ```
 
-In addition, a score-based password strength estimator allows you to set a threshold for password strength when creating a new internal user or updating a user's password. This feature makes use of the [`zxcvbn` library](https://github.com/dropbox/zxcvbn) to apply a policy that emphasizes a password's complexity rather than its capacity to meet traditional criteria such as uppercase keys, numerals, and special characters.
+此外，以分數為基礎的密碼強度估計器可讓您在建立新的內部使用者或更新使用者密碼時，設定密碼強度的門檻。此功能使用 [`zxcvbn` 程式庫](https://github.com/dropbox/zxcvbn)來套用一項政策，強調密碼的複雜度，而非其符合大寫字母、數字與特殊字元等傳統標準的能力。
 
-For information about defining users, see [Defining users]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#defining-users).
+如需定義使用者的資訊，請參閱[定義使用者]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#defining-users)。
 
-This feature is not compatible with users specified as reserved. For information about reserved resources, see [Reserved and hidden resources]({{site.url}}{{site.baseurl}}/security/access-control/api#reserved-and-hidden-resources).
+此功能與指定為保留使用者的帳戶不相容。如需保留資源的資訊，請參閱[保留和隱藏的資源]({{site.url}}{{site.baseurl}}/security/access-control/api#reserved-and-hidden-resources)。
 {: .important }
 
-Score-based password strength requires two settings to configure the feature. The following table describes the two settings.
+以分數為基礎的密碼強度需要兩個設定來組態此功能。下表說明這兩個設定。
 
-| Setting | Description |
+| 設定 | 說明 |
 | :--- | :--- |
-| `plugins.security.restapi.password_min_length` | Sets the minimum number of characters for the password length. The default is `8`. This is also the minimum. |
-| `plugins.security.restapi.password_score_based_validation_strength` | Sets a threshold to determine whether the password is strong or weak. There are four values that represent a threshold's increasing complexity.<br>`fair`--A very "guessable" password: provides protection from throttled online attacks.<br>`good`--A somewhat guessable password: provides protection from unthrottled online attacks.<br>`strong`--A safely "unguessable" password: provides moderate protection from an offline, slow-hash scenario.<br>`very_strong`--A very unguessable password: provides strong protection from an offline, slow-hash scenario. |
+| `plugins.security.restapi.password_min_length` | 設定密碼長度的最小字元數。預設值為 `8`。這也是最小值。 |
+| `plugins.security.restapi.password_score_based_validation_strength` | 設定判斷密碼為強或弱的門檻。有四個值代表門檻的複雜度遞增。<br>`fair`--非常「容易猜測」的密碼：可防範受節流的線上攻擊。<br>`good`--稍微容易猜測的密碼：可防範未受節流的線上攻擊。<br>`strong`--安全地「難以猜測」的密碼：可對離線慢雜湊情境提供適度防護。<br>`very_strong`--非常難以猜測的密碼：可對離線慢雜湊情境提供強力防護。 |
 
-The following example shows the settings configured for the `opensearch.yml` file and enabling a password with a minimum of 10 characters and a threshold requiring the highest strength:
+下列範例顯示為 `opensearch.yml` 檔案設定的組態，以及啟用最少 10 個字元且門檻要求最高強度的密碼：
 
 ```yml
 plugins.security.restapi.password_min_length: 10
 plugins.security.restapi.password_score_based_validation_strength: very_strong
 ```
 
-When you try to create a user with a password that doesn't reach the specified threshold, the system generates a "weak password" warning, indicating that the password needs to be modified before you can save the user.
+當您嘗試建立密碼未達指定門檻的使用者時，系統會產生「弱密碼」警告，指出必須先修改密碼才能儲存該使用者。
 
-The following example shows the response from the [Create user]({{site.url}}{{site.baseurl}}/security/api/users/create-user/) API when the password is weak:
+下列範例顯示密碼過弱時 [Create user]({{site.url}}{{site.baseurl}}/security/api/users/create-user/) API 的回應：
 
 ```json
 {

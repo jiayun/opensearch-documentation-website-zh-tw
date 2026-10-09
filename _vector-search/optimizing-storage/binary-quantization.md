@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Binary quantization
+title: "二元量化"
 parent: Vector quantization
 grand_parent: Optimizing vector storage
 nav_order: 40
@@ -8,19 +9,19 @@ has_children: false
 has_math: true
 ---
 
-# Binary quantization
+# 二元量化
 
-OpenSearch supports binary quantization (BQ) with binary vector support for the Faiss engine. BQ compresses vectors into a binary format (0s and 1s), making it highly efficient in terms of memory usage. You can choose to represent each vector dimension using 1, 2, or 4 bits, depending on the desired precision. One of the advantages of using BQ is that the training process is handled automatically during indexing. This means that no separate training step is required, unlike other quantization techniques such as PQ.
+OpenSearch 透過 Faiss 引擎的二進位向量支援，提供二元量化 (BQ) 功能。BQ 將向量壓縮成二進位格式 (0 與 1)，因此在記憶體使用上非常有效率。您可以依據所需的精確度，選擇以 1、2 或 4 位元表示每個向量維度。使用 BQ 的優點之一是訓練程序會在編製索引時自動處理。這表示不需要另外執行訓練步驟，與 PQ 等其他量化技術不同。
 
-## Using BQ
+## 使用 BQ
 
-To configure BQ for the Faiss engine, define a `knn_vector` field and specify the `binary` encoder in the method parameters. The `bits` parameter controls the number of bits used for quantization and can be set to `1`, `2`, or `4`:
+若要為 Faiss 引擎設定 BQ，請定義 `knn_vector` 欄位，並在 method 參數中指定 `binary` 編碼器。`bits` 參數控制量化所使用的位元數，可設定為 `1`、`2` 或 `4`：
 
-- `1`-bit quantization: 32x compression
-- `2`-bit quantization: 16x compression
-- `4`-bit quantization: 8x compression
+- `1` 位元量化：32 倍壓縮
+- `2` 位元量化：16 倍壓縮
+- `4` 位元量化：8 倍壓縮
 
-The following example creates an index with 1-bit binary quantization:
+下列範例建立一個使用 1 位元二元量化的索引：
 
 ```json
 PUT my-vector-index
@@ -57,17 +58,17 @@ PUT my-vector-index
 ```
 {% include copy-curl.html %}
 
-## Enhancing search quality with ADC and RR
-**Introduced 3.2**
+## 使用 ADC 與 RR 提升搜尋品質
+**3.2 版新增**
 {: .label .label-purple }
 
-If your search results have low recall, you can enhance search quality by specifying asymmetric distance computation (ADC) or random rotation (RR) in the index mapping.
+如果您的搜尋結果召回率偏低，可以在索引對應中指定非對稱距離計算 (ADC) 或隨機旋轉 (RR) 來提升搜尋品質。
 
-ADC maintains a full-precision query vector while rescaling it to have meaningful distance computations against binary-quantized document vectors. This asymmetric approach preserves more information about the query vector, boosting search quality without significant memory penalty. ADC is supported for 1-bit quantization only.
+ADC 會保留全精確度的查詢向量，同時重新調整其比例，以便對二元量化的文件向量進行有意義的距離計算。這種非對稱做法保留了更多查詢向量的資訊，在不顯著增加記憶體負擔的情況下提升搜尋品質。ADC 僅支援 1 位元量化。
 
-RR addresses the issue of binary quantization giving equal weight to each vector dimension during the quantization process. By rotating the distribution, RR can redistribute variance (information) from high-variance dimensions to low-variance dimensions, preserving more information during the 32x compression process. RR is supported for 1-bit, 2-bit, and 4-bit quantization.
+RR 解決了二元量化在量化過程中對每個向量維度給予相同權重的問題。透過旋轉分布，RR 可以將變異數 (資訊) 從高變異數維度重新分配到低變異數維度，在 32 倍壓縮過程中保留更多資訊。RR 支援 1 位元、2 位元與 4 位元量化。
 
-For optimal performance and recall enhancement, use both ADC and RR together:
+若要獲得最佳效能與召回率提升，請同時使用 ADC 與 RR：
 
 ```json
 PUT vector-index
@@ -104,12 +105,12 @@ PUT vector-index
 ```
 {% include copy-curl.html %}
 
-ADC and RR impact search and indexing performance, so they are disabled by default. ADC may introduce a moderate latency increase because of full-precision distance computations, while RR primarily affects indexing latency because vectors must be rotated during the process.
+ADC 與 RR 會影響搜尋與索引效能，因此預設為停用。ADC 因為需要進行全精確度距離計算，可能會適度增加延遲；而 RR 主要影響索引延遲，因為向量在此過程中必須旋轉。
 {: .note}
 
-## Search using binary quantized vectors
+## 使用二元量化向量進行搜尋
 
-You can perform a vector search on your index by providing a vector and specifying the number of nearest neighbors (k) to return:
+您可以提供向量並指定要傳回的最近鄰居數量 (k)，對索引執行向量搜尋：
 
 ```json
 GET my-vector-index/_search
@@ -127,10 +128,10 @@ GET my-vector-index/_search
 ```
 {% include copy-curl.html %}
 
-You can also fine-tune search by providing the `ef_search` and `oversample_factor` parameters.
-The `oversample_factor` parameter controls the factor by which the search oversamples the candidate vectors before ranking them. Using a higher oversample factor means that more candidates will be considered before ranking, improving accuracy but also increasing search time. When selecting the `oversample_factor` value, consider the trade-off between accuracy and efficiency. For example, setting the `oversample_factor` to `2.0` will double the number of candidates considered during the ranking phase, which may help achieve better results. 
+您也可以提供 `ef_search` 與 `oversample_factor` 參數來微調搜尋。
+`oversample_factor` 參數控制搜尋在排名前對候選向量進行超取樣的倍數。使用較高的超取樣倍數表示在排名前會考慮更多候選向量，可提升準確度，但也會增加搜尋時間。選擇 `oversample_factor` 值時，請考量準確度與效率之間的取捨。例如，將 `oversample_factor` 設為 `2.0` 會使排名階段考慮的候選向量數量加倍，可能有助於取得更好的結果。
 
-The following request specifies the `ef_search` and `oversample_factor` parameters:
+下列請求指定了 `ef_search` 與 `oversample_factor` 參數：
 
 ```json
 GET my-vector-index/_search
@@ -155,41 +156,41 @@ GET my-vector-index/_search
 {% include copy-curl.html %}
 
 
-## HNSW memory estimation
+## HNSW 記憶體估算
 
-The memory required for the Hierarchical Navigable Small World (HNSW) graph can be estimated as `1.1 * (dimension * bits / 8 + 8 * m)` bytes/vector, where `m` is the maximum number of bidirectional links created for each element during the construction of the graph.
+階層式可導航小世界 (HNSW) 圖形所需的記憶體可估算為 `1.1 * (dimension * bits / 8 + 8 * m)` 位元組/向量，其中 `m` 是建構圖形時為每個元素建立的最大雙向連結數。
 
-As an example, assume that you have 1 million vectors with a dimension of 256 and an `m` of 16. The following sections provide memory requirement estimations for various compression values.
+舉例來說，假設您有 100 萬個向量，維度為 256，`m` 為 16。以下各節提供各種壓縮值的記憶體需求估算。
 
-### 1-bit quantization (32x compression)
+### 1 位元量化 (32 倍壓縮)
 
-In 1-bit quantization, each dimension is represented using 1 bit, equivalent to a 32x compression factor. The memory requirement can be estimated as follows:
+在 1 位元量化中，每個維度以 1 位元表示，相當於 32 倍壓縮。記憶體需求可估算如下：
 
 ```r
 Memory = 1.1 * ((256 * 1 / 8) + 8 * 16) * 1,000,000
        ~= 0.176 GB
 ```
 
-### 2-bit quantization (16x compression)
+### 2 位元量化 (16 倍壓縮)
 
-In 2-bit quantization, each dimension is represented using 2 bits, equivalent to a 16x compression factor. The memory requirement can be estimated as follows:
+在 2 位元量化中，每個維度以 2 位元表示，相當於 16 倍壓縮。記憶體需求可估算如下：
 
 ```r
 Memory = 1.1 * ((256 * 2 / 8) + 8 * 16) * 1,000,000
        ~= 0.211 GB
 ```
 
-### 4-bit quantization (8x compression)
+### 4 位元量化 (8 倍壓縮)
 
-In 4-bit quantization, each dimension is represented using 4 bits, equivalent to an 8x compression factor. The memory requirement can be estimated as follows:
+在 4 位元量化中，每個維度以 4 位元表示，相當於 8 倍壓縮。記憶體需求可估算如下：
 
 ```r
 Memory = 1.1 * ((256 * 4 / 8) + 8 * 16) * 1,000,000
        ~= 0.282 GB
 ```
 
-## Next steps
+## 後續步驟
 
-- [Disk-based vector search]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/disk-based-vector-search/)
-- [Memory-optimized vectors]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/)
-- [k-NN query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)
+- [磁碟型向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/disk-based-vector-search/)
+- [記憶體最佳化向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/)
+- [k-NN 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: show datasources
 parent: Commands
@@ -8,28 +9,28 @@ nav_order: 42
 
 <!-- vale off -->
 
-# show datasources command
+# show datasources 命令
 
 <!-- vale on -->
 
-The `show datasources` command queries data sources configured in the PPL engine. The `show datasources` command can only be used as the first command in a PPL query.
+`show datasources` 命令會查詢 PPL 引擎中設定的資料來源。`show datasources` 命令只能作為 PPL 查詢中的第一個命令使用。
 
-To use the `show datasources` command, `plugins.calcite.enabled` must be set to `false`.
+若要使用 `show datasources` 命令，必須將 `plugins.calcite.enabled` 設定為 `false`。
 {: .note}
 
-## Syntax
+## 語法
 
-The `show datasources` command has the following syntax:
+`show datasources` 命令的語法如下：
 
 ```sql
 show datasources
 ```
 
-The `show datasources` command takes no parameters.  
+`show datasources` 命令不接受任何參數。  
 
-## Example 1: Fetching all Prometheus data sources
+## 範例 1：擷取所有 Prometheus 資料來源
 
-The following query fetches all Prometheus data sources:
+下列查詢會擷取所有 Prometheus 資料來源：
   
 ```sql
 show datasources
@@ -37,7 +38,7 @@ show datasources
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 

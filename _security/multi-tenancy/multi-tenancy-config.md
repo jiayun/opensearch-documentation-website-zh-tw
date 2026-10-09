@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Multi-tenancy configuration
+title: "多租用戶組態"
 parent: OpenSearch Dashboards multi-tenancy
 nav_order: 145
 ---
 
 
-# Multi-tenancy configuration
+# 多租用戶組態
 
-Multi-tenancy is enabled in OpenSearch Dashboards by default. If you need to disable or change settings related to multi-tenancy, see the `kibana` settings in `config/opensearch-security/config.yml`, as shown in the following example:
+OpenSearch Dashboards 預設會啟用多租用戶。如果您需要停用或變更與多租用戶相關的設定，請參閱 `config/opensearch-security/config.yml` 中的 `kibana` 設定，如下列範例所示：
 
 ```yml
 config:
@@ -22,16 +23,16 @@ config:
     do_not_fail_on_forbidden: false
 ```
 
-| Setting | Description |
+| 設定 | 說明 |
 | :--- | :--- |
-| `multitenancy_enabled` | Enable or disable multi-tenancy. Default is `true`. |
-| `private_tenant_enabled` | Enable or disable the private tenant. Default is `true`. |
-| `default_tenant` | Use to set the tenant that is available when users log in. |
-| `server_username` | Must match the name of the OpenSearch Dashboards server user in `opensearch_dashboards.yml`. Default is `kibanaserver`. If a different user is configured, then make sure that user is mapped to the `kibana_server` role through the `role_mappings.yml` file in order to give them the appropriate permissions listed in [kibana_server role details]({{site.url}}{{site.baseurl}}/security/multi-tenancy/multi-tenancy-config/#kibana_server-role-details). |
-| `index` | Must match the name of the OpenSearch Dashboards index from `opensearch_dashboards.yml`. Default is `.kibana`. |
-| `do_not_fail_on_forbidden` | When `true`, the Security plugin removes any content that a user is not allowed to see from the search results. When `false`, the plugin returns a security exception. Default is `false`. |
+| `multitenancy_enabled` | 啟用或停用多租用戶。預設為 `true`。 |
+| `private_tenant_enabled` | 啟用或停用私有租用戶。預設為 `true`。 |
+| `default_tenant` | 用於設定使用者登入時可用的租用戶。 |
+| `server_username` | 必須與 `opensearch_dashboards.yml` 中 OpenSearch Dashboards 伺服器使用者的名稱相符。預設為 `kibanaserver`。如果設定了其他使用者，請確保該使用者已透過 `role_mappings.yml` 檔案對應至 `kibana_server` 角色，以取得 [kibana_server 角色詳細資料]({{site.url}}{{site.baseurl}}/security/multi-tenancy/multi-tenancy-config/#kibana_server-role-details) 中列出的適當權限。 |
+| `index` | 必須與 `opensearch_dashboards.yml` 中的 OpenSearch Dashboards 索引名稱相符。預設為 `.kibana`。 |
+| `do_not_fail_on_forbidden` | 當設定為 `true` 時，Security 外掛程式會從搜尋結果中移除使用者無權檢視的任何內容。當設定為 `false` 時，外掛程式會回傳安全性例外。預設為 `false`。 |
 
-The `opensearch_dashboards.yml` file includes additional settings:
+`opensearch_dashboards.yml` 檔案包含其他設定：
 
 ```yml
 opensearch.username: kibanaserver
@@ -44,32 +45,32 @@ opensearch_security.multitenancy.tenants.preferred: ["Private", "Global"]
 opensearch_security.multitenancy.enable_filter: false
 ```
 
-| Setting | Description |
+| 設定 | 說明 |
 | :--- | :--- |
-| `opensearch.requestHeadersAllowlist` | OpenSearch Dashboards requires that you add all HTTP headers to the allow list so that the headers pass to OpenSearch. Multi-tenancy uses a specific header, `securitytenant`, that must be present with the standard `Authorization` header. If the `securitytenant` header is not on the allow list, OpenSearch Dashboards starts with a red status.
-| `opensearch_security.multitenancy.enabled` | Enables or disables multi-tenancy in OpenSearch Dashboards. Default is `true`. |
-| `opensearch_security.multitenancy.tenants.enable_global` | Enables or disables the global tenant. Default is `true`. |
-| `opensearch_security.multitenancy.tenants.enable_private` | Enables or disables private tenants. Default is `true`. |
-| `opensearch_security.multitenancy.tenants.preferred` | Lets you change ordering in the **Tenants** tab of OpenSearch Dashboards. By default, the list starts with Global and Private (if enabled) and then proceeds alphabetically. You can add tenants here to move them to the top of the list. |
-| `opensearch_security.multitenancy.enable_filter` | If you have many tenants, you can add a search bar to the top of the list. Default is `false`. |
+| `opensearch.requestHeadersAllowlist` | OpenSearch Dashboards 要求您將所有 HTTP 標頭加入允許清單，以便這些標頭傳遞至 OpenSearch。多租用戶使用特定的標頭 `securitytenant`，該標頭必須與標準的 `Authorization` 標頭一併存在。如果 `securitytenant` 標頭不在允許清單中，OpenSearch Dashboards 會以紅色狀態啟動。
+| `opensearch_security.multitenancy.enabled` | 啟用或停用 OpenSearch Dashboards 中的多租用戶。預設為 `true`。 |
+| `opensearch_security.multitenancy.tenants.enable_global` | 啟用或停用全域租用戶。預設為 `true`。 |
+| `opensearch_security.multitenancy.tenants.enable_private` | 啟用或停用私有租用戶。預設為 `true`。 |
+| `opensearch_security.multitenancy.tenants.preferred` | 可讓您變更 OpenSearch Dashboards 中 **Tenants** 索引標籤的排序。預設情況下，清單會以 Global 和 Private (如果已啟用) 開頭，然後按字母順序排列。您可以在此新增租用戶，將它們移至清單頂端。 |
+| `opensearch_security.multitenancy.enable_filter` | 如果您有許多租用戶，可以在清單頂端新增搜尋列。預設為 `false`。 |
 
 
-## Add tenants
+## 新增租用戶
 
-To create tenants, use OpenSearch Dashboards, the REST API, or `tenants.yml`.
+若要建立租用戶，請使用 OpenSearch Dashboards、REST API 或 `tenants.yml`。
 
 
 #### OpenSearch Dashboards
 
-1. Open OpenSearch Dashboards.
-1. Choose **Security**, **Tenants**, and **Create tenant**.
-1. Give the tenant a name and description.
-1. Choose **Create**.
+1. 開啟 OpenSearch Dashboards。
+1. 選擇 **Security**、**Tenants**，然後選擇 **Create tenant**。
+1. 為租用戶提供名稱與描述。
+1. 選擇 **Create**。
 
 
 #### REST API
 
-See [Create tenant]({{site.url}}{{site.baseurl}}/security/api/tenants/create-tenant/).
+請參閱[建立租用戶]({{site.url}}{{site.baseurl}}/security/api/tenants/create-tenant/)。
 
 
 #### tenants.yml
@@ -86,24 +87,24 @@ admin_tenant:
   description: "Demo tenant for admin user"
 ```
 
-## Give roles access to tenants
+## 將租用戶的存取權授予角色
 
-After creating a tenant, give a role access to it using OpenSearch Dashboards, the REST API, or `roles.yml`.
+建立租用戶後，請使用 OpenSearch Dashboards、REST API 或 `roles.yml` 將該租用戶的存取權授予角色。
 
-- Read-write (`kibana_all_write`) permissions let the role view and modify objects in the tenant.
-- Read-only (`kibana_all_read`) permissions let the role view objects, but not modify them.
+- 讀寫 (`kibana_all_write`) 權限可讓角色檢視及修改租用戶中的物件。
+- 唯讀 (`kibana_all_read`) 權限可讓角色檢視物件，但無法修改。
 
 
 #### OpenSearch Dashboards
 
-1. Open OpenSearch Dashboards.
-1. Choose **Security**, **Roles**, and a role.
-1. For **Tenant permissions**, add tenants, press Enter, and give the role read and/or write permissions to it.
+1. 開啟 OpenSearch Dashboards。
+1. 選擇 **Security**、**Roles**，然後選擇一個角色。
+1. 在 **Tenant permissions** 中，新增租用戶、按 Enter 鍵，並為該角色授予讀取及/或寫入權限。
 
 
 #### REST API
 
-See [Create role]({{site.url}}{{site.baseurl}}/security/api/roles/create-role/).
+請參閱[建立角色]({{site.url}}{{site.baseurl}}/security/api/roles/create-role/)。
 
 
 #### roles.yml
@@ -136,26 +137,26 @@ _meta:
 ```
 
 
-## Manage OpenSearch Dashboards indexes
+## 管理 OpenSearch Dashboards 索引
 
-The open source version of OpenSearch Dashboards saves all objects to a single index: `.kibana`. The Security plugin uses this index for the global tenant, but separate indexes for every other tenant. Each user also has a private tenant, so you might see a large number of indexes that follow two patterns:
+OpenSearch Dashboards 的開放原始碼版本會將所有物件儲存至單一索引：`.kibana`。Security 外掛程式會將此索引用於全域租用戶，並為其他每個租用戶使用個別的索引。每位使用者也有自己的私有租用戶，因此您可能會看到大量遵循兩種模式的索引：
 
 ```
 .kibana_<hash>_<tenant_name>
 .kibana_<hash>_<username>
 ```
 
-The Security plugin scrubs these index names of special characters, so they might not be a perfect match of tenant names and usernames.
+Security 外掛程式會清除這些索引名稱中的特殊字元，因此它們可能與租用戶名稱和使用者名稱不完全相符。
 {: .tip }
 
-To back up your OpenSearch Dashboards data, [take a snapshot]({{site.url}}{{site.baseurl}}/opensearch/snapshots/snapshot-restore/) of all tenant indexes using an index pattern such as `.kibana*`.
+若要備份您的 OpenSearch Dashboards 資料，請使用 `.kibana*` 之類的索引模式，對所有租用戶索引[建立快照]({{site.url}}{{site.baseurl}}/opensearch/snapshots/snapshot-restore/)。
 
 <!-- vale off -->
-## `kibana_server` role details
+## `kibana_server` 角色詳細資料
 <!-- vale on -->
 
-OpenSearch Dashboards uses the`kibana_server` role to perform necessary OpenSearch operations. By default, `kibanauser` is mapped to this role through the `role_mappings.yml` file. You can view the full list of permissions assigned to this role by sending a GET request to the `_plugins/_security/api/roles/kibana_server` API (include the admin certificate, key, and certificate authority file in the GET request).
-The following list includes the permissions assigned to this role:
+OpenSearch Dashboards 使用 `kibana_server` 角色來執行必要的 OpenSearch 作業。預設情況下，`kibanauser` 會透過 `role_mappings.yml` 檔案對應至此角色。您可以向 `_plugins/_security/api/roles/kibana_server` API 傳送 GET 請求，以檢視指派給此角色的完整權限清單 (請在 GET 請求中包含管理員憑證、金鑰與憑證授權單位檔案)。
+下列清單包含指派給此角色的權限：
 
 ```
 {
@@ -242,6 +243,6 @@ The following list includes the permissions assigned to this role:
 }
 ```
 
-## Testing tenants with multiple users
+## 以多位使用者測試租用戶
 
-If you test multiple users in the same browser and the selected tenant changes unexpectedly, sign in as each user in a separate private browsing window, such as an Incognito window in Google Chrome or a Private window in Firefox.
+如果您在同一個瀏覽器中測試多位使用者，而所選租用戶意外變更，請在個別的私密瀏覽視窗中以每位使用者登入，例如 Google Chrome 的無痕視窗或 Firefox 的私密視窗。

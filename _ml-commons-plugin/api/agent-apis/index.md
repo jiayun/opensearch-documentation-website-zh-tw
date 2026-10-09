@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Agent APIs
+title: "代理程式 API"
 parent: ML Commons APIs
 has_children: true
 has_toc: false
@@ -9,18 +10,18 @@ redirect_from:
   - /ml-commons-plugin/api/agent-apis/
 ---
 
-# Agent APIs
-**Introduced 2.13**
+# 代理程式 API
+**於 2.13 版推出**
 {: .label .label-purple }
 
-You can automate machine learning (ML) tasks using agents and tools. An _agent_ orchestrates and runs ML models and tools. For more information, see [Agents and tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/index/).
+您可以使用代理程式和工具將機器學習 (ML) 工作自動化。_代理程式_ 會協調並執行 ML 模型與工具。如需更多資訊，請參閱[代理程式與工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/index/)。
 
-ML Commons supports the following agent-level APIs:
+ML Commons 支援下列代理程式層級的 API：
 
-- [Register agent]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)
-- [Update agent]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/update-agent/)
-- [Execute agent]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/)
-- [Execute agent stream]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-stream-agent/)
-- [Get agent]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/get-agent/)
-- [Search agent]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/search-agent/)
-- [Delete agent]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/delete-agent/)
+- [註冊代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)
+- [更新代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/update-agent/)
+- [執行代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/)
+- [串流執行代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-stream-agent/)
+- [取得代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/get-agent/)
+- [搜尋代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/search-agent/)
+- [刪除代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/delete-agent/)

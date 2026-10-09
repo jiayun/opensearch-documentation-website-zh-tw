@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Debugging a search pipeline
+title: "偵錯搜尋管線"
 nav_order: 25
 has_children: false
 parent: Search pipelines
 ---
 
 
-# Debugging a search pipeline
+# 偵錯搜尋管線
 
-The `verbose_pipeline` parameter provides detailed information about the data flow and transformations for the search request, search response, and search phase processors in the search pipeline. It helps with troubleshooting and optimizing the pipeline and ensures transparency in handling search requests and responses. 
+`verbose_pipeline` 參數提供搜尋管線中搜尋請求、搜尋回應及搜尋階段處理器的資料流程與轉換詳細資訊。它有助於疑難排解及最佳化管線，並確保處理搜尋請求和回應時的透明度。
 
-## Enabling debugging
+## 啟用偵錯
 
-To enable pipeline debugging, specify `verbose_pipeline=true` as a query parameter in your search request. This functionality is available for all three search pipeline methods:
+若要啟用管線偵錯，請在搜尋請求中將 `verbose_pipeline=true` 指定為查詢參數。此功能適用於全部三種搜尋管線方法：
 
-- [Default search pipeline](#default-search-pipeline)
-- [Specific search pipeline](#specific-search-pipeline)
-- [Temporary search pipeline](#temporary-search-pipeline)
+- [預設搜尋管線](#default-search-pipeline)
+- [特定搜尋管線](#specific-search-pipeline)
+- [臨時搜尋管線](#temporary-search-pipeline)
 
-### Default search pipeline
+### 預設搜尋管線
 
-To use `verbose_pipeline` with a default search pipeline, set the pipeline as the default in the index settings and include `verbose_pipeline=true` in the query:
+若要在預設搜尋管線中使用 `verbose_pipeline`，請在索引設定中將該管線設為預設，並在查詢中加入 `verbose_pipeline=true`：
 
 ```json
 PUT /my_index/_settings
@@ -36,22 +37,22 @@ GET /my_index/_search?verbose_pipeline=true
 ```
 {% include copy-curl.html %}
 
-For more information about default search pipelines, see [Setting a default pipeline for all requests in an index]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/using-search-pipeline/#default-search-pipeline).
+如需預設搜尋管線的詳細資訊，請參閱[為索引中的所有請求設定預設管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/using-search-pipeline/#default-search-pipeline)。
 
-### Specific search pipeline 
+### 特定搜尋管線
 
-To use `verbose_pipeline` with a specific search pipeline, specify the pipeline ID and include `verbose_pipeline=true` in the query:
+若要在特定搜尋管線中使用 `verbose_pipeline`，請指定管線 ID，並在查詢中加入 `verbose_pipeline=true`：
 
 ```json
 GET /my_index/_search?search_pipeline=my_pipeline&verbose_pipeline=true
 ```
 {% include copy-curl.html %}
 
-For more information about using specific search pipelines, see [Specifying an existing pipeline for a request]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/using-search-pipeline/#specifying-an-existing-search-pipeline-for-a-request).
+如需使用特定搜尋管線的詳細資訊，請參閱[為請求指定現有管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/using-search-pipeline/#specifying-an-existing-search-pipeline-for-a-request)。
 
-### Temporary search pipeline
+### 臨時搜尋管線
 
-To use `verbose_pipeline` with a temporary search pipeline, define the pipeline directly in the request body and include `verbose_pipeline=true` in the query:
+若要在臨時搜尋管線中使用 `verbose_pipeline`，請直接在請求本文中定義管線，並在查詢中加入 `verbose_pipeline=true`：
 
 ```json
 POST /my_index/_search?verbose_pipeline=true
@@ -79,15 +80,15 @@ POST /my_index/_search?verbose_pipeline=true
 ```
 {% include copy-curl.html %}
 
-For more information about using a temporary search pipeline, see [Using a temporary pipeline for a request]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/using-search-pipeline/#using-a-temporary-search-pipeline-for-a-request).
+如需使用臨時搜尋管線的詳細資訊，請參閱[為請求使用臨時管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/using-search-pipeline/#using-a-temporary-search-pipeline-for-a-request)。
 
-## Example response
+## 回應範例
 
-When the `verbose_pipeline` parameter is enabled, the response contains an additional `processor_results` field that provides information about the transformations applied by each processor in the pipeline:
+啟用 `verbose_pipeline` 參數時，回應會包含額外的 `processor_results` 欄位，提供管線中每個處理器所套用轉換的相關資訊：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 

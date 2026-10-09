@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Vector search
+title: "向量搜尋"
 has_children: true
 has_toc: false
 nav_order: 10
@@ -8,52 +9,52 @@ redirect_from:
   - /vector-search/tutorials/
   - /tutorials/vector-search/
 vector_search_101:
-  - heading: "Getting started with vector search"
-    description: "Learn how to run a raw vector search"
-    link: "/vector-search/getting-started/"
-  - heading: "Getting started with semantic and hybrid search"
-    description: "Build your first AI search application"
-    link: "/tutorials/vector-search/neural-search-tutorial/"
+- heading: 向量搜尋入門
+  description: 了解如何執行原始向量搜尋
+  link: /vector-search/getting-started/
+- heading: 語意搜尋與混合搜尋入門
+  description: 建立您的第一個 AI 搜尋應用程式
+  link: /tutorials/vector-search/neural-search-tutorial/
 ai_search_types:
-  - heading: "Semantic search"
-    description: "Understands the meaning and intent behind a query to deliver more relevant results"
-    link: "/vector-search/ai-search/semantic-search/"
-  - heading: "Hybrid search"
-    description: "Improves relevance by combining keyword-based and semantic search techniques"
-    link: "/vector-search/ai-search/hybrid-search/"
-  - heading: "Multimodal search"
-    description: "Enables searching across different types of data, such as text and images"
-    link: "/vector-search/ai-search/multimodal-search/"
-  - heading: "Neural sparse search"
-    description: "Uses sparse vector representations and deep learning models for efficient retrieval"
-    link: "/vector-search/ai-search/neural-sparse-search/"
-  - heading: "Conversational search with RAG"
-    description: "Combines natural dialogue with retrieval-augmented generation to provide contextual answers"
-    link: "/vector-search/ai-search/conversational-search/"
+- heading: 語意搜尋
+  description: 理解查詢背後的含義與意圖，以提供更相關的結果
+  link: /vector-search/ai-search/semantic-search/
+- heading: 混合搜尋
+  description: 結合關鍵字搜尋與語意搜尋技術，提升相關性
+  link: /vector-search/ai-search/hybrid-search/
+- heading: 多模態搜尋
+  description: 支援跨不同類型的資料進行搜尋，例如文字與影像
+  link: /vector-search/ai-search/multimodal-search/
+- heading: 神經稀疏搜尋
+  description: 使用稀疏向量表示與深度學習模型，實現高效率的檢索
+  link: /vector-search/ai-search/neural-sparse-search/
+- heading: 使用 RAG 的對話式搜尋
+  description: 結合自然對話與檢索增強生成，提供符合上下文的回答
+  link: /vector-search/ai-search/conversational-search/
 other:
-  - heading: "Vector operations"
-    description: "Learn how to generate embeddings and optimize vector storage"
-    link: "/tutorials/vector-search/vector-operations/"
-  - heading: "Semantic search"
-    description: "Implement semantic search using various machine learning models"
-    link: "/tutorials/vector-search/semantic-search/"
-  - heading: "Using semantic highlighting"
-    description: "Learn how to highlight the most semantically relevant sentences in the results"
-    link: "/tutorials/vector-search/semantic-highlighting-tutorial/"
+- heading: 向量操作
+  description: 了解如何產生嵌入並最佳化向量儲存空間
+  link: /tutorials/vector-search/vector-operations/
+- heading: 語意搜尋
+  description: 使用各種機器學習模型實作語意搜尋
+  link: /tutorials/vector-search/semantic-search/
+- heading: 使用語意醒目提示
+  description: 了解如何在結果中醒目提示語意最相關的句子
+  link: /tutorials/vector-search/semantic-highlighting-tutorial/
 ---
 
-# Vector search tutorials
+# 向量搜尋教學
 
-Explore the following tutorials to learn about implementing vector search applications using the OpenSearch vector database. For more information about using OpenSearch as a vector database, see [Vector search]({{site.url}}{{site.baseurl}}/vector-search/).
+探索下列教學，了解如何使用 OpenSearch 向量資料庫實作向量搜尋應用程式。如需進一步了解如何將 OpenSearch 用作向量資料庫，請參閱[向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/)。
 
-## Vector search 101
+## 向量搜尋基礎
 
 {% include cards.html cards=page.vector_search_101 %}
 
-## AI search types
+## AI 搜尋類型
 
 {% include cards.html cards=page.ai_search_types %}
 
-## Vector search applications
+## 向量搜尋應用程式
 
 {% include cards.html cards=page.other %}

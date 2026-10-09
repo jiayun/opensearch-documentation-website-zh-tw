@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Copy to
+title: "複製到"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/copy-to/
@@ -9,27 +10,27 @@ has_children: false
 has_toc: false
 ---
 
-# Copy to mapping parameter
+# copy_to 對應參數
 
-The `copy_to` parameter allows you to copy the values of multiple fields into a group field, which can then be queried as a single field. This is useful when you frequently search across multiple fields and want to simplify your queries.
+`copy_to` 參數可讓您將多個欄位的值複製到一個群組欄位中，之後即可將該群組欄位當作單一欄位進行查詢。當您經常跨多個欄位搜尋並希望簡化查詢時，這個功能非常實用。
 
-Note the following important considerations:
+請注意以下重要事項：
 
-- During copying, the raw field value (not the tokens produced during analysis) is copied.
+- 複製時，複製的是原始欄位值（而非分析過程中產生的詞元）。
 
-- The original `_source` field is not modified to reflect the copied values.
+- 原始的 `_source` 欄位不會因複製的值而有所修改。
 
-- The same value can be copied to multiple fields using `"copy_to": ["field_1", "field_2"]` syntax.
+- 使用 `"copy_to": ["field_1", "field_2"]` 語法可將同一個值複製到多個欄位。
 
-- You cannot copy recursively through intermediary fields. For example, if `field_1` is copied to `field_2` and `field_2` is copied to `field_3`, indexing into `field_1` does not result in values appearing in `field_3`. Instead, use `copy_to` directly from the originating field to multiple target fields.
+- 您無法透過中繼欄位進行遞迴複製。例如，若將 `field_1` 複製到 `field_2`，並將 `field_2` 複製到 `field_3`，則對 `field_1` 編製索引並不會使值出現在 `field_3` 中。請改為直接從來源欄位使用 `copy_to` 複製到多個目標欄位。
 
-## Examples
+## 範例
 
-The following examples demonstrate using the `copy_to` parameter.
+下列範例示範如何使用 `copy_to` 參數。
 
-### Basic copy_to usage
+### copy_to 的基本用法
 
-Create an index that copies first and last names into a `full_name` field:
+建立一個索引，將名字與姓氏複製到 `full_name` 欄位：
 
 ```json
 PUT /user_profiles
@@ -53,7 +54,7 @@ PUT /user_profiles
 ```
 {% include copy-curl.html %}
 
-Index a document with separate name fields:
+將含有獨立姓名欄位的文件編製索引：
 
 ```json
 PUT /user_profiles/_doc/1
@@ -64,7 +65,7 @@ PUT /user_profiles/_doc/1
 ```
 {% include copy-curl.html %}
 
-The `first_name` and `last_name` fields can still be queried individually, but the `full_name` field allows you to search for both names together. To search using the combined field, send the following request. The `and` operator requires both terms to match:
+`first_name` 與 `last_name` 欄位仍可個別查詢，但 `full_name` 欄位可讓您同時搜尋兩個姓名。若要使用合併欄位進行搜尋，請傳送下列請求。`and` 運算子要求兩個詞都必須符合：
 
 ```json
 GET /user_profiles/_search
@@ -81,7 +82,7 @@ GET /user_profiles/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含符合的文件：
 
 ```json
 {
@@ -114,9 +115,9 @@ The response contains the matching document:
 }
 ```
 
-### Copying to multiple target fields
+### 複製到多個目標欄位
 
-To copy the field contents to multiple target fields, create an index that copies the `title` field into both the `searchable_content` and `display_text` fields. The `body` field is copied only to `searchable_content`:
+若要將欄位內容複製到多個目標欄位，請建立一個索引，將 `title` 欄位同時複製到 `searchable_content` 與 `display_text` 欄位。`body` 欄位則僅複製到 `searchable_content`：
 
 ```json
 PUT /content_library
@@ -143,7 +144,7 @@ PUT /content_library
 ```
 {% include copy-curl.html %}
 
-Index a document containing the `title` and `body` fields:
+將含有 `title` 與 `body` 欄位的文件編製索引：
 
 ```json
 PUT /content_library/_doc/1
@@ -154,7 +155,7 @@ PUT /content_library/_doc/1
 ```
 {% include copy-curl.html %}
 
-You can search both title and body content using the `searchable_content` field:
+您可以使用 `searchable_content` 欄位搜尋標題與內文：
 
 ```json
 GET /content_library/_search
@@ -168,7 +169,7 @@ GET /content_library/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document. The document's original `_source` field still contains only the `title` and `body` fields:
+回應包含符合的文件。該文件原始的 `_source` 欄位仍只包含 `title` 與 `body` 欄位：
 
 ```json
 {

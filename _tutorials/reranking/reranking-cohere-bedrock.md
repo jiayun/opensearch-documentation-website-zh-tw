@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reranking search results using Cohere Rerank on Amazon Bedrock
+title: "使用 Amazon Bedrock 上的 Cohere Rerank 對搜尋結果重新排序"
 parent: Reranking search results
 nav_order: 95
 redirect_from:
   - /vector-search/tutorials/reranking/reranking-cohere-bedrock/
 ---
 
-# Reranking search results using Cohere Rerank on Amazon Bedrock
+# 使用 Amazon Bedrock 上的 Cohere Rerank 對搜尋結果重新排序
 
-This tutorial shows you how to implement search result reranking in [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) and self-managed OpenSearch using the [Cohere Rerank model](https://docs.aws.amazon.com/bedrock/latest/userguide/rerank-supported.html) hosted on Amazon Bedrock.
+本教學說明如何在 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 與自行管理的 OpenSearch 中，使用託管於 Amazon Bedrock 的 [Cohere Rerank 模型](https://docs.aws.amazon.com/bedrock/latest/userguide/rerank-supported.html) 實作搜尋結果重新排序。
 
-A [reranking pipeline]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/) can rerank search results, providing a relevance score for each document in the search results with respect to the search query. The relevance score is calculated by a cross-encoder model. 
+[重新排序管線]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/) 可以對搜尋結果重新排序，並針對搜尋結果中的每份文件，計算其相對於搜尋查詢的相關性分數。相關性分數由交叉編碼器模型計算。
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將以 `your_` 前綴開頭的預留位置替換為您自己的值。
 {: .note}
 
-## Prerequisites: Test the model on Amazon Bedrock
+## 先決條件：在 Amazon Bedrock 上測試模型
 
-Before using your model, test it on Amazon Bedrock using the following code:
+在使用模型之前，請使用下列程式碼在 Amazon Bedrock 上測試：
 
 ```python
 import json
@@ -52,7 +53,7 @@ print(json.dumps(results, indent=2))
 ```
 {% include copy.html %}
 
-The response contains the reranking results ordered by relevance score:
+回應包含依相關性分數排序的重新排序結果：
 
 ```json
 [
@@ -75,14 +76,14 @@ The response contains the reranking results ordered by relevance score:
 ]
 ```
 
-To sort the results by index, use the following code:
+若要依索引排序結果，請使用下列程式碼：
 
 ```python
 print(json.dumps(sorted(results, key=lambda x: x['index']), indent=2))
 ```
 {% include copy.html %}
 
-The sorted results are as follows:
+排序後的結果如下：
 
 ```json
 [
@@ -105,11 +106,11 @@ The sorted results are as follows:
 ]
 ```
 
-## Step 1: Create a connector and register the model
+## 步驟 1：建立連接器並註冊模型
 
-To create a connector for the model, send the following request. 
+若要為模型建立連接器，請傳送下列請求。
 
-If you are using self-managed OpenSearch, supply your AWS credentials:
+如果您使用的是自行管理的 OpenSearch，請提供您的 AWS 憑證：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -191,7 +192,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-If you are using Amazon OpenSearch Service, you can provide an AWS Identity and Access Management (IAM) role Amazon Resource Name (ARN) that allows access to Amazon Bedrock:
+如果您使用的是 Amazon OpenSearch Service，您可以提供允許存取 Amazon Bedrock 的 AWS Identity and Access Management (IAM) 角色 Amazon Resource Name (ARN)：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -270,9 +271,9 @@ POST /_plugins/_ml/connectors/_create
 }
 ```
 
-For more information, see the [AWS documentation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html).
+如需更多資訊，請參閱 [AWS 文件](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)。
 
-Use the connector ID from the response to register and deploy the model:
+使用回應中的連接器 ID 來註冊並部署模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -285,9 +286,9 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Note the model ID in the response; you'll use it in the following steps.
+請記下回應中的模型 ID；後續步驟將會用到。
 
-Test the model by using the Predict API:
+使用 Predict API 測試模型：
 
 ```json
 POST _plugins/_ml/models/your_model_id/_predict
@@ -305,7 +306,7 @@ POST _plugins/_ml/models/your_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-Alternatively, you can test the model as follows:
+或者，您也可以依照下列方式測試模型：
 
 ```json
 POST _plugins/_ml/_predict/text_similarity/your_model_id
@@ -321,9 +322,9 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
 ```
 {% include copy-curl.html %}
 
-The connector `pre_process_function` transforms the input into the format required by the previously shown parameters.
+連接器 `pre_process_function` 會將輸入轉換為先前所示參數所需的格式。
 
-By default, the Amazon Bedrock Rerank API output has the following format:
+預設情況下，Amazon Bedrock Rerank API 的輸出具有下列格式：
 
 ```json
 [
@@ -346,7 +347,7 @@ By default, the Amazon Bedrock Rerank API output has the following format:
 ]
 ```
 
-The connector `post_process_function` transforms the model's output into a format that the [rerank processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) can interpret and orders the results by index. This adapted format is as follows:
+連接器 `post_process_function` 會將模型的輸出轉換為 [重新排序處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) 可以解讀的格式，並依索引排序結果。此調整後的格式如下：
 
 ```json
 {
@@ -400,15 +401,15 @@ The connector `post_process_function` transforms the model's output into a forma
 }
 ```
 
-The response contains four `similarity` objects. For each `similarity` object, the `data` array contains a relevance score for each document with respect to the query. The `similarity` objects are provided in the order of the input documents---the first object pertains to the first document. This differs from the default output of the Cohere Rerank model, which orders documents by relevance score. The document order is changed in the `connector.post_process.cohere.rerank` post-processing function so that the output is compatible with a reranking pipeline.
+回應包含四個 `similarity` 物件。對於每個 `similarity` 物件，`data` 陣列包含每個文件相對於查詢的相關性分數。`similarity` 物件會依照輸入文件的順序提供——第一個物件對應第一個文件。這與 Cohere Rerank 模型的預設輸出不同，後者會依相關性分數排序文件。文件順序會在 `connector.post_process.cohere.rerank` 後處理函式中變更，讓輸出與重新排序管線相容。
 
-## Step 2: Configure a reranking pipeline
+## 步驟 2：設定重新排序管線
 
-Follow these steps to configure a reranking pipeline.
+請依照下列步驟設定重新排序管線。
 
-### Step 2.1: Ingest test data
+### 步驟 2.1：匯入測試資料
 
-Send a bulk request to ingest test data:
+傳送大量請求以匯入測試資料：
 
 ```json
 POST _bulk
@@ -423,9 +424,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-### Step 2.2: Create a reranking pipeline
+### 步驟 2.2：建立重新排序管線
 
-Create a reranking pipeline with the Cohere Rerank model:
+使用 Cohere Rerank 模型建立重新排序管線：
 
 ```json
 PUT /_search/pipeline/rerank_pipeline_bedrock
@@ -447,14 +448,14 @@ PUT /_search/pipeline/rerank_pipeline_bedrock
 ```
 {% include copy-curl.html %}
 
-If you provide multiple field names in `document_fields`, the values of all fields are first concatenated, and then reranking is performed.
+如果您在 `document_fields` 中提供多個欄位名稱，會先串接所有欄位的值，然後再執行重新排序。
 {: .note}
 
-### Step 2.3: Test the reranking
+### 步驟 2.3：測試重新排序
 
-To limit the number of returned results, you can specify the `size` parameter. For example, set `"size": 2` to return the top two documents.
+若要限制傳回的結果數量，您可以指定 `size` 參數。例如，將 `"size": 2` 設為傳回前兩份文件。
 
-First, test the query without using the reranking pipeline:
+首先，在不使用重新排序管線的情況下測試查詢：
 
 ```json
 POST my-test-data/_search
@@ -475,7 +476,7 @@ POST my-test-data/_search
 ```
 {% include copy-curl.html %}
 
-The first document in the response is `Carson City is the capital city of the American state of Nevada`, which is incorrect:
+回應中的第一份文件是 `Carson City is the capital city of the American state of Nevada`，這是不正確的：
 
 ```json
 {
@@ -563,7 +564,7 @@ The first document in the response is `Carson City is the capital city of the Am
 }
 ```
 
-Next, test the query using the reranking pipeline:
+接著，使用重新排序管線測試查詢：
 
 ```json
 POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock
@@ -591,7 +592,7 @@ POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock
 ```
 {% include copy-curl.html %}
 
-The first document in the response is `"Washington, D.C. (also known as simply Washington or D.C., and officially as the District of Columbia) is the capital of the United States. It is a federal district."`, which is correct:
+回應中的第一份文件是 `"Washington, D.C. (also known as simply Washington or D.C., and officially as the District of Columbia) is the capital of the United States. It is a federal district."`，這是正確的：
 
 ```json
 {
@@ -682,7 +683,7 @@ The first document in the response is `"Washington, D.C. (also known as simply W
 }
 ```
 
-To avoid writing the query twice, use the `query_text_path` instead of `query_text`, as follows:
+若要避免將查詢寫兩次，請使用 `query_text_path` 而非 `query_text`，如下所示：
 
 ```json
 POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock

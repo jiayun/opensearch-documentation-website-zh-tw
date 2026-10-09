@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Neural Sparse Search tool
+title: "Neural Sparse Search 工具"
 has_children: false
 has_toc: false
 nav_order: 50
@@ -9,18 +10,18 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# Neural Sparse Search tool
-**Introduced 2.13**
+# Neural Sparse Search 工具
+**於 2.13 版推出**
 {: .label .label-purple }
 <!-- vale on -->
 
-The `NeuralSparseSearchTool` performs sparse vector retrieval. For more information about neural sparse search, see [Neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/).
+`NeuralSparseSearchTool` 會執行稀疏向量擷取。如需 neural sparse search 的詳細資訊，請參閱 [Neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
 
-## Step 1: Register and deploy a sparse encoding model
+## 步驟 1：註冊並部署稀疏編碼模型
 
-OpenSearch supports several pretrained sparse encoding models. You can either use one of those models or your own custom model. For a list of supported pretrained models, see [Sparse encoding models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#sparse-encoding-models). For more information, see [OpenSearch-provided pretrained models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/) and [Custom local models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/). 
+OpenSearch 支援多個預先訓練的稀疏編碼模型。您可以使用其中一個模型，也可以使用自己的自訂模型。如需支援的預先訓練模型清單，請參閱 [Sparse encoding models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#sparse-encoding-models)。如需詳細資訊，請參閱 [OpenSearch-provided pretrained models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/) 和 [Custom local models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)。
 
-In this example, you'll use the `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill` pretrained model for both ingestion and search. To register the model and deploy it to OpenSearch, send the following request:
+在此範例中，您將使用 `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill` 預先訓練模型來進行匯入和搜尋。若要註冊模型並將其部署至 OpenSearch，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -30,9 +31,9 @@ POST /_plugins/_ml/models/_register?deploy=true
   "model_format": "TORCH_SCRIPT"
 }
 ```
-{% include copy-curl.html %} 
+{% include copy-curl.html %}
 
-OpenSearch responds with a task ID for the model registration and deployment task:
+OpenSearch 會回應模型註冊與部署工作的任務 ID：
 
 ```json
 {
@@ -41,14 +42,14 @@ OpenSearch responds with a task ID for the model registration and deployment tas
 }
 ```
 
-You can monitor the status of the task by calling the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+您可以呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來監視任務的狀態：
 
 ```json
 GET _plugins/_ml/tasks/M_9KY40Bk4MTqirc5lP8
 ```
-{% include copy-curl.html %} 
+{% include copy-curl.html %}
 
-Once the model is registered and deployed, the task `state` changes to `COMPLETED` and OpenSearch returns a model ID for the model:
+模型註冊並部署後，任務 `state` 會變成 `COMPLETED`，且 OpenSearch 會傳回該模型的模型 ID：
 
 ```json
 {
@@ -65,9 +66,9 @@ Once the model is registered and deployed, the task `state` changes to `COMPLETE
 }
 ```
 
-## Step 2: Ingest data into an index
+## 步驟 2：將資料匯入索引
 
-First, you'll set up an ingest pipeline to encode documents using the sparse encoding model set up in the previous step:
+首先，您將設定資料匯入管線，以使用上一個步驟中設定的稀疏編碼模型來編碼文件：
 
 ```json
 PUT /_ingest/pipeline/pipeline-sparse
@@ -85,9 +86,9 @@ PUT /_ingest/pipeline/pipeline-sparse
   ]
 }
 ```
-{% include copy-curl.html %} 
+{% include copy-curl.html %}
 
-Next, create an index specifying the pipeline as the default pipeline:
+接著，建立索引並將該管線指定為預設管線：
 
 ```json
 PUT index_for_neural_sparse
@@ -107,9 +108,9 @@ PUT index_for_neural_sparse
   }
 }
 ```
-{% include copy-curl.html %} 
+{% include copy-curl.html %}
 
-Last, ingest data into the index by sending a bulk request:
+最後，傳送大量請求將資料匯入索引：
 
 ```json
 POST _bulk
@@ -124,11 +125,11 @@ POST _bulk
 { "index" : { "_index" : "index_for_neural_sparse", "_id" : "5" } }
 { "passage_text" : "company AAA focus on the large language models domain" }
 ```
-{% include copy-curl.html %} 
+{% include copy-curl.html %}
 
-## Step 3: Register a flow agent that will run the NeuralSparseSearchTool
+## 步驟 3：註冊將執行 NeuralSparseSearchTool 的流程代理程式
 
-A flow agent runs a sequence of tools in order and returns the last tool's output. To create a flow agent, send the following request, providing the model ID for the model set up in Step 1. This model will encode your queries into sparse vector embeddings:
+流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列請求，並提供步驟 1 中設定之模型的模型 ID。此模型會將您的查詢編碼為稀疏向量嵌入：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -151,11 +152,11 @@ POST /_plugins/_ml/agents/_register
   ]
 }
 ```
-{% include copy-curl.html %} 
+{% include copy-curl.html %}
 
-For parameter descriptions, see [Register parameters](#register-parameters).
+如需參數說明，請參閱 [Register parameters](#register-parameters)。
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -163,11 +164,11 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 4: Run the agent
+## 步驟 4：執行代理程式
 
-Before you run the agent, make sure that you add the sample OpenSearch Dashboards `Sample web logs` dataset. To learn more, see [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
+執行代理程式之前，請確認您已新增範例 OpenSearch Dashboards `Sample web logs` 資料集。如需詳細資訊，請參閱 [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
 
-Then, run the agent by sending the following request:
+接著，傳送下列請求來執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
@@ -177,9 +178,9 @@ POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
   }
 }
 ```
-{% include copy-curl.html %} 
+{% include copy-curl.html %}
 
-OpenSearch returns the inference results:
+OpenSearch 會傳回推論結果：
 
 ```json
 {
@@ -198,31 +199,31 @@ OpenSearch returns the inference results:
 }
 ```
 
-## Register parameters
+## 註冊參數
 
-The following table lists all tool parameters that are available when registering an agent.
+下表列出註冊代理程式時可用的所有工具參數。
 
-Parameter	| Type | Required/Optional | Description	
+參數	| 類型 | 必要/選用 | 說明	
 :--- | :--- | :--- | :---
-`model_id` | String | Required | The model ID of the sparse encoding model to use at search time.
-`index` | String | Required | The index to search.
-`embedding_field` | String | Required | When the neural sparse model encodes raw text documents, the encoding result is saved in a field. Specify this field as the `embedding_field`. Neural sparse search matches documents to the query by calculating the similarity score between the query text and the text in the document's `embedding_field`.
-`source_field` | String | Required | The document field or fields to return. You can provide a list of multiple fields as an array of strings, for example, `["field1", "field2"]`.
-`input` | String | Required for flow agent | Runtime input sourced from flow agent parameters. If using a large language model (LLM), this field is populated with the LLM response.
-`name` | String  | Optional | The tool name. Useful when an LLM needs to select an appropriate tool for a task.
-`description` | String | Optional | A description of the tool. Useful when an LLM needs to select an appropriate tool for a task.
-`doc_size` | Integer | Optional | The number of documents to fetch. Default is `2`.
-`nested_path` | String | Optional | The path to the nested object for the nested query. Only used for nested fields. Default is `null`.
+`model_id` | 字串 | 必要 | 搜尋時要使用的稀疏編碼模型 ID。
+`index` | 字串 | 必要 | 要搜尋的索引。
+`embedding_field` | 字串 | 必要 | 當 neural sparse 模型編碼原始文字文件時，編碼結果會儲存在某個欄位中。請將此欄位指定為 `embedding_field`。Neural sparse search 會計算查詢文字與文件 `embedding_field` 中文字的相似度分數，藉此將文件與查詢進行比對。
+`source_field` | 字串 | 必要 | 要傳回的文件欄位。您可以提供多個欄位清單作為字串陣列，例如 `["field1", "field2"]`。
+`input` | 字串 | 流程代理程式必要 | 來自流程代理程式參數的執行階段輸入。若使用大型語言模型 (LLM)，此欄位會填入 LLM 回應。
+`name` | 字串  | 選用 | 工具名稱。當 LLM 需要為任務選取合適的工具時很有用。
+`description` | 字串 | 選用 | 工具的說明。當 LLM 需要為任務選取合適的工具時很有用。
+`doc_size` | 整數 | 選用 | 要擷取的文件數。預設為 `2`。
+`nested_path` | 字串 | 選用 | 巢狀查詢之巢狀物件的路徑。僅用於巢狀欄位。預設為 `null`。
 
-## Execute parameters
+## 執行參數
 
-The following table lists all tool parameters that are available when running the agent.
+下表列出執行代理程式時可用的所有工具參數。
 
-Parameter	| Type | Required/Optional | Description	
+參數	| 類型 | 必要/選用 | 說明	
 :--- | :--- | :--- | :---
-`question` | String | Required | The natural language question to send to the LLM. 
+`question` | 字串 | 必要 | 要傳送給 LLM 的自然語言問題。
 
 
-## Testing the tool
+## 測試工具
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+您可以將此工具做為代理程式工作流程的一部分來執行，也可以使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適合用來測試個別工具或執行獨立作業。

@@ -1,71 +1,72 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Exploring search evaluation results
+title: "探索搜尋評估結果"
 nav_order: 65
 parent: Search Relevance Workbench
 grand_parent: Optimizing search quality
 has_children: false
 ---
 
-# Exploring search evaluation results
-**Introduced 3.2**
+# 探索搜尋評估結果
+**於 3.2 版推出**
 {: .label .label-purple }
 
-In addition to retrieving the experiment results using the API, you can explore the results visually. The Search Relevance Workbench comes with dashboards that you can install to review search evaluation and hybrid search optimization experiment results.
+除了使用 API 擷取實驗結果之外，您也可以以視覺化方式探索結果。Search Relevance Workbench 隨附了一些儀表板，您可以安裝這些儀表板來檢閱搜尋評估與混合搜尋最佳化實驗的結果。
 
-## Installing the dashboards
+## 安裝儀表板
 
-You can install the dashboards in one of the following ways:
+您可以使用下列其中一種方式安裝儀表板：
 
-* In the **Actions** column, select a visualization icon in the experiment overview.
+* 在實驗總覽的 **Actions** 欄中，選取視覺化圖示。
 
-* Select the **Install Dashboards** button in the upper-right corner of the experiment overview.
+* 選取實驗總覽右上角的 **Install Dashboards** 按鈕。
 
-![Experiment overview of the Search Relevance Workbench including dashboard installation options]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/experiment_overview_dashboard_installation_options.png)
+![Search Relevance Workbench 的實驗總覽，包含儀表板安裝選項]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/experiment_overview_dashboard_installation_options.png)
 
-The modal offers to install the dashboards for the user.
+此強制回應視窗會提供為使用者安裝儀表板的選項。
 
-![Modal to install dashboards]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/install_dashboards_modal.png)
+![安裝儀表板的強制回應視窗]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/install_dashboards_modal.png)
 
-## Using the dashboards
+## 使用儀表板
 
-Once you install the dashboards, in the **Actions** column, select the visualization icon in the experiment overview. This opens the experiment result dashboard. The view presented depends on the type of experiment you chose:
+安裝儀表板之後，請在實驗總覽的 **Actions** 欄中選取視覺化圖示。這會開啟實驗結果儀表板。顯示的檢視取決於您選擇的實驗類型：
 
-* The search evaluation dashboard focuses on the individual query level and provides insights about well-performing queries and queries with open relevance potential.
+* 搜尋評估儀表板著重於個別查詢層級，並提供效能良好查詢以及仍有相關性提升空間之查詢的深入解析。
 
-* The hybrid search dashboard provides an overview of how the different hybrid search parameter configurations performed and lets you identify candidate queries for further exploration and experimentation.
+* 混合搜尋儀表板提供不同混合搜尋參數組態效能表現的總覽，並讓您找出可進一步探索與實驗的候選查詢。
 
-### Search evaluation dashboard
+### 搜尋評估儀表板
 
-The search evaluation dashboard, shown in the following image, aggregates performance metrics across all queries in your selected experiment. Use the search evaluation dashboard to get a high-level view of overall experiment performance and identify the queries that need attention.
+如下圖所示的搜尋評估儀表板，會彙總您所選實驗中所有查詢的效能指標。使用搜尋評估儀表板可取得整體實驗效能的高階檢視，並找出需要留意的查詢。
 
-![Search evaluation dashboard with visualizations]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/search_evaluation_dashboard.png)
+![包含視覺化的搜尋評估儀表板]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/search_evaluation_dashboard.png)
 
-The **Deep Dive Summary** panel shows the aggregate metrics for NDCG, MAP, precision, and coverage (see [Evaluating search quality]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/search-configurations/)).
+**Deep Dive Summary** 面板會顯示 NDCG、MAP、精確度與涵蓋率的彙總指標（請參閱[評估搜尋品質]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/search-configurations/)）。
 
-The **Deep Dive Query Scores** pane shows individual query performance ranked by NDCG score (highest to lowest). Use this pane to identify your best- and worst-performing queries.
+**Deep Dive Query Scores** 窗格會顯示依 NDCG 分數排序（由高至低）的個別查詢效能。使用此窗格可找出效能最佳與最差的查詢。
 
-The **Deep Dive Score Densities** pane shows how metric values are distributed across your query set. Use this pane to understand whether poor performance is widespread or concentrated in specific queries. The x-axis shows metric values, while the y-axis shows how frequently those values occur.
+**Deep Dive Score Densities** 窗格會顯示指標值在您查詢集中的分布情形。使用此窗格可了解效能不佳的情況是普遍存在，還是集中在特定查詢。x 軸顯示指標值，而 y 軸則顯示這些值出現的頻率。
 
-The **Deep Dive Score Scatter Plot** pane shows an interactive view of the preceding distribution data, with each query shown as a separate point. Use this pane to investigate specific queries at performance extremes. Points are scattered vertically to prevent overlap while maintaining the same x-axis metric values as the preceding distribution view.
+**Deep Dive Score Scatter Plot** 窗格會顯示前述分布資料的互動式檢視，並將每個查詢顯示為個別資料點。使用此窗格可調查效能極端值的特定查詢。資料點會以垂直方式分散以避免重疊，同時維持與前述分布檢視相同的 x 軸指標值。
 
-### Hybrid search evaluation dashboard
+### 混合搜尋評估儀表板
 
-Use the hybrid search evaluation dashboard, shown in the following image, to compare experiment variants and identify the optimal parameter configurations for your hybrid experiment.
+使用如下圖所示的混合搜尋評估儀表板，可比較實驗變體並找出混合實驗的最佳參數組態。
 
-![Hybrid search optimization evaluation dashboard with visualizations]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/hybrid_search_optimizer_dashboard.png)
+![包含視覺化的混合搜尋最佳化評估儀表板]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/hybrid_search_optimizer_dashboard.png)
 
-The **Variant Performance Chart** shows your experiment variants arranged visually from best to worst performing (left to right, by decreasing NDCG). Use this chart to quickly identify your top-performing queries and view performance patterns across different parameter combinations at a glance.
+**Variant Performance Chart** 會以視覺方式依效能由佳至差排列實驗變體（從左至右，NDCG 逐漸降低）。使用此圖表可快速找出效能最佳的查詢，並一眼看出不同參數組合的效能模式。
 
-The **Variant Performance** pane shows the same variant data in a sortable table format with all metrics visible. Use this pane to compare specific metric values across variants and customize your analysis by sorting on different performance measures. To sort by a column, select the column header.
+**Variant Performance** 窗格會以可排序的表格格式顯示相同的變體資料，並呈現所有指標。使用此窗格可比較各變體的特定指標值，並透過依不同效能衡量指標排序來自訂您的分析。若要依某欄排序，請選取該欄的標題。
 
 
-### Customizing the dashboards
+### 自訂儀表板
 
-The dashboards are installed as saved objects. After installing them, you can edit the dashboards or clone and customize them to your specific requirements.
+這些儀表板會以已儲存物件的形式安裝。安裝之後，您可以編輯儀表板，或將其複製並自訂以符合您的特定需求。
 
-To learn how to customize the source files, see [Updating the default dashboards](https://github.com/opensearch-project/dashboards-search-relevance/blob/main/DEVELOPER_GUIDE.md#updating-default-dashboards).
+若要了解如何自訂來源檔案，請參閱[更新預設儀表板](https://github.com/opensearch-project/dashboards-search-relevance/blob/main/DEVELOPER_GUIDE.md#updating-default-dashboards)。
 
-### Resetting dashboards
+### 重設儀表板
 
-To reset the dashboards, select the **Install Dashboards** button in the upper-right corner of the experiment overview. This will reinstall the dashboards.
+若要重設儀表板，請選取實驗總覽右上角的 **Install Dashboards** 按鈕。這會重新安裝儀表板。

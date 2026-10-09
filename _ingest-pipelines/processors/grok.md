@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Grok
 parent: Ingest processors
 nav_order: 120
 ---
 
-# Grok processor 
+# Grok 處理器
 
-The `grok` processor is used to parse and structure unstructured data using pattern matching. You can use the `grok` processor to extract fields from log messages, web server access logs, application logs, and other log data that follows a consistent format.
+`grok` 處理器可用於透過模式比對來解析及結構化非結構化資料。您可以使用 `grok` 處理器，從記錄訊息、網頁伺服器存取記錄檔、應用程式記錄檔，以及其他遵循一致格式的記錄資料中擷取欄位。
 
-This documentation describes using the `grok` processor in OpenSearch ingest pipelines. Consider using the [Data Prepper `grok` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/grok/), which runs on the OpenSearch cluster, if your use case involves large or complex datasets.
+本文件說明如何在 OpenSearch 資料匯入管線中使用 `grok` 處理器。如果您的使用情境涉及大型或複雜的資料集，請考慮使用 [Data Prepper `grok` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/grok/)，其執行於 OpenSearch 叢集上。
 {: .note}
 
-## Grok basics
+## Grok 基礎
 
-The `grok` processor uses a set of predefined patterns to match parts of the input text. Each pattern consists of a name and a regular expression. For example, the pattern `%{IP:ip_address}` matches an IP address and assigns it to the field `ip_address`. You can combine multiple patterns to create more complex expressions. For example, the pattern `%{IP:client} %{WORD:method} %{URIPATHPARM:request} %{NUMBER:bytes %NUMBER:duration}` matches a line from a web server access log and extracts the client IP address, the HTTP method, the request URI, the number of bytes sent, and the duration of the request.
+`grok` 處理器使用一組預先定義的模式來比對輸入文字的各個部分。每個模式由名稱和規則運算式組成。例如，模式 `%{IP:ip_address}` 會比對 IP 位址，並將其指派給 `ip_address` 欄位。您可以合併多個模式來建立更複雜的運算式。例如，模式 `%{IP:client} %{WORD:method} %{URIPATHPARM:request} %{NUMBER:bytes %NUMBER:duration}` 會比對網頁伺服器存取記錄檔中的一行，並擷取用戶端 IP 位址、HTTP 方法、請求 URI、傳送的位元組數，以及請求的持續時間。
 
-For a list of available predefined patterns, see [Grok patterns](https://github.com/opensearch-project/OpenSearch/blob/main/libs/grok/src/main/resources/patterns/grok-patterns).
+如需可用的預先定義模式清單，請參閱 [Grok 模式](https://github.com/opensearch-project/OpenSearch/blob/main/libs/grok/src/main/resources/patterns/grok-patterns)。
 {: .tip}
 
-The `grok` processor is built on the [Oniguruma regular expression library](https://github.com/kkos/oniguruma/blob/master/doc/RE) and supports all the patterns from that library. You can use the built-in [Grok Debugger]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/grok-debugger/) in OpenSearch Dashboards Dev Tools to test and debug your grok expressions.
+`grok` 處理器建構於 [Oniguruma 規則運算式程式庫](https://github.com/kkos/oniguruma/blob/master/doc/RE) 之上，並支援該程式庫的所有模式。您可以使用 OpenSearch Dashboards Dev Tools 中內建的 [Grok Debugger]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/grok-debugger/) 來測試及偵錯您的 grok 運算式。
 
-Note that patterns are *not anchored*. For performance and reliability, include a start-of-line anchor (`^`) in your pattern.
+請注意，模式*不會錨定*。為了效能與可靠性，請在模式中包含行首錨點（`^`）。
 {: .note}
 
-## Syntax
+## 語法
 
-The following is the basic syntax for the `grok` processor: 
+以下是 `grok` 處理器的基本語法：
 
 ```json
 {
@@ -38,31 +39,31 @@ The following is the basic syntax for the `grok` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-To configure the `grok` processor, you have various options that allow you to define patterns, match specific keys, and control the processor's behavior. The following table lists the required and optional parameters for the `grok` processor.
+若要設定 `grok` 處理器，您有多種選項可定義模式、比對特定索引鍵，以及控制處理器的行為。下表列出 `grok` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | Required  | The name of the field containing the text to be parsed. |
-`patterns`  | Required  | A list of grok expressions used to match and extract named captures. The first matching expression in the list is returned. | 
-`pattern_definitions`  | Optional  | A dictionary of pattern names and pattern tuples used to define custom patterns for the current processor. If a pattern matches an existing name, it overrides the pre-existing definition. |
-`trace_match` | Optional | When the parameter is set to `true`, the processor adds a field named `_grok_match_index` to the processed document. This field contains the index of the pattern within the `patterns` array that successfully matched the document. This information can be useful for debugging and understanding which pattern was applied to the document. Default is `false`. |
-`capture_all_matches` | Optional | When set to `true`, captures all matches of repeated grok patterns instead of only the first match. For example, given the text `192.168.1.1 10.0.0.1 172.16.0.1` and the pattern `%{IP:ipAddress} %{IP:ipAddress} %{IP:ipAddress}`, all three IP addresses are collected into an array in the `ipAddress` field. Works only with explicitly repeated patterns, not with quantified patterns such as `(%{IP:ipAddress})+`. Default is `false`. |
-`description` | Optional | A brief description of the processor. |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | Specifies whether the processor continues execution even if it encounters errors. If set to `true`, failures are ignored. Default is `false`. |
-`ignore_missing` | Optional | Specifies whether the processor should ignore documents that do not contain the specified field. If set to `true`, the processor does not modify the document if the field does not exist or is `null`. Default is `false`. |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |
+`field`  | 必要  | 包含待解析文字的欄位名稱。 |
+`patterns`  | 必要  | 用於比對並擷取具名捕獲內容的 grok 運算式清單。傳回清單中第一個符合的運算式。 | 
+`pattern_definitions`  | 選用  | 由模式名稱與模式元組組成的字典，用於定義目前處理器的自訂模式。如果模式名稱與現有名稱相符，則會覆寫既有定義。 |
+`trace_match` | 選用 | 當此參數設為 `true` 時，處理器會在處理後的文件中新增名為 `_grok_match_index` 的欄位。此欄位包含 `patterns` 陣列中成功比對文件的模式索引值。這項資訊有助於偵錯，以及瞭解文件套用了哪個模式。預設為 `false`。 |
+`capture_all_matches` | 選用 | 設為 `true` 時，會擷取重複 grok 模式的所有比對結果，而非僅擷取第一個比對結果。例如，指定文字 `192.168.1.1 10.0.0.1 172.16.0.1` 和模式 `%{IP:ipAddress} %{IP:ipAddress} %{IP:ipAddress}` 時，全部三個 IP 位址都會收集至 `ipAddress` 欄位中的陣列。僅適用於明確重複的模式，不適用於使用量詞的模式，例如 `(%{IP:ipAddress})+`。預設為 `false`。 |
+`description` | 選用 | 處理器的簡短說明。 |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 指定處理器是否在遇到錯誤時仍繼續執行。如果設為 `true`，則會忽略失敗。預設為 `false`。 |
+`ignore_missing` | 選用 | 指定處理器是否應忽略不含指定欄位的文件。如果設為 `true`，則當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別標籤。有助於在偵錯時區分相同類型的處理器。 |
 
-## Creating a pipeline
+## 建立管線
 
-The following steps guide you through creating an [ingest pipeline]({{site.url}}{{site.baseurl}}/ingest-pipelines/index/) with the `grok` processor. 
+以下步驟將引導您使用 `grok` 處理器建立[資料匯入管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/index/)。
 
-**Step 1: Create a pipeline** 
+**步驟 1：建立管線**
 
-The following query creates a pipeline, named `log_line`. It extracts fields from the `message` field of the document using the specified pattern. In this case, it extracts the `clientip`, `timestamp`, and `response_status` fields:
+以下查詢會建立名為 `log_line` 的管線。其會使用指定的模式，從文件的 `message` 欄位中擷取欄位。在此情況下，其會擷取 `clientip`、`timestamp` 及 `response_status` 欄位：
 
 ```json
 PUT _ingest/pipeline/log_line
@@ -80,12 +81,12 @@ PUT _ingest/pipeline/log_line
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline.**
+**步驟 2（選用）：測試管線。**
 
-{::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/alert-icon.png" class="inline-icon" alt="alert icon"/>{:/} **NOTE**<br>It is recommended that you test your pipeline before you ingest documents.
+{::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/alert-icon.png" class="inline-icon" alt="alert icon"/>{:/} **注意**<br>建議您在匯入文件之前先測試管線。
 {: .note}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行以下查詢：
 
 ```json
 POST _ingest/pipeline/log_line/_simulate
@@ -101,9 +102,9 @@ POST _ingest/pipeline/log_line/_simulate
 ```
 {% include copy-curl.html %}
 
-**Response**
+**回應**
 
-The following response confirms that the pipeline is working as expected:
+以下回應確認管線運作正常：
 
 ```json
 {
@@ -127,9 +128,9 @@ The following response confirms that the pipeline is working as expected:
 }
 ```
 
-**Step 3: Ingest a document**
+**步驟 3：匯入文件**
 
-The following query ingests a document into an index named `testindex1`:
+以下查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=log_line
@@ -139,20 +140,20 @@ PUT testindex1/_doc/1?pipeline=log_line
 ```
 {% include copy-curl.html %}
 
-**Step 4 (Optional): Retrieve the document**
+**步驟 4（選用）：擷取文件**
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行以下查詢：
 
 ```json
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-## Custom patterns
+## 自訂模式
 
-You can use default patterns, or you can add custom patterns to your pipelines using the `patterns_definitions` parameter. Custom grok patterns can be used in a pipeline to extract structured data from log messages that do not match the built-in grok patterns. This can be useful for parsing log messages from custom applications or for parsing log messages that have been modified in some way. Custom patterns adhere to a straightforward structure: each pattern has a unique name and the corresponding regular expression that defines its matching behavior.
+您可以使用預設模式，也可以使用 `patterns_definitions` 參數將自訂模式新增至管線。自訂 grok 模式可用於管線中，從不符合內建 grok 模式的記錄訊息中擷取結構化資料。這對於解析來自自訂應用程式的記錄訊息，或解析經過某種修改的記錄訊息很有用。自訂模式遵循簡單的結構：每個模式都有唯一的名稱，以及定義其比對行為的對應規則運算式。
 
-The following is an example of how to include a custom pattern in your configuration. In this example, the issue number is between 3 and 4 digits and is parsed into the `issue_number` field and the status is parsed into the `status` field:
+以下範例說明如何在組態中包含自訂模式。在此範例中，問題編號為 3 到 4 位數，並會解析至 `issue_number` 欄位，而狀態則會解析至 `status` 欄位：
 
 ```json
 PUT _ingest/pipeline/log_line
@@ -173,9 +174,9 @@ PUT _ingest/pipeline/log_line
 ```
 {% include copy-curl.html %}
 
-## Tracing which patterns matched
+## 追蹤符合的模式
 
-To trace which patterns matched and populated the fields, you can use the `trace_match` parameter. The following is an example of how to include this parameter in your configuration:
+若要追蹤哪些模式符合並填入欄位，您可以使用 `trace_match` 參數。以下範例說明如何在組態中包含此參數：
 
 ```json
 PUT _ingest/pipeline/log_line  
@@ -194,7 +195,7 @@ PUT _ingest/pipeline/log_line
 ```
 {% include copy-curl.html %}
 
-When you simulate the pipeline, OpenSearch returns the `_ingest` metadata that includes the `grok_match_index`, as shown in the following output:
+當您模擬管線時，OpenSearch 會傳回包含 `grok_match_index` 的 `_ingest` 中繼資料，如下列輸出所示：
 
 ```json
 {

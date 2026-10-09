@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Faiss scalar quantization
+title: "Faiss 純量量化"
 parent: Vector quantization
 grand_parent: Optimizing vector storage
 nav_order: 20
@@ -10,18 +11,18 @@ redirect_from:
   - /vector-search/optimizing-storage/faiss-16-bit-quantization/
 ---
 
-# Faiss scalar quantization
+# Faiss 純量量化
 
-OpenSearch supports built-in scalar quantization for the Faiss engine. The Faiss scalar quantizer converts 32-bit floating-point input vectors into lower-bit representations during ingestion and stores the quantized vectors in a vector index. OpenSearch supports 1-, 2-, 4-, and 16-bit Faiss scalar quantization.
+OpenSearch 支援 Faiss 引擎的內建純量量化。Faiss 純量量化器會在匯入期間將 32 位元浮點輸入向量轉換為較低位元的表示形式，並將量化後的向量儲存在向量索引中。OpenSearch 支援 1、2、4 和 16 位元的 Faiss 純量量化。
 
-Quantization can decrease the memory footprint in exchange for some loss in recall. When used with [SIMD optimization]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#simd-optimization), Faiss scalar quantization can also significantly reduce search latencies and improve indexing throughput.
+量化可減少記憶體用量，代價是召回率略有下降。搭配 [SIMD 最佳化]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#simd-optimization) 使用時，Faiss 純量量化也能大幅降低搜尋延遲，並提高編製索引的輸送量。
 
-SIMD optimization is not supported on Windows. Using Faiss scalar quantization on Windows can lead to a significant drop in performance, including decreased indexing throughput and increased search latencies.
+Windows 不支援 SIMD 最佳化。在 Windows 上使用 Faiss 純量量化可能導致效能大幅下降，包括編製索引的輸送量降低及搜尋延遲增加。
 {: .warning}
 
-## Using Faiss scalar quantization
+## 使用 Faiss 純量量化
 
-To use Faiss scalar quantization, set the k-NN vector field's `method.parameters.encoder.name` to `sq` when creating a vector index. You must specify the `bits` parameter in the `method.parameters.encoder.parameters` object:
+若要使用 Faiss 純量量化，請在建立向量索引時，將 k-NN 向量欄位的 `method.parameters.encoder.name` 設為 `sq`。您必須在 `method.parameters.encoder.parameters` 物件中指定 `bits` 參數：
 
 ```json
 PUT /test-index
@@ -58,30 +59,30 @@ PUT /test-index
 ```
 {% include copy-curl.html %}
 
-The Faiss `sq` encoder supports the following parameters.
+Faiss `sq` 編碼器支援下列參數。
 
-Parameter name | Required | Default | Description
+參數名稱 | 必要 | 預設 | 說明
 :--- | :--- | :--- | :---
-`bits` | Yes | None | The number of bits used to quantize each vector dimension. Valid values are `1`, `2`, `4`, and `16`.
-`type` | No | `fp16` | The type of scalar quantization to be used. Valid values are `fp16` and `bf16`. For the `fp16` encoder, vector values must be in the [-65504.0, 65504.0] range. The `bf16` encoder accepts any finite 32-bit floating-point value.
-`clip` | No | `false` | For `fp16`, if `true`, vector values outside of the supported range are rounded so that they are within the range. If `false`, the request is rejected if any vector values are outside of the supported range. Setting `clip` to `true` may decrease recall. For `bf16`, setting `clip` to `true` is rejected; setting it to `false` has no effect.
+`bits` | 是 | 無 | 用於量化每個向量維度的位元數。有效值為 `1`、`2`、`4` 和 `16`。
+`type` | 否 | `fp16` | 要使用的純量量化類型。有效值為 `fp16` 和 `bf16`。對於 `fp16` 編碼器，向量值必須介於 [-65504.0, 65504.0] 範圍內。`bf16` 編碼器接受任何有限的 32 位元浮點值。
+`clip` | 否 | `false` | 對於 `fp16`，若 `true`，則會將支援範圍之外的向量值捨入，使其落在範圍內。若 `false`，則只要有任何向量值超出支援範圍，就會拒絕請求。將 `clip` 設為 `true` 可能會降低召回率。對於 `bf16`，將 `clip` 設為 `true` 會遭到拒絕；將其設為 `false` 則沒有作用。
 
-The `type` and `clip` parameters are supported only for 16-bit quantization. If you set `bits` to any other value and specify `type` or `clip`, the request is rejected.
+`type` 和 `clip` 參數僅支援 16 位元量化。如果您將 `bits` 設為任何其他值，並指定 `type` 或 `clip`，則會拒絕請求。
 {: .warning}
 
-## 1-bit, 2-bit, and 4-bit quantization
+## 1 位元、2 位元和 4 位元量化
 
-For the lowest memory footprint, quantize each vector dimension to 1, 2, or 4 bits. Each bit width corresponds to a `compression_level`.
+若要將記憶體用量降至最低，請將每個向量維度量化為 1、2 或 4 位元。每種位元寬度都對應一個 `compression_level`。
 
-Bits | `compression_level` | Memory reduction compared to 32-bit vectors | Introduced
+位元數 | `compression_level` | 相較於 32 位元向量的記憶體縮減倍數 | 引入版本
 :--- | :--- | :--- | :---
 `1` | `32x` | 32x | 3.6
 `2` | `16x` | 16x | 3.9
 `4` | `8x` | 8x | 3.9
 
-Fewer bits per dimension produce a smaller index at the cost of recall. These bit widths are supported only for the HNSW method; IVF requires 16-bit quantization. 1-bit quantization uses [memory-optimized search]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/memory-optimized-search/).
+每個維度使用的位元越少，產生的索引就越小，但召回率也會下降。這些位元寬度僅支援 HNSW 方法；IVF 需要 16 位元量化。1 位元量化使用[記憶體最佳化搜尋]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/memory-optimized-search/)。
 
-The following example enables 2-bit quantization for `float` fields by setting `compression_level` to `16x` in the `knn_vector` mapping. To use 1-bit or 4-bit quantization, set `compression_level` to `32x` or `8x`:
+下列範例在 `knn_vector` 對應中將 `compression_level` 設為 `16x`，以對 `float` 欄位啟用 2 位元量化。若要使用 1 位元或 4 位元量化，請將 `compression_level` 設為 `32x` 或 `8x`：
 
 ```json
 PUT /test-index
@@ -105,7 +106,7 @@ PUT /test-index
 ```
 {% include copy-curl.html %}
 
-Alternatively, specify the encoder explicitly by setting `bits` in the `sq` encoder:
+或者，您可以在 `sq` 編碼器中設定 `bits`，以明確指定編碼器：
 
 ```json
 PUT /test-index
@@ -142,29 +143,29 @@ PUT /test-index
 ```
 {% include copy-curl.html %}
 
-1-bit quantization is also supported for [`half_float` vectors]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#half-float-vectors). Because `half_float` fields do not accept an `encoder` in the `method` mapping, set `compression_level` to `16x` instead. This level is measured against the 16-bit baseline of `half_float` vectors and therefore maps each dimension to a single bit.
+1 位元量化也支援 [`half_float` 向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#half-float-vectors)。由於 `half_float` 欄位不接受在 `method` 對應中指定 `encoder`，請改將 `compression_level` 設為 `16x`。此等級以 `half_float` 向量的 16 位元基準衡量，因此會將每個維度對應至單一位元。
 
-## 16-bit quantization
+## 16 位元量化
 
-With 16-bit quantization, the Faiss scalar quantizer converts 32-bit floating-point vectors into 16-bit vectors and stores them in the vector index. At search time, the stored 16-bit values are converted back to 32-bit floating-point values for distance computation. On Intel Sapphire Rapids or newer-generation processors, OpenSearch computes distances directly on the 16-bit values, using AVX-512 BF16 instructions for `bf16` inner product and AVX-512 FP16 instructions for `fp16` cosine similarity. For more information, see [SIMD optimization]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#simd-optimization).
+使用 16 位元量化時，Faiss 純量量化器會將 32 位元浮點向量轉換為 16 位元向量，並將其儲存在向量索引中。搜尋時，儲存的 16 位元值會轉換回 32 位元浮點值，以計算距離。在 Intel Sapphire Rapids 或更新世代的處理器上，OpenSearch 會直接以 16 位元值計算距離，使用 AVX-512 BF16 指令計算 `bf16` 內積，並使用 AVX-512 FP16 指令計算 `fp16` 餘弦相似度。如需詳細資訊，請參閱 [SIMD 最佳化]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#simd-optimization)。
 
-OpenSearch supports two 16-bit encoder types, specified in the `type` parameter:
+OpenSearch 支援兩種 16 位元編碼器類型，可在 `type` 參數中指定：
 
-- `fp16` (Default): The IEEE 754 half-precision format (FP16), which uses 5 exponent bits and 10 mantissa bits. This format provides the highest 16-bit precision but a narrower value range of [-65504.0, 65504.0]. Use `fp16` when all of your vector values fall within that range.
-- `bf16`: The [bfloat16](https://en.wikipedia.org/wiki/Bfloat16_floating-point_format) format (BF16), which uses 8 exponent bits and 7 mantissa bits. It spans the same value range as 32-bit floating-point numbers but with lower precision, so it can cause a slightly larger drop in recall. Use `bf16` when your vectors may contain values outside of the `fp16` range or when you want to avoid `fp16` range validation and clipping.
+- `fp16`（預設）：IEEE 754 半精度格式（FP16），使用 5 個指數位元和 10 個尾數位元。此格式提供最高的 16 位元精度，但數值範圍較窄，為 [-65504.0, 65504.0]。當您所有的向量值都落在該範圍內時，請使用 `fp16`。
+- `bf16`：[bfloat16](https://en.wikipedia.org/wiki/Bfloat16_floating-point_format) 格式（BF16），使用 8 個指數位元和 7 個尾數位元。其數值範圍與 32 位元浮點數相同，但精度較低，因此可能導致召回率的降幅稍大。當您的向量可能包含超出 `fp16` 範圍的值，或您想避免 `fp16` 的範圍驗證與裁剪時，請使用 `bf16`。
 
-Both encoder types store 2 bytes per vector dimension, so both reduce the memory footprint by a factor of 2 with minimal loss in recall.
+這兩種編碼器類型都以 2 位元組儲存每個向量維度，因此都能將記憶體用量減半，且召回率損失極小。
 
-### The fp16 encoder
+### fp16 編碼器
 
-The `fp16` encoder converts 32-bit vectors into their 16-bit counterparts. For this encoder type, the vector values must be in the [-65504.0, 65504.0] range. To define how to handle out-of-range values, you can specify the `clip` parameter. By default, this parameter is `false`, and any vectors containing out-of-range values are rejected.
+`fp16` 編碼器會將 32 位元向量轉換為對應的 16 位元向量。對於此編碼器類型，向量值必須介於 [-65504.0, 65504.0] 範圍內。若要定義如何處理超出範圍的值，您可以指定 `clip` 參數。此參數預設為 `false`，任何包含超出範圍值的向量都會遭到拒絕。
 
-When `clip` is set to `true`, out-of-range vector values are rounded up or down so that they are in the supported range. For example, if the original 32-bit vector is `[65510.82, -65504.1]`, the vector will be indexed as a 16-bit vector `[65504.0, -65504.0]`.
+當 `clip` 設為 `true` 時，會將超出範圍的向量值向上或向下捨入，使其落在支援範圍內。例如，如果原始的 32 位元向量為 `[65510.82, -65504.1]`，則會以 16 位元向量 `[65504.0, -65504.0]` 編製索引。
 
-We recommend setting `clip` to `true` only if very few vector dimensions lie outside of the supported range. Rounding the values may cause a drop in recall.
+我們建議僅在極少數向量維度超出支援範圍時，才將 `clip` 設為 `true`。將數值捨入可能導致召回率下降。
 {: .note}
 
-The following example specifies the Faiss `fp16` encoder with 16-bit quantization, which rejects any indexing request that contains out-of-range vector values (because the `clip` parameter is `false` by default):
+下列範例指定採用 16 位元量化的 Faiss `fp16` 編碼器，此編碼器會拒絕任何包含超出範圍向量值的編製索引請求（因為 `clip` 參數預設為 `false`）：
 
 ```json
 PUT /test-index
@@ -201,7 +202,7 @@ PUT /test-index
 ```
 {% include copy-curl.html %}
 
-When indexing vectors, ensure that each vector dimension is in the supported range:
+為向量編製索引時，請確保每個向量維度都在支援範圍內：
 
 ```json
 PUT test-index/_doc/1
@@ -211,7 +212,7 @@ PUT test-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-When querying vectors, the query vector has no range limitation:
+查詢向量時，查詢向量沒有範圍限制：
 
 ```json
 GET test-index/_search
@@ -229,13 +230,13 @@ GET test-index/_search
 ```
 {% include copy-curl.html %}
 
-### The bf16 encoder
-**Introduced 3.9**
+### bf16 編碼器
+**3.9 版新增**
 {: .label .label-purple }
 
-The `bf16` encoder converts 32-bit vectors into bfloat16 vectors. Because bfloat16 uses the same number of exponent bits as a 32-bit floating-point number, it spans the same value range. Any finite 32-bit floating-point value can therefore be indexed without range-based rejection or clipping. During quantization, each value is rounded to the nearest representable bfloat16 value, reducing the mantissa from 23 bits to 7 bits. As a result, `bf16` trades precision for range compared to `fp16`.
+`bf16` 編碼器會將 32 位元向量轉換為 bfloat16 向量。由於 bfloat16 使用的指數位元數與 32 位元浮點數相同，因此涵蓋相同的數值範圍。任何有限的 32 位元浮點值都可以編製索引，不會因範圍限制而被拒絕或裁剪。在量化過程中，每個值會四捨五入至最接近的可表示 bfloat16 值，將尾數從 23 位元縮減為 7 位元。因此，與 `fp16` 相比，`bf16` 以精確度換取範圍。
 
-The following example specifies the Faiss `bf16` encoder with 16-bit quantization:
+以下範例指定使用 16 位元量化的 Faiss `bf16` 編碼器：
 
 ```json
 PUT /test-index-bf16
@@ -273,7 +274,7 @@ PUT /test-index-bf16
 ```
 {% include copy-curl.html %}
 
-Vector values are not restricted to a range, so no dimension is rejected:
+向量值不受範圍限制，因此不會有任何維度被拒絕：
 
 ```json
 PUT test-index-bf16/_doc/1
@@ -283,54 +284,54 @@ PUT test-index-bf16/_doc/1
 ```
 {% include copy-curl.html %}
 
-Only finite values are accepted. Indexing requests containing `NaN` or infinite values are rejected.
+僅接受有限值。包含 `NaN` 或無限值的編製索引請求會被拒絕。
 {: .note}
 
-Note the following limitations of the `bf16` encoder:
+請注意 `bf16` 編碼器的以下限制：
 
-- Setting `clip` to `true` is not supported and causes the request to be rejected. Because `bf16` spans the full 32-bit floating-point value range, clipping has no effect.
-- [Remote index build]({{site.url}}{{site.baseurl}}/vector-search/remote-index-build/) is not supported. Indexes using the `bf16` encoder are always built locally.
+- 不支援將 `clip` 設定為 `true`，否則請求會被拒絕。因為 `bf16` 涵蓋完整的 32 位元浮點值範圍，裁剪不會產生任何效果。
+- 不支援[遠端索引建置]({{site.url}}{{site.baseurl}}/vector-search/remote-index-build/)。使用 `bf16` 編碼器的索引一律在本機建置。
 
-## Memory estimation
+## 記憶體估算
 
-In the best-case scenario, quantized vectors require the following percentage of the memory that 32-bit vectors require.
+在最佳情況下，量化向量所需的記憶體為 32 位元向量所需記憶體的以下百分比。
 
-Bits | Percentage of 32-bit vector memory | Reduction
+位元 | 佔 32 位元向量記憶體的百分比 | 縮減幅度
 :--- | :--- | :---
-`1` | 3.125% | 32x
-`2` | 6.25% | 16x
-`4` | 12.5% | 8x
-`16` | 50% | 2x
+`1` | 3.125% | 32 倍
+`2` | 6.25% | 16 倍
+`4` | 12.5% | 8 倍
+`16` | 50% | 2 倍
 
-### HNSW memory estimation
+### HNSW 記憶體估算
 
-The memory required for Hierarchical Navigable Small Worlds (HNSW) is estimated to be `1.1 * (dimension * bits_per_dimension / 8 + 8 * m)` bytes per vector, where `m` is the maximum number of bidirectional links created for each element during the construction of the graph.
+Hierarchical Navigable Small Worlds (HNSW) 所需的記憶體估算為每個向量 `1.1 * (dimension * bits_per_dimension / 8 + 8 * m)` 位元組，其中 `m` 是在建構圖形時為每個元素建立的最大雙向連結數。
 
-For example, assume that you have 1 million vectors with a dimension of 256 and an `m` of 16. The memory requirement for each bit width can be estimated as follows.
+例如，假設您有 100 萬個向量，維度為 256，`m` 為 16。每個位元寬度的記憶體需求可估算如下。
 
-Bits | Estimate | Result
+位元 | 估算 | 結果
 :--- | :--- | :---
 `1` | `1.1 * (256 * 1 / 8 + 8 * 16) * 1,000,000` | ~0.176 GB
 `2` | `1.1 * (256 * 2 / 8 + 8 * 16) * 1,000,000` | ~0.211 GB
 `4` | `1.1 * (256 * 4 / 8 + 8 * 16) * 1,000,000` | ~0.282 GB
 `16` | `1.1 * (256 * 16 / 8 + 8 * 16) * 1,000,000` | ~0.656 GB
 
-### IVF memory estimation
+### IVF 記憶體估算
 
-The memory required for IVF is estimated to be `1.1 * (((bytes_per_dimension * dimension) * num_vectors) + (4 * nlist * dimension))` bytes, where `nlist` is the number of buckets to partition vectors into.
+IVF 所需的記憶體估算為 `1.1 * (((bytes_per_dimension * dimension) * num_vectors) + (4 * nlist * dimension))` 位元組，其中 `nlist` 是向量分割成的桶數。
 
-As an example, assume that you have 1 million vectors with a dimension of 256 and an `nlist` of 128.
+例如，假設您有 100 萬個向量，維度為 256，`nlist` 為 128。
 
-IVF is only supported for 16-bit Faiss scalar quantization. 1-bit, 2-bit, and 4-bit quantization are supported only for the HNSW method.
+IVF 僅支援 16 位元 Faiss 純量量化。1 位元、2 位元與 4 位元量化僅支援 HNSW 方法。
 {: .note}
 
-For 16-bit quantization, the memory requirement can be estimated as follows:
+對於 16 位元量化，記憶體需求可估算如下：
 
 ```r
 1.1 * (((2 * 256) * 1,000,000) + (4 * 128 * 256))  ~= 0.525 GB
 ```
 
-## Next steps
+## 後續步驟
 
-- [Memory-optimized vectors]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/)
-- [k-NN query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)
+- [記憶體最佳化向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/)
+- [k-NN 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)

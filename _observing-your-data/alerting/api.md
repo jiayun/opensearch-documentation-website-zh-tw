@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: API
 parent: Alerting
@@ -7,15 +8,15 @@ redirect_from:
   - /monitoring-plugins/alerting/api/
 ---
 
-# Alerting API
+# 警示 API
 
-Use the Alerting API to programmatically create, update, and manage monitors and alerts. For APIs that support the composite monitor specifically, see [Managing composite monitors with the API]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/composite-monitors/#managing-composite-monitors-with-the-api). 
+使用警示 API，以程式設計方式建立、更新及管理監視器和警示。如需專門支援複合監視器的 API，請參閱[使用 API 管理複合監視器]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/composite-monitors/#managing-composite-monitors-with-the-api)。
 
-## Create a query-level monitor
+## 建立查詢層級監視器
 
-Query-level monitors run the query and determine whether or not the results should trigger an alert. Query-level monitors can only trigger one alert at a time. For more information about query-level and bucket-level monitors, see [Creating monitors]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/monitors/).
+查詢層級監視器會執行查詢，並判斷結果是否應觸發警示。查詢層級監視器一次只能觸發一個警示。如需查詢層級與桶 (bucket) 層級監視器的詳細資訊，請參閱[建立監視器]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/monitors/)。
 
-#### Example request
+#### 請求範例
 ```json
 POST _plugins/_alerting/monitors
 {
@@ -81,8 +82,8 @@ POST _plugins/_alerting/monitors
 {% include copy-curl.html %}
 
 
-If you use a custom webhook for your destination and need to embed JSON in the message body, be sure to escape the quotation marks:
- 
+如果您的目的地使用自訂 webhook，且需要在訊息本文中嵌入 JSON，請務必將引號逸出：
+
 ```json
 {
   "message_template": {
@@ -93,11 +94,11 @@ If you use a custom webhook for your destination and need to embed JSON in the m
 {% include copy-curl.html %}
 
 
-Optionally, to specify a backend role, you can add the `rbac_roles` parameter and backend role names to the bottom of your create monitor request.
+若要指定後端角色，您可以選擇在建立監視器請求的底部加入 `rbac_roles` 參數及後端角色名稱。
 
-The following request creates a query-level monitor and provides two backend roles, `role1` and `role2`. The section at the bottom of the request shows the line that specifies the roles with this syntax: `"rbac_roles": ["role1", "role2"]`. To learn about using backend roles to limit access, see [(Advanced) Limit access by backend role]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/security/#advanced-limit-access-by-backend-role).
- 
-#### Example request
+下列請求會建立查詢層級監視器，並提供兩個後端角色：`role1` 和 `role2`。請求底部的區段顯示以此語法指定角色的那一行：`"rbac_roles": ["role1", "role2"]`。如需了解如何使用後端角色限制存取，請參閱[（進階）依後端角色限制存取]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/security/#advanced-limit-access-by-backend-role)。
+
+#### 請求範例
 ```json
 POST _plugins/_alerting/monitors
 {
@@ -166,11 +167,11 @@ POST _plugins/_alerting/monitors
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開回應範例
   </summary>
   {: .text-delta}
-  
-#### Example response
+
+#### 回應範例
 ```json
 {
   "_id": "vd5k2GsBlQ5JUWWFxhsP",
@@ -252,9 +253,9 @@ POST _plugins/_alerting/monitors
 </details>
 
 
-To specify a time zone, you can do so by including a [cron expression]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions) with a time zone name in the `schedule` section of your request. The following example creates a monitor that runs at 12:10 PM Pacific Time on the first day of each month.
+若要指定時區，您可以在請求的 `schedule` 區段中加入含有時區名稱的 [cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。下列範例會建立一個監視器，於每月第一天太平洋時間下午 12:10 執行。
 
-#### Example request
+#### 請求範例
 ```json
 {
   "type": "monitor",
@@ -319,15 +320,15 @@ To specify a time zone, you can do so by including a [cron expression]({{site.ur
 {% include copy-curl.html %}
 
 
-For a full list of time zone names, see [List of `tz` database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). The Alerting plugin uses the Java [`TimeZone`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TimeZone.html) class to convert a [`ZoneId`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/ZoneId.html) to a valid time zone.
+如需完整的時區名稱清單，請參閱 [`tz` 資料庫時區清單](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)。Alerting 外掛程式使用 Java [`TimeZone`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TimeZone.html) 類別，將 [`ZoneId`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/ZoneId.html) 轉換為有效的時區。
 
 ---
 
-## Bucket-level monitors
+## 桶層級監視器
 
-Bucket-level monitors categorize results into buckets separated by fields. The monitor then runs the script with each bucket's results and evaluates whether to trigger an alert. For more information about bucket-level and query-level monitors, see [Creating monitors]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/monitors/).
+桶層級監視器會將結果依欄位分類至不同的桶。接著，監視器會以每個桶的結果執行指令碼，並評估是否觸發警示。如需桶層級與查詢層級監視器的詳細資訊，請參閱[建立監視器]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/monitors/)。
 
-#### Example request
+#### 範例請求
 ```json
 POST _plugins/_alerting/monitors
 {
@@ -447,11 +448,11 @@ POST _plugins/_alerting/monitors
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開範例回應
   </summary>
   {: .text-delta}
  
-#### Example response
+#### 範例回應
 ```json
 {
   "_id" : "Dfxr63sBwex6DxEhHV5N",
@@ -596,59 +597,59 @@ POST _plugins/_alerting/monitors
 
 ---
 
-## Document-level monitors
-Introduced 2.0
+## 文件層級監視器
+於 2.0 版推出
 {: .label .label-purple }
 
-Document-level monitors check whether individual documents in an index match trigger conditions. If so, the monitor generates an alert notification. When you run a query with a document-level monitor, the results are returned for each document that matches the trigger condition. You can create trigger conditions based on query names, query IDs, or tags that combine multiple queries.
+文件層級監視器會檢查索引中的個別文件是否符合觸發條件。若符合，監視器會產生警示通知。當您使用文件層級監視器執行查詢時，會針對每個符合觸發條件的文件回傳結果。您可以根據查詢名稱、查詢 ID 或結合多個查詢的標籤來建立觸發條件。
 
-To learn more about per document monitors that function similarly to the document-level monitor API, see [Monitors]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/).
+若要進一步瞭解功能類似文件層級監視器 API 的每文件監視器，請參閱[監視器]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/)。
 
-### Search the findings index
+### 搜尋發現結果索引
 
-You can use the alerting search API operation to search the findings index `.opensearch-alerting-finding*` for available document findings with a GET request. By default, a GET request without path parameters returns all available findings. 
+您可以使用警示搜尋 API 操作，透過 GET 請求搜尋發現結果索引 `.opensearch-alerting-finding*` 以取得可用的文件發現結果。預設情況下，不含路徑參數的 GET 請求會回傳所有可用的發現結果。
 
-To retrieve any available findings, send a GET request without any path parameters as follows:
+若要擷取所有可用的發現結果，請依照下列方式傳送不含任何路徑參數的 GET 請求：
 
 ```json
 GET /_plugins/_alerting/findings/_search?
 ```
 {% include copy-curl.html %}
 
-To retrieve metadata for an individual document finding entry, you can search for the finding by its `findingId` as follows:
+若要擷取單一文件發現項目的中繼資料，您可以依照下列方式以 `findingId` 搜尋該發現結果：
 
 ```json
 GET /_plugins/_alerting/findings/_search?findingId=gKQhj8WJit3BxjGfiOXC
 ```
 {% include copy-curl.html %}
 
-The response returns the number of individual finding entries in the `total_findings` field.
+回應會在 `total_findings` 欄位中回傳個別發現項目的數量。
 
-To get more specific results in a findings search, you can use any of the optional path parameters defined in the following table.
+若要在發現結果搜尋中取得更精確的結果，您可以使用下表定義的任何選用路徑參數。
 
-Path parameter | Description | Usage
+路徑參數 | 說明 | 用法
 :--- | :--- | :---
-`findingId` | The identifier for the finding entry. | The finding ID is returned in the initial query response.
-`sortString` | This field specifies which string the Alerting plugin uses to sort the findings. | The default value is `id`.
-`sortOrder` | The order to sort the list of findings, either ascending or descending. | Use `sortOrder=asc` to indicate ascending, or `sortOrder=desc` for descending sort order.
-`size` | An optional limit for the maximum number of results returned in the response. | There is no minimum or maximum values.
-`startIndex` | The pagination indicator. | Default is `0`.
-`searchString` | The finding attribute you want returned in the search. | To search in a specific index, specify the index name in the request path. For example, to search findings in the `indexABC` index, use `searchString=indexABC'.
+`findingId` | 發現項目的識別碼。 | 發現 ID 會在初始查詢回應中回傳。
+`sortString` | 此欄位指定 Alerting 外掛程式用來排序發現結果的字串。 | 預設值為 `id`。
+`sortOrder` | 發現結果清單的排序方式，可為遞增或遞減。 | 使用 `sortOrder=asc` 表示遞增，或 `sortOrder=desc` 表示遞減排序。
+`size` | 選用的限制，指定回應中回傳結果的最大數量。 | 沒有最小值或最大值限制。
+`startIndex` | 分頁指示器。 | 預設為 `0`。
+`searchString` | 您希望在搜尋中回傳的發現結果屬性。 | 若要在特定索引中搜尋，請在請求路徑中指定索引名稱。例如，若要搜尋 `indexABC` 索引中的發現結果，請使用 `searchString=indexABC'。
 
-### Create a document-level monitor
+### 建立文件層級監視器
 
-You can create a document-level monitor with a POST request that provides the monitor details in the request body. At a minimum, you need to provide the following details: specify the queries or combinations by tag with the `inputs` field, a valid trigger condition, and provide the notification message in the `action` field.
+您可以透過 POST 請求建立文件層級監視器，並在請求本文中提供監視器詳細資訊。至少需要提供以下詳細資訊：使用 `inputs` 欄位指定查詢或依標籤組合的查詢、有效的觸發條件，並在 `action` 欄位中提供通知訊息。
 
-The following table provides the syntax to use for each trigger option.
+下表提供每個觸發選項的語法。
 
-Trigger options | Definition | Syntax
+觸發選項 | 定義 | 語法
 :--- | :--- | :---
-Tag | Creates alerts for documents that match a multiple query with this tag applied. If you group multiple queries by a single tag, then you can set it to trigger an alert if the results are returned by this tag name.| `query[tag=<tag-name>]`
-Query by name | Creates alerts for documents matched or returned by the named query.  | `query[name=<query-name>]`
-Query by ID | Creates alerts for documents that were returned by the identified query. | `query[id=<query-id>]`
+標籤 | 為套用此標籤之多個查詢所比對到的文件建立警示。如果您依單一標籤將多個查詢分組，則可設定當此標籤名稱回傳結果時觸發警示。| `query[tag=<tag-name>]`
+依名稱查詢 | 為具名查詢所比對到或回傳的文件建立警示。 | `query[name=<query-name>]`
+依 ID 查詢 | 為指定查詢所回傳的文件建立警示。 | `query[id=<query-id>]`
 
 
-#### Example request
+#### 範例請求
 ```json
 POST _plugins/_alerting/monitors
 {
@@ -735,17 +736,17 @@ POST _plugins/_alerting/monitors
 {% include copy-curl.html %}
 
 
-### Limitations
+### 限制
 
-If you run a document-level query while the index is getting reindexed, the API response will not return the reindexed results. To get updates, wait until the reindexing process completes, then rerun the query.
+如果您在索引正在重建索引時執行文件層級查詢，API 回應將不會回傳重建索引後的結果。若要取得更新，請等待重建索引程序完成後，再重新執行查詢。
 
 ---
 
-## Update monitor
+## 更新監視器
 
-When updating a monitor, you can optionally include the `if_seq_no` and `if_primary_term` query parameters, for example, `?if_seq_no=3&if_primary_term=1`. If these numbers do not match the existing monitor or the monitor does not exist, the Alerting plugin throws an error. OpenSearch increments the version number and the sequence number automatically (see the example response).
+更新監視器時，您可以選擇性地包含 `if_seq_no` 和 `if_primary_term` 查詢參數，例如 `?if_seq_no=3&if_primary_term=1`。如果這些數字與現有監視器不符，或該監視器不存在，Alerting 外掛程式會擲回錯誤。OpenSearch 會自動遞增版本號碼和序號（請參閱範例回應）。
 
-#### Example request
+#### 範例請求
 ```json
 PUT _plugins/_alerting/monitors/{monitor_id}
 {
@@ -804,11 +805,11 @@ PUT _plugins/_alerting/monitors/{monitor_id}
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開範例回應
   </summary>
   {: .text-delta}
 
-#### Example response
+#### 回應範例
 ```json
 {
   "_id": "Q9aXOmkBC25HCRGmzfw-",
@@ -873,11 +874,11 @@ PUT _plugins/_alerting/monitors/{monitor_id}
 
 ---
 
-## Get monitor
+## 取得監視器
 
-Retrieve the details of a specific monitor using the following request.
+使用下列請求擷取特定監視器的詳細資訊。
 
-#### Example request
+#### 請求範例
 ```
 GET _plugins/_alerting/monitors/{monitor_id}
 ```
@@ -886,11 +887,11 @@ GET _plugins/_alerting/monitors/{monitor_id}
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開回應範例
   </summary>
   {: .text-delta}
 
-#### Example response
+#### 回應範例
 ```json
 {
   "_id": "Q9aXOmkBC25HCRGmzfw-",
@@ -955,11 +956,11 @@ GET _plugins/_alerting/monitors/{monitor_id}
 
 ---
 
-## Monitor stats
+## 監視器統計資料
 
-Returns statistics about the alerting feature. Use `_plugins/_alerting/stats` to find node IDs and metrics. Then you can drill down using those values.
+傳回警示功能的統計資料。使用 `_plugins/_alerting/stats` 來尋找節點 ID 與指標，然後即可使用這些值進一步深入查詢。
 
-#### Example request
+#### 請求範例
 ```json
 GET _plugins/_alerting/stats
 GET _plugins/_alerting/stats/{metric}
@@ -970,11 +971,11 @@ GET _plugins/_alerting/{node-id}/stats/{metric}
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開回應範例
   </summary>
   {: .text-delta}
 
-#### Example response
+#### 回應範例
 ```json
 {
   "_nodes": {
@@ -1151,11 +1152,11 @@ GET _plugins/_alerting/{node-id}/stats/{metric}
 
 ---
 
-## Delete monitor
+## 刪除監視器
 
-Delete a monitor using the following request.
+使用下列請求刪除監視器。
 
-#### Example request
+#### 範例請求
 ```
 DELETE _plugins/_alerting/monitors/{monitor_id}
 ```
@@ -1164,11 +1165,11 @@ DELETE _plugins/_alerting/monitors/{monitor_id}
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開範例回應
   </summary>
   {: .text-delta}
   
-#### Example response
+#### 範例回應
 ```json
 {
   "_index": ".opensearch-scheduled-jobs",
@@ -1191,11 +1192,11 @@ DELETE _plugins/_alerting/monitors/{monitor_id}
 
 ---
 
-## Search monitors
+## 搜尋監視器
 
-Query and retrieve information about existing monitors based on specific criteria, such as the monitor name, using the following request.
+使用下列請求，根據特定條件 (例如監視器名稱) 查詢並擷取現有監視器的資訊。
 
-#### Example request
+#### 範例請求
 ```json
 GET _plugins/_alerting/monitors/_search
 {
@@ -1211,11 +1212,11 @@ GET _plugins/_alerting/monitors/_search
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開範例回應
   </summary>
   {: .text-delta}
   
-#### Example response
+#### 範例回應
 ```json
 {
   "took": 17,
@@ -1298,11 +1299,11 @@ GET _plugins/_alerting/monitors/_search
 
 ---
 
-## Run monitor
+## 執行監視器
 
-You can add the optional `?dryrun=true` parameter to the URL to show the results of a run without actions sending any message.
+您可以在 URL 中加入選用的 `?dryrun=true` 參數，以顯示執行結果，而不會有任何動作傳送訊息。
 
-#### Example request
+#### 範例請求
 ```json
 POST _plugins/_alerting/monitors/{monitor_id}/_execute
 ```
@@ -1311,11 +1312,11 @@ POST _plugins/_alerting/monitors/{monitor_id}/_execute
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開範例回應
   </summary>
   {: .text-delta}
 
-#### Example response
+#### 範例回應
 ```json
 {
   "monitor_name": "logs",
@@ -1338,28 +1339,28 @@ POST _plugins/_alerting/monitors/{monitor_id}/_execute
 
 ---
 
-## Get alerts
+## 取得警示
 
-Return an array of all alerts.
+傳回包含所有警示的陣列。
 
-#### Path parameters
+#### 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description
+| 參數 | 資料類型 | 說明
 | :--- | :--- | :---
-| `sortString` | String | Defines how to sort the results. Default is `monitor_name.keyword`.
-| `sortOrder` | String | Defines the order of the results. Options are `asc` or `desc`. Default is `asc`.
-| `missing` | String | Specifies whether to include missing data in the response.
-| `size` | String | Defines the size of the request to be returned. Default is `20`.
-| `startIndex` | String | Defines the index to start from. Used for paginating results. Default is `0`.
-| `searchString` | String | Defines the search string to use for searching a specific alert. Default is an empty string.
-| `severityLevel` | String | Defines the severity level to filter for. Default is `ALL`.
-| `alertState` | String | Defines the alert state to filter for. Default is `ALL`.
-| `monitorId` | String | Filters by monitor ID.
-| `workflowIds` | String | Allows for monitoring the status of chained alerts from multiple workflows within a single dashboard. Available in OpenSearch 2.9 or later.
+| `sortString` | 字串 | 定義結果的排序方式。預設為 `monitor_name.keyword`。
+| `sortOrder` | 字串 | 定義結果的順序。選項為 `asc` 或 `desc`。預設為 `asc`。
+| `missing` | 字串 | 指定是否在回應中包含遺漏的資料。
+| `size` | 字串 | 定義要傳回的結果數量。預設為 `20`。
+| `startIndex` | 字串 | 定義結果的起始位置，用於分頁。預設為 `0`。
+| `searchString` | 字串 | 定義用於搜尋特定警示的搜尋字串。預設為空字串。
+| `severityLevel` | 字串 | 定義要篩選的嚴重性層級。預設為 `ALL`。
+| `alertState` | 字串 | 定義要篩選的警示狀態。預設為 `ALL`。
+| `monitorId` | 字串 | 依監視器 ID 篩選。
+| `workflowIds` | 字串 | 允許在單一儀表板中監視來自多個工作流程的鏈結警示狀態。適用於 OpenSearch 2.9 或更新版本。
 
-#### Example request
+#### 範例請求
 ```json
 GET _plugins/_alerting/monitors/alerts
 ```
@@ -1368,11 +1369,11 @@ GET _plugins/_alerting/monitors/alerts
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開範例回應
   </summary>
   {: .text-delta}
 
-#### Example response
+#### 範例回應
 ```json
 {
   "alerts": [
@@ -1432,11 +1433,11 @@ GET _plugins/_alerting/monitors/alerts
 
 ---
 
-## Acknowledge alert
+## 確認警示
 
-[After getting your alerts](#get-alerts), you can acknowledge any number of active alerts in one call. If the alert is already in an `ERROR`, `COMPLETED`, or `ACKNOWLEDGED` state, it appears in the `failed` array.
+[取得警示之後](#get-alerts)，您可以在一次呼叫中確認任意數量的作用中警示。如果警示已處於 `ERROR`、`COMPLETED` 或 `ACKNOWLEDGED` 狀態，則會出現在 `failed` 陣列中。
 
-#### Example request
+#### 範例請求
 ```json
 POST _plugins/_alerting/monitors/{monitor-id}/_acknowledge/alerts
 {
@@ -1448,12 +1449,12 @@ POST _plugins/_alerting/monitors/{monitor-id}/_acknowledge/alerts
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開範例回應
   </summary>
   {: .text-delta}
 
 
-#### Example response
+#### 範例回應
 ```json
 {
   "success": [
@@ -1468,16 +1469,16 @@ POST _plugins/_alerting/monitors/{monitor-id}/_acknowledge/alerts
 
 ---
 
-## Destinations
+## 目的地
 
-Destinations were deprecated in OpenSearch 2.0 and replaced by notification channels. The operations that created, updated, and deleted destinations were removed in the same release, and existing destinations were migrated to notification channels automatically. To configure where alerts are delivered, use the [Notifications API]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/api/). The following read operations remain available for retrieving destinations that did not migrate.
+目的地已在 OpenSearch 2.0 中被棄用，並由通知通道取代。建立、更新及刪除目的地的作業已在同一版本中移除，現有的目的地也已自動遷移至通知通道。若要設定警示的傳送目的地，請使用 [Notifications API]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/api/)。下列讀取作業仍可用於擷取尚未遷移的目的地。
 {: .warning}
 
-### Get destination
+### 取得目的地
 
-Retrieve one destination using the following request.
+使用下列請求擷取單一目的地。
 
-#### Example request
+#### 範例請求
 ```json
 GET _plugins/_alerting/destinations/{destination-id}
 ```
@@ -1486,11 +1487,11 @@ GET _plugins/_alerting/destinations/{destination-id}
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開範例回應
   </summary>
   {: .text-delta}
 
-#### Example response
+#### 範例回應
 ```json
 {
   "totalDestinations": 1,
@@ -1524,11 +1525,11 @@ GET _plugins/_alerting/destinations/{destination-id}
 
 </details>
 
-### Get destinations
+### 取得目的地
 
-Retrieve all destinations using the following request.
+使用下列請求擷取所有目的地。
 
-#### Example request
+#### 範例請求
 ```json
 GET _plugins/_alerting/destinations
 ```
@@ -1537,11 +1538,11 @@ GET _plugins/_alerting/destinations
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開範例回應
   </summary>
   {: .text-delta}
 
-#### Example response
+#### 範例回應
 ```json
 {
   "totalDestinations": 1,
@@ -1575,11 +1576,11 @@ GET _plugins/_alerting/destinations
 
 </details>
 
-### Get email account
+### 取得電子郵件帳戶
 
-Retrieve the details of a specific email account configured for alerting purposes using the following request.
+使用下列請求擷取為警示用途所設定的特定電子郵件帳戶詳細資料。
 
-#### Example request
+#### 範例請求
 ```json
 GET _plugins/_alerting/destinations/email_accounts/{email_account_id}
 {
@@ -1595,11 +1596,11 @@ GET _plugins/_alerting/destinations/email_accounts/{email_account_id}
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開範例回應
   </summary>
   {: .text-delta}
 
-#### Example response
+#### 範例回應
 ```json
 {
   "_id" : "email_account_id",
@@ -1620,11 +1621,11 @@ GET _plugins/_alerting/destinations/email_accounts/{email_account_id}
 
 </details>
 
-### Search email account
+### 搜尋電子郵件帳戶
 
-Retrieve information about the configured email accounts used for email-based alerting using the following request.
+使用下列請求擷取用於電子郵件警示的已設定電子郵件帳戶相關資訊。
 
-#### Example request
+#### 範例請求
 ```json
 POST _plugins/_alerting/destinations/email_accounts/_search
 {
@@ -1645,11 +1646,11 @@ POST _plugins/_alerting/destinations/email_accounts/_search
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開範例回應
   </summary>
   {: .text-delta}
 
-#### Example response
+#### 範例回應
 ```json
 {
   "took" : 8,
@@ -1695,11 +1696,11 @@ POST _plugins/_alerting/destinations/email_accounts/_search
 
 </details>
 
-### Get email group
+### 取得電子郵件群組
 
-Retrieve the details of a specific email group destination using the following request, passing the ID of the email group you want to fetch.
+使用下列請求擷取特定電子郵件群組目的地的詳細資料，並傳入您要擷取的電子郵件群組 ID。
 
-#### Example request
+#### 範例請求
 ```json
 GET _plugins/_alerting/destinations/email_groups/{email_group_id}
 {
@@ -1714,11 +1715,11 @@ GET _plugins/_alerting/destinations/email_groups/{email_group_id}
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開範例回應
   </summary>
   {: .text-delta}
   
-#### Example response
+#### 範例回應
 ```json
 {
   "_id" : "email_group_id",
@@ -1740,11 +1741,11 @@ GET _plugins/_alerting/destinations/email_groups/{email_group_id}
 
 </details>
 
-### Search email group
+### 搜尋電子郵件群組
 
-Query and retrieve information about existing email groups used for alerting purposes, enabling you to filter and sort the results based on various criteria. An example is shown in the following request.
+查詢並擷取用於警示的現有電子郵件群組相關資訊，讓您能依據各種條件篩選及排序結果。下列請求顯示一個範例。
 
-#### Example request
+#### 範例請求
 ```json
 POST _plugins/_alerting/destinations/email_groups/_search
 {
@@ -1765,11 +1766,11 @@ POST _plugins/_alerting/destinations/email_groups/_search
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開範例回應
   </summary>
   {: .text-delta}
   
-#### Example response
+#### 範例回應
 ```json
 {
   "took" : 7,
@@ -1816,11 +1817,11 @@ POST _plugins/_alerting/destinations/email_groups/_search
 
 </details>
 
-## Create comment
+## 建立註解
 
-Add comments to a specific alert, providing additional context or notes related to that alert, using the following request.
+使用下列請求為特定警示新增註解，提供與該警示相關的額外背景資訊或備註。
 
-#### Example request
+#### 範例請求
 ```json
 POST _plugins/_alerting/comments/{alert-id}
 {
@@ -1832,11 +1833,11 @@ POST _plugins/_alerting/comments/{alert-id}
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開範例回應
   </summary>
   {: .text-delta}
   
-#### Example response
+#### 範例回應
 ```json
 {
   "_id": "0U6aBJABVWc3FrmWer9s",
@@ -1856,11 +1857,11 @@ POST _plugins/_alerting/comments/{alert-id}
 
 </details>
 
-## Update comment
+## 更新註解
 
-Modify the content of a previously added comment associated with an alert using the following request.
+使用下列請求修改先前新增且與警示相關的註解內容。
 
-#### Example request
+#### 請求範例
 
 ```json
 PUT _plugins/_alerting/comments/{comment-id}
@@ -1873,11 +1874,11 @@ PUT _plugins/_alerting/comments/{comment-id}
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開回應範例
   </summary>
   {: .text-delta}
   
-#### Example response
+#### 回應範例
 ```json
 {
   "_id": "0U6aBJABVWc3FrmWer9s",
@@ -1897,11 +1898,11 @@ PUT _plugins/_alerting/comments/{comment-id}
 
 </details>
 
-## Search comment
+## 搜尋評論
 
-Query and retrieve existing comments associated with alerts using the following request.
+使用下列請求來查詢並擷取與警示相關聯的現有評論。
 
-#### Example request
+#### 請求範例
 ```json
 GET _plugins/_alerting/comments/_search
 {
@@ -1915,11 +1916,11 @@ GET _plugins/_alerting/comments/_search
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開回應範例
   </summary>
   {: .text-delta}
   
-#### Example response
+#### 回應範例
 ```json
 {
   "took": 14,
@@ -1977,11 +1978,11 @@ GET _plugins/_alerting/comments/_search
 
 </details>
 
-## Delete comment
+## 刪除評論
 
-Remove a specific comment associated with an alert using the following request.
+使用下列請求來移除與警示相關聯的特定評論。
 
-#### Example request
+#### 請求範例
 ```json
 DELETE _plugins/_alerting/comments/{comment-id}
 ```
@@ -1990,11 +1991,11 @@ DELETE _plugins/_alerting/comments/{comment-id}
 
 <details markdown="block">
   <summary>
-    Select to expand example response
+    選取以展開回應範例
   </summary>
   {: .text-delta}
 
-#### Example response
+#### 回應範例
 ```json
 {
   "_id": "0U6aBJABVWc3FrmWer9s"

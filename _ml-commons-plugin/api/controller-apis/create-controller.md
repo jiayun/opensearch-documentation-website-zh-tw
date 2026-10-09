@@ -1,56 +1,57 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create controller
+title: "建立控制器"
 parent: Controller APIs
 grand_parent: ML Commons APIs
 nav_order: 10
 ---
 
-# Create or Update Controller API
-**Introduced 2.12**
+# 建立或更新控制器 API
+**2.12 版推出**
 {: .label .label-purple }
 
-Use this API to create or update a controller for a model. A model may be shared by multiple users. A controller sets rate limits for the number of [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) calls users can make on the model. A controller consists of a set of rate limiters for different users.  
+使用此 API 為模型建立或更新控制器。一個模型可能由多位使用者共用。控制器會針對使用者可對該模型進行的 [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 呼叫次數設定速率限制。控制器由一組適用於不同使用者的速率限制器組成。  
 
-You can only create a controller for a model once you have registered the model and received a model ID.
+您必須先註冊模型並取得模型 ID，才能為該模型建立控制器。
 {: .tip}
 
-The POST method creates a new controller. The PUT method updates an existing controller. 
+POST 方法會建立新的控制器。PUT 方法會更新現有的控制器。 
 
-To learn how to set rate limits at the model level for all users, see [Update Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/update-model/). The rate limit is set to either the model-level limit or the user-level limit, whichever is more restrictive. For example, if the model-level limit is 2 requests per minute and the user-level limit is 4 requests per minute, the overall limit will be set to 2 requests per minute.
+若要了解如何在模型層級為所有使用者設定速率限制，請參閱 [Update Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/update-model/)。速率限制會採用模型層級限制或使用者層級限制中較嚴格的一項。例如，若模型層級限制為每分鐘 2 個請求，而使用者層級限制為每分鐘 4 個請求，則整體限制將設為每分鐘 2 個請求。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/controllers/{model_id}
 PUT /_plugins/_ml/controllers/{model_id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`model_id` | String | The model ID of the model for which you want to set rate limits. Required.
+`model_id` | 字串 | 您要設定速率限制之模型的模型 ID。必要。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request fields.
+下表列出可用的請求欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :---  | :--- | :--- | :---
-`user_rate_limiter`| Object | Required | Limits the number of times users can call the Predict API on the model. For more information, see [Rate limiting inference calls]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#rate-limiting-inference-calls).
+`user_rate_limiter`| 物件 | 必要 | 限制使用者可對該模型呼叫 Predict API 的次數。如需詳細資訊，請參閱[限制推論呼叫的速率]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#rate-limiting-inference-calls)。
 
-The `user_rate_limiter` object contains an object for each user, specified by username. The user object contains the following fields.
+`user_rate_limiter` 物件包含每位使用者的物件，以使用者名稱指定。使用者物件包含下列欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :---  | :--- | :--- 
-`limit` | Integer | The maximum number of times the user can call the Predict API on the model per `unit` of time. By default, there is no limit on the number of Predict API calls. Once you set a limit, you cannot reset it to no limit. As an alternative, you can specify a high limit value and a small time unit, for example, 1 request per nanosecond.
-`unit` | String | The unit of time for the rate limiter. Valid values are `DAYS`, `HOURS`, `MICROSECONDS`, `MILLISECONDS`, `MINUTES`, `NANOSECONDS`, and `SECONDS`.
+`limit` | 整數 | 使用者在每 `unit` 時間內可對該模型呼叫 Predict API 的最大次數。預設情況下，Predict API 的呼叫次數沒有限制。一旦設定限制，就無法將其重設為無限制。作為替代方案，您可以指定較高的限制值與較小的時間單位，例如每奈秒 1 個請求。
+`unit` | 字串 | 速率限制器的時間單位。有效值為 `DAYS`、`HOURS`、`MICROSECONDS`、`MILLISECONDS`、`MINUTES`、`NANOSECONDS` 和 `SECONDS`。
 
 
-## Example request: Create a controller
+## 請求範例：建立控制器
 
 ```json
 POST _plugins/_ml/controllers/mtw-ZI0B_1JGmyB068C0
@@ -69,7 +70,7 @@ POST _plugins/_ml/controllers/mtw-ZI0B_1JGmyB068C0
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -78,9 +79,9 @@ POST _plugins/_ml/controllers/mtw-ZI0B_1JGmyB068C0
 }
 ```
 
-## Example request: Update the rate limit for one user
+## 請求範例：更新單一使用者的速率限制
 
-To update the limit for `user1`, send a PUT request and specify the updated information:
+若要更新 `user1` 的限制，請傳送 PUT 請求並指定更新後的資訊：
 
 ```json
 PUT _plugins/_ml/controllers/mtw-ZI0B_1JGmyB068C0
@@ -95,7 +96,7 @@ PUT _plugins/_ml/controllers/mtw-ZI0B_1JGmyB068C0
 ```
 {% include copy-curl.html %}
 
-This will update only the `user1` object, leaving all other user limits intact:
+這只會更新 `user1` 物件，其他所有使用者的限制將維持不變：
 
 ```json
 {
@@ -113,7 +114,7 @@ This will update only the `user1` object, leaving all other user limits intact:
 }
 ```
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -132,9 +133,9 @@ This will update only the `user1` object, leaving all other user limits intact:
 }
 ```
 
-## Example request: Delete the rate limit for one user
+## 請求範例：刪除單一使用者的速率限制
 
-To delete the limit for `user2`, send a POST request containing all other users' limits: 
+若要刪除 `user2` 的限制，請傳送包含其他所有使用者限制的 POST 請求： 
 
 ```json
 POST _plugins/_ml/controllers/mtw-ZI0B_1JGmyB068C0
@@ -149,7 +150,7 @@ POST _plugins/_ml/controllers/mtw-ZI0B_1JGmyB068C0
 ```
 {% include copy-curl.html %}
 
-This will overwrite the controller with the new information:
+這會以新的資訊覆寫控制器：
 
 ```json
 {
@@ -163,7 +164,7 @@ This will overwrite the controller with the new information:
 }
 ```
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -182,6 +183,6 @@ This will overwrite the controller with the new information:
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/opensearch/ml/controllers/create` and `cluster:admin/opensearch/ml/controllers/update`.
+若您使用 Security 外掛程式，請確認您具有適當的權限：`cluster:admin/opensearch/ml/controllers/create` 和 `cluster:admin/opensearch/ml/controllers/update`。

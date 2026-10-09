@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Building a plan-execute-reflect agent
+title: "建立 plan-execute-reflect 代理程式"
 parent: Agentic AI
 grand_parent: Generative AI
 nav_order: 20
 ---
 
-# Building a plan-execute-reflect agent
+# 建立 plan-execute-reflect 代理程式
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, see the associated [GitHub issue](https://github.com/opensearch-project/ml-commons/issues/3745).    
+這是實驗性功能，不建議在正式環境中使用。如需此功能的進度更新，或想提供意見回饋，請參閱相關的 [GitHub 議題](https://github.com/opensearch-project/ml-commons/issues/3745)。    
 {: .warning}
 
-This tutorial describes how to build and use a _plan-execute-reflect_ agent. This agent can be used to solve complex problems that benefit from multi-step execution and reasoning. In this example, you will ask the agent to analyze flight data in your OpenSearch index. For more information about this agent, see [Plan-execute-reflect agents]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/).
+本教學說明如何建立及使用 _plan-execute-reflect_ 代理程式。此代理程式可用於解決需要多步驟執行與推理的複雜問題。在此範例中，您將要求代理程式分析 OpenSearch 索引中的航班資料。如需此代理程式的詳細資訊，請參閱 [Plan-execute-reflect 代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/)。
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將開頭為前置字元 `your_` 的預留位置取代為您自己的值。
 {: .note}
 
-## Prerequisite
+## 先決條件
 
-Log in to the OpenSearch Dashboards home page, select **Add sample data**, and add the **Sample Flight data**. 
+登入 OpenSearch Dashboards 首頁，選取 **Add sample data**，然後新增 **Sample Flight data**。 
 
-## Step 1: Prepare an LLM
+## 步驟 1：準備 LLM
 
-A plan-execute-reflect agent requires a large language model (LLM) in order to function. This tutorial uses the [Anthropic Claude 3.7 model hosted on Amazon Bedrock](https://aws.amazon.com/bedrock/claude/). You can also [use other supported LLMs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/#supported-llms).
+plan-execute-reflect 代理程式需要大型語言模型 (LLM) 才能運作。本教學使用 [託管於 Amazon Bedrock 的 Anthropic Claude 3.7 模型](https://aws.amazon.com/bedrock/claude/)。您也可以[使用其他支援的 LLM]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/#supported-llms)。
 
-### Step 1(a): Create a connector
+### 步驟 1(a)：建立連接器
 
-Create a connector for the model:
+為模型建立連接器：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -60,11 +61,11 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-Note the connector ID; you'll use it to register the model.
+請記下連接器 ID；您將使用它來註冊模型。
 
-### Step 1(b): Register the model
+### 步驟 1(b)：註冊模型
 
-Register the model:
+註冊模型：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -77,11 +78,11 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-Note the model ID; you'll use it in the following steps.
+請記下模型 ID；您將在後續步驟中使用它。
 
-### Step 1(c): Configure a retry policy
+### 步驟 1(c)：設定重試原則
 
-Because the agent is a long-running agent that executes multiple steps, we strongly recommend configuring a retry policy for your connector. For more information, see the `client_config` field in [Request body fields]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields). For example, to configure unlimited retries, set `max_retry_times` to `-1`:
+由於此代理程式是會執行多個步驟的長時間執行代理程式，我們強烈建議為您的連接器設定重試原則。如需詳細資訊，請參閱[請求本文欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields)中的 `client_config` 欄位。例如，若要設定無限重試，請將 `max_retry_times` 設為 `-1`：
 
 ```json
 PUT /_plugins/_ml/connectors/{connector_id}
@@ -95,23 +96,23 @@ PUT /_plugins/_ml/connectors/{connector_id}
 ```
 {% include copy-curl.html %}
 
-If you have deployed your model or made a predict call, you must undeploy your model before updating the `client_config`. For more information, see [Undeploy Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/undeploy-model/).
+如果您已部署模型或已進行 predict 呼叫，則必須先取消部署模型，才能更新 `client_config`。如需詳細資訊，請參閱 [Undeploy Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/undeploy-model/)。
 
-For more information about deploying your model, see [Deploy Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/deploy-model/).
+如需部署模型的詳細資訊，請參閱 [Deploy Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/deploy-model/)。
 
 
-## Step 2: Create an agent
+## 步驟 2：建立代理程式
 
-Create a `plan_execute_and_reflect` agent configured with the following information:
+建立一個 `plan_execute_and_reflect` 代理程式，並使用下列資訊進行設定：
 
-- Meta information: `name`, `type`, `description`.
-- LLM information: The agent uses an LLM to reason, devise a plan for completing the task, execute the steps in the plan using appropriate tools, and reflect on the intermediate results in order to optimize the plan.
-- Tools: A tool is a function that can be executed by the agent. Each tool can define its own `name`, `description`, `parameters` and `attributes`.
-- Memory: Stores chat messages. OpenSearch supports one memory type: `conversation_index`.
+- 中繼資訊：`name`、`type`、`description`。
+- LLM 資訊：代理程式使用 LLM 進行推理、擬定完成工作的計畫、使用適當的工具執行計畫中的步驟，並根據中間結果進行反思，以最佳化計畫。
+- 工具：工具是代理程式可執行的函式。每個工具都可以定義自己的 `name`、`description`、`parameters` 和 `attributes`。
+- 記憶體：儲存聊天訊息。OpenSearch 支援一種記憶體類型：`conversation_index`。
 
-For more information about all request fields, see [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/#request-body-fields).
+如需所有請求欄位的詳細資訊，請參閱 [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/#request-body-fields)。
 
-To register the agent, send the following request. In this example, you'll create an agent with the `ListIndexTool`, `SearchIndexTool`, and `IndexMappingTool`:
+若要註冊代理程式，請傳送下列請求。在此範例中，您將建立一個具有 `ListIndexTool`、`SearchIndexTool` 和 `IndexMappingTool` 的代理程式：
 
 ```json
 POST _plugins/_ml/agents/_register
@@ -145,11 +146,11 @@ POST _plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-Note the agent ID; you'll use it in the next step.
+請記下代理程式 ID；您將在下一個步驟中使用它。
 
-You can configure other tools that are relevant to your use case as needed. To configure other tools, make sure to provide the `attributes` field for the tool. This is crucial because `attributes` are used to inform the LLM of the expected input schema for executing the tool.
+您可以視需要設定與您的使用案例相關的其他工具。若要設定其他工具，請務必為工具提供 `attributes` 欄位。這點至關重要，因為 `attributes` 用於告知 LLM 執行工具時預期的輸入結構描述。
 
-`ListIndexTool`, `SearchIndexTool`, `IndexMappingTool`, and `WebSearchTool` contain predefined attributes. For example, the `ListIndexTool` provides the following attributes:
+`ListIndexTool`、`SearchIndexTool`、`IndexMappingTool` 和 `WebSearchTool` 包含預先定義的屬性。例如，`ListIndexTool` 提供下列屬性：
 
 ```json
 tools: [{
@@ -172,24 +173,24 @@ tools: [{
 }]
 ```
 
-### Test the agent
+### 測試代理程式
 
-Use the following tips to test your `plan_execute_and_reflect` agent effectively:
+使用下列提示來有效測試您的 `plan_execute_and_reflect` 代理程式：
 
-- **Trace agent execution**: Use the Get Message Traces API to view detailed execution steps:
+- **追蹤代理程式執行**：使用 Get Message Traces API 檢視詳細的執行步驟：
   ```http
   GET _plugins/_ml/memory/message/your_message_id/traces
   ```
 
-- **Mitigate hallucinations**: An LLM may "hallucinate" by selecting the wrong tool or misinterpreting the task, especially if the agent is configured with too many tools. To avoid hallucinations, try the following options:
-  - Limit the number of tools configured in an agent.
-  - Provide clear, specific descriptions for each tool.
-  - Ensure the agent has access to all necessary tools for the task.
-  - Include relevant context about your cluster in the prompt; for example, `Can you identify the error in my cluster by analyzing the "spans" and "logs" indexes?`
+- **減少幻覺**：LLM 可能會因為選錯工具或誤解工作而「產生幻覺」，尤其是在代理程式設定了過多工具時。若要避免幻覺，請嘗試下列選項：
+  - 限制代理程式中設定的工具數量。
+  - 為每個工具提供清楚且具體的描述。
+  - 確保代理程式能存取工作所需的所有工具。
+  - 在提示中包含叢集的相關內容；例如 `Can you identify the error in my cluster by analyzing the "spans" and "logs" indexes?`
 
-- **Configure retries**: LLM calls can occasionally fail. Set up retries to improve reliability. For more information, see the `client_config` field in [Request body fields]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields).
+- **設定重試**：LLM 呼叫偶爾可能會失敗。設定重試可提升可靠性。如需詳細資訊，請參閱[請求本文欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields)中的 `client_config` 欄位。
 
-To test the agent, run it using the [Execute Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/). Because this agent performs long-running tasks, we recommend running it asynchronously to avoid timeouts. Use the `async=true` query parameter to run the agent as a separate task:
+若要測試代理程式，請使用 [Execute Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/) 執行它。由於此代理程式會執行長時間執行的工作，我們建議以非同步方式執行，以避免逾時。使用 `async=true` 查詢參數將代理程式作為個別工作執行：
 
 ```json
 POST _plugins/_ml/agents/your_agent_id/_execute?async=true
@@ -201,16 +202,16 @@ POST _plugins/_ml/agents/your_agent_id/_execute?async=true
 ```
 {% include copy-curl.html %}
 
-Note the `task_id` and `memory_id` in the response. You'll use these to track progress and view results.
+請記下回應中的 `task_id` 和 `memory_id`。您將使用這些項目來追蹤進度及檢視結果。
 
-Use the following request to check whether the task is still running or has completed:
+使用下列請求來檢查工作仍在執行中或已完成：
 
 ```json
 GET _plugins/_ml/tasks/your_task_id
 ```
 {% include copy-curl.html %}
 
-Once the task is completed, it returns a response from the agent:
+工作完成後，會傳回來自代理程式的回應：
 
 ```json
 {
@@ -292,39 +293,39 @@ Based on a comprehensive search of the OpenSearch flight sample dataset, there a
 }
 ```
 
-The agent execution response includes several key fields:
+代理程式執行的回應包含幾個關鍵欄位：
 
-- `memory_id`: The ID of the memory that stores all messages exchanged between the `plan_execute_and_reflect` agent and the LLM.
-- `parent_interaction_id`: The `message_id` of the parent message that initiated the conversation in the planning agent.
-- `executor_agent_memory_id`: The ID of the memory that stores messages exchanged between the internal executor agent and the LLM.
-- `executor_agent_parent_interaction_id`: The `message_id` of the parent message in the executor agent's conversation.
-- `response`: The final result produced by the agent after all steps are executed.
+- `memory_id`：儲存 `plan_execute_and_reflect` 代理程式與 LLM 之間所有交換訊息的記憶體 ID。
+- `parent_interaction_id`：在規劃代理程式中啟動對話的父訊息之 `message_id`。
+- `executor_agent_memory_id`：儲存內部執行代理程式與 LLM 之間交換訊息的記憶體 ID。
+- `executor_agent_parent_interaction_id`：執行代理程式對話中父訊息的 `message_id`。
+- `response`：代理程式在所有步驟執行完畢後產生的最終結果。
 
-When you execute a plan-execute-reflect agent asynchronously, the API returns the `memory_id` and the `parent_interaction_id` of the planner agent once the agent is started.
+當您以非同步方式執行 plan-execute-reflect 代理程式時，API 會在代理程式啟動後傳回規劃代理程式的 `memory_id` 與 `parent_interaction_id`。
 
-In the final response, the API also returns the `executor_agent_memory_id` and `executor_agent_parent_interaction_id`, which correspond to the internal executor agent responsible for carrying out each step of the plan. The `executor_agent_memory_id` and `executor_agent_parent_interaction_id` are updated in the task as soon as they are available, even before the agent has completed execution. This enables real-time tracking of the execution process.
+在最終回應中，API 也會傳回 `executor_agent_memory_id` 與 `executor_agent_parent_interaction_id`，對應至負責執行計畫中每個步驟的內部執行代理程式。`executor_agent_memory_id` 與 `executor_agent_parent_interaction_id` 一旦可用就會立即更新至任務中，甚至在代理程式完成執行之前。這使得即時追蹤執行過程成為可能。
 
-To inspect the message history of the agent, use the Get Memory API:
+若要檢視代理程式的訊息歷程記錄，請使用 Get Memory API：
 
 ```json
 GET _plugins/_ml/memory/your_memory_id/messages
 ```
 {% include copy-curl.html %}
 
-For more information, see the [Memory APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/).
+如需更多資訊，請參閱 [Memory APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/)。
 
-Note the `message_id` of the relevant message and use it to fetch the step-by-step execution trace:
+記下相關訊息的 `message_id`，並使用它來擷取逐步執行追蹤：
 
 ```json
 GET _plugins/_ml/memory/message/your_message_id/traces
 ```
 {% include copy-curl.html %}
 
-For more information, see the [Get Message Traces API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/get-message-traces/).
+如需更多資訊，請參閱 [Get Message Traces API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/get-message-traces/)。
 
-### Test conversational memory
+### 測試對話記憶
 
-To continue the same conversation, specify the conversation's `memory_id` when executing the agent. Previous messages are extracted and provided as context to the model. Use the `memory_id` of the planner agent to continue a conversation:
+若要繼續相同的對話，請在執行代理程式時指定對話的 `memory_id`。先前的訊息會被擷取並作為上下文提供給模型。使用規劃代理程式的 `memory_id` 來繼續對話：
 
 ```json
 POST _plugins/_ml/agents/your_agent_id/_execute?async=true
@@ -337,7 +338,7 @@ POST _plugins/_ml/agents/your_agent_id/_execute?async=true
 ```
 {% include copy-curl.html %}
 
-## Next steps
+## 後續步驟
 
-- For information about using other models, see [Supported LLMs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/#supported-llms).
-- For information about creating agents with custom prompts, see [Modifying default prompts]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/#modifying-default-prompts).
+- 如需使用其他模型的資訊，請參閱 [支援的 LLM]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/#supported-llms)。
+- 如需使用自訂提示建立代理程式的資訊，請參閱 [修改預設提示]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/#modifying-default-prompts)。

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Lucene scalar quantization
+title: "Lucene 純量量化"
 parent: Vector quantization
 grand_parent: Optimizing vector storage
 nav_order: 10
@@ -8,18 +9,18 @@ has_children: false
 has_math: true
 ---
 
-# Lucene scalar quantization
+# Lucene 純量量化
 
-OpenSearch supports built-in scalar quantization for the Lucene engine. Unlike [byte vectors]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#byte-vectors), which require you to quantize vectors before ingesting documents, the Lucene scalar quantizer quantizes input vectors in OpenSearch during ingestion. The quantizer converts 32-bit floating-point input vectors into lower-bit representations in each segment. OpenSearch supports 1-, 2-, 4-, and 7-bit quantization.
+OpenSearch 支援 Lucene 引擎的內建純量量化。與[位元組向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#byte-vectors)不同，位元組向量需要您在匯入文件前先量化向量，而 Lucene 純量量化器會在匯入期間於 OpenSearch 中量化輸入向量。量化器會將 32 位元浮點數輸入向量轉換為每個分段中較低位元的表示法。OpenSearch 支援 1、2、4 及 7 位元量化。
 
-When searching, the query vector is quantized in each segment in order to compute the distance between the query vector and the segment's quantized input vectors. Quantization can decrease the memory footprint in exchange for some loss in recall. Additionally, quantization slightly increases disk usage because it requires storing both the raw input vectors and the quantized vectors.
+搜尋時，查詢向量會在每個分段中量化，以計算查詢向量與該分段量化後輸入向量之間的距離。量化可減少記憶體用量，但會犧牲部分召回率。此外，量化會略微增加磁碟使用量，因為它需要同時儲存原始輸入向量與量化後的向量。
 
-The `bits` parameter is required when configuring the `sq` encoder.
+設定 `sq` 編碼器時，必須提供 `bits` 參數。
 {: .important}
 
-## Using Lucene scalar quantization
+## 使用 Lucene 純量量化
 
-To use the Lucene scalar quantizer, set the k-NN vector field's `method.parameters.encoder.name` to `sq` when creating a vector index. You must specify the `bits` parameter in the `method.parameters.encoder.parameters` object:
+若要使用 Lucene 純量量化器，請在建立向量索引時將 k-NN 向量欄位的 `method.parameters.encoder.name` 設為 `sq`。您必須在 `method.parameters.encoder.parameters` 物件中指定 `bits` 參數：
 
 ```json
 PUT /test-index
@@ -56,34 +57,34 @@ PUT /test-index
 ```
 {% include copy-curl.html %}
 
-Lucene scalar quantization is applied only to `float` and `half_float` vectors. [Half-float vectors]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#half-float-vectors) do not accept an `encoder` in the `method` mapping; to quantize them to 1 bit per dimension, set `compression_level` to `16x`. If you change the `data_type` parameter to `byte` or any other unsupported type when mapping a [k-NN vector]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/), then the request is rejected.
+Lucene 純量量化僅適用於 `float` 與 `half_float` 向量。[半精度浮點數向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#half-float-vectors)在 `method` 對應中不接受 `encoder`；若要將其量化為每個維度 1 位元，請將 `compression_level` 設為 `16x`。若您在對應 [k-NN 向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)時將 `data_type` 參數變更為 `byte` 或任何其他不受支援的類型，則該請求會被拒絕。
 {: .warning}
 
-### SQ parameters
+### SQ 參數
 
-The Lucene `sq` encoder supports the following parameters.
+Lucene `sq` 編碼器支援下列參數。
 
-Parameter name | Required | Default | Description
+參數名稱 | 必要 | 預設 | 說明
 :--- | :--- | :--- | :---
-`bits` | Yes | 1 | The number of bits used to quantize each vector dimension. Valid values are `1`, `2`, `4`, and `7`.
-`confidence_interval` | No | Computed based on vector dimension | The quantile interval used to compute the minimum and maximum values for quantization. Supported for 7-bit quantization only. For more information, see [Confidence interval](#confidence-interval).
+`bits` | 是 | 1 | 用於量化每個向量維度的位元數。有效值為 `1`、`2`、`4` 及 `7`。
+`confidence_interval` | 否 | 依向量維度計算 | 用於計算量化最小值與最大值的分位數區間。僅支援 7 位元量化。如需更多資訊，請參閱[信賴區間](#confidence-interval)。
 
-The `confidence_interval` parameter is only supported for 7-bit quantization. If you set `bits` to any other value and specify a `confidence_interval`, the request is rejected.
+`confidence_interval` 參數僅支援 7 位元量化。若您將 `bits` 設為任何其他值並指定 `confidence_interval`，則該請求會被拒絕。
 {: .warning}
 
-## 1-bit, 2-bit, and 4-bit quantization
+## 1 位元、2 位元及 4 位元量化
 
-For the lowest memory footprint, quantize each vector dimension to 1, 2, or 4 bits. These variants support the following bit widths.
+若要達到最低的記憶體用量，請將每個向量維度量化為 1、2 或 4 位元。這些變體支援下列位元寬度。
 
-Bits | Memory reduction compared to 32-bit vectors | Introduced
+位元 | 相較於 32 位元向量的記憶體縮減 | 推出版本
 :--- | :--- | :---
 `1` | 32x | 3.6
 `2` | 16x | 3.9
 `4` | 8x | 3.9
 
-Fewer bits per dimension produce a smaller index at the cost of recall. None of these variants support the `confidence_interval` parameter; specifying it causes the request to be rejected.
+每個維度的位元數越少，索引就越小，但會犧牲召回率。這些變體皆不支援 `confidence_interval` 參數；指定它會導致請求被拒絕。
 
-The following example creates an index that quantizes each `float` vector dimension to 2 bits. To use 1-bit or 4-bit quantization, set `bits` to `1` or `4`:
+下列範例會建立一個將每個 `float` 向量維度量化為 2 位元的索引。若要使用 1 位元或 4 位元量化，請將 `bits` 設為 `1` 或 `4`：
 
 ```json
 PUT /test-index
@@ -120,21 +121,21 @@ PUT /test-index
 ```
 {% include copy-curl.html %}
 
-To quantize [`half_float` vectors]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#half-float-vectors) to 1 bit per dimension, set `compression_level` to `16x` instead of specifying `bits`.
+若要將 [`half_float` 向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#half-float-vectors)量化為每個維度 1 位元，請將 `compression_level` 設為 `16x`，而不要指定 `bits`。
 
-## 7-bit quantization
+## 7 位元量化
 
-With 7-bit quantization, the Lucene scalar quantizer converts each 32-bit floating-point vector dimension into a 7-bit integer value using the minimum and maximum quantiles computed based on the [`confidence_interval`](#confidence-interval) parameter. When searching, the query vector is quantized in each segment using the segment's minimum and maximum quantiles.
+使用 7 位元量化時，Lucene 純量量化器會根據 [`confidence_interval`](#confidence-interval) 參數計算出的最小與最大分位數，將每個 32 位元浮點數向量維度轉換為 7 位元整數值。搜尋時，查詢向量會使用該分段的最小與最大分位數，在每個分段中量化。
 
-### Confidence interval
+### 信賴區間
 
-Optionally, you can specify the `confidence_interval` parameter in the `method.parameters.encoder` object.
-The `confidence_interval` is used to compute the minimum and maximum quantiles in order to quantize the vectors:
-- If you set the `confidence_interval` to a value in the `0.9` to `1.0` range, inclusive, then the quantiles are calculated statically. For example, setting the `confidence_interval` to `0.9` specifies that OpenSearch will compute the minimum and maximum quantiles based on the middle 90% of the vector values, excluding the minimum 5% and maximum 5% of the values.
-- Setting `confidence_interval` to `0` specifies that OpenSearch will compute the quantiles dynamically, which involves oversampling and additional computations performed on the input data.
-- When `confidence_interval` is not set, it is computed based on the vector dimension $d$ using the formula $max(0.9, 1 - \frac{1}{1 + d})$.
+您可以選擇在 `method.parameters.encoder` 物件中指定 `confidence_interval` 參數。
+`confidence_interval` 用於計算量化向量所需的最小與最大分位數：
+- 若您將 `confidence_interval` 設為 `0.9` 至 `1.0` 範圍內（含端點）的值，則分位數會以靜態方式計算。例如，將 `confidence_interval` 設為 `0.9` 表示 OpenSearch 會根據向量值的中間 90% 計算最小與最大分位數，排除最小值 5% 與最大值 5% 的值。
+- 將 `confidence_interval` 設為 `0` 表示 OpenSearch 會動態計算分位數，這涉及過度取樣以及對輸入資料執行額外計算。
+- 未設定 `confidence_interval` 時，會根據向量維度 $d$ 使用公式 $max(0.9, 1 - \frac{1}{1 + d})$ 計算。
 
-The following example method definition specifies the Lucene `sq` encoder with 7-bit quantization and the `confidence_interval` set to `1.0`. This `confidence_interval` specifies to use all the input vectors when computing the minimum and maximum quantiles:
+下列範例方法定義指定使用 7 位元量化的 Lucene `sq` 編碼器，並將 `confidence_interval` 設為 `1.0`。此 `confidence_interval` 指定在計算最小與最大分位數時使用所有輸入向量：
 
 ```json
 PUT /test-index
@@ -172,31 +173,31 @@ PUT /test-index
 ```
 {% include copy-curl.html %}
 
-## Memory estimation
+## 記憶體估算
 
-In the ideal scenario, quantized vectors use the following percentage of the memory that 32-bit vectors require.
+在理想情況下，量化向量使用的記憶體佔 32 位元向量所需記憶體的下列百分比。
 
-Bits | Percentage of 32-bit vector memory | Reduction
+位元 | 佔 32 位元向量記憶體的百分比 | 縮減
 :--- | :--- | :---
 `1` | 3.125% | 32x
 `2` | 6.25% | 16x
 `4` | 12.5% | 8x
 `7` | 25% | 4x
 
-### HNSW memory estimation
+### HNSW 記憶體估算
 
-The memory required for the Hierarchical Navigable Small World (HNSW) graph can be estimated as `1.1 * (dimension * bits_per_dimension / 8 + 8 * m)` bytes per vector, where `m` is the maximum number of bidirectional links created for each element during the construction of the graph.
+階層式可導覽小世界 (HNSW) 圖形所需的記憶體可估算為每個向量 `1.1 * (dimension * bits_per_dimension / 8 + 8 * m)` 位元組，其中 `m` 是在圖形建構期間為每個元素建立的最大雙向連結數。
 
-For example, assume that you have 1 million vectors with a dimension of 256 and an `m` of 16. The memory requirement for each bit width can be estimated as follows.
+例如，假設您有 100 萬個維度為 256 且 `m` 為 16 的向量。每個位元寬度的記憶體需求可估算如下。
 
-Bits | Estimate | Result
+位元 | 估算 | 結果
 :--- | :--- | :---
 `1` | `1.1 * (256 * 1 / 8 + 8 * 16) * 1,000,000` | ~0.176 GB
 `2` | `1.1 * (256 * 2 / 8 + 8 * 16) * 1,000,000` | ~0.211 GB
 `4` | `1.1 * (256 * 4 / 8 + 8 * 16) * 1,000,000` | ~0.282 GB
 `7` | `1.1 * (256 * 7 / 8 + 8 * 16) * 1,000,000` | ~0.387 GB
 
-## Next steps
+## 後續步驟
 
-- [Memory-optimized vectors]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/)
-- [k-NN query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)
+- [記憶體最佳化向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/)
+- [k-NN 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)

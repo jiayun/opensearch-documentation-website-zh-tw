@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Troubleshooting SAML
+title: "SAML 疑難排解"
 parent: SAML
 grand_parent: Authentication backends
 nav_order: 10
@@ -8,23 +9,23 @@ redirect_from:
   - /troubleshoot/saml/
 ---
 
-# Troubleshooting SAML
+# SAML 疑難排解
 
-Use the following troubleshooting steps to resolve issues with using SAML for OpenSearch Dashboards authentication.
+使用下列疑難排解步驟，解決使用 SAML 進行 OpenSearch Dashboards 驗證時遇到的問題。
 
 
 ---
 
-#### Table of contents
+#### 目錄
 - TOC
 {:toc}
 
 
 ---
 
-## Check sp.entity_id
+## 檢查 sp.entity_id
 
-Most identity providers (IdPs) allow you to configure multiple authentication methods for different applications. For example, in Okta, these clients are called "Applications." In Keycloak, they are called "Clients." Each one has its own entity ID. Make sure to configure `sp.entity_id` to match those settings:
+大多數身分識別提供者 (IdP) 允許您為不同的應用程式設定多種驗證方法。例如，在 Okta 中，這些用戶端稱為「Applications」；在 Keycloak 中，則稱為「Clients」。每個用戶端都有自己的實體 ID。請務必設定 `sp.entity_id` 以符合這些設定：
 
 ```yml
 saml:
@@ -39,28 +40,28 @@ saml:
 ```
 
 
-## Check the SAML assertion consumer service URL
+## 檢查 SAML 宣告取用者服務 URL
 
-After a successful login, your IdP sends a SAML response using HTTP POST to the OpenSearch Dashboards "assertion consumer service URL" (ACS).
+成功登入後，您的 IdP 會使用 HTTP POST 將 SAML 回應傳送至 OpenSearch Dashboards 的「宣告取用者服務 URL」(ACS)。
 
-The endpoint the OpenSearch Dashboards Security plugin provides is:
+OpenSearch Dashboards Security 外掛程式提供的端點為：
 
 ```
 /_opendistro/_security/saml/acs
 ```
 
-Make sure that you have configured this endpoint correctly in your IdP. Some IdPs also require you to add all endpoints to the allow list that they send requests to. Ensure that the ACS endpoint is listed.
+請確認您已在 IdP 中正確設定此端點。有些 IdP 也會要求您將其傳送請求的所有端點加入允許清單。請確認 ACS 端點已列入清單中。
 
-OpenSearch Dashboards also requires you to add this endpoint to the allow list. Make sure you have the following entry in `opensearch_dashboards.yml`:
+OpenSearch Dashboards 也要求您將此端點加入允許清單。請確認 `opensearch_dashboards.yml` 中有下列項目：
 
 ```
 server.xsrf.allowlist: [/_opendistro/_security/saml/acs]
 ```
 
 
-## Sign all documents
+## 簽署所有文件
 
-Some IdPs do not sign the SAML documents by default. Make sure the IdP signs all documents.
+有些 IdP 預設不會簽署 SAML 文件。請務必讓 IdP 簽署所有文件。
 
 
 #### Keycloak
@@ -68,9 +69,9 @@ Some IdPs do not sign the SAML documents by default. Make sure the IdP signs all
 ![Keycloak UI]({{site.url}}{{site.baseurl}}/images/saml-keycloak-sign-documents.png)
 
 
-## Role settings
+## 角色設定
 
-Including user roles in the SAML response is dependent on your IdP. For example, in Keycloak, this setting is in the **Mappers** section of your client. In Okta, you have to set group attribute statements. Make sure this is configured correctly and that the `roles_key` in the SAML configuration matches the role name in the SAML response:
+在 SAML 回應中包含使用者角色取決於您的 IdP。例如，在 Keycloak 中，此設定位於用戶端的 **Mappers** 區段；在 Okta 中，您必須設定群組屬性陳述式。請確認此設定正確，且 SAML 組態中的 `roles_key` 與 SAML 回應中的角色名稱相符：
 
 ```yml
 saml:
@@ -84,31 +85,31 @@ saml:
 ```
 
 
-## Inspect the SAML response
+## 檢查 SAML 回應
 
-If you are not sure what the SAML response of your IdP contains and where it places the username and roles, you can enable debug mode in the `log4j2.properties`:
+如果您不確定 IdP 的 SAML 回應包含哪些內容，以及它將使用者名稱與角色放在何處，可以在 `log4j2.properties` 中啟用偵錯模式：
 
 ```
 logger.token.name = com.amazon.dlic.auth.http.saml.Token
 logger.token.level = debug
 ```
 
-This setting prints the SAML response to the OpenSearch log file so that you can inspect and debug it. Setting this logger to `debug` generates many statements, so we don't recommend using it in production.
+此設定會將 SAML 回應輸出至 OpenSearch 記錄檔，讓您可以檢查並偵錯。將此記錄器設為 `debug` 會產生大量輸出，因此不建議在正式環境中使用。
 
-Another way of inspecting the SAML response is to monitor network traffic while logging in to OpenSearch Dashboards. The IdP uses HTTP POST requests to send Base64-encoded SAML responses to:
+另一種檢查 SAML 回應的方法，是在登入 OpenSearch Dashboards 時監控網路流量。IdP 會使用 HTTP POST 請求，將 Base64 編碼的 SAML 回應傳送至：
 
 ```
 /_opendistro/_security/saml/acs
 ```
 
-Inspect the payload of this POST request, and use a tool like [base64decode.org](https://www.base64decode.org/) to decode it.
+請檢查此 POST 請求的酬載，並使用 [base64decode.org](https://www.base64decode.org/) 之類的工具進行解碼。
 
 
-## Check role mapping
+## 檢查角色對應
 
-The Security plugin uses a standard role mapping to map a user or backend role to one or more Security roles.
+Security 外掛程式使用標準角色對應，將使用者或後端角色對應至一或多個 Security 角色。
 
-For username, the Security plugin uses the `NameID` attribute of the SAML response by default. For some IdPs, this attribute does not contain the expected username, but some internal user ID. Check the content of the SAML response to locate the element you want to use as username, and configure it by setting the `subject_key`:
+對於使用者名稱，Security 外掛程式預設使用 SAML 回應的 `NameID` 屬性。對某些 IdP 而言，此屬性包含的不是預期的使用者名稱，而是某個內部使用者 ID。請檢查 SAML 回應的內容，找出您想用作使用者名稱的元素，並透過設定 `subject_key` 來設定它：
 
 ```yml
 saml:
@@ -121,7 +122,7 @@ saml:
       subject_key: preferred_username
 ```
 
-For checking that the correct backend roles are contained in the SAML response, inspect the contents, and set the correct attribute name:
+若要確認 SAML 回應中包含正確的後端角色，請檢查其內容並設定正確的屬性名稱：
 
 ```yml
 saml:
@@ -135,8 +136,8 @@ saml:
 ```
 
 
-## Inspect the JWT token
+## 檢查 JWT 權杖
 
-The Security plugin trades the SAML response for a more lightweight JSON Web Token (JWT). The username and backend roles in the JWT are ultimately mapped to roles in the Security plugin. If there is a problem with the mapping, you can enable the token debug mode using the same setting as [Inspect the SAML response](#inspect-the-saml-response).
+Security 外掛程式會將 SAML 回應換成較輕量的 JSON Web Token (JWT)。JWT 中的使用者名稱與後端角色最終會對應至 Security 外掛程式中的角色。如果對應有問題，您可以使用與[檢查 SAML 回應](#inspect-the-saml-response)相同的設定來啟用權杖偵錯模式。
 
-This setting prints the JWT to the OpenSearch log file so that you can inspect and debug it using a tool like [JWT.io](https://jwt.io/).
+此設定會將 JWT 輸出至 OpenSearch 記錄檔，讓您可以使用 [JWT.io](https://jwt.io/) 之類的工具進行檢查與偵錯。

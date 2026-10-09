@@ -1,51 +1,52 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Separate index and search workloads
+title: "分離索引與搜尋工作負載"
 nav_order: 42
 has_children: false
 redirect_from: 
    - /tuning-your-cluster/seperate-index-and-search-workloads/
 ---
 
-# Separate index and search workloads
+# 分離索引與搜尋工作負載
 
-In a remote-store-enabled cluster with a segment-replication-enabled index, you can segregate indexing and search workloads across different hardware by using the specialized `search` node role and provisioning corresponding search replicas in the index.
+在啟用遠端儲存且索引已啟用分段複寫的叢集中，您可以使用專門的 `search` 節點角色，並在索引中佈建對應的搜尋副本，將索引編製與搜尋工作負載分散到不同的硬體上。
 
-OpenSearch uses two types of replicas:
+OpenSearch 使用兩種類型的副本：
 
-- **Write replicas**: Act as redundant copies of the primary shard. If a primary shard fails (for example, due to node drop or hardware issues), a write replica can be promoted as the new primary to ensure high availability for write operations.
-- **Search replicas**: Work for search queries exclusively. Search replicas cannot be promoted as primaries.
+- **寫入副本**：做為主要分片的備援複本。如果主要分片失敗（例如因為節點離線或硬體問題），寫入副本可以提升為新的主要分片，以確保寫入作業的高可用性。
+- **搜尋副本**：專門處理搜尋查詢。搜尋副本無法提升為主要分片。
 
-## Benefits of separating workloads
+## 分離工作負載的優點
 
-Separating index and search workloads provides the following benefits:
+分離索引與搜尋工作負載可提供下列優點：
 
-1. **Parallel and isolated processing**: Process indexing and search workloads in parallel and isolate them from each other to improve overall system throughput and ensure predictable performance.
-2. **Independent scalability**: Scale indexing and search independently by adding more data nodes (for write replicas) or search nodes (for search replicas).
-3. **Failure resilience**: Prevent failures in indexing or search from affecting each other to improve overall system availability.
-4. **Cost efficiency and performance**: Use specialized hardware (for example, compute-optimized instances for indexing and memory-optimized instances for search) to reduce costs and enhance performance.
-5. **Tuning flexibility**: Separately optimize performance settings, like buffers and caches, for indexing and search workloads.
+1. **平行且隔離的處理**：平行處理索引編製與搜尋工作負載，並將兩者彼此隔離，以提升整體系統輸送量並確保可預測的效能。
+2. **獨立擴充**：透過新增更多資料節點（用於寫入副本）或搜尋節點（用於搜尋副本），獨立擴充索引編製與搜尋。
+3. **容錯能力**：避免索引編製或搜尋的失敗互相影響，以提升整體系統可用性。
+4. **成本效益與效能**：使用專門的硬體（例如用於索引編製的運算最佳化執行個體，以及用於搜尋的記憶體最佳化執行個體）來降低成本並提升效能。
+5. **調校彈性**：分別針對索引編製與搜尋工作負載最佳化效能設定，例如緩衝區與快取。
 
-## Setting up workload separation
+## 設定工作負載分離
 
-To separate indexing and search workloads, you need to configure search nodes, enable the remote store, and add search replicas to your index. Follow these steps to set up workload separation in your cluster.
+若要分離索引編製與搜尋工作負載，您需要設定搜尋節點、啟用遠端儲存，並將搜尋副本新增至索引。請依照下列步驟在叢集中設定工作負載分離。
 
-### Step 1: Configure search nodes
+### 步驟 1：設定搜尋節點
 
-Before you can separate your workloads, you need to designate specific nodes for search operations. Search nodes are dedicated to serving search requests and can help optimize your cluster's search performance.
+在分離工作負載之前，您需要指定特定節點來處理搜尋作業。搜尋節點專門用來處理搜尋請求，可協助最佳化叢集的搜尋效能。
 
-The following request configures a node for search-only workloads in `opensearch.yml`:
+下列請求會在 `opensearch.yml` 中將節點設定為僅處理搜尋工作負載：
 
 ```yaml
 node.name: searcher-node1
 node.roles: [ search ]
 ```
 
-### Step 2: Enable the remote store
+### 步驟 2：啟用遠端儲存
 
-The remote store provides a centralized storage location for your index data. This configuration is essential for segment replication and ensures that all nodes can access the same data, regardless of their role. Remote storage is particularly useful in cloud environments where you want to separate storage from compute resources.
+遠端儲存為您的索引資料提供集中式儲存位置。此組態對分段複寫至關重要，可確保所有節點都能存取相同的資料，無論其角色為何。遠端儲存在您想要將儲存空間與運算資源分離的雲端環境中特別實用。
 
-The following request sets the repository configuration for a remote store (for example, Amazon Simple Storage Service [Amazon S3]) in `opensearch.yml`:
+下列請求會在 `opensearch.yml` 中設定遠端儲存（例如 Amazon Simple Storage Service [Amazon S3]）的儲存庫組態：
 
 ```yaml
 node.attr.remote_store.segment.repository: "my-repository"
@@ -57,25 +58,25 @@ node.attr.remote_store.repository.my-repository.settings.base_path: <Bucket Base
 node.attr.remote_store.repository.my-repository.settings.region: <Region>
 ```
 
-For more information, see [Remote-backed storage]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/index/).
+如需更多資訊，請參閱[遠端後端儲存]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/index/)。
 
-When separating index and search workloads, set `cluster.remote_store.state.enabled` to `true` during initial setup. This setting ensures that OpenSearch stores index metadata in the remote store, enabling seamless recovery of search replicas in [search-only mode](#turn-off-write-workloads-with-search-only-mode). For more information, see [Search replica recovery scenarios](#search-replica-recovery-scenarios).
+分離索引與搜尋工作負載時，請在初始設定期間將 `cluster.remote_store.state.enabled` 設為 `true`。此設定可確保 OpenSearch 將索引中繼資料儲存在遠端儲存中，讓搜尋副本能在[僅搜尋模式](#turn-off-write-workloads-with-search-only-mode)下順暢復原。如需更多資訊，請參閱[搜尋副本復原情境](#search-replica-recovery-scenarios)。
 {: .note}
 
 
-### Step 3: Add search replicas to an index
+### 步驟 3：將搜尋副本新增至索引
 
-After configuring your nodes and the remote store, you need to set up search replicas for your indexes. Search replicas are copies of your index that are dedicated to handling search requests, allowing you to scale your search capacity independently of your indexing capacity.
+設定節點與遠端儲存之後，您需要為索引設定搜尋副本。搜尋副本是索引的複本，專門用來處理搜尋請求，讓您能獨立於索引編製容量來擴充搜尋容量。
 
-By default, indexes created in a remote-store-enabled cluster use segment replication. For more information, see [Segment replication]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/segment-replication/index/).
+根據預設，在啟用遠端儲存的叢集中建立的索引會使用分段複寫。如需更多資訊，請參閱[分段複寫]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/segment-replication/index/)。
 
-You can add search replicas for an index using the `number_of_search_replicas` setting (default is 0) in one the following ways.
+您可以使用 `number_of_search_replicas` 設定（預設為 0），以下列其中一種方式為索引新增搜尋副本。
 
-#### Option 1: Create an index with search replicas
+#### 選項 1：建立含搜尋副本的索引
 
-Use this option when you're creating a new index and want to configure search replicas at the beginning of the process. This approach is ideal for planning your workload separation strategy before indexing data.
+當您要建立新索引，並想在一開始就設定搜尋副本時，請使用此選項。如果您想在將資料編製索引之前先規劃工作負載分離策略，此做法最理想。
 
-The following request creates an index with one primary, one replica, and two search replicas:
+下列請求會建立一個含一個主要分片、一個副本及兩個搜尋副本的索引：
 
 ```json
 PUT /my-index
@@ -91,11 +92,11 @@ PUT /my-index
 ```
 {% include copy-curl.html %}
 
-#### Option 2: Update the search replica count for an existing index
+#### 選項 2：更新現有索引的搜尋副本計數
 
-Use this option when you have an existing index and want to add or modify search replicas. This is useful when you need to adjust your search capacity based on changing workload demands.
+當您已有現有索引，並想新增或修改搜尋副本時，請使用此選項。當您需要根據不斷變化的工作負載需求調整搜尋容量時，這很實用。
 
-The following request updates the search replica count:
+下列請求會更新搜尋副本計數：
 
 ```json
 PUT /my-index/_settings
@@ -109,11 +110,11 @@ PUT /my-index/_settings
 ```
 {% include copy-curl.html %}
 
-#### Option 3: Restore an index from a snapshot with search replicas
+#### 選項 3：從快照還原含搜尋副本的索引
 
-Use this option when you're restoring an index from a snapshot and want to configure search replicas during the restore process. This is particularly useful for disaster recovery scenarios or when migrating indexes between clusters.
+當您要從快照還原索引，並想在還原過程中設定搜尋副本時，請使用此選項。這在災難復原情境或叢集之間遷移索引時特別實用。
 
-The following request restores an index from a snapshot with search replicas:
+下列請求會從快照還原含搜尋副本的索引：
 
 ```json
 POST /_snapshot/my-repository/my-snapshot/_restore
@@ -127,13 +128,13 @@ POST /_snapshot/my-repository/my-snapshot/_restore
 ```
 {% include copy-curl.html %}
 
-## Additional configuration
+## 其他組態
 
-After setting up basic workload separation, you can fine-tune your configuration to optimize performance and resource utilization. The following settings allow you to control search routing, automatically scale replicas, and manage write workloads based on your specific needs.
+設定基本的工作負載分離之後，您可以微調組態以最佳化效能與資源使用率。下列設定可讓您根據特定需求控制搜尋路由、自動擴充副本，以及管理寫入工作負載。
 
-### Enforce cluster-level search request routing
+### 強制執行叢集層級的搜尋請求路由
 
-When search replicas are enabled, all search traffic is routed to them by default. The following request enforces or relaxes this routing behavior:
+啟用搜尋副本時，根據預設，所有搜尋流量都會路由至搜尋副本。下列請求會強制執行或放寬此路由行為：
 
 ```json
 PUT /_cluster/settings
@@ -145,20 +146,20 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-The `cluster.routing.search_replica.strict` setting supports the following options:
+`cluster.routing.search_replica.strict` 設定支援下列選項：
 
-- `true` (default): Route only to search replicas.
-- `false`: Allow fallback to primary/write replicas if needed.
+- `true`（預設）：僅路由至搜尋副本。
+- `false`：如有需要，允許退回至主要分片/寫入副本。
 
-### Automatically scale search replicas
+### 自動擴充搜尋副本
 
-Use the `auto_expand_search_replicas` index setting to automatically scale search replicas based on the number of available search nodes in the cluster. For more information, see [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings).
+使用 `auto_expand_search_replicas` 索引設定，根據叢集中可用的搜尋節點數自動擴充搜尋副本。如需更多資訊，請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)。
 
-### Turn off write workloads with search-only mode
+### 使用僅搜尋模式關閉寫入工作負載
 
-You can use the `_scale` API to turn off primary shards and write replicas for an index when you don't need to write to it. This approach works well for write-once, read-many scenarios like log analytics, where you can reduce resource usage by keeping only search replicas active.
+當您不需要寫入索引時，可以使用 `_scale` API 關閉索引的主要分片與寫入副本。此做法很適合寫入一次、讀取多次的情境，例如記錄檔分析，您只需保持搜尋副本作用中，即可降低資源使用量。
 
-The following request turns on search-only mode by deactivating write replicas:
+下列請求會停用寫入副本，以開啟僅搜尋模式：
 
 ```json
 POST my_index/_scale 
@@ -168,7 +169,7 @@ POST my_index/_scale
 ```
 {% include copy-curl.html %}
 
-The following request turns off search-only mode by activating write replicas:
+下列請求會啟用寫入副本，以關閉僅搜尋模式：
 
 ```json
 POST my_index/_scale 
@@ -178,23 +179,23 @@ POST my_index/_scale
 ```
 {% include copy-curl.html %}
 
-#### Search replica recovery scenarios
+#### 搜尋副本復原情境
 
-OpenSearch handles recovery of search replicas in search-only mode differently depending on the configuration.
+OpenSearch 會依組態不同，以不同方式處理僅搜尋模式下搜尋副本的復原。
 
-##### Scenario 1: Persistent data directory with remote store state disabled
+##### 情境 1：持續性資料目錄且停用遠端儲存狀態
 
-When you use a persistent data directory and set `cluster.remote_store.state.enabled` to `false`, search replicas recover automatically after node restarts.
+當您使用持續性資料目錄並將 `cluster.remote_store.state.enabled` 設為 `false` 時，搜尋副本會在節點重新啟動後自動復原。
 
-##### Scenario 2: Remote store state enabled without a persistent data directory
+##### 情境 2：啟用遠端儲存狀態但沒有持續性資料目錄
 
-When `cluster.remote_store.state.enabled` is set to `true` and there is no persistent data directory, OpenSearch recovers search replicas without requiring primaries or write replicas. Because remote store state is enabled, OpenSearch retains the index metadata after a restart. The allocation logic skips the active primary check for search replicas, allowing them to be allocated so that search queries remain functional.
+當 `cluster.remote_store.state.enabled` 設為 `true` 且沒有持續性資料目錄時，OpenSearch 會復原搜尋副本，而不需要主要分片或寫入副本。因為已啟用遠端儲存狀態，OpenSearch 會在重新啟動後保留索引中繼資料。配置邏輯會略過搜尋副本的作用中主要分片檢查，允許配置搜尋副本，讓搜尋查詢保持正常運作。
 
-##### Scenario 3: Remote store state enabled with a persistent data directory
+##### 情境 3：啟用遠端儲存狀態且有持續性資料目錄
 
-This configuration provides seamless recovery. In search-only mode, with both a persistent data directory and `cluster.remote_store.state.enabled` set to `true`, OpenSearch starts only search replicas—excluding primaries and write replicas—ensuring the index can be queried after restart.
+此組態可提供順暢的復原。在僅搜尋模式下，同時具備持續性資料目錄且 `cluster.remote_store.state.enabled` 設為 `true` 時，OpenSearch 只會啟動搜尋副本（排除主要分片與寫入副本），確保索引在重新啟動後仍可查詢。
 
-##### Scenario 4: No persistent data directory and remote store state disabled
+##### 情境 4：沒有持續性資料目錄且停用遠端儲存狀態
 
-When both the persistent data directory is missing and `cluster.remote_store.state.enabled` is set to `false`, all local state is lost on restart. OpenSearch has no metadata reference, so the index becomes unrecoverable.
+當持續性資料目錄不存在且 `cluster.remote_store.state.enabled` 設為 `false` 時，所有本機狀態都會在重新啟動時遺失。OpenSearch 沒有中繼資料參考，因此索引會變成無法復原。
 

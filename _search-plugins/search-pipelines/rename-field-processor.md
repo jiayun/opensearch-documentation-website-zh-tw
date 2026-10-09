@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Rename field
+title: "重新命名欄位"
 nav_order: 100
 has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
 ---
 
-# Rename field processor
-Introduced 2.8
+# 重新命名欄位處理器
+於 2.8 版推出
 {: .label .label-purple }
 
-The `rename_field` search response processor intercepts a search response and renames the specified field. This is useful when your index and your application use different names for the same field. For example, if you rename a field in your index, the `rename_field` processor can change the new name to the old one before sending the response to your application.
+`rename_field` 搜尋回應處理器會攔截搜尋回應並重新命名指定的欄位。當您的索引與應用程式對同一欄位使用不同名稱時，這非常有用。例如，如果您在索引中重新命名某個欄位，`rename_field` 處理器可以在將回應傳送至您的應用程式之前，把新名稱改回舊名稱。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists all available request fields.
+下表列出所有可用的請求欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`field` | String | The field to rename. Required.
-`target_field` | String | The new field name. Required.
-`tag` | String | The processor's identifier. 
-`description` | String | A description of the processor. 
-`ignore_failure` | Boolean | If `true`, OpenSearch [ignores any failure]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures) of this processor and continues to run the remaining processors in the search pipeline. Optional. Default is `false`.
+`field` | 字串 | 要重新命名的欄位。必要。
+`target_field` | 字串 | 新的欄位名稱。必要。
+`tag` | 字串 | 處理器的識別碼。
+`description` | 字串 | 處理器的描述。
+`ignore_failure` | 布林值 | 若為 `true`，OpenSearch 會[忽略此處理器的任何失敗]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures)，並繼續執行搜尋管線中其餘的處理器。選用。預設為 `false`。
 
-## Example 
+## 範例
 
-The following example demonstrates using a search pipeline with a `rename_field` processor.
+下列範例示範如何使用含有 `rename_field` 處理器的搜尋管線。
 
-### Setup
+### 設定
 
-Create an index named `my_index` and index a document with the field `message`:
+建立一個名為 `my_index` 的索引，並為含有欄位 `message` 的文件編製索引：
 
 ```json
 POST /my_index/_doc/1
@@ -42,9 +43,9 @@ POST /my_index/_doc/1
 ```
 {% include copy-curl.html %}
 
-### Creating a search pipeline 
+### 建立搜尋管線
 
-The following request creates a search pipeline with a `rename_field` response processor that renames the field `message` to `notification`:
+下列請求會建立一個搜尋管線，其中包含一個將欄位 `message` 重新命名為 `notification` 的 `rename_field` 回應處理器：
 
 ```json
 PUT /_search/pipeline/my_pipeline
@@ -61,22 +62,22 @@ PUT /_search/pipeline/my_pipeline
 ```
 {% include copy-curl.html %}
 
-### Using a search pipeline
+### 使用搜尋管線
 
-Search for documents in `my_index` without a search pipeline:
+在不使用搜尋管線的情況下搜尋 `my_index` 中的文件：
 
 ```json
 GET /my_index/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the field `message`:
+回應包含欄位 `message`：
 
 <details open markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta}
+<summary>
+    回應
+</summary>
+{: .text-delta}
 ```json
 {
   "took" : 1,
@@ -109,20 +110,20 @@ The response contains the field `message`:
 ```
 </details>
 
-To search with a pipeline, specify the pipeline name in the `search_pipeline` query parameter:
+若要使用管線進行搜尋，請在 `search_pipeline` 查詢參數中指定管線名稱：
 
 ```json
 GET /my_index/_search?search_pipeline=my_pipeline
 ```
 {% include copy-curl.html %}
 
-The `message` field has been renamed to `notification`:
+欄位 `message` 已重新命名為 `notification`：
 
 <details open markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta}
+<summary>
+    回應
+</summary>
+{: .text-delta}
 ```json
 {
   "took" : 2,
@@ -155,7 +156,7 @@ The `message` field has been renamed to `notification`:
 ```
 </details>
 
-You can also use the `fields` option to search for specific fields in a document:
+您也可以使用 `fields` 選項來搜尋文件中的特定欄位：
 
 ```json
 POST /my_index/_search?pretty&search_pipeline=my_pipeline
@@ -165,13 +166,13 @@ POST /my_index/_search?pretty&search_pipeline=my_pipeline
 ``` 
 {% include copy-curl.html %}
 
-In the response, the field `message` has been renamed to `notification`:
+在回應中，欄位 `message` 已重新命名為 `notification`：
 
 <details open markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta}
+<summary>
+    回應
+</summary>
+{: .text-delta}
 ```json
 {
   "took" : 4,

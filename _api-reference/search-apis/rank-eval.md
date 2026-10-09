@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Ranking evaluation
+title: "排名評估"
 parent: Search APIs
 nav_order: 60
 redirect_from:
@@ -8,47 +9,47 @@ redirect_from:
 ---
 
 # Ranking Evaluation API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Rank Evaluation API evaluates the quality of ranked search results.
+Rank Evaluation API 用於評估排名搜尋結果的品質。
 
-## Endpoints
+## 端點
 
 ```json
 GET {index_name}/_rank_eval 
 POST {index_name}/_rank_eval
 ```
 
-## Query parameters
+## 查詢參數
 
-Query parameters are optional.
+查詢參數為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :---  | :---
-`ignore_unavailable` | Boolean | Defaults to `false`. When set to `false` the response body will return an error if an index is closed or missing.
-`allow_no_indices` | Boolean | Defaults to `true`. When set to `false` the response body will return an error if a wildcard expression points to indexes that are closed or missing.
-`expand_wildcards` | String | Expand wildcard expressions for indexes that are `open`, `closed`, `hidden`, `none`, or `all`.
-`search_type` | String | Set search type to either `query_then_fetch` or `dfs_query_then_fetch`.
+`ignore_unavailable` | 布林值 | 預設為 `false`。設為 `false` 時，若索引已關閉或不存在，回應本文會傳回錯誤。
+`allow_no_indices` | 布林值 | 預設為 `true`。設為 `false` 時，若萬用字元運算式指向已關閉或不存在的索引，回應本文會傳回錯誤。
+`expand_wildcards` | 字串 | 針對狀態為 `open`、`closed`、`hidden`、`none` 或 `all` 的索引展開萬用字元運算式。
+`search_type` | 字串 | 將搜尋類型設為 `query_then_fetch` 或 `dfs_query_then_fetch`。
 
-## Request body fields
+## 請求本文欄位
 
-The request body must contain at least one parameter.
+請求本文必須包含至少一個參數。
 
-Field type | Description
+欄位類型 | 說明
 :--- | :---  
-`id` | Document or template ID.
-`requests` | Set multiple search requests within the request field section.
-`ratings` | Document relevance score.
-k | The number of documents returned per query. Default is set to 10.
-`relevant_rating_threshold` | The threshold at which documents are considered relevant. Default is set to 1.
-`normalize` | Discounted cumulative gain will be calculated when set to `true`.
-`maximum_relevance` | Sets the maximum relevance score when using the expected reciprocal rank metric.
-`ignore_unlabeled` | Defaults to `false`. Unlabeled documents are ignored when set to `true`. 
-`template_id` | Template ID.
-`params` | Parameters used in the template.
+`id` | 文件或範本 ID。
+`requests` | 在 request 欄位區段中設定多個搜尋請求。
+`ratings` | 文件相關性分數。
+k | 每個查詢傳回的文件數量。預設為 10。
+`relevant_rating_threshold` | 判定文件為相關的門檻值。預設為 1。
+`normalize` | 設為 `true` 時，將計算折扣累計增益。
+`maximum_relevance` | 使用預期倒數排名指標時，設定相關性分數的最大值。
+`ignore_unlabeled` | 預設為 `false`。設為 `true` 時，將忽略未標示的文件。
+`template_id` | 範本 ID。
+`params` | 範本中使用的參數。
 
-## Example request
+## 範例請求
 
 <!-- spec_insert_start
 component: example_code
@@ -193,7 +194,7 @@ response = client.rank_eval(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ````json
 {

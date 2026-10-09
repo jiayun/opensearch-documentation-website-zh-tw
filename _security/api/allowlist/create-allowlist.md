@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create or update allow list
+title: "建立或更新允許清單"
 parent: Allow list APIs
 grand_parent: Security APIs
 nav_order: 10
 ---
 
-# Create or Update Allow List API
-**Introduced 2.1**
+# 建立或更新允許清單 API
+**於 2.1 版推出**
 {: .label .label-purple }
 
-Creates or replaces the allow list configuration.
+建立或取代允許清單組態。
 
-This API is reserved for a superadmin. Authenticate with an admin certificate rather than with a user name and password. For more information, see [Access control for the API]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api).
+此 API 保留給超級管理員使用。請使用管理員憑證進行驗證，而非使用使用者名稱與密碼。如需更多資訊，請參閱[API 的存取控制]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api)。
 {: .note}
 
 <!-- spec_insert_start
 api: security.create_allowlist
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PUT /_plugins/_security/api/allowlist
 ```
 <!-- spec_insert_end -->
 
-## Request body fields
+## 請求本文欄位
 
-The request body is required. It is a JSON object with the following fields.
+請求本文為必要。其為包含下列欄位的 JSON 物件。
 
-| Field | Data type | Description | Required |
+| 欄位 | 資料類型 | 說明 | 必要 |
 | :--- | :--- | :--- | :--- |
-| `enabled` | Boolean | Whether the allow list is enforced. When `true`, users without administrator privileges can call only the requests listed in `requests`. | Yes |
-| `requests` | Object | The permitted requests. Each key is a path, such as `/_cat/nodes`, and each value is an array of the HTTP methods permitted for that path. | Yes |
+| `enabled` | 布林值 | 是否強制執行允許清單。當 `true` 時，沒有管理員權限的使用者只能呼叫 `requests` 中列出的請求。 | 是 |
+| `requests` | 物件 | 允許的請求。每個索引鍵都是路徑，例如 `/_cat/nodes`，而每個值都是該路徑允許的 HTTP 方法陣列。 | 是 |
 
-## Example request
+## 範例請求
 
 ```json
 PUT _plugins/_security/api/allowlist
@@ -55,7 +56,7 @@ PUT _plugins/_security/api/allowlist
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {

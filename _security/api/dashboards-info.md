@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Dashboards info
+title: "Dashboards 資訊"
 parent: Security APIs
 nav_order: 160
 redirect_from:
@@ -9,28 +10,28 @@ redirect_from:
 ---
 
 # Dashboards Info API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Retrieves the current values for dynamic security settings for OpenSearch Dashboards.
+擷取 OpenSearch Dashboards 動態安全性設定的目前值。
 
-## Endpoints
+## 端點
 
 ```json
 GET  /_plugins/_security/dashboardsinfo
 POST /_plugins/_security/dashboardsinfo
 ```
 
-Both methods take no request body and return the same response.
+兩種方法都不需要請求本文，且會傳回相同的回應。
 
-## Example request
+## 範例請求
 
 ```json
 GET _plugins/_security/dashboardsinfo
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -52,24 +53,24 @@ GET _plugins/_security/dashboardsinfo
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文是含有下列欄位的 JSON 物件。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `user_name` | String | The name of the current user. |
-| `not_fail_on_forbidden_enabled` | Boolean | Whether OpenSearch omits the results that a user cannot access from a search response rather than returning an error. |
-| `multitenancy_enabled` | Boolean | Whether multi-tenancy is enabled. |
-| `opensearch_dashboards_mt_enabled` | Boolean | Whether multi-tenancy is enabled for OpenSearch Dashboards. |
-| `opensearch_dashboards_index` | String | The name of the index in which OpenSearch Dashboards stores its saved objects. |
-| `opensearch_dashboards_server_user` | String | The name of the user that OpenSearch Dashboards uses to connect to OpenSearch. |
-| `default_tenant` | String | The tenant that OpenSearch Dashboards opens by default. |
-| `private_tenant_enabled` | Boolean | Whether users can use their private tenants. |
-| `preferred_tenants` | Array of Strings | The tenants to list ahead of the others in the tenant selector, in order of preference. |
-| `sign_in_options` | Array of Strings | The sign-in methods that OpenSearch Dashboards offers. |
-| `password_validation_regex` | String | The regular expression that a new password must match. |
-| `password_validation_error_message` | String | The message that OpenSearch Dashboards displays when a password does not match `password_validation_regex`. |
-| `resource_sharing_enabled` | Boolean | Whether the resource sharing feature is enabled. |
-| `api_tokens_enabled` | Boolean | Whether the API key APIs are enabled. |
-| `max_duration_seconds` | Integer | The longest lifetime, in seconds, that an API key can be given. |
+| `user_name` | 字串 | 目前使用者的名稱。 |
+| `not_fail_on_forbidden_enabled` | 布林值 | OpenSearch 是否從搜尋回應中省略使用者無法存取的結果，而非傳回錯誤。 |
+| `multitenancy_enabled` | 布林值 | 是否啟用多租用戶。 |
+| `opensearch_dashboards_mt_enabled` | 布林值 | 是否為 OpenSearch Dashboards 啟用多租用戶。 |
+| `opensearch_dashboards_index` | 字串 | OpenSearch Dashboards 儲存其已儲存物件的索引名稱。 |
+| `opensearch_dashboards_server_user` | 字串 | OpenSearch Dashboards 用來連線至 OpenSearch 的使用者名稱。 |
+| `default_tenant` | 字串 | OpenSearch Dashboards 預設開啟的租用戶。 |
+| `private_tenant_enabled` | 布林值 | 使用者是否可以使用其私人租用戶。 |
+| `preferred_tenants` | 字串陣列 | 在租用戶選取器中依偏好順序列在其他租用戶之前的租用戶。 |
+| `sign_in_options` | 字串陣列 | OpenSearch Dashboards 提供的登入方法。 |
+| `password_validation_regex` | 字串 | 新密碼必須符合的正規表示式。 |
+| `password_validation_error_message` | 字串 | 當密碼不符合 `password_validation_regex` 時，OpenSearch Dashboards 顯示的訊息。 |
+| `resource_sharing_enabled` | 布林值 | 是否啟用資源共用功能。 |
+| `api_tokens_enabled` | 布林值 | 是否啟用 API 金鑰 API。 |
+| `max_duration_seconds` | 整數 | API 金鑰可被授予的最長存續時間 (以秒為單位)。 |

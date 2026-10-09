@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: AG-UI agents
+title: "AG-UI 代理程式"
 has_children: false
 has_toc: false
 nav_order: 50
@@ -8,24 +9,24 @@ parent: Agents
 grand_parent: Agents and tools
 ---
 
-# AG-UI agents
-**Introduced 3.5**
+# AG-UI 代理程式
+**於 3.5 版推出**
 {: .label .label-purple }
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).    
+這是實驗性功能，不建議在正式環境中使用。如需功能進展的最新消息，或想提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/)的討論。    
 {: .warning}
 
-An Agent-User Interaction (AG-UI) agent follows the [AG-UI protocol](https://docs.ag-ui.com/introduction) for integrating AI agents with frontend applications. This implementation brings real-time AI agent capabilities directly into user interfaces with standardized streaming interactions and sophisticated tool execution.
+Agent-User Interaction (AG-UI) 代理程式遵循 [AG-UI 通訊協定](https://docs.ag-ui.com/introduction)，將 AI 代理程式與前端應用程式整合。此實作透過標準化的串流互動與精密的工具執行，將即時 AI 代理程式功能直接帶入使用者介面。
 
-Similar to a [conversational agent]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/), an AG-UI agent is configured with a large language model (LLM) and optional tools. When processing user input, the agent uses the LLM to reason about the request, considering both the conversation history and available frontend context. The agent then determines the tools to use and executes them to provide an appropriate response.
+與[對話式代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/)類似，AG-UI 代理程式會以大語言模型 (LLM) 及選用工具進行設定。處理使用者輸入時，代理程式會使用 LLM 對請求進行推理，同時考量對話歷程與可用的前端情境。接著，代理程式會判斷要使用哪些工具並執行這些工具，以提供適當的回應。
 
-AG-UI agents can use two types of tools:
-- **Backend tools**: Registered with the agent (like `ListIndexTool` or `SearchIndexTool`) and query OpenSearch data and perform server-side operations.
-- **Frontend tools**: Provided in each request and allow the agent to interact with the UI, such as refreshing dashboards, applying filters, or navigating between pages.
+AG-UI 代理程式可使用兩種類型的工具：
+- **後端工具**：向代理程式註冊 (例如 `ListIndexTool` 或 `SearchIndexTool`)，用於查詢 OpenSearch 資料並執行伺服器端作業。
+- **前端工具**：在每個請求中提供，讓代理程式能與 UI 互動，例如重新整理儀表板、套用篩選條件，或在頁面之間瀏覽。
 
-## Prerequisites
+## 先決條件
 
-Before using AG-UI agents, you must enable the feature by updating your cluster settings. The `ag_ui_enabled` and `stream_enabled` settings are required, while `mcp_connector_enabled` (to connect to Model Context Protocol [MCP] servers) and `unified_agent_api_enabled` are optional but recommended:
+使用 AG-UI 代理程式之前，您必須更新叢集設定以啟用此功能。`ag_ui_enabled` 與 `stream_enabled` 設定為必要，而 `mcp_connector_enabled` (用於連線至 Model Context Protocol [MCP] 伺服器) 與 `unified_agent_api_enabled` 則為選用但建議設定：
 
 ```json
 PUT _cluster/settings
@@ -40,14 +41,14 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-## Creating an AG-UI agent
+## 建立 AG-UI 代理程式
 
-AG-UI agents use the unified registration method to streamline agent creation into a single API call. To register an AG-UI agent, set the `type` field to `AG_UI` and configure your model using the Unified Agent API.
+AG-UI 代理程式使用統一註冊方法，將代理程式建立流程簡化為單一 API 呼叫。若要註冊 AG-UI 代理程式，請將 `type` 欄位設為 `AG_UI`，並使用 Unified Agent API 設定您的模型。
 
-For complete registration instructions, field definitions, and examples for all supported model providers (Amazon Bedrock, Google Gemini, OpenAI), see [Unified registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/#unified-agent-registration).
+如需所有支援之模型供應商 (Amazon Bedrock、Google Gemini、OpenAI) 的完整註冊指示、欄位定義與範例，請參閱[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/#unified-agent-registration)。
 
 <!-- vale off -->
-### Example request: Amazon Bedrock Converse
+### 範例請求：Amazon Bedrock Converse
 <!-- vale on -->
 
 ```json
@@ -85,7 +86,7 @@ POST /_plugins/_ml/agents/_register
 {% include copy-curl.html %}
 
 <!-- vale off -->
-### Example request: OpenAI Chat Completion
+### 範例請求：OpenAI Chat Completion
 <!-- vale on -->
 
 ```json
@@ -120,33 +121,33 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-## Execute agent stream
+## 執行代理程式串流
 
-AG-UI agents use a specialized execution protocol designed for frontend applications. Unlike regular agent execution (the [Execute Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/)) that uses the `input` field, AG-UI agents use the AG-UI protocol format with frontend context, tools, and streaming responses.
+AG-UI 代理程式使用專為前端應用程式設計的特殊執行通訊協定。與使用 `input` 欄位的一般代理程式執行 ([Execute Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/)) 不同，AG-UI 代理程式使用 AG-UI 通訊協定格式，並搭配前端情境、工具與串流回應。
 
-### AG-UI protocol format
+### AG-UI 通訊協定格式
 
-AG-UI execution follows the [AG-UI protocol](https://docs.ag-ui.com/introduction) specification, providing structured communication between frontend applications and AI agents. The protocol includes conversation threading, frontend tool integration, and real-time streaming responses.
+AG-UI 執行遵循 [AG-UI 通訊協定](https://docs.ag-ui.com/introduction)規格，在前端應用程式與 AI 代理程式之間提供結構化通訊。此通訊協定包含對話執行緒、前端工具整合與即時串流回應。
 
-For more information about the input format specification, see [RunAgentInput](https://docs.ag-ui.com/sdk/js/core/types#runagentinput) in the AG-UI documentation.
+如需輸入格式規格的詳細資訊，請參閱 AG-UI 文件中的 [RunAgentInput](https://docs.ag-ui.com/sdk/js/core/types#runagentinput)。
 
-### Request fields
+### 請求欄位
 
-The following table lists the request fields.
+下表列出請求欄位。
 
-| Field | Data type | Required/Optional | Description |
+| 欄位 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `threadId` | String | Required | Unique identifier for the conversation thread, generated by the frontend. Used to maintain conversation continuity across multiple requests and enable conversation memory. |
-| `runId` | String | Required | Unique identifier for this specific execution within the thread, generated by the frontend. Each new request should have a new `runId`. |
-| `state` | Object | Required | Current internal state of the agent session. Can store workflow state, user preferences, or session-specific data that persists across tool calls within the same run. |
-| `messages` | Array | Required | Array of conversation messages including both user input and previous assistant responses. Each message has an `id`, `role` (user/assistant), and `content`. |
-| `tools` | Array | Required | Array of frontend-specific tools the agent can call to interact with the UI. Each tool includes a `name`, `description`, and `parameters` schema defining how the agent can invoke UI actions. |
-| `context` | Array | Required | Array of context objects providing current application state to the agent. Includes information like active dashboard, applied filters, time ranges, or any relevant UI context that helps the agent understand the user's current situation. |
-| `forwardedProps` | Object | Required | Additional properties forwarded from the frontend application, such as user authentication details, permissions, application configuration, or other metadata needed for agent operations. |
+| `threadId` | 字串 | 必要 | 對話執行緒的唯一識別碼，由前端產生。用於在多個請求之間維持對話連續性，並啟用對話記憶。 |
+| `runId` | 字串 | 必要 | 此執行緒中此次特定執行的唯一識別碼，由前端產生。每個新請求都應有新的 `runId`。 |
+| `state` | 物件 | 必要 | 代理程式工作階段的目前內部狀態。可儲存工作流程狀態、使用者偏好設定，或在同一次執行中跨工具呼叫持續存在的特定工作階段資料。 |
+| `messages` | 陣列 | 必要 | 對話訊息的陣列，包含使用者輸入與先前的助理回應。每則訊息都有 `id`、`role` (user/assistant) 與 `content`。 |
+| `tools` | 陣列 | 必要 | 前端專屬工具的陣列，代理程式可呼叫這些工具與 UI 互動。每個工具都包含 `name`、`description` 與 `parameters` 結構定義，說明代理程式如何叫用 UI 動作。 |
+| `context` | 陣列 | 必要 | 情境物件的陣列，向代理程式提供目前的應用程式狀態。包含作用中的儀表板、已套用的篩選條件、時間範圍，或任何可協助代理程式瞭解使用者目前情況的相關 UI 情境等資訊。 |
+| `forwardedProps` | 物件 | 必要 | 從前端應用程式轉送的其他屬性，例如使用者驗證詳細資料、權限、應用程式組態，或代理程式作業所需的其他中繼資料。 |
 
-#### Example request
+#### 範例請求
 
-The following example shows how to execute an AG-UI agent using the AG-UI protocol format with frontend tools, conversation context, and application state:
+下列範例顯示如何使用 AG-UI 通訊協定格式，搭配前端工具、對話情境與應用程式狀態來執行 AG-UI 代理程式：
 
 ```json
 POST /_plugins/_ml/agents/{{agent_id}}/_execute/stream
@@ -181,9 +182,9 @@ POST /_plugins/_ml/agents/{{agent_id}}/_execute/stream
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
-AG-UI agents return Server-Sent Events (SSEs) that allow frontends to provide real-time feedback as the agent processes the request:
+AG-UI 代理程式會回傳 Server-Sent Events (SSE)，讓前端能在代理程式處理請求時提供即時回饋：
 
 ```json
 data: {"type":"RUN_STARTED","timestamp":1234567890,"threadId":"thread-xxxxx","runId":"run-xxxxx"}
@@ -203,48 +204,48 @@ data: {"type":"TOOL_CALL_END","timestamp":1234567890,"toolCallId":"tool-xxxxx"}
 data: {"type":"RUN_FINISHED","timestamp":1234567890,"threadId":"thread-xxxxx","runId":"run-xxxxx"}
 ```
 
-### Response fields
+### 回應欄位
 
-Each SSE contains the following fields.
+每個 SSE 包含下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `type` | String | The event type. |
-| `timestamp` | Long | The Unix timestamp, in milliseconds, when the event was generated. |
-| `threadId` | String | The conversation thread ID from the request. |
-| `runId` | String | The run ID from the request. |
-| `messageId` | String | The unique identifier for the message (present in message events). |
-| `role` | String | The role of the message sender, typically "assistant" (present in message start events). |
-| `delta` | String | Incremental content for streaming text or tool arguments (present in content/args events). |
-| `toolCallId` | String | The unique identifier for the tool call (present in tool call events). |
-| `toolCallName` | String | The name of the tool being called (present in tool call start events). |
+| `type` | 字串 | 事件類型。 |
+| `timestamp` | Long | 事件產生時的 Unix 時間戳記，單位為毫秒。 |
+| `threadId` | 字串 | 來自請求的對話執行緒 ID。 |
+| `runId` | 字串 | 來自請求的執行 ID。 |
+| `messageId` | 字串 | 訊息的唯一識別碼 (出現在訊息事件中)。 |
+| `role` | 字串 | 訊息傳送者的角色，通常為 "assistant" (出現在訊息開始事件中)。 |
+| `delta` | 字串 | 串流文字或工具引數的增量內容 (出現在 content/args 事件中)。 |
+| `toolCallId` | 字串 | 工具呼叫的唯一識別碼 (出現在工具呼叫事件中)。 |
+| `toolCallName` | 字串 | 被呼叫工具的名稱 (出現在工具呼叫開始事件中)。 |
 
-### Event types
+### 事件類型
 
-AG-UI agents return SSEs with the following event types in the `type` field.
+AG-UI 代理程式會在 `type` 欄位中回傳下列事件類型的 SSE。
 
-| Event type | Description |
+| 事件類型 | 說明 |
 | :--- | :--- |
-| `RUN_STARTED` | Indicates the beginning of a run |
-| `TEXT_MESSAGE_START` | Marks the start of an assistant message |
-| `TEXT_MESSAGE_CONTENT` | Contains incremental text content (streaming) |
-| `TEXT_MESSAGE_END` | Marks the end of an assistant message |
-| `TOOL_CALL_START` | Indicates the beginning of a tool call |
-| `TOOL_CALL_ARGS` | Contains incremental tool call arguments |
-| `TOOL_CALL_END` | Marks the end of a tool call |
-| `RUN_FINISHED` | Indicates the completion of a run |
+| `RUN_STARTED` | 表示一次執行的開始 |
+| `TEXT_MESSAGE_START` | 標記助理訊息的開始 |
+| `TEXT_MESSAGE_CONTENT` | 包含增量文字內容 (串流) |
+| `TEXT_MESSAGE_END` | 標記助理訊息的結束 |
+| `TOOL_CALL_START` | 表示一次工具呼叫的開始 |
+| `TOOL_CALL_ARGS` | 包含增量工具呼叫引數 |
+| `TOOL_CALL_END` | 標記工具呼叫的結束 |
+| `RUN_FINISHED` | 表示一次執行的完成 |
 
-## Tracking token usage
-**Introduced 3.6**
+## 追蹤詞元用量
+**3.6 版新增**
 {: .label .label-purple }
 
-AG-UI agents support token usage tracking, which provides detailed metrics about token consumption for each LLM call during agent execution. Token usage is delivered as part of the streaming event sequence.
+AG-UI 代理程式支援詞元用量追蹤，可提供代理程式執行期間每次 LLM 呼叫的詳細詞元消耗指標。詞元用量會作為串流事件序列的一部分傳送。
 
-For AG-UI agents, token usage tracking is enabled during agent registration by setting `"include_token_usage": true` in the `parameters` field. This applies to both the unified registration method (new interface) and the regular registration method (old interface). Once the agent is registered, this setting cannot be changed during agent execution, it must be set at registration time.
+對於 AG-UI 代理程式，詞元用量追蹤是在代理程式註冊時，透過在 `parameters` 欄位中設定 `"include_token_usage": true` 來啟用。這同時適用於統一註冊方法 (新介面) 與一般註冊方法 (舊介面)。代理程式註冊後，此設定在代理程式執行期間無法變更，必須在註冊時設定。
 
-### Enabling token usage tracking during registration (unified method)
+### 在註冊時啟用詞元用量追蹤 (統一方法)
 
-To enable token usage tracking for an AG-UI agent using the unified registration method, include the `include_token_usage` parameter in the `parameters` field during registration:
+若要使用統一註冊方法為 AG-UI 代理程式啟用詞元用量追蹤，請在註冊時於 `parameters` 欄位中加入 `include_token_usage` 參數：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -278,9 +279,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### Enabling token usage tracking during registration (regular method)
+### 在註冊時啟用詞元用量追蹤 (一般方法)
 
-Alternatively, you can enable token usage tracking using the regular registration method by including `include_token_usage` in the agent's `parameters`:
+或者，您可以使用一般註冊方法啟用詞元用量追蹤，方法是在代理程式的 `parameters` 中加入 `include_token_usage`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -306,9 +307,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### Token usage in streaming responses
+### 串流回應中的詞元用量
 
-When token usage tracking is enabled, the streaming response includes a `Custom` event with token usage metrics after the `RUN_FINISHED` event. The metrics include per-turn and per-model token consumption:
+啟用詞元用量追蹤後，串流回應會在 `RUN_FINISHED` 事件之後包含一個帶有詞元用量指標的 `Custom` 事件。這些指標包含每輪與每個模型的詞元消耗：
 
 ```json
 data: {"type":"RUN_STARTED","timestamp":1775501029508,"threadId":"thread-agui-new-agmem-postman","runId":"run-postman-agui-new-am"}
@@ -336,16 +337,16 @@ data: {"type":"Custom","timestamp":1775501041115,"name":"token_usage","value":{"
 data: {"type":"RUN_FINISHED","timestamp":1775501041116,"threadId":"thread-agui-new-agmem-postman","runId":"run-postman-agui-new-am"}
 ```
 
-The `token_usage` event contains:
-- **`per_turn_usage`**: Token metrics for each individual turn during the agent execution, including `turn` number, `model_id`, `model_name`, `model_url`, `input_tokens`, `output_tokens`, and `total_tokens`.
-- **`per_model_usage`**: Aggregated token metrics grouped by model, including `model_id`, `model_name`, `model_url`, `call_count`, `input_tokens`, `output_tokens`, and `total_tokens`.
+`token_usage` 事件包含：
+- **`per_turn_usage`**：代理程式執行期間每一輪的詞元指標，包括 `turn` 數量、`model_id`、`model_name`、`model_url`、`input_tokens`、`output_tokens` 與 `total_tokens`。
+- **`per_model_usage`**：依模型分組的彙總詞元指標，包括 `model_id`、`model_name`、`model_url`、`call_count`、`input_tokens`、`output_tokens` 與 `total_tokens`。
 
-For detailed information about token usage fields and how tokens are calculated by different model providers, see [Tracking token usage]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#tracking-token-usage) in the Execute Agent API documentation.
+如需有關詞元用量欄位以及不同模型供應商如何計算詞元的詳細資訊，請參閱 Execute Agent API 文件中的 [追蹤詞元用量]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#tracking-token-usage)。
 
-## Next steps
+## 後續步驟
 
-- For AG-UI agent registration, see [Unified registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method).
-- For unified agent execution, see [Unified agent execution]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#unified-agent-execution).
-- Learn about the [AG-UI protocol specification](https://docs.ag-ui.com/introduction).
-- Explore available backend [tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/) for your agents.
-- Review [Agent APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/) for additional functionality.
+- 如需 AG-UI 代理程式註冊，請參閱[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)。
+- 如需統一代理程式執行，請參閱[統一代理程式執行]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#unified-agent-execution)。
+- 了解 [AG-UI 通訊協定規格](https://docs.ag-ui.com/introduction)。
+- 探索代理程式可用的後端[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
+- 檢閱[代理程式 API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/) 以了解其他功能。

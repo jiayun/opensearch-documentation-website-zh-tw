@@ -1,13 +1,14 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Term
 parent: Term-level queries
 nav_order: 10
 ---
 
-# Term query
+# Term 查詢
 
-Use the `term` query to search for an exact term in a field. For example, the following query searches for a line with an exact line number:
+使用 `term` 查詢來搜尋欄位中的精確詞彙。例如，下列查詢會搜尋具有精確行號的一行：
 
 ```json
 GET shakespeare/_search
@@ -23,9 +24,9 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-When a document is indexed, the `text` fields are [analyzed]({{site.url}}{{site.baseurl}}/analyzers/index/). Analysis includes tokenizing and lowercasing the text and removing punctuation. Unlike `match` queries, which analyze the query text, `term` queries only match the exact term and thus may not return relevant results. Avoid using `term` queries on `text` fields. For more information, see [Term-level and full-text queries compared]({{site.url}}{{site.baseurl}}/query-dsl/term-vs-full-text/).
+當文件被編製索引時，`text` 欄位會經過[分析]({{site.url}}{{site.baseurl}}/analyzers/index/)。分析包括對文字進行斷詞、轉為小寫以及移除標點符號。與會分析查詢文字的 `match` 查詢不同，`term` 查詢只會比對精確的詞彙，因此可能不會傳回相關的結果。請避免在 `text` 欄位上使用 `term` 查詢。如需更多資訊，請參閱[詞彙層級查詢與全文查詢的比較]({{site.url}}{{site.baseurl}}/query-dsl/term-vs-full-text/)。
 
-You can specify that the query should be case insensitive in the `case_insensitive` parameter:
+您可以在 `case_insensitive` 參數中指定查詢不區分大小寫：
 
 ```json
 GET shakespeare/_search
@@ -42,10 +43,10 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-In OpenSearch 2.x and earlier, complexity can increase exponentially with the number of characters, leading to high heap memory usage and reduced performance. To avoid this, do not use case-insensitive searches. Instead, apply a [lowercase token filter]({{site.url}}{{site.baseurl}}/analyzers/token-filters/lowercase/) in the indexed field's analyzer and use lowercase query terms.
+在 OpenSearch 2.x 及更早的版本中，複雜度可能會隨著字元數量呈指數級增加，導致堆積記憶體使用量偏高並降低效能。為避免此情況，請勿使用不區分大小寫的搜尋。改為在已編製索引欄位的分析器中套用[lowercase 詞元篩選器]({{site.url}}{{site.baseurl}}/analyzers/token-filters/lowercase/)，並使用小寫的查詢詞彙。
 {: .warning}
 
-The response contains the matching documents despite any differences in case:
+回應會包含符合的文件，即使大小寫有所差異：
 
 ```json
 "hits": {
@@ -73,9 +74,9 @@ The response contains the matching documents despite any differences in case:
 }
 ```
 
-## Parameters
+## 參數
 
-The query accepts the name of the field (`<field>`) as a top-level parameter:
+此查詢接受欄位名稱 (`<field>`) 作為頂層參數：
 
 ```json
 GET _search
@@ -92,11 +93,11 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-The `<field>` accepts the following parameters. All parameters except `value` are optional.
+`<field>` 接受下列參數。除了 `value` 以外，所有參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`value` | String | The term to search for in the field specified in `<field>`. A document is returned in the results only if its field value exactly matches the term, with the correct spacing and capitalization.
-`boost` | Floating-point | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field’s relevance. Values between 0.0 and 1.0 decrease the field’s relevance. Default is 1.0.
-`_name` | String | The name of the query for query tagging. Optional.
-`case_insensitive` | Boolean | If `true`, allows case-insensitive matching of the value with the indexed field values. Default is `false` (case sensitivity is determined by the field's mapping).
+`value` | 字串 | 要在 `<field>` 所指定欄位中搜尋的詞彙。只有當文件的欄位值與該詞彙完全相符（包括正確的空格與大小寫）時，該文件才會出現在結果中。
+`boost` | 浮點數 | 一個浮點數值，用於指定此欄位對相關性分數的權重。高於 1.0 的值會提高該欄位的相關性；介於 0.0 與 1.0 之間的值會降低該欄位的相關性。預設為 1.0。
+`_name` | 字串 | 用於查詢標記的查詢名稱。選用。
+`case_insensitive` | 布林值 | 若為 `true`，允許該值與已編製索引的欄位值進行不區分大小寫的比對。預設為 `false`（是否區分大小寫由該欄位的對應決定）。

@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Terms set
+title: "詞項集合"
 parent: Term-level queries
 nav_order: 30
 ---
 
-# Terms set query
+# 詞項集合查詢
 
-With a terms set query, you can search for documents that match a minimum number of exact terms in a specified field. A `terms_set` query is similar to a `terms` query, except that you can specify the minimum number of matching terms that are required in order to return a document. You can specify this number either in a field in the index or with a script.
+使用詞項集合查詢，您可以搜尋在指定欄位中符合最少數量確切詞項的文件。`terms_set` 查詢與 `terms` 查詢類似，差別在於您可以指定要傳回文件所需符合的最少詞項數量。您可以在索引的欄位中指定此數量，或使用指令碼指定。
 
-As an example, consider an index that contains names of students and classes those students have taken. When setting up the mapping for this index, you need to provide a [numeric]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/) field that specifies the minimum number of matching terms that are required in order to return a document:
+舉例來說，假設有一個索引包含學生姓名以及這些學生修過的課程。設定此索引的對應時，您需要提供一個 [數值]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/) 欄位，指定要傳回文件所需符合的最少詞項數量：
 
 ```json
 PUT students
@@ -31,7 +32,7 @@ PUT students
 ```
 {% include copy-curl.html %}
 
-Next, index two documents that correspond to students:
+接著，將兩份對應至學生的文件編製索引：
 
 ```json
 PUT students/_doc/1
@@ -53,7 +54,7 @@ PUT students/_doc/2
 ```
 {% include copy-curl.html %}
 
-Now search for students who have taken at least two of the following classes: `CS101`, `CS102`, `MATH101`:
+現在搜尋修過下列課程中至少兩門的學生：`CS101`、`CS102`、`MATH101`：
 
 ```json
 GET students/_search
@@ -70,7 +71,7 @@ GET students/_search
 ```
 {% include copy-curl.html %}
 
-The response contains both documents:
+回應包含這兩份文件：
 
 ```json
 {
@@ -122,7 +123,7 @@ The response contains both documents:
 }
 ```
 
-To specify the minimum number of terms a document should match with a script, provide the script in the `minimum_should_match_script` field:
+若要使用指令碼指定文件應符合的最少詞項數量，請在 `minimum_should_match_script` 欄位中提供指令碼：
 
 ```json
 GET students/_search
@@ -141,9 +142,9 @@ GET students/_search
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-The query accepts the name of the field (`<field>`) as a top-level parameter:
+此查詢接受欄位名稱 (`<field>`) 作為最上層參數：
 
 ```json
 GET _search
@@ -160,11 +161,11 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-The `<field>` accepts the following parameters. All parameters except `terms` are optional.
+`<field>` 接受下列參數。除了 `terms` 之外，所有參數都是選用的。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`terms` | Array of strings | The array of terms to search for in the field specified in `<field>`. A document is returned in the results only if the required number of terms matches the document's field values exactly, with the correct spacing and capitalization.
-`minimum_should_match_field` | String | The name of the [numeric]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/) field that specifies the number of matching terms required in order to return a document in the results. You must specify either `minimum_should_match_field` or `minimum_should_match_script`, but not both.
-`minimum_should_match_script` | String | A script that returns the number of matching terms required in order to return a document in the results. You must specify either `minimum_should_match_field` or `minimum_should_match_script`, but not both.
-`boost` | Floating-point | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field’s relevance. Values between 0.0 and 1.0 decrease the field’s relevance. Default is 1.0.
+`terms` | 字串陣列 | 要在 `<field>` 中指定之欄位中搜尋的詞項陣列。只有在所需數量的詞項與文件的欄位值完全相符 (包括正確的空格與大小寫) 時，文件才會出現在結果中。
+`minimum_should_match_field` | 字串 | [數值]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/) 欄位的名稱，該欄位指定要讓文件出現在結果中所需符合的詞項數量。您必須指定 `minimum_should_match_field` 或 `minimum_should_match_script`，但不能同時指定兩者。
+`minimum_should_match_script` | 字串 | 傳回要讓文件出現在結果中所需符合之詞項數量的指令碼。您必須指定 `minimum_should_match_field` 或 `minimum_should_match_script`，但不能同時指定兩者。
+`boost` | 浮點數 | 浮點值，指定此欄位對相關性分數的權重。大於 1.0 的值會提高欄位的相關性。介於 0.0 與 1.0 之間的值會降低欄位的相關性。預設值為 1.0。

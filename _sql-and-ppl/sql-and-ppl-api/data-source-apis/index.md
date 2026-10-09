@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Data source APIs
+title: "資料來源 API"
 nav_order: 1
 has_children: true
 parent: SQL and PPL API
@@ -10,15 +11,15 @@ redirect_from:
   - /sql-and-ppl/ppl/admin/datasources/
 ---
 
-# Data source APIs
+# 資料來源 API
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).    
+這是實驗性功能，不建議在正式環境中使用。如需此功能的進度更新，或想提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/)的討論。    
 {: .warning}
 
-OpenSearch supports querying external non-OpenSearch data sources such as Prometheus using the SQL plugin. The Direct Query API enables querying these data sources directly using their native query languages (for example, PromQL for Prometheus).
+OpenSearch 支援使用 SQL 外掛程式查詢外部的非 OpenSearch 資料來源，例如 Prometheus。Direct Query API 可讓您使用這些資料來源的原生查詢語言（例如 Prometheus 的 PromQL）直接查詢它們。
 
-The following data source APIs are supported:
+支援下列資料來源 API：
 
-- [Execute direct query]({{site.url}}{{site.baseurl}}/sql-and-ppl/sql-and-ppl-api/data-source-apis/execute-direct-query/)
-- [Read resources]({{site.url}}{{site.baseurl}}/sql-and-ppl/sql-and-ppl-api/data-source-apis/read-resources/)
-- [Write resources]({{site.url}}{{site.baseurl}}/sql-and-ppl/sql-and-ppl-api/data-source-apis/write-resources/)
+- [執行直接查詢]({{site.url}}{{site.baseurl}}/sql-and-ppl/sql-and-ppl-api/data-source-apis/execute-direct-query/)
+- [讀取資源]({{site.url}}{{site.baseurl}}/sql-and-ppl/sql-and-ppl-api/data-source-apis/read-resources/)
+- [寫入資源]({{site.url}}{{site.baseurl}}/sql-and-ppl/sql-and-ppl-api/data-source-apis/write-resources/)

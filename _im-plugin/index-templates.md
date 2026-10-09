@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index templates
+title: "索引範本"
 nav_order: 15
 redirect_from:
   - /opensearch/index-templates/
@@ -8,15 +9,15 @@ redirect_from:
   - /dashboards/admin-ui-index/component-templates/
 ---
 
-# Index templates
+# 索引範本
 
-An index template applies mappings, settings, and aliases to every new index whose name matches one of the template's index patterns. Templates apply only at index creation: changing a template has no effect on indexes that already exist.
+索引範本會將對應、設定與別名套用到每個名稱符合範本其中一個索引模式的新索引。範本只會在建立索引時套用：變更範本不會影響已存在的索引。
 
-Use a template when new indexes appear on their own and need to be configured consistently, such as the daily indexes behind a log alias or the backing indexes of a data stream. The alternative---specifying settings and mappings in each [Create Index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/) request---does not apply to indexes that OpenSearch creates for you.
+當新索引會自行出現且需要一致設定時，請使用範本，例如記錄檔別名背後的每日索引，或資料串流的後端索引。另一種做法---在每個 [Create Index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/) 請求中指定設定與對應---不適用於 OpenSearch 為您建立的索引。
 
-## Creating an index template
+## 建立索引範本
 
-The following request creates a template named `daily_logs`, applies it to any new index matching `logs-2020-01-*`, and adds each of those indexes to the `my_logs` alias:
+下列請求會建立名為 `daily_logs` 的範本，將其套用到任何符合 `logs-2020-01-*` 的新索引，並將每個這類索引加入 `my_logs` 別名：
 
 ```json
 PUT _index_template/daily_logs
@@ -48,33 +49,33 @@ PUT _index_template/daily_logs
 ```
 {% include copy-curl.html %}
 
-Creating `logs-2020-01-01` now produces an index with the template's alias, settings, and mappings, and so does every other index matching the pattern:
+現在建立 `logs-2020-01-01` 會產生具有範本別名、設定與對應的索引，其他每個符合模式的索引也是如此：
 
 ```json
 PUT logs-2020-01-01
 ```
 {% include copy-curl.html %}
 
-To view the resulting configuration, send the following request:
+若要檢視產生的組態，請傳送下列請求：
 
 ```json
 GET logs-2020-01-01
 ```
 {% include copy-curl.html %}
 
-An index pattern cannot contain any of the following characters: `:`, `"`, `+`, `/`, `\`, `|`, `?`, `#`, `>`, or `<`.
+索引模式不能包含下列任何字元：`:`、`"`、`+`、`/`、`\`、`|`、`?`、`#`、`>` 或 `<`。
 
-Settings and mappings that you specify in a [Create Index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/) request override the ones from a matching template.
+您在 [Create Index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/) 請求中指定的設定與對應會覆寫符合範本中的設定與對應。
 {: .note}
 
-## Resolving conflicts between templates
+## 解決範本之間的衝突
 
-When an index name matches more than one template, OpenSearch applies the template with the highest `priority` and ignores the others---the templates are not merged. A template without a `priority` is assigned `0`, the lowest priority.
+當索引名稱符合多個範本時，OpenSearch 會套用 `priority` 最高的範本，並忽略其他範本---範本不會合併。沒有 `priority` 的範本會指派為 `0`，也就是最低優先順序。
 
-Give overlapping templates distinct priorities. A template whose patterns overlap those of an existing template at the same priority is rejected with `400`, because OpenSearch cannot determine which one to apply.
+請為重疊的範本指定不同的優先順序。模式與現有範本重疊且優先順序相同的範本會遭到拒絕並傳回 `400`，因為 OpenSearch 無法判斷要套用哪一個。
 {: .note}
 
-For example, an index named `logs-2020-01-02` matches both of the following templates, which disagree about `number_of_shards`:
+例如，名為 `logs-2020-01-02` 的索引同時符合下列兩個範本，而這兩個範本對 `number_of_shards` 的設定不一致：
 
 ```json
 PUT _index_template/template-01
@@ -105,15 +106,15 @@ PUT _index_template/template-02
 ```
 {% include copy-curl.html %}
 
-Because `template-02` has the higher priority, the index gets 3 primary shards and the default of 1 replica. It does not inherit `number_of_replicas` from `template-01`.
+因為 `template-02` 的優先順序較高，該索引會取得 3 個主要分片以及預設的 1 個副本。它不會從 `template-01` 繼承 `number_of_replicas`。
 
-To view the template that applies to a name before you create the index, use [Simulate Index Template]({{site.url}}{{site.baseurl}}/api-reference/index-apis/simulate-index-template/).
+若要在建立索引之前檢視適用於某個名稱的範本，請使用 [Simulate Index Template]({{site.url}}{{site.baseurl}}/api-reference/index-apis/simulate-index-template/)。
 
-## Reusing configuration with component templates
+## 使用元件範本重複使用組態
 
-A component template holds aliases, settings, or mappings that several index templates share. Instead of repeating the same mapping block in every template---which inflates the cluster state and has to be edited in every copy when it changes---define it once as a component template and reference it.
+元件範本會保存多個索引範本共用的別名、設定或對應。與其在每個範本中重複相同的對應區塊---這會使叢集狀態膨脹，且變更時必須編輯每個複本---不如將其定義為元件範本一次並加以參照。
 
-The following requests define two component templates:
+下列請求會定義兩個元件範本：
 
 ```json
 PUT _component_template/component_template_1
@@ -147,7 +148,7 @@ PUT _component_template/component_template_2
 ```
 {% include copy-curl.html %}
 
-List the component templates in `composed_of` to build an index template from them. OpenSearch applies them in the order you list them, and applies anything in the template's own `template` block last, so the index template's values win:
+在 `composed_of` 中列出元件範本，以從中建立索引範本。OpenSearch 會依您列出的順序套用它們，並最後套用範本本身 `template` 區塊中的任何內容，因此索引範本的值會勝出：
 
 ```json
 PUT _index_template/daily_logs
@@ -186,121 +187,121 @@ PUT _index_template/daily_logs
 ```
 {% include copy-curl.html %}
 
-An index created from this template has the `@timestamp` and `ip_address` fields from the component templates alongside the `timestamp` and `value` fields from the index template.
+從此範本建立的索引會具有來自元件範本的 `@timestamp` 與 `ip_address` 欄位，以及來自索引範本的 `timestamp` 與 `value` 欄位。
 
-A component template takes effect only where an index template lists it in `composed_of`. Creating a component template does not attach it to index templates that already exist; add it to their `composed_of` list yourself. Updating a component template does reach every index template that already references it, but applies only to indexes created after the update. Indexes that already exist keep the configuration they were created with.
+元件範本只會在索引範本於 `composed_of` 中列出它時才生效。建立元件範本不會將其附加到已存在的索引範本；請自行將其加入這些範本的 `composed_of` 清單。更新元件範本確實會影響每個已參照它的索引範本，但只會套用到更新後建立的索引。已存在的索引會保留建立時所用的組態。
 
-## Retrieving and deleting templates
+## 擷取與刪除範本
 
-The following table lists common template requests.
+下表列出常見的範本請求。
 
-| Task | Request |
+| 工作 | 請求 |
 | :--- | :--- |
-| List all templates | `GET _cat/templates` or `GET _index_template` |
-| Get one template | `GET _index_template/daily_logs` |
-| Get templates matching a pattern | `GET _index_template/daily*` |
-| Check whether a template exists | `HEAD _index_template/daily_logs` |
-| Delete a template | `DELETE _index_template/daily_logs` |
+| 列出所有範本 | `GET _cat/templates` 或 `GET _index_template` |
+| 取得一個範本 | `GET _index_template/daily_logs` |
+| 取得符合模式的範本 | `GET _index_template/daily*` |
+| 檢查範本是否存在 | `HEAD _index_template/daily_logs` |
+| 刪除範本 | `DELETE _index_template/daily_logs` |
 
-For all template operations and their parameters, see [Index template APIs]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-templates/).
+如需所有範本操作及其參數，請參閱 [索引範本 API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-templates/)。
 
-## Index templates in OpenSearch Dashboards
+## OpenSearch Dashboards 中的索引範本
 
-To navigate to the **Index Management** page, go to **Management > Index Management** on the top menu. Select **Templates** to list the index templates in your cluster; **Component templates** appears in the navigation once you do.
+若要前往 **Index Management** 頁面，請在頂端功能表上前往 **Management > Index Management**。選取 **Templates** 以列出叢集中的索引範本；您這麼做之後，導覽中會出現 **Component templates**。
 
-The following image shows the **Templates** page.
+下圖顯示 **Templates** 頁面。
 
-![Templates page]({{site.url}}{{site.baseurl}}/images/admin-ui-index/templates-list.png)
+![範本頁面]({{site.url}}{{site.baseurl}}/images/admin-ui-index/templates-list.png)
 
-### Creating an index template
+### 建立索引範本
 
-1. In **Index Management**, select **Templates**, and then select **Create template**.
-1. In **Template settings**, do the following:
+1. 在 **Index Management** 中，選取 **Templates**，然後選取 **Create template**。
+1. 在 **Template settings** 中，執行下列操作：
 
-   1. Enter a name in **Template name**.
-   1. Select a **Template type**. Select **Data streams** if the template backs a [data stream]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/), and then enter the name of the timestamp field in **Time field**. A data stream template requires a timestamp field.
-   1. In **Index patterns**, enter the patterns that the template matches, separated by commas.
-   1. In **Priority**, enter the template priority. The default is `0`, the lowest priority. OpenSearch uses the priority when an index name matches more than one template.
-   1. Select **Simple template** to define the configuration here, or **Component template** to build the template from existing component templates. See [Building a template from component templates](#building-a-template-from-component-templates).
+   1. 在 **Template name** 中輸入名稱。
+   1. 選取 **Template type**。如果範本支援[資料串流]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)，請選取 **Data streams**，然後在 **Time field** 中輸入時間戳記欄位的名稱。資料串流範本需要時間戳記欄位。
+   1. 在 **Index patterns** 中，輸入範本符合的模式，並以逗號分隔。
+   1. 在 **Priority** 中，輸入範本優先順序。預設為 `0`，也就是最低優先順序。當索引名稱符合多個範本時，OpenSearch 會使用優先順序。
+   1. 選取 **Simple template** 以在此定義組態，或選取 **Component template** 以從現有的元件範本建立範本。請參閱[從元件範本建立範本](#building-a-template-from-component-templates)。
 
-1. In **Template definition**, do the following:
+1. 在 **Template definition** 中，執行下列操作：
 
-   1. In **Index alias**, select or enter the aliases to add each new index to.
-   1. In **Index settings**, enter the number of primary shards, the number of replicas, and the refresh interval. The default refresh interval is `1s`. To supply other settings as JSON, expand **Advanced settings**.
-   1. In **Index mapping**, define the fields in your documents. Select **Visual editor** to add fields one at a time, or **JSON editor** to paste an existing mapping.
+   1. 在 **Index alias** 中，選取或輸入要將每個新索引加入的別名。
+   1. 在 **Index settings** 中，輸入主要分片數、副本數以及重新整理間隔。預設重新整理間隔為 `1s`。若要以 JSON 提供其他設定，請展開 **Advanced settings**。
+   1. 在 **Index mapping** 中，定義文件中的欄位。選取 **Visual editor** 以一次新增一個欄位，或選取 **JSON editor** 以貼上現有的對應。
 
-1. Select **Create template**.
+1. 選取 **Create template**。
 
-To define a field in the visual editor, select **Add new field**, enter a name in **Field name**, and select a type from **Field type**. To define an object, select **Add new object**, name it, select the `object` type, and then select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/plus-icon.png" class="inline-icon" alt="plus icon"/>{:/} (plus) icon in **Actions** to add fields inside it.
+若要在視覺化編輯器中定義欄位，請選取 **Add new field**，在 **Field name** 中輸入名稱，並從 **Field type** 選取類型。若要定義物件，請選取 **Add new object**、為其命名、選取 `object` 類型，然後在 **Actions** 中選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/plus-icon.png" class="inline-icon" alt="plus icon"/>{:/} (加號) 圖示，以在其中新增欄位。
 
-### Editing an index template
+### 編輯索引範本
 
-1. In **Index Management**, select **Templates**.
-1. Select the template in the **Template name** column.
-1. On the **Configuration** tab, change the template settings and definition.
-1. To check the result before saving, select **Preview template**, review the configuration, and then select **Close**.
-1. Select **Save**.
+1. 在 **Index Management** 中，選取 **Templates**。
+1. 在 **Template name** 欄中選取該範本。
+1. 在 **Configuration** 索引標籤上，變更範本的設定與定義。
+1. 若要在儲存前檢查結果，請選取 **Preview template**，檢閱組態，然後選取 **Close**。
+1. 選取 **Save**。
 
-Editing a template does not change indexes that were created from it.
+編輯範本不會變更由該範本建立的索引。
 
-### Deleting an index template
+### 刪除索引範本
 
-1. In **Index Management**, select **Templates**.
-1. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/trash-icon.png" class="inline-icon" alt="trashcan icon"/>{:/} (trashcan) icon in the row of the template.
-1. Enter `delete` in the confirmation dialog, and then select **Delete**.
+1. 在 **Index Management** 中，選取 **Templates**。
+1. 在該範本所在的列中，選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/trash-icon.png" class="inline-icon" alt="trashcan icon"/>{:/} (垃圾桶) 圖示。
+1. 在確認對話方塊中輸入 `delete`，然後選取 **Delete**。
 
-### Creating an index from a template
+### 從範本建立索引
 
-An index inherits a template when its name matches one of the template's index patterns:
+當索引的名稱符合範本的其中一個索引模式時，該索引就會繼承此範本：
 
-1. In **Index Management**, select **Indexes**, and then select **Create Index**.
-1. In **Index name**, enter a name that matches one of the template's index patterns. For example, a template with the pattern `flight-data-*` applies to an index named `flight-data-1`.
-1. Optionally, change any alias, setting, or mapping value to override the one from the template. The template values populate the form as soon as focus leaves the **Index name** box, and any value you replace is kept.
-1. Select **Create**.
+1. 在 **Index Management** 中，選取 **Indexes**，然後選取 **Create Index**。
+1. 在 **Index name** 中，輸入符合範本其中一個索引模式的名稱。例如，模式為 `flight-data-*` 的範本會套用至名為 `flight-data-1` 的索引。
+1. 您可以選擇性變更任何別名、設定或對應值，以覆寫範本中的值。只要焦點離開 **Index name** 方塊，範本值就會填入表單，而您取代的任何值都會保留。
+1. 選取 **Create**。
 
-### Creating a component template
+### 建立元件範本
 
-1. In **Index Management**, select **Templates > Component templates**, and then select **Create component template**.
-1. Enter a name in **Name** and, optionally, a description of what the component template configures or when to use it.
-1. In each of the **Index alias**, **Index settings**, and **Index mapping** panels that you want the component template to define, select **Use configuration** and then enter the values. All three panels are optional, so a component template can define one configuration or a complete index.
-1. Select **Create component template**.
+1. 在 **Index Management** 中，選取 **Templates > Component templates**，然後選取 **Create component template**。
+1. 在 **Name** 中輸入名稱，並可選擇性輸入此元件範本所設定的內容或使用時機的描述。
+1. 在您希望元件範本定義的 **Index alias**、**Index settings** 與 **Index mapping** 各面板中，選取 **Use configuration**，然後輸入值。這三個面板皆為選用，因此元件範本可以只定義一項組態，或定義完整的索引。
+1. 選取 **Create component template**。
 
-### Building a template from component templates
+### 以元件範本組合範本
 
-Follow the steps in [Creating an index template](#creating-an-index-template-1), and in **Template settings**, select **Component templates** as the method. Then do the following:
+依照[建立索引範本](#creating-an-index-template-1)中的步驟操作，並在 **Template settings** 中選取 **Component templates** 作為方法。然後執行下列步驟：
 
-1. In the **Component template** panel, select **Associate component template**.
-1. Select the component templates to include, and then select **Associate**.
-1. Optionally, select **Override template definition** and enter alias, settings, or mapping values that take precedence over the ones from the component templates.
-1. Select **Create template**, or **Save** if you are editing an existing template.
+1. 在 **Component template** 面板中，選取 **Associate component template**。
+1. 選取要納入的元件範本，然後選取 **Associate**。
+1. 您可以選擇性選取 **Override template definition**，並輸入優先於元件範本值的別名、設定或對應值。
+1. 選取 **Create template**；若您正在編輯現有範本，則選取 **Save**。
 
-When two component templates define the same value, the one later in the list wins. Avoid associating multiple component templates that configure the same thing, unless you have checked that their values do not conflict.
+當兩個元件範本定義了相同的值時，清單中較後面的範本會勝出。請避免關聯多個設定相同內容的元件範本，除非您已確認它們的值不會衝突。
 
-### Editing a component template
+### 編輯元件範本
 
-1. In **Index Management**, select **Templates > Component templates**.
-1. Select the component template in the **Name** column.
-1. Turn **Use configuration** on or off for **Index alias**, **Index settings**, or **Index mapping**, and add, change, or remove values in the configurations that are turned on.
-1. Select **Apply changes**.
+1. 在 **Index Management** 中，選取 **Templates > Component templates**。
+1. 在 **Name** 欄中選取該元件範本。
+1. 針對 **Index alias**、**Index settings** 或 **Index mapping**，開啟或關閉 **Use configuration**，並在已開啟的組態中新增、變更或移除值。
+1. 選取 **Apply changes**。
 
-The new configuration applies to every index template that uses this component template. Indexes that already exist do not change.
+新的組態會套用至使用此元件範本的每個索引範本。已存在的索引不會變更。
 
-### Deleting a component template
+### 刪除元件範本
 
-1. In **Index Management**, select **Templates > Component templates**.
-1. Select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/trash-icon.png" class="inline-icon" alt="trashcan icon"/>{:/} (trashcan) icon in the row of the component template.
-1. In the confirmation dialog, select **Unlink index templates and delete**, and then select **Apply changes**.
+1. 在 **Index Management** 中，選取 **Templates > Component templates**。
+1. 在該元件範本所在的列中，選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/trash-icon.png" class="inline-icon" alt="trashcan icon"/>{:/} (垃圾桶) 圖示。
+1. 在確認對話方塊中，選取 **Unlink index templates and delete**，然後選取 **Apply changes**。
 
-Deleting a component template removes it from every index template that used it, with the following results:
+刪除元件範本會將它從每個使用它的索引範本中移除，結果如下：
 
-- Values that came from the component template are removed from those index templates.
-- A value that an index template overrode remains in the index template.
-- A value that an index template did not override becomes undefined in the index template.
-- Indexes created from those templates are unchanged.
+- 來自該元件範本的值會從那些索引範本中移除。
+- 索引範本已覆寫的值會保留在索引範本中。
+- 索引範本未覆寫的值會在索引範本中變成未定義。
+- 由那些範本建立的索引不會變更。
 
-## Related documentation
+## 相關文件
 
-- [Index template APIs]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-templates/)
-- [Mappings and field types]({{site.url}}{{site.baseurl}}/field-types/)
-- [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)
-- [Data streams]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)
+- [索引範本 API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-templates/)
+- [對應與欄位類型]({{site.url}}{{site.baseurl}}/field-types/)
+- [索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)
+- [資料串流]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)

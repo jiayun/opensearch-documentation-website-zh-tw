@@ -1,57 +1,58 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Migrate to OpenSearch Serverless NextGen
+title: "遷移至 OpenSearch Serverless NextGen"
 nav_order: 55
 permalink: /migration-assistant/amazon-opensearch-serverless/
 ---
 
-# Migrate to OpenSearch Serverless NextGen
+# 遷移至 OpenSearch Serverless NextGen
 
-If your target is an Amazon OpenSearch Serverless NextGen collection, Serverless NextGen works as a target for every source Migration Assistant supports: Elasticsearch 1.x--2.x, OpenSearch 1.x--2.x, Amazon OpenSearch Service, and Apache Solr 6.x--9.x (backfill only). The migration steps are the same as for any other OpenSearch target. Follow your source's playbook and use the Serverless NextGen target configuration from this page.
+如果您的目標是 Amazon OpenSearch Serverless NextGen 集合，Serverless NextGen 可作為 Migration Assistant 支援之所有來源的目標：Elasticsearch 1.x--2.x、OpenSearch 1.x--2.x、Amazon OpenSearch Service，以及 Apache Solr 6.x--9.x（僅限回填）。遷移步驟與任何其他 OpenSearch 目標相同。請依照來源的教戰手冊操作，並使用本頁的 Serverless NextGen 目標組態。
 
-| Source | Backfill | Capture and Replay |
+| 來源 | 回填 | 擷取與重播 |
 |:-------|:--------:|:------------------:|
-| Self-managed Elasticsearch 5.x--8.x | Yes | Yes |
-| Elasticsearch 1.x--2.x | Yes | No (not supported in this source version) |
-| OpenSearch 1.x--2.x | Yes | Yes |
-| Amazon OpenSearch Service or legacy Elasticsearch Service (5.x+) | Yes | Yes |
-| Apache Solr 6.x--9.x | Yes | No (Solr does not support Capture and Replay) |
+| 自行管理的 Elasticsearch 5.x--8.x | 是 | 是 |
+| Elasticsearch 1.x--2.x | 是 | 否（此來源版本不支援） |
+| OpenSearch 1.x--2.x | 是 | 是 |
+| Amazon OpenSearch Service 或舊版 Elasticsearch Service（5.x+） | 是 | 是 |
+| Apache Solr 6.x--9.x | 是 | 否（Solr 不支援擷取與重播） |
 
-## Collection types
+## 集合類型
 
-Amazon OpenSearch Serverless NextGen supports the following collection types. Migration Assistant auto-detects the collection type and adjusts behavior accordingly.
+Amazon OpenSearch Serverless NextGen 支援下列集合類型。Migration Assistant 會自動偵測集合類型並據以調整行為。
 
-| Collection type | Document IDs |
+| 集合類型 | 文件 ID |
 |:---------------|:------------|
-| `SEARCH` | Preserves source document IDs |
-| `TIMESERIES` | Server-generated IDs (source IDs not preserved). Not supported on NextGen at launch (available with Classic). |
-| `VECTORSEARCH` | Server-generated IDs (source IDs not preserved) |
+| `SEARCH` | 保留來源文件 ID |
+| `TIMESERIES` | 伺服器產生的 ID（不保留來源 ID）。NextGen 推出時不支援（Classic 版本提供）。 |
+| `VECTORSEARCH` | 伺服器產生的 ID（不保留來源 ID） |
 
-If your source data relies on specific document IDs (for example, for lookups or deduplication), use a `SEARCH` collection.
+如果您的來源資料依賴特定的文件 ID（例如用於查閱或去除重複），請使用 `SEARCH` 集合。
 
-When migrating to a `VECTORSEARCH` collection, `knn_vector` field mappings are automatically converted to Faiss HNSW for Serverless NextGen compatibility, and `model_id` references are removed (Amazon OpenSearch Serverless NextGen does not support training APIs).
+遷移至 `VECTORSEARCH` 集合時，`knn_vector` 欄位對應會自動轉換為 Faiss HNSW，以與 Serverless NextGen 相容，且 `model_id` 參照會被移除（Amazon OpenSearch Serverless NextGen 不支援訓練 API）。
 
-## Connecting your collection to Migration Assistant
+## 將您的集合連線至 Migration Assistant
 
-Migration Assistant requires the following configuration to access your Amazon OpenSearch Serverless NextGen collection:
+Migration Assistant 需要下列組態才能存取您的 Amazon OpenSearch Serverless NextGen 集合：
 
-1. The migration IAM role must have `aoss:APIAccessAll` in its IAM policy (the Amazon Elastic Kubernetes Service (EKS) deployment handles this automatically).
-2. The migration IAM role must be listed as a `Principal` in your collection's data access policy (you must configure this).
+1. 遷移 IAM 角色必須在其 IAM 政策中具有 `aoss:APIAccessAll`（Amazon Elastic Kubernetes Service (EKS) 部署會自動處理此項）。
+2. 遷移 IAM 角色必須在您集合的資料存取政策中列為 `Principal`（您必須自行設定此項）。
 
-### Step 1: Find the migration role ARN
+### 步驟 1：尋找遷移角色 ARN
 
-The EKS deployment creates a role named `<eks-cluster-name>-migrations-role`. To find the role, run the following command:
+EKS 部署會建立名為 `<eks-cluster-name>-migrations-role` 的角色。若要尋找該角色，請執行下列命令：
 
 ```bash
 aws iam list-roles --query "Roles[?contains(RoleName,'migrations-role')].{Name:RoleName,Arn:Arn}" --output table
 ```
 {% include copy.html %}
 
-### Step 2: Update your collection's data access policy
+### 步驟 2：更新您集合的資料存取政策
 
-Add the migration role as a principal in your collection's data access policy. The role needs both collection-level and index-level permissions.
+將遷移角色新增為您集合資料存取政策中的主體。該角色同時需要集合層級與索引層級的權限。
 
-Run the following command in the AWS CLI:
+請在 AWS CLI 中執行下列命令：
 
 ```bash
 aws opensearchserverless create-access-policy \
@@ -87,21 +88,21 @@ aws opensearchserverless create-access-policy \
 ```
 {% include copy.html %}
 
-Replace `<COLLECTION-NAME>` with your collection name and `<MIGRATION-ROLE-ARN>` with the ARN from Step 1.
+將 `<COLLECTION-NAME>` 取代為您的集合名稱，並將 `<MIGRATION-ROLE-ARN>` 取代為步驟 1 取得的 ARN。
 
-If your collection already has a data access policy, use `update-access-policy` instead to add the migration role to the existing Principal list. See [Data access control for Amazon OpenSearch Serverless](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-data-access.html) for details.
+如果您的集合已有資料存取政策，請改用 `update-access-policy` 將遷移角色新增至現有的 Principal 清單。詳情請參閱 [Data access control for Amazon OpenSearch Serverless](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-data-access.html)。
 {: .note }
 
-### Step 3: Configure the workflow
+### 步驟 3：設定工作流程
 
-Configure your Amazon OpenSearch Serverless NextGen collection as the target in your workflow configuration. The key difference from a managed OpenSearch Service target is `service: aoss` (instead of `service: es`):
+在工作流程組態中，將您的 Amazon OpenSearch Serverless NextGen 集合設定為目標。與受管理的 OpenSearch Service 目標的主要差異在於 `service: aoss`（而非 `service: es`）：
 
 ```bash
 workflow configure edit
 ```
 {% include copy.html %}
 
-Set the target cluster:
+設定目標叢集：
 
 ```json
 {
@@ -120,12 +121,12 @@ Set the target cluster:
 ```
 {% include copy.html %}
 
-Then follow the steps in [Using the Workflow CLI]({{site.url}}{{site.baseurl}}/migration-assistant/workflow-cli/getting-started/).
+接著依照[使用 Workflow CLI]({{site.url}}{{site.baseurl}}/migration-assistant/workflow-cli/getting-started/) 中的步驟操作。
 
-## Per-source playbooks
+## 各來源的教戰手冊
 
-Choose the playbook for your source type:
+請選擇符合您來源類型的教戰手冊：
 
-- **Self-managed/third-party Elasticsearch or OpenSearch** -- Follow the [Elasticsearch 6.8 → OpenSearch 3.5 playbook]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-elasticsearch-6-8-to-opensearch-3/), then replace the target cluster block with the preceding Serverless NextGen configuration.
-- **Amazon OpenSearch Service/legacy Elasticsearch Service** -- Follow the [Amazon OpenSearch Service → Amazon OpenSearch Serverless NextGen playbook]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-amazon-opensearch-service-to-serverless/).
-- **Apache Solr** -- Follow the [Apache Solr 8.11 → OpenSearch 3.5 playbook]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-solr-8.11-to-opensearch-3/), then replace the target cluster block with the preceding Serverless NextGen configuration.
+- **自行管理/第三方 Elasticsearch 或 OpenSearch** -- 請依照 [Elasticsearch 6.8 → OpenSearch 3.5 教戰手冊]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-elasticsearch-6-8-to-opensearch-3/)，然後將目標叢集區塊取代為前述的 Serverless NextGen 組態。
+- **Amazon OpenSearch Service/舊版 Elasticsearch Service** -- 請依照 [Amazon OpenSearch Service → Amazon OpenSearch Serverless NextGen 教戰手冊]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-amazon-opensearch-service-to-serverless/)。
+- **Apache Solr** -- 請依照 [Apache Solr 8.11 → OpenSearch 3.5 教戰手冊]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-solr-8.11-to-opensearch-3/)，然後將目標叢集區塊取代為前述的 Serverless NextGen 組態。

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: search
 parent: Commands
@@ -8,106 +9,106 @@ nav_order: 41
 
 <!-- vale off -->
 
-# search command
+# search 命令
 
 <!-- vale on -->
 
-The `search` command retrieves documents from the index. The `search` command can only be used as the first command in a PPL query.
+`search` 命令會從索引擷取文件。`search` 命令只能作為 PPL 查詢中的第一個命令使用。
 
-## Syntax
+## 語法
 
-The `search` command has the following syntax:
+`search` 命令具有下列語法：
 
 ```sql
 search source=[<remote-cluster>:]<index> [<search-expression>]
 ```
 
-## Parameters
+## 參數
 
-The `search` command supports the following parameters.
+`search` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<index>` | Required | The index to query. The index name can be prefixed with `<remote-cluster>:` (the remote cluster name) for cross-cluster search. |
-| `<search-expression>` | Optional | A search expression that is converted to an OpenSearch [query string]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/) query. |
+| `<index>` | 必要 | 要查詢的索引。索引名稱可加上 `<remote-cluster>:` (遠端叢集名稱) 前置詞，以進行跨叢集搜尋。 |
+| `<search-expression>` | 選用 | 會轉換為 OpenSearch [查詢字串]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/)查詢的搜尋運算式。 |
   
 
-## Search expression  
+## 搜尋運算式  
 
-The search expression syntax supports:
-* **Full-text search**: `error` or `"error message"` -- Searches the default field configured in the `index.query.default_field` setting (default is `*`, which specifies all fields). For more information, see [Default field configuration](#default-field-configuration). 
-* **Field-value comparisons**: `field=value`, `field!=value`, `field>value`, `field>=value`, `field<value`, or `field<=value`.  
-* **Time modifiers**: `earliest=timeModifier`, `latest=timeModifier` -- Filter results by time range using the implicit `@timestamp` field. For more information, see [Time modifiers](#time-modifiers). 
-* **Boolean operators**: `AND`, `OR`, or `NOT`. Default is `AND`.  
-* **Grouping using parentheses**: `(expression)`.  
-* **The `IN` operator for multiple values**: `field IN (value1, value2, value3)`.  
-* **Wildcards**: `*` (zero or more characters), `?` (exactly one character).  
+搜尋運算式語法支援：
+* **全文搜尋**：`error` 或 `"error message"` -- 搜尋 `index.query.default_field` 設定中所設定的預設欄位 (預設為 `*`，其指定所有欄位)。如需詳細資訊，請參閱[預設欄位組態](#default-field-configuration)。 
+* **欄位值比較**：`field=value`、`field!=value`、`field>value`、`field>=value`、`field<value` 或 `field<=value`。  
+* **時間修飾詞**：`earliest=timeModifier`、`latest=timeModifier` -- 使用隱含的 `@timestamp` 欄位依時間範圍篩選結果。如需詳細資訊，請參閱[時間修飾詞](#time-modifiers)。 
+* **布林運算子**：`AND`、`OR` 或 `NOT`。預設為 `AND`。  
+* **使用括號分組**：`(expression)`。  
+* **用於多個值的 `IN` 運算子**：`field IN (value1, value2, value3)`。  
+* **萬用字元**：`*` (零個或多個字元)、`?` (恰好一個字元)。  
   
-### Full-text search
+### 全文搜尋
 
-Unlike other PPL commands, the `search` command supports both quoted and unquoted strings. Unquoted terms are limited to alphanumeric characters, hyphens, underscores, and wildcards. Any other characters require double quotation marks.
+與其他 PPL 命令不同，`search` 命令同時支援加上引號與未加引號的字串。未加引號的詞彙僅限於英數字元、連字號、底線與萬用字元。任何其他字元都需要加上雙引號。
 
-The following queries show both syntax types:
+下列查詢顯示這兩種語法類型：
 
-* **Unquoted**: `search error`, `search user-123`, `search log_*`
-* **Quoted**: `search "error message"`, `search "user@example.com"`
+* **未加引號**：`search error`、`search user-123`、`search log_*`
+* **加上引號**：`search "error message"`、`search "user@example.com"`
   
-### Field values
+### 欄位值
 
-Field values follow the same quoting rules as search text.
+欄位值遵循與搜尋文字相同的引號規則。
 
-Examples of field value syntax:
+欄位值語法的範例：
 
-* **Unquoted**: `status=active`, `code=ERR-401`
-* **Quoted**: `email="user@example.com"`, `message="server error"`  
+* **未加引號**：`status=active`、`code=ERR-401`
+* **加上引號**：`email="user@example.com"`、`message="server error"`  
   
-### Time modifiers
+### 時間修飾詞
 
-Time modifiers filter search results by a time range using the implicit `@timestamp` field. Time modifiers support the following formats.
+時間修飾詞會使用隱含的 `@timestamp` 欄位，依時間範圍篩選搜尋結果。時間修飾詞支援下列格式。
 
-| Format | Syntax | Description | Example |
+| 格式 | 語法 | 說明 | 範例 |
 | --- | --- | --- | --- |
-| Current time | `now` or `now()` | The current time | `earliest=now` |
-| Absolute time | `MM/dd/yyyy:HH:mm:ss` or `yyyy-MM-dd HH:mm:ss` | A specific date and time | `latest='2024-12-31 23:59:59'` |
-| Unix timestamp | Numeric values | Seconds since the epoch | `latest=1754020060.123` |
-| Relative time | `[(+/-)<time_integer><time_unit>][@<round_to_unit>]` | A time offset relative to the current time. See [Relative time components](#relative-time-components). | `earliest=-7d`, `latest='+1d@d'` |
+| 目前時間 | `now` 或 `now()` | 目前時間 | `earliest=now` |
+| 絕對時間 | `MM/dd/yyyy:HH:mm:ss` 或 `yyyy-MM-dd HH:mm:ss` | 特定日期與時間 | `latest='2024-12-31 23:59:59'` |
+| Unix 時間戳記 | 數值 | 自 epoch 起算的秒數 | `latest=1754020060.123` |
+| 相對時間 | `[(+/-)<time_integer><time_unit>][@<round_to_unit>]` | 相對於目前時間的時間位移。請參閱[相對時間元件](#relative-time-components)。 | `earliest=-7d`、`latest='+1d@d'` |
 
-#### Relative time components
+#### 相對時間元件
 
-Relative time modifiers use multiple components that can be combined. The following table describes each component.
+相對時間修飾詞使用多個可合併的元件。下表說明每個元件。
 
-| Component | Syntax | Description | Examples |
+| 元件 | 語法 | 說明 | 範例 |
 | --- | --- | --- | --- |
-| Time offset | `+` or `-` | Direction: `+` (future) or `-` (past) | `+7d`, `-1h` |
-| Amount of time | `<time_integer><time_unit>` | Numeric value + time unit | `7d`, `1h`, `30m` |
-| Round to unit | `@<round_to_unit>` | Round to nearest unit | `@d` (day), `@h` (hour), `@m` (minute) | 
+| 時間位移 | `+` 或 `-` | 方向：`+` (未來) 或 `-` (過去) | `+7d`、`-1h` |
+| 時間量 | `<time_integer><time_unit>` | 數值 + 時間單位 | `7d`、`1h`、`30m` |
+| 捨入至單位 | `@<round_to_unit>` | 捨入至最接近的單位 | `@d` (日)、`@h` (小時)、`@m` (分鐘) | 
   
-The following are examples of common time modifier patterns:
+下列是常見時間修飾詞模式的範例：
 
-* `earliest=now` -- Start from the current time.
-* `latest='2024-12-31 23:59:59'` -- End at a specific date and time.
-* `earliest=-7d` -- Start from 7 days ago.
-* `latest='+1d@d'` -- End at the start of tomorrow.
-* `earliest='-1month@month'` -- Start from the beginning of the previous month.
-* `latest=1754020061` -- End at the Unix timestamp `1754020061` (August 1, 2025, 03:47:41 UTC).
+* `earliest=now` -- 從目前時間開始。
+* `latest='2024-12-31 23:59:59'` -- 結束於特定日期與時間。
+* `earliest=-7d` -- 從 7 天前開始。
+* `latest='+1d@d'` -- 結束於明天的開始時間。
+* `earliest='-1month@month'` -- 從上個月的開始時間開始。
+* `latest=1754020061` -- 結束於 Unix 時間戳記 `1754020061` (2025 年 8 月 1 日 03:47:41 UTC)。
 
-The following considerations apply when using time modifiers in the `search` command:
+在 `search` 命令中使用時間修飾詞時，適用下列考量事項：
 
-* **Column name conflicts**: If your data contains columns named `earliest` or `latest`, use backticks to access them as regular fields (for example, `` `earliest`="value"``) to avoid conflicts with time modifier syntax.  
-* **Time round syntax**: Time modifiers with chained time offsets must be wrapped in quotation marks (for example, `latest='+1d@month-10h'`) for proper query parsing.  
+* **欄位名稱衝突**：如果您的資料包含名為 `earliest` 或 `latest` 的欄位，請使用反引號將它們作為一般欄位存取 (例如 `` `earliest`="value"``)，以避免與時間修飾詞語法衝突。  
+* **時間捨入語法**：具有連鎖時間位移的時間修飾詞必須以引號括住 (例如 `latest='+1d@month-10h'`)，才能正確剖析查詢。  
 
-## Default field configuration  
+## 預設欄位組態  
 
-When a search is performed without specifying a field, it uses the default field configured by the `index.query.default_field` index setting. By default, this is set to `*`, which searches all fields.
+在未指定欄位的情況下執行搜尋時，會使用 `index.query.default_field` 索引設定所設定的預設欄位。根據預設，此設定為 `*`，其會搜尋所有欄位。
 
-To retrieve the default field setting, use the following request:
+若要擷取預設欄位設定，請使用下列請求：
 
 ```json
 GET /accounts/_settings/index.query.default_field
 ```
 {% include copy-curl.html %}
 
-To modify the default field setting, use the following request:
+若要修改預設欄位設定，請使用下列請求：
 
 ```json
 PUT /accounts/_settings
@@ -117,23 +118,23 @@ PUT /accounts/_settings
 ```
 {% include copy-curl.html %}
 
-## Search behavior by field type
+## 依欄位類型區分的搜尋行為
 
-Different field types have specific search capabilities and limitations. The following table summarizes how search expressions work with each field type.
+不同的欄位類型具有特定的搜尋功能與限制。下表摘要說明搜尋運算式如何與各欄位類型搭配運作。
 
-| Field type | Supported operations | Example | Limitations |
+| 欄位類型 | 支援的操作 | 範例 | 限制 |
 | --- | --- | --- | --- |
-| Text | Full-text search, phrase search | `search message="error occurred" source=logs` | Wildcards apply to terms after analysis, not the entire field value |
-| Keyword | Exact matching, wildcard patterns | `search status="ACTIVE" source=logs` | No text analysis; matching is case sensitive |
-| Numeric | Range queries, exact matching, `IN` operator | `search age>=18 AND balance<50000 source=accounts` | No wildcard or text search support |
-| Date | Range queries, exact matching, `IN` operator | `search timestamp>="2024-01-01" source=logs` | Must follow index mapping date format; wildcards not supported |
-| Boolean | Exact matching, `true` and `false` values, `IN` operator | `search active=true source=users` | No wildcards or range queries |
-| IP | Exact matching, CIDR notation | `search client_ip="192.168.1.0/24" source=logs` | Partial IP wildcard matching not supported. For wildcard search, use multi-field with keyword: `search ip_address.keyword='1*' source=logs` or WHERE clause: `source=logs | where cast(ip_address as string) like '1%'` |
+| 文字 | 全文搜尋、片語搜尋 | `search message="error occurred" source=logs` | 萬用字元套用於分析後的詞元，而非整個欄位值 |
+| 關鍵字 | 完全相符、萬用字元模式 | `search status="ACTIVE" source=logs` | 無文字分析；比對區分大小寫 |
+| 數值 | 範圍查詢、完全相符、`IN` 運算子 | `search age>=18 AND balance<50000 source=accounts` | 不支援萬用字元或文字搜尋 |
+| 日期 | 範圍查詢、完全相符、`IN` 運算子 | `search timestamp>="2024-01-01" source=logs` | 必須遵循索引對應的日期格式；不支援萬用字元 |
+| 布林值 | 完全相符、`true` 與 `false` 值、`IN` 運算子 | `search active=true source=users` | 不支援萬用字元或範圍查詢 |
+| IP | 完全相符、CIDR 標記法 | `search client_ip="192.168.1.0/24" source=logs` | 不支援部分 IP 萬用字元比對。如需萬用字元搜尋，請使用 keyword 的多欄位：`search ip_address.keyword='1*' source=logs` 或 WHERE 子句：`source=logs | where cast(ip_address as string) like '1%'` |
 
-Consider the following performance optimizations when working with different field types:
+處理不同欄位類型時，請考量下列效能最佳化：
 
-* Each field type has specific search capabilities and limitations. Choosing an inappropriate field type during ingestion can negatively affect performance and query accuracy.
-* For wildcard searches on non-keyword fields, create a `keyword` subfield to improve performance. For example, for wildcard searches on a `message` field of type `text`, add a `message.keyword` field.
+* 每個欄位類型都有特定的搜尋功能與限制。在匯入期間選擇不適當的欄位類型，可能會對效能與查詢準確度造成負面影響。
+* 若要在非 keyword 欄位上進行萬用字元搜尋，請建立 `keyword` 子欄位以改善效能。例如，若要在類型為 `text` 的 `message` 欄位上進行萬用字元搜尋，請新增 `message.keyword` 欄位。
 
 <!-- temporarily commented out because the admin section is not ported
 ## Cross-cluster search  
@@ -141,9 +142,9 @@ Consider the following performance optimizations when working with different fie
 Cross-cluster search lets any node in a cluster execute search requests against other clusters. Refer to [Cross-cluster search]({{site.url}}{{site.baseurl}}/search-plugins/cross-cluster-search/) for configuration.
 -->
 
-## Example 1: Fetching all data
+## 範例 1：擷取所有資料
 
-Retrieve all documents from an index:
+從索引擷取所有文件：
 
 ```sql
 source=otellogs
@@ -152,7 +153,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -165,9 +166,9 @@ The query returns the following results:
 <!-- vale on -->
 
 
-## Example 2: Searching text
+## 範例 2：搜尋文字
 
-For basic text search, use an unquoted single term:
+若要進行基本文字搜尋，請使用不加引號的單一詞彙：
   
 ```sql
 search ERROR source=otellogs
@@ -178,7 +179,7 @@ search ERROR source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -188,7 +189,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-Phrase search requires quotation marks for multi-word exact matching:
+片語搜尋需要使用引號，才能對多個單字進行精確比對：
   
 ```sql
 search "Payment failed" source=otellogs
@@ -197,7 +198,7 @@ search "Payment failed" source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -207,7 +208,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-Multiple search terms (unquoted string literals) are automatically combined using the `AND` operator:
+多個搜尋詞彙（不加引號的字串字面值）會自動使用 `AND` 運算子合併：
   
 ```sql
 search connection timeout source=otellogs
@@ -216,7 +217,7 @@ search connection timeout source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -226,12 +227,12 @@ The query returns the following results:
 
 <!-- vale on -->
   
-`search connection timeout` is equivalent to `search connection AND timeout`. 
+`search connection timeout` 等同於 `search connection AND timeout`。
 {: .note}
 
-### Combined phrase and Boolean search
+### 結合片語與布林搜尋
 
-Combine quoted phrases with Boolean operators for more precise searches:
+將加引號的片語與布林運算子結合，可進行更精確的搜尋：
 
 ```sql
 search "connection timeout" OR "heap space" source=otellogs
@@ -241,7 +242,7 @@ search "connection timeout" OR "heap space" source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -253,13 +254,13 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Boolean logic and operator precedence  
+## 範例 3：布林邏輯與運算子優先順序  
 
-The following queries demonstrate Boolean operators and precedence.
+下列查詢示範布林運算子及其優先順序。
 
-### Boolean operators
+### 布林運算子
 
-Use `OR` to match documents containing any of the specified conditions:
+使用 `OR` 比對包含任一指定條件的文件：
 
 ```sql
 search severityText="ERROR" OR severityText="WARN" source=otellogs
@@ -269,7 +270,7 @@ search severityText="ERROR" OR severityText="WARN" source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -289,7 +290,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-Combine conditions with `AND` to require all criteria to match:
+使用 `AND` 結合條件，要求所有條件都必須符合：
 
 ```sql
 search severityText="INFO" AND `resource.attributes.service.name`="cart-service" source=otellogs
@@ -299,7 +300,7 @@ search severityText="INFO" AND `resource.attributes.service.name`="cart-service"
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -309,15 +310,15 @@ The query returns the following results:
 
 <!-- vale on -->
   
-### Operator precedence
+### 運算子優先順序
 
-The operators are evaluated using the following precedence:
+運算子會依照下列優先順序求值：
 
 ```
 Parentheses > NOT > OR > AND
 ```
 
-The following query demonstrates operator precedence:
+下列查詢示範運算子優先順序：
 
 ```sql
 search severityText="ERROR" OR severityText="WARN" AND severityNumber>15 source=otellogs
@@ -327,7 +328,7 @@ search severityText="ERROR" OR severityText="WARN" AND severityNumber>15 source=
 ```
 {% include copy.html %}
 
-The preceding expression is evaluated as `(severityText="ERROR" OR severityText="WARN") AND severityNumber>15`. The query returns the following results:
+前述運算式會被求值為 `(severityText="ERROR" OR severityText="WARN") AND severityNumber>15`。查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -338,13 +339,13 @@ The preceding expression is evaluated as `(severityText="ERROR" OR severityText=
 
 <!-- vale on -->
 
-## Example 4: Comparing NOT with != semantics
+## 範例 4：比較 NOT 與 != 的語意
 
-Both `!=` and `NOT` operators find documents in which the field value is not equal to the specified value. However, the `!=` operator excludes documents containing null or missing fields, while the `NOT` operator includes them. The following queries show this difference using `instrumentationScope.name`, which is null for most records.
+`!=` 與 `NOT` 運算子都能找出欄位值不等於指定值的文件。不過，`!=` 運算子會排除包含 null 或缺少欄位的文件，而 `NOT` 運算子則會包含這些文件。下列查詢使用 `instrumentationScope.name`（在大多數記錄中為 null）來說明這項差異。
 
-**!= operator**
+**!= 運算子**
 
-Excludes null values---only returns rows where the field exists and is not the specified value:
+排除 null 值---只傳回欄位存在且不等於指定值的資料列：
 
 ```sql
 search instrumentationScope.name!="@opentelemetry/instrumentation-http" source=otellogs
@@ -353,7 +354,7 @@ search instrumentationScope.name!="@opentelemetry/instrumentation-http" source=o
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -363,9 +364,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-**`NOT` operator**
+**`NOT` 運算子**
 
-Includes null values---returns rows where the field is null or not the specified value:
+包含 null 值---傳回欄位為 null 或不等於指定值的資料列：
 
 ```sql
 search NOT instrumentationScope.name="@opentelemetry/instrumentation-http" source=otellogs
@@ -375,7 +376,7 @@ search NOT instrumentationScope.name="@opentelemetry/instrumentation-http" sourc
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -389,9 +390,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 5: Querying ranges
+## 範例 5：查詢範圍
 
-Use comparison operators (`>,` `<,` `>=` and `<=`) to filter numeric and date fields within specific ranges. Range queries are particularly useful for filtering by age, price, timestamps, or any numeric metrics:
+使用比較運算子（`>,` `<,` `>=` 與 `<=`）篩選特定範圍內的數值與日期欄位。範圍查詢特別適合用來依年齡、價格、時間戳記或任何數值指標進行篩選：
 
 ```sql
 search severityNumber>13 AND severityNumber<=21 source=otellogs
@@ -402,7 +403,7 @@ search severityNumber>13 AND severityNumber<=21 source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -416,11 +417,11 @@ The query returns the following results:
 
 
 
-## Example 6: Using wildcards
+## 範例 6：使用萬用字元
 
-The following queries demonstrate wildcard pattern matching. In wildcard patterns, `*` matches zero or more characters, while `?` matches exactly one character.
+以下查詢示範萬用字元模式比對。在萬用字元模式中，`*` 比對零個或多個字元，而 `?` 則比對恰好一個字元。
 
-Use `*` to match any number of characters at the end of a term:
+使用 `*` 比對詞彙結尾的任意數量字元：
 
 ```sql
 search severityText=ERR* source=otellogs
@@ -431,7 +432,7 @@ search severityText=ERR* source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -443,7 +444,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-Wildcard searches also work within text fields to find partial matches:
+萬用字元搜尋也可用於文字欄位內，以尋找部分相符的內容：
 
 ```sql
 search body=connection* source=otellogs
@@ -454,7 +455,7 @@ search body=connection* source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -465,7 +466,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-Use `?` to match exactly one character in specific positions:
+使用 `?` 比對特定位置的恰好一個字元：
 
 ```sql
 search severityText="ERR?R" source=otellogs
@@ -475,7 +476,7 @@ search severityText="ERR?R" source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -488,14 +489,14 @@ The query returns the following results:
 <!-- vale on -->
 
 
-## Example 7: Wildcard patterns in service name searches
+## 範例 7：服務名稱搜尋中的萬用字元模式
 
-When searching in text or keyword fields, wildcards enable partial matching, which is useful when you only know part of a service name. Wildcards work best on keyword fields, for which they match the exact value using patterns. Using wildcards on text fields may produce unexpected results because they apply to individual tokens after analysis, not the entire field value. Wildcards in keyword fields are case sensitive unless normalized at indexing.
+在 text 或 keyword 欄位中搜尋時，萬用字元可啟用部分相符，當您只知道服務名稱的一部分時相當實用。萬用字元在 keyword 欄位上效果最佳，因為它們會使用模式比對確切值。在 text 欄位上使用萬用字元可能會產生非預期的結果，因為它們會套用至分析後的個別詞元，而非整個欄位值。除非在編製索引時進行正規化，否則 keyword 欄位中的萬用字元會區分大小寫。
 
-Leading wildcards (for example, `*-service`) can decrease query speed compared to trailing wildcards.
+前置萬用字元（例如 `*-service`）相較於尾端萬用字元，可能會降低查詢速度。
 {: .note}
 
-Find logs for services when you only know the beginning of the service name:
+當您只知道服務名稱的開頭時，尋找服務的記錄檔：
 
 ```sql
 search `resource.attributes.service.name`=payment* source=otellogs
@@ -505,7 +506,7 @@ search `resource.attributes.service.name`=payment* source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -516,7 +517,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-Combine wildcard patterns with other conditions for more precise filtering:
+將萬用字元模式與其他條件結合，以進行更精確的篩選：
 
 ```sql
 search firstname=A* AND age>30 source=accounts
@@ -524,7 +525,7 @@ search firstname=A* AND age>30 source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -534,11 +535,11 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 8: Field value matching  
+## 範例 8：欄位值比對  
 
-The `IN` operator efficiently checks whether a field matches any value in a list, providing a more concise and more performant alternative to chaining multiple `OR` conditions on the same field.
+`IN` 運算子可有效率地檢查欄位是否符合清單中的任何值，提供比在同一欄位上串接多個 `OR` 條件更簡潔且效能更好的替代方案。
 
-Check whether a field matches any value from a predefined list:
+檢查欄位是否符合預先定義清單中的任何值：
 
 ```sql
 search severityText IN ("ERROR", "WARN") source=otellogs
@@ -547,7 +548,7 @@ search severityText IN ("ERROR", "WARN") source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -568,7 +569,7 @@ The query returns the following results:
 <!-- vale on -->
 
 
-Filter logs by `severityNumber` to find errors with a specific numeric severity level:
+依 `severityNumber` 篩選記錄檔，以尋找具有特定數值嚴重性層級的錯誤：
 
 ```sql
 search severityNumber=17 source=otellogs
@@ -577,7 +578,7 @@ search severityNumber=17 source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -593,9 +594,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 9: Using complex expressions  
+## 範例 9：使用複雜運算式  
 
-To create sophisticated search queries, combine multiple conditions using Boolean operators and parentheses:
+若要建立精密的搜尋查詢，請使用布林運算子和括號結合多個條件：
   
 ```sql
 search (severityText="ERROR" OR severityText="WARN") AND severityNumber>13 source=otellogs
@@ -606,7 +607,7 @@ search (severityText="ERROR" OR severityText="WARN") AND severityNumber>13 sourc
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -618,13 +619,13 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 10: Using time modifiers  
+## 範例 10：使用時間修飾詞  
 
-Time modifiers filter search results by time range using the implicit `@timestamp` field. They support various time formats for precise temporal filtering.
+時間修飾詞會使用隱含的 `@timestamp` 欄位，依時間範圍篩選搜尋結果。它們支援各種時間格式，以進行精確的時間篩選。
 
-### Absolute time filtering
+### 絕對時間篩選
 
-Filter logs within a specific time window using absolute timestamps:
+使用絕對時間戳記，篩選特定時間範圍內的記錄檔：
 
 ```sql
 search earliest='2024-02-01 09:13:00' latest='2024-02-01 09:16:00' source=otellogs
@@ -634,7 +635,7 @@ search earliest='2024-02-01 09:13:00' latest='2024-02-01 09:16:00' source=otello
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -647,9 +648,9 @@ The query returns the following results:
 
 <!-- vale on -->
   
-### Relative time filtering
+### 相對時間篩選
 
-Filter logs using relative time expressions, such as those that occurred before 30 seconds ago:
+使用相對時間運算式篩選記錄檔，例如 30 秒前之前發生的記錄檔：
 
 ```sql
 search latest=-30s source=otellogs
@@ -660,7 +661,7 @@ search latest=-30s source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -672,9 +673,9 @@ The query returns the following results:
 
 <!-- vale on -->
   
-### Time rounding
+### 時間捨入
 
-Use time rounding expressions to filter events relative to time boundaries, such as those before the start of the current minute:
+使用時間捨入運算式，依時間邊界篩選事件，例如目前分鐘開始之前的事件：
 
 ```sql
 search latest='@m' source=otellogs
@@ -685,7 +686,7 @@ search latest='@m' source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -696,9 +697,9 @@ The query returns the following results:
 
 <!-- vale on -->
   
-### Unix timestamp filtering
+### Unix 時間戳記篩選
 
-Filter logs using Unix epoch timestamps for precise time ranges:
+使用 Unix 紀元時間戳記篩選記錄檔，以指定精確的時間範圍：
 
 ```sql
 search earliest=1706778600 latest=1706778960 source=otellogs
@@ -708,7 +709,7 @@ search earliest=1706778600 latest=1706778960 source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -725,23 +726,23 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Escaping special characters
+## 特殊字元的跳脫處理
 
-Special characters fall into two categories, depending on whether they must always be escaped or only when you want to search for their literal value:
+特殊字元分為兩類，取決於它們是否必須一律跳脫，或僅在您想搜尋其字面值時才需要跳脫：
 
-- The following characters must always be escaped to be interpreted literally:
-    * **Backslash (`\`)**: Escape as `\\`.
-    * **Quotation mark (`"`)**: Escape as `\"` when used inside a quoted string.
+- 下列字元必須一律跳脫，才能按字面值解讀：
+    * **反斜線（`\`）**：跳脫為 `\\`。
+    * **引號（`"`）**：在以引號括住的字串內使用時，跳脫為 `\"`。
 
-- These characters act as wildcards by default and should be escaped only when you want to match them literally:
-    * **Asterisk (`*`)**: Use as `*` for wildcard matching; escape as `\\*` for a literal asterisk.
-    * **Question mark (`?`)**: Use as `?` for wildcard matching; escape as `\\?` for a literal question mark.
+- 這些字元預設作為萬用字元，只有在您想比對其字面值時才應跳脫：
+    * **星號（`*`）**：使用 `*` 進行萬用字元比對；若要比對星號的字面值，則跳脫為 `\\*`。
+    * **問號（`?`）**：使用 `?` 進行萬用字元比對；若要比對問號的字面值，則跳脫為 `\\?`。
 
-The following table compares wildcard and literal character matching.
+下表比較萬用字元比對與字元字面值比對。
 
-| Intent | PPL syntax | Result |
+| 目的 | PPL 語法 | 結果 |
 | ---| --- | --- |
-| Wildcard search | `field=user*` | Matches `user`, `user123`, `userABC` |
-| Literal `user*` | `field="user\\*"` | Matches only `user*` |
-| Wildcard search | `field=log?` | Matches `log1`, `logA`, `logs` |
-| Literal `log?` | `field="log\\?"`  | Matches only `log?`|
+| 萬用字元搜尋 | `field=user*` | 比對 `user`、`user123`、`userABC` |
+| 字面值 `user*` | `field="user\\*"` | 僅比對 `user*` |
+| 萬用字元搜尋 | `field=log?` | 比對 `log1`、`logA`、`logs` |
+| 字面值 `log?` | `field="log\\?"`  | 僅比對 `log?`|

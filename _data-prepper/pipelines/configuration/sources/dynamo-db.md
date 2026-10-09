@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: DynamoDB
 parent: Sources
@@ -6,18 +7,18 @@ grand_parent: Pipelines
 nav_order: 20
 ---
 
-# DynamoDB source
+# DynamoDB 來源
 
-The `dynamodb` source enables change data capture (CDC) on [Amazon DynamoDB](https://aws.amazon.com/dynamodb/) tables. It can receive table events, such as `create`, `update`, or `delete`, using DynamoDB streams and supports initial snapshots using [point-in-time recovery (PITR)](https://aws.amazon.com/dynamodb/pitr/).
+`dynamodb` 來源可在 [Amazon DynamoDB](https://aws.amazon.com/dynamodb/) 資料表上啟用異動資料擷取 (CDC)。它可以使用 DynamoDB 串流接收資料表事件，例如 `create`、`update` 或 `delete`，並支援使用[時間點復原 (PITR)](https://aws.amazon.com/dynamodb/pitr/) 的初始快照。
 
-The source includes two ingestion options to stream DynamoDB events:
+此來源包含兩個用於串流 DynamoDB 事件的匯入選項：
 
-1. A _full initial snapshot_ using [PITR](https://aws.amazon.com/dynamodb/pitr/) gets an initial snapshot of the current state of the DynamoDB table. This requires the PITR Snapshots and DyanmoDB option enabled on your DynamoDB table.
-2.  Stream events from DynamoDB streams without full initial snapshots. This is useful if you already have a snapshot mechanism within your pipelines. This requires that the DynamoDB stream option is enabled on the DynamoDB table.
+1. 使用 [PITR](https://aws.amazon.com/dynamodb/pitr/) 的_完整初始快照_會取得 DynamoDB 資料表目前狀態的初始快照。這需要在您的 DynamoDB 資料表上啟用 PITR Snapshots 與 DynamoDB 選項。
+2.  從 DynamoDB 串流串流事件，而不進行完整初始快照。如果您已在管線中具備快照機制，這會很實用。這需要在 DynamoDB 資料表上啟用 DynamoDB 串流選項。
 
-## Usage
+## 使用方式
 
-The following example pipeline specifies DynamoDB as a source. It ingests data from a DyanmoDB table named `table-a` through a PITR snapshot. It also indicates the `start_position`, which tells the pipeline how to read DynamoDB stream events:
+下列範例管線將 DynamoDB 指定為來源。它會透過 PITR 快照，從名為 `table-a` 的 DynamoDB 資料表匯入資料。它也會指出 `start_position`，以告知管線如何讀取 DynamoDB 串流事件：
 
 ```yaml
 version: "2"
@@ -37,81 +38,81 @@ cdc-pipeline:
         sts_role_arn: "arn:aws:iam::123456789012:role/my-iam-role"
 ```
 
-## Configuration options
+## 組態選項
 
-The following tables describe the configuration options for the `dynamodb` source.
+下列表格說明 `dynamodb` 來源的組態選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`aws` | Yes | AWS | The AWS configuration. See [`aws`](#aws) for more information.
-`acknowledgments` | No | Boolean  | When `true`, enables `s3` sources to receive [end-to-end acknowledgments]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/pipelines#end-to-end-acknowledgments) when events are received by OpenSearch sinks.
-`shared_acknowledgement_timeout` | No | Duration | The amount of time that elapses before the data read from a DynamoDB stream expires when used with acknowledgements. Default is 10 minutes.
-`s3_data_file_acknowledgment_timeout` | No | Duration | The amount of time that elapses before the data read from a DynamoDB export expires when used with acknowledgments. Default is 5 minutes.
-`tables` | Yes | List | The configuration for the DynamoDB table. See [tables](#tables) for more information.
+`aws` | 是 | AWS | AWS 組態。如需更多資訊，請參閱[`aws`](#aws)。
+`acknowledgments` | 否 | 布林值  | 當 `true` 時，啟用 `s3` 來源，以便在 OpenSearch 接收器收到事件時接收[端對端確認]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/pipelines#end-to-end-acknowledgments)。
+`shared_acknowledgement_timeout` | 否 | 持續時間 | 搭配確認使用時，從 DynamoDB 串流讀取的資料到期前所經過的時間量。預設為 10 分鐘。
+`s3_data_file_acknowledgment_timeout` | 否 | 持續時間 | 搭配確認使用時，從 DynamoDB 匯出讀取的資料到期前所經過的時間量。預設為 5 分鐘。
+`tables` | 是 | 清單 | DynamoDB 資料表的組態。如需更多資訊，請參閱[tables](#tables)。
 
 <!-- vale off -->
 ### aws
 <!-- vale on -->
 
-Use the following options in the AWS configuration.
+在 AWS 組態中使用下列選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`region` | No | String | The AWS Region to use for credentials. Defaults to [standard SDK behavior to determine the Region](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html).
-`sts_role_arn` | No | String | The AWS Security Token Service (AWS STS) role to assume for requests to Amazon Simple Queue Service (Amazon SQS) and Amazon Simple Storage Service (Amazon S3). Defaults to `null`, which will use the [standard SDK behavior for credentials](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html).
-`aws_sts_header_overrides` | No | Map | A map of header overrides that the AWS Identity and Access Management (IAM) role assumes for the sink plugin.
+`region` | 否 | 字串 | 用於憑證的 AWS Region。預設為[決定 Region 的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html)。
+`sts_role_arn` | 否 | 字串 | 對 Amazon Simple Queue Service (Amazon SQS) 與 Amazon Simple Storage Service (Amazon S3) 的請求所要擔任的 AWS Security Token Service (AWS STS) 角色。預設為 `null`，其將使用[憑證的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html)。
+`aws_sts_header_overrides` | 否 | 對應表 | 接收器外掛程式擔任 AWS Identity and Access Management (IAM) 角色時使用的標頭覆寫對應。
 
 
 <!-- vale off -->
 ### tables
 <!-- vale on -->
 
-Use the following options with the `tables` configuration.
+搭配 `tables` 組態使用下列選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`table_arn` | Yes | String | The Amazon Resource Name (ARN) of the source DynamoDB table.
-`export` | No | Export | Determines how to export DynamoDB events. For more information, see [export](#export-options).
-`stream` | No | Stream | Determines how the pipeline reads data from the DynamoDB table. For more information, see [stream](#stream-option).
+`table_arn` | 是 | 字串 | 來源 DynamoDB 資料表的 Amazon Resource Name (ARN)。
+`export` | 否 | 匯出 | 決定如何匯出 DynamoDB 事件。如需更多資訊，請參閱[export](#export-options)。
+`stream` | 否 | 串流 | 決定管線如何從 DynamoDB 資料表讀取資料。如需更多資訊，請參閱[stream](#stream-option)。
 
-#### Export options
+#### 匯出選項
 
-The following options let you customize the export destination for DynamoDB events.
+下列選項可讓您自訂 DynamoDB 事件的匯出目的地。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`s3_bucket` | Yes | String | The destination bucket that stores the exported data files.
-`s3_prefix` | No | String | The custom prefix for the S3 bucket.
-`s3_sse_kms_key_id` | No | String |  An AWS Key Management Service (AWS KMS) key that encrypts the export data files. The `key_id` is the ARN of the KMS key, for example, `arn:aws:kms:us-west-2:123456789012:key/0a4bc22f-bb96-4ad4-80ca-63b12b3ec147`.
-`s3_region` | No | String | The Region for the S3 bucket.
+`s3_bucket` | 是 | 字串 | 儲存匯出資料檔案的目的地儲存貯體。
+`s3_prefix` | 否 | 字串 | S3 儲存貯體的自訂前置詞。
+`s3_sse_kms_key_id` | 否 | 字串 |  用於加密匯出資料檔案的 AWS Key Management Service (AWS KMS) 金鑰。`key_id` 是 KMS 金鑰的 ARN，例如 `arn:aws:kms:us-west-2:123456789012:key/0a4bc22f-bb96-4ad4-80ca-63b12b3ec147`。
+`s3_region` | 否 | 字串 | S3 儲存貯體的 Region。
 
-#### Stream option
+#### 串流選項
 
-The following option lets you customize how the pipeline reads events from the DynamoDB table.
+下列選項可讓您自訂管線如何從 DynamoDB 資料表讀取事件。
 
-Option | Required | Type   | Description
+選項 | 必要 | 類型   | 說明
 :--- | :--- | :--- | :---
-`start_position` | No | String | The position from where the source starts reading stream events when the DynamoDB stream option is enabled. `LATEST` starts reading events from the most recent stream record. 
-`view_on_remove` | No | Enum | The [stream record view](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.html) to use for REMOVE events from DynamoDB streams. Must be either `NEW_IMAGE` or `OLD_IMAGE` . Defaults to `NEW_IMAGE`. If the `OLD_IMAGE` option is used and the old image can not be found, the source will find the `NEW_IMAGE`.
+`start_position` | 否 | 字串 | 啟用 DynamoDB 串流選項時，來源開始讀取串流事件的位置。`LATEST` 會從最新的串流記錄開始讀取事件。 
+`view_on_remove` | 否 | 列舉 | 用於 DynamoDB 串流中 REMOVE 事件的[串流記錄檢視](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.html)。必須是 `NEW_IMAGE` 或 `OLD_IMAGE`。預設為 `NEW_IMAGE`。如果使用 `OLD_IMAGE` 選項且找不到舊映像，來源會尋找 `NEW_IMAGE`。
 
-## Exposed metadata attributes
+## 公開的中繼資料屬性
 
-The following metadata will be added to each event that is processed by the `dynamodb` source. These metadata attributes can be accessed using the [expression syntax `getMetadata` function]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/get-metadata/).
+下列中繼資料將新增至 `dynamodb` 來源所處理的每個事件。這些中繼資料屬性可使用[運算式語法 `getMetadata` 函式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/get-metadata/)存取。
 
-* `primary_key`: The primary key of the DynamoDB item. For tables that only contain a partition key, this value provides the partition key. For tables that contain both a partition and sort key, the `primary_key` attribute will be equal to the partition and sort key, separated by a `|`, for example, `partition_key|sort_key`.
-* `partition_key`: The partition key of the DynamoDB item.
-* `sort_key`: The sort key of the DynamoDB item. This will be null if the table does not contain a sort key.
-* `dynamodb_timestamp`: The timestamp of the DynamoDB item. This will be the export time for export items and the DynamoDB stream event time for stream items. This timestamp is used by sinks to emit an `EndtoEndLatency` metric for DynamoDB stream events that tracks the latency between a change occurring in the DynamoDB table and that change being applied to the sink.
-* `document_version`: Uses the `dynamodb_timestamp` to modify break ties between stream items that are received in the same second. Recommend for use with the `opensearch` sink's `document_version` setting.
-* `opensearch_action`: A default value for mapping DynamoDB event actions to OpenSearch actions. This action will be `index` for export items, and `INSERT` or `MODIFY` for stream events, and `REMOVE` stream events when the OpenSearch action is `delete`.
-* `dynamodb_event_name`: The exact event type for the item. Will be `null` for export items and either `INSERT`, `MODIFY`, or `REMOVE` for stream events.
-* `table_name`: The name of the DynamoDB table that an event came from.
-* `ttl_delete`: A Boolean value indicating whether a `REMOVE` event was triggered by DynamoDB Time-To-Live (TTL). The `ttl_delete` attribute is `true` for TTL-based deletions and `false` for all other events. This metadata can be used with conditional routing or filtering to handle TTL deletions differently from manual deletions.
+* `primary_key`：DynamoDB 項目的主索引鍵。對於僅包含分割區索引鍵的資料表，此值會提供分割區索引鍵。對於同時包含分割區索引鍵與排序索引鍵的資料表，`primary_key` 屬性將等於分割區索引鍵與排序索引鍵，並以 `|` 分隔，例如 `partition_key|sort_key`。
+* `partition_key`：DynamoDB 項目的分割區索引鍵。
+* `sort_key`：DynamoDB 項目的排序索引鍵。如果資料表不包含排序索引鍵，這會是 null。
+* `dynamodb_timestamp`：DynamoDB 項目的時間戳記。對於匯出項目，這會是匯出時間；對於串流項目，這會是 DynamoDB 串流事件時間。接收器會使用此時間戳記，為 DynamoDB 串流事件發出 `EndtoEndLatency` 指標，以追蹤 DynamoDB 資料表中發生變更與該變更套用至接收器之間的延遲。
+* `document_version`：使用 `dynamodb_timestamp` 調整同一秒內收到的串流項目在時間戳記相同時的排序判定。建議搭配 `opensearch` 接收器的 `document_version` 設定使用。
+* `opensearch_action`：將 DynamoDB 事件動作對應至 OpenSearch 動作的預設值。對於匯出項目，此動作會是 `index`；對於串流事件，則會是 `INSERT` 或 `MODIFY`；而當 OpenSearch 動作為 `delete` 時，則為 `REMOVE` 串流事件。
+* `dynamodb_event_name`：項目的確切事件類型。對於匯出項目會是 `null`，對於串流事件則會是 `INSERT`、`MODIFY` 或 `REMOVE`。
+* `table_name`：事件來源的 DynamoDB 資料表名稱。
+* `ttl_delete`：一個布林值，指出 `REMOVE` 事件是否由 DynamoDB Time-To-Live (TTL) 觸發。對於以 TTL 為基礎的刪除，`ttl_delete` 屬性為 `true`；對於所有其他事件則為 `false`。此中繼資料可搭配條件式路由或篩選使用，以不同於手動刪除的方式處理 TTL 刪除。
 
 
-## Permissions
+## 權限
 
-The following are the minimum required permissions for running DynamoDB as a source:
+下列是將 DynamoDB 作為來源執行所需的最低權限：
 
 ```json
 {
@@ -177,37 +178,37 @@ The following are the minimum required permissions for running DynamoDB as a sou
 }
 ```
 
-When performing an export, the `"Sid": "allowReadFromStream"` section is not required. If only reading from DynamoDB streams, the 
-`"Sid": "allowReadAndWriteToS3ForExport"`, `"Sid": "allowCheckExportjob"`, and ` "Sid": "allowRunExportJob"` sections are not required.
+執行匯出時，不需要 `"Sid": "allowReadFromStream"` 區段。如果僅從 DynamoDB 串流讀取，則不需要 
+`"Sid": "allowReadAndWriteToS3ForExport"`、`"Sid": "allowCheckExportjob"` 與 ` "Sid": "allowRunExportJob"` 區段。
 
-## Limitations
+## 限制
 
-Note the following limitations:
+請注意下列限制：
 
-* Each Data Prepper instance can process up to 150 DynamoDB stream shards in parallel. To prevent high latency and data loss, set the number of Data Prepper instances to the maximum number of open shards divided by 150 (rounded up to the nearest integer).
+* 每個 Data Prepper 執行個體最多可平行處理 150 個 DynamoDB 串流分片。為避免高延遲與資料遺失，請將 Data Prepper 執行個體數目設為開啟分片數上限除以 150（無條件進位至最接近的整數）。
 
-## Metrics
+## 指標
 
-The `dynamodb` source includes the following metrics.
+`dynamodb` 來源包含下列指標。
 
-### Counters
+### 計數器
 
-* `exportJobSuccess`: The number of export jobs that have been submitted successfully.
-* `exportJobFailure`: The number of export job submission attempts that have failed.
-* `exportS3ObjectsTotal`: The total number of export data files found in S3.
-* `exportS3ObjectsProcessed`: The total number of export data files that have been processed successfully from S3.
-* `exportRecordsTotal`: The total number of records found in the export.
-* `exportRecordsProcessed`: The total number of export records that have been processed successfully.
-* `exportRecordsProcessingErrors`: The number of export record processing errors.
-* `changeEventsProcessed`: The number of change events processed from DynamoDB streams.
-* `changeEventsProcessingErrors`: The number of processing errors for change events from DynamoDB streams.
-* `shardProgress`: The incremented shard progress when DynamoDB streams are being read correctly. This being`0` for any significant amount of time means there is a problem with the pipeline that has streams enabled.
+* `exportJobSuccess`：已成功提交的匯出工作數目。
+* `exportJobFailure`：已失敗的匯出工作提交嘗試次數。
+* `exportS3ObjectsTotal`：在 S3 中找到的匯出資料檔案總數。
+* `exportS3ObjectsProcessed`：已從 S3 成功處理的匯出資料檔案總數。
+* `exportRecordsTotal`：匯出中找到的記錄總數。
+* `exportRecordsProcessed`：已成功處理的匯出記錄總數。
+* `exportRecordsProcessingErrors`：匯出記錄處理錯誤數目。
+* `changeEventsProcessed`：從 DynamoDB 串流處理的變更事件數目。
+* `changeEventsProcessingErrors`：DynamoDB 串流變更事件的處理錯誤數目。
+* `shardProgress`：正確讀取 DynamoDB 串流時遞增的分片進度。若此值在相當長的一段時間內為`0`，表示啟用串流的管線發生問題。
 
-### Gauges
+### 計量
 
-The `dynamodb` source includes the following gauges:
+`dynamodb` 來源包含下列計量：
 
-* `totalOpenShards`: The number of open shards in the DynamoDB stream. Open shards are shards that are not assigned an `EndingSequenceNumber`.
-* `activeShardsInProcessing`: The number of shards currently being processed by Data Prepper.
+* `totalOpenShards`：DynamoDB 串流中開啟的分片數目。開啟的分片是指未獲指派 `EndingSequenceNumber` 的分片。
+* `activeShardsInProcessing`：Data Prepper 目前正在處理的分片數目。
 
 

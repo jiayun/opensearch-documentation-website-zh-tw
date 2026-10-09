@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Jobs API
 parent: Job Scheduler
@@ -8,33 +9,33 @@ redirect_from:
 ---
 
 # Job Scheduler Jobs API 
-Introduced 3.2
+於 3.2 版推出
 {: .label .label-purple }
 
-The Jobs API allows you to view all Job Scheduler jobs.
+Jobs API 可讓您檢視所有 Job Scheduler 工作。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_job_scheduler/api/jobs
 ```
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter |  Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `by_node` | Boolean | Returns the jobs grouped by the node on which they are running. Default is `false`. |
+| `by_node` | 布林值 | 傳回依執行所在節點分組的工作。預設為 `false`。 |
 
-## Example request
+## 請求範例
 
 ```json
 GET /_plugins/_job_scheduler/api/jobs
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -88,46 +89,46 @@ GET /_plugins/_job_scheduler/api/jobs
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `jobs` | Array | Contains all jobs reported by the Job Scheduler. |
-| `job_type` | String | The plugin that scheduled the job. |
-| `job_id` | String | The unique identifier of the job. |
-| `index_name` | String | The index in which the job information is stored. |
-| `name` | String | The job name. The name is not necessarily unique. |
-| `descheduled` | Boolean | Indicates whether the job is scheduled to be executed (`false`) or is not scheduled (`true`) by the Job Scheduler. |
-| `enabled` | Boolean | Indicates whether the job is active (`true`) or inactive (`false`), as defined by the plugin using the Job Scheduler. |
-| `enabled_time` | String | The time at which the job was originally scheduled. |
-| `last_update_time` | String | The time at which the job was last updated. |
-| `last_expected_exection_time` | String | The time at which the job was most recently executed. |
-| `next_expected_execution_time` | String | The time at which the job is expected to be executed next. |
-| `schedule` | Map | The job's execution schedule. Can define a [Cron](#cron-schedule) or [interval](#interval-schedule) schedule. |
-| `schedule.type` | String | The schedule type. Valid values are `cron` and `interval`. |
-| `lock_duration` | Integer | The maximum amount of time (in seconds) that a job can remain locked during execution.|
-| `jitter` | Double | A random delay applied to job execution times to prevent simultaneous runs across the system.|
-| `failures` | Array | A list of nodes that failed to report jobs. |
-| `total_jobs` | Integer | The total number of jobs reported across all nodes. |
+| `jobs` | 陣列 | 包含 Job Scheduler 回報的所有工作。 |
+| `job_type` | 字串 | 排定該工作的外掛程式。 |
+| `job_id` | 字串 | 工作的唯一識別碼。 |
+| `index_name` | 字串 | 儲存工作資訊的索引。 |
+| `name` | 字串 | 工作名稱。名稱不一定是唯一的。 |
+| `descheduled` | 布林值 | 表示工作是否已由 Job Scheduler 排定執行 (`false`) 或未排定 (`true`)。 |
+| `enabled` | 布林值 | 表示工作是否為作用中 (`true`) 或非作用中 (`false`)，由使用 Job Scheduler 的外掛程式定義。 |
+| `enabled_time` | 字串 | 工作最初排定的時間。 |
+| `last_update_time` | 字串 | 工作上次更新的時間。 |
+| `last_expected_exection_time` | 字串 | 工作最近一次執行的時間。 |
+| `next_expected_execution_time` | 字串 | 工作預期下次執行的時間。 |
+| `schedule` | 對應表 | 工作的執行排程。可定義 [Cron](#cron-schedule) 或[間隔](#interval-schedule)排程。 |
+| `schedule.type` | 字串 | 排程類型。有效值為 `cron` 和 `interval`。 |
+| `lock_duration` | 整數 | 工作在執行期間可保持鎖定的最長時間 (秒)。 |
+| `jitter` | 雙精度浮點數 | 套用至工作執行時間的隨機延遲，以防止整個系統同時執行。 |
+| `failures` | 陣列 | 未成功回報工作的節點清單。 |
+| `total_jobs` | 整數 | 所有節點回報的工作總數。 |
 
-### Interval schedule
+### 間隔排程
 
-The `interval` schedule supports the following fields.
+`interval` 排程支援下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `start_time` | String | The schedule start time.  |
-| `interval` | Integer | The numeric interval duration between job executions (for example, `10`). |
-| `unit` | String | The interval units (for example, `Minutes`, `Hours`, or `Days`). |
-| `delay` | String | A fixed amount of time applied to the job before execution. |
+| `start_time` | 字串 | 排程開始時間。 |
+| `interval` | 整數 | 工作執行之間的數值間隔時間 (例如 `10`)。 |
+| `unit` | 字串 | 間隔單位 (例如 `Minutes`、`Hours` 或 `Days`)。 |
+| `delay` | 字串 | 在工作執行前套用的固定時間。 |
 
-### Cron schedule
+### Cron 排程
 
-The `cron` schedule supports the following fields.
+`cron` 排程支援下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `expression` | String | A Cron expression defining the schedule. |
-| `timezone` | String | The time zone associated with the Cron schedule. |
+| `expression` | 字串 | 定義排程的 Cron 運算式。 |
+| `timezone` | 字串 | 與 Cron 排程關聯的時區。 |

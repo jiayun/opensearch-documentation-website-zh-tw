@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: NetFlow
 parent: Supported log types
 nav_order: 60
 ---
 
-# NetFlow log type
+# NetFlow 記錄類型
 
-The `netflow` log type records NetFlow events used during integration testing.
+`netflow` 記錄類型會記錄整合測試期間所使用的 NetFlow 事件。
 
-The following code snippet contains all the `raw_field` and `ecs` mappings for this log type:
+下列程式碼片段包含此記錄類型的所有 `raw_field` 與 `ecs` 對應：
 
 ```json
 "mappings": [

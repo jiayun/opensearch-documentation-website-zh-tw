@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Update context management
+title: "更新情境管理"
 parent: Context management APIs
 grand_parent: ML Commons APIs
 nav_order: 30
 ---
 
-# Update Context Management API
-**Introduced 3.5**
+# 更新情境管理 API
+**於 3.5 版推出**
 {: .label .label-purple }
 
-Use this API to update an existing context management configuration. You can modify the description, hooks configuration, and context manager settings.
+使用此 API 更新現有的情境管理組態。您可以修改描述、掛鉤組態以及情境管理員設定。
 
-## Endpoints
+## 端點
 
 ```json
 PUT /_plugins/_ml/context_management/{context_management_name}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-Parameter | Data type | Required/Optional | Description
+參數 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`context_management_name` | String | Required | The name of the context management to update.
+`context_management_name` | 字串 | 必要 | 要更新的情境管理名稱。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`description` | String | Optional | A human-readable description of what this context management does.
-`hooks` | Object | Optional | A map of hook names to lists of context manager configurations. See [The `hooks` object]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/#the-hooks-object).
+`description` | 字串 | 選用 | 此情境管理用途的人類可讀描述。
+`hooks` | 物件 | 選用 | 掛鉤名稱與情境管理員組態清單的對應關係。請參閱[`hooks` 物件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/#the-hooks-object)。
 
-The request body follows the same structure as the [Create Context Management API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/).
+請求本文的結構與[建立情境管理 API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/) 相同。
 
-## Example request: Update description
+## 範例請求：更新描述
 
 ```json
 PUT /_plugins/_ml/context_management/advanced-context-management
@@ -47,7 +48,7 @@ PUT /_plugins/_ml/context_management/advanced-context-management
 ```
 {% include copy-curl.html %}
 
-## Example request: Update hooks configuration
+## 範例請求：更新掛鉤組態
 
 ```json
 PUT /_plugins/_ml/context_management/sliding_window_max_40000_tokens_managers
@@ -81,7 +82,7 @@ PUT /_plugins/_ml/context_management/sliding_window_max_40000_tokens_managers
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -100,6 +101,6 @@ PUT /_plugins/_ml/context_management/sliding_window_max_40000_tokens_managers
 }
 ```
 
-## Related documentation
+## 相關文件
 
-For more information, see [Context management]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/).
+如需更多資訊，請參閱[情境管理]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/)。

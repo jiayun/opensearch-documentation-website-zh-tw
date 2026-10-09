@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Range field types
+title: "範圍欄位類型"
 nav_order: 70
 has_children: false
 parent: Supported field types
@@ -10,24 +11,24 @@ redirect_from:
   - /field-types/range/
 ---
 
-# Range field types
-**Introduced 1.0**
+# 範圍欄位類型
+**1.0 版新增**
 {: .label .label-purple }
 
-The following table lists all range field types that OpenSearch supports.
+下表列出 OpenSearch 支援的所有範圍欄位類型。
 
-Field data type | Description
+欄位資料類型 | 說明
 :--- | :---
-`integer_range` | A range of [integer]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/) values. 
-`long_range` | A range of [long]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/) values.   
-`double_range` | A range of [double]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/) values.  
-`float_range` | A range of [float]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/) values. 
-`ip_range` | A range of [IP addresses]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/ip/) in IPv4 or IPv6 format. Start and end IP addresses may be in different formats.  
-`date_range` | A range of [date]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/) values. Start and end dates may be in different [formats]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/#formats). Internally, all dates are stored as unsigned 64-bit integers representing milliseconds since the epoch.
+`integer_range` | [integer]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/) 值的範圍。 
+`long_range` | [long]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/) 值的範圍。   
+`double_range` | [double]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/) 值的範圍。  
+`float_range` | [float]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/) 值的範圍。 
+`ip_range` | IPv4 或 IPv6 格式的 [IP 位址]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/ip/)範圍。起始與結束 IP 位址可以使用不同的格式。  
+`date_range` | [date]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/) 值的範圍。起始與結束日期可以使用不同的[格式]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/#formats)。在內部，所有日期都以不帶正負號的 64 位元整數儲存，代表自 epoch 起算的毫秒數。
 
-## Example
+## 範例
 
-Create a mapping with a double range and a date range:
+建立一個包含 double 範圍與 date 範圍的對應：
 
 ```json
 PUT testindex 
@@ -47,7 +48,7 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-Index a document with a double range and a date range:
+將一份包含 double 範圍與 date 範圍的文件編製索引：
 
 ```json
 PUT testindex/_doc/1
@@ -64,11 +65,11 @@ PUT testindex/_doc/1
 ```
 {% include copy-curl.html %}
 
-## IP address ranges
+## IP 位址範圍
 
-You can specify IP address ranges in two formats: as a range and in [Classless Inter-Domain Routing (CIDR) notation](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation).
+您可以用兩種格式指定 IP 位址範圍：範圍表示法，以及[無類別網域間路由 (CIDR) 表示法](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation)。
 
-Create a mapping with an IP address range:
+建立一個包含 IP 位址範圍的對應：
 
 ```json
 PUT testindex 
@@ -87,7 +88,7 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-Index a document with IP address ranges in both formats:
+將一份同時包含兩種格式 IP 位址範圍的文件編製索引：
 
 ```json
 PUT testindex/_doc/2
@@ -101,15 +102,15 @@ PUT testindex/_doc/2
 ```
 {% include copy-curl.html %}
 
-## Querying range fields
+## 查詢範圍欄位
 
-You can use a [Term query](#term-query) or a [Range query](#range-query) to search for values within range fields. 
+您可以使用 [Term query](#term-query) 或 [Range query](#range-query) 來搜尋範圍欄位中的值。 
 
 ### Term query
 
-A term query takes a value and matches all range fields for which the value is within the range.
+Term query 會接受一個值，並比對所有該值落在範圍內的範圍欄位。
 
-The following query will return document 1 because 3.5 is within the range [1.0, 4.0]:
+下列查詢會傳回文件 1，因為 3.5 落在範圍 [1.0, 4.0] 內：
 
 ```json
 GET testindex/_search
@@ -127,9 +128,9 @@ GET testindex/_search
 
 ### Range query
 
-A range query on a range field returns documents within that range. 
+對範圍欄位執行 Range query 會傳回落在該範圍內的文件。 
 
-Query for all graduation dates in 2019, providing the date range in a "MM/dd/yyyy" format:
+查詢 2019 年的所有畢業日期，並以 "MM/dd/yyyy" 格式提供日期範圍：
 
 ```json
 GET testindex1/_search
@@ -148,16 +149,16 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The preceding query will return document 1 for the `within` and `intersects` relations but will not return it for the `contains` relation. For more information about relation types, see [range query parameters]({{site.url}}{{site.baseurl}}/query-dsl/term/range#parameters).
+上述查詢對於 `within` 與 `intersects` 關係會傳回文件 1，但對於 `contains` 關係則不會傳回。如需關係類型的詳細資訊，請參閱 [範圍查詢參數]({{site.url}}{{site.baseurl}}/query-dsl/term/range#parameters)。
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by range field types. All parameters are optional.
+下表列出範圍欄位類型接受的參數。所有參數皆為選用。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :--- 
-`boost` | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field's relevance. Values between 0.0 and 1.0 decrease the field's relevance. Default is 1.0. Dynamically updatable.
-`coerce` | A Boolean value that signals to truncate decimals for integer values and to convert strings to numeric values. Default is `true`. Dynamically updatable.
-`doc_values` | A Boolean value that specifies whether the field should be stored on disk so that it can be used for aggregations, sorting, or scripting. Default is `true`.
-`index` | A Boolean value that specifies whether the field should be searchable. Default is `true`. 
-`store` | A Boolean value that specifies whether the field value should be stored and can be retrieved separately from the `_source` field. Default is `false`. 
+`boost` | 一個浮點數值，指定此欄位對相關性分數的權重。高於 1.0 的值會提高欄位的相關性；介於 0.0 與 1.0 之間的值會降低欄位的相關性。預設值為 1.0。可動態更新。
+`coerce` | 一個布林值，表示要將整數值的小數部分截斷，並將字串轉換為數值。預設值為 `true`。可動態更新。
+`doc_values` | 一個布林值，指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設值為 `true`。
+`index` | 一個布林值，指定欄位是否應可被搜尋。預設值為 `true`。 
+`store` | 一個布林值，指定是否應儲存欄位值，並可從 `_source` 欄位另外擷取。預設值為 `false`。 

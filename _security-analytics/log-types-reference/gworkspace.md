@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Google Workspace
 parent: Supported log types
 nav_order: 45
 ---
 
-# Google Workspace log type
+# Google Workspace 記錄類型
 
-The `gworkspace` log type monitors Google Workspace log entries, such as the following:
+`gworkspace` 記錄類型會監控 Google Workspace 記錄項目，例如以下項目：
 
-- Admin actions
-- Group and group membership actions
-- Events related to logins
+- 管理員動作
+- 群組與群組成員資格動作
+- 與登入相關的事件
 
-The following code snippet contains all the `raw_field` and `ecs` mappings for this log type:
+下列程式碼片段包含此記錄類型的所有 `raw_field` 與 `ecs` 對應：
 
 ```json
   "mappings": [

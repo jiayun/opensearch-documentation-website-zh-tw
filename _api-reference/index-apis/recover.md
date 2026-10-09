@@ -1,62 +1,63 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index recovery
+title: "索引復原"
 parent: Index operations
 grand_parent: Index APIs
 nav_order: 50
 ---
 
-# Index Recovery API
-**Introduced 1.0**
+# 索引復原 API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Recovery API provides information about any completed or ongoing shard recoveries for one or more indexes. If a data stream is listed, the API returns information about that data stream's backing indexes. 
+Recovery API 提供一或多個索引已完成或進行中的分片復原相關資訊。若列出的是資料串流，API 會傳回該資料串流基礎索引的相關資訊。
 
-Shard recovery involves creating a shard copy to restore a primary shard from a snapshot or to synchronize a replica shard. After the shard recovery process completes, the recovered shard becomes available for use in search and index operations.
+分片復原涉及建立分片複本，以從快照還原主要分片或同步副本分片。分片復原程序完成後，復原的分片即可用於搜尋與索引作業。
 
-Shard recovery occurs automatically in the following scenarios:
+分片復原會在下列情況自動發生：
 
-- Node startup, known as a local store recovery
-- Replication of a primary shard
-- Relocation of a shard to a different node within the same cluster
-- Restoration of a snapshot
-- Clone, shrink, or split operations
+- 節點啟動，稱為本機存放區復原
+- 主要分片的複寫
+- 將分片重新配置到同一叢集內的其他節點
+- 還原快照
+- 複製、縮小或分割作業
 
-The Recovery API reports solely on completed recoveries for shard copies presently stored in the cluster. It reports only the most recent recovery for each shard copy and does not include historical information about previous recoveries or information about recoveries of shard copies that no longer exist. Consequently, if a shard copy completes a recovery and is subsequently relocated to a different node, then the information about the original recovery is not displayed in the Recovery API.
+Recovery API 僅報告目前儲存在叢集中的分片複本已完成復原的資訊。它只報告每個分片複本最近一次的復原，不包含先前復原的歷史資訊，也不包含已不存在之分片複本的復原資訊。因此，若某個分片複本完成復原後被重新配置到其他節點，Recovery API 就不會顯示原始復原的資訊。
 
 
-## Endpoints
+## 端點
 
 ```json
 GET /_recovery
 GET /{index}/_recovery/
 ```
 
-## Path parameters
+## 路徑參數
 
 Parameter | Data type | Description 
 :--- | :--- 
-`index` |  String | A comma-separated list of indexes, data streams, or index aliases to which the operation is applied. Supports wildcard expressions (`*`). Use `_all` or `*` to specify all indexes and data streams in a cluster. |
+`index` |  String | 套用此作業的索引、資料串流或索引別名的逗號分隔清單。支援萬用字元運算式 (`*`)。使用 `_all` 或 `*` 指定叢集中的所有索引與資料串流。 |
 
 
-## Query parameters
+## 查詢參數
 
-All of the following query parameters are optional.
+下列所有查詢參數皆為選用。
 
 Parameter | Data type | Description 
 :--- | :--- | :---  
-`active_only` | Boolean | When `true`, the response only includes active shard recoveries. Default is `false`.
-`detailed` | Boolean | When `true`, provides detailed information about shard recoveries. Default is `false`.
-`index`  | String | A comma-separated list or wildcard expression of index names used to limit the request.
+`active_only` | Boolean | 當為 `true` 時，回應僅包含進行中的分片復原。預設為 `false`。
+`detailed` | Boolean | 當為 `true` 時，提供分片復原的詳細資訊。預設為 `false`。
+`index`  | String | 用於限制請求範圍的索引名稱逗號分隔清單或萬用字元運算式。
 
 
-## Example requests
+## 範例請求
 
-The following examples demonstrate how to recover information using the Recovery API.
+下列範例示範如何使用 Recovery API 取得復原資訊。
 
-### Recover information from several or all indexes
+### 從多個或所有索引取得復原資訊
 
-The following example request returns recovery information about several indexes in a [human-readable format]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#human-readable-output):
+下列範例請求以[人類可讀格式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#human-readable-output)傳回多個索引的復原資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -81,7 +82,7 @@ response = client.indices.recovery(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The following example request returns recovery information about all indexes in a human-readable format:
+下列範例請求以人類可讀格式傳回所有索引的復原資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -105,9 +106,9 @@ response = client.indices.recovery(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Recover detailed information
+### 取得詳細復原資訊
 
-The following example request returns detailed recovery information:
+下列範例請求傳回詳細的復原資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -131,9 +132,9 @@ response = client.indices.recovery(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-The following response returns detailed recovery information about an index named `shakespeare`:
+下列回應傳回名為 `shakespeare` 之索引的詳細復原資訊：
 
 ```json
 {
@@ -325,25 +326,25 @@ The following response returns detailed recovery information about an index name
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The API responds with the following information about the recovery shard.
+API 會回應下列復原分片的相關資訊。
 
 Parameter | Data type | Description 
 :--- | :--- | :--- 
-`id` | Integer | The ID of the shard. 
-`type` | String | The recovery source for the shard. Returned values include: <br> - `EMPTY_STORE`: An empty store. Indicates a new primary shard or the forced allocation of an empty primary shard using the Cluster Reroute API. <br> - `EXISTING_STORE`: The store of an existing primary shard. Indicates that the recovery is related to node startup or the allocation of an existing primary shard. <br> - `LOCAL_SHARDS`: Shards belonging to another index on the same node. Indicates that the recovery is related to a clone, shrink, or split operation. <br> - `PEER`: A primary shard on another node. Indicates that the recovery is related to shard replication. <br> - `SNAPSHOT`: A snapshot. Indicates that the recovery is related to a snapshot restore operation. 
-`STAGE` | String | The recovery stage. Returned values can include: <br> - `INIT`: Recovery has not started. <br> - `INDEX`: Reading index metadata and copying bytes from the source to the destination. <br> - `VERIFY_INDEX`: Verifying the integrity of the index. <br> - `TRANSLOG`: Replaying the transaction log. <br> - `FINALIZE`: Cleanup. <br> - `DONE`: Complete. 
-`primary` | Boolean | When `true`, the shard is a primary shard. 
-`start_time` | String | The timestamp indicating when the recovery started. 
-`stop_time` | String | The timestamp indicating when the recovery completed. 
-`total_time_in_millis` | String | The total amount of time taken to recover a shard, in milliseconds. 
-`source` | Object | The recovery source. This can include a description of the repository (if the recovery is from a snapshot) or a description of the source node. 
-`target` | Object | The destination node. 
-`index` | Object | Statistics about the physical index recovery. 
-`translog` | Object | Statistics about the translog recovery. 
- `start` | Object | Statistics about the amount of time taken to open and start the index.
+`id` | Integer | 分片的 ID。 
+`type` | String | 分片的復原來源。傳回的值包括：<br> - `EMPTY_STORE`：空的存放區。表示新的主要分片，或使用 Cluster Reroute API 強制配置空的主要分片。<br> - `EXISTING_STORE`：現有主要分片的存放區。表示復原與節點啟動或現有主要分片的配置有關。<br> - `LOCAL_SHARDS`：同一節點上屬於另一個索引的分片。表示復原與複製、縮小或分割作業有關。<br> - `PEER`：另一個節點上的主要分片。表示復原與分片複寫有關。<br> - `SNAPSHOT`：快照。表示復原與快照還原作業有關。 
+`STAGE` | String | 復原階段。傳回的值可包括：<br> - `INIT`：復原尚未開始。<br> - `INDEX`：讀取索引中繼資料，並將位元組從來源複製到目的地。<br> - `VERIFY_INDEX`：驗證索引的完整性。<br> - `TRANSLOG`：重播交易記錄。<br> - `FINALIZE`：清理。<br> - `DONE`：完成。 
+`primary` | Boolean | 當為 `true` 時，該分片為主要分片。 
+`start_time` | String | 表示復原開始時間的時間戳記。 
+`stop_time` | String | 表示復原完成時間的時間戳記。 
+`total_time_in_millis` | String | 復原分片所花費的總時間，以毫秒為單位。 
+`source` | Object | 復原來源。這可包括儲存庫的說明 (若復原來自快照) 或來源節點的說明。 
+`target` | Object | 目的地節點。 
+`index` | Object | 實體索引復原的統計資料。 
+`translog` | Object | translog 復原的統計資料。 
+ `start` | Object | 開啟並啟動索引所花費時間的統計資料。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:monitor/recovery`.
+若您使用 Security 外掛程式，請確認您具備適當的權限：`indices:monitor/recovery`。

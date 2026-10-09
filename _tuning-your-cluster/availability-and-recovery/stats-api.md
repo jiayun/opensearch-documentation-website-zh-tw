@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Stats API
 parent: Shard indexing backpressure
@@ -9,25 +10,25 @@ redirect_from:
   - /opensearch/stats-api/
 ---
 
-# Shard Indexing Backpressure Stats API
+# 分片索引編製背壓 Stats API
 
-Use the stats operation to monitor shard indexing backpressure.
+使用 stats 操作來監視分片索引編製背壓。
 
 ## Stats
-Introduced 1.2
+於 1.2 版推出
 {: .label .label-purple }
 
-Returns node-level and shard-level stats for indexing request rejections.
+傳回索引請求拒絕的節點層級與分片層級統計資料。
 
-#### Request
+#### 請求
 
 ```json
 GET _nodes/_local/stats/shard_indexing_pressure
 ```
 
-If `enforced` is `true`:
+如果 `enforced` 為 `true`：
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -132,9 +133,9 @@ If `enforced` is `true`:
 }
 ```
 
-If `enforced` is `false`:
+如果 `enforced` 為 `false`：
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -239,15 +240,15 @@ If `enforced` is `false`:
 }
 ```
 
-To include all the shards with both active and previous write operations performed on them, specify the `include_all` parameter:
+若要包含目前有寫入操作或先前曾執行過寫入操作的所有分片，請指定 `include_all` 參數：
 
-#### Request
+#### 請求
 
 ```json
 GET _nodes/_local/stats/shard_indexing_pressure?include_all
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -352,17 +353,17 @@ GET _nodes/_local/stats/shard_indexing_pressure?include_all
 }
 ```
 
-To get only all the top-level aggregated stats, specify the `top` parameter (skips the per-shard stats).
+若只要取得所有最上層的彙總統計資料，請指定 `top` 參數（略過各分片的統計資料）。
 
-#### Request
+#### 請求
 
 ```json
 GET _nodes/_local/stats/shard_indexing_pressure?top
 ```
 
-If `enforced` is `true`:
+如果 `enforced` 為 `true`：
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -403,9 +404,9 @@ If `enforced` is `true`:
 }
 ```
 
-If `enforced` is `false`:
+如果 `enforced` 為 `false`：
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -446,15 +447,15 @@ If `enforced` is `false`:
 }
 ```
 
-To get the shard-level breakup of rejections for every node (only includes shards with active write operations):
+若要取得每個節點的分片層級拒絕明細（僅包含有作用中寫入操作的分片）：
 
-#### Request
+#### 請求
 
 ```json
 GET _nodes/stats/shard_indexing_pressure
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {

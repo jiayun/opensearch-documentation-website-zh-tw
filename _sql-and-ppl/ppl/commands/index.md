@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Commands
+title: "命令"
 parent: PPL
 nav_order: 1
 has_children: true
@@ -13,6 +14,6 @@ redirect_from:
   - /sql-and-ppl/ppl/commands/
 ---
 
-# PPL commands
+# PPL 命令
 
-PPL supports most common [SQL functions]({{site.url}}{{site.baseurl}}/search-plugins/sql/functions/), including [relevance search]({{site.url}}{{site.baseurl}}/search-plugins/sql/full-text/), but also introduces several more functions, called _commands_, which are available in PPL only.  
+PPL 支援大多數常用的 [SQL 函式]({{site.url}}{{site.baseurl}}/search-plugins/sql/functions/)，包括[相關性搜尋]({{site.url}}{{site.baseurl}}/search-plugins/sql/full-text/)，但也另外引入了數個稱為_命令_的函式，這些函式僅在 PPL 中可用。  

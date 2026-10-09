@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: ML inference (response) 
+title: "ML 推論 (回應)"
 nav_order: 40
 has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
 ---
 
-# ML inference search response processor
-Introduced 2.16
+# ML 推論搜尋回應處理器
+於 2.16 版導入
 {: .label .label-purple }
 
-The `ml_inference` search response processor is used to invoke registered machine learning (ML) models in order to incorporate their outputs as new fields in documents within search results.
+`ml_inference` 搜尋回應處理器用於呼叫已註冊的機器學習 (ML) 模型，將其輸出納入搜尋結果文件中的新欄位。
 
-**PREREQUISITE**<br>
-Before using the `ml_inference` search response processor, you must have either a local ML model hosted on your OpenSearch cluster or an externally hosted model connected to your OpenSearch cluster through the ML Commons plugin. For more information about local models, see [Using ML models within OpenSearch]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/). For more information about externally hosted models, see [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/).
+**必要條件**<br>
+使用 `ml_inference` 搜尋回應處理器之前，您必須擁有託管在 OpenSearch 叢集上的本機 ML 模型，或透過 ML Commons 外掛程式連線至 OpenSearch 叢集的外部託管模型。如需本機模型的詳細資訊，請參閱 [在 OpenSearch 內使用 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。如需外部託管模型的詳細資訊，請參閱 [連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
 {: .note}
 
-## Syntax
+## 語法
 
-The following is the syntax for the `ml-inference` search response processor:
+以下是 `ml-inference` 搜尋回應處理器的語法：
 
 ```json
 {
@@ -48,37 +49,37 @@ The following is the syntax for the `ml-inference` search response processor:
 ```
 {% include copy-curl.html %}
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the required and optional parameters for the `ml-inference` search response processor.
+下表列出 `ml-inference` 搜尋回應處理器的必要與選用參數。
 
-| Parameter | Data type | Required/Optional | Description  |
+| 參數 | 資料類型 | 必要/選用 | 說明  |
 |:--| :--- | :--- |:---|
-| `model_id` | String | Required | The ID of the ML model used by the processor. |
-| `function_name`        | String    | Optional for externally hosted models<br/><br/>Required for local models | The function name of the ML model configured in the processor. For local models, valid values are `sparse_encoding`, `sparse_tokenize`, `text_embedding`, and `text_similarity`. For externally hosted models, valid value is `remote`. Default is `remote`. |
-| `model_config`         | Object    | Optional   | Custom configuration options for the ML model. For externally hosted models, if set, this configuration overrides the default connector parameters. For local models, you can add `model_config` to `model_input` to override the model configuration set during registration. For more information, see [The `model_config` object]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-model_config-object). |
-| `model_input`          | String    | Optional for externally hosted models<br/><br/>Required for local models | A template that defines the input field format expected by the model. Each local model type might use a different set of inputs. For externally hosted models, default is `"{ \"parameters\": ${ml_inference.parameters} }`. |
-| `input_map`            | Array | Optional for externally hosted models<br/><br/>Required for local models | An array specifying how to map document fields in the search response to the model input fields. Each element of the array is a map in the `"<model_input_field>": "<document_field>"` format and corresponds to one model invocation of a document field. If no input mapping is specified for an externally hosted model, then all document fields are passed to the model directly as input. The `input_map` size indicates the number of times the model is invoked (the number of Predict API requests). |
-| `<model_input_field>`  | String    | Optional for externally hosted models<br/><br/>Required for local models  | The model input field name. |
-| `<document_field>`     | String    | Optional for externally hosted models<br/><br/>Required for local models | The name or JSON path of the document field in the search response used as the model input.  |
-| `output_map`           | Array | Optional for externally hosted models<br/><br/>Required for local models | An array specifying how to map the model output fields to new fields in the search response document. Each element of the array is a map in the `"<new_document_field>": "<model_output_field>"` format. |
-| `<new_document_field>` | String    | Optional for externally hosted models<br/><br/>Required for local models | The name of the new field in the document in which the model's output (specified by `model_output`) is stored. If no output mapping is specified for externally hosted models, then all fields from the model output are added to the new document field.  |
-| `<model_output_field>` | String    | Optional for externally hosted models<br/><br/>Required for local models | The name or JSON path of the field in the model output to be stored in the `new_document_field`.  |
-| `full_response_path`   | Boolean   | Optional   | Set this parameter to `true` if the `model_output_field` contains a full JSON path to the field instead of the field name. The model output will then be fully parsed to get the value of the field. Default is `true` for local models and `false` for externally hosted models.  |
-| `ignore_missing`       | Boolean   | Optional  | If `true` and any of the input fields defined in the `input_map` or `output_map` are missing, then this processor is ignored. Otherwise, a missing field causes a failure. Default is `false`. |
-| `ignore_failure`       | Boolean   | Optional  | Specifies whether the processor continues execution even if it encounters an error. If `true`, then this processor is ignored and the search continues. If `false`, then any failure causes the search to be canceled. Default is `false`. |
-| `override`             | Boolean   | Optional   | Relevant if a document in the response already contains a field with the name specified in `<new_document_field>`. If `override` is `false`, then the input field is skipped. If `true`, then the existing field value is overridden by the new model output. Default is `false`.  |
-| `max_prediction_tasks` | Integer   | Optional  | The maximum number of concurrent model invocations that can run during document search. Default is `10`.  |
-| `one_to_one`           | Boolean    | Optional  | Set this parameter to `true` to invoke the model once (make one Predict API request) for each document. Default value (`false`) specifies to invoke the model with all documents from the search response, making one Predict API request. |
-| `description`          | String    | Optional  | A brief description of the processor. |
-| `tag`                  | String    | Optional | An identifier tag for the processor. Useful for debugging to distinguish between processors of the same type. |
+| `model_id` | 字串 | 必要 | 處理器所使用的 ML 模型 ID。 |
+| `function_name`        | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 處理器中設定的 ML 模型函式名稱。對於本機模型，有效值為 `sparse_encoding`、`sparse_tokenize`、`text_embedding` 和 `text_similarity`。對於外部託管模型，有效值為 `remote`。預設為 `remote`。 |
+| `model_config`         | 物件    | 選用   | ML 模型的自訂組態選項。對於外部託管模型，若設定此項，此組態會覆寫預設的連接器參數。對於本機模型，您可以在 `model_input` 中加入 `model_config`，以覆寫註冊時設定的模型組態。如需詳細資訊，請參閱 [`model_config` 物件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-model_config-object)。 |
+| `model_input`          | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 定義模型所預期輸入欄位格式的範本。每種本機模型類型可能使用不同的輸入集合。對於外部託管模型，預設為 `"{ \"parameters\": ${ml_inference.parameters} }`。 |
+| `input_map`            | 陣列 | 外部託管模型為選用<br/><br/>本機模型為必要 | 一個陣列，指定如何將搜尋回應中的文件欄位對應到模型輸入欄位。陣列的每個元素都是 `"<model_input_field>": "<document_field>"` 格式的對應，並對應至一個文件欄位的一次模型呼叫。若外部託管模型未指定輸入對應，則所有文件欄位會直接作為輸入傳遞給模型。`input_map` 的大小表示模型被呼叫的次數 (Predict API 請求的次數)。 |
+| `<model_input_field>`  | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要  | 模型輸入欄位名稱。 |
+| `<document_field>`     | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 搜尋回應中用作模型輸入的文件欄位名稱或 JSON 路徑。  |
+| `output_map`           | 陣列 | 外部託管模型為選用<br/><br/>本機模型為必要 | 一個陣列，指定如何將模型輸出欄位對應到搜尋回應文件中的新欄位。陣列的每個元素都是 `"<new_document_field>": "<model_output_field>"` 格式的對應。 |
+| `<new_document_field>` | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 文件中新欄位的名稱，模型的輸出 (由 `model_output` 指定) 會儲存在此欄位。若外部託管模型未指定輸出對應，則模型輸出的所有欄位都會加入新的文件欄位。  |
+| `<model_output_field>` | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 模型輸出中要儲存至 `new_document_field` 的欄位名稱或 JSON 路徑。  |
+| `full_response_path`   | 布林值   | 選用   | 若 `model_output_field` 包含欄位的完整 JSON 路徑而非欄位名稱，請將此參數設為 `true`。屆時模型輸出將被完整解析以取得該欄位的值。本機模型預設為 `true`，外部託管模型預設為 `false`。  |
+| `ignore_missing`       | 布林值   | 選用  | 若為 `true`，且 `input_map` 或 `output_map` 中定義的任何輸入欄位遺漏，則會忽略此處理器。否則，欄位遺漏會導致失敗。預設為 `false`。 |
+| `ignore_failure`       | 布林值   | 選用  | 指定處理器即使遇到錯誤仍繼續執行。若為 `true`，則會忽略此處理器並繼續搜尋。若為 `false`，則任何失敗都會導致搜尋被取消。預設為 `false`。 |
+| `override`             | 布林值   | 選用   | 當回應中的文件已包含名稱為 `<new_document_field>` 所指定名稱的欄位時，此參數才有作用。若 `override` 為 `false`，則會略過輸入欄位。若為 `true`，則現有的欄位值會被新的模型輸出覆寫。預設為 `false`。  |
+| `max_prediction_tasks` | 整數   | 選用  | 文件搜尋期間可執行的並行模型呼叫數目上限。預設為 `10`。  |
+| `one_to_one`           | 布林值    | 選用  | 將此參數設為 `true`，可為每個文件呼叫模型一次 (發出一個 Predict API 請求)。預設值 (`false`) 指定以搜尋回應中的所有文件呼叫模型，發出一個 Predict API 請求。 |
+| `description`          | 字串    | 選用  | 處理器的簡要說明。 |
+| `tag`                  | 字串    | 選用 | 處理器的識別標籤。在偵錯時可用於區分相同類型的處理器。 |
 
-The `input_map` and `output_map` mappings support standard [JSON path](https://github.com/json-path/JsonPath) notation for specifying complex data structures.
+`input_map` 與 `output_map` 對應支援標準 [JSON path](https://github.com/json-path/JsonPath) 標記法，以指定複雜的資料結構。
 {: .note}
 
-### Setup
+### 設定
 
-Create an index named `my_index` and index one document to explain the mappings:
+建立一個名為 `my_index` 的索引，並將一份文件編製索引以說明對應：
 
 ```json
 POST /my_index/_doc/1
@@ -88,23 +89,23 @@ POST /my_index/_doc/1
 ```
 {% include copy-curl.html %}
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline. You must provide a model ID when creating the processor. Before testing a pipeline using the processor, make sure that the model is successfully deployed. You can check the model state using the [Get Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/get-model/).
+依照下列步驟在管線中使用處理器。建立處理器時必須提供模型 ID。在使用處理器測試管線之前，請確認模型已成功部署。您可以使用 [Get Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/get-model/) 檢查模型狀態。
 
-For local models, you must provide a `model_input` field that specifies the model input format. Add any input fields in `model_config` to `model_input`.
+對於本機模型，您必須提供 `model_input` 欄位，以指定模型輸入格式。請在 `model_input` 中加入 `model_config` 的任何輸入欄位。
 
-For remote models, the `model_input` field is optional, and its default value is `"{ \"parameters\": ${ml_inference.parameters} }`.
+對於遠端模型，`model_input` 欄位為選用，其預設值為 `"{ \"parameters\": ${ml_inference.parameters} }`。
 
-### Example: Local model
+### 範例：本機模型
 
-The following example shows you how to configure an `ml_inference` search response processor with a local model.
+下列範例示範如何使用本機模型設定 `ml_inference` 搜尋回應處理器。
 
-**Step 1: Create a pipeline**
+**步驟 1：建立管線**
 
-The following example shows you how to create a search pipeline for the `huggingface/sentence-transformers/all-distilroberta-v1` local model. The model is a [pretrained sentence transformer model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#sentence-transformers) hosted in your OpenSearch cluster.
+下列範例示範如何為 `huggingface/sentence-transformers/all-distilroberta-v1` 本機模型建立搜尋管線。該模型是託管在您的 OpenSearch 叢集中的[預先訓練句子轉換器模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#sentence-transformers)。
 
-If you invoke the model using the Predict API, then the request appears as follows:
+如果您使用 Predict API 叫用該模型，則請求如下所示：
 
 ```json
 POST /_plugins/_ml/_predict/text_embedding/cleMb4kBJ1eYAeTMFFg4
@@ -115,13 +116,13 @@ POST /_plugins/_ml/_predict/text_embedding/cleMb4kBJ1eYAeTMFFg4
 }
 ```
 
-Using this schema, specify the `model_input` as follows:
+使用此結構描述，請依照下列方式指定 `model_input`：
 
 ```json
  "model_input": "{ \"text_docs\": ${input_map.text_docs}, \"return_number\": ${model_config.return_number}, \"target_response\": ${model_config.target_response} }"
 ```
 
-In the `input_map`, map the `passage_text` document field to the `text_docs` field expected by the model:
+在 `input_map` 中，將 `passage_text` 文件欄位對應到模型預期的 `text_docs` 欄位：
 
 ```json
 "input_map": [
@@ -131,13 +132,13 @@ In the `input_map`, map the `passage_text` document field to the `text_docs` fie
 ]
 ```
 
-Because you specified the field to be converted into embeddings as a JSON path, you need to set the `full_response_path` to `true`. Then the full JSON document is parsed in order to obtain the input field:
+由於您將要轉換為嵌入的欄位指定為 JSON 路徑，因此需要將 `full_response_path` 設定為 `true`。這樣系統會剖析完整的 JSON 文件以取得輸入欄位：
 
 ```json
 "full_response_path": true
 ```
 
-The text in the `passage_text` field will be used to generate embeddings:
+`passage_text` 欄位中的文字將用於產生嵌入：
 
 ```json
 {
@@ -145,7 +146,7 @@ The text in the `passage_text` field will be used to generate embeddings:
 }
 ```
 
-The Predict API request returns the following response:
+Predict API 請求會傳回以下回應：
 
 ```json
 {
@@ -171,7 +172,7 @@ The Predict API request returns the following response:
 }
 ```
 
-The model generates embeddings in the `$.inference_results.*.output.*.data` field. The `output_map` maps this field to the newly created `passage_embedding` field in the search response document:
+模型會在 `$.inference_results.*.output.*.data` 欄位中產生嵌入。`output_map` 會將此欄位對應到搜尋回應文件中新建立的 `passage_embedding` 欄位：
 
 ```json
 "output_map": [
@@ -181,9 +182,9 @@ The model generates embeddings in the `$.inference_results.*.output.*.data` fiel
 ]
 ```
 
-To configure an `ml_inference` search response processor with a local model, specify the `function_name` explicitly. In this example, the `function_name` is `text_embedding`. For information about valid `function_name` values, see [Request fields](#request-body-fields).
+若要使用本機模型設定 `ml_inference` 搜尋回應處理器，請明確指定 `function_name`。在此範例中，`function_name` 為 `text_embedding`。有關有效 `function_name` 值的資訊，請參閱 [請求本文欄位](#request-body-fields)。
 
-The following is the final configuration of the `ml_inference` search response processor with the local model:
+以下是最終的 `ml_inference` 搜尋回應處理器搭配本機模型的組態：
 
 ```json
 PUT /_search/pipeline/ml_inference_pipeline_local
@@ -219,9 +220,9 @@ PUT /_search/pipeline/ml_inference_pipeline_local
 ```
 {% include copy-curl.html %}
 
-**Step 2: Run the pipeline**
+**步驟 2：執行管線**
 
-Run the following query, providing the pipeline name in the request:
+執行以下查詢，並在請求中提供管線名稱：
 
 ```json
 GET /my_index/_search?search_pipeline=ml_inference_pipeline_local
@@ -237,9 +238,9 @@ GET /my_index/_search?search_pipeline=ml_inference_pipeline_local
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The response confirms that the processor has generated text embeddings in the `passage_embedding` field:
+回應確認處理器已在 `passage_embedding` 欄位中產生文字嵌入：
 
 ```json
 {
@@ -277,13 +278,13 @@ The response confirms that the processor has generated text embeddings in the `p
 }
 ```
 
-### Example: Externally hosted text embedding model
+### 範例：外部託管的文字嵌入模型
 
-The following example shows you how to configure an `ml_inference` search response processor with an externally hosted model.
+下列範例示範如何使用外部託管的模型設定 `ml_inference` 搜尋回應處理器。
 
-**Step 1: Create a pipeline**
+**步驟 1：建立管線**
 
-The following example shows you how to create a search pipeline for an externally hosted text embedding model. The model requires an `input` field and generates results in a `data` field. It converts the text in the `passage_text` field into text embeddings and stores the embeddings in the `passage_embedding` field. The `function_name` is not explicitly specified in the processor configuration, so it defaults to `remote`, signifying an externally hosted model:
+下列範例示範如何為外部託管的文字嵌入模型建立搜尋管線。該模型需要一個 `input` 欄位，並在 `data` 欄位中產生結果。它會將 `passage_text` 欄位中的文字轉換為文字嵌入，並將嵌入儲存在 `passage_embedding` 欄位中。`function_name` 未在處理器組態中明確指定，因此預設為 `remote`，表示外部託管的模型：
 
 ```json
 PUT /_search/pipeline/ml_inference_pipeline
@@ -310,7 +311,7 @@ PUT /_search/pipeline/ml_inference_pipeline
 ```
 {% include copy-curl.html %}
 
-When making a Predict API request to an externally hosted model, all necessary fields and parameters are usually contained within a `parameters` object:
+向外部託管的模型發出 Predict API 請求時，所有必要的欄位和參數通常都包含在 `parameters` 物件中：
 
 ```json
 POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_predict
@@ -325,7 +326,7 @@ POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_predict
 }
 ```
 
-When specifying the `input_map` for an externally hosted model, you can directly reference the `input` field instead of providing its dot path `parameters.input`:
+為外部託管的模型指定 `input_map` 時，您可以直接參照 `input` 欄位，而不用提供其點路徑 `parameters.input`：
 
 ```json
 "input_map": [
@@ -335,9 +336,9 @@ When specifying the `input_map` for an externally hosted model, you can directly
 ]
 ```
 
-**Step 2: Run the pipeline**
+**步驟 2：執行管線**
 
-Run the following query, providing the pipeline name in the request:
+執行以下查詢，並在請求中提供管線名稱：
 
 ```json
 GET /my_index/_search?search_pipeline=ml_inference_pipeline_local
@@ -350,7 +351,7 @@ GET /my_index/_search?search_pipeline=ml_inference_pipeline_local
 ```
 {% include copy-curl.html %}
 
-The response confirms that the processor has generated text embeddings in the `passage_embedding` field. The document within `_source` now contains both the `passage_text` and `passage_embedding` fields:
+回應確認處理器已在 `passage_embedding` 欄位中產生文字嵌入。`_source` 內的文件現在同時包含 `passage_text` 和 `passage_embedding` 欄位：
 
 ```json
 {
@@ -389,13 +390,13 @@ The response confirms that the processor has generated text embeddings in the `p
 }
 ```
 
-### Example: Externally hosted large language model
+### 範例：外部託管的大型語言模型
 
-This example demonstrates how to configure an `ml_inference` search response processor to work with an externally hosted large language model (LLM) and map the model's response to the search extension object. Using the `ml_inference` processor, you can enable an LLM to summarize search results directly within the response. The summary is included in the `ext` field of the search response, providing seamless access to AI-generated insights alongside the original search results.
+此範例示範如何設定 `ml_inference` 搜尋回應處理器，以搭配外部託管的大型語言模型 (LLM) 使用，並將模型回應對應至搜尋擴充物件。使用 `ml_inference` 處理器，您可以讓 LLM 直接在回應中摘要搜尋結果。摘要會包含在搜尋回應的 `ext` 欄位中，讓您能在原始搜尋結果旁無縫存取 AI 產生的洞察。
 
-**Prerequisite**
+**先決條件**
 
-You must configure an externally hosted LLM for this use case. For more information about externally hosted models, see [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/). Once you register the LLM, you can use the following request to test it. This request requires providing the `prompt` and `context` fields:
+您必須為此使用案例設定外部託管的 LLM。如需外部託管模型的詳細資訊，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。註冊 LLM 後，您可以使用下列請求進行測試。此請求需要提供 `prompt` 和 `context` 欄位：
 
 ```json
 POST /_plugins/_ml/models/KKne6JIBAs32TwoK-FFR/_predict
@@ -408,7 +409,7 @@ POST /_plugins/_ml/models/KKne6JIBAs32TwoK-FFR/_predict
 ```
 {% include copy-curl.html %}
 
-The response contains the model output in the `inference_results` field:
+回應會在 `inference_results` 欄位中包含模型輸出：
 
 ```json
 {
@@ -434,9 +435,9 @@ The response contains the model output in the `inference_results` field:
 }
 ```
 
-**Step 1: Create a pipeline**
+**步驟 1：建立管線**
 
-Create a search pipeline for the registered model. The model requires a `context` field as input. The model response summarizes the text in the `review` field and stores the summary in the `ext.ml_inference.llm_response` field of the search response:
+為已註冊的模型建立搜尋管線。此模型需要 `context` 欄位作為輸入。模型回應會摘要 `review` 欄位中的文字，並將摘要儲存在搜尋回應的 `ext.ml_inference.llm_response` 欄位中：
 
 ```json
 PUT /_search/pipeline/my_pipeline_request_review_llm
@@ -470,17 +471,17 @@ PUT /_search/pipeline/my_pipeline_request_review_llm
 ```
 {% include copy-curl.html %}
 
-In this configuration, you've provided the following parameters:
+在此組態中，您提供了下列參數：
 
-- The `model_id` parameter specifies the ID of the generative AI model.
-- The `function_name` parameter is set to `REMOTE`, indicating that the model is hosted externally.
-- The `input_map` parameter maps the review field from the document to the context field expected by the model.
-- The `output_map` parameter specifies that the model's response should be stored in `ext.ml_inference.llm_response` in the search response.
-- The `model_config` parameter includes a prompt that tells the model how to process the input and generate a summary.
+- `model_id` 參數指定生成式 AI 模型的 ID。
+- `function_name` 參數設為 `REMOTE`，表示此模型為外部託管。
+- `input_map` 參數會將文件中的 review 欄位對應至模型預期的 context 欄位。
+- `output_map` 參數指定模型回應應儲存在搜尋回應中的 `ext.ml_inference.llm_response`。
+- `model_config` 參數包含提示，告知模型如何處理輸入並產生摘要。
 
-**Step 2: Index sample documents**
+**步驟 2：將範例文件編製索引**
 
-Index some sample documents to test the pipeline:
+將一些範例文件編製索引，以測試管線：
 
 ```json
 POST /_bulk
@@ -493,9 +494,9 @@ POST /_bulk
 ```
 {% include copy-curl.html %}
 
-**Step 3: Run the pipeline**
+**步驟 3：執行管線**
 
-Run a search query using the pipeline:
+使用管線執行搜尋查詢：
 
 ```json
 GET /review_string_index/_search?search_pipeline=my_pipeline_request_review_llm
@@ -507,7 +508,7 @@ GET /review_string_index/_search?search_pipeline=my_pipeline_request_review_llm
 ```
 {% include copy-curl.html %}
 
-The response includes the original documents and the generated summary in the `ext.ml_inference.llm_response` field:
+回應包含原始文件，並在 `ext.ml_inference.llm_response` 欄位中包含產生的摘要：
 
 ```json
 {
@@ -568,13 +569,13 @@ The response includes the original documents and the generated summary in the `e
 }
 ```
 
-### Example: Reranking search results using a text similarity model
+### 範例：使用文字相似度模型重新排序搜尋結果
 
-The following example shows you how to configure an `ml_inference` search response processor with a text similarity model.
+下列範例示範如何設定 `ml_inference` 搜尋回應處理器以搭配文字相似度模型。
 
-**Prerequisite**
+**先決條件**
 
-You must configure an externally hosted text similarity model for this use case. For more information about externally hosted models, see [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/). Once you register the text similarity model, you can use the following request to test it. This request requires that you provide the `text` and `text_pair` fields within the `inputs` field:
+您必須為此使用案例設定外部託管的文字相似度模型。如需外部託管模型的詳細資訊，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。註冊文字相似度模型後，您可以使用下列請求進行測試。此請求需要您在 `inputs` 欄位中提供 `text` 和 `text_pair` 欄位：
 
 ```json
 POST /_plugins/_ml/models/Ialx65IBAs32TwoK1lXf/_predict
@@ -590,7 +591,7 @@ POST /_plugins/_ml/models/Ialx65IBAs32TwoK1lXf/_predict
 ```
 {% include copy-curl.html %}
 
-The model returns similarity scores for each input document:
+模型會為每份輸入文件傳回相似度分數：
 
 ```json
 {
@@ -612,9 +613,9 @@ The model returns similarity scores for each input document:
 ```
 {% include copy-curl.html %}
 
-**Step 1: Index sample documents**
+**步驟 1：將範例文件編製索引**
 
-Create an index and add some sample documents:
+建立索引並新增一些範例文件：
 
 ```json
 POST _bulk
@@ -627,9 +628,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-**Step 2: Create a search pipeline**
+**步驟 2：建立搜尋管線**
 
-For this example, you'll create a search pipeline that uses a text similarity model in a `one-to-one` inference mode, processing each document in the search results individually. This setup allows the model to make one prediction request per document, providing specific relevance insights for each search hit. When using `input_map` to map the search request to query text, the JSON path must start with `$._request` or `_request`:
+在此範例中，您將建立一個搜尋管線，在 `one-to-one` 推論模式中使用文字相似度模型，逐一處理搜尋結果中的每份文件。此設定可讓模型為每份文件發出一次預測請求，為每個搜尋命中提供特定的相關性洞察。使用 `input_map` 將搜尋請求對應至查詢文字時，JSON 路徑必須以 `$._request` 或 `_request` 開頭：
 
 ```json
 PUT /_search/pipeline/my_rerank_pipeline
@@ -671,22 +672,22 @@ PUT /_search/pipeline/my_rerank_pipeline
 ```
 {% include copy-curl.html %}
 
-In this configuration, you've provided the following parameters:
+在此組態中，您提供了下列參數：
 
-- The `model_id` parameter specifies the unique identifier of the text similarity model.
-- The `function_name` parameter is set to `REMOTE`, indicating that the model is hosted externally.
-- The `input_map` parameter maps the `diary` field from each document to the `text` input of the model as well as the search query term to the `text_pair` input.
-- The `output_map` parameter maps the model's score to a field named `rank_score` in each document.
-- The `model_input` parameter formats the input for the model, ensuring that it matches the structure expected by the Predict API.
-- The `one_to_one` parameter is set to `true`, ensuring that the model processes each document individually rather than batching multiple documents together.
-- The `ignore_missing` parameter is set to `false`, causing the processor to fail if the mapped fields are missing from a document.
-- The `ignore_failure` parameter is set to `false`, causing the entire pipeline to fail if the ML inference processor encounters an error.
+- `model_id` 參數指定文字相似度模型的唯一識別碼。
+- `function_name` 參數設為 `REMOTE`，表示此模型為外部託管。
+- `input_map` 參數會將每份文件中的 `diary` 欄位對應至模型的 `text` 輸入，並將搜尋查詢詞彙對應至 `text_pair` 輸入。
+- `output_map` 參數會將模型的分數對應至每份文件中名為 `rank_score` 的欄位。
+- `model_input` 參數會格式化模型的輸入，確保其符合 Predict API 預期的結構。
+- `one_to_one` 參數設為 `true`，確保模型逐一處理每份文件，而非將多份文件批次處理。
+- `ignore_missing` 參數設為 `false`，若文件中缺少對應的欄位，會導致處理器失敗。
+- `ignore_failure` 參數設為 `false`，若 ML 推論處理器發生錯誤，會導致整個管線失敗。
 
-The `rerank` processor is applied after ML inference. It reorders the documents based on the `rank_score` field generated by the ML model and then removes this field from the final results.
+`rerank` 處理器會在 ML 推論之後套用。它會根據 ML 模型產生的 `rank_score` 欄位重新排序文件，然後從最終結果中移除此欄位。
 
-**Step 3: Run the pipeline**
+**步驟 3：執行管線**
 
-Now perform a search using the created pipeline:
+現在使用建立的管線執行搜尋：
 
 ```json
 GET /demo-index-0/_search?search_pipeline=my_rerank_pipeline
@@ -702,7 +703,7 @@ GET /demo-index-0/_search?search_pipeline=my_rerank_pipeline
 ```
 {% include copy-curl.html %}
 
-The response includes the original documents and their reranked scores:
+回應包含原始文件及其重新排序後的分數：
 
 ```json
 {
@@ -753,6 +754,6 @@ The response includes the original documents and their reranked scores:
 }
 ```
 
-## Next steps
+## 後續步驟
 
-- See a comprehensive example of [reranking by a field using an externally hosted cross-encoder model]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-cross-encoder/).
+- 請參閱[使用外部託管的交叉編碼器模型依欄位重新排序]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-cross-encoder/)的完整範例。

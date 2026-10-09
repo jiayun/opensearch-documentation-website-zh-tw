@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Autocomplete field types
+title: "自動完成欄位類型"
 nav_order: 80
 has_children: true
 has_toc: false
@@ -11,11 +12,11 @@ redirect_from:
   - /field-types/supported-field-types/autocomplete/
 ---
 
-# Autocomplete field types
+# 自動完成欄位類型
 
-The following table lists all autocomplete field types that OpenSearch supports.
+下表列出 OpenSearch 支援的所有自動完成欄位類型。
 
-Field data type | Description
+欄位資料類型 | 說明
 :--- | :---  
-[`completion`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/completion/) | A completion suggester that provides autocomplete functionality using prefix completion. You need to upload a list of all possible completions into the index before using this feature.
-[`search_as_you_type`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/search-as-you-type/) | Provides search-as-you-type functionality using both prefix and infix completion. 
+[`completion`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/completion/) | 透過前綴補全提供自動完成功能的完成建議器。使用此功能前，您需要將所有可能的自動完成結果清單上傳至索引。
+[`search_as_you_type`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/search-as-you-type/) | 透過前綴與中綴補全提供隨打即搜功能。 

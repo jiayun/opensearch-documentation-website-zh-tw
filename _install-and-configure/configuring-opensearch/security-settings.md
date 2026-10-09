@@ -1,415 +1,416 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Security settings
+title: "安全性設定"
 parent: Configuring OpenSearch
 nav_order: 40
 ---
 
-# Security settings
+# 安全性設定
 
-The Security plugin provides a number of YAML configuration files that are used to store the necessary settings that define the way the Security plugin manages users, roles, and activity within the cluster. For a full list of the Security plugin configuration files, see [Modifying the YAML files]({{site.url}}{{site.baseurl}}/security/configuration/yaml/).
+Security 外掛程式提供多個 YAML 組態檔案，用於儲存必要的設定，這些設定定義 Security 外掛程式如何管理叢集中的使用者、角色與活動。如需 Security 外掛程式組態檔案的完整清單，請參閱[修改 YAML 檔案]({{site.url}}{{site.baseurl}}/security/configuration/yaml/)。
 
-The following sections describe security-related settings in `opensearch.yml`. You can find the `opensearch.yml` in the `<OPENSEARCH_HOME>/config/opensearch.yml`. To learn how to apply these settings, see [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/).
+以下各節說明 `opensearch.yml` 中與安全性相關的設定。您可以在 `<OPENSEARCH_HOME>/config/opensearch.yml` 中找到 `opensearch.yml`。若要了解如何套用這些設定，請參閱[設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/)。
 
-## Common settings
+## 一般設定
 
-The Security plugin supports the following common settings:
+Security 外掛程式支援下列一般設定：
 
--  `plugins.security.nodes_dn` (Static): Specifies a list of distinguished names (DNs) that denote the other nodes in the cluster. This setting supports wildcards and regular expressions. The list of DNs are also read from the security index **in addition** to the YAML configuration when `plugins.security.nodes_dn_dynamic_config_enabled` is `true`. If this setting is not configured correctly, the cluster will fail to form as the nodes will not be able to trust each other and will result in the following error: `Transport client authentication no longer supported`.
+-  `plugins.security.nodes_dn`（靜態）：指定一份辨別名稱 (DN) 清單，用以表示叢集中的其他節點。此設定支援萬用字元與規則運算式。當 `plugins.security.nodes_dn_dynamic_config_enabled` 為 `true` 時，除了 YAML 組態之外，**還會**從安全性索引讀取 DN 清單。若此設定未正確設定，叢集將無法形成，因為節點之間無法互相信任，並會產生下列錯誤：`Transport client authentication no longer supported`。
 
-- `plugins.security.nodes_dn_dynamic_config_enabled` (Static): Relevant for `cross_cluster` use cases where there is a need to manage the allow listed `nodes_dn` without having to restart the nodes every time a new `cross_cluster` remote is configured.
-  Setting `nodes_dn_dynamic_config_enabled` to `true` enables **super-admin callable** Distinguished Names APIs, which provide means to update or retrieve `nodes_dn` dynamically. This setting only has effect if `plugins.security.cert.intercluster_request_evaluator_class` is not set. Default is `false`.
+- `plugins.security.nodes_dn_dynamic_config_enabled`（靜態）：適用於 `cross_cluster` 使用案例，即需要管理允許清單中的 `nodes_dn`，而不必在每次設定新的 `cross_cluster` 遠端時重新啟動節點。
+  將 `nodes_dn_dynamic_config_enabled` 設定為 `true` 會啟用**可由超級管理員呼叫**的 Distinguished Names API，這些 API 提供動態更新或擷取 `nodes_dn` 的方法。此設定僅在未設定 `plugins.security.cert.intercluster_request_evaluator_class` 時才會生效。預設為 `false`。
 
-- `plugins.security.authcz.admin_dn` (Static): Defines the DNs of certificates to which admin privileges should be assigned. Required.
+- `plugins.security.authcz.admin_dn`（靜態）：定義應獲指派管理員權限的憑證 DN。必要。
 
-- `plugins.security.roles_mapping_resolution` (Static): Defines how backend roles are mapped to Security roles. The following values are supported:
-    - `MAPPING_ONLY`(Default): Mappings must be configured explicitly in `roles_mapping.yml`.
-    - `BACKENDROLES_ONLY`: Backend roles are mapped to security roles directly. Settings in `roles_mapping.yml` have no effect.
-    - `BOTH`: Backend roles are mapped to security roles both directly and through `roles_mapping.yml`.
+- `plugins.security.roles_mapping_resolution`（靜態）：定義後端角色如何對應至 Security 角色。支援下列值：
+    - `MAPPING_ONLY`（預設）：必須在 `roles_mapping.yml` 中明確設定對應。
+    - `BACKENDROLES_ONLY`：後端角色會直接對應至安全性角色。`roles_mapping.yml` 中的設定不會生效。
+    - `BOTH`：後端角色會同時直接對應以及透過 `roles_mapping.yml` 對應至安全性角色。
 
-- `plugins.security.dls.mode` (Static): Sets the document-level security (DLS) evaluation mode. Default is `adaptive`. See [How to set the DLS evaluation mode]({{site.url}}{{site.baseurl}}/security/access-control/document-level-security/#how-to-set-the-dls-evaluation-mode-in-opensearchyml).
+- `plugins.security.dls.mode`（靜態）：設定文件層級安全性 (DLS) 的評估模式。預設為 `adaptive`。請參閱[如何設定 DLS 評估模式]({{site.url}}{{site.baseurl}}/security/access-control/document-level-security/#how-to-set-the-dls-evaluation-mode-in-opensearchyml)。
 
-- `plugins.security.compliance.salt` (Static): The salt to use when generating the hash value for field masking. Must be at least 32 characters. Only ASCII characters are allowed. Optional.
+- `plugins.security.compliance.salt`（靜態）：為欄位遮罩產生雜湊值時使用的 salt。長度至少須為 32 個字元。僅允許 ASCII 字元。選用。
 
-- `plugins.security.compliance.immutable_indices` (Static): Documents in indexes that are marked as immutable follow the write-once, read-many paradigm. Documents created in these indexes cannot be changed and are therefore immutable.
+- `plugins.security.compliance.immutable_indices`（靜態）：標記為不可變更的索引中的文件遵循「一次寫入、多次讀取」模式。在這些索引中建立的文件無法變更，因此是不可變更的。
 
-- `config.dynamic.http.anonymous_auth_enabled` (Static): Enables anonymous authentication. This will cause all HTTP authenticators to not challenge. Default is `false`.
+- `config.dynamic.http.anonymous_auth_enabled`（靜態）：啟用匿名驗證。這會使所有 HTTP 驗證器都不發出驗證挑戰。預設為 `false`。
 
-- `http.detailed_errors.enabled` (Static): Enables a detailed error message for REST calls performed against the OpenSearch cluster. If set to `true`,  provides the `root_cause` together with the error code. Default is `true`.  
+- `http.detailed_errors.enabled`（靜態）：為針對 OpenSearch 叢集執行的 REST 呼叫啟用詳細錯誤訊息。若設定為 `true`，會連同錯誤程式碼一併提供 `root_cause`。預設為 `true`。
 
-## REST management API settings
+## REST 管理 API 設定
 
-The Security plugin supports the following REST management API settings:
+Security 外掛程式支援下列 REST 管理 API 設定：
 
-- `plugins.security.restapi.roles_enabled` (Static): Enables role-based access to the REST management API for listed roles. Roles are separated by a comma. Default is an empty list (no role is allowed to access the REST management API). See [Access control for the API]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api).
+- `plugins.security.restapi.roles_enabled`（靜態）：為列出的角色啟用以角色為基礎的 REST 管理 API 存取權。角色之間以逗號分隔。預設為空白清單（不允許任何角色存取 REST 管理 API）。請參閱[API 的存取控制]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api)。
 
-- `plugins.security.restapi.endpoints_disabled.<role>.<endpoint>` (Static): Disables specific endpoints and their HTTP methods for roles. Values for this setting compose an array of HTTP methods. For example: `plugins.security.restapi.endpoints_disabled.all_access.ACTIONGROUPS: ["PUT","POST","DELETE"]`. By default, all endpoints and methods are allowed. To disable an endpoint for every role, use `global` in place of the role name. For the valid `<endpoint>` values, see [Endpoint values]({{site.url}}{{site.baseurl}}/security/access-control/api/#endpoint-values).
+- `plugins.security.restapi.endpoints_disabled.<role>.<endpoint>`（靜態）：針對角色停用特定端點及其 HTTP 方法。此設定的值由 HTTP 方法陣列組成。例如：`plugins.security.restapi.endpoints_disabled.all_access.ACTIONGROUPS: ["PUT","POST","DELETE"]`。預設會允許所有端點與方法。若要為每個角色停用某個端點，請使用 `global` 取代角色名稱。如需有效的 `<endpoint>` 值，請參閱[端點值]({{site.url}}{{site.baseurl}}/security/access-control/api/#endpoint-values)。
 
-- `plugins.security.restapi.admin.enabled` (Static): Enables the `restapi:admin/*` cluster permissions, which grant a role access to the allow list, distinguished name, and certificate APIs. When this setting is `false`, these permissions have no effect, and those APIs are reachable only with an admin certificate. Default is `false`. See [REST API admin permissions]({{site.url}}{{site.baseurl}}/security/access-control/api/#rest-api-admin-permissions).
+- `plugins.security.restapi.admin.enabled`（靜態）：啟用 `restapi:admin/*` 叢集權限，這些權限會授予角色存取允許清單、辨別名稱與憑證 API 的權限。當此設定為 `false` 時，這些權限不會生效，且只有使用管理員憑證才能存取這些 API。預設為 `false`。請參閱 [REST API 管理員權限]({{site.url}}{{site.baseurl}}/security/access-control/api/#rest-api-admin-permissions)。
 
-- `plugins.security.restapi.max_string_length` (Static): Sets the maximum number of characters allowed for any individual string value in a Security REST API request body. Valid values are between `1` and `50000000`, inclusive. Default is `4096`. Increase this value if you submit large free-form values, such as document-level security (DLS) queries, through the REST API.
+- `plugins.security.restapi.max_string_length`（靜態）：設定 Security REST API 請求本文中任何單一字串值允許的最大字元數。有效值介於 `1` 與 `50000000` 之間（含）。預設為 `4096`。若您透過 REST API 提交大型自由格式值，例如文件層級安全性 (DLS) 查詢，請增加此值。
 
-- `plugins.security.restapi.password_validation_regex` (Static): Specifies a regular expression to set the criteria for the login password. For more information, see [Password settings]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#password-settings).
+- `plugins.security.restapi.password_validation_regex`（靜態）：指定規則運算式，用以設定登入密碼的條件。如需詳細資訊，請參閱[密碼設定]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#password-settings)。
 
-- `plugins.security.restapi.password_validation_error_message` (Static): Specifies an error message that loads when a password doesn’t pass validation. This setting is used in conjunction with `plugins.security.restapi.password_validation_regex`.
+- `plugins.security.restapi.password_validation_error_message`（靜態）：指定密碼未通過驗證時載入的錯誤訊息。此設定需與 `plugins.security.restapi.password_validation_regex` 搭配使用。
 
-- `plugins.security.restapi.password_min_length` (Static): Sets the minimum number of characters for the password length when using the score-based password strength estimator. The default is 8. This is also the minimum. For more information, see [Password settings]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#password-settings).
+- `plugins.security.restapi.password_min_length`（靜態）：設定使用以分數為基礎的密碼強度估算器時，密碼長度的最小字元數。預設為 8，這也是最小值。如需詳細資訊，請參閱[密碼設定]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#password-settings)。
 
-- `plugins.security.restapi.password_score_based_validation_strength` (Static): Sets a threshold to determine whether the password is strong or weak. Valid values are `fair`, `good`, `strong`, and `very_strong`. This setting is used in conjunction with `plugins.security.restapi.password_min_length`.
+- `plugins.security.restapi.password_score_based_validation_strength`（靜態）：設定用於判斷密碼強弱的門檻。有效值為 `fair`、`good`、`strong` 與 `very_strong`。此設定需與 `plugins.security.restapi.password_min_length` 搭配使用。
 
-- `plugins.security.unsupported.restapi.allow_securityconfig_modification` (Static): Enables the use of the PUT and PATCH methods for the configuration APIs.
+- `plugins.security.unsupported.restapi.allow_securityconfig_modification`（靜態）：允許對組態 API 使用 PUT 與 PATCH 方法。
 
-## Advanced settings
+## 進階設定
 
-The Security plugin supports the following advanced settings:
+安全性外掛程式支援下列進階設定：
 
-- `plugins.security.authcz.impersonation_dn` (Static): Enables transport layer impersonation. This allows DNs to impersonate as other users. See [User impersonation]({{site.url}}{{site.baseurl}}/security/access-control/impersonation/).
+- `plugins.security.authcz.impersonation_dn`（靜態）：啟用傳輸層身分冒用。這可讓 DN 以其他使用者的身分執行操作。請參閱[使用者身分冒用]({{site.url}}{{site.baseurl}}/security/access-control/impersonation/)。
 
-- `plugins.security.authcz.rest_impersonation_user` (Static): Enables REST layer impersonation. This allows users to impersonate as other users. See [User impersonation]({{site.url}}{{site.baseurl}}/security/access-control/impersonation/).
+- `plugins.security.authcz.rest_impersonation_user`（靜態）：啟用 REST 層身分冒用。這可讓使用者以其他使用者的身分執行操作。請參閱[使用者身分冒用]({{site.url}}{{site.baseurl}}/security/access-control/impersonation/)。
 
-- `plugins.security.allow_default_init_securityindex` (Static): When set to `true`, OpenSearch Security will automatically initialize the configuration index with the files in the `/config` directory if the index does not exist.
+- `plugins.security.allow_default_init_securityindex`（靜態）：設定為 `true` 時，若組態索引不存在，OpenSearch Security 會自動使用 `/config` 目錄中的檔案初始化組態索引。
 
-  This will use well-known default passwords. Use only in a private network/environment.
+  這會使用眾所周知的預設密碼。請僅在私人網路／環境中使用。
   {: .warning}
 
-- `plugins.security.allow_unsafe_democertificates` (Static): When set to `true`, OpenSearch starts up with demo certificates. These certificates are issued only for demo purposes.
+- `plugins.security.allow_unsafe_democertificates`（靜態）：設定為 `true` 時，OpenSearch 會使用示範憑證啟動。這些憑證僅供示範用途核發。
 
-  These certificates are well known and therefore unsafe for production. Use only in a private network/environment.
+  這些憑證廣為人知，因此不適合用於生產環境。請僅在私人網路／環境中使用。
   {: .warning}
 
-- `plugins.security.ccs.ignore_source_security_roles` (Dynamic): When set to `true`, a remote cluster ignores the security roles propagated from the coordinating cluster on cross-cluster search requests and evaluates access using only its own `roles_mapping.yml` configuration. Default is `false`. See [Remote cluster role evaluation]({{site.url}}{{site.baseurl}}/search-plugins/cross-cluster-search/#remote-cluster-role-evaluation).
+- `plugins.security.ccs.ignore_source_security_roles`（動態）：設定為 `true` 時，遠端叢集會忽略跨叢集搜尋請求中由協調叢集傳遞的安全性角色，並僅使用其本身的 `roles_mapping.yml` 組態來評估存取權。預設為 `false`。請參閱[遠端叢集角色評估]({{site.url}}{{site.baseurl}}/search-plugins/cross-cluster-search/#remote-cluster-role-evaluation)。
 
-- `plugins.security.system_indices.permission.enabled` (Static): Enables the system index permissions feature. When set to `true`, the feature is enabled and users with permission to modify roles can create roles that include permissions that grant access to system indexes. When set to `false`, the permission is disabled and only admins with an admin certificate can make changes to system indexes. By default, the permission is set to `false` in a new cluster.
+- `plugins.security.system_indices.permission.enabled`（靜態）：啟用系統索引權限功能。設定為 `true` 時，此功能會啟用，且具有修改角色權限的使用者可以建立包含授予系統索引存取權之權限的角色。設定為 `false` 時，此權限會停用，只有持有管理員憑證的管理員才能變更系統索引。在新叢集中，此權限預設設定為 `false`。
 
-## Expert-level settings
+## 專家級設定
 
-An expert-level setting should only be configured and deployed by an admin who understands the feature completely. Misunderstandings of a feature can lead to security risks, cause the Security plugin to not operate properly, or cause data loss.
+專家級設定只應由完全了解該功能的管理員設定與部署。對功能的誤解可能導致安全性風險、使 Security 外掛程式無法正常運作，或造成資料遺失。
 {: .warning}
 
-The Security plugin supports the following expert-level settings:
+Security 外掛程式支援下列專家級設定：
 
-- `plugins.security.config_index_name` (Static): The name of the index where `.opendistro_security` stores its configuration.
+- `plugins.security.config_index_name`（靜態）：`.opendistro_security` 儲存其組態的索引名稱。
 
-- `plugins.security.cert.oid` (Static): Defines the Object Identifier (OID) of server node certificates.
+- `plugins.security.cert.oid`（靜態）：定義伺服器節點憑證的物件識別碼 (OID)。
 
-- `plugins.security.cert.intercluster_request_evaluator_class` (Static): Specifies the implementation of `org.opensearch.security.transport.InterClusterRequestEvaluator` that is used to evaluate intercluster requests. Instances of `org.opensearch.security.transport.InterClusterRequestEvaluator` must implement a single-argument constructor that takes an `org.opensearch.common.settings.Settings` object.
+- `plugins.security.cert.intercluster_request_evaluator_class`（靜態）：指定用於評估跨叢集請求的 `org.opensearch.security.transport.InterClusterRequestEvaluator` 實作。`org.opensearch.security.transport.InterClusterRequestEvaluator` 的執行個體必須實作一個接受 `org.opensearch.common.settings.Settings` 物件的單一引數建構函式。
 
-- `plugins.security.enable_snapshot_restore_privilege` (Static): When set to `false`, this setting disables snapshot restore for regular users. In this case, only snapshot restore requests signed by an admin TLS certificate are accepted. When set to `true` (default), regular users can restore snapshots if they have the `cluster:admin/snapshot/restore`, `indices:admin/create`, and `indices:data/write/index` privileges.
+- `plugins.security.enable_snapshot_restore_privilege`（靜態）：設為 `false` 時，此設定會停用一般使用者的快照還原功能。在此情況下，只會接受由管理員 TLS 憑證簽署的快照還原請求。設為 `true`（預設）時，一般使用者若具有 `cluster:admin/snapshot/restore`、`indices:admin/create` 和 `indices:data/write/index` 權限，即可還原快照。
 
-  A snapshot can only be restored when it does not contain global state and does not restore the `.opendistro_security` index.
+  只有在快照不包含全域狀態，且不會還原 `.opendistro_security` 索引時，才能還原該快照。
   {: .note}
 
-- `plugins.security.check_snapshot_restore_write_privileges` (Static): When set to `false`, additional index checks are omitted. When set to the default of `true`, attempts to restore snapshots are evaluated for `indices:admin/create` and `"indices:data/write/index`.
+- `plugins.security.check_snapshot_restore_write_privileges`（靜態）：設為 `false` 時，會略過額外的索引檢查。設為預設值 `true` 時，會針對 `indices:admin/create` 和 `"indices:data/write/index` 評估還原快照的嘗試。
 
-- `plugins.security.cache.ttl_minutes` (Static): Determines how long it takes for authentication caching to time out. The authentication cache helps speed up authentication by temporarily storing user objects returned from the backend so that the Security plugin is not required to make repeated requests for them. Set the value in minutes. The default is `60`. Disable caching by setting the value to `0`.
+- `plugins.security.cache.ttl_minutes`（靜態）：決定驗證快取的逾時時間。驗證快取會暫時儲存從後端傳回的使用者物件，使 Security 外掛程式不需重複發出請求來取得這些物件，藉此加快驗證速度。請以分鐘為單位設定此值。預設為 `60`。將此值設為 `0` 即可停用快取。
 
-- `plugins.security.disabled` (Static): Disables OpenSearch Security.
+- `plugins.security.disabled`（靜態）：停用 OpenSearch Security。
 
-  Disabling this plugin can expose your configuration (including passwords) to the public.
+  停用此外掛程式可能會使您的組態（包括密碼）公開暴露。
   {:warning}
 
-- `plugins.security.protected_indices.enabled` (Static): If set to `true`, enables protected indexes. Protected indexes are even more secure than regular indexes. These indexes require a role to access like any other traditional index and require an additional role to be visible. This setting is used in conjunction with the `plugins.security.protected_indices.roles` and `plugins.security.protected_indices.indices` settings.
+- `plugins.security.protected_indices.enabled`（靜態）：若設為 `true`，則啟用受保護的索引。受保護的索引比一般索引更安全。這些索引與其他傳統索引一樣需要角色才能存取，此外還需要另一個角色才能看見。此設定需搭配 `plugins.security.protected_indices.roles` 和 `plugins.security.protected_indices.indices` 設定使用。
 
-- `plugins.security.protected_indices.roles` (Static): Specifies a list of roles to which a user must be mapped to access protected indexes.
+- `plugins.security.protected_indices.roles`（靜態）：指定使用者必須對應到的角色清單，才能存取受保護的索引。
 
-- `plugins.security.protected_indices.indices` (Static): Specifies a list of indexes to mark as protected. These indexes will only be visible to users mapped to the roles specified in `plugins.security.protected_indices.roles`. After this requirement is fulfilled, a user will still need to be mapped to the traditional role used to grant access permission to the index.
+- `plugins.security.protected_indices.indices`（靜態）：指定要標記為受保護的索引清單。這些索引只對對應到 `plugins.security.protected_indices.roles` 中所指定角色的使用者可見。滿足此要求後，使用者仍需對應到用於授予該索引存取權限的傳統角色。
 
-- `plugins.security.system_indices.enabled` (Static): If set to `true`, enables system indexes. System indexes are similar to the security index, except that the contents are not encrypted. Indexes configured as system indexes can be accessed by either a super-admin or a user with a role that includes the [system index permission]({{site.url}}{{site.baseurl}}/security/access-control/permissions/#system-index-permissions). For more information about system indexes, see [System indexes]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/).
+- `plugins.security.system_indices.enabled`（靜態）：若設為 `true`，則啟用系統索引。系統索引與安全性索引類似，差別在於其內容未經加密。設定為系統索引的索引，可由超級管理員或具有包含[系統索引權限]({{site.url}}{{site.baseurl}}/security/access-control/permissions/#system-index-permissions)之角色的使用者存取。如需系統索引的詳細資訊，請參閱[系統索引]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/)。
 
-- `plugins.security.system_indices.indices` (Static): A list of indexes to be used as system indexes. This setting is controlled by the `plugins.security.system_indices.enabled` setting.
+- `plugins.security.system_indices.indices`（靜態）：要作為系統索引使用的索引清單。此設定由 `plugins.security.system_indices.enabled` 設定控制。
 
-- `plugins.security.allow_default_init_securityindex` (Static): When set to `true`, sets the Security plugin to its default security settings if an attempt to create the security index fails when OpenSearch launches. Default security settings are stored in YAML files contained in the `opensearch-project/security/config` directory. Default is `false`.
+- `plugins.security.allow_default_init_securityindex`（靜態）：設為 `true` 時，若 OpenSearch 啟動時建立安全性索引的嘗試失敗，會將 Security 外掛程式設為其預設安全性設定。預設安全性設定儲存在 `opensearch-project/security/config` 目錄中的 YAML 檔案內。預設為 `false`。
 
-- `plugins.security.cert.intercluster_request_evaluator_class` (Static): A class to be used for evaluating intercluster communication.
+- `plugins.security.cert.intercluster_request_evaluator_class`（靜態）：用於評估跨叢集通訊的類別。
 
-- `plugins.security.enable_snapshot_restore_privilege` (Static): Enables granting the snapshot restore privilege. Optional. Default is `true`.
+- `plugins.security.enable_snapshot_restore_privilege`（靜態）：啟用授予快照還原權限的功能。選用。預設為 `true`。
 
-- `plugins.security.check_snapshot_restore_write_privileges` (Static): Enforces write privilege evaluation when creating snapshots. Default is `true`.
+- `plugins.security.check_snapshot_restore_write_privileges`（靜態）：在建立快照時強制執行寫入權限評估。預設為 `true`。
 
-If you change any of the following password hashing properties, you must rehash all internal passwords to ensure compatibility and security.
+若您變更下列任何密碼雜湊屬性，則必須重新雜湊所有內部密碼，以確保相容性與安全性。
 {: .warning}
 
-- `plugins.security.password.hashing.algorithm`: (Static): Specifies the password hashing algorithm to use. The following values are supported:  
-  - `BCrypt` (Default)
-  - `PBKDF2` (Compliant with FIPS 140-2 and FIPS 140-3)
+- `plugins.security.password.hashing.algorithm`：（靜態）：指定要使用的密碼雜湊演算法。支援下列值：  
+  - `BCrypt`（預設）
+  - `PBKDF2`（符合 FIPS 140-2 與 FIPS 140-3）
   - `Argon2`
 
-- `plugins.security.password.hashing.bcrypt.rounds` (Static): Specifies the number of rounds to use for password hashing with `BCrypt`. Valid values are between `4` and `31`, inclusive. Default is `12`.
+- `plugins.security.password.hashing.bcrypt.rounds`（靜態）：指定使用 `BCrypt` 進行密碼雜湊時的回合數。有效值介於 `4` 與 `31` 之間（含）。預設為 `12`。
 
-- `plugins.security.password.hashing.bcrypt.minor` (Static): Specifies the minor version of the `BCrypt` algorithm to use for password hashing. The following values are supported:
+- `plugins.security.password.hashing.bcrypt.minor`（靜態）：指定用於密碼雜湊的 `BCrypt` 演算法次要版本。支援下列值：
   - `A`
   - `B`
-  - `Y` (Default)
+  - `Y`（預設）
 
-- `plugins.security.password.hashing.pbkdf2.function` (Static): Specifies the pseudo-random function applied to the password. The following values are supported:
+- `plugins.security.password.hashing.pbkdf2.function`（靜態）：指定套用至密碼的偽隨機函式。支援下列值：
   - `SHA1`
   - `SHA224`
-  - `SHA256` (Default)
+  - `SHA256`（預設）
   - `SHA384`
   - `SHA512`
 
-- `plugins.security.password.hashing.pbkdf2.iterations` (Static): Specifies the number of times that the pseudo-random function is applied to the password. Default is `600,000`.
+- `plugins.security.password.hashing.pbkdf2.iterations`（靜態）：指定將偽隨機函式套用至密碼的次數。預設為 `600,000`。
 
-- `plugins.security.password.hashing.pbkdf2.length` (Static): Specifies the desired length of the final derived key. Default is `256`.
+- `plugins.security.password.hashing.pbkdf2.length`（靜態）：指定最終衍生金鑰的所需長度。預設為 `256`。
 
-- `plugins.security.password.hashing.argon2.iterations`: Specifies the number of passes over memory that the algorithm performs. Increasing this value raises CPU computation time and improves resistance to brute-force attacks. Default: `3`.
+- `plugins.security.password.hashing.argon2.iterations`：指定演算法對記憶體執行的處理次數。增加此值會提高 CPU 運算時間，並增強對暴力破解攻擊的抵抗力。預設：`3`。
 
-- `plugins.security.password.hashing.argon2.memory`: Specifies the amount of memory (in kibibytes) used during hashing. Default: `65536` (64 MiB).
+- `plugins.security.password.hashing.argon2.memory`：指定雜湊期間使用的記憶體量（以 KiB 為單位）。預設：`65536` (64 MiB)。
 
-- `plugins.security.password.hashing.argon2.parallelism`: Specifies the number of parallel threads used for computation. Default: `1`.
+- `plugins.security.password.hashing.argon2.parallelism`：指定用於運算的平行執行緒數。預設：`1`。
 
-- `plugins.security.password.hashing.argon2.length`: Specifies the length (in bytes) of the resulting hash output. Default: `32`.
+- `plugins.security.password.hashing.argon2.length`：指定產生之雜湊輸出的長度（以位元組為單位）。預設：`32`。
 
-- `plugins.security.password.hashing.argon2.type`: Specifies which variant of Argon2 to use. The following values are supported:
+- `plugins.security.password.hashing.argon2.type`：指定要使用的 Argon2 變體。支援下列值：
   - `Argon2i`
   - `Argon2d`
-  - `Argon2id` (default)
+  - `Argon2id`（預設）
 
-- `plugins.security.password.hashing.argon2.version`: Specifies which version of Argon2 to use. The following values are supported:
+- `plugins.security.password.hashing.argon2.version`：指定要使用的 Argon2 版本。支援下列值：
   - `16`
-  - `19` (default)
+  - `19`（預設）
 
 
 
-## Audit log settings
+## 稽核記錄檔設定
 
-The Security plugin supports the following audit log settings:
+Security 外掛程式支援下列稽核記錄檔設定：
 
-- `plugins.security.audit.enable_rest` (Dynamic): Enables or disables REST request logging. Default is `true` (enable).
+- `plugins.security.audit.enable_rest`（動態）：啟用或停用 REST 請求記錄。預設為 `true`（啟用）。
 
-- `plugins.security.audit.enable_transport` (Dynamic): Enables or disables transport-level request logging. Default is `false` (disable).
+- `plugins.security.audit.enable_transport`（動態）：啟用或停用傳輸層級的請求記錄。預設為 `false`（停用）。
 
-- `plugins.security.audit.resolve_bulk_requests` (Dynamic): Enable or disable bulk request logging. When enabled, all individual requests within bulk requests are also logged. Default is `false` (disabled).
+- `plugins.security.audit.resolve_bulk_requests`（動態）：啟用或停用大量 (bulk) 請求記錄。啟用時，也會記錄大量請求中的每個個別請求。預設為 `false`（停用）。
 
-- `plugins.security.audit.config.disabled_categories` (Dynamic): Disables the specified event categories.
+- `plugins.security.audit.config.disabled_categories`（動態）：停用指定的事件類別。
 
-- `plugins.security.audit.ignore_requests` (Dynamic): Excludes the specified requests from being logged. Allows wildcards and regular expressions containing actions or REST request paths.
+- `plugins.security.audit.ignore_requests`（動態）：將指定的請求排除在記錄之外。允許使用包含動作或 REST 請求路徑的萬用字元和規則運算式。
 
-- `plugins.security.audit.threadpool.size` (Static): Determines the number of threads in the thread pool used to log events. Default is `10`. Setting this value to `0` disables the thread pool, which means the plugin logs events synchronously.
+- `plugins.security.audit.threadpool.size`（靜態）：決定用於記錄事件之執行緒集區中的執行緒數量。預設為 `10`。將此值設為 `0` 會停用執行緒集區，這表示外掛程式會以同步方式記錄事件。
 
-- `plugins.security.audit.threadpool.max_queue_len` (Static): Sets the maximum queue length per thread. Default is `100000`.
+- `plugins.security.audit.threadpool.max_queue_len`（靜態）：設定每個執行緒的最大佇列長度。預設為 `100000`。
 
-- `plugins.security.audit.ignore_users` (Dynamic): An array of users. Audit requests from the users in the list will not be logged.
+- `plugins.security.audit.ignore_users`（動態）：使用者陣列。不會記錄清單中使用者的稽核請求。
 
-- `plugins.security.audit.type` (Static): The destination of audit log events. Valid values are `internal_opensearch`, `external_opensearch`, `debug`, and `webhook`.
+- `plugins.security.audit.type`（靜態）：稽核記錄檔事件的目的地。有效值為 `internal_opensearch`、`external_opensearch`、`debug` 和 `webhook`。
 
-- `plugins.security.audit.enable_standalone` (Static): Enables standalone audit logging for clusters running without fine-grained access control (SSL-only or security-disabled modes). Set this to `true` and also set `plugins.security.audit.type` to activate standalone audit logging. Default is `false`. For more information, see [Standalone audit logging]({{site.url}}{{site.baseurl}}/security/audit-logs/standalone/).
+- `plugins.security.audit.enable_standalone`（靜態）：為未使用細粒度存取控制（僅 SSL 或停用安全性模式）執行的叢集啟用獨立稽核記錄。請將此設定設為 `true`，並同時設定 `plugins.security.audit.type`，以啟用獨立稽核記錄。預設為 `false`。如需更多資訊，請參閱[獨立稽核記錄]({{site.url}}{{site.baseurl}}/security/audit-logs/standalone/)。
 
-- `plugins.security.audit.config.body_logging_exclusions` (Dynamic): A list of action group names or raw action and path patterns for which request body logging is suppressed. Default is `[]`, which logs all request bodies. For more information, see [Body logging exclusions]({{site.url}}{{site.baseurl}}/security/audit-logs/index/#body-logging-exclusions).
+- `plugins.security.audit.config.body_logging_exclusions`（動態）：動作群組名稱或原始動作與路徑模式的清單，系統會針對這些項目略過請求本文記錄。預設為 `[]`，即記錄所有請求本文。如需更多資訊，請參閱[本文記錄排除項目]({{site.url}}{{site.baseurl}}/security/audit-logs/index/#body-logging-exclusions)。
 
-- `plugins.security.audit.config.action_groups.<NAME>` (Static): Defines named groups of action and path patterns for use with `body_logging_exclusions`. Each group is a comma-separated string of transport action patterns, REST paths, or both. Supports wildcards.
+- `plugins.security.audit.config.action_groups.<NAME>`（靜態）：定義具名的動作與路徑模式群組，以搭配 `body_logging_exclusions` 使用。每個群組都是以逗號分隔的字串，內容為傳輸動作模式、REST 路徑，或兩者皆有。支援萬用字元。
 
-- `plugins.security.audit.config.log4j.enable_mdc_routing` (Static): Enables Mapped Diagnostic Context (MDC) routing for the Log4j audit sink. When enabled, audit events set the `audit_category`, `audit_action`, `audit_user`, and `audit_request_type` MDC keys, which Log4j routing appenders can use. Default is `false`.
+- `plugins.security.audit.config.log4j.enable_mdc_routing`（靜態）：為 Log4j 稽核接收端啟用對應診斷內容 (Mapped Diagnostic Context, MDC) 路由。啟用時，稽核事件會設定 `audit_category`、`audit_action`、`audit_user` 和 `audit_request_type` MDC 鍵，供 Log4j 路由附加器 (appender) 使用。預設為 `false`。
 
-- `plugins.security.audit.config.http_endpoints` (Static): A list of endpoints for `localhost`.
+- `plugins.security.audit.config.http_endpoints`（靜態）：`localhost` 的端點清單。
 
-- `plugins.security.audit.config.index` (Static): The audit log index. The default is the date-rolling pattern `"'security-auditlog-'YYYY.MM.dd"`, which produces a new index daily (for example, `security-auditlog-2023.06.15`). You can also specify a fixed index name instead. In either case, make sure to secure the index properly.
+- `plugins.security.audit.config.index`（靜態）：稽核記錄檔索引。預設為依日期輪替的模式 `"'security-auditlog-'YYYY.MM.dd"`，每天會產生一個新索引（例如 `security-auditlog-2023.06.15`）。您也可以改為指定固定的索引名稱。無論哪種情況，請務必妥善保護該索引。
 
-- `plugins.security.audit.config.type` (Static): Specify the audit log type as `auditlog`.
+- `plugins.security.audit.config.type`（靜態）：將稽核記錄檔類型指定為 `auditlog`。
 
-- `plugins.security.audit.config.username` (Static): Username for the audit log configuration.
+- `plugins.security.audit.config.username`（靜態）：稽核記錄檔組態的使用者名稱。
 
-- `plugins.security.audit.config.password` (Static): Password for the audit log configuration.
+- `plugins.security.audit.config.password`（靜態）：稽核記錄檔組態的密碼。
 
-- `plugins.security.audit.config.enable_ssl` (Static): Enables or disables SSL for audit logging.
+- `plugins.security.audit.config.enable_ssl`（靜態）：為稽核記錄啟用或停用 SSL。
 
-- `plugins.security.audit.config.verify_hostnames` (Static): Enables or disables verification of the hostname for SSL/TLS certificates. Default is `true` (enabled).
+- `plugins.security.audit.config.verify_hostnames`（靜態）：啟用或停用 SSL/TLS 憑證的主機名稱驗證。預設為 `true`（啟用）。
 
-- `plugins.security.audit.config.enable_ssl_client_auth` (Static): Enables or disables SSL/TLS client authentication. Default is `false` (disabled).
+- `plugins.security.audit.config.enable_ssl_client_auth`（靜態）：啟用或停用 SSL/TLS 用戶端驗證。預設為 `false`（停用）。
 
-- `plugins.security.audit.config.cert_alias` (Static): An alias to the certificate used for audit log access.
+- `plugins.security.audit.config.cert_alias`（靜態）：用於存取稽核記錄檔之憑證的別名。
 
-- `plugins.security.audit.config.pemkey_filepath` (Static): The `/config` relative file path to the Privacy Enhanced Mail (PEM) key used for audit logging.
+- `plugins.security.audit.config.pemkey_filepath`（靜態）：用於稽核記錄之 Privacy Enhanced Mail (PEM) 金鑰的 `/config` 相對檔案路徑。
 
-- `plugins.security.audit.config.pemkey_content` (Static): The Base64-encoded content of the PEM key used for audit logging. This is an alternative to `...config.pemkey_filepath`.
+- `plugins.security.audit.config.pemkey_content`（靜態）：用於稽核記錄之 PEM 金鑰的 Base64 編碼內容。此為 `...config.pemkey_filepath` 的替代方案。
 
-- `plugins.security.audit.config.pemkey_password` (Static): Password for the PEM-formatted private key used by the client.
+- `plugins.security.audit.config.pemkey_password`（靜態）：用戶端所使用之 PEM 格式私密金鑰的密碼。
 
-- `plugins.security.audit.config.pemcert_filepath` (Static): The `/config` relative file path to the PEM certificate used for audit logging.
+- `plugins.security.audit.config.pemcert_filepath`（靜態）：用於稽核記錄之 PEM 憑證的 `/config` 相對檔案路徑。
 
-- `plugins.security.audit.config.pemcert_content` (Static): The Base64-encoded content of the PEM certificate used for audit logging. This is an alternative to specifying the file path with `...config.pemcert_filepath`.
+- `plugins.security.audit.config.pemcert_content`（靜態）：用於稽核記錄之 PEM 憑證的 Base64 編碼內容。此為使用 `...config.pemcert_filepath` 指定檔案路徑的替代方案。
 
-- `plugins.security.audit.config.pemtrustedcas_filepath` (Static): The `/config` relative file path to trusted root certificate authority.
+- `plugins.security.audit.config.pemtrustedcas_filepath`（靜態）：受信任根憑證授權單位的 `/config` 相對檔案路徑。
 
-- `plugins.security.audit.config.pemtrustedcas_content` (Static): The Base64-encoded content of the root certificate authority. This is an alternative to `...config.pemtrustedcas_filepath`.
+- `plugins.security.audit.config.pemtrustedcas_content`（靜態）：根憑證授權單位的 Base64 編碼內容。此為 `...config.pemtrustedcas_filepath` 的替代方案。
 
-- `plugins.security.audit.config.webhook.url` (Static): The webhook URL.
+- `plugins.security.audit.config.webhook.url`（靜態）：Webhook URL。
 
-- `plugins.security.audit.config.webhook.format` (Static): The format used for the webhook. Valid values are `URL_PARAMETER_GET`, `URL_PARAMETER_POST`, `TEXT`, `JSON`, and `SLACK`.
+- `plugins.security.audit.config.webhook.format`（靜態）：Webhook 所使用的格式。有效值為 `URL_PARAMETER_GET`、`URL_PARAMETER_POST`、`TEXT`、`JSON` 和 `SLACK`。
 
-- `plugins.security.audit.config.webhook.ssl.verify` (Static): Enables or disables verification of any SSL/TLS certificates sent with any webhook request. Default is `true` (enabled).
+- `plugins.security.audit.config.webhook.ssl.verify`（靜態）：啟用或停用對隨任何 webhook 請求傳送之 SSL/TLS 憑證的驗證。預設為 `true`（啟用）。
 
-- `plugins.security.audit.config.webhook.ssl.pemtrustedcas_filepath` (Static): The `/config` relative file path to trusted certificate authority against which webhook requests are verified.
+- `plugins.security.audit.config.webhook.ssl.pemtrustedcas_filepath`（靜態）：用於驗證 webhook 請求之受信任憑證授權單位的 `/config` 相對檔案路徑。
 
-- `plugins.security.audit.config.webhook.ssl.pemtrustedcas_content` (Static): The Base64-encoded content of the certificate authority used to verify webhook requests. This is an alternative to `...config.pemtrustedcas_filepath`.
+- `plugins.security.audit.config.webhook.ssl.pemtrustedcas_content`（靜態）：用於驗證 webhook 請求之憑證授權單位的 Base64 編碼內容。此為 `...config.pemtrustedcas_filepath` 的替代方案。
 
-- `plugins.security.audit.config.log4j.logger_name` (Static): A custom name for the Log4j logger.
+- `plugins.security.audit.config.log4j.logger_name`（靜態）：Log4j 記錄器的自訂名稱。
 
-- `plugins.security.audit.config.log4j.level` (Static): Provides a default log level for the Log4j logger. Valid values are `OFF`, `FATAL`, `ERROR`, `WARN`, `INFO`, `DEBUG`, `TRACE`, and `ALL`. Default is `INFO`. 
+- `plugins.security.audit.config.log4j.level`（靜態）：為 Log4j 記錄器提供預設記錄層級。有效值為 `OFF`、`FATAL`、`ERROR`、`WARN`、`INFO`、`DEBUG`、`TRACE` 和 `ALL`。預設為 `INFO`。
 
-- `opendistro_security.audit.config.disabled_rest_categories` (Dynamic): A list of REST categories to be ignored by the logger. Valid values are `AUTHENTICATED` and `GRANTED_PRIVILEGES`.
+- `opendistro_security.audit.config.disabled_rest_categories`（動態）：記錄器要忽略的 REST 類別清單。有效值為 `AUTHENTICATED` 和 `GRANTED_PRIVILEGES`。
 
-- `opendistro_security.audit.config.disabled_transport_categories` (Dynamic): A list of transport layer categories to be ignored by the logger. Valid values are `AUTHENTICATED` and `GRANTED_PRIVILEGES`.
+- `opendistro_security.audit.config.disabled_transport_categories`（動態）：記錄器要忽略的傳輸層類別清單。有效值為 `AUTHENTICATED` 和 `GRANTED_PRIVILEGES`。
 
-When fine-grained access control (FGAC) is enabled, a `PUT _cluster/settings` request that updates a dynamic audit filter setting or any `plugins.security.audit.compliance.*` setting is rejected unless the caller holds a role listed in `plugins.security.restapi.roles_enabled`. This restriction is not enforced in SSL-only or security-disabled mode. The `plugins.security.audit.config.body_logging_exclusions` and `plugins.security.audit.config.action_groups.<NAME>` settings are exceptions and do not require the elevated role.
+啟用細粒度存取控制 (FGAC) 時，更新動態稽核篩選設定或任何 `plugins.security.audit.compliance.*` 設定的 `PUT _cluster/settings` 請求都會遭到拒絕，除非呼叫者具有 `plugins.security.restapi.roles_enabled` 中列出的角色。在僅 SSL 或停用安全性模式下，不會強制執行此限制。`plugins.security.audit.config.body_logging_exclusions` 和 `plugins.security.audit.config.action_groups.<NAME>` 設定為例外，不需要具備提升權限的角色。
 
-The following table describes the audit settings that a caller can read using `GET _cluster/settings` in each mode.
+下表說明在各模式下，呼叫者可使用 `GET _cluster/settings` 讀取的稽核設定。
 
-Mode | Audit settings visible in settings responses
+模式 | 設定回應中可見的稽核設定
 :--- | :---
-SSL-only | Any caller can read the non-secret dynamic configuration under `plugins.security.audit.config.*` and `plugins.security.audit.compliance.*`. Credential-bearing sink settings remain hidden.
-Security disabled | No `plugins.security.audit.*` settings are filtered, so sink credentials and PEM content may be visible.
-FGAC | The entire `plugins.security.audit.*` subtree is filtered for all callers. This filtering is not role based.
+僅 SSL | 任何呼叫者都可以讀取 `plugins.security.audit.config.*` 和 `plugins.security.audit.compliance.*` 下的非機密動態組態。含有認證資訊的接收端設定仍會保持隱藏。
+停用安全性 | 不會篩選任何 `plugins.security.audit.*` 設定，因此接收端認證資訊和 PEM 內容可能會被看見。
+FGAC | 整個 `plugins.security.audit.*` 子樹會針對所有呼叫者進行篩選。此篩選並非以角色為依據。
 
-## Hostname verification and DNS lookup settings
+## 主機名稱驗證與 DNS 查詢設定
 
-The Security plugin supports the following hostname verification and DNS lookup settings:
+Security 外掛程式支援下列主機名稱驗證與 DNS 查詢設定：
 
-- `transport.ssl.enforce_hostname_verification` (Static): Whether to verify hostnames on the transport layer. Optional. Default is `true`.
+- `transport.ssl.enforce_hostname_verification`（靜態）：是否在傳輸層驗證主機名稱。選用。預設為 `true`。
 
-- `transport.ssl.resolve_hostname` (Static): Whether to resolve hostnames against DNS on the transport layer. Optional. Default is `true`. Only works if hostname verification is enabled.
+- `transport.ssl.resolve_hostname`（靜態）：是否在傳輸層透過 DNS 解析主機名稱。選用。預設為 `true`。僅在啟用主機名稱驗證時有效。
 
-For more information, see [Hostname verification and DNS lookup]({{site.url}}{{site.baseurl}}/security/configuration/tls/#advanced-hostname-verification-and-dns-lookup).
+如需更多資訊，請參閱[主機名稱驗證與 DNS 查詢]({{site.url}}{{site.baseurl}}/security/configuration/tls/#advanced-hostname-verification-and-dns-lookup)。
 
-## Client authentication settings
+## 用戶端驗證設定
 
-The Security plugin supports the following client authentication setting:
+Security 外掛程式支援下列用戶端驗證設定：
 
-- `plugins.security.ssl.http.clientauth_mode` (Static): The TLS client authentication mode to use. Valid values are `OPTIONAL` (default), `REQUIRE`, and `NONE`. Optional.
+- `plugins.security.ssl.http.clientauth_mode`（靜態）：要使用的 TLS 用戶端驗證模式。有效值為 `OPTIONAL`（預設）、`REQUIRE` 和 `NONE`。選用。
 
-For more information, see [Client authentication]({{site.url}}{{site.baseurl}}/security/configuration/tls/#advanced-client-authentication).
+如需更多資訊，請參閱[用戶端驗證]({{site.url}}{{site.baseurl}}/security/configuration/tls/#advanced-client-authentication)。
 
-## Enabled cipher and protocol settings
+## 已啟用的加密套件與通訊協定設定
 
-The Security plugin supports the following enabled cipher and protocol settings. Each setting must be expressed in an array:
+Security 外掛程式支援下列已啟用的加密套件與通訊協定設定。每個設定都必須以陣列表示：
 
-- `plugins.security.ssl.http.enabled_ciphers` (Static): Enabled TLS cipher suites for the REST layer. Only Java format is supported.
+- `plugins.security.ssl.http.enabled_ciphers`（靜態）：REST 層已啟用的 TLS 加密套件。僅支援 Java 格式。
 
-- `plugins.security.ssl.http.enabled_protocols` (Static): Enabled TLS protocols for the REST layer. Only Java format is supported.
+- `plugins.security.ssl.http.enabled_protocols`（靜態）：REST 層已啟用的 TLS 通訊協定。僅支援 Java 格式。
 
-- `plugins.security.ssl.transport.enabled_ciphers` (Static): Enabled TLS cipher suites for the transport layer. Only Java format is supported.
+- `plugins.security.ssl.transport.enabled_ciphers`（靜態）：傳輸層已啟用的 TLS 加密套件。僅支援 Java 格式。
 
-- `plugins.security.ssl.transport.enabled_protocols` (Static): Enabled TLS protocols for the transport layer. Only Java format is supported.
+- `plugins.security.ssl.transport.enabled_protocols`（靜態）：傳輸層已啟用的 TLS 通訊協定。僅支援 Java 格式。
 
-For more information, see [Enabled ciphers and protocols]({{site.url}}{{site.baseurl}}/security/configuration/tls/#advanced-enabled-ciphers-and-protocols).
+如需更多資訊，請參閱[已啟用的加密套件與通訊協定]({{site.url}}{{site.baseurl}}/security/configuration/tls/#advanced-enabled-ciphers-and-protocols)。
 
-## Keystore and truststore files---transport layer TLS settings
+## 金鑰儲存區與信任儲存區檔案---傳輸層 TLS 設定
 
-The Security plugin supports the following transport layer TLS keystore and truststore settings:
+Security 外掛程式支援下列傳輸層 TLS 金鑰儲存區與信任儲存區設定：
 
-- `plugins.security.ssl.transport.keystore_type` (Static): The type of the keystore file. Optional. Valid values are `JKS` or `PKCS12/PFX`. Default is `JKS`.
+- `plugins.security.ssl.transport.keystore_type`（靜態）：金鑰儲存區檔案的類型。選用。有效值為 `JKS` 或 `PKCS12/PFX`。預設為 `JKS`。
 
-- `plugins.security.ssl.transport.keystore_filepath` (Static): The path to the keystore file, which must be under the `config` directory, specified using a relative path. Required.
+- `plugins.security.ssl.transport.keystore_filepath`（靜態）：金鑰儲存區檔案的路徑，該檔案必須位於 `config` 目錄下，並以相對路徑指定。必要。
 
-- `plugins.security.ssl.transport.keystore_alias` (Static): The keystore alias name. Optional. Default is the first alias.
+- `plugins.security.ssl.transport.keystore_alias`（靜態）：金鑰儲存區別名。選用。預設為第一個別名。
 
-- `plugins.security.ssl.transport.keystore_password` (Static): The keystore password. Default is `changeit`.
+- `plugins.security.ssl.transport.keystore_password`（靜態）：金鑰儲存區密碼。預設為 `changeit`。
 
-- `plugins.security.ssl.transport.truststore_type` (Static): The type of the truststore file. Optional. Valid values are `JKS` or `PKCS12/PFX`. Default is `JKS`.
+- `plugins.security.ssl.transport.truststore_type`（靜態）：信任儲存區檔案的類型。選用。有效值為 `JKS` 或 `PKCS12/PFX`。預設為 `JKS`。
 
-- `plugins.security.ssl.transport.truststore_filepath` (Static): The path to the truststore file, which must be under the `config` directory, specified using a relative path. Required.
+- `plugins.security.ssl.transport.truststore_filepath`（靜態）：信任儲存區檔案的路徑，該檔案必須位於 `config` 目錄下，並以相對路徑指定。必要。
 
-- `plugins.security.ssl.transport.truststore_alias` (Static): The truststore alias name. Optional. Default is all certificates.
+- `plugins.security.ssl.transport.truststore_alias`（靜態）：信任儲存區別名。選用。預設為所有憑證。
 
-- `plugins.security.ssl.transport.truststore_password` (Static): The truststore password. Default is `changeit`.
+- `plugins.security.ssl.transport.truststore_password`（靜態）：信任儲存區密碼。預設為 `changeit`。
 
-For more information about keystore and truststore files, see [Transport layer TLS]({{site.url}}{{site.baseurl}}/security/configuration/tls/#transport-layer-tls-1).
+如需有關金鑰儲存區與信任儲存區檔案的更多資訊，請參閱[傳輸層 TLS]({{site.url}}{{site.baseurl}}/security/configuration/tls/#transport-layer-tls-1)。
 
-## Keystore and truststore files---REST layer TLS settings
+## 金鑰儲存區與信任儲存區檔案---REST 層 TLS 設定
 
-The Security plugin supports the following REST layer TLS keystore and truststore settings:
+Security 外掛程式支援下列 REST 層 TLS 金鑰儲存區與信任儲存區設定：
 
-- `plugins.security.ssl.http.enabled` (Static): Whether to enable TLS on the REST layer. If enabled, only HTTPS is allowed. Optional. Default is `false`.
+- `plugins.security.ssl.http.enabled`（靜態）：是否在 REST 層啟用 TLS。若啟用，則僅允許 HTTPS。選用。預設為 `false`。
 
-- `plugins.security.ssl.http.keystore_type` (Static): The type of the keystore file. Optional. Valid values are `JKS` or `PKCS12/PFX`. Default is `JKS`.
+- `plugins.security.ssl.http.keystore_type`（靜態）：金鑰儲存區檔案的類型。選用。有效值為 `JKS` 或 `PKCS12/PFX`。預設為 `JKS`。
 
-- `plugins.security.ssl.http.keystore_filepath` (Static): The path to the keystore file, which must be under the `config` directory, specified using a relative path. Required.
+- `plugins.security.ssl.http.keystore_filepath`（靜態）：金鑰儲存區檔案的路徑，該檔案必須位於 `config` 目錄下，並以相對路徑指定。必要。
 
-- `plugins.security.ssl.http.keystore_alias` (Static):  The keystore alias name. Optional. Default is the first alias.
+- `plugins.security.ssl.http.keystore_alias`（靜態）：金鑰儲存區別名。選用。預設為第一個別名。
 
-- `plugins.security.ssl.http.keystore_password`: The keystore password. Default is `changeit`.
+- `plugins.security.ssl.http.keystore_password`：金鑰儲存區密碼。預設為 `changeit`。
 
-- `plugins.security.ssl.http.truststore_type`: The type of the truststore file. Optional. Valid values are `JKS` or `PKCS12/PFX`. Default is `JKS`.
+- `plugins.security.ssl.http.truststore_type`：信任儲存區檔案的類型。選用。有效值為 `JKS` 或 `PKCS12/PFX`。預設為 `JKS`。
 
-- `plugins.security.ssl.http.truststore_filepath`: The path to the truststore file, which must be under the `config` directory, specified using a relative path. Required.
+- `plugins.security.ssl.http.truststore_filepath`：信任儲存區檔案的路徑，該檔案必須位於 `config` 目錄下，並以相對路徑指定。必要。
 
-- `plugins.security.ssl.http.truststore_alias` (Static): The truststore alias name. Optional. Default is all certificates.
+- `plugins.security.ssl.http.truststore_alias`（靜態）：信任儲存區別名。選用。預設為所有憑證。
 
-- `plugins.security.ssl.http.truststore_password` (Static): The truststore password. Default is `changeit`.
+- `plugins.security.ssl.http.truststore_password`（靜態）：信任儲存區密碼。預設為 `changeit`。
 
-For more information, see [REST layer TLS]({{site.url}}{{site.baseurl}}/security/configuration/tls/#rest-layer-tls-1).
+如需更多資訊，請參閱[REST 層 TLS]({{site.url}}{{site.baseurl}}/security/configuration/tls/#rest-layer-tls-1)。
 
-## X.509 PEM certificates and PKCS #8 keys---transport layer TLS settings
+## X.509 PEM 憑證與 PKCS #8 金鑰---傳輸層 TLS 設定
 
-The Security plugin supports the following transport layer TLS settings related to X.509 PEM certificates and PKCS #8 keys:
+Security 外掛程式支援下列與 X.509 PEM 憑證及 PKCS #8 金鑰相關的傳輸層 TLS 設定：
 
-- `plugins.security.ssl.transport.pemkey_filepath` (Static): The path to the certificate's key file (PKCS #8), which must be under the `config` directory, specified using a relative path. Required.
+- `plugins.security.ssl.transport.pemkey_filepath`（靜態）：憑證金鑰檔案（PKCS #8）的路徑，該檔案必須位於 `config` 目錄下，並以相對路徑指定。必要。
 
-- `plugins.security.ssl.transport.pemkey_password` (Static): The key password. Omit this setting if the key has no password. Optional.
+- `plugins.security.ssl.transport.pemkey_password`（靜態）：金鑰密碼。若金鑰沒有密碼，請省略此設定。選用。
 
-- `plugins.security.ssl.transport.pemcert_filepath` (Static): The path to the X.509 node certificate chain (PEM format), which must be under the `config` directory, specified using a relative path. Required.
+- `plugins.security.ssl.transport.pemcert_filepath`（靜態）：X.509 節點憑證鏈（PEM 格式）的路徑，該檔案必須位於 `config` 目錄下，並以相對路徑指定。必要。
 
-- `plugins.security.ssl.transport.pemtrustedcas_filepath` (Static): The path to the root certificate authorities (PEM format), which must be under the `config` directory, specified using a relative path. Required.
+- `plugins.security.ssl.transport.pemtrustedcas_filepath`（靜態）：根憑證授權單位（PEM 格式）的路徑，該檔案必須位於 `config` 目錄下，並以相對路徑指定。必要。
 
-For more information, see [REST layer TLS]({{site.url}}{{site.baseurl}}/security/configuration/tls/#transport-layer-tls).
+如需更多資訊，請參閱[REST 層 TLS]({{site.url}}{{site.baseurl}}/security/configuration/tls/#transport-layer-tls)。
 
-## X.509 PEM certificates and PKCS #8 keys---REST layer TLS settings
+## X.509 PEM 憑證與 PKCS #8 金鑰---REST 層 TLS 設定
 
-The Security plugin supports the following REST layer TLS settings related to X.509 PEM certificates and PKCS #8 keys:
+Security 外掛程式支援下列與 X.509 PEM 憑證及 PKCS #8 金鑰相關的 REST 層 TLS 設定：
 
-- `plugins.security.ssl.http.enabled` (Static): Whether to enable TLS on the REST layer. If enabled, only HTTPS is allowed. Optional. Default is `false`.
+- `plugins.security.ssl.http.enabled`（靜態）：是否在 REST 層啟用 TLS。若啟用，則僅允許 HTTPS。選用。預設為 `false`。
 
-- `plugins.security.ssl.http.pemkey_filepath` (Static): The path to the certificate’s key file (PKCS #8), which must be under the `config` directory, specified using a relative path. Required.
+- `plugins.security.ssl.http.pemkey_filepath`（靜態）：憑證金鑰檔案（PKCS #8）的路徑，該檔案必須位於 `config` 目錄下，並以相對路徑指定。必要。
 
-- `plugins.security.ssl.http.pemkey_password` (Static): The key password. Omit this setting if the key has no password. Optional.
+- `plugins.security.ssl.http.pemkey_password`（靜態）：金鑰密碼。若金鑰沒有密碼，請省略此設定。選用。
 
-- `plugins.security.ssl.http.pemcert_filepath` (Static): The path to the X.509 node certificate chain (PEM format), which must be under the `config` directory, specified using a relative path. Required.
+- `plugins.security.ssl.http.pemcert_filepath`（靜態）：X.509 節點憑證鏈（PEM 格式）的路徑，該檔案必須位於 `config` 目錄下，並以相對路徑指定。必要。
 
--  `plugins.security.ssl.http.pemtrustedcas_filepath`: The path to the root certificate authorities (PEM format), which must be under the config directory, specified using a relative path. Required.
+-  `plugins.security.ssl.http.pemtrustedcas_filepath`：根憑證授權單位（PEM 格式）的路徑，該檔案必須位於 config 目錄下，並以相對路徑指定。必要。
 
-For more information, see [REST layer TLS]({{site.url}}{{site.baseurl}}/security/configuration/tls/#rest-layer-tls).
+如需更多資訊，請參閱[REST 層 TLS]({{site.url}}{{site.baseurl}}/security/configuration/tls/#rest-layer-tls)。
 
-## Transport layer security settings
+## 傳輸層安全性設定
 
-The Security plugin supports the following transport layer security settings:
+Security 外掛程式支援下列傳輸層安全性設定：
 
-- `plugins.security.ssl.transport.enabled` (Static): Whether to enable TLS on the REST layer.
+- `plugins.security.ssl.transport.enabled`（靜態）：是否在 REST 層啟用 TLS。
 
-- `plugins.security.ssl.transport.client.pemkey_password` (Static): The password for the PEM-formatted private key used by the transport client.
+- `plugins.security.ssl.transport.client.pemkey_password`（靜態）：傳輸用戶端所使用之 PEM 格式私密金鑰的密碼。
 
-- `plugins.security.ssl.transport.keystore_keypassword` (Static): The password for the key inside the keystore.
+- `plugins.security.ssl.transport.keystore_keypassword`（靜態）：金鑰儲存區內金鑰的密碼。
 
-- `plugins.security.ssl.transport.server.keystore_keypassword` (Static): The password for the key inside the server keystore.
+- `plugins.security.ssl.transport.server.keystore_keypassword`（靜態）：伺服器金鑰儲存區內金鑰的密碼。
 
-- `plugins.sercurity.ssl.transport.server.keystore_alias` (Static): The alias name for the keystore of the server.
+- `plugins.sercurity.ssl.transport.server.keystore_alias`（靜態）：伺服器金鑰儲存區的別名。
 
-- `plugins.sercurity.ssl.transport.client.keystore_alias` (Static): The alias name for the keystore of the client.
+- `plugins.sercurity.ssl.transport.client.keystore_alias`（靜態）：用戶端金鑰儲存區的別名。
 
-- `plugins.sercurity.ssl.transport.server.truststore_alias` (Static): The alias name for the truststore of the server.
+- `plugins.sercurity.ssl.transport.server.truststore_alias`（靜態）：伺服器信任儲存區的別名。
 
-- `plugins.sercurity.ssl.transport.client.truststore_alias` (Static): The alias name for the truststore of the client.
+- `plugins.sercurity.ssl.transport.client.truststore_alias`（靜態）：用戶端信任儲存區的別名。
 
-- `plugins.security.ssl.client.external_context_id` (Static): Provides the transport client an ID to use for an external SSL context.
+- `plugins.security.ssl.client.external_context_id`（靜態）：為傳輸用戶端提供用於外部 SSL 內容的 ID。
 
-- `plugins.secuirty.ssl.transport.principal_extractor_class` (Static): Specifies a class implementing an extractor so a custom part of the certificate is used as the principal.
+- `plugins.secuirty.ssl.transport.principal_extractor_class`（靜態）：指定實作擷取器的類別，以便將憑證的自訂部分用作主體。
 
-- `plugins.security.ssl.http.crl.file_path` (Static): A file path to a certificate revocation list file.
+- `plugins.security.ssl.http.crl.file_path`（靜態）：憑證撤銷清單檔案的檔案路徑。
 
-- `plugins.security.ssl.http.crl.validate` (Static): Enables certificate revocation list (CRL) validation. Default is `false` (disabled).
+- `plugins.security.ssl.http.crl.validate`（靜態）：啟用憑證撤銷清單 (CRL) 驗證。預設為 `false`（停用）。
 
-- `plugins.security.ssl.http.crl.prefer_crlfile_over_ocsp` (Static): Whether to prefer the CRL certificate entry over the Online Certificate Status Protocol (OCSP) entry if the certificate contains both. Optional. Default is `false`.
+- `plugins.security.ssl.http.crl.prefer_crlfile_over_ocsp`（靜態）：當憑證同時包含 CRL 憑證項目與線上憑證狀態通訊協定 (OCSP) 項目時，是否優先使用 CRL 憑證項目。選用。預設為 `false`。
 
-- `plugins.security.ssl.http.crl.check_only_end_entitites` (Static): When `true`, only leaf certificates are validated. Default is `true`.
+- `plugins.security.ssl.http.crl.check_only_end_entitites`（靜態）：設為 `true` 時，僅驗證末端憑證。預設為 `true`。
 
-- `plugins.security.ssl.http.crl.disable_ocsp` (Static): Disables OCSP. Default is `false` (OCSP is enabled).  
+- `plugins.security.ssl.http.crl.disable_ocsp`（靜態）：停用 OCSP。預設為 `false`（OCSP 為啟用狀態）。  
 
-- `plugins.security.ssl.http.crl.disable_crldp` (Static): Disables CRL endpoints in certificates. Default is `false` (CRL endpoints are enabled).
+- `plugins.security.ssl.http.crl.disable_crldp`（靜態）：停用憑證中的 CRL 端點。預設為 `false`（CRL 端點為啟用狀態）。
 
-- `plugins.security.ssl.allow_client_initiated_renegotiation` (Static): Enables or disables client renegotiation. Default is `false` (client initiated renegotiation is not allowed).
+- `plugins.security.ssl.allow_client_initiated_renegotiation`（靜態）：啟用或停用用戶端重新交涉。預設為 `false`（不允許由用戶端發起的重新交涉）。
 
-- `plugins.security_config.ssl_dual_mode_enabled` (Static): Enables dual-mode SSL, allowing a node to accept both encrypted (TLS) and non-encrypted traffic on the transport layer. When set to `true`, nodes can communicate with other nodes using either SSL or non-SSL connections. This setting is designed for transitional scenarios, such as migrating a cluster from having security disabled to having security enabled through a rolling restart process. This setting should not be used indefinitely in production environments. Use it only temporarily during the migration, and disable it once all nodes in the cluster are using the same security configuration. Default is `false`.
+- `plugins.security_config.ssl_dual_mode_enabled`（靜態）：啟用雙模式 SSL，讓節點可在傳輸層同時接受加密 (TLS) 與未加密的流量。設為 `true` 時，節點可使用 SSL 或非 SSL 連線與其他節點通訊。此設定專為過渡情境而設計，例如透過滾動重新啟動程序，將叢集從停用安全性遷移至啟用安全性。請勿在生產環境中無限期使用此設定。請僅在遷移期間暫時使用，並在叢集中所有節點都使用相同的安全性組態後將其停用。預設為 `false`。
 
-## Security plugin settings examples
+## 安全性外掛程式設定範例
 
 ```yml
 # Common configuration settings

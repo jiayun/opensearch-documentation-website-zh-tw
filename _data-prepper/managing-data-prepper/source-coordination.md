@@ -1,73 +1,73 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Source coordination
+title: "來源協調"
 nav_order: 35
 parent: Managing OpenSearch Data Prepper
 ---
 
-# Source coordination
+# 來源協調
 
-_Source coordination_ is the concept of coordinating and distributing work between OpenSearch Data Prepper data sources in a multi-node environment. Some data sources, such as Amazon Kinesis or Amazon Simple Queue Service (Amazon SQS), handle coordination natively. Other data sources, such as OpenSearch, Amazon Simple Storage Service (Amazon S3), Amazon DynamoDB, and JDBC/ODBC, do not support source coordination.
+_來源協調_ (source coordination) 是在多節點環境中協調與分配 OpenSearch Data Prepper 資料來源之間工作的概念。有些資料來源，例如 Amazon Kinesis 或 Amazon Simple Queue Service (Amazon SQS)，本身原生就支援協調。其他資料來源，例如 OpenSearch、Amazon Simple Storage Service (Amazon S3)、Amazon DynamoDB 與 JDBC/ODBC，則不支援來源協調。
 
-Data Prepper source coordination decides which partition of work is performed by each node in the Data Prepper cluster and prevents duplicate partitions of work.
+Data Prepper 來源協調會決定 Data Prepper 叢集中每個節點要執行哪個工作分割區，並防止重複的工作分割區。
 
-Inspired by the [Kinesis Client Library](https://docs.aws.amazon.com/streams/latest/dev/shared-throughput-kcl-consumers.html), Data Prepper utilizes a distributed store in the form of a lease to handle the distribution and deduplication of work.
+Data Prepper 受 [Kinesis Client Library](https://docs.aws.amazon.com/streams/latest/dev/shared-throughput-kcl-consumers.html) 啟發，利用分散式儲存庫以租約 (lease) 的形式來處理工作的分配與去重。
 
-## Formatting partitions
+## 分割區格式
 
-Source coordination separates sources into "partitions of work." For example, an S3 object would be a partition of work for Amazon S3, or an OpenSearch index would be a partition of work for OpenSearch.
+來源協調會將來源區分為「工作分割區」。例如，S3 物件就是 Amazon S3 的一個工作分割區，而 OpenSearch 索引則是 OpenSearch 的一個工作分割區。
 
-Data Prepper takes each partition of work that is chosen by the source and creates corresponding items in the distributed store that Data Prepper uses for source coordination. Each of these items has the following standard format, which can be extended by the distributed store implementation.
+Data Prepper 會為來源所選取的每個工作分割區，在其用於來源協調的分散式儲存庫中建立對應的項目。每個項目都具有下列標準格式，並可由分散式儲存庫的實作加以擴充。
 
-| Value | Type | Description |
+| 值 | 類型 | 說明 |
 | :--- | :--- | :--- |
-| `sourceIdentifier` | String  | The identifier for which the Data Prepper pipeline works on this partition. By default, the `sourceIdentifier` is prefixed by the sub-pipeline name, but an additional prefix can be configured with `partition_prefix` in your data-prepper-config.yaml file. |
-| `sourcePartitionKey` | String  | The identifier for the partition of work associated with this item. For example, for an `s3` source with scan capabilities, this identifier is the S3 bucket's `objectKey` combination.
-| `partitionOwner` | String   | An identifier for the node that actively owns and is working on this partition. This ID contains the hostname of the node but is `null` when this partition is not owned. |
-| `partitionProgressState` | String  | A JSON string object representing the progress made on a partition of work or any additional metadata that may be needed by the source in the case of another node resuming where the last node stopped during a crash.  |
-| `partitionOwnershipTimeout` | Timestamp  | Whenever a Data Prepper node acquires a partition, a 10-minute timeout is given to the owner of the partition to handle the event of a node crashing. The ownership is renewed with another 10 minutes when the owner saves the state of the partition.  |
-| `sourcePartitionStatus` | Enum | Represents the current state of the partition: `ASSIGNED` means the partition is currently being processed, `UNASSIGNED` means the partition is waiting to be processed, `CLOSED` means the partition is waiting to be processed at a later date, and `COMPLETED` means the partition has already been processed. |           
-| `reOpenAt` | Timestamp  | Represents the time at which CLOSED partitions reopen and are considered to be available for processing. Only applies to CLOSED partitions. |
-| `closedCount` | Long | Tracks how many times the partition has been marked as `CLOSED`.|
+| `sourceIdentifier` | 字串  | 識別哪個 Data Prepper 管線在此分割區上工作。預設情況下，`sourceIdentifier` 會以子管線名稱作為字首，但可以在 data-prepper-config.yaml 檔案中透過 `partition_prefix` 設定額外的字首。 |
+| `sourcePartitionKey` | 字串  | 與此項目相關聯之工作分割區的識別碼。例如，對於具有掃描功能的 `s3` 來源，此識別碼是 S3 儲存貯體的 `objectKey` 組合。
+| `partitionOwner` | 字串   | 目前擁有並正在處理此分割區之節點的識別碼。此 ID 包含節點的主機名稱，但當此分割區未被擁有時則為 `null`。 |
+| `partitionProgressState` | 字串  | 一個 JSON 字串物件，代表工作分割區上已完成的進度，或在另一個節點於前一個節點當機停止處接續處理時，來源可能需要的任何其他中繼資料。  |
+| `partitionOwnershipTimeout` | 時間戳記  | 每當 Data Prepper 節點取得分割區時，會給予分割區擁有者 10 分鐘的逾時時間，以處理節點當機的情況。當擁有者儲存分割區的狀態時，擁有權會再延長 10 分鐘。  |
+| `sourcePartitionStatus` | 列舉 | 代表分割區目前的狀態：`ASSIGNED` 表示分割區目前正在處理中，`UNASSIGNED` 表示分割區正在等待處理，`CLOSED` 表示分割區等待日後再處理，`COMPLETED` 表示分割區已經處理完畢。 |           
+| `reOpenAt` | 時間戳記  | 代表 CLOSED 分割區重新開放並被視為可供處理的時間。僅適用於 CLOSED 分割區。 |
+| `closedCount` | Long | 追蹤分割區被標記為 `CLOSED` 的次數。|
 
 
-## Acquiring partitions
+## 取得分割區
 
-Partitions are acquired in the order that they are returned in the `List<PartitionIdentifer>` provided by the source. When a node attempts to acquire a partition, Data Prepper performs the following steps:
+分割區會按照來源在 `List<PartitionIdentifer>` 中回傳的順序被取得。當節點嘗試取得分割區時，Data Prepper 會執行下列步驟：
 
-1. Data Prepper queries the `ASSIGNED` partitions to check whether any `ASSIGNED` partitions have expired partition owners. This is intended to assign priority to partitions that have had nodes crash in the middle of processing, which can allow for using a partition state that may be time sensitive. 
-2. After querying `ASSIGNED` partitions, Data Prepper queries the `CLOSED` partitions to determine whether any of the partition's `reOpenAt` timestamps have been reached. 
-3. If there are no `ASSIGNED` or `CLOSED` partitions available, then Data Prepper queries the `UNASSIGNED` partitions until on of these partitions is `ASSIGNED`.
+1. Data Prepper 會查詢 `ASSIGNED` 分割區，檢查是否有 `ASSIGNED` 分割區的分割區擁有者已逾時。這是為了優先處理在處理過程中節點當機的分割區，以便能使用可能具有時效性的分割區狀態。 
+2. 查詢 `ASSIGNED` 分割區之後，Data Prepper 會查詢 `CLOSED` 分割區，判斷是否有任何分割區的 `reOpenAt` 時間戳記已到期。 
+3. 如果沒有可用的 `ASSIGNED` 或 `CLOSED` 分割區，Data Prepper 會查詢 `UNASSIGNED` 分割區，直到其中一個分割區變為 `ASSIGNED`。
 
-If this flow occurs and no partition is acquired by the node, then the partition supplier function provided in the `getNextPartition` method of `SourceCoordinator` will create new partitions. After the supplier function completes, Data Prepper again queries the partitions for `ASSIGNED`, `CLOSED`, and `UNASSIGNED`.
+如果發生此流程且節點未取得任何分割區，則在 `SourceCoordinator` 的 `getNextPartition` 方法中提供的分割區供應函式會建立新的分割區。供應函式完成後，Data Prepper 會再次查詢 `ASSIGNED`、`CLOSED` 與 `UNASSIGNED` 的分割區。
 
-## Global state
+## 全域狀態
 
-Any function that is passed to the `getNextPartition` method creates new partitions with a global state of `Map<String, Object>`. This state is shared between all of the nodes in the cluster and will only be run by a single node at a time, as determined by the source.
+傳遞給 `getNextPartition` 方法的任何函式，都會以 `Map<String, Object>` 的全域狀態建立新的分割區。此狀態由叢集中的所有節點共用；來源會決定該函式每次只由單一節點執行。
 
-## Configuration
+## 組態
 
-The following table provide optional configuration values for `source_coordination`.
+下表提供 `source_coordination` 的選用組態值。
 
-| Value | Type | Description |
+| 值 | 類型 | 說明 |
 | :--- | :--- | :--- |
-| `partition_prefix` | String | A prefix to the `sourceIdentifier` used to differentiate between Data Prepper clusters that share the same distributed store. |
-| `store` | Object  | The object that comprises the configuration for the store to be used, where the key is the name of the store, such as `in_memory` or `dynamodb`, and the value is any configuration available on that store type. |
+| `partition_prefix` | 字串 | `sourceIdentifier` 的字首，用於區分共用同一個分散式儲存庫的多個 Data Prepper 叢集。 |
+| `store` | 物件  | 構成所用儲存庫組態的物件，其中鍵是儲存庫的名稱，例如 `in_memory` 或 `dynamodb`，值則是該儲存庫類型上可用的任何組態。 |
 
-### Supported stores
-As of Data Prepper 2.4, only `in_memory` and `dynamodb` stores are supported:
+### 支援的儲存庫
+從 Data Prepper 2.4 開始，僅支援 `in_memory` 與 `dynamodb` 儲存庫：
 
-- The `in_memory` store is the
-default when no `source_coordination` settings are configured in the `data-prepper-config.yaml` file and should only be used for single-node configurations.
-- The `dynamodb` store is used for multi-node Data Prepper environments. The `dynamodb` store can be shared between one or more Data Prepper clusters that need to utilize source coordination.
+- `in_memory` 儲存庫是在 `data-prepper-config.yaml` 檔案中未設定任何 `source_coordination` 設定時的預設值，且僅應用於單一節點組態。
+- `dynamodb` 儲存庫用於多節點的 Data Prepper 環境。`dynamodb` 儲存庫可在需要使用來源協調的一或多個 Data Prepper 叢集之間共用。
 
-#### DynamoDB store
+#### DynamoDB 儲存庫
 
-Data Prepper will attempt to create the `dynamodb` table on startup unless the `skip_table_creation` flag is configured to `true`. Optionally, you can configure the [time-to-live](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html) (`ttl`) on the table, which results in the store cleaning up items over time. Some sources rely on source coordination for the deduplication of data, so be sure to configure a large enough `ttl` for the pipeline duration. 
+Data Prepper 會在啟動時嘗試建立 `dynamodb` 資料表，除非 `skip_table_creation` 旗標被設定為 `true`。您也可以選擇性地在資料表上設定[存留時間](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html) (`ttl`)，讓儲存庫隨著時間清理項目。有些來源依賴來源協調來進行資料去重，因此請務必為管線執行期間設定足夠大的 `ttl`。 
 
-If `ttl` is not configured on the table, any items no longer needed in the table must be cleaned manually.
+如果資料表上未設定 `ttl`，則資料表中不再需要的項目必須手動清理。
 
-The following shows the full set of permissions needed for Data Prepper to create the table, enable `ttl`, and interact with the table:
+以下顯示 Data Prepper 建立資料表、啟用 `ttl` 以及與資料表互動所需的完整權限集合：
 
 ```json
 {
@@ -90,18 +90,18 @@ The following shows the full set of permissions needed for Data Prepper to creat
 ```
 
 
-| Value | Required | Type | Description |
+| 值 | 必要 | 類型 | 說明 |
 | :--- | :--- | :--- | :--- | 
-| `table_name` | Yes | String  | The name of the table to be used for source coordination. |
-| `region` | Yes | String | The region of the DynamoDB table. |
-| `sts_role_arn` | No  | String  |  The `sts` role that contains the table permissions. Uses default credentials when not provided. |
-| `sts_external_id` | No | String  | The external ID used in the API call to assume the `sts_role_arn`. |
-| `skip_table_creation` | No | Boolean  | If set to `true` when using an existing store, the attempt to create the store is skipped. Default is `false`. |
-| `provisioned_write_capacity_units` | No | Integer |  The number of write capacity units to configure on the table. Default is `10`. |
-| `provisioned_read_capacity_units`  | No | Integer | The number of read capacity units to configure on the table. Default is `10`. |
-| `ttl` | Duration | Optional. The duration of the TTL for the items in the table. The TTL is extended by this duration when an update is made to the item. Defaults to no TTL being used on the table. |
+| `table_name` | 是 | 字串  | 用於來源協調的資料表名稱。 |
+| `region` | 是 | 字串 | DynamoDB 資料表的區域。 |
+| `sts_role_arn` | 否  | 字串  |  包含資料表權限的 `sts` 角色。未提供時會使用預設憑證。 |
+| `sts_external_id` | 否 | 字串  | 在 API 呼叫中用來擔任 `sts_role_arn` 的外部 ID。 |
+| `skip_table_creation` | 否 | 布林值  | 使用現有儲存庫時，若設定為 `true`，則會略過建立儲存庫的嘗試。預設值為 `false`。 |
+| `provisioned_write_capacity_units` | 否 | 整數 |  要在資料表上設定的寫入容量單位數量。預設值為 `10`。 |
+| `provisioned_read_capacity_units`  | 否 | 整數 | 要在資料表上設定的讀取容量單位數量。預設值為 `10`。 |
+| `ttl` | Duration | 選用。資料表中項目的 TTL 持續時間。對項目進行更新時，TTL 會延長此持續時間。預設為資料表上不使用 TTL。 |
   
-The following example shows a `dynamodb` store:
+以下範例顯示 `dynamodb` 儲存庫：
 
 ```yaml
 source_coordination:
@@ -114,9 +114,9 @@ source_coordination:
        skip_table_creation: true
 ```
 
-#### In-memory store (default)
+#### 記憶體內儲存庫（預設）
 
-The following example shows an `in_memory` store, which is best used with a single-node cluster:
+以下範例顯示 `in_memory` 儲存庫，最適合與單一節點叢集搭配使用：
 
 
 ```yaml
@@ -126,23 +126,23 @@ source_coordination:
 ```
 
 
-## Metrics
+## 指標
 
-Source coordination metrics are interpreted differently depending on which source is configured. The format of a source coordination metric is `<sub-pipeline-name>_source_coordinator_<metric-name>`. You can use the sub-pipeline name to identify the source for these metrics because each sub-pipeline is unique to each source.
+來源協調指標的解讀方式取決於所設定的來源。來源協調指標的格式為 `<sub-pipeline-name>_source_coordinator_<metric-name>`。您可以使用子管線名稱來識別這些指標的來源，因為每個子管線對應的來源都是唯一的。
 
-### Progress metrics
+### 進度指標
 
-The following are metrics related to partition progress:
+以下為與分割區進度相關的指標：
 
-* `partitionsCreatedCount`: The number of partition items that have been created. For an S3 scan, this is the number of objects that have had partitions created for them.
-* `partitionsCompleted`: The number of partitions that have been fully processed and marked as `COMPLETED`. For an S3 scan, this is the number of objects that have been processed.
-* `noPartitionsAcquired`: The number of times that a node has attempted to acquire a partition on which to perform work but has found no available partitions in the store. Use this to indicate that there is no more data coming into the source.
-* `partitionsAcquired`: The number of partitions that have been acquired by nodes on which to perform work. In non-error scenarios, this should be equal to the number of partitions created.
-* `partitionsClosed`: The number of partitions that have been marked as `CLOSED`. This is only applicable to sources that use the CLOSED functionality.
+* `partitionsCreatedCount`：已建立的分割區項目數量。對於 S3 掃描，這是已為其建立分割區的物件數量。
+* `partitionsCompleted`：已完整處理並標記為 `COMPLETED` 的分割區數量。對於 S3 掃描，這是已處理的物件數量。
+* `noPartitionsAcquired`：節點嘗試取得分割區以執行工作，但在儲存庫中找不到可用分割區的次數。可用來表示來源已沒有更多資料進入。
+* `partitionsAcquired`：已被節點取得以執行工作的分割區數量。在非錯誤情況下，此數值應等於已建立的分割區數量。
+* `partitionsClosed`：已被標記為 `CLOSED` 的分割區數量。僅適用於使用 CLOSED 功能的來源。
 
-The following are metrics related to partition errors:
+以下為與分割區錯誤相關的指標：
 
-* `partitionNotFoundErrors`: Indicates that a partition item that is actively owned by a node does not have a corresponding store item. This should only occur if an item in the table has been manually deleted.
-* `partitionNotOwnedErrors`: Indicates that a node that owns a partition has lost ownership due to the partition ownership timeout expiring. Unless the source is able to checkpoint the partition with `saveState`, this error results in duplicate item processing.
-* `partitionUpdateErrors`: The number of errors that were received when an update to the store for this partition item failed. Is prefixed with either `saveState`, `close`, or `complete` to indicate which update action is failing.
+* `partitionNotFoundErrors`：表示某個正由節點擁有的分割區項目沒有對應的儲存庫項目。只有在資料表中的項目被手動刪除時才會發生。
+* `partitionNotOwnedErrors`：表示擁有分割區的節點因分割區擁有權逾時到期而失去擁有權。除非來源能夠透過 `saveState` 對分割區進行檢查點標記，否則此錯誤會導致項目重複處理。
+* `partitionUpdateErrors`：對此分割區項目的儲存庫更新失敗時所收到的錯誤數量。會加上 `saveState`、`close` 或 `complete` 字首，以指出哪個更新動作失敗。
 

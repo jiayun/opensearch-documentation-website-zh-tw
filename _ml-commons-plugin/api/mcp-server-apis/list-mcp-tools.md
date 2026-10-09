@@ -1,33 +1,34 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: List MCP tools 
+title: "列出 MCP 工具"
 parent: MCP server APIs
 grand_parent: ML Commons APIs
 nav_order: 30
 ---
 
-# List MCP Tools API
-**Introduced 3.1**
+# 列出 MCP 工具 API
+**於 3.1 版推出**
 {: .label .label-purple }
 
-Use this API to list all Model Context Protocol (MCP)-based tools by name.
+使用此 API 依名稱列出所有以 Model Context Protocol (MCP) 為基礎的工具。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/mcp/tools/_list
 ```
 
-## Example request
+## 請求範例
 
 ```json
 GET /_plugins/_ml/mcp/tools/_list
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-OpenSearch responds with the MCP tool list:
+OpenSearch 會回應 MCP 工具清單：
 
 ```json
 {

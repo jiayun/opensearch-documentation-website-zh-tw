@@ -1,162 +1,163 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Voting and quorum
+title: "投票與法定人數"
 parent: Discovery and cluster formation
 nav_order: 20
 ---
 
-# Voting and quorum
+# 投票與法定人數
 
-OpenSearch uses a sophisticated quorum-based decision-making system to ensure cluster reliability and prevent split-brain scenarios. Understanding how voting and quorum work is essential for maintaining a stable, fault-tolerant OpenSearch cluster.
+OpenSearch 使用一套精密的法定人數決策系統，以確保叢集可靠性並防止腦裂 (split-brain) 情境。了解投票與法定人數的運作方式，對於維持穩定且容錯的 OpenSearch 叢集至關重要。
 
-Two fundamental tasks require coordination among cluster-manager-eligible nodes:
+有兩項基本任務需要具備叢集管理員資格的節點之間協調：
 
-1. **Electing a cluster manager** -- Choosing which node will coordinate the cluster.
-2. **Updating cluster state** -- Making changes to cluster metadata, shard allocation, and configuration.
+1. **選舉叢集管理員** -- 選擇由哪個節點協調叢集。
+2. **更新叢集狀態** -- 對叢集中繼資料、分片配置與組態進行變更。
 
-OpenSearch achieves robust coordination by requiring a _quorum_ (majority) of cluster-manager-eligible nodes to agree on these decisions. This approach provides several key benefits:
+OpenSearch 透過要求 _法定人數_ (過半數) 的具備叢集管理員資格節點就這些決策達成共識，來實現穩健的協調。這種做法提供幾項關鍵優點：
 
-- **Fault tolerance**: Some nodes can fail without stopping cluster operations.
-- **Split-brain prevention**: The cluster cannot make conflicting decisions when partitioned.
-- **Consistency**: All decisions are made by a clear majority of nodes.
+- **容錯能力**：部分節點故障時，叢集運作仍可繼續。
+- **防止腦裂**：叢集被分割時，無法做出相互衝突的決策。
+- **一致性**：所有決策都由明確的節點多數做出。
 
-A decision succeeds only when **more than half** of the nodes in the voting configuration respond positively. This ensures that even if the cluster becomes partitioned, only one partition can have a majority and continue making decisions.
+只有在投票組態中 **超過半數** 的節點正面回應時，決策才會成功。這確保即使叢集被分割，也只有一個分割區能擁有多數並繼續做出決策。
 
-## Voting configuration
+## 投票組態
 
-The _voting configuration_ is the set of cluster-manager-eligible nodes whose responses are counted when making cluster decisions. OpenSearch automatically manages this configuration as nodes join and leave the cluster.
+_投票組態_ 是指在做出叢集決策時，其回應會被計入的具備叢集管理員資格節點集合。當節點加入或離開叢集時，OpenSearch 會自動管理此組態。
 
-OpenSearch implements dynamic voting configuration management:
+OpenSearch 實作了動態投票組態管理：
 
-- As nodes join or leave, OpenSearch updates the voting configuration to maintain optimal fault tolerance.
-- The voting configuration typically includes all cluster-manager-eligible nodes currently in the cluster.
-- During node transitions, the voting configuration may temporarily differ from the current node set.
+- 當節點加入或離開時，OpenSearch 會更新投票組態，以維持最佳的容錯能力。
+- 投票組態通常包含叢集中目前所有具備叢集管理員資格的節點。
+- 在節點轉換期間，投票組態可能暫時與目前的節點集合不同。
 
-The voting configuration follows these rules:
+投票組態遵循以下規則：
 
-- Decisions require more than half of voting nodes to respond.
-- OpenSearch adds nodes to the voting configuration when they join.
-- Nodes are removed from the voting configuration when they leave gracefully.
-- No two partitions can both have a voting majority.
+- 決策需要超過半數的投票節點回應。
+- 節點加入時，OpenSearch 會將其加入投票組態。
+- 節點正常離開時，會從投票組態中移除。
+- 任何兩個分割區不能同時擁有投票多數。
 
-## Fault tolerance guidelines
+## 容錯指引
 
-To maintain cluster availability, follow these critical guidelines.
+若要維持叢集可用性，請遵循以下關鍵指引。
 
-Never stop half or more of the nodes in the voting configuration at the same time. This is the most important rule for cluster availability.
+切勿同時停止投票組態中半數或以上的節點。這是維持叢集可用性最重要的規則。
 {: .important}
 
-The number of cluster-manager-eligible nodes determines your fault tolerance:
+具備叢集管理員資格的節點數量決定了您的容錯能力：
 
-- 3 nodes: Can tolerate 1 node failure (2 nodes maintain majority).
-- 4 nodes: Can tolerate 1 node failure (3 nodes maintain majority).
-- 5 nodes: Can tolerate 2 node failures (3 nodes maintain majority).
-- 6 nodes: Can tolerate 2 node failures (4 nodes maintain majority).
-- 2 nodes: Can tolerate 0 node failures (both must remain available).
-- 1 node: Can tolerate 0 node failures (single point of failure).
+- 3 個節點：可容忍 1 個節點故障 (2 個節點維持多數)。
+- 4 個節點：可容忍 1 個節點故障 (3 個節點維持多數)。
+- 5 個節點：可容忍 2 個節點故障 (3 個節點維持多數)。
+- 6 個節點：可容忍 2 個節點故障 (4 個節點維持多數)。
+- 2 個節點：可容忍 0 個節點故障 (兩個節點都必須保持可用)。
+- 1 個節點：可容忍 0 個節點故障 (單一故障點)。
 
-## Cluster manager elections
+## 叢集管理員選舉
 
-OpenSearch uses an election process to select the cluster manager node, both at startup and when the current cluster manager fails.
+OpenSearch 使用選舉程序來選出叢集管理員節點，無論是在啟動時或目前的叢集管理員故障時。
 
-The election process is as follows:
+選舉程序如下：
 
-1. Election is triggered by one of the following events:
-   - Cluster startup (no current cluster manager)
-   - Current cluster manager failure or disconnection
-   - Network partition resolution
+1. 選舉由下列任一事件觸發：
+   - 叢集啟動 (目前沒有叢集管理員)
+   - 目前的叢集管理員故障或斷線
+   - 網路分割解除
 
-2. Any cluster-manager-eligible node can start an election.
+2. 任何具備叢集管理員資格的節點都可以發起選舉。
 
-3. Elections are randomly scheduled on each node to reduce conflicts.
+3. 選舉會在每個節點上隨機排程，以減少衝突。
 
-4. A node becomes cluster manager only with majority support from the voting configuration.
+4. 節點必須獲得投票組態的多數支援，才能成為叢集管理員。
 
-5. If elections fail (because of timing conflicts), nodes retry with exponential backoff.
+5. 如果選舉失敗 (因為時序衝突)，節點會以指數退避方式重試。
 
-Election behavior is controlled by the `cluster.election.*` settings. For more information, see [Discovery and cluster formation settings]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/settings/).
+選舉行為由 `cluster.election.*` 設定控制。如需更多資訊，請參閱 [探索與叢集形成設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/settings/)。
 
-## Cluster maintenance operations
+## 叢集維護作業
 
-Understanding quorum requirements helps you perform maintenance safely.
+了解法定人數需求有助於您安全地執行維護。
 
-### Rolling restarts
+### 輪流重新啟動
 
-OpenSearch can remain available during rolling restarts:
+OpenSearch 在輪流重新啟動期間可以保持可用：
 
-- Restart nodes one at a time: Restart nodes individually, waiting for each to rejoin.
-- Maintain a majority: Ensure a majority of voting nodes remain available.
-- Wait for stabilization: Allow the voting configuration to update after each node rejoins.
+- 一次重新啟動一個節點：逐一重新啟動節點，並等待每個節點重新加入。
+- 維持多數：確保多數投票節點保持可用。
+- 等待穩定：在每個節點重新加入後，允許投票組態更新。
 
-### Planned maintenance
+### 計畫性維護
 
-For maintenance requiring multiple nodes:
+對於需要多個節點的維護：
 
-1. Check the voting configuration: Verify current voting nodes using the Cluster API.
-2. Plan shutdown order: Ensure a majority remains available throughout maintenance.
-3. Wait between changes: Allow time for voting configuration updates.
-4. Monitor cluster health: Verify that the cluster remains green during maintenance.
+1. 檢查投票組態：使用 Cluster API 驗證目前的投票節點。
+2. 規劃關機順序：確保在整個維護期間多數節點保持可用。
+3. 在變更之間等待：預留時間讓投票組態更新。
+4. 監控叢集健康狀態：驗證叢集在維護期間保持綠色狀態。
 
-### Emergency procedures
+### 緊急程序
 
-If you must stop multiple nodes simultaneously:
+如果您必須同時停止多個節點：
 
-- Use voting exclusions: Temporarily exclude nodes from voting before shutdown.
-- Restore carefully: Bring nodes back online in the correct order.
-- Clear exclusions: Remove voting exclusions once nodes are stable.
+- 使用投票排除：在關機前暫時將節點排除於投票之外。
+- 謹慎還原：以正確的順序讓節點重新上線。
+- 清除排除：一旦節點穩定，即移除投票排除。
 
-## Monitoring voting configurations
+## 監控投票組態
 
-To monitor voting configurations, cluster health, and cluster manager elections, use the monitoring commands detailed in [Discovery and cluster formation]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/#monitoring-discovery-and-cluster-formation).
+若要監控投票組態、叢集健康狀態與叢集管理員選舉，請使用 [探索與叢集形成]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/#monitoring-discovery-and-cluster-formation) 中詳述的監控命令。
 
-## Cluster state publishing
+## 叢集狀態發布
 
-Once a cluster manager is elected, it becomes responsible for distributing cluster state updates to all nodes. Understanding how state publishing works helps you configure appropriate timeouts and monitor cluster coordination.
+叢集管理員一旦選出，便負責將叢集狀態更新分發到所有節點。了解狀態發布的運作方式，有助於您設定適當的逾時時間並監控叢集協調。
 
-The cluster manager is the only node that can make changes to the cluster state. It processes cluster state updates one batch at a time using a two-phase commit process:
+叢集管理員是唯一能對叢集狀態進行變更的節點。它使用兩階段提交程序，一次處理一批叢集狀態更新：
 
-1. Phase 1: Broadcasting and acknowledgment
-      1. Cluster manager computes changes and creates updated cluster state.
-      2. Broadcasts updated state to all nodes in the cluster.
-      3. Nodes acknowledge receipt but do not yet apply the new state.
-      4. Cluster manager waits for majority of cluster-manager-eligible nodes to acknowledge.
-2. Phase 2: Commitment and application
-      1. Cluster manager declares state committed once majority acknowledges.
-      2. Broadcasts commit message instructing nodes to apply the new state.
-      3. Nodes apply the updated state and send second acknowledgment.
-      4. Cluster manager waits for all nodes to confirm application.
+1. 階段 1：廣播與確認
+      1. 叢集管理員計算變更並建立更新後的叢集狀態。
+      2. 將更新後的狀態廣播到叢集中的所有節點。
+      3. 節點確認收到，但尚未套用新狀態。
+      4. 叢集管理員等待具備叢集管理員資格節點的多數確認。
+2. 階段 2：提交與套用
+      1. 一旦獲得多數確認，叢集管理員即宣告狀態已提交。
+      2. 廣播提交訊息，指示節點套用新狀態。
+      3. 節點套用更新後的狀態並送出第二次確認。
+      4. 叢集管理員等待所有節點確認已套用。
 
-### Publishing timeouts and failure handling
+### 發布逾時與失敗處理
 
-The cluster manager allows a limited time for each state update to complete, controlled by `cluster.publish.timeout` (default: `30s`), which is measured from when publication begins. If this timeout is reached before the change is committed, the cluster state update is rejected, the cluster manager steps down after considering itself failed, and a new cluster manager election begins. If the commitment succeeds before the timeout, the change is considered successful, and the cluster manager waits for any remaining acknowledgments or until the timeout expires before proceeding to the next update.
+叢集管理員為每次狀態更新允許有限的完成時間，由 `cluster.publish.timeout` 控制 (預設：`30s`)，從發布開始時起算。如果在變更提交之前達到此逾時，叢集狀態更新會被拒絕，叢集管理員在認定自身失敗後卸任，並開始新的叢集管理員選舉。如果在逾時之前提交成功，則該變更視為成功，叢集管理員會等待其餘的確認或直到逾時到期，再進行下一次更新。
 
-After a successful commitment, some nodes might be slow to apply the update. These lagging nodes are given additional time, controlled by `cluster.follower_lag.timeout` (default: `90s`). If a node fails to apply the update within this time, it is considered failed, removed from the cluster, and the cluster continues operating without it.
+成功提交後，某些節點可能套用更新的速度較慢。這些落後的節點會獲得額外時間，由 `cluster.follower_lag.timeout` 控制 (預設：`90s`)。如果節點未在此時間內套用更新，則視為故障，會從叢集中移除，叢集會在沒有它的情況下繼續運作。
 
-### State publishing optimizations
+### 狀態發布最佳化
 
-OpenSearch typically optimizes cluster state publishing by sending **differential updates (diffs)** instead of full state copies. This approach reduces network bandwidth and publication time because only the changed portions are transmitted to nodes that already hold the current state. For example, when index mappings are updated, only the mapping changes are distributed rather than the entire state.
+OpenSearch 通常會透過傳送 **差異更新 (diffs)** 而非完整狀態副本，來最佳化叢集狀態發布。這種做法可減少網路頻寬與發布時間，因為只有變更的部分會傳送給已持有目前狀態的節點。例如，當索引對應更新時，只會分發對應的變更，而不是整個狀態。
 
-In some cases, OpenSearch falls back to publishing the **full cluster state**. This happens when nodes need complete information, such as when a node rejoins the cluster, when a new node joins for the first time, or when a node's state is outdated and must be synchronized with the current cluster view.
-
-
-### Monitoring state publishing
-
-To monitor cluster state publishing, use the monitoring commands detailed in [Discovery and cluster formation]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/#monitoring-discovery-and-cluster-formation).
+在某些情況下，OpenSearch 會退回發布 **完整叢集狀態**。這發生在節點需要完整資訊時，例如節點重新加入叢集、新節點首次加入，或節點的狀態已過時而必須與目前的叢集檢視同步時。
 
 
-### OpenSearch as a peer-to-peer system
+### 監控狀態發布
 
-Understanding OpenSearch's architecture helps explain state publishing importance:
+若要監控叢集狀態發布，請使用 [探索與叢集形成]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/#monitoring-discovery-and-cluster-formation) 中詳述的監控命令。
 
-- High-throughput APIs (Index, Delete, Search) communicate directly between nodes.
-- The cluster manager role is limited to maintaining global cluster state and coordinating shard allocation.
-- State changes (node joins/leaves, shard reassignment) require cluster-wide coordination.
-- State publishing ensures that all nodes have a consistent view of cluster topology.
 
-This design keeps the cluster manager from becoming a bottleneck for data operations while ensuring consistent cluster coordination.
+### OpenSearch 作為點對點系統
 
-## Related documentation
+了解 OpenSearch 的架構有助於解釋狀態發布的重要性：
 
-- [Discovery and cluster formation settings]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/settings/): Configuring voting and election behavior
-- [Node discovery and seed hosts]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/discovery/): How nodes find each other
-- [Creating a cluster]({{site.url}}{{site.baseurl}}/tuning-your-cluster/): Step-by-step cluster setup guide
+- 高輸送量的 API (Index、Delete、Search) 在節點之間直接通訊。
+- 叢集管理員的角色僅限於維護全域叢集狀態與協調分片配置。
+- 狀態變更 (節點加入/離開、分片重新指派) 需要叢集範圍的協調。
+- 狀態發布確保所有節點對叢集拓撲有一致的檢視。
+
+這種設計可避免叢集管理員成為資料作業的瓶頸，同時確保叢集協調的一致性。
+
+## 相關文件
+
+- [探索與叢集形成設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/settings/)：設定投票與選舉行為
+- [節點探索與種籽主機]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/discovery/)：節點如何彼此尋找
+- [建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)：逐步叢集設定指南

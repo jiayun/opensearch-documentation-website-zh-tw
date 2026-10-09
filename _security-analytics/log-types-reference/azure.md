@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Azure
 parent: Supported log types
 nav_order: 29
 ---
 
-# Azure log type
+# Azure 記錄檔類型
 
-The `azure` log type monitors log data for cloud applications managed by Azure Cloud Services.
+`azure` 記錄檔類型會監視由 Azure Cloud Services 管理之雲端應用程式的記錄資料。
 
-The following code snippet contains all `raw_field` and `ecs` mappings for this log type:
+下列程式碼片段包含此記錄檔類型的所有 `raw_field` 與 `ecs` 對應：
 
 ```json
 "mappings": [

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: SQL and PPL API
+title: "SQL 與 PPL API"
 nav_order: 1
 has_children: true
 redirect_from:
@@ -9,30 +10,30 @@ redirect_from:
   - /sql-and-ppl/sql-and-ppl-api/
 ---
 
-# SQL and PPL API
+# SQL 與 PPL API
 
-Use the SQL and PPL API to send queries to the SQL plugin. Use the `_sql` endpoint to send queries in SQL, and the `_ppl` endpoint to send queries in PPL. For both of these, you can also use the `_explain` endpoint to translate your query into [OpenSearch domain-specific language]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/) (DSL) or to troubleshoot errors.
+使用 SQL 與 PPL API 將查詢傳送至 SQL 外掛程式。使用 `_sql` 端點以 SQL 傳送查詢，並使用 `_ppl` 端點以 PPL 傳送查詢。對於這兩者，您也可以使用 `_explain` 端點將查詢轉譯為 [OpenSearch 領域特定語言]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/) (DSL)，或對錯誤進行疑難排解。
 
 ## Query API
 
-Sends an SQL/PPL query to the SQL plugin. You can pass the format for the response as a query parameter.
+將 SQL/PPL 查詢傳送至 SQL 外掛程式。您可以透過查詢參數傳遞回應的格式。
 
-### Query parameters
+### 查詢參數
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-[format]({{site.url}}{{site.baseurl}}/search-plugins/sql/response-formats/) | String | The format for the response. The `_sql` endpoint supports `jdbc`, `csv`, `raw`, and `json` formats. The `_ppl` endpoint supports `jdbc`, `csv`, and `raw` formats. Default is `jdbc`.
-`sanitize` | Boolean | Specifies whether to escape special characters in the results. See [Response formats]({{site.url}}{{site.baseurl}}/search-plugins/sql/response-formats/) for more information. Default is `true`.
+[format]({{site.url}}{{site.baseurl}}/search-plugins/sql/response-formats/) | 字串 | 回應的格式。`_sql` 端點支援 `jdbc`、`csv`、`raw` 與 `json` 格式。`_ppl` 端點支援 `jdbc`、`csv` 與 `raw` 格式。預設為 `jdbc`。
+`sanitize` | 布林值 | 指定是否在結果中逸出特殊字元。如需更多資訊，請參閱[回應格式]({{site.url}}{{site.baseurl}}/search-plugins/sql/response-formats/)。預設為 `true`。
 
-### Request body fields
+### 請求本文欄位
 
-Field | Data type | Description  
+欄位 | 資料類型 | 說明  
 :--- | :--- | :---
-`query` | String | The query to be executed. Required.
-[filter](#filtering-results) | JSON object | The filter for the results. Optional.
-[fetch_size](#paginating-results) | integer | The number of results to return in one response. Used for paginating results. Default is 1,000. Optional. `fetch_size` is supported for SQL and requires using the `jdbc` response format.
+`query` | 字串 | 要執行的查詢。必要。
+[filter](#filtering-results) | JSON 物件 | 結果的篩選條件。選用。
+[fetch_size](#paginating-results) | 整數 | 單一回應中要傳回的結果數量。用於結果分頁。預設為 1,000。選用。SQL 支援 `fetch_size`，且需要使用 `jdbc` 回應格式。
 
-#### Example request
+#### 範例請求
 
 ```json
 POST /_plugins/_sql
@@ -42,9 +43,9 @@ POST /_plugins/_sql
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
-The response contains the schema and the results:
+回應包含結構描述與結果：
 
 ```json
 {
@@ -154,34 +155,34 @@ The response contains the schema and the results:
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-Field | Data type | Description  
+欄位 | 資料類型 | 說明  
 :--- | :--- | :---
-`schema` | Array | Specifies the field names and types for all fields. 
-`data_rows` | Two-dimensional array | An array of results. Each result represents one matching row (document).
-`total` | Integer | The total number of rows (documents) in the index.
-`size` | Integer | The number of results to return in one response.
-`status` | String | The HTTP response status OpenSearch returns after running the query.
+`schema` | 陣列 | 指定所有欄位的名稱與類型。
+`data_rows` | 二維陣列 | 結果的陣列。每個結果代表一個符合的資料列 (文件)。
+`total` | 整數 | 索引中的資料列 (文件) 總數。
+`size` | 整數 | 單一回應中要傳回的結果數量。
+`status` | 字串 | OpenSearch 在執行查詢後傳回的 HTTP 回應狀態。
 
 ## Explain API
 
-The SQL plugin's `explain` feature shows how a query is executed against OpenSearch, which is useful for debugging and development. A POST request to the `_plugins/_sql/_explain` or `_plugins/_ppl/_explain` endpoint returns [OpenSearch domain-specific language]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/) (DSL) in JSON format.
+SQL 外掛程式的 `explain` 功能會顯示查詢如何在 OpenSearch 上執行，這對偵錯與開發非常有用。向 `_plugins/_sql/_explain` 或 `_plugins/_ppl/_explain` 端點傳送 POST 請求，會以 JSON 格式傳回 [OpenSearch 領域特定語言]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/) (DSL)。
 
-Starting with OpenSearch 3.0.0, when you set `plugins.calcite.enabled` to `true`, the `explain` response provides enhanced information about query execution plans. The API supports four output formats:
+從 OpenSearch 3.0.0 開始，當您將 `plugins.calcite.enabled` 設定為 `true` 時，`explain` 回應會提供有關查詢執行計畫的增強資訊。此 API 支援四種輸出格式：
 
-- `standard`: Displays logical and physical plans (default if not specified)
-- `simple`: Displays logical plan without attributes
-- `cost`: Displays logical and physical plans with their costs
-- `extended`: Displays logical and physical plans with generated code
+- `standard`：顯示邏輯與實體計畫 (未指定時的預設值)
+- `simple`：顯示不含屬性的邏輯計畫
+- `cost`：顯示邏輯與實體計畫及其成本
+- `extended`：顯示邏輯與實體計畫及產生的程式碼
 
-### Examples
+### 範例
 
-The following examples demonstrate different `explain` queries.
+下列範例示範不同的 `explain` 查詢。
 
-#### Basic SQL query
+#### 基本 SQL 查詢
 
-The following request shows a basic SQL `explain` query:
+下列請求顯示基本的 SQL `explain` 查詢：
 
 ```json
 POST _plugins/_sql/_explain
@@ -192,7 +193,7 @@ POST _plugins/_sql/_explain
 {% include copy.html %}
 
 
-The response shows the query execution plan:
+回應顯示查詢執行計畫：
 
 ```json
 {
@@ -214,9 +215,9 @@ The response shows the query execution plan:
 }
 ```
 
-#### Advanced query with the Calcite engine
+#### 使用 Calcite 引擎的進階查詢
 
-The following request demonstrates a more complex query using the Calcite engine:
+下列請求示範使用 Calcite 引擎的更複雜查詢：
 
 ```json
 POST _plugins/_ppl/_explain
@@ -227,7 +228,7 @@ POST _plugins/_ppl/_explain
 {% include copy.html %}
 
 
-The response shows both logical and physical plans in the standard format:
+回應以標準格式顯示邏輯與實體計畫：
 
 ```json
 {
@@ -244,7 +245,7 @@ The response shows both logical and physical plans in the standard format:
 }
 ```
 
-For a simplified view of the query plan, you can use the `simple` format:
+若要取得查詢計畫的簡化檢視，您可以使用 `simple` 格式：
 
 ```json
 POST _plugins/_ppl/_explain?format=simple
@@ -254,7 +255,7 @@ POST _plugins/_ppl/_explain?format=simple
 ```
 {% include copy-curl.html %}
 
-The response shows a condensed logical plan:
+回應顯示精簡的邏輯計畫：
 
 ```json
 {
@@ -268,18 +269,18 @@ The response shows a condensed logical plan:
 }
 ```
 
-For queries that require post-processing, the `explain` response includes a query plan in addition to the OpenSearch DSL. For queries that don't require post-processing, you'll see only the complete DSL.
+對於需要後續處理的查詢，`explain` 回應除了 OpenSearch DSL 之外還會包含查詢計畫。對於不需要後續處理的查詢，您只會看到完整的 DSL。
 
-## Paginating results
+## 分頁結果
 
-To get back a paginated response, use the `fetch_size` parameter. The value of `fetch_size` should be greater than 0. The default value is 1,000. A value of 0 will fall back to a non-paginated response.
+若要取得分頁回應，請使用 `fetch_size` 參數。`fetch_size` 的值應大於 0。預設值為 1,000。值為 0 會退回非分頁回應。
 
-The `fetch_size` parameter is only supported for the `jdbc` response format.
+`fetch_size` 參數僅支援 `jdbc` 回應格式。
 {: .note }
 
-### Example
+### 範例
 
-The following request contains an SQL query and specifies to return five results at a time:
+下列請求包含 SQL 查詢，並指定一次傳回五筆結果：
 
 ```json
 POST _plugins/_sql/
@@ -290,7 +291,7 @@ POST _plugins/_sql/
 ```
 {% include copy-curl.html %}
 
-The response contains all the fields that a query without `fetch_size` would contain, and a `cursor` field that is used to retrieve subsequent pages of results:
+回應包含不含 `fetch_size` 的查詢會包含的所有欄位，以及一個用於擷取後續結果頁面的 `cursor` 欄位：
 
 ```json
 {
@@ -333,7 +334,7 @@ The response contains all the fields that a query without `fetch_size` would con
 }
 ```
 
-To fetch subsequent pages, use the `cursor` from the previous response:
+若要擷取後續頁面，請使用上一個回應中的 `cursor`：
 
 ```json
 POST /_plugins/_sql
@@ -343,7 +344,7 @@ POST /_plugins/_sql
 ```
 {% include copy-curl.html %}
 
-The next response contains only the `datarows` of the results and a new `cursor`.
+下一個回應只包含結果的 `datarows` 以及新的 `cursor`。
 
 ```json
 {
@@ -373,12 +374,12 @@ The next response contains only the `datarows` of the results and a new `cursor`
 }
 ```
 
-The `datarows` can have more than the `fetch_size` number of records in case nested fields are flattened. 
+若巢狀欄位被扁平化，`datarows` 可能會有超過 `fetch_size` 筆記錄。
 {: .note }
 
-The last page of results has only `datarows` and no `cursor`. The `cursor` context is automatically cleared on the last page.
+最後一頁結果只有 `datarows`，沒有 `cursor`。`cursor` 內容會在最後一頁自動清除。
 
-To explicitly clear the cursor context, use the `_plugins/_sql/close` endpoint operation:
+若要明確清除游標內容，請使用 `_plugins/_sql/close` 端點操作：
 
 ```json
 POST /_plugins/_sql/close
@@ -388,17 +389,17 @@ POST /_plugins/_sql/close
 ```
 {% include copy-curl.html %}
 
-The response is an acknowledgment from OpenSearch:
+回應是來自 OpenSearch 的確認：
 
 ```json
 {"succeeded":true}
 ```
 
-## Filtering results
+## 篩選結果
 
-You can use the `filter` parameter to add more conditions to the OpenSearch DSL directly.
+您可以使用 `filter` 參數，直接將更多條件新增至 OpenSearch DSL。
 
-The following SQL query returns the names and account balances of all customers. The results are then filtered to contain only those customers with less than $10,000 balance. 
+下列 SQL 查詢會傳回所有客戶的名稱與帳戶餘額。接著會篩選結果，只包含餘額低於 $10,000 的客戶。
 
 ```json
 POST /_plugins/_sql/
@@ -415,7 +416,7 @@ POST /_plugins/_sql/
 ```
 {% include copy-curl.html %}
 
-The response contains the matching results:
+回應包含相符的結果：
 
 ```json
 {
@@ -451,7 +452,7 @@ The response contains the matching results:
 }
 ```
 
-You can use the Explain API to see how this query is executed against OpenSearch:
+您可以使用 Explain API 查看此查詢如何對 OpenSearch 執行：
 
 ```json
 POST /_plugins/_sql/_explain
@@ -468,7 +469,7 @@ POST /_plugins/_sql/_explain
 ```
 {% include copy-curl.html %}
 
-The response contains the Boolean query in OpenSearch DSL that corresponds to the preceding query:
+回應包含 OpenSearch DSL 中對應前述查詢的布林值查詢：
 
 ```json
 {
@@ -508,11 +509,11 @@ The response contains the Boolean query in OpenSearch DSL that corresponds to th
 }
 ```
 
-## Using parameters
+## 使用參數
 
-You can use the `parameters` field to pass parameter values to a prepared SQL query.
+您可以使用 `parameters` 欄位，將參數值傳遞至已備妥的 SQL 查詢。
 
-The following explain operation uses an SQL query with an `age` parameter:
+下列 explain 操作使用帶有 `age` 參數的 SQL 查詢：
 
 ```json
 POST /_plugins/_sql/_explain
@@ -526,7 +527,7 @@ POST /_plugins/_sql/_explain
 ```
 {% include copy-curl.html %}
 
-The response contains the Boolean query in OpenSearch DSL that corresponds to the preceding SQL query:
+回應包含 OpenSearch DSL 中對應前述 SQL 查詢的布林值查詢：
 
 ```json
 {

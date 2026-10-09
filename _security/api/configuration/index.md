@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Security configuration APIs
+title: "安全性組態 API"
 parent: Security APIs
 nav_order: 110
 has_children: true
@@ -11,41 +12,41 @@ redirect_from:
   - /security/api/configuration/
 ---
 
-# Security configuration APIs
+# 安全性組態 API
 
-The configuration APIs retrieve, replace, patch, and upgrade the Security plugin configuration.
+組態 API 可擷取、取代、修補及升級安全性外掛程式組態。
 
-OpenSearch supports the following configuration APIs.
+OpenSearch 支援下列組態 API。
 
-| API | Description |
+| API | 說明 |
 | :--- | :--- |
-| [Create or Update Security Configuration API]({{site.url}}{{site.baseurl}}/security/api/configuration/update-configuration/) | Creates or replaces the Security plugin configuration. |
-| [Patch Security Configuration API]({{site.url}}{{site.baseurl}}/security/api/configuration/patch-configuration/) | Updates individual parts of the Security plugin configuration without replacing the entire configuration document. |
-| [Get Security Configuration API]({{site.url}}{{site.baseurl}}/security/api/configuration/get-configuration/) | Retrieves the current Security plugin configuration, including its authentication and authorization domains. |
-| [Check for Security Configuration Upgrades API]({{site.url}}{{site.baseurl}}/security/api/configuration/upgrade-check/) | Checks whether any configuration components require an upgrade and lists the upgrades that are available. |
-| [Perform Security Configuration Upgrade API]({{site.url}}{{site.baseurl}}/security/api/configuration/upgrade-perform/) | Applies the upgrades that the Check for Upgrades API identifies. |
+| [建立或更新安全性組態 API]({{site.url}}{{site.baseurl}}/security/api/configuration/update-configuration/) | 建立或取代安全性外掛程式組態。 |
+| [修補安全性組態 API]({{site.url}}{{site.baseurl}}/security/api/configuration/patch-configuration/) | 更新安全性外掛程式組態的個別部分，而不取代整份組態文件。 |
+| [取得安全性組態 API]({{site.url}}{{site.baseurl}}/security/api/configuration/get-configuration/) | 擷取目前的安全性外掛程式組態，包括其驗證與授權網域。 |
+| [檢查安全性組態升級 API]({{site.url}}{{site.baseurl}}/security/api/configuration/upgrade-check/) | 檢查是否有任何組態元件需要升級，並列出可用的升級項目。 |
+| [執行安全性組態升級 API]({{site.url}}{{site.baseurl}}/security/api/configuration/upgrade-perform/) | 套用「檢查升級 API」所識別的升級項目。 |
 
-These APIs manage the following configuration components:
+這些 API 可管理下列組態元件：
 
-- Roles, which define the actions that users can perform
-- Role mappings, which map users or backend roles to specific roles
-- Action groups, which are collections of permissions used to simplify role definitions
-- Internal users, whose credentials are stored directly in OpenSearch
-- Tenants, which are isolated workspaces that support multi-tenancy
-- The security configuration, which contains global security settings
+- 角色，定義使用者可執行的動作
+- 角色對應，將使用者或後端角色對應至特定角色
+- 動作群組，是用來簡化角色定義的權限集合
+- 內部使用者，其認證資訊直接儲存在 OpenSearch 中
+- 租用戶，是支援多租用戶的隔離工作區
+- 安全性組態，包含全域安全性設定
 
 ## `authc`
 
-Authentication domains (`authc`) define how OpenSearch extracts user information and backend roles from the authentication response. This is especially important when integrating with external systems such as SAML, OpenID Connect (OIDC), or custom authentication backends.
+驗證網域 (`authc`) 定義 OpenSearch 如何從驗證回應中擷取使用者資訊與後端角色。在與 SAML、OpenID Connect (OIDC) 或自訂驗證後端等外部系統整合時，這點尤其重要。
 
-To support role mapping, use the following configuration keys:
+為支援角色對應，請使用下列組態索引鍵：
 
-- `subject_key`: Specifies where to find the user identifier in the authentication response.
-- `roles_key`: Indicates where to find the backend roles in the authentication response.
+- `subject_key`：指定在驗證回應中何處尋找使用者識別碼。
+- `roles_key`：指出在驗證回應中何處尋找後端角色。
 
-OpenSearch uses the extracted backend roles in role mappings to assign roles to users.
+OpenSearch 會使用擷取出的後端角色進行角色對應，以將角色指派給使用者。
 
-The following example configures an authentication domain to extract the user name from `preferred_username` and backend roles from `groups` in a JSON Web Token (JWT):
+下列範例設定一個驗證網域，從 JSON Web Token (JWT) 中的 `preferred_username` 擷取使用者名稱，並從 `groups` 擷取後端角色：
 
 ```json
 {
@@ -73,7 +74,7 @@ The following example configures an authentication domain to extract the user na
 ```
 {% include copy.html %}
 
-You can then use the extracted backend roles in role mappings. The following configuration assigns the `analyst_role` to users whose authentication response includes either `analyst_group` or `data_scientist_group`:
+接著您可以在角色對應中使用擷取出的後端角色。下列組態會將 `analyst_role` 指派給驗證回應中包含 `analyst_group` 或 `data_scientist_group` 的使用者：
 
 ```json
 {
@@ -88,16 +89,16 @@ You can then use the extracted backend roles in role mappings. The following con
 
 ## `authz`
 
-The `authz` section handles authorization by retrieving backend roles from external sources such as LDAP. This allows OpenSearch to authenticate users through one method, such as basic authentication or SAML, and authorize them based on role information stored in a separate directory. This setup is useful in enterprise environments in which identities are managed in one system and roles in another.
+`authz` 區段會從 LDAP 等外部來源擷取後端角色來處理授權。這可讓 OpenSearch 透過一種方法 (例如基本驗證或 SAML) 驗證使用者，並根據儲存在另一個目錄中的角色資訊對其授權。此設定在身分識別由一個系統管理、角色由另一個系統管理的企業環境中很實用。
 
-A typical `authz` configuration includes the following elements:
+典型的 `authz` 組態包含下列元素：
 
-- `roles_search_filter`: The LDAP search filter used to find roles for a user.
-- `rolebase`: The distinguished name (DN) to search for roles.
-- `rolesearch`: The search pattern to use when looking for roles.
-- `rolename`: The attribute that contains the role name.
+- `roles_search_filter`：用來尋找使用者角色的 LDAP 搜尋篩選條件。
+- `rolebase`：用來搜尋角色的辨別名稱 (DN)。
+- `rolesearch`：尋找角色時所使用的搜尋模式。
+- `rolename`：包含角色名稱的屬性。
 
-The following example connects to an LDAP directory, uses the `rolesearch` filter to find user groups, and extracts each group as a backend role using the `rolename` attribute:
+下列範例會連線至 LDAP 目錄，使用 `rolesearch` 篩選條件尋找使用者群組，並使用 `rolename` 屬性將每個群組擷取為後端角色：
 
 ```json
 {
@@ -122,7 +123,7 @@ The following example connects to an LDAP directory, uses the `rolesearch` filte
 ```
 {% include copy.html %}
 
-The following example maps an LDAP group to an OpenSearch role. If a user belongs to the LDAP group `cn=analysts,ou=groups,dc=example,dc=com`, then the backend role `analysts` is extracted and mapped to the `data_access_role`:
+下列範例會將 LDAP 群組對應至 OpenSearch 角色。若使用者屬於 LDAP 群組 `cn=analysts,ou=groups,dc=example,dc=com`，則會擷取後端角色 `analysts` 並對應至 `data_access_role`：
 
 ```json
 {
@@ -135,12 +136,12 @@ The following example maps an LDAP group to an OpenSearch role. If a user belong
 ```
 {% include copy.html %}
 
-## Best practices
+## 最佳實務
 
-When using the configuration APIs, follow these best practices:
+使用組態 API 時，請遵循下列最佳實務：
 
-- Always back up your security configuration before making changes.
-- Run the Check for Upgrades API before using the Perform Upgrade API.
-- Test changes in a non-production environment before deploying to production.
-- Integrate these APIs into your regular upgrade and maintenance workflows.
-- Validate functionality after applying configuration changes.
+- 進行變更前，請務必備份您的安全性組態。
+- 使用「執行升級 API」之前，請先執行「檢查升級 API」。
+- 部署至正式環境前，請先在非正式環境中測試變更。
+- 將這些 API 整合至您例行的升級與維護工作流程中。
+- 套用組態變更後，請驗證功能是否正常。

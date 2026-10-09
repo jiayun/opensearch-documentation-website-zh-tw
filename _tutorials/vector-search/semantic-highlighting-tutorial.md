@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using semantic highlighting
+title: "使用語意醒目提示"
 parent: Vector search
 nav_order: 60
 ---
 
-# Using semantic highlighting
+# 使用語意醒目提示
 
-Semantic highlighting enhances search results by identifying and emphasizing the most semantically relevant sentences or passages within documents, based on the query's meaning. Unlike traditional highlighters that rely on exact keyword matches, semantic highlighting uses machine learning (ML) models to understand the context and relevance of text segments. This allows you to pinpoint the most pertinent information within a document, even if the exact search terms aren't present in the highlighted passage. For more information, see [Using the `semantic` highlighter]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight#the-semantic-highlighter).
+語意醒目提示會根據查詢的含義，找出並強調文件中語意上最相關的句子或段落，藉此強化搜尋結果。傳統的醒目提示器仰賴完全相符的關鍵字，語意醒目提示則不同，它使用機器學習 (ML) 模型來理解文字片段的上下文與相關性。如此一來，即使醒目提示的段落中沒有出現完全相同的搜尋詞彙，您仍可精確找出文件中最切題的資訊。如需詳細資訊，請參閱[使用 `semantic` 醒目提示器]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight#the-semantic-highlighter)。
 
-This tutorial guides you through setting up and using semantic highlighting with a neural search query.
+本教學將引導您設定語意醒目提示，並搭配神經搜尋查詢使用。
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將以 `your_` 為前綴的預留位置替換為您自己的值。
 {: .note}
 
-## Prerequisites
+## 先決條件
 
-To ensure local basic setup works, specify the following cluster settings:
+為確保本機基本設定能夠運作，請指定下列叢集設定：
 
 ```json
 PUT _cluster/settings
@@ -30,14 +31,14 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-When registering a model from a URL, make sure the source is trusted. Loading models from untrusted sources can pose security risks. For more information, see [PyTorch security guidelines for untrusted models](https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models).
+從 URL 註冊模型時，請確認來源可信。從不受信任的來源載入模型可能帶來安全性風險。如需詳細資訊，請參閱[針對不受信任模型的 PyTorch 安全性指引](https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models)。
 {: .warning}
 
-This example uses a simple setup with no dedicated ML nodes and allows running a model on a non-ML node. On clusters with dedicated ML nodes, specify `"only_run_on_ml_node": "true"` for improved performance. For more information, see [ML Commons cluster settings]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/).
+此範例使用簡易設定，沒有專用的 ML 節點，並允許在非 ML 節點上執行模型。在具有專用 ML 節點的叢集上，請指定 `"only_run_on_ml_node": "true"` 以提升效能。如需詳細資訊，請參閱 [ML Commons 叢集設定]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/)。
 
-## Step 1: Create an index
+## 步驟 1：建立索引
 
-First, create an index to store your text data and its corresponding vector embeddings. You'll need a `text` field for the original content and a `knn_vector` field for the embeddings:
+首先，建立一個索引來儲存您的文字資料及其對應的向量嵌入。您需要一個 `text` 欄位存放原始內容，以及一個 `knn_vector` 欄位存放嵌入：
 
 ```json
 PUT neural-search-index
@@ -69,16 +70,16 @@ PUT neural-search-index
 ```
 {% include copy-curl.html %}
 
-The `dimension` field must contain your chosen embedding model's dimension.
+`dimension` 欄位必須設為您所選嵌入模型的維度。
 
-## Step 2: Register and deploy the ML models
+## 步驟 2：註冊並部署 ML 模型
 
-You need two types of models for semantic highlighting:
+語意醒目提示需要兩種模型：
 
-1.  **Text embedding model**: To convert the search query and document text into vectors.
-2.  **Sentence highlighting model**: To analyze the text and identify the most relevant sentences.
+1.  **文字嵌入模型**：將搜尋查詢與文件文字轉換為向量。
+2.  **句子醒目提示模型**：分析文字並找出最相關的句子。
 
-First, register and deploy a text embedding model:
+首先，註冊並部署文字嵌入模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -90,16 +91,16 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-This API returns a `task_id` for the deployment operation. Use the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) to monitor the deployment status:
+此 API 會傳回部署作業的 `task_id`。請使用 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 監視部署狀態：
 
 ```json
 GET /_plugins/_ml/tasks/{your-task-id}
 ```
 {% include copy-curl.html %}
 
-Once the `state` changes to `COMPLETED`, the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) returns the model ID for the deployed model. Note the text embedding model ID; you'll use it in the following steps.
+當 `state` 變為 `COMPLETED` 後，[Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 會傳回已部署模型的模型 ID。請記下文字嵌入模型 ID，後續步驟會用到。
 
-Next, register a pretrained semantic sentence highlighting model:
+接著，註冊預先訓練的語意句子醒目提示模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -112,14 +113,14 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Monitor the deployment status using the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/). Note the semantic highlighting model ID; you'll use it in the following steps.
+使用 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 監視部署狀態。請記下語意醒目提示模型 ID，後續步驟會用到。
 
-For production environments, consider using an externally hosted model instead of a locally deployed model. Externally hosted models offer better scalability, resource isolation, and support for advanced features like batch inference. For information about deploying externally hosted models, see [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/).
+在正式環境中，建議使用外部託管的模型，而非本機部署的模型。外部託管模型提供更佳的擴充性、資源隔離，並支援批次推論等進階功能。如需部署外部託管模型的相關資訊，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/)。
 {: .tip}
 
-## Step 3 (Optional): Configure an ingest pipeline 
+## 步驟 3（選用）：設定資料匯入管線 
 
-To automatically generate embeddings during indexing, create an [ingest pipeline]({{site.url}}{{site.baseurl}}/ingest-pipelines/):
+若要在編製索引時自動產生嵌入，請建立[資料匯入管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/)：
 
 ```json
 PUT /_ingest/pipeline/nlp-ingest-pipeline
@@ -139,7 +140,7 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-Set this pipeline as the default pipeline for your index:
+將此管線設為索引的預設管線：
 
 ```json
 PUT /neural-search-index/_settings
@@ -149,9 +150,9 @@ PUT /neural-search-index/_settings
 ```
 {% include copy-curl.html %}
 
-## Step 4: Index data
+## 步驟 4：將資料編製索引
 
-Now, index some sample documents. If you configured the ingest pipeline, embeddings will be generated automatically:
+現在，將一些範例文件編製索引。如果您已設定資料匯入管線，系統會自動產生嵌入：
 
 ```json
 POST /neural-search-index/_doc/1
@@ -177,18 +178,18 @@ POST /neural-search-index/_doc/3
 ```
 {% include copy-curl.html %}
 
-## Step 5: Perform semantic highlighting
+## 步驟 5：執行語意醒目提示
 
-Combine a neural search query with the semantic highlighter:
+將神經搜尋查詢與語意醒目提示器結合：
 
-1.  Use a `neural` query to find documents semantically similar to your query text using the text embedding model.
-2.  Add a `highlight` section.
-3.  In `highlight.fields`, specify the `text` field (or another field containing the content you want to highlight).
-4.  Set the `type` for this field to `semantic`.
-5.  Add a global `highlight.options` object.
-6.  In `options`, provide the `model_id` of your deployed sentence highlighting model.
+1.  使用 `neural` 查詢，透過文字嵌入模型找出與您的查詢文字語意相似的文件。
+2.  新增 `highlight` 區段。
+3.  在 `highlight.fields` 中，指定 `text` 欄位（或包含您要醒目提示之內容的其他欄位）。
+4.  將此欄位的 `type` 設定為 `semantic`。
+5.  新增全域 `highlight.options` 物件。
+6.  在 `options` 中，提供您已部署之句子醒目提示模型的 `model_id`。
 
-Use the following request to retrieve the top five matching documents (specified in the `k` parameter). Replace the placeholder model IDs (`TEXT_EMBEDDING_MODEL_ID` and `SEMANTIC_HIGHLIGHTING_MODEL_ID`) with the model IDs obtained after successful deployment in Step 2:
+使用下列請求擷取前五筆相符文件（在 `k` 參數中指定）。將預留位置模型 ID（`TEXT_EMBEDDING_MODEL_ID` 與 `SEMANTIC_HIGHLIGHTING_MODEL_ID`）替換為步驟 2 中成功部署後取得的模型 ID：
 
 ```json
 POST /neural-search-index/_search
@@ -219,7 +220,7 @@ POST /neural-search-index/_search
 ```
 {% include copy-curl.html %}
 
-The search results include a `highlight` object within each hit. The specified `text` field in the `highlight` object contains the original text, with the most semantically relevant sentences wrapped in `<em>` tags by default:
+搜尋結果在每個命中結果中包含 `highlight` 物件。`highlight` 物件中指定的 `text` 欄位包含原始文字，預設會將語意最相關的句子以 `<em>` 標籤包覆：
 
 ```json
 {
@@ -270,12 +271,12 @@ The search results include a `highlight` object within each hit. The specified `
 }
 ```
 
-The `semantic` highlighter identifies the sentence determined by the model to be semantically relevant to the query ("treatments for neurodegenerative diseases") within the context of each retrieved document. You can customize the highlight tags using the `pre_tags` and `post_tags` parameters if needed. For more information, see [Changing the highlighting tags]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#changing-the-highlighting-tags).
+`semantic` 醒目提示器會在每份擷取文件的內容中，找出模型判定與查詢（「treatments for neurodegenerative diseases」）語意相關的句子。如有需要，您可以使用 `pre_tags` 與 `post_tags` 參數自訂醒目提示標籤。如需更多資訊，請參閱[變更醒目提示標籤]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#changing-the-highlighting-tags)。
 
-### Using batch inference mode for highlighting
+### 使用批次推論模式進行醒目提示
 
-For improved performance when highlighting multiple documents in production environments, consider enabling batch inference mode. This processes all documents in a single ML inference call instead of one call per document. For more information, see [Batch inference mode]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight#batch-inference-mode).
+在正式環境中醒目提示多份文件時，若要提升效能，可考慮啟用批次推論模式。此模式會在單一 ML 推論呼叫中處理所有文件，而不是每份文件呼叫一次。如需更多資訊，請參閱[批次推論模式]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight#batch-inference-mode)。
 
-## Next steps
+## 後續步驟
 
-For more information about semantic highlighting options and configuration, see [Using the semantic highlighter]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight#the-semantic-highlighter).
+如需語意醒目提示選項與組態的更多資訊，請參閱[使用語意醒目提示器]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight#the-semantic-highlighter)。

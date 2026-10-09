@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Kinesis
 parent: Sources
@@ -6,13 +7,13 @@ grand_parent: Pipelines
 nav_order: 45
 ---
 
-# Kinesis source
+# Kinesis 來源
 
-You can use the OpenSearch Data Prepper `kinesis` source to ingest records from one or more [Amazon Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/).
+您可以使用 OpenSearch Data Prepper `kinesis` 來源，從一或多個 [Amazon Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) 匯入記錄。
 
-## Usage
+## 使用方式
 
-The following example pipeline specifies Kinesis as a source. The pipeline ingests data from multiple Kinesis data streams named `stream1` and `stream2` and sets the `initial_position` to indicate the starting point for reading the stream records:
+下列範例管線將 Kinesis 指定為來源。此管線會從名為 `stream1` 和 `stream2` 的多個 Kinesis 資料串流匯入資料，並設定 `initial_position` 以指出讀取串流記錄的起始點：
 
 ```yaml
 version: "2"
@@ -29,111 +30,111 @@ kinesis-pipeline:
         sts_role_arn: "arn:aws:iam::123456789012:role/my-iam-role"
 ```
 
-## Configuration options
+## 組態選項
 
-The `kinesis` source supports the following configuration options.
+`kinesis` 來源支援下列組態選項。
 
-Option | Required | Type     | Description
+選項 | 必要 | 類型     | 說明
 :--- |:---------|:---------| :---
-`aws` | Yes      | AWS      | Specifies the AWS configuration. See [`aws`](#aws).
-`acknowledgments` | No       | Boolean  | When set to `true`, enables the `kinesis` source to receive [end-to-end acknowledgments]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/pipelines#end-to-end-acknowledgments) when events are received by OpenSearch sinks.
-`streams` | Yes      | List     | Configures a list of multiple Kinesis data streams that the `kinesis` source uses to read records. You can configure up to four streams. See [Streams](#streams).
-`codec` | Yes      | Codec    | Specifies the [codec](#codec) to apply.
-`buffer_timeout` | No       | Duration | Sets the amount of time allowed for writing events to the Data Prepper buffer before timeout occurs. Any events that the source cannot write to the buffer during the specified amount of time are discarded. Default is `1s`.
-`records_to_accumulate` | No       | Integer  | Determines the number of messages that accumulate before being written to the buffer. Default is `100`.
-`consumer_strategy` | No       | String   | Selects the consumer strategy to use for ingesting Kinesis data streams. The default is `fan-out`, but `polling` can also be used. If `polling` is enabled, the additional configuration is required.
-`polling` | No       | polling   | See [polling](#polling).
+`aws` | 是      | AWS      | 指定 AWS 組態。請參閱 [`aws`](#aws)。
+`acknowledgments` | 否       | 布林值  | 設為 `true` 時，可讓 `kinesis` 來源在 OpenSearch 接收器收到事件時接收[端對端確認]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/pipelines#end-to-end-acknowledgments)。
+`streams` | 是      | List     | 設定多個 Kinesis 資料串流的清單，供 `kinesis` 來源用來讀取記錄。您最多可以設定四個串流。請參閱[串流](#streams)。
+`codec` | 是      | Codec    | 指定要套用的 [codec](#codec)。
+`buffer_timeout` | 否       | Duration | 設定事件寫入 Data Prepper 緩衝區的允許時間，超過即逾時。來源在指定時間內無法寫入緩衝區的任何事件都會被捨棄。預設值為 `1s`。
+`records_to_accumulate` | 否       | 整數  | 決定寫入緩衝區前累積的訊息數量。預設值為 `100`。
+`consumer_strategy` | 否       | 字串   | 選取用於匯入 Kinesis 資料串流的取用者策略。預設值為 `fan-out`，但也可以使用 `polling`。若啟用 `polling`，則需要額外的組態。
+`polling` | 否       | polling   | 請參閱 [polling](#polling)。
 
-### Streams
+### 串流
 
-You can use the following options in the `streams` array.
+您可以在 `streams` 陣列中使用下列選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- |:---------| :--- | :---
-`stream_name` | Yes      | String | Defines the name of each Kinesis data stream.
-`initial_position` | No       | String | Sets the `initial_position` to control where the `kinesis` source begins reading stream records. Use `LATEST` to start from the most recent record, `EARLIEST` to read from the beginning of the stream, or `AT_TIMESTAMP` to start from a specific timestamp. Default is `LATEST`.
-`initial_timestamp`| No       | String | Specifies the timestamp from which to begin reading stream records. The value must follow the [ISO LocalDateTime](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_LOCAL_DATE_TIME) format and be provided in the UTC time zone (for example, `2023-01-23T10:00:00`). When `initial_position` is set to `AT_TIMESTAMP`, you must specify either `initial_timestamp` or `range`.
-`range` | No  | String | Specifies how far back from the current time to begin reading Kinesis data stream records. Supports ISO-8601 duration strings (such as `PT20.345S` or `PT15M`) as well as shorthand notation for seconds (`60s`) and milliseconds (`1600ms`). For example, `PT12H` starts reading records from 12 hours before the pipeline started. When `initial_position` is set to `AT_TIMESTAMP`, you must specify either `initial_timestamp` or `range`.
+`stream_name` | 是      | 字串 | 定義每個 Kinesis 資料串流的名稱。
+`initial_position` | 否       | 字串 | 設定 `initial_position` 以控制 `kinesis` 來源開始讀取串流記錄的位置。使用 `LATEST` 從最新記錄開始，使用 `EARLIEST` 從串流開頭讀取，或使用 `AT_TIMESTAMP` 從特定時間戳記開始。預設值為 `LATEST`。
+`initial_timestamp`| 否       | 字串 | 指定開始讀取串流記錄的時間戳記。此值必須遵循 [ISO LocalDateTime](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_LOCAL_DATE_TIME) 格式，並以 UTC 時區提供（例如 `2023-01-23T10:00:00`）。當 `initial_position` 設為 `AT_TIMESTAMP` 時，您必須指定 `initial_timestamp` 或 `range`。
+`range` | 否  | 字串 | 指定從目前時間往前多久開始讀取 Kinesis 資料串流記錄。支援 ISO-8601 持續時間字串（例如 `PT20.345S` 或 `PT15M`），以及秒（`60s`）和毫秒（`1600ms`）的簡寫標記法。例如，`PT12H` 會從管線啟動前 12 小時開始讀取記錄。當 `initial_position` 設為 `AT_TIMESTAMP` 時，您必須指定 `initial_timestamp` 或 `range`。
 
-`checkpoint_interval` | No       | Duration | Configure the `checkpoint_interval` to periodically checkpoint Kinesis data streams and avoid duplication of record processing. Default is `PT2M`.
-`compression` | No | String  | Specifies the compression format. To decompress records added by a [CloudWatch Logs Subscription Filter](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/SubscriptionFilters.html) to Kinesis, use the `gzip` compression format.
+`checkpoint_interval` | 否       | Duration | 設定 `checkpoint_interval` 以定期對 Kinesis 資料串流建立檢查點，並避免重複處理記錄。預設值為 `PT2M`。
+`compression` | 否 | 字串  | 指定壓縮格式。若要解壓縮由 [CloudWatch Logs Subscription Filter](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/SubscriptionFilters.html) 新增至 Kinesis 的記錄，請使用 `gzip` 壓縮格式。
 
 <!-- vale off -->
 ## codec
 <!-- vale on -->
 
-The `codec` determines how the `kinesis` source parses each Kinesis stream record. For increased and more efficient performance, you can use [codec combinations]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/codec-processor-combinations/) with certain processors.
+`codec` 會決定 `kinesis` 來源如何剖析每個 Kinesis 串流記錄。為了提升效能並提高效率，您可以搭配特定處理器使用 [codec 組合]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/codec-processor-combinations/)。
 
 <!-- vale off -->
 ### json codec
 <!-- vale on -->
 
-The `json` codec parses each single line as a single JSON object from a JSON array and then creates a Data Prepper event for each object in the array. It can be used for parsing nested CloudWatch events into individual log entries. 
-It also supports the following configuration to use with this codec.
+`json` codec 會將每一行剖析為 JSON 陣列中的單一 JSON 物件，然後為陣列中的每個物件建立 Data Prepper 事件。它可用於將巢狀 CloudWatch 事件剖析為個別記錄項目。
+它也支援下列組態以搭配此 codec 使用。
 
-Option | Required | Type    | Description
+選項 | 必要 | 類型    | 說明
 :--- | :--- |:--------| :---
-`key_name` | No | String | The name of the input field from which to extract the JSON array and create Data Prepper events.
-`include_keys` | No | List | The list of input fields to be extracted and added as additional fields in the Data Prepper event.
-`include_keys_metadata` | No | List | The list of input fields to be extracted and added to the Data Prepper event metadata object.
-`max_event_length` | No | Integer | The maximum size of any single event being read by the JSON codec. Default is 20,000,000 characters.
+`key_name` | 否 | 字串 | 要從中擷取 JSON 陣列並建立 Data Prepper 事件的輸入欄位名稱。
+`include_keys` | 否 | List | 要擷取並新增為 Data Prepper 事件中其他欄位的輸入欄位清單。
+`include_keys_metadata` | 否 | List | 要擷取並新增至 Data Prepper 事件中繼資料物件的輸入欄位清單。
+`max_event_length` | 否 | 整數 | JSON codec 讀取之任何單一事件的大小上限。預設值為 20,000,000 個字元。
 
 
 ### `newline` codec
 
-The `newline` codec parses each Kinesis stream record as a single log event, making it ideal for processing single-line records. It also works well with the [`parse_json` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/parse-json/) to parse each line.   
+`newline` codec 會將每個 Kinesis 串流記錄剖析為單一記錄事件，非常適合處理單行記錄。它也能與 [`parse_json` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/parse-json/)搭配使用，以剖析每一行。
 
-You can use the following options to configure the `newline` codec.
+您可以使用下列選項來設定 `newline` codec。
 
-Option | Required | Type    | Description
+選項 | 必要 | 類型    | 說明
 :--- | :--- |:--------| :---
-`skip_lines` | No | Integer | Sets the number of lines to skip before creating events. You can use this configuration to skip common header rows. Default is `0`.
-`header_destination` | No | String  | Defines a key value to assign to the header line of the stream event. If this option is specified, then each event will contain a `header_destination` field.
+`skip_lines` | 否 | 整數 | 設定建立事件前要略過的行數。您可以使用此組態略過常見的標題列。預設值為 `0`。
+`header_destination` | 否 | 字串  | 定義要指派給串流事件標題行的索引鍵值。若指定此選項，則每個事件都會包含 `header_destination` 欄位。
 
 ### `otel_traces` codec
 
-The `otel_traces` codec parses each Kinesis data stream record as an OpenTelemetry trace record and creates a Data Prepper span event for each span record.
+`otel_traces` codec 會將每個 Kinesis 資料串流記錄剖析為 OpenTelemetry 追蹤記錄，並為每個 span 記錄建立 Data Prepper span 事件。
 
-You can use the following options to configure the `otel_traces` codec.
+您可以使用下列選項來設定 `otel_traces` codec。
 
-Option | Required | Type    | Description
+選項 | 必要 | 類型    | 說明
 :--- | :--- |:--------| :---
-`format` | No | String | Specifies the format of the OpenTelemetry traces. Valid values are `json` and `protobuf`. Default is `json`.
-`otel_format` | No | String | Specifies the output format of the decoded spans. Valid values are `opensearch` and `otel`. Default is `opensearch`.
-`length_prefixed_encoding` | No | Boolean | Specifies whether the length precedes the data in protobuf format. Default is `false`.
+`format` | 否 | 字串 | 指定 OpenTelemetry 追蹤的格式。有效值為 `json` 和 `protobuf`。預設值為 `json`。
+`otel_format` | 否 | 字串 | 指定解碼後 span 的輸出格式。有效值為 `opensearch` 和 `otel`。預設值為 `opensearch`。
+`length_prefixed_encoding` | 否 | 布林值 | 指定在 protobuf 格式中長度是否位於資料之前。預設值為 `false`。
 
 <!-- vale off -->
 ### polling
 <!-- vale on -->
 
-When the `consumer_strategy` is set to `polling`, the `kinesis` source uses a polling-based approach to read records from the Kinesis data streams, instead of the default `fan-out` approach.
+當 `consumer_strategy` 設為 `polling` 時，`kinesis` 來源會使用以輪詢為基礎的方法從 Kinesis 資料串流讀取記錄，而非預設的 `fan-out` 方法。
 
-Option | Required | Type    | Description
+選項 | 必要 | 類型    | 說明
 :--- | :--- |:--------| :---
-`max_polling_records` | No | Integer | Sets the number of records to fetch from Kinesis during a single call.
-`idle_time_between_reads` | No | Duration  | Defines the amount of idle time between calls. 
+`max_polling_records` | 否 | 整數 | 設定單次呼叫期間從 Kinesis 擷取的記錄數。
+`idle_time_between_reads` | 否 | Duration  | 定義呼叫之間的閒置時間量。
 
 <!-- vale off -->
 ### aws
 <!-- vale on -->
 
-You can use the following options in the `aws` configuration.
+您可以在 `aws` 組態中使用下列選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`region` | No | String | Sets the AWS Region to use for credentials. Defaults to the [standard SDK behavior for determining the Region](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html).
-`sts_role_arn` | No | String | Defines the AWS Security Token Service (AWS STS) role to assume for requests to Amazon Kinesis Data Streams and Amazon DynamoDB. Defaults to `null`, which uses the [standard SDK behavior for credentials](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html).
-`aws_sts_header_overrides` | No | Map | Defines a map of header overrides that the AWS Identity and Access Management (IAM) role assumes for the sink plugin.
+`region` | 否 | 字串 | 設定要用於憑證的 AWS 區域。預設為[決定區域的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html)。
+`sts_role_arn` | 否 | 字串 | 定義對 Amazon Kinesis Data Streams 和 Amazon DynamoDB 的請求所要擔任的 AWS Security Token Service (AWS STS) 角色。預設為 `null`，其使用[憑證的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html)。
+`aws_sts_header_overrides` | 否 | Map | 定義接收器外掛程式所擔任之 AWS Identity and Access Management (IAM) 角色的標頭覆寫對應。
 
-## Exposed metadata attributes
+## 公開的中繼資料屬性
 
-The `kinesis` source adds the following metadata to each processed event. You can access the metadata attributes using the [expression syntax `getMetadata` function]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/get-metadata/).
+`kinesis` 來源會將下列中繼資料新增至每個已處理的事件。您可以使用[運算式語法 `getMetadata` 函式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/get-metadata/)存取中繼資料屬性。
 
-- `stream_name`: Contains the name of the Kinesis data stream from which the event was obtained.
+- `stream_name`：包含取得事件來源的 Kinesis 資料串流名稱。
 
-## Permissions
+## 權限
 
-The following minimum permissions are required in order to run `kinesis` as a source:
+若要以來源身分執行 `kinesis`，需要下列最低權限：
 
 ```json
 {
@@ -179,15 +180,15 @@ The following minimum permissions are required in order to run `kinesis` as a so
 }
 ```
 
-The `kinesis` source uses a DynamoDB table for ingestion coordination among multiple workers, so you need DynamoDB permissions.
+`kinesis` 來源會使用 DynamoDB 資料表協調多個工作程序的資料匯入，因此您需要 DynamoDB 權限。
 
-## Metrics
+## 指標
 
-The `kinesis` source includes the following metrics.
+`kinesis` 來源包含下列指標。
 
-### Counters
+### 計數器
 
-* `recordsProcessed`: Counts the number of processed stream records.
-* `recordProcessingErrors`: Counts the number of stream record processing errors.
-* `acknowledgementSetSuccesses`: Counts the number of processed stream records that were successfully added to the sink.
-* `acknowledgementSetFailures`: Counts the number of processed stream records that failed to be added to the sink.
+* `recordsProcessed`：計算已處理的串流記錄數。
+* `recordProcessingErrors`：計算串流記錄處理錯誤數。
+* `acknowledgementSetSuccesses`：計算已成功新增至接收器的已處理串流記錄數。
+* `acknowledgementSetFailures`：計算新增至接收器失敗的已處理串流記錄數。

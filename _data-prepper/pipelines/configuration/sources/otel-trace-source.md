@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: OTel trace source
+title: "OTel 追蹤來源"
 parent: Sources
 grand_parent: Pipelines
 nav_order: 80
@@ -9,37 +10,37 @@ redirect_from:
 ---
 
 
-# OTel trace source 
+# OTel 追蹤來源 
 
-The `otel_trace_source` is a source for the OpenTelemetry Collector. The following table describes options you can use to configure the `otel_trace_source` source.
+`otel_trace_source` 是 OpenTelemetry Collector 的來源。下表說明您可用來設定 `otel_trace_source` 來源的選項。
 
-## Configuration
+## 組態
 
-You can configure the `otel_trace_source` source with the following options. 
+您可以使用下列選項設定 `otel_trace_source` 來源。 
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`port` | No | Integer | The port that the `otel_trace_source` source runs on. Default value is `21890`.
-`request_timeout` | No | Integer | The request timeout, in milliseconds. Default value is `10000`.
-`health_check_service` | No | Boolean | Enables a gRPC health check service under `grpc.health.v1/Health/Check`. Default value is `false`.
-`unauthenticated_health_check` | No | Boolean | Determines whether or not authentication is required on the health check endpoint. OpenSearch Data Prepper ignores this option if no authentication is defined. Default value is `false`.
-`proto_reflection_service` | No | Boolean | Enables a reflection service for Protobuf services (see [gRPC reflection](https://github.com/grpc/grpc/blob/master/doc/server-reflection.md) and [gRPC Server Reflection Tutorial](https://github.com/grpc/grpc-java/blob/master/documentation/server-reflection-tutorial.md) docs). Default value is `false`.
-`unframed_requests` | No | Boolean | Enable requests not framed using the gRPC wire protocol.
-`thread_count` | No | Integer | The number of threads to keep in the ScheduledThreadPool. Default value is `200`.
-`max_connection_count` | No | Integer | The maximum allowed number of open connections. Default value is `500`.
-| `output_format` | String | Specifies the output format of the generated events. Valid values are `otel` or `opensearch`. Default is `opensearch`. |
-`max_request_length` | No | ByteCount | The maximum number of bytes allowed in the payload of a single gRPC or HTTP request. Default value is `10mb`.
-`ssl` | No | Boolean | Enables connections to the OTel source port over TLS/SSL. Defaults to `true`.
-sslKeyCertChainFile | Conditionally | String | File system path or Amazon Simple Storage Service (Amazon S3) path to the security certificate (for example, `"config/demo-data-prepper.crt"` or `"s3://my-secrets-bucket/demo-data-prepper.crt"`). Required if `ssl` is set to `true`.
-`sslKeyFile` | Conditionally | String | File system path or Amazon S3 path to the security key (for example, `"config/demo-data-prepper.key"` or `"s3://my-secrets-bucket/demo-data-prepper.key"`). Required if `ssl` is set to `true`.
-`useAcmCertForSSL` | No | Boolean | Whether to enable TLS/SSL using a certificate and private key from AWS Certificate Manager (ACM). Default value is `false`.
-`acmCertificateArn` | Conditionally | String | Represents the ACM certificate ARN. ACM certificate take preference over S3 or local file system certificate. Required if `useAcmCertForSSL` is set to `true`.
-`awsRegion` | Conditionally | String | Represents the AWS region used by ACM or Amazon S3. Required if `useAcmCertForSSL` is set to `true` or `sslKeyCertChainFile` and `sslKeyFile` are Amazon S3 paths.
-`authentication` | No | Object | An authentication configuration. By default, an unauthenticated server is created for the pipeline. This parameter uses pluggable authentication for HTTPS. To use basic authentication, define the `http_basic` plugin with a `username` and `password`. To provide customer authentication, use or create a plugin that implements [GrpcAuthenticationProvider](https://github.com/opensearch-project/data-prepper/blob/1.2.0/data-prepper-plugins/armeria-common/src/main/java/com/amazon/dataprepper/armeria/authentication/GrpcAuthenticationProvider.java).
+`port` | 否 | 整數 | `otel_trace_source` 來源執行時使用的連接埠。預設值為 `21890`。
+`request_timeout` | 否 | 整數 | 請求逾時時間，以毫秒為單位。預設值為 `10000`。
+`health_check_service` | 否 | 布林值 | 在 `grpc.health.v1/Health/Check` 下啟用 gRPC 健康狀態檢查服務。預設值為 `false`。
+`unauthenticated_health_check` | 否 | 布林值 | 決定健康狀態檢查端點是否需要驗證。若未定義驗證，OpenSearch Data Prepper 會忽略此選項。預設值為 `false`。
+`proto_reflection_service` | 否 | 布林值 | 為 Protobuf 服務啟用反射服務（請參閱 [gRPC 反射](https://github.com/grpc/grpc/blob/master/doc/server-reflection.md)及 [gRPC 伺服器反射教學](https://github.com/grpc/grpc-java/blob/master/documentation/server-reflection-tutorial.md)文件）。預設值為 `false`。
+`unframed_requests` | 否 | 布林值 | 啟用未使用 gRPC 傳輸協定封裝的請求。
+`thread_count` | 否 | 整數 | ScheduledThreadPool 中保留的執行緒數量。預設值為 `200`。
+`max_connection_count` | 否 | 整數 | 允許的最大開啟連線數量。預設值為 `500`。
+| `output_format` | 字串 | 指定所產生事件的輸出格式。有效值為 `otel` 或 `opensearch`。預設值為 `opensearch`。 |
+`max_request_length` | 否 | ByteCount | 單一 gRPC 或 HTTP 請求的承載中允許的最大位元組數。預設值為 `10mb`。
+`ssl` | 否 | 布林值 | 啟用透過 TLS/SSL 連線至 OTel 來源連接埠。預設為 `true`。
+sslKeyCertChainFile | 視條件而定 | 字串 | 安全性憑證的檔案系統路徑或 Amazon Simple Storage Service (Amazon S3) 路徑（例如 `"config/demo-data-prepper.crt"` 或 `"s3://my-secrets-bucket/demo-data-prepper.crt"`）。當 `ssl` 設為 `true` 時為必要。
+`sslKeyFile` | 視條件而定 | 字串 | 安全性金鑰的檔案系統路徑或 Amazon S3 路徑（例如 `"config/demo-data-prepper.key"` 或 `"s3://my-secrets-bucket/demo-data-prepper.key"`）。當 `ssl` 設為 `true` 時為必要。
+`useAcmCertForSSL` | 否 | 布林值 | 是否使用 AWS Certificate Manager (ACM) 提供的憑證與私密金鑰啟用 TLS/SSL。預設值為 `false`。
+`acmCertificateArn` | 視條件而定 | 字串 | 代表 ACM 憑證 ARN。ACM 憑證的優先順序高於 S3 或本機檔案系統憑證。當 `useAcmCertForSSL` 設為 `true` 時為必要。
+`awsRegion` | 視條件而定 | 字串 | 代表 ACM 或 Amazon S3 所使用的 AWS 區域。當 `useAcmCertForSSL` 設為 `true`，或 `sslKeyCertChainFile` 與 `sslKeyFile` 為 Amazon S3 路徑時為必要。
+`authentication` | 否 | 物件 | 驗證組態。根據預設，系統會為管線建立未經驗證的伺服器。此參數為 HTTPS 使用可插拔式驗證。若要使用基本驗證，請以 `username` 和 `password` 定義 `http_basic` 外掛程式。若要提供自訂驗證，請使用或建立實作 [GrpcAuthenticationProvider](https://github.com/opensearch-project/data-prepper/blob/1.2.0/data-prepper-plugins/armeria-common/src/main/java/com/amazon/dataprepper/armeria/authentication/GrpcAuthenticationProvider.java) 的外掛程式。
 
-## Usage
+## 使用方式
 
-To use the `otel-metrics` source, create the following `pipeline.yaml` file with `otel_metrics_source` as the source:
+若要使用 `otel-metrics` 來源，請建立下列以 `otel_metrics_source` 作為來源的 `pipeline.yaml` 檔案：
 
 ```yaml
 source:
@@ -47,7 +48,7 @@ source:
 ```
 {% include copy.html %}
 
-If you want to use the OpenTelemetry format for your output, set the `output_format` to `otel`, as shown in the following example:
+若您想要以 OpenTelemetry 格式輸出，請將 `output_format` 設為 `otel`，如下列範例所示：
 
 ```yaml
 source:
@@ -56,9 +57,9 @@ source:
 ```
 {% include copy.html %}
 
-## Example
+## 範例
 
-The following example shows Data Prepper ingesting OTLP traces over HTTPS using a PEM certificate and key with unframed HTTP at a custom path, accepting gzip-compressed payloads, preserving OpenTelemetry document structure, and indexing them into OpenSearch:
+下列範例示範 Data Prepper 透過 HTTPS 匯入 OTLP 追蹤：使用 PEM 憑證與金鑰、在自訂路徑使用未封裝的 HTTP、接受以 gzip 壓縮的承載、保留 OpenTelemetry 文件結構，並將追蹤編製索引至 OpenSearch：
 
 ```yaml
 otel-traces-https:
@@ -84,7 +85,7 @@ otel-traces-https:
 ```
 {% include copy.html %}
 
-You can test the pipeline using the following command:
+您可以使用下列命令測試管線：
 
 ```bash
 cat > /tmp/otel-trace3.json <<'JSON'
@@ -122,7 +123,7 @@ curl -s -X POST "https://localhost:21890/ingest/otel-traces-https/v1/traces" \
 ```
 {% include copy.html %}
 
-The document stored in OpenSearch contains the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 {
@@ -182,23 +183,23 @@ The document stored in OpenSearch contains the following information:
 }
 ```
 
-## Metrics
+## 指標
 
-The `otel_trace_source` source includes the following metrics.
+`otel_trace_source` 來源包含下列指標。
 
-### Counters
+### 計數器
 
-- `requestTimeouts`: Measures the total number of requests that time out.
-- `requestsReceived`: Measures the total number of requests received by the `otel_trace` source.
-- `successRequests`: Measures the total number of requests successfully processed by the `otel_trace` source plugin.
-- `badRequests`: Measures the total number of requests with an invalid format processed by the `otel_trace` source plugin.
-- `requestsTooLarge`: Measures the total number of requests whose number of spans exceeds the buffer capacity.
-- `internalServerError`: Measures the total number of requests processed by the `otel_trace` source with a custom exception type.
+- `requestTimeouts`：測量逾時的請求總數。
+- `requestsReceived`：測量 `otel_trace` 來源收到的請求總數。
+- `successRequests`：測量 `otel_trace` 來源外掛程式成功處理的請求總數。
+- `badRequests`：測量 `otel_trace` 來源外掛程式所處理、格式無效的請求總數。
+- `requestsTooLarge`：測量 span 數量超過緩衝區容量的請求總數。
+- `internalServerError`：測量 `otel_trace` 來源以自訂例外類型處理的請求總數。
 
-### Timers
+### 計時器
 
-- `requestProcessDuration`: Measures the latency of requests processed by the `otel_trace` source plugin in seconds.
+- `requestProcessDuration`：測量 `otel_trace` 來源外掛程式所處理請求的延遲時間，以秒為單位。
 
-### Distribution summaries
+### 分布摘要
 
-- `payloadSize`: Measures the incoming request payload size distribution in bytes.
+- `payloadSize`：測量傳入請求承載大小的分布，以位元組為單位。

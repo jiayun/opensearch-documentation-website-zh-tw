@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Sampling
+title: "取樣"
 parent: Common use cases
 nav_order: 45
 ---
 
-# Sampling
+# 取樣
 
-OpenSearch Data Prepper provides the following sampling capabilities:
+OpenSearch Data Prepper 提供下列取樣功能：
 
-- Time sampling
-- Percentage sampling
-- Tail sampling
+- 時間取樣
+- 百分比取樣
+- 尾端取樣
 
-## Time sampling 
+## 時間取樣
 
-You can use the `rate_limiter` action within the [`aggregate` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/aggregate/) to limit the number of events that can be processed per second. You can choose to either drop excess events or carry them forward to the next time period.
+您可以在 [`aggregate` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/aggregate/) 中使用 `rate_limiter` 動作，以限制每秒可處理的事件數量。您可以選擇捨棄超出的事件，或將其保留至下一個時間週期。
 
-In the following example, only 100 events with a status code of `200` are sent to the sink per second from a given IP address. The `when_exceeds` option is set to `drop`, which means that all excess events from the configured time window will be dropped.
+在下列範例中，來自特定 IP 位址且狀態碼為 `200` 的事件，每秒只有 100 個會傳送至接收端。`when_exceeds` 選項設為 `drop`，表示所設定時間範圍內所有超出的事件都會被捨棄。
 
 ```json
 ...
@@ -32,13 +33,13 @@ In the following example, only 100 events with a status code of `200` are sent t
 ...
 ```
 
-If you instead set the `when_exceeds` option to `block`, the processor will block the pipeline until the time window has elapsed. Then it will process the blocked events.
+如果您改將 `when_exceeds` 選項設為 `block`，處理器會封鎖管線，直到時間範圍結束。接著它會處理被封鎖的事件。
 
-## Percentage sampling
+## 百分比取樣
 
-Use the `percent_sampler` action within the `aggregate` processor to limit the number of events that are sent to a sink. All excess events will be dropped.
+在 `aggregate` 處理器中使用 `percent_sampler` 動作，以限制傳送至接收端的事件數量。所有超出的事件都會被捨棄。
 
-In the following example, only 20% of events with a status code of `200` are sent to the sink from a given IP address:
+在下列範例中，來自特定 IP 位址且狀態碼為 `200` 的事件，只有 20% 會傳送至接收端：
 
 ```json
 ...
@@ -53,11 +54,11 @@ In the following example, only 20% of events with a status code of `200` are sen
 ...
 ```
 
-## Tail sampling
+## 尾端取樣
 
-Use the `tail_sampler` action within the `aggregate` processor to sample events based on a set of defined policies. This action waits for an aggregation to complete across different aggregation periods based on the configured wait period. When an aggregation is complete, and if it matches the specific error condition, it is sent to the sink. Otherwise, only a configured percentage of events is sent to the sink.
+在 `aggregate` 處理器中使用 `tail_sampler` 動作，以依據一組已定義的原則取樣事件。此動作會根據所設定的等待期間，等待不同彙總期間的彙總完成。當彙總完成且符合特定錯誤條件時，便會傳送至接收端。否則，只有所設定百分比的事件會傳送至接收端。
 
-The following pipeline sends all OpenTelemetry traces with an error condition status of `2` to the sink. It only sends 20% of the traces that don't match this error condition to the sink.
+下列管線會將所有錯誤條件狀態為 `2` 的 OpenTelemetry 追蹤傳送至接收端。不符合此錯誤條件的追蹤則只有 20% 會傳送至接收端。
 
 ```json
 ...
@@ -73,6 +74,6 @@ The following pipeline sends all OpenTelemetry traces with an error condition st
 ...
 ```
 
-If you set the error condition to `false` or don't include it, only the configured percentage of events is allowed to pass through, as determined by a probabilistic outcome.
+如果您將錯誤條件設為 `false` 或未包含該條件，則只有所設定百分比的事件會依機率結果獲准通過。
 
-Because it can be difficult to determine exactly when tail sampling should occur, you can use the `wait_period` option to measure the idle time since the last event was received.
+由於可能難以確切判斷尾端取樣應於何時發生，您可以使用 `wait_period` 選項來測量自上次收到事件以來的閒置時間。

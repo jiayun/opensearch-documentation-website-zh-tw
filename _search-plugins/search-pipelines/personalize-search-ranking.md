@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Personalize search ranking
+title: "個人化搜尋排名"
 nav_order: 85
 has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
 ---
 
-# Personalize search ranking processor
-Introduced 2.9
+# 個人化搜尋排名處理器
+自 2.9 版引入
 {: .label .label-purple }
 
-The `personalize_search_ranking` search response processor intercepts a search response and uses [Amazon Personalize](https://aws.amazon.com/personalize/) to rerank search results according to their Amazon Personalize ranking. This ranking is based on the user's past behavior and metadata about the search items and the user.
+`personalize_search_ranking` 搜尋回應處理器會攔截搜尋回應，並使用 [Amazon Personalize](https://aws.amazon.com/personalize/) 根據其 Amazon Personalize 排名重新排序搜尋結果。此排名是根據使用者過去的行為，以及搜尋項目與使用者的中繼資料。
 
-To use the `personalize_search_ranking` processor, you must first install the Amazon Personalize Search Ranking (`opensearch-search-processor`) plugin. For detailed instructions, see [Installing and configuring the Amazon Personalize Search Ranking plugin](https://docs.aws.amazon.com/personalize/latest/dg/opensearch-install.html).
+若要使用 `personalize_search_ranking` 處理器，您必須先安裝 Amazon Personalize Search Ranking (`opensearch-search-processor`) 外掛程式。如需詳細指示，請參閱[安裝及設定 Amazon Personalize Search Ranking 外掛程式](https://docs.aws.amazon.com/personalize/latest/dg/opensearch-install.html)。
 {: .important}
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists all available request fields.
+下表列出所有可用的請求欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :--- 
-`campaign_arn` | String |  The Amazon Resource Name (ARN) of the Amazon Personalize campaign used to personalize results. Required.
-`recipe` | String | The name of the Amazon Personalize recipe to use. The only supported value is `aws-personalized-ranking`. Required.
-`weight` | Float | The weight to use with rankings provided by OpenSearch and Amazon Personalize. Valid values are in the [0.0, 1.0] range. The closer the weight is to 1.0, the more weight is given to Amazon Personalize as opposed to OpenSearch when calculating the ranking. If you specify 0.0, OpenSearch rankings are used. If you specify 1.0, Amazon Personalize rankings are used. Required.
-`item_id_field` | String | If the `_id` field for an indexed document in OpenSearch doesn't correspond with your Amazon Personalize `itemId`, specify the name of the field that does. By default, the plugin assumes the `_id` data matches the `itemId` in your Amazon Personalize data.
-`iam_role_arn` | String | If you use multiple roles to restrict permissions for different groups of users in your organization, specify the ARN of the role that has permission to access Amazon Personalize. If you use only the AWS credentials in your OpenSearch keystore, you can omit this field. Optional.
-`tag` | String | The processor's identifier. Optional.
-`description` | String | A description of the processor. Optional.
-`ignore_failure` | Boolean | If `true`, OpenSearch [ignores any failure]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures) of this processor and continues to run the remaining processors in the search pipeline. Optional. Default is `false`.
+`campaign_arn` | 字串 | 用於個人化結果的 Amazon Personalize 行銷活動的 Amazon Resource Name（ARN）。必要。
+`recipe` | 字串 | 要使用的 Amazon Personalize 配方名稱。唯一支援的值是 `aws-personalized-ranking`。必要。
+`weight` | 浮點數 | 搭配 OpenSearch 與 Amazon Personalize 所提供排名使用的權重。有效值介於 [0.0, 1.0] 範圍內。權重越接近 1.0，計算排名時相對於 OpenSearch 會給予 Amazon Personalize 越多權重。若指定 0.0，則使用 OpenSearch 排名。若指定 1.0，則使用 Amazon Personalize 排名。必要。
+`item_id_field` | 字串 | 若 OpenSearch 中已編製索引文件的 `_id` 欄位與您的 Amazon Personalize `itemId` 不相符，請指定相符的欄位名稱。根據預設，此外掛程式會假設 `_id` 資料與您 Amazon Personalize 資料中的 `itemId` 相符。
+`iam_role_arn` | 字串 | 若您使用多個角色來限制組織中不同使用者群組的權限，請指定有權存取 Amazon Personalize 的角色 ARN。若您只使用 OpenSearch keystore 中的 AWS 認證，則可省略此欄位。選用。
+`tag` | 字串 | 處理器的識別碼。選用。
+`description` | 字串 | 處理器的說明。選用。
+`ignore_failure` | 布林值 | 若為 `true`，OpenSearch 會[忽略此處理器的任何失敗]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures)，並繼續執行搜尋管線中的其餘處理器。選用。預設值為 `false`。
 
-## Example 
+## 範例 
 
-The following example demonstrates using a search pipeline with a `personalize_search_ranking` processor. 
+下列範例示範如何使用含有 `personalize_search_ranking` 處理器的搜尋管線。 
 
-### Creating a search pipeline 
+### 建立搜尋管線 
 
-The following request creates a search pipeline with a `personalize_search_ranking` response processor:
+下列請求會建立含有 `personalize_search_ranking` 回應處理器的搜尋管線：
 
 ```json
 PUT /_search/pipeline/my-pipeline
@@ -60,9 +61,9 @@ PUT /_search/pipeline/my-pipeline
 ```
 {% include copy-curl.html %}
 
-### Using a search pipeline
+### 使用搜尋管線
 
-To search with a pipeline, specify the pipeline name in the `search_pipeline` query parameter. For example, the following request searches for comedies using the pipeline set up in the previous section:
+若要使用管線進行搜尋，請在 `search_pipeline` 查詢參數中指定管線名稱。例如，下列請求會使用上一節設定的管線搜尋喜劇：
 
 ```json
 GET /movies/_search?search_pipeline=my-pipeline
@@ -83,4 +84,4 @@ GET /movies/_search?search_pipeline=my-pipeline
 ```
 {% include copy-curl.html %}
 
-For additional details, see [Personalizing search results from OpenSearch (self-managed)](https://docs.aws.amazon.com/personalize/latest/dg/personalize-opensearch.html).
+如需其他詳細資訊，請參閱[從 OpenSearch 個人化搜尋結果 (自我管理)](https://docs.aws.amazon.com/personalize/latest/dg/personalize-opensearch.html)。

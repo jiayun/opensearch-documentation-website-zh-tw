@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Hybrid search with search_after
+title: "使用 search_after 的混合搜尋"
 parent: Hybrid search
 grand_parent: AI search
 has_children: false
 nav_order: 30
 ---
 
-# Hybrid search with search_after
-**Introduced 2.16**
+# 使用 search_after 的混合搜尋
+**於 2.16 版引入**
 {: .label .label-purple }
 
-You can control sorting results by applying a `search_after` condition that provides a live cursor and uses the previous page's results to obtain the next page's results. For more information about `search_after`, see [The search_after parameter]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#the-search_after-parameter).
+您可以套用 `search_after` 條件來控制結果排序，此條件提供即時游標，並使用上一頁的結果來取得下一頁的結果。如需 `search_after` 的詳細資訊，請參閱 [search_after 參數]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#the-search_after-parameter)。
 
-You can paginate the sorted results by applying a `search_after` condition in the sort queries.
+您可以在排序查詢中套用 `search_after` 條件，將排序後的結果分頁。
 
-In the following example, sorting is applied by `doc_price` with a `search_after` condition:
+在下列範例中，使用 `doc_price` 進行排序，並套用 `search_after` 條件：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -59,7 +60,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents that are listed after the `200` sort value, sorted by `doc_price` in descending order:
+回應包含列於 `200` 排序值之後的相符文件，並依 `doc_price` 遞減排序：
 
 ```json
 {
@@ -110,7 +111,7 @@ The response contains the matching documents that are listed after the `200` sor
 }
 ```
 
-In the following example, sorting is applied by `id` with a `search_after` condition:
+在下列範例中，使用 `id` 進行排序，並套用 `search_after` 條件：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -154,7 +155,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents that are listed after the `7yaM4JABZkI1FQv8AwoN` sort value, sorted by `id` in descending order:
+回應包含列於 `7yaM4JABZkI1FQv8AwoN` 排序值之後的相符文件，並依 `id` 遞減排序：
 
 ```json
 {

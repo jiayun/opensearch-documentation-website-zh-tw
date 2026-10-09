@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Extensions
+title: "擴充功能"
 parent: Managing OpenSearch Data Prepper
 has_children: true
 nav_order: 18
 ---
 
-# Data Prepper extensions
+# Data Prepper 擴充功能
 
-OpenSearch Data Prepper extensions provide Data Prepper functionality outside of core Data Prepper pipeline components.
-Many extensions provide configuration options that give Data Prepper administrators greater flexibility over Data Prepper's functionality.
+OpenSearch Data Prepper 擴充功能提供 Data Prepper 核心管線元件以外的功能。
+許多擴充功能提供組態選項，讓 Data Prepper 管理員對 Data Prepper 的功能擁有更大的彈性。
 
-Extension configurations can be configured in the `data-prepper-config.yaml` file under the `extensions:` YAML block.
+擴充功能組態可以在 `data-prepper-config.yaml` 檔案的 `extensions:` YAML 區塊中設定。
 

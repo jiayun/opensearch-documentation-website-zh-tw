@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Geopoint
+title: "地理點"
 nav_order: 56
 has_children: false
 parent: Geographic field types
@@ -11,15 +12,15 @@ redirect_from:
   - /field-types/geo-point/
 ---
 
-# Geopoint field type
-**Introduced 1.0**
+# 地理點欄位類型
+**於 1.0 版引入**
 {: .label .label-purple }
 
-A geopoint field type contains a geographic point specified by latitude and longitude. 
+地理點欄位類型包含以緯度和經度指定的地理點。 
 
-## Example
+## 範例
 
-Create a mapping with a geopoint field type:
+建立具有地理點欄位類型的對應：
 
 ```json
 PUT testindex1
@@ -35,11 +36,11 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-## Formats
+## 格式
 
-Geopoints can be indexed in the following formats:
+地理點可以下列格式編製索引：
 
-- An object with a latitude and longitude
+- 具有緯度和經度的物件
 
 ```json
 PUT testindex1/_doc/1
@@ -52,7 +53,7 @@ PUT testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-- A string in the "`latitude`,`longitude`" format
+- 採用「`latitude`,`longitude`」格式的字串
 
 ```json
 PUT testindex1/_doc/2
@@ -62,7 +63,7 @@ PUT testindex1/_doc/2
 ```
 {% include copy-curl.html %}
 
-- A geohash
+- 地理雜湊
 
 ```json
 PUT testindex1/_doc/3
@@ -72,7 +73,7 @@ PUT testindex1/_doc/3
 ```
 {% include copy-curl.html %}
 
-- An array in the [`longitude`, `latitude`] format
+- 採用 [`longitude`, `latitude`] 格式的陣列
 
 ```json
 PUT testindex1/_doc/4
@@ -82,7 +83,7 @@ PUT testindex1/_doc/4
 ```
 {% include copy-curl.html %}
 
-- A [Well-Known Text](https://docs.opengeospatial.org/is/12-063r5/12-063r5.html) POINT in the "POINT(`longitude` `latitude`)" format
+- 採用「POINT(`longitude` `latitude`)」格式的[標準文字表示法](https://docs.opengeospatial.org/is/12-063r5/12-063r5.html) POINT
 
 ```json
 PUT testindex1/_doc/5
@@ -92,7 +93,7 @@ PUT testindex1/_doc/5
 ```
 {% include copy-curl.html %}
 
-- GeoJSON format, where the `coordinates` are in the [`longitude`, `latitude`] format
+- GeoJSON 格式，其中 `coordinates` 採用 [`longitude`, `latitude`] 格式
 
 ```json
 PUT testindex1/_doc/6
@@ -105,22 +106,22 @@ PUT testindex1/_doc/6
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by geopoint field types. All parameters are optional.
+下表列出地理點欄位類型接受的參數。所有參數皆為選用。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :--- 
-`doc_values` | A Boolean value that specifies whether the field should be stored on disk so that it can be used for aggregations, sorting, or scripting. Default is `true`.
-`ignore_malformed` | A Boolean value that specifies to ignore malformed values and not to throw an exception. Valid values for latitude are [-90, 90]. Valid values for longitude are [-180, 180]. Default is `false`.
-`ignore_z_value` | Specific to points with three coordinates. If `ignore_z_value` is `true`, the third coordinate is not indexed but is still stored in the `_source` field. If `ignore_z_value` is `false`, an exception is thrown.
-[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | A value to be used in place of `null`. Must be of the same type as the field. If this parameter is not specified, the field is treated as missing when its value is `null`. Default is `null`.
+`doc_values` | 布林值，指定是否將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `true`。
+`ignore_malformed` | 布林值，指定忽略格式錯誤的值，且不擲回例外。緯度的有效值為 [-90, 90]。經度的有效值為 [-180, 180]。預設為 `false`。
+`ignore_z_value` | 僅適用於具有三個座標的點。如果 `ignore_z_value` 為 `true`，則不會為第三個座標編製索引，但仍會將其儲存在 `_source` 欄位中。如果 `ignore_z_value` 為 `false`，則會擲回例外。
+[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。必須與欄位的類型相同。如果未指定此參數，當欄位的值為 `null` 時，該欄位會被視為缺漏。預設為 `null`。
 
-## Derived source
+## 衍生來源
 
-When an index uses [derived source]({{site.url}}{{site.baseurl}}/field-types/metadata-fields/source/#derived-source), OpenSearch normalizes geopoint values to a consistent latitude/longitude object format during source reconstruction, regardless of the original input format. OpenSearch may also sort multi-value geopoint fields, and precision loss can occur during the conversion process.
+當索引使用[衍生來源]({{site.url}}{{site.baseurl}}/field-types/metadata-fields/source/#derived-source)時，OpenSearch 會在重建來源的過程中，將地理點值正規化為一致的緯度／經度物件格式，不受原始輸入格式影響。OpenSearch 也可能對多值地理點欄位進行排序，且轉換過程中可能會損失精確度。
 
-Create an index that enables derived source and configures a `geo_point` field:
+建立索引，啟用衍生來源並設定 `geo_point` 欄位：
 
 ```json
 PUT sample-index1
@@ -142,7 +143,7 @@ PUT sample-index1
 }
 ```
 
-Index a document with a geohash format into the index:
+將採用地理雜湊格式的文件編製索引至該索引中：
 
 ```json
 PUT sample-index1/_doc/1
@@ -151,7 +152,7 @@ PUT sample-index1/_doc/1
 }
 ```
 
-After OpenSearch reconstructs `_source`, the derived `_source` is as follows:
+OpenSearch 重建 `_source` 後，衍生的 `_source` 如下：
 
 ```json
 {
@@ -159,7 +160,7 @@ After OpenSearch reconstructs `_source`, the derived `_source` is as follows:
 }
 ```
 
-Index another document with a Well-Known Text format into the index:
+將另一份採用標準文字表示法格式的文件編製索引至該索引中：
 
 ```json
 PUT sample-index1/_doc/2
@@ -168,7 +169,7 @@ PUT sample-index1/_doc/2
 }
 ```
 
-After OpenSearch reconstructs `_source`, the derived `_source` is as follows:
+OpenSearch 重建 `_source` 後，衍生的 `_source` 如下：
 
 ```json
 {
@@ -176,7 +177,7 @@ After OpenSearch reconstructs `_source`, the derived `_source` is as follows:
 }
 ```
 
-Index a document with multiple geopoints into the index:
+將具有多個地理點的文件編製索引至該索引中：
 
 ```json
 PUT sample-index1/_doc/3
@@ -188,7 +189,7 @@ PUT sample-index1/_doc/3
 }
 ```
 
-After OpenSearch reconstructs `_source`, the derived `_source` shows sorted values with potential precision changes:
+OpenSearch 重建 `_source` 後，衍生的 `_source` 顯示已排序的值，且精確度可能有所變化：
 
 ```json
 {

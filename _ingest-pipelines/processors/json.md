@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: JSON
 parent: Ingest processors
 nav_order: 170
 ---
 
-# JSON processor
+# JSON 處理器
 
-The `json` processor serializes a string value field into a map of maps, which can be useful for various data processing and enrichment tasks.
+`json` 處理器會將字串值欄位序列化為巢狀對應表，這對於各種資料處理與擴充任務相當實用。
 
-The following is the syntax for the `json` processor:
+以下是 `json` 處理器的語法：
 
 ```json
 {
@@ -24,28 +25,28 @@ The following is the syntax for the `json` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `json` processor.
+下表列出 `json` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
-`field` | Required | The name of the field containing the JSON-formatted string to be deserialized.
-`target_field` | Optional | The name of the field in which the deserialized JSON data is stored. When not provided, the data is stored in the `field` field. If `target_field` exists, its existing value is overwritten with the new JSON data.
-`add_to_root` | Optional | A Boolean flag that determines whether the deserialized JSON data should be added to the root of the document (`true`) or stored in the target_field (`false`). If `add_to_root` is `true`, then `target-field` is invalid. Default value is `false`. 
-`description` | Optional | A description of the processor's purpose or configuration.
-`if` | Optional | Specifies to conditionally execute the processor.
-`ignore_failure` | Optional | Specifies to ignore processor failures. See [Handling pipeline failures]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/).
-`on_failure`| Optional | Specifies a list of processors to run if the processor fails during execution. These processors are executed in the order they are specified. 
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type.
+`field` | 必要 | 包含要還原序列化之 JSON 格式字串的欄位名稱。
+`target_field` | 選用 | 儲存還原序列化 JSON 資料的欄位名稱。未提供時，資料會儲存在 `field` 欄位中。若 `target_field` 已存在，其現有值會以新的 JSON 資料覆寫。
+`add_to_root` | 選用 | 布林值旗標，決定還原序列化的 JSON 資料應加入文件根層級 (`true`) 或儲存在 target_field (`false`) 中。若 `add_to_root` 為 `true`，則 `target-field` 無效。預設值為 `false`。 
+`description` | 選用 | 處理器用途或組態的說明。
+`if` | 選用 | 指定以條件方式執行處理器。
+`ignore_failure` | 選用 | 指定忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`on_failure`| 選用 | 指定處理器在執行期間失敗時要執行的一組處理器。這些處理器會依指定的順序執行。 
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+請依照下列步驟在管線中使用處理器。
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
 
-The following query creates a pipeline named `my-json-pipeline` that uses the `json` processor to process JSON data and enrich the documents with additional information: 
+下列查詢會建立名為 `my-json-pipeline` 的管線，該管線使用 `json` 處理器來處理 JSON 資料，並以其他資訊擴充文件： 
 
 ```json
 PUT _ingest/pipeline/my-json-pipeline
@@ -82,12 +83,12 @@ PUT _ingest/pipeline/my-json-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2 (Optional): Test the pipeline
+### 步驟 2 (選用)：測試管線
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/my-json-pipeline/_simulate
@@ -108,9 +109,9 @@ POST _ingest/pipeline/my-json-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線運作正常：
 
 ```json
 {
@@ -156,9 +157,9 @@ The following example response confirms that the pipeline is working as expected
 ```
 {% include copy-curl.html %}
 
-### Step 3: Ingest a document 
+### 步驟 3：匯入文件 
 
-The following query ingests a document into an index named `my-index`:
+下列查詢會將文件匯入名為 `my-index` 的索引：
 
 ```json
 POST my-index/_doc?pipeline=my-json-pipeline
@@ -168,9 +169,9 @@ POST my-index/_doc?pipeline=my-json-pipeline
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The response confirms that the document containing the JSON data from the `raw_data` field was successfully indexed:
+回應確認包含 `raw_data` 欄位中 JSON 資料的文件已成功編製索引：
 
 ```json
 {
@@ -189,9 +190,9 @@ The response confirms that the document containing the JSON data from the `raw_d
 ```
 {% include copy-curl.html %}
 
-### Step 4 (Optional): Retrieve the document
+### 步驟 4 (選用)：擷取文件
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET my-index/_doc/1

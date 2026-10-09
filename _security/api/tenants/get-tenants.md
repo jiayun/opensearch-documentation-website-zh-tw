@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get tenants
+title: "取得租用戶"
 parent: Tenant APIs
 grand_parent: Security APIs
 nav_order: 30
 ---
 
-# Get Tenants API
-**Introduced 1.0**
+# 取得租用戶 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Retrieves tenants. Specify a tenant name to retrieve one tenant, or omit the tenant name to retrieve all tenants.
+擷取租用戶。指定租用戶名稱以擷取單一租用戶，或省略租用戶名稱以擷取所有租用戶。
 
 <!-- spec_insert_start
 api: security.get_tenants
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_plugins/_security/api/tenants
 ```
@@ -31,33 +32,33 @@ GET /_plugins/_security/api/tenants/{tenant}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required | Description |
+| 參數 | 資料類型 | 必要 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `tenant` | String | No | The name of the tenant to retrieve. If omitted, all tenants are returned. |
+| `tenant` | 字串 | 否 | 要擷取的租用戶名稱。若省略，則會傳回所有租用戶。 |
 
-## Example request
+## 範例請求
 
-The following request retrieves all tenants:
+下列請求會擷取所有租用戶：
 
 ```json
 GET _plugins/_security/api/tenants
 ```
 {% include copy-curl.html security=true %}
 
-The following request retrieves the `human_resources` tenant:
+下列請求會擷取 `human_resources` 租用戶：
 
 ```json
 GET _plugins/_security/api/tenants/human_resources
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
-The response to a request for all tenants contains the default tenants along with any that you created:
+針對所有租用戶之請求的回應會包含預設租用戶，以及您建立的任何租用戶：
 
 ```json
 {
@@ -88,7 +89,7 @@ The response to a request for all tenants contains the default tenants along wit
 }
 ```
 
-When you retrieve one tenant, the response contains only that tenant:
+當您擷取單一租用戶時，回應只會包含該租用戶：
 
 ```json
 {

@@ -1,20 +1,21 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: AD LDAP
 parent: Supported log types
 nav_order: 20
 ---
 
-# AD LDAP log type
+# AD LDAP 記錄類型
 
-The `ad_ldap` log type tracks Active Directory logs, such as:
+`ad_ldap` 記錄類型會追蹤 Active Directory 記錄檔，例如：
 
-- Lightweight Directory Access Protocol (LDAP) queries.
-- Errors from the LDAP server.
-- Timeout events.
-- Unsecured LDAP binds.
+- 輕量型目錄存取協定 (LDAP) 查詢。
+- LDAP 伺服器的錯誤。
+- 逾時事件。
+- 未受保護的 LDAP 繫結。
 
-The following code snippet contains all `raw_field` and `ecs` mappings for this log type:
+下列程式碼片段包含此記錄類型的所有 `raw_field` 與 `ecs` 對應：
 
 ```json
  "mappings": [

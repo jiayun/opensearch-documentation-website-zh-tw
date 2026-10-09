@@ -1,55 +1,56 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create memory container
+title: "建立記憶容器"
 parent: Agentic memory APIs
 grand_parent: ML Commons APIs
 nav_order: 10
 ---
 
-# Create Memory Container API
-**Introduced 3.3**
+# 建立記憶容器 API
+**3.3 版新增**
 {: .label .label-purple }
 
-Use this API to create a [memory container]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-containers) to store agentic memories. The container can have two model types associated with it:
+使用此 API 建立儲存代理程式記憶的[記憶容器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-containers)。容器可以關聯兩種模型類型：
 
-- A text embedding model for vectorizing the message so it can be searched. Use a text embedding model for dense vector embeddings or a sparse encoding model for sparse vector formats. If no embedding model is specified, messages are stored but cannot be used for vector-based searches.
-- A large language model (LLM) for reasoning over the message to produce factual or processed content. If no LLM is specified, messages are stored directly, without applying inference. Long-term memory requires both an LLM model and embedding model to be configured.
+- 文字嵌入模型，用於將訊息向量化以便搜尋。稠密向量嵌入請使用文字嵌入模型，稀疏向量格式請使用稀疏編碼模型。若未指定嵌入模型，訊息會被儲存，但無法用於以向量為基礎的搜尋。
+- 大型語言模型 (LLM)，用於對訊息進行推理以產生事實性或經過處理的內容。若未指定 LLM，訊息會直接儲存，不套用推論。長期記憶需要同時設定 LLM 模型與嵌入模型。
 
-For more information, see [Integrating ML models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/).
+如需更多資訊，請參閱[整合 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/)。
 
-LLM connectors must support `system_prompt` and `user_prompt` parameters for agentic memory processing. The default `llm_result_path` is the Amazon Bedrock Converse API response path (`"$.output.message.content[0].text"`). If using an OpenAI GPT model, set the `llm_result_path` to `$.choices[0].message.content`.
+LLM 連接器必須支援 `system_prompt` 與 `user_prompt` 參數，才能進行代理程式記憶處理。預設的 `llm_result_path` 是 Amazon Bedrock Converse API 回應路徑 (`"$.output.message.content[0].text"`)。若使用 OpenAI GPT 模型，請將 `llm_result_path` 設為 `$.choices[0].message.content`。
 {: .note}
 
-Once a memory container is created, provide its `memory_container_id` to other APIs.
+建立記憶容器後，請將其 `memory_container_id` 提供給其他 API 使用。
 
-## The created indexes
+## 建立的索引
 
-The indexes created for a memory container depend on the `configuration` you provide. The following table summarizes the behavior.
+為記憶容器建立的索引取決於您提供的 `configuration`。下表摘要說明其行為。
 
-Configuration | Indexes created | Capabilities
+組態 | 建立的索引 | 功能
 :--- | :--- | :---
-No `configuration` or no `strategies` | Working memory + session (unless `disable_session` is `true`) | Raw message storage and retrieval. No semantic search, no long-term memory, no fact extraction.
-With `strategies` (requires `llm_id`, `embedding_model_id`, and `embedding_model_type`) | Working memory + session + long-term memory + history (unless `disable_session` is `true`) | Semantic search, fact extraction, memory consolidation (ADD/UPDATE/DELETE decisions), and an audit trail of all long-term memory changes.
+無 `configuration` 或無 `strategies` | 工作記憶 + 工作階段 (除非 `disable_session` 為 `true`) | 原始訊息的儲存與擷取。無語意搜尋、無長期記憶、無事實擷取。
+有 `strategies` (需要 `llm_id`、`embedding_model_id` 與 `embedding_model_type`) | 工作記憶 + 工作階段 + 長期記憶 + 歷史記錄 (除非 `disable_session` 為 `true`) | 語意搜尋、事實擷取、記憶整合 (ADD/UPDATE/DELETE 決策)，以及所有長期記憶變更的稽核軌跡。
 
-Each index type serves a specific purpose:
+每種索引類型都有特定用途：
 
-- **Working memory**: Stores raw messages as they are received. Always created.
-- **Session**: Tracks conversation sessions and their metadata. Created by default. To disable session tracking, set `disable_session` to `true`.
-- **Long-term memory**: Stores extracted facts and persistent knowledge produced by strategies. Created only when strategies are configured.
-- **History**: An audit trail that records every ADD, UPDATE, and DELETE operation on long-term memory. Created only when strategies are configured. Can be opted out of by setting `disable_history` to `true`.
+- **工作記憶**：在收到訊息時儲存原始訊息。一定會建立。
+- **工作階段**：追蹤對話工作階段及其中繼資料。預設會建立。若要停用工作階段追蹤，請將 `disable_session` 設為 `true`。
+- **長期記憶**：儲存由策略產生的已擷取事實與持續性知識。僅在設定策略時建立。
+- **歷史記錄**：記錄長期記憶上每一次 ADD、UPDATE 與 DELETE 操作的稽核軌跡。僅在設定策略時建立。可透過將 `disable_history` 設為 `true` 選擇不使用。
 
-## Prerequisites
+## 必要條件
 
-If you want to use one of the model types to process memories, register the models in OpenSearch.
+若要使用其中一種模型類型來處理記憶，請在 OpenSearch 中註冊模型。
 
-### Embedding model
+### 嵌入模型
 
-Register either a local or externally hosted embedding model. OpenSearch supports text embedding and sparse encoding models. 
+註冊本機或外部託管的嵌入模型。OpenSearch 支援文字嵌入與稀疏編碼模型。
 
-For more information about using models locally, see [Using ML models within OpenSearch]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/). For a list of supported models, see [OpenSearch-provided pretrained models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#supported-pretrained-models).
+如需在本機使用模型的更多資訊，請參閱[在 OpenSearch 內使用 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。支援的模型清單請參閱 [OpenSearch 提供的預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#supported-pretrained-models)。
 
 
-For more information about using externally hosted models, see [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/). For example, to register an externally hosted Amazon Titan Embeddings model, send the following request:
+如需使用外部託管模型的更多資訊，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。例如，若要註冊外部託管的 Amazon Titan Embeddings 模型，請傳送以下請求：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -99,7 +100,7 @@ POST /_plugins/_ml/models/_register
 ### LLM
 
 
-To register an Anthropic Claude model, send the following request:
+若要註冊 Anthropic Claude 模型，請傳送以下請求：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -141,53 +142,53 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-The `system_prompt` parameter is required for Claude models.
+Claude 模型需要 `system_prompt` 參數。
 {: .note}
 
-For more information about using externally hosted models, see [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/).
+如需使用外部託管模型的更多資訊，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/memory_containers/_create
 ```
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`name` | String | Required | The name of the memory container.
-`memory_container_id` | String | Optional | A unique identifier for the memory container. If omitted, OpenSearch generates one automatically. |
-`description` | String | Optional | The description of the memory container.
-`configuration` | Object | Optional | The memory container configuration. When not provided, a default configuration is used that creates a working-memory-only container with no AI capabilities. For full functionality including semantic search and long-term memory, provide a configuration with model IDs and strategies. See [The `configuration` object](#the-configuration-object).
-`backend_roles` | Array | Optional | A list of backend roles for access control. Each role must be at most 128 characters and contain only alphanumeric characters and `:+=,.@-_/`.
+`name` | 字串 | 必要 | 記憶容器的名稱。
+`memory_container_id` | 字串 | 選用 | 記憶容器的唯一識別碼。若省略，OpenSearch 會自動產生。 |
+`description` | 字串 | 選用 | 記憶容器的描述。
+`configuration` | 物件 | 選用 | 記憶容器的組態。未提供時，會使用僅建立無 AI 功能之工作記憶容器的預設組態。若要取得包括語意搜尋與長期記憶在內的完整功能，請提供包含模型 ID 與策略的組態。請參閱 [`configuration` 物件](#the-configuration-object)。
+`backend_roles` | 陣列 | 選用 | 用於存取控制的後端角色清單。每個角色最多 128 個字元，且只能包含英數字元與 `:+=,.@-_/`。
 
-### The configuration object
+### 組態物件
 
-The `configuration` object supports the following fields.
+`configuration` 物件支援下列欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`embedding_model_type` | String | Optional | The embedding model type. Supported types are `TEXT_EMBEDDING` and `SPARSE_ENCODING`. Required if `embedding_model_id` is provided.
-`embedding_model_id` | String | Optional | The embedding model ID. Required if `embedding_model_type` is provided.
-`embedding_dimension` | Integer | Optional | The dimension of the embedding model. Required if `embedding_model_type` is `TEXT_EMBEDDING`. Not allowed if `embedding_model_type` is `SPARSE_ENCODING`.
-`llm_id` | String | Optional | The LLM model ID for processing and inference.
-`index_prefix` | String | Optional | A custom prefix for memory indexes. If not specified, a default prefix is used: `default` when `use_system_index` is `true`, or an 8-character random UUID when `use_system_index` is `false`.
-`use_system_index` | Boolean | Optional | Whether to use system indexes (hidden indexes prefixed with `.plugins-ml-agentic-memory-`). Default is `true`.
-`disable_history`  | Boolean | Optional | Whether to disable the history audit trail index. Default is `false`. This setting only takes effect when strategies are configured, because the history index records changes to long-term memory. Without strategies, no long-term memory or history index is created regardless of this setting.
-`disable_session`  | Boolean | Optional | Whether to disable the session tracking index. Default is `false` (sessions are enabled by default). Set to `true` to disable session tracking.
-`max_infer_size`   | Integer | Optional | The maximum number of similar existing memories retrieved during memory consolidation to make ADD/UPDATE/DELETE decisions. Default is `5`. Maximum is `10`.
-`index_settings`   | Object | Optional | Custom OpenSearch index settings for the memory storage indexes that will be created for this container. Each memory type (`sessions`, `working`, `long_term`, and `history`) uses its own index. See [The `index_settings` object](#the-index_settings-object).
-`strategies` | Array | Optional | An array of [memory processing strategies]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-processing-strategies). When strategies are provided, both `llm_id` and embedding model fields (`embedding_model_id`, `embedding_model_type`) are required. See [The `strategies` array](#the-strategies-array).
-`parameters` | Object | Optional | Global parameters for the memory container. See [The `parameters` object](#the-parameters-object).
+`embedding_model_type` | 字串 | 選用 | 嵌入模型類型。支援的類型為 `TEXT_EMBEDDING` 和 `SPARSE_ENCODING`。若提供 `embedding_model_id` 則為必要。
+`embedding_model_id` | 字串 | 選用 | 嵌入模型 ID。若提供 `embedding_model_type` 則為必要。
+`embedding_dimension` | 整數 | 選用 | 嵌入模型的維度。若 `embedding_model_type` 為 `TEXT_EMBEDDING` 則為必要。若 `embedding_model_type` 為 `SPARSE_ENCODING` 則不允許。
+`llm_id` | 字串 | 選用 | 用於處理與推論的 LLM 模型 ID。
+`index_prefix` | 字串 | 選用 | 記憶索引的自訂前置字元。若未指定，則使用預設前置字元：當 `use_system_index` 為 `true` 時為 `default`，或當 `use_system_index` 為 `false` 時為 8 字元的隨機 UUID。
+`use_system_index` | 布林值 | 選用 | 是否使用系統索引 (以 `.plugins-ml-agentic-memory-` 為前置字元的隱藏索引)。預設為 `true`。
+`disable_history`  | 布林值 | 選用 | 是否停用歷史稽核軌跡索引。預設為 `false`。此設定僅在已設定策略時生效，因為歷史索引會記錄長期記憶的變更。若未設定策略，則無論此設定為何，都不會建立長期記憶或歷史索引。
+`disable_session`  | 布林值 | 選用 | 是否停用工作階段追蹤索引。預設為 `false` (預設會啟用工作階段)。設為 `true` 可停用工作階段追蹤。
+`max_infer_size`   | 整數 | 選用 | 在記憶整併期間所擷取之相似現有記憶的最大數量，用於做出 ADD/UPDATE/DELETE 決策。預設為 `5`。最大值為 `10`。
+`index_settings`   | 物件 | 選用 | 為此容器將建立之記憶儲存索引的自訂 OpenSearch 索引設定。每種記憶類型 (`sessions`、`working`、`long_term` 和 `history`) 使用各自的索引。請參閱 [`index_settings` 物件](#the-index_settings-object)。
+`strategies` | 陣列 | 選用 | [記憶處理策略]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-processing-strategies) 的陣列。提供策略時，`llm_id` 和嵌入模型欄位 (`embedding_model_id`、`embedding_model_type`) 皆為必要。請參閱 [`strategies` 陣列](#the-strategies-array)。
+`parameters` | 物件 | 選用 | 記憶容器的全域參數。請參閱 [`parameters` 物件](#the-parameters-object)。
 
-### The index_settings object
+### index_settings 物件
 
-You can customize the OpenSearch index settings for the storage indexes that will be created to store memory data. Each memory type uses a dedicated index, and you can configure settings like the number of shards and replicas for performance optimization.
+您可以自訂將建立用於儲存記憶資料之儲存索引的 OpenSearch 索引設定。每種記憶類型使用專屬索引，您可以設定分片和副本數量等設定以最佳化效能。
 
-The following example shows you how to specify custom index settings in the `configuration` object:
+下列範例說明如何在 `configuration` 物件中指定自訂索引設定：
 
 ```json
 POST /_plugins/_ml/memory_containers/_create
@@ -226,38 +227,38 @@ POST /_plugins/_ml/memory_containers/_create
 ```
 {% include copy-curl.html %}
 
-### The strategies array
+### strategies 陣列
 
-Each strategy in the `strategies` array supports the following fields.
+`strategies` 陣列中的每個策略支援下列欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`type` | String | Required | The strategy type. Valid values are `SEMANTIC`, `USER_PREFERENCE`, and `SUMMARY`.
-`namespace` | Array | Required | An array of [namespace]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#namespaces) dimensions for organizing memories (for example, `["user_id"]` or `["agent_id", "session_id"]`).
-`configuration` | Object | Optional | Strategy-specific configuration. See [The `strategies.configuration` object](#the-strategies-configuration-object).
-`enabled`       | Boolean             | Optional | Whether to enable the strategy in the memory container. Default is `true`.
+`type` | 字串 | 必要 | 策略類型。有效值為 `SEMANTIC`、`USER_PREFERENCE` 和 `SUMMARY`。
+`namespace` | 陣列 | 必要 | 用於組織記憶的[命名空間]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#namespaces)維度陣列 (例如 `["user_id"]` 或 `["agent_id", "session_id"]`)。
+`configuration` | 物件 | 選用 | 策略專屬組態。請參閱 [`strategies.configuration` 物件](#the-strategies-configuration-object)。
+`enabled`       | 布林值             | 選用 | 是否在記憶容器中啟用該策略。預設為 `true`。
 
-### The strategies configuration object
+### strategies 組態物件
 
-The `strategies.configuration` object supports the following fields.
+`strategies.configuration` 物件支援下列欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`llm_result_path` | String | Optional | A JSONPath expression for extracting LLM results from responses. Default is the Amazon Bedrock Converse API response path (`"$.output.message.content[0].text"`).
-`system_prompt` | String | Optional | A custom system prompt used to override the default strategy prompt.
-`llm_id` | String | Optional | The LLM model ID for this strategy. Overrides the global LLM setting.
+`llm_result_path` | 字串 | 選用 | 用於從回應中擷取 LLM 結果的 JSONPath 運算式。預設為 Amazon Bedrock Converse API 回應路徑 (`"$.output.message.content[0].text"`)。
+`system_prompt` | 字串 | 選用 | 用於覆寫預設策略提示的自訂系統提示。
+`llm_id` | 字串 | 選用 | 此策略的 LLM 模型 ID。會覆寫全域 LLM 設定。
 
-### The parameters object
+### parameters 物件
 
-The `parameters` object supports the following field.
+`parameters` 物件支援下列欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`llm_result_path` | String | Optional | A global JSONPath expression for extracting LLM results from responses. Default is the Amazon Bedrock Converse API response path (`"$.output.message.content[0].text"`).
+`llm_result_path` | 字串 | 選用 | 用於從回應中擷取 LLM 結果的全域 JSONPath 運算式。預設為 Amazon Bedrock Converse API 回應路徑 (`"$.output.message.content[0].text"`)。
 
-## Example request: Minimal memory container
+## 範例請求：最小記憶容器
 
-The following request creates a minimal memory container with only working memory (raw message storage). No AI models or strategies are configured:
+下列請求會建立僅含工作記憶 (原始訊息儲存) 的最小記憶容器。未設定任何 AI 模型或策略：
 
 ```json
 POST /_plugins/_ml/memory_containers/_create
@@ -267,9 +268,9 @@ POST /_plugins/_ml/memory_containers/_create
 ```
 {% include copy-curl.html %}
 
-This request creates a container with a single working memory index. Messages can be stored and retrieved by ID, but semantic search and long-term memory features are not available.
+此請求會建立具有單一工作記憶索引的容器。訊息可依 ID 儲存及擷取，但無法使用語意搜尋和長期記憶功能。
 
-## Example request: Basic memory container with a strategy
+## 範例請求：含策略的基本記憶容器
 
 ```json
 POST /_plugins/_ml/memory_containers/_create
@@ -292,9 +293,9 @@ POST /_plugins/_ml/memory_containers/_create
 ```
 {% include copy-curl.html %}
 
-This request creates a container with working memory, long-term memory, and history indexes. The `SEMANTIC` strategy uses the LLM to extract facts from messages and the embedding model to enable vector-based semantic search over those facts.
+此請求會建立具有工作記憶、長期記憶和歷史索引的容器。`SEMANTIC` 策略使用 LLM 從訊息中擷取事實，並使用嵌入模型對這些事實啟用向量式語意搜尋。
 
-## Example request: Advanced memory container with multiple strategies
+## 範例請求：含多個策略的進階記憶容器
 
 ```json
 POST /_plugins/_ml/memory_containers/_create
@@ -341,9 +342,9 @@ POST /_plugins/_ml/memory_containers/_create
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-The response contains the `memory_container_id` that you can use to retrieve or delete the container:
+回應包含 `memory_container_id`，您可以使用它來擷取或刪除容器：
 
 ```json
 {

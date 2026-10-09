@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Conversational search with RAG
+title: "使用 RAG 的對話式搜尋"
 parent: AI search
 has_children: false
 nav_order: 70
@@ -9,32 +10,32 @@ redirect_from:
   - /search-plugins/conversational-search/
 ---
 
-# Conversational search with RAG
+# 使用 RAG 的對話式搜尋
 
-Conversational search allows you to ask questions in natural language and refine the answers by asking follow-up questions. Thus, the conversation becomes a dialog between you and a large language model (LLM). For this to happen, instead of answering each question individually, the model needs to remember the context of the entire conversation. 
+對話式搜尋讓您能以自然語言提問，並透過追問來精煉答案。如此一來，對話就成為您與大型語言模型 (LLM) 之間的對話。為了達成這一點，模型不能逐一回答每個問題，而需要記住整個對話的上下文。
 
-Conversational search is implemented with the following components:
+對話式搜尋由下列元件實作：
 
-- [Conversation history](#conversation-history): Allows an LLM to remember the context of the current conversation and understand follow-up questions.
-- [Retrieval-augmented generation (RAG)](#rag): Allows an LLM to supplement its static knowledge base with proprietary or current information.
+- [對話歷史](#conversation-history)：讓 LLM 記住目前對話的上下文，並理解追問的問題。
+- [檢索增強生成 (RAG)](#rag)：讓 LLM 以專有或最新資訊補充其靜態知識庫。
 
-## Conversation history
+## 對話歷史
 
-Conversation history consists of a simple CRUD-like API comprising two resources: _memories_ and _messages_. All messages for the current conversation are stored within one conversation _memory_. A _message_ represents a question/answer pair: a human-input question and an AI answer. Messages do not exist by themselves; they must be added to a memory. 
+對話歷史由一個類似 CRUD 的簡單 API 組成，包含兩種資源：_memories_（記憶）與 _messages_（訊息）。目前對話的所有訊息都儲存在同一個對話 _memory_ 中。一則 _message_ 代表一組問答：使用者輸入的問題與 AI 的回答。訊息不會單獨存在；必須加入某個 memory。
 
 ## RAG
 
-RAG retrieves data from the index and history and sends all the information as context to the LLM. The LLM then supplements its static knowledge base with the dynamically retrieved data. In OpenSearch, RAG is implemented through a search pipeline containing a [retrieval-augmented generation processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/). The processor intercepts OpenSearch query results, retrieves previous messages in the conversation from the conversation memory, and sends a prompt to the LLM. After the processor receives a response from the LLM, it saves the response in conversation memory and returns both the original OpenSearch query results and the LLM response. 
+RAG 會從索引與歷史中擷取資料，並將所有資訊作為上下文傳送給 LLM。LLM 接著以動態擷取的資料補充其靜態知識庫。在 OpenSearch 中，RAG 透過包含[檢索增強生成處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/)的搜尋管線實作。該處理器會攔截 OpenSearch 查詢結果，從對話記憶中擷取對話先前的訊息，並將提示傳送給 LLM。處理器收到 LLM 的回應後，會將回應儲存在對話記憶中，並同時傳回原始的 OpenSearch 查詢結果與 LLM 回應。
 
-As of OpenSearch 2.11, the RAG technique has only been tested with OpenAI models and the Anthropic Claude model on Amazon Bedrock.
+截至 OpenSearch 2.11，RAG 技術僅在 OpenAI 模型與 Amazon Bedrock 上的 Anthropic Claude 模型上測試過。
 {: .warning}
 
-When the Security plugin is enabled, all memories exist in a `private` security mode. Only the user who created a memory can interact with that memory. No user can see another user's memory.
+當 Security 外掛程式啟用時，所有 memory 都存在於 `private` 安全模式中。只有建立某個 memory 的使用者才能與該 memory 互動。任何使用者都無法看到其他使用者的 memory。
 {: .note}
 
-## Prerequisites
+## 先決條件
 
-To begin using conversational search, enable conversation memory and RAG pipeline features:
+若要開始使用對話式搜尋，請啟用對話記憶與 RAG 管線功能：
 
 ```json
 PUT /_cluster/settings
@@ -47,16 +48,16 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-## Configuring conversational search
+## 設定對話式搜尋
 
-There are two ways to configure conversational search:
+設定對話式搜尋有兩種方式：
 
-- [**Automated workflow**](#automated-workflow) (Recommended for quick setup): Automatically create an ingest pipeline and index with minimal configuration.
-- [**Manual setup**](#manual-setup) (Recommended for custom configurations): Manually configure each component for greater flexibility and control.
+- [**自動化工作流程**](#automated-workflow)（建議用於快速設定）：以最少的組態自動建立資料匯入管線與索引。
+- [**手動設定**](#manual-setup)（建議用於自訂組態）：手動設定每個元件，以獲得更大的彈性與控制。
 
-## Automated workflow
+## 自動化工作流程
 
-OpenSearch provides a [workflow template]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates#conversational-search-using-an-llm) that automatically creates a connector for the LLM, registers and deploys the LLM, and configures a search pipeline. You must provide the API key for the configured LLM when creating a workflow. Review the conversational search workflow template [defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/conversational-search-defaults.json) to determine whether you need to update any of the parameters. For example, if the model endpoint is different from the default (`https://api.cohere.ai/v1/chat`), specify the endpoint of your model in the `create_connector.actions.url` parameter. To create the default conversational search workflow, send the following request:
+OpenSearch 提供[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates#conversational-search-using-an-llm)，可自動為 LLM 建立連接器、註冊並部署 LLM，以及設定搜尋管線。建立工作流程時，您必須提供所設定 LLM 的 API 金鑰。請檢視對話式搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/conversational-search-defaults.json)，判斷是否需要更新任何參數。例如，如果模型端點與預設值 (`https://api.cohere.ai/v1/chat`) 不同，請在 `create_connector.actions.url` 參數中指定您模型的端點。若要建立預設的對話式搜尋工作流程，請傳送下列請求：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=conversational_search_with_llm_deploy&provision=true
@@ -66,7 +67,7 @@ POST /_plugins/_flow_framework/workflow?use_case=conversational_search_with_llm_
 ```
 {% include copy-curl.html %}
 
-OpenSearch responds with a workflow ID for the created workflow:
+OpenSearch 會以所建立工作流程的工作流程 ID 回應：
 
 ```json
 {
@@ -74,35 +75,35 @@ OpenSearch responds with a workflow ID for the created workflow:
 }
 ```
 
-To check the workflow status, send the following request:
+若要檢查工作流程狀態，請傳送下列請求：
 
 ```json
 GET /_plugins/_flow_framework/workflow/U_nMXJUBq_4FYQzMOS4B/_status
 ```
 {% include copy-curl.html %}
 
-Once the workflow completes, the `state` changes to `COMPLETED`. The workflow creates the following components:
+工作流程完成後，`state` 會變更為 `COMPLETED`。該工作流程會建立下列元件：
 
-- A model connector: Connects to the specified model.
-- A registered and deployed model: The model is ready for inference.
-- A search pipeline: Configured to handle conversational queries.
+- 模型連接器：連接至指定的模型。
+- 已註冊並部署的模型：模型已可進行推論。
+- 搜尋管線：已設定為處理對話式查詢。
 
-You can now continue with [steps 4, 5, and 6](#step-4-ingest-rag-data-into-an-index) to ingest RAG data into the index, create a conversation memory, and use the pipeline for RAG.
+您現在可以繼續[步驟 4、5 與 6](#step-4-ingest-rag-data-into-an-index)，將 RAG 資料匯入索引、建立對話記憶，並使用該管線進行 RAG。
 
-## Manual setup
+## 手動設定
 
-To manually configure conversational search, follow these steps:
+若要手動設定對話式搜尋，請依照下列步驟進行：
 
-1. [Create a connector for a model](#step-1-create-a-connector-for-a-model).
-1. [Register and deploy the model](#step-2-register-and-deploy-the-model).
-1. [Create a search pipeline](#step-3-create-a-search-pipeline).
-1. [Ingest RAG data into an index](#step-4-ingest-rag-data-into-an-index).
-1. [Create a conversation memory](#step-5-create-a-conversation-memory).
-1. [Use the pipeline for RAG](#step-6-use-the-pipeline-for-rag).
+1. [為模型建立連接器](#step-1-create-a-connector-for-a-model)。
+1. [註冊並部署模型](#step-2-register-and-deploy-the-model)。
+1. [建立搜尋管線](#step-3-create-a-search-pipeline)。
+1. [將 RAG 資料匯入索引](#step-4-ingest-rag-data-into-an-index)。
+1. [建立對話記憶](#step-5-create-a-conversation-memory)。
+1. [使用管線進行 RAG](#step-6-use-the-pipeline-for-rag)。
 
-### Step 1: Create a connector for a model
+### 步驟 1：為模型建立連接器
 
-RAG requires an LLM in order to function. To connect to an LLM, create a [connector]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/). The following request creates a connector for the OpenAI gpt-4o-mini model:
+RAG 需要 LLM 才能運作。若要連接至 LLM，請建立[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。下列請求會為 OpenAI gpt-4o-mini 模型建立連接器：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -134,7 +135,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-OpenSearch responds with a connector ID for the connector:
+OpenSearch 會以該連接器的連接器 ID 回應：
 
 ```json
 {
@@ -142,12 +143,12 @@ OpenSearch responds with a connector ID for the connector:
 }
 ```
 
-For example requests that connect to other services and models, see [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/).
+如需連接至其他服務與模型的範例請求，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)。
 {: .tip}
 
-### Step 2: Register and deploy the model
+### 步驟 2：註冊並部署模型
 
-Register the LLM for which you created a connector in the previous step. To register the model with OpenSearch, provide the `connector_id` returned in the previous step:
+請註冊您在上一個步驟中為其建立連接器的 LLM。若要向 OpenSearch 註冊模型，請提供上一個步驟傳回的 `connector_id`：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -160,7 +161,7 @@ POST /_plugins/_ml/models/_register
 ``` 
 {% include copy-curl.html %}
 
-OpenSearch returns a task ID for the register task and a model ID for the registered model:
+OpenSearch 會為註冊任務傳回任務 ID，並為已註冊的模型傳回模型 ID：
 
 ```json
 {
@@ -170,14 +171,14 @@ OpenSearch returns a task ID for the register task and a model ID for the regist
 }
 ```
 
-To verify that the registration is complete, call the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+若要確認註冊已完成，請呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
 ```json
 GET /_plugins/_ml/tasks/gXDIbI0BfUsSoeNT_jAb
 ```
 {% include copy-curl.html %}
 
-The `state` changes to `COMPLETED` in the response:
+回應中的 `state` 會變更為 `COMPLETED`：
 
 ```json
 {
@@ -194,14 +195,14 @@ The `state` changes to `COMPLETED` in the response:
 }
 ```
 
-To deploy the model, provide the `model_id` to the Deploy API:
+若要部署模型，請將 `model_id` 提供給 Deploy API：
 
 ```json
 POST /_plugins/_ml/models/gnDIbI0BfUsSoeNT_jAw/_deploy
 ```
 {% include copy-curl.html %}
 
-OpenSearch acknowledges that the model is deployed:
+OpenSearch 會確認模型已部署：
 
 ```json
 {
@@ -211,9 +212,9 @@ OpenSearch acknowledges that the model is deployed:
 }
 ```
 
-### Step 3: Create a search pipeline
+### 步驟 3：建立搜尋管線
 
-Next, create a search pipeline with a `retrieval_augmented_generation` processor: 
+接著，建立含有 `retrieval_augmented_generation` 處理器的搜尋管線：
 
 ```json
 PUT /_search/pipeline/rag_pipeline
@@ -234,13 +235,13 @@ PUT /_search/pipeline/rag_pipeline
 ```
 {% include copy-curl.html %}
 
-For information about the processor fields, see [Retrieval-augmented generation processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/).
+如需處理器欄位的相關資訊，請參閱[檢索增強生成處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/)。
 
-### Step 4: Ingest RAG data into an index
+### 步驟 4：將 RAG 資料匯入索引
 
-RAG augments the LLM knowledge with some supplementary data. 
+RAG 會以一些補充資料來擴增 LLM 知識。
 
-First, create an index in which to store this data and set the default search pipeline to the pipeline created in the previous step:
+首先，建立用來儲存此資料的索引，並將預設搜尋管線設為前一個步驟所建立的管線：
 
 ```json
 PUT /my_rag_test_data
@@ -259,7 +260,7 @@ PUT /my_rag_test_data
 ```
 {% include copy-curl.html %}
 
-Next, ingest the supplementary data into the index:
+接著，將補充資料匯入索引：
 
 ```json
 POST _bulk
@@ -270,18 +271,18 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## RAG pipeline
+## RAG 管線
 
-RAG is a technique that retrieves documents from an index, passes them through a seq2seq model, such as an LLM, and then supplements the static LLM information with the dynamically retrieved data in context.
+RAG 是一種技術，會從索引擷取文件、將其傳送至 seq2seq 模型 (例如 LLM)，然後在上下文中以動態擷取的資料補充靜態的 LLM 資訊。
 
-As of OpenSearch 2.12, the RAG technique has only been tested with OpenAI models, the Anthropic Claude model on Amazon Bedrock, and Cohere Command models. 
+自 OpenSearch 2.12 起，RAG 技術僅曾以 OpenAI 模型、Amazon Bedrock 上的 Anthropic Claude 模型，以及 Cohere Command 模型進行測試。
 {: .warning}
 
-Configuring the Cohere Command model to enable RAG requires using a post-processing function to transform the model output. For more information, see the [Cohere RAG Tutorial](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/tutorials/conversational_search/conversational_search_with_Cohere_Command.md).
+設定 Cohere Command 模型以啟用 RAG 時，需要使用後處理函式來轉換模型輸出。如需詳細資訊，請參閱 [Cohere RAG 教學](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/tutorials/conversational_search/conversational_search_with_Cohere_Command.md)。
 
-### Step 5: Create a conversation memory
+### 步驟 5：建立對話記憶
 
-You'll need to create a conversation memory that will store all messages from a conversation. To make the memory easily identifiable, provide a name for the memory in the optional `name` field, as shown in the following example. Because the `name` parameter is not updatable, this is your only opportunity to name your conversation.
+您需要建立對話記憶，用來儲存對話中的所有訊息。為了讓記憶容易識別，請在選用的 `name` 欄位中提供記憶的名稱，如下列範例所示。由於 `name` 參數無法更新，這是您唯一能為對話命名的機會。
 
 ```json
 POST /_plugins/_ml/memory/
@@ -291,7 +292,7 @@ POST /_plugins/_ml/memory/
 ```
 {% include copy-curl.html %}
 
-OpenSearch responds with a memory ID for the newly created memory:
+OpenSearch 會以新建立記憶的記憶 ID 回應：
 
 ```json
 {
@@ -299,28 +300,28 @@ OpenSearch responds with a memory ID for the newly created memory:
 }
 ```
 
-You'll use the `memory_id` to add messages to the memory. 
+您將使用 `memory_id` 將訊息新增至記憶。
 
 
-### Step 6: Use the pipeline for RAG
+### 步驟 6：使用管線進行 RAG
 
-To use the RAG pipeline, send a query to OpenSearch and provide additional parameters in the `ext.generative_qa_parameters` object. 
+若要使用 RAG 管線，請將查詢傳送至 OpenSearch，並在 `ext.generative_qa_parameters` 物件中提供其他參數。
 
-The `generative_qa_parameters` object supports the following parameters.
+`generative_qa_parameters` 物件支援下列參數。
 
-Parameter | Required | Description
+參數 | 必要 | 說明
 :--- | :--- | :---
-`llm_question` | Yes | The question that the LLM must answer. 
-`llm_model` | No | Overrides the original model set in the connection in cases where you want to use a different model (for example, `gpt-4o` instead of `gpt-4o-mini`). This option is required if a default model is not set during pipeline creation.
-`memory_id` | No | If you provide a `memory_id`, the pipeline retrieves the 10 most recent messages in the specified memory and adds them to the LLM prompt. If you don't specify a `memory_id`, the prior context is not added to the LLM prompt. 
-`context_size` | No | The number of search results sent to the LLM. This is typically needed in order to meet the token size limit, which can vary by model. Alternatively, you can use the `size` parameter in the Search API to control the number of search results sent to the LLM.
-`message_size` | No | The number of messages sent to the LLM. Similarly to the number of search results, this affects the total number of tokens received by the LLM. When not set, the pipeline uses the default message size of `10`.
-`timeout` | No | The number of seconds that the pipeline waits for the remote model using a connector to respond. Default is `30`.
+`llm_question` | 是 | LLM 必須回答的問題。
+`llm_model` | 否 | 當您想使用不同的模型時 (例如使用 `gpt-4o` 而非 `gpt-4o-mini`)，覆寫連線中設定的原始模型。若建立管線時未設定預設模型，則必須使用此選項。
+`memory_id` | 否 | 若您提供 `memory_id`，管線會擷取指定記憶中最近的 10 則訊息，並將其新增至 LLM 提示。若您未指定 `memory_id`，則不會將先前的上下文新增至 LLM 提示。
+`context_size` | 否 | 傳送至 LLM 的搜尋結果數目。這通常是為了符合詞元大小限制所需，而該限制會因模型而異。或者，您可以使用 Search API 中的 `size` 參數，控制傳送至 LLM 的搜尋結果數目。
+`message_size` | 否 | 傳送至 LLM 的訊息數目。與搜尋結果數目類似，這會影響 LLM 接收的詞元總數。未設定時，管線會使用預設訊息大小 `10`。
+`timeout` | 否 | 管線等待使用連接器的遠端模型回應的秒數。預設為 `30`。
 
-If your LLM includes a set token limit, set the `size` field in your OpenSearch query to limit the number of documents used in the search response. Otherwise, the RAG pipeline will send every document in the search results to the LLM.
+若您的 LLM 包含設定的詞元限制，請在 OpenSearch 查詢中設定 `size` 欄位，以限制搜尋回應中使用的文件數目。否則，RAG 管線會將搜尋結果中的每份文件都傳送至 LLM。
 {: .note}
 
-If you ask an LLM a question about the present, it cannot provide an answer because it was trained on data from a few years ago. However, if you add current information as context, the LLM is able to generate a response. For example, you can ask the LLM about the population of the New York City metro area in 2023. You'll construct a query that includes an OpenSearch match query and an LLM query. Provide the `memory_id` so that the message is stored in the appropriate memory object:
+若您向 LLM 詢問關於現況的問題，它無法提供答案，因為它是以前幾年的資料訓練而成。不過，若您將最新資訊新增為上下文，LLM 就能產生回應。例如，您可以詢問 LLM 2023 年紐約市都會區的人口數。您將建構一個包含 OpenSearch match 查詢與 LLM 查詢的查詢。請提供 `memory_id`，讓訊息儲存在適當的記憶物件中：
 
 ```json
 GET /my_rag_test_data/_search
@@ -344,7 +345,7 @@ GET /my_rag_test_data/_search
 ```
 {% include copy-curl.html %}
 
-Because the context included a document containing information about the population of New York City, the LLM was able to correctly answer the question (though it included the word "projected" because it was trained on data from previous years). The response contains the matching documents from the supplementary RAG data and the LLM response:
+由於上下文包含一份內含紐約市人口資訊的文件，LLM 得以正確回答該問題 (不過它包含了「projected」一詞，因為它是以前幾年的資料訓練而成)。回應包含來自補充 RAG 資料的相符文件以及 LLM 回應：
 
 <details open markdown="block">
   <summary>
@@ -397,7 +398,7 @@ Because the context included a document containing information about the populat
 ```
 </details>
 
-Now you'll ask an LLM a follow-up question as part of the same conversation. Again, provide the `memory_id` in the request: 
+現在您將在同一段對話中向 LLM 提出後續問題。同樣地，請在請求中提供 `memory_id`：
 
 ```json
 GET /my_rag_test_data/_search
@@ -421,7 +422,7 @@ GET /my_rag_test_data/_search
 ```
 {% include copy-curl.html %}
 
-The LLM correctly identifies the subject of the conversation and returns a relevant response:
+LLM 正確辨識出對話的主題，並傳回相關的回應：
 
 ```json
 {
@@ -435,13 +436,13 @@ The LLM correctly identifies the subject of the conversation and returns a relev
 }
 ```
 
-To verify that both messages were added to the memory, provide the `memory_ID` to the Get Messages API:
+若要確認這兩則訊息都已新增至記憶，請將 `memory_ID` 提供給 Get Messages API：
 
 ```json
 GET /_plugins/_ml/memory/znCqcI0BfUsSoeNTntd7/messages
 ```
 
-The response contains both messages:
+回應包含這兩則訊息：
 
 <details open markdown="block">
   <summary>
@@ -481,6 +482,6 @@ The response contains both messages:
 ```
 </details>
 
-## Next steps
+## 後續步驟
 
-- Explore our [tutorials]({{site.url}}{{site.baseurl}}/vector-search/tutorials/) to learn how to build AI search applications. 
+- 探索我們的[教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/)，了解如何建立 AI 搜尋應用程式。 

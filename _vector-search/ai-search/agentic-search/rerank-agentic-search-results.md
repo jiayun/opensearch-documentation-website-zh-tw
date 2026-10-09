@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reranking agentic search results
+title: "重新排序代理式搜尋結果"
 parent: Agentic search
 grand_parent: AI search
 nav_order: 105
 has_children: false
 ---
 
-# Reranking agentic search results
+# 重新排序代理式搜尋結果
 
-Agentic search requests are processed by the [`agentic_query_translator` search request processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/), which intercepts the given query text and passes it to the configured agent in order to generate and execute an OpenSearch DSL query. To further adjust relevance scores, search results can also be reranked using the [`rerank` search response processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/).
+代理式搜尋請求由 [`agentic_query_translator` 搜尋請求處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/) 處理，該處理器會攔截指定的查詢文字，並將其傳遞給已設定的代理程式，以產生並執行 OpenSearch DSL 查詢。若要進一步調整相關性分數，也可以使用 [`rerank` 搜尋回應處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) 來重新排序搜尋結果。
 
-## Prerequisite
+## 必要條件
 
-Before using agentic search, you must configure an agent with the [`QueryPlanningTool`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/query-planning-tool/).
+在使用代理式搜尋之前，您必須使用 [`QueryPlanningTool`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/query-planning-tool/) 設定代理程式。
 
-## Step 1: Create an index for ingestion
+## 步驟 1：建立用於匯入的索引
 
-Create an index for ingestion:
+建立用於匯入的索引：
 
 ```json
 PUT /iris-index
@@ -51,9 +52,9 @@ PUT /iris-index
 ```
 {% include copy-curl.html %}
 
-## Step 2: Ingest documents into the index
+## 步驟 2：將文件匯入索引
 
-To ingest documents into the index created in the previous step, send the following request:
+若要將文件匯入上一個步驟建立的索引，請傳送下列請求：
 
 ```json
 POST _bulk
@@ -80,20 +81,20 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Step 3: Register a model and an agent
+## 步驟 3：註冊模型與代理程式
 
-Follow these steps to register a model and an agent:
+依照下列步驟註冊模型與代理程式：
 
-1. [Create a model for the agent and QueryPlanningTool]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/#step-3-create-a-model-for-the-agent-and-queryplanningtool).
-2. [Create an agent]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/#step-4-create-an-agent).
+1. [為代理程式與 QueryPlanningTool 建立模型]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/#step-3-create-a-model-for-the-agent-and-queryplanningtool)。
+2. [建立代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/#step-4-create-an-agent)。
 
-## Step 4: Create a search pipeline
+## 步驟 4：建立搜尋管線
 
-Create a search pipeline that uses your agent and a `rerank` response processor. This example uses a `by_field` rerank processor that reranks documents based on the `petal_length_in_cm` field.
+建立使用您的代理程式與 `rerank` 回應處理器的搜尋管線。此範例使用 `by_field` 重新排序處理器，根據 `petal_length_in_cm` 欄位重新排序文件。
 
-### Step 4(a): Configure a by_field rerank processor
+### 步驟 4(a)：設定 by_field 重新排序處理器
 
-Create an agentic search pipeline containing a `by_field` rerank processor:
+建立包含 `by_field` 重新排序處理器的代理式搜尋管線：
 
 ```json
 PUT _search/pipeline/agentic-pipeline
@@ -124,11 +125,11 @@ PUT _search/pipeline/agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-Alternatively, you can use an `ml_opensearch` rerank processor to apply OpenSearch-provided [cross-encoder models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#cross-encoder-models) to rerank results.
+或者，您也可以使用 `ml_opensearch` 重新排序處理器，套用 OpenSearch 提供的 [cross-encoder 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#cross-encoder-models) 來重新排序結果。
 
-### Step 4(b): Configure an ml_opensearch rerank processor
+### 步驟 4(b)：設定 ml_opensearch 重新排序處理器
 
-Register an `ms-marco-MiniLM-L-6-v2` cross-encoder model:
+註冊 `ms-marco-MiniLM-L-6-v2` cross-encoder 模型：
 
 ```json
 POST _plugins/_ml/models/_register?deploy=true
@@ -140,7 +141,7 @@ POST _plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Then configure an `ml_opensearch` rerank processor by providing the model ID returned in the response. You can configure the rerank processor for any text field in your index. In this example, you'll use the `species` field: 
+接著提供回應中傳回的模型 ID，設定 `ml_opensearch` 重新排序處理器。您可以為索引中的任何文字欄位設定重新排序處理器。在此範例中，您將使用 `species` 欄位：
 
 ```json
 POST _search/pipeline/agentic-pipeline
@@ -176,13 +177,13 @@ POST _search/pipeline/agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-## Step 5: Test a question
+## 步驟 5：測試問題
 
-Test your reranking agentic search pipeline by asking a question.
+透過提出問題來測試您的重新排序代理式搜尋管線。
 
-### Step 5(a): Test the by_field rerank processor
+### 步驟 5(a)：測試 by_field 重新排序處理器
 
-To test the `by_field` rerank processor, send the following request:
+若要測試 `by_field` 重新排序處理器，請傳送下列請求：
 
 ```json
 POST /iris-index/_search?search_pipeline=agentic-pipeline
@@ -196,7 +197,7 @@ POST /iris-index/_search?search_pipeline=agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-The generated DSL query shows that the agent opted to use a basic `term` query on the `species` field of the `iris-index`. The query returns all documents matching the given term. In the response, each document includes two scores: `previous_score` (the original relevance score) and `_score` (the updated score after reranking). The documents are ranked by petal length in descending order: 
+產生的 DSL 查詢顯示代理程式選擇在 `iris-index` 的 `species` 欄位上使用基本的 `term` 查詢。該查詢會傳回所有符合指定詞彙的文件。在回應中，每份文件包含兩個分數：`previous_score`（原始相關性分數）與 `_score`（重新排序後的更新分數）。文件依花瓣長度以遞減順序排列：
 
 ```json
 {
@@ -288,9 +289,9 @@ The generated DSL query shows that the agent opted to use a basic `term` query o
 }
 ```
 
-### Step 5(b): Test the ml_opensearch rerank processor
+### 步驟 5(b)：測試 ml_opensearch 重新排序處理器
 
-To test the `ml_opensearch` rerank processor, send the following request:
+若要測試 `ml_opensearch` 重新排序處理器，請傳送下列請求：
 
 ```json
 POST /iris-index/_search?search_pipeline=agentic-pipeline
@@ -311,7 +312,7 @@ POST /iris-index/_search?search_pipeline=agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-The model receives both the query text and the document text and generates a new relevance score based on both:
+模型會同時接收查詢文字與文件文字，並根據兩者產生新的相關性分數：
 
 ```json
 {
@@ -398,7 +399,7 @@ The model receives both the query text and the document text and generates a new
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [Reranking search results]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)
-- [Rerank processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)
+- [重新排序搜尋結果]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)
+- [Rerank 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)

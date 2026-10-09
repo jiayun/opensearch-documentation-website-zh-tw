@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: substringAfterLast()
 parent: Functions
@@ -7,41 +8,41 @@ nav_order: 70
 ---
 
 <!-- vale off -->
-# substringAfterLast() function
+# substringAfterLast() 函式
 <!-- vale on -->
 
-The `substringAfterLast()` function is used to extract the portion of a string that follows the last occurrence of a specified delimiter. It takes two arguments:
+`substringAfterLast()` 函式用於擷取字串中最後一次出現指定分隔符之後的部分。它接受兩個引數：
 
-1. The first argument is either a literal string or a JSON pointer that represents the source string.
+1. 第一個引數是常值字串，或是代表來源字串的 JSON pointer。
 
-1. The second argument is the delimiter string to search for within the first argument.
+1. 第二個引數是要在第一個引數中搜尋的分隔符字串。
 
-If the delimiter is found, the function returns the portion of the string after the last occurrence of the delimiter. If the delimiter is not found, the original string is returned. If the source resolves to `null`, the function returns `null`. If the delimiter is `null` or empty, the original string is returned.
+如果找到分隔符，函式會傳回字串中最後一次出現分隔符之後的部分。如果找不到分隔符，則傳回原始字串。如果來源解析為 `null`，函式會傳回 `null`。如果分隔符為 `null` 或空字串，則傳回原始字串。
 
-For example, to extract the file extension from the `/filepath` field containing a file path, use the `substringAfterLast()` function as follows:
+例如，若要從包含檔案路徑的 `/filepath` 欄位中擷取副檔名，請如下使用 `substringAfterLast()` 函式：
 
 ```
 'substringAfterLast(/filepath, ".")'
 ```
 {% include copy.html %}
 
-If the `/filepath` field contains `archive.tar.gz`, the function returns `gz`.
+如果 `/filepath` 欄位包含 `archive.tar.gz`，函式會傳回 `gz`。
 
-Alternatively, you can use a literal string as the first argument:
+您也可以使用常值字串作為第一個引數：
 
 ```
 'substringAfterLast("one-two-three", "-")'
 ```
 {% include copy.html %}
 
-The function returns `three` because it extracts the portion of the string after the last `-` character.
+函式會傳回 `three`，因為它擷取了最後一個 `-` 字元之後的字串部分。
 
-The `substringAfterLast()` function performs a case-sensitive search.
+`substringAfterLast()` 函式執行區分大小寫的搜尋。
 {: .note}
 
-## Example
+## 範例
 
-The following pipeline uses the `substringAfterLast()` function to extract the file name from a full file path. It adds the extracted file name as a new field called `filename`:
+下列管線使用 `substringAfterLast()` 函式從完整檔案路徑中擷取檔案名稱，並將擷取到的檔案名稱新增為名為 `filename` 的新欄位：
 
 ```yaml
 substring-after-last-demo:
@@ -66,7 +67,7 @@ substring-after-last-demo:
 ```
 {% include copy.html %}
 
-You can test the pipeline using the following command:
+您可以使用下列命令測試此管線：
 
 ```bash
 curl -sS -X POST "http://localhost:2021/log/ingest" \
@@ -78,7 +79,7 @@ curl -sS -X POST "http://localhost:2021/log/ingest" \
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 {

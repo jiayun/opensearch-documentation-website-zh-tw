@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: table
 parent: Commands
@@ -8,32 +9,32 @@ nav_order: 48
 
 <!-- vale off -->
 
-# table command
+# table 命令
 
 <!-- vale on -->
 
-The `table` command is an alias for the [`fields`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/fields/) command and provides the same field selection capabilities. It allows you to keep or remove fields from the search results using enhanced syntax options.
+`table` 命令是 [`fields`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/fields/) 命令的別名，提供相同的欄位選取功能。您可以使用增強的語法選項，保留或移除搜尋結果中的欄位。
 
-## Syntax
+## 語法
 
-The `table` command has the following syntax:
+`table` 命令的語法如下：
 
 ```sql
 table [+|-] <field-list>
 ```
 
-## Parameters
+## 參數
 
-The `table` command supports the following parameters.
+`table` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<field-list>` | Required | A comma-delimited or space-delimited list of fields to keep or remove. Supports wildcard patterns. |
-| `[+|-]` | Optional | Specifies the fields to keep or remove. If the plus sign (`+`) is used, only the fields specified in the field list are kept. If the minus sign (`-`) is used, all the fields specified in the field list are removed. Default is `+`. |
+| `<field-list>` | 必要 | 以逗號或空格分隔的欄位清單，列出要保留或移除的欄位。支援萬用字元模式。 |
+| `[+|-]` | 選用 | 指定要保留或移除的欄位。如果使用加號（`+`），則只保留欄位清單中指定的欄位。如果使用減號（`-`），則移除欄位清單中指定的所有欄位。預設為 `+`。 |
 
-## Example: Basic table command usage  
+## 範例：table 命令的基本用法  
 
-The following query builds a quick incident summary table showing severity, service, and the log message for recent errors:
+下列查詢會快速建立事件摘要表，顯示近期錯誤的嚴重性、服務和記錄訊息：
   
 ```sql
 source=otellogs
@@ -45,7 +46,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -58,6 +59,6 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Related documentation 
+## 相關文件 
 
-- [`fields`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/fields/) -- An alias command with identical functionality  
+- [`fields`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/fields/) -- 功能相同的別名命令  

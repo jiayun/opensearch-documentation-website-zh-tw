@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Internal user APIs
+title: "內部使用者 API"
 parent: Security APIs
 nav_order: 30
 has_children: true
@@ -9,20 +10,20 @@ redirect_from:
   - /security/api/users/
 ---
 
-# Internal user APIs
+# 內部使用者 API
 
-The internal user APIs create, retrieve, modify, and delete users in the internal user database. If you use an external authentication backend, you probably don't need to worry about internal users.
+內部使用者 API 可在內部使用者資料庫中建立、擷取、修改及刪除使用者。如果您使用外部驗證後端，可能就不需要擔心內部使用者。
 
-OpenSearch supports the following internal user APIs.
+OpenSearch 支援下列內部使用者 API。
 
-| API | Description |
+| API | 說明 |
 | :--- | :--- |
-| [Create or Update User API]({{site.url}}{{site.baseurl}}/security/api/users/create-user/) | Creates or replaces the specified internal user. |
-| [Patch Users API]({{site.url}}{{site.baseurl}}/security/api/users/patch-users/) | Updates individual attributes of one internal user, or creates, updates, or deletes multiple internal users in a single call. |
-| [Get Users API]({{site.url}}{{site.baseurl}}/security/api/users/get-users/) | Retrieves one internal user or all internal users. |
-| [Delete User API]({{site.url}}{{site.baseurl}}/security/api/users/delete-user/) | Deletes the specified internal user. |
-| [Generate User Token API]({{site.url}}{{site.baseurl}}/security/api/users/generate-user-token/) | Generates an authorization token for the specified internal user. |
+| [建立或更新使用者 API]({{site.url}}{{site.baseurl}}/security/api/users/create-user/) | 建立或取代指定的內部使用者。 |
+| [修補使用者 API]({{site.url}}{{site.baseurl}}/security/api/users/patch-users/) | 更新單一內部使用者的個別屬性，或在單次呼叫中建立、更新或刪除多個內部使用者。 |
+| [取得使用者 API]({{site.url}}{{site.baseurl}}/security/api/users/get-users/) | 擷取單一內部使用者或所有內部使用者。 |
+| [刪除使用者 API]({{site.url}}{{site.baseurl}}/security/api/users/delete-user/) | 刪除指定的內部使用者。 |
+| [產生使用者權杖 API]({{site.url}}{{site.baseurl}}/security/api/users/generate-user-token/) | 為指定的內部使用者產生授權權杖。 |
 
-## Legacy endpoints
+## 舊版端點
 
-The `_plugins/_security/api/user` endpoints are deprecated aliases of the `_plugins/_security/api/internalusers` endpoints documented in this section. Use the `internalusers` endpoints in new code.
+`_plugins/_security/api/user` 端點是本章節所記載之 `_plugins/_security/api/internalusers` 端點的已棄用別名。新程式碼請使用 `internalusers` 端點。

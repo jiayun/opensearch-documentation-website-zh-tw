@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Patch distinguished names
+title: "修補辨別名稱"
 parent: Distinguished name APIs
 grand_parent: Security APIs
 nav_order: 20
 ---
 
-# Patch Distinguished Names API
-**Introduced 1.0**
+# 修補辨別名稱 API
+**1.0 版導入**
 {: .label .label-purple }
 
-Updates the distinguished names in the allow list without replacing them. Specify a cluster name to update the distinguished names for one cluster, or omit the cluster name to make a bulk update.
+更新允許清單中的辨別名稱，而不會取代它們。指定叢集名稱即可更新單一叢集的辨別名稱，或省略叢集名稱以進行批次更新。
 
-This API is reserved for a superadmin. Authenticate with an admin certificate rather than with a user name and password. For more information, see [Access control for the API]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api).
+此 API 僅供超級管理員使用。請使用管理員憑證而非使用者名稱與密碼進行驗證。如需更多資訊，請參閱 [API 的存取控制]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api)。
 {: .note}
 
 <!-- spec_insert_start
 api: security.patch_distinguished_names
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PATCH /_plugins/_security/api/nodesdn
 ```
@@ -34,27 +35,27 @@ PATCH /_plugins/_security/api/nodesdn/{cluster_name}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required | Description |
+| 參數 | 資料類型 | 必要 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `cluster_name` | String | No | The name of the cluster whose node distinguished names you want to update. If omitted, the request can modify multiple clusters. |
+| `cluster_name` | 字串 | 否 | 您要更新其節點辨別名稱的叢集名稱。若省略，請求可修改多個叢集。 |
 
-## Request body fields
+## 請求本文欄位
 
-The request body is required. It is an array of JSON objects. Each object contains the following fields.
+請求本文為必要項目。它是一個 JSON 物件陣列。每個物件包含下列欄位。
 
-| Field | Data type | Description | Required |
+| 欄位 | 資料類型 | 說明 | 必要 |
 | :--- | :--- | :--- | :--- |
-| `op` | String | The operation to perform. Valid values are `add`, `remove`, `replace`, `move`, `copy`, and `test`. | Yes |
-| `path` | String | The path to modify. When you specify a cluster name, the path is relative to that cluster, such as `/nodes_dn/0`. When you omit the cluster name, the path begins with the cluster name, such as `/cluster1/nodes_dn/0`. | Yes |
-| `value` | Array | The new values used for the update. Required for the `add`, `replace`, and `test` operations. | No |
+| `op` | 字串 | 要執行的操作。有效值為 `add`、`remove`、`replace`、`move`、`copy` 與 `test`。 | 是 |
+| `path` | 字串 | 要修改的路徑。指定叢集名稱時，路徑相對於該叢集，例如 `/nodes_dn/0`。省略叢集名稱時，路徑以叢集名稱開頭，例如 `/cluster1/nodes_dn/0`。 | 是 |
+| `value` | 陣列 | 用於更新的新值。`add`、`replace` 與 `test` 操作需要此欄位。 | 否 |
 
-## Example request
+## 範例請求
 
-The following request replaces the first distinguished name in the `cluster1` allow list:
+下列請求會取代 `cluster1` 允許清單中的第一個辨別名稱：
 
 ```json
 PATCH _plugins/_security/api/nodesdn/cluster1
@@ -68,7 +69,7 @@ PATCH _plugins/_security/api/nodesdn/cluster1
 ```
 {% include copy-curl.html security=true %}
 
-The following request makes the same change as part of a bulk update:
+下列請求會在批次更新中進行相同的變更：
 
 ```json
 PATCH _plugins/_security/api/nodesdn
@@ -82,9 +83,9 @@ PATCH _plugins/_security/api/nodesdn
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
-A request that updates the allow list for one cluster names it in the response:
+更新單一叢集允許清單的請求會在回應中指明該叢集：
 
 ```json
 {
@@ -93,7 +94,7 @@ A request that updates the allow list for one cluster names it in the response:
 }
 ```
 
-A bulk request does not name the clusters it changed:
+批次請求不會指明其變更的叢集：
 
 ```json
 {
@@ -102,11 +103,11 @@ A bulk request does not name the clusters it changed:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文是具有下列欄位的 JSON 物件。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `status` | String | The status of the request. A successful request returns `OK`. |
-| `message` | String | A message describing the result of the operation. |
+| `status` | 字串 | 請求的狀態。成功的請求會傳回 `OK`。 |
+| `message` | 字串 | 描述操作結果的訊息。 |

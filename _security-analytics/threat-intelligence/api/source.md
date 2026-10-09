@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title:  Source API
 parent: Threat intelligence APIs
@@ -8,97 +9,97 @@ nav_order: 50
 
 # Source API
 
-The threat intelligence Source API updates and returns information about tasks related to threat intelligence source configurations.
+威脅情報 Source API 會更新並傳回與威脅情報來源組態相關任務的資訊。
 
-## Create or update a threat intelligence source
+## 建立或更新威脅情報來源
 
-Creates or updates a threat intelligence source and loads indicators of compromise (IOCs) from that source.
+建立或更新威脅情報來源，並從該來源載入入侵指標 (IOC)。
 
-You can create sources of type `S3_CUSTOM` and `IOC_UPLOAD`. The `URL_DOWNLOAD` type is reserved for built-in feeds that OpenSearch creates automatically and cannot be created using this API. For more information, see [URL_DOWNLOAD type sources](#url_download-type-sources).
+您可以建立 `S3_CUSTOM` 與 `IOC_UPLOAD` 類型的來源。`URL_DOWNLOAD` 類型保留給 OpenSearch 自動建立的內建饋送，無法透過此 API 建立。如需更多資訊，請參閱 [URL_DOWNLOAD 類型來源](#url_download-type-sources)。
 
-### Endpoints
+### 端點
 
 ```json
 POST _plugins/_security_analytics/threat_intel/sources
 PUT _plugins/_security_analytics/threat_intel/sources/{source_id}
 ```
 
-### Request body fields
+### 請求本文欄位
 
-| Field  | Type  | Description  |
+| 欄位  | 類型  | 說明  |
 | :---  | :--- | :---- |
-| `type`  | String | The type of threat intelligence source. Valid values are `S3_CUSTOM` and `IOC_UPLOAD`. |
-| `name`  | String   | The name of the threat intelligence source.   |
-| `format`  | String   | The format of the threat intelligence data, such as `STIX2`.   |
-| `description`    | String   | A description of the threat intelligence source.  |
-| `enabled`   | Boolean | Indicates whether the scheduled refresh of IOCs from the source is enabled. |
-| `ioc_types` | Array of strings | The `STIX2` types of IOCs that the source supports, for example, `hashes`, `domain-name`, `ipv4-addr`, or `ipv6-addr`.                                             |
-| `source`  | Object   | The source information for the threat intelligence data.   |
-| `source.ioc_upload`   | Object   | Information about the IOC upload. Applicable to the `IOC_UPLOAD` type.  |
-| `source.ioc_upload.file_name`  | String   | The name of the file containing IOCs, such as `test`. Applicable to the`IOC_UPLOAD` type.  |
-| `source.ioc_upload.iocs`   | Array of objects | A list of IOCs in `STIX2` format. Applicable to the `IOC_UPLOAD` type. |
-| `source_config.source.s3`   | Object   | Information about the Amazon Simple Storage Service (Amazon S3) source. Applicable to the `S3_CUSTOM` type.   |
-| `source_config.source.s3.bucket_name` | String  | The name of the S3 bucket, such as `threat-intel-s3-test-bucket`. Applicable to the `S3_CUSTOM` type.                                                                        |
-| `source_config.source.s3.object_key`  | String   | The key for the object in the S3 bucket, such `alltypess3object`. Applicable to the `S3_CUSTOM` type.   |
-| `source_config.source.s3.region`  | String | The AWS Region in which the S3 bucket is located. Example: `us-west-2`. Applicable to the `S3_CUSTOM` type.  |
-| `source_config.source.s3.role_arn`    | String   | The Amazon Resource Name (ARN) of the role used to access the S3 bucket, such as `arn:aws:iam::248279774929:role/threat_intel_s3_test_role`. Applicable to the `S3_CUSTOM` type. |
-| `source_config.source.url_download`  | Object   | Information about the URL from which IOCs are downloaded. Applicable to the `URL_DOWNLOAD` type. |
-| `source_config.source.url_download.url` | String | The URL from which IOCs are downloaded. Only the `http` and `https` protocols are supported. Applicable to the `URL_DOWNLOAD` type. |
-| `source_config.source.url_download.feed_format` | String | The format of the downloaded feed. The only supported value is `csv`. Applicable to the `URL_DOWNLOAD` type. |
-| `source_config.source.url_download.has_csv_header_field` | Boolean | Whether the first row of the CSV file is a header row. Default is `false`. Applicable to the `URL_DOWNLOAD` type. |
-| `source_config.source.url_download.csv_ioc_value_colum_num` | Integer | The zero-based index of the CSV column containing the IOC value. Applicable to the `URL_DOWNLOAD` type. |
+| `type`  | 字串 | 威脅情報來源的類型。有效值為 `S3_CUSTOM` 與 `IOC_UPLOAD`。 |
+| `name`  | 字串   | 威脅情報來源的名稱。   |
+| `format`  | 字串   | 威脅情報資料的格式，例如 `STIX2`。   |
+| `description`    | 字串   | 威脅情報來源的描述。  |
+| `enabled`   | 布林值 | 指示是否啟用從來源排程重新整理 IOC。 |
+| `ioc_types` | 字串陣列 | 該來源支援的 `STIX2` IOC 類型，例如 `hashes`、`domain-name`、`ipv4-addr` 或 `ipv6-addr`。                                             |
+| `source`  | 物件   | 威脅情報資料的來源資訊。   |
+| `source.ioc_upload`   | 物件   | IOC 上傳的相關資訊。適用於 `IOC_UPLOAD` 類型。  |
+| `source.ioc_upload.file_name`  | 字串   | 包含 IOC 的檔案名稱，例如 `test`。適用於 `IOC_UPLOAD` 類型。  |
+| `source.ioc_upload.iocs`   | 物件陣列 | `STIX2` 格式的 IOC 清單。適用於 `IOC_UPLOAD` 類型。 |
+| `source_config.source.s3`   | 物件   | Amazon Simple Storage Service (Amazon S3) 來源的相關資訊。適用於 `S3_CUSTOM` 類型。   |
+| `source_config.source.s3.bucket_name` | 字串  | S3 儲存貯體的名稱，例如 `threat-intel-s3-test-bucket`。適用於 `S3_CUSTOM` 類型。                                                                        |
+| `source_config.source.s3.object_key`  | 字串   | S3 儲存貯體中物件的金鑰，例如 `alltypess3object`。適用於 `S3_CUSTOM` 類型。   |
+| `source_config.source.s3.region`  | 字串 | S3 儲存貯體所在的 AWS 區域。範例：`us-west-2`。適用於 `S3_CUSTOM` 類型。  |
+| `source_config.source.s3.role_arn`    | 字串   | 用於存取 S3 儲存貯體之角色的 Amazon Resource Name (ARN)，例如 `arn:aws:iam::248279774929:role/threat_intel_s3_test_role`。適用於 `S3_CUSTOM` 類型。 |
+| `source_config.source.url_download`  | 物件   | 下載 IOC 之 URL 的相關資訊。適用於 `URL_DOWNLOAD` 類型。 |
+| `source_config.source.url_download.url` | 字串 | 下載 IOC 的 URL。僅支援 `http` 與 `https` 協定。適用於 `URL_DOWNLOAD` 類型。 |
+| `source_config.source.url_download.feed_format` | 字串 | 下載饋送的格式。唯一支援的值為 `csv`。適用於 `URL_DOWNLOAD` 類型。 |
+| `source_config.source.url_download.has_csv_header_field` | 布林值 | CSV 檔案的第一列是否為標題列。預設為 `false`。適用於 `URL_DOWNLOAD` 類型。 |
+| `source_config.source.url_download.csv_ioc_value_colum_num` | 整數 | 包含 IOC 值之 CSV 欄位的零基索引。適用於 `URL_DOWNLOAD` 類型。 |
 
-#### IOC fields (STIX2)  
+#### IOC 欄位 (STIX2)  
 
-The following fields modify the `ioc_types` option.
+下列欄位會修改 `ioc_types` 選項。
 
-| Field  | Type  | Description   |
+| 欄位  | 類型  | 說明   |
 | :--- | :---- | :----  |
-| `id`  | String  | A unique identifier for the IOC, such as `1`.  |
-| `name`   | String   | A human-readable name for the IOC, such as `ioc-name`.  |
-| `type`  | String  | The type of IOC, such as `hashes`. |
-| `value`   | String  | The value of the IOC, which can be a hash value, such as `gof`.   |
-| `severity`     | String   | The severity level of the IOC. Example: `thvvz`.    |
-| `created`  | Integer/String   | The timestamp indicating when the IOC was created, either in UNIX epoch format or ISO_8601 format, for example, `1719519073` or `2024-06-20T01:06:20.562008Z`.   |
-| `modified` | Integer/String   | The timestamp indicating when the IOC was last modified, either in UNIX epoch format or ISO_8601 format, for example, `1719519073` or `2024-06-20T01:06:20.562008Z.` |
-| `description`  | String     | A description of the IOC.    |
-| `labels`   | Array of strings | Any labels or tags associated with the IOC.  |
-| `feed_id`   | String           | A unique identifier for the feed to which the IOC belongs.    |
-| `spec_version` | String           | The specification version used for the IOC.    |
-| `version`      | Integer    | A version number for the IOC.    |
+| `id`  | 字串  | IOC 的唯一識別碼，例如 `1`。  |
+| `name`   | 字串   | IOC 的人類可讀名稱，例如 `ioc-name`。  |
+| `type`  | 字串  | IOC 的類型，例如 `hashes`。 |
+| `value`   | 字串  | IOC 的值，可以是雜湊值，例如 `gof`。   |
+| `severity`     | 字串   | IOC 的嚴重性等級。範例：`thvvz`。    |
+| `created`  | 整數/字串   | 指示 IOC 建立時間的時間戳記，可為 UNIX epoch 格式或 ISO_8601 格式，例如 `1719519073` 或 `2024-06-20T01:06:20.562008Z`。   |
+| `modified` | 整數/字串   | 指示 IOC 最後修改時間的時間戳記，可為 UNIX epoch 格式或 ISO_8601 格式，例如 `1719519073` 或 `2024-06-20T01:06:20.562008Z.` |
+| `description`  | 字串     | IOC 的描述。    |
+| `labels`   | 字串陣列 | 與 IOC 相關聯的任何標籤。  |
+| `feed_id`   | 字串           | IOC 所屬饋送的唯一識別碼。    |
+| `spec_version` | 字串           | IOC 使用的規格版本。    |
+| `version`      | 整數    | IOC 的版本號碼。    |
 
-### Response body fields
+### 回應本文欄位
 
-| Field     | Data type   | Description   |
+| 欄位     | 資料類型   | 說明   |
 | :---- | :--- |:----- |
-| `_id`     | String    | The unique identifier for the threat intelligence source.     |
-| `_version`  | Integer           | The version number of the threat intelligence source.   |
-| `source_config`    | Object   | The configuration details of the threat intelligence source.    |
-| `source_config.name`    | String    | The name of the threat intelligence source.   |
-| `source_config.format`   | String     | The format of the threat intelligence data.    |
-| `source_config.type`   | String   | The type of the threat intelligence source.   |
-| `source_config.ioc_types`  | Array of strings  | The types of IOCs supported by the source.   |
-| `source_config.description`   | String  | A description of the threat intelligence source.  |
-| `source_config.created_by_user`  | String or null    | The user who created the threat intelligence source.    |
-| `source_config.created_at`    | String (DateTime) | The date and time when the threat intelligence source was created.      |
-| `source_config.source`  | Object   | Contains information about the source of the threat intelligence data.   |
-| `source_config.source.ioc_upload`    | Object    | Information about the IOC upload.   |
-| `source_config.source.ioc_upload.file_name` | String   | The name of the uploaded file. Example: `test`. |
-| `source_config.source.ioc_upload.iocs`      | Array of objects  | Any additional information about the IOC upload. When the IOC is stored successfully, this appears as an empty array.   |
-| `source_config.enabled`   | Boolean    | Indicates whether the threat intelligence source is enabled.  |
-| `source_config.enabled_time`    | String or null    | The date and time when the source was enabled.   |
-| `source_config.last_update_time`  | String (DateTime) | The date and time when the threat intelligence source was last updated.  |
-| `source_config.schedule`  | String or null    | The schedule for the threat intelligence source.  |
-| `source_config.state`    | String    | The current state of the threat intelligence source.  |
-| `source_config.refresh_type`    | String   | The type of refresh applied to the source.  |
-| `source_config.last_refreshed_user`   | String or null    | The user who last refreshed the source. |
-| `source_config.last_refreshed_time`         | String (DateTime) | The date and time when the source was last refreshed. |
+| `_id`     | 字串    | 威脅情報來源的唯一識別碼。     |
+| `_version`  | 整數           | 威脅情報來源的版本號碼。   |
+| `source_config`    | 物件   | 威脅情報來源的組態詳細資訊。    |
+| `source_config.name`    | 字串    | 威脅情報來源的名稱。   |
+| `source_config.format`   | 字串     | 威脅情報資料的格式。    |
+| `source_config.type`   | 字串   | 威脅情報來源的類型。   |
+| `source_config.ioc_types`  | 字串陣列  | 該來源支援的 IOC 類型。   |
+| `source_config.description`   | 字串  | 威脅情報來源的描述。  |
+| `source_config.created_by_user`  | 字串或 null    | 建立威脅情報來源的使用者。    |
+| `source_config.created_at`    | 字串 (DateTime) | 威脅情報來源的建立日期與時間。      |
+| `source_config.source`  | 物件   | 包含威脅情報資料來源的相關資訊。   |
+| `source_config.source.ioc_upload`    | 物件    | IOC 上傳的相關資訊。   |
+| `source_config.source.ioc_upload.file_name` | 字串   | 上傳檔案的名稱。範例：`test`。 |
+| `source_config.source.ioc_upload.iocs`      | 物件陣列  | IOC 上傳的任何其他資訊。當 IOC 成功儲存時，此欄位會顯示為空陣列。   |
+| `source_config.enabled`   | 布林值    | 指示是否啟用威脅情報來源。  |
+| `source_config.enabled_time`    | 字串或 null    | 啟用來源的日期與時間。   |
+| `source_config.last_update_time`  | 字串 (DateTime) | 威脅情報來源最後更新的日期與時間。  |
+| `source_config.schedule`  | 字串或 null    | 威脅情報來源的排程。  |
+| `source_config.state`    | 字串    | 威脅情報來源的目前狀態。  |
+| `source_config.refresh_type`    | 字串   | 套用至來源的重新整理類型。  |
+| `source_config.last_refreshed_user`   | 字串或 null    | 最後重新整理來源的使用者。 |
+| `source_config.last_refreshed_time`         | 字串 (DateTime) | 來源最後重新整理的日期與時間。 |
 
-### Example requests 
+### 範例請求
 
-The following example requests show you how to use the Source API.
+下列範例請求示範如何使用 Source API。
 
-#### IOC_UPLOAD type
+#### IOC_UPLOAD 類型
 
 ```json
 POST _plugins/_security_analytics/threat_intel/sources/
@@ -156,7 +157,7 @@ POST _plugins/_security_analytics/threat_intel/sources/
 {% include copy-curl.html %}
 
 <!-- vale off -->
-#### S3_CUSTOM type source
+#### S3_CUSTOM 類型來源
 <!-- vale on -->
 
 ```json
@@ -190,12 +191,12 @@ POST _plugins/_security_analytics/threat_intel/sources/
 ```
 {% include copy-curl.html %}
 
-### Example responses
+### 範例回應
 
-The following example responses show what OpenSearch returns after a successful request.
+下列範例回應顯示 OpenSearch 在請求成功後傳回的內容。
 
 
-#### IOC_UPLOAD type
+#### IOC_UPLOAD 類型
 
 ```json
 {
@@ -230,7 +231,7 @@ The following example responses show what OpenSearch returns after a successful 
 ```
 
 <!-- vale off -->
-#### S3_CUSTOM type source
+#### S3_CUSTOM 類型來源
 <!-- vale on -->
 
 ```json
@@ -290,15 +291,15 @@ The following example responses show what OpenSearch returns after a successful 
 
 ---
 
-## URL_DOWNLOAD type sources
+## URL_DOWNLOAD 類型來源
 
-A `URL_DOWNLOAD` source downloads IOCs from an HTTP or HTTPS URL. OpenSearch creates these sources automatically for built-in threat intelligence feeds, so you cannot create one using the Source API. A request that specifies `URL_DOWNLOAD` in a `POST` request returns the following error:
+`URL_DOWNLOAD` 來源會從 HTTP 或 HTTPS URL 下載 IOC。OpenSearch 會為內建的威脅情報饋送自動建立這些來源，因此您無法使用 Source API 建立這類來源。若請求在 `POST` 請求中指定 `URL_DOWNLOAD`，會傳回下列錯誤：
 
 ```
 URL_DOWNLOAD source type cannot be created via the REST API. It is reserved for internal use only.
 ```
 
-To list the `URL_DOWNLOAD` sources in your cluster, search for them by type:
+若要列出叢集中的 `URL_DOWNLOAD` 來源，請依類型搜尋：
 
 ```json
 POST _plugins/_security_analytics/threat_intel/sources/_search
@@ -312,7 +313,7 @@ POST _plugins/_security_analytics/threat_intel/sources/_search
 ```
 {% include copy-curl.html %}
 
-The `source.url_download` object in the response describes the feed:
+回應中的 `source.url_download` 物件會描述該饋送：
 
 ```json
 {
@@ -341,14 +342,14 @@ The `source.url_download` object in the response describes the feed:
 }
 ```
 
-Only the `csv` feed format is supported for `URL_DOWNLOAD` sources. A source configured with any other format fails to refresh with an `unsupported feed format for url download` error.
+`URL_DOWNLOAD` 來源僅支援 `csv` 饋送格式。若來源設定為任何其他格式，重新整理時會失敗並出現 `unsupported feed format for url download` 錯誤。
 {: .note}
 
-### Activating or deactivating a URL_DOWNLOAD source
+### 啟用或停用 URL_DOWNLOAD 來源
 
-Because `URL_DOWNLOAD` sources are built in, the only field you can change is `enabled_for_scan`, which activates or deactivates the feed. Update requests that change any other field return an `Unsupported Threat intel Source Config Type passed` error. You must include the `schedule` field in the request, otherwise the request fails validation.
+由於 `URL_DOWNLOAD` 來源是內建的，您唯一可以變更的欄位是 `enabled_for_scan`，該欄位會啟用或停用饋送。若更新請求變更任何其他欄位，會傳回 `Unsupported Threat intel Source Config Type passed` 錯誤。您必須在請求中包含 `schedule` 欄位，否則請求將無法通過驗證。
 
-The following request deactivates a built-in feed:
+下列請求會停用內建饋送：
 
 ```json
 PUT _plugins/_security_analytics/threat_intel/sources/alienvault_reputation_ip_database
@@ -380,32 +381,32 @@ PUT _plugins/_security_analytics/threat_intel/sources/alienvault_reputation_ip_d
 ```
 {% include copy-curl.html %}
 
-To activate the feed again, send the same request with `enabled_for_scan` set to `true`.
+若要再次啟用饋送，請傳送相同的請求，並將 `enabled_for_scan` 設為 `true`。
 
-You cannot delete a `URL_DOWNLOAD` source. A delete request returns a `Cannot delete built-in tif source config` error.
+您無法刪除 `URL_DOWNLOAD` 來源。刪除請求會傳回 `Cannot delete built-in tif source config` 錯誤。
 {: .note}
 
 ---
 
-## Get threat intelligence source configuration details
+## 取得威脅情報來源組態詳細資料
 
-Retrieves the threat intelligence source configuration details.
+擷取威脅情報來源組態詳細資料。
 
-### Endpoints
+### 端點
 
 
 ```json
 GET /_plugins/_security_analytics/threat_intel/sources/{source-id}
 ```
 
-### Example request
+### 範例請求
 
 ```json
 GET /_plugins/_security_analytics/threat_intel/sources/{source-id}
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -449,18 +450,18 @@ GET /_plugins/_security_analytics/threat_intel/sources/{source-id}
 ```
 ---
 
-## Search for a threat intelligence source 
+## 搜尋威脅情報來源
 
-Searches for threat intelligence source matches based on the search query. The request body expects a search query. For query options, see [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/).
+根據搜尋查詢搜尋威脅情報來源的相符項目。請求本文需要一個搜尋查詢。查詢選項請參閱 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/)。
 
 
-### Endpoints
+### 端點
 
 ```json
 POST /_plugins/_security_analytics/threat_intel/sources/_search
 ```
 
-### Example request
+### 範例請求
 
 ```json
 POST /_plugins/_security_analytics/threat_intel/sources/_search
@@ -474,7 +475,7 @@ POST /_plugins/_security_analytics/threat_intel/sources/_search
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -544,24 +545,24 @@ POST /_plugins/_security_analytics/threat_intel/sources/_search
 
 ---
 
-## Delete Threat Intelligence Source API
+## 刪除威脅情報來源 API
 
-Deletes a threat intelligence source.
+刪除威脅情報來源。
 
-### Endpoints
+### 端點
 
 ```json
 DELETE /_plugins/_security_analytics/threat_intel/sources/{source-id}
 ```
 
-### Example request
+### 範例請求
 
 ```json
 DELETE /_plugins/_security_analytics/threat_intel/sources/2c0u7JAB9IJUg27gcjUp
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -570,24 +571,24 @@ DELETE /_plugins/_security_analytics/threat_intel/sources/2c0u7JAB9IJUg27gcjUp
 ```
 ---
 
-## Refresh the source 
+## 重新整理來源
 
-Downloads any IOCs from the threat intelligence source. Supports the `S3_CUSTOM` and `URL_DOWNLOAD` type sources. Refreshing an `IOC_UPLOAD` source is not supported because its IOCs are supplied directly in the create request.
+從威脅情報來源下載所有 IOC。支援 `S3_CUSTOM` 與 `URL_DOWNLOAD` 類型的來源。`IOC_UPLOAD` 來源不支援重新整理，因為其 IOC 是直接在建立請求中提供的。
 
-### Endpoints
+### 端點
 
 ```json
 POST /_plugins/_security_analytics/threat_intel/sources/{source-id}/_refresh
 ```
 
-### Example request
+### 範例請求
 
 ```json
 POST /_plugins/_security_analytics/threat_intel/sources/IJAXz4QBrmVplM4JYxx_/_refresh
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {

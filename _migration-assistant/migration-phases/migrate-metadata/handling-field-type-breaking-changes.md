@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Transform field types
+title: "轉換欄位類型"
 nav_order: 2
 parent: Migrate metadata
 grand_parent: Migration workflows
@@ -10,34 +11,34 @@ redirect_from:
   - /migration-assistant/migration-phases/planning-your-migration/handling-field-type-breaking-changes/
 ---
 
-# Transform field types
+# 轉換欄位類型
 
-Migration Assistant resolves several common field-type compatibility problems during metadata migration automatically. The following sections describe when the built-in transformations are sufficient and when you need a custom transformer.
+Migration Assistant 會在中繼資料遷移期間自動解決數種常見的欄位類型相容性問題。下列章節說明內建轉換何時已足夠，以及何時需要自訂轉換器。
 
-## Built-in transformations
+## 內建轉換
 
-Before you build custom logic, verify whether the migration is already covered by the built-in metadata transformations:
+在建立自訂邏輯之前，請先確認遷移是否已由內建的中繼資料轉換涵蓋：
 
-- `string` to `text` and `keyword`
-- `flattened` to `flat_object`
-- `dense_vector` to `knn_vector`
-- Additional vector compatibility adjustments for newer OpenSearch and Serverless NextGen targets.
+- `string` 至 `text` 與 `keyword`
+- `flattened` 至 `flat_object`
+- `dense_vector` 至 `knn_vector`
+- 針對較新的 OpenSearch 與 Serverless NextGen 目標的額外向量相容性調整。
 
-## Custom field type transformer
+## 自訂欄位類型轉換器
 
-Use a custom transformer only when:
+只有在下列情況才使用自訂轉換器：
 
-- The built-in rules do not match your target behavior.
-- Your application requires a specific field rewrite.
-- You need to remove or adjust mapping properties in a way the defaults do not cover.
+- 內建規則不符合您的目標行為。
+- 您的應用程式需要特定的欄位重寫。
+- 您需要以預設值未涵蓋的方式移除或調整對應屬性。
 
-Custom metadata transformations are configured through the following metadata migration settings:
+自訂中繼資料轉換可透過下列中繼資料遷移設定進行設定：
 
 - `transformerConfig`
 - `transformerConfigBase64`
 - `transformerConfigFile`
 
-To configure a custom transformer, load the sample configuration and edit the workflow:
+若要設定自訂轉換器，請載入範例組態並編輯工作流程：
 
 ```bash
 workflow configure sample --load
@@ -45,19 +46,19 @@ workflow configure edit
 ```
 {% include copy.html %}
 
-Configuring `transformerConfigFile` requires additional setup and is intended for advanced use cases: the file must be accessible inside the Migration Console container. You can mount it as a Kubernetes volume or include it in a custom container image.
+設定 `transformerConfigFile` 需要額外的設定，適用於進階使用情境：該檔案必須可供 Migration Console 容器存取。您可以將它掛載為 Kubernetes 磁碟區，或將它包含在自訂容器映像中。
 
-### JavaScript-based transformer
+### JavaScript 型轉換器
 
-You can supply a JavaScript-based metadata transformer through `JsonJSTransformerProvider`. Typical use cases include:
+您可以透過 `JsonJSTransformerProvider` 提供 JavaScript 型的中繼資料轉換器。常見的使用情境包括：
 
-- Replacing deprecated field types
-- Removing incompatible mapping properties
-- Normalizing field definitions before they reach the target.
+- 取代已淘汰的欄位類型
+- 移除不相容的對應屬性
+- 在欄位定義抵達目標之前予以正規化。
 
-### Example configuration
+### 範例組態
 
-The following example shows a transformer descriptor that references a JavaScript file:
+下列範例顯示參照 JavaScript 檔案的轉換器描述項：
 
 ```json
 [
@@ -71,18 +72,18 @@ The following example shows a transformer descriptor that references a JavaScrip
 ```
 {% include copy.html %}
 
-## Recommended sequence
+## 建議的順序
 
-Use custom transformers only after verifying that the built-in transformations do not cover your requirements. Follow this sequence:
+只有在確認內建轉換無法涵蓋您的需求之後，才使用自訂轉換器。請遵循以下順序：
 
-1. Run the assessment.
-2. Inspect the built-in transformation pages.
-3. Configure a pilot workflow.
-4. Add a custom transformer only if the pilot workflow results require one.
+1. 執行評估。
+2. 檢視內建轉換頁面。
+3. 設定試驗工作流程。
+4. 只有在試驗工作流程的結果需要時，才新增自訂轉換器。
 
-## Validate the transformed metadata
+## 驗證轉換後的中繼資料
 
-After the metadata phase runs, verify the target mappings:
+在中繼資料階段執行完畢後，請驗證目標對應：
 
 ```bash
 console clusters curl target /my-index/_mapping
@@ -90,4 +91,4 @@ workflow show
 ```
 {% include copy.html %}
 
-If a custom transformer changes field names or semantics, validate application queries before proceeding to full backfill or cutover.
+如果自訂轉換器變更了欄位名稱或語意，請在進行完整回填或切換之前，先驗證應用程式查詢。

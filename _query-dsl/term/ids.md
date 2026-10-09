@@ -1,13 +1,14 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: IDs
 parent: Term-level queries
 nav_order: 40
 ---
 
-# IDs query
+# IDs 查詢
 
-Use the `ids` query to search for documents with one or more specific document ID values in the `_id` field. For example, the following query requests documents with the IDs `34229` and `91296`:
+使用 `ids` 查詢，在 `_id` 欄位中搜尋具有一個或多個特定文件 ID 值的文件。例如，下列查詢會請求 ID 為 `34229` 和 `91296` 的文件：
 
 ```json
 GET shakespeare/_search
@@ -24,11 +25,11 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-The query accepts the following parameter.
+此查詢接受下列參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`values` | Array of strings | The document IDs to search for. Required.
-`boost` | Floating-point | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field’s relevance. Values between 0.0 and 1.0 decrease the field’s relevance. Default is 1.0.
+`values` | 字串陣列 | 要搜尋的文件 ID。必要。
+`boost` | 浮點數 | 浮點值，用來指定此欄位對相關性分數的權重。大於 1.0 的值會提高欄位的相關性。介於 0.0 和 1.0 之間的值會降低欄位的相關性。預設值為 1.0。

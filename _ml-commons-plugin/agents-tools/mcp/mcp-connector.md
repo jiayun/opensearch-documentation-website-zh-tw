@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Connecting to an external MCP server
+title: "連線至外部 MCP 伺服器"
 parent: Using MCP tools
 grand_parent: Agents and tools
 nav_order: 10
 ---
 
-# Connecting to an external MCP server 
-**Introduced 3.0**
+# 連線至外部 MCP 伺服器 
+**於 3.0 版推出**
 {: .label .label-purple }
 
-OpenSearch supports agentic workflows using [agents]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/). While OpenSearch provides built-in tools for running complex queries, [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) enables integration with external tools and data sources. MCP is an open protocol standard that provides a standardized way for AI models to connect to external data sources and tools, acting as a "universal adapter" for remote MCP server tools.
+OpenSearch 支援使用 [代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/) 的代理式工作流程。雖然 OpenSearch 提供內建工具來執行複雜查詢，但 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) 可與外部工具和資料來源整合。MCP 是一項開放通訊協定標準，為 AI 模型提供標準化的方式來連線至外部資料來源和工具，做為遠端 MCP 伺服器工具的「通用轉接器」。
 
-OpenSearch supports MCP servers that use either the Server-Sent Events (SSE) protocol or the Streamable HTTP protocol. Standard Input/Output (`stdio`) protocol is not supported.
+OpenSearch 支援使用 Server-Sent Events (SSE) 通訊協定或 Streamable HTTP 通訊協定的 MCP 伺服器。不支援 Standard Input/Output (`stdio`) 通訊協定。
 {: .note}
 
-The following example demonstrates using MCP tools in agentic workflows.
+下列範例示範如何在代理式工作流程中使用 MCP 工具。
 
-## Prerequisites
+## 先決條件
 
-Before using MCP tools, you must complete the following prerequisites.
+使用 MCP 工具之前，您必須完成下列先決條件。
 
-### Enable MCP and configure trusted connector endpoints
+### 啟用 MCP 並設定受信任的連接器端點
 
-- Enable the MCP protocol by configuring the `plugins.ml_commons.mcp_connector_enabled` setting.
-- Configure trusted connector endpoints in the `plugins.ml_commons.trusted_connector_endpoints_regex` setting. For security purposes, this setting uses regex patterns to define which MCP server URLs are allowed.
+- 透過設定 `plugins.ml_commons.mcp_connector_enabled` 設定來啟用 MCP 通訊協定。
+- 在 `plugins.ml_commons.trusted_connector_endpoints_regex` 設定中設定受信任的連接器端點。基於安全性考量，此設定使用 regex 模式來定義允許哪些 MCP 伺服器 URL。
 
-To configure both settings, send the following request:
+若要設定這兩個設定，請傳送下列請求：
 
 ```json
 PUT /_cluster/settings/
@@ -41,15 +42,15 @@ PUT /_cluster/settings/
 ```
 {% include copy-curl.html %}
 
-### Set up an MCP server
+### 設定 MCP 伺服器
 
-Ensure you have a running MCP server that is accessible from your OpenSearch cluster.
+請確認您有一個執行中且可從 OpenSearch 叢集存取的 MCP 伺服器。
 
-## Step 1: Create an MCP connector
+## 步驟 1：建立 MCP 連接器
 
-An MCP connector stores connection details and credentials for your MCP server. You can connect using either SSE or Streamable HTTP.
+MCP 連接器會儲存 MCP 伺服器的連線詳細資料和認證。您可以使用 SSE 或 Streamable HTTP 進行連線。
 
-To create an MCP connector using SSE, send the following request:
+若要使用 SSE 建立 MCP 連接器，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -72,7 +73,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-To create an MCP connector using Streamable HTTP, set `protocol` to `mcp_streamable_http`. Optionally, set `parameters.endpoint` to override the default endpoint (`/_plugins/_ml/mcp`). No SSE-specific endpoint is required:
+若要使用 Streamable HTTP 建立 MCP 連接器，請將 `protocol` 設為 `mcp_streamable_http`。您也可以選擇將 `parameters.endpoint` 設為覆寫預設端點 (`/_plugins/_ml/mcp`)。不需要 SSE 專用的端點：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -95,19 +96,19 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-The following table describes the connector parameters. For more information about standard connector parameters, see [Request body fields]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields).
+下表說明連接器參數。如需標準連接器參數的詳細資訊，請參閱 [請求本文欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields)。
 
-| Parameter | Data type | Required | Description |
+| 參數 | 資料類型 | 必要 | 描述 |
 |:----------|:---------|:---|:------------|
-| `protocol` | String | Yes | Specify `mcp_sse` for SSE or `mcp_streamable_http` for Streamable HTTP. |
-| `url` | String | Yes | The complete base URL of the MCP server, including protocol, hostname, and port, if not using the default port (for example, `https://my-mcp-server.com:8443`). |
-| `credential` | Object | Yes | Contains sensitive authentication information such as API keys or tokens. Values stored in this object can be securely referenced in the `headers` section using the `${credential.*}` syntax. |
-| `parameters` | Object | No | Contains configuration parameters for the MCP connector. |
-| `parameters.sse_endpoint` | String | No | Applicable for SSE only. The SSE endpoint path for the MCP server. Default is `/sse`. |
-| `parameters.endpoint` | String | No | Applicable for Streamable HTTP only. The MCP server endpoint path. Default is `/mcp`. |
-| `headers` | Object | No | The HTTP headers to include with requests to the MCP server. For authentication headers, use the `${credential.*}` syntax to reference values from the `credential` object (for example, `"Authorization": "Bearer ${credential.mcp_server_key}"`).  |
+| `protocol` | 字串 | 是 | 針對 SSE 指定 `mcp_sse`，或針對 Streamable HTTP 指定 `mcp_streamable_http`。 |
+| `url` | 字串 | 是 | MCP 伺服器的完整基礎 URL，包含通訊協定、主機名稱和連接埠 (若未使用預設連接埠，例如 `https://my-mcp-server.com:8443`)。 |
+| `credential` | 物件 | 是 | 包含機密驗證資訊，例如 API 金鑰或權杖。儲存在此物件中的值可使用 `${credential.*}` 語法在 `headers` 區段中安全地參照。 |
+| `parameters` | 物件 | 否 | 包含 MCP 連接器的組態參數。 |
+| `parameters.sse_endpoint` | 字串 | 否 | 僅適用於 SSE。MCP 伺服器的 SSE 端點路徑。預設為 `/sse`。 |
+| `parameters.endpoint` | 字串 | 否 | 僅適用於 Streamable HTTP。MCP 伺服器端點路徑。預設為 `/mcp`。 |
+| `headers` | 物件 | 否 | 要包含在對 MCP 伺服器之請求中的 HTTP 標頭。如需驗證標頭，請使用 `${credential.*}` 語法來參照 `credential` 物件中的值 (例如 `"Authorization": "Bearer ${credential.mcp_server_key}"`)。  |
 
-The response contains the connector ID:
+回應包含連接器 ID：
 
 ```json
 {
@@ -115,11 +116,11 @@ The response contains the connector ID:
 }
 ```
 
-## Step 2: Register a model
+## 步驟 2：註冊模型
 
-Register any externally hosted large language model (LLM) using a connector. For a list of supported models, see [OpenSearch-provided connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/).
+使用連接器註冊任何外部託管的大型語言模型 (LLM)。如需支援的模型清單，請參閱 [OpenSearch 提供的連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/)。
 
-For example, to register an OpenAI chat model, send the following request:
+例如，若要註冊 OpenAI 聊天模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -154,7 +155,7 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-The response contains the model ID:
+回應包含模型 ID：
 
 ```json
 {
@@ -164,32 +165,32 @@ The response contains the model ID:
 }
 ```
 
-To check the status of the operation, provide the task ID to the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/). Once the registration is complete, the task `state` changes to `COMPLETED`.
+若要檢查作業狀態，請將任務 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)。註冊完成後，任務 `state` 會變更為 `COMPLETED`。
 
-## Step 3: Register an agent for accessing MCP tools
+## 步驟 3：註冊代理程式以存取 MCP 工具
 
-The following table lists the agent types that support MCP tools.
+下表列出支援 MCP 工具的代理程式類型。
 
-| Agent type | MCP integration |
+| 代理程式類型 | MCP 整合 |
 |:---|:---|
-| [`conversational`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/) | The LLM selects MCP tools at runtime. |
-| [`plan_execute_and_reflect`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/) | The LLM selects MCP tools at runtime. |
-| [`flow`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/flow/) | MCP tools run in a fixed pipeline order. |
-| [`conversational_flow`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational-flow/) | MCP tools run in a fixed pipeline order with conversation memory. |
+| [`conversational`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/) | LLM 會在執行階段選取 MCP 工具。 |
+| [`plan_execute_and_reflect`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/) | LLM 會在執行階段選取 MCP 工具。 |
+| [`flow`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/flow/) | MCP 工具會依固定管線順序執行。 |
+| [`conversational_flow`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational-flow/) | MCP 工具會依固定管線順序執行，並具備對話記憶。 |
 
-For all supported agent types, include one or more MCP connectors in `parameters.mcp_connectors`. How you configure the `tools` array depends on the agent type.
+對於所有支援的代理程式類型，請在 `parameters.mcp_connectors` 中包含一或多個 MCP 連接器。您設定 `tools` 陣列的方式取決於代理程式類型。
 
-Each connector must specify the following parameters in the `parameters.mcp_connectors` array.
+每個連接器都必須在 `parameters.mcp_connectors` 陣列中指定下列參數。
 
-| Parameter | Data type | Required | Description | 
+| 參數 | 資料類型 | 必要 | 描述 | 
 |:--- |:--- |:--- |:--- |
-| `mcp_connector_id` | String | Yes | The connector ID of the MCP connector. | 
-| `tool_filters` | Array | No | An array of Java-style regular expressions that specify which tools from the MCP server to make available to the agent. A tool is included if it matches at least one of the regular expressions in the array. If omitted or set to an empty array, all tools exposed by the connector are available. Use the `^` or `$` anchors or literal strings to precisely match tool names. For example, `^get_forecast` matches any tool starting with "get_forecast", while `search_indices` matches only "search_indices".|
-| `tool_descriptions` | Array | No | An array of objects that override the tool descriptions sent to the LLM. Each object maps a tool name (key) to a replacement description (string value). Only tools that pass the `tool_filters` evaluation can be overridden. Entries are ignored if the tool does not exist on the connector, is excluded by `tool_filters`, or has a blank, null, or non-string value. If the same tool name appears in multiple objects, the last value wins. |
+| `mcp_connector_id` | 字串 | 是 | MCP 連接器的連接器 ID。 | 
+| `tool_filters` | 陣列 | 否 | Java 樣式規則運算式的陣列，用於指定要提供給代理程式的 MCP 伺服器工具。若工具符合陣列中至少一個規則運算式，即會納入。若省略或設為空陣列，則連接器所公開的所有工具皆可使用。請使用 `^` 或 `$` 錨點或常值字串來精確比對工具名稱。例如，`^get_forecast` 會比對任何開頭為 "get_forecast" 的工具，而 `search_indices` 只會比對 "search_indices"。|
+| `tool_descriptions` | 陣列 | 否 | 物件的陣列，用於覆寫傳送給 LLM 的工具描述。每個物件會將工具名稱 (索引鍵) 對應至取代描述 (字串值)。只有通過 `tool_filters` 評估的工具才能覆寫。若工具不存在於連接器上、被 `tool_filters` 排除，或具有空白、null 或非字串值，則會忽略這些項目。若相同的工具名稱出現在多個物件中，則以最後一個值為準。 |
 
-For `conversational` and `plan_execute_and_reflect` agents, MCP tools are discovered from the configured connectors and presented to the LLM. The LLM decides which MCP tool to call during execution. You do not need to list MCP tools explicitly in the `tools` array, but you can include OpenSearch built-in tools alongside MCP tools.
+對於 `conversational` 和 `plan_execute_and_reflect` 代理程式，MCP 工具會從設定的連接器中探索，並呈現給 LLM。LLM 會決定在執行期間要呼叫哪個 MCP 工具。您不需要在 `tools` 陣列中明確列出 MCP 工具，但您可以將 OpenSearch 內建工具與 MCP 工具一併納入。
 
-The following example registers a conversational agent using the connector ID created in Step 1. The MCP server has two tools available (`get_alerts` and `get_forecasts`), but only the `get_alerts` tool is included in the agent's configuration because it matches the specified regex pattern `^get_alerts$`:
+下列範例會使用步驟 1 中建立的連接器 ID 註冊對話式代理程式。MCP 伺服器有兩個可用的工具 (`get_alerts` 和 `get_forecasts`)，但代理程式的組態中只包含 `get_alerts` 工具，因為它符合指定的 regex 模式 `^get_alerts$`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -228,7 +229,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-The response contains the agent ID:
+回應包含代理程式 ID：
 
 ```json
 {
@@ -236,15 +237,15 @@ The response contains the agent ID:
 }
 ```
 
-### Overriding MCP tool descriptions
-**Introduced 3.8**
+### 覆寫 MCP 工具描述
+**3.8 版新增**
 {: .label .label-purple }
 
-Each MCP tool includes a description that helps the LLM decide when to call it. To replace a tool's description without modifying the MCP server, use the `tool_descriptions` parameter. This is useful when the server-provided description is too generic, uses internal naming, or does not match your agent's domain vocabulary.
+每個 MCP 工具都包含一段描述，協助 LLM 決定何時呼叫它。若要在不修改 MCP 伺服器的情況下取代工具的描述，請使用 `tool_descriptions` 參數。當伺服器提供的描述太過籠統、使用內部命名，或不符合您代理程式的領域詞彙時，這項功能特別有用。
 
-Each entry in `tool_descriptions` must be a JSON object with a single key-value pair: the MCP tool name and the override description string. You can specify multiple overrides by adding multiple objects to the array.
+`tool_descriptions` 中的每個項目都必須是具有單一鍵值對的 JSON 物件：MCP 工具名稱與覆寫描述字串。您可以在陣列中加入多個物件，以指定多個覆寫。
 
-The following example registers an agent that exposes only the `get_alerts` tool (using `tool_filters`) and replaces its description with agent-specific guidance:
+以下範例註冊一個僅公開 `get_alerts` 工具的代理程式（使用 `tool_filters`），並以代理程式專屬的指引取代其描述：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -285,7 +286,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-To override descriptions for multiple tools without applying `tool_filters`, omit the `tool_filters` parameter or set it to an empty array so that all connector tools remain available:
+若要為多個工具覆寫描述而不套用 `tool_filters`，請省略 `tool_filters` 參數或將其設為空陣列，讓所有連接器工具保持可用：
 
 ```json
 "mcp_connectors": [
@@ -299,35 +300,35 @@ To override descriptions for multiple tools without applying `tool_filters`, omi
 ]
 ```
 
-Overrides for tool names that are not exposed by the connector or that `tool_filters` excludes have no effect. The agent continues to use the MCP server's original description for any tool without a valid override.
+對於連接器未公開或被 `tool_filters` 排除的工具名稱所做的覆寫不會產生任何效果。對於沒有有效覆寫的任何工具，代理程式會繼續使用 MCP 伺服器的原始描述。
 
-### Flow agents and conversational flow agents
-**Introduced 3.8**
+### Flow 代理程式與對話式 flow 代理程式
+**3.8 版新增**
 {: .label .label-purple }
 
-For [`flow`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/flow/) and [`conversational_flow`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational-flow/) agents, MCP tools run in the fixed order defined in the `tools` array. You must declare each MCP tool explicitly and match the tool `type` to your connector protocol.
+對於 [`flow`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/flow/) 與 [`conversational_flow`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational-flow/) 代理程式，MCP 工具會依照 `tools` 陣列中定義的固定順序執行。您必須明確宣告每個 MCP 工具，並讓工具 `type` 符合您的連接器協定。
 
-| Connector protocol | MCP tool `type` |
+| 連接器協定 | MCP 工具 `type` |
 |:---|:---|
 | `mcp_streamable_http` | `McpStreamableHttpTool` |
 | `mcp_sse` | `McpSseTool` |
 
-Each MCP tool entry in the `tools` array supports the following fields.
+`tools` 陣列中的每個 MCP 工具項目支援下列欄位。
 
-| Field | Data type | Required | Description |
+| 欄位 | 資料類型 | 必要 | 描述 |
 |:---|:---|:---|:---|
-| `name` | String | Yes | The MCP server tool name. Must match a tool exposed by the configured connector. Used for output chaining (for example, `${parameters.get_simple_price.output}`). |
-| `type` | String | Yes | `McpStreamableHttpTool` or `McpSseTool`, matching the connector protocol. |
-| `description` | String | No | A description of the tool. If omitted, OpenSearch uses the description from the MCP server when available. |
-| `parameters.input` | String | Yes | The tool input payload, typically a JSON string passed to the MCP server tool. |
+| `name` | 字串 | 是 | MCP 伺服器工具名稱。必須符合所設定連接器公開的工具之一。用於輸出鏈結（例如 `${parameters.get_simple_price.output}`）。 |
+| `type` | 字串 | 是 | `McpStreamableHttpTool` 或 `McpSseTool`，須符合連接器協定。 |
+| `description` | 字串 | 否 | 工具的描述。若省略，OpenSearch 會在可用時使用來自 MCP 伺服器的描述。 |
+| `parameters.input` | 字串 | 是 | 工具輸入承載，通常是傳遞給 MCP 伺服器工具的 JSON 字串。 |
 
-You can mix MCP tools with OpenSearch tools such as `MLModelTool` in the same pipeline. Output from one step can be passed to the next using `${parameters.<tool_name>.output}`.
+您可以在同一個管線中將 MCP 工具與 OpenSearch 工具（例如 `MLModelTool`）混合使用。某個步驟的輸出可以使用 `${parameters.<tool_name>.output}` 傳遞給下一個步驟。
 
-If an MCP tool is listed in `tools` but is not available from the configured connector, agent execution fails with an error indicating the tool is not available. If multiple MCP connectors expose a tool with the same name, OpenSearch uses the tool from the first matching connector in the `mcp_connectors` array.
+如果 MCP 工具列於 `tools` 中，但無法從所設定的連接器取得，代理程式執行將會失敗，並出現指出該工具無法使用的錯誤。如果多個 MCP 連接器公開同名工具，OpenSearch 會使用 `mcp_connectors` 陣列中第一個符合的連接器所提供的工具。
 
-Before registering a flow or conversational flow agent, use the [List Connector MCP Tools API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/mcp-client-apis/list-connector-mcp-tools/) to discover tool names, types, descriptions, and input schemas from your MCP connector. Use the `name` and `type` values from the response when configuring MCP tools in the agent, and build the `parameters.input` JSON string from each tool's `input_schema`.
+在註冊 flow 或對話式 flow 代理程式之前，請使用 [List Connector MCP Tools API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/mcp-client-apis/list-connector-mcp-tools/) 從您的 MCP 連接器探索工具名稱、類型、描述與輸入結構描述。在代理程式中設定 MCP 工具時，請使用回應中的 `name` 與 `type` 值，並根據每個工具的 `input_schema` 建構 `parameters.input` JSON 字串。
 
-The following example registers a `flow` agent that calls `search_documents` and `get_weather` in sequence, then summarizes the results with `MLModelTool`:
+以下範例註冊一個 `flow` 代理程式，依序呼叫 `search_documents` 與 `get_weather`，然後使用 `MLModelTool` 摘要結果：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -373,7 +374,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-To use the same MCP pipeline with conversation memory, set `type` to `conversational_flow` and add a `memory` block at the same level as `parameters` and `tools`:
+若要搭配對話記憶使用相同的 MCP 管線，請將 `type` 設為 `conversational_flow`，並在與 `parameters` 和 `tools` 相同的層級加入 `memory` 區塊：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -422,9 +423,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-## Step 4: Run the agent
+## 步驟 4：執行代理程式
 
-Invoke the registered agent by calling the Execute Agent API and providing a user question:
+呼叫 Execute Agent API 並提供使用者問題，以叫用已註冊的代理程式：
 
 ```json
 POST /_plugins/_ml/agents/{Agent_ID}/_execute
@@ -437,7 +438,7 @@ POST /_plugins/_ml/agents/{Agent_ID}/_execute
 ```
 {% include copy-curl.html %}
 
-The agent uses both the OpenSearch tools specified in the `tools` array and the selected tools from the MCP server (based on your tool filters) to return the answer:
+代理程式會同時使用 `tools` 陣列中指定的 OpenSearch 工具，以及來自 MCP 伺服器的所選工具 (依據您的工具篩選條件)，以傳回答案：
 
 ```json
 {
@@ -470,7 +471,7 @@ The agent uses both the OpenSearch tools specified in the `tools` array and the 
 }
 ```
 
-## Additional resources
+## 其他資源
 
-* For more information about the MCP protocol, see [MCP protocol documentation](https://modelcontextprotocol.io/introduction).
-* For information about using MCP in Java, see [MCP Java SDK](https://github.com/modelcontextprotocol/java-sdk).
+* 如需 MCP 通訊協定的詳細資訊，請參閱 [MCP 通訊協定文件](https://modelcontextprotocol.io/introduction)。
+* 如需在 Java 中使用 MCP 的資訊，請參閱 [MCP Java SDK](https://github.com/modelcontextprotocol/java-sdk)。

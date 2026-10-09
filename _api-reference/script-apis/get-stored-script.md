@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get stored script
+title: "取得已儲存指令碼"
 parent: Script APIs
 nav_order: 30
 ---
 
-# Get Stored Script API
-**Introduced 1.0**
+# 取得已儲存指令碼 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Retrieves a stored script from the cluster state.
+從叢集狀態擷取已儲存的指令碼。
 
-## Endpoints
+## 端點
 
 ```json
 GET _scripts/my-first-script
 ```
 
-## Path parameters
+## 路徑參數
 
-| Parameter | Data type | Description | 
+| 參數 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `script` | String | Stored script or search template name. Required.|
+| `script` | 字串 | 已儲存指令碼或搜尋範本的名稱。必要。|
 
-## Query parameters
+## 查詢參數
 
-| Parameter | Data type | Description | 
+| 參數 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `cluster_manager_timeout` | Time | Amount of time to wait for a connection to the cluster manager. Optional, defaults to `30s`. |
+| `cluster_manager_timeout` | 時間 | 等待連線至叢集管理員的時間。選用，預設為 `30s`。 |
 
-## Example request
+## 請求範例
 
-The following retrieves the `my-first-script` stored script.
+以下範例會擷取已儲存的 `my-first-script` 指令碼。
 
 <!-- spec_insert_start
 component: example_code
@@ -55,9 +56,9 @@ response = client.get_script(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-The `GET _scripts/my-first-script` request returns the following fields:
+`GET _scripts/my-first-script` 請求會傳回下列欄位：
 
 ````json
 {
@@ -76,23 +77,23 @@ The `GET _scripts/my-first-script` request returns the following fields:
 }
 ````
 
-## Response body fields
+## 回應本文欄位
 
-The `GET _scripts/my-first-script` request returns the following response fields:
+`GET _scripts/my-first-script` 請求會傳回下列回應欄位：
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `_id` | String | The script's name. |
-| `found` | Boolean | The requested script exists and was retrieved. |
-| `script` | Object | The script definition. See [Script object](#script-object).  |
+| `_id` | 字串 | 指令碼的名稱。 |
+| `found` | 布林值 | 請求的指令碼存在且已擷取。 |
+| `script` | 物件 | 指令碼定義。請參閱[指令碼物件](#script-object)。  |
 
-#### Script object
+#### 指令碼物件
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `lang` | String | The script's language. |
-| `source` | String | The script's body. |
+| `lang` | 字串 | 指令碼的語言。 |
+| `source` | 字串 | 指令碼的本文。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/script/get`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:admin/script/get`。

@@ -1,42 +1,43 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete memory
+title: "刪除記憶"
 parent: Memory APIs
 grand_parent: ML Commons APIs
 nav_order: 30
 ---
 
-# Delete Memory API
-**Introduced 2.12**
+# 刪除記憶 API
+**於 2.12 版導入**
 {: .label .label-purple }
 
-Use this API to delete a memory based on the `memory_id`.
+使用此 API 根據 `memory_id` 刪除記憶。
 
-When the Security plugin is enabled, all memories exist in a `private` security mode. Only the user who created a memory can interact with that memory and its messages.
+啟用 Security 外掛程式時，所有記憶都存在於 `private` 安全性模式中。只有建立記憶的使用者才能與該記憶及其訊息互動。
 {: .important}
 
-## Endpoints
+## 端點
 
 ```json
 DELETE /_plugins/_ml/memory/{memory_id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`memory_id` | String | The ID of the memory to be deleted. 
+`memory_id` | 字串 | 要刪除之記憶的 ID。
 
-## Example request
+## 範例請求
 
 ```json
 DELETE /_plugins/_ml/memory/MzcIJX8BA7mbufL6DOwl
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -44,9 +45,9 @@ DELETE /_plugins/_ml/memory/MzcIJX8BA7mbufL6DOwl
 }
 ```
 
-## Error responses
+## 錯誤回應
 
-If you attempt to delete a memory that doesn't exist, OpenSearch returns a 404 error:
+如果您嘗試刪除不存在的記憶，OpenSearch 會傳回 404 錯誤：
 
 ```json
 {

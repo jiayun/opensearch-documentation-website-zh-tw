@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search
+title: "搜尋"
 parent: Search APIs
 nav_order: 10
 redirect_from:
@@ -8,13 +9,13 @@ redirect_from:
   - /api-reference/search/
 ---
 
-# Search API
-**Introduced 1.0**
+# 搜尋 API
+**1.0 版新增**
 {: .label .label-purple }
 
-The search API operation lets you search your cluster for data.
+搜尋 API 操作可讓您在叢集中搜尋資料。
 
-## Endpoints
+## 端點
 
 ```json
 GET /{index}/_search
@@ -24,105 +25,105 @@ POST /{index}/_search
 POST /_search
 ```
 
-## Query parameters
+## 查詢參數
 
-All parameters are optional.
+所有參數皆為選用。
 
-Many of the parameters apply only when you use the URL `q=` parameter or a `query_string` query. See [Query string query]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/) for more information.
+許多參數僅在您使用 URL `q=` 參數或 `query_string` 查詢時才適用。如需更多資訊，請參閱[查詢字串查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/)。
 {: .note}
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`allow_no_indices` | Boolean | Whether to ignore wildcards that don't match any indexes. Default is `true`. Example: `GET test-index-*/_search?allow_no_indices=true`. |
-`allow_partial_search_results` | Boolean | Whether to return partial results if the request encounters an error or times out. Default is `true`. Example: `GET test-index/_search?allow_partial_search_results=false`. |
-`analyzer` | String | The analyzer to use in the query string. Requires `q=` or a `query_string` body. Example: `GET test-index/_search?q=title:test&analyzer=standard`. |
-`analyze_wildcard` | Boolean | Whether the update operation should include wildcard and prefix queries in the analysis. Default is `false`. Requires `q=` or `query_string`. Example: `GET test-index/_search?q=title:te*&analyze_wildcard=true`. |
-`batched_reduce_size` | Integer | The number of shard results to combine into one batch on the coordinating node before returning the final search results. Limits the number of shard results processed together, helping reduce memory usage when a search request spans many shards. Default is `512`. Example: `GET test-index/_search?batched_reduce_size=2`. |
-`cancel_after_time_interval` | Time | The time after which the search request will be canceled. Request-level parameter takes precedence over the `cancel_after_time_interval` [cluster setting]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/). Default is `-1`. Example: `GET test-index/_search?cancel_after_time_interval=10ms`. |
-`ccs_minimize_roundtrips` | Boolean | Whether to minimize the number of round trips between a node and remote clusters. Default is `true`. Example: `GET test-index/_search?ccs_minimize_roundtrips=true`. |
-`default_operator` | String | The default operator for a string query. Valid values are `AND` and `OR`. Default is `OR`. Requires `q=` or `query_string`. Example: `GET test-index/_search?q=title:test one&default_operator=AND`. |
-`df` | String | The default field used if a field prefix is not provided in the query string. Requires `q=`  or `query_string`. Example: `GET test-index/_search?q=test&df=title`. |
-`docvalue_fields` | String | A comma-separated list of fields whose values should be returned from their doc values representation. Doc values are an optimized, columnar format that improves performance for aggregations, sorting, and scripting. Example: `GET test-index/_search?docvalue_fields=ts,views`. |
-`expand_wildcards` | String | Specifies the type of index that wildcard expressions can match. Supports comma-separated values. <br> Valid values are: <br> - `all`: Match any index, including hidden ones. <br> - `closed`: Match closed, non-hidden indexes. <br> - `hidden`: Match hidden indexes. Must be combined with `open`, `closed`, or both. <br> - `none`: Wildcard expressions are not accepted. <br> - `open`: Match open, non-hidden indexes. <br> Default is `open`. Example: `GET test-index-*/_search?expand_wildcards=open`. |
-`explain` | Boolean | If `true`, returns details about how OpenSearch computed each document's relevance score. Default is `false`. Only applies when `hits` are included in the search response. Example: `GET test-index/_search?explain=true&size=1&q=title:test`. |
-`from` | Integer | The starting index to search from. Default is `0`. Example: `GET test-index/_search?from=5&size=5`. |
-`ignore_throttled` | Boolean | Whether to ignore concrete indexes, expanded indexes, or indexes with aliases if they are frozen. Default is `true`. Example: `GET test-index/_search?ignore_throttled=true`. |
-`ignore_unavailable` | Boolean | If `true`, OpenSearch ignores missing or closed indexes and unavailable shards during the search. If `false`, the request returns an error when targeting missing or closed indexes. Default is `false`. Example: `GET test-index-*/_search?ignore_unavailable=true`. |
-`include_named_queries_score` | Boolean | Whether to return score contributions from named queries (queries with `_name`) for each hit. Default is `false`. Requires queries named with `_name`. Example: `POST test-index/_search?include_named_queries_score=true {"size":1,"query":{"match":{"title":{"query":"test","_name":"q1"}}}}`. |
-`lenient` | Boolean | Whether OpenSearch should accept requests if queries have formatting errors (for example, querying a numeric field using text) instead of returning an error. Default is `false`. Requires `q=` or `query_string`. Example: `GET test-index/_search?q=views:abc&lenient=true`. |
-`max_concurrent_shard_requests` | Integer | The maximum number of concurrent shard requests this request should execute on each node. Default is `5`. Example: `GET test-index/_search?max_concurrent_shard_requests=2`. |
-`node_level_query_fanout` | Boolean | Whether to use node-level query fan-out for this search request, overriding the `search.node_level_query_fanout.enabled` cluster setting when provided. Node-level query fan-out groups shard-level `query_then_fetch` query and `can_match` requests by target data node. Default is `false`. Example: `POST index1/_search?node_level_query_fanout=true`. |
-`phase_took` | Boolean | Whether to return phase-level `took` time values in the response. Default is `false`. Example: `GET test-index/_search?phase_took=true`. |
-`pre_filter_shard_size` | Integer | A prefilter size threshold for triggering a prefilter operation on search shards. If the number of shards a search request expands to exceeds this value, OpenSearch performs a prefilter operation to eliminate shards that cannot match documents based on query rewriting. Default is `128`. Example: `GET test-index/_search?pre_filter_shard_size=1`. |
-`preference` | String | Specifies the shards or nodes on which OpenSearch should perform the search. For valid values, see [The preference query parameter]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#the-preference-query-parameter). Example: `GET test-index/_search?preference=_local`. |
-`q` | String | A Lucene query string query. Enables query-string helpers. Takes precedence over the `query` parameter in the request body. If both are specified, only documents matching this parameter are returned; the query in the request body is ignored. Example: `GET test-index/_search?q=title:test&size=5`. |
-`request_cache` | Boolean | Whether OpenSearch should use caching of search results for a request if `size=0` is specified. Default is the index-level `request_cache` setting. Example: `GET test-index/_search?request_cache=true`. |
-`rest_total_hits_as_int` | Boolean | Whether to return `hits.total` as an integer. Returns an object otherwise. Default is `false`. Use with `track_total_hits` set to `true`. Example: `GET test-index/_search?track_total_hits=true&rest_total_hits_as_int=true`. |
-`routing` | String | The value used to route the update by query operation to a specific shard. Example: `GET test-index/_search?routing=user-42`. |
-`scroll` | Time | The amount of time to keep the search context open. Requires `size` greater than `0` and a follow-up `_search/scroll`. Example: `GET test-index/_search?scroll=1m&size=2`. |
-`search_type` | String | Whether OpenSearch should use global term and document frequencies when calculating relevance scores. Valid values are `query_then_fetch` and `dfs_query_then_fetch`. `query_then_fetch` scores documents using local term and document frequencies for the shard. It's usually faster but less accurate. `dfs_query_then_fetch` scores documents using global term and document frequencies across all shards. It's usually slower but more accurate. Default is `query_then_fetch`. Example: `GET test-index/_search?search_type=dfs_query_then_fetch`. |
-`seq_no_primary_term` | Boolean | Whether to return the sequence number and primary term of the last operation of each document hit. Example: `GET test-index/_search?seq_no_primary_term=true&size=1&q=title:test`. |
-`size` | Integer | The number of results to include in the response. Example: `GET test-index/_search?size=3`. |
-`sort` | List | A comma-separated list of `<field> : <direction>` pairs to sort by. Use `track_scores=true` if you want scores when sorting by a non-score field. Example: `GET test-index/_search?sort=views:desc&track_scores=true&size=3`. |
-`_source` | String or Boolean | Controls the `_source` field provided in the response. Valid values are `true` (return the document source), `false` (do not return the document source) and `<string>` (the field or fields in the source to return, provided as a list or wildcard pattern). For more information, see [Source filtering](#source-filtering). Examples: `GET test-index/_search?_source=false&size=1`, `GET test-index/_search?_source=titl*&size=1`, `GET test-index/_search?_source=title,description&size=1`. |
-`_source_excludes` | List | A comma-separated list of source fields to exclude from the response. If the `_source` parameter is `false`, this parameter is ignored. For more information, see [Source filtering](#source-filtering). Example: `GET test-index/_search?_source_excludes=title&size=1`. |
-`_source_includes` | List | A comma-separated list of source fields to include in the response. If the `_source` parameter is `false`, this parameter is ignored. For more information, see [Source filtering](#source-filtering). Example: `GET test-index/_search?_source_includes=title&size=1`. |
-`stats` | String | A comma-separated list of [search stats groups](#search-stats-groups) to associate with the request. Example: `GET test-index/_search?stats=group1`. |
-`stored_fields` | List | Whether the GET operation should retrieve fields stored in the index. Default is `false`. Example: `GET test-index-stored/_search?stored_fields=note&size=1`. |
-`terminate_after` | Integer | The maximum number of matching documents (hits) OpenSearch should process before terminating the request. Default is `0` (no maximum). Example: `GET test-index/_search?terminate_after=1&size=10`. |
-`timeout` | Time | How long the operation should wait for a response from active shards. Default is `1m` (1 minute). Example: `GET test-index/_search?timeout=10ms`. |
-`track_scores` | Boolean | Whether to return document scores. Default is `false`. Use with `sort`. Example: `GET test-index/_search?sort=views:desc&track_scores=true&size=3`. |
-`track_total_hits` | Boolean or Integer | How many matching documents to count. Default is `10000`. For more information, see [Track total hits](#track-total-hits). Example: `GET test-index/_search?track_total_hits=2`. |
-`typed_keys` | Boolean | Whether returned aggregations and suggested terms should include their types in the response. Default is `true`. Only applicable for aggregations or suggesters. Example: `POST test-index/_search?typed_keys=true {"size":0,"aggs":{"a":{"terms":{"field":"views"}}}}`. |
-`version` | Boolean | Whether to include the document version as a match. Example: `GET test-index/_search?version=true&size=1&q=title:test`. |
+`allow_no_indices` | 布林值 | 是否忽略不符合任何索引的萬用字元。預設為 `true`。範例：`GET test-index-*/_search?allow_no_indices=true`。 |
+`allow_partial_search_results` | 布林值 | 當請求發生錯誤或逾時時，是否回傳部分結果。預設為 `true`。範例：`GET test-index/_search?allow_partial_search_results=false`。 |
+`analyzer` | 字串 | 查詢字串中使用的分析器。需要 `q=` 或 `query_string` 本文。範例：`GET test-index/_search?q=title:test&analyzer=standard`。 |
+`analyze_wildcard` | 布林值 | 更新操作是否應在分析中包含萬用字元與前置詞查詢。預設為 `false`。需要 `q=` 或 `query_string`。範例：`GET test-index/_search?q=title:te*&analyze_wildcard=true`。 |
+`batched_reduce_size` | 整數 | 在協調節點回傳最終搜尋結果之前，要合併為一批的分片結果數量。限制一起處理的分片結果數量，有助於在搜尋請求橫跨許多分片時降低記憶體用量。預設為 `512`。範例：`GET test-index/_search?batched_reduce_size=2`。 |
+`cancel_after_time_interval` | 時間 | 搜尋請求在此時間之後將被取消。請求層級參數的優先順序高於 `cancel_after_time_interval` [叢集設定]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/)。預設為 `-1`。範例：`GET test-index/_search?cancel_after_time_interval=10ms`。 |
+`ccs_minimize_roundtrips` | 布林值 | 是否將節點與遠端叢集之間的往返次數降至最低。預設為 `true`。範例：`GET test-index/_search?ccs_minimize_roundtrips=true`。 |
+`default_operator` | 字串 | 字串查詢的預設運算子。有效值為 `AND` 與 `OR`。預設為 `OR`。需要 `q=` 或 `query_string`。範例：`GET test-index/_search?q=title:test one&default_operator=AND`。 |
+`df` | 字串 | 當查詢字串中未提供欄位前置詞時所使用的預設欄位。需要 `q=` 或 `query_string`。範例：`GET test-index/_search?q=test&df=title`。 |
+`docvalue_fields` | 字串 | 以逗號分隔的欄位清單，其值應從 doc values 表示形式回傳。Doc values 是一種經過最佳化的欄式格式，可提升彙總、排序與指令碼的效能。範例：`GET test-index/_search?docvalue_fields=ts,views`。 |
+`expand_wildcards` | 字串 | 指定萬用字元運算式可符合的索引類型。支援以逗號分隔的值。<br> 有效值為：<br> - `all`：符合任何索引，包括隱藏索引。<br> - `closed`：符合已關閉的非隱藏索引。<br> - `hidden`：符合隱藏索引。必須與 `open`、`closed` 或兩者合併使用。<br> - `none`：不接受萬用字元運算式。<br> - `open`：符合開啟的非隱藏索引。<br> 預設為 `open`。範例：`GET test-index-*/_search?expand_wildcards=open`。 |
+`explain` | 布林值 | 若為 `true`，則回傳 OpenSearch 如何計算每份文件相關性分數的詳細資訊。預設為 `false`。僅在搜尋回應中包含 `hits` 時適用。範例：`GET test-index/_search?explain=true&size=1&q=title:test`。 |
+`from` | 整數 | 搜尋結果的起始位置。預設為 `0`。範例：`GET test-index/_search?from=5&size=5`。 |
+`ignore_throttled` | 布林值 | 當具體索引、展開索引或具有別名的索引已凍結時，是否予以忽略。預設為 `true`。範例：`GET test-index/_search?ignore_throttled=true`。 |
+`ignore_unavailable` | 布林值 | 若為 `true`，OpenSearch 會在搜尋時忽略遺失或已關閉的索引以及不可用的分片。若為 `false`，當目標為遺失或已關閉的索引時，請求會回傳錯誤。預設為 `false`。範例：`GET test-index-*/_search?ignore_unavailable=true`。 |
+`include_named_queries_score` | 布林值 | 是否為每個命中結果回傳具名查詢（具有 `_name` 的查詢）的分數貢獻。預設為 `false`。需要以 `_name` 命名的查詢。範例：`POST test-index/_search?include_named_queries_score=true {"size":1,"query":{"match":{"title":{"query":"test","_name":"q1"}}}}`。 |
+`lenient` | 布林值 | 當查詢有格式錯誤時（例如以文字查詢數值欄位），OpenSearch 是否應接受請求而非回傳錯誤。預設為 `false`。需要 `q=` 或 `query_string`。範例：`GET test-index/_search?q=views:abc&lenient=true`。 |
+`max_concurrent_shard_requests` | 整數 | 此請求在每個節點上應執行的最大並行分片請求數。預設為 `5`。範例：`GET test-index/_search?max_concurrent_shard_requests=2`。 |
+`node_level_query_fanout` | 布林值 | 此搜尋請求是否使用節點層級的查詢分散，若提供則覆寫 `search.node_level_query_fanout.enabled` 叢集設定。節點層級查詢分散會依目標資料節點將分片層級的 `query_then_fetch` 查詢與 `can_match` 請求分組。預設為 `false`。範例：`POST index1/_search?node_level_query_fanout=true`。 |
+`phase_took` | 布林值 | 是否在回應中回傳階段層級的 `took` 時間值。預設為 `false`。範例：`GET test-index/_search?phase_took=true`。 |
+`pre_filter_shard_size` | 整數 | 觸發搜尋分片預先篩選操作的預先篩選大小門檻。若搜尋請求展開後的分片數量超過此值，OpenSearch 會執行預先篩選操作，透過查詢改寫排除無法符合文件的分片。預設為 `128`。範例：`GET test-index/_search?pre_filter_shard_size=1`。 |
+`preference` | 字串 | 指定 OpenSearch 應在其上執行搜尋的分片或節點。有效值請參閱 [preference 查詢參數]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#the-preference-query-parameter)。範例：`GET test-index/_search?preference=_local`。 |
+`q` | 字串 | Lucene 查詢字串查詢。啟用查詢字串輔助功能。優先順序高於請求本文中的 `query` 參數。若兩者皆已指定，僅會回傳符合此參數的文件；請求本文中的查詢會被忽略。範例：`GET test-index/_search?q=title:test&size=5`。 |
+`request_cache` | 布林值 | 當指定 `size=0` 時，OpenSearch 是否應對請求使用搜尋結果快取。預設為索引層級的 `request_cache` 設定。範例：`GET test-index/_search?request_cache=true`。 |
+`rest_total_hits_as_int` | 布林值 | 是否以整數回傳 `hits.total`。否則回傳物件。預設為 `false`。請與設為 `true` 的 `track_total_hits` 搭配使用。範例：`GET test-index/_search?track_total_hits=true&rest_total_hits_as_int=true`。 |
+`routing` | 字串 | 用來將依查詢更新操作路由至特定分片的值。範例：`GET test-index/_search?routing=user-42`。 |
+`scroll` | 時間 | 保持搜尋上下文開啟的時間長度。需要大於 `0` 的 `size` 以及後續的 `_search/scroll`。範例：`GET test-index/_search?scroll=1m&size=2`。 |
+`search_type` | 字串 | OpenSearch 在計算相關性分數時是否應使用全域詞元與文件頻率。有效值為 `query_then_fetch` 與 `dfs_query_then_fetch`。`query_then_fetch` 使用分片的本機詞元與文件頻率來計分。通常較快但較不準確。`dfs_query_then_fetch` 使用所有分片的全域詞元與文件頻率來計分。通常較慢但較準確。預設為 `query_then_fetch`。範例：`GET test-index/_search?search_type=dfs_query_then_fetch`。 |
+`seq_no_primary_term` | 布林值 | 是否回傳每份文件命中結果最後一次操作的序號與主要分片任期。範例：`GET test-index/_search?seq_no_primary_term=true&size=1&q=title:test`。 |
+`size` | 整數 | 回應中要包含的結果數量。範例：`GET test-index/_search?size=3`。 |
+`sort` | 清單 | 用來排序的 `<field> : <direction>` 配對清單（以逗號分隔）。若要在依非分數欄位排序時取得分數，請使用 `track_scores=true`。範例：`GET test-index/_search?sort=views:desc&track_scores=true&size=3`。 |
+`_source` | 字串或布林值 | 控制回應中提供的 `_source` 欄位。有效值為 `true`（回傳文件來源）、`false`（不回傳文件來源）與 `<string>`（要回傳的來源欄位，以清單或萬用字元模式提供）。如需更多資訊，請參閱[來源篩選](#source-filtering)。範例：`GET test-index/_search?_source=false&size=1`、`GET test-index/_search?_source=titl*&size=1`、`GET test-index/_search?_source=title,description&size=1`。 |
+`_source_excludes` | 清單 | 要從回應中排除的來源欄位清單（以逗號分隔）。若 `_source` 參數為 `false`，則忽略此參數。如需更多資訊，請參閱[來源篩選](#source-filtering)。範例：`GET test-index/_search?_source_excludes=title&size=1`。 |
+`_source_includes` | 清單 | 要包含在回應中的來源欄位清單（以逗號分隔）。若 `_source` 參數為 `false`，則忽略此參數。如需更多資訊，請參閱[來源篩選](#source-filtering)。範例：`GET test-index/_search?_source_includes=title&size=1`。 |
+`stats` | 字串 | 要與此請求關聯的[搜尋統計資料群組](#search-stats-groups)清單（以逗號分隔）。範例：`GET test-index/_search?stats=group1`。 |
+`stored_fields` | 清單 | GET 操作是否應擷取儲存在索引中的欄位。預設為 `false`。範例：`GET test-index-stored/_search?stored_fields=note&size=1`。 |
+`terminate_after` | 整數 | OpenSearch 在終止請求前應處理的最大符合文件數（命中結果）。預設為 `0`（無上限）。範例：`GET test-index/_search?terminate_after=1&size=10`。 |
+`timeout` | 時間 | 操作應等待作用中分片回應的時間長度。預設為 `1m`（1 分鐘）。範例：`GET test-index/_search?timeout=10ms`。 |
+`track_scores` | 布林值 | 是否回傳文件分數。預設為 `false`。請與 `sort` 搭配使用。範例：`GET test-index/_search?sort=views:desc&track_scores=true&size=3`。 |
+`track_total_hits` | 布林值或整數 | 要計算多少符合的文件。預設為 `10000`。如需更多資訊，請參閱[追蹤命中總數](#track-total-hits)。範例：`GET test-index/_search?track_total_hits=2`。 |
+`typed_keys` | 布林值 | 回傳的彙總與建議詞彙是否應在回應中包含其類型。預設為 `true`。僅適用於彙總或建議器。範例：`POST test-index/_search?typed_keys=true {"size":0,"aggs":{"a":{"terms":{"field":"views"}}}}`。 |
+`version` | 布林值 | 是否將文件版本包含為符合項目。範例：`GET test-index/_search?version=true&size=1&q=title:test`。 |
 
-### The `preference` query parameter
+### `preference` 查詢參數
 
-The `preference` query parameter specifies the shards or nodes on which OpenSearch should perform the search. The following are valid values:
+`preference` 查詢參數會指定 OpenSearch 應在哪個分片或節點上執行搜尋。以下是有效的值：
 
-- `_primary`: Perform the search only on primary shards.
-- `_replica`: Perform the search only on replica shards.
-- `_primary_first`: Perform the search on primary shards but fail over to other available shards if primary shards are not available.
-- `_replica_first`: Perform the search on replica shards but fail over to other available shards if replica shards are not available.
-- `_local`: If possible, perform the search on the local node's shards.
-- `_prefer_nodes:<node-id-1>,<node-id-2>`: If possible, perform the search on the specified nodes. Use a comma-separated list to specify multiple nodes.
-- `_shards:<shard-id-1>,<shard-id-2>`: Perform the search only on the specified shards. Use a comma-separated list to specify multiple shards. When combined with other preferences, the `_shards` preference must be listed first. For example, `_shards:1,2|_replica`.
-- `_only_nodes:<node-id-1>,<node-id-2>`: Perform the search only on the specified nodes. Use a comma-separated list to specify multiple nodes.
-- `<string>`: Specifies a custom string to use for the search. The string cannot start with an underscore character (`_`). Searches with the same custom string are routed to the same shards.
+- `_primary`：只在主要分片上執行搜尋。
+- `_replica`：只在副本分片上執行搜尋。
+- `_primary_first`：在主要分片上執行搜尋，但若主要分片無法使用，則容錯移轉至其他可用的分片。
+- `_replica_first`：在副本分片上執行搜尋，但若副本分片無法使用，則容錯移轉至其他可用的分片。
+- `_local`：若可能，在本機節點的分片上執行搜尋。
+- `_prefer_nodes:<node-id-1>,<node-id-2>`：若可能，在指定的節點上執行搜尋。使用以逗號分隔的清單來指定多個節點。
+- `_shards:<shard-id-1>,<shard-id-2>`：只在指定的分片上執行搜尋。使用以逗號分隔的清單來指定多個分片。與其他偏好設定合併使用時，`_shards` 偏好設定必須列在最前面。例如，`_shards:1,2|_replica`。
+- `_only_nodes:<node-id-1>,<node-id-2>`：只在指定的節點上執行搜尋。使用以逗號分隔的清單來指定多個節點。
+- `<string>`：指定要用於搜尋的自訂字串。該字串不能以底線字元 (`_`) 開頭。使用相同自訂字串的搜尋會路由至相同的分片。
 
-## Request body
+## 請求本文
 
-All fields are optional.
+所有欄位都是選用的。
 
-Field | Type | Description
+欄位 | 類型 | 說明
 :--- | :--- | :---
-`aggs` | Object | In the optional `aggs` parameter, you can define any number of aggregations. Each aggregation is defined by its name and one of the types of aggregations that OpenSearch supports. For more information, see [Aggregations]({{site.url}}{{site.baseurl}}/aggregations/).
-`docvalue_fields` | Array of objects | The fields to return in their `doc_values` form. You can include a format for the returned values (for example, a date format). For `knn_vector` fields, supported formats are `binary` (default, Base64-encoded) and `array` (JSON numeric arrays). For more information, see [Retrieving vector fields using `docvalue_fields`]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#retrieving-vector-fields-using-docvalue_fields).
-`fields` | Array | The fields to search for in the request. Specify a format to return results in a certain format, such as date and time.
-`explain` | String | Whether to return details about how OpenSearch computed the document's score. Default is `false`.
-`from` | Integer | The starting index to search from. Default is 0.
-`include_named_queries_score` | Boolean | Whether to return scores for named queries.
-`indices_boost` | Array of objects | Boosts the`_score` of documents from specific indexes. Each entry specifies an index and a boost factor in the format `<index>: <boost-multiplier>`. A boost greater than `1.0` increases the score, while a boost between `0` and `1.0` decreases it.
-`min_score` | Integer | Specify a score threshold to return only documents above the threshold.
-`query` | Object | The [DSL query]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/) to use in the request.
-`seq_no_primary_term` | Boolean | Whether to return sequence number and primary term of the last operation of each document hit.
-`size` | Integer | How many results to return. Default is 10.
-`sort` | Array of objects or strings | Specifies how to sort the results. Can be a field name, an object with field and sort options, or an array of these. See [Sorting results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/).
-`_source` | Boolean, String, Array of strings, or Object | The document source fields to return in each hit. Default is `true` (return the full document). For more information, see [Source filtering](#source-filtering).
-`stats` | Array of strings | A list of [search stats groups](#search-stats-groups) to associate with the request.
-`suggest_field` | String | The field used for suggestions. Use with `suggest_text` and, optionally, `suggest_mode` or `suggest_size`. |
-`suggest_mode` | String | The mode to use when searching. Valid values are `always` (provide suggestions based on the terms in `suggest_text`), `popular` (provide suggestions occurring in more documents on the shard than the search term), and `missing` (provide suggestions for terms not on the shard). Requires `suggest_field` and `suggest_text`. |
-`suggest_size` | Integer | The number of suggestions to return. Requires `suggest_field` and `suggest_text`. |
-`suggest_text` | String | The input text for which OpenSearch should return suggestions. Requires `suggest_field` and `suggest_text`. |
-`terminate_after` | Integer | The maximum number of matching documents (hits) OpenSearch should process before terminating the request. Default is 0.
-`timeout` | Time | How long to wait for a response. Default is no timeout.
-`version` | Boolean | Whether to include the document version in the response.
+`aggs` | 物件 | 在選用的 `aggs` 參數中，您可以定義任意數量的彙總。每個彙總都由其名稱以及 OpenSearch 支援的其中一種彙總類型所定義。如需更多資訊，請參閱[彙總]({{site.url}}{{site.baseurl}}/aggregations/)。
+`docvalue_fields` | 物件陣列 | 要以 `doc_values` 形式傳回的欄位。您可以為傳回的值加入格式（例如日期格式）。對於 `knn_vector` 欄位，支援的格式為 `binary`（預設，Base64 編碼）和 `array`（JSON 數值陣列）。如需更多資訊，請參閱[使用 `docvalue_fields` 擷取向量欄位]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#retrieving-vector-fields-using-docvalue_fields)。
+`fields` | 陣列 | 要在請求中搜尋的欄位。指定格式以特定格式傳回結果，例如日期和時間。
+`explain` | 字串 | 是否傳回 OpenSearch 如何計算文件分數的詳細資料。預設為 `false`。
+`from` | 整數 | 搜尋結果的起始位置。預設為 0。
+`include_named_queries_score` | 布林值 | 是否傳回具名查詢的分數。
+`indices_boost` | 物件陣列 | 提升特定索引中文件的`_score`。每個項目會以 `<index>: <boost-multiplier>` 格式指定索引和提升係數。大於 `1.0` 的提升會增加分數，而介於 `0` 和 `1.0` 之間的提升則會降低分數。
+`min_score` | 整數 | 指定分數臨界值，只傳回高於臨界值的文件。
+`query` | 物件 | 要在請求中使用的 [DSL 查詢]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/)。
+`seq_no_primary_term` | 布林值 | 是否傳回每個命中文件最後一次操作的序號和主要分片任期。
+`size` | 整數 | 要傳回的結果數量。預設為 10。
+`sort` | 物件或字串陣列 | 指定如何排序結果。可以是欄位名稱、包含欄位和排序選項的物件，或這些項目的陣列。請參閱[排序結果]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/)。
+`_source` | 布林值、字串、字串陣列或物件 | 要在每個命中中傳回的文件來源欄位。預設為 `true`（傳回完整文件）。如需更多資訊，請參閱[來源篩選](#source-filtering)。
+`stats` | 字串陣列 | 要與請求建立關聯的[搜尋統計資料群組](#search-stats-groups)清單。
+`suggest_field` | 字串 | 用於建議的欄位。搭配 `suggest_text` 使用，並可選擇搭配 `suggest_mode` 或 `suggest_size`。 |
+`suggest_mode` | 字串 | 搜尋時要使用的模式。有效的值為 `always`（根據 `suggest_text` 中的詞彙提供建議）、`popular`（提供在分片上出現於比搜尋詞彙更多文件中的建議），以及 `missing`（為分片上沒有的詞彙提供建議）。需要 `suggest_field` 和 `suggest_text`。 |
+`suggest_size` | 整數 | 要傳回的建議數量。需要 `suggest_field` 和 `suggest_text`。 |
+`suggest_text` | 字串 | OpenSearch 應為其傳回建議的輸入文字。需要 `suggest_field` 和 `suggest_text`。 |
+`terminate_after` | 整數 | OpenSearch 在終止請求之前應處理的相符文件（命中）數量上限。預設為 0。
+`timeout` | 時間 | 等待回應的時間長度。預設為無逾時。
+`version` | 布林值 | 是否在回應中包含文件版本。
 
-### Search stats groups
+### 搜尋統計資料群組
 
-You can associate a search request with one or more stats groups by specifying group names in the `stats` field of the request body or as a query parameter. OpenSearch maintains per-group search statistics that you can retrieve using the [Index Stats API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/stats/#specific-search-groups).
+您可以在請求本文的 `stats` 欄位中指定群組名稱，或以查詢參數的形式，將搜尋請求與一或多個統計資料群組建立關聯。OpenSearch 會維護各群組的搜尋統計資料，您可以使用 [Index Stats API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/stats/#specific-search-groups) 來擷取。
 
-The following example associates a search request with two groups:
+下列範例會將搜尋請求與兩個群組建立關聯：
 
 ```json
 POST /my-index/_search
@@ -135,21 +136,21 @@ POST /my-index/_search
 ```
 {% include copy-curl.html %}
 
-To retrieve search statistics for specific groups, use the `groups` query parameter of the Index Stats API:
+若要擷取特定群組的搜尋統計資料，請使用 Index Stats API 的 `groups` 查詢參數：
 
 ```json
 GET /my-index/_stats/search?groups=group1,group2
 ```
 {% include copy-curl.html %}
 
-To return statistics for all groups, use `_all`:
+若要傳回所有群組的統計資料，請使用 `_all`：
 
 ```json
 GET /my-index/_stats/search?groups=_all
 ```
 {% include copy-curl.html %}
 
-## Example request
+## 範例請求
 
 <!-- spec_insert_start
 component: example_code
@@ -196,9 +197,9 @@ response = client.search(
 <!-- spec_insert_end -->
 
 
-## Example response
+## 範例回應
 
-The following example response shows the structure of a search response:
+下列範例回應顯示搜尋回應的結構：
 
 ```json
 {
@@ -244,97 +245,97 @@ The following example response shows the structure of a search response:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the top-level response body fields.
+下表列出回應本文的最上層欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `took` | Integer | The time, in milliseconds, that OpenSearch took to run the search. This is measured from the moment the coordinating node receives the request until it is ready to send the response, so it includes communication between the coordinating node and the data nodes, time spent queued in the `search` thread pool, and the search itself. It does not include the time spent transmitting the request or the response over the network. |
-| `phase_took` | Object | The time, in milliseconds, spent in each search phase (`can_match`, `dfs_pre_query`, `query`, `dfs_query`, `fetch`, and `expand`). Returned only when the `phase_took` query parameter is `true`. |
-| `timed_out` | Boolean | Whether the search timed out before completing. If `true`, the returned results may be partial or empty. |
-| `terminated_early` | Boolean | Whether OpenSearch stopped the search early because it collected the number of documents specified in `terminate_after`. Returned only when `terminate_after` is set. |
-| `_shards` | Object | The number of shards that the search ran on and the outcome for each group of shards. |
-| `hits` | Object | The matching documents and their metadata. |
-| `aggregations` | Object | The aggregation results, keyed by aggregation name. Returned only when the request body contains an `aggs` object. |
-| `suggest` | Object | The suggestion results, keyed by suggester name. Returned only when the request body contains a `suggest` object. |
-| `profile` | Object | Per-shard timing details for the query and fetch phases. Returned only when the request body sets `profile` to `true`. For more information, see [Profile API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/profile/). |
-| `_scroll_id` | String | The scroll ID that identifies the search context. Pass this value to the [Scroll API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/scroll/) to retrieve the next batch of results. Returned only when the request includes the `scroll` query parameter. |
-| `pit_id` | String | The Point in Time (PIT) ID that identifies the search context. Returned only when the request searches a PIT. For more information, see [Point in Time API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/). |
-| `_clusters` | Object | The number of clusters that a cross-cluster search ran on and the outcome for each group of clusters. Returned only for cross-cluster searches. |
-| `num_reduce_phases` | Integer | The number of reduce phases that OpenSearch performed in order to combine partial shard results into the final result set. Returned only when the search uses more than one reduce phase. |
+| `took` | 整數 | OpenSearch 執行搜尋所花費的時間，以毫秒為單位。從協調節點收到請求的時刻起，到準備好傳送回應為止，因此包含協調節點與資料節點之間的通訊、在 `search` 執行緒集區中排隊的時間，以及搜尋本身所花費的時間。不包含透過網路傳輸請求或回應所花費的時間。 |
+| `phase_took` | 物件 | 各搜尋階段（`can_match`、`dfs_pre_query`、`query`、`dfs_query`、`fetch` 和 `expand`）所花費的時間，以毫秒為單位。僅在 `phase_took` 查詢參數為 `true` 時傳回。 |
+| `timed_out` | 布林值 | 搜尋是否在完成前逾時。如果為 `true`，傳回的結果可能不完整或為空。 |
+| `terminated_early` | 布林值 | OpenSearch 是否因為已收集到 `terminate_after` 指定的文件數量而提早停止搜尋。僅在設定 `terminate_after` 時傳回。 |
+| `_shards` | 物件 | 執行搜尋的分片數量，以及各組分片的結果。 |
+| `hits` | 物件 | 符合條件的文件及其中繼資料。 |
+| `aggregations` | 物件 | 彙總結果，以彙總名稱作為鍵。僅在請求本文包含 `aggs` 物件時傳回。 |
+| `suggest` | 物件 | 建議結果，以建議器名稱作為鍵。僅在請求本文包含 `suggest` 物件時傳回。 |
+| `profile` | 物件 | 各分片在查詢與擷取階段的計時詳細資訊。僅在請求本文將 `profile` 設為 `true` 時傳回。如需詳細資訊，請參閱 [Profile API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/profile/)。 |
+| `_scroll_id` | 字串 | 識別搜尋內容的 scroll ID。將此值傳遞給 [Scroll API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/scroll/)，以擷取下一批結果。僅在請求包含 `scroll` 查詢參數時傳回。 |
+| `pit_id` | 字串 | 識別搜尋內容的時間點（PIT）ID。僅在請求搜尋 PIT 時傳回。如需詳細資訊，請參閱 [Point in Time API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/)。 |
+| `_clusters` | 物件 | 執行跨叢集搜尋的叢集數量，以及各組叢集的結果。僅在跨叢集搜尋時傳回。 |
+| `num_reduce_phases` | 整數 | OpenSearch 為將分片的部分結果合併為最終結果集而執行的歸約階段數量。僅在搜尋使用多個歸約階段時傳回。 |
 
-The following table lists the fields in the `_shards` object.
+下表列出 `_shards` 物件中的欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `total` | Integer | The number of shards that the search needed to query, including unallocated shards. |
-| `successful` | Integer | The number of shards that ran the search successfully. |
-| `skipped` | Integer | The number of shards that skipped the search because a preliminary check determined that no document on the shard could match. This commonly happens when the search contains a range filter and all values on the shard fall outside of that range. |
-| `failed` | Integer | The number of shards that failed to run the search. Unallocated shards count as neither successful nor failed, so if `successful` and `failed` add up to less than `total`, some of the shards were unallocated. |
+| `total` | 整數 | 搜尋需要查詢的分片數量，包含未配置的分片。 |
+| `successful` | 整數 | 成功執行搜尋的分片數量。 |
+| `skipped` | 整數 | 因初步檢查判定分片上沒有任何文件可能符合條件而略過搜尋的分片數量。這通常發生在搜尋包含範圍篩選器，且分片上的所有值都落在該範圍之外時。 |
+| `failed` | 整數 | 未能執行搜尋的分片數量。未配置的分片既不計入成功，也不計入失敗，因此若 `successful` 和 `failed` 的總和小於 `total`，表示有部分分片未配置。 |
 
-The following table lists the fields in the `hits` object.
+下表列出 `hits` 物件中的欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `total` | Object | The number of matching documents. Contains a `value` field with the count and a `relation` field that is `eq` when the count is exact or `gte` when the count is a lower bound. Omitted when `track_total_hits` is `false`. |
-| `max_score` | Float | The highest `_score` among the matching documents. Is `null` when the search does not sort by `_score`. |
-| `hits` | Array of objects | The matching documents, ordered by relevance or by the specified sort. |
+| `total` | 物件 | 符合條件的文件數量。包含儲存計數的 `value` 欄位，以及 `relation` 欄位；當計數為精確值時，後者為 `eq`，當計數為下限時，則為 `gte`。當 `track_total_hits` 為 `false` 時省略。 |
+| `max_score` | 浮點數 | 符合條件的文件中最高的 `_score`。當搜尋未依 `_score` 排序時，值為 `null`。 |
+| `hits` | 物件陣列 | 符合條件的文件，依相關性或指定的排序方式排列。 |
 
-The following table lists the fields in each object in the `hits.hits` array.
+下表列出 `hits.hits` 陣列中各物件的欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `_index` | String | The name of the index that contains the document. |
-| `_id` | String | The document ID. This ID is unique only within the returned index. |
-| `_score` | Float | The relevance score for the document. Is `null` when the search does not sort by `_score`. |
-| `_source` | Object | The original JSON document provided at indexing time. To omit this field or to return only specific fields, see [Source filtering](#source-filtering). |
-| `fields` | Object | The field values retrieved by `docvalue_fields` or `stored_fields`. Returned only when the request specifies either of those parameters. |
-| `sort` | Array | The sort values for the document. Returned only when the request body contains a `sort` array. Pass the values from the last hit as `search_after` to retrieve the next page of results. |
-| `highlight` | Object | The highlighted snippets, keyed by field name. Returned only when the request body contains a `highlight` object. |
-| `matched_queries` | Array of strings | The names of the named queries that the document matched. Returned only when the search uses the `_name` parameter. |
-| `inner_hits` | Object | The matching nested, child, or parent documents. Returned only when the request body contains an `inner_hits` object. |
-| `_explanation` | Object | A breakdown of how OpenSearch computed the document's relevance score. Returned only when `explain` is `true`. |
-| `_shard` | String | The shard that returned the document. Returned only when `explain` is `true`. |
-| `_node` | String | The node that returned the document. Returned only when `explain` is `true`. |
+| `_index` | 字串 | 包含該文件的索引名稱。 |
+| `_id` | 字串 | 文件 ID。此 ID 僅在傳回的索引中具有唯一性。 |
+| `_score` | 浮點數 | 文件的相關性分數。當搜尋未依 `_score` 排序時，值為 `null`。 |
+| `_source` | 物件 | 編製索引時提供的原始 JSON 文件。若要省略此欄位或僅傳回特定欄位，請參閱[來源篩選](#source-filtering)。 |
+| `fields` | 物件 | 由 `docvalue_fields` 或 `stored_fields` 擷取的欄位值。僅在請求指定其中任一參數時傳回。 |
+| `sort` | 陣列 | 文件的排序值。僅在請求本文包含 `sort` 陣列時傳回。將最後一筆命中結果的值作為 `search_after` 傳遞，以擷取下一頁結果。 |
+| `highlight` | 物件 | 醒目提示的片段，以欄位名稱作為鍵。僅在請求本文包含 `highlight` 物件時傳回。 |
+| `matched_queries` | 字串陣列 | 文件符合的具名查詢名稱。僅在搜尋使用 `_name` 參數時傳回。 |
+| `inner_hits` | 物件 | 符合條件的巢狀文件、子文件或父文件。僅在請求本文包含 `inner_hits` 物件時傳回。 |
+| `_explanation` | 物件 | OpenSearch 計算文件相關性分數的詳細說明。僅在 `explain` 為 `true` 時傳回。 |
+| `_shard` | 字串 | 傳回文件的分片。僅在 `explain` 為 `true` 時傳回。 |
+| `_node` | 字串 | 傳回文件的節點。僅在 `explain` 為 `true` 時傳回。 |
 
-## Source filtering
+## 來源篩選
 
-Each hit in the response contains a `_source` object holding the original JSON document. Returning the full document for every hit transfers more data than most applications need. Source filtering limits the fields that OpenSearch returns in `_source`.
+回應中的每筆命中結果都包含一個 `_source` 物件，其中儲存原始 JSON 文件。為每筆命中結果傳回完整文件，會傳輸超過大多數應用程式所需的資料量。來源篩選可限制 OpenSearch 在 `_source` 中傳回的欄位。
 
-The following table lists the accepted values for the `_source` request body parameter.
+下表列出 `_source` 請求本文參數接受的值。
 
-| Value | Description |
+| 值 | 說明 |
 | :--- | :--- |
-| `true` | Returns the full document. This is the default. |
-| `false` | Omits the `_source` object from each hit. |
-| String | A field name or a wildcard pattern, such as `details.*`. OpenSearch returns only the matching fields. |
-| Array of strings | A list of field names or wildcard patterns, such as `["name", "details.*"]`. |
-| Object | An object containing `includes` and `excludes` lists. A field that matches a pattern in both lists is not returned because `excludes` takes precedence. |
+| `true` | 傳回完整文件。這是預設值。 |
+| `false` | 從每筆命中結果中省略 `_source` 物件。 |
+| 字串 | 欄位名稱或萬用字元模式，例如 `details.*`。OpenSearch 僅傳回符合條件的欄位。 |
+| 字串陣列 | 欄位名稱或萬用字元模式的清單，例如 `["name", "details.*"]`。 |
+| 物件 | 包含 `includes` 和 `excludes` 清單的物件。若欄位同時符合兩份清單中的模式，則不會傳回，因為 `excludes` 具有優先權。 |
 
-To filter the source in the request URL instead of the request body, use the `_source`, `_source_includes`, and `_source_excludes` query parameters.
+若要在請求 URL 中篩選來源，請使用 `_source`、`_source_includes` 和 `_source_excludes` 查詢參數，而非在請求本文中設定。
 
-For examples and limitations, see [Using source filtering]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#using-source-filtering).
+如需範例與限制，請參閱[使用來源篩選]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#using-source-filtering)。
 
-## Track total hits
+## 追蹤命中總數
 
-Counting matching documents exactly requires visiting every match, which is expensive for queries that match many documents. The `track_total_hits` parameter limits how many matches OpenSearch counts. Specify it either as a query parameter or in the request body.
+精確計算符合條件的文件數量需要逐一查看每筆符合條件的文件，對於符合大量文件的查詢而言，成本很高。`track_total_hits` 參數可限制 OpenSearch 計算的符合條件文件數量。您可以將它指定為查詢參數，或在請求本文中指定。
 
-By default, OpenSearch counts matches accurately up to `10000`. When more documents match, `hits.total.value` reports `10000` and `hits.total.relation` is `gte`, indicating that the query matched at least that many documents.
+根據預設，OpenSearch 會精確計算符合條件的文件數量，最多計算至 `10000`。當符合條件的文件更多時，`hits.total.value` 會回報 `10000`，且 `hits.total.relation` 為 `gte`，表示查詢至少符合該數量的文件。
 
-The following table lists the accepted values for `track_total_hits`.
+下表列出 `track_total_hits` 接受的值。
 
-| Value | Description |
+| 值 | 說明 |
 | :--- | :--- |
-| `true` | Counts every matching document. `hits.total.relation` is always `eq`. |
-| `false` | Disables hit counting. The response contains no `hits.total` object. |
-| Integer | Counts matching documents accurately up to the specified number. When more documents match, `hits.total.value` reports the threshold and `hits.total.relation` is `gte`. |
+| `true` | 計算每筆符合條件的文件。`hits.total.relation` 一律為 `eq`。 |
+| `false` | 停用命中計數。回應不包含 `hits.total` 物件。 |
+| 整數 | 精確計算符合條件的文件數量，最多計算至指定數量。當符合條件的文件更多時，`hits.total.value` 會回報臨界值，且 `hits.total.relation` 為 `gte`。 |
 
-Counting every match slows down searches that match many documents. Increase the threshold only when your application requires an exact count.
+計算每筆符合條件的文件，會使符合大量文件的搜尋變慢。只有在您的應用程式需要精確計數時，才提高臨界值。
 
-### Example: Default hit counting
+### 範例：預設命中計數
 
-The following example searches a `logs` index containing 10,500 documents without specifying `track_total_hits`:
+下列範例搜尋一個包含 10,500 份文件的 `logs` 索引，且未指定 `track_total_hits`：
 
 ```json
 GET /logs/_search
@@ -347,7 +348,7 @@ GET /logs/_search
 ```
 {% include copy-curl.html %}
 
-Because `relation` is `gte`, the index contains at least 10,000 matching documents:
+因為 `relation` 為 `gte`，所以索引中至少有 10,000 份符合的文件：
 
 ```json
 {
@@ -362,9 +363,9 @@ Because `relation` is `gte`, the index contains at least 10,000 matching documen
 }
 ```
 
-### Example: Counting every matching document
+### 範例：計算每份符合的文件
 
-To count every match, set `track_total_hits` to `true`:
+若要計算所有符合的結果，請將 `track_total_hits` 設定為 `true`：
 
 ```json
 GET /logs/_search
@@ -378,7 +379,7 @@ GET /logs/_search
 ```
 {% include copy-curl.html %}
 
-Because `relation` is `eq`, `value` is the exact number of matching documents:
+因為 `relation` 為 `eq`，所以 `value` 是符合文件的確切數量：
 
 ```json
 {
@@ -393,15 +394,15 @@ Because `relation` is `eq`, `value` is the exact number of matching documents:
 }
 ```
 
-## The `ext` object
-**Introduced 2.10**
+## `ext` 物件
+**2.10 版新增**
 {: .label .label-purple }
 
-Plugin authors can add an `ext` object to both search requests and search responses. The `ext` object contains plugin-specific fields that allow plugins to pass additional parameters in requests or return additional information in responses.
+外掛程式作者可以在搜尋請求與搜尋回應中加入 `ext` 物件。`ext` 物件包含外掛程式專屬的欄位，讓外掛程式能在請求中傳遞額外參數，或在回應中傳回額外資訊。
 
-### Using `ext` in search responses
+### 在搜尋回應中使用 `ext`
 
-Plugins can add an `ext` object to the search response to include plugin-specific response fields. For example, in conversational search, the result of retrieval-augmented generation (RAG) is a single "hit" (answer). Plugin authors can include this answer in the search response as part of the `ext` object so that it is separate from the search hits. In the following example response, the RAG result is in the `ext.retrieval_augmented_generation.answer` field:
+外掛程式可以在搜尋回應中加入 `ext` 物件，以包含外掛程式專屬的回應欄位。例如，在對話式搜尋中，檢索增強生成 (RAG) 的結果是單一「命中」(答案)。外掛程式作者可以將此答案納入搜尋回應中，作為 `ext` 物件的一部分，使其與搜尋命中結果分開。在下列範例回應中，RAG 結果位於 `ext.retrieval_augmented_generation.answer` 欄位：
 
 ```json
 {
@@ -446,11 +447,11 @@ Plugins can add an `ext` object to the search response to include plugin-specifi
 }
 ```
 
-### Using `ext` in search requests
+### 在搜尋請求中使用 `ext`
 
-Plugins can also accept an `ext` object in search requests to provide plugin-specific parameters. The structure and content of the `ext` object in requests depends on the plugin implementation. Consult your plugin's documentation for the specific fields supported in the request `ext` object.
+外掛程式也可以在搜尋請求中接受 `ext` 物件，以提供外掛程式專屬的參數。請求中 `ext` 物件的結構與內容取決於外掛程式的實作方式。請查閱您外掛程式的文件，了解請求 `ext` 物件中支援的特定欄位。
 
-The following example shows a search request that includes an `ext` object. The exact fields within `ext` depend on which plugins are installed and what parameters they accept:
+下列範例顯示包含 `ext` 物件的搜尋請求。`ext` 中的確切欄位取決於已安裝的外掛程式及其接受的參數：
 
 ```json
 POST /my-index/_search
@@ -468,6 +469,6 @@ POST /my-index/_search
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:data/read/search`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`indices:data/read/search`。

@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Regex conditionals
+title: "Regex 條件式"
 parent: Conditional execution
 nav_order: 70
 ---
 
-# Regex conditionals
+# Regex 條件式
 
-Ingest pipelines support conditional logic using regular expressions (regex) with the Painless scripting language. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/). This allows fine-grained control over which documents get processed based on the structure and contents of text fields. Regex can be used within the `if` parameter to evaluate string patterns. This is especially useful for matching IP formats, validating email addresses, identifying UUIDs, or processing logs with specific keywords.
+資料匯入管線支援搭配 Painless 指令碼語言使用正規表示式 (regex) 的條件邏輯。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。這可讓您根據文字欄位的結構與內容，精細控制哪些文件會被處理。Regex 可在 `if` 參數中用於評估字串模式。這對於比對 IP 格式、驗證電子郵件地址、識別 UUID，或處理包含特定關鍵字的記錄檔特別有用。
 
-## Example: Email domain filtering
+## 範例：電子郵件網域篩選
 
-The following pipeline uses regex to identify users from the `@example.com` email domain and tag those documents accordingly:
+下列管線使用 regex 識別來自 `@example.com` 電子郵件網域的使用者，並據此為這些文件加上標記：
 
 ```json
 PUT _ingest/pipeline/tag_example_com_users
@@ -29,7 +30,7 @@ PUT _ingest/pipeline/tag_example_com_users
 ```
 {% include copy-curl.html %}
 
-Use the following request to simulate the pipeline:
+使用下列請求來模擬此管線：
 
 ```json
 POST _ingest/pipeline/tag_example_com_users/_simulate
@@ -42,7 +43,7 @@ POST _ingest/pipeline/tag_example_com_users/_simulate
 ```
 {% include copy-curl.html %}
 
-Only the first document has `user_domain` added:
+只有第一份文件會新增 `user_domain`：
 
 ```json
 {
@@ -66,9 +67,9 @@ Only the first document has `user_domain` added:
 }
 ```
 
-## Example: Detect IPv6 addresses
+## 範例：偵測 IPv6 位址
 
-The following pipeline uses regex to identify and flag IPv6-formatted addresses:
+下列管線使用 regex 識別並標記 IPv6 格式的位址：
 
 ```json
 PUT _ingest/pipeline/ipv6_flagger
@@ -86,7 +87,7 @@ PUT _ingest/pipeline/ipv6_flagger
 ```
 {% include copy-curl.html %}
 
-Use the following request to simulate the pipeline:
+使用下列請求來模擬此管線：
 
 ```json
 POST _ingest/pipeline/ipv6_flagger/_simulate
@@ -99,7 +100,7 @@ POST _ingest/pipeline/ipv6_flagger/_simulate
 ```
 {% include copy-curl.html %}
 
-The first document contains an added `ip_type` field set to `IPv6`:
+第一份文件包含新增的 `ip_type` 欄位，其值設定為 `IPv6`：
 
 ```json
 {
@@ -123,9 +124,9 @@ The first document contains an added `ip_type` field set to `IPv6`:
 }
 ```
 
-## Example: Validate UUID strings
+## 範例：驗證 UUID 字串
 
-The following pipeline uses regex to verify whether a `session_id` field contains a valid UUID:
+下列管線使用 regex 驗證 `session_id` 欄位是否包含有效的 UUID：
 
 ```json
 PUT _ingest/pipeline/uuid_checker
@@ -143,7 +144,7 @@ PUT _ingest/pipeline/uuid_checker
 ```
 {% include copy-curl.html %}
 
-Use the following request to simulate the pipeline:
+使用下列請求來模擬此管線：
 
 ```json
 POST _ingest/pipeline/uuid_checker/_simulate
@@ -156,7 +157,7 @@ POST _ingest/pipeline/uuid_checker/_simulate
 ```
 {% include copy-curl.html %}
 
-The first document is tagged with a new `valid_uuid` field:
+第一份文件會以新的 `valid_uuid` 欄位加上標記：
 
 ```json
 {

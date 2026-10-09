@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: startsWith()
 parent: Functions
@@ -7,40 +8,40 @@ nav_order: 40
 ---
 
 <!-- vale off -->
-# startsWith() function
+# startsWith() 函式
 <!-- vale on -->
 
-The `startsWith()` function checks whether a string starts with the given string. It takes two arguments:
+`startsWith()` 函式會檢查字串是否以指定的字串開頭。它接受兩個引數：
 
-- The first argument is either a literal string or a JSON pointer that represents the field or value to be checked.
+- 第一個引數是常值字串，或代表要檢查之欄位或值的 JSON 指標。
 
-- The second argument is the string to be checked in the first argument.
-The function returns `true` if the string or field value represented by the first argument starts with the string specified in the second argument and `false` otherwise.
+- 第二個引數是要在第一個引數中檢查的字串。
+如果第一個引數所代表的字串或欄位值以第二個引數指定的字串開頭，函式會傳回 `true`，否則傳回 `false`。
 
-For example, to check whether the value of a field name `message` starts with a string `"abcd"`, use the `startsWith()` function as follows:
+例如，若要檢查名為 `message` 的欄位值是否以字串 `"abcd"` 開頭，請使用 `startsWith()` 函式，如下所示：
 
 ```
 startsWith('/message', 'abcd')
 ```
 {% include copy.html %}
 
-This call returns `true` if the `message` field starts with the string `abcd` or `false` if it does not.
+如果 `message` 欄位以字串 `abcd` 開頭，此呼叫會傳回 `true`，否則傳回 `false`。
 
-Alternatively, you can use a literal string as the first argument:
+或者，您也可以使用常值字串作為第一個引數：
 
 ```
 startsWith('abcdef', 'abcd')
 ```
 {% include copy.html %}
 
-In this case, the function returns `true` because the string `abcdef` starts with `abcd`.
+在此情況下，函式會傳回 `true`，因為字串 `abcdef` 以 `abcd` 開頭。
 
-The `startsWith()` function performs a case-sensitive check.
+`startsWith()` 函式會執行區分大小寫的檢查。
 {: .note }
 
-## Example
+## 範例
 
-The following pipeline uses the `startsWith()` function to add two Boolean flags, `starts_abcd` and `starts_error`, to each event and forwards only events that start with the string `ERROR:` to OpenSearch:
+下列管線使用 `startsWith()` 函式，將兩個布林值旗標 `starts_abcd` 和 `starts_error` 新增至每個事件，並只將以字串 `ERROR:` 開頭的事件轉送至 OpenSearch：
 
 ```yaml
 startswith-demo:
@@ -72,7 +73,7 @@ startswith-demo:
 ```
 {% include copy.html %}
 
-You can test the pipeline using the following command:
+您可以使用下列命令測試管線：
 
 ```bash
 curl -X POST "http://localhost:2021/log/ingest" \
@@ -86,7 +87,7 @@ curl -X POST "http://localhost:2021/log/ingest" \
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 {

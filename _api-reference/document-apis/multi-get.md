@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Multi-get documents
+title: "Multi-get 文件"
 parent: Document APIs
 nav_order: 30
 redirect_from:
@@ -8,26 +9,26 @@ redirect_from:
 ---
 
 # Multi-get Documents API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Multi-get Documents API retrieves multiple documents from one or more indexes in a single request. This operation is more efficient than executing multiple individual GET requests because it reduces network overhead and combines the operations into a single round-trip to the cluster.
+Multi-get Documents API 可在單一請求中從一或多個索引擷取多份文件。此操作比執行多個個別的 GET 請求更有效率，因為它可減少網路負擔，並將多個操作合併為對叢集的單次往返。
 
-Use this API when you need to retrieve specific documents by their IDs and you know which documents you want to fetch. Common scenarios include:
+當您需要依 ID 擷取特定文件，且已知要取得哪些文件時，可使用此 API。常見情境包括：
 
-- Retrieving a batch of user profiles, product details, or other entities based on a list of known IDs.
-- Fetching related documents from different indexes in a single operation, such as getting both an order record and its associated customer information.
-- Implementing efficient data access patterns where you need to retrieve multiple documents while controlling which fields are returned for each document.
+- 根據已知的 ID 清單擷取一批使用者設定檔、產品詳細資料或其他實體。
+- 在單一操作中從不同索引取得相關文件，例如同時取得訂單記錄及其關聯的客戶資訊。
+- 實作高效的資料存取模式，在擷取多份文件的同時控制每份文件要傳回哪些欄位。
 
-## Partial responses
+## 部分回應
 
-The Multi-get Documents API prioritizes fast responses and will return partial results if one or more shards fail during the operation. If a specific document cannot be retrieved due to a shard failure or if the document does not exist, the response includes error details for that document while still returning successfully retrieved documents. This ensures that temporary failures or missing documents do not block the entire operation.
+Multi-get Documents API 以快速回應為優先，若在操作期間有一或多個分片失敗，將會傳回部分結果。若因分片失敗而無法擷取特定文件，或該文件不存在，回應會包含該文件的錯誤詳細資訊，同時仍傳回成功擷取的文件。這可確保暫時性失敗或文件遺失不會阻礙整個操作。
 
 <!-- spec_insert_start
 api: mget
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET  /_mget
 POST /_mget
@@ -40,13 +41,13 @@ POST /{index}/_mget
 api: mget
 component: path_parameters
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `index` | String | The name of the index to retrieve documents from when `ids` are specified, or when a document in the `docs` array does not specify an index. |
+| `index` | 字串 | 當指定 `ids`，或 `docs` 陣列中的文件未指定索引時，用來擷取文件的索引名稱。 |
 
 <!-- spec_insert_end -->
 
@@ -54,42 +55,42 @@ The following table lists the available path parameters. All path parameters are
 api: mget
 component: query_parameters
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `_source` | Boolean or List or String | Set to `true` or `false` to return the `_source` field or not, or a list of fields to return. | N/A |
-| `_source_excludes` | List or String | A comma-separated list of source fields to exclude from the response. You can also use this parameter to exclude fields from the subset specified in `_source_includes` query parameter. | N/A |
-| `_source_includes` | List or String | A comma-separated list of source fields to include in the response. If this parameter is specified, only these source fields are returned. You can exclude fields from this subset using the `_source_excludes` query parameter. If the `_source` parameter is `false`, this parameter is ignored. | N/A |
-| `preference` | String | Specifies the node or shard the operation should be performed on. Random by default. | `random` |
-| `realtime` | Boolean | If `true`, the request is real time as opposed to near real time. | N/A |
-| `refresh` | Boolean or String | If `true`, the request refreshes relevant shards before retrieving documents. <br> Valid values are: <br> - `false`: Do not refresh the affected shards. <br> - `true`: Refresh the affected shards immediately. <br> - `wait_for`: Wait for the changes to become visible before replying. | N/A |
-| `routing` | List or String | A custom value used to route operations to a specific shard. | N/A |
-| `stored_fields` | List or String | If `true`, retrieves the document fields stored in the index rather than the document `_source`. | N/A |
+| `_source` | 布林值或清單或字串 | 設為 `true` 或 `false` 以決定是否傳回 `_source` 欄位，或提供要傳回的欄位清單。 | N/A |
+| `_source_excludes` | 清單或字串 | 以逗號分隔的來源欄位清單，用於從回應中排除。您也可以使用此參數，從 `_source_includes` 查詢參數所指定的子集中排除欄位。 | N/A |
+| `_source_includes` | 清單或字串 | 以逗號分隔的來源欄位清單，用於包含在回應中。若有指定此參數，則只會傳回這些來源欄位。您可以使用 `_source_excludes` 查詢參數從此子集中排除欄位。若 `_source` 參數為 `false`，則會忽略此參數。 | N/A |
+| `preference` | 字串 | 指定應在其上執行操作的節點或分片。預設為隨機。 | `random` |
+| `realtime` | 布林值 | 若為 `true`，則請求為即時，而非近乎即時。 | N/A |
+| `refresh` | 布林值或字串 | 若為 `true`，則請求會在擷取文件前重新整理相關分片。<br> 有效值為：<br> - `false`：不重新整理受影響的分片。<br> - `true`：立即重新整理受影響的分片。<br> - `wait_for`：等待變更可見後再回覆。 | N/A |
+| `routing` | 清單或字串 | 用於將操作路由至特定分片的自訂值。 | N/A |
+| `stored_fields` | 清單或字串 | 若為 `true`，則擷取儲存在索引中的文件欄位，而非文件 `_source`。 | N/A |
 
 <!-- spec_insert_end -->
 
-## Request body fields
+## 請求本文欄位
 
-The request body specifies which documents to retrieve. If you don't specify an index in the request path, you must include the index name for each document in the request body. The following table lists the available request body fields.
+請求本文指定要擷取哪些文件。若您未在請求路徑中指定索引，則必須在請求本文中為每份文件包含索引名稱。下表列出可用的請求本文欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`docs` | Array of objects | The documents to retrieve. Required if the `ids` field is not specified. Each object can include the following fields: `_index`, `_id`, `routing`, `_source`, and `stored_fields`.
-`docs._index` | String | The name of the index containing the document. Required if an index is not specified in the request path.
-`docs._id` | String | The document ID. Required.
-`docs.routing` | String | The routing value used to route the operation to a specific shard. Required if a custom routing value was used when indexing the document.
-`docs._source` | Boolean, Array, or Object | Controls which source fields are returned. If `false`, the `_source` field is excluded from the response. If an array, specifies the fields to include. If an object, can contain `includes` and `excludes` arrays to control field inclusion and exclusion. Default is `true`.
-`docs._source.includes` | Array of strings | The source fields to include in the response. For example, `["title", "author"]` returns only the `title` and `author` fields.
-`docs._source.excludes` | Array of strings | The source fields to exclude from the response. For example, `["internal_notes"]` excludes the `internal_notes` field.
-`docs.stored_fields` | Array of strings | The stored fields to retrieve instead of the `_source` field. Only fields explicitly stored in the index mapping can be retrieved. If specified, the `_source` field is not returned unless explicitly requested.
-`ids` | Array of strings | A simplified way to specify document IDs when all documents are in the same index. Can only be used when an index is specified in the request path. If provided, the `docs` field is not required.
+`docs` | 物件陣列 | 要擷取的文件。若未指定 `ids` 欄位，則為必要。每個物件可包含下列欄位：`_index`、`_id`、`routing`、`_source` 與 `stored_fields`。
+`docs._index` | 字串 | 包含該文件的索引名稱。若未在請求路徑中指定索引，則為必要。
+`docs._id` | 字串 | 文件 ID。必要。
+`docs.routing` | 字串 | 用於將操作路由至特定分片的路由值。若在為文件編製索引時使用了自訂路由值，則為必要。
+`docs._source` | 布林值、陣列或物件 | 控制要傳回哪些來源欄位。若為 `false`，則 `_source` 欄位會從回應中排除。若為陣列，則指定要包含的欄位。若為物件，可包含 `includes` 與 `excludes` 陣列，以控制欄位的包含與排除。預設為 `true`。
+`docs._source.includes` | 字串陣列 | 要包含在回應中的來源欄位。例如 `["title", "author"]` 只會傳回 `title` 與 `author` 欄位。
+`docs._source.excludes` | 字串陣列 | 要從回應中排除的來源欄位。例如 `["internal_notes"]` 會排除 `internal_notes` 欄位。
+`docs.stored_fields` | 字串陣列 | 要擷取的儲存欄位，用於取代 `_source` 欄位。只能擷取在索引對應中明確儲存的欄位。若有指定，則不會傳回 `_source` 欄位，除非明確要求。
+`ids` | 字串陣列 | 當所有文件都在同一索引時，用來指定文件 ID 的簡化方式。只能在請求路徑中指定索引時使用。若有提供，則不需要 `docs` 欄位。
 
-## Example: Retrieving documents from multiple indexes
+## 範例：從多個索引擷取文件
 
-The following example retrieves one document from the `books` index and one document from the `articles` index:
+下列範例從 `books` 索引擷取一份文件，並從 `articles` 索引擷取一份文件：
 
 <!-- spec_insert_start
 component: example_code
@@ -149,9 +150,9 @@ response = client.mget(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Using the IDs array
+## 範例：使用 IDs 陣列
 
-When retrieving multiple documents from the same index, you can simplify the request by specifying the index in the path and using the `ids` array. The following example retrieves three documents from the `books` index:
+當要從同一索引擷取多份文件時，您可以在路徑中指定索引並使用 `ids` 陣列，以簡化請求。下列範例從 `books` 索引擷取三份文件：
 
 <!-- spec_insert_start
 component: example_code
@@ -193,9 +194,9 @@ response = client.mget(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Filtering source fields
+## 範例：篩選來源欄位
 
-You can control which fields are returned for each document by using the `_source` parameter. The following example demonstrates different source filtering options: excluding the source entirely for the first document, returning specific fields for the second document, and using includes to return selected fields for the third document:
+您可以使用 `_source` 參數控制每份文件要傳回哪些欄位。下列範例示範不同的來源篩選選項：第一份文件完全排除來源、第二份文件傳回特定欄位，第三份文件使用 includes 傳回選取的欄位：
 
 <!-- spec_insert_start
 component: example_code
@@ -294,9 +295,9 @@ response = client.mget(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Retrieving stored fields
+## 範例：擷取儲存的欄位
 
-If your index mapping includes stored fields, you can retrieve them instead of the document source. The following example retrieves different stored fields from two user documents:
+如果您的索引對應包含儲存的欄位，您可以擷取這些欄位而非文件來源。下列範例從兩份使用者文件中擷取不同的儲存欄位：
 
 <!-- spec_insert_start
 component: example_code
@@ -374,9 +375,9 @@ response = client.mget(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Specifying routing values
+## 範例：指定路由值
 
-If you used custom routing when indexing documents, you must provide the routing value when retrieving those documents. The following example retrieves two order documents using their routing values: the first document uses the routing value from the query parameter, and the second document specifies its own routing value:
+如果您在將文件編製索引時使用了自訂路由，則必須在擷取這些文件時提供路由值。下列範例使用路由值擷取兩份訂單文件：第一份文件使用查詢參數中的路由值，第二份文件指定自己的路由值：
 
 <!-- spec_insert_start
 component: example_code
@@ -440,13 +441,13 @@ response = client.mget(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-The Multi-get Documents API returns a `docs` array containing the retrieved documents in the same order as they were requested. Each document includes its metadata and source data, or an error if the document could not be retrieved.
+Multi-get Documents API 會傳回一個 `docs` 陣列，其中包含依請求順序排列的已擷取文件。每份文件都包含其中繼資料與來源資料，若文件無法擷取，則包含錯誤資訊。
 
 <details markdown="block">
   <summary>
-    Response for retrieving documents from multiple indexes
+    從多個索引擷取文件的回應
   </summary>
   {: .text-delta}
 
@@ -490,7 +491,7 @@ The Multi-get Documents API returns a `docs` array containing the retrieved docu
 
 <details markdown="block">
   <summary>
-    Response for using the IDs array
+    使用 IDs 陣列的回應
   </summary>
   {: .text-delta}
 
@@ -549,7 +550,7 @@ The Multi-get Documents API returns a `docs` array containing the retrieved docu
 
 <details markdown="block">
   <summary>
-    Response for filtering source fields
+    篩選來源欄位的回應
   </summary>
   {: .text-delta}
 
@@ -595,7 +596,7 @@ The Multi-get Documents API returns a `docs` array containing the retrieved docu
 
 <details markdown="block">
   <summary>
-    Response for retrieving stored fields
+    擷取儲存欄位的回應
   </summary>
   {: .text-delta}
 
@@ -641,7 +642,7 @@ The Multi-get Documents API returns a `docs` array containing the retrieved docu
 
 <details markdown="block">
   <summary>
-    Response for specifying routing values
+    指定路由值的回應
   </summary>
   {: .text-delta}
 
@@ -683,24 +684,24 @@ The Multi-get Documents API returns a `docs` array containing the retrieved docu
 ```
 </details>
 
-## Response body fields
+## 回應本文欄位
 
-The response contains a `docs` array with one element for each requested document, returned in the same order as the request. The following table lists the response body fields.
+回應包含一個 `docs` 陣列，每個請求的文件各有一個元素，並依照請求中的順序傳回。下表列出回應本文欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`docs` | Array of objects | The retrieved documents. Each object represents one document and includes the fields described in this table.
-`_index` | String | The name of the index containing the document.
-`_id` | String | The document ID.
-`_version` | Integer | The document version number. This number is incremented each time the document is updated.
-`_seq_no` | Integer | The sequence number assigned to the document when it was indexed. Used for optimistic concurrency control.
-`_primary_term` | Integer | The primary term assigned to the document when it was indexed. Used with `_seq_no` for optimistic concurrency control.
-`found` | Boolean | Whether the document was found. If `false`, the document does not exist, and the `_source` field is not included.
-`_source` | Object | The document's original JSON content. Omitted if `found` is `false`, if `_source` was set to `false` in the request, or if `stored_fields` was specified.
-`fields` | Object | The stored fields for the document. Only included when `stored_fields` is specified in the request and `found` is `true`. Each field value is returned as an array.
-`_routing` | String | The routing value used to direct the document to a specific shard. Only included if a custom routing value was used.
-`error` | Object | Error information if the document could not be retrieved due to a failure. Contains details about the error type and reason.
+`docs` | 物件陣列 | 擷取的文件。每個物件代表一份文件，並包含此表所述的欄位。
+`_index` | 字串 | 包含該文件的索引名稱。
+`_id` | 字串 | 文件 ID。
+`_version` | 整數 | 文件版本號碼。每次更新文件時，此號碼都會遞增。
+`_seq_no` | 整數 | 文件在編製索引時被指派的序號。用於樂觀並行控制。
+`_primary_term` | 整數 | 文件在編製索引時被指派的主要分片任期。與 `_seq_no` 搭配用於樂觀並行控制。
+`found` | 布林值 | 是否找到該文件。如果為 `false`，表示文件不存在，且不包含 `_source` 欄位。
+`_source` | 物件 | 文件的原始 JSON 內容。如果 `found` 為 `false`、請求中的 `_source` 設為 `false`，或已指定 `stored_fields`，則會省略。
+`fields` | 物件 | 文件的已儲存欄位。僅在請求中指定 `stored_fields` 且 `found` 為 `true` 時包含。每個欄位值都以陣列形式傳回。
+`_routing` | 字串 | 用於將文件導向特定分片的路由值。僅在使用自訂路由值時包含。
+`error` | 物件 | 因失敗而無法擷取文件時的錯誤資訊。包含錯誤類型與原因的詳細資訊。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:data/read/mget` and `indices:data/read/mget*`.
+如果您使用 Security 外掛程式，請確保您具有適當的權限：`indices:data/read/mget` 和 `indices:data/read/mget*`。

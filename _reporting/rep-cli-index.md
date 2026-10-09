@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reporting using the CLI
+title: "使用 CLI 產生報告"
 nav_order: 10
 has_children: true
 redirect_from:
   - /dashboards/reporting-cli/rep-cli-index/
 ---
 
-# Reporting using the CLI
+# 使用 CLI 產生報告
 
-You can programmatically create dashboard reports in PDF or PNG format with the Reporting CLI without using OpenSearch Dashboards or the Reporting plugin. This allows you to create reports automatically within your email workflows.
+您可以使用 Reporting CLI 以程式設計方式建立 PDF 或 PNG 格式的儀表板報告，而不需使用 OpenSearch Dashboards 或 Reporting 外掛程式。這讓您可以在電子郵件工作流程中自動建立報告。
 
-If you want to download a CSV file, you need to have the Reporting plugin installed.
+如果您想下載 CSV 檔案，則必須安裝 Reporting 外掛程式。
 {: .note }
 
-For any dashboard view, you can request a report in PNG or PDF format to be sent to an email address. This can be useful for sending reports to multiple email recipients with an email alias. The only dashboard application that supports creating a CSV report is **Discover**.
+對於任何儀表板檢視，您都可以請求以 PNG 或 PDF 格式將報告傳送至電子郵件地址。這對於透過電子郵件別名將報告傳送給多位收件者非常實用。唯一支援建立 CSV 報告的儀表板應用程式是 **Discover**。
 
-With the Reporting CLI, you can specify options for your report in the command line. The report is sent to an email address as a PDF attachment by default. You can also request a PNG image or a CSV file with the `--formats` argument.
+透過 Reporting CLI，您可以在命令列中指定報告的選項。報告預設會以 PDF 附件形式傳送至電子郵件地址。您也可以使用 `--formats` 參數請求 PNG 圖片或 CSV 檔案。
 
-You can download the report to the directory in which you are running the Reporting CLI, or you can email the report by specifying Amazon Simple Email Service (Amazon SES) or SMTP for the email transport option.
+您可以將報告下載到執行 Reporting CLI 的目錄中，也可以透過在電子郵件傳輸選項中指定 Amazon Simple Email Service (Amazon SES) 或 SMTP 來以電子郵件傳送報告。
 
-You can connect to OpenSearch with any of the following authentication types:
+您可以使用下列任一驗證類型連線至 OpenSearch：
 
-- **Basic** – Basic HTTP authentication. Use `-a basic`.
-- **Cognito** – Authentication through Amazon Cognito. Use `-a cognito`.
-- **SAML** – Authentication between an identity provider and a service provider. Use `-a saml`. Okta provides the SAML third-party authentication.
+- **Basic** – 基本 HTTP 驗證。使用 `-a basic`。
+- **Cognito** – 透過 Amazon Cognito 進行驗證。使用 `-a cognito`。
+- **SAML** – 身分識別提供者與服務提供者之間的驗證。使用 `-a saml`。Okta 提供 SAML 第三方驗證。
 <!-- vale off -->
-- **No auth** – No authentication. Use `-a none`. Authentication defaults to no authentication if the `-a` flag is not specified.
+- **No auth** – 無驗證。使用 `-a none`。如果未指定 `-a` 旗標，驗證預設為無驗證。
 <!-- vale on -->
 
-To learn more about Amazon Cognito, see [What is Amazon Cognito?](https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html).
+若要進一步了解 Amazon Cognito，請參閱[什麼是 Amazon Cognito？](https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html)。
 
 <!--
 ### Bypass authentication option

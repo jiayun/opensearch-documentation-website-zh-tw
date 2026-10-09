@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Connectors
+title: "連接器"
 has_children: true
 has_toc: false
 nav_order: 61
@@ -10,45 +11,45 @@ redirect_from:
   - /ml-commons-plugin/extensibility/connectors/
 ---
 
-# Connectors for third-party ML platforms
-**Introduced 2.9**
+# 第三方 ML 平台的連接器
+**推出於 2.9**
 {: .label .label-purple }
 
-Connectors facilitate access to models hosted on third-party machine learning (ML) platforms. 
+連接器可協助存取託管於第三方機器學習 (ML) 平台上的模型。
 
-OpenSearch provides connectors for several platforms, for example:
+OpenSearch 為多個平台提供連接器，例如：
 
-- [Amazon SageMaker](https://aws.amazon.com/sagemaker/) allows you to host and manage the lifecycle of text embedding models, powering semantic search queries in OpenSearch. When connected, Amazon SageMaker hosts your models and OpenSearch is used to query inferences. This benefits Amazon SageMaker users who value its functionality, such as model monitoring, serverless hosting, and workflow automation for continuous training and deployment.
-- [OpenAI ChatGPT](https://platform.openai.com/docs/introduction) enables you to invoke an OpenAI chat model from inside an OpenSearch cluster.
-- [Cohere](https://cohere.com/) allows you to use data from OpenSearch to power the Cohere large language models.
-- [Amazon Bedrock](https://aws.amazon.com/bedrock/) supports models like [Bedrock Titan Embeddings](https://aws.amazon.com/bedrock/titan/), which can drive semantic search and retrieval-augmented generation in OpenSearch.
-- [Google Cloud Vertex AI](https://cloud.google.com/vertex-ai) enables you to invoke Vertex AI models, such as Gemini and text embedding models, from inside an OpenSearch cluster.
+- [Amazon SageMaker](https://aws.amazon.com/sagemaker/) 可讓您託管文字嵌入模型並管理其生命週期，為 OpenSearch 中的語意搜尋查詢提供支援。連線後，Amazon SageMaker 會託管您的模型，並使用 OpenSearch 查詢推論。這對重視 Amazon SageMaker 功能 (例如模型監控、無伺服器託管，以及持續訓練與部署的工作流程自動化) 的使用者很有幫助。
+- [OpenAI ChatGPT](https://platform.openai.com/docs/introduction) 可讓您從 OpenSearch 叢集內部叫用 OpenAI 聊天模型。
+- [Cohere](https://cohere.com/) 可讓您使用 OpenSearch 的資料來支援 Cohere 大型語言模型。
+- [Amazon Bedrock](https://aws.amazon.com/bedrock/) 支援 [Bedrock Titan Embeddings](https://aws.amazon.com/bedrock/titan/) 等模型，可在 OpenSearch 中帶動語意搜尋與檢索增強生成。
+- [Google Cloud Vertex AI](https://cloud.google.com/vertex-ai) 可讓您從 OpenSearch 叢集內部叫用 Vertex AI 模型，例如 Gemini 與文字嵌入模型。
 
-## Connector blueprints
+## 連接器藍圖
 
-Creating a connector requires two pieces of information: the request and response format for your model, and the authentication method for your platform:
+建立連接器需要兩項資訊：模型的請求與回應格式，以及平台的驗證方法：
 
-- The request and response format is specified in a _connector blueprint_, which defines the set of fields (the request body) to provide when creating a connector for a specific platform and model. To find a pre-built blueprint for your platform and model, see [OpenSearch-provided connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/). For descriptions of all connector fields or to create a blueprint for a platform or model that OpenSearch does not provide, see [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/).
+- 請求與回應格式定義於_連接器藍圖_中，其中定義了為特定平台與模型建立連接器時要提供的欄位集 (請求本文)。若要尋找適用於您平台與模型的預先建置藍圖，請參閱 [OpenSearch 提供的連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/)。如需所有連接器欄位的說明，或要為 OpenSearch 未提供的平台或模型建立藍圖，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)。
 
-- The authentication method is specified in the connector's `protocol` field and is determined by the platform. For more information, see [Connector authentication]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connector-authentication/).
+- 驗證方法定義於連接器的 `protocol` 欄位中，並由平台決定。如需詳細資訊，請參閱[連接器驗證]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connector-authentication/)。
 
-## Creating a connector
+## 建立連接器
 
-You can provision connectors in two ways:
+您可以用兩種方式佈建連接器：
 
-1. [Create a standalone connector](#creating-a-standalone-connector): A standalone connector can be reused by multiple model registrations in OpenSearch that share the same external endpoint and configuration. Standalone connectors require access to both the connector and the model in OpenSearch as well as the third-party platform. Standalone connectors are saved in a connector index.
+1. [建立獨立連接器](#creating-a-standalone-connector)：獨立連接器可供 OpenSearch 中多個共用相同外部端點與組態的模型註冊重複使用。獨立連接器需要同時存取 OpenSearch 中的連接器與模型，以及第三方平台。獨立連接器會儲存在連接器索引中。
 
-2. [Create a connector for a specific externally hosted model](#creating-a-connector-for-a-specific-model): Alternatively, you can create a connector that can only be used with the model for which it was created. To access such a connector, you only need access to the model itself because the connection is established inside the model. These connectors are saved in the model index.
+2. [為特定外部託管模型建立連接器](#creating-a-connector-for-a-specific-model)：或者，您可以建立僅能與其建立時所指定模型搭配使用的連接器。若要存取這類連接器，您只需要存取模型本身，因為連線是在模型內部建立。這些連接器會儲存在模型索引中。
 
-If you need to connect to a different external model (for example, switching from `gpt-4o-mini` to `gpt-4o`), we recommend creating a separate standalone connector. Alternatively, advanced users can override connector `parameters` at predict time if the connector blueprint uses placeholders. For more information, see [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/).
+如果您需要連線至不同的外部模型 (例如從 `gpt-4o-mini` 切換為 `gpt-4o`)，建議您建立個別的獨立連接器。或者，如果連接器藍圖使用預留位置，進階使用者可以在預測時覆寫連接器 `parameters`。如需詳細資訊，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)。
 {: .note}
 
-If using Python, you can create connectors using the [`opensearch-py-ml`](https://github.com/opensearch-project/opensearch-py-ml) client CLI. The CLI automates many configuration steps, making setup faster and reducing the chance of errors. For more information about using the CLI, see the [CLI documentation](https://opensearch-project.github.io/opensearch-py-ml/cli/index.html#).
+如果使用 Python，您可以使用 [`opensearch-py-ml`](https://github.com/opensearch-project/opensearch-py-ml) 用戶端 CLI 建立連接器。CLI 會自動執行許多組態步驟，讓設定更快速並降低出錯的機會。如需使用 CLI 的詳細資訊，請參閱 [CLI 文件](https://opensearch-project.github.io/opensearch-py-ml/cli/index.html#)。
 {: .tip}
 
-## Creating a standalone connector
+## 建立獨立連接器
 
-To create a standalone connector, send a request to the `connectors/_create` endpoint and provide all of the parameters described in [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/):
+若要建立獨立連接器，請將請求傳送至 `connectors/_create` 端點，並提供[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)中所述的所有參數：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -79,9 +80,9 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-## Creating a connector for a specific model
+## 為特定模型建立連接器
 
-To create a connector for a specific model, provide all of the parameters described in [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/) within the `connector` object of a request to the `models/_register` endpoint:
+若要為特定模型建立連接器，請在傳送至 `models/_register` 端點的請求之 `connector` 物件內，提供[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)中所述的所有參數：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -120,13 +121,13 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-## Updating connector credentials
+## 更新連接器憑證
 
-In some cases, you may need to update the credentials used to connect to an externally hosted model, such as an expiring API key. To do this without undeploying the model, provide the new credentials in an update request.
+在某些情況下，您可能需要更新用來連線至外部託管模型的憑證，例如即將到期的 API 金鑰。若要在不取消部署模型的情況下執行此操作，請在更新請求中提供新的憑證。
 
-### Connector for a specific model
+### 特定模型的連接器
 
-To update credentials for a connector linked to a specific model, provide the new credentials in the following request:
+若要更新連結至特定模型之連接器的憑證，請在下列請求中提供新的憑證：
 
 ```json
 PUT /_plugins/_ml/models/{model_id}
@@ -140,9 +141,9 @@ PUT /_plugins/_ml/models/{model_id}
 ```
 {% include copy-curl.html %}
 
-### Standalone connector
+### 獨立連接器
 
-To update credentials for a standalone connector, provide the new credentials in the following request:
+若要更新獨立連接器的憑證，請在下列請求中提供新的憑證：
 
 ```json
 PUT /_plugins/_ml/connectors/{connector_id}
@@ -154,9 +155,9 @@ PUT /_plugins/_ml/connectors/{connector_id}
 ```
 {% include copy-curl.html %}
 
-## Next steps
+## 後續步驟
 
-- To find the blueprint and protocol for your platform and model, see [OpenSearch-provided connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/).
-- To pass per-request values in connector headers, see [Dynamic header substitution]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/dynamic-header-substitution/).
-- To learn more about connecting to external models, see [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/).
-- To learn more about model access control and model groups, see [Model access control]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/).
+- 若要尋找適用於您平台與模型的藍圖與通訊協定，請參閱 [OpenSearch 提供的連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/)。
+- 若要在連接器標頭中傳遞各請求的值，請參閱[動態標頭替換]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/dynamic-header-substitution/)。
+- 若要進一步瞭解如何連線至外部模型，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
+- 若要進一步瞭解模型存取控制與模型群組，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。

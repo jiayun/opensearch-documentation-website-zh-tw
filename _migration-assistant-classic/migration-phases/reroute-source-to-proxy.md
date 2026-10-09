@@ -1,79 +1,80 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reroute client traffic
+title: "重新路由用戶端流量"
 nav_order: 3
 parent: Migration phases
 permalink: /classic/migration-assistant/migration-phases/reroute-source-to-proxy/
 ---
 
-# Reroute client traffic to the Traffic Capture Proxy
+# 將用戶端流量重新路由至 Traffic Capture Proxy
 
-**Note**: This page is only relevant if you are using Capture and Replay to avoid downtime during a migration. If you are only performing backfill migration, you can skip this step.
+**注意**：本頁面僅適用於您在遷移期間使用 Capture and Replay 以避免停機的情況。如果您只執行回填遷移，可以略過此步驟。
 {: .note}
 
-## Capture proxy data replication
+## Capture Proxy 資料複寫
 
-If you're interested in capturing live traffic during your migration, Migration Assistant includes an Application Load Balancer for routing traffic to the Capture Proxy and target cluster. Upstream client traffic must be routed through the Capture Proxy in order to replay the requests later. Before using the Capture Proxy, remember the following:
+如果您想在遷移期間擷取即時流量，Migration Assistant 內建一個 Application Load Balancer，用於將流量路由至 Capture Proxy 與目標叢集。上游的用戶端流量必須經過 Capture Proxy 路由，才能在之後重播請求。使用 Capture Proxy 之前，請記住以下幾點：
 
-* The layer upstream from the Application Load Balancer is compatible with the certificate for the Application Load Balancer listener, whether it's for clients or a Network Load Balancer. The `albAcmCertArn` in the `cdk.context.json` may need to be provided to ensure that clients trust the Application Load Balancer certificate.
-* If a Network Load Balancer is used directly upstream of the Application Load Balancer, it must use a TLS listener.
-* Upstream resources and security groups must allow network access to the Migration Assistant Application Load Balancer.
+* Application Load Balancer 的上游層必須與 Application Load Balancer 監聽器的憑證相容，無論其對象是用戶端還是 Network Load Balancer。可能需要提供 `cdk.context.json` 中的 `albAcmCertArn`，以確保用戶端信任 Application Load Balancer 憑證。
+* 如果在 Application Load Balancer 的正上游使用 Network Load Balancer，則必須使用 TLS 監聽器。
+* 上游資源與安全群組必須允許網路存取 Migration Assistant Application Load Balancer。
 
-To set up the Capture Proxy, go to the AWS Management Console and navigate to **EC2 > Load Balancers > Migration Assistant Application Load Balancer**. Copy the Application Load Balancer URL. With the URL copied, you can use one of the following options.
+若要設定 Capture Proxy，請前往 AWS Management Console，並導覽至 **EC2 > Load Balancers > Migration Assistant Application Load Balancer**。複製 Application Load Balancer URL。複製 URL 後，您可以使用下列其中一種選項。
 
 
 
-### Network load balancer to application load balancer to cluster
+### Network Load Balancer → Application Load Balancer → 叢集
 
-1. Ensure that ingress is provided directly to the Application Load Balancer for the Capture Proxy.
-2. Create a target group for the Migration Assistant Application Load Balancer on port `9200` and set the health check to `HTTPS`.
-3. Associate this target group with your existing Network Load Balancer on a new listener for testing.
-4. Verify that the health check is successful and perform smoke testing with some clients through the new listener port.
-5. Once you are ready to migrate all clients, detach the Migration Assistant Application Load Balancer target group from the testing Network Load Balancer listener and modify the existing Network Load Balancer listener to direct traffic to this target group.
-6. Now client requests will be routed through the proxy (once they establish a new connection). Verify the application metrics.
+1. 確認已直接為 Capture Proxy 的 Application Load Balancer 提供傳入存取。
+2. 在連接埠 `9200` 上為 Migration Assistant Application Load Balancer 建立目標群組，並將健康檢查設為 `HTTPS`。
+3. 在新的監聽器上，將此目標群組與您現有的 Network Load Balancer 建立關聯以進行測試。
+4. 確認健康檢查成功，並透過新的監聽器連接埠對一些用戶端執行煙霧測試。
+5. 當您準備好遷移所有用戶端時，將 Migration Assistant Application Load Balancer 目標群組從測試用的 Network Load Balancer 監聽器卸離，並修改現有的 Network Load Balancer 監聽器，將流量導向此目標群組。
+6. 現在用戶端請求將會透過代理程式路由（一旦建立新連線）。請驗證應用程式指標。
 
-### Network load balancer to cluster
+### Network Load Balancer → 叢集
 
-If you do not want to modify application logic, add an Application Load Balancer in front of your cluster and follow the **Network Load Balancer → Application Load Balancer → Cluster** steps. Otherwise:
+如果您不想修改應用程式邏輯，請在叢集前面加入一個 Application Load Balancer，並遵循 **Network Load Balancer → Application Load Balancer → Cluster** 步驟。否則：
 
-1. Create a target group for the Application Load Balancer on port `9200` and set the health check to `HTTPS`.
-2. Associate this target group with your existing Network Load Balancer on a new listener.
-3. Verify that the health check is successful, and perform smoke testing with some clients through the new listener port.
-4. Once you are ready to migrate all clients, deploy a change so that clients hit the new listener.
+1. 在連接埠 `9200` 上為 Application Load Balancer 建立目標群組，並將健康檢查設為 `HTTPS`。
+2. 在新的監聽器上，將此目標群組與您現有的 Network Load Balancer 建立關聯。
+3. 確認健康檢查成功，並透過新的監聽器連接埠對一些用戶端執行煙霧測試。
+4. 當您準備好遷移所有用戶端時，部署變更，讓用戶端連向新的監聽器。
    
 
-### Without a network load balancer
+### 不使用 Network Load Balancer
 
-If you're only using backfill as your migration technique, make a client/DNS change to route clients to the Migration Assistant Application Load Balancer on port `9200`.
+如果您只使用回填作為遷移技術，請變更用戶端/DNS，將用戶端路由至連接埠 `9200` 上的 Migration Assistant Application Load Balancer。
 
 
-### Apache Kafka connection
+### Apache Kafka 連線
 
-After you have routed the client based on your use case, test adding records against HTTP requests using the following steps.
+根據您的使用案例路由用戶端之後，請依照下列步驟，檢查記錄是否隨 HTTP 請求增加。
 
-In the Migration Console, run the following command:
+在 Migration Console 中，執行以下命令：
 
 ```bash
 console kafka describe-topic-records
 ```
 {% include copy.html %}
    
-Note the records in the logging topic.
+記下 logging 主題中的記錄。
    
-After a short period, re-execute the same command again and compare the increased number of records against the expected HTTP requests.
+經過一段短時間後，再次執行相同的命令，並將增加的記錄數量與預期的 HTTP 請求數進行比較。
 
-## Troubleshooting
+## 疑難排解
 
-The following sections may be helpful in diagnosing common issues.
+下列章節可能有助於診斷常見問題。
 
-### Host header routing configuration
+### Host 標頭路由組態
 
-Some systems, such as Elastic Cloud and other hosted Elasticsearch services, use the `Host` header for routing traffic to the appropriate cluster. When using the Capture Proxy with these systems, you must configure the proxy to override the `Host` header with your source cluster's domain name. If not configured correctly, clients might send a `Host` header that points to the proxy's address instead of the original domain, which can disrupt routing and authentication.
+某些系統（例如 Elastic Cloud 與其他託管的 Elasticsearch 服務）使用 `Host` 標頭將流量路由至適當的叢集。在這些系統上使用 Capture Proxy 時，您必須設定代理程式，以來源叢集的網域名稱覆寫 `Host` 標頭。如果設定不正確，用戶端可能會傳送指向代理程式位址而非原始網域的 `Host` 標頭，這可能會干擾路由與驗證。
 
-**Important**: This configuration is required for Elastic Cloud deployments and any system that uses `Host` header routing. If this setting is improperly configured, requests will fail in the Elastic Cloud with an error response similar to `{"ok":false,"message":"Unknown resource."}` or will be incorrectly routed in other systems.
+**重要**：Elastic Cloud 部署以及任何使用 `Host` 標頭路由的系統都需要此組態。如果此設定配置不當，請求將在 Elastic Cloud 中失敗並收到類似 `{"ok":false,"message":"Unknown resource."}` 的錯誤回應，或在其他系統中被錯誤路由。
 {: .important}
 
-To configure the `Host` header, add the `captureProxyExtraArgs` parameter to your `cdk.context.json` file:
+若要設定 `Host` 標頭，請在您的 `cdk.context.json` 檔案中加入 `captureProxyExtraArgs` 參數：
 
 ```json
 {
@@ -82,7 +83,7 @@ To configure the `Host` header, add the `captureProxyExtraArgs` parameter to you
 ```
 {% include copy.html %}
 
-For example, if your Elastic Cloud domain is `https://my-cluster.es.us-east-1.aws.example.com`, configure `captureProxyExtraArgs` as follows:
+例如，如果您的 Elastic Cloud 網域為 `https://my-cluster.es.us-east-1.aws.example.com`，請如下設定 `captureProxyExtraArgs`：
 
 ```json
 {
@@ -91,21 +92,21 @@ For example, if your Elastic Cloud domain is `https://my-cluster.es.us-east-1.aw
 ```
 {% include copy.html %}
 
-**Tip**: The `Host` header value should include only the domain name without the protocol (`https://`) or port number.
+**提示**：`Host` 標頭值應只包含網域名稱，不含通訊協定（`https://`）或連接埠號碼。
 {: .tip}
 
-#### Validating the configuration
+#### 驗證組態
 
-Before routing production traffic using the Capture Proxy, validate that the proxy is correctly configured by sending test requests directly to it. You can use cURL to verify the connection:
+在使用 Capture Proxy 路由正式環境流量之前，請直接向代理程式傳送測試請求，以驗證代理程式是否已正確設定。您可以使用 cURL 驗證連線：
 
 ```bash
 curl -k https://<capture-proxy-endpoint>:9200/
 ```
 {% include copy.html %}
 
-If the `Host` header configuration is correct, you should receive a successful or authentication failure response from your source cluster. If you receive an error similar to `{"ok":false,"message":"Unknown resource."}`, verify that:
-- The `captureProxyExtraArgs` parameter is correctly set in your `cdk.context.json`.
-- The `Host` header value matches your source cluster's domain exactly.
-- You have redeployed the Capture Proxy service after making configuration changes.
+如果 `Host` 標頭組態正確，您應該會收到來源叢集傳回的成功回應或驗證失敗回應。如果您收到類似 `{"ok":false,"message":"Unknown resource."}` 的錯誤，請確認：
+- `captureProxyExtraArgs` 參數已在您的 `cdk.context.json` 中正確設定。
+- `Host` 標頭值與您來源叢集的網域完全一致。
+- 您在進行組態變更後已重新部署 Capture Proxy 服務。
 
 {% include migration-phase-navigation.html %}

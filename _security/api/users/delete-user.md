@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete user
+title: "刪除使用者"
 parent: Internal user APIs
 grand_parent: Security APIs
 nav_order: 40
 ---
 
-# Delete User API
-**Introduced 1.0**
+# 刪除使用者 API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-Deletes the specified internal user.
+刪除指定的內部使用者。
 
 <!-- spec_insert_start
 api: security.delete_user
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 DELETE /_plugins/_security/api/internalusers/{username}
 ```
 <!-- spec_insert_end -->
 
-## Example request
+## 範例請求
 
 ```json
 DELETE _plugins/_security/api/internalusers/kirk
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {

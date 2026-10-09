@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Verifying live capture components
+title: "驗證即時擷取元件"
 grand_parent: Migration phases
 nav_order: 4
 parent: Deploy
 permalink: /classic/migration-assistant/migration-phases/deploy/verifying-live-capture-components/
 ---
 
-# Verifying live capture components
+# 驗證即時擷取元件
 
-Before using Migration Assistant, take the following steps to verify that your cluster is ready for migration.
+使用 Migration Assistant 之前，請採取下列步驟，驗證您的叢集已準備好進行遷移。
 
 ### Traffic Replayer
 
-To stop running Traffic Replayer, use the following command:
+若要停止執行 Traffic Replayer，請使用下列命令：
 
 ```bash
 console replay stop
@@ -22,9 +23,9 @@ console replay stop
 
 ### Apache Kafka 
 
-To clear all captured traffic from the Kafka topic, you can run the following command. 
+若要清除 Kafka 主題中所有已擷取的流量，您可以執行下列命令。
 
-This command will result in the loss of any traffic data captured by the Capture Proxy up to this point and thus should be used with caution.
+此命令會導致 Capture Proxy 到目前為止所擷取的所有流量資料遺失，因此應謹慎使用。
 {: .warning}
 
 ```bash
@@ -32,86 +33,86 @@ console kafka delete-topic
 ```
 {% include copy.html %}
 
-### Target cluster 
+### 目標叢集 
 
-To clear non-system indexes from the target cluster that may have been created as a result of testing, you can run the following command.
+若要清除目標叢集中可能因測試而建立的非系統索引，您可以執行下列命令。
 
-This command will result in the loss of all data in the target cluster and should be used with caution.
+此命令會導致目標叢集中的所有資料遺失，因此應謹慎使用。
 {: .warning}
 
 ```bash
 console clusters clear-indexes --cluster target
 ```
 
-## Switching over client traffic
+## 切換用戶端流量
 
-The Migration Assistant Application Load Balancer is deployed with a listener that shifts traffic between the source and target clusters through proxy services. The Application Load Balancer should start in **Source Passthrough** mode.
+Migration Assistant Application Load Balancer 部署時會搭配一個接聽程式，透過 Proxy 服務在來源叢集與目標叢集之間切換流量。Application Load Balancer 應以 **Source Passthrough** 模式啟動。
 
-### Verifying that the traffic switchover is complete
+### 驗證流量切換已完成
 
-Use the following steps to verify that the traffic switchover is complete:
+請使用下列步驟，驗證流量切換已完成：
 
-1. In the AWS Management Console, navigate to **EC2 > Load Balancers**.
-2. Select the **MigrationAssistant ALB**.
-3. Examine the listener on port `9200` and verify that 100% of the traffic is directed to the **Source Proxy**.
-4. Navigate to the **Migration ECS Cluster** in the AWS Management Console.
-5. Select the **Target Proxy Service**.
-6. Verify that the desired count for the service is running:
-   * If the desired count is not met, update the service to increase it to at least 1 and wait for the service to start.
-7. On the **Health and Metrics** tab under **Load balancer health**, verify that all targets are reporting as healthy:
-   * This confirms that the Application Load Balancer can connect to the target cluster through the target proxy.
-8. (Reset) Update the desired count for the **Target Proxy Service** back to its original value in Amazon Elastic Container Service (Amazon ECS).
+1. 在 AWS Management Console 中，瀏覽至 **EC2 > Load Balancers**。
+2. 選取 **MigrationAssistant ALB**。
+3. 檢查連接埠 `9200` 上的接聽程式，並確認 100% 的流量都導向 **Source Proxy**。
+4. 在 AWS Management Console 中，瀏覽至 **Migration ECS Cluster**。
+5. 選取 **Target Proxy Service**。
+6. 確認服務的所需計數正在執行中：
+   * 如果未達到所需計數，請更新服務，將其增加至至少 1，並等待服務啟動。
+7. 在 **Health and Metrics** 索引標籤的 **Load balancer health** 下，確認所有目標都回報為健康狀態：
+   * 這可確認 Application Load Balancer 可以透過目標 Proxy 連線至目標叢集。
+8. (重設) 在 Amazon Elastic Container Service (Amazon ECS) 中，將 **Target Proxy Service** 的所需計數更新回其原始值。
 
-### Fixing unidentified traffic patterns
+### 修正無法識別的流量模式
 
-When switching over traffic to the target cluster, you might encounter unidentified traffic patterns. To help identify the cause of these patterns, use the following steps:
-* Verify that the target cluster allows traffic ingress from the **Target Proxy security group**.
-* Navigate to **Target Proxy ECS Tasks** to investigate any failing tasks.
-Set **Filter desired status** to **Any desired status** to view all tasks, then navigate to the logs for any stopped tasks.
-
-
-## Verifying replication
-
-Use the following steps to verify that replication is working once the Traffic Capture Proxy is deployed:
+將流量切換至目標叢集時，您可能會遇到無法識別的流量模式。為了協助找出這些模式的原因，請使用下列步驟：
+* 確認目標叢集允許來自 **Target Proxy security group** 的流量輸入。
+* 瀏覽至 **Target Proxy ECS Tasks**，以調查任何失敗的工作。
+將 **Filter desired status** 設定為 **Any desired status** 以檢視所有工作，然後瀏覽至任何已停止工作的記錄檔。
 
 
-1. Navigate to the **Migration ECS Cluster** in the AWS Management Console.
-2. Navigate to **Capture Proxy Service**.
-3. Verify that the capture proxy is running with the desired proxy count. If it is not, update the service to increase it to at least 1 and wait for startup.
-4. Under **Health and Metrics** > **Load balancer health**, verify that all targets are healthy. This means that the Application Load Balancer is able to connect to the source cluster through the Capture Proxy.
-5. Navigate to the **Migration Console Terminal**.
-6. Run `console kafka describe-topic-records`. Wait 30 seconds for another Application Load Balancer health check.
-7. Run `console kafka describe-topic-records` again and verify that the number of RECORDS increased between runs.
-8. Run `console replay start` to start Traffic Replayer.
-9.  Run `tail -f /shared-logs-output/traffic-replayer-default/*/tuples/tuples.log  | jq '.targetResponses[]."Status-Code"'` to confirm that the Kafka requests were sent to the target and that it responded as expected. If the responses don't appear:
-    * Check that the Migration Console can access the target cluster by running `./catIndices.sh`, which should show the indexes in the source and target.
-    * Confirm that messages are still being recorded to Kafka.
-    * Check for errors in the Traffic Replayer logs (`/migration/STAGE/default/traffic-replayer-default`) using Amazon CloudWatch.
-10. (Reset) Update the desired count for the **Capture Proxy Service** back to its original value in Amazon ECS.
+## 驗證複寫
 
-### Troubleshooting
+部署 Traffic Capture Proxy 之後，請使用下列步驟驗證複寫是否正常運作：
 
-Use this guidance to troubleshoot any of the following replication verification issues.
 
-### Health check responses with 401/403 status code
+1. 在 AWS Management Console 中，瀏覽至 **Migration ECS Cluster**。
+2. 瀏覽至 **Capture Proxy Service**。
+3. 確認擷取 Proxy 正在以所需的 Proxy 計數執行中。如果沒有，請更新服務，將其增加至至少 1，並等待啟動。
+4. 在 **Health and Metrics** > **Load balancer health** 下，確認所有目標都健康。這表示 Application Load Balancer 可以透過 Capture Proxy 連線至來源叢集。
+5. 瀏覽至 **Migration Console Terminal**。
+6. 執行 `console kafka describe-topic-records`。等待 30 秒，讓另一個 Application Load Balancer 健康檢查執行。
+7. 再次執行 `console kafka describe-topic-records`，並確認兩次執行之間的 RECORDS 數量增加。
+8. 執行 `console replay start` 以啟動 Traffic Replayer。
+9.  執行 `tail -f /shared-logs-output/traffic-replayer-default/*/tuples/tuples.log  | jq '.targetResponses[]."Status-Code"'`，確認 Kafka 請求已傳送至目標，且目標已如預期回應。如果沒有出現回應：
+    * 執行 `./catIndices.sh` 以檢查 Migration Console 能否存取目標叢集，這應會顯示來源與目標中的索引。
+    * 確認訊息仍持續記錄至 Kafka。
+    * 使用 Amazon CloudWatch 檢查 Traffic Replayer 記錄檔 (`/migration/STAGE/default/traffic-replayer-default`) 中是否有錯誤。
+10. (重設) 在 Amazon ECS 中，將 **Capture Proxy Service** 的所需計數更新回其原始值。
 
-If the source cluster is configured to require authentication, the Capture Proxy will not be able to verify replication beyond receiving a 401/403 status code for Application Load Balancer health checks. For more information, see [Failure Modes](https://github.com/opensearch-project/opensearch-migrations/blob/main/TrafficCapture/trafficCaptureProxyServer/README.md#failure-modes).
+### 疑難排解
 
-### Traffic does not reach the source cluster 
+請使用本指引來排解下列任何複寫驗證問題。
 
-Verify that the source cluster allows traffic ingress from the Capture Proxy security group.
+### 健康檢查回應 401/403 狀態碼
 
-Look for failing tasks by navigating to **Traffic Capture Proxy ECS**. Change **Filter desired status** to **Any desired status** in order to see all tasks and navigate to the logs for stopped tasks.
+如果來源叢集設定為需要驗證，Capture Proxy 將無法驗證複寫，僅能在 Application Load Balancer 健康檢查中收到 401/403 狀態碼。如需詳細資訊，請參閱[失敗模式](https://github.com/opensearch-project/opensearch-migrations/blob/main/TrafficCapture/trafficCaptureProxyServer/README.md#failure-modes)。
 
-## Resetting before migration
+### 流量未送達來源叢集 
 
-After all verifications are complete, reset all resources before using Migration Assistant for an actual migration. 
+確認來源叢集允許來自 Capture Proxy security group 的流量輸入。
 
-The following steps outline how to reset resources with Migration Assistant before executing the actual migration. At this point all verifications are expected to have been completed. These steps can be performed after [accessing the Migration Console]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-console/accessing-the-migration-console/).
+瀏覽至 **Traffic Capture Proxy ECS**，以尋找失敗的工作。將 **Filter desired status** 變更為 **Any desired status**，以查看所有工作，並瀏覽至已停止工作的記錄檔。
+
+## 遷移前重設
+
+所有驗證完成之後，請先重設所有資源，再使用 Migration Assistant 進行實際遷移。 
+
+下列步驟概述如何在執行實際遷移之前，使用 Migration Assistant 重設資源。此時，預期所有驗證都已完成。這些步驟可以在[存取 Migration Console]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-console/accessing-the-migration-console/) 之後執行。
 
 ### Traffic Replayer
 
-To stop running Traffic Replayer, use the following command:
+若要停止執行 Traffic Replayer，請使用下列命令：
 
 ```bash
 console replay stop
@@ -120,9 +121,9 @@ console replay stop
 
 ### Kafka 
 
-To clear all captured traffic from the Kafka topic, you can run the following command. 
+若要清除 Kafka 主題中所有已擷取的流量，您可以執行下列命令。
 
-This command will result in the loss of any traffic data captured by the Capture Proxy up to this point and thus should be used with caution.
+此命令會導致 Capture Proxy 到目前為止所擷取的所有流量資料遺失，因此應謹慎使用。
 {: .warning}
 
 ```bash
@@ -130,11 +131,11 @@ console kafka delete-topic
 ```
 {% include copy.html %}
 
-### Target cluster 
+### 目標叢集 
 
-To clear non-system indexes from the target cluster that may have been created as a result of testing, you can run the following command. 
+若要清除目標叢集中可能因測試而建立的非系統索引，您可以執行下列命令。 
 
-This command will result in the loss of all data in the target cluster and should be used with caution.
+此命令會導致目標叢集中的所有資料遺失，因此應謹慎使用。
 {: .warning}
 
 ```bash

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Join
 nav_order: 44
@@ -11,23 +12,23 @@ redirect_from:
   - /field-types/join/
 ---
 
-# Join field type
-**Introduced 1.0**
+# Join 欄位類型
+**於 1.0 版推出**
 {: .label .label-purple }
 
-A `join` field type defines a parent/child relationship between documents within the same index. It performs the following to record how documents are related so that queries can connect related documents:
+`join` 欄位類型定義同一索引內文件之間的父子關係。它會執行下列操作，記錄文件之間的關係，讓查詢能夠連結相關文件：
 
-- Defines the relationship names: Specifies the names for the parent and child types (for example, `brand` and `product`).
-- Stores relationship metadata: Identifies which documents are parents, which are children, and how they are connected.
-- Enables parent/child queries: Supports `join` queries that find parents by children or children by parents.
+- 定義關係名稱：指定父類型與子類型的名稱（例如，`brand` 和 `product`）。
+- 儲存關係中繼資料：識別哪些文件是父文件、哪些是子文件，以及它們如何連結。
+- 啟用父子查詢：支援 `join` 查詢，可透過子文件尋找父文件，或透過父文件尋找子文件。
 
-## Example
+## 範例
 
-The following example creates an index in which brands are parents and products are children. 
+下列範例會建立一個索引，其中品牌是父文件，產品是子文件。 
 
-### Step 1: Create the mapping
+### 步驟 1：建立對應
 
-Create a mapping to establish a parent/child relationship between products and their brands. The `name` field stores product or brand names. The `product_to_brand` field is a `join` field that defines a `"brand": "product"` relation, indicating that `brand` documents can have `product` children:
+建立對應，以建立產品與其品牌之間的父子關係。`name` 欄位儲存產品或品牌名稱。`product_to_brand` 欄位是 `join` 欄位，定義了 `"brand": "product"` 關係，表示 `brand` 文件可以有 `product` 子文件：
 
 ```json
 PUT testindex1
@@ -49,9 +50,9 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-### Step 2: Index parent documents (brands)
+### 步驟 2：將父文件（品牌）編製索引
 
-Index a parent document representing a brand and define its role in a parent/child relationship (`"brand"`) in the `product_to_brand` field:
+將代表品牌的父文件編製索引，並在 `product_to_brand` 欄位中定義其在父子關係中的角色（`"brand"`）：
 
 ```json
 PUT testindex1/_doc/1
@@ -64,7 +65,7 @@ PUT testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-You can also use a shortcut without object notation to index a parent document:
+您也可以使用不含物件表示法的簡寫，將父文件編製索引：
 
 ```json
 PUT testindex1/_doc/1
@@ -75,13 +76,13 @@ PUT testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-### Step 3: Index child documents (products)
+### 步驟 3：將子文件（產品）編製索引
 
-When indexing child documents, you must specify the `routing` query parameter because parent and child documents in the same parent/child hierarchy must be indexed on the same shard. For more information, see [Routing]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/routing/).
+將子文件編製索引時，您必須指定 `routing` 查詢參數，因為同一父子階層中的父文件與子文件必須在同一個分片上編製索引。如需詳細資訊，請參閱[路由]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/routing/)。
 
-Each child document refers to its parent's ID in the `parent` field of the `join` field.
+每個子文件都會在 `join` 欄位的 `parent` 欄位中參照其父文件的 ID。
 
-Index two child documents representing products. Define each document's role in the parent/child relationship (`"product"`) in the `product_to_brand` field, specifying that they belong to the brand with ID `1`:
+將代表產品的兩個子文件編製索引。在 `product_to_brand` 欄位中定義每個文件在父子關係中的角色（`"product"`），指定它們屬於 ID 為 `1` 的品牌：
 
 ```json
 PUT testindex1/_doc/3?routing=1
@@ -107,20 +108,20 @@ PUT testindex1/_doc/4?routing=1
 ```
 {% include copy-curl.html %}
 
-After this step, the index contains three documents with this structure.
+完成此步驟後，索引會包含三個具有此結構的文件。
 
-| Document ID | Document type | `name` field | `product_to_brand` field |
+| 文件 ID | 文件類型 | `name` 欄位 | `product_to_brand` 欄位 |
 |-------------|---------------|--------------|--------------------------|
-| 1 | Parent (brand) | "Brand 1" | `{"name": "brand"}` |
-| 3 | Child (product) | "Product 1" | `{"name": "product", "parent": "1"}` |
-| 4 | Child (product) | "Product 2" | `{"name": "product", "parent": "1"}` |
+| 1 | 父文件（品牌） | "Brand 1" | `{"name": "brand"}` |
+| 3 | 子文件（產品） | "Product 1" | `{"name": "product", "parent": "1"}` |
+| 4 | 子文件（產品） | "Product 2" | `{"name": "product", "parent": "1"}` |
 
 
-## Querying a join field
+## 查詢 join 欄位
 
-When you query a join field, the response contains subfields that specify whether the returned document is a parent or a child. For child objects, the parent ID is also returned.
+當您查詢 join 欄位時，回應會包含子欄位，指出傳回的文件是父文件還是子文件。對於子物件，也會傳回父文件 ID。
 
-### Search for all documents
+### 搜尋所有文件
 
 ```json
 GET testindex1/_search
@@ -132,7 +133,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The response indicates whether a document is a parent or a child:
+回應會指出文件是父文件還是子文件：
 
 ```json
 {
@@ -196,9 +197,9 @@ The response indicates whether a document is a parent or a child:
 }
 ```
 
-### Search for all children of a parent 
+### 搜尋父文件的所有子文件 
 
-Find all products associated with Brand 1:
+尋找與 Brand 1 相關聯的所有產品：
 
 ```json
 GET testindex1/_search
@@ -217,7 +218,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The response contains Product 1 and Product 2, which are associated with Brand 1:
+回應包含與 Brand 1 相關聯的 Product 1 和 Product 2：
 
 ```json
 {
@@ -269,9 +270,9 @@ The response contains Product 1 and Product 2, which are associated with Brand 1
 }
 ```
 
-### Search for the parent of a child
+### 搜尋子文件的父文件
 
-Find the parent of Product 1:
+尋找 Product 1 的父文件：
 
 ```json
 GET testindex1/_search
@@ -290,7 +291,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The response returns Brand 1 as Product 1's parent:
+回應會傳回 Brand 1，作為 Product 1 的父文件：
 
 ```json
 {
@@ -326,9 +327,9 @@ The response returns Brand 1 as Product 1's parent:
 }
 ```
 
-## Parent with many children
+## 具有多個子文件的父文件
 
-One parent can have many children. Create a mapping with multiple children:
+一個父文件可以有多個子文件。建立具有多個子類型的對應：
 
 ```json
 PUT testindex1
@@ -347,15 +348,15 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-## Join field type notes
+## Join 欄位類型注意事項
 
-- There can only be one join field mapping in an index.
-- You need to provide the routing parameter when retrieving, updating, or deleting a child document. This is because parent and child documents in the same relation have to be indexed on the same shard.
-- Multiple parents are not supported.
-- You can add a child document to an existing document only if the existing document is already marked as a parent.
-- You can add a new relation to an existing join field.
+- 一個索引中只能有一個 join 欄位對應。
+- 擷取、更新或刪除子文件時，您需要提供 routing 參數。這是因為同一關係中的父文件與子文件必須在同一個分片上編製索引。
+- 不支援多個父文件。
+- 只有在現有文件已標記為父文件時，您才能將子文件新增至該現有文件。
+- 您可以將新關係新增至現有的 join 欄位。
 
-## Next steps
+## 後續步驟
 
-- Learn about [joining queries]({{site.url}}{{site.baseurl}}/query-dsl/joining/) on join fields.
-- Learn more about [retrieving inner hits]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/).
+- 瞭解 join 欄位的[聯結查詢]({{site.url}}{{site.baseurl}}/query-dsl/joining/)。
+- 深入瞭解[擷取內部命中結果]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/)。

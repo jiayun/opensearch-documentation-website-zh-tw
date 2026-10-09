@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Match phrase prefix
+title: "片語字首比對"
 parent: Full-text queries
 nav_order: 30
 ---
 
-# Match phrase prefix query
+# 片語字首比對查詢
 
-Use the `match_phrase_prefix` query to specify a phrase to match in order. The documents that contain the phrase you specify will be returned. The last partial term in the phrase is interpreted as a prefix, so any documents that contain phrases that begin with the phrase and prefix of the last term will be returned.
+使用 `match_phrase_prefix` 查詢來指定要依序比對的片語。包含您所指定片語的文件將會被傳回。片語中最後一個不完整的詞彙會被解讀為字首，因此任何包含以該片語及最後一個詞彙字首開頭之片語的文件都會被傳回。
 
-Similar to [match phrase]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/), but creates a [prefix query](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/PrefixQuery.html) out of the last term in the query string.
+類似於 [片語比對]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/)，但會以查詢字串中的最後一個詞彙建立 [字首查詢](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/PrefixQuery.html)。
 
-For differences between the `match_phrase_prefix` and the `match_bool_prefix` queries, see [The `match_bool_prefix` and `match_phrase_prefix` queries]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-bool-prefix/#the-match_bool_prefix-and-match_phrase_prefix-queries).
+如需 `match_phrase_prefix` 與 `match_bool_prefix` 查詢之間的差異，請參閱 [`match_bool_prefix` 與 `match_phrase_prefix` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-bool-prefix/#the-match_bool_prefix-and-match_phrase_prefix-queries)。
 
-The following example shows a basic `match_phrase_prefix` query:
+下列範例顯示基本的 `match_phrase_prefix` 查詢：
 
 ```json
 GET _search
@@ -27,7 +28,7 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-To pass additional parameters, you can use the expanded syntax:
+若要傳遞其他參數，您可以使用擴充語法：
 
 ```json
 GET _search
@@ -44,9 +45,9 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-## Example
+## 範例
 
-For example, consider an index with the following documents:
+例如，考慮一個包含下列文件的索引：
 
 ```json
 PUT testindex/_doc/1
@@ -65,7 +66,7 @@ PUT testindex/_doc/2
 ```
 {% include copy-curl.html %}
 
-The following `match_phrase_prefix` query searches for the whole word `wind`, followed by a word that starts with `ri`:
+下列 `match_phrase_prefix` 查詢搜尋完整單字 `wind`，其後接一個以 `ri` 開頭的單字：
 
 ```json
 GET testindex/_search
@@ -79,11 +80,11 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含符合的文件：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -118,9 +119,9 @@ The response contains the matching document:
 ```
 </details>
 
-## Parameters
+## 參數
 
-The query accepts the name of the field (`<field>`) as a top-level parameter:
+此查詢接受欄位名稱（`<field>`）作為頂層參數：
 
 ```json
 GET _search
@@ -137,11 +138,11 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-The `<field>` accepts the following parameters. All parameters except `query` are optional.
+`<field>` 接受下列參數。除 `query` 以外的所有參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`query` | String | The query string to use for search. Required.
-`analyzer` | String | The [analyzer]({{site.url}}{{site.baseurl}}/analyzers/index/) used to tokenize the query. 
-`max_expansions` | Positive integer |  The maximum number of terms to which the query can expand. Fuzzy queries “expand to” a number of matching terms that are within the distance specified in `fuzziness`. Then OpenSearch tries to match those terms. Default is `50`.
-`slop` | `0` (default) or a positive integer | Controls the degree to which words in a query can be misordered and still be considered a match. From the [Lucene documentation](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/PhraseQuery.html#getSlop--): "The number of other words permitted between words in query phrase. For example, to switch the order of two words requires two moves (the first move places the words atop one another), so to permit reorderings of phrases, the slop must be at least two. A value of zero requires an exact match."
+`query` | 字串 | 用於搜尋的查詢字串。必要。
+`analyzer` | 字串 | 用於對查詢進行斷詞的[分析器]({{site.url}}{{site.baseurl}}/analyzers/index/)。
+`max_expansions` | 正整數 | 查詢可擴充至的最大詞彙數。模糊查詢會「擴充至」多個在 `fuzziness` 所指定距離內的符合詞彙，然後 OpenSearch 會嘗試比對這些詞彙。預設為 `50`。
+`slop` | `0`（預設）或正整數 | 控制查詢中的單字可以錯序到何種程度仍被視為符合。引自 [Lucene 文件](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/PhraseQuery.html#getSlop--)：「查詢片語中的字詞之間允許出現的其他字詞數量。例如，交換兩個字詞的順序需要移動兩次（第一次移動會使兩個字詞重疊），因此若要允許片語重新排序，slop 至少須為 2。值為 0 時則須完全相符。」

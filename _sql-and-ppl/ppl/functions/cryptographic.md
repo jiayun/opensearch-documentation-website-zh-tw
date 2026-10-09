@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cryptographic functions
+title: "密碼學函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 5
 ---
 
-# Cryptographic functions
+# 密碼學函式
 
-The following cryptographic functions are supported in PPL.
+PPL 支援下列密碼學函式。
 
 ## MD5
 
-**Usage**: `MD5(str)`
+**用法**：`MD5(str)`
 
-Calculates the MD5 digest and returns the value as a 32-character hex string.
+計算 MD5 摘要並以 32 個字元的十六進位字串傳回值。
 
-**Parameters**:
+**參數**：
 
-- `str` (Required): The string for which to calculate the MD5 digest.
+- `str` (必要)：要計算 MD5 摘要的字串。
 
-**Return type**: `STRING`
+**傳回類型**：`STRING`
 
-#### Example
+#### 範例
 
 ```sql
 source=people
@@ -31,7 +32,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -43,17 +44,17 @@ The query returns the following results:
   
 ## SHA1
 
-**Usage**: `SHA1(str)`
+**用法**：`SHA1(str)`
 
-Returns the SHA-1 hash as a hex string.
+以十六進位字串傳回 SHA-1 雜湊。
 
-**Parameters**:
+**參數**：
 
-- `str` (Required): The string for which to calculate the SHA-1 hash.
+- `str` (必要)：要計算 SHA-1 雜湊的字串。
 
-**Return type**: `STRING`
+**傳回類型**：`STRING`
 
-#### Example
+#### 範例
 
 ```sql
 source=people
@@ -62,7 +63,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -74,18 +75,18 @@ The query returns the following results:
   
 ## SHA2
 
-**Usage**: `SHA2(str, numBits)`
+**用法**：`SHA2(str, numBits)`
 
-Returns the result of SHA-2 family hash functions (SHA-224, SHA-256, SHA-384, and SHA-512) as a hex string.
+以十六進位字串傳回 SHA-2 系列雜湊函式 (SHA-224、SHA-256、SHA-384 及 SHA-512) 的結果。
 
-**Parameters**:
+**參數**：
 
-- `str` (Required): The string for which to calculate the SHA-2 hash.
-- `numBits` (Required): The desired bit length of the result, which must be `224`, `256`, `384`, or `512`.
+- `str` (必要)：要計算 SHA-2 雜湊的字串。
+- `numBits` (必要)：結果的目標位元長度，必須是 `224`、`256`、`384` 或 `512`。
 
-**Return type**: `STRING`
+**傳回類型**：`STRING`
 
-#### Example: SHA-256 hash
+#### 範例：SHA-256 雜湊
 
 ```sql
 source=people
@@ -94,7 +95,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -104,7 +105,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-#### Example: SHA-512 hash
+#### 範例：SHA-512 雜湊
 
 ```sql
 source=people
@@ -113,7 +114,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 

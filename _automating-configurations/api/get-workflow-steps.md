@@ -1,13 +1,14 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get workflow steps
+title: "取得工作流程步驟"
 parent: Workflow APIs
 nav_order: 50
 ---
 
 # Get Workflow Steps API
 
-This API returns a list of workflow steps, including their required inputs, outputs, default timeout values, and required plugins. For example, for the `register_remote_model` step, the Get Workflow Steps API returns the following information:
+此 API 會傳回工作流程步驟的清單，包括其必要的輸入、輸出、預設逾時值以及必要的外掛程式。例如，對於 `register_remote_model` 步驟，Get Workflow Steps API 會傳回以下資訊：
 
 ```json
 {
@@ -27,31 +28,31 @@ This API returns a list of workflow steps, including their required inputs, outp
 }
 ``` 
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_flow_framework/workflow/_steps
 GET /_plugins/_flow_framework/workflow/_steps?workflow_step={step_name}
 ``` 
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `workflow_step` | String | The name of the step to retrieve. Specify multiple step names as a comma-separated list. For example, `create_connector,delete_model,deploy_model`. |
+| `workflow_step` | 字串 | 要擷取的步驟名稱。可指定多個步驟名稱，以逗號分隔的清單形式提供。例如 `create_connector,delete_model,deploy_model`。 |
 
-## Example request
+## 請求範例
 
-To fetch all workflow steps, use the following request:
+若要擷取所有工作流程步驟，請使用以下請求：
 
 ```json
 GET /_plugins/_flow_framework/workflow/_steps
 ``` 
 {% include copy-curl.html %}
 
-To fetch specific workflow steps, pass the step names to the request as a query parameter:
+若要擷取特定的工作流程步驟，請將步驟名稱作為查詢參數傳遞至請求：
 
 ```json
 GET /_plugins/_flow_framework/workflow/_step?workflow_steps=create_connector,delete_model,deploy_model
@@ -59,17 +60,17 @@ GET /_plugins/_flow_framework/workflow/_step?workflow_steps=create_connector,del
 {% include copy-curl.html %}
 
 
-## Example response
+## 回應範例
 
-OpenSearch responds with the workflow steps. The order of fields in the returned steps may not exactly match the original JSON but will function identically.
+OpenSearch 會以工作流程步驟回應。傳回步驟中的欄位順序可能與原始 JSON 不完全一致，但功能完全相同。
 
-To retrieve the template in YAML format, specify `Content-Type: application/yaml` in the request header:
+若要以 YAML 格式擷取範本，請在請求標頭中指定 `Content-Type: application/yaml`：
 
 ```bash
 curl -XGET "http://localhost:9200/_plugins/_flow_framework/workflow/_steps" -H 'Content-Type: application/yaml'
 ```
 
-To retrieve the template in JSON format, specify `Content-Type: application/json` in the request header:
+若要以 JSON 格式擷取範本，請在請求標頭中指定 `Content-Type: application/json`：
 
 ```bash
 curl -XGET "http://localhost:9200/_plugins/_flow_framework/workflow/_steps" -H 'Content-Type: application/json'

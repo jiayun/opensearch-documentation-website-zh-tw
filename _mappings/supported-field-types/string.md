@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: String field types
+title: "字串欄位類型"
 nav_order: 20
 has_children: true
 has_toc: false
@@ -11,15 +12,15 @@ redirect_from:
   - /field-types/string/
 ---
 
-# String field types
+# 字串欄位類型
 
-String field types contain text values or values derived from text. The following table lists all string field types that OpenSearch supports.
+字串欄位類型包含文字值或由文字衍生的值。下表列出 OpenSearch 支援的所有字串欄位類型。
 
-Field data type | Description
+欄位資料類型 | 描述
 :--- | :---
-[`text`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/text/) | A string that is analyzed. Useful for full-text search.
-[`keyword`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/keyword/) | A string that is not analyzed. Useful for exact-value search.
-[`match_only_text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/match-only-text/) | A space-optimized version of a `text` field.
-[`wildcard`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/wildcard/)  | A variation of `keyword` with efficient substring and regular expression matching.
-[`token_count`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/token-count/)  | Counts the number of tokens in a string.
-[`constant_keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/constant-keyword/)  | Similar to `keyword` but uses a single value for all documents.
+[`text`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/text/) | 經過分析的字串。適用於全文搜尋。
+[`keyword`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/keyword/) | 未經分析的字串。適用於精確值搜尋。
+[`match_only_text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/match-only-text/) | `text` 欄位的節省空間版本。
+[`wildcard`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/wildcard/)  | `keyword` 的變體，具備高效率的子字串與規則運算式比對。
+[`token_count`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/token-count/)  | 計算字串中的詞元數量。
+[`constant_keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/constant-keyword/)  | 類似於 `keyword`，但對所有文件使用單一值。

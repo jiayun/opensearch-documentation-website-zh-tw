@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search connector
+title: "搜尋連接器"
 parent: Connector APIs
 grand_parent: ML Commons APIs
 nav_order: 25
 ---
 
-# Search Connector API
+# 搜尋連接器 API
 
-Use the `_search` endpoint to search for a connector. This API uses a query to search for matching connectors.
+使用 `_search` 端點來搜尋連接器。此 API 使用查詢來搜尋符合條件的連接器。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/connectors/_search
 GET /_plugins/_ml/connectors/_search
 ```
 
-## Example request
+## 範例請求
 
 ```json
 POST /_plugins/_ml/connectors/_search
@@ -30,7 +31,7 @@ POST /_plugins/_ml/connectors/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {

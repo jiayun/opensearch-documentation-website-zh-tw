@@ -1,47 +1,48 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Update agent
+title: "更新代理程式"
 parent: Agent APIs
 grand_parent: ML Commons APIs
 nav_order: 15
 ---
 
 # Update Agent API
-**Introduced 3.1**
+**3.1 版引入**
 {: .label .label-purple }
 
-Use this API to update an existing agent's configuration.
+使用此 API 更新現有代理程式的組態。
 
-## Endpoints
+## 端點
 
 ```json
 PUT /_plugins/_ml/agents/{agent_id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `agent_id` | String | The agent ID of the agent to update. |
+| `agent_id` | 字串 | 要更新之代理程式的代理程式 ID。 |
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request fields. All request body fields are optional.
+下表列出可用的請求欄位。所有請求本文欄位皆為選用。
 
-Field | Data type | Agent type | Description
+欄位 | 資料類型 | 代理程式類型 | 說明
 :---  | :--- | :--- | :--- 
-`name`| String | All | The agent name. 
-`description` | String | All | A description of the agent. 
-`tools` | Array | All | A list of tools for the agent to execute. 
-`app_type` | String | All | Specifies an optional agent category.
-`memory.type` | String | `conversational_flow`, `conversational` | Specifies where to store the conversational memory. The only supported type is `conversation_index` (store the memory in a conversational system index).
-`llm.model_id` | String | `conversational` | The model ID of the large language model (LLM) to send questions to.
-`llm.parameters.response_filter` | String | `conversational` | The pattern for parsing the LLM response.
-`llm.parameters.max_iteration` | Integer | `conversational` | The maximum number of messages to send to the LLM.
+`name`| 字串 | 全部 | 代理程式名稱。 
+`description` | 字串 | 全部 | 代理程式的說明。 
+`tools` | 陣列 | 全部 | 代理程式可執行的一系列工具。 
+`app_type` | 字串 | 全部 | 指定選用的代理程式類別。
+`memory.type` | 字串 | `conversational_flow`, `conversational` | 指定交談記憶體的儲存位置。唯一支援的類型為 `conversation_index` (將記憶體儲存在交談系統索引中)。
+`llm.model_id` | 字串 | `conversational` | 要傳送問題給大型語言模型 (LLM) 的模型 ID。
+`llm.parameters.response_filter` | 字串 | `conversational` | 解析 LLM 回應的模式。
+`llm.parameters.max_iteration` | 整數 | `conversational` | 要傳送給 LLM 的訊息數量上限。
 
-## Example request: Update tool prompt
+## 範例請求：更新工具的提示詞
 
 ```json
 PUT /_plugins/_ml/agents/N8AE1osB0jLkkocYjz7D
@@ -62,7 +63,7 @@ PUT /_plugins/_ml/agents/N8AE1osB0jLkkocYjz7D
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {

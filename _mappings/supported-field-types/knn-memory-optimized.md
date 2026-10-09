@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Memory-optimized vectors
+title: "記憶體最佳化向量"
 parent: k-NN vector
 grand_parent: Supported field types
 redirect_from:
@@ -8,22 +9,22 @@ redirect_from:
 nav_order: 30
 ---
 
-# Memory-optimized vectors
+# 記憶體最佳化向量
 
-Vector search operations can be memory intensive, particularly when dealing with large-scale deployments. OpenSearch provides several strategies for optimizing memory usage while maintaining search performance. You can choose between different workload modes that prioritize either low latency or low cost, apply various compression levels to reduce memory footprint, or use alternative vector representations like byte or binary vectors. These optimization techniques allow you to balance memory consumption, search performance, and cost based on your specific use case requirements.
+向量搜尋作業可能相當耗用記憶體，尤其是在處理大規模部署時。OpenSearch 提供多種策略，可在維持搜尋效能的同時最佳化記憶體使用量。您可以選擇以低延遲或低成本為優先的不同工作負載模式、套用各種壓縮層級以減少記憶體佔用量，或使用位元組向量或二進位向量等替代向量表示法。這些最佳化技術可讓您根據特定使用案例需求，在記憶體耗用量、搜尋效能與成本之間取得平衡。
 
-## Vector workload modes
+## 向量工作負載模式
 
-Vector search requires balancing search performance and operational costs. While in-memory search provides the lowest latency, [disk-based search]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/disk-based-vector-search/) offers a more cost-effective approach by reducing memory usage, though it results in slightly higher search latency. To choose between these approaches, use the `mode` mapping parameter in your `knn_vector` field configuration. This parameter sets appropriate default values for k-NN parameters based on your priority: either low latency or low cost. For additional optimization, you can override these default parameter values in your k-NN field mapping.
+向量搜尋需要在搜尋效能與營運成本之間取得平衡。記憶體內搜尋可提供最低延遲，而[磁碟式搜尋]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/disk-based-vector-search/)則透過減少記憶體使用量提供更具成本效益的方法，但會導致搜尋延遲略微提高。若要在這些方法之間選擇，請在您的 `knn_vector` 欄位組態中使用 `mode` 對應參數。此參數會根據您的優先順序 (低延遲或低成本)，為 k-NN 參數設定適當的預設值。如需進一步最佳化，您可以在 k-NN 欄位對應中覆寫這些預設參數值。
 
-OpenSearch supports the following vector workload modes.
+OpenSearch 支援下列向量工作負載模式。
 
-| Mode    | Default engine | Description                                                                                                                                                                                                                                             |
+| 模式    | 預設引擎 | 說明                                                                                                                                                                                                                                             |
 |:---|:---|:---|
-| `in_memory` (Default) | `faiss`        | Prioritizes low-latency search. This mode uses the `faiss` engine without any quantization applied. It is configured with the default parameter values for vector search in OpenSearch.                                                                 |
-| `on_disk`             | `faiss`        | Prioritizes low-cost vector search while maintaining strong recall. By default, the `on_disk` mode uses quantization and rescoring to execute a two-phase approach in order to retrieve the top neighbors. The `on_disk` mode supports only `float` and `half_float` vector types. |
+| `in_memory` (預設) | `faiss`        | 以低延遲搜尋為優先。此模式使用 `faiss` 引擎，且不套用任何量化。其設定為 OpenSearch 中向量搜尋的預設參數值。                                                                 |
+| `on_disk`             | `faiss`        | 以低成本向量搜尋為優先，同時維持良好的召回率。根據預設，`on_disk` 模式會使用量化與重新評分來執行兩階段方法，以擷取最相近的鄰居。`on_disk` 模式僅支援 `float` 與 `half_float` 向量類型。 |
 
-To create a vector index that uses the `on_disk` mode for low-cost search, send the following request:
+若要建立使用 `on_disk` 模式進行低成本搜尋的向量索引，請傳送下列請求：
 
 ```json
 PUT test-index
@@ -47,36 +48,36 @@ PUT test-index
 ```
 {% include copy-curl.html %}
 
-### Compression levels
+### 壓縮層級
 
-The `compression_level` mapping parameter selects a quantization encoder that reduces vector memory consumption by the given factor. The compression factor is measured against the storage size of the vector data type: 32 bits per dimension for `float` vectors and 16 bits per dimension for `half_float` vectors. Therefore, the same `compression_level` value applies a different quantization to each data type. The following table lists the available `compression_level` values, the engines and data types that support them, and the quantization each one applies.
+`compression_level` 對應參數會選取量化編碼器，以指定的倍數減少向量記憶體耗用量。壓縮倍數是相對於向量資料類型的儲存大小來衡量：`float` 向量為每維度 32 位元，`half_float` 向量為每維度 16 位元。因此，相同的 `compression_level` 值會對每種資料類型套用不同的量化。下表列出可用的 `compression_level` 值、支援這些值的引擎與資料類型，以及各自套用的量化。
 
-| Compression level | Supported engines                            | Quantization for `float` vectors | Quantization for `half_float` vectors |
+| 壓縮層級 | 支援的引擎                            | `float` 向量的量化 | `half_float` 向量的量化 |
 |:------------------|:---------------------------------------------|:---------------------------------|:--------------------------------------|
-| `1x`              | `faiss`, `lucene`, and `nmslib` (deprecated) | None (32-bit storage)            | None (16-bit FP16 storage); `faiss` and `lucene` only |
-| `2x`              | `faiss`                                      | 16-bit                           | Not supported                         |
-| `4x`              | `lucene`                                     | 7-bit                            | Not supported                         |
-| `8x`              | `faiss` and `lucene`                         | 4-bit                            | Not supported                         |
-| `16x`             | `faiss` and `lucene`                         | 2-bit                            | 1-bit                                 |
-| `32x`             | `faiss` and `lucene`                         | 1-bit                            | Not supported                         |
+| `1x`              | `faiss`、`lucene` 及 `nmslib` (已棄用) | 無 (32 位元儲存)            | 無 (16 位元 FP16 儲存)；僅限 `faiss` 與 `lucene` |
+| `2x`              | `faiss`                                      | 16 位元                           | 不支援                         |
+| `4x`              | `lucene`                                     | 7 位元                            | 不支援                         |
+| `8x`              | `faiss` 與 `lucene`                         | 4 位元                            | 不支援                         |
+| `16x`             | `faiss` 與 `lucene`                         | 2 位元                            | 1 位元                                 |
+| `32x`             | `faiss` 與 `lucene`                         | 1 位元                            | 不支援                         |
 
-For example, if a `compression_level` of `32x` is passed for a `float32` index of 768-dimensional vectors, the per-vector memory is reduced from `4 * 768 = 3072` bytes to `3072 / 32 = 96` bytes. Internally, binary quantization (which maps a `float` to a `bit`) may be used to achieve this compression.
+例如，若為 768 維向量的 `float32` 索引傳入 `32x` 的 `compression_level`，則每個向量的記憶體會從 `4 * 768 = 3072` 位元組減少為 `3072 / 32 = 96` 位元組。在內部，可能會使用二進位量化 (將 `float` 對應至 `bit`) 來達成此壓縮。
 
-If you set the `compression_level` parameter, then you cannot specify an `encoder` in the `method` mapping. The `compression_level` parameter is supported only for `float` and [`half_float`](#half-float-vectors) vectors. For `half_float` vectors, the compression level is measured against their 16-bit baseline.
+如果您設定了 `compression_level` 參數，就無法在 `method` 對應中指定 `encoder`。`compression_level` 參數僅支援 `float` 與 [`half_float`](#half-float-vectors) 向量。對於 `half_float` 向量，壓縮層級是相對於其 16 位元基準來衡量。
 {: .note}
 
-Enabling `on_disk` mode with a `1x` compression level activates [memory-optimized search]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/memory-optimized-search/). In this mode, the engine loads data on demand during search instead of loading all data into memory at once.
+啟用 `on_disk` 模式並搭配 `1x` 壓縮層級，即會啟用[記憶體最佳化搜尋]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/memory-optimized-search/)。在此模式中，引擎會在搜尋期間視需要載入資料，而不是一次將所有資料載入記憶體。
 {: .important}
 
-The following table lists the default `compression_level` values for the available workload modes. For both data types, the `on_disk` default applies 1-bit quantization; the level differs because the compression factor is measured against the data type's storage size.
+下表列出可用工作負載模式的預設 `compression_level` 值。對於這兩種資料類型，`on_disk` 預設會套用 1 位元量化；層級不同是因為壓縮倍數是相對於資料類型的儲存大小來衡量。
 
-| Mode | Default compression level for `float` | Default compression level for `half_float` |
+| 模式 | `float` 的預設壓縮層級 | `half_float` 的預設壓縮層級 |
 |:------------------|:-------------------------------|:-------------------------------|
 | `in_memory`       | `1x` | `1x` |
 | `on_disk`         | `32x` | `16x` |
 
 
-To create a vector field with a `compression_level` of `16x`, specify the `compression_level` parameter in the mappings. This parameter overrides the default compression level for the `on_disk` mode from `32x` to `16x`, producing higher recall and accuracy at the expense of a larger memory footprint:
+若要建立具有 `16x` 的 `compression_level` 的向量欄位，請在對應中指定 `compression_level` 參數。此參數會將 `on_disk` 模式的預設壓縮層級從 `32x` 覆寫為 `16x`，以更大的記憶體佔用量換取更高的召回率與準確度：
 
 ```json
 PUT test-index
@@ -101,24 +102,24 @@ PUT test-index
 ```
 {% include copy-curl.html %}
 
-## Rescoring quantized results to full precision
+## 將量化結果重新評分至完整精確度
 
-To improve recall while maintaining the memory savings of quantization, you can use a two-phase search approach. In the first phase, `oversample_factor * k` results are retrieved from an index using quantized vectors and the scores are approximated. In the second phase, the full-precision vectors of those `oversample_factor * k` results are loaded into memory from disk, and scores are recomputed against the full-precision query vector. The results are then reduced to the top k.
+若要在維持量化所節省的記憶體之餘改善召回率，您可以使用兩階段搜尋方法。在第一階段，會使用量化向量從索引擷取 `oversample_factor * k` 筆結果，並近似計算分數。在第二階段，會從磁碟將這些 `oversample_factor * k` 筆結果的完整精確度向量載入記憶體，並針對完整精確度的查詢向量重新計算分數。接著再將結果縮減為前 k 筆。
 
-The default rescoring behavior is determined by the `mode` and `compression_level` of the backing k-NN vector field:
+預設的重新評分行為取決於後端 k-NN 向量欄位的 `mode` 與 `compression_level`：
 
-- For `in_memory` mode, no rescoring is applied by default.
-- For `on_disk` mode, default rescoring is based on the configured `compression_level`. Each `compression_level` provides a default `oversample_factor`, specified in the following table.
+- 對於 `in_memory` 模式，預設不會套用重新評分。
+- 對於 `on_disk` 模式，預設重新評分會以設定的 `compression_level` 為依據。每個 `compression_level` 都會提供預設的 `oversample_factor`，如下表所示。
 
-| Compression level | Default rescore `oversample_factor` |
+| 壓縮層級 | 預設重新評分 `oversample_factor` |
 |:------------------|:------------------------------------|
-| `32x` (default)   | 2.0                                 |
+| `32x` (預設)   | 2.0                                 |
 | `16x`             | 1.0                                 |
 | `8x`              | 1.0                                 |
 | `4x`              | 1.0                                 |
-| `2x`              | No default rescoring                |
+| `2x`              | 無預設重新評分                |
 
-To explicitly apply rescoring, provide the `rescore` parameter in a query on a quantized index and specify the `oversample_factor`:
+若要明確套用重新評分，請在量化索引的查詢中提供 `rescore` 參數，並指定 `oversample_factor`：
 
 ```json
 GET /my-vector-index/_search
@@ -139,7 +140,7 @@ GET /my-vector-index/_search
 ```
 {% include copy-curl.html %}
 
-Alternatively, set the `rescore` parameter to `true` to use the default `oversample_factor` of `1.0`:
+或者，將 `rescore` 參數設為 `true`，以使用 `1.0` 的預設 `oversample_factor`：
 
 ```json
 GET /my-vector-index/_search
@@ -158,36 +159,36 @@ GET /my-vector-index/_search
 ```
 {% include copy-curl.html %}
 
-The `oversample_factor` is a floating-point number between 1.0 and 100.0, inclusive. The number of results in the first pass is calculated as `oversample_factor * k` and is guaranteed to be between 100 and 10,000, inclusive. If the calculated number of results is smaller than 100, then the number of results is set to 100. If the calculated number of results is greater than 10,000, then the number of results is set to 10,000.
+`oversample_factor` 是介於 1.0 與 100.0 (含) 之間的浮點數。第一階段傳回的結果數目計算方式為 `oversample_factor * k`，並保證介於 100 與 10,000 (含) 之間。如果計算出的結果數目小於 100，則結果數目會設為 100。如果計算出的結果數目大於 10,000，則結果數目會設為 10,000。
 
-Rescoring is available only for the Faiss and Lucene engines.
+重新評分僅適用於 Faiss 與 Lucene 引擎。
 {: .note}
 
-Rescoring is not needed if quantization is not used because the scores returned are already fully precise.
+如果未使用量化，則不需要重新評分，因為傳回的分數已經是完整精確度。
 {: .note}
 
 
-## Half-float vectors
-**Introduced 3.9**
+## 半浮點數向量
+**3.9 版新增**
 {: .label .label-purple }
 
-By default, k-NN vectors are `float` vectors, in which each dimension is 4 bytes. If you want to reduce memory and storage requirements by half, you can use `half_float` vectors. In a `half_float` vector, each dimension is a 16-bit floating-point (FP16) value in the [-65504.0, 65504.0] range. If any vector value is outside this range, the request is rejected.
+預設情況下，k-NN 向量是 `float` 向量，每個維度佔 4 位元組。如果您想將記憶體與儲存需求減半，可以使用 `half_float` 向量。在 `half_float` 向量中，每個維度是一個 16 位元浮點數 (FP16) 值，範圍為 [-65504.0, 65504.0]。如果任何向量值超出此範圍，請求將被拒絕。
 
-To use `half_float` vectors, set the `data_type` parameter to `half_float` when creating mappings for an index. You ingest and query `half_float` vectors the same way as `float` vectors; OpenSearch stores them natively in the FP16 format.
+若要使用 `half_float` 向量，請在為索引建立對應時，將 `data_type` 參數設為 `half_float`。`half_float` 向量的匯入與查詢方式與 `float` 向量相同；OpenSearch 會以 FP16 格式原生儲存這些向量。
 
-Half-float vectors are supported for the `hnsw` method with the `faiss` or `lucene` engine and for [exact search using scalar quantization]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/exact-search-scalar-quantization/) with the `flat` method. Each of these configurations supports the `1x` and `16x` compression levels.
+半浮點數向量支援搭配 `faiss` 或 `lucene` 引擎的 `hnsw` 方法，以及搭配 `flat` 方法的[使用純量量化進行精確搜尋]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/exact-search-scalar-quantization/)。上述每種組態都支援 `1x` 與 `16x` 壓縮層級。
 
-Half-float vectors are not supported for the `nmslib` engine, the `ivf` method, or [trained models]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/#model-ids).
+半浮點數向量不支援 `nmslib` 引擎、`ivf` 方法或[已訓練模型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/#model-ids)。
 {: .note}
 
-Because the vectors are already 16-bit, `half_float` fields do not accept an `encoder` in the `method` mapping. To apply quantization, use the `compression_level` mapping parameter instead. The compression level is measured against the 16-bit baseline of `half_float` vectors:
+由於向量已經是 16 位元，`half_float` 欄位在 `method` 對應中不接受 `encoder`。若要套用量化，請改用 `compression_level` 對應參數。壓縮層級是以 `half_float` 向量的 16 位元基準來衡量：
 
-- `1x` stores vectors as unquantized FP16 values, using 2 bytes per dimension.
-- `16x` applies 1-bit scalar quantization, mapping each dimension to a single bit.
+- `1x` 將向量儲存為未量化的 FP16 值，每個維度使用 2 位元組。
+- `16x` 套用 1 位元純量量化，將每個維度對應到單一位元。
 
-### Example: HNSW
+### 範例：HNSW
 
-The following example creates a half-float vector index with the `faiss` engine and `hnsw` algorithm:
+下列範例使用 `faiss` 引擎與 `hnsw` 演算法建立半浮點數向量索引：
 
 ```json
 PUT test-index
@@ -215,38 +216,38 @@ PUT test-index
 ```
 {% include copy-curl.html %}
 
-### Memory estimation
+### 記憶體估算
 
-Half-float vectors require half the memory of `float` vectors. The memory required for HNSW can be estimated as `1.1 * (2 * dimension + 8 * m)` bytes/vector, where `m` is the maximum number of bidirectional links created for each element during graph construction.
+半浮點數向量所需的記憶體是 `float` 向量的一半。HNSW 所需的記憶體可估算為 `1.1 * (2 * dimension + 8 * m)` 位元組/向量，其中 `m` 是圖形建構期間為每個元素建立的最大雙向連結數。
 
-As an example, assume that you have 1 million half-float vectors with a `dimension` of `256` and an `m` of `16`. The memory requirement can be estimated as follows:
+舉例來說，假設您有 100 萬個半浮點數向量，`dimension` 為 `256`，`m` 為 `16`。記憶體需求可估算如下：
 
 ```r
 1.1 * (2 * 256 + 8 * 16) * 1,000,000 ~= 0.656 GB
 ```
 
-## Byte vectors
+## 位元組向量
 
-By default, k-NN vectors are `float` vectors, in which each dimension is 4 bytes. If you want to save storage space, you can use `byte` vectors with the `faiss` or `lucene` engine. In a `byte` vector, each dimension is a signed 8-bit integer in the [-128, 127] range. 
+預設情況下，k-NN 向量是 `float` 向量，每個維度佔 4 位元組。如果您想節省儲存空間，可以搭配 `faiss` 或 `lucene` 引擎使用 `byte` 向量。在 `byte` 向量中，每個維度是一個範圍為 [-128, 127] 的帶正負號 8 位元整數。
  
-Byte vectors are supported only for the `lucene` and `faiss` engines. They are not supported for the `nmslib` engine.
+位元組向量僅支援 `lucene` 與 `faiss` 引擎，不支援 `nmslib` 引擎。
 {: .note}
 
-In [k-NN benchmarking tests](https://github.com/opensearch-project/opensearch-benchmark-workloads/tree/main/vectorsearch), the use of `byte` rather than `float` vectors resulted in a significant reduction in storage and memory usage as well as improved indexing throughput and reduced query latency. Additionally, recall precision was not greatly affected (note that recall can depend on various factors, such as the [quantization technique](#quantization-techniques) used and the data distribution). 
+在 [k-NN 基準測試](https://github.com/opensearch-project/opensearch-benchmark-workloads/tree/main/vectorsearch)中，使用 `byte` 而非 `float` 向量可大幅降低儲存與記憶體用量，同時提升索引處理吞吐量並降低查詢延遲。此外，召回精確度並未受到太大影響（請注意，召回率可能取決於多種因素，例如所使用的[量化技術](#quantization-techniques)與資料分佈）。
 
-When using `byte` vectors, expect some loss of recall precision compared to using `float` vectors. Byte vectors are useful in large-scale applications and use cases that prioritize a reduced memory footprint in exchange for a minimal loss of recall.
+使用 `byte` 向量時，與使用 `float` 向量相比，預期會有一些召回精確度的損失。位元組向量適用於大規模應用程式，以及優先考慮以極小召回損失換取較低記憶體佔用量的使用情境。
 {: .important}
 
-When using `byte` vectors with the `faiss` engine, we recommend using [Single Instruction Multiple Data (SIMD) optimization]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#simd-optimization), which helps to significantly reduce search latencies and improve indexing throughput.
+搭配 `faiss` 引擎使用 `byte` 向量時，我們建議使用[單指令多資料 (SIMD) 最佳化]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#simd-optimization)，這有助於大幅降低搜尋延遲並提升索引處理吞吐量。
 {: .important} 
 
-Introduced in k-NN plugin version 2.9, the optional `data_type` parameter defines the data type of a vector. The default value of this parameter is `float`.
+k-NN 外掛程式 2.9 版新增了選用的 `data_type` 參數，用於定義向量的資料類型。此參數的預設值為 `float`。
 
-To use a `byte` vector, set the `data_type` parameter to `byte` when creating mappings for an index.
+若要使用 `byte` 向量，請在為索引建立對應時，將 `data_type` 參數設為 `byte`。
 
-### Example: HNSW
+### 範例：HNSW
 
-The following example creates a byte vector index with the `lucene` engine and `hnsw` algorithm:
+下列範例使用 `lucene` 引擎與 `hnsw` 演算法建立位元組向量索引：
 
 ```json
 PUT test-index
@@ -279,7 +280,7 @@ PUT test-index
 ```
 {% include copy-curl.html %}
 
-After creating the index, ingest documents as usual. Make sure each dimension in the vector is in the supported [-128, 127] range:
+建立索引後，照常匯入文件。請確定向量的每個維度都在支援的 [-128, 127] 範圍內：
 
 ```json
 PUT test-index/_doc/1
@@ -297,7 +298,7 @@ PUT test-index/_doc/2
 ```
 {% include copy-curl.html %}
 
-When querying, be sure to use a `byte` vector:
+查詢時，請務必使用 `byte` 向量：
 
 ```json
 GET test-index/_search
@@ -315,11 +316,11 @@ GET test-index/_search
 ```
 {% include copy-curl.html %}
 
-### Example: IVF
+### 範例：IVF
 
-The `ivf` method requires a training step that creates a model and trains it to initialize the native library index during segment creation. For more information, see [Building a vector index from a model]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/#building-a-vector-index-from-a-model).
+`ivf` 方法需要一個訓練步驟，以建立模型並加以訓練，從而在建立分段時初始化原生程式庫索引。如需更多資訊，請參閱[從模型建立向量索引]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/#building-a-vector-index-from-a-model)。
 
-First, create an index that will contain byte vector training data. Specify the `faiss` engine and `ivf` algorithm and make sure that the `dimension` matches the dimension of the model you want to create:
+首先，建立一個將包含位元組向量訓練資料的索引。指定 `faiss` 引擎與 `ivf` 演算法，並確保 `dimension` 與您要建立的模型維度相符：
 
 ```json
 PUT train-index
@@ -337,7 +338,7 @@ PUT train-index
 ```
 {% include copy-curl.html %}
 
-First, ingest training data containing byte vectors into the training index:
+接著，將包含位元組向量的訓練資料匯入訓練索引：
 
 ```json
 PUT _bulk
@@ -352,7 +353,7 @@ PUT _bulk
 ```
 {% include copy-curl.html %}
 
-Then, create and train the model named `byte-vector-model`. The model will be trained using the training data from the `train-field` in the `train-index`. Specify the `byte` data type:
+然後，建立並訓練名為 `byte-vector-model` 的模型。模型將使用 `train-index` 中 `train-field` 的訓練資料進行訓練。請指定 `byte` 資料類型：
 
 ```json
 POST _plugins/_knn/models/byte-vector-model/_train
@@ -375,16 +376,16 @@ POST _plugins/_knn/models/byte-vector-model/_train
 ```
 {% include copy-curl.html %}
 
-To check the model training status, call the Get Model API:
+若要檢查模型訓練狀態，請呼叫 Get Model API：
 
 ```json
 GET _plugins/_knn/models/byte-vector-model?filter_path=state
 ```
 {% include copy-curl.html %}
 
-Once the training is complete, the `state` changes to `created`.
+訓練完成後，`state` 會變更為 `created`。
 
-Next, create an index that will initialize its native library indexes using the trained model:
+接下來，建立一個索引，使用已訓練的模型來初始化其原生程式庫索引：
 
 ```json
 PUT test-byte-ivf
@@ -406,7 +407,7 @@ PUT test-byte-ivf
 ```
 {% include copy-curl.html %}
 
-Ingest the data containing the byte vectors that you want to search into the created index:
+將包含您要搜尋之位元組向量的資料匯入已建立的索引：
 
 ```json
 PUT _bulk?refresh=true
@@ -423,7 +424,7 @@ PUT _bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-Finally, search the data. Be sure to provide a byte vector in the k-NN vector field:
+最後，搜尋資料。請務必在 k-NN 向量欄位中提供位元組向量：
 
 ```json
 GET test-byte-ivf/_search
@@ -441,38 +442,38 @@ GET test-byte-ivf/_search
 ```
 {% include copy-curl.html %}
 
-### Memory estimation
+### 記憶體估算
 
-In the best-case scenario, byte vectors require 25% of the memory required by 32-bit vectors.
+在最佳情況下，位元組向量所需的記憶體為 32 位元向量所需記憶體的 25%。
 
-#### HNSW memory estimation
+#### HNSW 記憶體估算
 
-The memory required for Hierarchical Navigable Small World (HNSW) is estimated to be `1.1 * (dimension + 8 * m)` bytes/vector, where `m` is the maximum number of bidirectional links created for each element during the construction of the graph.
+階層式可導覽小世界 (Hierarchical Navigable Small World，HNSW) 所需的記憶體估計為每個向量 `1.1 * (dimension + 8 * m)` 位元組，其中 `m` 是在建構圖形期間為每個元素建立的最大雙向連結數。
 
-As an example, assume that you have 1 million vectors with a `dimension` of `256` and an `m` of `16`. The memory requirement can be estimated as follows:
+舉例來說，假設您有 100 萬個向量，`dimension` 為 `256`，且 `m` 為 `16`。記憶體需求可估算如下：
 
 ```r
 1.1 * (256 + 8 * 16) * 1,000,000 ~= 0.39 GB
 ```
 
-#### IVF memory estimation
+#### IVF 記憶體估算
 
-The memory required for Inverted File Index (IVF) is estimated to be `1.1 * ((dimension * num_vectors) + (4 * nlist * dimension))` bytes/vector, where `nlist` is the number of buckets into which to partition vectors.
+倒排檔案索引 (Inverted File Index，IVF) 所需的記憶體估計為每個向量 `1.1 * ((dimension * num_vectors) + (4 * nlist * dimension))` 位元組，其中 `nlist` 是要將向量分割成的桶數。
 
-As an example, assume that you have 1 million vectors with a `dimension` of `256` and an `nlist` of `128`. The memory requirement can be estimated as follows:
+舉例來說，假設您有 100 萬個向量，`dimension` 為 `256`，且 `nlist` 為 `128`。記憶體需求可估算如下：
 
 ```r
 1.1 * ((256 * 1,000,000) + (4 * 128 * 256))  ~= 0.27 GB
 ```
 
 
-### Quantization techniques
+### 量化技術
 
-If your vectors are of the type `float`, you need to first convert them to the `byte` type before ingesting documents. This conversion is accomplished by _quantizing the dataset_---reducing the precision of its vectors. The Faiss engine supports several quantization techniques, such as scalar quantization (SQ) and product quantization (PQ). The choice of quantization technique depends on the type of data you're using and can affect the accuracy of recall values. The following sections describe the scalar quantization algorithms that were used to quantize the [k-NN benchmarking test](https://github.com/opensearch-project/opensearch-benchmark-workloads/tree/main/vectorsearch) data for the [L2](#scalar-quantization-for-the-l2-space-type) and [cosine similarity](#scalar-quantization-for-the-cosine-similarity-space-type) space types. The provided pseudocode is for illustration purposes only.
+如果您的向量類型為 `float`，您必須先將其轉換為 `byte` 類型，再匯入文件。此轉換是透過_量化資料集_來完成——降低其向量的精確度。Faiss 引擎支援多種量化技術，例如純量量化 (SQ) 與乘積量化 (PQ)。量化技術的選擇取決於您使用的資料類型，並可能影響召回值的準確度。下列各節說明用於量化 [k-NN 基準測試](https://github.com/opensearch-project/opensearch-benchmark-workloads/tree/main/vectorsearch)資料 (針對 [L2](#scalar-quantization-for-the-l2-space-type) 與 [餘弦相似度](#scalar-quantization-for-the-cosine-similarity-space-type) 空間類型) 的純量量化演算法。所提供的虛擬碼僅供說明之用。
 
-#### Scalar quantization for the L2 space type
+#### L2 空間類型的純量量化
 
-The following example pseudocode illustrates the scalar quantization technique used for the benchmarking tests on Euclidean datasets with the L2 space type. Euclidean distance is shift invariant. If you shift both $$x$$ and $$y$$ by the same $$z$$, then the distance remains the same ($$\lVert x-y\rVert =\lVert (x-z)-(y-z)\rVert$$).
+下列範例虛擬碼說明用於 L2 空間類型歐幾里得資料集基準測試的純量量化技術。歐幾里得距離具有平移不變性。如果您將 $$x$$ 與 $$y$$ 同時平移相同的 $$z$$，則距離保持不變 ($$\lVert x-y\rVert =\lVert (x-z)-(y-z)\rVert$$)。
 
 ```python
 # Random dataset (Example to create a random dataset)
@@ -505,11 +506,11 @@ queryset = np.floor(queryset * (B - 1)) - int(B / 2)
 ```
 {% include copy.html %}
 
-#### Scalar quantization for the cosine similarity space type
+#### 餘弦相似度空間類型的純量量化
 
-The following example pseudocode illustrates the scalar quantization technique used for the benchmarking tests on angular datasets with the cosine similarity space type. Cosine similarity is not shift invariant ($$cos(x, y) \neq cos(x-z, y-z)$$). 
+下列範例虛擬碼說明用於餘弦相似度空間類型角度資料集基準測試的純量量化技術。餘弦相似度不具平移不變性 ($$cos(x, y) \neq cos(x-z, y-z)$$)。
 
-The following pseudocode is for positive numbers:
+下列虛擬碼適用於正數：
 
 ```python
 # For Positive Numbers
@@ -538,7 +539,7 @@ return Byte(bval)
 ```
 {% include copy.html %}
 
-The following pseudocode is for negative numbers:
+下列虛擬碼適用於負數：
 
 ```python
 # For Negative Numbers
@@ -567,28 +568,28 @@ return Byte(bval)
 ```
 {% include copy.html %}
 
-## Binary vectors
+## 二進位向量
 
-You can reduce memory costs by a factor of 32 by switching from float to binary vectors. Using binary vector indexes can lower operational costs while maintaining high recall performance, making large-scale deployment more economical and efficient.
+您可以從浮點數向量改用二進位向量，將記憶體成本降低為 32 分之一。使用二進位向量索引可降低營運成本，同時維持高召回效能，讓大規模部署更經濟且有效率。
 
-Binary format is available for the following k-NN search types:
+二進位格式適用於下列 k-NN 搜尋類型：
 
-- [Approximate k-NN]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/): Supports binary vectors only for the Faiss engine with the HNSW and IVF algorithms.
-- [Script score k-NN]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-score-script/): Enables the use of binary vectors in script scoring.
-- [Painless extensions]({{site.url}}{{site.baseurl}}/search-plugins/knn/painless-functions/): Allows the use of binary vectors with Painless scripting extensions.
+- [近似 k-NN]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/)：僅支援使用 HNSW 與 IVF 演算法的 Faiss 引擎的二進位向量。
+- [指令碼分數 k-NN]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-score-script/)：可在指令碼評分中使用二進位向量。
+- [Painless 擴充功能]({{site.url}}{{site.baseurl}}/search-plugins/knn/painless-functions/)：允許搭配 Painless 指令碼擴充功能使用二進位向量。
 
-### Requirements 
+### 需求
 
-There are several requirements for using binary vectors in the OpenSearch k-NN plugin:
+在 OpenSearch k-NN 外掛程式中使用二進位向量有幾項需求：
 
-- The `data_type` of the binary vector index must be `binary`.
-- The `space_type` of the binary vector index must be `hamming`.
-- The `dimension` of the binary vector index must be a multiple of 8.
-- You must convert your binary data into 8-bit signed integers (`int8`) in the [-128, 127] range. For example, the binary sequence of 8 bits `0, 1, 1, 0, 0, 0, 1, 1` must be converted into its equivalent byte value of `99` in order to be used as a binary vector input.
+- 二進位向量索引的 `data_type` 必須為 `binary`。
+- 二進位向量索引的 `space_type` 必須為 `hamming`。
+- 二進位向量索引的 `dimension` 必須是 8 的倍數。
+- 您必須將二進位資料轉換為 [-128, 127] 範圍內的 8 位元帶正負號整數 (`int8`)。例如，8 位元的二進位序列 `0, 1, 1, 0, 0, 0, 1, 1` 必須轉換為其對應的位元組值 `99`，才能做為二進位向量輸入使用。
 
-### Example: HNSW
+### 範例：HNSW
 
-To create a binary vector index with the Faiss engine and HNSW algorithm, send the following request:
+若要使用 Faiss 引擎與 HNSW 演算法建立二進位向量索引，請傳送下列請求：
 
 ```json
 PUT /test-binary-hnsw
@@ -616,7 +617,7 @@ PUT /test-binary-hnsw
 ```
 {% include copy-curl.html %}
 
-Then ingest some documents containing binary vectors:
+接著匯入一些包含二進位向量的文件：
 
 ```json
 PUT _bulk
@@ -633,7 +634,7 @@ PUT _bulk
 ```
 {% include copy-curl.html %}
 
-When querying, be sure to use a binary vector:
+查詢時，請務必使用二進位向量：
 
 ```json
 GET /test-binary-hnsw/_search
@@ -651,13 +652,13 @@ GET /test-binary-hnsw/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the two vectors closest to the query vector:
+回應包含最接近查詢向量的兩個向量：
 
 <details markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta}
+<summary>
+    回應
+</summary>
+{: .text-delta}
 
 ```json
 {
@@ -704,11 +705,11 @@ The response contains the two vectors closest to the query vector:
 ```
 </details>
 
-### Example: IVF
+### 範例：IVF
 
-The IVF method requires a training step that creates a model and trains it to initialize the native library index during segment creation. For more information, see [Building a vector index from a model]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/#building-a-vector-index-from-a-model). 
+IVF 方法需要一個訓練步驟，以建立模型並訓練模型，以便在建立分段時初始化原生程式庫索引。如需更多資訊，請參閱[從模型建立向量索引]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/#building-a-vector-index-from-a-model)。
 
-First, create an index that will contain binary vector training data. Specify the Faiss engine and IVF algorithm and make sure that the `dimension` matches the dimension of the model you want to create:
+首先，建立一個將包含二進位向量訓練資料的索引。指定 Faiss 引擎與 IVF 演算法，並確保 `dimension` 與您要建立的模型維度相符：
 
 ```json
 PUT train-index
@@ -726,13 +727,13 @@ PUT train-index
 ```
 {% include copy-curl.html %}
 
-Ingest training data containing binary vectors into the training index:
+將包含二進位向量的訓練資料匯入訓練索引：
 
 <details markdown="block">
-  <summary>
-    Bulk ingest request
-  </summary>
-  {: .text-delta}
+<summary>
+    批次匯入請求
+</summary>
+{: .text-delta}
 
 ```json
 PUT _bulk
@@ -820,7 +821,7 @@ PUT _bulk
 {% include copy-curl.html %}
 </details>
 
-Then, create and train the model named `test-binary-model`. The model will be trained using the training data from the `train_field` in the `train-index`. Specify the `binary` data type and `hamming` space type:
+接著，建立並訓練名為 `test-binary-model` 的模型。模型將使用 `train-index` 中 `train_field` 的訓練資料進行訓練。請指定 `binary` 資料類型與 `hamming` 空間類型：
 
 ```json
 POST _plugins/_knn/models/test-binary-model/_train
@@ -843,16 +844,16 @@ POST _plugins/_knn/models/test-binary-model/_train
 ```
 {% include copy-curl.html %}
 
-To check the model training status, call the Get Model API:
+若要檢查模型訓練狀態，請呼叫 Get Model API：
 
 ```json
 GET _plugins/_knn/models/test-binary-model?filter_path=state
 ```
 {% include copy-curl.html %}
 
-Once the training is complete, the `state` changes to `created`.
+訓練完成後，`state` 會變更為 `created`。
 
-Next, create an index that will initialize its native library indexes using the trained model:
+接下來，建立一個將使用已訓練模型來初始化其原生程式庫索引的索引：
 
 ```json
 PUT test-binary-ivf
@@ -874,7 +875,7 @@ PUT test-binary-ivf
 ```
 {% include copy-curl.html %}
 
-Ingest the data containing the binary vectors that you want to search into the created index:
+將包含您要搜尋之二進位向量的資料匯入已建立的索引：
 
 ```json
 PUT _bulk?refresh=true
@@ -891,7 +892,7 @@ PUT _bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-Finally, search the data. Be sure to provide a binary vector in the k-NN vector field:
+最後，搜尋資料。請務必在 k-NN 向量欄位中提供二進位向量：
 
 ```json
 GET test-binary-ivf/_search
@@ -909,13 +910,13 @@ GET test-binary-ivf/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the two vectors closest to the query vector:
+回應包含與查詢向量最接近的兩個向量：
 
 <details markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta}
+<summary>
+    回應
+</summary>
+{: .text-delta}
 
 ```json
 GET /_plugins/_knn/models/my-model?filter_path=state
@@ -963,28 +964,28 @@ GET /_plugins/_knn/models/my-model?filter_path=state
 ```
 </details>
 
-### Memory estimation
+### 記憶體估算
 
-Use the following formulas to estimate the amount of memory required for binary vectors.
+使用下列公式來估算二進位向量所需的記憶體量。
 
-#### HNSW memory estimation
+#### HNSW 記憶體估算
 
-The memory required for HNSW can be estimated using the following formula, where `m` is the maximum number of bidirectional links created for each element during the construction of the graph:
+HNSW 所需的記憶體可使用下列公式估算，其中 `m` 是在建構圖形時為每個元素建立的最大雙向連結數：
 
 ```r
 1.1 * (dimension / 8 + 8 * m) bytes/vector
 ```
 
-#### IVF memory estimation
+#### IVF 記憶體估算
 
-The memory required for IVF can be estimated using the following formula, where `nlist` is the number of buckets into which to partition vectors:
+IVF 所需的記憶體可使用下列公式估算，其中 `nlist` 是要將向量分割成的桶數：
 
 ```r
 1.1 * (((dimension / 8) * num_vectors) + (nlist * dimension / 8))
 ```
 
-## Next steps
+## 後續步驟
 
-- [k-NN query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)
-- [Disk-based vector search]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/disk-based-vector-search/)
-- [Vector quantization]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/knn-vector-quantization/)
+- [k-NN 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)
+- [磁碟式向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/disk-based-vector-search/)
+- [向量量化]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/knn-vector-quantization/)

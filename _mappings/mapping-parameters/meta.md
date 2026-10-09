@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Meta
 parent: Mapping parameters
@@ -9,16 +10,16 @@ has_children: false
 has_toc: false
 ---
 
-# Meta mapping parameter
+# Meta 對應參數
 
-The `_meta` mapping parameter allows you to attach metadata to your mapping definition. This metadata is stored alongside your mapping and is returned when the mapping is retrieved, serving solely as informational context without influencing indexing or search operations.
+`_meta` 對應參數可讓您將中繼資料附加至對應定義。此中繼資料會與對應一併儲存，並在擷取對應時一併回傳，僅作為資訊性內容，不會影響編製索引或搜尋作業。
 
-You can use the `_meta` mapping parameter to provide important details, such as version information, descriptions, or authorship. Metadata can also be updated by submitting a mapping update that overrides the existing metadata.
+您可以使用 `_meta` 對應參數提供重要細節，例如版本資訊、描述或作者資訊。中繼資料也可以透過提交會覆寫現有中繼資料的對應更新來更新。
 
 
-## Enabling meta on a mapping
+## 在對應上啟用 meta
 
-The following request creates an index named `products` with a `_meta` mapping parameter containing version and description information:
+下列請求會建立名為 `products` 的索引，其中包含含有版本與描述資訊的 `_meta` 對應參數：
 
 ```json
 PUT /products
@@ -41,9 +42,9 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-### Updating metadata on an index
+### 更新索引上的中繼資料
 
-Use the following request to update the `_meta` mapping parameter on an index:
+使用下列請求來更新索引上的 `_meta` 對應參數：
 
 ```json
 PUT /products/_mapping
@@ -57,9 +58,9 @@ PUT /products/_mapping
 ```
 {% include copy-curl.html %}
 
-### Indexing a document
+### 編製文件索引
 
-After the index is created, you can index documents as usual. The `_meta` information remains with the mapping and does not affect the document indexing process:
+建立索引後，您可以照常將文件編製索引。`_meta` 資訊會保留在對應中，且不會影響文件編製索引的程序：
 
 ```json
 PUT /products/_doc/1
@@ -70,9 +71,9 @@ PUT /products/_doc/1
 ```
 {% include copy-curl.html %}
 
-### Retrieve the meta information
+### 擷取 meta 資訊
 
-To verify that your `_meta` information is stored, you can retrieve the mapping for the index:
+若要驗證 `_meta` 資訊是否已儲存，您可以擷取該索引的對應：
 
 ```json
 GET /products/_mapping

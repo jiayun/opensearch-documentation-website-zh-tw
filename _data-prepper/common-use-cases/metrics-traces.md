@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Deriving metrics from traces
+title: "從追蹤衍生指標"
 parent: Common use cases
 nav_order: 20
 ---
 
-# Deriving metrics from traces
+# 從追蹤衍生指標
 
-You can use OpenSearch Data Prepper to derive metrics from OpenTelemetry traces. The following example pipeline receives incoming traces and extracts a metric called `durationInNanos`, aggregated over a tumbling window of 30 seconds. It then derives a histogram from the incoming traces.
+您可以使用 OpenSearch Data Prepper 從 OpenTelemetry 追蹤衍生指標。下列範例管線會接收傳入的追蹤，並擷取名為 `durationInNanos` 的指標，以 30 秒的滾動視窗進行彙總。接著，它會從傳入的追蹤衍生直方圖。
 
-The pipeline contains the following pipelines:
+此管線包含下列管線：
 
-- `entry-pipeline` – Receives trace data from the OpenTelemetry collector and forwards it to the `trace_to_metrics_pipeline` pipeline.
+- `entry-pipeline` – 從 OpenTelemetry collector 接收追蹤資料，並將其轉送至 `trace_to_metrics_pipeline` 管線。
 
-- `trace-to-metrics-pipeline` - Receives the trace data from the `entry-pipeline` pipeline, aggregates it, and derives a histogram of `durationInNanos` from the traces based on the value of the `serviceName` field. It then sends the derived metrics to the OpenSearch index called `metrics_for_traces`.
+- `trace-to-metrics-pipeline` - 從 `entry-pipeline` 管線接收追蹤資料，進行彙總，並根據 `serviceName` 欄位的值從追蹤衍生 `durationInNanos` 的直方圖。接著，它會將衍生的指標傳送至名為 `metrics_for_traces` 的 OpenSearch 索引。
 
 ```json
 entry-pipeline:

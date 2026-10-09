@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: fillnull
 parent: Commands
@@ -8,18 +9,18 @@ nav_order: 19
 
 <!-- vale off -->
 
-# fillnull command
+# fillnull 命令
 
 <!-- vale on -->
 
-The `fillnull` command replaces `null` values in one or more fields of the search results with a specified value.
+`fillnull` 命令會以指定的值取代搜尋結果中一或多個欄位裡的 `null` 值。
 
-The `fillnull` command is not rewritten to [query domain-specific language (DSL)]({{site.url}}{{site.baseurl}}/query-dsl/). It is only executed on the coordinating node.
+`fillnull` 命令不會改寫為[查詢領域特定語言（Query DSL）]({{site.url}}{{site.baseurl}}/query-dsl/)，只會在協調節點上執行。
 {: .note}
 
-## Syntax
+## 語法
 
-The `fillnull` command has the following syntax:
+`fillnull` 命令的語法如下：
 
 ```sql
 fillnull with <replacement> [in <field-list>]
@@ -27,25 +28,25 @@ fillnull using <field> = <replacement> [, <field> = <replacement>]
 fillnull value=<replacement> [<field-list>]
 ```
 
-The following syntax variations are available:
+可使用下列語法變化：
 
-* `with <replacement> in <field-list>` -- Apply the same value to specified fields.
-* `using <field>=<replacement>, ...` -- Apply different values to different fields.
-* `value=<replacement> [<field-list>]` -- Alternative syntax with an optional space-delimited field list.
+* `with <replacement> in <field-list>` -- 將相同的值套用至指定的欄位。
+* `using <field>=<replacement>, ...` -- 將不同的值套用至不同的欄位。
+* `value=<replacement> [<field-list>]` -- 替代語法，可選用以空格分隔的欄位清單。
 
-## Parameters
+## 參數
 
-The `fillnull` command supports the following parameters.
+`fillnull` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<replacement>` | Required | The value that replaces null values. |
-| `<field>` | Required (with `using` syntax) | The name of the field to which a specific replacement value is applied. |
-| `<field-list>` | Optional | A list of fields in which null values are replaced. You can specify the list as comma-delimited (using `with` or `using` syntax) or space-delimited (using `value=` syntax). By default, all fields are processed. |
+| `<replacement>` | 必要 | 用來取代 null 值的值。 |
+| `<field>` | 必要 (使用 `using` 語法時) | 套用特定取代值的欄位名稱。 |
+| `<field-list>` | 選用 | 要取代 null 值的欄位清單。您可以將清單指定為逗號分隔 (使用 `with` 或 `using` 語法) 或空格分隔 (使用 `value=` 語法)。預設會處理所有欄位。 |
 
-## Example 1: Replacing null values with different values per field
+## 範例 1：為每個欄位以不同的值取代 null 值
 
-The following query fills in missing instrumentation scope names with a default value:
+下列查詢會以預設值填入遺漏的檢測範圍名稱：
 
 ```sql
 source=otellogs
@@ -57,7 +58,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -78,9 +79,9 @@ The query returns the following results:
 <!-- vale on -->
 
 
-## Example 2: Replacing null values using value= syntax
+## 範例 2：使用 value= 語法取代 null 值
 
-The following query uses the `value=` syntax to fill null instrumentation scope names, helping identify services that are not instrumented:
+下列查詢使用 `value=` 語法填入值為 null 的檢測範圍名稱，協助識別尚未加入檢測機制的服務：
 
 ```sql
 source=otellogs
@@ -92,7 +93,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -109,12 +110,12 @@ The query returns the following results:
 <!-- vale on -->
 
 
-## Limitations
+## 限制
 
-The `fillnull` command has the following limitations:
+`fillnull` 命令有下列限制：
 
-* When applying the same value to all fields without specifying field names, all fields must be of the same type. For mixed types, use separate `fillnull` commands or explicitly specify fields.
-* The replacement value type must match all field types in the field list. When applying the same value to multiple fields, all fields must be of the same type (all strings or all numeric). The following query shows the error that occurs when this rule is violated:
+* 在未指定欄位名稱的情況下將相同的值套用至所有欄位時，所有欄位必須屬於相同類型。若為混合類型，請使用個別的 `fillnull` 命令或明確指定欄位。
+* 取代值的類型必須符合欄位清單中所有欄位的類型。將相同的值套用至多個欄位時，所有欄位必須屬於相同類型 (全部為字串或全部為數值)。下列查詢顯示違反此規則時發生的錯誤：
 
     ```sql
       # This FAILS - same value for mixed-type fields

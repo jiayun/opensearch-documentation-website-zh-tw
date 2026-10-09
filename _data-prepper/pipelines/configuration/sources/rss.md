@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: RSS
 parent: Sources
@@ -6,15 +7,15 @@ grand_parent: Pipelines
 nav_order: 97
 ---
 
-# RSS source
+# RSS 來源
 
-The `rss` source polls one or more RSS or Atom feeds and converts their items into OpenSearch Data Prepper events. Each feed is polled on a schedule, and new items are written to the [`buffer`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/buffers/buffers/).
+`rss` 來源會輪詢一或多個 RSS 或 Atom 摘要，並將其項目轉換為 OpenSearch Data Prepper 事件。每個摘要都會依排程輪詢，新項目會寫入 [`buffer`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/buffers/buffers/)。
 
-Each feed keeps a bounded in-memory cache of recently seen items, so already ingested items are not re-emitted on subsequent polls. This cache is not persisted, so it resets when Data Prepper restarts.
+每個摘要都會保留一個有界限的記憶體內快取，儲存最近看過的項目，因此已匯入的項目不會在後續輪詢時重複發出。此快取不會持久化，所以 Data Prepper 重新啟動時會重設。
 
-## Usage
+## 用法
 
-Provide one or more feeds under the `feeds` map, which is keyed by feed name. Each feed requires a `url` and can optionally set a per-feed `polling_frequency` and `authentication`. The following example pipeline specifies an `rss` source that polls three feeds. Enclose the `password` value in quotation marks when it contains characters that YAML treats as syntax, such as `:` or `#`:
+在 `feeds` 對應中提供一或多個摘要，該對應以摘要名稱作為鍵。每個摘要都需要一個 `url`，並可選擇性地設定每個摘要專屬的 `polling_frequency` 與 `authentication`。下列範例管線指定一個 `rss` 來源，輪詢三個摘要。當 `password` 值包含 YAML 視為語法的字元（例如 `:` 或 `#`）時，請以引號括住該值：
 
 ```yaml
 rss-pipeline:
@@ -37,61 +38,61 @@ rss-pipeline:
 ```
 {% include copy.html %}
 
-You can avoid storing plaintext credentials in your pipeline configuration by referencing them from a configured secret store. To use AWS Secrets Manager as a secret store, configure the [`aws` extension]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/configuring-data-prepper/#aws-extension-plugin). Then specify `{% raw %}${{aws_secrets:<secret-config-id>:<key>}}{% endraw %}` as the `password` value. Data Prepper resolves the reference at startup. For more information, see [Reference secrets]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/configuring-data-prepper/#reference-secrets).
+您可以參照已設定的祕密存放區，避免在管線組態中儲存明文憑證。若要使用 AWS Secrets Manager 作為祕密存放區，請設定 [`aws` 擴充功能]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/configuring-data-prepper/#aws-extension-plugin)。然後將 `{% raw %}${{aws_secrets:<secret-config-id>:<key>}}{% endraw %}` 指定為 `password` 值。Data Prepper 會在啟動時解析該參照。如需更多資訊，請參閱[參照祕密]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/configuring-data-prepper/#reference-secrets)。
 
-## Configuration options
+## 組態選項
 
-Use the following options to configure the `rss` source. All duration values support ISO 8601 notation (such as `PT15M` or `PT20.345S`) and simple notation for seconds (`60s`) and milliseconds (`1500ms`).
+使用下列選項來設定 `rss` 來源。所有持續時間值都支援 ISO 8601 表示法（例如 `PT15M` 或 `PT20.345S`），以及秒（`60s`）與毫秒（`1500ms`）的簡單表示法。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`feeds` | Yes | Map | A non-empty map of feeds to poll. Each key is the feed name, which is attached to events as `feed_name` and can be used for index routing. Feed names must be 1--64 characters long and can contain only letters, digits, underscores, and hyphens. Each value is a feed configuration. For more information, see [Feed options](#feed-options).
-`polling_frequency` | No | Duration | The default polling frequency for feeds that do not set their own. Must be at least 1 second. Default is `PT5M` (5 minutes).
-`workers` | No | Integer | The size of the polling thread pool. Must be between 1 and 1,000. The pool never contains more threads than the number of configured feeds. Default is `1`.
-`request_timeout` | No | Duration | The connection, request, and read timeout applied to each feed fetch. This timeout prevents a slow or unresponsive feed from blocking its worker thread indefinitely. Default is `PT30S` (30 seconds).
+`feeds` | 是 | 對應 | 要輪詢的非空白摘要對應。每個鍵都是摘要名稱，會以 `feed_name` 附加到事件，並可用於索引路由。摘要名稱長度必須為 1--64 個字元，且只能包含字母、數字、底線與連字號。每個值都是一份摘要組態。如需更多資訊，請參閱[摘要選項](#feed-options)。
+`polling_frequency` | 否 | 持續時間 | 未自行設定輪詢頻率之摘要的預設輪詢頻率。必須至少 1 秒。預設為 `PT5M`（5 分鐘）。
+`workers` | 否 | 整數 | 輪詢執行緒集區的大小。必須介於 1 到 1,000 之間。集區中的執行緒數量永遠不會超過已設定摘要的數量。預設為 `1`。
+`request_timeout` | 否 | 持續時間 | 套用至每次摘要擷取的連線、請求與讀取逾時。此逾時可防止緩慢或無回應的摘要無限期地阻塞其工作執行緒。預設為 `PT30S`（30 秒）。
 
-### Feed options
+### 摘要選項
 
-Use the following options for each entry in the `feeds` map.
+在 `feeds` 對應的每個項目中使用下列選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`url` | Yes | String | The RSS or Atom feed URL to read from.
-`polling_frequency` | No | Duration | Overrides the top-level `polling_frequency` for this feed. Must be at least 1 second.
-`authentication` | No | Object | The authentication configuration for the feed. For more information, see [Authentication](#authentication).
+`url` | 是 | 字串 | 要讀取的 RSS 或 Atom 摘要 URL。
+`polling_frequency` | 否 | 持續時間 | 覆寫此摘要的頂層 `polling_frequency`。必須至少 1 秒。
+`authentication` | 否 | 物件 | 摘要的驗證組態。如需更多資訊，請參閱[驗證](#authentication)。
 
-### Authentication
+### 驗證
 
-Use the following option in a feed's `authentication` object to configure HTTP basic authentication.
+在摘要的 `authentication` 物件中使用下列選項來設定 HTTP 基本驗證。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`basic` | No | Object | The HTTP basic authentication credentials. Contains a `username` and a `password`, both of which are required when `basic` is specified.
+`basic` | 否 | 物件 | HTTP 基本驗證憑證。包含一個 `username` 與一個 `password`，當指定 `basic` 時兩者皆為必要。
 
-## Event schema
+## 事件結構描述
 
-The source emits each item as an event of type `rss-item` that contains the following top-level body fields.
+來源會將每個項目以 `rss-item` 類型的事件發出，其中包含下列頂層本文欄位。
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`title` | The item title.
-`link` | The item link.
-`description` | The item description or summary.
-`publication_date` | The item publication date.
-`item_id` | The item's globally unique identifier (GUID). If the item has no GUID, the source uses the `link` value. If both are absent, the source uses a content hash. This field is always non-empty.
-`feed_name` | The feed's key from the `feeds` map. This field is always present.
-`feed_url` | The configured feed URL with its query string redacted. This field is always present.
+`title` | 項目標題。
+`link` | 項目連結。
+`description` | 項目描述或摘要。
+`publication_date` | 項目發布日期。
+`item_id` | 項目的全域唯一識別碼 (GUID)。若項目沒有 GUID，來源會使用 `link` 值。若兩者皆不存在，來源會使用內容雜湊。此欄位永遠不會是空的。
+`feed_name` | 來自 `feeds` 對應的摘要鍵。此欄位永遠存在。
+`feed_url` | 已遮蔽查詢字串的已設定摘要 URL。此欄位永遠存在。
 
-When a feed provides the following feed channel details, the source attaches them as event metadata rather than storing them in the document body.
+當摘要提供下列摘要頻道詳細資訊時，來源會將其附加為事件中繼資料，而不是儲存在文件本文中。
 
-Metadata attribute | Description
+中繼資料屬性 | 說明
 :--- | :---
-`feed_title` | The feed channel's `<title>`.
-`feed_link` | The feed channel's `<link>` (the publisher's site).
-`feed_language` | The feed channel's `<language>`.
-`feed_categories` | The feed channel's `<category>` values.
+`feed_title` | 摘要頻道的 `<title>`。
+`feed_link` | 摘要頻道的 `<link>`（發布者的網站）。
+`feed_language` | 摘要頻道的 `<language>`。
+`feed_categories` | 摘要頻道的 `<category>` 值。
 
-Because `feed_name` and `feed_url` are body fields, they are searchable and can be used directly for per-feed routing at the sink. Use `item_id` as the `document_id` at the sink so that a republished item updates the existing document, as shown in the following example:
+由於 `feed_name` 與 `feed_url` 是本文欄位，因此可供搜尋，並可直接在匯出端用於每個摘要的路由。請在匯出端使用 `item_id` 作為 `document_id`，讓重新發布的項目會更新現有文件，如下列範例所示：
 
 ```yaml
 sink:
@@ -102,25 +103,25 @@ sink:
 ```
 {% include copy.html %}
 
-Do not configure the sink to depend on a channel metadata attribute, because the attribute is absent when the feed does not provide it. Use the always present `feed_name`, `feed_url`, and `item_id` body fields for routing and document IDs.
+請勿將匯出端設定為依賴頻道中繼資料屬性，因為當摘要未提供該屬性時，它就不存在。請使用永遠存在的 `feed_name`、`feed_url` 與 `item_id` 本文欄位進行路由與文件 ID。
 
-## Failure handling
+## 失敗處理
 
-Feeds are polled independently. When a feed fails, the source logs the failure with the query string redacted from the feed URL, increments the `feedPollsFailed` metric for that feed, and backs off exponentially before retrying. A failure in one feed does not stop the other feeds or permanently stop polling.
+各摘要會獨立輪詢。當某個摘要失敗時，來源會記錄該失敗（從摘要 URL 遮蔽查詢字串）、遞增該摘要的 `feedPollsFailed` 指標，並在重試前以指數方式退避。單一摘要的失敗不會停止其他摘要，也不會永久停止輪詢。
 
-## Metrics
+## 指標
 
-The `rss` source includes the following metrics (counters). Each metric is recorded separately for every feed, with the feed name appended to the metric name:
+`rss` 來源包含下列指標（計數器）。每個指標都會針對每個摘要分別記錄，並在指標名稱後附加摘要名稱：
 
-* `feedPollsFailed.<feed-name>`: The number of polls that have failed for the feed.
-* `itemsIngested.<feed-name>`: The number of items the source has written to the buffer for the feed.
+* `feedPollsFailed.<feed-name>`：該摘要輪詢失敗的次數。
+* `itemsIngested.<feed-name>`：來源為該摘要寫入緩衝區的項目數。
 
 
-## Limitations
+## 限制
 
-The following capabilities are not yet supported:
+下列功能尚未支援：
 
-- Bearer token authentication
-- Custom header authentication
-- Deduplication across restarts and nodes using source coordination
-- End-to-end acknowledgments
+- Bearer 權杖驗證
+- 自訂標頭驗證
+- 使用來源協調在重新啟動與節點之間進行去重
+- 端對端確認

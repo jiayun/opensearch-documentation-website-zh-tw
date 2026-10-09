@@ -1,45 +1,46 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Creating a snapshot
+title: "建立快照"
 parent: Migration phases
 nav_order: 4
 permalink: /classic/migration-assistant/migration-phases/create-snapshot/
 ---
 
-# Creating a snapshot
+# 建立快照
 
-Once you have your change data capture solution in place or have disabled indexing to your source cluster, you are ready to create a snapshot. Creating a snapshot of the source cluster captures all the metadata and documents to be migrated to a new target cluster.
+當您已備妥變更資料擷取 (change data capture) 解決方案，或已停用來源叢集的索引作業後，即可開始建立快照。為來源叢集建立快照，可擷取所有要遷移至新目標叢集的中繼資料與文件。
 
-## Create a snapshot
+## 建立快照
 
-Run the following command to initiate snapshot creation from the source cluster:
+執行下列命令，從來源叢集啟動快照建立作業：
 
 ```bash
 console snapshot create [...]
 ```
 {% include copy.html %}
 
-**Note**: Migration Assistant will automatically generate a snapshot name and configure the necessary Amazon Simple Storage Service (Amazon S3) repository. Alternatively, you have the option to bring your own existing snapshot. 
+**注意**：Migration Assistant 會自動產生快照名稱，並設定必要的 Amazon Simple Storage Service (Amazon S3) 儲存庫。您也可以選擇使用自己既有的快照。
 
-For more information about using an existing snapshot, see [Bring your own snapshot]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/deploy/configuration-options/#bring-your-own-snapshot) configuration.
+如需使用既有快照的更多資訊，請參閱 [自備快照]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/deploy/configuration-options/#bring-your-own-snapshot) 組態。
 
-To check the snapshot creation status, run the following command:
+若要檢查快照建立狀態，請執行下列命令：
 
 ```bash
 console snapshot status
 ```
 {% include copy.html %}
 
-To retrieve more information about the snapshot, run the following command:
+若要取得快照的更多資訊，請執行下列命令：
 
 ```bash
 console snapshot status --deep-check
 ```
 {% include copy.html %}
 
-Wait for snapshot creation to complete before proceeding to the metadata migration phase.
+請等待快照建立完成後，再進入中繼資料遷移階段。
 
-You should receive the following response when the snapshot is created:
+快照建立完成後，您應會收到下列回應：
 
 ```shell
 SUCCESS
@@ -55,8 +56,8 @@ Anticipated duration remaining: 0h 0m 0s
 Throughput: 38.13 MiB/sec
 ```
 
-## Managing slow snapshot speeds
+## 處理快照速度緩慢的問題
 
-Depending on the size of the data in the source cluster and the bandwidth allocated for snapshots, the process can take some time. Adjust the maximum rate at which the source cluster's nodes create the snapshot using the `--max-snapshot-rate-mb-per-node` option. Increasing the snapshot rate will consume more node resources, which may affect the cluster's ability to handle normal traffic.
+視來源叢集中的資料大小以及分配給快照的頻寬而定，此程序可能需要一些時間。您可以使用 `--max-snapshot-rate-mb-per-node` 選項，調整來源叢集節點建立快照的最大速率。提高快照速率會消耗更多節點資源，可能影響叢集處理一般流量的能力。
 
 {% include migration-phase-navigation.html %}

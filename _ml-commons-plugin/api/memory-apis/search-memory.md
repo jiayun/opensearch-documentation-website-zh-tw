@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search memory
+title: "搜尋記憶"
 parent: Memory APIs
 grand_parent: ML Commons APIs
 nav_order: 25
 ---
 
-# Search Memory API
-**Introduced 2.12**
+# 搜尋記憶 API
+**2.12 版新增**
 {: .label .label-purple }
 
-This API retrieves a conversational memory for [conversational search]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/). Use this command to search for memories.
+此 API 會擷取[對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)所使用的對話記憶。請使用此命令搜尋記憶。
 
-When the Security plugin is enabled, all memories exist in a `private` security mode. Only the user who created a memory can interact with that memory and its messages.
+當 Security 外掛程式啟用時，所有記憶都存在於 `private` 安全模式中。只有建立記憶的使用者才能與該記憶及其訊息互動。
 {: .important}
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/memory/_search
 POST /_plugins/_ml/memory/_search
 ```
 
-## Example request: Searching for all memories
+## 範例請求：搜尋所有記憶
 
 ```json
 POST /_plugins/_ml/memory/_search
@@ -35,7 +36,7 @@ POST /_plugins/_ml/memory/_search
 ```
 {% include copy-curl.html %}
 
-## Example request: Searching for a memory by name
+## 範例請求：依名稱搜尋記憶
 
 ```json
 POST /_plugins/_ml/memory/_search
@@ -51,7 +52,7 @@ POST /_plugins/_ml/memory/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -120,14 +121,14 @@ POST /_plugins/_ml/memory/_search
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response fields.
+下表列出所有回應欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `memory_id` | String | The memory ID. |
-| `create_time` | String | The time at which the memory was created. |
-| `updated_time` | String | The time at which the memory was last updated. |
-| `name` | String | The memory name. |
-| `user` | String | The username of the user who created the memory. |
+| `memory_id` | 字串 | 記憶 ID。 |
+| `create_time` | 字串 | 記憶建立的時間。 |
+| `updated_time` | 字串 | 記憶最後更新的時間。 |
+| `name` | 字串 | 記憶名稱。 |
+| `user` | 字串 | 建立記憶之使用者的使用者名稱。 |

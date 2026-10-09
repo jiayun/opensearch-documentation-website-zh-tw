@@ -1,117 +1,118 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Architecture
+title: "架構"
 nav_order: 15
 permalink: /migration-assistant/architecture/
 redirect_from:
   - /migration-assistant/overview/architecture/
 ---
 
-# Migration Assistant architecture
+# Migration Assistant 架構
 
-Migration Assistant follows this operating model:
+Migration Assistant 採用下列運作模型：
 
-1. You describe the migration in workflow configuration.
-2. The Workflow CLI submits that configuration to Kubernetes.
-3. Kubernetes and Argo Workflows create the pods and services required for each phase.
-4. You observe progress, approve gated steps, validate results, and switch traffic to the target.
+1. 您在工作流程組態中描述遷移作業。
+2. Workflow CLI 將該組態提交至 Kubernetes。
+3. Kubernetes 與 Argo Workflows 建立各階段所需的 Pod 與服務。
+4. 您觀察進度、核准需經審核的步驟、驗證結果，並將流量切換至目標。
 
-Internally, workflows are executed by [Argo Workflows](https://argoproj.github.io/workflows/), but you operate Migration Assistant through the Migration Console and Workflow CLI rather than through Argo directly.
+在內部，工作流程由 [Argo Workflows](https://argoproj.github.io/workflows/) 執行，但您透過 Migration Console 與 Workflow CLI 操作 Migration Assistant，而非直接透過 Argo 操作。
 
-The following diagram illustrates a typical deployment on Amazon Elastic Kubernetes Service (EKS). Other Kubernetes distributions follow the same logical migration model, but EKS adds AWS-specific identity, networking, image, and observability integrations.
+下圖說明在 Amazon Elastic Kubernetes Service（EKS）上的典型部署。其他 Kubernetes 發行版採用相同的邏輯遷移模型，但 EKS 額外提供 AWS 專屬的身分、網路、映像檔與可觀測性整合。
 
-![Migration Assistant Architecture on EKS]({{site.url}}{{site.baseurl}}/images/migration-assistant/eks-architecture.svg)
+![EKS 上的 Migration Assistant 架構]({{site.url}}{{site.baseurl}}/images/migration-assistant/eks-architecture.svg)
 
-## System layers
+## 系統層
 
-Migration Assistant separates concerns into two layers. You describe the migration once, and the platform executes it as managed workloads:
+Migration Assistant 將職責分為兩層。您只需描述一次遷移作業，平台便會將其作為受管理的工作負載執行：
 
-- A **control plane** that manages migration workflows.
-- A **data plane** that performs the actual snapshot, metadata, backfill, capture, and replay work.
+- 管理遷移工作流程的 **控制平面**。
+- 執行實際快照、中繼資料、回填、擷取與重播工作的 **資料平面**。
 
-## Control plane
+## 控制平面
 
-The following table lists the control plane components.
+下表列出控制平面元件。
 
-| Component | Description |
+| 元件 | 說明 |
 |:----------|:------------|
-| **Migration Console** | The pod where you run `console` and `workflow` commands |
-| **Workflow CLI** | The primary interface for configuration, submission, approval, and status |
-| **Argo Workflows** | The workflow engine that sequences tasks, retries failures, and tracks state |
-| **Kubernetes** | The platform that schedules pods, creates services, manages secrets, and cleans up resources |
+| **Migration Console** | 您執行 `console` 與 `workflow` 命令的 Pod |
+| **Workflow CLI** | 用於組態設定、提交、核准與狀態查詢的主要介面 |
+| **Argo Workflows** | 依序執行任務、重試失敗的任務並追蹤狀態的工作流程引擎 |
+| **Kubernetes** | 排程 Pod、建立服務、管理 Secret 並清理資源的平台 |
 
-## Data plane
+## 資料平面
 
-The following table lists the data plane components.
+下表列出資料平面元件。
 
-| Component | Description |
+| 元件 | 說明 |
 |:----------|:------------|
-| **Reindex-from-Snapshot (RFS)** | High-performance backfill engine that reads Lucene segments from snapshots instead of reading documents through the source cluster API |
-| **Metadata migration** | Transfers index settings, mappings, templates, and aliases |
-| **Capture Proxy** | Records live traffic to Apache Kafka during zero-downtime migrations |
-| **Traffic Replayer** | Replays captured traffic against the target cluster to catch it up |
-| **Strimzi** | Manages Kafka for Capture and Replay workflows |
-| **Observability stack** | Prometheus-compatible metrics, logs, and dashboards; on EKS this extends into CloudWatch |
+| **Reindex-from-Snapshot（RFS）** | 高效能回填引擎，從快照讀取 Lucene 分段，而非透過來源叢集 API 讀取文件 |
+| **中繼資料遷移** | 傳輸索引設定、對應、範本與別名 |
+| **Capture Proxy** | 在零停機遷移期間，將即時流量記錄至 Apache Kafka |
+| **Traffic Replayer** | 對目標叢集重播擷取的流量，使其追上最新狀態 |
+| **Strimzi** | 為 Capture and Replay 工作流程管理 Kafka |
+| **可觀測性堆疊** | 與 Prometheus 相容的指標、記錄檔與儀表板；在 EKS 上，這些功能延伸至 CloudWatch |
 
-## Migration process overview
+## 遷移程序概觀
 
-Each numbered node in the architecture diagram corresponds to a step in the migration process.
+架構圖中每個編號節點都對應遷移程序中的一個步驟。
 
-### Step 1: Client traffic is directed to the existing cluster
+### 步驟 1：將用戶端流量導向現有叢集
 
-Client traffic flows to the source cluster as normal. If you are performing a zero-downtime migration using Capture and Replay, a Kubernetes Service routes traffic through the capture proxy fleet, which forwards requests to the source while simultaneously recording them to Kafka.
+用戶端流量如常流向來源叢集。如果您使用 Capture and Replay 執行零停機遷移，Kubernetes Service 會將流量路由經過擷取代理伺服器群組，該群組會將請求轉送至來源，同時將請求記錄至 Kafka。
 
-### Step 2: Capture proxy replicates traffic to Kafka
+### 步驟 2：擷取代理伺服器將流量複製至 Kafka
 
-The capture proxy relays traffic to the source cluster and simultaneously replicates the raw request/response streams to Kafka (managed by Strimzi). This provides a durable record of all writes during the migration window. This step does not apply to backfill-only migrations.
+擷取代理伺服器將流量轉送至來源叢集，同時將原始請求／回應串流複製至 Kafka（由 Strimzi 管理）。這會為遷移期間的所有寫入作業提供持久的記錄。此步驟不適用於僅執行回填的遷移。
 
-### Step 3: Snapshot and backfill through Reindex-from-Snapshot
+### 步驟 3：透過 Reindex-from-Snapshot 建立快照並回填
 
-With continuous traffic capture in place (or after pausing writes), you submit a migration workflow from the Migration Console. The workflow creates a point-in-time snapshot of the source cluster, migrates metadata (indexes, templates, aliases), and then launches Reindex-from-Snapshot (RFS) workers that read directly from the snapshot in Amazon S3 and bulk-index documents into the target cluster.
+在持續擷取流量的機制就緒後（或暫停寫入後），您從 Migration Console 提交遷移工作流程。工作流程會建立來源叢集在特定時間點的快照、遷移中繼資料（索引、範本、別名），然後啟動 Reindex-from-Snapshot（RFS）工作程序，直接從 Amazon S3 中的快照讀取資料，並將文件批次編製索引至目標叢集。
 
-### Step 4: Traffic Replayer catches up the target
+### 步驟 4：Traffic Replayer 使目標追上最新狀態
 
-After the backfill completes, the Traffic Replayer reads captured traffic from Kafka and replays it against the target cluster, transforming requests as needed (authentication, index names). The Replayer catches the target up to real-time, closing the gap between the snapshot point-in-time and the current state.
+回填完成後，Traffic Replayer 會從 Kafka 讀取擷取的流量，並對目標叢集重播，視需要轉換請求（驗證、索引名稱）。Replayer 使目標追上即時狀態，消除快照時間點與目前狀態之間的差距。
 
-### Step 5: Validate and compare
+### 步驟 5：驗證與比較
 
-The performance and behavior of traffic routed to the source and target clusters are analyzed by reviewing logs, metrics, and document counts. Use `console clusters curl` to run comparison queries against both clusters. On generic Kubernetes this usually means your cluster logging and metrics stack; on EKS the bootstrap path also wires in CloudWatch dashboards and logs.
+透過檢視記錄檔、指標與文件數量，分析路由至來源與目標叢集的流量效能及行為。使用 `console clusters curl` 對兩個叢集執行比較查詢。在一般 Kubernetes 上，這通常會使用您叢集的記錄與指標堆疊；在 EKS 上，初始設定流程也會整合 CloudWatch 儀表板與記錄檔。
 
-### Step 6: Redirect traffic and decommission
+### 步驟 6：重新導向流量並停用來源
 
-After confirming the target cluster's functionality meets expectations, redirect clients to the new target by updating DNS records, load balancer configuration, or application connection strings. Keep the source cluster available as a fallback (24--72 hours recommended), then decommission the source and remove Migration Assistant infrastructure.
+確認目標叢集的功能符合預期後，透過更新 DNS 記錄、負載平衡器組態或應用程式連線字串，將用戶端重新導向新的目標。保留來源叢集作為備援（建議保留 24--72 小時），然後停用來源並移除 Migration Assistant 基礎架構。
 
-## Error recovery
+## 錯誤復原
 
-The following are common error recovery symptoms and resolutions.
+以下列出常見的錯誤復原徵兆與解決方式。
 
-### Workflow failures
+### 工作流程失敗
 
-If a workflow step fails, perform the following steps:
+如果工作流程步驟失敗，請執行下列步驟：
 
-1. Check the error with `workflow status` and `workflow log all`.
-2. Fix the underlying issue such as connectivity, permissions, or configuration.
-3. Retry or resubmit from the workflow model instead of patching pods manually.
+1. 使用 `workflow status` 與 `workflow log all` 檢查錯誤。
+2. 修正根本問題，例如連線、權限或組態問題。
+3. 透過工作流程模型重試或重新提交，而非手動修補 Pod。
 
-### RFS backfill resumption
+### 恢復 RFS 回填
 
-RFS tracks progress automatically. If backfill is interrupted, the following behavior applies:
-- RFS automatically resumes from the last checkpoint when restarted.
-- Already-migrated shards are skipped.
-- No data is duplicated.
+RFS 會自動追蹤進度。如果回填中斷，會採取下列行為：
+- RFS 重新啟動時，會自動從上一個檢查點恢復。
+- 已遷移的分片會略過。
+- 不會產生重複資料。
 
-## Component details
+## 元件詳細資訊
 
-The following components make up the Migration Assistant architecture.
+下列元件構成 Migration Assistant 架構。
 
 ### Reindex-from-Snapshot
 
-RFS takes a fundamentally different approach from traditional migration tools. Instead of reading documents through the source cluster's HTTP API, it:
+RFS 採用與傳統遷移工具根本不同的方法。它不會透過來源叢集的 HTTP API 讀取文件，而是：
 
-1. Takes a **one-time snapshot** of the source cluster (the only time the source is touched)
-2. Reads the **raw Lucene segment files** directly from the snapshot in storage (S3)
-3. Extracts documents, applies transformations, and **bulk-indexes them on the target**
+1. 建立來源叢集的 **一次性快照**（這是唯一會存取來源的時機）
+2. 直接從儲存空間（S3）中的快照讀取 **原始 Lucene 分段檔案**
+3. 擷取文件、套用轉換，並 **在目標上批次編製索引**
 
-This approach produces **no ongoing source load**, **no version compatibility limit** (works across any supported gap), **parallel processing** (one worker per shard), and the ability to **resume where it left off** (failed shards are retried without restarting).
+此方法 **不會持續對來源造成負載**、**沒有版本相容性限制**（適用於任何受支援的版本差距）、支援 **平行處理**（每個分片使用一個工作程序），並且能夠 **從中斷處恢復**（重試失敗的分片，無須重新開始）。
 
 {% include migration-phase-navigation.html %}

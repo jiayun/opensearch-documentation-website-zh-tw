@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Extensions
+title: "擴充功能"
 nav_order: 10
 ---
 
-# OpenSearch extensions
+# OpenSearch 擴充功能
 
-Extensions is an experimental feature. Therefore, we do not recommend the use of extensions in a production environment. For updates on the progress of extensions, or if you want leave feedback that could help improve the feature, refer to the [issue on GitHub](https://github.com/opensearch-project/OpenSearch/issues/2447).
+擴充功能是一項實驗性功能。因此，我們不建議在正式環境中使用擴充功能。如需擴充功能進度的最新消息，或想提供有助於改善此功能的意見回饋，請參閱 [GitHub 上的 issue](https://github.com/opensearch-project/OpenSearch/issues/2447)。
 {: .warning}
 
-Until extensions were introduced, plugins were the only way to extend OpenSearch functionality. However, plugins have significant shortcomings: they require frequent updates to stay up to date with OpenSearch core, they pose a security risk because they run in the same process as OpenSearch, and updating or installing them requires a full cluster restart. Moreover, plugins can fatally impact the cluster in the event of failure.
+在擴充功能推出之前，外掛程式是擴充 OpenSearch 功能的唯一方式。然而，外掛程式有明顯的缺點：它們需要經常更新，才能與 OpenSearch 核心保持同步；由於它們與 OpenSearch 在同一個處理程序中執行，因此會帶來安全性風險；而且更新或安裝外掛程式需要將整個叢集重新啟動。此外，外掛程式一旦發生故障，可能會對叢集造成致命影響。
 
-Extensions provide an easier, more secure way to customize OpenSearch. Extensions support all plugin functionality and let you build additional modular features for OpenSearch. The [OpenSearch SDK for Java](https://github.com/opensearch-project/opensearch-sdk-java/) provides the library of classes and interfaces that you can use to develop extensions. Extensions are decoupled from OpenSearch core and do not need frequent updates. Additionally, they can run in a separate process or on another node and can be installed while a cluster is running.
+擴充功能提供更簡單、更安全的方式來自訂 OpenSearch。擴充功能支援所有外掛程式功能，並可讓您為 OpenSearch 建置更多模組化功能。[OpenSearch SDK for Java](https://github.com/opensearch-project/opensearch-sdk-java/) 提供可用於開發擴充功能的類別與介面程式庫。擴充功能與 OpenSearch 核心分離，不需要經常更新。此外，擴充功能可以在獨立的處理程序中或另一個節點上執行，並可在叢集執行期間安裝。
 
-## Getting started
+## 入門
 
-Use the following documentation to get started with extensions:
+請使用下列文件開始使用擴充功能：
 
-### Step 1: Learn the basics
+### 步驟 1：了解基本概念
 
-Read the [design documentation](https://opensearch-project.github.io/opensearch-sdk-java/DESIGN.html) to learn about extension architecture and how extensions work.
+閱讀[設計文件](https://opensearch-project.github.io/opensearch-sdk-java/DESIGN.html)，了解擴充功能的架構及其運作方式。
 
-### Step 2: Try it out
+### 步驟 2：實際試用
 
-Try running the sample Hello World extension by following detailed steps in the [Getting started section of the Developer Guide](https://opensearch-project.github.io/opensearch-sdk-java/DEVELOPER_GUIDE.html#getting-started).
+依照[開發人員指南的入門章節](https://opensearch-project.github.io/opensearch-sdk-java/DEVELOPER_GUIDE.html#getting-started)中的詳細步驟，嘗試執行 Hello World 範例擴充功能。
 
-### Step 3: Create your own extension
+### 步驟 3：建立您自己的擴充功能
 
-Develop a custom create, read, update, delete (CRUD) extension by following the instructions in [this tutorial](https://opensearch-project.github.io/opensearch-sdk-java/CREATE_YOUR_FIRST_EXTENSION.html).
+依照[此教學](https://opensearch-project.github.io/opensearch-sdk-java/CREATE_YOUR_FIRST_EXTENSION.html)中的說明，開發自訂的建立、讀取、更新、刪除 (CRUD) 擴充功能。
 
-### Step 4: Learn how to deploy your extension
+### 步驟 4：了解如何部署您的擴充功能
 
-For instructions on building, testing, and running an extension, see the [Developing your own extension section of the Developer Guide](https://opensearch-project.github.io/opensearch-sdk-java/DEVELOPER_GUIDE.html#developing-your-own-extension).
+如需建置、測試及執行擴充功能的說明，請參閱[開發人員指南的「開發您自己的擴充功能」章節](https://opensearch-project.github.io/opensearch-sdk-java/DEVELOPER_GUIDE.html#developing-your-own-extension)。
 
 <!-- TODO: add the link after the release
 ## Extensions Javadoc
@@ -39,8 +40,8 @@ For instructions on building, testing, and running an extension, see the [Develo
 For a complete extensions class hierarchy, see the [Javadoc](Link TBD).
 -->
 
-## Plugin migration
+## 外掛程式遷移
 
-The [Anomaly Detection plugin](https://github.com/opensearch-project/anomaly-detection) is now [implemented as an extension](https://github.com/opensearch-project/anomaly-detection/tree/feature/extensions). For details, see [this GitHub issue](https://github.com/opensearch-project/OpenSearch/issues/3635). 
+[Anomaly Detection 外掛程式](https://github.com/opensearch-project/anomaly-detection)現已[以擴充功能的形式實作](https://github.com/opensearch-project/anomaly-detection/tree/feature/extensions)。如需詳細資訊，請參閱[此 GitHub issue](https://github.com/opensearch-project/OpenSearch/issues/3635)。
 
-For tips on migrating an existing plugin to an extension, see the [plugin migration documentation](https://opensearch-project.github.io/opensearch-sdk-java/PLUGIN_MIGRATION.html).
+如需將現有外掛程式遷移為擴充功能的提示，請參閱[外掛程式遷移文件](https://opensearch-project.github.io/opensearch-sdk-java/PLUGIN_MIGRATION.html)。

@@ -1,50 +1,51 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Log ingestion
+title: "記錄檔匯入"
 nav_order: 10
 redirect_from:
   - /observability-plugin/log-analytics/
 ---
 
-# Log ingestion
+# 記錄檔匯入
 
-Log ingestion provides a way to transform unstructured log data into structured data and ingest into OpenSearch. Structured log data allows for improved queries and filtering based on the data format when searching logs for an event.
+記錄檔匯入提供一種方式，可將非結構化的記錄資料轉換為結構化資料並匯入 OpenSearch。結構化的記錄資料可在搜尋事件記錄時，依據資料格式進行更佳的查詢與篩選。
 
-## Get started with log ingestion
+## 開始使用記錄檔匯入
 
-OpenSearch Log Ingestion consists of three components---[Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/), [OpenSearch]({{site.url}}{{site.baseurl}}/quickstart/), and [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/index/). The Data Prepper repository contains several [sample applications](https://github.com/opensearch-project/data-prepper/tree/main/examples) that you can use to get started.
+OpenSearch 記錄檔匯入由三個元件組成：[Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/)、[OpenSearch]({{site.url}}{{site.baseurl}}/quickstart/) 與 [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/index/)。Data Prepper 儲存庫包含數個[範例應用程式](https://github.com/opensearch-project/data-prepper/tree/main/examples)，您可以用來入門。
 
-### Basic flow of data
+### 資料的基本流程
 
-![Log data flow diagram from a distributed application to OpenSearch]({{site.url}}{{site.baseurl}}/images/la.png)
+![從分散式應用程式到 OpenSearch 的記錄資料流程圖]({{site.url}}{{site.baseurl}}/images/la.png)
 
-1. Log Ingestion relies on you adding log collection to your application's environment to gather and send log data.
+1. 記錄檔匯入依賴您在應用程式的環境中加入記錄收集機制，以收集並傳送記錄資料。
 
-   (In the following [example](#example), [Fluent Bit](https://docs.fluentbit.io/manual/) is used as a log collector that collects log data from a file and sends the log data to Data Prepper).
+   （在下列[範例](#example)中，使用 [Fluent Bit](https://docs.fluentbit.io/manual/) 作為記錄收集器，從檔案收集記錄資料並傳送至 Data Prepper）。
 
-2. [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) receives the log data, transforms the data into a structured format, and indexes it on an OpenSearch cluster.
+2. [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) 接收記錄資料，將資料轉換為結構化格式，並在 OpenSearch 叢集上編製索引。
 
-3. The data can then be explored through OpenSearch search queries or the **Discover** page in OpenSearch Dashboards.
+3. 之後即可透過 OpenSearch 搜尋查詢或 OpenSearch Dashboards 的 **Discover** 頁面來探索資料。
 
-### Example
+### 範例
 
-This example mimics the writing of log entries to a log file that are then processed by Data Prepper and stored in OpenSearch.
+此範例模擬將記錄項目寫入記錄檔，再由 Data Prepper 處理並儲存至 OpenSearch。
 
-The example is located in the `examples/log-ingestion/` directory of the [Data Prepper repository](https://github.com/opensearch-project/data-prepper) and contains the following files.
+此範例位於 [Data Prepper 儲存庫](https://github.com/opensearch-project/data-prepper)的 `examples/log-ingestion/` 目錄中，包含下列檔案。
 
-| File | Description |
+| 檔案 | 說明 |
 |:---|:---|
-| `docker-compose.yaml` | Defines the [Fluent Bit](https://docs.fluentbit.io/manual/) (`fluent-bit`), single-node OpenSearch cluster (`opensearch`), and OpenSearch Dashboards (`dashboards`) containers. |
-| `docker-compose-dataprepper.yaml` | Defines the Data Prepper (`data-prepper`) container. |
-| `fluent-bit.conf` | Configures Fluent Bit to read `test.log` and send each new line to Data Prepper. |
-| `log_pipeline.yaml` | Defines the Data Prepper pipeline, which parses each log line using the `COMMONAPACHELOG` grok pattern and writes it to the `apache_logs` index. |
-| `test.log` | The log file that Fluent Bit reads. |
+| `docker-compose.yaml` | 定義 [Fluent Bit](https://docs.fluentbit.io/manual/)（`fluent-bit`）、單一節點 OpenSearch 叢集（`opensearch`）與 OpenSearch Dashboards（`dashboards`）容器。 |
+| `docker-compose-dataprepper.yaml` | 定義 Data Prepper（`data-prepper`）容器。 |
+| `fluent-bit.conf` | 設定 Fluent Bit 讀取 `test.log`，並將每一行新內容傳送至 Data Prepper。 |
+| `log_pipeline.yaml` | 定義 Data Prepper 管線，使用 `COMMONAPACHELOG` grok 模式解析每一行記錄，並寫入 `apache_logs` 索引。 |
+| `test.log` | Fluent Bit 讀取的記錄檔。 |
 
-The example sets the OpenSearch `admin` password to `Developer@123` in both `docker-compose.yaml` and `log_pipeline.yaml`. To use a different password, change it in both files before you start the containers.
+此範例在 `docker-compose.yaml` 與 `log_pipeline.yaml` 中都將 OpenSearch `admin` 密碼設為 `Developer@123`。若要使用不同的密碼，請在啟動容器前於這兩個檔案中修改。
 
-To run the example, follow these steps:
+若要執行此範例，請依照下列步驟操作：
 
-1. Clone the Data Prepper repository and go to the example directory:
+1. 複製 Data Prepper 儲存庫並前往範例目錄：
 
    ```bash
    git clone https://github.com/opensearch-project/data-prepper.git
@@ -52,46 +53,46 @@ To run the example, follow these steps:
    ```
    {% include copy.html %}
 
-1. Start the containers using both Docker Compose files in a single command:
+1. 使用單一命令啟動兩個 Docker Compose 檔案中的容器：
 
    ```bash
    docker compose -f docker-compose.yaml -f docker-compose-dataprepper.yaml up -d
    ```
    {% include copy.html %}
 
-   Both files must be specified in the same command so that all four containers join the same Docker network. If you start the files separately, Fluent Bit cannot reach Data Prepper and Data Prepper cannot reach OpenSearch, so no data is indexed.
+   兩個檔案必須在同一個命令中指定，讓全部四個容器加入同一個 Docker 網路。若分開啟動，Fluent Bit 將無法連線至 Data Prepper，Data Prepper 也無法連線至 OpenSearch，因此不會有任何資料被編製索引。
 
-1. Wait until Data Prepper is ready to receive data. Run the following command until the output contains a line similar to `Started http source on port 2021`:
+1. 等待 Data Prepper 準備好接收資料。重複執行下列命令，直到輸出包含類似 `Started http source on port 2021` 的一行為止：
 
    ```bash
    docker logs data-prepper 2>&1 | grep "Started http source"
    ```
    {% include copy.html %}
 
-   Data Prepper starts the pipeline only after it connects to OpenSearch, which can take a minute or longer. If you write log data before Data Prepper is ready, Fluent Bit can discard the data after it fails to deliver it.
+   Data Prepper 只有在連線至 OpenSearch 之後才會啟動管線，這可能需要一分鐘或更久。若在 Data Prepper 準備好之前寫入記錄資料，Fluent Bit 可能會在傳送失敗後捨棄該資料。
 
-1. Append a log line to `test.log`:
+1. 在 `test.log` 附加一行記錄：
 
    ```bash
    echo '63.173.168.120 - - [04/Nov/2021:15:07:25 -0500] "GET /search/tag/list HTTP/1.0" 200 5003' >> test.log
    ```
    {% include copy.html %}
 
-   Fluent Bit collects the log line and sends it to Data Prepper. To confirm delivery, run `docker logs fluent-bit`. The output contains a line similar to the following:
+   Fluent Bit 會收集該行記錄並傳送至 Data Prepper。若要確認已送達，請執行 `docker logs fluent-bit`。輸出會包含類似以下的一行：
 
    ```
    [2026/10/06 15:29:12.026] [ info] [output:http:http.0] data-prepper:2021, HTTP status=200
    200 OK
    ```
 
-1. Data Prepper parses the log line and writes it to the `apache_logs` index, as defined in `log_pipeline.yaml`. Data Prepper sends documents to OpenSearch in batches, so the document can take a minute or longer to appear. To view the document, run the following command:
+1. Data Prepper 會解析該行記錄並寫入 `apache_logs` 索引，如 `log_pipeline.yaml` 中所定義。Data Prepper 以批次方式將文件傳送至 OpenSearch，因此文件可能需要一分鐘或更久才會出現。若要檢視該文件，請執行下列命令：
 
    ```bash
    curl -X GET -u 'admin:Developer@123' -k 'https://localhost:9200/apache_logs/_search?pretty&size=1'
    ```
    {% include copy.html %}
 
-   The response contains the parsed log data:
+   回應會包含解析後的記錄資料：
 
    ```json
    {
@@ -133,9 +134,9 @@ To run the example, follow these steps:
    }
    ```
 
-1. To view the data in OpenSearch Dashboards, go to [http://localhost:5601](http://localhost:5601) and log in as the `admin` user. Create an index pattern for the `apache_logs` index, and then select the index pattern on the **Discover** page. The index does not contain a field of the `date` type, so create the index pattern without a time field. For more information, see [Index patterns]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/).
+1. 若要在 OpenSearch Dashboards 中檢視資料，請前往 [http://localhost:5601](http://localhost:5601) 並以 `admin` 使用者身分登入。為 `apache_logs` 索引建立索引模式，然後在 **Discover** 頁面選取該索引模式。此索引不包含 `date` 類型的欄位，因此建立索引模式時請不指定時間欄位。如需更多資訊，請參閱[索引模式]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/)。
 
-To stop the containers and delete their data, run the following command:
+若要停止容器並刪除其資料，請執行下列命令：
 
 ```bash
 docker compose -f docker-compose.yaml -f docker-compose-dataprepper.yaml down -v

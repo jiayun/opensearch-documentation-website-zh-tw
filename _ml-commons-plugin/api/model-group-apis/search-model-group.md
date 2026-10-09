@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search model group
+title: "搜尋模型群組"
 parent: Model group APIs
 grand_parent: ML Commons APIs
 nav_order: 40
 ---
 
-# Search Model Group API
+# 搜尋模型群組 API
 
-When you search for a model group, only those model groups to which you have access will be returned. For example, for a match all query, model groups that will be returned are:
+當您搜尋模型群組時，只會傳回您有權存取的模型群組。例如，對於 match all 查詢，會傳回的模型群組包括：
 
-- All public model groups in the index 
-- Private model groups for which you are the owner 
-- Model groups that share at least one of the `backend_roles` with you
+- 索引中的所有公開模型群組
+- 您是擁有者的私人模型群組
+- 與您共用至少一個 `backend_roles` 的模型群組
 
-For more information, see [Model access control]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/).
+如需更多資訊，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
 
-## Path and HTTP method
+## 路徑與 HTTP 方法
 
 ```json
 POST /_plugins/_ml/model_groups/_search
 GET /_plugins/_ml/model_groups/_search
 ```
 
-## Example request: Match all
+## 範例請求：Match all
 
-The following request is sent by `user1` who has the `IT` and `HR` roles:
+下列請求由具有 `IT` 與 `HR` 角色的 `user1` 傳送：
 
 ```json
 POST /_plugins/_ml/model_groups/_search
@@ -38,7 +39,7 @@ POST /_plugins/_ml/model_groups/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -130,9 +131,9 @@ POST /_plugins/_ml/model_groups/_search
 }
 ```
 
-## Example request: Search for model groups with an owner name
+## 範例請求：依擁有者名稱搜尋模型群組
 
-The following request to search for model groups of `user` is sent by `user2` who has the `IT` backend role:
+下列依 `user` 搜尋模型群組的請求，由具有 `IT` 後端角色的 `user2` 傳送：
 
 ```json
 GET /_plugins/_ml/model_groups/_search
@@ -163,7 +164,7 @@ GET /_plugins/_ml/model_groups/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -222,7 +223,7 @@ GET /_plugins/_ml/model_groups/_search
 }
 ```
 
-## Example request: Search for model groups with a model group ID
+## 範例請求：依模型群組 ID 搜尋模型群組
 
 ```json
 GET /_plugins/_ml/model_groups/_search
@@ -244,7 +245,7 @@ GET /_plugins/_ml/model_groups/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {

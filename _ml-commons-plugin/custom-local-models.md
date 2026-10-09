@@ -1,64 +1,65 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Custom models
+title: "自訂模型"
 parent: Using ML models within OpenSearch
 grand_parent: Integrating ML models
 nav_order: 20
 ---
 
-# Custom local models
-**Introduced 2.9**
+# 自訂本機模型
+**於 2.9 版推出**
 {: .label .label-purple }
 
-To use a custom model locally, you can upload it to the OpenSearch cluster.
+若要在本機使用自訂模型，您可以將其上傳至 OpenSearch 叢集。
 
-## Model support
+## 模型支援
 
-OpenSearch supports the following types of local models:
+OpenSearch 支援下列類型的本機模型：
 
-- Text embedding models
-- Sparse encoding models
-- Cross-encoder models
-- Question answering models
+- 文字嵌入模型
+- 稀疏編碼模型
+- 交叉編碼器模型
+- 問答模型
 
-Running local models on the CentOS 7 operating system is not supported. Moreover, not all local models can run on all hardware and operating systems.
+不支援在 CentOS 7 作業系統上執行本機模型。此外，並非所有本機模型都能在所有硬體和作業系統上執行。
 {: .important}
 
-## Preparing a model
+## 準備模型
 
-For all the models, you must provide a tokenizer JSON file within the model zip file.
+對於所有模型，您必須在模型 zip 檔案內提供斷詞器 JSON 檔案。
 
-For sparse encoding models, make sure your output format is `{"output":<sparse_vector>}` so that ML Commons can post-process the sparse vector.
+對於稀疏編碼模型，請確認您的輸出格式為 `{"output":<sparse_vector>}`，以便 ML Commons 能夠後處理稀疏向量。
 
-If you fine-tune a sparse model on your own dataset, you may also want to use your own sparse tokenizer model. It is preferable to provide your own [IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) JSON file in the tokenizer model zip file because this increases query performance when you use the tokenizer model in the query. Alternatively, you can use an OpenSearch-provided generic [IDF from MSMARCO](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1/1.0.0/torch_script/opensearch-neural-sparse-tokenizer-v1-1.0.0.zip). If the IDF file is not provided, the default weight of each token is set to 1, which may influence sparse neural search performance.  
+如果您在自己的資料集上微調稀疏模型，您可能也會想使用自己的稀疏斷詞器模型。建議您在斷詞器模型 zip 檔案中提供自己的 [IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) JSON 檔案，因為當您在查詢中使用斷詞器模型時，這可提升查詢效能。或者，您可以使用 OpenSearch 提供的通用[來自 MSMARCO 的 IDF](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1/1.0.0/torch_script/opensearch-neural-sparse-tokenizer-v1-1.0.0.zip)。若未提供 IDF 檔案，每個詞元的預設權重會設為 1，這可能會影響稀疏神經搜尋的效能。  
 
-### Model format
+### 模型格式
 
-To use a model in OpenSearch, you must export the model into a portable format. OpenSearch supports only the [TorchScript](https://pytorch.org/docs/stable/jit.html) and [ONNX](https://onnx.ai/) formats.
+若要在 OpenSearch 中使用模型，您必須將模型匯出為可攜式格式。OpenSearch 僅支援 [TorchScript](https://pytorch.org/docs/stable/jit.html) 和 [ONNX](https://onnx.ai/) 格式。
 
-You must save the model file as zip before uploading it to OpenSearch. To ensure that ML Commons can upload your model, compress your TorchScript file before uploading. For an example, download a TorchScript [model file](https://github.com/opensearch-project/ml-commons/blob/2.x/ml-algorithms/src/test/resources/org/opensearch/ml/engine/algorithms/text_embedding/all-MiniLM-L6-v2_torchscript_sentence-transformer.zip).
+您必須先將模型檔案儲存為 zip，才能將其上傳至 OpenSearch。為確保 ML Commons 能夠上傳您的模型，請先壓縮 TorchScript 檔案再上傳。如需範例，請下載 TorchScript [模型檔案](https://github.com/opensearch-project/ml-commons/blob/2.x/ml-algorithms/src/test/resources/org/opensearch/ml/engine/algorithms/text_embedding/all-MiniLM-L6-v2_torchscript_sentence-transformer.zip)。
 
-Additionally, you must calculate a SHA256 checksum for the model zip file that you'll need to provide when registering the model. For example, on UNIX, use the following command to obtain the checksum:
+此外，您必須為模型 zip 檔案計算 SHA256 總和檢查碼，並在註冊模型時提供。例如，在 UNIX 上，使用下列命令取得總和檢查碼：
 
 ```bash
 shasum -a 256 sentence-transformers_paraphrase-mpnet-base-v2-1.0.0-onnx.zip
 ```
 
-### Model size
+### 模型大小
 
-Most deep learning models are more than 100 MB, making it difficult to fit them into a single document. OpenSearch splits the model file into smaller chunks to be stored in a model index. When allocating ML or data nodes for your OpenSearch cluster, make sure you correctly size your ML nodes so that you have enough memory when making ML inferences.
+大多數深度學習模型都超過 100 MB，因此難以放入單一文件中。OpenSearch 會將模型檔案分割成較小的區塊，以儲存在模型索引中。為您的 OpenSearch 叢集配置 ML 節點或資料節點時，請務必正確調整 ML 節點的大小，以便在進行 ML 推論時有足夠的記憶體。
 
-## Prerequisites 
+## 先決條件 
 
-To upload a custom model to OpenSearch, you need to prepare it outside of your OpenSearch cluster. You can use a pretrained model, like one from [Hugging Face](https://huggingface.co/), or train a new model in accordance with your needs.
+若要將自訂模型上傳至 OpenSearch，您需要在 OpenSearch 叢集外部準備該模型。您可以使用預先訓練的模型 (例如來自 [Hugging Face](https://huggingface.co/) 的模型)，或依照您的需求訓練新模型。
 
-### Cluster settings
+### 叢集設定
 
-This example uses a simple setup with no dedicated ML nodes and allows running a model on a non-ML node. 
+此範例使用沒有專用 ML 節點的簡單設定，並允許在非 ML 節點上執行模型。 
 
-On clusters with dedicated ML nodes, specify `"only_run_on_ml_node": "true"` for improved performance. For more information, see [ML Commons cluster settings]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/).
+在具有專用 ML 節點的叢集上，請指定 `"only_run_on_ml_node": "true"` 以提升效能。如需詳細資訊，請參閱 [ML Commons 叢集設定]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/)。
 
-To ensure that this basic local setup works, specify the following cluster settings:
+為確保此基本本機設定能夠運作，請指定下列叢集設定：
 
 ```json
 PUT _cluster/settings
@@ -73,17 +74,17 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-When registering a model from a URL, make sure the source is trusted. Loading models from untrusted sources can pose security risks. For more information, see [PyTorch security guidelines for untrusted models](https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models).
+從 URL 註冊模型時，請確認來源受信任。從不受信任的來源載入模型可能會造成安全性風險。如需詳細資訊，請參閱 [PyTorch 不受信任模型的安全性指導方針](https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models)。
 {: .warning}
 
-## Step 1: Register a model group
+## 步驟 1：註冊模型群組
 
-To register a model, you have the following options:
+若要註冊模型，您有下列選項：
 
-- You can use `model_group_id` to register a model version to an existing model group.
-- If you do not use `model_group_id`, ML Commons creates a model with a new model group.
+- 您可以使用 `model_group_id` 將模型版本註冊至現有的模型群組。
+- 如果您不使用 `model_group_id`，ML Commons 會建立具有新模型群組的模型。
 
-To register a model group, send the following request:
+若要註冊模型群組，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -94,7 +95,7 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-The response contains the model group ID that you'll use to register a model to this model group:
+回應包含模型群組 ID，您將使用該 ID 將模型註冊至此模型群組：
 
 ```json
 {
@@ -103,15 +104,15 @@ The response contains the model group ID that you'll use to register a model to 
 }
 ```
 
-To learn more about model groups, see [Model access control]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/).
+若要進一步了解模型群組，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
 
-## Step 2: Register a local model
+## 步驟 2：註冊本機模型
 
-To register a local model to the model group created in step 1, send a Register Model API request. For descriptions of Register Model API parameters, see [Register a model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/). 
+若要將本機模型註冊至步驟 1 中建立的模型群組，請傳送 Register Model API 請求。如需 Register Model API 參數的說明，請參閱[註冊模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/)。 
 
-The `function_name` corresponds to the model type. For text embedding models, set this parameter to `TEXT_EMBEDDING`. For sparse encoding models, set this parameter to `SPARSE_ENCODING` or `SPARSE_TOKENIZE`. For cross-encoder models, set this parameter to `TEXT_SIMILARITY`. For question answering models, set this parameter to `QUESTION_ANSWERING`. In this example, set `function_name` to `TEXT_EMBEDDING` because you're registering a text embedding model. 
+`function_name` 對應於模型類型。對於文字嵌入模型，請將此參數設為 `TEXT_EMBEDDING`。對於稀疏編碼模型，請將此參數設為 `SPARSE_ENCODING` 或 `SPARSE_TOKENIZE`。對於交叉編碼器模型，請將此參數設為 `TEXT_SIMILARITY`。對於問答模型，請將此參數設為 `QUESTION_ANSWERING`。在此範例中，請將 `function_name` 設為 `TEXT_EMBEDDING`，因為您要註冊文字嵌入模型。 
 
-Provide the model group ID from step 1 and send the following request:
+提供步驟 1 中的模型群組 ID，並傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -136,7 +137,7 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-Note that in OpenSearch Dashboards, wrapping the `all_config` field contents in triple quotes (`"""`) automatically escapes quotation marks within the field and provides better readability:
+請注意，在 OpenSearch Dashboards 中，將 `all_config` 欄位內容以三個引號 (`"""`) 包住，會自動逸出欄位內的引號，並提供更好的可讀性：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -161,7 +162,7 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy.html %}
 
-OpenSearch returns the task ID of the register operation:
+OpenSearch 會傳回註冊作業的工作 ID：
 
 ```json
 {
@@ -170,14 +171,14 @@ OpenSearch returns the task ID of the register operation:
 }
 ```
 
-To check the status of the operation, provide the task ID to the [Get task]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+若要檢查作業的狀態，請將工作 ID 提供給 [Get task]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
 ```bash
 GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 ```
 {% include copy-curl.html %}
 
-When the operation is complete, the state changes to `COMPLETED`:
+作業完成後，狀態會變更為 `COMPLETED`：
 
 ```json
 {
@@ -194,20 +195,20 @@ When the operation is complete, the state changes to `COMPLETED`:
 }
 ```
 
-Take note of the returned `model_id` because you’ll need it to deploy the model.
+請記下傳回的 `model_id`，因為您需要它來部署模型。
 
-## Step 3: Deploy the model
+## 步驟 3：部署模型
 
-The deploy operation reads the model's chunks from the model index and then creates an instance of the model to load into memory. The bigger the model, the more chunks the model is split into and longer it takes for the model to load into memory.
+部署作業會從模型索引讀取模型的區塊，然後建立模型實例並載入記憶體。模型越大，切分出的區塊就越多，載入記憶體所需的時間也越長。
 
-To deploy the registered model, provide its model ID from step 3 in the following request:
+若要部署已註冊的模型，請在下列請求中提供步驟 3 取得的模型 ID：
 
 ```bash
 POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_deploy
 ```
 {% include copy-curl.html %}
 
-The response contains the task ID that you can use to check the status of the deploy operation:
+回應包含任務 ID，您可以用它來檢查部署作業的狀態：
 
 ```json
 {
@@ -216,14 +217,14 @@ The response contains the task ID that you can use to check the status of the de
 }
 ```
 
-As in the previous step, check the status of the operation by calling the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+如同上一個步驟，呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來檢查作業狀態：
 
 ```bash
 GET /_plugins/_ml/tasks/vVePb4kBJ1eYAeTM7ljG
 ```
 {% include copy-curl.html %}
 
-When the operation is complete, the state changes to `COMPLETED`:
+當作業完成時，狀態會變更為 `COMPLETED`：
 
 ```json
 {
@@ -240,14 +241,14 @@ When the operation is complete, the state changes to `COMPLETED`:
 }
 ```
 
-If a cluster or node is restarted, then you need to redeploy the model. To learn how to set up automatic redeployment, see [Model deployment settings]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/#model-deployment-settings).
+如果叢集或節點重新啟動，您需要重新部署模型。若要瞭解如何設定自動重新部署，請參閱[模型部署設定]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/#model-deployment-settings)。
 {: .tip} 
 
-## Step 4 (Optional): Test the model
+## 步驟 4（選用）：測試模型
 
-Use the [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) to test the model.
+使用 [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 來測試模型。
 
-For a text embedding model, send the following request:
+若為文字嵌入模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/_predict/text_embedding/cleMb4kBJ1eYAeTMFFg4
@@ -259,7 +260,7 @@ POST /_plugins/_ml/_predict/text_embedding/cleMb4kBJ1eYAeTMFFg4
 ```
 {% include copy-curl.html %}
 
-The response contains text embeddings for the provided sentence:
+回應包含所提供句子的文字嵌入：
 
 ```json
 {
@@ -285,7 +286,7 @@ The response contains text embeddings for the provided sentence:
 }
 ```
 
-For a sparse encoding model, send the following request:
+若為稀疏編碼模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
@@ -295,7 +296,7 @@ POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
 ```
 {% include copy-curl.html %}
 
-The response contains the tokens and weights:
+回應包含詞元與權重：
 
 ```json
 {
@@ -320,15 +321,15 @@ The response contains the tokens and weights:
 }
 ```
 
-## Step 5: Use the model for search
+## 步驟 5：使用模型進行搜尋
 
-To learn how to use the model for vector search, see [AI search methods]({{site.url}}{{site.baseurl}}/vector-search/ai-search/#ai-search-methods).
+若要瞭解如何使用模型進行向量搜尋，請參閱 [AI 搜尋方法]({{site.url}}{{site.baseurl}}/vector-search/ai-search/#ai-search-methods)。
 
-## Question answering models
+## 問答模型
 
-A question answering model extracts the answer to a question from a given context. ML Commons supports context in `text` format.
+問答模型會從給定的上下文中擷取問題的答案。ML Commons 支援 `text` 格式的上下文。
 
-To register a question answering model, send a request in the following format. Specify the `function_name` as `QUESTION_ANSWERING`:
+若要註冊問答模型，請以下列格式傳送請求。將 `function_name` 指定為 `QUESTION_ANSWERING`：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -349,14 +350,14 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-Then send a request to deploy the model:
+接著傳送請求來部署模型：
 
 ```json
 POST _plugins/_ml/models/{model_id}/_deploy
 ```
 {% include copy-curl.html %}
 
-To test a question answering model, send the following request. It requires a `question` and the relevant `context` from which the answer will be generated:
+若要測試問答模型，請傳送下列請求。此請求需要一個 `question` 以及將從中產生答案的相關 `context`：
 
 ```json
 POST /_plugins/_ml/_predict/question_answering/{model_id}
@@ -367,7 +368,7 @@ POST /_plugins/_ml/_predict/question_answering/{model_id}
 ```
 {% include copy-curl.html %}
 
-The response provides the answer based on the context:
+回應會根據上下文提供答案：
 
 ```json
 {

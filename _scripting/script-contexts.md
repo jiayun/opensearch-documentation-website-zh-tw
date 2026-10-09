@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Script contexts
+title: "指令碼情境"
 nav_order: 45
 ---
 
-# Script contexts
+# 指令碼情境
 
-A script runs in a _script context_. The context determines the variables the script receives, the value it must return, and the permitted languages. A script that is valid in one context is often invalid in another, which is why a script that works as a script field can fail when moved into an update.
+指令碼會在_指令碼情境_中執行。情境會決定指令碼可接收的變數、必須傳回的值，以及允許使用的語言。在某個情境中有效的指令碼，在另一個情境中通常無效，這也是為什麼可做為 script field 使用的指令碼，在移入 update 之後可能會失敗。
 
-Context is the unit that several other features are defined against. Compilation limits and caches are tracked per context, `script.allowed_contexts` restricts scripting by context, and a stored script can be compiled against a named context when you save it.
+情境是其他數項功能定義時所依據的單位。編譯限制與快取會依情境分別追蹤，`script.allowed_contexts` 會依情境限制指令碼功能，而儲存的指令碼在您儲存時，可針對具名情境進行編譯。
 
-## Listing the contexts in your cluster
+## 列出叢集中的情境
 
-Installed plugins register their own contexts, so the authoritative list is the one your cluster reports. To list all contexts in your cluster, use the [Get Script Contexts API]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-script-contexts/):
+已安裝的外掛程式會註冊自己的情境，因此最權威的清單就是您的叢集所回報的清單。若要列出叢集中的所有情境，請使用 [Get Script Contexts API]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-script-contexts/)：
 
 ```json
 GET _script_context
 ```
 {% include copy-curl.html %}
 
-Each entry names a context and lists its methods. The `execute` method provides the script's return type and any arguments passed to it, and each `get` method corresponds to a variable the script can read:
+每個項目都會列出一個情境名稱及其方法。`execute` 方法會提供指令碼的傳回類型，以及傳遞給它的任何引數，而每個 `get` 方法則對應到指令碼可讀取的變數：
 
 ```json
 {
@@ -43,113 +44,113 @@ Each entry names a context and lists its methods. The `execute` method provides 
 }
 ```
 
-The response is long, because it covers every context. To list the context names alone, use the `filter_path` query parameter:
+回應內容很長，因為它涵蓋了每個情境。若只要列出情境名稱，請使用 `filter_path` 查詢參數：
 
 ```json
 GET _script_context?filter_path=contexts.name
 ```
 {% include copy-curl.html %}
 
-## Contexts by task
+## 依工作分類的情境
 
-The following sections group the contexts by task. The `params` variable is available in every context and is omitted from the descriptions.
+以下各節依工作將情境分組。`params` 變數在所有情境中皆可使用，因此未列於各說明中。
 
-### Search and scoring
+### 搜尋與評分
 
-The following table lists the contexts that run during a search.
+下表列出搜尋期間執行的情境。
 
-Context | Returns | Variables | Used by
+情境 | 傳回 | 變數 | 用於
 :--- | :--- | :--- | :---
-`score` | `double` | `doc`, `_score`, `explanation` | [`script_score` query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/script-score/) and `function_score` script scoring.
-`filter` | `boolean` | `doc` | [`script` query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/script/).
-`field` | `Object` | `doc` | [Script fields]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#using-scripted-fields).
-`derived_field` | `void` | `doc`, `emit()` | [Derived fields]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/derived/).
-`number_sort` | `double` | `doc`, `_score` | Numeric [script-based sort]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/).
-`string_sort` | `String` | `doc`, `_score` | String script-based sort.
-`terms_set` | `Number` | `doc` | The `minimum_should_match_script` of a `terms_set` query.
-`similarity` | `double` | `weight`, `query`, `field`, `term`, `doc` | A scripted similarity module.
-`similarity_weight` | `double` | `query`, `field`, `term` | The weight calculation of a scripted similarity.
-`interval` | `boolean` | `interval` | The `script` filter of an `intervals` query.
-`search` | `void` | `ctx` | Search request preprocessing.
+`score` | `double` | `doc`, `_score`, `explanation` | [`script_score` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/script-score/) 與 `function_score` 指令碼評分。
+`filter` | `boolean` | `doc` | [`script` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/script/)。
+`field` | `Object` | `doc` | [指令碼欄位]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#using-scripted-fields)。
+`derived_field` | `void` | `doc`, `emit()` | [衍生欄位]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/derived/)。
+`number_sort` | `double` | `doc`, `_score` | 數值[以指令碼為基礎的排序]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/)。
+`string_sort` | `String` | `doc`, `_score` | 字串以指令碼為基礎的排序。
+`terms_set` | `Number` | `doc` | `terms_set` 查詢的 `minimum_should_match_script`。
+`similarity` | `double` | `weight`, `query`, `field`, `term`, `doc` | 指令碼化的相似度模組。
+`similarity_weight` | `double` | `query`, `field`, `term` | 指令碼化相似度的權重計算。
+`interval` | `boolean` | `interval` | `intervals` 查詢的 `script` 篩選條件。
+`search` | `void` | `ctx` | 搜尋請求的前置處理。
 
-The `score` context supplies `_score` as well as returning a score, so a script can build on the relevance that the query computed. See [Accessing the relevance score]({{site.url}}{{site.baseurl}}/scripting/accessing-fields/#accessing-the-relevance-score).
+`score` 情境除了傳回分數之外，也會提供 `_score`，因此指令碼可以根據查詢所計算出的相關性進一步處理。請參閱[存取相關性分數]({{site.url}}{{site.baseurl}}/scripting/accessing-fields/#accessing-the-relevance-score)。
 
-### Aggregations
+### 彙總
 
-The following table lists the aggregation contexts.
+下表列出彙總情境。
 
-Context | Returns | Variables | Used by
+情境 | 傳回 | 變數 | 用於
 :--- | :--- | :--- | :---
-`aggs` | `Object` | `doc`, `_score`, `value` | The `script` of a metric or bucket aggregation.
-`aggs_init` | `void` | `state` | The `init_script` of a [scripted metric aggregation]({{site.url}}{{site.baseurl}}/aggregations/metric/scripted-metric/).
-`aggs_map` | `void` | `doc`, `_score`, `state` | The `map_script` of a scripted metric aggregation.
-`aggs_combine` | `Object` | `state` | The `combine_script` of a scripted metric aggregation.
-`aggs_reduce` | `Object` | `states` | The `reduce_script` of a scripted metric aggregation.
-`bucket_aggregation` | `Number` | None | [Bucket script]({{site.url}}{{site.baseurl}}/aggregations/pipeline/bucket-script/) pipeline aggregations.
-`aggregation_selector` | `boolean` | None | Bucket selector pipeline aggregations.
-`moving-function` | `double` | `params`, `values` | The `script` of a `moving_fn` pipeline aggregation.
-`script_heuristic` | `double` | `params` | The `script_heuristic` of a `significant_terms` aggregation.
+`aggs` | `Object` | `doc`, `_score`, `value` | 指標或桶彙總的 `script`。
+`aggs_init` | `void` | `state` | [指令碼化指標彙總]({{site.url}}{{site.baseurl}}/aggregations/metric/scripted-metric/) 的 `init_script`。
+`aggs_map` | `void` | `doc`, `_score`, `state` | 指令碼化指標彙總的 `map_script`。
+`aggs_combine` | `Object` | `state` | 指令碼化指標彙總的 `combine_script`。
+`aggs_reduce` | `Object` | `states` | 指令碼化指標彙總的 `reduce_script`。
+`bucket_aggregation` | `Number` | 無 | [桶指令碼]({{site.url}}{{site.baseurl}}/aggregations/pipeline/bucket-script/) 管線彙總。
+`aggregation_selector` | `boolean` | 無 | 桶選取器管線彙總。
+`moving-function` | `double` | `params`, `values` | `moving_fn` 管線彙總的 `script`。
+`script_heuristic` | `double` | `params` | `significant_terms` 彙總的 `script_heuristic`。
 
-The four scripted metric contexts run in sequence and communicate through `state`, which `aggs_init` creates, `aggs_map` fills per document, `aggs_combine` reduces per shard, and `aggs_reduce` receives as the list `states`.
+這四個指令碼化指標情境會依序執行，並透過 `state` 溝通；`aggs_init` 會建立它，`aggs_map` 會依文件填入它，`aggs_combine` 會依分片縮減它，而 `aggs_reduce` 則會以清單 `states` 的形式接收它。
 
-### Ingestion and updates
+### 匯入與更新
 
-The following table lists the contexts that run while a document is indexed or updated.
+下表列出文件被編製索引或更新時所執行的情境。
 
-Context | Returns | Variables | Used by
+情境 | 傳回 | 變數 | 用於
 :--- | :--- | :--- | :---
-`update` | `void` | `ctx` | The [Update Document]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-document/), [Update By Query]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-by-query/), and [Reindex]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/) APIs.
-`ingest` | `void` | `ctx` | The [`script` processor]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/script/).
-`processor_conditional` | `boolean` | `ctx` | The `if` condition on any ingest processor.
-`context_aware_grouping` | `String` | `ctx` | The `script` of a `context_aware_grouping` mapping, which returns the grouping key that a document's segment is chosen by.
-`analysis` | `boolean` | `token` | The `condition` of a `condition` token filter.
+`update` | `void` | `ctx` | [Update Document]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-document/)、[Update By Query]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-by-query/) 與 [Reindex]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/) API。
+`ingest` | `void` | `ctx` | [`script` 處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/script/)。
+`processor_conditional` | `boolean` | `ctx` | 任何匯入處理器上的 `if` 條件。
+`context_aware_grouping` | `String` | `ctx` | `context_aware_grouping` 對應的 `script`，會傳回文件所屬分段被選取時所用的分組索引鍵。
+`analysis` | `boolean` | `token` | `condition` 詞元篩選器的 `condition`。
 
-The document-modifying contexts expose document data through `ctx`. The `doc` variable is unavailable, so a script that references it in an update fails to compile. See [Update scripts]({{site.url}}{{site.baseurl}}/scripting/accessing-fields/#update-scripts).
+修改文件的情境會透過 `ctx` 公開文件資料。`doc` 變數無法使用，因此在更新中參照它的指令碼會編譯失敗。請參閱[更新指令碼]({{site.url}}{{site.baseurl}}/scripting/accessing-fields/#update-scripts)。
 
-### Templates and testing
+### 範本與測試
 
-The following table lists the remaining general-purpose contexts.
+下表列出其餘的通用情境。
 
-Context | Returns | Variables | Used by
+情境 | 傳回 | 變數 | 用於
 :--- | :--- | :--- | :---
-`painless_test` | `Object` | None | The default context of the [Execute Inline Script API]({{site.url}}{{site.baseurl}}/api-reference/script-apis/exec-script/).
-`template` | `String` | None | [Search templates]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/), written in `mustache`.
+`painless_test` | `Object` | 無 | [Execute Inline Script API]({{site.url}}{{site.baseurl}}/api-reference/script-apis/exec-script/) 的預設情境。
+`template` | `String` | 無 | 以 `mustache` 撰寫的[搜尋範本]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/)。
 
-### Plugin contexts
+### 外掛程式情境
 
-The following table lists contexts registered by plugins. They appear only when the corresponding plugin is installed.
+下表列出外掛程式所註冊的情境。唯有安裝對應的外掛程式時，這些情境才會出現。
 
-Context | Returns | Variables | Registered by
+情境 | 傳回 | 變數 | 註冊者
 :--- | :--- | :--- | :---
-`trigger` | `boolean` | `ctx` | Alerting, for monitor trigger conditions.
-`ranklib` | `void` | None | Learning to Rank, for `ranklib` models.
+`trigger` | `boolean` | `ctx` | Alerting，用於監視器觸發條件。
+`ranklib` | `void` | 無 | Learning to Rank，用於 `ranklib` 模型。
 
-## Language support by context
+## 各情境支援的語言
 
-Painless runs in every context. The special-purpose languages are restricted, so a script in one of them fails outside its supported contexts. Use the [Get Script Languages API]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-script-language/) to see the mapping for your cluster:
+Painless 可在所有情境中執行。特殊用途語言則受到限制，因此使用這些語言的指令碼在其支援的情境之外會失敗。請使用 [Get Script Languages API]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-script-language/) 查看您叢集的對應：
 
 ```json
 GET _script_language
 ```
 {% include copy-curl.html %}
 
-The following table summarizes the languages you can write scripts in.
+下表摘要說明您可用來撰寫指令碼的語言。
 
-Language | Contexts
+語言 | 情境
 :--- | :---
-`painless` | Every context
+`painless` | 所有情境
 `expression` | `score`, `field`, `filter`, `number_sort`, `aggs`, `bucket_aggregation`, `aggregation_selector`, `terms_set`
 `mustache` | `template`
 `knn` | `score`
 `ranklib` | `ranklib`
 
-The `expression` language is unavailable in `update`, `ingest`, and `string_sort` because it cannot read the `_source` and cannot return a string. See [Limitations]({{site.url}}{{site.baseurl}}/scripting/expressions/#limitations).
+`expression` 語言無法在 `update`、`ingest` 與 `string_sort` 中使用，因為它無法讀取 `_source`，也無法傳回字串。請參閱[限制]({{site.url}}{{site.baseurl}}/scripting/expressions/#limitations)。
 
-## Writing a script for a context
+## 為情境撰寫指令碼
 
-Matching your script to the context means supplying the right return value and using the variables that context provides. The `derived_field` context illustrates both: it returns `void` and reports its value by calling `emit()` instead of returning it.
+讓指令碼符合情境，意味著提供正確的傳回值，並使用該情境所提供的變數。`derived_field` 情境同時說明了這兩點：它會傳回 `void`，並透過呼叫 `emit()` 來回報其值，而非直接傳回。
 
-The following search defines a derived field that labels each product by price tier, using the `scripting-products` index created in [Test setup]({{site.url}}{{site.baseurl}}/scripting/using-scripts/#test-setup):
+下列搜尋會定義一個衍生欄位，使用[測試設定]({{site.url}}{{site.baseurl}}/scripting/using-scripts/#test-setup)中所建立的 `scripting-products` 索引，依價格級距為每個產品加上標籤：
 
 ```json
 GET scripting-products/_search
@@ -168,11 +169,11 @@ GET scripting-products/_search
 ```
 {% include copy-curl.html %}
 
-Each result carries the emitted value:
+每個結果都會帶有發出的值：
 
 <details open markdown="block">
 <summary>
-  Response
+  回應
 </summary>
 
 ```json
@@ -250,19 +251,19 @@ Each result carries the emitted value:
 ```
 </details>
 
-## Compiling a stored script against a context
+## 針對情境編譯已儲存的指令碼
 
-Naming a context when you store a script makes OpenSearch compile it immediately, so a script that is invalid for that context fails on the store request rather than on the first search that uses it. See [Working with stored scripts]({{site.url}}{{site.baseurl}}/scripting/using-scripts/#working-with-stored-scripts).
+在儲存指令碼時指定情境，可讓 OpenSearch 立即編譯它，因此對該情境無效的指令碼會在儲存請求時失敗，而不是在第一次使用它的搜尋時才失敗。請參閱[使用已儲存的指令碼]({{site.url}}{{site.baseurl}}/scripting/using-scripts/#working-with-stored-scripts)。
 
-## Restricting and configuring by context
+## 依情境限制與設定
 
-The following settings operate on contexts:
+下列設定會依情境運作：
 
-- `script.allowed_contexts` limits the cluster to a named set of contexts, which reduces where a script can run at all. See [Restricting the allowed contexts]({{site.url}}{{site.baseurl}}/scripting/script-security/#restricting-the-allowed-contexts).
-- `script.context.<context>.max_compilations_rate`, `.cache_max_size`, and `.cache_expire` configure compilation and caching for one context without affecting the others. See [Script context settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/script-and-resource-settings/#script-context-settings).
+- `script.allowed_contexts` 會將叢集限制為一組具名情境，進而減少指令碼可執行的範圍。請參閱[限制允許的情境]({{site.url}}{{site.baseurl}}/scripting/script-security/#restricting-the-allowed-contexts)。
+- `script.context.<context>.max_compilations_rate`、`.cache_max_size` 與 `.cache_expire` 可為單一情境設定編譯與快取，而不影響其他情境。請參閱[指令碼情境設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/script-and-resource-settings/#script-context-settings)。
 
-## Related documentation
+## 相關文件
 
-- [Painless language reference]({{site.url}}{{site.baseurl}}/scripting/painless-language/)
-- [Accessing document fields in scripts]({{site.url}}{{site.baseurl}}/scripting/accessing-fields/)
+- [Painless 語言參考]({{site.url}}{{site.baseurl}}/scripting/painless-language/)
+- [在指令碼中存取文件欄位]({{site.url}}{{site.baseurl}}/scripting/accessing-fields/)
 - [Get Script Contexts API]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-script-contexts/)

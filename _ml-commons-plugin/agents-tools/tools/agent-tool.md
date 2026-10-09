@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Agent tool
+title: "代理程式工具"
 has_children: false
 has_toc: false
 nav_order: 10
@@ -9,16 +10,16 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# Agent tool
-**Introduced 2.13**
+# 代理程式工具
+**於 2.13 版推出**
 {: .label .label-purple }
 <!-- vale on -->
 
-The `AgentTool` runs any agent.
+`AgentTool` 可執行任何代理程式。
 
-## Step 1: Set up an agent for AgentTool to run
+## 步驟 1：設定供 AgentTool 執行的代理程式
 
-Set up any agent. For example, set up a flow agent that runs an `MLModelTool` by following the steps in the [ML Model Tool documentation]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/ml-model-tool/) and obtain its agent ID from [Step 3]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/ml-model-tool/#step-3-register-a-flow-agent-that-will-run-the-mlmodeltool):
+設定任何代理程式。例如，依照 [ML Model Tool 文件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/ml-model-tool/)中的步驟，設定執行 `MLModelTool` 的流程代理程式，並從[步驟 3]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/ml-model-tool/#step-3-register-a-flow-agent-that-will-run-the-mlmodeltool) 取得其代理程式 ID：
 
 ```json
 {
@@ -26,9 +27,9 @@ Set up any agent. For example, set up a flow agent that runs an `MLModelTool` by
 }
 ```
 
-## Step 2: Register a flow agent that will run the AgentTool
+## 步驟 2：註冊將執行 AgentTool 的流程代理程式
 
-A flow agent runs a sequence of tools in order and returns the last tool's output. To create a flow agent, send the following register agent request, providing the agent ID from the previous step:
+流程代理程式會依序執行一系列工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求，並提供上一步取得的代理程式 ID：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -49,9 +50,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-For parameter descriptions, see [Register parameters](#register-parameters).
+如需參數說明，請參閱[註冊參數](#register-parameters)。
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -59,9 +60,9 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 3: Run the agent
+## 步驟 3：執行代理程式
 
-Run the agent by sending the following request:
+傳送下列請求以執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/EQyyZ40BT2tRrkdmhT7_/_execute
@@ -73,7 +74,7 @@ POST /_plugins/_ml/agents/EQyyZ40BT2tRrkdmhT7_/_execute
 ```
 {% include copy-curl.html %} 
 
-OpenSearch returns the inference results:
+OpenSearch 會傳回推論結果：
 
 ```json
 {
@@ -90,22 +91,22 @@ OpenSearch returns the inference results:
 }
 ```
 
-## Register parameters
+## 註冊參數
 
-The following table lists all tool parameters that are available when registering an agent.
+下表列出註冊代理程式時可用的所有工具參數。
 
-Parameter	| Type | Required/Optional | Description	
+參數	| 類型 | 必要/選用 | 說明	
 :--- | :--- | :--- | :---
-`agent_id` | String | Required | The agent ID of the agent to run.
+`agent_id` | 字串 | 必要 | 要執行的代理程式之代理程式 ID。
 
-## Execute parameters
+## 執行參數
 
-The following table lists all tool parameters that are available when running the agent.
+下表列出執行代理程式時可用的所有工具參數。
 
-Parameter	| Type | Required/Optional | Description	
+參數	| 類型 | 必要/選用 | 說明	
 :--- | :--- | :--- | :---
-`question` | String | Required | The natural language question to send to the LLM. 
+`question` | 字串 | 必要 | 要傳送給 LLM 的自然語言問題。 
 
-## Testing the tool
+## 測試工具
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+您可以將此工具作為代理程式工作流程的一部分執行，也可以使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 可用於測試個別工具或執行獨立操作。

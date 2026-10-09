@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Text processing
+title: "文字處理"
 parent: Common use cases
 nav_order: 55
 ---
 
-# Text processing
+# 文字處理
 
-OpenSearch Data Prepper provides text processing capabilities with the [`grok processor`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/grok/). The `grok` processor is based on the [`java-grok`](https://mvnrepository.com/artifact/io.krakens/java-grok) library and supports all compatible patterns. The `java-grok` library is built using the [`java.util.regex`](https://docs.oracle.com/javase/8/docs/api/java/util/regex/package-summary.html) regular expression library.
+OpenSearch Data Prepper 透過 [`grok processor`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/grok/) 提供文字處理功能。`grok` 處理器以 [`java-grok`](https://mvnrepository.com/artifact/io.krakens/java-grok) 程式庫為基礎，並支援所有相容的模式。`java-grok` 程式庫是使用 [`java.util.regex`](https://docs.oracle.com/javase/8/docs/api/java/util/regex/package-summary.html) 正規表示式程式庫建置的。
 
-You can add custom patterns to your pipelines by using the `patterns_definitions` option. When debugging custom patterns, the [Grok Debugger](https://grokdebugger.com/) can be helpful.
+您可以使用 `patterns_definitions` 選項在管線中新增自訂模式。偵錯自訂模式時，[Grok Debugger](https://grokdebugger.com/) 可能會有所幫助。
 
-## Basic usage
+## 基本用法
 
-To get started with text processing, create the following pipeline:
+若要開始使用文字處理，請建立下列管線：
 
 ```json
 patten-matching-pipeline:
@@ -29,16 +30,16 @@ patten-matching-pipeline:
 ```
 {% include copy-curl.html %}
 
-An incoming message might contain the following contents:
+傳入的訊息可能包含下列內容：
 
 ```json
 {"message": "127.0.0.1 198.126.12 [10/Oct/2000:13:55:36 -0700] 200"}
 ```
 {% include copy-curl.html %}
 
-In each incoming event, the pipeline will locate the value in the `message` key and attempt to match the pattern. The keywords `IPORHOST`, `HTTPDATE`, and `NUMBER` are built into the plugin.
+在每個傳入的事件中，管線會找出 `message` 鍵中的值，並嘗試與模式進行比對。關鍵字 `IPORHOST`、`HTTPDATE` 和 `NUMBER` 已內建於此外掛程式中。
 
-When an incoming record matches the pattern, it generates an internal event such as the following with identification keys extracted from the original message:
+當傳入的記錄與模式比對成功時，會產生類似下列的內部事件，其中包含從原始訊息擷取的識別鍵：
 
 ```json
 { 
@@ -50,9 +51,9 @@ When an incoming record matches the pattern, it generates an internal event such
 ```
 {% include copy-curl.html %}
 
-The `match` configuration for the `grok` processor specifies which record keys to match against which patterns.
+`grok` 處理器的 `match` 組態會指定要與哪些模式比對哪些記錄鍵。
 
-In the following example, the `match` configuration checks incoming logs for a `message` key. If the key exists, it matches the key value against the `SYSLOGBASE` pattern and then against the `COMMONAPACHELOG` pattern. It then checks the logs for a `timestamp` key. If that key exists, it attempts to match the key value against the `TIMESTAMP_ISO8601` pattern.
+在下列範例中，`match` 組態會檢查傳入的記錄檔中是否有 `message` 鍵。如果該鍵存在，則會先將鍵值與 `SYSLOGBASE` 模式比對，再與 `COMMONAPACHELOG` 模式比對。接著會檢查記錄檔中是否有 `timestamp` 鍵。如果該鍵存在，則會嘗試將鍵值與 `TIMESTAMP_ISO8601` 模式比對。
 
 ```json
 processor:
@@ -63,13 +64,13 @@ processor:
 ```
 {% include copy-curl.html %}
 
-By default, the plugin continues until it finds a successful match. For example, if there is a successful match against the value in the `message` key for a `SYSLOGBASE` pattern, the plugin doesn't attempt to match the other patterns. If you want to match logs against every pattern, include the `break_on_match` option.
+預設情況下，外掛程式會持續比對，直到找到成功的比對為止。例如，如果 `message` 鍵中的值已成功比對 `SYSLOGBASE` 模式，外掛程式就不會再嘗試比對其他模式。如果您想讓記錄檔與每個模式都進行比對，請加入 `break_on_match` 選項。
 
-## Including named and empty captures
+## 包含具名與空白擷取
 
-Include the `keep_empty_captures` option in your pipeline configuration to include null captures or the `named_captures_only` option to include only named captures. Named captures follow the pattern `%{SYNTAX:SEMANTIC}` while unnamed captures follow the pattern `%{SYNTAX}`.
+在管線組態中加入 `keep_empty_captures` 選項以包含 null 擷取，或加入 `named_captures_only` 選項以僅包含具名擷取。具名擷取遵循 `%{SYNTAX:SEMANTIC}` 模式，而未具名擷取則遵循 `%{SYNTAX}` 模式。
 
-For example, you can modify the preceding Grok configuration to remove `clientip` from the `%{IPORHOST}` pattern:
+例如，您可以修改先前的 Grok 組態，從 `%{IPORHOST}` 模式中移除 `clientip`：
 
 ```json
 processor:
@@ -79,7 +80,7 @@ processor:
 ```
 {% include copy-curl.html %}
 
-The resulting grokked log will look like this:
+產生的 grokked 記錄檔會如下所示：
 
 ```json
 {
@@ -90,9 +91,9 @@ The resulting grokked log will look like this:
 ```
 {% include copy-curl.html %}
 
-Notice that the `clientip` key no longer exists because the `%{IPORHOST}` pattern is now an unnamed capture.
+請注意，`clientip` 鍵已不存在，因為 `%{IPORHOST}` 模式現在是未具名擷取。
 
-However, if you set `named_captures_only` to `false`:
+不過，如果您將 `named_captures_only` 設定為 `false`：
 
 ```json
 processor:
@@ -103,7 +104,7 @@ processor:
 ```
 {% include copy-curl.html %}
 
-Then the resulting grokked log will look like this:
+則產生的 grokked 記錄檔會如下所示：
 
 ```json
 {
@@ -123,13 +124,13 @@ Then the resulting grokked log will look like this:
 ```
 {% include copy-curl.html %}
 
-Note that the `IPORHOST` capture now shows up as a new key, along with some internal unnamed captures like `MONTH` and `YEAR`. The `HTTPDATE` keyword is currently using these patterns, which you can see in the default patterns file.
+請注意，`IPORHOST` 擷取現在會顯示為新的鍵，並伴隨一些內部的未具名擷取，例如 `MONTH` 和 `YEAR`。`HTTPDATE` 關鍵字目前使用這些模式，您可以在預設模式檔案中看到。
 
-## Overwriting keys
+## 覆寫鍵
 
-Include the `keys_to_overwrite` option to specify which existing record keys to overwrite if there is a capture with the same key value.
+加入 `keys_to_overwrite` 選項，以指定當擷取具有相同鍵值時要覆寫哪些現有的記錄鍵。
 
-For example, you can modify the preceding Grok configuration to replace `%{NUMBER:response_status:int}` with `%{NUMBER:message:int}` and add `message` to the list of keys to overwrite:
+例如，您可以修改先前的 Grok 組態，將 `%{NUMBER:response_status:int}` 取代為 `%{NUMBER:message:int}`，並將 `message` 加入要覆寫的鍵清單：
 
 ```json
 processor:
@@ -140,7 +141,7 @@ processor:
 ```
 {% include copy-curl.html %}
 
-In the resulting grokked log, the original message is overwritten with the number `200`:
+在產生的 grokked 記錄檔中，原始訊息會被數字 `200` 覆寫：
 
 ```json
 { 
@@ -151,11 +152,11 @@ In the resulting grokked log, the original message is overwritten with the numbe
 ```
 {% include copy-curl.html %}
 
-## Using custom patterns
+## 使用自訂模式
 
-Include the `pattern_definitions` option in your Grok configuration to specify custom patterns.
+在 Grok 組態中加入 `pattern_definitions` 選項，以指定自訂模式。
 
-The following configuration creates custom regex patterns named `CUSTOM_PATTERN-1` and `CUSTOM_PATTERN-2`. By default, the plugin continues until it finds a successful match.
+下列組態會建立名為 `CUSTOM_PATTERN-1` 和 `CUSTOM_PATTERN-2` 的自訂 regex 模式。預設情況下，外掛程式會持續比對，直到找到成功的比對為止。
 
 ```json
 processor:
@@ -168,7 +169,7 @@ processor:
 ```
 {% include copy-curl.html %}
 
-If you specify `break_on_match` as `false`, the pipeline attempts to match all patterns and extract keys from the incoming events:
+如果您將 `break_on_match` 指定為 `false`，管線會嘗試比對所有模式，並從傳入的事件中擷取鍵：
 
 ```json
 processor:
@@ -185,13 +186,13 @@ processor:
 ```
 {% include copy-curl.html %}
 
-You can define your own custom patterns to use for pipeline pattern matching. In the previous example, `my_pattern` will be extracted after matching the custom patterns.
+您可以定義自己的自訂模式，用於管線的模式比對。在上一個範例中，`my_pattern` 會在比對自訂模式後被擷取出來。
 
-## Storing captures with a parent key
+## 將擷取結果儲存在父鍵之下
 
-Include the `target_key` option in your Grok configuration to wrap all record captures in an additional outer key value.
+在 Grok 組態中加入 `target_key` 選項，將所有記錄擷取結果包裝在一個額外的外層鍵值中。
 
-For example, you can modify the preceding Grok configuration to add a target key named `grokked`:
+例如，您可以修改先前的 Grok 組態，新增名為 `grokked` 的目標鍵：
 
 ```json
 processor:
@@ -201,7 +202,7 @@ processor:
          message: ['%{IPORHOST} \[%{HTTPDATE:timestamp}\] %{NUMBER:response_status:int}']
 ```
 
-The resulting grokked log will look like this:
+產生的 grokked 記錄檔會如下所示：
 
 ```json
 { 

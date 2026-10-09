@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Getting started with semantic and hybrid search
+title: "語意搜尋與混合搜尋入門"
 has_children: false
 parent: Vector search
 nav_order: 3
@@ -9,41 +10,41 @@ redirect_from:
   - /search-plugins/neural-search-tutorial/
   - /vector-search/tutorials/neural-search-tutorial/
 steps:
-  - heading: "Choose a model for embedding generation"
-    link: "/tutorials/vector-search/neural-search-tutorial/#step-1-choose-a-model"
-  - heading: "Register and deploy the model"
-    link: "/tutorials/vector-search/neural-search-tutorial/#step-2-register-and-deploy-the-model"
-  - heading: "Ingest data"
-    link: "/tutorials/vector-search/neural-search-tutorial/#step-3-ingest-data"
-  - heading: "Search the data"
-    link: "/tutorials/vector-search/neural-search-tutorial/#step-4-search-the-data"
+- heading: 選擇用於產生嵌入的模型
+  link: /tutorials/vector-search/neural-search-tutorial/#step-1-choose-a-model
+- heading: 註冊並部署模型
+  link: /tutorials/vector-search/neural-search-tutorial/#step-2-register-and-deploy-the-model
+- heading: 匯入資料
+  link: /tutorials/vector-search/neural-search-tutorial/#step-3-ingest-data
+- heading: 搜尋資料
+  link: /tutorials/vector-search/neural-search-tutorial/#step-4-search-the-data
 ---
 
-# Getting started with semantic and hybrid search
+# 語意搜尋與混合搜尋入門
 
-By default, OpenSearch calculates document scores using the [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) algorithm. BM25 is a keyword-based algorithm that performs well on queries containing keywords but fails to capture the semantic meaning of the query terms. Semantic search, unlike keyword-based search, takes into account the meaning of the query in the search context. Thus, semantic search performs well when a query requires natural language understanding. 
+預設情況下，OpenSearch 使用 [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) 演算法計算文件分數。BM25 是一種以關鍵字為基礎的演算法，對包含關鍵字的查詢表現良好，但無法擷取查詢詞彙的語意。語意搜尋與關鍵字搜尋不同，會在搜尋情境中考量查詢的意義。因此，當查詢需要自然語言理解時，語意搜尋的表現較佳。
 
-In this tutorial, you'll learn how to implement the following types of search:
+在本教學中，您將學習如何實作下列幾種搜尋類型：
 
-- **Semantic search**: Considers semantic meaning in order to determine the intention of the user's query in the search context, thereby improving search relevance.
-- **Hybrid search**: Combines semantic and keyword search to improve search relevance. 
+- **語意搜尋**：考量語意，以判斷使用者的查詢在搜尋情境中的意圖，進而提升搜尋相關性。
+- **混合搜尋**：結合語意搜尋與關鍵字搜尋，以提升搜尋相關性。
 
-## OpenSearch components for semantic search
+## 用於語意搜尋的 OpenSearch 元件
 
-In this tutorial, you'll use the following OpenSearch components:
+在本教學中，您將使用下列 OpenSearch 元件：
 
-- [Pretrained language models provided by OpenSearch]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)
-- [Ingest pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)
-- [k-NN vector]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)
-- [Search pipeline]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/)
-- [Normalization processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/)
-- [Hybrid query]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/)
+- [OpenSearch 提供的預先訓練語言模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)
+- [資料匯入管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)
+- [k-NN 向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)
+- [搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/)
+- [標準化處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/)
+- [混合查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/)
 
-You'll find descriptions of all these components as you follow the tutorial, so don't worry if you're not familiar with some of them. Each link in the preceding list will take you to the documentation section for the corresponding component.
+在跟隨教學的過程中，您會看到所有這些元件的說明，因此即使對其中某些元件不熟悉也不必擔心。前述清單中的每個連結都會帶您前往對應元件的說明文件章節。
 
-## Prerequisites
+## 必要條件
 
-For this simple setup, you'll use an OpenSearch-provided machine learning (ML) model and a cluster with no dedicated ML nodes. To ensure that this basic local setup works, send the following request to update ML-related cluster settings:
+在這個簡單的設定中，您將使用 OpenSearch 提供的機器學習 (ML) 模型，以及一個沒有專用 ML 節點的叢集。為確保這個基本的本機設定可以運作，請傳送下列請求以更新 ML 相關的叢集設定：
 
 ```json
 PUT _cluster/settings
@@ -56,58 +57,58 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-#### Advanced
+#### 進階
 
-For a [custom local model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/) setup, note the following requirements:
+若要設定[自訂本機模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)，請注意下列需求：
 
-- To register a custom local model, you need to specify an additional `"allow_registering_model_via_url": "true"` cluster setting. 
-- In production, it's best practice to separate the workloads by having dedicated ML nodes. On clusters with dedicated ML nodes, specify `"only_run_on_ml_node": "true"` for improved performance. 
+- 若要註冊自訂本機模型，您需要指定額外的 `"allow_registering_model_via_url": "true"` 叢集設定。
+- 在正式環境中，最佳做法是使用專用的 ML 節點來分隔工作負載。在具有專用 ML 節點的叢集上，請指定 `"only_run_on_ml_node": "true"` 以提升效能。
 
-When registering a model from a URL, make sure the source is trusted. Loading models from untrusted sources can pose security risks. For more information, see [PyTorch security guidelines for untrusted models](https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models).
+從 URL 註冊模型時，請確認來源是可信任的。從不受信任的來源載入模型可能帶來安全性風險。如需更多資訊，請參閱 [PyTorch 針對不受信任模型的安全性指引](https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models)。
 {: .warning}
 
-For more information about ML-related cluster settings, see [ML Commons cluster settings]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/).
+如需 ML 相關叢集設定的更多資訊，請參閱 [ML Commons 叢集設定]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/)。
 
-## Tutorial
+## 教學
 
-This tutorial consists of the following steps:
+本教學包含下列步驟：
 
 {% include list.html list_items=page.steps%}
 
-You can follow this tutorial by using your command line or the OpenSearch Dashboards [Dev Tools console]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/run-queries/).
+您可以使用命令列或 OpenSearch Dashboards 的 [Dev Tools 主控台]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/run-queries/)來跟隨本教學。
 
-Some steps in the tutorial contain optional <span>Test it</span>{: .text-delta} sections. You can confirm that the step completed successfully by running the requests in these sections.
+教學中的某些步驟包含選用的 <span>測試</span>{: .text-delta} 章節。您可以執行這些章節中的請求，確認該步驟已成功完成。
 
-After you're done, follow the steps in the [Clean up](#clean-up) section to delete all created components.
+完成後，請依照 [清理](#clean-up) 章節中的步驟刪除所有已建立的元件。
 
-### Step 1: Choose a model
+### 步驟 1：選擇模型
 
-First, you'll need to choose a language model in order to generate vector embeddings from text fields, both at ingestion time and query time.
+首先，您需要選擇一個語言模型，以便在匯入資料時和查詢時從文字欄位產生向量嵌入。
 
-For this tutorial, you'll use the [DistilBERT](https://huggingface.co/docs/transformers/model_doc/distilbert) model from Hugging Face. It is one of the pretrained sentence transformer models available in OpenSearch that has shown some of the best results in benchmarking tests (for more information, see [this blog post](https://opensearch.org/blog/semantic-science-benchmarks/)). You'll need the name, version, and dimension of the model to register it. You can find this information in the [pretrained model table]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#sentence-transformers) by selecting the `config_url` link corresponding to the model's TorchScript artifact:
+在本教學中，您將使用 Hugging Face 的 [DistilBERT](https://huggingface.co/docs/transformers/model_doc/distilbert) 模型。它是 OpenSearch 中可用的預先訓練句子轉換器模型之一，在基準測試中展現了最佳的結果之一（如需更多資訊，請參閱[這篇網誌文章](https://opensearch.org/blog/semantic-science-benchmarks/)）。註冊模型時，您需要模型的名稱、版本與維度。您可以在[預先訓練模型表格]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#sentence-transformers)中，選取模型 TorchScript 工件對應的 `config_url` 連結來找到這些資訊：
 
-- The model name is `huggingface/sentence-transformers/msmarco-distilbert-base-tas-b`.
-- The model version is `1.0.3`.
-- The number of dimensions for this model is `768`.
+- 模型名稱為 `huggingface/sentence-transformers/msmarco-distilbert-base-tas-b`。
+- 模型版本為 `1.0.3`。
+- 此模型的維度數為 `768`。
 
-Take note of the dimensionality of the model because you'll need it when you set up a vector index.
+請記下模型的維度，因為在設定向量索引時會需要用到。
 {: .important}
 
-#### Advanced: Using a different model
+#### 進階：使用其他模型
 
-Alternatively, you can choose one of the following options for your model:
+或者，您可以為模型選擇下列其中一個選項：
 
-- Use any other pretrained model provided by OpenSearch. For more information, see [OpenSearch-provided pretrained models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/).
+- 使用 OpenSearch 提供的任何其他預先訓練模型。如需更多資訊，請參閱 [OpenSearch 提供的預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)。
 
-- Upload your own model to OpenSearch. For more information, see [Custom local models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/).
+- 將您自己的模型上傳至 OpenSearch。如需更多資訊，請參閱[自訂本機模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)。
 
-- Connect to a foundation model hosted on an external platform. For more information, see [Connecting to remote models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/).
+- 連接至託管於外部平台的基礎模型。如需更多資訊，請參閱[連接至遠端模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
 
-For information about choosing a model, see [Further reading](#further-reading). 
+如需選擇模型的相關資訊，請參閱[延伸閱讀](#further-reading)。
 
-### Step 2: Register and deploy the model 
+### 步驟 2：註冊並部署模型
 
-To register and deploy the model, provide the model group ID in the register request:
+若要註冊並部署模型，請在註冊請求中提供模型群組 ID：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -119,7 +120,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Registering a model is an asynchronous task. OpenSearch sends back a task ID for this task:
+註冊模型是一項非同步工作。OpenSearch 會傳回此工作的任務 ID：
 
 ```json
 {
@@ -128,16 +129,16 @@ Registering a model is an asynchronous task. OpenSearch sends back a task ID for
 }
 ```
 
-OpenSearch downloads the config file for the model and the model contents from the URL. Because the model is larger than 10 MB in size, OpenSearch splits it into chunks of up to 10 MB and saves those chunks in the model index. You can check the status of the task by using the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+OpenSearch 會從 URL 下載模型的組態檔與模型內容。由於模型大小超過 10 MB，OpenSearch 會將它分割成最大 10 MB 的區塊，並將這些區塊儲存在模型索引中。您可以使用 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 檢查工作的狀態：
 
 ```json
 GET /_plugins/_ml/tasks/aFeif4oB5Vm0Tdw8yoN7
 ```
 {% include copy-curl.html %}
 
-OpenSearch saves the registered model in the model index. Deploying a model creates a model instance and caches the model in memory. 
+OpenSearch 會將已註冊的模型儲存在模型索引中。部署模型會建立模型執行個體，並將模型快取在記憶體中。
 
-Once the task is complete, the task state changes to `COMPLETED` and the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) response contains the `model_id` for the deployed model (which is different from the initial `task_id`):
+工作完成後，工作狀態會變更為 `COMPLETED`，且 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 的回應會包含已部署模型的 `model_id`（與最初的 `task_id` 不同）：
 
 ```json
 {
@@ -154,25 +155,25 @@ Once the task is complete, the task state changes to `COMPLETED` and the [Get ML
 }
 ```
 
-You'll need the `model_id` in order to use the deployed model for several of the following steps.
+在後續的多個步驟中，您需要 `model_id` 才能使用已部署的模型。
 
-For detailed information about all possible response formats during different deployment states, see [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/#example-responses).
+如需不同部署狀態下所有可能回應格式的詳細資訊，請參閱 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/#example-responses)。
 {: .tip}
 
 <details markdown="block">
   <summary>
-    Test it
+    測試
   </summary>
   {: .text-delta}
 
-Search for the newly created model by providing its ID in the request:
+在請求中提供其 ID，以搜尋新建立的模型：
 
 ```json
 GET /_plugins/_ml/models/aVeif4oB5Vm0Tdw8zYO2
 ```
 {% include copy-curl.html %}
 
-The response contains the model:
+回應包含該模型：
 
 ```json
 {
@@ -204,27 +205,27 @@ The response contains the model:
 }
 ```
 
-The response contains the model information. You can see that the `model_state` is `REGISTERED`. Additionally, the model was split into 27 chunks, as shown in the `total_chunks` field.
+回應包含模型資訊。您可以看到 `model_state` 為 `REGISTERED`。此外，模型被分割成 27 個區塊，如 `total_chunks` 欄位所示。
 </details>
 
-#### Advanced: Registering a custom model
+#### 進階：註冊自訂模型
 
-To register a custom model, you must provide a model configuration in the register request. For more information, see [Using ML models within OpenSearch]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/).
+若要註冊自訂模型，您必須在註冊請求中提供模型組態。如需更多資訊，請參閱[在 OpenSearch 中使用 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。
 
 <details markdown="block">
   <summary>
-    Test it
+    測試它
   </summary>
   {: .text-delta}
 
-Search for the deployed model by providing its ID in the request:
+在請求中提供已部署模型的 ID 來搜尋該模型：
 
 ```json
 GET /_plugins/_ml/models/aVeif4oB5Vm0Tdw8zYO2
 ```
 {% include copy-curl.html %}
 
-The response shows the model state as `DEPLOYED`:
+回應會顯示模型狀態為 `DEPLOYED`：
 
 ```json
 {
@@ -256,20 +257,20 @@ The response shows the model state as `DEPLOYED`:
 }
 ```
 
-You can also receive statistics for all deployed models in your cluster by sending a [Models Profile API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/profile/) request:
+您也可以傳送 [Models Profile API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/profile/) 請求，以取得叢集中所有已部署模型的統計資料：
 
 ```json
 GET /_plugins/_ml/profile/models
 ```
 </details>
 
-### Step 3: Ingest data
+### 步驟 3：匯入資料
 
-OpenSearch uses a language model to transform text into vector embeddings. During ingestion, OpenSearch creates vector embeddings for the text fields in the request. During search, you can generate vector embeddings for the query text by applying the same model, allowing you to perform vector similarity search on the documents.
+OpenSearch 使用語言模型將文字轉換為向量嵌入。在匯入期間，OpenSearch 會為請求中的文字欄位建立向量嵌入。在搜尋期間，您可以套用相同的模型為查詢文字產生向量嵌入，讓您能對文件執行向量相似度搜尋。
 
-#### Step 3(a): Create an ingest pipeline
+#### 步驟 3(a)：建立資料匯入管線
 
-Now that you have deployed a model, you can use this model to configure an [ingest pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/) that contains one processor: a task that transforms document fields before documents are ingested into an index. In this example, you'll set up a `text_embedding` processor that creates vector embeddings from text. You'll need the `model_id` of the model you set up in the previous section and a `field_map`, which specifies the name of the field from which to take the text (`text`) and the name of the field in which to record embeddings (`passage_embedding`):
+現在您已部署模型，可以使用此模型來設定[資料匯入管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)，其中包含一個處理器：在文件匯入索引之前轉換文件欄位的工作。在此範例中，您將設定一個 `text_embedding` 處理器，從文字建立向量嵌入。您需要上一節所設定模型的 `model_id`，以及一個 `field_map`，其指定要從中取得文字的欄位名稱 (`text`) 和要記錄嵌入的欄位名稱 (`passage_embedding`)：
 
 ```json
 PUT /_ingest/pipeline/nlp-ingest-pipeline
@@ -291,18 +292,18 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline
 
 <details markdown="block">
   <summary>
-    Test it
+    測試它
   </summary>
   {: .text-delta}
 
-Search for the created ingest pipeline by using the Ingest API:
+使用 Ingest API 搜尋已建立的資料匯入管線：
 
 ```json
 GET /_ingest/pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains the ingest pipeline:
+回應包含該資料匯入管線：
 
 ```json
 {
@@ -323,9 +324,9 @@ The response contains the ingest pipeline:
 ```
 </details>
 
-#### Step 3(b): Create a vector index
+#### 步驟 3(b)：建立向量索引
 
-Now you'll create a vector index with a field named `text`, which contains an image description, and a [`knn_vector`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/) field named `passage_embedding`, which contains the vector embedding of the text. Additionally, set the default ingest pipeline to the `nlp-ingest-pipeline` you created in the previous step:
+現在您將建立一個向量索引，其中包含名為 `text` 的欄位 (內含圖片描述)，以及名為 `passage_embedding` 的 [`knn_vector`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/) 欄位 (內含文字的向量嵌入)。此外，將預設資料匯入管線設為您在上一個步驟中建立的 `nlp-ingest-pipeline`：
 
 
 ```json
@@ -354,15 +355,15 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-Setting up a vector index allows you to later perform a vector search on the `passage_embedding` field.
+設定向量索引可讓您之後對 `passage_embedding` 欄位執行向量搜尋。
 
 <details markdown="block">
   <summary>
-    Test it
+    測試它
   </summary>
   {: .text-delta}
 
-Use the following requests to get the settings and mappings of the created index:
+使用下列請求取得所建立索引的設定和對應：
 
 ```json
 GET /my-nlp-index/_settings
@@ -376,9 +377,9 @@ GET /my-nlp-index/_mappings
 
 </details>
 
-#### Step 3(c): Ingest documents into the index
+#### 步驟 3(c)：將文件匯入索引
 
-In this step, you'll ingest several sample documents into the index. The sample data is taken from the [Flickr image dataset](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset). Each document contains a `text` field corresponding to the image description and an `id` field corresponding to the image ID:
+在此步驟中，您將把數個範例文件匯入索引。範例資料取自 [Flickr 圖片資料集](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset)。每份文件都包含對應圖片描述的 `text` 欄位，以及對應圖片 ID 的 `id` 欄位：
 
 ```json
 PUT /my-nlp-index/_doc/1
@@ -425,14 +426,14 @@ PUT /my-nlp-index/_doc/5
 ```
 {% include copy-curl.html %}
 
-When the documents are ingested into the index, the `text_embedding` processor creates an additional field that contains vector embeddings and adds that field to the document. To see an example document that is indexed, search for document 1:
+當文件匯入索引時，`text_embedding` 處理器會建立一個包含向量嵌入的額外欄位，並將該欄位新增至文件。若要查看已編製索引的範例文件，請搜尋文件 1：
 
 ```json
 GET /my-nlp-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-The response includes the document `_source` containing the original `text` and `id` fields and the added `passage_embedding` field:
+回應包含文件 `_source`，其中含有原始的 `text` 和 `id` 欄位，以及新增的 `passage_embedding` 欄位：
 
 ```json
 {
@@ -456,13 +457,13 @@ The response includes the document `_source` containing the original `text` and 
 }
 ```
 
-### Step 4: Search the data
+### 步驟 4：搜尋資料
 
-Now you'll search the index using a keyword search, a semantic search, and a combination of the two.
+現在您將使用關鍵字搜尋、語意搜尋，以及兩者結合的方式來搜尋索引。
 
-### Search using a keyword search
+### 使用關鍵字搜尋
 
-To search using a keyword search, use a `match` query. You'll exclude embeddings from the results:
+若要使用關鍵字搜尋，請使用 `match` 查詢。您將從結果中排除嵌入：
 
 ```json
 GET /my-nlp-index/_search
@@ -483,11 +484,11 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-Document 3 is not returned because it does not contain the specified keywords. Documents containing the words `rodeo` and `cowboy` are scored lower because their semantic meaning is not considered:
+文件 3 未被傳回，因為它不包含指定的關鍵字。包含 `rodeo` 與 `cowboy` 這兩個詞的文件得分較低，因為它們的語意未被納入考量：
 
 <details markdown="block">
   <summary>
-    Results
+    結果
   </summary>
   {: .text-delta}
 
@@ -550,9 +551,9 @@ Document 3 is not returned because it does not contain the specified keywords. D
 ```
 </details>
 
-### Search using a semantic search
+### 使用語意搜尋
 
-To search using a semantic search, use a `neural` query and provide the model ID of the model you set up earlier so that vector embeddings for the query text are generated with the model used at ingestion time:
+若要使用語意搜尋，請使用 `neural` 查詢，並提供您先前設定的模型 ID，讓查詢文字的向量嵌入以匯入時所使用的模型來產生：
 
 ```json
 GET /my-nlp-index/_search
@@ -575,11 +576,11 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-This time, the response not only contains all five documents, but the document order is also improved because semantic search considers semantic meaning:
+這次回應不僅包含全部五份文件，文件順序也有所改善，因為語意搜尋會考量語意：
 
 <details markdown="block">
   <summary>
-    Results
+    結果
   </summary>
   {: .text-delta}
 
@@ -651,13 +652,13 @@ This time, the response not only contains all five documents, but the document o
 ```
 </details>
 
-### Search using a hybrid search
+### 使用混合搜尋
 
-Hybrid search combines keyword and semantic search to improve search relevance. To implement hybrid search, you need to set up a [search pipeline]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/) that runs at search time. The search pipeline you'll configure intercepts search results at an intermediate stage and applies the [`normalization-processor`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/) to them. The `normalization-processor` normalizes and combines the document scores from multiple query clauses, rescoring the documents according to the chosen normalization and combination techniques. 
+混合搜尋結合關鍵字搜尋與語意搜尋，以提升搜尋相關性。若要實作混合搜尋，您需要設定一個在搜尋時執行的[搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/)。您將設定的搜尋管線會在中繼階段攔截搜尋結果，並對其套用 [`normalization-processor`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/)。`normalization-processor` 會將來自多個查詢子句的文件分數進行標準化並合併，並依據所選的標準化與合併技術重新為文件評分。
 
-#### Step 1: Configure a search pipeline
+#### 步驟 1：設定搜尋管線
 
-To configure a search pipeline with a `normalization-processor`, use the following request. The normalization technique in the processor is set to `min_max`, and the combination technique is set to `arithmetic_mean`. The `weights` array specifies the weights assigned to each query clause as decimal percentages:
+若要設定含有 `normalization-processor` 的搜尋管線，請使用下列請求。處理器中的標準化技術設為 `min_max`，合併技術設為 `arithmetic_mean`。`weights` 陣列指定指派給每個查詢子句的權重，以小數百分比表示：
 
 ```json
 PUT /_search/pipeline/nlp-search-pipeline
@@ -685,9 +686,9 @@ PUT /_search/pipeline/nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-#### Step 2: Search using a hybrid query
+#### 步驟 2：使用混合查詢搜尋
 
-You'll use the [`hybrid` query]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/) to combine the `match` and `neural` query clauses. Make sure to apply the previously created `nlp-search-pipeline` to the request in the query parameter:
+您將使用 [`hybrid` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/) 來結合 `match` 與 `neural` 查詢子句。請務必在查詢參數中將先前建立的 `nlp-search-pipeline` 套用至請求：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -723,11 +724,11 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-Not only does OpenSearch return documents that match the semantic meaning of `wild west`, but now the documents containing words related to the wild west theme are also scored higher relative to the others:
+OpenSearch 不僅會傳回符合 `wild west` 語意的文件，包含與西部荒野主題相關詞彙的文件，相對於其他文件也會獲得較高分數：
 
 <details markdown="block">
   <summary>
-    Results
+    結果
   </summary>
   {: .text-delta}
 
@@ -799,7 +800,7 @@ Not only does OpenSearch return documents that match the semantic meaning of `wi
 ```
 </details>
 
-Instead of specifying the search pipeline in every request, you can set it as a default search pipeline for the index as follows:
+除了在每個請求中指定搜尋管線之外，您也可以將它設定為索引的預設搜尋管線，如下所示：
 
 ```json
 PUT /my-nlp-index/_settings 
@@ -809,26 +810,26 @@ PUT /my-nlp-index/_settings
 ```
 {% include copy-curl.html %}
 
-You can now experiment with different weights, normalization techniques, and combination techniques. For more information, see the [`normalization-processor`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/) and [`hybrid` query]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/) documentation.
+現在您可以嘗試不同的權重、標準化技術與合併技術。如需更多資訊，請參閱 [`normalization-processor`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/) 與 [`hybrid` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/) 的說明文件。
 
-#### Advanced
+#### 進階
 
-You can parameterize the search by using search templates. Search templates hide implementation details, reducing the number of nested levels and thus the query complexity. For more information, see [search templates]({{site.url}}{{site.baseurl}}/search-plugins/search-template/).
+您可以使用搜尋範本將搜尋參數化。搜尋範本會隱藏實作細節，減少巢狀層級數量，進而降低查詢複雜度。如需更多資訊，請參閱[搜尋範本]({{site.url}}{{site.baseurl}}/search-plugins/search-template/)。
 
-## Using automated workflows
+## 使用自動化工作流程
 
-You can quickly set up semantic or hybrid search using [_automated workflows_]({{site.url}}{{site.baseurl}}/automating-configurations/). This approach automatically creates and provisions all necessary resources. For more information, see [Workflow templates]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/).
+您可以使用[_自動化工作流程_]({{site.url}}{{site.baseurl}}/automating-configurations/)快速設定語意或混合搜尋。此方法會自動建立並佈建所有必要的資源。如需更多資訊，請參閱[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/)。
 
-### Automated semantic search setup
+### 自動化語意搜尋設定
 
-OpenSearch provides a [workflow template]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/) that automatically registers and deploys a default local model (`huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2`) and creates an ingest pipeline and a vector index: 
+OpenSearch 提供一個[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/)，會自動註冊並部署預設的本機模型 (`huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2`)，並建立資料匯入管線與向量索引：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=semantic_search_with_local_model&provision=true
 ```
 {% include copy-curl.html %}
 
-Review the semantic search workflow template [defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-with-local-model-defaults.json) to determine whether you need to update any of the parameters. For example, if you want to use a different model, specify the model name in the request body:
+請檢閱語意搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-with-local-model-defaults.json)，以判斷您是否需要更新任何參數。例如，如果您想使用不同的模型，請在請求本文中指定模型名稱：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=semantic_search_with_local_model&provision=true
@@ -838,7 +839,7 @@ POST /_plugins/_flow_framework/workflow?use_case=semantic_search_with_local_mode
 ```
 {% include copy-curl.html %}
 
-OpenSearch responds with a workflow ID for the created workflow:
+OpenSearch 會回應所建立工作流程的工作流程 ID：
 
 ```json
 {
@@ -846,24 +847,24 @@ OpenSearch responds with a workflow ID for the created workflow:
 }
 ```
 
-To check the workflow status, send the following request:
+若要檢查工作流程狀態，請傳送下列請求：
 
 ```json
 GET /_plugins/_flow_framework/workflow/U_nMXJUBq_4FYQzMOS4B/_status
 ```
 {% include copy-curl.html %}
 
-Once the workflow completes, the `state` changes to `COMPLETED`. The workflow runs the following steps:
+工作流程完成後，`state` 會變更為 `COMPLETED`。工作流程會執行下列步驟：
 
-1. [Step 2](#step-2-register-and-deploy-the-model) to register and deploy the model.
-1. [Step 3(a)](#step-3a-create-an-ingest-pipeline) to create an ingest pipeline.
-1. [Step 3(b)](#step-3b-create-a-vector-index) to create a vector index.
+1. [步驟 2](#step-2-register-and-deploy-the-model) 以註冊並部署模型。
+1. [步驟 3(a)](#step-3a-create-an-ingest-pipeline) 以建立資料匯入管線。
+1. [步驟 3(b)](#step-3b-create-a-vector-index) 以建立向量索引。
 
-You can now continue with [Step 3(c)](#step-3c-ingest-documents-into-the-index) to ingest documents into the index and [Step 4](#step-4-search-the-data) to search your data.
+您現在可以繼續進行[步驟 3(c)](#step-3c-ingest-documents-into-the-index) 將文件匯入索引，以及[步驟 4](#step-4-search-the-data) 搜尋您的資料。
 
-## Clean up
+## 清理
 
-After you're done, delete the components you've created in this tutorial from the cluster:
+完成後，請從叢集刪除您在本教學中建立的元件：
 
 ```json
 DELETE /my-nlp-index
@@ -895,11 +896,11 @@ DELETE /_plugins/_ml/model_groups/Z1eQf4oB5Vm0Tdw8EIP2
 ```
 {% include copy-curl.html %}
 
-## Further reading
+## 延伸閱讀
 
-- Read about the basics of OpenSearch semantic search in [Building a semantic search engine in OpenSearch](https://opensearch.org/blog/semantic-search-solutions/).
-- Read about the combining keyword and semantic search, the normalization and combination technique options, and benchmarking tests in [The ABCs of semantic search in OpenSearch: Architectures, benchmarks, and combination strategies](https://opensearch.org/blog/semantic-science-benchmarks/).
+- 在[在 OpenSearch 中建置語意搜尋引擎](https://opensearch.org/blog/semantic-search-solutions/)中閱讀 OpenSearch 語意搜尋的基礎知識。
+- 在[OpenSearch 語意搜尋的 ABC：架構、基準測試與組合策略](https://opensearch.org/blog/semantic-science-benchmarks/)中閱讀關於結合關鍵字與語意搜尋、正規化與組合技術選項，以及基準測試的內容。
 
-## Next steps
+## 後續步驟
 
-- Explore [AI search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/index/) in OpenSearch.
+- 探索 OpenSearch 中的 [AI 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/index/)。

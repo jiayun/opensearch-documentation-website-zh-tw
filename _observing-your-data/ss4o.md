@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Simple Schema for Observability
+title: "可觀測性簡易結構描述"
 nav_order: 150
 redirect_from:
 - /observing-your-data/ssfo/
 ---
 
-# Simple Schema for Observability
-Introduced 2.6
+# 可觀測性簡易結構描述
+於 2.6 版推出
 {: .label .label-purple }
 
-[Observability]({{site.url}}{{site.baseurl}}/observing-your-data/index/) is a collection of plugins and applications that let you visualize data-driven events by using Piped Processing Language (PPL) to explore and query data stored in OpenSearch. [Simple Schema for Observability](https://github.com/opensearch-project/opensearch-catalog/tree/main/docs/schema/observability), which uses the schema convention `ss4o`, is a standardization for conforming to a common and unified observability schema. With the schema in place, Observability tools can ingest, automatically extract, and aggregate data and create custom dashboards, making it easier to understand the system at a higher level.
+[可觀測性]({{site.url}}{{site.baseurl}}/observing-your-data/index/)是一組外掛程式與應用程式，讓您能使用 Piped Processing Language (PPL) 來探索與查詢儲存在 OpenSearch 中的資料，以視覺化資料驅動的事件。[可觀測性簡易結構描述](https://github.com/opensearch-project/opensearch-catalog/tree/main/docs/schema/observability) 採用 `ss4o` 結構慣例，是為遵循共同且統一的可觀測性結構而制定的標準化規範。有了這套結構，可觀測性工具便能匯入、自動擷取與彙總資料，並建立自訂儀表板，讓您更容易從較高的層次了解系統。
 
-The Simple Schema for Observability is inspired by both [OpenTelemetry](https://opentelemetry.io/docs/) and the Elastic Common Schema (ECS) and uses Amazon Elastic Container Service ([Amazon ECS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_cwe_events.html)) event logs and OpenTelemetry (OTel) metadata.
+可觀測性簡易結構描述的設計靈感同時來自 [OpenTelemetry](https://opentelemetry.io/docs/) 與 Elastic Common Schema (ECS)，並使用 Amazon Elastic Container Service ([Amazon ECS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_cwe_events.html)) 事件記錄檔與 OpenTelemetry (OTel) 中繼資料。
 
-Alerts will be supported in a future release.
+警示功能將於未來版本中支援。
 {: .note }
 
-## Use cases
+## 使用案例
 
-Use cases for the Simple Schema for Observability include:
+可觀測性簡易結構描述的使用案例包括：
 
-* Ingesting observability data from different data types.
-* Moving from proprietary configurations that are non-transferable to a consolidated, sharable observability solution that allows users to ingest and display an analysis of any type of telemetry data from any type of provider.
-* Conforming dashboards to the schema to align with the data structure so that you can design and organize the dashboard components and visualizations in a way that effectively represents your data.
+* 匯入不同資料類型的可觀測性資料。
+* 從無法轉移的專屬組態，轉換為整合且可共用的可觀測性解決方案，讓使用者能夠匯入並顯示來自任何類型提供者的任何遙測資料分析。
+* 讓儀表板符合此結構以對齊資料結構，使您能以有效呈現資料的方式設計與組織儀表板元件和視覺化。
 
-Data Prepper conforms to the schema for metrics and will gradually support traces and logs. Data Prepper's [trace mapping]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/trace-analytics/) currently provides `service-map` data in a different way than `ss4o` traces. To make the trace mapping compatible with Observability, it will be integrated with the `ss4o` traces schema and will introduce `service-map` as an enriched field.
+Data Prepper 遵循指標的結構規範，並將逐步支援追蹤與記錄檔。Data Prepper 的[追蹤對應]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/trace-analytics/)目前提供 `service-map` 資料的方式與 `ss4o` 追蹤不同。為了讓追蹤對應與可觀測性工具相容，它將整合 `ss4o` 追蹤結構，並引入 `service-map` 作為擴充欄位。
 {: .note }
 
-## Traces and metrics
+## 追蹤與指標
 
-Schema definitions for traces and metrics are defined and supported by the Observability plugin. These schema definitions include:
+追蹤與指標的結構定義由 Observability 外掛程式定義並支援。這些結構定義包括：
 
-- The index structure (mapping).
-- The [index naming conventions](https://github.com/opensearch-project/observability/issues/1405).
-- A JSON schema for enforcement and validation of the structure.
-- The [integration](https://github.com/opensearch-project/OpenSearch-Dashboards/issues/3412) feature for adding preconfigured dashboards and assets.
+- 索引結構 (對應)。
+- [索引命名慣例](https://github.com/opensearch-project/observability/issues/1405)。
+- 用於強制執行與驗證結構的 JSON 結構描述。
+- 用於新增預先設定之儀表板與資產的[整合](https://github.com/opensearch-project/OpenSearch-Dashboards/issues/3412)功能。

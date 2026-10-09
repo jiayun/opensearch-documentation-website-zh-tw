@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Playbooks
 nav_order: 80
@@ -7,35 +8,35 @@ has_toc: false
 permalink: /migration-assistant/playbooks/
 ---
 
-# Migration Assistant playbooks
+# Migration Assistant playbook
 
-Playbooks are step-by-step migration guides for specific source and target combinations. Each playbook provides the complete sequence of commands and configuration required for that migration path.
+Playbook 是針對特定來源與目標組合的逐步遷移指南。每個 playbook 都會提供該遷移路徑所需的完整命令序列與組態。
 
-## Prerequisites
+## 先決條件
 
-Before using a playbook, ensure the following:
+使用 playbook 之前，請確認下列事項：
 
-- Migration Assistant is deployed on Kubernetes or Amazon EKS.
-- You have determined whether your migration requires planned downtime or zero downtime.
-- You have loaded the version-matched sample configuration by running `workflow configure sample --load`.
+- Migration Assistant 已部署於 Kubernetes 或 Amazon EKS。
+- 您已確定您的遷移需要計畫性停機或零停機。
+- 您已藉由執行 `workflow configure sample --load` 載入版本相符的範例組態。
 
-## Using a playbook
+## 使用 playbook
 
-To use a playbook, follow these steps:
+若要使用 playbook，請依照下列步驟：
 
-1. Choose the playbook that matches your source and target.
-2. Follow the prerequisite checklist before editing the workflow.
-3. Run a pilot migration first.
-4. After the pilot migration succeeds, run the full migration.
+1. 選擇符合您來源與目標的 playbook。
+2. 在編輯工作流程之前，先依照先決條件檢查清單操作。
+3. 先執行試驗性遷移。
+4. 試驗性遷移成功後，執行完整遷移。
 
-## Available playbooks
+## 可用的 playbook
 
-The following table lists the available playbooks.
+下表列出可用的 playbook。
 
-| Playbook | Use case |
+| Playbook | 使用案例 |
 |:---------|:---------|
-| [Elasticsearch 6.8 to OpenSearch 3.5]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-elasticsearch-6-8-to-opensearch-3/) | Self-managed Elasticsearch sources requiring metadata transformation and snapshot-based backfill |
-| [Amazon OpenSearch Service to OpenSearch Serverless NextGen]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-amazon-opensearch-service-to-serverless/) | Managed AWS sources targeting Serverless NextGen collections |
-| [Solr 8.11 to OpenSearch 3]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-solr-8.11-to-opensearch-3/) | Solr snapshot-based backfill to OpenSearch |
+| [Elasticsearch 6.8 至 OpenSearch 3.5]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-elasticsearch-6-8-to-opensearch-3/) | 需要中介資料轉換與以快照為基礎之回填的自我管理 Elasticsearch 來源 |
+| [Amazon OpenSearch Service 至 OpenSearch Serverless NextGen]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-amazon-opensearch-service-to-serverless/) | 以 Serverless NextGen 集合為目標的受管理 AWS 來源 |
+| [Solr 8.11 至 OpenSearch 3]({{site.url}}{{site.baseurl}}/migration-assistant/playbook-solr-8.11-to-opensearch-3/) | 以 Solr 快照為基礎回填至 OpenSearch |
 
-For AWS production deployments, deploy Migration Assistant on Amazon Elastic Kubernetes Service (EKS) before following a playbook. For more information, see [Deploy on Amazon EKS]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-eks/).
+若為 AWS 生產部署，請先將 Migration Assistant 部署於 Amazon Elastic Kubernetes Service (EKS)，再依照 playbook 操作。如需更多資訊，請參閱[部署於 Amazon EKS]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-eks/)。

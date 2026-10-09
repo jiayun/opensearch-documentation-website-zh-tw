@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: LLM-as-a-Judge
 has_children: false
 nav_order: 70
 ---
 
-# Using LLM-as-a-Judge for search relevance
+# 使用 LLM-as-a-Judge 評估搜尋相關性
 
-LLM-as-a-Judge is a technique that uses large language models (LLMs) to automatically evaluate search result relevance. Manually annotating search results is time-consuming and inconsistent across annotators. LLM-as-a-Judge automates this process, enabling frequent and repeatable evaluation of search quality.
+LLM-as-a-Judge 是一種使用大型語言模型 (LLM) 自動評估搜尋結果相關性的技術。手動標註搜尋結果既耗時，且不同標註者之間也不一致。LLM-as-a-Judge 可將此流程自動化，讓搜尋品質的評估得以頻繁且可重複地進行。
 
-After completing this tutorial, you can [run an experiment to evaluate search quality]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/evaluate-search-quality/#creating-a-pointwise-experiment) using the LLM-generated judgments.
+完成本教學後，您可以使用 LLM 產生的判斷，[執行實驗來評估搜尋品質]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/evaluate-search-quality/#creating-a-pointwise-experiment)。
 
-## Prerequisites
+## 先決條件
 
-For this tutorial, you need an API key for an external LLM provider (OpenAI, Amazon Bedrock).
+本教學需要外部 LLM 供應商 (OpenAI、Amazon Bedrock) 的 API 金鑰。
 
-Using an external LLM incurs API costs based on the number of queries and results evaluated.
+使用外部 LLM 會依評估的查詢與結果數量產生 API 費用。
 {: .note}
 
-Enable the Search Relevance Workbench and configure the following settings:
+啟用 Search Relevance Workbench 並設定下列設定：
 
 ```json
 PUT /_cluster/settings
@@ -33,9 +34,9 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-### Step 1: Configure a model
+### 步驟 1：設定模型
 
-First, create a connector to an externally hosted LLM. This tutorial uses OpenAI, but you can adapt it for other providers such as Amazon Bedrock. For a list of available blueprints, see [OpenSearch-provided connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/#llm-judgment-blueprints-for-search-relevance-workbench). Replace `<YOUR_API_KEY>` with your OpenAI API key:
+首先，建立與外部託管 LLM 的連接器。本教學使用 OpenAI，但您可以調整為其他供應商，例如 Amazon Bedrock。如需可用藍圖的清單，請參閱 [OpenSearch 提供的連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/#llm-judgment-blueprints-for-search-relevance-workbench)。將 `<YOUR_API_KEY>` 替換為您的 OpenAI API 金鑰：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -72,11 +73,11 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-The `client_config` block enables automatic retries with exponential backoff and jitter for temporary rate limits or server errors. If a document still fails after the retries, the judgment run reports it instead of dropping it. For more information, see [Viewing a judgment list]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/judgments/#viewing-a-judgment-list).
+`client_config` 區塊會針對暫時性的速率限制或伺服器錯誤，啟用搭配指數退避與抖動的自動重試。如果文件在重試後仍失敗，判斷執行會回報該文件，而不是將其捨棄。如需詳細資訊，請參閱[檢視判斷清單]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/judgments/#viewing-a-judgment-list)。
 
-The `request_body` and `post_process_function` map the `system_prompt`, `user_prompt`, and `response` parameters into each provider's request and response format, so the judgment API call stays the same across providers. For information about these fields, see [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields).
+`request_body` 與 `post_process_function` 會將 `system_prompt`、`user_prompt` 及 `response` 參數對應到各供應商的請求與回應格式，因此判斷 API 呼叫在不同供應商之間維持一致。如需這些欄位的資訊，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields)。
 
-Then register and deploy the model. Replace `{connector_id}` with the ID returned in the previous response:
+接著註冊並部署模型。將 `{connector_id}` 替換為前一個回應所傳回的 ID：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -89,11 +90,11 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-This is an asynchronous operation. To verify the task status, use the [Get ML task]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) API. Once the state is `COMPLETED`, OpenSearch returns the `model_id` you'll use in the following steps.
+這是非同步操作。若要確認任務狀態，請使用 [Get ML task]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) API。當狀態為 `COMPLETED` 時，OpenSearch 會傳回您將在後續步驟中使用的 `model_id`。
 
-### Step 2: Create a search index
+### 步驟 2：建立搜尋索引
 
-Create a `products` index:
+建立 `products` 索引：
 
 ```json
 PUT /products
@@ -111,7 +112,7 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-Index example documents into the index:
+將範例文件編製索引至該索引：
 
 ```json
 POST /products/_bulk
@@ -128,9 +129,9 @@ POST /products/_bulk
 ```
 {% include copy-curl.html %}
 
-### Step 3: Create a search configuration
+### 步驟 3：建立搜尋組態
 
-A _search configuration_ defines a search strategy to evaluate. The `%SearchText%` placeholder is replaced with each query from the query set during evaluation:
+_搜尋組態_ 定義要評估的搜尋策略。評估期間，`%SearchText%` 預留位置會替換為查詢集中的每個查詢：
 
 ```json
 PUT /_plugins/_search_relevance/search_configurations
@@ -142,9 +143,9 @@ PUT /_plugins/_search_relevance/search_configurations
 ```
 {% include copy-curl.html %}
 
-### Step 4: Create a query set
+### 步驟 4：建立查詢集
 
-Create a query set containing test queries for evaluation:
+建立包含測試查詢的查詢集以供評估：
 
 ```json
 PUT /_plugins/_search_relevance/query_sets
@@ -161,9 +162,9 @@ PUT /_plugins/_search_relevance/query_sets
 ```
 {% include copy-curl.html %}
 
-### Step 5: Generate LLM judgments
+### 步驟 5：產生 LLM 判斷
 
-Create an LLM judgment that uses your deployed model to evaluate search results. Replace `{model_id}`, `{query_set_id}`, and `{search_configuration_id}` with the IDs returned in previous steps:
+建立 LLM 判斷，使用您部署的模型來評估搜尋結果。將 `{model_id}`、`{query_set_id}` 及 `{search_configuration_id}` 替換為先前步驟所傳回的 ID：
 
 ```json
 PUT /_plugins/_search_relevance/judgments
@@ -184,23 +185,23 @@ PUT /_plugins/_search_relevance/judgments
 ```
 {% include copy-curl.html %}
 
-For a description of all request body parameters, see [Judgments]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/judgments/#request-body-fields).
+如需所有請求本文參數的說明，請參閱[判斷]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/judgments/#request-body-fields)。
 
-The judgment process runs asynchronously. To verify the status, retrieve the judgment by its ID:
+判斷流程以非同步方式執行。若要確認狀態，請依其 ID 擷取判斷：
 
 ```json
 GET /search-relevance-judgment/_doc/{judgment_id}
 ```
 {% include copy-curl.html %}
 
-When the `status` field is `COMPLETED`, the `judgmentRatings` array contains the generated relevance scores for each query-document pair.
+當 `status` 欄位為 `COMPLETED` 時，`judgmentRatings` 陣列會包含為每個查詢-文件配對產生的相關性分數。
 
-## Next steps
+## 後續步驟
 
-You are now ready to [run an experiment to evaluate search quality]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/evaluate-search-quality/#creating-a-pointwise-experiment) with the LLM-generated judgments. The search configuration and query set that you created during this tutorial can serve as inputs for your first evaluation.
+您現在已準備好使用 LLM 產生的判斷，[執行實驗來評估搜尋品質]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/evaluate-search-quality/#creating-a-pointwise-experiment)。您在本教學期間建立的搜尋組態與查詢集，可作為您第一次評估的輸入。
 
-## Related documentation
+## 相關文件
 
 - [Search Relevance Workbench]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/using-search-relevance-workbench/)
-- [Using LLM-as-a-Judge]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/judgments/#using-llm-as-a-judge)
-- [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)
+- [使用 LLM-as-a-Judge]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/judgments/#using-llm-as-a-judge)
+- [連線至外部託管的模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)

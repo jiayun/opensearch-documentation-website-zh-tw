@@ -1,42 +1,43 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Logstash execution model
+title: "Logstash 執行模型"
 parent: Logstash
 nav_order: 210
 redirect_from:
  - /clients/logstash/execution-model/
 ---
 
-# Logstash execution model
+# Logstash 執行模型
 
-Here's a brief introduction to how Logstash processes events internally.
+以下簡要介紹 Logstash 如何在內部處理事件。
 
-## Handling events concurrently
+## 並行處理事件
 
-You can configure Logstash to have a number of inputs listening for events. Each input runs in its own thread to avoid inputs blocking each other. If you have two incoming events at the same time, Logstash handles both events concurrently.
+您可以設定 Logstash 讓多個輸入聆聽事件。每個輸入都在自己的執行緒中執行，以避免輸入彼此阻擋。如果您同時有兩個傳入事件，Logstash 會並行處理這兩個事件。
 
-After receiving an event and possibly applying an input codec, Logstash sends the event to a work queue. Pipeline workers or batchers perform the rest of the work involving filters and outputs along with any codec used at the output. Each pipeline worker also runs within its own thread meaning that Logstash processes multiple events simultaneously.
+收到事件並可能套用輸入 codec 之後，Logstash 會將事件傳送至工作佇列。管線工作執行緒或批次處理器會完成其餘的工作，包括篩選器與輸出，以及輸出所使用的任何 codec。每個管線工作執行緒也在自己的執行緒中執行，這表示 Logstash 會同時處理多個事件。
 
-## Processing events in batches
+## 批次處理事件
 
-A pipeline worker consumes events from the work queue in batches to optimize the throughput of the pipeline as a whole.
+管線工作執行緒會從工作佇列批次取用事件，以最佳化整體管線的輸送量。
 
-One reason why Logstash works in batches is that some code needs to be executed regardless of how many events are processed at a time within the pipeline worker. Instead of executing that code 100 times for 100 events, it’s more efficient to run it once for a batch of 100 events.
+Logstash 以批次運作的其中一個原因，是有些程式碼無論管線工作執行緒一次處理多少事件都必須執行。與其為 100 個事件執行該程式碼 100 次，不如為一批 100 個事件執行一次更有效率。
 
-Another reason is that a few output plugins group events as batches. For example, if you send 100 requests to OpenSearch, the OpenSearch output plugin uses the Bulk API to send a single request that groups the 100 requests.
+另一個原因是有些輸出外掛程式會將事件分組為批次。例如，如果您傳送 100 個請求至 OpenSearch，OpenSearch 輸出外掛程式會使用 Bulk API 傳送單一請求，將這 100 個請求分組。
 
-Logstash determines the batch size by two configuration options⁠---a number representing the maximum batch size and the batch delay. The batch delay is how long Logstash waits before processing the unprocessed batch of events.
-If you set the maximum batch size to 50 and the batch delay to 100 ms, Logstash processes a batch if they're either 50 unprocessed events in the work queue or if one hundred milliseconds have elapsed.
+Logstash 透過兩個組態選項決定批次大小⁠---一個代表批次大小上限的數字，以及批次延遲。批次延遲是 Logstash 在處理未處理的事件批次之前等待的時間。
+如果您將批次大小上限設為 50，並將批次延遲設為 100 ms，則只要工作佇列中有 50 個未處理的事件，或經過 100 毫秒，Logstash 就會處理批次。
 
-The reason that a batch is processed, even if the maximum batch size isn’t reached, is to reduce the delay in processing and to continue to process events in a timely manner. This works well for pipelines that process a low volume of events.
+即使未達到批次大小上限仍處理批次的原因，是為了減少處理延遲，並繼續及時處理事件。這對於處理少量事件的管線很有效。
 
-Imagine that you’ve a pipeline that processes error logs from web servers and pushes them to OpenSearch. You’re using OpenSearch Dashboards to analyze the error logs. Because you’re possibly dealing with a fairly low number of events, it might take a long time to reach 50 events. Logstash processes the events before reaching this threshold because otherwise there would be a long delay before we see the errors appear in OpenSearch Dashboards.
+假設您有一個管線，會處理來自網頁伺服器的錯誤記錄檔並推送至 OpenSearch。您使用 OpenSearch Dashboards 分析錯誤記錄檔。由於您可能處理的事件數量相當少，可能需要很長時間才能達到 50 個事件。Logstash 會在此門檻之前處理事件，否則我們要等很久才會看到錯誤出現在 OpenSearch Dashboards 中。
 
-The default batch size and batch delay work for most cases. You don’t need to change the default values unless you need to minutely optimize the performance.
+預設的批次大小與批次延遲適用於大多數情況。除非您需要精細地最佳化效能，否則不需要變更預設值。
 
-## Optimizing based on CPU cores
+## 根據 CPU 核心數最佳化
 
-The number of pipeline workers are proportional to the number of CPU cores on the nodes.
-If you have 5 workers running on a server with 2 CPU cores, the 5 workers won't be able to process events concurrently. On the other hand, running 5 workers on a server running 10 CPU cores limits the throughput of a Logstash instance.
+管線工作執行緒的數量與節點上的 CPU 核心數成正比。
+如果您在具有 2 個 CPU 核心的伺服器上執行 5 個工作執行緒，這 5 個工作執行緒將無法並行處理事件。另一方面，在具有 10 個 CPU 核心的伺服器上執行 5 個工作執行緒，會限制 Logstash 執行個體的輸送量。
 
-Instead of running a fixed number of workers, which results in poor performance in some cases, Logstash examines the number of CPU cores of the instance and selects the number of pipeline workers to optimize its performance for the platform on which its running. For instance, your local development machine might not have the same processing power as a production server. So you don't need to manually configure Logstash for different machines.
+與其執行固定數量的工作執行緒（在某些情況下會導致效能不佳），Logstash 會檢查執行個體的 CPU 核心數，並選擇管線工作執行緒的數量，以針對其執行所在的平台最佳化效能。例如，您的本機開發機器可能與生產伺服器具有不同的處理能力。因此，您不需要為不同的機器手動設定 Logstash。

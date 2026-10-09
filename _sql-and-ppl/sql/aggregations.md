@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Aggregate functions
+title: "彙總函式"
 parent: SQL
 nav_order: 11
 redirect_from:
@@ -8,30 +9,30 @@ redirect_from:
   - /search-plugins/sql/sql/aggregations/
 ---
 
-# SQL aggregate functions
+# SQL 彙總函式
 
-Aggregate functions operate on subsets defined by the `GROUP BY` clause. In the absence of a `GROUP BY` clause, aggregate functions operate on all elements of the result set. You can use aggregate functions in the `GROUP BY`, `SELECT`, and `HAVING` clauses.
+彙總函式會對 `GROUP BY` 子句定義的子集進行運算。若沒有 `GROUP BY` 子句，彙總函式會對結果集中的所有元素進行運算。您可以在 `GROUP BY`、`SELECT` 和 `HAVING` 子句中使用彙總函式。
 
-OpenSearch supports the following aggregate functions.
+OpenSearch 支援下列彙總函式。
 
 <!-- vale off -->
 
-Function | Description
+函式 | 說明
 :--- | :---
-`AVG` | Returns the average of the results.
-`COUNT` | Returns the number of results.
-`SUM` | Returns the sum of the results.
-`MIN` | Returns the minimum of the results.
-`MAX` | Returns the maximum of the results.
-`VAR_POP` or `VARIANCE` | Returns the population variance of the results after discarding nulls. Returns 0 when there is only one row of results.
-`VAR_SAMP` | Returns the sample variance of the results after discarding nulls. Returns null when there is only one row of results.
-`STD` or `STDDEV` | Returns the sample standard deviation of the results. Returns 0 when there is only one row of results.
-`STDDEV_POP` | Returns the population standard deviation of the results. Returns 0 when there is only one row of results.
-`STDDEV_SAMP` | Returns the sample standard deviation of the results. Returns null when there is only one row of results.
+`AVG` | 傳回結果的平均值。
+`COUNT` | 傳回結果的數量。
+`SUM` | 傳回結果的總和。
+`MIN` | 傳回結果的最小值。
+`MAX` | 傳回結果的最大值。
+`VAR_POP` 或 `VARIANCE` | 捨棄 null 值後，傳回結果的母體變異數。當結果只有一列時，傳回 0。
+`VAR_SAMP` | 捨棄 null 值後，傳回結果的樣本變異數。當結果只有一列時，傳回 null。
+`STD` 或 `STDDEV` | 傳回結果的樣本標準差。當結果只有一列時，傳回 0。
+`STDDEV_POP` | 傳回結果的母體標準差。當結果只有一列時，傳回 0。
+`STDDEV_SAMP` | 傳回結果的樣本標準差。當結果只有一列時，傳回 null。
 
 <!-- vale on -->
 
-The following examples reference an `employees` table. You can try out the examples by indexing the following documents into OpenSearch using the bulk index operation:
+下列範例參照 `employees` 資料表。您可以使用批次編製索引作業，將下列文件編製索引至 OpenSearch，以試用這些範例：
 
 ```json
 PUT employees/_bulk?refresh
@@ -52,13 +53,13 @@ PUT employees/_bulk?refresh
 
 ## GROUP BY
 
-The `GROUP BY` clause defines subsets of a result set. Aggregate functions operate on these subsets and return one result row for each subset. 
+`GROUP BY` 子句定義結果集的子集。彙總函式會對這些子集進行運算，並為每個子集傳回一列結果。 
 
-You can use an identifier, ordinal, or expression in the `GROUP BY` clause.
+您可以在 `GROUP BY` 子句中使用識別字、序數或運算式。
 
-### Using an identifier in GROUP BY
+### 在 GROUP BY 中使用識別字
 
-You can specify the field name (column name) to aggregate on in the `GROUP BY` clause. For example, the following query returns the department numbers and the total sales for each department: 
+您可以在 `GROUP BY` 子句中指定要進行彙總的欄位名稱（資料行名稱）。例如，下列查詢會傳回各部門的部門編號與銷售總額： 
 ```sql
 SELECT department, sum(sales)
 FROM employees
@@ -76,9 +77,9 @@ GROUP BY department;
 
 <!-- vale on -->
 
-### Using an ordinal in GROUP BY
+### 在 GROUP BY 中使用序數
 
-You can specify the column number to aggregate on in the `GROUP BY` clause. The column number is determined by the column position in the `SELECT` clause. For example, the following query is equivalent to the preceding query. It returns the department numbers and the total sales for each department. It groups the results by the first column of the result set, which is `department`:
+您可以在 `GROUP BY` 子句中指定要進行彙總的資料行編號。資料行編號取決於資料行在 `SELECT` 子句中的位置。例如，下列查詢等同於前一個查詢。它會傳回各部門的部門編號與銷售總額。它會依結果集的第一個資料行（即 `department`）將結果分組：
 
 ```sql
 SELECT department, sum(sales)
@@ -97,9 +98,9 @@ GROUP BY 1;
 
 <!-- vale on -->
 
-### Using an expression in GROUP BY
+### 在 GROUP BY 中使用運算式
 
-You can use an expression in the `GROUP BY` clause. For example, the following query returns the average sales for each year:
+您可以在 `GROUP BY` 子句中使用運算式。例如，下列查詢會傳回各年的平均銷售額：
 
 ```sql
 SELECT year(sale_date), avg(sales)
@@ -121,11 +122,11 @@ GROUP BY year(sale_date);
 
 ## SELECT
 
-You can use aggregate expressions in the `SELECT` clause either directly or as part of a larger expression. In addition, you can use expressions as arguments of aggregate functions.
+您可以在 `SELECT` 子句中直接使用彙總運算式，或將其作為較大運算式的一部分。此外，您可以使用運算式作為彙總函式的引數。
 
-### Using aggregate expressions directly in SELECT
+### 在 SELECT 中直接使用彙總運算式
 
-The following query returns the average sales for each department:
+下列查詢會傳回各部門的平均銷售額：
 
 ```sql
 SELECT department, avg(sales)
@@ -144,9 +145,9 @@ GROUP BY department;
 
 <!-- vale on -->
 
-### Using aggregate expressions as part of larger expressions in SELECT
+### 在 SELECT 中將彙總運算式作為較大運算式的一部分
 
-The following query calculates the average commission for the employees of each department as 5% of the average sales:
+下列查詢會以平均銷售額的 5% 計算各部門員工的平均佣金：
 
 ```sql
 SELECT department, avg(sales) * 0.05 as avg_commission
@@ -165,9 +166,9 @@ GROUP BY department;
 
 <!-- vale on -->
 
-### Using expressions as arguments to aggregate functions
+### 使用運算式作為彙總函式的引數
 
-The following query calculates the average commission amount for each department. First it calculates the commission amount for each `sales` value as 5% of the `sales`. Then it determines the average of all commission values:
+下列查詢會計算各部門的平均佣金金額。它先針對每個 `sales` 值，以 `sales` 的 5% 計算佣金金額。接著計算所有佣金值的平均值：
 
 ```sql
 SELECT department, avg(sales * 0.05) as avg_commission
@@ -188,19 +189,19 @@ GROUP BY department;
 
 ### COUNT
 
-The `COUNT` function accepts arguments, such as `*`, or literals, such as `1`.
-The following table describes how various forms of the `COUNT` function operate.
+`COUNT` 函式接受引數（例如 `*`）或常值（例如 `1`）。
+下表說明各種形式的 `COUNT` 函式如何運作。
 
 <!-- vale off -->
 
-| Function type | Description
-`COUNT(field)` | Counts the number of rows where the value of the given field (or expression) is not null.
-`COUNT(*)` | Counts the total number of rows in a table.
-`COUNT(1)` (same as `COUNT(*)`) | Counts any non-null literal.
+| 函式類型 | 說明
+`COUNT(field)` | 計算指定欄位（或運算式）的值不是 null 的列數。
+`COUNT(*)` | 計算資料表中的總列數。
+`COUNT(1)`（與 `COUNT(*)` 相同） | 計算任何非 null 常值的數量。
 
 <!-- vale on -->
 
-For example, the following query returns the count of sales for each year:
+例如，下列查詢會傳回各年的銷售筆數：
 
 ```sql
 SELECT year(sale_date), count(sales)
@@ -222,15 +223,15 @@ GROUP BY year(sale_date);
 
 ## HAVING
 
-Both `WHERE` and `HAVING` are used to filter results. The `WHERE` filter is applied before the `GROUP BY` phase, so you cannot use aggregate functions in a `WHERE` clause. However, you can use the `WHERE` clause to limit the rows to which the aggregate is then applied.
+`WHERE` 和 `HAVING` 都用於篩選結果。`WHERE` 篩選會在 `GROUP BY` 階段之前套用，因此您無法在 `WHERE` 子句中使用彙總函式。不過，您可以使用 `WHERE` 子句限制後續套用彙總的列。
 
-The `HAVING` filter is applied after the `GROUP BY` phase, so you can use the `HAVING` clause to limit the groups that are included in the results. 
+`HAVING` 篩選會在 `GROUP BY` 階段之後套用，因此您可以使用 `HAVING` 子句限制結果中包含的群組。 
 
-### HAVING with GROUP BY
+### 搭配 GROUP BY 使用 HAVING
 
-You can use aggregate expressions or their aliases defined in a `SELECT` clause in a `HAVING` condition.
+您可以在 `HAVING` 條件中使用彙總運算式，或使用其在 `SELECT` 子句中定義的別名。
 
-The following query uses an aggregate expression in the `HAVING` clause. It returns the number of sales for each employee who made more than one sale:
+下列查詢在 `HAVING` 子句中使用彙總運算式。它會傳回銷售超過一筆的各位員工的銷售筆數：
 
 ```sql
 SELECT employee_id, count(sales)
@@ -250,7 +251,7 @@ HAVING count(sales) > 1;
 
 <!-- vale on -->
 
-The aggregations in a `HAVING` clause do not have to be the same as the aggregations in a `SELECT` list. The following query uses the `count` function in the `HAVING` clause but the `sum` function in the `SELECT` clause. It returns the total sales amount for each employee who made more than one sale:
+`HAVING` 子句中的彙總不必與 `SELECT` 清單中的彙總相同。下列查詢在 `HAVING` 子句中使用 `count` 函式，而在 `SELECT` 子句中使用 `sum` 函式。它會傳回銷售超過一筆的各位員工的銷售總額：
 
 ```sql
 SELECT employee_id, sum(sales)
@@ -270,7 +271,7 @@ HAVING count(sales) > 1;
 
 <!-- vale on -->
 
-As an extension of the SQL standard, you are not restricted to using only identifiers in the `GROUP BY` clause. The following query uses an alias in the `GROUP BY` clause and is equivalent to the previous query:
+作為 SQL 標準的擴充功能，您在 `GROUP BY` 子句中不受限於只能使用識別字。下列查詢在 `GROUP BY` 子句中使用別名，且等同於前一個查詢：
 
 ```sql
 SELECT employee_id as id, sum(sales)
@@ -290,7 +291,7 @@ HAVING count(sales) > 1;
 
 <!-- vale on -->
 
-You can also use an alias for an aggregate expression in the `HAVING` clause. The following query returns the total sales for each department where sales exceed $40,000:
+您也可以在 `HAVING` 子句中使用彙總運算式的別名。下列查詢會傳回銷售額超過 $40,000 的各部門的銷售總額：
 
 ```sql
 SELECT department, sum(sales) as total
@@ -309,7 +310,7 @@ HAVING total > 40000;
 
 <!-- vale on -->
 
-If an identifier is ambiguous (for example, present both as a `SELECT` alias and as an index field), the preference is given to the alias. In the following query the identifier is replaced with the expression aliased in the `SELECT` clause:
+如果識別字有歧義（例如，同時存在於 `SELECT` 別名和索引欄位中），則會優先採用別名。在下列查詢中，識別字會被替換為在 `SELECT` 子句中指定別名的運算式：
 
 ```sql
 SELECT department, sum(sales) as sales
@@ -328,9 +329,9 @@ HAVING sales > 40000;
 
 <!-- vale on -->
 
-### HAVING without GROUP BY
+### 不搭配 GROUP BY 使用 HAVING
 
-You can use a `HAVING` clause without a `GROUP BY` clause. In this case, the whole set of data is to be considered one group. The following query will return `True` if there is more than one value in the `department` column:
+您可以在沒有 `GROUP BY` 子句的情況下使用 `HAVING` 子句。在此情況下，整個資料集會視為一個群組。如果 `department` 資料行中有超過一個值，下列查詢會傳回 `True`：
 
 ```sql
 SELECT 'True' as more_than_one_department FROM employees HAVING min(department) < max(department);
@@ -346,7 +347,7 @@ True |
 
 <!-- vale on -->
 
-If all employees in the employee table belonged to the same department, the result would contain zero rows:
+如果員工資料表中的所有員工都屬於同一個部門，結果將包含零列：
 
 <!-- vale off -->
 

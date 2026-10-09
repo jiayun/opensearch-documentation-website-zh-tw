@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Rolling upgrade lab
+title: "滾動升級實驗"
 parent: Rolling upgrade
 nav_order: 10
 redirect_from:
@@ -12,17 +13,17 @@ redirect_from:
   - /migrate-or-upgrade/rolling-upgrade/appendix/rolling-upgrade-lab/
 ---
 
-# Rolling upgrade lab
+# 滾動升級實驗
 
-You can follow these steps on your own compatible host to recreate the same cluster state that the OpenSearch Project used for testing [rolling upgrades]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/rolling-upgrade/). This exercise is useful if you want to test the upgrade process in a development environment.
+您可以在自己的相容主機上依照這些步驟操作，重現 OpenSearch 專案用於測試[滾動升級]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/rolling-upgrade/)的相同叢集狀態。如果您想在開發環境中測試升級程序，這項練習會很有幫助。
 
-The steps used in this lab were validated on an arbitrarily chosen [Amazon Elastic Compute Cloud (Amazon EC2)](https://aws.amazon.com/ec2/) `t2.large` instance using [Amazon Linux 2](https://aws.amazon.com/amazon-linux-2/) kernel version `Linux 5.10.162-141.675.amzn2.x86_64` and [Docker](https://www.docker.com/) version `20.10.17, build 100c701`. The instance was provisioned with an attached 20 GiB gp2 [Amazon EBS](https://aws.amazon.com/ebs/) root volume. These specifications are included for informational purposes and do not represent hardware requirements for OpenSearch or OpenSearch Dashboards.
+本實驗的步驟已在任意選用的 [Amazon Elastic Compute Cloud (Amazon EC2)](https://aws.amazon.com/ec2/) `t2.large` 執行個體上驗證，該執行個體使用 [Amazon Linux 2](https://aws.amazon.com/amazon-linux-2/) 核心版本 `Linux 5.10.162-141.675.amzn2.x86_64` 和 [Docker](https://www.docker.com/) 版本 `20.10.17, build 100c701`。佈建此執行個體時，已連接一個 20 GiB gp2 [Amazon EBS](https://aws.amazon.com/ebs/) 根磁碟區。這些規格僅供參考，並不代表 OpenSearch 或 OpenSearch Dashboards 的硬體需求。
 
-References in this procedure to the `$HOME` path on the host machine in this procedure are represented by the tilde character ("~") to make the instructions more portable. If you would prefer to specify an absolute path, modify the volume paths defined in `upgrade-demo-cluster.sh` and used throughout relevant commands in this document to reflect your environment.
+本程序中提及主機上的 `$HOME` 路徑時，皆以波浪號字元（「~」）表示，讓操作指示更易於在不同環境中使用。如果您偏好指定絕對路徑，請修改 `upgrade-demo-cluster.sh` 中定義的磁碟區路徑，以及本文相關命令中使用的磁碟區路徑，以符合您的環境。
 
-## Setting up the environment
+## 設定環境
 
-As you follow the steps in this document, you will define several Docker resources, including containers, volumes, and a dedicated Docker network, using a script we provide. You can clean up your environment with the following command if you want to restart the process:
+依照本文步驟操作時，您將使用我們提供的指令碼，定義數個 Docker 資源，包括容器、磁碟區和專用的 Docker 網路。如果您想重新開始此程序，可以使用下列命令清理環境：
 
 ```bash
 docker container stop $(docker container ls -aqf name=os-); \
@@ -32,56 +33,56 @@ docker container stop $(docker container ls -aqf name=os-); \
 ```
 {% include copy.html %}
 
-The command removes container names matching the regular expression `os-*`, data volumes matching `data-0*` and `repo-0*`, and the Docker network named `opensearch-dev-net`. If you have other Docker resources running on your host, then you should review and modify the command to avoid removing other resources unintentionally. This command does not revert host configuration changes, like memory swapping behavior.
+此命令會移除名稱符合規則運算式 `os-*` 的容器、符合 `data-0*` 和 `repo-0*` 的資料磁碟區，以及名為 `opensearch-dev-net` 的 Docker 網路。如果您的主機上有其他 Docker 資源正在執行，您應檢查並修改此命令，以免意外移除其他資源。此命令不會還原主機組態的變更，例如記憶體交換行為。
 {: .warning}
 
-After selecting a host, you can begin the lab:
+選好主機後，您就可以開始實驗：
 
-1. Install the appropriate version of [Docker Engine](https://docs.docker.com/engine/install/) for your Linux distribution and system architecture. 
-1. Configure [important system settings]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#important-settings) on your host:
-    1. Disable memory paging and swapping on the host to improve performance:
+1. 安裝適合您 Linux 發行版和系統架構的 [Docker Engine](https://docs.docker.com/engine/install/) 版本。 
+1. 在主機上設定[重要系統設定]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#important-settings)：
+    1. 停用主機上的記憶體分頁和交換，以提升效能：
 	   ```bash
 	   sudo swapoff -a
 	   ```
 	   {% include copy.html %}
-	1. Increase the number of memory maps available to OpenSearch. Open the `sysctl` configuration file for editing. This example command uses the [vim](https://www.vim.org/) text editor, but you can use any available text editor:
+	1. 增加 OpenSearch 可用的記憶體對應數量。開啟 `sysctl` 組態檔案進行編輯。此範例命令使用 [vim](https://www.vim.org/) 文字編輯器，但您可以使用任何可用的文字編輯器：
 	   ```bash
 	   sudo vim /etc/sysctl.conf
 	   ```
 	   {% include copy.html %}
-	1. Add the following line to `/etc/sysctl.conf`:
+	1. 將下列這一行新增至 `/etc/sysctl.conf`：
 	   ```bash
 	   vm.max_map_count=262144
 	   ```
 	   {% include copy.html %}
-	1. Save and quit. If you use the `vi` or `vim` text editors, you save and quit by switching to command mode, and entering `:wq!` or `ZZ`. 
-	1. Apply the configuration change:
+	1. 儲存並結束。如果您使用 `vi` 或 `vim` 文字編輯器，請切換至命令模式，並輸入 `:wq!` 或 `ZZ`，即可儲存並結束。 
+	1. 套用組態變更：
 	   ```bash
 	   sudo sysctl -p
 	   ```
 	   {% include copy.html %}
-1. Create a new directory called `deploy` in your home directory, then navigate to it. You will use `~/deploy` for paths in the deployment script, configuration files, and TLS certificates:
+1. 在您的家目錄中建立名為 `deploy` 的新目錄，然後切換至該目錄。您將在部署指令碼、組態檔案和 TLS 憑證的路徑中使用 `~/deploy`：
    ```bash
    mkdir ~/deploy && cd ~/deploy
    ```
    {% include copy.html %}
-1. Download `upgrade-demo-cluster.sh` from the OpenSearch Project [`documentation-website`](https://github.com/opensearch-project/documentation-website) repository:
+1. 從 OpenSearch 專案的 [`documentation-website`](https://github.com/opensearch-project/documentation-website) 儲存庫下載 `upgrade-demo-cluster.sh`：
    ```bash
    wget https://raw.githubusercontent.com/opensearch-project/documentation-website/main/assets/examples/upgrade-demo-cluster.sh
    ```
    {% include copy.html %}
-1. Run the script without any modifications in order to deploy four containers running OpenSearch and one container running OpenSearch Dashboards, with custom, self-signed TLS certificates and a predefined set of internal users:
+1. 不做任何修改，直接執行指令碼，以部署四個執行 OpenSearch 的容器和一個執行 OpenSearch Dashboards 的容器，並使用自訂的自我簽署 TLS 憑證和一組預先定義的內部使用者：
    ```bash
    sh upgrade-demo-cluster.sh
    ```
    {% include copy.html %}
-1. Confirm that the containers were launched successfully:
+1. 確認容器已成功啟動：
    ```bash
    docker container ls
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似下列內容：
 
    ```bash
    CONTAINER ID   IMAGE                                           COMMAND                  CREATED          STATUS          PORTS                                                                                                      NAMES
@@ -91,27 +92,27 @@ After selecting a host, you can begin the lab:
    f894054a9378   opensearchproject/opensearch:1.3.7              "./opensearch-docker…"   27 seconds ago   Up 26 seconds   9300/tcp, 9650/tcp, 0.0.0.0:9202->9200/tcp, :::9202->9200/tcp, 0.0.0.0:9602->9600/tcp, :::9602->9600/tcp   os-node-02
    2e9c91c959cd   opensearchproject/opensearch:1.3.7              "./opensearch-docker…"   28 seconds ago   Up 27 seconds   9300/tcp, 9650/tcp, 0.0.0.0:9201->9200/tcp, :::9201->9200/tcp, 0.0.0.0:9601->9600/tcp, :::9601->9600/tcp   os-node-01
    ```
-1. The amount of time OpenSearch needs to initialize the cluster varies depending on the performance capabilities of the underlying host. You can follow container logs to see what OpenSearch is doing during the bootstrap process:
-   1. Enter the following command to display logs for container `os-node-01` in the terminal window:
+1. OpenSearch 初始化叢集所需的時間，會因底層主機的效能而異。您可以持續查看容器記錄檔，以了解 OpenSearch 在啟動程序期間執行的作業：
+   1. 輸入下列命令，在終端機視窗中顯示容器 `os-node-01` 的記錄檔：
       ```bash
       docker logs -f os-node-01
       ```
       {% include copy.html %}
-   1. You will see a log entry resembling the following example when the node is ready:
+   1. 節點就緒時，您會看到類似下列範例的記錄項目：
 
-      The following is an example:
+      以下為範例：
 
       ```bash
       [INFO ][o.o.s.c.ConfigurationRepository] [os-node-01] Node 'os-node-01' initialized
       ```
-   1. Press `Ctrl+C` to stop following container logs and return to the command prompt.
-1. Use cURL to query the OpenSearch REST API. In the following command, `os-node-01` is queried by sending the request to host port `9201`, which is mapped to port `9200` on the container:
+   1. 按下 `Ctrl+C`，停止持續查看容器記錄檔並返回命令提示字元。
+1. 使用 cURL 查詢 OpenSearch REST API。在下列命令中，透過將請求傳送至主機連接埠 `9201` 來查詢 `os-node-01`，此連接埠對應至容器上的連接埠 `9200`：
    ```bash
    curl -s "https://localhost:9201" -ku admin:<custom-admin-password>
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似下列內容：
 
    ```json
    {
@@ -133,30 +134,30 @@ After selecting a host, you can begin the lab:
    }
    ```
 
-   **Tip**: Use the `-s` option with `curl` to hide the progress meter and error messages.
+   **提示**：搭配 `curl` 使用 `-s` 選項，可隱藏進度指示器和錯誤訊息。
    {: .tip}
 
-## Adding data and configuring OpenSearch Security
+## 新增資料並設定 OpenSearch Security
 
-Now that the OpenSearch cluster is running, it's time to add data and configure some OpenSearch Security settings. The data you add and settings you configure will be validated again after the version upgrade is complete.
+現在 OpenSearch 叢集已在執行中，是時候新增資料並設定一些 OpenSearch Security 設定了。您新增的資料與設定的設定，將在版本升級完成後再次進行驗證。
 
-This section can be broken down into two parts:
-- [Indexing data with the REST API](#indexing-data-with-the-rest-api)
-- [Adding data using OpenSearch Dashboards](#adding-data-using-opensearch-dashboards)
+本節可分為兩個部分：
+- [使用 REST API 編製資料索引](#indexing-data-with-the-rest-api)
+- [使用 OpenSearch Dashboards 新增資料](#adding-data-using-opensearch-dashboards)
 
-### Indexing data with the REST API
+### 使用 REST API 編製資料索引
 
-1. Download the sample field mappings file:
+1. 下載範例欄位對應檔案：
    ```bash
    wget https://raw.githubusercontent.com/opensearch-project/documentation-website/main/assets/examples/ecommerce-field_mappings.json
    ```
    {% include copy.html %}
-1. Next, download the bulk data that you will ingest into this index:
+1. 接著，下載您將匯入此索引的批量資料：
    ```bash
    wget https://raw.githubusercontent.com/opensearch-project/documentation-website/main/assets/examples/ecommerce.ndjson
    ```
    {% include copy.html %}
-1. Use the [Create index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/) API to create an index using the mappings defined in `ecommerce-field_mappings.json`:
+1. 使用 [Create index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/) API，以 `ecommerce-field_mappings.json` 中定義的對應建立索引：
    ```bash
    curl -H "Content-Type: application/json" \
       -X PUT "https://localhost:9201/ecommerce?pretty" \
@@ -165,7 +166,7 @@ This section can be broken down into two parts:
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似下列內容：
 
       ```json
       {
@@ -174,7 +175,7 @@ This section can be broken down into two parts:
          "index" : "ecommerce"
       }
       ```
-1. Use the [Bulk]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) API to add data to the new ecommerce index from `ecommerce.ndjson`:
+1. 使用 [Bulk]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) API，將 `ecommerce.ndjson` 中的資料新增至新的 ecommerce 索引：
    ```bash
    curl -H "Content-Type: application/x-ndjson" \
       -X PUT "https://localhost:9201/ecommerce/_bulk?pretty" \
@@ -183,7 +184,7 @@ This section can be broken down into two parts:
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following (truncated):
+   回應應類似下列內容（已截斷）：
 
       ```json
       {
@@ -209,7 +210,7 @@ This section can be broken down into two parts:
          ]
       }
       ```
-1. <p id="validation">A search query can also confirm that the data was indexed successfully. The following query returns the number of documents in which keyword `customer_first_name` equals `Sonya`:</p>
+1. <p id="validation">搜尋查詢也可確認資料是否已成功編製索引。下列查詢會傳回關鍵字 `customer_first_name` 等於 `Sonya` 的文件數量：</p>
    ```bash
    curl -H 'Content-Type: application/json' \
       -X GET "https://localhost:9201/ecommerce/_search?pretty=true&filter_path=hits.total" \
@@ -218,7 +219,7 @@ This section can be broken down into two parts:
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似下列內容：
 
       ```json
       {
@@ -231,32 +232,32 @@ This section can be broken down into two parts:
       }
       ```
 
-### Adding data using OpenSearch Dashboards
+### 使用 OpenSearch Dashboards 新增資料
 
-1. Open a web browser and navigate to port `5601` on your Docker host (for example, `https://<HOST_ADDRESS>:5601`). If OpenSearch Dashboards is running and you have network access to the host from your browser client, then you will be redirected to a login page.
-    1. If the web browser throws an error because the TLS certificates are self-signed, then you might need to bypass certificate checks in your browser. Refer to the browser's documentation for information about bypassing certificate checks. The common name (CN) for each certificate is generated according to the container and node names for intracluster communication, so connecting to the host from a browser will still result in an "invalid CN" warning.
-1. Enter the default username (`admin`) and password (`admin`).
-1. On the OpenSearch Dashboards **Home** page, select **Add sample data**.
-1. Under **Sample web logs**, select **Add data**.
-   1. **Optional**: Select **View data** to review the **[Logs] Web Traffic** dashboard.
-1. Select the **Menu button** to open the **Navigation pane**, then go to **Security > Internal users**.
-1. Select **Create internal user**.
-1. Provide a **Username** and **Password**.
-1. In the **Backend role** field, enter `admin`.
-1. Select **Create**.
+1. 開啟網頁瀏覽器，並瀏覽至 Docker 主機上的連接埠 `5601`（例如 `https://<HOST_ADDRESS>:5601`）。如果 OpenSearch Dashboards 正在執行，且您的瀏覽器用戶端可透過網路存取該主機，則您會被重新導向至登入頁面。
+    1. 如果網頁瀏覽器因為 TLS 憑證為自簽而發生錯誤，您可能需要略過瀏覽器中的憑證檢查。請參閱瀏覽器的說明文件，以取得略過憑證檢查的相關資訊。每個憑證的一般名稱 (CN) 是依據容器與節點名稱產生，以供叢集內通訊使用，因此從瀏覽器連線至主機時，仍會出現「invalid CN」警告。
+1. 輸入預設使用者名稱（`admin`）與密碼（`admin`）。
+1. 在 OpenSearch Dashboards 的 **Home** 頁面上，選取 **Add sample data**。
+1. 在 **Sample web logs** 下，選取 **Add data**。
+   1. **選用**：選取 **View data** 以檢閱 **[Logs] Web Traffic** 儀表板。
+1. 選取 **Menu button** 以開啟 **Navigation pane**，然後前往 **Security > Internal users**。
+1. 選取 **Create internal user**。
+1. 提供 **Username** 與 **Password**。
+1. 在 **Backend role** 欄位中，輸入 `admin`。
+1. 選取 **Create**。
 
-## Backing up important files
+## 備份重要檔案
 
-Always create backups before making changes to your cluster, especially if the cluster is running in a production environment.
+對叢集進行變更前，請務必先建立備份，尤其是叢集在生產環境中執行時。
 
-In this section you will be:
-- [Registering a snapshot repository](#registering-a-snapshot-repository).
-- [Creating a snapshot](#creating-a-snapshot).
-- [Backing up security settings](#backing-up-security-settings).
+在本節中，您將：
+- [註冊快照儲存庫](#registering-a-snapshot-repository)。
+- [建立快照](#creating-a-snapshot)。
+- [備份安全性設定](#backing-up-security-settings)。
 
-### Registering a snapshot repository
+### 註冊快照儲存庫
 
-1. Register a repository using the volume that was mapped by `upgrade-demo-cluster.sh`:
+1. 使用由 `upgrade-demo-cluster.sh` 對應的磁碟區來註冊儲存庫：
    ```bash
    curl -H 'Content-Type: application/json' \
       -X PUT "https://localhost:9201/_snapshot/snapshot-repo?pretty" \
@@ -265,14 +266,14 @@ In this section you will be:
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似下列內容：
 
       ```json
       {
          "acknowledged" : true
       }
       ```
-1. **Optional**: Perform an additional check to verify that the repository was created successfully:
+1. **選用**：執行額外檢查，以確認儲存庫已成功建立：
    ```bash
    curl -H 'Content-Type: application/json' \
       -X POST "https://localhost:9201/_snapshot/snapshot-repo/_verify?timeout=0s&master_timeout=50s&pretty" \
@@ -280,7 +281,7 @@ In this section you will be:
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似下列內容：
 
       ```json
       {
@@ -301,11 +302,11 @@ In this section you will be:
       }
       ```
 
-### Creating a snapshot
+### 建立快照
 
-Snapshots are backups of a cluster’s indexes and state. See [Snapshots]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/index/) to learn more.
+快照是叢集索引與狀態的備份。請參閱 [Snapshots]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/index/) 以深入了解。
 
-1. Create a snapshot that includes all indexes and the cluster state:
+1. 建立包含所有索引與叢集狀態的快照：
    ```bash
    curl -H 'Content-Type: application/json' \
       -X PUT "https://localhost:9201/_snapshot/snapshot-repo/cluster-snapshot-v137?wait_for_completion=true&pretty" \
@@ -313,7 +314,7 @@ Snapshots are backups of a cluster’s indexes and state. See [Snapshots]({{site
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似下列內容：
 
       ```json
       {
@@ -351,29 +352,29 @@ Snapshots are backups of a cluster’s indexes and state. See [Snapshots]({{site
       }
       ```
 
-### Backing up security settings
+### 備份安全性設定
 
-Cluster administrators can modify OpenSearch Security settings by using any of the following methods:
+叢集管理員可以使用下列任一方法修改 OpenSearch Security 設定：
 
-- Modifying YAML files and running `securityadmin.sh`
-- Making REST API requests using the admin certificate
-- Making changes with OpenSearch Dashboards
+- 修改 YAML 檔案並執行 `securityadmin.sh`
+- 使用管理員憑證發送 REST API 請求
+- 透過 OpenSearch Dashboards 進行變更
 
-Regardless of the method you choose, OpenSearch Security writes your configuration to a special system index called `.opendistro_security`. This system index is preserved through the upgrade process, and it is also saved in the snapshot you created. However, restoring system indexes requires elevated access granted by the `admin` certificate. To learn more, see [System indexes]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/) and [Configuring TLS certificates]({{site.url}}{{site.baseurl}}/security/configuration/tls/).
+無論您選擇哪種方法，OpenSearch Security 都會將您的組態寫入名為 `.opendistro_security` 的特殊系統索引。此系統索引會在升級過程中保留，並且也會儲存在您建立的快照中。不過，還原系統索引需要 `admin` 憑證所授予的進階存取權限。若要了解更多，請參閱 [System indexes]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/) 與 [Configuring TLS certificates]({{site.url}}{{site.baseurl}}/security/configuration/tls/)。
 
-You can also export your OpenSearch Security settings as YAML files by running `securityadmin.sh` with the `-backup` option on any of your OpenSearch nodes. These YAML files can be used to reinitialize the `.opendistro_security` index with your existing configuration. The following steps will guide you through generating these backup files and copying them to your host for storage:
+您也可以在任何 OpenSearch 節點上執行 `securityadmin.sh` 並搭配 `-backup` 選項，將 OpenSearch Security 設定匯出為 YAML 檔案。這些 YAML 檔案可用來以您現有的組態重新初始化 `.opendistro_security` 索引。下列步驟將引導您產生這些備份檔案並將其複製到主機儲存：
 
-1. Open an interactive pseudo-TTY session with `os-node-01`:
+1. 使用 `os-node-01` 開啟互動式偽 TTY 工作階段：
    ```bash
    docker exec -it os-node-01 bash
    ```
    {% include copy.html %}
-1. Create a directory called `backups` and navigate to it:
+1. 建立名為 `backups` 的目錄並切換至該目錄：
    ```bash
    mkdir /usr/share/opensearch/backups && cd /usr/share/opensearch/backups
    ```
    {% include copy.html %}
-1. Use `securityadmin.sh` to create backups of your OpenSearch Security settings in `/usr/share/opensearch/backups/`:
+1. 使用 `securityadmin.sh` 在 `/usr/share/opensearch/backups/` 中建立 OpenSearch Security 設定的備份：
    ```bash
    /usr/share/opensearch/plugins/opensearch-security/tools/securityadmin.sh \
       -backup /usr/share/opensearch/backups \
@@ -385,7 +386,7 @@ You can also export your OpenSearch Security settings as YAML files by running `
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似如下：
 
    ```bash
    Security Admin v7
@@ -418,30 +419,30 @@ You can also export your OpenSearch Security settings as YAML files by running `
    Will retrieve '/audit' into /usr/share/opensearch/backups/audit.yml 
       SUCC: Configuration for 'audit' stored in /usr/share/opensearch/backups/audit.yml
    ```
-1. **Optional**: Create a backup directory for TLS certificates and store copies of the certificates. Repeat this for each node if you use unique TLS certificates:
+1. **選用**：建立 TLS 憑證的備份目錄並儲存憑證副本。如果您使用不同的 TLS 憑證，請對每個節點重複此步驟：
    ```bash
    mkdir /usr/share/opensearch/backups/certs && cp /usr/share/opensearch/config/*pem /usr/share/opensearch/backups/certs/
    ```
    {% include copy.html %}
-1. Terminate the pseudo-TTY session:
+1. 結束偽 TTY 工作階段：
    ```bash
    exit
    ```
    {% include copy.html %}
-1. Copy the files to your host:
+1. 將檔案複製到您的主機：
    ```bash
    docker cp os-node-01:/usr/share/opensearch/backups ~/deploy/
    ```
    {% include copy.html %}
 
-## Performing the upgrade
+## 執行升級
 
-Now that the cluster is configured and you have made backups of important files and settings, it's time to begin the version upgrade.
+現在叢集已完成設定，您也已備份重要檔案與設定，是時候開始版本升級了。
 
-Some steps included in this section, like disabling shard replication and flushing the transaction log, will not impact the performance of your cluster. These steps are included as best practices and can significantly improve cluster performance in situations where clients continue interacting with the OpenSearch cluster throughout the upgrade, such as by querying existing data or indexing documents. 
+本節中的某些步驟，例如停用分片複寫與排清交易記錄，不會影響叢集的效能。這些步驟是作為最佳實務而納入，在用戶端於整個升級過程中持續與 OpenSearch 叢集互動的情況下（例如查詢現有資料或將文件編製索引），可顯著提升叢集效能。
 {: .note}
 
-1. Disable shard replication to stop the movement of Lucene index segments within your cluster:
+1. 停用分片複寫，以停止 Lucene 索引分段在叢集內的移動：
    ```bash
    curl -H 'Content-type: application/json' \
       -X PUT "https://localhost:9201/_cluster/settings?pretty" \
@@ -450,7 +451,7 @@ Some steps included in this section, like disabling shard replication and flushi
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似如下：
 
    ```json
    {
@@ -467,13 +468,13 @@ Some steps included in this section, like disabling shard replication and flushi
       "transient" : { }
    }
    ```
-1. Perform a flush operation on the cluster to commit transaction log entries to the Lucene index:
+1. 對叢集執行排清作業，將交易記錄項目提交至 Lucene 索引：
    ```bash
    curl -X POST "https://localhost:9201/_flush?pretty" -ku admin:<custom-admin-password>
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似如下：
 
    ```json
    {
@@ -484,12 +485,12 @@ Some steps included in this section, like disabling shard replication and flushi
       }
    }
    ```
-1. Select a node to upgrade. You can upgrade nodes in any order because all of the nodes in this demo cluster are eligible cluster managers. The following command will stop and remove container `os-node-01` without removing the mounted data volume:
+1. 選取要升級的節點。您可以以任何順序升級節點，因為此示範叢集中的所有節點都是合格的叢集管理員節點。下列命令將會停止並移除容器 `os-node-01`，但不會移除已掛載的資料儲存空間：
    ```bash
    docker stop os-node-01 && docker container rm os-node-01
    ```
    {% include copy.html %}
-1. Start a new container named `os-node-01` with the `opensearchproject/opensearch:2.5.0` image and using the same mapped volumes as the original container:
+1. 使用 `opensearchproject/opensearch:2.5.0` 映像啟動名為 `os-node-01` 的新容器，並使用與原始容器相同的掛載儲存空間：
    ```bash
    docker run -d \
       -p 9201:9200 -p 9601:9600 \
@@ -510,19 +511,19 @@ Some steps included in this section, like disabling shard replication and flushi
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似如下：
 
    ```bash
    d26d0cb2e1e93e9c01bb00f19307525ef89c3c3e306d75913860e6542f729ea4
    ```
-1. **Optional**: Query the cluster to determine which node is acting as the cluster manager. You can run this command at any time during the process to see when a new cluster manager is elected:
+1. **選用**：查詢叢集以判斷哪個節點正擔任叢集管理員。您可以在過程中的任何時間執行此命令，以查看何時選出新的叢集管理員：
    ```bash
    curl -s "https://localhost:9201/_cat/nodes?v&h=name,version,node.role,master" \
       -ku admin:<custom-admin-password> | column -t
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似如下：
 
    ```bash
    name        version  node.role  master
@@ -531,14 +532,14 @@ Some steps included in this section, like disabling shard replication and flushi
    os-node-02  1.3.7    dimr       -
    os-node-03  1.3.7    dimr       -
    ```
-1. **Optional**: Query the cluster to see how shard allocation changes as nodes are removed and replaced. You can run this command at any time during the process to see how shard statuses change:
+1. **選用**：查詢叢集以查看節點移除與替換時分片分配的變化。您可以在過程中的任何時間執行此命令，以查看分片狀態的變化：
    ```bash
    curl -s "https://localhost:9201/_cat/shards" \
       -ku admin:<custom-admin-password>
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似如下：
 
    ```bash
    security-auditlog-2023.03.06           0 p STARTED       53 214.5kb 172.20.0.13 os-node-03
@@ -562,12 +563,12 @@ Some steps included in this section, like disabling shard replication and flushi
    .kibana_92668751_admin_1               0 r STARTED       33  37.3kb 172.20.0.13 os-node-03
    .kibana_92668751_admin_1               0 p STARTED       33  37.3kb 172.20.0.14 os-node-04
    ```
-1. Stop `os-node-02`:
+1. 停止 `os-node-02`：
    ```bash
    docker stop os-node-02 && docker container rm os-node-02
    ```
    {% include copy.html %}
-1. Start a new container named `os-node-02` with the `opensearchproject/opensearch:2.5.0` image and using the same mapped volumes as the original container:
+1. 使用 `opensearchproject/opensearch:2.5.0` 映像啟動名為 `os-node-02` 的新容器，並使用與原始容器相同的對應磁碟區：
    ```bash
    docker run -d \
       -p 9202:9200 -p 9602:9600 \
@@ -588,17 +589,17 @@ Some steps included in this section, like disabling shard replication and flushi
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似下列內容：
 
    ```bash
    7b802865bd6eb420a106406a54fc388ed8e5e04f6cbd908c2a214ea5ce72ac00
    ```
-1. Stop `os-node-03`:
+1. 停止 `os-node-03`：
    ```bash
    docker stop os-node-03 && docker container rm os-node-03
    ```
    {% include copy.html %}
-1. Start a new container named `os-node-03` with the `opensearchproject/opensearch:2.5.0` image and using the same mapped volumes as the original container:
+1. 使用 `opensearchproject/opensearch:2.5.0` 映像啟動名為 `os-node-03` 的新容器，並使用與原始容器相同的對應磁碟區：
    ```bash
    docker run -d \
       -p 9203:9200 -p 9603:9600 \
@@ -619,17 +620,17 @@ Some steps included in this section, like disabling shard replication and flushi
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似下列內容：
 
    ```bash
    d7f11726841a89eb88ff57a8cbecab392399f661a5205f0c81b60a995fc6c99d
    ```
-1. Stop `os-node-04`:
+1. 停止 `os-node-04`：
    ```bash
    docker stop os-node-04 && docker container rm os-node-04
    ```
    {% include copy.html %}
-1. Start a new container named `os-node-04` with the `opensearchproject/opensearch:2.5.0` image and using the same mapped volumes as the original container:
+1. 使用 `opensearchproject/opensearch:2.5.0` 映像啟動名為 `os-node-04` 的新容器，並使用與原始容器相同的對應磁碟區：
    ```bash
    docker run -d \
       -p 9204:9200 -p 9604:9600 \
@@ -650,19 +651,19 @@ Some steps included in this section, like disabling shard replication and flushi
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似下列內容：
 
    ```bash
    26f8286ab11e6f8dcdf6a83c95f265172f9557578a1b292af84c6f5ef8738e1d
    ```
-1. Confirm that your cluster is running the new version:
+1. 確認您的叢集執行的是新版本：
    ```bash
    curl -s "https://localhost:9201/_cat/nodes?v&h=name,version,node.role,master" \
       -ku admin:<custom-admin-password> | column -t
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似下列內容：
 
    ```bash
    name        version  node.role  master
@@ -671,12 +672,12 @@ Some steps included in this section, like disabling shard replication and flushi
    os-node-04  2.5.0    dimr       -
    os-node-03  2.5.0    dimr       -
    ```
-1. The last component you should upgrade is the OpenSearch Dashboards node. First, stop and remove the old container:
+1. 您應升級的最後一個元件是 OpenSearch Dashboards 節點。首先，停止並移除舊容器：
    ```bash
    docker stop os-dashboards-01 && docker rm os-dashboards-01
    ```
    {% include copy.html %}
-1. Create a new container running the target version of OpenSearch Dashboards:
+1. 建立執行目標版本 OpenSearch Dashboards 的新容器：
    ```bash
    docker run -d \
       -p 5601:5601 --expose 5601 \
@@ -691,18 +692,18 @@ Some steps included in this section, like disabling shard replication and flushi
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似下列內容：
 
    ```bash
    310de7a24cf599ca0b39b241db07fa8865592ebe15b6f5fda26ad19d8e1c1e09
    ```
-1. Make sure the OpenSearch Dashboards container started properly. A command like the following can be used to confirm that requests to `https://<HOST_ADDRESS>:5601` are redirected (HTTP status code 302) to `/app/login?`:
+1. 確認 OpenSearch Dashboards 容器已正確啟動。可使用類似下列的命令來確認對 `https://<HOST_ADDRESS>:5601` 的請求會重新導向 (HTTP 狀態碼 302) 至 `/app/login?`：
    ```bash
    curl https://localhost:5601 -kI
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似下列內容：
 
    ```bash
    HTTP/1.1 302 Found
@@ -715,7 +716,7 @@ Some steps included in this section, like disabling shard replication and flushi
    Connection: keep-alive
    Keep-Alive: timeout=120
    ```
-1. Reenable allocation of replica shards:
+1. 重新啟用副本分片的配置：
    ```bash
    curl -H 'Content-type: application/json' \
       -X PUT "https://localhost:9201/_cluster/settings?pretty" \
@@ -724,7 +725,7 @@ Some steps included in this section, like disabling shard replication and flushi
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似下列內容：
 
       ```json
       {
@@ -742,26 +743,26 @@ Some steps included in this section, like disabling shard replication and flushi
       }
       ```
 
-## Validating the upgrade
+## 驗證升級
 
-You successfully deployed a secure OpenSearch cluster, indexed data, created a dashboard populated with sample data, created a new internal user, backed up your important files, and upgraded the cluster from version 1.3.7 to 2.5.0. Before you continue exploring and experimenting with OpenSearch and OpenSearch Dashboards, you should validate the outcome of the upgrade.
+您已成功部署安全的 OpenSearch 叢集、將資料編製索引、建立填入範例資料的儀表板、建立新的內部使用者、備份重要檔案，並將叢集從 1.3.7 版升級至 2.5.0 版。在繼續探索與實驗 OpenSearch 和 OpenSearch Dashboards 之前，您應該先驗證升級的結果。
 
-For this cluster, post-upgrade validation steps can include verifying the following:
+針對此叢集，升級後的驗證步驟可以包括確認以下項目：
 
-- [Running version](#verifying-the-new-running-version)
-- [Health and shard allocation](#verifying-cluster-health-and-shard-allocation)
-- [Data consistency](#verifying-data-consistency)
+- [執行版本](#verifying-the-new-running-version)
+- [健康狀態與分片配置](#verifying-cluster-health-and-shard-allocation)
+- [資料一致性](#verifying-data-consistency)
 
-### Verifying the new running version
+### 確認新的執行版本
 
-1. Verify the current running version of your OpenSearch nodes:
+1. 確認 OpenSearch 節點目前的執行版本：
    ```bash
    curl -s "https://localhost:9201/_cat/nodes?v&h=name,version,node.role,master" \
       -ku admin:<custom-admin-password> | column -t
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似如下：
 
    ```bash
    name        version  node.role  master
@@ -770,25 +771,25 @@ For this cluster, post-upgrade validation steps can include verifying the follow
    os-node-04  2.5.0    dimr       -
    os-node-03  2.5.0    dimr       -
    ```
-1. Verify the current running version of OpenSearch Dashboards:
-   1. **Option 1**: Verify the OpenSearch Dashboards version from the web interface.
-      1. Open a web browser and navigate to port `5601` on your Docker host (for example, `https://<HOST_ADDRESS>:5601`).
-      1. Log in with the default username (`admin`) and default password (`admin`).
-      1. Select the **Help button** in the upper-right corner. The version is displayed in a pop-up window.
-      1. Select the **Help button** again to close the pop-up window.
-   1. **Option 2**: Verify the OpenSearch Dashboards version by inspecting `manifest.yml`.
-      1. From the command line, open an interactive pseudo-TTY session with the OpenSearch Dashboards container:
+1. 確認 OpenSearch Dashboards 目前的執行版本：
+   1. **選項 1**：從網頁介面確認 OpenSearch Dashboards 版本。
+      1. 開啟網頁瀏覽器並前往 Docker 主機上的連接埠 `5601` (例如 `https://<HOST_ADDRESS>:5601`)。
+      1. 使用預設使用者名稱 (`admin`) 和預設密碼 (`admin`) 登入。
+      1. 選取右上角的 **Help button**。版本會顯示在快顯視窗中。
+      1. 再次選取 **Help button** 以關閉快顯視窗。
+   1. **選項 2**：透過檢查 `manifest.yml` 來確認 OpenSearch Dashboards 版本。
+      1. 從命令列開啟與 OpenSearch Dashboards 容器的互動式偽 TTY 工作階段：
          ```bash
          docker exec -it os-dashboards-01 bash
          ```
          {% include copy.html %}
-      1. Check `manifest.yml` for the version:
+      1. 檢查 `manifest.yml` 中的版本：
          ```bash
          head -n 5 manifest.yml 
          ```
          {% include copy.html %}
 
-         The response should appear similar to the following:
+         回應應類似如下：
 
          ```bash
          ---
@@ -797,21 +798,21 @@ For this cluster, post-upgrade validation steps can include verifying the follow
             name: OpenSearch Dashboards
             version: 2.5.0
          ```
-      1. Terminate the pseudo-TTY session:
+      1. 結束偽 TTY 工作階段：
          ```bash
          exit
          ```
          {% include copy.html %}
 
-### Verifying cluster health and shard allocation
+### 確認叢集健康狀態與分片配置
 
-1. Query the [Cluster health]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/) API endpoint to see information about the health of your cluster. You should see a status of `green`, which indicates that all primary and replica shards are allocated:
+1. 查詢 [Cluster health]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/) API 端點以查看叢集健康狀態的資訊。您應該會看到 `green` 狀態，表示所有主要分片與副本分片皆已配置：
    ```bash
    curl -s "https://localhost:9201/_cluster/health?pretty" -ku admin:<custom-admin-password>
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似如下：
 
    ```json
    {
@@ -834,13 +835,13 @@ For this cluster, post-upgrade validation steps can include verifying the follow
       "active_shards_percent_as_number" : 100.0
    }
    ```
-1. Query the [CAT shards]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-shards/) API endpoint to see how shards are allocated after the cluster is upgrade:
+1. 查詢 [CAT shards]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-shards/) API 端點，以查看叢集升級後分片的配置方式：
    ```bash
    curl -s "https://localhost:9201/_cat/shards" -ku admin:<custom-admin-password>
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應類似如下：
 
    ```bash
    security-auditlog-2023.02.27           0 r STARTED     4  80.5kb 172.20.0.13 os-node-03
@@ -881,11 +882,11 @@ For this cluster, post-upgrade validation steps can include verifying the follow
    .opendistro-reports-instances          0 p STARTED     0    208b 172.20.0.14 os-node-04
    ```
 
-### Verifying data consistency
+### 驗證資料一致性
 
-You need to query the e-commerce index again in order to confirm that the sample data is still present:
+您需要再次查詢電子商務索引，以確認範例資料仍然存在：
 
-1. Compare the response to this query with the response you received in the [last step](#validation) of [Indexing data with the REST API](#indexing-data-with-the-rest-api):
+1. 將此查詢的回應與您在 [Indexing data with the REST API](#indexing-data-with-the-rest-api) 的[最後一個步驟](#validation)中收到的回應進行比較：
    ```bash
    curl -H 'Content-Type: application/json' \
       -X GET "https://localhost:9201/ecommerce/_search?pretty=true&filter_path=hits.total" \
@@ -894,7 +895,7 @@ You need to query the e-commerce index again in order to confirm that the sample
    ```
    {% include copy.html %}
 
-   The response should appear similar to the following:
+   回應應該會類似以下內容：
 
    ```json
    {
@@ -906,17 +907,17 @@ You need to query the e-commerce index again in order to confirm that the sample
       }
    }
    ```
-1. Open a web browser and navigate to port `5601` on your Docker host (for example, `https://<HOST_ADDRESS>:5601`).
-1. Enter the default username (`admin`) and password (`admin`).
-1. On the OpenSearch Dashboards **Home** page, select the **Menu button** in the upper-left corner of the web interface to open the **Navigation pane**.
-1. Select **Dashboard**.
-1. Choose **[Logs] Web Traffic** to open the dashboard that was created when you added sample data earlier in the process.
-1. When you are done reviewing the dashboard, select the **Profile** button. Choose **Log out** so you can log in as a different user.
-1. Enter the username and password you created before upgrading, then select **Log in**.
+1. 開啟網頁瀏覽器並前往 Docker 主機上的連接埠 `5601` (例如 `https://<HOST_ADDRESS>:5601`)。
+1. 輸入預設的使用者名稱 (`admin`) 與密碼 (`admin`)。
+1. 在 OpenSearch Dashboards 的 **Home** 頁面上，選取網頁介面左上角的 **Menu button** 以開啟 **Navigation pane**。
+1. 選取 **Dashboard**。
+1. 選擇 **[Logs] Web Traffic** 以開啟您先前在此程序中新增範例資料時所建立的儀表板。
+1. 檢視完儀表板後，選取 **Profile** 按鈕。選擇 **Log out**，以便以其他使用者身分登入。
+1. 輸入您在升級前建立的使用者名稱與密碼，然後選取 **Log in**。
 
-## Next steps
+## 後續步驟
 
-Review the following resources to learn more about how OpenSearch works:
+檢閱下列資源，以進一步了解 OpenSearch 的運作方式：
 
 - [REST API reference]({{site.url}}{{site.baseurl}}/api-reference/index/)
 - [Getting started with OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/getting-started/)

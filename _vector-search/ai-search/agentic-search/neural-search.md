@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Configuring agents for semantic search
+title: "為語意搜尋設定代理程式"
 parent: Agentic search
 grand_parent: AI search
 nav_order: 90
 has_children: false
 ---
 
-# Configuring agents for semantic search
+# 為語意搜尋設定代理程式
 
-When you have vector indexes with embeddings and want agentic search to automatically perform semantic searches based on user intent, you need to configure your agent with embedding model information. This allows the agent to generate `neural` queries that search for semantic similarity rather than exact text matches, providing more relevant results for conceptual questions.
+當您擁有含嵌入的向量索引，並希望代理式搜尋能根據使用者意圖自動執行語意搜尋時，您需要在代理程式中設定嵌入模型資訊。這可讓代理程式產生用於搜尋語意相似度的 `neural` 查詢，而非搜尋完全相符的文字，為概念性問題提供更相關的結果。
 
-When you configure agents for semantic search, the agents choose between traditional keyword searches and semantic vector searches at query time.
+當您為語意搜尋設定代理程式時，代理程式會在查詢時於傳統關鍵字搜尋與語意向量搜尋之間做選擇。
 
-Even when an embedding model ID is provided, the agent autonomously decides whether to use neural (semantic) search or lexical search based on the query intent and context. For example, date filters or exact-match queries will use lexical search, while conceptual queries will use neural search.
+即使提供了嵌入模型 ID，代理程式仍會根據查詢意圖與情境，自主決定要使用神經 (語意) 搜尋或詞彙搜尋。例如，日期篩選條件或完全相符查詢會使用詞彙搜尋，而概念性查詢則會使用神經搜尋。
 {: .note} 
 
-**PREREQUISITE**<br>
-Before using semantic search, you must set up a text embedding model. For more information, see [Choosing a model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model).
+**先決條件**<br>
+使用語意搜尋之前，您必須設定文字嵌入模型。如需更多資訊，請參閱[選擇模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model)。
 {: .note}
 
-## Step 1: Configure a vector index
+## 步驟 1：設定向量索引
 
-First, configure a vector index.
+首先，設定向量索引。
 
-### Step 1(a): Create an embedding model
+### 步驟 1(a)：建立嵌入模型
 
-Register an embedding model that will convert text into vector representations for semantic search:
+註冊一個嵌入模型，將文字轉換為向量表示以供語意搜尋使用：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -73,9 +74,9 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-### Step 1(b): Create an ingest pipeline
+### 步驟 1(b)：建立資料匯入管線
 
-Create an ingest pipeline that automatically generates embeddings for text fields during document ingestion:
+建立資料匯入管線，在文件匯入期間自動為文字欄位產生嵌入：
 
 ```json
 PUT /_ingest/pipeline/my_bedrock_embedding_pipeline
@@ -95,9 +96,9 @@ PUT /_ingest/pipeline/my_bedrock_embedding_pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 1(c): Create a vector index with an ingest pipeline
+### 步驟 1(c)：建立含資料匯入管線的向量索引
 
-Create a vector index with mappings for both text content and vector embeddings, using the ingest pipeline to automatically process documents:
+建立含文字內容與向量嵌入對應的向量索引，並使用資料匯入管線自動處理文件：
 
 ```json
 PUT /research_papers
@@ -130,9 +131,9 @@ PUT /research_papers
 ```
 {% include copy-curl.html %}
 
-### Step 1(d): Ingest data into the vector index
+### 步驟 1(d)：將資料匯入向量索引
 
-Add research paper documents to the index. The ingest pipeline will automatically generate embeddings for the `content_text` field:
+將研究論文文件新增至索引。資料匯入管線會自動為 `content_text` 欄位產生嵌入：
 
 ```json
 POST /_bulk
@@ -149,13 +150,13 @@ POST /_bulk
 ```
 {% include copy-curl.html %}
 
-## Step 2: Configure agentic search
+## 步驟 2：設定代理式搜尋
 
-Next, configure agentic search.
+接著，設定代理式搜尋。
 
-### Step 2(a): Create a model for agentic search
+### 步驟 2(a)：為代理式搜尋建立模型
 
-Register a model that will be used by both the conversational agent and the `QueryPlanningTool`:
+註冊一個同時供對話代理程式與 `QueryPlanningTool` 使用的模型：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -190,16 +191,16 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-### Step 2(b): Create an agent
+### 步驟 2(b)：建立代理程式
 
-Create an agent for agentic search. To enable the agent to perform semantic searches using `neural` queries, you need to configure an embedding model using one of the following methods:
+建立用於代理式搜尋的代理程式。若要讓代理程式使用 `neural` 查詢執行語意搜尋，您需要使用下列其中一種方法設定嵌入模型：
 
-- [**Option 1**](#option-1-create-an-agent-without-an-embedding-model-id-recommended): Configure an embedding model in the search pipeline (recommended for easier updates).
-- [**Option 2**](#option-2-create-an-agent-with-an-embedding-model-id): Configure an embedding model in the agent configuration.
+- [**選項 1**](#option-1-create-an-agent-without-an-embedding-model-id-recommended)：在搜尋管線中設定嵌入模型 (建議使用，較易於更新)。
+- [**選項 2**](#option-2-create-an-agent-with-an-embedding-model-id)：在代理程式組態中設定嵌入模型。
 
-#### Option 1: Create an agent without an embedding model ID (recommended)
+#### 選項 1：建立不含嵌入模型 ID 的代理程式 (建議)
 
-Use this option if you plan to specify the `embedding_model_id` in the search pipeline:
+如果您打算在搜尋管線中指定 `embedding_model_id`，請使用此選項：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -232,9 +233,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-#### Option 2: Create an agent with an embedding model ID
+#### 選項 2：使用嵌入模型 ID 建立代理程式
 
-Alternatively, include the `embedding_model_id` in the agent's `llm.parameters`:
+或者，在代理程式的 `llm.parameters` 中包含 `embedding_model_id`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -268,11 +269,11 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### Step 2(c): Create a search pipeline
+### 步驟 2(c)：建立搜尋管線
 
-Create a search pipeline with the `agentic_query_translator` processor. For more information, see [Agentic query translator processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/).
+建立具有 `agentic_query_translator` 處理器的搜尋管線。如需詳細資訊，請參閱[代理式查詢轉譯處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/)。
 
-**If you used Option 1 in Step 2(b) (recommended)**: Include the `embedding_model_id` in the search pipeline:
+**如果您在步驟 2(b) 中使用選項 1（建議）**：在搜尋管線中包含 `embedding_model_id`：
 
 ```json
 PUT _search/pipeline/my_pipeline
@@ -289,7 +290,7 @@ PUT _search/pipeline/my_pipeline
 ```
 {% include copy-curl.html %}
 
-**If you used Option 2 in Step 2(b)**: Create the search pipeline without the `embedding_model_id`:
+**如果您在步驟 2(b) 中使用選項 2**：建立不含 `embedding_model_id` 的搜尋管線：
 
 ```json
 PUT _search/pipeline/my_pipeline
@@ -305,16 +306,16 @@ PUT _search/pipeline/my_pipeline
 ```
 {% include copy-curl.html %}
 
-If you specify the `embedding_model_id` in both the agent and the search pipeline, the search pipeline configuration takes precedence.
+如果您在代理程式和搜尋管線中都指定 `embedding_model_id`，則搜尋管線的組態優先。
 {: .note}
 
-## Step 3: Run an agentic search
+## 步驟 3：執行代理式搜尋
 
-Run various configurations of agentic search.
+使用各種組態執行代理式搜尋。
 
-### Run a semantic search
+### 執行語意搜尋
 
-Perform agentic search with a question that requires semantic understanding:
+使用需要語意理解的問題執行代理式搜尋：
 
 ```json
 POST /research_papers/_search?search_pipeline=my_pipeline
@@ -328,7 +329,7 @@ POST /research_papers/_search?search_pipeline=my_pipeline
 ```
 {% include copy-curl.html %}
 
-The agent successfully identifies that semantic search is needed. The `ext` object demonstrates that the `QueryPlanningTool` successfully generated a `neural` query using the embedding model ID. The response includes matching research papers ranked by semantic similarity:
+代理程式成功辨識出需要語意搜尋。`ext` 物件顯示，`QueryPlanningTool` 已成功使用嵌入模型 ID 產生 `neural` 查詢。回應包含依語意相似度排序的相符研究論文：
 
 ```json
 {
@@ -390,9 +391,9 @@ The agent successfully identifies that semantic search is needed. The `ext` obje
 }
 ```
 
-### Run a traditional search with filters
+### 執行含有篩選條件的傳統搜尋
 
-Next, perform agentic search with a question that requires filtering rather than semantic understanding:
+接著，使用需要篩選而非語意理解的問題執行代理式搜尋：
 
 ```json
 POST /research_papers/_search?search_pipeline=my_pipeline
@@ -406,7 +407,7 @@ POST /research_papers/_search?search_pipeline=my_pipeline
 ```
 {% include copy-curl.html %}
 
-The agent recognizes the query as a date-based filter query and generates a traditional `range` query instead of a `neural` query:
+代理程式將此查詢辨識為以日期為依據的篩選查詢，並產生傳統的 `range` 查詢，而非 `neural` 查詢：
 
 ```json
 {
@@ -449,9 +450,9 @@ The agent recognizes the query as a date-based filter query and generates a trad
 }
 ```
 
-### Specify embedding models in query text
+### 在查詢文字中指定嵌入模型
 
-To override the embedding model ID, you can include it directly in the natural language `query_text` when sending a query. This takes precedence over any `embedding_model_id` configured in the search pipeline or agent:
+若要覆寫嵌入模型 ID，您可以在傳送查詢時，將其直接包含在自然語言 `query_text` 中。這會優先於搜尋管線或代理程式中設定的任何 `embedding_model_id`：
 
 ```json
 POST /research_papers/_search?search_pipeline=my_pipeline
@@ -465,7 +466,7 @@ POST /research_papers/_search?search_pipeline=my_pipeline
 ```
 {% include copy-curl.html %}
 
-The agent successfully extracts the embedding model ID directly from the query text and generates the appropriate neural DSL query:
+代理程式成功直接從查詢文字中擷取嵌入模型 ID，並產生適當的神經 DSL 查詢：
 
 ```json
 {
@@ -523,8 +524,8 @@ The agent successfully extracts the embedding model ID directly from the query t
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [Agentic query translator processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/)
-- [Agentic search overview]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/index/)
-- [Configuring agents]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/)
+- [代理式查詢轉譯處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/)
+- [代理式搜尋概觀]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/index/)
+- [設定代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/)

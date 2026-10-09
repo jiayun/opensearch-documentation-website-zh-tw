@@ -1,42 +1,43 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Resource sharing and access control
+title: "資源共享與存取控制"
 parent: Access control
 nav_order: 110
 has_children: true
 has_toc: false
 ---
 
-# Resource sharing and access control
+# 資源共享與存取控制
 
-**Introduced 3.3**
+**於 3.3 版導入**
 {: .label .label-purple }
 
-The resource sharing and access control framework in the OpenSearch Security plugin provides *document-level*, fine-grained access management for plugin-defined resources. It extends OpenSearch's existing role-based access control by letting resource owners explicitly share individual resources with other principals.
+OpenSearch Security 外掛程式中的資源共享與存取控制框架，為外掛程式定義的資源提供*文件層級*的細微存取管理。它擴充了 OpenSearch 現有的角色型存取控制，讓資源擁有者能夠明確地將個別資源與其他主體共享。
 
-A _resource_ is a document stored in a plugin's system index. Resource sharing information is stored in a central security-managed system index.
+_資源_是儲存在外掛程式系統索引中的文件。資源共享資訊儲存在由安全性功能集中管理的系統索引中。
 
-Resource sharing requires coordination between plugin developers, administrators, and users. Plugin developers must first implement resource sharing support in their plugins and define the resource types that can be shared (such as `ml-model-group` or `anomaly-detector`). Once plugins with resource sharing support are installed, administrators enable the feature cluster-wide and configure the resource types that use resource-level authorization. Finally, users can create and share resources through the UI or APIs, provided they have the necessary cluster permissions.
+資源共享需要外掛程式開發人員、管理員和使用者之間的協調。外掛程式開發人員必須先在其外掛程式中實作資源共享支援，並定義可共享的資源類型（例如 `ml-model-group` 或 `anomaly-detector`）。安裝支援資源共享的外掛程式後，管理員可在整個叢集啟用此功能，並設定使用資源層級授權的資源類型。最後，使用者只要具備必要的叢集權限，即可透過 UI 或 API 建立與共享資源。
 
-This documentation is intended for **users** and **administrators** who want to configure and use resource sharing. If you are a **plugin developer** implementing resource sharing support for your plugin, see the [developer documentation](https://github.com/opensearch-project/security/blob/main/RESOURCE_SHARING_AND_ACCESS_CONTROL.md).
+本文件適用於想要設定與使用資源共享的**使用者**和**管理員**。如果您是正在為外掛程式實作資源共享支援的**外掛程式開發人員**，請參閱[開發人員文件](https://github.com/opensearch-project/security/blob/main/RESOURCE_SHARING_AND_ACCESS_CONTROL.md)。
 
-Resource sharing enables the following operations:
+資源共享可執行下列操作：
 
-- **Resource owners** can share or revoke access to their resources.
-- **Resource owners** can allow users with share permission to redistribute access.
-- **Administrators** with superadmin privileges can view and manage all shareable resources.
-- **All users** can search resource indexes with automatic per-user filtering applied by the Security plugin.
+- **資源擁有者**可以共享或撤銷其資源的存取權。
+- **資源擁有者**可以允許具備共享權限的使用者重新分配存取權。
+- 具備 superadmin 權限的**管理員**可以檢視和管理所有可共享的資源。
+- **所有使用者**都可以搜尋資源索引，Security 外掛程式會自動套用每位使用者的篩選。
 
-## Configuring resource sharing
+## 設定資源共享
 
-Resource sharing is disabled by default. To configure resource sharing, follow these steps.
+資源共享預設為停用。若要設定資源共享，請依照下列步驟操作。
 
-Before configuring resource sharing, ensure that the plugins you want to use with resource sharing have implemented resource sharing support. If you need to add resource sharing support to a plugin, see the [developer documentation](https://github.com/opensearch-project/security/blob/main/RESOURCE_SHARING_AND_ACCESS_CONTROL.md).
+在設定資源共享之前，請確認您要搭配資源共享使用的外掛程式已實作資源共享支援。如果您需要為外掛程式新增資源共享支援，請參閱[開發人員文件](https://github.com/opensearch-project/security/blob/main/RESOURCE_SHARING_AND_ACCESS_CONTROL.md)。
 {: .note}
 
-### Step 1: Enable resource sharing
+### 步驟 1：啟用資源共享
 
-To enable resource sharing, add the following settings to the `opensearch.yml` file:
+若要啟用資源共享，請將下列設定新增至 `opensearch.yml` 檔案：
 
 ```yaml
 plugins.security.resource_sharing.enabled: true
@@ -44,7 +45,7 @@ plugins.security.system_indices.enabled: true
 ```
 {% include copy.html %}
 
-Settings added to `opensearch.yml` take effect after a cluster restart. To update both resource sharing settings without restarting the cluster, use the Cluster Settings API:
+新增至 `opensearch.yml` 的設定會在叢集重新啟動後生效。若要在不重新啟動叢集的情況下更新這兩項資源共享設定，請使用 Cluster Settings API：
 
 ```json
 PUT _cluster/settings
@@ -57,51 +58,51 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html security=true %}
 
-### Step 2: Configure protected resource types
+### 步驟 2：設定受保護的資源類型
 
-Specify the resource types that use resource-level authorization by listing them in the protected types configuration. This setting determines the plugin-defined resources that use the sharing and access control framework:
+在受保護類型組態中列出資源類型，以指定使用資源層級授權的資源類型。此設定會決定哪些外掛程式定義的資源使用共享與存取控制框架：
 
 ```yaml
 plugins.security.resource_sharing.protected_types: ["sample-resource", "ml-model"]
 ```
 {% include copy.html %}
 
-The resource types you specify must exactly match the resource types supported by your installed plugins. To discover the resource types available in your cluster, follow these steps:
+您指定的資源類型必須與已安裝外掛程式支援的資源類型完全相符。若要找出叢集中可用的資源類型，請依照下列步驟操作：
 
-1. **Enable resource sharing** with an empty `protected_types` configuration initially.
-2. **Use the [List resource types API]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/#list-resource-types)** to discover all available resource types for your installed plugins.
-3. **Update your `protected_types` configuration** with the resource types you want to enable.
+1. 一開始先以空的 `protected_types` 組態**啟用資源共享**。
+2. **使用 [List resource types API]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/#list-resource-types)** 找出已安裝外掛程式所有可用的資源類型。
+3. 以您要啟用的資源類型**更新 `protected_types` 組態**。
 
-## Resource types by plugin
+## 各外掛程式的資源類型
 
-The following table describes the resource types registered by the plugins that support resource sharing. Each plugin's page describes the access levels for its resource types and the steps for migrating from the legacy backend role filtering settings.
+下表說明支援資源共享的外掛程式所註冊的資源類型。每個外掛程式的頁面會說明其資源類型的存取層級，以及從舊版後端角色篩選設定遷移的步驟。
 
-| Plugin | Resource types | Plugin documentation |
+| 外掛程式 | 資源類型 | 外掛程式文件 |
 | :--- | :--- | :--- |
-| Alerting | `monitor`, `alerting-workflow` | [Alerting resource access control]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/alerting-access-control/) |
-| Anomaly Detection | `anomaly-detector` | [Anomaly detector access control]({{site.url}}{{site.baseurl}}/observing-your-data/ad/detector-access-control/) |
-| Anomaly Detection | `forecaster` | [Forecaster access control]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/forecaster-access-control/) |
-| Flow Framework | `workflow` | [Workflow access control]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-access-control/) |
-| Flow Framework | `workflow-state` | [Workflow state access control]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-state-access-control/) |
-| ML Commons | `ml-model-group` | [Model access control through resource sharing]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-sharing-access-control/) |
-| Notifications | `notification_config` | [Notification access control]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/notification-access-control/) |
-| Reporting | `report-definition` | [Report definition access control]({{site.url}}{{site.baseurl}}/reporting/report-definition-access-control/) |
-| Reporting | `report-instance` | [Report instance access control]({{site.url}}{{site.baseurl}}/reporting/report-instance-access-control/) |
-| Security Analytics | `detector`, `correlation-rule` | [Security Analytics resource access control]({{site.url}}{{site.baseurl}}/security-analytics/resource-access-control/) |
+| Alerting | `monitor`, `alerting-workflow` | [Alerting 資源存取控制]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/alerting-access-control/) |
+| Anomaly Detection | `anomaly-detector` | [異常偵測器存取控制]({{site.url}}{{site.baseurl}}/observing-your-data/ad/detector-access-control/) |
+| Anomaly Detection | `forecaster` | [Forecaster 存取控制]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/forecaster-access-control/) |
+| Flow Framework | `workflow` | [工作流程存取控制]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-access-control/) |
+| Flow Framework | `workflow-state` | [工作流程狀態存取控制]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-state-access-control/) |
+| ML Commons | `ml-model-group` | [透過資源共享進行模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-sharing-access-control/) |
+| Notifications | `notification_config` | [通知存取控制]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/notification-access-control/) |
+| Reporting | `report-definition` | [報告定義存取控制]({{site.url}}{{site.baseurl}}/reporting/report-definition-access-control/) |
+| Reporting | `report-instance` | [報告執行個體存取控制]({{site.url}}{{site.baseurl}}/reporting/report-instance-access-control/) |
+| Security Analytics | `detector`, `correlation-rule` | [Security Analytics 資源存取控制]({{site.url}}{{site.baseurl}}/security-analytics/resource-access-control/) |
 
-The Security Analytics `detector` resource type is distinct from the Anomaly Detection `anomaly-detector` resource type, and the Alerting `alerting-workflow` resource type is distinct from the Flow Framework `workflow` resource type.
+Security Analytics 的 `detector` 資源類型與 Anomaly Detection 的 `anomaly-detector` 資源類型不同，Alerting 的 `alerting-workflow` 資源類型也與 Flow Framework 的 `workflow` 資源類型不同。
 {: .note}
 
-The following is an example configuration that protects the ML Commons and Anomaly Detection resource types:
+以下是保護 ML Commons 與 Anomaly Detection 資源類型的範例組態：
 
 ```yaml
 plugins.security.resource_sharing.protected_types: ["ml-model-group", "anomaly-detector", "forecaster"]
 ```
 {% include copy.html %}
 
-## Required permissions
+## 必要權限
 
-To access shared resources through plugin APIs, users need cluster-level permissions for those specific plugins. Administrators should configure appropriate roles in `roles.yml`. The following example shows the configuration for a `sample-resource-plugin`:
+若要透過外掛程式 API 存取共享資源，使用者需要這些特定外掛程式的叢集層級權限。管理員應在 `roles.yml` 中設定適當的角色。以下範例顯示 `sample-resource-plugin` 的組態：
 
 ```yaml
 sample_full_access:
@@ -114,23 +115,23 @@ sample_read_access:
 ```
 {% include copy.html %}
 
-Resource sharing does not automatically grant API access. To access a resource using the API, users must have both:
+資源共享不會自動授予 API 存取權。若要透過 API 存取資源，使用者必須同時具備：
 
-1. Cluster permissions for the plugin APIs.
-2. Resources shared with them through the sharing APIs.
+1. 外掛程式 API 的叢集權限。
+2. 透過共享 API 與其共享的資源。
 
-## Data model
+## 資料模型
 
-All sharing metadata (listed in the following table) is stored in a dedicated *security-owned* system index.
+所有共享中繼資料（列於下表）都儲存在專屬的*安全性自有*系統索引中。
 
-| Field         | Description                                    |
+| 欄位         | 說明                                    |
 |:---|:---|
-| `resource_id` | The unique identifier of the resource.              |
-| `created_by`  | The resource creator username (and tenant, if applicable).    |
-| `share_with`  | The mapping of action groups to allowed principals. |
-| `source_idx`  | The resource index managed by the plugin.           |
+| `resource_id` | 資源的唯一識別碼。              |
+| `created_by`  | 資源建立者的使用者名稱（以及租用戶，若適用）。    |
+| `share_with`  | 動作群組與允許主體的對應。 |
+| `source_idx`  | 由外掛程式管理的資源索引。           |
 
-The following example shows a resource with ID `model-group-123` created by the user `bob` in the `analytics` tenant. The resource is shared with specific users, roles, and backend roles with read-only access:
+以下範例顯示由使用者 `bob` 在 `analytics` 租用戶中建立的 ID 為 `model-group-123` 的資源。該資源與特定使用者、角色和後端角色共享，並具有唯讀存取權：
 
 ```json
 {
@@ -150,17 +151,17 @@ The following example shows a resource with ID `model-group-123` created by the 
 ```
 {% include copy.html %}
 
-In this example:
+在此範例中：
 
-- At read-only level:
+- 在唯讀層級：
 
- - Users: `alice` can access the resource.
+ - 使用者：`alice` 可以存取該資源。
 
- - Roles: Any user assigned the `data_viewer` role can access the resource.
+ - 角色：任何被指派 `data_viewer` 角色的使用者都可以存取該資源。
 
- - Backend roles: Any user mapped to the `analytics_backend` backend role can access the resource.
+ - 後端角色：任何對應到 `analytics_backend` 後端角色的使用者都可以存取該資源。
 
-To make this resource public, set `users` to `["*"]`:
+若要將此資源設為公開，請將 `users` 設為 `["*"]`：
 
 ```json
 PATCH _plugins/_security/api/resource/share
@@ -174,7 +175,7 @@ PATCH _plugins/_security/api/resource/share
 ```
 {% include copy-curl.html security=true %}
 
-To keep a resource private, make the `share_with` object empty:
+若要將資源保持為私人，請將 `share_with` 物件設為空：
 
 ```json
 PUT _plugins/_security/api/resource/share
@@ -186,35 +187,35 @@ PUT _plugins/_security/api/resource/share
 ```
 {% include copy-curl.html security=true %}
 
-## REST APIs
+## REST API
 
-You can use resource sharing API operations to share resources, manage access permissions, and automate resource sharing workflows.
+您可以使用資源共享 API 操作來共享資源、管理存取權限，以及自動化資源共享工作流程。
 
-For complete API documentation, see [Resource sharing APIs]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/).
+完整的 API 文件請參閱[資源共享 API]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/)。
 
-## Requirements and limitations
+## 需求與限制
 
-To ensure proper resource sharing and access control, the following requirements and limitations apply:
+為確保資源共享與存取控制正常運作，適用下列需求與限制：
 
-* Only resource owners, superadmins, or users explicitly granted sharing permissions can share or revoke access.
-* All resources must reside in system indexes.
-* System index protection must be enabled.
-* Users still require plugin-level cluster permissions, including permission to create resources.
-* Action groups must be defined in the plugin configuration.
+* 只有資源擁有者、superadmin，或被明確授予共享權限的使用者，才能共享或撤銷存取權。
+* 所有資源都必須位於系統索引中。
+* 必須啟用系統索引保護。
+* 使用者仍需要外掛程式層級的叢集權限，包括建立資源的權限。
+* 動作群組必須在外掛程式組態中定義。
 
-## Best practices
+## 最佳做法
 
-When managing resource sharing, administrators should follow these best practices:
+管理資源共享時，管理員應遵循下列最佳做法：
 
-- Enable resource sharing on new clusters before usage.
+- 在新叢集使用前先啟用資源共享。
 
-- Keep system index protection enabled.
+- 保持系統索引保護為啟用狀態。
 
-- Share resources minimally and explicitly to maintain security and control.
+- 以最小且明確的方式共享資源，以維持安全性與控制。
 
-## Related documentation
+## 相關文件
 
-- [Resource sharing APIs]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) -- REST API reference for programmatic management
-- [Resource access management]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI workflows and user guidance
-- [Resource types by plugin](#resource-types-by-plugin) -- Per-plugin access levels and migration steps
-- [Developer documentation](https://github.com/opensearch-project/security/blob/main/RESOURCE_SHARING_AND_ACCESS_CONTROL.md) -- Detailed technical documentation for plugin developers, users, and administrators
+- [資源共享 API]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) -- 以程式化管理為目的的 REST API 參考
+- [資源存取管理]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI 工作流程與使用者指引
+- [各外掛程式的資源類型](#resource-types-by-plugin) -- 各外掛程式的存取層級與遷移步驟
+- [開發人員文件](https://github.com/opensearch-project/security/blob/main/RESOURCE_SHARING_AND_ACCESS_CONTROL.md) -- 適用於外掛程式開發人員、使用者與管理員的詳細技術文件

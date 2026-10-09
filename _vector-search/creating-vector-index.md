@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Creating a vector index
+title: "建立向量索引"
 nav_order: 20
 redirect_from:
   - /vector-search/creating-a-vector-db/
   - /search-plugins/knn/knn-index/
 ---
 
-# Creating a vector index
+# 建立向量索引
 
-Creating a vector index in OpenSearch involves a common core process with some variations depending on the type of vector search. This guide outlines the key elements shared across all vector indexes and the differences specific to supported use cases.
+在 OpenSearch 中建立向量索引涉及一個共通的核心流程，並依向量搜尋的類型而有些許差異。本指南說明所有向量索引共用的關鍵元素，以及各支援使用案例特有的差異。
 
-Before you start, review the options for generating embeddings to help you decide on the option suitable for your use case. For more information, see [Preparing vectors]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-options/).
+開始之前，請先檢視產生嵌入的各種選項，以協助您選擇適合您使用案例的選項。如需更多資訊，請參閱 [準備向量]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-options/)。
 {: .tip}
 
-## Basic vector index
+## 基本向量索引
 
-To create a vector index, set the `index.knn` parameter to `true`in the `settings`:
+若要建立向量索引，請在 `settings` 中將 `index.knn` 參數設為 `true`：
 
 ```json
 PUT /test-index
@@ -42,43 +43,43 @@ PUT /test-index
 {% include copy-curl.html %}
 
 
-Creating a vector index involves the following key steps:
+建立向量索引包含下列關鍵步驟：
 
-1. **Enable k-nearest neighbors (k-NN) search**:
-   Set `index.knn` to `true` in the index settings to enable k-NN search functionality.
+1. **啟用 k-nearest neighbors (k-NN) 搜尋**：
+   在索引設定中將 `index.knn` 設為 `true`，以啟用 k-NN 搜尋功能。
 
-1. **Define a vector field**:
-   Specify the field that will store the vector data. When defining a `knn_vector` field in OpenSearch, you can select from different data types to balance storage requirements and performance. By default, k-NN vectors are float vectors, but you can also choose half-float, byte, or binary vectors for more efficient storage. For more information, see [k-NN vector]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/).
+1. **定義向量欄位**：
+   指定將儲存向量資料的欄位。在 OpenSearch 中定義 `knn_vector` 欄位時，您可以從不同的資料類型中選擇，以在儲存需求與效能之間取得平衡。預設情況下，k-NN 向量為 float 向量，但您也可以選擇 half-float、byte 或 binary 向量，以獲得更有效率的儲存。如需更多資訊，請參閱 [k-NN 向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)。
 
-1. **Specify the dimension**:
-   Set the `dimension` property to match the size of the vectors used.
+1. **指定維度**：
+   將 `dimension` 屬性設為與所用向量的大小相符。
 
-1. (Optional) **Choose a space type**:
-   Select a distance metric for similarity comparisons, such as `l2` (Euclidean distance) or `cosinesimil`. For more information, see [Spaces]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/).
+1. (選用) **選擇空間類型**：
+   選取用於相似度比較的距離指標，例如 `l2` (歐幾里得距離) 或 `cosinesimil`。如需更多資訊，請參閱 [空間]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/)。
 
-1. (Optional) **Select a workload mode and/or compression level**:
-   Select a workload mode and/or compression level in order to optimize vector storage. For more information, see [Optimizing vector storage]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/).
+1. (選用) **選取工作負載模式和/或壓縮等級**：
+   選取工作負載模式和/或壓縮等級，以最佳化向量儲存。如需更多資訊，請參閱 [最佳化向量儲存]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/)。
 
-1. (Optional, advanced) **Select a method**:
-   Configure the indexing method, such as HNSW or IVF, used to optimize vector search performance. For more information, see [Methods and engines]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/).
+1. (選用，進階) **選取方法**：
+   設定用於最佳化向量搜尋效能的索引方法，例如 HNSW 或 IVF。如需更多資訊，請參閱 [方法與引擎]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/)。
 
-## Implementation options
+## 實作選項
 
-Based on your vector generation approach, choose one of the following implementation options:
+根據您的向量產生方式，從下列實作選項中選擇一項：
 
-- [Store raw vectors or embeddings generated outside of OpenSearch](#storing-raw-vectors-or-embeddings-generated-outside-of-opensearch): Ingest pregenerated embeddings or raw vectors into your index for raw vector search.  
-- [Convert data to embeddings during ingestion](#converting-data-to-embeddings-during-ingestion): Ingest text that will be converted into vector embeddings in OpenSearch in order to perform semantic search using machine learning (ML) models. 
+- [儲存在 OpenSearch 外部產生的原始向量或嵌入](#storing-raw-vectors-or-embeddings-generated-outside-of-opensearch)：將預先產生的嵌入或原始向量匯入您的索引，以進行原始向量搜尋。  
+- [在匯入期間將資料轉換為嵌入](#converting-data-to-embeddings-during-ingestion)：匯入將在 OpenSearch 中轉換為向量嵌入的文字，以使用機器學習 (ML) 模型執行語意搜尋。
 
-The following table summarizes key index configuration differences for the supported use cases.
+下表摘要各支援使用案例在索引組態上的主要差異。
 
-| Feature                  | Vector field type | Ingest pipeline | Transformation     | Use case   |
+| 功能                  | 向量欄位類型 | 資料匯入管線 | 轉換     | 使用案例   |
 |--------------------------|-----------------------|---------------------|-------------------------|-------------------------|
-| **Store raw vectors or embeddings generated outside of OpenSearch**   | [`knn_vector`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)         | Not required        | Direct ingestion        | Raw vector search   |
-| **Convert data to embeddings during ingestion**      | [`knn_vector`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)         | Required            | Auto-generated vectors  | AI search <br><br> Automating embedding generation reduces data preprocessing and provides a more managed vector search experience.     |
+| **儲存在 OpenSearch 外部產生的原始向量或嵌入**   | [`knn_vector`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)         | 不需要        | 直接匯入        | 原始向量搜尋   |
+| **在匯入期間將資料轉換為嵌入**      | [`knn_vector`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)         | 需要            | 自動產生向量  | AI 搜尋 <br><br> 自動化嵌入產生可減少資料前處理，並提供更受管理的向量搜尋體驗。     |
 
-## Storing raw vectors or embeddings generated outside of OpenSearch
+## 儲存在 OpenSearch 外部產生的原始向量或嵌入
 
-To ingest raw vectors into an index, configure a vector field (in this request, `my_vector`) and specify its `dimension`:
+若要將原始向量匯入索引，請設定向量欄位 (在此請求中為 `my_vector`) 並指定其 `dimension`：
 
 ```json
 PUT /my-raw-vector-index
@@ -98,11 +99,11 @@ PUT /my-raw-vector-index
 ```
 {% include copy-curl.html %}
 
-## Converting data to embeddings during ingestion
+## 在匯入期間將資料轉換為嵌入
 
-To automatically generate embeddings during ingestion, configure an [ingest pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/) with the model ID of the embedding model. For more information about configuring a model, see [Integrating ML models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/).
+若要在匯入期間自動產生嵌入，請使用嵌入模型的模型 ID 設定 [資料匯入管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)。如需設定模型的更多資訊，請參閱 [整合機器學習模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/)。
 
-Specify the `field_map` to define the source field for input text and the target field for storing embeddings. In this example, text from the `input_text` field is converted into embeddings and stored in `output_embedding`:
+指定 `field_map` 以定義輸入文字的來源欄位，以及儲存嵌入的目標欄位。在此範例中，`input_text` 欄位中的文字會轉換為嵌入並儲存在 `output_embedding` 中：
 
 ```json
 PUT /_ingest/pipeline/auto-embed-pipeline
@@ -122,9 +123,9 @@ PUT /_ingest/pipeline/auto-embed-pipeline
 ```
 {% include copy-curl.html %}
 
-For more information, see [Text embedding processor]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/text-embedding/).
+如需更多資訊，請參閱 [文字嵌入處理器]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/text-embedding/)。
 
-When creating an index, specify the pipeline as the `default_pipeline`. Ensure that `dimension` matches the dimensionality of the model configured in the pipeline:
+建立索引時，請將管線指定為 `default_pipeline`。請確保 `dimension` 與管線中設定之模型的維度相符：
 
 ```json
 PUT /my-ai-search-index
@@ -148,12 +149,12 @@ PUT /my-ai-search-index
 ```
 {% include copy-curl.html %}
 
-## Working with sparse vectors
+## 使用稀疏向量
 
-OpenSearch also supports sparse vectors. For more information, see [Neural sparse search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-search/).
+OpenSearch 也支援稀疏向量。如需更多資訊，請參閱 [神經稀疏搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-search/)。
 
-## Next steps
+## 後續步驟
 
-- [Ingesting data into a vector index]({{site.url}}{{site.baseurl}}/vector-search/ingesting-data/)
-- [k-NN vector]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)
-- [Methods and engines]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/)
+- [將資料匯入向量索引]({{site.url}}{{site.baseurl}}/vector-search/ingesting-data/)
+- [k-NN 向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)
+- [方法與引擎]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/)

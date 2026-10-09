@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Update document
+title: "更新文件"
 parent: Document APIs
 nav_order: 10
 redirect_from: 
@@ -8,26 +9,26 @@ redirect_from:
 ---
 
 # Update Document API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-If you need to update a document's fields in your index, you can use the update document API operation. You can do so by specifying the new data you want to be in your index or by including a script in your request body, which OpenSearch runs to update the document. By default, the update operation only updates a document that exists in the index. If a document does not exist, the API returns an error. To _upsert_ a document (update the document that exists or index a new one), use the [upsert](#using-the-upsert-operation) operation.
+如果您需要在索引中更新文件的欄位，可以使用 update document API 操作。您可以指定想要放入索引的新資料，或在請求本文中加入指令碼，讓 OpenSearch 執行以更新文件。根據預設，更新操作只會更新索引中已存在的文件。如果文件不存在，API 會傳回錯誤。若要 _upsert_ 文件（更新已存在的文件或將新文件編製索引），請使用 [upsert](#using-the-upsert-operation) 操作。
 
-When you submit an update request, OpenSearch performs the following operations:
+當您提交更新請求時，OpenSearch 會執行下列操作：
 
-1. Fetches the current document from the shard where it is stored.
-2. Applies the update using either the provided script or by merging the partial document with the existing document.
-3. Reindexes the updated document and increments its version number.
+1. 從儲存該文件的分片擷取目前的文件。
+2. 使用提供的指令碼，或將部分文件與現有文件合併，以套用更新。
+3. 將更新後的文件重新編製索引，並遞增其版本號碼。
 
-Although the document must be reindexed, using the Update Document API reduces network round trips and minimizes version conflicts compared to manually retrieving the document using the `GET` method, modifying it, and reindexing it using the Index API.
+雖然文件必須重新編製索引，但與手動使用 `GET` 方法擷取文件、修改文件，再使用 Index API 重新編製索引相比，使用 Update Document API 可減少網路來回次數並將版本衝突降到最低。
 
-To use the Update Document API, the `_source` field must be enabled in your index. 
+若要使用 Update Document API，必須在您的索引中啟用 `_source` 欄位。 
 {: .important}
 
-You cannot explicitly specify an ingest pipeline when calling the Update Document API. If a `default_pipeline` or `final_pipeline` is defined in your index, the following behavior applies:
+呼叫 Update Document API 時，您無法明確指定資料匯入管線。如果您的索引中定義了 `default_pipeline` 或 `final_pipeline`，則會套用下列行為：
 
-- **Upsert operations**: When indexing a new document, the `default_pipeline` and `final_pipeline` defined in the index are executed as specified.  
-- **Update operations**: When updating an existing document, ingest pipeline execution is not recommended because it may produce erroneous results. Support for running ingest pipelines during update operations is deprecated and will be removed in version 3.0.0. If your index has a defined ingest pipeline, the update document operation will return the following deprecation warning: 
+- **Upsert 操作**：將新文件編製索引時，會依指定執行索引中定義的 `default_pipeline` 和 `final_pipeline`。  
+- **更新操作**：更新現有文件時，不建議執行資料匯入管線，因為可能會產生錯誤的結果。在更新操作期間執行資料匯入管線的支援已棄用，並將於 3.0.0 版中移除。如果您的索引定義了資料匯入管線，update document 操作會傳回下列棄用警告： 
 
 ```
 the index [sample-index1] has a default ingest pipeline or a final ingest pipeline, the support of the ingest pipelines for update operation causes unexpected result and will be removed in 3.0.0
@@ -37,72 +38,72 @@ the index [sample-index1] has a default ingest pipeline or a final ingest pipeli
 api: update
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 POST /{index}/_update/{id}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required | Data type | Description |
+| 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `id` | **Required** | String | The document ID. |
-| `index` | **Required** | String | The index name. By default, if the index doesn't exist, it is created automatically. |
+| `id` | **必要** | 字串 | 文件 ID。 |
+| `index` | **必要** | 字串 | 索引名稱。根據預設，如果索引不存在，會自動建立。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-Parameter | Data type | Description | Required
+參數 | 資料類型 | 說明 | 必要
 :--- | :--- | :--- | :---
-`if_seq_no` | Integer | Only perform the update operation if the document has the specified sequence number. | No
-`if_primary_term` | Integer | Perform the update operation if the document has the specified primary term. | No
-`lang` | String | Language of the script. Default is `painless`. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/). | No
-`require_alias` | Boolean | Specifies whether the destination must be an index alias. Default is `false`. | No
-`refresh` | Enum | If true, OpenSearch refreshes shards to make the operation visible to searching. Valid options are `true`, `false`, and `wait_for`, which tells OpenSearch to wait for a refresh before executing the operation. Default is `false`. | No
-`retry_on_conflict` | Integer | The amount of times OpenSearch should retry the operation if there's a document conflict. Default is 0. | No
-`routing` | String | Value to route the update operation to a specific shard. | No
-`_source` | Boolean or List | Whether or not to include the `_source` field in the response body. Default is `false`. This parameter also supports a comma-separated list of source fields for including multiple source fields in the query response. | No
-`_source_excludes` | List | A comma-separated list of source fields to exclude in the query response. | No
-`_source_includes` | List | A comma-separated list of source fields to include in the query response. | No
-`timeout` | Time | How long to wait for a response from the cluster. | No
-`wait_for_active_shards` | String | The number of active shards that must be available before OpenSearch processes the update request. Default is 1 (only the primary shard). Set to `all` or a positive integer. Values greater than 1 require replicas. For example, if you specify a value of 3, the index must have two replicas distributed across two additional nodes for the operation to succeed. | No
+`if_seq_no` | 整數 | 僅在文件具有指定的序號時才執行更新操作。 | 否
+`if_primary_term` | 整數 | 在文件具有指定的主要分片任期時執行更新操作。 | 否
+`lang` | 字串 | 指令碼的語言。預設為 `painless`。如需詳細資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。 | 否
+`require_alias` | 布林值 | 指定目的地是否必須是索引別名。預設為 `false`。 | 否
+`refresh` | 列舉 | 若為 true，OpenSearch 會重新整理分片，使操作可被搜尋看見。有效選項為 `true`、`false` 和 `wait_for`，後者會告訴 OpenSearch 在執行操作前等待重新整理。預設為 `false`。 | 否
+`retry_on_conflict` | 整數 | 如果發生文件衝突，OpenSearch 應重試操作的次數。預設為 0。 | 否
+`routing` | 字串 | 將更新操作路由至特定分片的值。 | 否
+`_source` | 布林值或清單 | 是否在回應本文中包含 `_source` 欄位。預設為 `false`。此參數也支援以逗號分隔的來源欄位清單，以便在查詢回應中包含多個來源欄位。 | 否
+`_source_excludes` | 清單 | 要在查詢回應中排除的來源欄位清單，以逗號分隔。 | 否
+`_source_includes` | 清單 | 要在查詢回應中納入的來源欄位清單，以逗號分隔。 | 否
+`timeout` | 時間 | 等待叢集回應的時間長度。 | 否
+`wait_for_active_shards` | 字串 | 在 OpenSearch 處理更新請求之前必須可用的作用中分片數。預設為 1（僅主要分片）。設為 `all` 或正整數。大於 1 的值需要副本。例如，如果您指定值為 3，則索引必須有兩個副本分散於兩個額外節點上，操作才能成功。 | 否
 
-## Request body fields
+## 請求本文欄位
 
-Your request body must contain the information with which you want to update your document. The following table lists the available request body fields.
+您的請求本文必須包含您要用來更新文件的資訊。下表列出可用的請求本文欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`doc` | Object | A partial document containing fields to merge into the existing document. Use this for simple field updates. See [Updating a document using a doc object](#updating-a-document-using-a-doc-object).
-`script` | Object | A script that defines how to update the document. Use this for complex updates requiring conditional logic or computed values. If both `doc` and `script` are specified, `doc` is ignored. See [Updating a document using a script](#updating-a-document-using-a-script).
-`upsert` | Object | The document to index if the target document does not exist. Used in combination with `doc` or `script` for conditional upsert operations. See [Upsert](#upsert).
-`doc_as_upsert` | Boolean | If `true`, uses the `doc` content for both updates and inserts. Default is `false`. See [Doc as upsert](#doc-as-upsert).
-`scripted_upsert` | Boolean | If `true`, runs the script whether or not the document exists. Default is `false`. Requires both `script` and `upsert` fields. See [Scripted upsert](#scripted-upsert).
-`detect_noop` | Boolean | If `true`, OpenSearch checks whether the update changes the document. If no changes are detected, the update is skipped. Default is `true`. See [Detecting no-op updates](#detecting-no-op-updates).
+`doc` | 物件 | 包含要合併至現有文件之欄位的部分文件。用於簡單的欄位更新。請參閱[使用 doc 物件更新文件](#updating-a-document-using-a-doc-object)。
+`script` | 物件 | 定義如何更新文件的指令碼。用於需要條件式邏輯或計算值的複雜更新。如果同時指定 `doc` 和 `script`，則會忽略 `doc`。請參閱[使用指令碼更新文件](#updating-a-document-using-a-script)。
+`upsert` | 物件 | 如果目標文件不存在，則要編製索引的文件。與 `doc` 或 `script` 搭配使用，以進行條件式 upsert 操作。請參閱 [Upsert](#upsert)。
+`doc_as_upsert` | 布林值 | 若為 `true`，則更新和插入都使用 `doc` 內容。預設為 `false`。請參閱[以 doc 執行 upsert](#doc-as-upsert)。
+`scripted_upsert` | 布林值 | 若為 `true`，則無論文件是否存在都會執行指令碼。預設為 `false`。需要 `script` 和 `upsert` 兩個欄位。請參閱[使用指令碼執行 upsert](#scripted-upsert)。
+`detect_noop` | 布林值 | 若為 `true`，OpenSearch 會檢查更新是否變更文件。如果未偵測到變更，則會略過更新。預設為 `true`。請參閱[偵測無操作更新](#detecting-no-op-updates)。
 
-### Script context and variables
+### 指令碼環境與變數
 
-Scripts can access and modify the document through the `ctx` map, which provides access to the following variables.
+指令碼可透過 `ctx` 對應存取及修改文件，該對應提供下列變數的存取權。
 
-Variable | Description
+變數 | 說明
 :--- | :---
-`ctx._source` | The document source. You can read and modify this object to update document fields.
-`ctx._index` | The name of the index containing the document.
-`ctx._id` | The document ID.
-`ctx._version` | The current document version.
-`ctx._routing` | The routing value used to route the document to a shard (if custom routing was used).
-`ctx._now` | The current timestamp in milliseconds since the epoch.
-`ctx.op` | The operation to perform. Set this to `delete` to delete the document or `none` to perform no operation (no-op).
+`ctx._source` | 文件來源。您可以讀取及修改此物件以更新文件欄位。
+`ctx._index` | 包含該文件之索引的名稱。
+`ctx._id` | 文件 ID。
+`ctx._version` | 目前的文件版本。
+`ctx._routing` | 用於將文件路由至分片的路由值（如果使用了自訂路由）。
+`ctx._now` | 目前的時間戳記，以自 epoch 起算的毫秒為單位。
+`ctx.op` | 要執行的操作。將此設為 `delete` 可刪除文件，或設為 `none` 以不執行任何操作（no-op）。
 
-You can use these variables in your scripts to implement conditional logic based on the document's current state.
+您可以在指令碼中使用這些變數，根據文件的目前狀態實作條件式邏輯。
 
-## Example setup
+## 範例設定
 
-The following examples use test documents in a `sample-index1` index. To follow along, first create an index with sample documents:
+下列範例使用 `sample-index1` 索引中的測試文件。若要跟著操作，請先建立包含範例文件的索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -150,11 +151,11 @@ response = client.index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example requests
+## 範例請求
 
-The following examples demonstrate how to use different request body fields to update documents.
+下列範例示範如何使用不同的請求本文欄位來更新文件。
 
-### Updating a document using a doc object
+### 使用 doc 物件更新文件
 
 <!-- spec_insert_start
 component: example_code
@@ -198,7 +199,7 @@ response = client.update(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Updating a document using a script
+### 使用指令碼更新文件
 
 <!-- spec_insert_start
 component: example_code
@@ -239,13 +240,13 @@ response = client.update(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Using the upsert operation
+### 使用 upsert 操作
 
-Upsert is an operation that conditionally either updates an existing document or inserts a new one based on information in the request. This is useful when you're not sure if a document already exists and want to ensure the correct content is present either way.
+Upsert 是一種依據請求中的資訊，有條件地更新現有文件或插入新文件的操作。當您不確定文件是否已存在，並希望無論如何都確保內容正確時，這個操作非常有用。
 
 #### Upsert
 
-In the following example, the `upsert` operation updates the `first_name` and `last_name` fields if a document already exists. If a document does not exist, a new one is indexed using content in the `upsert` object.
+在下列範例中，`upsert` 操作會在文件已存在時更新 `first_name` 與 `last_name` 欄位。如果文件不存在，則會使用 `upsert` 物件中的內容為新文件編製索引。
 
 <!-- spec_insert_start
 component: example_code
@@ -301,7 +302,7 @@ response = client.update(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Consider an index that contains the following document:
+假設某個索引包含下列文件：
 
 ```json
 {
@@ -316,7 +317,7 @@ Consider an index that contains the following document:
 ```
 {% include copy-curl.html %}
 
-After the upsert operation, the document's `first_name` and `last_name` fields are updated:
+執行 upsert 操作後，文件的 `first_name` 與 `last_name` 欄位會被更新：
 
 ```json
 {
@@ -331,7 +332,7 @@ After the upsert operation, the document's `first_name` and `last_name` fields a
 ```
 {% include copy-curl.html %}
 
-If the document does not exist in the index, a new document is indexed with the fields specified in the `upsert` object:
+如果索引中不存在該文件，則會使用 `upsert` 物件中指定的欄位為新文件編製索引：
 
 ```json
 {
@@ -346,9 +347,9 @@ If the document does not exist in the index, a new document is indexed with the 
 ```
 {% include copy-curl.html %}
 
-#### Doc as upsert
+#### 以 doc 執行 upsert
 
-You can also add `doc_as_upsert` to the request and set it to `true` to use the information in the `doc` field for performing the upsert operation:
+您也可以在請求中加入 `doc_as_upsert` 並將其設為 `true`，以使用 `doc` 欄位中的資訊執行 upsert 操作：
 
 <!-- spec_insert_start
 component: example_code
@@ -398,7 +399,7 @@ response = client.update(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Consider an index that contains the following document:
+假設某個索引包含下列文件：
 
 ```json
 {
@@ -413,7 +414,7 @@ Consider an index that contains the following document:
 ```
 {% include copy-curl.html %}
 
-After the upsert operation, the document's `first_name` and `last_name` fields are updated and an `age` field is added. If the document does not exist in the index, a new document is created using the fields from the `doc` object:
+執行 upsert 操作後，文件的 `first_name` 與 `last_name` 欄位會被更新，並新增一個 `age` 欄位。如果索引中不存在該文件，則會使用 `doc` 物件中的欄位建立新文件：
 
 ```json
 {
@@ -429,11 +430,11 @@ After the upsert operation, the document's `first_name` and `last_name` fields a
 ```
 {% include copy-curl.html %}
 
-#### Scripted upsert
+#### 使用指令碼執行 upsert
 
-You can also use a script to control how the document is updated. By setting the `scripted_upsert` parameter to `true`, you instruct OpenSearch to use the script even when the document doesn't exist yet. This allows you to define the entire upsert logic in the script.
+您也可以使用指令碼來控制文件的更新方式。將 `scripted_upsert` 參數設為 `true`，即可指示 OpenSearch 即使文件尚不存在也使用該指令碼。這讓您能夠在指令碼中定義整個 upsert 邏輯。
 
-In the following example, the script sets the document to contain specific fields regardless of whether it previously existed:
+在下列範例中，無論文件先前是否存在，指令碼都會將文件設定為包含特定欄位：
 
 <!-- spec_insert_start
 component: example_code
@@ -495,7 +496,7 @@ response = client.update(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-If the document with ID `2` does not already exist, this operation creates it using the script. If the document does exist, the script updates the specified fields. In both cases, the result is:
+如果 ID 為 `2` 的文件尚不存在，此操作會使用該指令碼建立文件。如果文件已存在，指令碼則會更新指定的欄位。在這兩種情況下，結果都是：
 
 ```json
 {
@@ -511,13 +512,13 @@ If the document with ID `2` does not already exist, this operation creates it us
 ```
 {% include copy-curl.html %}
 
-Using `scripted_upsert` gives you full control over document creation and updates when standard `doc`-based operations are not flexible enough.
+當標準的 `doc` 型操作不夠靈活時，使用 `scripted_upsert` 可讓您完全掌控文件的建立與更新。
 
-### Detecting no-op updates
+### 偵測無操作更新
 
-By default, OpenSearch detects whether an update operation actually changes the document. If the update doesn't make any changes, OpenSearch skips the operation and returns `"result": "noop"` to indicate that no operation was performed. This optimization avoids unnecessary reindexing when the document already contains the values you're trying to set.
+依預設，OpenSearch 會偵測更新操作是否確實變更文件。如果更新未做出任何變更，OpenSearch 會略過該操作並傳回 `"result": "noop"`，表示未執行任何操作。當文件已包含您嘗試設定的值時，這項最佳化可避免不必要的重新編製索引。
 
-The following example attempts to update document `1` with values it already contains:
+下列範例嘗試以文件 `1` 已包含的值更新該文件：
 
 ```json
 POST /sample-index1/_update/1
@@ -531,7 +532,7 @@ POST /sample-index1/_update/1
 ```
 {% include copy-curl.html %}
 
-Because the document already has these exact values, OpenSearch detects no changes and returns a no-op response:
+由於文件已有完全相同的值，OpenSearch 偵測到沒有變更，並傳回無操作回應：
 
 ```json
 {
@@ -550,9 +551,9 @@ Because the document already has these exact values, OpenSearch detects no chang
 ```
 {% include copy-curl.html %}
 
-Note that `_shards.total` is `0` when a no-op is detected, indicating that no shard operations were performed.
+請注意，偵測到無操作時，`_shards.total` 為 `0`，表示未執行任何分片操作。
 
-You can disable no-op detection by setting `detect_noop` to `false`. This forces OpenSearch to reindex the document even when the values haven't changed:
+您可以將 `detect_noop` 設為 `false`，以停用無操作偵測。這會強制 OpenSearch 重新編製文件索引，即使值未變更：
 
 ```json
 POST /sample-index1/_update/1
@@ -567,10 +568,10 @@ POST /sample-index1/_update/1
 ```
 {% include copy-curl.html %}
 
-With `noop` detection disabled, OpenSearch reindexes the document and increments its version number even though the content is identical.
+停用 `noop` 偵測後，即使內容完全相同，OpenSearch 仍會重新編製文件索引，並遞增其版本號碼。
 
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -588,30 +589,30 @@ With `noop` detection disabled, OpenSearch reindexes the document and increments
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`_index` | The name of the index.
-`_id` | The document's ID.
-`_version` | The document's version. Incremented each time the document is updated.
-`result` | The result of the update operation. Returns `updated` when the document was successfully updated, `created` when an upsert operation creates a new document, or `noop` when no changes were made.
-`_shards` | Detailed information about the cluster's shards.
-`_shards.total` | The total number of shards (primary and replicas).
-`_shards.successful` | The number of shards that successfully processed the update operation.
-`_shards.failed` | The number of shards that failed to process the update operation.
-`_seq_no` | The sequence number assigned when the document was updated. Used for optimistic concurrency control.
-`_primary_term` | The primary term assigned when the document was updated. Used with `_seq_no` for optimistic concurrency control.
+`_index` | 索引的名稱。
+`_id` | 文件的 ID。
+`_version` | 文件的版本。每次更新文件時都會遞增。
+`result` | 更新操作的結果。文件成功更新時傳回 `updated`，upsert 操作建立新文件時傳回 `created`，未做出任何變更時則傳回 `noop`。
+`_shards` | 叢集分片的詳細資訊。
+`_shards.total` | 分片總數（主要分片和副本分片）。
+`_shards.successful` | 成功處理更新操作的分片數量。
+`_shards.failed` | 處理更新操作失敗的分片數量。
+`_seq_no` | 更新文件時指派的序號。用於樂觀並行控制。
+`_primary_term` | 更新文件時指派的主要分片任期。與 `_seq_no` 搭配用於樂觀並行控制。
 
-## Advanced script examples
+## 進階指令碼範例
 
-The following examples demonstrate advanced scripting capabilities for document updates.
+下列範例示範用於文件更新的進階指令碼功能。
 
-#### Adding items to an array
+#### 在陣列中新增項目
 
-You can use a script to add items to an array field. The following example adds a gadget to the `gadgets` array (the gadget is added even if it already exists in the list):
+您可以使用指令碼在陣列欄位中新增項目。下列範例在 `gadgets` 陣列中新增一個小工具（即使該小工具已存在於清單中，仍會新增）：
 
 <!-- spec_insert_start
 component: example_code
@@ -664,9 +665,9 @@ response = client.update(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Removing items from an array
+#### 從陣列中移除項目
 
-You can use a script to remove items from an array. The Painless `remove` function takes the array index of the element you want to remove. To avoid a runtime error, first check that the item exists. If the list contains duplicate items, this script removes only one occurrence:
+您可以使用指令碼從陣列中移除項目。Painless 的 `remove` 函式接受您要移除之元素的陣列索引值。為避免執行階段錯誤，請先確認該項目存在。如果清單包含重複項目，此指令碼只會移除其中一個：
 
 <!-- spec_insert_start
 component: example_code
@@ -719,9 +720,9 @@ response = client.update(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Adding and removing fields
+#### 新增和移除欄位
 
-You can use scripts to add or remove fields from a document. The following example adds a new field:
+您可以使用指令碼在文件中新增或移除欄位。下列範例新增一個欄位：
 
 <!-- spec_insert_start
 component: example_code
@@ -756,7 +757,7 @@ response = client.update(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The following example removes a field:
+下列範例移除一個欄位：
 
 <!-- spec_insert_start
 component: example_code
@@ -791,9 +792,9 @@ response = client.update(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Changing the operation type
+#### 變更操作類型
 
-You can use scripts to change the operation that is executed based on document content. The following example deletes the document if the `gadgets` field contains `kryptonite`; otherwise, it performs no operation (`noop`):
+您可以使用指令碼，根據文件內容變更要執行的操作。在下列範例中，如果 `gadgets` 欄位包含 `kryptonite`，就會刪除文件；否則不會執行任何操作（`noop`）：
 
 <!-- spec_insert_start
 component: example_code
@@ -846,13 +847,13 @@ response = client.update(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Error responses
+## 錯誤回應
 
-The following examples show common error responses you may encounter when using the Update Document API.
+以下範例顯示使用 Update Document API 時可能遇到的常見錯誤回應。
 
-### Document not found
+### 找不到文件
 
-If you try to update a document that doesn't exist in the index without using the upsert operation, OpenSearch returns a 404 error:
+如果您嘗試更新索引中不存在的文件，且未使用 upsert 操作，OpenSearch 會傳回 404 錯誤：
 
 ```json
 {
@@ -876,11 +877,11 @@ If you try to update a document that doesn't exist in the index without using th
 }
 ```
 
-To avoid this error, use the [upsert operation](#using-the-upsert-operation) to create the document if it doesn't exist.
+若要避免此錯誤，請使用 [upsert 操作](#using-the-upsert-operation) 在文件不存在時建立該文件。
 
-### Version conflict
+### 版本衝突
 
-If you're using optimistic concurrency control with `if_seq_no` and `if_primary_term` parameters and the document has been modified since you last read it, OpenSearch returns a 409 conflict error:
+如果您使用 `if_seq_no` 與 `if_primary_term` 參數進行樂觀並行控制，而文件在您上次讀取後已被修改，OpenSearch 會傳回 409 衝突錯誤：
 
 ```json
 {
@@ -904,11 +905,11 @@ If you're using optimistic concurrency control with `if_seq_no` and `if_primary_
 }
 ```
 
-To handle this error, retrieve the latest version of the document and retry the update with the correct `if_seq_no` and `if_primary_term` values, or use the `retry_on_conflict` parameter to automatically retry the operation.
+若要處理此錯誤，請擷取文件的最新版本，並使用正確的 `if_seq_no` 與 `if_primary_term` 值重試更新，或使用 `retry_on_conflict` 參數自動重試該操作。
 
-### Script compilation error
+### 指令碼編譯錯誤
 
-If there's an error in your Painless script, OpenSearch returns a 400 error with details about the compilation failure:
+如果您的 Painless 指令碼有錯誤，OpenSearch 會傳回 400 錯誤，並附上編譯失敗的詳細資訊：
 
 ```json
 {
@@ -945,8 +946,8 @@ If there's an error in your Painless script, OpenSearch returns a 400 error with
 }
 ```
 
-Review the `script_stack` and `caused_by` fields in the error response to identify and fix the script error.
+請檢查錯誤回應中的 `script_stack` 與 `caused_by` 欄位，以找出並修正指令碼錯誤。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:data/write/update`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`indices:data/write/update`。

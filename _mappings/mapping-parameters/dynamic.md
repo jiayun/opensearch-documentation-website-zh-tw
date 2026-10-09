@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Dynamic
+title: "動態"
 parent: Mapping parameters
 nav_order: 30
 has_children: false
@@ -11,23 +12,23 @@ redirect_from:
   - /field-types/dynamic/
 ---
 
-# Dynamic mapping parameter
+# 動態對應參數
 
-The `dynamic` parameter specifies whether newly detected fields can be added dynamically to a mapping. It accepts the parameters listed in the following table.
+`dynamic` 參數會指定新偵測到的欄位是否可以動態新增至對應。其接受下表所列的參數。
 
-Parameter | Description 
-:--- | :--- 
-`true`  | Specifies that new fields can be added dynamically to the mapping. Default is `true`.
-`false` | Specifies that new fields cannot be added dynamically to the mapping. If a new field is detected, then it is not indexed or searchable but can be retrieved from the `_source` field.
-`false_allow_templates` | Adds new fields to the mapping when they match a predefined dynamic template. New fields that do not match a template are not indexed or searchable but are present in the `_source` field.
-`strict` | Throws an exception. The indexing operation fails when new fields are detected.
-`strict_allow_templates` | Adds new fields if they match predefined dynamic templates in the mapping.
+參數 | 說明
+:--- | :---
+`true`  | 指定新欄位可以動態新增至對應。預設值為 `true`。
+`false` | 指定新欄位無法動態新增至對應。若偵測到新欄位，則不會對其編製索引或搜尋，但可從 `_source` 欄位擷取。
+`false_allow_templates` | 當新欄位符合預先定義的動態範本時，將其新增至對應。不符合範本的新欄位不會編製索引或搜尋，但會存在於 `_source` 欄位中。
+`strict` | 擲回例外狀況。偵測到新欄位時，編製索引作業會失敗。
+`strict_allow_templates` | 若新欄位符合對應中預先定義的動態範本，則新增這些欄位。
 
---- 
+---
 
-## Example: Create an index with `dynamic` set to `true`
+## 範例：建立 `dynamic` 設為 `true` 的索引
 
-1. Create an index with `dynamic` set to `true` by sending the following request:
+1. 傳送下列請求，建立 `dynamic` 設為 `true` 的索引：
 
 ```json
 PUT testindex1
@@ -39,7 +40,7 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-2. Index a document with an object field `patient` containing two string fields by sending the following request:
+2. 傳送下列請求，將包含物件欄位 `patient`（其中有兩個字串欄位）的文件編製索引：
 
 ```json
 PUT testindex1/_doc/1
@@ -52,14 +53,14 @@ PUT testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-3. Confirm the mapping works as expected by sending the following request:
+3. 傳送下列請求，確認對應如預期運作：
 
 ```json
 GET testindex1/_mapping
 ```
 {% include copy-curl.html %}
 
-The object field `patient` and two subfields `name` and `id` are added to the mapping, as shown in the following response:
+物件欄位 `patient` 及兩個子欄位 `name` 和 `id` 已新增至對應，如下列回應所示：
 
 ```json
 {
@@ -97,9 +98,9 @@ The object field `patient` and two subfields `name` and `id` are added to the ma
 
 ---
 
-## Example: Create an index with `dynamic` set to `false`
+## 範例：建立 `dynamic` 設為 `false` 的索引
 
-1. Create an index with explicit mappings and `dynamic` set to `false` by sending the following request:
+1. 傳送下列請求，建立具有明確對應且 `dynamic` 設為 `false` 的索引：
 
 ```json
 PUT testindex1
@@ -123,7 +124,7 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-2. Index a document with an object field `patient` containing two string fields and additional unmapped fields by sending the following request:
+2. 傳送下列請求，將文件編製索引。該文件包含具有兩個字串欄位的物件欄位 `patient`，以及額外的未對應欄位：
 
 ```json
 PUT testindex1/_doc/1
@@ -138,14 +139,14 @@ PUT testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-3.  Confirm the mapping works as expected by sending the following request:
+3.  傳送下列請求，確認對應如預期運作：
 
 ```json
 GET testindex1/_mapping
 ```
 {% include copy-curl.html %}
 
-The following response shows that the new fields `room` and `floor` were not added to the mapping, which remained unchanged:
+下列回應顯示新欄位 `room` 和 `floor` 未新增至對應，對應維持不變：
 
 ```json
 {
@@ -169,7 +170,7 @@ The following response shows that the new fields `room` and `floor` were not add
 }
 ```
 
-4. Get the unmapped fields `room` and `floor` from the document by sending the following request:
+4. 傳送下列請求，從文件中取得未對應的欄位 `room` 和 `floor`：
 
 ```json
 PUT testindex1/_doc/1
@@ -183,7 +184,7 @@ PUT testindex1/_doc/1
 }
 ```
 
-The following request searches for the fields `room` and `floor`:
+下列請求會搜尋欄位 `room` 和 `floor`：
 
 ```json
 POST testindex1/_search
@@ -196,7 +197,7 @@ POST testindex1/_search
 }
 ```
 
-The response returns no results:
+回應未傳回任何結果：
 
 ```json
 {
@@ -221,9 +222,9 @@ The response returns no results:
 
 ---
 
-## Example: Create an index with `dynamic` set to `strict`
+## 範例：建立 `dynamic` 設為 `strict` 的索引
 
-1. Create an index with explicit mappings and `dynamic` set to `strict` by sending the following request:
+1. 傳送下列請求，建立具有明確對應且 `dynamic` 設為 `strict` 的索引：
 
 ```json
 PUT testindex1
@@ -247,7 +248,7 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-2. Index a document with an object field `patient` containing two string fields and additional unmapped fields by sending the following request:
+2. 傳送下列請求，將文件編製索引。該文件包含具有兩個字串欄位的物件欄位 `patient`，以及額外的未對應欄位：
 
 ```json
 PUT testindex1/_doc/1
@@ -262,7 +263,7 @@ PUT testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-Note that an exception is thrown, as shown in the following response: 
+請注意，如下列回應所示，會擲回例外狀況：
 
 ```json
 {
@@ -282,9 +283,9 @@ Note that an exception is thrown, as shown in the following response:
 
 ---
 
-## Example: Create an index with `dynamic` set to `strict_allow_templates`
+## 範例：建立 `dynamic` 設為 `strict_allow_templates` 的索引
 
-1. Create an index with predefined dynamic templates and `dynamic` set to `strict_allow_templates` by sending the following request: 
+1. 傳送下列請求，建立具有預先定義動態範本且 `dynamic` 設為 `strict_allow_templates` 的索引：
 
 ```json
 PUT testindex1
@@ -319,7 +320,7 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-2. Index a document with an object field `patient` containing two string fields and a new field `room` that matches one of the dynamic templates by sending the following request:
+2. 傳送下列請求，將文件編製索引。該文件包含具有兩個字串欄位的物件欄位 `patient`，以及符合其中一個動態範本的新欄位 `room`：
 
 ```json
 PUT testindex1/_doc/1
@@ -333,7 +334,7 @@ PUT testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-Indexing succeeds because the new field `room` matches the dynamic templates. However, indexing fails for the new field `floor` because it does not match one of the dynamic templates and is not explicitly mapped, as shown in the following response:
+編製索引成功，因為新欄位 `room` 符合動態範本。然而，新欄位 `floor` 的編製索引失敗，因為它不符合其中一個動態範本，且未明確對應，如下列回應所示：
 
 ```json
 PUT testindex1/_doc/1
@@ -349,9 +350,9 @@ PUT testindex1/_doc/1
 
 ---
 
-## Example: Create an index with `dynamic` set to `false_allow_templates`
+## 範例：建立 `dynamic` 設為 `false_allow_templates` 的索引
 
-1. Create an index with predefined dynamic templates and `dynamic` set to `false_allow_templates` by sending the following request: 
+1. 傳送下列請求，建立具有預先定義動態範本且 `dynamic` 設為 `false_allow_templates` 的索引：
 
 ```json
 PUT testindex1
@@ -386,7 +387,7 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-2. Index a document with an object field `patient` containing two string fields and a new field `room` that matches one of the dynamic templates by sending the following request:
+2. 傳送下列請求，將文件編製索引。該文件包含具有兩個字串欄位的物件欄位 `patient`，以及符合其中一個動態範本的新欄位 `room`：
 
 ```json
 PUT testindex1/_doc/1
@@ -400,9 +401,9 @@ PUT testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-The new field `room` is indexed because it matches the dynamic templates.
+新欄位 `room` 已編製索引，因為它符合動態範本。
 
-If you add a new field `floor`, it is indexed even though it does not match any mapping properties or dynamic templates. However, mappings are not created for the `floor` field. Thus, queries such as `{"match": {"floor": "1"}}` do not return this document:
+若您新增欄位 `floor`，即使它不符合任何對應屬性或任何動態範本，仍會編製索引。然而，不會為 `floor` 欄位建立對應。因此，諸如 `{"match": {"floor": "1"}}` 的查詢不會傳回此文件：
 
 ```json
 PUT testindex1/_doc/1

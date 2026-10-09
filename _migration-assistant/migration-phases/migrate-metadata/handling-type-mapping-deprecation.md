@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Transform type mappings
+title: "轉換類型對應"
 nav_order: 1
 parent: Migrate metadata
 grand_parent: Migration workflows
@@ -10,9 +11,9 @@ redirect_from:
   - /migration-assistant/migration-phases/planning-your-migration/handling-type-mapping-deprecation/
 ---
 
-# Transform type mappings
+# 轉換類型對應
 
-Older Elasticsearch data sets could contain multiple mapping types per index, as shown in the following example:
+較舊的 Elasticsearch 資料集可能每個索引包含多個對應類型，如下列範例所示：
 
 ```json
 {
@@ -31,17 +32,17 @@ Older Elasticsearch data sets could contain multiple mapping types per index, as
 }
 ```
 
-Modern OpenSearch does not support this structure. If your snapshot contains multi-type definitions, the `metadataMigrationConfig.multiTypeBehavior` parameter controls how Migration Assistant handles them. The following table describes the valid values.
+現代 OpenSearch 不支援此結構。如果您的快照包含多類型定義，`metadataMigrationConfig.multiTypeBehavior` 參數會控制 Migration Assistant 如何處理它們。下表說明有效的值。
 
-| Option | Behavior | Use when |
+| 選項 | 行為 | 使用時機 |
 |:-------|:---------|:---------|
-| `NONE` | Fails the migration when multi-type mappings are encountered. | You want to handle multi-type issues explicitly before proceeding. |
-| `UNION` | Merges all types into one mapping in a single target index. | The types are compatible enough to coexist under one merged mapping. |
-| `SPLIT` | Routes each type into a separate target index. | Different types should become different indexes, or merging them would create field conflicts. |
+| `NONE` | 遇到多類型對應時，讓遷移失敗。 | 您想要在繼續之前明確處理多類型問題。 |
+| `UNION` | 將所有類型合併成單一目標索引中的一個對應。 | 這些類型足夠相容，可以在一個合併的對應下共存。 |
+| `SPLIT` | 將每個類型路由到個別的目標索引。 | 不同類型應該成為不同的索引，或合併它們會產生欄位衝突。 |
 
-## Configuring multi-type behavior
+## 設定多類型行為
 
-Set `multiTypeBehavior` to the appropriate value in your workflow configuration, then run a pilot migration and validate the resulting target mappings and index layout before migrating the full dataset. To edit the workflow configuration, run the following commands:
+在工作流程組態中將 `multiTypeBehavior` 設為適當的值，然後執行試驗性遷移，並在遷移完整資料集之前驗證產生的目標對應和索引配置。若要編輯工作流程組態，請執行下列命令：
 
 ```bash
 workflow configure sample --load
@@ -49,23 +50,23 @@ workflow configure edit
 ```
 {% include copy.html %}
 
-## Custom type transformer
+## 自訂類型轉換器
 
-If the built-in `multiTypeBehavior` choices are not enough, you can supply custom transformer configuration through the metadata migration settings.
+如果內建的 `multiTypeBehavior` 選項不夠用，您可以透過中繼資料遷移設定提供自訂轉換器組態。
 
-That is an expert path. Use it when:
+那是一條專家的路徑。請在下列情況使用它：
 
-- The target index naming must follow a specific pattern.
-- Only selected types should migrate.
-- You need different routing logic than the built-in workflow choices.
+- 目標索引命名必須遵循特定模式。
+- 只有選取的類型應該遷移。
+- 您需要與內建工作流程選項不同的路由邏輯。
 
-## Validate the result
+## 驗證結果
 
-After the pilot metadata run, verify the following:
+在試驗性中繼資料執行之後，請驗證下列項目：
 
-- Resulting target index names
-- Field conflicts introduced by merges
-- Alias and template behavior
-- Application queries that assume a specific index layout.
+- 產生的目標索引名稱
+- 合併所引入的欄位衝突
+- 別名和範本行為
+- 假設特定索引配置的應用程式查詢。
 
-If this transformation changes index names or field semantics, your client configuration may need to change too.
+如果此轉換變更了索引名稱或欄位語意，您的用戶端組態可能也需要變更。

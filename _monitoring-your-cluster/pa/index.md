@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Performance Analyzer
 nav_order: 58
@@ -11,42 +12,42 @@ redirect_from:
 
 # Performance Analyzer
 
-Performance Analyzer is a plugin that contains an agent and REST API that allow you to query numerous cluster performance metrics, including aggregations of those metrics. 
+Performance Analyzer 是一個外掛程式，內含代理程式與 REST API，可讓您查詢眾多叢集效能指標，包括這些指標的彙總。
 
-The Performance Analyzer plugin is installed by default in OpenSearch versions 2.0 and later. If you want to use OpenSearch 2.0 or later with Performance Analyzer disabled, see [Disable Performance Analyzer](#disable-performance-analyzer).
+OpenSearch 2.0 及更新版本預設會安裝 Performance Analyzer 外掛程式。若您想在停用 Performance Analyzer 的情況下使用 OpenSearch 2.0 或更新版本，請參閱[停用 Performance Analyzer](#disable-performance-analyzer)。
 {: .note }
 
-## Prerequisites
+## 先決條件
 
-Before using Performance Analyzer with OpenSearch, review the following prerequisites.
+在搭配 OpenSearch 使用 Performance Analyzer 之前，請先檢閱下列先決條件。
 
-### Storage
+### 儲存空間
 
-Performance Analyzer uses `/dev/shm` for temporary storage. During heavy cluster workloads, Performance Analyzer can use up to 1 GB of space.
+Performance Analyzer 使用 `/dev/shm` 作為暫時性的儲存空間。在叢集工作負載繁重時，Performance Analyzer 最多可能使用 1 GB 的空間。
 
-Docker, however, has a default `/dev/shm` size of 64 MB. To change this value, you can use the `docker run --shm-size 1gb` flag or [a similar setting in Docker Compose](https://docs.docker.com/compose/compose-file#shm_size).
+不過，Docker 的 `/dev/shm` 預設大小為 64 MB。若要變更此值，您可以使用 `docker run --shm-size 1gb` 旗標或 [Docker Compose 中的類似設定](https://docs.docker.com/compose/compose-file#shm_size)。
 
-If you're not using Docker, you can check the size of `/dev/shm` using `df -h`. The default value should be adequate, but if you need to change its size, add the following line to `/etc/fstab`:
+若您未使用 Docker，可以使用 `df -h` 檢查 `/dev/shm` 的大小。預設值應已足夠，但若您需要變更其大小，請在 `/etc/fstab` 中新增下列這一行：
 
 ```bash
 tmpfs /dev/shm tmpfs defaults,noexec,nosuid,size=1G 0 0
 ```
 
-Then remount the file system:
+接著重新掛載檔案系統：
 
 ```bash
 mount -o remount /dev/shm
 ```
 
-### Security 
+### 安全性
 
-Performance Analyzer supports encryption in transit for requests. It does *not* support client or server authentication for requests. To enable encryption in transit, edit `performance-analyzer.properties` in your `$OPENSEARCH_HOME` directory:
+Performance Analyzer 支援請求的傳輸中加密，但*不*支援請求的用戶端或伺服器驗證。若要啟用傳輸中加密，請編輯 `$OPENSEARCH_HOME` 目錄中的 `performance-analyzer.properties`：
 
 ```properties
 vi $OPENSEARCH_HOME/config/opensearch-performance-analyzer/performance-analyzer.properties
 ```
 
-Change the following lines to configure encryption in transit. Note that `certificate-file-path` must be a certificate for the server and not a root certificate authority (CA).
+變更下列幾行以設定傳輸中加密。請注意，`certificate-file-path` 必須是伺服器的憑證，而不是根憑證授權單位 (CA)。
 
 ````properties
 https-enabled = true
@@ -57,55 +58,55 @@ certificate-file-path = specify_path
 private-key-file-path = specify_path
 ````
 
-## Install Performance Analyzer 
+## 安裝 Performance Analyzer
 
-The Performance Analyzer plugin is included in the installations for [Docker]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/docker/) and [tarball]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/tar/), but you can also install the plugin manually. 
+[Docker]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/docker/) 與 [tarball]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/tar/) 安裝中已包含 Performance Analyzer 外掛程式，但您也可以手動安裝此外掛程式。
 
-To install the Performance Analyzer plugin manually, download the plugin from [Maven](https://central.sonatype.com/namespace/org.opensearch.plugin) and install it using the standard [plugin installation]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/) process. Performance Analyzer runs on each node in a cluster.
+若要手動安裝 Performance Analyzer 外掛程式，請從 [Maven](https://central.sonatype.com/namespace/org.opensearch.plugin) 下載外掛程式，並使用標準的[外掛程式安裝]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)程序進行安裝。Performance Analyzer 會在叢集中的每個節點上執行。
 
-To start the Performance Analyzer root cause analysis (RCA) agent on a tarball installation, run the following command:
+若要在 tarball 安裝上啟動 Performance Analyzer 根本原因分析 (RCA) 代理程式，請執行下列命令：
       
 ````bash
 OPENSEARCH_HOME=~/opensearch-{{ site.opensearch_version }} OPENSEARCH_JAVA_HOME=~/opensearch-{{ site.opensearch_version }}/jdk OPENSEARCH_PATH_CONF=~/opensearch-{{ site.opensearch_version }}/bin ./performance-analyzer-agent-cli
 ````
 
-The following command enables the Performance Analyzer plugin. 
+下列命令會啟用 Performance Analyzer 外掛程式。
 
 ````bash
 curl -XPOST localhost:9200/_plugins/_performanceanalyzer/cluster/config -H 'Content-Type: application/json' -d '{"enabled": true}'
 ````
 
-## Disable Performance Analyzer
+## 停用 Performance Analyzer
 
-If you prefer to save memory and run your local instance of OpenSearch with the Performance Analyzer plugin disabled, perform the following steps:
+若您希望節省記憶體，並在停用 Performance Analyzer 外掛程式的情況下執行本機 OpenSearch 執行個體，請執行下列步驟：
 
-1. Before disabling Performance Analyzer, stop any currently running RCA agent action by using the following command:
+1. 在停用 Performance Analyzer 之前，請使用下列命令停止任何目前正在執行的 RCA 代理程式動作：
 
   ```bash
   curl -XPOST localhost:9200/_plugins/_performanceanalyzer/rca/cluster/config -H 'Content-Type: application/json' -d '{"enabled": false}'
   ```
 
-2. Shut down the Performance Analyzer RCA agent by running the following command:
+2. 執行下列命令以關閉 Performance Analyzer RCA 代理程式：
 
   ```bash
   kill $(ps aux | grep -i 'PerformanceAnalyzerApp' | grep -v grep | awk '{print $2}')
   ```
 
-3. Disable the Performance Analyzer plugin by running the following command:
+3. 執行下列命令以停用 Performance Analyzer 外掛程式：
 
   ```bash
   curl -XPOST localhost:9200/_plugins/_performanceanalyzer/cluster/config -H 'Content-Type: application/json' -d '{"enabled": false}'
   ```
 
-4. Uninstall the Performance Analyzer plugin by running the following command:
+4. 執行下列命令以解除安裝 Performance Analyzer 外掛程式：
 
   ```bash
   bin/opensearch-plugin remove opensearch-performance-analyzer
   ```
 
-## Configure Performance Analyzer 
+## 設定 Performance Analyzer
 
-To configure the Performance Analyzer plugin, edit the `performance-analyzer.properties` configuration file in the `config/opensearch-performance-analyzer/` directory. Make sure to uncomment the line `#webservice-bind-host` and set it to `0.0.0.0`. You can reference the following example configuration.
+若要設定 Performance Analyzer 外掛程式，請編輯 `config/opensearch-performance-analyzer/` 目錄中的 `performance-analyzer.properties` 組態檔案。請務必取消註解 `#webservice-bind-host` 這一行，並將其設為 `0.0.0.0`。您可以參考下列組態範例。
 
 ````bash
 # ======================== OpenSearch Performance Analyzer plugin config =========================
@@ -146,16 +147,16 @@ plugin-stats-metadata = plugin-stats-metadata
 # Agent Stats Metadata file name, expected to be in the same location
 agent-stats-metadata = agent-stats-metadata
 ````
-To start the Performance Analyzer RCA agent, run the following command:
+若要啟動 Performance Analyzer RCA 代理程式，請執行下列命令：
 
 ````bash
 OPENSEARCH_HOME=~/opensearch-{{ site.opensearch_version }} OPENSEARCH_JAVA_HOME=~/opensearch-{{ site.opensearch_version }}/jdk OPENSEARCH_PATH_CONF=~/opensearch-{{ site.opensearch_version }}/bin ./performance-analyzer-agent-cli
 ````
 
 
-## Enable Performance Analyzer for RPM/YUM installations
+## 為 RPM/YUM 安裝啟用 Performance Analyzer
 
-If you installed OpenSearch from an RPM distribution, you can start and stop Performance Analyzer with `systemctl`:
+若您是從 RPM 發行版安裝 OpenSearch，可以使用 `systemctl` 啟動及停止 Performance Analyzer：
 
 ```bash
 # Start OpenSearch Performance Analyzer
@@ -164,15 +165,15 @@ sudo systemctl start opensearch-performance-analyzer.service
 sudo systemctl stop opensearch-performance-analyzer.service
 ```
 
-## Example API query and response
+## API 查詢與回應範例
 
-The following is an example Performance Analyzer API query. The query pulls performance metrics related to your OpenSearch cluster:
+以下是 Performance Analyzer API 查詢範例。此查詢會擷取與您的 OpenSearch 叢集相關的效能指標：
   
 ````bash
 GET localhost:9600/_plugins/_performanceanalyzer/metrics/units
 ````
 
-The following is an example response:
+以下是回應範例：
 
 ````json
 {"Disk_Utilization":"%","Cache_Request_Hit":"count", 
@@ -231,39 +232,39 @@ The following is an example response:
 "Net_TCP_NumFlows":"count","Election_Term":"count"}
 ````
 
-## Root cause analysis
+## 根本原因分析
 
-The [root cause analysis]({{site.url}}{{site.baseurl}}/monitoring-plugins/pa/rca/index/) (RCA) framework uses the information from Performance Analyzer to inform administrators of the root cause of performance and availability issues experienced by their clusters.
+[根本原因分析]({{site.url}}{{site.baseurl}}/monitoring-plugins/pa/rca/index/) (RCA) 框架會使用 Performance Analyzer 的資訊，通知叢集管理員其叢集所發生效能與可用性問題的根本原因。
 
-### Enable the RCA framework
+### 啟用 RCA 框架
 
-To enable the RCA framework, run the following command:
+若要啟用 RCA 框架，請執行以下命令：
 
 ```bash
 curl -XPOST http://localhost:9200/_plugins/_performanceanalyzer/rca/cluster/config -H 'Content-Type: application/json' -d '{"enabled": true}'
 ```
 
-If you encounter the `curl: (52) Empty reply from server` response, run the following command to enable RCA:
+如果您收到 `curl: (52) Empty reply from server` 回應，請執行以下命令以啟用 RCA：
 
 ```bash
 curl -XPOST https://localhost:9200/_plugins/_performanceanalyzer/rca/cluster/config -H 'Content-Type: application/json' -d '{"enabled": true}' -u 'admin:<custom-admin-password>' -k
 ```
 
-### Example API query and response
+### API 查詢與回應範例
 
-To request all available RCAs, run the following command:
+若要請求所有可用的 RCA，請執行以下命令：
 
 ````bash
 GET localhost:9600/_plugins/_performanceanalyzer/rca
 ````
 
-To request a specific RCA, run the following command:
+若要請求特定的 RCA，請執行以下命令：
 
 ````bash
 GET localhost:9600/_plugins/_performanceanalyzer/rca?name=HighHeapUsageClusterRCA
 ````
 
-The following is an example response:
+以下為回應範例：
 
 ```json
 {
@@ -307,15 +308,15 @@ The following is an example response:
 ```
 
 
-### Related links
+### 相關連結
 
-Further documentation on the use of Performance Analyzer and RCA can be found at the following links:
+有關 Performance Analyzer 與 RCA 使用的更多文件，請參閱以下連結：
 
 - [Performance Analyzer API]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/pa/api/)
-- [Root cause analysis]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/pa/rca/index/)
-- [Root cause analysis]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/pa/rca/api/).
-- [RFC: Root cause analysis](https://github.com/opensearch-project/performance-analyzer-rca/blob/main/docs/rfc-rca.pdf)
+- [根本原因分析]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/pa/rca/index/)
+- [根本原因分析]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/pa/rca/api/)。
+- [RFC：根本原因分析](https://github.com/opensearch-project/performance-analyzer-rca/blob/main/docs/rfc-rca.pdf)
 
-## Common issues
+## 常見問題
 
-Performance Analyzer can log an `Illegal reflective access operation` warning. This is a known issue that doesn't affect functionality.
+Performance Analyzer 可能會記錄 `Illegal reflective access operation` 警告。這是已知問題，不會影響功能。

@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get agent
+title: "取得代理程式"
 parent: Agent APIs
 grand_parent: ML Commons APIs
 nav_order: 30
 ---
 
 # Get Agent API
-**Introduced 2.13**
+**2.13 版新增**
 {: .label .label-purple }
 
-You can retrieve agent information using the `agent_id`.
+您可以使用 `agent_id` 擷取代理程式資訊。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/agents/{agent_id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. 
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `agent_id` | String | The agent ID of the agent to retrieve. |
+| `agent_id` | String | 要擷取之代理程式的代理程式 ID。 |
 
 
-## Example request
+## 範例請求
 
 ```json
 GET /_plugins/_ml/agents/N8AE1osB0jLkkocYjz7D
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -77,6 +78,6 @@ Assistant:"""
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-For response field descriptions, see [Register Agent API request fields]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent#request-body-fields).
+回應欄位的說明請參閱 [Register Agent API 請求欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent#request-body-fields)。

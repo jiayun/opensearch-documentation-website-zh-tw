@@ -1,60 +1,61 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Simulate pipeline
+title: "模擬管線"
 nav_order: 11
 redirect_from:
   - /opensearch/rest-api/ingest-apis/simulate-ingest/
   - /api-reference/ingest-apis/simulate-ingest/
 ---
 
-# Simulate pipeline
-**Introduced 1.0**
+# 模擬管線
+**推出於 1.0**
 {: .label .label-purple }
 
-Use the simulate ingest pipeline API operation to run or test the pipeline.
+使用模擬資料匯入管線 API 操作來執行或測試管線。
 
-## Endpoints
+## 端點
 
-The following requests **simulate the latest ingest pipeline created**:
+下列請求會**模擬最新建立的資料匯入管線**：
 
 ```
 GET _ingest/pipeline/_simulate
 POST _ingest/pipeline/_simulate
 ```
 
-The following requests **simulate a single pipeline based on the pipeline ID**:
+下列請求會**根據管線 ID 模擬單一管線**：
 
 ```
 GET _ingest/pipeline/{pipeline-id}/_simulate
 POST _ingest/pipeline/{pipeline-id}/_simulate
 ```
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the request body fields used to run a pipeline.
+下表列出用來執行管線的請求本文欄位。
 
-Field | Required | Type | Description
+欄位 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`docs` | Required | Array | The documents to be used to test the pipeline.
-`pipeline` | Optional | Object | The pipeline to be simulated. If the pipeline identifier is not included, then the response simulates the latest pipeline created.
+`docs` | 必要 | 陣列 | 用來測試管線的文件。
+`pipeline` | 選用 | 物件 | 要模擬的管線。若未包含管線識別碼，則回應會模擬最新建立的管線。
 
-The `docs` field can include subfields listed in the following table.
+`docs` 欄位可包含下表所列的子欄位。
 
-Field | Required | Type | Description
+欄位 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`source` | Required | Object | The document's JSON body.
-`id` | Optional | String | A unique document identifier. The identifier cannot be used elsewhere in the index.
-`index` | Optional | String | The index where the document's transformed data appears.
+`source` | 必要 | 物件 | 文件的 JSON 本文。
+`id` | 選用 | 字串 | 唯一的文件識別碼。此識別碼不能在索引中的其他位置使用。
+`index` | 選用 | 字串 | 文件轉換後資料所在的索引。
 
-## Query parameters 
+## 查詢參數 
 
-The following table lists the query parameters for running a pipeline. 
+下表列出執行管線的查詢參數。 
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`verbose` | Boolean | Verbose mode. Display data output for each processor in the executed pipeline.
+`verbose` | 布林值 | 詳細模式。顯示所執行管線中每個處理器的資料輸出。
 
-#### Example: Specify a pipeline in the path
+#### 範例：在路徑中指定管線
 
 ```json
 POST /_ingest/pipeline/my-pipeline/_simulate
@@ -83,7 +84,7 @@ POST /_ingest/pipeline/my-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-The request returns the following response:
+請求會傳回下列回應：
 
 ```json
 {
@@ -120,9 +121,9 @@ The request returns the following response:
 }
 ```
 
-#### Example: Verbose mode
+#### 範例：詳細模式
 
-When the previous request is run with the `verbose` parameter set to `true`, the response shows the sequence of transformations for each document. For example, for the document with the ID `1`, the response contains the results of applying each processor in the pipeline in sequence:
+當先前的請求以 `verbose` 參數設為 `true` 執行時，回應會顯示每份文件的轉換順序。例如，對於 ID 為 `1` 的文件，回應會包含依序套用管線中每個處理器的結果：
 
 ```json
 {
@@ -188,9 +189,9 @@ When the previous request is run with the `verbose` parameter set to `true`, the
 }
 ```
 
-#### Example: Specify a pipeline in the request body
+#### 範例：在請求本文中指定管線
 
-Alternatively, you can specify a pipeline directly in the request body without first creating a pipeline:
+或者，您可以直接在請求本文中指定管線，而不必先建立管線：
 
 ```json
 POST /_ingest/pipeline/_simulate
@@ -234,9 +235,9 @@ POST /_ingest/pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The request returns the following response:
+請求會傳回下列回應：
 
 ```json
 {

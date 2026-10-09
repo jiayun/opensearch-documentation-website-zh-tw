@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Prometheus
 parent: Sinks
@@ -6,21 +7,21 @@ grand_parent: Pipelines
 nav_order: 59
 ---
 
-# Prometheus sink
+# Prometheus 輸出端
 
-The Prometheus sink buffers OpenTelemetry metrics and exports them in Prometheus time series format using the Remote Write API. It supports both open-source Prometheus and Amazon Managed Service for Prometheus (AMP).
+Prometheus 輸出端會緩衝 OpenTelemetry 指標，並使用 Remote Write API 以 Prometheus 時間序列格式匯出。它同時支援開源 Prometheus 與 Amazon Managed Service for Prometheus (AMP)。
 
-The `prometheus` sink processes only metric data. All other data types are sent to the [DLQ pipeline]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/dlq/), if it is configured.
+`prometheus` 輸出端僅處理指標資料。所有其他資料類型都會傳送至 [DLQ 管線]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/dlq/)（若有設定）。
 
-To ensure compatibility, the Prometheus sink sorts metrics by timestamp within each batch before sending them to the server. It also supports an out-of-order window, which allows ingestion of metrics with older timestamps.
+為確保相容性，Prometheus 輸出端會在傳送至伺服器前，先在每個批次內依時間戳記排序指標。它也支援亂序視窗，允許匯入具有較舊時間戳記的指標。
 
-## Usage
+## 使用方式
 
-The following examples configure the Prometheus sink for different deployment scenarios.
+下列範例針對不同的部署情境設定 Prometheus sink。
 
-### Open-source Prometheus with no authentication
+### 無驗證的開源 Prometheus
 
-To use an open-source Prometheus instance, provide an `https://` URL. To use `http://`, set `insecure` to `true`. No `aws` block is needed. Prometheus must be started with the `--web.enable-remote-write-receiver` flag:
+若要使用開源 Prometheus 執行個體，請提供 `https://` URL。若要使用 `http://`，請將 `insecure` 設定為 `true`。不需要 `aws` 區塊。Prometheus 必須以 `--web.enable-remote-write-receiver` 旗標啟動：
 
 ```yaml
 pipeline:
@@ -35,9 +36,9 @@ pipeline:
 ```
 {% include copy.html %}
 
-### Open-source Prometheus with HTTP Basic authentication
+### 使用 HTTP Basic 驗證的開源 Prometheus
 
-To authenticate with HTTP Basic credentials (for example, when Prometheus is behind a reverse proxy with basic authentication enabled), use the `authentication` block:
+若要使用 HTTP Basic 憑證進行驗證（例如當 Prometheus 位於啟用基本驗證的反向代理伺服器後方時），請使用 `authentication` 區塊：
 
 ```yaml
 pipeline:
@@ -54,7 +55,7 @@ pipeline:
 
 ### AMP
 
-To use AMP, provide the `aws` configuration block. An `https://` URL is required when using AWS authentication:
+若要使用 AMP，請提供 `aws` 組態區塊。使用 AWS 驗證時需要 `https://` URL：
 
 ```yaml
 pipeline:
@@ -71,9 +72,9 @@ pipeline:
 ```
 {% include copy.html %}
 
-## IAM permissions
+## IAM 權限
 
-When using AMP, configure AWS Identity and Access Management (IAM) to grant OpenSearch Data Prepper permissions to write to Amazon Managed Service for Prometheus. You can use a configuration similar to the following JSON configuration:
+使用 AMP 時，請設定 AWS Identity and Access Management (IAM)，以授予 OpenSearch Data Prepper 寫入 Amazon Managed Service for Prometheus 的權限。您可以使用類似下列 JSON 組態的設定：
 
 ```json
 {
@@ -92,53 +93,53 @@ When using AMP, configure AWS Identity and Access Management (IAM) to grant Open
 ```
 {% include copy.html %}
 
-## Configuration
+## 組態
 
-Use the following options when customizing the `prometheus` sink.
+自訂 `prometheus` 輸出端時，請使用下列選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`url` | Yes | String | The Prometheus Remote Write endpoint URL. Supports `https://` by default. To use `http://`, set `insecure` to `true`. When `aws` is configured, `https://` is required.
-`insecure` | No | Boolean | When set to `true`, allows `http://` URLs. By default, only `https://` URLs are permitted. Default is `false`.
-`encoding` | No | String | The compression format used for requests. Only `snappy` is supported. Default is `snappy`.
-`remote_write_version` | No | String | The version of the Prometheus remote write protocol. Only `0.1.0` is supported.
-`content_type` | No | String | The MIME type of the body. Only `application/x-protobuf` is supported.
-`out_of_order_time_window` | No | Duration | The time window allowed for late-arriving data points. Data older than this window relative to the latest point will be dropped. Default is `10s`.
-`sanitize_names` | No | Boolean | Determines whether metric and label names are sanitized in order to comply with Prometheus naming conventions. Default is `true`.
-`connection_timeout` | No | Duration | The maximum amount of time allowed to establish an HTTP connection. Default is `60s`.
-`idle_timeout` | No | Duration | The maximum amount of time an idle HTTP connection remains open before being closed. Default is `60s`.
-`request_timeout` | No | Duration | The maximum amount of time allowed for a full end-to-end HTTP request to complete. Default is `60s`.
-`threshold` | No | [Threshold configuration](#threshold-configuration) | Configuration for batching and flushing time-series data.
-`max_retries` | No | Integer | The maximum number of attempts for failed ingestion requests. Uses exponential backoff with jitter on `retryable` status codes (`429`, `502`, `503`, or `504`). Default is `5`.
-`aws` | No | [AWS configuration](#aws-configuration) | AWS configuration for AWS Signature Version 4 signing. When present, requests are signed with AWS credentials. Cannot be used with `authentication`.
-`authentication` | No | [Authentication configuration](#authentication-configuration) | HTTP Basic authentication credentials. Cannot be used with `aws`.
+`url` | 是 | 字串 | Prometheus Remote Write 端點 URL。預設支援 `https://`。若要使用 `http://`，請將 `insecure` 設定為 `true`。設定 `aws` 時，`https://` 為必要。
+`insecure` | 否 | 布林值 | 設定為 `true` 時，允許 `http://` URL。預設僅允許 `https://` URL。預設值為 `false`。
+`encoding` | 否 | 字串 | 請求所使用的壓縮格式。僅支援 `snappy`。預設值為 `snappy`。
+`remote_write_version` | 否 | 字串 | Prometheus remote write 協定的版本。僅支援 `0.1.0`。
+`content_type` | 否 | 字串 | 本文的 MIME 類型。僅支援 `application/x-protobuf`。
+`out_of_order_time_window` | 否 | 持續時間 | 允許延遲抵達資料點的時間視窗。相對於最新資料點，早於此視窗的資料將被捨棄。預設值為 `10s`。
+`sanitize_names` | 否 | 布林值 | 決定是否清理指標與標籤名稱，以符合 Prometheus 命名慣例。預設值為 `true`。
+`connection_timeout` | 否 | 持續時間 | 建立 HTTP 連線所允許的最長時間。預設值為 `60s`。
+`idle_timeout` | 否 | 持續時間 | 閒置 HTTP 連線在關閉前可保持開啟的最長時間。預設值為 `60s`。
+`request_timeout` | 否 | 持續時間 | 完成整個端對端 HTTP 請求所允許的最長時間。預設值為 `60s`。
+`threshold` | 否 | [閾值組態](#threshold-configuration) | 批次處理與排清時間序列資料的組態。
+`max_retries` | 否 | 整數 | 匯入請求失敗時的最多嘗試次數。對於 `retryable` 狀態碼（`429`、`502`、`503` 或 `504`），會使用帶抖動的指數退避。預設值為 `5`。
+`aws` | 否 | [AWS 組態](#aws-configuration) | 用於 AWS Signature Version 4 簽署的 AWS 組態。存在時，請求會以 AWS 憑證簽署。不可與 `authentication` 併用。
+`authentication` | 否 | [驗證組態](#authentication-configuration) | HTTP Basic 驗證憑證。不可與 `aws` 併用。
 
-## Threshold configuration
+## 閾值組態
 
-Use the following options to configure batching and flushing behavior for the Prometheus sink.
+使用下列選項設定 Prometheus sink 的批次處理與排清行為。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`max_events` | No | Integer | The maximum number of events to accumulate before flushing to Prometheus. Default is `1000`.
-`max_request_size` | No | String | The maximum size of the request payload before flushing. Default is `1mb`.
-`flush_interval` | No | Duration | The maximum amount of time to wait before flushing events. Default is `10s`.
+`max_events` | 否 | 整數 | 排清至 Prometheus 前可累積的最大事件數。預設值為 `1000`。
+`max_request_size` | 否 | 字串 | 排清前請求承載的最大大小。預設值為 `1mb`。
+`flush_interval` | 否 | 持續時間 | 排清事件前可等待的最長時間。預設值為 `10s`。
 
-## AWS configuration
+## AWS 組態
 
-When an `aws` block is present, requests are automatically signed with Signature Version 4. An `https://` URL is required. The AWS configuration supports the following options.
+當存在 `aws` 區塊時，請求會自動以 Signature Version 4 簽署。需要 `https://` URL。AWS 組態支援下列選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`region` | No | String | The AWS Region to use for credentials. Defaults to [standard SDK behavior to determine the region](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html).
-`sts_role_arn` | No | String | The STS role to assume for requests to AWS. Defaults to `null`, which uses [standard SDK credential behavior](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html).
-`sts_header_overrides` | No | Map | A map of header overrides to make when assuming the IAM role.
-`sts_external_id` | No | String | An optional external ID to use when assuming the IAM role.
+`region` | 否 | 字串 | 用於憑證的 AWS 區域。預設採用[判斷區域的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html)。
+`sts_role_arn` | 否 | 字串 | 對 AWS 發出請求時要擔任的 STS 角色。預設為 `null`，其使用[標準 SDK 憑證行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html)。
+`sts_header_overrides` | 否 | 對應 | 擔任 IAM 角色時要套用的標頭覆寫對應。
+`sts_external_id` | 否 | 字串 | 擔任 IAM 角色時可使用的選用外部 ID。
 
-## Authentication configuration
+## 驗證組態
 
-The `authentication` block supports HTTP Basic authentication. It cannot be used together with `aws` (Signature Version 4 signing). The authentication configuration supports the following options.
+`authentication` 區塊支援 HTTP Basic 驗證。不可與 `aws`（Signature Version 4 簽署）併用。驗證組態支援下列選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`http_basic.username` | Yes | String | The username for HTTP Basic authentication.
-`http_basic.password` | Yes | String | The password for HTTP Basic authentication.
+`http_basic.username` | 是 | 字串 | HTTP Basic 驗證的使用者名稱。
+`http_basic.password` | 是 | 字串 | HTTP Basic 驗證的密碼。

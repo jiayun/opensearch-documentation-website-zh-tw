@@ -1,60 +1,61 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: S3 logs
+title: "S3 記錄檔"
 parent: Common use cases
 nav_order: 40
 ---
 
-# S3 logs
+# S3 記錄檔
 
-OpenSearch Data Prepper allows you to load logs from [Amazon Simple Storage Service](https://aws.amazon.com/s3/) (Amazon S3), including traditional logs, JSON documents, and CSV logs.
+OpenSearch Data Prepper 可讓您從 [Amazon Simple Storage Service](https://aws.amazon.com/s3/) (Amazon S3) 載入記錄檔，包括傳統記錄檔、JSON 文件與 CSV 記錄檔。
 
-## Architecture
+## 架構
 
-Data Prepper can read objects from S3 buckets using an [Amazon Simple Queue Service (SQS)](https://aws.amazon.com/sqs/) (Amazon SQS) queue and [Amazon S3 Event Notifications](https://docs.aws.amazon.com/AmazonS3/latest/userguide/NotificationHowTo.html).
+Data Prepper 可以使用 [Amazon Simple Queue Service (SQS)](https://aws.amazon.com/sqs/) (Amazon SQS) 佇列與 [Amazon S3 Event Notifications](https://docs.aws.amazon.com/AmazonS3/latest/userguide/NotificationHowTo.html)，從 S3 儲存貯體讀取物件。
 
-Data Prepper polls the Amazon SQS queue for S3 event notifications. When Data Prepper receives a notification that an S3 object was created, Data Prepper reads and parses that S3 object.
+Data Prepper 會輪詢 Amazon SQS 佇列以取得 S3 事件通知。當 Data Prepper 收到 S3 物件已建立的通知時，就會讀取並剖析該 S3 物件。
 
-The following diagram shows the overall architecture of the components involved.
+下圖顯示相關元件的整體架構。
 
-![S3 source architecture]({{site.url}}{{site.baseurl}}/images/data-prepper/s3-source/s3-architecture.jpg)
+![S3 來源架構]({{site.url}}{{site.baseurl}}/images/data-prepper/s3-source/s3-architecture.jpg)
 
-The component data flow is as follows:
+元件的資料流程如下：
 
-1. A system produces logs into the S3 bucket.
-2. S3 creates an S3 event notification in the SQS queue.
-3. Data Prepper polls Amazon SQS for messages and then receives a message.
-4. Data Prepper downloads the content from the S3 object.
-5. Data Prepper sends a document to OpenSearch for the content in the S3 object.
+1. 系統將記錄檔產生至 S3 儲存貯體。
+2. S3 在 SQS 佇列中建立 S3 事件通知。
+3. Data Prepper 輪詢 Amazon SQS 以取得訊息，然後接收一則訊息。
+4. Data Prepper 從 S3 物件下載內容。
+5. Data Prepper 將 S3 物件中的內容以文件形式傳送至 OpenSearch。
 
-## Pipeline overview
+## 管線概觀
 
-Data Prepper supports reading data from S3 using the [`s3` source]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/).
+Data Prepper 支援使用 [`s3` 來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/)從 S3 讀取資料。
 
-The following diagram shows a conceptual outline of a Data Prepper pipeline reading from S3.
+下圖顯示 Data Prepper 管線從 S3 讀取資料的概念示意。
 
-![S3 source architecture]({{site.url}}{{site.baseurl}}/images/data-prepper/s3-source/s3-pipeline.jpg)
+![S3 來源架構]({{site.url}}{{site.baseurl}}/images/data-prepper/s3-source/s3-pipeline.jpg)
 
-## Prerequisites
+## 先決條件
 
-Before Data Prepper can read log data from S3, you need the following prerequisites: 
+在 Data Prepper 能夠從 S3 讀取記錄資料之前，您需要符合下列先決條件：
 
-- An S3 bucket.
-- A log producer that writes logs to S3. The exact log producer will vary depending on your specific use case, but could include writing logs to S3 or a service such as Amazon CloudWatch.
+- 一個 S3 儲存貯體。
+- 一個將記錄檔寫入 S3 的記錄產生器。確切的記錄產生器會依您的特定使用案例而異，但可能包括將記錄檔寫入 S3，或使用 Amazon CloudWatch 等服務。
 
-## Getting started
+## 入門
 
-Use the following steps to begin loading logs from S3 with Data Prepper.
+請使用下列步驟開始使用 Data Prepper 從 S3 載入記錄檔。
 
-1. Create an [SQS standard queue](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/step-create-queue.html) for your S3 event notifications. 
-2. Configure [bucket notifications](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ways-to-add-notification-config-to-bucket.html) for SQS. Use the `s3:ObjectCreated:*` event type.
-3. Grant [AWS Identity and Access Management (IAM)](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html) permissions to Data Prepper for accessing SQS and S3.
-4. (Recommended) Create an [SQS dead-letter queue](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html) (DLQ).
-5. (Recommended) Configure an SQS re-drive policy to move failed messages into the DLQ.
+1. 為您的 S3 事件通知建立 [SQS 標準佇列](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/step-create-queue.html)。
+2. 為 SQS 設定[儲存貯體通知](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ways-to-add-notification-config-to-bucket.html)。請使用 `s3:ObjectCreated:*` 事件類型。
+3. 授予 Data Prepper [AWS Identity and Access Management (IAM)](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html) 權限，以存取 SQS 與 S3。
+4. (建議) 建立 [SQS 死信佇列](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html) (DLQ)。
+5. (建議) 設定 SQS 重新驅動政策，將失敗的訊息移至 DLQ。
 
-### Setting permissions for Data Prepper
+### 為 Data Prepper 設定權限
 
-To view S3 logs, Data Prepper needs access to Amazon SQS and S3. Use the following example to set up permissions:
+若要檢視 S3 記錄檔，Data Prepper 需要存取 Amazon SQS 與 S3。請使用下列範例來設定權限：
 
 ```json
 {
@@ -86,28 +87,28 @@ To view S3 logs, Data Prepper needs access to Amazon SQS and S3. Use the followi
 ```
 {% include copy-curl.html %}
 
-If your S3 objects or SQS queues do not use KMS, you can remove the `kms:Decrypt` permission.
+如果您的 S3 物件或 SQS 佇列未使用 KMS，您可以移除 `kms:Decrypt` 權限。
 
-### SQS dead-letter queue
+### SQS 死信佇列
 
-The following two options can be used to handle S3 object processing errors:
+下列兩種選項可用於處理 S3 物件處理錯誤：
 
-- Use an SQS dead-letter queue (DLQ) to track the failure. This is the recommended approach.
-- Delete the message from SQS. You must manually find the S3 object and correct the error.
+- 使用 SQS 死信佇列 (DLQ) 追蹤失敗。這是建議的做法。
+- 從 SQS 刪除訊息。您必須手動找出 S3 物件並修正錯誤。
 
-The following diagram shows the system architecture when using SQS with DLQ.
+下圖顯示搭配 DLQ 使用 SQS 時的系統架構。
 
-![S3 source architecture with DLQ]({{site.url}}{{site.baseurl}}/images/data-prepper/s3-source/s3-architecture-dlq.jpg)
+![搭配 DLQ 的 S3 來源架構]({{site.url}}{{site.baseurl}}/images/data-prepper/s3-source/s3-architecture-dlq.jpg)
 
-To use an SQS dead-letter queue, perform the following steps:
+若要使用 SQS 死信佇列，請執行下列步驟：
 
-1. Create a new SQS standard queue to act as the DLQ.
-2. Configure your SQS re-drive policy [to use DLQ](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-dead-letter-queue.html). Consider using a low value such as 2 or 3 for the **Maximum Receives** setting.
-3. Configure the Data Prepper `s3` source to use `retain_messages` for `on_error`. This is the default behavior.
+1. 建立新的 SQS 標準佇列作為 DLQ。
+2. 設定您的 SQS 重新驅動政策[以使用 DLQ](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-dead-letter-queue.html)。建議將 **Maximum Receives** 設定設為較低的值，例如 2 或 3。
+3. 設定 Data Prepper `s3` 來源，針對 `on_error` 使用 `retain_messages`。這是預設行為。
 
-## Pipeline design
+## 管線設計
 
-Create a pipeline to read logs from S3, starting with an [`s3`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/) source plugin. Use the following example for guidance. 
+建立一條從 S3 讀取記錄檔的管線，首先從 [`s3`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/) 來源外掛程式開始。請參考下列範例。
 
 ```yaml
 s3-log-pipeline:
@@ -124,13 +125,13 @@ s3-log-pipeline:
 ```
 {% include copy-curl.html %}
 
-Configure the following options according to your use case:
+請根據您的使用案例設定下列選項：
 
-* `queue_url`: This the SQS queue URL and is always unique to your pipeline.
-* `codec`: The codec determines how to parse the incoming data.
-* `visibility_timeout`: Configure this value to be large enough for Data Prepper to process 10 S3 objects. However, if you make this value too large, messages that fail to process will take at least as long as the specified value before Data Prepper retries.
+* `queue_url`：這是 SQS 佇列 URL，對您的管線而言永遠是唯一的。
+* `codec`：codec 決定如何剖析傳入的資料。
+* `visibility_timeout`：請將此值設定為足夠大，讓 Data Prepper 能夠處理 10 個 S3 物件。不過，如果此值設定得太大，處理失敗的訊息在 Data Prepper 重試之前，至少會等待指定的時間。
 
-The default values for each option work for the majority of use cases. For all available options for the S3 source, see [`s3`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/).
+每個選項的預設值適用於大多數使用案例。如需 S3 來源所有可用選項，請參閱 [`s3`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/)。
 
 ```yaml
 s3-log-pipeline:
@@ -164,28 +165,28 @@ s3-log-pipeline:
 ```
 {% include copy-curl.html %}
 
-## Multiple Data Prepper pipelines
+## 多條 Data Prepper 管線
 
-It is recommended that you have one SQS queue per Data Prepper pipeline. In addition, you can have multiple nodes in the same cluster reading from the same SQS queue, which doesn't require additional Data Prepper configuration.
+建議每條 Data Prepper 管線各使用一個 SQS 佇列。此外，您也可以讓同一叢集中的多個節點從同一個 SQS 佇列讀取資料，這不需要額外的 Data Prepper 組態。
 
-If you have multiple pipelines, you must create multiple SQS queues for each pipeline, even if both pipelines use the same S3 bucket.
+如果您有多條管線，則必須為每條管線建立多個 SQS 佇列，即使這些管線使用同一個 S3 儲存貯體也一樣。
 
-## Amazon SNS fanout pattern
+## Amazon SNS 扇出模式
 
-To meet the scale of logs produced by S3, some users require multiple SQS queues for their logs. You can use [Amazon Simple Notification Service](https://docs.aws.amazon.com/sns/latest/dg/welcome.html) (Amazon SNS) to route event notifications from S3 to an SQS [fanout pattern](https://docs.aws.amazon.com/sns/latest/dg/sns-common-scenarios.html). Using SNS, all S3 event notifications are sent directly to a single SNS topic, where you can subscribe to multiple SQS queues.
+為了應付 S3 產生的記錄檔規模，有些使用者需要多個 SQS 佇列來處理記錄檔。您可以使用 [Amazon Simple Notification Service](https://docs.aws.amazon.com/sns/latest/dg/welcome.html) (Amazon SNS)，將來自 S3 的事件通知路由至 SQS [扇出模式](https://docs.aws.amazon.com/sns/latest/dg/sns-common-scenarios.html)。使用 SNS 時，所有 S3 事件通知都會直接傳送至單一 SNS 主題，您可以在該主題訂閱多個 SQS 佇列。
 
-To make sure that Data Prepper can directly parse the event from the SNS topic, configure [raw message delivery](https://docs.aws.amazon.com/sns/latest/dg/sns-large-payload-raw-message-delivery.html) on the SNS-to-SQS subscription. Applying this option does not affect other SQS queues subscribed to the SNS topic.
+為確保 Data Prepper 能夠直接剖析來自 SNS 主題的事件，請在 SNS 至 SQS 的訂閱上設定[原始訊息傳遞](https://docs.aws.amazon.com/sns/latest/dg/sns-large-payload-raw-message-delivery.html)。套用此選項不會影響訂閱該 SNS 主題的其他 SQS 佇列。
 
-## Filtering and retrieving data using Amazon S3 Select
+## 使用 Amazon S3 Select 篩選與擷取資料
 
-If a pipeline uses an S3 source, you can use SQL expressions to perform filtering and computations on the contents of S3 objects before ingesting them into the pipeline.
+如果管線使用 S3 來源，您可以在將 S3 物件內容匯入管線之前，使用 SQL 運算式對其執行篩選與運算。
 
-The `s3_select` option supports objects in the [Parquet File Format](https://parquet.apache.org/docs/). It also works with objects that are compressed with gzip or BZIP2 (for CSV and JSON objects only) and supports columnar compression for the Parquet File Format using gzip and Snappy.
+`s3_select` 選項支援 [Parquet File Format](https://parquet.apache.org/docs/) 的物件。它也適用於以 gzip 或 BZIP2 壓縮的物件 (僅限 CSV 與 JSON 物件)，並支援使用 gzip 與 Snappy 為 Parquet File Format 進行資料行壓縮。
 
-Refer to [Filtering and retrieving data using Amazon S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/userguide/selecting-content-from-objects.html) and [SQL reference for Amazon S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-select-sql-reference.html) for comprehensive information about using Amazon S3 Select.
+如需使用 Amazon S3 Select 的完整資訊，請參閱 [Filtering and retrieving data using Amazon S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/userguide/selecting-content-from-objects.html) 與 [SQL reference for Amazon S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-select-sql-reference.html)。
 {: .note}
 
-The following example pipeline retrieves all data from S3 objects encoded in the Parquet File Format:
+下列範例管線會擷取以 Parquet File Format 編碼的 S3 物件中的所有資料：
 
 ```json
 pipeline:
@@ -199,7 +200,7 @@ pipeline:
 ```
 {% include copy-curl.html %}
 
-The following example pipeline retrieves only the first 10,000 records in the objects:
+下列範例管線只會擷取物件中的前 10,000 筆記錄：
 
 ```json
 pipeline:
@@ -213,7 +214,7 @@ pipeline:
 ```
 {% include copy-curl.html %}
 
-The following example pipeline retrieves records from S3 objects that have a `data_value` in the given range of 200--500:
+下列範例管線會從 `data_value` 位於指定範圍 200--500 內的 S3 物件擷取記錄：
 
 ```json
 pipeline:

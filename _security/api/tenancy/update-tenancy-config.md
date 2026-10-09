@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create or update multi-tenancy configuration
+title: "建立或更新多租用戶組態"
 parent: Multi-tenancy configuration APIs
 grand_parent: Security APIs
 nav_order: 10
 ---
 
-# Create or Update Multi-Tenancy Configuration API
-**Introduced 2.7**
+# 建立或更新多租用戶組態 API
+**於 2.7 版引進**
 {: .label .label-purple }
 
-Creates or replaces the multi-tenancy configuration.
+建立或取代多租用戶組態。
 
 <!-- spec_insert_start
 api: security.create_update_tenancy_config
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PUT /_plugins/_security/api/tenancy/config
 ```
 <!-- spec_insert_end -->
 
-## Request body fields
+## 請求本文欄位
 
-The request body is required and must contain at least one of the following fields. OpenSearch preserves the current value of any field that you omit and rejects any field that is not listed.
+請求本文為必要，且必須包含下列至少一個欄位。OpenSearch 會保留您省略之任何欄位的目前值，並拒絕任何未列出的欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `multitenancy_enabled` | Boolean | Whether multi-tenancy is enabled. |
-| `private_tenant_enabled` | Boolean | Whether users can use their private tenants. |
-| `default_tenant` | String | The tenant that OpenSearch Dashboards opens by default. Must name one of the available tenants and cannot be an empty string. |
-| `sign_in_options` | Array of Strings | The sign-in methods that OpenSearch Dashboards offers. Valid values are `BASIC`, `SAML`, `OPENID`, and `ANONYMOUS`. Each value must correspond to an authentication provider configured on the cluster. |
-| `preferred_tenants` | Array of Strings | The tenants to list ahead of the others in the OpenSearch Dashboards tenant selector, in order of preference. |
+| `multitenancy_enabled` | 布林值 | 是否啟用多租用戶。 |
+| `private_tenant_enabled` | 布林值 | 使用者是否可以使用其私人租用戶。 |
+| `default_tenant` | 字串 | OpenSearch Dashboards 預設開啟的租用戶。必須指定其中一個可用的租用戶，且不能是空字串。 |
+| `sign_in_options` | 字串陣列 | OpenSearch Dashboards 提供的登入方法。有效值為 `BASIC`、`SAML`、`OPENID` 及 `ANONYMOUS`。每個值都必須對應至叢集上設定的驗證提供者。 |
+| `preferred_tenants` | 字串陣列 | 在 OpenSearch Dashboards 租用戶選取器中，依偏好順序列在其他租用戶之前的租用戶。 |
 
-## Example request
+## 範例請求
 
 ```json
 PUT _plugins/_security/api/tenancy/config
@@ -46,7 +47,7 @@ PUT _plugins/_security/api/tenancy/config
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {

@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Full-text search
+title: "全文搜尋"
 nav_order: 11
-description: "OpenSearch supports full-text search in SQL through the MATCH function and other SQL functions that map to OpenSearch full-text queries."
+description: "OpenSearch 透過 MATCH 函式及其他對應至 OpenSearch 全文查詢的 SQL 函式，在 SQL 中支援全文搜尋。"
 redirect_from:
   - /search-plugins/sql/full-text/
 ---
 
-# Full-text search
+# 全文搜尋
 
-Use SQL commands for full-text search. The SQL plugin supports a subset of full-text queries available in OpenSearch.
+使用 SQL 命令進行全文搜尋。SQL 外掛程式支援 OpenSearch 中可用全文查詢的一部分。
 
-To learn about full-text queries in OpenSearch, see [Full-text queries]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/full-text/index/).
+若要了解 OpenSearch 中的全文查詢，請參閱[全文查詢]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/full-text/index/)。
 
-## Match
+## 比對
 
-Use the `MATCH` function to search documents that match a `string`, `number`, `date`, or `boolean` value for a given field.
+使用 `MATCH` 函式搜尋與指定欄位的 `string`、`number`、`date` 或 `boolean` 值相符的文件。
 
-### Syntax
+### 語法
 
 ```sql
 match(field_expression, query_expression[, option=<option_value>]*)
 ```
 
-You can specify the following options in any order:
+您可以依任意順序指定下列選項：
 
 - `analyzer`
 - `auto_generate_synonyms_phrase`
@@ -38,9 +39,9 @@ You can specify the following options in any order:
 - `zero_terms_query`
 - `boost`
 
-Refer to the `match` query [documentation]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match/) for parameter descriptions and supported values.
+如需參數說明及支援的值，請參閱 `match` 查詢[文件]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match/)。
 
-### Example 1: Search the `message` field for the text "this is a test":
+### 範例 1：在 `message` 欄位中搜尋文字「this is a test」：
 
 ```json
 GET my_index/_search
@@ -54,21 +55,21 @@ GET my_index/_search
 ```
 {% include copy-curl.html %}
 
-*SQL query:*
+*SQL 查詢：*
 ```sql
 SELECT message FROM my_index WHERE match(message, "this is a test")
 ```
 {% include copy.html %}
 
 
-*PPL query:*
+*PPL 查詢：*
 ```sql
 SOURCE=my_index | WHERE match(message, "this is a test") | FIELDS message
 ```
 {% include copy.html %}
 
 
-### Example 2: Search the `message` field with the `operator` parameter:
+### 範例 2：使用 `operator` 參數搜尋 `message` 欄位：
 
 ```json
 GET my_index/_search
@@ -85,21 +86,21 @@ GET my_index/_search
 ```
 {% include copy-curl.html %}
 
-*SQL query:*
+*SQL 查詢：*
 ```sql
 SELECT message FROM my_index WHERE match(message, "this is a test", operator='and')
 ```
 {% include copy.html %}
 
 
-*PPL query:*
+*PPL 查詢：*
 ```sql
 SOURCE=my_index | WHERE match(message, "this is a test", operator='and') | FIELDS message
 ```
 {% include copy.html %}
 
 
-### Example 3: Search the `message` field with the `operator` and `zero_terms_query` parameters:
+### 範例 3：使用 `operator` 和 `zero_terms_query` 參數搜尋 `message` 欄位：
 
 ```json
 GET my_index/_search
@@ -117,27 +118,27 @@ GET my_index/_search
 ```
 {% include copy-curl.html %}
 
-*SQL query:*
+*SQL 查詢：*
 ```sql
 SELECT message FROM my_index WHERE match(message, "this is a test", operator='and', zero_terms_query='all')
 ```
 {% include copy.html %}
 
 
-*PPL query:*
+*PPL 查詢：*
 ```sql
 SOURCE=my_index | WHERE match(message, "this is a test", operator='and', zero_terms_query='all') | FIELDS message
 ```
 {% include copy.html %}
 
 
-## Multi-match
+## 多欄位比對
 
-To search for text in multiple fields, use `MULTI_MATCH` function. This function maps to the `multi_match` query used in search engine, to returns the documents that match a provided text, number, date, or Boolean value with a given field or fields.
+若要在多個欄位中搜尋文字，請使用 `MULTI_MATCH` 函式。此函式對應至搜尋引擎中使用的 `multi_match` 查詢，會傳回與一或多個指定欄位中所提供的文字、數字、日期或布林值相符的文件。
 
-### Syntax
+### 語法
 
-The `MULTI_MATCH` function *boosts* certain fields by using **^** character. Boosts are multipliers that weigh matches in one field more heavily than matches in other fields. The syntax supports specifying the fields with double quotes, single quotes, backticks, or without any quotes. Use star ``"*"`` to search all fields. Star symbol should be quoted.
+`MULTI_MATCH` 函式使用 **^** 字元來*提升 (boost)* 特定欄位的權重。提升值是乘數，可讓某個欄位中的相符項目比其他欄位中的相符項目具有更高的權重。此語法支援以雙引號、單引號、反引號或不加任何引號的方式指定欄位。使用星號 ``"*"`` 可搜尋所有欄位。星號必須加上引號。
 
 ```sql
 multi_match([field_expression+], query_expression[, option=<option_value>]*)
@@ -145,7 +146,7 @@ multi_match([field_expression+], query_expression[, option=<option_value>]*)
 {% include copy.html %}
 
 
-The weight is optional and is specified after the field name. It could be delimited by the `caret` character -- `^` or by white space. Refer to the following examples:
+權重為選用，並指定於欄位名稱之後。權重可以使用 `caret` 字元（`^`）或空白字元分隔。請參閱下列範例：
 
 ```sql
 multi_match(["Tags" ^ 2, 'Title' 3.4, `Body`, Comments ^ 0.3], ...)
@@ -154,7 +155,7 @@ multi_match(["*"], ...)
 {% include copy.html %}
 
 
-You can specify the following options for `MULTI_MATCH` in any order:
+您可以依任意順序為 `MULTI_MATCH` 指定下列選項：
 
 - `analyzer`
 - `auto_generate_synonyms_phrase`
@@ -172,9 +173,9 @@ You can specify the following options for `MULTI_MATCH` in any order:
 - `zero_terms_query`
 - `boost`
 
-Refer to `multi_match` query [documentation]({{site.url}}{{site.baseurl}}/query-dsl/full-text/multi-match/) for parameter description and supported values.
+如需參數說明及支援的值，請參閱 `multi_match` 查詢[文件]({{site.url}}{{site.baseurl}}/query-dsl/full-text/multi-match/)。
 
-### For example, REST API search for `Dale` in either the `firstname` or `lastname` fields:
+### 例如，在 `firstname` 或 `lastname` 欄位中搜尋 `Dale` 的 REST API 搜尋：
 
 ```json
 GET accounts/_search
@@ -189,7 +190,7 @@ GET accounts/_search
 ```
 {% include copy-curl.html %}
 
-could be called from *SQL* using `multi_match` function:
+可以從 *SQL* 使用 `multi_match` 函式呼叫：
 
 ```sql
 SELECT firstname, lastname
@@ -199,7 +200,7 @@ WHERE multi_match(['*name'], 'Dale')
 {% include copy.html %}
 
 
-or `multi_match` *PPL* function:
+或使用 `multi_match` *PPL* 函式：
 
 ```sql
 SOURCE=accounts | WHERE multi_match(['*name'], 'Dale') | fields firstname, lastname
@@ -207,7 +208,7 @@ SOURCE=accounts | WHERE multi_match(['*name'], 'Dale') | fields firstname, lastn
 {% include copy.html %}
 
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -217,14 +218,14 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Query string
+## 查詢字串
 
-To split text based on operators, use the `QUERY_STRING` function. The `QUERY_STRING` function supports logical connectives, wildcard, regex, and proximity search.
-This function maps to the to the `query_string` query used in search engine, to return the documents that match a provided text, number, date, or Boolean value with a given field or fields.
+若要根據運算子分割文字，請使用 `QUERY_STRING` 函式。`QUERY_STRING` 函式支援邏輯連接詞、萬用字元、規則運算式及鄰近搜尋。
+此函式對應至搜尋引擎中使用的 `query_string` 查詢，會傳回與一或多個指定欄位中所提供的文字、數字、日期或布林值相符的文件。
 
-### Syntax
+### 語法
 
-The `QUERY_STRING` function has syntax similar to `MATCH_QUERY` and *boosts* certain fields by using **^** character. Boosts are multipliers that weigh matches in one field more heavily than matches in other fields. The syntax supports specifying the fields with double quotes, single quotes, backticks, or without any quotes. Use star ``"*"`` to search all fields. Star symbol should be quoted.
+`QUERY_STRING` 函式的語法與 `MATCH_QUERY` 類似，並使用 **^** 字元來*提升 (boost)* 特定欄位的權重。提升值是乘數，可讓某個欄位中的相符項目比其他欄位中的相符項目具有更高的權重。此語法支援以雙引號、單引號、反引號或不加任何引號的方式指定欄位。使用星號 ``"*"`` 可搜尋所有欄位。星號必須加上引號。
 
 ```sql
 query_string([field_expression+], query_expression[, option=<option_value>]*)
@@ -232,7 +233,7 @@ query_string([field_expression+], query_expression[, option=<option_value>]*)
 {% include copy.html %}
 
 
-The weight is optional and is specified after the field name. It could be delimited by the `caret` character -- `^` or by white space. Refer to the following examples:
+權重為選用，並指定於欄位名稱之後。權重可以使用 `caret` 字元（`^`）或空白字元分隔。請參閱下列範例：
 
 ```sql
 query_string(["Tags" ^ 2, 'Title' 3.4, `Body`, Comments ^ 0.3], ...)
@@ -241,7 +242,7 @@ query_string(["*"], ...)
 {% include copy.html %}
 
 
-You can specify the following options for `QUERY_STRING` in any order:
+您可以依任意順序為 `QUERY_STRING` 指定下列選項：
 
 - `analyzer`
 - `allow_leading_wildcard`
@@ -267,11 +268,11 @@ You can specify the following options for `QUERY_STRING` in any order:
 - `tie_breaker`
 - `time_zone`
 
-Refer to the `query_string` query [documentation]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/) for parameter descriptions and supported values.
+如需參數說明及支援的值，請參閱 `query_string` 查詢[文件]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/)。
 
-### Example of using `query_string` in SQL and PPL queries:
+### 在 SQL 和 PPL 查詢中使用 `query_string` 的範例：
 
-The REST API search request
+下列 REST API 搜尋請求
 
 ```json
 GET accounts/_search
@@ -286,7 +287,7 @@ GET accounts/_search
 ```
 {% include copy-curl.html %}
 
-could be called from *SQL*
+可以從 *SQL* 呼叫
 
 ```sql
 SELECT account_number, address
@@ -296,7 +297,7 @@ WHERE query_string(['address'], 'Lane Street', default_operator='OR')
 {% include copy.html %}
 
 
-or from *PPL*:
+或從 *PPL* 呼叫：
 
 ```sql
 SOURCE=accounts | WHERE query_string(['address'], 'Lane Street', default_operator='OR') | fields account_number, address
@@ -304,7 +305,7 @@ SOURCE=accounts | WHERE query_string(['address'], 'Lane Street', default_operato
 {% include copy.html %}
 
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -316,11 +317,11 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Match phrase
+## 片語比對
 
-To search for exact phrases, use `MATCHPHRASE` or `MATCH_PHRASE` functions.
+若要搜尋確切的片語，請使用 `MATCHPHRASE` 或 `MATCH_PHRASE` 函式。
 
-### Syntax
+### 語法
 
 ```sql
 matchphrasequery(field_expression, query_expression)
@@ -330,18 +331,18 @@ match_phrase(field_expression, query_expression[, option=<option_value>]*)
 {% include copy.html %}
 
 
-The `MATCHPHRASE`/`MATCH_PHRASE` functions let you specify the following options in any order:
+`MATCHPHRASE`/`MATCH_PHRASE` 函式可讓您以任意順序指定下列選項：
 
 - `analyzer`
 - `slop`
 - `zero_terms_query`
 - `boost`
 
-Refer to the `match_phrase` query [documentation]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/) for parameter descriptions and supported values.
+參數說明與支援的值請參閱 `match_phrase` 查詢的[文件]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/)。
 
-### Example of using `match_phrase` in SQL and PPL queries:
+### 在 SQL 與 PPL 查詢中使用 `match_phrase` 的範例：
 
-The REST API search request
+REST API 搜尋請求
 ```json
 GET accounts/_search
 {
@@ -356,7 +357,7 @@ GET accounts/_search
 ```
 {% include copy-curl.html %}
 
-could be called from *SQL*
+可以從 *SQL* 呼叫
 ```sql
 SELECT account_number, address
 FROM accounts
@@ -365,14 +366,14 @@ WHERE match_phrase(address, '880 Holmes Lane')
 {% include copy.html %}
 
 
-or *PPL*
+或從 *PPL* 呼叫
 ```sql
 SOURCE=accounts | WHERE match_phrase(address, '880 Holmes Lane') | FIELDS account_number, address
 ```
 {% include copy.html %}
 
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -383,14 +384,14 @@ The query returns the following results:
 <!-- vale on -->
 
 
-## Simple query string
+## 簡易查詢字串
 
-The `simple_query_string` function maps to the `simple_query_string` query in OpenSearch. It returns the documents that match a provided text, number, date, or Boolean value with a given field or fields.
-The **^** lets you *boost* certain fields. Boosts are multipliers that weigh matches in one field more heavily than matches in other fields.
+`simple_query_string` 函式對應到 OpenSearch 中的 `simple_query_string` 查詢。它會傳回在指定的一個或多個欄位中，符合所提供文字、數字、日期或布林值的文件。
+**^** 可讓您對特定欄位進行 *boost*（加權）。加權是乘數，會讓某個欄位中的相符結果比其他欄位中的相符結果獲得更高的權重。
 
-### Syntax
+### 語法
 
-The syntax supports specifying the fields with double quotes, single quotes, backticks, or without any quotes. Use star ``"*"`` to search all fields. Star symbol should be quoted.
+此語法支援以雙引號、單引號、反引號或不加引號的方式指定欄位。使用星號 ``"*"`` 可搜尋所有欄位。星號應加上引號。
 
 ```sql
 simple_query_string([field_expression+], query_expression[, option=<option_value>]*)
@@ -398,7 +399,7 @@ simple_query_string([field_expression+], query_expression[, option=<option_value
 {% include copy.html %}
 
 
-The weight is optional and is specified after the field name. It could be delimited by the `caret` character -- `^` or by white space. Refer to the following examples:
+權重為選用，指定在欄位名稱之後。可以用 `caret` 字元 -- `^` 或空白字元分隔。請參閱下列範例：
 
 ```sql
 simple_query_string(["Tags" ^ 2, 'Title' 3.4, `Body`, Comments ^ 0.3], ...)
@@ -407,7 +408,7 @@ simple_query_string(["*"], ...)
 {% include copy.html %}
 
 
-You can specify the following options for `SIMPLE_QUERY_STRING` in any order:
+您可以以任意順序為 `SIMPLE_QUERY_STRING` 指定下列選項：
 
 - `analyze_wildcard`
 - `analyzer`
@@ -422,11 +423,11 @@ You can specify the following options for `SIMPLE_QUERY_STRING` in any order:
 - `minimum_should_match`
 - `quote_field_suffix`
 
-Refer to the `simple_query_string` query [documentation]({{site.url}}{{site.baseurl}}/query-dsl/full-text/simple-query-string/) for parameter descriptions and supported values.
+參數說明與支援的值請參閱 `simple_query_string` 查詢的[文件]({{site.url}}{{site.baseurl}}/query-dsl/full-text/simple-query-string/)。
 
-### *Example* of using `simple_query_string` in SQL and PPL queries:
+### 在 SQL 與 PPL 查詢中使用 `simple_query_string` 的*範例*：
 
-The REST API search request
+REST API 搜尋請求
 ```json
 GET accounts/_search
 {
@@ -440,7 +441,7 @@ GET accounts/_search
 ```
 {% include copy-curl.html %}
 
-could be called from *SQL*
+可以從 *SQL* 呼叫
 ```sql
 SELECT account_number, address
 FROM accounts
@@ -449,14 +450,14 @@ WHERE simple_query_string(['address'], 'Lane Street', default_operator='OR')
 {% include copy.html %}
 
 
-or from *PPL*
+或從 *PPL* 呼叫
 ```sql
 SOURCE=accounts | WHERE simple_query_string(['address'], 'Lane Street', default_operator='OR') | fields account_number, address
 ```
 {% include copy.html %}
 
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -468,17 +469,17 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Match phrase prefix
+## 片語前綴比對
 
-To search for phrases by given prefix, use `MATCH_PHRASE_PREFIX` function to make a prefix query out of the last term in the query string.
+若要依指定前綴搜尋片語，請使用 `MATCH_PHRASE_PREFIX` 函式，對查詢字串中的最後一個詞彙建立前綴查詢。
 
-### Syntax
+### 語法
 
 ```sql
 match_phrase_prefix(field_expression, query_expression[, option=<option_value>]*)
 ```
 
-The `MATCH_PHRASE_PREFIX` function lets you specify the following options in any order:
+`MATCH_PHRASE_PREFIX` 函式可讓您以任意順序指定下列選項：
 
 - `analyzer`
 - `slop`
@@ -486,11 +487,11 @@ The `MATCH_PHRASE_PREFIX` function lets you specify the following options in any
 - `zero_terms_query`
 - `boost`
 
-Refer to the `match_phrase_prefix` query [documentation]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase-prefix/) for parameter descriptions and supported values.
+參數說明與支援的值請參閱 `match_phrase_prefix` 查詢的[文件]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase-prefix/)。
 
-### *Example* of using `match_phrase_prefix` in SQL and PPL queries:
+### 在 SQL 與 PPL 查詢中使用 `match_phrase_prefix` 的*範例*：
 
-The REST API search request
+REST API 搜尋請求
 ```json
 GET accounts/_search
 {
@@ -505,7 +506,7 @@ GET accounts/_search
 ```
 {% include copy-curl.html %}
 
-could be called from *SQL*
+可以從 *SQL* 呼叫
 ```sql
 SELECT author, title
 FROM books
@@ -514,14 +515,14 @@ WHERE match_phrase_prefix(author, 'Alexander Mil')
 {% include copy.html %}
 
 
-or *PPL*
+或從 *PPL* 呼叫
 ```sql
 source=books | where match_phrase_prefix(author, 'Alexander Mil') | fields author, title
 ```
 {% include copy.html %}
 
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -533,17 +534,17 @@ Alan Alexander Milne | Winnie-the-Pooh
 <!-- vale on -->
 
 
-## Match Boolean prefix
+## 布林前綴比對
 
-Use the `match_bool_prefix` function to search documents that match text only for a given field prefix.
+使用 `match_bool_prefix` 函式，在指定欄位中搜尋符合文字前綴的文件。
 
-### Syntax
+### 語法
 
 ```sql
 match_bool_prefix(field_expression, query_expression[, option=<option_value>]*)
 ```
 
-The `MATCH_BOOL_PREFIX` function lets you specify the following options in any order:
+`MATCH_BOOL_PREFIX` 函式可讓您以任意順序指定下列選項：
 
 - `minimum_should_match`
 - `fuzziness`
@@ -555,11 +556,11 @@ The `MATCH_BOOL_PREFIX` function lets you specify the following options in any o
 - `analyzer`
 - `operator`
 
-Refer to the `match_bool_prefix` query [documentation]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-bool-prefix/) for parameter descriptions and supported values.
+參數說明與支援的值請參閱 `match_bool_prefix` 查詢的[文件]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-bool-prefix/)。
 
-### Example of using `match_bool_prefix` in SQL and PPL queries:
+### 在 SQL 與 PPL 查詢中使用 `match_bool_prefix` 的範例：
 
-The REST API search request
+REST API 搜尋請求
 ```json
 GET accounts/_search
 {
@@ -574,7 +575,7 @@ GET accounts/_search
 ```
 {% include copy-curl.html %}
 
-could be called from *SQL*
+可以從 *SQL* 呼叫
 ```sql
 SELECT firstname, address
 FROM accounts
@@ -583,14 +584,14 @@ WHERE match_bool_prefix(address, 'Bristol Stre')
 {% include copy.html %}
 
 
-or *PPL*
+或從 *PPL* 呼叫
 ```sql
 source=accounts | where match_bool_prefix(address, 'Bristol Stre') | fields firstname, address
 ```
 {% include copy.html %}
 
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 

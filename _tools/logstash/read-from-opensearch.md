@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Read from OpenSearch
+title: "從 OpenSearch 讀取資料"
 parent: Logstash
 nav_order: 220
 redirect_from:
   - /clients/logstash/read-from-opensearch/
 ---
 
-# Read from OpenSearch
+# 從 OpenSearch 讀取資料
 
-As we ship Logstash events to an OpenSearch cluster using the [OpenSearch output plugin](https://github.com/opensearch-project/logstash-output-opensearch), we can also perform read operations on an OpenSearch cluster and load data into Logstash using the [OpenSearch input plugin](https://github.com/opensearch-project/logstash-input-opensearch).
+我們可以使用 [OpenSearch output plugin](https://github.com/opensearch-project/logstash-output-opensearch) 將 Logstash 事件傳送至 OpenSearch 叢集，同樣地，也可以使用 [OpenSearch input plugin](https://github.com/opensearch-project/logstash-input-opensearch) 對 OpenSearch 叢集執行讀取操作，並將資料載入 Logstash。
 
-The OpenSearch input plugin reads the search query results performed on an OpenSearch cluster and loads them into Logstash. This lets you replay test logs, reindex, and perform other operations based on the loaded data. You can schedule ingest operations to run periodically by using 
-[cron expressions]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions), or manually load data into Logstash by running the query once.
+OpenSearch input plugin 會讀取在 OpenSearch 叢集上執行的搜尋查詢結果，並將其載入 Logstash。這讓您可以重新播放測試記錄檔、重新編製索引，並根據載入的資料執行其他操作。您可以使用
+[cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions) 排定資料匯入操作定期執行，也可以只執行一次查詢，手動將資料載入 Logstash。
 
 
 
 ## OpenSearch input plugin
 
-To run the OpenSearch input plugin, add the configuration to the `pipeline.conf` file within your Logstash's `config` folder. The following example runs the `match_all` query filter and loads in data once.
+若要執行 OpenSearch input plugin，請將組態新增至 Logstash `config` 資料夾內的 `pipeline.conf` 檔案。下列範例會執行 `match_all` 查詢篩選器，並載入資料一次。
 
 ```yml
 input {
@@ -38,16 +39,16 @@ output {
 }
 ```
 
-To ingest data according to a schedule, use a cron expression that specifies the schedule you want. For example, to load in data every minute, add `schedule => "* * * * *"` to the input section of your `pipeline.conf` file.
+若要依照排程匯入資料，請使用指定所需排程的 cron 運算式。例如，若要每分鐘載入一次資料，請在 `pipeline.conf` 檔案的 input 區段中新增 `schedule => "* * * * *"`。
 
-Like the output plugin, after adding your configuration to the `pipeline.conf` file, start Logstash by providing the path to this file:
+與 output plugin 相同，將組態新增至 `pipeline.conf` 檔案後，請提供該檔案的路徑來啟動 Logstash：
 
  ```bash
  $ bin/logstash -f config/pipeline.conf --config.reload.automatic
  ```
 
-`config/pipeline.conf` is a relative path to the `pipeline.conf` file. You can use an absolute path as well.
+`config/pipeline.conf` 是 `pipeline.conf` 檔案的相對路徑，您也可以使用絕對路徑。
 
-Adding `stdout{}` to the `output{}` section of your `pipeline.conf` file prints the query results to the console. 
+在 `pipeline.conf` 檔案的 `output{}` 區段中新增 `stdout{}`，即可將查詢結果輸出至主控台。
 
-To reindex the data into an OpenSearch domain, add the destination domain configuration in the `output{}` section like shown [here]({{site.url}}{{site.baseurl}}/tools/logstash/index/).
+若要將資料重新編製索引至 OpenSearch 網域，請如[這裡]({{site.url}}{{site.baseurl}}/tools/logstash/index/)所示，在 `output{}` 區段中新增目的地網域的組態。

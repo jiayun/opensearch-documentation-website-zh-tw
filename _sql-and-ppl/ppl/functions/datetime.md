@@ -1,34 +1,35 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Date and time functions
+title: "日期與時間函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 6
 ---
 
-# Date and time functions  
+# 日期與時間函式  
 
-All PPL date and time functions use the UTC time zone. Both input and output values are interpreted as UTC. For example, an input timestamp literal such as `'2020-08-26 01:01:01'` is assumed to be in UTC, and the `now()` function also returns the current date and time in UTC.
+所有 PPL 日期與時間函式都使用 UTC 時區。輸入與輸出值都會解讀為 UTC。例如，輸入的時間戳記常值如 `'2020-08-26 01:01:01'` 會假設為 UTC，而 `now()` 函式也會以 UTC 傳回目前的日期與時間。
 
-The following date and time functions are supported in PPL.
+PPL 支援下列日期與時間函式。
 
 ## ADDDATE
 
-**Usage**: `ADDDATE(date, INTERVAL expr unit)`, `ADDDATE(date, days)`
+**用法**：`ADDDATE(date, INTERVAL expr unit)`、`ADDDATE(date, days)`
 
-Adds the interval or number of days to the date. The first form adds an interval to the date, the second form adds the specified number of days as an integer to the date. If the first argument is `TIME`, today's date is used. If the first argument is `DATE`, the time at midnight is used.
+將間隔或天數加到日期。第一種形式會將間隔加到日期，第二種形式會將指定的整數天數加到日期。如果第一個引數是 `TIME`，則使用今天的日期。如果第一個引數是 `DATE`，則使用午夜的時間。
 
-**Parameters**:
+**參數**：
 
-- `date` (Required): The date, timestamp, or time value to modify.
-- `INTERVAL expr unit` (Required in first form): The interval to add to the date.
-- `days` (Required in second form): The number of days to add as an integer.
+- `date` (必要)：要修改的日期、時間戳記或時間值。
+- `INTERVAL expr unit` (第一種形式為必要)：要加到日期的間隔。
+- `days` (第二種形式為必要)：要加入的整數天數。
 
-**Return type**: `TIMESTAMP` for the interval form, `DATE` for the integer days form when the input is `DATE`, `TIMESTAMP` when the input is `TIMESTAMP` or `TIME`.
+**傳回類型**：間隔形式為 `TIMESTAMP`；當輸入為 `DATE` 時，整數天數形式為 `DATE`；當輸入為 `TIMESTAMP` 或 `TIME` 時為 `TIMESTAMP`。
 
-Synonyms: [`DATE_ADD`](#date_add) (when used in interval form)
+同義詞：[`DATE_ADD`](#date_add) (以間隔形式使用時)
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -37,7 +38,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -49,20 +50,20 @@ The query returns the following results:
   
 ## ADDTIME
 
-**Usage**: `ADDTIME(expr1, expr2)`
+**用法**：`ADDTIME(expr1, expr2)`
 
-Adds the second expression to the first expression and returns the result. If an argument is `TIME`, today's date is used. If an argument is `DATE`, the time at midnight is used.
+將第二個運算式加到第一個運算式並傳回結果。如果引數是 `TIME`，則使用今天的日期。如果引數是 `DATE`，則使用午夜的時間。
 
-**Parameters**:
+**參數**：
 
-- `expr1` (Required): The base date, timestamp, or time value.
-- `expr2` (Required): The date, timestamp, or time value to add to the first expression.
+- `expr1` (必要)：基準日期、時間戳記或時間值。
+- `expr2` (必要)：要加到第一個運算式的日期、時間戳記或時間值。
 
-**Return type**: `TIMESTAMP` when the first argument is `DATE` or `TIMESTAMP`, `TIME` when the first argument is `TIME`.
+**傳回類型**：當第一個引數是 `DATE` 或 `TIMESTAMP` 時為 `TIMESTAMP`；當第一個引數是 `TIME` 時為 `TIME`。
 
-#### Examples
+#### 範例
 
-The following example shows adding two DATE values:
+下列範例顯示將兩個 DATE 值相加：
 
 ```sql
 source=people
@@ -71,7 +72,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -81,7 +82,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows adding TIME and DATE values:
+下列範例顯示將 TIME 與 DATE 值相加：
 
 ```sql
 source=people
@@ -90,7 +91,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -100,7 +101,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows combining DATE and TIME into a timestamp:
+下列範例顯示將 DATE 與 TIME 合併為時間戳記：
 
 ```sql
 source=people
@@ -109,7 +110,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -119,7 +120,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows adding two TIME values:
+下列範例顯示將兩個 TIME 值相加：
 
 ```sql
 source=people
@@ -128,7 +129,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -138,7 +139,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows adding two TIMESTAMP values:
+下列範例顯示將兩個 TIMESTAMP 值相加：
 
 ```sql
 source=people
@@ -147,7 +148,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -159,19 +160,19 @@ The query returns the following results:
   
 ## CONVERT_TZ
 
-**Usage**: `CONVERT_TZ(timestamp, from_timezone, to_timezone)`
+**用法**：`CONVERT_TZ(timestamp, from_timezone, to_timezone)`
 
-Constructs a local timestamp converted from the source time zone to the target time zone. Returns `NULL` when any of the three function arguments is invalid: the timestamp is not in the format `yyyy-MM-dd HH:mm:ss`, a time zone is not in `(+/-)HH:mm` format, dates are invalid (such as February 30th), or time zones are outside the valid range of -13:59 to +14:00.
+建構從來源時區轉換為目標時區的本機時間戳記。當三個函式引數中有任何一個無效時會傳回 `NULL`：時間戳記不是 `yyyy-MM-dd HH:mm:ss` 格式、時區不是 `(+/-)HH:mm` 格式、日期無效 (例如 2 月 30 日)，或時區超出 -13:59 到 +14:00 的有效範圍。
 
-**Parameters**:
+**參數**：
 
-- `timestamp` (Required): The timestamp or string to convert in `yyyy-MM-dd HH:mm:ss` format.
-- `from_timezone` (Required): The source time zone in `(+/-)HH:mm` format.
-- `to_timezone` (Required): The target time zone in `(+/-)HH:mm` format.
+- `timestamp` (必要)：要以 `yyyy-MM-dd HH:mm:ss` 格式轉換的時間戳記或字串。
+- `from_timezone` (必要)：`(+/-)HH:mm` 格式的來源時區。
+- `to_timezone` (必要)：`(+/-)HH:mm` 格式的目標時區。
 
-**Return type**: `TIMESTAMP`
+**傳回類型**：`TIMESTAMP`
 
-#### Examples
+#### 範例
 
 ```sql
 source=people
@@ -180,7 +181,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -190,7 +191,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The valid time zone range for `convert_tz` is (-13:59, +14:00) inclusive. Time zones outside of the range, such as +15:00 in this example, return `NULL`:
+`convert_tz` 的有效時區範圍是 (-13:59, +14:00) (含端點)。超出此範圍的時區 (例如本範例中的 +15:00) 會傳回 `NULL`：
 
 ```sql
 source=people
@@ -199,7 +200,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -209,7 +210,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows conversion from a positive time zone to a negative time zone that crosses the date line:
+下列範例顯示從正時區轉換為跨越換日線的負時區：
 
 ```sql
 source=people
@@ -218,7 +219,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -228,7 +229,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-Valid dates are required in `convert_tz`. For invalid dates such as April 31st (not a date in the Gregorian calendar), `NULL` is returned:
+`convert_tz` 中需要有效的日期。對於無效的日期 (例如 4 月 31 日，這不是公曆中的日期)，會傳回 `NULL`：
 
 ```sql
 source=people
@@ -237,7 +238,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -247,7 +248,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The following example shows that February 30th also returns `NULL`:
+下列範例顯示 2 月 30 日也會傳回 `NULL`：
 
 ```sql
 source=people
@@ -256,7 +257,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -266,7 +267,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-February 29th 2008 is a valid date because it is a leap year:
+2008 年 2 月 29 日是有效日期，因為該年是閏年：
   
 ```sql
 source=people
@@ -275,7 +276,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -285,7 +286,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The following example shows that February 29th 2007 returns `NULL` because 2007 is not a leap year:
+下列範例顯示 2007 年 2 月 29 日會傳回 `NULL`，因為 2007 年不是閏年：
 
 ```sql
 source=people
@@ -294,7 +295,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -304,7 +305,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The valid time zone range for `convert_tz` is [-13:59, +14:00] inclusive. Time zones outside of the range, such as +14:01 in this example, return `NULL`:
+`convert_tz` 的有效時區範圍是 [-13:59, +14:00] (含端點)。超出此範圍的時區 (例如本範例中的 +14:01) 會傳回 `NULL`：
   
 ```sql
 source=people
@@ -313,7 +314,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -323,7 +324,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The valid time zone range for `convert_tz` is (-13:59, +14:00) inclusive. Time zones within the range, such as +14:00 in this example, return a correctly converted date time object:
+`convert_tz` 的有效時區範圍是 (-13:59, +14:00) (含端點)。在此範圍內的時區 (例如本範例中的 +14:00) 會傳回正確轉換的日期時間物件：
   
 ```sql
 source=people
@@ -332,7 +333,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -342,7 +343,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The following example shows that -14:00 (outside the valid range) returns `NULL`:
+下列範例顯示 -14:00 (超出有效範圍) 會傳回 `NULL`：
 
 ```sql
 source=people
@@ -351,7 +352,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -361,7 +362,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The valid time zone range for `convert_tz` is [-13:59, +14:00] inclusive. Time zones at the lower boundary of the range, such as -13:59, are valid and return converted results:
+`convert_tz` 的有效時區範圍是 [-13:59, +14:00] (含端點)。位於範圍下限的時區 (例如 -13:59) 是有效的，並會傳回轉換後的結果：
   
 ```sql
 source=people
@@ -370,7 +371,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -382,15 +383,15 @@ The query returns the following results:
   
 ## CURDATE
 
-**Usage**: `CURDATE()`
+**用法**：`CURDATE()`
 
-Returns the current date as a value in `YYYY-MM-DD` format. The function returns the current date in UTC at the time when the statement is executed.
+以 `YYYY-MM-DD` 格式的值傳回目前日期。此函式會傳回陳述式執行當下的 UTC 目前日期。
 
-**Parameters**: None
+**參數**：無
 
-**Return type**: `DATE`
+**傳回類型**：`DATE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -399,7 +400,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -411,15 +412,15 @@ The query returns the following results:
   
 ## CURRENT_DATE
 
-**Usage**: `CURRENT_DATE()`
+**用法**：`CURRENT_DATE()`
 
-A synonym for `CURDATE()`.
+`CURDATE()` 的同義詞。
 
-**Parameters**: None
+**參數**：無
 
-**Return type**: `DATE`
+**傳回類型**：`DATE`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -428,7 +429,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -440,15 +441,15 @@ The query returns the following results:
   
 ## CURRENT_TIME
 
-**Usage**: `CURRENT_TIME()`
+**用法**：`CURRENT_TIME()`
 
-A synonym for `CURTIME()`.
+`CURTIME()` 的同義詞。
 
-**Parameters**: None
+**參數**：無
 
-**Return type**: `TIME`
+**傳回類型**：`TIME`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -457,7 +458,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -469,15 +470,15 @@ The query returns the following results:
   
 ## CURRENT_TIMESTAMP
 
-**Usage**: `CURRENT_TIMESTAMP()`
+**用法**：`CURRENT_TIMESTAMP()`
 
-A synonym for `NOW()`.
+`NOW()` 的同義詞。
 
-**Parameters**: None
+**參數**：無
 
-**Return type**: `TIMESTAMP`
+**傳回類型**：`TIMESTAMP`
 
-### Example
+### 範例
   
 ```sql
 source=people
@@ -486,7 +487,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -498,15 +499,15 @@ The query returns the following results:
   
 ## CURTIME
 
-**Usage**: `CURTIME()`
+**用法**：`CURTIME()`
 
-Returns the current time as a value in the `hh:mm:ss` format in the UTC time zone. `CURTIME()` returns the time at which the statement began to execute, as [`NOW()`](#now) does.
+以 UTC 時區、`hh:mm:ss` 格式的值傳回目前時間。`CURTIME()` 會傳回陳述式開始執行的時間，與 [`NOW()`](#now) 相同。
 
-**Parameters**: None
+**參數**：無
 
-**Return type**: `TIME`
+**傳回類型**：`TIME`
 
-#### Example
+#### 範例
 
 ```sql
 source=people
@@ -515,7 +516,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -527,18 +528,18 @@ The query returns the following results:
   
 ## DATE
 
-**Usage**: `DATE(expr)`
+**用法**：`DATE(expr)`
 
-Constructs a date type from the input string `expr`. If the argument is a date or timestamp, it extracts the date value part from the expression.
+從輸入字串 `expr` 建構日期類型。如果引數是日期或時間戳記，則會從運算式中擷取日期值的部分。
 
-**Parameters**:
-- `expr` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `expr`（必要）：`STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `DATE`
+**傳回類型**：`DATE`
 
-#### Examples
+#### 範例
 
-The following example extracts a date from a string:
+下列範例會從字串中擷取日期：
 
 ```sql
 source=people
@@ -547,7 +548,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -557,7 +558,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example extracts the date from a timestamp:
+下列範例會從時間戳記中擷取日期：
 
 ```sql
 source=people
@@ -566,7 +567,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -576,7 +577,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example extracts the date from a string containing both date and time:
+下列範例會從同時包含日期與時間的字串中擷取日期：
 
 ```sql
 source=people
@@ -585,7 +586,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -597,20 +598,20 @@ The query returns the following results:
   
 ## DATE_ADD
 
-**Usage**: `DATE_ADD(date, INTERVAL expr unit)`
+**用法**：`DATE_ADD(date, INTERVAL expr unit)`
 
-Adds the interval `expr` to `date`. If the first argument is `TIME`, today's date is used. If the first argument is `DATE`, the time at midnight is used.
+將間隔 `expr` 加到 `date`。如果第一個引數是 `TIME`，則會使用今天的日期。如果第一個引數是 `DATE`，則會使用午夜時間。
 
-**Parameters**:
-- `date` (Required): A `DATE`, `TIMESTAMP`, or `TIME` value.
-- `INTERVAL expr unit` (Required): An `INTERVAL` expression.
+**參數**：
+- `date`（必要）：`DATE`、`TIMESTAMP` 或 `TIME` 值。
+- `INTERVAL expr unit`（必要）：`INTERVAL` 運算式。
 
-**Return type**: `TIMESTAMP`
+**傳回類型**：`TIMESTAMP`
 
-Synonyms: [`ADDDATE`](#adddate)
-Antonyms: [`DATE_SUB`](#date_sub)
+同義詞：[`ADDDATE`](#adddate)
+反義詞：[`DATE_SUB`](#date_sub)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -619,7 +620,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -631,55 +632,55 @@ The query returns the following results:
   
 ## DATE_FORMAT
 
-**Usage**: `DATE_FORMAT(date, format)`
+**用法**：`DATE_FORMAT(date, format)`
 
-Formats the `date` argument using the specifiers in the `format` argument. If an argument of type `TIME` is provided, the local date is used.
+使用 `format` 引數中的指定符來格式化 `date` 引數。如果提供的是 `TIME` 類型的引數，則使用本機日期。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, `TIME`, or `TIMESTAMP` value.
-- `format` (Required): A `STRING` containing format specifiers.
+**參數**：
+- `date`（必要）：`STRING`、`DATE`、`TIME` 或 `TIMESTAMP` 值。
+- `format`（必要）：包含格式指定符的 `STRING`。
 
-**Return type**: `STRING`
+**傳回類型**：`STRING`
 
-The following table describes the available format specifiers.
+下表說明可用的格式指定符。
 
-| Specifier | Description |
+| 指定符 | 說明 |
 | --- | --- |
-| `%a` | Abbreviated weekday name (Sun..Sat) |
-| `%b` | Abbreviated month name (Jan..Dec) |
-| `%c` | Month, numeric (0..12) |
-| `%D` | Day of the month with English suffix (0th, 1st, 2nd, 3rd, ...) |
-| `%d` | Day of the month, numeric (00..31) |
-| `%e` | Day of the month, numeric (0..31) |
-| `%f` | Microseconds (000000..999999) |
-| `%H` | Hour (00..23) |
-| `%h` | Hour (01..12) |
-| `%I` | Hour (01..12) |
-| `%i` | Minutes, numeric (00..59) |
-| `%j` | Day of year (001..366) |
-| `%k` | Hour (0..23) |
-| `%l` | Hour (1..12) |
-| `%M` | Month name (January..December) |
-| `%m` | Month, numeric (00..12) |
-| `%p` | AM or PM |
-| `%r` | Time, 12-hour (hh:mm:ss followed by AM or PM) |
-| `%S` | Seconds (00..59) |
-| `%s` | Seconds (00..59) |
-| `%T` | Time, 24-hour (hh:mm:ss) |
-| `%U` | Week (00..53), where Sunday is the first day of the week; WEEK() mode 0 |
-| `%u` | Week (00..53), where Monday is the first day of the week; WEEK() mode 1 |
-| `%V` | Week (01..53), where Sunday is the first day of the week; WEEK() mode 2; used with `%X` |
-| `%v` | Week (01..53), where Monday is the first day of the week; WEEK() mode 3; used with `%x` |
-| `%W` | Weekday name (Sunday..Saturday) |
-| `%w` | Day of the week (0=Sunday..6=Saturday) |
-| `%X` | Year for the week where Sunday is the first day of the week, numeric, four digits; used with `%V` |
-| `%x` | Year for the week, where Monday is the first day of the week, numeric, four digits; used with `%v` |
-| `%Y` | Year, numeric, four digits |
-| `%y` | Year, numeric (two digits) |
-| `%%` | A literal % character |
-| `x` | x, for any lowercase/uppercase alphabet except [aydmshiHIMYDSEL] |
+| `%a` | 星期名稱縮寫（Sun..Sat） |
+| `%b` | 月份名稱縮寫（Jan..Dec） |
+| `%c` | 月份，數值（0..12） |
+| `%D` | 當月日期，附英文序數後綴（0th、1st、2nd、3rd、...） |
+| `%d` | 當月日期，數值（00..31） |
+| `%e` | 當月日期，數值（0..31） |
+| `%f` | 微秒（000000..999999） |
+| `%H` | 小時（00..23） |
+| `%h` | 小時（01..12） |
+| `%I` | 小時（01..12） |
+| `%i` | 分鐘，數值（00..59） |
+| `%j` | 一年中的第幾天（001..366） |
+| `%k` | 小時（0..23） |
+| `%l` | 小時（1..12） |
+| `%M` | 月份名稱（January..December） |
+| `%m` | 月份，數值（00..12） |
+| `%p` | AM 或 PM |
+| `%r` | 時間，12 小時制（hh:mm:ss 後接 AM 或 PM） |
+| `%S` | 秒（00..59） |
+| `%s` | 秒（00..59） |
+| `%T` | 時間，24 小時制（hh:mm:ss） |
+| `%U` | 週（00..53），以星期日為一週的第一天；WEEK() 模式 0 |
+| `%u` | 週（00..53），以星期一為一週的第一天；WEEK() 模式 1 |
+| `%V` | 週（01..53），以星期日為一週的第一天；WEEK() 模式 2；與 `%X` 搭配使用 |
+| `%v` | 週（01..53），以星期一為一週的第一天；WEEK() 模式 3；與 `%x` 搭配使用 |
+| `%W` | 星期名稱（Sunday..Saturday） |
+| `%w` | 一週中的第幾天（0=星期日..6=星期六） |
+| `%X` | 以星期日為一週第一天時該週所屬的年份，數值，四位數；與 `%V` 搭配使用 |
+| `%x` | 以星期一為一週第一天時該週所屬的年份，數值，四位數；與 `%v` 搭配使用 |
+| `%Y` | 年份，數值，四位數 |
+| `%y` | 年份，數值（兩位數） |
+| `%%` | 字面 % 字元 |
+| `x` | x，適用於 [aydmshiHIMYDSEL] 以外的任何小寫或大寫字母 |
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -688,7 +689,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -700,19 +701,19 @@ The query returns the following results:
   
 ## DATETIME
 
-**Usage**: `DATETIME(timestamp)` or `DATETIME(date, to_timezone)`
+**用法**：`DATETIME(timestamp)` 或 `DATETIME(date, to_timezone)`
 
-Converts the `datetime` to a new time zone.
+將 `datetime` 轉換為新的時區。
 
-**Parameters**:
-- `timestamp` (Required): A `TIMESTAMP` or `STRING` value.
-- `to_timezone` (Optional): A `STRING` time zone value.
+**參數**：
+- `timestamp` (必要)：`TIMESTAMP` 或 `STRING` 值。
+- `to_timezone` (選用)：`STRING` 時區值。
 
-**Return type**: `TIMESTAMP`
+**傳回類型**：`TIMESTAMP`
 
-#### Examples
+#### 範例
 
-The following example converts a `datetime` to a different time zone:
+下列範例將 `datetime` 轉換為不同的時區：
 
 ```sql
 source=people
@@ -721,7 +722,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -731,7 +732,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The valid time zone range is (-13:59, +14:00) inclusive. The following example shows that time zones outside of this range return `NULL`:
+有效的時區範圍為 (-13:59, +14:00)（含端點）。下列範例顯示超出此範圍的時區會傳回 `NULL`：
 
 ```sql
 source=people
@@ -740,7 +741,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -752,20 +753,20 @@ The query returns the following results:
   
 ## DATE_SUB
 
-**Usage**: `DATE_SUB(date, INTERVAL expr unit)`
+**用法**：`DATE_SUB(date, INTERVAL expr unit)`
 
-Subtracts the interval `expr` from `date`. If the first argument is `TIME`, today's date is used. If the first argument is `DATE`, the time at midnight is used.
+從 `date` 減去間隔 `expr`。如果第一個引數為 `TIME`，則使用今天的日期。如果第一個引數為 `DATE`，則使用午夜的時間。
 
-**Parameters**:
-- `date` (Required): A `DATE`, `TIMESTAMP`, or `TIME` value.
-- `INTERVAL expr unit` (Required): An `INTERVAL` expression.
+**參數**：
+- `date` (必要)：`DATE`、`TIMESTAMP` 或 `TIME` 值。
+- `INTERVAL expr unit` (必要)：`INTERVAL` 運算式。
 
-**Return type**: `TIMESTAMP`
+**傳回類型**：`TIMESTAMP`
 
-Synonyms: [`SUBDATE`](#subdate)
-Antonyms: [`DATE_ADD`](#date_add)
+同義字：[`SUBDATE`](#subdate)
+反義字：[`DATE_ADD`](#date_add)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -774,7 +775,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -786,17 +787,17 @@ The query returns the following results:
   
 ## DATEDIFF
 
-**Usage**: `DATEDIFF(date1, date2)`
+**用法**：`DATEDIFF(date1, date2)`
 
-Calculates the difference of the date parts of given values. If the first argument is `TIME`, today's date is used.
+計算指定值的日期部分差異。如果第一個引數為 `TIME`，則使用今天的日期。
 
-**Parameters**:
-- `date1` (Required): A `DATE`, `TIMESTAMP`, or `TIME` value.
-- `date2` (Required): A `DATE`, `TIMESTAMP`, or `TIME` value.
+**參數**：
+- `date1` (必要)：`DATE`、`TIMESTAMP` 或 `TIME` 值。
+- `date2` (必要)：`DATE`、`TIMESTAMP` 或 `TIME` 值。
 
-**Return type**: `LONG`
+**傳回類型**：`LONG`
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -805,7 +806,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -817,18 +818,18 @@ The query returns the following results:
   
 ## DAY
 
-**Usage**: `DAY(date)`
+**用法**：`DAY(date)`
 
-Extracts the day of the month for `date`, in the range 1 to 31.
+擷取 `date` 的月份中的日，範圍為 1 到 31。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date` (必要)：`STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-Synonyms: [`DAYOFMONTH`](#dayofmonth), [`DAY_OF_MONTH`](#day_of_month)
+同義字：[`DAYOFMONTH`](#dayofmonth)、[`DAY_OF_MONTH`](#day_of_month)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -837,7 +838,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -849,16 +850,16 @@ The query returns the following results:
   
 ## DAYNAME
 
-**Usage**: `DAYNAME(date)`
+**用法**：`DAYNAME(date)`
 
-Returns the name of the weekday for `date`.
+傳回 `date` 的星期名稱。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date` (必要)：`STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `STRING`
+**傳回類型**：`STRING`
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -867,7 +868,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -879,18 +880,18 @@ The query returns the following results:
   
 ## DAYOFMONTH
 
-**Usage**: `DAYOFMONTH(date)`
+**用法**：`DAYOFMONTH(date)`
 
-Extracts the day of the month for `date`, in the range 1 to 31.
+擷取 `date` 的月份中的日，範圍為 1 到 31。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date` (必要)：`STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-Synonyms: [`DAY`](#day), [`DAY_OF_MONTH`](#day_of_month)
+同義字：[`DAY`](#day)、[`DAY_OF_MONTH`](#day_of_month)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -899,7 +900,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -911,18 +912,18 @@ The query returns the following results:
   
 ## DAY_OF_MONTH
 
-**Usage**: `DAY_OF_MONTH(date)`
+**用法**：`DAY_OF_MONTH(date)`
 
-Extracts the day of the month for `date`, in the range 1 to 31.
+擷取 `date` 的月份中的日，範圍為 1 到 31。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date` (必要)：`STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-Synonyms: [`DAY`](#day), [`DAYOFMONTH`](#dayofmonth)
+同義字：[`DAY`](#day)、[`DAYOFMONTH`](#dayofmonth)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -931,7 +932,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -943,18 +944,18 @@ The query returns the following results:
   
 ## DAYOFWEEK
 
-**Usage**: `DAYOFWEEK(date)`
+**用法**：`DAYOFWEEK(date)`
 
-Returns the weekday index for `date` (1 = Sunday, 2 = Monday, ..., 7 = Saturday).
+傳回 `date` 的星期索引 (1 = 星期日、2 = 星期一、...、7 = 星期六)。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date` (必要)：`STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-Synonyms: [`DAY_OF_WEEK`](#day_of_week)
+同義字：[`DAY_OF_WEEK`](#day_of_week)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -963,7 +964,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -975,18 +976,18 @@ The query returns the following results:
   
 ## DAY_OF_WEEK
 
-**Usage**: `DAY_OF_WEEK(date)`
+**用法**：`DAY_OF_WEEK(date)`
 
-Returns the weekday index for `date` (1 = Sunday, 2 = Monday, ..., 7 = Saturday).
+傳回 `date` 的星期索引 (1 = 星期日、2 = 星期一、...、7 = 星期六)。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date` (必要)：`STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-Synonyms: [`DAYOFWEEK`](#dayofweek)
+同義字：[`DAYOFWEEK`](#dayofweek)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -995,7 +996,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1007,18 +1008,18 @@ The query returns the following results:
   
 ## DAYOFYEAR
 
-**Usage**: `DAYOFYEAR(date)`
+**用法**：`DAYOFYEAR(date)`
 
-Returns the day of the year for `date`, in the range 1 to 366.
+傳回 `date` 的一年中的日，範圍為 1 到 366。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date` (必要)：`STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-Synonyms: [`DAY_OF_YEAR`](#day_of_year)
+同義字：[`DAY_OF_YEAR`](#day_of_year)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1027,7 +1028,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1039,18 +1040,18 @@ The query returns the following results:
   
 ## DAY_OF_YEAR
 
-**Usage**: `DAY_OF_YEAR(date)`
+**用法**：`DAY_OF_YEAR(date)`
 
-Returns the day of the year for `date`, in the range 1 to 366.
+傳回 `date` 的一年中的日，範圍為 1 到 366。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date` (必要)：`STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-Synonyms: [`DAYOFYEAR`](#dayofyear)
+同義字：[`DAYOFYEAR`](#dayofyear)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1059,7 +1060,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1071,20 +1072,20 @@ The query returns the following results:
   
 ## EXTRACT
 
-**Usage**: `EXTRACT(part FROM date)`
+**用法**：`EXTRACT(part FROM date)`
 
-Returns a `LONG` containing digits in order according to the given `part` argument. The specific format of the returned `LONG` is determined by the following table.
+根據指定的 `part` 參數，傳回包含依序排列數字的 `LONG`。傳回的 `LONG` 之特定格式由下表決定。
 
-**Parameters**:
-- `part` (Required): A part token (see following table).
-- `date` (Required): A `STRING`, `DATE`, `TIME`, or `TIMESTAMP` value.
+**參數**：
+- `part` (必要)：部分詞元 (請見下表)。
+- `date` (必要)：`STRING`、`DATE`、`TIME` 或 `TIMESTAMP` 值。
 
-**Return type**: `LONG`
+**傳回類型**：`LONG`
 
-The format specifiers found in this table are the same as those found in the [`DATE_FORMAT`](#date_format) function. The following table describes the mapping of a `part` to a particular format.
+此表中的格式規範與 [`DATE_FORMAT`](#date_format) 函式中的格式規範相同。下表說明 `part` 與特定格式的對應。
 
 
-| `part` | Format |
+| `part` | 格式 |
 | --- | --- |
 | `MICROSECOND` | `%f` |
 | `SECOND` | `%s` |
@@ -1106,7 +1107,7 @@ The format specifiers found in this table are the same as those found in the [`D
 | `DAY_HOUR` | `%d%H%` |
 | `YEAR_MONTH` | `%V%m` |
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1115,7 +1116,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1127,16 +1128,16 @@ The query returns the following results:
   
 ## FROM_DAYS
 
-**Usage**: `FROM_DAYS(N)`
+**用法**：`FROM_DAYS(N)`
 
-Returns the date value given the day number `N`.
+給定天數 `N`，傳回日期值。
 
-**Parameters**:
-- `N` (Required): An `INTEGER` or `LONG` value.
+**參數**：
+- `N` (必要)：`INTEGER` 或 `LONG` 值。
 
-**Return type**: `DATE`
+**傳回類型**：`DATE`
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1145,7 +1146,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1157,17 +1158,17 @@ The query returns the following results:
   
 ## FROM_UNIXTIME
 
-**Usage**: `FROM_UNIXTIME(timestamp)` or `FROM_UNIXTIME(timestamp, format)`
+**用法**：`FROM_UNIXTIME(timestamp)` 或 `FROM_UNIXTIME(timestamp, format)`
 
-Returns a representation of the argument as a timestamp or character string value. Performs the reverse conversion for the [`UNIX_TIMESTAMP`](#unix_timestamp) function. If the second argument is provided, it is used to format the result in the same way as the format string used for the [`DATE_FORMAT`](#date_format) function. If the timestamp is outside the range `1970-01-01 00:00:00`--`3001-01-18 23:59:59.999999` (0 to 32536771199.999999 epoch time), the function returns `NULL`.
+將引數表示為時間戳記或字串值。執行 [`UNIX_TIMESTAMP`](#unix_timestamp) 函式的反向轉換。若提供第二個引數，則會用於格式化結果，方式與 [`DATE_FORMAT`](#date_format) 函式所使用的格式字串相同。若時間戳記超出 `1970-01-01 00:00:00`--`3001-01-18 23:59:59.999999` 範圍（0 至 32536771199.999999 的紀元時間），函式會傳回 `NULL`。
 
-**Parameters**:
-- `timestamp` (Required): A `DOUBLE` value representing Unix timestamp.
-- `format` (Optional): A `STRING` format specifier.
+**參數**：
+- `timestamp` (必要)：代表 Unix 時間戳記的 `DOUBLE` 值。
+- `format` (選用)：`STRING` 格式規範。
 
-**Return type**: `TIMESTAMP` (without format), `STRING` (with format)
+**傳回類型**：`TIMESTAMP` (不含格式)、`STRING` (含格式)
 
-**Examples**
+**範例**
   
 ```sql
 source=people
@@ -1176,7 +1177,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1193,7 +1194,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1205,17 +1206,17 @@ The query returns the following results:
   
 ## GET_FORMAT
 
-**Usage**: `GET_FORMAT(type, format)`
+**用法**：`GET_FORMAT(type, format)`
 
-Returns a string value containing string format specifiers based on the input arguments.
+根據輸入引數，傳回包含字串格式規範的字串值。
 
-**Parameters**:
-- `type` (Required): One of the following tokens: `DATE`, `TIME`, `TIMESTAMP`.
-- `format` (Required): A `STRING` that must be one of: `USA`, `JIS`, `ISO`, `EUR`, `INTERNAL`.
+**參數**：
+- `type` (必要)：下列其中一個詞元：`DATE`、`TIME`、`TIMESTAMP`。
+- `format` (必要)：`STRING`，必須為下列其中之一：`USA`、`JIS`、`ISO`、`EUR`、`INTERNAL`。
 
-**Return type**: `STRING`
+**傳回類型**：`STRING`
 
-**Examples**
+**範例**
   
 ```sql
 source=people
@@ -1224,7 +1225,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1236,18 +1237,18 @@ The query returns the following results:
   
 ## HOUR
 
-**Usage**: `HOUR(time)`
+**用法**：`HOUR(time)`
 
-Extracts the hour value for `time`. Different from a time of day value, the time value has a large range and can be greater than 23, so the return value of `HOUR(time)` can also be greater than 23.
+擷取 `time` 的小時值。與一日中的時間值不同，時間值的範圍很大且可大於 23，因此 `HOUR(time)` 的傳回值也可能大於 23。
 
-**Parameters**:
-- `time` (Required): A `STRING`, `TIME`, or `TIMESTAMP` value.
+**參數**：
+- `time` (必要)：`STRING`、`TIME` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-Synonyms: [`HOUR_OF_DAY`](#hour_of_day)
+同義詞：[`HOUR_OF_DAY`](#hour_of_day)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1256,7 +1257,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1268,18 +1269,18 @@ The query returns the following results:
   
 ## HOUR_OF_DAY
 
-**Usage**: `HOUR_OF_DAY(time)`
+**用法**：`HOUR_OF_DAY(time)`
 
-Extracts the hour value for `time`. Different from a time of day value, the time value has a large range and can be greater than 23, so the return value of `HOUR_OF_DAY(time)` can also be greater than 23.
+擷取 `time` 的小時值。與一日中的時間值不同，時間值的範圍很大且可大於 23，因此 `HOUR_OF_DAY(time)` 的傳回值也可能大於 23。
 
-**Parameters**:
-- `time` (Required): A `STRING`, `TIME`, or `TIMESTAMP` value.
+**參數**：
+- `time` (必要)：`STRING`、`TIME` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-Synonyms: [`HOUR`](#hour)
+同義詞：[`HOUR`](#hour)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1288,7 +1289,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1300,16 +1301,16 @@ The query returns the following results:
   
 ## LAST_DAY
 
-**Usage**: `LAST_DAY(date)`
+**用法**：`LAST_DAY(date)`
 
-Returns the last day of the month as a `DATE` for a valid argument.
+對有效的引數，以 `DATE` 傳回該月的最後一天。
 
-**Parameters**:
-- `date` (Required): A `DATE`, `STRING`, `TIMESTAMP`, or `TIME` value.
+**參數**：
+- `date` (必要)：`DATE`、`STRING`、`TIMESTAMP` 或 `TIME` 值。
 
-**Return type**: `DATE`
+**傳回類型**：`DATE`
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1318,7 +1319,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1330,15 +1331,15 @@ The query returns the following results:
   
 ## LOCALTIMESTAMP
 
-**Usage**: `LOCALTIMESTAMP()`
+**用法**：`LOCALTIMESTAMP()`
 
-`LOCALTIMESTAMP()` is a synonym for [`NOW()`](#now).
+`LOCALTIMESTAMP()` 是 [`NOW()`](#now) 的同義詞。
 
-**Parameters**: None
+**參數**：無
 
-**Return type**: `TIMESTAMP`
+**傳回類型**：`TIMESTAMP`
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1347,7 +1348,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1359,15 +1360,15 @@ The query returns the following results:
   
 ## LOCALTIME
 
-**Usage**: `LOCALTIME()`
+**用法**：`LOCALTIME()`
 
-`LOCALTIME()` is a synonym for [`NOW()`](#now).
+`LOCALTIME()` 是 [`NOW()`](#now) 的同義詞。
 
-**Parameters**: None
+**參數**：無
 
-**Return type**: `TIMESTAMP`
+**傳回類型**：`TIMESTAMP`
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1376,7 +1377,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1388,23 +1389,23 @@ The query returns the following results:
   
 ## MAKEDATE
 
-**Usage**: `MAKEDATE(year, dayofyear)`
+**用法**：`MAKEDATE(year, dayofyear)`
 
-Returns a date, given `year` and `day-of-year` values. `dayofyear` must be greater than 0, otherwise the result is `NULL`. The result is also `NULL` if either argument is `NULL`. Arguments are rounded to an integer.
+給定 `year` 與 `day-of-year` 值，傳回日期。`dayofyear` 必須大於 0，否則結果為 `NULL`。若任一引數為 `NULL`，結果也會是 `NULL`。引數會四捨五入為整數。
 
-**Parameters**:
-- `year` (Required): A `DOUBLE` value for the year.
-- `dayofyear` (Required): A `DOUBLE` value for the day of year.
+**參數**：
+- `year` (必要)：年份的 `DOUBLE` 值。
+- `dayofyear` (必要)：一年中第幾天的 `DOUBLE` 值。
 
-**Return type**: `DATE`
+**傳回類型**：`DATE`
 
-Limitations:
-- A zero `year` is interpreted as 2000
-- A negative `year` is not accepted
-- `day-of-year` should be greater than zero
-- `day-of-year` can be greater than 365/366, and the calculation switches to the next year(s) (see example)
+限制：
+- `year` 為零時會解讀為 2000
+- 不接受負的 `year`
+- `day-of-year` 應大於零
+- `day-of-year` 可大於 365/366，計算會切換至下一年 (請見範例)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1413,7 +1414,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -1425,22 +1426,22 @@ The query returns the following results:
   
 ## MAKETIME
 
-**Usage**: `MAKETIME(hour, minute, second)`
+**用法**：`MAKETIME(hour, minute, second)`
 
-Returns a time value calculated from the hour, minute, and second arguments. Returns `NULL` if any of its arguments are `NULL`. The second argument can have a fractional part, and the rest of the arguments are rounded to an integer.
+傳回根據小時、分鐘和秒引數計算的時間值。如果任一引數為 `NULL`，則傳回 `NULL`。第二個引數可以包含小數部分，其餘引數則四捨五入為整數。
 
-**Parameters**:
-- `hour` (Required): A `DOUBLE` value for the hour.
-- `minute` (Required): A `DOUBLE` value for the minute.
-- `second` (Required): A `DOUBLE` value for the second.
+**參數**：
+- `hour`（必要）：表示小時的 `DOUBLE` 值。
+- `minute`（必要）：表示分鐘的 `DOUBLE` 值。
+- `second`（必要）：表示秒的 `DOUBLE` 值。
 
-**Return type**: `TIME`
+**回傳類型**：`TIME`
 
-Limitations:
-- A 24-hour clock is used, and the available time range is [`00:00:00.0`--`23:59:59.(9)`]
-- Up to 9 digits of the second fraction part are taken (nanosecond precision)
+限制：
+- 使用 24 小時制，可用的時間範圍為 [`00:00:00.0`--`23:59:59.(9)`]
+- 秒的小數部分最多取 9 位數（奈秒精度）
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1449,7 +1450,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -1461,16 +1462,16 @@ The query returns the following results:
   
 ## MICROSECOND
 
-**Usage**: `MICROSECOND(expr)`
+**用法**：`MICROSECOND(expr)`
 
-Returns the microseconds from the time or timestamp expression `expr` as a number in the range from 0 to 999999.
+傳回時間或時間戳記運算式 `expr` 中的微秒數，數值範圍為 0 到 999999。
 
-**Parameters**:
-- `expr` (Required): A `STRING`, `TIME`, or `TIMESTAMP` value.
+**參數**：
+- `expr`（必要）：`STRING`、`TIME` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**回傳類型**：`INTEGER`
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1479,7 +1480,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -1491,18 +1492,18 @@ The query returns the following results:
   
 ## MINUTE
 
-**Usage**: `MINUTE(time)`
+**用法**：`MINUTE(time)`
 
-Returns the minute for `time`, in the range 0 to 59.
+傳回 `time` 的分鐘數，範圍為 0 到 59。
 
-**Parameters**:
-- `time` (Required): A `STRING`, `TIME`, or `TIMESTAMP` value.
+**參數**：
+- `time`（必要）：`STRING`、`TIME` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**回傳類型**：`INTEGER`
 
-Synonyms: [`MINUTE_OF_HOUR`](#minute_of_hour)
+同義函式：[`MINUTE_OF_HOUR`](#minute_of_hour)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1511,7 +1512,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -1523,16 +1524,16 @@ The query returns the following results:
   
 ## MINUTE_OF_DAY
 
-**Usage**: `MINUTE_OF_DAY(time)`
+**用法**：`MINUTE_OF_DAY(time)`
 
-Returns the amount of minutes in the day, in the range of 0 to 1439.
+傳回一天中已經過的分鐘數，範圍為 0 到 1439。
 
-**Parameters**:
-- `time` (Required): A `STRING`, `TIME`, or `TIMESTAMP` value.
+**參數**：
+- `time`（必要）：`STRING`、`TIME` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**回傳類型**：`INTEGER`
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1541,7 +1542,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -1553,18 +1554,18 @@ The query returns the following results:
   
 ## MINUTE_OF_HOUR
 
-**Usage**: `MINUTE_OF_HOUR(time)`
+**用法**：`MINUTE_OF_HOUR(time)`
 
-Returns the minute for `time`, in the range 0 to 59.
+傳回 `time` 的分鐘數，範圍為 0 到 59。
 
-**Parameters**:
-- `time` (Required): A `STRING`, `TIME`, or `TIMESTAMP` value.
+**參數**：
+- `time`（必要）：`STRING`、`TIME` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**回傳類型**：`INTEGER`
 
-Synonyms: [`MINUTE`](#minute)
+同義函式：[`MINUTE`](#minute)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1573,7 +1574,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -1585,18 +1586,18 @@ The query returns the following results:
   
 ## MONTH
 
-**Usage**: `MONTH(date)`
+**用法**：`MONTH(date)`
 
-Returns the month for `date`, in the range 1 to 12 for January to December.
+傳回 `date` 的月份，範圍為 1 到 12，分別代表一月到十二月。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date`（必要）：`STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**回傳類型**：`INTEGER`
 
-Synonyms: [`MONTH_OF_YEAR`](#month_of_year)
+同義函式：[`MONTH_OF_YEAR`](#month_of_year)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1605,7 +1606,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -1617,18 +1618,18 @@ The query returns the following results:
   
 ## MONTH_OF_YEAR
 
-**Usage**: `MONTH_OF_YEAR(date)`
+**用法**：`MONTH_OF_YEAR(date)`
 
-Returns the month for `date`, in the range 1 to 12 for January to December.
+傳回 `date` 的月份，範圍為 1 到 12，分別代表一月到十二月。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date`（必要）：`STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**回傳類型**：`INTEGER`
 
-Synonyms: [`MONTH`](#month)
+同義函式：[`MONTH`](#month)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1637,7 +1638,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -1649,16 +1650,16 @@ The query returns the following results:
   
 ## MONTHNAME
 
-**Usage**: `MONTHNAME(date)`
+**用法**：`MONTHNAME(date)`
 
-Returns the full name of the month for `date`.
+傳回 `date` 的完整月份名稱。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date`（必要）：`STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `STRING`
+**回傳類型**：`STRING`
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1667,7 +1668,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -1679,15 +1680,15 @@ The query returns the following results:
   
 ## NOW
 
-**Usage**: `NOW()`
+**用法**：`NOW()`
 
-Returns the current date and time as a value in 'YYYY-MM-DD hh:mm:ss' format. The value is expressed in the UTC time zone. `NOW()` returns a constant time that indicates the time at which the statement began to execute. This differs from the behavior for [`SYSDATE()`](#sysdate), which returns the exact time at which it executes.
+以 'YYYY-MM-DD hh:mm:ss' 格式的值傳回目前的日期和時間。此值以 UTC 時區表示。`NOW()` 傳回固定的時間，表示陳述式開始執行的時間。這與 [`SYSDATE()`](#sysdate) 的行為不同，後者傳回其執行當下的確切時間。
 
-**Parameters**: None
+**參數**：無
 
-**Return type**: `TIMESTAMP`
+**回傳類型**：`TIMESTAMP`
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1696,7 +1697,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -1708,17 +1709,17 @@ The query returns the following results:
   
 ## PERIOD_ADD
 
-**Usage**: `PERIOD_ADD(P, N)`
+**用法**：`PERIOD_ADD(P, N)`
 
-Adds `N` months to period `P` (in the format YYMM or YYYYMM). Returns a value in the format YYYYMM.
+將 `N` 個月加到期間 `P`（格式為 YYMM 或 YYYYMM）。傳回格式為 YYYYMM 的值。
 
-**Parameters**:
-- `P` (Required): An `INTEGER` value representing a period in YYMM or YYYYMM format.
-- `N` (Required): An `INTEGER` number of months to add.
+**參數**：
+- `P`（必要）：表示 YYMM 或 YYYYMM 格式期間的 `INTEGER` 值。
+- `N`（必要）：要增加的月數，為 `INTEGER` 數值。
 
-**Return type**: `INTEGER`
+**回傳類型**：`INTEGER`
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1727,7 +1728,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -1739,17 +1740,17 @@ The query returns the following results:
   
 ## PERIOD_DIFF
 
-**Usage**: `PERIOD_DIFF(P1, P2)`
+**用法**：`PERIOD_DIFF(P1, P2)`
 
-Returns the number of months between periods `P1` and `P2` given in the format YYMM or YYYYMM.
+傳回以 YYMM 或 YYYYMM 格式指定的期間 `P1` 與 `P2` 之間的月數。
 
-**Parameters**:
-- `P1` (Required): An `INTEGER` value representing a period in YYMM or YYYYMM format.
-- `P2` (Required): An `INTEGER` value representing a period in YYMM or YYYYMM format.
+**參數**：
+- `P1`（必要）：表示 YYMM 或 YYYYMM 格式期間的 `INTEGER` 值。
+- `P2`（必要）：表示 YYMM 或 YYYYMM 格式期間的 `INTEGER` 值。
 
-**Return type**: `INTEGER`
+**回傳類型**：`INTEGER`
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1758,7 +1759,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1770,16 +1771,16 @@ The query returns the following results:
   
 ## QUARTER
 
-**Usage**: `QUARTER(date)`
+**用法**：`QUARTER(date)`
 
-Returns the quarter of the year for `date`, in the range 1 to 4.
+傳回 `date` 的季度，範圍為 1 到 4。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date` (必要)：一個 `STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1788,7 +1789,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1800,16 +1801,16 @@ The query returns the following results:
   
 ## SEC_TO_TIME
 
-**Usage**: `SEC_TO_TIME(number)`
+**用法**：`SEC_TO_TIME(number)`
 
-Returns the time in HH:mm:ss[.nnnnnn] format. Note that the function returns a time between 00:00:00 and 23:59:59. If the input value is too large (greater than 86399), the function will wrap around and begin returning outputs starting from 00:00:00. If the input value is too small (less than 0), the function will wrap around and begin returning outputs counting down from 23:59:59.
+以 HH:mm:ss[.nnnnnn] 格式傳回時間。請注意，此函式傳回的時間介於 00:00:00 與 23:59:59 之間。如果輸入值太大 (大於 86399)，此函式會循環並從 00:00:00 開始傳回輸出。如果輸入值太小 (小於 0)，此函式會循環並從 23:59:59 開始倒數傳回輸出。
 
-**Parameters**:
-- `number` (Required): An `INTEGER`, `LONG`, `DOUBLE`, or `FLOAT` value.
+**參數**：
+- `number` (必要)：一個 `INTEGER`、`LONG`、`DOUBLE` 或 `FLOAT` 值。
 
-**Return type**: `TIME`
+**傳回類型**：`TIME`
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1819,7 +1820,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1831,18 +1832,18 @@ The query returns the following results:
   
 ## SECOND
 
-**Usage**: `SECOND(time)`
+**用法**：`SECOND(time)`
 
-Returns the second for `time`, in the range 0 to 59.
+傳回 `time` 的秒數，範圍為 0 到 59。
 
-**Parameters**:
-- `time` (Required): A `STRING`, `TIME`, or `TIMESTAMP` value.
+**參數**：
+- `time` (必要)：一個 `STRING`、`TIME` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-Synonyms: [`SECOND_OF_MINUTE`](#second_of_minute)
+同義詞：[`SECOND_OF_MINUTE`](#second_of_minute)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1851,7 +1852,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1863,18 +1864,18 @@ The query returns the following results:
   
 ## SECOND_OF_MINUTE
 
-**Usage**: `SECOND_OF_MINUTE(time)`
+**用法**：`SECOND_OF_MINUTE(time)`
 
-Returns the second for `time`, in the range 0 to 59.
+傳回 `time` 的秒數，範圍為 0 到 59。
 
-**Parameters**:
-- `time` (Required): A `STRING`, `TIME`, or `TIMESTAMP` value.
+**參數**：
+- `time` (必要)：一個 `STRING`、`TIME` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-Synonyms: [`SECOND`](#second)
+同義詞：[`SECOND`](#second)
 
-#### Example
+#### 範例
   
 ```sql
 source=people
@@ -1883,7 +1884,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -1895,74 +1896,74 @@ The query returns the following results:
   
 ## STRFTIME
 
-**Version: 3.3.0**
+**版本：3.3.0**
 
-**Usage**: `STRFTIME(time, format)`
+**用法**：`STRFTIME(time, format)`
 
-Takes a UNIX timestamp (in seconds) and renders it as a string using the format specified. For numeric inputs, the UNIX time must be in seconds. Values greater than 100000000000 are automatically treated as milliseconds and converted to seconds. You can use time format variables with the `strftime` function. This function performs the reverse operation of [`UNIX_TIMESTAMP`](#unix_timestamp) and is similar to [`FROM_UNIXTIME`](#from_unixtime) but with POSIX-style format specifiers.
+接受 UNIX 時間戳記 (以秒為單位)，並使用指定的格式將其呈現為字串。對於數值輸入，UNIX 時間必須以秒為單位。大於 100000000000 的值會自動視為毫秒並轉換為秒。您可以搭配 `strftime` 函式使用時間格式變數。此函式執行 [`UNIX_TIMESTAMP`](#unix_timestamp) 的反向操作，且類似於 [`FROM_UNIXTIME`](#from_unixtime)，但使用 POSIX 風格的格式規範。
 
-**Parameters**:
-- `time` (Required): An `INTEGER`, `LONG`, `DOUBLE`, or `TIMESTAMP` value.
-- `format` (Required): A `STRING` format specifier.
+**參數**：
+- `time` (必要)：一個 `INTEGER`、`LONG`、`DOUBLE` 或 `TIMESTAMP` 值。
+- `format` (必要)：一個 `STRING` 格式規範。
 
-**Return type**: `STRING`
+**傳回類型**：`STRING`
 
-**Notes**:
-- Available only when Calcite engine is enabled
-- All timestamps are interpreted as UTC time zone
-- Text formatting uses language-neutral Locale.ROOT (weekday and month names appear in abbreviated form)
-- String inputs are NOT supported - use `unix_timestamp()` to convert strings first
-- Functions that return date/time values (like `date()`, `now()`, `timestamp()`) are supported
+**注意事項**：
+- 僅在啟用 Calcite 引擎時可用
+- 所有時間戳記都會解譯為 UTC 時區
+- 文字格式使用語言中立的 Locale.ROOT (星期與月份名稱會以縮寫形式顯示)
+- 不支援字串輸入 - 請先使用 `unix_timestamp()` 轉換字串
+- 支援傳回日期/時間值的函式 (例如 `date()`、`now()`、`timestamp()`)
 
-The following table describes the available specifier arguments:
+下表說明可用的規範引數：
 
 
 <!-- vale off -->
 
-| Specifier | Description |
+| 規範 | 說明 |
 | --- | --- |
-| `%a` | Abbreviated weekday name (Mon..Sun) |
-| `%A` | Weekday name (Mon..Sun) - Note: Locale.ROOT uses abbreviated form |
-| `%b` | Abbreviated month name (Jan..Dec) |
-| `%B` | Month name (Jan..Dec) - Note: Locale.ROOT uses abbreviated form |
-| `%c` | Date and time (for example, Mon Jul 18 09:30:00 2019) |
-| `%C` | Century as 2-digit decimal number |
-| `%d` | Day of the month, zero-padded (01..31) |
-| `%e` | Day of the month, space-padded ( 1..31) |
-| `%Ez` | Time zone offset in minutes from UTC (for example, +0 for UTC, +330 for IST, -300 for EST) |
-| `%f` | Microseconds as decimal number (000000..999999) |
-| `%F` | ISO 8601 date format (`%Y-%m-%d`) |
-| `%g` | ISO 8601 year without century (00..99) |
-| `%G` | ISO 8601 year with century |
-| `%H` | Hour (24-hour clock) (00..23) |
-| `%I` | Hour (12-hour clock) (01..12) |
-| `%j` | Day of year (001..366) |
-| `%k` | Hour (24-hour clock), space-padded ( 0..23) |
-| `%m` | Month as decimal number (01..12) |
-| `%M` | Minute (00..59) |
-| `%N` | Subsecond digits (default `%9N` = nanoseconds). Accepts any precision value from 1-9 (for example, `%3N` = 3 digits, `%5N` = 5 digits, `%9N` = 9 digits). The precision directly controls the number of digits displayed |
-| `%p` | AM or PM |
-| `%Q` | Subsecond component (default milliseconds). Can specify precision: `%3Q` = milliseconds, `%6Q` = microseconds, `%9Q` = nanoseconds. Other precision values (for example, `%5Q`) default to `%3Q` |
-| `%s` | UNIX Epoch timestamp in seconds |
-| `%S` | Second (00..59) |
-| `%T` | Time in 24-hour notation (`%H:%M:%S`) |
-| `%U` | Week of year starting from 0 (00..53) |
-| `%V` | ISO week number (01..53) |
-| `%w` | Weekday as decimal (0=Sunday..6=Saturday) |
-| `%x` | Date in MM/dd/yyyy format (for example, 07/13/2019) |
-| `%X` | Time in HH:mm:ss format (for example, 09:30:00) |
-| `%y` | Year without century (00..99) |
-| `%Y` | Year with century |
-| `%z` | Time zone offset (+hhmm or -hhmm) |
-| `%:z` | Time zone offset with colon (+hh:mm or -hh:mm) |
-| `%::z` | Time zone offset with colons (+hh:mm:ss) |
-| `%:::z` | Time zone offset hour only (+hh or -hh) |
-| `%Z` | Timezone abbreviation (for example, EST, PDT) |
-| `%%` | Literal % character |
+| `%a` | 縮寫的星期名稱 (Mon..Sun) |
+| `%A` | 星期名稱 (Mon..Sun) - 注意：Locale.ROOT 使用縮寫形式 |
+| `%b` | 縮寫的月份名稱 (Jan..Dec) |
+| `%B` | 月份名稱 (Jan..Dec) - 注意：Locale.ROOT 使用縮寫形式 |
+| `%c` | 日期與時間 (例如 Mon Jul 18 09:30:00 2019) |
+| `%C` | 世紀，以 2 位數十進位數字表示 |
+| `%d` | 月份中的日，以零補齊 (01..31) |
+| `%e` | 月份中的日，以空格補齊 ( 1..31) |
+| `%Ez` | 與 UTC 的時區位移分鐘數 (例如 UTC 為 +0、IST 為 +330、EST 為 -300) |
+| `%f` | 微秒，以十進位數字表示 (000000..999999) |
+| `%F` | ISO 8601 日期格式 (`%Y-%m-%d`) |
+| `%g` | ISO 8601 年份，不含世紀 (00..99) |
+| `%G` | ISO 8601 年份，含世紀 |
+| `%H` | 小時 (24 小時制) (00..23) |
+| `%I` | 小時 (12 小時制) (01..12) |
+| `%j` | 一年中的第幾天 (001..366) |
+| `%k` | 小時 (24 小時制)，以空格補齊 ( 0..23) |
+| `%m` | 月份，以十進位數字表示 (01..12) |
+| `%M` | 分鐘 (00..59) |
+| `%N` | 秒以下位數 (預設 `%9N` = 奈秒)。接受 1-9 的任何精確度值 (例如 `%3N` = 3 位數、`%5N` = 5 位數、`%9N` = 9 位數)。精確度直接控制顯示的位數 |
+| `%p` | AM 或 PM |
+| `%Q` | 秒以下元件 (預設為毫秒)。可指定精確度：`%3Q` = 毫秒、`%6Q` = 微秒、`%9Q` = 奈秒。其他精確度值 (例如 `%5Q`) 預設為 `%3Q` |
+| `%s` | UNIX Epoch 時間戳記，以秒為單位 |
+| `%S` | 秒 (00..59) |
+| `%T` | 24 小時制時間 (`%H:%M:%S`) |
+| `%U` | 一年中的第幾週，從 0 開始 (00..53) |
+| `%V` | ISO 週數 (01..53) |
+| `%w` | 星期，以十進位表示 (0=星期日..6=星期六) |
+| `%x` | MM/dd/yyyy 格式的日期 (例如 07/13/2019) |
+| `%X` | HH:mm:ss 格式的時間 (例如 09:30:00) |
+| `%y` | 年份，不含世紀 (00..99) |
+| `%Y` | 年份，含世紀 |
+| `%z` | 時區位移 (+hhmm 或 -hhmm) |
+| `%:z` | 含冒號的時區位移 (+hh:mm 或 -hh:mm) |
+| `%::z` | 含冒號的時區位移 (+hh:mm:ss) |
+| `%:::z` | 僅時區位移小時 (+hh 或 -hh) |
+| `%Z` | 時區縮寫 (例如 EST、PDT) |
+| `%%` | 字面 % 字元 |
 
 <!-- vale on -->
 
-**Examples**
+**範例**
   
 ```sql
 source=people | eval `strftime(1521467703, "%Y-%m-%dT%H:%M:%S")` = strftime(1521467703, "%Y-%m-%dT%H:%M:%S") | fields `strftime(1521467703, "%Y-%m-%dT%H:%M:%S")`
@@ -2069,17 +2070,17 @@ fetched rows / total rows = 1/1
 ```
 ## STR_TO_DATE
 
-**Usage**: `STR_TO_DATE(string, format)`
+**用法**：`STR_TO_DATE(string, format)`
 
-Extracts a `TIMESTAMP` from the first argument string using the formats specified in the second argument string. The input argument must have enough information to be parsed as a `DATE`, `TIMESTAMP`, or `TIME`. Acceptable string format specifiers are the same as those used in the [`DATE_FORMAT`](#date_format) function. Returns `NULL` when the statement cannot be parsed due to an invalid pair of arguments, and when 0 is provided for any `DATE` field. Otherwise, returns a `TIMESTAMP` with the parsed values (as well as default values for any field that was not parsed).
+使用第二個引數字串中指定的格式，從第一個引數字串擷取 `TIMESTAMP`。輸入引數必須包含足夠的資訊，才能剖析為 `DATE`、`TIMESTAMP` 或 `TIME`。可接受的字串格式指定符與 [`DATE_FORMAT`](#date_format) 函式使用的相同。當引數配對無效而導致陳述式無法剖析，或任何 `DATE` 欄位的值為 0 時，傳回 `NULL`。否則，傳回包含剖析值的 `TIMESTAMP`（以及任何未剖析欄位的預設值）。
 
-**Parameters**:
-- `string` (Required): A `STRING` value to parse.
-- `format` (Required): A `STRING` format specifier.
+**參數**：
+- `string`（必要）：要剖析的 `STRING` 值。
+- `format`（必要）：`STRING` 格式指定符。
 
-**Return type**: `TIMESTAMP`
+**回傳類型**：`TIMESTAMP`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2090,7 +2091,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
 
 ```text
   
@@ -2106,20 +2107,20 @@ fetched rows / total rows = 1/1
   
 ## SUBDATE
 
-**Usage**: `SUBDATE(date, INTERVAL expr unit)` or `SUBDATE(date, days)`
+**用法**：`SUBDATE(date, INTERVAL expr unit)` 或 `SUBDATE(date, days)`
 
-Subtracts the interval `expr` from `date`, or subtracts the second argument as an integer number of days from `date`. If the first argument is `TIME`, today's date is used. If the first argument is `DATE`, the time at midnight is used.
+從 `date` 減去時間間隔 `expr`，或將第二個引數視為整數天數，從 `date` 減去該天數。如果第一個引數是 `TIME`，則使用今天的日期。如果第一個引數是 `DATE`，則使用午夜時間。
 
-**Parameters**:
-- `date` (Required): A `DATE`, `TIMESTAMP`, or `TIME` value.
-- `expr` (Required): Either an `INTERVAL` expression or a `LONG` number of days.
+**參數**：
+- `date`（必要）：`DATE`、`TIMESTAMP` 或 `TIME` 值。
+- `expr`（必要）：`INTERVAL` 運算式或 `LONG` 天數。
 
-**Return type**: `TIMESTAMP` (with INTERVAL), `DATE` (DATE with LONG), `TIMESTAMP` (TIMESTAMP/TIME with LONG)
+**回傳類型**：`TIMESTAMP`（搭配 INTERVAL）、`DATE`（DATE 搭配 LONG）、`TIMESTAMP`（TIMESTAMP/TIME 搭配 LONG）
 
-Synonyms: [`DATE_SUB`](#date_sub) when invoked with the INTERVAL form of the second argument
-Antonyms: [`ADDDATE`](#adddate)
+同義函式：以 INTERVAL 形式的第二個引數呼叫時，為 [`DATE_SUB`](#date_sub)
+反義函式：[`ADDDATE`](#adddate)
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2130,7 +2131,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
 
 ```text
   
@@ -2146,19 +2147,19 @@ fetched rows / total rows = 1/1
   
 ## SUBTIME
 
-**Usage**: `SUBTIME(expr1, expr2)`
+**用法**：`SUBTIME(expr1, expr2)`
 
-Subtracts `expr2` from `expr1` and returns the result. If an argument is `TIME`, today's date is used. If an argument is `DATE`, the time at midnight is used.
+從 `expr1` 減去 `expr2`，並傳回結果。如果引數是 `TIME`，則使用今天的日期。如果引數是 `DATE`，則使用午夜時間。
 
-**Parameters**:
-- `expr1` (Required): A `DATE`, `TIMESTAMP`, or `TIME` value.
-- `expr2` (Required): A `DATE`, `TIMESTAMP`, or `TIME` value.
+**參數**：
+- `expr1`（必要）：`DATE`、`TIMESTAMP` 或 `TIME` 值。
+- `expr2`（必要）：`DATE`、`TIMESTAMP` 或 `TIME` 值。
 
-**Return type**: `TIMESTAMP` (DATE/TIMESTAMP with DATE/TIMESTAMP/TIME), `TIME` (TIME with DATE/TIMESTAMP/TIME)
+**回傳類型**：`TIMESTAMP`（DATE/TIMESTAMP 搭配 DATE/TIMESTAMP/TIME）、`TIME`（TIME 搭配 DATE/TIMESTAMP/TIME）
 
-Antonyms: [`ADDTIME`](#addtime)
+反義函式：[`ADDTIME`](#addtime)
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2169,7 +2170,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
 
 ```text
   
@@ -2192,7 +2193,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
 
 ```text
   
@@ -2215,7 +2216,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
 
 ```text
   
@@ -2238,7 +2239,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
 
 ```text  
 fetched rows / total rows = 1/1
@@ -2257,7 +2258,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
 
 ```text  
 fetched rows / total rows = 1/1
@@ -2271,16 +2272,16 @@ fetched rows / total rows = 1/1
   
 ## SYSDATE
 
-**Usage**: `SYSDATE()` or `SYSDATE(precision)`
+**用法**：`SYSDATE()` 或 `SYSDATE(precision)`
 
-Returns the current date and time as a value in 'YYYY-MM-DD hh:mm:ss[.nnnnnn]'. `SYSDATE()` returns the date and time at which it executes in UTC. This differs from the behavior for [`NOW()`](#now), which returns a constant time that indicates the time at which the statement began to execute. If an argument is given, it specifies a fractional seconds precision from 0 to 6, the return value includes a fractional seconds part of that many digits.
+以 'YYYY-MM-DD hh:mm:ss[.nnnnnn]' 格式的值傳回目前的日期與時間。`SYSDATE()` 傳回其執行當下的 UTC 日期與時間。這與 [`NOW()`](#now) 的行為不同，後者傳回固定的時間，表示陳述式開始執行的時間。如果提供引數，該引數會指定 0 到 6 的小數秒精確度，回傳值會包含具有該位數的小數秒部分。
 
-**Parameters**:
-- `precision` (Optional): An `INTEGER` value from 0 to 6 for fractional seconds precision.
+**參數**：
+- `precision`（選用）：介於 0 到 6 的 `INTEGER` 值，用於指定小數秒精確度。
 
-**Return type**: `TIMESTAMP`
+**回傳類型**：`TIMESTAMP`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2291,7 +2292,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
 
 ```text
   
@@ -2307,16 +2308,16 @@ fetched rows / total rows = 1/1
   
 ## TIME
 
-**Usage**: `TIME(expr)`
+**用法**：`TIME(expr)`
 
-Constructs a time type with the input string `expr` as a time. If the argument is of date/time/timestamp, it extracts the time value part from the expression.
+將輸入字串 `expr` 視為時間，建構時間類型。如果引數為日期、時間或時間戳記類型，則從運算式擷取時間值部分。
 
-**Parameters**:
-- `expr` (Required): A `STRING`, `DATE`, `TIME`, or `TIMESTAMP` value.
+**參數**：
+- `expr`（必要）：`STRING`、`DATE`、`TIME` 或 `TIMESTAMP` 值。
 
-**Return type**: `TIME`
+**回傳類型**：`TIME`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2327,7 +2328,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
 
 ```text
   
@@ -2350,7 +2351,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
 
 ```text
   
@@ -2373,7 +2374,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
 
 ```text
   
@@ -2396,7 +2397,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢傳回下列結果：
 
 ```text
   
@@ -2412,36 +2413,36 @@ fetched rows / total rows = 1/1
   
 ## TIME_FORMAT
 
-**Usage**: `TIME_FORMAT(time, format)`
+**用法**：`TIME_FORMAT(time, format)`
 
-Formats the `time` argument using the specifiers in the `format` argument. This supports a subset of the time format specifiers available for the [`DATE_FORMAT`](#date_format) function. Using date format specifiers supported by [`DATE_FORMAT`](#date_format) will return 0 or `NULL`. Acceptable format specifiers are listed in the following table. If an argument of type `DATE` is passed in, it is treated as a `TIMESTAMP` at midnight (i.e., 00:00:00).
+使用 `format` 引數中的規範符來格式化 `time` 引數。此函式支援 [`DATE_FORMAT`](#date_format) 函式可用之時間格式規範符的子集。使用 [`DATE_FORMAT`](#date_format) 支援的日期格式規範符將回傳 0 或 `NULL`。可接受的格式規範符列於下表。若傳入 `DATE` 類型的引數，則會將其視為午夜的 `TIMESTAMP`（即 00:00:00）。
 
-**Parameters**:
-- `time` (Required): A `STRING`, `DATE`, `TIME`, or `TIMESTAMP` value.
-- `format` (Required): A `STRING` format specifier.
+**參數**：
+- `time`（必要）：`STRING`、`DATE`、`TIME` 或 `TIMESTAMP` 值。
+- `format`（必要）：`STRING` 格式規範符。
 
-**Return type**: `STRING`
+**回傳類型**：`STRING`
 
-The following table describes the available specifier arguments:
+下表說明可用的規範符引數：
 
 <!-- vale off -->
 
-| Specifier | Description |
+| 規範符 | 說明 |
 | --- | --- |
-| `%f` | Microseconds (000000..999999) |
-| `%H` | Hour (00..23) |
-| `%h` | Hour (01..12) |
-| `%I` | Hour (01..12) |
-| `%i` | Minutes, numeric (00..59) |
-| `%p` | `AM` or `PM` |
-| `%r` | Time, 12-hour (hh:mm:ss followed by `AM` or `PM`) |
-| `%S` | Seconds (00..59) |
-| `%s` | Seconds (00..59) |
-| `%T` | Time, 24-hour (hh:mm:ss) |
+| `%f` | 微秒 (000000..999999) |
+| `%H` | 小時 (00..23) |
+| `%h` | 小時 (01..12) |
+| `%I` | 小時 (01..12) |
+| `%i` | 分鐘，數值 (00..59) |
+| `%p` | `AM` 或 `PM` |
+| `%r` | 時間，12 小時制 (hh:mm:ss 後接 `AM` 或 `PM`) |
+| `%S` | 秒 (00..59) |
+| `%s` | 秒 (00..59) |
+| `%T` | 時間，24 小時制 (hh:mm:ss) |
 
 <!-- vale on -->
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2452,7 +2453,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢回傳以下結果：
 
 ```text
   
@@ -2468,16 +2469,16 @@ fetched rows / total rows = 1/1
   
 ## TIME_TO_SEC
 
-**Usage**: `TIME_TO_SEC(time)`
+**用法**：`TIME_TO_SEC(time)`
 
-Returns the `time` argument, converted to seconds.
+回傳轉換為秒數的 `time` 引數。
 
-**Parameters**:
-- `time` (Required): A `STRING`, `TIME`, or `TIMESTAMP` value.
+**參數**：
+- `time`（必要）：`STRING`、`TIME` 或 `TIMESTAMP` 值。
 
-**Return type**: `LONG`
+**回傳類型**：`LONG`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2488,7 +2489,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢回傳以下結果：
 
 ```text
   
@@ -2504,17 +2505,17 @@ fetched rows / total rows = 1/1
   
 ## TIMEDIFF
 
-**Usage**: `TIMEDIFF(time1, time2)`
+**用法**：`TIMEDIFF(time1, time2)`
 
-Returns the difference between two time expressions as a time.
+以時間形式回傳兩個時間運算式之間的差值。
 
-**Parameters**:
-- `time1` (Required): A `TIME` value.
-- `time2` (Required): A `TIME` value.
+**參數**：
+- `time1`（必要）：`TIME` 值。
+- `time2`（必要）：`TIME` 值。
 
-**Return type**: `TIME`
+**回傳類型**：`TIME`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2525,7 +2526,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢回傳以下結果：
 
 ```text
   
@@ -2541,17 +2542,17 @@ fetched rows / total rows = 1/1
   
 ## TIMESTAMP
 
-**Usage**: `TIMESTAMP(expr)` or `TIMESTAMP(expr1, expr2)`
+**用法**：`TIMESTAMP(expr)` 或 `TIMESTAMP(expr1, expr2)`
 
-Constructs a timestamp type with the input string `expr` as a timestamp. If the argument is not a string, it casts `expr` to a timestamp type with the default time zone UTC. If the argument is a time, it applies today's date before the cast. With two arguments, adds the time expression `expr2` to the date or timestamp expression `expr1` and returns the result as a timestamp value.
+以輸入字串 `expr` 建構時間戳記類型。若引數不是字串，則會以預設時區 UTC 將 `expr` 轉換為時間戳記類型。若引數是時間，則會在轉換前套用今天的日期。若有兩個引數，則將時間運算式 `expr2` 加到日期或時間戳記運算式 `expr1`，並以時間戳記值回傳結果。
 
-**Parameters**:
-- `expr` (Required): A `STRING`, `DATE`, `TIME`, or `TIMESTAMP` value.
-- `expr2` (Optional): A `STRING`, `DATE`, `TIME`, or `TIMESTAMP` value.
+**參數**：
+- `expr`（必要）：`STRING`、`DATE`、`TIME` 或 `TIMESTAMP` 值。
+- `expr2`（選用）：`STRING`、`DATE`、`TIME` 或 `TIMESTAMP` 值。
 
-**Return type**: `TIMESTAMP`
+**回傳類型**：`TIMESTAMP`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2562,7 +2563,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢回傳以下結果：
 
 ```text
   
@@ -2578,18 +2579,18 @@ fetched rows / total rows = 1/1
   
 ## TIMESTAMPADD
 
-**Usage**: `TIMESTAMPADD(interval, count, datetime)`
+**用法**：`TIMESTAMPADD(interval, count, datetime)`
 
-Returns a `TIMESTAMP` value based on a passed-in `DATE`/`TIME`/`TIMESTAMP`/`STRING` argument and an `INTERVAL` and `INTEGER` argument which determine the amount of time to be added. If the third argument is a `STRING`, it must be formatted as a valid `TIMESTAMP`. If only a `TIME` is provided, a `TIMESTAMP` is still returned with the `DATE` portion filled in using the current date. If the third argument is a `DATE`, it will be automatically converted to a `TIMESTAMP`.
+根據傳入的 `DATE`/`TIME`/`TIMESTAMP`/`STRING` 引數，以及決定要加入之時間量的 `INTERVAL` 與 `INTEGER` 引數，回傳 `TIMESTAMP` 值。若第三個引數是 `STRING`，則必須格式化為有效的 `TIMESTAMP`。若僅提供 `TIME`，仍會回傳 `TIMESTAMP`，並以目前日期填入 `DATE` 部分。若第三個引數是 `DATE`，則會自動轉換為 `TIMESTAMP`。
 
-**Parameters**:
-- `interval` (Required): One of: `MICROSECOND`, `SECOND`, `MINUTE`, `HOUR`, `DAY`, `WEEK`, `MONTH`, `QUARTER`, `YEAR`.
-- `count` (Required): An `INTEGER` number of intervals to add.
-- `datetime` (Required): A `DATE`, `TIME`, `TIMESTAMP`, or `STRING` value.
+**參數**：
+- `interval`（必要）：以下其中之一：`MICROSECOND`、`SECOND`、`MINUTE`、`HOUR`、`DAY`、`WEEK`、`MONTH`、`QUARTER`、`YEAR`。
+- `count`（必要）：要加入的區間數量，為 `INTEGER`。
+- `datetime`（必要）：`DATE`、`TIME`、`TIMESTAMP` 或 `STRING` 值。
 
-**Return type**: `TIMESTAMP`
+**回傳類型**：`TIMESTAMP`
 
-**Examples**
+**範例**
 
 ```sql
   
@@ -2601,7 +2602,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢回傳以下結果：
 
 ```text
   
@@ -2617,18 +2618,18 @@ fetched rows / total rows = 1/1
   
 ## TIMESTAMPDIFF
 
-**Usage**: `TIMESTAMPDIFF(interval, start, end)`
+**用法**：`TIMESTAMPDIFF(interval, start, end)`
 
-Returns the difference between the start and end date/times in interval units. If a `TIME` is provided as an argument, it will be converted to a `TIMESTAMP` with the `DATE` portion filled in using the current date. Arguments will be automatically converted to a `TIME`/`TIMESTAMP` when appropriate. Any argument that is a `STRING` must be formatted as a valid `TIMESTAMP`.
+以區間單位回傳開始與結束日期/時間之間的差值。若提供 `TIME` 作為引數，則會轉換為 `TIMESTAMP`，並以目前日期填入 `DATE` 部分。引數會在適當時自動轉換為 `TIME`/`TIMESTAMP`。任何為 `STRING` 的引數都必須格式化為有效的 `TIMESTAMP`。
 
-**Parameters**:
-- `interval` (Required): One of: `MICROSECOND`, `SECOND`, `MINUTE`, `HOUR`, `DAY`, `WEEK`, `MONTH`, `QUARTER`, `YEAR`.
-- `start` (Required): A `DATE`, `TIME`, `TIMESTAMP`, or `STRING` value.
-- `end` (Required): A `DATE`, `TIME`, `TIMESTAMP`, or `STRING` value.
+**參數**：
+- `interval`（必要）：以下其中之一：`MICROSECOND`、`SECOND`、`MINUTE`、`HOUR`、`DAY`、`WEEK`、`MONTH`、`QUARTER`、`YEAR`。
+- `start`（必要）：`DATE`、`TIME`、`TIMESTAMP` 或 `STRING` 值。
+- `end`（必要）：`DATE`、`TIME`、`TIMESTAMP` 或 `STRING` 值。
 
-**Return type**: `LONG`
+**回傳類型**：`LONG`
 
-**Examples**
+**範例**
 
 ```sql
   
@@ -2640,7 +2641,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢回傳以下結果：
 
 ```text
   
@@ -2656,16 +2657,16 @@ fetched rows / total rows = 1/1
   
 ## TO_DAYS
 
-**Usage**: `TO_DAYS(date)`
+**用法**：`TO_DAYS(date)`
 
-Returns the day number (the number of days since year 0) of the given date. Returns `NULL` if date is invalid.
+傳回指定日期的天數（自第 0 年起算的天數）。若日期無效，則傳回 `NULL`。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date`（必要）：`STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `LONG`
+**傳回類型**：`LONG`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2676,7 +2677,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```text
   
@@ -2692,16 +2693,16 @@ fetched rows / total rows = 1/1
   
 ## TO_SECONDS
 
-**Usage**: `TO_SECONDS(date)`
+**用法**：`TO_SECONDS(date)`
 
-Returns the number of seconds since the year 0 of the given value. Returns `NULL` if value is invalid. An argument of a `LONG` type can be used. It must be formatted as YMMDD, YYMMDD, YYYMMDD, or YYYYMMDD. Note that a `LONG` type argument cannot have leading zeros as it will be parsed using an octal numbering system.
+傳回指定值自第 0 年起算的秒數。若值無效，則傳回 `NULL`。可使用 `LONG` 類型的引數。其格式必須為 YMMDD、YYMMDD、YYYMMDD 或 YYYYMMDD。請注意，`LONG` 類型的引數不能有前置零，因為它會使用八進位數字系統進行剖析。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `LONG`, `DATE`, `TIME`, or `TIMESTAMP` value.
+**參數**：
+- `date`（必要）：`STRING`、`LONG`、`DATE`、`TIME` 或 `TIMESTAMP` 值。
 
-**Return type**: `LONG`
+**傳回類型**：`LONG`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2713,7 +2714,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```text
   
@@ -2729,16 +2730,16 @@ fetched rows / total rows = 1/1
   
 ## UNIX_TIMESTAMP
 
-**Usage**: `UNIX_TIMESTAMP()` or `UNIX_TIMESTAMP(date)`
+**用法**：`UNIX_TIMESTAMP()` 或 `UNIX_TIMESTAMP(date)`
 
-Converts the given argument to Unix time (seconds since Epoch---the very beginning of the year 1970). If no argument is given, it returns the current Unix time. The date argument may be a `DATE`, or `TIMESTAMP` string, or a number in `YYMMDD`, `YYMMDDhhmmss`, `YYYYMMDD`, or `YYYYMMDDhhmmss` format. If the argument includes a time part, it may optionally include a fractional seconds part. If the argument is in an invalid format or outside the range `1970-01-01 00:00:00`--`3001-01-18 23:59:59.999999` (0 to 32536771199.999999 epoch time), the function returns `NULL`. You can use [`FROM_UNIXTIME`](#from_unixtime) to perform the reverse conversion.
+將指定的引數轉換為 Unix 時間（自 Epoch 起算的秒數，即 1970 年的一開始）。若未提供引數，則傳回目前的 Unix 時間。日期引數可以是 `DATE`、`TIMESTAMP` 字串，或 `YYMMDD`、`YYMMDDhhmmss`、`YYYYMMDD` 或 `YYYYMMDDhhmmss` 格式的數字。若引數包含時間部分，則可選擇性地包含小數秒部分。若引數格式無效或超出範圍 `1970-01-01 00:00:00`--`3001-01-18 23:59:59.999999`（0 至 32536771199.999999 epoch 時間），則函式會傳回 `NULL`。您可以使用 [`FROM_UNIXTIME`](#from_unixtime) 執行反向轉換。
 
-**Parameters**:
-- `date` (Optional): A `DOUBLE`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date`（選用）：`DOUBLE`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `DOUBLE`
+**傳回類型**：`DOUBLE`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2749,7 +2750,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```text
   
@@ -2765,15 +2766,15 @@ fetched rows / total rows = 1/1
   
 ## UTC_DATE
 
-**Usage**: `UTC_DATE()`
+**用法**：`UTC_DATE()`
 
-Returns the current UTC date as a value in `YYYY-MM-DD` format.
+以 `YYYY-MM-DD` 格式的值傳回目前的 UTC 日期。
 
-**Parameters**: None
+**參數**：無
 
-**Return type**: `DATE`
+**傳回類型**：`DATE`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2784,7 +2785,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```text
   
@@ -2800,15 +2801,15 @@ fetched rows / total rows = 1/1
   
 ## UTC_TIME
 
-**Usage**: `UTC_TIME()`
+**用法**：`UTC_TIME()`
 
-Returns the current UTC time as a value in 'hh:mm:ss'.
+以 'hh:mm:ss' 格式的值傳回目前的 UTC 時間。
 
-**Parameters**: None
+**參數**：無
 
-**Return type**: `TIME`
+**傳回類型**：`TIME`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2819,7 +2820,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```text
   
@@ -2835,15 +2836,15 @@ fetched rows / total rows = 1/1
   
 ## UTC_TIMESTAMP
 
-**Usage**: `UTC_TIMESTAMP()`
+**用法**：`UTC_TIMESTAMP()`
 
-Returns the current UTC timestamp as a value in 'YYYY-MM-DD hh:mm:ss'.
+以 'YYYY-MM-DD hh:mm:ss' 格式的值傳回目前的 UTC 時間戳記。
 
-**Parameters**: None
+**參數**：無
 
-**Return type**: `TIMESTAMP`
+**傳回類型**：`TIMESTAMP`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2854,7 +2855,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```text
   
@@ -2870,32 +2871,32 @@ fetched rows / total rows = 1/1
   
 ## WEEK
 
-**Usage**: `WEEK(date)` or `WEEK(date, mode)`
+**用法**：`WEEK(date)` 或 `WEEK(date, mode)`
 
-Returns the week number for `date`. If the mode argument is omitted, the default mode 0 is used.
+傳回 `date` 的週數。若省略模式引數，則使用預設模式 0。
 
-**Parameters**:
-- `date` (Required): A `DATE`, `TIMESTAMP`, or `STRING` value.
-- `mode` (Optional): An `INTEGER` mode value (0--7).
+**參數**：
+- `date`（必要）：`DATE`、`TIMESTAMP` 或 `STRING` 值。
+- `mode`（選用）：`INTEGER` 模式值（0--7）。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-Synonyms: [`WEEK_OF_YEAR`](#week_of_year)
+同義詞：[`WEEK_OF_YEAR`](#week_of_year)
 
-The following table describes how the `mode` parameter works.
+下表說明 `mode` 參數的運作方式。
 
-| Mode | First day of week | Range | Week 1 is the first week ... |
+| 模式 | 每週第一天 | 範圍 | 第 1 週是第一個... |
 | --- | --- | --- | --- |
-| 0 | Sunday | 0--53 | with a Sunday in this year |
-| 1 | Monday | 0--53 | with 4 or more days this year |
-| 2 | Sunday | 1--53 | with a Sunday in this year |
-| 3 | Monday | 1--53 | with 4 or more days this year |
-| 4 | Sunday | 0--53 | with 4 or more days this year |
-| 5 | Monday | 0--53 | with a Monday in this year |
-| 6 | Sunday | 1--53 | with 4 or more days this year |
-| 7 | Monday | 1--53 | with a Monday in this year |
+| 0 | 星期日 | 0--53 | 包含本年度星期日的該週 |
+| 1 | 星期一 | 0--53 | 本年度有 4 天以上的該週 |
+| 2 | 星期日 | 1--53 | 包含本年度星期日的該週 |
+| 3 | 星期一 | 1--53 | 本年度有 4 天以上的該週 |
+| 4 | 星期日 | 0--53 | 本年度有 4 天以上的該週 |
+| 5 | 星期一 | 0--53 | 包含本年度星期一的該週 |
+| 6 | 星期日 | 1--53 | 本年度有 4 天以上的該週 |
+| 7 | 星期一 | 1--53 | 包含本年度星期一的該週 |
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2906,7 +2907,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```text
   
@@ -2922,16 +2923,16 @@ fetched rows / total rows = 1/1
   
 ## WEEKDAY
 
-**Usage**: `WEEKDAY(date)`
+**用法**：`WEEKDAY(date)`
 
-Returns the weekday index for `date` (0 = Monday, 1 = Tuesday, ..., 6 = Sunday). It is similar to the [`DAYOFWEEK`](#dayofweek) function, but returns different indexes for each day.
+傳回 `date` 的星期索引（0 = 星期一、1 = 星期二、...、6 = 星期日）。它與 [`DAYOFWEEK`](#dayofweek) 函式類似，但對各星期幾傳回的索引值與該函式不同。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, `TIME`, or `TIMESTAMP` value.
+**參數**：
+- `date`（必要）：`STRING`、`DATE`、`TIME` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2943,7 +2944,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```text
   
@@ -2959,36 +2960,36 @@ fetched rows / total rows = 1/1
   
 ## WEEK_OF_YEAR
 
-**Usage**: `WEEK_OF_YEAR(date)` or `WEEK_OF_YEAR(date, mode)`
+**用法**：`WEEK_OF_YEAR(date)` 或 `WEEK_OF_YEAR(date, mode)`
 
-Returns the week number for `date`. If the mode argument is omitted, the default mode 0 is used.
+傳回 `date` 的週數。若省略 mode 引數，則使用預設模式 0。
 
-**Parameters**:
-- `date` (Required): A `DATE`, `TIMESTAMP`, or `STRING` value.
-- `mode` (Optional): An `INTEGER` mode value (0--7).
+**參數**：
+- `date`（必要）：`DATE`、`TIMESTAMP` 或 `STRING` 值。
+- `mode`（選用）：`INTEGER` 模式值（0--7）。
 
-**Return type**: `INTEGER`
+**回傳類型**：`INTEGER`
 
-Synonyms: [`WEEK`](#week)
+同義詞：[`WEEK`](#week)
 
-The following table describes how the mode argument works:
+下表說明 mode 引數的運作方式：
 
 <!-- vale off -->
 
-| Mode | First day of week | Range | Week 1 is the first week ... |
+| 模式 | 每週第一天 | 範圍 | 第 1 週是第一個 ... 的週 |
 | --- | --- | --- | --- |
-| 0 | Sunday | 0--53 | with a Sunday in this year |
-| 1 | Monday | 0--53 | with 4 or more days this year |
-| 2 | Sunday | 1--53 | with a Sunday in this year |
-| 3 | Monday | 1--53 | with 4 or more days this year |
-| 4 | Sunday | 0--53 | with 4 or more days this year |
-| 5 | Monday | 0--53 | with a Monday in this year |
-| 6 | Sunday | 1--53 | with 4 or more days this year |
-| 7 | Monday | 1--53 | with a Monday in this year |
+| 0 | 星期日 | 0--53 | 本年度包含星期日的週 |
+| 1 | 星期一 | 0--53 | 本年度有 4 天以上的週 |
+| 2 | 星期日 | 1--53 | 本年度包含星期日的週 |
+| 3 | 星期一 | 1--53 | 本年度有 4 天以上的週 |
+| 4 | 星期日 | 0--53 | 本年度有 4 天以上的週 |
+| 5 | 星期一 | 0--53 | 本年度包含星期一的週 |
+| 6 | 星期日 | 1--53 | 本年度有 4 天以上的週 |
+| 7 | 星期一 | 1--53 | 本年度包含星期一的週 |
 
 <!-- vale on -->
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -2999,7 +3000,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```text
   
@@ -3015,16 +3016,16 @@ fetched rows / total rows = 1/1
   
 ## YEAR
 
-**Usage**: `YEAR(date)`
+**用法**：`YEAR(date)`
 
-Returns the year for `date`, in the range 1000 to 9999, or 0 for the "zero" date.
+傳回 `date` 的年份，範圍為 1000 至 9999；「零」日期則傳回 0。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, or `TIMESTAMP` value.
+**參數**：
+- `date`（必要）：`STRING`、`DATE` 或 `TIMESTAMP` 值。
 
-**Return type**: `INTEGER`
+**回傳類型**：`INTEGER`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -3035,7 +3036,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```text
   
@@ -3051,17 +3052,17 @@ fetched rows / total rows = 1/1
   
 ## YEARWEEK
 
-**Usage**: `YEARWEEK(date)` or `YEARWEEK(date, mode)`
+**用法**：`YEARWEEK(date)` 或 `YEARWEEK(date, mode)`
 
-Returns the year and week for `date` as an integer. It accepts an optional mode argument aligned with those available for the [`WEEK`](#week) function.
+以整數傳回 `date` 的年份與週。可接受選用的 mode 引數，與 [`WEEK`](#week) 函式可用的模式一致。
 
-**Parameters**:
-- `date` (Required): A `STRING`, `DATE`, `TIME`, or `TIMESTAMP` value.
-- `mode` (Optional): An `INTEGER` mode value (0--7).
+**參數**：
+- `date`（必要）：`STRING`、`DATE`、`TIME` 或 `TIMESTAMP` 值。
+- `mode`（選用）：`INTEGER` 模式值（0--7）。
 
-**Return type**: `INTEGER`
+**回傳類型**：`INTEGER`
 
-#### Example
+#### 範例
 
 ```sql
   
@@ -3073,7 +3074,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 ```text
   

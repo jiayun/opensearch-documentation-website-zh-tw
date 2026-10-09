@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Complex conditionals
+title: "複雜條件式"
 parent: Conditional execution
 nav_order: 50
 ---
 
-# Complex conditionals
+# 複雜條件式
 
-In ingest pipelines, the `if` parameter in processors can evaluate complex conditions using Painless scripts. These conditionals help fine-tune document processing, allowing advanced logic such as type checking, regular expressions, and combining multiple criteria. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+在資料匯入管線中，處理器的 `if` 參數可使用 Painless 指令碼評估複雜條件。這些條件式有助於微調文件處理，可實現型別檢查、正規表達式及合併多項準則等進階邏輯。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-## Multiple condition checks
+## 多條件檢查
 
-You can combine logical operators like `&&` (and), `||` (or), and `!` (not) to construct more complex conditions. The following pipeline tags documents as `spam` and drops them if they contain an `error_code` higher than `1000`:
+您可以合併 `&&` (and)、`||` (or) 及 `!` (not) 等邏輯運算子，建構更複雜的條件。下列管線會將文件標記為 `spam`，並在文件包含高於 `1000` 的 `error_code` 時予以捨棄：
 
 ```json
 PUT _ingest/pipeline/spammy_error_handler
@@ -34,7 +35,7 @@ PUT _ingest/pipeline/spammy_error_handler
 ```
 {% include copy-curl.html %}
 
-You can test the pipeline using the following `_simulate` request:
+您可以使用下列 `_simulate` 請求測試此管線：
 
 ```json
 POST _ingest/pipeline/spammy_error_handler/_simulate
@@ -48,7 +49,7 @@ POST _ingest/pipeline/spammy_error_handler/_simulate
 ```
 {% include copy-curl.html %}
 
-The first document is dropped because it contains an `OutOfMemoryError` string and an `error_code` higher than `1000`:
+第一份文件會遭到捨棄，因為它包含 `OutOfMemoryError` 字串及高於 `1000` 的 `error_code`：
 
 ```json
 {
@@ -87,9 +88,9 @@ The first document is dropped because it contains an `OutOfMemoryError` string a
 }
 ```
 
-## Type-safe evaluations
+## 型別安全評估
 
-Use `instanceof` to ensure you're working with the right data types before performing operations. The following pipeline is configured to add a `processed` field set to `true` only if `message` is of type `String` and longer than `10` characters:
+使用 `instanceof` 以確保在執行作業前使用正確的資料類型。下列管線設定為僅在 `message` 為 `String` 類型且長度超過 `10` 個字元時，新增設為 `true` 的 `processed` 欄位：
 
 ```json
 PUT _ingest/pipeline/string_message_check
@@ -107,7 +108,7 @@ PUT _ingest/pipeline/string_message_check
 ```
 {% include copy-curl.html %}
 
-Test the pipeline using the following `_simulate` request:
+使用下列 `_simulate` 請求測試此管線：
 
 ```json
 POST _ingest/pipeline/string_message_check/_simulate
@@ -121,7 +122,7 @@ POST _ingest/pipeline/string_message_check/_simulate
 ```
 {% include copy-curl.html %}
 
-Only the second document has a new field added:
+只有第二份文件會新增欄位：
 
 ```json
 {
@@ -168,9 +169,9 @@ Only the second document has a new field added:
 ```
 
 
-## Using regular expressions
+## 使用正規表達式
 
-Painless scripting supports the `=~` operator to evaluate regular expressions. The following pipeline flags suspicious IP patterns beginning with `192.168.`:
+Painless 指令碼支援 `=~` 運算子以評估正規表達式。下列管線會標記以 `192.168.` 開頭的可疑 IP 模式：
 
 ```json
 PUT _ingest/pipeline/flag_suspicious_ips
@@ -188,7 +189,7 @@ PUT _ingest/pipeline/flag_suspicious_ips
 ```
 {% include copy-curl.html %}
 
-Test the pipeline using the following `_simulate` request:
+使用下列 `_simulate` 請求測試此管線：
 
 ```json
 POST _ingest/pipeline/flag_suspicious_ips/_simulate
@@ -201,7 +202,7 @@ POST _ingest/pipeline/flag_suspicious_ips/_simulate
 ```
 {% include copy-curl.html %}
 
-The first document has an `alert` field added:
+第一份文件會新增 `alert` 欄位：
 
 ```json
 {
@@ -235,9 +236,9 @@ The first document has an `alert` field added:
 }
 ```
 
-## Combining fields and null checks
+## 合併欄位與空值檢查
 
-The following pipeline adds a `priority` field set to `high` if `level` is `critical` and `timestamp` is provided. The script also ensures that all fields are present and meet specific conditions before proceeding:
+下列管線會在 `level` 為 `critical` 且提供 `timestamp` 時，新增設為 `high` 的 `priority` 欄位。此指令碼也會確保所有欄位皆存在並符合特定條件後才繼續：
 
 ```json
 PUT _ingest/pipeline/critical_log_handler
@@ -255,7 +256,7 @@ PUT _ingest/pipeline/critical_log_handler
 ```
 {% include copy-curl.html %}
 
-Test the pipeline using the following `_simulate` request:
+使用下列 `_simulate` 請求測試此管線：
 
 ```json
 POST _ingest/pipeline/critical_log_handler/_simulate
@@ -269,7 +270,7 @@ POST _ingest/pipeline/critical_log_handler/_simulate
 ```
 {% include copy-curl.html %}
 
-Only the first document has a `priority` field added:
+只有第一份文件會新增 `priority` 欄位：
 
 ```json
 {
@@ -317,13 +318,13 @@ Only the first document has a `priority` field added:
 }
 ```
 
-## Multi-conditional processing
+## 多條件處理
 
-The following pipeline:
+下列管線：
 
-- Adds an `env` field set to `production` if it doesn't already exist.
-- Adds a `severity` field set to `major` if the value in the `status` field is greater than or equal to `500`.
-- Drops the document if the `env` field is set to `test` and the `message` field contains `debug`.
+- 若 `env` 欄位尚不存在，則新增設為 `production` 的該欄位。
+- 若 `status` 欄位中的值大於或等於 `500`，則新增設為 `major` 的 `severity` 欄位。
+- 若 `env` 欄位設為 `test` 且 `message` 欄位包含 `debug`，則捨棄該文件。
 
 ```json
 PUT _ingest/pipeline/advanced_log_pipeline
@@ -353,7 +354,7 @@ PUT _ingest/pipeline/advanced_log_pipeline
 ```
 {% include copy-curl.html %}
 
-Use the following `_simulate` request to test the pipeline:
+使用下列 `_simulate` 請求測試此管線：
 
 ```json
 POST _ingest/pipeline/advanced_log_pipeline/_simulate
@@ -382,7 +383,7 @@ POST _ingest/pipeline/advanced_log_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-In the response, note that the first document has the `env: production` and `severity: major` fields added. The second document is dropped. The third document has an `env: production` field added:
+在回應中，請注意第一份文件新增了 `env: production` 及 `severity: major` 欄位。第二份文件遭到捨棄。第三份文件新增了 `env: production` 欄位：
 
 ```json
 {
@@ -421,19 +422,19 @@ In the response, note that the first document has the `env: production` and `sev
 }
 ```
 
-## Null-safe notation
+## 空值安全標記法
 
-Use null-safe navigation notation (`?.`) to check whether the field is `null`. Note that this notation can return `null` silently; therefore, we recommend first checking whether the returned value is `null` and then using operations like `.contains` or `==`.
+使用空值安全導覽標記法 (`?.`) 檢查欄位是否為 `null`。請注意，此標記法可能會無訊息地傳回 `null`；因此，我們建議先檢查傳回的值是否為 `null`，再使用 `.contains` 或 `==` 等作業。
 
-Unsafe syntax:
+不安全的語法：
 
 ```
 "if": "ctx.message?.contains('debug')"
 ```
 
-If the `message` field does not exist in the document, this request returns a `null_pointer_exception` with the message `Cannot invoke "Object.getClass()" because "value" is null`.
+若文件中不存在 `message` 欄位，此請求會傳回 `null_pointer_exception`，並附帶訊息 `Cannot invoke "Object.getClass()" because "value" is null`。
 
-Safe syntax:
+安全的語法：
 
 ```
 "if": "ctx.message != null && ctx.message.contains('debug')"

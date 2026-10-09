@@ -1,51 +1,52 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Creating correlation rules
+title: "建立關聯規則"
 parent: Setting up Security Analytics
 nav_order: 17
 ---
 
-# Creating correlation rules
+# 建立關聯規則
 
-Correlation rules allow you to define threat scenarios involving multiple systems in an infrastructure by matching the signatures of threat events occurring in different log types. Once a rule contains at least two different log sources and the preferred fields and field values that define an intended threat scenario, the correlation engine can query the indexes specified in the correlation rule and identify any correlations between the findings.
+關聯規則可讓您藉由比對不同記錄類型中出現的威脅事件特徵，定義基礎架構中涉及多個系統的威脅情境。一旦規則包含至少兩個不同的記錄來源，以及定義預定威脅情境所需的欄位與欄位值，關聯引擎即可查詢關聯規則中指定的索引，並找出各項發現之間的任何關聯。
 
 ---
-## Configuring rules
+## 設定規則
 
-Having at least two data sources in the rule configuration is the basis for making connections between different systems in an infrastructure and identifying correlations. Therefore, a minimum of two queries is required for each correlation rule. However, you can include more than two queries to better define a threat scenario and look for correlations between multiple systems. Follow these steps to create a correlation rule:
+規則組態中至少要有兩個資料來源，這是在基礎架構中不同系統之間建立連結並找出關聯的基礎。因此，每個關聯規則至少需要兩個查詢。不過，您可以加入兩個以上的查詢，以更完善地定義威脅情境，並尋找多個系統之間的關聯。請依照下列步驟建立關聯規則：
 
-1. Begin by selecting **Security Analytics** in the OpenSearch Dashboards main menu. Then select **Correlation rules** from the Security Analytics menu on the left side of the screen. The **Correlation rules** page is displayed, as shown in the following image.
+1. 首先，在 OpenSearch Dashboards 主選單中選取 **Security Analytics**。然後在畫面左側的 Security Analytics 選單中選取 **Correlation rules**。畫面會顯示 **Correlation rules** 頁面，如下圖所示。
    
    ![The correlation rules page]({{site.url}}{{site.baseurl}}/images/Security/sec-analytics/create-corr-rule.png){: width="85%" }
 
-1. Select **Create correlation rule**. The **Create correlation rule** window opens.
-1. In the **Correlation rule details** field, enter a name for the rule, as shown in the following image.
+1. 選取 **Create correlation rule**。**Create correlation rule** 視窗隨即開啟。
+1. 在 **Correlation rule details** 欄位中，輸入規則的名稱，如下圖所示。
   
    ![The correlation rule name]({{site.url}}{{site.baseurl}}/images/Security/sec-analytics/corr-rule-config1.png){: width="50%" }
 
-1. The **Correlation queries** field contains two dropdown lists. In the **Select index** dropdown list, specify an index or index pattern for the data source. In the **Log type** dropdown list, specify the log type associated with the index, as shown in the following image.
+1. **Correlation queries** 欄位包含兩個下拉式清單。在 **Select index** 下拉式清單中，指定資料來源的索引或索引模式。在 **Log type** 下拉式清單中，指定與該索引相關聯的記錄類型，如下圖所示。
   
    ![The data source and log type for the query]({{site.url}}{{site.baseurl}}/images/Security/sec-analytics/corr-rule-config2.png){: width="45%" }
   
-1. In the **Field** dropdown list, specify a log field. In the **Field value** text box, enter a value for the field, as shown in the following image.
+1. 在 **Field** 下拉式清單中，指定記錄欄位。在 **Field value** 文字方塊中，輸入該欄位的值，如下圖所示。
   
    ![The field and field value for the query]({{site.url}}{{site.baseurl}}/images/Security/sec-analytics/corr-rule-config3.png){: width="45%" }
 
-1. To add more fields to the query, select **Add field**.    
-1. After configuring the first query, repeat the previous step to configure a second query. You can select **Add query** at the bottom of the window to add more queries for the rule, as shown in the following image.
+1. 若要為查詢新增更多欄位，請選取 **Add field**。    
+1. 設定好第一個查詢後，重複上述步驟以設定第二個查詢。您可以在視窗底部選取 **Add query**，為規則新增更多查詢，如下圖所示。
   
    ![A second query for the correlation rule]({{site.url}}{{site.baseurl}}/images/Security/sec-analytics/corr-rule-config4.png){: width="50%" }
 
-1. Once the rule is complete, select **Create correlation rule** in the lower-right corner of the window. OpenSearch creates a new rule, the screen returns to the **Correlation rules** window, and the new rule appears in the table of correlation rules. To edit the rule, select the rule name in the **Name** column. The **Edit correlation rule** window opens.
+1. 規則完成後，選取視窗右下角的 **Create correlation rule**。OpenSearch 會建立新規則，畫面會返回 **Correlation rules** 視窗，且新規則會出現在關聯規則表格中。若要編輯規則，請在 **Name** 欄中選取規則名稱。**Edit correlation rule** 視窗隨即開啟。
 
 ---
-## Setting a time window
+## 設定時間範圍
 
-The Cluster Settings API allows you to correlate findings within a set time window. For example, if your time window is three minutes, the system attempts to correlate findings defined in the threat scenario only when they occur within three minutes of one another. By default, the time window is five minutes. For more information about the Cluster Settings API, see [Cluster settings]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/).
+Cluster Settings API 可讓您在一段設定的時間範圍內關聯各項發現。舉例來說，如果您的時間範圍是三分鐘，系統只會在威脅情境中定義的各項發現彼此出現時間相隔三分鐘內時，才會嘗試加以關聯。根據預設，時間範圍為五分鐘。如需 Cluster Settings API 的詳細資訊，請參閱[叢集設定]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/)。
 
-### Example request
+### 範例請求
 
-The following PUT call sets the time window to two minutes:
+下列 PUT 呼叫會將時間範圍設為兩分鐘：
 
 ```json
 PUT /_cluster/settings
@@ -58,9 +59,9 @@ PUT /_cluster/settings
 {% include copy-curl.html %}
 
 ---
-## Next steps
+## 後續步驟
 
-After creating detectors and correlation rules, you can use the correlation graph to observe the correlations between findings from different log sources. For information about working with the correlation graph, see [Working with the correlation graph]({{site.url}}{{site.baseurl}}/security-analytics/usage/correlation-graph/). 
+建立偵測器和關聯規則後，您可以使用關聯圖來觀察來自不同記錄來源之各項發現之間的關聯。如需使用關聯圖的詳細資訊，請參閱[使用關聯圖]({{site.url}}{{site.baseurl}}/security-analytics/usage/correlation-graph/)。
 
-You can also add a trigger to a correlation rule so that it generates an alert and sends a notification when it correlates findings. For more information, see [Correlation rule triggers]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/correlation-eng/#correlation-rule-triggers).
+您也可以為關聯規則新增觸發條件，使其在關聯各項發現時產生警示並傳送通知。如需詳細資訊，請參閱[關聯規則觸發條件]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/correlation-eng/#correlation-rule-triggers)。
 

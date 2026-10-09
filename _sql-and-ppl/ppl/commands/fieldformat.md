@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: fieldformat
 parent: Commands
@@ -8,36 +9,36 @@ nav_order: 17
 
 <!-- vale off -->
 
-# fieldformat command
+# fieldformat 命令
 
 <!-- vale on -->
 
-The `fieldformat` command sets a field to the result of a specified expression and appends the evaluated field to the search results. This command is an alias of [`eval`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/eval/).
+`fieldformat` 命令會將欄位設定為指定運算式的結果，並將評估後的欄位附加到搜尋結果。此命令是 [`eval`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/eval/) 的別名。
 
-It also supports string concatenation using the dot (`.`) operator, allowing you to append strings to expressions.
+它也支援使用點 (`.`) 運算子進行字串串接，讓您可以將字串附加到運算式。
 
-## Syntax
+## 語法
 
-The `fieldformat` command has the following syntax:
+`fieldformat` 命令具有下列語法：
 
 ```sql
  fieldformat <field>=[(prefix).]<expression>[.(suffix)] ["," <field>=[(prefix).]<expression>[.(suffix)] ]...
 ```
 
-## Parameters
+## 參數
 
-The `fieldformat` command supports the following parameters.
+`fieldformat` 命令支援下列參數。
 
-| Parameter| Required/Optional | Description                                                                                                                                   |
+| 參數| 必要/選用 | 說明                                                                                                                                   |
 |----------------|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| `<field>`      | Required | The name of the field to create or update. If the field does not exist, it is added. If it already exists, its value is overwritten. |
-| `<expression>` | Required | The expression to evaluate. It may include optional prefix and/or suffix strings that are concatenated using the dot (`.`) operator. |
-| `prefix`       | Optional | A string placed before the expression. When combined using the dot (`.`) operator, it is concatenated as a prefix to the evaluated result. |
-| `suffix`       | Optional | A string placed after the expression. When combined using the dot (`.`) operator, it is concatenated as a suffix to the evaluated result. |
+| `<field>`      | 必要 | 要建立或更新的欄位名稱。若欄位不存在，則會新增該欄位。若欄位已存在，則會覆寫其值。 |
+| `<expression>` | 必要 | 要評估的運算式。可包含使用點 (`.`) 運算子串接的選用前置字串及/或後置字串。 |
+| `prefix`       | 選用 | 置於運算式前面的字串。使用點 (`.`) 運算子結合時，會串接為評估結果的前置字串。 |
+| `suffix`       | 選用 | 置於運算式後面的字串。使用點 (`.`) 運算子結合時，會串接為評估結果的後置字串。 |
 
-## Example 1: Creating a computed field for incident classification  
+## 範例 1：建立用於事件分類的計算欄位  
 
-The following query creates an `is_critical` field that indicates whether a log entry represents a critical issue, useful for filtering in dashboards:
+下列查詢會建立一個 `is_critical` 欄位，用來指出記錄項目是否代表重大問題，適合在儀表板中進行篩選：
   
 ```sql
 source=otellogs
@@ -50,7 +51,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -64,9 +65,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Overriding a field with a formatted value  
+## 範例 2：以格式化值覆寫欄位  
 
-The following query overrides the `severityNumber` field with a human-readable severity tier:
+下列查詢會以人類可讀的嚴重性層級覆寫 `severityNumber` 欄位：
   
 ```sql
 source=otellogs
@@ -78,7 +79,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -91,6 +92,6 @@ The query returns the following results:
 
 <!-- vale on -->
   
-## Related commands
+## 相關命令
 
 - [`eval`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/eval/)

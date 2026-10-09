@@ -67,7 +67,7 @@ terms:
   - {term: 負載均衡, preferred: 負載平衡}
   - {term: 異步, preferred: 非同步}
   - {term: 調用, preferred: 呼叫}
-  - {term: 登錄, preferred: 登入, exceptions: [登錄檔]}
+  - {term: 登錄, preferred: 登入, exceptions: [登錄檔, 登錄機碼, 登錄器]}
   - {term: 創建, preferred: 建立}
   - {term: 運行, preferred: 執行}
   - {term: 支持, preferred: 支援, exceptions: [支持向量機, 支持向量]}

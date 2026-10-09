@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Who am I protected
 parent: Authentication APIs
@@ -7,29 +8,29 @@ nav_order: 30
 ---
 
 # Who Am I Protected API
-**Introduced 2.11**
+**於 2.11 版推出**
 {: .label .label-purple }
 
-Returns the identity information for the current user. Unlike the Who Am I API, this endpoint is subject to REST layer authorization, so the user's role must grant access to it.
+傳回目前使用者的身分資訊。與 Who Am I API 不同，此端點受 REST 層授權控管，因此使用者的角色必須授予存取此端點的權限。
 
 <!-- spec_insert_start
 api: security.who_am_i_protected
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_plugins/_security/whoamiprotected
 ```
 <!-- spec_insert_end -->
 
-## Example request
+## 請求範例
 
 ```json
 GET _plugins/_security/whoamiprotected
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 回應範例
 
 ```json
 {

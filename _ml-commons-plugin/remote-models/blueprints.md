@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Connector blueprints
+title: "連接器藍圖"
 has_children: false
 nav_order: 10
 parent: Connectors
@@ -10,13 +11,13 @@ redirect_from:
   - /ml-commons-plugin/extensibility/blueprints/
 ---
 
-# Connector blueprints
-**Introduced 2.9**
+# 連接器藍圖
+**於 2.9 版推出**
 {: .label .label-purple }
 
-Every [connector]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/) is specified by a _connector blueprint_. The blueprint defines all the parameters you need to provide when creating a connector.
+每個[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)都由一個「_連接器藍圖_」定義。藍圖定義了您在建立連接器時需要提供的所有參數。
 
-For example, the following blueprint is a specification for an Amazon SageMaker connector:
+例如，下列藍圖是 Amazon SageMaker 連接器的規格：
 
 ```json
 {
@@ -48,83 +49,83 @@ For example, the following blueprint is a specification for an Amazon SageMaker 
 ```
 {% include copy-curl.html %} 
 
-## Finding a blueprint
+## 尋找藍圖
 
-OpenSearch provides connector blueprints for many machine learning (ML) platforms and models. For a list of every platform and model that has a provided blueprint, along with the authentication protocol each one uses, see [OpenSearch-provided connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/).
+OpenSearch 為許多機器學習 (ML) 平台及模型提供連接器藍圖。如需所有已提供藍圖的平台及模型清單，以及各自使用的驗證通訊協定，請參閱 [OpenSearch 提供的連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/)。
 
-As an ML developer, you can build connector blueprints for other platforms. Using those blueprints, administrators and data scientists can create connectors for models hosted on those platforms. 
+身為 ML 開發人員，您可以為其他平台建置連接器藍圖。管理員和資料科學家可以使用這些藍圖，為託管在這些平台上的模型建立連接器。 
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the fields in a create connector request.
+下表列出建立連接器請求中的欄位。
 
-| Field                                            | Data type | Is required | Description                                                                                                                                                                                                                                                                                                                                                                          |
+| 欄位 | 資料類型 | 是否必要 | 說明 |
 |:-------------------------------------------------|:---|:------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `name`                                           | String | Yes         | The name of the connector.                                                                                                                                                                                                                                                                                                                                                           |
-| `connector_id`                                   | String | No          | A unique identifier for the connector. If omitted, OpenSearch generates one automatically. |
-| `description`                                    | String | Yes         | A description of the connector.                                                                                                                                                                                                                                                                                                                                                      |
-| `version`                                        | Integer | Yes         | The connector version.                                                                                                                                                                                                                                                                                                                                                        |
-| `protocol`                                       | String | Yes         | The protocol for the connection, which determines how OpenSearch authenticates to the platform. For AWS services, such as Amazon SageMaker and Amazon Bedrock, use `aws_sigv4`. For Google Cloud Vertex AI, use `google_cloud`. For all other platforms, use `http`. For more information, see [Connector authentication]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connector-authentication/).                                                                                                                                                                                                                                  |
-| `parameters`                                     | JSON object | Yes         | The default connector parameters, including `endpoint`, `model`, and `skip_validating_missing_parameters`. Any parameters indicated in this field can be overridden by parameters specified in a predict request.                                                                                                                                                                     |
-| `credential`                                     | JSON object | Depends on `protocol` | Defines the credential variables that OpenSearch uses to authenticate to your endpoint. Required for all protocols except `google_cloud` in Application Default Credentials mode (`auth_mode` set to `adc`) and the `mcp_sse` and `mcp_streamable_http` protocols, which resolve credentials outside the connector. For every other protocol, including `http`, omitting this object or leaving it empty returns a `400` error. The fields that this object accepts depend on the `protocol`. For more information, see [Connector authentication]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connector-authentication/). ML Commons uses **AES/GCM/NoPadding** symmetric encryption to encrypt your credentials. When the cluster connection is initiated, OpenSearch creates a random 32-byte encryption key that persists in OpenSearch's system index. Therefore, you do not need to manually set the encryption key. |
-| `actions`                                        | JSON array  | Yes         | Defines the actions that can run within the connector. If you're an administrator creating a connection, add the [blueprint]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/) for your desired connection.                                                                                                                                                      |
-| `backend_roles`                                  | JSON array  | No          | A list of OpenSearch backend roles. For more information about setting up backend roles, see [Assigning backend roles to users]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control#assigning-backend-roles-to-users).                                                                                                                                               |
-| `access_mode`                                    | String | No          | Sets the access mode for the model, either `public`, `restricted`, or `private`. Default is `private`. For more information about `access_mode`, see [Model groups]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control#model-groups).                                                                                                                               |
-| `add_all_backend_roles`                          | Boolean  | No          | When set to `true`, adds all `backend_roles` to the access list, which only a user with admin permissions can adjust. When set to `false`, non-admins can add `backend_roles`.                                                                                                                                                                                                       |
-| `client_config`                                  | JSON object | No          | The client configuration object, which provides settings that control the behavior of the client connections used by the connector. These settings allow you to manage connection limits, timeouts, and TLS options, ensuring efficient and reliable communication.                                                                                                                                |
-| `parameters.skip_validating_missing_parameters`  | Boolean | No          | When set to `true`, this option allows you to send a request using a connector without validating any missing parameters. Default is `false`.                                                                                                                                                                                                                                                            |
-| `provisioned_by`                                     | String | No          | An optional attribution tag identifying the plugin or client that provisioned the connector (for example, `flow-framework`). Included in ML statistics metrics. Set at creation time only; ignored by the Update Connector API.                                                                                                                                                            |
+| `name` | 字串 | 是 | 連接器的名稱。 |
+| `connector_id` | 字串 | 否 | 連接器的唯一識別碼。若省略，OpenSearch 會自動產生一個。 |
+| `description` | 字串 | 是 | 連接器的說明。 |
+| `version` | 整數 | 是 | 連接器版本。 |
+| `protocol` | 字串 | 是 | 連線的通訊協定，決定 OpenSearch 如何向平台進行驗證。對於 AWS 服務，例如 Amazon SageMaker 和 Amazon Bedrock，請使用 `aws_sigv4`。對於 Google Cloud Vertex AI，請使用 `google_cloud`。對於所有其他平台，請使用 `http`。如需詳細資訊，請參閱[連接器驗證]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connector-authentication/)。 |
+| `parameters` | JSON 物件 | 是 | 預設的連接器參數，包括 `endpoint`、`model` 和 `skip_validating_missing_parameters`。此欄位中指定的任何參數，都可以由預測請求中指定的參數覆寫。 |
+| `credential` | JSON 物件 | 取決於 `protocol` | 定義 OpenSearch 用來向您的端點進行驗證的憑證變數。除了處於應用程式預設憑證 (Application Default Credentials) 模式 (`auth_mode` 設為 `adc`) 的 `google_cloud`，以及在連接器之外解析憑證的 `mcp_sse` 和 `mcp_streamable_http` 通訊協定外，所有通訊協定皆為必要。對於其他所有通訊協定 (包括 `http`)，若省略此物件或將其留空，將傳回 `400` 錯誤。此物件接受的欄位取決於 `protocol`。如需詳細資訊，請參閱[連接器驗證]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connector-authentication/)。ML Commons 使用 **AES/GCM/NoPadding** 對稱式加密來加密您的憑證。在起始叢集連線時，OpenSearch 會建立一個隨機的 32 位元組加密金鑰，並將其保存在 OpenSearch 的系統索引中。因此，您不需要手動設定加密金鑰。 |
+| `actions` | JSON 陣列 | 是 | 定義可在連接器內執行的動作。如果您是建立連線的管理員，請為您想要的連線新增[藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)。 |
+| `backend_roles` | JSON 陣列 | 否 | OpenSearch 後端角色的清單。如需設定後端角色的詳細資訊，請參閱[將後端角色指派給使用者]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control#assigning-backend-roles-to-users)。 |
+| `access_mode` | 字串 | 否 | 設定模型的存取模式，可為 `public`、`restricted` 或 `private`。預設為 `private`。如需 `access_mode` 的詳細資訊，請參閱[模型群組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control#model-groups)。 |
+| `add_all_backend_roles` | 布林值 | 否 | 設為 `true` 時，會將所有 `backend_roles` 新增至存取清單，且只有具備管理員權限的使用者才能調整。設為 `false` 時，非管理員可以新增 `backend_roles`。 |
+| `client_config` | JSON 物件 | 否 | 用戶端組態物件，提供用於控制連接器所使用之用戶端連線行為的設定。這些設定可讓您管理連線限制、逾時及 TLS 選項，以確保有效率且可靠的通訊。 |
+| `parameters.skip_validating_missing_parameters` | 布林值 | 否 | 設為 `true` 時，此選項可讓您使用連接器傳送請求，而不驗證任何缺少的參數。預設為 `false`。 |
+| `provisioned_by` | 字串 | 否 | 選用的歸屬標籤，用於識別佈建該連接器的外掛程式或用戶端 (例如 `flow-framework`)。會包含在 ML 統計指標中。僅能在建立時設定；Update Connector API 會忽略此欄位。 |
 
 
-The `actions` object supports the following fields.
+`actions` 物件支援下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 |:---|:---|:---|
-| `action_type` | String | Required. Specifies the ML Commons API operation to use upon connection. Valid values are `predict`, `batch_predict`, `batch_predict_status`, `cancel_batch_predict`, and `execute`. |
-| `method`  | String | Required. Defines the HTTP method for the API call. Supports `POST` and `GET`. |
-| `url` | String      | Required. Specifies the connection endpoint at which the action occurs. This must match the regex expression for the connection used when [adding trusted endpoints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index#adding-trusted-endpoints).|
-| `request_body` | String | Required. Sets the parameters contained in the request body of the action. The parameters must include `\"inputText\`, which specifies how users of the connector should construct the request payload for the `action_type`.  |
-| `pre_process_function`  | String | Optional. A built-in or custom Painless script used to preprocess the input data. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/). OpenSearch provides the following built-in preprocess functions that you can call directly:<br> - `connector.pre_process.cohere.embedding` for [Cohere](https://cohere.com/) embedding models<br> - `connector.pre_process.openai.embedding` for [OpenAI](https://platform.openai.com/docs/guides/embeddings) embedding models <br> - `connector.pre_process.default.embedding`, which you can use to preprocess documents in neural search requests so that they are in the format that ML Commons can process with the default preprocessor (OpenSearch 2.11 or later). For more information, see [Built-in functions](#built-in-pre--and-post-processing-functions). |
-| `post_process_function` | String   | Optional. A built-in or custom Painless script used to post-process the model output data. OpenSearch provides the following built-in post-process functions that you can call directly:<br> - `connector.post_process.cohere.embedding` for [Cohere text embedding models](https://docs.cohere.com/reference/embed)<br> - `connector.post_process.openai.embedding` for [OpenAI text embedding models](https://platform.openai.com/docs/api-reference/embeddings) <br> - `connector.post_process.default.embedding`, which you can use to post-process documents in the model response so that they are in the format that neural search expects (OpenSearch 2.11 or later). For more information, see [Built-in functions](#built-in-pre--and-post-processing-functions). |
-| `headers` | JSON object | Specifies the headers used in the request or response body. Default is `ContentType: application/json`. If your third-party ML tool requires access control, define the required `credential` parameters in the `headers` parameter. |
+| `action_type` | 字串 | 必要。指定連線時要使用的 ML Commons API 操作。有效值為 `predict`、`batch_predict`、`batch_predict_status`、`cancel_batch_predict` 和 `execute`。 |
+| `method`  | 字串 | 必要。定義 API 呼叫的 HTTP 方法。支援 `POST` 和 `GET`。 |
+| `url` | 字串      | 必要。指定執行動作的連線端點。此值必須符合[新增受信任端點]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index#adding-trusted-endpoints)時所用連線的正規表達式。|
+| `request_body` | 字串 | 必要。設定動作請求本文中包含的參數。這些參數必須包含 `\"inputText\`，其指定連接器的使用者應如何為 `action_type` 建構請求承載。  |
+| `pre_process_function`  | 字串 | 選用。用於前置處理輸入資料的內建或自訂 Painless 指令碼。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。OpenSearch 提供下列可直接呼叫的內建前置處理函式：<br> - `connector.pre_process.cohere.embedding` 用於 [Cohere](https://cohere.com/) 嵌入模型<br> - `connector.pre_process.openai.embedding` 用於 [OpenAI](https://platform.openai.com/docs/guides/embeddings) 嵌入模型 <br> - `connector.pre_process.default.embedding`，您可用來前置處理類神經搜尋請求中的文件，使其成為 ML Commons 可使用預設前置處理器處理的格式 (OpenSearch 2.11 或更新版本)。如需更多資訊，請參閱[內建函式](#built-in-pre--and-post-processing-functions)。 |
+| `post_process_function` | 字串   | 選用。用於後置處理模型輸出資料的內建或自訂 Painless 指令碼。OpenSearch 提供下列可直接呼叫的內建後置處理函式：<br> - `connector.post_process.cohere.embedding` 用於 [Cohere 文字嵌入模型](https://docs.cohere.com/reference/embed)<br> - `connector.post_process.openai.embedding` 用於 [OpenAI 文字嵌入模型](https://platform.openai.com/docs/api-reference/embeddings) <br> - `connector.post_process.default.embedding`，您可用來後置處理模型回應中的文件，使其成為類神經搜尋預期的格式 (OpenSearch 2.11 或更新版本)。如需更多資訊，請參閱[內建函式](#built-in-pre--and-post-processing-functions)。 |
+| `headers` | JSON 物件 | 指定請求或回應本文中使用的標頭。預設為 `ContentType: application/json`。若您的第三方 ML 工具需要存取控制，請在 `headers` 參數中定義必要的 `credential` 參數。 |
 
-The `client_config` object supports the following fields.
+`client_config` 物件支援下列欄位。
 
-| Field  | Data type | Description |
+| 欄位  | 資料類型 | 說明 |
 |:---|:---|:---|
-| `max_connection` | Integer   | The maximum number of concurrent connections that the client can establish to the server. Some remote services, like SageMaker, constrain the maximum number of concurrent connections and throw a throttling exception if the number of concurrent connections exceeds the threshold. The maximum number of concurrent OpenSearch connections is `max_connection`*`node_number_for_connector`. To mitigate this issue, try to decrease the value of this parameter and modify the retry settings in `client_config`. Default is `30`. |
-| `connection_timeout` | Integer | The maximum amount of time (in seconds) that the client will wait while trying to establish a connection to the server. A timeout prevents the client from waiting indefinitely and allows the client to recover when it encounters unreachable network endpoints. Default is `30`. |
-| `read_timeout` | Integer | The maximum amount of time (in seconds) that the client will wait for a response from the server after sending a request. This is useful when the server is slow to respond or encounters an issue while processing a request. Default is `30`. |
-| `retry_backoff_policy`  | String   | The backoff policy for retries to the remote connector. This is useful when there is spike in traffic causing throttling exceptions. Supported policies are `constant`, `exponential_equal_jitter`, and `exponential_full_jitter`. Default is `constant`. |
-| `max_retry_times`  | Integer   | The maximum number of times that a single remote inference request will be retried. This is useful when there is a spike in traffic causing throttling exceptions. When set to `0`, retrying is disabled. When set to `-1`, OpenSearch does not limit the number of `retry_times`. Setting this to a positive integer specifies the maximum number of retry attempts. Default is `0`.       |
-| `retry_backoff_millis` | Integer   | The base backoff time in milliseconds for retry policy. The suspend time during two retries is determined by this parameter and `retry_backoff_policy`.  Default is `200`. |
-| `retry_timeout_seconds` | Integer   | The timeout value, in seconds, for the retry. If the retry can not succeed within the specified amount of time, the connector will stop retrying and throw an exception. Default is `30`. |
-| `skip_ssl_verification` | Boolean   | If set to `true`, disables SSL certificate verification for the connector, allowing connections to endpoints with self-signed or otherwise invalid certificates. Use only in development or testing environments. If set to `false`, SSL certificate verification remains enabled (recommended for production). Default is `false`. |
-| `mutual_tls_enabled` | Boolean | If set to `true`, the connector presents a client certificate to the endpoint using mutual TLS (mTLS). Provide the certificate material in the connector's `credential` object. Supported only for connectors that use the `http` protocol. Cannot be enabled together with `skip_ssl_verification`. Default is `false`. For more information, see [Client certificate authentication]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/http-authentication/#client-certificate-authentication). |
-| `keystore_type` | String | The format of the client certificate material supplied in the `credential` object. Valid values are `PEM` and `PKCS12` (not case sensitive). Applies only when `mutual_tls_enabled` is `true`. Default is `PEM`. |
+| `max_connection` | 整數   | 用戶端可與伺服器建立的最大並行連線數。部分遠端服務 (例如 SageMaker) 會限制並行連線數上限，並在並行連線數超過閾值時擲回節流例外。OpenSearch 並行連線數上限為 `max_connection`*`node_number_for_connector`。若要減輕此問題，請嘗試降低此參數的值，並修改 `client_config` 中的重試設定。預設為 `30`。 |
+| `connection_timeout` | 整數 | 用戶端嘗試與伺服器建立連線時等待的最大時間 (以秒為單位)。逾時可避免用戶端無限期等待，並讓用戶端在遇到無法連線的網路端點時復原。預設為 `30`。 |
+| `read_timeout` | 整數 | 用戶端傳送請求後等待伺服器回應的最大時間 (以秒為單位)。當伺服器回應緩慢或在處理請求時發生問題時，此設定很實用。預設為 `30`。 |
+| `retry_backoff_policy`  | 字串   | 重試遠端連接器的退避原則。當流量暴增導致節流例外時，此設定很實用。支援的原則為 `constant`、`exponential_equal_jitter` 和 `exponential_full_jitter`。預設為 `constant`。 |
+| `max_retry_times`  | 整數   | 單一遠端推論請求可重試的最大次數。當流量暴增導致節流例外時，此設定很實用。設為 `0` 時，會停用重試。設為 `-1` 時，OpenSearch 不會限制 `retry_times` 的次數。將此值設為正整數會指定重試次數上限。預設為 `0`。       |
+| `retry_backoff_millis` | 整數   | 重試原則的基礎退避時間 (以毫秒為單位)。兩次重試之間的暫停時間取決於此參數和 `retry_backoff_policy`。預設為 `200`。 |
+| `retry_timeout_seconds` | 整數   | 重試的逾時值 (以秒為單位)。若重試無法在指定時間內成功，連接器會停止重試並擲回例外。預設為 `30`。 |
+| `skip_ssl_verification` | 布林值   | 若設為 `true`，會停用連接器的 SSL 憑證驗證，允許連線至使用自簽或其他無效憑證的端點。僅在開發或測試環境中使用。若設為 `false`，SSL 憑證驗證會保持啟用 (建議用於正式環境)。預設為 `false`。 |
+| `mutual_tls_enabled` | 布林值 | 若設為 `true`，連接器會使用雙向 TLS (mTLS) 向端點出示用戶端憑證。請在連接器的 `credential` 物件中提供憑證資料。僅支援使用 `http` 通訊協定的連接器。無法與 `skip_ssl_verification` 同時啟用。預設為 `false`。如需更多資訊，請參閱[用戶端憑證驗證]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/http-authentication/#client-certificate-authentication)。 |
+| `keystore_type` | 字串 | 在 `credential` 物件中提供之用戶端憑證資料的格式。有效值為 `PEM` 和 `PKCS12` (不分大小寫)。僅在 `mutual_tls_enabled` 為 `true` 時適用。預設為 `PEM`。 |
 
-## Built-in pre- and post-processing functions
+## 內建前置與後置處理函式
 
-Call the built-in pre- and post-processing functions instead of writing a custom Painless script when connecting to the following text embedding models or your own text embedding models deployed on a remote server (for example, Amazon SageMaker):
+連線至下列文字嵌入模型，或您部署在遠端伺服器 (例如 Amazon SageMaker) 上的自有文字嵌入模型時，請呼叫內建的前置與後置處理函式，而不要撰寫自訂 Painless 指令碼：
 
-- [OpenAI models](https://platform.openai.com/docs/api-reference/embeddings)
-- [Cohere models](https://docs.cohere.com/reference/embed)
+- [OpenAI 模型](https://platform.openai.com/docs/api-reference/embeddings)
+- [Cohere 模型](https://docs.cohere.com/reference/embed)
 
-OpenSearch provides the following pre- and post-processing functions:
+OpenSearch 提供下列前置與後置處理函式：
 
-- OpenAI: `connector.pre_process.openai.embedding` and `connector.post_process.openai.embedding`
-- Cohere: `connector.pre_process.cohere.embedding` and `connector.post_process.cohere.embedding`
-- [Amazon SageMaker default functions for neural search](#amazon-sagemaker-default-pre--and-post-processing-functions-for-neural-search): `connector.pre_process.default.embedding` and `connector.post_process.default.embedding`
+- OpenAI：`connector.pre_process.openai.embedding` 和 `connector.post_process.openai.embedding`
+- Cohere：`connector.pre_process.cohere.embedding` 和 `connector.post_process.cohere.embedding`
+- [Amazon SageMaker 類神經搜尋預設函式](#amazon-sagemaker-default-pre--and-post-processing-functions-for-neural-search)：`connector.pre_process.default.embedding` 和 `connector.post_process.default.embedding`
 
-### Amazon SageMaker default pre- and post-processing functions for neural search
+### Amazon SageMaker 神經搜尋的預設前置與後置處理函式
 
-When you perform vector search using [neural search]({{site.url}}{{site.baseurl}}/search-plugins/neural-search/), the neural search request is routed first to ML Commons and then to the model. If the model is one of the [pretrained models provided by OpenSearch]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/), it can parse the ML Commons request and return the response in the format that ML Commons expects. However, for a model hosted on an external platform, the expected format may be different from the ML Commons format. The default pre- and post-processing functions translate between the format that the model expects and the format that neural search expects. 
+當您使用[神經搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-search/)執行向量搜尋時，神經搜尋請求會先路由至 ML Commons，再路由至模型。如果模型是 [OpenSearch 提供的預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)之一，它可以解析 ML Commons 請求，並以 ML Commons 預期的格式傳回回應。然而，對於託管在外部平台上的模型，預期的格式可能與 ML Commons 格式不同。預設的前置與後置處理函式會在模型預期的格式與神經搜尋預期的格式之間進行轉換。
 
-For the default functions to be applied, the model input and output must be in the format described in the following sections.
+若要套用預設函式，模型輸入與輸出必須符合以下各節所述的格式。
 
-#### Example request
+#### 範例請求
 
-The following example request creates a SageMaker text embedding connector and calls the default post-processing function:
+以下範例請求建立 SageMaker 文字嵌入連接器，並呼叫預設後置處理函式：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -158,14 +159,14 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-The `request_body` template must be `${parameters.input}`. 
+`request_body` 範本必須為 `${parameters.input}`。
 {: .important}
 
-### Preprocessing function 
+### 前置處理函式
 
-The `connector.pre_process.default.embedding` default preprocessing function parses the neural search request and transforms it into the format that the model expects as input.
+`connector.pre_process.default.embedding` 預設前置處理函式會解析神經搜尋請求，並將其轉換為模型預期的輸入格式。
 
-The ML Commons [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) provides parameters in the following format:
+ML Commons [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 提供下列格式的參數：
 
 ```json
 {
@@ -175,17 +176,17 @@ The ML Commons [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/
 }
 ```
 
-The default preprocessing function sends the `input` field contents to the model. Thus, the model input format must be a list of strings, for example:
+預設前置處理函式會將 `input` 欄位內容傳送至模型。因此，模型輸入格式必須是字串清單，例如：
 
 ```json
 ["hello", "world"]
 ```
 
-### Post-processing function 
+### 後置處理函式
 
-The `connector.post_process.default.embedding` default post-processing function parses the model response and transforms it into the format that neural search expects as input.
+`connector.post_process.default.embedding` 預設後置處理函式會解析模型回應，並將其轉換為神經搜尋預期的輸入格式。
 
-The remote text embedding model output must be a two-dimensional float array, each element of which represents an embedding of a string from the input list. For example, the following two-dimensional array corresponds to the embedding of the list `["hello", "world"]`:
+遠端文字嵌入模型的輸出必須是二維浮點數陣列，其中每個元素代表輸入清單中一個字串的嵌入。例如，下列二維陣列對應於清單 `["hello", "world"]` 的嵌入：
 
 ```json
 [
@@ -202,9 +203,9 @@ The remote text embedding model output must be a two-dimensional float array, ea
 ]
 ```
 
-## Custom pre- and post-processing functions
+## 自訂前置與後置處理函式
 
-You can write your own pre- and post-processing functions specifically for your model format. For example, the following Amazon Bedrock connector definition contains custom pre- and post-processing functions for the Amazon Bedrock Titan embedding model:
+您可以針對自己的模型格式撰寫專屬的前置與後置處理函式。例如，下列 Amazon Bedrock 連接器定義包含適用於 Amazon Bedrock Titan 嵌入模型的自訂前置與後置處理函式：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -240,7 +241,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-## Next steps
+## 後續步驟
 
-- To learn more about connecting to external models, see [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/).
-- For connector examples, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/).
+- 若要進一步了解如何連線至外部模型，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
+- 如需連接器範例，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。

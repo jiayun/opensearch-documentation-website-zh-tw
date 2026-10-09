@@ -1,46 +1,47 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Remote segment backpressure
+title: "遠端分段背壓"
 nav_order: 10
 parent: Remote-backed storage
 grand_parent: Availability and recovery
 ---
 
-# Remote segment backpressure
+# 遠端分段背壓
 
-Introduced 2.10
+於 2.10 版推出
 {: .label .label-purple }
 
-Remote segment backpressure is a shard-level rejection mechanism that dynamically rejects indexing requests when the remote segment store falls behind the local committed segments on the primary shard. With remote segment backpressure, you can prevent the lag between the remote store and the local primary store. The lag can be caused by slow or failed remote store interaction, remote store throttling, long garbage collection pauses, or high CPU utilization.
+遠端分段背壓是一種分片層級的拒絕機制，當遠端分段儲存落後於主要分片上本機已提交的分段時，會動態拒絕編製索引請求。透過遠端分段背壓，您可以避免遠端儲存與本機主要儲存之間的落後。落後可能由緩慢或失敗的遠端儲存互動、遠端儲存節流、長時間的垃圾收集暫停或高 CPU 使用率所造成。
 
-## Thresholds
+## 閾值
 
-Remote segment backpressure is activated if any of the following thresholds is breached:
+只要違反下列任一閾值，遠端分段背壓就會啟動：
 
-- **Consecutive failure**: The backpressure is activated if there are _N_ or more consecutive failures. The value of _N_ is configurable in `remote_store.segment.pressure.consecutive_failures.limit`.
-- **Bytes lag**: The bytes lag is calculated by adding the sizes of all the files that are present in local committed segments but not in the remote store. Backpressure is activated if the bytes lag is greater than _K_ multiplied by the moving average of the size, in bytes, of the files uploaded after each refresh. The variance factor _K_ is configurable in `remote_store.segment.pressure.bytes_lag.variance_factor`. The moving window size is configurable through the `remote_store.moving_average_window_size` setting.
-- **Time lag**: The time lag is calculated by comparing the timestamps of the most recent local refresh and the most recent remote store segment upload. Backpressure is activated if the time lag is greater than _K_ multiplied by the moving average of the time taken to upload new segments and metadata files after each refresh. The variance factor _K_ is configurable through the `remote_store.segment.pressure.time_lag.variance_factor` setting. The moving window size is configurable through the `remote_store.moving_average_window_size` setting.  
+- **連續失敗**：若連續失敗達 _N_ 次或以上，背壓即會啟動。_N_ 的值可在 `remote_store.segment.pressure.consecutive_failures.limit` 中設定。
+- **位元組落後**：位元組落後的計算方式，是將存在於本機已提交分段中但不存在於遠端儲存中的所有檔案大小相加。若位元組落後大於 _K_ 乘以每次重新整理後上傳檔案大小（以位元組為單位）的移動平均值，背壓即會啟動。變異因子 _K_ 可在 `remote_store.segment.pressure.bytes_lag.variance_factor` 中設定。移動視窗大小可透過 `remote_store.moving_average_window_size` 設定來調整。
+- **時間落後**：時間落後的計算方式，是比較最近一次本機重新整理與最近一次遠端儲存分段上傳的時間戳記。若時間落後大於 _K_ 乘以每次重新整理後上傳新分段與中繼資料檔案所需時間的移動平均值，背壓即會啟動。變異因子 _K_ 可透過 `remote_store.segment.pressure.time_lag.variance_factor` 設定來調整。移動視窗大小可透過 `remote_store.moving_average_window_size` 設定來調整。  
 
-## Handling segment merges 
+## 處理分段合併 
 
-At every segment merge, a corresponding refresh is initiated. Because this refresh has new merged segments, the bytes lag instantly spikes. To compensate for this spike, the bytes lag and time lag are evaluated only if the remote store is behind the local primary store by more than one refresh. However, backpressure induced by consecutive failures activates regardless of refresh lag (the number of refreshes by which the remote store is lagging behind the local store).
+每次分段合併時，都會啟動對應的重新整理。由於此重新整理包含新的合併分段，位元組落後會瞬間飆升。為了補償這種飆升，只有在遠端儲存落後本機主要儲存超過一次重新整理時，才會評估位元組落後與時間落後。不過，由連續失敗引發的背壓無論重新整理落後（遠端儲存落後本機儲存的重新整理次數）為何都會啟動。
 
-## Remote segment backpressure settings
+## 遠端分段背壓設定
 
-Remote segment backpressure adds several settings to the standard OpenSearch cluster settings. The settings are dynamic, so you can change the default backpressure behavior without restarting your cluster. 
+遠端分段背壓在標準 OpenSearch 叢集設定中新增了數項設定。這些設定是動態的，因此您無需重新啟動叢集即可變更預設的背壓行為。 
 
-The following table lists the settings used for activating backpressure. For threshold calculation, see [Thresholds](#thresholds).
+下表列出用於啟動背壓的設定。關於閾值計算，請參閱 [閾值](#thresholds)。
 
-|Setting	|Data type	|Description	|
+|設定	|資料類型	|說明	|
 |:---	|:---	|:---	|
-|`remote_store.segment.pressure.enabled`	|Boolean | Enables remote segment backpressure. Default is `true`. |
-|`remote_store.segment.pressure.consecutive_failures.limit`	|Integer | The minimum consecutive failure count for activating remote segment backpressure. Default is `5`.	|
-|`remote_store.segment.pressure.bytes_lag.variance_factor`	|Float | The variance factor that is used together with the moving average to calculate the dynamic bytes lag threshold for activating remote segment backpressure. Default is `10`.	|
-|`remote_store.segment.pressure.time_lag.variance_factor`	|Float 	|The variance factor that is used together with the moving average to calculate the dynamic time lag threshold for activating remote segment backpressure. Default is `10`.	|
+|`remote_store.segment.pressure.enabled`	|布林值 | 啟用遠端分段背壓。預設為 `true`。 |
+|`remote_store.segment.pressure.consecutive_failures.limit`	|整數 | 啟動遠端分段背壓所需的最小連續失敗次數。預設為 `5`。	|
+|`remote_store.segment.pressure.bytes_lag.variance_factor`	|浮點數 | 與移動平均值搭配使用，以計算啟動遠端分段背壓之動態位元組落後閾值的變異因子。預設為 `10`。	|
+|`remote_store.segment.pressure.time_lag.variance_factor`	|浮點數 	|與移動平均值搭配使用，以計算啟動遠端分段背壓之動態時間落後閾值的變異因子。預設為 `10`。	|
 
-The following table lists the settings used for statistics.
+下表列出用於統計資料的設定。
 
-|Setting	|Data type	|Description	|
+|設定	|資料類型	|說明	|
 |:---	|:---	|:---	|
-| `remote_store.moving_average_window_size` | Integer | The moving average window size used to calculate the rolling statistic values exposed through the [Remote Store Stats API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-store-stats-api/). Default is `20`. Minimum enforced is `5`. |
+| `remote_store.moving_average_window_size` | 整數 | 用於計算透過 [Remote Store Stats API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-store-stats-api/) 公開之滾動統計值的移動平均視窗大小。預設為 `20`。強制最小值為 `5`。 |
 

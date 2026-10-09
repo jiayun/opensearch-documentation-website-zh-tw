@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Is Migration Assistant right for you?
+title: "Migration Assistant 適合您嗎？"
 nav_order: 10
 permalink: /migration-assistant/is-migration-assistant-right-for-you/
 redirect_from:
@@ -9,142 +10,142 @@ redirect_from:
 ---
 
 <!-- vale off -->
-# Is Migration Assistant right for you?
+# Migration Assistant 適合您嗎？
 <!-- vale on -->
-Whether Migration Assistant is right for you depends on your migration path, downtime target, and how much platform work you want to own yourself.
+Migration Assistant 是否適合您，取決於您的遷移路徑、停機時間目標，以及您想自行負責多少平台工作。
 
-Migration Assistant is designed for teams that want a **workflow-driven migration platform** rather than a single-use upgrade procedure. It is especially useful when:
+Migration Assistant 專為想要**工作流程驅動的遷移平台**，而非單次使用的升級程序的團隊所設計。它在下列情況特別實用：
 
-- You need to migrate across one or more major versions in a single step.
-- You want to validate the target before cutover.
-- You need a repeatable backfill process with retries and progress tracking.
-- You want a zero-downtime option through Capture and Replay.
+- 您需要在單一步驟中跨一或多個主要版本進行遷移。
+- 您想在切換前驗證目標。
+- 您需要可重複執行、具備重試與進度追蹤的回填流程。
+- 您想透過 Capture and Replay 取得零停機選項。
 
-Compared with traditional upgrade methods, Migration Assistant reduces the amount of manual coordination required between snapshot creation, metadata changes, backfill, validation, and cutover.
+與傳統升級方法相比，Migration Assistant 減少了快照建立、中繼資料變更、回填、驗證與切換之間所需的人工協調作業。
 
-## Migration concepts
+## 遷移概念
 
-If you're new to Migration Assistant, you see a few terms repeatedly. The [migration phases overview]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/) explains how they fit together. The shortest definitions are:
+如果您是 Migration Assistant 的新手，會反覆看到幾個詞彙。[遷移階段概觀]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/)說明它們如何相互配合。最簡短的定義如下：
 
-- **Backfill** -- Bulk migration of historical documents from a snapshot. Used for both planned-downtime and zero-downtime migrations.
-- **Reindex-from-Snapshot (RFS)** -- The mechanism Migration Assistant uses for backfill. RFS reads shard data from a snapshot in object storage instead of querying the live source cluster, which is why it scales well and keeps load off the source.
-- **Capture and Replay** -- Zero-downtime path that captures live writes from the source through a proxy, buffers them in Kafka, and replays them against the target after backfill catches up.
-- **Migration phases** -- The ordered steps the workflow runs: assess, deploy, migrate metadata, backfill, optional Capture and Replay, validate, and switch traffic to the target.
+- **回填 (Backfill)** -- 從快照大量遷移歷史文件。用於計畫性停機與零停機遷移。
+- **Reindex-from-Snapshot (RFS)** -- Migration Assistant 用於回填的機制。RFS 從物件儲存空間中的快照讀取分片資料，而非查詢即時來源叢集，因此能良好擴展，並讓來源免於承受負載。
+- **Capture and Replay** -- 零停機路徑，透過 Proxy 擷取來源的即時寫入、緩衝於 Kafka，並在回填追上進度後對目標重播這些寫入。
+- **遷移階段** -- 工作流程執行的有序步驟：評估、部署、遷移中繼資料、回填、選用的 Capture and Replay、驗證，以及將流量切換至目標。
 
-## Supported migration paths
+## 支援的遷移路徑
 
-The following matrix shows which source versions can be directly migrated to which OpenSearch target versions.
+下表顯示哪些來源版本可直接遷移至哪些 OpenSearch 目標版本。
 
-| Source version | OpenSearch 1.x | OpenSearch 2.x | OpenSearch 3.x |
+| 來源版本 | OpenSearch 1.x | OpenSearch 2.x | OpenSearch 3.x |
 |:---------------|:--------------:|:--------------:|:--------------:|
-| Elasticsearch 1.x--2.x | Yes* | Yes* | Yes* |
-| Elasticsearch 5.x--7.x | Yes | Yes | Yes |
-| Elasticsearch 8.x | No | Yes | Yes |
-| OpenSearch 1.x--2.x | No | Yes | Yes |
-| Apache Solr 6.x--9.x | No | No | Yes* |
+| Elasticsearch 1.x--2.x | 是* | 是* | 是* |
+| Elasticsearch 5.x--7.x | 是 | 是 | 是 |
+| Elasticsearch 8.x | 否 | 是 | 是 |
+| OpenSearch 1.x--2.x | 否 | 是 | 是 |
+| Apache Solr 6.x--9.x | 否 | 否 | 是* |
 
-\* Backfill only---Capture and Replay is not supported for these source versions.
+\* 僅限回填---這些來源版本不支援 Capture and Replay。
 
-### Version-specific notes
+### 版本特定注意事項
 
-**Elasticsearch 6.x**: Elasticsearch 6.x generally uses single-type indexes, but upgraded or legacy datasets may still contain mappings that need type-handling decisions. Run metadata evaluation first; set `multiTypeBehavior` only if the evaluation reports multi-type mapping issues.
+**Elasticsearch 6.x**：Elasticsearch 6.x 通常使用單一類型索引，但升級或舊版資料集可能仍包含需要進行類型處理決策的對應。請先執行中繼資料評估；僅在評估回報多類型對應問題時設定 `multiTypeBehavior`。
 
-**Elasticsearch 8.x**: Supported with compatibility support for post-fork features. Some 8.x-specific features may not have OpenSearch equivalents. Test metadata migration first.
+**Elasticsearch 8.x**：支援，並對 fork 後功能提供相容性支援。部分 8.x 專屬功能可能沒有 OpenSearch 對應項目。請先測試中繼資料遷移。
 
-**Apache Solr 6.x--9.x**: Only the backfill migration approach is supported (no Capture and Replay). Migration Assistant auto-detects whether the source is SolrCloud or standalone. For more information, see [Solr migration]({{site.url}}{{site.baseurl}}/migration-assistant/solr-migration/).
+**Apache Solr 6.x--9.x**：僅支援回填遷移方式（不支援 Capture and Replay）。Migration Assistant 會自動偵測來源是 SolrCloud 還是獨立部署。如需更多資訊，請參閱 [Solr 遷移]({{site.url}}{{site.baseurl}}/migration-assistant/solr-migration/)。
 
-## Supported platforms
+## 支援的平台
 
-The following table lists supported source and target platforms.
+下表列出支援的來源與目標平台。
 
-| Platform | Source | Target |
+| 平台 | 來源 | 目標 |
 |:---------|:-------|:-------|
-| Self-managed (on-premises) | Yes | Yes |
-| Amazon OpenSearch Service | Yes | Yes |
-| [Amazon OpenSearch Serverless NextGen]({{site.url}}{{site.baseurl}}/migration-assistant/amazon-opensearch-serverless/) | No | Yes |
-| Third-party cloud providers | Yes | Yes |
-| AWS EC2 | Yes | Yes |
-| Apache Solr (SolrCloud/Standalone) | Yes | No |
+| 自行管理（內部部署） | 是 | 是 |
+| Amazon OpenSearch Service | 是 | 是 |
+| [Amazon OpenSearch Serverless NextGen]({{site.url}}{{site.baseurl}}/migration-assistant/amazon-opensearch-serverless/) | 否 | 是 |
+| 第三方雲端供應商 | 是 | 是 |
+| AWS EC2 | 是 | 是 |
+| Apache Solr (SolrCloud/Standalone) | 是 | 否 |
 
-## Deployment options
+## 部署選項
 
-Migration Assistant runs on Kubernetes and can be deployed to:
+Migration Assistant 在 Kubernetes 上執行，可部署至：
 
-- **Amazon EKS** for the recommended AWS production path with bootstrap automation, pod identity, image mirroring, snapshot helpers, and CloudWatch integration.
-- **Any Kubernetes cluster** when you already operate your own Kubernetes platform or you are evaluating locally.
+- **Amazon EKS**，作為建議的 AWS 生產路徑，具備啟動自動化、Pod 身分、映像鏡像、快照輔助工具與 CloudWatch 整合。
+- **任何 Kubernetes 叢集**，當您已自行操作 Kubernetes 平台，或正在本機進行評估時。
 
-The migration engine is the same in both cases. The difference is how much of the surrounding platform is prepared for you.
+兩種情況下的遷移引擎相同。差別在於周邊平台為您準備了多少。
 
-## Component support
+## 元件支援
 
-The following table lists the components that Migration Assistant can migrate automatically and those that require manual migration.
+下表列出 Migration Assistant 可自動遷移的元件，以及需要手動遷移的元件。
 
-| Component | Supported | Recommendation |
+| 元件 | 支援 | 建議 |
 |:----------|:----------|:---------------|
-| Documents | Yes | Migrate using RFS (backfill) or Capture and Replay |
-| Index settings | Yes | Migrated automatically |
-| Index mappings | Yes | Migrated automatically |
-| Index templates | Yes | Migrated automatically |
-| Component templates | Yes | Migrated automatically |
-| Aliases | Yes | Migrated automatically |
-| Data streams | No | Manually recreate on target |
-| ISM/ILM policies | No | Manually recreate on target |
-| Security configuration | No | Configure separately on target |
-| Kibana/Dashboards objects | No | Export/import using Dashboards UI |
-| Ingest pipelines | No | Manually recreate |
-| Cluster settings | No | Configure separately |
+| 文件 | 是 | 使用 RFS（回填）或 Capture and Replay 遷移 |
+| 索引設定 | 是 | 自動遷移 |
+| 索引對應 | 是 | 自動遷移 |
+| 索引範本 | 是 | 自動遷移 |
+| 元件範本 | 是 | 自動遷移 |
+| 別名 | 是 | 自動遷移 |
+| 資料串流 | 否 | 在目標上手動重新建立 |
+| ISM/ILM 原則 | 否 | 在目標上手動重新建立 |
+| 安全性組態 | 否 | 在目標上另行設定 |
+| Kibana/Dashboards 物件 | 否 | 使用 Dashboards UI 匯出/匯入 |
+| 資料匯入管線 | 否 | 手動重新建立 |
+| 叢集設定 | 否 | 另行設定 |
 
-## Checklist
+## 檢查清單
 
-Use this checklist to determine whether Migration Assistant is the right fit:
+使用此檢查清單判斷 Migration Assistant 是否合適：
 
-- Are you migrating across one or more major versions in a single step?
-- Do you need to maintain high service availability with minimal or zero downtime?
-- Do you need to validate a new OpenSearch cluster before switching over?
-- Are you looking for tooling to migrate index settings and other metadata?
-- Do you need a high-performance backfill solution with pause, resume, and checkpoint recovery?
-- Are you migrating from Apache Solr and need a snapshot-based backfill solution?
+- 您是否要在單一步驟中跨一或多個主要版本進行遷移？
+- 您是否需要以最短或零停機時間維持高服務可用性？
+- 您是否需要在切換前驗證新的 OpenSearch 叢集？
+- 您是否在尋找可遷移索引設定與其他中繼資料的工具？
+- 您是否需要具備暫停、繼續與檢查點復原功能的高效能回填解決方案？
+- 您是否要從 Apache Solr 遷移，並需要以快照為基礎的回填解決方案？
 
-Use Amazon EKS if you also want the deployment tooling to prepare the AWS environment around the migration.
+如果您也想要部署工具來準備遷移周遭的 AWS 環境，請使用 Amazon EKS。
 
-If you answered "yes" to most of these questions, Migration Assistant is likely the right solution.
+如果您對上述大多數問題的回答都是「是」，Migration Assistant 很可能就是正確的解決方案。
 
-## Assumptions and limitations
+## 假設與限制
 
-Migration Assistant has the following assumptions and limitations.
+Migration Assistant 有下列假設與限制。
 
 ### Reindex-from-Snapshot
 
-For Elasticsearch and OpenSearch sources:
+針對 Elasticsearch 與 OpenSearch 來源：
 
-- The source cluster must have the [`repository-s3` plugin](https://opensearch.org/docs/latest/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/#amazon-s3) installed (for S3-based snapshots).
-- Shards of up to **80 GiB** are supported by default. This can be configured to support larger shards up to the limits of your EBS storage, except in AWS GovCloud regions which are limited to 80 GiB.
-- Snapshots of indexes using `zstd` or `zstd_no_dict` codecs (OpenSearch 2.9+) are not supported---reindex with `default` or `best_compression` first.
+- 來源叢集必須安裝 [`repository-s3` 外掛程式](https://opensearch.org/docs/latest/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/#amazon-s3)（適用於以 S3 為基礎的快照）。
+- 預設支援最高 **80 GiB** 的分片。除了限制為 80 GiB 的 AWS GovCloud 區域外，可透過設定支援更大的分片，最高可達您的 EBS 儲存空間上限。
+- 不支援使用 `zstd` 或 `zstd_no_dict` 編解碼器的索引快照（OpenSearch 2.9+）---請先使用 `default` 或 `best_compression` 重新編製索引。
 
-For Apache Solr sources:
+針對 Apache Solr 來源：
 
-- The source cluster must have the [Solr S3 backup plugin](https://solr.apache.org/guide/solr/latest/deployment-guide/backup-restore.html#s3backuprepository) installed and a backup repository configured in `solr.xml`. Solr writes the backup directly to S3, and Migration Assistant reads it from there. See the [Solr backfill guide]({{site.url}}{{site.baseurl}}/migration-assistant/solr-migration/solr-backfill-guide/) for the full prerequisite list.
+- 來源叢集必須安裝 [Solr S3 備份外掛程式](https://solr.apache.org/guide/solr/latest/deployment-guide/backup-restore.html#s3backuprepository)，並在 `solr.xml` 中設定備份儲存庫。Solr 會將備份直接寫入 S3，Migration Assistant 再從該處讀取。完整的前置條件清單請參閱 [Solr 回填指南]({{site.url}}{{site.baseurl}}/migration-assistant/solr-migration/solr-backfill-guide/)。
 
 ### Capture and Replay
 
-Capture and Replay has the following limitations:
+Capture and Replay 有下列限制：
 
-- Automatically generated document IDs are **not preserved** during replay---clients must explicitly provide document IDs to maintain consistency between source and target.
-- Live capture is recommended only for workloads with **< 4 TB/day** of incoming traffic.
+- 自動產生的文件 ID 在重播期間**不會保留**---用戶端必須明確提供文件 ID，以維持來源與目標之間的一致性。
+- 即時擷取僅建議用於傳入流量 **< 4 TB/天** 的工作負載。
 
-### Networking
+### 網路
 
-The following networking requirements apply:
+下列網路需求適用：
 
-- The Kubernetes cluster must have network connectivity to both source and target clusters.
-- For EKS deployments, source and target cluster security groups must allow inbound traffic from the EKS cluster security group.
+- Kubernetes 叢集必須能與來源和目標叢集建立網路連線。
+- 針對 EKS 部署，來源與目標叢集的安全性群組必須允許來自 EKS 叢集安全性群組的輸入流量。
 
-## Pre-migration checklist
+## 遷移前檢查清單
 
-Complete the following steps before starting a migration:
+開始遷移前，請完成下列步驟：
 
-- Verify source and target versions are in the preceding compatibility matrix.
-- Identify unsupported components and plan manual migration.
-- Plan index scope using index allow lists.
-- Test with a subset of 1--2 representative indexes first.
-- Verify whether multi-type indexes exist (ES 5.x and 6.x).
+- 確認來源與目標版本列於前述相容性矩陣中。
+- 找出不支援的元件並規劃手動遷移。
+- 使用索引允許清單規劃索引範圍。
+- 先以 1--2 個具代表性的索引子集進行測試。
+- 確認是否存在多類型索引（ES 5.x 與 6.x）。

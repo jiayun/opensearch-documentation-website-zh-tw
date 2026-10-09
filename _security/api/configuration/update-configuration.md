@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create or update configuration
+title: "建立或更新組態"
 parent: Security configuration APIs
 grand_parent: Security APIs
 nav_order: 10
@@ -8,58 +9,58 @@ redirect_from:
   - /api-reference/security/configuration/update-configuration/
 ---
 
-# Create or Update Security Configuration API
-**Introduced 2.10**
+# 建立或更新安全性組態 API
+**於 2.10 版推出**
 {: .label .label-purple }
 
-The Create or Update Configuration API creates or updates the Security plugin's configuration directly through the REST API. This configuration manages core security settings, including authentication methods, authorization rules, and access controls.
+建立或更新組態 API 會直接透過 REST API 建立或更新安全性外掛程式的組態。此組態會管理核心安全性設定，包括驗證方法、授權規則及存取控制。
 
-This operation can easily break your existing security configuration. We strongly recommend using the `securityadmin.sh` script instead, which includes validations and safeguards to prevent misconfiguration.
+此操作很容易破壞您現有的安全性組態。我們強烈建議改用 `securityadmin.sh` 指令碼，其中包含驗證與防護機制，可避免組態錯誤。
 {: .warning}
 
 <!-- spec_insert_start
 api: security.update_configuration
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PUT /_plugins/_security/api/securityconfig/config
 ```
 <!-- spec_insert_end -->
 
-## Request body fields
+## 請求本文欄位
 
-The request body is **required**. It is a JSON object with the following fields.
+請求本文為**必要**。其為包含下列欄位的 JSON 物件。
 
-| Property | Required | Data type | Description |
+| 屬性 | 必要性 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `dynamic` | **Required** | Object | The main configuration object containing all security configuration settings. |
+| `dynamic` | **必要** | 物件 | 包含所有安全性組態設定的主要組態物件。 |
 
 <details markdown="block">
-  <summary>
-    Request body fields: <code>dynamic</code>
-  </summary>
-  {: .text-delta}
+<summary>
+    請求本文欄位：<code>dynamic</code>
+</summary>
+{: .text-delta}
 
-`dynamic` is a JSON object with the following fields.
+`dynamic` 是包含下列欄位的 JSON 物件。
 
-| Property | Data type | Description |
+| 屬性 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `auth_failure_listeners` | Object | The configuration for handling authentication failures, including thresholds and actions. |
-| `authc` | Object | The authentication configuration domains that define how users are authenticated. For more information, see [`authc`]({{site.url}}{{site.baseurl}}/security/api/configuration/index/#authc). |
-| `authz` | Object | The authorization configuration that defines how to extract backend roles when using LDAP for authentication. For more information, see [`authz`]({{site.url}}{{site.baseurl}}/security/api/configuration/index/#authz). |
-| `do_not_fail_on_forbidden` | Boolean | When `true`, returns empty results instead of a forbidden error. Instead, failures are stored in the application logs. |
-| `do_not_fail_on_forbidden_empty` | Boolean | Similar to `do_not_fail_on_forbidden` but with specific behavior for empty results. |
-| `filtered_alias_mode` | String | Controls how document field filtering is applied to aliases. |
-| `hosts_resolver_mode` | String | Determines how hostname resolution is performed for security operations. |
-| `http` | Object | The HTTP-specific security configurations. |
-| `on_behalf_of` | Object | Configures a temporary access token for the duration of a user's session (advanced). |
-| `kibana` | Object | The configuration for OpenSearch Dashboards integration. |
-| `respect_request_indices_options` | Boolean | When `true`, respects index options specified in requests. |
+| `auth_failure_listeners` | 物件 | 處理驗證失敗的組態，包括閾值與動作。 |
+| `authc` | 物件 | 定義使用者如何通過驗證的驗證組態網域。如需更多資訊，請參閱 [`authc`]({{site.url}}{{site.baseurl}}/security/api/configuration/index/#authc)。 |
+| `authz` | 物件 | 定義使用 LDAP 進行驗證時如何擷取後端角色的授權組態。如需更多資訊，請參閱 [`authz`]({{site.url}}{{site.baseurl}}/security/api/configuration/index/#authz)。 |
+| `do_not_fail_on_forbidden` | 布林值 | 當 `true` 時，傳回空結果而非權限不足錯誤。失敗則會改為儲存在應用程式記錄檔中。 |
+| `do_not_fail_on_forbidden_empty` | 布林值 | 類似於 `do_not_fail_on_forbidden`，但對空結果有特定行為。 |
+| `filtered_alias_mode` | 字串 | 控制文件欄位篩選如何套用至別名。 |
+| `hosts_resolver_mode` | 字串 | 決定安全性作業如何執行主機名稱解析。 |
+| `http` | 物件 | HTTP 特定的安全性組態。 |
+| `on_behalf_of` | 物件 | 為使用者的工作階段期間設定暫時存取權杖 (進階)。 |
+| `kibana` | 物件 | OpenSearch Dashboards 整合的組態。 |
+| `respect_request_indices_options` | 布林值 | 當 `true` 時，會遵循請求中指定的索引選項。 |
 
 </details>
 
-## Example request
+## 範例請求
 
 ```json
 PUT /_plugins/_security/api/securityconfig/config
@@ -247,7 +248,7 @@ PUT /_plugins/_security/api/securityconfig/config
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -256,33 +257,33 @@ PUT /_plugins/_security/api/securityconfig/config
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文為包含下列欄位的 JSON 物件。
 
-| Property | Data type | Description |
+| 屬性 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `status` | String | The status of the request. A successful request returns "OK". |
-| `message` | String | A message describing the result of the operation. |
+| `status` | 字串 | 請求的狀態。成功的請求會傳回「OK」。 |
+| `message` | 字串 | 描述作業結果的訊息。 |
 
-## Usage notes
+## 使用注意事項
 
-This API modifies the Security plugin's core configuration directly, so it carries the following risks:
+此 API 會直接修改安全性外掛程式的核心組態，因此具有下列風險：
 
-- In most cases, use the `securityadmin.sh` script, which includes validations and safeguards that prevent misconfiguration.
-- Back up your current security configuration before making changes.
-- Grant access to this API only to trusted administrators. A request can disable the security configuration for your entire cluster.
-- Test security configuration changes in a development environment before deploying them to production.
-- Provide a complete configuration. A partial update replaces the entire configuration.
-- This API performs minimal validation, so an incorrect configuration might not be identified until it causes operational issues.
+- 在多數情況下，請使用 `securityadmin.sh` 指令碼，其中包含可避免組態錯誤的驗證與防護機制。
+- 進行變更前，請先備份您目前的安全性組態。
+- 僅將此 API 的存取權授予受信任的管理員。一個請求就可能停用整個叢集的安全性組態。
+- 將安全性組態變更部署至正式環境前，請先在開發環境中測試。
+- 提供完整的組態。部分更新會取代整個組態。
+- 此 API 僅執行最少的驗證，因此不正確的組態可能要到造成作業問題時才會被發現。
 
-## Enabling this API
+## 啟用此 API
 
-By default, this API is disabled for security reasons. To enable it, add the following line to `opensearch.yml`:
+基於安全性理由，此 API 預設為停用。若要啟用，請將下列這一行新增至 `opensearch.yml`：
 
 ```yml
 plugins.security.unsupported.restapi.allow_securityconfig_modification: true
 ```
 {% include copy.html %}
 
-For more information about granting access to the Security APIs, see [Access control for the API]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api).
+如需授予安全性 API 存取權的詳細資訊，請參閱 [API 的存取控制]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api)。

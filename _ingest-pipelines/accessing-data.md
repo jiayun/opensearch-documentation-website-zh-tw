@@ -1,20 +1,21 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Access data in a pipeline
+title: "在管線中存取資料"
 nav_order: 20
 ---
 
-# Access data in a pipeline
+# 在管線中存取資料
 
-In ingest pipelines, you can access the document data using the `ctx` object. This object represents the processed document and allows you to read, modify, or enrich the document fields. Pipeline processors have read and write access to both the `_source` field of a document and its metadata fields.
+在資料匯入管線中，您可以使用 `ctx` 物件來存取文件資料。此物件代表正在處理的文件，並允許您讀取、修改或擴充文件欄位。管線處理器對文件的 `_source` 欄位及其中介資料欄位皆具有讀取和寫入權限。
 
-## Accessing document fields
+## 存取文件欄位
 
-The `ctx` object exposes all document fields. You can access them directly using dot notation.
+`ctx` 物件會公開所有文件欄位。您可以使用點標記法直接存取這些欄位。
 
-### Example: Access a top-level field
+### 範例：存取最上層欄位
 
-Given the following example document:
+給定以下範例文件：
 
 ```json
 {
@@ -22,15 +23,15 @@ Given the following example document:
 }
 ```
 
-You can access `user` as follows:
+您可以如下方式存取 `user`：
 
 ```json
 "field": "ctx.user"
 ```
 
-### Example: Access a nested field
+### 範例：存取巢狀欄位
 
-Given the following example document:
+給定以下範例文件：
 
 ```json
 {
@@ -40,15 +41,15 @@ Given the following example document:
 }
 ```
 
-You can access `user.name` as follows:
+您可以如下方式存取 `user.name`：
 
 ```json
 "field": "ctx.user.name"
 ```
 
-## Accessing a field in the source
+## 存取來源中的欄位
 
-To access a field in the document `_source`, refer to the field by its name:
+若要存取文件 `_source` 中的欄位，請以欄位名稱來參照該欄位：
 
 ```json
 {
@@ -59,7 +60,7 @@ To access a field in the document `_source`, refer to the field by its name:
 }
 ```
 
-Alternatively, you can explicitly use `_source`:
+或者，您也可以明確使用 `_source`：
 
 ```json
 {
@@ -70,16 +71,16 @@ Alternatively, you can explicitly use `_source`:
 }
 ```
 
-## Accessing metadata fields
+## 存取中介資料欄位
 
-You can read or write to metadata fields such as the following:
+您可以讀取或寫入下列中介資料欄位：
 
 - `_index`
 - `_type`
 - `_id`
 - `_routing`
 
-### Example: Set `_routing` dynamically
+### 範例：動態設定 `_routing`
 
 ```json
 {
@@ -91,9 +92,9 @@ You can read or write to metadata fields such as the following:
 ```
 
 
-## Accessing ingest metadata fields
+## 存取匯入中介資料欄位
 
-The `_ingest.timestamp` field represents the time at which the ingest node received the document. To persist this timestamp, use the `set` processor:
+`_ingest.timestamp` 欄位代表匯入節點收到文件的時間。若要保存此時間戳記，請使用 `set` 處理器：
 
 ```json
 {
@@ -104,13 +105,13 @@ The `_ingest.timestamp` field represents the time at which the ingest node recei
 }
 ```
 
-## Using `ctx` in Mustache templates
+## 在 Mustache 範本中使用 `ctx`
 
-Use Mustache templates to insert field values into processor settings. Use triple curly braces ({% raw %}`{{{` and `}}}`{% endraw %}) for unescaped field values.
+使用 Mustache 範本將欄位值插入處理器設定中。使用三個大括號（{% raw %}`{{{` 和 `}}}`{% endraw %}）來表示未逸出的欄位值。
 
-### Example: Combining source fields
+### 範例：合併來源欄位
 
-The following processor configuration combines the `app` and `env` fields, separated by an underscore (_), and stores the result in the `log_label` field:
+下列處理器組態會合併 `app` 和 `env` 欄位，並以底線（_）分隔，然後將結果儲存在 `log_label` 欄位中：
 
 ```json
 {
@@ -121,9 +122,9 @@ The following processor configuration combines the `app` and `env` fields, separ
 }
 ```
 
-### Example: Generating a dynamic greeting using the `set` processor
+### 範例：使用 `set` 處理器產生動態問候語
 
-If a document's `user` field is set to `alice`, use the following syntax to produce the result `"greeting": "Hello, alice!"`:
+如果文件的 `user` 欄位設為 `alice`，請使用下列語法來產生結果 `"greeting": "Hello, alice!"`：
 
 ```json
 {
@@ -134,9 +135,9 @@ If a document's `user` field is set to `alice`, use the following syntax to prod
 }
 ```
 
-## Dynamic field names
+## 動態欄位名稱
 
-You can use a field's value as the name of a new field:
+您可以使用欄位的值作為新欄位的名稱：
 
 ```json
 {
@@ -147,9 +148,9 @@ You can use a field's value as the name of a new field:
 }
 ```
 
-## Example: Routing to a dynamic index based on status
+## 範例：根據狀態路由至動態索引
 
-The following processor configuration sets the target index dynamically by appending `-events` to the value of the `status` field:
+下列處理器組態會將 `-events` 附加至 `status` 欄位的值，以動態設定目標索引：
 
 ```json
 {
@@ -160,13 +161,13 @@ The following processor configuration sets the target index dynamically by appen
 }
 ```
 
-## Using `ctx` in the `script` processor
+## 在 `script` 處理器中使用 `ctx`
 
-Use the `script` processor for advanced transformations.
+使用 `script` 處理器進行進階轉換。
 
-### Example: Adding a field only if another is missing
+### 範例：僅在另一個欄位缺少時新增欄位
 
-The following processor adds the `error_message` field with the value "none" only if the field is missing from the document:
+下列處理器僅在文件中缺少該欄位時，新增值為「none」的 `error_message` 欄位：
 
 ```json
 {
@@ -177,9 +178,9 @@ The following processor adds the `error_message` field with the value "none" onl
 }
 ```
 
-### Example: Copying a value from one field to another
+### 範例：將值從一個欄位複製到另一個欄位
 
-The following processor copies the value from the `timestamp` field into a new field called `event_time`:
+下列處理器會將 `timestamp` 欄位的值複製到名為 `event_time` 的新欄位中：
 
 ```json
 {
@@ -190,9 +191,9 @@ The following processor copies the value from the `timestamp` field into a new f
 }
 ```
 
-## Example of a complete pipeline
+## 完整管線範例
 
-The following example defines a complete ingest pipeline that sets a tagline using the `source` field, extracts the `year` from the `date` field, and records the document’s ingest timestamp in the `received_at` field:
+下列範例定義了一個完整的資料匯入管線，其使用 `source` 欄位設定標語、從 `date` 欄位擷取 `year`，並將文件的匯入時間戳記記錄在 `received_at` 欄位中：
 
 ```json
 PUT _ingest/pipeline/example-pipeline
@@ -221,7 +222,7 @@ PUT _ingest/pipeline/example-pipeline
 }
 ```
 
-To test the pipeline, use the following request:
+若要測試此管線，請使用下列請求：
 
 ```json
 POST _ingest/pipeline/example-pipeline/_simulate
@@ -240,7 +241,7 @@ POST _ingest/pipeline/example-pipeline/_simulate
 }
 ```
 
-The response shows the enriched document after processing, including the newly added `tagline`, extracted `year`, and the `received_at` timestamp generated by the ingest pipeline:
+回應會顯示處理後經過擴充的文件，包括新增的 `tagline`、擷取出的 `year`，以及由資料匯入管線產生的 `received_at` 時間戳記：
 
 ```json
 {

@@ -1,101 +1,102 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create context management
+title: "建立脈絡管理"
 parent: Context management APIs
 grand_parent: ML Commons APIs
 nav_order: 10
 ---
 
 # Create Context Management API
-**Introduced 3.5**
+**於 3.5 版推出**
 {: .label .label-purple }
 
-Use this API to configure [context management]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/) that defines teams of context managers to optimize agent context at specific execution points.
+使用此 API 設定[脈絡管理]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/)，定義脈絡管理器團隊，以在特定執行點最佳化代理程式的脈絡。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/context_management/{context_management_name}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-Parameter | Data type | Required/Optional | Description
+參數 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`context_management_name` | String | Required | The unique name for the context management.
+`context_management_name` | 字串 | 必要 | 脈絡管理的唯一名稱。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`description` | String | Optional | A human-readable description of what this context management does.
-`hooks` | Object | Required | A map of hook names to lists of context manager configurations. See [The `hooks` object](#the-hooks-object).
+`description` | 字串 | 選用 | 以人類可讀的方式描述此脈絡管理的功能。
+`hooks` | 物件 | 必要 | 將掛鉤名稱對應至脈絡管理器組態清單的對應關係。請參閱 [`hooks` 物件](#the-hooks-object)。
 
-### The hooks object
+### hooks 物件
 
-The `hooks` object maps hook names to arrays of context manager configurations. The following hooks are supported.
+`hooks` 物件將掛鉤名稱對應至脈絡管理器組態陣列。支援下列掛鉤。
 
-Hook | Description
+掛鉤 | 說明
 :--- | :---
-`pre_llm` | Executes before sending requests to the large language model (LLM).
-`post_tool` | Executes after tool execution completes.
+`pre_llm` | 在傳送請求至大型語言模型（LLM）之前執行。
+`post_tool` | 在工具執行完成後執行。
 
-Each hook contains an array of context manager configurations with the following fields.
+每個掛鉤都包含一個脈絡管理器組態陣列，其中具有下列欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`type` | String | Required | The context manager type. Valid values are `SlidingWindowManager`, `SummarizationManager`, and `ToolsOutputTruncateManager`.
-`config` | Object | Required | Configuration specific to the context manager type. See [Context manager configurations](#context-manager-configurations).
+`type` | 字串 | 必要 | 脈絡管理器類型。有效值為 `SlidingWindowManager`、`SummarizationManager` 和 `ToolsOutputTruncateManager`。
+`config` | 物件 | 必要 | 脈絡管理器類型專用的組態。請參閱[脈絡管理器組態](#context-manager-configurations)。
 
-### Context manager configurations
+### 脈絡管理器組態
 
-The following context manager configurations are supported based on the context manager type.
+依據脈絡管理器類型，支援下列脈絡管理器組態。
 
 #### SlidingWindowManager
 
-The `SlidingWindowManager` supports the following parameters in the `config` object.
+`SlidingWindowManager` 支援 `config` 物件中的下列參數。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`max_messages` | Integer | Optional | The maximum number of messages to retain. Default is `20`.
-`activation` | Object | Optional | The activation rules. Defaults to always activated. See [Activation rules](#activation-rules).
+`max_messages` | 整數 | 選用 | 要保留的訊息數量上限。預設為 `20`。
+`activation` | 物件 | 選用 | 啟動規則。預設為一律啟動。請參閱[啟動規則](#activation-rules)。
 
 #### SummarizationManager
 
-The `SummarizationManager` supports the following parameters in the `config` object.
+`SummarizationManager` 支援 `config` 物件中的下列參數。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`summary_ratio` | Double | Optional | The ratio of messages to summarize (0.1--0.8). Default is `0.3`.
-`preserve_recent_messages` | Integer | Optional | The number of recent messages to preserve. Default is `10`.
-`summarization_model_id` | String | Optional | A model ID for summarization. Uses the agent's model if not specified.
-`summarization_system_prompt` | String | Optional | A system prompt for summarization. If not specified, the default system prompt is used.
-`activation` | Object | Optional | The activation rules. Defaults to always activated. See [Activation rules](#activation-rules).
+`summary_ratio` | 雙精度浮點數 | 選用 | 要摘要的訊息比例（0.1--0.8）。預設為 `0.3`。
+`preserve_recent_messages` | 整數 | 選用 | 要保留的近期訊息數量。預設為 `10`。
+`summarization_model_id` | 字串 | 選用 | 用於摘要的模型 ID。若未指定，則使用代理程式的模型。
+`summarization_system_prompt` | 字串 | 選用 | 用於摘要的系統提示。若未指定，則使用預設系統提示。
+`activation` | 物件 | 選用 | 啟動規則。預設為一律啟動。請參閱[啟動規則](#activation-rules)。
 
 #### ToolsOutputTruncateManager
 
-The `ToolsOutputTruncateManager` supports the following parameters in the `config` object.
+`ToolsOutputTruncateManager` 支援 `config` 物件中的下列參數。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`max_output_length` | Integer | Optional | The maximum length of tool output to retain. Default is `40000`.
-`activation` | Object | Optional | The activation rules. Defaults to always activated. See [Activation rules](#activation-rules).
+`max_output_length` | 整數 | 選用 | 要保留的工具輸出長度上限。預設為 `40000`。
+`activation` | 物件 | 選用 | 啟動規則。預設為一律啟動。請參閱[啟動規則](#activation-rules)。
 
-### Activation rules
+### 啟動規則
 
-Activation rules determine when a context manager should execute. If omitted, the manager always executes. Multiple rules use `AND` logic---all rules must be satisfied for activation. For more information and examples, see [Activation rules]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/#activation-rules).
+啟動規則決定脈絡管理器應於何時執行。若省略，管理器會一律執行。多個規則使用 `AND` 邏輯，必須滿足所有規則才會啟動。如需更多資訊與範例，請參閱[啟動規則]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/#activation-rules)。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`rule_type` | String | Optional | Set to `always` to always activate the manager.
-`message_count_exceed` | Integer | Optional | Activates when the message count exceeds this threshold.
-`tokens_exceed` | Integer | Optional | Activates when the token count exceeds this threshold.
+`rule_type` | 字串 | 選用 | 設為 `always`，即可一律啟動管理器。
+`message_count_exceed` | 整數 | 選用 | 當訊息數量超過此閾值時啟動。
+`tokens_exceed` | 整數 | 選用 | 當詞元數量超過此閾值時啟動。
 
-## Example request: Basic sliding window context management
+## 請求範例：基本滑動視窗脈絡管理
 
 ```json
 POST /_plugins/_ml/context_management/basic-sliding-window
@@ -118,7 +119,7 @@ POST /_plugins/_ml/context_management/basic-sliding-window
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -127,7 +128,7 @@ POST /_plugins/_ml/context_management/basic-sliding-window
 }
 ```
 
-## Related documentation
+## 相關文件
 
-For more information, see [Context management]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/).
+如需更多資訊，請參閱[脈絡管理]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/)。
 

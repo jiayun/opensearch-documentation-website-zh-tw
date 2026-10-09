@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Span multi-term
 parent: Span queries
@@ -6,27 +7,27 @@ grand_parent: Query DSL
 nav_order: 40
 ---
 
-# Span multi-term query
+# Span multi-term 查詢
 
-The `span_multi` query allows you to wrap a multi-term query (like `wildcard`, `fuzzy`, `prefix`, `range`, or `regexp`) as a span query. This enables you to use these more flexible matching queries within other span queries.
+`span_multi` 查詢可讓您將多詞彙查詢 (例如 `wildcard`、`fuzzy`、`prefix`、`range` 或 `regexp`) 包裝為 span 查詢。這可讓您在其他 span 查詢中使用這些更有彈性的比對查詢。
 
-For example, you can use the `span_multi` query to:
-- Find words with common prefixes near other terms.
-- Match fuzzy variations of words within spans.
-- Use regular expressions in span queries.
+例如，您可以使用 `span_multi` 查詢來：
+- 尋找與其他詞彙鄰近且具有共同前置字元的詞彙。
+- 在 span 內比對詞彙的模糊變化。
+- 在 span 查詢中使用規則運算式。
 
->`span_multi` queries can potentially match many terms. To avoid excessive memory usage, you can:
->- Set the `rewrite` parameter for the multi-term query.
->- Use the `top_terms_*` rewrite method.
->- Consider enabling the `index_prefixes` option for the text field if you use `span_multi` only for a `prefix` query. This automatically rewrites any `prefix` query on the field into a single-term query that matches the indexed prefix.
+>`span_multi` 查詢可能比對到許多詞彙。為避免過度使用記憶體，您可以：
+>- 為多詞彙查詢設定 `rewrite` 參數。
+>- 使用 `top_terms_*` 重寫方法。
+>- 若您僅將 `span_multi` 用於 `prefix` 查詢，請考慮為文字欄位啟用 `index_prefixes` 選項。這會自動將該欄位上的任何 `prefix` 查詢重寫為符合已編製索引前置字元的單一詞彙查詢。
 {: .note}
 
-## Example
+## 範例
 
-To try the examples in this section, complete the [setup steps]({{site.url}}{{site.baseurl}}/query-dsl/span/index/#setup).
+若要試用本節的範例，請完成[設定步驟]({{site.url}}{{site.baseurl}}/query-dsl/span/index/#setup)。
 {: .tip}
 
-The `span_multi` query uses the following syntax to wrap the `prefix` query:
+`span_multi` 查詢使用下列語法來包裝 `prefix` 查詢：
 
 ```json
 "span_multi": {
@@ -40,7 +41,7 @@ The `span_multi` query uses the following syntax to wrap the `prefix` query:
 }
 ```
 
-The following query searches for words starting with "dress" near any form of "sleeve" within at most 5 words of each other:
+下列查詢會搜尋以「dress」開頭的詞彙，以及任何形式的「sleeve」，且兩者相距最多 5 個詞彙：
 
 ```json
 GET /clothing/_search
@@ -78,11 +79,11 @@ GET /clothing/_search
 ```
 {% include copy-curl.html %}
 
-The query matches documents 1 ("Long-sleeved dress...") and 4 ("...dresses with long fluttered sleeves...") because "dress" and "long" occur within the maximum distance in both documents.
+此查詢會比對文件 1 (「Long-sleeved dress...」) 和文件 4 (「...dresses with long fluttered sleeves...」)，因為「dress」和「long」在兩份文件中都出現在最大距離內。
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -125,10 +126,10 @@ The query matches documents 1 ("Long-sleeved dress...") and 4 ("...dresses with 
 ```
 </details>
 
-## Parameters
+## 參數
 
-The following table lists all top-level parameters supported by `span_multi` queries. All parameters are required.
+下表列出 `span_multi` 查詢支援的所有最上層參數。所有參數皆為必要。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 |:----------|:-----|:------------|
-| `match` | Object | The multi-term query to wrap (can be `prefix`, `wildcard`, `fuzzy`, `range`, or `regexp`). |
+| `match` | 物件 | 要包裝的多詞彙查詢 (可為 `prefix`、`wildcard`、`fuzzy`、`range` 或 `regexp`)。 |

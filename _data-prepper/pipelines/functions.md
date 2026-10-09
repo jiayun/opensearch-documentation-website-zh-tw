@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Functions
+title: "函式"
 parent: Pipelines
 nav_order: 10
 has_children: true
 ---
 
-# Data Prepper expression functions
+# Data Prepper 運算式函式
 
-OpenSearch Data Prepper offers a range of built-in functions that can be used within expressions to perform common data preprocessing tasks, such as calculating lengths, checking for tags, retrieving metadata, searching for substrings, checking IP address ranges, joining list elements, and generating unique identifiers. These functions include the following:
+OpenSearch Data Prepper 提供一系列內建函式，可在運算式中使用，以執行常見的資料前置處理工作，例如計算長度、檢查標籤、擷取中繼資料、搜尋子字串、檢查 IP 位址範圍、合併清單元素，以及產生唯一識別碼。這些函式包括以下幾種：
 
 - [`cidrContains()`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/cidrcontains/)
 - [`contains()`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/contains/)

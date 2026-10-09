@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Rules API
 nav_order: 20
@@ -8,84 +9,84 @@ grand_parent: Availability and recovery
 
 # Rules API
 
-The Rules API allows you to create, update, retrieve, and delete rules. Each rule is associated with a specific feature type and contains a feature value and at least one attribute.
-These rules are designed to automatically assign feature values to incoming queries based on the specified attributes, helping to categorize and manage queries automatically.
+Rules API 可讓您建立、更新、擷取及刪除規則。每條規則都與特定的功能類型相關聯，並包含一個功能值以及至少一個屬性。
+這些規則旨在根據指定的屬性，自動為傳入的查詢指派功能值，協助自動分類及管理查詢。
 
-## Endpoints
+## 端點
 
-The following sections describe the API endpoints available for managing rules across different feature types.
+下列章節說明可用於管理不同功能類型之規則的 API 端點。
 
-### Create a rule
+### 建立規則
 
-Use the following endpoint to add a new rule for a specific feature type:
+使用下列端點為特定功能類型新增規則：
 
 ```json
 PUT /_rules/{feature_type}
 POST /_rules/{feature_type}
 ```
 
-### Update a rule
+### 更新規則
 
-Use the following endpoint to modify an existing rule by specifying both the feature type and rule ID in the path parameters:
+使用下列端點，在路徑參數中同時指定功能類型與規則 ID，以修改現有規則：
 
 ```json
 PUT /_rules/{feature_type}/{id}
 POST /_rules/{feature_type}/{id}
 ```
 
-### Get a rule
+### 取得規則
 
-Use the following endpoint to retrieve either a specific rule by ID or list all rules for a feature type:
+使用下列端點，依 ID 擷取特定規則，或列出某功能類型的所有規則：
 
 ```json
 GET /_rules/{feature_type}/{id}
 GET /_rules/{feature_type}
 ```
 
-### Delete a rule
+### 刪除規則
 
-Use the following endpoint to remove a rule by specifying both the feature type and rule ID:
+使用下列端點，同時指定功能類型與規則 ID 來移除規則：
 
 ```json
 DELETE /_rules/{feature_type}/{id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter      | Data type | Description  |
+| 參數      | 資料類型 | 說明  |
 |:---------------| :--- | :--- |
-| `feature_type` | String    | The category of the rule that defines the type of feature, such as `workload_group`. |
-| `id`           | String    | The unique identifier for the rule. Required for `UPDATE`, `GET`, and `DELETE` operations. |
+| `feature_type` | 字串    | 規則的類別，定義功能類型，例如 `workload_group`。 |
+| `id`           | 字串    | 規則的唯一識別碼。`UPDATE`、`GET` 與 `DELETE` 作業需要此參數。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters.
+下表列出可用的查詢參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `search_after` | String | The token used to retrieve the next page of results for pagination. |
-| `<attribute_key>` | String | Filters results to rules where `<attribute_key>` matches one of the specified values. |
+| `search_after` | 字串 | 用於分頁時擷取下一頁結果的權杖。 |
+| `<attribute_key>` | 字串 | 篩選結果，只保留 `<attribute_key>` 符合其中一個指定值的規則。 |
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the fields available in the request body.
+下表列出請求本文中可用的欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `description` | String | The human-readable explanation or purpose of the rule. |
-| `<attribute_key>` | Array | A list of attribute values that must match the query in order for the rule to apply. |
-| `<feature_type>` | String | The feature value assigned when the rule matches. |
+| `description` | 字串 | 規則的易讀說明或用途。 |
+| `<attribute_key>` | 陣列 | 必須與查詢相符的屬性值清單，規則才會套用。 |
+| `<feature_type>` | 字串 | 規則相符時所指派的功能值。 |
 
 
-## Example requests
+## 範例請求
 
-The following example demonstrates how to use the Rules API to create a rule.
+下列範例示範如何使用 Rules API 建立規則。
 
-### Create a rule
+### 建立規則
 
-The following request creates a rule that assigns a `workload_group` value based on matching `index_pattern` and principal attributes:
+下列請求會建立一條規則，根據相符的 `index_pattern` 與主體屬性指派 `workload_group` 值：
 
 ```json
 PUT _rules/workload_group
@@ -101,9 +102,9 @@ PUT _rules/workload_group
 ```
 {% include copy-curl.html %}
 
-### Update a rule
+### 更新規則
 
-The following request updates a rule with ID `0A6RULxkQ9yLqn4r8LPrIg`:
+下列請求會更新 ID 為 `0A6RULxkQ9yLqn4r8LPrIg` 的規則：
 
 ```json
 PUT _rules/workload_group/0A6RULxkQ9yLqn4r8LPrIg
@@ -119,49 +120,49 @@ PUT _rules/workload_group/0A6RULxkQ9yLqn4r8LPrIg
 ```
 {% include copy-curl.html %}
 
-You can't change the `feature_type`. Fields that are not updated can be omitted.
+您無法變更 `feature_type`。未更新的欄位可以省略。
 {: .note }
 
-### Retrieve a rule
+### 擷取規則
 
-The following request retrieves a rule by ID:
+下列請求會依 ID 擷取規則：
 
 ```json
 GET /_rules/{feature_type}/{id}
 ```
 {% include copy-curl.html %}
 
-The following request retrieves all rules for a feature type:
+下列請求會擷取某功能類型的所有規則：
 
 ```json
 GET /_rules/{feature_type}
 ```
 {% include copy-curl.html %}
 
-The following request returns all rules of the `workload_group` feature type that contain an `index_pattern` attribute with values `a` or `b` and `principal.username` set to `admin`:
+下列請求會傳回 `workload_group` 功能類型中，包含值為 `a` 或 `b` 的 `index_pattern` 屬性，且 `principal.username` 設為 `admin` 的所有規則：
 
 ```json
 GET /_rules/workload_group?index_pattern=a,b&principal.username=admin
 ```
 {% include copy-curl.html %}
 
-If a `GET` request returns more results than can be included in a single response, the system paginates the results and includes a `search_after` field in the response.  
-To retrieve the next page, send another request to the same endpoint using the same filters and include the `search_after` value from the previous response as a query parameter.
+如果 `GET` 請求傳回的結果超過單一回應可容納的數量，系統會將結果分頁，並在回應中包含 `search_after` 欄位。  
+若要擷取下一頁，請使用相同的篩選條件向同一端點傳送另一個請求，並將上一個回應中的 `search_after` 值作為查詢參數一併傳入。
 
-The following example continues the search for all rules of the `workload_group` feature type where the `index_pattern` attribute contains the values `a` or `b`:
+下列範例接續搜尋 `workload_group` 功能類型中 `index_pattern` 屬性包含 `a` 或 `b` 值的所有規則：
 
 ```json
 GET /_rules/workload_group?index_pattern=a,b&search_after=z1MJApUB0zgMcDmz-UQq
 ```
 {% include copy-curl.html %}
 
-## Example responses
+## 範例回應
 
-<details open markdown="block"> 
-  <summary> 
-    Response: Create or update rule 
-  </summary> 
-  {: .text-delta }
+<details open markdown="block">
+<summary>
+    回應：建立或更新規則 
+</summary>
+{: .text-delta }
 
 ```json
 {
@@ -180,11 +181,11 @@ GET /_rules/workload_group?index_pattern=a,b&search_after=z1MJApUB0zgMcDmz-UQq
 </details>
 
 
-<details markdown="block"> 
-  <summary> 
-    Response: Get rules 
-  </summary> 
-  {: .text-delta }
+<details markdown="block">
+<summary>
+    回應：取得規則 
+</summary>
+{: .text-delta }
 
 ```json
 {
@@ -206,19 +207,19 @@ GET /_rules/workload_group?index_pattern=a,b&search_after=z1MJApUB0zgMcDmz-UQq
 }
 ```
 
-If the `search_after` field is present in the response, more results are available.  
-To retrieve the next page, include the `search_after` value in the next `GET` request as a query parameter, such as `GET /_rules/{feature_type}?search_after=z1MJApUB0zgMcDmz-UQq`.
+如果回應中有 `search_after` 欄位，表示還有更多結果。  
+若要擷取下一頁，請在下一個 `GET` 請求中將 `search_after` 值作為查詢參數傳入，例如 `GET /_rules/{feature_type}?search_after=z1MJApUB0zgMcDmz-UQq`。
 
 </details>
 
 
-## Response body fields
+## 回應本文欄位
 
-| Field             | Data type | Description |
+| 欄位             | 資料類型 | 說明 |
 |:------------------| :--- | :--- |
-| `id`              | String | The unique identifier for the rule. |
-| `description`     | String | The explanation or purpose of the rule. |
-| `updated_at`      | String | The timestamp of the most recent update to the rule in UTC format. |
-| `<attribute_key>` | Array | The attribute values used to match incoming queries. |
-| `<feature_type>`  | String | The value assigned to the feature type if the rule matches. |
-| `search_after`    | Array | The token for paginating additional results. Present only if more results exist. |
+| `id`              | 字串 | 規則的唯一識別碼。 |
+| `description`     | 字串 | 規則的說明或用途。 |
+| `updated_at`      | 字串 | 規則最近一次更新的時間戳記，採 UTC 格式。 |
+| `<attribute_key>` | 陣列 | 用於比對傳入查詢的屬性值。 |
+| `<feature_type>`  | 字串 | 規則相符時指派給功能類型的值。 |
+| `search_after`    | 陣列 | 用於分頁更多結果的權杖。只有在還有更多結果時才會出現。 |

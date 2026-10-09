@@ -1,34 +1,35 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Adding search templates
+title: "新增搜尋範本"
 parent: Agentic search
 grand_parent: AI search
 nav_order: 100
 has_children: false
 ---
 
-# Adding search templates
+# 新增搜尋範本
 
-The `QueryPlanningTool` can accept a list of [search templates]({{site.url}}{{site.baseurl}}/search-plugins/search-template/) during its registration. During search, the `QueryPlanningTool` chooses an appropriate search template based on the user's question and template descriptions, and the large language model (LLM) generates a query based on the selected search template. 
+`QueryPlanningTool` 在註冊時可以接受一份[搜尋範本]({{site.url}}{{site.baseurl}}/search-plugins/search-template/)清單。在搜尋期間，`QueryPlanningTool` 會根據使用者的問題與範本描述選擇合適的搜尋範本，並由大型語言模型 (LLM) 根據所選的搜尋範本產生查詢。
 
-This approach allows you to solve complex use cases that would otherwise be challenging for the LLM alone:
+這種做法讓您能解決原本單靠 LLM 難以處理的複雜使用情境：
 
-- Enhances query response consistency in agentic search. Most of the query domain-specific language (DSL) query is provided by the search template, with only minor portions or placeholders provided by the LLM.
-- Handles complex use cases in which the LLM struggles to generate correct queries.
-- Ensures predictable query structure and naming conventions.
+- 提升代理程式搜尋中查詢回應的一致性。Query DSL 查詢的大部分內容由搜尋範本提供，LLM 僅提供少部分內容或填入預留位置。
+- 處理 LLM 難以產生正確查詢的複雜使用情境。
+- 確保查詢結構與命名慣例可預期。
 
-## Best practices
+## 最佳做法
 
-When creating search templates for agentic search, follow these guidelines:
+為代理程式搜尋建立搜尋範本時，請遵循下列準則：
 
-- Write detailed descriptions for each template to help the LLM choose appropriately.
-- Use descriptive placeholder names that clearly indicate what should be filled.
-- Create templates for different query patterns you commonly use.
-- Validate that templates work correctly with various inputs before deployment.
+- 為每個範本撰寫詳細的描述，協助 LLM 做出適當選擇。
+- 使用具描述性的預留位置名稱，清楚指出應填入的內容。
+- 為您常用的不同查詢模式建立範本。
+- 在部署前驗證範本在各種輸入下皆能正確運作。
 
-## Step 1: Create an index
+## 步驟 1：建立索引
 
-Create a stores index with nested inventory data to demonstrate complex aggregation scenarios:
+建立一個包含巢狀庫存資料的 stores 索引，以示範複雜的彙總情境：
 
 ```json
 PUT /stores
@@ -57,9 +58,9 @@ PUT /stores
 ```
 {% include copy-curl.html %}
 
-## Step 2: Ingest documents
+## 步驟 2：匯入文件
 
-Add sample store documents containing inventory data for different cities and products:
+新增包含不同城市與產品庫存資料的範例商店文件：
 
 ```json
 POST /_bulk
@@ -77,9 +78,9 @@ POST /_bulk
 ```
 {% include copy-curl.html %}
 
-## Step 3: Register search templates
+## 步驟 3：註冊搜尋範本
 
-Register a search template that returns stores in a city whose combined inventory across three SKUs meets a minimum threshold:
+註冊一個搜尋範本，用於傳回某城市中三個 SKU 合計庫存達到最低門檻的商店：
 
 ```json
 POST /_scripts/store_sum_skus
@@ -127,7 +128,7 @@ POST /_scripts/store_sum_skus
 ```
 {% include copy-curl.html %}
 
-Register a search template that counts stores in a city that have at least a minimum quantity of a specific SKU:
+註冊一個搜尋範本，用於計算某城市中特定 SKU 數量至少達到最低數量的商店數：
 
 ```json
 POST /_scripts/stores_with_give_sku
@@ -169,13 +170,13 @@ POST /_scripts/stores_with_give_sku
 ```
 {% include copy-curl.html %}
 
-## Step 4: Register an agent with the QueryPlanningTool
+## 步驟 4：使用 QueryPlanningTool 註冊代理程式
 
-Next, register an agent with the `QueryPlanningTool`, and configure the tool to use your search templates.
+接下來，使用 `QueryPlanningTool` 註冊一個代理程式，並設定該工具使用您的搜尋範本。
 
-### Step 4(a): Create a model for the agent and QueryPlanningTool
+### 步驟 4(a)：為代理程式與 QueryPlanningTool 建立模型
 
-Register a model for both the conversational agent and the `QueryPlanningTool`:
+為對話式代理程式與 `QueryPlanningTool` 註冊一個模型：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -210,9 +211,9 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-### Step 4(b): Register an agent with search templates
+### 步驟 4(b)：使用搜尋範本註冊代理程式
 
-Register an agent with the `QueryPlanningTool` configured to use your search templates:
+使用已設定為使用您搜尋範本的 `QueryPlanningTool` 註冊代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -256,9 +257,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-## Step 5: Create a search pipeline
+## 步驟 5：建立搜尋管線
 
-Create a search pipeline that uses your agent with search templates:
+建立使用您代理程式與搜尋範本的搜尋管線：
 
 ```json
 PUT _search/pipeline/agentic-pipeline
@@ -282,9 +283,9 @@ PUT _search/pipeline/agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-## Step 6: Test a complex question
+## 步驟 6：測試複雜問題
 
-Send a complex query that requires advanced aggregations:
+傳送需要進階彙總的複雜查詢：
 
 ```json
 POST /stores/_search?search_pipeline=agentic-pipeline
@@ -298,11 +299,11 @@ POST /stores/_search?search_pipeline=agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-Without search templates, complex queries involving advanced aggregations and scripts often fail because LLMs struggle to generate the correct syntax. For example, if you did not add search templates when creating an agent in Step 4(b), the preceding request would return a script execution error similar to the following:
+若沒有搜尋範本，涉及進階彙總與指令碼的複雜查詢經常會失敗，因為 LLM 難以產生正確的語法。例如，如果您在步驟 4(b) 建立代理程式時未新增搜尋範本，前述請求會傳回類似以下的指令碼執行錯誤：
 
 <details markdown="block">
   <summary>
-    Error response
+    錯誤回應
   </summary>
   {: .text-delta}
 
@@ -363,7 +364,7 @@ Without search templates, complex queries involving advanced aggregations and sc
 
 </details>
 
-However, with search templates, the agent can handle sophisticated queries by selecting the appropriate template and filling in the parameters. The LLM correctly identifies and uses the `store_sum_skus` template, fills the template parameters (such as `city: "Seattle"` and `sku1: "iphone_17_air"`), and generates a valid query with nested aggregations and bucket selectors. The response contains stores (`S-SEA-002` and `S-SEA-003`) with a combined inventory of ≥ 30 units:
+然而，有了搜尋範本，代理程式便能藉由選取適當的範本並填入參數來處理精密的查詢。LLM 會正確識別並使用 `store_sum_skus` 範本，填入範本參數（例如 `city: "Seattle"` 和 `sku1: "iphone_17_air"`），並產生含有巢狀彙總與桶選取器的有效查詢。回應包含庫存合計 ≥ 30 個單位的商店（`S-SEA-002` 和 `S-SEA-003`）：
 
 ```json
 {
@@ -472,6 +473,6 @@ However, with search templates, the agent can handle sophisticated queries by se
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [Search templates]({{site.url}}{{site.baseurl}}/search-plugins/search-template/)
+- [搜尋範本]({{site.url}}{{site.baseurl}}/search-plugins/search-template/)

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Disk-based vector search
+title: "磁碟式向量搜尋"
 nav_order: 20
 parent: Optimizing vector storage
 has_children: false
@@ -8,17 +9,17 @@ redirect_from:
   - /search-plugins/knn/disk-based-vector-search/
 ---
 
-# Disk-based vector search
-**Introduced 2.17**
+# 磁碟式向量搜尋
+**於 2.17 版推出**
 {: .label .label-purple}
 
-For low-memory environments, OpenSearch provides _disk-based vector search_, which significantly reduces the operational costs for vector workloads. Disk-based vector search supports [scalar quantization]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/faiss-scalar-quantization/) (the default quantization type) and [binary quantization]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/binary-quantization/) to compress vectors and reduce memory requirements. This memory optimization provides large memory savings at the cost of slightly increased search latency while still maintaining strong recall.
+針對低記憶體環境，OpenSearch 提供_磁碟式向量搜尋_，可大幅降低向量工作負載的營運成本。磁碟式向量搜尋支援[純量量化]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/faiss-scalar-quantization/)（預設的量化類型）與[二進位量化]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/binary-quantization/)，可壓縮向量並降低記憶體需求。這項記憶體最佳化可節省大量記憶體，代價是搜尋延遲略微增加，同時仍維持良好的召回率。
 
-To use disk-based vector search, set the [`mode`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#vector-workload-modes) parameter to `on_disk` for your vector field type. This parameter will configure your index to use secondary storage. For more information about disk-based search parameters, see [Memory-optimized vectors]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/).
+若要使用磁碟式向量搜尋，請為您的向量欄位類型將 [`mode`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#vector-workload-modes) 參數設為 `on_disk`。此參數會將您的索引設定為使用次要儲存空間。如需磁碟式搜尋參數的詳細資訊，請參閱[記憶體最佳化向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/)。
 
-## Creating an index for disk-based vector search
+## 建立磁碟式向量搜尋的索引
 
-To create an index for disk-based vector search, send the following request:
+若要建立磁碟式向量搜尋的索引，請傳送下列請求：
 
 ```json
 PUT my-vector-index
@@ -43,9 +44,9 @@ PUT my-vector-index
 ```
 {% include copy-curl.html %}
 
-By default, the `on_disk` mode configures the index to use the `faiss` engine and `hnsw` method. The default [`compression_level`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#compression-levels) of `32x` reduces the amount of memory the vectors require by a factor of 32. To preserve the search recall, rescoring is enabled by default. A search on a disk-optimized index runs in two phases: The compressed index is searched first, and then the results are rescored using full-precision vectors loaded from disk.
+根據預設，`on_disk` 模式會將索引設定為使用 `faiss` 引擎與 `hnsw` 方法。預設的 [`compression_level`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#compression-levels) 為 `32x`，可將向量所需的記憶體量減少 32 倍。為了維持搜尋召回率，重新評分預設為啟用。對磁碟最佳化索引進行的搜尋分兩個階段執行：先搜尋壓縮後的索引，然後使用從磁碟載入的全精度向量重新評分結果。
 
-To reduce the compression level, provide the `compression_level` parameter when creating the index mapping: 
+若要降低壓縮層級，請在建立索引對應時提供 `compression_level` 參數：
 
 ```json
 PUT my-vector-index
@@ -71,10 +72,10 @@ PUT my-vector-index
 ```
 {% include copy-curl.html %}
 
-For more information about the `compression_level` parameter, see [Compression levels]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#compression-levels). Note that for `4x` compression, the `lucene` engine will be used.
+如需 `compression_level` 參數的詳細資訊，請參閱[壓縮層級]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#compression-levels)。請注意，若使用 `4x` 壓縮，將會使用 `lucene` 引擎。
 {: .note}
 
-If you need more granular fine-tuning, you can override additional k-NN parameters in the method definition. For example, to improve recall, increase the `ef_construction` parameter value:
+如果您需要更精細的微調，可以在方法定義中覆寫其他 k-NN 參數。例如，若要提升召回率，請增加 `ef_construction` 參數值：
 
 ```json
 PUT my-vector-index
@@ -104,12 +105,12 @@ PUT my-vector-index
 ```
 {% include copy-curl.html %}
 
-The `on_disk` mode works only with the `float` and `half_float` data types.
+`on_disk` 模式僅適用於 `float` 與 `half_float` 資料類型。
 {: .note}
 
-## Ingestion
+## 匯入
 
-You can perform document ingestion for a disk-optimized vector index in the same way as for a regular vector index. To index several documents in bulk, send the following request:
+您可以像對一般向量索引一樣，對磁碟最佳化向量索引執行文件匯入。若要大量將多份文件編製索引，請傳送下列請求：
 
 ```json
 POST _bulk
@@ -134,9 +135,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Search
+## 搜尋
 
-Search is also performed in the same way as in other index configurations. The key difference is that, by default, the `oversample_factor` of the rescore parameter is set to `2.0` (unless you override the `compression_level`). For more information, see [Rescoring quantized results to full precision]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#rescoring-quantized-results-to-full-precision). To perform vector search on a disk-optimized index, provide the search vector:
+搜尋的執行方式也與其他索引組態相同。主要差異在於，根據預設，重新評分參數的 `oversample_factor` 會設為 `2.0`（除非您覆寫 `compression_level`）。如需詳細資訊，請參閱[將量化結果重新評分至全精度]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#rescoring-quantized-results-to-full-precision)。若要在磁碟最佳化索引上執行向量搜尋，請提供搜尋向量：
 
 ```json
 GET my-vector-index/_search
@@ -153,7 +154,7 @@ GET my-vector-index/_search
 ```
 {% include copy-curl.html %}
 
-Similarly to other index configurations, you can override k-NN parameters in the search request:
+與其他索引組態類似，您可以在搜尋請求中覆寫 k-NN 參數：
 
 ```json
 GET my-vector-index/_search
@@ -176,12 +177,12 @@ GET my-vector-index/_search
 ```
 {% include copy-curl.html %}
 
-[Radial search]({{site.url}}{{site.baseurl}}/search-plugins/knn/radial-search-knn/) does not support disk-based vector search.
+[徑向搜尋]({{site.url}}{{site.baseurl}}/search-plugins/knn/radial-search-knn/)不支援磁碟式向量搜尋。
 {: .note}
 
-## Model-based indexes
+## 以模型為基礎的索引
 
-For [model-based indexes]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/#building-a-vector-index-from-a-model), you can specify the `on_disk` parameter in the training request in the same way that you would specify it during index creation. By default, `on_disk` mode will use the [Faiss IVF method]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#ivf-parameters) and a compression level of `32x`. To run the training API, send the following request:
+對於[以模型為基礎的索引]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/#building-a-vector-index-from-a-model)，您可以在訓練請求中指定 `on_disk` 參數，方式與建立索引時指定該參數相同。根據預設，`on_disk` 模式會使用 [Faiss IVF 方法]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#ivf-parameters)與 `32x` 的壓縮層級。若要執行訓練 API，請傳送下列請求：
 
 ```json
 POST /_plugins/_knn/models/test-model/_train
@@ -198,14 +199,14 @@ POST /_plugins/_knn/models/test-model/_train
 ```
 {% include copy-curl.html %}
 
-This command assumes that training data has been ingested into the `train-index-name` index. For more information, see [Building a vector index from a model]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/#building-a-vector-index-from-a-model).
+此命令假設訓練資料已匯入 `train-index-name` 索引。如需詳細資訊，請參閱[從模型建立向量索引]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/#building-a-vector-index-from-a-model)。
 {: .note}
 
-You can override the `compression_level` for disk-optimized indexes in the same way as for regular vector indexes.
+您可以像對一般向量索引一樣，為磁碟最佳化索引覆寫 `compression_level`。
 
 
-## Next steps
+## 後續步驟
 
-- [Binary quantization]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/binary-quantization/)
-- [Memory-optimized vectors]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/)
-- [k-NN query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)
+- [二進位量化]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/binary-quantization/)
+- [記憶體最佳化向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/)
+- [k-NN 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)

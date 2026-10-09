@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get multi-tenancy configuration
+title: "取得多租用戶組態"
 parent: Multi-tenancy configuration APIs
 grand_parent: Security APIs
 nav_order: 20
 ---
 
-# Get Multi-Tenancy Configuration API
-**Introduced 2.7**
+# 取得多租用戶組態 API
+**2.7 版導入**
 {: .label .label-purple }
 
-Retrieves the multi-tenancy configuration.
+擷取多租用戶組態。
 
 <!-- spec_insert_start
 api: security.get_tenancy_config
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_plugins/_security/api/tenancy/config
 ```
 <!-- spec_insert_end -->
 
-## Example request
+## 請求範例
 
 ```json
 GET _plugins/_security/api/tenancy/config
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 回應範例
 
 ```json
 {

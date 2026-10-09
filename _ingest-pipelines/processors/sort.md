@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Sort
+title: "排序"
 parent: Ingest processors
 nav_order: 250
 ---
 
-# Sort ingest processor
+# Sort 資料匯入處理器
 
-The `sort` processor sorts an array of items in either ascending or descending order. Numeric arrays are sorted numerically, while string or mixed arrays (strings and numbers) are sorted lexicographically. The processor throws an error if the input is not an array.
+`sort` 處理器會以遞增或遞減順序排序項目陣列。數值陣列會以數值方式排序，而字串或混合陣列（字串與數字）則會以字典順序排序。如果輸入不是陣列，處理器會擲回錯誤。
 
-The following is the syntax for the `sort` processor:
+以下是 `sort` 處理器的語法：
 
 ```json
 {
@@ -26,28 +27,28 @@ The following is the syntax for the `sort` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `sort` processor.
+下表列出 `sort` 處理器的必要與選用參數。
 
-| Parameter  | Required/Optional  | Description  |
+| 參數  | 必要／選用  | 說明  |
 |---|---|---|
-`field`  | Required | The field to be sorted. Must be an array.
-`order`  | Optional | The sort order to apply. Accepts `asc` for ascending or `desc` for descending. Default is `asc`.
-`target_field` | Optional | The name of the field in which the sorted array is stored. If not specified, then the sorted array is stored in the same field as the original array (the `field` variable). 
-`description`  | Optional  | A description of the processor's purpose or configuration.
-`if` | Optional | Specifies to conditionally execute the processor.
-`ignore_failure` | Optional | Specifies to ignore processor failures. See [Handling pipeline failures]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/).
-`on_failure` | Optional | Specifies a list of processors to run if the processor fails during execution. These processors are executed in the order they are specified.
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type.
+`field`  | 必要 | 要排序的欄位。必須是陣列。
+`order`  | 選用 | 要套用的排序順序。接受 `asc` 表示遞增，`desc` 表示遞減。預設為 `asc`。
+`target_field` | 選用 | 儲存排序後陣列的欄位名稱。若未指定，排序後的陣列會儲存在與原始陣列相同的欄位中（`field` 變數）。
+`description`  | 選用  | 處理器用途或組態的描述。
+`if` | 選用 | 指定是否有條件地執行處理器。
+`ignore_failure` | 選用 | 指定忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`on_failure` | 選用 | 指定處理器在執行期間失敗時要執行的處理器清單。這些處理器會依指定的順序執行。
+`tag` | 選用 | 處理器的識別標籤。在偵錯時有助於區分相同類型的處理器。
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+依照下列步驟在管線中使用處理器。
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
 
-The following query creates a pipeline named `sort-pipeline` that uses the `sort` processor to sort the `my_field` in descending order and store the sorted values in the `sorted_field`:
+下列查詢會建立名為 `sort-pipeline` 的管線，使用 `sort` 處理器以遞減順序排序 `my_field`，並將排序後的值儲存在 `sorted_field` 中：
 
 ```json
 PUT _ingest/pipeline/sort-pipeline
@@ -66,12 +67,12 @@ PUT _ingest/pipeline/sort-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2 (Optional): Test the pipeline
+### 步驟 2（選用）：測試管線
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/sort-pipeline/_simulate
@@ -87,9 +88,9 @@ POST _ingest/pipeline/sort-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -132,9 +133,9 @@ The following example response confirms that the pipeline is working as expected
 ```
 {% include copy-curl.html %}
 
-### Step 3: Ingest a document 
+### 步驟 3：匯入文件
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 POST testindex1/_doc?pipeline=sort-pipeline
@@ -144,9 +145,9 @@ POST testindex1/_doc?pipeline=sort-pipeline
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The request indexes the document into the index `testindex1` and then indexes all documents with the `my_array_field` sorted in descending order, as shown in the following response:
+此請求會將文件編製索引至索引 `testindex1`，然後將所有文件以 `my_array_field` 遞減排序後編製索引，如下列回應所示：
 
 ```json
 {
@@ -165,9 +166,9 @@ The request indexes the document into the index `testindex1` and then indexes al
 ```
 {% include copy-curl.html %}
 
-### Step 4 (Optional): Retrieve the document
+### 步驟 4（選用）：擷取文件
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/no-Py48BwFahnwl9KZzf

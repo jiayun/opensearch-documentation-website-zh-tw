@@ -1,111 +1,112 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Neural sparse ANN search performance tuning
+title: "神經稀疏 ANN 搜尋效能調校"
 parent: Performance tuning
 nav_order: 30
 has_math: true
 ---
 
-# Neural sparse ANN search performance tuning
+# 神經稀疏 ANN 搜尋效能調校
 
-[Neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/) offers several parameters that allow you to balance the trade-off between query recall (accuracy) and query efficiency (latency). Query parameters, which you supply in the `method_parameters` object of a query, take effect immediately. Mapping parameters, which you supply in the `method` object of a `sparse_vector` field, are fixed when the field is created.To change `engine` or any value in `method.parameters`, create a new index with the intended mapping and reindex your data.
+[神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/) 提供數個參數，讓您能在查詢召回率（準確度）與查詢效率（延遲）之間取得平衡。查詢參數是在查詢的 `method_parameters` 物件中提供，會立即生效。對應參數是在 `sparse_vector` 欄位的 `method` 物件中提供，會在建立欄位時固定。若要變更 `engine` 或 `method.parameters` 中的任何值，請以所需的對應建立新索引，並將資料重新編製索引。
 
-## Choosing an engine
-**Introduced 3.9**
+## 選擇引擎
+**自 3.9 版推出**
 {: .label .label-purple }
 
-Neural sparse ANN search runs the SEISMIC algorithm using one of two engines, which you select for each `sparse_vector` field using the `method.engine` mapping parameter. Valid values are `lucene` (default) and `native`. Both engines accept the same query parameters, and they accept the same `method.parameters` values except for `clustering_batch_size` and `forward_index`, which apply to the native engine only. The tuning guidance in the rest of this page therefore applies to both engines. For a full comparison of the engines and instructions for enabling the native engine, see [Engines]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines).
+神經稀疏 ANN 搜尋會使用兩種引擎之一來執行 SEISMIC 演算法，您可以透過 `method.engine` 對應參數為每個 `sparse_vector` 欄位選取要使用的引擎。有效值為 `lucene`（預設）與 `native`。兩種引擎接受相同的查詢參數，且除了僅適用於原生引擎的 `clustering_batch_size` 與 `forward_index` 之外，它們也接受相同的 `method.parameters` 值。因此，本頁其餘的調校指引適用於兩種引擎。如需引擎的完整比較以及啟用原生引擎的說明，請參閱 [引擎]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines)。
 
-The engines differ in the location of the data structures that the algorithm reads, which affects node sizing:
+兩種引擎的差異在於演算法所讀取之資料結構的位置，這會影響節點大小規劃：
 
-- The Lucene engine holds clustered posting lists and the forward index in JVM heap caches bounded by `plugins.neural_search.circuit_breaker.limit`. Size the node's heap to hold the working set of every sparse segment it serves.
-- The native engine reads its index from a memory-mapped file on disk, so the index consumes no JVM heap and adds no garbage collection pressure. Size the node to leave enough RAM for the operating system page cache.
+- Lucene 引擎會將叢集化的張貼清單與正向索引保存在受 `plugins.neural_search.circuit_breaker.limit` 限制的 JVM 堆積快取中。請將節點的堆積大小設定為足以容納其服務之每個稀疏分段的工作集。
+- 原生引擎會從磁碟上的記憶體對應檔案讀取其索引，因此索引不會耗用 JVM 堆積，也不會增加垃圾回收壓力。請將節點大小設定為為作業系統頁面快取保留足夠的 RAM。
 
-Consider the native engine when you want better query and index build performance, when your sparse indexes are large enough that holding them in JVM heap constrains the node, or when you want to serve a large sparse index from a comparatively small heap. Consider the Lucene engine when you want the default configuration, or when you rely on the [Warm Up]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#warm-up) and [Clear Cache]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#clear-cache) APIs or the sparse memory statistics reported by the [Neural Search Stats API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#stats).
+當您想要更好的查詢與索引建置效能、當您的稀疏索引大到將其保存在 JVM 堆積中會對節點造成限制，或當您想以相對較小的堆積服務大型稀疏索引時，請考慮使用原生引擎。當您想要預設組態，或當您依賴 [Warm Up]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#warm-up) 與 [Clear Cache]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#clear-cache) API，或依賴 [Neural Search Stats API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#stats) 所回報的稀疏記憶體統計資料時，請考慮使用 Lucene 引擎。
 
-Benchmark both engines against your own data and query mix before choosing one. Relative throughput, latency, and memory usage depend on your corpus, your parameter settings, and the resources available on the node.
+在選擇引擎之前，請先針對您自己的資料與查詢組合對兩種引擎進行基準測試。相對輸送量、延遲與記憶體使用量取決於您的語料庫、您的參數設定，以及節點上可用的資源。
 {: .note}
 
-## Indexing performance tuning
+## 索引效能調校
 
-These parameters control index construction and memory usage:
+這些參數控制索引建構與記憶體使用量：
 
-- `n_postings`: The maximum number of documents to retain in each posting list.
+- `n_postings`：每個張貼清單中要保留的文件數上限。
 
-    A smaller `n_postings` value applies more aggressive pruning, meaning fewer document identifiers are kept in each posting list. Lower values speed up index building and query execution but reduce recall and memory consumption. If not specified, the algorithm calculates the value as $$0.0005 \times \text{document count}$$ at the segment level.
+    `n_postings` 值越小，會套用越積極的剪除，表示每個張貼清單中保留的文件識別碼越少。較低的值可加快索引建置與查詢執行速度，但會降低召回率與記憶體耗用量。若未指定，演算法會在分段層級將該值計算為 $$0.0005 \times \text{document count}$$。
 
-- `cluster_ratio`: The fraction of documents in each posting list used to determine the cluster count.
+- `cluster_ratio`：每個張貼清單中用來決定叢集數的文件比例。
 
-    After pruning, each posting list contains `cluster_ratio × posting_document_count`. Increasing `cluster_ratio` results in more clusters, which improves recall but increases index build time, query latency, and memory usage.
+    剪除之後，每個張貼清單會包含 `cluster_ratio × posting_document_count`。增加 `cluster_ratio` 會產生更多叢集，可改善召回率，但會增加索引建置時間、查詢延遲與記憶體使用量。
 
-- `summary_prune_ratio`: The fraction of tokens to keep in cluster summary vectors for approximate matching.
+- `summary_prune_ratio`：叢集摘要向量中要保留以供近似比對的詞元比例。
 
-    This parameter controls how many tokens are retained in the `summary` of each cluster. The `summary` helps determine whether to examine a cluster during a query. If embeddings vary widely in token counts, adjust this parameter accordingly. Higher values retain more tokens in the `summary`.
+    此參數控制每個叢集的 `summary` 中保留多少詞元。`summary` 有助於判斷查詢期間是否要檢查某個叢集。若嵌入的詞元數差異很大，請據此調整此參數。較高的值會在 `summary` 中保留更多詞元。
 
-- `approximate_threshold`: The minimum number of documents in a segment required to activate neural sparse ANN search.
+- `approximate_threshold`：分段中要啟用神經稀疏 ANN 搜尋所需的文件數下限。
 
-    This parameter controls whether to activate the neural sparse ANN algorithm in a segment once the segment's document count reaches the specified threshold. As the total number of documents increases, individual segments contain more documents. In this case, you can set `approximate_threshold` to a higher value in order to avoid rebuilding clusters repeatedly when segments with fewer documents are merged. This parameter is especially important if you do not use force merge operations to combine all segments into one, because segments with fewer documents than the threshold fall back to the `rank_features` (regular neural sparse search) mode. Note that if you set this value too high, neural sparse ANN search may never activate.
+    此參數控制當分段的文件數達到指定閾值時，是否要在該分段中啟用神經稀疏 ANN 演算法。隨著文件總數增加，個別分段會包含更多文件。在此情況下，您可以將 `approximate_threshold` 設為較高的值，以避免在文件數較少的分段合併時反覆重建叢集。如果您不使用 force merge 作業將所有分段合併成一個，此參數尤其重要，因為文件數少於閾值的分段會退回 `rank_features`（一般神經稀疏搜尋）模式。請注意，若將此值設得太高，神經稀疏 ANN 搜尋可能永遠不會啟用。
 
-- `clustering_batch_size`: The number of batches that each inverted list is split into for clustering. Supported for the native engine only.
+- `clustering_batch_size`：每個倒排清單在進行叢集化時要分割成的批次數。僅原生引擎支援。
 
-    By default, this parameter is `1` and clustering runs over the whole corpus. Setting it to a higher value, up to `10000`, splits each inverted list into that many batches and clusters each batch separately, which reduces the memory required to build the index in exchange for a longer build time. Increase this value if index building is memory constrained.
+    依預設，此參數為 `1`，叢集化會對整個語料庫執行。將其設為較高的值（最高為 `10000`）會將每個倒排清單分割成該數量的批次，並分別對每個批次進行叢集化，這可減少建置索引所需的記憶體，但會延長建置時間。若索引建置受記憶體限制，請增加此值。
 
-- `forward_index`: How the forward index is stored on disk. Supported for the native engine only.
+- `forward_index`：正向索引在磁碟上的儲存方式。僅原生引擎支援。
 
-    The default `shared` layout stores one contiguous forward index for the field, which uses less disk space. The `per_block` layout stores each block's vectors inline next to the block, so a query reads only the blocks that it selects, which reduces query latency but uses more disk space. For more information, see [Choosing a forward index layout]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#choosing-a-forward-index-layout).
+    預設的 `shared` 配置會為欄位儲存一個連續的正向索引，使用的磁碟空間較少。`per_block` 配置會將每個區塊的向量內嵌儲存在該區塊旁，因此查詢只會讀取其選取的區塊，可降低查詢延遲，但會使用更多磁碟空間。如需詳細資訊，請參閱 [選擇正向索引配置]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#choosing-a-forward-index-layout)。
 
-## Query performance tuning
+## 查詢效能調校
 
-These parameters affect search performance and recall:
+這些參數會影響搜尋效能與召回率：
 
-- `top_n`: The number of query tokens with the highest weights to retain for approximate sparse queries.
+- `top_n`：近似稀疏查詢要保留之權重最高的查詢詞元數。
 
-    In the neural sparse ANN search algorithm, only the top `top_n` tokens in a query are retained based on their weights. This parameter controls the balance between search efficiency (latency) and accuracy (recall). A higher value improves accuracy but increases latency, while a lower value reduces latency at the cost of accuracy.
+    在神經稀疏 ANN 搜尋演算法中，查詢中只會依權重保留前 `top_n` 個詞元。此參數控制搜尋效率（延遲）與準確度（召回率）之間的平衡。較高的值可改善準確度，但會增加延遲；較低的值可降低延遲，但會犧牲準確度。
 
-- `heap_factor`: Controls the trade-off between recall and performance.
+- `heap_factor`：控制召回率與效能之間的取捨。
 
-    During neural sparse ANN search, the algorithm decides whether to examine a cluster by comparing the cluster's score with the top score in the result queue divided by `heap_factor`. A larger `heap_factor` lowers the threshold that clusters must meet in order to be examined, causing the algorithm to examine more clusters and improving accuracy at the cost of slower query speed. Conversely, a smaller `heap_factor` raises the threshold, making the algorithm more selective about which clusters to examine. This parameter provides finer control than `top_n`, allowing you to slightly adjust the trade-off between accuracy and latency.
+    在神經稀疏 ANN 搜尋期間，演算法會將叢集的分數與結果佇列中的最高分數除以 `heap_factor` 後的結果進行比較，以決定是否要檢查某個叢集。`heap_factor` 越大，叢集必須達到的閾值越低，使演算法檢查更多叢集，進而改善準確度，但會降低查詢速度。反之，`heap_factor` 越小，閾值越高，使演算法對要檢查哪些叢集更具選擇性。此參數提供比 `top_n` 更精細的控制，讓您能微調準確度與延遲之間的取捨。
 
 
-## Other optimization strategies
+## 其他最佳化策略
 
-In addition to tuning the preceding parameters, you can employ the following optimization strategies.
+除了調校上述參數之外，您還可以採用下列最佳化策略。
 
-### Building clusters
+### 建置叢集
 
-Index building can benefit from using multiple threads. You can adjust the number of threads used for cluster building by specifying the `plugins.neural_search.sparse.algo_param.index_thread_qty` setting (by default, `1`). For information about updating this setting, see [Vector search settings]({{site.url}}{{site.baseurl}}/vector-search/settings/#cluster-settings-2). Using a higher `plugins.neural_search.sparse.algo_param.index_thread_qty` can reduce force merge time when neural sparse ANN search is enabled, though it also consumes more system resources. This setting applies to both the Lucene engine and the native engine.
+索引建置可受益於使用多個執行緒。您可以指定 `plugins.neural_search.sparse.algo_param.index_thread_qty` 設定（預設為 `1`）來調整用於叢集建置的執行緒數。如需更新此設定的相關資訊，請參閱 [向量搜尋設定]({{site.url}}{{site.baseurl}}/vector-search/settings/#cluster-settings-2)。在啟用神經稀疏 ANN 搜尋時，使用較高的 `plugins.neural_search.sparse.algo_param.index_thread_qty` 可縮短 force merge 時間，不過也會耗用更多系統資源。此設定同時適用於 Lucene 引擎與原生引擎。
 
-### Querying after a cold start
+### 冷啟動後查詢
 
-The Lucene engine's cache is empty after rebooting OpenSearch, so the first several hundred queries may experience high latency. To address this "cold start" issue, you can use the [Warm Up API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#warm-up). This API loads data from disk into cache, ensuring optimal performance for subsequent queries. You can also use the [Clear Cache API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#clear-cache) to free up memory when needed.
+重新啟動 OpenSearch 後，Lucene 引擎的快取是空的，因此前幾百次查詢可能會遇到高延遲。為了解決這個「冷啟動」問題，您可以使用 [Warm Up API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#warm-up)。此 API 會將資料從磁碟載入快取，確保後續查詢有最佳效能。您也可以在需要時使用 [Clear Cache API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#clear-cache) 來釋放記憶體。
 
-The native engine does not use this cache, so the Warm Up and Clear Cache APIs do not apply to it. For the native engine, the first query against a segment pays a one-time cost to memory map the segment's index file, and later queries reuse the existing mapping.
+原生引擎不使用此快取，因此 Warm Up 與 Clear Cache API 不適用於它。對於原生引擎，對某個分段的第一個查詢會支付一次性的成本，將該分段的索引檔案進行記憶體對應，之後的查詢則會重複使用既有的對應。
 
-### Force merging segments
+### 強制合併分段
 
-Neural sparse ANN search automatically builds clustered posting lists once a segment's document count exceeds `approximate_threshold`. However, you can often achieve lower query latency by merging all segments into a single segment:
+一旦分段的文件數超過 `approximate_threshold`，神經稀疏 ANN 搜尋就會自動建置叢集化的張貼清單。不過，將所有分段合併成單一分段通常可達到更低的查詢延遲：
 
 ```json
 POST /sparse-ann-documents/_forcemerge?max_num_segments=1
 ```
 {% include copy-curl.html %}
 
-You can also set `approximate_threshold` to a high value so that individual segments do not trigger clustering but the merged segment does. This approach helps avoid repeated cluster building during indexing.
+您也可以將 `approximate_threshold` 設為較高的值，讓個別分段不會觸發叢集化，但合併後的分段會觸發。此做法有助於避免在編製索引期間反覆建置叢集。
 
-The native engine builds the sparse index faster, so force merges complete sooner. For more information, see [Choosing an engine](#choosing-an-engine).
+原生引擎建置稀疏索引的速度較快，因此 force merge 會較早完成。如需詳細資訊，請參閱 [選擇引擎](#choosing-an-engine)。
 
-## Best practices
+## 最佳做法
 
-- Start with default parameters and tune based on your specific dataset.
-- For the Lucene engine, monitor memory usage and adjust cache settings accordingly.
-- Consider the trade-off between indexing time and query performance.
-- Choose an engine before creating the field. `method` is not updatable, so switching engines later requires reindexing into a new index.
-- If you are memory constrained or your JVM heap is under pressure, we recommend the native engine, which keeps its index in a memory-mapped file on disk.
-- When sizing a node for the native engine, leave enough RAM for the operating system page cache rather than increasing the JVM heap.
-- Set `forward_index` to `per_block` when query latency matters more than disk usage, and keep the default `shared` layout when you want to minimize disk usage.
-- For the native engine, if index building is memory constrained, increase `clustering_batch_size` to lower peak build memory in exchange for a longer build time.
-- Do not combine neural sparse ANN search fields with a pipeline that includes a [two-phase processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-sparse-query-two-phase-processor/).
+- 從預設參數開始，並根據您的特定資料集進行調校。
+- 對於 Lucene 引擎，請監控記憶體使用量並據此調整快取設定。
+- 請考量索引時間與查詢效能之間的取捨。
+- 在建立欄位之前先選擇引擎。`method` 無法更新，因此之後若要切換引擎，必須將資料重新編製索引至新索引。
+- 如果您受記憶體限制或 JVM 堆積承受壓力，我們建議使用原生引擎，它會將其索引保存在磁碟上的記憶體對應檔案中。
+- 為原生引擎規劃節點大小時，請為作業系統頁面快取保留足夠的 RAM，而不是增加 JVM 堆積。
+- 當查詢延遲比磁碟使用量更重要時，請將 `forward_index` 設為 `per_block`；當您想盡量減少磁碟使用量時，請保留預設的 `shared` 配置。
+- 對於原生引擎，若索引建置受記憶體限制，請增加 `clustering_batch_size` 以降低建置尖峰記憶體，但會延長建置時間。
+- 請勿將神經稀疏 ANN 搜尋欄位與包含[兩階段處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-sparse-query-two-phase-processor/)的管線結合使用。
 
-## Next steps
+## 後續步驟
 
-- [Neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)
+- [神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)

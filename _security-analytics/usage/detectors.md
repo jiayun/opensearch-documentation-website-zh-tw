@@ -1,67 +1,68 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Working with detectors
+title: "使用偵測器"
 parent: Using Security Analytics
 nav_order: 30
 ---
 
-# Working with detectors
+# 使用偵測器
 
-After creating a detector, it appears on the Threat detectors page along with others saved to the system. You can then perform a number of actions for each detector, from editing its details to changing its status. See the following sections for description of the available actions.
+建立偵測器後，它會與其他已儲存至系統的偵測器一同顯示在「威脅偵測器」頁面上。接著您可以對每個偵測器執行多項操作，從編輯其詳細資料到變更其狀態皆可。請參閱下列各節，以瞭解可用操作的說明。
 
-![Threat detector page]({{site.url}}{{site.baseurl}}/images/Security/threat-detector.png){: width="60%" }
+![威脅偵測器頁面]({{site.url}}{{site.baseurl}}/images/Security/threat-detector.png){: width="60%" }
 
 ---
-## Threat detector list
+## 威脅偵測器清單
 
-The list of threat detectors includes the search bar, the **Status** dropdown list, and the **Log type** dropdown list.
-* Use the search bar to filter by detector name.
-* Select the **Status** dropdown list to filter detectors in the list by Active and Inactive status.
-* Select the **Log type** dropdown list to filter detectors by any log type that appears in the list (the options depend on the detectors present in the list and their log types).
+威脅偵測器清單包含搜尋列、**Status** 下拉式清單，以及 **Log type** 下拉式清單。
+* 使用搜尋列依偵測器名稱篩選。
+* 選取 **Status** 下拉式清單，依 Active 和 Inactive 狀態篩選清單中的偵測器。
+* 選取 **Log type** 下拉式清單，依清單中出現的任何記錄檔類型篩選偵測器（選項取決於清單中現有的偵測器及其記錄檔類型）。
 
-### Editing a detector
+### 編輯偵測器
 
-To edit a detector, begin by selecting the link to the detector in the Detector name column of the list. The detector's details window opens and shows details about the detector's configuration.
+若要編輯偵測器，請先選取清單中「Detector name」欄內該偵測器的連結。偵測器的詳細資料視窗會開啟，並顯示偵測器組態的詳細資料。
 
-![Detector details window for editing the detector]({{site.url}}{{site.baseurl}}/images/Security/detector-details.png){: width="50%" }
+![用於編輯偵測器的偵測器詳細資料視窗]({{site.url}}{{site.baseurl}}/images/Security/detector-details.png){: width="50%" }
 
-* In the upper-left portion of the window, the details window shows the name of the detector and its status, either Active or Inactive.
-* In the upper-right corner of the window, you can select **View alerts** to go to the Alerts window or **View findings** to go to the Findings window. You can also select **Actions** to perform actions for the detector. See [Detector actions]({{site.url}}{{site.baseurl}}/security-analytics/usage/detectors/#detector-actions).
-* In the lower portion of the window, select the **Edit** button for either Detector details or Detection rules to make changes accordingly.
-* Finally, you can select the **Field mappings** tab to edit field mappings for the detector, or select the **Alert triggers** tab to make edits to alerts associated with the detector.
+* 在視窗左上方，詳細資料視窗會顯示偵測器的名稱及其狀態，即 Active 或 Inactive。
+* 在視窗右上角，您可以選取 **View alerts** 前往「Alerts」視窗，或選取 **View findings** 前往「Findings」視窗。您也可以選取 **Actions** 來執行偵測器的操作。請參閱[偵測器操作]({{site.url}}{{site.baseurl}}/security-analytics/usage/detectors/#detector-actions)。
+* 在視窗下方，選取「Detector details」或「Detection rules」的 **Edit** 按鈕，以進行相應的變更。
+* 最後，您可以選取 **Field mappings** 索引標籤，以編輯偵測器的欄位對應；或選取 **Alert triggers** 索引標籤，以編輯與偵測器相關聯的警示。
 
-![Field mappings and Alert triggers tabs]({{site.url}}{{site.baseurl}}/images/Security/detector-details2.png){: width="40%" }
+![Field mappings 和 Alert triggers 索引標籤]({{site.url}}{{site.baseurl}}/images/Security/detector-details2.png){: width="40%" }
 
-After you select the **Alert triggers** tab, you also have the option to add additional alerts for the detector by selecting **Add another alert condition** at the bottom of the page.
+選取 **Alert triggers** 索引標籤後，您也可以選擇在頁面底部選取 **Add another alert condition**，為偵測器新增其他警示。
 {: .tip }
 
-### Threat intelligence feeds
+### 威脅情報饋送
 
-A threat intelligence feed is a real-time, continuous data stream that gathers information related to risks or threats. A piece of information in the tactical threat intelligence feed suggesting that your cluster may have been compromised, such as a login from an unknown user or location or anomalous activity like an increase in read volume, is called an *indicator of compromise (IOC)*. These IOCs can be used by investigators to help isolate security incidents. 
+威脅情報饋送是一種即時、持續的資料串流，會收集與風險或威脅相關的資訊。戰術威脅情報饋送中若有一則資訊指出您的叢集可能已遭入侵，例如來自未知使用者或位置的登入，或讀取量增加等異常活動，即稱為*入侵指標 (indicator of compromise, IOC)*。調查人員可利用這些 IOC 協助隔離安全事件。
 
-You can enable threat intelligence for Sigma rules related to malicious IP addresses. 
+您可以為與惡意 IP 位址相關的 Sigma 規則啟用威脅情報。
 
-To enable threat intelligence feeds, select the **Enable threat intelligence-based detection** option. 
+若要啟用威脅情報饋送，請選取 **Enable threat intelligence-based detection** 選項。
 
-Threat intelligence feeds only work with **standard** log types.
+威脅情報饋送僅適用於 **standard** 記錄檔類型。
 
 ---
-## Detector actions
+## 偵測器操作
 
-Threat detector actions allow you to stop and start detectors or delete a detector. To enable actions, first select the checkbox beside one or more detectors in the list.
+威脅偵測器操作可讓您停止和啟動偵測器，或刪除偵測器。若要啟用操作，請先選取清單中一或多個偵測器旁的核取方塊。
 
-![Threat detector actions]({{site.url}}{{site.baseurl}}/images/Security/detector-action.png){: width="50%" }
+![威脅偵測器操作]({{site.url}}{{site.baseurl}}/images/Security/detector-action.png){: width="50%" }
 
-### Changing detector status
+### 變更偵測器狀態
 
-1.  Select the detector or detectors in the list whose status you would like to change. The **Actions** dropdown list becomes enabled.
-1.  Depending on whether the detector is currently active or inactive, select either **Stop detector** or **Start detector**. After a moment, the change in status of the detector appears in the detector list as either Inactive or Active.
+1.  選取清單中您要變更狀態的一或多個偵測器。**Actions** 下拉式清單隨即啟用。
+1.  視偵測器目前為使用中或未使用中，選取 **Stop detector** 或 **Start detector**。稍後，偵測器狀態的變更會以 Inactive 或 Active 顯示在偵測器清單中。
 
-### Deleting a detector
+### 刪除偵測器
 
-1. Select the detector or detectors in the list that you would like to delete. The **Actions** dropdown list becomes enabled.
-1. Select **Delete** in the dropdown list. The Delete detector popup window opens and asks you to verify that you want to delete the detector or detectors.
-1. Select **Cancel** to decline the action. Select **Delete detector** to delete the detector or detectors permanently from the list.
+1. 選取清單中您要刪除的一或多個偵測器。**Actions** 下拉式清單隨即啟用。
+1. 在下拉式清單中選取 **Delete**。「Delete detector」彈出式視窗會開啟，並要求您確認是否要刪除所選偵測器。
+1. 選取 **Cancel** 以拒絕此操作。選取 **Delete detector** 以從清單中永久刪除所選偵測器。
 
-## Related documentation
-[Creating detectors]({{site.url}}{{site.baseurl}}/security-analytics/sec-analytics-config/detectors-config/)
+## 相關文件
+[建立偵測器]({{site.url}}{{site.baseurl}}/security-analytics/sec-analytics-config/detectors-config/)

@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Span first
+title: "Span first 查詢"
 parent: Span queries
 grand_parent: Query DSL
 nav_order: 30
 ---
 
-# Span first query
+# Span first 查詢
 
-The `span_first` query matches spans that begin at the start of a field and end within a specified number of positions. This query is useful when you want to find terms or phrases that appear near the beginning of a document.
+`span_first` 查詢會比對從欄位開頭起始，並在指定位置數內結束的跨度 (span)。當您想找出出現在文件開頭附近的詞彙或片語時，此查詢非常實用。
 
-For example, you can use the `span_first` query to perform the following searches:
+例如，您可以使用 `span_first` 查詢執行下列搜尋：
 
-- Find documents in which specific terms appear in the first few words of a field.
-- Ensure certain phrases occur at or near the beginning of a text
-- Match patterns only when they appear within a specified distance from the start
+- 找出特定詞彙出現在欄位開頭幾個字詞中的文件。
+- 確保某些片語出現在文字的開頭或開頭附近
+- 僅在模式出現在距離開頭指定距離內時進行比對
 
-## Example
+## 範例
 
-To try the examples in this section, complete the [setup steps]({{site.url}}{{site.baseurl}}/query-dsl/span/#setup).
+若要嘗試本節中的範例，請先完成[設定步驟]({{site.url}}{{site.baseurl}}/query-dsl/span/#setup)。
 {: .tip}
 
-The following query searches for the stemmed word "dress" appearing within the first 4 positions of the description:
+下列查詢會搜尋出現在 description 前 4 個位置內的詞幹化單字 "dress"：
 
 ```json
 GET /clothing/_search
@@ -40,13 +41,13 @@ GET /clothing/_search
 ```
 {% include copy-curl.html %}
 
-The query matches documents 1 and 2:
-- Documents 1 and 2 contain the word `dress` at the third position ("Long-sleeved dress..." and "Beautiful long dress"). Indexing of the words starts with 0, so the word "dress" is at position 2. 
-- The position of the word `dress` must be less than `4`, as specified by the `end` parameter.
+查詢比對到文件 1 和 2：
+- 文件 1 和 2 在第三個位置包含 `dress` 這個字（"Long-sleeved dress..." 和 "Beautiful long dress"）。字詞的位置編號從 0 開始，因此 "dress" 位於位置 2。
+- `dress` 這個字的位置必須小於 `4`，這是由 `end` 參數指定的。
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -90,13 +91,13 @@ The query matches documents 1 and 2:
 
 </details>
 
-The `match` parameter can contain any type of span query, allowing for more complex patterns to be matched at the beginning of fields.
+`match` 參數可以包含任何類型的 span 查詢，因此可以在欄位開頭比對更複雜的模式。
 
-## Parameters
+## 參數
 
-The following table lists all top-level parameters supported by `span_first` queries. All parameters are required.
+下表列出 `span_first` 查詢支援的所有頂層參數。所有參數皆為必要。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 |:----------|:-----|:------------|
-| `match` | Object | The span query to match. This defines the pattern you're searching for at the start of the field. |
-| `end` | Integer | The maximum end position (exclusive) allowed for the span query match. For example, `end: 4` matches terms at positions 0--3. |
+| `match` | 物件 | 要比對的 span 查詢。這定義了您要在欄位開頭搜尋的模式。 |
+| `end` | 整數 | span 查詢比對允許的最大結束位置（不含）。例如，`end: 4` 會比對位置 0--3 的詞彙。 |

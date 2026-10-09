@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index
+title: "索引"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/index-parameter/
@@ -9,41 +10,41 @@ has_children: false
 has_toc: false
 ---
 
-# Index mapping parameter
+# Index 對應參數
 
-The `index` mapping parameter controls whether a field is included in the inverted index. When set to `true`, the field is indexed and available for queries. When set to `false`, the field is stored in the document but not indexed, making it non-searchable when [`doc_values`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/) are not enabled. If you do not need to search a particular field, disabling indexing and `doc_values` for that field can reduce index size and improve indexing performance. For example, you can disable indexing on large text fields or metadata that is only used for display.
+`index` 對應參數可控制欄位是否納入反向索引。設為 `true` 時，該欄位會編製索引並可供查詢。設為 `false` 時，該欄位會儲存在文件中但不編製索引，因此在未啟用 [`doc_values`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/) 時無法搜尋。如果您不需要搜尋特定欄位，停用該欄位的索引與 `doc_values` 可縮小索引大小並提升索引效能。例如，您可以對僅供顯示的大型文字欄位或中繼資料停用索引。
 
-By default, all field types are indexed. For indexes that use a pluggable data format, `index` defaults to `false` for the field types whose values are stored in doc values. For more information, see [Pluggable data format indexes](#pluggable-data-format-indexes).
+根據預設，所有欄位類型都會編製索引。對於使用可插拔資料格式的索引，若欄位類型的值儲存在 doc values 中，`index` 會預設為 `false`。如需詳細資訊，請參閱[可插拔資料格式索引](#pluggable-data-format-indexes)。
 
-##  The index and doc values parameters compared
+##  index 與 doc values 參數比較
 
-When you enable the `index` parameter, OpenSearch creates a mapping of terms to the documents that contain them. For each new document, the values of the indexed fields are broken into terms, and each term is linked to the document ID in the mapping.
+啟用 `index` 參數時，OpenSearch 會建立詞彙與包含這些詞彙之文件的對應。對於每份新文件，已編製索引欄位的值會拆解為詞彙，而每個詞彙都會在對應中連結至文件 ID。
 
-When you enable the `doc_values` parameter, OpenSearch creates a reverse mapping: each document is linked to the list of terms found in that field. This is useful for operations like sorting, where the system needs fast access to a document's field values.
+啟用 `doc_values` 參數時，OpenSearch 會建立反向對應：每份文件都會連結至在該欄位中找到的詞彙清單。這對於排序等作業很有用，因為系統需要快速存取文件的欄位值。
 
-The following table illustrates the field behavior depending on the combination of `index` and `doc_values`.
+下表說明 `index` 與 `doc_values` 不同組合下的欄位行為。
 
-| `index` parameter value | `doc_values` parameter value | Behavior       | Use case       
+| `index` 參數值 | `doc_values` 參數值 | 行為       | 使用案例       
 | :--       | :--               | :--            | :--            |
-| `true`   | `true`          | The field is searchable and supports sorting, scripting, and aggregations.    | Use for any field you want to query directly and perform complex operations on.          |
-| `true`   | `false`          | The field is searchable but does not support document-to-term lookup (thus, sorting, scripting, and aggregations take longer). |  Use for fields you want to query but don't need for sorting or aggregations, such as `text` fields.          |
-| `false`   | `true`         | The field is searchable (although not as efficiently) and supports sorting, scripting, and aggregations. Note that not all field types support `doc_values` (for example, `text` fields do not support `doc_values`).     | Use for fields that you want to aggregate on but not filter or query.          |
-| `false`  | `false`          | The field is not searchable. Queries that attempt to search the field return an error.    | Use for fields on which you do not want to perform any operations, such as metadata fields.          |
+| `true`   | `true`          | 該欄位可搜尋，並支援排序、指令碼與彙總。    | 適用於您想直接查詢並執行複雜作業的任何欄位。          |
+| `true`   | `false`          | 該欄位可搜尋，但不支援文件對詞彙的查閱 (因此排序、指令碼與彙總會耗時較久)。 |  適用於您想查詢但不需要用於排序或彙總的欄位，例如 `text` 欄位。          |
+| `false`   | `true`         | 該欄位可搜尋 (雖然效率較低)，並支援排序、指令碼與彙總。請注意，並非所有欄位類型都支援 `doc_values` (例如 `text` 欄位不支援 `doc_values`)。     | 適用於您想彙總但不想篩選或查詢的欄位。          |
+| `false`  | `false`          | 該欄位無法搜尋。嘗試搜尋該欄位的查詢會傳回錯誤。    | 適用於您不想對其執行任何作業的欄位，例如中繼資料欄位。          |
 
-## Supported data types
+## 支援的資料類型
 
-The `index` mapping parameter can be applied to the following data types:
+`index` 對應參數可套用於下列資料類型：
 
-- [Text]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/)
-- [Keyword]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/keyword/)
-- [Boolean]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/boolean/)
-- [IP address]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/ip/)
-- [Date field types]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/dates/)
-- [Numeric field types]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/)
+- [文字]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/)
+- [關鍵字]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/keyword/)
+- [布林值]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/boolean/)
+- [IP 位址]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/ip/)
+- [日期欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/dates/)
+- [數值欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/)
 
-## Enabling indexing on a field
+## 在欄位上啟用索引
 
-The following request creates an index named `products` with `description` and `name` fields that are indexed (the default behavior):
+下列請求會建立名為 `products` 的索引，其中包含已編製索引的 `description` 與 `name` 欄位 (預設行為)：
 
 ```json
 PUT /products
@@ -62,7 +63,7 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-Index a document using the following request:
+使用下列請求將文件編製索引：
 
 ```json
 PUT /products/_doc/1
@@ -73,7 +74,7 @@ PUT /products/_doc/1
 ```
 {% include copy-curl.html %}
 
-Query the description field:
+查詢 description 欄位：
 
 ```json
 POST /products/_search
@@ -87,7 +88,7 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-The following response confirms that the indexed document was successfully matched by the query:
+下列回應確認已編製索引的文件成功符合查詢：
 
 ```json
 {
@@ -113,9 +114,9 @@ The following response confirms that the indexed document was successfully match
 }
 ```
 
-## Disabling indexing on a field
+## 在欄位上停用索引
 
-Create an index named `products-no-index` with a `description` field and a `name` field that are not indexed:
+建立名為 `products-no-index` 的索引，其中包含未編製索引的 `description` 欄位與 `name` 欄位：
 
 ```json
 PUT /products-no-index
@@ -136,7 +137,7 @@ PUT /products-no-index
 ```
 {% include copy-curl.html %}
 
-Index a document using the following request:
+使用下列請求將文件編製索引：
 
 ```json
 PUT /products-no-index/_doc/1
@@ -147,7 +148,7 @@ PUT /products-no-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-Query `products-no-index` using the `description` field:
+使用 `description` 欄位查詢 `products-no-index`：
 
 ```json
 POST /products-no-index/_search
@@ -161,7 +162,7 @@ POST /products-no-index/_search
 ```
 {% include copy-curl.html %}
 
-The following error response indicates that the search query failed because the description field is not indexed:
+下列錯誤回應指出搜尋查詢失敗，因為 description 欄位未編製索引：
 
 ```json
 {
@@ -200,9 +201,9 @@ The following error response indicates that the search query failed because the 
 }
 ```
 
-For `text` fields, setting the `index` parameter to `false` disables search on the field because `text` fields do not support `doc_values`. To make other fields not searchable, you must additionally set `doc_values` to `false`.  
+對於 `text` 欄位，將 `index` 參數設為 `false` 會停用該欄位的搜尋，因為 `text` 欄位不支援 `doc_values`。若要讓其他欄位無法搜尋，您必須另外將 `doc_values` 設為 `false`。  
 
-Query `products-no-index` using the `name` field:
+使用 `name` 欄位查詢 `products-no-index`：
 
 ```json
 POST /products-no-index/_search
@@ -218,7 +219,7 @@ POST /products-no-index/_search
 ```
 {% include copy-curl.html %}
 
-The following response confirms that the search query succeeded because the `name` field, though not indexed, has `doc_values` enabled:
+下列回應確認搜尋查詢成功，因為 `name` 欄位雖然未編製索引，但已啟用 `doc_values`：
 
 ```json
 {
@@ -244,23 +245,23 @@ The following response confirms that the search query succeeded because the `nam
 }
 ```
 
-## Pluggable data format indexes
-**Introduced 3.9**
+## 可插拔資料格式索引
+**3.9 版引入**
 {: .label .label-purple }
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).    
+這是實驗性功能，不建議在生產環境中使用。如需此功能進展的最新資訊，或想提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/) 的討論。    
 {: .warning}
 
-For indexes that use a pluggable data format, fields of the following types are not indexed by default:
+對於使用可插拔資料格式的索引，下列類型的欄位預設不會編製索引：
 
-- Numeric types, including `scaled_float`
+- 數值類型，包括 `scaled_float`
 - `date`
 - `date_nanos`
 - `ip`
 - `boolean`
 
-Fields of these types remain searchable because OpenSearch serves `range`, `term`, and `terms` queries on them from doc values. Fields of all other types are indexed by default. For information about enabling and disabling experimental features, see [Enabling experimental features]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/experimental/).
+這些類型的欄位仍可搜尋，因為 OpenSearch 會從 doc values 提供對它們的 `range`、`term` 與 `terms` 查詢。所有其他類型的欄位則預設會編製索引。如需啟用與停用實驗性功能的相關資訊，請參閱[啟用實驗性功能]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/experimental/)。
 
-Setting `index` to `true` for these fields is not supported.
+不支援為這些欄位將 `index` 設為 `true`。
 
-Because the default value is not stored in the mapping, the `index` parameter does not appear in the response to a `GET _mapping` request for these fields, and the Field Capabilities API reports them as `"searchable": false`.
+由於預設值不會儲存在對應中，`index` 參數不會出現在這些欄位的 `GET _mapping` 請求回應中，且 Field Capabilities API 會將它們回報為 `"searchable": false`。

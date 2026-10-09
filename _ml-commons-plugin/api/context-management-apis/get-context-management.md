@@ -1,39 +1,40 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get context management
+title: "取得上下文管理"
 parent: Context management APIs
 grand_parent: ML Commons APIs
 nav_order: 20
 ---
 
-# Get Context Management API
-**Introduced 3.5**
+# 取得上下文管理 API
+**於 3.5 版推出**
 {: .label .label-purple }
 
-Use this API to retrieve a context management configuration by its name.
+使用此 API 依名稱擷取上下文管理組態。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/context_management/{context_management_name}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-Parameter | Data type | Required/Optional | Description
+參數 | 資料類型 | 必要／選用 | 說明
 :--- | :--- | :--- | :---
-`context_management_name` | String | Required | The name of the context management to retrieve.
+`context_management_name` | 字串 | 必要 | 要擷取的上下文管理名稱。
 
-## Example request
+## 範例請求
 
 ```json
 GET /_plugins/_ml/context_management/token-aware-truncation
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -65,6 +66,6 @@ GET /_plugins/_ml/context_management/token-aware-truncation
 }
 ```
 
-## Related documentation
+## 相關文件
 
-For more information, see [Context management]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/).
+如需更多資訊，請參閱[上下文管理]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/)。

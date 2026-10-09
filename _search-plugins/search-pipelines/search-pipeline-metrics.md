@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search pipeline metrics
+title: "搜尋管線指標"
 nav_order: 60
 has_children: false
 parent: Search pipelines
 ---
 
-# Search pipeline metrics
+# 搜尋管線指標
 
-To view search pipeline metrics, use the [Nodes Stats API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/):
+若要檢視搜尋管線指標，請使用 [Nodes Stats API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/)：
 
 ```json
 GET /_nodes/stats/search_pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains statistics for all search pipelines:
+回應包含所有搜尋管線的統計資料：
 
 ```json
 {
@@ -164,4 +165,4 @@ The response contains statistics for all search pipelines:
 }
 ```
 
-For descriptions of each field in the response, see the [Nodes Stats search pipeline section]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/#search_pipeline). 
+如需回應中每個欄位的說明，請參閱 [Nodes Stats 搜尋管線章節]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/#search_pipeline)。 

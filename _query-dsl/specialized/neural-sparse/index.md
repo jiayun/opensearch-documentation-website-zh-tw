@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Neural sparse
+title: "神經稀疏"
 parent: AI and vector search queries
 has_children: true
 nav_order: 55
@@ -8,24 +9,24 @@ redirect_from:
   - /query-dsl/specialized/neural-sparse/
 ---
 
-# Neural sparse query
-**Introduced 2.11**
+# 神經稀疏查詢
+**於 2.11 版推出**
 {: .label .label-purple }
 
-The `neural_sparse` query performs vector field search for neural sparse functionality. You can run this query on two types of vector fields:
+`neural_sparse` 查詢會針對神經稀疏功能執行向量欄位搜尋。您可以在兩種類型的向量欄位上執行此查詢：
 
-- **`rank_features` fields**: For traditional [neural sparse search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-search/)
-- **`sparse_vector` fields**: For [neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)
+- **`rank_features` 欄位**：用於傳統的[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-search/)
+- **`sparse_vector` 欄位**：用於[神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)
 
-## Neural sparse search
+## 神經稀疏搜尋
 
-Use neural sparse search on `rank_features` fields for traditional sparse vector search with inverted index efficiency.
+在 `rank_features` 欄位上使用神經稀疏搜尋，以倒排索引的效率進行傳統稀疏向量搜尋。
 
-You can run a neural sparse search either using raw sparse vectors or text. The text can be tokenized by built-in analyzers or tokenizer models.
+您可以使用原始稀疏向量或文字來執行神經稀疏搜尋。文字可由內建分析器或斷詞器模型進行斷詞。
 
-### Using raw sparse vectors
+### 使用原始稀疏向量
 
-Provide sparse vector embeddings directly for matching:
+直接提供稀疏向量嵌入以進行比對：
 
 ```json
 "neural_sparse": {
@@ -38,11 +39,11 @@ Provide sparse vector embeddings directly for matching:
 }
 ```
 
-For more information, see [Neural sparse search using raw vectors]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-with-raw-vectors/).
+如需更多資訊，請參閱[使用原始向量的神經稀疏搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-with-raw-vectors/)。
 
-### Using text with built-in analyzers
+### 使用文字與內建分析器
 
-Provide text to tokenize using a built-in DL model analyzer:
+提供文字以使用內建 DL 模型分析器進行斷詞：
 
 ```json
 "neural_sparse": {
@@ -53,9 +54,9 @@ Provide text to tokenize using a built-in DL model analyzer:
 }
 ```
 
-### Using text with custom models
+### 使用文字與自訂模型
 
-Provide text to tokenize using a custom tokenizer model:
+提供文字以使用自訂斷詞器模型進行斷詞：
 
 ```json
 "neural_sparse": {
@@ -66,19 +67,19 @@ Provide text to tokenize using a custom tokenizer model:
 }
 ```
 
-For more information, see [Generating sparse vector embeddings automatically]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-with-pipelines/).
+如需更多資訊，請參閱[自動產生稀疏向量嵌入]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-with-pipelines/)。
 
-## Neural sparse ANN search
-**Introduced 3.3**
+## 神經稀疏 ANN 搜尋
+**於 3.3 版推出**
 {: .label .label-purple }
 
-Use neural sparse ANN search on `sparse_vector` fields for improved query performance with high recall. For more information, see [Neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/).
+在 `sparse_vector` 欄位上使用神經稀疏 ANN 搜尋，以提升查詢效能並維持高召回率。如需更多資訊，請參閱[神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)。
 
-Neural sparse ANN search supports two engines: the Lucene engine and the native engine. You select the engine in the field mapping by setting `method.engine`. The query syntax and all supported query parameters are the same for both engines. For more information, see [Engines]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines).
+神經稀疏 ANN 搜尋支援兩種引擎：Lucene 引擎與原生引擎。您可以在欄位對應中設定 `method.engine` 來選擇引擎。兩種引擎的查詢語法與所有支援的查詢參數皆相同。如需更多資訊，請參閱[引擎]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines)。
 
-You can run a neural sparse search either using raw sparse vectors or text. 
+您可以使用原始稀疏向量或文字來執行神經稀疏搜尋。
 
-### Using raw sparse vectors
+### 使用原始稀疏向量
 
 ```json
 "neural_sparse": {
@@ -96,7 +97,7 @@ You can run a neural sparse search either using raw sparse vectors or text.
 }
 ```
 
-### Using text with models
+### 使用文字與模型
 
 ```json
 "neural_sparse": {
@@ -112,50 +113,50 @@ You can run a neural sparse search either using raw sparse vectors or text.
 }
 ```
 
-## Request body fields
+## 請求本文欄位
 
-The top-level field name specifies the vector field against which to run a search query. You must specify either `query_text` or `query_tokens` to define the input.
+最上層的欄位名稱會指定要對其執行搜尋查詢的向量欄位。您必須指定 `query_text` 或 `query_tokens` 來定義輸入。
 
-### Common fields
+### 一般欄位
 
-These fields are supported for both `rank_features` and `sparse_vector` field types.
+這些欄位同時支援 `rank_features` 與 `sparse_vector` 欄位類型。
 
-| Field | Data type | Required/Optional | Description |
+| 欄位 | 資料類型 | 必要/選用 | 說明 |
 |:--- |:--- |:--- |:--- |
-| `query_text` | String | Optional | The query text to convert into sparse vector embeddings. Either `query_text` or `query_tokens` must be specified. |
-| `query_tokens` | Map of token (string) to weight (float) | Optional | A raw sparse vector in the form of tokens and their weights. Used as an alternative to `query_text` for direct vector input. Either `query_text` or `query_tokens` must be specified. |
-| `model_id` | String | Optional | Used with `query_text`. The ID of the sparse encoding model (for bi-encoder mode) or tokenizer (for doc-only mode) used to generate vector embeddings from the query text. The model/tokenizer must be deployed in OpenSearch before it can be used in neural sparse search. For more information, see [Using custom models within OpenSearch]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/) and [Generating sparse vector embeddings automatically]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-with-pipelines/). For information about setting a default model ID in a neural sparse query, see [`neural_query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/). Cannot be specified at the same time as `analyzer`. |
-| `max_token_score` | Float | Optional | (Deprecated) This parameter has been deprecated since OpenSearch 2.12. It is maintained only for backward compatibility and no longer affects functionality. The parameter can still be provided in requests, but its value has no impact. Previously used as the theoretical upper bound of the score for all tokens in the vocabulary.|
+| `query_text` | 字串 | 選用 | 要轉換為稀疏向量嵌入的查詢文字。必須指定 `query_text` 或 `query_tokens`。 |
+| `query_tokens` | 詞元（字串）到權重（浮點數）的對應 | 選用 | 以詞元及其權重形式呈現的原始稀疏向量。用於直接輸入向量，作為 `query_text` 的替代方案。必須指定 `query_text` 或 `query_tokens`。 |
+| `model_id` | 字串 | 選用 | 與 `query_text` 搭配使用。用於從查詢文字產生向量嵌入的稀疏編碼模型 ID（適用於雙編碼器模式）或斷詞器 ID（適用於僅文件模式）。模型/斷詞器必須先在 OpenSearch 中部署，才能在神經稀疏搜尋中使用。如需更多資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)與[自動產生稀疏向量嵌入]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-with-pipelines/)。如需在神經稀疏查詢中設定預設模型 ID 的資訊，請參閱[`neural_query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/)。不能與 `analyzer` 同時指定。 |
+| `max_token_score` | 浮點數 | 選用 | （已棄用）此參數自 OpenSearch 2.12 起已棄用。僅為回溯相容性而保留，不再影響功能。請求中仍可提供此參數，但其值沒有任何影響。先前用於表示詞彙表中所有詞元分數的理論上限。|
 
-### Fields for rank_features only
+### 僅適用於 rank_features 的欄位
 
-| Field | Data type | Required/Optional | Description |
+| 欄位 | 資料類型 | 必要/選用 | 說明 |
 |:--- |:--- |:--- |:--- |
-| `analyzer` | String | Optional | Used with `query_text`. Specifies a built-in DL model analyzer for tokenizing query text. Valid values are `bert-uncased` and `mbert-uncased`. Default is `bert-uncased`. If neither `model_id` nor `analyzer` are specified, the default analyzer (`bert-uncased`) is used to tokenize the text. Cannot be specified at the same time as `model_id`. For more information, see [DL model analyzers]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/dl-model-analyzers/). |
+| `analyzer` | 字串 | 選用 | 與 `query_text` 搭配使用。指定用於將查詢文字斷詞的內建 DL 模型分析器。有效值為 `bert-uncased` 與 `mbert-uncased`。預設為 `bert-uncased`。若 `model_id` 與 `analyzer` 均未指定，則使用預設分析器（`bert-uncased`）將文字斷詞。不能與 `model_id` 同時指定。如需更多資訊，請參閱[DL 模型分析器]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/dl-model-analyzers/)。 |
 
-### Fields for sparse_vector only
+### 僅適用於 sparse_vector 的欄位
 
-| Field | Data type | Required/Optional | Description |
+| 欄位 | 資料類型 | 必要/選用 | 說明 |
 |:--- |:--- |:--- |:--- |
-| `method_parameters.top_n` | Integer | Optional | Specifies the number of query tokens with the highest weights to retain for approximate sparse queries. |
-| `method_parameters.heap_factor` | Float | Optional | Controls the trade-off between recall and performance. Higher values increase recall but reduce query speed; lower values decrease recall but improve query speed. |
-| `method_parameters.k` | Integer | Optional | Specifies the number of top k nearest results that the approximate neural search algorithm returns. |
-| `method_parameters.filter` | Object | Optional | Applies filters to the query results. How the filter is applied depends on the engine configured for the field. See [Filtering in neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/filtering-in-sparse-search/). |
+| `method_parameters.top_n` | 整數 | 選用 | 指定要為近似稀疏查詢保留的權重最高查詢詞元數量。 |
+| `method_parameters.heap_factor` | 浮點數 | 選用 | 控制召回率與效能之間的取捨。較高的值會提高召回率但降低查詢速度；較低的值會降低召回率但提升查詢速度。 |
+| `method_parameters.k` | 整數 | 選用 | 指定近似神經搜尋演算法傳回的前 k 個最近結果數量。 |
+| `method_parameters.filter` | 物件 | 選用 | 對查詢結果套用篩選條件。篩選條件的套用方式取決於為該欄位設定的引擎。請參閱[神經稀疏 ANN 搜尋中的篩選]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/filtering-in-sparse-search/)。 |
 
-If the filter matches fewer documents than `k`, both engines run an exact search over the filtered documents. Beyond that point, the Lucene engine applies the filter after approximate retrieval, so a selective filter can produce fewer than `k` results, whereas the native engine retrieves within the filtered set and can return the full `k` results. This difference is determined by the engine configured in the field mapping.
+如果篩選條件相符的文件數少於 `k`，兩種引擎都會對篩選後的文件執行精確搜尋。超過該數量後，Lucene 引擎會在近似檢索後套用篩選條件，因此選擇性篩選可能產生少於 `k` 個結果，而原生引擎則會在篩選後的集合中進行檢索，可傳回完整的 `k` 個結果。此差異取決於欄位對應中設定的引擎。
 {: .note}
 
-## Examples
+## 範例
 
-The following examples demonstrate using a `neural_sparse` query.
+下列範例示範如何使用 `neural_sparse` 查詢。
 
-### Neural sparse search on rank_features fields
+### 在 rank_features 欄位上進行神經稀疏搜尋
 
-You can run a neural sparse search on a `rank_features` field using text tokenized by an analyzer or a model or using raw vectors. 
+您可以使用由分析器或模型斷詞的文字，或使用原始向量，在 `rank_features` 欄位上執行神經稀疏搜尋。
 
-#### Using text tokenized by an analyzer
+#### 使用由分析器斷詞的文字
 
-To run a search using text tokenized by an analyzer, specify an `analyzer` in the request. The analyzer must be compatible with the model that you used for text analysis at ingestion time:
+若要使用由分析器斷詞的文字執行搜尋，請在請求中指定 `analyzer`。分析器必須與您在匯入時用於文字分析的模型相容：
 
 ```json
 GET my-nlp-index/_search
@@ -172,9 +173,9 @@ GET my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-For more information, see [DL model analyzers]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/dl-model-analyzers/).
+如需更多資訊，請參閱[DL 模型分析器]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/dl-model-analyzers/)。
 
-If you don't specify an analyzer, the default `bert-uncased` analyzer is used:
+若未指定分析器，則會使用預設的 `bert-uncased` 分析器：
 
 ```json
 GET my-nlp-index/_search
@@ -190,9 +191,9 @@ GET my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-#### Using text tokenized by a model
+#### 使用由模型斷詞的文字
 
-To search using text tokenized by a tokenizer model, provide the model ID in the request:
+若要使用由斷詞器模型斷詞的文字進行搜尋，請在請求中提供模型 ID：
 
 ```json
 GET my-nlp-index/_search
@@ -209,9 +210,9 @@ GET my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-#### Using raw vectors
+#### 使用原始向量
 
-To search using a sparse vector, provide the sparse vector in the `query_tokens` parameter:
+若要使用稀疏向量進行搜尋，請在 `query_tokens` 參數中提供稀疏向量：
 
 ```json
 GET my-nlp-index/_search
@@ -234,13 +235,13 @@ GET my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-### Neural sparse ANN search on sparse_vector fields
+### 在 sparse_vector 欄位上進行神經稀疏 ANN 搜尋
 
-You can run a neural sparse ANN search on a `sparse_vector` field using text or raw vectors.
+您可以使用文字或原始向量，在 `sparse_vector` 欄位上執行神經稀疏 ANN 搜尋。
 
-#### Using text
+#### 使用文字
 
-To search using natural language, provide the `query_text` and a deployed sparse encoding model ID:
+若要使用自然語言進行搜尋，請提供 `query_text` 與已部署的稀疏編碼模型 ID：
 
 ```json
 GET sparse-vector-index/_search
@@ -262,9 +263,9 @@ GET sparse-vector-index/_search
 ```
 {% include copy-curl.html %}
 
-#### Using raw vectors with method parameters
+#### 使用原始向量與方法參數
 
-To search using a precomputed sparse vector, provide the vector in the `query_tokens` field:
+若要使用預先計算的稀疏向量進行搜尋，請在 `query_tokens` 欄位中提供向量：
 
 ```json
 GET sparse-vector-index/_search
@@ -287,9 +288,9 @@ GET sparse-vector-index/_search
 ```
 {% include copy-curl.html %}
 
-## Next steps
+## 後續步驟
 
-- For more information about neural sparse search, see [Neural sparse search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-search/).
-- For more information about neural sparse ANN search, see [Neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/).
-- For field type information, see [Rank features]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/rank/) and [Sparse vector]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/sparse-vector/).
-- For information about filtering `neural_sparse` query results, see [Filtering in neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/filtering-in-sparse-search/).
+- 如需神經稀疏搜尋的更多資訊，請參閱[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-search/)。
+- 如需神經稀疏 ANN 搜尋的更多資訊，請參閱[神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)。
+- 如需欄位類型資訊，請參閱[排名特徵]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/rank/)與[稀疏向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/sparse-vector/)。
+- 如需篩選 `neural_sparse` 查詢結果的資訊，請參閱[神經稀疏 ANN 搜尋中的篩選]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/filtering-in-sparse-search/)。

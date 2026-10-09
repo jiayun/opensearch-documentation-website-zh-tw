@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: k-NN query explain
+title: "k-NN 查詢說明"
 parent: k-NN
 grand_parent: AI and vector search queries
 nav_order: 10
 ---
 
-# k-NN query explain
-**Introduced 3.0**
+# k-NN 查詢說明
+**3.0 版新增**
 {: .label .label-purple }
 
-You can provide the `explain` parameter to understand how scores are calculated, normalized, and combined in `knn` queries. When enabled, it provides detailed information about the scoring process for each search result. This includes revealing the score normalization techniques used, how different scores were combined, and the calculations for individual subquery scores. This comprehensive insight makes it easier to understand and optimize your `knn` query results. For more information about `explain`, see [Explain API]({{site.url}}{{site.baseurl}}/api-reference/explain/).
+您可以提供 `explain` 參數，以了解 `knn` 查詢中分數的計算、正規化與合併方式。啟用後，它會提供每個搜尋結果評分程序的詳細資訊，包括所使用的分數正規化技術、不同分數的合併方式，以及各個子查詢分數的計算過程。這種全面的洞察讓您更容易理解並最佳化 `knn` 查詢結果。如需 `explain` 的更多資訊，請參閱 [Explain API]({{site.url}}{{site.baseurl}}/api-reference/explain/)。
 
-`explain` is an expensive operation in terms of both resources and time. For production clusters, we recommend using it sparingly for the purpose of troubleshooting.
+`explain` 在資源與時間方面都是昂貴的操作。對於正式環境叢集，我們建議僅在疑難排解時少量使用。
 {: .warning }
 
-You can provide the `explain` parameter in a URL when running a complete `knn` query for the Faiss engine using the following syntax:
+使用下列語法執行 Faiss 引擎的完整 `knn` 查詢時，您可以在 URL 中提供 `explain` 參數：
 
 ```json
 GET {index}/_search?explain=true
 POST {index}/_search?explain=true
 ```
 
-`explain` for k-NN search for all types of queries with the Lucene engine does not return a detailed explanation as with the Faiss engine.
+`explain`：使用 Lucene 引擎的所有類型 k-NN 搜尋，不會像 Faiss 引擎那樣回傳詳細說明。
 {: .note }
 
-The `explain` parameter works for the following types of k-NN search with the Faiss engine:
+`explain` 參數適用於使用 Faiss 引擎的下列 k-NN 搜尋類型：
 
-- [Approximate k-NN search]({{site.url}}{{site.baseurl}}/vector-search/vector-search-techniques/approximate-knn/)
-- Approximate k-NN search with [exact search]({{site.url}}{{site.baseurl}}/vector-search/vector-search-techniques/knn-score-script/)
-- [Disk-based search]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/disk-based-vector-search/)
-- [k-NN search with efficient filtering]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/efficient-knn-filtering/)
-- [Radial search]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/radial-search-knn/)
-- k-NN search with a `term` query
+- [近似 k-NN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/vector-search-techniques/approximate-knn/)
+- 搭配 [精確搜尋]({{site.url}}{{site.baseurl}}/vector-search/vector-search-techniques/knn-score-script/) 的近似 k-NN 搜尋
+- [磁碟型搜尋]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/disk-based-vector-search/)
+- [搭配高效篩選的 k-NN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/efficient-knn-filtering/)
+- [放射狀搜尋]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/radial-search-knn/)
+- 搭配 `term` 查詢的 k-NN 搜尋
 
-`explain` for k-NN search with nested fields does not return a detailed explanation as with other searches.
+`explain`：使用巢狀欄位的 k-NN 搜尋，不會像其他搜尋那樣回傳詳細說明。
 {: .note }
 
-You can provide the `explain` parameter as a query parameter:
+您可以將 `explain` 參數作為查詢參數提供：
 
 ```json
 GET my-knn-index/_search?explain=true
@@ -54,7 +55,7 @@ GET my-knn-index/_search?explain=true
 ```
 {% include copy-curl.html %}
 
-Alternatively, you can provide the `explain` parameter in the request body:
+或者，您可以在請求本文中提供 `explain` 參數：
 
 ```json
 GET my-knn-index/_search
@@ -72,11 +73,11 @@ GET my-knn-index/_search
 ```
 {% include copy-curl.html %}
 
-## Example: Approximate k-NN search
+## 範例：近似 k-NN 搜尋
 
 <details markdown="block">
   <summary>
-    Example response
+    範例回應
   </summary>
   {: .text-delta}
 
@@ -169,11 +170,11 @@ GET my-knn-index/_search
 ```
 </details>
 
-## Example: Approximate k-NN search with exact search
+## 範例：搭配精確搜尋的近似 k-NN 搜尋
 
 <details markdown="block">
   <summary>
-    Example response
+    範例回應
   </summary>
   {: .text-delta}
 
@@ -253,11 +254,11 @@ GET my-knn-index/_search
 ```
 </details>
 
-## Example: Disk-based search
+## 範例：磁碟型搜尋
 
 <details markdown="block">
   <summary>
-    Example response
+    範例回應
   </summary>
   {: .text-delta}
 
@@ -315,11 +316,11 @@ GET my-knn-index/_search
 ```
 </details>
 
-## Example: k-NN search with efficient filtering
+## 範例：具備高效篩選的 k-NN 搜尋
 
 <details markdown="block">
   <summary>
-    Example response
+    範例回應
   </summary>
   {: .text-delta}
 
@@ -400,7 +401,7 @@ GET my-knn-index/_search
 ```
 </details>
 
-## Example: Radial search
+## 範例：徑向搜尋
 
 ```json
 GET my-knn-index/_search?explain=true
@@ -419,7 +420,7 @@ GET my-knn-index/_search?explain=true
 
 <details markdown="block">
   <summary>
-    Example response
+    範例回應
   </summary>
   {: .text-delta}
 
@@ -509,7 +510,7 @@ GET my-knn-index/_search?explain=true
 ```
 </details>
 
-## Example: k-NN search with a term query
+## 範例：使用詞項查詢的 k-NN 搜尋
 
 ```json
 GET my-knn-index/_search?explain=true
@@ -539,7 +540,7 @@ GET my-knn-index/_search?explain=true
 
 <details markdown="block">
   <summary>
-    Example response
+    範例回應
   </summary>
   {: .text-delta}
 
@@ -650,9 +651,9 @@ GET my-knn-index/_search?explain=true
 
 </details>
 
-## Response body fields
+## 回應本文欄位
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`explanation` | The `explanation` object contains the following fields: <br> - `value`: Contains the calculation result.<br> - `description`: Explains what type of calculation was performed. For score normalization, the information in the `description` field includes the technique used for normalization or combination and the corresponding score. <br> - `details`: Shows any subcalculations performed. 
+`explanation` | `explanation` 物件包含下列欄位：<br> - `value`：包含計算結果。<br> - `description`：說明執行的計算類型。對於分數正規化，`description` 欄位中的資訊包含用於正規化或組合的技術，以及對應的分數。<br> - `details`：顯示執行的任何子計算。 
 

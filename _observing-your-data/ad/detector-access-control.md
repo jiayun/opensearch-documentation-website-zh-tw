@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Anomaly detector access control
+title: "異常偵測器存取控制"
 nav_order: 40
 parent: Anomaly detection
 has_children: false
@@ -8,35 +9,35 @@ redirect_from:
   - /monitoring-plugins/ad/detector-access-control/
 ---
 
-# Anomaly detector access control
+# 異常偵測器存取控制
 
-Anomaly Detection integrates with the Security plugin's resource sharing and access control framework to provide document-level authorization for anomaly detector resources. This replaces the legacy `plugins.anomaly_detection.filter_by_backend_roles` setting with a more flexible sharing system that allows resource owners to grant specific access levels to users, roles, or backend roles.
+Anomaly Detection 與 Security 外掛程式的資源共用及存取控制架構整合，為異常偵測器資源提供文件層級的授權。此機制以更具彈性的共用系統取代舊版的 `plugins.anomaly_detection.filter_by_backend_roles` 設定，讓資源擁有者能夠將特定存取層級授予使用者、角色或後端角色。
 
-For the end-to-end framework concepts and APIs, see [Resource sharing and access control]({{site.url}}{{site.baseurl}}/security/access-control/resources/).
+如需完整的架構概念與 API，請參閱[資源共用與存取控制]({{site.url}}{{site.baseurl}}/security/access-control/resources/)。
 {: .note}
 
-## Resource configuration
+## 資源組態
 
-The following table describes the anomaly detector resource configuration.
+下表說明異常偵測器的資源組態。
 
-| Field | Value |
+| 欄位 | 值 |
 | :--- | :--- |
-| Resource type | `anomaly-detector` |
-| System index | `.opendistro-anomaly-detectors` |
-| Onboarded version | OpenSearch 3.3 |
+| 資源類型 | `anomaly-detector` |
+| 系統索引 | `.opendistro-anomaly-detectors` |
+| 導入版本 | OpenSearch 3.3 |
 
-When resource-level authorization is enabled for anomaly detectors, each detector's visibility is governed by a central sharing record. Resource owners and users with sharing capabilities can grant or revoke access permissions for specific users, roles, or backend roles.
+為異常偵測器啟用資源層級授權後，每個偵測器的可見性皆由一份集中式共用記錄管理。資源擁有者以及具備共用功能的使用者，可以針對特定使用者、角色或後端角色授予或撤銷存取權限。
 
-## Enable anomaly detector resource sharing
+## 啟用異常偵測器資源共用
 
-To enable resource sharing for anomaly detectors, you must add the anomaly-detector resource type to the protected types list and enable resource sharing cluster-wide.
+若要為異常偵測器啟用資源共用，您必須將 anomaly-detector 資源類型新增至受保護類型清單，並在整個叢集啟用資源共用。
 
-Admin-only: These settings can be configured only by cluster administrators with superadmin privileges.
+僅限管理員：這些設定只能由具備超級管理員權限的叢集管理員進行設定。
 {: .important }
 
-### Configuration using opensearch.yml
+### 使用 opensearch.yml 進行設定
 
-Add the following settings to your `opensearch.yml` configuration file to enable resource sharing for anomaly detectors:
+將下列設定新增至您的 `opensearch.yml` 組態檔案，以為異常偵測器啟用資源共用：
 
 ```yaml
 plugins.security.resource_sharing.enabled: true
@@ -46,9 +47,9 @@ plugins.security.resource_sharing.protected_types:
 ```
 {% include copy.html %}
 
-### Configuration using the Cluster Settings API
+### 使用 Cluster Settings API 進行設定
 
-Alternatively, you can enable resource sharing dynamically using the Cluster Settings API:
+或者，您也可以使用 Cluster Settings API 動態啟用資源共用：
 
 ```json
 PUT _cluster/settings
@@ -61,16 +62,16 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-When adding the anomaly-detector resource type to an existing configuration, include all previously configured resource types in the `protected_types` array.
+將 anomaly-detector 資源類型新增至現有組態時，請在 `protected_types` 陣列中包含所有先前已設定的資源類型。
 {: .note}
 
-## Anomaly detector access levels
+## 異常偵測器存取層級
 
-Anomaly Detection provides three predefined access levels for anomaly detector documents. These access levels determine the specific permissions granted to users who have been granted access to a detector resource.
+Anomaly Detection 為異常偵測器文件提供三種預先定義的存取層級。這些存取層級決定了授予已獲得偵測器資源存取權之使用者的具體權限。
 
 ### ad_read_only
 
-The `ad_read_only` read-only access level grants users the ability to view and search shared anomaly detectors but not modify them. This access level includes the following permissions:
+`ad_read_only` 唯讀存取層級讓使用者能夠檢視及搜尋共用的異常偵測器，但無法修改。此存取層級包含下列權限：
 
 ```yaml
 - 'cluster:admin/opendistro/ad/detector/info'
@@ -83,7 +84,7 @@ The `ad_read_only` read-only access level grants users the ability to view and s
 
 ### ad_read_write
 
-The `ad_read_write` read-write access level grants users full access to anomaly detector operations except for sharing capabilities. This access level includes all read permissions plus write operations:
+`ad_read_write` 讀寫存取層級授予使用者除共用功能以外的完整異常偵測器操作存取權。此存取層級包含所有讀取權限以及寫入操作：
 
 ```yaml
 - "cluster:admin/opendistro/ad/*"
@@ -95,7 +96,7 @@ The `ad_read_write` read-write access level grants users full access to anomaly 
 
 ### ad_full_access
 
-The `ad_full_access` full access level grants users complete control over an anomaly detector, including owner-like permissions such as sharing the resource with other users. This access level includes all anomaly detector operations plus resource sharing permissions:
+`ad_full_access` 完整存取層級授予使用者對異常偵測器的完全控制權，包括類似擁有者的權限，例如與其他使用者共用該資源。此存取層級包含所有異常偵測器操作以及資源共用權限：
 
 ```yaml
 - "cluster:admin/ingest/pipeline/delete"
@@ -106,17 +107,17 @@ The `ad_full_access` full access level grants users complete control over an ano
 ```
 {% include copy.html %}
 
-These access levels are predefined and cannot be modified. To request additional access levels, create an issue in the [Anomaly Detection GitHub repository](https://github.com/opensearch-project/anomaly-detection/).
+這些存取層級為預先定義，無法修改。若要請求其他存取層級，請在 [Anomaly Detection GitHub 儲存庫](https://github.com/opensearch-project/anomaly-detection/)中建立 issue。
 {: .note}
 
-## Migrating from the legacy framework
+## 從舊版架構遷移
 
-After enabling resource sharing and marking anomaly detectors as a protected resource type, cluster administrators must run the migration API to transfer existing detector sharing information from the legacy framework to the new resource sharing system.
+啟用資源共用並將異常偵測器標記為受保護的資源類型後，叢集管理員必須執行遷移 API，將現有的偵測器共用資訊從舊版架構轉移至新的資源共用系統。
 
-Admin-only: The Migrate API can only be executed by cluster administrators with superadmin or REST admin privileges.
+僅限管理員：Migrate API 只能由具備超級管理員或 REST 管理員權限的叢集管理員執行。
 {: .important }
 
-Use the following API call to migrate legacy anomaly detector sharing data to the resource sharing framework:
+使用下列 API 呼叫，將舊版異常偵測器共用資料遷移至資源共用架構：
 
 ```json
 POST _plugins/_security/api/resources/migrate
@@ -132,10 +133,10 @@ POST _plugins/_security/api/resources/migrate
 ```
 {% include copy-curl.html %}
 
-Replace `<replace-with-existing-user>` with the username of an existing user who should own anomaly detectors without explicit ownership information. Replace `<select-appropriate-access-level>` with one of the available anomaly detector access levels: `ad_read_only`, `ad_read_write`, or `ad_full_access`.
+將 `<replace-with-existing-user>` 替換為現有使用者的使用者名稱，該使用者將成為沒有明確擁有權資訊之異常偵測器的擁有者。將 `<select-appropriate-access-level>` 替換為下列其中一個可用的異常偵測器存取層級：`ad_read_only`、`ad_read_write` 或 `ad_full_access`。
 
-## Related documentation
+## 相關文件
 
-- [Resource sharing and access control]({{site.url}}{{site.baseurl}}/security/access-control/resources/) -- Backend concepts, configuration, and setup
-- [Resource sharing APIs]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) -- REST API reference for programmatic management
-- [Resource access management]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI workflows and user guidance
+- [資源共用與存取控制]({{site.url}}{{site.baseurl}}/security/access-control/resources/) -- 後端概念、組態與設定
+- [資源共用 API]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) -- 用於程式化管理的 REST API 參考資料
+- [資源存取管理]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI 工作流程與使用者指引

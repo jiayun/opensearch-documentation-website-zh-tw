@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Constant keyword
 nav_order: 30
@@ -9,17 +10,17 @@ redirect_from:
   - /field-types/supported-field-types/constant-keyword/
 ---
 
-# Constant keyword field type
-**Introduced 2.14**
+# Constant keyword 欄位類型
+**自 2.14 版起推出**
 {: .label .label-purple }
 
-A constant keyword field uses the same value for all documents in the index. 
+Constant keyword 欄位對索引中的所有文件使用相同的值。
 
-When a search request spans multiple indexes, you can filter on a constant keyword field to match documents from indexes with the given constant value but not from indexes with a different value.
+當搜尋請求橫跨多個索引時，您可以依 constant keyword 欄位進行篩選，以比對來自具有指定常數值之索引的文件，而不比對來自具有不同值之索引的文件。
 
-## Example
+## 範例
 
-The following query creates a mapping with a constant keyword field:
+下列查詢會建立含有 constant keyword 欄位的對應：
 
 ```json
 PUT romcom_movies
@@ -36,11 +37,11 @@ PUT romcom_movies
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by constant keyword field types. All values are required.
+下表列出 constant keyword 欄位類型接受的參數。所有值皆為必要。
 
-Parameter | Description 
-:--- | :--- 
-`value` | The string field value for all documents in the index.
+參數 | 說明
+:--- | :---
+`value` | 索引中所有文件的字串欄位值。
 

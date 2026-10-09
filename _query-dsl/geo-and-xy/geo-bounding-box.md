@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Geo-bounding box
+title: "地理邊界框"
 parent: Geographic and xy queries
 nav_order: 10
 redirect_from:
@@ -8,15 +9,15 @@ redirect_from:
   - /query-dsl/query-dsl/geo-and-xy/geo-bounding-box/
 ---
 
-# Geo-bounding box query
+# 地理邊界框查詢
 
-To search for documents that contain [geopoint]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point/) fields, use a geo-bounding box query. The geo-bounding box query returns documents whose geopoints are within the bounding box specified in the query. A document with multiple geopoints matches the query if at least one geopoint is within the bounding box.
+若要搜尋包含 [geopoint]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point/) 欄位的文件，請使用地理邊界框查詢。地理邊界框查詢會傳回其 geopoint 位於查詢中所指定邊界框內的文件。若文件包含多個 geopoint，只要至少有一個 geopoint 位於邊界框內，該文件即符合查詢。
 
-## Example
+## 範例
 
-You can use a geo-bounding box query to search for documents that contain geopoints. 
+您可以使用地理邊界框查詢來搜尋包含 geopoint 的文件。
 
-Create a mapping with the `point` field mapped as `geo_point`:
+建立對應，將 `point` 欄位對應為 `geo_point`：
 
 ```json
 PUT testindex1
@@ -32,7 +33,7 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-Index three geopoints as objects with latitudes and longitudes:
+將三個 geopoint 編製索引為具有緯度和經度的物件：
 
 ```json
 PUT testindex1/_doc/1
@@ -67,7 +68,7 @@ PUT testindex1/_doc/3
 ```
 {% include copy-curl.html %}
 
-Search for all documents and filter the documents whose points lie within the rectangle defined in the query:
+搜尋所有文件，並篩選出點位於查詢中所定義矩形內的文件：
 
 ```json
 GET testindex1/_search
@@ -97,7 +98,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含符合的文件：
 
 ```json
 {
@@ -132,28 +133,28 @@ The response contains the matching document:
 }
 ```
 
-The preceding response does not include the document with a geopoint of `"lat": 75.00, "lon": 28.00` because of the geopoint's limited [precision](#precision).
+上述回應不包含 geopoint 為 `"lat": 75.00, "lon": 28.00` 的文件，這是因為 geopoint 的[精確度](#precision)有限。
 {: .note}
 
-## Precision
+## 精確度
 
-Geopoint coordinates are always rounded down at index time. At query time, the upper boundaries of the bounding box are rounded down, and the lower boundaries are rounded up. Therefore, the documents with geopoints that lie on the lower and left edges of the bounding box might not be included in the results due to rounding error. On the other hand, geopoints that lie on the upper and right edges of the bounding box might be included in the results even though they are outside the boundaries. The rounding error is less than 4.20 &times; 10<sup>&minus;8</sup> degrees for latitude and less than 8.39 &times; 10<sup>&minus;8</sup> degrees for longitude (around 1 cm). 
+geopoint 座標在編製索引時一律會向下捨入。查詢時，邊界框的上界會向下捨入，下界則會向上捨入。因此，位於邊界框下緣和左緣的 geopoint 文件，可能因捨入誤差而不包含在結果中。另一方面，位於邊界框上緣和右緣的 geopoint，即使超出邊界，仍可能包含在結果中。緯度的捨入誤差小於 4.20 &times; 10<sup>&minus;8</sup> 度，經度的捨入誤差小於 8.39 &times; 10<sup>&minus;8</sup> 度（約 1 公分）。
 
-## Specifying the bounding box
+## 指定邊界框
 
-You can specify the bounding box by providing vertex coordinates, a geohash, or a [Well-Known Text (WKT)](https://docs.opengeospatial.org/is/12-063r5/12-063r5.html) string.
+您可以提供頂點座標、geohash 或 [Well-Known Text (WKT)](https://docs.opengeospatial.org/is/12-063r5/12-063r5.html) 字串來指定邊界框。
 
-### Using vertex coordinates to specify the bounding box
+### 使用頂點座標指定邊界框
 
-Provide any of the following combinations of vertex coordinates:
+提供下列任一頂點座標組合：
 
-- `top_left` and `bottom_right`
-- `top_right` and `bottom_left`
-- `top`, `left`, `bottom`, and `right`
+- `top_left` 和 `bottom_right`
+- `top_right` 和 `bottom_left`
+- `top`、`left`、`bottom` 和 `right`
 
-Specify the coordinate values in any [format]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point#formats) that the geopoint field type accepts.
+以 geopoint 欄位類型可接受的任何[格式]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point#formats)指定座標值。
 
-The following example shows how to specify the bounding box using the `top`, `left`, `bottom`, and `right` coordinates:
+下列範例顯示如何使用 `top`、`left`、`bottom` 和 `right` 座標指定邊界框：
 
 ```json
 GET testindex1/_search
@@ -179,11 +180,11 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-### Using a geohash to specify the bounding box
+### 使用 geohash 指定邊界框
 
-If you use a geohash to specify the bounding box, the geohash is treated as a rectangle. The upper-left vertex of the bounding box corresponds to the upper-left vertex of the `top_left` geohash, and the lower-right vertex of the bounding box corresponds to the lower-right vertex of the `bottom_right` geohash. 
+如果您使用 geohash 指定邊界框，該 geohash 會視為一個矩形。邊界框的左上頂點對應至 `top_left` geohash 的左上頂點，而邊界框的右下頂點對應至 `bottom_right` geohash 的右下頂點。
 
-The following example shows how to use a geohash to specify the same bounding box as the previous examples:
+下列範例顯示如何使用 geohash 指定與前述範例相同的邊界框：
 
 ```json
 GET testindex1/_search
@@ -207,7 +208,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-To specify a bounding box that covers the whole area of a geohash, provide that geohash as both `top_left` and `bottom_right` parameters of the bounding box:
+若要指定涵蓋某個 geohash 整個區域的邊界框，請將該 geohash 同時提供為邊界框的 `top_left` 和 `bottom_right` 參數：
 
 ```json
 GET testindex1/_search
@@ -231,11 +232,11 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-### Using WKT to specify the bounding box
+### 使用 WKT 指定邊界框
 
-To define the bounding box in WKT format, provide the `wkt` parameter with a bounding rectangle in the form `BBOX (minLon, maxLon, maxLat, minLat)`. `BBOX` is the only WKT geometry that a geo-bounding box query accepts.
+若要以 WKT 格式定義邊界框，請提供 `wkt` 參數，並以 `BBOX (minLon, maxLon, maxLat, minLat)` 形式提供邊界矩形。`BBOX` 是地理邊界框查詢唯一接受的 WKT 幾何圖形。
 
-The following example shows how to use WKT to specify the same bounding box as the previous examples:
+下列範例顯示如何使用 WKT 指定與前述範例相同的邊界框：
 
 ```json
 GET testindex1/_search
@@ -258,14 +259,14 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-Geo-bounding box queries accept the following parameters.
+地理邊界框查詢接受下列參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :--- 
-`_name` | String | The name of the filter. Optional.
-`validation_method` | String | The validation method. Valid values are `IGNORE_MALFORMED` (accept geopoints with invalid coordinates), `COERCE` (try to coerce coordinates to valid values), and `STRICT` (return an error when coordinates are invalid). Default is `STRICT`.
-`type` | String | Specifies how to execute the filter. Valid values are `indexed` (index the filter) and `memory` (execute the filter in memory). Default is `memory`.
-`ignore_unmapped` | Boolean | Specifies whether to ignore an unmapped field. If set to `true`, the query does not return any documents that have an unmapped field. If set to `false`, an exception is thrown when the field is unmapped. Default is `false`.
+`_name` | 字串 | 篩選條件的名稱。選用。
+`validation_method` | 字串 | 驗證方法。有效值為 `IGNORE_MALFORMED`（接受含無效座標的 geopoint）、`COERCE`（嘗試將座標強制轉換為有效值），以及 `STRICT`（座標無效時傳回錯誤）。預設為 `STRICT`。
+`type` | 字串 | 指定篩選條件的執行方式。有效值為 `indexed`（將篩選條件編製索引）和 `memory`（在記憶體中執行篩選條件）。預設為 `memory`。
+`ignore_unmapped` | 布林值 | 指定是否忽略未對應的欄位。若設為 `true`，查詢不會傳回任何具有未對應欄位的文件。若設為 `false`，則欄位未對應時會擲回例外狀況。預設為 `false`。
 

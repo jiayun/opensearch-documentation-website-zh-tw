@@ -1,13 +1,14 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Scoring script filter
+title: "評分指令碼篩選器"
 parent: Filtering data
 nav_order: 30
 ---
 
-# Scoring script filter
+# 評分指令碼篩選器
 
-A scoring script filter first filters the documents and then uses a brute-force exact k-NN search on the results. For example, the following query searches for hotels with a rating between 8 and 10, inclusive, that provide parking and then performs a k-NN search to return the 3 hotels that are closest to the specified `location`:
+評分指令碼篩選器會先篩選文件，然後對結果使用暴力精確 k-NN 搜尋。例如，下列查詢會搜尋評分介於 8 到 10（含）之間且提供停車位的飯店，然後執行 k-NN 搜尋，以傳回最接近指定 `location` 的 3 間飯店：
 
 ```json
 POST /hotels-index/_search

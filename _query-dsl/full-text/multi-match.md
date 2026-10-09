@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Multi-match
+title: "多重比對"
 parent: Full-text queries
 nav_order: 50
 ---
 
-# Multi-match queries
+# 多重比對查詢
 
-A multi-match operation functions similarly to the [match]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match/) operation. You can use a `multi_match` query to search multiple fields. 
+多重比對操作的運作方式類似於 [match]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match/) 操作。您可以使用 `multi_match` 查詢搜尋多個欄位。
 
-The `^` "boosts" certain fields. Boosts are multipliers that weigh matches in one field more heavily than matches in other fields. In the following example, a match for "wind" in the title field influences `_score` four times as much as a match in the plot field:
+`^` 會「提升」某些欄位的權重。提升值是乘數，會讓某個欄位的匹配比其他欄位的匹配更具份量。在以下範例中，title 欄位中對「wind」的匹配對 `_score` 的影響是 plot 欄位中匹配的四倍：
 
 ```json
 GET _search
@@ -24,9 +25,9 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-The result is that films like *The Wind Rises* and *Gone with the Wind* are near the top of the search results, and films like *Twister*, which presumably have "wind" in their plot summaries, are near the bottom.
+結果是像 *The Wind Rises* 和 *Gone with the Wind* 這類電影會接近搜尋結果頂端，而像 *Twister* 這類電影（其劇情摘要中應該有「wind」）則接近底端。
 
-You can use wildcards in the field name. For example, the following query will search the `speaker` field and all fields that start with `play_`, for example, `play_name` or `play_title`:
+您可以在欄位名稱中使用萬用字元。例如，下列查詢會搜尋 `speaker` 欄位以及所有以 `play_` 開頭的欄位，例如 `play_name` 或 `play_title`：
 
 ```json
 GET _search
@@ -41,27 +42,27 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-If you don't provide the `fields` parameter, `multi_match` query searches the fields specified in the `index.query. Default_field` setting, which defaults to `*`. The default behavior is to extract all fields in the mapping that are eligible for [term-level queries]({{site.url}}{{site.baseurl}}/query-dsl/term/index/), filter the metadata fields, and combine all extracted fields to build a query.
+如果您未提供 `fields` 參數，`multi_match` 查詢會搜尋 `index.query. Default_field` 設定中指定的欄位，該設定預設為 `*`。預設行為是擷取對應中所有符合 [詞彙層級查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/index/) 資格的欄位、篩除中繼資料欄位，並結合所有擷取的欄位來建立查詢。
 
-The maximum number of clauses in a query is defined in the `indices.query.bool.max_clause_count` setting, which defaults to 1,024. 
+查詢中子句的最大數量由 `indices.query.bool.max_clause_count` 設定定義，預設值為 1,024。
 {: .note}
 
-## Multi-match query types
+## 多重比對查詢類型
 
-OpenSearch supports the following multi-match query types, which differ in the way the query is executed internally:
+OpenSearch 支援下列多重比對查詢類型，這些類型在內部執行查詢的方式上有所不同：
 
-- [`best_fields`](#best-fields) (default): Returns documents that match any field. Uses the `_score` of the best-matching field. 
-- [`most_fields`](#most-fields): Returns documents that match any field. Uses a combined score of each matching field.
-- [`cross_fields`](#cross-fields): Treats all fields as if they were one field. Processes fields with the same `analyzer` and matches words in any field. 
-- [`phrase`](#phrase): Runs a `match_phrase` query on each field. Uses the `_score` of the best-matching field.
-- [`phrase_prefix`](#phrase-prefix): Runs a `match_phrase_prefix` query on each field. Uses the `_score` of the best-matching field.
-- [`bool_prefix`](#boolean-prefix): Runs a `match_bool_prefix` query on each field. Uses a combined score of each matched field.
+- [`best_fields`](#best-fields)（預設）：回傳符合任一欄位的文件。使用最佳匹配欄位的 `_score`。
+- [`most_fields`](#most-fields)：回傳符合任一欄位的文件。使用各匹配欄位的合併分數。
+- [`cross_fields`](#cross-fields)：將所有欄位視為單一欄位。將具有相同 `analyzer` 的欄位一起處理，並匹配任一欄位中的詞。
+- [`phrase`](#phrase)：在每個欄位上執行 `match_phrase` 查詢。使用最佳匹配欄位的 `_score`。
+- [`phrase_prefix`](#phrase-prefix)：在每個欄位上執行 `match_phrase_prefix` 查詢。使用最佳匹配欄位的 `_score`。
+- [`bool_prefix`](#boolean-prefix)：在每個欄位上執行 `match_bool_prefix` 查詢。使用各匹配欄位的合併分數。
 
-## Best fields 
+## 最佳欄位
 
-If you're searching for two words that specify a concept, you want the results where the two words are next to each other to score higher. 
+如果您要搜尋指定某個概念的兩個詞，您會希望這兩個詞相鄰的結果獲得較高分數。
 
-For example, consider an index that contains the following scientific articles:
+例如，假設有一個包含下列科學文章的索引：
 
 ```json
 PUT /articles/_doc/1
@@ -81,7 +82,7 @@ PUT /articles/_doc/2
 ```
 {% include copy-curl.html %}
 
-You can search for articles containing `northern lights` in the title or description:
+您可以搜尋 title 或 description 中包含 `northern lights` 的文章：
 
 ```json
 GET articles/_search
@@ -98,7 +99,7 @@ GET articles/_search
 ```
 {% include copy-curl.html %}
 
-The preceding query is executed as the following [`dis_max`]({{site.url}}{{site.baseurl}}/query-dsl/compound/disjunction-max/) query with a `match` query for each field:
+上述查詢會以對每個欄位各執行一個 `match` 查詢的 [`dis_max`]({{site.url}}{{site.baseurl}}/query-dsl/compound/disjunction-max/) 查詢形式執行：
 
 ```json
 GET /articles/_search
@@ -115,7 +116,7 @@ GET /articles/_search
 }
 ```
 
-The results contain both documents, but document 1 is scored higher because both words are in the `description` field:
+結果包含兩份文件，但文件 1 的分數較高，因為兩個詞都出現在 `description` 欄位中：
 
 ```json
 {
@@ -157,13 +158,13 @@ The results contain both documents, but document 1 is scored higher because both
 }
 ```
 
-The `best_fields` query uses the score of the best-matching field. If you specify a `tie_breaker`, the score is calculated using the following algorithm:
+`best_fields` 查詢使用最佳匹配欄位的分數。如果您指定 `tie_breaker`，分數會以下列演算法計算：
 
-Take the score of the best-matching field and add (`tie_breaker` * `_score`) for all other matching fields.
+取最佳匹配欄位的分數，並對所有其他匹配欄位加上（`tie_breaker` * `_score`）。
 
-## Most fields 
+## 最多欄位
 
-Use the `most_fields` query for multiple fields that contain the same text that is analyzed in different ways. For example, the original field may contain text analyzed with the `standard` analyzer and another field may contain the same text analyzed with the `english` analyzer, which performs stemming:
+`most_fields` 查詢適用於包含相同文字但以不同方式分析的多個欄位。例如，原始欄位可能包含以 `standard` 分析器分析的文字，而另一個欄位可能包含以執行詞幹提取的 `english` 分析器分析的相同文字：
 
 ```json
 PUT /articles
@@ -185,7 +186,7 @@ PUT /articles
 ```
 {% include copy-curl.html %}
 
-Consider the following two documents that are indexed in the `articles` index:
+考慮在 `articles` 索引中編製索引的下列兩份文件：
 
 ```json
 PUT /articles/_doc/1
@@ -203,9 +204,9 @@ PUT /articles/_doc/2
 ```
 {% include copy-curl.html %}
 
-The `standard` analyzer analyzes the title `Buttered toast` into [`buttered`, `toasts`] and the title `Buttering a toast` into [`buttering`, `a`, `toast`]. On the other hand, the `english` analyzer produces the same token list [`butter`, `toast`] for both titles because of stemming.
+`standard` 分析器將標題 `Buttered toast` 分析為 [`buttered`, `toasts`]，並將標題 `Buttering a toast` 分析為 [`buttering`, `a`, `toast`]。另一方面，`english` 分析器因為詞幹提取，對兩個標題都產生相同的詞元清單 [`butter`, `toast`]。
 
-You can use the `most_fields` query in order to return as many documents as possible:
+您可以使用 `most_fields` 查詢以回傳盡可能多的文件：
 
 ```json
 GET /articles/_search
@@ -224,7 +225,7 @@ GET /articles/_search
 ```
 {% include copy-curl.html %}
 
-The preceding query is executed as the following Boolean query:
+上述查詢會以下列布林查詢的形式執行：
 
 ```json
 GET articles/_search
@@ -240,9 +241,9 @@ GET articles/_search
 }
 ```
 
-To calculate the relevance score, a document's scores for all `match` clauses are added together and then the result is divided by the number of `match` clauses.
+為計算相關性分數，文件在所有 `match` 子句上的分數會相加，然後將結果除以 `match` 子句的數量。
 
-Including the `title.english` field retrieves the second document that matches the stemmed tokens:
+納入 `title.english` 欄位可擷取符合詞幹化詞元的第二份文件：
 
 ```json
 {
@@ -282,13 +283,13 @@ Including the `title.english` field retrieves the second document that matches t
 }
 ```
 
-Because both `title` and `title.english` fields match for the first document, it has a higher relevance score.
+因為 `title` 和 `title.english` 欄位都符合第一份文件，所以它的相關性分數較高。
 
-## Operator and minimum should match
+## 運算子與最低應符合數量
 
-The `best_fields` and `most_fields` queries generate a match query on a field basis (one per field). Thus, the `minimum_should_match` and `operator` parameters are applied to each field, which is normally not the desired behavior. 
+`best_fields` 與 `most_fields` 查詢會以欄位為基礎產生 match 查詢（每個欄位一個）。因此，`minimum_should_match` 與 `operator` 參數會套用至每個欄位，這通常不是您想要的行為。
 
-For example, consider a `customers` index with the following documents: 
+例如，假設有一個 `customers` 索引包含下列文件：
 
 ```json
 PUT customers/_doc/1 
@@ -308,7 +309,7 @@ PUT customers/_doc/2
 ```
 {% include copy-curl.html %}
 
-If you're searching for `John Doe` in the `customers` index, you might construct the following query:
+如果您要在 `customers` 索引中搜尋 `John Doe`，您可能會建構下列查詢：
 
 ```json
 GET customers/_validate/query?explain
@@ -325,7 +326,7 @@ GET customers/_validate/query?explain
 ```
 {% include copy-curl.html %}
 
-The intent of the `and` operator in this query is to find a document that matches `John` and `Doe`. However, the query does not return any results. You can learn how the query is executed by running the Validate API:
+此查詢中 `and` 運算子的用意是要找出同時符合 `John` 與 `Doe` 的文件。然而，此查詢不會傳回任何結果。您可以執行 Validate API 來了解查詢的執行方式：
 
 ```json
 GET customers/_validate/query?explain
@@ -342,7 +343,7 @@ GET customers/_validate/query?explain
 ```
 {% include copy-curl.html %}
 
-From the response, you can see that the query is trying to match both `John` and `Doe` to either the `first_name` or `last_name` field:
+從回應中可以看出，此查詢嘗試將 `John` 與 `Doe` 兩者都對應到 `first_name` 或 `last_name` 欄位：
 
 ```json
 {
@@ -362,22 +363,22 @@ From the response, you can see that the query is trying to match both `John` and
 }
 ```
 
-Because neither field contains both words, no results are returned. 
+因為這兩個欄位都不包含這兩個詞，所以不會傳回任何結果。
 
-A better alternative for searching across fields is to use the [`cross_fields`](#cross-fields) query. Unlike the field-centric `best_fields` and `most_fields` queries, `cross_fields` query is term-centric.
+跨欄位搜尋的更好替代方案是使用 [`cross_fields`](#cross-fields) 查詢。與以欄位為中心的 `best_fields` 與 `most_fields` 查詢不同，`cross_fields` 查詢是以詞為中心。
 
-## Cross fields 
+## 跨欄位
 
-Use the `cross_fields` query to search for data across multiple fields. For example, if an index contains customer data, the first name and last name of the customer reside in different fields. Yet, when you search for `John Doe`, you want to receive documents in which `John` is in the `first_name` field and `Doe` is in the `last_name` field.
+使用 `cross_fields` 查詢來跨多個欄位搜尋資料。例如，如果某個索引包含客戶資料，客戶的名字和姓氏會位於不同的欄位。然而，當您搜尋 `John Doe` 時，您會希望收到 `first_name` 欄位中有 `John` 且 `last_name` 欄位中有 `Doe` 的文件。
 
-The `most_fields` query does not work in this case because of the following problems:
+`most_fields` 查詢在此情況下無法運作，原因如下：
 
-- The [`operator` and `minimum_should_match`](#operator-and-minimum-should-match) parameters are applied on a field basis instead of on a term basis.
-- Term frequencies in the `first_name` and `last_name` fields can lead to unexpected results. For example, if someone's first name happens to be `Doe`, a document with this name will be presumed a better match because this first name will not appear in any other documents.
+- [`operator` 與 `minimum_should_match`](#operator-and-minimum-should-match) 參數是以欄位為基礎套用，而非以詞為基礎。
+- `first_name` 與 `last_name` 欄位中的詞頻可能導致非預期的結果。例如，如果某人的名字剛好是 `Doe`，則具有此名字的文件會被認為是更好的相符項目，因為這個名字不會出現在任何其他文件中。
 
-The `cross_fields` query analyzes the query string into individual terms and then searches for each of the terms in any of the fields, as if they were one field.
+`cross_fields` 查詢會將查詢字串分析成個別的詞，然後在任一欄位中搜尋每一個詞，就像它們是同一個欄位一樣。
 
-The following is the `cross_fields` query for `John Doe`:
+以下是 `John Doe` 的 `cross_fields` 查詢：
 
 ```json
 GET /customers/_search
@@ -394,7 +395,7 @@ GET /customers/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the only document in which both `John` and `Doe` are present:
+回應中只包含同時具有 `John` 與 `Doe` 的那一份文件：
 
 ```json
 {
@@ -427,7 +428,7 @@ The response contains the only document in which both `John` and `Doe` are prese
 }
 ```
 
-You can use the validate API operation to gain insight into how the preceding query is executed:
+您可以使用 validate API 操作來深入了解上述查詢的執行方式：
 
 ```json
 GET /customers/_validate/query?explain
@@ -444,7 +445,7 @@ GET /customers/_validate/query?explain
 ```
 {% include copy-curl.html %}
 
-From the response, you can see that the query is searching for all terms in at least one field:
+從回應中可以看出，此查詢會在至少一個欄位中搜尋所有詞：
 
 ```json
 {
@@ -464,26 +465,26 @@ From the response, you can see that the query is searching for all terms in at l
 }
 ```
 
-Thus, blending the term frequencies for all fields solves the problem of differing term frequencies by correcting for the differences.
+因此，混合所有欄位的詞頻可透過修正差異來解決詞頻不同的問題。
 
-The `cross_fields` query is usually only useful on short string fields with a `boost` of 1. In other cases, the score does not produce a meaningful blend of term statistics because of the way boosts, term frequencies, and length normalization contribute to the score.
+`cross_fields` 查詢通常只對 `boost` 為 1 的短字串欄位有用。在其他情況下，由於 boost、詞頻與長度正規化對分數的貢獻方式，分數無法產生有意義的詞統計混合。
 {: .note}
 
-The `fuzziness` parameter is not supported for `cross_fields` queries.
+`cross_fields` 查詢不支援 `fuzziness` 參數。
 {: .note}
 
-### Analysis
+### 分析
 
-The `cross_fields` query only works as a term-centric query on fields with the same analyzer. Fields with the same analyzer are grouped together and these groups are combined with a Boolean query. 
+`cross_fields` 查詢只有在具有相同分析器的欄位上才會以詞為中心的方式運作。具有相同分析器的欄位會群組在一起，而這些群組會以布林查詢合併。
 
-For example, consider an index where the `first_name` and `last_name` fields are analyzed with the default `standard`
- analyzer and their `.edge` subfields are analyzed with an edge n-gram analyzer:
+例如，假設有一個索引，其中 `first_name` 與 `last_name` 欄位使用預設的 `standard`
+ 分析器進行分析，而其 `.edge` 子欄位使用 edge n-gram 分析器進行分析：
 
 <details markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta}
+<summary>
+    回應
+</summary>
+{: .text-delta}
 
 ```json
 PUT customers
@@ -532,7 +533,7 @@ PUT customers
 
 </details>
 
-You index one document in the `customers` index:
+您在 `customers` 索引中將一份文件編製索引：
 
 ```json
 PUT /customers/_doc/1
@@ -543,7 +544,7 @@ PUT /customers/_doc/1
 ```
 {% include copy-curl.html %}
 
-You can use a `cross_fields` query to search across the fields for `John Doe`:
+您可以使用 `cross_fields` 查詢來跨欄位搜尋 `John Doe`：
 
 ```json
 GET /customers/_search
@@ -562,7 +563,7 @@ GET /customers/_search
 ```
 {% include copy-curl.html %}
 
-To see how the query is executed, you can run the Validate API:
+若要查看查詢的執行方式，您可以執行 Validate API：
 
 ```json
 GET /customers/_validate/query?explain
@@ -581,7 +582,7 @@ GET /customers/_validate/query?explain
 ```
 {% include copy-curl.html %}
 
-The response shows that the `last_name` and `first_name` fields are grouped together and treated as a single field. Similarly, the `last_name.edge` and `first_name.edge` fields are grouped together and treated as a single field:
+回應顯示 `last_name` 與 `first_name` 欄位會群組在一起並視為單一欄位。同樣地，`last_name.edge` 與 `first_name.edge` 欄位也會群組在一起並視為單一欄位：
 
 ```json
 {
@@ -601,7 +602,7 @@ The response shows that the `last_name` and `first_name` fields are grouped toge
 }
 ```
 
-Using the `operator` or `minimum_should_match` parameters with multiple field groups like the preceding ones can lead to the problem described in the [previous section](#operator-and-minimum-should-match). To avoid it, you can rewrite the previous query as two `cross_fields` subqueries combined with a Boolean query and apply the `minimum_should_match` to one of the subqueries:
+將 `operator` 或 `minimum_should_match` 參數與上述的多個欄位群組搭配使用，可能會導致 [上一節](#operator-and-minimum-should-match) 所述的問題。若要避免此問題，您可以將上述查詢改寫為兩個以布林查詢合併的 `cross_fields` 子查詢，並將 `minimum_should_match` 套用至其中一個子查詢：
 
 ```json
 GET /customers/_search
@@ -637,7 +638,7 @@ GET /customers/_search
 ```
 {% include copy-curl.html %}
 
-To create one group for all fields, specify an analyzer in your query:
+若要為所有欄位建立一個群組，請在查詢中指定分析器：
 
 ```json
 GET customers/_search
@@ -654,7 +655,7 @@ GET customers/_search
 ```
 {% include copy-curl.html %}
 
-Running the Validate API on the previous query shows how the query is executed:
+對上述查詢執行 Validate API 可顯示查詢的執行方式：
 
 ```json
 {
@@ -674,11 +675,11 @@ Running the Validate API on the previous query shows how the query is executed:
 }
 ```
 
-## Phrase 
+## 片語 
 
-The `phrase` query behaves similarly to the [`best_fields`](#best-fields) query but uses a `match_phrase` query instead of a `match` query.
+`phrase` 查詢的行為與 [`best_fields`](#best-fields) 查詢類似，但使用 `match_phrase` 查詢，而非 `match` 查詢。
 
-The following is an example `phrase` query for the index described in the [`best_fields`](#best-fields) section:
+以下是針對 [`best_fields`](#best-fields) 一節所述索引的 `phrase` 查詢範例：
 
 ```json
 GET articles/_search
@@ -694,7 +695,7 @@ GET articles/_search
 ```
 {% include copy-curl.html %}
 
-The preceding query is executed as the following [`dis_max`]({{site.url}}{{site.baseurl}}/query-dsl/compound/disjunction-max/) query with a `match_phrase` query for each field:
+上述查詢會以下列 [`dis_max`]({{site.url}}{{site.baseurl}}/query-dsl/compound/disjunction-max/) 查詢的形式執行，每個欄位各使用一個 `match_phrase` 查詢：
 
 ```json
 GET articles/_search
@@ -710,13 +711,13 @@ GET articles/_search
 }
 ```
 
-Because by default a `phrase` query matches text only when the terms appear in the same order, only document 1 is returned in the results:
+由於 `phrase` 查詢預設只有在詞彙以相同順序出現時才會比對文字，因此結果只會傳回文件 1：
 
 <details markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta}
+<summary>
+    回應
+</summary>
+{: .text-delta}
 
 ```json
 {
@@ -750,7 +751,7 @@ Because by default a `phrase` query matches text only when the terms appear in t
 ```
 </details>
 
-You can use the `slop` parameter to allow other words between words in query phrase. For example, the following query accepts text as a match if up to two words are between `flourescent` and `therapy`:
+您可以使用 `slop` 參數，允許查詢片語中的字詞之間出現其他字詞。例如，以下查詢會將 `flourescent` 和 `therapy` 之間最多包含兩個字詞的文字視為相符：
 
 ```json
 GET articles/_search
@@ -767,13 +768,13 @@ GET articles/_search
 ```
 {% include copy-curl.html %}
 
-The response contains document 2:
+回應包含文件 2：
 
 <details markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta}
+<summary>
+    回應
+</summary>
+{: .text-delta}
 
 ```json
 {
@@ -807,16 +808,16 @@ The response contains document 2:
 ```
 </details>
 
-For `slop` values less than 2, no documents are returned.
+當 `slop` 值小於 2 時，不會傳回任何文件。
 
-The `fuzziness` parameter is not supported for `phrase` queries.
+`phrase` 查詢不支援 `fuzziness` 參數。
 {: .note}
 
-## Phrase prefix 
+## 片語前綴 
 
-The `phrase_prefix` query behaves similarly to the [`phrase`](#phrase) query but uses a `match_phrase_prefix` query instead of a `match_phrase` query.
+`phrase_prefix` 查詢的行為與 [`phrase`](#phrase) 查詢類似，但使用 `match_phrase_prefix` 查詢，而非 `match_phrase` 查詢。
 
-The following is an example `phrase_prefix` query for the index described in the [`best_fields`](#best-fields) section:
+以下是針對 [`best_fields`](#best-fields) 一節所述索引的 `phrase_prefix` 查詢範例：
 
 ```json
 GET articles/_search
@@ -832,7 +833,7 @@ GET articles/_search
 ```
 {% include copy-curl.html %}
 
-The preceding query is executed as the following [`dis_max`]({{site.url}}{{site.baseurl}}/query-dsl/compound/disjunction-max/) query with a `match_phrase_prefix` query for each field:
+上述查詢會以下列 [`dis_max`]({{site.url}}{{site.baseurl}}/query-dsl/compound/disjunction-max/) 查詢的形式執行，每個欄位各使用一個 `match_phrase_prefix` 查詢：
 
 ```json
 GET articles/_search
@@ -848,16 +849,16 @@ GET articles/_search
 }
 ```
 
-You can use the `slop` parameter to allow other words between words in query phrase.
+您可以使用 `slop` 參數，允許查詢片語中的字詞之間出現其他字詞。
 
-The `fuzziness` parameter is not supported for `phrase_prefix` queries.
+`phrase_prefix` 查詢不支援 `fuzziness` 參數。
 {: .note}
 
-## Boolean prefix 
+## 布林前綴 
 
-The `bool_prefix` query scores documents similarly to the [`most_fields`](#most-fields) query but uses a [`match_bool_prefix`]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-bool-prefix/) query instead of a `match` query.
+`bool_prefix` 查詢對文件評分的方式與 [`most_fields`](#most-fields) 查詢類似，但使用 [`match_bool_prefix`]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-bool-prefix/) 查詢，而非 `match` 查詢。
 
-The following is an example `bool_prefix` query for the index described in the [`best_fields`](#best-fields) section:
+以下是針對 [`best_fields`](#best-fields) 一節所述索引的 `bool_prefix` 查詢範例：
 
 ```json
 GET articles/_search
@@ -873,7 +874,7 @@ GET articles/_search
 ```
 {% include copy-curl.html %}
 
-The preceding query is executed as the following [`dis_max`]({{site.url}}{{site.baseurl}}/query-dsl/compound/disjunction-max/) query with a `match_bool_prefix` query for each field:
+上述查詢會以下列 [`dis_max`]({{site.url}}{{site.baseurl}}/query-dsl/compound/disjunction-max/) 查詢的形式執行，每個欄位各使用一個 `match_bool_prefix` 查詢：
 
 ```json
 GET articles/_search
@@ -889,43 +890,43 @@ GET articles/_search
 }
 ```
 
-The `fuzziness`, `prefix_length`, `max_expansions`, `fuzzy_rewrite`, and `fuzzy_transpositions` parameters are supported for the terms that are used to construct term queries, but they do not have an effect on the prefix query constructed from the final term.
+用於建構詞彙查詢的詞彙支援 `fuzziness`、`prefix_length`、`max_expansions`、`fuzzy_rewrite` 和 `fuzzy_transpositions` 參數，但這些參數不會影響由最後一個詞彙建構的前綴查詢。
 {: .note}
 
-## Parameters
+## 參數
 
-The query accepts the following parameters. All parameters except `query` are optional.
+此查詢接受下列參數。除了 `query` 之外，所有參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`query` | String | The query string to use for search. Required.
-`auto_generate_synonyms_phrase_query` | Boolean | Specifies whether to create a [match phrase query]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/) automatically for multi-term synonyms. For example, if you specify `ba,batting average` as synonyms and search for `ba`, OpenSearch searches for `ba OR "batting average"` (if this option is `true`) or `ba OR (batting AND average)` (if this option is `false`). Default is `true`.
-`analyzer` | String | The [analyzer]({{site.url}}{{site.baseurl}}/analyzers/index/) used to tokenize the query string text. Default is the index-time analyzer specified for the `default_field`. If no analyzer is specified for the `default_field`, the `analyzer` is the default analyzer for the index. For more information about `index.query.default_field`, see [Dynamic index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings).
-`boost` | Floating-point | Boosts the clause by the given multiplier. Useful for weighing clauses in compound queries. Values in the [0, 1) range decrease relevance, and values greater than 1 increase relevance. Default is `1`.
-`fields` | Array of strings | The list of fields in which to search. If you don't provide the `fields` parameter, `multi_match` query searches the fields specified in the `index.query.default_field` setting, which defaults to `*`. 
-`fuzziness` | String | The number of character edits (insert, delete, substitute) that it takes to change one word to another when determining whether a term matched a value. For example, the distance between `wined` and `wind` is 1. Valid values are non-negative integers or `AUTO`. The default, `AUTO`, dynamically selects the edit distance based on the search term's length. You can customize the thresholds using the syntax `AUTO:[low],[high]`, where `low` and `high` define the character length boundaries. When omitted, OpenSearch uses `AUTO:3,6` as the default, which applies the following rules: <br>- Terms containing 0--2 characters: Requires an exact match (0 edits). <br>- Terms containing 3--5 characters: Allows a maximum of 1 edit. <br>- Terms containing 6 or more characters: Allows a maximum of 2 edits. <br>For example, `AUTO:4,7` requires exact matches for terms containing 0--3 characters, allows a maximum of 1 edit for terms containing 4--6 characters, and allows a maximum of 2 edits for terms containing 7 or more characters. Using `AUTO` is recommended for most scenarios. Not supported for `phrase`, `phrase_prefix`, and `cross_fields` queries.
-`fuzzy_rewrite` | String | Determines how OpenSearch rewrites the query. Valid values are `constant_score`, `scoring_boolean`, `constant_score_boolean`, `top_terms_N`, `top_terms_boost_N`, and `top_terms_blended_freqs_N`. If the `fuzziness` parameter is not `0`, the query uses a `fuzzy_rewrite` method of `top_terms_blended_freqs_${max_expansions}` by default. Default is `constant_score`. 
-`fuzzy_transpositions` | Boolean | Setting `fuzzy_transpositions` to `true` (default) adds swaps of adjacent characters to the insert, delete, and substitute operations of the `fuzziness` option. For example, the distance between `wind` and `wnid` is 1 if `fuzzy_transpositions` is true (swap "n" and "i") and 2 if it is false (delete "n", insert "n"). If `fuzzy_transpositions` is false, `rewind` and `wnid` have the same distance (2) from `wind`, despite the more human-centric opinion that `wnid` is an obvious typo. The default is a good choice for most use cases.
-`lenient` | Boolean | Setting `lenient` to `true` ignores data type mismatches between the query and the document field. For example, a query string of `"8.2"` could match a field of type `float`. Default is `false`.
-`max_expansions` | Positive integer |  The maximum number of terms to which the query can expand. Fuzzy queries “expand to” a number of matching terms that are within the distance specified in `fuzziness`. Then OpenSearch tries to match those terms. Default is `50`.
-`minimum_should_match` | Positive or negative integer, positive or negative percentage, combination | If the query string contains multiple search terms and you use the `or` operator, the number of terms that need to match for the document to be considered a match. For example, if `minimum_should_match` is 2, `wind often rising` does not match `The Wind Rises.` If `minimum_should_match` is `1`, it matches. For details, see [Minimum should match]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/).
-`operator` | String | If the query string contains multiple search terms, whether all terms need to match (`AND`) or only one term needs to match (`OR`) for a document to be considered a match. Valid values are:<br>- `OR`: The string `to be` is interpreted as `to OR be`<br>- `AND`: The string `to be` is interpreted as `to AND be`<br> Default is `OR`.
-`prefix_length` | Non-negative integer | The number of leading characters that are not considered in fuzziness. Default is `0`.
-`slop` | `0` (default) or a positive integer | Controls the degree to which words in a query can be misordered and still be considered a match. From the [Lucene documentation](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/PhraseQuery.html#getSlop--): "The number of other words permitted between words in query phrase. For example, to switch the order of two words requires two moves (the first move places the words atop one another), so to permit reorderings of phrases, the slop must be at least two. A value of zero requires an exact match." Supported for `phrase` and `phrase_prefix` query types.
-`tie_breaker` | Floating-point | A factor between 0 and 1.0 that is used to give more weight to documents that match multiple query clauses. For more information, see [The `tie_breaker` parameter`](#the-tie_breaker-parameter).
-`type` | String | The multi-match query type. Valid values are `best_fields`, `most_fields`, `cross_fields`, `phrase`, `phrase_prefix`, `bool_prefix`. Default is `best_fields`.
-`zero_terms_query` | String | In some cases, the analyzer removes all terms from a query string. For example, the `stop` analyzer removes all terms from the string `an but this`. In those cases, `zero_terms_query` specifies whether to match no documents (`none`) or all documents (`all`). Valid values are `none` and `all`. Default is `none`.
+`query` | 字串 | 用於搜尋的查詢字串。必要。
+`auto_generate_synonyms_phrase_query` | 布林值 | 指定是否自動為多詞彙同義詞建立[片語比對查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/)。例如，若您將 `ba,batting average` 指定為同義詞並搜尋 `ba`，OpenSearch 會搜尋 `ba OR "batting average"`（若此選項為 `true`）或 `ba OR (batting AND average)`（若此選項為 `false`）。預設為 `true`。
+`analyzer` | 字串 | 用於將查詢字串文字斷詞的[分析器]({{site.url}}{{site.baseurl}}/analyzers/index/)。預設為針對 `default_field` 指定的索引時分析器。若未針對 `default_field` 指定分析器，則 `analyzer` 為索引的預設分析器。如需 `index.query.default_field` 的詳細資訊，請參閱[動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)。
+`boost` | 浮點數 | 依指定的乘數提高子句的權重。適合用來調整複合查詢中子句的權重。[0, 1) 範圍內的值會降低相關性，大於 1 的值則會提高相關性。預設為 `1`。
+`fields` | 字串陣列 | 要搜尋的欄位清單。若您未提供 `fields` 參數，`multi_match` 查詢會搜尋 `index.query.default_field` 設定所指定的欄位，其預設為 `*`。 
+`fuzziness` | 字串 | 判斷詞彙是否與某個值相符時，將一個字詞變更為另一個字詞所需的字元編輯次數（插入、刪除、替換）。例如，`wined` 與 `wind` 之間的距離為 1。有效值為非負整數或 `AUTO`。預設值 `AUTO` 會根據搜尋詞彙的長度動態選擇編輯距離。您可以使用 `AUTO:[low],[high]` 語法自訂門檻，其中 `low` 和 `high` 定義字元長度的界限。省略時，OpenSearch 使用 `AUTO:3,6` 作為預設值，並套用下列規則：<br>- 包含 0--2 個字元的詞彙：必須完全相符（0 次編輯）。<br>- 包含 3--5 個字元的詞彙：最多允許 1 次編輯。<br>- 包含 6 個以上字元的詞彙：最多允許 2 次編輯。<br>例如，`AUTO:4,7` 要求包含 0--3 個字元的詞彙完全相符，包含 4--6 個字元的詞彙最多允許 1 次編輯，包含 7 個以上字元的詞彙最多允許 2 次編輯。大多數情境建議使用 `AUTO`。`phrase`、`phrase_prefix` 和 `cross_fields` 查詢不支援此參數。
+`fuzzy_rewrite` | 字串 | 決定 OpenSearch 如何改寫查詢。有效值為 `constant_score`、`scoring_boolean`、`constant_score_boolean`、`top_terms_N`、`top_terms_boost_N` 和 `top_terms_blended_freqs_N`。若 `fuzziness` 參數不是 `0`，查詢預設會使用 `top_terms_blended_freqs_${max_expansions}` 作為 `fuzzy_rewrite` 方法。預設為 `constant_score`。 
+`fuzzy_transpositions` | 布林值 | 將 `fuzzy_transpositions` 設為 `true`（預設）會在 `fuzziness` 選項的插入、刪除和替換操作之外，加入相鄰字元交換操作。例如，若 `fuzzy_transpositions` 為 true，`wind` 與 `wnid` 之間的距離為 1（交換「n」和「i」）；若為 false，距離則為 2（刪除「n」、插入「n」）。若 `fuzzy_transpositions` 為 false，`rewind` 和 `wnid` 與 `wind` 的距離相同（皆為 2），即使從人類的角度來看，`wnid` 是明顯的打字錯誤。預設值適合大多數使用案例。
+`lenient` | 布林值 | 將 `lenient` 設為 `true` 會忽略查詢與文件欄位之間的資料類型不符。例如，`"8.2"` 查詢字串可以與 `float` 類型的欄位相符。預設為 `false`。
+`max_expansions` | 正整數 |  查詢可擴展出的詞彙數量上限。模糊查詢會「擴展為」多個相符詞彙，其距離在 `fuzziness` 指定的範圍內。接著 OpenSearch 會嘗試比對這些詞彙。預設為 `50`。
+`minimum_should_match` | 正整數或負整數、正百分比或負百分比、組合 | 若查詢字串包含多個搜尋詞彙，且您使用 `or` 運算子，此參數指定文件必須符合多少個詞彙，才會被視為相符。例如，若 `minimum_should_match` 為 2，`wind often rising` 不會與 `The Wind Rises.` 相符。若 `minimum_should_match` 為 `1`，則會相符。如需詳細資訊，請參閱[最低應符合數量]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/)。
+`operator` | 字串 | 若查詢字串包含多個搜尋詞彙，此參數指定文件是否必須符合所有詞彙（`AND`），或只需符合一個詞彙（`OR`），才會被視為相符。有效值為：<br>- `OR`：字串 `to be` 會解讀為 `to OR be`<br>- `AND`：字串 `to be` 會解讀為 `to AND be`<br> 預設為 `OR`。
+`prefix_length` | 非負整數 | 模糊比對時不納入考量的開頭字元數量。預設為 `0`。
+`slop` | `0`（預設）或正整數 | 控制查詢中字詞的順序可以錯置到什麼程度，仍會被視為相符。[Lucene 文件](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/PhraseQuery.html#getSlop--) 說明：「查詢片語中的字詞之間允許出現的其他字詞數量。例如，交換兩個字詞的順序需要移動兩次（第一次移動會讓兩個字詞重疊），因此若要允許片語重新排序，slop 必須至少為 2。值為零時必須完全相符。」支援 `phrase` 和 `phrase_prefix` 查詢類型。
+`tie_breaker` | 浮點數 | 介於 0 與 1.0 之間的係數，用於給予符合多個查詢子句的文件更高的權重。如需詳細資訊，請參閱 [`tie_breaker` 參數`](#the-tie_breaker-parameter)。
+`type` | 字串 | 多重比對查詢類型。有效值為 `best_fields`、`most_fields`、`cross_fields`、`phrase`、`phrase_prefix`、`bool_prefix`。預設為 `best_fields`。
+`zero_terms_query` | 字串 | 在某些情況下，分析器會移除查詢字串中的所有詞彙。例如，`stop` 分析器會移除字串 `an but this` 中的所有詞彙。在這些情況下，`zero_terms_query` 指定是否不與任何文件相符（`none`），或與所有文件相符（`all`）。有效值為 `none` 和 `all`。預設為 `none`。
 
-The `fuzziness` parameter is not supported for `phrase`, `phrase_prefix`, and `cross_fields` queries.
+`phrase`、`phrase_prefix` 和 `cross_fields` 查詢不支援 `fuzziness` 參數。
 {: .note}
 
-The `slop` parameter is only supported for `phrase` and `phrase_prefix` queries.
+`slop` 參數僅支援 `phrase` 與 `phrase_prefix` 查詢。
 {: .note}
 
-### The `tie_breaker` parameter
+### `tie_breaker` 參數
 
-Each term-level blended query calculates the document score as the best score returned by any field in a group. The scores from all blended queries are added together to produce the final score. You can change the way the score is calculated by using the `tie_breaker` parameter. The `tie_breaker` parameter accepts the following values:
+每個詞彙層級的混合查詢會以群組中任一欄位所傳回的最佳分數來計算文件分數。所有混合查詢的分數會相加，產生最終分數。您可以使用 `tie_breaker` 參數變更分數的計算方式。`tie_breaker` 參數接受下列值：
 
-- 0.0 (default for `best_fields`, `cross_fields`, `phrase`, and `phrase_prefix` queries): Take the single best score returned by any field in a group.
-- 1.0 (default for `most_fields` and `bool_prefix` queries): Add the scores for all fields in a group.
-- A floating-point value in the (0, 1) range: Take the single best score of the best-matching field and add (`tie_breaker` * `_score`) for all other matching fields.
+- 0.0（`best_fields`、`cross_fields`、`phrase` 與 `phrase_prefix` 查詢的預設值）：取群組中任一欄位所傳回的單一最佳分數。
+- 1.0（`most_fields` 與 `bool_prefix` 查詢的預設值）：將群組中所有欄位的分數相加。
+- (0, 1) 範圍內的浮點數值：取最佳符合欄位的單一最佳分數，並為其他所有符合的欄位加上（`tie_breaker` * `_score`）。

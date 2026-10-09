@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: subquery
 parent: Commands
@@ -8,42 +9,42 @@ nav_order: 47
 
 <!-- vale off -->
 
-# subquery command
+# subquery 命令
 
 <!-- vale on -->
 
-The `subquery` command allows you to embed one PPL query within another, enabling advanced filtering and data retrieval. A subquery is executed first, and its results are used by the outer query for filtering, comparison, or joining.
+`subquery` 命令可讓您將一個 PPL 查詢嵌入另一個查詢中，以進行進階篩選與資料擷取。子查詢會先執行，其結果會由外層查詢用於篩選、比較或聯結。
 
-Common use cases for subqueries include:
+子查詢的常見使用案例包括：
 
-* Filtering data based on the results of another query.
-* Checking for the existence of related data.
-* Performing calculations that rely on aggregated values from other tables.
-* Creating complex joins with dynamic conditions.
+* 根據另一個查詢的結果篩選資料。
+* 檢查相關資料是否存在。
+* 執行依賴其他資料表彙總值的計算。
+* 建立具有動態條件的複雜聯結。
 
-## Syntax
+## 語法
 
-The `subquery` command has the following syntax:
+`subquery` 命令的語法如下：
 
 `subquery: [ source=... | ... | ... ]`  
 
-Subqueries use the same syntax as regular PPL queries but must be enclosed in square brackets. There are four main subquery types:
+子查詢使用與一般 PPL 查詢相同的語法，但必須以方括號括住。子查詢有四種主要類型：
 
 - [`IN`](#in-subquery)
 - [`EXISTS`](#exists-subquery)
-- [Scalar](#scalar-subquery)
-- [Relation](#relation-subquery)
+- [純量](#scalar-subquery)
+- [關聯](#relation-subquery)
 
-### IN subquery
+### IN 子查詢
 
-Tests whether a field value exists in the results of a subquery:
+測試某個欄位值是否存在於子查詢的結果中：
   
 ```sql
 where <field> [not] in [ source=... | ... | ... ]
 ```
 {% include copy.html %}
 
-The following are examples of the `IN` subquery syntax:
+以下為 `IN` 子查詢語法的範例：
 
 ```sql
 source = outer | where a in [ source = inner | fields b ]
@@ -59,16 +60,16 @@ source = table1 | inner join left = l right = r on l.a = r.a AND r.a in [ source
 ```
 {% include copy.html %}
   
-### EXISTS subquery
+### EXISTS 子查詢
 
-Tests whether a subquery returns any results:
+測試子查詢是否傳回任何結果：
   
 ```sql
 where [not] exists [ source=... | ... | ... ]
 ```
 {% include copy.html %}
 
-The following are examples of the `EXISTS` subquery syntax:
+以下為 `EXISTS` 子查詢語法的範例：
 
 ```sql
 // Assumptions: `a`, `b` are fields of table outer, `c`, `d` are fields of table inner,  `e`, `f` are fields of table nested
@@ -87,16 +88,16 @@ source = outer | where exists [ source = inner ] | eval l = "nonEmpty" | fields 
 ```
 {% include copy.html %}
   
-### Scalar subquery
+### 純量子查詢
 
-Returns a single value that can be used in comparisons or calculations:   
+傳回單一值，可用於比較或計算：   
   
 ```sql
 where <field> = [ source=... | ... | ... ]
 ```
 {% include copy.html %}
 
-The following are examples of the scalar subquery syntax:
+以下為純量子查詢語法的範例：
 
 ```sql
 //Uncorrelated scalar subquery in Select
@@ -123,16 +124,16 @@ source = outer | where a = [ source = inner | where c =  [ source = nested | sta
 ```
 {% include copy.html %}
   
-### Relation subquery
+### 關聯子查詢
 
-Used in `join` operations to provide dynamic right-side data:  
+用於 `join` 作業，以提供動態的右側資料：  
   
 ```sql
 | join ON condition [ source=... | ... | ... ]
 ```
 {% include copy.html %}
 
-The following are examples of the relation subquery syntax:
+以下為關聯子查詢語法的範例：
 
 ```sql
 source = table1 | join left = l right = r on condition [ source = table2 | where d > 10 | head 5 ] //subquery in join right side
@@ -140,11 +141,11 @@ source = [ source = table1 | join left = l right = r [ source = table2 | where d
 ```
 {% include copy.html %}
 
-## Configuration
+## 組態
 
-The `subquery` command behavior is configured using the `plugins.ppl.subsearch.maxout` setting, which specifies the maximum number of rows to return from the subsearch. Default is `10000`. A value of `0` indicates that the restriction is unlimited.
+`subquery` 命令的行為由 `plugins.ppl.subsearch.maxout` 設定控制，該設定指定子搜尋可傳回的最大資料列數。預設值為 `10000`。若值為 `0`，表示此限制沒有上限。
 
-To update the setting, send the following request:
+若要更新此設定，請傳送以下請求：
 
 ```json
 PUT /_plugins/_query/settings
@@ -157,9 +158,9 @@ PUT /_plugins/_query/settings
 {% include copy-curl.html %}
   
 
-## Example 1: TPC-H q20
+## 範例 1：TPC-H q20
 
-The following query demonstrates a complex TPC-H query 20 implementation using nested subqueries:
+以下查詢示範使用巢狀子查詢實作的複雜 TPC-H 查詢 20：
 
 ```sql
 source = supplier
@@ -188,9 +189,9 @@ source = supplier
 {% include copy.html %}
   
 
-## Example 2: TPC-H q22
+## 範例 2：TPC-H q22
 
-The following query demonstrates a TPC-H query 22 implementation using `EXISTS` and scalar subqueries:
+以下查詢示範使用 `EXISTS` 與純量子查詢實作的 TPC-H 查詢 22：
 
 ```sql
 source = [

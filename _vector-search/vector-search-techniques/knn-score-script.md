@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Exact k-NN search with a scoring script
+title: "使用評分指令碼進行精確 k-NN 搜尋"
 nav_order: 20
 parent: Vector search techniques
 has_children: true
@@ -9,19 +10,19 @@ redirect_from:
   - /search-plugins/knn/knn-score-script/ 
 ---
 
-# Exact k-NN search with a scoring script
+# 使用評分指令碼進行精確 k-NN 搜尋
 
-You can use exact k-nearest neighbors (k-NN) search with a scoring script to find the exact k-nearest neighbors to a given query point. Using the k-NN scoring script, you can apply a filter on an index before executing the nearest neighbor search. This is useful for dynamic search use cases, where the index body may vary based on other conditions.
+您可以使用評分指令碼進行精確 k-nearest neighbors (k-NN) 搜尋，以找出與給定查詢點最接近的精確 k 個最近鄰。使用 k-NN 評分指令碼，您可以在執行最近鄰搜尋之前，先對索引套用篩選條件。這對於動態搜尋使用案例很有用，因為這類案例的索引本文可能會依其他條件而有所不同。
 
-Because the scoring script approach executes a brute force search, it doesn't scale as efficiently as the [approximate approach]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/). In some cases, it might be better to consider refactoring your workflow or index structure to use the approximate approach instead of the scoring script approach.
+由於評分指令碼方法會執行暴力搜尋，其擴展效率不如[近似方法]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/)。在某些情況下，您最好考慮重構工作流程或索引結構，改用近似方法，而非評分指令碼方法。
 
-## Getting started with the scoring script for vectors
+## 開始使用向量評分指令碼
 
-Similarly to approximate nearest neighbor (ANN) search, in order to use the scoring script on a body of vectors, you must first create an index with one or more `knn_vector` fields.
+與近似最近鄰 (ANN) 搜尋類似，若要在向量本文上使用評分指令碼，您必須先建立一個含有一或多個 `knn_vector` 欄位的索引。
 
-If you intend to only use the scoring script approach (and not the approximate approach), you can set `index.knn` to `false` and not set `index.knn.space_type`. You can choose the space type during search. For the spaces that the k-NN scoring script supports, see [Spaces]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/).
+如果您打算只使用評分指令碼方法（而不使用近似方法），可以將 `index.knn` 設為 `false`，並不要設定 `index.knn.space_type`。您可以在搜尋時選擇空間類型。關於 k-NN 評分指令碼支援的空間，請參閱[空間]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/)。
 
-This example creates an index with two `knn_vector` fields:
+此範例建立一個含有兩個 `knn_vector` 欄位的索引：
 
 ```json
 PUT my-knn-index-1
@@ -42,10 +43,10 @@ PUT my-knn-index-1
 ```
 {% include copy-curl.html %}
 
-If you want to *only* use the scoring script, you can omit `"index.knn": true`. This approach leads to faster indexing speed and lower memory usage, but you lose the ability to run standard k-NN queries on the index.
+如果您想*只*使用評分指令碼，可以省略 `"index.knn": true`。此方法可加快編製索引速度並降低記憶體用量，但您將無法在該索引上執行標準 k-NN 查詢。
 {: .tip}
 
-After you create the index, you can add some data to it:
+建立索引之後，您可以新增一些資料到索引中：
 
 ```json
 POST _bulk
@@ -70,7 +71,7 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-Finally, you can run an exact nearest neighbor search on the data using the `knn` script:
+最後，您可以使用 `knn` 指令碼對資料執行精確最近鄰搜尋：
 
 ```json
 GET my-knn-index-1/_search
@@ -96,20 +97,20 @@ GET my-knn-index-1/_search
 ```
 {% include copy-curl.html %}
 
-All parameters are required.
+所有參數都是必要。
 
-- `lang` is the script type. This value is usually `painless`, but here you must specify `knn`.
-- `source` is the name of the script, `knn_score`.
+- `lang` 是指令碼類型。此值通常是 `painless`，但在此您必須指定 `knn`。
+- `source` 是指令碼名稱，即 `knn_score`。
 
-  This script is part of the k-NN plugin and isn't available at the standard `_scripts` path. A GET request to  `_cluster/state/metadata` doesn't return it, either.
+  此指令碼是 k-NN 外掛程式的一部分，無法在標準 `_scripts` 路徑取得。對 `_cluster/state/metadata` 發出 GET 請求也不會傳回它。
 
-- `field` is the field that contains your vector data.
-- `query_value` is the point you want to find the nearest neighbors for. For the Euclidean and cosine similarity spaces, the value must be an array of floats that matches the dimension set in the field's mapping. For Hamming bit distance, this value can be either of type signed long or a Base64-encoded string (for the long and binary field types, respectively).
-- `space_type` corresponds to the distance function. For more information, see [Spaces]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/).
+- `field` 是包含您向量資料的欄位。
+- `query_value` 是您想找出最近鄰的點。對於 Euclidean 和 cosine similarity 空間，此值必須是符合欄位對應中所設定維度的浮點數陣列。對於 Hamming bit distance，此值可以是 signed long 類型，或是 Base64 編碼字串（分別對應 long 和 binary 欄位類型）。
+- `space_type` 對應於距離函式。如需更多資訊，請參閱[空間]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/)。
 
-The [post filter example in the approximate approach]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/) shows a search that returns fewer than `k` results. If you want to avoid this, the scoring script method lets you essentially invert the order of events. In other words, you can filter the set of documents on which to execute the k-NN search.
+[近似方法中的後置篩選範例]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/)顯示了一種傳回結果少於 `k` 筆的搜尋。如果您想避免這種情況，評分指令碼方法可讓您基本上反轉事件順序。換句話說，您可以先篩選要執行 k-NN 搜尋的文件集合。
 
-This example shows a pre-filter approach to k-NN search with the scoring script approach. First, create the index:
+此範例顯示使用評分指令碼方法進行 k-NN 搜尋的前置篩選方法。首先，建立索引：
 
 ```json
 PUT my-knn-index-2
@@ -129,7 +130,7 @@ PUT my-knn-index-2
 ```
 {% include copy-curl.html %}
 
-Then add some documents:
+然後新增一些文件：
 
 ```json
 POST _bulk
@@ -148,7 +149,7 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-Finally, use the `script_score` query to pre-filter your documents before identifying nearest neighbors:
+最後，使用 `script_score` 查詢先篩選您的文件，再找出最近鄰：
 
 ```json
 GET my-knn-index-2/_search
@@ -180,12 +181,12 @@ GET my-knn-index-2/_search
 ```
 {% include copy-curl.html %}
 
-## Getting started with the scoring script for binary data
+## 開始使用二進位資料評分指令碼
 
-The k-NN scoring script also allows you to run k-NN search on your binary data with the Hamming distance space.
-In order to use Hamming distance, the field of interest must have either a `binary` or `long` field type. If you're using `binary` type, the data must be a Base64-encoded string.
+k-NN 評分指令碼也可讓您使用 Hamming distance 空間對二進位資料執行 k-NN 搜尋。
+若要使用 Hamming distance，目標欄位的類型必須是 `binary` 或 `long`。如果您使用 `binary` 類型，資料必須是 Base64 編碼字串。
 
-This example shows how to use the Hamming distance space with a `binary` field type:
+此範例顯示如何搭配 `binary` 欄位類型使用 Hamming distance 空間：
 
 ```json
 PUT my-index
@@ -205,7 +206,7 @@ PUT my-index
 ```
 {% include copy-curl.html %}
 
-Then add some documents:
+然後新增一些文件：
 
 ```json
 POST _bulk
@@ -224,7 +225,7 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-Finally, use the `script_score` query to pre-filter your documents before identifying nearest neighbors:
+最後，使用 `script_score` 查詢先篩選您的文件，再找出最近鄰：
 
 ```json
 GET my-index/_search
@@ -256,7 +257,7 @@ GET my-index/_search
 ```
 {% include copy-curl.html %}
 
-Similarly, you can encode your data with the `long` field and run a search:
+同樣地，您可以使用 `long` 欄位編碼資料並執行搜尋：
 
 ```json
 GET my-long-index/_search

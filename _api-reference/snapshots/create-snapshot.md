@@ -1,58 +1,59 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create snapshot
+title: "建立快照"
 parent: Snapshot APIs
 nav_order: 5
 ---
 
-# Create Snapshot API
-**Introduced 1.0**
+# 建立快照 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Creates a snapshot within an existing repository.
+在現有的儲存庫中建立快照。
 
-* To learn more about snapshots, see [Snapshots]({{site.url}}{{site.baseurl}}/opensearch/snapshots/index/).
+* 若要進一步了解快照，請參閱[快照]({{site.url}}{{site.baseurl}}/opensearch/snapshots/index/)。
 
-* To view a list of your repositories, see [Get snapshot repository]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot-repository/).
+* 若要檢視您的儲存庫清單，請參閱[取得快照儲存庫]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot-repository/)。
 
-## Endpoints
+## 端點
 
 ```json
 PUT /_snapshot/{repository}/{snapshot}
 POST /_snapshot/{repository}/{snapshot}
 ```
 
-## Path parameters
+## 路徑參數
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`repository` | String | Repository name to store the snapshot. |
-`snapshot` | String | Name of Snapshot to create. |
+`repository` | String | 用來儲存快照的儲存庫名稱。 |
+`snapshot` | String | 要建立的快照名稱。 |
 
-## Query parameters
+## 查詢參數
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`wait_for_completion` | Boolean |  Whether to wait for snapshot creation to complete before continuing. If you include this parameter, the snapshot definition is returned after completion. |
+`wait_for_completion` | Boolean |  是否要等待快照建立完成後再繼續。若包含此參數，快照定義會在完成後傳回。 |
 
-## Request body fields
+## 請求本文欄位
 
-The request body is optional.
+請求本文為選用。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`indices` | String | The indexes you want to include in the snapshot. You can use `,` to create a list of indexes, `*` to specify an index pattern, and `-` to exclude certain indexes. Don't put spaces between items. Default is all indexes.
-`ignore_unavailable` | Boolean | If an index from the `indices` list doesn't exist, whether to ignore it rather than fail the snapshot. Default is `false`.
-`include_global_state` | Boolean | Whether to include cluster state in the snapshot. Default is `true`.
-`partial` | Boolean | Whether to allow partial snapshots. Default is `false`, which fails the entire snapshot if one or more shards fails to stor
+`indices` | String | 您要包含在快照中的索引。您可以使用 `,` 建立索引清單、使用 `*` 指定索引模式，並使用 `-` 排除特定索引。項目之間請勿加入空格。預設為所有索引。
+`ignore_unavailable` | Boolean | 若 `indices` 清單中的某個索引不存在，是否要忽略它，而不是讓快照失敗。預設為 `false`。
+`include_global_state` | Boolean | 是否要在快照中包含叢集狀態。預設為 `true`。
+`partial` | Boolean | 是否允許部分快照。預設為 `false`，若有一或多個分片儲存失敗，會使整個快照失敗
 
-## Example requests
+## 範例請求
 
-The following examples demonstrate how to create a snapshot.
+下列範例示範如何建立快照。
 
-### Request without a body
+### 不含本文的請求
 
-The following request creates a snapshot called `my-first-snapshot` in an S3 repository called `my-s3-repository`. A request body is not included because it is optional.
+下列請求會在名為 `my-s3-repository` 的 S3 儲存庫中建立名為 `my-first-snapshot` 的快照。由於請求本文為選用，因此未包含。
 
 <!-- spec_insert_start
 component: example_code
@@ -78,9 +79,9 @@ response = client.snapshot.create(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Request with a body
+### 含本文的請求
 
-You can also add a request body to include or exclude certain indexes or specify other settings:
+您也可以新增請求本文，以包含或排除特定索引，或指定其他設定：
 
 <!-- spec_insert_start
 component: example_code
@@ -124,12 +125,12 @@ response = client.snapshot.create(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example responses
+## 範例回應
 
-Upon success, the response content depends on whether you include the `wait_for_completion` query parameter.
+成功時，回應內容取決於您是否包含 `wait_for_completion` 查詢參數。
 
 <!-- vale off -->
-##### `wait_for_completion` not included
+##### 未包含 `wait_for_completion`
 <!-- vale on -->
 
 ```json
@@ -138,14 +139,14 @@ Upon success, the response content depends on whether you include the `wait_for_
 }
 ```
 
-To verify that the snapshot was created, use the [Get snapshot]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot/) API, passing the snapshot name as the `snapshot` path parameter.
+若要確認快照已建立，請使用[取得快照]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot/) API，並將快照名稱傳入 `snapshot` 路徑參數。
 {: .note}
 
 <!-- vale off -->
-### `wait_for_completion` included
+### 包含 `wait_for_completion`
 <!-- vale on -->
 
-The snapshot definition is returned.
+會傳回快照定義。
 
 ```json
 {
@@ -181,28 +182,28 @@ The snapshot definition is returned.
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- | 
-| `snapshot` | String | Snapshot name. |
-| `uuid` | String | Snapshot's universally unique identifier (UUID). |
-| `version_id` | Integer | Build ID of the Open Search version that created the snapshot. |
-| `version` | Float | Open Search version that created the snapshot. |
-| `indices` | Array | Indexes in the snapshot. |
-| `data_streams` | Array | Data streams in the snapshot. |
-| `include_global_state` | Boolean | Whether the current cluster state is included in the snapshot. |
-| `start_time` | String | Date/time when the snapshot creation process began. |
-| `start_time_in_millis` | Long | Time (in milliseconds) when the snapshot creation process began. |
-| `end_time` | String | Date/time when the snapshot creation process ended. |
-| `end_time_in_millis` | Long | Time (in milliseconds) when the snapshot creation process ended. |
-| `duration_in_millis` | Long | Total time (in milliseconds) that the snapshot creation process lasted. |
-| `failures` | Array | Failures, if any, that occurred during snapshot creation. |
-| `shards` | Object | Total number of shards created along with number of successful and failed shards. |
-| `state` | String | Snapshot status. Possible values: `IN_PROGRESS`, `SUCCESS`, `FAILED`, `PARTIAL`. |
-| `remote_store_index_shallow_copy` | Boolean | Whether the snapshots of the remote store indexes is captured as a shallow copy. Default is `false`. |
-| `pinned_timestamp` | Long | A timestamp (in milliseconds) pinned by the snapshot for the implicit locking of remote store files referenced by the snapshot. |
+| `snapshot` | String | 快照名稱。 |
+| `uuid` | String | 快照的通用唯一識別碼 (UUID)。 |
+| `version_id` | Integer | 建立此快照的 OpenSearch 版本組建 ID。 |
+| `version` | Float | 建立此快照的 OpenSearch 版本。 |
+| `indices` | Array | 快照中的索引。 |
+| `data_streams` | Array | 快照中的資料串流。 |
+| `include_global_state` | Boolean | 快照中是否包含目前的叢集狀態。 |
+| `start_time` | String | 快照建立程序開始的日期/時間。 |
+| `start_time_in_millis` | Long | 快照建立程序開始的時間 (毫秒)。 |
+| `end_time` | String | 快照建立程序結束的日期/時間。 |
+| `end_time_in_millis` | Long | 快照建立程序結束的時間 (毫秒)。 |
+| `duration_in_millis` | Long | 快照建立程序持續的總時間 (毫秒)。 |
+| `failures` | Array | 快照建立期間發生的失敗 (若有)。 |
+| `shards` | Object | 建立的分片總數，以及成功與失敗的分片數。 |
+| `state` | String | 快照狀態。可能的值：`IN_PROGRESS`、`SUCCESS`、`FAILED`、`PARTIAL`。 |
+| `remote_store_index_shallow_copy` | Boolean | 遠端儲存索引的快照是否以淺層複本形式擷取。預設為 `false`。 |
+| `pinned_timestamp` | Long | 快照為了隱含鎖定其參照的遠端儲存檔案所固定的時間戳記 (毫秒)。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/snapshot/create`.
+若您使用安全性外掛程式，請確認您具有適當的權限：`cluster:admin/snapshot/create`。

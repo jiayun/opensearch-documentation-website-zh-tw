@@ -1,36 +1,37 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Filter query
+title: "篩選查詢"
 nav_order: 20
 has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
 ---
 
-# Filter query processor
-Introduced 2.8
+# 篩選查詢處理器
+於 2.8 版推出
 {: .label .label-purple }
 
-The `filter_query` search request processor intercepts a search request and applies an additional query to the request, filtering the results. This is useful when you don't want to rewrite existing queries in your application but need additional filtering of the results.
+`filter_query` 搜尋請求處理器會攔截搜尋請求，並對該請求套用額外的查詢，以篩選結果。當您不想重寫應用程式中現有的查詢，但需要對結果進行額外篩選時，這個處理器非常實用。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists all available request fields.
+下表列出所有可用的請求欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`query` | Object | A query in query domain-specific language (DSL). For a list of OpenSearch query types, see [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/). Required. 
-`tag` | String | The processor's identifier. Optional.
-`description` | String | A description of the processor. Optional.
-`ignore_failure` | Boolean | If `true`, OpenSearch [ignores any failure]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures) of this processor and continues to run the remaining processors in the search pipeline. Optional. Default is `false`.
+`query` | 物件 | 以查詢領域特定語言 (DSL) 表示的查詢。OpenSearch 查詢類型的清單請參閱 [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/)。必要。
+`tag` | 字串 | 處理器的識別碼。選用。
+`description` | 字串 | 處理器的描述。選用。
+`ignore_failure` | 布林值 | 若為 `true`，OpenSearch 會[忽略此處理器的任何失敗]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures)，並繼續執行搜尋管線中其餘的處理器。選用。預設為 `false`。
 
-## Example 
+## 範例
 
-The following example demonstrates using a search pipeline with a `filter_query` processor.
+以下範例示範如何使用包含 `filter_query` 處理器的搜尋管線。
 
-### Setup
+### 設定
 
-Create an index named `my_index` and index two documents, one public and one private:
+建立名為 `my_index` 的索引，並將兩份文件編製索引，一份公開、一份私密：
 
 ```json
 POST /my_index/_doc/1
@@ -50,9 +51,9 @@ POST /my_index/_doc/2
 ```
 {% include copy-curl.html %}
 
-### Creating a search pipeline 
+### 建立搜尋管線
 
-The following request creates a search pipeline called `my_pipeline` with a `filter_query` request processor that uses a term query to return only public messages:
+以下請求會建立名為 `my_pipeline` 的搜尋管線，其中包含一個 `filter_query` 請求處理器，該處理器使用 term 查詢僅傳回公開的訊息：
 
 ```json
 PUT /_search/pipeline/my_pipeline 
@@ -74,20 +75,20 @@ PUT /_search/pipeline/my_pipeline
 ```
 {% include copy-curl.html %}
 
-### Using a search pipeline
+### 使用搜尋管線
 
-Search for documents in `my_index` without a search pipeline:
+在不使用搜尋管線的情況下搜尋 `my_index` 中的文件：
 
 ```json
 GET /my_index/_search
 ```
 {% include copy-curl.html %}
 
-The response contains both documents:
+回應包含兩份文件：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 ```json
@@ -131,18 +132,18 @@ The response contains both documents:
 ```
 </details>
 
-To search with a pipeline, specify the pipeline name in the `search_pipeline` query parameter:
+若要使用管線進行搜尋，請在 `search_pipeline` 查詢參數中指定管線名稱：
 
 ```json
 GET /my_index/_search?search_pipeline=my_pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains only the document with `public` visibility:
+回應僅包含 `public` 可見性的文件：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 ```json

@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: UBI JavaScript Collector
+title: "UBI JavaScript 收集器"
 parent: User Behavior Insights
 grand_parent: Optimizing search quality
 has_children: false
 nav_order: 10
 ---
 
-# How to use UBI JavaScript collector
+# 如何使用 UBI JavaScript 收集器
 
-UBI comes with a very basic JavaScript client that manages the lifecycle of the `query_id` for a specific search and can create UBI event data structures and store them for specific actions.
+UBI 隨附一個非常基本的 JavaScript 用戶端，可管理特定搜尋的 `query_id` 生命週期，並能建立 UBI 事件資料結構，為特定動作儲存這些結構。
 
-For more information about the schema, see [UBI index schemas]({{site.url}}{{site.baseurl}}/search-plugins/ubi/schemas/).
+如需結構描述的詳細資訊，請參閱 [UBI 索引結構描述]({{site.url}}{{site.baseurl}}/search-plugins/ubi/schemas/)。
 
-We recommend using the client as a starting point to address your specific needs.
+我們建議將此用戶端做為起點，以滿足您的特定需求。
 
-## Installation
+## 安裝
 
-The client is a single file ([ubi.js](https://github.com/opensearch-project/user-behavior-insights/tree/main/ubi-javascript-collector/ubi.js)) and only has a dependency on the `axios` library.  
+此用戶端是單一檔案（[ubi.js](https://github.com/opensearch-project/user-behavior-insights/tree/main/ubi-javascript-collector/ubi.js)），且僅相依於 `axios` 程式庫。  
 <!-- vale off -->
-Download it from [https://github.com/opensearch-project/user-behavior-insights/tree/main/ubi-javascript-collector/ubi.js](https://github.com/opensearch-project/user-behavior-insights/tree/main/ubi-javascript-collector/ubi.js).
+從 [https://github.com/opensearch-project/user-behavior-insights/tree/main/ubi-javascript-collector/ubi.js](https://github.com/opensearch-project/user-behavior-insights/tree/main/ubi-javascript-collector/ubi.js) 下載。
 <!-- vale on -->
 
-To reference the events and create the client, use the following code:
+若要參考事件並建立用戶端，請使用下列程式碼：
 
 ```js
 import { UbiEvent } from './ubi';
@@ -34,9 +35,9 @@ const ubiClient = new  UbiClient('http://localhost:9200');
 {% include copy.html %}
 
 
-## Creating an event 
+## 建立事件 
 
-The following code tracks adding an item to a shopping cart in an e-commerce application. It uses the `UbiEvent` and `UbiEventAttributes` classes to encapsulate event details, which can then be sent to the tracking system:
+下列程式碼會追蹤在電子商務應用程式中將商品加入購物車的動作。它使用 `UbiEvent` 和 `UbiEventAttributes` 類別來封裝事件詳細資料，之後可將這些詳細資料傳送至追蹤系統：
 ```js
 var event = new UbiEvent(
     'add_to_cart', 
@@ -49,36 +50,36 @@ var event = new UbiEvent(
 ```
 {% include copy.html %}
 
-### Parameters
+### 參數
 
-1. **Event Name**: 
-   - `'add_to_cart'` -- This string indicates the type of event being tracked.
+1. **事件名稱**： 
+   - `'add_to_cart'` -- 此字串表示所追蹤的事件類型。
 
-2. **Client ID**: 
-   - `client_id` -- A variable that holds the unique identifier for the client. This helps in distinguishing between different users or sessions.
+2. **用戶端 ID**： 
+   - `client_id` -- 一個變數，用於保存用戶端的唯一識別碼。這有助於區分不同的使用者或工作階段。
 
-3. **Session ID**: 
-   - `session_id` -- A variable that contains the unique identifier for the user session. This is used to track user interactions within a specific session.
+3. **工作階段 ID**： 
+   - `session_id` -- 一個變數，用於保存使用者工作階段的唯一識別碼。這用於追蹤特定工作階段內的使用者互動。
 
-4. **Query ID**: 
-   - `getQueryId()` -- A function call that retrieves the current query ID, which may represent a specific search or interaction context.
+4. **查詢 ID**： 
+   - `getQueryId()` -- 一個函式呼叫，用於擷取目前的查詢 ID，這可能代表特定的搜尋或互動情境。
 
-5. **UbiEventAttributes**: 
-   - This is an instance of the `UbiEventAttributes` class, which encapsulates additional details about the event:
-     - **Type**: 
-       - `'product'` -- Specifies that the attribute type is related to a product.
-     - **Primary EAN**: 
-       - `item.primary_ean` -- This is the product's unique identifier in EAN format.
-     - **Title**: 
-       - `item.title` -- The name or description of the product.
-     - **Item**: 
-       - `item` -- The complete product object containing all relevant details.
+5. **UbiEventAttributes**： 
+   - 這是 `UbiEventAttributes` 類別的執行個體，用於封裝事件的額外詳細資料：
+     - **類型**： 
+       - `'product'` -- 指定屬性類型與產品相關。
+     - **主要 EAN**： 
+       - `item.primary_ean` -- 這是產品以 EAN 格式表示的唯一識別碼。
+     - **標題**： 
+       - `item.title` -- 產品名稱或描述。
+     - **商品**： 
+       - `item` -- 包含所有相關詳細資料的完整產品物件。
 
-6. **Event Label**: 
-   - `item.title + ' (' + item.id + ')'` -- This creates a descriptive label for the event that includes the product title and its unique identifier (ID).
+6. **事件標籤**： 
+   - `item.title + ' (' + item.id + ')'` -- 這會為事件建立描述性標籤，其中包含產品標題及其唯一識別碼（ID）。
 
-The method `getQueryId()` refers to a helper method that generates a unique query ID (and stores it in the session).  
-The following is a sample method:
+方法 `getQueryId()` 指的是會產生唯一查詢 ID（並將其儲存在工作階段中）的輔助方法。  
+以下是範例方法：
 
 ```js
 function generateQueryId(){
@@ -103,20 +104,20 @@ function generateGuid() {
 ```
 {% include copy.html %}
 
-## Tracking the event 
+## 追蹤事件 
 
-You can send the event to the backend by calling the `trackEvent` method:
+您可以呼叫 `trackEvent` 方法，將事件傳送至後端：
 
 ```js
 ubiClient.trackEvent(event);
 ```
 
 
-## Tracking queries
+## 追蹤查詢
 
-You can optionally track queries using the client (instead of using the UBI plugin for OpenSearch).
+您可以選擇使用此用戶端追蹤查詢（而非使用 OpenSearch 的 UBI 外掛程式）。
 
-The code is similar to that used for tracking events:
+程式碼與用於追蹤事件的程式碼類似：
 
 ```js
 const query = new UbiQuery(APPLICATION, client_id, query_id, value, "_id", {});

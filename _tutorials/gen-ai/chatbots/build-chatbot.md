@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Build your own chatbot
+title: "建立您自己的聊天機器人"
 parent: Chatbots
 grand_parent: Generative AI
 has_children: false
@@ -11,24 +12,24 @@ redirect_from:
   - /vector-search/tutorials/chatbots/build-chatbot/
 ---
 
-# Build your own chatbot
+# 建立您自己的聊天機器人
 
-Sometimes a large language model (LLM) cannot answer a question right away. For example, an LLM can't tell you how many errors there are in your log index for last week because its knowledge base does not contain your proprietary data. In this case, you need to provide additional information to an LLM in a subsequent call. You can use an agent to solve such complex problems. The agent can run tools to obtain more information from configured data sources and send the additional information to the LLM as context.
+有時大型語言模型 (LLM) 無法立即回答問題。例如，LLM 無法告訴您上週記錄索引中有多少錯誤，因為其知識庫不包含您的專有資料。在這種情況下，您需要在後續呼叫中向 LLM 提供額外資訊。您可以使用代理程式來解決這類複雜問題。代理程式可以執行工具，從設定的資料來源取得更多資訊，並將額外資訊作為上下文傳送給 LLM。
 
-This tutorial describes how to build your own chatbot in OpenSearch using a `conversational` agent. For more information about agents, see [Agents and tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/index/).
+本教學說明如何使用 `conversational` 代理程式在 OpenSearch 中建立您自己的聊天機器人。如需代理程式的更多資訊，請參閱 [代理程式與工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/index/)。
 
-Replace the placeholders starting with the prefix `your_` with your own values.
+將以 `your_` 前綴開頭的預留位置替換為您自己的值。
 {: .note}
 
-## Prerequisite
+## 必要條件
 
-Log in to the OpenSearch Dashboards home page, select **Add sample data**, and add the **Sample eCommerce orders** data.
+登入 OpenSearch Dashboards 首頁，選取 **Add sample data**，並新增 **Sample eCommerce orders** 資料。
 
-## Step 1: Configure a knowledge base
+## 步驟 1：設定知識庫
 
-Meet the prerequisite and follow Step 1 of the [RAG with a conversational flow agent tutorial]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/rag-conversational-agent/) to configure the `test_population_data` knowledge base index, which contains US city population data.
+完成必要條件，並依照 [使用對話流程代理程式的 RAG 教學]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/rag-conversational-agent/) 的步驟 1 設定 `test_population_data` 知識庫索引，其中包含美國城市人口資料。
 
-Create an ingest pipeline:
+建立資料匯入管線：
 
 ```json
 PUT /_ingest/pipeline/test_stock_price_data_pipeline
@@ -48,7 +49,7 @@ PUT /_ingest/pipeline/test_stock_price_data_pipeline
 ```
 {% include copy-curl.html %}
 
-Create the `test_stock_price_data` index, which contains historical stock price data:
+建立包含歷史股價資料的 `test_stock_price_data` 索引：
 
 ```json
 PUT test_stock_price_data
@@ -75,7 +76,7 @@ PUT test_stock_price_data
 ```
 {% include copy-curl.html %}
 
-Ingest data into the index:
+將資料匯入索引：
 
 ```json
 POST _bulk
@@ -94,11 +95,11 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Step 2: Prepare an LLM
+## 步驟 2：準備 LLM
 
-This tutorial uses the [Amazon Bedrock Claude model](https://aws.amazon.com/bedrock/claude/). You can also use other LLMs. For more information, see [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/).
+本教學使用 [Amazon Bedrock Claude 模型](https://aws.amazon.com/bedrock/claude/)。您也可以使用其他 LLM。如需更多資訊，請參閱[連線至外部託管的模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
 
-Create a connector for the model:
+為模型建立連接器：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -129,9 +130,9 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-Note the connector ID; you'll use it to register the model.
+請記下連接器 ID；您將使用它來註冊模型。
 
-Register the model:
+註冊模型：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -144,16 +145,16 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-Note the LLM model ID; you'll use it in the following steps.
+請記下 LLM 模型 ID；您將在後續步驟中使用它。
 
-Deploy the model:
+部署模型：
 
 ```json
 POST /_plugins/_ml/models/your_LLM_model_id/_deploy
 ```
 {% include copy-curl.html %}
 
-Test the model:
+測試模型：
 
 ```json
 POST /_plugins/_ml/models/your_LLM_model_id/_predict
@@ -165,43 +166,43 @@ POST /_plugins/_ml/models/your_LLM_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-## Step 3: Create an agent with the default prompt
+## 步驟 3：使用預設提示建立代理程式
 
-Next, create and test an agent.
+接著，建立並測試代理程式。
 
-### Create an agent
+### 建立代理程式
 
-Create an agent of the `conversational` type. 
+建立 `conversational` 類型的代理程式。
 
-The agent is configured with the following information:
+代理程式會使用下列資訊進行設定：
 
-- Meta information: `name`, `type`, `description`.
-- LLM information: The agent uses an LLM to reason and select the next step, including choosing an appropriate tool and preparing the tool input.
-- Tools: A tool is a function that can be executed by the agent. Each tool can define its own `name`, `description`, and `parameters`.
-- Memory: Stores chat messages. OpenSearch supports one memory type: `conversation_index`.
+- 中繼資訊：`name`、`type`、`description`。
+- LLM 資訊：代理程式使用 LLM 進行推理並選擇下一個步驟，包括選擇合適的工具及準備工具輸入。
+- 工具：工具是代理程式可執行的函式。每個工具都可以定義自己的 `name`、`description` 和 `parameters`。
+- 記憶體：儲存聊天訊息。OpenSearch 支援一種記憶體類型：`conversation_index`。
 
-The agent contains the following parameters:
+代理程式包含下列參數：
 
-- `conversational`: This agent type has a built-in prompt. To override it with your own prompt, see [Step 4](#step-4-optional-create-an-agent-with-a-custom-prompt).
-- `app_type`: Specify this parameter for reference purposes in order to differentiate between multiple agents.
-- `llm`: Defines the LLM configuration:
-   - `"max_iteration": 5`:  The agent runs the LLM a maximum of five times.
-   - `"response_filter": "$.completion"`: Needed to retrieve the LLM answer from the Bedrock Claude model response.
-   - `"message_history_limit": 5`: The agent retrieves a maximum of the five most recent historical messages and adds them to the LLM context. Set this parameter to `0` to omit message history in the context.
-   - `disable_trace`: If `true`, then the agent does not store trace data in memory. Trace data is included in each message and provides a detailed recount of steps performed while generating the message.
-- `memory`: Defines how to store messages. OpenSearch only supports the `conversation_index` memory, which stores messages in a memory index.
-- Tools: 
-   - An LLM will reason to decide which tool to run and will prepare the tool's input. 
-   - To include the tool's output in the response, specify `"include_output_in_agent_response": true`. In this tutorial, you will include the `PPLTool` output in the response (see the example response in [Test the agent](#test-the-agent)). 
-   - By default, the tool's `name` is the same as the tool's `type`, and each tool has a default description. You can override the tool's `name` and `description`.
-   - Each tool in the `tools` list must have a unique name. For example, the following demo agent defines two tools of the `VectorDBTool` type with different names (`population_data_knowledge_base` and `stock_price_data_knowledge_base`). Each tool has a custom description so that the LLM can easily understand what the tool does.
+- `conversational`：此代理程式類型具有內建的提示。若要使用您自己的提示加以覆寫，請參閱[步驟 4](#step-4-optional-create-an-agent-with-a-custom-prompt)。
+- `app_type`：指定此參數以供參照之用，以便區分多個代理程式。
+- `llm`：定義 LLM 組態：
+   - `"max_iteration": 5`：代理程式最多執行 LLM 五次。
+   - `"response_filter": "$.completion"`：從 Bedrock Claude 模型回應中擷取 LLM 答案時所需。
+   - `"message_history_limit": 5`：代理程式最多擷取五則最近的歷史訊息，並將其加入 LLM 內容。將此參數設為 `0` 以在內容中省略訊息歷史記錄。
+   - `disable_trace`：若為 `true`，則代理程式不會將追蹤資料儲存在記憶體中。追蹤資料會包含在每則訊息中，並詳細說明產生訊息時所執行的步驟。
+- `memory`：定義如何儲存訊息。OpenSearch 僅支援 `conversation_index` 記憶體，其會將訊息儲存在記憶體索引中。
+- 工具：
+   - LLM 會進行推理以決定要執行哪個工具，並準備工具的輸入。
+   - 若要在回應中包含工具的輸出，請指定 `"include_output_in_agent_response": true`。在本教學中，您將在回應中包含 `PPLTool` 輸出（請參閱[測試代理程式](#test-the-agent)中的範例回應）。
+   - 依預設，工具的 `name` 與工具的 `type` 相同，且每個工具都有預設描述。您可以覆寫工具的 `name` 和 `description`。
+   - `tools` 清單中的每個工具都必須有唯一的名稱。例如，下列示範代理程式定義了兩個 `VectorDBTool` 類型且名稱不同的工具（`population_data_knowledge_base` 和 `stock_price_data_knowledge_base`）。每個工具都有自訂描述，以便 LLM 輕鬆理解該工具的功能。
    
-   For more information about tools, see [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/).
+   如需工具的詳細資訊，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
 
-This example request configures several sample tools in an agent. You can configure other tools that are relevant to your use case as needed.
+此範例請求會在代理程式中設定數個範例工具。您可以視需要設定與您的使用案例相關的其他工具。
 {: .note}
 
-Register the agent:
+註冊代理程式：
 
 ```json
 POST _plugins/_ml/agents/_register
@@ -290,23 +291,23 @@ POST _plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-Note the agent ID; you'll use it in the next step.
+請記下代理程式 ID；您將在下一個步驟中使用它。
 
-### Test the agent
+### 測試代理程式
 
-Note the following testing tips: 
+請注意下列測試提示：
 
-- You can view the detailed steps of an agent execution in one of the following ways:
-   - Enable verbose mode: `"verbose": true`.
-   - Call the Get Trace API: `GET _plugins/_ml/memory/message/your_message_id/traces`.
+- 您可以透過下列其中一種方式檢視代理程式執行的詳細步驟：
+   - 啟用詳細模式：`"verbose": true`。
+   - 呼叫 Get Trace API：`GET _plugins/_ml/memory/message/your_message_id/traces`。
 
-- An LLM may hallucinate. It may choose the wrong tool to solve your problem, especially when you have configured many tools. To avoid hallucinations, try the following options:
-   - Avoid configuring many tools in an agent.
-   - Provide a detailed tool description clarifying what the tool can do. 
-   - Specify the tool to use in the LLM question, for example, `Can you use the PPLTool to query the opensearch_dashboards_sample_data_ecommerce index so it can calculate how many orders were placed last week?`.
-   - Specify the tool to use when executing an agent. For example, specify that only the `PPLTool` and `ListIndexTool` should be used to process the current request.
+- LLM 可能會產生幻覺。它可能選擇錯誤的工具來解決您的問題，尤其是當您設定了許多工具時。為避免產生幻覺，請嘗試下列選項：
+   - 避免在代理程式中設定過多工具。
+   - 提供詳細的工具說明，釐清該工具可以做什麼。
+   - 在 LLM 問題中指定要使用的工具，例如 `Can you use the PPLTool to query the opensearch_dashboards_sample_data_ecommerce index so it can calculate how many orders were placed last week?`。
+   - 在執行代理程式時指定要使用的工具。例如，指定僅使用 `PPLTool` 和 `ListIndexTool` 來處理目前的請求。
 
-Test the agent:
+測試代理程式：
 
 ```json
 POST _plugins/_ml/agents/your_agent_id/_execute
@@ -321,7 +322,7 @@ POST _plugins/_ml/agents/your_agent_id/_execute
 {% include copy-curl.html %}
 
 <!-- vale off -->
-#### Test the PPLTool
+#### 測試 PPLTool
 <!-- vale on -->
 
 ```json
@@ -335,7 +336,7 @@ POST _plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-Because you specified `"include_output_in_agent_response": true` for the `PPLTool`, the response contains `PPLTool.output` in the `additional_info` object:
+因為您為 `PPLTool` 指定了 `"include_output_in_agent_response": true`，所以回應在 `additional_info` 物件中包含 `PPLTool.output`：
 
 ```json
 {
@@ -368,7 +369,7 @@ Because you specified `"include_output_in_agent_response": true` for the `PPLToo
 ```
 {% include copy-curl.html %}
 
-Obtain trace data:
+取得追蹤資料：
 
 ```json
 GET _plugins/_ml/memory/message/T0JwyI0Bn3OCesyvz-EI/traces
@@ -376,10 +377,10 @@ GET _plugins/_ml/memory/message/T0JwyI0Bn3OCesyvz-EI/traces
 {% include copy-curl.html %}
 
 <!-- vale off -->
-#### Test the population_data_knowledge_base VectorDBTool
+#### 測試 population_data_knowledge_base VectorDBTool
 <!-- vale on -->
 
-To view detailed steps, set `verbose` to `true` when executing the agent:
+若要檢視詳細步驟，請在執行代理程式時將 `verbose` 設定為 `true`：
 
 ```json
 POST _plugins/_ml/agents/your_agent_id/_execute
@@ -392,7 +393,7 @@ POST _plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-The response contains the execution steps:
+回應包含執行步驟：
 
 ```json
 {
@@ -432,16 +433,16 @@ The response contains the execution steps:
 }
 ```
 
-Obtain trace data:
+取得追蹤資料：
 
 ```json
 GET _plugins/_ml/memory/message/L0JuyI0Bn3OCesyv3-Er/traces
 ```
 {% include copy-curl.html %}
 
-#### Test conversational memory
+#### 測試對話記憶
 
-To continue the same conversation, specify the conversation's `memory_id` when executing the agent:
+若要延續相同的對話，請在執行代理程式時指定該對話的 `memory_id`：
 
 ```json
 POST _plugins/_ml/agents/your_agent_id/_execute
@@ -455,7 +456,7 @@ POST _plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-In the response, note that the `population_data_knowledge_base` doesn't return the population of Seattle. Instead, the agent learns the population of Seattle by referencing historical messages:
+在回應中，請注意 `population_data_knowledge_base` 並未傳回西雅圖的人口數。代理程式是透過參考歷史訊息得知西雅圖的人口數：
 
 ```json
 {
@@ -495,23 +496,23 @@ In the response, note that the `population_data_knowledge_base` doesn't return t
 }
 ```
 
-View all messages:
+檢視所有訊息：
 
 ```json
 GET _plugins/_ml/memory/LkJuyI0Bn3OCesyv3-Ef/messages
 ```
 {% include copy-curl.html %}
 
-Obtain trace data:
+取得追蹤資料：
 
 ```json
 GET _plugins/_ml/memory/message/00J6yI0Bn3OCesyvIuGZ/traces
 ```
 {% include copy-curl.html %}
 
-## Step 4 (Optional): Create an agent with a custom prompt 
+## 步驟 4 (選用)：使用自訂提示建立代理程式
 
-All agents have the following default prompt:
+所有代理程式都有下列預設提示：
 
 ```json
 "prompt": """
@@ -525,12 +526,12 @@ Human: follow RESPONSE FORMAT INSTRUCTIONS
 Assistant:"""
 ```
 
-The prompt consists of two parts:
+提示由兩個部分組成：
 
-- `${parameters.prompt.prefix}`: A prompt prefix that describes what the AI assistant can do. You can change this parameter based on your use case, for example, `You are a professional data analyst. You will always answer questions based on the tool response first. If you don't know the answer, just say you don't know.`
-- `${parameters.prompt.suffix}`: The main part of the prompt that defines the tools, chat history, prompt format instructions, a question, and a scratchpad. 
+- `${parameters.prompt.prefix}`：描述 AI 助理能做什麼的提示前置詞。您可以根據使用案例變更此參數，例如 `You are a professional data analyst. You will always answer questions based on the tool response first. If you don't know the answer, just say you don't know.`
+- `${parameters.prompt.suffix}`：提示的主要部分，定義工具、聊天記錄、提示格式指示、問題和暫存區。
 
-The default `prompt.suffix` is the following:
+預設的 `prompt.suffix` 如下：
 
 ```json
 "prompt.suffix": """Human:TOOLS
@@ -554,21 +555,21 @@ ${parameters.question}
 ${parameters.scratchpad}"""
 ```
 
-The `prompt.suffix` consists of the following placeholders:
+`prompt.suffix` 由下列預留位置組成：
 
-- `${parameters.tool_descriptions}`: This placeholder will be filled with the agent's tool information: the tool name and description. If you omit this placeholder, the agent will not use any tools.
-- `${parameters.prompt.format_instruction}`: This placeholder defines the LLM response format. This placeholder is critical, and we do not recommend removing it.
-- `${parameters.chat_history}`: This placeholder will be filled with the message history of the current memory. If you don't set the `memory_id` when you run the agent, or if there are no history messages, then this placeholder will be empty. If you don't need chat history, you can remove this placeholder.
-- `${parameters.question}`: This placeholder will be filled with the user question.
-- `${parameters.scratchpad}`: This placeholder will be filled with the detailed agent execution steps. These steps are the same as those you can view by specifying verbose mode or obtaining trace data (see an example in [Test the agent](#test-the-agent)). This placeholder is critical in order for the LLM to reason and select the next step based on the outcome of the previous steps. We do not recommend removing this placeholder.
+- `${parameters.tool_descriptions}`：此預留位置會填入代理程式的工具資訊：工具名稱和描述。如果您省略此預留位置，代理程式將不會使用任何工具。
+- `${parameters.prompt.format_instruction}`：此預留位置定義 LLM 回應格式。此預留位置至關重要，我們不建議移除它。
+- `${parameters.chat_history}`：此預留位置會填入目前記憶體的訊息記錄。如果您在執行代理程式時未設定 `memory_id`，或沒有歷史訊息，則此預留位置會是空的。如果您不需要聊天記錄，可以移除此預留位置。
+- `${parameters.question}`：此預留位置會填入使用者問題。
+- `${parameters.scratchpad}`：此預留位置會填入詳細的代理程式執行步驟。這些步驟與您指定詳細模式或取得追蹤資料時所看到的步驟相同 (請參閱[測試代理程式](#test-the-agent)中的範例)。此預留位置至關重要，可讓 LLM 根據先前步驟的結果進行推理並選取下一個步驟。我們不建議移除此預留位置。
 
-### Custom prompt examples
+### 自訂提示範例
 
-The following examples demonstrate how to customize the prompt.
+下列範例示範如何自訂提示。
 
-#### Example 1: Customize `prompt.prefix`
+#### 範例 1：自訂 `prompt.prefix`
 
-Register an agent with a custom `prompt.prefix`:
+使用自訂 `prompt.prefix` 註冊代理程式：
 
 ```json
 POST _plugins/_ml/agents/_register
@@ -624,7 +625,7 @@ POST _plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-Test the agent:
+測試代理程式：
 
 ```json
 POST _plugins/_ml/agents/o0LDyI0Bn3OCesyvr-Zq/_execute
@@ -637,9 +638,9 @@ POST _plugins/_ml/agents/o0LDyI0Bn3OCesyvr-Zq/_execute
 ```
 {% include copy-curl.html %}
 
-#### Example 2: OpenAI model with a custom prompt
+#### 範例 2：使用自訂提示的 OpenAI 模型
 
-Create a connector for the OpenAI `gpt-4o-mini` model:
+為 OpenAI `gpt-4o-mini` 模型建立連接器：
 
 ```json
 POST _plugins/_ml/connectors/_create
@@ -672,7 +673,7 @@ POST _plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-Create a model using the connector ID from the response:
+使用回應中的連接器 ID 建立模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -685,7 +686,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Note the model ID and test the model by calling the Predict API:
+記下模型 ID，並呼叫 Predict API 測試模型：
 
 ```json
 POST /_plugins/_ml/models/your_openai_model_id/_predict
@@ -698,7 +699,7 @@ POST /_plugins/_ml/models/your_openai_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-Create an agent with a custom `system_instruction` and `prompt`. The `prompt` customizes the `tool_descriptions`, `chat_history`, `format_instruction`, `question`, and `scratchpad` placeholders:
+使用自訂 `system_instruction` 和 `prompt` 建立代理程式。`prompt` 會自訂 `tool_descriptions`、`chat_history`、`format_instruction`、`question` 和 `scratchpad` 預留位置：
 
 ```json
 POST _plugins/_ml/agents/_register
@@ -756,7 +757,7 @@ POST _plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-Note the agent ID from the response and test the model by running the agent:
+記下回應中的代理程式 ID，並執行代理程式來測試模型：
 
 ```json
 POST _plugins/_ml/agents/your_agent_id/_execute
@@ -769,7 +770,7 @@ POST _plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-Test the agent by asking a question that requires the agent to use both configured tools:
+提出一個需要代理程式同時使用兩個已設定工具的問題來測試代理程式：
 
 ```json
 POST _plugins/_ml/agents/your_agent_id/_execute
@@ -782,7 +783,7 @@ POST _plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-The response shows that the agent runs both the `population_data_knowledge_base` and `stock_price_data_knowledge_base` tools to obtain the answer:
+回應顯示代理程式同時執行 `population_data_knowledge_base` 和 `stock_price_data_knowledge_base` 工具來取得答案：
 
 ```json
 {
@@ -837,16 +838,16 @@ The response shows that the agent runs both the `population_data_knowledge_base`
 }
 ```
 
-## Step 5: Configure a root chatbot agent in OpenSearch Dashboards
+## 步驟 5：在 OpenSearch Dashboards 中設定根聊天機器人代理程式
 
-To use the [OpenSearch Assistant for OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/index/), you need to configure a root chatbot agent.
+若要使用 [OpenSearch Assistant for OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/index/)，您需要設定一個根聊天機器人代理程式。
 
-A root chatbot agent consists of the following parts:
+根聊天機器人代理程式由以下幾個部分組成：
 
-- A `conversational` agent: Within the `AgentTool`, you can use any `conversational` agent created in the previous steps.
-- An `MLModelTool`: This tool is used for suggesting new questions based on your current question and the model response.
+- 一個 `conversational` 代理程式：在 `AgentTool` 中，您可以使用先前步驟中建立的任何 `conversational` 代理程式。
+- 一個 `MLModelTool`：此工具用於根據您目前的問題與模型回應建議新問題。
 
-Configure a root agent:
+設定根代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -881,7 +882,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-Note the root chatbot agent ID, log in to your OpenSearch server, go to the OpenSearch config folder (`$OS_HOME/config`), and run the following command:
+記下根聊天機器人代理程式 ID，登入您的 OpenSearch 伺服器，前往 OpenSearch 組態資料夾 (`$OS_HOME/config`)，然後執行以下命令：
 
 ```bashx
  curl -k --cert ./kirk.pem --key ./kirk-key.pem -X PUT https://localhost:9200/.plugins-ml-config/_doc/os_chat -H 'Content-Type: application/json' -d'
@@ -894,12 +895,12 @@ Note the root chatbot agent ID, log in to your OpenSearch server, go to the Open
 ```
 {% include copy.html %}
 
-Go to your OpenSearch Dashboards config folder (`$OSD_HOME/config`) and edit `opensearch_dashboards.yml` by adding the following line to the end of the file: `assistant.chat.enabled: true`.
+前往您的 OpenSearch Dashboards 組態資料夾 (`$OSD_HOME/config`)，並編輯 `opensearch_dashboards.yml`，在檔案結尾加入以下這一行：`assistant.chat.enabled: true`。
 
-Restart OpenSearch Dashboards and then select the chat icon in the upper-right corner, shown in the following image.
+重新啟動 OpenSearch Dashboards，然後選取右上角的聊天圖示，如下圖所示。
 
-![OpenSearch Assistant icon]({{site.url}}{{site.baseurl}}/images/dashboards/os-assistant-icon.png){: width="300" }
+![OpenSearch Assistant 圖示]({{site.url}}{{site.baseurl}}/images/dashboards/os-assistant-icon.png){: width="300" }
 
-You can now chat in OpenSearch Dashboards, as shown in the following image.
+現在您可以在 OpenSearch Dashboards 中進行聊天，如下圖所示。
 
-![OpenSearch Assistant chat]({{site.url}}{{site.baseurl}}/images/dashboards/os-assistant-chat.png)
+![OpenSearch Assistant 聊天畫面]({{site.url}}{{site.baseurl}}/images/dashboards/os-assistant-chat.png)

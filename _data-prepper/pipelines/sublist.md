@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: subList()
 parent: Functions
@@ -7,35 +8,35 @@ nav_order: 50
 ---
 
 <!-- vale off -->
-# subList() function
+# subList() 函式
 <!-- vale on -->
 
-The `subList(<key>, <start_index, inclusive>, <end_index, exclusive>)` function extracts a sublist from a list field in an event. It takes the following arguments:
+`subList(<key>, <start_index, inclusive>, <end_index, exclusive>)` 函式會從事件中的清單欄位擷取子清單。此函式接受下列引數：
 
-- A JSON pointer to an event field containing a list
-- A start index (inclusive)
-- An end index (exclusive)
+- 指向包含清單的事件欄位的 JSON 指標
+- 起始索引（包含）
+- 結束索引（不包含）
 
-The function returns the portion of the list between the specified start and end indexes. If the end index is `-1`, the function extracts elements from the start index to the end of the list.
+此函式會傳回指定起始索引與結束索引之間的清單部分。如果結束索引為 `-1`，此函式會擷取從起始索引到清單結尾的元素。
 
 
-## Examples
+## 範例
 
-The following examples show how the `sublist()` function works.
+下列範例說明 `sublist()` 函式的運作方式。
 
 <!-- vale off -->
-### add_entries processor
+### add_entries 處理器
 <!-- vale on -->
 
-You can use `subList()` in the `add_entries` processor, as shown in the following example.
+您可以在 `add_entries` 處理器中使用 `subList()`，如下列範例所示。
 
-The function uses the following input to extract a sublist:
+此函式使用下列輸入來擷取子清單：
 
 ```
 input: {"my_list": [ 0, 1, 2, 3, 4, 5, 6]}
 ```
 
-Then, the following configuration uses the `add_entries` processor to extract a sublist from `my_list`, starting at index `1` and ending before index `4`: 
+接著，下列組態使用 `add_entries` 處理器，從 `my_list` 擷取子清單，從索引 `1` 開始，並在索引 `4` 之前結束： 
 
 ```yaml
 add_entries:
@@ -46,17 +47,17 @@ add_entries:
 ```
 {% include copy.html %}
 
-The following output shows the resulting list after extracting elements from index `1` to `3` and overwriting the original list:
+下列輸出顯示擷取索引 `1` 到 `3` 的元素並覆寫原始清單後所得到的清單：
 
 ```
 output: my_list: [1, 2, 3]
 ```
 
-### Specific ranges
+### 特定範圍
 
-Each of the following examples demonstrates how the `subList()` function extracts a specific range of elements from a list.
+下列各個範例示範 `subList()` 函式如何從清單擷取特定範圍的元素。
 
-The following example extracts elements from index `0` to `2` (excluding index `3`), resulting in the first three elements of the list:
+下列範例擷取索引 `0` 到 `2` 的元素（不包含索引 `3`），得到清單的前三個元素：
 
 ```json
 {
@@ -69,7 +70,7 @@ The following example extracts elements from index `0` to `2` (excluding index `
 ```
 {% include copy.html %}
 
-The following example uses `-1` as the end index, which specifies to include all elements from index `4` to the end of the list:
+下列範例使用 `-1` 作為結束索引，指定包含從索引 `4` 到清單結尾的所有元素：
 
 ```json
 {

@@ -1,20 +1,21 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Replication settings
+title: "複製設定"
 nav_order: 40
 parent: Cross-cluster replication
 redirect_from:
   - /replication-plugin/settings/
 ---
 
-# Replication settings
+# 複製設定
 
-The replication plugin adds several settings to the standard OpenSearch cluster and index settings.
-The settings are dynamic, so you can change the default behavior of the plugin without restarting your cluster. To learn more about static and dynamic settings, see [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/).
+複製外掛程式為標準的 OpenSearch 叢集與索引設定新增了數項設定。
+這些設定是動態的，因此您無需重新啟動叢集即可變更外掛程式的預設行為。若要進一步了解靜態與動態設定，請參閱 [設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/)。
 
-You can mark settings as `persistent` or `transient`.
+您可以將設定標記為 `persistent` 或 `transient`。
 
-For example, to update how often the follower cluster polls the leader cluster for updates:
+例如，若要更新追隨者叢集向領導者叢集輪詢更新的頻率：
 
 ```json
 PUT _cluster/settings
@@ -25,35 +26,35 @@ PUT _cluster/settings
 }
 ```
 
-These settings manage the resources consumed by remote recoveries. We don't recommend changing these settings; the defaults should work well for most use cases.
+這些設定可管理遠端復原所消耗的資源。我們不建議變更這些設定；預設值應能適用於大多數使用情境。
 
-## Cluster-level settings
+## 叢集層級設定
 
-You can specify these settings at the cluster level to control the default behavior of replication across all indexes in the cluster. These settings apply globally unless overridden by index-level settings.
+您可以在叢集層級指定這些設定，以控制叢集中所有索引的預設複製行為。除非被索引層級設定覆寫，否則這些設定會全域套用。
 
-Setting | Default | Description
+設定 | 預設值 | 說明
 :--- | :--- | :---
-`plugins.replication.follower.concurrent_readers_per_shard` | 2 | The number of concurrent requests from the follower cluster per shard during the syncing phase of replication.
-`plugins.replication.autofollow.fetch_poll_interval` | 30s | How often auto-follow tasks poll the leader cluster for new matching indexes.
-`plugins.replication.follower.metadata_sync_interval` | 60s | How often the follower cluster polls the leader cluster for updated index metadata.
-`plugins.replication.translog.retention_lease.pruning.enabled` | true | If enabled, prunes the translog based on retention leases on the leader index.
-`plugins.replication.translog.retention_size` | 512 MB | Controls the size of the translog on the leader index.
-`plugins.replication.replicate.delete_index` | false | If enabled, the follower index is automatically deleted whenever the corresponding leader index is deleted.
-`plugins.replication.follower.index.ops_batch_size` | 50000 | The number of operations that can be fetched at a time during the sync phase of replication.
+`plugins.replication.follower.concurrent_readers_per_shard` | 2 | 複製同步階段期間，追隨者叢集每個分片的並行請求數量。
+`plugins.replication.autofollow.fetch_poll_interval` | 30s | 自動跟隨任務向領導者叢集輪詢新符合索引的頻率。
+`plugins.replication.follower.metadata_sync_interval` | 60s | 追隨者叢集向領導者叢集輪詢更新索引中繼資料的頻率。
+`plugins.replication.translog.retention_lease.pruning.enabled` | true | 若啟用，會根據領導者索引上的保留租約修剪 translog。
+`plugins.replication.translog.retention_size` | 512 MB | 控制領導者索引上 translog 的大小。
+`plugins.replication.replicate.delete_index` | false | 若啟用，每當對應的領導者索引被刪除時，追隨者索引會自動刪除。
+`plugins.replication.follower.index.ops_batch_size` | 50000 | 複製同步階段期間，一次可擷取的操作數量。
 
-## Index-level settings
+## 索引層級設定
 
-You can specify these settings when creating a follower index or update them for existing follower indexes. These settings control the behavior of individual indexes during replication.
+您可以在建立追隨者索引時指定這些設定，或為現有的追隨者索引更新它們。這些設定可控制複製期間個別索引的行為。
 
-Setting | Default | Description
+設定 | 預設值 | 說明
 :--- |:------| :---
-`index.plugins.replication.follower.ops_batch_size` | 50000 | The number of operations that can be fetched at a time during the sync phase of replication for the specific index. This setting overrides the cluster-level setting.
+`index.plugins.replication.follower.ops_batch_size` | 50000 | 複製同步階段期間，該特定索引一次可擷取的操作數量。此設定會覆寫叢集層級設定。
 
-## Bulk replication settings
+## 大量複製設定
 
-The following settings control [Bulk Replication API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/bulk-api/) behavior.
+下列設定可控制 [Bulk Replication API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/bulk-api/) 的行為。
 
-Setting | Default | Description
+設定 | 預設值 | 說明
 :--- | :--- | :---
-`plugins.replication.follower.bulk_batch_size` | 10 | The number of indexes processed concurrently in each batch during a bulk replication task. Minimum value is `1` and maximum value is `100`.
-`plugins.replication.follower.bulk_poll_timeout` | 15 | The time, in minutes, that start and resume tasks wait for replication to confirm before timing out indexes. Minimum value is `1` and maximum value is `30`.
+`plugins.replication.follower.bulk_batch_size` | 10 | 大量複製任務期間，每個批次中同時處理的索引數量。最小值為 `1`，最大值為 `100`。
+`plugins.replication.follower.bulk_poll_timeout` | 15 | 啟動與恢復任務在將索引判定為逾時前，等待複製確認的時間（以分鐘為單位）。最小值為 `1`，最大值為 `30`。

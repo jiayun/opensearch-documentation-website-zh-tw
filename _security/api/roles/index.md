@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Role APIs
+title: "角色 API"
 parent: Security APIs
 nav_order: 40
 has_children: true
@@ -9,15 +10,15 @@ redirect_from:
   - /security/api/roles/
 ---
 
-# Role APIs
+# 角色 API
 
-The role APIs create, retrieve, modify, and delete the roles that define cluster, index, and document permissions.
+角色 API 可建立、擷取、修改及刪除定義叢集、索引與文件權限的角色。
 
-OpenSearch supports the following role APIs.
+OpenSearch 支援下列角色 API。
 
-| API | Description |
+| API | 說明 |
 | :--- | :--- |
-| [Create or Update Role API]({{site.url}}{{site.baseurl}}/security/api/roles/create-role/) | Creates or replaces the specified role. |
-| [Patch Roles API]({{site.url}}{{site.baseurl}}/security/api/roles/patch-roles/) | Updates individual attributes of one role, or creates, updates, or deletes multiple roles in a single call. |
-| [Get Roles API]({{site.url}}{{site.baseurl}}/security/api/roles/get-roles/) | Retrieves one role or all roles. |
-| [Delete Role API]({{site.url}}{{site.baseurl}}/security/api/roles/delete-role/) | Deletes the specified role. |
+| [建立或更新角色 API]({{site.url}}{{site.baseurl}}/security/api/roles/create-role/) | 建立或取代指定的角色。 |
+| [修補角色 API]({{site.url}}{{site.baseurl}}/security/api/roles/patch-roles/) | 更新單一角色的個別屬性，或在單次呼叫中建立、更新或刪除多個角色。 |
+| [取得角色 API]({{site.url}}{{site.baseurl}}/security/api/roles/get-roles/) | 擷取單一角色或所有角色。 |
+| [刪除角色 API]({{site.url}}{{site.baseurl}}/security/api/roles/delete-role/) | 刪除指定的角色。 |

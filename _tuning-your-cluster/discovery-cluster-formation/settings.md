@@ -1,152 +1,153 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Discovery and cluster formation settings
+title: "探索與叢集形成設定"
 parent: Discovery and cluster formation
 nav_order: 100
 ---
 
-# Discovery and cluster formation settings
+# 探索與叢集形成設定
 
-This page provides a comprehensive reference for all settings that control discovery and cluster formation behavior in OpenSearch. These settings determine how nodes find each other, elect a cluster manager, and maintain cluster coordination.
+本頁提供所有控制 OpenSearch 中探索與叢集形成行為之設定的完整參考。這些設定決定節點如何找到彼此、選出叢集管理員，以及維持叢集協調。
 
-## Core discovery settings
+## 核心探索設定
 
-The following settings control the fundamental discovery process:
+下列設定控制基本的探索程序：
 
-- `discovery.seed_hosts` (Static, list): Provides a list of addresses for cluster-manager-eligible nodes in the cluster. This setting is essential for nodes to be able to find each other during cluster formation. Each address can be specified as `host:port` or just `host`. The `host` can be a hostname (resolved through DNS---if multiple IPs are resolved, OpenSearch attempts to connect to all), IPv4 address, or IPv6 address (must be enclosed in square brackets). If no port is specified, OpenSearch determines the port by checking `transport.profiles.default.port`, then `transport.port`. If neither is configured, the default port `9300` is used. Default is `["127.0.0.1", "[::1]"]`.
+- `discovery.seed_hosts`（靜態，清單）：提供叢集中符合叢集管理員資格之節點的位址清單。此設定對於節點在叢集形成期間能找到彼此至關重要。每個位址可指定為 `host:port` 或僅 `host`。`host` 可以是主機名稱（透過 DNS 解析——若解析出多個 IP，OpenSearch 會嘗試連線至全部）、IPv4 位址或 IPv6 位址（必須以方括號括住）。若未指定連接埠，OpenSearch 會依序檢查 `transport.profiles.default.port`、`transport.port` 來決定連接埠。若兩者皆未設定，則使用預設連接埠 `9300`。預設為 `["127.0.0.1", "[::1]"]`。
 
-- `discovery.seed_providers` (Static, list): Specifies which seed host providers to use for obtaining seed node addresses during discovery. Available providers are `settings` (uses addresses from the `discovery.seed_hosts` setting) and `file` (reads addresses from the `unicast_hosts.txt` file). You can specify multiple providers to combine discovery methods. Default is `["settings"]`.
+- `discovery.seed_providers`（靜態，清單）：指定探索期間使用哪些種子主機提供者來取得種子節點位址。可用的提供者為 `settings`（使用 `discovery.seed_hosts` 設定中的位址）與 `file`（從 `unicast_hosts.txt` 檔案讀取位址）。您可以指定多個提供者來合併探索方法。預設為 `["settings"]`。
 
-- `discovery.type` (Static, string): Specifies whether OpenSearch should form a multi-node cluster or operate as a single node. When set to `single-node`, OpenSearch forms a single-node cluster and suppresses certain timeouts. This setting is useful for development and testing environments. Valid values are `multi-node` (default) and `single-node`.
+- `discovery.type`（靜態，字串）：指定 OpenSearch 應形成多節點叢集或以單一節點運作。設為 `single-node` 時，OpenSearch 會形成單節點叢集並抑制特定逾時。此設定適用於開發與測試環境。有效值為 `multi-node`（預設）與 `single-node`。
 
-- `cluster.initial_cluster_manager_nodes` (Static, list): Sets the initial cluster-manager-eligible nodes for bootstrapping a brand-new cluster. This setting is required when bootstrapping a cluster for the first time and should contain the node names (as defined by `node.name`) of the initial cluster-manager-eligible nodes. This list should be empty for nodes joining an existing cluster. Default is `[]` (empty).
+- `cluster.initial_cluster_manager_nodes`（靜態，清單）：設定用於啟動全新叢集的初始符合叢集管理員資格節點。首次啟動叢集時需要此設定，且應包含初始符合叢集管理員資格節點的節點名稱（如 `node.name` 所定義）。對於加入現有叢集的節點，此清單應為空。預設為 `[]`（空）。
 
-## Discovery process settings
+## 探索程序設定
 
-These settings control timing and behavior during the discovery process:
+這些設定控制探索程序期間的時序與行為：
 
-- `discovery.find_peers_interval` (Static, time unit): Sets how long a node waits before attempting another discovery round when the initial attempt fails. Default is `1s`.
+- `discovery.find_peers_interval`（靜態，時間單位）：設定當初始嘗試失敗時，節點在嘗試下一輪探索前等待的時間長度。預設為 `1s`。
 
-- `discovery.cluster_formation_warning_timeout` (Static, time unit): Sets how long a node attempts to form a cluster before logging a warning message. The warning will start with "cluster manager not discovered" and describe the current discovery state. Default is `10s`.
+- `discovery.cluster_formation_warning_timeout`（靜態，時間單位）：設定節點在記錄警告訊息前嘗試形成叢集的時間長度。警告會以「cluster manager not discovered」開頭，並描述目前的探索狀態。預設為 `10s`。
 
-### DNS resolution settings
+### DNS 解析設定
 
-The following settings control DNS lookup behavior for seed hosts:
+下列設定控制種子主機的 DNS 查閱行為：
 
-- `discovery.seed_resolver.max_concurrent_resolvers` (Static, integer): Specifies how many concurrent DNS lookups to perform when resolving seed node addresses. Default is `10`.
+- `discovery.seed_resolver.max_concurrent_resolvers`（靜態，整數）：指定解析種子節點位址時要執行多少個並行 DNS 查閱。預設為 `10`。
 
-- `discovery.seed_resolver.timeout` (Static, time unit): Specifies the timeout for each DNS lookup when resolving seed node addresses. Default is `5s`.
+- `discovery.seed_resolver.timeout`（靜態，時間單位）：指定解析種子節點位址時每次 DNS 查閱的逾時。預設為 `5s`。
 
-### Connection settings
+### 連線設定
 
-The following settings control connection attempts during discovery:
+下列設定控制探索期間的連線嘗試：
 
-- `discovery.probe.connect_timeout` (Static, time unit): Sets the timeout when attempting to connect to each address during discovery. Default is `3s`.
+- `discovery.probe.connect_timeout`（靜態，時間單位）：設定探索期間嘗試連線至每個位址時的逾時。預設為 `3s`。
 
-- `discovery.probe.handshake_timeout` (Static, time unit): Sets the timeout when attempting to identify a remote node through handshake during discovery. Default is `1s`.
+- `discovery.probe.handshake_timeout`（靜態，時間單位）：設定探索期間嘗試透過握手識別遠端節點時的逾時。預設為 `1s`。
 
-- `discovery.request_peers_timeout` (Static, time unit): Sets how long a node waits for peer information requests during discovery before considering the request failed. Default is `3s`.
+- `discovery.request_peers_timeout`（靜態，時間單位）：設定探索期間節點在將請求視為失敗前，等待對等節點資訊請求的時間長度。預設為 `3s`。
 
-## Cluster manager election settings
+## 叢集管理員選舉設定
 
-These settings control the cluster manager election process:
+這些設定控制叢集管理員選舉程序：
 
-- `cluster.election.back_off_time` (Static, time unit): Sets the incremental delay added after each election failure (linear backoff). Each failed election increases the wait time by this amount before the next attempt. Default is `100ms`. **Warning**: Changing this from the default may prevent cluster manager election.
+- `cluster.election.back_off_time`（靜態，時間單位）：設定每次選舉失敗後新增的遞增延遲（線性退避）。每次選舉失敗都會在下一次嘗試前依此數量增加等待時間。預設為 `100ms`。**警告**：將此值從預設值變更可能會導致叢集管理員選舉無法進行。
 
-- `cluster.election.duration` (Static, time unit): Sets the maximum duration allowed for each election attempt before considering it failed and scheduling a retry. Default is `500ms`. **Warning**: Changing this from the default may prevent cluster manager election.
+- `cluster.election.duration`（靜態，時間單位）：設定每次選舉嘗試在視為失敗並排程重試前允許的最大持續時間。預設為 `500ms`。**警告**：將此值從預設值變更可能會導致叢集管理員選舉無法進行。
 
-- `cluster.election.initial_timeout` (Static, time unit): Sets the initial upper bound for how long a node waits before attempting its first election, either at startup or after the current cluster manager fails. Default is `100ms`. **Warning**: Changing this from the default may prevent cluster manager election.
+- `cluster.election.initial_timeout`（靜態，時間單位）：設定節點在嘗試第一次選舉前等待時間的初始上限，無論是在啟動時或目前叢集管理員失敗後。預設為 `100ms`。**警告**：將此值從預設值變更可能會導致叢集管理員選舉無法進行。
 
-- `cluster.election.max_timeout` (Static, time unit): Sets the maximum upper bound for election delays to prevent excessively sparse elections during long network partitions. Default is `10s`. **Warning**: Changing this from the default may prevent cluster manager election.
+- `cluster.election.max_timeout`（靜態，時間單位）：設定選舉延遲的最大上限，以防止在長時間網路分割期間選舉過於稀疏。預設為 `10s`。**警告**：將此值從預設值變更可能會導致叢集管理員選舉無法進行。
 
-## Voting configuration settings
+## 投票組態設定
 
-The following settings control the voting mechanism for cluster manager elections:
+下列設定控制叢集管理員選舉的投票機制：
 
-- `cluster.auto_shrink_voting_configuration` (Dynamic, Boolean): Controls whether the voting configuration automatically removes departed nodes, provided at least three nodes remain. When set to `false`, you must manually remove departed nodes using the Voting Configuration Exclusions API. Default is `true`.
+- `cluster.auto_shrink_voting_configuration`（動態，布林值）：控制投票組態是否自動移除已離開的節點，前提是至少保留三個節點。設為 `false` 時，您必須使用 Voting Configuration Exclusions API 手動移除已離開的節點。預設為 `true`。
 
-- `cluster.max_voting_config_exclusions` (Dynamic, integer): Sets the maximum number of voting configuration exclusions allowed simultaneously. This is used during cluster manager node maintenance operations. Default is `10`.
+- `cluster.max_voting_config_exclusions`（動態，整數）：設定同時允許的投票組態排除項目數量上限。這用於叢集管理員節點維護作業期間。預設為 `10`。
 
-## Fault detection settings
+## 故障偵測設定
 
-OpenSearch continuously monitors cluster health through two types of health checks:
+OpenSearch 透過兩種類型的健康狀態檢查持續監視叢集健康狀態：
 
-- [Follower checks](#follower-checks) (sent by the cluster manager to non-cluster-manager nodes)
-- [Leader checks](#leader-checks) (sent by non-cluster-manager nodes to the cluster manager)
+- [追隨者檢查](#follower-checks)（由叢集管理員傳送給非叢集管理員節點）
+- [領導者檢查](#leader-checks)（由非叢集管理員節點傳送給叢集管理員）
 
-OpenSearch allows occasional check failures and uses the following guidelines for taking action:
+OpenSearch 允許偶發的檢查失敗，並使用下列準則來採取行動：
 
-- Transient issues (single check failures) are ignored; multiple consecutive failures are required for action.
-- Network disconnects trigger immediate response.
-- All timeouts and retry counts are configurable.
+- 暫時性問題（單次檢查失敗）會被忽略；必須連續多次失敗才會採取行動。
+- 網路中斷會觸發立即回應。
+- 所有逾時與重試次數皆可設定。
 
-### Follower checks 
+### 追隨者檢查
 
-The elected cluster manager periodically checks each node in the cluster:
+選出的叢集管理員會定期檢查叢集中的每個節點：
 
-1. Sends periodic health check requests to all nodes.
-2. Waits for responses within the configured timeout.
-3. Tracks consecutive check failures for each node.
-4. Removes nodes that fail consecutive checks (based on retry count).
+1. 傳送定期健康狀態檢查請求至所有節點。
+2. 在設定的逾時內等待回應。
+3. 追蹤每個節點的連續檢查失敗次數。
+4. 移除連續檢查失敗的節點（依據重試次數）。
 
-If the cluster manager detects that a node has disconnected (network-level disconnect), it bypasses the timeout and retry settings and immediately attempts to remove the node from the cluster.
+若叢集管理員偵測到某節點已中斷連線（網路層級中斷），會略過逾時與重試設定，並立即嘗試將該節點從叢集移除。
 
-### Leader checks
+### 領導者檢查
 
-Each non-cluster-manager node periodically checks the health of the elected cluster manager:
+每個非叢集管理員節點會定期檢查選出的叢集管理員健康狀態：
 
-1. Send periodic health check requests to the cluster manager.
-2. Wait for responses within the configured timeout.
-3. Tracks consecutive check failures for the cluster manager.
-4. Starts a new cluster manager election if consecutive checks fail.
+1. 傳送定期健康狀態檢查請求至叢集管理員。
+2. 在設定的逾時內等待回應。
+3. 追蹤叢集管理員的連續檢查失敗次數。
+4. 若連續檢查失敗，則開始新的叢集管理員選舉。
 
-If a node detects that the cluster manager has disconnected, it bypasses timeout and retry settings and immediately restarts its discovery phase to find or elect a new cluster manager.
+若節點偵測到叢集管理員已中斷連線，會略過逾時與重試設定，並立即重新啟動其探索階段，以尋找或選出新的叢集管理員。
 
-The following settings control health monitoring and failure detection.
+下列設定控制健康狀態監視與故障偵測。
 
-### Follower check settings
+### 追隨者檢查設定
 
-These settings control how the cluster manager monitors other nodes:
+這些設定控制叢集管理員如何監視其他節點：
 
-- `cluster.fault_detection.follower_check.interval` (Static, time unit): Sets the interval between follower checks from the cluster manager to other nodes. Default is `1s`. **Warning**: Changing this may cause cluster instability.
+- `cluster.fault_detection.follower_check.interval`（靜態，時間單位）：設定叢集管理員對其他節點執行追隨者檢查的間隔。預設為 `1s`。**警告**：變更此設定可能導致叢集不穩定。
 
-- `cluster.fault_detection.follower_check.timeout` (Static, time unit): Sets how long the cluster manager waits for a response to follower checks before considering the check failed. Default is `10s`. **Warning**: Changing this may cause cluster instability.
+- `cluster.fault_detection.follower_check.timeout`（靜態，時間單位）：設定叢集管理員等待追隨者檢查回應的時間，超過此時間便視為檢查失敗。預設為 `10s`。**警告**：變更此設定可能導致叢集不穩定。
 
-- `cluster.fault_detection.follower_check.retry_count` (Static, integer): Sets how many consecutive follower check failures must occur before the cluster manager considers a node faulty and removes it from the cluster. Default is `3`. **Warning**: Changing this may cause cluster instability.
+- `cluster.fault_detection.follower_check.retry_count`（靜態，整數）：設定追隨者檢查必須連續失敗多少次，叢集管理員才會將節點視為故障並從叢集移除。預設為 `3`。**警告**：變更此設定可能導致叢集不穩定。
 
-### Leader check settings
+### 領導者檢查設定
 
-These settings control how non-cluster-manager nodes monitor the cluster manager:
+這些設定控制非叢集管理員節點如何監視叢集管理員：
 
-- `cluster.fault_detection.leader_check.interval` (Static, time unit): Sets the interval between leader checks from nodes to the cluster manager. Default is `1s`. **Warning**: Changing this may cause cluster instability.
+- `cluster.fault_detection.leader_check.interval`（靜態，時間單位）：設定節點對叢集管理員執行領導者檢查的間隔。預設為 `1s`。**警告**：變更此設定可能導致叢集不穩定。
 
-- `cluster.fault_detection.leader_check.timeout` (Static, time unit): Sets how long nodes wait for a response to leader checks before considering the cluster manager failed. Default is `10s`. **Warning**: Changing this may cause cluster instability.
+- `cluster.fault_detection.leader_check.timeout`（靜態，時間單位）：設定節點等待領導者檢查回應的時間，超過此時間便視為叢集管理員失效。預設為 `10s`。**警告**：變更此設定可能導致叢集不穩定。
 
-- `cluster.fault_detection.leader_check.retry_count` (Static, integer): Sets how many consecutive leader check failures must occur before a node considers the cluster manager faulty and attempts to find or elect a new cluster manager. Default is `3`. **Warning**: Changing this may cause cluster instability.
+- `cluster.fault_detection.leader_check.retry_count`（靜態，整數）：設定領導者檢查必須連續失敗多少次，節點才會將叢集管理員視為故障，並嘗試尋找或選出新的叢集管理員。預設為 `3`。**警告**：變更此設定可能導致叢集不穩定。
 
-## Cluster state publishing settings
+## 叢集狀態發布設定
 
-The following settings control how cluster state updates are distributed:
+下列設定控制叢集狀態更新的分送方式：
 
-- `cluster.publish.timeout` (Static, time unit): Sets how long the cluster manager waits for cluster state updates to be published to all nodes before timing out. This setting is ignored when `discovery.type` is set to `single-node`. Default is `30s`.
+- `cluster.publish.timeout`（靜態，時間單位）：設定叢集管理員等待叢集狀態更新發布至所有節點的時間，超過此時間便逾時。當 `discovery.type` 設為 `single-node` 時，會忽略此設定。預設為 `30s`。
 
-- `cluster.publish.info_timeout` (Static, time unit): Sets how long the cluster manager waits before logging a message about slow-responding nodes during cluster state publishing. Default is `10s`.
+- `cluster.publish.info_timeout`（靜態，時間單位）：設定叢集管理員在叢集狀態發布期間，等待多久才記錄有關回應緩慢節點的訊息。預設為 `10s`。
 
-- `cluster.follower_lag.timeout` (Static, time unit): Sets how long the cluster manager waits for acknowledgments of cluster state updates from lagging nodes. Nodes that don't respond within this time are considered failed and removed from the cluster. Default is `90s`.
+- `cluster.follower_lag.timeout`（靜態，時間單位）：設定叢集管理員等待落後節點確認叢集狀態更新的時間。未在此時間內回應的節點會被視為失效，並從叢集移除。預設為 `90s`。
 
-## Cluster coordination settings
+## 叢集協調設定
 
-The following settings control cluster joining and coordination:
+下列設定控制叢集加入與協調：
 
-- `cluster.join.timeout` (Static, time unit): Sets how long a node waits after sending a join request before considering it failed and retrying. This setting is ignored when `discovery.type` is set to `single-node`. Default is `60s`.
+- `cluster.join.timeout`（靜態，時間單位）：設定節點傳送加入請求後的等待時間，超過此時間便視為請求失敗並重試。當 `discovery.type` 設為 `single-node` 時，會忽略此設定。預設為 `60s`。
 
-- `cluster.no_cluster_manager_block` (Dynamic, string): Specifies which operations are rejected when there is no active cluster manager. Valid values are `all` (all operations including read/write and cluster state APIs are rejected) and `write` (only write operations are rejected; read operations succeed based on the last known cluster state but may return stale data). This setting doesn't affect node-based APIs (Cluster Stats, Node Info, Node Stats). For full cluster functionality, an active cluster manager is required. Default is `write`.
+- `cluster.no_cluster_manager_block`（動態，字串）：指定沒有作用中的叢集管理員時，會拒絕哪些操作。有效值為 `all`（拒絕所有操作，包括讀取／寫入與叢集狀態 API）和 `write`（僅拒絕寫入操作；讀取操作會根據最後已知的叢集狀態成功執行，但可能傳回過時的資料）。此設定不影響以節點為基礎的 API（Cluster Stats、Node Info、Node Stats）。若要使用完整的叢集功能，必須有作用中的叢集管理員。預設為 `write`。
 
-## Configuration examples
+## 組態範例
 
-The following are configuration examples for discovery.
+以下是探索的組態範例。
 
-### Basic production cluster
+### 基本正式環境叢集
 
 ```yaml
 # Cluster identification
@@ -170,7 +171,7 @@ cluster.max_voting_config_exclusions: 10
 ```
 {% include copy.html %}
 
-### Development single-node setup
+### 開發環境單一節點設定
 
 ```yaml
 # Single-node development cluster
@@ -183,7 +184,7 @@ cluster.join.timeout: 10s
 ```
 {% include copy.html %}
 
-### High-availability production cluster
+### 高可用性正式環境叢集
 
 ```yaml
 # Production cluster with dedicated cluster manager nodes
@@ -209,8 +210,8 @@ cluster.join.timeout: 120s
 ```
 {% include copy.html %}
 
-## Related documentation
+## 相關文件
 
-- [Node discovery and seed hosts]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/discovery/): Provides information about discovery mechanisms and seed host providers
-- [Creating a cluster]({{site.url}}{{site.baseurl}}/tuning-your-cluster/): Step-by-step cluster setup guide
-- [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/): General configuration guidance
+- [節點探索與種子主機]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/discovery/)：提供探索機制與種子主機提供者的資訊
+- [建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)：逐步叢集設定指南
+- [設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)：一般組態指引

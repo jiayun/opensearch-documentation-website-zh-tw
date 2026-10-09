@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using agentic memory
+title: "使用代理程式記憶"
 parent: Agentic search
 grand_parent: AI search
 nav_order: 80
 has_children: false
 ---
 
-# Using agentic memory for agentic search
+# 使用代理程式記憶進行代理程式搜尋
 
-[Agentic memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/) provides a structured approach to managing conversation context in agentic search through dedicated memory containers. Unlike the default `conversation_index` memory type used by conversational agents, agentic memory uses separately created and configured memory containers that give you greater control over how conversation history is stored and managed. This is useful for scenarios where you want to manage memory lifecycle independently from the agent, configure memory behavior, or share memory containers across different workflows.
+[代理程式記憶]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/) 透過專用的記憶容器，提供在代理程式搜尋中管理對話內容的結構化方法。與對話代理程式使用的預設 `conversation_index` 記憶類型不同，代理程式記憶使用個別建立並設定的記憶容器，讓您更能掌控對話歷史的儲存與管理方式。這適用於您想要獨立於代理程式管理記憶生命週期、設定記憶行為，或在不同工作流程之間共用記憶容器的情境。
 
-The following example demonstrates how to create a memory container, configure an agent with agentic memory, and use memory continuity across multiple search queries.
+下列範例示範如何建立記憶容器、設定使用代理程式記憶的代理程式，以及跨多個搜尋查詢使用記憶連續性。
 
-## Step 1: Create a product index
+## 步驟 1：建立產品索引
 
-Create a sample index with product data that includes various product attributes such as a `product_name`, `price`, `color`, and `category`:
+建立包含產品資料的範例索引，其中包含各種產品屬性，例如 `product_name`、`price`、`color` 及 `category`：
 
 ```json
 PUT /products-index
@@ -44,9 +45,9 @@ PUT /products-index
 ```
 {% include copy-curl.html %}
 
-## Step 2: Ingest sample data
+## 步驟 2：匯入範例資料
 
-Add sample product documents to the index:
+將範例產品文件新增至索引：
 
 ```json
 POST _bulk
@@ -61,11 +62,11 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Step 3: Create a model
+## 步驟 3：建立模型
 
-Review the [model configuration]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/#model-configuration) and choose a model to use.
+檢閱[模型組態]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/#model-configuration)並選擇要使用的模型。
 
-The following example registers a GPT model that will be used by both the `conversational` agent and the `QueryPlanningTool`:
+下列範例註冊一個 GPT 模型，供 `conversational` 代理程式與 `QueryPlanningTool` 兩者使用：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -100,9 +101,9 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-## Step 4: Create a memory container
+## 步驟 4：建立記憶容器
 
-Create a memory container to store conversation context for the agent:
+建立記憶容器以儲存代理程式的對話內容：
 
 ```json
 POST /_plugins/_ml/memory_containers/_create
@@ -115,9 +116,9 @@ POST /_plugins/_ml/memory_containers/_create
 ```
 {% include copy-curl.html %}
 
-The memory container is created independently and can be configured using various options. For more information, see [The configuration object]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/#the-configuration-object).
+記憶容器會個別建立，並可使用各種選項進行設定。如需詳細資訊，請參閱[組態物件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/#the-configuration-object)。
 
-The response contains the memory container ID:
+回應包含記憶容器 ID：
 
 ```json
 {
@@ -125,9 +126,9 @@ The response contains the memory container ID:
 }
 ```
 
-## Step 5: Register an agent with an agentic memory
+## 步驟 5：註冊使用代理程式記憶的代理程式
 
-Register a conversational agent that uses `agentic_memory` as the memory type. Specify the memory container created in the previous step in the `memory_container_id` field. The agent includes the required `QueryPlanningTool` for generating query domain-specific language (DSL):
+註冊使用 `agentic_memory` 作為記憶類型的對話代理程式。在 `memory_container_id` 欄位中指定前一步驟建立的記憶容器。代理程式包含產生 Query DSL 所需的 `QueryPlanningTool`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -158,11 +159,11 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-For more configuration options, see [Configuring agentic search agents]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/).
+如需更多組態選項，請參閱[設定代理程式搜尋代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/)。
 
-## Step 6: Configure a search pipeline
+## 步驟 6：設定搜尋管線
 
-Create a search pipeline containing both request and response processors. The [`agentic_query_translator` request processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/) translates natural language queries into query DSL. The [`agentic_context` response processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-context-processor/) adds agent execution context information for monitoring and conversation continuity:
+建立同時包含請求與回應處理器的搜尋管線。[`agentic_query_translator` 請求處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/)會將自然語言查詢轉譯為 Query DSL。[`agentic_context` 回應處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-context-processor/)會新增代理程式執行脈絡資訊，以供監控及維持對話連續性：
 
 ```json
 PUT _search/pipeline/agentic_search_pipeline
@@ -185,9 +186,9 @@ PUT _search/pipeline/agentic_search_pipeline
 ```
 {% include copy-curl.html %}
 
-## Step 7: Run an agentic search
+## 步驟 7：執行代理程式搜尋
 
-To run an agentic search, send a natural language search query:
+若要執行代理程式搜尋，請傳送自然語言搜尋查詢：
 
 ```json
 GET /_search?search_pipeline=agentic_search_pipeline
@@ -201,7 +202,7 @@ GET /_search?search_pipeline=agentic_search_pipeline
 ```
 {% include copy-curl.html %}
 
-The agent analyzes the request, discovers appropriate indexes, and generates an optimized DSL query. The response includes matching products in the `hits` array. The `ext` object contains the `memory_id` (for continuing the conversation) and the generated `dsl_query`:
+代理程式會分析請求、探索適當的索引，並產生最佳化的 Query DSL 查詢。回應會在 `hits` 陣列中包含相符的產品。`ext` 物件包含 `memory_id`（用於繼續對話）及產生的 `dsl_query`：
 
 ```json
 {
@@ -275,9 +276,9 @@ The agent analyzes the request, discovers appropriate indexes, and generates an 
 }
 ```
 
-## Step 8: Run a follow-up agentic search
+## 步驟 8：執行後續的代理程式搜尋
 
-Send a follow-up query using the `memory_id` from the previous response:
+使用上一個回應中的 `memory_id` 傳送後續查詢：
 
 ```json
 GET /_search?search_pipeline=agentic_search_pipeline
@@ -292,7 +293,7 @@ GET /_search?search_pipeline=agentic_search_pipeline
 ```
 {% include copy-curl.html %}
 
-Using the agentic memory container, the agent recalls the previous conversation and applies it to the new request. The agent successfully interprets "black ones instead" while maintaining the price constraint of 150 dollars or less. In the response, the `memory_id` remains the same, and the generated DSL query changes only the color filter from white to black while preserving all other constraints:
+透過代理程式記憶容器，代理程式會記住先前的對話並將其套用到新的請求。代理程式成功解讀「改為黑色」，同時維持 150 美元以下的價格限制。在回應中，`memory_id` 保持不變，產生的 Query DSL 查詢僅將顏色篩選條件從白色改為黑色，並保留所有其他限制條件：
 
 ```json
 {
@@ -366,9 +367,9 @@ Using the agentic memory container, the agent recalls the previous conversation 
 }
 ```
 
-## Next steps
+## 後續步驟
 
-- [Using conversational agents]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-converse/) -- Learn about conversational agents with reasoning traces and conversation index memory.
-- [Agentic query translator processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/) -- Learn more about the request processor that translates natural language queries into query DSL.
-- [Agentic context processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-context-processor/) -- Learn more about the response processor that adds agent execution context information for monitoring and conversation continuity.
-- [Configuring agentic search agents]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/) -- Configure agent behaviors with different models, tools, and prompts.
+- [使用對話式代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-converse/) -- 了解具備推理軌跡與對話索引記憶的對話式代理程式。
+- [代理程式查詢轉譯處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/) -- 進一步了解將自然語言查詢轉換為 Query DSL 的請求處理器。
+- [代理程式脈絡處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-context-processor/) -- 進一步了解為監控與對話連續性新增代理程式執行脈絡資訊的回應處理器。
+- [設定代理程式搜尋代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/) -- 使用不同的模型、工具與提示詞設定代理程式行為。

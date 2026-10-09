@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: rename
 parent: Commands
@@ -8,41 +9,41 @@ nav_order: 37
 
 <!-- vale off -->
 
-# rename command
+# rename 命令
 
 <!-- vale on -->
 
-The `rename` command renames one or more fields in the search results.
+`rename` 命令會重新命名搜尋結果中的一或多個欄位。
 
-The `rename` command handles non-existent fields as follows:
+`rename` 命令對不存在的欄位處理方式如下：
 
-* **Renaming a non-existent field to a non-existent field**: No change occurs to the search results.
-* **Renaming a non-existent field to an existing field**: The existing target field is removed from the search results.
-* **Renaming an existing field to an existing field**: The existing target field is removed and the source field is renamed to the target.
+* **將不存在的欄位重新命名為不存在的欄位**：搜尋結果不會有任何變更。
+* **將不存在的欄位重新命名為現有的欄位**：現有的目標欄位會從搜尋結果中移除。
+* **將現有的欄位重新命名為現有的欄位**：現有的目標欄位會移除，並將來源欄位重新命名為目標欄位。
 
-The `rename` command is not rewritten to [query domain-specific language (DSL)]({{site.url}}{{site.baseurl}}/query-dsl/). It is only executed on the coordinating node.
+`rename` 命令不會改寫為 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/)。它只會在協調節點上執行。
 {: .note}
 
-## Syntax
+## 語法
 
-The `rename` command has the following syntax:
+`rename` 命令的語法如下：
 
 ```sql
 rename <source-field> AS <target-field>[, <source-field> AS <target-field>]...
 ```
 
-## Parameters
+## 參數
 
-The `rename` command supports the following parameters.
+`rename` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<source-field>` | Required | The name of the field you want to rename. Supports wildcard patterns using `*`. |
-| `<target-field>` | Required | The name you want to rename to. Must contain the same number of wildcards as the source. |
+| `<source-field>` | 必要 | 您要重新命名的欄位名稱。支援使用 `*` 的萬用字元模式。 |
+| `<target-field>` | 必要 | 您要重新命名成的名稱。其萬用字元數量必須與來源相同。 |
 
-## Example 1: Renaming a field  
+## 範例 1：重新命名欄位  
 
-The following query renames one field:
+下列查詢會重新命名一個欄位：
   
 ```sql
 source=otellogs
@@ -53,7 +54,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -67,9 +68,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Renaming multiple fields  
+## 範例 2：重新命名多個欄位  
 
-The following query renames multiple fields:
+下列查詢會重新命名多個欄位：
   
 ```sql
 source=otellogs
@@ -80,7 +81,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -94,9 +95,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Renaming fields using wildcards  
+## 範例 3：使用萬用字元重新命名欄位  
 
-The following query renames multiple fields using a wildcard pattern. Both `severityText` and `severityNumber` match `severity*` and are renamed to `sev*`:
+下列查詢會使用萬用字元模式重新命名多個欄位。`severityText` 和 `severityNumber` 都符合 `severity*`，並會重新命名為 `sev*`：
   
 ```sql
 source=otellogs
@@ -107,7 +108,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -121,9 +122,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 4: Renaming fields using multiple wildcard patterns  
+## 範例 4：使用多個萬用字元模式重新命名欄位  
 
-The following query renames multiple fields using multiple wildcard patterns:
+下列查詢會使用多個萬用字元模式重新命名多個欄位：
   
 ```sql
 source=otellogs
@@ -134,7 +135,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -148,9 +149,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 5: Renaming an existing field to another existing field  
+## 範例 5：將現有的欄位重新命名為另一個現有的欄位  
 
-The following query renames an existing field to another existing field. The target field is removed and the source field is renamed to the target:
+下列查詢會將現有的欄位重新命名為另一個現有的欄位。目標欄位會移除，並將來源欄位重新命名為目標欄位：
   
 ```sql
 source=otellogs
@@ -161,7 +162,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -175,8 +176,8 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Limitations
+## 限制
 
-The `rename` command has the following limitations:
+`rename` 命令有下列限制：
 
-* Literal asterisk (`*`) characters in field names cannot be replaced because the asterisk is used for wildcard matching.
+* 欄位名稱中的字面星號 (`*`) 字元無法取代，因為星號用於萬用字元比對。

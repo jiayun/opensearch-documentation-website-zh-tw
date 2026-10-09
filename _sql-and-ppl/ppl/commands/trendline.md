@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: trendline
 parent: Commands
@@ -8,36 +9,36 @@ nav_order: 52
 
 <!-- vale off -->
 
-# trendline command
+# trendline 命令
 
 <!-- vale on -->
 
-The `trendline` command calculates moving averages of fields.
+`trendline` 命令會計算欄位的移動平均。
 
-## Syntax
+## 語法
 
-The `trendline` command has the following syntax:
+`trendline` 命令的語法如下：
 
 ```sql
 trendline [sort [+|-] <sort-field>] (sma | wma)(<number-of-datapoints>, <field>) [as <alias>] [(sma | wma)(<number-of-datapoints>, <field>) [as <alias>]]...
 ```
 
-## Parameters
+## 參數
 
-The `trendline` command supports the following parameters.
+`trendline` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `[+|-]` | Optional | The sort order for the data. `+` specifies ascending order with `NULL`/`MISSING` first, `-` specifies descending order with `NULL`/`MISSING` last. Default is `+`. |
-| `<sort-field>` | Required | The field used to sort the data. |
-| `(sma | wma)` | Required | The type of moving average to calculate. `sma` calculates the simple moving average with equal weighting for all values, `wma` calculates the weighted moving average with more weight given to recent values. |
-| `number-of-datapoints` | Required | The number of data points used to calculate the moving average. Must be greater than zero. |
-| `<field>` | Required | The field for which the moving average is calculated. |
-| `<alias>` | Optional | The name of the resulting column containing the moving average. Default is the `<field>` name with `_trendline` appended. |
+| `[+|-]` | 選用 | 資料的排序順序。`+` 指定遞增排序，`NULL`/`MISSING` 排在最前面；`-` 指定遞減排序，`NULL`/`MISSING` 排在最後面。預設值為 `+`。 |
+| `<sort-field>` | 必要 | 用於排序資料的欄位。 |
+| `(sma | wma)` | 必要 | 要計算的移動平均類型。`sma` 會計算簡單移動平均，所有值的權重相同；`wma` 會計算加權移動平均，較近期的值權重較高。 |
+| `number-of-datapoints` | 必要 | 用於計算移動平均的資料點數量。必須大於零。 |
+| `<field>` | 必要 | 要計算移動平均的欄位。 |
+| `<alias>` | 選用 | 包含移動平均的結果欄名稱。預設為 `<field>` 名稱後加上 `_trendline`。 |
 
-## Example 1: Tracking whether severity is escalating over time
+## 範例 1：追蹤嚴重性是否隨時間升高
 
-The following query calculates a 3-point simple moving average of `severityNumber`:
+下列查詢會計算 `severityNumber` 的 3 點簡單移動平均：
   
 ```sql
 source=otellogs
@@ -49,7 +50,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -65,9 +66,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Using weighted moving average for recent-biased trends
+## 範例 2：使用加權移動平均呈現偏重近期的趨勢
 
-The following query calculates a weighted moving average, which gives more weight to recent values:
+下列查詢會計算加權移動平均，給予較近期的值更高的權重：
   
 ```sql
 source=otellogs
@@ -79,7 +80,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -95,8 +96,8 @@ The query returns the following results:
 <!-- vale on -->
 
 
-## Limitations
+## 限制
 
-The `trendline` command has the following limitations:
+`trendline` 命令有下列限制：
 
-* The `trendline` command requires all values in the specified `<field>` parameter to be non-null. Any rows with `null` values in this field are automatically excluded from the command's output.
+* `trendline` 命令要求指定的 `<field>` 參數中的所有值皆不得為 null。此欄位中值為 `null` 的任何資料列，都會自動從命令的輸出中排除。

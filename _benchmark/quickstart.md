@@ -1,34 +1,35 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Quickstart
+title: "快速入門"
 nav_order: 5
 ---
 
-# OpenSearch Benchmark quickstart
+# OpenSearch Benchmark 快速入門
 
-This page outlines how to quickly install OpenSearch Benchmark and run your first OpenSearch Benchmark workload.
+本頁說明如何快速安裝 OpenSearch Benchmark，並執行您的第一個 OpenSearch Benchmark 工作負載。
 
-## Prerequisites
+## 先決條件
 
-To perform the Quickstart steps, you'll need to fulfill the following prerequisites:
+若要執行快速入門的步驟，您必須符合下列先決條件：
 
-- A currently active OpenSearch cluster. For instructions on how to create an OpenSearch cluster, see [Creating a cluster]({{site.url}}{{site.baseurl}}/tuning-your-cluster/index/).
-- Git 2.3 or greater.
-- Python 3.8 or later
+- 目前作用中的 OpenSearch 叢集。如需建立 OpenSearch 叢集的指示，請參閱[建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/index/)。
+- Git 2.3 或更新版本。
+- Python 3.8 或更新版本
 
-## Set up an OpenSearch cluster
+## 設定 OpenSearch 叢集
 
-If you don't already have an active OpenSearch cluster, you can launch a new OpenSearch cluster to use with OpenSearch Benchmark.
+如果您還沒有作用中的 OpenSearch 叢集，可以啟動新的 OpenSearch 叢集來搭配 OpenSearch Benchmark 使用。
 
-- Using **Docker Compose**. For instructions on how to use Docker Compose, see [OpenSearch Quickstart]({{site.url}}{{site.baseurl}}/quickstart/).
-- Using **Tar**. For instructions on how to install OpenSearch with Tar, see [Installing OpenSearch > Tarball]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/tar#step-1-download-and-unpack-opensearch).
+- 使用 **Docker Compose**。如需使用 Docker Compose 的指示，請參閱 [OpenSearch 快速入門]({{site.url}}{{site.baseurl}}/quickstart/)。
+- 使用 **Tar**。如需使用 Tar 安裝 OpenSearch 的指示，請參閱[安裝 OpenSearch > Tarball]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/tar#step-1-download-and-unpack-opensearch)。
 
-OpenSearch Benchmark has not been tested with the Window's distribution of OpenSearch.
+OpenSearch Benchmark 尚未在 Windows 版 OpenSearch 上測試過。
 {: .note}
 
-After installation, you can verify OpenSearch is running by going to `localhost:9200`. If you're running your cluster with the Security plugin enabled, OpenSearch will expect SSL connections with the username "admin" and password "admin".  However, since the localhost address is not a unique public address, no certificate authority will issue an SSL certificate for it, so certificate checking will need to be disabled using the `-k` option.
+安裝之後，您可以前往 `localhost:9200` 來確認 OpenSearch 正在執行。如果您在啟用 Security 外掛程式的情況下執行叢集，OpenSearch 會預期使用使用者名稱「admin」和密碼「admin」的 SSL 連線。不過，由於 localhost 位址並非唯一的公開位址，沒有任何憑證授權單位會為它核發 SSL 憑證，因此必須使用 `-k` 選項停用憑證檢查。
 
-Use the following command to verify OpenSearch is running with SSL certificate checks disabled:
+使用下列命令來確認 OpenSearch 正在執行且已停用 SSL 憑證檢查：
 
 ```bash
 curl -k -u admin:<custom-admin-password> https://localhost:9200			# the "-k" option skips SSL certificate checks
@@ -52,27 +53,27 @@ curl -k -u admin:<custom-admin-password> https://localhost:9200			# the "-k" opt
 }
 ```
 
-With your cluster running, you can now install OpenSearch Benchmark.
+叢集執行後，您現在可以安裝 OpenSearch Benchmark。
 
-## Installing OpenSearch Benchmark
+## 安裝 OpenSearch Benchmark
 
-To install OpenSearch Benchmark with Docker, see [Installing OpenSearch Benchmark > Installing with Docker]({{site.url}}{{site.baseurl}}/benchmark/user-guide/installing-benchmark/#installing-with-docker).
+若要使用 Docker 安裝 OpenSearch Benchmark，請參閱[安裝 OpenSearch Benchmark > 使用 Docker 安裝]({{site.url}}{{site.baseurl}}/benchmark/user-guide/installing-benchmark/#installing-with-docker)。
 {: .tip}
 
-To install OpenSearch Benchmark from PyPi, enter the following `pip` command:
+若要從 PyPi 安裝 OpenSearch Benchmark，請輸入下列 `pip` 命令：
 
 ```bash
 pip3 install opensearch-benchmark
 ```
 {% include copy.html %}
 
-After the installation completes, verify that OpenSearch Benchmark is running by entering the following command:
+安裝完成後，輸入下列命令來確認 OpenSearch Benchmark 正在執行：
 
 ```bash
 opensearch-benchmark --help
 ```
 
-If successful, OpenSearch returns the following response:
+如果成功，OpenSearch 會傳回下列回應：
 
 ```bash
 $ opensearch-benchmark --help
@@ -107,46 +108,46 @@ subcommands:
 Find out more about Benchmark at https://opensearch.org/docs
 ```
 
-## Running your first benchmark
+## 執行您的第一個基準測試
 
-You can now run your first benchmark. The following benchmark uses the [percolator](https://github.com/opensearch-project/opensearch-benchmark-workloads/tree/main/percolator) workload.
+您現在可以執行您的第一個基準測試。下列基準測試使用 [percolator](https://github.com/opensearch-project/opensearch-benchmark-workloads/tree/main/percolator) 工作負載。
 
 
-### Understanding workload command flags
+### 了解工作負載命令旗標
 
-Benchmarks are run using the [`run`]({{site.url}}{{site.baseurl}}/benchmark/reference/commands/run/) command with the following command flags:
+基準測試使用 [`run`]({{site.url}}{{site.baseurl}}/benchmark/reference/commands/run/) 命令搭配下列命令旗標來執行：
 
-For additional `run` command flags, see the [run]({{site.url}}{{site.baseurl}}/benchmark/reference/commands/run/) reference. Some commonly used options are `--workload-params`, `--exclude-tasks`, and `--include-tasks`.
+如需其他 `run` 命令旗標，請參閱 [run]({{site.url}}{{site.baseurl}}/benchmark/reference/commands/run/) 參考。一些常用的選項為 `--workload-params`、`--exclude-tasks` 和 `--include-tasks`。
 {: .tip}
 
-* `--pipeline=benchmark-only` : Informs OSB that users wants to provide their own OpenSearch cluster.
-- `workload=percolator`: The name of workload used by OpenSearch Benchmark.
-* `--target-host="<OpenSearch Cluster Endpoint>"`: Indicates the target cluster or host that will be benchmarked. Enter the endpoint of your OpenSearch cluster here.
-* `--client-options="basic_auth_user:'<Basic Auth Username>',basic_auth_password:'<Basic Auth Password>'"`: The username and password for your OpenSearch cluster.
-* `--test-mode`: Allows a user to run the workload without running it for the entire duration. When this flag is present, Benchmark runs the first thousand operations of each task in the workload. This is only meant for sanity checks---the metrics produced are meaningless.
-* `--distribution-version`: Indicates which OpenSearch version Benchmark will use when provisioning. When run, the `run` command will parse the correct distribution version when it connects to the OpenSearch cluster.
+* `--pipeline=benchmark-only` ：告知 OSB 使用者想要提供自己的 OpenSearch 叢集。
+- `workload=percolator`：OpenSearch Benchmark 所使用的工作負載名稱。
+* `--target-host="<OpenSearch Cluster Endpoint>"`：指出將接受基準測試的目標叢集或主機。請在此輸入您 OpenSearch 叢集的端點。
+* `--client-options="basic_auth_user:'<Basic Auth Username>',basic_auth_password:'<Basic Auth Password>'"`：您 OpenSearch 叢集的使用者名稱和密碼。
+* `--test-mode`：允許使用者在未執行完整時段的情況下執行工作負載。當此旗標存在時，Benchmark 會執行工作負載中每個工作的前一千次操作。這僅用於基本檢查---所產生的指標沒有意義。
+* `--distribution-version`：指出 Benchmark 在佈建時將使用的 OpenSearch 版本。執行時，`run` 命令會在連線至 OpenSearch 叢集時解析正確的發行版本。
 
-### Running the workload
+### 執行工作負載
 
-To run the [percolator](https://github.com/opensearch-project/opensearch-benchmark-workloads/tree/main/percolator) workload with OpenSearch Benchmark, use the following `run` command:
+若要使用 OpenSearch Benchmark 執行 [percolator](https://github.com/opensearch-project/opensearch-benchmark-workloads/tree/main/percolator) 工作負載，請使用下列 `run` 命令：
 
 ```bash
 opensearch-benchmark run --pipeline=benchmark-only --workload=percolator --target-host=https://localhost:9200 --client-options=basic_auth_user:admin,basic_auth_password:admin,verify_certs:false --test-mode
 ```
 {% include copy.html %}
 
-When the `run` command runs, all tasks and operations in the `percolator` workload run sequentially.
+當 `run` 命令執行時，`percolator` 工作負載中的所有工作和操作會依序執行。
 
-### Validating the test
+### 驗證測試
 
-After an OpenSearch Benchmark test runs, take the following steps to verify that it has run properly:
+OpenSearch Benchmark 測試執行後，請採取下列步驟來確認它已正確執行：
 
-- Note the number of documents in the OpenSearch or OpenSearch Dashboards index that you plan to run the benchmark against.
-- In the results returned by OpenSearch Benchmark, compare the `workload.json` file for your specific workload and verify that the document count matches the number of documents. For example, based on the [percolator](https://github.com/opensearch-project/opensearch-benchmark-workloads/blob/main/percolator/workload.json#L19) `workload.json` file, you should expect to see `2000000` documents in your cluster.
+- 記下您打算對其執行基準測試的 OpenSearch 或 OpenSearch Dashboards 索引中的文件數目。
+- 在 OpenSearch Benchmark 傳回的結果中，比較您特定工作負載的 `workload.json` 檔案，並確認文件計數與文件數目相符。例如，根據 [percolator](https://github.com/opensearch-project/opensearch-benchmark-workloads/blob/main/percolator/workload.json#L19) 的 `workload.json` 檔案，您應該會預期在叢集中看到 `2000000` 份文件。
 
-### Understanding the results
+### 瞭解結果
 
-OpenSearch Benchmark returns the following response once the benchmark completes:
+OpenSearch Benchmark 在基準測試完成後會傳回以下回應：
 
 ```bash
 ------------------------------------------------------
@@ -247,36 +248,36 @@ OpenSearch Benchmark returns the following response once the benchmark completes
 -----------------------------------
 ```
 
-Each task run by the `percolator` workload represents a specific OpenSearch API operation---such as Bulk or Search---that was performed when the test was run. Each task in the output summary contains the following information:
+`percolator` 工作負載執行的每個工作都代表測試執行時所執行的特定 OpenSearch API 操作，例如 Bulk 或 Search。輸出摘要中的每個工作包含以下資訊：
 
-* **Throughput:** The number of successful OpenSearch operations per second.
-* **Latency:** The amount of time, including wait time, taken for the request and the response to be sent and received by Benchmark.
-* **Service Time:** The amount of time, excluding wait time, taken for the request and the response to be sent and received by Benchmark.
-* **Error Rate:** The percentage of operations run during the task that were not successful or returned a 200 error code.
+* **輸送量：** 每秒成功的 OpenSearch 操作次數。
+* **延遲：** Benchmark 傳送與接收請求和回應所花費的時間，包括等待時間。
+* **服務時間：** Benchmark 傳送與接收請求和回應所花費的時間，不包括等待時間。
+* **錯誤率：** 工作期間執行的操作中，未成功或傳回 200 錯誤碼的操作百分比。
 
-For more details about how the summary report is generated, see [Summary report]({{site.url}}{{site.baseurl}}/benchmark/reference/summary-report/).
+如需更多關於摘要報告產生方式的詳細資訊，請參閱[摘要報告]({{site.url}}{{site.baseurl}}/benchmark/reference/summary-report/)。
 
 
-## Running OpenSearch Benchmark on your own cluster
+## 在您自己的叢集上執行 OpenSearch Benchmark
 
-Now that you're familiar with running OpenSearch Benchmark on a cluster, you can run OpenSearch Benchmark on your own cluster, using the same `run` command but replacing the following settings:
+現在您已熟悉如何在叢集上執行 OpenSearch Benchmark，您可以在自己的叢集上執行 OpenSearch Benchmark，使用相同的 `run` 命令，但替換下列設定：
 
-  * Replace `https://localhost:9200` with your target cluster endpoint. This can be a URI like `https://search.mydomain.com` or a `HOST:PORT` specification.
-  * If the cluster is configured with basic authentication, replace the username and password in the command line with the appropriate credentials.
-  * Remove the `verify_certs:false` directive if you are not specifying `localhost` as your target cluster. This directive is needed only for clusters where SSL certificates are not set up.
-  * If you are using a `HOST:PORT`specification and plan to use SSL/TLS, either specify `https://`, or add the `use_ssl:true` directive to the `--client-options` string option.
-  * Remove the `--test-mode` flag to run the full workload, rather than an abbreviated test.
+  * 將 `https://localhost:9200` 替換為您的目標叢集端點。這可以是像 `https://search.mydomain.com` 的 URI，或 `HOST:PORT` 規格。
+  * 如果叢集設定了基本驗證，請將命令列中的使用者名稱和密碼替換為適當的認證資訊。
+  * 如果您未指定 `localhost` 作為目標叢集，請移除 `verify_certs:false` 指示詞。只有在未設定 SSL 憑證的叢集上才需要此指示詞。
+  * 如果您使用 `HOST:PORT`規格並打算使用 SSL/TLS，請指定 `https://`，或將 `use_ssl:true` 指示詞新增至 `--client-options` 字串選項。
+  * 移除 `--test-mode` 旗標，以執行完整的工作負載，而非縮減的測試。
 
-You can copy the following command template to use in your own terminal:
+您可以複製下列命令範本，在您自己的終端機中使用：
 
 ```bash
 opensearch-benchmark run --pipeline=benchmark-only --workload=percolator --target-host=<OpenSearch Cluster Endpoint> --client-options=basic_auth_user:admin,basic_auth_password:admin
 ```
 {% include copy.html %}
 
-## Next steps
+## 後續步驟
 
-See the following resources to learn more about OpenSearch Benchmark:
+請參閱下列資源，以進一步瞭解 OpenSearch Benchmark：
 
-- [User guide]({{site.url}}{{site.baseurl}}/benchmark/user-guide/index/): Dive deep into how OpenSearch Benchmark can you help you track the performance of your cluster.
-- [Tutorials]({{site.url}}{{site.baseurl}}/benchmark/tutorials/index/): Use step-by-step guides for more advanced Benchmarking configurations and functionality.
+- [使用者指南]({{site.url}}{{site.baseurl}}/benchmark/user-guide/index/)：深入瞭解 OpenSearch Benchmark 如何協助您追蹤叢集的效能。
+- [教學]({{site.url}}{{site.baseurl}}/benchmark/tutorials/index/)：使用逐步指南，瞭解更進階的 Benchmarking 組態與功能。

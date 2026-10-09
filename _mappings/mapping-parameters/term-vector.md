@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Term vector
+title: "詞彙向量"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/term-vector/
@@ -9,30 +10,30 @@ has_children: false
 has_toc: false
 ---
 
-# Term vector mapping parameter
+# 詞彙向量對應參數
 
-The `term_vector` mapping parameter controls whether term-level information is stored for individual text fields during indexing. This information includes details such as term frequency, position, and character offsets, which can be used for advanced features like custom scoring and highlighting.
+`term_vector` 對應參數控制是否在編製索引時為個別文字欄位儲存詞彙層級資訊。這些資訊包括詞彙頻率、位置與字元位移等詳細資料，可用於自訂評分與醒目顯示等進階功能。
 
-By default, `term_vector` is disabled. When enabled, term vectors are stored and can be retrieved using the `_termvectors` API.
+預設情況下，`term_vector` 為停用狀態。啟用後，詞彙向量會被儲存，並可透過 `_termvectors` API 擷取。
 
-Enabling `term_vector` increases index size. Only use it when you need detailed term-level data.
+啟用 `term_vector` 會增加索引大小。請只在需要詳細詞彙層級資料時才使用。
 {: .important}
 
-## Configuration options
+## 組態選項
 
-The `term_vector` parameter supports the following valid values:
+`term_vector` 參數支援下列有效值：
 
-- `no` (default): Term vectors are not stored.
-- `yes`: Store term frequencies (the number of times a term appears in the specific document) and basic positions.
-- `with_positions`: Store term positions. The order in which the term appears in the field.
-- `with_offsets`: Store character offsets. The exact starting and ending character positions of the term within the field text.
-- `with_positions_offsets`: Store both positions and offsets.
-- `with_positions_payloads`: Store term positions along with payloads, which are optional pieces of custom metadata (such as tags or numeric values) that can be attached to individual terms during indexing. Payloads are used in advanced scenarios like custom scoring or tagging but require special analyzers in order to be set up.
-- `with_positions_offsets_payloads`: Store all term vector data.
+- `no` (預設)：不儲存詞彙向量。
+- `yes`：儲存詞彙頻率 (詞彙在特定文件中出現的次數) 與基本位置。
+- `with_positions`：儲存詞彙位置，即詞彙在欄位中出現的順序。
+- `with_offsets`：儲存字元位移，即詞彙在欄位文字中的確切起始與結束字元位置。
+- `with_positions_offsets`：同時儲存位置與位移。
+- `with_positions_payloads`：儲存詞彙位置以及酬載 (payload)，酬載是可在編製索引時附加至個別詞彙的選用自訂中繼資料 (例如標籤或數值)。酬載用於自訂評分或標記等進階情境，但需要特殊的分析器才能設定。
+- `with_positions_offsets_payloads`：儲存所有詞彙向量資料。
 
-## Enabling term_vector on a field
+## 在欄位上啟用 term_vector
 
-The following request creates an index named `articles` with the `content` field configured to store term vectors, including positions and offsets:
+下列請求會建立名為 `articles` 的索引，並將 `content` 欄位設定為儲存詞彙向量，包括位置與位移：
 
 ```json
 PUT /articles
@@ -50,7 +51,7 @@ PUT /articles
 {% include copy-curl.html %}
 
 
-Index a sample document:
+為範例文件編製索引：
 
 ```json
 PUT /articles/_doc/1
@@ -61,7 +62,7 @@ PUT /articles/_doc/1
 {% include copy-curl.html %}
 
 
-Retrieve term-level statistics using the `_termvectors` API:
+使用 `_termvectors` API 擷取詞彙層級統計資料：
 
 ```json
 POST /articles/_termvectors/1
@@ -74,7 +75,7 @@ POST /articles/_termvectors/1
 ```
 {% include copy-curl.html %}
 
-The following response includes detailed term-level statistics for the `content` field in document ID `1`, such as term frequency, document frequency, token positions, and character offsets:
+下列回應包含文件 ID `1` 中 `content` 欄位的詳細詞彙層級統計資料，例如詞彙頻率、文件頻率、詞元位置與字元位移：
 
 ```json
 {
@@ -205,9 +206,9 @@ The following response includes detailed term-level statistics for the `content`
 }
 ```
 
-## Highlighting with term vectors
+## 使用詞彙向量進行醒目顯示
 
-Use the following command to search for the term "analytics" and [highlight]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/) it using the field's stored term vectors:
+使用下列命令搜尋詞彙 "analytics"，並使用該欄位儲存的詞彙向量進行[醒目顯示]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/)：
 
 ```json
 POST /articles/_search
@@ -228,7 +229,7 @@ POST /articles/_search
 ```
 {% include copy-curl.html %}
 
-The following response shows a matched document in which the term "analytics" was found in the `content` field. The `highlight` section includes the matched term wrapped in `<em>` tags, using the field's stored term vectors for efficient and accurate highlighting:
+下列回應顯示一個相符的文件，其中在 `content` 欄位中找到詞彙 "analytics"。`highlight` 區段包含以 `<em>` 標籤包覆的相符詞彙，並使用該欄位儲存的詞彙向量來實現高效率且準確的醒目顯示：
 
 ```json
 {

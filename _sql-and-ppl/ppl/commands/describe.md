@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: describe
 parent: Commands
@@ -8,40 +9,40 @@ nav_order: 12
 
 <!-- vale off -->
 
-# describe command
+# describe 命令
 
 <!-- vale on -->
 
-The `describe` command queries index metadata. The `describe` command can only be used as the first command in the PPL query.
+`describe` 命令會查詢索引中繼資料。`describe` 命令只能作為 PPL 查詢中的第一個命令使用。
 
-## Syntax
+## 語法
 
-The `describe` command has the following syntax. The argument to the command is a dot-separated path to the table consisting of an optional data source, optional schema, and required table name:
+`describe` 命令具有下列語法。此命令的引數是以點分隔的資料表路徑，由選用的資料來源、選用的結構描述，以及必要的資料表名稱組成：
 
 ```sql
 describe [<data-source>.][<schema>.]<table-name>
 ```
 
-## Parameters
+## 參數
 
-The `describe` command supports the following parameters.
+`describe` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<table-name>` | Required | The table to query. |  
-| `<data-source>` | Optional | The data source to use. Default is the OpenSearch `datasource`. |
-| `<schema>` | Optional | The schema to use. Default is the default schema. |
+| `<table-name>` | 必要 | 要查詢的資料表。 |  
+| `<data-source>` | 選用 | 要使用的資料來源。預設為 OpenSearch `datasource`。 |
+| `<schema>` | 選用 | 要使用的結構描述。預設為預設結構描述。 |
 
-## Example 1: Fetching all metadata  
+## 範例 1：擷取所有中繼資料  
 
-This example describes the `accounts` index:
+此範例說明 `accounts` 索引：
   
 ```sql
 describe accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -62,9 +63,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Fetching metadata with a condition and filter  
+## 範例 2：擷取具有條件與篩選的中繼資料  
 
-This example retrieves columns of the type `bigint` from the `accounts` index:
+此範例會從 `accounts` 索引擷取 `bigint` 類型的資料行：
   
 ```sql
 describe accounts
@@ -73,7 +74,7 @@ describe accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 

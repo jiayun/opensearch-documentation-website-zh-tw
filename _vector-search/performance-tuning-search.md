@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search performance tuning
+title: "搜尋效能調校"
 nav_order: 20
 parent: Performance tuning
 ---
 
-# Vector search query performance tuning
+# 向量搜尋查詢效能調校
 
-Take the following steps to improve search performance.
+請依照下列步驟改善搜尋效能。
 
-## Reduce segment count
+## 減少分段數量
 
-To improve search performance, you must keep the number of segments under control. Lucene's IndexSearcher searches over all of the segments in a shard to find the 'size' best results.
+若要改善搜尋效能，您必須將分段數量控制在合理範圍內。Lucene 的 IndexSearcher 會搜尋分片中的所有分段，以找出 'size' 筆最佳結果。
 
-Having one segment per shard provides optimal performance with respect to search latency. You can configure an index to have multiple shards in order to avoid very large shards and achieve more parallelism.
+每個分片只有一個分段時，搜尋延遲可達最佳效能。您可以設定索引使用多個分片，以避免分片過大並達到更高的平行度。
 
-You can control the number of segments by choosing a larger refresh interval or during indexing by asking OpenSearch to slow down segment creation by disabling the refresh interval.
+您可以選擇較長的重新整理間隔來控制分段數量，或在編製索引時停用重新整理間隔，要求 OpenSearch 減緩分段建立速度。
 
-## Warm up the index
+## 預熱索引
 
-Native library indexes are constructed during indexing, but they're loaded into memory during the first search. In Lucene, each segment is searched sequentially (so, for k-NN, each segment returns up to k nearest neighbors of the query point). The top `size` results, ranked by score, are returned from all segment-level results within a shard (a higher score indicates a better result).
+原生程式庫索引會在編製索引時建構，但在第一次搜尋時才載入記憶體。在 Lucene 中，每個分段會依序搜尋（因此對 k-NN 而言，每個分段會傳回最多 k 個查詢點的最近鄰居）。最終的 `size` 筆結果會依分數排序，從分片內所有分段層級的結果中傳回（分數越高代表結果越好）。
 
-Once a native library index is loaded (native library indexes are loaded outside of the OpenSearch JVM), OpenSearch caches them in memory. Initial queries are expensive and complete in a few seconds, while subsequent queries are faster and complete in milliseconds (assuming that the k-NN circuit breaker isn't triggered).
+原生程式庫索引一旦載入（原生程式庫索引是在 OpenSearch JVM 之外載入），OpenSearch 會將它們快取在記憶體中。初始查詢成本高昂，需要數秒才能完成，而後續查詢則較快，可在數毫秒內完成（假設 k-NN 熔斷器未被觸發）。
 
-You can use [memory-optimized search]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/memory-optimized-search/), which enables the engine to load only the necessary bytes during search instead of loading the entire index outside the JVM. With this mode enabled, the Warm-up API loads only the required data into memory and opens read streams to the underlying indexes. Thus, the Warm-up API helps ensure that searches after warm-up run faster, even with memory-optimized search enabled.
+您可以使用[記憶體最佳化搜尋]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/memory-optimized-search/)，讓引擎在搜尋時只載入必要的位元組，而不是在 JVM 之外載入整個索引。啟用此模式後，Warm-up API 只會將所需的資料載入記憶體，並開啟底層索引的讀取串流。因此，即使啟用了記憶體最佳化搜尋，Warm-up API 也有助於確保預熱後的搜尋執行得更快。
 
-To avoid this latency penalty during your first queries, you can use the warmup API operation on the indexes you want to search:
+若要避免第一次查詢時的延遲，您可以對想要搜尋的索引使用 warmup API 操作：
 
 ```json
 GET /_plugins/_knn/warmup/index1,index2,index3?pretty
@@ -39,15 +40,15 @@ GET /_plugins/_knn/warmup/index1,index2,index3?pretty
 ```
 {% include copy-curl.html %}
 
-The warmup API operation loads all native library indexes for all shards (primaries and replicas) for the specified indexes into the cache, so there's no penalty for loading native library indexes during initial searches.
+warmup API 操作會將指定索引的所有分片（主要分片與副本分片）的所有原生程式庫索引載入快取，因此初始搜尋時不會有載入原生程式庫索引的負擔。
 
-This API operation only loads the segments of active indexes into the cache. If a merge or refresh operation finishes after the API runs, or if you add new documents, you need to rerun the API to load those native library indexes into memory.
+此 API 操作只會將作用中索引的分段載入快取。如果合併或重新整理操作在此 API 執行後才完成，或者您新增了新文件，則需要重新執行此 API，將那些原生程式庫索引載入記憶體。
 {: .warning}
 
 
-## Avoid reading stored fields
+## 避免讀取儲存欄位
 
-If your use case only involves reading the IDs and scores of the nearest neighbors, you can disable the reading of stored fields, which saves time that would otherwise be spent retrieving the vectors from stored fields. To disable stored fields entirely, set `_source` to `false`:
+如果您的使用情境只需要讀取最近鄰居的 ID 與分數，您可以停用儲存欄位的讀取，以節省原本用於從儲存欄位擷取向量的時間。若要完全停用儲存欄位，請將 `_source` 設為 `false`：
 
 ```json
 GET /my-index/_search
@@ -65,11 +66,11 @@ GET /my-index/_search
 ```
 {% include copy-curl.html %}
 
-This query returns only the document IDs and scores, making it the fastest option when you don't need the actual document contents. For more information, see [Disabling `_source`]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#disabling-_source).
+此查詢只會傳回文件 ID 與分數，因此當您不需要實際文件內容時，這是最快的選項。如需詳細資訊，請參閱[停用 `_source`]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#disabling-_source)。
 
-## Exclude vectors from search results
+## 從搜尋結果中排除向量
 
-If you need the document contents but want to optimize performance, you can exclude only the vector fields from being returned in the search results. This approach reduces network transfer while still maintaining access to other document fields. To exclude vectors from search results, provide the vector field name in `_source.excludes`:
+如果您需要文件內容但想最佳化效能，您可以只在搜尋結果中排除向量欄位。這種做法可減少網路傳輸量，同時仍能存取其他文件欄位。若要從搜尋結果中排除向量，請在 `_source.excludes` 中提供向量欄位名稱：
 
 ```json
 GET /my-index/_search
@@ -91,17 +92,17 @@ GET /my-index/_search
 ```
 {% include copy-curl.html %}
 
-For more information, see [Retrieve specific fields]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/).
+如需詳細資訊，請參閱[擷取特定欄位]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/)。
 
-## Automatically exclude vectors from search results
-**Introduced 3.8**
+## 自動從搜尋結果中排除向量
+**3.8 版新增**
 {: .label .label-purple }
 
-OpenSearch can exclude vector fields from search responses automatically so you don't have to list them in `_source.excludes` for every request. When enabled, the `knn_default_excludes` [system-generated search request processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/system-generated-search-processors/) inspects the index mappings for each search request, identifies all `knn_vector` fields (including those nested in object or nested fields), and adds them to `_source.excludes` before the request runs. This reduces the search response payload size.
+OpenSearch 可以自動從搜尋回應中排除向量欄位，因此您不必在每次請求的 `_source.excludes` 中逐一列出。啟用後，`knn_default_excludes` [系統產生的搜尋請求處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/system-generated-search-processors/)會檢查每個搜尋請求的索引對應，識別所有 `knn_vector` 欄位（包括巢狀於物件或 nested 欄位中的欄位），並在請求執行前將它們加入 `_source.excludes`。這可減少搜尋回應的承載大小。
 
-Automatic exclusion changes only the fields returned in the response. It does not affect scoring: a script that accesses a vector during query execution using either `doc['vector_field']` or `params._source['vector_field']` still reads the full vector because the exclusion is applied during the fetch phase rather than the query phase. Vectors also remain fully stored and are reconstructed through [derived source]({{site.url}}{{site.baseurl}}/vector-search/settings/), so excluding them from responses does not remove them from the index.
+自動排除只會改變回應中傳回的欄位，不會影響評分：在查詢執行期間透過 `doc['vector_field']` 或 `params._source['vector_field']` 存取向量的指令碼仍會讀取完整向量，因為排除是在擷取階段而非查詢階段套用。向量也會完整儲存，並透過[衍生來源]({{site.url}}{{site.baseurl}}/vector-search/settings/)重建，因此從回應中排除向量並不會將它們從索引中移除。
 
-The processor is disabled by default. To enable it, add its factory, `knn_default_excludes_factory`, to the `cluster.search.enabled_system_generated_factories` cluster setting:
+此處理器預設為停用。若要啟用，請將其工廠 `knn_default_excludes_factory` 加入 `cluster.search.enabled_system_generated_factories` 叢集設定：
 
 ```json
 PUT _cluster/settings
@@ -115,7 +116,7 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-After you enable the processor, vector fields are omitted from `_source` in search responses by default:
+啟用處理器後，搜尋回應中的 `_source` 預設會省略向量欄位：
 
 ```json
 GET /my-index/_search
@@ -132,15 +133,15 @@ GET /my-index/_search
 ```
 {% include copy-curl.html %}
 
-### Overriding automatic exclusion
+### 覆寫自動排除
 
-The processor does not exclude any field that you specify in a request. Use one of the following options to control `_source` in the response:
+處理器不會排除您在請求中指定的任何欄位。請使用下列其中一種選項來控制回應中的 `_source`：
 
-- To return all fields, including vector fields, set `_source` to `true`.
-- To return a specific vector field, list it in `_source.includes`.
-- To omit the source entirely, set `_source` to `false`.
+- 若要傳回所有欄位（包括向量欄位），請將 `_source` 設為 `true`。
+- 若要傳回特定向量欄位，請將它列在 `_source.includes` 中。
+- 若要完全省略來源文件內容，請將 `_source` 設為 `false`。
 
-For example, the following request explicitly includes `vector_field`, so the response returns it even though the processor is enabled:
+例如，下列請求明確包含 `vector_field`，因此即使處理器已啟用，回應仍會傳回該欄位：
 
 ```json
 GET /my-index/_search
@@ -162,15 +163,15 @@ GET /my-index/_search
 ```
 {% include copy-curl.html %}
 
-The processor also skips any field already listed in the index mapping's `_source.excludes` or in the request's `_source.includes` or `_source.excludes`.
+處理器也會略過已列在索引對應的 `_source.excludes` 或請求的 `_source.includes` 或 `_source.excludes` 中的任何欄位。
 
-## Retrieve vectors using doc values
-**Introduced 3.7**
+## 使用 doc values 擷取向量
+**3.7 版新增**
 {: .label .label-purple }
 
-Use `docvalue_fields` to retrieve vector fields directly from on-disk columnar storage, which avoids reading and parsing the full `_source` document. This approach is significantly faster when retrieving a large number of vectors in a single search request.
+使用 `docvalue_fields` 可直接從磁碟上的欄式儲存擷取向量欄位，避免讀取與解析完整的 `_source` 文件。在單一搜尋請求中擷取大量向量時，這種做法明顯更快。
 
-For best performance, exclude the vector field from the `_source` by using `_source.excludes` or by setting `_source` to `false`. This ensures that OpenSearch reads vectors only from `doc_values` and does not redundantly decompress them from the stored `_source`.
+為獲得最佳效能，請使用 `_source.excludes` 或將 `_source` 設為 `false`，從 `_source` 中排除向量欄位。這可確保 OpenSearch 只從 `doc_values` 讀取向量，而不會從儲存的 `_source` 重複解壓縮。
 {: .tip}
 
-For supported formats and examples, see [Retrieving vector fields using `docvalue_fields`]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#retrieving-vector-fields-using-docvalue_fields).
+如需支援的格式與範例，請參閱[使用 `docvalue_fields` 擷取向量欄位]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#retrieving-vector-fields-using-docvalue_fields)。

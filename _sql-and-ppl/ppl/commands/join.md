@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: join
 parent: Commands
@@ -8,26 +9,26 @@ nav_order: 25
 
 <!-- vale off -->
 
-# join command
+# join 命令
 
 <!-- vale on -->
 
-The `join` command combines two datasets. The left side can be an index or the results of piped commands, while the right side can be either an index or a subsearch.
+`join` 命令會合併兩個資料集。左側可以是索引或管線命令的結果，而右側可以是索引或子搜尋。
 
-## Syntax
+## 語法
 
-The `join` command supports basic and extended syntax options.
+`join` 命令支援基本與擴充語法選項。
 
-### Basic syntax
+### 基本語法
 
 ```sql
 [joinType] join [left = <leftAlias>] [right = <rightAlias>] (on | where) <joinCriteria> <right-dataset>
 ```
 
-When using aliases, `left` must appear before `right`.
+使用別名時，`left` 必須出現在 `right` 之前。
 {: .note}
 
-The following are examples of the basic `join` command syntax:
+以下是基本 `join` 命令語法的範例：
 
 ```sql
 source = table1 | inner join left = l right = r on l.a = r.a table2 | fields l.a, r.a, b, c
@@ -46,25 +47,25 @@ source = table1 as t1 | join left = l right = r on l.a = r.a table2 as t2 | fiel
 source = table1 | join left = l right = r on l.a = r.a [ source = table2 ] as s | fields l.a, s.a
 ```
 
-#### Basic syntax parameters
+#### 基本語法參數
 
-The basic `join` syntax supports the following parameters.
+基本 `join` 語法支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<joinCriteria>` | Required | A comparison expression specifying how to join the datasets. Must be placed after the `on` or `where` keyword in the query. |
-| `<right-dataset>` | Required | The right dataset, which can be an index or a subsearch, with or without an alias. |
-| `joinType` | Optional | The type of join to perform. Valid values are `left`, `semi`, `anti`, and performance-sensitive types (`right`, `full`, and `cross`). Default is `inner`. |
-| `left` | Optional | An alias for the left dataset (typically a subsearch) used to avoid ambiguous field names. Specify as `left = <leftAlias>`. |
-| `right` | Optional | An alias for the right dataset (typically, a subsearch) used to avoid ambiguous field names. Specify as `right = <rightAlias>`. |
+| `<joinCriteria>` | 必要 | 比較運算式，指定如何合併資料集。必須放在查詢中的 `on` 或 `where` 關鍵字之後。 |
+| `<right-dataset>` | 必要 | 右側資料集，可以是索引或子搜尋，可含或不含別名。 |
+| `joinType` | 選用 | 要執行的 join 類型。有效值為 `left`、`semi`、`anti`，以及效能敏感類型（`right`、`full` 和 `cross`）。預設為 `inner`。 |
+| `left` | 選用 | 左側資料集（通常是子搜尋）的別名，用於避免欄位名稱不明確。指定為 `left = <leftAlias>`。 |
+| `right` | 選用 | 右側資料集（通常是子搜尋）的別名，用於避免欄位名稱不明確。指定為 `right = <rightAlias>`。 |
 
-### Extended syntax
+### 擴充語法
 
 ```sql
 join [type=<joinType>] [overwrite=<bool>] [max=n] (<join-field-list> | [left = <leftAlias>] [right = <rightAlias>] (on | where) <joinCriteria>) <right-dataset>
 ```
 
-The following are examples of the extended `join` command syntax:
+以下是擴充 `join` 命令語法的範例：
 
 ```sql
 source = table1 | join type=outer left = l right = r on l.a = r.a table2 | fields l.a, r.a, b, c
@@ -77,27 +78,27 @@ source = table1 | join type=inner max=1 a, b table2 | fields a, b, c
 source = table1 | join type=left overwrite=false max=0 a, b [source=table2 | rename d as b] | fields a, b, c
 ```
 
-#### Extended syntax parameters
+#### 擴充語法參數
 
-The extended `join` syntax supports the following parameters.
+擴充 `join` 語法支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<joinCriteria>` | Required | A comparison expression specifying how to join the datasets. Must be placed after the `on` or `where` keyword in the query. |
-| `<right-dataset>` | Required | The right dataset, which can be an index or a subsearch, with or without an alias. |  
-| `type` | Optional | The join type when using extended syntax. Valid values are `left`, `outer` (same as `left`), `semi`, `anti`, and performance-sensitive types (`right`, `full`, and `cross`). Default is `inner`. |
-| `<join-field-list>` | Optional | A list of fields used to build the join criteria. These fields must exist in both datasets. If not specified, all fields common to both datasets are used as join keys. |
-| `overwrite` | Optional | Applicable only when `join-field-list` is specified. Specifies whether fields from the right dataset with duplicate names should replace corresponding fields in the main search results. Default is `true`. |
-| `max` | Optional | The maximum number of subsearch results to join with each row in the main search. Default is `0` (unlimited) when plugins.ppl.syntax.legacy.preferred is `true`. When the setting is `false` the default value is `1`. |
-| `left` | Optional | An alias for the left dataset (typically a subsearch) used to avoid ambiguous field names. Specify as `left = <leftAlias>`. |
-| `right` | Optional | An alias for the right dataset (typically, a subsearch) used to avoid ambiguous field names. Specify as `right = <rightAlias>`. |
+| `<joinCriteria>` | 必要 | 比較運算式，指定如何合併資料集。必須放在查詢中的 `on` 或 `where` 關鍵字之後。 |
+| `<right-dataset>` | 必要 | 右側資料集，可以是索引或子搜尋，可含或不含別名。 |  
+| `type` | 選用 | 使用擴充語法時的 join 類型。有效值為 `left`、`outer`（與 `left` 相同）、`semi`、`anti`，以及效能敏感類型（`right`、`full` 和 `cross`）。預設為 `inner`。 |
+| `<join-field-list>` | 選用 | 用於建立 join 準則的欄位清單。這些欄位必須同時存在於兩個資料集中。若未指定，則會使用兩個資料集共有的所有欄位作為 join 鍵。 |
+| `overwrite` | 選用 | 僅在指定 `join-field-list` 時適用。指定右側資料集中名稱重複的欄位是否應取代主搜尋結果中的對應欄位。預設為 `true`。 |
+| `max` | 選用 | 要與主搜尋中每一列合併的子搜尋結果數上限。當 plugins.ppl.syntax.legacy.preferred 為 `true` 時，預設為 `0`（無限制）。當設定為 `false` 時，預設值為 `1`。 |
+| `left` | 選用 | 左側資料集（通常是子搜尋）的別名，用於避免欄位名稱不明確。指定為 `left = <leftAlias>`。 |
+| `right` | 選用 | 右側資料集（通常是子搜尋）的別名，用於避免欄位名稱不明確。指定為 `right = <rightAlias>`。 |
   
 
-## Configuration
+## 組態
 
-The `join` command behavior is configured using the `plugins.ppl.join.subsearch_maxout` setting, which specifies the maximum number of rows from the subsearch to join against. Default is `50000`. A value of `0` indicates that the restriction is unlimited.
+`join` 命令的行為是使用 `plugins.ppl.join.subsearch_maxout` 設定來設定，該設定指定要合併的子搜尋列數上限。預設為 `50000`。值為 `0` 表示無限制。
 
-To update the setting, send the following request:
+若要更新設定，請傳送下列請求：
   
 ```json
 PUT /_plugins/_query/settings
@@ -109,9 +110,9 @@ PUT /_plugins/_query/settings
 ```
 {% include copy-curl.html %}
 
-## Example 1: Joining two indexes  
+## 範例 1：合併兩個索引  
 
-The following query uses the basic `join` syntax to join two indexes:
+下列查詢使用基本 `join` 語法來合併兩個索引：
   
 ```sql
 source = state_country
@@ -120,7 +121,7 @@ source = state_country
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -135,9 +136,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Joining with a subsearch  
+## 範例 2：與子搜尋合併  
 
-The following query combines a dataset with a subsearch using the basic `join` syntax:
+下列查詢使用基本 `join` 語法將資料集與子搜尋合併：
   
 ```sql
 source = state_country as a
@@ -151,7 +152,7 @@ source = state_country as a
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -164,9 +165,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Joining using a field list  
+## 範例 3：使用欄位清單合併  
 
-The following query uses the extended syntax and specifies a list of fields for the join criteria:
+下列查詢使用擴充語法，並為 join 準則指定欄位清單：
   
 ```sql
 source = state_country
@@ -180,7 +181,7 @@ source = state_country
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -193,9 +194,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 4: Joining with additional options  
+## 範例 4：使用其他選項合併  
 
-The following query uses the extended syntax and optional parameters for more control over the join operation:
+下列查詢使用擴充語法與選用參數，以進一步控制 join 作業：
   
 ```sql
 source = state_country
@@ -204,7 +205,7 @@ source = state_country
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -218,21 +219,21 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Limitations
+## 限制
 
-The `join` command has the following limitations:
+`join` 命令有下列限制：
 
-* **Field name ambiguity in basic syntax** – When fields from the left and right datasets share the same name, the field names in the output are ambiguous. To resolve this, conflicting fields are renamed to `<alias>.id` (or `<tableName>.id` if no alias is specified).
+* **基本語法中的欄位名稱不明確** – 當左側與右側資料集的欄位名稱相同時，輸出中的欄位名稱會不明確。為了解決此問題，衝突的欄位會重新命名為 `<alias>.id`（若未指定別名則為 `<tableName>.id`）。
 
-  The following table demonstrates how field name conflicts are resolved when both `table1` and `table2` contain a field named `id`.
+  下表示範當 `table1` 與 `table2` 都包含名為 `id` 的欄位時，如何解決欄位名稱衝突。
 
-  | Query | Output |
+  | 查詢 | 輸出 |
   | --- | --- |
   | `source=table1 \| join left=t1 right=t2 on t1.id=t2.id table2 \| eval a = 1` | `t1.id, t2.id, a` |
   | `source=table1 \| join on table1.id=table2.id table2 \| eval a = 1` | `table1.id, table2.id, a` |
   | `source=table1 \| join on table1.id=t2.id table2 as t2 \| eval a = 1` | `table1.id, t2.id, a` |
   | `source=table1 \| join right=tt on table1.id=t2.id [ source=table2 as t2 \| eval b = id ] \| eval a = 1` | `table1.id, tt.id, tt.b, a` |
 
-* **Field deduplication in extended syntax** – When using the extended syntax with a field list, duplicate field names in the output are deduplicated according to the `overwrite` option.
+* **擴充語法中的欄位去重** – 使用擴充語法搭配欄位清單時，輸出中重複的欄位名稱會根據 `overwrite` 選項進行去重。
 
-* **Join type availability** – The join types `inner`, `left`, `outer` (alias of `left`), `semi`, and `anti` are enabled by default. The performance-sensitive join types `right`, `full`, and `cross` are disabled by default. To enable these types, set `plugins.calcite.all_join_types.allowed` to `true`.
+* **join 類型可用性** – join 類型 `inner`、`left`、`outer`（`left` 的別名）、`semi` 和 `anti` 預設為啟用。效能敏感的 join 類型 `right`、`full` 和 `cross` 預設為停用。若要啟用這些類型，請將 `plugins.calcite.all_join_types.allowed` 設定為 `true`。

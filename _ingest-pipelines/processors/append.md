@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Append
 parent: Ingest processors
@@ -7,20 +8,20 @@ redirect_from:
    - /api-reference/ingest-apis/processors/append/
 ---
 
-This documentation describes using the `append` processor in OpenSearch ingest pipelines. Consider using the [Data Prepper `add_entries` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/add-entries/), which runs on the OpenSearch cluster, if your use case involves large or complex datasets.
+本文件說明如何在 OpenSearch 資料匯入管線中使用 `append` 處理器。如果您的使用情境涉及大型或複雜的資料集，建議考慮使用在 OpenSearch 叢集上執行的 [Data Prepper `add_entries` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/add-entries/)。
 {: .note}
 
-# Append processor
+# Append 處理器
 
-The `append` processor is used to add values to a field:
+`append` 處理器用於將值新增至欄位：
 
-- If the field is an array, the `append` processor appends the specified values to that array.
-- If the field is a scalar field, the `append` processor converts it to an array and appends the specified values to that array.
-- If the field does not exist, the `append` processor creates an array with the specified values.
+- 如果該欄位是陣列，`append` 處理器會將指定的值附加到該陣列。
+- 如果該欄位是純量欄位，`append` 處理器會將其轉換為陣列，並將指定的值附加到該陣列。
+- 如果該欄位不存在，`append` 處理器會建立一個包含指定值的陣列。
 
-### Syntax 
+### 語法 
 
-The following is the syntax for the `append` processor: 
+以下是 `append` 處理器的語法： 
 
 ```json
 {
@@ -32,28 +33,28 @@ The following is the syntax for the `append` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `append` processor.
+下表列出 `append` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | Required  | The name of the field containing the data to be appended. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets).|
-`value`  | Required  | The value to be appended. This can be a static value or a dynamic value derived from existing fields. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets). | 
-`description`  | Optional  | A brief description of the processor.  |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | Specifies whether the processor continues execution even if it encounters errors. If set to `true`, failures are ignored. Default is `false`. |
-`allow_duplicates` | Optional | Specifies whether to append the values already contained in the field. If `true`, duplicate values are appended. Otherwise, they are skipped. |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |
+`field`  | 必要  | 包含要附加資料的欄位名稱。支援[範本程式碼片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。|
+`value`  | 必要  | 要附加的值。可以是靜態值，或從現有欄位衍生的動態值。支援[範本程式碼片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 | 
+`description`  | 選用  | 處理器的簡短描述。  |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 指定處理器遇到錯誤時是否繼續執行。若設為 `true`，則會忽略失敗。預設值為 `false`。 |
+`allow_duplicates` | 選用 | 指定是否附加欄位中已存在的值。若為 `true`，則會附加重複的值；否則會略過。 |
+`on_failure` | 選用 | 當處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。 |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+請依照下列步驟在管線中使用處理器。
 
-**Step 1: Create a pipeline** 
+**步驟 1：建立管線** 
 
-The following query creates a pipeline, named `user-behavior`, that has one append processor. It appends the `page_view` of each new document ingested into OpenSearch to an array field named `event_types`:
+下列查詢會建立一個名為 `user-behavior` 的管線，其中包含一個 append 處理器。它會將每個匯入 OpenSearch 的新文件的 `page_view` 附加到名為 `event_types` 的陣列欄位：
 
 ```json
 PUT _ingest/pipeline/user-behavior
@@ -71,12 +72,12 @@ PUT _ingest/pipeline/user-behavior
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline**
+**步驟 2（選用）：測試管線**
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/user-behavior/_simulate
@@ -91,9 +92,9 @@ POST _ingest/pipeline/user-behavior/_simulate
 ```
 {% include copy-curl.html %}
 
-**Response**
+**回應**
 
-The following response confirms that the pipeline is working as expected:
+下列回應確認管線如預期運作：
 
 ```json
 {
@@ -116,9 +117,9 @@ The following response confirms that the pipeline is working as expected:
 }
 ```
 
-**Step 3: Ingest a document**
+**步驟 3：匯入文件**
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=user-behavior
@@ -127,16 +128,16 @@ PUT testindex1/_doc/1?pipeline=user-behavior
 ```
 {% include copy-curl.html %}
 
-**Step 4 (Optional): Retrieve the document**
+**步驟 4（選用）：擷取文件**
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-Because the document does not contain an `event_types` field, an array field is created and the event is appended to the array:
+由於文件不包含 `event_types` 欄位，因此會建立一個陣列欄位，並將事件附加到該陣列：
 
 ```json
 {

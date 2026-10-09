@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Date index name
+title: "日期索引名稱"
 parent: Ingest processors
 nav_order: 55
 ---
 
-# Date index name processor
+# 日期索引名稱處理器
 
-The `date_index_name` processor is used to point documents to the correct time-based index based on the date or timestamp field within the document. The processor sets the `_index` metadata field to a [date math]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#date-math) index name expression. Then the processor fetches the date or timestamp from the `field` field in the document being processed and formats it into a date math index name expression. The extracted date, `index_name_prefix` value, and `date_rounding` value are then combined to create the date math index expression. For example, if the `field` field contains the value `2023-10-30T12:43:29.000Z` and `index_name_prefix` is set to `week_index-` and `date_rounding` is set to `w`, then the date math index name expression is `week_index-2023-10-30`. You can use the `date_formats` field to specify how the date in the date math index expression should be formatted.
+`date_index_name` 處理器用於根據文件內的日期或時間戳記欄位，將文件指向正確的時間型索引。此處理器會將 `_index` 中繼資料欄位設定為[日期運算]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#date-math)索引名稱運算式。接著，處理器會從正在處理的文件中的 `field` 欄位擷取日期或時間戳記，並將其格式化為日期運算索引名稱運算式。擷取的日期、`index_name_prefix` 值與 `date_rounding` 值隨後會合併以建立日期運算索引運算式。例如，若 `field` 欄位包含值 `2023-10-30T12:43:29.000Z`，且 `index_name_prefix` 設定為 `week_index-`、`date_rounding` 設定為 `w`，則日期運算索引名稱運算式為 `week_index-2023-10-30`。您可以使用 `date_formats` 欄位來指定日期運算索引運算式中的日期應如何格式化。
 
-The following is the syntax for the `date_index_name` processor:
+以下是 `date_index_name` 處理器的語法：
 
 ```json
 {
@@ -21,32 +22,32 @@ The following is the syntax for the `date_index_name` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `date_index_name` processor.
+下表列出 `date_index_name` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | Required  | The date or timestamp field in the incoming document. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets). |
-`date_rounding`  | Required | The rounded date format within the index name . Valid values are `y` (year), `M` (month), `w` (week), `d` (day), `h` (hour), `m` (minute), and `s` (second). |
-`date_formats` | Optional | An array of date formats used to parse the date or timestamp field. Valid options include a Java time pattern or one of the following formats: ISO8601, UNIX, UNIX_MS, or TAI64N. Default is `yyyy-MM-dd'T'HH:mm:ss.SSSXX`. |
-`index_name_format` | Optional | The date format. Default is `yyyy-MM-dd`. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets). |
-`index_name_prefix` | Optional | The index name prefix to append before the date. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets).
-`description`  | Optional  | A brief description of the processor.  |
-`if` | Optional | A condition for running this processor. |
-`ignore_failure` | Optional | If set to `true`, failures are ignored. Default is `false`. |
-`locale` | `locale`  | Optional  | The locale to use when parsing the month name and week day of the date. Default is `ENGLISH`. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets).  |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging to distinguish between processors of the same type. |
-`timezone`  | Optional  | The time zone to use when parsing the date. Default is `UTC`. |
+`field`  | 必要  | 傳入文件中的日期或時間戳記欄位。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
+`date_rounding`  | 必要 | 索引名稱中日期的捨入單位。有效值為 `y`（年）、`M`（月）、`w`（週）、`d`（日）、`h`（小時）、`m`（分鐘）與 `s`（秒）。 |
+`date_formats` | 選用 | 用於剖析日期或時間戳記欄位的日期格式陣列。有效選項包括 Java 時間模式，或下列格式之一：ISO8601、UNIX、UNIX_MS 或 TAI64N。預設為 `yyyy-MM-dd'T'HH:mm:ss.SSSXX`。 |
+`index_name_format` | 選用 | 日期格式。預設為 `yyyy-MM-dd`。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
+`index_name_prefix` | 選用 | 要附加在日期之前的索引名稱前置詞。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。
+`description`  | 選用  | 處理器的簡短描述。  |
+`if` | 選用 | 執行此處理器的條件。 |
+`ignore_failure` | 選用 | 若設定為 `true`，則會忽略失敗。預設為 `false`。 |
+`locale` | `locale`  | 選用  | 剖析日期的月份名稱與星期幾時使用的地區設定。預設為 `ENGLISH`。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。  |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別標籤。在偵錯時有助於區分相同類型的處理器。 |
+`timezone`  | 選用  | 剖析日期時使用的時區。預設為 `UTC`。 |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+依照下列步驟在管線中使用此處理器。
 
-**Step 1: Create a pipeline.**
+**步驟 1：建立管線。**
 
-The following query creates a pipeline, named `date-index-name1`, that uses the `date_index_name` processor to index logs into monthly indexes: 
+下列查詢會建立名為 `date-index-name1` 的管線，使用 `date_index_name` 處理器將記錄檔編製索引至每月索引：
 
 ```json
 PUT /_ingest/pipeline/date-index-name1
@@ -66,12 +67,12 @@ PUT /_ingest/pipeline/date-index-name1
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline.**
+**步驟 2 (選用)：測試管線。**
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/date-index-name1/_simulate
@@ -89,9 +90,9 @@ POST _ingest/pipeline/date-index-name1/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -112,9 +113,9 @@ The following example response confirms that the pipeline is working as expected
 }
 ```
 
-**Step 3: Ingest a document.**
+**步驟 3：匯入文件。**
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=date-index-name1
@@ -124,9 +125,9 @@ PUT testindex1/_doc/1?pipeline=date-index-name1
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The request indexes the document into the index `week_index-2023-10-23` and will index all documents with a timestamp within that week into the same index because the pipeline rounds by week.
+此請求會將文件編製索引至索引 `week_index-2023-10-23`，並且因為管線會以週為單位捨入日期，所有時間戳記落在該週內的文件都會編製索引至同一個索引。
 
 ```json
 {
@@ -144,9 +145,9 @@ The request indexes the document into the index `week_index-2023-10-23` and will
 }
 ```
 
-**Step 4 (Optional): Retrieve the document.**
+**步驟 4（選用）：擷取文件。**
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET week_index-2023-10-30/_doc/1

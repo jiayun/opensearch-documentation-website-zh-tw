@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Neural sparse search using raw vectors
+title: "使用原始向量進行神經稀疏搜尋"
 parent: Neural sparse search
 grand_parent: AI search
 nav_order: 30
@@ -9,17 +10,17 @@ redirect_from:
   - /search-plugins/neural-sparse-with-raw-vectors/
 ---
 
-# Neural sparse search using raw vectors
+# 使用原始向量進行神經稀疏搜尋
 
-If you're using self-hosted sparse embedding models, you can ingest raw sparse vectors for use in neural sparse search. 
+如果您使用自架的稀疏嵌入模型，您可以匯入原始稀疏向量，以供神經稀疏搜尋使用。
 
-## Example
+## 範例
 
-The following example ingests sparse vectors into an OpenSearch index and then uses a sparse vector to search for matching documents.
+下列範例會將稀疏向量匯入 OpenSearch 索引，然後使用稀疏向量搜尋相符的文件。
 
-### Step 1: Create an index
+### 步驟 1：建立索引
 
-To ingest documents containing raw sparse vectors, create a rank features index:
+若要匯入包含原始稀疏向量的文件，請建立 rank features 索引：
 
 ```json
 PUT /my-nlp-index
@@ -41,9 +42,9 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-### Step 2: Ingest documents into the index
+### 步驟 2：將文件匯入索引
 
-To ingest documents into the index created in the previous step, send the following request:
+若要將文件匯入上一個步驟所建立的索引，請傳送下列請求：
 
 ```json
 PUT /my-nlp-index/_doc/1
@@ -62,9 +63,9 @@ PUT /my-nlp-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-### Step 3: Search the data using a sparse vector
+### 步驟 3：使用稀疏向量搜尋資料
 
-To search the documents using a sparse vector, provide the sparse embeddings in the `neural_sparse` query:
+若要使用稀疏向量搜尋文件，請在 `neural_sparse` 查詢中提供稀疏嵌入：
 
 ```json
 GET my-nlp-index/_search
@@ -87,10 +88,10 @@ GET my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-## Accelerating neural sparse search
+## 加速神經稀疏搜尋
 
-To learn more about improving retrieval time for neural sparse search, see [Accelerating neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/#accelerating-neural-sparse-search).
+若要進一步了解如何改善神經稀疏搜尋的擷取時間，請參閱[加速神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/#accelerating-neural-sparse-search)。
 
-## Next steps
+## 後續步驟
 
-- Explore our [tutorials]({{site.url}}{{site.baseurl}}/vector-search/tutorials/) to learn how to build AI search applications. 
+- 探索我們的[教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/)，了解如何建置 AI 搜尋應用程式。 

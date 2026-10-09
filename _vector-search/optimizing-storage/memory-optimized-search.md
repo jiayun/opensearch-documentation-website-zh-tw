@@ -1,34 +1,35 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Memory-optimized search
+title: "記憶體最佳化搜尋"
 parent: Optimizing vector storage
 nav_order: 30
 ---
 
-# Memory-optimized search
-Introduced 3.1
+# 記憶體最佳化搜尋
+於 3.1 版導入
 {: .label .label-purple }
 
-Memory-optimized search allows the Faiss engine to run efficiently without loading the entire vector index into off-heap memory. Without this optimization, Faiss typically loads the full index into memory, which can become unsustainable if the index size exceeds available physical memory. With memory-optimized search, the engine memory-maps the index file and relies on the operating system's file cache to serve search requests. This approach avoids unnecessary I/O and allows repeated reads to be served directly from the system cache.
+記憶體最佳化搜尋可讓 Faiss 引擎在不必將整個向量索引載入堆外記憶體的情況下高效執行。若沒有這項最佳化，Faiss 通常會將完整索引載入記憶體，當索引大小超過可用的實體記憶體時，這種做法可能難以維持。透過記憶體最佳化搜尋，引擎會將索引檔案進行記憶體對映，並依靠作業系統的檔案快取來處理搜尋請求。這種方式可避免不必要的 I/O，並讓重複讀取直接由系統快取提供服務。
 
-Memory-optimized search affects only search operations. Indexing behavior remains unchanged.
+記憶體最佳化搜尋僅影響搜尋作業。索引編製行為維持不變。
 {: .note }
 
-## Limitations
+## 限制
 
-The following limitations apply to memory-optimized search in OpenSearch:
+下列限制適用於 OpenSearch 中的記憶體最佳化搜尋：
 
-- **For indexes created before OpenSearch 2.19, the engine loads data into memory regardless of whether memory-optimized mode is enabled**.
-- Memory-optimized search is supported only for the [Faiss engine]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#faiss-engine) with the [HNSW method]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#hnsw-parameters-1). 
-- Memory-optimized search does not support [IVF]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#ivf-parameters) or [product quantization (PQ)]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/faiss-product-quantization).
-- An index restart is required to enable or disable memory-optimized search.
+- **對於在 OpenSearch 2.19 之前建立的索引，無論是否啟用記憶體最佳化模式，引擎都會將資料載入記憶體**。
+- 記憶體最佳化搜尋僅支援搭配 [HNSW 方法]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#hnsw-parameters-1) 的 [Faiss 引擎]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#faiss-engine)。
+- 記憶體最佳化搜尋不支援 [IVF]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#ivf-parameters) 或 [產品量化 (PQ)]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/faiss-product-quantization)。
+- 啟用或停用記憶體最佳化搜尋需要重新啟動索引。
 
-If you use IVF or PQ, the engine loads data into memory regardless of whether memory-optimized mode is enabled.
+如果您使用 IVF 或 PQ，無論是否啟用記憶體最佳化模式，引擎都會將資料載入記憶體。
 {: .important }
 
-## Configuration
+## 組態
 
-To enable memory-optimized search, set `index.knn.memory_optimized_search` to `true` when creating an index:
+若要啟用記憶體最佳化搜尋，請在建立索引時將 `index.knn.memory_optimized_search` 設定為 `true`：
 
 ```json
 PUT /test_index
@@ -53,7 +54,7 @@ PUT /test_index
 ```
 {% include copy-curl.html %}
 
-To enable memory-optimized search on an existing index, you must close the index, update the setting, and then reopen the index:
+若要在現有索引上啟用記憶體最佳化搜尋，您必須先關閉索引、更新設定，然後重新開啟索引：
 
 ```json
 POST /test_index/_close
@@ -73,25 +74,25 @@ POST /test_index/_open
 ```
 {% include copy-curl.html %}
 
-## Integration with disk-based search
+## 與磁碟型搜尋整合
 
-When you configure a field with `on_disk` mode and `1x` compression, memory-optimized search is automatically enabled for that field, even if memory optimization isn't enabled at the index level. For more information, see [Memory-optimized vectors]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/).
+當您為欄位設定 `on_disk` 模式與 `1x` 壓縮時，即使索引層級未啟用記憶體最佳化，該欄位也會自動啟用記憶體最佳化搜尋。如需更多資訊，請參閱 [記憶體最佳化向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/)。
 
 
-Memory-optimized search differs from [disk-based search]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/disk-based-vector-search/) because it doesn't use compression or quantization. It only changes how vector data is loaded and accessed during search.
+記憶體最佳化搜尋與 [磁碟型搜尋]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/disk-based-vector-search/) 不同，因為它不使用壓縮或量化。它只會改變搜尋期間向量資料的載入與存取方式。
 {: .note }
 
-## Performance optimization
+## 效能最佳化
 
-When memory-optimized search is enabled, the [warm-up API]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning-search/#warm-up-the-index) loads only the essential information needed for search operations, such as opening streams to the underlying Faiss index file. This minimal warm-up results in:
-- Faster initial searches.
-- Reduced memory overhead.
-- More efficient resource utilization.
+啟用記憶體最佳化搜尋時，[預熱 API]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning-search/#warm-up-the-index) 只會載入搜尋作業所需的基本資訊，例如開啟底層 Faiss 索引檔案的串流。這種最小化的預熱可帶來：
+- 更快的初始搜尋。
+- 降低記憶體負擔。
+- 更有效率的資源利用。
 
-For fields where memory-optimized search is disabled, the warm-up process loads vectors into off-heap memory.
+對於停用記憶體最佳化搜尋的欄位，預熱程序會將向量載入堆外記憶體。
 
-## Next steps
+## 後續步驟
 
-- [Disk-based vector search]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/disk-based-vector-search/)
-- [Vector quantization]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/knn-vector-quantization/)
-- [Performance tuning]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning/)
+- [磁碟型向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/disk-based-vector-search/)
+- [向量量化]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/knn-vector-quantization/)
+- [效能調校]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning/)

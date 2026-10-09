@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Dynamic header substitution
+title: "動態標頭替換"
 has_children: false
 nav_order: 70
 parent: Connectors
@@ -8,15 +9,15 @@ grand_parent: Connecting to externally hosted models
 great_grand_parent: Integrating ML models
 ---
 
-# Dynamic header substitution
-**Introduced 3.7**
+# 動態標頭替換
+**於 3.7 版引入**
 {: .label .label-purple }
 
-By default, connector headers are resolved once at connector creation time. Dynamic connector headers allow you to use `${parameters.*}` placeholders in header values so that per-request values are substituted at prediction time. This is useful for passing request-scoped metadata such as transaction IDs, correlation IDs, or trace tokens to the externally hosted model endpoint.
+預設情況下，連接器標頭只會在建立連接器時解析一次。動態連接器標頭可讓您在標頭值中使用 `${parameters.*}` 預留位置，以便在預測時替換為個別請求的值。這有助於將交易 ID、關聯 ID 或追蹤權杖等請求範圍內的中繼資料傳遞至外部託管的模型端點。
 
-## Configuring dynamic headers
+## 設定動態標頭
 
-To configure a dynamic header, define the header with a `${parameters.*}` placeholder in the connector's `actions[].headers` field. You can optionally set a default value for the parameter in the top-level `parameters` field:
+若要設定動態標頭，請在連接器的 `actions[].headers` 欄位中定義含有 `${parameters.*}` 預留位置的標頭。您也可以選擇在頂層的 `parameters` 欄位中設定參數的預設值：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -46,7 +47,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-At prediction time, pass the runtime value in the `parameters` field of the `_predict` request:
+進行預測時，請在 `_predict` 請求的 `parameters` 欄位中傳入執行階段值：
 
 ```json
 POST /_plugins/_ml/models/{model_id}/_predict
@@ -59,7 +60,7 @@ POST /_plugins/_ml/models/{model_id}/_predict
 ```
 {% include copy-curl.html %}
 
-The resulting HTTP request to the remote endpoint includes the substituted header:
+傳送至遠端端點的 HTTP 請求會包含替換後的標頭：
 
 ```json
 POST https://api.example.com/predict
@@ -67,13 +68,13 @@ Authorization: test-api-key
 X-Test-Request-Id: request-123
 ```
 
-If no runtime value is provided and no default is set in the connector's `parameters` field, the prediction request is rejected with a 400 error. To avoid this, define a default value for the parameter in the connector's `parameters` field. If no runtime value is provided, the default value is used.
+如果未提供執行階段值，且連接器的 `parameters` 欄位中未設定預設值，預測請求就會遭到拒絕，並傳回 400 錯誤。若要避免此情況，請在連接器的 `parameters` 欄位中定義參數的預設值。如果未提供執行階段值，就會使用預設值。
 
-## Security restrictions
+## 安全性限制
 
-The following headers cannot contain `${parameters.*}` placeholders. Using them returns a 400 error at connector creation or update time. Use `${credential.*}` for authentication headers instead:
+下列標頭不能包含 `${parameters.*}` 預留位置。使用這些預留位置會在建立或更新連接器時傳回 400 錯誤。驗證標頭請改用 `${credential.*}`：
 
-- Credential headers:
+- 認證資訊標頭：
   - `Authorization`
   - `Proxy-Authorization`
   - `Cookie`
@@ -81,7 +82,7 @@ The following headers cannot contain `${parameters.*}` placeholders. Using them 
   - `X-Auth-Token`
   - `X-Auth-Header`
 
-- IP and host spoofing headers:
+- IP 與主機偽冒標頭：
   - `Host`
   - `X-Forwarded-Host`
   - `X-Forwarded-Server`
@@ -93,16 +94,16 @@ The following headers cannot contain `${parameters.*}` placeholders. Using them 
   - `True-Client-IP`
   - `X-Originating-IP`
 
-## Runtime validation
+## 執行階段驗證
 
-At prediction time, substituted header values are validated before the request is sent:
+進行預測時，系統會在傳送請求前驗證替換後的標頭值：
 
-- Header values containing `\r` or `\n` characters are rejected to prevent HTTP response splitting.
-- Values containing control characters (`0x00–0x1F`, except tab) are rejected.
-- Each individual header value must not exceed 8 KB.
-- The combined size of all headers must not exceed 64 KB.
+- 含有 `\r` 或 `\n` 字元的標頭值會遭到拒絕，以防止 HTTP 回應分割。
+- 含有控制字元（`0x00–0x1F`，定位字元除外）的值會遭到拒絕。
+- 每個標頭值不得超過 8 KB。
+- 所有標頭的總大小不得超過 64 KB。
 
-## Next steps
+## 後續步驟
 
-- For descriptions of all connector fields, see [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/).
-- For information about supplying authentication credentials to a connector, see the authentication method for your platform's protocol in [Connector authentication]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connector-authentication/).
+- 如需所有連接器欄位的說明，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)。
+- 如需向連接器提供驗證認證資訊的相關資訊，請參閱[連接器驗證]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connector-authentication/)中適用於您平台通訊協定的驗證方法。

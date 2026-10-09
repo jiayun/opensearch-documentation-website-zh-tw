@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete ML task
+title: "刪除 ML 任務"
 parent: ML Tasks APIs
 grand_parent: ML Commons APIs
 nav_order: 20
 ---
 
-# Delete ML Task API
+# 刪除 ML 任務 API
 
-Deletes a machine learning (ML) task based on the `task_id`.
+根據 `task_id` 刪除機器學習 (ML) 任務。
 
-ML Commons does not check the task status when running the delete request. There is a risk that a currently running task could be deleted before the task completes. To check the status of a task, run `GET /_plugins/_ml/tasks/<task_id>` before task deletion.
+ML Commons 在執行刪除請求時不會檢查任務狀態。目前正在執行的任務有可能在完成前就被刪除。若要檢查任務狀態，請在刪除任務前執行 `GET /_plugins/_ml/tasks/<task_id>`。
 {: .note}
 
-### Endpoints
+### 端點
 
 ```json
 DELETE /_plugins/_ml/tasks/{task_id}
 ```
 
-## Example request
+## 範例請求
 
 ```json
 DELETE /_plugins/_ml/tasks/xQRYLX8BydmmU1x6nuD3
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -44,9 +45,9 @@ DELETE /_plugins/_ml/tasks/xQRYLX8BydmmU1x6nuD3
 }
 ```
 
-## Error responses
+## 錯誤回應
 
-If you attempt to delete a task that doesn't exist, OpenSearch returns a 404 Not Found error:
+如果您嘗試刪除不存在的任務，OpenSearch 會傳回 404 Not Found 錯誤：
 
 ```json
 {

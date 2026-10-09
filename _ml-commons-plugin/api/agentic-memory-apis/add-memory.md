@@ -1,50 +1,51 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Add agentic memory
+title: "新增代理式記憶"
 parent: Agentic memory APIs
 grand_parent: ML Commons APIs
 nav_order: 45
 ---
 
-# Add Agentic Memory API
-**Introduced 3.3**
+# 新增代理式記憶 API
+**3.3 版推出**
 {: .label .label-purple }
 
 
-Use this API to add an agentic memory to a [memory container]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container). You can specify different [payload types]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#payload-types) and control [inference mode]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#inference-mode) for how OpenSearch processes the memory.
+使用此 API 將代理式記憶新增至[記憶容器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container)。您可以指定不同的[酬載類型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#payload-types)，並控制 OpenSearch 處理記憶時所使用的[推論模式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#inference-mode)。
 
-Once an agentic memory is created, provide its `memory_id` to other APIs.
+建立代理式記憶後，請將其 `memory_id` 提供給其他 API。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/memory_containers/{memory_container_id}/memories
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required/Optional | Description |
+| 參數 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `memory_container_id` | String | Required | The ID of the memory container to add the memory to. |
+| `memory_container_id` | 字串 | 必要 | 要新增記憶的記憶容器 ID。 |
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`messages` | Array | Conditional | A list of messages for a `conversational` payload. Each message must include a `content` field specified as an array of objects. Each object must contain the `type` (for example, `text`) and the corresponding content. Each message may include a `role` (commonly, `user` or `assistant`) when `infer` is set to `true`. Required when `payload_type` is `conversational`.
-`structured_data` | Object | Conditional | Structured data content for data memory. Required when `payload_type` is `data`.
-`binary_data` | String | Optional | Binary data content encoded as a Base64 string for binary payloads.
-`payload_type` | String | Required | The type of payload. Valid values are `conversational` or `data`. See [Payload types]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#payload-types).
-`namespace` | Object | Optional | The [namespace]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#namespaces) context for organizing memories (for example, `user_id`, `session_id`, or `agent_id`). If `session_id` is not specified in the `namespace` field and `disable_session` is `false` (the default), a new session with a new session ID is created.
-`metadata` | Object | Optional | Additional metadata for the memory (for example, `status`, `branch`, or custom fields).
-`tags` | Object | Optional | Tags for categorizing and organizing memories.
-`infer` | Boolean | Optional | Whether to use a large language model (LLM) to extract key information from messages. Default is `false`. When `true`, the LLM extracts key information from the original text and stores it as a memory. See [Inference mode]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#inference-mode).
+`messages` | 陣列 | 條件式 | `conversational` 酬載的訊息清單。每則訊息都必須包含一個以物件陣列指定的 `content` 欄位。每個物件都必須包含 `type`（例如 `text`）及對應的內容。當 `infer` 設為 `true` 時，每則訊息可包含 `role`（通常為 `user` 或 `assistant`）。當 `payload_type` 為 `conversational` 時為必要。
+`structured_data` | 物件 | 條件式 | 資料記憶的結構化資料內容。當 `payload_type` 為 `data` 時為必要。
+`binary_data` | 字串 | 選用 | 二進位酬載的二進位資料內容，以 Base64 字串編碼。
+`payload_type` | 字串 | 必要 | 酬載類型。有效值為 `conversational` 或 `data`。請參閱[酬載類型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#payload-types)。
+`namespace` | 物件 | 選用 | 用於整理記憶的[命名空間]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#namespaces)內容（例如 `user_id`、`session_id` 或 `agent_id`）。如果未在 `namespace` 欄位中指定 `session_id`，且 `disable_session` 為 `false`（預設值），則會建立具有新工作階段 ID 的新工作階段。
+`metadata` | 物件 | 選用 | 記憶的其他中繼資料（例如 `status`、`branch` 或自訂欄位）。
+`tags` | 物件 | 選用 | 用於分類及整理記憶的標籤。
+`infer` | 布林值 | 選用 | 是否使用大型語言模型 (LLM) 從訊息中擷取關鍵資訊。預設為 `false`。若為 `true`，LLM 會從原始文字中擷取關鍵資訊，並將其儲存為記憶。請參閱[推論模式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#inference-mode)。
 
-## Example request: Conversational payload
+## 範例請求：對話酬載
 
 ```json
 POST /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN/memories
@@ -88,7 +89,7 @@ POST /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN/memories
 ```
 {% include copy-curl.html %}
 
-## Example response: Conversation payload
+## 範例回應：對話酬載
 
 ```json
 {
@@ -97,9 +98,9 @@ POST /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN/memories
 }
 ```
 
-## Example request: Data payload
+## 範例請求：資料酬載
 
-To store agent state in working memory, send the following request:
+若要在工作記憶中儲存代理程式狀態，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN/memories
@@ -126,7 +127,7 @@ POST /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN/memories
 ```
 {% include copy-curl.html %}
 
-## Example response: Data payload
+## 範例回應：資料酬載
 
 ```json
 {
@@ -134,9 +135,9 @@ POST /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN/memories
 }
 ```
 
-## Example request: Storing tool invocation data
+## 範例請求：儲存工具呼叫資料
 
-To store agent trace data in working memory, send the following request:
+若要在工作記憶中儲存代理程式追蹤資料，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN/memories
@@ -176,7 +177,7 @@ POST /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN/memories
 ```
 {% include copy-curl.html %}
 
-## Example response: Trace data
+## 範例回應：追蹤資料
 
 ```json
 {
@@ -184,11 +185,11 @@ POST /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN/memories
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field           | Data type | Description                                                                                       |
+| 欄位           | 資料類型 | 說明                                                                                       |
 | :-------------- | :-------- | :------------------------------------------------------------------------------------------------ |
-| `session_id`    | String    | The session ID associated with the memory (returned for `conversation` memory when a session is created or used). |
-| `working_memory_id` | String | The unique identifier for the created working memory entry. |
+| `session_id`    | 字串    | 與記憶相關聯的工作階段 ID（建立或使用工作階段時，針對 `conversation` 記憶傳回）。 |
+| `working_memory_id` | 字串 | 所建立之工作記憶項目的唯一識別碼。 |

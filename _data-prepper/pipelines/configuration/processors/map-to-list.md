@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Map to list
+title: "對應至清單"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 200
 ---
 
-# Map to list processor
+# Map to list 處理器
 
-The `map_to_list` processor converts a map of key-value pairs to a list of objects. Each object contains the key and value in separate fields.
+`map_to_list` 處理器會將鍵值對的 map 轉換為物件清單。每個物件會在個別欄位中包含鍵與值。
 
-## Configuration
+## 組態
 
-The following table describes the configuration options for the `map_to_list` processor.
+下表說明 `map_to_list` 處理器的組態選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`source` | Yes | String | The source map used to perform the mapping operation. When set to an empty string (`""`), it will use the root of the event as the `source`.
-`target` | Yes | String | The target for the generated list. 
-`key_name` | No | String | The name of the field in which to store the original key. Default is `key`.
-`value_name` | No | String |  The name of the field in which to store the original value. Default is `value`.
-`exclude_keys` | No | List | The keys in the source map that will be excluded from processing. Default is an empty list (`[]`).
-`remove_processed_fields` | No | Boolean | When `true`, the processor will remove the processed fields from the source map. Default is `false`.
-`convert_field_to_list` | No | Boolean | If `true`, the processor will convert the fields from the source map into lists and place them in fields in the target list. Default is `false`.
-`map_to_list_when` | No | String | A [conditional expression]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/), such as `/some-key == "test"'`, that will be evaluated to determine whether the processor will be run on the event. Default is `null`. All events will be processed unless otherwise stated.
-`tags_on_failure` | No | List | A list of tags to add to the event metadata when the event fails to process.
+`source` | 是 | String | 用於執行對應作業的來源 map。設為空字串 (`""`) 時，會使用事件的根作為 `source`。
+`target` | 是 | String | 產生的清單的目標。
+`key_name` | 否 | String | 用來儲存原始鍵的欄位名稱。預設為 `key`。
+`value_name` | 否 | String | 用來儲存原始值的欄位名稱。預設為 `value`。
+`exclude_keys` | 否 | List | 來源 map 中將排除處理的鍵。預設為空清單 (`[]`)。
+`remove_processed_fields` | 否 | Boolean | 當 `true` 時，處理器會從來源 map 移除已處理的欄位。預設為 `false`。
+`convert_field_to_list` | 否 | Boolean | 若為 `true`，處理器會將來源 map 中的欄位轉換為清單，並將其放置在目標清單的欄位中。預設為 `false`。
+`map_to_list_when` | 否 | String | 一個[條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，例如 `/some-key == "test"'`，會評估以判斷處理器是否要在該事件上執行。預設為 `null`。除非另有說明，否則會處理所有事件。
+`tags_on_failure` | 否 | List | 當事件處理失敗時，要新增至事件中繼資料的標籤清單。
 
-## Usage
+## 使用方式
 
-The following examples show how the `map_to_list` processor can be used in your pipeline.
+下列範例顯示如何在您的管線中使用 `map_to_list` 處理器。
 
-### Example: Minimum configuration
+### 範例：最小組態
 
-The following example shows the `map_to_list` processor with only the required parameters, `source` and `target`, configured: 
+下列範例顯示僅設定必要參數 `source` 與 `target` 的 `map_to_list` 處理器：
 
 ```yaml
 ...
@@ -44,7 +45,7 @@ The following example shows the `map_to_list` processor with only the required p
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 
 ```json
 {
@@ -57,7 +58,7 @@ When the input event contains the following data:
 ```
 
 
-The processed event will contain the following output:
+處理後的事件會包含下列輸出：
 
 ```json
 {
@@ -83,9 +84,9 @@ The processed event will contain the following output:
 }
 ```
 
-### Example: Custom key name and value name
+### 範例：自訂鍵名稱與值名稱
 
-The following example shows how to configure a custom key name and value name:
+下列範例顯示如何設定自訂鍵名稱與值名稱：
 
 ```yaml
 ...
@@ -99,7 +100,7 @@ The following example shows how to configure a custom key name and value name:
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 
 ```json
 {
@@ -111,7 +112,7 @@ When the input event contains the following data:
 }
 ```
 
-The processed event will contain the following output:
+處理後的事件會包含下列輸出：
 
 ```json
 {
@@ -137,9 +138,9 @@ The processed event will contain the following output:
 }
 ```
 
-### Example: Exclude specific keys from processing and remove any processed fields
+### 範例：排除特定鍵不處理並移除任何已處理的欄位
 
-The following example shows how to exclude specific keys and remove any processed fields from the output:
+下列範例顯示如何排除特定鍵並從輸出中移除任何已處理的欄位：
 
 ```yaml
 ...
@@ -153,7 +154,7 @@ The following example shows how to exclude specific keys and remove any processe
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 ```json
 {
   "my-map": {
@@ -164,7 +165,7 @@ When the input event contains the following data:
 }
 ```
 
-The processed event will remove the "key2" and "key3" fields, but the "my-map" object, "key1", will remain, as shown in the following output:
+處理後的事件會移除 "key2" 與 "key3" 欄位，但 "my-map" 物件、"key1" 會保留，如下列輸出所示：
 
 ```json
 {
@@ -184,9 +185,9 @@ The processed event will remove the "key2" and "key3" fields, but the "my-map" o
 }
 ```
 
-### Example: Use convert_field_to_list
+### 範例：使用 convert_field_to_list
 
-The following example shows how to use the `convert_field_to_list` option in the processor:
+下列範例顯示如何在處理器中使用 `convert_field_to_list` 選項：
 
 ```yaml
 ...
@@ -199,7 +200,7 @@ The following example shows how to use the `convert_field_to_list` option in the
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 
 ```json
 {
@@ -211,7 +212,7 @@ When the input event contains the following data:
 }
 ```
 
-The processed event will convert all fields into lists, as shown in the following output:
+處理後的事件會將所有欄位轉換為清單，如下列輸出所示：
 
 ```json
 {
@@ -228,9 +229,9 @@ The processed event will convert all fields into lists, as shown in the followin
 }
 ```
 
-### Example: Use the event root as the source
+### 範例：使用事件根作為來源
 
-The following example shows how you can use an event's root as the source by setting the `source` setting to an empty string (`""`):
+下列範例顯示如何將 `source` 設定設為空字串 (`""`)，以使用事件的根作為來源：
 
 ```yaml
 ...
@@ -242,7 +243,7 @@ The following example shows how you can use an event's root as the source by set
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 
 ```json
 {
@@ -252,7 +253,7 @@ When the input event contains the following data:
 }
 ```
 
-The processed event will contain the following output:
+處理後的事件會包含下列輸出：
 
 ```json
 {

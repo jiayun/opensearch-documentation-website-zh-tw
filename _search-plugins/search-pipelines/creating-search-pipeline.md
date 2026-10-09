@@ -1,18 +1,19 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Creating a search pipeline
+title: "建立搜尋管線"
 nav_order: 10
 has_children: false
 parent: Search pipelines
 ---
 
-# Creating a search pipeline
+# 建立搜尋管線
 
-Search pipelines are stored in the cluster state. To create a search pipeline, you must configure an ordered list of processors in your OpenSearch cluster. You can have more than one processor of the same type in the pipeline. Each processor has a `tag` identifier that distinguishes it from the others. Tagging a specific processor can be helpful when debugging error messages, especially if you add multiple processors of the same type.
+搜尋管線儲存在叢集狀態中。若要建立搜尋管線，您必須在 OpenSearch 叢集中設定一個有序的處理器清單。管線中可以有多個相同類型的處理器。每個處理器都有一個 `tag` 識別碼，用來與其他處理器區別。為特定處理器加上標籤在偵錯錯誤訊息時很有幫助，尤其是當您加入多個相同類型的處理器時。
 
-#### Example request
+#### 範例請求
 
-The following request creates a search pipeline with a `filter_query` request processor that uses a term query to return only public messages and a response processor that renames the field `message` to `notification`:
+下列請求會建立一個搜尋管線，其中包含一個使用 term 查詢只回傳公開訊息的 `filter_query` 請求處理器，以及一個將欄位 `message` 重新命名為 `notification` 的回應處理器：
 
 ```json
 PUT /_search/pipeline/my_pipeline 
@@ -42,9 +43,9 @@ PUT /_search/pipeline/my_pipeline
 ```
 {% include copy-curl.html %}
 
-## Ignoring processor failures
+## 忽略處理器失敗
 
-By default, a search pipeline stops if one of its processors fails. If you want the pipeline to continue running when a processor fails, you can set the `ignore_failure` parameter for that processor to `true` when creating the pipeline:
+預設情況下，當搜尋管線中的某個處理器失敗時，管線會停止。如果您希望管線在處理器失敗時繼續執行，可以在建立管線時將該處理器的 `ignore_failure` 參數設為 `true`：
 
 ```json
 "filter_query" : {
@@ -59,15 +60,15 @@ By default, a search pipeline stops if one of its processors fails. If you want 
 }
 ```
 
-If the processor fails, OpenSearch logs the failure and continues to run all remaining processors in the search pipeline. To check whether there were any failures, you can use [search pipeline metrics]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/search-pipeline-metrics/). 
+如果處理器失敗，OpenSearch 會記錄該失敗，並繼續執行搜尋管線中其餘的所有處理器。若要檢查是否有任何失敗，您可以使用[搜尋管線指標]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/search-pipeline-metrics/)。
 
-## Updating a search pipeline
+## 更新搜尋管線
 
-To update a search pipeline dynamically, replace the search pipeline using the Search Pipeline API. 
+若要動態更新搜尋管線，請使用 Search Pipeline API 取代該搜尋管線。
 
-#### Example request
+#### 範例請求
 
-The following example request upserts `my_pipeline` by adding a `filter_query` request processor and a `rename_field` response processor:
+下列範例請求透過加入一個 `filter_query` 請求處理器和一個 `rename_field` 回應處理器，以新增或更新 `my_pipeline`：
 
 ```json
 PUT /_search/pipeline/my_pipeline
@@ -97,9 +98,9 @@ PUT /_search/pipeline/my_pipeline
 ```
 {% include copy-curl.html %}
 
-## Search pipeline versions
+## 搜尋管線版本
 
-When creating your pipeline, you can specify a version for it in the `version` parameter:
+建立管線時，您可以在 `version` 參數中為它指定版本：
 
 ```json
 PUT _search/pipeline/my_pipeline
@@ -120,17 +121,17 @@ PUT _search/pipeline/my_pipeline
 ```
 {% include copy-curl.html %}
 
-The version is provided in all subsequent responses to `get pipeline` requests:
+後續所有對 `get pipeline` 請求的回應都會提供此版本：
 
 ```json
 GET _search/pipeline/my_pipeline
 ```
 
-The response contains the pipeline version:
+回應中包含管線版本：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 

@@ -1,56 +1,57 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Workload group settings
+title: "工作負載群組設定"
 nav_order: 30
 parent: Workload management
 grand_parent: Availability and recovery
 ---
 
-# Workload group settings
-**Introduced 3.7**
+# 工作負載群組設定
+**於 3.7 版導入**
 {: .label .label-purple }
 
-OpenSearch operation is normally controlled by cluster-wide defaults and per-request parameters. In a multi-tenant cluster, you may need to apply different limits to different tenants.
+OpenSearch 的運作通常由叢集層級的預設值與每個請求的參數控制。在多租用戶叢集中，您可能需要對不同的租用戶套用不同的限制。
 
-Workload group settings address this need by letting you attach group-specific configuration directly to a [workload group]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-groups/). When a request is routed to a group, the group's settings are applied automatically. This approach provides the following benefits:
+工作負載群組設定可滿足這項需求，讓您將群組專屬的組態直接附加到[工作負載群組]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-groups/)。當請求被路由到某個群組時，該群組的設定會自動套用。這種做法提供下列優點：
 
-- You can apply stricter limits to resource-intensive or unverified tenants while keeping generous defaults for others, all without modifying cluster settings.
-- Limits are bound to the workload group, so they apply to every request routed to the group regardless of which client sent it. No client-side configuration is required.
-- A workload group can optionally take precedence over lenient request-level values, protecting the cluster from uncontrolled queries without rejecting them entirely.
-- All guardrails for a tenant are located in one place alongside the group's `resource_limits` and `resiliency_mode`.
+- 您可以對資源密集或未經驗證的租用戶套用更嚴格的限制，同時為其他租用戶保留寬鬆的預設值，而且完全不必修改叢集設定。
+- 限制會繫結到工作負載群組，因此無論是哪個用戶端送出請求，只要路由到該群組就會套用，不需要任何用戶端組態。
+- 工作負載群組可以選擇性地優先於寬鬆的請求層級數值，在不完全拒絕查詢的情況下保護叢集。
+- 租用戶的所有防護機制都集中在一處，與群組的 `resource_limits` 和 `resiliency_mode` 並列。
 
-## Supported settings
+## 支援的設定
 
-You can configure settings in the `settings` object of a workload group. All settings are optional. Only the settings you explicitly define on a workload group are enforced; any setting you omit defaults to the corresponding request parameter or cluster default. Each workload group setting accepts the same value range as the underlying request parameter or cluster setting it maps to.
+您可以在工作負載群組的 `settings` 物件中設定這些設定。所有設定皆為選用。只有您在工作負載群組上明確定義的設定才會生效；任何省略的設定都會預設為對應的請求參數或叢集預設值。每個工作負載群組設定可接受的值範圍，與其所對應的請求參數或叢集設定相同。
 
-The following table lists the supported workload group settings.
+下表列出支援的工作負載群組設定。
 
-| Setting | Type | Description |
+| 設定 | 類型 | 說明 |
 | :--- | :--- | :--- |
-| `search.default_search_timeout` | Time unit | The maximum amount of time a shard can spend on query execution. When a shard exceeds this timeout, it stops collecting hits and returns its current results to the coordinating node, which may produce partial results. <br><br>**Equivalent request parameter**: [`timeout`]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#query-parameters) <br>**Equivalent cluster setting**: [`search.default_search_timeout`]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/search-settings/) |
-| `search.cancel_after_time_interval` | Time unit | The maximum amount of time the entire search request can run at the coordinating node level. When the interval is reached, the request and all associated tasks are canceled and the client receives an error rather than partial results. <br><br>**Equivalent request parameter**: [`cancel_after_time_interval`]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#query-parameters) <br>**Equivalent cluster setting**: [`search.cancel_after_time_interval`]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/search-settings/) |
-| `search.max_concurrent_shard_requests` | Integer | The maximum number of concurrent shard-level requests a single search may issue per node. Limits search fan-out. <br><br>**Equivalent request parameter**: [`max_concurrent_shard_requests`]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#query-parameters) <br>**Equivalent cluster setting**: None |
-| `search.batched_reduce_size` | Integer | The number of shard results combined into one batch on the coordinating node before the final reduction step. Lower values reduce coordinator memory usage when a search spans many shards. <br><br>**Equivalent request parameter**: [`batched_reduce_size`]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#query-parameters) <br>**Equivalent cluster setting**: None |
-| `search.max_buckets` | Integer | The maximum number of aggregation buckets allowed in a single response. Guards against excessive memory use from large aggregations. <br><br>**Equivalent request parameter**: None <br>**Equivalent cluster setting**: [`search.max_buckets`]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/search-settings/) |
-| `override_request_values` | Boolean | Whether the workload group's settings take precedence over values supplied on the request. Default is `false`. See [Setting precedence](#setting-precedence). <br><br>**Equivalent request parameter**: None <br>**Equivalent cluster setting**: None |
+| `search.default_search_timeout` | 時間單位 | 分片在查詢執行上可花費的最長時間。當分片超過此逾時時間時，會停止蒐集命中結果，並將目前的結果傳回協調節點，可能因此產生部分結果。 <br><br>**對應的請求參數**：[`timeout`]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#query-parameters) <br>**對應的叢集設定**：[`search.default_search_timeout`]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/search-settings/) |
+| `search.cancel_after_time_interval` | 時間單位 | 整個搜尋請求在協調節點層級可執行的最長時間。當達到此時間間隔時，請求與所有相關工作都會被取消，用戶端會收到錯誤而非部分結果。 <br><br>**對應的請求參數**：[`cancel_after_time_interval`]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#query-parameters) <br>**對應的叢集設定**：[`search.cancel_after_time_interval`]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/search-settings/) |
+| `search.max_concurrent_shard_requests` | 整數 | 單一搜尋在每個節點上可發出的並行分片層級請求數上限。用於限制搜尋的扇出規模。 <br><br>**對應的請求參數**：[`max_concurrent_shard_requests`]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#query-parameters) <br>**對應的叢集設定**：無 |
+| `search.batched_reduce_size` | 整數 | 在最終縮減步驟之前，協調節點上合併為單一批次的分片結果數量。當搜尋橫跨許多分片時，較低的值可降低協調器的記憶體用量。 <br><br>**對應的請求參數**：[`batched_reduce_size`]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#query-parameters) <br>**對應的叢集設定**：無 |
+| `search.max_buckets` | 整數 | 單一回應中允許的彙總桶數上限。可防止大型彙總造成過度的記憶體用量。 <br><br>**對應的請求參數**：無 <br>**對應的叢集設定**：[`search.max_buckets`]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/search-settings/) |
+| `override_request_values` | 布林值 | 工作負載群組的設定是否優先於請求上提供的數值。預設為 `false`。請參閱[設定優先順序](#setting-precedence)。 <br><br>**對應的請求參數**：無 <br>**對應的叢集設定**：無 |
 
-## Setting precedence
+## 設定優先順序
 
-When a setting is defined on a workload group, OpenSearch resolves the effective value at request time using the following precedence rules:
+當設定定義在工作負載群組上時，OpenSearch 會在請求時使用下列優先順序規則來解析有效值：
 
-- A workload group setting always takes precedence over the corresponding cluster setting when both are defined.
-- By default, an explicit value supplied on a request takes precedence over the workload group's setting. You can reverse this behavior by setting `override_request_values` to `true`.
+- 當工作負載群組設定與對應的叢集設定同時定義時，工作負載群組設定一律優先。
+- 預設情況下，請求上明確提供的數值優先於工作負載群組的設定。您可以將 `override_request_values` 設為 `true` 來反轉此行為。
 
-The following table summarizes how the effective value is resolved.
+下表摘要說明有效值的解析方式。
 
-| `override_request_values` value | Precedence (highest to lowest) |
+| `override_request_values` 的值 | 優先順序（由高至低） |
 | :--- | :--- |
-| `false` (Default) | Request parameter > Workload group setting > Cluster setting |
-| `true` | Workload group setting > Request parameter > Cluster setting |
+| `false`（預設） | 請求參數 > 工作負載群組設定 > 叢集設定 |
+| `true` | 工作負載群組設定 > 請求參數 > 叢集設定 |
 
-## Creating a workload group containing settings
+## 建立包含設定的工作負載群組
 
-Add a `settings` object alongside the existing workload group fields:
+在現有的工作負載群組欄位旁加入 `settings` 物件：
 
 ```json
 PUT _wlm/workload_group
@@ -72,11 +73,11 @@ PUT _wlm/workload_group
 ```
 {% include copy-curl.html %}
 
-## Updating workload group settings
+## 更新工作負載群組設定
 
-You can update individual settings without affecting the other settings.
+您可以更新個別設定，而不影響其他設定。
 
-For example, to change only the search timeout for the `analytics` workload group:
+例如，若只要變更 `analytics` 工作負載群組的搜尋逾時時間：
 
 ```json
 PUT _wlm/workload_group/analytics
@@ -88,7 +89,7 @@ PUT _wlm/workload_group/analytics
 ```
 {% include copy-curl.html %}
 
-To remove a single setting, set its value to `null`:
+若要移除單一設定，請將其值設為 `null`：
 
 ```json
 PUT _wlm/workload_group/analytics
@@ -100,7 +101,7 @@ PUT _wlm/workload_group/analytics
 ```
 {% include copy-curl.html %}
 
-To clear all settings, send an empty `settings` object:
+若要清除所有設定，請送出空的 `settings` 物件：
 
 ```json
 PUT _wlm/workload_group/analytics
@@ -110,15 +111,15 @@ PUT _wlm/workload_group/analytics
 ```
 {% include copy-curl.html %}
 
-## Retrieving workload group settings
+## 擷取工作負載群組設定
 
-To retrieve workload group settings, use the [Workload Group API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-groups/#retrieving-a-workload-group):
+若要擷取工作負載群組設定，請使用 [Workload Group API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-groups/#retrieving-a-workload-group)：
 
 ```json
 GET _wlm/workload_group/analytics
 ```
 {% include copy-curl.html %}
 
-## Deleting workload group settings
+## 刪除工作負載群組設定
 
-Settings are removed when the workload group is deleted. To remove individual settings without deleting the group, see [Updating workload group settings](#updating-workload-group-settings).
+當工作負載群組被刪除時，其設定也會一併移除。若要在不刪除群組的情況下移除個別設定，請參閱[更新工作負載群組設定](#updating-workload-group-settings)。

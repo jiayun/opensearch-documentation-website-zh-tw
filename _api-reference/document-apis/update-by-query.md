@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Update by query
+title: "依查詢更新"
 parent: Document APIs
 nav_order: 40
 redirect_from: 
@@ -8,26 +9,26 @@ redirect_from:
 ---
 
 # Update By Query API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple}
 
-The Update by Query API updates all documents in an index that match a specified query. You can update documents without changing their source to pick up mapping changes, or use a script to modify field values based on custom logic.
+Update by Query API 會更新索引中符合指定查詢的所有文件。您可以在不變更文件來源的情況下更新文件，以套用對應變更，或使用指令碼根據自訂邏輯修改欄位值。
 
-Use this API in the following scenarios:
+在下列情境中使用此 API：
 
-- Applying mapping changes to existing documents after adding new fields or changing field types.
-- Updating field values across multiple documents based on calculated logic or conditions.
-- Incrementing counters or performing bulk calculations on documents that match specific criteria.
-- Conditionally deleting documents by setting `ctx.op = "delete"` in a script.
-- Performing no-operation updates by setting `ctx.op = "noop"` when conditions aren't met.
+- 新增欄位或變更欄位類型後，將對應變更套用至現有文件。
+- 根據計算邏輯或條件更新多份文件中的欄位值。
+- 對符合特定條件的文件遞增計數器或執行大量計算。
+- 在指令碼中設定 `ctx.op = "delete"`，依條件刪除文件。
+- 在不符合條件時設定 `ctx.op = "noop"`，執行不進行任何操作的更新。
 
-When you submit an update by query request, OpenSearch takes a snapshot of the index at the start of the operation and updates matching documents using internal versioning. If a document changes between when the snapshot is taken and when the update operation processes it, a version conflict occurs and the update fails for that document unless you set the `conflicts` parameter to `proceed`. When a version conflict doesn't cause an abort, the document is updated and its version number is incremented. Successfully updated documents are not rolled back even if later operations in the batch fail.
+當您提交依查詢更新請求時，OpenSearch 會在操作開始時建立索引快照，並使用內部版本控制更新符合條件的文件。如果文件在建立快照之後、更新操作處理該文件之前發生變更，就會發生版本衝突，且該文件的更新會失敗，除非您將 `conflicts` 參數設為 `proceed`。當版本衝突未導致操作中止時，文件會更新，且其版本號碼會遞增。即使批次中的後續操作失敗，已成功更新的文件也不會回復。
 
-All update and query failures cause the operation to abort and are returned in the `failures` array of the response. Successful updates persist even after an abort. While the first failure triggers the abort, all failures from the rejected bulk request appear in the `failures` element, so multiple failed entities may be reported.
+所有更新與查詢失敗都會導致操作中止，並傳回於回應的 `failures` 陣列中。即使操作中止，成功的更新仍會保留。雖然第一個失敗會觸發中止，但遭拒絕的大量請求中的所有失敗都會出現在 `failures` 元素中，因此可能會回報多個失敗的實體。
 
-OpenSearch retries rejected search or bulk requests up to 10 times with exponential backoff. If the maximum retry limit is reached, the operation halts and returns all failed requests in the response.
+OpenSearch 會採用指數退避，對遭拒絕的搜尋或大量請求最多重試 10 次。如果達到重試次數上限，操作就會停止，並在回應中傳回所有失敗的請求。
 
-**Note:** OpenSearch cannot update documents with version `0` using this API. The internal versioning system requires that version numbers are greater than 0 in order to track and process update operations correctly.
+**注意：** OpenSearch 無法使用此 API 更新版本為 `0` 的文件。內部版本控制系統要求版本號碼必須大於 0，才能正確追蹤與處理更新操作。
 {: .note}
 
 
@@ -35,7 +36,7 @@ OpenSearch retries rejected search or bulk requests up to 10 times with exponent
 api: update_by_query
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 POST /{index}/_update_by_query
 ```
@@ -45,13 +46,13 @@ POST /{index}/_update_by_query
 api: update_by_query
 component: path_parameters
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required | Data type | Description |
+| 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `index` | **Required** | List or String | A comma-separated list of data streams, indexes, and aliases to search. Supports wildcards (`*`). To search all data streams or indexes, omit this parameter or use `*` or `_all`. |
+| `index` | **必要** | 清單或字串 | 要搜尋的資料串流、索引與別名清單，以逗號分隔。支援萬用字元（`*`）。若要搜尋所有資料串流或索引，請省略此參數，或使用 `*` 或 `_all`。 |
 
 <!-- spec_insert_end -->
 
@@ -59,113 +60,113 @@ The following table lists the available path parameters.
 api: update_by_query
 component: query_parameters
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `_source` | Boolean or List or String | Set to `true` or `false` to return the `_source` field or not, or a list of fields to return. | N/A |
-| `_source_excludes` | List | List of fields to exclude from the returned `_source` field. | N/A |
-| `_source_includes` | List | List of fields to extract and return from the `_source` field. | N/A |
-| `allow_no_indices` | Boolean | If `false`, the request returns an error if any wildcard expression, index alias, or `_all` value targets only missing or closed indexes. This behavior applies even if the request targets other open indexes. For example, a request targeting `foo*,bar*` returns an error if an index starts with `foo` but no index starts with `bar`. | N/A |
-| `analyze_wildcard` | Boolean | If `true`, wildcard and prefix queries are analyzed. | `false` |
-| `analyzer` | String | Analyzer to use for the query string. | N/A |
-| `conflicts` | String | What to do if update by query hits version conflicts: `abort` or `proceed`. <br> Valid values are: <br> - `abort`: Abort the operation on version conflicts. <br> - `proceed`: Proceed with the operation on version conflicts. | N/A |
-| `default_operator` | String | The default operator for query string query: `AND` or `OR`. <br> Valid values are: `and`, `AND`, `or`, and `OR`. | N/A |
-| `df` | String | Field to use as default where no field prefix is given in the query string. | N/A |
-| `expand_wildcards` | List or String | Type of index that wildcard patterns can match. If the request can target data streams, this argument determines whether wildcard expressions match hidden data streams. Supports comma-separated values, such as `open,hidden`. Valid values are: `all`, `open`, `closed`, `hidden`, `none`. <br> Valid values are: <br> - `all`: Match any index, including hidden ones. <br> - `closed`: Match closed, non-hidden indexes. <br> - `hidden`: Match hidden indexes. Must be combined with `open`, `closed`, or both. <br> - `none`: Wildcard expressions are not accepted. <br> - `open`: Match open, non-hidden indexes. | N/A |
-| `from` | Integer | Starting offset. | `0` |
-| `ignore_unavailable` | Boolean | If `false`, the request returns an error if it targets a missing or closed index. | N/A |
-| `lenient` | Boolean | If `true`, format-based query failures (such as providing text to a numeric field) in the query string will be ignored. | N/A |
-| `max_docs` | Integer | Maximum number of documents to process. Defaults to all documents. | N/A |
-| `pipeline` | String | ID of the pipeline to use to preprocess incoming documents. If the index has a default ingest pipeline specified, then setting the value to `_none` disables the default ingest pipeline for this request. If a final pipeline is configured it will always run, regardless of the value of this parameter. | N/A |
-| `preference` | String | Specifies the node or shard the operation should be performed on. Random by default. | `random` |
-| `q` | String | Query in the Lucene query string syntax. | N/A |
-| `refresh` | Boolean or String | If `true`, OpenSearch refreshes affected shards to make the operation visible to search. <br> Valid values are: <br> - `false`: Do not refresh the affected shards. <br> - `true`: Refresh the affected shards immediately. <br> - `wait_for`: Wait for the changes to become visible before replying. | N/A |
-| `request_cache` | Boolean | If `true`, the request cache is used for this request. | N/A |
-| `requests_per_second` | Float | The throttle for this request in sub-requests per second. | `0` |
-| `routing` | List or String | A custom value used to route operations to a specific shard. | N/A |
-| `scroll` | String | Period to retain the search context for scrolling. | N/A |
-| `scroll_size` | Integer | Size of the scroll request that powers the operation. | `100` |
-| `search_timeout` | String | Explicit timeout for each search request. | N/A |
-| `search_type` | String | The type of the search operation. Available options: `query_then_fetch`, `dfs_query_then_fetch`. <br> Valid values are: <br> - `dfs_query_then_fetch`: Documents are scored using global term and document frequencies across all shards. This is usually slower but more accurate. <br> - `query_then_fetch`: Documents are scored using local term and document frequencies for the shard. This is usually faster but less accurate. | N/A |
-| `size` | Integer | Deprecated, use `max_docs` instead. | N/A |
-| `slices` | Integer or String | The number of slices this task should be divided into. <br> Valid values are: <br> - `auto`: Automatically determine the number of slices. | N/A |
-| `sort` | List | A comma-separated list of <field>:<direction> pairs. | N/A |
-| `stats` | List | Specific `tag` of the request for logging and statistical purposes. | N/A |
-| `terminate_after` | Integer | Maximum number of documents to collect for each shard. If a query reaches this limit, OpenSearch terminates the query early. OpenSearch collects documents before sorting. Use with caution. OpenSearch applies this parameter to each shard handling the request. When possible, let OpenSearch perform early termination automatically. Avoid specifying this parameter for requests that target data streams with backing indexes across multiple data tiers. | N/A |
-| `timeout` | String | Period each update request waits for the following operations: dynamic mapping updates, waiting for active shards. | N/A |
-| `version` | Boolean | If `true`, returns the document version as part of a hit. | N/A |
-| `wait_for_active_shards` | Integer or String or NULL or String | The number of shard copies that must be active before proceeding with the operation. Set to `all` or any positive integer up to the total number of shards in the index (`number_of_replicas+1`). <br> Valid values are: <br> - `all`: Wait for all shards to be active. | N/A |
-| `wait_for_completion` | Boolean | If `true`, the request blocks until the operation is complete. | `true` |
+| `_source` | 布林值或清單或字串 | 設為 `true` 或 `false`，以決定是否傳回 `_source` 欄位，或設為要傳回的欄位清單。 | 不適用 |
+| `_source_excludes` | 清單 | 要從傳回的 `_source` 欄位中排除的欄位清單。 | 不適用 |
+| `_source_includes` | 清單 | 要從 `_source` 欄位擷取並傳回的欄位清單。 | 不適用 |
+| `allow_no_indices` | 布林值 | 若為 `false`，當任何萬用字元運算式、索引別名或 `_all` 值僅指向不存在或已關閉的索引時，請求會傳回錯誤。即使請求也指向其他開啟的索引，此行為仍適用。例如，指向 `foo*,bar*` 的請求，如果存在以 `foo` 開頭的索引，但沒有以 `bar` 開頭的索引，就會傳回錯誤。 | 不適用 |
+| `analyze_wildcard` | 布林值 | 若為 `true`，會分析萬用字元與前綴查詢。 | `false` |
+| `analyzer` | 字串 | 查詢字串使用的分析器。 | 不適用 |
+| `conflicts` | 字串 | 依查詢更新遇到版本衝突時要採取的動作：`abort` 或 `proceed`。<br> 有效值為：<br> - `abort`：發生版本衝突時中止操作。<br> - `proceed`：發生版本衝突時繼續操作。 | 不適用 |
+| `default_operator` | 字串 | 查詢字串查詢的預設運算子：`AND` 或 `OR`。<br> 有效值為：`and`、`AND`、`or` 與 `OR`。 | 不適用 |
+| `df` | 字串 | 查詢字串未提供欄位前綴時，使用的預設欄位。 | 不適用 |
+| `expand_wildcards` | 清單或字串 | 萬用字元模式可以比對的索引類型。如果請求可以指向資料串流，此引數會決定萬用字元運算式是否比對隱藏的資料串流。支援以逗號分隔的值，例如 `open,hidden`。有效值為：`all`、`open`、`closed`、`hidden`、`none`。<br> 有效值為：<br> - `all`：比對任何索引，包括隱藏的索引。<br> - `closed`：比對已關閉且未隱藏的索引。<br> - `hidden`：比對隱藏的索引。必須搭配 `open`、`closed` 或兩者使用。<br> - `none`：不接受萬用字元運算式。<br> - `open`：比對開啟且未隱藏的索引。 | 不適用 |
+| `from` | 整數 | 起始位移。 | `0` |
+| `ignore_unavailable` | 布林值 | 若為 `false`，當請求指向不存在或已關閉的索引時，會傳回錯誤。 | 不適用 |
+| `lenient` | 布林值 | 若為 `true`，會忽略查詢字串中因格式造成的查詢失敗（例如將文字提供給數值欄位）。 | 不適用 |
+| `max_docs` | 整數 | 要處理的文件數量上限。預設為所有文件。 | 不適用 |
+| `pipeline` | 字串 | 用於預先處理傳入文件的管線 ID。如果索引已指定預設資料匯入管線，將此值設為 `_none` 會停用此請求的預設資料匯入管線。如果已設定最終管線，則無論此參數的值為何，最終管線都會執行。 | 不適用 |
+| `preference` | 字串 | 指定應執行操作的節點或分片。預設為隨機選擇。 | `random` |
+| `q` | 字串 | 使用 Lucene 查詢字串語法的查詢。 | 不適用 |
+| `refresh` | 布林值或字串 | 若為 `true`，OpenSearch 會重新整理受影響的分片，讓搜尋可以看見此操作的結果。<br> 有效值為：<br> - `false`：不重新整理受影響的分片。<br> - `true`：立即重新整理受影響的分片。<br> - `wait_for`：等待變更可見後再回覆。 | 不適用 |
+| `request_cache` | 布林值 | 若為 `true`，此請求會使用請求快取。 | 不適用 |
+| `requests_per_second` | 浮點數 | 此請求的節流限制，以每秒子請求數表示。 | `0` |
+| `routing` | 清單或字串 | 用於將操作路由至特定分片的自訂值。 | 不適用 |
+| `scroll` | 字串 | 捲動搜尋情境的保留時間。 | 不適用 |
+| `scroll_size` | 整數 | 用於執行此操作的捲動請求大小。 | `100` |
+| `search_timeout` | 字串 | 每個搜尋請求的明確逾時時間。 | 不適用 |
+| `search_type` | 字串 | 搜尋操作的類型。可用選項：`query_then_fetch`、`dfs_query_then_fetch`。<br> 有效值為：<br> - `dfs_query_then_fetch`：使用所有分片的全域詞彙頻率與文件頻率為文件評分。這通常較慢，但更準確。<br> - `query_then_fetch`：使用該分片的本機詞彙頻率與文件頻率為文件評分。這通常較快，但較不準確。 | 不適用 |
+| `size` | 整數 | 已棄用，請改用 `max_docs`。 | 不適用 |
+| `slices` | 整數或字串 | 此工作應分割成的切片數量。<br> 有效值為：<br> - `auto`：自動決定切片數量。 | 不適用 |
+| `sort` | 清單 | 以逗號分隔的 <field>:<direction> 配對清單。 | 不適用 |
+| `stats` | 清單 | 請求的特定 `tag`，用於記錄與統計。 | 不適用 |
+| `terminate_after` | 整數 | 每個分片要收集的文件數量上限。如果查詢達到此上限，OpenSearch 會提前終止查詢。OpenSearch 會在排序前收集文件。請謹慎使用。OpenSearch 會將此參數套用至處理請求的每個分片。盡可能讓 OpenSearch 自動執行提前終止。對於指向資料串流，且其後端索引橫跨多個資料層級的請求，請避免指定此參數。 | 不適用 |
+| `timeout` | 字串 | 每個更新請求等待下列操作的時間：動態對應更新、等待作用中分片。 | 不適用 |
+| `version` | 布林值 | 若為 `true`，會將文件版本作為命中結果的一部分傳回。 | 不適用 |
+| `wait_for_active_shards` | 整數或字串或 NULL 或字串 | 繼續執行操作前必須處於作用中狀態的分片副本數量。設為 `all`，或不超過索引分片總數（`number_of_replicas+1`）的任何正整數。<br> 有效值為：<br> - `all`：等待所有分片處於作用中狀態。 | 不適用 |
+| `wait_for_completion` | 布林值 | 若為 `true`，請求會封鎖直到操作完成。 | `true` |
 
 <!-- spec_insert_end -->
 
-**Important:** When using `_source`, `_source_includes`, or `_source_excludes` in an update by query request, these settings affect not only the response but also the fields available to the update script. If a field is excluded from `_source` and not explicitly handled in the script, it may be removed from the document during the update operation. To preserve excluded fields, ensure that the script reads and reassigns them as needed.
+**重要：** 在依查詢更新請求中使用 `_source`、`_source_includes` 或 `_source_excludes` 時，這些設定不僅會影響回應，也會影響更新指令碼可使用的欄位。如果某個欄位從 `_source` 中排除，且未在指令碼中明確處理，該欄位可能會在更新操作期間從文件中移除。若要保留排除的欄位，請確保指令碼會視需要讀取並重新指派這些欄位。
 {: .important}
 
-## Request body fields
+## 請求本文欄位
 
-The request body is optional but typically includes a query to specify which documents to update and a script to define the update logic.
+請求本文是選用的，但通常包含一個用於指定要更新哪些文件的查詢，以及一個用於定義更新邏輯的指令碼。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`query` | Object | The query used to select documents for update. If not specified, the operation updates all documents in the target index. For more information about query types, see [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/).
-`script` | Object | The script to run on each matching document. Contains `source` (the script code), `lang` (script language, typically `painless`), and optional `params` (parameters passed to the script). The script can access the document via `ctx._source` and control the operation by setting `ctx.op`. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
-`slice` | Object | Manually specify slice ID and maximum slices for parallel processing. Contains `id` (integer, slice number) and `max` (integer, total number of slices). Optional.
-`max_docs` | Integer | Maximum number of documents to process. Optional.
-`conflicts` | String | What to do when the update by query operation encounters version conflicts. Set to `proceed` to continue or `abort` to stop. Can be specified in either the request body or as a query parameter. Optional.
+`query` | 物件 | 用於選取要更新之文件的查詢。若未指定，此操作會更新目標索引中的所有文件。如需查詢類型的更多資訊，請參閱 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/)。
+`script` | 物件 | 在每個符合條件的文件上執行的指令碼。包含 `source` (指令碼程式碼)、`lang` (指令碼語言，通常為 `painless`)，以及選用的 `params` (傳遞給指令碼的參數)。指令碼可透過 `ctx._source` 存取文件，並透過設定 `ctx.op` 來控制操作。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
+`slice` | 物件 | 手動指定切片 ID 與平行處理的最大切片數。包含 `id` (整數，切片編號) 與 `max` (整數，切片總數)。選用。
+`max_docs` | 整數 | 要處理的最大文件數量。選用。
+`conflicts` | 字串 | 當依查詢更新操作遇到版本衝突時的處理方式。設為 `proceed` 以繼續，或設為 `abort` 以停止。可在請求本文中指定，或作為查詢參數指定。選用。
 
-## Script operations
+## 指令碼操作
 
-Within your update script, you can control what happens to each document by setting `ctx.op`:
+在更新指令碼中，您可以透過設定 `ctx.op` 來控制每個文件的處理方式：
 
-Operation | Description
+操作 | 說明
 :--- | :---
-No operation (`noop`) | Set `ctx.op = "noop"` to skip updating a document when your script determines no changes are needed. OpenSearch reports skipped documents in the `noops` counter of the response.
-Delete (`delete`) | Set `ctx.op = "delete"` to delete a document based on script logic. OpenSearch reports deleted documents in the `deleted` counter of the response.
+不執行任何操作（`noop`） | 當指令碼判斷文件無需變更時，設定 `ctx.op = "noop"` 以跳過更新該文件。OpenSearch 會在回應的 `noops` 計數器中回報被跳過的文件。
+刪除（`delete`） | 設定 `ctx.op = "delete"`，根據指令碼邏輯刪除文件。OpenSearch 會在回應的 `deleted` 計數器中回報被刪除的文件。
 
-Setting `ctx.op` to any other value causes an error. Modifying other fields in `ctx` besides `ctx._source` and `ctx.op` also causes an error.
+將 `ctx.op` 設定為任何其他值都會導致錯誤。修改 `ctx` 中 `ctx._source` 與 `ctx.op` 以外的其他欄位也會導致錯誤。
 
-## Refreshing shards
+## 重新整理分片
 
-Specifying the `refresh` parameter refreshes all shards involved in the update by query operation after the request completes. This behavior differs from the Update API's `refresh` parameter, which only refreshes the shard that received the update request. The Update by Query API does not support the `wait_for` value for the `refresh` parameter.
+指定 `refresh` 參數會在請求完成後重新整理依查詢更新操作所涉及的所有分片。此行為與 Update API 的 `refresh` 參數不同，後者只會重新整理接收更新請求的分片。Update by Query API 不支援 `refresh` 參數使用 `wait_for` 值。
 
-## Running update by query asynchronously
+## 以非同步方式執行依查詢更新
 
-To run an update by query operation asynchronously, set the `wait_for_completion` query parameter to `false`. OpenSearch performs preflight checks, launches the request, and returns a task ID that you can use to monitor progress or cancel the operation. When running asynchronously, OpenSearch creates a record of the task as a document at `.tasks/task/${taskId}`. After the task completes, delete the task document to allow OpenSearch to reclaim the space.
+若要以非同步方式執行依查詢更新操作，請將 `wait_for_completion` 查詢參數設為 `false`。OpenSearch 會執行預先檢查、啟動請求，並傳回一個工作 ID，您可以用它來監控進度或取消操作。以非同步方式執行時，OpenSearch 會在 `.tasks/task/${taskId}` 建立一份以文件形式記錄的工作。工作完成後，請刪除該工作文件，讓 OpenSearch 能夠回收儲存空間。
 
-## Waiting for active shards
+## 等待作用中的分片
 
-The `wait_for_active_shards` parameter controls how many shard copies must be active before processing the request. The `timeout` parameter controls how long each write request waits for unavailable shards to become available. These parameters work the same way as in the Bulk API. Because Update by Query uses scrolled searches, you can specify the `scroll` parameter to control how long the search context remains active. The default scroll time is 5 minutes.
+`wait_for_active_shards` 參數控制在處理請求之前必須有多少分片副本處於作用中狀態。`timeout` 參數控制每個寫入請求等待無法使用的分片變成可用的時間長度。這些參數的運作方式與 Bulk API 相同。由於 Update by Query 使用捲動式搜尋，您可以指定 `scroll` 參數，控制搜尋情境保持作用中的時間長度。預設捲動時間為 5 分鐘。
 
-## Throttling update requests
+## 節流更新請求
 
-To control the rate at which update by query issues batches of update operations, set `requests_per_second` to any positive decimal number. This pads each batch with a wait time to throttle the rate. Set `requests_per_second` to `-1` to disable throttling.
+若要控制依查詢更新操作發出更新批次的速率，請將 `requests_per_second` 設為任何正的十進位數。這會在每個批次之間加入等待時間，以節流速率。將 `requests_per_second` 設為 `-1` 可停用節流。
 
-Throttling uses wait time between batches so that internal scroll requests can be given a timeout that accounts for request padding. The padding time is the difference between the batch size divided by `requests_per_second` and the time spent writing. By default, the batch size is 1,000, so if `requests_per_second` is set to 500:
+節流使用批次之間的等待時間，讓內部捲動請求可以取得一個將請求填充時間納入考量的逾時設定。填充時間是批次大小除以 `requests_per_second` 的結果與寫入所花費時間之間的差值。預設批次大小為 1,000，因此若 `requests_per_second` 設為 500：
 
 ```
 target_time = 1,000 / 500 per second = 2 seconds
 wait_time = target_time - write_time = 2 seconds - 0.5 seconds = 1.5 seconds
 ```
 
-Because each batch is issued as a single bulk request, large batch sizes cause OpenSearch to create many requests and then wait before starting the next batch. This creates uneven processing patterns with periods of high activity followed by idle waiting.
+由於每個批次都是以單一大量請求的形式發出，較大的批次大小會導致 OpenSearch 建立許多請求，然後在開始下一個批次之前等待。這會造成不均勻的處理模式，出現高活動量時期之後接著閒置等待。
 
-## Slicing for parallel processing
+## 切片以進行平行處理
 
-You can use slicing to run update operations in parallel across multiple threads. This approach divides the update operation into independent segments, improving performance for large-scale updates.
+您可以使用切片在多個執行緒之間平行執行更新操作。這種方式會將更新操作劃分為獨立的區段，提升大規模更新的效能。
 
-Setting `slices` to `auto` allows OpenSearch to choose a reasonable number for most indexes. When using automatic slicing or tuning it manually, consider these factors:
+將 `slices` 設為 `auto` 可讓 OpenSearch 為大多數索引選擇合理的數量。使用自動切片或手動調整時，請考量下列因素：
 
-- Optimal query performance occurs when you match the slice count to your shard count. However, for indexes with many shards (500 or more), use fewer slices to avoid performance degradation from excessive parallelization overhead. Setting slices higher than the number of shards generally does not improve efficiency and adds overhead.
-- Update performance scales linearly across available resources with the number of slices.
-- Whether query or update performance dominates runtime depends on the documents being updated and available cluster resources.
+- 當切片數量與分片數量相符時，查詢效能最佳。然而，對於具有許多分片 (500 個以上) 的索引，請使用較少的切片，以避免過度平行化造成的額外負擔導致效能下降。將切片數設定得高於分片數通常不會提升效率，反而會增加負擔。
+- 更新效能會隨著可用資源與切片數量呈線性擴展。
+- 查詢效能或更新效能何者主導執行時間，取決於正在更新的文件以及可用的叢集資源。
 
-## Example: Updating all documents without changing source
+## 範例：更新所有文件而不變更來源
 
-The following example request updates all documents in the index without modifying their source. This is useful for picking up new mapping properties or other mapping changes:
+下列範例請求會更新索引中的所有文件，而不修改其來源。這對於套用新的對應屬性或其他對應變更非常有用：
 
 <!-- spec_insert_start
 component: example_code
@@ -191,9 +192,9 @@ response = client.update_by_query(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Updating documents with a query filter
+## 範例：使用查詢篩選條件更新文件
 
-The following example request updates only electronics products by adding a 10% discount:
+下列範例請求會透過新增 10% 的折扣，僅更新電子產品：
 
 <!-- spec_insert_start
 component: example_code
@@ -260,9 +261,9 @@ response = client.update_by_query(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Incrementing a field value
+## 範例：遞增欄位值
 
-The following example request increments the likes counter for all products from a specific user:
+下列範例請求會針對特定使用者的所有產品遞增 likes 計數器：
 
 <!-- spec_insert_start
 component: example_code
@@ -320,9 +321,9 @@ response = client.update_by_query(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Conditionally deleting documents
+## 範例：有條件地刪除文件
 
-The following example request deletes out-of-stock products with zero likes:
+下列範例請求會刪除 likes 為零的缺貨產品：
 
 <!-- spec_insert_start
 component: example_code
@@ -406,10 +407,10 @@ response = client.update_by_query(
 <!-- spec_insert_end -->
 
 <!-- vale off -->
-## Example: Using noop for conditional updates
+## 範例：使用 noop 進行有條件的更新
 <!-- vale on -->
 
-The following example request increases discount only for products priced above $100, otherwise performs no operation:
+下列範例請求只會針對價格高於 $100 的產品增加折扣，否則不執行任何操作：
 
 <!-- spec_insert_start
 component: example_code
@@ -452,9 +453,9 @@ response = client.update_by_query(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Updating from multiple indexes
+## 範例：從多個索引更新
 
-The following example request updates documents across multiple indexes:
+下列範例請求會跨多個索引更新文件：
 
 <!-- spec_insert_start
 component: example_code
@@ -494,9 +495,9 @@ response = client.update_by_query(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Using routing for targeted updates
+## 範例：使用路由進行目標式更新
 
-The following example request limits the update operation to shards with a specific routing value:
+下列範例請求會將更新操作限制在具有特定路由值的分片：
 
 <!-- spec_insert_start
 component: example_code
@@ -555,9 +556,9 @@ response = client.update_by_query(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Using scroll_size to control batch size
+## 範例：使用 scroll_size 控制批次大小
 
-The following example request uses a custom scroll batch size of 100 documents:
+下列範例請求使用自訂的 100 份文件 scroll 批次大小：
 
 <!-- spec_insert_start
 component: example_code
@@ -622,9 +623,9 @@ response = client.update_by_query(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Manual slicing for parallel processing
+## 範例：手動切片以進行平行處理
 
-The following example requests manually divide the update operation into two slices for parallel processing:
+下列範例請求會手動將更新操作分成兩個切片以進行平行處理：
 
 <!-- spec_insert_start
 component: example_code
@@ -679,7 +680,7 @@ response = client.update_by_query(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-In a separate request, process the second slice:
+在另一個請求中，處理第二個切片：
 
 <!-- spec_insert_start
 component: example_code
@@ -734,9 +735,9 @@ response = client.update_by_query(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Automatic slicing
+## 範例：自動切片
 
-The following example request uses automatic slicing to parallelize the update operation across 5 slices:
+下列範例請求使用自動切片，將更新作業平行化為 5 個切片執行：
 
 <!-- spec_insert_start
 component: example_code
@@ -780,7 +781,7 @@ response = client.update_by_query(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To allow OpenSearch to automatically determine the optimal number of slices, use `slices=auto`:
+若要讓 OpenSearch 自動判斷最佳切片數量，請使用 `slices=auto`：
 
 <!-- spec_insert_start
 component: example_code
@@ -839,9 +840,9 @@ response = client.update_by_query(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-The following example response shows a successful update by query operation that updated 8 documents:
+下列範例回應顯示一次成功的依查詢更新作業，共更新了 8 份文件：
 
 ```json
 {
@@ -864,7 +865,7 @@ The following example response shows a successful update by query operation that
 }
 ```
 
-When using a script with conditional `noop` operations, the response includes a `noops` count showing how many documents were skipped:
+當指令碼使用條件式 `noop` 作業時，回應會包含 `noops` 計數，顯示有多少文件被略過：
 
 ```json
 {
@@ -887,7 +888,7 @@ When using a script with conditional `noop` operations, the response includes a 
 }
 ```
 
-When using manual slicing, the response includes a `slice_id` field indicating which slice was processed:
+當使用手動切片時，回應會包含 `slice_id` 欄位，指出處理的是哪一個切片：
 
 ```json
 {
@@ -911,49 +912,49 @@ When using manual slicing, the response includes a `slice_id` field indicating w
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`took` | Integer | The amount of time from the start to the end of the entire operation, in milliseconds.
-`timed_out` | Boolean | Whether any of the requests executed during the update by query operation timed out. When set to `true`, successfully completed updates still persist and are not rolled back.
-`total` | Integer | The total number of documents that were successfully processed.
-`updated` | Integer | The number of documents that were successfully updated.
-`deleted` | Integer | The number of documents that were deleted. This occurs when the script sets `ctx.op = "delete"`.
-`batches` | Integer | The number of scroll batches processed by the update by query operation.
-`version_conflicts` | Integer | The number of version conflicts encountered by the update by query operation. Occurs when a document changes between the time the snapshot is taken and when the update operation is processed.
-`noops` | Integer | The number of documents that were ignored because the script set `ctx.op = "noop"`. Unlike delete by query, this field can contain non-zero values when scripts conditionally skip updates.
-`retries` | Object | The number of retries attempted by the update by query operation. Contains `bulk` (number of bulk action retries) and `search` (number of search action retries).
-`throttled_millis` | Integer | The amount of time the request was throttled to conform to `requests_per_second`, in milliseconds.
-`requests_per_second` | Float | The number of requests per second effectively executed during the update by query operation.
-`throttled_until_millis` | Integer | The amount of time until the next throttled request will be executed, in milliseconds. Always equals 0 in a completed update by query response. This field has meaning only when using the Tasks API to monitor an ongoing operation, where it indicates the next time a throttled request will execute.
-`slice_id` | Integer | The slice number for this response. Only present when using manual slicing. Indicates which slice of the operation this response represents.
-`slices` | Array | An array of slice results when using automatic slicing with a specific number. Each element contains the same response fields as the main response, showing the results for that individual slice.
-`failures` | Array | An array of failures if any unrecoverable errors occurred during the operation. If this array is not empty, the request aborted because of those failures. Update by query is implemented using batches, and any failure causes the entire process to abort, but all failures in the current batch are collected in this array. You can use the `conflicts` parameter set to `proceed` to prevent the operation from aborting on version conflicts.
+`took` | 整數 | 整個作業從開始到結束所花費的時間，單位為毫秒。
+`timed_out` | 布林值 | 依查詢更新作業期間執行的任何請求是否逾時。當設為 `true` 時，已成功完成的更新仍會保存，不會復原。
+`total` | 整數 | 成功處理的文件總數。
+`updated` | 整數 | 成功更新的文件數。
+`deleted` | 整數 | 刪除的文件數。當指令碼設定 `ctx.op = "delete"` 時會發生此情況。
+`batches` | 整數 | 依查詢更新作業處理的捲動批次數。
+`version_conflicts` | 整數 | 依查詢更新作業遇到的版本衝突數。當文件在建立快照與處理更新作業之間發生變更時，就會發生此情況。
+`noops` | 整數 | 因指令碼設定 `ctx.op = "noop"` 而被忽略的文件數。與依查詢刪除不同，當指令碼有條件地略過更新時，此欄位可能包含非零值。
+`retries` | 物件 | 依查詢更新作業嘗試的重試次數。包含 `bulk` (大量操作動作重試次數) 與 `search` (搜尋動作重試次數)。
+`throttled_millis` | 整數 | 為符合 `requests_per_second` 而對請求進行節流的時間，單位為毫秒。
+`requests_per_second` | 浮點數 | 依查詢更新作業期間每秒實際執行的請求數。
+`throttled_until_millis` | 整數 | 下一個被節流的請求將執行前的等待時間，單位為毫秒。在已完成的依查詢更新回應中一律為 0。此欄位僅在使用 Tasks API 監視進行中的作業時才有意義，此時它表示下一個被節流的請求將執行的時間。
+`slice_id` | 整數 | 此回應的切片編號。僅在使用手動切片時出現。指出此回應代表作業的哪一個切片。
+`slices` | 陣列 | 使用自動切片並指定特定數量時的切片結果陣列。每個元素包含與主要回應相同的回應欄位，顯示該個別切片的結果。
+`failures` | 陣列 | 作業期間發生任何無法復原的錯誤時的失敗陣列。若此陣列不為空，表示請求因這些失敗而中止。依查詢更新是以批次方式實作，任何失敗都會導致整個程序中止，但目前批次中的所有失敗都會收集在此陣列中。您可以將 `conflicts` 參數設為 `proceed`，以防止作業在發生版本衝突時中止。
 
-## Managing update by query tasks
+## 管理依查詢更新任務
 
-When you run an update by query operation asynchronously by setting `wait_for_completion=false`, OpenSearch returns a task ID that you can use to monitor, modify, or cancel the operation.
+當您透過設定 `wait_for_completion=false` 以非同步方式執行依查詢更新作業時，OpenSearch 會傳回一個任務 ID，您可以用它來監視、修改或取消該作業。
 
-### Retrieving the status of an update by query operation
+### 擷取依查詢更新作業的狀態
 
-To retrieve the status of an update by query operation, use the [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/):
+若要擷取依查詢更新作業的狀態，請使用 [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/)：
 
 ```json
 GET _tasks?detailed=true&actions=*/update/byquery
 ```
 {% include copy-curl.html %}
 
-The response includes the status of all running update by query operations. To retrieve the status of a specific task, use the task ID:
+回應包含所有執行中的依查詢更新作業狀態。若要擷取特定任務的狀態，請使用任務 ID：
 
 ```json
 GET _tasks/<task_id>
 ```
 {% include copy-curl.html %}
 
-The response contains detailed information about the operation's progress:
+回應包含作業進度的詳細資訊：
 
 ```json
 {
@@ -979,30 +980,30 @@ The response contains detailed information about the operation's progress:
 }
 ```
 
-The `total` field represents the total number of operations that the update by query operation expects to perform. You can estimate progress by adding the `updated`, `deleted`, and `noops` fields and comparing the sum to the `total` field. The operation is complete when their sum equals the `total` field.
+`total` 欄位代表依查詢更新作業預期執行的作業總數。您可以將 `updated`、`deleted` 與 `noops` 欄位相加，並將總和與 `total` 欄位比較，以估算進度。當總和等於 `total` 欄位時，作業即完成。
 
-### Changing throttling for a running operation
+### 變更執行中作業的節流設定
 
-To change the throttling of a running update by query operation, use the Rethrottle Task API with the task ID:
+若要變更執行中依查詢更新作業的節流設定，請使用 Rethrottle Task API 並指定工作 ID：
 
 ```json
 POST _update_by_query/<task_id>/_rethrottle?requests_per_second=100
 ```
 {% include copy-curl.html %}
 
-Set `requests_per_second` to any positive decimal value or `-1` to disable throttling. Rethrottling that speeds up the operation takes effect immediately. Rethrottling that slows down the operation takes effect after completing the current batch to prevent scroll timeouts.
+將 `requests_per_second` 設為任何正的十進位數值，或設為 `-1` 以停用節流。提高作業速度的節流調整會立即生效。降低作業速度的節流調整會在目前批次完成後生效，以避免捲動逾時。
 
-### Canceling an update by query operation
+### 取消依查詢更新作業
 
-To cancel a running update by query operation, use the task cancel API:
+若要取消執行中的依查詢更新作業，請使用工作取消 API：
 
 ```json
 POST _tasks/<task_id>/_cancel
 ```
 {% include copy-curl.html %}
 
-Cancellation should happen quickly but might take a few seconds. The Tasks API continues to list the update by query task until it checks that it has been canceled and terminates itself. When you cancel an update by query operation with slices, OpenSearch cancels each sub-request.
+取消作業應會迅速完成，但可能需要幾秒鐘。Tasks API 會持續列出依查詢更新工作，直到該工作確認已被取消並自行終止。當您取消使用切片的依查詢更新作業時，OpenSearch 會取消每個子請求。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:data/write/update/byquery`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`indices:data/write/update/byquery`。

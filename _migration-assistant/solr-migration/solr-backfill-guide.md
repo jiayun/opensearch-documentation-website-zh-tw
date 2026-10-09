@@ -1,78 +1,79 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Solr backfill guide
+title: "Solr 回填指南"
 nav_order: 2
 parent: Solr migration
 permalink: /migration-assistant/solr-migration/solr-backfill-guide/
 ---
 
-# Solr backfill guide
+# Solr 回填指南
 
-To migrate documents from Apache Solr to OpenSearch, use the snapshot-based backfill workflow. For the overall Solr migration architecture, see [Solr migration overview]({{site.url}}{{site.baseurl}}/migration-assistant/solr-migration/).
+若要將文件從 Apache Solr 遷移至 OpenSearch，請使用以快照為基礎的回填工作流程。如需整體 Solr 遷移架構，請參閱 [Solr 遷移概觀]({{site.url}}{{site.baseurl}}/migration-assistant/solr-migration/)。
 
-## SolrCloud compared to standalone Solr
+## SolrCloud 與單機版 Solr 的比較
 
-Migration Assistant supports both SolrCloud and standalone Solr deployment modes. It auto-detects the mode by probing the Solr Collections API first and falling back to the Solr Core Admin API. The prerequisites differ between the two modes, as described in the following table.
+Migration Assistant 同時支援 SolrCloud 與單機版 Solr 部署模式。它會先探測 Solr Collections API 以自動偵測模式，若失敗則改用 Solr Core Admin API。兩種模式的前置條件不同，如下表所述。
 
-| Feature | SolrCloud | Standalone Solr |
+| 功能 | SolrCloud | 單機版 Solr |
 |:-------|:----------|:----------------|
-| Backup unit | Collection | Core |
-| Solr backup API endpoint | `admin/collections?action=BACKUP` | `/solr/<core>/replication?command=backup` |
-| Poll API endpoint | `admin/collections?action=REQUESTSTATUS` | `/solr/<core>/replication?command=details` |
-| `solr.xml` location | ZooKeeper | Filesystem (typically `/var/solr/data/solr.xml`) |
-| Restart scope | Restart every node in the cluster | Restart the single Solr node |
-| Migration Assistant workflow argument | `solrCollections: [name1, name2]` | Same field, value is core names |
+| 備份單位 | Collection | Core |
+| Solr 備份 API 端點 | `admin/collections?action=BACKUP` | `/solr/<core>/replication?command=backup` |
+| 輪詢 API 端點 | `admin/collections?action=REQUESTSTATUS` | `/solr/<core>/replication?command=details` |
+| `solr.xml` 位置 | ZooKeeper | 檔案系統 (通常為 `/var/solr/data/solr.xml`) |
+| 重新啟動範圍 | 重新啟動叢集中的每個節點 | 重新啟動單一 Solr 節點 |
+| Migration Assistant 工作流程參數 | `solrCollections: [name1, name2]` | 相同欄位，值為 core 名稱 |
 
-Steps 1–4 are identical in both modes. Only Step 5 (how `solr.xml` is published and how nodes are restarted) differs.
+步驟 1–4 在兩種模式下完全相同。只有步驟 5 (`solr.xml` 的發布方式以及節點的重新啟動方式) 不同。
 
-## Responsibility breakdown
+## 職責劃分
 
-The snapshot is produced by **your Solr cluster** ([Solr's Amazon S3 backup plugin](https://solr.apache.org/guide/solr/latest/deployment-guide/backup-restore.html#s3backuprepository) writes the backup files to Amazon S3) and consumed by **Migration Assistant** (reads those files and bulk-indexes into OpenSearch). Migration Assistant cannot access your Solr cluster to install plugins or modify its configuration. You must complete those steps manually. All prerequisites on your side must be in place before you run the `create snapshot` step of the workflow.
+快照由**您的 Solr 叢集**產生 ([Solr 的 Amazon S3 備份外掛程式](https://solr.apache.org/guide/solr/latest/deployment-guide/backup-restore.html#s3backuprepository) 會將備份檔案寫入 Amazon S3)，並由 **Migration Assistant** 使用 (讀取這些檔案並大量索引至 OpenSearch)。Migration Assistant 無法存取您的 Solr 叢集來安裝外掛程式或修改其組態。您必須手動完成這些步驟。在執行工作流程的 `create snapshot` 步驟之前，您這端的所有前置條件都必須就緒。
 
-| Responsibility | Owner | Timing |
+| 職責 | 負責方 | 時機 |
 |:---------------|:------|:-----|
-| Install the Solr S3 backup plugin on every Solr node | You | Before running Migration Assistant |
-| Configure `solr.xml` with an `<backup>` repository and publish it (ZooKeeper for SolrCloud, filesystem for standalone) | You | Before running Migration Assistant |
-| Restart Solr so it loads the new `solr.xml` (every node for SolrCloud, the single node for standalone) | You | Before running Migration Assistant |
-| Create the S3 bucket and grant Solr `PutObject` / `GetObject` / `ListBucket` | You | Before running Migration Assistant |
-| Grant the Migration Assistant pods read access to the same bucket | You | During deployment |
-| Trigger `BACKUP` on every collection (SolrCloud) or core (standalone) and poll until complete. For SolrCloud, also create the S3 directory markers Solr's `S3BackupRepository` checks for. | Migration Assistant (`create snapshot`) | Workflow step |
-| Read the backup from S3, translate schemas, bulk-index into OpenSearch | Migration Assistant (metadata + Reindex-from-Snapshot) | Workflow step |
+| 在每個 Solr 節點上安裝 Solr S3 備份外掛程式 | 您 | 執行 Migration Assistant 之前 |
+| 設定 `solr.xml` 使用 `<backup>` 儲存庫並發布 (SolrCloud 使用 ZooKeeper，單機版使用檔案系統) | 您 | 執行 Migration Assistant 之前 |
+| 重新啟動 Solr 以載入新的 `solr.xml` (SolrCloud 為每個節點，單機版為單一節點) | 您 | 執行 Migration Assistant 之前 |
+| 建立 S3 儲存貯體並授予 Solr `PutObject` / `GetObject` / `ListBucket` | 您 | 執行 Migration Assistant 之前 |
+| 授予 Migration Assistant pod 對同一儲存貯體的讀取權限 | 您 | 部署期間 |
+| 在每個 collection (SolrCloud) 或 core (單機版) 上觸發 `BACKUP` 並輪詢直到完成。對於 SolrCloud，還需建立 Solr 的 `S3BackupRepository` 所檢查的 S3 目錄標記。 | Migration Assistant (`create snapshot`) | 工作流程步驟 |
+| 從 S3 讀取備份、轉換 schema、大量索引至 OpenSearch | Migration Assistant (metadata + Reindex-from-Snapshot) | 工作流程步驟 |
 
-## Solr prerequisites
+## Solr 前置條件
 
-Complete the following five steps on every Solr node in the cluster.
+在叢集中的每個 Solr 節點上完成以下五個步驟。
 
-### Step 1: Install the S3 backup plugin on every Solr node
+### 步驟 1：在每個 Solr 節點上安裝 S3 備份外掛程式
 
-In the Solr 8.11 Docker image (and most default installations), the S3 backup plugin files are distributed across two directories.
+在 Solr 8.11 Docker 映像 (以及大多數預設安裝) 中，S3 備份外掛程式的檔案分布在兩個目錄中。
 
-| Path | Contents | Missing component |
+| 路徑 | 內容 | 缺少的元件 |
 |:-----|:---------|:---------------|
-| `/opt/solr/contrib/s3-repository/lib/` | AWS SDK jars (dependencies only) | The `S3BackupRepository` class |
-| `/opt/solr/dist/solr-s3-repository-<VERSION>.jar` | `S3BackupRepository` class | The required AWS SDK jars |
+| `/opt/solr/contrib/s3-repository/lib/` | AWS SDK jar 檔案 (僅相依套件) | `S3BackupRepository` 類別 |
+| `/opt/solr/dist/solr-s3-repository-<VERSION>.jar` | `S3BackupRepository` 類別 | 必要的 AWS SDK jar 檔案 |
 
-If `sharedLib` references only one of these directories, Solr starts without errors but every `BACKUP` request fails with a `ClassNotFoundException: org.apache.solr.s3.S3BackupRepository` (or an AWS SDK `NoClassDefFoundError`).
+如果 `sharedLib` 只引用了其中一個目錄，Solr 啟動時不會出現錯誤，但每個 `BACKUP` 請求都會失敗並出現 `ClassNotFoundException: org.apache.solr.s3.S3BackupRepository` (或 AWS SDK `NoClassDefFoundError`)。
 
-Copy the `solr-s3-repository` jar from the `/opt/solr/dist/` directory into the `/opt/solr/contrib/s3-repository/lib/` directory so that all required files are in the same location:
+將 `solr-s3-repository` jar 從 `/opt/solr/dist/` 目錄複製到 `/opt/solr/contrib/s3-repository/lib/` 目錄，使所有必要檔案都位於同一位置：
 
 ```bash
 cp /opt/solr/dist/solr-s3-repository-*.jar /opt/solr/contrib/s3-repository/lib/
 ```
 {% include copy.html %}
 
-Run this command on **every Solr node** before starting Solr. In Docker, include this command in the container startup script (the directory requires `root` permissions).
+請在啟動 Solr 之前，於**每個 Solr 節點**上執行此命令。在 Docker 中，請將此命令加入容器啟動指令碼 (該目錄需要 `root` 權限)。
 
-### Step 2: Configure solr.xml
+### 步驟 2：設定 solr.xml
 
-There is **no API to register a backup repository at runtime in any version of Solr**. Repositories must be declared in `solr.xml` and loaded at node startup.
+**在任何版本的 Solr 中，都沒有可在執行階段註冊備份儲存庫的 API**。儲存庫必須在 `solr.xml` 中宣告，並在節點啟動時載入。
 
-Two common configuration errors produce no visible warning:
+兩個常見的組態錯誤不會產生任何可見的警告：
 
-- **`sharedLib` must be a single directory in Solr 8**: A comma-separated list is accepted but treated as a single invalid path, and the plugin does not load.
-- **Variable substitution `${VAR:default}` in `solr.xml` reads Java system properties, not OpenSearch environment variables**: Pass the values using `SOLR_OPTS=-Dkey=value` rather than Docker environment variables (`-e KEY=value`).
+- **`sharedLib` 在 Solr 8 中必須是單一目錄**：以逗號分隔的清單會被接受，但會被視為單一無效路徑，導致外掛程式無法載入。
+- **`solr.xml` 中的變數替代 `${VAR:default}` 讀取的是 Java 系統屬性，而非 OpenSearch 環境變數**：請使用 `SOLR_OPTS=-Dkey=value` 傳遞值，而非 Docker 環境變數 (`-e KEY=value`)。
 
-The following example shows a minimal `solr.xml` configuration:
+以下範例顯示最小的 `solr.xml` 組態：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -100,19 +101,19 @@ The following example shows a minimal `solr.xml` configuration:
 ```
 {% include copy.html %}
 
-The following table describes the configuration fields.
+下表說明各組態欄位。
 
-| Field | Description |
+| 欄位 | 說明 |
 |:------|:------------|
-| `<str name="sharedLib">` | The directory containing the jar files that Solr loads on startup. This must be the single directory into which you copied both the AWS SDK jar files and the plugin jar in Step 1. |
-| `<repository name="s3">` | The logical repository name. This value corresponds to `repoName` in your workflow configuration and to the `repository=` parameter in Solr's `BACKUP` URL. |
-| `s3.bucket.name` | The Amazon S3 bucket that stores the backup. The bucket must already exist because Solr does not create it. |
-| `s3.region` | The AWS Region of the bucket. |
-| `s3.endpoint` | The S3 endpoint. Leave empty for production Amazon S3. Set this field only when targeting a custom endpoint (for example, LocalStack). |
+| `<str name="sharedLib">` | Solr 啟動時載入 jar 檔案的目錄。此目錄必須是您在步驟 1 中將 AWS SDK jar 檔案與外掛程式 jar 一併複製進去的單一目錄。 |
+| `<repository name="s3">` | 儲存庫的邏輯名稱。此值對應您工作流程組態中的 `repoName`，以及 Solr `BACKUP` URL 中的 `repository=` 參數。 |
+| `s3.bucket.name` | 儲存備份的 Amazon S3 儲存貯體。儲存貯體必須已存在，因為 Solr 不會建立它。 |
+| `s3.region` | 儲存貯體所在的 AWS 區域。 |
+| `s3.endpoint` | S3 端點。生產環境的 Amazon S3 請留空。僅在目標為自訂端點 (例如 LocalStack) 時才設定此欄位。 |
 
-### Step 3: Configure Solr S3 connection
+### 步驟 3：設定 Solr S3 連線
 
-Pass S3 connection values to Solr through `SOLR_OPTS` system properties:
+透過 `SOLR_OPTS` 系統屬性將 S3 連線值傳遞給 Solr：
 
 ```bash
 export SOLR_OPTS="-DS3_BUCKET_NAME=my-solr-backups \
@@ -121,11 +122,11 @@ export SOLR_OPTS="-DS3_BUCKET_NAME=my-solr-backups \
 ```
 {% include copy.html %}
 
-`SOLR_SECURITY_MANAGER_ENABLED=false` is only required in sandboxed or `LocalStack` setups where the Java security manager blocks the AWS SDK outbound connections. In standard AWS deployments, it is not needed.
+`SOLR_SECURITY_MANAGER_ENABLED=false` 僅在 Java 安全管理員會封鎖 AWS SDK 對外連線的沙箱或 `LocalStack` 環境中才需要。在標準 AWS 部署中，不需要此屬性。
 
-### Step 4: Grant Solr permission to write to S3
+### 步驟 4：授予 Solr 寫入 S3 的權限
 
-The Solr process uses the [default AWS credential provider chain](https://docs.aws.amazon.com/sdkref/latest/guide/standardized-credentials.html): environment variables, Amazon EC2 instance profile, ECS task role, `~/.aws/credentials`, or a shared profile. Ensure that one of these credential sources resolves to an IAM identity with the following permissions scoped to the backup bucket:
+Solr 程序會使用[預設 AWS 憑證提供者鏈](https://docs.aws.amazon.com/sdkref/latest/guide/standardized-credentials.html)：環境變數、Amazon EC2 執行個體設定檔、ECS 任務角色、`~/.aws/credentials`，或共用設定檔。請確認上述其中一個憑證來源能解析為具有下列權限的 IAM 身分，且權限範圍限定於備份儲存貯體：
 
 ```json
 {
@@ -148,15 +149,15 @@ The Solr process uses the [default AWS credential provider chain](https://docs.a
 ```
 {% include copy.html %}
 
-Solr writes backups incrementally and reads previous backup metadata to determine which Lucene segments to re-upload. Therefore, `PutObject`, `GetObject`, and `ListBucket` are all required. `DeleteObject` is only needed if you use the `DELETE_BACKUP` or `maxNumBackup` cleanup features.
+Solr 會以增量方式寫入備份，並讀取先前的備份中繼資料，以判斷要重新上傳哪些 Lucene 分段。因此，`PutObject`、`GetObject` 和 `ListBucket` 都是必要的。只有在您使用 `DELETE_BACKUP` 或 `maxNumBackup` 清理功能時，才需要 `DeleteObject`。
 
-### Step 5: Publish solr.xml and restart Solr
+### 步驟 5：發布 solr.xml 並重新啟動 Solr
 
-The method for publishing `solr.xml` differs between SolrCloud and standalone Solr, but the file contents from Step 2 are the same for both modes.
+發布 `solr.xml` 的方法在 SolrCloud 與單機版 Solr 之間有所不同，但兩種模式使用的步驟 2 檔案內容相同。
 
 #### SolrCloud
 
-In SolrCloud mode, `solr.xml` is stored in `ZooKeeper`. Upload the edited file and then restart each node to load the new `<backup>` section:
+在 SolrCloud 模式中，`solr.xml` 會儲存在 `ZooKeeper`。上傳編輯後的檔案，然後重新啟動每個節點，以載入新的 `<backup>` 區段：
 
 ```bash
 /opt/solr/bin/solr zk cp <path-to-new-solr.xml> zk:/solr.xml -z <ZK_HOST>:2181
@@ -164,9 +165,9 @@ In SolrCloud mode, `solr.xml` is stored in `ZooKeeper`. Upload the edited file a
 ```
 {% include copy.html %}
 
-#### Standalone Solr
+#### 單機版 Solr
 
-Copy the edited `solr.xml` to the Solr home directory and restart Solr. In the default Docker image, the correct path is `/var/solr/data/solr.xml`. Do not use `/opt/solr/server/solr/solr.xml` because Solr ignores that path when started with `-Dsolr.solr.home=/var/solr/data`. To copy the file and restart Solr, run the following commands:
+將編輯後的 `solr.xml` 複製到 Solr 主目錄，然後重新啟動 Solr。在預設 Docker 映像中，正確的路徑是 `/var/solr/data/solr.xml`。請勿使用 `/opt/solr/server/solr/solr.xml`，因為以 `-Dsolr.solr.home=/var/solr/data` 啟動時，Solr 會忽略該路徑。若要複製檔案並重新啟動 Solr，請執行下列命令：
 
 ```bash
 cp <path-to-new-solr.xml> /var/solr/data/solr.xml
@@ -174,13 +175,13 @@ cp <path-to-new-solr.xml> /var/solr/data/solr.xml
 ```
 {% include copy.html %}
 
-### Verify the repository before running Migration Assistant
+### 在執行 Migration Assistant 之前驗證儲存庫
 
-Before running Migration Assistant, verify that your Solr cluster can write a backup to S3 successfully. If the test backup fails, resolve the issue in your Solr configuration before proceeding.
+在執行 Migration Assistant 之前，請確認您的 Solr 叢集可以成功將備份寫入 S3。如果測試備份失敗，請先解決 Solr 組態中的問題，再繼續進行。
 
 #### SolrCloud
 
-For SolrCloud, run the following command:
+若為 SolrCloud，請執行下列命令：
 
 ```bash
 # Trigger an async backup of one collection to a throwaway location.
@@ -194,22 +195,22 @@ curl "http://<solr-host>:8983/solr/admin/collections?action=REQUESTSTATUS\
 ```
 {% include copy.html %}
 
-If `REQUESTSTATUS` returns `state=failed`, review the complete JSON response. The `status.msg` field only contains a generic message such as `"found [preflight-1] in failed tasks"`. The detailed error appears in the top-level `exception.msg` or `response.*` fields. Common causes include the following:
+如果 `REQUESTSTATUS` 傳回 `state=failed`，請檢閱完整的 JSON 回應。`status.msg` 欄位只會包含一般訊息，例如 `"found [preflight-1] in failed tasks"`。詳細的錯誤會出現在最上層的 `exception.msg` 或 `response.*` 欄位中。常見原因包括下列各項：
 
-- The plugin jar was not copied in Step 1.
-- The S3 bucket does not exist.
-- The IAM identity from step 4 does not have access to the bucket.
+- 外掛程式 jar 未在步驟 1 中複製。
+- S3 儲存貯體不存在。
+- 步驟 4 的 IAM 身分無權存取該儲存貯體。
 
-After the test backup succeeds, delete it by running the following command:
+測試備份成功後，請執行下列命令將其刪除：
 
 ```bash
 curl "http://<solr-host>:8983/solr/admin/collections?action=DELETE_BACKUP&name=preflight&location=/preflight-check&purge=true&repository=s3"
 ```
 {% include copy.html %}
 
-#### Standalone Solr
+#### 單機版 Solr
 
-For standalone Solr, run the following command:
+若為單機版 Solr，請執行下列命令：
 
 ```bash
 # Trigger a backup of one core.
@@ -221,38 +222,38 @@ curl "http://<solr-host>:8983/solr/<CORE_NAME>/replication?command=details&wt=js
 ```
 {% include copy.html %}
 
-Verify that `details.backup.status` returns `"success"`. If the value is `"failed"` or `"exception"`, the `details.backup.exception` field contains the error details. The same root causes apply as for SolrCloud.
+請確認 `details.backup.status` 傳回 `"success"`。如果值為 `"failed"` 或 `"exception"`，則 `details.backup.exception` 欄位會包含錯誤詳細資料。SolrCloud 的相同根本原因也適用於此處。
 
-## Migration Assistant prerequisites
+## Migration Assistant 先決條件
 
-Verify that the following Migration Assistant prerequisites are met:
+請確認已符合下列 Migration Assistant 先決條件：
 
-- Migration Assistant is deployed to Kubernetes or Amazon EKS. For more information, see [Deploy on Kubernetes]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-kubernetes/) or [Deploy on Amazon EKS]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-eks/).
-- The Migration Console pod and the RFS worker pods have read access (`s3:GetObject` and `s3:ListBucket`) to the backup bucket. If Solr and Migration Assistant run in different AWS accounts or VPCs, verify routing (VPC endpoints, bucket policy) before proceeding.
-- The bucket configured in Solr's `solr.xml` (`s3.bucket.name`) and the bucket referenced in the workflow configuration (`s3RepoPathUri`) are the same bucket.
+- Migration Assistant 已部署至 Kubernetes 或 Amazon EKS。如需更多資訊，請參閱[在 Kubernetes 上部署]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-kubernetes/)或[在 Amazon EKS 上部署]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-eks/)。
+- Migration Console pod 和 RFS worker pod 具有備份儲存貯體的讀取權限 (`s3:GetObject` 和 `s3:ListBucket`)。如果 Solr 與 Migration Assistant 執行於不同的 AWS 帳戶或 VPC，請先確認路由 (VPC 端點、儲存貯體政策) 再繼續進行。
+- Solr 的 `solr.xml` (`s3.bucket.name`) 中設定的儲存貯體，與工作流程組態 (`s3RepoPathUri`) 中參照的儲存貯體是同一個儲存貯體。
 
-## Workflow configuration
+## 工作流程組態
 
-Migration Assistant validates the workflow against a schema generated at installation time. Always start from the version-matched sample (`workflow configure sample --load`) instead of writing the configuration manually. The schema names and structure change between releases.
+Migration Assistant 會根據安裝時產生的結構描述來驗證工作流程。請一律從版本相符的範例 (`workflow configure sample --load`) 開始，而不要手動撰寫組態。結構描述的名稱與結構會隨版本而有所不同。
 
-### Key configuration fields
+### 主要組態欄位
 
-The following table describes the key configuration fields.
+下表說明主要的組態欄位。
 
-| Field | Description |
+| 欄位 | 說明 |
 |:------|:------------|
-| `sourceClusters.<name>.version` | The Solr version string. Must match the format `SOLR <major>.<minor>.<patch>`, for example, `SOLR 6.6.6`, `SOLR 7.7.3`, `SOLR 8.11.4`, or `SOLR 9.7.0`. |
-| `sourceClusters.<name>.snapshotInfo.repos.<repoName>.s3RepoPathUri` | The full Amazon S3 URI in the format `s3://bucket` or `s3://bucket/subpath`. The bucket must match `s3.bucket.name` in `solr.xml`. The subpath is passed as the `location` parameter to Solr's `BACKUP` API. |
-| `sourceClusters.<name>.snapshotInfo.snapshots.<snapshotName>.repoName` | The repository name. Must match the `name` attribute in `solr.xml`. |
-| `targetClusters.<name>.authConfig.sigv4.service` | The AWS service identifier. Use `es` for Amazon OpenSearch Service or `aoss` for Amazon OpenSearch Serverless NextGen. |
-| `targetClusters.<name>.authConfig.basic.secretName` | The Kubernetes secret name containing basic authentication credentials. Use this field instead of `sigv4` when targeting a self-managed cluster. |
-| `perSnapshotConfig.<snapshotName>[].metadataMigrationConfig.skipEvaluateApproval` / `skipMigrateApproval` | Bypasses the per-step approval gates without disabling all approvals globally. |
-| `perSnapshotConfig.<snapshotName>[].documentBackfillConfig.podReplicas` | The number of RFS pods. Each pod processes a different shard in parallel. |
-| `perSnapshotConfig.<snapshotName>[].documentBackfillConfig.maxShardSizeBytes` | The maximum supported shard size. The default is 80 GiB. Larger shards must be reduced (force-merge or split) before backfill. |
+| `sourceClusters.<name>.version` | Solr 版本字串。格式必須符合 `SOLR <major>.<minor>.<patch>`，例如 `SOLR 6.6.6`、`SOLR 7.7.3`、`SOLR 8.11.4` 或 `SOLR 9.7.0`。 |
+| `sourceClusters.<name>.snapshotInfo.repos.<repoName>.s3RepoPathUri` | 格式為 `s3://bucket` 或 `s3://bucket/subpath` 的完整 Amazon S3 URI。儲存貯體必須與 `solr.xml` 中的 `s3.bucket.name` 相符。子路徑會以 `location` 參數的形式傳遞至 Solr 的 `BACKUP` API。 |
+| `sourceClusters.<name>.snapshotInfo.snapshots.<snapshotName>.repoName` | 儲存庫名稱。必須與 `solr.xml` 中的 `name` 屬性相符。 |
+| `targetClusters.<name>.authConfig.sigv4.service` | AWS 服務識別碼。Amazon OpenSearch Service 請使用 `es`，Amazon OpenSearch Serverless NextGen 請使用 `aoss`。 |
+| `targetClusters.<name>.authConfig.basic.secretName` | 包含基本驗證憑證的 Kubernetes secret 名稱。以自我管理叢集為目標時，請使用此欄位而非 `sigv4`。 |
+| `perSnapshotConfig.<snapshotName>[].metadataMigrationConfig.skipEvaluateApproval` / `skipMigrateApproval` | 略過各步驟的核准關卡，而不會全域停用所有核准。 |
+| `perSnapshotConfig.<snapshotName>[].documentBackfillConfig.podReplicas` | RFS pod 的數量。每個 pod 會平行處理不同的分片。 |
+| `perSnapshotConfig.<snapshotName>[].documentBackfillConfig.maxShardSizeBytes` | 支援的分片大小上限。預設值為 80 GiB。較大的分片必須先縮減 (強制合併或分割)，才能進行回填。 |
 
-### S3 repository path URI
+### S3 儲存庫路徑 URI
 
-Both `CreateSnapshot` (write) and `RFS` (read) use the same `s3RepoPathUri`, so they reference the same S3 location. Migration Assistant automatically creates the S3 directory markers Solr expects at both `<subpath>/` and `<subpath>/<snapshotName>/` before calling `BACKUP`, so you do not need to create them manually, as shown in the following diagram. 
+`CreateSnapshot` (寫入) 與 `RFS` (讀取) 都使用相同的 `s3RepoPathUri`，因此兩者參照相同的 S3 位置。Migration Assistant 會在呼叫 `BACKUP` 之前，自動在 `<subpath>/` 和 `<subpath>/<snapshotName>/` 兩處建立 Solr 預期的 S3 目錄標記，因此您不需要手動建立，如下圖所示。
 
 ```
 s3RepoPathUri: "s3://my-bucket/solr-migration-v3"
@@ -261,23 +262,23 @@ s3RepoPathUri: "s3://my-bucket/solr-migration-v3"
                       └── Bucket — must match s3.bucket.name in solr.xml
 ```
 
-### Creating a snapshot
+### 建立快照
 
-When you run the `create snapshot` workflow step, Migration Assistant performs the following operations:
+當您執行 `create snapshot` 工作流程步驟時，Migration Assistant 會執行下列操作：
 
-1. **Detects the deployment mode** by probing the SolrCloud Collections API. If the probe fails, Migration Assistant falls back to the standalone Core Admin API.
-2. **Discovers the backup units** -- Collections in SolrCloud (through `admin/collections?action=LIST`) or cores in standalone (through `admin/cores?action=STATUS`). You can override this by specifying the `solrCollections` workflow field.
-3. **Creates Amazon S3 directory markers** at `<subpath>/` and `<subpath>/<snapshotName>/` (zero-byte objects with `content-type: application/x-directory`). Solr's `S3BackupRepository` verifies these paths exist before accepting a backup. This step applies to SolrCloud only. Migration Assistant does not create these markers in standalone mode. If you encounter a `specified location` failure in standalone mode, create the subpath manually by running `aws s3api put-object --bucket <bucket> --key <subpath>/ --content-type application/x-directory` and resubmit the workflow. For additional standalone Solr with S3 issues, see [Troubleshooting](#troubleshooting).
-4. **Calls Solr's backup API** once per collection or core:
-   - SolrCloud: `admin/collections?action=BACKUP&name=<collection>&location=<subpath>/<snapshotName>&repository=s3&async=...` (asynchronous).
-   - Standalone: `/solr/<core>/replication?command=backup&name=<snapshotName>&location=<subpath>&repository=s3` (synchronous dispatch, asynchronous execution).
-5. **Polls for completion** using `REQUESTSTATUS` per asynchronous ID (SolrCloud) or `replication?command=details` per core (standalone) until every unit reports `completed`, `success`, or failure.
+1. **偵測部署模式**，方法是探查 SolrCloud Collections API。如果探查失敗，Migration Assistant 會改用單機版 Core Admin API。
+2. **探索備份單位** -- SolrCloud 中的 collection (透過 `admin/collections?action=LIST`) 或單機版中的 core (透過 `admin/cores?action=STATUS`)。您可以指定 `solrCollections` 工作流程欄位來覆寫此行為。
+3. **建立 Amazon S3 目錄標記**，位置在 `<subpath>/` 和 `<subpath>/<snapshotName>/` (內含 `content-type: application/x-directory` 的零位元組物件)。Solr 的 `S3BackupRepository` 會在接受備份之前驗證這些路徑存在。此步驟僅適用於 SolrCloud。Migration Assistant 不會在單機版模式中建立這些標記。如果您在單機版模式中遇到 `specified location` 失敗，請執行 `aws s3api put-object --bucket <bucket> --key <subpath>/ --content-type application/x-directory` 手動建立子路徑，然後重新提交工作流程。如需更多單機版 Solr 搭配 S3 的問題，請參閱[疑難排解](#troubleshooting)。
+4. **呼叫 Solr 的備份 API**，每個 collection 或 core 一次：
+   - SolrCloud：`admin/collections?action=BACKUP&name=<collection>&location=<subpath>/<snapshotName>&repository=s3&async=...` (非同步)。
+   - 單機版：`/solr/<core>/replication?command=backup&name=<snapshotName>&location=<subpath>&repository=s3` (同步分派、非同步執行)。
+5. **輪詢等待完成**，使用 `REQUESTSTATUS` 依非同步 ID (SolrCloud) 或 `replication?command=details` 依 core (單機版)，直到每個單位回報 `completed`、`success` 或失敗為止。
 
-Steps 3 through 5 require the [Solr prerequisites](#solr-prerequisites) to be fulfilled.
+步驟 3 到 5 需要滿足 [Solr 先決條件](#solr-prerequisites)。
 
-## Running the backfill
+## 執行回填
 
-Load your YAML into the workflow session, then submit the workflow:
+將您的 YAML 載入工作流程工作階段，然後提交工作流程：
 
 ```bash
 # Option 1: edit interactively (loads sample, opens $EDITOR)
@@ -293,49 +294,49 @@ workflow manage    # interactive TUI — also shows approval gates
 ```
 {% include copy.html %}
 
-If a previous workflow exists in your cluster, `workflow submit` automatically stops and replaces it. To remove CRDs without resubmitting, run `workflow reset` (interactive) or `workflow reset --all` (delete everything).
+如果您的叢集中已有先前的工作流程，`workflow submit` 會自動停止並取代它。若要在不重新提交的情況下移除 CRD，請執行 `workflow reset` (互動式) 或 `workflow reset --all` (刪除所有項目)。
 
-### Verify document counts
+### 驗證文件計數
 
-After backfill completes, verify document counts on the target by running the following command:
+回填完成後，請執行下列命令來驗證目標上的文件計數：
 
 ```bash
 console clusters cat-indices --refresh
 ```
 {% include copy.html %}
 
-## Troubleshooting
+## 疑難排解
 
-The following are common issues and their resolutions.
+以下是常見問題及其解決方式。
 
-### Snapshot creation fails
+### 快照建立失敗
 
-The following table lists common snapshot creation errors, their causes, and resolutions.
+下表列出常見的快照建立錯誤、其成因及解決方式。
 
-| Error | Cause | Resolution |
+| 錯誤 | 成因 | 解決方式 |
 |:------|:------|:-----------|
-| `ClassNotFoundException: org.apache.solr.s3.S3BackupRepository` in Solr logs | The plugin jar was not copied from `/opt/solr/dist/` into the `sharedLib` directory. | Repeat [Step 1](#step-1-install-the-s3-backup-plugin-on-every-solr-node) on every node and restart Solr. |
-| `Repository default-s3 not found` | The `<backup>` block is missing from the running `solr.xml` (incorrect file, incorrect mount path, or nodes were not restarted after upload). | Repeat [Step 5](#step-5-publish-solrxml-and-restart-solr). |
-| `specified location s3:///...` (triple slash) | Solr cannot verify the directory marker using `HeadObject`. | Verify permissions in [Step 4](#step-4-grant-solr-permission-to-write-to-s3). |
-| S3 `AccessDenied` in Solr logs | The IAM identity on the Solr node does not have write access to the bucket. | Correct the IAM policy in [Step 4](#step-4-grant-solr-permission-to-write-to-s3) and confirm access by running `aws s3 ls` from the Solr node. |
-| (SolrCloud only) `status.msg="found [...] in failed tasks"` | The asynchronous task failed. The detailed error is in a different field. | Review the full `REQUESTSTATUS` JSON response and inspect the top-level `exception.msg` or `response.*` fields. |
-| (Standalone only) `details.backup.status` = `failed` or `exception` | The core-level backup failed. | Review the `details.backup.exception` field in the `replication?command=details` response for the detailed error. |
+| Solr 記錄檔中的 `ClassNotFoundException: org.apache.solr.s3.S3BackupRepository` | 外掛程式 jar 未從 `/opt/solr/dist/` 複製到 `sharedLib` 目錄。 | 在每個節點上重複[步驟 1](#step-1-install-the-s3-backup-plugin-on-every-solr-node) 並重新啟動 Solr。 |
+| `Repository default-s3 not found` | 執行中的 `solr.xml` 缺少 `<backup>` 區塊 (檔案錯誤、掛載路徑錯誤，或上傳後未重新啟動節點)。 | 重複[步驟 5](#step-5-publish-solrxml-and-restart-solr)。 |
+| `specified location s3:///...` (三個斜線) | Solr 無法使用 `HeadObject` 驗證目錄標記。 | 在[步驟 4](#step-4-grant-solr-permission-to-write-to-s3) 中驗證權限。 |
+| Solr 記錄檔中的 S3 `AccessDenied` | Solr 節點上的 IAM 身分沒有儲存貯體的寫入權限。 | 在[步驟 4](#step-4-grant-solr-permission-to-write-to-s3) 中修正 IAM 政策，並從 Solr 節點執行 `aws s3 ls` 確認存取權。 |
+| (僅限 SolrCloud) `status.msg="found [...] in failed tasks"` | 非同步工作失敗。詳細錯誤位於不同欄位中。 | 檢閱完整的 `REQUESTSTATUS` JSON 回應，並檢查最上層的 `exception.msg` 或 `response.*` 欄位。 |
+| (僅限單機版) `details.backup.status` = `failed` 或 `exception` | core 層級的備份失敗。 | 檢閱 `replication?command=details` 回應中的 `details.backup.exception` 欄位以取得詳細錯誤。 |
 
-### Metadata migration finds 0 items
+### 中繼資料遷移找到 0 個項目
 
-The following are common causes of empty metadata migration results:
+以下是中繼資料遷移結果為空的常見原因：
 
-- The `s3RepoPathUri` is incorrect. The bucket matches but the subpath does not match the location where Solr wrote the backup.
-- The snapshot did not complete. Verify `REQUESTSTATUS` for every collection (SolrCloud) or `replication?command=details` for every core (standalone).
-- The snapshot name referenced in `snapshotMigrationConfigs` is incorrect.
+- `s3RepoPathUri` 不正確。儲存貯體相符，但子路徑與 Solr 寫入備份的位置不符。
+- 快照未完成。請驗證每個 collection (SolrCloud) 的 `REQUESTSTATUS` 或每個 core (單機版) 的 `replication?command=details`。
+- `snapshotMigrationConfigs` 中參照的快照名稱不正確。
 
-### RFS migrates fewer documents than expected
+### RFS 遷移的文件數少於預期
 
-If the document count on the target is lower than expected, perform the following steps:
+如果目標上的文件計數低於預期，請執行下列步驟：
 
-1. Verify that the backup contains all shards by running the following command:
+1. 執行下列命令，驗證備份包含所有分片：
    ```bash
    aws s3 ls s3://<bucket>/<subpath>/<snapshot>/<collection-or-core>/shard_backup_metadata/
    ```
-2. Confirm that each shard has a `md_shardN_0.json` file (or `md_shardN_<N>.json` for successive backups). Migration Assistant uses the highest N value.
-3. Verify work item status in `workflow manage`.
+2. 確認每個分片都有 `md_shardN_0.json` 檔案 (或連續備份的 `md_shardN_<N>.json`)。Migration Assistant 會使用最高的 N 值。
+3. 在 `workflow manage` 中驗證工作項目狀態。

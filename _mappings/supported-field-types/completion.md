@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Completion
 nav_order: 51
@@ -11,15 +12,15 @@ redirect_from:
   - /field-types/completion/
 ---
 
-# Completion field type
-**Introduced 1.0**
+# Completion 欄位類型
+**於 1.0 版導入**
 {: .label .label-purple }
 
-A completion field type provides autocomplete functionality through a completion suggester. The completion suggester is a prefix suggester, so it matches the beginning of text only. A completion suggester creates an in-memory data structure, which provides faster lookups but leads to increased memory usage. You need to upload a list of all possible completions into the index before using this feature.
+Completion 欄位類型透過 completion suggester 提供自動完成功能。Completion suggester 是一種前綴建議器，因此只會比對文字的開頭。Completion suggester 會建立記憶體內資料結構，查詢速度較快，但會增加記憶體用量。使用此功能前，您需要將所有可能的完成項清單上傳至索引。
 
-## Example
+## 範例
 
-Create a mapping with a completion field:
+建立包含 completion 欄位的對應：
 
 ```json
 PUT chess_store
@@ -38,19 +39,19 @@ PUT chess_store
 ```
 {% include copy-curl.html %}
 
-## Mapping parameters
+## 對應參數
 
-The `completion` field type supports the following mapping parameters.
+`completion` 欄位類型支援下列對應參數。
 
-| Parameter   | Description   |
+| 參數   | 說明   |
 | :--- | :--- |
-| `analyzer` | Specifies the index-time analyzer for input text. Default is `simple`. See [Index analyzers]({{site.url}}{{site.baseurl}}/analyzers/index-analyzers/).  |
-| `search_analyzer` | Defines the analyzer used at search time. Default is the value of `analyzer`. See [Search analyzers]({{site.url}}{{site.baseurl}}/analyzers/search-analyzers/). |
-| `preserve_separators` | If `true` (default), preserves separators such as spaces or punctuation. If set to `false`, allows queries like `queensg` to match a suggestion like "Queen's Gambit".    |
-| `preserve_position_increments` | If `true` (default), maintains position increments for analyzed tokens. Setting this to `false` can match suggestions like "The Sicilian Defense" when typing `s` because it skips over stopwords like "The". Alternatively, you can index both "Sicilian Defense" and "The Sicilian Defense" as separate inputs without changing the analyzer. |
-| `max_input_length`             | Limits the length of each input string. Default is `50` UTF-16 code points. This applies only at index time to prevent large inputs from bloating the underlying data structure. Most prefix completions work well within this limit. Dynamically updatable. |
+| `analyzer` | 指定輸入文字在索引時使用的分析器。預設為 `simple`。請參閱 [索引分析器]({{site.url}}{{site.baseurl}}/analyzers/index-analyzers/)。  |
+| `search_analyzer` | 定義搜尋時使用的分析器。預設為 `analyzer` 的值。請參閱 [搜尋分析器]({{site.url}}{{site.baseurl}}/analyzers/search-analyzers/)。 |
+| `preserve_separators` | 若為 `true`（預設），會保留空格或標點符號等分隔符。若設為 `false`，則允許 `queensg` 之類的查詢比對「Queen's Gambit」這類建議。    |
+| `preserve_position_increments` | 若為 `true`（預設），會為分析後的詞元維持位置增量。將此設為 `false` 時，輸入 `s` 可以比對出「The Sicilian Defense」這類建議，因為它會略過「The」等停用詞。或者，您也可以在不變更分析器的情況下，將「Sicilian Defense」與「The Sicilian Defense」作為不同輸入分別編製索引。 |
+| `max_input_length`             | 限制每個輸入字串的長度。預設為 `50` 個 UTF-16 碼位。此限制僅在索引時生效，以防止過大的輸入使底層資料結構膨脹。大多數前綴完成項在此限制內皆可正常運作。可動態更新。 |
 
-### Example mapping
+### 對應範例
 
 ```json
 PUT chess_store
@@ -69,7 +70,7 @@ PUT chess_store
 }
 ```
 
-Index suggestions into OpenSearch:
+將建議編製索引至 OpenSearch：
 
 ```json
 PUT chess_store/_doc/1
@@ -82,16 +83,16 @@ PUT chess_store/_doc/1
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by completion fields.
+下表列出 completion 欄位接受的參數。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :--- 
-`input` | A list of possible completions as a string or array of strings. Cannot contain `\u0000` (null), `\u001f` (information separator one), or `\u001e` (information separator two). Required.
-`weight` | A positive integer or a positive integer string for ranking suggestions. Optional.
+`input` | 可能的完成項清單，以字串或字串陣列表示。不可包含 `\u0000`（空字元）、`\u001f`（資訊分隔符一）或 `\u001e`（資訊分隔符二）。必要。
+`weight` | 用於為建議排序的正整數或正整數字串。選用。
 
-Multiple suggestions can be indexed as follows:
+多個建議可依下列方式編製索引：
 
 ```json
 PUT chess_store/_doc/2
@@ -114,7 +115,7 @@ PUT chess_store/_doc/2
 ```
 {% include copy-curl.html %}
 
-As an alternative, you can use the following shorthand notation (note that you cannot provide the `weight` parameter in this notation):
+或者，您可以使用下列簡寫標記法（請注意，此標記法無法提供 `weight` 參數）：
 
 ```json
 PUT chess_store/_doc/3
@@ -124,11 +125,11 @@ PUT chess_store/_doc/3
 ```
 {% include copy-curl.html %}
 
-## Querying completion field types
+## 查詢 completion 欄位類型
 
-To query completion field types, specify the prefix that you want to search for and the name of the field in which to look for suggestions.
+若要查詢 completion 欄位類型，請指定要搜尋的前綴，以及要在其中尋找建議的欄位名稱。
 
-Query the index for suggestions that start with the word "chess":
+查詢索引中以「chess」一詞開頭的建議：
 
 ```json
 GET chess_store/_search
@@ -145,7 +146,7 @@ GET chess_store/_search
 ```
 {% include copy-curl.html %}
 
-The response contains autocomplete suggestions:
+回應包含自動完成建議：
 
 ```json
 {
@@ -215,9 +216,9 @@ The response contains autocomplete suggestions:
 }
 ```
 
-In the response, the `_score` field contains the value of the `weight` parameter that was set up at index time. The `text` field is populated with the suggestion's `input` parameter.
+在回應中，`_score` 欄位包含索引時設定的 `weight` 參數值。`text` 欄位則填入建議的 `input` 參數。
 
-By default, the response contains the whole document, including the `_source` field, which may impact performance. To return only the `suggestions` field, you can specify that in the `_source` parameter. You can also restrict the number of returned suggestions by specifying the `size` parameter.
+預設情況下，回應包含整份文件，包括 `_source` 欄位，這可能影響效能。若只要傳回 `suggestions` 欄位，您可以在 `_source` 參數中指定。您也可以透過指定 `size` 參數來限制傳回的建議數量。
 
 ```json
 GET chess_store/_search
@@ -236,7 +237,7 @@ GET chess_store/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the suggestions:
+回應包含建議：
 
 ```json
 {
@@ -306,22 +307,22 @@ The response contains the suggestions:
 }
 ```
 
-To take advantage of source filtering, use the suggest functionality on the `_search` endpoint. The `_suggest` endpoint does not support source filtering.
+若要利用來源篩選，請在 `_search` 端點上使用 suggest 功能。`_suggest` 端點不支援來源篩選。
 {: .note}
 
-## Completion query parameters
+## Completion 查詢參數
 
-The following table lists the parameters accepted by the completion suggester query.
+下表列出 completion suggester 查詢接受的參數。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :--- 
-`field` | A string that specifies the field on which to run the query. Required.
-`size` | An integer that specifies the maximum number of returned suggestions. Optional. Default is 5.
-`skip_duplicates` | A Boolean value that specifies whether to skip duplicate suggestions. Optional. Default is `false`.
+`field` | 指定執行查詢之欄位的字串。必要。
+`size` | 指定傳回建議數量上限的整數。選用。預設為 5。
+`skip_duplicates` | 指定是否略過重複建議的布林值。選用。預設為 `false`。
 
-## Fuzzy completion query
+## 模糊 completion 查詢
 
-To allow for fuzzy matching, you can specify the `fuzziness` parameter for the completion query. In this case, even if the user mistypes a search term, the completion query still returns results. Additionally, the longer the prefix that matches the query, the higher the document's score.
+若要允許模糊比對，您可以為 completion 查詢指定 `fuzziness` 參數。如此一來，即使使用者輸入錯誤的搜尋詞，completion 查詢仍會傳回結果。此外，比對查詢的前綴越長，文件的分數就越高。
 
 ```json
 GET chess_store/_search
@@ -342,24 +343,24 @@ GET chess_store/_search
 ```
 {% include copy-curl.html %}
 
-To use all default fuzziness options, specify `"fuzzy": {}` or `"fuzzy": true`.
+若要使用所有預設模糊選項，請指定 `"fuzzy": {}` 或 `"fuzzy": true`。
 {: .tip}
 
-The following table lists the parameters accepted by the `fuzzy` completion suggester query. All of the parameters are optional.
+下表列出 `fuzzy` completion suggester 查詢接受的參數。所有參數皆為選用。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :--- 
-`fuzziness` | Fuzziness can be set as one of the following: <br> 1. An integer that specifies the maximum allowed [Damerau–Levenshtein distance](https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance) for this edit. <br> 2. `AUTO`: Strings of 0–2 characters must match exactly, strings of 3–5 characters allow 1 edit, and strings longer than 5 characters allow 2 edits.<br> Default is `AUTO`.
-`min_length` | An integer that specifies the minimum length the input must be to start returning suggestions. If the search term is shorter than `min_length`, no suggestions are returned. Default is 3.
-`prefix_length` | An integer that specifies the minimum length the matched prefix must be to start returning suggestions. If the prefix of `prefix_length` is not matched, but the search term is still within the Damerau–Levenshtein distance, no suggestions are returned. Default is 1.
-`transpositions` | A Boolean value that specifies to count transpositions (interchanges of adjacent characters) as one edit instead of two. Example: The suggestion's `input` parameter is `abcde` and the `fuzziness` is 1. If `transpositions` is set to `true`, `abdce` will match, but if `transpositions` is set to `false`, `abdce` will not match. Default is `true`.
-`unicode_aware` | A Boolean value that specifies whether to use Unicode code points when measuring the edit distance, transposition, and length. If `unicode_aware` is set to `true`, the measurement is slower. Default is `false`, in which case distances are measured in bytes.
+`fuzziness` | 模糊度可設為下列其中之一：<br> 1. 指定此次編輯允許的最大 [Damerau–Levenshtein 距離](https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance) 的整數。<br> 2. `AUTO`：0–2 個字元的字串必須完全相符，3–5 個字元的字串允許 1 次編輯，超過 5 個字元的字串允許 2 次編輯。<br> 預設為 `AUTO`。
+`min_length` | 指定輸入必須達到的最小長度才會開始傳回建議的整數。若搜尋詞短於 `min_length`，則不會傳回任何建議。預設為 3。
+`prefix_length` | 指定相符前綴必須達到的最小長度才會開始傳回建議的整數。若 `prefix_length` 的前綴未相符，但搜尋詞仍在 Damerau–Levenshtein 距離內，則不會傳回任何建議。預設為 1。
+`transpositions` | 指定是否將相鄰字元互換（transposition）計為一次編輯而非兩次的布林值。範例：建議的 `input` 參數為 `abcde`，而 `fuzziness` 為 1。若 `transpositions` 設為 `true`，`abdce` 會相符；但若 `transpositions` 設為 `false`，`abdce` 則不會相符。預設為 `true`。
+`unicode_aware` | 指定在測量編輯距離、互換與長度時是否使用 Unicode 碼位的布林值。若 `unicode_aware` 設為 `true`，測量速度會較慢。預設為 `false`，此時距離以位元組為單位測量。
 
-## Regex queries
+## 正規表示式查詢
 
-You can use a regular expression to define the prefix for the completion suggester query. 
+您可以使用正規表示式來定義 completion suggester 查詢的前綴。
 
-For example, to search for strings that start with "a" and have a "d" later on, use the following query:
+例如，若要搜尋以「a」開頭且後面含有「d」的字串，請使用下列查詢：
 
 ```json
 GET chess_store/_search
@@ -376,7 +377,7 @@ GET chess_store/_search
 ```
 {% include copy-curl.html %}
 
-The response matches the string `"abcde"`:
+回應會比對出字串 `"abcde"`：
 
 ```json
 {

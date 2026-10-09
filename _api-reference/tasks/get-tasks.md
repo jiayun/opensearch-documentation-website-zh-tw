@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get task
+title: "取得任務"
 parent: Tasks APIs
 nav_order: 20
 ---
 
 # Get Task API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Get Task API returns detailed information about a single general OpenSearch task (such as search, reindex, or bulk operations).
+Get Task API 會回傳單一一般 OpenSearch 任務（例如搜尋、重新編製索引或大量操作）的詳細資訊。
 
-This API is different from the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/), which tracks machine learning tasks and has a different response format.
+此 API 與 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 不同，後者追蹤機器學習任務，並具有不同的回應格式。
 {: .important }
 
 <!-- spec_insert_start
 api: tasks.get
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_tasks/{task_id}
 ```
@@ -28,13 +29,13 @@ GET /_tasks/{task_id}
 api: tasks.get
 component: path_parameters
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required | Data type | Description |
+| 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `task_id` | **Required** | String | The task ID. |
+| `task_id` | **必要** | 字串 | 任務 ID。 |
 
 <!-- spec_insert_end -->
 
@@ -42,29 +43,29 @@ The following table lists the available path parameters.
 api: tasks.get
 component: query_parameters
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `timeout` | String | The amount of time to wait for a response. | `30s` |
-| `wait_for_completion` | Boolean | Waits for the matching task to complete. When `true`, the request is blocked until the task has completed. | `false` |
+| `timeout` | 字串 | 等待回應的時間長度。 | `30s` |
+| `wait_for_completion` | 布林值 | 等待符合條件的任務完成。當設為 `true` 時，請求會被阻擋，直到任務完成為止。 | `false` |
 
 <!-- spec_insert_end -->
 
-## Example request
+## 範例請求
 
-The following request returns detailed information about active search tasks:
+下列請求會回傳進行中搜尋任務的詳細資訊：
 
 ```bash
 curl -XGET "localhost:9200/_tasks?actions=*search&detailed
 ```
 {% include copy.html %}
 
-## Example response
+## 範例回應
 
-The following response returns detailed information about the `transport` task:
+下列回應會回傳 `transport` 任務的詳細資訊：
 
 ```json
 {
@@ -113,22 +114,22 @@ The following response returns detailed information about the `transport` task:
 }
 ```
 
-### The `resource_stats` object
+### `resource_stats` 物件
 
-The `resource_stats` object is only updated for tasks that support resource tracking. These statistics are computed based on scheduled thread executions, including both threads that have finished working on the task and threads currently working on the task. Because the same thread may be scheduled to work on the same task multiple times, each instance of a given thread being scheduled to work on a given task is considered to be a single thread execution.
+`resource_stats` 物件僅會針對支援資源追蹤的任務進行更新。這些統計數據是根據已排程的執行緒執行計算而得，包括已完成該任務工作的執行緒，以及目前正在處理該任務的執行緒。由於同一個執行緒可能被排程多次處理同一個任務，因此每個執行緒被排程處理某個任務的執行個體，都視為單次執行緒執行。
 
-The following table lists all response fields in the `resource_stats` object. 
+下表列出 `resource_stats` 物件中的所有回應欄位。
 
-Response field | Description |
+回應欄位 | 說明 |
 :--- | :--- |
-`average` | The average resource usage across all scheduled thread executions. |
-`total` | The total resource usage across all scheduled thread executions. |
-`min` | The minimum resource usage across all scheduled thread executions. |
-`max` | The maximum resource usage across all scheduled thread executions. |
-`thread_info` | Thread-count-related statistics.|
-`thread_info.active_threads` | The number of threads currently working on the task. |
-`thread_info.thread_executions` | The number of threads that have been scheduled to work on the task. |
+`average` | 所有已排程執行緒執行的平均資源使用量。 |
+`total` | 所有已排程執行緒執行的總資源使用量。 |
+`min` | 所有已排程執行緒執行的最小資源使用量。 |
+`max` | 所有已排程執行緒執行的最大資源使用量。 |
+`thread_info` | 與執行緒數量相關的統計數據。|
+`thread_info.active_threads` | 目前正在處理該任務的執行緒數量。 |
+`thread_info.thread_executions` | 執行緒被排程處理該任務的執行次數。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:monitor/tasks/get`.
+如果您使用 Security 外掛程式，請確保您具備適當的權限：`cluster:monitor/tasks/get`。

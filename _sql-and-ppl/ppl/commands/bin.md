@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: bin
 parent: Commands
@@ -8,78 +9,78 @@ nav_order: 8
 
 <!-- vale off -->
 
-# bin command
+# bin 命令
 
 <!-- vale on -->
 
-The `bin` command groups numeric values into buckets of equal intervals, which is useful for creating histograms and analyzing data distribution. It accepts a numeric or time-based field and generates a new field containing values that represent the lower bound of each bucket.
+`bin` 命令會將數值分組至等間隔的桶中，適合用於建立直方圖及分析資料分布。此命令接受數值或時間欄位，並產生新欄位，其中的值代表各桶的下限。
 
-## Syntax
+## 語法
 
-The `bin` command has the following syntax:
+`bin` 命令的語法如下：
 
 ```sql
 bin <field> [span=<interval>] [minspan=<interval>] [bins=<count>] [aligntime=(earliest | latest | <time-specifier>)] [start=<value>] [end=<value>]
 ```
 
-## Parameters
+## 參數
 
-The `bin` command supports the following parameters.
+`bin` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要／選用 | 說明 |
 | --- | --- | --- |
-| `<field>` | Required | The field to group into buckets. Accepts numeric or time-based fields. |
-| `span` | Optional | The interval size for each bin. Cannot be used with the `bins` or `minspan` parameters. Supports numeric, logarithmic (`log10`, `2log10`), and time intervals. See [Time units](#time-units).|
-| `minspan` | Optional | The minimum interval size for automatic span calculation. Cannot be used with the `span` or `bins` parameters. |
-| `bins` | Optional | The maximum number of equal-width bins to create. Must be between `2` and `50000` (inclusive). Cannot be used with the `span` or `minspan` parameters. See [The bins parameter for timestamp fields](#the-bins-parameter-for-timestamp-fields).|
-| `aligntime` | Optional | Align the bin times for time-based fields. Valid only for time-based discretization. Valid values are `earliest`, `latest`, or a specific time. See [Align options](#align-time-options).|
-| `start` | Optional | The starting value of the interval range. Default is the minimum value of the field. |
-| `end` | Optional | The ending value of the interval range. Default is the maximum value of the field. |
+| `<field>` | 必要 | 要分組至桶中的欄位。接受數值或時間欄位。 |
+| `span` | 選用 | 每個桶的間隔大小。不可與 `bins` 或 `minspan` 參數一起使用。支援數值、對數（`log10`、`2log10`）及時間間隔。請參閱[時間單位](#time-units)。|
+| `minspan` | 選用 | 自動計算間隔時的最小間隔大小。不可與 `span` 或 `bins` 參數一起使用。 |
+| `bins` | 選用 | 要建立的等寬桶數量上限。必須介於 `2` 與 `50000` 之間（含上下限）。不可與 `span` 或 `minspan` 參數一起使用。請參閱[時間戳記欄位的 bins 參數](#the-bins-parameter-for-timestamp-fields)。|
+| `aligntime` | 選用 | 對齊時間欄位的桶時間。僅適用於時間離散化。有效值為 `earliest`、`latest` 或特定時間。請參閱[對齊選項](#align-time-options)。|
+| `start` | 選用 | 間隔範圍的起始值。預設為欄位的最小值。 |
+| `end` | 選用 | 間隔範圍的結束值。預設為欄位的最大值。 |
 
-### The bins parameter for timestamp fields
+### 時間戳記欄位的 bins 參數
 
-The `bins` parameter for timestamp fields has the following requirements:
+時間戳記欄位的 `bins` 參數有下列要求：
 
-- **Push-down must be enabled**: Enable push-down by setting `plugins.calcite.pushdown.enabled` to `true` (enabled by default). If push-down is disabled, use the `span` parameter instead (for example, `bin @timestamp span=5m`).
-- **The timestamp field must be used as an aggregation bucket**: The binned timestamp field must be included in a `stats` aggregation (for example, `source=events | bin @timestamp bins=3 | stats count() by @timestamp`). Using `bins` on timestamp fields outside of aggregation buckets is not supported.
+- **必須啟用下推**：將 `plugins.calcite.pushdown.enabled` 設為 `true` 以啟用下推（預設啟用）。若停用下推，請改用 `span` 參數（例如 `bin @timestamp span=5m`）。
+- **時間戳記欄位必須用作彙總桶**：分桶後的時間戳記欄位必須包含在 `stats` 彙總中（例如 `source=events | bin @timestamp bins=3 | stats count() by @timestamp`）。不支援在彙總桶以外的時間戳記欄位上使用 `bins`。
 
 
-### Time units
+### 時間單位
 
-The following time units are available for the `span` parameter:
+`span` 參數可使用下列時間單位：
 
-* Microseconds (`us`)
-* Milliseconds (`ms`)
-* Centiseconds (`cs`)
-* Deciseconds (`ds`)
-* Seconds (`s`, `sec`, `secs`, `second`, or `seconds`)
-* Minutes (`m`, `min`, `mins`, `minute`, or `minutes`)
-* Hours (`h`, `hr`, `hrs`, `hour`, or `hours`)
-* Days (`d`, `day`, or `days`)
-* Months (`M`, `mon`, `month`, or `months`)
+* 微秒（`us`）
+* 毫秒（`ms`）
+* 百分之一秒（`cs`）
+* 十分之一秒（`ds`）
+* 秒（`s`、`sec`、`secs`、`second` 或 `seconds`）
+* 分鐘（`m`、`min`、`mins`、`minute` 或 `minutes`）
+* 小時（`h`、`hr`、`hrs`、`hour` 或 `hours`）
+* 天（`d`、`day` 或 `days`）
+* 月（`M`、`mon`、`month` 或 `months`）
 
-### Align time options
+### 時間對齊選項
 
-The following options are available for the `aligntime` parameter:
+`aligntime` 參數可使用下列選項：
 
-* `earliest` -- Align bins to the earliest timestamp in the data.
-* `latest` -- Align bins to the latest timestamp in the data.
-* `<time-specifier>` -- Align bins to a specific epoch time value or time modifier expression.
+* `earliest` -- 將桶對齊至資料中最早的時間戳記。
+* `latest` -- 將桶對齊至資料中最晚的時間戳記。
+* `<time-specifier>` -- 將桶對齊至特定的紀元時間值或時間修飾詞運算式。
   
-### Parameter behavior
+### 參數行為
 
-When multiple parameters are specified, the priority order is: `span` > `minspan` > `bins` > `start`/`end` > default.
+指定多個參數時，優先順序為：`span` > `minspan` > `bins` > `start`/`end` > 預設。
 
-### Special parameter types
+### 特殊參數類型
 
-The `bin` command has the following special handling for certain parameter types:
+`bin` 命令會對某些參數類型進行下列特殊處理：
 
-* Logarithmic spans (for example, `log10` or `2log10`) create logarithmic bin boundaries instead of linear ones.
-* Daily or monthly spans automatically align to calendar boundaries and return date strings (`YYYY-MM-DD`) instead of timestamps.
-* The `aligntime` parameter applies only to time spans shorter than a day (excluding daily or monthly spans).
-* The `start` and `end` parameters expand the range (they never reduce it) and affect bin width calculations.
+* 對數間隔（例如 `log10` 或 `2log10`）會建立對數桶邊界，而非線性桶邊界。
+* 以天或月為單位的間隔會自動對齊至日曆邊界，並傳回日期字串（`YYYY-MM-DD`），而非時間戳記。
+* `aligntime` 參數僅適用於小於一天的時間間隔（不包括以天或月為單位的間隔）。
+* `start` 和 `end` 參數會擴大範圍（絕不縮小範圍），並影響桶寬度的計算。
 
-## Example 1: Response time distribution from logs
+## 範例 1：記錄資料的回應時間分布
 
 ```sql
 source=otellogs
@@ -91,7 +92,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -105,7 +106,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Severity level distribution
+## 範例 2：嚴重性等級分布
 
 ```sql
 source=otellogs
@@ -116,7 +117,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -129,7 +130,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Logarithmic span (log10)  
+## 範例 3：對數間隔（log10）  
 
 ```sql
 source=accounts
@@ -139,7 +140,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -151,7 +152,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 4: Logarithmic span with coefficient  
+## 範例 4：含係數的對數間隔  
 
 ```sql
 source=accounts
@@ -161,7 +162,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -174,7 +175,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 5: Basic bins parameter  
+## 範例 5：bins 參數的基本用法  
 
 ```sql
 source=time_test
@@ -184,7 +185,7 @@ source=time_test
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -197,7 +198,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 6: Log volume distribution with bins parameter
+## 範例 6：使用 bins 參數的記錄資料量分布
 
 ```sql
 source=otellogs
@@ -209,7 +210,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -223,7 +224,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 7: High bin count  
+## 範例 7：較多的桶數量  
 
 ```sql
 source=accounts
@@ -233,7 +234,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -248,7 +249,7 @@ The query returns the following results:
 
 <!-- vale off -->
 
-## Example 8: Basic minspan  
+## 範例 8：minspan 的基本用法  
 
 <!-- vale on -->
 
@@ -260,7 +261,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -273,7 +274,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 9: Large minspan  
+## 範例 9：較大的 minspan  
 
 ```sql
 source=accounts
@@ -283,7 +284,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -294,7 +295,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 10: Start and end range  
+## 範例 10：起始與結束範圍  
 
 ```sql
 source=accounts
@@ -304,7 +305,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -315,7 +316,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 11: Large end range  
+## 範例 11：較大的結束範圍  
 
 ```sql
 source=accounts
@@ -325,7 +326,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -336,7 +337,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 12: Span with start/end  
+## 範例 12：搭配 start/end 的間隔  
 
 ```sql
 source=accounts
@@ -346,7 +347,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -360,7 +361,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 13: Hour span  
+## 範例 13：小時間隔  
 
 ```sql
 source=time_test
@@ -370,7 +371,7 @@ source=time_test
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -383,7 +384,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 14: Minute span  
+## 範例 14：分鐘間隔  
 
 ```sql
 source=time_test
@@ -393,7 +394,7 @@ source=time_test
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -406,7 +407,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 15: Second span  
+## 範例 15：秒間隔  
 
 ```sql
 source=time_test
@@ -416,7 +417,7 @@ source=time_test
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -429,7 +430,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 16: Daily span  
+## 範例 16：以天為單位的間隔  
 
 ```sql
 source=time_test
@@ -439,7 +440,7 @@ source=time_test
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -452,7 +453,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 17: Align time with time modifier  
+## 範例 17：使用時間修飾詞對齊時間  
 
 ```sql
 source=time_test
@@ -462,7 +463,7 @@ source=time_test
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -475,7 +476,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 18: Align time with epoch timestamp  
+## 範例 18：使用紀元時間戳記對齊時間  
 
 ```sql
 source=time_test
@@ -485,7 +486,7 @@ source=time_test
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -498,7 +499,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 19: Default behavior (no parameters)  
+## 範例 19：預設行為（無參數）  
 
 ```sql
 source=accounts
@@ -508,7 +509,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -521,7 +522,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 20: Binning with string fields  
+## 範例 20：對字串欄位分桶  
 
 ```sql
 source=accounts
@@ -532,7 +533,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 

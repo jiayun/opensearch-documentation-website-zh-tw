@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: UBI dashboard tutorial
+title: "UBI 儀表板教學"
 parent: User Behavior Insights
 grand_parent: Optimizing search quality
 has_children: false
@@ -8,88 +9,88 @@ nav_order: 25
 ---
 
 
-# UBI dashboard tutorial
+# UBI 儀表板教學
 
-Whether you've been collecting user events and queries for a while or [you've uploaded some sample events](https://github.com/o19s/chorus-OpenSearch-edition/blob/main/katas/003_import_preexisting_event_data.md), you're now ready to visualize the data collected through User Behavior Insights (UBI) in a dashboard in OpenSearch.
+無論您已經收集使用者事件與查詢一段時間，或是[已上傳一些範例事件](https://github.com/o19s/chorus-OpenSearch-edition/blob/main/katas/003_import_preexisting_event_data.md)，您現在都可以在 OpenSearch 的儀表板中，將透過使用者行為洞察 (UBI) 收集到的資料視覺化。
 
-> This tutorial is a nice way to learn how to make custom dashboards.
+> 本教學是學習如何製作自訂儀表板的好方法。
 
-To quickly view a dashboard without completing the full tutorial, do the following:
-1. Download and save the [sample UBI dashboard]({{site.url}}{{site.baseurl}}/assets/examples/ubi-dashboard.ndjson).
-1. On the top menu, go to **Management > Dashboard Management**.
-1. In the **Dashboards** panel, choose **Saved objects**.
-1. In the upper-right corner, select **Import**.
-1. In the **Select file** panel, choose **Import**.
-1. Select the UBI dashboard file that you downloaded and select the **Import** button.
+若想快速檢視儀表板而不完成整份教學，請執行下列步驟：
+1. 下載並儲存[範例 UBI 儀表板]({{site.url}}{{site.baseurl}}/assets/examples/ubi-dashboard.ndjson)。
+1. 在頂端功能表中，前往 **Management > Dashboard Management**。
+1. 在 **Dashboards** 面板中，選擇 **Saved objects**。
+1. 在右上角，選取 **Import**。
+1. 在 **Select file** 面板中，選擇 **Import**。
+1. 選取您下載的 UBI 儀表板檔案，然後選取 **Import** 按鈕。
 
-## 1. Start OpenSearch Dashboards
+## 1. 啟動 OpenSearch Dashboards
 
-Start OpenSearch Dashboards. For example, go to `http://{server}:5601/app/home#/`. For more information, see [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/). The following image shows the home page.
+啟動 OpenSearch Dashboards。例如，前往 `http://{server}:5601/app/home#/`。如需更多資訊，請參閱 [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/)。下圖顯示首頁。
 ![Dashboard Home]({{site.url}}{{site.baseurl}}/images/ubi/home.png)
 
-## 2. Create an index pattern
+## 2. 建立索引模式
 
-In OpenSearch Management, navigate to **Dashboards Management > Index patterns** or navigate using a URL, such as `http://{server}:5601/app/management/OpenSearch-dashboards/indexPatterns`.
+在 OpenSearch Management 中，瀏覽至 **Dashboards Management > Index patterns**，或使用 URL 瀏覽，例如 `http://{server}:5601/app/management/OpenSearch-dashboards/indexPatterns`。
 
-OpenSearch Dashboards accesses your indexes using index patterns. To visualize your users' online search behavior, you must create an index pattern in order to access the indexes that UBI creates. For more information, see [Index patterns]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/).
+OpenSearch Dashboards 使用索引模式存取您的索引。若要將使用者的線上搜尋行為視覺化，您必須建立索引模式，才能存取 UBI 建立的索引。如需更多資訊，請參閱[索引模式]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/)。
 
-After you select **Create index pattern**, a list of indexes in your OpenSearch instance is displayed. The UBI stores may be hidden by default, so make sure to select **Include system and hidden indexes**, as shown in the following image.
+選取 **Create index pattern** 後，會顯示您 OpenSearch 執行個體中的索引清單。UBI 儲存區預設可能會隱藏，因此請務必選取 **Include system and hidden indexes**，如下圖所示。
 ![Index Patterns]({{site.url}}{{site.baseurl}}/images/ubi/index_pattern2.png)
 
-You can group indexes into the same data source for your dashboard using wildcards. For this tutorial you'll combine the query and event stores into the `ubi_*` pattern.
+您可以使用萬用字元，將索引分組到儀表板的同一個資料來源中。在本教學中，您會將查詢儲存區與事件儲存區合併為 `ubi_*` 模式。
 
-OpenSearch Dashboards prompts you to filter on any `date` field in your schema so that you can look at things like trending queries over the last 15 minutes. However, for your first dashboard, select **I don't want to use the time filter**, as shown in the following image.
+OpenSearch Dashboards 會提示您依結構描述中的任何 `date` 欄位進行篩選，以便您查看例如過去 15 分鐘的熱門查詢等內容。不過，若這是您的第一個儀表板，請選取 **I don't want to use the time filter**，如下圖所示。
 ![Index Patterns]({{site.url}}{{site.baseurl}}/images/ubi/index_pattern3.png){: width="400" }
 
 
-After selecting **Create index pattern**, you're ready to start building a dashboard that displays the UBI store data.
+選取 **Create index pattern** 後，您就可以開始建立顯示 UBI 儲存區資料的儀表板。
 
-## 3. Create a new dashboard
+## 3. 建立新儀表板
 
-To create a new dashboard, on the top menu, select **OpenSearch Dashboards > Dashboards** and then **Create > Dashboard** > **Create new**.
-If you haven't previously created a dashboard, you are presented with the option to create a new dashboard. Otherwise, previously created dashboards are displayed.
+若要建立新儀表板，請在頂端功能表中選取 **OpenSearch Dashboards > Dashboards**，然後選取 **Create > Dashboard** > **Create new**。
+如果您先前未曾建立儀表板，系統會提供您建立新儀表板的選項。否則，會顯示先前建立的儀表板。
 
 
-In the **New Visualization** window, select **Pie** to create a new pie chart. Then select the index pattern you created in step 2.
+在 **New Visualization** 視窗中，選取 **Pie** 以建立新的圓餅圖。然後選取您在步驟 2 建立的索引模式。
 
-Most visualizations require some sort of aggregate function on a bucket/facet/aggregatable field (numeric or keyword). You'll add a `Terms` aggregation to the `action_name` field so that you can view the distribution of event names. Change the **Size** to the number of slices you want to display, as shown in the following image.
+大多數視覺化都需要對桶/面向/可彙總欄位 (數值或關鍵字) 套用某種彙總函式。您會將 `Terms` 彙總新增至 `action_name` 欄位，以便檢視事件名稱的分佈。將 **Size** 變更為您要顯示的扇區數，如下圖所示。
 ![Pie Chart]({{site.url}}{{site.baseurl}}/images/ubi/pie.png)
 
-Save the visualization so that it's added to your new dashboard. Now that you have a visualization displayed on your dashboard, you can save the dashboard.
+儲存視覺化，以便將其新增至您的新儀表板。現在您的儀表板上已顯示視覺化，您可以儲存儀表板。
 
-## 4. Add a tag cloud visualization
+## 4. 新增標籤雲視覺化
 
-Now you'll add a word cloud for trending searches by creating a new visualization, similarly to the previous step.  
+現在您將以類似上一個步驟的方式建立新的視覺化，來新增熱門搜尋的文字雲。  
 
-In the **New Visualization** window, select **Tag Cloud**, and then select the index pattern you created in Step 2. Choose the tag cloud visualization of the terms in the `message` field where the JavaScript client logs the raw search text. Note: The true query, as processed by OpenSearch with filters, boosting, and so on, resides in the `ubi_queries` index. However, you'll view the `message` field of the `ubi_events` index, where the JavaScript client captures the text that the user actually typed.
+在 **New Visualization** 視窗中，選取 **Tag Cloud**，然後選取您在步驟 2 建立的索引模式。選擇 `message` 欄位中詞彙的標籤雲視覺化，JavaScript 用戶端會在該欄位記錄原始搜尋文字。注意：經 OpenSearch 處理 (含篩選、加權等) 後的真正查詢位於 `ubi_queries` 索引中。不過，您會檢視 `ubi_events` 索引的 `message` 欄位，JavaScript 用戶端會在該欄位擷取使用者實際輸入的文字。
 
-The following image shows the tag cloud visualization on the `message` field.
+下圖顯示 `message` 欄位上的標籤雲視覺化。
 ![Word Cloud]({{site.url}}{{site.baseurl}}/images/ubi/tag_cloud1.png)
 
-The underlying queries can be found at [SQL trending queries]({{site.url}}{{site.baseurl}}/search-plugins/ubi/sql-queries/#trending-queries).
+基礎查詢可在 [SQL 熱門查詢]({{site.url}}{{site.baseurl}}/search-plugins/ubi/sql-queries/#trending-queries) 找到。
 {: .note}
 
 
-The resulting visualization may contain different information than you're looking for. The `message` field is updated with every event, and as a result, it can contain error messages, debug messages, click information, and other unwanted data.
-To view only search terms for query events, you need to add a filter to your visualization. Because during setup you provided a `message_type` of `QUERY` for each search event, you can filter by that message type to isolate the specific users' searches. To do this, select **Add filter** and then select **QUERY** in the **Edit filter** panel, as shown in the following image.
+產生的視覺化可能包含與您所需不同的資訊。`message` 欄位會隨每個事件更新，因此可能包含錯誤訊息、偵錯訊息、點擊資訊及其他不需要的資料。
+若只要檢視查詢事件的搜尋詞彙，您需要在視覺化中新增篩選條件。由於您在設定時為每個搜尋事件提供了 `QUERY` 的 `message_type`，您可以依該訊息類型進行篩選，以隔離特定使用者的搜尋。若要這麼做，請選取 **Add filter**，然後在 **Edit filter** 面板中選取 **QUERY**，如下圖所示。
 ![Word Cloud]({{site.url}}{{site.baseurl}}/images/ubi/tag_cloud2.png)
 
-There should now be two visualizations (the pie chart and the tag cloud) displayed on your dashboard, as shown in the following image.
+您的儀表板上現在應該會顯示兩個視覺化 (圓餅圖與標籤雲)，如下圖所示。
 ![UBI Dashboard]({{site.url}}{{site.baseurl}}/images/ubi/dashboard2.png)
 
-## 5. Add a histogram of item clicks
+## 5. 新增項目點擊的直方圖
 
-Now you'll add a histogram visualization to your dashboard, similarly to the previous step. In the **New Visualization** window, select **Vertical Bar**. Then select the index pattern you created in Step 2.
+現在您將以類似上一個步驟的方式，在儀表板中新增直方圖視覺化。在 **New Visualization** 視窗中，選取 **Vertical Bar**。然後選取您在步驟 2 建立的索引模式。
 
-Examine the `event_attributes.position.ordinal` data field. This field contains the position of the item in a list selected by the user. For the histogram visualization, the x-axis represents the ordinal number of the selected item (n). The y-axis represents the number of times that the nth item was clicked, as shown in the following image.
+檢查 `event_attributes.position.ordinal` 資料欄位。此欄位包含使用者所選清單中項目的位置。在直方圖視覺化中，x 軸代表所選項目的序號 (n)。y 軸代表第 n 個項目被點擊的次數，如下圖所示。
 
 ![Vertical Bar Chart]({{site.url}}{{site.baseurl}}/images/ubi/histogram.png)
 
-## 6. Filter the displayed data
+## 6. 篩選顯示的資料
 
-Now you can further filter the displayed data. For example, you can see how the click position changes when a purchase occurs. Select **Add filter** and then select the `action_name:product_purchase` field, as shown in the following image.
+現在您可以進一步篩選顯示的資料。例如，您可以查看發生購買時點擊位置的變化。選取 **Add filter**，然後選取 `action_name:product_purchase` 欄位，如下圖所示。
 ![Product Purchase]({{site.url}}{{site.baseurl}}/images/ubi/product_purchase.png)
 
 
-You can filter event messages containing the word `*laptop*` by adding wildcards, as shown in the following image.
-![Laptop]({{site.url}}{{site.baseurl}}/images/ubi/laptop.png "Laptop").
+您可以新增萬用字元，以篩選包含 `*laptop*` 一詞的事件訊息，如下圖所示。
+![Laptop]({{site.url}}{{site.baseurl}}/images/ubi/laptop.png "Laptop")。

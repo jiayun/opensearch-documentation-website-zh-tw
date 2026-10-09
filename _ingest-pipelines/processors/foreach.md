@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Foreach
 parent: Ingest processors
@@ -6,12 +7,12 @@ nav_order: 110
 ---
 
 <!-- vale off -->
-# Foreach processor
+# Foreach 處理器
 <!-- vale on -->
 
-The `foreach` processor is used to iterate over a list of values in an input document and apply a transformation to each value. This can be useful for tasks like processing all the elements in an array consistently, such as converting all elements in a string to lowercase or uppercase.
+`foreach` 處理器用於迭代輸入文件中的值清單，並對每個值套用轉換。這對於以一致方式處理陣列中的所有元素等任務非常有用，例如將字串中的所有元素轉換為小寫或大寫。
 
-The following is the syntax for the `foreach` processor:
+以下是 `foreach` 處理器的語法：
 
 ```json
 {
@@ -27,28 +28,28 @@ The following is the syntax for the `foreach` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `foreach` processor.
+下表列出 `foreach` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`field` | Required | The array field to iterate over.
-`processor` | Required | The processor to execute against each field.
-`ignore_missing` | Optional | If `true` and the specified field does not exist or is null, then the processor will quietly exit without modifying the document.
-`description` | Optional | A brief description of the processor.
-`if` | Optional | A condition for running the processor.
-`ignore_failure` | Optional | Specifies whether the processor continues execution even if it encounters an error. If set to `true`, then failures are ignored. Default is `false`.
-`on_failure` | Optional | A list of processors to run if the processor fails.
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type.
+`field` | 必要 | 要迭代的陣列欄位。
+`processor` | 必要 | 要對每個欄位執行的處理器。
+`ignore_missing` | 選用 | 若為 `true` 且指定的欄位不存在或為 null，則處理器會靜默結束，不會修改文件。
+`description` | 選用 | 處理器的簡短描述。
+`if` | 選用 | 執行處理器的條件。
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤也繼續執行。若設為 `true`，則會忽略失敗。預設值為 `false`。
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+依照下列步驟在管線中使用處理器。
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
 
-The following query creates a pipeline named `test-foreach` that uses the `foreach` processor to iterate over each element in the `protocols` field: 
+下列查詢會建立名為 `test-foreach` 的管線，使用 `foreach` 處理器迭代 `protocols` 欄位中的每個元素：
 
 ```json
 PUT _ingest/pipeline/test-foreach  
@@ -67,12 +68,12 @@ PUT _ingest/pipeline/test-foreach
 ```
 {% include copy-curl.html %}
 
-### Step 2 (Optional): Test the pipeline
+### 步驟 2（選用）：測試管線
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/test-foreach/_simulate  
@@ -90,9 +91,9 @@ POST _ingest/pipeline/test-foreach/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected, showing that the four elements have been lowercased:
+下列範例回應確認管線如預期運作，顯示四個元素已轉換為小寫：
 
 ```json
 {  
@@ -121,9 +122,9 @@ The following example response confirms that the pipeline is working as expected
 ```
 {% include copy-curl.html %}
 
-### Step 3: Ingest a document 
+### 步驟 3：匯入文件
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 POST testindex1/_doc/1?pipeline=test-foreach  
@@ -133,9 +134,9 @@ POST testindex1/_doc/1?pipeline=test-foreach
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The request indexes the document into the index `testindex1` and applies the pipeline before indexing:
+此請求會將文件編製索引到索引 `testindex1`，並在編製索引之前套用管線：
 
 ```json
 {  
@@ -154,18 +155,18 @@ The request indexes the document into the index `testindex1` and applies the pip
 ```
 {% include copy-curl.html %}
 
-### Step 4 (Optional): Retrieve the document
+### 步驟 4（選用）：擷取文件
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The response shows the document with the extracted JSON data from the `users` field:
+回應會顯示文件，其中包含從 `users` 欄位擷取的 JSON 資料：
 
 ```json
 {  

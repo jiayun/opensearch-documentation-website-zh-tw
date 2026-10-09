@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: PPL syntax
+title: "PPL 語法"
 parent: Commands
 grand_parent: PPL
 nav_order: 1
@@ -10,18 +11,18 @@ redirect_from:
 
 <!-- vale off -->
 
-# PPL syntax
+# PPL 語法
 
 <!-- vale on -->
 
-Every PPL query starts with the `search` command. It specifies the index to search and retrieve documents from.
+每個 PPL 查詢都會以 `search` 命令開頭。它會指定要從中搜尋及擷取文件的索引。
 
-`PPL` supports exactly one `search` command per PPL query, and it is always the first command. The word `search` can be omitted.
+`PPL` 在每個 PPL 查詢中只支援一個 `search` 命令，而且它一律是第一個命令。`search` 這個字可以省略。
 
-Subsequent commands can follow in any order.
+後續命令可以依任意順序接續。
 
 
-## Syntax
+## 語法
 
 ```sql
 search source=<index> [boolean-expression]
@@ -29,60 +30,60 @@ source=<index> [boolean-expression]
 ```
 {% include copy.html %}
 
-## Parameters
+## 參數
 
-The `search` command supports the following parameters.
+`search` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<index>` | Required | Specifies the index to query. |
-| `<boolean-expression>` | Optional | Specifies an expression that evaluates to a Boolean value. |
+| `<index>` | 必要 | 指定要查詢的索引。 |
+| `<boolean-expression>` | 選用 | 指定評估為布林值的運算式。 |
 
 
-## Syntax notation conventions
+## 語法標記慣例
 
-PPL command syntax uses the following notation conventions.
+PPL 命令語法使用下列標記慣例。
 
-### Placeholders
+### 預留位置
 
-Placeholders are shown in angle brackets (`< >`). These must be replaced with actual values.
+預留位置以角括號表示（`< >`）。這些必須替換為實際值。
 
-**Example**: `<field>` means you must specify an actual field name like `age` or `firstname`.
+**範例**：`<field>` 表示您必須指定實際的欄位名稱，例如 `age` 或 `firstname`。
 
-### Optional elements
+### 選用元素
 
-Optional elements are enclosed in square brackets (`[ ]`). These can be omitted from the command.
+選用元素以方括號括住（`[ ]`）。這些可以從命令中省略。
 
-**Examples**:
-- `[+|-]` means the plus or minus signs are optional.
-- `[<alias>]` means the alias placeholder is optional.
+**範例**：
+- `[+|-]` 表示加號或減號為選用。
+- `[<alias>]` 表示別名預留位置為選用。
 
-### Required choices
+### 必要選項
 
-Required choices between alternatives are shown in parentheses and are delimited with pipe separators (`(option1 | option2)`). You must choose exactly one of the specified options.
+替代選項之間的必要選擇以括號表示，並以直線分隔符號（`(option1 | option2)`）分隔。您必須從指定的選項中選擇恰好一個。
 
-**Example**: `(on | where)` means you must use either `on` or `where`, but not both.
+**範例**：`(on | where)` 表示您必須使用 `on` 或 `where`，但不能同時使用兩者。
 
-### Optional choices
+### 選用選項
 
-Optional choices between alternatives are shown in square brackets with pipe separators (`[option1 | option2]`). You can choose one of the options or omit them entirely.
+替代選項之間的選用選擇以方括號搭配直線分隔符號表示（`[option1 | option2]`）。您可以選擇其中一個選項，或完全省略。
 
-**Example**: `[asc | desc]` means you can specify `asc`, `desc`, or neither.
+**範例**：`[asc | desc]` 表示您可以指定 `asc`、`desc`，或兩者皆不指定。
 
-### Repetition
+### 重複
 
-An ellipsis (`...`) indicates that the preceding element can be repeated multiple times.
+省略符號（`...`）表示前面的元素可以重複多次。
 
-**Examples**:
-- `<field>...` means one or more fields without commas: `field1 field2 field3`
-- `<field>, ...` means comma-separated repetition: `field1, field2, field3`
+**範例**：
+- `<field>...` 表示一個或多個不以逗號分隔的欄位：`field1 field2 field3`
+- `<field>, ...` 表示以逗號分隔的重複：`field1, field2, field3`
   
 
-## Examples
+## 範例
 
-**Example 1: Search through an index**
+**範例 1：透過索引搜尋**
 
-In the following query, the `search` command refers to the `otellogs` index as the source and uses the `fields` and `where` commands for the conditions:
+在下列查詢中，`search` 命令會將 `otellogs` 索引指定為來源，並使用 `fields` 和 `where` 命令做為條件：
 
 ```sql
 search source=otellogs
@@ -92,7 +93,7 @@ search source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -108,9 +109,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-**Example 2: Get all documents**
+**範例 2：取得所有文件**
 
-To get all documents from the `otellogs` index, specify it as the `source`. The following example limits the output to 5 rows using `head`:
+若要從 `otellogs` 索引取得所有文件，請將其指定為 `source`。下列範例使用 `head` 將輸出限制為 5 列：
 
 ```sql
 source=otellogs
@@ -120,7 +121,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -134,9 +135,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-**Example 3: Get documents that match a condition**
+**範例 3：取得符合條件的文件**
 
-To get all documents from the `otellogs` index that have `severityText` equal to `ERROR` and `resource.attributes.service.name` equal to `payment`, use the following query:
+若要從 `otellogs` 索引取得所有 `severityText` 等於 `ERROR` 且 `resource.attributes.service.name` 等於 `payment` 的文件，請使用下列查詢：
 
 ```sql
 source=otellogs severityText = 'ERROR' AND `resource.attributes.service.name` = 'payment'
@@ -145,7 +146,7 @@ source=otellogs severityText = 'ERROR' AND `resource.attributes.service.name` = 
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 

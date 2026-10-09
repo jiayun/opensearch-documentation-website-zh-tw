@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Agentic memory retention
+title: "代理程式記憶保留"
 parent: Agentic memory
 grand_parent: Memory and context
 nav_order: 30
 ---
 
-# Agentic memory retention
-**Introduced 3.8**
+# 代理程式記憶保留
+**於 3.8 版推出**
 {: .label .label-purple }
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).
+這是實驗性功能，不建議在正式環境中使用。如需功能進展的最新消息，或想提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/)的討論。
 {: .warning}
 
-By default, agentic memories accumulate indefinitely, which increases storage use and can cause agents to retrieve outdated memories. To automatically delete old or excess memories, define a _retention policy_ for a [memory container]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-containers). The retention policy specifies an age limit, a count limit, or both for each memory type. A background job enforces the policy on a schedule. It deletes `sessions`, `long-term`, and `history` memories that exceed a count limit, or `sessions` and `long-term` memories that exceed an age limit. In contrast, `working` memory is not subject to the retention policy and is deleted when its parent session no longer exists. To control the amount of time that `working` memories are retained, configure retention for `sessions`.
+根據預設，代理程式記憶會無限期累積，這會增加儲存空間用量，並可能導致代理程式擷取到過期的記憶。若要自動刪除舊的或多餘的記憶，請為[記憶容器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-containers)定義_保留原則_。保留原則會為每種記憶類型指定存留期限、數量上限，或同時指定兩者。背景工作會依排程強制執行該原則。它會刪除超過數量上限的 `sessions`、`long-term` 和 `history` 記憶，或刪除超過存留期限的 `sessions` 和 `long-term` 記憶。相對地，`working` 記憶不受保留原則約束，並會在其父工作階段不存在時遭到刪除。若要控制 `working` 記憶的保留時間長度，請為 `sessions` 設定保留。
 
-You can exclude `sessions` and `long-term` memories from the retention policy by pinning them. For more information, see [Pinning memories](#pinning-memories).
+您可以將 `sessions` 和 `long-term` 記憶釘選，將其排除在保留原則之外。如需詳細資訊，請參閱[釘選記憶](#pinning-memories)。
 
-## Enabling memory retention
+## 啟用記憶保留
 
-Retention is disabled by default. To enable it cluster-wide, configure the following dynamic cluster setting:
+保留功能預設為停用。若要在整個叢集啟用，請設定下列動態叢集設定：
 
 ```json
 PUT /_cluster/settings
@@ -31,9 +32,9 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-## Defining a retention policy
+## 定義保留原則
 
-The `retention_policy` object is specified in the container's `configuration` object and maps each memory type to the retention limits for that type. Replace `{memory_type}` with `sessions`, `long-term`, or `history`:
+`retention_policy` 物件指定於容器的 `configuration` 物件中，並將每種記憶類型對應至該類型的保留限制。請將 `{memory_type}` 取代為 `sessions`、`long-term` 或 `history`：
 
 ```json
 "configuration": {
@@ -46,19 +47,19 @@ The `retention_policy` object is specified in the container's `configuration` ob
 }
 ```
 
-Each `{memory_type}` object accepts the following optional fields. When both fields are set, a memory is deleted if it violates either rule.
+每個 `{memory_type}` 物件接受下列選用欄位。當兩個欄位都設定時，只要記憶違反任一規則就會遭到刪除。
 
-Field | Data type | Supported memory types | Description
+欄位 | 資料類型 | 支援的記憶類型 | 說明
 :--- | :--- | :--- | :---
-`retention_days` | Integer | `sessions`, `long-term` | Deletes memories older than this many days, measured from the memory's `last_updated_time`.
-`max_count` | Integer | `sessions`, `long-term`, `history` | Keeps at most this many memories, deleting the oldest first. Sessions and long-term memory are ordered by `last_updated_time`; history is ordered by `created_time`.
+`retention_days` | 整數 | `sessions`、`long-term` | 刪除早於此天數的記憶，天數從記憶的 `last_updated_time` 起算。
+`max_count` | 整數 | `sessions`、`long-term`、`history` | 最多保留此數量的記憶，並優先刪除最舊的。工作階段和長期記憶依 `last_updated_time` 排序；歷程記錄依 `created_time` 排序。
 
-A retention rule takes effect only if the container stores that memory type. For `long-term` and `history` memories to be stored, you must configure `strategies`; otherwise, retention rules for those types have no effect. For more information, see [The created indexes]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/#the-created-indexes).
+保留規則只有在容器儲存該記憶類型時才會生效。若要儲存 `long-term` 和 `history` 記憶，您必須設定 `strategies`；否則，這些類型的保留規則不會有任何作用。如需詳細資訊，請參閱[建立的索引]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/#the-created-indexes)。
 {: .note}
 
-### Configuring a retention policy
+### 設定保留原則
 
-To configure a policy when you create a memory container, include the `retention_policy` field in the create request. The following example creates a container with session tracking, a strategy, and a retention policy that retains up to 5,000 sessions for 90 days and limits long-term memory to 2,000 entries:
+若要在建立記憶容器時設定原則，請在建立請求中加入 `retention_policy` 欄位。下列範例會建立具有工作階段追蹤、策略和保留原則的容器，該原則會保留最多 5,000 個工作階段達 90 天，並將長期記憶限制為 2,000 筆項目：
 
 ```json
 POST /_plugins/_ml/memory_containers/_create
@@ -89,7 +90,7 @@ POST /_plugins/_ml/memory_containers/_create
 ```
 {% include copy-curl.html %}
 
-You can also add a retention policy for an existing container at any time by sending the `retention_policy` object in an update request:
+您也可以隨時在更新請求中傳送 `retention_policy` 物件，為現有容器新增保留原則：
 
 ```json
 PUT /_plugins/_ml/memory_containers/{memory_container_id}
@@ -109,23 +110,23 @@ PUT /_plugins/_ml/memory_containers/{memory_container_id}
 ```
 {% include copy-curl.html %}
 
-A policy applies to all memories in the container, including those created before you added the policy. For example, adding a `max_count` of 100 to a container that holds 10,000 sessions deletes the 9,900 least recently updated sessions. To preserve specific memories, [pin](#pinning-memories) them before adding the policy.
+原則會套用至容器中的所有記憶，包括在您新增原則之前建立的記憶。例如，為含有 10,000 個工作階段的容器新增 `max_count` 為 100，會刪除最近更新時間最舊的 9,900 個工作階段。若要保留特定記憶，請在新增原則之前將其[釘選](#pinning-memories)。
 {: .warning}
 
-### Viewing a retention policy
+### 檢視保留原則
 
-To view the stored policy, retrieve the container using the [Get Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/get-memory-container/):
+若要檢視已儲存的原則，請使用 [Get Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/get-memory-container/) 擷取容器：
 
 ```json
 GET /_plugins/_ml/memory_containers/{memory_container_id}
 ```
 {% include copy-curl.html %}
 
-### Updating a retention policy
+### 更新保留原則
 
-Updating a `retention_policy` merges your changes into the existing policy rather than replacing it. Memory types and fields that you omit are left unchanged.
+更新 `retention_policy` 會將您的變更合併至現有原則，而不是取代它。您省略的記憶類型和欄位會保持不變。
 
-To remove a single field, set it to `null`. For example, the following request updates the policy in the [Configuring a retention policy](#configuring-a-retention-policy) example by removing `retention_days` from `sessions` while keeping the `max_count` of 5,000:
+若要移除單一欄位，請將其設為 `null`。例如，下列請求會更新[設定保留原則](#configuring-a-retention-policy)範例中的原則，從 `sessions` 移除 `retention_days`，同時保留 5,000 的 `max_count`：
 
 ```json
 PUT /_plugins/_ml/memory_containers/{memory_container_id}
@@ -141,9 +142,9 @@ PUT /_plugins/_ml/memory_containers/{memory_container_id}
 ```
 {% include copy-curl.html %}
 
-### Disabling retention for a container
+### 停用容器的保留功能
 
-To disable retention for the entire container, set `retention_policy` to `null`:
+若要停用整個容器的保留功能，請將 `retention_policy` 設為 `null`：
 
 ```json
 PUT /_plugins/_ml/memory_containers/{memory_container_id}
@@ -155,21 +156,21 @@ PUT /_plugins/_ml/memory_containers/{memory_container_id}
 ```
 {% include copy-curl.html %}
 
-Setting `retention_policy` to `null` differs from omitting it. Omitting the policy leaves the container eligible for [cluster-level default settings](#default-settings); setting it to `null` exempts the container from those defaults. You can send this request even when retention is disabled cluster-wide.
+將 `retention_policy` 設為 `null` 與省略它不同。省略原則會讓容器適用[叢集層級預設設定](#default-settings)；將其設為 `null` 則會讓容器豁免於這些預設值。即使叢集層級的保留功能已停用，您仍可傳送此請求。
 
-## Pinning memories
+## 釘選記憶
 
-Pinning a memory exempts it from deletion under a container's [retention policy](#defining-a-retention-policy). You can pin `sessions` and `long-term` memories. Pinning `sessions` retains all of their `working` memories. Because pinned memories are never deleted, they can accumulate over time. To reduce the container size, unpin `sessions` that no longer require protection.
+釘選記憶可使其免於依容器的[保留原則](#defining-a-retention-policy)遭到刪除。您可以釘選 `sessions` 和 `long-term` 記憶。釘選 `sessions` 會保留其所有 `working` 記憶。由於釘選的記憶永遠不會遭到刪除，因此可能會隨時間累積。若要縮小容器大小，請取消釘選不再需要保護的 `sessions`。
 
-Pinning protects a memory from deletion but does not change its age. A memory's age is measured from its `last_updated_time`, which advances only when its content changes, such as when a `working` memory is added to a session or a `long-term` memory is updated. Pinning does not update this timestamp, so if you later unpin the memory, its age still reflects its last content change and it may become immediately eligible for deletion.
+釘選可保護記憶免於遭到刪除，但不會變更其存留時間。記憶的存留時間從其 `last_updated_time` 起算，只有在內容變更時才會推進，例如將 `working` 記憶新增至工作階段，或更新 `long-term` 記憶時。釘選不會更新此時間戳記，因此如果您之後取消釘選該記憶，其存留時間仍會反映上次內容變更的時間，並可能立即符合刪除條件。
 
-Use the following request field to pin a memory.
+請使用下列請求欄位來釘選記憶。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`pinned` | Boolean | Set to `true` to pin a memory or `false` to unpin it. Valid for `sessions` and `long-term` memories.
+`pinned` | 布林值 | 設為 `true` 可釘選記憶，設為 `false` 則可取消釘選。適用於 `sessions` 和 `long-term` 記憶。
 
-The following example pins a memory (specify either `sessions` or `long-term` as `memory_type`):
+下列範例會釘選記憶（將 `sessions` 或 `long-term` 指定為 `memory_type`）：
 
 ```json
 PUT /_plugins/_ml/memory_containers/{memory_container_id}/memories/{memory_type}/{memory_id}
@@ -179,67 +180,67 @@ PUT /_plugins/_ml/memory_containers/{memory_container_id}/memories/{memory_type}
 ```
 {% include copy-curl.html %}
 
-## Retention job
+## 保留作業
 
-A background job enforces retention policies on a [schedule](#retention-job-schedule) (by default, every 24 hours). Because enforcement is scheduled rather than continuous, a memory that has passed its age or count limit is still returned in search results until the job next runs and deletes it.
+背景作業會依照[排程](#retention-job-schedule)執行保留原則（預設為每 24 小時一次）。由於原則是依排程執行，而非持續執行，因此超過存留時間或數量限制的記憶仍會出現在搜尋結果中，直到作業下次執行並將其刪除。
 
-Memories are evaluated against the following limits:
+記憶會依據下列限制進行評估：
 
-- `retention_days` is measured from a memory's `last_updated_time`. Adding a `working` memory to a session advances the session's timestamp, so active conversations are retained. Pinning a memory does not advance it.
-- `max_count` applies regardless of age. If a container holds more than `max_count` non-pinned memories of a type, the oldest are deleted until `max_count` remain, even if they are newer than `retention_days`.
-- When a memory type sets both limits, a memory is deleted if it exceeds either one.
+- `retention_days` 從記憶的 `last_updated_time` 起算。將 `working` 記憶新增至工作階段會更新該工作階段的時間戳記，因此進行中的對話會予以保留。釘選記憶不會更新此時間戳記。
+- `max_count` 不受存留時間影響。如果容器中某種類型的未釘選記憶數量超過 `max_count`，就會刪除最舊的記憶，直到剩下 `max_count` 筆為止，即使這些記憶比 `retention_days` 更新也一樣。
+- 當某種記憶類型同時設定這兩項限制時，只要記憶超過其中任一項限制，就會遭到刪除。
 
-When enforcing `max_count`, each run deletes at most 50,000 memories in a container for each memory type. A larger backlog is reduced over successive runs, so a container that far exceeds its `max_count` may take several runs to reach the limit. Deletions based on `retention_days` are not capped.
+執行 `max_count` 時，每次執行最多會針對容器中的每種記憶類型刪除 50,000 筆記憶。較大量的待刪除記憶會在後續多次執行中逐步減少，因此遠超過其 `max_count` 的容器可能需要執行數次才能達到限制。依據 `retention_days` 進行的刪除沒有數量上限。
 
-When the job evicts a `sessions` memory, its `working` memories are deleted first so that no orphans are created. Manually deleting a `sessions` memory does not delete its `working` memories, leaving them orphaned. After enforcing the policies, the job removes orphaned `working` memories whose `created_time` is older than `orphan_ttl_days`. The first time the job checks a container for orphans, it records a baseline and deletes nothing, so orphan deletion in that container begins `orphan_ttl_days` after the baseline.
+當作業移除 `sessions` 記憶時，會先刪除其 `working` 記憶，以免產生孤立記憶。手動刪除 `sessions` 記憶不會刪除其 `working` 記憶，因而使這些記憶成為孤立記憶。執行原則後，作業會移除自 `created_time` 起已超過 `orphan_ttl_days` 天的孤立 `working` 記憶。作業第一次檢查容器是否有孤立記憶時，會記錄基準且不刪除任何記憶，因此該容器中的孤立記憶會在記錄基準後經過 `orphan_ttl_days` 才開始刪除。
 
-Orphan cleanup runs only for containers that have a retention policy and that were created with `disable_session` set to `false` (the default). In a container with no retention policy, orphaned `working` memories are retained indefinitely.
+孤立記憶清理只會針對具有保留原則，且建立時將 `disable_session` 設為 `false`（預設值）的容器執行。在沒有保留原則的容器中，孤立的 `working` 記憶會無限期保留。
 
-A container created with `disable_session` set to `true` stores no `sessions` memories, so neither of the preceding mechanisms applies to it. Its `working` memories are deleted only by the `plugins.ml_commons.memory.working_memory_ttl_days` setting, which is disabled by default. Until you set it to a positive value, these containers retain `working` memories indefinitely. For more information, see [Memory retention settings](#memory-retention-settings).
+建立時將 `disable_session` 設為 `true` 的容器不會儲存 `sessions` 記憶，因此上述兩種機制都不適用。其 `working` 記憶只會由 `plugins.ml_commons.memory.working_memory_ttl_days` 設定刪除，而此設定預設為停用。在您將其設為正值之前，這些容器會無限期保留 `working` 記憶。如需詳細資訊，請參閱[記憶保留設定](#memory-retention-settings)。
 
-The job is disabled when multi-tenancy is active. In this case, no retention is enforced, even for containers that have a policy.
+啟用多租用戶功能時，此作業會停用。在此情況下，即使容器具有原則，也不會執行任何保留原則。
 
-## Pausing retention
+## 暫停保留
 
-To pause retention while preserving configured retention policies, set `plugins.ml_commons.memory.retention_enabled` to `false`. Setting it back to `true` resumes enforcement.
+若要暫停保留作業並保留已設定的保留原則，請將 `plugins.ml_commons.memory.retention_enabled` 設為 `false`。將其設回 `true` 即可恢復執行。
 
-## Memory retention settings
+## 記憶保留設定
 
-You can customize retention behavior using the following dynamic cluster settings:
+您可以使用下列動態叢集設定自訂保留行為：
 
-- `plugins.ml_commons.memory.retention_enabled` (Boolean): Enables retention cluster-wide. While this setting is `false`, the retention job deletes nothing and the container APIs reject a `retention_policy`. Default is `false`.
+- `plugins.ml_commons.memory.retention_enabled`（布林值）：在整個叢集啟用保留功能。當此設定為 `false` 時，保留作業不會刪除任何記憶，且容器 API 會拒絕 `retention_policy`。預設值為 `false`。
 
-- `plugins.ml_commons.memory.retention_job_throttle_seconds` (Integer): Specifies how long the retention job pauses after processing a container in which it deleted memories, before it moves on to the next container. Increase this value to reduce cluster load. Valid values are in the `[1, 60]` range. Default is `5`.
+- `plugins.ml_commons.memory.retention_job_throttle_seconds`（整數）：指定保留作業處理完已刪除記憶的容器後，在繼續處理下一個容器之前暫停的時間。提高此值可降低叢集負載。有效值介於 `[1, 60]` 範圍內。預設值為 `5`。
 
-- `plugins.ml_commons.memory.working_memory_ttl_days` (Integer): Deletes a `working` memory this many days after it is created. Applicable only to containers created with `disable_session` set to `true`. Because those containers store no `sessions` memories, this setting is the only mechanism that deletes their `working` memories. Valid values are in the `[1, 365]` range. Default is `-1` (disabled).
+- `plugins.ml_commons.memory.working_memory_ttl_days`（整數）：在 `working` 記憶建立後經過此天數時將其刪除。僅適用於建立時將 `disable_session` 設為 `true` 的容器。由於這些容器不會儲存 `sessions` 記憶，因此此設定是刪除其 `working` 記憶的唯一機制。有效值介於 `[1, 365]` 範圍內。預設值為 `-1`（停用）。
 
-- `plugins.ml_commons.memory.orphan_ttl_days` (Integer): Deletes a `working` memory whose parent `sessions` memory no longer exists, measured from the `working` memory's `created_time`. For more information, see [Retention job](#retention-job). Valid values are in the `[1, 365]` range. Default is `7`.
+- `plugins.ml_commons.memory.orphan_ttl_days`（整數）：刪除其父層 `sessions` 記憶已不存在的 `working` 記憶，時間從 `working` 記憶的 `created_time` 起算。如需詳細資訊，請參閱[保留作業](#retention-job)。有效值介於 `[1, 365]` 範圍內。預設值為 `7`。
 
-### Default settings
+### 預設設定
 
-The default settings apply to any container that has not set its own retention policy. They take effect only after [retention is enabled for the cluster](#enabling-memory-retention); until then, they are stored but have no effect. Once retention is enabled, the next scheduled job applies them to containers that have no policy and deletes any memories that exceed the default values, including memories that were created before you set the defaults.
+預設設定適用於任何尚未設定自身保留原則的容器。這些設定只有在[叢集啟用保留功能](#enabling-memory-retention)後才會生效；在此之前，設定會儲存，但不會產生作用。啟用保留功能後，下一次排程作業會將這些設定套用至沒有原則的容器，並刪除任何超過預設值的記憶，包括您設定預設值之前建立的記憶。
 
-Defaults are applied to a container only once; changing these settings later does not update containers to which they were already applied. To exempt a container from the defaults, set its `retention_policy` to `null`. To update a container's policy after the defaults are applied, use the [Update Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/update-memory-container/).
+預設值只會套用至容器一次；之後變更這些設定，不會更新已套用預設值的容器。若要讓容器不受預設值影響，請將其 `retention_policy` 設為 `null`。若要在套用預設值後更新容器的原則，請使用 [Update Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/update-memory-container/)。
 
-Each of the following dynamic settings provides the default for one field of a [retention policy](#defining-a-retention-policy). The default `-1` applies no default for that field:
+下列每個動態設定各自提供[保留原則](#defining-a-retention-policy)中一個欄位的預設值。預設值 `-1` 表示不為該欄位套用任何預設值：
 
-- `plugins.ml_commons.memory.default_session_retention_days` (Integer): Sets the default `retention_days` for `sessions` memories. Valid values are in the `[1, 3650]` range. Default is `-1`.
+- `plugins.ml_commons.memory.default_session_retention_days`（整數）：設定 `sessions` 記憶的預設 `retention_days`。有效值介於 `[1, 3650]` 範圍內。預設值為 `-1`。
 
-- `plugins.ml_commons.memory.default_session_max_count` (Integer): Sets the default `max_count` for `sessions` memories. Valid values are in the `[1, 1000000]` range. Default is `-1`.
+- `plugins.ml_commons.memory.default_session_max_count`（整數）：設定 `sessions` 記憶的預設 `max_count`。有效值介於 `[1, 1000000]` 範圍內。預設值為 `-1`。
 
-- `plugins.ml_commons.memory.default_long_term_max_count` (Integer): Sets the default `max_count` for `long-term` memories. Valid values are in the `[1, 1000000]` range. Default is `-1`.
+- `plugins.ml_commons.memory.default_long_term_max_count`（整數）：設定 `long-term` 記憶的預設 `max_count`。有效值介於 `[1, 1000000]` 範圍內。預設值為 `-1`。
 
-- `plugins.ml_commons.memory.default_history_max_count` (Integer): Sets the default `max_count` for `history` memories. Valid values are in the `[1, 10000000]` range. Default is `-1`.
+- `plugins.ml_commons.memory.default_history_max_count`（整數）：設定 `history` 記憶的預設 `max_count`。有效值介於 `[1, 10000000]` 範圍內。預設值為 `-1`。
 
-### Retention job schedule
+### 保留作業排程
 
 <!-- TODO: When this feature goes GA, revisit the retention_job_interval_hours behavior (currently static-like; dynamic interval updates are planned for a future release). -->
 
-The following setting controls the retention job schedule. Set it in `opensearch.yml` before starting the cluster. The job reads it once, when it is first scheduled at startup; updating it through the Cluster Settings API on a running cluster has no effect:
+下列設定控制保留作業的排程。請在啟動叢集前於 `opensearch.yml` 中設定。作業只會在啟動時首次排定排程時讀取此設定一次；在執行中的叢集上透過 Cluster Settings API 更新此設定不會生效：
 
-- `plugins.ml_commons.memory.retention_job_interval_hours` (Integer): Specifies how often the retention job runs, in hours. Valid values are in the `[1, 168]` range. Default is `24`.
+- `plugins.ml_commons.memory.retention_job_interval_hours`（整數）：指定保留作業的執行間隔，以小時為單位。有效值介於 `[1, 168]` 範圍內。預設值為 `24`。
 
-## Next steps
+## 後續步驟
 
-- For more information about memory containers and agentic memory, see [Agentic memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/).
-- For the container creation API reference, see [Create Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/).
+- 如需記憶容器與代理式記憶的詳細資訊，請參閱[代理式記憶]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/)。
+- 如需容器建立 API 的參考資料，請參閱 [Create Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/)。

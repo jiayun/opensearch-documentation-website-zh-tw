@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Linux
 parent: Supported log types
 nav_order: 50 
 ---
 
-# Linux log type
+# Linux 記錄檔類型
 
-The `linux` log type records Linux syslog events.
+`linux` 記錄檔類型會記錄 Linux syslog 事件。
 
-The following code snippet contains all the `raw_field` and `ecs` mappings for this log type:
+下列程式碼片段包含此記錄檔類型的所有 `raw_field` 和 `ecs` 對應：
 
 ```json
   "mappings": [

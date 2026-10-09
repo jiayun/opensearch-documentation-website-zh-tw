@@ -1,86 +1,87 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Target throughput
+title: "目標輸送量"
 nav_order: 60
 redirect_from:
   - /benchmark/user-guide/target-throughput/
   - /benchmark/user-guide/optimizing-benchmarks/target-throughput/
 ---
 
-# Target throughput
+# 目標輸送量
 
-Target throughput is key to understanding the OpenSearch Benchmark definition of *latency*. Target throughput is the rate at which OpenSearch Benchmark issues requests, assuming that responses will be returned instantaneously. `target-throughput` is a common workload parameter that can be set for each test and is measured in operations per second.
+目標輸送量是理解 OpenSearch Benchmark 中*延遲*定義的關鍵。目標輸送量是 OpenSearch Benchmark 發出請求的速率，並假設回應會立即傳回。`target-throughput` 是常見的工作負載參數，可為每個測試設定，並以每秒作業數為單位測量。
 
-OpenSearch Benchmark has two testing modes, both of which are related to throughput, latency, and service time:
+OpenSearch Benchmark 有兩種測試模式，兩者都與輸送量、延遲和服務時間相關：
 
-- [Benchmarking mode](#benchmarking-mode): Latency is measured in the same way as service time.
-- [Throughput-throttled mode](#throughput-throttled-mode): Latency is measured as service time plus the time that a request spends waiting in the queue.
+- [基準測試模式](#benchmarking-mode)：延遲的測量方式與服務時間相同。
+- [輸送量節流模式](#throughput-throttled-mode)：延遲的測量方式為服務時間加上請求在佇列中等待的時間。
 
-## Benchmarking mode
+## 基準測試模式
 
-When `target-throughput` is set to `0`, OpenSearch Benchmark latency tests are performed in *benchmarking mode*. In this mode, the OpenSearch client sends requests to the OpenSearch cluster as fast as possible. After the cluster receives a response from the previous request, OpenSearch Benchmark immediately sends the next request to the OpenSearch client. In this testing mode, latency is identical to service time.
+當 `target-throughput` 設為 `0` 時，OpenSearch Benchmark 延遲測試會以*基準測試模式*執行。在此模式下，OpenSearch 用戶端會以最快的速度向 OpenSearch 叢集傳送請求。叢集收到前一個請求的回應後，OpenSearch Benchmark 會立即向 OpenSearch 用戶端傳送下一個請求。在此測試模式下，延遲與服務時間相同。
 
-OpenSearch Benchmark issues one request at a time per a single client. The number of clients is set by the `search-clients` setting in the workload parameters. 
+OpenSearch Benchmark 對每個單一用戶端一次只發出一個請求。用戶端數量由工作負載參數中的 `search-clients` 設定決定。
 
-## Throughput-throttled mode
+## 輸送量節流模式
 
-If the `target-throughput` is not set to `0`, then OpenSearch Benchmark issues the next request in accordance with the `target-throughput`, assuming that responses are returned instantaneously.
+如果 `target-throughput` 未設為 `0`，則 OpenSearch Benchmark 會依據 `target-throughput` 發出下一個請求，並假設回應會立即傳回。
 
-**Throughput** measures the rate at which OpenSearch Benchmark issues requests, assuming that responses are returned instantaneously. To configure the request rate, you can set the `target-throughput` workload parameter to the desired number of operations per second for each test.
+**輸送量**測量 OpenSearch Benchmark 發出請求的速率，並假設回應會立即傳回。若要設定請求速率，您可以將 `target-throughput` 工作負載參數設為每個測試所需的每秒作業數。
 
-When you want to simulate the type of traffic you might encounter when deploying a production cluster, set the `target-throughput` in your benchmark test to match the number of requests you estimate that the production cluster might receive. The following examples show how the `target-throughput` setting affects the latency measurement.
+當您想模擬部署正式叢集時可能遇到的流量類型時，請將基準測試中的 `target-throughput` 設為您估計正式叢集可能收到的請求數量。下列範例說明 `target-throughput` 設定如何影響延遲測量。
 
-### Example A
+### 範例 A
 
-The following diagrams illustrate how latency is calculated with an expected request response time of 200 ms and the following settings: 
+下列圖表說明在預期請求回應時間為 200 ms 且使用下列設定時，如何計算延遲：
 
-- `search-clients` is set to `1`. 
-- `target-throughput` is set to `1` operation per second.
+- `search-clients` 設為 `1`。
+- `target-throughput` 設為每秒 `1` 次作業。
 
-![Request schedule showing expected 200 ms response times at 1 operation per second]({{site.url}}{{site.baseurl}}/images/benchmark/latency-explanation-1.png)
+![請求排程顯示在每秒 1 次作業下預期的 200 ms 回應時間]({{site.url}}{{site.baseurl}}/images/benchmark/latency-explanation-1.png)
 
-When a request takes longer than 200 ms, such as when a request takes 1110 ms instead of 400 ms, OpenSearch Benchmark sends the next request that was supposed to occur at 4.00 s based on the `target-throughput` of 4.10 s. All requests subsequent to the 4.10 s request attempt to re-synchronize with the `target-throughput` setting, as shown in the following image:
+當請求花費的時間超過 200 ms 時，例如請求花費 1110 ms 而非 400 ms，OpenSearch Benchmark 會在 4.10 s 傳送原本根據 `target-throughput` 應在 4.00 s 發生的下一個請求。4.10 s 請求之後的所有請求都會嘗試與 `target-throughput` 設定重新同步，如下圖所示：
 
-![Request schedule showing a delayed request re-synchronizing with the target throughput]({{site.url}}{{site.baseurl}}/images/benchmark/latency-explanation-2.png)
+![請求排程顯示延遲的請求與目標輸送量重新同步]({{site.url}}{{site.baseurl}}/images/benchmark/latency-explanation-2.png)
 
-When measuring the overall latency, OpenSearch Benchmark includes all performed requests. All requests have a latency of 200 ms, except for the following two requests:
+在測量整體延遲時，OpenSearch Benchmark 會納入所有已執行的請求。除了下列兩個請求外，所有請求的延遲皆為 200 ms：
 
-- The request that lasted 1100 ms. 
-- The subsequent request which should have started at 4.00 s. This request was delayed by 100 ms, denoted by the orange-colored area in the following diagram, and had a response time of 200 ms. When calculating the latency for this request, OpenSearch Benchmark accounts for the delayed start time and combines it with the response time. The latency for this request is **300 ms**.
+- 持續 1100 ms 的請求。
+- 原本應在 4.00 s 開始的後續請求。此請求延遲了 100 ms，以下圖中的橘色區域表示，且回應時間為 200 ms。在計算此請求的延遲時，OpenSearch Benchmark 會將延遲的開始時間納入考量，並與回應時間合併計算。此請求的延遲為 **300 ms**。
 
-![Latency calculation showing the delayed request with combined wait time and response time]({{site.url}}{{site.baseurl}}/images/benchmark/latency-explanation-3.png)
+![延遲計算顯示延遲的請求合併等待時間與回應時間]({{site.url}}{{site.baseurl}}/images/benchmark/latency-explanation-3.png)
 
-### Example B
+### 範例 B
 
-In this example, OpenSearch Benchmark assumes a latency of 200 ms and uses the following latency settings:
+在此範例中，OpenSearch Benchmark 假設延遲為 200 ms，並使用下列延遲設定：
 
-- `search_clients` is set to `1`.
-- `target-throughput` is set to `10` operations per second.
+- `search_clients` 設為 `1`。
+- `target-throughput` 設為每秒 `10` 次作業。
 
-The following diagram shows the schedule built by OpenSearch Benchmark with the expected response times.
+下圖顯示 OpenSearch Benchmark 依據預期回應時間建立的排程。
 
-![Request schedule with target throughput of 10 operations per second and expected 200 ms response times]({{site.url}}{{site.baseurl}}/images/benchmark/b-latency-explanation-1.png)
+![請求排程顯示目標輸送量為每秒 10 次作業且預期回應時間為 200 ms]({{site.url}}{{site.baseurl}}/images/benchmark/b-latency-explanation-1.png)
 
-However, if it is assumed that all responses will have a latency of 200 ms, then 10 operations per second won't be possible. Therefore, the highest throughput that OpenSearch Benchmark can reach is 5 operations per second, as shown in the following diagram.
+然而，如果假設所有回應的延遲都是 200 ms，那麼每秒 10 次作業將無法達成。因此，OpenSearch Benchmark 可達到的最高輸送量為每秒 5 次作業，如下圖所示。
 
-![Actual throughput limited to 5 operations per second due to 200 ms response times]({{site.url}}{{site.baseurl}}/images/benchmark/b-latency-explanation-2.png)
+![由於回應時間為 200 ms，實際輸送量限制為每秒 5 次作業]({{site.url}}{{site.baseurl}}/images/benchmark/b-latency-explanation-2.png)
 
-OpenSearch Benchmark does not account for this limitation and continues to try to achieve the `target-throughput` of 10 operations per second. Because of this, delays for each request begin to cascade, as illustrated in the following diagram.
+OpenSearch Benchmark 並不會考量此限制，仍會繼續嘗試達到每秒 `target-throughput` 10 次作業的目標。因此，每個請求的延遲開始層層累積，如下圖所示。
 
-![Cascading delays as OpenSearch Benchmark attempts to maintain target throughput beyond capacity]({{site.url}}{{site.baseurl}}/images/benchmark/b-latency-explanation-3.png)
+![OpenSearch Benchmark 嘗試在超出容量時維持目標輸送量所造成的延遲層層累積]({{site.url}}{{site.baseurl}}/images/benchmark/b-latency-explanation-3.png)
 
-By combining the service time and the delay for each operation, the following latency measurements are provided for each operation: 
+將服務時間與每個作業的延遲合併計算後，每個作業會得到下列延遲測量結果：
 
-- 200 ms for operation 1
-- 300 ms for operation 2
-- 400 ms for operation 3
-- 500 ms for operation 4 
-- 600 ms for operation 5
+- 作業 1 為 200 ms
+- 作業 2 為 300 ms
+- 作業 3 為 400 ms
+- 作業 4 為 500 ms
+- 作業 5 為 600 ms
 
-This latency cascade continues, increasing latency by 100 ms for each subsequent request.
+此延遲累積會持續下去，每個後續請求的延遲增加 100 ms。
 
-### Recommendation
+### 建議
 
-As shown in the preceding examples, you should be aware of each task's average service time and should provide a `target-throughput` that accounts for the service time. OpenSearch Benchmark latency is calculated based on the `target-throughput` set by the user; therefore, *latency* could be redefined as *throughput-based latency*.
+如前述範例所示，您應了解每個任務的平均服務時間，並提供能將服務時間納入考量的 `target-throughput`。OpenSearch Benchmark 的延遲是根據使用者設定的 `target-throughput` 計算；因此，*延遲*可以重新定義為*以輸送量為基礎的延遲*。
 
 

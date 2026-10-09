@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Bounded blocking
+title: "有界阻塞"
 parent: Buffers
 grand_parent: Pipelines
 nav_order: 50
 ---
 
-# Bounded blocking buffer
+# 有界阻塞緩衝區
 
-The `bounded_blocking` buffer is the default buffer and is memory based. The following table describes the `bounded_blocking` buffer parameters.
+`bounded_blocking` 緩衝區是預設緩衝區，以記憶體為基礎。下表說明 `bounded_blocking` 緩衝區的參數。
 
-| Option | Required | Type | Description |
+| 選項 | 必要 | 類型 | 說明 |
 | --- | --- | --- | --- |
-| buffer_size | No | Integer | The maximum number of records the buffer accepts. Default value is `12800`. |
-| batch_size | No | Integer | The maximum number of records the buffer drains after each read. Default value is `200`. |
+| buffer_size | 否 | 整數 | 緩衝區可接受的記錄數上限。預設值為 `12800`。 |
+| batch_size | 否 | 整數 | 緩衝區每次讀取後排出的記錄數上限。預設值為 `200`。 |
 
 <!--- ## Configuration
 

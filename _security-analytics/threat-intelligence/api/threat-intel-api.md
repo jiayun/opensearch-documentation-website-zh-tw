@@ -1,14 +1,15 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Threat intelligence APIs
+title: "威脅情報 API"
 nav_order: 50
 parent: Threat intelligence
 has_children: true
 has_toc: true
 ---
 
-# Threat intelligence APIs
+# 威脅情報 API
 
-OpenSearch provides several APIs that allow you to set up and interact with your threat intelligence feeds. 
+OpenSearch 提供多個 API，讓您設定威脅情報來源，並與其互動。 
 
 

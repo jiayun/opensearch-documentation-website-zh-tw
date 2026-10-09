@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: mvcombine
 parent: Commands
@@ -8,38 +9,38 @@ nav_order: 30
 
 <!-- vale off -->
 
-# mvcombine command
+# mvcombine 命令
 
 <!-- vale on -->
 
-The `mvcombine` command groups rows that are identical across all fields except a specified target field, and combines the values of that target field into a multivalue (array) field.
+`mvcombine` 命令會將除了指定目標欄位以外，所有欄位都相同的資料列分組，並將該目標欄位的值合併成多重值 (陣列) 欄位。
 
-Rows are grouped by all fields currently in the pipeline except the target field. Rows in which the target field is missing or `null` are excluded from the combined multivalue output.
+資料列會依管線中目前除了目標欄位以外的所有欄位進行分組。目標欄位缺少或為 `null` 的資料列，會從合併後的多重值輸出中排除。
 {: .note}
 
-## Syntax
+## 語法
 
-The `mvcombine` command has the following syntax:
+`mvcombine` 命令的語法如下：
 
 ```sql
 mvcombine <field>
 ```
 
-## Parameters
+## 參數
 
-The `mvcombine` command supports the following parameters.
+`mvcombine` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<field>` | Required | The name of the field whose values are combined into a multivalue field. |
+| `<field>` | 必要 | 值會合併成多重值欄位的欄位名稱。 |
 
 <!-- vale off -->
 
-## Example 1: Using basic mvcombine
+## 範例 1：使用基本 mvcombine
 
 <!-- vale on -->
 
-The following query collapses rows into a single row and combines `packets_str` into a multivalue field:
+下列查詢會將資料列收合成單一資料列，並將 `packets_str` 合併成多重值欄位：
 
 ```sql
 source=mvcombine_data
@@ -49,7 +50,7 @@ source=mvcombine_data
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -59,9 +60,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 2: Combining multiple groups
+## 範例 2：合併多個群組
 
-The following query produces one output row per group key:
+下列查詢會為每個群組索引鍵產生一個輸出資料列：
 
 ```sql
 source=mvcombine_data
@@ -73,7 +74,7 @@ source=mvcombine_data
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -84,9 +85,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 3: Missing target field in some rows
+## 範例 3：部分資料列缺少目標欄位
 
-Rows missing the target field do not contribute a value to the combined output:
+缺少目標欄位的資料列不會對合併後的輸出貢獻值：
 
 ```sql
 source=mvcombine_data
@@ -96,7 +97,7 @@ source=mvcombine_data
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -106,9 +107,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 4: Missing fields
+## 範例 4：缺少欄位
 
-The following query attempts to combine values for a field that does not exist in the current schema:
+下列查詢嘗試合併目前結構描述中不存在之欄位的值：
 
 ```sql
 source=mvcombine_data
@@ -116,13 +117,13 @@ source=mvcombine_data
 ```
 {% include copy.html %}
 
-The query returns the following error:
+查詢會傳回下列錯誤：
 
 ```text
 {'reason': 'Invalid Query', 'details': 'Field [does_not_exist] not found.', 'type': 'IllegalArgumentException'}
 ```
 
-## Related commands
+## 相關命令
 
-- [`nomv`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/nomv/) -- Converts a multivalue field into a single-value string
-- [`mvexpand`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/mvexpand/) -- Expands multivalue fields into separate rows
+- [`nomv`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/nomv/) -- 將多重值欄位轉換成單一字串值
+- [`mvexpand`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/mvexpand/) -- 將多重值欄位展開成個別資料列

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Profile
 parent: Search APIs
@@ -8,19 +9,19 @@ redirect_from:
 ---
 
 # Profile API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Profile API provides timing information about the execution of individual components of a search request. Using the Profile API, you can debug slow requests and understand how to improve their performance. The Profile API does not measure the following:
+Profile API 提供搜尋請求中各個元件執行時間的資訊。使用 Profile API，您可以對緩慢的請求進行除錯，並了解如何改善其效能。Profile API 不會測量以下項目：
 
-- Network latency
-- Amount of time a request spends in queues
-- Idle time while merging shard responses on the coordinating node
+- 網路延遲
+- 請求在佇列中等待的時間
+- 在協調節點上合併分片回應時的閒置時間
 
-The Profile API is a resource-consuming operation that adds overhead to search operations.
+Profile API 是一種消耗資源的操作，會為搜尋作業增加額外負擔。
 {: .warning}
 
-## Endpoints
+## 端點
 
 ```json
 GET /testindex/_search
@@ -32,17 +33,17 @@ GET /testindex/_search
 }
 ```
 
-## Concurrent segment search
+## 並行分段搜尋
 
-[Concurrent segment search]({{site.url}}{{site.baseurl}}/search-plugins/concurrent-segment-search/) allows each shard-level request to search segments in parallel during the query phase. The Profile API response contains several additional fields with statistics about _slices_.
+[並行分段搜尋]({{site.url}}{{site.baseurl}}/search-plugins/concurrent-segment-search/)允許每個分片層級的請求在查詢階段以平行方式搜尋分段。Profile API 回應包含數個額外欄位，提供有關 _工作切片（slice）_ 的統計資訊。
 
-A slice is the unit of work that can be executed by a thread. Each query can be partitioned into multiple slices, with each slice containing one or more segments. All the slices can be executed either in parallel or in some order depending on the available threads in the pool.
+工作切片是可由執行緒執行的工作單位。每個查詢可以分割成多個工作切片，每個工作切片包含一或多個分段。所有工作切片可以平行執行，或依集區中可用的執行緒以某種順序執行。
 
-In general, the max/min/avg slice time captures statistics across all slices for a timing type. For example, when profiling aggregations, the `max_slice_time_in_nanos` field in the `aggregations` section shows the maximum time consumed by the aggregation operation and its children across all slices. 
+一般而言，最大/最小/平均工作切片時間會針對某種計時類型彙整所有工作切片的統計資料。例如，在剖析彙總時，`aggregations` 區段中的 `max_slice_time_in_nanos` 欄位會顯示彙總操作及其子項在所有工作切片中消耗的最長時間。
 
-## Example request: Non-concurrent search
+## 範例請求：非並行搜尋
 
-To use the Profile API, include the `profile` parameter set to `true` in the search request sent to the `_search` endpoint:
+若要使用 Profile API，請在傳送至 `_search` 端點的搜尋請求中加入設為 `true` 的 `profile` 參數：
 
 <!-- spec_insert_start
 component: example_code
@@ -89,7 +90,7 @@ response = client.search(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-To turn on human-readable format, include the `?human=true` query parameter in the request:
+若要啟用人類可讀的格式，請在請求中加入 `?human=true` 查詢參數：
 
 <!-- spec_insert_start
 component: example_code
@@ -137,7 +138,7 @@ response = client.search(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The response contains an additional `time` field with human-readable units, for example:
+回應會包含一個額外的 `time` 欄位，並附上人類可讀的單位，例如：
 
 ```json
 "collector": [
@@ -150,14 +151,14 @@ The response contains an additional `time` field with human-readable units, for 
 ]
 ```
 
-The Profile API response is verbose, so if you're running the request through the `curl` command, include the `?pretty` query parameter to make the response easier to understand.
+Profile API 的回應十分冗長，因此如果您是透過 `curl` 命令執行請求，請加入 `?pretty` 查詢參數，讓回應更容易理解。
 {: .tip}
 
-## Example request: Aggregations
+## 範例請求：彙總
 
-To profile aggregations, send an aggregation request and provide the `profile` parameter set to `true`.
+若要剖析彙總，請傳送彙總請求，並提供設為 `true` 的 `profile` 參數。
 
-### Global aggregation
+### 全域彙總
 
 <!-- spec_insert_start
 component: example_code
@@ -250,7 +251,7 @@ response = client.search(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Non-global aggregation
+### 非全域彙總
 
 <!-- spec_insert_start
 component: example_code
@@ -306,13 +307,13 @@ response = client.search(
 <!-- spec_insert_end -->
 
 
-## Example response: Non-concurrent search
+## 範例回應：非並行搜尋
 
-The response contains profiling information:
+回應包含剖析資訊：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -457,13 +458,13 @@ The response contains profiling information:
 ```
 </details>
 
-### Concurrent segment search
+### 並行分段搜尋
 
-The following is an example response for a concurrent segment search with three segment slices:
+以下是具有三個分段工作切片的並行分段搜尋範例回應：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -671,104 +672,104 @@ The following is an example response for a concurrent segment search with three 
 ```
 </details>
 
-## Response body fields
+## 回應本文欄位
 
-The response includes the following fields.
+回應包含下列欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`profile` | Object | Contains profiling information.
-`profile.shards` | Array of objects | A search request can be executed against one or more shards in the index, and a search may involve one or more indexes. Thus, the `profile.shards` array contains profiling information for each shard that was involved in the search.
-`profile.shards.id` | String | The shard ID of the shard in the `[node-ID][index-name][shard-ID]` format.
-`profile.shards.searches` | Array of objects | A search represents a query executed against the underlying Lucene index. Most search requests execute a single search against a Lucene index, but some search requests can execute more than one search. For example, including a global aggregation results in a secondary `match_all` query for the global context. The `profile.shards` array contains profiling information about each search execution.
-[`profile.shards.searches.query`](#the-query-array) | Array of objects | Profiling information about the query execution.
-`profile.shards.searches.rewrite_time` | Integer | All Lucene queries are rewritten. A query and its children may be rewritten more than once, until the query stops changing. The rewriting process involves performing optimizations, such as removing redundant clauses or replacing a query path with a more efficient one. After the rewriting process, the original query may change significantly. The `rewrite_time` field contains the cumulative total rewrite time for the query and all its children, in nanoseconds.
-[`profile.shards.searches.collector`](#the-collector-array) | Array of objects | Profiling information about the Lucene collectors that ran the search.
-[`profile.shards.aggregations`](#aggregation-responses) | Array of objects | Profiling information about the aggregation execution.
+`profile` | 物件 | 包含剖析資訊。
+`profile.shards` | 物件陣列 | 一個搜尋請求可以對索引中的一或多個分片執行，而一次搜尋可能涉及一或多個索引。因此，`profile.shards` 陣列包含搜尋所涉及之每個分片的剖析資訊。
+`profile.shards.id` | 字串 | `[node-ID][index-name][shard-ID]` 格式的分片 ID。
+`profile.shards.searches` | 物件陣列 | 一次搜尋代表對底層 Lucene 索引執行的一個查詢。大多數搜尋請求會對 Lucene 索引執行單一搜尋，但某些搜尋請求可以執行多個搜尋。例如，包含全域彙總會在全域情境中產生次要的 `match_all` 查詢。`profile.shards` 陣列包含每次搜尋執行的剖析資訊。
+[`profile.shards.searches.query`](#the-query-array) | 物件陣列 | 關於查詢執行的剖析資訊。
+`profile.shards.searches.rewrite_time` | 整數 | 所有 Lucene 查詢都會被改寫。查詢及其子查詢可能被改寫多次，直到查詢不再變化為止。改寫過程涉及執行最佳化，例如移除冗餘子句或以更有效率的路徑取代查詢路徑。改寫過程之後，原始查詢可能會有顯著變化。`rewrite_time` 欄位包含該查詢及其所有子查詢的累計改寫時間總和，單位為奈秒。
+[`profile.shards.searches.collector`](#the-collector-array) | 物件陣列 | 關於執行搜尋之 Lucene 收集器的剖析資訊。
+[`profile.shards.aggregations`](#aggregation-responses) | 物件陣列 | 關於彙總執行的剖析資訊。
 
-### The `query` array
+### `query` 陣列
 
-The `query` array contains objects with the following fields.
+`query` 陣列包含具有下列欄位的物件。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`type` | String | The Lucene query type into which the search query was rewritten. Corresponds to the Lucene class name (which often has the same name in OpenSearch).
-`description` | String | Contains a Lucene explanation of the query. Helps differentiate queries with the same type.
-`time_in_nanos`	| Long | The total elapsed time for this query, in nanoseconds. For concurrent segment search, `time_in_nanos` is the total time spent across all the slices (the difference between the last completed slice execution end time and the first slice execution start time).
-`max_slice_time_in_nanos`	| Long | The maximum amount of time taken by any slice to run a query, in nanoseconds. This field is included only if you enable concurrent segment search.	
-`min_slice_time_in_nanos`	| Long | The minimum amount of time taken by any slice to run a query, in nanoseconds. This field is included only if you enable concurrent segment search.
-`avg_slice_time_in_nanos`	| Long | The average amount of time taken by any slice to run a query, in nanoseconds. This field is included only if you enable concurrent segment search.
-[`breakdown`](#the-breakdown-object) | Object | Contains timing statistics about low-level Lucene execution.
-`children` | Array of objects | If a query has subqueries (children), this field contains information about the subqueries.
+`type` | 字串 | 搜尋查詢被改寫成的 Lucene 查詢類型。對應至 Lucene 類別名稱（在 OpenSearch 中通常同名）。
+`description` | 字串 | 包含查詢的 Lucene 說明。有助於區分類型相同的查詢。
+`time_in_nanos`	| 長整數 | 此查詢的總經過時間，單位為奈秒。對於並行分段搜尋，`time_in_nanos` 是所有工作切片花費的總時間（最後完成之工作切片執行結束時間與第一個工作切片執行開始時間之間的差值）。
+`max_slice_time_in_nanos`	| 長整數 | 任何工作切片執行查詢所花費的最長時間，單位為奈秒。僅在您啟用並行分段搜尋時才會包含此欄位。	
+`min_slice_time_in_nanos`	| 長整數 | 任何工作切片執行查詢所花費的最短時間，單位為奈秒。僅在您啟用並行分段搜尋時才會包含此欄位。
+`avg_slice_time_in_nanos`	| 長整數 | 任何工作切片執行查詢所花費的平均時間，單位為奈秒。僅在您啟用並行分段搜尋時才會包含此欄位。
+[`breakdown`](#the-breakdown-object) | 物件 | 包含底層 Lucene 執行的計時統計資訊。
+`children` | 物件陣列 | 如果查詢有子查詢（子項），此欄位包含子查詢的相關資訊。
 
-### The `breakdown` object
+### `breakdown` 物件
 
-The `breakdown` object represents the timing statistics about low-level Lucene execution, broken down by method. Timings are listed in wall-clock nanoseconds and are not normalized. The `breakdown` timings are inclusive of all child times. The `breakdown` object comprises the following fields. All fields contain integer values.
+`breakdown` 物件代表底層 Lucene 執行的計時統計資訊，依方法細分。計時以實際經過的奈秒列出，且未經正規化。`breakdown` 計時包含所有子項的時間。`breakdown` 物件由下列欄位組成。所有欄位皆包含整數值。
 
-Field | Description
+欄位 | 說明
 :--- | :--- 
-`create_weight` | A `Query` object in Lucene is immutable. Yet, Lucene should be able to reuse `Query` objects in multiple `IndexSearcher` objects. Thus, `Query` objects need to keep temporary state and statistics associated with the index in which the query is executed. To achieve reuse, every `Query` object generates a `Weight` object, which keeps the temporary context (state) associated with the `<IndexSearcher, Query>` tuple. The `create_weight` field contains the amount of time spent creating the `Weight` object.
-`build_scorer` | A `Scorer` iterates over matching documents and generates a score for each document. The `build_scorer` field contains the amount of time spent generating the `Scorer` object. This does not include the time spent scoring the documents. The `Scorer` initialization time depends on the optimization and complexity of a particular query. The `build_scorer` parameter also includes the amount of time associated with caching, if caching is applicable and enabled for the query.
-`next_doc` | The `next_doc` Lucene method returns the document ID of the next document that matches the query. This method is a special type of the `advance` method and is equivalent to `advance(docId() + 1)`. The `next_doc` method is more convenient for many Lucene queries. The `next_doc` field contains the amount of time required to determine the next matching document, which varies depending on the query type.  
-`advance` | The `advance` method is a lower-level version of the `next_doc` method in Lucene. It also finds the next matching document but necessitates that the calling query perform additional tasks, such as identifying skips. Some queries, such as conjunctions (`must` clauses in Boolean queries), cannot use `next_doc`. For those queries, `advance` is timed.
-`match` | For some queries, document matching is performed in two steps. First, the document is matched approximately. Second, those documents that are approximately matched are examined through a more comprehensive process. For example, a phrase query first checks whether a document contains all terms in the phrase. Next, it verifies that the terms are in order (which is a more expensive process). The `match` field is non-zero only for those queries that use the two-step verification process. 
-`score` | Contains the time taken for a `Scorer` to score a particular document.
-`shallow_advance` | Contains the amount of time required to execute the `advanceShallow` Lucene method.
-`compute_max_score` | Contains the amount of time required to execute the `getMaxScore` Lucene method.
-`set_min_competitive_score` | Contains the amount of time required to execute the `setMinCompetitiveScore` Lucene method.
-`<method>_count` | Contains the number of invocations of a `<method>`. For example, `advance_count` contains the number of invocations of the `advance` method. Different invocations of the same method occur because the method is called on different documents. You can determine the selectivity of a query by comparing counts in different query components.
-`max_<method>`	| The maximum amount of time taken by any slice to run a query method. Breakdown stats for the `create_weight` method do not include profiled `max` time because the method runs at the query level rather than the slice level. This field is included only if you enable concurrent segment search.
-`min_<method>`	| The minimum amount of time taken by any slice to run a query method. Breakdown stats for the `create_weight` method do not include profiled `min` time because the method runs at the query level rather than the slice level. This field is included only if you enable concurrent segment search.
-`avg_<method>`	| The average amount of time taken by any slice to run a query method. Breakdown stats for the `create_weight` method do not include profiled `avg` time because the method runs at the query level rather than the slice level. This field is included only if you enable concurrent segment search.
-`max_<method>_count`	| The maximum number of invocations of a `<method>` on any slice. Breakdown stats for the `create_weight` method do not include profiled `max` count because the method runs at the query level rather than the slice level. This field is included only if you enable concurrent segment search.
-`min_<method>_count`	| The minimum number of invocations of a `<method>` on any slice. Breakdown stats for the `create_weight` method do not include profiled `min` count because the method runs at the query level rather than the slice level. This field is included only if you enable concurrent segment search.
-`avg_<method>_count`	| The average number of invocations of a `<method>` on any slice. Breakdown stats for the `create_weight` method do not include profiled `avg` count because the method runs at the query level rather than the slice level. This field is included only if you enable concurrent segment search.
+`create_weight` | Lucene 中的 `Query` 物件是不可變的。然而，Lucene 應能將 `Query` 物件重複用於多個 `IndexSearcher` 物件。因此，`Query` 物件需要保留與執行查詢之索引相關的暫時狀態與統計資訊。為達成重複使用，每個 `Query` 物件都會產生一個 `Weight` 物件，該物件保留與 `<IndexSearcher, Query>` 元組相關的暫時情境（狀態）。`create_weight` 欄位包含建立 `Weight` 物件所花費的時間。
+`build_scorer` | `Scorer` 會迭代比對的文件並為每份文件產生分數。`build_scorer` 欄位包含產生 `Scorer` 物件所花費的時間。這不包括為文件評分所花費的時間。`Scorer` 初始化時間取決於特定查詢的最佳化與複雜度。若查詢適用快取且已啟用快取，`build_scorer` 參數也包含與快取相關的時間。
+`next_doc` | `next_doc` Lucene 方法會傳回下一個符合查詢之文件的文件 ID。此方法是 `advance` 方法的一種特殊類型，等同於 `advance(docId() + 1)`。`next_doc` 方法對許多 Lucene 查詢而言更為方便。`next_doc` 欄位包含判定下一個符合文件所需的時間，時間長短視查詢類型而定。  
+`advance` | `advance` 方法是 Lucene 中 `next_doc` 方法的較低階版本。它同樣會找出下一個符合的文件，但需要呼叫的查詢執行額外工作，例如識別跳躍。某些查詢（例如布林查詢中的連詞（`must` 子句））無法使用 `next_doc`。對於這些查詢，會計時 `advance`。
+`match` | 對於某些查詢，文件比對分兩步驟執行。首先，大致比對文件。其次，透過更全面的程序檢查大致比對到的文件。例如，片語查詢會先檢查文件是否包含片語中的所有詞彙，接著驗證這些詞彙是否依序排列（這是成本更高的程序）。`match` 欄位僅在使用兩步驟驗證程序的查詢中才為非零值。 
+`score` | 包含 `Scorer` 為特定文件評分所花費的時間。
+`shallow_advance` | 包含執行 `advanceShallow` Lucene 方法所需的時間。
+`compute_max_score` | 包含執行 `getMaxScore` Lucene 方法所需的時間。
+`set_min_competitive_score` | 包含執行 `setMinCompetitiveScore` Lucene 方法所需的時間。
+`<method>_count` | 包含 `<method>` 的叫用次數。例如，`advance_count` 包含 `advance` 方法的叫用次數。同一方法會有不同的叫用，是因為該方法在不同的文件上被呼叫。您可以透過比較不同查詢元件中的計數來判斷查詢的選擇性。
+`max_<method>`	| 任何工作切片執行查詢方法所花費的最長時間。`create_weight` 方法的細項統計不包含剖析的 `max` 時間，因為該方法是在查詢層級而非工作切片層級執行。僅在您啟用並行分段搜尋時才會包含此欄位。
+`min_<method>`	| 任何工作切片執行查詢方法所花費的最短時間。`create_weight` 方法的細項統計不包含剖析的 `min` 時間，因為該方法是在查詢層級而非工作切片層級執行。僅在您啟用並行分段搜尋時才會包含此欄位。
+`avg_<method>`	| 任何工作切片執行查詢方法所花費的平均時間。`create_weight` 方法的細項統計不包含剖析的 `avg` 時間，因為該方法是在查詢層級而非工作切片層級執行。僅在您啟用並行分段搜尋時才會包含此欄位。
+`max_<method>_count`	| 任何工作切片上 `<method>` 的最大叫用次數。`create_weight` 方法的細項統計不包含剖析的 `max` 計數，因為該方法是在查詢層級而非工作切片層級執行。僅在您啟用並行分段搜尋時才會包含此欄位。
+`min_<method>_count`	| 任何工作切片上 `<method>` 的最小叫用次數。`create_weight` 方法的細項統計不包含剖析的 `min` 計數，因為該方法是在查詢層級而非工作切片層級執行。僅在您啟用並行分段搜尋時才會包含此欄位。
+`avg_<method>_count`	| 任何工作切片上 `<method>` 的平均叫用次數。`create_weight` 方法的細項統計不包含剖析的 `avg` 計數，因為該方法是在查詢層級而非工作切片層級執行。僅在您啟用並行分段搜尋時才會包含此欄位。
 
-### The `collector` array
+### `collector` 陣列
 
-The `collector` array contains information about Lucene Collectors. A Collector is responsible for coordinating document traversal and scoring and collecting matching documents. Using Collectors, individual queries can record aggregation results and execute global queries or post-query filters. 
+`collector` 陣列包含 Lucene 收集器的相關資訊。收集器負責協調文件遍歷與評分，並收集相符的文件。使用收集器時，個別查詢可以記錄彙總結果，並執行全域查詢或查詢後篩選器。
 
-Field | Description
+欄位 | 說明
 :--- | :--- 
-`name` | The collector name. In the [example response](#example-response-non-concurrent-search), the `collector` is a single `SimpleTopScoreDocCollector`---the default scoring and sorting collector.
-`reason` | Contains a description of the collector. For possible field values, see [Collector reasons](#collector-reasons).
-`time_in_nanos` | The total elapsed time for this collector, in nanoseconds. For concurrent segment search, `time_in_nanos` is the total amount of time across all slices (the difference between the last completed slice execution end time and the first slice execution start time).
-`children` | If a collector has subcollectors (children), this field contains information about the subcollectors.
-`max_slice_time_in_nanos`	|The maximum amount of time taken by any slice, in nanoseconds.	This field is included only if you enable concurrent segment search.
-`min_slice_time_in_nanos`	|The minimum amount of time taken by any slice, in nanoseconds.	This field is included only if you enable concurrent segment search.
-`avg_slice_time_in_nanos`	|The average amount of time taken by any slice, in nanoseconds.	This field is included only if you enable concurrent segment search.
-`slice_count`	|The total slice count for this query. This field is included only if you enable concurrent segment search.
-`reduce_time_in_nanos`	|The amount of time taken to reduce results for all slice collectors, in nanoseconds.	This field is included only if you enable concurrent segment search.
+`name` | 收集器名稱。在[範例回應](#example-response-non-concurrent-search)中，`collector` 是單一 `SimpleTopScoreDocCollector`——預設的評分與排序收集器。
+`reason` | 包含收集器的說明。如需可能的欄位值，請參閱[收集器原因](#collector-reasons)。
+`time_in_nanos` | 此收集器的總經過時間，以奈秒為單位。若為並行分段搜尋，`time_in_nanos` 是所有工作切片的總時間（最後完成的工作切片執行結束時間與第一個工作切片執行開始時間之間的差異）。
+`children` | 如果收集器有子收集器（子項），此欄位會包含子收集器的相關資訊。
+`max_slice_time_in_nanos`	|任何工作切片所花費的最長時間，以奈秒為單位。	唯有啟用並行分段搜尋時，才會包含此欄位。
+`min_slice_time_in_nanos`	|任何工作切片所花費的最短時間，以奈秒為單位。	唯有啟用並行分段搜尋時，才會包含此欄位。
+`avg_slice_time_in_nanos`	|任何工作切片所花費的平均時間，以奈秒為單位。	唯有啟用並行分段搜尋時，才會包含此欄位。
+`slice_count`	|此查詢的工作切片總數。唯有啟用並行分段搜尋時，才會包含此欄位。
+`reduce_time_in_nanos`	|為所有工作切片收集器縮減結果所花費的時間，以奈秒為單位。	唯有啟用並行分段搜尋時，才會包含此欄位。
 
-Collector times are calculated, combined, and normalized independently, so they are independent of query times.
+收集器時間會個別計算、合併及正規化，因此與查詢時間無關。
 {: .note}
 
-#### Collector reasons
+#### 收集器原因
 
-The following table describes all available collector reasons.
+下表說明所有可用的收集器原因。
 
-Reason | Description
+原因 | 說明
 :--- | :--- 
-`search_sorted` | A collector that scores and sorts documents. Present in most simple searches.
-`search_count` | A collector that counts the number of matching documents but does not fetch the source. Present when `size: 0` is specified.
-`search_terminate_after_count` | A collector that searches for matching documents and terminates the search when it finds a specified number of documents. Present when the `terminate_after_count` query parameter is specified.
-`search_min_score` | A collector that returns matching documents that have a score greater than a minimum score. Present when the `min_score` parameter is specified.
-`search_multi` | A wrapper collector for other collectors. Present when search, aggregations, global aggregations, and post filters are combined in a single search.
-`search_timeout` | A collector that stops running after a specified period of time. Present when a `timeout` parameter is specified.
-`aggregation` | A collector for aggregations that is run against the specified query scope. OpenSearch uses a single `aggregation` collector to collect documents for all aggregations.
-`global_aggregation` | A collector that is run against the global query scope. Global scope is different from a specified query scope, so in order to collect the entire dataset, a `match_all` query must be run.
+`search_sorted` | 為文件評分並排序的收集器。存在於大多數簡單搜尋中。
+`search_count` | 計算相符文件數但不會擷取來源的收集器。指定 `size: 0` 時會出現。
+`search_terminate_after_count` | 搜尋相符文件，並在找到指定數量的文件時終止搜尋的收集器。指定 `terminate_after_count` 查詢參數時會出現。
+`search_min_score` | 傳回分數高於最低分數之相符文件的收集器。指定 `min_score` 參數時會出現。
+`search_multi` | 其他收集器的包裝收集器。當搜尋、彙總、全域彙總及查詢後篩選器合併在單一搜尋中時會出現。
+`search_timeout` | 在指定時間過後停止執行的收集器。指定 `timeout` 參數時會出現。
+`aggregation` | 針對指定查詢範圍執行之彙總的收集器。OpenSearch 使用單一 `aggregation` 收集器來收集所有彙總的文件。
+`global_aggregation` | 針對全域查詢範圍執行的收集器。全域範圍與指定的查詢範圍不同，因此為了收集整個資料集，必須執行 `match_all` 查詢。
 
-### Aggregation responses
+### 彙總回應
 
-The following examples show profiling responses for different aggregation types.
+下列範例顯示不同彙總類型的效能分析回應。
 
-#### Response: Global aggregation
+#### 回應：全域彙總
 
-The response contains profiling information:
+回應包含剖析資訊：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -1017,13 +1018,13 @@ The response contains profiling information:
 ```
 </details>
 
-#### Response: Non-global aggregation
+#### 回應：非全域彙總
 
-The response contains profiling information:
+回應包含剖析資訊：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -1162,39 +1163,39 @@ The response contains profiling information:
 ```
 </details>
 
-#### Response body fields
+#### 回應本文欄位
 
-The `aggregations` array contains aggregation objects with the following fields.
+`aggregations` 陣列包含具有下列欄位的彙總物件。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`type` | String | The aggregator type. In the [non-global aggregation example response](#response-non-global-aggregation), the aggregator type is `AvgAggregator`. [Global aggregation example response](#response-global-aggregation) contains a `GlobalAggregator` with an `AvgAggregator` child.
-`description` | String | Contains a Lucene explanation of the aggregation. Helps differentiate aggregations with the same type.
-`time_in_nanos` | Long | The total elapsed time for this aggregation, in nanoseconds. For concurrent segment search, `time_in_nanos` is the total amount of time across all slices (the difference between the last completed slice execution end time and the first slice execution start time).	
-[`breakdown`](#the-breakdown-object-1) | Object | Contains timing statistics about low-level Lucene execution.
-`children` | Array of objects | If an aggregation has subaggregations (children), this field contains information about the subaggregations.
-`debug` | Object | Some aggregations return a `debug` object that describes the details of the underlying execution.
-`max_slice_time_in_nanos`	|Long | The maximum amount of time taken by any slice to run an aggregation, in nanoseconds. This field is included only if you enable concurrent segment search.
-`min_slice_time_in_nanos`	|Long |The minimum amount of time taken by any slice to run an aggregation, in nanoseconds. This field is included only if you enable concurrent segment search.
-`avg_slice_time_in_nanos`	|Long |The average amount of time taken by any slice to run an aggregation, in nanoseconds. This field is included only if you enable concurrent segment search.
+`type` | 字串 | 彙總器類型。在[非全域彙總範例回應](#response-non-global-aggregation)中，彙總器類型為 `AvgAggregator`。[全域彙總範例回應](#response-global-aggregation)包含一個 `GlobalAggregator`，其下有一個 `AvgAggregator` 子項目。
+`description` | 字串 | 包含彙總的 Lucene 說明。有助於區分相同類型的彙總。
+`time_in_nanos` | 長整數 | 此彙總經過的總時間，以奈秒為單位。對於並行分段搜尋，`time_in_nanos` 是所有工作切片的總時間（最後一個完成的工作切片執行結束時間與第一個工作切片執行開始時間之間的差值）。	
+[`breakdown`](#the-breakdown-object-1) | 物件 | 包含低階 Lucene 執行的計時統計資料。
+`children` | 物件陣列 | 如果彙總具有子彙總（子項目），此欄位會包含子彙總的相關資訊。
+`debug` | 物件 | 部分彙總會傳回描述底層執行詳細資訊的 `debug` 物件。
+`max_slice_time_in_nanos`	|長整數 | 任一工作切片執行彙總所花費的最長時間，以奈秒為單位。只有在您啟用並行分段搜尋時，才會包含此欄位。
+`min_slice_time_in_nanos`	|長整數 |任一工作切片執行彙總所花費的最短時間，以奈秒為單位。只有在您啟用並行分段搜尋時，才會包含此欄位。
+`avg_slice_time_in_nanos`	|長整數 |任一工作切片執行彙總所花費的平均時間，以奈秒為單位。只有在您啟用並行分段搜尋時，才會包含此欄位。
 
-#### The `breakdown` object
+#### `breakdown` 物件
 
-The `breakdown` object represents the timing statistics about low-level Lucene execution, broken down by method. Each field in the `breakdown` object represents an internal Lucene method executed within the aggregation. Timings are listed in wall-clock nanoseconds and are not normalized. The `breakdown` timings are inclusive of all child times. The `breakdown` object is comprised of the following fields. All fields contain integer values.
+`breakdown` 物件代表低階 Lucene 執行的計時統計資料，並依方法細分。`breakdown` 物件中的每個欄位都代表在彙總中執行的一個 Lucene 內部方法。計時以實際經過的奈秒數列出，且未經正規化。`breakdown` 計時包含所有子項目的時間。`breakdown` 物件由下列欄位組成。所有欄位皆包含整數值。
 
-Field | Description
+欄位 | 說明
 :--- | :--- 
-`initialize` | Contains the amount of time taken to execute the `preCollection()` callback method during `AggregationCollectorManager` creation. For concurrent segment search, the `initialize` method contains the total elapsed time across all slices (the difference between the last completed slice execution end time and the first slice execution start time).
-`build_leaf_collector`| Contains the time spent running the aggregation's `getLeafCollector()` method, which creates a new collector to collect the given context. For concurrent segment search, the `build_leaf_collector` method contains the total elapsed time across all slices (the difference between the last completed slice execution end time and the first slice execution start time).
-`collect`| Contains the time spent collecting the documents into buckets. For concurrent segment search, the `collect` method contains the total elapsed time across all slices (the difference between the last completed slice execution end time and the first slice execution start time).
-`post_collection`| Contains the time spent running the aggregation’s `postCollection()` callback method. For concurrent segment search, the `post_collection` method contains the total elapsed time across all slices (the difference between the last completed slice execution end time and the first slice execution start time).
-`build_aggregation`| Contains the time spent running the aggregation’s `buildAggregations()` method, which builds the results of this aggregation. For concurrent segment search, the `build_aggregation` method contains the total elapsed time across all slices (the difference between the last completed slice execution end time and the first slice execution start time).
-`reduce`| Contains the time spent in the `reduce` phase. For concurrent segment search, the `reduce` method contains the total elapsed time across all slices (the difference between the last completed slice execution end time and the first slice execution start time).
-`<method>_count` | Contains the number of invocations of a `<method>`. For example, `build_leaf_collector_count` contains the number of invocations of the `build_leaf_collector` method. 
-`max_<method>`	|The maximum amount of time taken by any slice to run an aggregation method. This field is included only if you enable concurrent segment search.
-`min_<method>`|The minimum amount of time taken by any slice to run an aggregation method. This field is included only if you enable concurrent segment search.
-`avg_<method>`	|The average amount of time taken by any slice to run an aggregation method. This field is included only if you enable concurrent segment search.
-`<method>_count`	|The total method count across all slices. For example, for the `collect` method, it is the total number of invocations of this method needed to collect documents into buckets across all slices. 
-`max_<method>_count`	|The maximum number of invocations of a `<method>` on any slice. This field is included only if you enable concurrent segment search.
-`min_<method>_count`	|The minimum number of invocations of a `<method>` on any slice. This field is included only if you enable concurrent segment search.
-`avg_<method>_count`	|The average number of invocations of a `<method>` on any slice. This field is included only if you enable concurrent segment search.
+`initialize` | 包含在建立 `AggregationCollectorManager` 期間執行 `preCollection()` 回呼方法所花費的時間。對於並行分段搜尋，`initialize` 方法包含所有切片的總經過時間 (最後一個完成的切片執行結束時間與第一個切片執行開始時間之間的差值)。
+`build_leaf_collector`| 包含執行彙總的 `getLeafCollector()` 方法所花費的時間，此方法會建立新的收集器，以收集指定上下文中的文件。對於並行分段搜尋，`build_leaf_collector` 方法包含所有切片的總經過時間 (最後一個完成的切片執行結束時間與第一個切片執行開始時間之間的差值)。
+`collect`| 包含將文件收集到桶 (bucket) 中所花費的時間。對於並行分段搜尋，`collect` 方法包含所有切片的總經過時間 (最後一個完成的切片執行結束時間與第一個切片執行開始時間之間的差值)。
+`post_collection`| 包含執行彙總的 `postCollection()` 回呼方法所花費的時間。對於並行分段搜尋，`post_collection` 方法包含所有切片的總經過時間 (最後一個完成的切片執行結束時間與第一個切片執行開始時間之間的差值)。
+`build_aggregation`| 包含執行彙總的 `buildAggregations()` 方法所花費的時間，此方法會建置此彙總的結果。對於並行分段搜尋，`build_aggregation` 方法包含所有切片的總經過時間 (最後一個完成的切片執行結束時間與第一個切片執行開始時間之間的差值)。
+`reduce`| 包含在 `reduce` 階段所花費的時間。對於並行分段搜尋，`reduce` 方法包含所有切片的總經過時間 (最後一個完成的切片執行結束時間與第一個切片執行開始時間之間的差值)。
+`<method>_count` | 包含 `<method>` 的呼叫次數。例如，`build_leaf_collector_count` 包含 `build_leaf_collector` 方法的呼叫次數。 
+`max_<method>`	|任一切片執行彙總方法所花費的最長時間。只有在您啟用並行分段搜尋時，才會包含此欄位。
+`min_<method>`|任一切片執行彙總方法所花費的最短時間。只有在您啟用並行分段搜尋時，才會包含此欄位。
+`avg_<method>`	|任一切片執行彙總方法所花費的平均時間。只有在您啟用並行分段搜尋時，才會包含此欄位。
+`<method>_count`	|所有切片的方法總計數。例如，對於 `collect` 方法，此值是在所有切片中將文件收集到桶中所需的此方法總呼叫次數。 
+`max_<method>_count`	|任一切片上 `<method>` 的最大呼叫次數。只有在您啟用並行分段搜尋時，才會包含此欄位。
+`min_<method>_count`	|任一切片上 `<method>` 的最小呼叫次數。只有在您啟用並行分段搜尋時，才會包含此欄位。
+`avg_<method>_count`	|任一切片上 `<method>` 的平均呼叫次數。只有在您啟用並行分段搜尋時，才會包含此欄位。

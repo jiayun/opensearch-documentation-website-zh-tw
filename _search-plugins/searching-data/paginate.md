@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Paginate results
+title: "分頁顯示結果"
 parent: Customizing search results
 nav_order: 10
 redirect_from:
   - /opensearch/search/paginate/
 ---
 
-# Paginate results
+# 分頁顯示結果
 
-You can use the following methods to paginate search results in OpenSearch: 
+您可以使用下列方法在 OpenSearch 中對搜尋結果進行分頁：
 
-1. The [`from` and `size` parameters](#the-from-and-size-parameters)
-1. The [scroll search](#scroll-search) operation
-1. The [`search_after` parameter](#the-search_after-parameter)
-1. [Point in Time with `search_after`](#point-in-time-with-search_after)
+1. [`from` 與 `size` 參數](#the-from-and-size-parameters)
+1. [scroll 搜尋](#scroll-search)操作
+1. [`search_after` 參數](#the-search_after-parameter)
+1. [搭配 `search_after` 的 Point in Time](#point-in-time-with-search_after)
 
-## The `from` and `size` parameters
+## `from` 與 `size` 參數
 
-The `from` and `size` parameters return results one page at a time.
+`from` 與 `size` 參數會一次一頁地傳回結果。
 
-The `from` parameter is the document number from which you want to start showing the results. The `size` parameter is the number of results that you want to show. Together, they let you return a subset of the search results.
+`from` 參數是您希望開始顯示結果的文件編號。`size` 參數是您希望顯示的結果數量。兩者搭配使用，可讓您傳回搜尋結果的子集。
 
-For example, if the value of `size` is 10 and the value of `from` is 0, you see the first 10 results. If you change the value of `from` to 10, you see the next 10 results (because the results are zero-indexed). So if you want to see results starting from result 11, `from` must be 10.
+例如，若 `size` 的值為 10 且 `from` 的值為 0，您會看到前 10 筆結果。若將 `from` 的值改為 10，您會看到接下來的 10 筆結果（因為結果是從零開始編號）。因此，若您想從第 11 筆結果開始查看，`from` 必須為 10。
 
 ```json
 GET shakespeare/_search
@@ -37,40 +38,40 @@ GET shakespeare/_search
 }
 ```
 
-Use the following formula to calculate the `from` parameter relative to the page number:
+請使用下列公式，根據頁碼計算 `from` 參數：
 
 ```json
 from = size * (page_number - 1)
 ```
 
-Each time the user chooses the next page of the results, your application needs to run the same search query with an incremented `from` value.
+每當使用者選擇結果的下一頁時，您的應用程式都需要以遞增後的 `from` 值執行相同的搜尋查詢。
 
-You can also specify the `from` and `size` parameters in the search URI:
+您也可以在搜尋 URI 中指定 `from` 與 `size` 參數：
 
 ```json
 GET shakespeare/_search?from=0&size=10
 ```
 
-If you only specify the `size` parameter, the `from` parameter defaults to 0.
+若您只指定 `size` 參數，`from` 參數會預設為 0。
 
-Querying for pages deep in your results can have a significant performance impact, so OpenSearch limits this approach to 10,000 results.
+查詢結果深處的頁面可能對效能造成重大影響，因此 OpenSearch 將此方法限制為 10,000 筆結果。
 
-The `from` and `size` parameters are stateless, so the results are based on the latest available data.
-This can cause inconsistent pagination.
-For example, assume a user stays on the first page of the results and then navigates to the second page. During that time, a new document relevant to the user's search is indexed and shows up on the first page. In this scenario, the last result on the first page is pushed to the second page, and the user sees duplicate results (that is, the first and second pages both display that last result).
+`from` 與 `size` 參數是無狀態的，因此結果會以最新可用的資料為基礎。
+這可能導致分頁不一致。
+例如，假設使用者停留在結果的第一頁，然後前往第二頁。在這段期間，一筆與使用者搜尋相關的新文件被編製索引並出現在第一頁。在這種情況下，第一頁的最後一筆結果會被推到第二頁，使用者會看到重複的結果（也就是第一頁與第二頁都顯示該筆最後的結果）。
 
-Use the `scroll` operation for consistent pagination. The `scroll` operation keeps a search context open for a certain period of time. Any data changes do not affect the results during that time.
+請使用 `scroll` 操作來實現一致的分頁。`scroll` 操作會將搜尋情境保持開啟一段時間。在這段時間內，任何資料變更都不會影響結果。
 
 
-## Scroll search
+## Scroll 搜尋
 
-The `from` and `size` parameters allow you to paginate your search results but with a limit of 10,000 results at a time.
+`from` 與 `size` 參數可讓您對搜尋結果進行分頁，但一次最多只能 10,000 筆結果。
 
-If you need to request volumes of data larger than 1 PB from, for example, a machine learning job, use the `scroll` operation instead. The `scroll` operation allows you to request an unlimited number of results.
+如果您需要請求超過 1 PB 的資料量（例如來自機器學習工作），請改用 `scroll` 操作。`scroll` 操作可讓您請求不限數量的結果。
 
-To use the scroll operation, add a `scroll` parameter to the request header with a search context telling OpenSearch for how long you need to keep scrolling. This search context needs to be long enough to process a single batch of results.
+若要使用 scroll 操作，請在請求標頭中加入 `scroll` 參數，並在搜尋情境中告訴 OpenSearch 您需要持續捲動多久。此搜尋情境的時間必須足夠處理單一批次的結果。
 
-To set the number of results that you want returned for each batch, use the `size` parameter:
+若要設定每個批次要傳回的結果數量，請使用 `size` 參數：
 
 ```json
 GET shakespeare/_search?scroll=10m
@@ -79,13 +80,13 @@ GET shakespeare/_search?scroll=10m
 }
 ```
 
-OpenSearch caches the results and returns a scroll ID that you can use to access them in batches:
+OpenSearch 會快取結果並傳回一個 scroll ID，您可以使用它在批次中存取這些結果：
 
 ```json
 "_scroll_id" : "DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAAUWdmpUZDhnRFBUcWFtV21nMmFwUGJEQQ=="
 ```
 
-Pass this scroll ID to the `scroll` operation to obtain the next batch of results:
+將此 scroll ID 傳遞給 `scroll` 操作以取得下一批結果：
 
 ```json
 GET _search/scroll
@@ -95,10 +96,10 @@ GET _search/scroll
 }
 ```
 
-Using this scroll ID, you get results in batches of 10,000 as long as the search context is still open. Typically, the scroll ID does not change between requests, but it *can* change, so make sure to always use the latest scroll ID. If you don't send the next scroll request within the set search context, the `scroll` operation does not return any results.
+只要搜尋情境仍處於開啟狀態，使用此 scroll ID 就能以每批 10,000 筆的方式取得結果。一般而言，scroll ID 在請求之間不會改變，但它*可能*會改變，因此請務必一律使用最新的 scroll ID。如果您未在設定的搜尋情境時間內傳送下一個 scroll 請求，`scroll` 操作將不會傳回任何結果。
 
-If you expect billions of results, use a sliced scroll. Slicing allows you to perform multiple scroll operations for the same request but in parallel.
-Set the ID and the maximum number of slices for the scroll:
+如果您預期會有數十億筆結果，請使用 sliced scroll。切片 (slicing) 可讓您針對同一請求平行執行多個 scroll 操作。
+設定 scroll 的 ID 與最大切片數：
 
 ```json
 GET shakespeare/_search?scroll=10m
@@ -113,9 +114,9 @@ GET shakespeare/_search?scroll=10m
 }
 ```
 
-With a single scroll ID, you receive 10 results.
-You can have up to 10 IDs.
-Perform the same command with the ID equal to 1:
+使用單一 scroll ID，您會收到 10 筆結果。
+您最多可以有 10 個 ID。
+以 ID 等於 1 執行相同的命令：
 
 ```json
 GET shakespeare/_search?scroll=10m
@@ -130,13 +131,13 @@ GET shakespeare/_search?scroll=10m
 }
 ```
 
-Close the search context when you’re done scrolling, because it continues to consume computing resources until the timeout:
+捲動完成後，請關閉搜尋情境，因為它會持續消耗運算資源直到逾時：
 
 ```json
 DELETE _search/scroll/DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAAcWdmpUZDhnRFBUcWFtV21nMmFwUGJEQQ==
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -145,21 +146,21 @@ DELETE _search/scroll/DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAAcWdmpUZDhnRFBUcWFtV21nMmFwUG
 }
 ```
 
-Use the following request to close all open scroll contexts:
+請使用下列請求來關閉所有開啟的 scroll 情境：
 
 ```json
 DELETE _search/scroll/_all
 ```
 
-The `scroll` operation corresponds to a specific timestamp. It doesn't consider documents added after that timestamp as potential results.
+`scroll` 操作對應特定的時間戳記。它不會將該時間戳記之後新增的文件視為潛在結果。
 
-Because open search contexts consume a lot of memory, we suggest you don't use the `scroll` operation for frequent user queries that don't need the search context to be open. Instead, use the `sort` parameter with the `search_after` parameter to scroll responses for user queries.
+由於開啟的搜尋情境會消耗大量記憶體，我們建議您不要在不需要保持搜尋情境開啟的頻繁使用者查詢中使用 `scroll` 操作。請改用 `sort` 參數搭配 `search_after` 參數來捲動使用者查詢的回應。
 
-## The `search_after` parameter
+## `search_after` 參數
 
-The `search_after` parameter provides a live cursor that uses the previous page's results to obtain the next page's results. It is similar to the `scroll` operation in that it is meant to scroll many queries in parallel. You can use `search_after` only when sorting is applied.
+`search_after` 參數提供一個即時游標，使用上一頁的結果來取得下一頁的結果。它類似於 `scroll` 操作，旨在平行捲動多個查詢。只有在套用排序時才能使用 `search_after`。
 
-For example, the following query sorts all lines from the play "Hamlet" by the speech number and then the line ID and retrieves the first three results:
+例如，下列查詢依台詞編號與台詞 ID 排序戲劇「Hamlet」中的所有台詞，並擷取前三筆結果：
 
 ```json
 GET shakespeare/_search
@@ -177,7 +178,7 @@ GET shakespeare/_search
 }
 ```
 
-The response contains the `sort` array of values for each document:
+回應包含每份文件的 `sort` 值陣列：
 
 ```json
 {
@@ -255,7 +256,7 @@ The response contains the `sort` array of values for each document:
 }
 ```
 
-You can use the last result's `sort` values to retrieve the next result by using the `search_after` parameter:
+您可以使用最後一筆結果的 `sort` 值，透過 `search_after` 參數擷取下一筆結果：
 
 ```json
 GET shakespeare/_search
@@ -274,8 +275,8 @@ GET shakespeare/_search
 }
 ```
 
-Unlike the `scroll` operation, the `search_after` parameter is stateless, so the document order may change because of documents being indexed or deleted.
+與 `scroll` 操作不同，`search_after` 參數是無狀態的，因此文件順序可能因文件被編製索引或刪除而改變。
 
-## Point in Time with `search_after`
+## 搭配 `search_after` 的 Point in Time
 
-Point in Time (PIT) with `search_after` is the preferred pagination method in OpenSearch, especially for deep pagination. It bypasses the limitations of all other methods because it operates on a dataset that is frozen in time, it is not bound to a query, and it supports consistent pagination going forward and backward. To learn more, see [Point in Time]({{site.url}}{{site.baseurl}}/opensearch/point-in-time/).
+搭配 `search_after` 的 Point in Time (PIT) 是 OpenSearch 中建議使用的分頁方法，尤其適用於深層分頁。它避開了所有其他方法的限制，因為它作用於時間凍結的資料集、不受查詢約束，並且支援向前與向後的一致性分頁。若要了解更多，請參閱 [Point in Time]({{site.url}}{{site.baseurl}}/opensearch/point-in-time/)。

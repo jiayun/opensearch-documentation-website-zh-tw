@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Customizing search results
+title: "自訂搜尋結果"
 nav_order: 15
 has_children: true
 has_toc: false
@@ -10,41 +11,41 @@ redirect_from:
   - /search-plugins/search-options/
 ---
 
-# Customizing search results
+# 自訂搜尋結果
 
-OpenSearch provides fundamental search capabilities and options that form the foundation of most search applications. These features work with all search types including keyword, vector, and AI search.
+OpenSearch 提供基本的搜尋功能與選項，構成大多數搜尋應用程式的基礎。這些功能適用於所有搜尋類型，包括關鍵字、向量與 AI 搜尋。
 
-## Pagination
+## 分頁
 
-Control how search results are accessed across large result sets:
+控制如何在大量結果集中存取搜尋結果：
 
-- [Paginate results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/): Rather than a single, long list, separate search results into pages.
-- [Point in Time]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/point-in-time/): Run different queries against a dataset that is fixed in time.
+- [將結果分頁]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/)：將搜尋結果分成多個頁面，而非單一長列表。
+- [時間點 (Point in Time)]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/point-in-time/)：對固定在某個時間點的資料集執行不同的查詢。
 
-## Sort and filter
+## 排序與篩選
 
-Apply the most common result refinements:
+套用最常見的結果調整：
 
-- [Sort results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/): Allow sorting of results by different criteria.
-- [Filter results]({{site.url}}{{site.baseurl}}/search-plugins/filter-search/): Filter search results based on specific criteria.
+- [排序結果]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/)：允許依不同條件排序結果。
+- [篩選結果]({{site.url}}{{site.baseurl}}/search-plugins/filter-search/)：根據特定條件篩選搜尋結果。
 
-## Result processing
+## 結果處理
 
-Control what data is returned and how it's organized:
+控制要傳回哪些資料以及如何組織：
 
-- [Collapse results]({{site.url}}{{site.baseurl}}/search-plugins/collapse-search/): Collapse search results to show only unique values for a specified field.
-- [Retrieve specific fields]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/): Retrieve only the specific fields you need.
-- [Retrieve inner hits]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/): Retrieve underlying hits in nested and parent-join objects.
+- [收合結果]({{site.url}}{{site.baseurl}}/search-plugins/collapse-search/)：收合搜尋結果，只顯示指定欄位的唯一值。
+- [擷取特定欄位]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/)：只擷取您需要的特定欄位。
+- [擷取內部命中]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/)：擷取巢狀與父聯結物件中的底層命中。
 
-## Result formatting
+## 結果格式
 
-Customize how search results are visually presented:
+自訂搜尋結果的視覺呈現方式：
 
-- [Highlight query matches]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/): Highlight the search term in the results.
+- [醒目提示查詢相符項]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/)：在結果中醒目提示搜尋詞彙。
 
-## Query enhancement
+## 查詢增強
 
-Enhance user queries in real-time to improve search accuracy and user experience:
+即時增強使用者查詢，以提升搜尋準確度與使用者體驗：
 
-- [Autocomplete functionality]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/autocomplete/): Suggest phrases as the user types.
-- [Did-you-mean functionality]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/did-you-mean/): Check spelling of phrases as the user types.
+- [自動完成功能]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/autocomplete/)：在使用者輸入時建議詞句。
+- [拼字建議功能]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/did-you-mean/)：在使用者輸入時檢查詞句的拼字。

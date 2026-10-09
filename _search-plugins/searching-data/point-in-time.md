@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Point in Time
+title: "時間點"
 parent: Customizing search results
 nav_order: 20
 redirect_from:
@@ -8,42 +9,42 @@ redirect_from:
   - /search-plugins/point-in-time/
 ---
 
-# Point in Time
+# 時間點
 
-Point in Time (PIT) lets you run different queries against a dataset that is fixed in time. 
+時間點 (PIT) 可讓您對固定在某個時間點的資料集執行不同的查詢。
 
-Normally, if you run a query on an index multiple times, the same query may return different results because documents are continually indexed, updated, and deleted. If you need to run a query against the same data, you can preserve the state of that data by creating a PIT. The main use of the PIT feature is to couple it with the `search_after` functionality for deep pagination of search results.
+一般來說，如果您對某個索引執行查詢多次，相同的查詢可能會傳回不同的結果，因為文件會不斷地被編製索引、更新和刪除。如果您需要對相同的資料執行查詢，可以建立 PIT 來保留該資料的狀態。PIT 功能的主要用途是將其與 `search_after` 功能結合，以對搜尋結果進行深度分頁。
 
-## Paginating search results
+## 為搜尋結果分頁
 
-Besides the PIT functionality, there are three ways to [paginate search results]({{site.url}}{{site.baseurl}}/opensearch/search/paginate/) in OpenSearch: using the Scroll API, specifying `from` and `size` parameters for your search, and using the `search_after` functionality. However, all three have limitations:
+除了 PIT 功能之外，在 OpenSearch 中還有三種[為搜尋結果分頁]({{site.url}}{{site.baseurl}}/opensearch/search/paginate/)的方式：使用 Scroll API、為您的搜尋指定 `from` 和 `size` 參數，以及使用 `search_after` 功能。然而，這三種方式都有其限制：
 
-- The Scroll API search results are frozen at the moment of the request, but they are bound to a particular query. Additionally, scroll can only move forward in the search, so if a request for a page fails, the subsequent request skips that page and returns the following one.
-- If you specify the `from` and `size` parameters for your search, the search results are not frozen in time, so they may be inconsistent because of documents being indexed or deleted. The `from` and `size` feature is not recommended for deep pagination because every page request requires processing of all results and filtering them for the requested page.
-- The `search_after` search results are not frozen in time, so they may be inconsistent because of concurrent document indexing or deletion.
+- Scroll API 的搜尋結果會在請求當下凍結，但它們會繫結至特定的查詢。此外，scroll 只能在搜尋中向前移動，因此如果某個頁面的請求失敗，後續的請求會略過該頁面並傳回下一頁。
+- 如果您為搜尋指定 `from` 和 `size` 參數，搜尋結果不會凍結在時間點上，因此可能會因為文件被編製索引或刪除而不一致。不建議將 `from` 和 `size` 功能用於深度分頁，因為每個頁面請求都需要處理所有結果，並為所請求的頁面進行篩選。
+- `search_after` 的搜尋結果不會凍結在時間點上，因此可能會因為文件同時被編製索引或刪除而不一致。
 
-The PIT functionality does not have the limitations of other pagination methods, because PIT search is not bound to a query, and it supports consistent pagination going forward and backward. If you have looked at page one of your results and are now on page two, you will see the same page one if you go back.
+PIT 功能沒有其他分頁方法的限制，因為 PIT 搜尋不會繫結至查詢，且支援向前和向後的一致分頁。如果您已看過結果的第一頁，而現在位於第二頁，當您返回時仍會看到相同的第一頁。
 
-## PIT search
+## PIT 搜尋
 
-PIT search has the same capabilities as regular search, except PIT search acts on an older dataset, while a regular search acts on a live dataset. PIT search is not bound to a query, so you can run different queries on the same dataset, which is frozen in time. 
+PIT 搜尋與一般搜尋具有相同的能力，差別在於 PIT 搜尋會作用於較舊的資料集，而一般搜尋則作用於即時資料集。PIT 搜尋不會繫結至查詢，因此您可以對同一個凍結在時間點的資料集執行不同的查詢。
 
-You can use the [Create PIT API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/#create-a-pit) to create a PIT. When you create a PIT for a set of indexes, OpenSearch locks a set of segments for those indexes, freezing them in time. On a lower level, none of the resources required for this PIT are modified or deleted. If the segments that are part of a PIT are merged, OpenSearch retains a copy of those segments for the period of time specified at PIT creation by the `keep_alive` parameter. 
+您可以使用 [Create PIT API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/#create-a-pit) 來建立 PIT。當您為一組索引建立 PIT 時，OpenSearch 會鎖定這些索引的一組分段，將其凍結在時間點上。在較低層級，此 PIT 所需的資源都不會被修改或刪除。如果屬於某個 PIT 的分段被合併，OpenSearch 會依建立 PIT 時透過 `keep_alive` 參數指定的期間保留這些分段的副本。
 
-The create PIT operation returns a PIT ID, which you can use to run multiple queries on the frozen dataset. Even though the indexes continue to ingest data and modify or delete documents, the PIT references the data that has not changed since the PIT creation. When your query contains a PIT ID, you don't need to pass the indexes to the search because it will use that PIT. A search with a PIT ID will produce exactly the same result when you run it multiple times.
+建立 PIT 作業會傳回 PIT ID，您可以使用它對凍結的資料集執行多個查詢。即使索引持續匯入資料並修改或刪除文件，PIT 仍會參考自建立 PIT 以來未曾變更的資料。當您的查詢包含 PIT ID 時，您不需要將索引傳遞給搜尋，因為它會使用該 PIT。使用 PIT ID 的搜尋在您執行多次時會產生完全相同的結果。
 
-In case of a cluster or node failure, all PIT data is lost.
+如果發生叢集或節點故障，所有 PIT 資料都會遺失。
 {: .note}
 
-### PIT in SQL
+### SQL 中的 PIT
 
-The [SQL plugin]({{site.url}}{{site.baseurl}}/search-plugins/sql/index/) also supports pagination using PIT. When the `plugin.sql.pagination.api` setting is enabled (the default), SQL search queries in OpenSearch automatically use PIT internally. For more information, see [Pagination in SQL]({{site.url}}{{site.baseurl}}/search-plugins/sql/sql-ppl-api/#paginating-results).
+[SQL 外掛程式]({{site.url}}{{site.baseurl}}/search-plugins/sql/index/)也支援使用 PIT 進行分頁。當 `plugin.sql.pagination.api` 設定啟用時 (預設)，OpenSearch 中的 SQL 搜尋查詢會在內部自動使用 PIT。如需更多資訊，請參閱 [SQL 中的分頁]({{site.url}}{{site.baseurl}}/search-plugins/sql/sql-ppl-api/#paginating-results)。
 
-## Pagination with PIT and search_after
+## 使用 PIT 和 search_after 進行分頁
 
-When you run a query with a PIT ID, you can use the `search_after` parameter to retrieve the next page of results. This gives you control over the order of documents in the pages of results.
+當您使用 PIT ID 執行查詢時，可以使用 `search_after` 參數來擷取下一頁的結果。這可讓您控制結果頁面中文件的順序。
 
-Run a search query with a PIT ID:
+使用 PIT ID 執行搜尋查詢：
 
 ```json
 GET /_search
@@ -64,7 +65,7 @@ GET /_search
 }
 ```
 
-The response contains the first 10,000 documents that match the query. To get the next set of documents, run the same query with the last document's sort values as the `search_after` parameter, keeping the same `sort` and `pit.id`. You can use the optional `keep_alive` parameter to extend the PIT time:
+回應包含符合查詢的前 10,000 份文件。若要取得下一組文件，請使用最後一份文件的排序值作為 `search_after` 參數來執行相同的查詢，並保持相同的 `sort` 和 `pit.id`。您可以使用選用的 `keep_alive` 參數來延長 PIT 時間：
 
 ```json
 GET /_search
@@ -88,17 +89,17 @@ GET /_search
 }
 ```
 
-## Search slicing
+## 搜尋切片
 
-Using `search_after` with PIT for pagination gives you control over ordering of the results. If you don't need results in any specific order, or if you want the ability to jump from a page to a non-consecutive page, you can use search slicing. Search slicing splits a PIT search into multiple slices that can be consumed independently by a client application.
+將 `search_after` 與 PIT 搭配使用進行分頁，可讓您控制結果的排序。如果您不需要結果依特定順序排列，或者您希望能夠從某一頁跳到非連續的頁面，您可以使用搜尋切片。搜尋切片會將 PIT 搜尋分割成多個切片，供用戶端應用程式獨立取用。
 
-For example, if you have a PIT search query that has 1,000,000 results and you want to return 50,000 results at a time, your client application has to make 20 consecutive calls to receive each batch of results. If you use search slicing, you can parallelize these 20 calls. In your multithreaded client application you can use five slices for each PIT. As a result, you will have 5 10,000-hit slices that can be consumed by five different threads in your client, instead of having a single thread consume 50,000 results. 
+例如，如果您有一個包含 1,000,000 筆結果的 PIT 搜尋查詢，而您想要一次傳回 50,000 筆結果，您的用戶端應用程式必須進行 20 次連續呼叫，才能接收每一批結果。如果您使用搜尋切片，可以將這 20 次呼叫平行化。在多執行緒的用戶端應用程式中，您可以為每個 PIT 使用五個切片。如此一來，您將會有 5 個各 10,000 筆命中的切片，可由用戶端中的五個不同執行緒取用，而不是由單一執行緒取用 50,000 筆結果。
 
-To use search slicing, you have to specify two parameters:
-- `slice.id` is the slice ID you are requesting. 
-- `slice.max` is the number of slices to break the search response into. 
+若要使用搜尋切片，您必須指定兩個參數：
+- `slice.id` 是您所要求的切片 ID。
+- `slice.max` 是要將搜尋回應分割成的切片數。
 
-The following PIT search query illustrates search slicing:
+下列 PIT 搜尋查詢說明了搜尋切片：
 
 ```json
 
@@ -119,27 +120,27 @@ GET /_search
 }
 ```
 
-In every request you can only query for one slice, so the next query will be the same as the previous one, except the `slice.id` will be `1`.
+在每個請求中，您只能查詢一個切片，因此下一個查詢會與前一個相同，差別在於 `slice.id` 會是 `1`。
 
 
 ## API
 
-The following table lists all [Point in Time API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/) functions.
+下表列出所有 [Point in Time API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/) 函式。
 
 Function | API | Description
 :--- | :--- | :---
-[Create PIT]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/#create-a-pit) | `POST /<target_indexes>/_search/point_in_time?keep_alive=1h` | Creates a PIT.
-[List PIT]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/#list-all-pits) | `GET /_search/point_in_time/_all` | Lists all PITs.
-[Delete PIT]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/#delete-pits) | `DELETE /_search/point_in_time`<br> `DELETE /_search/point_in_time/_all` | Deletes a PIT or all PITs.
-[CAT PIT segments]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-pit-segments/) | `GET /_cat/pit_segments/_all` | Provides information about the disk utilization of a PIT by describing its Lucene segments.
+[Create PIT]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/#create-a-pit) | `POST /<target_indexes>/_search/point_in_time?keep_alive=1h` | 建立 PIT。
+[List PIT]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/#list-all-pits) | `GET /_search/point_in_time/_all` | 列出所有 PIT。
+[Delete PIT]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/#delete-pits) | `DELETE /_search/point_in_time`<br> `DELETE /_search/point_in_time/_all` | 刪除一個 PIT 或所有 PIT。
+[CAT PIT segments]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-pit-segments/) | `GET /_cat/pit_segments/_all` | 透過描述 PIT 的 Lucene 分段，提供其磁碟使用量的相關資訊。
 
-For required permissions, see [Security model]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api#security-model).
+如需必要的權限，請參閱[安全性模型]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api#security-model)。
 
-## PIT settings
+## PIT 設定
 
-You can specify the following settings for a PIT.
+您可以為 PIT 指定下列設定。
 
 Setting | Description | Default 
 :--- | :--- | :---
-`point_in_time.max_keep_alive` | A cluster-level setting that specifies the maximum value for the `keep_alive` parameter. | `24h`
-`search.max_open_pit_context` | A node-level setting that specifies the maximum number of open PIT contexts for the node. | `300`
+`point_in_time.max_keep_alive` | 叢集層級設定，用於指定 `keep_alive` 參數的最大值。 | `24h`
+`search.max_open_pit_context` | 節點層級設定，用於指定該節點開啟的 PIT 內容最大數量。 | `300`

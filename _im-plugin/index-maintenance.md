@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index maintenance
+title: "索引維護"
 nav_order: 10
 redirect_from:
   - /dashboards/im-dashboards/forcemerge/
@@ -9,15 +10,15 @@ redirect_from:
   - /dashboards/admin-ui-index/rollover/
 ---
 
-# Index maintenance
+# 索引維護
 
-OpenSearch refreshes indexes, flushes the translog, and merges segments in the background, so most clusters never need these operations to be run by hand. Run them yourself when you need a result at a specific moment: making a document searchable immediately after indexing it, reclaiming disk space from deleted documents before a snapshot, or changing the shard count of an index that has outgrown its original layout.
+OpenSearch 會在背景重新整理索引、排清 translog，並合併分段，因此大多數叢集完全不需要手動執行這些操作。當您需要在特定時刻取得結果時，請自行執行這些操作：在將文件編製索引後立即讓它可供搜尋、在建立快照前從已刪除的文件回收磁碟空間，或是變更已超出原始配置的索引分片數。
 
-Each operation is available through the [index operations APIs]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-operations/) and, except for cloning, from the **Index Management** page in OpenSearch Dashboards.
+每項操作都可透過 [索引操作 API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-operations/) 執行，且除了複製之外，也可從 OpenSearch Dashboards 的 **Index Management** 頁面執行。
 
-For lifecycle operations such as creating, opening, closing, and deleting an index, see [Index operations]({{site.url}}{{site.baseurl}}/im-plugin/index-operations/).
+如需建立、開啟、關閉及刪除索引等生命週期操作，請參閱 [索引操作]({{site.url}}{{site.baseurl}}/im-plugin/index-operations/)。
 
-The examples on this page operate on an index named `logs-2026` with two primary shards, which you can create with the following request:
+本頁的範例會操作名為 `logs-2026` 且具有兩個主要分片的索引，您可以使用下列請求建立該索引：
 
 ```json
 PUT /logs-2026
@@ -30,61 +31,61 @@ PUT /logs-2026
 ```
 {% include copy-curl.html %}
 
-## Refreshing an index
+## 重新整理索引
 
-A refresh writes the documents in the in-memory buffer to a new segment, making them visible to search. OpenSearch refreshes each index every second by default, so a document becomes searchable about a second after you index it. Refresh an index manually when a test or a client needs to search a document immediately after writing it:
+重新整理會將記憶體內緩衝區中的文件寫入新的分段，使其可供搜尋。OpenSearch 預設每秒重新整理每個索引，因此文件在您將其編製索引後約一秒即可搜尋。當測試或用戶端需要在寫入文件後立即搜尋該文件時，請手動重新整理索引：
 
 ```json
 POST /logs-2026/_refresh
 ```
 {% include copy-curl.html %}
 
-Refreshing creates a segment each time it runs, so refreshing frequently during a bulk load slows indexing. When you load a large amount of data, set `index.refresh_interval` to `-1` for the duration of the load and refresh once at the end. For more information, see [Refresh index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/refresh/).
+每次重新整理都會建立一個分段，因此在大量載入期間頻繁重新整理會拖慢索引編製。當您載入大量資料時，請在載入期間將 `index.refresh_interval` 設為 `-1`，並在結束時重新整理一次。如需詳細資訊，請參閱 [Refresh index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/refresh/)。
 
-A refresh applies only to open indexes.
+重新整理僅適用於開啟的索引。
 
-## Flushing an index
+## 排清索引
 
-A flush performs a Lucene commit, writing the segments in the file system cache to disk and starting a new translog. This is what makes indexed data durable across a node restart. OpenSearch flushes automatically based on translog size and age:
+排清會執行 Lucene 提交，將檔案系統快取中的分段寫入磁碟，並啟動新的 translog。這正是讓已編製索引的資料在節點重新啟動後仍能持久保存的原因。OpenSearch 會根據 translog 大小與存留時間自動排清：
 
 ```json
 POST /logs-2026/_flush
 ```
 {% include copy-curl.html %}
 
-Flush manually before you shut a node down for maintenance so that recovery does not have to replay a large translog. For more information, see [Flush]({{site.url}}{{site.baseurl}}/api-reference/index-apis/flush/).
+在為了維護而關閉節點之前，請手動排清，這樣復原時就不必重播大量的 translog。如需詳細資訊，請參閱 [Flush]({{site.url}}{{site.baseurl}}/api-reference/index-apis/flush/)。
 
-A flush applies only to open indexes.
+排清僅適用於開啟的索引。
 
-## Clearing an index cache
+## 清除索引快取
 
-OpenSearch caches field data, query results, and request-level aggregation results to speed up repeated searches. Clearing these caches frees heap memory but makes the next searches slower until the caches refill:
+OpenSearch 會快取欄位資料、查詢結果及請求層級的彙總結果，以加速重複的搜尋。清除這些快取可釋放堆積記憶體，但在快取重新填入之前，後續搜尋會變慢：
 
 ```json
 POST /logs-2026/_cache/clear
 ```
 {% include copy-curl.html %}
 
-To clear one cache instead of all of them, use the `fielddata`, `query`, or `request` query parameter. For more information, see [Clear cache]({{site.url}}{{site.baseurl}}/api-reference/index-apis/clear-index-cache/).
+若要只清除其中一個快取而非全部，請使用 `fielddata`、`query` 或 `request` 查詢參數。如需詳細資訊，請參閱 [Clear cache]({{site.url}}{{site.baseurl}}/api-reference/index-apis/clear-index-cache/)。
 
-Clearing a cache applies only to open indexes.
+清除快取僅適用於開啟的索引。
 
-## Force merging an index
+## 強制合併索引
 
-OpenSearch stores an index as a set of immutable segments and merges smaller segments into larger ones in the background. A deleted document is only marked as deleted; its space is reclaimed when the segment containing it is merged. A force merge runs that merge immediately, reducing the segment count and expunging deleted documents:
+OpenSearch 會將索引儲存為一組不可變的分段，並在背景將較小的分段合併為較大的分段。已刪除的文件只會被標示為已刪除；其空間會在包含該文件的分段合併時回收。強制合併會立即執行該合併，減少分段數量並清除已刪除的文件：
 
 ```json
 POST /logs-2026/_forcemerge?max_num_segments=1
 ```
 {% include copy-curl.html %}
 
-Force merging is expensive in I/O and can produce segments that the automatic merge policy never merges again. Run it only on indexes that no longer receive writes, such as a rolled-over time-series index. For more information, see [Force merge]({{site.url}}{{site.baseurl}}/api-reference/index-apis/force-merge/).
+強制合併的 I/O 成本很高，且可能產生自動合併原則永遠不會再合併的分段。請僅對不再接收寫入的索引執行，例如已輪替的時間序列索引。如需詳細資訊，請參閱 [Force merge]({{site.url}}{{site.baseurl}}/api-reference/index-apis/force-merge/)。
 
-## Shrinking an index
+## 縮小索引
 
-Shrinking copies an index into a new index with fewer primary shards. Shrink an index that was created with more shards than its final size warrants, because the number of primary shards of an existing index cannot be changed in place.
+縮小會將索引複製到具有較少主要分片的新索引。若索引建立時的分片數超過其最終規模所需，請縮小該索引，因為現有索引的主要分片數無法就地變更。
 
-First, block write operations on the source index. Shrinking an index that still accepts writes fails with an `illegal_state_exception`:
+首先，封鎖來源索引上的寫入操作。縮小仍接受寫入的索引會失敗並出現 `illegal_state_exception`：
 
 ```json
 PUT /logs-2026/_settings
@@ -94,7 +95,7 @@ PUT /logs-2026/_settings
 ```
 {% include copy-curl.html %}
 
-Then shrink the index:
+接著縮小索引：
 
 ```json
 POST /logs-2026/_shrink/logs-2026-shrunk
@@ -106,21 +107,21 @@ POST /logs-2026/_shrink/logs-2026-shrunk
 ```
 {% include copy-curl.html %}
 
-The source index must meet the following conditions:
+來源索引必須符合下列條件：
 
-- The index is read-only, with a write block set. See [Blocks]({{site.url}}{{site.baseurl}}/api-reference/index-apis/blocks/).
-- A copy of every shard, primary or replica, resides on the same node. Use [shard allocation filtering]({{site.url}}{{site.baseurl}}/api-reference/index-apis/shard-allocation/) to move the copies together.
-- Every shard of the source index is allocated, that is, the index health is not red.
-- The target index does not already exist.
-- The source index has more primary shards than the target index, and the target shard count is a factor of the source shard count. For example, an index with 8 primary shards can be shrunk to 4, 2, or 1. An index with a prime number of shards, such as 7, can be shrunk only to 1.
-- No single target shard receives more than 2,147,483,519 documents, which is the maximum a Lucene shard can hold.
-- The node performing the shrink has enough free disk space for a second copy of the index.
+- 索引為唯讀，且已設定寫入封鎖。請參閱 [封鎖]({{site.url}}{{site.baseurl}}/api-reference/index-apis/blocks/)。
+- 每個分片都必須有一份位於同一個節點上的分片複本，可以是主要分片或副本分片。請使用 [分片配置篩選]({{site.url}}{{site.baseurl}}/api-reference/index-apis/shard-allocation/) 將這些分片移至同一節點。
+- 來源索引的每個分片都已配置，也就是索引健康狀態不是紅色。
+- 目標索引尚未存在。
+- 來源索引的主要分片數多於目標索引，且目標分片數是來源分片數的因數。例如，具有 8 個主要分片的索引可縮小為 4、2 或 1。具有質數個分片（例如 7）的索引只能縮小為 1。
+- 任何單一目標分片接收的文件數不得超過 2,147,483,519，這是 Lucene 分片可容納的上限。
+- 執行縮小的節點有足夠的可用磁碟空間容納索引的第二份複本。
 
-For more information, see [Shrink index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/shrink-index/).
+如需詳細資訊，請參閱 [縮小索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/shrink-index/)。
 
-## Splitting an index
+## 分割索引
 
-Splitting copies an index into a new index with more primary shards, dividing each source shard into several target shards. Split an index that has outgrown its original shard count and needs more capacity for data volume or query load. Splitting also requires a write block on the source index:
+分割會將索引複製到具有更多主要分片的新索引，將每個來源分片分割成數個目標分片。若索引已超出其原始分片數，且需要更多容量來因應資料量或查詢負載，請分割該索引。分割同樣需要在來源索引上設定寫入封鎖：
 
 ```json
 PUT /logs-2026/_settings
@@ -130,7 +131,7 @@ PUT /logs-2026/_settings
 ```
 {% include copy-curl.html %}
 
-Then split the index:
+接著分割索引：
 
 ```json
 POST /logs-2026/_split/logs-2026-split
@@ -142,19 +143,19 @@ POST /logs-2026/_split/logs-2026-split
 ```
 {% include copy-curl.html %}
 
-The source index must meet the following conditions:
+來源索引必須符合下列條件：
 
-- The index is read-only, with a write block set. See [Blocks]({{site.url}}{{site.baseurl}}/api-reference/index-apis/blocks/).
-- Every shard of the source index is allocated, that is, the index health is not red.
-- The target index does not already exist.
-- The source index has fewer primary shards than the target index, and the target shard count is a multiple of the source shard count. For example, an index with 2 primary shards can be split into 4, 6, or 8. An index with 1 primary shard can be split into any number of shards.
-- The node performing the split has enough free disk space for a second copy of the index.
+- 索引為唯讀，且已設定寫入封鎖。請參閱 [Blocks]({{site.url}}{{site.baseurl}}/api-reference/index-apis/blocks/)。
+- 來源索引的每個分片都已配置，也就是索引健康狀態不是紅色。
+- 目標索引尚未存在。
+- 來源索引的主要分片數少於目標索引，且目標分片數是來源分片數的倍數。例如，具有 2 個主要分片的索引可分割為 4、6 或 8。具有 1 個主要分片的索引可分割為任意數量的分片。
+- 執行分割的節點有足夠的可用磁碟空間容納索引的第二份複本。
 
-For more information, see [Split index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/split/).
+如需詳細資訊，請參閱 [Split index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/split/)。
 
-## Cloning an index
+## 複製索引
 
-Cloning copies an index into a new index with the same number of primary shards, mappings, and settings. Clone an index to test a mapping or settings change against real data without touching the original. Like shrinking and splitting, cloning requires a write block on the source index:
+複製會將索引複製到具有相同主要分片數、對應及設定的新索引。若要在不動到原始索引的情況下，以實際資料測試對應或設定變更，請複製該索引。與縮小和分割一樣，複製需要在來源索引上設定寫入封鎖：
 
 ```json
 PUT /logs-2026/_settings
@@ -164,22 +165,22 @@ PUT /logs-2026/_settings
 ```
 {% include copy-curl.html %}
 
-Then clone the index:
+接著複製索引：
 
 ```json
 POST /logs-2026/_clone/logs-2026-copy
 ```
 {% include copy-curl.html %}
 
-Remove the write block when you are finished by setting `index.blocks.write` to `false`.
+完成後，將 `index.blocks.write` 設為 `false` 以移除寫入封鎖。
 
-For more information, see [Clone index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/clone/). Cloning is available only through the API.
+如需詳細資訊，請參閱 [Clone index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/clone/)。複製僅可透過 API 使用。
 
-## Rolling over an index
+## 輪替索引
 
-A rollover creates a new index and redirects the write alias or data stream to it, so that writes continue against a fresh index while the previous one becomes read-only. This keeps individual time-series indexes at a manageable size and lets you delete or archive old data by dropping whole indexes.
+輪替 (rollover) 會建立一個新索引，並將寫入別名或資料串流重新導向至該索引，讓寫入作業繼續針對全新的索引進行，而前一個索引則變為唯讀。這樣可以讓個別的時間序列索引保持在可管理的大小，並讓您能透過刪除整個索引來刪除或封存舊資料。
 
-A rollover target must be a [data stream]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/) or an [index alias]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/) with a designated write index. Create an index whose name ends in a number and point a write alias at it:
+輪替目標必須是[資料串流]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)，或是具有指定寫入索引的[索引別名]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/)。請建立一個名稱以數字結尾的索引，並將寫入別名指向它：
 
 ```json
 PUT /logs-000001
@@ -193,7 +194,7 @@ PUT /logs-000001
 ```
 {% include copy-curl.html %}
 
-The following request rolls over the `logs` alias when its write index reaches 50 GB, 10 million documents, or 7 days of age:
+下列請求會在 `logs` 別名的寫入索引達到 50 GB、1,000 萬份文件或 7 天的索引齡時執行輪替：
 
 ```json
 POST /logs/_rollover
@@ -207,90 +208,90 @@ POST /logs/_rollover
 ```
 {% include copy-curl.html %}
 
-None of the conditions are met on a new index, so the response reports `"rolled_over": false`. For more information, see [Roll over index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/rollover/).
+新索引不會符合任何條件，因此回應會報告 `"rolled_over": false`。如需更多資訊，請參閱 [Roll over index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/rollover/)。
 
-To roll over on a schedule instead of calling the API when a condition is met, define an [Index State Management policy]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/) with a `rollover` action. ISM evaluates the conditions for you and rolls the index over when they are met.
+若要改為依照排程輪替，而不是在符合條件時呼叫 API，請定義一個包含 `rollover` 動作的 [Index State Management 政策]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/)。ISM 會為您評估條件，並在條件符合時輪替索引。
 
-## Index maintenance in OpenSearch Dashboards
+## OpenSearch Dashboards 中的索引維護
 
-To navigate to the **Index Management** page, go to **Management > Index Management** on the top menu. The maintenance operations for the selected indexes are in the **Actions** menu on the **Indexes** page, as shown in the following image.
+若要前往 **Index Management** 頁面，請在頂端選單中前往 **Management > Index Management**。所選索引的維護作業位於 **Indexes** 頁面的 **Actions** 選單中，如下圖所示。
 
-![Actions menu on the Indexes page]({{site.url}}{{site.baseurl}}/images/admin-ui-index/index-actions-menu.png)
+![Indexes 頁面上的 Actions 選單]({{site.url}}{{site.baseurl}}/images/admin-ui-index/index-actions-menu.png)
 
-These procedures act on an index that already exists. To create one, see [Creating an index]({{site.url}}{{site.baseurl}}/im-plugin/index-operations/#creating-an-index-1).
+這些程序會針對已存在的索引執行。若要建立索引，請參閱[建立索引]({{site.url}}{{site.baseurl}}/im-plugin/index-operations/#creating-an-index-1)。
 
-### Refreshing, flushing, or clearing the cache
+### 重新整理、排清或清除快取
 
-1. In **Index Management**, select **Indexes**, **Data streams**, or **Aliases**.
-1. Optionally, select the checkbox next to each item that you want the operation to apply to. If you do not select any, the operation applies to all of them.
-1. Select **Actions**, and then select **Refresh**, **Flush**, or **Clear cache**.
-1. Select the same option in the confirmation dialog.
+1. 在 **Index Management** 中，選取 **Indexes**、**Data streams** 或 **Aliases**。
+1. 選用：選取您要套用此作業之每個項目旁的核取方塊。如果您未選取任何項目，作業將套用至所有項目。
+1. 選取 **Actions**，然後選取 **Refresh**、**Flush** 或 **Clear cache**。
+1. 在確認對話方塊中選取相同的選項。
 
-For aliases and data streams, these operations apply to the open backing indexes.
+對於別名和資料串流，這些作業會套用至已開啟的後端索引。
 
-### Force merging an index
+### 強制合併索引
 
-1. In **Index Management**, select **Indexes**, **Data streams**, or **Aliases**.
-1. Select **Actions**, and then select **Force merge**.
-1. In **Configure source index**, select the indexes, data streams, or aliases to merge.
-1. Optionally, expand **Advanced settings** and set any of the following options:
+1. 在 **Index Management** 中，選取 **Indexes**、**Data streams** 或 **Aliases**。
+1. 選取 **Actions**，然後選取 **Force merge**。
+1. 在 **Configure source index** 中，選取要合併的索引、資料串流或別名。
+1. 選用：展開 **Advanced settings** 並設定下列任一選項：
 
-   - To merge to a specific number of segments, select **Manually set number of segments** in **Index segments** and enter the number. Enter `1` to merge each shard into a single segment.
-   - To flush the indexes after the merge completes, select **Flush indexes**.
-   - To expunge the documents that are marked as deleted, select **Remove deleted documents**.
+   - 若要合併至特定數量的分段，請在 **Index segments** 中選取 **Manually set number of segments** 並輸入數量。輸入 `1` 可將每個分片合併為單一分段。
+   - 若要在合併完成後排清索引，請選取 **Flush indexes**。
+   - 若要清除已標記為刪除的文件，請選取 **Remove deleted documents**。
 
-1. Optionally, in **Notifications**, select **Has failed / timed out**, **Has completed**, or both to be notified about the outcome.
-1. Select **Force merge**.
+1. 選用：在 **Notifications** 中，選取 **Has failed / timed out**、**Has completed** 或兩者，以接收結果通知。
+1. 選取 **Force merge**。
 
-### Shrinking an index
+### 縮減索引
 
-1. In **Index Management**, select **Indexes**.
-1. Select the index to shrink, and then select **Actions > Shrink**.
-1. In **Configure target index**, enter a name in **Target index name**.
-1. Enter the new shard count in **Number of primary shards** and the replica count in **Number of replicas**.
-1. Optionally, select or enter one or more aliases for the target index in **Index alias**.
-1. Optionally, expand **Advanced settings** to add notifications. See [Sending additional notifications]({{site.url}}{{site.baseurl}}/im-plugin/notifications-settings/#sending-additional-notifications).
-1. Select **Shrink**.
+1. 在 **Index Management** 中，選取 **Indexes**。
+1. 選取要縮減的索引，然後選取 **Actions > Shrink**。
+1. 在 **Configure target index** 中，於 **Target index name** 輸入名稱。
+1. 在 **Number of primary shards** 輸入新的主要分片數量，並在 **Number of replicas** 輸入副本數量。
+1. 選用：在 **Index alias** 中為目標索引選取或輸入一或多個別名。
+1. 選用：展開 **Advanced settings** 以新增通知。請參閱[傳送其他通知]({{site.url}}{{site.baseurl}}/im-plugin/notifications-settings/#sending-additional-notifications)。
+1. 選取 **Shrink**。
 
-If the source index does not meet the [conditions for shrinking](#shrinking-an-index), the interface prompts you to resolve them, including setting a write block on the index.
+如果來源索引不符合[縮減條件](#shrinking-an-index)，介面會提示您解決這些條件，包括在索引上設定寫入封鎖。
 
-### Splitting an index
+### 分割索引
 
-1. In **Index Management**, select **Indexes**.
-1. Select the index to split, and then select **Actions > Split**.
-1. In **Configure target index**, enter a name in **Target index name**.
-1. Enter the new shard count in **Number of primary shards** and the replica count in **Number of replicas**.
-1. Optionally, select or enter one or more aliases for the target index in **Index alias**.
-1. Optionally, expand **Advanced settings** to add notifications. See [Sending additional notifications]({{site.url}}{{site.baseurl}}/im-plugin/notifications-settings/#sending-additional-notifications).
-1. Select **Split**.
+1. 在 **Index Management** 中，選取 **Indexes**。
+1. 選取要分割的索引，然後選取 **Actions > Split**。
+1. 在 **Configure target index** 中，於 **Target index name** 輸入名稱。
+1. 在 **Number of primary shards** 輸入新的主要分片數量，並在 **Number of replicas** 輸入副本數量。
+1. 選用：在 **Index alias** 中為目標索引選取或輸入一或多個別名。
+1. 選用：展開 **Advanced settings** 以新增通知。請參閱[傳送其他通知]({{site.url}}{{site.baseurl}}/im-plugin/notifications-settings/#sending-additional-notifications)。
+1. 選取 **Split**。
 
-### Rolling over a data stream
+### 輪替資料串流
 
-1. In **Index Management**, select **Data streams**.
-1. Select **Actions**, and then select **Roll over**.
-1. In **Configure source**, select the data stream to roll over.
-1. Select **Roll over**.
+1. 在 **Index Management** 中，選取 **Data streams**。
+1. 選取 **Actions**，然後選取 **Roll over**。
+1. 在 **Configure source** 中，選取要輪替的資料串流。
+1. 選取 **Roll over**。
 
-### Rolling over an alias
+### 輪替別名
 
-1. In **Index Management**, select **Aliases**.
-1. Select **Actions**, and then select **Roll over**.
-1. In **Configure source**, select the alias to roll over. If the alias has no write index, you are prompted to designate one.
-1. In **Define index**, enter a name for the new index and, optionally, an alias for it.
-1. In **Index settings**, enter the number of primary shards, the number of replicas, and the refresh interval.
-1. Select **Roll over**.
+1. 在 **Index Management** 中，選取 **Aliases**。
+1. 選取 **Actions**，然後選取 **Roll over**。
+1. 在 **Configure source** 中，選取要輪替的別名。如果別名沒有寫入索引，系統會提示您指定一個。
+1. 在 **Define index** 中，輸入新索引的名稱，並可選擇性地為它輸入別名。
+1. 在 **Index settings** 中，輸入主要分片數量、副本數量以及重新整理間隔。
+1. 選取 **Roll over**。
 
-### Checking the status of long-running operations
+### 檢查長時間執行作業的狀態
 
-Reindex, shrink, and split operations can take from tens of seconds to hours, depending on the amount of data involved. Because each is a one-time, non-recursive operation, you can track it to completion:
+重新編製索引、縮小及分割作業可能需要數十秒到數小時的時間，視涉及的資料量而定。由於每個作業都是一次性的非遞迴作業，您可以追蹤它直到完成：
 
-1. In **Index Management**, select **Indexes**.
-1. Find the index that the operation applies to.
-1. Read the **Status** column for the state of the operation.
+1. 在 **Index Management** 中，選取 **Indexes**。
+1. 尋找作業所套用的索引。
+1. 從 **Status** 欄讀取作業的狀態。
 
-## Related documentation
+## 相關文件
 
-- [Index operations APIs]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-operations/)
-- [Index operations]({{site.url}}{{site.baseurl}}/im-plugin/index-operations/)
-- [Index State Management]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/)
-- [Long-running operation notifications]({{site.url}}{{site.baseurl}}/im-plugin/notifications-settings/)
+- [索引操作 API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-operations/)
+- [索引操作]({{site.url}}{{site.baseurl}}/im-plugin/index-operations/)
+- [索引狀態管理]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/)
+- [長時間執行作業的通知]({{site.url}}{{site.baseurl}}/im-plugin/notifications-settings/)

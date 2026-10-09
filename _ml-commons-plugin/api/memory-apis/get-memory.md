@@ -1,55 +1,56 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get memory
+title: "取得記憶"
 parent: Memory APIs
 grand_parent: ML Commons APIs
 nav_order: 20
 ---
 
 # Get Memory API
-**Introduced 2.12**
+**於 2.12 版推出**
 {: .label .label-purple }
 
-Use this API to retrieve a conversational memory for [conversational search]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/). 
+使用此 API 可擷取[對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)的對話記憶。
 
-To retrieve memory information, you can:
+若要擷取記憶資訊，您可以：
 
-- [Get a memory by ID](#get-a-memory-by-id).
-- [Get all memories](#get-all-memories).
+- [依 ID 取得記憶](#get-a-memory-by-id)。
+- [取得所有記憶](#get-all-memories)。
 
-To retrieve message information for a memory, you can:
+若要擷取某個記憶的訊息資訊，您可以：
 
-- [Get all messages within a memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/get-message#get-all-messages-within-a-memory). 
-- [Search for messages within a memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/search-message/).
+- [取得某個記憶內的所有訊息]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/get-message#get-all-messages-within-a-memory)。
+- [搜尋某個記憶內的訊息]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/search-message/)。
 
-When the Security plugin is enabled, all memories exist in a `private` security mode. Only the user who created a memory can interact with that memory and its messages.
+啟用 Security 外掛程式時，所有記憶都處於 `private` 安全性模式。只有建立記憶的使用者才能與該記憶及其訊息互動。
 {: .important}
 
-## Get a memory by ID
+## 依 ID 取得記憶
 
-You can retrieve memory information by using the `memory_id`. The response includes all messages within the memory.
+您可以使用 `memory_id` 擷取記憶資訊。回應會包含該記憶內的所有訊息。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_ml/memory/{memory_id}
 ```
-### Path parameters
+### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`memory_id` | String | The ID of the memory to retrieve.
+`memory_id` | 字串 | 要擷取的記憶 ID。
 
-## Example request
+## 範例請求
 
 ```json
 GET /_plugins/_ml/memory/N8AE1osB0jLkkocYjz7D
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -61,50 +62,50 @@ GET /_plugins/_ml/memory/N8AE1osB0jLkkocYjz7D
 }
 ```
 
-## Get all memories
+## 取得所有記憶
 
-Use this command to get all memories.
+使用此命令可取得所有記憶。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_ml/memory
 ```
 
-### Query parameters
+### 查詢參數
 
-Use the following query parameters to customize your results. All query parameters are optional.
+使用下列查詢參數來自訂結果。所有查詢參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`max_results` | Integer | The maximum number of results to return. If there are fewer memories than the number set in `max_results`, the response returns only the number of memories that exist. Default is `10`.
-`next_token` | Integer | The index of the first memory in the sorted list of memories to return. Memories are ordered by `create_time`. For example, if memories A, B, and C exist, `next_token=1` returns memories B and C. Default is `0` (return all memories).
+`max_results` | 整數 | 要傳回的結果數上限。若記憶數少於 `max_results` 中設定的數量，回應只會傳回實際存在的記憶數。預設為 `10`。
+`next_token` | 整數 | 要傳回的記憶排序清單中，第一個記憶的索引。記憶會依 `create_time` 排序。例如，若存在記憶 A、B 和 C，`next_token=1` 會傳回記憶 B 和 C。預設為 `0` (傳回所有記憶)。
 
-### Paginating results
+### 分頁結果
 
-The `next_token` parameter provides the ordered position of the first memory within the sorted list of memories to return in the results. When a memory is added between subsequent GET Memory calls, one of the listed memories will be duplicated in the results. For example, suppose the current ordered list of memories is `BCDEF`, where `B` is the memory created most recently. When you call the Get Memory API with `next_token=0` and `max_results=3`, the API returns `BCD`. Suppose you then create another memory A. The memory list now appears as `ABCDEF`. The next time you call the Get Memory API with `next_token=3` and `max_results=3`, you'll receive `DEF` in the results. Notice that `D` will be returned in the first and second batches of results. The following diagram illustrates the duplication.
+`next_token` 參數提供要傳回之記憶排序清單中，第一個記憶的排序位置。當在後續的 Get Memory 呼叫之間新增記憶時，結果中會有一個列出的記憶重複出現。例如，假設目前的記憶排序清單為 `BCDEF`，其中 `B` 是最近建立的記憶。當您以 `next_token=0` 和 `max_results=3` 呼叫 Get Memory API 時，API 會傳回 `BCD`。假設您接著建立另一個記憶 A。記憶清單現在顯示為 `ABCDEF`。下次您以 `next_token=3` 和 `max_results=3` 呼叫 Get Memory API 時，結果中會收到 `DEF`。請注意，`D` 會在第一批次和第二批次的結果中傳回。下圖說明此重複情形。
 
-Request | List of memories (returned memories are enclosed in brackets) | Results returned in the response
+請求 | 記憶清單 (傳回的記憶以方括號括住) | 回應中傳回的結果
 :--- | :--- | :---
 Get Memory (next_token = 0, max_results = 3) | [BCD]EF | BCD
 Create Memory            | ABCDEF | -
 Get Memory (next_token = 3, max_results = 3) -> ABC[DEF] | DEF
 
 
-## Example request: Get all memories
+## 範例請求：取得所有記憶
 
 ```json
 GET /_plugins/_ml/memory/
 ```
 {% include copy-curl.html %}
 
-## Example request: Paginating results
+## 範例請求：分頁結果
 
 ```json
 GET /_plugins/_ml/memory?max_results=2&next_token=1
 ```
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -120,14 +121,14 @@ GET /_plugins/_ml/memory?max_results=2&next_token=1
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the available response fields.
+下表列出可用的回應欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `memory_id` | String | The memory ID. |
-| `create_time` | String | The time at which the memory was created. |
-| `updated_time` | String | The time at which the memory was last updated. |
-| `name` | String | The memory name. |
-| `user` | String | The username of the user who created the memory. |
+| `memory_id` | 字串 | 記憶 ID。 |
+| `create_time` | 字串 | 建立記憶的時間。 |
+| `updated_time` | 字串 | 上次更新記憶的時間。 |
+| `name` | 字串 | 記憶名稱。 |
+| `user` | 字串 | 建立記憶之使用者的使用者名稱。 |

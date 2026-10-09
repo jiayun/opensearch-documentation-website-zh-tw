@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: JSON support
+title: "JSON 支援"
 parent: SQL
 nav_order: 8
 redirect_from:
@@ -8,15 +9,15 @@ redirect_from:
   - /search-plugins/sql/sql/partiql/
 ---
 
-# SQL JSON support
+# SQL JSON 支援
 
-SQL plugin supports JSON by following [PartiQL](https://partiql.org/) specification, a SQL-compatible query language that lets you query semi-structured and nested data for any data format. The SQL plugin only supports a subset of the PartiQL specification.
+SQL 外掛程式依照 [PartiQL](https://partiql.org/) 規格支援 JSON，PartiQL 是一種相容於 SQL 的查詢語言，可讓您查詢任何資料格式的半結構化與巢狀資料。SQL 外掛程式僅支援 PartiQL 規格的子集。
 
-## Querying nested collection
+## 查詢巢狀集合
 
-PartiQL extends SQL to allow you to query and flatten nested collections. In OpenSearch, this is very useful to query a JSON index with nested objects or fields.
+PartiQL 擴充了 SQL，讓您可以查詢並扁平化巢狀集合。在 OpenSearch 中，這對查詢含有巢狀物件或欄位的 JSON 索引非常有用。
 
-To follow along, use the `bulk` operation to index some sample data:
+若要跟著操作，請使用 `bulk` 操作將一些範例資料編製索引：
 
 ```json
 POST employees_nested/_bulk?refresh
@@ -29,9 +30,9 @@ POST employees_nested/_bulk?refresh
 ```
 {% include copy-curl.html %}
 
-### Example 1: Flattening a nested collection
+### 範例 1：扁平化巢狀集合
 
-This example finds the nested document (`projects`) with a field value (`name`) that satisfies the predicate (contains `security`). Because each parent document can have more than one nested documents, the nested document that matches is flattened. In other words, the final result is the Cartesian product between the parent and nested documents.
+此範例會找出欄位值 (`name`) 符合述詞 (包含 `security`) 的巢狀文件 (`projects`)。由於每個父文件可能有多個巢狀文件，符合條件的巢狀文件會被扁平化。換句話說，最終結果是父文件與巢狀文件之間的笛卡兒積。
 
 ```sql
 SELECT e.name AS employeeName,
@@ -43,7 +44,7 @@ WHERE p.name LIKE '%security%'
 {% include copy.html %}
 
 
-Explain:
+說明：
 
 ```json
 {
@@ -105,7 +106,7 @@ Explain:
 }
 ```
 
-The query returns the following results:
+查詢會傳回以下結果：
 
 <!-- vale off -->
 
@@ -118,9 +119,9 @@ Jane Smith | SQL security
 
 <!-- vale on -->
 
-### Example 2: Flattening in an existential subquery
+### 範例 2：存在子查詢中的扁平化
 
-To flatten a nested collection in a subquery to check if it satisfies a condition:
+若要在子查詢中扁平化巢狀集合，以檢查它是否符合某個條件：
 
 ```sql
 SELECT e.name AS employeeName
@@ -134,7 +135,7 @@ WHERE EXISTS (
 {% include copy.html %}
 
 
-Explain:
+說明：
 
 ```json
 {
@@ -219,7 +220,7 @@ Explain:
 }
 ```
 
-The query returns the following results:
+查詢會傳回以下結果：
 
 <!-- vale off -->
 

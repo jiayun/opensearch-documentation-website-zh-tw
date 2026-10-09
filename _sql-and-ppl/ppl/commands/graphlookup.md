@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: graphLookup
 parent: Commands
@@ -8,34 +9,34 @@ nav_order: 21
 
 <!-- vale off -->
 
-# graphLookup command
+# graphLookup 命令
 
 <!-- vale on -->
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).
+這是一項實驗性功能，不建議在正式環境中使用。若要了解此功能的進度或提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/) 的討論。
 {: .warning}
 
-The `graphLookup` command performs recursive graph traversal on a collection using a breadth-first search (BFS) algorithm. It finds documents matching a starting value and recursively traverses relationships between documents based on specified fields. This is useful for hierarchical data such as organizational charts, social networks, or routing graphs.
+`graphLookup` 命令使用廣度優先搜尋 (BFS) 演算法對集合執行遞迴圖形走訪。它會找出符合起始值的文件，並根據指定的欄位遞迴走訪文件之間的關聯。這對於組織架構圖、社交網路或路由圖等階層式資料非常有用。
 
-The `graphLookup` command performs a breadth-first search (BFS) traversal:
+`graphLookup` 命令執行廣度優先搜尋 (BFS) 走訪：
 
-1. For each source document, extract the value of `start`
-2. Query the lookup index to find documents in which `toField` matches the start value
-3. Add matched documents to the result array
-4. Extract `fromField` values from matched documents to continue traversal
-5. Repeat steps 2--4 until no new documents are found or `maxDepth` is reached
+1. 對每個來源文件，擷取 `start` 的值
+2. 查詢 lookup 索引，找出 `toField` 符合起始值的文件
+3. 將符合的文件加入結果陣列
+4. 從符合的文件中擷取 `fromField` 值以繼續走訪
+5. 重複步驟 2--4，直到找不到新文件或達到 `maxDepth` 為止
 
-For bidirectional traversal (`<->`), the algorithm also follows edges in the reverse direction by additionally matching `fromField` values.
+對於雙向走訪 (`<->`)，演算法還會透過額外比對 `fromField` 值，沿反方向追蹤邊。
 
-## Syntax
+## 語法
 
-The `graphLookup` command has the following syntax:
+`graphLookup` 命令的語法如下：
 
 ```sql
 graphLookup <lookupIndex> start=<startField> edge=<fromField><operator><toField> [maxDepth=<maxDepth>] [depthField=<depthField>] [supportArray=(true | false)] [batchMode=(true | false)] [usePIT=(true | false)] [filter=(<condition>)] as <outputField>
 ```
 
-The following are examples of the `graphLookup` command syntax:
+以下是 `graphLookup` 命令語法的範例：
 
 ```sql
 source = employees | graphLookup employees start=reportsTo edge=reportsTo-->name as reportingHierarchy
@@ -47,38 +48,38 @@ source = airports | graphLookup airports start=airport edge=connects-->airport s
 source = employees | graphLookup employees start=reportsTo edge=reportsTo-->name filter=(status = 'active' AND age > 18) as reportingHierarchy
 ```
 
-## Parameters
+## 參數
 
 
-The `graphLookup` command supports the following parameters.
+`graphLookup` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 |---|---|---|
-| `<lookupIndex>` | Required | The name of the index to perform the graph traversal on. Can be the same as the source index for self-referential graphs. |
-| `start=<startField>` | Required | The field in the source documents whose value is used to initiate the recursive search. The value is matched against `toField` in the lookup index. Supports both single values and arrays. |
-| `edge=<fromField><operator><toField>` | Required | Defines the traversal path between nodes, specifying how documents are connected and the direction of traversal. See [Edge parameters](#edge-parameters). |
-| `maxDepth=<maxDepth>` | Optional | The maximum recursion depth (number of hops). Default is `0`. A value of `0` returns only direct connections; higher values expand traversal accordingly. |
-| `depthField=<depthField>` | Optional | The name of the field added to each result document to indicate recursion depth. If omitted, no depth information is added. Depth starts at `0` for the first level. |
-| `supportArray=(true \| false)` | Optional | When `true`, disables early visited-node filter push-down to OpenSearch. Default is `false`. Enable when `fromField` or `toField` contains array values to ensure correct traversal behavior. See [Array fields](#array-fields). |
-| `batchMode=(true \| false)` | Optional | When `true`, collects all start values and performs a single unified BFS traversal. Default is `false`. Output becomes two arrays: `[Array<sourceRows>, Array<lookupResults>]`. See [Batch Mode](#batch-mode). |
-| `usePIT=(true \| false)` | Optional | When `true`, enables Point in Time (PIT) search for the lookup index, allowing complete paginated traversal beyond the `max_result_window` limit. Default is `false`. See [PIT Search](#pit-search). |
-| `filter=(<condition>)` | Optional | A filter condition that restricts which lookup index documents participate in traversal. Only matching documents are considered during BFS. Parentheses are required. Example: `filter=(status = 'active' AND age > 18)`. |
-| `as <outputField>` | Required | The name of the output field that stores all documents discovered during traversal. |
+| `<lookupIndex>` | 必要 | 要執行圖形走訪的索引名稱。對於自我參照的圖形，可以與來源索引相同。 |
+| `start=<startField>` | 必要 | 來源文件中用於啟動遞迴搜尋的欄位。該值會與 lookup 索引中的 `toField` 進行比對。支援單一值與陣列。 |
+| `edge=<fromField><operator><toField>` | 必要 | 定義節點之間的走訪路徑，指定文件如何連接以及走訪方向。請參閱[邊參數](#edge-parameters)。 |
+| `maxDepth=<maxDepth>` | 選用 | 最大遞迴深度 (跳躍次數)。預設為 `0`。值為 `0` 時僅傳回直接連接；較高的值會相應擴大走訪範圍。 |
+| `depthField=<depthField>` | 選用 | 加入每個結果文件中以表示遞迴深度的欄位名稱。若省略，則不會加入深度資訊。第一層的深度從 `0` 開始。 |
+| `supportArray=(true \| false)` | 選用 | 當為 `true` 時，停用將已造訪節點篩選條件提前下推至 OpenSearch。預設為 `false`。當 `fromField` 或 `toField` 包含陣列值時，請啟用此選項以確保正確的走訪行為。請參閱[陣列欄位](#array-fields)。 |
+| `batchMode=(true \| false)` | 選用 | 當為 `true` 時，會收集所有起始值並執行單一統一的 BFS 走訪。預設為 `false`。輸出會變成兩個陣列：`[Array<sourceRows>, Array<lookupResults>]`。請參閱[批次模式](#batch-mode)。 |
+| `usePIT=(true \| false)` | 選用 | 當為 `true` 時，會為 lookup 索引啟用 Point in Time (PIT) 搜尋，允許超出 `max_result_window` 限制的完整分頁走訪。預設為 `false`。請參閱[PIT 搜尋](#pit-search)。 |
+| `filter=(<condition>)` | 選用 | 限制哪些 lookup 索引文件參與走訪的篩選條件。BFS 期間僅考慮符合條件的文件。必須使用括號。範例：`filter=(status = 'active' AND age > 18)`。 |
+| `as <outputField>` | 必要 | 儲存走訪期間發現之所有文件的輸出欄位名稱。 |
 
-### Edge parameters
+### 邊參數
 
 
-The `edge` parameter uses the syntax `edge=<fromField><operator><toField>` and consists of the following components.
+`edge` 參數使用語法 `edge=<fromField><operator><toField>`，由下列元件組成。
 
-| Component | Description |
+| 元件 | 說明 |
 |---|---|
-| `fromField` | The field in the lookup index documents used as the source of traversal. After a document is matched, the value of this field is used to find the next set of connected documents. Supports both single values and arrays. |
-| `toField` | The field in the lookup index documents used for matching. Documents in which `toField` equals the current traversal value are included in the results. |
-| `operator` | Specifies the direction of traversal:<br>- `-->` performs a **unidirectional** traversal from `fromField` to `toField` only (for example, `edge=reportsTo-->name` traverses from `reportsTo` to `name` in one direction only).<br>- `<->` performs a **bidirectional** traversal between `fromField` and `toField` (for example, `edge=reportsTo<->name` traverses between `reportsTo` and `name` in both directions). |
+| `fromField` | lookup 索引文件中用作走訪來源的欄位。文件被比對成功後，此欄位的值會用來尋找下一組連接的文件。支援單一值與陣列。 |
+| `toField` | lookup 索引文件中用於比對的欄位。`toField` 等於目前走訪值的文件會包含在結果中。 |
+| `operator` | 指定走訪方向：<br>- `-->` 僅執行從 `fromField` 到 `toField` 的**單向**走訪 (例如，`edge=reportsTo-->name` 僅以單一方向從 `reportsTo` 走訪到 `name`)。<br>- `<->` 在 `fromField` 與 `toField` 之間執行**雙向**走訪 (例如，`edge=reportsTo<->name` 在 `reportsTo` 與 `name` 之間以雙向走訪)。 |
 
-## Example 1: Traversing an employee hierarchy
+## 範例 1：走訪員工階層
 
-Consider an `employees` index containing the following documents.
+假設有一個包含下列文件的 `employees` 索引。
 
 <!-- vale off -->
 
@@ -92,7 +93,7 @@ Consider an `employees` index containing the following documents.
 | 6 | Dan | Andrew |
 <!-- vale on -->
 
-The following query finds the reporting chain for each employee:
+下列查詢會找出每位員工的回報鏈：
 
 ```sql
 source = employees
@@ -103,7 +104,7 @@ source = employees
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -118,11 +119,11 @@ The query returns the following results:
 
 <!-- vale on -->
 
-Each element in the `reportingHierarchy` array is a `struct` containing named fields from the lookup index. For the employee named `Dev`, the traversal starts with `reportsTo="Eliot"`, finds the record for `Eliot`, and includes it in the `reportingHierarchy` array.
+`reportingHierarchy` 陣列中的每個元素都是一個 `struct`，包含來自 lookup 索引的具名欄位。對於名為 `Dev` 的員工，走訪從 `reportsTo="Eliot"` 開始，找出 `Eliot` 的記錄，並將其包含在 `reportingHierarchy` 陣列中。
 
-## Example 2: Adding depth tracking
+## 範例 2：加入深度追蹤
 
-The following query adds a `depthField` named `level` to track the number of levels each manager is from the employee:
+下列查詢加入一個名為 `level` 的 `depthField`，以追蹤每位主管與員工之間的層級數：
 
 ```sql
 source = employees
@@ -134,7 +135,7 @@ source = employees
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -149,12 +150,12 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The `level` field is added to each struct in the result array. A value of `0` indicates the first level of matches.
+`level` 欄位會加入結果陣列中的每個 struct。值為 `0` 表示第一層比對結果。
 
 
-## Example 3: Limiting the traversal depth
+## 範例 3：限制走訪深度
 
-The following query limits traversal to two levels using `maxDepth=1` (depth `0` and `1`):
+下列查詢使用 `maxDepth=1` 將走訪限制為兩層（深度 `0` 與 `1`）：
 
 ```sql
 source = employees
@@ -166,7 +167,7 @@ source = employees
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -181,9 +182,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 4: Finding reachable airports
+## 範例 4：尋找可到達的機場
 
-Consider an `airports` index containing the following documents.
+假設有一個 `airports` 索引包含下列文件。
 
 <!-- vale off -->
 
@@ -196,7 +197,7 @@ Consider an `airports` index containing the following documents.
 | LHR | [PWM] |
 <!-- vale on -->
 
-The following query finds all airports reachable from each airport:
+下列查詢會找出可從每個機場到達的所有機場：
 
 ```sql
 source = airports
@@ -207,7 +208,7 @@ source = airports
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -221,11 +222,11 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 5: Using different source and lookup indexes
+## 範例 5：使用不同的來源與 lookup 索引
 
-The `graphLookup` command can use different source and lookup indexes. 
+`graphLookup` 命令可以使用不同的來源與 lookup 索引。
 
-Consider a `travelers` index containing the following documents.
+假設有一個 `travelers` 索引包含下列文件。
 
 <!-- vale off -->
 
@@ -236,7 +237,7 @@ Consider a `travelers` index containing the following documents.
 | Jeff | BOS |
 <!-- vale on -->
 
-The following query finds reachable airports for each traveler:
+下列查詢會找出每位旅客可到達的機場：
 
 ```sql
 source = travelers
@@ -247,7 +248,7 @@ source = travelers
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -259,9 +260,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 6: Traversing the graph bidirectionally
+## 範例 6：雙向走訪圖形
 
-The following query performs bidirectional traversal to find both managers and colleagues who share the same manager:
+下列查詢會執行雙向走訪，以找出直屬主管以及共用同一位主管的同事：
 
 ```sql
 source = employees
@@ -273,7 +274,7 @@ source = employees
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -283,27 +284,27 @@ The query returns the following results:
 
 <!-- vale on -->
 
-With bidirectional traversal, Ron's connections include the following records:
+使用雙向走訪時，Ron 的 connections 包含下列記錄：
 
-- His own record (Ron reports to Andrew).
-- His manager (Andrew).
-- His peer (Dan, who also reports to Andrew).
+- 他自己的記錄（Ron 向 Andrew 報告）。
+- 他的主管（Andrew）。
+- 他的同儕（Dan，他也向 Andrew 報告）。
 
-## Batch mode
+## 批次模式
 
-When `batchMode=true`, the `graphLookup` command collects all start values from all source rows and performs a single unified BFS traversal instead of traversing each row separately.
+當 `batchMode=true` 時，`graphLookup` 命令會收集所有來源資料列中的所有起始值，並執行單一統一的 BFS 走訪，而不是分別走訪每個資料列。
 
-Use `batchMode=true` when:
+在下列情況使用 `batchMode=true`：
 
-- You want to find all nodes reachable from **any** of the source start values.
-- You need a global view of the graph connectivity from multiple starting points.
-- You want to avoid duplicate traversals when multiple source rows share overlapping paths.
+- 您想找出可從**任何**來源起始值到達的所有節點。
+- 您需要從多個起始點檢視圖形連線性的全域檢視。
+- 當多個來源資料列共用重疊路徑時，您想避免重複走訪。
 
-In batch mode, the output is a **single row** containing two arrays:
-1. All source rows collected.
-2. All lookup results from the unified BFS traversal.
+在批次模式中，輸出是包含兩個陣列的**單一資料列**：
+1. 收集到的所有來源資料列。
+2. 統一 BFS 走訪的所有 lookup 結果。
 
-The following query finds all reachable airports from each traveler's nearest airport:
+下列查詢會找出可從每位旅客最近機場到達的所有機場：
 
 ```sql
 source = travelers
@@ -316,7 +317,7 @@ source = travelers
 ```
 {% include copy.html %}
 
-**Standard mode** (default): Each traveler is assigned a list of reachable airports:
+**標準模式**（預設）：每位旅客會獲指派一份可到達機場的清單：
 
 ```text
 | name  | nearestAirport | reachableAirports                    |
@@ -325,7 +326,7 @@ source = travelers
 | Jeff  | BOS            | [{airport:BOS, connects:[JFK, PWM]}] |
 ```
 
-**Batch mode**: All travelers and all reachable airports are combined into a single result:
+**批次模式**：所有旅客與所有可到達機場會合併成單一結果：
 
 ```text
 | travelers                                                          | reachableAirports                                           |
@@ -333,24 +334,24 @@ source = travelers
 | [{name:Dev, nearestAirport:JFK}, {name:Jeff, nearestAirport:BOS}] | [{airport:JFK, connects:[BOS, ORD]}, {airport:BOS, ...}]   |
 ```
 
-## Array fields
+## 陣列欄位
 
-When the `fromField` or `toField` contains array values, set `supportArray=true` to ensure correct traversal behavior.
+當 `fromField` 或 `toField` 包含陣列值時，請設定 `supportArray=true` 以確保正確的走訪行為。
 
-## PIT search
+## PIT 搜尋
 
 
-By default, each level of BFS traversal limits the number of returned documents to the `max_result_window` setting of the lookup index (typically, 10,000). This avoids the overhead of Point in Time (PIT) search but may return incomplete results when a single traversal level matches more documents than the limit.
+根據預設，BFS 走訪的每一層會將傳回的文件數限制為 lookup 索引的 `max_result_window` 設定 (通常為 10,000)。這可避免 Point in Time (PIT) 搜尋的額外負荷，但當單一走訪層符合的文件數超過限制時，可能會傳回不完整的結果。
 
-When `usePIT=true`, this limit is removed and the lookup table uses PIT-based pagination, which ensures that all matching documents are retrieved at each traversal level. This provides complete and accurate results at the cost of additional search overhead.
+當 `usePIT=true` 時，會移除此限制，且 lookup 表會使用以 PIT 為基礎的分頁，以確保在每個走訪層擷取所有符合的文件。這會提供完整且準確的結果，但會增加搜尋的額外負荷。
 
-Use `usePIT=true` when:
+在下列情況使用 `usePIT=true`：
 
-- The graph contains high-degree nodes for which a single traversal level may return more than `max_result_window` documents.
-- Result completeness is more important than query performance.
-- You observe incomplete or missing results with the default setting.
+- 圖形包含連接數多的節點，單一走訪層可能會傳回超過 `max_result_window` 份文件。
+- 結果完整性比查詢效能更重要。
+- 您使用預設設定時觀察到不完整或缺少的結果。
 
-The following query enables PIT search to ensure complete traversal results:
+下列查詢會啟用 PIT 搜尋，以確保完整的走訪結果：
 
 ```sql
 source = employees
@@ -362,11 +363,11 @@ source = employees
 ```
 {% include copy.html %}
 
-## Filtered graph traversal
+## 篩選後的圖形走訪
 
-The `filter` parameter restricts the documents in the lookup index that are considered during BFS traversal. Only documents matching the filter condition are included as candidates at each traversal level.
+`filter` 參數會限制 BFS 走訪期間納入考量的 lookup 索引文件。在每個走訪層中，只有符合篩選條件的文件會納入做為候選項。
 
-The following query traverses only active employees in the reporting hierarchy:
+下列查詢只會走訪報告階層中的在職員工：
 
 ```sql
 source = employees
@@ -378,11 +379,11 @@ source = employees
 ```
 {% include copy.html %}
 
-The filter is applied at the OpenSearch query level, so it combines efficiently with the BFS traversal queries. At each BFS level, the query sent to OpenSearch is  `bool { filter: [user_filter, bfs_terms_query] }`.
+篩選條件會在 OpenSearch 查詢層級套用，因此能有效率地與 BFS 走訪查詢結合。在每個 BFS 層級，傳送至 OpenSearch 的查詢為  `bool { filter: [user_filter, bfs_terms_query] }`。
 
-## Limitations
+## 限制
 
-Note the following limitations of the `graphLookup` command:
+請注意 `graphLookup` 命令的下列限制：
 
-- The source input, which provides the starting points for traversal, is limited to 100 documents to avoid performance issues.
-- When `usePIT=false` (default), each traversal level returns up to the `max_result_window` of the lookup index, which may result in incomplete results. Set `usePIT=true` to retrieve complete results.
+- 來源輸入提供走訪的起始點，為避免效能問題，其上限為 100 份文件。
+- 當 `usePIT=false`（預設）時，每個走訪層級傳回的結果最多只會達到 lookup 索引的 `max_result_window`，因此結果可能不完整。請設定 `usePIT=true` 以取得完整結果。

@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Fail
 parent: Ingest processors
 nav_order: 100
 ---
 
-# Fail processor
+# Fail 處理器
 
-The `fail` processor is useful for performing data transformation and enrichment during the indexing process. The primary use case for the `fail` processor is to fail an indexing operation when certain conditions are met.
+`fail` 處理器適合在編製索引的過程中執行資料轉換與擴充。`fail` 處理器的主要用途是在符合特定條件時讓編製索引作業失敗。
 
-The following is the syntax for the `fail` processor:
+以下是 `fail` 處理器的語法：
 
 ```json
 "fail": { 
@@ -19,26 +20,26 @@ The following is the syntax for the `fail` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `fail` processor.
+下表列出 `fail` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`message` | Required | A custom error message to be included in the failure response.
-`description`  | Optional  | A brief description of the processor.  |  
-`if` | Optional | A condition for running the processor. |  
-`ignore_failure` | Optional | Specifies whether the processor continues execution even if it encounters an error. If set to `true`, then failures are ignored. Default is `false`. |  
-`on_failure` | Optional | A list of processors to run if the processor fails. |  
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |  
+`message` | 必要 | 要包含在失敗回應中的自訂錯誤訊息。
+`description`  | 選用  | 處理器的簡短說明。  |  
+`if` | 選用 | 執行處理器的條件。 |  
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |  
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |  
+`tag` | 選用 | 處理器的識別碼標籤。用於偵錯，以區分相同類型的處理器。 |  
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+請依照下列步驟在管線中使用處理器。
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
 
-The following query creates a pipeline, named `fail-log-pipeline`, that uses the `fail` processor to intentionally fail the pipeline execution for log events: 
+下列查詢會建立名為 `fail-log-pipeline` 的管線，該管線使用 `fail` 處理器來刻意讓記錄事件的管線執行失敗：
 
 ```json
 PUT _ingest/pipeline/fail-log-pipeline  
@@ -56,12 +57,12 @@ PUT _ingest/pipeline/fail-log-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2 (Optional): Test the pipeline
+### 步驟 2 (選用)：測試管線
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/fail-log-pipeline/_simulate  
@@ -77,9 +78,9 @@ POST _ingest/pipeline/fail-log-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線運作正常：
 
 ```json
 {
@@ -101,9 +102,9 @@ The following example response confirms that the pipeline is working as expected
 ```
 {% include copy-curl.html %}
 
-### Step 3: Ingest a document 
+### 步驟 3：匯入文件
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=fail-log-pipeline  
@@ -113,9 +114,9 @@ PUT testindex1/_doc/1?pipeline=fail-log-pipeline
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The request fails to index the log event into the index `testindex1` due to the string `credit card` being present in `user_info`. The following response includes the custom error message specified in the fail processor:
+由於 `user_info` 中出現字串 `credit card`，請求無法將記錄事件編製索引至索引 `testindex1`。下列回應包含在 fail 處理器中指定的自訂錯誤訊息：
 
 ```json
 
@@ -134,16 +135,16 @@ The request fails to index the log event into the index `testindex1` due to the 
 ```
 {% include copy-curl.html %}
 
-### Step 4 (Optional): Retrieve the document
+### 步驟 4 (選用)：擷取文件
 
-Because the log event was not indexed due to the pipeline failure, attempting to retrieve it results in the document not found error `"found": false`:
+由於管線失敗，記錄事件未被編製索引，因此嘗試擷取它會導致找不到文件的錯誤 `"found": false`：
 
 ```json
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### Document error example
+#### 文件錯誤範例
 
 ```json
 {  

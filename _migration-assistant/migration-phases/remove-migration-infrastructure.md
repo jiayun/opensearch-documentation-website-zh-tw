@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Removing Migration Assistant
+title: "移除 Migration Assistant"
 nav_order: 90
 parent: Migration workflows
 permalink: /migration-assistant/migration-phases/remove-migration-infrastructure/
@@ -10,20 +11,20 @@ redirect_from:
 
 ---
 
-# Removing migration infrastructure
+# 移除遷移基礎架構
 
-Do not remove migration infrastructure immediately after a successful migration.
+請勿在遷移成功後立即移除遷移基礎架構。
 
-Before proceeding with removal, confirm the following:
+移除前，請確認下列事項：
 
-- Production traffic has been stable on the target.
-- You no longer need the source for rollback.
-- You no longer need replay or comparison checks.
-- Any snapshot artifacts you want to keep have been retained intentionally.
+- 正式環境流量在目標端已穩定運作。
+- 您不再需要使用來源端進行復原。
+- 您不再需要重播或比較檢查。
+- 您想保留的所有快照產物都已明確保留。
 
-## Generic Kubernetes removal
+## 一般 Kubernetes 移除程序
 
-To remove the Helm deployment and persistent volumes, run the following commands:
+若要移除 Helm 部署和持久磁碟區，請執行下列命令：
 
 ```bash
 helm uninstall -n ma ma
@@ -32,9 +33,9 @@ kubectl delete namespace ma
 ```
 {% include copy.html %}
 
-## Amazon EKS removal
+## Amazon EKS 移除程序
 
-If you used the EKS bootstrap path, remove the Helm release and then the CloudFormation stack:
+如果您使用了 EKS 啟動程序，請先移除 Helm 發行版本，再移除 CloudFormation 堆疊：
 
 ```bash
 helm uninstall -n ma ma
@@ -44,17 +45,17 @@ aws cloudformation wait stack-delete-complete --stack-name <STACK_NAME>
 ```
 {% include copy.html %}
 
-This removes the EKS platform resources created by the solution stack.
+這會移除解決方案堆疊所建立的 EKS 平台資源。
 
-## Snapshot and artifact retention
+## 保留快照與產物
 
-Be deliberate about S3 removal. The default migrations bucket is often still useful for:
+請審慎決定是否移除 S3。預設的遷移儲存貯體通常仍可用於：
 
-- Audit and rollback investigation
-- Preserving snapshots
-- Comparing post-cutover behavior
+- 稽核與復原調查
+- 保存快照
+- 比較切換後的行為
 
-Delete the bucket only after you are certain you no longer need its contents.
+請僅在確定不再需要儲存貯體的內容後，才刪除該儲存貯體。
 {: .warning }
 
 {% include migration-phase-navigation.html %}

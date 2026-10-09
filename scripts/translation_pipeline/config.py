@@ -87,7 +87,8 @@ OLLAMA_CLOUD_MODELS = {
     "ollama-cloud-glm-backup": "glm-5.2:cloud",
     "ollama-cloud-gemma": "gemma4:cloud",
 }
-TRANSLATION_WEIGHTS = ("ollama-cloud-glm", "ollama-cloud", "ollama-cloud-glm", "claude", "codex")
+TRANSLATION_WEIGHTS = ("ollama-cloud-glm", "ollama-cloud", "ollama-cloud-glm", "ollama-cloud", "claude",
+                       "ollama-cloud-glm", "ollama-cloud", "ollama-cloud-glm", "ollama-cloud", "codex")
 # Verified against each model's /api/show thinking.values (2026-10-08).
 OLLAMA_CLOUD_THINKING = {
     "glm-5.3-flash:cloud": "low",
@@ -104,7 +105,7 @@ AGY_MODELS = {
     "agy-opus": ("claude-opus-5-5-medium", "claude-gpt"),
     "agy-gpt": ("gpt-oss-120b-medium", "claude-gpt"),
 }
-REVIEW_WEIGHTS = ("agy-sonnet", "agy-sonnet", "codex-review")
+REVIEW_WEIGHTS = ("agy", "agy", "agy-sonnet", "codex-review")
 
 # Environment variables removed before launching a model CLI so that the CLIs
 # authenticate with the signed-in account and never fall back to paid API keys.

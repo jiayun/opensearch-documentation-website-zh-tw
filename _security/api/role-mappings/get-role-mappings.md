@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get role mappings
+title: "取得角色對應"
 parent: Role mapping APIs
 grand_parent: Security APIs
 nav_order: 30
 ---
 
-# Get Role Mappings API
-**Introduced 1.0**
+# 取得角色對應 API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-Retrieves role mappings. Specify a role name to retrieve the mapping for one role, or omit the role name to retrieve all role mappings.
+擷取角色對應。指定角色名稱以擷取單一角色的對應，或省略角色名稱以擷取所有角色對應。
 
 <!-- spec_insert_start
 api: security.get_role_mappings
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_plugins/_security/api/rolesmapping
 ```
@@ -31,33 +32,33 @@ GET /_plugins/_security/api/rolesmapping/{role}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required | Description |
+| 參數 | 資料類型 | 必要 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `role` | String | No | The name of the role whose mapping you want to retrieve. If omitted, all role mappings are returned. |
+| `role` | 字串 | 否 | 您要擷取其對應的角色名稱。若省略，則傳回所有角色對應。 |
 
-## Example request
+## 範例請求
 
-The following request retrieves all role mappings:
+下列請求會擷取所有角色對應：
 
 ```json
 GET _plugins/_security/api/rolesmapping
 ```
 {% include copy-curl.html security=true %}
 
-The following request retrieves the mapping for the `role_starfleet` role:
+下列請求會擷取 `role_starfleet` 角色的對應：
 
 ```json
 GET _plugins/_security/api/rolesmapping/role_starfleet
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
-The response is abbreviated here:
+回應在此經過刪節：
 
 ```json
 {
@@ -96,7 +97,7 @@ The response is abbreviated here:
 }
 ```
 
-The response to a request for one role mapping contains only that mapping:
+針對單一角色對應之請求的回應僅包含該對應：
 
 ```json
 {

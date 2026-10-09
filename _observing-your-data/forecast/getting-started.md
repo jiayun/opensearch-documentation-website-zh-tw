@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Getting started with forecasting
+title: "預測入門"
 nav_order: 5
 parent: Forecasting
 has_children: false
 ---
 
-# Getting started with forecasting
+# 預測入門
 
-You can define and configure forecasters in OpenSearch Dashboards by selecting **Forecasting** from the navigation panel.
+您可以在 OpenSearch Dashboards 中，從導覽面板選取 **Forecasting**，以定義及設定預測器。
 
-## Step 1: Define a forecaster
+## 步驟 1：定義預測器
 
-A **forecaster** represents a single forecasting task. You can create multiple forecasters to run in parallel, each analyzing a different data source. Follow these steps to define a new forecaster:
+**預測器**代表單一預測工作。您可以建立多個預測器並行執行，每個預測器分析不同的資料來源。請依照下列步驟定義新的預測器：
 
-1. In the **Forecaster list** view, choose **Create forecaster**.
+1. 在 **Forecaster list** 檢視中，選擇 **Create forecaster**。
 
-2. Define the data source by entering the following information:
-   * **Name** – Provide a unique, descriptive name, such as `requests-10min`.  
-   * **Description** – Summarize the forecaster's purpose, for example, `Forecast total request count every 10 minutes`.  
-   * **Indexes** – Select one or more indexes, index patterns, or aliases. Remote indexes are supported through cross-cluster search (`cluster-name:index-pattern`). For more information, see [Cross-cluster search]({{site.url}}{{site.baseurl}}/search-plugins/cross-cluster-search/). If the Security plugin is enabled, see [Selecting remote indexes with fine-grained access control]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/security/#selecting-remote-indexes-with-fine-grained-access-control).
+2. 輸入下列資訊以定義資料來源：
+   * **Name** – 提供唯一且具描述性的名稱，例如 `requests-10min`。  
+   * **Description** – 簡述預測器的用途，例如 `Forecast total request count every 10 minutes`。  
+   * **Indexes** – 選取一或多個索引、索引模式或別名。透過跨叢集搜尋（`cluster-name:index-pattern`）可支援遠端索引。如需詳細資訊，請參閱[跨叢集搜尋]({{site.url}}{{site.baseurl}}/search-plugins/cross-cluster-search/)。如果已啟用 Security 外掛程式，請參閱[透過細粒度存取控制選取遠端索引]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/security/#selecting-remote-indexes-with-fine-grained-access-control)。
 
-3. (Optional) Choose **Add data filter** to set a **Field**, **Operator**, and **Value** or choose **Use query DSL** to define a [Boolean query]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/). The following example uses a query domain-specific language (DSL) filter to match three URL paths:
+3. （選用）選擇 **Add data filter** 以設定 **Field**、**Operator** 和 **Value**，或選擇 **Use query DSL** 以定義[布林查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/)。下列範例使用查詢領域專用語言（DSL）篩選器來比對三個 URL 路徑：
 
      ```json
      {
@@ -36,12 +37,12 @@ A **forecaster** represents a single forecasting task. You can create multiple f
     ```
 
 
-4. Under **Timestamp field**, select the field that stores the timestamps.
+4. 在 **Timestamp field** 下，選取儲存時間戳記的欄位。
 
-5. In the **Indicator (metric)** section, add a metric for the forecaster. Each forecaster supports one metric for optimal accuracy. Choose one of the following options:
+5. 在 **Indicator (metric)** 區段中，為預測器新增指標。每個預測器支援一個指標，以達到最佳準確度。請選擇下列其中一個選項：
 
-   - Select a predefined aggregation: `average()`, `count()`, `sum()`, `min()`, or `max()`.  
-   - To use a custom aggregation, choose **Custom expression** under **Forecast based on** and define your own [query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/) expression. For example, the following query forecasts the number of unique accounts with a specific account type:
+   - 選取預先定義的彙總：`average()`、`count()`、`sum()`、`min()` 或 `max()`。  
+   - 若要使用自訂彙總，請在 **Forecast based on** 下選擇 **Custom expression**，並定義您自己的 [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/) 運算式。例如，下列查詢會預測具有特定帳戶類型的不重複帳戶數量：
 
    ```json
    {
@@ -73,9 +74,9 @@ A **forecaster** represents a single forecasting task. You can create multiple f
    }
    ```
 
-6. (Optional) In the **Categorical fields** section, enable **Split time series using categorical fields** to generate forecasts at the entity level (for example, by IP address, product ID, or country code).
+6. （選用）在 **Categorical fields** 區段中，啟用 **Split time series using categorical fields**，以產生實體層級的預測（例如依 IP 位址、產品 ID 或國家編碼）。
 
-   The number of unique entities that can be cached in memory is limited. Use the following formula to estimate capacity:
+   可快取於記憶體中的不重複實體數量有限。請使用下列公式估算容量：
 
    ```
    (data nodes × heap size × plugins.forecast.model_max_size_percent)
@@ -83,227 +84,227 @@ A **forecaster** represents a single forecasting task. You can create multiple f
                  entity-model size (MB)
    ```
 
-   For example, a cluster with 3 data nodes, each with 8 GB JVM heap and the default 10% model memory, would contain the following number of entities:
+   例如，一個叢集有 3 個資料節點，每個節點具有 8 GB 的 JVM 堆積記憶體，並採用預設的 10% 模型記憶體配置，其可容納的實體數量如下：
 
    ```
    (8096 MB × 0.10 ÷ 1 MB) × 3 nodes ≈ 2429 entities
    ```
 
-   To determine the entity-model size, use the [Profile Forecaster API]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#profile-forecaster). You can raise or lower the memory ceiling with the `plugins.forecast.model_max_size_percent` setting.
+   若要判斷實體模型的大小，請使用 [Profile Forecaster API]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#profile-forecaster)。您可以透過 `plugins.forecast.model_max_size_percent` 設定提高或降低記憶體上限。
 
 
-Forecasters cache models for the most frequently and recently observed entities, subject to available memory. Models for less common entities are loaded from indexes on a best-effort basis during each interval, with no guaranteed service-level agreement (SLA). Always validate memory usage against a representative workload.
+預測器會在可用記憶體的限制內，快取最常觀察到且最近觀察到的實體模型。對於較少出現的實體，每個間隔都會盡力從索引載入其模型，但不保證符合服務水準協議（SLA）。請務必使用具代表性的工作負載驗證記憶體使用量。
 
-For more information, see the blog post [Improving Anomaly Detection: One Million Entities in One Minute](https://opensearch.org/blog/one-million-enitities-in-one-minute/). Although focused on anomaly detection, the recommendations apply to forecasting, as both features share the same underlying Random Cut Forest (RCF) model.
+如需詳細資訊，請參閱部落格文章[改善異常偵測：一分鐘內處理一百萬個實體](https://opensearch.org/blog/one-million-enitities-in-one-minute/)。雖然該文章著重於異常偵測，但其中的建議也適用於預測，因為這兩項功能共用相同的底層隨機切割森林（RCF）模型。
 
-## Step 2: Add model parameters
+## 步驟 2：新增模型參數
 
-The **Suggest parameters** button in OpenSearch Dashboards initiates a review of recent history to recommend sensible defaults. You can override these defaults by adjusting the following parameters:
+OpenSearch Dashboards 中的 **Suggest parameters** 按鈕會啟動近期歷史資料的檢視，以建議合理的預設值。您可以調整下列參數來覆寫這些預設值：
 
-* **Forecasting interval** – Specifies the aggregation bucket (for example, 10 minutes). Longer intervals smooth out noise and reduce compute costs, but they delay detection. Shorter intervals detect changes sooner but increase resource usage and can introduce noise. Choose the shortest interval that still produces a stable signal.
-* **Window delay** – Tells the forecaster how much of a delay to expect between event occurrence and ingestion. This delay adjusts the forecasting interval backward to ensure complete data coverage. For example, if the forecasting interval is 10 minutes and ingestion is delayed by 1 minute, setting the window delay to 1 minute ensures that the forecaster evaluates data from 1:49 to 1:59 rather than 1:50 to 2:00.
-  * To avoid missing data, set the window delay to the upper limit of the expected ingestion delay. However, longer delays reduce the real-time responsiveness of forecasts.
-* **Horizon** – Specifies how many future buckets to predict. Forecast accuracy declines with distance, so choose only the forecast window that is operationally meaningful.
-* **History** – Sets the number of historical data points used to train the initial (cold-start) model. The maximum is 10,000. More history improves initial model accuracy up to that limit.
+* **Forecasting interval** – 指定彙總桶的時間間隔（例如 10 分鐘）。較長的間隔可平滑雜訊並降低運算成本，但會延遲偵測。較短的間隔能更早偵測變化，但會增加資源使用量，且可能引入雜訊。請選擇仍能產生穩定訊號的最短間隔。
+* **Window delay** – 告知預測器事件發生與資料匯入之間的預期延遲時間。此延遲會將預測間隔向前移，以確保完整涵蓋資料。例如，如果預測間隔為 10 分鐘，且匯入延遲 1 分鐘，將視窗延遲設為 1 分鐘可確保預測器評估 1:49 至 1:59 的資料，而非 1:50 至 2:00 的資料。
+  * 為避免遺漏資料，請將視窗延遲設為預期匯入延遲的上限。不過，較長的延遲會降低預測的即時回應能力。
+* **Horizon** – 指定要預測多少個未來的桶。預測準確度會隨預測時間的距離增加而下降，因此請僅選擇對實際作業有意義的預測視窗。
+* **History** – 設定用於訓練初始（冷啟動）模型的歷史資料點數量。上限為 10,000。在此上限內，更多歷史資料可提高初始模型的準確度。
 
-The **Advanced** panel is collapsed by default, allowing most users to proceed with the suggested parameters. If you expand the panel, you can fine-tune three additional parameters: [shingle size](#choosing-a-shingle-size), [suggested seasonality](#choosing-a-shingle-size), and [recency emphasis](#choosing-a-shingle-size). These control how the forecaster balances recent fluctuations against long-term patterns.
+**Advanced** 面板預設為收合狀態，讓大多數使用者可使用建議的參數繼續操作。如果展開面板，您可以微調另外三個參數：[shingle 大小](#choosing-a-shingle-size)、[建議的季節性](#choosing-a-shingle-size)和[近期資料權重](#choosing-a-shingle-size)。這些參數控制預測器如何平衡近期波動與長期模式。
 
-Unless your data or use case demands otherwise, the defaults—**shingle size 8**, **no explicit seasonality**, and **recency emphasis 2560**—are reliable starting points.
+除非您的資料或使用案例有其他需求，否則預設值——**shingle 大小為 8**、**未明確指定季節性**及**近期資料權重為 2560**——是可靠的起始設定。
 
-### Choosing a shingle size
+### 選擇 shingle 大小
 
-Leave the **Shingle size** field empty to use the automatic heuristic:
+將 **Shingle size** 欄位留空，以使用自動啟發式方法：
 
-1. Start with the default value of 8.
-2. If **Suggested seasonality** is defined and greater than 16, replace it with half the season length.
-3. If **Horizon** is defined and one-third of the value is greater than the current candidate, update it accordingly.
+1. 從預設值 8 開始。
+2. 如果已定義 **Suggested seasonality** 且其值大於 16，則將候選值替換為季節週期長度的一半。
+3. 如果已定義 **Horizon** 且其值的三分之一大於目前的候選值，則據此更新候選值。
 
-The final value is the maximum of these three:
+最終值為這三者中的最大值：
 `max(8, seasonality ÷ 2, horizon ÷ 3)`
 
-If you provide a custom value, it overrides this calculation.
+如果您提供自訂值，該值會覆寫此計算結果。
 
-### Determining storage amounts
+### 決定儲存空間用量
 
-By default, forecast results are stored in the `opensearch-forecast-results` index alias. You can:
+根據預設，預測結果會儲存在 `opensearch-forecast-results` 索引別名中。您可以：
 
-* Build dashboards and visualizations.
-* Connect the results to the Alerting plugin.
-* Query the results as with any other OpenSearch index.
+* 建立儀表板和視覺化。
+* 將結果連接至 Alerting 外掛程式。
+* 像查詢任何其他 OpenSearch 索引一樣查詢結果。
 
-To manage storage, the plugin applies a rollover policy:
+為了管理儲存空間，此外掛程式會套用輪替原則：
 
-* **Rollover trigger** – When a primary shard reaches approximately 65 GB, a new backing index is created and the alias is updated.
-* **Retention** – Rolled-over indexes are retained for at least 30 days before deletion.
+* **輪替觸發條件** – 當主要分片達到約 65 GB 時，會建立新的後端索引並更新別名。
+* **保留期** – 已輪替的索引會保留至少 30 天後才刪除。
 
-You can customize this behavior using the following settings.
+您可以使用下列設定來自訂此行為。
 
-| Setting | Description | Default |
+| 設定 | 說明 | 預設值 |
 |---------|-------------|---------|
-| `plugins.forecast.forecast_result_history_max_docs_per_shard` | The maximum number of Lucene documents allowed per shard before triggering a rollover. One result is approximately 4 documents at around 47 bytes each, totaling about 65 GB. | `1_350_000_000` |
-| `plugins.forecast.forecast_result_history_retention_period` | The duration for which to retain forecast results. Supports duration formats such as `7d`, `90d`. | `30d` |
+| `plugins.forecast.forecast_result_history_max_docs_per_shard` | 觸發輪替前，每個分片允許的 Lucene 文件數上限。一筆結果約為 4 份文件，每份約 47 位元組，總計約 65 GB。 | `1_350_000_000` |
+| `plugins.forecast.forecast_result_history_retention_period` | 預測結果的保留期間。支援 `7d`、`90d` 等期間格式。 | `30d` |
 
-### Specifying a custom result index
+### 指定自訂結果索引
 
-You can store forecast results in a custom index by selecting **Custom index** and providing an alias name, such as `abc`. The plugin creates an alias like `opensearch-forecast-result-abc` that points to the backing index (for example, `opensearch-forecast-result-abc-history-2024.06.12-000002`).
+您可以選取 **Custom index** 並提供別名名稱 (例如 `abc`)，將預測結果儲存在自訂索引中。此外掛程式會建立類似 `opensearch-forecast-result-abc` 的別名，指向後端索引 (例如 `opensearch-forecast-result-abc-history-2024.06.12-000002`)。
 
-To manage permissions, use hyphenated namespaces. For example, assign `opensearch-forecast-result-financial-us-*` to roles for the `financial` department's `us` group.
-{: .note } If the Security plugin is enabled, ensure appropriate [permissions are configured]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/security/#custom-result-index-permissions).
+若要管理權限，請使用以連字號分隔的命名空間。例如，將 `opensearch-forecast-result-financial-us-*` 指派給 `financial` 部門 `us` 群組的角色。
+{: .note } 如果已啟用 Security 外掛程式，請確保已設定適當的[權限]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/security/#custom-result-index-permissions)。
 
-### Flattening nested fields
+### 扁平化巢狀欄位
 
-If your custom result index's documents include nested fields, enable the **Flattened custom result index** to simplify aggregation and visualization.
+如果您的自訂結果索引文件包含巢狀欄位，請啟用 **Flattened custom result index** 以簡化彙總和視覺化。
 
-This creates a separate index prefixed with the custom index and forecaster name (for example, `opensearch-forecast-result-abc-flattened-test`) and attaches an ingest pipeline using a [Painless script](https://github.com/opensearch-project/anomaly-detection/blob/main/src/main/resources/scripts/flatten-custom-result-index-painless.txt) to flatten nested data. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+這會建立一個以自訂索引和預測器名稱為前置字串的個別索引 (例如 `opensearch-forecast-result-abc-flattened-test`)，並附加使用 [Painless 指令碼](https://github.com/opensearch-project/anomaly-detection/blob/main/src/main/resources/scripts/flatten-custom-result-index-painless.txt) 的資料匯入管線來扁平化巢狀資料。如需詳細資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-If you later disable this option, the associated ingest pipeline is removed.
+如果您之後停用此選項，相關聯的資料匯入管線會遭到移除。
 
-Use [Index State Management]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/) to manage rollover and deletion of flattened result indexes.
+請使用 [Index State Management]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/) 來管理扁平化結果索引的輪替和刪除。
 
-### Custom result index lifecycle management
+### 自訂結果索引生命週期管理
 
-The plugin triggers a rollover for custom result indexes when any of the following conditions are met.
+當符合下列任一條件時，此外掛程式會觸發自訂結果索引的輪替。
 
-| Parameter | Description | Type | Unit | Default | Required |
+| 參數 | 說明 | 類型 | 單位 | 預設值 | 必要 |
 |----------|-------------|------|------|---------|----------|
-| `result_index_min_size` | The minimum total primary shard size required to trigger a rollover. | Integer | MB | `51200` (50 GB) | No |
-| `result_index_min_age` | The minimum index age required to trigger a rollover. | Integer | Days | `7` | No |
-| `result_index_ttl` | The minimum amount of time before rolled-over indexes are deleted | Integer | Days | `60` | No |
+| `result_index_min_size` | 觸發輪替所需的主要分片大小總和下限。 | 整數 | MB | `51200` (50 GB) | 否 |
+| `result_index_min_age` | 觸發輪替所需的索引存在時間下限。 | 整數 | 天 | `7` | 否 |
+| `result_index_ttl` | 已輪替索引遭到刪除前的最短保留時間 | 整數 | 天 | `60` | 否 |
 
 
-## Step 3: Test your forecaster
+## 步驟 3：測試您的預測器
 
-Backtesting is the fastest way to evaluate and refine key forecasting settings such as **Interval** and **Horizon**. During backtesting, the model is trained on historical data, generates forecasts, and plots them alongside actual values to help visualize prediction accuracy. If the results do not meet expectations, you can adjust the settings and run the test again.
+回溯測試是評估及調整 **Interval** 和 **Horizon** 等重要預測設定的最快方式。在回溯測試期間，模型會以歷史資料進行訓練、產生預測，並將預測與實際值一起繪製，以協助您視覺化預測準確度。如果結果不符合預期，您可以調整設定並再次執行測試。
 
-Backtesting uses the following methods:
+回溯測試使用下列方法：
 
-1. **Training window**: The model trains on historical data defined by the **History** setting.
+1. **訓練視窗**：模型會以 **History** 設定所定義的歷史資料進行訓練。
 
-2. **Rolling forecast**: The model progresses through the time series, repeatedly performing the following actions:
-   * Ingesting the next actual data point
-   * Emitting forecasts at each step
+2. **滾動預測**：模型會沿著時間序列推進，重複執行下列動作：
+   * 匯入下一個實際資料點
+   * 在每個步驟發出預測
 
-   Because this is a retrospective simulation, forecasted values are plotted at their original timestamps, allowing you to see how well the model would have performed in real time.
+   由於這是回溯模擬，預測值會繪製在其原始時間戳記上，讓您能看到模型在即時情況下可能達到的表現。
 
 
-### Starting a backtest
+### 開始回溯測試
 
-To begin a test: 
+若要開始測試：
 
-1. Scroll to the bottom of the **Add model parameters** page. 
-2. Select **Create and test**.  
+1. 捲動至 **Add model parameters** 頁面底部。
+2. 選取 **Create and test**。
 
-To skip testing and create the forecaster immediately, select **Create**.
+若要略過測試並立即建立預測器，請選取 **Create**。
 
-Backtests usually take 1 or 2 minutes, but run time depends on the following factors.
+回溯測試通常需要 1 到 2 分鐘，但執行時間取決於下列因素。
 
-| Factor                | Why it matters                                                           |
+| 因素                | 重要性                                                           |
 | --------------------- | ------------------------------------------------------------------------ |
-| **History length**    | More historical data increases training time.                            |
-| **Data density**      | Densely packed data slows aggregation.                                   |
-| **Categorical field** | The model trains separately for each entity.                             |
-| **Horizon**           | A longer forecast horizon increases the number of generated predictions. |
+| **歷史長度**    | 歷史資料越多，訓練時間越長。                            |
+| **資料密度**      | 資料越密集，彙總速度越慢。                                   |
+| **類別欄位** | 模型會為每個實體個別訓練。                             |
+| **Horizon**           | 預測範圍越長，產生的預測數量越多。 |
 
 
-If the chart is empty, as shown in the following image, check that your index contains at least one time series with more than 40 data points at the selected interval.
+如果圖表是空的 (如下圖所示)，請檢查您的索引在選取的間隔下是否包含至少一個具有超過 40 個資料點的時間序列。
 
-![test failed]({{site.url}}{{site.baseurl}}/images/forecast/no_result.png){: width="800" height="800" }
-
-
-### Reading the chart
-
-When the test succeeds, hover over any point on the chart to view exact values and confidence bounds:
-
-- **Actual data** – Solid line
-- **Median prediction (P50)** – Dotted line
-- **Confidence interval** – Shaded band between P10 and P90
-
-The following image shows the chart view.
-
-![Forecast chart with confidence bounds]({{site.url}}{{site.baseurl}}/images/forecast/bound.png){: width="800" height="800" }
-
-### Viewing forecasts from a specific date
-
-The forecast chart displays predictions starting from the final actual data point through the end of the configured horizon.
-
-For example, you might configure the following settings in the **Forecast from** field:
-
-- **Last actual timestamp**: Mar 5, 2025, 19:23  
-- **Interval**: 1 minute  
-- **Horizon**: 24
-
-With these settings, the forecast range would span `Mar 5, 2025, 19:23 – 19:47`, as shown in the following image.
-
-![Forecast chart with trend]({{site.url}}{{site.baseurl}}/images/forecast/trend.png){: width="800" height="800" }
-
-You can also use the **Forecast from** dropdown list to view forecasts from earlier test runs, as shown in the following image.
-
-![Forecast from dropdown]({{site.url}}{{site.baseurl}}/images/forecast/forecast_from_1.png){: width="800" height="800" }
-
-When you select an earlier **Forecast from** time, the forecast line is drawn directly over the historical data available at that moment. This causes the two series to overlap, as shown in the following image.
-
-![Overlapping forecast and actual data]({{site.url}}{{site.baseurl}}/images/forecast/forecast_from_2.png){: width="800" height="800" }
-
-To return to the most recent forecast window, select **Show latest**.
-
-### Overlay mode: Side-by-side accuracy check
-
-By default the chart displays forecasts that start from a single origin point. Toggle Overlay mode to lay a forecast curve directly on top of the actual series and inspect accuracy across the entire timeline.
-
-Because the model emits one forecast per horizon step, for example, 24 forecasts when the horizon is 24, a single timestamp can have many forecasts that were generated from different origins. Overlay mode lets you decide which lead time (k) to plot:
-
-* Horizon index 0 = Immediate next step
-* Horizon index 1 = 1 step ahead
-* Horizon index 23 = 23 steps ahead
-
-The horizon control defaults to **index 3**, but you can choose any value to focus on a different lead time. 
-
-The following image shows Overlay mode enabled with a horizon index of 3. The visualization plots the forecast curve (in purple) directly on top of the actual data points (shown with white-filled markers). This lets you evaluate the accuracy of the model's three-steps-ahead prediction across the full timeline. The forecast range is displayed as a shaded band around the predicted values, helping highlight uncertainty.
-
-![overlay config]({{site.url}}{{site.baseurl}}/images/forecast/overlay_3.png){: width="800" height="800" }
-
-### View multiple forecast series
-
-A high-cardinality forecaster can display many time series at once. Use the **Time series per page** dropdown menu in the results panel to switch between the following views:
-
-- **Single-series view** (default): Renders one entity per page for maximum readability.
-- **Multi-series view**: Plots up to five entities side by side. Confidence bands are translucent by default—hover over a line to highlight its associated band.
-
-Actual and forecast lines are overlaid so you can assess accuracy point by point. However, in **Multi-series view**, the overlapping lines can make the chart more difficult to interpret. To reduce visual clutter, go to **Visualization options** and turn off **Show actual data at forecast**.
-
-The following image shows the chart with actual and forecast lines overlaid.
-
-![Chart with actual and forecast lines overlaid]({{site.url}}{{site.baseurl}}/images/forecast/toggle_overlay_before.png){: width="800" height="800" }
-
-The following image shows the same chart with actual lines hidden at forecast time to simplify the view.
-
-![Chart with forecast lines only]({{site.url}}{{site.baseurl}}/images/forecast/toggle_overlay_after.png){: width="800" height="800" }
+![測試失敗]({{site.url}}{{site.baseurl}}/images/forecast/no_result.png){: width="800" height="800" }
 
 
-### Exploring the timeline
+### 解讀圖表
 
-Use the following timeline controls to navigate, magnify, and filter any span of your forecast history:
+測試成功時，將游標停留在圖表上的任何點，即可檢視確切值和信賴界限：
 
-* **Zoom** – Select **+ / –** to zoom in on forecasts or broaden context.
-* **Pan** – Use the arrow buttons to move to earlier or later data points, if any.
-* **Quick Select** – Choose common ranges, such as "Last 24 hours", or supply custom dates for the result range.
+- **實際資料** – 實線
+- **中位數預測 (P50)** – 虛線
+- **信賴區間** – P10 和 P90 之間的陰影帶
 
-### Sorting options in multi-series view
+下圖顯示圖表檢視。
 
-When a forecaster tracks more than five entities, the chart can't show every line at once.  
-In **Multi-series view**, you therefore choose the five most informative series and decide what "informative" means by selecting a sort method. The following table lists the available sort methods.
+![含信賴界限的預測圖表]({{site.url}}{{site.baseurl}}/images/forecast/bound.png){: width="800" height="800" }
 
-| Sort method | What it shows | When to use it |
+### 檢視特定日期的預測
+
+預測圖表會顯示從最後一個實際資料點開始，到設定的預測範圍結束為止的預測。
+
+例如，您可能會在 **Forecast from** 欄位中設定下列設定：
+
+- **Last actual timestamp**：2025 年 3 月 5 日 19:23
+- **Interval**：1 分鐘
+- **Horizon**：24
+
+使用這些設定時，預測範圍會涵蓋 `Mar 5, 2025, 19:23 – 19:47`，如下圖所示。
+
+![顯示趨勢的預測圖表]({{site.url}}{{site.baseurl}}/images/forecast/trend.png){: width="800" height="800" }
+
+您也可以使用 **Forecast from** 下拉式清單，檢視先前測試執行的預測，如下圖所示。
+
+![Forecast from 下拉式清單]({{site.url}}{{site.baseurl}}/images/forecast/forecast_from_1.png){: width="800" height="800" }
+
+當您選取較早的 **Forecast from** 時間時，預測線會直接繪製在該時刻可用的歷史資料上。這會導致兩個數列重疊，如下圖所示。
+
+![重疊的預測與實際資料]({{site.url}}{{site.baseurl}}/images/forecast/forecast_from_2.png){: width="800" height="800" }
+
+若要返回最近的預測視窗，請選取 **Show latest**。
+
+### 疊加模式：並排準確度檢查
+
+根據預設，圖表會顯示從單一原點開始的預測。切換「疊加模式」可將預測曲線直接疊在實際數列上，並檢查整個時間軸的準確度。
+
+由於模型會在每個預測範圍步驟發出一個預測，例如預測範圍為 24 時會產生 24 個預測，因此單一時間戳記可能會有許多從不同原點產生的預測。疊加模式可讓您決定要繪製哪個前置時間 (k)：
+
+* 預測範圍索引 0 = 緊接的下一個步驟
+* 預測範圍索引 1 = 提前 1 個步驟
+* 預測範圍索引 23 = 提前 23 個步驟
+
+預測範圍控制項預設為 **索引 3**，但您可以選擇任何值，以聚焦於不同的前置時間。
+
+下圖顯示已啟用疊加模式且預測範圍索引為 3。視覺化會將預測曲線 (紫色) 直接繪製在實際資料點 (以白色填充標記顯示) 上。這可讓您評估模型在整個時間軸上提前三步預測的準確度。預測範圍會以預測值周圍的陰影帶顯示，有助於突顯不確定性。
+
+![疊加模式組態]({{site.url}}{{site.baseurl}}/images/forecast/overlay_3.png){: width="800" height="800" }
+
+### 檢視多個預測序列
+
+高基數的預測器可以同時顯示許多時間序列。使用結果面板中的 **Time series per page** 下拉式功能表，即可在下列檢視之間切換：
+
+- **Single-series view** (預設)：每頁呈現一個實體，以獲得最佳可讀性。
+- **Multi-series view**：最多並排繪製五個實體。信賴區間預設為半透明—將游標停留在某條線上，即可突顯其對應的區間。
+
+實際線與預測線會重疊顯示，讓您可以逐點評估準確度。不過，在 **Multi-series view** 中，重疊的線條可能會讓圖表更難以解讀。若要減少視覺雜亂，請前往 **Visualization options** 並關閉 **Show actual data at forecast**。
+
+下圖顯示實際線與預測線重疊的圖表。
+
+![實際線與預測線重疊的圖表]({{site.url}}{{site.baseurl}}/images/forecast/toggle_overlay_before.png){: width="800" height="800" }
+
+下圖顯示同一張圖表在預測時間點隱藏實際線後的簡化檢視。
+
+![僅顯示預測線的圖表]({{site.url}}{{site.baseurl}}/images/forecast/toggle_overlay_after.png){: width="800" height="800" }
+
+
+### 探索時間軸
+
+使用下列時間軸控制項，即可瀏覽、放大及篩選預測歷史記錄中的任何時間範圍：
+
+* **Zoom** – 選取 **+ / –** 以放大預測，或擴大檢視範圍。
+* **Pan** – 使用箭頭按鈕移至較早或較晚的資料點 (若有)。
+* **Quick Select** – 選擇常見的範圍，例如「Last 24 hours」，或為結果範圍提供自訂日期。
+
+### 多序列檢視中的排序選項
+
+當預測器追蹤超過五個實體時，圖表無法一次顯示所有線條。  
+因此在 **Multi-series view** 中，您可以選擇五個最具資訊價值的序列，並透過選取排序方法來決定「具資訊價值」的定義。下表列出可用的排序方法。
+
+| 排序方法 | 顯示內容 | 適用時機 |
 |-------------|--------------|----------------|
-| **Minimum confidence-interval width** *(default)* | The five series whose prediction bands are narrowest. A narrow band indicates that the model is highly certain about its forecast. | Surface the most "trustworthy" forecasts. |
-| **Maximum confidence-interval width** | The five series with the widest bands—forecasts the model is least sure about. | Spot risky or noisy series that may need review or more training data. |
-| **Minimum value within the horizon** | The lowest predicted point across the forecast window for each entity, sorted in ascending order. | Identify entities expected to drop the farthest—useful for capacity planning or alerting on potential dips. |
-| **Maximum value within the horizon** | The highest predicted point across the horizon for each entity, sorted in descending order. | Highlight series with the greatest expected peaks, such as traffic spikes or sales surges. |
-| **Distance to threshold value** | Filters forecasts by a numeric threshold (>, <, ≥, ≤) and then orders the remainder by how far they sit from that threshold. | Investigate entities that breach—or nearly breach—an SLA or business KPI, such as "show anything forecast to exceed 10,000 requests". |
+| **Minimum confidence-interval width** *(預設)* | 預測區間最窄的五個序列。區間狹窄表示模型對其預測高度確定。 | 呈現最「值得信賴」的預測。 |
+| **Maximum confidence-interval width** | 區間最寬的五個序列—模型最不確定的預測。 | 找出可能需要檢閱或更多訓練資料的高風險或雜訊序列。 |
+| **Minimum value within the horizon** | 每個實體在預測範圍內的最低預測點，並以遞增順序排序。 | 找出預期下降幅度最大的實體—適合用於容量規劃或針對可能的下探發出警示。 |
+| **Maximum value within the horizon** | 每個實體在預測範圍內的最高預測點，並以遞減順序排序。 | 突顯預期尖峰最大的序列，例如流量暴增或銷售激增。 |
+| **Distance to threshold value** | 依數值閾值 (>, <, ≥, ≤) 篩選預測，再依其與該閾值的距離排序其餘項目。 | 調查違反—或幾乎違反—SLA 或業務 KPI 的實體，例如「顯示任何預測超過 10,000 次請求的項目」。 |
 
-If the forecaster monitors five or fewer entities, **Multi-series view** displays all of them. When there are more than five, the view reranks them dynamically each time you change the sort method or adjust the threshold, ensuring that the most relevant series stay in focus.
+如果預測器監視五個或更少的實體，**Multi-series view** 會顯示全部實體。當超過五個時，每次您變更排序方法或調整閾值時，此檢視都會動態重新排序，確保最相關的序列保持聚焦。
 
-To focus on a specific subset of entities, switch **Filter by** to **Custom query** and enter a query DSL query. The following example shows entities where the `host` equals `server_1`:
+若要聚焦於特定實體子集，請將 **Filter by** 切換為 **Custom query**，並輸入 query DSL 查詢。下列範例顯示 `host` 等於 `server_1` 的實體：
 
 ```json
 {
@@ -321,33 +322,33 @@ To focus on a specific subset of entities, switch **Filter by** to **Custom quer
 }
 ```
 
-Next, select a sort method, such as **Maximum value within the horizon**, and select **Update visualization**. The chart updates to show only the forecast series for `host:server_1`, ranked according to your selected criteria.
+接著選取排序方法，例如 **Maximum value within the horizon**，然後選取 **Update visualization**。圖表會更新，只顯示 `host:server_1` 的預測序列，並依您選取的準則排序。
 
-### Edit a forecaster
+### 編輯預測器
 
-If the initial backtest shows weak performance, you can adjust the forecaster's configuration and run the test again.
+如果初始回溯測試顯示效能不佳，您可以調整預測器的組態並再次執行測試。
 
-To edit a forecaster:
+若要編輯預測器：
 
-1. Open the forecaster's **Details** page and select **Edit** to enter edit mode.  
-2. Modify the settings as needed—for example, add a **Category field**, change the **Interval**, or increase the **History** window.  
-3. Select **Update**. The validation panel automatically evaluates the new configuration and flags any issues.
+1. 開啟預測器的 **Details** 頁面，然後選取 **Edit** 進入編輯模式。  
+2. 視需要修改設定—例如新增 **Category field**、變更 **Interval**，或增加 **History** 視窗。  
+3. 選取 **Update**。驗證面板會自動評估新的組態，並標示任何問題。
 
-   The following image shows the validation process in progress.
+   下圖顯示驗證程序正在進行中。
 
-   ![Validation panel loading]({{site.url}}{{site.baseurl}}/images/forecast/validation_loading.png){: width="800" height="800" }
+   ![驗證面板載入中]({{site.url}}{{site.baseurl}}/images/forecast/validation_loading.png){: width="800" height="800" }
 
-4. Resolve any validation errors. When the panel becomes green, select **Start test** in the upper-right corner to run another backtest with the updated parameters.
+4. 解決任何驗證錯誤。當面板變成綠色時，選取右上角的 **Start test**，以更新後的參數執行另一次回溯測試。
 
-### Real-time forecasting
+### 即時預測
 
-Once you are confident in the forecasting configuration, go to the **Details** page and click **Start forecasting** to begin real-time forecasting. The forecaster will generate new predictions at each interval moving forward.
+當您對預測組態有信心後，請前往 **Details** 頁面並按一下 **Start forecasting**，開始即時預測。預測器之後會在每個間隔產生新的預測。
 
-A **Live** badge appears when the chart is synchronized with the most recent data.
+當圖表與最新資料同步時，會出現 **Live** 徽章。
 
-Unlike backtesting, real-time forecasting continuously attempts to initialize using live data if there is not enough historical data. During this initialization period, the forecaster displays an initialization status until it has enough data to begin emitting forecasts.
+與回溯測試不同，如果歷史資料不足，即時預測會持續嘗試使用即時資料進行初始化。在此初始化期間，預測器會顯示初始化狀態，直到有足夠的資料開始產生預測為止。
 
-## Next steps
+## 後續步驟
 
-Once you have tested and refined your forecaster, you can begin using it to generate live forecasts or manage it over time. To learn how to start, stop, delete, or update an existing forecaster, see [Managing forecasters]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/managing-forecasters/).
+測試並調整預測器之後，您就可以開始使用它來產生即時預測，或長期管理它。若要了解如何啟動、停止、刪除或更新現有的預測器，請參閱[管理預測器]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/managing-forecasters/)。
 

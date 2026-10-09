@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Perform upgrade
+title: "執行升級"
 parent: Security configuration APIs
 grand_parent: Security APIs
 nav_order: 50
@@ -8,34 +9,34 @@ redirect_from:
   - /api-reference/security/configuration/upgrade-perform/
 ---
 
-# Perform Security Configuration Upgrade API
-**Introduced 2.14**
+# 執行安全性組態升級 API
+**2.14 版新增**
 {: .label .label-purple }
 
 
-The Perform Upgrade API allows you to upgrade your Security plugin configuration components. This API is typically used after identifying necessary upgrades with the [Check for Upgrades API]({{site.url}}{{site.baseurl}}/security/api/configuration/upgrade-check/). It updates your configuration components to ensure compatibility with the current version of the Security plugin.
+Perform Upgrade API 可讓您升級 Security 外掛程式的組態元件。此 API 通常在透過 [Check for Upgrades API]({{site.url}}{{site.baseurl}}/security/api/configuration/upgrade-check/) 識別出必要的升級之後使用。它會更新您的組態元件，以確保與目前版本的 Security 外掛程式相容。
 
-This API adds and updates resources on the cluster's existing security configuration from the configuration bundled with the installed version of the Security plugin. The bundled configuration files are located in the `<OPENSEARCH_HOME>/security/config` directory. Default configuration files are updated when OpenSearch is upgraded, whereas the cluster configuration is only updated by cluster operators, so this API lets an operator upgrade missing defaults and stale default definitions.
+此 API 會從隨所安裝 Security 外掛程式版本一併提供的組態中，新增並更新叢集現有安全性組態的資源。隨附的組態檔位於 `<OPENSEARCH_HOME>/security/config` 目錄。預設組態檔會在 OpenSearch 升級時更新，而叢集組態僅會由叢集維運人員更新，因此此 API 可讓維運人員升級缺少的預設值與過時的預設定義。
 
 <!-- spec_insert_start
 api: security.config_upgrade_perform
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 POST /_plugins/_security/api/_upgrade_perform
 ```
 <!-- spec_insert_end -->
 
-## Request body fields
+## 請求本文欄位
 
-The request body is optional. It is a JSON object with the following fields.
+請求本文為選用。它是一個包含下列欄位的 JSON 物件。
 
-| Property | Data type | Description |
+| 屬性 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `config` | Array of Strings | A list of specific configuration components to upgrade. If omitted, all components requiring upgrades will be processed. Valid values include `roles`, `rolesmapping`, `actiongroups`, `config`, `internalusers`, and `tenants`. |
+| `config` | 字串陣列 | 要升級的特定組態元件清單。若省略，將處理所有需要升級的元件。有效值包括 `roles`、`rolesmapping`、`actiongroups`、`config`、`internalusers` 與 `tenants`。 |
 
-## Example request
+## 範例請求
 
 ```json
 POST /_plugins/_security/api/_upgrade_perform
@@ -47,9 +48,9 @@ POST /_plugins/_security/api/_upgrade_perform
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
-The `upgrades` object lists the changes that were applied:
+`upgrades` 物件列出已套用的變更：
 
 ```json
 {
@@ -64,7 +65,7 @@ The `upgrades` object lists the changes that were applied:
 }
 ```
 
-If the named configuration is already current, the request fails with `400 Bad Request`:
+若指定的組態已是最新狀態，請求會失敗並傳回 `400 Bad Request`：
 
 ```json
 {
@@ -73,21 +74,21 @@ If the named configuration is already current, the request fails with `400 Bad R
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文是一個包含下列欄位的 JSON 物件。
 
-| Property | Data type | Description |
+| 屬性 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `status` | String | The status of the request. A successful request returns `OK`. |
-| `upgrades` | Object | A container for the upgrade results, organized by configuration type, such as `roles`. Each changed configuration type is represented as a key in this object. |
+| `status` | 字串 | 請求的狀態。成功的請求會傳回 `OK`。 |
+| `upgrades` | 物件 | 升級結果的容器，依組態類型組織，例如 `roles`。每個已變更的組態類型都會以這個物件中的一個鍵表示。 |
 
 <details markdown="block">
   <summary>
-    Response body fields: <code>upgrades</code>
+    回應本文欄位：<code>upgrades</code>
   </summary>
   {: .text-delta}
 
-Each configuration type in `upgrades` maps to an object whose keys are the actions applied to that type, such as `add` or `modify`. Each action maps to a list of the names of the objects modified by the upgrade.
+`upgrades` 中的每個組態類型都對應到一個物件，其鍵為套用至該類型的動作，例如 `add` 或 `modify`。每個動作都對應到一個清單，列出該升級所修改物件的名稱。
 
 </details>

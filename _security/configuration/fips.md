@@ -1,114 +1,115 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: OpenSearch FIPS configuration
+title: "OpenSearch FIPS 組態"
 parent: Configuration
 nav_order: 55
 ---
 
-# OpenSearch FIPS configuration
+# OpenSearch FIPS 組態
 
-The [Federal Information Processing Standard (FIPS) 140-3](https://csrc.nist.gov/pubs/fips/140-3/final) is a U.S. government standard that defines security requirements for cryptographic modules. When running OpenSearch in a FIPS-compliant environment, you must configure the system to use FIPS-validated cryptographic providers.
+[聯邦資訊處理標準 (FIPS) 140-3](https://csrc.nist.gov/pubs/fips/140-3/final) 是一項美國政府標準，定義了密碼編譯模組的安全性需求。在符合 FIPS 的環境中執行 OpenSearch 時，您必須設定系統使用通過 FIPS 驗證的密碼編譯提供者。
 
-To achieve FIPS compliance, OpenSearch requires:
+若要達成 FIPS 合規，OpenSearch 需要：
 
-- FIPS-validated cryptographic providers for all cryptographic operations (Bouncy Castle FIPS is included in OpenSearch).
-- A JVM configured to use these FIPS-validated providers.
-- A JVM using a Java version for which [BC-FJA](https://www.bouncycastle.org/download/bouncy-castle-java-fips/) is certified (for example, Java 11, 17, or 21 for OpenSearch v3.2.0+ with BC-FJA v2.1.0).
-- FIPS-compliant keystores and truststores in BCFKS or PKCS11 format.
-- Strong passwords meeting FIPS minimum requirements (112 bits or approximately 14 characters).
+- 所有密碼編譯作業都使用通過 FIPS 驗證的密碼編譯提供者（OpenSearch 內含 Bouncy Castle FIPS）。
+- 設定為使用這些通過 FIPS 驗證提供者的 JVM。
+- 使用 [BC-FJA](https://www.bouncycastle.org/download/bouncy-castle-java-fips/) 已認證之 Java 版本的 JVM（例如，OpenSearch v3.2.0+ 搭配 BC-FJA v2.1.0 時使用 Java 11、17 或 21）。
+- BCFKS 或 PKCS11 格式且符合 FIPS 的 keystore 與 truststore。
+- 符合 FIPS 最低需求的強式密碼（112 位元，約 14 個字元）。
 
-## FIPS demo installer
+## FIPS 示範安裝程式
 
-By default, the JVM uses the `cacerts` truststore (typically in PKCS12 format) for SSL/TLS connections. This truststore contains trusted certificate authority (CA) certificates. However, the standard PKCS12 format is not FIPS compliant.
+預設情況下，JVM 使用 `cacerts` truststore（通常為 PKCS12 格式）進行 SSL/TLS 連線。此 truststore 包含受信任的憑證授權單位 (CA) 憑證。然而，標準 PKCS12 格式不符合 FIPS 規範。
 
-OpenSearch includes a FIPS demo installer CLI tool that simplifies the truststore configuration process. The tool provides an automated way to configure a FIPS-compliant truststore by converting the JVM default truststore to BCFKS format. The project source is available in `distribution/tools/fips-demo-installer-cli`.
+OpenSearch 提供一個 FIPS 示範安裝程式 CLI 工具，可簡化 truststore 的組態程序。此工具提供自動化的方式，將 JVM 預設 truststore 轉換為 BCFKS 格式，以設定符合 FIPS 規範的 truststore。專案原始碼可在 `distribution/tools/fips-demo-installer-cli` 取得。
 
-This tool is designed for demo and development purposes. Before deploying to production, carefully review all generated configurations and replace demo settings with production-appropriate values.
+此工具僅設計用於示範與開發用途。部署至正式環境之前，請仔細檢閱所有產生的組態，並將示範設定替換為適合正式環境的值。
 {: .warning}
 
-### Prerequisites
+### 必要條件
 
-Before running the FIPS demo installer, ensure that the following prerequisites are met:
+執行 FIPS 示範安裝程式之前，請確認符合下列必要條件：
 
-- OpenSearch is installed and the installation directory is accessible.
-- You have write permissions to the OpenSearch configuration directory.
-- The `jvm.options` file exists in the configuration directory.
+- 已安裝 OpenSearch，且可存取安裝目錄。
+- 您對 OpenSearch 組態目錄具有寫入權限。
+- 組態目錄中存在 `jvm.options` 檔案。
 
-### Available commands
+### 可用命令
 
-The FIPS demo installer provides the following commands.
+FIPS 示範安裝程式提供下列命令。
 
-| Command | Description |
+| 命令 | 說明 |
 |---------|-------------|
-| `generated` | Generates a new BCFKS truststore from the JVM default truststore. |
-| `system` | Uses the existing system PKCS11 truststore. |
-| `show-providers` | Shows available security providers and exits (does not change the configuration). |
+| `generated` | 從 JVM 預設 truststore 產生新的 BCFKS truststore。 |
+| `system` | 使用現有的系統 PKCS11 truststore。 |
+| `show-providers` | 顯示可用的安全性提供者並結束（不會變更組態）。 |
 
-### Configuration options
+### 組態選項
 
-The FIPS demo installer supports the following command-line options.
+FIPS 示範安裝程式支援下列命令列選項。
 
-| Option | Description |
+| 選項 | 說明 |
 |--------|-------------|
-| `-f`, `--force` | Force the configuration even if FIPS settings already exist in `jvm.options`. |
-| `-n`, `--non-interactive` | Run in non-interactive mode (use defaults, no prompts). |
-| `-p`, `--password` | Specify a password for the BCFKS truststore (overrides the auto-generated password in non-interactive mode). |
-| `--pkcs11-provider` | Specify a PKCS11 provider name directly (used with the `system` command). |
-| `--help` | Display help information for the supported commands. |
+| `-f`, `--force` | 即使 `jvm.options` 中已存在 FIPS 設定，仍強制執行組態。 |
+| `-n`, `--non-interactive` | 以非互動模式執行（使用預設值，不出現提示）。 |
+| `-p`, `--password` | 為 BCFKS truststore 指定密碼（在非互動模式下覆寫自動產生的密碼）。 |
+| `--pkcs11-provider` | 直接指定 PKCS11 提供者名稱（與 `system` 命令搭配使用）。 |
+| `--help` | 顯示所支援命令的說明資訊。 |
 
-### Non-interactive mode
+### 非互動模式
 
-To run the installer in non-interactive mode for automated deployments, use either the `-n` or `--non-interactive` flag:
+若要在自動化部署時以非互動模式執行安裝程式，請使用 `-n` 或 `--non-interactive` 旗標：
 
 ```bash
 ./bin/opensearch-fips-demo-installer -n
 ```
 {% include copy.html %}
 
-The non-interactive mode runs without prompts and automatically performs the following actions:
+非互動模式會在沒有提示的情況下執行，並自動執行下列動作：
 
-- Defaults to generating a new BCFKS truststore.
-- Auto-confirms all prompts.
-- Generates a secure 24-character password (or uses the one specified using `-p`).
-- Selects the first available PKCS11 provider when using the `system` command.
+- 預設產生新的 BCFKS truststore。
+- 自動確認所有提示。
+- 產生安全的 24 字元密碼（或使用透過 `-p` 指定的密碼）。
+- 使用 `system` 命令時，選取第一個可用的 PKCS11 提供者。
 
-Non-interactive mode is ideal for automated provisioning scripts and configuration management tools.
+非互動模式非常適合自動化佈建指令碼與組態管理工具。
 {: .note}
 
-### Examples
+### 範例
 
-The following are some common command examples for the FIPS demo installer.
+以下是 FIPS 示範安裝程式的一些常見命令範例。
 
-On Windows, use `opensearch-fips-demo-installer.bat` instead of the bash script.
+在 Windows 上，請使用 `opensearch-fips-demo-installer.bat` 而非 bash 指令碼。
 {: .note}
 
-Interactive mode (prompts for all choices):
+互動模式（對所有選擇出現提示）：
 ```bash
 ./bin/opensearch-fips-demo-installer
 ```
 {% include copy.html %}
 
-Non-interactive mode with auto-generated password---overrides the existing FIPS configuration:
+使用自動產生密碼的非互動模式---覆寫現有的 FIPS 組態：
 ```bash
 ./bin/opensearch-fips-demo-installer -n -f
 ```
 {% include copy.html %}
 
-Generate a BCFKS truststore with a custom password:
+以自訂密碼產生 BCFKS truststore：
 ```bash
 ./bin/opensearch-fips-demo-installer generated -p "MySecurePassword123!"
 ```
 {% include copy.html %}
 
-Use the system PKCS11 truststore with a specific provider:
+搭配特定提供者使用系統 PKCS11 truststore：
 ```bash
 ./bin/opensearch-fips-demo-installer system --pkcs11-provider YourPKCS11-Provider
 ```
 {% include copy.html %}
 
-### Configuration output
+### 組態輸出
 
-After running the FIPS demo installer, the following properties are added to your `jvm.options` file:
+執行 FIPS 示範安裝程式後，下列屬性會新增至您的 `jvm.options` 檔案：
 
 ```bash
 ################################################################
@@ -123,77 +124,77 @@ After running the FIPS demo installer, the following properties are added to you
 ################################################################
 ```
 
-These properties configure the JVM to use the FIPS-compliant truststore for all SSL/TLS connections if no other truststore is defined.
+若未定義其他 truststore，這些屬性會設定 JVM 對所有 SSL/TLS 連線使用符合 FIPS 規範的 truststore。
 
-## Troubleshooting FIPS
+## FIPS 疑難排解
 
-This section covers common issues encountered when running OpenSearch in FIPS mode.
+本節涵蓋在 FIPS 模式下執行 OpenSearch 時遇到的常見問題。
 
-### Truststore type not specified
+### 未指定 truststore 類型
 
-The following error indicates that the FIPS truststore configuration is incomplete or missing from `jvm.options`:
+下列錯誤表示 `jvm.options` 中的 FIPS truststore 組態不完整或遺失：
 
 ```
 Trust store type must be specified using the '-Djavax.net.ssl.trustStoreType' JVM option. Accepted values are PKCS11 and BCFKS.
 ```
 
-To resolve this issue:
+若要解決此問題：
 
-- Verify that you have run the FIPS demo installer successfully.
-- Check that `jvm.options` contains the FIPS truststore configuration block.
+- 確認您已成功執行 FIPS 示範安裝程式。
+- 檢查 `jvm.options` 是否包含 FIPS truststore 組態區塊。
 
-### Truststore file not found
+### 找不到 truststore 檔案
 
-If you see an error indicating that the truststore file cannot be found, verify that:
+如果您看到指出找不到 truststore 檔案的錯誤，請確認：
 
-- The path in `jvm.options` is correct and absolute.
-- The truststore file exists at the specified location.
-- OpenSearch has read permissions for the truststore file.
+- `jvm.options` 中的路徑正確且為絕對路徑。
+- truststore 檔案存在於指定的位置。
+- OpenSearch 對 truststore 檔案具有讀取權限。
 
-### Certificate conversion failures
+### 憑證轉換失敗
 
-Some certificates in the JVM default truststore may not be compatible with the BCFKS format. The installer reports the number of certificates that were successfully converted. Review the output to ensure that critical certificates were converted successfully.
+JVM 預設 truststore 中的某些憑證可能與 BCFKS 格式不相容。安裝程式會報告成功轉換的憑證數量。請檢閱輸出，確保關鍵憑證已成功轉換。
 
-### Keystore password is too weak for FIPS mode
+### Keystore 密碼對 FIPS 模式而言太弱
 
-When the [OpenSearch keystore]({{site.url}}{{site.baseurl}}/security/configuration/opensearch-keystore) `$OPENSEARCH_HOME/config/opensearch.keystore` contains a password that does not meet FIPS requirements, OpenSearch fails to start with the following error:
+當 [OpenSearch keystore]({{site.url}}{{site.baseurl}}/security/configuration/opensearch-keystore) `$OPENSEARCH_HOME/config/opensearch.keystore` 包含不符合 FIPS 需求的密碼時，OpenSearch 會無法啟動並出現下列錯誤：
 
 ```
 org.bouncycastle.crypto.fips.FipsUnapprovedOperationError: password must be at least 112 bits
 ```
 
-In FIPS mode, Bouncy Castle enforces a minimum password strength of 112 bits, which is approximately 14 characters.
+在 FIPS 模式下，Bouncy Castle 會強制要求密碼強度至少為 112 位元，約 14 個字元。
 
-Because FIPS mode is already active, the `opensearch-keystore passwd` command does not accept the existing weak password. Alternatively, you can recreate the keystore as follows:
+由於 FIPS 模式已啟用，`opensearch-keystore passwd` 命令不接受現有的弱式密碼。或者，您可以依照下列方式重建 keystore：
 
-1. List existing secrets for backup (if needed):
+1. 列出現有的機密以供備份（如有需要）：
 ```bash
 ./bin/opensearch-keystore list
 ```
 {% include copy.html %}
 
-2. Create a new keystore with a FIPS-compliant password (at least 14 characters):
+2. 使用符合 FIPS 規範的密碼（至少 14 個字元）建立新的 keystore：
 ```bash
 ./bin/opensearch-keystore create --password
 ```
 {% include copy.html %}
 
-3. Re-add any secrets that were stored in the old keystore (if needed):
+3. 重新新增原本儲存在舊 keystore 中的機密（如有需要）：
 ```bash
 ./bin/opensearch-keystore add <setting-name>
 ```
 {% include copy.html %}
 
-Ensure that your new password is at least 14 characters long and includes a mix of uppercase characters, lowercase characters, numbers, and special characters. For security best practices, consider using a password manager to generate and store complex passwords.
+請確保新密碼長度至少 14 個字元，並混合大寫字母、小寫字母、數字與特殊字元。基於安全性最佳實務，建議使用密碼管理工具來產生並儲存複雜的密碼。
 {: .note}
 
-## Next steps
+## 後續步驟
 
-After configuring FIPS mode for OpenSearch:
+為 OpenSearch 設定 FIPS 模式之後：
 
-- Review the [security configuration]({{site.url}}{{site.baseurl}}/security/configuration/index/) guide for additional security settings.
-- Configure [TLS certificates]({{site.url}}{{site.baseurl}}/security/configuration/tls/) for node-to-node and client-to-node encryption.
-- Set up [authentication and authorization]({{site.url}}{{site.baseurl}}/security/configuration/configuration/) for your cluster.
-- Configure [PBKDF2 password hashing]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/security-settings/#expert-level-settings) for internal user passwords to ensure FIPS compliance.
-- Set up [field masking with FIPS-approved hash algorithms]({{site.url}}{{site.baseurl}}/security/access-control/field-masking/) instead of the default BLAKE2b.
-- Review [best practices for OpenSearch security]({{site.url}}{{site.baseurl}}/security/configuration/best-practices/) for comprehensive security guidance.
+- 檢閱[安全性組態]({{site.url}}{{site.baseurl}}/security/configuration/index/)指南，了解其他安全性設定。
+- 為節點對節點與用戶端對節點加密設定 [TLS 憑證]({{site.url}}{{site.baseurl}}/security/configuration/tls/)。
+- 為您的叢集設定[驗證與授權]({{site.url}}{{site.baseurl}}/security/configuration/configuration/)。
+- 為內部使用者密碼設定 [PBKDF2 密碼雜湊]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/security-settings/#expert-level-settings)，以確保符合 FIPS 規範。
+- 設定[使用 FIPS 核准之雜湊演算法的欄位遮罩]({{site.url}}{{site.baseurl}}/security/access-control/field-masking/)，取代預設的 BLAKE2b。
+- 檢閱 [OpenSearch 安全性最佳實務]({{site.url}}{{site.baseurl}}/security/configuration/best-practices/)，取得全面的安全性指引。

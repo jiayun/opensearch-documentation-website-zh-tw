@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: regex
 parent: Commands
@@ -8,45 +9,45 @@ nav_order: 36
 
 <!-- vale off -->
 
-# regex command
+# regex 命令
 
 <!-- vale on -->
 
-The `regex` command filters search results by matching field values against a regular expression pattern. Only documents in which the specified field matches the pattern are included in the results.
+`regex` 命令透過將欄位值與正規表示式模式比對來篩選搜尋結果。只有指定欄位符合該模式的文件才會包含在結果中。
 
-## Syntax
+## 語法
 
-The `regex` command has the following syntax:
+`regex` 命令的語法如下：
 
 ```sql
 regex <field> = <pattern>
 regex <field> != <pattern>
 ```
 
-The following operators are supported:
+支援下列運算子：
 
-* `=` -- Positive matching (include matches)
-* `!=` -- Negative matching (exclude matches)
+* `=` -- 正向比對（包含符合的結果）
+* `!=` -- 反向比對（排除符合的結果）
 
-The `regex` command uses Java's built-in regular expression engine, which supports:
+`regex` 命令使用 Java 內建的正規表示式引擎，支援：
 
-* **Standard regex features**: Character classes, quantifiers, anchors.  
-* **Named capture groups**: `(?<name>pattern)` syntax.  
-* **Lookahead/lookbehind**: `(?=...)` and `(?<=...)` assertions.  
-* **Inline flags**: Case-insensitive `(?i)`, multiline `(?m)`, dotall `(?s)`, and other modes.  
+* **標準正規表示式功能**：字元類別、量詞、錨點。  
+* **具名擷取群組**：`(?<name>pattern)` 語法。  
+* **先行斷言／後顧斷言**：`(?=...)` 與 `(?<=...)` 斷言。  
+* **行內旗標**：不分大小寫 `(?i)`、多行 `(?m)`、點號可比對換行字元的模式 `(?s)` 及其他模式。  
 
-## Parameters
+## 參數
 
-The `regex` command supports the following parameters.
+`regex` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<field>` | Required | The field name to match against. |
-| `<pattern>` | Required | The regular expression pattern to match. Supports [Java regular expression syntax](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html). |
+| `<field>` | 必要 |要比對的欄位名稱。 |
+| `<pattern>` | 必要 |要比對的正規表示式模式。支援 [Java 正規表示式語法](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)。 |
 
-## Example 1: Finding logs matching a pattern  
+## 範例 1：尋找符合模式的記錄檔  
 
-The following query finds error logs mentioning connection timeouts:
+下列查詢會找出提及連線逾時的錯誤記錄檔：
   
 ```sql
 source=otellogs
@@ -57,7 +58,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -68,9 +69,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Excluding logs matching a pattern  
+## 範例 2：排除符合模式的記錄檔  
 
-The following query finds all errors except those related to timeouts:
+下列查詢會找出所有錯誤，但與逾時相關的錯誤除外：
   
 ```sql
 source=otellogs
@@ -82,7 +83,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -95,9 +96,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Filtering by service name pattern  
+## 範例 3：依服務名稱模式篩選  
 
-The following query finds warning logs from services whose names end with "catalog":
+下列查詢會找出名稱以 "catalog" 結尾之服務的警告記錄檔：
   
 ```sql
 source=otellogs
@@ -108,7 +109,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -120,9 +121,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 4: Complex patterns with character classes
+## 範例 4：使用字元類別的複雜模式
 
-The following query uses complex regex patterns with character classes and quantifiers to match log messages containing service method calls:
+下列查詢使用包含字元類別與量詞的複雜正規表示式模式，比對包含服務方法呼叫的記錄訊息：
 
 ```sql
 source=otellogs
@@ -134,7 +135,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -144,9 +145,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 5: Case-sensitive matching
+## 範例 5：區分大小寫的比對
 
-By default, regex matching is case sensitive. The following query searches for lowercase `error`:
+預設情況下，regex 比對會區分大小寫。下列查詢會搜尋小寫的 `error`：
 
 ```sql
 source=otellogs
@@ -156,11 +157,11 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns no results because the regex pattern `error` (lowercase) does not match `ERROR` (uppercase):
+查詢沒有傳回任何結果，因為正規表示式模式 `error`（小寫）不符合 `ERROR`（大寫）：
 
-## Limitations
+## 限制
 
-The `regex` command has the following limitations:
+`regex` 命令有下列限制：
 
-* A field name must be specified in the `regex` command. Pattern-only syntax (for example, `regex "pattern"`) is not supported.
-* The `regex` command only supports string fields. Using it on numeric or Boolean fields results in an error.  
+* 必須在 `regex` 命令中指定欄位名稱。不支援僅使用模式的語法（例如 `regex "pattern"`）。
+* `regex` 命令僅支援字串欄位。對數值或布林值欄位使用會導致錯誤。  

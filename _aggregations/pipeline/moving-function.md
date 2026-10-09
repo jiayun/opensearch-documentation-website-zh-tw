@@ -1,74 +1,75 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Moving function
+title: "移動函式"
 parent: Pipeline aggregations
 nav_order: 130
 ---
 
-# Moving function aggregation
+# 移動函式彙總
 
-The `moving_fn` aggregation is a parent pipeline aggregation that executes a script over a sliding window. The sliding window moves over a sequence of values extracted from a parent `histogram` or `date histogram` aggregation. The window shifts left to right one bucket at a time; `moving_fn` runs the script each time the window shifts. 
+`moving_fn` 彙總是一種父管線彙總，會在滑動視窗上執行指令碼。滑動視窗會在從父 `histogram` 或 `date histogram` 彙總擷取的一連串數值上移動。視窗每次由左向右移動一個桶 (bucket)；每次視窗移動時，`moving_fn` 都會執行指令碼。
 
-Use the `moving_fn` aggregation to script any numeric calculation on data within the sliding window. You can use `moving_fn` for the following purposes:
+使用 `moving_fn` 彙總，即可透過指令碼對滑動視窗內的資料進行任何數值計算。您可以將 `moving_fn` 用於下列用途：
 
-- Trend analysis
-- Outlier detection
-- Custom time-series analysis
-- Custom smoothing algorithms
-- Digital signal processing (DSP)
+- 趨勢分析
+- 離群值偵測
+- 自訂時間序列分析
+- 自訂平滑演算法
+- 數位訊號處理 (DSP)
 
 
-## Parameters
+## 參數
 
-The `moving_fn` aggregation takes the following parameters.
+`moving_fn` 彙總接受下列參數。
 
-| Parameter             | Required/Optional | Data type       | Description |
+| 參數             | 必要/選用 | 資料類型       | 說明 |
 | :--                   | :--               |  :--            | :--         |
-| `buckets_path`        | Required          | String          | The path of the aggregation buckets containing the metric values to process. See [Buckets path]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path). |
-| `script`              | Required          | String or Object | The script that calculates a value for each window of data. Can be an inline script, stored script, or script file. The script has access to the variable names defined in the `buckets_path` parameter. |
-| `window`              | Required          | Integer         | The number of buckets in the sliding window. Must be a positive integer. |
-| `gap_policy`          | Optional          | String          | The policy to apply to missing data. Valid values are `skip` and `insert_zeros`. Default is `skip`. See [Data gaps]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#data-gaps). |
-| `format`              | Optional          | String          | A [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) formatting string. Returns the formatted output in the aggregation's `value_as_string` property. |
-| `shift`               | Optional          | Integer         | The number of buckets by which to shift the window. Can be positive (shift right toward future buckets) or negative (toward past buckets). Default is `0`, which places the window immediately to the left of the current bucket. See [Shifting the window](#shifting-the-window). |
+| `buckets_path`        | 必要          | 字串          | 包含要處理之指標值的彙總桶路徑。請參閱[桶路徑]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path)。 |
+| `script`              | 必要          | 字串或物件 | 為每個資料視窗計算數值的指令碼。可以是內嵌指令碼、已儲存的指令碼或指令碼檔案。指令碼可以存取 `buckets_path` 參數中定義的變數名稱。 |
+| `window`              | 必要          | 整數         | 滑動視窗中的桶數。必須是正整數。 |
+| `gap_policy`          | 選用          | 字串          | 套用至缺漏資料的政策。有效值為 `skip` 和 `insert_zeros`。預設為 `skip`。請參閱[資料缺口]({{site.url}}{{site.baseurl}}/aggregations/pipeline/#data-gaps)。 |
+| `format`              | 選用          | 字串          | [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) 格式字串。在彙總的 `value_as_string` 屬性中傳回格式化後的輸出。 |
+| `shift`               | 選用          | 整數         | 視窗要移動的桶數。可以是正數（向右移往未來的桶）或負數（移往過去的桶）。預設為 `0`，會將視窗置於目前桶的緊鄰左側。請參閱[移動視窗](#shifting-the-window)。 |
 
 
-## How moving function works
+## 移動函式的運作方式
 
-The `moving_fn` aggregation operates on a sliding window over an ordered sequence of buckets. Starting at the first bucket in the parent aggregation, `moving_fn` does the following:
+`moving_fn` 彙總會在有序桶序列上的滑動視窗中運作。從父彙總的第一個桶開始，`moving_fn` 會執行下列動作：
 
-1. Collects the subsequence (window) of values from the buckets specified by the `window` and `shift` parameters.
-2. Passes these values as an array to the function specified by `script`.
-3. Uses `script` to compute a single value from the array.
-4. Returns this value as the result for the current bucket.
-5. Moves forward one bucket and repeats this process.
+1. 從 `window` 和 `shift` 參數指定的桶中，收集數值的子序列（視窗）。
+2. 將這些數值以陣列形式傳遞給 `script` 指定的函式。
+3. 使用 `script` 從陣列計算出單一數值。
+4. 將此數值傳回，作為目前桶的結果。
+5. 向前移動一個桶，並重複此程序。
 
-"Past" and "future" values imply time-series data, the most common use case for moving window functions. More generally, they refer to previous and upcoming values, respectively, in any ordered data sequence.
+「過去」與「未來」數值意指時間序列資料，這是移動視窗函式最常見的使用案例。更廣義地說，它們分別指任何有序資料序列中先前與後續的數值。
 {: .note}
 
-The script applied by `moving_fn` can be a [predefined function](#predefined-functions) or a [custom script](#custom-scripts). Bucket values are provided to the script in the `values` array. The script returns a double value as the result. The result values `NaN` and `+/- Inf` are allowed, but `null` is not.
+`moving_fn` 套用的指令碼可以是[預先定義的函式](#predefined-functions)或[自訂指令碼](#custom-scripts)。桶值會以 `values` 陣列提供給指令碼。指令碼會傳回 double 值作為結果。結果值允許為 `NaN` 和 `+/- Inf`，但不允許為 `null`。
 
 
-### Window size
+### 視窗大小
 
-The `window` parameter specifies the number of buckets that define the size of the window.
+`window` 參數指定定義視窗大小的桶數。
 
-The array passed to the `script` function is zero-indexed. Its values are accessed within the script as `values[0]` to `values[n]`, where `n = values.length - 1`.
+傳遞給 `script` 函式的陣列索引從零開始。在指令碼中，以 `values[0]` 到 `values[n]` 存取其值，其中 `n = values.length - 1`。
 
 
-### Shifting the window
+### 移動視窗
 
-The `shift` parameter controls where the moving window is located relative to the current bucket. Set `shift` based on whether your analysis requires historical context, current data, or future prediction. The default is `0`, which shows only past values (excluding the current bucket). 
+`shift` 參數控制移動視窗相對於目前桶的位置。請根據您的分析需要歷史脈絡、目前資料或未來預測來設定 `shift`。預設為 `0`，只會顯示過去的值（不包括目前的桶）。
 
-Some commonly used values of `shift` are as follows:
+`shift` 的一些常用值如下：
 
-| `shift` | Window description                            |                     |
+| `shift` | 視窗說明                            |                     |
 | :--           | :--                                           | :--                 |
-| `0`           | Only past values. Excludes the current value. | `--[-----]x----`    |
-| `1`           | Past values, including the current value.     | `--[----x]-----`    |
-| `window/2`    | Centers the window around the current value.  | `--[--x--]-----`    |
-| `window`      | Future values, including the current value.   | `--[x----]-----`    |
+| `0`           | 僅過去的值。不包括目前的值。 | `--[-----]x----`    |
+| `1`           | 過去的值，包括目前的值。     | `--[----x]-----`    |
+| `window/2`    | 以目前數值為中心放置視窗。  | `--[--x--]-----`    |
+| `window`      | 未來的值，包括目前的值。   | `--[x----]-----`    |
 
-When a window extends beyond available data at the beginning or end of a sequence, `window` shrinks automatically to use only the available points:
+當視窗在序列開頭或結尾超出可用資料範圍時，`window` 會自動縮小，只使用可用的資料點：
 
 ```
 [x----]--
@@ -81,53 +82,53 @@ When a window extends beyond available data at the beginning or end of a sequenc
 ```
 
 
-## Predefined functions
+## 預先定義的函式
 
-The `moving_fn` aggregation supports a number of predefined functions that can be used instead of a custom script. The functions are accessible from the `MovingFunctions` context. For example, you can access the `max` function as `MovingFunctions.max(values)`. 
+`moving_fn` 彙總支援多個預先定義的函式，可用來取代自訂指令碼。這些函式可從 `MovingFunctions` 內容存取。例如，您可以用 `MovingFunctions.max(values)` 存取 `max` 函式。
 
-The following table describes the predefined functions.
+下表說明預先定義的函式。
 
-| Function                              | Model keyword        | Description                      |
+| 函式                              | 模型關鍵字        | 說明                      |
 |:--                                    | :--                  |:--                               |
-| Max                                   | `max`                | The maximum value in the window. |
-| Min                                   | `min`                | The minimum value in the window. |
-| Sum                                   | `sum`                | The sum of values in the window. |
-| Unweighted average                    | `unweightedAvg`      | An unweighted mean of all values in the window, equal to `sum` / `window`. |
-| Linear weighted average               | `linearWeightedAvg`  | A weighted average using a linear decay of weights, giving more importance to recent values. |
-| Exponentially Weighted Moving Average | `ewma`               | A weighted average using exponentially decaying weights, giving more importance to recent values. |
-| Holt                                  | `holt`               | A weighted average using a second exponential term to smooth long-term trends. |
-| Holt-Winters                          | `holt_wimnters`      | A weighted average using a third exponential term to smooth periodic (seasonal) effects. |
-| Standard deviation                    | `stdDev`             | The sum of values in the window. |
+| 最大值                                   | `max`                | 視窗中的最大值。 |
+| 最小值                                   | `min`                | 視窗中的最小值。 |
+| 總和                                   | `sum`                | 視窗中數值的總和。 |
+| 未加權平均值                    | `unweightedAvg`      | 視窗中所有數值的未加權平均數，等於 `sum` / `window`。 |
+| 線性加權平均值               | `linearWeightedAvg`  | 使用線性遞減權重的加權平均值，賦予較近期的數值較高的重要性。 |
+| 指數加權移動平均值 | `ewma`               | 使用指數遞減權重的加權平均值，賦予較近期的數值較高的重要性。 |
+| Holt                                  | `holt`               | 使用第二個指數項來平滑長期趨勢的加權平均值。 |
+| Holt-Winters                          | `holt_wimnters`      | 使用第三個指數項來平滑週期性（季節性）效應的加權平均值。 |
+| 標準差                    | `stdDev`             | 視窗中數值的總和。 |
 
-All of the predefined functions take the `values` array as their first parameter. For functions that take extra parameters, pass these parameters in order after `values`. For example, call the `stdDev` function by setting the `script` value to `MovingFunctions.stdDev(values, MovingFunctions.unweightedAvg(values))`.
+所有預先定義的函式都以 `values` 陣列作為第一個參數。對於接受額外參數的函式，請在 `values` 之後依序傳遞這些參數。例如，將 `script` 值設為 `MovingFunctions.stdDev(values, MovingFunctions.unweightedAvg(values))` 來呼叫 `stdDev` 函式。
 
-The following table shows the settings required for each model.
+下表顯示每個模型所需的設定。
 
-| Function            | Extra parameters   | Allowed values  | Default | Description |
+| 函式            | 額外參數   | 允許值  | 預設 | 說明 |
 | :--                 | :--                | :--             | :--     | :--         |
-| `max`               | None               |   Numeric array   |   None   |  The maximum value of the window. |
-| `min`               | None               |    Numeric array   |   None   | The minimum value of the window. |
-| `sum`               | None               |    Numeric array |   None    | The sum of all values in the window. |
-| `unweightedAvg`     | None               |    Numeric array  |   None   | The arithmetic mean of all values in the window. |
-| `linearWeightedAvg` | None               |    Numeric array  |   None    | The weighted average of all values in the window, with more recent values weighted more heavily.|
-| `ewma`              | `alpha`            | [0, 1] | 0.3     | The decay parameter. Higher values give more weight to recent data points. |
-| `holt`              | `alpha`            | [0, 1] | 0.3     | The decay parameter for the level component. |
-|              | `beta`             | [0, 1] | 0.1     | The decay parameter for the trend component.|
-| `holt_winters`      | `alpha`            | [0, 1] | 0.3     | The decay parameter for the level component.  |
-|       | `beta`             | [0, 1] | 0.3     | The decay parameter for the trend component. |
-|       | `gamma`            | [0, 1] | 0.3     | The decay parameter for the seasonal component.  |
-|       | `type`             | `add`, `mult`   | `add`   | Defines how seasonality is modeled: additive or multiplicative. |
-|       | `period`           | Integer         | 1       | The number of buckets comprising the period. |
-|      | `pad`              | Boolean         | true    | Whether to add a small offset to `0` values for `mult` type models to avoid a divide-by-zero error. |
-| `stdDev`            | `avg`              | Any double      | None    | The standard deviation of the window. To compute a meaningful standard deviation, use the mean of the sliding window array, typically, `MovingFunctions.unweightedAvg(values)`. |
+| `max`               | 無               |   數值陣列   |   無   |  視窗的最大值。 |
+| `min`               | 無               |    數值陣列   |   無   | 視窗的最小值。 |
+| `sum`               | 無               |    數值陣列 |   無    | 視窗中所有數值的總和。 |
+| `unweightedAvg`     | 無               |    數值陣列  |   無   | 視窗中所有數值的算術平均數。 |
+| `linearWeightedAvg` | 無               |    數值陣列  |   無    | 視窗中所有數值的加權平均值，較近期的數值權重較高。|
+| `ewma`              | `alpha`            | [0, 1] | 0.3     | 衰減參數。值越高，越近期的資料點權重越高。 |
+| `holt`              | `alpha`            | [0, 1] | 0.3     | 水準成分的衰減參數。 |
+|              | `beta`             | [0, 1] | 0.1     | 趨勢成分的衰減參數。|
+| `holt_winters`      | `alpha`            | [0, 1] | 0.3     | 水準成分的衰減參數。  |
+|       | `beta`             | [0, 1] | 0.3     | 趨勢成分的衰減參數。 |
+|       | `gamma`            | [0, 1] | 0.3     | 季節性成分的衰減參數。  |
+|       | `type`             | `add`, `mult`   | `add`   | 定義季節性的建模方式：加法或乘法。 |
+|       | `period`           | 整數         | 1       | 構成週期的桶數。 |
+|      | `pad`              | 布林值         | true    | 是否為 `mult` 類型模型的 `0` 值加上少量偏移，以避免除以零錯誤。 |
+| `stdDev`            | `avg`              | 任意 double 值      | 無    | 視窗的標準差。若要計算有意義的標準差，請使用滑動視窗陣列的平均值，通常為 `MovingFunctions.unweightedAvg(values)`。 |
 
-The predefined functions do not support function signatures with missing parameters. You therefore must supply the extra parameters, even if using the default values.
+預先定義的函式不支援缺少參數的函式簽章。因此，即使使用預設值，您也必須提供額外參數。
 {: .important}  
 
 
-### Example: Predefined functions
+### 範例：預先定義的函式
 
-The following example creates a date histogram with a one-week interval from the OpenSearch Dashboards logs sample data. The `sum` subaggregation calculates the sum of all bytes logged for each week. Finally, the `moving_fn` aggregation calculates the standard deviation of the byte sum using a `window` size of `5`, the default `shift` of `0`, and unweighted means:
+下列範例從 OpenSearch Dashboards 記錄檔範例資料建立以一週為間隔的日期直方圖。`sum` 子彙總會計算每週記錄的所有位元組總和。最後，`moving_fn` 彙總使用 `window` 大小 `5`、預設的 `shift` 值 `0` 以及未加權平均值，計算位元組總和的標準差：
 
 ```json
 POST /opensearch_dashboards_sample_data_logs/_search
@@ -157,13 +158,13 @@ POST /opensearch_dashboards_sample_data_logs/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-The response shows the standard deviation of the moving window starting with a zero value in the second bucket. The `stdDev` function returns `0` for windows that are empty or contain only invalid values (`null` or `NaN`):
+回應顯示移動視窗的標準差，從第二個桶 (bucket) 的零值開始。對於空的視窗或僅包含無效值 (`null` 或 `NaN`) 的視窗，`stdDev` 函式會傳回 `0`：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
 
 ```json
@@ -305,13 +306,13 @@ The response shows the standard deviation of the moving window starting with a z
 </details>
 
 
-## Custom scripts
+## 自訂指令碼
 
-You can supply an arbitrary custom script to calculate `moving_fn` results. Custom scripts use the Painless scripting language. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+您可以提供任意的自訂指令碼來計算 `moving_fn` 結果。自訂指令碼使用 Painless 指令碼語言。如需詳細資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-### Example: Custom scripts
+### 範例：自訂指令碼
 
-The following example creates a date histogram with a one-week interval from the OpenSearch Dashboards e-commerce sample data. The `sum` subaggregation calculates the sum of all taxed revenue for each week. The `moving_fn` script then returns the greater of the two values previous to the current value or `NaN` if two values are not available:
+下列範例從 OpenSearch Dashboards 電子商務範例資料建立以一週為間隔的日期直方圖。`sum` 子彙總會計算每週所有含稅營收的總和。接著，`moving_fn` 指令碼會傳回目前值之前兩個值中較大的一個；如果沒有兩個可用的值，則傳回 `NaN`：
 
 ```json
 POST /opensearch_dashboards_sample_data_ecommerce/_search
@@ -341,11 +342,11 @@ POST /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-The example returns the results of the calculation starting in bucket three, where enough previous data exists to perform the calculation:
+此範例從第三個桶開始傳回計算結果，因為從該處起才有足夠的先前資料可執行計算：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
 
 ```json
@@ -432,11 +433,11 @@ The example returns the results of the calculation starting in bucket three, whe
 </details>
 
 
-## Example: Moving average
+## 範例：移動平均
 
-The `moving_fn` aggregation replaces the deprecated `moving_avg` aggregation. The `moving_fn` aggregation is similar to the `moving_avg` aggregation but is more versatile since it computes arbitrary functions instead of only averages. All of the predefined `moving_avg` functions are implemented in `moving_fn` as well. 
+`moving_fn` 彙總取代了已棄用的 `moving_avg` 彙總。`moving_fn` 彙總與 `moving_avg` 彙總類似，但用途更廣泛，因為它可以計算任意函式，而不僅限於平均值。所有預先定義的 `moving_avg` 函式也都在 `moving_fn` 中實作。 
 
-The `holt` model is a moving average that uses exponentially decaying weights controlled by the `alpha` and `beta` parameters. The following example creates a date histogram with a one-week interval from the OpenSearch Dashboards logs sample data. The `sum` subaggregation calculates the sum of all bytes for each week. Finally, the `moving_fn` aggregation calculates a weighted average of the byte sum using a Holt model with a `window` size of `6`, the default `shift` of `0`, an `alpha` value of `0.3`, and a `beta` value of `0.1`:
+`holt` 模型是一種移動平均，使用由 `alpha` 和 `beta` 參數控制的指數衰減權重。以下範例使用 OpenSearch Dashboards 記錄檔範例資料，建立間隔為一週的日期直方圖。`sum` 子彙總會計算每週所有位元組的總和。最後，`moving_fn` 彙總使用 Holt 模型計算位元組總和的加權平均值，其中 `window` 大小為 `6`，`shift` 採用預設值 `0`，`alpha` 值為 `0.3`，而 `beta` 值為 `0.1`：
 
 ```json
 POST /opensearch_dashboards_sample_data_logs/_search
@@ -466,11 +467,11 @@ POST /opensearch_dashboards_sample_data_logs/_search
 ```
 {% include copy-curl.html %}
 
-The aggregation returns the moving `holt` average starting with the second bucket:
+此彙總會從第二個桶開始傳回 `holt` 移動平均值：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
 
 ```json

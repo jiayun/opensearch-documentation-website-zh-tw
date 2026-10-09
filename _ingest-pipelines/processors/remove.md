@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Remove
+title: "移除"
 parent: Ingest processors
 nav_order: 222
 redirect_from:
    - /api-reference/ingest-apis/processors/remove/
 ---
 
-# Remove processor
+# Remove 處理器
 
-The `remove` processor is used to remove a field from a document. 
+`remove` 處理器用於從文件中移除欄位。
 
-## Syntax
+## 語法
 
-The following is the syntax for the `remove` processor: 
+以下是 `remove` 處理器的語法：
 
 ```json
 {
@@ -24,27 +25,27 @@ The following is the syntax for the `remove` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `remove` processor.
+下表列出 `remove` 處理器的必要與選用參數。
 
-| Parameter  | Required/Optional  | Description  |
+| 參數  | 必要/選用  | 說明  |
 |---|---|---|
-`field`  | Optional  | The field name containing the data to be removed. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets). The metadata fields `_index`, `_version`, `_version_type`, and `_id` cannot be removed. If `version` is specified, `_id` cannot be removed from the ingested document. |
-`exclude_field`  | Optional  | The field name to be retained. All other fields, except metadata fields, will be removed. The `exclude_field` and `field` options are mutually exclusive. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets).  |
-`description`  | Optional  | A brief description of the processor.  |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | Specifies whether the processor continues execution even if it encounters errors. If set to `true`, failures are ignored. Default is `false`. |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |
+`field`  | 選用  | 包含要移除之資料的欄位名稱。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。中繼資料欄位 `_index`、`_version`、`_version_type` 和 `_id` 無法移除。若指定 `version`，則無法從匯入的文件中移除 `_id`。 |
+`exclude_field`  | 選用  | 要保留的欄位名稱。除了中繼資料欄位外，所有其他欄位都會被移除。`exclude_field` 與 `field` 選項互斥。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。  |
+`description`  | 選用  | 處理器的簡短說明。  |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。 |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+請依照下列步驟在管線中使用處理器。
 
-**Step 1: Create a pipeline** 
+**步驟 1：建立管線**
 
-The following query creates a pipeline, named `remove_ip`, that removes the `ip_address` field from a document: 
+下列查詢會建立名為 `remove_ip` 的管線，該管線會從文件中移除 `ip_address` 欄位：
 
 ```json
 PUT /_ingest/pipeline/remove_ip
@@ -61,12 +62,12 @@ PUT /_ingest/pipeline/remove_ip
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline**
+**步驟 2 (選用)：測試管線**
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/remove_ip/_simulate
@@ -85,9 +86,9 @@ POST _ingest/pipeline/remove_ip/_simulate
 ```
 {% include copy-curl.html %}
 
-**Response**
+**回應**
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線運作正常：
 
 ```json
 {
@@ -108,9 +109,9 @@ The following example response confirms that the pipeline is working as expected
 }
 ```
 
-**Step 3: Ingest a document**
+**步驟 3：匯入文件**
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=remove_ip
@@ -121,9 +122,9 @@ PUT testindex1/_doc/1?pipeline=remove_ip
 ```
 {% include copy-curl.html %}
 
-**Step 4 (Optional): Retrieve the document**
+**步驟 4 (選用)：擷取文件**
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1

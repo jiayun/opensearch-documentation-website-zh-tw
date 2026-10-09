@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Sample UBI SQL queries
+title: "UBI SQL 查詢範例"
 parent: User Behavior Insights
 grand_parent: Optimizing search quality
 has_children: false
 nav_order: 20
 ---
 
-# Sample UBI SQL queries
+# UBI SQL 查詢範例
 
-You can run sample User Behavior Insights (UBI) SQL queries through the OpenSearch Dashboards [Query Workbench]({{site.url}}{{site.baseurl}}/dashboards/query-workbench/).
+您可以透過 OpenSearch Dashboards 的 [Query Workbench]({{site.url}}{{site.baseurl}}/dashboards/query-workbench/) 執行 User Behavior Insights (UBI) SQL 查詢範例。
 
-## Queries with zero results
+## 查詢結果為零
 
-Queries can be executed on events on either the queries index (`ubi_queries`) or events index (`ubi_events`).
+查詢可對查詢索引（`ubi_queries`）或事件索引（`ubi_events`）中的事件執行。
 
-### Server-side queries
+### 伺服器端查詢
 
-A UBI-enabled search server logs the queries and their results as they are made, so in order to find all queries with *no* results, search for empty `query_response_hit_ids`:
+啟用 UBI 的搜尋伺服器會在查詢發生時記錄查詢及其結果，因此若要找出所有*沒有*結果的查詢，請搜尋空的 `query_response_hit_ids`：
 
 ```sql
 select
@@ -27,10 +28,10 @@ where query_response_hit_ids is null
 
 ```
 
-### Client-side events
+### 用戶端事件
 
-Although it's relatively straightforward to find queries with no results on the server side, you can also get the same result by querying the *event attributes* that were logged on the client side.
-Both client- and server-side queries return the same results. Use the following query to search for queries with no results: 
+雖然在伺服器端找出沒有結果的查詢相對簡單，您也可以透過查詢在用戶端記錄的*事件屬性*取得相同結果。
+用戶端與伺服器端查詢都會回傳相同的結果。請使用下列查詢來搜尋沒有結果的查詢：
 
 ```sql
 select
@@ -41,12 +42,11 @@ where event_attributes.result_count > 0
 
 
 
+## 熱門查詢
 
-## Trending queries
+熱門查詢可以使用下列任一查詢找出。
 
-Trending queries can be found by using either of the following queries.
-
-### Server-side
+### 伺服器端
 
 ```sql
 select 
@@ -56,7 +56,7 @@ group by user_query
 order by Total desc
 ```
 
-### Client-side
+### 用戶端
 
 ```sql
 select 
@@ -68,7 +68,7 @@ group by message
 order by Total desc
 ```
 
-Both queries return the distribution of search strings, as shown in the following table.
+兩種查詢都會回傳搜尋字串的分佈，如下表所示。
 
 <!-- vale off -->
 
@@ -102,10 +102,9 @@ abraza metodologías B2C|3
 <!-- vale on -->
 
 
+## 事件類型分佈計數
 
-## Event type distribution counts
-
-To create a pie chart widget visualizing the most common events, run the following query:
+若要建立圓餅圖小工具，將最常見的事件視覺化，請執行下列查詢：
 
 ```sql
 select 
@@ -115,7 +114,7 @@ group by action_name
 order by Total desc
 ```
 
-The results include a distribution across actions, as shown in the following table.
+結果包含各種動作的分佈，如下表所示。
 
 <!-- vale off -->
 
@@ -138,7 +137,7 @@ The results include a distribution across actions, as shown in the following tab
 
 <!-- vale on -->
 
-The following query shows the distribution of margins across user actions:
+下列查詢顯示各使用者動作之間的利潤分佈：
 
 
 ```sql
@@ -152,7 +151,7 @@ group by action_name
 order by average_cost desc
 ```
 
-The results include actions and the distribution across average costs and margins, as shown in the following table.
+結果包含各動作以及平均成本與利潤的分佈，如下表所示。
 
 <!-- vale off -->
 
@@ -175,9 +174,9 @@ The results include actions and the distribution across average costs and margin
 
 <!-- vale on -->
 
-## Sample search journey
+## 搜尋歷程範例
 
-To find a search in the query log, run the following query:
+若要在查詢記錄檔中找出某次搜尋，請執行下列查詢：
 
 ```sql
 select
@@ -185,7 +184,7 @@ select
 from ubi_queries where query_id = '7ae52966-4fd4-4ab1-8152-0fd0b52bdadf'
 ```
 
-The following table shows the results of the preceding query.
+下表顯示前述查詢的結果。
 
 <!-- vale off -->
 
@@ -195,7 +194,7 @@ The following table shows the results of the preceding query.
 
 <!-- vale on -->
 
-The `query` field in `query_id` has the following nested structure:
+`query_id` 中的 `query` 欄位具有下列巢狀結構：
 
 ```json
 {
@@ -233,7 +232,7 @@ The `query` field in `query_id` has the following nested structure:
 }
 ```
 
-In the event log, `ubi_events`, search for the events that correspond to the preceding query (whose query ID is `7ae52966-4fd4-4ab1-8152-0fd0b52bdadf`):
+在事件記錄檔中，`ubi_events`，搜尋對應於前述查詢的事件 (其查詢 ID 為 `7ae52966-4fd4-4ab1-8152-0fd0b52bdadf`)：
 
 ```sql
 select 
@@ -245,7 +244,7 @@ order by timestamp
 
 <!-- vale off -->
 
-The results include all events associated with the user's query, as shown in the following table.
+結果包含與該使用者查詢相關的所有事件，如下表所示。
 
 `application`|query_id|action_name|message_type|message|client_id|timestamp
 ---|---|---|---|---|---|---
@@ -258,9 +257,9 @@ The results include all events associated with the user's query, as shown in the
 <!-- vale on -->
 
 
-## User sessions
+## 使用者工作階段
 
-To find more of the same user's sessions (with the client ID `a15f1ef3-6bc6-4959-9b83-6699a4d29845`), run the following query:
+若要找出同一使用者的更多工作階段 (用戶端 ID 為 `a15f1ef3-6bc6-4959-9b83-6699a4d29845`)，請執行下列查詢：
 
 ```sql
 select
@@ -274,7 +273,7 @@ where client_id = 'a15f1ef3-6bc6-4959-9b83-6699a4d29845'
 order by query_id, timestamp
 ```
 
-The results are truncated to show a sample of sessions, as shown in the following table.
+結果已截斷以顯示工作階段範例，如下表所示。
 
 <!-- vale off -->
 
@@ -327,9 +326,9 @@ The results are truncated to show a sample of sessions, as shown in the followin
 <!-- vale on -->
 
 
-## List user sessions for users who logged out without submitting any queries
+## 列出登出但未提交任何查詢的使用者工作階段
 
-The following query searches for users who don't have an associated `query_id`. Note that this may happen if the client side does not pass the returned query to other events.
+下列查詢會搜尋沒有關聯 `query_id` 的使用者。請注意，如果用戶端未將傳回的查詢傳遞給其他事件，就可能發生這種情況。
 
 ```sql
 select 
@@ -342,7 +341,7 @@ order by EventTotal desc
 
 <!-- vale off -->
 
-The following table shows the client ID, session ID, and that there was 1 event,`logout`. 
+下表顯示用戶端 ID、工作階段 ID，以及有 1 個事件，`logout`。
 
 `client_id`|session_id|EventTotal
 ---|---|---
@@ -368,7 +367,7 @@ The following table shows the client ID, session ID, and that there was 1 event,
 
 <!-- vale on -->
 
-You may want to identify users who logged out multiple times without submitting a query. The following query lets you see which users do this the most:
+您可能想找出多次登出但未提交查詢的使用者。下列查詢可讓您查看哪些使用者最常這樣做：
 
 ```sql
 select 
@@ -379,7 +378,7 @@ group by client_id
 order by EventTotal desc
 ```
 
-The following table shows user client IDs and the number of logouts without any queries.
+下表顯示使用者用戶端 ID，以及未提交任何查詢的登出次數。
 
 <!-- vale off -->
 

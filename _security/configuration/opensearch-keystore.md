@@ -1,155 +1,156 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: OpenSearch keystore
+title: "OpenSearch 金鑰儲存庫"
 parent: Configuration
 nav_order: 40
 ---
 
-# OpenSearch keystore
+# OpenSearch 金鑰儲存庫
 
-`opensearch-keystore` is a utility script used to manage an OpenSearch keystore. An OpenSearch keystore provides a secure method of storing sensitive information, such as passwords and keys, used in an OpenSearch cluster. The script allows you to securely create, list, add, and remove settings. It is included in the OpenSearch distribution. 
+`opensearch-keystore` 是用來管理 OpenSearch keystore 的公用程式指令碼。OpenSearch keystore 提供一種安全的方法，用於儲存 OpenSearch 叢集中使用的敏感資訊，例如密碼與金鑰。此指令碼可讓您安全地建立、列出、新增及移除設定。它已包含在 OpenSearch 發行版本中。
 
-This keystore is separate from the keystore and truststore used to store TLS certificates in JKS or PKCS12/PFX format in order to secure the transport and HTTP layers. For information about those keystores, refer to [Keystore and truststore files]({{site.url}}{{site.baseurl}}/security/configuration/tls/#keystore-and-truststore-files).
+此 keystore 與用來以 JKS 或 PKCS12/PFX 格式儲存 TLS 憑證、以保護傳輸層與 HTTP 層的 keystore 及 truststore 是分開的。關於那些 keystore 的資訊，請參閱 [Keystore 與 truststore 檔案]({{site.url}}{{site.baseurl}}/security/configuration/tls/#keystore-and-truststore-files)。
 {: .note} 
 
-## Usage
+## 使用方式
 
-In order to use the `opensearch-keystore` script, you must have access to the file system containing the OpenSearch installation and the ability to execute OpenSearch scripts.
+若要使用 `opensearch-keystore` 指令碼，您必須能夠存取包含 OpenSearch 安裝的檔案系統，並具備執行 OpenSearch 指令碼的能力。
 
-To use `opensearch-keystore`, open a terminal and use the following command syntax:
+若要使用 `opensearch-keystore`，請開啟終端機並使用下列命令語法：
 
 ```
 opensearch-keystore [command] [options]
 ```
 {% include copy.html %}
 
-## Commands
+## 命令
 
-The `opensearch-keystore` script supports the following the commands: 
+`opensearch-keystore` 指令碼支援下列命令：
 
-- `create`: Initializes a new keystore. If a keystore already exists, this command will overwrite the existing keystore.
-- `list`: Lists all settings in the keystore.
-- `add <setting-name>`: Adds a new setting to the current keystore. When a new setting is added, the script prompts you for the value of that setting. After adding the setting and value, both are securely stored in the keystore.
-- `add-file <file-name>`: Adds a new file to the keystore.
-- `remove <setting-name>`: Removes an existing setting from the keystore.
-- `upgrade <setting-name>`: Upgrades an existing setting in the keystore.
-- `passwd`: Sets a password for the keystore.
-- `has-passwd`: Prints whether the keystore is password protected.
-- `help`: Displays help information about all `opensearch-keystore` commands.
+- `create`：初始化新的 keystore。如果 keystore 已存在，此命令會覆寫現有的 keystore。
+- `list`：列出 keystore 中的所有設定。
+- `add <setting-name>`：將新設定新增至目前的 keystore。新增設定時，指令碼會提示您輸入該設定的值。新增設定與值之後，兩者都會安全地儲存在 keystore 中。
+- `add-file <file-name>`：將新檔案新增至 keystore。
+- `remove <setting-name>`：從 keystore 移除現有的設定。
+- `upgrade <setting-name>`：升級 keystore 中現有的設定。
+- `passwd`：為 keystore 設定密碼。
+- `has-passwd`：顯示 keystore 是否受密碼保護。
+- `help`：顯示所有 `opensearch-keystore` 命令的說明資訊。
 
-## Options
+## 選項
 
-You can append each command with the following options:
+您可以在每個命令後面附加下列選項：
 
-- `-h, --help`: Displays help information about the script and its options.
-- `-s, --silent`: Provides minimal output when the script responds to a command.
-- `-v, --verbose`: Provides a verbose output for debugging purposes.
-- `-p, --password` (`create` command only): Specifies the password to use for encrypting the keystore. If this flag isn't used, the keystore will be created without a password.
+- `-h, --help`：顯示指令碼及其選項的說明資訊。
+- `-s, --silent`：當指令碼回應命令時提供最精簡的輸出。
+- `-v, --verbose`：提供用於偵錯的詳細輸出。
+- `-p, --password`（僅限 `create` 命令）：指定用於加密 keystore 的密碼。若未使用此旗標，keystore 將在沒有密碼的情況下建立。
 
-## Examples
+## 範例
 
-The following examples provide the basic syntax for common `opensearch-keystore` commands:
+下列範例提供常見 `opensearch-keystore` 命令的基本語法：
 
-### Creating a new keystore
+### 建立新的 keystore
 
-The following command creates a new keystore:
+下列命令會建立新的 keystore：
 
 ```bash
 ./bin/opensearch-keystore create
 ```
 {% include copy.html %}
 
-If a keystore already exists, the script will ask whether you would like to overwrite the existing keystore.
+如果 keystore 已存在，指令碼會詢問您是否要覆寫現有的 keystore。
 
-The script responds with a confirmation that the keystore was created:
+指令碼會回應確認訊息，表示 keystore 已建立：
    
 ```bash
 Created opensearch keystore in $OPENSEARCH_HOME/config/opensearch.keystore
 ```
 
-### Create a new password-protected keystore
+### 建立新的受密碼保護 keystore
 
-To create a new password-protected keystore, run the following command:
+若要建立新的受密碼保護 keystore，請執行下列命令：
 
 ```bash
 ./bin/opensearch-keystore create -p
 ```
 {% include copy.html %}
 
-If a keystore already exists, the script will ask whether you would like to overwrite the existing keystore.
+如果 keystore 已存在，指令碼會詢問您是否要覆寫現有的 keystore。
 
-### Setting a keystore password
+### 設定 keystore 密碼
 
-The following command sets a new keystore password:
+下列命令會設定新的 keystore 密碼：
 
 ```bash
 ./bin/opensearch-keystore passwd
 ```
 {% include copy.html %}
 
-If a keystore password already exists, the script will ask for the current keystore password before you can reset the password.
+如果 keystore 密碼已存在，指令碼會先要求您輸入目前的 keystore 密碼，才能重設密碼。
    
-**Response**
+**回應**
 
-The script responds with a confirmation that the keystore password was set successfully:
+指令碼會回應確認訊息，表示 keystore 密碼已成功設定：
    
 ```bash
 OpenSearch keystore password changed successfully.
 ```
 
-When starting OpenSearch you will be prompted to enter the keystore password. Alternatively, you can set the environment variable KEYSTORE_PASSWORD to avoid being prompted for password on startup.
+啟動 OpenSearch 時，系統會提示您輸入 keystore 密碼。或者，您可以設定環境變數 KEYSTORE_PASSWORD，以避免在啟動時被提示輸入密碼。
 {: .note}
 
-### Listing settings in the keystore
+### 列出 keystore 中的設定
 
-The following commands list all setting currently in the keystore:
+下列命令會列出 keystore 中目前所有的設定：
    
 ```bash
 ./bin/opensearch-keystore list
 ```
 {% include copy.html %}
 
-The script responds with a list of settings in the keystore:
+指令碼會回應 keystore 中的設定清單：
 
 ```bash
 keystore.seed
 plugins.security.ssl.http.pemkey_password_secure
 ```
 
-### Adding a new setting
+### 新增設定
 
-The following command adds a new keystore setting:
+下列命令會新增 keystore 設定：
 
 ```bash
 ./bin/opensearch-keystore add plugins.security.ssl.http.pemkey_password_secure
 ```
 {% include copy.html %}
 
-After this command, you will be prompted to enter the secret key securely.
+執行此命令後，系統會提示您以安全方式輸入秘密金鑰。
 
-### Removing a setting
+### 移除設定
 
-The following command removes a keystore setting:
+下列命令會移除 keystore 設定：
 
 ```bash
 ./bin/opensearch-keystore remove plugins.security.ssl.http.pemkey_password_secure
 ```
 {% include copy.html %}
 
-No response exists for this command. To confirm that the setting was deleted, use `opensearch-keystore list`.
+此命令沒有任何回應。若要確認設定已刪除，請使用 `opensearch-keystore list`。
 
-For a complete list of secure settings that can be configured using `opensearch-keystore`, refer to [(Advanced) Using encrypted password settings for SSL]({{site.url}}{{site.baseurl}}/security/configuration/tls/#advanced-using-encrypted-password-settings-for-ssl).
+關於可使用 `opensearch-keystore` 設定的完整安全設定清單，請參閱[（進階）使用 SSL 加密密碼設定]({{site.url}}{{site.baseurl}}/security/configuration/tls/#advanced-using-encrypted-password-settings-for-ssl)。
 {: .note}
 
-### Upgrading the keystore
+### 升級 keystore
 
-The following command upgrades the keystore format to the latest version:
+下列命令會將 keystore 格式升級至最新版本：
 
 ```bash
 ./bin/opensearch-keystore upgrade
 ```
 {% include copy.html %}
 
-## Keystore entries as OpenSearch settings
+## 作為 OpenSearch 設定的 keystore 項目
 
-After a setting has been added to a keystore, it is implicitly added to the OpenSearch configuration as if it were another entry in `opensearch.yml`.
+設定新增至 keystore 之後，會隱含地新增至 OpenSearch 組態中，就像 `opensearch.yml` 中的另一個項目一樣。

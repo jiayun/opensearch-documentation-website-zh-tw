@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Span term
+title: "跨度詞元"
 parent: Span queries
 grand_parent: Query DSL
 nav_order: 80
 ---
 
-# Span term query
+# 跨度詞元查詢
 
-The `span_term` query is the most basic span query that matches spans containing a single term. It serves as a building block for more complex span queries.
+`span_term` 查詢是最基本的跨度查詢，用於比對包含單一詞元的跨度。它是建構更複雜跨度查詢的基礎元件。
 
-For example, you can use the `span_term` query to:
-- Find exact term matches that can be used in other span queries.
-- Match specific words while maintaining position information.
-- Create basic spans that can be combined with other span queries.
+例如，您可以使用 `span_term` 查詢來：
+- 尋找可在其他跨度查詢中使用的精確詞元比對。
+- 比對特定單字，同時保留位置資訊。
+- 建立可與其他跨度查詢合併的基本跨度。
 
-## Example
+## 範例
 
-To try the examples in this section, complete the [setup steps]({{site.url}}{{site.baseurl}}/query-dsl/span/#setup).
+若要嘗試本節中的範例，請完成[設定步驟]({{site.url}}{{site.baseurl}}/query-dsl/span/#setup)。
 {: .tip}
 
-The following query searches for the exact term "formal":
+下列查詢會搜尋精確詞元 "formal"：
 
 ```json
 GET /clothing/_search
@@ -34,7 +35,7 @@ GET /clothing/_search
 ```
 {% include copy-curl.html %}
 
-Alternatively, you can specify the search term in the `value` parameter:
+或者，您可以在 `value` 參數中指定搜尋詞元：
 
 ```json
 GET /clothing/_search
@@ -50,7 +51,7 @@ GET /clothing/_search
 ```
 {% include copy-curl.html %}
 
-You can also specify a `boost` value in order to boost the document score:
+您也可以指定 `boost` 值，以提高文件分數：
 
 ```json
 GET /clothing/_search
@@ -67,11 +68,11 @@ GET /clothing/_search
 ```
 {% include copy-curl.html %}
 
-The query matches documents 1 and 2 because they contain the exact term "formal". Position information is preserved for use in other span queries.
+此查詢比對文件 1 和 2，因為它們包含精確詞元 "formal"。位置資訊會保留，供其他 span 查詢使用。
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -114,10 +115,10 @@ The query matches documents 1 and 2 because they contain the exact term "formal"
 ```
 </details>
 
-## Parameters
+## 參數
 
-The following table lists all top-level parameters supported by `span_term` queries.
+下表列出 `span_term` 查詢支援的所有頂層參數。
 
-| Parameter  | Data type | Description |
+| 參數  | 資料類型 | 說明 |
 |:----------------|:------------|:--------|
-| `<field>` | String or object | The name of the field in which to search. |
+| `<field>` | 字串或物件 | 要搜尋的欄位名稱。 |

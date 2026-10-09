@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using sorting with a hybrid query
+title: "在混合查詢中使用排序"
 parent: Hybrid search
 grand_parent: AI search
 has_children: false
 nav_order: 10
 ---
 
-# Using sorting with a hybrid query
-**Introduced 2.16**
+# 在混合查詢中使用排序
+**於 2.16 版導入**
 {: .label .label-purple }
 
-By default, hybrid search returns results ordered by scores in descending order. You can apply sorting to hybrid query results by providing the `sort` criteria in the search request. For more information about sort criteria, see [Sort results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/).
-When sorting is applied to a hybrid search, results are fetched from the shards based on the specified sort criteria. As a result, the search results are sorted accordingly, and the document scores are `null`. Scores are only present in the hybrid search sorting results if documents are sorted by `_score`. 
+預設情況下，混合搜尋會以分數遞減順序傳回結果。您可以在搜尋請求中提供 `sort` 準則，為混合查詢結果套用排序。如需排序準則的更多資訊，請參閱 [排序結果]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/)。
+當排序套用於混合搜尋時，系統會依據指定的排序準則從分片取得結果。因此，搜尋結果會據此排序，而文件分數為 `null`。只有當文件依 `_score` 排序時，混合搜尋排序結果中才會包含分數。
 
-Starting with OpenSearch 3.5, the [`min_score`]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#request-body) parameter is applied after score normalization and combination. It can be used only when sorting by `_score` or when no explicit sort order is specified. If `min_score` is used with any other sorting criteria, the request results in an error.
+從 OpenSearch 3.5 開始，[`min_score`]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#request-body) 參數會在分數正規化與合併之後套用。此參數只能在依 `_score` 排序或未指定明確排序順序時使用。若 `min_score` 與任何其他排序準則一起使用，請求將導致錯誤。
 {: .important}
 
-In the following example, sorting is applied by `doc_price` in the hybrid query search request:
+在下列範例中，混合查詢搜尋請求依 `doc_price` 套用排序：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -60,7 +61,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents sorted by `doc_price` in descending order:
+回應包含依 `doc_price` 遞減排序的相符文件：
 
 ```json
 {
@@ -139,7 +140,7 @@ The response contains the matching documents sorted by `doc_price` in descending
 }
 ```
 
-In the following example, sorting is applied by `_id`:
+在下列範例中，排序依 `_id` 套用：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -182,7 +183,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents sorted by `_id` in descending order:
+回應包含依 `_id` 遞減排序的相符文件：
 
 ```json
 {

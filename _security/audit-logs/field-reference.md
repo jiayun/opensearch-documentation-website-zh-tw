@@ -1,242 +1,243 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Audit log field reference
+title: "稽核記錄檔欄位參考"
 parent: Audit logs
 nav_order: 130
 redirect_from:
   - /security-plugin/audit-logs/field-reference/
 ---
 
-# Audit log field reference
+# 稽核記錄檔欄位參考
 
-This page contains descriptions for all audit log fields.
+本頁包含所有稽核記錄檔欄位的說明。
 
 
-## Common attributes
+## 共同屬性
 
-The following attributes are logged for all event categories, independent of the layer.
+下列屬性會記錄於所有事件類別，與層級無關。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`audit_format_version` | The audit log message format version.
-`audit_category` | The audit log category. Values include `FAILED_LOGIN`, `MISSING_PRIVILEGES`, `BAD_HEADERS`, `SSL_EXCEPTION`, `OPENSEARCH_SECURITY_INDEX_ATTEMPT`, `AUTHENTICATED`, `GRANTED_PRIVILEGES`, `CLUSTER_SETTINGS_CHANGED`, and `INDEX_SETTINGS_CHANGED`.
-`audit_node_id ` | The ID of the node where the event was generated.
-`audit_node_name` | The name of the node where the event was generated.
-`audit_node_host_address` | The host address of the node where the event was generated.
-`audit_node_host_name` | The hostname of the node where the event was generated.
-`audit_request_layer` | The layer on which the event has been generated, either TRANSPORT or REST.
-`audit_request_origin` | The layer from which the event originated, either TRANSPORT or REST.
-`audit_request_effective_user_is_admin` | True if the request was made with a TLS admin certificate, otherwise false.
+`audit_format_version` | 稽核記錄檔訊息格式的版本。
+`audit_category` | 稽核記錄檔類別。值包括 `FAILED_LOGIN`、`MISSING_PRIVILEGES`、`BAD_HEADERS`、`SSL_EXCEPTION`、`OPENSEARCH_SECURITY_INDEX_ATTEMPT`、`AUTHENTICATED`、`GRANTED_PRIVILEGES`、`CLUSTER_SETTINGS_CHANGED` 與 `INDEX_SETTINGS_CHANGED`。
+`audit_node_id ` | 產生事件的節點 ID。
+`audit_node_name` | 產生事件的節點名稱。
+`audit_node_host_address` | 產生事件的節點主機位址。
+`audit_node_host_name` | 產生事件的節點主機名稱。
+`audit_request_layer` | 產生事件的層級，為 TRANSPORT 或 REST。
+`audit_request_origin` | 事件來源的層級，為 TRANSPORT 或 REST。
+`audit_request_effective_user_is_admin` | 若請求是以 TLS 管理員憑證發出則為 true，否則為 false。
 
 
-## REST FAILED_LOGIN attributes
+## REST FAILED_LOGIN 屬性
 
-The following attributes are logged for the REST layer failed login events.
+下列屬性會記錄於 REST 層級的登入失敗事件。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`audit_request_effective_user` | The username that failed to authenticate.
-`audit_rest_request_path` | The REST endpoint URI.
-`audit_rest_request_params` | The HTTP request parameters, if any.
-`audit_rest_request_headers` | The HTTP headers, if any.
-`audit_request_initiating_user` | The user that initiated the request. Only logged if it differs from the effective user.
-`audit_request_body` | The HTTP request body, if any (and if request body logging is enabled).
-`audit_rest_request_method` | The HTTP request method.
+`audit_request_effective_user` | 驗證失敗的使用者名稱。
+`audit_rest_request_path` | REST 端點 URI。
+`audit_rest_request_params` | HTTP 請求參數（若有的話）。
+`audit_rest_request_headers` | HTTP 標頭（若有的話）。
+`audit_request_initiating_user` | 發起請求的使用者。僅在與有效使用者不同時記錄。
+`audit_request_body` | HTTP 請求本文（若有的話，且已啟用請求本文記錄）。
+`audit_rest_request_method` | HTTP 請求方法。
 
 
-## REST AUTHENTICATED attributes
+## REST AUTHENTICATED 屬性
 
-The following attributes are logged for the REST layer successful authentication events.
+下列屬性會記錄於 REST 層級的驗證成功事件。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`audit_request_effective_user` | The username that failed to authenticate.
-`audit_request_initiating_user` | The user that initiated the request. Only logged if it differs from the effective user.
-`audit_rest_request_path` | The REST endpoint URI.
-`audit_rest_request_params` | The HTTP request parameters, if any.
-`audit_rest_request_headers` | The HTTP headers, if any.
-`audit_request_body` | The HTTP request body, if any (and if request body logging is enabled).
-`audit_rest_request_method` | The HTTP request method.
+`audit_request_effective_user` | 驗證失敗的使用者名稱。
+`audit_request_initiating_user` | 發起請求的使用者。僅在與有效使用者不同時記錄。
+`audit_rest_request_path` | REST 端點 URI。
+`audit_rest_request_params` | HTTP 請求參數（若有的話）。
+`audit_rest_request_headers` | HTTP 標頭（若有的話）。
+`audit_request_body` | HTTP 請求本文（若有的話，且已啟用請求本文記錄）。
+`audit_rest_request_method` | HTTP 請求方法。
 
 
-## REST SSL_EXCEPTION attributes
+## REST SSL_EXCEPTION 屬性
 
-The following attributes are logged for the REST layer SSL exception events.
+下列屬性會記錄於 REST 層級的 SSL 例外事件。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`audit_request_exception_stacktrace` | The stack trace of the SSL exception.
+`audit_request_exception_stacktrace` | SSL 例外的堆疊追蹤。
 
 
-## REST BAD_HEADERS attributes
+## REST BAD_HEADERS 屬性
 
-The following attributes are logged for the REST layer bad headers events.
+下列屬性會記錄於 REST 層級的錯誤標頭事件。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`audit_rest_request_path` | The REST endpoint URI.
-`audit_rest_request_params` | The HTTP request parameters, if any.
-`audit_rest_request_headers` | The HTTP headers, if any.
-`audit_request_body` | The HTTP request body, if any (and if request body logging is enabled).
+`audit_rest_request_path` | REST 端點 URI。
+`audit_rest_request_params` | HTTP 請求參數（若有的話）。
+`audit_rest_request_headers` | HTTP 標頭（若有的話）。
+`audit_request_body` | HTTP 請求本文（若有的話，且已啟用請求本文記錄）。
 
 
-## Transport FAILED_LOGIN attributes
+## Transport FAILED_LOGIN 屬性
 
-The following attributes are logged for the transport layer failed login events.
+下列屬性會記錄於傳輸層級的登入失敗事件。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`audit_trace_task_id` | The ID of the request.
-`audit_transport_headers` | The headers of the request, if any.
-`audit_request_effective_user` | The username that failed to authenticate.
-`audit_request_initiating_user` | The user that initiated the request. Only logged if it differs from the effective user.
-`audit_transport_request_type` | The request type (for example, `IndexRequest`).
-`audit_request_body` | The HTTP request body, if any (and if request body logging is enabled).
-`audit_trace_indices` | The index name(s) included in the request. Can contain wildcards, date patterns, and aliases. Only logged if `resolve_indices` is true.
-`audit_trace_resolved_indices` | The resolved index name(s) affected by the request. Only logged if `resolve_indices` is true.
-`audit_trace_doc_types` | The document types affected by the request. Only logged if `resolve_indices` is true.
+`audit_trace_task_id` | 請求的 ID。
+`audit_transport_headers` | 請求的標頭（若有的話）。
+`audit_request_effective_user` | 驗證失敗的使用者名稱。
+`audit_request_initiating_user` | 發起請求的使用者。僅在與有效使用者不同時記錄。
+`audit_transport_request_type` | 請求類型（例如 `IndexRequest`）。
+`audit_request_body` | HTTP 請求本文（若有的話，且已啟用請求本文記錄）。
+`audit_trace_indices` | 請求中包含的索引名稱。可包含萬用字元、日期模式與別名。僅在 `resolve_indices` 為 true 時記錄。
+`audit_trace_resolved_indices` | 受該請求影響的已解析索引名稱。僅在 `resolve_indices` 為 true 時記錄。
+`audit_trace_doc_types` | 受該請求影響的文件類型。僅在 `resolve_indices` 為 true 時記錄。
 
 
-## Transport AUTHENTICATED attributes
+## Transport AUTHENTICATED 屬性
 
-The following attributes are logged for the transport layer successful authentication events.
+下列屬性會記錄於傳輸層級的驗證成功事件。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`audit_trace_task_id` | The ID of the request.
-`audit_transport_headers` | The headers of the request, if any.
-`audit_request_effective_user` | The username that failed to authenticate.
-`audit_request_initiating_user` | The user that initiated the request. Only logged if it differs from the effective user.
-`audit_transport_request_type` | The request type (for example, `IndexRequest`).
-`audit_request_body` | The HTTP request body, if any (and if request body logging is enabled).
-`audit_trace_indices` | The index name(s) included in the request. Can contain wildcards, date patterns, and aliases. Only logged if `resolve_indices` is true.
-`audit_trace_resolved_indices` | The resolved index name(s) affected by the request. Only logged if `resolve_indices` is true.
-`audit_trace_doc_types` | The document types affected by the request. Only logged if `resolve_indices` is true.
+`audit_trace_task_id` | 請求的 ID。
+`audit_transport_headers` | 請求的標頭（若有的話）。
+`audit_request_effective_user` | 驗證失敗的使用者名稱。
+`audit_request_initiating_user` | 發起請求的使用者。僅在與有效使用者不同時記錄。
+`audit_transport_request_type` | 請求類型（例如 `IndexRequest`）。
+`audit_request_body` | HTTP 請求本文（若有的話，且已啟用請求本文記錄）。
+`audit_trace_indices` | 請求中包含的索引名稱。可包含萬用字元、日期模式與別名。僅在 `resolve_indices` 為 true 時記錄。
+`audit_trace_resolved_indices` | 受該請求影響的已解析索引名稱。僅在 `resolve_indices` 為 true 時記錄。
+`audit_trace_doc_types` | 受該請求影響的文件類型。僅在 `resolve_indices` 為 true 時記錄。
 
 
-## Transport MISSING_PRIVILEGES attributes
+## Transport MISSING_PRIVILEGES 屬性
 
-The following attributes are logged for the transport layer missing privileges events.
+下列屬性會記錄於傳輸層級的缺少權限事件。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`audit_trace_task_id` | The ID of the request.
-`audit_trace_task_parent_id` | The parent ID of this request, if any.
-`audit_transport_headers` | The headers of the request, if any.
-`audit_request_effective_user` | The username that failed to authenticate.
-`audit_request_initiating_user` | The user that initiated the request. Only logged if it differs from the effective user.
-`audit_transport_request_type` | The request type (for example, `IndexRequest`).
-`audit_request_privilege` | The required privilege of the request (for example, `indices:data/read/search`).
-`audit_request_body` | The HTTP request body, if any (and if request body logging is enabled).
-`audit_trace_indices` | The index name(s) included in the request. Can contain wildcards, date patterns, and aliases. Only logged if `resolve_indices` is true.
-`audit_trace_resolved_indices` | The resolved index name(s) affected by the request. Only logged if `resolve_indices` is true.
-`audit_trace_doc_types` | The document types affected by the request. Only logged if `resolve_indices` is true.
+`audit_trace_task_id` | 請求的 ID。
+`audit_trace_task_parent_id` | 此請求的父系 ID（若有的話）。
+`audit_transport_headers` | 請求的標頭（若有的話）。
+`audit_request_effective_user` | 驗證失敗的使用者名稱。
+`audit_request_initiating_user` | 發起請求的使用者。僅在與有效使用者不同時記錄。
+`audit_transport_request_type` | 請求類型（例如 `IndexRequest`）。
+`audit_request_privilege` | 請求所需的權限（例如 `indices:data/read/search`）。
+`audit_request_body` | HTTP 請求本文（若有的話，且已啟用請求本文記錄）。
+`audit_trace_indices` | 請求中包含的索引名稱。可包含萬用字元、日期模式與別名。僅在 `resolve_indices` 為 true 時記錄。
+`audit_trace_resolved_indices` | 受該請求影響的已解析索引名稱。僅在 `resolve_indices` 為 true 時記錄。
+`audit_trace_doc_types` | 受該請求影響的文件類型。僅在 `resolve_indices` 為 true 時記錄。
 
 
-## Transport GRANTED_PRIVILEGES attributes
+## Transport GRANTED_PRIVILEGES 屬性
 
-The following attributes are logged for the transport layer granted privileges events.
+下列屬性會記錄於傳輸層級的已授權權限事件。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`audit_trace_task_id` | The ID of the request.
-`audit_trace_task_parent_id` | The parent ID of this request, if any.
-`audit_transport_headers` | The headers of the request, if any.
-`audit_request_effective_user` | The username that failed to authenticate.
-`audit_request_initiating_user` | The user that initiated the request. Only logged if it differs from the effective user.
-`audit_transport_request_type` | The request type (for example, `IndexRequest`).
-`audit_request_privilege` | The required privilege of the request (for example, `indices:data/read/search`).
-`audit_request_body` | The HTTP request body, if any (and if request body logging is enabled).
-`audit_trace_indices` | The index name(s) included in the request. Can contain wildcards, date patterns, and aliases. Only logged if `resolve_indices` is true.
-`audit_trace_resolved_indices` | The resolved index name(s) affected by the request. Only logged if `resolve_indices` is true.
-`audit_trace_doc_types` | The document types affected by the request. Only logged if `resolve_indices` is true.
+`audit_trace_task_id` | 請求的 ID。
+`audit_trace_task_parent_id` | 此請求的父系 ID（若有的話）。
+`audit_transport_headers` | 請求的標頭（若有的話）。
+`audit_request_effective_user` | 驗證失敗的使用者名稱。
+`audit_request_initiating_user` | 發起請求的使用者。僅在與有效使用者不同時記錄。
+`audit_transport_request_type` | 請求類型（例如 `IndexRequest`）。
+`audit_request_privilege` | 請求所需的權限（例如 `indices:data/read/search`）。
+`audit_request_body` | HTTP 請求本文（若有的話，且已啟用請求本文記錄）。
+`audit_trace_indices` | 請求中包含的索引名稱。可包含萬用字元、日期模式與別名。僅在 `resolve_indices` 為 true 時記錄。
+`audit_trace_resolved_indices` | 受該請求影響的已解析索引名稱。僅在 `resolve_indices` 為 true 時記錄。
+`audit_trace_doc_types` | 受該請求影響的文件類型。僅在 `resolve_indices` 為 true 時記錄。
 
 
-## Transport SSL_EXCEPTION attributes
+## Transport SSL_EXCEPTION 屬性
 
-The following attributes are logged for the transport layer SSL exception events.
+傳輸層 SSL 例外事件會記錄下列屬性。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`audit_request_exception_stacktrace` | The stack trace of the SSL exception.
+`audit_request_exception_stacktrace` | SSL 例外的堆疊追蹤。
 
 
-## Transport BAD_HEADERS attributes
+## Transport BAD_HEADERS 屬性
 
-The following attributes are logged for the transport layer bad headers events.
+傳輸層錯誤標頭事件會記錄下列屬性。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`audit_trace_task_id` | The ID of the request.
-`audit_trace_task_parent_id` | The parent ID of this request, if any.
-`audit_transport_headers` | The headers of the request, if any.
-`audit_request_effective_user` | The username that failed to authenticate.
-`audit_request_initiating_user` | The user that initiated the request. Only logged if it differs from the effective user.
-`audit_transport_request_type` | The request type (for example, `IndexRequest`).
-`audit_request_body` | The HTTP request body, if any (and if request body logging is enabled).
-`audit_trace_indices` | The index name(s) included in the request. Can contain wildcards, date patterns, and aliases. Only logged if `resolve_indices` is true.
-`audit_trace_resolved_indices` | The resolved index name(s) affected by the request. Only logged if `resolve_indices` is true.
-`audit_trace_doc_types` | The document types affected by the request. Only logged if `resolve_indices` is true.
+`audit_trace_task_id` | 請求的 ID。
+`audit_trace_task_parent_id` | 此請求的父 ID (如果有的話)。
+`audit_transport_headers` | 請求的標頭 (如果有的話)。
+`audit_request_effective_user` | 驗證失敗的使用者名稱。
+`audit_request_initiating_user` | 發起請求的使用者。僅在與有效使用者不同時才會記錄。
+`audit_transport_request_type` | 請求類型 (例如 `IndexRequest`)。
+`audit_request_body` | HTTP 請求本文 (如果有的話，且已啟用請求本文記錄)。
+`audit_trace_indices` | 請求中包含的索引名稱。可包含萬用字元、日期模式與別名。僅在 `resolve_indices` 為 true 時才會記錄。
+`audit_trace_resolved_indices` | 受該請求影響的已解析索引名稱。僅在 `resolve_indices` 為 true 時才會記錄。
+`audit_trace_doc_types` | 受該請求影響的文件類型。僅在 `resolve_indices` 為 true 時才會記錄。
 
 
-## Transport opensearch_SECURITY_INDEX_ATTEMPT attributes
+## Transport opensearch_SECURITY_INDEX_ATTEMPT 屬性
 
-The following attributes are logged when a request attempts to access the OpenSearch security index.
+當請求嘗試存取 OpenSearch 安全性索引時，會記錄下列屬性。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`audit_trace_task_id` | The ID of the request.
-`audit_transport_headers` | The headers of the request, if any.
-`audit_request_effective_user` | The username that failed to authenticate.
-`audit_request_initiating_user` | The user that initiated the request. Only logged if it differs from the effective user.
-`audit_transport_request_type` | The request type (for example, `IndexRequest`).
-`audit_request_body` | The HTTP request body, if any (and if request body logging is enabled).
-`audit_trace_indices` | The index name(s) included in the request. Can contain wildcards, date patterns, and aliases. Only logged if `resolve_indices` is true.
-`audit_trace_resolved_indices` | The resolved index name(s) affected by the request. Only logged if `resolve_indices` is true.
-`audit_trace_doc_types` | The document types affected by the request. Only logged if `resolve_indices` is true.
+`audit_trace_task_id` | 請求的 ID。
+`audit_transport_headers` | 請求的標頭 (如果有的話)。
+`audit_request_effective_user` | 驗證失敗的使用者名稱。
+`audit_request_initiating_user` | 發起請求的使用者。僅在與有效使用者不同時才會記錄。
+`audit_transport_request_type` | 請求類型 (例如 `IndexRequest`)。
+`audit_request_body` | HTTP 請求本文 (如果有的話，且已啟用請求本文記錄)。
+`audit_trace_indices` | 請求中包含的索引名稱。可包含萬用字元、日期模式與別名。僅在 `resolve_indices` 為 true 時才會記錄。
+`audit_trace_resolved_indices` | 受該請求影響的已解析索引名稱。僅在 `resolve_indices` 為 true 時才會記錄。
+`audit_trace_doc_types` | 受該請求影響的文件類型。僅在 `resolve_indices` 為 true 時才會記錄。
 
 
-## Transport CLUSTER_SETTINGS_CHANGED attributes
+## Transport CLUSTER_SETTINGS_CHANGED 屬性
 
-The following attributes are logged when cluster settings are changed.
+當叢集設定變更時，會記錄下列屬性。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`audit_request_effective_user` | The user who made the setting change.
-`audit_transport_request_type` | The request type (for example, `ClusterUpdateSettingsRequest`).
-`audit_transport_action` | The transport action (for example, `cluster:admin/settings/update`).
-`audit_settings_changes` | An array of setting change objects, each containing `setting`, `old_value`, `new_value`, `operation`, and `scope`. Sensitive settings are automatically redacted.
+`audit_request_effective_user` | 進行設定變更的使用者。
+`audit_transport_request_type` | 請求類型 (例如 `ClusterUpdateSettingsRequest`)。
+`audit_transport_action` | 傳輸動作 (例如 `cluster:admin/settings/update`)。
+`audit_settings_changes` | 設定變更物件的陣列，每個物件包含 `setting`、`old_value`、`new_value`、`operation` 與 `scope`。敏感性設定會自動遮蔽。
 
-Each object in `audit_settings_changes` contains the following fields.
+`audit_settings_changes` 中的每個物件包含下列欄位。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`setting` | The full setting name (for example, `cluster.max_shards_per_node`).
-`old_value` | The previous value of the setting, or `null` if not previously set.
-`new_value` | The new value of the setting, or `null` if the setting was removed.
-`operation` | Either `set` (value was assigned) or `removed` (value was reset to the default).
-`scope` | Either `persistent` (survives restarts) or `transient` (lost on restart).
+`setting` | 完整設定名稱 (例如 `cluster.max_shards_per_node`)。
+`old_value` | 設定的先前值，若先前未設定則為 `null`。
+`new_value` | 設定的新值，若設定已被移除則為 `null`。
+`operation` | 為 `set` (值已被指派) 或 `removed` (值已重設為預設)。
+`scope` | 為 `persistent` (重新啟動後仍保留) 或 `transient` (重新啟動後遺失)。
 
 
-## Transport INDEX_SETTINGS_CHANGED attributes
+## Transport INDEX_SETTINGS_CHANGED 屬性
 
-The following attributes are logged when index settings are changed.
+當索引設定變更時，會記錄下列屬性。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`audit_request_effective_user` | The user who made the setting change.
-`audit_transport_request_type` | The request type (for example, `UpdateSettingsRequest`).
-`audit_transport_action` | The transport action (for example, `indices:admin/settings/update`).
-`audit_trace_indices` | The index name(s) included in the request. Can contain wildcards and aliases.
-`audit_trace_resolved_indices` | The resolved concrete index name(s) affected by the request.
-`audit_settings_changes` | An array of setting change objects, each containing `setting`, `old_value`, `new_value`, `operation`, and `scope`. Sensitive settings are automatically redacted.
+`audit_request_effective_user` | 進行設定變更的使用者。
+`audit_transport_request_type` | 請求類型 (例如 `UpdateSettingsRequest`)。
+`audit_transport_action` | 傳輸動作 (例如 `indices:admin/settings/update`)。
+`audit_trace_indices` | 請求中包含的索引名稱。可包含萬用字元與別名。
+`audit_trace_resolved_indices` | 受該請求影響的已解析具體索引名稱。
+`audit_settings_changes` | 設定變更物件的陣列，每個物件包含 `setting`、`old_value`、`new_value`、`operation` 與 `scope`。敏感性設定會自動遮蔽。
 
-Each object in `audit_settings_changes` contains the following fields.
+`audit_settings_changes` 中的每個物件包含下列欄位。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`setting` | The full setting name (for example, `index.number_of_replicas`).
-`old_value` | The previous value of the setting, or `null` if not previously set.
-`new_value` | The new value of the setting, or `null` if the setting was removed.
-`operation` | Either `set` (value was assigned) or `removed` (value was reset to the default).
-`scope` | Always `index` for index setting changes.
+`setting` | 完整設定名稱 (例如 `index.number_of_replicas`)。
+`old_value` | 設定的先前值，若先前未設定則為 `null`。
+`new_value` | 設定的新值，若設定已被移除則為 `null`。
+`operation` | 為 `set` (值已被指派) 或 `removed` (值已重設為預設)。
+`scope` | 索引設定變更時一律為 `index`。

@@ -1,45 +1,46 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Rule-based auto-tagging
+title: "規則式自動標記"
 nav_order: 80
 parent: Availability and recovery
 has_children: true
 ---
 
-# Rule-based auto-tagging
+# 規則式自動標記
 
-Rule-based auto-tagging automatically assigns feature-specific values to incoming requests and evaluates those requests against a set of predefined rules by matching request attributes.
-For example, the workload management feature uses index patterns as an attribute and assigns workload group IDs.
+規則式自動標記會自動將功能專屬的值指派給傳入的請求，並透過比對請求屬性，依據一組預先定義的規則評估這些請求。
+例如，工作負載管理功能會使用索引模式作為屬性，並指派工作負載群組 ID。
 
-Rule-based auto-tagging offers the following benefits:
+規則式自動標記提供下列優點：
 
-* Flexible attribute-based matching
-* Support for feature-specific matching logic
-* Consistent policy application
-* Automated request classification
-* Reduced administrative overhead
-* Centralized rule management
-* Easy policy updates
+* 彈性的屬性比對
+* 支援功能專屬的比對邏輯
+* 一致的政策套用
+* 自動化的請求分類
+* 降低管理負擔
+* 集中化的規則管理
+* 輕鬆更新政策
 
-Rule-based auto-tagging provides a flexible framework for implementing feature-specific request handling. Although this topic uses workload management as an example, the attribute-based matching system can be adapted for other OpenSearch features and use cases.
+規則式自動標記提供彈性的架構，可實作功能專屬的請求處理。雖然本主題以工作負載管理為例，但以屬性為基礎的比對系統可調整用於其他 OpenSearch 功能與使用案例。
 {: .tip }
 
-## Key concepts
+## 重要概念
 
-Before reviewing the rule configuration and behavior, it's important to understand the following key components of rule-based auto-tagging:
+在檢閱規則組態與行為之前，請務必先了解規則式自動標記的下列重要元件：
 
-* **Rule**: Defines matching criteria (attributes) and the value to assign.
-* **Attributes**: Key-value pairs used to match rules (such as index patterns, username, user roles, or request types).
-* **Feature-specific value**: The value assigned when a rule matches.
-* **Pattern matching**: The matching behavior (exact or pattern based) for attribute values.
+* **規則**：定義比對條件 (屬性) 以及要指派的值。
+* **屬性**：用於比對規則的索引鍵-值配對 (例如索引模式、使用者名稱、使用者角色或請求類型)。
+* **功能專屬的值**：規則相符時所指派的值。
+* **模式比對**：屬性值的比對行為 (完全相符或以模式為基礎)。
 
-## Rule structure and management
+## 規則結構與管理
 
-Proper rule structure and management are essential for effective auto-tagging. This section describes the rule schema and how to manage rules.
+妥善的規則結構與管理對於有效的自動標記至關重要。本節說明規則結構描述以及如何管理規則。
 
-### Rule schema
+### 規則結構描述
 
-The following rule schema includes matching attributes and a feature-specific value:
+下列規則結構描述包含比對屬性與功能專屬的值：
 
 ```json
 {
@@ -55,86 +56,86 @@ The following rule schema includes matching attributes and a feature-specific va
 }
 ```
 
-### Managing rules
+### 管理規則
 
-Use the [Rules API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/rule-based-autotagging/rule-lifecycle-api/) to manage rules.
+使用 [Rules API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/rule-based-autotagging/rule-lifecycle-api/) 來管理規則。
 
-## Attribute matching
+## 屬性比對
 
-The attribute matching system determines which rules apply to a given request. Each attribute type can support different matching behaviors, based on the following attribute types:
+屬性比對系統會決定哪些規則適用於指定的請求。每種屬性類型可依據下列屬性類型支援不同的比對行為：
 
-1. **Exact matching**: Attribute values must match exactly.
-2. **Pattern matching**: Supports wildcards (such as index patterns).
-3. **List matching**: Matches any item in a list.
-4. **Range matching**: Matches values within a defined range.
+1. **完全相符**：屬性值必須完全相符。
+2. **模式比對**：支援萬用字元 (例如索引模式)。
+3. **清單比對**：比對清單中的任何項目。
+4. **範圍比對**：比對定義範圍內的值。
 
-For example, in workload management, index patterns support:
+例如，在工作負載管理中，索引模式支援：
 
-* Exact match: `logs-2025-04`
-* Prefix pattern: `logs-2025-*`
+* 完全相符：`logs-2025-04`
+* 前置字元模式：`logs-2025-*`
 
-Note that matching behavior is determined by the feature and attribute type.
+請注意，比對行為取決於功能與屬性類型。
 
-### Rule precedence
+### 規則優先順序
 
-When multiple rules match a request, OpenSearch uses the following precedence rules:
+當多個規則符合某個請求時，OpenSearch 會使用下列優先順序規則：
 
-1. Rules with more specific attribute matches are prioritized.
-2. Feature-specific tie-breaking logic is applied.
+1. 屬性比對較為明確的規則會優先處理。
+2. 套用功能專屬的決勝邏輯。
 
-For example, with index patterns:
+例如，以索引模式來說：
 
-* `logs-prod-2025-*` takes precedence over `logs-prod-*`.
-* `logs-prod-*` takes precedence over `logs-*`.
+* `logs-prod-2025-*` 優先於 `logs-prod-*`。
+* `logs-prod-*` 優先於 `logs-*`。
 
-### Evaluation process
+### 評估流程
 
-OpenSearch evaluates incoming requests using the following process:
+OpenSearch 會使用下列流程評估傳入的請求：
 
-1. OpenSearch receives a request.
-2. The system evaluates request attributes against defined rules.
-3. The most specific matching rule's value is assigned.
-4. If no rules match, no value is assigned.
+1. OpenSearch 收到請求。
+2. 系統會依據定義的規則評估請求屬性。
+3. 指派最明確的相符規則的值。
+4. 如果沒有規則相符，則不指派任何值。
 
-If two or more rules remain tied after all tie-breaking logic is applied, meaning they match equally specifically and produce the same match score, then no value is assigned. OpenSearch does not choose between tied rules arbitrarily.
+如果在套用所有決勝邏輯後，仍有兩個或多個規則並列，也就是它們的相符程度同樣明確且產生相同的相符分數，則不指派任何值。OpenSearch 不會任意在並列的規則之間做選擇。
 {: .note}
 
-### Rule matching examples
+### 規則比對範例
 
-The following examples demonstrate how OpenSearch matches attributes and resolves ties between rules.
+下列範例示範 OpenSearch 如何比對屬性以及解決規則之間的並列情況。
 
-In these examples, the `username` attribute has higher priority than the `index_pattern` attribute (priority order depends on the feature and feature type).
+在這些範例中，`username` 屬性的優先順序高於 `index_pattern` 屬性 (優先順序取決於功能與功能類型)。
 
-1. **Example 1**
-   A request matches three rules:
+1. **範例 1**
+   某個請求符合三個規則：
 
-   * Rule 1: `index_pattern = log*`
-   * Rule 2: `username = admin`
-   * Rule 3: `index_pattern = log123*`
+   * 規則 1：`index_pattern = log*`
+   * 規則 2：`username = admin`
+   * 規則 3：`index_pattern = log123*`
 
-   **Result**: Rule 2 applies because the `username` attribute has higher priority.
+   **結果**：套用規則 2，因為 `username` 屬性的優先順序較高。
 
-2. **Example 2**
-   A request matches two rules:
+2. **範例 2**
+   某個請求符合兩個規則：
 
-   * Rule 1: `index_pattern = logs-prod-*`
-   * Rule 2: `index_pattern = logs-*`
+   * 規則 1：`index_pattern = logs-prod-*`
+   * 規則 2：`index_pattern = logs-*`
 
-   **Result**: Rule 1 applies because `logs-prod-*` is more specific than `logs-*`.
+   **結果**：套用規則 1，因為 `logs-prod-*` 比 `logs-*` 更明確。
 
-3. **Example 3**
-   A request matches two rules:
+3. **範例 3**
+   某個請求符合兩個規則：
 
-   * Rule 1: `index_pattern = log*` and `username = admin`
-   * Rule 2: `username = admin`
+   * 規則 1：`index_pattern = log*` 與 `username = admin`
+   * 規則 2：`username = admin`
 
-   **Result**: Rule 1 applies because it includes both the `index_pattern` and `username` attributes, making it a more specific match.
+   **結果**：套用規則 1，因為它同時包含 `index_pattern` 與 `username` 屬性，使其成為更明確的相符項。
 
-## Workload management examples
+## 工作負載管理範例
 
-These examples demonstrate how rule-based auto-tagging works in workload management, which uses index patterns as its primary attribute.
+這些範例示範規則式自動標記在工作負載管理中的運作方式，該功能使用索引模式作為其主要屬性。
 
-### Multiple attribute matching
+### 多屬性比對
 
 ```json
 {
@@ -149,7 +150,7 @@ These examples demonstrate how rule-based auto-tagging works in workload managem
 }
 ```
 
-### Attribute specificity
+### 屬性明確性
 
 ```json
 {
@@ -163,55 +164,55 @@ These examples demonstrate how rule-based auto-tagging works in workload managem
 }
 ```
 
-## Best practices
+## 最佳實務
 
-Follow these best practices for designing and operating rule-based auto-tagging.
+設計與操作規則式自動標記時，請遵循下列最佳實務。
 
-### Designing rules
+### 設計規則
 
-When creating rules, focus on building logical, specific configurations that support your workload and access patterns. Consider the following guidelines:
+建立規則時，請專注於建構合乎邏輯且明確的組態，以支援您的工作負載與存取模式。請考量下列準則：
 
-* Identify the most relevant attributes for your use case.
-* Use specific attribute values for precise control.
-* Combine multiple attributes when appropriate.
-* Use consistent naming conventions.
-* Document attribute matching behavior.
+* 找出最符合您使用案例的屬性。
+* 使用明確的屬性值以進行精確控制。
+* 在適當情況下合併多個屬性。
+* 使用一致的命名慣例。
+* 記錄屬性比對行為。
 
-### Managing attributes
+### 管理屬性
 
-Attribute selection and configuration significantly influence rule effectiveness. To manage attributes successfully, perform the following actions:
+屬性的選擇與組態會大幅影響規則的成效。若要成功管理屬性，請執行下列動作：
 
-* Understand each attribute's matching behavior.
-* Start with the most specific criteria needed.
-* Avoid overlapping rules unless intentional.
-* Plan for future attribute value patterns.
+* 了解每個屬性的比對行為。
+* 從所需的最明確條件開始。
+* 除非刻意為之，否則避免規則重疊。
+* 為未來的屬性值模式做好規劃。
 
-### Operations
+### 作業
 
-Ongoing operations and monitoring help maintain rule quality over time. Use the following best practices to ensure that your feature rules are reliable and effective:
+持續的作業與監控有助於長期維持規則品質。請使用下列最佳實務，確保您的功能規則可靠且有效：
 
-* Test new rules in a development environment.
-* Monitor rule matches in system logs.
-* Document rule configurations.
-* Regularly review rule effectiveness.
-* Remove unused rules.
+* 在開發環境中測試新規則。
+* 在系統記錄檔中監控規則相符情況。
+* 記錄規則組態。
+* 定期檢閱規則成效。
+* 移除未使用的規則。
 
-## Troubleshooting
+## 疑難排解
 
-When creating rules, the following issues can occur:
+建立規則時，可能發生下列問題：
 
-* **No value assigned**: This issue typically occurs when the request attributes do not match any existing rules.  
-  For example, suppose `index_pattern` is a valid allowed attribute. If a request is made to search `logs_q1_2025` but no rule exists for that value, the request will not match any rule and will result in a missing assignment.
+* **未指派任何值**：此問題通常發生在請求屬性不符合任何現有規則時。  
+  例如，假設 `index_pattern` 是有效的允許屬性。如果對 `logs_q1_2025` 發出搜尋請求，但該值沒有任何規則存在，則該請求不會符合任何規則，因而導致缺少指派。
 
-* **Unexpected value**: This can happen when multiple rules are defined with overlapping or conflicting conditions.  
-  For example, consider the following rules:
+* **非預期的值**：當定義了多個具有重疊或衝突條件的規則時，就可能發生此情況。  
+  例如，請考量下列規則：
   1. `{ principal: {"username": ["dev*"]}, "index_pattern": ["logs*"] }`
   2. `{ "index_pattern": ["logs*", "events*"] }`
 
-  If a user with the username `dev_john` sends a search request to `logs_q1_25`, it will match the first rule based on the `username` and `index_pattern` attributes. The request will not match the second rule, even though the `index_pattern` also qualifies.
+  如果使用者名稱 `dev_john` 的使用者對 `logs_q1_25` 傳送搜尋請求，該請求會依據 `username` 與 `index_pattern` 屬性符合第一個規則。即使 `index_pattern` 也符合資格，該請求仍不會符合第二個規則。
 
-You can resolve both issues by validating your configuration using one of the following techniques:
+您可以使用下列其中一種技術驗證組態，以解決這兩個問題：
 
-- **Test rules with sample requests**: First, create a rule using the REST API, and then send a request that matches the rule's attributes. For example, for a rule with `"index_pattern": ["logs*", "events*"]`, you can send a request to a `logs` or `events` index. Then verify the workload management statistics by querying the [Workload Management Stats API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/wlm-feature-overview/#workload-management-stats-api).
+- **使用範例請求測試規則**：首先，使用 REST API 建立規則，然後傳送符合該規則屬性的請求。例如，對於具有 `"index_pattern": ["logs*", "events*"]` 的規則，您可以對 `logs` 或 `events` 索引傳送請求。然後查詢 [Workload Management Stats API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/wlm-feature-overview/#workload-management-stats-api) 來驗證工作負載管理統計資料。
 
-- **Use the [Get Rule API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/rule-based-autotagging/rule-lifecycle-api/#get-a-rule)** to confirm rule definitions.
+- **使用 [Get Rule API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/rule-based-autotagging/rule-lifecycle-api/#get-a-rule)** 來確認規則定義。

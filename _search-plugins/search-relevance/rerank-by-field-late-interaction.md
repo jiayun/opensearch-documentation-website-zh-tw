@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reranking by a field using a late interaction model
+title: "使用延遲互動模型依欄位重新排序"
 parent: Reranking search results
 grand_parent: Optimizing search quality
 has_children: false
 nav_order: 40
 ---
 
-# Reranking by a field using a late interaction model
-**Introduced 3.3**
+# 使用延遲互動模型依欄位重新排序
+**3.3 版新增**
 {: .label .label-purple }
 
-In this tutorial, you'll learn how to use a late interaction model (such as ColBERT or ColPali) hosted on Amazon SageMaker to rerank search results and improve search relevance for multimodal content.
+在本教學中，您將學習如何使用託管於 Amazon SageMaker 的延遲互動模型 (例如 ColBERT 或 ColPali)，重新排序搜尋結果並提升多模態內容的搜尋相關性。
 
-Late interaction models balance speed and accuracy by generating multiple vectors per document and query, then performing fine-grained token-level matching during search. This approach is particularly effective for multimodal content (such as images with text, technical diagrams, and complex documents), for which detailed semantic analysis improves relevance. By combining fast k-NN retrieval with token-level reranking, late interaction models efficiently handle complex queries and capture nuanced semantic relationships across text and other content types.
+延遲互動模型會為每份文件與查詢產生多個向量，並在搜尋期間執行細緻的詞元層級比對，藉此兼顧速度與準確度。這種方法對多模態內容 (例如含文字的圖片、技術圖表及複雜文件) 特別有效，因為詳細的語意分析可提升其相關性。延遲互動模型結合快速的 k-NN 擷取與詞元層級重新排序，能有效率地處理複雜查詢，並擷取文字與其他內容類型之間細微的語意關聯。
 
-To implement late interaction reranking, you'll configure both ingest and search pipelines:
-- **Ingest pipeline**: Generates multi-vectors and single k-NN vectors during document indexing using the [`ml_inference` ingest processor]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/ml-inference/).
-- **Search pipeline**: Processes queries at search time, generating query vectors for both k-NN retrieval and late interaction reranking using the [`ml_inference` search request processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-request/) and the [`lateInteractionScore`]({{site.url}}{{site.baseurl}}/query-dsl/specialized/script-score/#late-interaction-score) function.
+若要實作延遲互動重新排序，您需要同時設定資料匯入管線與搜尋管線：
+- **資料匯入管線**：在文件編製索引期間，使用 [`ml_inference` 匯入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/ml-inference/) 產生多向量與單一 k-NN 向量。
+- **搜尋管線**：在搜尋時處理查詢，使用 [`ml_inference` 搜尋請求處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-request/) 與 [`lateInteractionScore`]({{site.url}}{{site.baseurl}}/query-dsl/specialized/script-score/#late-interaction-score) 函式，為 k-NN 擷取及延遲互動重新排序產生查詢向量。
 
-## Prerequisite: Deploy a ColPali model on Amazon SageMaker
+## 先決條件：在 Amazon SageMaker 上部署 ColPali 模型
 
-The following is a sample deployment script for the [`vidore/colpali-v1.3-hf`](https://huggingface.co/vidore/colpali-v1.3-hf) model on Amazon SageMaker. You can use any late interaction model and deployment method of your choice. Because ColPali requires custom inference logic to handle both text queries and Base64-encoded images, this example uses a custom inference script rather than the standard Hugging Face task interface. Run the following steps in a SageMaker notebook.
+以下是在 Amazon SageMaker 上部署 [`vidore/colpali-v1.3-hf`](https://huggingface.co/vidore/colpali-v1.3-hf) 模型的範例部署指令碼。您可以使用任何延遲互動模型及偏好的部署方式。由於 ColPali 需要自訂推論邏輯來處理文字查詢與 Base64 編碼的圖片，因此本範例使用自訂推論指令碼，而非標準的 Hugging Face 任務介面。請在 SageMaker 筆記本中執行下列步驟。
 
-### Step 1: Create a custom inference script
+### 步驟 1：建立自訂推論指令碼
 
-The following script handles both query (text list) and image (Base64 list) inputs, returning multi-vector token-level embeddings. It downloads model weights from Hugging Face Hub at container startup:
+下列指令碼會同時處理查詢 (文字清單) 與圖片 (Base64 清單) 輸入，並傳回多向量詞元層級嵌入。它會在容器啟動時從 Hugging Face Hub 下載模型權重：
 
 ```python
 import os
@@ -88,9 +89,9 @@ print('Created colpali_code/inference.py')
 ```
 {% include copy.html %}
 
-### Step 2: Package the script and upload it to Amazon S3
+### 步驟 2：封裝指令碼並上傳至 Amazon S3
 
-Package the `inference.py` script and upload it to Amazon S3 by using the following code:
+使用下列程式碼封裝 `inference.py` 指令碼並上傳至 Amazon S3：
 
 ```python
 import subprocess
@@ -113,9 +114,9 @@ print(f'Uploaded to {model_data_url}')
 ```
 {% include copy.html %}
 
-### Step 3: Deploy the SageMaker endpoint
+### 步驟 3：部署 SageMaker 端點
 
-The following code deploys the model to a GPU instance (this process takes approximately 5--10 minutes):
+下列程式碼會將模型部署至 GPU 執行個體 (此程序大約需要 5--10 分鐘)：
 
 ```python
 import time
@@ -182,22 +183,22 @@ print(f'\nEndpoint ready: {ep_name}')
 ```
 {% include copy.html %}
 
-After deployment, find your endpoint name in the Amazon SageMaker console under **Inference > Endpoints**. You'll use this endpoint URL in the connector configuration.
+部署後，請在 Amazon SageMaker 主控台的 **Inference > Endpoints** 中找到您的端點名稱。您將在連接器組態中使用此端點 URL。
 
-## Running a search with late interaction reranking
+## 執行使用延遲互動重新排序的搜尋
 
-To implement late interaction reranking, follow these steps:
+若要實作延遲互動重新排序，請依照下列步驟操作：
 
-1. [Register the model](#step-1-register-the-model).
-1. [Create an index with appropriate mappings](#step-2-create-an-index).
-1. [Create an ingest pipeline](#step-3-create-an-ingest-pipeline).
-1. [Ingest documents](#step-4-ingest-documents).
-1. [Create a search pipeline](#step-5-create-a-search-pipeline).
-1. [Search using late interaction reranking](#step-6-search-using-late-interaction-reranking).
+1. [註冊模型](#step-1-register-the-model)。
+1. [建立具有適當對應的索引](#step-2-create-an-index)。
+1. [建立資料匯入管線](#step-3-create-an-ingest-pipeline)。
+1. [匯入文件](#step-4-ingest-documents)。
+1. [建立搜尋管線](#step-5-create-a-search-pipeline)。
+1. [使用延遲互動重新排序進行搜尋](#step-6-search-using-late-interaction-reranking)。
 
-## Step 1: Register the model
+## 步驟 1：註冊模型
 
-Register the ColPali model by creating a connector and registering it with OpenSearch:
+建立連接器並將 ColPali 模型註冊至 OpenSearch：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -235,11 +236,11 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Note the `model_id` from the response; you'll use it in subsequent steps.
+請記下回應中的 `model_id`；您將在後續步驟中使用它。
 
-## Step 2: Create an index
+## 步驟 2：建立索引
 
-Create an index with mappings optimized for storing both multi-vectors and single k-NN vectors. The `colbert_vectors` field is stored as an `object` with `enabled: false` for optimal performance. The `knn_vector` field is configured for the `hnsw` algorithm, with the number of dimensions matching the model's number of dimensions. The `image` field stores Base64-encoded image data as a `keyword`:
+建立索引，並使用針對儲存多向量及單一 k-NN 向量最佳化的對應。`colbert_vectors` 欄位儲存為 `object`，並搭配 `enabled: false` 以獲得最佳效能。`knn_vector` 欄位設定為使用 `hnsw` 演算法，其維度數與模型的維度數相符。`image` 欄位將 Base64 編碼的影像資料儲存為 `keyword`：
 
 
 ```json
@@ -278,9 +279,9 @@ PUT /multimodal_docs
 ```
 {% include copy-curl.html %}
 
-## Step 3: Create an ingest pipeline
+## 步驟 3：建立資料匯入管線
 
-Create an ingest pipeline that generates both multi-vectors for late interaction and single vectors for k-NN search:
+建立資料匯入管線，同時產生用於延遲互動的多向量及用於 k-NN 搜尋的單一向量：
 
 ```json
 PUT /_ingest/pipeline/colpali_pipeline
@@ -311,9 +312,9 @@ PUT /_ingest/pipeline/colpali_pipeline
 ```
 {% include copy-curl.html %}
 
-## Step 4: Ingest documents
+## 步驟 4：匯入文件
 
-Ingest sample documents containing Base64-encoded images and descriptive content:
+匯入包含 Base64 編碼影像及描述性內容的範例文件：
 
 ```json
 PUT /multimodal_docs/_doc/1?pipeline=colpali_pipeline
@@ -346,9 +347,9 @@ PUT /multimodal_docs/_doc/3?pipeline=colpali_pipeline
 ```
 {% include copy-curl.html %}
 
-## Step 5: Create a search pipeline
+## 步驟 5：建立搜尋管線
 
-Create a search pipeline that generates query vectors and performs both k-NN retrieval and late interaction reranking:
+建立搜尋管線，以產生查詢向量並執行 k-NN 擷取與延遲互動重新排序：
 
 ```json
 PUT /_search/pipeline/colpali_search_pipeline
@@ -377,7 +378,7 @@ PUT /_search/pipeline/colpali_search_pipeline
 ```
 {% include copy-curl.html %}
 
-The following is the `query_template` from the preceding search pipeline, formatted for clarity. The template defines how the original search query is rewritten:
+以下是前述搜尋管線中的 `query_template`，為了清楚呈現而格式化。此範本定義了原始搜尋查詢的重寫方式：
 
 ```json
 {
@@ -413,19 +414,19 @@ The following is the `query_template` from the preceding search pipeline, format
 }
 ```
 
-Note the following components of the query template:
+請注意查詢範本的下列元件：
 
-- Template variables:
-   - `${query_knn_vector}`: Mean-pooled vector for fast k-NN retrieval
-   - `${query_colbert_vectors}`: Multi-vectors for precise late interaction scoring
-- Rewritten query structure:
-   - `knn` query: Uses `query_knn_vector` to find the top 100 candidates quickly
-   - `rescore_query`: Uses `query_colbert_vectors` with the `lateInteractionScore` function for precise reranking
-   - `_source` filtering: Excludes vector fields from the response to reduce payload size
+- 範本變數：
+   - `${query_knn_vector}`：用於快速 k-NN 擷取的平均池化向量
+   - `${query_colbert_vectors}`：用於精確延遲互動評分的多重向量
+- 重寫後的查詢結構：
+   - `knn` 查詢：使用 `query_knn_vector` 快速找出前 100 個候選項目
+   - `rescore_query`：使用 `query_colbert_vectors` 搭配 `lateInteractionScore` 函式進行精確的重新排序
+   - `_source` 篩選：從回應中排除向量欄位以縮減承載大小
 
-## Step 6: Search using late interaction reranking
+## 步驟 6：使用延遲互動重新排序進行搜尋
 
-Now you can search for documents using k-NN retrieval and late interaction reranking:
+現在您可以使用 k-NN 擷取與延遲互動重新排序來搜尋文件：
 
 ```json
 GET /multimodal_docs/_search?search_pipeline=colpali_search_pipeline
@@ -441,21 +442,21 @@ GET /multimodal_docs/_search?search_pipeline=colpali_search_pipeline
 ```
 {% include copy-curl.html %}
 
-When you run this search request, OpenSearch executes the following steps:
+當您執行此搜尋請求時，OpenSearch 會執行下列步驟：
 
-1. **Query processing**: The search text (`"financial data charts"`) is sent to the ColPali model, which generates query vectors.
+1. **查詢處理**：搜尋文字 (`"financial data charts"`) 會傳送至 ColPali 模型，由該模型產生查詢向量。
 
-1. **k-NN retrieval**: The mean-pooled query vector (`query_knn_vector`) performs approximate k-NN search to retrieve the top 100 candidate documents. This step prioritizes speed.
+1. **k-NN 擷取**：平均池化查詢向量 (`query_knn_vector`) 會執行近似 k-NN 搜尋，以擷取前 100 個候選文件。此步驟以速度為優先。
 
-1. **Late interaction reranking**: Multi-vectors (`query_colbert_vectors`) are used with the `lateInteractionScore` function to rerank results based on fine-grained token-level matching. This step prioritizes accuracy.
+1. **延遲互動重新排序**：多重向量 (`query_colbert_vectors`) 會搭配 `lateInteractionScore` 函式，根據細微的詞元層級比對來重新排序結果。此步驟以準確度為優先。
 
-1. **Final results**: The top 10 documents are returned, ranked by their late interaction scores.
+1. **最終結果**：傳回前 10 個文件，並依其延遲互動分數排序。
 
-This hybrid approach balances speed and accuracy, making it suitable for production search systems. The response contains documents reranked based on their semantic similarity to the query, with late interaction scoring providing more nuanced relevance than traditional vector search alone:
+此混合方法兼顧速度與準確度，適合用於正式環境的搜尋系統。回應包含根據與查詢的語意相似度重新排序的文件，其中延遲互動評分比單純的傳統向量搜尋提供更細緻的相關性：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -513,13 +514,13 @@ This hybrid approach balances speed and accuracy, making it suitable for product
 
 </details>
 
-## Debugging and testing
+## 偵錯與測試
 
-You can perform the following actions to debug and test the search.
+您可以執行下列動作來偵錯與測試搜尋。
 
-### Simulating the ingest pipeline
+### 模擬資料匯入管線
 
-Before ingesting documents, test the ingest pipeline to verify it processes documents correctly:
+在匯入文件之前，請先測試資料匯入管線，以驗證它是否能正確處理文件：
 
 ```json
 POST /_ingest/pipeline/colpali_pipeline/_simulate?verbose=true
@@ -539,7 +540,7 @@ POST /_ingest/pipeline/colpali_pipeline/_simulate?verbose=true
 ```
 {% include copy-curl.html %}
 
-The response shows how the document will be processed and includes the generated `colbert_vectors` and `knn_vector` fields:
+回應會顯示文件將如何被處理，並包含產生的 `colbert_vectors` 與 `knn_vector` 欄位：
 
 ```json
 {
@@ -588,9 +589,9 @@ The response shows how the document will be processed and includes the generated
 }
 ```
 
-### Debugging the search pipeline
+### 偵錯搜尋管線
 
-Test the search pipeline with verbose output to see how queries are rewritten:
+使用詳細輸出測試搜尋管線，以查看查詢如何被改寫：
 
 ```json
 GET /multimodal_docs/_search?search_pipeline=colpali_search_pipeline&verbose_pipeline=true
@@ -606,7 +607,7 @@ GET /multimodal_docs/_search?search_pipeline=colpali_search_pipeline&verbose_pip
 ```
 {% include copy-curl.html %}
 
-The response provides a complete view of the query transformation process captured in the `processor_results` section. It shows the original query text ("financial data charts") submitted as input, the generated query vectors (both multi-vectors and mean-pooled vector), and the rewritten query structure using k-NN search with late interaction rescoring. Processing times for each step are also included, providing detailed information for debugging and performance optimization:
+回應提供 `processor_results` 區段中所擷取查詢轉換過程的完整檢視。它顯示了作為輸入提交的原始查詢文字（「financial data charts」）、產生的查詢向量（包括多向量與平均池化向量），以及使用 k-NN 搜尋搭配延遲互動重新評分的改寫後查詢結構。其中也包含每個步驟的處理時間，為偵錯與效能最佳化提供詳細資訊：
 
 ```json
 {
@@ -710,7 +711,7 @@ The response provides a complete view of the query transformation process captur
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [Late interaction score function]({{site.url}}{{site.baseurl}}/query-dsl/specialized/script-score/#late-interaction-score)
+- [延遲互動分數函式]({{site.url}}{{site.baseurl}}/query-dsl/specialized/script-score/#late-interaction-score)
 

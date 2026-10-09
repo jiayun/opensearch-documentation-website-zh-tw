@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: join()
 parent: Functions
@@ -7,31 +8,31 @@ nav_order: 25
 ---
 
 <!-- vale off -->
-# join() function
+# join() 函式
 <!-- vale on -->
 
 
-The `join()` function joins elements of a list to form a string. The function takes a JSON pointer, which represents the key to a list or map where values are of the list type, and joins the lists as strings using a delimiter. The default delimiter is a comma (`,`).
+`join()` 函式會將清單中的元素串接起來以形成字串。此函式接受一個 JSON 指標，代表清單或對應 (其值為清單類型) 的鍵，並使用分隔符號將清單以字串形式串接。預設分隔符號為逗號 (`,`)。
 
-## Parameters
+## 參數
 
-The `join` function takes the following parameters:
+`join` 函式接受下列參數：
 
-- `delimiter` (string, optional): The string placed between elements. Examples: `,`, ` | `, `; `. Default is `,`.
-- `pointer` (required): A JSON pointer resolving to a list in the event.
+- `delimiter` (字串，選用)：放置在元素之間的字串。範例：`,`、` | `、`; `。預設值為 `,`。
+- `pointer` (必要)：解析至事件中某個清單的 JSON 指標。
 
-## Returns
-The `join` command returns the following value:
+## 回傳值
+`join` 命令回傳下列值：
 
-- `string`: All elements concatenated using the specified `delimiter`.
+- `string`：使用指定的 `delimiter` 串接所有元素後的結果。
 
-## Quick examples
-- `join("-", /labels)` returns `"prod-api-us"` for `labels: ["prod","api","us"]`
-- `join(" | ", /authors)` returns `"Ada | Linus | Grace"` for `authors: ["Ada","Linus","Grace"]`
+## 快速範例
+- `join("-", /labels)` 在 `labels: ["prod","api","us"]` 時回傳 `"prod-api-us"`
+- `join(" | ", /authors)` 在 `authors: ["Ada","Linus","Grace"]` 時回傳 `"Ada | Linus | Grace"`
 
-## Using `join()` in a pipeline
+## 在管線中使用 `join()`
 
-You can use `join()` inside processors that support `value_expression`, for example, the `add_entries` processor:
+您可以在支援 `value_expression` 的處理器中使用 `join()`，例如 `add_entries` 處理器：
 
 ```yaml
 processor:
@@ -42,9 +43,9 @@ processor:
 ```
 {% include copy.html %}
 
-## Example
+## 範例
 
-The following pipeline ingests JSON events using an `http` source. It then uses `add_entries` with `join()` to build two new fields, `labels_csv` and `authors_pipe`:
+下列管線使用 `http` 來源匯入 JSON 事件，接著使用 `add_entries` 搭配 `join()` 建立兩個新欄位 `labels_csv` 和 `authors_pipe`：
 
 ```yaml
 join-demo:
@@ -70,7 +71,7 @@ join-demo:
 ```
 {% include copy.html %}
 
-You can test the pipeline using the following command:
+您可以使用下列命令測試此管線：
 
 ```bash
 curl "http://localhost:2021/events" \
@@ -82,7 +83,7 @@ curl "http://localhost:2021/events" \
 ```
 {% include copy.html %}
 
-The document stored in OpenSearch contains the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 {

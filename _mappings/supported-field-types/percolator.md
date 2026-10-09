@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Percolator
 nav_order: 35
@@ -11,17 +12,17 @@ redirect_from:
   - /field-types/percolator/
 ---
 
-# Percolator field type
-**Introduced 1.0**
+# Percolator 欄位類型
+**於 1.0 版推出**
 {: .label .label-purple }
 
-A `percolator` field type specifies to treat this field as a query. Any JSON object field can be marked as a `percolator` field. Normally, documents are indexed and searches are run against them. When you use a `percolator` field, you store a search, and the `percolate` query later matches documents to that search. For a detailed example, see [Percolate query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/percolate/).
+`percolator` 欄位類型指定將此欄位視為查詢。任何 JSON 物件欄位都可以標記為 `percolator` 欄位。一般而言，文件會被編製索引，並對其執行搜尋。當您使用 `percolator` 欄位時，您儲存的是一項搜尋，而 `percolate` 查詢之後會將文件與該搜尋比對。如需詳細範例，請參閱 [Percolate 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/percolate/)。
 
-## Example
+## 範例
 
-A customer is searching for a table priced at $400 or less and wants to create an alert for this search. 
+某位客戶正在搜尋價格為 $400 或以下的桌子，並想為此搜尋建立警示。
 
-Create a mapping assigning a percolator field type to the query field:
+建立對應，將 percolator 欄位類型指派給 query 欄位：
 
 ```json
 PUT testindex1
@@ -47,7 +48,7 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-Index a query:
+將查詢編製索引：
 
 ```json
 PUT testindex1/_doc/1
@@ -78,10 +79,10 @@ PUT testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-Fields referenced in the query must already exist in the mapping.
+查詢中參照的欄位必須已存在於對應中。
 {: .note }
 
-Run a percolate query to search for matching documents:
+執行 percolate 查詢以搜尋相符的文件：
 
 ```json
 GET testindex1/_search
@@ -104,7 +105,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the originally indexed query:
+回應包含最初編製索引的查詢：
 
 ```json
 {

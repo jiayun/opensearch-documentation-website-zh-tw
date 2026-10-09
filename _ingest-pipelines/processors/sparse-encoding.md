@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Sparse encoding
+title: "稀疏編碼"
 parent: Ingest processors
 nav_order: 252
 redirect_from:
    - /api-reference/ingest-apis/processors/sparse-encoding/
 ---
 
-# Sparse encoding processor
+# 稀疏編碼處理器
 
-The `sparse_encoding` processor is used to generate a sparse vector/token and weights from text fields for [neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/) using sparse retrieval. 
+`sparse_encoding` 處理器用於從文字欄位產生稀疏向量/詞元與權重，以供使用稀疏擷取的[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)使用。
 
-**PREREQUISITE**<br>
-Before using the `sparse_encoding` processor, you must set up a machine learning (ML) model. For more information, see [Choosing a model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model).
+**先決條件**<br>
+使用 `sparse_encoding` 處理器之前，您必須設定機器學習 (ML) 模型。如需更多資訊，請參閱[選擇模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model)。
 {: .note}
 
-The following is the syntax for the `sparse_encoding` processor: 
+以下是 `sparse_encoding` 處理器的語法：
 
 ```json
 {
@@ -29,46 +30,46 @@ The following is the syntax for the `sparse_encoding` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `sparse_encoding` processor.
+下表列出 `sparse_encoding` 處理器的必要與選用參數。
 
-| Parameter  | Data type | Required/Optional  | Description  |
+| 參數  | 資料類型 | 必要/選用  | 說明  |
 |:---|:---|:---|:---|
-`model_id` | String | Required | The ID of the model that will be used to generate the embeddings. The model must be deployed in OpenSearch before it can be used in neural search. For more information, see [Using custom models within OpenSearch]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/) and [Neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/).
-`prune_type` | String | Optional | The prune strategy for sparse vectors. Valid values are `max_ratio`, `alpha_mass`, `top_k`, `abs_value`, and `none`. Default is `none`.
-`prune_ratio` | Float | Optional | The ratio for the pruning strategy. Required when `prune_type` is specified.
-`field_map` | Object | Required | Contains key-value pairs that specify the mapping of a text field to a `rank_features` field.
-`field_map.<input_field>` | String | Required | The name of the field from which to obtain text for generating vector embeddings.
-`field_map.<vector_field>`  | String | Required | The name of the vector field in which to store the generated vector embeddings.
-`description`  | String | Optional  | A brief description of the processor.  |
-`tag` | String | Optional | An identifier tag for the processor. Useful for debugging to distinguish between processors of the same type. |
-`batch_size` | Integer | Optional | Specifies the number of documents to be batched and processed each time. Default is `1`. |
-`skip_existing` | Boolean | Optional | When `true`, the processor does not make inference calls for fields that already contain embeddings, leaving existing embeddings unchanged. Default is `false`.|
+`model_id` | 字串 | 必要 | 將用於產生嵌入的模型 ID。模型必須部署在 OpenSearch 中，才能在神經搜尋中使用。如需更多資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)和[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
+`prune_type` | 字串 | 選用 | 稀疏向量的剪除策略。有效值為 `max_ratio`、`alpha_mass`、`top_k`、`abs_value` 和 `none`。預設為 `none`。
+`prune_ratio` | 浮點數 | 選用 | 剪除策略的比例。指定 `prune_type` 時為必要。
+`field_map` | 物件 | 必要 | 包含鍵值對，用於指定文字欄位到 `rank_features` 欄位的對應。
+`field_map.<input_field>` | 字串 | 必要 | 從中取得文字以產生向量嵌入的欄位名稱。
+`field_map.<vector_field>`  | 字串 | 必要 | 用於儲存所產生向量嵌入的向量欄位名稱。
+`description`  | 字串 | 選用  | 處理器的簡短說明。  |
+`tag` | 字串 | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。 |
+`batch_size` | 整數 | 選用 | 指定每次批次處理的文件數。預設為 `1`。 |
+`skip_existing` | 布林值 | 選用 | 當 `true` 時，處理器不會對已包含嵌入的欄位進行推論呼叫，讓現有的嵌入保持不變。預設為 `false`。|
 
-### Pruning sparse vectors
+### 剪除稀疏向量
 
-A sparse vector often has a long-tail distribution of token weights, with less important tokens occupying a significant amount of storage space. Pruning reduces the size of an index by removing tokens with lower semantic importance, yielding a slight decrease in search relevance in exchange for a more compact index.
+稀疏向量通常具有長尾分布的詞元權重，較不重要的詞元會佔用大量儲存空間。剪除會移除語意重要性較低的詞元，以縮減索引大小，換取搜尋相關性略微下降，但可獲得更加精簡的索引。
 
-The `sparse_encoding` processor can be used to prune sparse vectors by configuring the `prune_type` and `prune_ratio` parameters. The following table lists the supported pruning options for the `sparse_encoding` processor. 
+`sparse_encoding` 處理器可透過設定 `prune_type` 和 `prune_ratio` 參數來剪除稀疏向量。下表列出 `sparse_encoding` 處理器支援的剪除選項。 
 
-| Pruning type  | Valid pruning ratio | Description  |
+| 剪除類型  | 有效的剪除比例 | 說明  |
 |:---|:---|:---|
-`max_ratio` | Float [0, 1) | Prunes a sparse vector by keeping only elements whose values are within the `prune_ratio` of the largest value in the vector.
-`abs_value` | Float (0, +∞) | Prunes a sparse vector by removing elements with values lower than the `prune_ratio`.
-`alpha_mass` | Float [0, 1) | Prunes a sparse vector by keeping only elements whose cumulative sum of values is within the `prune_ratio` of the total sum.
-`top_k` | Integer (0, +∞) | Prunes a sparse vector by keeping only the top `prune_ratio` elements.
-`none` | N/A | Leaves sparse vectors unchanged.
+`max_ratio` | 浮點數 [0, 1) | 剪除稀疏向量，只保留值不低於向量最大值乘以 `prune_ratio` 的元素。
+`abs_value` | 浮點數 (0, +∞) | 剪除稀疏向量，移除值低於 `prune_ratio` 的元素。
+`alpha_mass` | 浮點數 [0, 1) | 剪除稀疏向量，只保留值的累計總和不超過所有元素值的總和乘以 `prune_ratio` 的元素。
+`top_k` | 整數 (0, +∞) | 剪除稀疏向量，只保留前 `prune_ratio` 個元素。
+`none` | 不適用 | 保持稀疏向量不變。
 
-Among all pruning options, specifying `max_ratio` as equal to `0.1` demonstrates strong generalization on test datasets. This approach reduces storage requirements by approximately 40% while incurring less than a 1% loss in search relevance.
+在所有剪除選項中，將 `max_ratio` 指定為等於 `0.1` 在測試資料集上展現出強大的泛化能力。此方法可將儲存需求減少約 40%，同時搜尋相關性損失不到 1%。
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline. You must provide a model ID when creating the processor. For more information, see [Using custom models within OpenSearch]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/). 
+請依照下列步驟在管線中使用處理器。建立處理器時，您必須提供模型 ID。如需更多資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。
 
-**Step 1: Create a pipeline.** 
+**步驟 1：建立管線。**
 
-The following example request creates an ingest pipeline where the text from `passage_text` will be converted into text embeddings and the embeddings will be stored in `passage_embedding`:
+下列範例請求會建立資料匯入管線，其中來自 `passage_text` 的文字將轉換為文字嵌入，且嵌入將儲存在 `passage_embedding` 中：
 
 ```json
 PUT /_ingest/pipeline/nlp-ingest-pipeline
@@ -90,12 +91,12 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline.**
+**步驟 2 (選用)：測試管線。**
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/nlp-ingest-pipeline/_simulate
@@ -113,9 +114,9 @@ POST _ingest/pipeline/nlp-ingest-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The response confirms that in addition to the `passage_text` field, the processor has generated text embeddings in the `passage_embedding` field:
+回應確認除了 `passage_text` 欄位之外，處理器已在 `passage_embedding` 欄位中產生文字嵌入：
 
 ```json
 {
@@ -154,13 +155,13 @@ The response confirms that in addition to the `passage_text` field, the processo
 }
 ```
 
-Once you have created an ingest pipeline, you need to create an index for ingestion and ingest documents into the index. For a complete example, see [Generating sparse vector embeddings automatically]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-with-pipelines/).
+建立資料匯入管線之後，您需要建立索引以進行匯入，並將文件匯入索引中。如需完整範例，請參閱[自動產生稀疏向量嵌入]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-with-pipelines/)。
 
 ---
 
-## Next steps
+## 後續步驟
 
-- To learn how to use the `neural_sparse` query for a sparse search, see [Neural sparse query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural-sparse/).
-- To learn more about sparse search, see [Neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/).
-- To learn more about using models in OpenSearch, see [Choosing a model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model).
-- For a comprehensive example, see [Getting started with semantic and hybrid search]({{site.url}}{{site.baseurl}}/search-plugins/neural-search-tutorial/).
+- 若要瞭解如何使用 `neural_sparse` 查詢進行稀疏搜尋，請參閱[神經稀疏查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural-sparse/)。
+- 若要深入瞭解稀疏搜尋，請參閱[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
+- 若要深入瞭解如何在 OpenSearch 中使用模型，請參閱[選擇模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model)。
+- 如需完整範例，請參閱[語意與混合搜尋入門]({{site.url}}{{site.baseurl}}/search-plugins/neural-search-tutorial/)。

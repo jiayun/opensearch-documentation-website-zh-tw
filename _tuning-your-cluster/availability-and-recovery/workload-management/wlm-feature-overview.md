@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Workload management
+title: "工作負載管理"
 nav_order: 90
 has_children: true
 parent: Availability and recovery
 ---
 
-# Workload management
-Introduced 2.18
+# 工作負載管理
+於 2.18 版推出
 {: .label .label-purple }
 
-Workload management allows you to group search traffic and isolate network resources, preventing the overuse of network resources by specific requests. It offers the following benefits:
+工作負載管理可讓您將搜尋流量分組並隔離網路資源，避免特定請求過度使用網路資源。它提供下列優點：
 
-- Tenant-level admission control and reactive query management. When resource usage exceeds configured limits, it automatically identifies and cancels demanding queries, ensuring fair resource distribution.
+- 租用戶層級的准入控制與反應式查詢管理。當資源使用量超過設定的限制時，它會自動識別並取消高耗資源的查詢，確保資源公平分配。
 
-- Tenant-level isolation within the cluster for search workloads, operating at the node level.
+- 叢集內搜尋工作負載的租用戶層級隔離，於節點層級運作。
 
-## Installing workload management
+## 安裝工作負載管理
 
-Using workload management requires installing the Workload Management plugin. To install the plugin, use the following command: 
+使用工作負載管理需要安裝 Workload Management 外掛程式。若要安裝此外掛程式，請使用下列命令：
 
 ```bash
 ./bin/opensearch-plugin install workload-management
 ```
 {% include copy.html %}
 
-Then restart your cluster. For more information, see [Managing OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/).
+然後重新啟動您的叢集。如需更多資訊，請參閱[管理 OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)。
 
-## Workload groups
+## 工作負載群組
 
-A _workload group_ is a logical grouping of tasks with defined resource limits. System administrators can dynamically manage workload groups using the Workload Management APIs. These workload groups can be used to create search requests with resource limits. You can also define group-specific settings that are applied automatically to every request routed to the group. For more information, see [Workload groups]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-groups/) and [Workload group settings]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-group-settings/).
+_工作負載群組_是具有已定義資源限制之工作的邏輯分組。系統管理員可以使用 Workload Management API 動態管理工作負載群組。這些工作負載群組可用來建立具有資源限制的搜尋請求。您也可以定義群組專屬設定，這些設定會自動套用至路由到該群組的每個請求。如需更多資訊，請參閱[工作負載群組]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-groups/)和[工作負載群組設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-group-settings/)。
 
-The following example request adds a workload group named `analytics`:
+下列範例請求會新增名為 `analytics` 的工作負載群組：
 
 ```json
 PUT _wlm/workload_group
@@ -46,10 +47,10 @@ PUT _wlm/workload_group
 ```
 {% include copy-curl.html %}
 
-When creating a workload group, make sure that the sum of the resource limits for a single resource, such as `cpu` or `memory`, does not exceed `1`.
+建立工作負載群組時，請確定單一資源 (例如 `cpu` 或 `memory`) 的資源限制總和不超過 `1`。
 {: .important}
 
-OpenSearch responds with the set resource limits and the workload group ID:
+OpenSearch 會回應已設定的資源限制與工作負載群組 ID：
 
 ```json
 {
@@ -64,11 +65,11 @@ OpenSearch responds with the set resource limits and the workload group ID:
 }
 ```
 
-## Using the workload group ID
+## 使用工作負載群組 ID
 
-You can associate a request with a workload group ID to manage and allocate resources within the limits defined by the workload group. By using this ID, request routing and tracking are associated with the workload group, ensuring resource quotas and task limits are maintained.
+您可以將請求與工作負載群組 ID 建立關聯，以在工作負載群組定義的限制內管理及分配資源。使用此 ID 時，請求路由與追蹤會與工作負載群組建立關聯，確保維持資源配額與工作限制。
 
-The following example request uses the workload group ID from the preceding response to ensure that the request does not exceed the `analytics` workload group's resource limits. Pass the workload group ID as a custom request header:
+下列範例請求會使用前述回應中的工作負載群組 ID，以確保請求不超過 `analytics` 工作負載群組的資源限制。請將工作負載群組 ID 作為自訂請求標頭傳遞：
 
 ```json
 curl -X GET "http://localhost:9200/testindex/_search?pretty" \
@@ -87,59 +88,59 @@ curl -X GET "http://localhost:9200/testindex/_search?pretty" \
 ```
 {% include copy.html %}
 
-To avoid passing the ID in every query, you can create rules to apply the ID automatically. For more information, see [Workload group rules]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-group-rules/).
+為了避免在每個查詢中傳遞 ID，您可以建立規則來自動套用 ID。如需更多資訊，請參閱[工作負載群組規則]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-group-rules/)。
 
-## Operating modes
+## 運作模式
 
-The `wlm.workload_group.mode` cluster-level setting controls whether workload management is globally enabled. The following operating modes determine the operating level for workload management:
+`wlm.workload_group.mode` 叢集層級設定可控制是否全域啟用工作負載管理。下列運作模式會決定工作負載管理的運作層級：
 
-- `monitor_only` (Default): Workload management monitors tasks but does not cancel or reject any queries.
+- `monitor_only` (預設)：工作負載管理會監視工作，但不會取消或拒絕任何查詢。
 
-- `disabled`: Workload management is disabled, with no monitoring or enforcement.
+- `disabled`：工作負載管理已停用，不會進行監視或強制執行。
 
-- `enabled`: Workload management is enabled and cancels and rejects queries once the configured thresholds are reached.
+- `enabled`：工作負載管理已啟用，並會在達到設定的閾值時取消及拒絕查詢。
 
-To change the operating mode, update the [`wlm.workload_group.mode` setting](#workload-management-settings), as described in the next section.
+若要變更運作模式，請更新 [`wlm.workload_group.mode` 設定](#workload-management-settings)，如下一節所述。
 
-Additionally, each workload group defines its own `resiliency_mode`. The `resiliency_mode` defines enforcement behavior but only takes effect when `wlm.workload_group.mode` is `enabled`. For more information about `resiliency_mode`, see [Workload group parameters]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-groups/#parameters).
+此外，每個工作負載群組都會定義自己的 `resiliency_mode`。`resiliency_mode` 會定義強制執行行為，但只有在 `wlm.workload_group.mode` 為 `enabled` 時才會生效。如需 `resiliency_mode` 的更多資訊，請參閱[工作負載群組參數]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-groups/#parameters)。
 
-## Workload management settings
+## 工作負載管理設定
 
-You can configure workload management by updating its values using the Cluster Settings API. For more information, see [Dynamic settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/#dynamic-settings).
+您可以使用 Cluster Settings API 更新工作負載管理的值來進行設定。如需更多資訊，請參閱[動態設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/#dynamic-settings)。
 
-OpenSearch supports the following workload management settings:
+OpenSearch 支援下列工作負載管理設定：
 
-- `wlm.workload_group.duress_streak` (Dynamic, integer): Determines the node duress threshold. Once the threshold is reached, the node is marked as in duress. Default is `3`. Minimum value is `3`.
+- `wlm.workload_group.duress_streak` (動態，整數)：決定節點受壓閾值。一旦達到閾值，節點就會標記為受壓。預設值為 `3`。最小值為 `3`。
 
-- `wlm.workload_group.enforcement_interval` (Dynamic, long): Defines the monitoring interval in milliseconds. Default is `1000`. Minimum value is `1000`.
+- `wlm.workload_group.enforcement_interval` (動態，long)：定義監視間隔，單位為毫秒。預設值為 `1000`。最小值為 `1000`。
 
  <p id="mode"> </p>
 
-- `wlm.workload_group.mode` (Dynamic, enum): Defines the operating mode. Valid values are `enabled`, `disabled`, and `monitor_only`. Default is `monitor_only`. For more information, see [Operating modes](#operating-modes).
+- `wlm.workload_group.mode` (動態，enum)：定義運作模式。有效值為 `enabled`、`disabled` 和 `monitor_only`。預設值為 `monitor_only`。如需更多資訊，請參閱[運作模式](#operating-modes)。
 
-- `wlm.workload_group.node.memory_rejection_threshold` (Dynamic, double): Defines the workload group level memory threshold. When the threshold is reached, the request is rejected. Default is `0.8`. Maximum value is `0.9`.
+- `wlm.workload_group.node.memory_rejection_threshold` (動態，double)：定義工作負載群組層級的記憶體閾值。達到閾值時，請求會被拒絕。預設值為 `0.8`。最大值為 `0.9`。
 
-- `wlm.workload_group.node.cpu_rejection_threshold` (Dynamic, double): Defines the workload group level CPU threshold. When the threshold is reached, the request is rejected. Default is `0.8`. Maximum value is `0.9`.
+- `wlm.workload_group.node.cpu_rejection_threshold` (動態，double)：定義工作負載群組層級的 CPU 閾值。達到閾值時，請求會被拒絕。預設值為 `0.8`。最大值為 `0.9`。
 
-- `wlm.workload_group.node.memory_cancellation_threshold` (Dynamic, double): Controls whether the node is considered to be in duress when the memory threshold is reached. Requests routed to nodes in duress are canceled. Default is `0.9`. Maximum value is `0.95`.
+- `wlm.workload_group.node.memory_cancellation_threshold` (動態，double)：控制達到記憶體閾值時是否將節點視為受壓。路由到受壓節點的請求會被取消。預設值為 `0.9`。最大值為 `0.95`。
 
-- `wlm.workload_group.node.cpu_cancellation_threshold` (Dynamic, double): Controls whether the node is considered to be in duress when the CPU threshold is reached. Requests routed to nodes in duress are canceled. Default is `0.9`. Maximum value is `0.95`.
+- `wlm.workload_group.node.cpu_cancellation_threshold` (動態，double)：控制達到 CPU 閾值時是否將節點視為受壓。路由到受壓節點的請求會被取消。預設值為 `0.9`。最大值為 `0.95`。
 
-When setting rejection and cancellation thresholds, remember that the rejection threshold for a resource must always be lower than the cancellation threshold. 
+設定拒絕與取消閾值時，請記住資源的拒絕閾值一律必須低於取消閾值。
 {: .important}
 
 ## Workload Management Stats API
 
-The Workload Management Stats API provides information about the current status of the Workload Management plugin.
+Workload Management Stats API 提供 Workload Management 外掛程式目前狀態的相關資訊。
 
-To receive statistics for all workload groups, use the following request:
+若要取得所有工作負載群組的統計資料，請使用下列請求：
 
 ```json
 GET _wlm/stats
 ```
 {% include copy-curl.html %}
 
-The response returns workload management statistics for each workload group:
+回應會傳回每個工作負載群組的工作負載管理統計資料：
 
 ```json
 {
@@ -187,35 +188,35 @@ The response returns workload management statistics for each workload group:
 ```
 {% include copy-curl.html %}
 
-To filter by a specific workload group, provide its ID as a path parameter:
+若要依特定工作負載群組篩選，請將其 ID 作為路徑參數提供：
 
 ```json
 GET _wlm/stats/wfbdJoDAS0mYiLbEAjd1sA
 ```
 {% include copy-curl.html %}
 
-### Response body fields 
+### 回應本文欄位
 
-The response contains the following fields.
+回應包含下列欄位。
 
-| Field name | Description                                                                                                                                      |
+| 欄位名稱 | 說明                                                                                                                                      |
 | :--- |:-------------------------------------------------------------------------------------------------------------------------------------------------| 
-| `total_completions`  | The total number of request completions in the `workload_group` at the given node. This includes all shard-level and coordinator-level requests. |
-| `total_rejections`    | The total number request rejections in the `workload_group` at the given node. This includes all shard-level and coordinator-level requests.     |
-| `total_cancellations` | The total number of cancellations in the `workload_group` at the given node. This includes all shard-level and coordinator-level requests.       |
-| `cpu`   | The `cpu` resource type statistics for the `workload_group`.                                                                                     | 
-| `memory`  | The `memory` resource type statistics for the `workload_group`.                                                                                  | 
+| `total_completions`  | 指定節點上 `workload_group` 中的請求完成總數。這包含所有分片層級與協調節點層級的請求。 |
+| `total_rejections`    | 指定節點上 `workload_group` 中的請求拒絕總數。這包含所有分片層級與協調節點層級的請求。     |
+| `total_cancellations` | 指定節點上 `workload_group` 中的取消總數。這包含所有分片層級與協調節點層級的請求。       |
+| `cpu`   | `workload_group` 的 `cpu` 資源類型統計資料。                                                                                     | 
+| `memory`  | `workload_group` 的 `memory` 資源類型統計資料。                                                                                  | 
 
-### Resource type statistics
+### 資源類型統計資料
 
-The resource type statistics objects contain the following fields.
+資源類型統計資料物件包含下列欄位。
 
-| Field name  | Description                                                                                                                                                                                 |
+| 欄位名稱  | 說明                                                                                                                                                                                 |
 | :--- |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
-| `current_usage` | The resource usage for the `workload_group` at the given node based on the last run of the monitoring thread. This value is updated based on the `wlm.workload_group.enforcement_interval`. |
-| `cancellations` | The number of cancellations resulting from the cancellation threshold being reached.                                                                                                        |
-| `rejections`    | The number of rejections resulting from the cancellation threshold being reached.                                                                                                           |
+| `current_usage` | 根據監視執行緒上次執行結果，指定節點上 `workload_group` 的資源使用量。此值會根據 `wlm.workload_group.enforcement_interval` 更新。 |
+| `cancellations` | 因達到取消閾值而導致的取消次數。                                                                                                        |
+| `rejections`    | 因達到取消閾值而導致的拒絕次數。                                                                                                           |
 
-## Permissions
+## 權限
 
-Only users with administrator-level permissions can create and update workload groups using the Workload Management APIs.
+只有具備管理員層級權限的使用者，才能使用 Workload Management API 建立及更新工作負載群組。

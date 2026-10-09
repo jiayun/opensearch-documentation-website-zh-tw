@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Deriving metrics from logs
+title: "從記錄檔衍生指標"
 parent: Common use cases
 nav_order: 15
 ---
 
-# Deriving metrics from logs
+# 從記錄檔衍生指標
 
-You can use OpenSearch Data Prepper to derive metrics from logs. 
+您可以使用 OpenSearch Data Prepper 從記錄檔衍生指標。
 
-The following example pipeline receives incoming logs using the [`http` source plugin]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/http-source) and the [`grok` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/grok/). It then uses the [`aggregate` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/aggregate/) to extract the metric bytes aggregated during a 30-second window and derives histograms from the results.
+下列範例管線使用 [`http` 來源外掛程式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/http-source) 與 [`grok` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/grok/) 接收傳入的記錄檔，然後使用 [`aggregate` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/aggregate/) 擷取在 30 秒時間窗內彙總的指標位元組，並從結果衍生長條圖。
 
-This pipeline writes data to two different OpenSearch indexes:
+此管線將資料寫入兩個不同的 OpenSearch 索引：
 
-- `logs`: This index stores the original, un-aggregated log events after being processed by the `grok` processor.
-- `histogram_metrics`: This index stores the derived histogram metrics extracted from the log events using the `aggregate` processor.
+- `logs`：此索引在經過 `grok` 處理器處理後，儲存原始、未彙總的記錄事件。
+- `histogram_metrics`：此索引儲存使用 `aggregate` 處理器從記錄事件中擷取的衍生長條圖指標。
 
-The pipeline contains two sub-pipelines:
+此管線包含兩個子管線：
 
-- `apache-log-pipeline-with-metrics`: Receives logs through an HTTP client like FluentBit, using `grok` to extract important values from the logs by matching the value in the log key against the [Apache Common Log Format](https://httpd.apache.org/docs/2.4/logs.html#accesslog). It then forwards the grokked logs to two destinations:
+- `apache-log-pipeline-with-metrics`：透過 FluentBit 等 HTTP 用戶端接收記錄檔，並使用 `grok` 透過比對記錄鍵中的值與 [Apache Common Log Format](https://httpd.apache.org/docs/2.4/logs.html#accesslog)，從記錄檔中擷取重要值。接著將經過 grok 處理的記錄檔轉送至兩個目的地：
 
- - An OpenSearch index named `logs` to store the original log events.
- - The `log-to-metrics-pipeline` for further aggregation and metric derivation.
+ - 名為 `logs` 的 OpenSearch 索引，用於儲存原始記錄事件。
+ - `log-to-metrics-pipeline`，用於進一步彙總與指標衍生。
 
-- `log-to-metrics-pipeline`: Receives the grokked logs from the `apache-log-pipeline-with-metrics` pipeline, aggregates the logs, and derives histogram metrics of bytes based on the values in the `clientip` and `request` keys. Finally, it sends the derived histogram metrics to an OpenSearch index named `histogram_metrics`.
+- `log-to-metrics-pipeline`：從 `apache-log-pipeline-with-metrics` 管線接收經過 grok 處理的記錄檔，彙總這些記錄檔，並根據 `clientip` 與 `request` 鍵中的值衍生位元組的長條圖指標。最後，將衍生的長條圖指標傳送至名為 `histogram_metrics` 的 OpenSearch 索引。
   
-#### Example pipeline
+#### 範例管線
 
 ```json
 apache-log-pipeline-with-metrics:

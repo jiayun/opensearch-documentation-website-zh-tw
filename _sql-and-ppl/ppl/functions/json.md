@@ -1,45 +1,46 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: JSON functions
+title: "JSON 函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 9
 ---
 
-# JSON functions
+# JSON 函式
 
-PPL supports the following JSON functions for creating, parsing, and manipulating JSON data.
+PPL 支援下列 JSON 函式，用於建立、剖析及操作 JSON 資料。
 
 ## JSON path
 
-All JSON paths used in JSON functions follow the format `<key1>{<index1>}.<key2>{<index2>}...`.
-Each `<key>` represents a field name. The `{<index>}` part is optional and is used only when the corresponding key refers to an array.
-For example:
+JSON 函式中使用的所有 JSON 路徑都遵循 `<key1>{<index1>}.<key2>{<index2>}...` 格式。
+每個 `<key>` 代表一個欄位名稱。`{<index>}` 部分為選用，僅在對應的鍵指向陣列時使用。
+例如：
 
 ```bash
 a{2}.b{0}
 ```
 {% include copy.html %}
 
-This path accesses the element at index `0` in the `b` array, which is located within the element at index `2` of the `a` array.
+此路徑存取 `b` 陣列中索引 `0` 處的元素，而該陣列位於 `a` 陣列中索引 `2` 處的元素內。
 
-**Notes**:
-1. The `{<index>}` notation applies only when the associated key points to an array.
-2. `{}` (without a specific index) is interpreted as a wildcard, equivalent to `{*}`, meaning `all elements` in the array at that level.
+**注意**：
+1. `{<index>}` 標記法僅在相關的鍵指向陣列時適用。
+2. `{}` (不含特定索引) 會被解讀為萬用字元，等同於 `{*}`，表示該層級陣列中的 `all elements`。
 
 ## JSON
 
-**Usage**: `JSON(value)`
+**用法**：`JSON(value)`
 
-Validates and parses a JSON string. Returns the parsed JSON value if the string is valid JSON, or `NULL` if invalid.
+驗證並剖析 JSON 字串。若字串是有效的 JSON，則傳回剖析後的 JSON 值；若無效，則傳回 `NULL`。
 
-**Parameters**:
+**參數**：
 
-- `value` (Required): The string to validate and parse as JSON.
+- `value` (必要)：要驗證並剖析為 JSON 的字串。
 
-**Return type**: `STRING`
+**回傳類型**：`STRING`
 
-#### Example
+#### 範例
 
 ```sql
 source=json_test
@@ -49,7 +50,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -64,20 +65,20 @@ The query returns the following results:
 
 ## JSON_VALID
 
-**Usage**: `JSON_VALID(value)`
+**用法**：`JSON_VALID(value)`
 
-Evaluates whether a string uses valid JSON syntax. Returns `TRUE` if valid, `FALSE` if invalid. `NULL` input returns `NULL`.
+評估字串是否使用有效的 JSON 語法。若有效則傳回 `TRUE`，若無效則傳回 `FALSE`。`NULL` 輸入會傳回 `NULL`。
 
-**Version**: 3.1.0
-**Limitation**: Only works when `plugins.calcite.enabled=true`
+**版本**：3.1.0
+**限制**：僅在 `plugins.calcite.enabled=true` 時有效
 
-**Parameters**:
+**參數**：
 
-- `value` (Required): The string to validate as JSON.
+- `value` (必要)：要驗證為 JSON 的字串。
 
-**Return type**: `BOOLEAN`
+**回傳類型**：`BOOLEAN`
 
-#### Example
+#### 範例
 
 ```sql
 source=people
@@ -87,7 +88,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -99,18 +100,18 @@ The query returns the following results:
 
 ## JSON_OBJECT
 
-**Usage**: `JSON_OBJECT(key1, value1, key2, value2, ...)`
+**用法**：`JSON_OBJECT(key1, value1, key2, value2, ...)`
 
-Creates a JSON object string from the specified key-value pairs. All keys must be strings.
+從指定的鍵值對建立 JSON 物件字串。所有鍵都必須是字串。
 
-**Parameters**:
+**參數**：
 
-- `key1`, `value1` (Required): The first key-value pair. The key must be a string.
-- `key2`, `value2`, `...` (Optional): Additional key-value pairs.
+- `key1`, `value1` (必要)：第一個鍵值對。鍵必須是字串。
+- `key2`, `value2`, `...` (選用)：其他鍵值對。
 
-**Return type**: `STRING`
+**回傳類型**：`STRING`
 
-#### Example
+#### 範例
 
 ```sql
 source=json_test
@@ -120,7 +121,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -132,17 +133,17 @@ The query returns the following results:
 
 ## JSON_ARRAY
 
-**Usage**: `JSON_ARRAY(element1, element2, ...)`
+**用法**：`JSON_ARRAY(element1, element2, ...)`
 
-Creates a JSON array string from the specified elements.
+從指定的元素建立 JSON 陣列字串。
 
-**Parameters**:
+**參數**：
 
-- `element1`, `element2`, `...` (Optional): The elements to include in the array. Can be any data type.
+- `element1`, `element2`, `...` (選用)：要包含在陣列中的元素。可以是任何資料類型。
 
-**Return type**: `STRING`
+**回傳類型**：`STRING`
 
-#### Example
+#### 範例
 
 ```sql
 source=json_test
@@ -152,7 +153,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -164,19 +165,19 @@ The query returns the following results:
 
 ## JSON_ARRAY_LENGTH
 
-**Usage**: `JSON_ARRAY_LENGTH(value)`
+**用法**：`JSON_ARRAY_LENGTH(value)`
 
-Returns the number of elements in a JSON array. Returns `NULL` if the input is not a valid JSON array, is `NULL`, or contains invalid JSON.
+傳回 JSON 陣列中的元素數量。若輸入不是有效的 JSON 陣列、為 `NULL`，或包含無效的 JSON，則傳回 `NULL`。
 
-**Parameters**:
+**參數**：
 
-- `value` (Required): A string containing a JSON array.
+- `value` (必要)：包含 JSON 陣列的字串。
 
-**Return type**: `INTEGER`
+**回傳類型**：`INTEGER`
 
-#### Examples
+#### 範例
 
-The following example returns the length of a valid JSON array:
+下列範例傳回有效 JSON 陣列的長度：
 
 ```sql
 source=json_test
@@ -186,7 +187,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -196,7 +197,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example returns `NULL` for non-array JSON values:
+下列範例針對非陣列的 JSON 值傳回 `NULL`：
 
 ```sql
 source=json_test
@@ -206,7 +207,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -218,27 +219,27 @@ The query returns the following results:
 
 ## JSON_EXTRACT
 
-**Usage**: `JSON_EXTRACT(json_string, path1, path2, ...)`
+**用法**：`JSON_EXTRACT(json_string, path1, path2, ...)`
 
-Extracts values from a JSON string using the specified JSON paths.
+使用指定的 JSON 路徑從 JSON 字串中擷取值。
 
-**Behavior**:
-- **Single path**: Returns the extracted value directly.
-- **Multiple paths**: Returns a JSON array containing the extracted values in path order.
-- **Invalid path**: Returns `NULL` for that path in the result.
+**行為**：
+- **單一路徑**：直接傳回擷取的值。
+- **多個路徑**：傳回一個 JSON 陣列，其中依路徑順序包含擷取的值。
+- **無效路徑**：結果中該路徑傳回 `NULL`。
 
-For path syntax details, see the [JSON path](#json-path) section.
+有關路徑語法的詳細資訊，請參閱 [JSON path](#json-path) 章節。
 
-**Parameters**:
+**參數**：
 
-- `json_string` (Required): The JSON string to extract values from.
-- `path1`, `path2`, `...` (Required): One or more JSON paths specifying which values to extract.
+- `json_string` (必要)：要從中擷取值的 JSON 字串。
+- `path1`, `path2`, `...` (必要)：一或多個 JSON 路徑，指定要擷取哪些值。
 
-**Return type**: `STRING`
+**回傳類型**：`STRING`
 
-#### Examples
+#### 範例
 
-The following example extracts values using a single JSON path:
+下列範例使用單一 JSON 路徑擷取值：
 
 ```sql
 source=json_test
@@ -248,7 +249,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -258,7 +259,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example extracts values using multiple JSON paths:
+下列範例使用多個 JSON 路徑擷取值：
 
 ```sql
 source=json_test
@@ -268,7 +269,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -280,20 +281,20 @@ The query returns the following results:
 
 ## JSON_DELETE
 
-**Usage**: `JSON_DELETE(json_string, path1, path2, ...)`
+**用法**：`JSON_DELETE(json_string, path1, path2, ...)`
 
-Deletes values from a JSON string at the specified JSON paths. Returns the modified JSON string. If a path cannot find a value, no changes are made for that path.
+從 JSON 字串中指定的 JSON 路徑刪除值。傳回修改後的 JSON 字串。若某個路徑找不到值，則該路徑不會進行任何變更。
 
-**Parameters**:
+**參數**：
 
-- `json_string` (Required): The JSON string to delete values from.
-- `path1`, `path2`, `...` (Required): One or more JSON paths specifying which values to delete.
+- `json_string` (必要)：要從中刪除值的 JSON 字串。
+- `path1`, `path2`, `...` (必要)：一或多個 JSON 路徑，指定要刪除哪些值。
 
-**Return type**: `STRING`
+**回傳類型**：`STRING`
 
-#### Examples
+#### 範例
 
-The following example deletes a value using a single JSON path:
+下列範例使用單一 JSON 路徑刪除值：
 
 ```sql
 source=json_test
@@ -303,17 +304,17 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
 | delete |
 | --- |
-| {"a":[{},{"b":2}]} |
+| {"a":[{"b":2}]} |
 
 <!-- vale on -->
 
-The following example deletes values using multiple JSON paths:
+下列範例使用多個 JSON 路徑刪除值：
 
 ```sql
 source=json_test
@@ -323,7 +324,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -333,7 +334,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows no changes occur when trying to delete a non-existent path:
+下列範例顯示嘗試刪除不存在的路徑時不會發生任何變更：
 
 ```sql
 source=json_test
@@ -343,7 +344,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -355,21 +356,21 @@ The query returns the following results:
 
 ## JSON_SET
 
-**Usage**: `JSON_SET(json_string, path1, value1, path2, value2, ...)`
+**用法**：`JSON_SET(json_string, path1, value1, path2, value2, ...)`
 
-Sets values in a JSON string at the specified JSON paths. Returns the modified JSON string. If a path's parent node is not a JSON object, that path is skipped.
+在 JSON 字串中指定的 JSON 路徑設定值。回傳修改後的 JSON 字串。如果某個路徑的父節點不是 JSON 物件，則略過該路徑。
 
-**Parameters**:
+**參數**：
 
-- `json_string` (Required): The JSON string to modify.
-- `path1`, `value1` (Required): The first path-value pair to set.
-- `path2`, `value2`, `...` (Optional): Additional path-value pairs.
+- `json_string` (必要)：要修改的 JSON 字串。
+- `path1`、`value1` (必要)：要設定的第一組路徑-值配對。
+- `path2`、`value2`、`...` (選用)：其他路徑-值配對。
 
-**Return type**: `STRING`
+**回傳類型**：`STRING`
 
-#### Examples
+#### 範例
 
-The following example sets a single value at a JSON path:
+以下範例在 JSON 路徑設定單一值：
 
 ```sql
 source=json_test
@@ -379,7 +380,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢回傳以下結果：
 
 <!-- vale off -->
 
@@ -389,7 +390,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example sets multiple values using multiple path-value pairs:
+以下範例使用多組路徑-值配對設定多個值：
 
 ```sql
 source=json_test
@@ -399,7 +400,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢回傳以下結果：
 
 <!-- vale off -->
 
@@ -411,21 +412,21 @@ The query returns the following results:
 
 ## JSON_APPEND
 
-**Usage**: `JSON_APPEND(json_string, path1, value1, path2, value2, ...)`
+**用法**：`JSON_APPEND(json_string, path1, value1, path2, value2, ...)`
 
-Appends values to arrays in a JSON string at the specified JSON paths. Returns the modified JSON string. If a path's target node is not an array, that path is skipped.
+在 JSON 字串中指定的 JSON 路徑將值附加至陣列。回傳修改後的 JSON 字串。如果某個路徑的目標節點不是陣列，則略過該路徑。
 
-**Parameters**:
+**參數**：
 
-- `json_string` (Required): The JSON string to modify.
-- `path1`, `value1` (Required): The first path-value pair to append.
-- `path2`, `value2`, `...` (Optional): Additional path-value pairs.
+- `json_string` (必要)：要修改的 JSON 字串。
+- `path1`、`value1` (必要)：要附加的第一組路徑-值配對。
+- `path2`、`value2`、`...` (選用)：其他路徑-值配對。
 
-**Return type**: `STRING`
+**回傳類型**：`STRING`
 
-#### Examples
+#### 範例
 
-The following example appends a value to an array:
+以下範例將一個值附加至陣列：
 
 ```sql
 source=json_test
@@ -435,7 +436,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢回傳以下結果：
 
 <!-- vale off -->
 
@@ -445,7 +446,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows paths to non-array targets are skipped:
+以下範例顯示目標不是陣列的路徑會被略過：
 
 ```sql
 source=json_test
@@ -455,7 +456,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢回傳以下結果：
 
 <!-- vale off -->
 
@@ -465,7 +466,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example appends values using mixed path types:
+以下範例使用混合路徑類型附加值：
 
 ```sql
 source=json_test
@@ -475,7 +476,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢回傳以下結果：
 
 <!-- vale off -->
 
@@ -487,25 +488,25 @@ The query returns the following results:
 
 ## JSON_EXTEND
 
-**Usage**: `JSON_EXTEND(json_string, path1, value1, path2, value2, ...)`
+**用法**：`JSON_EXTEND(json_string, path1, value1, path2, value2, ...)`
 
-Extends arrays in a JSON string at the specified JSON paths with new values. Returns the modified JSON string. If a path's target node is not an array, that path is skipped.
+在 JSON 字串中指定的 JSON 路徑以新值擴充陣列。回傳修改後的 JSON 字串。如果某個路徑的目標節點不是陣列，則略過該路徑。
 
-The function attempts to parse each value as an array:
-- If parsing succeeds: The parsed array elements are added to the target array.
-- If parsing fails: The value is treated as a single element and added to the target array.
+此函式會嘗試將每個值剖析為陣列：
+- 如果剖析成功：剖析出的陣列元素會加入目標陣列。
+- 如果剖析失敗：該值會視為單一元素並加入目標陣列。
 
-**Parameters**:
+**參數**：
 
-- `json_string` (Required): The JSON string to modify.
-- `path1`, `value1` (Required): The first path-value pair to extend.
-- `path2`, `value2`, `...` (Optional): Additional path-value pairs.
+- `json_string` (必要)：要修改的 JSON 字串。
+- `path1`、`value1` (必要)：要擴充的第一組路徑-值配對。
+- `path2`、`value2`、`...` (選用)：其他路徑-值配對。
 
-**Return type**: `STRING`
+**回傳類型**：`STRING`
 
-#### Examples
+#### 範例
 
-The following example extends an array with a single value:
+以下範例以單一值擴充陣列：
 
 ```sql
 source=json_test
@@ -515,7 +516,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢回傳以下結果：
 
 <!-- vale off -->
 
@@ -525,7 +526,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows paths to non-array targets are skipped:
+以下範例顯示目標不是陣列的路徑會被略過：
 
 ```sql
 source=json_test
@@ -535,7 +536,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢回傳以下結果：
 
 <!-- vale off -->
 
@@ -545,7 +546,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example extends an array by parsing the value as an array:
+以下範例將值剖析為陣列來擴充陣列：
 
 ```sql
 source=json_test
@@ -555,7 +556,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢回傳以下結果：
 
 <!-- vale off -->
 
@@ -567,19 +568,19 @@ The query returns the following results:
 
 ## JSON_KEYS
 
-**Usage**: `JSON_KEYS(json_string)`
+**用法**：`JSON_KEYS(json_string)`
 
-Returns the keys of a JSON object as a JSON array. Returns `NULL` if the input is not a valid JSON object.
+以 JSON 陣列回傳 JSON 物件的鍵。如果輸入不是有效的 JSON 物件，則回傳 `NULL`。
 
-**Parameters**:
+**參數**：
 
-- `json_string` (Required): A string containing a JSON object.
+- `json_string` (必要)：包含 JSON 物件的字串。
 
-**Return type**: `STRING`
+**回傳類型**：`STRING`
 
-#### Examples
+#### 範例
 
-The following example gets keys from a simple JSON object:
+以下範例從簡單的 JSON 物件取得鍵：
 
 ```sql
 source=json_test
@@ -589,7 +590,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢回傳以下結果：
 
 <!-- vale off -->
 
@@ -599,7 +600,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example gets keys from a nested JSON object:
+以下範例從巢狀 JSON 物件取得鍵：
 
 ```sql
 source=json_test
@@ -609,7 +610,7 @@ source=json_test
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢回傳以下結果：
 
 <!-- vale off -->
 

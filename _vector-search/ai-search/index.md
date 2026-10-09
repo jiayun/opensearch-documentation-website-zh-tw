@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: AI search
+title: "AI 搜尋"
 nav_order: 45
 has_children: true
 has_toc: false
@@ -9,61 +10,61 @@ redirect_from:
   - /search-plugins/neural-search/
   - /vector-search/ai-search/
 model_cards:
-  - heading: "Use a pretrained model provided by OpenSearch"
-    link: "/ml-commons-plugin/pretrained-models/"
-  - heading: "Upload your own model to OpenSearch"
-    link: "/ml-commons-plugin/custom-local-models/"
-  - heading: "Connect to a model hosted on an external platform"
-    link: "/ml-commons-plugin/remote-models/index/"
+- heading: 使用 OpenSearch 提供的預訓練模型
+  link: /ml-commons-plugin/pretrained-models/
+- heading: 將您自己的模型上傳至 OpenSearch
+  link: /ml-commons-plugin/custom-local-models/
+- heading: 連線至外部平台上託管的模型
+  link: /ml-commons-plugin/remote-models/index/
 tutorial_cards:
-  - heading: "Getting started with semantic and hybrid search"
-    description: "Learn how to implement semantic and hybrid search"
-    link: "/vector-search/tutorials/neural-search-tutorial/"
+- heading: 語意與混合搜尋入門
+  description: 了解如何實作語意與混合搜尋
+  link: /vector-search/tutorials/neural-search-tutorial/
 search_method_cards:
-  - heading: "Semantic search"
-    description: "Uses dense retrieval based on text embedding models to search text data."
-    link: "/vector-search/ai-search/semantic-search/"
-  - heading: "Hybrid search"
-    description: "Combines keyword and semantic search to improve search relevance."
-    link: "/vector-search/ai-search/hybrid-search/"
-  - heading: "Multimodal search"
-    description: "Uses multimodal embedding models to search text and image data."
-    link: "/vector-search/ai-search/multimodal-search/"
-  - heading: "Neural sparse search"
-    description: "Uses sparse retrieval based on sparse embedding models to search text data."
-    link: "/vector-search/ai-search/neural-sparse-search/"
-  - heading: "Neural sparse ANN search"
-    description: "Uses approximate nearest neighbor techniques on sparse vectors for improved performance at scale."
-    link: "/vector-search/ai-search/neural-sparse-ann/"
-  - heading: "Conversational search with RAG"
-    description: "Uses retrieval-augmented generation (RAG) and conversational memory to provide context-aware responses."
-    link: "/vector-search/ai-search/conversational-search/"
+- heading: 語意搜尋
+  description: 使用以文字嵌入模型為基礎的稠密檢索來搜尋文字資料。
+  link: /vector-search/ai-search/semantic-search/
+- heading: 混合搜尋
+  description: 結合關鍵字與語意搜尋，以提升搜尋相關性。
+  link: /vector-search/ai-search/hybrid-search/
+- heading: 多模態搜尋
+  description: 使用多模態嵌入模型來搜尋文字與影像資料。
+  link: /vector-search/ai-search/multimodal-search/
+- heading: 神經稀疏搜尋
+  description: 使用以稀疏嵌入模型為基礎的稀疏檢索來搜尋文字資料。
+  link: /vector-search/ai-search/neural-sparse-search/
+- heading: 神經稀疏 ANN 搜尋
+  description: 對稀疏向量使用近似最近鄰技術，以在大規模環境中提升效能。
+  link: /vector-search/ai-search/neural-sparse-ann/
+- heading: 使用 RAG 的對話式搜尋
+  description: 使用檢索增強生成 (RAG) 與對話記憶，以提供能感知情境的回應。
+  link: /vector-search/ai-search/conversational-search/
 ---
 
-# AI search
+# AI 搜尋
 
-AI search streamlines your workflow by generating embeddings automatically. OpenSearch converts text to vectors during indexing and querying. It creates and indexes vector embeddings for documents and then processes query text into embeddings to find and return the most relevant results.
+AI 搜尋會自動產生嵌入，藉此簡化您的工作流程。OpenSearch 會在編製索引與查詢期間將文字轉換為向量。它會為文件建立並編製向量嵌入的索引，接著將查詢文字處理為嵌入，以找出並傳回最相關的結果。
 
-## Prerequisite
+## 先決條件
 
-Before using AI search, you must set up an ML model for embedding generation. When selecting a model, you have the following options:
+使用 AI 搜尋之前，您必須設定用於產生嵌入的 ML 模型。選擇模型時，您有下列選項：
 
-- Use a pretrained model provided by OpenSearch. For more information, see [OpenSearch-provided pretrained models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/).
+- 使用 OpenSearch 提供的預訓練模型。如需詳細資訊，請參閱 [OpenSearch 提供的預訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)。
 
-- Upload your own model to OpenSearch. For more information, see [Custom local models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/).
+- 將您自己的模型上傳至 OpenSearch。如需詳細資訊，請參閱 [自訂本機模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)。
 
-- Connect to a foundation model hosted on an external platform. For more information, see [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/).
+- 連線至外部平台上託管的基礎模型。如需詳細資訊，請參閱 [連線至外部託管的模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
 
 ---
 
-## Tutorial
+## 教學
 
 {% include cards.html cards=page.tutorial_cards %}
 
 ---
 
-## AI search methods
+## AI 搜尋方法
 
-Once you set up an ML model, choose one of the following search methods.
+設定好 ML 模型後，請選擇下列其中一種搜尋方法。
 
 {% include cards.html cards=page.search_method_cards %}

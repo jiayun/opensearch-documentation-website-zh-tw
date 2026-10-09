@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Transform type mappings
+title: "轉換類型對應"
 nav_order: 1
 parent: Migrate metadata
 grand_parent: Migration phases
 permalink: /classic/migration-assistant/migration-phases/migrate-metadata/handling-type-mapping-deprecation/
 ---
 
-# Transform type mappings
+# 轉換類型對應
 
 {: .note }
-These transformations may not apply to your use case, but the framework for creating a transformation is designed to handle mutations, data enrichment, and other modifications when modifying workloads or moving them to a new target.
+這些轉換可能不適用於您的情境，但建立轉換的框架旨在處理變更，例如在修改工作負載或將其移至新目標時，進行資料異動、資料擴充及其他修改。
 
-This guide provides solutions for managing the deprecation of the type mapping functionality when migrating from Elasticsearch 6.x or earlier to OpenSearch.
+本指南提供在從 Elasticsearch 6.x 或更早版本遷移至 OpenSearch 時，管理類型對應功能棄用的解決方案。
 
-In versions of Elasticsearch prior to 6.x, an index could contain multiple types, each with its own mapping. These types allowed you to store and query different kinds of documents—such as books and movies—in a single index. For example, both `book` and `movie` types could have a shared field like `title`, while each had additional fields specific to that type.
+在 Elasticsearch 6.x 之前的版本中，一個索引可以包含多個類型，每個類型都有自己的對應。這些類型可讓您在單一索引中儲存及查詢不同種類的文件，例如書籍和電影。舉例來說，`book` 和 `movie` 類型可以共用 `title` 這類欄位，同時各自擁有專屬於該類型的其他欄位。
 
-Newer versions of Elasticsearch and OpenSearch no longer support multiple mapping types. Each index now supports only a single mapping type. During migration, you must define how to transform or restructure data that used multiple types. The following example shows multiple mapping types:
+較新版本的 Elasticsearch 和 OpenSearch 已不再支援多個對應類型。現在每個索引僅支援單一對應類型。遷移期間，您必須定義如何轉換或重新建構使用多個類型的資料。以下範例顯示多個對應類型：
 
 
 ```json
@@ -41,46 +42,46 @@ GET /library/_mappings
 }
 ```
 
-For more information, see the [official Elasticsearch documentation on the removal of mapping types](https://www.elastic.co/guide/en/elasticsearch/reference/7.10/removal-of-types.html). 
+如需更多資訊，請參閱 [Elasticsearch 官方文件中有關移除對應類型的說明](https://www.elastic.co/guide/en/elasticsearch/reference/7.10/removal-of-types.html)。
 
-## Using the type mapping transformer
+## 使用類型對應轉換器
 
-To address type mapping deprecation, use the `TypeMappingsSanitizationTransformer`. This transformer can modify data, including metadata, documents, and requests, so that the previously mapped data can be used in OpenSearch. To use the mapping transformer:
+若要解決類型對應棄用的問題，請使用 `TypeMappingsSanitizationTransformer`。此轉換器可以修改資料，包括中繼資料、文件和請求，讓先前對應的資料可在 OpenSearch 中使用。若要使用對應轉換器：
 
-1. Navigate to the bootstrap box and open the `cdk.context.json` file with Vim.
-2. Add or update the key `reindexFromSnapshotExtraArgs` to include `--doc-transformer-config-file /shared-logs-output/transformation.json`.
-3. Add or update the key `trafficReplayerExtraArgs` to include `--transformer-config-file /shared-logs-output/transformation.json`.
-4. Deploy Migration Assistant.
-5. Navigate to the Migration Assistant console.
-6. Create a file named `/shared-logs-output/transformation.json`.
-7. Add your transformation configuration to the file. For configuration options, see [Configuration options](#configuration-options).
-8. When running the metadata migration, run the configuration with the transformer using the command `console metadata migrate --transformer-config-file /shared-logs-output/transformation.json`.
+1. 瀏覽至 bootstrap box 並使用 Vim 開啟 `cdk.context.json` 檔案。
+2. 新增或更新 `reindexFromSnapshotExtraArgs` 索引鍵，加入 `--doc-transformer-config-file /shared-logs-output/transformation.json`。
+3. 新增或更新 `trafficReplayerExtraArgs` 索引鍵，加入 `--transformer-config-file /shared-logs-output/transformation.json`。
+4. 部署 Migration Assistant。
+5. 瀏覽至 Migration Assistant 主控台。
+6. 建立名為 `/shared-logs-output/transformation.json` 的檔案。
+7. 將您的轉換組態新增至該檔案。如需組態選項，請參閱[組態選項](#configuration-options)。
+8. 執行中繼資料遷移時，使用 `console metadata migrate --transformer-config-file /shared-logs-output/transformation.json` 命令搭配轉換器執行組態。
 
-Whenever the transformation configuration is updated, the backfill and Replayer tools need to be stopped and restarted in order to apply the changes. Any previously migrated data and metadata may need to be cleared in order to avoid an inconsistent state.
+每當轉換組態更新時，必須停止並重新啟動回填和 Replayer 工具，才能套用變更。先前遷移的資料和中繼資料可能需要清除，以避免狀態不一致。
 
-### Configuration options
+### 組態選項
 
-The `TypeMappingsSanitizationTransformer` supports several strategies for managing type mappings:
+`TypeMappingsSanitizationTransformer` 支援多種管理類型對應的策略：
 
-1. **Route different types to separate indexes**: Split different types into their own indexes.
-2. **Merge all types into one index**: Combine multiple types into a single index.
-3. **Drop specific types**: Selectively migrate only specific types.
-4. **Keep the original structure**: Maintain the same index name while conforming to the new type standards.
+1. **將不同類型路由至個別索引**：將不同類型分割至各自的索引。
+2. **將所有類型合併至單一索引**：將多個類型合併至單一索引。
+3. **捨棄特定類型**：僅選擇性遷移特定類型。
+4. **保留原始結構**：維持相同的索引名稱，同時符合新的類型標準。
 
-### Type mapping transformer configuration schema
+### 類型對應轉換器組態結構描述
 
-The type mapping transformer uses the following configuration options.
+類型對應轉換器使用下列組態選項。
 
-| **Field**  | **Type** | **Required** | **Description** | 
+| **欄位**  | **類型** | **必要** | **說明** | 
 | :--- | :--- | :--- | :--- |
-| `staticMappings`   | `object` | No   | A map of `{ indexName: { typeName: targetIndex } }` used to **statically** route specific types. <br/><br/> For any **index** listed on this page, types **not** included in its object are **dropped** (no data or requests are migrated for those omitted types).   |
-| `regexMappings`    | `array`  | No   | A list of **regex-based** rules for **dynamic** routing of source index/type names to a target index. <br/><br/> Each element in this array is itself an object with `sourceIndexPattern`, `sourceTypePattern`, and `targetIndexPattern` fields. <br/><br/> For information about the **default value**, see [Defaults](#Defaults). |
-| `sourceProperties` | `object` | Yes  | Additional **metadata** about the source (for example, its Elasticsearch/OpenSearch version). Must include at least `"version"` with `"major"` and `"minor"` fields.   |
+| `staticMappings`   | `object` | 否   | 用於**靜態**路由特定類型的 `{ indexName: { typeName: targetIndex } }` 對應。<br/><br/> 對於此頁面上列出的任何**索引**，未包含在其物件中的類型會遭到**捨棄**（這些省略的類型不會遷移任何資料或請求）。   |
+| `regexMappings`    | `array`  | 否   | 用於將來源索引/類型名稱**動態**路由至目標索引的**規則運算式**規則清單。<br/><br/> 此陣列中的每個元素本身都是一個物件，包含 `sourceIndexPattern`、`sourceTypePattern` 和 `targetIndexPattern` 欄位。<br/><br/> 如需**預設值**的相關資訊，請參閱[預設值](#Defaults)。 |
+| `sourceProperties` | `object` | 是  | 來源的額外**中繼資料**（例如其 Elasticsearch/OpenSearch 版本）。至少必須包含 `"version"`，並具有 `"major"` 和 `"minor"` 欄位。   |
 
-The following example JSON configuration provides a transformation schema:
+下列範例 JSON 組態提供轉換結構描述：
 
 <details markdown="block">
-<summary>Example JSON Configuration</summary>
+<summary>範例 JSON 組態</summary>
 
 ```json
 {
@@ -111,13 +112,13 @@ The following example JSON configuration provides a transformation schema:
 
 </details>
 
-## Example configurations
+## 範例組態
 
-The following example configurations show you how to use the transformer for different mapping type scenarios.
+下列範例組態說明如何針對不同的對應類型情境使用轉換器。
 
-### Route different types to separate indexes
+### 將不同類型路由至個別索引
 
-If you have an index `activity` with types `user` and `post` that you want to split into separate indexes, use the following configuration:
+如果您有一個索引 `activity`，其中包含類型 `user` 和 `post`，且您想將其分割至個別索引，請使用下列組態：
 
 ```json
 [
@@ -141,14 +142,14 @@ If you have an index `activity` with types `user` and `post` that you want to sp
 ```
 {% include copy.html %}
 
-This transformer will perform the following:
+此轉換器將執行下列操作：
 
-- Route documents with type `user` to the `new_users` index.
-- Route documents with type `post` to the `new_posts` index.
+- 將類型為 `user` 的文件路由至 `new_users` 索引。
+- 將類型為 `post` 的文件路由至 `new_posts` 索引。
 
-### Merge all types into one index
+### 將所有類型合併至單一索引
 
-To merge all types into one index, use the following configuration:
+若要將所有類型合併至單一索引，請使用下列組態：
 
 ```json
 [
@@ -172,9 +173,9 @@ To merge all types into one index, use the following configuration:
 ```
 {% include copy.html %}
 
-### Drop specific types
+### 捨棄特定類型
 
-To migrate only the `user` type within the `activity` index and drop all documents/requests with types not directly specified, use the following configuration:
+若只要遷移 `activity` 索引中的 `user` 類型，並捨棄所有未直接指定類型的文件/請求，請使用下列組態：
 
 ```json
 [
@@ -197,11 +198,11 @@ To migrate only the `user` type within the `activity` index and drop all documen
 ```
 {% include copy.html %}
 
-This configuration only migrates documents of type `user` and ignores other document types in the `activity` index.
+此組態僅遷移類型為 `user` 的文件，並忽略 `activity` 索引中的其他文件類型。
 
-### Keep the original structure
+### 保留原始結構
 
-To migrate only specific types and keep the original structure, use the following configuration:
+若只要遷移特定類型並保留原始結構，請使用下列組態：
 
 ```json
 [
@@ -226,22 +227,22 @@ To migrate only specific types and keep the original structure, use the followin
 ```
 {% include copy.html %}
 
-This is equivalent to the strategy of merging all types into one index but also uses a pattern-based routing strategy.
+這等同於將所有類型合併到一個索引的策略，但同時也使用以模式為基礎的路由策略。
 
-### Combining multiple strategies
+### 結合多種策略
 
-You can combine both static and regex-based mappings to manage different indexes or patterns in a single migration. For example, you might have one index that must use `staticMappings` and another that uses `regexMappings` to route all types by pattern.
+您可以同時結合靜態對應與以正規表示式為基礎的對應，在單一遷移中管理不同的索引或模式。例如，您可能有一個必須使用 `staticMappings` 的索引，以及另一個使用 `regexMappings` 依模式路由所有類型的索引。
 
-For each document, request, or metadata item (processed individually for bulk requests), the following steps are performed:
+對於每個文件、請求或中繼資料項目（大量請求會逐一處理），會執行下列步驟：
 
-1. The index is checked to determine whether it matches an entry in the static mappings.
-   - If matched, the type is checked against the index component of the static mappings entry.
-     - If the type matches, the mapping is applied, and the resulting index includes the value of the type key.
-     - If the type doesn't match, the request/document/metadata is dropped and not migrated.
-2. If the index is not matched in the static mappings, the index-type combination is checked against each item in the regex mappings list, in order from first to last. If a match is found, the mapping is applied, the resulting index includes the value of the type key, and no further regex matching is performed.
-3. Any request, document, or metadata that doesn't match the preceding cases is dropped, and the documents they contain are not migrated.
+1. 檢查索引是否符合靜態對應中的項目。
+   - 若符合，則檢查類型是否符合該靜態對應項目的索引元件。
+     - 若類型符合，則套用對應，產生的索引會包含 type 鍵的值。
+     - 若類型不符合，則捨棄該請求／文件／中繼資料，不予遷移。
+2. 若索引在靜態對應中沒有符合項目，則依序從頭到尾檢查索引與類型的組合是否符合 regex 對應清單中的每個項目。若找到符合項目，則套用對應，產生的索引會包含 type 鍵的值，且不再執行後續的 regex 比對。
+3. 任何不符合前述情況的請求、文件或中繼資料都會被捨棄，其所包含的文件也不會被遷移。
 
-The following example demonstrates how to combine static and regex-based mappings for different indexes:
+下列範例示範如何為不同索引結合靜態對應與以 regex 為基礎的對應：
 
 ```json
 [
@@ -276,9 +277,9 @@ The following example demonstrates how to combine static and regex-based mapping
 ```
 {% include copy.html %}
 
-### Defaults
+### 預設值
 
-When the `regexMappings` key is missing from the transformation configuration, `regexMappings` will default to the following:
+當轉換組態中缺少 `regexMappings` 鍵時，`regexMappings` 會預設為下列內容：
 
 ```json
 {
@@ -298,26 +299,26 @@ When the `regexMappings` key is missing from the transformation configuration, `
 ```
 {% include copy.html %}
 
-This has the effect of retaining the index name for indexes created in Elasticsearch 6.x or later while combining the type and index name for indexes created in Elasticsearch 5.x. If you want to retain the index name for indexes created in Elasticsearch 5.x, use the `staticMappings` option or override the type mappings using the `regexMappings` option.
+這會使在 Elasticsearch 6.x 或更新版本中建立的索引保留其索引名稱，同時將在 Elasticsearch 5.x 中建立的索引的類型名稱與索引名稱合併。若您想保留在 Elasticsearch 5.x 中建立的索引的索引名稱，請使用 `staticMappings` 選項，或使用 `regexMappings` 選項覆寫類型對應。
 
-## Limitations
+## 限制
 
-When using the transformer, remember the following limitations.
+使用轉換器時，請記住下列限制。
 
 ### Traffic Replayer
 
-For the Traffic Replayer, **only a subset** of requests that include types is supported. These requests are listed in the following table.
+對於 Traffic Replayer，僅支援**包含類型的請求中的一個子集**。這些請求列於下表。
 
-| **Operation** | **HTTP method(s)** | **Endpoint**   | **Description**  |
+| **操作** | **HTTP 方法** | **端點**   | **說明**  |
 | :--- | :--- | :--- | :--- |
-| **Index (by ID)**  | PUT/POST           | `/{index}/{type}/{id}`  | Create or update a single document with an explicit ID.   |
-| **Index (auto ID)**          | PUT/POST           | `/{index}/{type}/`      | Create a single document for which the ID is automatically generated.  |
-| **Get Document**             | GET                | `/{index}/{type}/{id}`  | Retrieve a document by ID.  |
-| **Bulk Index/Update/Delete** | PUT/POST           | `/_bulk`                | Perform multiple create/update/delete operations in a single request. |
-| **Bulk Index/Update/Delete** | PUT/POST           | `/{index}/_bulk`        | Perform multiple create/update/delete operations in a single request with default index assignment.                                                                                                                                                 |
-| **Bulk Index/Update/Delete** | PUT/POST           | `/{index}/{type}/_bulk` | Perform multiple create/update/delete operations in a single request with default index and type assignment.                                                                                                                                        |
-| **Create/Update Index**      | PUT/POST           | `/{index}`              | Create or update an index. <br/><br/> **Split** behavior is not supported in the Traffic Replayer. See [this GitHub issue](https://github.com/opensearch-project/opensearch-migrations/issues/1305) to provide feedback or to vote on this feature. |
+| **Index (by ID)**  | PUT/POST           | `/{index}/{type}/{id}`  | 以明確 ID 建立或更新單一文件。   |
+| **Index (auto ID)**          | PUT/POST           | `/{index}/{type}/`      | 建立單一文件，其 ID 自動產生。  |
+| **Get Document**             | GET                | `/{index}/{type}/{id}`  | 依 ID 擷取文件。  |
+| **Bulk Index/Update/Delete** | PUT/POST           | `/_bulk`                | 在單一請求中執行多個建立／更新／刪除操作。 |
+| **Bulk Index/Update/Delete** | PUT/POST           | `/{index}/_bulk`        | 在單一請求中以預設索引指派執行多個建立／更新／刪除操作。                                                                                                                                                 |
+| **Bulk Index/Update/Delete** | PUT/POST           | `/{index}/{type}/_bulk` | 在單一請求中以預設索引與類型指派執行多個建立／更新／刪除操作。                                                                                                                                        |
+| **Create/Update Index**      | PUT/POST           | `/{index}`              | 建立或更新索引。<br/><br/> Traffic Replayer 不支援 **Split** 行為。若要提供意見回饋或為此功能投票，請參閱[此 GitHub issue](https://github.com/opensearch-project/opensearch-migrations/issues/1305)。 |
 
 ### Reindex-from-Snapshot
 
-For `Reindex-From-Snapshot,` indexes created in Elasticsearch 6.x or later will use `_doc` as the type for all documents, even if a different type was specified in Elasticsearch 6.
+對於 `Reindex-From-Snapshot,`，在 Elasticsearch 6.x 或更新版本中建立的索引會使用 `_doc` 作為所有文件的類型，即使在 Elasticsearch 6 中指定了不同的類型也一樣。

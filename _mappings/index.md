@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Mappings
+title: "對應"
 nav_order: 1
 nav_exclude: true
 permalink: /mappings/
@@ -13,21 +14,21 @@ redirect_from:
   - /field-types/mappings-use-cases/
 ---
 
-# Mappings
+# 對應
 
-Mappings tell OpenSearch how to store and index your documents and their fields. You can specify the data type for each field (for example, `year` as `date`) to make storage and querying more efficient. 
+對應會告訴 OpenSearch 如何儲存您的文件及其欄位並編製索引。您可以為每個欄位指定資料類型（例如，將 `year` 指定為 `date`），讓儲存與查詢更有效率。
 
-While [dynamic mappings](#dynamic-mapping) automatically add new data and fields, using explicit mappings is recommended. Explicit mappings let you define the exact structure and data types upfront. This helps to maintain data consistency and optimize performance, especially for large datasets or high-volume indexing operations.
+雖然[動態對應](#dynamic-mapping)會自動新增資料與欄位，但仍建議使用明確對應。明確對應可讓您預先定義確切的結構與資料類型，有助於維持資料一致性並最佳化效能，尤其是在處理大型資料集或大量編製索引作業時。
 
-For example, with explicit mappings, you can ensure that `year` is treated as text and `age` as an integer instead of both being interpreted as integers by dynamic mapping.
+例如，使用明確對應時，您可以確保 `year` 被視為文字，而 `age` 被視為整數，而不是兩者都被動態對應解讀為整數。
 
-## Mapping structure and concepts
+## 對應結構與概念
 
-Before learning how to create mappings, it's important to understand how mappings are structured and the key terminology used throughout this documentation.
+在學習如何建立對應之前，請先了解對應的結構，以及本文件中使用的關鍵術語。
 
-### Mapping structure and example
+### 對應結構與範例
 
-OpenSearch mappings follow a hierarchical JSON structure. The following example demonstrates using `text` and `date` fields with their mapping parameters. Additionally, it contains a nested `director` object with its own properties:
+OpenSearch 對應遵循階層式 JSON 結構。下列範例示範如何使用 `text` 與 `date` 欄位及其對應參數。此外，其中還包含一個具有自身屬性的巢狀 `director` 物件：
 
 ```json
 PUT /movies
@@ -56,17 +57,17 @@ PUT /movies
 ```
 {% include copy-curl.html %}
 
-### Key terminology
+### 關鍵術語
 
-- **Mappings**: The overall schema definition for an index.
-- **Properties**: The container for all field definitions within mappings.
-- **Field**: An individual data element (like `title` or `year`).
-- **Field type**: Defines how the field data is stored and indexed (for example, `text`, `integer`, `date`). For more information, see [Supported field types]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/).
-- **Mapping parameters**: Configuration options that modify field behavior (for example, `analyzer`, `coerce`, `format`). For more information, see [Mapping parameters]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/).
+- **對應**：索引的整體結構描述定義。
+- **屬性**：對應中所有欄位定義的容器。
+- **欄位**：個別的資料元素（例如 `title` 或 `year`）。
+- **欄位類型**：定義欄位資料如何儲存與編製索引（例如 `text`、`integer`、`date`）。如需更多資訊，請參閱[支援的欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/)。
+- **對應參數**：修改欄位行為的組態選項（例如 `analyzer`、`coerce`、`format`）。如需更多資訊，請參閱[對應參數]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/)。
 
-## Explicit mapping
+## 明確對應
 
-If you know exactly which field data types you need to use, then you can specify them in your request body when creating your index, as shown in the following example request:
+如果您確切知道需要使用哪些欄位資料類型，就可以在建立索引時於請求本文中指定，如下列範例請求所示：
 
 ```json
 PUT sample-index1
@@ -82,10 +83,10 @@ PUT sample-index1
 ```
 {% include copy-curl.html %}
 
-You cannot change the mapping of an existing field; you can only modify the field's mapping parameters.
+您無法變更現有欄位的對應；只能修改該欄位的對應參數。
 {: .note}
 
-To add mappings to an existing index or data stream, you can send a request to the `_mapping` endpoint using the `PUT` or `POST` HTTP method, as shown in the following example request:
+若要為現有的索引或資料串流新增對應，您可以向 `_mapping` 端點傳送請求，並使用 `PUT` 或 `POST` HTTP 方法，如下列範例請求所示：
 
 ```json
 POST sample-index1/_mapping
@@ -99,33 +100,33 @@ POST sample-index1/_mapping
 ```
 {% include copy-curl.html %}
 
-For more information about the Mapping API, see [Update mapping]({{site.url}}{{site.baseurl}}/api-reference/index-apis/put-mapping/).
+如需 Mapping API 的更多資訊，請參閱[更新對應]({{site.url}}{{site.baseurl}}/api-reference/index-apis/put-mapping/)。
 
-## Dynamic mapping
+## 動態對應
 
-When you index a document, OpenSearch can automatically detect and add new fields using dynamic mapping. This behavior differs from using explicit mappings, in which you define field types ahead of time.
+當您將文件編製索引時，OpenSearch 可以使用動態對應自動偵測並新增欄位。此行為與明確對應不同，後者需要您預先定義欄位類型。
 
-### Dynamic mapping rules
+### 動態對應規則
 
-When OpenSearch encounters a new field during indexing, it uses the following rules to determine the field type:
+當 OpenSearch 在編製索引時遇到新欄位，會使用下列規則來判斷欄位類型：
 
-JSON data type | OpenSearch field type | Description
+JSON 資料類型 | OpenSearch 欄位類型 | 說明
 :--- | :--- | :---
-`null` | No field is added | A `null` field can't be indexed or searched. When a field is set to null, OpenSearch behaves as if the field has no value.
-`true` or `false` | [`boolean`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/boolean/) field | OpenSearch accepts `true` and `false` as Boolean values. An empty string is equal to `false`.
-Double (for example, `1.5`) | [`float`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/) field | A single-precision, 32-bit IEEE 754 floating-point number, restricted to finite values. JSON floating-point numbers are mapped to this type.
-Long (for example, `1`)| [`long`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/) field | A signed 64-bit number. JSON integer numbers are mapped to this type.
-Object (`{}`) | [`object`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/object/) field | Objects are standard JSON objects, which can have fields and mappings of their own. For example, a `movies` object can have additional properties such as `title`, `year`, and `director`.
-Array (`[]`)| Depends on the first non-null value in the array | OpenSearch does not have a specific array data type. Arrays are represented as a set of values of the same data type (for example, integers or strings) associated with a field. When indexing, you can pass multiple values for a field, and OpenSearch will treat it as an array. Empty arrays are valid and recognized as array fields with zero elements---not as fields with no values.
-String (`""`) | [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) field with [`keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/keyword/) subfield, or [`date`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/) field, or numeric field | A string sequence of characters. By default, strings are mapped as `text` fields with a `keyword` subfield. However, if the string matches a date format (and date detection is enabled), it becomes a `date` field. If numeric detection is enabled and the string represents a number, it becomes the appropriate numeric field type.
+`null` | 不會新增欄位 | `null` 欄位無法編製索引或搜尋。當欄位設定為 null 時，OpenSearch 的行為如同該欄位沒有值。
+`true` 或 `false` | [`boolean`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/boolean/) 欄位 | OpenSearch 接受 `true` 與 `false` 作為布林值。空字串等於 `false`。
+雙精度浮點數（例如 `1.5`） | [`float`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/) 欄位 | 單精度 32 位元 IEEE 754 浮點數，僅限有限值。JSON 浮點數會對應至此類型。
+長整數（例如 `1`）| [`long`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/) 欄位 | 帶正負號的 64 位元數字。JSON 整數會對應至此類型。
+物件（`{}`） | [`object`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/object/) 欄位 | 物件是標準 JSON 物件，可以擁有自己的欄位與對應。例如，`movies` 物件可以擁有 `title`、`year` 與 `director` 等其他屬性。
+陣列（`[]`）| 取決於陣列中第一個非 null 值 | OpenSearch 沒有特定的陣列資料類型。陣列是以與欄位關聯的一組相同資料類型的值（例如整數或字串）來表示。編製索引時，您可以為一個欄位傳遞多個值，OpenSearch 會將其視為陣列。空陣列是有效的，會被辨識為零個元素的陣列欄位---而不是沒有值的欄位。
+字串（`""`） | 帶有 [`keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/keyword/) 子欄位的 [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 欄位、[`date`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/) 欄位，或數值欄位 | 字元組成的字串序列。預設情況下，字串會對應為帶有 `keyword` 子欄位的 `text` 欄位。不過，如果字串符合日期格式（且已啟用日期偵測），則會變成 `date` 欄位。如果已啟用數值偵測且字串代表數字，則會變成適當的數值欄位類型。
 
-These are the only field types that are automatically detected. All other field types must be mapped explicitly.
+這些是唯一會自動偵測的欄位類型。所有其他欄位類型都必須明確對應。
 
-### Dynamic templates
+### 動態範本
 
-Dynamic templates are used to define custom mappings for dynamically added fields based on the data type, field name, or field path. They allow you to define a flexible schema for your data that can automatically adapt to changes in the structure or format of the input data.
+動態範本用於根據資料類型、欄位名稱或欄位路徑，為動態新增的欄位定義自訂對應。它們可讓您為資料定義彈性的結構描述，自動適應輸入資料結構或格式的變化。
 
-You can use the following syntax to define a dynamic mapping template:
+您可以使用下列語法來定義動態對應範本：
 
 ```json
 PUT index
@@ -147,36 +148,36 @@ PUT index
 ```
 {% include copy-curl.html %}
 
-This mapping configuration dynamically maps any field with a name starting with `status` (for example, `status_code`) to the `short` data type if the initial value provided during indexing is a string.
+此對應組態會將任何名稱以 `status` 開頭的欄位（例如 `status_code`）動態對應至 `short` 資料類型（前提是編製索引時提供的初始值為字串）。
 
-### Dynamic mapping parameters
+### 動態對應參數
 
-The `dynamic_templates` support the following parameters for matching conditions and mapping rules. The default value is `null`.
+`dynamic_templates` 支援下列參數，用於比對條件與對應規則。預設值為 `null`。
 
-Parameter | Description |
+參數 | 說明 |
 ----------|-------------|
-`match_mapping_type` | Specifies the JSON data type (for example, string, long, double, object, binary, Boolean, date) that triggers the mapping.
-`match` | A regular expression used to match field names and apply the mapping.
-`unmatch` | A regular expression used to exclude field names from the mapping.
-`match_pattern` | Determines the pattern matching behavior, either `regex` or `simple`. Default is `simple`.
-`path_match` | Allows you to match nested field paths using a regular expression.
-`path_unmatch` | Excludes nested field paths from the mapping using a regular expression.
-`mapping` | The mapping configuration to apply.
+`match_mapping_type` | 指定觸發對應的 JSON 資料類型（例如字串、長整數、雙精度浮點數、物件、二進位資料、布林值、日期）。
+`match` | 用於比對欄位名稱並套用對應的正規表示式。
+`unmatch` | 用於從對應中排除欄位名稱的正規表示式。
+`match_pattern` | 決定模式比對行為，可為 `regex` 或 `simple`。預設為 `simple`。
+`path_match` | 可讓您使用正規表示式比對巢狀欄位路徑。
+`path_unmatch` | 使用正規表示式從對應中排除巢狀欄位路徑。
+`mapping` | 要套用的對應組態。
 
-### Dynamic mapping settings
+### 動態對應設定
 
-OpenSearch provides several settings to control how dynamic mapping behaves when processing new fields.
+OpenSearch 提供數個設定，用來控制動態對應在處理新欄位時的行為。
 
-#### Date detection
+#### 日期偵測
 
-By default, OpenSearch automatically detects date-formatted strings and creates `date` fields. When `date_detection` is enabled (default), new string fields are checked against date patterns specified in `dynamic_date_formats`. If a match is found, a new `date` field is created with the corresponding format.
+根據預設，OpenSearch 會自動偵測日期格式的字串並建立 `date` 欄位。當 `date_detection` 啟用時 (預設)，新的字串欄位會依據 `dynamic_date_formats` 中指定的日期模式進行檢查。若找到相符項目，便會建立具有對應格式的新 `date` 欄位。
 
-The default value for `dynamic_date_formats` is:
+`dynamic_date_formats` 的預設值為：
 ```
 ["strict_date_optional_time", "yyyy/MM/dd HH:mm:ss Z||yyyy/MM/dd Z"]
 ```
 
-When you run the following example request, the `create_date` field is automatically mapped as a `date` field with the format `yyyy/MM/dd HH:mm:ss Z||yyyy/MM/dd Z`:
+當您執行下列範例請求時，`create_date` 欄位會自動對應為格式為 `yyyy/MM/dd HH:mm:ss Z||yyyy/MM/dd Z` 的 `date` 欄位：
 
 ```json
 PUT sample-index/_doc/1
@@ -186,7 +187,7 @@ PUT sample-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-You can disable automatic date detection by setting `date_detection` to `false`:
+您可以將 `date_detection` 設為 `false`，以停用自動日期偵測：
 
 ```json
 PUT sample-index
@@ -198,9 +199,9 @@ PUT sample-index
 ```
 {% include copy-curl.html %}
 
-With date detection disabled, date-formatted strings will be mapped as `text` fields instead.
+停用日期偵測後，日期格式的字串會改為對應為 `text` 欄位。
 
-You can customize the date patterns used for detection by specifying your own `dynamic_date_formats`:
+您可以指定自己的 `dynamic_date_formats`，自訂用於偵測的日期模式：
 
 ```json
 PUT sample-index
@@ -212,14 +213,14 @@ PUT sample-index
 ```
 {% include copy-curl.html %}
 
-#### Numeric detection
+#### 數值偵測
 
-While JSON supports native numeric data types, some applications may send numbers as strings. OpenSearch can automatically detect numeric strings and map them as numeric fields when `numeric_detection` is enabled.
+雖然 JSON 支援原生數值資料類型，但有些應用程式可能會以字串形式傳送數字。當 `numeric_detection` 啟用時，OpenSearch 可以自動偵測數值字串，並將其對應為數值欄位。
 
-Numeric detection is disabled by default. The recommended approach is to use explicit mappings for numeric fields.
+數值偵測預設為停用。建議的做法是針對數值欄位使用明確對應。
 {: .note}
 
-To enable numeric detection, send the following request:
+若要啟用數值偵測，請傳送下列請求：
 
 ```json
 PUT sample-index
@@ -231,7 +232,7 @@ PUT sample-index
 ```
 {% include copy-curl.html %}
 
-Then index a document containing numeric fields into the index:
+接著將包含數值欄位的文件編製索引至該索引：
 
 ```json
 PUT sample-index/_doc/1
@@ -242,43 +243,43 @@ PUT sample-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-With numeric detection enabled:
-- The `price` field will be mapped as a `float` field
-- The `quantity` field will be mapped as a `long` field
+啟用數值偵測後：
+- `price` 欄位會對應為 `float` 欄位
+- `quantity` 欄位會對應為 `long` 欄位
 
-## Retrieving mappings
+## 擷取對應
 
-To get all mappings for one or more indexes, use the following request:
+若要取得一或多個索引的所有對應，請使用下列請求：
 
 ```json
 GET {index}/_mapping
 ```
 {% include copy-curl.html %}
 
-In the previous request, `<index>` may be an index name or a comma-separated list of index names.
+在上述請求中，`<index>` 可以是索引名稱，或以逗號分隔的索引名稱清單。
 
-To get all mappings for all indexes, use the following request:
+若要取得所有索引的所有對應，請使用下列請求：
 
 ```json
 GET _mapping
 ```
 {% include copy-curl.html %}
 
-To get a mapping for a specific field, provide the index name and the field name:
+若要取得特定欄位的對應，請提供索引名稱與欄位名稱：
 
 ```json
 GET _mapping/field/{fields}
 GET /{index}/_mapping/field/{fields}
 ```
 
-Both `<index>` and `<fields>` can be specified as either one value or a comma-separated list. For example, the following request retrieves the mapping for the `year` and `age` fields in `sample-index1`:
+`<index>` 與 `<fields>` 都可指定為單一值或以逗號分隔的清單。例如，下列請求會擷取 `sample-index1` 中 `year` 與 `age` 欄位的對應：
 
 ```json
 GET sample-index1/_mapping/field/year,age
 ```
 {% include copy-curl.html %}
 
-The response contains the specified fields:
+回應會包含指定的欄位：
 
 ```json
 {
@@ -305,17 +306,17 @@ The response contains the specified fields:
 }
 ```
 
-For more information, see [Get Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/get-index/).
+如需更多資訊，請參閱 [Get Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/get-index/)。
 
-## Examples
+## 範例
 
-The following examples demonstrate practical applications of OpenSearch mappings in different scenarios.
+下列範例示範 OpenSearch 對應在不同情境中的實際應用。
 
-### Ignoring malformed IP addresses
+### 忽略格式錯誤的 IP 位址
 
-The following example shows you how to create a mapping specifying that OpenSearch should ignore any documents containing malformed IP addresses that do not conform to the [`ip`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/ip/) data type. You can accomplish this by setting the `ignore_malformed` parameter to `true`.
+下列範例說明如何建立對應，指定 OpenSearch 應忽略任何包含不符合 [`ip`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/ip/) 資料類型之格式錯誤 IP 位址的文件。您可以將 `ignore_malformed` 參數設為 `true` 來達成此目的。
 
-To create an index with an `ip` mapping, use a PUT request:
+若要建立具有 `ip` 對應的索引，請使用 PUT 請求：
 
 ```json
 PUT /test-index
@@ -332,7 +333,7 @@ PUT /test-index
 ```
 {% include copy-curl.html %}
 
-Then add a document with a malformed IP address:
+接著新增含有格式錯誤 IP 位址的文件：
 
 ```json
 PUT /test-index/_doc/1
@@ -342,14 +343,14 @@ PUT /test-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-When you query the index, the `ip_address` field will be ignored. You can query the index using the following request:
+當您查詢該索引時，`ip_address` 欄位會被忽略。您可以使用下列請求查詢該索引：
 
 ```json
 GET /test-index/_search
 ```
 {% include copy-curl.html %}
 
-The response shows that the document was indexed successfully, but the malformed IP address field is listed in the `_ignored` array:
+回應顯示文件已成功編製索引，但格式錯誤的 IP 位址欄位會列在 `_ignored` 陣列中：
 
 ```json
 {
@@ -384,9 +385,9 @@ The response shows that the document was indexed successfully, but the malformed
 }
 ```
 
-### Mapping string fields to `text` and `keyword` types
+### 將字串欄位對應至 `text` 與 `keyword` 類型
 
-To create an index named `movies1` with a dynamic template that maps all string fields to both the `text` and `keyword` types, you can use the following request:
+若要建立名為 `movies1` 的索引，並使用動態範本將所有字串欄位同時對應至 `text` 與 `keyword` 類型，您可以使用下列請求：
 
 ```json
 PUT movies1
@@ -413,23 +414,23 @@ PUT movies1
 ```
 {% include copy-curl.html %}
 
-This dynamic template ensures that any string fields in your documents will be indexed as both a full-text `text` type and a `keyword` type.
+此動態範本可確保您文件中的任何字串欄位都會同時編製為全文 `text` 類型與 `keyword` 類型的索引。
 
-## Mapping parameters
+## 對應參數
 
-Mapping parameters are used to configure the behavior of index fields. For detailed information about all available mapping parameters, see [Mapping parameters]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/).
+對應參數用於設定索引欄位的行為。如需所有可用對應參數的詳細資訊，請參閱 [對應參數]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/)。
 
-## Metadata fields
+## 中繼資料欄位
 
-OpenSearch automatically manages several metadata fields for each document, such as `_source`, `_id`, and `_index`. For information about all available metadata fields and their configuration options, see [Metadata fields]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/).
+OpenSearch 會自動為每份文件管理數個中繼資料欄位，例如 `_source`、`_id` 與 `_index`。如需所有可用中繼資料欄位及其組態選項的資訊，請參閱 [中繼資料欄位]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/)。
 
-## Mapping limit settings
+## 對應限制設定
 
-OpenSearch provides several settings to prevent mapping explosion and control mapping growth. These settings help maintain cluster performance and prevent memory issues caused by creating an excessive number of fields.
+OpenSearch 提供多項設定，以防止對應爆炸並控制對應的成長。這些設定有助於維持叢集效能，並避免因建立過多欄位而造成的記憶體問題。
 
-For detailed information about all mapping limit settings, including their default values and valid ranges, see [Mapping limit settings]({{site.url}}{{site.baseurl}}/mappings/mapping-explosion/#mapping-limit-settings).
+如需所有對應限制設定的詳細資訊（包括預設值與有效範圍），請參閱 [對應限制設定]({{site.url}}{{site.baseurl}}/mappings/mapping-explosion/#mapping-limit-settings)。
 
 
-## Related documentation
+## 相關文件
 
-- [Supported field types]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/)
+- [支援的欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/)

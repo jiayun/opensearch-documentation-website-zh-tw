@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Conversational search using Cohere Command
+title: "使用 Cohere Command 的對話式搜尋"
 parent: RAG
 grand_parent: Generative AI
 nav_order: 150
@@ -10,18 +11,18 @@ redirect_from:
   - /tutorials/vector-search/rag/conversational-search/conversational-search-cohere/
 ---
 
-# Conversational search using Cohere Command
+# 使用 Cohere Command 的對話式搜尋
 
-This tutorial shows you how to configure conversational search with RAG using the Cohere Command model. For more information, see [Conversational search]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/).
+本教學說明如何使用 Cohere Command 模型設定具備 RAG 的對話式搜尋。如需更多資訊，請參閱[對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)。
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將以 `your_` 前綴開頭的佔位符替換為您自己的值。
 {: .note}
 
-Alternatively, you can build a RAG/conversational search using agents and tools. For more information, see [Retrieval-augmented generation chatbot]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/rag-conversational-agent/).
+或者，您也可以使用代理程式與工具來建立 RAG／對話式搜尋。如需更多資訊，請參閱[擷取增強生成聊天機器人]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/rag-conversational-agent/)。
 
-## Prerequisite
+## 必要條件
 
-Ingest test data:
+匯入測試資料：
 
 ```json
 POST _bulk
@@ -40,17 +41,17 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Step 1: Create a connector and register a model
+## 步驟 1：建立連接器並註冊模型
 
-Conversational search only supports the [OpenAI](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/open_ai_connector_chat_blueprint.md) 
-and [Amazon Bedrock Claude](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_anthropic_claude_blueprint.md) input/output styles.
+對話式搜尋僅支援 [OpenAI](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/open_ai_connector_chat_blueprint.md) 
+與 [Amazon Bedrock Claude](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_anthropic_claude_blueprint.md) 的輸入／輸出樣式。
 {: .important}
 
-This tutorial follows the Amazon Bedrock Claude model input/output style by:
-- Mapping the Cohere Command `message` input parameter to the `inputs` parameter in order to match the Cohere Claude model input style.
-- Using a post-processing function to convert the Cohere Command model output to the Claude model output style.
+本教學依循 Amazon Bedrock Claude 模型的輸入／輸出樣式，方式如下：
+- 將 Cohere Command 的 `message` 輸入參數對應到 `inputs` 參數，以符合 Cohere Claude 模型的輸入樣式。
+- 使用後處理函式，將 Cohere Command 模型的輸出轉換為 Claude 模型的輸出樣式。
 
-Create a connector for the Cohere Command model:
+為 Cohere Command 模型建立連接器：
 
 ```json
 POST _plugins/_ml/connectors/_create
@@ -82,16 +83,16 @@ POST _plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-You can use the default `escape` function directly in the `post_process_function`:
+您可以直接在 `post_process_function` 中使用預設的 `escape` 函式：
 
 ```json
 "post_process_function": "    \n    def name = 'response';\n    def result = params.text;\n    def json = '{ \"name\": \"' + name + '\",' +\n                 '\"dataAsMap\": { \"completion\":  \"' + escape(result) +\n               '\"}}';\n    return json;"
 ```
 {% include copy-curl.html %}
 
-Note the connector ID; you'll use it to register the model.
+請記下連接器 ID；您將使用它來註冊模型。
 
-Register the Cohere Command model:
+註冊 Cohere Command 模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -104,9 +105,9 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Note the model ID; you'll use it in the following steps.
+請記下模型 ID；您將在後續步驟中使用它。
 
-Test the model:
+測試模型：
 
 ```json
 POST /_plugins/_ml/models/your_model_id/_predict
@@ -118,7 +119,7 @@ POST /_plugins/_ml/models/your_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-The response contains the LLM completion:
+回應中包含 LLM 的完成結果：
 
 ```json
 {
@@ -144,9 +145,9 @@ Would you like me to provide more details on Seattle's weather?  Or, if you have
 }
 ```
 
-## Step 2: Configure conversational search
+## 步驟 2：設定對話式搜尋
 
-Create a search pipeline containing a RAG processor:
+建立包含 RAG 處理器的搜尋管線：
 
 ```json
 PUT /_search/pipeline/my-conversation-search-pipeline-cohere
@@ -169,7 +170,7 @@ PUT /_search/pipeline/my-conversation-search-pipeline-cohere
 ```
 {% include copy-curl.html %}
 
-To run a conversational search, specify its parameters in the `generative_qa_parameters` object:
+若要執行對話式搜尋，請在 `generative_qa_parameters` 物件中指定其參數：
 
 ```json
 GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-cohere
@@ -195,7 +196,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-cohere
 ```
 {% include copy-curl.html %}
 
-The response contains the model's answer:
+回應中包含模型的答案：
 
 ```json
 {

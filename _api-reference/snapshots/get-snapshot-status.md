@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get snapshot status
+title: "取得快照狀態"
 parent: Snapshot APIs
 nav_order: 8
 ---
@@ -9,56 +10,56 @@ nav_order: 8
 **Introduced 1.0**
 {: .label .label-purple }
 
-Returns details about a snapshot’s state during and after snapshot creation.
+傳回快照建立期間及建立之後的快照狀態詳細資料。
 
-To learn about snapshot creation, see [Create snapshot]({{site.url}}{{site.baseurl}}/api-reference/snapshots/create-snapshot/).
+若要了解快照建立，請參閱[建立快照]({{site.url}}{{site.baseurl}}/api-reference/snapshots/create-snapshot/)。
 
-If you use the Security plugin, you must have the `monitor_snapshot`, `create_snapshot`, or `manage cluster` privileges.
+如果您使用 Security 外掛程式，您必須具備 `monitor_snapshot`、`create_snapshot` 或 `manage cluster` 權限。
 {: .note}
 
-## Endpoints
+## 端點
 
 ```json
 GET _snapshot/{repository}/{snapshot}/_status
 ```
 
-## Path parameters
+## 路徑參數
 
-Path parameters are optional. 
+路徑參數為選用。
 
-| Parameter | Data type | Description | 
+| 參數 | 資料類型 | 說明 |
 :--- | :--- | :---
-| `repository` | String | The repository containing the snapshot. |
-| `snapshot` | List | The snapshot(s) to return. |
-| `index` | List | The indexes to include in the response. |
+| `repository` | String | 包含快照的儲存庫。 |
+| `snapshot` | List | 要傳回的快照。 |
+| `index` | List | 要包含在回應中的索引。 |
 
-Three request variants provide flexibility:
+三種請求變體提供了彈性：
 
-* `GET _snapshot/_status` returns the status of all currently running snapshots in all repositories.
+* `GET _snapshot/_status` 會傳回所有儲存庫中目前執行中所有快照的狀態。
 
-* `GET _snapshot/<repository>/_status` returns all currently running snapshots in the specified repository. This is the preferred variant.
+* `GET _snapshot/<repository>/_status` 會傳回指定儲存庫中目前執行中的所有快照。這是偏好的變體。
 
-* `GET _snapshot/<repository>/<snapshot>/_status` returns detailed status information for a specific snapshot(s) in the specified repository, regardless of whether it's currently running. 
+* `GET _snapshot/<repository>/<snapshot>/_status` 會傳回指定儲存庫中特定快照的詳細狀態資訊，無論其目前是否正在執行。
 
-* `GET /_snapshot/<repository>/<snapshot>/<index>/_status` returns detailed status information only for the specified indexes in a specific snapshot in the specified repository. Note that this endpoint works only for indexes belonging to a specific snapshot.
+* `GET /_snapshot/<repository>/<snapshot>/<index>/_status` 只會傳回指定儲存庫中特定快照之指定索引的詳細狀態資訊。請注意，此端點僅適用於屬於特定快照的索引。
 
-Snapshot API calls only work if the total number of shards across the requested resources, such as snapshots and indexes created from snapshots, is smaller than the limit specified by the following cluster setting:
+只有在所請求資源 (例如快照以及從快照建立的索引) 的分片總數小於下列叢集設定所指定的限制時，快照 API 呼叫才能運作：
 
-- `snapshot.max_shards_allowed_in_status_api`(Dynamic, integer): The maximum number of shards that can be included in the Snapshot Status API response. Default value is `200000`. Not applicable for [shallow snapshots v2]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/snapshot-interoperability##shallow-snapshot-v2), where the total number and sizes of files are returned as 0. 
+- `snapshot.max_shards_allowed_in_status_api`(Dynamic, integer)：可包含在 Snapshot Status API 回應中的分片數上限。預設值為 `200000`。不適用於[淺層快照 v2]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/snapshot-interoperability##shallow-snapshot-v2)，其中檔案的總數與大小會傳回為 0。
 
 
-Using the API to return the state of snapshots that are not currently running can be very costly in terms of both machine resources and processing time when querying data in the cloud. For each snapshot, each request causes a file read of all of the snapshot's shards. 
+在雲端查詢資料時，使用此 API 傳回目前未執行之快照的狀態，無論在機器資源或處理時間方面都可能非常耗費成本。對於每個快照，每個請求都會造成讀取該快照所有分片的檔案。
 {: .warning}
 
-## Request body fields
+## 請求本文欄位
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 |
 :--- | :--- | :---
-| `ignore_unavailable` | Boolean | How to handle requests for unavailable snapshots and indexes. If `false`, the request returns an error for unavailable snapshots and indexes. If `true`, the request ignores unavailable snapshots and indexes, such as those that are corrupted or temporarily cannot be returned. Default is `false`.|
+| `ignore_unavailable` | Boolean | 如何處理對無法使用之快照與索引的請求。若為 `false`，請求會對無法使用的快照與索引傳回錯誤。若為 `true`，請求會忽略無法使用的快照與索引，例如已損毀或暫時無法傳回的項目。預設為 `false`。|
 
-## Example request
+## 範例請求
 
-The following request returns the status of `my-first-snapshot` in the `my-opensearch-repo` repository. Unavailable snapshots are ignored.
+下列請求會傳回 `my-opensearch-repo` 儲存庫中 `my-first-snapshot` 的狀態。無法使用的快照會被忽略。
 
 <!-- spec_insert_start
 component: example_code
@@ -91,11 +92,11 @@ response = client.snapshot.status(
 <!-- spec_insert_end -->
 
 
-## Example response
+## 範例回應
 
-The following example corresponds to the preceding [Example request](#example-request).
+下列範例對應於前述的[範例請求](#example-request)。
 
-The `GET _snapshot/my-opensearch-repo/my-first-snapshot/_status` request returns the following fields:
+`GET _snapshot/my-opensearch-repo/my-first-snapshot/_status` 請求會傳回下列欄位：
 
 ````json
 {
@@ -406,59 +407,59 @@ The `GET _snapshot/my-opensearch-repo/my-first-snapshot/_status` request returns
 }
 ````
 
-## Response body fields
+## 回應本文欄位
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `repository` | String | Name of repository that contains the snapshot. |
-| `snapshot` | String | Snapshot name. |
-| `uuid` | String | A snapshot's universally unique identifier (UUID). |
-| `state` | String | Snapshot's current status. See [Snapshot states](#snapshot-states).  |
-| `include_global_state` | Boolean | Whether the current cluster state is included in the snapshot. |
-| `shards_stats` | Object | Snapshot's shard counts. See [Shard stats](#shard-stats). |
-| `stats` | Object | Information about files included in the snapshot. `file_count`: number of files. `size_in_bytes`: total size of all files. See [Snapshot file stats](#snapshot-file-stats). |
-| `index` | List of Objects | List of objects that contain information about the indexes in the snapshot. See [Index objects](#index-objects).|
+| `repository` | String | 包含快照的儲存庫名稱。 |
+| `snapshot` | String | 快照名稱。 |
+| `uuid` | String | 快照的通用唯一識別碼 (UUID)。 |
+| `state` | String | 快照的目前狀態。請參閱[快照狀態](#snapshot-states)。  |
+| `include_global_state` | Boolean | 目前的叢集狀態是否包含在快照中。 |
+| `shards_stats` | Object | 快照的分片計數。請參閱[分片統計](#shard-stats)。 |
+| `stats` | Object | 快照中包含的檔案相關資訊。`file_count`：檔案數量。`size_in_bytes`：所有檔案的總大小。請參閱[快照檔案統計](#snapshot-file-stats)。 |
+| `index` | List of Objects | 包含快照中索引相關資訊的物件清單。請參閱[索引物件](#index-objects)。|
 
-### Snapshot states
+### 快照狀態
 
-| State | Description | 
+| 狀態 | 說明 | 
 :--- | :--- |
-| `FAILED` | The snapshot terminated in an error and no data was stored. |
-| `IN_PROGRESS` | The snapshot is currently running. |
-| `PARTIAL` | The global cluster state was stored, but data from at least one shard was not stored. The `failures` property of the [Create snapshot]({{site.url}}{{site.baseurl}}/api-reference/snapshots/create-snapshot/) response contains additional details. |
-| `SUCCESS` | The snapshot finished and all shards were stored successfully. |
+| `FAILED` | 快照因錯誤而終止，未儲存任何資料。 |
+| `IN_PROGRESS` | 快照目前正在執行。 |
+| `PARTIAL` | 全域叢集狀態已儲存，但至少有一個分片的資料未儲存。[Create snapshot]({{site.url}}{{site.baseurl}}/api-reference/snapshots/create-snapshot/) 回應的 `failures` 屬性包含其他詳細資訊。 |
+| `SUCCESS` | 快照已完成，且所有分片皆成功儲存。 |
 
-### Shard stats
+### 分片統計
 
-All property values are integers.
+所有屬性值皆為整數。
 
-| Property | Description | 
+| 屬性 | 說明 | 
 :--- | :--- |
-| `initializing` | Number of shards that are still initializing. |
-| `started` | Number of shards that have started but not are not finalized. |
-| `finalizing` | Number of shards that are finalizing but are not done. |
-| `done` | Number of shards that initialized, started, and finalized successfully. |
-| `failed` | Number of shards that failed to be included in the snapshot. |
-| `total` | Total number of shards included in the snapshot. |
+| `initializing` | 仍在初始化中的分片數量。 |
+| `started` | 已啟動但尚未完成的分片數量。 |
+| `finalizing` | 正在完成但尚未完成的分片數量。 |
+| `done` | 已成功初始化、啟動並完成的分片數量。 |
+| `failed` | 無法納入快照的分片數量。 |
+| `total` | 快照中包含的分片總數。 |
 
-### Snapshot file stats
+### 快照檔案統計
 
-| Property | Type | Description | 
+| 屬性 | 類型 | 說明 | 
 :--- | :--- | :--- |
-| `incremental` | Object | Number and size of files that still need to be copied during snapshot creation. For completed snapshots, `incremental` provides the number and size of files that were not already in the repository and were copied as part of the incremental snapshot. |
-| `processed` | Object | Number and size of files already uploaded to the snapshot. The processed `file_count` and `size_in_bytes` are incremented in stats after a file is uploaded. |
-| `total` | Object | Total number and size of files that are referenced by the snapshot. | 
-| `start_time_in_millis` | Long | Time (in milliseconds) when snapshot creation began. |
-| `time_in_millis` | Long | Total time (in milliseconds) that the snapshot took to complete. |
+| `incremental` | Object | 快照建立期間仍需複製的檔案數量與大小。對於已完成的快照，`incremental` 會提供原本不在儲存庫中、並作為增量快照一部分而複製的檔案數量與大小。 |
+| `processed` | Object | 已上傳至快照的檔案數量與大小。檔案上傳後，已處理的 `file_count` 與 `size_in_bytes` 會在統計中遞增。 |
+| `total` | Object | 快照所參照檔案的總數量與總大小。 | 
+| `start_time_in_millis` | Long | 快照開始建立的時間 (毫秒)。 |
+| `time_in_millis` | Long | 快照完成所需的總時間 (毫秒)。 |
 
-### Index objects
+### 索引物件
 
-| Property | Type | Description | 
+| 屬性 | 類型 | 說明 | 
 :--- | :--- | :--- |
-| `shards_stats` | Object | See [Shard stats](#shard-stats). |
-| `stats` | Object | See [Snapshot file stats](#snapshot-file-stats). |
-| `shards` | List of objects | Contains information about the shards included in the snapshot. OpenSearch returns the following properties about the shard: <br /><br /> **stage**: The current state of shards in the snapshot. Shard states are: <br /><br /> * DONE: The number of shards in the snapshot that were successfully stored in the repository. <br /><br /> * FAILURE: The number of shards in the snapshot that were not successfully stored in the repository. <br /><br /> * FINALIZE: The number of shards in the snapshot that are in the finalizing stage of being stored in the repository. <br /><br />* INIT: The number of shards in the snapshot that are in the initializing stage of being stored in the repository.<br /><br />* STARTED:  The number of shards in the snapshot that are in the started stage of being stored in the repository.<br /><br /> **stats**: See [Snapshot file stats](#snapshot-file-stats). <br /><br /> **total**: The total number and sizes of files referenced by the snapshot. <br /><br /> **start_time_in_millis**: The time (in milliseconds) when snapshot creation began. <br /><br /> **time_in_millis**: The total amount of time (in milliseconds) that the snapshot took to complete.  |
+| `shards_stats` | Object | 請參閱[分片統計](#shard-stats)。 |
+| `stats` | Object | 請參閱[快照檔案統計](#snapshot-file-stats)。 |
+| `shards` | List of objects | 包含快照中分片的相關資訊。OpenSearch 會傳回下列與分片相關的屬性：<br /><br /> **stage**：快照中分片的目前狀態。分片狀態包括：<br /><br /> * DONE：快照中已成功儲存至儲存庫的分片數量。<br /><br /> * FAILURE：快照中未成功儲存至儲存庫的分片數量。<br /><br /> * FINALIZE：快照中正在進行儲存至儲存庫之完成階段的分片數量。<br /><br />* INIT：快照中正在進行儲存至儲存庫之初始化階段的分片數量。<br /><br />* STARTED：快照中正在進行儲存至儲存庫之啟動階段的分片數量。<br /><br /> **stats**：請參閱[快照檔案統計](#snapshot-file-stats)。<br /><br /> **total**：快照所參照檔案的總數量與總大小。<br /><br /> **start_time_in_millis**：快照開始建立的時間 (毫秒)。<br /><br /> **time_in_millis**：快照完成所需的總時間 (毫秒)。  |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/snapshot/status` and `cluster:admin/snapshot/status*`.
+如果您使用 Security 外掛程式，請確保您具備適當的權限：`cluster:admin/snapshot/status` 與 `cluster:admin/snapshot/status*`。

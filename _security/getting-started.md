@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Getting started with OpenSearch security
+title: "OpenSearch 安全性入門"
 nav_order: 1
 redirect_from:
   - /getting-started/security/
 ---
 
-# Getting started with OpenSearch security
+# OpenSearch 安全性入門
 
-The demo configuration is the most straightforward way to get started with OpenSearch security. OpenSearch comes bundled with a number of useful scripts, including `install_demo_configuration.sh` (or `install_demo_configuration.bat` for Windows).
+示範組態是開始使用 OpenSearch 安全性最直接的方式。OpenSearch 隨附了許多實用的指令碼，包括 `install_demo_configuration.sh`（Windows 則為 `install_demo_configuration.bat`）。
 
-This script is located in `plugins/opensearch-security/tools` and performs the following actions:
+此指令碼位於 `plugins/opensearch-security/tools`，並執行下列動作：
 
-- Creates demo certificates for TLS encryption on both the transport and REST layers.
-- Configures demo users, roles, and role mappings.
-- Configures the Security plugin to use an internal database for authentication and authorization.
-- Updates the `opensearch.yml` file with the basic configuration needed to start the cluster.
+- 建立示範憑證，用於傳輸層與 REST 層的 TLS 加密。
+- 設定示範使用者、角色與角色對應。
+- 設定安全性外掛程式，使用內部資料庫進行驗證與授權。
+- 以啟動叢集所需的基本組態更新 `opensearch.yml` 檔案。
 
-You can find more information about the demo configuration and how to quickly get started at [Setting up a demo configuration]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/).
+您可以在[設定示範組態]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/)找到更多關於示範組態以及如何快速入門的資訊。
 {: .note}
 
-Certain aspects of this configuration, such as demo certificates and default passwords, should never be used in production. These parts of the demo configuration should be replaced with your custom information before proceeding to production.
+此組態的某些部分（例如示範憑證與預設密碼）絕不應在正式環境中使用。在進入正式環境之前，應以您的自訂資訊取代示範組態的這些部分。
 {: .warning}
 
-## Setting up the demo configuration
+## 設定示範組態
 
-Prior to running the `install_demo_configuration.sh` script, you must create an environment variable named `OPENSEARCH_INITIAL_ADMIN_PASSWORD` with a strong password. This will be used as the password for the admin user to authenticate with OpenSearch. For the rules the password must satisfy, see [Admin password requirements]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements). For an overview of the other passwords in a cluster and how to change them, see [Managing passwords]({{site.url}}{{site.baseurl}}/security/configuration/passwords/). After this, you can execute `install_demo_configuration.sh` and follow the terminal prompt to enter necessary details.
+在執行 `install_demo_configuration.sh` 指令碼之前，您必須建立名為 `OPENSEARCH_INITIAL_ADMIN_PASSWORD` 的環境變數並設定高強度密碼。這將做為 admin 使用者向 OpenSearch 進行驗證的密碼。關於密碼必須符合的規則，請參閱[管理員密碼需求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)。關於叢集中其他密碼的概觀以及如何變更這些密碼，請參閱[管理密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/)。完成後，您可以執行 `install_demo_configuration.sh` 並依照終端機提示輸入必要的詳細資料。
 
-After the script is executed, you can start OpenSearch and test the configuration by running the following command:
+指令碼執行完畢後，您可以啟動 OpenSearch 並執行下列命令來測試組態：
 
 ```
 curl -k -XGET -u admin:<password> https://<opensearch-ip>:9200
 ```
 {% include copy.html %}
 
-You should see output similar to the following:
+您應該會看到類似下列的輸出：
 
 ```
 {
@@ -56,9 +57,9 @@ You should see output similar to the following:
 }
 ```
 
-## Setting up OpenSearch Dashboards
+## 設定 OpenSearch Dashboards
 
-In order to quickly get started with OpenSearch Dashboards, you can add the following configuration to `opensearch_dashboards.yml`:
+為了快速開始使用 OpenSearch Dashboards，您可以將下列組態新增至 `opensearch_dashboards.yml`：
 
 ```
 opensearch.hosts: [https://localhost:9200]
@@ -75,12 +76,12 @@ opensearch_security.cookie.secure: false
 ```
 {% include copy.html %}
 
-You can start the binary or service, depending on which method was used to install OpenSearch and OpenSearch Dashboards.
+您可以啟動二進位檔或服務，取決於安裝 OpenSearch 與 OpenSearch Dashboards 所使用的方法。
 
-When using binary, you need to supply `--no-base-path` to `yarn start` command to set a URL without a base path. If this is not set, a random three-letter base path will be added.
+使用二進位檔時，您需要將 `--no-base-path` 提供給 `yarn start` 命令，以設定不含基礎路徑的 URL。若未設定此項，將會新增隨機的三個字母基礎路徑。
 {: .note}
 
-After starting OpenSearch Dashboards, you should see the following two log lines:
+啟動 OpenSearch Dashboards 之後，您應該會看到下列兩行記錄：
 
 ```
 [info][listening] Server running at http://localhost:5601
@@ -88,20 +89,20 @@ After starting OpenSearch Dashboards, you should see the following two log lines
 ```
 {% include copy.html %}
 
-You can now access OpenSearch Dashboards using http://localhost:5601 in your browser. Use the username `admin` and the password that was configured in the `OPENSEARCH_INITIAL_ADMIN_PASSWORD` environment variable.
+您現在可以在瀏覽器中使用 http://localhost:5601 存取 OpenSearch Dashboards。請使用使用者名稱 `admin` 以及設定於 `OPENSEARCH_INITIAL_ADMIN_PASSWORD` 環境變數中的密碼。
 
-# Adding users
+# 新增使用者
 
-There are three ways to add users, roles, and other security-related configurations:
+有三種方式可以新增使用者、角色與其他安全性相關組態：
 
-  - Updating appropriate configuration files (`internal_users.yml` for adding/updating/removing users)
-  - Using the API
-  - Using OpenSearch Dashboards
+  - 更新適當的組態檔案（`internal_users.yml` 用於新增/更新/移除使用者）
+  - 使用 API
+  - 使用 OpenSearch Dashboards
 
-Security configuration files are located in the `config/opensearch-security` directory.
+安全性組態檔案位於 `config/opensearch-security` 目錄中。
 {: .note}
 
-You can add an OpenSearch Dashboards user by updating the `internal_users.yml` file with the following settings:
+您可以藉由以下列設定更新 `internal_users.yml` 檔案來新增 OpenSearch Dashboards 使用者：
 
 ```
 test-user:
@@ -113,13 +114,13 @@ test-user:
 ```
 {% include copy.html %}
 
-The `hash` string is generated using the `hash.sh` script located in the `plugins/opensearch-security/tools/` directory. In this case, the hash of the string `secretpassword` was used.
+`hash` 字串是使用位於 `plugins/opensearch-security/tools/` 目錄中的 `hash.sh` 指令碼所產生。在此情況下，使用了字串 `secretpassword` 的雜湊值。
 
-Note the use of the built-in backend role `kibanauser`, which provides the user permissions needed to navigate OpenSearch Dashboards.
+請注意使用了內建後端角色 `kibanauser`，其提供瀏覽 OpenSearch Dashboards 所需的使用者權限。
 
-## Creating roles
+## 建立角色
 
-Roles contained in `roles.yml` use the following structure:
+`roles.yml` 中包含的角色使用下列結構：
 
 ```
 <rolename>:
@@ -133,7 +134,7 @@ Roles contained in `roles.yml` use the following structure:
 ```
 {% include copy.html %}
 
-Using this structure, you can configure a new role to provide access to specific indexes, such as the role configured in the following example:
+使用此結構，您可以設定新角色以提供特定索引的存取權，例如下列範例中所設定的角色：
 
 ```
 human_resources:
@@ -145,12 +146,12 @@ human_resources:
 ```
 {% include copy.html %}
 
-Note that the cluster permissions are not listed in this example because these are provided by the built-in role `kibana_user`, which is already mapped using the `kibanauser` backend role.
+請注意，此範例中未列出叢集權限，因為這些權限是由內建角色 `kibana_user` 所提供，而該角色已使用 `kibanauser` 後端角色進行對應。
 
 
-## Mapping users to roles
+## 將使用者對應至角色
 
-When a user logs in to OpenSearch, they need to be mapped to the appropriate role in order to obtain the correct permissions. This mapping is performed using the `roles_mapping.yml` file with the following structure:
+當使用者登入 OpenSearch 時，必須將其對應至適當的角色，才能取得正確的權限。此對應是使用 `roles_mapping.yml` 檔案並採用下列結構來執行：
 
 ```
 <role_name>:
@@ -162,7 +163,7 @@ When a user logs in to OpenSearch, they need to be mapped to the appropriate rol
 ```
 {% include copy.html %}
 
-In order to map the newly created user `test-user` to the role `human_resources`, you can use the following configuration in the `roles_mapping.yml` file:
+為了將新建的使用者 `test-user` 對應至角色 `human_resources`，您可以在 `roles_mapping.yml` 檔案中使用下列組態：
 
 ```
 human_resources:
@@ -171,7 +172,7 @@ human_resources:
 ```
 {% include copy.html %}
 
-As an additional example, the `roles_mappings.yml` file includes the backend role `kibanauser` that has been mapped to the `kibana_user` role:
+另一個範例是，`roles_mappings.yml` 檔案包含已對應至 `kibana_user` 角色的後端角色 `kibanauser`：
 
 ```
 kibana_user:
@@ -182,19 +183,19 @@ kibana_user:
 ```
 {% include copy.html %}
 
-## Uploading the configuration to a security index
+## 將組態上傳至安全性索引
 
-The final step in configuring a user, role, or any other security configuration is uploading it to a OpenSearch security index. Only updating the files, without uploading them, will not change the configuration of an already running OpenSearch cluster. 
+設定使用者、角色或任何其他安全性組態的最後一個步驟，是將其組態上傳至 OpenSearch 安全性索引。僅更新檔案而未上傳，並不會變更已在執行中的 OpenSearch 叢集組態。
 
-To upload a configuration, the following command can be used with the admin certificate that was generated during `install_demo_configuration.sh` execution:
+若要上傳組態，可以搭配 `install_demo_configuration.sh` 執行期間所產生的管理員憑證使用下列命令：
 
 ```
 ./plugins/opensearch-security/tools/securityadmin.sh -cd "config/opensearch-security" -icl -key "../kirk-key.pem" -cert "../kirk.pem" -cacert "../root-ca.pem" -nhnv
 ```
 {% include copy.html %}
 
-## Next steps
+## 後續步驟
 
-The [Best practices for OpenSearch security]({{site.url}}{{site.baseurl}}/security/configuration/best-practices/)  guide covers 10 things to consider when getting started with OpenSearch security.
+[OpenSearch 安全性最佳實務]({{site.url}}{{site.baseurl}}/security/configuration/best-practices/)指南涵蓋開始使用 OpenSearch 安全性時應考量的 10 件事。
 
-The [Security configuration]({{site.url}}{{site.baseurl}}/security/configuration/index/) overview provides the basic steps for setting up security in your OpenSearch implementation and includes links to information about customizing security for your business needs. 
+[安全性組態]({{site.url}}{{site.baseurl}}/security/configuration/index/)概觀提供在 OpenSearch 實作中設定安全性的基本步驟，並包含可讓您為業務需求自訂安全性的相關資訊連結。 

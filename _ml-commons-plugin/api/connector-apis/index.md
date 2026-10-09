@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Connector APIs
+title: "連接器 API"
 parent: ML Commons APIs
 has_children: true
 has_toc: false
@@ -9,14 +10,14 @@ redirect_from:
   - /ml-commons-plugin/api/connector-apis/
 ---
 
-# Connector APIs
+# 連接器 API
 
-ML Commons supports the following connector APIs:
+ML Commons 支援下列連接器 API：
 
-- [Create connector]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/create-connector/)
-- [Get connector]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/get-connector/)
-- [Search connector]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/search-connector/)
-- [Update connector]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/update-connector/)
-- [Delete connector]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/delete-connector/)
+- [建立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/create-connector/)
+- [取得連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/get-connector/)
+- [搜尋連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/search-connector/)
+- [更新連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/update-connector/)
+- [刪除連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/delete-connector/)
 
-For more information, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/).
+如需更多資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。

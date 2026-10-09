@@ -1,61 +1,62 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Triggers
+title: "觸發條件"
 nav_order: 40
 grand_parent: Alerting
 parent: Monitors
 ---
 
-# Alerting triggers
+# 警示觸發條件
 
-How you create a trigger differs depending on the monitor method selected when the monitor was created. The monitor methods are **Visual editor**, **Extraction query editor**, and **Anomaly detector**. Learn more about each type in the following sections.
+建立觸發條件的方式取決於建立監視器時所選擇的監視器方法。監視器方法包括 **Visual editor**、**Extraction query editor** 和 **Anomaly detector**。請參閱下列各節，進一步了解每種類型。
 
-## Creating triggers
+## 建立觸發條件
 
-To create a trigger:
+若要建立觸發條件：
 
-1. In the **Create monitor** window, select **Add trigger**.
+1. 在 **Create monitor** 視窗中，選取 **Add trigger**。
 <!-- vale off -->
-2. Enter the trigger name, severity level, and trigger condition. Severity levels, which range from 1 (highest) to 5 (lowest) help manage alerts. For example, a trigger with a high severity level (for example, 1 or 2) may notify a specific individual, whereas a trigger with a low severity level (4 or 5) might notify a chat room. Trigger conditions include "IS ABOVE," "IS BELOW," and "IS EXACTLY."
+2. 輸入觸發條件名稱、嚴重性等級和觸發條件。嚴重性等級範圍從 1 (最高) 到 5 (最低)，可用於管理警示。例如，嚴重性等級高的觸發條件 (例如 1 或 2) 可能會通知特定人員，而嚴重性等級低的觸發條件 (4 或 5) 則可能通知聊天室。觸發條件包括「IS ABOVE」、「IS BELOW」和「IS EXACTLY」。
 <!-- vale on -->
 
-Query-level monitors run your trigger's script once against the query's results, and bucket-level monitors run your trigger's script on each bucket. Create a trigger that best fits the monitor method. To run multiple scripts, you must create multiple triggers.
+查詢層級監視器會針對查詢結果執行一次觸發條件的指令碼，而桶層級監視器則會在每個桶上執行觸發條件的指令碼。請建立最適合監視器方法的觸發條件。若要執行多個指令碼，您必須建立多個觸發條件。
 {: .note}
 
 ## Visual editor
 
-For a query-level monitor's trigger condition, specify a threshold for the aggregation and time frame you chose when you created the monitor (for example, "IS BELOW 1,000" or "IS EXACTLY 10"). The line moves up and down as you increase or decrease the threshold. Once this line is crossed, the trigger evaluates to `true`.
+對於查詢層級監視器的觸發條件，請為您建立監視器時所選擇的彙總和時間範圍指定閾值 (例如「IS BELOW 1,000」或「IS EXACTLY 10」)。當您增加或減少閾值時，該線會上下移動。一旦數值跨越此線，觸發條件就會評估為 `true`。
 
-For a bucket-level monitor, you must specify a threshold and value for the aggregation and time frame. You can use a maximum of five conditions to refine your trigger. Optionally, you can also use a keyword filter to filter for a specific field in your index.
+對於桶層級監視器，您必須為彙總和時間範圍指定閾值和值。您最多可以使用五個條件來精簡觸發條件。此外，您也可以選擇使用關鍵字篩選器，篩選索引中的特定欄位。
 
-For document-level monitors, use tags that represent multiple queries connected by the logical `OR` operator. To create a multiple-query trigger:
+對於文件層級監視器，請使用代表多個查詢的標籤，這些查詢由邏輯 `OR` 運算子連接。若要建立多重查詢觸發條件：
 
-1. Select **Per document monitor**.
-2. Select a data source. 
-3. Enter the query name and field information. For example, set the query to search for the `region` field with either the operator "is" or "is not" and the value "us-west-2".
-4. Select **Add tag** and enter a tag name.
-5. Create the second query by selecting **Add another query** and add the same tag to it.
+1. 選取 **Per document monitor**。
+2. 選取資料來源。
+3. 輸入查詢名稱和欄位資訊。例如，將查詢設定為使用「is」或「is not」運算子搜尋 `region` 欄位，並將值設為「us-west-2」。
+4. 選取 **Add tag** 並輸入標籤名稱。
+5. 選取 **Add another query** 建立第二個查詢，並為其加入相同的標籤。
 
-Now you can create the trigger condition and specify the tag name. This creates a combination trigger that checks two queries that both contain the same tag. The monitor checks both queries with a logical `OR` operation, and if either query's conditions are met, the alert notification is generated.
+現在您可以建立觸發條件並指定標籤名稱。這會建立一個組合觸發條件，檢查兩個都包含相同標籤的查詢。監視器會以邏輯 `OR` 運算檢查這兩個查詢，若任一查詢的條件符合，就會產生警示通知。
 
 ## Extraction query editor
 
-For a query-level monitor, specify a Painless script that returns `true` or `false`. Painless is the default OpenSearch scripting language and has a syntax similar to Groovy. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+對於查詢層級監視器，請指定會傳回 `true` 或 `false` 的 Painless 指令碼。Painless 是 OpenSearch 的預設指令碼語言，其語法類似 Groovy。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-Trigger condition scripts revolve around the `ctx.results[0]` variable, which corresponds to the extraction query response. For example, the script might reference `ctx.results[0].hits.total.value` or `ctx.results[0].hits.hits[i]._source.error_code`.
+觸發條件指令碼以 `ctx.results[0]` 變數為核心，該變數對應至擷取查詢的回應。例如，指令碼可能會參照 `ctx.results[0].hits.total.value` 或 `ctx.results[0].hits.hits[i]._source.error_code`。
 
-A return value of `true` means that the trigger condition has been met and the trigger should run its actions. Test the script using the **Run** button.
+傳回值為 `true` 表示觸發條件已符合，觸發條件應執行其動作。請使用 **Run** 按鈕測試指令碼。
 
-The **Info** link next to **Trigger condition** contains a useful summary of the variables and results available to your query.
+**Trigger condition** 旁的 **Info** 連結包含查詢可用變數和結果的實用摘要。
 {: .tip }
 
-Bucket-level monitors require you to specify more information in your trigger condition. At a minimum, you must have the following fields:
+桶層級監視器需要在觸發條件中指定更多資訊。至少必須包含下列欄位：
 
-- `buckets_path`: Maps variable names to metrics to use in your script.
-- `parent_bucket_path`: The path to a multi-bucket aggregation. The path can include single-bucket aggregations, but the last aggregation must be multi-bucket. For example, if you have a pipeline such as `agg1>agg2>agg3`, `agg1` and `agg2` are single-bucket aggregations, but `agg3` must be a multi-bucket aggregation.
-- `script`: The script that OpenSearch runs to evaluate whether to trigger any alerts.
+- `buckets_path`：將變數名稱對應至指令碼中使用的指標。
+- `parent_bucket_path`：多重桶彙總的路徑。路徑可以包含單桶彙總，但最後一個彙總必須是多重桶彙總。例如，如果您有一個類似 `agg1>agg2>agg3` 的管線，`agg1` 和 `agg2` 是單桶彙總，但 `agg3` 必須是多重桶彙總。
+- `script`：OpenSearch 用來評估是否觸發任何警示的指令碼。
 
-The following is an example script:
+以下是指令碼範例：
 
 ```json
 {
@@ -69,17 +70,17 @@ The following is an example script:
 }
 ```
 
-After mapping the `count_var` variable to the `_count` metric, you can use `count_var` in your script and reference `_count` data. The `composite_agg` is a path to a multi-bucket aggregation.
+將 `count_var` 變數對應至 `_count` 指標後，您就可以在指令碼中使用 `count_var` 並參照 `_count` 資料。`composite_agg` 是多重桶彙總的路徑。
 
 ## Anomaly detector
 
-To use the anomaly detector method:
+若要使用異常偵測器方法：
 
-1. For **Trigger type**, choose **Anomaly detector grade and confidence**. 
-2. Specify the **Anomaly grade condition** for the aggregation and time frame you chose when you created the monitor, for example, "IS ABOVE 0.7" or "IS EXACTLY 0.5." The *anomaly grade* is a number between 0 and 1 that indicates how anomalous a data point is.
-3. Specify the **Anomaly confidence condition** for the aggregation and time frame you chose earlier, "IS ABOVE 0.7" or "IS EXACTLY 0.5." The *anomaly confidence* is an estimate of the probability that the reported anomaly grade matches the expected anomaly grade. The line moves up and down as you increase and decrease the threshold. Once this line is crossed, the trigger evaluates to `true`.
+1. 在 **Trigger type** 中，選擇 **Anomaly detector grade and confidence**。
+2. 為您建立監視器時所選擇的彙總和時間範圍指定 **Anomaly grade condition**，例如「IS ABOVE 0.7」或「IS EXACTLY 0.5」。*異常等級* 是介於 0 和 1 之間的數字，表示資料點的異常程度。
+3. 為先前選擇的彙總和時間範圍指定 **Anomaly confidence condition**，例如「IS ABOVE 0.7」或「IS EXACTLY 0.5」。*異常信賴度* 是對所回報異常等級符合預期異常等級之機率的估計值。當您增加或減少閾值時，該線會上下移動。一旦數值跨越此線，觸發條件就會評估為 `true`。
 
-### Sample scripts
+### 範例指令碼
 
 
 ```groovy
@@ -112,54 +113,54 @@ if (score > 99) {
 }
 ```
 
-#### Trigger variables
+#### 觸發條件變數
 
-Variable | Data type | Description
+變數 | 資料類型 | 說明
 :--- | :--- | :---
-`ctx.trigger.id` | String | The trigger ID.
-`ctx.trigger.name` | String | The trigger name.
-`ctx.trigger.severity` | String | The trigger severity.
-`ctx.trigger.condition`| Object | Contains the Painless script used when the monitor was created.
-`ctx.trigger.condition.script.source` | String | The script used to define the trigger.
-`ctx.trigger.condition.script.lang` | String | The language used to define the script. Must be Painless.
-`ctx.trigger.actions`| Array | An array with one element that contains information about the action the monitor needs to trigger.
+`ctx.trigger.id` | 字串 | 觸發條件 ID。
+`ctx.trigger.name` | 字串 | 觸發條件名稱。
+`ctx.trigger.severity` | 字串 | 觸發條件嚴重性。
+`ctx.trigger.condition`| 物件 | 包含建立監視器時所使用的 Painless 指令碼。
+`ctx.trigger.condition.script.source` | 字串 | 用來定義觸發條件的指令碼。
+`ctx.trigger.condition.script.lang` | 字串 | 用來定義指令碼的語言。必須是 Painless。
+`ctx.trigger.actions`| 陣列 | 包含一個元素的陣列，其中含有監視器需要觸發之動作的資訊。
 
-#### Other variables
+#### 其他變數
 
-Variable | Data type | Description
+變數 | 資料類型 | 說明
 :--- | :--- | :---
-`ctx.results` | Array | An array with one element (`ctx.results.0`). Contains the query results. This variable is empty if the trigger is unable to retrieve results. See `ctx.error`.
-`ctx.last_update_time` | Milliseconds | Unix epoch time of when the monitor was last updated.
-`ctx.periodStart` | String | Unix timestamp for the beginning of the period during which the alert was triggered. For example, if a monitor runs every 10 minutes, a period might begin at 10:40 and end at 10:50.
-`ctx.periodEnd` | String | The end of the period during which the alert triggered.
-`ctx.error` | String | The error message displayed if the trigger was unable to retrieve results or could not be evaluated, typically due to a compile error or null pointer exception. Null otherwise.
-`ctx.alert` | Object | The current, active alert (if it exists). Includes `ctx.alert.id`, `ctx.alert.version`, and `ctx.alert.isAcknowledged`. Null if no alert is active. Only available with query-level monitors.
-`ctx.alerts` | Array | Newly created alerts. Includes the `ctx.alerts.0.finding_ids` that triggered the alert and the `ctx.alerts.0.related_doc_ids` associated with the findings. Only available with document-level monitors.
-`ctx.dedupedAlerts` | Array | Triggered alerts. OpenSearch keeps the existing alert to prevent the plugin from perpetually creating the same alert. Only available with bucket-level monitors.
-`ctx.newAlerts` | Array | Newly created alerts. Only available with bucket-level monitors.
-`ctx.completedAlerts` | Array | Completed or expired alerts. Only available with bucket-level monitors.
-`bucket_keys` | String | A comma-separated list of the monitor's bucket key values. Available only for `ctx.dedupedAlerts`, `ctx.newAlerts`, and `ctx.completedAlerts`. Accessed through the `ctx.dedupedAlerts.0.bucket_keys` variable.
-`parent_bucket_path` | String | The parent bucket path of the bucket that triggered the alert. Accessed through `ctx.dedupedAlerts.0.parent_bucket_path`.
-`associated_queries` | Array | An array of document-level monitor queries that triggered the creation of the finding associated with the alert. Only available with document-level monitors. Accessed through the `ctx.alerts.0.associated_queries` variable.
-`sample_documents` | Array | An array of sample documents that matched the monitor query. Only available with bucket- and document-level monitors. Accessed through the `ctx.newAlerts.0.sample_documents` and `ctx.alerts.0.sample_documents` variables, respectively.
+`ctx.results` | 陣列 | 包含一個元素 (`ctx.results.0`) 的陣列。含有查詢結果。如果觸發條件無法擷取結果，此變數為空。請參閱 `ctx.error`。
+`ctx.last_update_time` | 毫秒 | 監視器上次更新的 Unix 紀元時間。
+`ctx.periodStart` | 字串 | 觸發警示之期間開始的 Unix 時間戳記。例如，如果監視器每 10 分鐘執行一次，期間可能從 10:40 開始，到 10:50 結束。
+`ctx.periodEnd` | 字串 | 觸發警示之期間的結束時間。
+`ctx.error` | 字串 | 如果觸發條件無法擷取結果或無法評估時所顯示的錯誤訊息，通常是由於編譯錯誤或空指標例外狀況。否則為 Null。
+`ctx.alert` | 物件 | 目前作用中的警示 (如果存在)。包含 `ctx.alert.id`、`ctx.alert.version` 和 `ctx.alert.isAcknowledged`。如果沒有作用中的警示則為 Null。僅適用於查詢層級監視器。
+`ctx.alerts` | 陣列 | 新建立的警示。包含觸發警示的 `ctx.alerts.0.finding_ids` 以及與發現結果相關聯的 `ctx.alerts.0.related_doc_ids`。僅適用於文件層級監視器。
+`ctx.dedupedAlerts` | 陣列 | 已觸發的警示。OpenSearch 會保留現有的警示，以防止外掛程式不斷建立相同的警示。僅適用於桶層級監視器。
+`ctx.newAlerts` | 陣列 | 新建立的警示。僅適用於桶層級監視器。
+`ctx.completedAlerts` | 陣列 | 已完成或已到期的警示。僅適用於桶層級監視器。
+`bucket_keys` | 字串 | 監視器桶鍵值的逗號分隔清單。僅適用於 `ctx.dedupedAlerts`、`ctx.newAlerts` 和 `ctx.completedAlerts`。透過 `ctx.dedupedAlerts.0.bucket_keys` 變數存取。
+`parent_bucket_path` | 字串 | 觸發警示之桶的上層桶路徑。透過 `ctx.dedupedAlerts.0.parent_bucket_path` 存取。
+`associated_queries` | 陣列 | 觸發建立與警示相關聯之發現結果的文件層級監視器查詢陣列。僅適用於文件層級監視器。透過 `ctx.alerts.0.associated_queries` 變數存取。
+`sample_documents` | 陣列 | 符合監視器查詢的範例文件陣列。僅適用於桶層級和文件層級監視器。分別透過 `ctx.newAlerts.0.sample_documents` 和 `ctx.alerts.0.sample_documents` 變數存取。
 
-#### The `associated_queries` and `sample_documents` variables
+#### `associated_queries` 和 `sample_documents` 變數
 
-Per bucket and per document monitors support printing sample documents in notification messages. Per document monitors support printing the list of queries that triggered the creation of the finding associated with the alert. When the monitor runs, it adds each new alert to the `ctx` variables, for example, `newAlerts` for per bucket monitors and `alerts` for per document monitors. Each alert has its own list of `sample_documents`, and each per document monitor alert has its own list of `associated_queries`. The message template can be formatted to iterate through the list of alerts, the list of `associated_queries`, and the `sample_documents` for each alert.
+每桶與每文件監視器支援在通知訊息中列印範例文件。每文件監視器支援列印觸發建立與警示相關聯之發現結果的查詢清單。當監視器執行時，它會將每個新警示加入 `ctx` 變數，例如每桶監視器為 `newAlerts`，每文件監視器為 `alerts`。每個警示都有自己的 `sample_documents` 清單，且每個每文件監視器警示都有自己的 `associated_queries` 清單。訊息範本可以格式化為逐一迭代警示清單、`associated_queries` 清單，以及每個警示的 `sample_documents`。
 
-An alerting monitor uses the permissions of the user that created it. Be mindful of the Notifications plugin channel to which alert messages are sent and the content of the message mustache template. To learn more about security in the Alerting plugin, see [Alerting security]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/security/).
+警示監視器會使用建立它的使用者的權限。請留意警示訊息傳送至的 Notifications 外掛程式頻道，以及訊息 mustache 範本的內容。若要進一步了解 Alerting 外掛程式中的安全性，請參閱[警示安全性]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/security/)。
 {: .note}
 
-#### Sample document variables
+#### 範例文件變數
 
-Variable | Data type | Description
+變數 | 資料類型 | 說明
 :--- | :--- | :---
-`_index` | String | The index containing the sample document.
-`_id` | String | The sample document ID.
-`_score` | Float | A positive 32-bit floating-point number illustrating the relevance of the returned document.
-`_source` | Object | The JSON payload of the sample document.
+`_index` | 字串 | 包含範例文件的索引。
+`_id` | 字串 | 範例文件 ID。
+`_score` | 浮點數 | 一個正 32 位元浮點數，說明所傳回文件的相關性。
+`_source` | 物件 | 範例文件的 JSON 承載。
 
-##### Mustache template example
+##### Mustache 範本範例
 
 {% raw %}
 ```groovy
@@ -176,17 +177,17 @@ Alerts:
 ```
 {% endraw %}
 
-#### Associated query variables
+#### 相關聯的查詢變數
 
-Variable | Data type | Description
+變數 | 資料類型 | 說明
 :--- | :--- | :---
-`id` | String | The ID of the document-level query.
-`name` | String | The name of the document-level query.
-`tags` | Array | An array of tags (each of type String) configured for the document-level query.
+`id` | 字串 | 文件層級查詢的 ID。
+`name` | 字串 | 文件層級查詢的名稱。
+`tags` | 陣列 | 為文件層級查詢設定的標籤陣列 (每個標籤的類型為字串)。
 
-##### Mustache template example
+##### Mustache 範本範例
 
-The `_source` object in this example is based on the `opensearch_dashboards_sample_data_ecommerce` index available in OpenSearch Dashboards. In this example, the message template is accessing the `ctx.alerts` variable of a per document monitor.
+此範例中的 `_source` 物件是以 OpenSearch Dashboards 中提供的 `opensearch_dashboards_sample_data_ecommerce` 索引為基礎。在此範例中，訊息範本正在存取每文件監視器的 `ctx.alerts` 變數。
 {: .note}
 
 {% raw %}

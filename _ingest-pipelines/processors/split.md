@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Split
+title: "分割"
 parent: Ingest processors
 nav_order: 255
 ---
 
-# Split ingest processor
+# Split 資料匯入處理器
 
-The `split` processor is used to split a string field into an array of substrings based on a specified delimiter.
+`split` 處理器用來根據指定的分隔符，將字串欄位分割成子字串陣列。
 
-The following is the syntax for the `split` processor:
+以下是 `split` 處理器的語法：
 
 ```json
 {
@@ -22,30 +23,30 @@ The following is the syntax for the `split` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `split` processor.
+下表列出 `split` 處理器的必要與選用參數。
 
-Parameter  | Required/Optional  | Description 
+參數  | 必要／選用  | 說明 
 :--- | :--- | :--- 
-`field` | Required | The field containing the string to be split. 
-`separator` | Required | The delimiter used to split the string. This can be a regular expression pattern. 
-`preserve_trailing` | Optional | If set to `true`, preserves empty trailing fields (for example, `''`) in the resulting array. If set to `false`, then empty trailing fields are removed from the resulting array. Default is `false`. 
-`target_field` | Optional | The field where the array of substrings is stored. If not specified, then the field is updated in-place. 
-`ignore_missing` | Optional	| Specifies whether the processor should ignore documents that do not contain the specified field. If set to `true`, then the processor ignores missing values in the field and leaves the `target_field` unchanged. Default is `false`.  
-`description` | Optional | A brief description of the processor. 
-`if` | Optional | A condition for running the processor. 
-`ignore_failure` | Optional | Specifies whether the processor continues execution even if it encounters an error. If set to `true`, then failures are ignored. Default is `false`. 
-`on_failure` | Optional | A list of processors to run if the processor fails. 
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. 
+`field` | 必要 | 包含要分割字串的欄位。 
+`separator` | 必要 | 用來分割字串的分隔符。可以是正規表示式模式。 
+`preserve_trailing` | 選用 | 若設為 `true`，則會在結果陣列中保留空的結尾欄位 (例如 `''`)。若設為 `false`，則會從結果陣列中移除空的結尾欄位。預設為 `false`。 
+`target_field` | 選用 | 儲存子字串陣列的欄位。若未指定，則會就地更新該欄位。 
+`ignore_missing` | 選用	| 指定處理器是否應忽略不含指定欄位的文件。若設為 `true`，則處理器會忽略欄位中缺少的值，並保持 `target_field` 不變。預設為 `false`。  
+`description` | 選用 | 處理器的簡短描述。 
+`if` | 選用 | 執行處理器的條件。 
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤也繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。 
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+依照下列步驟在管線中使用處理器。
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
 
-The following query creates a pipeline named `split_pipeline` that uses the `split` processor to split the `log_message` field on the comma character and store the resulting array in the `log_parts` field: 
+下列查詢會建立名為 `split_pipeline` 的管線，使用 `split` 處理器依逗號字元分割 `log_message` 欄位，並將結果陣列儲存在 `log_parts` 欄位：
 
 ```json
 PUT _ingest/pipeline/split_pipeline
@@ -64,12 +65,12 @@ PUT _ingest/pipeline/split_pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2 (Optional): Test the pipeline
+### 步驟 2 (選用)：測試管線
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/split_pipeline/_simulate
@@ -85,9 +86,9 @@ POST _ingest/pipeline/split_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -114,9 +115,9 @@ The following example response confirms that the pipeline is working as expected
 ```
 {% include copy-curl.html %}
 
-### Step 3: Ingest a document 
+### 步驟 3：匯入文件
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=split_pipeline
@@ -126,9 +127,9 @@ PUT testindex1/_doc/1?pipeline=split_pipeline
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The request indexes the document into the index `testindex1` and splits the `log_message` field on the comma delimiter before indexing, as shown in the following response:
+此請求會將文件編製索引到索引 `testindex1`，並在編製索引前依逗號分隔符分割 `log_message` 欄位，如下列回應所示：
 
 ```json
 {
@@ -146,18 +147,18 @@ The request indexes the document into the index `testindex1` and splits the `log
 }
 ```
 
-### Step 4 (Optional): Retrieve the document
+### 步驟 4 (選用)：擷取文件
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### Response 
+#### 回應
 
-The response shows the `log_message` field as an array of values split on the comma delimiter:
+回應顯示 `log_message` 欄位為依逗號分隔符分割後的值陣列：
 
 ```json
 {

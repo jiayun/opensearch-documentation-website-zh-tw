@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Security configuration version APIs
+title: "安全性組態版本 API"
 parent: Security APIs
 nav_order: 115
 has_children: true
@@ -10,64 +11,64 @@ redirect_from:
   - /security/configuration/versioning/
 ---
 
-# Security configuration version APIs
-**Introduced 3.3**
+# 安全性組態版本 API
+**於 3.3 版推出**
 {: .label .label-purple }
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).
+這是實驗性功能，不建議在正式環境中使用。如需功能進度的最新消息，或想提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/)的討論。
 {: .warning}
 
-The security configuration version APIs track the history of the Security plugin configuration and restore a previous version of it. Use them to review how the configuration has changed over time and to return the cluster to a known state after an unintended change.
+安全性組態版本 API 會追蹤 Security 外掛程式組態的歷史記錄，並還原先前的版本。您可以使用這些 API 檢閱組態隨時間的變化，並在發生非預期的變更後將叢集還原至已知狀態。
 
-OpenSearch supports the following security configuration version APIs.
+OpenSearch 支援下列安全性組態版本 API。
 
-| API | Description |
+| API | 說明 |
 | :--- | :--- |
-| [Get Security Configuration Versions API]({{site.url}}{{site.baseurl}}/security/api/configuration-versions/get-versions/) | Retrieves the security configuration version history or a single version by ID. |
-| [Roll Back Security Configuration API]({{site.url}}{{site.baseurl}}/security/api/configuration-versions/rollback/) | Restores a previous version of the security configuration. |
+| [Get Security Configuration Versions API]({{site.url}}{{site.baseurl}}/security/api/configuration-versions/get-versions/) | 擷取安全性組態版本歷史記錄，或依 ID 擷取單一版本。 |
+| [Roll Back Security Configuration API]({{site.url}}{{site.baseurl}}/security/api/configuration-versions/rollback/) | 還原先前版本的安全性組態。 |
 
-## Versioning
+## 版本控制
 
-OpenSearch creates a version when a security configuration change differs from the most recent saved version. Identical changes do not create a version, so the history contains only meaningful entries.
+當安全性組態變更與最近儲存的版本不同時，OpenSearch 會建立一個版本。相同的變更不會建立版本，因此歷史記錄只會包含有意義的項目。
 
-Each version contains the following information:
+每個版本包含下列資訊：
 
-- A version ID, such as `v1` or `v2`
-- A snapshot of the complete security configuration at the time the version was created
-- The time at which the version was created
-- The user who made the change, if OpenSearch can attribute the change to a user
+- 版本 ID，例如 `v1` 或 `v2`
+- 建立版本時完整安全性組態的快照
+- 建立版本的時間
+- 進行變更的使用者 (若 OpenSearch 可將該變更歸因於某位使用者)
 
-A rollback is itself a configuration change, so it creates a new version.
+回復本身也是一項組態變更，因此會建立新版本。
 
-## Enabling versioning
+## 啟用版本控制
 
-Versioning is disabled by default. To enable it, add the following setting to `opensearch.yml`:
+版本控制預設為停用。若要啟用，請將下列設定新增至 `opensearch.yml`：
 
 ```yaml
 plugins.security.configurations_versions.enabled: true
 ```
 {% include copy.html %}
 
-To change the number of retained versions, add the following setting to `opensearch.yml`:
+若要變更保留的版本數，請將下列設定新增至 `opensearch.yml`：
 
 ```yaml
 plugins.security.config_version.retention_count: 10
 ```
 {% include copy.html %}
 
-Default is `10`. When the cluster reaches the retention limit, OpenSearch removes the oldest version to make room for a new one.
+預設為 `10`。當叢集達到保留上限時，OpenSearch 會移除最舊的版本，以騰出空間給新版本。
 
-Restart the cluster to apply these settings. For more information, see [Experimental feature flags]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/experimental/).
+請重新啟動叢集以套用這些設定。如需詳細資訊，請參閱[實驗性功能旗標]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/experimental/)。
 
-## Required permissions
+## 必要權限
 
-These APIs use the same access control as all other Security APIs, so the calling user must be mapped to a role listed in `plugins.security.restapi.roles_enabled`. A user without such a role receives `403 Forbidden` unless that user holds one of the following permissions. For more information, see [Access control for the API]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api).
+這些 API 使用與所有其他 Security API 相同的存取控制，因此呼叫的使用者必須對應至 `plugins.security.restapi.roles_enabled` 中列出的角色。沒有這類角色的使用者會收到 `403 Forbidden`，除非該使用者擁有下列其中一項權限。如需詳細資訊，請參閱 [API 的存取控制]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api)。
 
-To control the two operations separately, enable REST API admin permissions and grant a role the following cluster permissions. Each one is an independent grant, so a role that holds it does not also need to be listed in `plugins.security.restapi.roles_enabled`. No built-in role includes these permissions, including `security_rest_api_full_access`.
+若要分別控制這兩項操作，請啟用 REST API 管理員權限，並授予角色下列叢集權限。每一項都是獨立的授權，因此擁有該權限的角色不需要同時列在 `plugins.security.restapi.roles_enabled` 中。沒有任何內建角色包含這些權限，包括 `security_rest_api_full_access`。
 
-| Operation | Required permission |
+| 操作 | 必要權限 |
 | :--- | :--- |
-| Get versions | `restapi:admin/view_version` |
-| Roll back the configuration | `restapi:admin/rollback_version` |
+| 取得版本 | `restapi:admin/view_version` |
+| 回復組態 | `restapi:admin/rollback_version` |
 
-To prevent a role from using either operation, disable the `VIEW_VERSION` or `ROLLBACK_VERSION` endpoint for that role using `plugins.security.restapi.endpoints_disabled`.
+若要防止角色使用任一操作，請使用 `plugins.security.restapi.endpoints_disabled` 為該角色停用 `VIEW_VERSION` 或 `ROLLBACK_VERSION` 端點。

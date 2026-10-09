@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: getMetadata()
 parent: Functions
@@ -7,18 +8,18 @@ nav_order: 15
 ---
 
 <!-- vale off -->
-# getMetadata() function
+# getMetadata() 函式
 <!-- vale on -->
 
-The `getMetadata()` function takes one literal string argument and looks up specific keys in event metadata. 
+`getMetadata()` 函式接受一個字面字串引數，並查閱事件中繼資料中的特定索引鍵。
 
-If the key contains a `/`, then the function looks up the metadata recursively. When passed, the expression returns the value corresponding to the key. 
+如果索引鍵包含 `/`，則函式會遞迴查閱中繼資料。傳入後，運算式會傳回對應索引鍵的值。
 
-The value returned can be of any type. For example, if the metadata contains `{"key1": "value2", "key2": 10}`, then the function `getMetadata("key1")` returns `value2`. The function `getMetadata("key2")` returns `10`.
+傳回的值可以是任何類型。例如，如果中繼資料包含 `{"key1": "value2", "key2": 10}`，則函式 `getMetadata("key1")` 會傳回 `value2`。函式 `getMetadata("key2")` 會傳回 `10`。
 
-## Example 
+## 範例
 
-The following pipeline writes request-derived values into event metadata and then uses `getMetadata()` in the OpenSearch sink to construct tenant-scoped daily index names and document IDs:
+下列管線會將請求衍生的值寫入事件中繼資料，然後在 OpenSearch 接收端中使用 `getMetadata()`，建構各租用戶的每日索引名稱與文件 ID：
 
 ```yaml
 metadata-pass-demo:
@@ -52,7 +53,7 @@ metadata-pass-demo:
 ```
 {% include copy.html %}
 
-You can test the pipeline using the following command:
+您可以使用下列命令測試管線：
 
 ```bash
 curl -sS -X POST "http://localhost:2021/log/ingest" \
@@ -61,7 +62,7 @@ curl -sS -X POST "http://localhost:2021/log/ingest" \
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 {

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Ignore malformed
+title: "忽略格式錯誤"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/ignore-malformed/
@@ -9,15 +10,15 @@ has_children: false
 has_toc: false
 ---
 
-# Ignore malformed mapping parameter
+# 忽略格式錯誤的對應參數
 
-The `ignore_malformed` mapping parameter instructs the indexing engine to ignore values that do not match the field's expected format. When enabled, malformed values are not indexed, preventing entire-document rejection because of data format issues. This ensures that documents are still stored even if one or more fields contain data that cannot be parsed.
+`ignore_malformed` 對應參數會指示索引引擎忽略不符合欄位預期格式的值。啟用後，格式錯誤的值不會被編製索引，避免因為資料格式問題而拒絕整份文件。這可確保即使一或多個欄位包含無法剖析的資料，文件仍會被儲存。
 
-By default, `ignore_malformed` is disabled, which means that if a value cannot be parsed according to the field type, indexing will fail for the entire document.
+根據預設，`ignore_malformed` 為停用狀態，這表示若某個值無法依據欄位類型剖析，整份文件的索引作業將會失敗。
 
-## Example: ignore_malformed off
+## 範例：ignore_malformed 關閉
 
-Create an index named `people_no_ignore` containing an `age` field of type `integer`. By default, `ignore_malformed` is set to `false`:
+建立一個名為 `people_no_ignore` 的索引，其中包含類型為 `integer` 的 `age` 欄位。根據預設，`ignore_malformed` 設為 `false`：
 
 ```json
 PUT /people_no_ignore
@@ -33,7 +34,7 @@ PUT /people_no_ignore
 ```
 {% include copy-curl.html %}
 
-Index a document with a malformed value:
+將含有格式錯誤值的文件編製索引：
 
 ```json
 PUT /people_no_ignore/_doc/1
@@ -43,7 +44,7 @@ PUT /people_no_ignore/_doc/1
 ```
 {% include copy-curl.html %}
 
-The request fails because of the malformed value:
+由於該值格式錯誤，請求失敗：
 
 ```json
 {
@@ -65,9 +66,9 @@ The request fails because of the malformed value:
 }
 ```
 
-## Example: ignore_malformed on
+## 範例：ignore_malformed 開啟
 
-Create an index named `people_ignore` in which the `age` field has `ignore_malformed` set to `true`:
+建立一個名為 `people_ignore` 的索引，其中 `age` 欄位的 `ignore_malformed` 設為 `true`：
 
 ```json
 PUT /people_ignore
@@ -84,7 +85,7 @@ PUT /people_ignore
 ```
 {% include copy-curl.html %}
 
-Index a document with a malformed value:
+將含有格式錯誤值的文件編製索引：
 
 ```json
 PUT /people_ignore/_doc/1
@@ -94,14 +95,14 @@ PUT /people_ignore/_doc/1
 ```
 {% include copy-curl.html %}
 
-Retrieve the document:
+擷取該文件：
 
 ```json
 GET /people_ignore/_doc/1
 ```
 {% include copy-curl.html %}
 
-The response shows that the document was indexed successfully, despite having a malformed value:
+回應顯示，儘管該值格式錯誤，文件仍已成功編製索引：
 
 ```json
 {

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Star-tree
 nav_order: 45
@@ -9,28 +10,28 @@ redirect_from:
   - /field-types/supported-field-types/star-tree/
 ---
 
-# Star-tree field type
+# Star-tree 欄位類型
 
-A star-tree index precomputes aggregations, accelerating the performance of aggregation queries. 
-If a star-tree index is configured as part of an index mapping, the star-tree index is created and maintained as data is ingested in real time.
+Star-tree 索引會預先計算彙總，加速彙總查詢的效能。
+如果將 star-tree 索引設定為索引對應的一部分，則會在資料即時匯入時建立並維護 star-tree 索引。
 
-OpenSearch will automatically use the star-tree index to optimize aggregations if the queried fields are part of star-tree index dimension fields and the aggregations are on star-tree index metric fields. No changes are required in the query syntax or the request parameters.
+如果查詢的欄位屬於 star-tree 索引維度欄位，且彙總是在 star-tree 索引指標欄位上進行，OpenSearch 會自動使用 star-tree 索引來最佳化彙總。查詢語法或請求參數不需要任何變更。
 
-For more information, see [Star-tree index]({{site.url}}{{site.baseurl}}/search-plugins/star-tree-index/).
+如需更多資訊，請參閱 [Star-tree 索引]({{site.url}}{{site.baseurl}}/search-plugins/star-tree-index/)。
 
-## Prerequisites
+## 先決條件
 
-To use a star-tree index, follow the instructions in [Enabling a star-tree index]({{site.url}}{{site.baseurl}}/search-plugins/star-tree-index#enabling-a-star-tree-index).
+若要使用 star-tree 索引，請依照 [啟用 star-tree 索引]({{site.url}}{{site.baseurl}}/search-plugins/star-tree-index#enabling-a-star-tree-index) 中的指示操作。
 
-## Examples
+## 範例
 
-The following examples show how to use a star-tree index.
+下列範例顯示如何使用 star-tree 索引。
 
-### Star-tree index mappings
+### Star-tree 索引對應
 
-Define star-tree index mappings in the `composite` section in `mappings`. 
+在 `mappings` 的 `composite` 區段中定義 star-tree 索引對應。
 
-The following example API request creates a corresponding star-tree index named`request_aggs`. To compute metric aggregations for `request_size` and `latency` fields with queries on `port` and `status` fields, configure the following mappings:
+下列範例 API 請求會建立名為`request_aggs`的對應 star-tree 索引。若要使用 `port` 和 `status` 欄位上的查詢來計算 `request_size` 和 `latency` 欄位的指標彙總，請設定下列對應：
 
 ```json
 PUT logs
@@ -117,80 +118,80 @@ PUT logs
 }
 ```
 
-## Star-tree index configuration options
+## Star-tree 索引組態選項
 
-You can customize your star-tree implementation using the following `config` options in the `mappings` section. These options cannot be modified without reindexing.
+您可以使用 `mappings` 區段中的下列 `config` 選項來自訂您的 star-tree 實作。若未重新編製索引，就無法修改這些選項。
 
-| Parameter | Description  | 
+| 參數 | 說明  | 
 | :--- | :--- |
-| `ordered_dimensions`  | A [list of fields](#ordered-dimensions) based on which metrics will be aggregated in a star-tree index. Required.  | 
-| `date_dimension` | If the [date dimension](#date-dimension) is provided, `ordered_dimensions` is appended to it based on which metrics will be aggregated in a star-tree index. Optional. |
-| `metrics` | A [list of metric](#metrics) fields required in order to perform aggregations. Required.  |
-| `max_leaf_docs` | The maximum number of star-tree documents that a leaf node can point to. After the maximum number of documents is reached, child nodes will be created based on the unique value of the next field in the `ordered_dimension` (if any). Default is `10000`. A lower value will use more storage but result in faster query performance. Inversely, a higher value will use less storage but result in slower query performance. For more information, see [Star-tree indexing structure]({{site.url}}{{site.baseurl}}/search-plugins/star-tree-index/#star-tree-index-structure). |
-| `skip_star_node_creation_for_dimensions` | A list of dimensions for which a star-tree index will skip star node creation. When `true`, this reduces storage size at the expense of query performance. Default is `false`. For more information about star nodes, see [Star-tree indexing structure]({{site.url}}{{site.baseurl}}/search-plugins/star-tree-index/#star-tree-index-structure).  |
+| `ordered_dimensions`  | 用於在 star-tree 索引中彙總指標的[欄位清單](#ordered-dimensions)。必要。  | 
+| `date_dimension` | 如果提供[日期維度](#date-dimension)，則會附加 `ordered_dimensions`，並據以在 star-tree 索引中彙總指標。選用。 |
+| `metrics` | 執行彙總所需的[指標欄位清單](#metrics)。必要。  |
+| `max_leaf_docs` | 葉節點可指向的 star-tree 文件數上限。達到文件數上限後，會根據 `ordered_dimension` 中下一個欄位的唯一值建立子節點（若有）。預設為 `10000`。較低的值會使用更多儲存空間，但可獲得更快的查詢效能。反之，較高的值會使用較少儲存空間，但會導致查詢效能變慢。如需更多資訊，請參閱 [Star-tree 索引結構]({{site.url}}{{site.baseurl}}/search-plugins/star-tree-index/#star-tree-index-structure)。 |
+| `skip_star_node_creation_for_dimensions` | 將略過星形節點建立的維度清單。當 `true` 時，這會減少儲存空間大小，但會犧牲查詢效能。預設為 `false`。如需星形節點的更多資訊，請參閱 [Star-tree 索引結構]({{site.url}}{{site.baseurl}}/search-plugins/star-tree-index/#star-tree-index-structure)。  |
 
 
-### Ordered dimensions
+### 排序維度
 
-The `ordered_dimensions` parameter contains fields based on which metrics will be aggregated in a star-tree index. The star-tree index will be selected for querying only if all the fields in the query are part of the `ordered_dimensions`. 
+`ordered_dimensions` 參數包含用於在 star-tree 索引中彙總指標的欄位。只有在查詢中的所有欄位都屬於 `ordered_dimensions` 時，才會選取 star-tree 索引進行查詢。
 
-When using the `ordered_dimesions` parameter, follow these best practices:
+使用 `ordered_dimesions` 參數時，請遵循下列最佳做法：
 
-- The order of dimensions matters. You can define the dimensions ordered from the highest cardinality to the lowest cardinality for efficient storage and query pruning. 
-- Avoid using high-cardinality fields as dimensions. High-cardinality fields adversely affect storage space, indexing throughput, and query performance.
-- A minimum of `2` and a maximum of `10` dimensions are supported per star-tree index.
+- 維度的順序很重要。您可以將維度從最高基數到最低基數排序，以實現高效的儲存和查詢修剪。
+- 避免使用高基數欄位作為維度。高基數欄位會對儲存空間、索引輸送量和查詢效能造成負面影響。
+- 每個 star-tree 索引支援最少 `2` 個和最多 `10` 個維度。
 
-The `ordered_dimensions` parameter supports the following field types:
+`ordered_dimensions` 參數支援下列欄位類型：
 
-  - All numeric field types, excluding `unsigned_long` and `scaled_float`
+  - 所有數值欄位類型，但 `unsigned_long` 和 `scaled_float` 除外
   - `keyword` 
   - `object`
   - `ip`
 
-The `ordered_dimensions` parameter supports the following property.
+`ordered_dimensions` 參數支援下列屬性。
 
-| Parameter  | Required/Optional | Description  | 
+| 參數  | 必要/選用 | 說明  | 
 | :--- | :--- | :--- |
-| `name` | Required | The name of the field. The field name should be present in the `properties` section as part of the index `mapping`. Ensure that the `doc_values` setting is `enabled` for any associated fields. |
+| `name` | 必要 | 欄位名稱。欄位名稱應存在於 `properties` 區段中，作為索引 `mapping` 的一部分。請確保任何相關聯欄位的 `doc_values` 設定為 `enabled`。 |
 
 
-### Date dimension
+### 日期維度
 
-The `date_dimension` supports one `Date` field and is always the first dimension placed above the ordered dimensions, as they generally have high cardinality.
+`date_dimension` 支援一個 `Date` 欄位，且一律是置於排序維度之上的第一個維度，因為它們通常具有高基數。
 
-The `date_dimension` can support up to three of the following calendar intervals:
+`date_dimension` 可從下列日曆間隔中選用最多三種：
 
-- `year` (of era)
-- `quarter` (of year)
-- `month` (of year)
-- `week` (of week-based year)
-- `day` (of month)
-- `hour` (of day)
-- `half-hour` (of day)
-- `quater-hour` (of day)
-- `minute` (of hour)
-- `second` (of minute)
-
-
-Any values in the `date` field are rounded based on the granularity associated with the calendar intervals provided. For example: 
-
-- The default `calendar_intervals` are `minute` and `half-hour`.
-- During queries, the nearest granular intervals are automatically picked up. For example, if you have configured `hour` and `minute` as the `calendar_intervals` and your query is a monthly date histogram, the `hour` interval will be automatically selected so that the query computes the results in an optimized way.
-- To support time-zone-based queries, `:30` equals a `half-hour` interval and `:15` equals a `quarter-hour` interval.
+- `year`（紀元）
+- `quarter`（一年中的季度）
+- `month`（一年中的月份）
+- `week`（以週為基準的年份中的週）
+- `day`（一個月中的日期）
+- `hour`（一天中的小時）
+- `half-hour`（一天中的半小時）
+- `quater-hour`（一天中的 15 分鐘）
+- `minute`（一小時中的分鐘）
+- `second`（一分鐘中的秒）
 
 
-### Metrics
+`date` 欄位中的任何值都會根據所提供日曆間隔的粒度進行捨入。例如：
 
-Configure any metric fields on which you need to perform aggregations. `Metrics` are required as part of a star-tree index configuration.
+- 預設的 `calendar_intervals` 是 `minute` 和 `half-hour`。
+- 查詢期間，會自動選取最接近的粒度間隔。例如，如果您將 `hour` 和 `minute` 設定為 `calendar_intervals`，而您的查詢是每月日期直方圖，則會自動選取 `hour` 間隔，讓查詢以最佳化方式計算結果。
+- 若要支援以時區為基礎的查詢，`:30` 等於 `half-hour` 間隔，且 `:15` 等於 `quarter-hour` 間隔。
 
-When using `metrics`, follow these best practices: 
 
-- Fields supported by `metrics` are all [numeric field types]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/), with the exception of `unsigned_long`. For more information, see [GitHub issue #15231](https://github.com/opensearch-project/OpenSearch/issues/15231). 
-- Supported metric aggregations include `Min`, `Max`, `Sum`, `Avg`, and `Value_count`. 
-    - `Avg` is a derived metric based on `Sum` and `Value_count` and is not indexed when a query is run. The remaining base metrics are indexed.
-- A maximum of `100` base metrics are supported per star-tree index.
+### 指標
 
-If `Min`, `Max`, `Sum`, and `Value_count` are defined as `metrics` for each field, then up to 25 such fields can be configured, as shown in the following example:
+設定您需要執行彙總的任何指標欄位。star-tree 索引組態的必要項目為 `Metrics`。
+
+使用 `metrics` 時，請遵循下列最佳做法：
+
+- `metrics` 支援的欄位是所有[數值欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/)，但 `unsigned_long` 除外。如需更多資訊，請參閱 [GitHub 議題 #15231](https://github.com/opensearch-project/OpenSearch/issues/15231)。
+- 支援的指標彙總包括 `Min`、`Max`、`Sum`、`Avg` 和 `Value_count`。
+    - `Avg` 是根據 `Sum` 和 `Value_count` 衍生的指標，執行查詢時不會編製索引。其餘基本指標則會編製索引。
+- 每個 star-tree 索引支援最多 `100` 個基本指標。
+
+如果為每個欄位將 `Min`、`Max`、`Sum` 和 `Value_count` 定義為 `metrics`，則最多可設定 25 個這類欄位，如下列範例所示：
 
 ```json
 {
@@ -218,20 +219,20 @@ If `Min`, `Max`, `Sum`, and `Value_count` are defined as `metrics` for each fiel
 ```
 
 
-#### Properties
+#### 屬性
 
-The `metrics` parameter supports the following properties.
+`metrics` 參數支援下列屬性。
 
-| Parameter   | Required/Optional | Description  | 
+| 參數   | 必要/選用 | 說明  | 
 | :--- | :--- | :--- |
-| `name` | Required | The name of the field. The field name should be present in the `properties` section as part of the index `mapping`. Ensure that the `doc_values` setting is `enabled` for any associated fields. |
-| `stats` | Optional | A list of metric aggregations computed for each field. You can choose between `Min`, `Max`, `Sum`, `Avg`, and `Value Count`.<br/>Default is `Sum` and `Value_count`.<br/>`Avg` is a derived metric statistic that will automatically be supported in queries if `Sum` and `Value_Count` are present as part of metric `stats`.
+| `name` | 必要 | 欄位名稱。欄位名稱應存在於 `properties` 區段中，作為索引 `mapping` 的一部分。請確保任何相關聯欄位的 `doc_values` 設定為 `enabled`。 |
+| `stats` | 選用 | 為每個欄位計算的指標彙總清單。您可以選擇 `Min`、`Max`、`Sum`、`Avg` 和 `Value Count`。<br/>預設為 `Sum` 和 `Value_count`。<br/>如果 `Sum` 和 `Value_Count` 作為指標 `stats` 的一部分存在，則 `Avg` 是衍生的指標統計資料，會自動在查詢中支援。
 
 
-## Supported queries and aggregations
+## 支援的查詢和彙總
 
-For more information about supported queries and aggregations, see [Supported queries and aggregations for a star-tree index]({{site.url}}{{site.baseurl}}/search-plugins/star-tree-index/#supported-queries-and-aggregations).
+如需支援的查詢和彙總的更多資訊，請參閱 [Star-tree 索引支援的查詢與彙總]({{site.url}}{{site.baseurl}}/search-plugins/star-tree-index/#supported-queries-and-aggregations)。
 
-## Next steps
+## 後續步驟
 
-- [Star-tree index]({{site.url}}{{site.baseurl}}/search-plugins/star-tree-index/)
+- [Star-tree 索引]({{site.url}}{{site.baseurl}}/search-plugins/star-tree-index/)

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reranking search results using Amazon Bedrock models
+title: "使用 Amazon Bedrock 模型重新排序搜尋結果"
 parent: Reranking search results
 nav_order: 100
 redirect_from:
@@ -8,18 +9,18 @@ redirect_from:
   - /vector-search/tutorials/reranking/reranking-bedrock/
 ---
 
-# Reranking search results using Amazon Bedrock models
+# 使用 Amazon Bedrock 模型重新排序搜尋結果
 
-A [reranking pipeline]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/) can rerank search results, providing a relevance score for each document in the search results with respect to the search query. The relevance score is calculated by a cross-encoder model. 
+[重新排序管線]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)可以重新排序搜尋結果，為搜尋結果中的每份文件提供相對於搜尋查詢的相關性分數。相關性分數由交叉編碼器模型計算。
 
-This tutorial shows you how to use the [Amazon Bedrock Rerank API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_Rerank.html) to rerank search results using a model hosted on Amazon Bedrock. 
+本教學說明如何使用 [Amazon Bedrock Rerank API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_Rerank.html)，以託管於 Amazon Bedrock 的模型重新排序搜尋結果。
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將開頭為前置字元 `your_` 的預留位置取代為您自己的值。
 {: .note}
 
-## Prerequisite: Test the model on Amazon Bedrock
+## 先決條件：在 Amazon Bedrock 上測試模型
 
-Before using your model, test it on Amazon Bedrock. For supported reranker models, see [Supported Regions and models for reranking in Amazon Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/rerank-supported.html). For model IDs, see [Supported foundation models in Amazon Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html). To perform a reranking test, use the following code:
+使用模型之前，請先在 Amazon Bedrock 上進行測試。如需支援的重新排序器模型，請參閱 [Amazon Bedrock 中重新排序的支援區域與模型](https://docs.aws.amazon.com/bedrock/latest/userguide/rerank-supported.html)。如需模型 ID，請參閱 [Amazon Bedrock 中支援的基礎模型](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html)。若要執行重新排序測試，請使用下列程式碼：
 
 ```python
 import json
@@ -91,7 +92,7 @@ print(json.dumps(results, indent=2))
 ```
 {% include copy.html %}
 
-The reranked results are ordered by the highest score:
+重新排序後的結果會依最高分數排序：
 
 ```json
 [
@@ -114,13 +115,13 @@ The reranked results are ordered by the highest score:
 ]
 ```
 
-To sort the results by index, use the following code:
+若要依索引排序結果，請使用下列程式碼：
 
 ```python
 print(json.dumps(sorted(results, key=lambda x: x['index']),indent=2))
 ```
 
-The following are the results sorted by index:
+以下是依索引排序的結果：
 
 ```json
 [
@@ -143,15 +144,15 @@ The following are the results sorted by index:
 ]
 ```
 
-## Step 1: Create a connector and register the model
+## 步驟 1：建立連接器並註冊模型
 
-To create a connector and register the model, use the following steps.
+若要建立連接器並註冊模型，請使用下列步驟。
 
-### Step 1.1: Create a connector for the model
+### 步驟 1.1：為模型建立連接器
 
-First, create a connector for the model. 
+首先，為模型建立連接器。
 
-If you are using self-managed OpenSearch, supply your AWS credentials:
+如果您使用自我管理的 OpenSearch，請提供您的 AWS 憑證：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -203,7 +204,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-If you are using Amazon OpenSearch Service, you can provide an AWS Identity and Access Management (IAM) role Amazon Resource Name (ARN) that allows access to Amazon Bedrock. For more information, see the [AWS documentation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html). Use the following request to create a connector:
+如果您使用 Amazon OpenSearch Service，則可以提供允許存取 Amazon Bedrock 的 AWS Identity and Access Management (IAM) 角色 Amazon Resource Name (ARN)。如需詳細資訊，請參閱 [AWS 文件](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)。使用下列請求建立連接器：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -253,9 +254,9 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-### Step 1.2: Register and deploy the model
+### 步驟 1.2：註冊並部署模型
 
-Use the connector ID from the response to register and deploy the model:
+使用回應中的連接器 ID 來註冊並部署模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -268,11 +269,11 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Note the model ID in the response; you'll use it in the following steps.
+記下回應中的模型 ID；後續步驟將會用到。
 
-### Step 1.3: Test the model
+### 步驟 1.3：測試模型
 
-Test the model by using the Predict API:
+使用 Predict API 測試模型：
 
 ```json
 POST _plugins/_ml/_predict/text_similarity/your_model_id
@@ -288,7 +289,7 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
 ```
 {% include copy-curl.html %}
 
-Alternatively, you can test the model using the following query. This query bypasses the `pre_process_function` and calls the Rerank API directly:
+或者，您也可以使用下列查詢來測試模型。此查詢會略過 `pre_process_function`，直接呼叫 Rerank API：
 
 ```json
 POST _plugins/_ml/models/your_model_id/_predict
@@ -345,9 +346,9 @@ POST _plugins/_ml/models/your_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-The connector `pre_process_function` transforms the input into the format required by the Predict API `parameters`.
+連接器 `pre_process_function` 會將輸入轉換為 Predict API `parameters` 所需的格式。
 
-By default, the Amazon Bedrock Rerank API output is formatted as follows:
+預設情況下，Amazon Bedrock Rerank API 的輸出格式如下：
 
 ```json
 [
@@ -370,9 +371,9 @@ By default, the Amazon Bedrock Rerank API output is formatted as follows:
 ]
 ```
 
-The connector `post_process_function` transforms the model's output into a format that the [Reranker processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) can interpret and orders the results by index. 
+連接器 `post_process_function` 會將模型的輸出轉換為 [Reranker 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) 可以解讀的格式，並依索引排序結果。
 
-The response contains four `similarity` outputs. For each `similarity` output, the `data` array contains a relevance score for each document against the query. The `similarity` outputs are provided in the order of the input documents; the first similarity result pertains to the first document:
+回應包含四個 `similarity` 輸出。對於每個 `similarity` 輸出，`data` 陣列包含每份文件相對於查詢的相關性分數。`similarity` 輸出會依照輸入文件的順序提供；第一個相似度結果對應第一份文件：
 
 ```json
 {
@@ -426,13 +427,13 @@ The response contains four `similarity` outputs. For each `similarity` output, t
 }
 ```
 
-## Step 2: Create a reranking pipeline
+## 步驟 2：建立重新排序管線
 
-To create a reranking pipeline, use the following steps.
+若要建立重新排序管線，請依照下列步驟操作。
 
-### Step 2.1: Ingest test data
+### 步驟 2.1：匯入測試資料
 
-Use the following request to ingest data into your index:
+使用下列請求將資料匯入您的索引：
 
 ```json
 POST _bulk
@@ -447,9 +448,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-### Step 2.2: Create a reranking pipeline
+### 步驟 2.2：建立重新排序管線
 
-Create a reranking pipeline using the Amazon Bedrock reranking model:
+使用 Amazon Bedrock 重新排序模型建立重新排序管線：
 
 ```json
 PUT /_search/pipeline/rerank_pipeline_bedrock
@@ -471,12 +472,12 @@ PUT /_search/pipeline/rerank_pipeline_bedrock
 ```
 {% include copy-curl.html %}
 
-If you provide multiple field names in `document_fields`, the values of all fields are first concatenated, after which reranking is performed.
+如果您在 `document_fields` 中提供多個欄位名稱，所有欄位的值會先串連，然後再執行重新排序。
 {: .note}
 
-### Step 2.3: Test reranking
+### 步驟 2.3：測試重新排序
 
-First, test the query without using the reranking pipeline:
+首先，測試不使用重新排序管線的查詢：
 
 ```json
 POST my-test-data/_search
@@ -497,7 +498,7 @@ POST my-test-data/_search
 ```
 {% include copy-curl.html %}
 
-The first document in the response is `Carson City is the capital city of the American state of Nevada`, which is incorrect:
+回應中的第一份文件是 `Carson City is the capital city of the American state of Nevada`，這是不正確的：
 
 ```json
 {
@@ -585,7 +586,7 @@ The first document in the response is `Carson City is the capital city of the Am
 }
 ```
 
-Next, test the query using the reranking pipeline:
+接著，測試使用重新排序管線的查詢：
 
 ```json
 POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock
@@ -613,7 +614,7 @@ POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock
 ```
 {% include copy-curl.html %}
 
-The first document in the response is `"Washington, D.C. (also known as simply Washington or D.C., and officially as the District of Columbia) is the capital of the United States. It is a federal district."`, which is correct:
+回應中的第一份文件是 `"Washington, D.C. (also known as simply Washington or D.C., and officially as the District of Columbia) is the capital of the United States. It is a federal district."`，這是正確的：
 
 ```json
 {
@@ -704,7 +705,7 @@ The first document in the response is `"Washington, D.C. (also known as simply W
 }
 ```
 
-You can reuse the same query by specifying the `query_text_path` instead of `query_text`:
+您可以指定 `query_text_path` 而非 `query_text`，藉此重複使用相同的查詢：
 
 ```json
 POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock

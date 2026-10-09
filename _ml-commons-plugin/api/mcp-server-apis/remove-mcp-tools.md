@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Remove MCP tools 
+title: "移除 MCP 工具"
 parent: MCP server APIs
 grand_parent: ML Commons APIs
 nav_order: 40
 ---
 
-# Remove MCP Tools API
-**Introduced 3.0**
+# 移除 MCP 工具 API
+**於 3.0 版推出**
 {: .label .label-purple }
 
-Use this API to delete one or more Model Context Protocol (MCP)-based tools by name.
+使用此 API 依名稱刪除一或多個以 Model Context Protocol (MCP) 為基礎的工具。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/mcp/tools/_remove
 ```
 
-## Example request
+## 範例請求
 
 ```json
 POST /_plugins/_ml/mcp/tools/_remove
@@ -28,9 +29,9 @@ POST /_plugins/_ml/mcp/tools/_remove
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-OpenSearch responds with the node ID and the status of tool deletion for each node:
+OpenSearch 會回應節點 ID 以及每個節點的工具刪除狀態：
 
 ```json
 {

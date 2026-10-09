@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Geographic field types
+title: "地理欄位類型"
 nav_order: 60
 has_children: true
 has_toc: false
@@ -11,11 +12,11 @@ redirect_from:
   - /field-types/geographic/
 ---
 
-# Geographic field types
+# 地理欄位類型
 
-Geographic fields contain values that represent points or shapes on a map. The following table lists all geographic field types that OpenSearch supports.
+地理欄位包含代表地圖上的點或形狀的值。下表列出 OpenSearch 支援的所有地理欄位類型。
 
-Field data type | Description
+欄位資料類型 | 說明
 :--- | :---  
-[`geo_point`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point/) | A geographic point specified by latitude and longitude. 
-[`geo_shape`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-shape/) | A geographic shape, such as a polygon or a collection of geographic points. 
+[`geo_point`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point/) | 以緯度和經度指定的地理位置。
+[`geo_shape`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-shape/) | 地理形狀，例如多邊形或地理位置的集合。 

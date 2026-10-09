@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Query Planning tool
+title: "查詢規劃工具"
 has_children: false
 has_toc: false
 nav_order: 50
@@ -9,24 +10,24 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# Query Planning tool
-**Introduced 3.3**
+# 查詢規劃工具
+**於 3.3 版推出**
 {: .label .label-purple }
 <!-- vale on -->
 
-The `QueryPlanningTool` generates an OpenSearch query domain-specific language (DSL) query from a natural language question. It is a core component of [agentic search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/index/), which enables natural language query processing through agent-driven workflows.
+`QueryPlanningTool` 會從自然語言問題產生 OpenSearch 查詢領域特定語言 (DSL) 查詢。它是 [代理式搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/index/) 的核心元件，可透過代理程式驅動的工作流程進行自然語言查詢處理。
 
-The `QueryPlanningTool` supports two approaches for generating DSL queries from natural language questions:
+`QueryPlanningTool` 支援兩種從自然語言問題產生 DSL 查詢的方法：
 
-- **Using LLM knowledge only (default)**: The large language model (LLM) generates queries using only its training knowledge and any system/user prompts you provide. This approach relies entirely on the model's understanding of DSL syntax and your specific prompting instructions.
+- **僅使用 LLM 知識 (預設)**：大型語言模型 (LLM) 僅使用其訓練知識以及您提供的任何系統/使用者提示來產生查詢。此方法完全仰賴模型對 DSL 語法的理解以及您特定的提示指示。
 
-- **Using search templates**: The LLM uses predefined search templates as additional context when generating queries. You provide a collection of search templates with descriptions, and the LLM uses these as examples and guidance to create more accurate queries. If the LLM determines that none of the provided templates are suitable for the user's question, the LLM attempts to generate the query independently.
+- **使用搜尋範本**：LLM 在產生查詢時，會使用預先定義的搜尋範本作為額外的上下文。您提供一組附有說明的搜尋範本，LLM 會將這些範本當作範例和指引，以建立更精確的查詢。如果 LLM 判斷提供的範本都不適合使用者的問題，LLM 會嘗試自行產生查詢。
 
-Using search templates is particularly useful when you have established query patterns for your specific use case or domain: it helps the LLM to generate queries that follow your preferred structure and to use appropriate field names from your index mappings.
+當您已為特定使用案例或領域建立查詢模式時，使用搜尋範本特別有用：它有助於 LLM 產生遵循您偏好結構的查詢，並使用您索引對應中適當的欄位名稱。
 
-## Step 1: Create an index and ingest sample data
+## 步驟 1：建立索引並匯入範例資料
 
-First, create an index for the `iris` dataset:
+首先，為 `iris` 資料集建立索引：
 
 ```json
 PUT /iris-index
@@ -60,7 +61,7 @@ PUT /iris-index
 ```
 {% include copy-curl.html %}
 
-Next, ingest sample documents into the index:
+接著，將範例文件匯入索引：
 
 ```json
 POST _bulk
@@ -73,13 +74,13 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Step 2: Register and deploy a model
+## 步驟 2：註冊並部署模型
 
-The following request registers a remote model from Amazon Bedrock and deploys it to your cluster. The API call creates the connector and model in one step. Replace the `region`, `access_key`, `secret_key`, and `session_token` with your own values. You can use any model that supports the `converse` API, such as [Anthropic Claude 4](https://www.anthropic.com/news/claude-4) or [GPT 5](https://openai.com/index/introducing-gpt-5). You can use other model providers by creating a connector to this model (see [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)).
+下列請求會從 Amazon Bedrock 註冊遠端模型，並將其部署到您的叢集。此 API 呼叫會一步建立連接器和模型。請將 `region`、`access_key`、`secret_key` 和 `session_token` 替換為您自己的值。您可以使用任何支援 `converse` API 的模型，例如 [Anthropic Claude 4](https://www.anthropic.com/news/claude-4) 或 [GPT 5](https://openai.com/index/introducing-gpt-5)。您也可以建立此模型的連接器，以使用其他模型供應商 (請參閱 [連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/))。
 
-**Important**: When creating connectors for the `QueryPlanningTool`, the request body must include the `system_prompt` and `user_prompt` parameters. These parameters are required for the tool to properly inject the system and user prompts into the model's request. 
+**重要**：為 `QueryPlanningTool` 建立連接器時，請求本文必須包含 `system_prompt` 和 `user_prompt` 參數。此工具需要這些參數，才能將系統和使用者提示正確注入模型的請求中。
 
-The following example registers and deploys the Anthropic Claude 4 model:
+下列範例會註冊並部署 Anthropic Claude 4 模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -118,7 +119,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-The following example registers and deploys the OpenAI GPT 5 model:
+下列範例會註冊並部署 OpenAI GPT 5 模型：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -153,7 +154,7 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-OpenSearch responds with the model ID:
+OpenSearch 會回應模型 ID：
 
 ```json
 {
@@ -163,13 +164,13 @@ OpenSearch responds with the model ID:
 }
 ```
 
-## Step 3: Register an agent
+## 步驟 3：註冊代理程式
 
-You can use any [OpenSearch agent type]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/) to run the `QueryPlanningTool`. The following example uses a `flow` agent, which runs a sequence of tools in order and returns the last tool's output.
+您可以使用任何 [OpenSearch 代理程式類型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/) 來執行 `QueryPlanningTool`。下列範例使用 `flow` 代理程式，它會依序執行一連串工具，並傳回最後一個工具的輸出。
 
-### Using LLM knowledge only
+### 僅使用 LLM 知識
 
-To use prompts only, don't specify the `generation_type`, so it defaults to `llmGenerated`:
+若只要使用提示，請不要指定 `generation_type`，如此一來它會預設為 `llmGenerated`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -189,13 +190,13 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-When registering the agent, you can override parameters that you specified during model registration, such as `system_prompt` and `user_prompt`.
+註冊代理程式時，您可以覆寫在模型註冊期間指定的參數，例如 `system_prompt` 和 `user_prompt`。
 
-### Using search templates
+### 使用搜尋範本
 
-You can add [search templates]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/index/) as additional context to assist the LLM in OpenSearch DSL generation.
+您可以新增[搜尋範本]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/index/)作為額外的上下文，協助 LLM 產生 OpenSearch DSL。
 
-First, create the search templates:
+首先，建立搜尋範本：
 
 ```json
 POST /_scripts/flower_species_search_template
@@ -238,7 +239,7 @@ POST /_scripts/flower_petal_length_range_template
 ```
 {% include copy-curl.html %}
 
-Next, register an agent with `generation_type` set to `user_templates` and provide the `template_id` and `template_description` for each template in the `search_templates` parameter:
+接著，註冊代理程式，將 `generation_type` 設為 `user_templates`，並在 `search_templates` 參數中提供每個範本的 `template_id` 和 `template_description`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -270,11 +271,11 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-The LLM uses the `template_description` as the only context to help it choose the best template to use when generating an OpenSearch DSL query based on the user-provided `question`. Make sure to provide a good description of the templates to help the LLM make appropriate choices. Note that the LLM doesn't directly populate template variables or render the template; instead, it analyzes the template's query structure and uses it as a guide to generate a new, contextually appropriate OpenSearch DSL query.
+LLM 僅使用 `template_description` 作為上下文，協助它在根據使用者提供的 `question` 產生 OpenSearch DSL 查詢時，選擇最適合的範本。請務必提供清楚的範本說明，協助 LLM 做出適當的選擇。請注意，LLM 不會直接填入範本變數或呈現範本；它會分析範本的查詢結構，並以此為指引，產生符合上下文的新 OpenSearch DSL 查詢。
 
-For parameter descriptions, see [Register parameters](#register-parameters).
+如需參數說明，請參閱[註冊參數](#register-parameters)。
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -282,9 +283,9 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 4: Execute the agent
+## 步驟 4：執行代理程式
 
-Execute the agent by sending the following request:
+傳送下列請求以執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/RNjQi5gBOh0h20Y9-RX1/_execute
@@ -297,7 +298,7 @@ POST /_plugins/_ml/agents/RNjQi5gBOh0h20Y9-RX1/_execute
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns the inference results, which include the generated query DSL:
+OpenSearch 會傳回推論結果，其中包含產生的 Query DSL：
 
 ```json
 {
@@ -314,60 +315,60 @@ OpenSearch returns the inference results, which include the generated query DSL:
 }
 ```
 
-## Register parameters
+## 註冊參數
 
-The following table lists all tool parameters that are available when registering an agent.
+下表列出註冊代理程式時可用的所有工具參數。
 
-Parameter	| Type | Required/Optional | Description	
+參數	| 類型 | 必要/選用 | 說明	
 :--- | :--- | :--- | :---
-`model_id` | String | Required | The model ID of the LLM used to generate the query DSL. When used within a `conversational` agent, if this value is not provided, the agent's own `llm.model_id` is used by default.
-`response_filter` | String | Optional | A JSONPath expression used to extract the generated query from the LLM response.
-`generation_type` | String | Optional | Determines how queries are generated. Use `llmGenerated` to rely solely on the LLM built-in knowledge or `user_templates` to provide predefined search templates that guide query generation for consistent results. Default is `llmGenerated`.
-`query_planner_system_prompt` | String | Optional | A system prompt that provides high-level instructions to the LLM.
-`query_planner_user_prompt` | String | Optional | A user prompt template that defines how the natural language question and context are presented to the LLM for query generation.
-`search_templates` | Array | Optional | Applicable only when `generation_type` is `user_templates`. A list of search templates that provide the LLM with predefined query patterns for generating query DSL. Each template must include a `template_id` (unique identifier) and `template_description` (explains the template's purpose and use case to help the LLM choose appropriately).
-`fallback_query` | String | Optional | An OpenSearch query DSL query used if the LLM fails to generate a valid DSL query for the given query text. See [Fallback behavior](#fallback-behavior).
+`model_id` | 字串 | 必要 | 用於產生 Query DSL 的 LLM 模型 ID。在 `conversational` 代理程式中使用時，若未提供此值，預設會使用代理程式本身的 `llm.model_id`。
+`response_filter` | 字串 | 選用 | 用於從 LLM 回應中擷取所產生查詢的 JSONPath 運算式。
+`generation_type` | 字串 | 選用 | 決定如何產生查詢。使用 `llmGenerated` 可僅依賴 LLM 的內建知識，或使用 `user_templates` 提供預先定義的搜尋範本，引導查詢產生以取得一致的結果。預設為 `llmGenerated`。
+`query_planner_system_prompt` | 字串 | 選用 | 向 LLM 提供高層級指示的系統提示。
+`query_planner_user_prompt` | 字串 | 選用 | 定義如何將自然語言問題和上下文呈現給 LLM，以產生查詢的使用者提示範本。
+`search_templates` | 陣列 | 選用 | 僅在 `generation_type` 為 `user_templates` 時適用。搜尋範本清單，為 LLM 提供預先定義的查詢模式，以產生 Query DSL。每個範本都必須包含 `template_id`（唯一識別碼）和 `template_description`（說明範本的用途與使用案例，協助 LLM 做出適當的選擇）。
+`fallback_query` | 字串 | 選用 | 當 LLM 無法針對指定的查詢文字產生有效的 DSL 查詢時，所使用的 OpenSearch Query DSL 查詢。請參閱[備援行為](#fallback-behavior)。
 
-All parameters that were configured either in the connector or in the agent registration can be overridden during agent execution.
+在連接器或代理程式註冊中設定的所有參數，都可以在執行代理程式時覆寫。
 {: .note}
 
-## Response filter configuration
+## 回應篩選器組態
 
-The `response_filter` parameter uses JSONPath expressions to extract the generated query from the LLM response. Different model providers return responses in different formats, so you need to specify the appropriate filter for your model type.
+`response_filter` 參數使用 JSONPath 運算式，從 LLM 回應中擷取所產生的查詢。不同模型提供者傳回的回應格式不同，因此您需要為您的模型類型指定適當的篩選器。
 
-**OpenAI models**:
+**OpenAI 模型**：
 
 ```json
 "response_filter": "$.choices[0].message.content"
 ```
 {% include copy.html %}
 
-**Anthropic Claude models (Amazon Bedrock Converse API)**:
+**Anthropic Claude 模型（Amazon Bedrock Converse API）**：
 
 ```json
 "response_filter": "$.output.message.content[0].text"
 ```
 {% include copy.html %}
 
-## Execute parameters
+## 執行參數
 
-The `QueryPlanningTool` accepts the following execution parameters.
+`QueryPlanningTool` 接受下列執行參數。
 
-Parameter | Type | Required/Optional | Description
+參數 | 類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`question` | String | Required | A complete natural language query with all necessary context to generate OpenSearch DSL. Include the question, any specific requirements, filters, or constraints. Examples: `Find all products with price greater than 100 dollars`, `Show me documents about machine learning published in 2023`, `Search for users with status active and age between 25 and 35`.
-`index_name` | String | Required | The name of the index for which the query needs to be generated.
-`embedding_model_id` | String | Optional | The model ID used to perform semantic search.
+`question` | 字串 | 必要 | 完整的自然語言查詢，包含產生 OpenSearch DSL 所需的所有上下文。請包含問題、任何特定需求、篩選條件或限制。範例：`Find all products with price greater than 100 dollars`、`Show me documents about machine learning published in 2023`、`Search for users with status active and age between 25 and 35`。
+`index_name` | 字串 | 必要 | 需要為其產生查詢的索引名稱。
+`embedding_model_id` | 字串 | 選用 | 用於執行語意搜尋的模型 ID。
 
-## Customizing the prompts
+## 自訂提示
 
-You can provide your own `query_planner_system_prompt` and `query_planner_user_prompt` to customize how the LLM generates OpenSearch DSL queries.
+您可以提供自己的 `query_planner_system_prompt` 和 `query_planner_user_prompt`，自訂 LLM 產生 OpenSearch DSL 查詢的方式。
 
-When creating custom prompts, ensure that they include clear output formatting rules so that they work properly with agentic search. The system prompt should specify that the LLM must return only a valid JSON object without any additional text, code fences, or explanations.
+建立自訂提示時，請確保其中包含明確的輸出格式規則，讓提示能與代理式搜尋正常搭配運作。系統提示應指定 LLM 必須僅傳回有效的 JSON 物件，不得包含任何額外文字、程式碼圍欄或說明。
 {: .important}
 
-**Custom prompt configuration**:
-Provide your custom prompts during tool registration in agents as follows:
+**自訂提示組態**：
+在代理程式中註冊工具時，請依下列方式提供您的自訂提示：
 ```json
 POST /_plugins/_ml/agents/_register
 {
@@ -389,16 +390,16 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-Use the appropriate `response_filter` based on your model type. For more information and examples, see [Response filter configuration](#response-filter-configuration).
+請根據您的模型類型使用適當的 `response_filter`。如需更多資訊與範例，請參閱[回應篩選器組態](#response-filter-configuration)。
 {: .note}
 
-The following is the default system prompt:
+以下是預設的系統提示：
 
 <details open markdown="block">
-  <summary>
-    Prompt
-  </summary>
-  {: .text-delta}
+<summary>
+    提示
+</summary>
+{: .text-delta}
 
 ```json
 ==== PURPOSE ====
@@ -527,7 +528,7 @@ Note that this template might contain terms that are not relevant to the questio
 
 </details>
 
-The following is the default user prompt:
+以下是預設的使用者提示：
 
 ```json
 Question: ${parameters.question}
@@ -542,21 +543,21 @@ GIVE THE OUTPUT PART ONLY IN YOUR RESPONSE (a single JSON object)
 Output:
 ```
 
-## Fallback behavior
+## 備援行為
 
-The `QueryPlanningTool` uses a fallback query when the LLM fails to generate valid query DSL. By default, the fallback query is `{"size":10,"query":{"match_all":{}}}`. You can override this default by specifying a custom `fallback_query` parameter when registering the agent.
+當 LLM 無法產生有效的 Query DSL 時，`QueryPlanningTool` 會使用備援查詢。根據預設，備援查詢為 `{"size":10,"query":{"match_all":{}}}`。您可以在註冊代理程式時指定自訂的 `fallback_query` 參數，以覆寫此預設值。
 
-The tool automatically extracts the first valid JSON object from the LLM response, even if the JSON is surrounded by additional text, Markdown code fences, explanations, or other content. However, if no valid JSON can be extracted from the response (for example, when the response is completely empty, contains only non-JSON text, or contains only malformed JSON), the tool returns the fallback query (either the default or your custom query).
+此工具會自動從 LLM 回應中擷取第一個有效的 JSON 物件，即使該 JSON 周圍有其他文字、Markdown 程式碼區塊標記、說明或其他內容也是如此。但是，如果無法從回應中擷取任何有效的 JSON（例如，回應完全空白、只包含非 JSON 文字，或只包含格式錯誤的 JSON），此工具會傳回備援查詢（預設查詢或您的自訂查詢）。
 
-When the fallback is triggered, no error is thrown. Instead, a debug log is shown in the system logs. This ensures that query planning operations continue to work even when the LLM provides unexpected output.
+觸發備援時不會擲回錯誤，而是在系統記錄檔中顯示一筆偵錯記錄。這可確保即使 LLM 提供非預期的輸出，查詢規劃作業仍可繼續運作。
 
-### Overriding the default fallback query
+### 覆寫預設備援查詢
 
-The following example demonstrates how the fallback query operates. 
+以下範例示範備援查詢的運作方式。
 
-To follow this example, first complete Steps 1--3 from the [Agentic search tutorial]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/index/): create an index, ingest data, and register a model.
+若要按照此範例操作，請先完成[代理式搜尋教學]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/index/)中的步驟 1 至 3：建立索引、匯入資料並註冊模型。
 
-Next, register an agent using the model ID from Step 3. Include a custom `fallback_query` parameter to demonstrate the fallback behavior: 
+接著，使用步驟 3 中的模型 ID 註冊代理程式。加入自訂的 `fallback_query` 參數以示範備援行為：
 
 ```json
 POST _plugins/_ml/agents/_register
@@ -576,7 +577,7 @@ POST _plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-Next, create a search pipeline using the agent ID from the previous step:
+接著，使用上一個步驟中的代理程式 ID 建立搜尋管線：
 
 ```json
 PUT _search/pipeline/agentic_search_pipeline
@@ -599,7 +600,7 @@ PUT _search/pipeline/agentic_search_pipeline
 ```
 {% include copy-curl.html %}
 
-To test the fallback behavior, send a search request with a question unrelated to the `iris-index`:
+若要測試備援行為，請傳送搜尋請求，並提出與 `iris-index` 無關的問題：
 
 ```json
 POST /iris-index/_search?search_pipeline=agentic_search_pipeline&pretty
@@ -613,7 +614,7 @@ POST /iris-index/_search?search_pipeline=agentic_search_pipeline&pretty
 ```
 {% include copy-curl.html %}
 
-The response includes the `dsl_query` field in the `ext` section containing the fallback query:
+回應的 `ext` 區段中包含 `dsl_query` 欄位，其中含有備援查詢：
 
 ```json
 {
@@ -664,7 +665,7 @@ The response includes the `dsl_query` field in the `ext` section containing the 
 }
 ```
 
-Next, ask a question related to the `iris-index`:
+接著，提出與 `iris-index` 相關的問題：
 
 ```json
 POST /iris-index/_search?search_pipeline=agentic_search_pipeline
@@ -678,7 +679,7 @@ POST /iris-index/_search?search_pipeline=agentic_search_pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains the proper LLM-generated query instead of using the fallback query:
+回應中包含由 LLM 正確產生的查詢，而不是使用備援查詢：
 
 ```json
 {
@@ -717,10 +718,10 @@ The response contains the proper LLM-generated query instead of using the fallba
 }
 ```
 
-## Testing the tool
+## 測試工具
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+您可以在代理程式工作流程中執行此工具，也可以使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適合用來測試個別工具或執行獨立作業。
 
-## Related documentation
+## 相關文件
 
-- [Agentic search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/index)
+- [代理式搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/index)

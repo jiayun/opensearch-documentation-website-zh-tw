@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: API key APIs
+title: "API 金鑰 API"
 parent: Security APIs
 nav_order: 70
 has_children: true
@@ -11,20 +12,20 @@ redirect_from:
   - /security/api/api-keys/
 ---
 
-# API key APIs
-**Introduced 3.7**
+# API 金鑰 API
+**於 3.7 版推出**
 {: .label .label-purple }
 
-The API key APIs create, list, and revoke the API keys used to authenticate requests without a user name and password.
+API 金鑰 API 可建立、列出及撤銷用於在沒有使用者名稱和密碼的情況下驗證請求的 API 金鑰。
 
-OpenSearch supports the following API key APIs.
+OpenSearch 支援下列 API 金鑰 API。
 
-| API | Description |
+| API | 說明 |
 | :--- | :--- |
-| [Create API Key API]({{site.url}}{{site.baseurl}}/security/api/api-keys/create/) | Creates an API key with the specified permissions and expiration. |
-| [List API Keys API]({{site.url}}{{site.baseurl}}/security/api/api-keys/list/) | Returns all API keys, including active, expired, and revoked keys. |
-| [Revoke API Key API]({{site.url}}{{site.baseurl}}/security/api/api-keys/revoke/) | Revokes an API key, making it immediately unusable for authentication. |
+| [Create API Key API]({{site.url}}{{site.baseurl}}/security/api/api-keys/create/) | 建立具有指定權限和到期時間的 API 金鑰。 |
+| [List API Keys API]({{site.url}}{{site.baseurl}}/security/api/api-keys/list/) | 傳回所有 API 金鑰，包括作用中、已過期和已撤銷的金鑰。 |
+| [Revoke API Key API]({{site.url}}{{site.baseurl}}/security/api/api-keys/revoke/) | 撤銷 API 金鑰，使其立即無法用於驗證。 |
 
-## Required permissions
+## 必要權限
 
-To use the API key APIs, you must have the `cluster:admin/plugins/security/api_token` permission.
+若要使用 API 金鑰 API，您必須擁有 `cluster:admin/plugins/security/api_token` 權限。

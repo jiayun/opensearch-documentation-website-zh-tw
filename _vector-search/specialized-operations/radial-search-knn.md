@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Radial search
+title: "徑向搜尋"
 nav_order: 50
 parent: Specialized vector search
 has_children: false
@@ -9,33 +10,33 @@ redirect_from:
   - /search-plugins/knn/radial-search-knn/
 ---
 
-# Radial search
+# 徑向搜尋
 
-Radial search enhances the vector search capabilities beyond approximate top-k searches. With radial search, you can search all points within a vector space that reside within a specified maximum distance or minimum score threshold from a query point. This provides increased flexibility and utility in search operations.
+徑向搜尋強化了向量搜尋能力，超越近似 top-k 搜尋。透過徑向搜尋，您可以搜尋向量空間中所有與查詢點距離在指定最大距離內，或分數達到指定最低分數門檻的點。這為搜尋作業提供了更高的彈性與實用性。
 
-You can perform radial search using either the Lucene or Faiss engines. Both engines support radial search on nested fields.
+您可以使用 Lucene 或 Faiss 引擎執行徑向搜尋。兩種引擎都支援巢狀欄位的徑向搜尋。
 
-## Parameters
+## 參數
 
-Radial search supports the following parameters:
+徑向搜尋支援下列參數：
 
-- `max_distance`: Specifies a physical distance within the vector space, identifying all points that are within this distance from the query point. This approach is particularly useful for applications requiring spatial proximity or absolute distance measurements.
+- `max_distance`：指定向量空間中的實際距離，找出所有與查詢點距離在此範圍內的點。此方法特別適用於需要空間鄰近性或絕對距離測量的應用。
 
-`min_score`: Specifies a similarity score, facilitating the retrieval of points that meet or exceed this score in relation to the query point. This method is ideal in scenarios where relative similarity, based on a specific metric, is more critical than physical proximity.
+`min_score`：指定相似度分數，便於擷取與查詢點相比達到或超過此分數的點。當相對於特定指標的相似性比實際鄰近性更為關鍵時，此方法最為理想。
 
-Only one query variable, either `k`, `max_distance`, or `min_score`, is required to be specified during radial search. 
+在徑向搜尋期間，只需要指定一個查詢變數，即 `k`、`max_distance` 或 `min_score`。
 
-## Spaces
+## 空間
 
-For supported spaces, see [Spaces]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/).
+如需支援的空間，請參閱[空間]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/)。
 
-## Examples
+## 範例
 
-The following examples can help you to get started with radial search.
+下列範例可協助您開始使用徑向搜尋。
 
-### Prerequisites
+### 先決條件
 
-To use a vector index with radial search, create a vector index by setting `index.knn` to `true`. Specify one or more fields of the `knn_vector` data type, as shown in the following example:
+若要將向量索引與徑向搜尋搭配使用，請將 `index.knn` 設定為 `true` 來建立向量索引。指定一或多個 `knn_vector` 資料類型的欄位，如下列範例所示：
 
 ```json
 PUT knn-index-test
@@ -67,7 +68,7 @@ PUT knn-index-test
 ```
 {% include copy-curl.html %}
 
-After you create the index, add some data similar to the following:
+建立索引之後，新增一些類似下列內容的資料：
 
 ```json
 PUT _bulk?refresh=true
@@ -85,9 +86,9 @@ PUT _bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-### Example: Radial search with `max_distance`
+### 範例：使用 `max_distance` 的徑向搜尋
 
-The following example shows a radial search performed with `max_distance`:
+下列範例顯示使用 `max_distance` 執行的徑向搜尋：
 
 ```json
 GET knn-index-test/_search
@@ -107,11 +108,11 @@ GET knn-index-test/_search
 ```
 {% include copy-curl.html %}
 
-All documents that fall within the squared Euclidean distance (`l2^2`) of 2 are returned, as shown in the following response:
+所有落在歐幾里得距離平方（`l2^2`）為 2 以內的文件都會被傳回，如下列回應所示：
 
 <details markdown="block">
   <summary>
-    Results
+    結果
   </summary>
   {: .text-delta}
 
@@ -186,9 +187,9 @@ All documents that fall within the squared Euclidean distance (`l2^2`) of 2 are 
 ```
 </details>
 
-### Example: Radial search with `max_distance` and a filter
+### 範例：使用 `max_distance` 與篩選條件的徑向搜尋
 
-The following example shows a radial search performed with `max_distance` and a response filter:
+下列範例顯示使用 `max_distance` 與回應篩選條件執行的徑向搜尋：
 
 ```json
 GET knn-index-test/_search
@@ -213,11 +214,11 @@ GET knn-index-test/_search
 ```
 {% include copy-curl.html %}
 
-All documents that fall within the squared Euclidean distance (`l2^2`) of 2 and have a price within the range of 1 to 5 are returned, as shown in the following response:
+所有落在歐幾里得距離平方（`l2^2`）為 2 以內，且價格介於 1 到 5 範圍內的文件都會被傳回，如下列回應所示：
 
 <details markdown="block">
   <summary>
-    Results
+    結果
   </summary>
   {: .text-delta}
 
@@ -268,9 +269,9 @@ All documents that fall within the squared Euclidean distance (`l2^2`) of 2 and 
 ```
 </details>
 
-### Example: Radial search with `min_score`
+### 範例：使用 `min_score` 的徑向搜尋
 
-The following example shows a radial search performed with `min_score`:
+下列範例顯示使用 `min_score` 執行的徑向搜尋：
 
 ```json
 GET knn-index-test/_search
@@ -287,11 +288,11 @@ GET knn-index-test/_search
 ```
 {% include copy-curl.html %}
 
-All documents with a score of 0.9 or higher are returned, as shown in the following response:
+所有分數為 0.9 或更高的文件都會被傳回，如下列回應所示：
 
 <details markdown="block">
   <summary>
-    Results
+    結果
   </summary>
   {: .text-delta}
 
@@ -342,9 +343,9 @@ All documents with a score of 0.9 or higher are returned, as shown in the follow
 ```
 </details>
 
-### Example: Radial search with `min_score` and a filter
+### 範例：使用 `min_score` 和篩選器進行徑向搜尋
 
-The following example shows a radial search performed with `min_score` and a response filter:
+下列範例示範使用 `min_score` 和回應篩選器執行徑向搜尋：
 
 ```json
 GET knn-index-test/_search
@@ -372,11 +373,11 @@ GET knn-index-test/_search
 ```
 {% include copy-curl.html %}
 
-All documents that have a score of 0.9 or higher and a price within the range of 1 to 5 are returned, as shown in the following example:
+系統會傳回分數大於或等於 0.9，且價格介於 1 到 5 之間的所有文件，如下列範例所示：
 
 <details markdown="block">
   <summary>
-    Results
+    結果
   </summary>
   {: .text-delta}
 
@@ -415,9 +416,9 @@ All documents that have a score of 0.9 or higher and a price within the range of
 ```
 </details>
 
-### Example: Radial search on nested fields
+### 範例：對巢狀欄位進行徑向搜尋
 
-The following example shows how to perform radial search on nested vector fields. First, create an index containing nested `knn_vector` fields:
+下列範例示範如何對巢狀向量欄位執行徑向搜尋。首先，建立包含巢狀 `knn_vector` 欄位的索引：
 
 ```json
 PUT nested-knn-index
@@ -453,7 +454,7 @@ PUT nested-knn-index
 ```
 {% include copy-curl.html %}
 
-Add sample data to the index:
+將範例資料新增至索引：
 
 ```json
 PUT _bulk?refresh=true
@@ -466,7 +467,7 @@ PUT _bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-Perform a radial search on the `my_embeddings.embedding` nested field to find all embeddings similar to the query vector that have a similarity score of at least 0.7:
+對 `my_embeddings.embedding` 巢狀欄位執行徑向搜尋，找出與查詢向量相似且相似度分數至少為 0.7 的所有嵌入：
 
 ```json
 GET nested-knn-index/_search
@@ -489,11 +490,11 @@ GET nested-knn-index/_search
 ```
 {% include copy-curl.html %}
 
-This query works with both the Lucene and Faiss engines and returns documents in which the nested vector embeddings meet the minimum similarity score threshold, as shown in the following response:
+此查詢可搭配 Lucene 和 Faiss 引擎使用，並傳回巢狀向量嵌入達到最低相似度分數門檻的文件，如下列回應所示：
 
 <details markdown="block">
   <summary>
-    Results
+    結果
   </summary>
   {: .text-delta}
 

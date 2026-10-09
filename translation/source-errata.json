@@ -1,0 +1,36 @@
+{
+ "schema_version": 1,
+ "description": "Markdown syntax repairs for malformed upstream baseline sources. Each entry is keyed by the SHA-256 of the entire original baseline file in translation/source/ and applies only to that exact text. Every 'before' string must occur exactly once. The files in translation/source/ are never modified; the repairs are applied in memory to the baseline used for translation, checks and English heading IDs.",
+ "errata": {
+  "ef8b3403bf208f0949b90b96e8500fcfaf6ea9566b508cc55e3a588d7d198766": {
+   "page": "_security/authentication-backends/ldap.md",
+   "reason": "The ```yml example under 'LDAP referrals' has no closing fence, so the following prose and the 'Timeouts' heading render as code until the next bare fence. Add the missing closing fence after the YAML example.",
+   "replacements": [
+    {
+     "before": "  follow_referrals: false\n\nAdd this setting",
+     "after": "  follow_referrals: false\n```\n\nAdd this setting"
+    }
+   ]
+  },
+  "f8f5fed4af7e87938ad4c9c1ed011ad95c62a99d5623e37176a0bf23d978a438": {
+   "page": "_data-prepper/pipelines/configuration/processors/key-value.md",
+   "reason": "The `[...]` delimiter in the value_grouping description ends with a straight quote instead of a backtick, so the inline code spans pair up wrongly and swallow prose. Replace the quote with the closing backtick.",
+   "replacements": [
+    {
+     "before": "`[...]', `<...>`",
+     "after": "`[...]`, `<...>`"
+    }
+   ]
+  },
+  "4e909a9665319205f67da660c53f54c9a0c234e032fe37e63b696df4f6c16399": {
+   "page": "_sql-and-ppl/ppl/commands/replace.md",
+   "reason": "Example 3 contains leftover query lines followed by a closing fence without an opening fence. That fence opens a code block that swallows 'The query returns the following results:' up to the end of the results block. Add the missing opening ```sql fence; the leftover query lines are kept unchanged.",
+   "replacements": [
+    {
+     "before": "{% include try-in-playground.html %}\n| where age > 30\n",
+     "after": "{% include try-in-playground.html %}\n```sql\n| where age > 30\n"
+    }
+   ]
+  }
+ }
+}

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search Anomaly Detectors tool
+title: "Search Anomaly Detectors 工具"
 has_children: false
 has_toc: false
 nav_order: 70
@@ -9,16 +10,16 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# Search Anomaly Detectors tool
-**Introduced 2.13**
+# Search Anomaly Detectors 工具
+**於 2.13 版推出**
 {: .label .label-purple }
 <!-- vale on -->
 
-The `SearchAnomalyDetectorsTool` retrieves information about anomaly detectors set up on your cluster. For more information about anomaly detectors, see [Anomaly detection]({{site.url}}{{site.baseurl}}/observing-your-data/ad/index/).
+`SearchAnomalyDetectorsTool` 會擷取您叢集上所設定之異常偵測器的相關資訊。如需異常偵測器的詳細資訊，請參閱[異常偵測]({{site.url}}{{site.baseurl}}/observing-your-data/ad/index/)。
 
-## Step 1: Register a flow agent that will run the SearchAnomalyDetectorsTool
+## 步驟 1：註冊將執行 SearchAnomalyDetectorsTool 的流程代理程式
 
-A flow agent runs a sequence of tools in order and returns the last tool's output. To create a flow agent, send the following register agent request:
+流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -40,9 +41,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-For parameter descriptions, see [Register parameters](#register-parameters).
+如需參數說明，請參閱[註冊參數](#register-parameters)。
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -50,9 +51,9 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 2: Run the agent
+## 步驟 2：執行代理程式
 
-Run the agent by sending the following request:
+傳送下列請求以執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/EuJYYo0B9RaBCvhuy1q8/_execute
@@ -64,7 +65,7 @@ POST /_plugins/_ml/agents/EuJYYo0B9RaBCvhuy1q8/_execute
 ```
 {% include copy-curl.html %} 
 
-OpenSearch responds with a list of anomaly detectors set up on your cluster and the total number of anomaly detectors:
+OpenSearch 會回應您叢集上所設定之異常偵測器的清單，以及異常偵測器的總數：
 
 ```json
 {
@@ -81,33 +82,33 @@ OpenSearch responds with a list of anomaly detectors set up on your cluster and 
 }
 ```
 
-## Register parameters
+## 註冊參數
 
-The following table lists all tool parameters that are available when registering an agent. All parameters are optional.
+下表列出註冊代理程式時可用的所有工具參數。所有參數皆為選用。
 
-Parameter	| Type | Description	
+參數	| 類型 | 說明	
 :--- | :--- | :---
-`detectorName`	| String	| The name of the detector to search for.
-`detectorNamePattern`	| String | A wildcard query used to match the detector name to search for.
-`indices` | String	| The index name or index pattern of the indexes that the returned detectors are using as data sources.
-`highCardinality` | Boolean	| Whether to return information about high-cardinality detectors. Leave this parameter unset (or set it to `null`) to return information about both high-cardinality (multi-entity) and non-high-cardinality (single-entity) detectors. Set this parameter to `true` to only return information about high-cardinality detectors. Set this parameter to `false` to only return information about non-high-cardinality detectors.
-`lastUpdateTime` | Long |	Specifies the earliest last updated time of the detectors to return, in epoch milliseconds. Default is `null`.
-`sortOrder`	|String | The sort order for the results. Valid values are `asc` (ascending) and `desc` (descending). Default is `desc`. 
-`sortString`| String |	Specifies the detector field by which to sort the results. Default is `name.keyword`.
-`size`	| Integer |	The number of results to return. Default is `20`.
-`startIndex`| Integer |	The paginated index of the detector to start from. Default is `0`.
-`running`| Boolean | Whether to return information about detectors that are currently running. Leave this parameter unset (or set it to `null`) to return both running and non-running detector information. Set this parameter to `true` to only return information about running detectors. Set this parameter to `false` to return only information about detectors that are not currently running. Default is `null`.
-`disabled` |	Boolean	| Whether to return information about detectors that are currently disabled. Leave this parameter unset (or set it to `null`) to return information about both enabled and disabled detectors. Set this parameter to `true` to return only information about disabled detectors. Set this parameter to `false` to return only information about enabled detectors. Default is `null`.
-`failed` |	Boolean	| Whether to return information about detectors that are currently failing. Leave this parameter unset (or set it to `null`) to return information about both failed and non-failed detectors. Set this parameter to `true` to return only information about failed detectors. Set this parameter to `false` to return only information about non-failed detectors. Default is `null`.
+`detectorName`	| 字串	| 要搜尋的偵測器名稱。
+`detectorNamePattern`	| 字串 | 用來比對要搜尋之偵測器名稱的萬用字元查詢。
+`indices` | 字串	| 所傳回偵測器用作資料來源之索引的索引名稱或索引模式。
+`highCardinality` | 布林值	| 是否傳回高基數偵測器的相關資訊。將此參數保持未設定（或設為 `null`），即可同時傳回高基數（多實體）與非高基數（單一實體）偵測器的相關資訊。將此參數設為 `true`，即可只傳回高基數偵測器的相關資訊。將此參數設為 `false`，即可只傳回非高基數偵測器的相關資訊。
+`lastUpdateTime` | 長整數 |	指定要傳回之偵測器最早的最後更新時間，以 epoch 毫秒為單位。預設值為 `null`。
+`sortOrder`	| 字串 | 結果的排序順序。有效值為 `asc`（遞增）與 `desc`（遞減）。預設值為 `desc`。 
+`sortString`| 字串 |	指定要用來排序結果的偵測器欄位。預設值為 `name.keyword`。
+`size`	| 整數 |	要傳回的結果數。預設值為 `20`。
+`startIndex`| 整數 |	要開始之偵測器的分頁索引。預設值為 `0`。
+`running`| 布林值 | 是否傳回目前正在執行之偵測器的相關資訊。將此參數保持未設定（或設為 `null`），即可同時傳回正在執行與未在執行之偵測器的相關資訊。將此參數設為 `true`，即可只傳回正在執行之偵測器的相關資訊。將此參數設為 `false`，即可只傳回目前未在執行之偵測器的相關資訊。預設值為 `null`。
+`disabled` |	布林值	| 是否傳回目前已停用之偵測器的相關資訊。將此參數保持未設定（或設為 `null`），即可同時傳回已啟用與已停用偵測器的相關資訊。將此參數設為 `true`，即可只傳回已停用偵測器的相關資訊。將此參數設為 `false`，即可只傳回已啟用偵測器的相關資訊。預設值為 `null`。
+`failed` |	布林值	| 是否傳回目前失敗之偵測器的相關資訊。將此參數保持未設定（或設為 `null`），即可同時傳回失敗與未失敗偵測器的相關資訊。將此參數設為 `true`，即可只傳回失敗偵測器的相關資訊。將此參數設為 `false`，即可只傳回未失敗偵測器的相關資訊。預設值為 `null`。
 
-## Execute parameters
+## 執行參數
 
-The following table lists all tool parameters that are available when running the agent.
+下表列出執行代理程式時可用的所有工具參數。
 
-Parameter	| Type | Required/Optional | Description	
+參數	| 類型 | 必要/選用 | 說明	
 :--- | :--- | :--- | :---
-`question` | String | Required | The natural language question to send to the LLM. 
+`question` | 字串 | 必要 | 要傳送給 LLM 的自然語言問題。 
 
-## Testing the tool
+## 測試工具
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+您可以將此工具做為代理程式工作流程的一部分來執行，或使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適合用來測試個別工具或執行獨立作業。

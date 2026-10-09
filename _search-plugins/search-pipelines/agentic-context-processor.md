@@ -1,48 +1,49 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Agentic context
+title: "代理式上下文"
 nav_order: 2
 has_children: false
 parent: Search processors
 grand_parent: Search pipelines
 ---
 
-# Agentic context processor
-**Introduced 3.3**
+# 代理式上下文處理器
+**於 3.3 版推出**
 {: .label .label-purple }
 
-The `agentic_context` search response processor adds agent execution context information to search response extensions. This processor works in conjunction with the [agentic query translator]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/) to expose the agent's query translation process and maintain conversation continuity:
+`agentic_context` 搜尋回應處理器會將代理程式執行上下文資訊新增至搜尋回應擴充項目。此處理器與[代理式查詢轉譯器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/)搭配運作，以呈現代理程式的查詢轉譯過程並維持對話連續性：
 
-1. The processor retrieves agent context information from the pipeline processing context.
-2. Based on the processor configuration, it selectively includes the agent steps summary and the query domain-specific language (DSL) query in the response.
-3. The memory ID is always included, when available, for conversation continuity.
-4. The context information is added to the search response extensions.
-5. Type validation ensures that all context attributes are strings.
+1. 處理器會從管線處理上下文擷取代理程式上下文資訊。
+2. 根據處理器組態，選擇性地在回應中包含代理程式步驟摘要與查詢領域專用語言（DSL）查詢。
+3. 若有記憶 ID，則一律包含，以維持對話連續性。
+4. 上下文資訊會新增至搜尋回應擴充項目。
+5. 類型驗證可確保所有上下文屬性都是字串。
 
-This processor works with both conversational and flow agents, but the available context information differs by agent type. Flow agents provide `dsl_query` (the generated DSL) only, while conversational agents provide `dsl_query`, `memory_id`, and `agent_steps_summary`. For more information, see [Agent types]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/index/#agent-types).
+此處理器可搭配對話式代理程式與流程代理程式運作，但可用的上下文資訊會因代理程式類型而異。流程代理程式僅提供 `dsl_query`（產生的 DSL），而對話式代理程式則提供 `dsl_query`、`memory_id` 和 `agent_steps_summary`。如需詳細資訊，請參閱[代理程式類型]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/index/#agent-types)。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists all available request fields.
+下表列出所有可用的請求欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`agent_steps_summary` | Boolean | Whether to include the agent's execution step summary in the response. Available for conversational agents only. Optional. Default is `false`. 
-`dsl_query` | Boolean | Whether to include the generated DSL query in the response. Available for both conversational and flow agents. Optional. Default is `false`. 
+`agent_steps_summary` | 布林值 | 是否在回應中包含代理程式的執行步驟摘要。僅適用於對話式代理程式。選用。預設為 `false`。 
+`dsl_query` | 布林值 | 是否在回應中包含產生的 DSL 查詢。適用於對話式代理程式與流程代理程式。選用。預設為 `false`。 
 
-## Response fields
+## 回應欄位
 
-When enabled, the processor adds the following fields to the search response extensions.
+啟用時，處理器會將下列欄位新增至搜尋回應擴充項目。
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`agent_steps_summary` | A summary of the steps that the agent took to translate the natural language query (included when `agent_steps_summary` is `true`). Available for conversational agents only.
-`memory_id` | The conversation memory ID for maintaining context across queries. Available for conversational agents only. Only provide this in the `agentic` query if you want to continue the previous conversation.
-`dsl_query` | The generated DSL query that was executed (included when `dsl_query` is `true`). Available for both conversational and flow agents.
+`agent_steps_summary` | 代理程式轉譯自然語言查詢時所採取的步驟摘要（當 `agent_steps_summary` 為 `true` 時包含）。僅適用於對話式代理程式。
+`memory_id` | 用於在不同查詢之間維持上下文的對話記憶 ID。僅適用於對話式代理程式。只有在您想要繼續先前的對話時，才在 `agentic` 查詢中提供此值。
+`dsl_query` | 已執行的產生之 DSL 查詢（當 `dsl_query` 為 `true` 時包含）。適用於對話式代理程式與流程代理程式。
 
-## Example
+## 範例
 
-The following example request creates a search pipeline with an `agentic_context` response processor:
+下列範例請求會建立具有 `agentic_context` 回應處理器的搜尋管線：
 
 ```json
 PUT /_search/pipeline/agentic_pipeline
@@ -66,7 +67,7 @@ PUT /_search/pipeline/agentic_pipeline
 ```
 {% include copy-curl.html %}
 
-Perform a search using the configured pipeline:
+使用設定好的管線執行搜尋：
 
 ```json
 POST /your-index/_search?search_pipeline=agentic_search_pipeline
@@ -81,7 +82,7 @@ POST /your-index/_search?search_pipeline=agentic_search_pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains the steps taken by the agent to translate the query, the memory ID, and the rewritten DSL query:
+回應包含代理程式轉譯查詢時所採取的步驟、記憶 ID，以及改寫後的 DSL 查詢：
 
 ```json
 {
@@ -98,8 +99,8 @@ The response contains the steps taken by the agent to translate the query, the m
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [Agentic search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/index/)
-- [Agentic query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/agentic/)
-- [Agentic query translator processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/)
+- [代理式搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/index/)
+- [代理式查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/agentic/)
+- [代理式查詢轉譯器處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/)

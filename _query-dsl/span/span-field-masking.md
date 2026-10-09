@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Span field masking
+title: "Span 欄位遮罩"
 parent: Span queries
 grand_parent: Query DSL
 nav_order: 20
 ---
 
-# Span field masking query
+# Span 欄位遮罩查詢
 
-The `field_masking_span` query allows span queries to match across different fields by "masking" the true field of a query. This is particularly useful when working with multi-fields (the same content indexed with different analyzers) or when you need to run span queries like `span_near` or `span_or` across different fields (which is normally not allowed).
+`field_masking_span` 查詢允許 span 查詢透過「遮罩」查詢的真實欄位，在不同欄位之間進行比對。當您處理多重欄位（相同內容以不同分析器編製索引）時，或當您需要在不同欄位之間執行 `span_near` 或 `span_or` 這類 span 查詢（這通常是不允許的）時，這特別有用。
 
-For example, you can use the `field_masking_span` query to:
-- Match terms across a raw field and its stemmed version.
-- Combine span queries on different fields in a single span operation.
-- Work with the same content indexed using different analyzers.
+舉例來說，您可以使用 `field_masking_span` 查詢來：
+- 在原始欄位及其詞幹化版本之間比對詞彙。
+- 在單一 span 操作中合併不同欄位上的 span 查詢。
+- 處理以不同分析器編製索引的相同內容。
 
-When using field masking, the relevance score is calculated using the characteristics (norms) of the masked field rather than the actual field being searched. This means that if the masked field has different properties (like length or boost values) than the field being searched, you might receive unexpected scoring results.
+使用欄位遮罩時，相關性分數是使用被遮罩欄位的特性（norms）計算，而非實際搜尋的欄位。這表示如果被遮罩欄位的屬性（例如長度或 boost 值）與實際搜尋的欄位不同，您可能會得到非預期的評分結果。
 {: .note}
 
-## Example
+## 範例
 
-To try the examples in this section, complete the [setup steps]({{site.url}}{{site.baseurl}}/query-dsl/span/#setup).
+若要試用本節的範例，請完成[設定步驟]({{site.url}}{{site.baseurl}}/query-dsl/span/#setup)。
 {: .tip}
 
-The following query searches for the word "long" near variations of the word "sleeve" in the stemmed field:
+下列查詢會搜尋原始欄位中的「long」，以及詞幹化欄位中鄰近的「sleeve」變化形式：
 
 ```json
 GET /clothing/_search
@@ -56,15 +57,15 @@ GET /clothing/_search
 ```
 {% include copy-curl.html %}
 
-The query matches documents 1 and 4:
-- The term "long" appears in the `description` field in both documents.
-- Document 1 contains the word "sleeved", and document 4 contains the word "sleeves".
-- The `field_masking_span` makes the stemmed field match appear as if it were in the raw field.
-- The terms appear within 1 position of each other in the specified order ("long" must appear before "sleeve").
+此查詢會比對文件 1 和 4：
+- 「long」這個詞彙同時出現在兩份文件的 `description` 欄位中。
+- 文件 1 包含「sleeved」這個字，文件 4 包含「sleeves」這個字。
+- `field_masking_span` 讓詞幹化欄位的比對結果看起來像是在原始欄位中。
+- 這些詞彙出現在彼此相距 1 個位置內，且順序符合指定（「long」必須出現在「sleeve」之前）。
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -106,11 +107,11 @@ The query matches documents 1 and 4:
 }
 ```
 
-## Parameters
+## 參數
 
-The following table lists all top-level parameters supported by `field_masking_span` queries. All parameters are required.
+下表列出 `field_masking_span` 查詢支援的所有最上層參數。所有參數皆為必要。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 |:----------|:-----|:------------|
-| `query` | Object | The span query to execute on the actual field. |
-| `field` | String | The field name used to mask the query. Other span queries will treat this query as if it were executing on this field. |
+| `query` | 物件 | 要在實際欄位上執行的 span 查詢。 |
+| `field` | 字串 | 用來遮罩查詢的欄位名稱。其他 span 查詢會將此查詢視為在此欄位上執行。 |

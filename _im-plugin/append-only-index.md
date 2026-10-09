@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Append-only index
+title: "僅附加索引"
 nav_order: 30
 ---
 
-# Append-only index
+# 僅附加索引
 
-An append-only index is an immutable index that only allows document ingestion (appending) while blocking all updates or deletions after initial document creation. When you enable the append-only setting for an index, OpenSearch prevents any modifications to existing documents. You can only add new documents to the index.
+僅附加索引 (append-only index) 是一種不可變的索引，僅允許文件匯入 (附加)，並在文件初次建立後封鎖所有更新或刪除作業。當您為索引啟用僅附加設定時，OpenSearch 會防止對現有文件進行任何修改。您只能在索引中新增文件。
 
-When you configure an index as append-only, the following operations return an error:
+當您將索引設定為僅附加時，下列作業會回傳錯誤：
 
-- Document update call (Update API)
-- Document delete call (Delete API)
-- Update by query call
-- Delete by query call
-- Bulk API calls made with the update, delete, or upsert actions
-- Bulk API calls containing an index action with a custom document ID
+- 文件更新呼叫 (Update API)
+- 文件刪除呼叫 (Delete API)
+- Update by query 呼叫
+- Delete by query 呼叫
+- 使用 update、delete 或 upsert 動作的 Bulk API 呼叫
+- 包含帶有自訂文件 ID 之 index 動作的 Bulk API 呼叫
 
-Because an append-only index performs no updates or deletions, it skips soft deletes and version tracking, which reduces storage use and the work done during segment merges. Use an append-only index for data that is not modified after it is ingested, such as logs, metrics, observability data, or security events.
+由於僅附加索引不執行任何更新或刪除作業，因此會略過軟刪除與版本追蹤，從而減少儲存空間用量以及分段合併期間的工作量。請將僅附加索引用於匯入後不會修改的資料，例如記錄檔、指標、可觀測性資料或安全性事件。
 
-## Creating an append-only index
+## 建立僅附加索引
 
-The following request creates a new index named `my-append-only-index` with all updates disabled:
+下列請求會建立一個名為 `my-append-only-index` 的新索引，並停用所有更新：
 
 ```json
 PUT /my-append-only-index
@@ -33,13 +34,13 @@ PUT /my-append-only-index
 ```
 {% include copy-curl.html %}
 
-After an index is set to append-only, it cannot be changed to another index type.
+索引一旦設定為僅附加，就無法變更為其他索引類型。
 {: .warning}
 
 
-To append data from an existing index to a new append-only index, use the Reindex API. Because append-only indexes don't support custom document IDs, you need to set the `ctx._id` of the source index to `null`. This allows documents to be added through reindexing.
+若要將現有索引的資料附加到新的僅附加索引，請使用 Reindex API。由於僅附加索引不支援自訂文件 ID，您需要將來源索引的 `ctx._id` 設定為 `null`。這樣文件就能透過重新索引加入。
 
-The following example reindexes documents from a source index (`my-source-index`) into the new append-only index. Create the source index first:
+下列範例將文件從來源索引 (`my-source-index`) 重新索引到新的僅附加索引。請先建立來源索引：
 
 ```json
 POST /my-source-index/_doc?refresh=true
@@ -49,7 +50,7 @@ POST /my-source-index/_doc?refresh=true
 ```
 {% include copy-curl.html %}
 
-Then reindex its documents into the append-only index:
+然後將其文件重新索引到僅附加索引：
 
 ```json
 POST /_reindex
@@ -69,15 +70,15 @@ POST /_reindex
 ```
 {% include copy-curl.html %}
 
-## Adaptive shard selection for bulk indexing
-**Introduced 3.5**
+## 批次編製索引的適應性分片選擇
+**3.5 版新增**
 {: .label .label-purple }
 
-For append-only indexes, OpenSearch automatically generates a random `_id` for write routing when you don't explicitly specify one. In bulk writing, a single bulk entry may be split into dozens of sub-bulks and dispatched to different shards, which leads to significant long-tail latency and markedly degrades write performance.
+對於僅附加索引，當您未明確指定時，OpenSearch 會自動產生隨機的 `_id` 進行寫入路由。在批次寫入時，單一批次項目可能會被拆分成數十個子批次並分派到不同的分片，這會導致顯著的長尾延遲，並大幅降低寫入效能。
 
-Adaptive shard selection guarantees that all sub-bulks of a single bulk entry are routed to the same shard, thereby achieving a substantial boost in bulk write performance.
+適應性分片選擇可確保單一批次項目的所有子批次都路由到同一個分片，從而大幅提升批次寫入效能。
 
-The `index.bulk.adaptive_shard_selection.enabled` setting is dynamic, so you can enable it on an existing append-only index:
+`index.bulk.adaptive_shard_selection.enabled` 設定是動態的，因此您可以在現有的僅附加索引上啟用它：
 
 ```json
 PUT /my-append-only-index/_settings
@@ -87,7 +88,7 @@ PUT /my-append-only-index/_settings
 ```
 {% include copy-curl.html %}
 
-You can also set it when you create the index:
+您也可以在建立索引時設定它：
 
 ```json
 PUT /my-new-append-only-index
@@ -100,4 +101,4 @@ PUT /my-new-append-only-index
 ```
 {% include copy-curl.html %}
 
-For more information, see [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/).
+如需更多資訊，請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)。

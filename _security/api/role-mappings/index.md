@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Role mapping APIs
+title: "角色對應 API"
 parent: Security APIs
 nav_order: 50
 has_children: true
@@ -9,15 +10,15 @@ redirect_from:
   - /security/api/role-mappings/
 ---
 
-# Role mapping APIs
+# 角色對應 API
 
-The role mapping APIs map users, backend roles, and hosts to security roles.
+角色對應 API 會將使用者、後端角色及主機對應至安全性角色。
 
-OpenSearch supports the following role mapping APIs.
+OpenSearch 支援下列角色對應 API。
 
-| API | Description |
+| API | 說明 |
 | :--- | :--- |
-| [Create or Update Role Mapping API]({{site.url}}{{site.baseurl}}/security/api/role-mappings/create-role-mapping/) | Creates or replaces the specified role mapping. |
-| [Patch Role Mappings API]({{site.url}}{{site.baseurl}}/security/api/role-mappings/patch-role-mappings/) | Updates individual attributes of one role mapping, or creates, updates, or deletes multiple role mappings in a single call. |
-| [Get Role Mappings API]({{site.url}}{{site.baseurl}}/security/api/role-mappings/get-role-mappings/) | Retrieves the mapping for one role or all role mappings. |
-| [Delete Role Mapping API]({{site.url}}{{site.baseurl}}/security/api/role-mappings/delete-role-mapping/) | Deletes the specified role mapping. |
+| [Create or Update Role Mapping API]({{site.url}}{{site.baseurl}}/security/api/role-mappings/create-role-mapping/) | 建立或取代指定的角色對應。 |
+| [Patch Role Mappings API]({{site.url}}{{site.baseurl}}/security/api/role-mappings/patch-role-mappings/) | 更新單一角色對應的個別屬性，或在單次呼叫中建立、更新或刪除多個角色對應。 |
+| [Get Role Mappings API]({{site.url}}{{site.baseurl}}/security/api/role-mappings/get-role-mappings/) | 擷取單一角色或所有角色對應的對應關係。 |
+| [Delete Role Mapping API]({{site.url}}{{site.baseurl}}/security/api/role-mappings/delete-role-mapping/) | 刪除指定的角色對應。 |

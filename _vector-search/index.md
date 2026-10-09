@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Vector search
+title: "向量搜尋"
 nav_order: 1
 has_children: false
 has_toc: false
@@ -10,83 +11,83 @@ redirect_from:
   - /vector-search/index/
   - /search-plugins/vector-search/
 tutorial_cards:
-  - heading: "Get started with vector search"
-    description: "Build powerful similarity search applications using your existing vectors or embeddings"
-    link: "/vector-search/getting-started/"
-  - heading: "Generate embeddings automatically"
-    description: "Streamline your vector search using OpenSearch's built-in embedding generation"
-    link: "/vector-search/getting-started/auto-generated-embeddings/"
+- heading: 開始使用向量搜尋
+  description: 使用您現有的向量或嵌入，建置功能強大的相似度搜尋應用程式
+  link: /vector-search/getting-started/
+- heading: 自動產生嵌入
+  description: 使用 OpenSearch 內建的嵌入產生功能，簡化您的向量搜尋
+  link: /vector-search/getting-started/auto-generated-embeddings/
 demo_cards:
-  - heading: "Explore AI search and RAG demos"
-    description: "Try interactive Hugging Face demos showcasing AI search, multimodal RAG, and agentic RAG"
-    link: "https://huggingface.co/spaces/opensearch-project/OpenSearch-AI"
+- heading: 探索 AI 搜尋與 RAG 示範
+  description: 試用互動式 Hugging Face 示範，體驗 AI 搜尋、多模態 RAG 與代理式 RAG
+  link: https://huggingface.co/spaces/opensearch-project/OpenSearch-AI
 more_cards:
-  - heading: "AI search"
-    description: "Discover AI search, from <b>semantic</b>, <b>hybrid</b>, and <b>multimodal</b> search to <b>RAG</b>"
-    link: "/vector-search/ai-search/"
-  - heading: "Tutorials"
-    description: "Follow step-by-step tutorials to build AI-powered search for your applications"
-    link: "/vector-search/tutorials/"
-  - heading: "Advanced filtering"
-    description: "Refine search results while maintaining semantic relevance"
-    link: "/vector-search/filter-search-knn/"
-  - heading: "Memory-efficient search"
-    description: "Reduce memory footprint using vector compression methods"
-    link: "/vector-search/optimizing-storage/"
-  - heading: "Sparse vector support"
-    description: "Combine semantic understanding with traditional search efficiency using <b>neural sparse search</b>"
-    link: "/vector-search/ai-search/neural-sparse-search/"
-  - heading: "Multi-vector support"
-    description: "Store and search multiple vectors per document using nested fields"
-    link: "/vector-search/specialized-operations/nested-search-knn/"
+- heading: AI 搜尋
+  description: 探索 AI 搜尋，從<b>語意</b>、<b>混合</b>與<b>多模態</b>搜尋到 <b>RAG</b>
+  link: /vector-search/ai-search/
+- heading: 教學
+  description: 依照逐步教學，為您的應用程式建置 AI 驅動的搜尋功能
+  link: /vector-search/tutorials/
+- heading: 進階篩選
+  description: 在維持語意相關性的同時，精化搜尋結果
+  link: /vector-search/filter-search-knn/
+- heading: 節省記憶體的搜尋
+  description: 使用向量壓縮方法減少記憶體用量
+  link: /vector-search/optimizing-storage/
+- heading: 稀疏向量支援
+  description: 使用<b>神經稀疏搜尋</b>，結合語意理解與傳統搜尋的效率
+  link: /vector-search/ai-search/neural-sparse-search/
+- heading: 多向量支援
+  description: 使用巢狀欄位，儲存並搜尋每份文件中的多個向量
+  link: /vector-search/specialized-operations/nested-search-knn/
 items:
-  - heading: "Create an index"
-    description: "Create a vector index for storing your embeddings."
-    link: "/vector-search/creating-vector-index/"
-  - heading: "Ingest data"
-    description: "Ingest your data into the index."
-    link: "/vector-search/ingesting-data/"
-  - heading: "Search data"
-    description: "Use raw vector search or AI-powered methods like semantic, hybrid, multimodal, or neural sparse search. Add RAG to build conversational search."
-    link: "/vector-search/searching-data/"
+- heading: 建立索引
+  description: 建立向量索引以儲存您的嵌入。
+  link: /vector-search/creating-vector-index/
+- heading: 匯入資料
+  description: 將您的資料匯入索引。
+  link: /vector-search/ingesting-data/
+- heading: 搜尋資料
+  description: 使用原始向量搜尋，或語意、混合、多模態、神經稀疏搜尋等 AI 驅動的方法。加入 RAG 以建置對話式搜尋。
+  link: /vector-search/searching-data/
 ---
 
-# Vector search
+# 向量搜尋
 
-OpenSearch [vector search]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-basics/) provides a complete vector database solution for building efficient AI applications. Store and search vector embeddings alongside your existing data, making it easy to implement semantic search, retrieval-augmented generation (RAG), recommendation systems, and other AI-powered applications.
+OpenSearch [向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-basics/)提供完整的向量資料庫解決方案，可用於建置高效率的 AI 應用程式。將向量嵌入與您現有的資料一併儲存及搜尋，輕鬆實作語意搜尋、檢索增強生成（RAG）、推薦系統及其他 AI 驅動的應用程式。
 
-## Watch a demo
+## 觀看示範
 
-Watch this video to learn about key vector search features in OpenSearch and discover how to use OpenSearch as a vector database through a step-by-step demo.
+觀看這段影片，瞭解 OpenSearch 中的主要向量搜尋功能，並透過逐步示範，探索如何將 OpenSearch 用作向量資料庫。
 
 {% include youtube-player.html id='oX0HMAztP8E' %}
 
-To follow the demo, use these steps.
+請依照下列步驟操作示範。
 
 <details markdown="block">
-  <summary>
-    Steps
-  </summary>
-  {: .fs-5 .fw-700}
+<summary>
+    步驟
+</summary>
+{: .fs-5 .fw-700}
 
-### Prerequisites
-{:.no_toc} 
+### 先決條件
+{:.no_toc}
 
-Download the sample data for this demo:
+下載此示範的範例資料：
 
 ```bash
 wget https://amazon-pqa.s3.amazonaws.com/amazon_pqa_headsets.json
 ```
 {% include copy.html %}
 
-Prepare data for bulk indexing into OpenSearch:
+準備資料，以在 OpenSearch 中批次編製索引：
 
 ```bash
 head -n 5000 amazon_pqa_headsets.json |  awk '{ print "{\"index\":{\"_index\":\"neural_search_pqa\"}}"; print;}'  > neural_search_amazon_pqa_headsets.json
 ```
 {% include copy.html %}
 
-Enable running machine learning (ML) models on data nodes (not recommended for production environments):
+啟用在資料節點上執行機器學習（ML）模型的功能（不建議用於正式環境）：
 
 ```json
 PUT /_cluster/settings
@@ -98,10 +99,10 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-### Step 1: Register and deploy a model
-{:.no_toc} 
+### 步驟 1：註冊並部署模型
+{:.no_toc}
 
-Register and deploy an ML model provided by OpenSearch:
+註冊並部署 OpenSearch 提供的 ML 模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -113,19 +114,19 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Registering a model is an asynchronous task. OpenSearch returns a task ID for this task. Check the status of the task by using the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+註冊模型是一項非同步任務。OpenSearch 會傳回此任務的任務 ID。使用 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 檢查任務狀態：
 
 ```json
 GET /_plugins/_ml/tasks/{task_id}
 ```
 {% include copy-curl.html %}
 
-Once the task is complete, the task state will change to `COMPLETED` and the ML Tasks API response will contain a model ID for the registered model. Note the model ID; you'll use it in the following steps.
+任務完成後，任務狀態會變更為 `COMPLETED`，而 ML Tasks API 回應會包含已註冊模型的模型 ID。請記下模型 ID；您將在後續步驟中使用它。
 
-### Step 2: Create an ingest pipeline 
-{:.no_toc} 
+### 步驟 2：建立資料匯入管線 
+{:.no_toc}
 
-Create an ingest pipeline that will generate vector embeddings from text:
+建立資料匯入管線，以從文字產生向量嵌入：
 
 ```json
 PUT _ingest/pipeline/nlp-index-pipeline
@@ -144,7 +145,7 @@ PUT _ingest/pipeline/nlp-index-pipeline
 ```
 {% include copy-curl.html %}
 
-Test the ingest pipeline:
+測試資料匯入管線：
 
 ```json
 POST /_plugins/_ml/_predict/text_embedding/{model_id}
@@ -156,10 +157,10 @@ POST /_plugins/_ml/_predict/text_embedding/{model_id}
 ```
 {% include copy-curl.html %}
 
-### Step 3: Create an index
-{:.no_toc} 
+### 步驟 3：建立索引
+{:.no_toc}
 
-Create a vector index and set the default ingest pipeline to the ingest pipeline created in the previous step:
+建立向量索引，並將預設資料匯入管線設為上一步建立的資料匯入管線：
 
 ```json
 PUT /neural_search_pqa
@@ -180,38 +181,38 @@ PUT /neural_search_pqa
 ```
 {% include copy-curl.html %}
 
-### Step 4: Ingest data
-{:.no_toc} 
+### 步驟 4：匯入資料
+{:.no_toc}
 
-Ingest the data you prepared in the [Prerequisites](#prerequisites) section:
+匯入您在[先決條件](#prerequisites)一節中準備的資料：
 
 ```bash
 curl -XPOST -u "<username>:<password>" -k https://localhost:9200/_bulk --data-binary @neural_search_amazon_pqa_headsets.json  -H 'Content-Type: application/json'
 ```
 {% include copy.html %}
 
-If you're not running the Security plugin, omit the username and password:
+如果您未執行 Security 外掛程式，請省略使用者名稱與密碼：
 
 ```bash
 curl -XPOST http://localhost:9200/_bulk --data-binary @neural_search_amazon_pqa_headsets.json  -H 'Content-Type: application/json'
 ```
 {% include copy.html %}
 
-Test the vector generation:
+測試向量產生功能：
 
 ```json
 GET /neural_search_pqa/_search
 ```
 {% include copy-curl.html %}
 
-### Step 5: Search the data
-{:.no_toc} 
+### 步驟 5：搜尋資料
+{:.no_toc}
 
-Now search the data using the following search methods.
+現在使用下列搜尋方法搜尋資料。
 
-#### Semantic search
+#### 語意搜尋
 
-To run a semantic search, send the following request:
+若要執行語意搜尋，請傳送下列請求：
 
 ```json
 GET /neural_search_pqa/_search
@@ -230,14 +231,14 @@ GET /neural_search_pqa/_search
 ```
 {% include copy-curl.html %}
 
-#### Raw vector search 
+#### 原始向量搜尋 
 
-To run a raw vector search using test embeddings, send the following request:
+若要使用測試嵌入執行原始向量搜尋，請傳送下列請求：
 
 <details markdown="block">
-  <summary>
-    Request
-  </summary>
+<summary>
+    請求
+</summary>
 
 ```json
 GET /neural_search_pqa/_search
@@ -1024,9 +1025,9 @@ GET /neural_search_pqa/_search
 {% include copy-curl.html %}
 </details>
 
-#### Lexical search
+#### 詞彙搜尋
 
-To run a lexical search, send the following request:
+若要執行詞彙搜尋，請傳送下列請求：
 
 ```json
 GET /neural_search_pqa/_search
@@ -1040,9 +1041,9 @@ GET /neural_search_pqa/_search
 ```
 {% include copy-curl.html %}
 
-#### Hybrid search
+#### 混合搜尋
 
-Create a search pipeline for hybrid search:
+為混合搜尋建立搜尋管線：
 
 ```json
 PUT /_search/pipeline/hybrid-search-pipeline
@@ -1069,7 +1070,7 @@ PUT /_search/pipeline/hybrid-search-pipeline
 ```
 {% include copy-curl.html %}
 
-Set this pipeline as the default search pipeline for the index:
+將此管線設為該索引的預設搜尋管線：
 
 ```json
 PUT /neural_search_pqa/_settings
@@ -1079,7 +1080,7 @@ PUT /neural_search_pqa/_settings
 ```
 {% include copy-curl.html %}
 
-To run a hybrid search, send the following request:
+若要執行混合搜尋，請傳送下列請求：
 
 ```json
 GET /neural_search_pqa/_search
@@ -1109,24 +1110,24 @@ GET /neural_search_pqa/_search
 ```
 {% include copy-curl.html %}
 
-### Clean up
+### 清理
 {:.no_toc} 
 
-Undeploy the model:
+取消部署模型：
 
 ```json
 POST /_plugins/_ml/models/{model_id}/_undeploy
 ```
 {% include copy-curl.html %}
 
-Delete the model:
+刪除模型：
 
 ```json
 DELETE /_plugins/_ml/models/{model_id}
 ```
 {% include copy-curl.html %}
 
-Delete the index:
+刪除索引：
 
 ```json
 DELETE /neural_search_pqa
@@ -1135,13 +1136,13 @@ DELETE /neural_search_pqa
 
 </details>
 
-## Interactive demos
+## 互動式示範
 
 {% include cards.html cards=page.demo_cards %}
 
-## Getting started
+## 入門
 
-You can bring your own vectors or let OpenSearch generate embeddings automatically from your data. See [Preparing vectors]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-options/).
+您可以自備向量，或讓 OpenSearch 從您的資料自動產生嵌入。請參閱[準備向量]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-options/)。
 {: .info }
 
 {% include cards.html cards=page.tutorial_cards %}
@@ -1149,9 +1150,9 @@ You can bring your own vectors or let OpenSearch generate embeddings automatical
 {% include list.html list_items=page.items%}
 
 <span class="centering-container">
-[Get started]({{site.url}}{{site.baseurl}}/vector-search/getting-started/){: .btn-dark-blue}
+[開始使用]({{site.url}}{{site.baseurl}}/vector-search/getting-started/){: .btn-dark-blue}
 </span>
 
-## Build your solution 
+## 建置您的解決方案 
 
 {% include cards.html cards=page.more_cards %}

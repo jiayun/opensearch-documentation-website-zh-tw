@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Convert
+title: "轉換"
 parent: Ingest processors
 nav_order: 30
 redirect_from:
    - /api-reference/ingest-apis/processors/convert/
 ---
 
-This documentation describes using the `convert` processor in OpenSearch ingest pipelines. Consider using the [Data Prepper `convert_entry_type` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/convert-entry-type/), which runs on the OpenSearch cluster, if your use case involves large or complex datasets.
+本文件說明如何在 OpenSearch 資料匯入管線中使用 `convert` 處理器。如果您的使用情境涉及大型或複雜的資料集，建議考慮使用在 OpenSearch 叢集上執行的 [Data Prepper `convert_entry_type` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/convert-entry-type/)。
 {: .note}
 
-# Convert processor
+# Convert 處理器
 
-The `convert` processor converts a field in a document to a different type, for example, a string to an integer or an integer to a string. For an array field, all values in the array are converted. 
+`convert` 處理器會將文件中的欄位轉換為不同的類型，例如將字串轉換為整數，或將整數轉換為字串。對於陣列欄位，陣列中的所有值都會被轉換。
 
-## Syntax
+## 語法
 
-The following is the syntax for the `convert` processor: 
+以下是 `convert` 處理器的語法：
 
 ```json
 {
@@ -28,29 +29,29 @@ The following is the syntax for the `convert` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `convert` processor.   
+下表列出 `convert` 處理器的必要與選用參數。   
 
-Parameter | Required/Optional | Description |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | Required  | The name of the field containing the data to be converted. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets). |
-`type`  | Required  | The type to convert the field value to. The supported types are `integer`, `long`, `float`, `double`, `string`, `boolean`, `ip`, and `auto`. If the `type` is `boolean`, then the value is set to `true` if the field value is a string `true` (ignoring case) and to `false` if  the field value is a string `false` (ignoring case). If the type is set to `ip`, then this processor validates whether the field value adheres to the correct format for IPv4 or IPv6 addresses; if the value is invalid, an error is raised. If the value is not one of the allowed values, an error will occur.  |
-`description`  | Optional  | A brief description of the processor.  |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | Specifies whether the processor continues execution even if it encounters errors. If set to `true`, failures are ignored. Default is `false`. |
-`ignore_missing`  | Optional  | Specifies whether the processor should ignore documents that do not contain the specified field. If set to `true`, the processor does not modify the document if the field does not exist or is `null`. Default is `false`. |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |
-`target_field`  | Optional  | The name of the field in which to store the parsed data. If not specified, the value will be stored in the `field` field. Default is `field`.  |
+`field`  | 必要  | 包含要轉換之資料的欄位名稱。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
+`type`  | 必要  | 要將欄位值轉換成的類型。支援的類型為 `integer`、`long`、`float`、`double`、`string`、`boolean`、`ip` 與 `auto`。如果 `type` 設為 `boolean`，則當欄位值為字串 `true`（不分大小寫）時，值會設為 `true`；當欄位值為字串 `false`（不分大小寫）時，值會設為 `false`。如果類型設為 `ip`，則此處理器會驗證欄位值是否符合 IPv4 或 IPv6 位址的正確格式；如果值無效，將會產生錯誤。如果值不是允許的值之一，將會發生錯誤。  |
+`description`  | 選用  | 處理器的簡要描述。  |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 指定處理器是否即使遇到錯誤也繼續執行。如果設為 `true`，則會忽略失敗。預設值為 `false`。 |
+`ignore_missing`  | 選用  | 指定處理器是否應忽略不包含指定欄位的文件。如果設為 `true`，當欄位不存在或為 `null` 時，處理器不會修改文件。預設值為 `false`。 |
+`on_failure` | 選用 | 當處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別標籤。有助於除錯，以區分相同類型的處理器。 |
+`target_field`  | 選用  | 用來儲存已剖析資料的欄位名稱。如果未指定，值將儲存在 `field` 欄位中。預設值為 `field`。  |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+依照下列步驟在管線中使用處理器。
 
-**Step 1: Create a pipeline** 
+**步驟 1：建立管線**
 
-The following query creates a pipeline, named `convert-price`, that converts `price` to a floating-point number, stores the converted value in the `price_float` field, and sets the value to `0` if it is less than `0`:
+下列查詢會建立一個名為 `convert-price` 的管線，將 `price` 轉換為浮點數，將轉換後的值儲存在 `price_float` 欄位中，並在值小於 `0` 時將其設為 `0`：
 
 ```json
 PUT _ingest/pipeline/convert-price
@@ -76,12 +77,12 @@ PUT _ingest/pipeline/convert-price
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline**
+**步驟 2（選用）：測試管線**
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/convert-price/_simulate
@@ -99,9 +100,9 @@ POST _ingest/pipeline/convert-price/_simulate
 ```
 {% include copy-curl.html %}
 
-**Response**
+**回應**
 
-The following example response confirms that the pipeline is working as expected: 
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -123,9 +124,9 @@ The following example response confirms that the pipeline is working as expected
 }
 ```
 
-**Step 3: Ingest a document**
+**步驟 3：匯入文件**
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=convert-price
@@ -135,9 +136,9 @@ PUT testindex1/_doc/1?pipeline=convert-price
 ```
 {% include copy-curl.html %}
 
-**Step 4 (Optional): Retrieve the document**
+**步驟 4（選用）：擷取文件**
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1

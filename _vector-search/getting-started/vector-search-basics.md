@@ -1,44 +1,45 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Vector search basics
+title: "向量搜尋基礎"
 parent: Getting started
 nav_order: 10
 ---
 
-# Vector search basics
+# 向量搜尋基礎
 
-_Vector search_, also known as _similarity search_ or _nearest neighbor search_, is a powerful technique for finding items that are most similar to a given input. Use cases include semantic search to understand user intent, recommendations (for example, an "other songs you might like" feature in a music application), image recognition, and fraud detection. For more background information about vector search, see [Nearest neighbor search](https://en.wikipedia.org/wiki/Nearest_neighbor_search).
+_向量搜尋_ (vector search)，又稱為 _相似性搜尋_ (similarity search) 或 _最近鄰搜尋_ (nearest neighbor search)，是一種強大的技術，可用來找出與給定輸入最相似的項目。使用案例包括理解使用者意圖的語意搜尋、推薦（例如音樂應用程式中的「您可能喜歡的其他歌曲」功能）、影像辨識，以及詐欺偵測。如需向量搜尋的更多背景資訊，請參閱[最近鄰搜尋](https://en.wikipedia.org/wiki/Nearest_neighbor_search)。
 
-## Vector embeddings
+## 向量嵌入
 
-Unlike traditional search methods that rely on exact keyword matches, vector search uses _vector embeddings_---numerical representations of data such as text, images, or audio. These embeddings are stored as multi-dimensional vectors, capturing deeper patterns and similarities in meaning, context, or structure. For example, a large language model (LLM) can create vector embeddings from input text, as shown in the following image.
+傳統搜尋方法依賴精確的關鍵字比對，向量搜尋則不同，它使用 _向量嵌入_ (vector embeddings)——文字、影像或音訊等資料的數值表示。這些嵌入以多維向量的形式儲存，擷取意義、情境或結構中更深層的模式與相似性。例如，大型語言模型 (LLM) 可以從輸入文字建立向量嵌入，如下圖所示。
 
-![Generating embeddings from text]({{site.url}}{{site.baseurl}}/images/vector-search/embeddings.png)
+![從文字產生嵌入]({{site.url}}{{site.baseurl}}/images/vector-search/embeddings.png)
 
-## Similarity search
+## 相似性搜尋
 
-A vector embedding is a vector in a high-dimensional space. Its position and orientation capture meaningful relationships between objects. Vector search finds the most similar results by comparing a query vector to stored vectors and returning the closest matches. OpenSearch uses the [k-nearest neighbors (k-NN) algorithm](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm) to efficiently identify the most similar vectors. Unlike keyword search, which relies on exact word matches, vector search measures similarity based on distance in this high-dimensional space.
+向量嵌入是高維度空間中的向量。它的位置與方向擷取物件之間有意義的關聯。向量搜尋會將查詢向量與儲存的向量進行比較，並傳回最接近的相符結果，藉此找出最相似的結果。OpenSearch 使用 [k-nearest neighbors (k-NN) 演算法](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm) 來有效率地識別最相似的向量。與依賴精確字詞比對的關鍵字搜尋不同，向量搜尋是根據此高維度空間中的距離來衡量相似性。
 
-In the following image, the vectors for `Wild West` and `Broncos` are closer to each other, while both are far from `Basketball`, reflecting their semantic differences.
+在下圖中，`Wild West` 與 `Broncos` 的向量彼此較為接近，而兩者都與 `Basketball` 相距甚遠，反映出它們在語意上的差異。
 
-![Similarity search]({{site.url}}{{site.baseurl}}/images/vector-search/vector-similarity.jpg){: width="400px"}
+![相似性搜尋]({{site.url}}{{site.baseurl}}/images/vector-search/vector-similarity.jpg){: width="400px"}
 
-To learn more about the types of vector search that OpenSearch supports, see [Vector search techniques]({{site.url}}{{site.baseurl}}/vector-search/vector-search-techniques/).
+若要進一步了解 OpenSearch 支援的向量搜尋類型，請參閱[向量搜尋技術]({{site.url}}{{site.baseurl}}/vector-search/vector-search-techniques/)。
 
-## Calculating similarity
+## 計算相似性
 
-Vector similarity measures how close two vectors are in a multi-dimensional space, facilitating tasks like nearest neighbor search and ranking results by relevance. OpenSearch supports multiple distance metrics (_spaces_) for calculating vector similarity:  
+向量相似性衡量兩個向量在多維度空間中的接近程度，有助於最近鄰搜尋以及依相關性排序結果等工作。OpenSearch 支援多種用於計算向量相似性的距離指標 (_spaces_)：  
 
-- **L1 (Manhattan distance):** Sums the absolute differences between vector components.  
-- **L2 (Euclidean distance):** Calculates the square root of the sum of squared differences, making it sensitive to magnitude.  
-- **L∞ (Chebyshev distance):** Considers only the maximum absolute difference between corresponding vector elements.  
-- **Cosine similarity:** Measures the angle between vectors, focusing on direction rather than magnitude.  
-- **Inner product:** Determines similarity based on vector dot products, which can be useful for ranking.  
-- **Hamming distance:** Counts differing elements in binary vectors.  
-- **Hamming bit:** Applies the same principle as Hamming distance but is optimized for binary-encoded data.  
+- **L1 (曼哈頓距離)：** 將向量各分量之間的絕對差異加總。  
+- **L2 (歐幾里得距離)：** 計算平方差總和的平方根，因此對量值敏感。  
+- **L∞ (切比雪夫距離)：** 只考慮對應向量元素之間的最大絕對差異。  
+- **Cosine similarity (餘弦相似性)：** 衡量向量之間的角度，著重於方向而非量值。  
+- **Inner product (內積)：** 根據向量點積判斷相似性，可用於排序。  
+- **Hamming distance (漢明距離)：** 計算二元向量中相異元素的數量。  
+- **Hamming bit：** 套用與 Hamming distance 相同的原則，但針對二元編碼資料進行最佳化。  
 
-To learn more about the distance metrics, see [Spaces]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/).
+若要進一步了解距離指標，請參閱[空間]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/)。
 
-## Next steps
+## 後續步驟
 
-- [Preparing vectors]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-options/)
+- [準備向量]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-options/)

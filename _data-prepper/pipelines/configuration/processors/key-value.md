@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Key-value
+title: "鍵值"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 170
 ---
 
-# Key-value processor
+# Key-value 處理器
 
 
-You can use the `key_value` processor to parse the specified field into key-value pairs. You can customize the `key_value` processor to parse field information with the following options. The type for each of the following options is `string`.
+您可以使用 `key_value` 處理器將指定的欄位解析為鍵值對。您可以使用下列選項自訂 `key_value` 處理器，以解析欄位資訊。下列每個選項的類型皆為 `string`。
 
-## Examples
+## 範例
 
-The following examples demonstrate several configurations you can use with this processor.
+下列範例展示可與此處理器搭配使用的數種組態。
 
-The examples don't use security and are for demonstration purposes only. We strongly recommend configuring SSL before using these examples in production.
+這些範例未使用安全性功能，僅供示範之用。我們強烈建議在正式環境中使用這些範例之前，先設定 SSL。
 {: .warning}
 
-### Key-value parsing, normalization, and deduplication
+### 鍵值解析、正規化與去重
 
-The following example parses the `message` field into `key=value` pairs, normalizes and cleans the keys, prefixes them with `meta_`, deduplicates values, and drops keys without values into `parsed_kv`:
+下列範例將 `message` 欄位解析為 `key=value` 鍵值對，正規化並清理鍵、為鍵加上 `meta_` 前綴、去除重複的值，捨棄沒有值的鍵，並將解析結果寫入 `parsed_kv`：
 
 ```yaml
 kv-basic-pipeline:
@@ -65,7 +66,7 @@ kv-basic-pipeline:
 ```
 {% include copy.html %}
 
-You can test this pipeline using the following command:
+您可以使用下列命令測試此管線：
 
 ```bash
 curl -sS -X POST "http://localhost:2021/logs" \
@@ -77,7 +78,7 @@ curl -sS -X POST "http://localhost:2021/logs" \
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 {
@@ -120,9 +121,9 @@ The documents stored in OpenSearch contain the following information:
 }
 ```
 
-### Grouped values to root
+### 分組值寫入根層級
 
-The following example parses the `payload` field by using `&&` to separate pairs and `==` to separate keys and values. It preserves bracketed groups as single values, writes the parsed results to the event root without overwriting existing fields, and records any unmatched tokens as `null`:
+下列範例使用 `&&` 分隔鍵值對、使用 `==` 分隔鍵與值，藉此解析 `payload` 欄位。它會將括號內的分組保留為單一值、將解析結果寫入事件根層級而不覆寫現有欄位，並將任何未比對到的詞元記錄為 `null`：
 
 ```yaml
 kv-grouping-pipeline:
@@ -156,7 +157,7 @@ kv-grouping-pipeline:
 ```
 {% include copy.html %}
 
-You can test this pipeline using the following command:
+您可以使用下列命令測試此管線：
 
 ```bash
 curl -sS -X POST "http://localhost:2021/logs" \
@@ -174,7 +175,7 @@ curl -sS -X POST "http://localhost:2021/logs" \
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 {
@@ -215,9 +216,9 @@ The documents stored in OpenSearch contain the following information:
 }
 ```
 
-### Conditional recursive key-value parsing
+### 條件式遞迴鍵值解析
 
-The following example parses bracketed nested `key=value` structures from `body` into `parsed.*` only when `/type == "nested"`. It preserves group hierarchy, enforces strict nesting rules, applies default fields, and leaves non-nested events unchanged:
+下列範例僅在 `/type == "nested"` 時，才會將 `body` 中以括號括住的巢狀 `key=value` 結構解析為 `parsed.*`。它會保留分組階層、強制執行嚴格的巢狀規則、套用預設欄位，並讓非巢狀事件保持不變：
 
 ```yaml
 kv-conditional-recursive-pipeline:
@@ -263,7 +264,7 @@ kv-conditional-recursive-pipeline:
 ```
 {% include copy.html %}
 
-You can test this pipeline using the following command:
+您可以使用下列命令測試此管線：
 
 ```bash
 curl -sS -X POST "http://localhost:2021/logs" \
@@ -282,7 +283,7 @@ curl -sS -X POST "http://localhost:2021/logs" \
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 {
@@ -349,34 +350,34 @@ The documents stored in OpenSearch contain the following information:
 }
 ```
 
-## Configuration
+## 組態
 
-Option | Description | Example 
+選項 | 說明 | 範例 
 :--- | :--- | :--- 
-`source` | The message field to be parsed. Optional. Default value is `message`. | If `source` is `"message1"`, `{"message1": {"key1=value1"}, "message2": {"key2=value2"}}` parses into `{"message1": {"key1=value1"}, "message2": {"key2=value2"}, "parsed_message": {"key1": "value1"}}`. 
-`destination` | The destination field for the parsed source. The parsed source overwrites the preexisting data for that key. Optional. If `destination` is set to `null`, the parsed fields will be written to the root of the event. Default value is `parsed_message`. | If `destination` is `"parsed_data"`, `{"message": {"key1=value1"}}` parses into `{"message": {"key1=value1"}, "parsed_data": {"key1": "value1"}}`. 
-`field_delimiter_regex` | A regular expression specifying the delimiter that separates key-value pairs. Special regular expression characters such as `[` and `]` must be escaped with `\\`. Cannot be defined at the same time as `field_split_characters`. Optional. If this option is not defined, `field_split_characters` is used. | If `field_delimiter_regex` is `"&\\{2\\}"`, `{"key1=value1&&key2=value2"}` parses into `{"key1": "value1", "key2": "value2"}`. 
-`field_split_characters` | A string of characters specifying the delimiter that separates key-value pairs. Special regular expression characters such as `[` and `]` must be escaped with `\\`. Cannot be defined at the same time as `field_delimiter_regex`. Optional. Default value is `&`. | If `field_split_characters` is `"&&"`, `{"key1=value1&&key2=value2"}` parses into `{"key1": "value1", "key2": "value2"}`. 
-`key_value_delimiter_regex` | A regular expression specifying the delimiter that separates the key and value within a key-value pair. Special regular expression characters such as `[` and `]` must be escaped with `\\`. This option cannot be defined at the same time as `value_split_characters`. Optional. If this option is not defined, `value_split_characters` is used.  | If `key_value_delimiter_regex` is `"=\\{2\\}"`, `{"key1==value1"}` parses into `{"key1": "value1"}`. 
-`value_split_characters` | A string of characters specifying the delimiter that separates the key and value within a key-value pair. Special regular expression characters such as `[` and `]` must be escaped with `\\`. Cannot be defined at the same time as `key_value_delimiter_regex`. Optional. Default value is `=`. | If `value_split_characters` is `"=="`, `{"key1==value1"}` parses into `{"key1": "value1"}`. 
-`non_match_value` | When a key-value pair cannot be successfully split, the key-value pair is placed in the `key` field, and the specified value is placed in the `value` field. Optional. Default value is `null`. | `key1value1&key2=value2` parses into `{"key1value1": null, "key2": "value2"}`. |
-`prefix` | A prefix to append before all keys. Optional. Default value is an empty string. | If `prefix` is `"custom"`, `{"key1=value1"}` parses into `{"customkey1": "value1"}`. 
-`delete_key_regex` | A regular expression specifying the characters to delete from the key. Special regular expression characters such as `[` and `]` must be escaped with `\\`. Cannot be an empty string. Optional. No default value. | If `delete_key_regex` is `"\s"`, `{"key1 =value1"}` parses into `{"key1": "value1"}`. 
-`delete_value_regex` | A regular expression specifying the characters to delete from the value. Special regular expression characters such as `[` and `]` must be escaped with `\\`. Cannot be an empty string. Optional. No default value. | If `delete_value_regex` is `"\s"`, `{"key1=value1 "}` parses into `{"key1": "value1"}`. 
-`include_keys` | An array specifying the keys that should be added for parsing. By default, all keys will be added. | If `include_keys` is `["key2"]`,`key1=value1&key2=value2` will parse into `{"key2": "value2"}`. 
-`exclude_keys` | An array specifying the parsed keys that should not be added to the event. By default, no keys will be excluded. | If `exclude_keys` is `["key2"]`, `key1=value1&key2=value2` will parse into `{"key1": "value1"}`. 
-`default_values` | A map specifying the default keys and their values that should be added to the event in case these keys do not exist in the source field being parsed. If the default key already exists in the message, the value is not changed. The `include_keys` filter will be applied to the message before `default_values`. | If `default_values` is `{"defaultkey": "defaultvalue"}`, `key1=value1` will parse into `{"key1": "value1", "defaultkey": "defaultvalue"}`. <br /> If `default_values` is `{"key1": "abc"}`, `key1=value1` will parse into `{"key1": "value1"}`. <br /> If `include_keys` is `["key1"]` and `default_values` is `{"key2": "value2"}`, `key1=value1&key2=abc` will parse into `{"key1": "value1", "key2": "value2"}`. 
-`transform_key` | When to lowercase, uppercase, or capitalize keys. | If `transform_key` is `lowercase`, `{"Key1=value1"}` will parse into `{"key1": "value1"}`. <br /> If `transform_key` is `uppercase`, `{"key1=value1"}` will parse into `{"KEY1": "value1"}`. <br /> If `transform_key` is `capitalize`, `{"key1=value1"}` will parse into `{"Key1": "value1"}`. 
-`whitespace` | Specifies whether to be lenient or strict with the acceptance of unnecessary white space surrounding the configured value-split sequence. Default is `lenient`. | If `whitespace` is `"lenient"`, `{"key1  =  value1"}` will parse into `{"key1  ": "  value1"}`. If `whitespace` is `"strict"`, `{"key1  =  value1"}` will parse into `{"key1": "value1"}`. 
-`skip_duplicate_values` | A Boolean option for removing duplicate key-value pairs. When set to `true`, only one unique key-value pair will be preserved. Default is `false`. | If `skip_duplicate_values` is `false`, `{"key1=value1&key1=value1"}` will parse into `{"key1": ["value1", "value1"]}`. If  `skip_duplicate_values` is `true`, `{"key1=value1&key1=value1"}` will parse into `{"key1": "value1"}`. 
-`remove_brackets` | Specifies whether to treat square brackets, angle brackets, and parentheses as value "wrappers" that should be removed from the value. Default is `false`. | If `remove_brackets` is `true`, `{"key1=(value1)"}` will parse into `{"key1": value1}`. If `remove_brackets` is `false`, `{"key1=(value1)"}` will parse into `{"key1": "(value1)"}`. 
-`recursive` | Specifies whether to recursively obtain additional key-value pairs from values. The extra key-value pairs will be stored as sub-keys of the root key. Default is `false`. The levels of recursive parsing must be defined by different brackets for each level: `[]`, `()`, and `<>`, in this order. Any other configurations specified will only be applied to the outmost keys. <br />When `recursive` is `true`: <br /> `remove_brackets` cannot also be `true`;<br />`skip_duplicate_values` will always be `true`; <br />`whitespace` will always be `"strict"`. | If `recursive` is true, `{"item1=[item1-subitem1=item1-subitem1-value&item1-subitem2=(item1-subitem2-subitem2A=item1-subitem2-subitem2A-value&item1-subitem2-subitem2B=item1-subitem2-subitem2B-value)]&item2=item2-value"}` will parse into `{"item1": {"item1-subitem1": "item1-subitem1-value", "item1-subitem2" {"item1-subitem2-subitem2A": "item1-subitem2-subitem2A-value", "item1-subitem2-subitem2B": "item1-subitem2-subitem2B-value"}}}`. 
-`overwrite_if_destination_exists` | Specifies whether to overwrite existing fields if there are key conflicts when writing parsed fields to the event. Default is `true`. | If `overwrite_if_destination_exists` is `true` and destination is `null`, `{"key1": "old_value", "message": "key1=new_value"}` will parse into `{"key1": "new_value", "message": "key1=new_value"}`. 
-`tags_on_failure` | When a `kv` operation causes a runtime exception within the processor, the operation is safely stopped without crashing the processor, and the event is tagged with the provided tags. | If `tags_on_failure` is set to `["keyvalueprocessor_failure"]`, `{"tags": ["keyvalueprocessor_failure"]}` will be added to the event's metadata in the event of a runtime exception. 
-`value_grouping` | Specifies whether to group values using predefined value grouping delimiters: `{...}`, `[...]', `<...>`, `(...)`, `"..."`, `'...'`, `http://... (space)`, and `https:// (space)`. If this flag is enabled, then the content between the delimiters is considered to be one entity and is not parsed for key-value pairs. Default is `false`. If `value_grouping` is `true`, then `{"key1=[a=b,c=d]&key2=value2"}` parses to `{"key1": "[a=b,c=d]", "key2": "value2"}`. 
-`drop_keys_with_no_value` | Specifies whether keys should be dropped if they have a null value. Default is `false`. If `drop_keys_with_no_value` is set to `true`, then `{"key1=value1&key2"}` parses to `{"key1": "value1"}`. 
-`strict_grouping` | Specifies whether strict grouping should be enabled when the `value_grouping` or `string_literal_character` options are used. Default is `false`. | When enabled, groups with unmatched end characters yield errors. The event is ignored after the errors are logged. 
-`string_literal_character` | Can be set to either a single quotation mark (`'`) or a double quotation mark (`"`). Default is `null`. | When this option is used, any text contained within the specified quotation mark character will be ignored and excluded from key-value parsing. For example, `text1 "key1=value1" text2 key2=value2` would parse to `{"key2": "value2"}`. 
-`key_value_when` | Allows you to specify a [conditional expression]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/), such as `/some-key == "test"`, that will be evaluated to determine whether the processor should be applied to the event. 
+`source` | 要剖析的訊息欄位。選用。預設值為 `message`。 | 若 `source` 為 `"message1"`，`{"message1": {"key1=value1"}, "message2": {"key2=value2"}}` 會剖析為 `{"message1": {"key1=value1"}, "message2": {"key2=value2"}, "parsed_message": {"key1": "value1"}}`。 
+`destination` | 剖析後來源的目標欄位。剖析後的來源會覆寫該鍵原有的資料。選用。若 `destination` 設為 `null`，剖析後的欄位將寫入事件的根層級。預設值為 `parsed_message`。 | 若 `destination` 為 `"parsed_data"`，`{"message": {"key1=value1"}}` 會剖析為 `{"message": {"key1=value1"}, "parsed_data": {"key1": "value1"}}`。 
+`field_delimiter_regex` | 指定分隔鍵值對之分隔符的規則運算式。特殊規則運算式字元（例如 `[` 與 `]`）必須以 `\\` 逸出。不可與 `field_split_characters` 同時定義。選用。若未定義此選項，則使用 `field_split_characters`。 | 若 `field_delimiter_regex` 為 `"&\\{2\\}"`，`{"key1=value1&&key2=value2"}` 會剖析為 `{"key1": "value1", "key2": "value2"}`。 
+`field_split_characters` | 指定分隔鍵值對之分隔符的字元字串。特殊規則運算式字元（例如 `[` 與 `]`）必須以 `\\` 逸出。不可與 `field_delimiter_regex` 同時定義。選用。預設值為 `&`。 | 若 `field_split_characters` 為 `"&&"`，`{"key1=value1&&key2=value2"}` 會剖析為 `{"key1": "value1", "key2": "value2"}`。 
+`key_value_delimiter_regex` | 指定分隔鍵值對內鍵與值之分隔符的規則運算式。特殊規則運算式字元（例如 `[` 與 `]`）必須以 `\\` 逸出。此選項不可與 `value_split_characters` 同時定義。選用。若未定義此選項，則使用 `value_split_characters`。 | 若 `key_value_delimiter_regex` 為 `"=\\{2\\}"`，`{"key1==value1"}` 會剖析為 `{"key1": "value1"}`。 
+`value_split_characters` | 指定分隔鍵值對內鍵與值之分隔符的字元字串。特殊規則運算式字元（例如 `[` 與 `]`）必須以 `\\` 逸出。不可與 `key_value_delimiter_regex` 同時定義。選用。預設值為 `=`。 | 若 `value_split_characters` 為 `"=="`，`{"key1==value1"}` 會剖析為 `{"key1": "value1"}`。 
+`non_match_value` | 當鍵值對無法成功分割時，該鍵值對會放入 `key` 欄位，而指定的值會放入 `value` 欄位。選用。預設值為 `null`。 | `key1value1&key2=value2` 會剖析為 `{"key1value1": null, "key2": "value2"}`。 |
+`prefix` | 附加在所有鍵前面的字首。選用。預設值為空字串。 | 若 `prefix` 為 `"custom"`，`{"key1=value1"}` 會剖析為 `{"customkey1": "value1"}`。 
+`delete_key_regex` | 指定要從鍵中刪除之字元的規則運算式。特殊規則運算式字元（例如 `[` 與 `]`）必須以 `\\` 逸出。不可為空字串。選用。無預設值。 | 若 `delete_key_regex` 為 `"\s"`，`{"key1 =value1"}` 會剖析為 `{"key1": "value1"}`。 
+`delete_value_regex` | 指定要從值中刪除之字元的規則運算式。特殊規則運算式字元（例如 `[` 與 `]`）必須以 `\\` 逸出。不可為空字串。選用。無預設值。 | 若 `delete_value_regex` 為 `"\s"`，`{"key1=value1 "}` 會剖析為 `{"key1": "value1"}`。 
+`include_keys` | 指定剖析時應加入哪些鍵的陣列。預設會加入所有鍵。 | 若 `include_keys` 為 `["key2"]`，`key1=value1&key2=value2` 會剖析為 `{"key2": "value2"}`。 
+`exclude_keys` | 指定哪些剖析後的鍵不應加入事件的陣列。預設不排除任何鍵。 | 若 `exclude_keys` 為 `["key2"]`，`key1=value1&key2=value2` 會剖析為 `{"key1": "value1"}`。 
+`default_values` | 指定預設鍵及其值的對應，當被剖析的來源欄位中不存在這些鍵時，會將其加入事件。若預設鍵已存在於訊息中，則不會變更其值。`include_keys` 篩選器會在 `default_values` 之前套用於訊息。 | 若 `default_values` 為 `{"defaultkey": "defaultvalue"}`，`key1=value1` 會剖析為 `{"key1": "value1", "defaultkey": "defaultvalue"}`。 <br /> 若 `default_values` 為 `{"key1": "abc"}`，`key1=value1` 會剖析為 `{"key1": "value1"}`。 <br /> 若 `include_keys` 為 `["key1"]` 且 `default_values` 為 `{"key2": "value2"}`，`key1=value1&key2=abc` 會剖析為 `{"key1": "value1", "key2": "value2"}`。 
+`transform_key` | 指定將鍵轉為小寫、大寫或首字母大寫。 | 若 `transform_key` 為 `lowercase`，`{"Key1=value1"}` 會剖析為 `{"key1": "value1"}`。 <br /> 若 `transform_key` 為 `uppercase`，`{"key1=value1"}` 會剖析為 `{"KEY1": "value1"}`。 <br /> 若 `transform_key` 為 `capitalize`，`{"key1=value1"}` 會剖析為 `{"Key1": "value1"}`。 
+`whitespace` | 指定對設定的值分隔序列周圍不必要空白字元的接受方式為寬鬆或嚴格。預設為 `lenient`。 | 若 `whitespace` 為 `"lenient"`，`{"key1  =  value1"}` 會剖析為 `{"key1  ": "  value1"}`。若 `whitespace` 為 `"strict"`，`{"key1  =  value1"}` 會剖析為 `{"key1": "value1"}`。 
+`skip_duplicate_values` | 用於移除重複鍵值對的布林值選項。設為 `true` 時，只會保留一組唯一的鍵值對。預設為 `false`。 | 若 `skip_duplicate_values` 為 `false`，`{"key1=value1&key1=value1"}` 會剖析為 `{"key1": ["value1", "value1"]}`。若 `skip_duplicate_values` 為 `true`，`{"key1=value1&key1=value1"}` 會剖析為 `{"key1": "value1"}`。 
+`remove_brackets` | 指定是否將方括號、角括號與圓括號視為應從值中移除的值「包裝符」。預設為 `false`。 | 若 `remove_brackets` 為 `true`，`{"key1=(value1)"}` 會剖析為 `{"key1": value1}`。若 `remove_brackets` 為 `false`，`{"key1=(value1)"}` 會剖析為 `{"key1": "(value1)"}`。 
+`recursive` | 指定是否從值中遞迴取得額外的鍵值對。額外的鍵值對會儲存為根鍵的子鍵。預設為 `false`。遞迴剖析的層級必須依此順序以不同的括號定義：`[]`、`()` 與 `<>`。其他指定的組態只會套用於最外層的鍵。 <br />當 `recursive` 為 `true` 時： <br /> `remove_brackets` 不可同時為 `true`；<br />`skip_duplicate_values` 一律為 `true`； <br />`whitespace` 一律為 `"strict"`。 | 若 `recursive` 為 true，`{"item1=[item1-subitem1=item1-subitem1-value&item1-subitem2=(item1-subitem2-subitem2A=item1-subitem2-subitem2A-value&item1-subitem2-subitem2B=item1-subitem2-subitem2B-value)]&item2=item2-value"}` 會剖析為 `{"item1": {"item1-subitem1": "item1-subitem1-value", "item1-subitem2" {"item1-subitem2-subitem2A": "item1-subitem2-subitem2A-value", "item1-subitem2-subitem2B": "item1-subitem2-subitem2B-value"}}}`。 
+`overwrite_if_destination_exists` | 指定將剖析後的欄位寫入事件時若發生鍵衝突，是否覆寫現有欄位。預設為 `true`。 | 若 `overwrite_if_destination_exists` 為 `true` 且 destination 為 `null`，`{"key1": "old_value", "message": "key1=new_value"}` 會剖析為 `{"key1": "new_value", "message": "key1=new_value"}`。 
+`tags_on_failure` | 當 `kv` 作業在處理器內造成執行期例外時，該作業會安全停止而不會使處理器當機，並以提供的標籤標記該事件。 | 若 `tags_on_failure` 設為 `["keyvalueprocessor_failure"]`，發生執行期例外時 `{"tags": ["keyvalueprocessor_failure"]}` 會加入事件的中繼資料。 
+`value_grouping` | 指定是否使用預先定義的值分組分隔符進行分組：`{...}`、`[...]`、`<...>`、`(...)`、`"..."`、`'...'`、`http://... (space)` 與 `https:// (space)`。若啟用此旗標，分隔符之間的內容會被視為單一實體，不會剖析為鍵值對。預設為 `false`。若 `value_grouping` 為 `true`，則 `{"key1=[a=b,c=d]&key2=value2"}` 會剖析為 `{"key1": "[a=b,c=d]", "key2": "value2"}`。 
+`drop_keys_with_no_value` | 指定鍵的值為 null 時是否捨棄該鍵。預設為 `false`。若 `drop_keys_with_no_value` 設為 `true`，則 `{"key1=value1&key2"}` 會剖析為 `{"key1": "value1"}`。 
+`strict_grouping` | 指定使用 `value_grouping` 或 `string_literal_character` 選項時是否啟用嚴格分組。預設為 `false`。 | 啟用時，結尾字元不匹配的分組會產生錯誤。錯誤記錄後該事件會被忽略。 
+`string_literal_character` | 可設為單引號（`'`）或雙引號（`"`）。預設為 `null`。 | 使用此選項時，包含在指定引號字元內的任何文字都會被忽略，並排除於鍵值剖析之外。例如，`text1 "key1=value1" text2 key2=value2` 會剖析為 `{"key2": "value2"}`。 
+`key_value_when` | 允許您指定[條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，例如 `/some-key == "test"`，系統會評估該運算式以判斷是否應將處理器套用於事件。 
 
 

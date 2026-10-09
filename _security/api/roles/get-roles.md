@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get roles
+title: "取得角色"
 parent: Role APIs
 grand_parent: Security APIs
 nav_order: 30
 ---
 
 # Get Roles API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-Retrieves roles. Specify a role name to retrieve one role, or omit the role name to retrieve all roles.
+擷取角色。指定角色名稱以擷取單一角色，或省略角色名稱以擷取所有角色。
 
 <!-- spec_insert_start
 api: security.get_roles
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_plugins/_security/api/roles
 ```
@@ -31,33 +32,33 @@ GET /_plugins/_security/api/roles/{role}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required | Description |
+| 參數 | 資料類型 | 必要 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `role` | String | No | The name of the role to retrieve. If omitted, all roles are returned. |
+| `role` | 字串 | 否 | 要擷取的角色名稱。若省略，則傳回所有角色。 |
 
-## Example request
+## 範例請求
 
-The following request retrieves all roles:
+下列請求會擷取所有角色：
 
 ```json
 GET _plugins/_security/api/roles
 ```
 {% include copy-curl.html security=true %}
 
-The following request retrieves the `test-role` role:
+下列請求會擷取 `test-role` 角色：
 
 ```json
 GET _plugins/_security/api/roles/test-role
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
-The response is abbreviated here:
+回應在此經過精簡：
 
 ```json
 {
@@ -75,7 +76,7 @@ The response is abbreviated here:
 }
 ```
 
-The response to a request for one role contains only that role:
+針對單一角色請求的回應只包含該角色：
 
 ```json
 {

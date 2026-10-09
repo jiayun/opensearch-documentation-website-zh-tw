@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: SQL and PPL
+title: "SQL 與 PPL"
 nav_order: 230
 has_children: true
 has_toc: false
@@ -11,26 +12,26 @@ redirect_from:
   - /search-plugins/sql/index/
 ---
 
-# SQL and PPL
+# SQL 與 PPL
 
-OpenSearch provides two powerful query languages that offer alternatives to the [OpenSearch query domain-specific language (DSL)]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/full-text/): **SQL** and **Piped Processing Language (PPL)**. Both languages make it easier to query and analyze your data using familiar syntax.
+OpenSearch 提供兩種強大的查詢語言，可作為 [OpenSearch 查詢領域特定語言 (DSL)]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/full-text/) 的替代方案：**SQL** 與 **Piped Processing Language (PPL)**。這兩種語言都能讓您使用熟悉的語法，更輕鬆地查詢和分析資料。
 
 ## SQL
 
-SQL in OpenSearch bridges the gap between traditional relational database concepts and OpenSearch's document-oriented data storage. Use SQL when you want to leverage existing SQL knowledge to query, filter, and aggregate OpenSearch data with familiar `SELECT`, `WHERE`, `GROUP BY`, and other standard SQL operations.
+OpenSearch 中的 SQL 彌補了傳統關聯式資料庫概念與 OpenSearch 以文件為導向的資料儲存之間的落差。當您想運用既有的 SQL 知識，使用熟悉的 `SELECT`、`WHERE`、`GROUP BY` 及其他標準 SQL 作業來查詢、篩選和彙總 OpenSearch 資料時，請使用 SQL。
 
-**Best for**: Users with SQL experience who want to query OpenSearch data using familiar relational database syntax.
+**最適合**：具有 SQL 經驗、想使用熟悉的關聯式資料庫語法查詢 OpenSearch 資料的使用者。
 
 ## PPL
 
-PPL is a query language that processes data in a sequential, step-by-step manner using the pipe (`|`) operator to chain commands together. PPL excels at analyzing observability data like logs, metrics, and traces and is particularly effective for exploratory data analysis and transformations.
+PPL 是一種查詢語言，以循序、逐步的方式處理資料，並使用管線 (`|`) 運算子將命令串連起來。PPL 擅長分析記錄檔、指標和追蹤等可觀測性資料，對於探索性資料分析與轉換特別有效。
 
-**Best for**: Log analysis, observability workflows, and users who prefer a pipeline-based approach to data processing.
+**最適合**：記錄檔分析、可觀測性工作流程，以及偏好以管線方式處理資料的使用者。
 
-## Getting started
+## 入門
 
-- Learn about the [SQL and PPL API]({{site.url}}{{site.baseurl}}/sql-and-ppl/sql-ppl-api/).
-- Learn about [using SQL within OpenSearch]({{site.url}}{{site.baseurl}}/sql-and-ppl/sql/).
-- Learn about [using PPL within OpenSearch]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/).
-- Learn about [using Query Workbench for SQL and PPL queries within OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/query-workbench/). 
-- Learn more about OpenSearch SQL in the [Developer Guide](https://github.com/opensearch-project/sql/blob/main/DEVELOPER_GUIDE.rst).
+- 了解 [SQL 與 PPL API]({{site.url}}{{site.baseurl}}/sql-and-ppl/sql-ppl-api/)。
+- 了解[在 OpenSearch 中使用 SQL]({{site.url}}{{site.baseurl}}/sql-and-ppl/sql/)。
+- 了解[在 OpenSearch 中使用 PPL]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/)。
+- 了解[在 OpenSearch Dashboards 中使用 Query Workbench 執行 SQL 與 PPL 查詢]({{site.url}}{{site.baseurl}}/dashboards/query-workbench/)。
+- 在[開發人員指南](https://github.com/opensearch-project/sql/blob/main/DEVELOPER_GUIDE.rst)中進一步了解 OpenSearch SQL。

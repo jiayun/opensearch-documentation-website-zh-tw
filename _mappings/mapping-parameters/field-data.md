@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Field data
+title: "欄位資料"
 parent: Mapping parameters
 nav_order: 50
 has_children: false
 has_toc: false
 ---
 
-# Field data mapping parameter
+# 欄位資料對應參數
 
-By default, `text` fields cannot be used for sorting, aggregations, or scripting. The inverted index that powers full-text search maps terms to documents but does not provide the per-document field values that sorting and aggregations need. Attempting to aggregate or sort on a `text` field returns an error suggesting you use a `keyword` field instead.
+預設情況下，`text` 欄位無法用於排序、彙總或指令碼處理。支援全文搜尋的倒排索引會將詞彙對應至文件，但不會提供排序與彙總所需的個別文件欄位值。嘗試對 `text` 欄位進行彙總或排序時，會傳回錯誤，建議您改用 `keyword` 欄位。
 
-The `fielddata` mapping parameter loads analyzed tokens into a heap-resident data structure, making `text` fields available for sorting, aggregations, and scripting. OpenSearch constructs this structure on demand when the field is first accessed for one of these operations.
+`fielddata` 對應參數會將分析後的詞元載入常駐堆積記憶體的資料結構，讓 `text` 欄位可用於排序、彙總與指令碼處理。當首次為了執行其中一項操作而存取欄位時，OpenSearch 會依需求建構此結構。
 
-Because field data operates on analyzed tokens, aggregating a text field produces buckets for individual terms (for example, "open" and "source") rather than the original multi-word values (for example, "Open Source"). If you need to aggregate on exact values that are not analyzed, use a `keyword` field instead.
+由於欄位資料會針對分析後的詞元進行操作，對文字欄位進行彙總會為個別詞彙（例如「open」和「source」）產生桶，而非原始的多字詞值（例如「Open Source」）。如果您需要對未經分析的精確值進行彙總，請改用 `keyword` 欄位。
 {: .note}
 
-Field data can consume a significant amount of heap memory because it loads all unique tokens for the field across all documents in the segment and remains in memory for the lifetime of that segment. In most cases, using a [`keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/keyword/) subfield in [multi-fields]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/fields/) is a better approach than enabling field data.
+欄位資料可能耗用大量堆積記憶體，因為它會載入分段中所有文件在該欄位的所有不重複詞元，並在該分段的整個存續期間保留於記憶體中。在大多數情況下，使用[多重欄位]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/fields/)中的 [`keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/keyword/) 子欄位，比啟用欄位資料更合適。
 {: .warning}
 
-## Example
+## 範例
 
-The following example creates an index with `fielddata` enabled on a text field:
+下列範例會建立索引，並在文字欄位上啟用 `fielddata`：
 
 ```json
 PUT /fielddata_test
@@ -38,7 +39,7 @@ PUT /fielddata_test
 ```
 {% include copy-curl.html %}
 
-Index some documents:
+將一些文件編製索引：
 
 ```json
 POST /fielddata_test/_bulk?refresh=true
@@ -51,7 +52,7 @@ POST /fielddata_test/_bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-With `fielddata` enabled, you can aggregate on the analyzed tokens of the `title` field:
+啟用 `fielddata` 後，您可以對 `title` 欄位中分析後的詞元進行彙總：
 
 ```json
 GET /fielddata_test/_search
@@ -69,7 +70,7 @@ GET /fielddata_test/_search
 ```
 {% include copy-curl.html %}
 
-The response returns buckets for the individual analyzed tokens (not the full field value):
+回應會傳回個別分析後詞元的桶（而非完整的欄位值）：
 
 ```json
 {
@@ -121,7 +122,7 @@ The response returns buckets for the individual analyzed tokens (not the full fi
 }
 ```
 
-The `fielddata` setting is dynamically updatable. You can enable it on an existing field without reindexing:
+`fielddata` 設定可動態更新。您可以在現有欄位上啟用此設定，無須重新編製索引：
 
 ```json
 PUT /fielddata_test/_mapping
@@ -136,19 +137,19 @@ PUT /fielddata_test/_mapping
 ```
 {% include copy-curl.html %}
 
-## Field data frequency filter
+## 欄位資料頻率篩選器
 
-The `fielddata_frequency_filter` parameter reduces memory usage by loading only tokens whose document frequency falls within a specified range. Tokens that are extremely common (such as stop words) or extremely rare (such as typos) are excluded from field data, reducing heap consumption while still supporting most aggregation use cases.
+`fielddata_frequency_filter` 參數僅載入文件頻率落在指定範圍內的詞元，以減少記憶體用量。極為常見的詞元（例如停用詞）或極為罕見的詞元（例如拼字錯誤）會從欄位資料中排除，藉此降低堆積記憶體耗用量，同時仍支援大多數彙總使用案例。
 
-The following table lists the `fielddata_frequency_filter` parameters.
+下表列出 `fielddata_frequency_filter` 參數。
 
-| Parameter | Required/Optional | Data type | Description |
+| 參數 | 必要／選用 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `min` | Required | Float | The minimum document frequency (as a ratio between 0 and 1) for a token to be loaded. Tokens appearing in fewer documents than this threshold are excluded. |
-| `max` | Required | Float | The maximum document frequency (as a ratio between 0 and 1) for a token to be loaded. Tokens appearing in more documents than this threshold are excluded. |
-| `min_segment_size` | Optional | Integer | The minimum number of documents a segment must contain for the frequency filter to apply. Smaller segments load all tokens regardless of frequency. Default is `0`. |
+| `min` | 必要 | 浮點數 | 載入詞元所需的最低文件頻率（以 0 到 1 之間的比率表示）。出現於文件中的頻率低於此門檻的詞元會被排除。 |
+| `max` | 必要 | 浮點數 | 載入詞元所允許的最高文件頻率（以 0 到 1 之間的比率表示）。出現於文件中的頻率高於此門檻的詞元會被排除。 |
+| `min_segment_size` | 選用 | 整數 | 分段必須包含的最低文件數量，達到此數量才會套用頻率篩選器。較小的分段會載入所有詞元，不受頻率影響。預設為 `0`。 |
 
-The following example loads only tokens that appear in between 1% and 50% of documents, and only applies this filter to segments with at least 100 documents:
+下列範例僅載入出現於 1% 到 50% 文件中的詞元，並且僅對至少包含 100 份文件的分段套用此篩選器：
 
 ```json
 PUT /my-index

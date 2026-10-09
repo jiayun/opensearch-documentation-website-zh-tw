@@ -1,65 +1,66 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using custom configurations for neural sparse search
+title: "使用自訂組態進行神經稀疏搜尋"
 parent: Neural sparse search
 grand_parent: AI search
 nav_order: 20
 has_children: false
 ---
 
-# Using custom configurations for neural sparse search
+# 使用自訂組態進行神經稀疏搜尋
 
-Neural sparse search using automatically generated vector embeddings operates in two modes: doc-only and bi-encoder. For more information, see [Generating sparse vector embeddings automatically]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-with-pipelines/).
+使用自動產生的向量嵌入的神經稀疏搜尋有兩種模式：僅文件 (doc-only) 與雙編碼器 (bi-encoder)。如需更多資訊，請參閱[自動產生稀疏向量嵌入]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-with-pipelines/)。
 
-At query time, you can use custom models in the following ways: 
+查詢時，您可以透過下列方式使用自訂模型：
 
-- **Bi-encoder mode**: Use your deployed sparse encoding model to generate embeddings from query text. This must be the same model you used at ingestion time.
+- **雙編碼器模式**：使用您部署的稀疏編碼模型，從查詢文字產生嵌入。這必須與您在匯入時使用的模型相同。
 
-- **Doc-only mode with a custom tokenizer**: Use your deployed tokenizer model to tokenize query text. The token weights are obtained from a precomputed lookup table.
+- **搭配自訂斷詞器的僅文件模式**：使用您部署的斷詞器模型，對查詢文字進行斷詞。詞元權重取自預先計算的查閱表。
 
-The following is a complete example of using a custom model for neural sparse search.
+以下是在神經稀疏搜尋中使用自訂模型的完整範例。
 
-## Step 1: Configure a sparse encoding model/tokenizer
+## 步驟 1：設定稀疏編碼模型/斷詞器
 
-You must configure a sparse encoding model for ingestion when using both the bi-encoder mode and the doc-only mode with a custom tokenizer. Bi-encoder mode uses the same model for search; doc-only mode uses a separate tokenizer for search.
+使用雙編碼器模式以及搭配自訂斷詞器的僅文件模式時，您都必須設定用於匯入的稀疏編碼模型。雙編碼器模式在搜尋時使用相同的模型；僅文件模式在搜尋時使用個別的斷詞器。
 
-### Step 1(a): Choose the search mode
+### 步驟 1(a)：選擇搜尋模式
 
-Choose the search mode and the appropriate model/tokenizer combination:
+選擇搜尋模式以及適當的模型/斷詞器組合：
 
-- **Bi-encoder**: Use the `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill` model during both ingestion and search. 
+- **雙編碼器**：在匯入與搜尋期間都使用 `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill` 模型。
 
-- **Doc-only with a custom tokenizer**: Use the `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-distill` model during ingestion and the `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1` tokenizer during search.
+- **搭配自訂斷詞器的僅文件模式**：在匯入期間使用 `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-distill` 模型，並在搜尋期間使用 `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1` 斷詞器。
 
-The following tables provide a search relevance comparison for all available combinations of the two search modes so that you can choose the best combination for your use case.
+下表提供兩種搜尋模式所有可用組合的搜尋相關性比較，讓您可以為您的使用案例選擇最佳組合。
 
-#### English language models
+#### 英文語言模型
 
-| Mode      | Ingestion model                                               | Search model                                                  | Avg. search relevance on BEIR | Model parameters |
+| 模式      | 匯入模型                                               | 搜尋模型                                                  | BEIR 上的平均搜尋相關性 | 模型參數 |
 |-----------|---------------------------------------------------------------|---------------------------------------------------------------|------------------------------|------------------|
-| Doc-only  | `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v1` | `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1`    | 0.49                         | 133M             |
-| Doc-only  | `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-distill` | `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1`    | 0.504                         | 67M             |
-| Doc-only  | `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-mini` | `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1`    | 0.497                         | 23M             |
-| Doc-only  | `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-distill` | `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1`    | 0.517                         | 67M             |
-| Doc-only  | `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-gte` | `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1`    | 0.546                         | 133M             |
-| Bi-encoder| `amazon/neural-sparse/opensearch-neural-sparse-encoding-v1`     | `amazon/neural-sparse/opensearch-neural-sparse-encoding-v1`     | 0.524                        | 133M             |
-| Bi-encoder| `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill`     | `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill`     | 0.528                        | 67M             |
+| 僅文件  | `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v1` | `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1`    | 0.49                         | 133M             |
+| 僅文件  | `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-distill` | `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1`    | 0.504                         | 67M             |
+| 僅文件  | `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-mini` | `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1`    | 0.497                         | 23M             |
+| 僅文件  | `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-distill` | `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1`    | 0.517                         | 67M             |
+| 僅文件  | `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-gte` | `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1`    | 0.546                         | 133M             |
+| 雙編碼器| `amazon/neural-sparse/opensearch-neural-sparse-encoding-v1`     | `amazon/neural-sparse/opensearch-neural-sparse-encoding-v1`     | 0.524                        | 133M             |
+| 雙編碼器| `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill`     | `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill`     | 0.528                        | 67M             |
 
-#### Multilingual models
+#### 多語言模型
 
-| Mode      | Ingestion model                                               | Search model                                                  | Avg. search relevance on MIRACL | Model parameters |
+| 模式      | 匯入模型                                               | 搜尋模型                                                  | MIRACL 上的平均搜尋相關性 | 模型參數 |
 |-----------|---------------------------------------------------------------|---------------------------------------------------------------|------------------------------|------------------|
-| Doc-only  | `amazon/neural-sparse/opensearch-neural-sparse-encoding-multilingual-v1` | `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-multilingual-v1`    | 0.629                         | 168M             |
+| 僅文件  | `amazon/neural-sparse/opensearch-neural-sparse-encoding-multilingual-v1` | `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-multilingual-v1`    | 0.629                         | 168M             |
 
-### Step 1(b): Register the model/tokenizer
+### 步驟 1(b)：註冊模型/斷詞器
 
-For both modes, register the sparse encoding model. For the doc-only mode with a custom tokenizer, register a custom tokenizer in addition to the sparse encoding model.
+兩種模式都請註冊稀疏編碼模型。若使用搭配自訂斷詞器的僅文件模式，請在稀疏編碼模型之外另外註冊自訂斷詞器。
 
-#### Bi-encoder mode
+#### 雙編碼器模式
 
-When using bi-encoder mode, you only need to register the `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill` model.
+使用雙編碼器模式時，您只需要註冊 `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill` 模型。
 
-Register the sparse encoding model:
+註冊稀疏編碼模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -71,7 +72,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Registering a model is an asynchronous task. OpenSearch returns a task ID for every model you register:
+註冊模型是非同步工作。OpenSearch 會為您註冊的每個模型傳回一個工作 ID：
 
 ```json
 {
@@ -80,14 +81,14 @@ Registering a model is an asynchronous task. OpenSearch returns a task ID for ev
 }
 ```
 
-You can check the status of the task by calling the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+您可以呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來檢查工作狀態：
 
 ```json
 GET /_plugins/_ml/tasks/aFeif4oB5Vm0Tdw8yoN7
 ```
 {% include copy-curl.html %}
 
-Once the task is complete, the task state will change to `COMPLETED` and the ML Tasks API response will contain the model ID of the registered model:
+工作完成後，工作狀態會變成 `COMPLETED`，而 ML Tasks API 回應會包含已註冊模型的模型 ID：
 
 ```json
 {
@@ -104,13 +105,13 @@ Once the task is complete, the task state will change to `COMPLETED` and the ML 
 }
 ```
 
-Note the `model_id` of the model you've created; you'll need it for the following steps.
+請記下您所建立模型的 `model_id`；後續步驟會用到。
 
-#### Doc-only mode with a custom tokenizer
+#### 搭配自訂斷詞器的僅文件模式
 
-When using the doc-only mode with a custom tokenizer, you need to register the `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-distill` model, which you'll use at ingestion time, and the `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1` tokenizer, which you'll use at search time.
+使用搭配自訂斷詞器的僅文件模式時，您需要註冊匯入時要使用的 `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-distill` 模型，以及搜尋時要使用的 `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1` 斷詞器。
 
-Register the sparse encoding model:
+註冊稀疏編碼模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -122,7 +123,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Register the tokenizer:
+註冊斷詞器：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -134,17 +135,17 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Like in bi-encoder mode, use the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) to check the status of the registration task. After the ML Tasks API returns, the task state changes to `COMPLETED`. Note the `model_id` of the model and the tokenizer you've created; you'll need them for the following steps.
+與雙編碼器模式相同，請使用 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 檢查註冊工作的狀態。ML Tasks API 傳回後，工作狀態會變成 `COMPLETED`。請記下您所建立模型與斷詞器的 `model_id`；後續步驟會用到。
 
-## Step 2: Ingest data 
+## 步驟 2：匯入資料
 
-In both the bi-encoder and doc-only modes, you'll use a sparse encoding model at ingestion time to generate sparse vector embeddings.
+在雙編碼器與僅文件兩種模式中，您都會在匯入時使用稀疏編碼模型來產生稀疏向量嵌入。
 
-### Step 2(a): Create an ingest pipeline
+### 步驟 2(a)：建立資料匯入管線
 
-To generate sparse vector embeddings, you need to create an [ingest pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/) that contains a [`sparse_encoding` processor]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/sparse-encoding/), which will convert the text in a document field to vector embeddings. The processor's `field_map` determines the input fields from which to generate vector embeddings and the output fields in which to store the embeddings.
+若要產生稀疏向量嵌入，您需要建立一個包含 [`sparse_encoding` 處理器]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/sparse-encoding/) 的[資料匯入管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)，該處理器會將文件欄位中的文字轉換為向量嵌入。處理器的 `field_map` 決定要從哪些輸入欄位產生向量嵌入，以及要將嵌入儲存在哪些輸出欄位。
 
-The following example request creates an ingest pipeline where the text from `passage_text` will be converted into sparse vector embeddings, which will be stored in `passage_embedding`. Provide the model ID of the registered model in the request:
+下列範例請求會建立一個資料匯入管線，其中 `passage_text` 的文字將被轉換為稀疏向量嵌入，並儲存在 `passage_embedding` 中。請在請求中提供已註冊模型的模型 ID：
 
 ```json
 PUT /_ingest/pipeline/nlp-ingest-pipeline-sparse
@@ -166,13 +167,13 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline-sparse
 ```
 {% include copy-curl.html %}
 
-To split long text into passages, use the `text_chunking` ingest processor before the `sparse_encoding` processor. For more information, see [Text chunking]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/).
+若要將長文字分割成段落，請在 `sparse_encoding` 處理器之前使用 `text_chunking` 資料匯入處理器。如需更多資訊，請參閱 [文字分塊]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/)。
 
-### Step 2(b): Create an index for ingestion
+### 步驟 2(b)：建立用於匯入的索引
 
-In order to use the sparse encoding processor defined in your pipeline, create a rank features index, adding the pipeline created in the previous step as the default pipeline. Ensure that the fields defined in the `field_map` are mapped as correct types. Continuing with the example, the `passage_embedding` field must be mapped as [`rank_features`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/rank/#rank-features). Similarly, the `passage_text` field must be mapped as `text`.
+若要使用管線中定義的稀疏編碼處理器，請建立一個 rank features 索引，並將上一步建立的管線新增為預設管線。請確保 `field_map` 中定義的欄位已對應為正確的類型。延續前述範例，`passage_embedding` 欄位必須對應為 [`rank_features`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/rank/#rank-features)。同樣地，`passage_text` 欄位必須對應為 `text`。
 
-The following example request creates a rank features index configured with a default ingest pipeline:
+下列範例請求會建立一個設定了預設資料匯入管線的 rank features 索引：
 
 ```json
 PUT /my-nlp-index
@@ -197,7 +198,7 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-To save disk space, you can exclude the embedding vector from the source as follows:
+若要節省磁碟空間，您可以依照下列方式將嵌入向量從來源中排除：
 
 ```json
 PUT /my-nlp-index
@@ -227,12 +228,12 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-Once the `<token, weight>` pairs are excluded from the source, they cannot be recovered. Before applying this optimization, make sure you don't need the `<token, weight>` pairs for your application.
+一旦 `<token, weight>` 配對從來源中排除，就無法復原。在套用此最佳化之前，請確認您的應用程式不需要 `<token, weight>` 配對。
 {: .important}
 
-### Step 2(c): Ingest documents into the index
+### 步驟 2(c)：將文件匯入索引
 
-To ingest documents into the index created in the previous step, send the following requests:
+若要將文件匯入上一步建立的索引，請傳送下列請求：
 
 ```json
 PUT /my-nlp-index/_doc/1
@@ -252,13 +253,13 @@ PUT /my-nlp-index/_doc/2
 ```
 {% include copy-curl.html %}
 
-Before the document is ingested into the index, the ingest pipeline runs the `sparse_encoding` processor on the document, generating vector embeddings for the `passage_text` field. The indexed document includes the `passage_text` field, which contains the original text, and the `passage_embedding` field, which contains the vector embeddings. 
+在文件匯入索引之前，資料匯入管線會對文件執行 `sparse_encoding` 處理器，為 `passage_text` 欄位產生向量嵌入。編製索引後的文件包含 `passage_text` 欄位（其中包含原始文字）以及 `passage_embedding` 欄位（其中包含向量嵌入）。
 
-## Step 3: Search the data
+## 步驟 3：搜尋資料
 
-To perform a neural sparse search on your index, use the `neural_sparse` query clause in [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/) queries. 
+若要對索引執行神經稀疏搜尋，請在 [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/) 查詢中使用 `neural_sparse` 查詢子句。
 
-The following example request uses a `neural_sparse` query to search for relevant documents using a raw text query. Provide the model ID for bi-encoder mode or the tokenizer ID for doc-only mode with a custom tokenizer:
+下列範例請求使用 `neural_sparse` 查詢，以原始文字查詢搜尋相關文件。請提供 bi-encoder 模式的模型 ID，或自訂斷詞器的 doc-only 模式的斷詞器 ID：
 
 ```json
 GET my-nlp-index/_search
@@ -275,7 +276,7 @@ GET my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents:
+回應包含相符的文件：
 
 ```json
 {
@@ -351,11 +352,11 @@ The response contains the matching documents:
 }
 ```
 
-## Configuring a default model for search
+## 設定搜尋的預設模型
 
-When using custom models, you can configure a default model ID at the index level to simplify your queries. This eliminates the need to specify the `model_id` in every query.
+使用自訂模型時，您可以在索引層級設定預設模型 ID，以簡化查詢。這樣就不需要在每個查詢中指定 `model_id`。
 
-First, create a search pipeline with a [`neural_query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/) processor:
+首先，建立一個包含 [`neural_query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/) 處理器的搜尋管線：
 
 ```json
 PUT /_search/pipeline/neural_search_pipeline
@@ -371,7 +372,7 @@ PUT /_search/pipeline/neural_search_pipeline
 ```
 {% include copy-curl.html %}
 
-Then set this pipeline as the default for your index:
+然後將此管線設定為索引的預設管線：
 
 ```json
 PUT /my-nlp-index/_settings 
@@ -381,10 +382,10 @@ PUT /my-nlp-index/_settings
 ```
 {% include copy-curl.html %}
 
-After configuring the default model, you can omit the `model_id` when running queries.
+設定預設模型後，您在執行查詢時即可省略 `model_id`。
 
-For more information about setting a default model on an index, or to learn how to set a default model on a specific field, see [Setting a default model on an index or field]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/#setting-a-default-model-on-an-index-or-field).
+如需更多關於在索引上設定預設模型的資訊，或想了解如何在特定欄位上設定預設模型，請參閱 [在索引或欄位上設定預設模型]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/#setting-a-default-model-on-an-index-or-field)。
 
-## Next steps
+## 後續步驟
 
-- Explore our [tutorials]({{site.url}}{{site.baseurl}}/vector-search/tutorials/) to learn how to build AI search applications. 
+- 瀏覽我們的[教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/)，了解如何建置 AI 搜尋應用程式。 

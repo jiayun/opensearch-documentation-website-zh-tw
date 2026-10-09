@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: ML inference
+title: "ML 推論"
 parent: Ingest processors
 nav_order: 215
 redirect_from:
 - /api-reference/ingest-apis/processors/ml-inference/
 ---
 
-# ML inference processor
+# ML 推論處理器
 
-The `ml_inference` processor is used to invoke machine learning (ML) models registered in the [OpenSearch ML Commons plugin]({{site.url}}{{site.baseurl}}/ml-commons-plugin/). The model outputs are added as new fields to the ingested documents.
+`ml_inference` 處理器用於叫用註冊在 [OpenSearch ML Commons 外掛程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/) 中的機器學習 (ML) 模型。模型輸出會以新欄位的形式新增至匯入的文件。
 
-**PREREQUISITE**<br>
-Before using the `ml_inference` processor, you must have either a local ML model hosted on your OpenSearch cluster or an externally hosted model connected to your OpenSearch cluster through the ML Commons plugin. For more information about local models, see [Using ML models within OpenSearch]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/). For more information about externally hosted models, see [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/). 
+**先決條件**<br>
+使用 `ml_inference` 處理器之前，您必須在 OpenSearch 叢集上裝載本機 ML 模型，或透過 ML Commons 外掛程式將外部裝載的模型連線至您的 OpenSearch 叢集。如需本機模型的詳細資訊，請參閱[在 OpenSearch 中使用 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。如需外部裝載模型的詳細資訊，請參閱[連線至外部裝載的模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。 
 {: .note}
 
-## Syntax
+## 語法
 
-The following is the syntax for the `ml-inference` processor:
+以下是 `ml-inference` 處理器的語法：
 
 ```json
 {
@@ -45,48 +46,48 @@ The following is the syntax for the `ml-inference` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `ml-inference` processor.
+下表列出 `ml-inference` 處理器的必要與選用參數。
 
-| Parameter | Data type | Required/Optional | Description |
+| 參數 | 資料類型 | 必要/選用 | 說明 |
 |:--- | :--- | :--- | :--- |
-| `model_id` | String | Required | The ID of the ML model used by the processor. |
-| `function_name` | String    | Optional for externally hosted models<br/><br/>Required for local models | The function name of the ML model configured in the processor. For local models, valid values are `sparse_encoding`, `sparse_tokenize`, `text_embedding`, and `text_similarity`. For externally hosted models, valid value is `remote`. Default is `remote`. |
-| `model_config` | Object    | Optional   | Custom configuration options for the ML model. For externally hosted models, if set, this configuration overrides the default connector parameters. For local models, you can add `model_config` to `model_input` to override the model configuration set during registration. For more information, see [The `model_config` object]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-model_config-object). |
-| `model_input`  | String    | Optional for externally hosted models<br/><br/>Required for local models | A template that defines the input field format expected by the model. Each local model type might use a different set of inputs. For externally hosted models, default is `"{ \"parameters\": ${ml_inference.parameters} }`.|
-| `input_map` | Array | Optional for externally hosted models<br/><br/>Required for local models | An array specifying how to map ingested document fields to the model input fields. Each element of the array is a map in the `"<model_input_field>": "<document_field>"` format and corresponds to one model invocation for a document field. If no input mapping is specified for an externally hosted model, then all fields from the document are passed to the model directly as input. The `input_map` size indicates the number of times the model is invoked (the number of Predict API requests). |
-| `<model_input_field>` | String    | Optional for externally hosted models<br/><br/>Required for local models  | The model input field name. |
-| `<document_field>`   | String    | Optional for externally hosted models<br/><br/>Required for local models | The name or JSON path of the ingested document field used as the model input. |
-| `output_map` | Array | Optional for externally hosted models<br/><br/>Required for local models | An array specifying how to map the model output fields to new fields in the ingested document. Each element of the array is a map in the `"<new_document_field>": "<model_output_field>"` format.|
-| `<new_document_field>`   | String    | Optional for externally hosted models<br/><br/>Required for local models | The name of the new field in the ingested document in which the model's output (specified by `model_output`) is stored. If no output mapping is specified for externally hosted models, then all fields from the model output are added to the new document field. |
-| `<model_output_field>` | String    | Optional for externally hosted models<br/><br/>Required for local models | The name or JSON path of the field in the model output to be stored in the `new_document_field`. |
-| `full_response_path` | Boolean   | Optional   | Set this parameter to `true` if the `model_output_field` contains a full JSON path to the field instead of the field name. The model output will then be fully parsed to get the value of the field. Default is `true` for local models and `false` for externally hosted models. |
-| `ignore_missing` | Boolean   | Optional  | If `true` and any of the input fields defined in the `input_map` or `output_map` are missing, then the missing fields are ignored. Otherwise, a missing field causes a failure. Default is `false`. |
-| `ignore_failure` | Boolean   | Optional  | Specifies whether the processor continues execution even if it encounters an error. If `true`, then any failure is ignored and ingestion continues. If `false`, then any failure causes ingestion to be canceled. Default is `false`. |
-| `override` | Boolean   | Optional   | Relevant if an ingested document already contains a field with the name specified in `<new_document_field>`. If `override` is `false`, then the input field is skipped. If `true`, then the existing field value is overridden by the new model output. Default is `false`. |
-| `max_prediction_tasks`  | Integer   | Optional  | The maximum number of concurrent model invocations that can run during document ingestion. Default is `10`. |
-| `description` | String    | Optional  | A brief description of the processor. |
-| `tag` | String    | Optional | An identifier tag for the processor. Useful for debugging to distinguish between processors of the same type. |
+| `model_id` | 字串 | 必要 | 處理器所使用的 ML 模型 ID。 |
+| `function_name` | 字串    | 外部裝載模型為選用<br/><br/>本機模型為必要 | 處理器中所設定 ML 模型的函式名稱。若為本機模型，有效值為 `sparse_encoding`、`sparse_tokenize`、`text_embedding` 和 `text_similarity`。若為外部裝載模型，有效值為 `remote`。預設為 `remote`。 |
+| `model_config` | 物件    | 選用   | ML 模型的自訂組態選項。若為外部裝載模型，設定此項會覆寫預設的連接器參數。若為本機模型，您可以將 `model_config` 新增至 `model_input`，以覆寫註冊期間所設定的模型組態。如需詳細資訊，請參閱[`model_config` 物件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-model_config-object)。 |
+| `model_input`  | 字串    | 外部裝載模型為選用<br/><br/>本機模型為必要 | 定義模型預期輸入欄位格式的範本。每個本機模型類型可能使用不同的輸入集。若為外部裝載模型，預設為 `"{ \"parameters\": ${ml_inference.parameters} }`。|
+| `input_map` | 陣列 | 外部裝載模型為選用<br/><br/>本機模型為必要 | 指定如何將匯入的文件欄位對應至模型輸入欄位的陣列。陣列的每個元素都是 `"<model_input_field>": "<document_field>"` 格式的對應，並對應至文件欄位的一次模型叫用。若未為外部裝載模型指定輸入對應，則文件中的所有欄位都會直接以輸入形式傳遞至模型。`input_map` 大小表示模型被叫用的次數 (Predict API 請求的次數)。 |
+| `<model_input_field>` | 字串    | 外部裝載模型為選用<br/><br/>本機模型為必要  | 模型輸入欄位名稱。 |
+| `<document_field>`   | 字串    | 外部裝載模型為選用<br/><br/>本機模型為必要 | 做為模型輸入之匯入文件欄位的名稱或 JSON 路徑。 |
+| `output_map` | 陣列 | 外部裝載模型為選用<br/><br/>本機模型為必要 | 指定如何將模型輸出欄位對應至匯入文件中新欄位的陣列。陣列的每個元素都是 `"<new_document_field>": "<model_output_field>"` 格式的對應。|
+| `<new_document_field>`   | 字串    | 外部裝載模型為選用<br/><br/>本機模型為必要 | 匯入文件中用來儲存模型輸出 (由 `model_output` 指定) 的新欄位名稱。若未為外部裝載模型指定輸出對應，則模型輸出中的所有欄位都會新增至新的文件欄位。 |
+| `<model_output_field>` | 字串    | 外部裝載模型為選用<br/><br/>本機模型為必要 | 模型輸出中要儲存至 `new_document_field` 之欄位的名稱或 JSON 路徑。 |
+| `full_response_path` | 布林值   | 選用   | 若 `model_output_field` 包含欄位的完整 JSON 路徑而非欄位名稱，請將此參數設為 `true`。接著會完整剖析模型輸出，以取得該欄位的值。本機模型的預設值為 `true`，外部裝載模型的預設值為 `false`。 |
+| `ignore_missing` | 布林值   | 選用  | 若 `true` 且 `input_map` 或 `output_map` 中定義的任何輸入欄位遺漏，則會忽略遺漏的欄位。否則，遺漏欄位會導致失敗。預設為 `false`。 |
+| `ignore_failure` | 布林值   | 選用  | 指定處理器即使遇到錯誤是否仍繼續執行。若為 `true`，則會忽略任何失敗並繼續匯入。若為 `false`，則任何失敗都會導致匯入取消。預設為 `false`。 |
+| `override` | 布林值   | 選用   | 若匯入的文件已包含 `<new_document_field>` 中所指定名稱的欄位，則此參數會相關。若 `override` 為 `false`，則會略過輸入欄位。若為 `true`，則現有欄位值會由新的模型輸出覆寫。預設為 `false`。 |
+| `max_prediction_tasks`  | 整數   | 選用  | 文件匯入期間可執行的並行模型叫用數上限。預設為 `10`。 |
+| `description` | 字串    | 選用  | 處理器的簡短說明。 |
+| `tag` | 字串    | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。 |
 
-The `input_map` and `output_map` mappings support standard [JSON path](https://github.com/json-path/JsonPath) notation for specifying complex data structures. 
+`input_map` 和 `output_map` 對應支援標準 [JSON 路徑](https://github.com/json-path/JsonPath) 標記法，以指定複雜的資料結構。 
 {: .note}
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline. You must provide a model ID when creating the processor. Before testing a pipeline or ingesting the documents using the processor, make sure that the model is successfully deployed. You can check the model state using the [Get Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/get-model/).
+請依照下列步驟在管線中使用處理器。建立處理器時，您必須提供模型 ID。使用處理器測試管線或匯入文件之前，請確定模型已成功部署。您可以使用 [Get Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/get-model/) 檢查模型狀態。
 
-For local models, you must provide a `model_input` field that specifies the model input format. Add any input fields in `model_config` to `model_input`.
+若為本機模型，您必須提供指定模型輸入格式的 `model_input` 欄位。將 `model_config` 中的所有輸入欄位新增至 `model_input`。
 
-For remote models, the `model_input` field is optional, and its default value is `"{ \"parameters\": ${ml_inference.parameters} }`.
+若為遠端模型，`model_input` 欄位為選用，其預設值為 `"{ \"parameters\": ${ml_inference.parameters} }`。
 
-### Example: Externally hosted model
+### 範例：外部裝載的模型
 
-The following example configures an `ml_inference` processor with an externally hosted model.
+下列範例會使用外部裝載的模型設定 `ml_inference` 處理器。
 
-**Step 1: Create a pipeline**
+**步驟 1：建立管線**
 
-The following example creates an ingest pipeline for an externally hosted text embedding model. The model requires an `input` field and generates results in a `data` field. It converts the text in the `passage_text` field into text embeddings and stores the embeddings in the `passage_embedding` field. The `function_name` is not explicitly specified in the processor configuration, so it defaults to `remote`, signifying an externally hosted model:
+下列範例會為外部裝載的文字嵌入模型建立資料匯入管線。此模型需要 `input` 欄位，並在 `data` 欄位中產生結果。它會將 `passage_text` 欄位中的文字轉換為文字嵌入，並將嵌入儲存在 `passage_embedding` 欄位中。處理器組態中未明確指定 `function_name`，因此其預設為 `remote`，表示為外部裝載的模型：
 
 ```json
 PUT /_ingest/pipeline/ml_inference_pipeline
@@ -113,7 +114,7 @@ PUT /_ingest/pipeline/ml_inference_pipeline
 ```
 {% include copy-curl.html %}
 
-For a Predict API request to an externally hosted model, all fields are usually nested inside the `parameters` object:
+對於傳送至外部裝載模型的 Predict API 請求，所有欄位通常會巢狀置於 `parameters` 物件內：
 
 ```json
 POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_predict
@@ -128,7 +129,7 @@ POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_predict
 }
 ```
 
-When specifying the `input_map` for an externally hosted model, you can directly reference the `input` field instead of providing its dot path `parameters.input`:
+為外部裝載模型指定 `input_map` 時，您可以直接參照 `input` 欄位，而不必提供其點路徑 `parameters.input`：
 
 ```json
 "input_map": [
@@ -138,12 +139,12 @@ When specifying the `input_map` for an externally hosted model, you can directly
 ]
 ```
 
-**Step 2 (Optional): Test the pipeline**
+**步驟 2 (選用)：測試管線**
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/ml_inference_pipeline/_simulate
@@ -161,9 +162,9 @@ POST _ingest/pipeline/ml_inference_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The response confirms that the processor has generated text embeddings in the `passage_embedding` field. The document now contains both the `passage_text` and `passage_embedding` fields:
+回應確認處理器已在 `passage_embedding` 欄位中產生文字嵌入。該文件現在同時包含 `passage_text` 與 `passage_embedding` 欄位：
 
 ```json
 {
@@ -191,18 +192,18 @@ The response confirms that the processor has generated text embeddings in the `p
 }
 ```
 
-Once you have created an ingest pipeline, you need to create an index for ingestion and ingest documents into the index.
+建立資料匯入管線後，您需要建立一個索引以供匯入，並將文件匯入該索引。
 {: .note}
 
-### Example: Local model
+### 範例：本機模型
 
-The following example configures an `ml_inference` processor with a local model.
+下列範例設定一個使用本機模型的 `ml_inference` 處理器。
 
-**Step 1: Create a pipeline**
+**步驟 1：建立管線**
 
-The following example creates an ingest pipeline for the `huggingface/sentence-transformers/all-distilroberta-v1` local model. The model is a sentence transformer [pretrained model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#sentence-transformers) hosted in your OpenSearch cluster. 
+下列範例為 `huggingface/sentence-transformers/all-distilroberta-v1` 本機模型建立資料匯入管線。該模型是託管在您 OpenSearch 叢集中的句子轉換器 [預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#sentence-transformers)。 
 
-If you invoke the model using the Predict API, then the request looks like this:
+如果您使用 Predict API 叫用該模型，則請求如下所示：
 
 ```json
 POST /_plugins/_ml/_predict/text_embedding/cleMb4kBJ1eYAeTMFFg4
@@ -213,13 +214,13 @@ POST /_plugins/_ml/_predict/text_embedding/cleMb4kBJ1eYAeTMFFg4
 }
 ```
 
-Using this schema, specify the `model_input` as follows:
+使用此結構描述，請依照下列方式指定 `model_input`：
 
 ```json
  "model_input": "{ \"text_docs\": ${input_map.text_docs}, \"return_number\": ${model_config.return_number}, \"target_response\": ${model_config.target_response} }"
 ```
 
-In the `input_map`, map the `book.*.chunk.text.*.context` document field to the `text_docs` field expected by the model:
+在 `input_map` 中，將 `book.*.chunk.text.*.context` 文件欄位對應到模型預期的 `text_docs` 欄位：
 
 ```json
 "input_map": [
@@ -229,13 +230,13 @@ In the `input_map`, map the `book.*.chunk.text.*.context` document field to the 
 ]
 ```
 
-Because you specified the field to convert into embeddings as a JSON path, you need to set the `full_response_path` to `true` so that the full JSON document is parsed to obtain the input field:
+由於您將要轉換為嵌入的欄位指定為 JSON 路徑，因此需要將 `full_response_path` 設定為 `true`，以便剖析完整的 JSON 文件以取得輸入欄位：
 
 ```json
 "full_response_path": true
 ```
 
-The documents you index will appear as follows. The text in the `context` field will be used to generate embeddings:
+您編製索引的文件將如下所示。`context` 欄位中的文字將用於產生嵌入：
 
 ```json
 "book": [
@@ -252,7 +253,7 @@ The documents you index will appear as follows. The text in the `context` field 
 ]
 ```
 
-The Predict API request returns the following response:
+Predict API 請求會傳回以下回應：
 
 ```json
 {
@@ -278,7 +279,7 @@ The Predict API request returns the following response:
 }
 ```
 
-The model generates embeddings in the `$.inference_results.*.output.*.data` field. The `output_map` maps this field to the newly created `book.*.chunk.text.*.context_embedding` field in the ingested document: 
+模型會在 `$.inference_results.*.output.*.data` 欄位中產生嵌入。`output_map` 會將此欄位對應到已匯入文件中新建的 `book.*.chunk.text.*.context_embedding` 欄位： 
 
 ```json
 "output_map": [
@@ -288,9 +289,9 @@ The model generates embeddings in the `$.inference_results.*.output.*.data` fiel
 ]
 ```
 
-To configure an `ml_inference` processor with a local model, specify the `function_name` explicitly. In this example, `function_name` is `text_embedding`. For information about valid `function_name` values, see [Configuration parameters](#configuration-parameters).
+若要設定使用本機模型的 `ml_inference` 處理器，請明確指定 `function_name`。在此範例中，`function_name` 為 `text_embedding`。如需有效 `function_name` 值的資訊，請參閱 [組態參數](#configuration-parameters)。
 
-In this example, the final configuration of the `ml_inference` processor with the local model is as follows:
+在此範例中，使用本機模型的 `ml_inference` 處理器的最終組態如下：
 
 ```json
 PUT /_ingest/pipeline/ml_inference_pipeline_local
@@ -326,9 +327,9 @@ PUT /_ingest/pipeline/ml_inference_pipeline_local
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline**
+**步驟 2（選用）：測試管線**
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/ml_inference_pipeline/_simulate
@@ -375,9 +376,9 @@ POST _ingest/pipeline/ml_inference_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The response confirms that the processor has generated text embeddings in the `context_embedding` field. The document now contains both the `context` and `context_embedding` fields at the same path:
+回應確認處理器已在 `context_embedding` 欄位中產生文字嵌入。該文件現在在同一個路徑下同時包含 `context` 與 `context_embedding` 欄位：
 
 ```json
 {
@@ -452,5 +453,5 @@ The response confirms that the processor has generated text embeddings in the `c
 }
 ```
 
-Once you have created an ingest pipeline, you need to create an index for ingestion and ingest documents into the index.
+建立資料匯入管線後，您需要建立一個索引以供匯入，並將文件匯入該索引。
 {: .note}

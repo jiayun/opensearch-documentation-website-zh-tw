@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: multisearch
 parent: Commands
@@ -8,34 +9,34 @@ nav_order: 29
 
 <!-- vale off -->
 
-# multisearch command
+# multisearch 命令
 
 <!-- vale on -->
 
 
-The `multisearch` command runs multiple subsearches and merges their results. It allows you to combine data from different queries on the same or different sources. You can optionally apply subsequent processing, such as aggregation or sorting, to the combined results. Each subsearch can have different filtering criteria, data transformations, and field selections. 
+`multisearch` 命令會執行多個子搜尋並合併其結果。它可讓您在相同或不同來源上合併來自不同查詢的資料。您可以選擇性地對合併後的結果套用後續處理，例如彙總或排序。每個子搜尋可以有不同的篩選條件、資料轉換和欄位選取。
 
-The `multisearch` command is particularly useful for comparative analysis, union operations, and creating comprehensive datasets from multiple search criteria. The command supports timestamp-based result interleaving when working with time-series data.
+`multisearch` 命令對於比較分析、聯集運算，以及從多個搜尋條件建立完整資料集特別有用。處理時間序列資料時，此命令支援依時間戳記交錯排列結果。
 
-Use `multisearch` for:
+`multisearch` 適用於：
 
-* **Comparative analysis**: Compare metrics across different segments, regions, or time periods.
-* **Success rate monitoring**: Calculate success rates by comparing successful to total operations.
-* **Multi-source data combination**: Merge data from different indexes or apply different filters to the same source.
-* **A/B testing analysis**: Combine results from different test groups for comparison.
-* **Time-series data merging**: Interleave events from multiple sources based on timestamps.
+* **比較分析**：比較不同區隔、地區或時間週期的指標。
+* **成功率監控**：透過比較成功與總運算次數來計算成功率。
+* **多來源資料合併**：合併來自不同索引的資料，或對相同來源套用不同的篩選條件。
+* **A/B 測試分析**：合併不同測試群組的結果以進行比較。
+* **時間序列資料合併**：依時間戳記交錯排列來自多個來源的事件。
  
   
 
-## Syntax
+## 語法
 
-The `multisearch` command has the following syntax:
+`multisearch` 命令的語法如下：
 
 ```sql
 multisearch <subsearch1> <subsearch2> [<subsearch3> ...]
 ```
 
-The following are examples of the `multisearch` command syntax:
+以下為 `multisearch` 命令語法的範例：
 
 ```sql
 | multisearch [search source=table | where condition1] [search source=table | where condition2]
@@ -43,18 +44,18 @@ The following are examples of the `multisearch` command syntax:
 | multisearch [search source=table | where status="success"] [search source=table | where status="error"]
 ```
 
-## Parameters
+## 參數
 
-The `multisearch` command supports the following parameters.
+`multisearch` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<subsearchN>` | Required | At least two subsearches are required. Each subsearch must be enclosed in square brackets and start with the `search` keyword (`[search source=index | <commands>]`). All PPL commands are supported within subsearches. |
-| `<result-processing>` | Optional | Commands applied to the merged results after the `multisearch` operation (for example, `stats`, `sort`, or `head`). |  
+| `<subsearchN>` | 必要 | 至少需要兩個子搜尋。每個子搜尋必須以方括號括住，並以 `search` 關鍵字 (`[search source=index | <commands>]`) 開頭。子搜尋內支援所有 PPL 命令。 |
+| `<result-processing>` | 選用 | 在 `multisearch` 運算之後套用至合併結果的命令 (例如 `stats`、`sort` 或 `head`)。 |  
 
-## Example 1: Comparing errors with debug logs
+## 範例 1：比較錯誤記錄檔與偵錯記錄檔
 
-This example merges error logs with debug logs side by side. This is useful when investigating whether debug-level logs from the same services provide clues about the root cause of errors:
+此範例將錯誤記錄檔與偵錯記錄檔並排合併。當您調查相同服務的偵錯層級記錄檔是否提供錯誤根本原因的線索時，這非常有用：
   
 ```sql
 | multisearch [search source=otellogs
@@ -68,7 +69,7 @@ This example merges error logs with debug logs side by side. This is useful when
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -88,9 +89,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Segmenting logs by severity tier
+## 範例 2：依嚴重性層級分割記錄檔
 
-This example separates critical and non-critical logs for comparative analysis:
+此範例將嚴重與非嚴重的記錄檔分開，以進行比較分析：
   
 ```sql
 | multisearch [search source=otellogs
@@ -104,7 +105,7 @@ This example separates critical and non-critical logs for comparative analysis:
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -125,9 +126,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Merging time-series data from multiple sources
+## 範例 3：合併來自多個來源的時間序列資料
 
-This example demonstrates how to combine time-series data from different sources while maintaining chronological order. The results are automatically sorted by timestamp to create a unified timeline:
+此範例示範如何在維持時間先後順序的情況下，合併來自不同來源的時間序列資料。結果會自動依時間戳記排序，以建立統一的時間軸：
   
 ```sql
 | multisearch [search source=time_data
@@ -138,7 +139,7 @@ This example demonstrates how to combine time-series data from different sources
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -153,9 +154,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 4: Handling missing fields across subsearches
+## 範例 4：處理子搜尋之間缺少的欄位
 
-This example demonstrates how `multisearch` handles schema differences when subsearches return different fields. When one subsearch includes a field that others don't have, missing values are automatically filled with null values:
+此範例示範 `multisearch` 如何在子搜尋傳回不同欄位時處理結構描述差異。當某個子搜尋包含其他子搜尋沒有的欄位時，缺少的值會自動以 null 填入：
   
 ```sql
 | multisearch [search source=otellogs
@@ -169,7 +170,7 @@ This example demonstrates how `multisearch` handles schema differences when subs
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -184,9 +185,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Limitations
+## 限制
 
-The `multisearch` command has the following limitations:
+`multisearch` 命令有下列限制：
 
-* At least two subsearches must be specified.
-* When fields with the same name exist across subsearches but have incompatible types, the system automatically resolves conflicts by renaming the conflicting fields. The first occurrence retains the original name, while subsequent conflicting fields are renamed using a numeric suffix (for example, `age` becomes `age0`, `age1`, and so on). This ensures that all data is preserved while maintaining schema consistency.  
+* 至少必須指定兩個子搜尋。
+* 當子搜尋之間存在名稱相同但類型不相容的欄位時，系統會透過重新命名衝突的欄位自動解決衝突。第一次出現的欄位保留原始名稱，後續衝突的欄位則會以數字後綴重新命名 (例如 `age` 會變成 `age0`、`age1`，依此類推)。這可確保在維持結構描述一致性的同時保留所有資料。  

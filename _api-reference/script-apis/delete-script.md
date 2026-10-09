@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete stored script
+title: "刪除預存指令碼"
 parent: Script APIs
 nav_order: 40
 ---
 
-# Delete Stored Script API
-**Introduced 1.0**
+# 刪除預存指令碼 API
+**1.0 版推出**
 {: .label .label-purple }
 
-Deletes a stored script from the cluster state.
+從叢集狀態中刪除預存指令碼。
 
-## Endpoints
+## 端點
 
 ```json
 DELETE _scripts/my-script
 ```
 
-## Path parameters
+## 路徑參數
 
-Path parameters are optional. 
+路徑參數為選用。 
 
-| Parameter | Data type | Description | 
+| 參數 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `script-id` | String | ID of script to delete. |
+| `script-id` | 字串 | 要刪除的指令碼 ID。 |
 
-## Query parameters
+## 查詢參數
 
-| Parameter | Data type | Description | 
+| 參數 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `cluster_manager_timeout` | Time | Amount of time to wait for a connection to the cluster manager. Optional, defaults to `30s`. |
-| `timeout` | Time | The period of time to wait for a response. If a response is not received before the timeout value, the request will be dropped.
+| `cluster_manager_timeout` | Time | 等待與叢集管理員節點建立連線的時間長度。選用，預設為 `30s`。 |
+| `timeout` | Time | 等待回應的時間長度。如果在逾時值之前未收到回應，請求將會被捨棄。
 
-## Example request
+## 請求範例
 
-The following request deletes the `my-first-script` script:
+下列請求會刪除 `my-first-script` 指令碼：
 
 <!-- spec_insert_start
 component: example_code
@@ -58,9 +59,9 @@ response = client.delete_script(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
-The `DELETE _scripts/my-first-script` request returns the following field:
+`DELETE _scripts/my-first-script` 請求會傳回下列欄位：
 
 ````json
 {
@@ -68,16 +69,16 @@ The `DELETE _scripts/my-first-script` request returns the following field:
 }
 ````
 
-To determine whether the stored script was successfully deleted, use the [Get stored script]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-stored-script/) API, passing the script name as the `script` path parameter.
+若要確認預存指令碼是否已成功刪除，請使用[取得預存指令碼]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-stored-script/) API，並將指令碼名稱作為 `script` 路徑參數傳入。
 
-## Response body fields
+## 回應本文欄位
 
-The <HTTP METHOD> <endpoint> request returns the following response fields:
+此 <HTTP METHOD> <endpoint> 請求會傳回下列回應欄位：
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `acknowledged` | Boolean | Whether the delete script request was received. |
+| `acknowledged` | 布林值 | 是否已收到刪除指令碼請求。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/script/delete`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:admin/script/delete`。

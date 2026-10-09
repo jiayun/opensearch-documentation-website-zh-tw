@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Asynchronous search
+title: "非同步搜尋"
 nav_order: 40
 parent: Improving search performance
 has_children: true
@@ -8,32 +9,32 @@ redirect_from:
   - /search-plugins/async/
 ---
 
-# Asynchronous search
+# 非同步搜尋
 
-Searching large volumes of data can take a long time, especially if you're searching across warm nodes or multiple remote clusters.
+搜尋大量資料可能需要很長的時間，尤其是當您跨暖節點或多個遠端叢集進行搜尋時。
 
-Asynchronous search in OpenSearch lets you send search requests that run in the background. You can monitor the progress of these searches and get back partial results as they become available. After the search finishes, you can save the results to examine at a later time.
+OpenSearch 的非同步搜尋可讓您傳送在背景執行的搜尋請求。您可以監視這些搜尋的進度，並在部分結果可用時取得這些結果。搜尋完成後，您可以儲存結果，以便日後檢視。
 
 ## REST API
-Introduced 1.0
+於 1.0 版推出
 {: .label .label-purple }
 
-To perform an asynchronous search, send requests to `_plugins/_asynchronous_search`, with your query in the request body:
+若要執行非同步搜尋，請將請求傳送至 `_plugins/_asynchronous_search`，並在請求本文中放入您的查詢：
 
 ```json
 POST _plugins/_asynchronous_search
 ```
 
-You can specify the following options.
+您可以指定下列選項。
 
-Options | Description | Default value | Required
+選項 | 說明 | 預設值 | 必要
 :--- | :--- |:--- |:--- |
-`wait_for_completion_timeout` |  The amount of time that you plan to wait for the results. You can see whatever results you get within this time just like in a normal search. You can poll the remaining results based on an ID. The maximum value is 300 seconds. | 1 second | No
-`keep_on_completion` |  Whether you want to save the results in the cluster after the search is complete. You can examine the stored results at a later time. | `false` | No
-`keep_alive` |  The amount of time that the result is saved in the cluster. For example, `2d` means that the results are stored in the cluster for 48 hours. The saved search results are deleted after this period or if the search is canceled. Note that this includes the query execution time. If the query overruns this time, the process cancels this query automatically. | 12 hours | No
-`index` | The name of the index to be searched. Can be an individual name, a comma-separated list of indexes, or a wildcard expression of index names. | All indexes in the cluster | No
+`wait_for_completion_timeout` | 您打算等待結果的時間長度。您可以在此時間內看到取得的任何結果，就像一般搜尋一樣。您可以根據 ID 輪詢剩餘的結果。最大值為 300 秒。 | 1 秒 | 否
+`keep_on_completion` | 您是否要在搜尋完成後將結果儲存在叢集中。您可以稍後再檢視儲存的結果。 | `false` | 否
+`keep_alive` | 結果儲存在叢集中的時間長度。例如，`2d` 表示結果會儲存在叢集中 48 小時。儲存的搜尋結果會在此期間過後或搜尋取消時刪除。請注意，這包含查詢執行時間。如果查詢超過此時間，程序會自動取消此查詢。 | 12 小時 | 否
+`index` | 要搜尋的索引名稱。可以是個別名稱、以逗號分隔的索引清單，或索引名稱的萬用字元運算式。 | 叢集中的所有索引 | 否
 
-#### Example request
+#### 範例請求
 
 ```json
 POST _plugins/_asynchronous_search/?pretty&size=10&wait_for_completion_timeout=1ms&keep_on_completion=true&request_cache=false
@@ -49,7 +50,7 @@ POST _plugins/_asynchronous_search/?pretty&size=10&wait_for_completion_timeout=1
 }
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -99,32 +100,32 @@ POST _plugins/_asynchronous_search/?pretty&size=10&wait_for_completion_timeout=1
 }
 ```
 
-#### Response parameters
+#### 回應參數
 
-Options | Description
+選項 | 說明
 :--- | :---
-`id` | The ID of an asynchronous search. Use this ID to monitor the progress of the search, get its partial results, and/or delete the results. If the asynchronous search finishes within the timeout period, the response doesn't include the ID because the results aren't stored in the cluster.
-`state` | Specifies whether the search is still running or if it has finished, and if the results persist in the cluster. The possible states are `RUNNING`, `SUCCEEDED`, `FAILED`, `PERSISTING`, `PERSIST_SUCCEEDED`, `PERSIST_FAILED`, `CLOSED` and `STORE_RESIDENT`.
-`start_time_in_millis` | The start time in milliseconds.
-`expiration_time_in_millis` | The expiration time in milliseconds.
-`took` | The total time that the search is running.
-`response` | The actual search response.
-`num_reduce_phases` | The number of times that the coordinating node aggregates results from batches of shard responses (5 by default). If this number increases compared to the last retrieved results, you can expect additional results to be included in the search response.
-`total` | The total number of shards that run the search.
-`successful` | The number of shard responses that the coordinating node received successfully.
-`aggregations` | The partial aggregation results that have been completed by the shards so far.
+`id` | 非同步搜尋的 ID。使用此 ID 來監視搜尋的進度、取得其部分結果，以及/或刪除結果。如果非同步搜尋在逾時期間內完成，回應不會包含此 ID，因為結果不會儲存在叢集中。
+`state` | 指定搜尋仍在執行或已完成，以及結果是否保存在叢集中。可能的狀態為 `RUNNING`、`SUCCEEDED`、`FAILED`、`PERSISTING`、`PERSIST_SUCCEEDED`、`PERSIST_FAILED`、`CLOSED` 及 `STORE_RESIDENT`。
+`start_time_in_millis` | 開始時間 (毫秒)。
+`expiration_time_in_millis` | 到期時間 (毫秒)。
+`took` | 搜尋執行的總時間。
+`response` | 實際的搜尋回應。
+`num_reduce_phases` | 協調節點從各批次分片回應彙總結果的次數 (預設為 5)。如果此數字比上次擷取的結果增加，您可以預期搜尋回應中會包含其他結果。
+`total` | 執行搜尋的分片總數。
+`successful` | 協調節點成功收到的分片回應數。
+`aggregations` | 分片到目前為止已完成的部分彙總結果。
 
-## Get partial results
-Introduced 1.0
+## 取得部分結果
+於 1.0 版推出
 {: .label .label-purple }
 
-After you submit an asynchronous search request, you can request partial responses with the ID that you see in the asynchronous search response.
+提交非同步搜尋請求後，您可以使用非同步搜尋回應中所見的 ID 來請求部分回應。
 
 ```json
 GET _plugins/_asynchronous_search/{ID}?pretty
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -185,27 +186,27 @@ GET _plugins/_asynchronous_search/{ID}?pretty
 }
 ```
 
-After the response is successfully persisted, you get back the `STORE_RESIDENT` state in the response.
+成功保存回應後，您會在回應中取得 `STORE_RESIDENT` 狀態。
 
-You can poll the ID with the `wait_for_completion_timeout` parameter to wait for the results received for the time that you specify.
+您可以使用 `wait_for_completion_timeout` 參數輪詢該 ID，以等待您指定時間內收到的結果。
 
-For asynchronous searches with `keep_on_completion` as `true` and a sufficiently long `keep_alive` time, you can keep polling the IDs until the search finishes. If you don’t want to periodically poll each ID, you can retain the results in your cluster with the `keep_alive` parameter and come back to it at a later time.
+對於 `keep_on_completion` 為 `true` 且 `keep_alive` 時間夠長的非同步搜尋，您可以持續輪詢 ID，直到搜尋完成。如果您不想定期輪詢每個 ID，可以使用 `keep_alive` 參數將結果保留在叢集中，並稍後再回來查看。
 
-## Delete searches and results
-Introduced 1.0
+## 刪除搜尋與結果
+於 1.0 版推出
 {: .label .label-purple }
 
-To delete an asynchronous search:
+若要刪除非同步搜尋：
 
 ```
 DELETE _plugins/_asynchronous_search/{ID}?pretty
 ```
 
-- If the search is still running, OpenSearch cancels it.
-- If the search is complete, OpenSearch deletes the saved results.
+- 如果搜尋仍在執行，OpenSearch 會取消它。
+- 如果搜尋已完成，OpenSearch 會刪除儲存的結果。
 
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -213,17 +214,17 @@ DELETE _plugins/_asynchronous_search/{ID}?pretty
 }
 ```
 
-## Monitor stats
-Introduced 1.0
+## 監視統計資料
+於 1.0 版推出
 {: .label .label-purple }
 
-You can use the stats API operation to monitor asynchronous searches that are running, completed, and/or persisted.
+您可以使用 stats API 作業來監視正在執行、已完成及/或已保存的非同步搜尋。
 
 ```json
 GET _plugins/_asynchronous_search/stats
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -251,16 +252,16 @@ GET _plugins/_asynchronous_search/stats
 }
 ```
 
-#### Response parameters
+#### 回應參數
 
-Options | Description
+選項 | 說明
 :--- | :---
-`submitted` | The number of asynchronous search requests that were submitted.
-`initialized` | The number of asynchronous search requests that were initialized.
-`rejected` | The number of asynchronous search requests that were rejected.
-`search_completed` | The number of asynchronous search requests that completed with a successful response.
-`search_failed` | The number of asynchronous search requests that completed with a failed response.
-`persisted` | The number of asynchronous search requests whose final result successfully persisted in the cluster.
-`persist_failed` | The number of asynchronous search requests whose final result failed to persist in the cluster.
-`running_current` | The number of asynchronous search requests that are running on a given coordinating node.
-`cancelled` | The number of asynchronous search requests that were canceled while the search was running.
+`submitted` | 已提交的非同步搜尋請求數。
+`initialized` | 已初始化的非同步搜尋請求數。
+`rejected` | 已拒絕的非同步搜尋請求數。
+`search_completed` | 以成功回應完成的非同步搜尋請求數。
+`search_failed` | 以失敗回應完成的非同步搜尋請求數。
+`persisted` | 最終結果成功保存在叢集中的非同步搜尋請求數。
+`persist_failed` | 最終結果無法保存在叢集中的非同步搜尋請求數。
+`running_current` | 在指定協調節點上執行的非同步搜尋請求數。
+`cancelled` | 在搜尋執行期間取消的非同步搜尋請求數。

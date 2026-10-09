@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Distance feature
+title: "距離功能"
 parent: Specialized queries
 nav_order: 5
 has_math: true
 ---
 
-# Distance feature query
+# 距離功能查詢
 
-Use the `distance_feature` query to boost the relevance of documents that are closer to a specific date or geographic point. This can help you prioritize more recent or nearby content in your search results. For example, you can assign more weight to products manufactured more recently or boost items closest to a user-specified location.
+使用 `distance_feature` 查詢來提升與特定日期或地理位置較接近之文件的相關性。這可協助您在搜尋結果中優先顯示較新或鄰近的內容。舉例來說，您可以為較近期製造的產品指派較高的權重，或提升最接近使用者指定位置的項目。
 
-You can apply this query to fields containing date or location data. It's commonly used within a `bool` query `should` clause to improve relevance scoring without filtering out results.
+您可以將此查詢套用至包含日期或位置資料的欄位。它通常用於 `bool` 查詢的 `should` 子句中，以改善相關性分數，而不會篩除結果。
 
-## Configuring the index
+## 設定索引
 
-Before using the `distance_feature` query, ensure that your index contains at least one of the following field types:
+使用 `distance_feature` 查詢之前，請確認您的索引至少包含下列其中一種欄位類型：
 
 - [`date`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/)
 - [`date_nanos`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date-nanos/)
 - [`geo_point`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-point/)
 
-In this example, you'll configure the `opening_date` and `coordinates` fields that you can use to run distance feature queries:
+在此範例中，您將設定可用來執行距離功能查詢的 `opening_date` 和 `coordinates` 欄位：
 
 ```json
 PUT /stores
@@ -39,7 +40,7 @@ PUT /stores
 ```
 {% include copy-curl.html %}
 
-Add sample documents to the index:
+將範例文件新增至索引：
 
 ```json
 PUT /stores/_doc/1
@@ -71,9 +72,9 @@ PUT /stores/_doc/3
 ```
 {% include copy-curl.html %}
 
-## Example: Boost scores based on recency
+## 範例：根據新近程度提升分數
 
-The following query searches for documents with a `store_name` matching `market` and boosts recently opened stores:
+下列查詢會搜尋 `store_name` 符合 `market` 的文件，並提升最近開幕的商店：
 
 ```json
 GET /stores/_search
@@ -98,7 +99,7 @@ GET /stores/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含相符的文件：
 
 ```json
 {
@@ -135,9 +136,9 @@ The response contains the matching document:
 }
 ```
 
-### Example: Boost scores based on geographic proximity
+### 範例：根據地理鄰近程度提升分數
 
-The following query searches for documents with a `store_name` matching `market` and boosts results closer to the given origin point:
+下列查詢會搜尋 `store_name` 符合 `market` 的文件，並提升較接近指定原點位置的結果：
 
 ```json
 GET /stores/_search
@@ -162,7 +163,7 @@ GET /stores/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含相符的文件：
 
 ```json
 {
@@ -199,25 +200,25 @@ The response contains the matching document:
 }
 ```
 
-## Parameters
+## 參數
 
-The following table lists all top-level parameters supported by `distance_feature` queries.
+下表列出 `distance_feature` 查詢支援的所有最上層參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要／選用 | 說明 |
 |-----------|-------------------|-------------|
-| `field`   | Required          | The name of the field used to calculate distances. Must be a `date`, `date_nanos`, or `geo_point` field with `index: true` (default) and `doc_values: true` (default). |
-| `origin`  | Required          | The point of origin used to calculate distances. Use a [date]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/) or [date math expression]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#date-math) (for example, `now-1h`) for `date` fields or a [geopoint]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-point/) for `geo_point` fields. |
-| `pivot`   | Required          | The distance from the `origin` at which scores receive half of the `boost` value. Use a time unit (for example, `10d`) for date fields or a distance unit (for example, `1km`) for geographic fields. For more information, see [Units]({{site.url}}{{site.baseurl}}/api-reference/units/).|
-| `boost`   | Optional          | A multiplier for the relevance score of matching documents. Must be a non-negative float. Default is `1.0`. |
+| `field`   | 必要          | 用來計算距離的欄位名稱。必須是 `date`、`date_nanos` 或 `geo_point` 欄位，且具有 `index: true`（預設）和 `doc_values: true`（預設）。 |
+| `origin`  | 必要          | 用來計算距離的原點。`date` 欄位請使用 [日期]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/) 或 [日期數學運算式]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#date-math)（例如 `now-1h`），`geo_point` 欄位請使用 [地理座標點]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-point/)。 |
+| `pivot`   | 必要          | 與 `origin` 的距離，在該距離時分數會獲得 `boost` 值的一半。日期欄位請使用時間單位（例如 `10d`），地理欄位請使用距離單位（例如 `1km`）。如需詳細資訊，請參閱 [單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。|
+| `boost`   | 選用          | 相符文件相關性分數的乘數。必須是非負浮點數。預設值為 `1.0`。 |
 
-## How scores are calculated
+## 分數的計算方式
 
-The `distance_feature` query calculates a document's relevance score using the following formula:
+`distance_feature` 查詢會使用下列公式計算文件的相關性分數：
 
 $$ \text{score} = \text{boost} \cdot \frac {\text{pivot}} {\text{pivot} + \text{distance}} $$,
 
-where $$\text{distance}$$ is the absolute difference between the `origin` and the field's value.
+其中 $$\text{distance}$$ 是 `origin` 與欄位值之間的絕對差。
 
-## Skipping non-competitive hits
+## 略過不具競爭力的命中
 
-Unlike other score-modifying queries like the `function_score` query, the `distance_feature` query is optimized to efficiently skip non-competitive hits when total hit tracking (`track_total_hits`) is disabled.
+與其他修改分數的查詢 (例如 `function_score` 查詢) 不同，`distance_feature` 查詢經過最佳化，可在停用總命中數追蹤 (`track_total_hits`) 時有效率地略過不具競爭力的命中。

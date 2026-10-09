@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using conversational agents
+title: "使用對話式代理程式"
 parent: Agentic search
 grand_parent: AI search
 nav_order: 70
 has_children: false
 ---
 
-# Using conversational agents for agentic search
+# 將對話式代理程式用於代理程式搜尋
 
-Conversational agents provide advanced agentic search capabilities with detailed reasoning traces and conversation memory. Unlike flow agents, which run tools sequentially and only return the generated query domain-specific language (DSL) query, conversational agents provide additional context through the `agentic_context` response processor, including a step-by-step reasoning summary and a memory ID for continuing conversations across multiple queries.
+對話式代理程式提供進階的代理程式搜尋功能，包含詳細的推理追蹤與對話記憶。不同於依序執行工具、且只傳回產生的查詢領域特定語言 (DSL) 查詢的流程代理程式，對話式代理程式會透過 `agentic_context` 回應處理器提供額外的內容，包括逐步推理摘要，以及用於跨多個查詢延續對話的記憶 ID。
 
-This guide demonstrates how to configure conversational agents with multiple tools and use their advanced features for complex search scenarios. 
+本指南示範如何設定具備多個工具的對話式代理程式，並在複雜的搜尋情境中使用其進階功能。
 
-There are two ways to configure agentic search with a conversational agent:
+使用對話式代理程式設定代理程式搜尋有兩種方式：
 
-- [**Automated workflow**](#automated-workflow) (Recommended for quick setup): Automatically create all agentic search resources except the index using a single API call.
-- [**Manual setup**](#manual-setup) (Recommended for custom configurations): Manually configure each component for greater flexibility and control.
+- [**自動化工作流程**](#automated-workflow) (建議用於快速設定)：透過單一 API 呼叫自動建立除索引以外的所有代理程式搜尋資源。
+- [**手動設定**](#manual-setup) (建議用於自訂組態)：手動設定每個元件，以獲得更大的彈性與控制。
 
-## Automated workflow
+## 自動化工作流程
 
-OpenSearch provides a [workflow template]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates#agentic-search-with-a-conversational-agent) that automatically creates an Amazon Bedrock connector, a remote chat model, a `QueryPlanningTool`, `ListIndexTool`, `IndexMappingTool`, a conversational agent with conversation memory, and a search pipeline. Review the workflow template [defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/agentic-search-with-conversational-agent-defaults.json) to determine whether you need to update any of the parameters. To create the default agentic search workflow with a conversational agent, send the following request:
+OpenSearch 提供一個[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates#agentic-search-with-a-conversational-agent)，會自動建立 Amazon Bedrock 連接器、遠端聊天模型、`QueryPlanningTool`、`ListIndexTool`、`IndexMappingTool`、具備對話記憶的對話式代理程式，以及搜尋管線。請檢視工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/agentic-search-with-conversational-agent-defaults.json)，以判斷是否需要更新任何參數。若要建立使用對話式代理程式的預設代理程式搜尋工作流程，請傳送以下請求：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=agentic_search_with_conversational_agent&provision=true
@@ -32,7 +33,7 @@ POST /_plugins/_flow_framework/workflow?use_case=agentic_search_with_conversatio
 ```
 {% include copy-curl.html %}
 
-OpenSearch responds with a workflow ID for the created workflow:
+OpenSearch 會以所建立工作流程的工作流程 ID 回應：
 
 ```json
 {
@@ -40,22 +41,22 @@ OpenSearch responds with a workflow ID for the created workflow:
 }
 ```
 
-To check the workflow status, send the following request:
+若要檢查工作流程狀態，請傳送以下請求：
 
 ```json
 GET /_plugins/_flow_framework/workflow/abc123/_status
 ```
 {% include copy-curl.html %}
 
-Once the workflow completes, the `state` changes to `COMPLETED`. The workflow creates the agentic search resources but does not create an index. You can query any existing index using the provisioned search pipeline. For an example query, see [Step 6](#step-6-run-an-agentic-search).
+工作流程完成後，`state` 會變更為 `COMPLETED`。此工作流程會建立代理程式搜尋資源，但不會建立索引。您可以使用已佈建的搜尋管線查詢任何現有的索引。查詢範例請參閱[步驟 6](#step-6-run-an-agentic-search)。
 
-## Manual setup
+## 手動設定
 
-Use the following steps to set up an agentic converse flow manually.
+請依照下列步驟手動設定代理程式對話流程。
 
-## Step 1: Create a product index
+## 步驟 1：建立產品索引
 
-Create a sample index with product data that includes various attributes like name, price, color, and category:
+建立一個包含產品資料的範例索引，其中包含名稱、價格、顏色與類別等各種屬性：
 
 ```json
 PUT /products-index
@@ -84,9 +85,9 @@ PUT /products-index
 ```
 {% include copy-curl.html %}
 
-## Step 2: Ingest sample data
+## 步驟 2：匯入範例資料
 
-Add sample product documents to the index:
+將範例產品文件加入索引：
 
 ```json
 POST _bulk
@@ -101,11 +102,11 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Step 3: Create a model
+## 步驟 3：建立模型
 
-Review the [model configuration]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/#model-configuration) and choose a model to use.
+請檢視[模型組態]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/#model-configuration)並選擇要使用的模型。
 
-The following example registers a GPT model that will be used by both the conversational agent and the `QueryPlanningTool`:
+以下範例註冊一個 GPT 模型，該模型將同時供對話式代理程式與 `QueryPlanningTool` 使用：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -140,11 +141,11 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-## Step 4: Register an agent
+## 步驟 4：註冊代理程式
 
-Register a conversational agent with multiple tools---`ListIndexTool` to discover available indexes, `IndexMappingTool` to understand index structure, `WebSearchTool` for external data access, and the required `QueryPlanningTool` to generate OpenSearch DSL.
+註冊一個具備多個工具的對話式代理程式---`ListIndexTool` 用於探索可用的索引、`IndexMappingTool` 用於了解索引結構、`WebSearchTool` 用於存取外部資料，以及產生 OpenSearch DSL 所需的 `QueryPlanningTool`。
 
-See [Configuring agentic search agents]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/) for basic configurations. The agent must include a `QueryPlanningTool`:
+基本組態請參閱[設定代理程式搜尋代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/)。代理程式必須包含一個 `QueryPlanningTool`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -188,9 +189,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-## Step 5: Configure a search pipeline
+## 步驟 5：設定搜尋管線
 
-Create a search pipeline with both request and response processors. The [`agentic_query_translator` request processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/) translates natural language queries into OpenSearch DSL, while the [`agentic_context` response processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-context-processor/) adds agent execution context information for monitoring and conversation continuity:
+建立同時包含請求與回應處理器的搜尋管線。[`agentic_query_translator` 請求處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/) 會將自然語言查詢轉譯為 OpenSearch DSL，而 [`agentic_context` 回應處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-context-processor/) 則會加入代理程式執行情境資訊，以供監控及對話延續使用：
 
 ```json
 PUT _search/pipeline/agentic-pipeline
@@ -214,9 +215,9 @@ PUT _search/pipeline/agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-## Step 6: Run an agentic search
+## 步驟 6：執行代理式搜尋
 
-To run a search, send a natural language search query. The agent analyzes the request, discovers appropriate indexes, and generates an optimized DSL query:
+若要執行搜尋，請傳送自然語言搜尋查詢。代理程式會分析請求、探索適當的索引，並產生最佳化的 DSL 查詢：
 
 ```json
 GET /_search?search_pipeline=agentic-pipeline
@@ -230,7 +231,7 @@ GET /_search?search_pipeline=agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-The response includes matching products and detailed agent information in the `ext` object, showing the agent's reasoning process and the generated DSL query:
+回應包含相符的產品；`ext` 物件則包含詳細的代理程式資訊，顯示代理程式的推理過程及所產生的 DSL 查詢：
 
 ```json
 {
@@ -313,9 +314,9 @@ The response includes matching products and detailed agent information in the `e
 }
 ```
 
-## Step 7: Run an agentic search with a memory ID
+## 步驟 7：使用記憶 ID 執行代理程式搜尋
 
-Send a follow-up query using the `memory_id` from the previous response:
+使用前一個回應中的 `memory_id` 傳送後續查詢：
 
 ```json
 GET /_search?search_pipeline=agentic-pipeline
@@ -330,7 +331,7 @@ GET /_search?search_pipeline=agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-The agent remembers the context and applies it to the new request. It successfully interprets "black ones instead" and maintains the $150 budget from the previous context:
+代理程式會記住情境並將其套用至新的請求。它會成功解讀「改成黑色的」，並維持先前情境中的 $150 預算：
 
 ```json
 {
@@ -386,11 +387,11 @@ The agent remembers the context and applies it to the new request. It successful
 }
 ```
 
-## Using hints to guide the LLM
+## 使用提示引導 LLM
 
-You can guide the large language model (LLM) to generate the DSL query you prefer by providing hints in the `query_text`. The agent considers these hints when planning the search.
+您可以在 `query_text` 中提供提示，引導大型語言模型 (LLM) 產生您偏好的 DSL 查詢。代理程式在規劃搜尋時會考量這些提示。
 
-The following query provides specific hints about sorting and aggregations to guide the agent's DSL generation:
+下列查詢提供關於排序與彙總的特定提示，以引導代理程式產生 DSL：
 
 ```json
 GET /_search?search_pipeline=agentic-pipeline
@@ -404,7 +405,7 @@ GET /_search?search_pipeline=agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-In contrast, the following query uses simple language without specific DSL hints:
+相較之下，下列查詢使用簡單的語言，未提供特定的 DSL 提示：
 
 ```json
 GET /_search?search_pipeline=agentic-pipeline
@@ -418,10 +419,10 @@ GET /_search?search_pipeline=agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-The first query will likely generate more complex DSL with sorting and aggregations, while the second will be simpler. Use specific terms like "sort by", "aggregate", "filter by", and "group by" to guide the agent's query generation.
+第一個查詢可能會產生包含排序與彙總的較複雜 DSL，而第二個查詢則較為簡單。請使用「sort by」、「aggregate」、「filter by」及「group by」等特定詞彙，引導代理程式產生查詢。
 
-## Next steps
+## 後續步驟
 
-- [Agentic query translator processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/) -- Learn more about the request processor that translates natural language queries into OpenSearch DSL.
-- [Agentic context processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-context-processor/) -- Learn more about the response processor that adds agent execution context information for monitoring and conversation continuity.
-- [Configuring agentic search agents]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/) -- Configure agent behaviors with different models, tools, and prompts.
+- [代理程式查詢轉譯器處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/) -- 進一步了解可將自然語言查詢轉換為 OpenSearch DSL 的請求處理器。
+- [代理程式情境處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-context-processor/) -- 進一步了解可新增代理程式執行情境資訊以供監控與對話延續使用的回應處理器。
+- [設定代理程式搜尋代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/) -- 使用不同的模型、工具與提示來設定代理程式行為。

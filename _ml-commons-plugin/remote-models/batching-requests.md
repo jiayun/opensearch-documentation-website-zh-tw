@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Request batching
+title: "請求批次處理"
 has_children: false
 nav_order: 85
 parent: Connecting to externally hosted models
 grand_parent: Integrating ML models
 ---
 
-# Batching requests to externally hosted models
-**Introduced 3.9**
+# 將請求批次傳送至外部託管的模型
+**於 3.9 版推出**
 {: .label .label-purple }
 
-OpenSearch provides two techniques for controlling how prediction requests are grouped into calls to an externally hosted model:
+OpenSearch 提供兩種技術來控制預測請求如何分組為對外部託管模型的呼叫：
 
-- Large prediction requests can be split so that each call to the model stays within the model endpoint's limits.
+- 大型預測請求可以分割，讓每次對模型的呼叫都維持在模型端點的限制內。
 
-- Small prediction requests can be combined into fewer calls to the model, which increases throughput at the cost of a short wait before each call.
+- 小型預測請求可以合併為較少的模型呼叫，藉此提高輸送量，代價是每次呼叫前需短暫等待。
 
-Both techniques are optional and disabled by default, and both operate on input strings. An input string is one string in the `text_docs` array of a prediction request, such as the text of one document field during ingestion or the query text during search.
+這兩種技術都是選用的，且預設為停用，兩者都作用於輸入字串。輸入字串是預測請求的 `text_docs` 陣列中的一個字串，例如匯入期間某個文件欄位的文字，或搜尋期間的查詢文字。
 
-You configure both techniques in the `batch_inference_config` parameter when you register the model. For field descriptions and default values, see [The `batch_inference_config` parameter]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-batch_inference_config-parameter).
+您在註冊模型時，於 `batch_inference_config` 參數中設定這兩種技術。如需欄位說明與預設值，請參閱[`batch_inference_config` 參數]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-batch_inference_config-parameter)。
 
-These techniques work only for externally hosted models whose [connector]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/) accepts text document (`text_docs`) input and produces one result for each input string in the same order. A model configured with the `batch_inference_config` parameter rejects prediction requests that use another input type.
+這些技術僅適用於外部託管的模型，且其[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)必須接受文字文件 (`text_docs`) 輸入，並依相同順序為每個輸入字串產生一個結果。以 `batch_inference_config` 參數設定的模型會拒絕使用其他輸入類型的預測請求。
 
-## Splitting large prediction requests
+## 分割大型預測請求
 
-Use request splitting when the input strings in one prediction request can exceed the model endpoint's limit on the number or combined size of input strings. This pattern is common during bulk ingestion because an [ingest processor]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/index-processors/) can send many documents in one prediction request.
+當一個預測請求中的輸入字串可能超過模型端點對輸入字串數量或合併大小的限制時，請使用請求分割。這種模式在大量匯入期間很常見，因為[匯入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/index-processors/)可以在一個預測請求中傳送許多文件。
 
-### Choosing the size limits
+### 選擇大小限制
 
-Set `max_items_per_request`, `max_bytes_per_request`, or both. Use the [OpenSearch-provided connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/) to identify the provider and exact model used by the connector. Obtain the limits from the provider's official documentation for the exact model and version, or from the model server configuration for a custom endpoint.
+設定 `max_items_per_request`、`max_bytes_per_request` 或兩者。使用 [OpenSearch 提供的連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/)來識別連接器所使用的供應商與確切模型。請從供應商針對確切模型與版本的官方文件取得限制，或從自訂端點的模型伺服器組態取得限制。
 
-The `max_items_per_request` parameter limits the number of input strings in each call to the model, and `max_bytes_per_request` limits their combined size in bytes. OpenSearch measures the size of each input string as its UTF-8 byte length. The byte limit counts only the input strings. The request sent to the model also contains the other fields defined in the connector's `request_body` template, so set `max_bytes_per_request` lower than the model's actual limit to leave room for them.
+`max_items_per_request` 參數限制每次對模型呼叫中的輸入字串數量，而 `max_bytes_per_request` 則限制其合併大小 (以位元組為單位)。OpenSearch 以 UTF-8 位元組長度來測量每個輸入字串的大小。位元組限制只計算輸入字串。傳送至模型的請求還包含連接器 `request_body` 範本中定義的其他欄位，因此請將 `max_bytes_per_request` 設得比模型的實際限制低，以留出空間給這些欄位。
 
-To change the `batch_inference_config` settings later, use the [Update Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/update-model/). OpenSearch stores `batch_inference_config` on the registered model, so ingest pipelines, Bulk API requests, and queries that use the model don't require any changes.
+若要稍後變更 `batch_inference_config` 設定，請使用 [Update Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/update-model/)。OpenSearch 會將 `batch_inference_config` 儲存在已註冊的模型上，因此使用該模型的資料匯入管線、Bulk API 請求及查詢都不需要任何變更。
 
-### Splitting rules
+### 分割規則
 
-OpenSearch splits the `text_docs` array of a prediction request into consecutive groups of input strings, keeping the original order, and sends each group to the model in a separate call. OpenSearch adds input strings to the current call until the next input string would exceed `max_items_per_request` or `max_bytes_per_request` and then starts a new call. A call can reach a limit exactly. For example, consider the following configuration and input sizes:
+OpenSearch 會將預測請求的 `text_docs` 陣列分割為連續的輸入字串群組，並保持原始順序，然後將每個群組以個別的呼叫傳送至模型。OpenSearch 會將輸入字串加入目前的呼叫，直到下一個輸入字串會超過 `max_items_per_request` 或 `max_bytes_per_request`，然後開始新的呼叫。呼叫可以剛好達到限制。例如，請考慮下列組態與輸入大小：
 
 ```text
 max_items_per_request = 3
@@ -45,28 +46,28 @@ max_bytes_per_request = 10
 input sizes in bytes = [4, 3, 5, 2]
 ```
 
-OpenSearch creates the following calls to the model:
+OpenSearch 會建立下列對模型的呼叫：
 
 ```text
 Call 1: [4, 3]
 Call 2: [5, 2]
 ```
 
-Adding the 5-byte input string to the first call would produce 12 bytes, so OpenSearch starts the second call. Both calls also remain within the limit of three input strings.
+將 5 位元組的輸入字串加入第一個呼叫會產生 12 位元組，因此 OpenSearch 會開始第二個呼叫。這兩個呼叫也都維持在三個輸入字串的限制內。
 
-If the original request already fits within the limits, OpenSearch sends it as a single call to the model. If an individual input string is larger than `max_bytes_per_request`, OpenSearch sends that input string unchanged, and the model endpoint might reject it.
+如果原始請求已符合限制，OpenSearch 會將其以單一呼叫傳送至模型。如果個別輸入字串大於 `max_bytes_per_request`，OpenSearch 會原樣傳送該輸入字串，而模型端點可能會拒絕它。
 
-OpenSearch waits for all calls to the model created from the original prediction request. If all calls succeed, OpenSearch combines their outputs in the original input order. If any call fails, the original prediction request fails and doesn't return a partial result.
+OpenSearch 會等待從原始預測請求建立的所有模型呼叫。如果所有呼叫都成功，OpenSearch 會依原始輸入順序合併其輸出。如果任何呼叫失敗，原始預測請求就會失敗，且不會傳回部分結果。
 
-For information about configuring retry and backoff settings for failed calls, see [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields).
+如需為失敗的呼叫設定重試與退避設定的相關資訊，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields)。
 
-### Configuring request splitting
+### 設定請求分割
 
-To configure request splitting for batch ingestion, follow these steps.
+若要為批次匯入設定請求分割，請依照下列步驟操作。
 
-#### Step 1: Register the ingestion model
+#### 步驟 1：註冊匯入模型
 
-Register an externally hosted model and provide the `batch_inference_config` parameter in the [model registration request]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/). The following request configures request splitting without dynamic batching:
+註冊外部託管的模型，並在[模型註冊請求]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/)中提供 `batch_inference_config` 參數。下列請求會設定請求分割，但不啟用動態批次處理：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -82,11 +83,11 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-The registration request returns a task ID and model ID. Use the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) to wait for the task to reach the `COMPLETED` state before using the model ID.
+註冊請求會傳回任務 ID 與模型 ID。請使用 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 等待任務達到 `COMPLETED` 狀態，再使用模型 ID。
 
-#### Step 2: Add the model to an ingest pipeline
+#### 步驟 2：將模型新增至資料匯入管線
 
-Use the model ID in an ingest processor. The processor's `batch_size` sets the number of documents in each prediction request, and the model's limits then split each prediction request into calls to the model. The following example configures a [`text_embedding` processor]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/) that sends up to 100 documents in each prediction request. Because the model registered in Step 1 sets `max_items_per_request` to `96`, OpenSearch splits each of these requests into calls containing no more than 96 input strings:
+在匯入處理器中使用模型 ID。處理器的 `batch_size` 會設定每個預測請求中的文件數量，接著模型的限制會將每個預測請求分割為對模型的呼叫。下列範例設定一個[`text_embedding` 處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/)，在每個預測請求中傳送最多 100 份文件。由於步驟 1 中註冊的模型將 `max_items_per_request` 設為 `96`，OpenSearch 會將這些請求各自分割為包含不超過 96 個輸入字串的呼叫：
 
 ```json
 PUT /_ingest/pipeline/embedding-pipeline
@@ -106,47 +107,47 @@ PUT /_ingest/pipeline/embedding-pipeline
 ```
 {% include copy-curl.html %}
 
-#### Step 3: Run batch ingestion
+#### 步驟 3：執行批次匯入
 
-Use the pipeline with the Bulk API as described in [Batch ingestion]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/batch-ingestion/).
+如[批次匯入]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/batch-ingestion/)所述，搭配 Bulk API 使用該管線。
 
-## Dynamically batching small prediction requests
+## 動態批次處理小型預測請求
 
-Dynamic batching is useful when many small prediction requests for the same model arrive close together. This pattern is common during search because each [neural query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/) typically produces a prediction request containing one input string, the query text.
+當同一模型的許多小型預測請求幾乎同時到達時，動態批次處理就很有用。這種模式在搜尋期間很常見，因為每個[類神經查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)通常會產生一個包含單一輸入字串 (即查詢文字) 的預測請求。
 
-To apply dynamic batching to search independently from ingestion, register separate model IDs for the two workloads and enable dynamic batching only on the search model.
+若要將動態批次處理套用至搜尋而不影響匯入，請為這兩個工作負載註冊不同的模型 ID，並僅在搜尋模型上啟用動態批次處理。
 
-To enable dynamic batching, set `dynamic_batching.enabled` to `true`. You must also set `max_items_per_request`, `max_bytes_per_request`, or both. These limits set the maximum size of each batch call, so configure them to allow more than one input string per call to the model. For more information, see [Choosing the size limits](#choosing-the-size-limits).
+若要啟用動態批次處理，請將 `dynamic_batching.enabled` 設為 `true`。您也必須設定 `max_items_per_request`、`max_bytes_per_request` 或兩者。這些限制會設定每個批次呼叫的大小上限，因此請設定它們以允許每次對模型的呼叫包含多個輸入字串。如需詳細資訊，請參閱[選擇大小限制](#choosing-the-size-limits)。
 
-OpenSearch queues each prediction request on the node that processes it and invokes the model in batch when any of the following conditions is met:
+OpenSearch 會在其處理節點上將每個預測請求排入佇列，並在符合下列任一條件時以批次方式叫用模型：
 
-- The accumulated number of input strings reaches the configured `max_items_per_request` limit.
-- The accumulated size of the input strings, in bytes, reaches the configured `max_bytes_per_request` limit.
-- The time elapsed since the first request was received reaches `dynamic_batching.flush_timeout_ms`.
+- 累積的輸入字串數量達到設定的 `max_items_per_request` 限制。
+- 輸入字串的累積大小 (以位元組為單位) 達到設定的 `max_bytes_per_request` 限制。
+- 自收到第一個請求以來經過的時間達到 `dynamic_batching.flush_timeout_ms`。
 
-When traffic is low and neither size limit is reached, the first request waits for the full `dynamic_batching.flush_timeout_ms` value. Setting the value to `10000`, for example, can add 10 seconds before the model is invoked.
+當流量偏低且未達到任一大小限制時，第一個請求會等待完整的 `dynamic_batching.flush_timeout_ms` 值。例如，將該值設為 `10000` 可能會在叫用模型前增加 10 秒的等待。
 
-### Batching scope and resource usage
+### 批次處理範圍與資源使用量
 
-Each batch belongs to one model ID on one node:
+每個批次都屬於單一節點上的單一模型 ID：
 
-- Requests that use different model IDs don't share a batch, even when both models reference the same connector.
-- Requests for the same model that are routed to different nodes enter different batches.
-- Requests for the same model and node share a batch. Within that batch, OpenSearch groups requests whose prediction input fields are all identical except `text_docs`. For direct [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) calls, the endpoint, including `{algorithm_name}` and `{model_id}`, must also be identical. Each group is sent as a separate batch request to the model.
+- 使用不同模型 ID 的請求不會共用批次，即使兩個模型參照相同的連接器亦然。
+- 路由至不同節點的相同模型請求會進入不同的批次。
+- 相同模型與節點的請求會共用批次。在該批次內，OpenSearch 會將預測輸入欄位除了 `text_docs` 以外全部相同的請求分組。對於直接呼叫 [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/)，端點 (包括 `{algorithm_name}` 與 `{model_id}`) 也必須相同。每個群組會以個別的批次請求傳送至模型。
 
-All models on a node share the memory available for queued requests. A batch retains memory while it waits for additional requests and while its call to the model is in progress. If this memory is exhausted, OpenSearch rejects new requests before calling the model endpoint. For information about the memory settings, see [Dynamic batching memory settings]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/#dynamic-batching-memory-settings).
+節點上的所有模型會共用可供排入佇列請求使用的記憶體。批次在等待其他請求期間，以及其對模型的呼叫進行期間，都會保留記憶體。如果此記憶體耗盡，OpenSearch 會在呼叫模型端點前拒絕新的請求。如需記憶體設定的相關資訊，請參閱[動態批次處理記憶體設定]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/#dynamic-batching-memory-settings)。
 
-### Response routing
+### 回應路由
 
-OpenSearch routes each output to the request and position that supplied the corresponding input. If a call to the model returns a different number of results than the number of input strings it contained, OpenSearch can't route the outputs, and the affected requests fail.
+OpenSearch 會將每個輸出路由至提供對應輸入的請求和位置。如果對模型的呼叫傳回的結果數量與其包含的輸入字串數量不同，OpenSearch 就無法路由輸出，受影響的請求便會失敗。
 
-### Configuring dynamic batching for search
+### 為搜尋設定動態批次處理
 
-To configure dynamic batching for search, follow these steps.
+若要為搜尋設定動態批次處理，請依照下列步驟操作。
 
-#### Step 1: Register a search model with dynamic batching enabled
+#### 步驟 1：註冊已啟用動態批次處理的搜尋模型
 
-Register the search model with the endpoint limits and provide a `dynamic_batching` parameter:
+註冊搜尋模型，並提供端點限制與 `dynamic_batching` 參數：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -166,11 +167,11 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-The registration request returns a task ID and a separate model ID for search.
+註冊請求會傳回任務 ID 與供搜尋使用的個別模型 ID。
 
-#### Step 2: Use the model to generate query embeddings
+#### 步驟 2：使用模型產生查詢嵌入
 
-After the registration task reaches the `COMPLETED` state, use the search model ID in all requests that generate query embeddings. The following example specifies the search model ID in a [neural query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/) for a `knn_vector` field:
+在註冊任務達到 `COMPLETED` 狀態後，請在所有產生查詢嵌入的請求中使用搜尋模型 ID。下列範例在 `knn_vector` 欄位的[類神經查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)中指定搜尋模型 ID：
 
 ```json
 GET /my-index/_search
@@ -188,8 +189,8 @@ GET /my-index/_search
 ```
 {% include copy-curl.html %}
 
-## Related documentation
+## 相關文件
 
-- [Sparse encoding processor]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/sparse-encoding/)
-- [Neural sparse query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural-sparse/)
-- [Semantic search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)
+- [稀疏編碼處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/sparse-encoding/)
+- [類神經稀疏查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural-sparse/)
+- [語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)

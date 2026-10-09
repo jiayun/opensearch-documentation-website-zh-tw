@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Retrieve inner hits
+title: "擷取內部命中結果"
 parent: Customizing search results
 has_children: false
 nav_order: 60
 ---
 
-# Retrieve inner hits
+# 擷取內部命中結果
 
-In OpenSearch, when you perform a search using [nested objects]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/) or [parent-join]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/), the underlying hits (nested inner objects or child documents) are hidden by default. You can retrieve inner hits by using the `inner_hits` parameter in the search query.
+在 OpenSearch 中，當您使用[巢狀物件]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/)或 [parent-join]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/) 執行搜尋時，底層的命中結果（巢狀內部物件或子文件）預設會隱藏。您可以在搜尋查詢中使用 `inner_hits` 參數來擷取內部命中結果。
 
-You can also use `inner_hits` with the following features:
+您也可以搭配下列功能使用 `inner_hits`：
 
-  - [Highlight query matches]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/)
-  - [Explain]({{site.url}}{{site.baseurl}}/api-reference/explain/)
+  - [醒目提示查詢相符項目]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/)
+  - [解釋]({{site.url}}{{site.baseurl}}/api-reference/explain/)
 
-## Inner hits with nested objects
-Nested objects allow you to index an array of objects and maintain their relationship within the same document. The following example request uses the `inner_hits` parameter to retrieve the underlying inner hits.
+## 巢狀物件的內部命中結果
+巢狀物件可讓您為物件陣列編製索引，並在同一份文件中維持物件之間的關係。下列範例請求使用 `inner_hits` 參數來擷取底層的內部命中結果。
 
-1. Create an index mapping with a nested object:
+1. 建立包含巢狀物件的索引對應：
 
     ```json
     PUT /my_index
@@ -36,9 +37,9 @@ Nested objects allow you to index an array of objects and maintain their relatio
       }
     }
     ```
-    {% include copy-curl.html %}
+{% include copy-curl.html %}
 
-2. Index data:
+2. 將資料編製索引：
 
     ```json
     POST /my_index/_doc/1
@@ -56,9 +57,9 @@ Nested objects allow you to index an array of objects and maintain their relatio
       ]
     }
     ```
-    {% include copy-curl.html %}
+{% include copy-curl.html %}
 
-3. Query with `inner_hits`:
+3. 使用 `inner_hits` 進行查詢：
 
     ```json
     GET /my_index/_search
@@ -78,9 +79,9 @@ Nested objects allow you to index an array of objects and maintain their relatio
       }
     }
     ```
-    {% include copy-curl.html %}
+{% include copy-curl.html %}
 
-The preceding query searches for nested user objects containing the name John and returns the matching nested documents in the `inner_hits` section of the response:
+上述查詢會搜尋包含姓名 John 的巢狀使用者物件，並在回應的 `inner_hits` 區段中傳回相符的巢狀文件：
 
 ```json
 {
@@ -139,10 +140,10 @@ The preceding query searches for nested user objects containing the name John an
   }
 }
 ```
-## Inner hits with parent/child objects
-Parent-join relationships allow you to create relationships between documents of different types within the same index. The following example request searches with `inner_hits` using parent/child objects.
+## 父／子物件的內部命中結果
+Parent-join 關係可讓您在同一個索引中，建立不同類型文件之間的關係。下列範例請求使用父／子物件，搭配 `inner_hits` 進行搜尋。
 
-1. Create an index with a parent-join field:
+1. 建立包含 parent-join 欄位的索引：
 
     ```json
     PUT /my_index
@@ -162,9 +163,9 @@ Parent-join relationships allow you to create relationships between documents of
       }
     }
     ```
-    {% include copy-curl.html %}
+{% include copy-curl.html %}
 
-2. Index data:
+2. 將資料編製索引：
 
     ```json
     # Index a parent document
@@ -184,9 +185,9 @@ Parent-join relationships allow you to create relationships between documents of
       }
     }
     ```
-    {% include copy-curl.html %}
+{% include copy-curl.html %}
 
-3. Search with `inner_hits`:
+3. 使用 `inner_hits` 進行搜尋：
 
     ```json
     GET /my_index/_search
@@ -204,9 +205,9 @@ Parent-join relationships allow you to create relationships between documents of
       }
     }
     ```
-    {% include copy-curl.html %}
+{% include copy-curl.html %}
 
-The preceding query searches for parent documents that have child documents matching the query criteria (in this case, containing the term `"child"`). It returns the matching child documents in the `inner_hits` section of the response:
+上述查詢會搜尋具有符合查詢條件之子文件的父文件（在此範例中，子文件包含詞彙 `"child"`）。查詢會在回應的 `inner_hits` 區段中傳回相符的子文件：
 
 ```json
 {
@@ -257,11 +258,11 @@ The preceding query searches for parent documents that have child documents matc
 }
 ```
 
-## Using both parent-join and nested objects with `inner_hits`
+## 搭配 `inner_hits` 同時使用 parent-join 與巢狀物件
 
-The following example demonstrates using both parent-join and nested objects with `inner_hits`.
+下列範例示範如何搭配 `inner_hits` 同時使用 parent-join 與巢狀物件。
 
-1. Create an index with the following mapping:
+1. 建立具有下列對應的索引：
 
     ```json
     PUT /my_index
@@ -288,9 +289,9 @@ The following example demonstrates using both parent-join and nested objects wit
       }
     }
     ```
-    {% include copy-curl.html %}
+{% include copy-curl.html %}
 
-2. Index data:
+2. 將資料編製索引：
 
     ```json
     # Index a parent document
@@ -320,9 +321,9 @@ The following example demonstrates using both parent-join and nested objects wit
       ]
     }
     ```
-    {% include copy-curl.html %}
+{% include copy-curl.html %}
 
-3. Query with `inner_hits`:
+3. 使用 `inner_hits` 進行查詢：
 
     ```json
     GET /my_index/_search
@@ -348,9 +349,9 @@ The following example demonstrates using both parent-join and nested objects wit
       }
     }
     ```
-    {% include copy-curl.html %}
+{% include copy-curl.html %}
 
-The preceding query searches for parent documents that have child documents containing comments made by John. Specifying `inner_hits` ensures that the matching child documents and their nested comments are returned:
+上述查詢會搜尋具有包含 John 所發表留言之子文件的父文件。指定 `inner_hits` 可確保傳回相符的子文件及其巢狀留言：
 
 ```json
 {
@@ -438,20 +439,20 @@ The preceding query searches for parent documents that have child documents cont
 ```
 
 <!-- vale off -->
-## inner_hits parameters
+## inner_hits 參數
 <!-- vale on -->
-You can pass the following additional parameters to a search with `inner_hits` using both nested objects and parent-join relationships:
+您可以在使用 `inner_hits` 進行搜尋時，傳遞下列額外參數，適用於巢狀物件與 parent-join 關聯：
 
-* `from`: The offset from where to start fetching hits in the `inner_hits` results.
-* `size`: The maximum number of inner hits to return.
-* `sort`: The sorting order for the inner hits.
-* `name`: A custom name for the inner hits in the response. This is useful in differentiating between multiple inner hits in a single query.
+* `from`：從 `inner_hits` 結果中開始擷取命中的偏移量。
+* `size`：要傳回的內部命中數量上限。
+* `sort`：內部命中的排序方式。
+* `name`：回應中內部命中的自訂名稱。這有助於在單一查詢中區分多個內部命中。
 
 <!-- vale off -->
-### Example: inner_hits parameters with nested objects
+### 範例：搭配巢狀物件使用 inner_hits 參數
 <!-- vale on -->
 
-1. Create an index with the following mappings:
+1. 使用下列對應建立索引：
 
     ```json
     PUT /products
@@ -473,7 +474,7 @@ You can pass the following additional parameters to a search with `inner_hits` u
     ```
     {% include copy-curl.html %}
 
-2. Index data:
+2. 將資料編製索引：
 
     ```json
     POST /products/_doc/1
@@ -500,7 +501,7 @@ You can pass the following additional parameters to a search with `inner_hits` u
     ```
     {% include copy-curl.html %}
 
-3. Query with `inner_hits` and provide additional parameters:
+3. 使用 `inner_hits` 進行查詢並提供額外參數：
 
     ```json
     GET /products/_search
@@ -525,7 +526,7 @@ You can pass the following additional parameters to a search with `inner_hits` u
     ```
     {% include copy-curl.html %}
 
-The following is the expected result:
+以下是預期結果：
 
 ```json
 {
@@ -609,10 +610,10 @@ The following is the expected result:
 ```
 
 <!-- vale off -->
-### Example: inner_hits parameters with a parent-join relationship
+### 範例：搭配 parent-join 關聯使用 inner_hits 參數
 <!-- vale on -->
 
-1. Create an index with the following mappings:
+1. 使用下列對應建立索引：
 
     ```json
     PUT /company
@@ -638,7 +639,7 @@ The following is the expected result:
     ```
     {% include copy-curl.html %}
 
-2. Index data:
+2. 將資料編製索引：
 
     ```json
     # Index a parent document
@@ -687,7 +688,7 @@ The following is the expected result:
     ```
     {% include copy-curl.html %}
 
-3. Query with `inner_hits` parameters:
+3. 使用 `inner_hits` 參數進行查詢：
 
     ```json
     GET /company/_search
@@ -712,7 +713,7 @@ The following is the expected result:
     ```
     {% include copy-curl.html %}
 
-The following is the expected result:
+以下是預期結果：
 
 ```json
 {
@@ -782,32 +783,32 @@ The following is the expected result:
 }
 ```
 <!-- vale off -->
-## Benefits of using inner_hits
+## 使用 inner_hits 的優點
 <!-- vale on -->
-* **Detailed query results**
+* **詳細的查詢結果**
 
-    You can use `inner_hits` to retrieve detailed information about matching nested or child documents directly from the parent document's search results. This is particularly useful for understanding the context and specifics of the match without having to perform additional queries.
+    您可以使用 `inner_hits` 直接從父文件的搜尋結果中，取得符合條件的巢狀或子文件的詳細資訊。這對於了解相符項目的內容與細節特別有用，且無須執行額外的查詢。
     
-    Example use case: In a blog post index, you have comments as nested objects. When searching for blog posts containing specific comments, you can retrieve relevant comments that match the search criteria along with information about the post.
+    範例使用情境：在部落格文章索引中，您將留言作為巢狀物件。當搜尋包含特定留言的部落格文章時，您可以取得符合搜尋條件的相關留言，以及該文章的相關資訊。
 
-* **Optimized performance**
+* **最佳化的效能**
 
-    Without `inner_hits`, you may need to run multiple queries to fetch related documents. Using `inner_hits` consolidates these into a single query, reducing the number of round trips to the OpenSearch server and improving overall performance.
+    若不使用 `inner_hits`，您可能需要執行多個查詢才能取得相關文件。使用 `inner_hits` 可將這些查詢合併為單一查詢，減少與 OpenSearch 伺服器之間的來回次數，並改善整體效能。
 
-    Example use case: In an e-commerce application, you have products as parent documents and reviews as child documents. A single query using `inner_hits` can fetch products and their relevant reviews, avoiding multiple separate queries.
+    範例使用情境：在電子商務應用程式中，您將產品作為父文件，並將評論作為子文件。使用 `inner_hits` 的單一查詢即可取得產品及其相關評論，避免多個個別查詢。
 
-* **Simplified query logic**
+* **簡化的查詢邏輯**
 
-    You can combine parent/child or nested document logic in a single query to simplify the application code and reduce complexity. This helps to ensure that the code is more maintainable and consistent by centralizing the query logic in OpenSearch
+    您可以將父/子或巢狀文件邏輯合併在單一查詢中，以簡化應用程式程式碼並降低複雜度。將查詢邏輯集中於 OpenSearch 有助於確保程式碼更容易維護且更一致
 
-    Example use case: In a job portal, you have jobs as parent documents and applications as nested or child documents. You can simplify the application logic by fetching jobs along with specific applications in one query.
+    範例使用情境：在人力銀行網站中，您將職缺作為父文件，並將應徵記錄作為巢狀或子文件。您可以透過單一查詢取得職缺及其特定應徵記錄，以簡化應用程式邏輯。
 
-* **Contextual relevance**
+* **情境相關性**
 
-    Using `inner_hits` provides contextual relevance by showing exactly which nested or child documents match the query criteria. This is crucial for applications in which the relevance of results depends on a specific part of the document that matches the query.
+    使用 `inner_hits` 可顯示哪些巢狀或子文件確實符合查詢條件，藉此提供情境相關性。對於結果相關性取決於文件中符合查詢之特定部分的應用程式而言，這至關重要。
 
-    Example use case: In a customer support system, you have tickets as parent documents and comments or updates as nested or child documents. You can determine which specific comment matches the search in order to better understand the context of the ticket search.
+    範例使用情境：在客戶支援系統中，您將工單作為父文件，並將留言或更新作為巢狀或子文件。您可以判斷哪一則特定留言符合搜尋，以便更了解工單搜尋的情境。
 
-## Next steps
+## 後續步驟
 
-- Learn about [joining queries]({{site.url}}{{site.baseurl}}/query-dsl/joining/) on [nested]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/) or [join]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/) fields.
+- 了解如何在 [nested]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/) 或 [join]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/) 欄位上使用[聯結查詢]({{site.url}}{{site.baseurl}}/query-dsl/joining/)。

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: dedup
 parent: Commands
@@ -8,36 +9,36 @@ nav_order: 11
 
 <!-- vale off -->
 
-# dedup command
+# dedup 命令
 
 <!-- vale on -->
 
-The `dedup` command removes duplicate documents defined by specified fields from the search result.
+`dedup` 命令會從搜尋結果中移除由指定欄位所定義的重複文件。
 
 
-## Syntax
+## 語法
 
-The `dedup` command has the following syntax:
+`dedup` 命令的語法如下：
 
 ```sql
 dedup [int] <field-list> [keepempty=<bool>] [consecutive=<bool>]
 ```
 
-## Parameters
+## 參數
 
-The `dedup` command supports the following parameters.
+`dedup` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<field-list>` | Required | A comma-delimited list of fields to use for deduplication. At least one field is required. |
-| `<int>` | Optional | The number of duplicate documents to retain for each combination. Must be greater than `0`. Default is `1`. |
-| `keepempty` | Optional | When set to `true`, keeps documents in which any field in the field list has a `NULL` value or is missing. Default is `false`. |
-| `consecutive` | Optional | When set to `true`, removes only consecutive duplicate documents. Default is `false`. Requires the legacy SQL engine (`plugins.calcite.enabled=false`). |
+| `<field-list>` | 必要 | 用於去除重複的欄位清單，以逗號分隔。至少需要一個欄位。 |
+| `<int>` | 選用 | 每種組合要保留的重複文件數量。必須大於 `0`。預設為 `1`。 |
+| `keepempty` | 選用 | 設定為 `true` 時，會保留欄位清單中任一欄位具有 `NULL` 值或缺少值的文件。預設為 `false`。 |
+| `consecutive` | 選用 | 設定為 `true` 時，只會移除連續的重複文件。預設為 `false`。需要舊版 SQL 引擎 (`plugins.calcite.enabled=false`)。 |
   
 
-## Example 1: Removing duplicates based on a single field  
+## 範例 1：根據單一欄位去除重複  
 
-The following query deduplicates by service name to get one sample error per service, giving you a quick view of what's failing across your system:
+下列查詢依服務名稱去除重複，以取得每個服務的一筆錯誤範例，讓您快速掌握系統中哪些地方發生故障：
   
 ```sql
 source=otellogs
@@ -49,7 +50,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -64,9 +65,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Retaining multiple duplicate documents  
+## 範例 2：保留多筆重複文件  
 
-The following query keeps up to two logs per severity level, giving you a broader sample of each level to understand the variety of issues:
+下列查詢為每個嚴重性等級最多保留兩筆記錄，提供每個等級更廣泛的樣本，協助您了解問題的多樣性：
   
 ```sql
 source=otellogs
@@ -78,7 +79,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -94,9 +95,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Handling documents with empty field values  
+## 範例 3：處理欄位值為空的文件  
 
-The following query deduplicates by instrumentation scope name to see which OTel SDKs are reporting. By default, records with null values are dropped:
+下列查詢依檢測範圍名稱去除重複，以查看哪些 OTel SDK 正在回報。預設情況下，具有 null 值的記錄會被捨棄：
   
 ```sql
 source=otellogs
@@ -107,7 +108,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -119,7 +120,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The following query deduplicates while ignoring documents with empty values in the specified field:
+下列查詢在去除重複時，會忽略指定欄位值為空的文件：
   
 ```sql
 source=otellogs
@@ -130,7 +131,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -143,9 +144,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 4: Deduplicating consecutive documents  
+## 範例 4：去除連續文件的重複  
 
-The following query removes duplicate consecutive documents. When logs are sorted by severity, this shows the transitions between severity levels, helping you see the pattern of escalation:
+下列查詢會移除重複的連續文件。當記錄檔依嚴重性排序時，這會顯示嚴重性等級之間的轉換，協助您看出升溫的模式：
   
 ```sql
 source=otellogs
@@ -156,7 +157,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 

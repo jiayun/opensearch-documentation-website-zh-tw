@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Semantic search using text chunking
+title: "使用文字分段進行語意搜尋"
 parent: Semantic search
 grand_parent: Vector search
 nav_order: 90
@@ -8,33 +9,33 @@ redirect_from:
   - /vector-search/tutorials/semantic-search/long-document/
 ---
 
-# Semantic search using text chunking
+# 使用文字分段進行語意搜尋
 
-This tutorial shows you how to use text chunking to run semantic search on long documents in OpenSearch 2.19 or later. 
+本教學說明如何在 OpenSearch 2.19 或更新版本中，使用文字分段對長文件執行語意搜尋。
 
-In this tutorial, you'll use the following OpenSearch components:
-- [Text chunking processor]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-chunking/)
-- [ML inference ingest processor]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/ml-inference/)
-- [ML inference search request processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-request/) 
-- [Template query]({{site.url}}{{site.baseurl}}/api-reference/search-template/)
+在本教學中，您將使用下列 OpenSearch 元件：
+- [文字分段處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-chunking/)
+- [ML 推論匯入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/ml-inference/)
+- [ML 推論搜尋請求處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-request/)
+- [範本查詢]({{site.url}}{{site.baseurl}}/api-reference/search-template/)
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將開頭為前置字元 `your_` 的預留位置取代為您自己的值。
 {: .note}
 
-## Step 1: Create an embedding model
+## 步驟 1：建立嵌入模型
 
-In this tutorial, you'll use the [Amazon Bedrock Titan Text Embeddings model](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html). 
+在本教學中，您將使用 [Amazon Bedrock Titan Text Embeddings 模型](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html)。
 
-If using Python, you can create an Amazon Bedrock Titan embedding connector and test the model using the [`opensearch-py-ml`](https://github.com/opensearch-project/opensearch-py-ml) client CLI. The CLI automates many configuration steps, making setup faster and reducing the chance of errors. For more information about using the CLI, see the [CLI documentation](https://opensearch-project.github.io/opensearch-py-ml/cli/index.html#).
+如果您使用 Python，可以建立 Amazon Bedrock Titan 嵌入連接器，並使用 [`opensearch-py-ml`](https://github.com/opensearch-project/opensearch-py-ml) 用戶端 CLI 測試模型。此 CLI 會自動執行許多組態步驟，讓設定更快速並降低出錯的機會。如需使用 CLI 的詳細資訊，請參閱 [CLI 文件](https://opensearch-project.github.io/opensearch-py-ml/cli/index.html#)。
 {: .tip}
 
-If using self-managed OpenSearch, create a model using [the blueprint](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/bedrock_connector_titan_embedding_blueprint.md). 
+如果您使用自行管理的 OpenSearch，請使用[藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/bedrock_connector_titan_embedding_blueprint.md)建立模型。
 
-If using Amazon OpenSearch Service, use [this Python notebook](https://github.com/opensearch-project/ml-commons/blob/main/docs/tutorials/aws/AIConnectorHelper.ipynb) to create the model. Alternatively, you can manually create a connector by following [this tutorial]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-bedrock-titan/).
+如果您使用 Amazon OpenSearch Service，請使用[此 Python 筆記本](https://github.com/opensearch-project/ml-commons/blob/main/docs/tutorials/aws/AIConnectorHelper.ipynb)建立模型。或者，您也可以依照[本教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-bedrock-titan/)手動建立連接器。
 
-### Step 1.1: Create a connector
+### 步驟 1.1：建立連接器
 
-To create a connector, send the following request. Because you'll use the [ML inference processor]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/ml-inference/) in this tutorial, you don't need to specify a pre- or post-processing function in the connector:
+若要建立連接器，請傳送下列請求。由於您將在本教學中使用 [ML 推論處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/ml-inference/)，因此不需要在連接器中指定前置或後置處理函式：
 
 ```json
 POST _plugins/_ml/connectors/_create
@@ -72,7 +73,7 @@ POST _plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-The response contains a connector ID:
+回應中包含連接器 ID：
 
 ```json
 {
@@ -80,11 +81,11 @@ The response contains a connector ID:
 }
 ```
 
-Note the connector ID; you'll use it in the next step.
+請記下連接器 ID；您將在下一步中使用它。
 
-### Step 1.2: Register the model
+### 步驟 1.2：註冊模型
 
-To register the model, send the following request:
+若要註冊模型，請傳送下列請求：
 
 ```json
 POST _plugins/_ml/models/_register?deploy=true
@@ -97,7 +98,7 @@ POST _plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-The response contains the model ID:
+回應中包含模型 ID：
 
 ```json
 {
@@ -107,11 +108,11 @@ The response contains the model ID:
 }
 ```
 
-Note the model ID; you'll use it in the next step.
+請記下模型 ID；您將在下一步中使用它。
 
-### Step 1.3: Test the model
+### 步驟 1.3：測試模型
 
-To test the model, send the following request:
+若要測試模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/xhR35JQBLopfJ2xsO9pr/_predict
@@ -123,7 +124,7 @@ POST /_plugins/_ml/models/xhR35JQBLopfJ2xsO9pr/_predict
 ```
 {% include copy-curl.html %}
 
-The response contains the embeddings generated by the model:
+回應中包含模型產生的嵌入：
 
 ```json
 {
@@ -151,9 +152,9 @@ The response contains the embeddings generated by the model:
 }
 ```
 
-## Step 2: Create an ingest pipeline
+## 步驟 2：建立資料匯入管線
 
-Many text embedding models have input size limitations. The [Amazon Titan Text Embeddings V2 model](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html) supports a maximum of 8,192 text tokens. To process long documents, you need to split them into smaller chunks and send each chunk to the model. The [text chunking processor]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-chunking/) splits the original document into smaller pieces, and the [ML inference processor]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/ml-inference/) generates embeddings for each chunk. To create an ingest pipeline containing both processors, send the following request:
+許多文字嵌入模型都有輸入大小限制。[Amazon Titan Text Embeddings V2 模型](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html)最多支援 8,192 個文字詞元。若要處理長文件，您需要將其分割成較小的分段，並將每個分段傳送給模型。[文字分段處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-chunking/)會將原始文件分割成較小的片段，而 [ML 推論處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/ml-inference/)則會為每個分段產生嵌入。若要建立同時包含這兩個處理器的資料匯入管線，請傳送下列請求：
 
 ```json
 PUT _ingest/pipeline/bedrock-text-embedding-pipeline
@@ -212,7 +213,7 @@ PUT _ingest/pipeline/bedrock-text-embedding-pipeline
 ```
 {% include copy-curl.html %}
 
-To test the pipeline, send the following request:
+若要測試管線，請傳送下列請求：
 
 ```json
 POST _ingest/pipeline/bedrock-text-embedding-pipeline/_simulate
@@ -230,7 +231,7 @@ POST _ingest/pipeline/bedrock-text-embedding-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-The response shows the processed document, which has been split into chunks and includes embeddings for each chunk:
+回應會顯示處理後的文件，該文件已分割成分段，並包含每個分段的嵌入：
 
 ```json
 {
@@ -298,9 +299,9 @@ description	Optional	String	A description of the ingest pipeline.
 }
 ```
 
-## Step 3: Create an index and ingest data 
+## 步驟 3：建立索引並匯入資料
 
-To create a vector index, send the following request:
+若要建立向量索引，請傳送下列請求：
 
 ```json
 PUT opensearch_docs
@@ -332,7 +333,7 @@ PUT opensearch_docs
 ```
 {% include copy-curl.html %}
 
-Ingest test data into the index:
+將測試資料匯入索引：
 
 ```json
 POST _bulk
@@ -345,16 +346,16 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-To verify that the documents were properly processed, search the index to view the generated chunks and embeddings:
+若要確認文件已正確處理，請搜尋索引以檢視產生的分段與嵌入：
 
 ```json
 GET opensearch_docs/_search
 ```
 {% include copy-curl.html %}
 
-## Step 4: Search using an ML inference processor
+## 步驟 4：使用 ML 推論處理器搜尋
 
-Create a search pipeline with an ML inference processor that converts input text into embeddings:
+建立含有 ML 推論處理器的搜尋管線，將輸入文字轉換為嵌入：
 
 ```json
 PUT _search/pipeline/bedrock_semantic_search_pipeline
@@ -380,7 +381,7 @@ PUT _search/pipeline/bedrock_semantic_search_pipeline
 ```
 {% include copy-curl.html %}
 
-Use the following template query to run a semantic search:
+使用下列範本查詢來執行語意搜尋：
 
 ```json
 GET opensearch_docs/_search?search_pipeline=bedrock_semantic_search_pipeline
@@ -417,9 +418,9 @@ GET opensearch_docs/_search?search_pipeline=bedrock_semantic_search_pipeline
 ```
 {% include copy-curl.html %}
 
-The pipeline maps `inputText` to `ext.ml_inference.params.text`. During input processing, the pipeline retrieves the value from the path `ext.ml_inference.params.text` in the search request. In this example, the value in this path is `"What's OpenSearch ingest pipeline"`, and this value is passed to the model in the `inputText` parameter.
+此管線會將 `inputText` 對應至 `ext.ml_inference.params.text`。在輸入處理期間，管線會從搜尋請求中的路徑 `ext.ml_inference.params.text` 擷取值。在此範例中，此路徑中的值為 `"What's OpenSearch ingest pipeline"`，而此值會傳遞至模型中的 `inputText` 參數。
 
-During search, the search query references `"vector": "${ext.ml_inference.params.vector}"`. This vector value isn't provided in the initial search request; instead, the ML inference processor generates it by invoking the Amazon Bedrock Titan Embeddings model. The model creates an embedding vector from your search text and stores the vector in `ext.ml_inference.params.vector`. OpenSearch then uses this generated vector to find similar documents:
+搜尋期間，搜尋查詢會參照 `"vector": "${ext.ml_inference.params.vector}"`。此向量值並非在初始搜尋請求中提供；而是由 ML 推論處理器呼叫 Amazon Bedrock Titan Embeddings 模型來產生。模型會從您的搜尋文字建立嵌入向量，並將該向量儲存在 `ext.ml_inference.params.vector` 中。OpenSearch 接著會使用此產生的向量來尋找相似的文件：
 
 ```json
 {

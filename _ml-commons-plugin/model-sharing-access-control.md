@@ -1,42 +1,43 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Model access control through resource sharing
+title: "透過資源共用進行模型存取控制"
 parent: Integrating ML models
 has_children: false
 nav_order: 30
 ---
 
-# Model access control through resource sharing
+# 透過資源共用進行模型存取控制
 
-In ML Commons, access to models is controlled through [model groups]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/#model-groups)---collections of versions of a particular model that share the same access permissions. ML Commons integrates with the Security plugin's resource sharing and access control framework to provide document-level authorization for these model group resources.
+在 ML Commons 中，模型的存取是透過[模型群組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/#model-groups)來控制——模型群組是共用相同存取權限之特定模型版本的集合。ML Commons 與 Security 外掛程式的資源共用及存取控制框架整合，為這些模型群組資源提供文件層級的授權。
 
-This resource sharing approach is the new method for controlling model group access and provides more flexible sharing capabilities than the [original model access control system]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/). Resource owners can grant specific access levels to users, roles, or backend roles for individual model groups.
+這種資源共用方式是控制模型群組存取的新方法，並且比[原始的模型存取控制系統]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)提供更彈性的共用功能。資源擁有者可以針對個別模型群組，授予使用者、角色或後端角色特定的存取層級。
 
-For the end-to-end framework concepts and APIs, see [Resource sharing and access control]({{site.url}}{{site.baseurl}}/security/access-control/resources/).
+如需端對端框架概念與 API，請參閱[資源共用與存取控制]({{site.url}}{{site.baseurl}}/security/access-control/resources/)。
 {: .note}
 
-## Resource configuration
+## 資源組態
 
-The following table describes the machine learning (ML) model group resource configuration.
+下表說明機器學習 (ML) 模型群組的資源組態。
 
-| Field | Value |
+| 欄位 | 值 |
 | :--- | :--- |
-| Resource type | `ml-model-group` |
-| System index | `.plugins-ml-model-group` |
-| Onboarded version | OpenSearch 3.3 |
+| 資源類型 | `ml-model-group` |
+| 系統索引 | `.plugins-ml-model-group` |
+| 導入版本 | OpenSearch 3.3 |
 
-When resource-level authorization is enabled for ML model groups, each model group's visibility is governed by a central sharing record. Resource owners and users with sharing capabilities can grant or revoke access permissions for specific users, roles, or backend roles.
+當 ML 模型群組啟用資源層級授權時，每個模型群組的可見性都由中央共用記錄管理。資源擁有者以及具備共用功能的使用者，可以授予或撤銷特定使用者、角色或後端角色的存取權限。
 
-## Enable ML model group resource sharing
+## 啟用 ML 模型群組資源共用
 
-To enable resource sharing for ML model groups, you must add the ml-model-group resource type to the protected types list and enable resource sharing cluster-wide.
+若要為 ML 模型群組啟用資源共用，您必須將 ml-model-group 資源類型新增至受保護類型清單，並在整個叢集範圍啟用資源共用。
 
-Admin-only: These settings can be configured only by cluster administrators with superadmin privileges.
+僅限管理員：這些設定只能由具備 superadmin 權限的叢集管理員設定。
 {: .important }
 
-### Configuration using opensearch.yml
+### 使用 opensearch.yml 進行組態
 
-Add the following settings to your `opensearch.yml` configuration file to enable resource sharing for ML model groups:
+將下列設定新增至您的 `opensearch.yml` 組態檔，以啟用 ML 模型群組的資源共用：
 
 ```yaml
 plugins.security.resource_sharing.enabled: true
@@ -46,9 +47,9 @@ plugins.security.resource_sharing.protected_types:
 ```
 {% include copy.html %}
 
-### Configuration using the Cluster Settings API
+### 使用 Cluster Settings API 進行組態
 
-Alternatively, you can enable resource sharing dynamically using the Cluster Settings API:
+或者，您可以使用 Cluster Settings API 動態啟用資源共用：
 
 ```json
 PUT _cluster/settings
@@ -61,16 +62,16 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-When adding the ml-model-group resource type to an existing configuration, include all previously configured resource types in the `protected_types` array.
+將 ml-model-group 資源類型新增至現有組態時，請在 `protected_types` 陣列中包含所有先前已設定的資源類型。
 {: .note}
 
-## ML model group access levels
+## ML 模型群組存取層級
 
-ML Commons provides three predefined access levels for ML model group documents. These access levels determine the specific permissions granted to users who have been granted access to a model group resource.
+ML Commons 為 ML 模型群組文件提供三個預先定義的存取層級。這些存取層級決定被授予模型群組資源存取權的使用者所取得的特定權限。
 
 ### ml_read_only
 
-The `ml_read_only` read-only access level grants users the ability to view and search shared ML model groups but not modify them. This access level includes the following permissions:
+`ml_read_only` 唯讀存取層級讓使用者能夠檢視及搜尋共用的 ML 模型群組，但無法修改。此存取層級包含下列權限：
 
 ```yaml
 - "cluster:admin/opensearch/ml/model_groups/get"
@@ -80,7 +81,7 @@ The `ml_read_only` read-only access level grants users the ability to view and s
 
 ### ml_read_write
 
-The `ml_read_write` read-write access level grants users full access to ML model group operations except for sharing capabilities. This access level includes all read permissions plus write operations:
+`ml_read_write` 讀寫存取層級授予使用者 ML 模型群組作業的完整存取權，但不包含共用功能。此存取層級包含所有讀取權限以及寫入作業：
 
 ```yaml
 - "cluster:admin/opensearch/ml/*"
@@ -89,7 +90,7 @@ The `ml_read_write` read-write access level grants users full access to ML model
 
 ### ml_full_access
 
-The `ml_full_access` full access level grants users complete control over an ML model group, including owner-like permissions such as sharing the resource with other users. This access level includes all ML model group operations plus resource sharing permissions:
+`ml_full_access` 完整存取層級授予使用者對 ML 模型群組的完整控制權，包括類似擁有者的權限，例如與其他使用者共用資源。此存取層級包含所有 ML 模型群組作業以及資源共用權限：
 
 ```yaml
 - "cluster:admin/opensearch/ml/*"
@@ -97,17 +98,17 @@ The `ml_full_access` full access level grants users complete control over an ML 
 ```
 {% include copy.html %}
 
-These access levels are predefined and cannot be modified. To request additional access levels, create an issue in the [ML Commons GitHub repository](https://github.com/opensearch-project/ml-commons/).
+這些存取層級是預先定義的，無法修改。若要要求其他存取層級，請在 [ML Commons GitHub 儲存庫](https://github.com/opensearch-project/ml-commons/)中建立 issue。
 {: .note}
 
-## Migrating from the legacy framework
+## 從舊版框架遷移
 
-After enabling resource sharing and marking ML model groups as a protected resource type, cluster administrators must run the migration API to transfer existing model group sharing information from the legacy framework to the new resource sharing system.
+啟用資源共用並將 ML 模型群組標記為受保護資源類型之後，叢集管理員必須執行遷移 API，將現有的模型群組共用資訊從舊版框架轉移至新的資源共用系統。
 
-Admin-only: The Migrate API can only be executed by cluster administrators with superadmin or REST admin privileges.
+僅限管理員：Migrate API 只能由具備 superadmin 或 REST admin 權限的叢集管理員執行。
 {: .important }
 
-Use the following API call to migrate legacy ML model group sharing data to the resource sharing framework:
+使用下列 API 呼叫，將舊版 ML 模型群組共用資料遷移至資源共用框架：
 
 ```json
 POST _plugins/_security/api/resources/migrate
@@ -123,10 +124,10 @@ POST _plugins/_security/api/resources/migrate
 ```
 {% include copy-curl.html %}
 
-Replace `<replace-with-existing-user>` with the username of an existing user who should own ML model groups without explicit ownership information. Replace `<select-appropriate-access-level>` with one of the available ML model group access levels: `ml_read_only`, `ml_read_write`, or `ml_full_access`.
+將 `<replace-with-existing-user>` 取代為應擁有沒有明確擁有權資訊之 ML 模型群組的現有使用者名稱。將 `<select-appropriate-access-level>` 取代為其中一個可用的 ML 模型群組存取層級：`ml_read_only`、`ml_read_write` 或 `ml_full_access`。
 
-## Related documentation
+## 相關文件
 
-- [Resource sharing and access control]({{site.url}}{{site.baseurl}}/security/access-control/resources/) -- Backend concepts, configuration, and setup
-- [Resource sharing APIs]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) -- REST API reference for programmatic management
-- [Resource access management]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI workflows and user guidance
+- [資源共用與存取控制]({{site.url}}{{site.baseurl}}/security/access-control/resources/) -- 後端概念、組態與設定
+- [資源共用 API]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) -- 用於程式化管理之 REST API 參考
+- [資源存取管理]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI 工作流程與使用者指引

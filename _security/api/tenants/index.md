@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Tenant APIs
+title: "租用戶 API"
 parent: Security APIs
 nav_order: 80
 has_children: true
@@ -9,15 +10,15 @@ redirect_from:
   - /security/api/tenants/
 ---
 
-# Tenant APIs
+# 租用戶 API
 
-The tenant APIs create, retrieve, modify, and delete the tenants that isolate OpenSearch Dashboards resources between groups of users.
+租用戶 API 用於建立、擷取、修改及刪除租用戶，以在不同使用者群組之間隔離 OpenSearch Dashboards 資源。
 
-OpenSearch supports the following tenant APIs.
+OpenSearch 支援下列租用戶 API。
 
-| API | Description |
+| API | 說明 |
 | :--- | :--- |
-| [Create or Update Tenant API]({{site.url}}{{site.baseurl}}/security/api/tenants/create-tenant/) | Creates or replaces the specified tenant. |
-| [Patch Tenants API]({{site.url}}{{site.baseurl}}/security/api/tenants/patch-tenants/) | Updates individual attributes of one tenant, or adds, deletes, or modifies multiple tenants in a single call. |
-| [Get Tenants API]({{site.url}}{{site.baseurl}}/security/api/tenants/get-tenants/) | Retrieves one tenant or all tenants. |
-| [Delete Tenant API]({{site.url}}{{site.baseurl}}/security/api/tenants/delete-tenant/) | Deletes the specified tenant. |
+| [Create or Update Tenant API]({{site.url}}{{site.baseurl}}/security/api/tenants/create-tenant/) | 建立或取代指定的租用戶。 |
+| [Patch Tenants API]({{site.url}}{{site.baseurl}}/security/api/tenants/patch-tenants/) | 在單一呼叫中更新某個租用戶的個別屬性，或新增、刪除或修改多個租用戶。 |
+| [Get Tenants API]({{site.url}}{{site.baseurl}}/security/api/tenants/get-tenants/) | 擷取單一租用戶或所有租用戶。 |
+| [Delete Tenant API]({{site.url}}{{site.baseurl}}/security/api/tenants/delete-tenant/) | 刪除指定的租用戶。 |

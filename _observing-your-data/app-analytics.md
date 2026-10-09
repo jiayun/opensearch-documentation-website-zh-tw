@@ -1,65 +1,66 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Application analytics
+title: "應用程式分析"
 nav_order: 30
 ---
 
-# Application analytics
+# 應用程式分析
 
-You can use application analytics to create custom observability applications to view the availability status of your systems, where you can combine log events with trace and metric data into a single view of overall system health. This lets you quickly pivot between logs, traces, and metrics to dig into the source of any issues.
+您可以使用應用程式分析來建立自訂的可觀測性應用程式，以檢視系統的可用性狀態，並將記錄事件與追蹤及指標資料合併為整體系統健康狀況的單一檢視。這讓您能夠快速在記錄檔、追蹤與指標之間切換，深入調查任何問題的來源。
 
-## Get started with application analytics
+## 開始使用應用程式分析
 
-To get started, select the Menu button on the upper left corner of the OpenSearch Dashboards interface. Next, select **Observability**, and then choose **Application analytics**.
+若要開始使用，請選取 OpenSearch Dashboards 介面左上角的 Menu 按鈕。接著選取 **Observability**，然後選擇 **Application analytics**。
 
-### Create an application
+### 建立應用程式
 
-1. Choose **Create application**.
-2. Enter a name for your application and optionally add a description.
-3. Do at least one of the following:
+1. 選擇 **Create application**。
+2. 輸入應用程式的名稱，並可選擇性地新增描述。
+3. 至少執行下列其中一項操作：
 
-    - Use [PPL]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) to specify the base query.
+    - 使用 [PPL]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) 指定基礎查詢。
 
-      You can't change the base query after the application is created.
+      應用程式建立後，您無法變更基礎查詢。
       {: .note }
 
-    - Select **Services & entities** from the dropdown or the service map.
-    - Select **Trace groups** from the dropdown or the table.
+    - 從下拉式選單或服務地圖選取 **Services & entities**。
+    - 從下拉式選單或表格選取 **Trace groups**。
 
-4. Choose **Create**.
+4. 選擇 **Create**。
 
-### Create a visualization
+### 建立視覺化
 
-1. Choose the **Log Events** tab.
-1. Use [PPL]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) to build upon your base query.
-1. Choose the **Visualizations** tab to see your visualizations.
-1. Expand the **Save** dropdown menu, enter a name for your visualization, then choose **Save**.
+1. 選擇 **Log Events** 索引標籤。
+1. 使用 [PPL]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) 在基礎查詢的基礎上繼續建置。
+1. 選擇 **Visualizations** 索引標籤以檢視您的視覺化。
+1. 展開 **Save** 下拉式選單，輸入視覺化的名稱，然後選擇 **Save**。
 
-To see your visualizations, choose the **Panel** tab.
+若要檢視您的視覺化，請選擇 **Panel** 索引標籤。
 
-### Configure availability
+### 設定可用性
 
-Availability is the status of your application determined by availability levels set on a [time series metric]({{site.url}}{{site.baseurl}}/observing-your-data/app-analytics/#time-series-metric).
+可用性是應用程式的狀態，由在[時間序列指標]({{site.url}}{{site.baseurl}}/observing-your-data/app-analytics/#time-series-metric)上設定的可用性層級決定。
 
-To create an availability level, you must configure the following:
-- color: The color of the availability badge on the home page.
-- name: The text in the availability badge on the home page.
-- expression: Comparison operator to determine the availability.
-- value: Value to use when calculating availability.
+若要建立可用性層級，您必須設定下列項目：
+- color：首頁上可用性徽章的顏色。
+- name：首頁上可用性徽章中的文字。
+- expression：用於判斷可用性的比較運算子。
+- value：計算可用性時使用的值。
 
-![Configuring availability]({{site.url}}{{site.baseurl}}/images/app_availability_level.gif)
+![設定可用性]({{site.url}}{{site.baseurl}}/images/app_availability_level.gif)
 
-By default, application analytics shows results from the last 24 hours of your data. To see data from a different time frame, use the date and time selector.
+預設情況下，應用程式分析會顯示資料最近 24 小時的結果。若要檢視不同時間範圍的資料，請使用日期與時間選取器。
 
-#### Time series metric
+#### 時間序列指標
 
-A time series metric is any visualization that has a query that spans over a timestamp and is a line chart. You can then use PPL to define arbitrary conditions on your logs to create a visualization over time.
+時間序列指標是指任何查詢跨越時間戳記且為折線圖的視覺化。接著您可以使用 PPL 在記錄檔上定義任意條件，以建立隨時間變化的視覺化。
 
-##### Example
+##### 範例
 ```
 source = <index_name> | ... | ... | stats ... by span(<timestamp_field>, 1h)
 ```
 
-Choose **Line** in visualization configurations to create a time series metric.
+在視覺化組態中選擇 **Line** 以建立時間序列指標。
 
-![Changing visualization to line chart]({{site.url}}{{site.baseurl}}/images/visualization-line-type.gif)
+![將視覺化變更為折線圖]({{site.url}}{{site.baseurl}}/images/visualization-line-type.gif)

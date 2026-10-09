@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Report definition access control
+title: "報表定義存取控制"
 nav_order: 15
 ---
 
-# Report definition access control
+# 報表定義存取控制
 
-The Reporting plugin integrates with the Security plugin's resource sharing and access control framework to provide document-level authorization for report definition records. This replaces the legacy `plugins.alerting.filter_by_backend_roles` setting with a more flexible sharing system that allows resource owners to grant specific access levels to users, roles, or backend roles.
+Reporting 外掛程式與 Security 外掛程式的資源共用與存取控制架構整合，為報表定義記錄提供文件層級的授權。這會以更具彈性的共用系統取代舊版的 `plugins.alerting.filter_by_backend_roles` 設定，讓資源擁有者可以將特定的存取層級授予使用者、角色或後端角色。
 
-For the end-to-end framework concepts and APIs, see [Resource sharing and access control]({{site.url}}{{site.baseurl}}/security/access-control/resources/).
+如需端對端架構的概念與 API，請參閱[資源共用與存取控制]({{site.url}}{{site.baseurl}}/security/access-control/resources/)。
 {: .note}
 
-## Resource configuration
+## 資源組態
 
-The following table describes the report definition resource configuration.
+下表說明報表定義的資源組態。
 
-| Field | Value                             |
+| 欄位 | 值                             |
 | :--- |:----------------------------------|
-| Resource type | `report-definition`               |
-| System index | `.opendistro-reports-definitions` |
-| Onboarded version | OpenSearch 3.5                    |
+| 資源類型 | `report-definition`               |
+| 系統索引 | `.opendistro-reports-definitions` |
+| 導入版本 | OpenSearch 3.5                    |
 
-When resource-level authorization is enabled for report definitions, each report definition's visibility is governed by a central sharing record. Resource owners and users with sharing capabilities can grant or revoke access permissions for specific users, roles, or backend roles.
+為報表定義啟用資源層級授權後，每個報表定義的可見性會由一筆中央共用記錄控管。資源擁有者以及具備共用能力的使用者，可以為特定的使用者、角色或後端角色授予或撤銷存取權限。
 
-## Enable report definition resource sharing
+## 啟用報表定義資源共用
 
-To enable resource sharing for report definitions, you must add the report definition resource type to the protected types list and enable resource sharing cluster-wide.
+若要為報表定義啟用資源共用，您必須將報表定義資源類型加入受保護類型清單，並在整個叢集啟用資源共用。
 
-Admin-only: These settings can be configured only by cluster administrators with superadmin privileges.
+僅限管理員：這些設定只能由具備超級管理員權限的叢集管理員進行設定。
 {: .important }
 
-### Configuration using opensearch.yml
+### 使用 opensearch.yml 進行組態設定
 
-Add the following settings to your `opensearch.yml` configuration file to enable resource sharing for report definitions:
+將下列設定加入您的 `opensearch.yml` 組態檔，以啟用報表定義的資源共用：
 
 ```yaml
 plugins.security.resource_sharing.enabled: true
@@ -42,9 +43,9 @@ plugins.security.resource_sharing.protected_types:
 ```
 {% include copy.html %}
 
-### Configuration using the Cluster Settings API
+### 使用 Cluster Settings API 進行組態設定
 
-Alternatively, you can enable resource sharing dynamically using the Cluster Settings API:
+或者，您可以使用 Cluster Settings API 動態啟用資源共用：
 
 ```json
 PUT _cluster/settings
@@ -57,16 +58,16 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-When adding the report definition resource type to an existing configuration, include all previously configured resource types in the `protected_types` array.
+將報表定義資源類型加入現有組態時，請在 `protected_types` 陣列中包含所有先前已設定的資源類型。
 {: .note}
 
-## Report definition access levels
+## 報表定義存取層級
 
-Reporting provides the following predefined access levels for report definition documents. These access levels determine the specific permissions granted to users who have been granted access to a report definition resource.
+Reporting 為報表定義文件提供下列預先定義的存取層級。這些存取層級會決定授予給已獲報表定義資源存取權之使用者的特定權限。
 
 ### rd_read_only
 
-The `rd_read_only` read-only access level grants users the ability to view and search shared report definitions but not modify them. This access level includes the following permissions:
+`rd_read_only` 唯讀存取層級可讓使用者檢視及搜尋共用的報表定義，但無法修改。此存取層級包含下列權限：
 
 ```yaml
 - "cluster:admin/opendistro/reports/definition/get"
@@ -79,7 +80,7 @@ The `rd_read_only` read-only access level grants users the ability to view and s
 
 ### rd_read_write
 
-The `rd_read_write` read-write access level grants users full access to report definition operations except for sharing capabilities. This access level includes all read permissions plus write operations:
+`rd_read_write` 讀寫存取層級可讓使用者完整存取報表定義作業，但共用功能除外。此存取層級包含所有讀取權限以及寫入作業：
 
 ```yaml
 - "cluster:admin/opendistro/reports/definition/*"
@@ -90,7 +91,7 @@ The `rd_read_write` read-write access level grants users full access to report d
 
 ### rd_full_access
 
-The `rd_full_access` full access level grants users complete control over a report definition, including owner-like permissions such as sharing the resource with other users. This access level includes all report definition operations plus resource sharing permissions:
+`rd_full_access` 完整存取層級可讓使用者完整控制報表定義，包括將資源與其他使用者共用等擁有者層級的權限。此存取層級包含所有報表定義作業以及資源共用權限：
 
 ```yaml
 - "cluster:admin/opendistro/reports/definition/*"
@@ -101,17 +102,17 @@ The `rd_full_access` full access level grants users complete control over a repo
 ```
 {% include copy.html %}
 
-These access levels are predefined and cannot be modified. To request additional access levels, create an issue in the [Reporting GitHub repository](https://github.com/opensearch-project/reporting/).
+這些存取層級為預先定義，無法修改。如需其他存取層級，請在 [Reporting GitHub 儲存庫](https://github.com/opensearch-project/reporting/) 建立 issue。
 {: .note}
 
-## Migrating from the legacy framework
+## 從舊版架構遷移
 
-After enabling resource sharing and marking report definitions as a protected resource type, cluster administrators must run the Migrate API to transfer existing report definition sharing information from the legacy framework to the new resource sharing system.
+啟用資源共用並將報表定義標記為受保護資源類型後，叢集管理員必須執行 Migrate API，將現有的報表定義共用資訊從舊版架構轉移至新的資源共用系統。
 
-Admin-only: The Migrate API can only be executed by cluster administrators with superadmin or REST admin privileges.
+僅限管理員：Migrate API 只能由具備超級管理員或 REST 管理員權限的叢集管理員執行。
 {: .important }
 
-Use the following API call to migrate legacy report definition sharing data to the resource sharing framework:
+使用下列 API 呼叫，將舊版報表定義共用資料遷移至資源共用架構：
 
 ```json
 POST _plugins/_security/api/resources/migrate
@@ -127,11 +128,11 @@ POST _plugins/_security/api/resources/migrate
 ```
 {% include copy-curl.html %}
 
-Replace `<replace-with-existing-user>` with the username of an existing user who should own report definitions without explicit ownership information. Replace `<select-appropriate-access-level>` with one of the available report definition access levels: `rd_read_only`, `rd_read_write`, or `rd_full_access`.
+將 `<replace-with-existing-user>` 取代為應擁有無明確擁有權資訊之報表定義的現有使用者名稱。將 `<select-appropriate-access-level>` 取代為可用的報表定義存取層級之一：`rd_read_only`、`rd_read_write` 或 `rd_full_access`。
 
-## Related documentation
+## 相關文件
 
-- [Resource sharing and access control]({{site.url}}{{site.baseurl}}/security/access-control/resources/) -- Backend concepts, configuration, and setup
-- [Resource sharing APIs]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) -- REST API reference for programmatic management
-- [Resource access management]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI workflows and user guidance
-- [Report instance access control]({{site.url}}{{site.baseurl}}/reporting/report-instance-access-control/) -- Access control for report instances
+- [資源共用與存取控制]({{site.url}}{{site.baseurl}}/security/access-control/resources/) -- 後端概念、組態與設定
+- [資源共用 API]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) -- 以程式化管理所需的 REST API 參考
+- [資源存取管理]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI 工作流程與使用者指引
+- [報表執行個體存取控制]({{site.url}}{{site.baseurl}}/reporting/report-instance-access-control/) -- 報表執行個體的存取控制

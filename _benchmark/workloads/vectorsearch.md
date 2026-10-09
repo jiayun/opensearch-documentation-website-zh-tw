@@ -1,89 +1,90 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Vector search
+title: "向量搜尋"
 parent: Workload types
 nav_order: 10
 ---
 
-# Vector search workload
+# 向量搜尋工作負載
 
-The vector search workload benchmarks OpenSearch's vector engine capabilities for both indexing and search operations. It tests various vector search algorithms, quantization methods, and index configurations to measure performance metrics like throughput, latency, and recall accuracy. The workload supports different datasets and can evaluate both trained and untrained vector search methods.
+向量搜尋工作負載會針對編製索引與搜尋作業，對 OpenSearch 的向量引擎功能進行基準測試。它會測試各種向量搜尋演算法、量化方法與索引組態，以衡量輸送量、延遲與召回準確度等效能指標。此工作負載支援不同的資料集，並可評估已訓練與未訓練的向量搜尋方法。
 
-This workload supports datasets in either the `HDF5` or `BIG-ANN` formats. To download the datasets, use [this link](http://corpus-texmex.irisa.fr/).
+此工作負載支援 `HDF5` 或 `BIG-ANN` 格式的資料集。若要下載資料集，請使用[此連結](http://corpus-texmex.irisa.fr/)。
 
-## Supported workload parameters
+## 支援的工作負載參數
 
-The following workload parameters are supported by the vector search workload.
+向量搜尋工作負載支援下列工作負載參數。
 
-| Name                                      | Description                                                                                                                                     |
+| 名稱                                      | 說明                                                                                                                                     |
 | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `target_index_name`                       | The name of index to which to add vectors.                                                                                                           |
-| `target_field_name`                       | The name of the field to which to add vectors. Use "." to indicate a nested field.                                                                     |
-| `target_index_body`                       | The path to the target index definition.                                                                                                        |
-| `target_index_primary_shards`             | The target index's primary shards.                                                                                                              |
-| `target_index_replica_shards`             | The target index's replica shards.                                                                                                              |
-| `target_index_dimension`                  | The dimension of the target index.                                                                                                              |
-| `target_index_space_type`                 | The target index space type.                                                                                                                    |
-| `target_index_bulk_size`                  | The target index bulk size.                                                                                                                     |
-| `target_index_bulk_index_data_set_format` | The format of the vector dataset.                                                                                                               |
-| `target_index_bulk_index_data_set_path`   | The path to the vector dataset in the index.                                                                                                   |
-| `target_index_bulk_index_data_set_corpus` | The corpus name of the vector dataset.                                                                                                         |
-| `target_index_bulk_index_clients`         | The clients to be used for bulk ingestion. Must be a divisor of dataset size.                                                                  |
-| `target_index_max_num_segments`           | The number of segments to merge into the target index before beginning to search.                                                              |
-| `target_index_force_merge_timeout`        | The amount of time (in seconds) to wait before force merging requests.                                                                          |
-| `hnsw_ef_search `                         | THE `HNSW ef` search parameter.                                                                                                                 |
-| `hnsw_ef_construction`                      | The `HNSW ef` construction parameter.                                                                                                           |
-| `id_field_name`                           | The name of the field that will be used to identify documents in an index.                                                                      |
-| `hnsw_m `                                 | The `HNSW m` parameter.                                                                                                                         |
-| `query_k`                                 | The number of neighbors to return for the search. Only one of `query_k`, `query_max_distance`, or `query_min_score` can be provided.          |
-| `query_max_distance `                     | The maximum distance to be returned for the vector search. Only one of `query_k`, `query_max_distance`, or `query_min_score` can be provided. |
-| `query_min_score`                         | The minimum score to be returned for the vector search. Only one of `query_k`, `query_max_distance`, or `query_min_score` can be provided.    |
-| `query_data_set_format`                   | The format of the vector dataset used for queries. Only one of `query_k`, `query_max_distance`, or `query_min_score` can be provided.        |
-| `query_data_set_path`                     | The path to the vector dataset used for queries.                                                                                               |
-| `query_count`                             | The number of queries used for the search operation.                                                                                                 |
-| `query_body`                              | The JSON properties that will be merged with the search body.                                                                                        |
-| `search_clients`                          | The number of clients used to run queries.                                                                                               |
-| `repetitions`                             | The number of repetitions completed until the dataset is exhausted. Default is `1`.                                                                      |
-| `target_throughput`                       | The target throughput for each query operation, in requests per second. Default is `10`.                                                         |
-| `time_period`                             | The period of time dedicated to running the benchmark test, in seconds. Default is `900`.                                                       |
+| `target_index_name`                       | 要加入向量的索引名稱。                                                                                                           |
+| `target_field_name`                       | 要加入向量的欄位名稱。使用 "." 表示巢狀欄位。                                                                     |
+| `target_index_body`                       | 目標索引定義的路徑。                                                                                                        |
+| `target_index_primary_shards`             | 目標索引的主要分片數量。                                                                                                              |
+| `target_index_replica_shards`             | 目標索引的副本分片數量。                                                                                                              |
+| `target_index_dimension`                  | 目標索引的維度。                                                                                                              |
+| `target_index_space_type`                 | 目標索引的空間類型。                                                                                                                    |
+| `target_index_bulk_size`                  | 目標索引的批次大小。                                                                                                                     |
+| `target_index_bulk_index_data_set_format` | 向量資料集的格式。                                                                                                               |
+| `target_index_bulk_index_data_set_path`   | 索引中向量資料集的路徑。                                                                                                   |
+| `target_index_bulk_index_data_set_corpus` | 向量資料集的語料庫名稱。                                                                                                         |
+| `target_index_bulk_index_clients`         | 用於大量匯入的用戶端數量。必須是資料集大小的因數。                                                                  |
+| `target_index_max_num_segments`           | 開始搜尋前要合併至目標索引的分段數量。                                                              |
+| `target_index_force_merge_timeout`        | 強制合併請求前的等待時間（以秒為單位）。                                                                          |
+| `hnsw_ef_search `                         | `HNSW ef` 搜尋參數。                                                                                                                 |
+| `hnsw_ef_construction`                      | `HNSW ef` 建構參數。                                                                                                           |
+| `id_field_name`                           | 用於識別索引中文件的欄位名稱。                                                                      |
+| `hnsw_m `                                 | `HNSW m` 參數。                                                                                                                         |
+| `query_k`                                 | 搜尋要傳回的鄰居數量。`query_k`、`query_max_distance` 或 `query_min_score` 三者只能提供其中一個。          |
+| `query_max_distance `                     | 向量搜尋要傳回的最大距離。`query_k`、`query_max_distance` 或 `query_min_score` 三者只能提供其中一個。 |
+| `query_min_score`                         | 向量搜尋要傳回的最低分數。`query_k`、`query_max_distance` 或 `query_min_score` 三者只能提供其中一個。    |
+| `query_data_set_format`                   | 查詢所使用的向量資料集格式。`query_k`、`query_max_distance` 或 `query_min_score` 三者只能提供其中一個。        |
+| `query_data_set_path`                     | 查詢所使用的向量資料集路徑。                                                                                               |
+| `query_count`                             | 搜尋作業所使用的查詢數量。                                                                                                 |
+| `query_body`                              | 將與搜尋本文合併的 JSON 屬性。                                                                                        |
+| `search_clients`                          | 用於執行查詢的用戶端數量。                                                                                               |
+| `repetitions`                             | 資料集耗盡前完成的重複次數。預設為 `1`。                                                                      |
+| `target_throughput`                       | 每個查詢作業的目標輸送量，以每秒請求數為單位。預設為 `10`。                                                         |
+| `time_period`                             | 執行基準測試的時間長度，以秒為單位。預設為 `900`。                                                       |
 
 
 
-## Test procedures
+## 測試程序
 
-The vector search workload supports the following test procedures.
+向量搜尋工作負載支援下列測試程序。
 
-### No-train test procedure
+### 未訓練測試程序
 
-The no-train test procedure tests vector search indexes that require no training. You can define the underlying configuration of the vector search algorithm (such as specifying a specific engine or space type) as method definitions.
+未訓練測試程序會測試不需要訓練的向量搜尋索引。您可以將向量搜尋演算法的底層組態（例如指定特定的引擎或空間類型）定義為方法定義。
 
-### No-train test (index only) procedure
+### 未訓練測試（僅編製索引）程序
 
-The no-train test (index only) procedure is used to index vector search indexes that require no training. This can be particularly useful when you want to benchmark only the indexing operation.
+未訓練測試（僅編製索引）程序用於為不需要訓練的向量搜尋索引編製索引。當您只想對編製索引作業進行基準測試時，這特別有用。
 
-### No-train test (Amazon OpenSearch Serverless)
+### 未訓練測試 (Amazon OpenSearch Serverless)
 
-The no-train test procedure for Amazon OpenSearch Serverless is used specifically for OpenSearch Serverless vector search collections. This procedure doesn't include operations like **refresh** and **warmup** because they aren't supported by vector search collections.
+Amazon OpenSearch Serverless 的未訓練測試程序專門用於 OpenSearch Serverless 向量搜尋集合。此程序不包含 **refresh** 和 **warmup** 等操作，因為向量搜尋集合不支援這些操作。
 
-### Force merge index procedure
+### 強制合併索引程序
 
-The force merge index procedure optimizes vector search indexes by performing force merge operations up to a given maximum number of segments. For large datasets, force merging is a costly operation. Therefore, we recommend using a separate procedure to occasionally trigger force merge operations based on user requirements.
+強制合併索引程序會執行強制合併操作，將分段數合併至指定的上限，藉此最佳化向量搜尋索引。對於大型資料集而言，強制合併是成本高昂的操作。因此，我們建議使用個別程序，依使用者需求偶爾觸發強制合併操作。
 
-### Train test procedure
+### 訓練測試程序
 
-The train test procedure benchmarks approximate k-NN search algorithms that require a training step. For example, the Faiss Inverted File Indexing (IVF) technique requires a training step in order to retrieve cluster vectors. After the step is performed, the benchmark can search a smaller number of cluster centroids instead of the entire dataset.
+訓練測試程序會對需要訓練步驟的近似 k-NN 搜尋演算法進行基準測試。舉例來說，Faiss 反向檔案索引 (IVF) 技術需要訓練步驟才能擷取叢集向量。執行該步驟後，基準測試便能搜尋較少數量的叢集質心，而不必搜尋整個資料集。
 
-### Search procedure
+### 搜尋程序
 
-The search procedure benchmarks previously indexed vector search indexes. This can be useful when you want to benchmark large vector search indexes without reindexing each time because load time can be substantial for large datasets. This procedure includes warmup operations intended to avoid cold start problems during vector search.
+搜尋程序會對先前已編製索引的向量搜尋索引進行基準測試。當您想對大型向量搜尋索引進行基準測試，又不想每次都重新編製索引時，這項程序便很實用，因為大型資料集的載入時間可能相當可觀。此程序包含暖機操作，旨在避免向量搜尋期間發生冷啟動問題。
 
-## Custom runners
+## 自訂執行器
 
-Only one custom runner, `warmup-knn-indices`, is supported by the vector search workload. This runner will warm up k-NN indexes and retry the warmup until it succeeds.
+向量搜尋工作負載僅支援一種自訂執行器：`warmup-knn-indices`。此執行器會暖機 k-NN 索引，並重試暖機直到成功為止。
 
-## Running the workload
+## 執行工作負載
 
-To run the vector search workload, use the following command:
+若要執行向量搜尋工作負載，請使用下列命令：
 
 ```bash
 export ENDPOINT=<cluster-endpoint>
@@ -98,13 +99,13 @@ opensearch-benchmark run \
 ```
 {% include copy.html %}
 
-## Sample results
+## 範例結果
 
-When using the vector search workload, you can expect results similar to the following.
+使用向量搜尋工作負載時，您可以預期結果類似下列內容。
 
-### Train test procedure
+### 訓練測試程序
 
-The following example provides results from the train test procedure:
+下列範例提供訓練測試程序的結果：
 
 
 ```
@@ -193,11 +194,11 @@ The following example provides results from the train test procedure:
 ------------------------------------
 ```
 
-### Faiss results
+### Faiss 結果
 
-The following sample outputs were generated using the Faiss IVF benchmarking procedure. For brevity, the test used 100 search queries instead of the 10,000 specified in the parameter files. All other parameters remain the same as those in the `params/train` folder. The first run demonstrates results without quantization, the second run demonstrates scalar quantization, and the third run demonstrates product quantization. Note that quantization may cause search recall to drop.
+下列範例輸出是使用 Faiss IVF 基準測試程序產生的。為求簡潔，測試使用了 100 個搜尋查詢，而非參數檔中指定的 10,000 個。所有其他參數與 `params/train` 資料夾中的設定相同。第一次執行展示未量化的結果，第二次執行展示純量量化，第三次執行展示乘積量化。請注意，量化可能導致搜尋召回率下降。
 
-#### Faiss IVF with no quantization/flat encoding
+#### Faiss IVF 未量化/平面編碼
 
 
 ```
@@ -323,7 +324,7 @@ The following sample outputs were generated using the Faiss IVF benchmarking pro
 ------------------------------------
 ```
 
-#### Faiss IVF with scalar quantization (100 search queries)
+#### 使用純量量化的 Faiss IVF (100 次搜尋查詢)
 
 ```
 |                                                         Metric |                     Task |       Value |   Unit |
@@ -448,7 +449,7 @@ The following sample outputs were generated using the Faiss IVF benchmarking pro
 ------------------------------------
 ```
 
-#### Faiss IVF with product quantization (100 search queries)
+#### 使用乘積量化的 Faiss IVF（100 個搜尋查詢）
 
 ```
 |                                                         Metric |                     Task |       Value |   Unit |

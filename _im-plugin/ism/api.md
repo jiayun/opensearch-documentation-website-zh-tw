@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: ISM API
 parent: Index State Management
@@ -7,11 +8,11 @@ nav_order: 30
 
 # ISM API
 
-Use the Index State Management (ISM) API to programmatically work with policies and managed indexes.
+使用 Index State Management (ISM) API 以程式設計方式管理政策與受管理的索引。
 
 ---
 
-#### Table of contents
+#### 目錄
 - TOC
 {:toc}
 
@@ -19,19 +20,19 @@ Use the Index State Management (ISM) API to programmatically work with policies 
 ---
 
 
-## Create policy
-**Introduced 1.0**
+## 建立政策
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Creates a policy.
+建立政策。
 
-#### Endpoints
+#### 端點
 
 ```json
 PUT _plugins/_ism/policies/{policy_id}
 ```
 
-#### Example request
+#### 範例請求
 
 ```json
 PUT _plugins/_ism/policies/policy_1
@@ -82,7 +83,7 @@ PUT _plugins/_ism/policies/policy_1
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -153,32 +154,32 @@ PUT _plugins/_ism/policies/policy_1
 }
 ```
 
-The response echoes the policy with the defaults that ISM filled in, so each action gains a `retry` object and each operation gains the parameters that you did not set.
+回應會傳回由 ISM 填入預設值的政策，因此每個動作都會獲得一個 `retry` 物件，而每個操作都會獲得您未設定的參數。
 
 ---
 
-## Add policy
-**Introduced 1.0**
+## 新增政策
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Adds a policy to an index. To change the policy of an index that already has one, use [Update managed index policy](#update-managed-index-policy) instead.
+將政策新增至索引。若要變更已有政策的索引之政策，請改用 [更新受管理索引政策](#update-managed-index-policy)。
 
-#### Endpoints
+#### 端點
 
 ```json
 POST _plugins/_ism/add/{index}
 ```
 
-#### Example request
+#### 範例請求
 
-Create the index first:
+先建立索引：
 
 ```json
 PUT index_1
 ```
 {% include copy-curl.html %}
 
-Then add the policy to the index:
+然後將政策新增至索引：
 
 ```json
 POST _plugins/_ism/add/index_1
@@ -188,7 +189,7 @@ POST _plugins/_ism/add/index_1
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -198,7 +199,7 @@ POST _plugins/_ism/add/index_1
 }
 ```
 
-Adding a policy to an index that already has one does not overwrite it. The request returns `200`, but the index appears in `failed_indices` and `failures` is `true`:
+對已有政策的索引新增政策並不會覆寫原有政策。請求會傳回 `200`，但該索引會出現在 `failed_indices` 中，且 `failures` 為 `true`：
 
 ```json
 {
@@ -214,28 +215,28 @@ Adding a policy to an index that already has one does not overwrite it. The requ
 }
 ```
 
-If you use a wildcard `*` while adding a policy to an index, the ISM plugin interprets `*` as all indexes, including system indexes like `.opendistro-security`, which stores users, roles, and tenants. A delete action in your policy might accidentally delete all user roles and tenants in your cluster.
-Don't use the broad `*` wildcard, and instead add a prefix, such as `my-logs*`, when specifying indexes with the `_ism/add` API.
+如果您在為索引新增政策時使用萬用字元 `*`，ISM 外掛程式會將 `*` 解譯為所有索引，包括儲存使用者、角色與租用戶的系統索引 `.opendistro-security`。政策中的刪除動作可能會意外刪除叢集中的所有使用者角色與租用戶。
+請勿使用過於寬泛的 `*` 萬用字元，而是在使用 `_ism/add` API 指定索引時加上前置詞，例如 `my-logs*`。
 {: .warning }
 
 ---
 
 
-## Update policy
-**Introduced 1.0**
+## 更新政策
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Updates a policy. Use the `seq_no` and `primary_term` parameters to update an existing policy. If these numbers don't match the existing policy or the policy doesn't exist, ISM throws an error.
+更新政策。使用 `seq_no` 與 `primary_term` 參數來更新現有政策。如果這些數字與現有政策不符，或政策不存在，ISM 會擲回錯誤。
 
-It's possible that the policy currently applied to your index isn't the most up-to-date policy available. To view the policy that is currently applied to your index, see [Explain index]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/#explain-index). To get the most up-to-date version of a policy, see [Get policy]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/#get-policy).
+目前套用至您索引的政策可能不是最新的政策版本。若要檢視目前套用至索引的政策，請參閱 [說明索引]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/#explain-index)。若要取得政策的最新版本，請參閱 [取得政策]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/#get-policy)。
 
-#### Endpoints
+#### 端點
 
 ```json
 PUT _plugins/_ism/policies/{policy_id}?if_seq_no={seq_no}&if_primary_term={primary_term}
 ```
 
-#### Example request
+#### 範例請求
 
 ```json
 PUT _plugins/_ism/policies/policy_1?if_seq_no=7&if_primary_term=1
@@ -287,7 +288,7 @@ PUT _plugins/_ism/policies/policy_1?if_seq_no=7&if_primary_term=1
 {% include copy-curl.html %}
 
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -361,19 +362,19 @@ PUT _plugins/_ism/policies/policy_1?if_seq_no=7&if_primary_term=1
 
 ---
 
-## Get policy
-**Introduced 1.0**
+## 取得政策
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Gets the policy by `policy_id`.
+依 `policy_id` 取得政策。
 
-#### Endpoints
+#### 端點
 
 ```json
 GET _plugins/_ism/policies/{policy_id}
 ```
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_ism/policies/policy_1
@@ -381,7 +382,7 @@ GET _plugins/_ism/policies/policy_1
 {% include copy-curl.html %}
 
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -452,40 +453,40 @@ GET _plugins/_ism/policies/policy_1
 
 ---
 
-## Get policies
-**Introduced 1.0**
+## 取得多個政策
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Gets a list of policies. This API accepts search parameters to filter and paginate the results.
+取得政策清單。此 API 接受搜尋參數，以篩選及分頁結果。
 
-#### Endpoints
+#### 端點
 
 ```json
 GET _plugins/_ism/policies
 ```
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `size` | Integer | The number of policies to return. |
-| `from` | Integer | The starting position for pagination. |
-| `sortField` | String | The field by which to sort the results, given as a path into the stored policy document, such as `policy.policy_id.keyword` or `policy.last_updated_time`. An unmapped name such as `policy_id` is rejected with `400`. |
-| `sortOrder` | String | The sort order for the results. Valid values are `asc` (ascending) and `desc` (descending). |
-| `queryString` | String | A query string used to filter policies by name or other attributes. See [Query string query]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/).|
+| `size` | 整數 | 要傳回的政策數量。 |
+| `from` | 整數 | 分頁的起始位置。 |
+| `sortField` | 字串 | 用來排序結果的欄位，以儲存之政策文件中的路徑表示，例如 `policy.policy_id.keyword` 或 `policy.last_updated_time`。未對應的名稱（例如 `policy_id`）會遭到拒絕，並傳回 `400`。 |
+| `sortOrder` | 字串 | 結果的排序順序。有效值為 `asc`（遞增）及 `desc`（遞減）。 |
+| `queryString` | 字串 | 用來依名稱或其他屬性篩選政策的查詢字串。請參閱 [查詢字串查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/)。|
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_ism/policies
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
-Each entry contains the sequence number and primary term of the policy but not its `_version`. The `states` array of each policy is omitted from the following response for brevity:
+每個項目都包含政策的序號及主要分片任期，但不包含其 `_version`。為精簡起見，下列回應省略了每個政策的 `states` 陣列：
 
 ```json
 {
@@ -527,19 +528,19 @@ Each entry contains the sequence number and primary term of the policy but not i
 
 ---
 
-## Remove policy from index
-**Introduced 1.0**
+## 從索引移除政策
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Removes any ISM policy from the index.
+從索引移除任何 ISM 政策。
 
-#### Endpoints
+#### 端點
 
 ```json
 POST _plugins/_ism/remove/{index}
 ```
 
-#### Example request
+#### 範例請求
 
 ```json
 POST _plugins/_ism/remove/index_1
@@ -547,7 +548,7 @@ POST _plugins/_ism/remove/index_1
 {% include copy-curl.html %}
 
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -559,23 +560,23 @@ POST _plugins/_ism/remove/index_1
 
 ---
 
-## Update managed index policy
-**Introduced 1.0**
+## 更新受管理索引政策
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Updates the managed index policy to a new policy (or to a new version of the policy). You can use an index pattern to update multiple indexes at once. When updating multiple indexes, you might want to include a state filter to only affect certain managed indexes. The change policy filters out all the existing managed indexes and only applies the change to the ones in the state that you specify. You can also explicitly specify the state that the managed index transitions to after the change policy takes effect.
+將受管理索引政策更新為新政策（或政策的新版本）。您可以使用索引模式一次更新多個索引。更新多個索引時，您可能想加入狀態篩選條件，只影響特定的受管理索引。變更政策會篩選所有現有的受管理索引，並只將變更套用至您指定狀態中的索引。您也可以明確指定受管理索引在變更政策生效後要轉換到的狀態。
 
-A policy change is an asynchronous background process. The changes are queued and are not executed immediately by the background process. This delay in execution protects the currently running managed indexes from being put into a broken state. If the policy you are changing to has only some small configuration changes, then the change takes place immediately. For example, if the policy changes the `min_index_age` parameter in a rollover condition from `1000d` to `100d`, this change takes place immediately in its next execution. If the change modifies the state, actions, or the order of actions of the current state the index is in, then the change happens at the end of its current state before transitioning to a new state.
+政策變更是一種非同步的背景程序。變更會排入佇列，不會立即由背景程序執行。此執行延遲可保護目前正在執行的受管理索引，避免其進入損毀狀態。如果您要變更成的政策只有一些小幅組態變更，則變更會立即生效。例如，如果政策將輪替條件中的 `min_index_age` 參數從 `1000d` 變更為 `100d`，此變更會在其下次執行時立即生效。如果變更修改了索引目前所在狀態的狀態、動作或動作順序，則變更會在目前狀態結束時發生，然後才轉換至新狀態。
 
-In this example, the policy applied on the `index_1` index is changed to `policy_1`, which could either be a completely new policy or an updated version of its existing policy. The process only applies the change if the index is currently in the `searches` state. After this change in policy takes place, `index_1` transitions to the `delete` state.
+在此範例中，套用於 `index_1` 索引的政策會變更為 `policy_1`，這可以是全新的政策，也可以是現有政策的更新版本。此程序只會在索引目前處於 `searches` 狀態時套用變更。此政策變更生效後，`index_1` 會轉換至 `delete` 狀態。
 
-#### Endpoints
+#### 端點
 
 ```json
 POST _plugins/_ism/change_policy/{index}
 ```
 
-#### Example request
+#### 範例請求
 
 ```json
 POST _plugins/_ism/change_policy/index_1
@@ -592,7 +593,7 @@ POST _plugins/_ism/change_policy/index_1
 {% include copy-curl.html %}
 
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -602,27 +603,27 @@ POST _plugins/_ism/change_policy/index_1
 }
 ```
 
-The change is queued on the managed index and takes effect on the next job run, so `updated_indices` counts the indexes whose change policy was recorded, not the indexes that have already moved to the new policy.
+變更會排入受管理索引的佇列，並在下次工作執行時生效，因此 `updated_indices` 計數的是已記錄變更政策的索引，而非已移至新政策的索引。
 
 ---
 
-## Retry failed index
-**Introduced 1.0**
+## 重試失敗的索引
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Retries the failed action for an index. For the retry call to succeed, ISM must manage the index, and the index must be in a failed state. You can use index patterns (`*`) to retry multiple failed indexes.
+重試索引失敗的動作。若要讓重試呼叫成功，ISM 必須管理該索引，且索引必須處於失敗狀態。您可以使用索引模式（`*`）重試多個失敗的索引。
 
-Use [Explain index](#explain-index) to confirm that an index is in a failed state: its `action` object contains `"failed": true` and its `step` object contains `"step_status": "failed"`.
+使用 [說明索引](#explain-index) 確認索引處於失敗狀態：其 `action` 物件包含 `"failed": true`，且其 `step` 物件包含 `"step_status": "failed"`。
 
-Optionally, specify a `state` in the request body to restart the index in that state rather than in the state in which it failed.
+您也可以在請求本文中指定 `state`，讓索引在該狀態重新啟動，而非在其失敗的狀態中重新啟動。
 
-#### Endpoints
+#### 端點
 
 ```json
 POST _plugins/_ism/retry/{index}
 ```
 
-#### Example request
+#### 範例請求
 
 ```json
 POST _plugins/_ism/retry/index_1
@@ -633,7 +634,7 @@ POST _plugins/_ism/retry/index_1
 {% include copy-curl.html %}
 
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -643,7 +644,7 @@ POST _plugins/_ism/retry/index_1
 }
 ```
 
-If the index is not in a failed state, the response reports the index in `failed_indices`:
+如果索引並非處於失敗狀態，回應會以 `failed_indices` 回報該索引：
 
 ```json
 {
@@ -661,19 +662,19 @@ If the index is not in a failed state, the response reports the index in `failed
 
 ---
 
-## Explain index
-**Introduced 1.0**
+## 說明索引
+**1.0 版新增**
 {: .label .label-purple }
 
-Gets the current state of the index. You can use index patterns to get the status of multiple indexes.
+取得索引的目前狀態。您可以使用索引模式來取得多個索引的狀態。
 
-#### Endpoints
+#### 端點
 
 ```json
 GET _plugins/_ism/explain/{index}
 ```
 
-#### Example request
+#### 請求範例
 
 ```json
 GET _plugins/_ism/explain/index_1
@@ -681,7 +682,7 @@ GET _plugins/_ism/explain/index_1
 {% include copy-curl.html %}
 
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -697,19 +698,19 @@ GET _plugins/_ism/explain/index_1
 }
 ```
 
-Immediately after you add a policy, the fields of the response are `null` and `total_managed_indices` is `0`. ISM creates the managed index job on its next sweep, and the response is populated from then on.
+在您新增政策後的即時狀態下，回應的欄位為 `null`，且 `total_managed_indices` 為 `0`。ISM 會在下一次掃描時建立受管理索引工作，之後回應便會填入內容。
 {: .note}
 
-Optionally, you can add the `show_policy` parameter to your request's path to get the policy that is currently applied to your index, which is useful for seeing whether the policy applied to your index is the latest one. To get the most up-to-date policy, see [Get Policy API]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/#get-policy).
+您也可以選擇在請求的路徑中加入 `show_policy` 參數，以取得目前套用至索引的政策，這有助於確認套用至索引的政策是否為最新版本。若要取得最新的政策，請參閱 [取得政策 API]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/#get-policy)。
 
-#### Example request
+#### 請求範例
 
 ```json
 GET _plugins/_ism/explain/index_1?show_policy=true
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -735,32 +736,32 @@ GET _plugins/_ism/explain/index_1?show_policy=true
 }
 ```
 
-The `plugins.index_state_management.policy_id` setting is deprecated starting from ODFE version 1.13.0. We retain this field in the response API for consistency.
+`plugins.index_state_management.policy_id` 設定自 ODFE 1.13.0 版起已淘汰。為保持一致性，我們在回應 API 中保留此欄位。
 
-## Explain index with filtering
-**Introduced 2.12**
+## 使用篩選條件說明索引
+**2.12 版新增**
 {: .label .label-purple }
 
-You can use the `POST` method with the Explain API to filter the results based on specific criteria. This allows you to query indexes based on their policy ID, current state, or action type.
+您可以在 Explain API 中使用 `POST` 方法，依據特定條件篩選結果。這可讓您依據政策 ID、目前狀態或動作類型來查詢索引。
 
-#### Endpoints
+#### 端點
 
 ```json
 POST _plugins/_ism/explain/{index}
 ```
 
-#### Request body
+#### 請求本文
 
-The request body supports the following optional filters. If a filter is not specified, indexes with any value for that parameter are included in the results. The API returns only indexes that match all specified filters.
+請求本文支援下列選用篩選條件。若未指定某個篩選條件，則該參數具有任何值的索引都會包含在結果中。API 只會傳回符合所有指定篩選條件的索引。
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 |:----------|:-----|:------------|
-| `policy_id` | String | Filter results to show only indexes managed by the specified policy ID. |
-| `state` | String | Filter results to show only indexes currently in the specified state. |
-| `action_type` | String | Filter results to show only indexes currently executing the specified action type. |
-| `failed` | Boolean | Filter results to show only failed managed indexes. |
+| `policy_id` | 字串 | 篩選結果，只顯示由指定政策 ID 管理的索引。 |
+| `state` | 字串 | 篩選結果，只顯示目前處於指定狀態的索引。 |
+| `action_type` | 字串 | 篩選結果，只顯示目前正在執行指定動作類型的索引。 |
+| `failed` | 布林值 | 篩選結果，只顯示失敗的受管理索引。 |
 
-#### Example request: Filter by policy ID
+#### 請求範例：依政策 ID 篩選
 
 ```json
 POST _plugins/_ism/explain/log-*
@@ -772,7 +773,7 @@ POST _plugins/_ism/explain/log-*
 ```
 {% include copy-curl.html %}
 
-#### Example request: Filter by state and action type
+#### 請求範例：依狀態與動作類型篩選
 
 ```json
 POST _plugins/_ism/explain/app-*
@@ -785,7 +786,7 @@ POST _plugins/_ism/explain/app-*
 ```
 {% include copy-curl.html %}
 
-#### Example request: Filter by all criteria
+#### 請求範例：依所有條件篩選
 
 ```json
 POST _plugins/_ism/explain/data-*
@@ -799,11 +800,11 @@ POST _plugins/_ism/explain/data-*
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 回應範例
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -924,59 +925,59 @@ POST _plugins/_ism/explain/data-*
 
 ---
 
-## Simulate policy
-**Introduced 3.7**
+## 模擬政策
+**3.7 版新增**
 {: .label .label-purple }
 
-Previews how a policy would apply to one or more indexes without making any changes. For each index, the response contains the current state, the next action to execute, the evaluation of every transition condition, and which state the index would move to next. Use this endpoint to validate a policy before attaching it or to debug why an index is not transitioning as expected.
+在不進行任何變更的情況下，預覽政策套用至一或多個索引的方式。對於每個索引，回應會包含目前狀態、下一個要執行的動作、每個轉移條件的評估結果，以及索引接下來會移至哪個狀態。請使用此端點在附加政策前進行驗證，或偵錯索引為何未如預期轉移。
 
-Exactly one of `policy_id` or `policy` must be provided.
+必須且只能提供 `policy_id` 或 `policy` 其中之一。
 
-#### Endpoints
+#### 端點
 
 ```json
 POST _plugins/_ism/simulate
 ```
 
-#### Request body fields
+#### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Type | Required | Description |
+| 欄位 | 類型 | 必要 | 說明 |
 |:------|:-----|:---------|:------------|
-| `policy_id` | String | Conditional | The ID of a stored ISM policy to simulate. Required when `policy` is not provided. |
-| `policy` | Object | Conditional | An inline policy definition to simulate without saving it. Required when `policy_id` is not provided. |
-| `indices` | Array of strings | Yes | The index names or wildcard patterns to simulate against. Wildcard patterns are expanded to matching concrete indexes. Patterns that match no indexes are silently ignored. Concrete index names that do not exist return an error in the per-index result. |
+| `policy_id` | 字串 | 視情況而定 | 要模擬的已儲存 ISM 政策 ID。未提供 `policy` 時為必要。 |
+| `policy` | 物件 | 視情況而定 | 要模擬但不儲存的內嵌政策定義。未提供 `policy_id` 時為必要。 |
+| `indices` | 字串陣列 | 是 | 要模擬的索引名稱或萬用字元模式。萬用字元模式會展開為相符的具體索引。未符合任何索引的模式會以無訊息方式忽略。不存在的具體索引名稱會在每個索引的結果中傳回錯誤。 |
 
-#### Response body fields
+#### 回應本文欄位
 
-The following table lists all response body fields. The response contains a `simulate_results` array with one entry per index.
+下表列出所有回應本文欄位。回應包含 `simulate_results` 陣列，每個索引各有一個項目。
 
-| Field | Type | Description |
+| 欄位 | 類型 | 說明 |
 |:------|:-----|:------------|
-| `index_name` | String | The name of the index. |
-| `index_uuid` | String | The UUID of the index. `null` when the index was not found. |
-| `policy_id` | String | The ID of the policy used for simulation. Empty string for inline policies. |
-| `is_managed` | Boolean | Whether the index is managed by ISM. |
-| `current_state` | String | The state the index is in, or would start in for unmanaged indexes. Omitted when `error` is present. |
-| `current_action` | String | The action that would execute next in the current state. Omitted when `error` is present. |
-| `transition_evaluation` | Array | Per-transition condition evaluations. Present only when the index is in the transition phase (no pending actions). Omitted when `error` is present. |
-| `next_state` | String | The state the index would transition to (first met condition). `null` if no condition is met. Omitted when `error` is present. |
-| `error` | String | An index-level error message. Present when the index does not exist or another index-level error occurs. When this field is present, all other fields except `index_name`, `index_uuid`, `policy_id`, and `is_managed` are omitted. |
+| `index_name` | 字串 | 索引的名稱。 |
+| `index_uuid` | 字串 | 索引的 UUID。找不到索引時為 `null`。 |
+| `policy_id` | 字串 | 用於模擬的政策 ID。內嵌政策為空字串。 |
+| `is_managed` | 布林值 | 索引是否由 ISM 管理。 |
+| `current_state` | 字串 | 索引所在的狀態，或未受管理索引的起始狀態。存在 `error` 時省略。 |
+| `current_action` | 字串 | 在目前狀態下接下來會執行的動作。存在 `error` 時省略。 |
+| `transition_evaluation` | 陣列 | 每個轉換條件的評估結果。僅在索引處於轉換階段時出現（沒有待執行的動作）。存在 `error` 時省略。 |
+| `next_state` | 字串 | 索引會轉換到的狀態（第一個符合的條件）。未符合任何條件時為 `null`。存在 `error` 時省略。 |
+| `error` | 字串 | 索引層級的錯誤訊息。索引不存在或發生其他索引層級錯誤時出現。此欄位存在時，除了 `index_name`、`index_uuid`、`policy_id` 和 `is_managed` 以外的所有其他欄位都會省略。 |
 
-Each object in `transition_evaluation` contains the following fields.
+`transition_evaluation` 中的每個物件都包含下列欄位。
 
-| Field | Type | Description |
+| 欄位 | 類型 | 說明 |
 |:------|:-----|:------------|
-| `state_name` | String | The target state this transition would move the index to. |
-| `condition_met` | Boolean | Whether the transition condition is satisfied. |
-| `condition_type` | String | The condition type (for example, `min_index_age`, `min_doc_count`, `min_size`). Set to `unconditional` for transitions with no conditions. |
-| `current_value` | String | The current value of the metric being checked, formatted as a readable string (for example, `"3d 4h"`). Omitted for unconditional transitions. |
-| `required_value` | String | The threshold required by the condition, formatted as a readable string (for example, `"7d"`). Omitted for unconditional transitions. |
+| `state_name` | 字串 | 此轉換會將索引移至的目標狀態。 |
+| `condition_met` | 布林值 | 是否符合轉換條件。 |
+| `condition_type` | 字串 | 條件類型（例如 `min_index_age`、`min_doc_count`、`min_size`）。沒有條件的轉換會設為 `unconditional`。 |
+| `current_value` | 字串 | 所檢查指標的目前值，格式化為可讀字串（例如 `"3d 4h"`）。無條件轉換時省略。 |
+| `required_value` | 字串 | 條件所需的閾值，格式化為可讀字串（例如 `"7d"`）。無條件轉換時省略。 |
 
-#### Example request: Simulate a stored policy
+#### 範例請求：模擬已儲存的政策
 
-The following request simulates the [`policy_1` policy](#create-policy) against `index_1` and an index that does not exist:
+下列請求會對 `index_1` 及一個不存在的索引模擬 [`policy_1` 政策](#create-policy)：
 
 ```json
 POST _plugins/_ism/simulate
@@ -987,9 +988,9 @@ POST _plugins/_ism/simulate
 ```
 {% include copy-curl.html %}
 
-#### Example response: Simulate a stored policy
+#### 範例回應：模擬已儲存的政策
 
-The first result shows that `index_1` would start in the `ingest` state with `rollover` as its next action. The second shows the `error` field that a concrete index name returns when the index does not exist in the cluster:
+第一個結果顯示 `index_1` 會以 `ingest` 狀態開始，並以 `rollover` 作為其下一個動作。第二個結果顯示具體索引名稱在叢集中不存在索引時所傳回的 `error` 欄位：
 
 ```json
 {
@@ -1014,9 +1015,9 @@ The first result shows that `index_1` would start in the `ingest` state with `ro
 }
 ```
 
-#### Example request: Simulate an inline policy
+#### 範例請求：模擬內嵌政策
 
-The following request simulates a policy that is not stored in the cluster:
+下列請求會模擬未儲存在叢集中的政策：
 
 ```json
 POST _plugins/_ism/simulate
@@ -1043,9 +1044,9 @@ POST _plugins/_ism/simulate
 ```
 {% include copy-curl.html %}
 
-#### Example response: Simulate an inline policy
+#### 範例回應：模擬內嵌政策
 
-Because the `hot` state defines no actions, the next action is the transition itself, so the response contains a `transition_evaluation` array. The `min_index_age` condition is not met, so `next_state` is `null`. The `policy_id` field is an empty string because the policy is not stored:
+因為 `hot` 狀態未定義任何動作，下一個動作就是轉換本身，所以回應包含 `transition_evaluation` 陣列。未符合 `min_index_age` 條件，因此 `next_state` 為 `null`。由於政策未儲存，`policy_id` 欄位為空字串：
 
 ```json
 {
@@ -1076,19 +1077,19 @@ Because the `hot` state defines no actions, the next action is the transition it
 
 ---
 
-## Delete policy
-**Introduced 1.0**
+## 刪除政策
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Deletes the policy by `policy_id`.
+依 `policy_id` 刪除政策。
 
-#### Endpoints
+#### 端點
 
 ```json
 DELETE _plugins/_ism/policies/{policy_id}
 ```
 
-#### Example request
+#### 範例請求
 
 ```json
 DELETE _plugins/_ism/policies/policy_1
@@ -1096,7 +1097,7 @@ DELETE _plugins/_ism/policies/policy_1
 {% include copy-curl.html %}
 
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -1115,13 +1116,13 @@ DELETE _plugins/_ism/policies/policy_1
 }
 ```
 
-## Error prevention validation
-**Introduced 2.4**
+## 錯誤預防驗證
+**於 2.4 版推出**
 {: .label .label-purple }
 
-ISM runs actions automatically. However, actions can fail for various reasons. You can use error prevention validation to test an action and identify potential failures.
+ISM 會自動執行動作。不過，動作可能因各種原因而失敗。您可以使用錯誤預防驗證來測試動作並找出可能的失敗。
 
-To enable error prevention validation, set `plugins.index_state_management.action_validation.enabled` to `true`:
+若要啟用錯誤預防驗證，請將 `plugins.index_state_management.action_validation.enabled` 設為 `true`：
 
 ```json
 PUT _cluster/settings
@@ -1133,9 +1134,9 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
-The following response confirms the setting was updated:
+下列回應確認設定已更新：
 
 ```json
 {
@@ -1153,16 +1154,16 @@ The following response confirms the setting was updated:
 }
 ```
 
-To retrieve the error prevention validation status and message, pass `validate_action=true` to the `_plugins/_ism/explain` endpoint:
+若要擷取錯誤預防驗證狀態和訊息，請將 `validate_action=true` 傳遞至 `_plugins/_ism/explain` 端點：
 
 ```json
 GET _plugins/_ism/explain/test-000001?validate_action=true
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
-The response contains an additional validate object with a validation message and status:
+回應包含額外的 validate 物件，其中含有驗證訊息和狀態：
 
 ```json
 {
@@ -1210,7 +1211,7 @@ The response contains an additional validate object with a validation message an
 }
 ```
 
-If you pass `validate_action=false` or omit the `validate_action` parameter, the response does not contain the validation status and message:
+如果您傳遞 `validate_action=false` 或省略 `validate_action` 參數，回應不會包含驗證狀態和訊息：
 
 ```json
 GET _plugins/_ism/explain/test-000001?validate_action=false
@@ -1222,7 +1223,7 @@ GET _plugins/_ism/explain/test-000001
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 回應範例
 
 ```json
 {

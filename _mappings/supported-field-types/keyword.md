@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Keyword
 nav_order: 25
@@ -11,20 +12,20 @@ redirect_from:
   - /field-types/keyword/
 ---
 
-# Keyword field type
-**Introduced 1.0**
+# Keyword 欄位類型
+**於 1.0 版導入**
 {: .label .label-purple }
 
-A keyword field type contains a string that is not analyzed. It allows only exact, case-sensitive matches.
+keyword 欄位類型包含未經分析的字串。它僅允許精確且區分大小寫的比對。
 
-By default, keyword fields are both indexed (because `index` is enabled) and stored on disk (because `doc_values` is enabled). To reduce disk space, you can specify not to index keyword fields by setting `index` to `false`.
+預設情況下，keyword 欄位既會編製索引（因為 `index` 已啟用），也會儲存在磁碟上（因為 `doc_values` 已啟用）。若要減少磁碟空間，您可以將 `index` 設定為 `false`，指定不為 keyword 欄位編製索引。
 
-If you need to use a field for full-text search, map it as [`text`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/text/) instead.
+如果您需要使用某個欄位進行全文搜尋，請改將它對應為 [`text`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/text/)。
 {: .note }
 
-## Example
+## 範例
 
-The following query creates a mapping with a keyword field. Setting `index` to `false` specifies to store the `genre` field on disk and to retrieve it using `doc_values`:
+下列查詢會建立一個包含 keyword 欄位的對應。將 `index` 設定為 `false` 表示將 `genre` 欄位儲存在磁碟上，並使用 `doc_values` 來擷取：
 
 ```json
 PUT movies
@@ -41,33 +42,33 @@ PUT movies
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by keyword field types. All parameters are optional.
+下表列出 keyword 欄位類型接受的參數。所有參數皆為選用。
 
-| Parameter | Description | Default value | Dynamically updatable |
+| 參數 | 描述 | 預設值 | 可動態更新 |
 | :--- | :--- | :--- | :--- |
-| `boost` | A floating-point value that specifies the weight of this field toward the relevance score. Values above `1.0` increase the field's relevance. Values between `0.0` and `1.0` decrease the field's relevance. | `1.0` | Yes |
-| `doc_values` | A Boolean value that specifies whether the field should be stored on disk so that it can be used for aggregations, sorting, or scripting. | `true` | No | 
-| `eager_global_ordinals` | Specifies whether global ordinals should be loaded eagerly on refresh. If the field is often used for aggregations, this parameter should be set to `true`. | `false` | Yes |
-| `fields` | To index the same string in several ways (for example, as a keyword and text), provide the fields parameter. You can specify one version of the field to be used for search and another to be used for sorting and aggregations. | None | No |
-| `ignore_above` | Any string longer than this integer value should not be indexed. Default dynamic mapping creates a keyword subfield for which `ignore_above` is set to `256`. | `2147483647` | Yes |
-| `index` | A Boolean value that specifies whether the field should be searchable. To reduce disk space, set `index` to `false`. | `true` | No |
-| `index_options` | Information to be stored in the index that will be considered when calculating relevance scores. Can be set to `freqs` for term frequency. | `docs` | No |
-| `meta` | Accepts metadata for this field. | None | Yes |
-| [`normalizer`]({{site.url}}{{site.baseurl}}/analyzers/normalizers/) | Specifies how to preprocess this field before indexing (for example, make it lowercase). | `null` (no preprocessing) | No |
-| `norms` | A Boolean value that specifies whether the field length should be used when calculating relevance scores. | `false` | Yes |
-| [`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | A value to be used in place of `null`. Must be of the same type as the field. If this parameter is not specified, the field is treated as missing when its value is `null`. | `null` | No |
-| `similarity` | The ranking algorithm for calculating relevance scores. | The index's `similarity` setting (by default, `BM25`) | No |
-| `use_similarity` | Determines whether to calculate relevance scores. Default is `false`, which uses `constant_score` for faster queries. Setting this parameter to `true` enables scoring but may increase search latency. See [The use_similarity parameter ](#the-use_similarity-parameter). | `false` | Yes |
-| `split_queries_on_whitespace` | A Boolean value that specifies whether full-text queries should be split on white space. | `false` | Yes |
-| `store` | A Boolean value that specifies whether the field value should be stored and can be retrieved separately from the `_source` field. | `false` | No |
+| `boost` | 指定此欄位對相關性分數權重的浮點數值。高於 `1.0` 的值會提高欄位的相關性。介於 `0.0` 與 `1.0` 之間的值會降低欄位的相關性。 | `1.0` | 是 |
+| `doc_values` | 指定欄位是否應儲存在磁碟上，以便用於彙總、排序或指令碼的布林值。 | `true` | 否 |
+| `eager_global_ordinals` | 指定是否應在重新整理時立即載入全域序數。如果此欄位經常用於彙總，應將此參數設定為 `true`。 | `false` | 是 |
+| `fields` | 若要以多種方式為相同字串編製索引（例如，同時作為 keyword 與 text），請提供 fields 參數。您可以指定一個版本的欄位用於搜尋，另一個版本用於排序與彙總。 | None | 否 |
+| `ignore_above` | 長度超過此整數值的字串不應編製索引。預設動態對應會建立一個 keyword 子欄位，其 `ignore_above` 設定為 `256`。 | `2147483647` | 是 |
+| `index` | 指定欄位是否應可搜尋的布林值。若要減少磁碟空間，請將 `index` 設定為 `false`。 | `true` | 否 |
+| `index_options` | 儲存在索引中，於計算相關性分數時會納入考量的資訊。可設定為 `freqs` 以使用詞彙頻率。 | `docs` | 否 |
+| `meta` | 接受此欄位的中繼資料。 | None | 是 |
+| [`normalizer`]({{site.url}}{{site.baseurl}}/analyzers/normalizers/) | 指定在編製索引前如何前置處理此欄位（例如，轉為小寫）。 | `null`（無前置處理） | 否 |
+| `norms` | 指定計算相關性分數時是否應使用欄位長度的布林值。 | `false` | 是 |
+| [`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。必須與欄位屬於相同類型。若未指定此參數，當欄位值為 `null` 時，該欄位會被視為遺漏。 | `null` | 否 |
+| `similarity` | 用於計算相關性分數的排名演算法。 | 索引的 `similarity` 設定（預設為 `BM25`） | 否 |
+| `use_similarity` | 決定是否計算相關性分數。預設為 `false`，它使用 `constant_score` 以加快查詢速度。將此參數設定為 `true` 會啟用評分，但可能會增加搜尋延遲。請參閱 [use_similarity 參數](#the-use_similarity-parameter)。 | `false` | 是 |
+| `split_queries_on_whitespace` | 指定全文查詢是否應以空白字元分割的布林值。 | `false` | 是 |
+| `store` | 指定欄位值是否應儲存，並可與 `_source` 欄位分開擷取的布林值。 | `false` | 否 |
 
-## The use_similarity parameter 
+## use_similarity 參數
 
-The `use_similarity` parameter controls whether OpenSearch calculates relevance scores when querying a `keyword` field. By default, it is set to `false`, which improves performance by using `constant_score`. Setting it to `true` enables scoring based on the configured similarity algorithm (typically, BM25) but may increase query latency.
+`use_similarity` 參數控制查詢 `keyword` 欄位時，OpenSearch 是否計算相關性分數。預設設定為 `false`，它會使用 `constant_score` 來提升效能。將其設定為 `true` 會啟用根據所設定的相似度演算法（通常為 BM25）進行評分，但可能會增加查詢延遲。
 
-Run a term query on the index for which `use_similarity` is disabled (default):
+在 `use_similarity` 已停用（預設）的索引上執行 term 查詢：
 
 ```json
 GET /big5/_search
@@ -84,7 +85,7 @@ GET /big5/_search
 ```
 {% include copy-curl.html %}
 
-The query returns results quickly (10 ms), and all documents receive a constant relevance score of 1.0:
+查詢會快速傳回結果（10 毫秒），且所有文件都會收到 1.0 的固定相關性分數：
 
 ```json
 {
@@ -123,7 +124,7 @@ The query returns results quickly (10 ms), and all documents receive a constan
 }
 ```
 
-To enable scoring using the default BM25 algorithm for the `process.name` field, provide the `use_similarity` parameter in the index mappings:
+若要為 `process.name` 欄位啟用使用預設 BM25 演算法的評分，請在索引對應中提供 `use_similarity` 參數：
 
 ```json
 PUT /big5/_mapping
@@ -137,7 +138,7 @@ PUT /big5/_mapping
 }
 ```
 
-When you run the same term query on the configured index, the query takes longer to run (200 ms), and the returned documents have varying relevance scores based on term frequency and other BM25 factors:
+當您在已設定的索引上執行相同的 term 查詢時，查詢需要較長時間執行（200 毫秒），且傳回的文件會依據詞彙頻率及其他 BM25 因素而具有不同的相關性分數：
 
 ```json
 {
@@ -176,11 +177,11 @@ When you run the same term query on the configured index, the query takes longer
 }
 ```
 
-## Derived source
+## 衍生來源
 
-When an index uses [derived source]({{site.url}}{{site.baseurl}}/field-types/metadata-fields/source/#derived-source), OpenSearch may sort keyword values and remove duplicates in multi-value keyword fields during source reconstruction.
+當索引使用[衍生來源]({{site.url}}{{site.baseurl}}/field-types/metadata-fields/source/#derived-source)時，OpenSearch 在來源重建期間可能會排序 keyword 值，並移除多值 keyword 欄位中的重複項。
 
-Create an index that enables derived source and configures a `name` field:
+建立一個啟用衍生來源並設定 `name` 欄位的索引：
 
 ```json
 PUT sample-index1
@@ -202,7 +203,7 @@ PUT sample-index1
 }
 ```
 
-Index a document with multiple keyword values, including duplicates, into the index:
+將一份包含多個 keyword 值（包括重複值）的文件編製索引至該索引：
 
 ```json
 PUT sample-index1/_doc/1
@@ -211,7 +212,7 @@ PUT sample-index1/_doc/1
 }
 ```
 
-After OpenSearch reconstructs `_source`, the derived `_source` removes duplicates and sorts the values alphabetically:
+在 OpenSearch 重建 `_source` 之後，衍生的 `_source` 會移除重複項並依字母順序排序這些值：
 
 ```json
 {
@@ -219,9 +220,9 @@ After OpenSearch reconstructs `_source`, the derived `_source` removes duplicate
 }
 ```
 
-If the field mapping defines a [`null_value`]({{site.url}}{{site.baseurl}}/field-types/mapping-parameters/null-value/), any ingested null values are replaced with that value during reconstruction. The following example demonstrates how `null_value` affects derived source output.
+如果欄位對應定義了 [`null_value`]({{site.url}}{{site.baseurl}}/field-types/mapping-parameters/null-value/)，任何匯入的空值都會在重建期間被取代為該值。下列範例示範 `null_value` 如何影響衍生來源的輸出。
 
-Create an index that enables derived source and configures a `null_value` for the `name` field:
+建立一個啟用衍生來源，並為 `name` 欄位設定 `null_value` 的索引：
 
 ```json
 PUT sample-index2
@@ -244,7 +245,7 @@ PUT sample-index2
 }
 ```
 
-Index a document with null values into the index:
+將一份包含空值的文件編製索引至該索引：
 
 ```json
 PUT sample-index2/_doc/1
@@ -253,7 +254,7 @@ PUT sample-index2/_doc/1
 }
 ```
 
-After OpenSearch reconstructs `_source`, the derived `_source` replaces null values and sorts the values alphabetically:
+在 OpenSearch 重建 `_source` 之後，衍生的 `_source` 會取代空值並依字母順序排序這些值：
 
 ```json
 {

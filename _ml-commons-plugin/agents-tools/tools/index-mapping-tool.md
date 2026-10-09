@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index Mapping tool
+title: "索引對應工具"
 has_children: false
 has_toc: false
 nav_order: 30
@@ -9,16 +10,16 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# Index Mapping tool
-**Introduced 2.13**
+# 索引對應工具
+**於 2.13 版導入**
 {: .label .label-purple }
 <!-- vale on -->
 
-The `IndexMappingTool` retrieves mapping and setting information for indexes in your cluster.
+`IndexMappingTool` 會擷取叢集中索引的對應與設定資訊。
 
-## Step 1: Register a flow agent that will run the IndexMappingTool
+## 步驟 1：註冊將執行 IndexMappingTool 的流程代理程式
 
-A flow agent runs a sequence of tools in order and returns the last tool's output. To create a flow agent, send the following register agent request:
+流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -40,9 +41,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-For parameter descriptions, see [Register parameters](#register-parameters).
+如需參數說明，請參閱[註冊參數](#register-parameters)。
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -50,11 +51,11 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 2: Run the agent
+## 步驟 2：執行代理程式
 
-Before you run the agent, make sure that you add the sample OpenSearch Dashboards `Sample eCommerce orders` dataset. To learn more, see [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
+在執行代理程式之前，請確定您已新增 OpenSearch Dashboards 的 `Sample eCommerce orders` 範例資料集。若要了解更多，請參閱[新增範例資料]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
 
-Then, run the agent by sending the following request and providing the index name and the question:
+接著，傳送下列請求並提供索引名稱與問題來執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
@@ -67,7 +68,7 @@ POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
 ```
 {% include copy-curl.html %} 
 
-OpenSearch returns the mappings and settings for the specified index:
+OpenSearch 會傳回指定索引的對應與設定：
 
 ```json
 {
@@ -100,25 +101,25 @@ index.version.created=137217827
 }
 ```
 
-## Register parameters
+## 註冊參數
 
-The following table lists all tool parameters that are available when registering an agent.
+下表列出註冊代理程式時可用的所有工具參數。
 
-Parameter | Type | Required/Optional | Description
+參數 | 類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`input` | String | Required | The user input used to return index information.
-`index` | Array | Required | A comma-delimited list of one or more indexes for which to obtain mapping and setting information. Default is an empty list, which means all indexes.
-`local` | Boolean | Optional | Whether to return information from the local node only instead of the cluster manager node (default is `false`).
+`input` | 字串 | 必要 | 用於傳回索引資訊的使用者輸入。
+`index` | 陣列 | 必要 | 一或多個索引的逗號分隔清單，用於取得對應與設定資訊。預設為空清單，表示所有索引。
+`local` | 布林值 | 選用 | 是否只傳回本機節點的資訊，而不是叢集管理員節點的資訊（預設為 `false`）。
 
-## Execute parameters
+## 執行參數
 
-The following table lists all tool parameters that are available when running the agent.
+下表列出執行代理程式時可用的所有工具參數。
 
-Parameter	| Type | Required/Optional | Description	
+參數	| 類型 | 必要/選用 | 說明	
 :--- | :--- | :--- | :---
-`question` | String | Required | The natural language question to send to the LLM. 
-`index` | Array | Optional | A comma-delimited list of one or more indexes for which to obtain mapping and setting information. Default is an empty list, which means all indexes.
+`question` | 字串 | 必要 | 要傳送至 LLM 的自然語言問題。 
+`index` | 陣列 | 選用 | 一或多個索引的逗號分隔清單，用於取得對應與設定資訊。預設為空清單，表示所有索引。
 
-## Testing the tool
+## 測試工具
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+您可以將此工具作為代理程式工作流程的一部分執行，也可以使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適用於測試個別工具或執行獨立作業。

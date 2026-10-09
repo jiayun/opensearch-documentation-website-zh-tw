@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Object
+title: "物件"
 nav_order: 41
 has_children: false
 parent: Object field types
@@ -11,15 +12,15 @@ redirect_from:
   - /field-types/object/
 ---
 
-# Object field type
-**Introduced 1.0**
+# 物件欄位類型
+**於 1.0 版導入**
 {: .label .label-purple }
 
-An object field type contains a JSON object (a set of name/value pairs). A value in a JSON object may be another JSON object. It is not necessary to specify `object` as the type when mapping object fields because `object` is the default type.
+物件欄位類型包含一個 JSON 物件（一組名稱/值配對）。JSON 物件中的值可以是另一個 JSON 物件。在對應物件欄位時，不需要指定 `object` 作為類型，因為 `object` 是預設類型。
 
-## Example
+## 範例
 
-Create a mapping with an object field:
+建立一個包含 object 欄位的對應：
 
 ```json
 PUT testindex1/_mappings
@@ -41,7 +42,7 @@ PUT testindex1/_mappings
 ```
 {% include copy-curl.html %}
 
-Index a document with an object field:
+將一個包含 object 欄位的文件編製索引：
 
 ```json
 PUT testindex1/_doc/1
@@ -54,9 +55,9 @@ PUT testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-Nested objects are stored as flat key-value pairs internally. To refer to a field in a nested object, use `parent field`.`child field` (for example, `patient.id`).
+巢狀物件在內部以扁平的鍵值配對形式儲存。若要參照巢狀物件中的欄位，請使用 `parent field`.`child field`（例如 `patient.id`）。
 
-Search for a patient with ID 123456:
+搜尋 ID 為 123456 的病患：
 
 ```json
 GET testindex1/_search
@@ -70,21 +71,21 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by object field types. All parameters are optional.
+下表列出物件欄位類型接受的參數。所有參數皆為選用。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :--- 
-[`dynamic`](#the-dynamic-parameter) | Specifies whether new fields can be dynamically added to the object. Valid values are `true`, `false`, `strict`, `strict_allow_templates`, and `false_allow_templates`. Default is `true`.
-`enabled` | A Boolean value that specifies whether the JSON contents of the object should be parsed. If `enabled` is set to `false`, the object's contents are not indexed or searchable, but they are still retrievable from the `_source` field. Default is `true`.
-`properties` | Fields of this object, which can be of any supported type. New properties can be dynamically added to this object if `dynamic` is set to `true`.
+[`dynamic`](#the-dynamic-parameter) | 指定是否可以動態地將新欄位新增至物件。有效值為 `true`、`false`、`strict`、`strict_allow_templates` 和 `false_allow_templates`。預設值為 `true`。
+`enabled` | 一個布林值，指定是否應解析物件的 JSON 內容。若 `enabled` 設定為 `false`，物件的內容不會被編製索引，也無法搜尋，但仍可從 `_source` 欄位擷取。預設值為 `true`。
+`properties` | 此物件的欄位，可以是任何支援的類型。若 `dynamic` 設定為 `true`，則可以動態地將新屬性新增至此物件。
 
-### The `dynamic` parameter
+### `dynamic` 參數
 
-The `dynamic` parameter specifies whether new fields can be dynamically added to an object that is already indexed.
+`dynamic` 參數指定是否可以動態地將新欄位新增至已編製索引的物件。
 
-For example, you can initially create a mapping with a `patient` object that has only one field:
+例如，您可以先建立一個對應，其中包含只有一個欄位的 `patient` 物件：
 
 ```json
 PUT testindex1/_mappings
@@ -103,7 +104,7 @@ PUT testindex1/_mappings
 ```
 {% include copy-curl.html %}
 
-Then you index a document with a new `id` field in `patient`:
+接著，您將一個在 `patient` 中含有新 `id` 欄位的文件編製索引：
 
 ```json
 PUT testindex1/_doc/1
@@ -116,7 +117,7 @@ PUT testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-As a result, the field `id` is added to the mappings:
+結果，欄位 `id` 會被新增至對應：
 
 ```json
 {
@@ -145,19 +146,19 @@ As a result, the field `id` is added to the mappings:
 }
 ```
 
-The `dynamic` parameter has the following valid values.
+`dynamic` 參數有以下有效值。
 
-Value | Description 
+值 | 說明 
 :--- | :--- 
-`true` | New fields can be added to the mapping dynamically. This is the default.
-`false` | New fields cannot be added to the mapping dynamically. If a new field is detected, it is not indexed or searchable. However, it is still retrievable from the `_source` field. 
-`strict` | When new fields are added to the mapping dynamically, an exception is thrown. To add a new field to an object, you have to add it to the mapping first.
-`strict_allow_templates` | If the newly detected fields match any of the predefined dynamic templates in the mapping, then they are added to the mapping; if they do not match any of them, then an exception is thrown.
-`false_allow_templates` | If the newly detected fields match any of the predefined dynamic templates in the mapping, then they are added to the mapping. Only fields matching dynamic templates or mapping properties are indexed.
+`true` | 可以動態地將新欄位新增至對應。這是預設值。
+`false` | 無法動態地將新欄位新增至對應。若偵測到新欄位，該欄位不會被編製索引，也無法搜尋，但仍可從 `_source` 欄位擷取。 
+`strict` | 當動態地將新欄位新增至對應時，會擲回例外狀況。若要將新欄位新增至物件，您必須先將其新增至對應。
+`strict_allow_templates` | 若新偵測到的欄位符合對應中任何預先定義的動態範本，則會將其新增至對應；若不符合任何範本，則會擲回例外狀況。
+`false_allow_templates` | 若新偵測到的欄位符合對應中任何預先定義的動態範本，則會將其新增至對應。只有符合動態範本或對應屬性的欄位會被編製索引。
 
-Inner objects inherit the `dynamic` parameter value from their parent unless they declare their own `dynamic` parameter value.
+內部物件會從其父物件繼承 `dynamic` 參數值，除非它們自行宣告 `dynamic` 參數值。
 {: .note }
 
-## Related documentation
+## 相關文件
 
-- [Disable objects]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/disable-objects/)
+- [停用物件]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/disable-objects/)

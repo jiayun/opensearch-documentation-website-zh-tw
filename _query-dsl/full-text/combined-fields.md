@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Combined fields
+title: "合併欄位"
 parent: Full-text queries
 nav_order: 60
 ---
 
-# Combined fields query
-**Introduced 3.2**
+# 合併欄位查詢
+**於 3.2 版引入**
 {: .label .label-purple }
 
-The `combined_fields` query treats multiple text fields as a unified field, using the BM25F algorithm for consistent relevance scoring. Unlike the [`cross_fields`]({{site.url}}{{site.baseurl}}/query-dsl/full-text/multi-match/#cross-fields) type of `multi_match`, which executes separate queries per field, `combined_fields` processes all fields together, resulting in better performance and more accurate scoring. You can apply different field weights while maintaining unified scoring across all fields.
+`combined_fields` 查詢將多個文字欄位視為統一欄位，使用 BM25F 演算法提供一致的相關性評分。與針對每個欄位執行個別查詢的 `multi_match` 的 [`cross_fields`]({{site.url}}{{site.baseurl}}/query-dsl/full-text/multi-match/#cross-fields) 類型不同，`combined_fields` 會一起處理所有欄位，提供更好的效能與更準確的評分。您可以套用不同的欄位權重，同時維持所有欄位的統一評分。
 
-All fields in a `combined_fields` query must be `text` fields and must use the same text analyzer.
+`combined_fields` 查詢中的所有欄位都必須是 `text` 欄位，且必須使用相同的文字分析器。
 {: .note }
 
-## Setup
+## 設定
 
-To follow along with the examples, index some sample documents:
+若要跟著範例操作，請將一些範例文件編製索引：
 
 ```json
 POST /books/_bulk
@@ -27,9 +28,9 @@ POST /books/_bulk
 ```
 {% include copy-curl.html %}
 
-## Example
+## 範例
 
-The following example demonstrates field weights in a `combined_fields` query. The query searches for "database systems" across the `title` and `description` fields, with the `title` field weighted four times as heavily as the `description` field:
+下列範例示範 `combined_fields` 查詢中的欄位權重。此查詢會在 `title` 和 `description` 欄位中搜尋「database systems」，其中 `title` 欄位的權重是 `description` 欄位的四倍：
 
 ```json
 GET /books/_search
@@ -44,7 +45,7 @@ GET /books/_search
 ```
 {% include copy-curl.html %}
 
-The response shows that "Database Systems" scores significantly higher than "Introduction to Systems" because both query terms appear in the heavily weighted `title` field:
+回應顯示，「Database Systems」的分數明顯高於「Introduction to Systems」，因為兩個查詢詞彙都出現在權重較高的 `title` 欄位中：
 
 ```json
 {
@@ -86,22 +87,22 @@ The response shows that "Database Systems" scores significantly higher than "Int
 }
 ```
 
-## Parameters
+## 參數
 
-The following table lists the parameters for the `combined_fields` query.
+下表列出 `combined_fields` 查詢的參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `query` | String | The query string to search for. Required. |
-| `fields` | Array of strings | The fields to search. Supports field name patterns and field weights using the `^` syntax (for example, `title^2`). Required. |
-| `operator` | String | The Boolean logic used to interpret the query string. Valid values are `OR` (default) and `AND`. Optional. |
-| `minimum_should_match` | String | The minimum number of terms that must match for a document to be returned. Can be an absolute number, a percentage, or a combination. For more information, see [Minimum should match]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/). Optional. |
-| `boost` | Floating-point | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field's relevance. Values between 0.0 and 1.0 decrease the field's relevance. Default is 1.0. Optional. |
-| `_name` | String | A name for the query that can be used to identify it in the response. Optional. |
+| `query` | 字串 | 要搜尋的查詢字串。必要。 |
+| `fields` | 字串陣列 | 要搜尋的欄位。支援欄位名稱模式，以及使用 `^` 語法指定欄位權重（例如 `title^2`）。必要。 |
+| `operator` | 字串 | 用於解讀查詢字串的布林邏輯。有效值為 `OR`（預設）和 `AND`。選用。 |
+| `minimum_should_match` | 字串 | 傳回文件所需符合的最少詞彙數。可以是絕對數值、百分比或兩者的組合。如需詳細資訊，請參閱[最少應符合數量]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/)。選用。 |
+| `boost` | 浮點數 | 指定此欄位對相關性分數之權重的浮點數值。大於 1.0 的值會提高欄位的相關性。介於 0.0 和 1.0 之間的值會降低欄位的相關性。預設為 1.0。選用。 |
+| `_name` | 字串 | 查詢的名稱，可用於在回應中識別此查詢。選用。 |
 
-## Using the AND operator
+## 使用 AND 運算子
 
-By default, the query uses the `OR` operator, meaning that documents matching any term in the query will be returned. You can change this to `AND` to require all terms to match:
+預設情況下，查詢使用 `OR` 運算子，這表示符合查詢中任一詞彙的文件都會傳回。您可以將其變更為 `AND`，要求所有詞彙都必須符合：
 
 ```json
 GET /books/_search
@@ -117,7 +118,7 @@ GET /books/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the only document in which both terms ("introduction" and "systems") appear in the combined fields:
+回應包含唯一一份在合併欄位中同時出現兩個詞彙（「introduction」和「systems」）的文件：
 
 ```json
 {
@@ -150,9 +151,9 @@ The response contains the only document in which both terms ("introduction" and 
 }
 ```
 
-## Using minimum_should_match
+## 使用 minimum_should_match
 
-The `minimum_should_match` parameter lets you specify the minimum number of terms that must match for a document to be returned. For example, the following query requires at least 75% of the terms to match:
+`minimum_should_match` 參數可讓您指定傳回文件所需符合的最少詞彙數。例如，下列查詢要求至少 75% 的詞彙必須符合：
 
 ```json
 GET /books/_search
@@ -168,7 +169,7 @@ GET /books/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the only document matching at least 3 of the 4 query terms (75%):
+回應包含唯一一份符合 4 個查詢詞彙中至少 3 個（75%）的文件：
 
 ```json
 {
@@ -201,13 +202,13 @@ The response contains the only document matching at least 3 of the 4 query terms
 }
 ```
 
-## Comparison with multi_match cross_fields
+## 與 multi_match cross_fields 比較
 
-The `combined_fields` query differs from `multi_match` with `type: cross_fields` in how it calculates relevance scores. While both query types search across multiple fields, `combined_fields` uses the BM25F algorithm to treat all fields as a single unified field for scoring purposes. This means that inverse document frequency (IDF) is calculated globally across all fields rather than per field, and term frequency normalization accounts for the combined length of all fields. This approach is particularly beneficial when you have fields of very different lengths, such as a short title field and a long body field, because it prevents shorter fields from being overweighted in the relevance calculation. Additionally, `combined_fields` uses term-centric matching, where query terms can be satisfied across any combination of fields, rather than requiring all terms to match within individual fields.
+`combined_fields` 查詢與使用 `type: cross_fields` 的 `multi_match` 在計算相關性分數的方式上有所不同。雖然這兩種查詢類型都會跨多個欄位搜尋，但 `combined_fields` 使用 BM25F 演算法，在評分時將所有欄位視為單一統一欄位。這表示反向文件頻率（IDF）會跨所有欄位整體計算，而非逐一欄位計算，且詞頻正規化會考量所有欄位的合併長度。當您的欄位長度差異很大時，例如較短的標題欄位與較長的本文欄位，這種方法特別有益，因為它可避免在計算相關性時給予較短欄位過高的權重。此外，`combined_fields` 使用以詞彙為中心的比對方式，查詢詞彙可以透過任意欄位組合來符合，而不必在個別欄位內符合所有詞彙。
 
-The following example compares the two approaches using the same query.
+下列範例使用相同的查詢比較這兩種方法。
 
-**Combined fields query**:
+**合併欄位查詢**：
 
 ```json
 GET /books/_search
@@ -222,7 +223,7 @@ GET /books/_search
 ```
 {% include copy-curl.html %}
 
-The `combined_fields` query calculates term frequency across all fields together, providing more accurate BM25F scoring:
+`combined_fields` 查詢會一起計算所有欄位的詞頻，提供更準確的 BM25F 評分：
 
 ```json
 {
@@ -264,7 +265,7 @@ The `combined_fields` query calculates term frequency across all fields together
 }
 ```
 
-**Multi_match cross_fields query**:
+**Multi_match cross_fields 查詢**：
 
 ```json
 GET /books/_search
@@ -280,7 +281,7 @@ GET /books/_search
 ```
 {% include copy-curl.html %}
 
-The `cross_fields` approach executes separate queries per field and then combines the results, which can lead to less precise scoring:
+`cross_fields` 方法會針對每個欄位執行個別查詢，然後合併結果，這可能導致評分較不精確：
 
 ```json
 {
@@ -322,12 +323,12 @@ The `cross_fields` approach executes separate queries per field and then combine
 }
 ```
 
-Notice that the `combined_fields` query produces higher relevance scores (0.20001775 compared to 0.18051638 for the top result).
+請注意，`combined_fields` 查詢會產生較高的相關性分數（排名第一的結果為 0.20001775，相較之下另一種查詢為 0.18051638）。
 
-## Limitations
+## 限制
 
-Note the following limitations of the `combined_fields` query:
+請注意 `combined_fields` 查詢的下列限制：
 
-- All fields must have the same text analyzer.
-- The query only works with `text` fields.
-- The query does not support per-field boosts in the same way as `multi_match`; instead, use field weights.
+- 所有欄位都必須使用相同的文字分析器。
+- 此查詢僅適用於 `text` 欄位。
+- 此查詢不支援以與 `multi_match` 相同的方式提升個別欄位的權重；請改用欄位權重。

@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Common filter plugins
+title: "常見的篩選器外掛程式"
 parent: Logstash
 nav_order: 220
 redirect_from:
  - /clients/logstash/common-filters/
 ---
 
-# Common filter plugins
+# 常見的篩選器外掛程式
 
-This page contains a list of common filter plugins.
+本頁列出常見的篩選器外掛程式。
 
 <!-- vale off -->
 ## mutate
 <!-- vale on -->
 
-You can use the `mutate` filter to change the data type of a field. For example, you can use the `mutate` filter if you're sending events to OpenSearch and you need to change the data type of a field to match any existing mappings.
+您可以使用 `mutate` 篩選器來變更欄位的資料類型。例如，當您將事件傳送至 OpenSearch，而需要變更欄位的資料類型以符合現有的對應時，可以使用 `mutate` 篩選器。
 
-To convert the `quantity` field from a `string` type to an `integer` type:
+若要將 `quantity` 欄位從 `string` 類型轉換為 `integer` 類型：
 
 ```yml
 input {
@@ -40,9 +41,9 @@ output {
 }
 ```
 
-#### Sample output
+#### 範例輸出
 
-You can see that the type of the `quantity` field is changed from a `string` to an `integer`.
+可以看到 `quantity` 欄位的類型已從 `string` 變更為 `integer`。
 
 ```yml
 {
@@ -68,18 +69,18 @@ You can see that the type of the `quantity` field is changed from a `string` to 
 }
 ```
 
-Other data types you can convert to are `float`, `string`, and `boolean` values. If you pass in an array, the `mutate` filter converts all the elements in the array. If you pass a `string` like "world" to cast to an `integer` type, the result is 0 and Logstash continues processing events.
+其他可轉換的資料類型包括 `float`、`string` 與 `boolean` 值。若傳入陣列，`mutate` 篩選器會轉換陣列中的所有元素。若傳入類似 "world" 的 `string` 並嘗試轉換為 `integer` 類型，結果為 0，且 Logstash 會繼續處理事件。
 
-Logstash supports a few common options for all filter plugins:
+Logstash 為所有篩選器外掛程式支援幾個常見選項：
 
-Option | Description
+選項 | 說明
 :--- | :---
-`add_field` | Adds one or more fields to the event.
-`remove_field` | Removes one or more fields from the event.
-`add_tag` | Adds one or more tags to the event. You can use tags to perform conditional processing on events depending on which tags they contain.
-`remove_tag` | Removes one or more tags from the event.
+`add_field` | 在事件中新增一或多個欄位。
+`remove_field` | 從事件中移除一或多個欄位。
+`add_tag` | 為事件新增一或多個標籤。您可以根據事件所包含的標籤，使用標籤對事件執行條件式處理。
+`remove_tag` | 從事件中移除一或多個標籤。
 
-For example, you can remove the `host` field from the event:
+例如，您可以從事件中移除 `host` 欄位：
 
 ```yml
 input {
@@ -106,25 +107,25 @@ output {
 ## grok
 <!-- vale on -->
 
-With the `grok` filter, you can parse unstructured data and structure it into fields. The `grok` filter uses text patterns to match text in your logs. You can think of text patterns as variables containing regular expressions.
+透過 `grok` 篩選器，您可以解析非結構化資料並將其結構化為欄位。`grok` 篩選器使用文字模式來比對記錄檔中的文字。您可以將文字模式視為包含正規表示式的變數。
 
-The format of a text pattern is as follows:
+文字模式的格式如下：
 
 ```bash
 %{SYNTAX:SEMANTIC}
 ```
 
-`SYNTAX` is the format a piece of text should be in for the pattern to match. You can enter any of `grok`'s predefined patterns. For example, you can use the email identifier to match an email address from a given piece of text.
+`SYNTAX` 是文字必須符合的格式，模式才能比對成功。您可以輸入 `grok` 的任何預先定義模式。例如，您可以使用 email 識別碼從給定的文字中比對電子郵件地址。
 
-`SEMANTIC` is an arbitrary name for the matched text. For example, if you're using the email identifier syntax, you can name it “email.”
+`SEMANTIC` 是比對到的文字的任意名稱。例如，若您使用 email 識別碼語法，可以將它命名為「email」。
 
-The following request consists of the IP address of the visitor, name of the visitor, the timestamp of the request, the HTTP verb and URL, the HTTP status code, and the number of bytes:
+下列請求包含訪客的 IP 位址、訪客名稱、請求的時間戳記、HTTP 動詞與 URL、HTTP 狀態碼，以及位元組數：
 
 ```bash
 184.252.108.229 - joe [20/Sep/2017:13:22:22 +0200] GET /products/view/123 200 12798
 ```
 
-To split this request into different fields:
+若要將此請求拆分為不同欄位：
 
 ```yml
 filter {
@@ -139,16 +140,16 @@ filter {
 }
 ```
 
-where:
+其中：
 
-- `IP`: matches the IP address field.
-- `USER`: matches the user name.
-- `WORD`: matches the HTTP verb.
-- `URIPATHPARAM`: matches the URI path.
-- `INT`: matches the HTTP status field.
-- `INT`: matches the number of bytes.
+- `IP`：比對 IP 位址欄位。
+- `USER`：比對使用者名稱。
+- `WORD`：比對 HTTP 動詞。
+- `URIPATHPARAM`：比對 URI 路徑。
+- `INT`：比對 HTTP 狀態欄位。
+- `INT`：比對位元組數。
 
-This is what the event looks like after the `grok` filter breaks it down into individual fields:
+以下是 `grok` 篩選器將事件拆解為個別欄位後的樣子：
 
 ```yml
 ip_address: 184.252.108.229
@@ -160,4 +161,4 @@ http_status: 200
 num_bytes: 12798
 ```
 
-For common log formats, you use the predefined patterns defined here⁠---[Logstash patterns](https://github.com/logstash-plugins/logstash-patterns-core/blob/main/patterns/ecs-v1). You can make any adjustments to the results with the `mutate` filter.
+對於常見的記錄檔格式，您可以使用此處定義的預先定義模式---[Logstash 模式](https://github.com/logstash-plugins/logstash-patterns-core/blob/main/patterns/ecs-v1)。您可以使用 `mutate` 篩選器對結果進行任何調整。

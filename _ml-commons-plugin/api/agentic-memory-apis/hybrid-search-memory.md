@@ -1,58 +1,59 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Hybrid search agentic memory
+title: "混合搜尋代理程式記憶"
 parent: Agentic memory APIs
 grand_parent: ML Commons APIs
 nav_order: 70
 ---
 
-# Hybrid Search Agentic Memory API
-**Introduced 3.6**
+# 混合搜尋代理程式記憶 API
+**於 3.6 版推出**
 {: .label .label-purple }
 
-Use this API to search long-term memories using a combination of BM25 keyword matching and semantic search. This is useful when your query benefits from both exact keyword precision and semantic understanding.
+使用此 API 結合 BM25 關鍵字比對與語意搜尋來搜尋長期記憶。當您的查詢同時受益於精確的關鍵字精確度與語意理解時，這會很有用。
 
-Hybrid search combines two search methods in a single query:
+混合搜尋會在單一查詢中結合兩種搜尋方法：
 
-1. **BM25 keyword search**: A `match` query on the `memory` field for exact keyword matching.
-2. **Neural vector search**: A `neural` query (or `neural_sparse` for `SPARSE_ENCODING` models) on the `memory_embedding` field for semantic similarity.
+1. **BM25 關鍵字搜尋**：對 `memory` 欄位執行 `match` 查詢，以進行精確的關鍵字比對。
+2. **神經向量搜尋**：對 `memory_embedding` 欄位執行 `neural` 查詢（若為 `SPARSE_ENCODING` 模型則使用 `neural_sparse`），以進行語意相似度比對。
 
-Results are combined using an inline normalization processor pipeline using `min_max` normalization and `arithmetic_mean` combination. The `bm25_weight` and `neural_weight` parameters control the relative importance of each search method. No preconfigured search pipeline is required.
+結果會使用內嵌正規化處理器管線來合併，該管線使用 `min_max` 正規化與 `arithmetic_mean` 組合。`bm25_weight` 與 `neural_weight` 參數控制每種搜尋方法的相對重要性。不需要預先設定的搜尋管線。
 
-The memory container must have an embedding model and at least one [memory strategy]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-processing-strategies) configured. 
+記憶容器必須設定嵌入模型以及至少一個[記憶策略]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-processing-strategies)。 
 {: .note}
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/memory_containers/{memory_container_id}/memories/long-term/_hybrid_search
 GET /_plugins/_ml/memory_containers/{memory_container_id}/memories/long-term/_hybrid_search
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required/Optional | Description |
+| 參數 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `memory_container_id` | String | Required | The ID of the memory container. |
+| `memory_container_id` | 字串 | 必要 | 記憶容器的 ID。 |
 
-## Request fields
+## 請求欄位
 
-The following table lists the available request fields.
+下表列出可用的請求欄位。
 
-| Field | Data type | Required/Optional | Default | Description |
+| 欄位 | 資料類型 | 必要/選用 | 預設 | 說明 |
 | :--- | :--- | :--- | :--- | :--- |
-| `query` | String | Required | N/A | A natural language search query used for both BM25 keyword matching and semantic search.  |
-| `k` | Integer | Optional | 10 | The number of results to return. Valid values are `1`–`10000`, inclusive. |
-| `namespace` | Object | Optional | N/A | Filters results by namespace fields. For example, `{"user_id": "alice"}`. |
-| `tags` | Object | Optional | N/A | Filters results by tag fields. For example, `{"topic": "food"}`. |
-| `min_score` | Float | Optional | N/A | The minimum relevance score threshold. Results below this score are excluded. |
-| `filter` | Object | Optional | N/A | An additional [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/) filter applied alongside the hybrid query. |
-| `bm25_weight` | Float | Optional | 0.5 | The weight for the BM25 keyword search component. Valid values are `0.0`–`1.0`. The sum of `bm25_weight` and `neural_weight` must equal `1.0`. |
-| `neural_weight` | Float | Optional | 0.5 | The weight for the neural vector search component. Valid values are `0.0`–`1.0`. The sum of `bm25_weight` and `neural_weight` must equal `1.0`. |
+| `query` | 字串 | 必要 | N/A | 同時用於 BM25 關鍵字比對與語意搜尋的自然語言搜尋查詢。  |
+| `k` | 整數 | 選用 | 10 | 要傳回的結果數。有效值為 `1`–`10000`（含）。 |
+| `namespace` | 物件 | 選用 | N/A | 依命名空間欄位篩選結果。例如 `{"user_id": "alice"}`。 |
+| `tags` | 物件 | 選用 | N/A | 依標籤欄位篩選結果。例如 `{"topic": "food"}`。 |
+| `min_score` | 浮點數 | 選用 | N/A | 最低相關性分數閾值。低於此分數的結果會被排除。 |
+| `filter` | 物件 | 選用 | N/A | 與混合查詢一併套用的額外 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/) 篩選條件。 |
+| `bm25_weight` | 浮點數 | 選用 | 0.5 | BM25 關鍵字搜尋元件的權重。有效值為 `0.0`–`1.0`。`bm25_weight` 與 `neural_weight` 的總和必須等於 `1.0`。 |
+| `neural_weight` | 浮點數 | 選用 | 0.5 | 神經向量搜尋元件的權重。有效值為 `0.0`–`1.0`。`bm25_weight` 與 `neural_weight` 的總和必須等於 `1.0`。 |
 
-## Example request: Basic hybrid search
+## 範例請求：基本混合搜尋
 
 ```json
 POST /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/_hybrid_search
@@ -66,9 +67,9 @@ POST /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/_hy
 ```
 {% include copy-curl.html %}
 
-## Example request: Custom weights
+## 範例請求：自訂權重
 
-You can adjust the balance between keyword and semantic search for each request. Increasing `neural_weight` prioritizes semantic similarity, while increasing `bm25_weight` higher prioritizes exact keyword matches:
+您可以針對每個請求調整關鍵字搜尋與語意搜尋之間的平衡。提高 `neural_weight` 會優先考量語意相似度，而提高 `bm25_weight` 則會優先考量精確的關鍵字比對：
 
 ```json
 POST /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/_hybrid_search
@@ -84,7 +85,7 @@ POST /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/_hy
 ```
 {% include copy-curl.html %}
 
-## Example request: Minimum score and tags filter
+## 範例請求：最低分數與標籤篩選
 
 ```json
 POST /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/_hybrid_search
@@ -102,7 +103,7 @@ POST /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/_hy
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -156,12 +157,12 @@ POST /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/_hy
 }
 ```
 
-## Response fields
+## 回應欄位
 
-The response uses the standard OpenSearch search response format. For field descriptions, see [Semantic search memory response fields]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/semantic-search-memory/#response-fields).
+回應使用標準的 OpenSearch 搜尋回應格式。如需欄位說明，請參閱[語意搜尋記憶回應欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/semantic-search-memory/#response-fields)。
 
-The `memory_embedding` field is excluded from the response.
+`memory_embedding` 欄位不會包含在回應中。
 
-## Related documentation
+## 相關文件
 
-- [Hybrid search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/)
+- [混合搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/)

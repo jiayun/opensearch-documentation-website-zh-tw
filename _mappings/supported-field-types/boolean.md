@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Boolean
+title: "布林值"
 nav_order: 15
 has_children: false
 parent: Supported field types
@@ -10,15 +11,15 @@ redirect_from:
   - /field-types/boolean/
 ---
 
-# Boolean field type
-**Introduced 1.0**
+# 布林值欄位類型
+**於 1.0 版推出**
 {: .label .label-purple }
 
-A Boolean field type takes `true` or `false` values, or `"true"` or `"false"` strings. You can also pass an empty string (`""`) in place of a `false` value.
+布林值欄位類型接受 `true` 或 `false` 值，或 `"true"` 或 `"false"` 字串。您也可以傳遞空字串（`""`）來取代 `false` 值。
 
-## Example
+## 範例
 
-Create a mapping where a, b, and c are Boolean fields:
+建立一個對應，其中 a、b 和 c 為布林值欄位：
 
 ```json
 PUT testindex
@@ -40,7 +41,7 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-Index a document with Boolean values:
+將含有布林值的文件編製索引：
 
 ```json
 PUT testindex/_doc/1 
@@ -52,9 +53,9 @@ PUT testindex/_doc/1
 ```
 {% include copy-curl.html %}
 
-As a result, `a` and `b` will be set to `true`, and `c` will be set to `false`.
+結果，`a` 和 `b` 會設為 `true`，而 `c` 會設為 `false`。
 
-Search for all documents where `c` is false:
+搜尋所有 `c` 為 false 的文件：
 
 ```json
 GET testindex/_search 
@@ -68,26 +69,26 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by Boolean field types. All parameters are optional.
+下表列出布林值欄位類型接受的參數。所有參數皆為選用。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :--- 
-`boost` | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field's relevance. Values between 0.0 and 1.0 decrease the field's relevance. Default is 1.0. Dynamically updatable.
-`doc_values` | A Boolean value that specifies whether the field should be stored on disk so that it can be used for aggregations, sorting or scripting. Default is `true`.
-`index` | A Boolean value that specifies whether the field should be searchable. Default is `true`. For indexes that use a pluggable data format, the default is `false`, and `true` is not supported. For more information, see [Pluggable data format indexes]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/#pluggable-data-format-indexes).
-`meta` | Accepts metadata for this field.
-[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | A value to be used in place of `null`. Must be of the same type as the field. If this parameter is not specified, the field is treated as missing when its value is `null`. Default is `null`.
-`store` | A Boolean value that specifies whether the field value should be stored and can be retrieved separately from the `_source` field. Default is `false`. 
+`boost` | 一個浮點數值，指定此欄位對相關性分數的權重。大於 1.0 的值會提高欄位的相關性。介於 0.0 和 1.0 之間的值會降低欄位的相關性。預設為 1.0。可動態更新。
+`doc_values` | 一個布林值，指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `true`。
+`index` | 一個布林值，指定欄位是否應可供搜尋。預設為 `true`。對於使用可插拔資料格式的索引，預設為 `false`，且不支援 `true`。如需更多資訊，請參閱[可插拔資料格式索引]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/#pluggable-data-format-indexes)。
+`meta` | 接受此欄位的中繼資料。
+[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。必須與欄位類型相同。若未指定此參數，當欄位值為 `null` 時，該欄位會被視為缺少。預設為 `null`。
+`store` | 一個布林值，指定是否應儲存欄位值，且可與 `_source` 欄位分開擷取。預設為 `false`。 
 
-## Boolean values in aggregations and scripts
+## 彙總和指令碼中的布林值
 
-In aggregations on Boolean fields, `key` returns numeric values (1 for `true` or 0 for `false`), and `key_as_string` returns strings (`"true"` or `"false"`). Scripts return `true` and `false` for Boolean values.
+在布林值欄位的彙總中，`key` 會傳回數值（`true` 為 1，`false` 為 0），而 `key_as_string` 會傳回字串（`"true"` 或 `"false"`）。指令碼會針對布林值傳回 `true` 和 `false`。
 
-### Example
+### 範例
 
-Run a terms aggregation query on the field `a`:
+對欄位 `a` 執行詞彙彙總查詢：
 
 ```json
 GET testindex/_search
@@ -111,7 +112,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The script returns the value of `a` as `true`, `key` returns the value of `a` as `1`, and `key_as_string` returns the value of `a` as `"true"`:
+指令碼會將 `a` 的值傳回為 `true`，`key` 會將 `a` 的值傳回為 `1`，而 `key_as_string` 會將 `a` 的值傳回為 `"true"`：
 
 ```json
 {
@@ -159,11 +160,11 @@ The script returns the value of `a` as `true`, `key` returns the value of `a` as
 }
 ```
 
-## Derived source
+## 衍生的來源
 
-When an index uses [derived source]({{site.url}}{{site.baseurl}}/field-types/metadata-fields/source/#derived-source), OpenSearch may sort values in a multi-value `boolean` field during source reconstruction. The following example shows how OpenSearch processes mixed `boolean` inputs.
+當索引使用[衍生的來源]({{site.url}}{{site.baseurl}}/field-types/metadata-fields/source/#derived-source)時，OpenSearch 可能會在來源重建期間對多值 `boolean` 欄位中的值進行排序。下列範例顯示 OpenSearch 如何處理混合的 `boolean` 輸入。
 
-Create an index that enables derived source and configures a `boolean` field named `a`:
+建立一個啟用衍生的來源並設定名為 `a` 之 `boolean` 欄位的索引：
 
 ```json
 PUT /sample-index1
@@ -183,7 +184,7 @@ PUT /sample-index1
 }
 ```
 
-Index a document into the index:
+將文件編製索引至該索引：
 
 ```json
 PUT sample-index1/_doc/1
@@ -192,7 +193,7 @@ PUT sample-index1/_doc/1
 }
 ```
 
-After OpenSearch reconstructs `_source`, the derived `_source` is as follows:
+在 OpenSearch 重建 `_source` 之後，衍生的 `_source` 如下：
 
 ```json
 {
@@ -200,9 +201,9 @@ After OpenSearch reconstructs `_source`, the derived `_source` is as follows:
 }
 ```
 
-If the field mapping defines a [`null_value`]({{site.url}}{{site.baseurl}}/field-types/mapping-parameters/null-value/), any ingested null values are replaced with that value during reconstruction. The following example demonstrates how `null_value` affects derived source output.
+若欄位對應定義了[`null_value`]({{site.url}}{{site.baseurl}}/field-types/mapping-parameters/null-value/)，則在重建期間，任何匯入的 null 值都會被取代為該值。下列範例示範 `null_value` 如何影響衍生的來源輸出。
 
-Create an index that enables derived source and configures a `null_value` for the `boolean` field `a`:
+建立一個啟用衍生的來源並為 `boolean` 欄位 `a` 設定 `null_value` 的索引：
 
 ```json
 PUT sample-index2
@@ -222,7 +223,7 @@ PUT sample-index2
 }
 ```
 
-Index a document into the index:
+將文件編製索引至該索引：
 
 ```json
 PUT sample-index2/_doc/1
@@ -231,7 +232,7 @@ PUT sample-index2/_doc/1
 }
 ```
 
-After OpenSearch reconstructs `_source`, the derived `_source` is as follows:
+在 OpenSearch 重建 `_source` 之後，衍生的 `_source` 如下：
 
 ```json
 {

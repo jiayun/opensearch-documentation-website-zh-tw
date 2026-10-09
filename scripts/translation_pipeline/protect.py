@@ -3,7 +3,9 @@
 Protected regions: fenced code blocks, Liquid raw/comment/capture blocks,
 Liquid tags and output, HTML comments, math blocks, inline code, link and
 image destinations, reference labels and definitions, autolinks, bare URLs,
-kramdown attribute lists, footnote markers, and HTML tags.
+kramdown attribute lists, footnote markers, and HTML tags. Markdown prose in a
+capture block that no include renders as code, and prose between two code
+literals of a raw block, stay translatable; their tags remain protected.
 
 A placeholder looks like ``⟦P12⟧``. Placeholders may nest (for example, a
 capture block that contains a fenced code block); ``restore`` expands them
@@ -20,8 +22,16 @@ STRAY_BRACKET_RE = re.compile(r"[⟦⟧]")
 
 _FENCE_OPEN_RE = re.compile(r"^([ \t]*)(`{3,}|~{3,})(.*)$")
 _LIQUID_BLOCK_RE = re.compile(
-    r"\{%-?\s*(raw|comment|capture)\b[^%]*?-?%\}.*?\{%-?\s*end\1\s*-?%\}", re.S
+    r"(\{%-?\s*(raw|comment|capture)\b[^%]*?-?%\})(.*?)(\{%-?\s*end\2\s*-?%\})", re.S
 )
+_CAPTURE_NAME_RE = re.compile(r"\{%-?\s*capture\s+([A-Za-z_][\w-]*)")
+_INCLUDE_TAG_RE = re.compile(r"\{%-?\s*include\b.*?%\}", re.S)
+# Unquoted include arguments are variable references, e.g. rest=step1_rest.
+_INCLUDE_VAR_RE = re.compile(r"[\w-]+\s*=\s*([A-Za-z_][\w.-]*)")
+_HEADING_LINE_RE = re.compile(r"(?m)^[ ]{0,3}#{1,6}[ \t]+\S")
+_LETTER_RE = re.compile(r"[^\W\d_]")
+_RAW_CODE_PROSE_RE = re.compile(r"(`[^`\n]+`)([^`{}%\n⟦⟧]+)(`[^`\n]+`)")
+_CJK_RE = re.compile(r"[㐀-鿿]")
 _HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
 _MATH_BLOCK_RE = re.compile(r"\$\$.+?\$\$", re.S)
 _INLINE_CODE_RE = re.compile(r"(?<!`)(`+)(?!`)(.+?)(?<!`)\1(?!`)")
@@ -52,6 +62,11 @@ _LIQUID_OUTPUT_RE = re.compile(r"\{\{.*?\}\}(?:" + _URL_CHARS + r"]*" + _URL_CHA
 
 class PlaceholderError(ValueError):
     pass
+
+
+def legal_notice_lines(text: str) -> list[str]:
+    """Exact legal/attribution lines explicitly exempt from translation."""
+    return [match.group(0) for match in _LEGAL_LINE_RE.finditer(text)]
 
 
 class Protector:
@@ -88,7 +103,7 @@ class Protector:
         if STRAY_BRACKET_RE.search(text):
             raise PlaceholderError("source already contains placeholder brackets ⟦ ⟧")
         text = self._protect_fences(text)
-        text = self._sub(_LIQUID_BLOCK_RE, text, mark_blocks=True)
+        text = self._protect_liquid_blocks(text, _include_variables(text))
         text = self._sub(_HTML_COMMENT_RE, text, mark_blocks=True)
         text = self._sub(_MATH_BLOCK_RE, text, mark_blocks=True)
         text = self._protect_legal(text, mark_blocks=True)
@@ -142,6 +157,32 @@ class Protector:
             return self._token(body, block=mark_blocks) + line[len(body):]
         return _LEGAL_LINE_RE.sub(repl, text)
 
+    # -- Liquid raw/comment/capture blocks ----------------------------------
+    def _protect_liquid_blocks(self, text: str, include_vars: set[str]) -> str:
+        """Protect each block whole, except user-facing Markdown prose.
+
+        Comments are always protected whole. A capture not passed to an
+        include whose content is Markdown prose keeps its prose translatable;
+        its tags are protected here and nested code and Liquid as usual. A raw
+        block of two inline code literals joined by prose (no bare Liquid
+        syntax) exposes only that prose.
+        """
+        def repl(m: re.Match) -> str:
+            opening, kind, inner, closing = m.group(1), m.group(2), m.group(3), m.group(4)
+            if kind == "capture" and _capture_name(opening) not in include_vars and _is_markdown_prose(inner):
+                head = self._token(opening, block=_owns_lines(text, m.start(1), m.end(1)))
+                inner = self._protect_liquid_blocks(inner, include_vars)
+                return head + inner + self._token(closing, block=_owns_lines(text, m.start(4), m.end(4)))
+            raw = _raw_code_prose(inner) if kind == "raw" else None
+            if raw:
+                # Each tag stays fused to its code literal, so translation
+                # cannot move Liquid syntax out of the raw block.
+                return (self._token(opening + raw.group(1)) + raw.group(2)
+                        + self._token(raw.group(3) + closing))
+            original = m.group(0)
+            return self._token(original, block="\n" in original and _owns_lines(text, m.start(), m.end()))
+        return _LIQUID_BLOCK_RE.sub(repl, text)
+
     # -- fenced code ------------------------------------------------------
     def _protect_fences(self, text: str) -> str:
         lines = text.splitlines(keepends=True)
@@ -175,6 +216,42 @@ def _owns_lines(text: str, start: int, end: int) -> bool:
     before_ok = start == 0 or text[start - 1] == "\n"
     after_ok = end == len(text) or text[end] in "\r\n"
     return before_ok and after_ok
+
+
+def _include_variables(text: str) -> set[str]:
+    """Variables passed to includes, such as captures rendered by code-block.html."""
+    return {var for tag in _INCLUDE_TAG_RE.findall(text) for var in _INCLUDE_VAR_RE.findall(tag)}
+
+
+def _capture_name(opening: str) -> str | None:
+    m = _CAPTURE_NAME_RE.match(opening)
+    return m.group(1) if m else None
+
+
+def _is_markdown_prose(inner: str) -> bool:
+    """Capture content with a Markdown heading or a prose sentence outside code.
+
+    Fenced code is already a placeholder here. Bare HTTP requests, client code
+    and JSON have no heading and no sentence line free of code punctuation.
+    """
+    rest = _LIQUID_TAG_RE.sub(" ", _LIQUID_OUTPUT_RE.sub(" ", TOKEN_RE.sub(" ", inner)))
+    rest = _INLINE_CODE_RE.sub("x", _HTML_COMMENT_RE.sub(" ", rest))
+    if _HEADING_LINE_RE.search(rest):
+        return True
+    for line in rest.splitlines():
+        line = line.strip()
+        if (re.search(r"[.:!?。：！？]$", line) and not re.search(r"[=;{}()<>\[\]\"'/\\|$]", line)
+                and (len(line.split()) >= 3 or _CJK_RE.search(line))):
+            return True
+    return False
+
+
+def _raw_code_prose(inner: str) -> re.Match | None:
+    """Raw content of two inline code literals joined by prose, such as
+    ``{% raw %}`{{{` and `}}}`{% endraw %}``. Liquid syntax outside the code
+    spans, line breaks and other placeholders keep the block whole."""
+    m = _RAW_CODE_PROSE_RE.fullmatch(inner)
+    return m if m and _LETTER_RE.search(m.group(2)) else None
 
 
 def tokens_in(text: str) -> Counter:

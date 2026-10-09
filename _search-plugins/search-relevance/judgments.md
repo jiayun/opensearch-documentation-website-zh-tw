@@ -1,49 +1,50 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Judgments
+title: "評分"
 nav_order: 8
 parent: Search Relevance Workbench
 grand_parent: Optimizing search quality
 has_children: false
 ---
 
-# Judgments
+# 評分
 
-A judgment is a relevance rating assigned to a specific document in the context of a particular query. Multiple judgments are grouped together into judgment lists.
-Typically, judgments are categorized as two types---implicit and explicit:
+評分是指在特定查詢的情境下，指派給特定文件的相關性評等。多個評分會群組在一起成為評分清單。
+一般而言，評分可分為兩種類型：隱式與顯式：
 
-- Implicit judgments are ratings derived from user behavior (for example, what did the user see and select after searching?).
-- Humans have traditionally produced explicit judgments, but large language models (LLMs) are increasingly used for this task.
+- 隱式評分是從使用者行為衍生的評等（例如，使用者在搜尋後看到並選取了什麼？）。
+- 人類傳統上會產生顯式評分，但大型語言模型 (LLM) 正日益用於此任務。
 
-Search Relevance Workbench (SRW) supports all types of judgments:
+Search Relevance Workbench (SRW) 支援所有類型的評分：
 
-- Using LLMs as automated judges (an approach known as LLM-as-a-Judge) to generate judgments by evaluating search results using a prompt.
-- Generating implicit judgments based on data that adheres to the User Behavior Insights (UBI) schema specification.
-- Importing judgments that were collected using a process outside of SRW.
+- 使用 LLM 作為自動評審（此方法稱為 LLM-as-a-Judge），透過提示評估搜尋結果來產生評分。
+- 根據符合 User Behavior Insights (UBI) 結構描述規格的資料產生隱式評分。
+- 匯入使用 SRW 以外流程所收集的評分。
 
-## Using LLM-as-a-Judge
+## 使用 LLM-as-a-Judge
 
-Generate explicit judgments with an LLM in SRW when you don't have human annotators available, or you need to scale up the number of judgments beyond what humans can provide.
+當您沒有人工標註者可用，或需要將評分數量擴展到超出人類所能提供的規模時，可在 SRW 中使用 LLM 產生顯式評分。
 
-For step-by-step instructions, see [Using LLM-as-a-Judge for search relevance]({{site.url}}{{site.baseurl}}/tutorials/llm-as-a-judge-tutorial/).
+如需逐步操作說明，請參閱[使用 LLM-as-a-Judge 進行搜尋相關性]({{site.url}}{{site.baseurl}}/tutorials/llm-as-a-judge-tutorial/)。
 
-### Prerequisites
+### 先決條件
 
-To use LLM-as-a-Judge, configure the following components:
+若要使用 LLM-as-a-Judge，請設定下列元件：
 
-- A connector to an LLM to use for generating the judgments. For more information, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/).
-- A query set: Together with the `size` parameter, the query set defines the scope for generating judgments. For each query, the top k documents are retrieved from the specified index, in which k is defined by the `size` parameter.
-- A search configuration: A search configuration defines how documents are retrieved for use in query-document pairs.
+- 用於產生評分之 LLM 的連接器。如需詳細資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
+- 查詢集：查詢集與 `size` 參數一起定義產生評分的範圍。針對每個查詢，會從指定的索引擷取前 k 個文件，其中 k 由 `size` 參數定義。
+- 搜尋組態：搜尋組態定義如何擷取文件以用於查詢-文件配對。
 
-The AI-assisted judgment process consists of the following steps:
+AI 輔助評分流程包含下列步驟：
 
-- For each query, the top k documents are retrieved using the defined search configuration, which includes the index information. The query and each document from the result list create a query-document pair.
-- The LLM is then called with a predefined prompt to generate a judgment for each query-document pair.
-- All generated judgments are stored in the judgment list.
+- 針對每個查詢，會使用定義的搜尋組態擷取前 k 個文件，其中包含索引資訊。查詢與結果清單中的每個文件會建立一個查詢-文件配對。
+- 接著會以預先定義的提示呼叫 LLM，為每個查詢-文件配對產生評分。
+- 所有產生的評分都會儲存在評分清單中。
 
-To create a judgment list, provide the model ID of the LLM, an available query set, and a created search configuration.
+若要建立評分清單，請提供 LLM 的模型 ID、可用的查詢集，以及已建立的搜尋組態。
 
-The following example uses a generic prompt template with a scale of 0.0 to 1.0. To reduce the volume of data sent to the LLM (and therefore the cost), use the `contextFields` parameter to specify which fields from each result to include:
+下列範例使用範圍為 0.0 到 1.0 的通用提示範本。若要減少傳送給 LLM 的資料量（進而降低成本），請使用 `contextFields` 參數指定要包含每個結果中的哪些欄位：
 
 ```json
 PUT _plugins/_search_relevance/judgments
@@ -62,59 +63,59 @@ PUT _plugins/_search_relevance/judgments
 ```
 {% include copy-curl.html %}
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the parameters for creating LLM-based judgments.
+下表列出建立以 LLM 為基礎之評分的參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `name` | String | The name of the judgment list. |
-| `description` | String | Optional. A description of the judgment list. |
-| `type` | String | Set to `LLM_JUDGMENT`. |
-| `modelId` | String | The ID of the deployed machine learning (ML) model to use for generating judgments. Must be a remote model connected to an external LLM service. |
-| `querySetId` | String | The ID of the query set containing the queries to evaluate. |
-| `searchConfigurationList` | Array of strings | The list of search configuration IDs to use for retrieving documents to evaluate. |
-| `size` | Integer | The number of top documents to retrieve and evaluate for each query. Default is `10`. |
-| `tokenLimit` | Integer | The maximum number of tokens to send to the LLM in a single request. Used to batch documents when the total content exceeds this limit. Default is `4,000`. |
-| `contextFields` | Array of strings | Optional. Specifies which document fields to include when sending content to the LLM. If not specified, the entire document source is sent. Use this parameter to reduce costs and focus the LLM on relevant fields. |
-| `ignoreFailure` | Boolean | Whether to continue processing other documents if the LLM fails to generate a judgment for some documents. Default is `false`. |
-| `llmJudgmentRatingType` | String | The type of rating scale to use. Valid values are `SCORE0_1` (numeric scale 0--1) and `RELEVANT_IRRELEVANT` (binary relevant/irrelevant). Use `SCORE0_1` for graded relevance metrics such as NDCG. Use `RELEVANT_IRRELEVANT` for binary metrics such as precision and recall. |
-| `promptTemplate` | String | Optional. A custom prompt template for the LLM. Supports {% raw %}`{{queryText}}`{% endraw %} and {% raw %}`{{hits}}`{% endraw %} placeholders. If not provided, the default template is used. |
-| `existingJudgments` | Array of strings | Optional. A list of up to 5 existing judgment IDs whose ratings are reused. For each query-document pair, SRW checks these judgments in order, using the rating from the first match found. Only pairs without an existing rating in any of these judgments are sent to the LLM for evaluation. |
-| `overwriteCache` | Boolean | Optional. Deprecated. Accepted but ignored. The global judgment cache has been removed. |
+| `name` | 字串 | 評分清單的名稱。 |
+| `description` | 字串 | 選用。評分清單的說明。 |
+| `type` | 字串 | 設為 `LLM_JUDGMENT`。 |
+| `modelId` | 字串 | 用於產生評分之已部署機器學習 (ML) 模型的 ID。必須是連線至外部 LLM 服務的遠端模型。 |
+| `querySetId` | 字串 | 包含要評估之查詢的查詢集 ID。 |
+| `searchConfigurationList` | 字串陣列 | 用於擷取要評估之文件的搜尋組態 ID 清單。 |
+| `size` | 整數 | 針對每個查詢要擷取及評估的前幾個文件數。預設為 `10`。 |
+| `tokenLimit` | 整數 | 單一請求中傳送給 LLM 的詞元數上限。當總內容超過此限制時，用於批次處理文件。預設為 `4,000`。 |
+| `contextFields` | 字串陣列 | 選用。指定將內容傳送給 LLM 時要包含哪些文件欄位。若未指定，則會傳送整份文件來源。使用此參數可降低成本，並讓 LLM 專注於相關欄位。 |
+| `ignoreFailure` | 布林值 | 若 LLM 無法為某些文件產生評分，是否繼續處理其他文件。預設為 `false`。 |
+| `llmJudgmentRatingType` | 字串 | 要使用的評等量表類型。有效值為 `SCORE0_1`（數值量表 0--1）與 `RELEVANT_IRRELEVANT`（二元相關/不相關）。分級相關性指標（例如 NDCG）請使用 `SCORE0_1`。二元指標（例如精確率與召回率）請使用 `RELEVANT_IRRELEVANT`。 |
+| `promptTemplate` | 字串 | 選用。LLM 的自訂提示範本。支援 {% raw %}`{{queryText}}`{% endraw %} 與 {% raw %}`{{hits}}`{% endraw %} 預留位置。若未提供，則使用預設範本。 |
+| `existingJudgments` | 字串陣列 | 選用。最多 5 個現有評分 ID 的清單，其評等會被重複使用。針對每個查詢-文件配對，SRW 會依序檢查這些評分，並使用第一個找到之相符項目的評等。只有在這些評分中皆無現有評等的配對，才會傳送給 LLM 進行評估。 |
+| `overwriteCache` | 布林值 | 選用。已棄用。接受但會忽略。全域評分快取已移除。 |
 
-### Retrying failed judgment requests
+### 重試失敗的評分請求
 
-Generating a judgment sends one LLM request for every query-document pair. Occasional failures are expected at scale: for example, the provider might throttle a request or a request might time out. To retry these requests automatically, configure retries on the connector you use for the judgment, using the connector's `client_config` settings (`max_retry_times`, `retry_backoff_policy`, and related options). For more information, see [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields).
+產生評分會為每個查詢-文件配對傳送一個 LLM 請求。在規模化時偶爾發生失敗是預期中的情況：例如，供應商可能會對請求進行節流，或請求可能會逾時。若要自動重試這些請求，請在您用於評分的連接器上設定重試，使用連接器的 `client_config` 設定（`max_retry_times`、`retry_backoff_policy` 及相關選項）。如需詳細資訊，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields)。
 
-### Retrying failed documents
+### 重試失敗的文件
 
-This section applies only to `LLM_JUDGMENT` lists.
+本節僅適用於 `LLM_JUDGMENT` 清單。
 
-A judgment list can finish with a `status` of `COMPLETED` even if some documents didn't receive a rating, for example because the LLM provider throttled or timed out on those requests. Unrated documents appear in each query's `failures` array, and the run's overall counts appear in the judgment list's `metadata` field, as shown in [Viewing a judgment list](#viewing-a-judgment-list). Rather than regenerating the entire judgment list, you can retry only the documents that failed by sending a `POST` request to the `_retry` endpoint with the judgment list's ID.
+即使某些文件未取得評等（例如因為 LLM 供應商對這些請求進行節流或逾時），評分清單仍可能以 `COMPLETED` 的 `status` 結束。未評等的文件會出現在每個查詢的 `failures` 陣列中，而該次執行的整體計數會出現在評分清單的 `metadata` 欄位中，如[檢視評分清單](#viewing-a-judgment-list)所示。您可以不必重新產生整份評分清單，而是將 `POST` 請求連同評分清單的 ID 傳送至 `_retry` 端點，只重試失敗的文件。
 
-#### Endpoint
+#### 端點
 
 ```json
 POST _plugins/_search_relevance/judgments/{judgment_list_id}/_retry
 ```
 
-#### Path parameters
+#### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `judgment_list_id` | String | The ID of the judgment list whose failed documents you want to retry. |
+| `judgment_list_id` | 字串 | 您要重試其失敗文件的評分清單 ID。 |
 
-#### Example request
+#### 請求範例
 
 ```json
 POST _plugins/_search_relevance/judgments/b54f791a-3b02-49cb-a06c-46ab650b2ade/_retry
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -124,22 +125,22 @@ POST _plugins/_search_relevance/judgments/b54f791a-3b02-49cb-a06c-46ab650b2ade/_
 }
 ```
 
-The retry runs asynchronously and generates new ratings for only the previously failed documents; ratings that already succeeded are left unchanged. The response returns immediately with a `status` of `RETRYING`. To track progress, retrieve the judgment list and check its `status`, as described in [Viewing a judgment list](#viewing-a-judgment-list). If individual documents still fail to get rated (for example, because the LLM provider is still throttling requests), the judgment list's `status` returns to `COMPLETED`---check the `failures` array and `metadata` field to see which documents are still unrated. If the retry process itself fails (for example, due to an internal error), the judgment list's `status` becomes `ERROR`.
+重試會以非同步方式執行，並僅為先前失敗的文件產生新的評分；已成功的評分保持不變。回應會立即傳回 `RETRYING` 的 `status`。若要追蹤進度，請擷取評分清單並檢查其 `status`，如[檢視評分清單](#viewing-a-judgment-list)所述。如果個別文件仍然無法取得評分（例如，因為 LLM 供應商仍在對請求進行節流），評分清單的 `status` 會回到 `COMPLETED`---請檢查 `failures` 陣列與 `metadata` 欄位，查看哪些文件仍未評分。如果重試程序本身失敗（例如，由於內部錯誤），評分清單的 `status` 會變成 `ERROR`。
 
-#### Status values
+#### 狀態值
 
-The following table lists the possible `status` values for a judgment list.
+下表列出評分清單可能的 `status` 值。
 
-| Status | Description |
+| 狀態 | 說明 |
 | :--- | :--- |
-| `PROCESSING` | The judgment list is being generated. |
-| `COMPLETED` | Generation (or a retry) has finished. Some documents may still be unrated: check the `failures` array and `metadata` field to verify the document ratings. |
-| `RETRYING` | A retry of previously failed documents is in progress. |
-| `ERROR` | The retry process itself failed internally. This is separate from individual documents failing to get rated, which still results in a `COMPLETED` status. |
+| `PROCESSING` | 評分清單正在產生中。 |
+| `COMPLETED` | 產生（或重試）已完成。某些文件可能仍未評分：請檢查 `failures` 陣列與 `metadata` 欄位以驗證文件評分。 |
+| `RETRYING` | 先前失敗文件的重試正在進行中。 |
+| `ERROR` | 重試程序本身內部失敗。這與個別文件無法取得評分的情況不同，後者仍會產生 `COMPLETED` 狀態。 |
 
-### Custom prompt templates
+### 自訂提示詞範本
 
-You can customize the prompt template to focus on specific aspects of relevance:
+您可以自訂提示詞範本，以聚焦於相關性的特定面向：
 
 ```json
 PUT /_plugins/_search_relevance/judgments
@@ -155,9 +156,9 @@ PUT /_plugins/_search_relevance/judgments
 ```
 {% include copy-curl.html %}
 
-### Binary relevance judgments
+### 二元相關性評分
 
-For simpler relevance assessment, you can use binary (relevant/irrelevant) judgments:
+若要進行較簡單的相關性評估，您可以使用二元（相關/不相關）評分：
 
 ```json
 PUT /_plugins/_search_relevance/judgments
@@ -173,13 +174,13 @@ PUT /_plugins/_search_relevance/judgments
 ```
 {% include copy-curl.html %}
 
-### Using different LLM providers
+### 使用不同的 LLM 供應商
 
-LLM-as-a-Judge works with any LLM provider to which you can connect using an [ML Commons connector]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/). Blueprints are available for OpenAI, Azure OpenAI, DeepSeek, Ollama, Google Gemini, and Amazon Bedrock. For more information, see [OpenSearch-provided connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/#llm-judgment-blueprints-for-search-relevance-workbench).
+LLM-as-a-Judge 可與任何您能透過 [ML Commons 連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)連線的 LLM 供應商搭配使用。OpenAI、Azure OpenAI、DeepSeek、Ollama、Google Gemini 與 Amazon Bedrock 均提供藍圖。如需更多資訊，請參閱 [OpenSearch 提供的連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/#llm-judgment-blueprints-for-search-relevance-workbench)。
 
-#### Amazon Bedrock example
+#### Amazon Bedrock 範例
 
-The following example creates a connector for an Anthropic Claude model on Amazon Bedrock:
+下列範例為 Amazon Bedrock 上的 Anthropic Claude 模型建立連接器：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -219,25 +220,25 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-## Implicit judgments
+## 隱式評分
 
-Implicit judgments are derived from past user interactions. SRW supports the Clicks Over Expected Clicks (COEC) click model, which uses *impression* and *click* signals to calculate judgments.
+隱式評分是從過去的使用者互動推導而來。SRW 支援 Clicks Over Expected Clicks (COEC) 點擊模型，該模型使用*曝光*與*點擊*訊號來計算評分。
 
-Input data must follow the [UBI index schemas]({{site.url}}{{site.baseurl}}/search-plugins/ubi/schemas/). COEC uses every event in the `ubi_events` index with an `action_name` of `impression` or `click`. Use the `ubiEventsIndex` parameter to read from a differently named index.
+輸入資料必須遵循 [UBI 索引結構描述]({{site.url}}{{site.baseurl}}/search-plugins/ubi/schemas/)。COEC 會使用 `ubi_events` 索引中 `action_name` 為 `impression` 或 `click` 的所有事件。請使用 `ubiEventsIndex` 參數從名稱不同的索引讀取。
 
-COEC calculates an expected click-through rate (CTR) for each rank by dividing the total number of clicks by the total number of impressions observed at that rank, based on all events in `ubi_events`. This ratio represents the expected CTR for that position.
+COEC 會根據 `ubi_events` 中的所有事件，將每個排名的點擊總數除以在該排名觀察到的曝光總數，計算出預期點擊率 (CTR)。此比率代表該位置的預期 CTR。
 
-For each document displayed in a hit list after a query, the average CTR at that rank serves as the expected value for the query-document pair. COEC calculates the actual CTR for the query-document pair and divides it by this expected rank-based CTR. Consequently, query-document pairs with a higher CTR than the average for that rank have a judgment value greater than 1. Conversely, if the CTR is lower than average, the judgment value is lower than 1.
+對於查詢後顯示在命中清單中的每份文件，該排名的平均 CTR 會作為查詢-文件配對的預期值。COEC 會計算查詢-文件配對的實際 CTR，並將其除以此以排名為基礎的預期 CTR。因此，CTR 高於該排名平均值的查詢-文件配對，其評分值會大於 1。反之，若 CTR 低於平均值，評分值則低於 1。
 
-Depending on the tracking implementation, multiple clicks for a single query can be recorded in the `ubi_events` index. Consequently, the average CTR can sometimes exceed 1 (or 100%).
+視追蹤實作而定，單一查詢的多個點擊可能會記錄在 `ubi_events` 索引中。因此，平均 CTR 有時可能超過 1（或 100%）。
 {: .note}
 
-For query-document observations that occur at different positions, all impressions and clicks are assumed to have occurred at the lowest (best) position. This aggregation approach biases the final judgment toward lower values, reflecting the common trend that higher-ranked results typically receive higher CTRs.
+對於發生在不同位置的查詢-文件觀察，所有曝光與點擊都假設發生在最低（最佳）位置。這種彙總方式會使最終評分偏向較低的值，反映出排名較高的結果通常獲得較高 CTR 的常見趨勢。
 {: .note}
 
-### Example request
+### 範例請求
 
-The following example creates an implicit judgment list using the COEC click model:
+下列範例使用 COEC 點擊模型建立隱式評分清單：
 
 ```json
 PUT _plugins/_search_relevance/judgments
@@ -250,27 +251,27 @@ PUT _plugins/_search_relevance/judgments
 ```
 {% include copy-curl.html %}
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the parameters for creating implicit judgments.
+下表列出建立隱式評分的參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `name` | String | The name of the judgment list. |
-| `clickModel` | String | The model used to calculate implicit judgments. Only `coec` (Clicks Over Expected Clicks) is supported. |
-| `type` | String | Set to `UBI_JUDGMENT`. |
-| `maxRank` | Integer | The maximum rank to consider when including events in the judgment calculation. |
-| `startDate` | Date | An optional starting date from which behavioral data events are considered for implicit judgment generation. The format is `yyyy-MM-dd`. |
-| `endDate` | Date | An optional end date until which behavioral data events are considered for implicit judgment generation. The format is `yyyy-MM-dd`. |
-| `ubiEventsIndex` | String | An optional name of the index containing the UBI events to analyze. Default is `ubi_events`. Specify this parameter when your UBI events are stored in an index with a different name. |
+| `name` | 字串 | 評分清單的名稱。 |
+| `clickModel` | 字串 | 用於計算隱式評分的模型。僅支援 `coec` (Clicks Over Expected Clicks)。 |
+| `type` | 字串 | 設為 `UBI_JUDGMENT`。 |
+| `maxRank` | 整數 | 將事件納入評分計算時所考量的最大排名。 |
+| `startDate` | 日期 | 選用的開始日期，從該日期起將行為資料事件納入隱式評分產生。格式為 `yyyy-MM-dd`。 |
+| `endDate` | 日期 | 選用的結束日期，直到該日期為止將行為資料事件納入隱式評分產生。格式為 `yyyy-MM-dd`。 |
+| `ubiEventsIndex` | 字串 | 選用的索引名稱，內含要分析的 UBI 事件。預設為 `ubi_events`。當您的 UBI 事件儲存在名稱不同的索引時，請指定此參數。 |
 
-## Importing judgments
+## 匯入評分
 
-You may already have external processes for generating judgments. Regardless of the judgment type or the way they were generated, you can import them into SRW.
+您可能已有產生評分的外部流程。無論評分類型或產生方式為何，您都可以將它們匯入 SRW。
 
-### Example request
+### 範例請求
 
-The following example imports a set of judgments for two queries:
+下列範例匯入兩筆查詢的一組評分：
 
 ```json
 PUT _plugins/_search_relevance/judgments
@@ -334,52 +335,52 @@ PUT _plugins/_search_relevance/judgments
 ```
 {% include copy-curl.html %}
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the parameters for importing judgments.
+下表列出匯入評分的參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `name` | String | The name of the judgment list. |
-| `description` | String | An optional description of the judgment list. |
-| `type` | String | Set to `IMPORT_JUDGMENT`. |
-| `judgmentRatings` | Array | A list of JSON objects containing the judgments. Judgments are grouped by query, each containing a nested map in which document IDs (`docId`) serve as keys and their floating-point ratings serve as values. |
+| `name` | 字串 | 評分清單的名稱。 |
+| `description` | 字串 | 評分清單的選用說明。 |
+| `type` | 字串 | 設為 `IMPORT_JUDGMENT`。 |
+| `judgmentRatings` | 陣列 | 內含評分的 JSON 物件清單。評分依查詢分組，每組包含一個巢狀對應，其中以文件 ID (`docId`) 作為鍵，並以其浮點數評分作為值。 |
 
-## Managing judgment lists
+## 管理評分清單
 
-You can retrieve or delete judgment lists using the following APIs.
+您可以使用下列 API 擷取或刪除評分清單。
 
-### Viewing a judgment list
+### 檢視評分清單
 
-Retrieve a judgment list by its ID.
+依 ID 擷取評分清單。
 
-#### Endpoint
+#### 端點
 
 ```json
 GET _plugins/_search_relevance/judgments/{judgment_list_id}
 ```
 
-#### Path parameters
+#### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `judgment_list_id` | String | The ID of the judgment list to retrieve. |
+| `judgment_list_id` | 字串 | 要擷取的評分清單 ID。 |
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_search_relevance/judgments/b54f791a-3b02-49cb-a06c-46ab650b2ade
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 <details open markdown="block">
-  <summary>
-    Response
-  </summary>
+<summary>
+    回應
+</summary>
 
 ```json
 {
@@ -476,26 +477,26 @@ GET _plugins/_search_relevance/judgments/b54f791a-3b02-49cb-a06c-46ab650b2ade
 
 </details>
 
-Unrated documents appear in each query's `failures` array. The run's overall counts appear in the judgment list's `metadata` field. To retry only the failed documents in an `LLM_JUDGMENT` list, see [Retrying failed documents](#retrying-failed-documents).
+未評分的文件會出現在每筆查詢的 `failures` 陣列中。執行的整體計數會出現在評分清單的 `metadata` 欄位中。若只要重試 `LLM_JUDGMENT` 清單中失敗的文件，請參閱[重試失敗的文件](#retrying-failed-documents)。
 
-### Deleting a judgment list
+### 刪除評分清單
 
-Delete a judgment list by its ID.
+依 ID 刪除評分清單。
 
-#### Endpoint
+#### 端點
 
 ```json
 DELETE _plugins/_search_relevance/judgments/{judgment_list_id}
 ```
 
-#### Example request
+#### 範例請求
 
 ```json
 DELETE _plugins/_search_relevance/judgments/b54f791a-3b02-49cb-a06c-46ab650b2ade
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -514,20 +515,20 @@ DELETE _plugins/_search_relevance/judgments/b54f791a-3b02-49cb-a06c-46ab650b2ade
 }
 ```
 
-### Searching for a judgment list
+### 搜尋評分清單
 
-Search for judgment lists using query domain-specific language (DSL). The response excludes `judgmentRatings.ratings` by default; to include it, specify the `_source` field in the query.
+使用 Query DSL 搜尋評分清單。回應預設不包含 `judgmentRatings.ratings`；若要包含此項目，請在查詢中指定 `_source` 欄位。
 
-#### Endpoints
+#### 端點
 
 ```json
 GET _plugins/_search_relevance/judgments/_search
 POST _plugins/_search_relevance/judgments/_search
 ```
 
-#### Example request
+#### 請求範例
 
-The following example searches for judgment lists that include the exact query `red dress`:
+下列範例會搜尋包含完全相符查詢 `red dress` 的評分清單：
 
 ```json
 GET _plugins/_search_relevance/judgments/_search
@@ -546,7 +547,7 @@ GET _plugins/_search_relevance/judgments/_search
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -591,6 +592,6 @@ GET _plugins/_search_relevance/judgments/_search
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [Automate search relevance evaluation using LLMs]({{site.url}}{{site.baseurl}}/tutorials/llm-as-a-judge-tutorial/)
+- [使用 LLM 自動化搜尋相關性評估]({{site.url}}{{site.baseurl}}/tutorials/llm-as-a-judge-tutorial/)

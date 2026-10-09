@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: CAT segment replication
+title: "CAT 區段複寫"
 parent: CAT APIs
 nav_order: 53
 has_children: false
 ---
 
 # CAT Segment Replication API
-**Introduced 2.7**
+**於 2.7 版引入**
 {: .label .label-purple }
 
-The CAT segment replication operation returns information about active and last completed [segment replication]({{site.url}}{{site.baseurl}}/opensearch/segment-replication/index/) events on each replica shard, including related shard-level metrics. These metrics provide information about how far behind the primary shard the replicas are lagging.
+CAT 區段複寫操作會傳回每個副本分片上進行中及最近完成的[區段複寫]({{site.url}}{{site.baseurl}}/opensearch/segment-replication/index/)事件資訊，包括相關的分片層級指標。這些指標可顯示副本落後主要分片的程度。
 
-Call the CAT Segment Replication API only on indexes with segment replication enabled.
+請僅對已啟用區段複寫的索引呼叫 CAT Segment Replication API。
 {: .note}
 
 <!-- spec_insert_start
 api: cat.segment_replication
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_cat/segment_replication
 GET /_cat/segment_replication/{index}
@@ -32,13 +33,13 @@ component: path_parameters
 columns: Parameter, Data type, Description
 include_deprecated: false
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `index` | List | A comma-separated list of data streams, indexes, and aliases used to limit the request. Supports wildcards (`*`). To target all data streams and indexes, omit this parameter or use `*` or `_all`. |
+| `index` | List | 以逗號分隔的資料串流、索引和別名清單，用於限制請求範圍。支援萬用字元（`*`）。若要以所有資料串流和索引為目標，請省略此參數，或使用 `*` 或 `_all`。 |
 
 <!-- spec_insert_end -->
 
@@ -49,54 +50,54 @@ component: query_parameters
 columns: Parameter, Data type, Description, Default
 include_deprecated: false
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設值 |
 | :--- | :--- | :--- | :--- |
-| `active_only` | Boolean | When `true`, the response only includes ongoing segment replication events. | `false` |
-| `allow_no_indices` | Boolean | Whether to ignore the index if a wildcard index expression resolves to no concrete indexes. This includes the `_all` string or when no indexes have been specified. | N/A |
-| `bytes` | String | The units used to display byte values. <br> Valid values are: `b`, `kb`, `k`, `mb`, `m`, `gb`, `g`, `tb`, `t`, `pb`, and `p`. | N/A |
-| `completed_only` | Boolean | When `true`, the response only includes the last-completed segment replication events. | `false` |
-| `detailed` | Boolean | When `true`, the response includes additional metrics for each stage of a segment replication event. | `false` |
-| `expand_wildcards` | List or String | Specifies the type of index that wildcard expressions can match. Supports comma-separated values. <br> Valid values are: <br> - `all`: Match any index, including hidden ones. <br> - `closed`: Match closed, non-hidden indexes. <br> - `hidden`: Match hidden indexes. Must be combined with `open`, `closed`, or both. <br> - `none`: Wildcard expressions are not accepted. <br> - `open`: Match open, non-hidden indexes. | N/A |
-| `format` | String | A short version of the `Accept` header, such as `json` or `yaml`. | N/A |
-| `h` | List | A comma-separated list of column names to display. | N/A |
-| `help` | Boolean | Returns help information. | `false` |
-| `ignore_throttled` | Boolean | Whether specified concrete, expanded, or aliased indexes should be ignored when throttled. | N/A |
-| `ignore_unavailable` | Boolean | Whether the specified concrete indexes should be ignored when missing or closed. | N/A |
-| `index` | List | A comma-separated list of data streams, indexes, and aliases used to limit the request. Supports wildcards (`*`). To target all data streams and indexes, omit this parameter or use `*` or `_all`. | N/A |
-| `s` | List | A comma-separated list of column names or column aliases to sort by. | N/A |
-| `shards` | List | A comma-separated list of shards to display. | N/A |
-| `time` | String | Specifies the time units, for example, `5d` or `7h`. For more information, see [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/). <br> Valid values are: `nanos`, `micros`, `ms`, `s`, `m`, `h`, and `d`. | N/A |
-| `timeout` | String | The operation timeout. | N/A |
-| `v` | Boolean | Enables verbose mode, which displays column headers. | `false` |
+| `active_only` | Boolean | 若為 `true`，回應僅包含進行中的區段複寫事件。 | `false` |
+| `allow_no_indices` | Boolean | 當萬用字元索引運算式未解析出任何具體索引時，是否忽略該索引。這包括 `_all` 字串或未指定任何索引的情況。 | N/A |
+| `bytes` | String | 用於顯示位元組值的單位。<br> 有效值為：`b`、`kb`、`k`、`mb`、`m`、`gb`、`g`、`tb`、`t`、`pb` 和 `p`。 | N/A |
+| `completed_only` | Boolean | 若為 `true`，回應僅包含最近完成的區段複寫事件。 | `false` |
+| `detailed` | Boolean | 若為 `true`，回應會包含區段複寫事件各階段的額外指標。 | `false` |
+| `expand_wildcards` | List or String | 指定萬用字元運算式可比對的索引類型。支援以逗號分隔的值。<br> 有效值為：<br> - `all`：比對任何索引，包括隱藏索引。<br> - `closed`：比對已關閉的非隱藏索引。<br> - `hidden`：比對隱藏索引。必須與 `open`、`closed` 或兩者搭配使用。<br> - `none`：不接受萬用字元運算式。<br> - `open`：比對開啟的非隱藏索引。 | N/A |
+| `format` | String | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
+| `h` | List | 以逗號分隔的要顯示的欄名清單。 | N/A |
+| `help` | Boolean | 傳回說明資訊。 | `false` |
+| `ignore_throttled` | Boolean | 指定的具體、展開或別名索引在受到節流時是否應予以忽略。 | N/A |
+| `ignore_unavailable` | Boolean | 指定的具體索引在遺失或已關閉時是否應予以忽略。 | N/A |
+| `index` | List | 以逗號分隔的資料串流、索引和別名清單，用於限制請求範圍。支援萬用字元（`*`）。若要以所有資料串流和索引為目標，請省略此參數，或使用 `*` 或 `_all`。 | N/A |
+| `s` | List | 以逗號分隔的用於排序的欄名或欄別名清單。 | N/A |
+| `shards` | List | 以逗號分隔的要顯示的分片清單。 | N/A |
+| `time` | String | 指定時間單位，例如 `5d` 或 `7h`。如需更多資訊，請參閱[支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。<br> 有效值為：`nanos`、`micros`、`ms`、`s`、`m`、`h` 和 `d`。 | N/A |
+| `timeout` | String | 操作逾時時間。 | N/A |
+| `v` | Boolean | 啟用詳細模式，此模式會顯示欄標題。 | `false` |
 
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`index` | String | The name of the index, or a comma-separated list or wildcard expression of index names used to filter results. If this parameter is not provided, the response contains information about all indexes in the cluster.
+`index` | String | 索引名稱，或用於篩選結果的以逗號分隔的索引名稱清單或萬用字元運算式。若未提供此參數，回應會包含叢集中所有索引的資訊。
 
-## Query parameters
+## 查詢參數
 
-Parameter | Data type  | Description
+參數 | 資料類型  | 說明
 :--- |:-----------| :---
-`active_only` | Boolean    | If `true`, the response only includes active segment replications. Defaults to `false`. 
-[`detailed`](#additional-detailed-response-metrics) | String     | If `true`, the response includes additional metrics for each stage of a segment replication event. Defaults to `false`.
-`shards` | String     | A comma-separated list of shards to display.
-`bytes` | Byte units | [Units]({{site.url}}{{site.baseurl}}/api-reference/units/) used to display byte size values.
-`format` | String     | A short version of the HTTP accept header. Valid values include `JSON` and `YAML`.  
-`h` | String     | A comma-separated list of column names to display. 
-`help` | Boolean    | If `true`, the response includes help information. Defaults to `false`.
-`time` | Time units | [Units]({{site.url}}{{site.baseurl}}/api-reference/units/) used to display time values.
-`v` | Boolean    | If `true`, the response includes column headings. Defaults to `false`.
-`s` | String     | Specifies to sort the results. For example, `s=shardId:desc` sorts by shardId in descending order.
+`active_only` | Boolean    | 若為 `true`，回應僅包含進行中的區段複寫。預設為 `false`。
+[`detailed`](#additional-detailed-response-metrics) | String     | 若為 `true`，回應會包含區段複寫事件各階段的額外指標。預設為 `false`。
+`shards` | String     | 以逗號分隔的要顯示的分片清單。
+`bytes` | 位元組單位 | 用於顯示位元組大小值的[單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。
+`format` | String     | HTTP accept 標頭的簡短版本。有效值包括 `JSON` 和 `YAML`。
+`h` | String     | 以逗號分隔的要顯示的欄名清單。
+`help` | Boolean    | 若為 `true`，回應會包含說明資訊。預設為 `false`。
+`time` | 時間單位 | 用於顯示時間值的[單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。
+`v` | Boolean    | 若為 `true`，回應會包含欄標題。預設為 `false`。
+`s` | String     | 指定結果的排序方式。例如，`s=shardId:desc` 會依 shardId 遞減排序。
 
-## Example requests
+## 請求範例
 <!-- spec_insert_start
 component: example_code
 rest: GET /_cat/segment_replication?v&s=s:desc
@@ -119,11 +120,11 @@ response = client.cat.segment_replication(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The following examples illustrate various segment replication responses.
+下列範例說明各種區段複寫回應。
 
-### No active segment replication events
+### 沒有進行中的區段複寫事件
 
-The following query requests segment replication metrics with column headings for all indexes:
+下列查詢會請求所有索引的區段複寫指標，並包含欄標題：
 
 <!-- spec_insert_start
 component: example_code
@@ -147,16 +148,16 @@ response = client.cat.segment_replication(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The response contains the metrics for the preceding request:
+回應包含上述請求的指標：
 
 ```bash
 shardId target_node target_host checkpoints_behind bytes_behind current_lag last_completed_lag rejected_requests
 [index-1][0] runTask-1 127.0.0.1 0 0b 0s 7ms 0
 ```
 
-###  Shard ID specified
+###  已指定分片 ID
 
-The following query requests segment replication metrics with column headings for shards with the ID `0` from indexes `index1` and `index2`:
+下列查詢會請求索引 `index1` 和 `index2` 中 ID 為 `0` 的分片的區段複寫指標，並包含欄標題：
 
 <!-- spec_insert_start
 component: example_code
@@ -181,7 +182,7 @@ response = client.cat.segment_replication(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The response contains the metrics for the preceding request. The column headings correspond to the metric names:
+回應包含上述請求的指標。欄標題與指標名稱相對應：
 
 ```bash
 shardId target_node target_host checkpoints_behind bytes_behind current_lag last_completed_lag rejected_requests
@@ -189,9 +190,9 @@ shardId target_node target_host checkpoints_behind bytes_behind current_lag last
 [index-2][0] runTask-1 127.0.0.1 0 0b 0s 5ms 0
 ```
 
-###  Detailed response
+###  詳細回應
 
-The following query requests detailed segment replication metrics with column headings for all indexes:
+下列查詢會要求所有索引的詳細區段複寫指標，並附上欄標題：
 
 <!-- spec_insert_start
 component: example_code
@@ -215,7 +216,7 @@ response = client.cat.segment_replication(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The response contains additional metrics about the files and stages of a segment replication event:
+回應包含區段複寫事件的檔案與階段的其他指標：
 
 ```bash
 shardId target_node target_host checkpoints_behind bytes_behind current_lag last_completed_lag rejected_requests stage time files_fetched files_percent bytes_fetched bytes_percent start_time stop_time files files_total bytes bytes_total replicating_stage_time_taken get_checkpoint_info_stage_time_taken file_diff_stage_time_taken get_files_stage_time_taken finalize_replication_stage_time_taken
@@ -223,9 +224,9 @@ shardId target_node target_host checkpoints_behind bytes_behind current_lag last
 [index-2][0] runTask-1 127.0.0.1 0 0b 0s 5ms 0 done 7ms 3 100.0% 3664 100.0% 2023-03-16T13:53:33.466Z 2023-03-16T13:53:33.474Z 3 3 3.5kb 3.5kb 0s 1ms 0s 2ms 2ms
 ```
 
-###  Sorting the results
+###  排序結果
 
-The following query requests segment replication metrics with column headings for all indexes, sorted by shard ID in descending order:
+下列查詢會要求所有索引的區段複寫指標，並附上欄標題，依分片 ID 遞減排序：
 
 <!-- spec_insert_start
 component: example_code
@@ -249,7 +250,7 @@ response = client.cat.segment_replication(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The response contains the sorted results:
+回應包含排序後的結果：
 
 ```bash
 shardId    target_node  target_host checkpoints_behind bytes_behind current_lag last_completed_lag rejected_requests
@@ -257,9 +258,9 @@ shardId    target_node  target_host checkpoints_behind bytes_behind current_lag 
 [test6][0] runTask-2   127.0.0.1   0                  0b           0s          4ms                0
 ```
 
-### Using a metric alias 
+### 使用指標別名 
 
-In a request, you can either use a metric's full name or one of its aliases. The following query is the same as the preceding query, but it uses the alias `s` instead of `shardID` for sorting:
+在請求中，您可以使用指標的完整名稱或其任一別名。下列查詢與前一個查詢相同，但使用別名 `s` 而非 `shardID` 來排序：
 
 <!-- spec_insert_start
 component: example_code
@@ -283,41 +284,41 @@ response = client.cat.segment_replication(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response metrics
+## 範例回應指標
 
-The following table lists the response metrics that are returned for all requests. When referring to a metric in a query parameter, you can provide either the metric's full name or any of its aliases, as shown in the previous [example](#using-a-metric-alias).
+下表列出所有請求都會傳回的回應指標。在查詢參數中參照指標時，您可以提供指標的完整名稱或其任一別名，如先前的[範例](#using-a-metric-alias)所示。
 
-Metric | Alias | Description
+指標 | 別名 | 說明
 :--- | :--- | :---
-`shardId` | `s` | The ID of a specific shard.
-`target_host` | `thost` | The target host IP address.
-`target_node` | `tnode` | The target node name.
-`checkpoints_behind` | `cpb` | The number of checkpoints by which the replica shard is behind the primary shard.
-`bytes_behind` | `bb` | The number of bytes by which the replica shard is behind the primary shard.
-`current_lag` | `clag` | The time elapsed while waiting for a replica shard to catch up to the primary shard.
-`last_completed_lag` | `lcl` | The time taken for a replica shard to catch up to the latest primary shard refresh.
-`rejected_requests` | `rr` | The number of rejected requests for the replication group.
+`shardId` | `s` | 特定分片的 ID。
+`target_host` | `thost` | 目標主機 IP 位址。
+`target_node` | `tnode` | 目標節點名稱。
+`checkpoints_behind` | `cpb` | 副本分片落後主要分片的檢查點數量。
+`bytes_behind` | `bb` | 副本分片落後主要分片的位元組數。
+`current_lag` | `clag` | 等待副本分片追上主要分片所經過的時間。
+`last_completed_lag` | `lcl` | 副本分片追上最新主要分片重新整理所花費的時間。
+`rejected_requests` | `rr` | 複寫群組被拒絕的請求數。
 
-### Additional detailed response metrics
+### 其他詳細回應指標
 
-The following table lists the additional response fields returned if `detailed` is set to `true`.
+下表列出當 `detailed` 設為 `true` 時所傳回的其他回應欄位。
 
-Metric | Alias | Description
+指標 | 別名 | 說明
 :--- |:--- |:---
-`stage` | `st` | The current stage of a segment replication event.
-`time` | `t`, `ti` | The amount of time a segment replication event took to complete, in milliseconds.
-`files_fetched` | `ff` | The number of files fetched so far for a segment replication event.
-`files_percent` | `fp` | The percentage of files fetched so far for a segment replication event.
-`bytes_fetched` | `bf` | The number of bytes fetched so far for a segment replication event.
-`bytes_percent` | `bp` | The number of bytes fetched so far for a segment replication event as a percentage.
-`start_time` | `start` | The segment replication start time.
-`stop_time` | `stop` | The segment replication stop time.
-`files` | `f` | The number of files that needs to be fetched for a segment replication event.
-`files_total` | `tf` | The total number of files that are part of this recovery, including both reused and recovered files.
-`bytes` | `b` | The number of bytes that needs to be fetched for a segment replication event.
-`bytes_total` | `tb` | The total number of bytes in the shard.
-`replicating_stage_time_taken` | `rstt` | The amount of time the `replicating` stage of a segment replication event took to complete. 
-`get_checkpoint_info_stage_time_taken` | `gcistt` | The amount of time the `get checkpoint info` stage of a segment replication event took to complete. 
-`file_diff_stage_time_taken` | `fdstt` | The amount of time the `file diff` stage of a segment replication event took to complete. 
-`get_files_stage_time_taken` | `gfstt` | The amount of time the `get files` stage of a segment replication event took to complete. 
-`finalize_replication_stage_time_taken` | `frstt` | The amount of time the `finalize replication` stage of a segment replication event took to complete.
+`stage` | `st` | 區段複寫事件的目前階段。
+`time` | `t`, `ti` | 區段複寫事件完成所花費的時間，以毫秒為單位。
+`files_fetched` | `ff` | 區段複寫事件迄今已擷取的檔案數。
+`files_percent` | `fp` | 區段複寫事件迄今已擷取檔案的百分比。
+`bytes_fetched` | `bf` | 區段複寫事件迄今已擷取的位元組數。
+`bytes_percent` | `bp` | 區段複寫事件迄今已擷取的位元組數百分比。
+`start_time` | `start` | 區段複寫開始時間。
+`stop_time` | `stop` | 區段複寫停止時間。
+`files` | `f` | 區段複寫事件需要擷取的檔案數。
+`files_total` | `tf` | 屬於此復原的檔案總數，包含重複使用與已復原的檔案。
+`bytes` | `b` | 區段複寫事件需要擷取的位元組數。
+`bytes_total` | `tb` | 分片中的位元組總數。
+`replicating_stage_time_taken` | `rstt` | 區段複寫事件的 `replicating` 階段完成所花費的時間。 
+`get_checkpoint_info_stage_time_taken` | `gcistt` | 區段複寫事件的 `get checkpoint info` 階段完成所花費的時間。 
+`file_diff_stage_time_taken` | `fdstt` | 區段複寫事件的 `file diff` 階段完成所花費的時間。 
+`get_files_stage_time_taken` | `gfstt` | 區段複寫事件的 `get files` 階段完成所花費的時間。 
+`finalize_replication_stage_time_taken` | `frstt` | 區段複寫事件的 `finalize replication` 階段完成所花費的時間。

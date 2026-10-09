@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create or update index mappings
+title: "建立或更新索引對應"
 parent: Index settings and mappings
 grand_parent: Index APIs
 nav_order: 30
@@ -10,58 +11,58 @@ redirect_from:
   - /opensearch/rest-api/update-mapping/
 ---
 
-# Create or Update Index Mappings API
-**Introduced 1.0**
+# 建立或更新索引對應 API
+**推出於 1.0**
 {: .label .label-purple }
 
-Use this API to introduce new fields into an existing index or modify the search settings of existing fields. This operation lets you evolve your index schema without recreating the index from scratch.
+使用此 API 將新欄位加入現有索引，或修改現有欄位的搜尋設定。此操作可讓您在不從頭重新建立索引的情況下演進索引結構描述。
 
-You cannot use this operation to change the mapping or field type of a field that already contains indexed data. Modifying an existing field's type risks making previously indexed data incompatible with the new mapping. If you need to change the type of an existing field, create a new index with the desired mappings and then use the [Reindex]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/) operation to copy documents from the original index. To avoid downtime during reindexing, you can use [aliases]({{site.url}}{{site.baseurl}}/opensearch/index-alias/). For more information, see [Changing the type of an existing field](#example-changing-the-type-of-an-existing-field).
+您無法使用此操作來變更已包含索引資料之欄位的對應或欄位類型。修改現有欄位的類型可能會使先前已編製索引的資料與新對應不相容。如果您需要變更現有欄位的類型，請建立具有所需對應的新索引，然後使用 [Reindex]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/) 操作將文件從原始索引複製過來。若要在重新編製索引期間避免停機，您可以使用[別名]({{site.url}}{{site.baseurl}}/opensearch/index-alias/)。如需更多資訊，請參閱[變更現有欄位的類型](#example-changing-the-type-of-an-existing-field)。
 
 <!-- spec_insert_start
 api: indices.put_mapping
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 POST /{index}/_mapping
 PUT  /{index}/_mapping
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required | Data type | Description |
+| 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `index` | **Required** | String | The name of the index to update. You can specify a single index name, a comma-separated list of index names, or a wildcard expression. To update the mapping of all indexes, use `_all` or `*`. |
+| `index` | **必要** | String | 要更新的索引名稱。您可以指定單一索引名稱、以逗號分隔的索引名稱清單，或萬用字元運算式。若要更新所有索引的對應，請使用 `_all` 或 `*`。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `allow_no_indices` | Boolean | Specifies whether to ignore wildcards that do not match any indexes. If `false`, the request returns an error when wildcards do not match any indexes. | `true` |
-| `cluster_manager_timeout` | String | The amount of time to wait for a connection to the cluster manager node. | `30s` |
-| `expand_wildcards` | String | Specifies the types of indexes to which wildcard expressions can expand. Supports comma-separated values. Valid values are: <br> - `all`: Match all indexes, including hidden indexes. <br> - `open`: Match open indexes. <br> - `closed`: Match closed indexes. <br> - `hidden`: Match hidden indexes. Must be combined with `open`, `closed`, or both. <br> - `none`: Do not accept wildcard expressions. | `open` |
-| `ignore_unavailable` | Boolean | Specifies whether to ignore indexes that are missing or closed. If `true`, missing or closed indexes are not included in the response. | `false` |
-| `timeout` | String | The amount of time to wait for a response. If no response is received before the timeout expires, the request fails and returns an error. | `30s` |
-| `write_index_only` | Boolean | If `true`, the mappings are applied only to the current write index for the target. | `false` |
+| `allow_no_indices` | Boolean | 指定是否忽略未符合任何索引的萬用字元。若為 `false`，當萬用字元未符合任何索引時，請求會傳回錯誤。 | `true` |
+| `cluster_manager_timeout` | String | 等待與叢集管理員節點連線的時間長度。 | `30s` |
+| `expand_wildcards` | String | 指定萬用字元運算式可展開的索引類型。支援以逗號分隔的值。有效值為：<br> - `all`：符合所有索引，包括隱藏索引。<br> - `open`：符合開啟的索引。<br> - `closed`：符合關閉的索引。<br> - `hidden`：符合隱藏索引。必須與 `open`、`closed` 或兩者合併使用。<br> - `none`：不接受萬用字元運算式。 | `open` |
+| `ignore_unavailable` | Boolean | 指定是否忽略遺失或關閉的索引。若為 `true`，遺失或關閉的索引不會包含在回應中。 | `false` |
+| `timeout` | String | 等待回應的時間長度。若在逾時前未收到回應，請求會失敗並傳回錯誤。 | `30s` |
+| `write_index_only` | Boolean | 若為 `true`，對應只會套用至目標目前的寫入索引。 | `false` |
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `properties` | Object | Required. Defines the fields and their types for the index mapping. Each field can include a name, [field data type]({{site.url}}{{site.baseurl}}/field-types/index/), and [mapping parameters]({{site.url}}{{site.baseurl}}/field-types/mapping-parameters/). |
-| `dynamic` | String | Controls whether new fields are added dynamically. Valid values are `true` (new fields are added automatically), `false` (new fields are ignored), and `strict` (requests that contain unmapped fields are rejected). Default is `true`. |
+| `properties` | Object | 必要。定義索引對應的欄位及其類型。每個欄位可包含名稱、[欄位資料類型]({{site.url}}{{site.baseurl}}/field-types/index/) 及[對應參數]({{site.url}}{{site.baseurl}}/field-types/mapping-parameters/)。 |
+| `dynamic` | String | 控制是否動態新增欄位。有效值為 `true` (自動新增欄位)、`false` (忽略新欄位) 及 `strict` (拒絕包含未對應欄位的請求)。預設為 `true`。 |
 
-## Example: Adding fields to an index
+## 範例：將欄位新增至索引
 
-The Create or Update Mappings API requires an existing index. The following example adds `description` and `price` fields to the `products` index:
+建立或更新對應 API 需要現有的索引。下列範例將 `description` 和 `price` 欄位新增至 `products` 索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -116,15 +117,15 @@ response = client.indices.put_mapping(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-You can verify the mapping was applied by using the [Get Mappings API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/get-mapping/):
+您可以使用 [Get Mappings API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/get-mapping/) 來確認對應已套用：
 
 ```json
 GET /products/_mapping
 ```
 
-## Example: Updating multiple indexes
+## 範例：更新多個索引
 
-You can apply a mapping update to multiple indexes in a single request by specifying a comma-separated list of index names. The following example adds `currency` and `tax_rate` fields to both a US and EU regional catalog:
+您可以藉由指定以逗號分隔的索引名稱清單，在單一請求中將對應更新套用至多個索引。下列範例將 `currency` 和 `tax_rate` 欄位新增至美國和歐盟地區目錄：
 
 <!-- spec_insert_start
 component: example_code
@@ -179,9 +180,9 @@ response = client.indices.put_mapping(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Adding properties to an existing object field
+## 範例：將屬性新增至現有的物件欄位
 
-You can add new inner fields to an existing [object]({{site.url}}{{site.baseurl}}/field-types/supported-field-types/object/) field. Suppose the `products` index already has a `manufacturer` object with a `name` field. The following example adds a `country` keyword field to the `manufacturer` object:
+您可以將新的內部欄位新增至現有的 [object]({{site.url}}{{site.baseurl}}/field-types/supported-field-types/object/) 欄位。假設 `products` 索引已有具備 `name` 欄位的 `manufacturer` 物件。下列範例將 `country` 關鍵字欄位新增至 `manufacturer` 物件：
 
 <!-- spec_insert_start
 component: example_code
@@ -239,7 +240,7 @@ response = client.indices.put_mapping(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-You can confirm the nested structure by retrieving the mapping:
+您可以藉由擷取對應來確認巢狀結構：
 
 ```json
 GET /products/_mapping
@@ -247,7 +248,7 @@ GET /products/_mapping
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -282,9 +283,9 @@ GET /products/_mapping
 ```
 </details>
 
-## Example: Adding multi-fields to an existing field
+## 範例：為現有欄位新增多欄位
 
-[Multi-fields]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/fields/) allow you to index the same field in different ways. For instance, a `text` field used for full-text search can also have a `keyword` sub-field for sorting or aggregations. The following example adds a `product_name.keyword` sub-field with `ignore_above` set to `256`, enabling exact-match filtering and sorting on product names:
+[多欄位]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/fields/)可讓您以不同方式為同一個欄位編製索引。例如，用於全文搜尋的 `text` 欄位也可以有一個用於排序或彙總的 `keyword` 子欄位。下列範例新增一個 `product_name.keyword` 子欄位並將 `ignore_above` 設為 `256`，以便對產品名稱進行精確比對篩選與排序：
 
 <!-- spec_insert_start
 component: example_code
@@ -348,7 +349,7 @@ response = client.indices.put_mapping(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-You can verify the multi-field configuration:
+您可以驗證多欄位組態：
 
 ```json
 GET /products/_mapping
@@ -356,7 +357,7 @@ GET /products/_mapping
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -397,9 +398,9 @@ GET /products/_mapping
 ```
 </details>
 
-## Example: Changing supported mapping parameters
+## 範例：變更支援的對應參數
 
-Some [mapping parameters]({{site.url}}{{site.baseurl}}/field-types/mapping-parameters/) can be updated for an existing field using the Create or Update Mappings API. For example, you can change the [`ignore_above`]({{site.url}}{{site.baseurl}}/field-types/mapping-parameters/ignore-above/) value for a keyword field. The following example increases `ignore_above` from `20` to `50` for the `sku` field, allowing longer product codes to be indexed:
+某些[對應參數]({{site.url}}{{site.baseurl}}/field-types/mapping-parameters/)可以使用 Create or Update Mappings API 為現有欄位更新。例如，您可以變更 keyword 欄位的 [`ignore_above`]({{site.url}}{{site.baseurl}}/field-types/mapping-parameters/ignore-above/) 值。下列範例將 `sku` 欄位的 `ignore_above` 從 `20` 提高到 `50`，以便為較長的產品代號編製索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -448,7 +449,7 @@ response = client.indices.put_mapping(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-You can confirm the updated parameter value:
+您可以確認更新後的參數值：
 
 ```json
 GET /products/_mapping
@@ -456,7 +457,7 @@ GET /products/_mapping
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -501,9 +502,9 @@ GET /products/_mapping
 ```
 </details>
 
-## Example: Renaming a field using an alias
+## 範例：使用別名重新命名欄位
 
-Because renaming a field makes previously stored data inaccessible under the new name, use an [`alias`]({{site.url}}{{site.baseurl}}/field-types/supported-field-types/alias/) field type to provide an alternate way to reference the field. The following example creates an `item_id` alias that points to the existing `product_id` field, allowing queries to use either name:
+由於重新命名欄位會導致先前儲存的資料無法以新名稱存取，請使用 [`alias`]({{site.url}}{{site.baseurl}}/field-types/supported-field-types/alias/) 欄位類型提供參照該欄位的替代方式。下列範例建立一個指向現有 `product_id` 欄位的 `item_id` 別名，讓查詢可以使用任一名稱：
 
 <!-- spec_insert_start
 component: example_code
@@ -552,7 +553,7 @@ response = client.indices.put_mapping(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-You can verify the alias was created:
+您可以驗證別名是否已建立：
 
 ```json
 GET /products/_mapping
@@ -560,7 +561,7 @@ GET /products/_mapping
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -612,13 +613,13 @@ GET /products/_mapping
 ```
 </details>
 
-## Example: Changing the type of an existing field
+## 範例：變更現有欄位的類型
 
-You cannot directly change the field type of a field that already contains indexed data. Instead, create a new index with the correct mapping and use the [Reindex]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/) API to copy documents from the original index.
+您無法直接變更已包含索引資料之欄位的欄位類型。請改為建立一個具有正確對應的新索引，並使用 [Reindex]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/) API 從原始索引複製文件。
 
-The following example changes the `weight` field from `integer` to `float` so that fractional values (such as `0.75` kg) can be stored accurately.
+下列範例將 `weight` 欄位從 `integer` 變更為 `float`，以便準確儲存小數值（例如 `0.75` kg）。
 
-First, create the new index with the updated field type:
+首先，以更新後的欄位類型建立新索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -706,7 +707,7 @@ response = client.indices.create(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Then reindex the data from the original index into the new one:
+接著將資料從原始索引重新編製索引到新索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -756,7 +757,7 @@ response = client.reindex(
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -783,9 +784,9 @@ response = client.reindex(
 ```
 </details>
 
-## Example response
+## 範例回應
 
-A successful mapping update returns the following response:
+成功的對應更新會傳回下列回應：
 
 ```json
 {
@@ -793,14 +794,14 @@ A successful mapping update returns the following response:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `acknowledged` | Boolean | Indicates whether the request was acknowledged by all relevant nodes in the cluster. |
+| `acknowledged` | Boolean | 指出請求是否已由叢集中所有相關節點確認。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/mapping/put`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`indices:admin/mapping/put`。

@@ -1,105 +1,106 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Services
+title: "服務"
 nav_order: 20
 parent: Application Performance Monitoring
 ---
 
-# Services
-**Introduced 3.6**
+# 服務
+**於 3.6 版推出**
 {: .label .label-purple }
 
-The **Services** page provides a centralized catalog of all instrumented services in your application, displaying Rate, Errors, Duration (RED) at a glance. Use this page to identify services with high error rates, latency issues, or throughput anomalies.
+**Services** 頁面提供應用程式中所有已導入監測的服務之集中式目錄，讓您一眼就能掌握速率、錯誤、持續時間 (RED) 指標。您可以使用此頁面找出錯誤率高、有延遲問題或輸送量異常的服務。
 
-## Accessing the services page
+## 存取服務頁面
 
-To access the **Services** page, navigate to your Observability workspace and select **APM** > **Services** from the left navigation menu. The following image shows the **Services** page.
+若要存取 **Services** 頁面，請瀏覽至您的可觀測性工作區，然後從左側導覽選單中選取 **APM** > **Services**。下圖顯示 **Services** 頁面。
 
-![Services home page]({{site.url}}{{site.baseurl}}/images/apm/services-home.png)
+![服務首頁]({{site.url}}{{site.baseurl}}/images/apm/services-home.png)
 
-The Services home page displays a table of all discovered services with the following information:
+服務首頁會顯示所有已探索服務的表格，並包含下列資訊：
 
-- **Service name**: The name of the instrumented service as reported by the OpenTelemetry SDK.
-- **P99/P90/P50 latency**: The 99th, 90th, and 50th percentile response times for the service.
-- **Total requests**: The total number of requests handled by the service during the selected time range.
-- **Failure ratio**: The percentage of requests resulting in errors (`4xx` and `5xx` responses).
-- **Environment**: The deployment environment (for example, `production` or `staging`).
+- **Service name**：OpenTelemetry SDK 所回報的已導入監測服務名稱。
+- **P99/P90/P50 latency**：服務的第 99、90 及 50 百分位回應時間。
+- **Total requests**：服務在所選時間範圍內處理的請求總數。
+- **Failure ratio**：導致錯誤的請求百分比 (`4xx` 及 `5xx` 回應)。
+- **Environment**：部署環境 (例如 `production` 或 `staging`)。
 
-The Services home page also provides information about the **Top services by fault rate** and **Top dependency paths by fault rate**, helping you quickly identify critical issues and problematic service-to-service communication paths.
+服務首頁也會提供 **Top services by fault rate**（故障率最高的服務）及 **Top dependency paths by fault rate**（故障率最高的相依性路徑）相關資訊，協助您快速找出重大問題及有問題的服務對服務通訊路徑。
 
-## Service overview
+## 服務概觀
 
-Select a service name to open the service detail view. The following image shows a service overview.
+選取服務名稱以開啟服務詳細資料檢視。下圖顯示服務概觀。
 
-![Service overview]({{site.url}}{{site.baseurl}}/images/apm/services-overview.png)
+![服務概觀]({{site.url}}{{site.baseurl}}/images/apm/services-overview.png)
 
-The **Overview** tab displays metric tiles summarizing the service's current health, along with the following time-series charts:
+**Overview** 索引標籤會顯示摘要說明服務目前健康狀態的指標圖磚，以及下列時間序列圖表：
 
-- **Latency by service dependencies**: P50, P90, and P99 latency broken down by downstream dependencies.
-- **Requests by operations**: Request volume per operation over time.
-- **Availability by operations**: Availability percentage per operation over time.
-- **Fault rate and error rate by operations**: `5xx` fault rate and `4xx` error rate per operation over time.
+- **Latency by service dependencies**：依下游相依性細分的 P50、P90 及 P99 延遲。
+- **Requests by operations**：一段時間內每項作業的請求量。
+- **Availability by operations**：一段時間內每項作業的可用性百分比。
+- **Fault rate and error rate by operations**：一段時間內每項作業的 `5xx` 故障率及 `4xx` 錯誤率。
 
-## Operations
+## 作業
 
-The following image shows the Operations tab.
+下圖顯示 Operations 索引標籤。
 
-![Service operations]({{site.url}}{{site.baseurl}}/images/apm/service-operations.png)
+![服務作業]({{site.url}}{{site.baseurl}}/images/apm/service-operations.png)
 
-The **Operations** tab provides a per-operation breakdown of service performance. Each row in the operations table represents a distinct API endpoint or method and displays the following metrics:
+**Operations** 索引標籤提供服務效能依作業細分的明細。作業表格中的每一列代表不同的 API 端點或方法，並顯示下列指標：
 
-- **Operation name**: The name of the API endpoint or method (for example, `GET /api/products`).
-- **P50 latency**: The median response time.
-- **P90 latency**: The 90th percentile response time.
-- **P99 latency**: The 99th percentile response time.
-- **Total requests**: The total number of requests for this operation during the selected time range.
-- **Error rate**: The percentage of requests resulting in errors.
-- **Availability**: The availability percentage for this operation.
+- **Operation name**：API 端點或方法的名稱 (例如 `GET /api/products`)。
+- **P50 latency**：回應時間中位數。
+- **P90 latency**：第 90 百分位回應時間。
+- **P99 latency**：第 99 百分位回應時間。
+- **Total requests**：此作業在所選時間範圍內的請求總數。
+- **Error rate**：導致錯誤的請求百分比。
+- **Availability**：此作業的可用性百分比。
 
-Use the column headers to sort operations by any metric and identify the slowest or most error-prone endpoints.
+使用欄標題依任一指標排序作業，並找出最慢或最容易發生錯誤的端點。
 
-## Dependencies
+## 相依性
 
-The following image shows the Dependencies tab.
+下圖顯示 Dependencies 索引標籤。
 
-![Service dependencies]({{site.url}}{{site.baseurl}}/images/apm/service-dependencies.png)
+![服務相依性]({{site.url}}{{site.baseurl}}/images/apm/service-dependencies.png)
 
-The **Dependencies** tab shows the downstream services that the selected service calls. For each dependency, the following information is displayed:
+**Dependencies** 索引標籤會顯示所選服務呼叫的下游服務。針對每個相依性，會顯示下列資訊：
 
-- **Dependency service**: The name of the downstream service being called.
-- **Remote operation**: The specific operation invoked on the downstream service.
-- **Service operations**: The operations on the current service that call this dependency.
-- **P99 latency**: The 99th percentile response time for calls to this dependency.
-- **P90 latency**: The 90th percentile response time for calls to this dependency.
-- **P50 latency**: The median response time for calls to this dependency.
-- **Total requests**: The total number of requests to this dependency during the selected time range.
-- **Error rate**: The percentage of failed calls to this dependency.
-- **Availability**: The availability percentage for this dependency path.
+- **Dependency service**：所呼叫下游服務的名稱。
+- **Remote operation**：在下游服務上叫用的特定作業。
+- **Service operations**：目前服務上會呼叫此相依性的作業。
+- **P99 latency**：呼叫此相依性的第 99 百分位回應時間。
+- **P90 latency**：呼叫此相依性的第 90 百分位回應時間。
+- **P50 latency**：呼叫此相依性的回應時間中位數。
+- **Total requests**：此相依性在所選時間範圍內的請求總數。
+- **Error rate**：對此相依性失敗呼叫的百分比。
+- **Availability**：此相依性路徑的可用性百分比。
 
-Use this view to determine whether performance issues in a service are caused by its own logic or by a slow or failing downstream dependency.
+使用此檢視來判斷服務中的效能問題是本身邏輯所造成，還是緩慢或失敗的下游相依性所造成。
 
-## Correlations
+## 關聯
 
-APM provides in-context correlations that allow you to navigate from service metrics directly to related traces and logs. Correlations are accessible from the **Services home page**, **Service overview**, and **Operations** pages.
+APM 提供情境式關聯，可讓您從服務指標直接瀏覽至相關的追蹤與記錄檔。您可以從 **Services home page**、**Service overview** 及 **Operations** 頁面存取關聯。
 
-![Service span correlations]({{site.url}}{{site.baseurl}}/images/apm/service-span-correlations.png)
+![服務跨距關聯]({{site.url}}{{site.baseurl}}/images/apm/service-span-correlations.png)
 
-When viewing a service, you can:
+檢視服務時，您可以：
 
-- **View related traces**: Select a metric or operation to open a flyout panel showing correlated trace spans. This helps you drill down from a high-level metric to the individual requests that contributed to it.
-- **View related logs**: The flyout panel also displays log entries associated with the selected traces, giving you full context for debugging issues.
-- **Filter by attributes**: Use service attributes such as environment, operation name, or error type to narrow the correlation results.
+- **檢視相關追蹤**：選取指標或作業，以開啟顯示相關追蹤跨距的飛出面板。這可協助您從高階指標向下鑽研至造成該指標的個別請求。
+- **檢視相關記錄檔**：飛出面板也會顯示與所選追蹤相關聯的記錄檔項目，讓您在偵錯問題時取得完整情境。
+- **依屬性篩選**：使用環境、作業名稱或錯誤類型等服務屬性，縮小關聯結果的範圍。
 
-For more information about configuring correlations between trace and log datasets, see [Correlations]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/correlations/).
+如需設定追蹤與記錄檔資料集之間關聯的詳細資訊，請參閱[關聯]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/correlations/)。
 
-## Filtering services
+## 篩選服務
 
-Use the filter controls at the top of the **Services** page to narrow the list of displayed services:
+使用 **Services** 頁面頂端的篩選控制項，縮小所顯示服務的清單範圍：
 
-- **Environment**: Filter by deployment environment (for example, `production`, `staging`, `development`).
-- **Latency**: Filter services exceeding a latency threshold.
-- **Throughput**: Filter services by request volume.
-- **Failure ratio**: Filter services with failure ratios that exceed a specified percentage.
+- **Environment**：依部署環境篩選 (例如 `production`、`staging`、`development`)。
+- **Latency**：篩選超過延遲閾值的服務。
+- **Throughput**：依請求量篩選服務。
+- **Failure ratio**：篩選失敗率超過指定百分比的服務。
 
-You can combine multiple filters to quickly isolate services that match specific criteria, for example, production services with a failure ratio greater than 5%.
+您可以合併多個篩選條件，快速找出符合特定條件的服務，例如失敗率高於 5% 的生產服務。
 {: .tip}

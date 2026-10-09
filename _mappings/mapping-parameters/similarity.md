@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Similarity
+title: "相似度"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/similarity/
@@ -9,24 +10,24 @@ has_children: false
 has_toc: false
 ---
 
-# Similarity mapping parameter
+# 相似度對應參數
 
-The `similarity` mapping parameter lets you customize how relevance scores are calculated for a text field during search. It defines the scoring algorithm used to rank matching documents, which directly impacts how results are ordered in search responses.
+`similarity` 對應參數可讓您自訂搜尋期間文字欄位的相關性分數計算方式。它會定義用來為相符文件排序的評分演算法，這會直接影響搜尋回應中結果的排序方式。
 
-## Supported similarity types
+## 支援的相似度類型
 
-OpenSearch supports two types of similarities for field mappings:
+OpenSearch 支援兩種欄位對應的相似度：
 
-**Built-in similarities** (can be used directly):
-- [`BM25`]({{site.url}}{{site.baseurl}}/im-plugin/similarity/#bm25-similarity-default) (default): Uses a modern, probabilistic ranking model that balances term frequency, document length, and inverse document frequency.
-- [`boolean`]({{site.url}}{{site.baseurl}}/im-plugin/similarity/#boolean-similarity): Returns constant scores (`1` or `0`), so should be used if you care only about matching, not relevance.
+**內建相似度**（可直接使用）：
+- [`BM25`]({{site.url}}{{site.baseurl}}/im-plugin/similarity/#bm25-similarity-default)（預設）：使用現代機率排序模型，可平衡詞彙頻率、文件長度及反向文件頻率。
+- [`boolean`]({{site.url}}{{site.baseurl}}/im-plugin/similarity/#boolean-similarity)：傳回固定分數（`1` 或 `0`），因此若您只在意是否相符，而不在意相關性，則應使用此項。
 
-**Custom similarities** (must be defined in the index settings first):
-- [DFR, DFI, IB, LM Dirichlet, LM Jelinek Mercer, and scripted similarities]({{site.url}}{{site.baseurl}}/im-plugin/similarity/#available-similarity-types): Advanced similarity algorithms that require configuration in the index settings before they can be referenced by name in field mappings.
+**自訂相似度**（必須先在索引設定中定義）：
+- [DFR、DFI、IB、LM Dirichlet、LM Jelinek Mercer 及指令碼相似度]({{site.url}}{{site.baseurl}}/im-plugin/similarity/#available-similarity-types)：進階相似度演算法，必須先在索引設定中進行組態，才能在欄位對應中以名稱參照。
 
-## Setting a custom similarity on a field
+## 在欄位上設定自訂相似度
 
-The following request creates an index named `products` with a `title` field that uses the `boolean` similarity, which assigns all matches the same score:
+下列請求會建立名為 `products` 的索引，其中包含使用 `boolean` 相似度的 `title` 欄位，該相似度會為所有相符項目指派相同的分數：
 
 ```json
 PUT /products
@@ -43,9 +44,9 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-## Indexing a document
+## 將文件編製索引
 
-Use the following command to index a sample document:
+使用下列命令將範例文件編製索引：
 
 ```json
 PUT /products/_doc/1
@@ -55,9 +56,9 @@ PUT /products/_doc/1
 ```
 {% include copy-curl.html %}
 
-## Querying and inspecting scoring impact
+## 查詢並檢查評分影響
 
-Use the following command to search by the `title` field:
+使用下列命令依 `title` 欄位搜尋：
 
 ```json
 POST /products/_search
@@ -71,7 +72,7 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-You can examine the score returned in the `_score` field of the response:
+您可以檢查回應的 `_score` 欄位中所傳回的分數：
 
 ```json
 {
@@ -96,6 +97,6 @@ You can examine the score returned in the `_score` field of the response:
 }
 ```
 
-## Related documentation
+## 相關文件
 
-- [Similarity]({{site.url}}{{site.baseurl}}/im-plugin/similarity/)
+- [相似度]({{site.url}}{{site.baseurl}}/im-plugin/similarity/)

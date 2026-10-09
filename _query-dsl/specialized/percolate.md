@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Percolate
 parent: Specialized queries
 nav_order: 55
 ---
 
-# Percolate query
+# Percolate 查詢
 
-Use the `percolate` query to find stored queries that match a given document. This operation is the opposite of a regular search: instead of finding documents that match a query, you find queries that match a document. `percolate` queries are often used for alerting, notifications, and reverse search use cases.
+使用 `percolate` 查詢來尋找符合指定文件的已儲存查詢。此操作與一般搜尋相反：一般搜尋是尋找符合查詢的文件，而此操作則是尋找符合文件的所有查詢。`percolate` 查詢常用於警示、通知及反向搜尋等使用情境。
 
-When working with `percolate` queries, consider the following key points:
+使用 `percolate` 查詢時，請考量下列重點：
 
-- You can percolate a document provided inline or fetch an existing document from an index.
-- The document and the stored queries must use the same field names and types.
-- You can combine percolation with filtering and scoring to build complex matching systems.
-- `percolate` queries are considered [expensive queries]({{site.url}}{{site.baseurl}}/query-dsl/#expensive-queries) and will only run if the cluster setting `search.allow_expensive_queries` is set to `true` (default). If this setting is `false`, `percolate` queries will be rejected.
+- 您可以比對內嵌提供的文件，或從索引擷取現有文件進行比對。
+- 文件與已儲存的查詢必須使用相同的欄位名稱與類型。
+- 您可以結合反向比對、篩選與評分，以建立複雜的比對系統。
+- `percolate` 查詢被視為[高成本查詢]({{site.url}}{{site.baseurl}}/query-dsl/#expensive-queries)，只有在叢集設定 `search.allow_expensive_queries` 設為 `true` (預設) 時才會執行。若此設定為 `false`，`percolate` 查詢將會被拒絕。
 
-`percolate` queries are useful in a variety of real-time matching scenarios. Some common use cases include:
+`percolate` 查詢在各種即時比對情境中相當實用。常見的使用情境包括：
 
-- **E-commerce notifications**: Users can register interest in products, for example, "Notify me when new Apple laptops are in stock". When new product documents are indexed, the system finds all users with matching saved queries and sends alerts.
-- **Job alerts**: Job seekers save queries based on preferred job titles or locations, and new job postings are matched against these to trigger alerts.
-- **Security and alerting systems**: Percolate incoming log or event data against saved rules or anomaly patterns.
-- **News filtering**: Match incoming articles against saved topic profiles to categorize or deliver relevant content.
+- **電子商務通知**：使用者可以註冊對產品的關注，例如「當新的 Apple 筆記型電腦到貨時通知我」。當新的產品文件被編製索引時，系統會找出所有具有相符已儲存查詢的使用者並傳送警示。
+- **職缺警示**：求職者根據偏好的職稱或地點儲存查詢，新的職缺張貼時會與這些查詢進行比對以觸發警示。
+- **安全性與警示系統**：將傳入的記錄資料或事件資料與已儲存的規則或異常模式進行比對。
+- **新聞篩選**：將傳入的文章與已儲存的主題設定檔進行比對，以分類或遞送相關內容。
 
-## How percolation works
+## 反向比對的運作方式
 
-1. Saved queries are stored in a special [`percolator` field type]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/percolator/).
-2. Documents are compared against all saved queries.
-3. Each matching query is returned with its `_id`.
-4. If highlighting is enabled, matched text snippets are also returned.
-5. If multiple documents are sent, `_percolator_document_slot` displays the matching document.
+1. 已儲存的查詢會儲存在特殊的 [`percolator` 欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/percolator/) 中。
+2. 文件會與所有已儲存的查詢進行比對。
+3. 每個相符的查詢會連同其 `_id` 一併傳回。
+4. 若已啟用醒目提示，也會傳回相符的文字片段。
+5. 若傳送多份文件，`_percolator_document_slot` 會顯示相符的文件。
 
-## Example
+## 範例
 
-The following examples demonstrate how to store `percolate` queries and test documents against them using different methods.
+下列範例示範如何使用不同的方法儲存 `percolate` 查詢，並以測試文件與這些查詢進行比對。
 
-### Create an index for storing saved queries
+### 建立用於儲存已儲存查詢的索引
 
-First, create an index and configure its `mappings` with a [`percolator` field type]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/percolator/) to store the saved queries:
+首先，建立索引並使用 [`percolator` 欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/percolator/) 設定其 `mappings`，以儲存已儲存的查詢：
 
 ```json
 PUT /my_percolator_index
@@ -56,7 +57,7 @@ PUT /my_percolator_index
 ```
 {% include copy-curl.html %}
 
-Add a query matching "apple" in the `title` field:
+新增一個在 `title` 欄位中比對「apple」的查詢：
 
 ```json
 POST /my_percolator_index/_doc/1
@@ -70,7 +71,7 @@ POST /my_percolator_index/_doc/1
 ```
 {% include copy-curl.html %}
 
-Add a query matching "banana" in the `title` field:
+新增一個在 `title` 欄位中比對「banana」的查詢：
 
 ```json
 POST /my_percolator_index/_doc/2
@@ -84,9 +85,9 @@ POST /my_percolator_index/_doc/2
 ```
 {% include copy-curl.html %}
 
-### Percolate an inline document
+### 比對內嵌文件
 
-Test an inline document against the saved queries:
+以內嵌文件與已儲存的查詢進行測試：
 
 ```json
 POST /my_percolator_index/_search
@@ -103,7 +104,7 @@ POST /my_percolator_index/_search
 ```
 {% include copy-curl.html %}
 
-The response provides the stored `percolate` query that searches for documents containing the word "apple" in the `title` field, identified by `_id`: `1`:
+回應會提供已儲存的 `percolate` 查詢，該查詢會在 `title` 欄位中搜尋包含「apple」一詞的文件，並以 `_id` 識別：`1`：
 
 ```json
 {
@@ -137,9 +138,9 @@ The response provides the stored `percolate` query that searches for documents c
 }
 ```
 
-### Percolate with multiple documents
+### 比對多份文件
 
-To test multiple documents in the same query, use the following request:
+若要在同一個查詢中測試多份文件，請使用下列請求：
 
 ```json
 POST /my_percolator_index/_search
@@ -159,7 +160,7 @@ POST /my_percolator_index/_search
 ```
 {% include copy-curl.html %}
 
-The `_percolator_document_slot` field helps you identify each document (by index) matching each saved query:
+`_percolator_document_slot` 欄位可協助您依文件在陣列中的索引位置，識別符合各個已儲存查詢的文件：
 
 ```json
 {
@@ -211,11 +212,11 @@ The `_percolator_document_slot` field helps you identify each document (by index
 }
 ```
 
-### Percolate an existing indexed document
+### 比對現有已編製索引的文件
 
-You can reference an existing document already stored in another index to check for matching `percolate` queries.
+您可以參照已儲存在另一個索引中的現有文件，以檢查是否有相符的 `percolate` 查詢。
 
-Create a separate index for your documents:
+為您的文件建立個別的索引：
 
 ```json
 PUT /products
@@ -231,7 +232,7 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-Add a document:
+新增文件：
 
 ```json
 POST /products/_doc/1
@@ -241,7 +242,7 @@ POST /products/_doc/1
 ```
 {% include copy-curl.html %}
 
-Check whether the stored queries match the indexed document:
+檢查已儲存的查詢是否符合已編製索引的文件：
 
 ```json
 POST /my_percolator_index/_search
@@ -257,10 +258,10 @@ POST /my_percolator_index/_search
 ```
 {% include copy-curl.html %}
 
-You must provide both `index` and `id` when using a stored document.
+使用已儲存的文件時，您必須同時提供 `index` 與 `id`。
 {: .note}
 
-The corresponding query is returned:
+對應的查詢會傳回：
 
 ```json
 {
@@ -294,9 +295,9 @@ The corresponding query is returned:
 }
 ```
 
-### Batch percolation (multiple documents)
+### 批次反向比對（多份文件）
 
-You can check multiple documents in one request:
+您可以在同一個請求中檢查多份文件：
 
 ```json
 POST /my_percolator_index/_search
@@ -315,7 +316,7 @@ POST /my_percolator_index/_search
 ```
 {% include copy-curl.html %}
 
-Each match indicates the matching document in the `_percolator_document_slot` field:
+每個相符項目會在 `_percolator_document_slot` 欄位中指出相符的文件：
 
 ```json
 {
@@ -366,9 +367,9 @@ Each match indicates the matching document in the `_percolator_document_slot` fi
 }
 ```
 
-### Multi-query percolation using a named query
+### 使用具名查詢進行多重反向比對
 
-You can percolate different documents inside a named query:
+您可以在具名查詢中比對不同的文件：
 
 ```json
 GET /my_percolator_index/_search
@@ -401,7 +402,7 @@ GET /my_percolator_index/_search
 ```
 {% include copy-curl.html %}
 
-The `name` parameter is appended to `_percolator_document_slot` to provide the matching query:
+`name` 參數會附加到 `_percolator_document_slot`，以提供相符的查詢：
 
 ```json
 {
@@ -452,7 +453,7 @@ The `name` parameter is appended to `_percolator_document_slot` to provide the m
 }
 ```
 
-This approach enables you to configure more custom query logic for individual documents. In the following example, the `title` field is queried in the first document and the `description` field is queried in the second document. The `boost` parameter is also provided:
+這種方式可讓您為個別文件設定更多自訂的查詢邏輯。在下列範例中，第一份文件查詢 `title` 欄位，第二份文件查詢 `description` 欄位。同時也提供了 `boost` 參數：
 
 ```json
 GET /my_percolator_index/_search
@@ -496,34 +497,34 @@ GET /my_percolator_index/_search
 {% include copy-curl.html %}
 
 
-## Batch percolation compared to named percolation
+## 批次反向比對與具名反向比對的比較
 
-Both batch percolation (using `documents`) and named percolation (using `bool` with `name`) can be used to percolate multiple documents, but they differ in how results are labeled, interpreted, and controlled. They provide functionally similar results but with important structural differences, described in the following table.
+批次反向比對（使用 `documents`）與具名反向比對（使用 `bool` 搭配 `name`）都可用來比對多份文件，但兩者在結果的標記、解讀與控制方式上有所不同。它們提供的結果在功能上相似，但在結構上有重要差異，如下表所述。
 
-| Feature                        | Batch (`documents`)                            | Named (`bool` + `percolate` + `name`)            |
+| 功能                        | 批次 (`documents`)                            | 具名 (`bool` + `percolate` + `name`)            |
 |-------------------------------|------------------------------------------------|--------------------------------------------------|
-| Input format                  | One percolate clause, array of documents       | Multiple percolate clauses, one per document     |
-| Traceability per document     | By slot index (0, 1, ...)                      | By name (`apple_doc`, `banana_doc`)        |
-| Response field for match slot | `_percolator_document_slot: [0]`              | `_percolator_document_slot_<name>: [0]`          |
-| Highlight prefix              | `0_title`, `1_title`                           | `apple_doc_title`, `banana_doc_title`            |
-| Custom control per doc        | Not supported                                | Can customize each clause                     |
-| Supports boosts and filters     | No                                           | Yes (per clause)                              |
-| Performance                   | Best for large batches                      | Slightly slower when there are many clauses              |
-| Use case                      | Bulk matching jobs, large event streams        | Per-document tracing, testing, custom control    |
+| 輸入格式                  | 一個 percolate 子句，文件陣列       | 多個 percolate 子句，每份文件一個     |
+| 每份文件的可追蹤性     | 依槽位索引 (0, 1, ...)                      | 依名稱 (`apple_doc`, `banana_doc`)        |
+| 相符槽位的回應欄位 | `_percolator_document_slot: [0]`              | `_percolator_document_slot_<name>: [0]`          |
+| 突顯前置詞              | `0_title`, `1_title`                           | `apple_doc_title`, `banana_doc_title`            |
+| 每份文件的自訂控制        | 不支援                                | 可自訂每個子句                     |
+| 支援加權與篩選     | 否                                           | 是（每個子句）                              |
+| 效能                   | 最適合大批次                      | 子句較多時稍慢              |
+| 使用情境                      | 大量比對工作、大型事件串流        | 逐文件追蹤、測試、自訂控制    |
 
 
-## Highlighting matches
+## 突顯相符項目
 
-`percolate` queries handle highlighting differently from regular queries:
+`percolate` 查詢處理突顯的方式與一般查詢不同：
 
-- In a regular query, the document is stored in the index, and the search query is used to highlight the matching terms.
-- In a `percolate` query, the roles are reversed: the saved queries (in the percolator index) are used to highlight the document.
+- 在一般查詢中，文件儲存在索引中，並使用搜尋查詢來突顯相符的詞彙。
+- 在 `percolate` 查詢中，角色是反過來的：使用已儲存的查詢（在 percolator 索引中）來突顯文件。
 
-This means that the document provided in `document` or `documents` is the target for highlighting and that the `percolate` queries determine the sections to be highlighted.
+這表示在 `document` 或 `documents` 中提供的文件是突顯的目標，而 `percolate` 查詢決定要突顯的區段。
 
-### Highlighting a single document
+### 突顯單一文件
 
-This example uses the previously defined searches in `my_percolator_index`. Use the following request to highlight matches in the `title` field:
+此範例使用 `my_percolator_index` 中先前定義的搜尋。請使用下列請求來突顯 `title` 欄位中的相符項目：
 
 ```json
 POST /my_percolator_index/_search
@@ -545,7 +546,7 @@ POST /my_percolator_index/_search
 ```
 {% include copy-curl.html %}
 
-The matches are highlighted depending on the query that was matched:
+相符項目會依據所符合的查詢進行突顯：
 
 ```json
 {
@@ -606,15 +607,15 @@ The matches are highlighted depending on the query that was matched:
 }
 ```
 
-### Highlighting multiple documents
+### 突顯多份文件
 
-When percolating multiple documents using the `documents` array, a slot index is assigned to each document. The highlight keys then take the following form, where `<slot>` is the index of the document in your `documents` array:
+使用 `documents` 陣列比對多份文件時，每份文件都會被指派一個槽位索引。突顯鍵值接著會採用下列形式，其中 `<slot>` 是文件在 `documents` 陣列中的索引：
 
 ```json
 "<slot>_<fieldname>": [ ... ]
 ```
 
-Use the following command to percolate two documents with highlighting:
+請使用下列命令比對兩份文件並突顯相符內容：
 
 ```json
 POST /my_percolator_index/_search
@@ -637,7 +638,7 @@ POST /my_percolator_index/_search
 ```
 {% include copy-curl.html %}
 
-The response contains highlighting fields prefixed with document slots, such as `0_title` and `1_title`:
+回應包含以文件槽位為前置詞的突顯欄位，例如 `0_title` 和 `1_title`：
 
 ```json
 {
@@ -698,17 +699,17 @@ The response contains highlighting fields prefixed with document slots, such as 
 }
 ```
 
-## Parameters
+## 參數
 
-The `percolate` query supports the following parameters.
+`percolate` 查詢支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 |-----------|-------------------|-------------|
-| `field` | Required | The field containing the stored `percolate` queries. |
-| `document` | Optional | A single inline document to match against saved queries. |
-| `documents` | Optional | An array of multiple inline documents to match against saved queries. |
-| `index` | Optional | An index containing the document you want to match. |
-| `id` | Optional | The ID of the document to fetch from the index. |
-| `routing` | Optional | The routing value to use when fetching the document. |
-| `preference` | Optional | The preference for the shard routing when fetching the document. |
-| `name` | Optional | The name assigned to a `percolate` clause. Helpful when using multiple `percolate` clauses in a `bool` query. |
+| `field` | 必要 | 包含已儲存 `percolate` 查詢的欄位。 |
+| `document` | 選用 | 要與已儲存查詢比對的單一內嵌文件。 |
+| `documents` | 選用 | 要與已儲存查詢比對的多個內嵌文件陣列。 |
+| `index` | 選用 | 包含您要比對之文件的索引。 |
+| `id` | 選用 | 要從索引擷取之文件的 ID。 |
+| `routing` | 選用 | 擷取文件時要使用的路由值。 |
+| `preference` | 選用 | 擷取文件時分片路由的偏好設定。 |
+| `name` | 選用 | 指派給 `percolate` 子句的名稱。在 `bool` 查詢中使用多個 `percolate` 子句時很有幫助。 |

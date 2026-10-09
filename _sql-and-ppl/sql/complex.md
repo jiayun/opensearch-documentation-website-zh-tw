@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Complex queries
+title: "複雜查詢"
 parent: SQL
 nav_order: 6
 redirect_from:
@@ -8,58 +9,58 @@ redirect_from:
   - /search-plugins/sql/sql/complex/
 ---
 
-# Complex SQL queries
+# 複雜 SQL 查詢
 
-Besides simple SFW (`SELECT-FROM-WHERE`) queries, the SQL plugin supports complex queries such as subquery, join, union, and minus. These queries operate on more than one OpenSearch index. To examine how these queries execute behind the scenes, use the `explain` operation.
+除了簡單的 SFW (`SELECT-FROM-WHERE`) 查詢之外，SQL 外掛程式也支援複雜查詢，例如子查詢、join、union 和 minus。這些查詢會在多個 OpenSearch 索引上運作。若要檢視這些查詢在幕後的執行方式，請使用 `explain` 操作。
 
 
-## Joins
+## 聯結
 
-OpenSearch SQL supports inner joins, cross joins, and left outer joins.
+OpenSearch SQL 支援 inner join、cross join 和 left outer join。
 
-### Constraints
+### 限制
 
-Joins have a number of constraints:
+Join 有若干限制：
 
-1. You can only join two indexes.
-1. You must use aliases for indexes (for example, `people p`).
-1. Within an ON clause, you can only use AND conditions.
-1. In a WHERE statement, don't combine trees that contain multiple indexes. For example, the following statement works:
+1. 您只能 join 兩個索引。
+1. 您必須為索引使用別名（例如 `people p`）。
+1. 在 ON 子句中，您只能使用 AND 條件。
+1. 在 WHERE 陳述式中，請勿合併包含多個索引的樹狀結構。例如，下列陳述式可運作：
 
    ```
    WHERE (a.type1 > 3 OR a.type1 < 0) AND (b.type2 > 4 OR b.type2 < -1)
    ```
 
-   The following statement does not:
+   下列陳述式則不行：
 
    ```
    WHERE (a.type1 > 3 OR b.type2 < 0) AND (a.type1 > 4 OR b.type2 < -1)
    ```
 
-1. You can't use GROUP BY or ORDER BY for results.
-1. LIMIT with OFFSET (e.g. `LIMIT 25 OFFSET 25`) is not supported.
+1. 您無法對結果使用 GROUP BY 或 ORDER BY。
+1. 不支援搭配 OFFSET 的 LIMIT（例如 `LIMIT 25 OFFSET 25`）。
 
-### Description
+### 說明
 
-The `JOIN` clause combines columns from one or more indexes using values common to each.
+`JOIN` 子句會使用各索引共通的値，合併來自一或多個索引的欄位。
 
-### Syntax
+### 語法
 
-Rule `tableSource`:
+規則 `tableSource`：
 
-![table source rule]({{site.url}}{{site.baseurl}}/images/tableSource.png)
+![tableSource 規則]({{site.url}}{{site.baseurl}}/images/tableSource.png)
 
-Rule `joinPart`:
+規則 `joinPart`：
 
-![join part rule]({{site.url}}{{site.baseurl}}/images/joinPart.png)
+![joinPart 規則]({{site.url}}{{site.baseurl}}/images/joinPart.png)
 
-### Example 1: Inner join
+### 範例 1：內部聯結
 
-Inner join creates a new result set by combining columns of two indexes based on your join predicates. It iterates the two indexes and compares each document to find the ones that satisfy the join predicates. You can optionally precede the `JOIN` clause with an `INNER` keyword.
+Inner join 會根據您的 join 述詞，合併兩個索引的欄位來建立新的結果集。它會逐一查看兩個索引並比較每份文件，以找出符合 join 述詞的文件。您可以選擇在 `JOIN` 子句前面加上 `INNER` 關鍵字。
 
-The join predicate(s) is specified by the ON clause.
+Join 述詞由 ON 子句指定。
 
-SQL query:
+SQL 查詢：
 
 ```sql
 SELECT
@@ -72,9 +73,9 @@ JOIN employees_nested e
 {% include copy.html %}
 
 
-Explain:
+說明：
 
-The `explain` output is complicated, because a `JOIN` clause is associated with two OpenSearch DSL queries that execute in separate query planner frameworks. You can interpret it by examining the `Physical Plan` and `Logical Plan` objects.
+`explain` 輸出很複雜，因為 `JOIN` 子句會與兩個在不同查詢規劃架構中執行的 OpenSearch DSL 查詢相關聯。您可以檢查 `Physical Plan` 和 `Logical Plan` 物件來解讀它。
 
 ```json
 {
@@ -144,7 +145,7 @@ The `explain` output is complicated, because a `JOIN` clause is associated with 
 }
 ```
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -154,16 +155,16 @@ The query returns the following results:
 
 <!-- vale on -->
 
-### Example 2: Cross join
+### 範例 2：交叉聯結
 
-Cross join, also known as Cartesian join, combines each document from the first index with each document from the second.
-The result set is the Cartesian product of documents of both indexes.
-This operation is similar to the inner join without the `ON` clause that specifies the join condition.
+Cross join 又稱為 Cartesian join，會將第一個索引中的每份文件與第二個索引中的每份文件合併。
+結果集是兩個索引中所有文件的笛卡兒積。
+此操作類似於沒有用來指定聯結條件的 `ON` 子句的 inner join。
 
-It's risky to perform cross join on two indexes of large or even medium size. It might trigger a circuit breaker that terminates the query to avoid running out of memory.
+對兩個大型甚至中型索引執行 cross join 有風險。它可能會觸發斷路器來終止查詢，以避免記憶體耗盡。
 {: .warning }
 
-SQL query:
+SQL 查詢：
 
 ```sql
 SELECT
@@ -175,7 +176,7 @@ JOIN employees_nested e
 {% include copy.html %}
 
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -196,11 +197,11 @@ The query returns the following results:
 
 <!-- vale on -->
 
-### Example 3: Left outer join
+### 範例 3：左外部聯結
 
-Use left outer join to retain rows from the first index if it does not satisfy the join predicate. The keyword `OUTER` is optional.
+使用 left outer join 可保留第一個索引中不符合 join 述詞的資料列。關鍵字 `OUTER` 為選用。
 
-SQL query:
+SQL 查詢：
 
 ```sql
 SELECT
@@ -213,7 +214,7 @@ LEFT JOIN employees_nested e
 {% include copy.html %}
 
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -226,14 +227,14 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Subquery
+## 子查詢
 
-A subquery is a complete `SELECT` statement used within another statement and enclosed in parenthesis.
-From the explain output, you can see that some subqueries are actually transformed to an equivalent join query to execute.
+子查詢是完整的 `SELECT` 陳述式，用於另一個陳述式內並以括號括住。
+從 explain 輸出中，您可以看到某些子查詢實際上會轉換為等效的 join 查詢來執行。
 
-### Example 1: Table subquery
+### 範例 1：資料表子查詢
 
-SQL query:
+SQL 查詢：
 
 ```sql
 SELECT a1.firstname, a1.lastname, a1.balance
@@ -247,7 +248,7 @@ WHERE a1.account_number IN (
 {% include copy.html %}
 
 
-Explain:
+說明：
 
 ```json
 {
@@ -370,7 +371,7 @@ Explain:
 }
 ```
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -381,9 +382,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-### Example 2: From subquery
+### 範例 2：FROM 子句中的子查詢
 
-SQL query:
+SQL 查詢：
 
 ```sql
 SELECT a.f, a.l, a.a
@@ -396,7 +397,7 @@ FROM (
 {% include copy.html %}
 
 
-Explain:
+說明：
 
 ```json
 {
@@ -440,7 +441,7 @@ Explain:
 }
 ```
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 

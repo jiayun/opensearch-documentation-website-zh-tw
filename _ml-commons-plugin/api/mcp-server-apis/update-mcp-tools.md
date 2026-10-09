@@ -1,46 +1,47 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Update MCP tools 
+title: "更新 MCP 工具"
 parent: MCP server APIs
 grand_parent: ML Commons APIs
 nav_order: 20
 ---
 
 # Update MCP Tools API
-**Introduced 3.0**
+**於 3.0 推出**
 {: .label .label-purple }
 
-Use this API to update one or more Model Context Protocol (MCP)-based tools. For more information about supported tools, see [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/).
+使用此 API 更新一或多個以 Model Context Protocol（MCP）為基礎的工具。如需支援工具的詳細資訊，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/mcp/tools/_update
 ```
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request fields.
+下表列出可用的請求欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :---  | :--- | :--- | :--- 
-`tools` | Array | Required | A list of tools. 
+`tools` | 陣列 | 必要 | 工具清單。 
 
 
-The `tools` array contains a list of tools. Each tool contains the following fields.
+`tools` 陣列包含工具清單。每個工具包含下列欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :---  | :--- | :---
-`name`| String | Required | The name of the tool to update. |
-`type` | String | Optional | The tool type. For a list of supported tools, see [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/). 
-`description` | String | Optional | The description of the tool.
-`parameters` | Object | Optional | The parameters for the tool. The parameters are dependent on the tool type. For information about specific tool types, see [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/).
-`attributes` | Object | Optional | The configuration properties (attributes) for the tool. The most important attribute in this field is the tool's `input_schema`, which defines the expected parameter format for the tool. This schema is sent to the large language model (LLM) so it can properly format parameters when executing the tool.
+`name`| 字串 | 必要 | 要更新的工具名稱。 |
+`type` | 字串 | 選用 | 工具類型。如需支援工具的清單，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。 
+`description` | 字串 | 選用 | 工具的描述。
+`parameters` | 物件 | 選用 | 工具的參數。參數取決於工具類型。如需特定工具類型的資訊，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
+`attributes` | 物件 | 選用 | 工具的組態屬性。此欄位中最重要的屬性是工具的 `input_schema`，它定義工具預期的參數格式。此結構描述會傳送至大型語言模型（LLM），讓模型在執行工具時能正確設定參數格式。
 
 
-## Example requests
+## 請求範例
 
-The following sections provide example requests for updating tools. For information about tool-specific parameters, see the corresponding [tool documentation]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/).
+下列各節提供更新工具的請求範例。如需工具專屬參數的資訊，請參閱對應的[工具文件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
 
 ### WebSearchTool
 
@@ -115,9 +116,9 @@ POST /_plugins/_ml/mcp/tools/_update
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-For each node, OpenSearch responds with the node ID and the status of the update operation for all tools:
+對於每個節點，OpenSearch 都會回傳節點 ID，以及所有工具的更新作業狀態：
 
 ```json
 {

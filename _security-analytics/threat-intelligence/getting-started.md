@@ -1,75 +1,76 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Getting started
+title: "入門"
 parent: Threat intelligence
 nav_order: 41
 ---
 
-# Getting started with threat intelligence
+# 威脅情報入門
 
-To get started with threat intelligence, you'll need to set up your threat intelligence sources and set up monitors to scan your log sources. The following tutorial shows you how to get started using OpenSearch Dashboards. Alternatively, you can use the [API]({{site.url}}{{site.baseurl}}/security-analytics/threat-intelligence/api/threat-intel-api/). 
+若要開始使用威脅情報，您需要設定威脅情報來源，並設定監視器來掃描您的記錄來源。下列教學將說明如何透過 OpenSearch Dashboards 開始使用。您也可以使用 [API]({{site.url}}{{site.baseurl}}/security-analytics/threat-intelligence/api/threat-intel-api/)。
 
-## Threat intelligence view
+## 威脅情報檢視
 
-To access threat intelligence, log in to OpenSearch Dashboards and select **Security Analytics** > **Threat Intelligence**.
+若要存取威脅情報，請登入 OpenSearch Dashboards，然後選取 **Security Analytics** > **Threat Intelligence**。
 
-In the threat intelligence view, you can access the following tabs:
+在威脅情報檢視中，您可以存取下列分頁：
 
-- **Threat intel sources**: Shows a list of all active and inactive threat intelligence sources, including the default IP reputation feed, [AlienVault OTX](https://otx.alienvault.com/), which comes prepackaged when downloading OpenSearch.
-- **Scan configuration**: Shows an overview of your scan configuration, including the configured **Log sources**, **Scan schedule**, and **Alert triggers**. From the **Actions** dropdown list, you can also **Stop scan**, **Edit scan configuration**, or **Delete scan configuration**.
+- **Threat intel sources**：顯示所有作用中與非作用中威脅情報來源的清單，包括預設的 IP 信譽資料來源 [AlienVault OTX](https://otx.alienvault.com/)，此資料來源在下載 OpenSearch 時已預先封裝。
+- **Scan configuration**：顯示掃描組態的概觀，包括已設定的 **Log sources**、**Scan schedule** 與 **Alert triggers**。從 **Actions** 下拉式清單中，您也可以 **Stop scan**、**Edit scan configuration** 或 **Delete scan configuration**。
 
 
-## Step 1: Set up threat intelligence sources
+## 步驟 1：設定威脅情報來源
 
-To add a threat intelligence source, select **Add threat intel source** from the threat intelligence page. The **Add custom threat intelligence source** page appears. 
+若要新增威脅情報來源，請在威脅情報頁面選取 **Add threat intel source**。此時會出現 **Add custom threat intelligence source** 頁面。
 
-On the threat intelligence source page, add the following information:
+在威脅情報來源頁面上，新增下列資訊：
 
-- **Name**: A name for the source.
-- **Description**: An optional description of the source.
-- **Threat intel source type**: The source type determines where the `STIX2` file is stored. You can choose one of the following options:
-  - **Remote data store location**: Connects to a custom data store. The only supported type is `S3_SOURCE`. This setting also gives you the ability to set a download schedule, where OpenSearch downloads the newest `STIX2` file from the data store. For more information, see [S3_SOURCE connection details](#s3_source-connection-information).
-  - **Local file upload**: Uploads a custom threat intelligence IOC file. Custom files cannot be downloaded based on a schedule and must be uploaded manually in order to update the IOCs. For more information, see [Local file upload](#local-file-upload).
-- **Types of malicious indicators**: Determines the types of malicious IOCs to pull from the `STIX2` file. The following IOCs are supported:
+- **Name**：來源的名稱。
+- **Description**：來源的選用描述。
+- **Threat intel source type**：來源類型決定 `STIX2` 檔案的儲存位置。您可以選擇下列其中一個選項：
+  - **Remote data store location**：連線至自訂資料儲存區。唯一支援的類型是 `S3_SOURCE`。此設定也讓您能夠設定下載排程，讓 OpenSearch 從資料儲存區下載最新的 `STIX2` 檔案。如需更多資訊，請參閱 [S3_SOURCE 連線詳細資訊](#s3_source-connection-information)。
+  - **Local file upload**：上傳自訂的威脅情報 IOC 檔案。自訂檔案無法依排程下載，必須手動上傳才能更新 IOC。如需更多資訊，請參閱 [本機檔案上傳](#local-file-upload)。
+- **Types of malicious indicators**：決定要從 `STIX2` 檔案擷取的惡意 IOC 類型。支援下列 IOC：
   - IPv4-Address
   - IPv6-Address
   - Domains
   - File hash
 
-After all the relevant information has been entered, select **Add threat intel source**.
+輸入所有相關資訊後，選取 **Add threat intel source**。
 
-### Local file upload
+### 本機檔案上傳
 
-Local files uploaded as the threat intelligence source must use the following specifications:
+上傳作為威脅情報來源的本機檔案必須符合下列規格：
 
-- Upload as a JSON file in the `STIX2` format. For an example `STIX2` file, download [this file]({{site.url}}{{site.baseurl}}/assets/examples/all-ioc-type-examples.json), which contains example formatting for all supported IOC types.
-- Be less than 500 kB.
+- 以 `STIX2` 格式上傳為 JSON 檔案。若需範例 `STIX2` 檔案，請下載 [此檔案]({{site.url}}{{site.baseurl}}/assets/examples/all-ioc-type-examples.json)，其中包含所有支援 IOC 類型的範例格式。
+- 檔案大小必須小於 500 kB。
 
-
-<!-- vale off -->
-### S3_SOURCE connection information
-<!-- vale on -->
-
-When using the `S3_SOURCE` as a remote store, the following connection information must be provided:
-
-- **IAM Role ARN**: The Amazon Resource Name (ARN) for an AWS Identity and Access Management (IAM) role. When using the AWS OpenSearch Service, the role ARN needs to be in the same account as the OpenSearch domain. For more information about adding a new role for the AWS OpenSearch Service, see [Add service ARN](#add-aws-opensearch-service-arn).
-- **S3 bucket directory**: The name of the Amazon Simple Storage Service (Amazon S3) bucket in which the `STIX2` file is stored. To access an S3 bucket in a different AWS account, see the [Cross-account S3 bucket connection](#cross-account-s3-bucket-connection) section for more details.
-- **Specify a file**: The object key for the `STIX2` file in the S3 bucket.
-- **Region**: The AWS Region for the S3 bucket.
-
-You can also set the **Download schedule**, which determines to where OpenSearch downloads an updated `STIX2` file from the connected S3 bucket. The default interval is once a day. Only daily intervals are supported. 
-
-Alternatively, you can check the **Download on demand** option, which prevents new data from the bucket from being automatically downloaded.
 
 <!-- vale off -->
-#### Add AWS OpenSearch Service ARN
+### S3_SOURCE 連線資訊
 <!-- vale on -->
 
-If you're using the AWS OpenSearch Service, create a new ARN role with a custom trust policy. For instructions on how to create the role, see [Creating a role for an AWS service](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-service.html#roles-creatingrole-service-console).
+使用 `S3_SOURCE` 作為遠端儲存區時，必須提供下列連線資訊：
 
-When creating the role, customize the following settings:
+- **IAM Role ARN**：AWS Identity and Access Management (IAM) 角色的 Amazon Resource Name (ARN)。使用 AWS OpenSearch Service 時，角色 ARN 必須與 OpenSearch 網域位於同一個帳戶中。如需為 AWS OpenSearch Service 新增角色的更多資訊，請參閱 [新增服務 ARN](#add-aws-opensearch-service-arn)。
+- **S3 bucket directory**：儲存 `STIX2` 檔案的 Amazon Simple Storage Service (Amazon S3) 儲存貯體名稱。若要存取不同 AWS 帳戶中的 S3 儲存貯體，請參閱 [跨帳戶 S3 儲存貯體連線](#cross-account-s3-bucket-connection) 一節以取得更多詳細資訊。
+- **Specify a file**：S3 儲存貯體中 `STIX2` 檔案的物件金鑰。
+- **Region**：S3 儲存貯體所在的 AWS 區域。
 
-- Add the following custom trust policy:
+您也可以設定 **Download schedule**，決定 OpenSearch 何時從連線的 S3 儲存貯體下載更新的 `STIX2` 檔案。預設間隔為每天一次。僅支援每日間隔。
+
+或者，您可以勾選 **Download on demand** 選項，以防止自動下載儲存貯體中的新資料。
+
+<!-- vale off -->
+#### 新增 AWS OpenSearch Service ARN
+<!-- vale on -->
+
+如果您使用 AWS OpenSearch Service，請以自訂信任政策建立新的 ARN 角色。如需建立角色的說明，請參閱 [為 AWS 服務建立角色](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-service.html#roles-creatingrole-service-console)。
+
+建立角色時，請自訂下列設定：
+
+- 新增下列自訂信任政策：
 
 ```json
 {
@@ -88,14 +89,14 @@ When creating the role, customize the following settings:
 }
 ```
       
-- On the Permissions policies page, add the `AmazonS3ReadOnlyAccess` permission. 
+- 在 Permissions policies 頁面上，新增 `AmazonS3ReadOnlyAccess` 權限。
 
 
-#### Cross-account S3 bucket connection
+#### 跨帳戶 S3 儲存貯體連線
 
-Because the role ARN needs to be in the same account as the OpenSearch domain, a trust policy needs to be configured that allows the OpenSearch domain to download from S3 buckets from the same account.
+由於角色 ARN 必須與 OpenSearch 網域位於同一個帳戶中，因此需要設定信任政策，允許 OpenSearch 網域從同一帳戶的 S3 儲存貯體下載。
 
-To download from an S3 bucket in another account, the trust policy for that bucket needs to give the role ARN permission to read from the object, as shown in the following example:
+若要從另一個帳戶的 S3 儲存貯體下載，該儲存貯體的信任政策必須授予角色 ARN 讀取物件的權限，如下列範例所示：
 
 ```json
 {
@@ -113,26 +114,26 @@ To download from an S3 bucket in another account, the trust policy for that buck
 }
 ```
 
-## Step 2: Set up scanning for your log sources
+## 步驟 2：為您的記錄來源設定掃描
 
-You can configure threat intelligence monitors to scan your aliases and data streams. The monitor scans for newly ingested data from your indexes and matches that data against any IOCs present in the threat intelligence sources. The scan applies to all threat intelligence sources added to OpenSearch. By default, the scan runs once each minute.
+您可以設定威脅情報監視器來掃描您的別名與資料串流。監視器會掃描新匯入索引的資料，並將該資料與威脅情報來源中存在的任何 IOC 進行比對。掃描會套用至新增到 OpenSearch 的所有威脅情報來源。預設情況下，掃描每分鐘執行一次。
 
-To add or edit a scan configuration:
+若要新增或編輯掃描組態：
 
-1. From the threat intelligence view, select **Add scan configuration** or **Edit scan configuration**.
-2. Select the indexes or aliases to scan.
-3. Select the **fields** from your indexes or aliases to scan based on their IOC type. For example, if an alias has two fields called `src_ip` and `dst_ip` that contain `ipv4` addresses, then those fields must be entered into the `ipv4-addr` section of the monitor request.
-4. Determine a **Scan schedule** for the indicated indexes or aliases. By default, OpenSearch scans for IOCs once each minute.
-5. Set up any alert triggers and trigger conditions. You can add multiple triggers:
-   1. Add a name for the trigger.
-   2. Choose an indicator type. The indicator type matches the IOC type.
-   3. Select a severity for the alert. 
-   4. Select whether to send a notification when the alert is triggered. When enabled, you can customize which channels the notification is sent to as well as the notification message. The notification message can be customized using a [Mustache template](https://mustache.github.io/mustache.5.html).
-6. Once your settings have been entered, select **Save and start monitoring**.
+1. 從威脅情報檢視中，選取 **Add scan configuration** 或 **Edit scan configuration**。
+2. 選取要掃描的索引或別名。
+3. 依據 IOC 類型，從您的索引或別名中選取要掃描的 **欄位**。例如，若別名有兩個名為 `src_ip` 與 `dst_ip` 的欄位包含 `ipv4` 位址，則這些欄位必須輸入到監視器請求的 `ipv4-addr` 區段中。
+4. 為指定的索引或別名決定 **Scan schedule**。預設情況下，OpenSearch 每分鐘掃描一次 IOC。
+5. 設定警示觸發器及其觸發條件。您可以新增多個觸發器：
+   1. 為觸發器新增名稱。
+   2. 選擇指標類型。指標類型會與 IOC 類型相符。
+   3. 選取警示的嚴重性。
+   4. 選取是否在觸發警示時傳送通知。啟用後，您可以自訂通知傳送至哪些頻道以及通知訊息。通知訊息可以使用 [Mustache 範本](https://mustache.github.io/mustache.5.html) 自訂。
+6. 輸入所有設定後，選取 **Save and start monitoring**。
 
-When malicious IOCs are found, OpenSearch creates **findings**, which provide information about the threat. You can also configure triggers to create alerts, which send notifications to configured webhooks or endpoints.
+當發現惡意 IOC 時，OpenSearch 會建立 **findings**，提供有關該威脅的資訊。您也可以設定觸發器來建立警示，將通知傳送至已設定的 webhook 或端點。
 
 
-## Viewing alerts and findings 
+## 檢視警示與發現
 
-You can view the alerts and findings generated by threat intelligence monitors to analyze which malicious indicators have occurred in their security logs. To view alerts or findings, select **View findings** or **View alerts** from the threat intelligence view.
+您可以檢視由威脅情報監視器產生的警示與發現，以分析安全性記錄檔中出現了哪些惡意指標。若要檢視警示或發現，請從威脅情報檢視中選取 **View findings** 或 **View alerts**。

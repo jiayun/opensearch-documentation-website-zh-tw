@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index rollups API
+title: "索引彙總 API"
 parent: Index rollups
 nav_order: 10
 ---
 
-# Index rollups API
+# 索引彙總 API
 
-Use the index rollup operations to programmatically work with index rollup jobs.
+使用索引彙總 (index rollup) 操作，以程式方式處理索引彙總任務。
 
 ---
 
-#### Table of contents
+#### 目錄
 - TOC
 {:toc}
 
 
 ---
 
-## Create or update an index rollup job
-**Introduced 1.0**
+## 建立或更新索引彙總任務
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Creates or updates an index rollup job. To update an existing job, provide the `if_seq_no` and `if_primary_term` parameters, which you can read from the [Get an index rollup job](#get-an-index-rollup-job) response. Omitting them on an update returns `409 version_conflict_engine_exception`. An update must also repeat the job's current `schedule.interval.start_time`.
+建立或更新索引彙總任務。若要更新現有任務，請提供 `if_seq_no` 與 `if_primary_term` 參數，您可以從[取得索引彙總任務](#get-an-index-rollup-job)的回應中讀取這些參數。更新時若省略這些參數，會回傳 `409 version_conflict_engine_exception`。更新時也必須重複該任務目前的 `schedule.interval.start_time`。
 
-#### Request
+#### 請求
 
-To create a job, send the following request:
+若要建立任務，請傳送以下請求：
 
 ```json
 PUT _plugins/_rollup/jobs/{rollup_id}
@@ -92,39 +93,39 @@ PUT _plugins/_rollup/jobs/{rollup_id}
 ```
 {% include copy-curl.html %}
 
-To update an existing job, add the `if_seq_no` and `if_primary_term` parameters and send the complete job definition, including its current `start_time`:
+若要更新現有任務，請加上 `if_seq_no` 與 `if_primary_term` 參數，並傳送完整的任務定義，包括其目前的 `start_time`：
 
 ```json
 PUT _plugins/_rollup/jobs/{rollup_id}?if_seq_no=1&if_primary_term=1
 ```
 {% include copy-curl.html %}
 
-You can specify the following options.
+您可以指定以下選項。
 
-Options | Description | Type | Required
+選項 | 說明 | 類型 | 必要
 :--- |:--- |:--- |:--- |
-`source_index` | The index that the rollup job reads from. Cannot contain wildcards. | String | Yes
-`target_index` | Specify the target index that the rolled up data is ingested into. You can either create a new target index or use an existing index. The target index cannot be a combination of raw and rolled up data. This field supports dynamically generated index names like {% raw %}`rollup_{{ctx.source_index}}`{% endraw %}, where `source_index` cannot contain wildcards. | String | Yes
-`target_index_settings` | Specify any [index settings]({{site.url}}{{site.baseurl}}/im-plugin/index-settings/) to be applied to the target index created during the rollup. | Object | No
-`schedule` | Schedule of the index rollup job which can be an interval or a [cron expression]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions). | Object | Yes
-`schedule.interval` | Specify the frequency of execution of the rollup job. | Object | No
-`schedule.interval.start_time` | Start time of the interval. If omitted when you create a job, OpenSearch sets it to the current time. Required when you update a job. | Timestamp | No
-`schedule.interval.period` | Define the interval period. | String | Yes
-`schedule.interval.unit` | Specify the time unit of the interval. | String | Yes
-`schedule.cron` | Specify a cron expression to define the rollup frequency instead of an interval. Specify either `schedule.interval` or `schedule.cron`, not both. | Object | No
-`schedule.cron.expression` | Specify a Unix cron expression. | String | Yes
-`schedule.cron.timezone` | Specify timezones as defined by the IANA Time Zone Database. Defaults to UTC. | String | No
-`description` | Describe the rollup job. | String | Yes
-`enabled` | When true, the index rollup job is scheduled. Default is `true`. | Boolean | No
-`continuous` | Specify whether or not the index rollup job continuously rolls up data forever or executes over the current dataset once and stops. Default is `false`. | Boolean | No
-`page_size` | Specify the number of buckets to paginate at a time during rollup. | Number | Yes
-`delay` | The number of milliseconds to delay execution of the index rollup job.  | Long | No
-`dimensions` | Specify aggregations to create dimensions for the roll up time window. Supported groups are `terms`, `histogram`, and `date_histogram`. For more information, see [Bucket aggregations]({{site.url}}{{site.baseurl}}/aggregations/bucket/index/). | Array | Yes
-`routing_field` | The `source_field` of a `terms` dimension to use as the routing value for rolled up documents in the target index. When set, each rolled up document is indexed using the value of that dimension as its routing value. This ensures that searches specifying the same `routing` value are directed to the correct shard and can find the rolled up documents. If not set, rolled up documents are distributed across shards based on document ID, and searches that specify a `routing` value may not return matching documents. The value must match the `source_field` of one of the `terms` dimensions defined in `dimensions`. This setting is immutable and cannot be changed when updating an existing rollup job. Available in OpenSearch 3.7 and later. | String | No
-`metrics` | Specify a list of objects that represent the fields and metrics that you want to calculate. Supported metrics are `sum`, `max`, `min`, `value_count`, `avg`, and `cardinality`. For more information, see [Metric aggregations]({{site.url}}{{site.baseurl}}/aggregations/metric/index/). | Array | No
+`source_index` | 彙總任務讀取的索引。不可包含萬用字元。 | 字串 | 是
+`target_index` | 指定彙總資料匯入的目標索引。您可以建立新的目標索引，或使用現有索引。目標索引不可混合原始資料與彙總資料。此欄位支援動態產生的索引名稱，例如 {% raw %}`rollup_{{ctx.source_index}}`{% endraw %}，其中 `source_index` 不可包含萬用字元。 | 字串 | 是
+`target_index_settings` | 指定要在彙總期間建立的目標索引上套用的[索引設定]({{site.url}}{{site.baseurl}}/im-plugin/index-settings/)。 | 物件 | 否
+`schedule` | 索引彙總任務的排程，可以是間隔或 [cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。 | 物件 | 是
+`schedule.interval` | 指定彙總任務的執行頻率。 | 物件 | 否
+`schedule.interval.start_time` | 間隔的開始時間。建立任務時若省略此項，OpenSearch 會將其設為目前時間。更新任務時為必要。 | 時間戳記 | 否
+`schedule.interval.period` | 定義間隔週期。 | 字串 | 是
+`schedule.interval.unit` | 指定間隔的時間單位。 | 字串 | 是
+`schedule.cron` | 指定 cron 運算式來定義彙總頻率，以取代間隔。請指定 `schedule.interval` 或 `schedule.cron` 其中之一，不可同時指定。 | 物件 | 否
+`schedule.cron.expression` | 指定 Unix cron 運算式。 | 字串 | 是
+`schedule.cron.timezone` | 依 IANA Time Zone Database 的定義指定時區。預設為 UTC。 | 字串 | 否
+`description` | 描述彙總任務。 | 字串 | 是
+`enabled` | 當為 true 時，索引彙總任務會被排程。預設為 `true`。 | 布林值 | 否
+`continuous` | 指定索引彙總任務是否持續不斷地彙總資料，或僅對目前資料集執行一次後停止。預設為 `false`。 | 布林值 | 否
+`page_size` | 指定彙總期間每次分頁處理的桶數。 | 數字 | 是
+`delay` | 延遲索引彙總任務執行的毫秒數。 | 長整數 | 否
+`dimensions` | 指定彙總，為彙總時間視窗建立維度。支援的群組為 `terms`、`histogram` 與 `date_histogram`。如需更多資訊，請參閱[桶彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/index/)。 | 陣列 | 是
+`routing_field` | `terms` 維度的 `source_field`，用作目標索引中彙總文件的路由值。設定後，每個彙總文件都會以該維度的值作為其路由值來編製索引。這可確保指定相同 `routing` 值的搜尋會被導向正確的分片，並能找到彙總文件。若未設定，彙總文件會依文件 ID 分散到各分片，而指定 `routing` 值的搜尋可能無法回傳符合的文件。此值必須符合 `dimensions` 中定義的其中一個 `terms` 維度的 `source_field`。此設定不可變更，更新現有彙總任務時無法修改。適用於 OpenSearch 3.7 及後續版本。 | 字串 | 否
+`metrics` | 指定物件清單，代表您要計算的欄位與指標。支援的指標為 `sum`、`max`、`min`、`value_count`、`avg` 與 `cardinality`。如需更多資訊，請參閱[指標彙總]({{site.url}}{{site.baseurl}}/aggregations/metric/index/)。 | 陣列 | 否
 
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -204,20 +205,20 @@ Options | Description | Type | Required
 ```
 
 
-## Get an index rollup job
-**Introduced 1.0**
+## 取得索引彙總任務
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Returns all information about an index rollup job based on the `rollup_id`.
+根據 `rollup_id` 回傳索引彙總任務的所有資訊。
 
-#### Request
+#### 請求
 
 ```json
 GET _plugins/_rollup/jobs/{rollup_id}
 ```
 
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -232,20 +233,20 @@ GET _plugins/_rollup/jobs/{rollup_id}
 
 ---
 
-## Delete an index rollup job
-**Introduced 1.0**
+## 刪除索引彙總任務
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Deletes an index rollup job based on the `rollup_id`.
+根據 `rollup_id` 刪除索引彙總任務。
 
-#### Request
+#### 請求
 
 ```json
 DELETE _plugins/_rollup/jobs/{rollup_id}
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -264,18 +265,18 @@ DELETE _plugins/_rollup/jobs/{rollup_id}
 }
 ```
 
-A request for a job that does not exist returns `404`.
+對不存在的任務提出請求會回傳 `404`。
 
 ---
 
 
-## Start or stop an index rollup job
-**Introduced 1.0**
+## 啟動或停止索引彙總任務
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Start or stop an index rollup job.
+啟動或停止索引彙總任務。
 
-#### Request
+#### 請求
 
 ```json
 POST _plugins/_rollup/jobs/{rollup_id}/_start
@@ -283,7 +284,7 @@ POST _plugins/_rollup/jobs/{rollup_id}/_stop
 ```
 
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -294,22 +295,22 @@ POST _plugins/_rollup/jobs/{rollup_id}/_stop
 
 ---
 
-## Explain an index rollup job
-**Introduced 1.0**
+## 解釋索引彙總任務
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Returns metadata information about the index rollup job.
+回傳索引彙總任務的中繼資料資訊。
 
-#### Request
+#### 請求
 
 ```json
 GET _plugins/_rollup/jobs/{rollup_id}/_explain
 ```
 
 
-#### Example response: Job not yet executed
+#### 回應範例：任務尚未執行
 
-When the rollup job has not yet executed, both fields return `null`:
+當彙總任務尚未執行時，兩個欄位都會回傳 `null`：
 
 ```json
 {
@@ -320,9 +321,9 @@ When the rollup job has not yet executed, both fields return `null`:
 }
 ```
 
-#### Example response: Job executed
+#### 回應範例：任務已執行
 
-After the rollup job executes at least once, the response includes detailed metadata and statistics:
+彙總任務至少執行一次後，回應會包含詳細的中繼資料與統計資訊：
 
 ```json
 {
@@ -345,24 +346,24 @@ After the rollup job executes at least once, the response includes detailed meta
 }
 ```
 
-For continuous rollup jobs, the `rollup_metadata` object may include additional fields such as `next_window_start_time` and `next_window_end_time` to indicate the time window for the next scheduled execution.
+對於持續執行的彙總任務，`rollup_metadata` 物件可能包含額外欄位，例如 `next_window_start_time` 與 `next_window_end_time`，用於指示下次排程執行的時間視窗。
 {: .note}
 
-#### Response fields
+#### 回應欄位
 
-The response contains the rollup job ID as the key, with the following fields:
+回應以彙總任務 ID 作為鍵，並包含以下欄位：
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`metadata_id` | The document ID of the rollup metadata stored in the system index. Returns `null` if the rollup job has not yet executed.
-`rollup_metadata` | Metadata about the rollup job execution. Returns `null` if the rollup job has not yet executed. When populated, contains the following nested fields.
-`rollup_metadata.rollup_id` | The ID of the rollup job.
-`rollup_metadata.last_updated_time` | The timestamp (in milliseconds since epoch) when the rollup job was last updated.
-`rollup_metadata.status` | The current status of the rollup job. Possible values are `init` (job is initializing), `started` (job is currently executing), `finished` (job completed successfully), `failed` (job encountered an error), `stopped` (job was stopped), or `retry` (job is retrying after a failure).
-`rollup_metadata.failure_reason` | The reason for failure if the job failed. Returns `null` if the job succeeded.
-`rollup_metadata.stats` | Statistics about the rollup job execution.
-`rollup_metadata.stats.pages_processed` | The number of pages processed during the rollup.
-`rollup_metadata.stats.documents_processed` | The total number of documents processed during the rollup.
-`rollup_metadata.stats.rollups_indexed` | The number of rollup documents created and indexed.
-`rollup_metadata.stats.index_time_in_millis` | The time spent indexing rollup documents, in milliseconds.
-`rollup_metadata.stats.search_time_in_millis` | The time spent searching source documents, in milliseconds.
+`metadata_id` | 儲存在系統索引中的彙總中繼資料的文件 ID。若彙總任務尚未執行，則回傳 `null`。
+`rollup_metadata` | 彙總任務執行的中繼資料。若彙總任務尚未執行，則回傳 `null`。填入內容時，包含以下巢狀欄位。
+`rollup_metadata.rollup_id` | 彙總任務的 ID。
+`rollup_metadata.last_updated_time` | 彙總任務上次更新的時間戳記（自 epoch 起算的毫秒數）。
+`rollup_metadata.status` | 彙總任務的目前狀態。可能的值為 `init`（任務正在初始化）、`started`（任務正在執行）、`finished`（任務成功完成）、`failed`（任務發生錯誤）、`stopped`（任務已停止），或 `retry`（任務失敗後正在重試）。
+`rollup_metadata.failure_reason` | 若任務失敗，則為失敗原因。若任務成功，則回傳 `null`。
+`rollup_metadata.stats` | 彙總任務執行的統計資訊。
+`rollup_metadata.stats.pages_processed` | 彙總期間處理的頁數。
+`rollup_metadata.stats.documents_processed` | 彙總期間處理的文件總數。
+`rollup_metadata.stats.rollups_indexed` | 建立並編製索引的彙總文件數量。
+`rollup_metadata.stats.index_time_in_millis` | 為彙總文件編製索引所花費的時間，單位為毫秒。
+`rollup_metadata.stats.search_time_in_millis` | 搜尋來源文件所花費的時間，單位為毫秒。

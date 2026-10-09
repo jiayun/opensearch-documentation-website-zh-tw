@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Summary report
+title: "摘要報告"
 nav_order: 40
 parent: Reference
 redirect_from:
@@ -8,13 +9,13 @@ redirect_from:
   - /benchmark/user-guide/understanding-results/
 ---
 
-# Summary report
+# 摘要報告
 
-At the end of each test run, OpenSearch Benchmark prints a summary report of metrics such as service time, throughput, latency, and more. These metrics show how the selected workload performed on the benchmarked OpenSearch cluster.
+每次測試執行結束時，OpenSearch Benchmark 都會列印一份摘要報告，其中包含服務時間、輸送量、延遲等指標。這些指標顯示所選工作負載在受基準測試的 OpenSearch 叢集上的表現。
 
-## Example output
+## 輸出範例
 
-The following example shows a typical summary report:
+下列範例顯示一份典型的摘要報告：
 
 ```bash
 ------------------------------------------------------
@@ -53,194 +54,194 @@ The following example shows a typical summary report:
 |                                                            ... |                                        ... |         ... |    ... |
 ```
 
-Metrics unique to the cluster begin at the `index` task line. For example:
+叢集專屬的指標從 `index` 任務那一行開始。例如：
 
-- To assess how much load your cluster can handle, the `index` task metrics show the number of documents ingested during the workload run and the ingestion error rate.
-- To assess query latency and service time, the `match_all` and `term` tasks show the number of query operations performed per second, measurable query latency, and query operation error rate.
+- 若要評估您的叢集能承受多少負載，`index` 任務指標會顯示工作負載執行期間匯入的文件數量，以及匯入錯誤率。
+- 若要評估查詢延遲與服務時間，`match_all` 和 `term` 任務會顯示每秒執行的查詢操作數、可測量的查詢延遲，以及查詢操作錯誤率。
 
-Which values are shown in the report depends on the `--show-in-results` flag; see [Storing results](#storing-results).
+報告中顯示哪些值取決於 `--show-in-results` 旗標；請參閱[儲存結果](#storing-results)。
 
-## Storing results
+## 儲存結果
 
-Results are stored in-memory by default. When stored in-memory, they're written to `~/.benchmark/benchmarks/test-runs/<test_run_id>/`, named by the `test_run_id` of the most recent workload test.
+結果預設儲存在記憶體中。儲存在記憶體中時，結果會寫入 `~/.benchmark/benchmarks/test-runs/<test_run_id>/`，並以最近一次工作負載測試的 `test_run_id` 命名。
 
-While [running a test]({{site.url}}{{site.baseurl}}/benchmark/reference/commands/run/#general-settings), the following flags customize how results are stored:
+[執行測試]({{site.url}}{{site.baseurl}}/benchmark/reference/commands/run/#general-settings)時，下列旗標可自訂結果的儲存方式：
 
-- `--results-file`: File path to write the summary report to.
-- `--results-format`: Output format for the summary. `markdown` or `csv`. Default is `markdown`.
-- `--show-in-results`: Which values appear in the published report. `available`, `all-percentiles`, or `all`. Default is `available`.
-- `--user-tag`: Key-value pairs stored with the run as metadata (for example, `intention:baseline-ticket-12345`). Useful when storing metrics in external storage.
+- `--results-file`：要寫入摘要報告的檔案路徑。
+- `--results-format`：摘要的輸出格式。`markdown` 或 `csv`。預設為 `markdown`。
+- `--show-in-results`：發布的報告中會出現哪些值。`available`、`all-percentiles` 或 `all`。預設為 `available`。
+- `--user-tag`：與該次執行一起儲存為中繼資料的鍵值組（例如 `intention:baseline-ticket-12345`）。將指標儲存在外部儲存空間時很有用。
 
-To store results outside the test-runs directory, configure an external metrics data store. For nightly published results, see the OpenSearch Benchmark [nightly test dashboard](https://opensearch.org/benchmarks).
+若要將結果儲存在 test-runs 目錄之外，請設定外部指標資料存放區。如需每晚發布的結果，請參閱 OpenSearch Benchmark [每夜測試儀表板](https://opensearch.org/benchmarks)。
 
-## Metric reference
+## 指標參考
 
-The following metrics are included in the summary report.
+摘要報告中包含下列指標。
 
-### Cumulative indexing time of primary shards
+### 主要分片的累計索引時間
 
-**Corresponding metric key**: `indexing_total_time`
+**對應的指標鍵**：`indexing_total_time`
 
-The cumulative time used for indexing as reported by the Index Stats API. Note that this is not wall-clock time, for example, if M indexing threads ran for N minutes, report M * N minutes, not N minutes.
+由 Index Stats API 回報的索引累計耗用時間。請注意，這不是實際經過時間 (wall-clock time)，例如，若 M 個索引執行緒執行了 N 分鐘，則回報 M * N 分鐘，而非 N 分鐘。
 
-### Cumulative indexing time across primary shards
+### 跨主要分片的累計索引時間
 
-**Corresponding metric key**: `indexing_total_time` (property: `per-shard`)
+**對應的指標鍵**：`indexing_total_time`（屬性：`per-shard`）
 
-The minimum, median, and maximum cumulative time used for indexing across primary shards as reported by the Index Stats API.
+由 Index Stats API 回報的各主要分片索引累計耗用時間的最小值、中位數與最大值。
 
-### Cumulative indexing throttle time of primary shards
+### 主要分片的累計索引節流時間
 
-**Corresponding metric key**: `indexing_throttle_time`
+**對應的指標鍵**：`indexing_throttle_time`
 
-The cumulative time that the indexing has been throttled as reported by the Index Stats API. Note that this is not wall-clock time, for example, if M indexing threads ran for N minutes, report M * N minutes, not N minutes.
+由 Index Stats API 回報的索引受到節流的累計時間。請注意，這不是實際經過時間 (wall-clock time)，例如，若 M 個索引執行緒執行了 N 分鐘，則回報 M * N 分鐘，而非 N 分鐘。
 
 
-### Cumulative indexing throttle time across primary shards
+### 跨主要分片的累計索引節流時間
 
-**Corresponding metric key**: `indexing_throttle_time` (property: `per-shard`)
+**對應的指標鍵**：`indexing_throttle_time`（屬性：`per-shard`）
 
-The minimum, median, and maximum cumulative time used that indexing has been throttled across primary shards as reported by the Index Stats API.
+由 Index Stats API 回報的各主要分片索引受到節流之累計時間的最小值、中位數與最大值。
 
 
-### Cumulative merge time of primary shards
+### 主要分片的累計合併時間
 
-**Corresponding metric key**: `merges_total_time`
+**對應的指標鍵**：`merges_total_time`
 
-The cumulative runtime of merges of primary shards, as reported by the index stats API. Note that this is not wall-clock time.
+由 Index Stats API 回報的主要分片合併累計執行時間。請注意，這不是實際經過時間 (wall-clock time)。
 
-### Cumulative merge count of primary shards
+### 主要分片的累計合併次數
 
-**Corresponding metric key**: `merges_total_count`
+**對應的指標索引鍵**：`merges_total_count`
 
-The cumulative number of merges of primary shards, as reported by the Index Stats API under `_all/primaries`.
+主要分片的累計合併次數，由 Index Stats API 於 `_all/primaries` 下回報。
 
 
-### Cumulative merge time across primary shards
+### 跨主要分片的累計合併時間
 
-**Corresponding metric key**: `merges_total_time` (property: `per-shard`)
+**對應的指標索引鍵**：`merges_total_time` (屬性：`per-shard`)
 
-The minimum, median, and maximum cumulative time of merges across primary shards as reported by the Index Stats API.
+由 Index Stats API 回報的各主要分片合併累計時間之最小值、中位數與最大值。
 
 
-### Cumulative refresh time of primary shards
+### 主要分片的累計重新整理時間
 
-**Corresponding metric key**: `refresh_total_time`
+**對應的指標索引鍵**：`refresh_total_time`
 
-The cumulative time used for index refresh of primary shards as reported by the Index Stats API. Note that this is not wall-clock time.
+由 Index Stats API 回報的主要分片索引重新整理累計時間。請注意，這不是實際經過時間 (wall-clock time)。
 
-### Cumulative refresh count of primary shards
+### 主要分片的累計重新整理次數
 
-**Corresponding metric key**: `refresh_total_count`
+**對應的指標索引鍵**：`refresh_total_count`
 
-The cumulative number of refreshes of primary shards as reported by the Index Stats API under `_all/primaries`.
+主要分片的累計重新整理次數，由 Index Stats API 於 `_all/primaries` 下回報。
 
-### Cumulative refresh time across primary shards
+### 跨主要分片的累計重新整理時間
 
-**Corresponding metric key**: `refresh_total_time` (property: `per-shard`)
+**對應的指標索引鍵**：`refresh_total_time` (屬性：`per-shard`)
 
-The minimum, median, and maximum cumulative time for index refresh across primary shards as reported by the Index Stats API.
+由 Index Stats API 回報的各主要分片索引重新整理累計時間之最小值、中位數與最大值。
 
-### Cumulative flush time of primary shards
+### 主要分片的累計排清時間
 
-**Corresponding metric key**: `flush_total_time`
+**對應的指標索引鍵**：`flush_total_time`
 
-The cumulative time used for index flush of primary shards as reported by the Index Stats API. Note that this is not wall-clock time.
+由 Index Stats API 回報的主要分片索引排清累計時間。請注意，這不是實際經過時間 (wall-clock time)。
 
-### Cumulative flush count of primary shards
+### 主要分片的累計排清次數
 
-**Corresponding metric key**: `flush_total_count`
+**對應的指標索引鍵**：`flush_total_count`
 
-The cumulative number of flushes of primary shards as reported by the Index Stats API under `_all/primaries`.
+主要分片的累計排清次數，由 Index Stats API 於 `_all/primaries` 下回報。
 
 
-### Cumulative flush time across primary shards
+### 跨主要分片的累計排清時間
 
-**Corresponding metric key**: `flush_total_time` (property: `per-shard`)
+**對應的指標索引鍵**：`flush_total_time` (屬性：`per-shard`)
 
-The minimum, median, and maximum time for index flush across primary shards as reported by the Index Stats API.
+由 Index Stats API 回報的各主要分片索引排清時間之最小值、中位數與最大值。
 
-### Cumulative merge throttle time of primary shards
+### 主要分片的累計合併節流時間
 
-**Corresponding metric key**: `merges_total_throttled_time`
+**對應的指標索引鍵**：`merges_total_throttled_time`
 
-The cumulative time within merges that have been throttled as reported by the Index Stats API. Note that this is not wall-clock time.
+由 Index Stats API 回報的合併作業中已遭節流的累計時間。請注意，這不是實際經過時間 (wall-clock time)。
 
-### Cumulative merge throttle time across primary shards
+### 跨主要分片的累計合併節流時間
 
-**Corresponding metric key**: `merges_total_throttled_time` (property: `per-shard`)
+**對應的指標索引鍵**：`merges_total_throttled_time` (屬性：`per-shard`)
 
-The minimum, median, and maximum cumulative time that merges have been throttled across primary shards as reported by the Index Stats API.
+由 Index Stats API 回報的各主要分片合併作業已遭節流的累計時間之最小值、中位數與最大值。
 
-### ML processing time
+### ML 處理時間
 
-**Corresponding metric key**: `ml_processing_time`
+**對應的指標索引鍵**：`ml_processing_time`
 
-The minimum, mean, median, and maximum time in milliseconds that a machine learning (ML) job has spent processing a single bucket.
+機器學習 (ML) 作業處理單一桶 (bucket) 所花費時間的最小值、平均值、中位數與最大值，以毫秒為單位。
 
 
-### Total young gen GC time
+### 年輕世代 GC 總時間
 
-**Corresponding metric key**: `node_total_young_gen_gc_time`
+**對應的指標索引鍵**：`node_total_young_gen_gc_time`
 
-The total runtime of the young generation (gen) garbage collector (GC) across the whole cluster as reported by the Node Stats API.
+由 Node Stats API 回報的整個叢集年輕世代 (young gen) 垃圾收集 (GC) 總執行時間。
 
-### Total young gen GC count
+### 年輕世代 GC 總次數
 
-**Corresponding metric key**: `node_total_young_gen_gc_count`
+**對應的指標索引鍵**：`node_total_young_gen_gc_count`
 
-The total number of young gen GCs across the whole cluster as reported by the Node Stats API.
+由 Node Stats API 回報的整個叢集年輕世代 GC 總次數。
 
 
-### Total old gen GC time
+### 老世代 GC 總時間
 
-**Corresponding metric key**: `node_total_old_gen_gc_time`
+**對應的指標索引鍵**：`node_total_old_gen_gc_time`
 
-The total runtime of the old gen GC across the whole cluster as reported by the Node Stats API.
+由 Node Stats API 回報的整個叢集老世代 (old gen) GC 總執行時間。
 
-### Total old gen GC count
+### 老世代 GC 總次數
 
-**Corresponding metric key**: `node_total_old_gen_gc_count`
+**對應的指標索引鍵**：`node_total_old_gen_gc_count`
 
-The total number of old gen GCs across the whole cluster as reported by the Node Stats API.
+由 Node Stats API 回報的整個叢集老世代 GC 總次數。
 
-### Total ZGC cycles GC time
+### ZGC 循環 GC 總時間
 
-**Corresponding metric key**: `node_total_zgc_cycles_gc_count`
+**對應的指標索引鍵**：`node_total_zgc_cycles_gc_count`
 
-The total number of garbage collections performed by the Z garbage collector (ZGC) across the whole cluster as reported by the Node Stats API.
+由 Node Stats API 回報的整個叢集 Z 垃圾收集器 (ZGC) 所執行的垃圾收集總次數。
 
-### Total ZGC pauses GC time
+### ZGC 暫停 GC 總時間
 
-**Corresponding metric key**: `node_total_zgc_pauses_gc_time`
+**對應的指標索引鍵**：`node_total_zgc_pauses_gc_time`
 
-The total time spent in stop-the-world pauses by the ZGC across the whole cluster as reported by the Node Stats API.
+由 Node Stats API 回報的整個叢集 ZGC 花費在停止整個世界 (stop-the-world) 暫停的總時間。
 
 
-### Total ZGC pauses GC count
+### ZGC 暫停 GC 總次數
 
-**Corresponding metric key**: `node_total_zgc_pauses_gc_count`
+**對應的指標索引鍵**：`node_total_zgc_pauses_gc_count`
 
-The total number of stop-the-world pauses performed by the ZGC across the whole cluster as reported by the Node Stats API.
+由 Node Stats API 回報的整個叢集 ZGC 所執行的停止整個世界 (stop-the-world) 暫停總次數。
 
 
-### Store size
+### 儲存區大小
 
-**Corresponding metric key**: `store_size_in_bytes`
+**對應的指標索引鍵**：`store_size_in_bytes`
 
-The index size in bytes (excluding the translog) as reported by the Index Stats API.
+由 Index Stats API 回報的索引大小，以位元組為單位 (不含 translog)。
 
-### Translog size
+### Translog 大小
 
-**Corresponding metric key**: `translog_size_in_bytes`
+**對應的指標索引鍵**：`translog_size_in_bytes`
 
-The translog size in bytes as reported by the Index Stats API.
+由 Index Stats API 回報的 translog 大小，以位元組為單位。
 
-### Heap used for X
+### X 所使用的堆積記憶體
 
-**Corresponding metric keys**: `segments_*_in_bytes`
+**對應的指標索引鍵**：`segments_*_in_bytes`
 
-The number of bytes used for the corresponding item as reported by the Index Stats API. The item may be any of the following:
+由 Index Stats API 回報的對應項目所使用的位元組數。該項目可以是下列任一項：
 
 - Doc values
 - Terms
@@ -249,78 +250,78 @@ The number of bytes used for the corresponding item as reported by the Index Sta
 - Stored fields
 
 
-### Segments count
+### 分段數
 
-**Corresponding metric key**: `segments_count`
+**對應的指標索引鍵**：`segments_count`
 
-The total number of segments as reported by the Index Stats API.
-
-
-### Total ingest pipeline count
-
-**Corresponding metric key**: `ingest_pipeline_cluster_count`
-
-The total number of documents ingested by all nodes within the cluster over the race duration.
-
-### Total ingest pipeline time
-
-**Corresponding metric key**: `ingest_pipeline_cluster_time`
-
-The total time in milliseconds spent preprocessing ingest documents by all nodes within the cluster over the race duration.
+由 Index Stats API 回報的分段總數。
 
 
-### Total ingest pipeline failed
+### 資料匯入管線總次數
 
-**Corresponding metric key**: `ingest_pipeline_cluster_failed`
+**對應的指標索引鍵**：`ingest_pipeline_cluster_count`
 
-The total number of failed ingest operations by all nodes within the cluster over the race duration.
+在競賽期間，叢集內所有節點所匯入的文件總數。
 
+### 資料匯入管線總時間
 
-### Throughput
+**對應的指標索引鍵**：`ingest_pipeline_cluster_time`
 
-**Corresponding metric key**: `throughput`
-
-Reports the minimum, mean, median, and maximum throughput for each task.
-
-The number of operations that OpenSearch can perform within a certain time period per second. The report includes the minimum, mean, median, and maximum throughput for each task.
+在競賽期間，叢集內所有節點前置處理匯入文件所花費的總時間，以毫秒為單位。
 
 
-### Latency
+### 資料匯入管線失敗總數
 
-**Corresponding metric key**: `latency`
+**對應的指標索引鍵**：`ingest_pipeline_cluster_failed`
 
-The time period between submission of a request and receiving the complete response. It includes the wait time the request spends waiting before it is processed by OpenSearch. OpenSearch reports several percentile numbers for each task. Which percentiles are shown depends on how many requests OpenSearch can capture during the latency period.
-
-
-### Service time
-
-**Corresponding metric key**: `service_time`
-
-The time period between sending a request and receiving the corresponding response. It does not include waiting time. While many load testing tools refer to this metric as _latency_, it is not the same. OpenSearch reports several percentile numbers for each task. Which percentiles are shown depends on how many requests OpenSearch can capture during the latency period.
+在競賽期間，叢集內所有節點失敗的匯入作業總數。
 
 
+### 輸送量
 
-### Processing time
+**對應的指標索引鍵**：`throughput`
 
-Processing time is only reported if the setting `output.processingtime` is set to `true` in the OpenSearch Benchmark configuration file.
+回報每個任務的輸送量最小值、平均值、中位數與最大值。
+
+OpenSearch 在特定時間內每秒可執行的作業數。報告包含每個任務的輸送量最小值、平均值、中位數與最大值。
+
+
+### 延遲
+
+**對應的指標索引鍵**：`latency`
+
+從提交請求到收到完整回應之間的時間。其中包含請求在由 OpenSearch 處理之前所花費的等待時間。OpenSearch 會為每個任務回報數個百分位數。顯示哪些百分位數取決於 OpenSearch 在延遲期間內能擷取多少個請求。
+
+
+### 服務時間
+
+**對應的指標索引鍵**：`service_time`
+
+從傳送請求到收到對應回應之間的時間。其中不包含等待時間。雖然許多負載測試工具將此指標稱為 _latency_，但兩者並不相同。OpenSearch 會為每個任務回報數個百分位數。顯示哪些百分位數取決於 OpenSearch 在延遲期間內能擷取多少個請求。
+
+
+
+### 處理時間
+
+只有在 OpenSearch Benchmark 組態檔中將設定 `output.processingtime` 設為 `true` 時，才會回報處理時間。
 {: note.}
 
-**Corresponding metric key**: `processing_time`
+**對應的指標索引鍵**：`processing_time`
 
 
-The time period between start of request processing and retrieval of the complete response. Unlike `service_time`, this metric includes OpenSearch’s client-side processing overhead. The larger the difference between `service_time` and `processing_time`, the higher the overhead in the client. Depending on your processing goals, this can point to a potential client-side bottleneck that requires investigation.
+從開始處理請求到取得完整回應之間的時間。與 `service_time` 不同，此指標包含 OpenSearch 的用戶端處理額外負荷。`service_time` 與 `processing_time` 之間的差異越大，用戶端的額外負荷就越高。視您的處理目標而定，這可能指出有潛在的用戶端瓶頸需要調查。
 
 
-### Error rate
+### 錯誤率
 
-**Corresponding metric key**: `service_time`. Each `service_time` record has a `meta.success` flag. 
+**對應的指標索引鍵**：`service_time`。每筆 `service_time` 記錄都有一個 `meta.success` 旗標。
 
-The ratio of erroneous responses relative to the total number of responses. Any exception thrown by the Python OpenSearch client is considered erroneous, for example, HTTP response codes 4xx, 5xx, or network errors (network unreachable). You can investigate the root cause by inspecting OpenSearch and OpenSearch Benchmark logs and rerunning the benchmark.
+錯誤回應相對於回應總數的比例。Python OpenSearch 用戶端所擲回的任何例外狀況都視為錯誤，例如 HTTP 回應碼 4xx、5xx 或網路錯誤 (網路無法連線)。您可以檢查 OpenSearch 與 OpenSearch Benchmark 記錄檔並重新執行基準測試，以調查根本原因。
 
 
-### Disk usage
+### 磁碟使用量
 
-**Corresponding metric keys**: `disk_usage_total`
-**Metric metadata**: `index` and `field`
+**對應的指標鍵**：`disk_usage_total`
+**指標中繼資料**：`index` 與 `field`
 
-The total number of bytes that a single field uses on disk. Recorded for each field returned by the Disk Usage API even if the total is `0`.
+單一欄位在磁碟上使用的位元組總數。Disk Usage API 回傳的每個欄位都會記錄此數值，即使總數為 `0`。

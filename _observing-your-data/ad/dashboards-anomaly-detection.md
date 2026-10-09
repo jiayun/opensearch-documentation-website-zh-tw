@@ -1,77 +1,78 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Anomaly detection visualizations and dashboards
+title: "異常偵測視覺化與儀表板"
 parent: Anomaly detection
 nav_order: 50
 ---
 
-# Anomaly detection dashboards and visualizations
-Introduced 2.9
+# 異常偵測儀表板與視覺化
+於 2.9 版推出
 {: .label .label-purple }
 
-OpenSearch provides an automated means of detecting harmful outliers and protecting your data when you enable anomaly detection. When applied to metrics, OpenSearch uses algorithms to continuously analyze systems and applications, determine normal baselines, and surface anomalies. 
+啟用異常偵測後，OpenSearch 提供自動化的方式來偵測有害的離群值並保護您的資料。套用至指標時，OpenSearch 會使用演算法持續分析系統與應用程式、判定正常基準，並呈現異常。 
 
-You can connect data visualizations to OpenSearch datasets and then create, run, and view real-time anomaly results from visualizations in the **Dashboard** interface. With only a couple of steps, you can bring together traces, metrics, and logs to make your applications and infrastructure fully observable.
+您可以將資料視覺化連接至 OpenSearch 資料集，然後在 **Dashboard** 介面中，從視覺化建立、執行及檢視即時異常結果。只需幾個步驟，您就能整合追蹤、指標與記錄檔，讓您的應用程式與基礎架構具備完整的可觀測性。
 
-## Getting started 
+## 入門 
 
-Before getting started, you must have:
+開始之前，您必須：
 
-- Installed OpenSearch and OpenSearch Dashboards version 2.9 or later. See [Installing OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/).
-- Installed the Anomaly Detection plugin version 2.9 or later. See [Installing OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/).
-- Installed the Anomaly Detection Dashboards plugin version 2.9 or later. See [Managing OpenSearch Dashboards plugins]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/plugins/) to get started.
+- 已安裝 OpenSearch 與 OpenSearch Dashboards 2.9 或更新版本。請參閱[安裝 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/)。
+- 已安裝 Anomaly Detection 外掛程式 2.9 或更新版本。請參閱[安裝 OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)。
+- 已安裝 Anomaly Detection Dashboards 外掛程式 2.9 或更新版本。請參閱[管理 OpenSearch Dashboards 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/plugins/)以開始使用。
 
-## General requirements for anomaly detection visualizations
+## 異常偵測視覺化的一般需求
 
-Anomaly detection visualizations are displayed as time-series charts that give you a snapshot of when anomalies have occurred. You can display up to 10 metrics on your chart, and each series can be shown as a line on the chart. Note that only real-time anomalies will be visible on the chart. For more information about real-time and historical anomaly detection, see [Anomaly detection, Step 3: Set up detector jobs]({{site.url}}{{site.baseurl}}/observing-your-data/ad/index/#step-3-set-up-detector-jobs).
+異常偵測視覺化會以時間序列圖表顯示，讓您快速掌握異常發生的時間點。您最多可在圖表上顯示 10 個指標，每個序列都可以在圖表上以一條線顯示。請注意，圖表上只會顯示即時異常。如需即時與歷史異常偵測的詳細資訊，請參閱[異常偵測，步驟 3：設定偵測器工作]({{site.url}}{{site.baseurl}}/observing-your-data/ad/index/#step-3-set-up-detector-jobs)。
 
-Keep in mind the following requirements when setting up or creating anomaly detection visualizations. The visualization:
+設定或建立異常偵測視覺化時，請留意下列需求。視覺化：
 
-- Must be a [line chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/line-charts/) in which every series is displayed as a line
-- Must contain at least a Y-axis metric aggregation
-- Must not have non-Y-axis metric aggregation types
-- Must use the date histogram aggregation type for the X-axis bucket
-- Must have an X-axis on the bottom
-- Must define one X-axis aggregation bucket
-- Must have a valid time-based X-axis
+- 必須是[折線圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/line-charts/)，且每個序列都以一條線顯示
+- 必須至少包含一個 Y 軸指標彙總
+- 不得包含非 Y 軸的指標彙總類型
+- X 軸桶 (bucket) 必須使用日期長條圖 (date histogram) 彙總類型
+- X 軸必須位於底部
+- 必須定義一個 X 軸彙總桶
+- 必須具有有效的時間型 X 軸
 
-## Configuring admin settings
+## 設定管理員設定
 
-Users can only access, create, or manage anomaly detectors for resources for which they have permissions. Access to anomaly detection dashboards and visualizations is controlled by OpenSearch and OpenSearch Dashboards permissions. It is enabled by default and appears as a feature under **Dashboards Management** > **Advanced Settings** > **Visualization**. If the setting is disabled, it does not appear under **Dashboards Management**. You can disable the setting at the cluster level in the `opensearch-dashboards.yml` file.
+使用者只能存取、建立或管理其具有權限之資源的異常偵測器。異常偵測儀表板與視覺化的存取權由 OpenSearch 與 OpenSearch Dashboards 權限控制。此功能預設為啟用，並以功能形式顯示於 **Dashboards Management** > **Advanced Settings** > **Visualization** 下。若停用此設定，則不會顯示於 **Dashboards Management** 下。您可以在 `opensearch-dashboards.yml` 檔案中於叢集層級停用此設定。
 
-## Creating anomaly detectors
+## 建立異常偵測器
 
-To start, first create an anomaly detector:
+首先，請建立異常偵測器：
 
-1. Select **Dashboard** from the OpenSearch Dashboards main menu.
-2. From the **Dashboards** window, select **Create** and then choose **Dashboard**.
-3. Select **Add an existing**, then select the appropriate visualization from the **Add panels** list. The visualization is added to the dashboard.
-4. From the visualization panel, choose the ellipsis icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/}).
-5. From the **Options** menu, choose **Anomaly Detection** > **Add anomaly detector**.
-6. Select **Create new detector**.
-7. Input information for **Detector details** and **Model features**. Up to five model features are allowed. 
-8. To preview the visualization within the flyout, toggle the **Show visualization** button.
-9. Select **Create detector**. Once you have created a new detector, the detector is added to the visualization, as shown in the following image.  
+1. 從 OpenSearch Dashboards 主選單選取 **Dashboard**。
+2. 在 **Dashboards** 視窗中，選取 **Create**，然後選擇 **Dashboard**。
+3. 選取 **Add an existing**，然後從 **Add panels** 清單中選取適當的視覺化。該視覺化即會新增至儀表板。
+4. 在視覺化面板中，選擇省略符號圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/})。
+5. 從 **Options** 選單中，選擇 **Anomaly Detection** > **Add anomaly detector**。
+6. 選取 **Create new detector**。
+7. 輸入 **Detector details** 與 **Model features** 的資訊。最多可設定五個模型特徵。 
+8. 若要在飛出視窗中預覽視覺化，請切換 **Show visualization** 按鈕。
+9. 選取 **Create detector**。建立新的偵測器後，該偵測器即會新增至視覺化，如下圖所示。  
 
-![Interface of adding a detector]({{site.url}}{{site.baseurl}}/images/dashboards/add-detector.png){: width="800" height="800" }
+![新增偵測器的介面]({{site.url}}{{site.baseurl}}/images/dashboards/add-detector.png){: width="800" height="800" }
 
-## Adding anomaly detectors to visualizations
+## 將異常偵測器新增至視覺化
 
-Use a single interface to add, view, and edit anomaly detectors that you want to associate with a visualization. Continuing with the visualization and dashboard in the preceding tutorial, follow these steps to associate an anomaly detector with a visualization:
+使用單一介面新增、檢視及編輯您要與視覺化建立關聯的異常偵測器。延續前述教學中的視覺化與儀表板，請依照下列步驟將異常偵測器與視覺化建立關聯：
  
-1. Select the ellipsis icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/}) from the visualization panel, then select **Anomaly Detection**.
-2. Select **Associate a detector**.
-3. From the **Select detector to associate** dropdown menu, select the detector. Only eligible detectors are listed in the dropdown menu.
-4. View basic information about the detectors. To view comprehensive details, select **View detector page** to open the Anomaly Detection plugin page.
-5. Select **Associate detector**. An existing detector is now associated to the visualization, as shown in the following image.
+1. 在視覺化面板中選取省略符號圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/})，然後選取 **Anomaly Detection**。
+2. 選取 **Associate a detector**。
+3. 從 **Select detector to associate** 下拉式選單中選取偵測器。下拉式選單中只會列出符合資格的偵測器。
+4. 檢視偵測器的基本資訊。若要檢視完整詳細資料，請選取 **View detector page** 以開啟 Anomaly Detection 外掛程式頁面。
+5. 選取 **Associate detector**。現有的偵測器現在已與視覺化建立關聯，如下圖所示。
 
-![Interface and confirmation message of associating a detector]({{site.url}}{{site.baseurl}}/images/dashboards/anomaly-detect-dashboard.png){: width="800" height="800" }
+![建立偵測器關聯的介面與確認訊息]({{site.url}}{{site.baseurl}}/images/dashboards/anomaly-detect-dashboard.png){: width="800" height="800" }
 
-## Refreshing the visualization
+## 重新整理視覺化
 
-Depending on the threshold settings, the visualization refreshes automatically at the specified interval. To manually refresh the visualization, select the **Refresh** button on the Dashboard page.
+視覺化會依據閾值設定，以指定的間隔自動重新整理。若要手動重新整理視覺化，請選取 Dashboard 頁面上的 **Refresh** 按鈕。
 
-## Next steps
+## 後續步驟
 
-- [Learn more about the Dashboard application]({{site.url}}{{site.baseurl}}/dashboards/dashboard/index/).
-- [Learn more about anomaly detection]({{site.url}}{{site.baseurl}}/observing-your-data/ad/index/).
+- [深入了解 Dashboard 應用程式]({{site.url}}{{site.baseurl}}/dashboards/dashboard/index/)。
+- [深入了解異常偵測]({{site.url}}{{site.baseurl}}/observing-your-data/ad/index/)。

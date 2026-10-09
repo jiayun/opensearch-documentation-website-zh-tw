@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: replace
 parent: Commands
@@ -8,33 +9,33 @@ nav_order: 38
 
 <!-- vale off -->
 
-# replace command
+# replace 命令
 
 <!-- vale on -->
 
-The `replace` command replaces text in one or more fields in the search results. It supports literal string replacement and wildcard patterns using `*`.
+`replace` 命令會取代搜尋結果中一個或多個欄位內的文字。它支援字面字串取代，以及使用 `*` 的萬用字元模式。
 
-## Syntax
+## 語法
 
-The `replace` command has the following syntax:
+`replace` 命令的語法如下：
 
 ```sql
 replace '<pattern>' WITH '<replacement>' [, '<pattern>' WITH '<replacement>']... IN <field-name>[, <field-name>]...
 ```
 
-## Parameters
+## 參數
 
-The `replace` command supports the following parameters.
+`replace` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<pattern>` | Required | The text pattern to be replaced. |
-| `<replacement>` | Required | The text to use as the replacement. |
-| `<field-name>` | Required | One or more fields to which the replacement should be applied. |
+| `<pattern>` | 必要 | 要取代的文字模式。 |
+| `<replacement>` | 必要 | 用來取代的文字。 |
+| `<field-name>` | 必要 | 要套用取代的一個或多個欄位。 |
 
-## Example 1: Replacing text in one field  
+## 範例 1：取代單一欄位中的文字  
 
-The following query replaces text in one field:
+下列查詢會取代單一欄位中的文字：
   
 ```sql
 source=otellogs
@@ -45,7 +46,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -60,9 +61,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Replacing text in multiple fields  
+## 範例 2：取代多個欄位中的文字  
 
-The following query replaces text in multiple fields:
+下列查詢會取代多個欄位中的文字：
   
 ```sql
 source=otellogs
@@ -73,7 +74,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -88,9 +89,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Using the replace command in a pipeline
+## 範例 3：在管線中使用 replace 命令
 
-The following query uses the `replace` command with other commands in a query pipeline:
+下列查詢會在查詢管線中將 `replace` 命令與其他命令搭配使用：
   
 ```sql
 source=otellogs
@@ -101,12 +102,13 @@ source=otellogs
 ```
 {% include copy.html %}
 {% include try-in-playground.html %}
+```sql
 | where age > 30
 | fields state, age
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 ```text
 fetched rows / total rows = 3/3
@@ -120,9 +122,9 @@ fetched rows / total rows = 3/3
 ```
   
 
-## Example 4: Replacing text using multiple pattern-replacement pairs
+## 範例 4：使用多組模式-取代配對來取代文字
 
-The following query uses the `replace` command with multiple pattern and replacement pairs in a single replace command. The replacements are applied sequentially:
+下列查詢會在單一 replace 命令中使用 `replace` 命令搭配多組模式與取代配對。這些取代會依序套用：
   
 ```sql
 source=accounts
@@ -131,7 +133,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 ```text
 fetched rows / total rows = 4/4
@@ -146,9 +148,9 @@ fetched rows / total rows = 4/4
 ```
   
 
-## Example 5: Pattern matching using LIKE
+## 範例 5：使用 LIKE 進行模式比對
 
-The following query uses the `LIKE` command with the `replace` command for pattern matching, since the `replace` command only supports plain string literals:
+下列查詢會使用 `LIKE` 命令搭配 `replace` 命令進行模式比對，因為 `replace` 命令僅支援純字串常值：
   
 ```sql
 source=accounts
@@ -158,7 +160,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 ```text
 fetched rows / total rows = 1/1
@@ -170,9 +172,9 @@ fetched rows / total rows = 1/1
 ```
   
 
-## Example 6: Wildcard suffix matching  
+## 範例 6：萬用字元後置字元比對  
 
-The following query shows wildcard suffix matching, in which `*` matches any characters before a specific ending pattern:
+下列查詢示範萬用字元後置字元比對，其中 `*` 會比對特定結尾模式之前的所有字元：
   
 ```sql
 source=accounts
@@ -181,7 +183,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 ```text
 fetched rows / total rows = 4/4
@@ -196,9 +198,9 @@ fetched rows / total rows = 4/4
 ```
   
 
-## Example 7: Wildcard prefix matching  
+## 範例 7：萬用字元前置字元比對  
 
-The following query shows wildcard prefix matching, in which `*` matches any characters after a specific starting pattern:
+下列查詢示範萬用字元前置字元比對，其中 `*` 會比對特定起始模式之後的所有字元：
   
 ```sql
 source=accounts
@@ -207,7 +209,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 ```text
 fetched rows / total rows = 4/4
@@ -222,9 +224,9 @@ fetched rows / total rows = 4/4
 ```
   
 
-## Example 8: Wildcard capture and substitution  
+## 範例 8：萬用字元擷取與替換  
 
-The following query uses wildcards in both the pattern and replacement to capture and reuse matched portions. The number of wildcards must match in the pattern and replacement:
+下列查詢會在模式與取代中同時使用萬用字元，以擷取並重複使用比對到的部分。模式與取代中的萬用字元數量必須相符：
   
 ```sql
 source=accounts
@@ -233,7 +235,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 ```text
 fetched rows / total rows = 4/4
@@ -248,9 +250,9 @@ fetched rows / total rows = 4/4
 ```
   
 
-## Example 9: Transforming patterns with multiple wildcards  
+## 範例 9：使用多個萬用字元轉換模式  
 
-The following query uses multiple wildcards to transform patterns. Each wildcard in the replacement is substituted with the corresponding captured value:
+下列查詢會使用多個萬用字元來轉換模式。取代中的每個萬用字元都會以對應的擷取值來替換：
   
 ```sql
 source=accounts
@@ -259,7 +261,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 ```text
 fetched rows / total rows = 4/4
@@ -274,9 +276,9 @@ fetched rows / total rows = 4/4
 ```
   
 
-## Example 10: Replacing any match with a fixed value  
+## 範例 10：將任何比對結果取代為固定值  
 
-The following query shows that when the replacement contains zero wildcards, all matching values are replaced with the literal replacement string:
+下列查詢示範當取代中包含零個萬用字元時，所有比對到的值都會以字面取代字串來取代：
   
 ```sql
 source=accounts
@@ -285,7 +287,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 ```text
 fetched rows / total rows = 4/4
@@ -300,9 +302,9 @@ fetched rows / total rows = 4/4
 ```
   
 
-## Example 11: Matching literal asterisks  
+## 範例 11：比對字面星號  
 
-Use `\*` to match literal asterisk characters and `\\` to match literal backslash characters. The following query uses `\*`:
+使用 `\*` 來比對字面星號字元，並使用 `\\` 來比對字面反斜線字元。下列查詢使用 `\*`：
   
 ```sql
 source=accounts
@@ -312,7 +314,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 ```text
 fetched rows / total rows = 4/4
@@ -326,9 +328,9 @@ fetched rows / total rows = 4/4
 +------------+
 ```
 
-## Example 12: Replacing text with literal asterisk symbols  
+## 範例 12：以字面星號符號取代文字  
 
-The following query shows how to insert literal asterisk symbols into text while using wildcards to preserve other parts of the pattern:
+下列查詢示範如何在文字中插入字面星號符號，同時使用萬用字元保留模式的其他部分：
   
 ```sql
 source=accounts
@@ -338,7 +340,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 ```text
 fetched rows / total rows = 4/4
@@ -353,10 +355,10 @@ fetched rows / total rows = 4/4
 ```
   
 
-## Limitations
+## 限制
 
-The `replace` command has the following limitations:
+`replace` 命令有下列限制：
 
-* **Wildcards**: The `*` wildcard matches zero or more characters and is case sensitive.
-* **Wildcard matching**: Replacement wildcards must match the pattern wildcard count or be zero.
-* **Escape sequences**: Use `\*` for literal asterisk and `\\` for literal backslash characters.  
+* **萬用字元**：`*` 萬用字元會比對零個或多個字元，且區分大小寫。
+* **萬用字元比對**：取代中的萬用字元數量必須與模式中的萬用字元數量相符，或為零。
+* **逸出序列**：使用 `\*` 表示字面星號，並使用 `\\` 表示字面反斜線字元。  

@@ -6,6 +6,7 @@ import json
 import re
 import subprocess
 import threading
+import copy
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
@@ -21,9 +22,11 @@ from .frontmatter import (Document, FrontMatterError, add_modification_notice, o
 from .prompts import (REVIEWER_SYSTEM, TRANSLATOR_SYSTEM, PromptContext, ReviewResult,
                       parse_review, validate_translation)
 from .protect import TOKEN_RE, PlaceholderError, Protector
+from .protect import legal_notice_lines
 from .providers import (INVALID, TRUNCATED, NoProviderAvailable, ProviderError, ProviderPool,
                         extract_json_object)
 from .segment import Chunk, split_body
+from .source_errata import apply_source_errata
 from .store import (Cache, Manifest, RunLog, SourceInventory, SourceStore, atomic_write, new_entry, now,
                     sha256_bytes, sha256_text)
 from .terms import TermRules
@@ -139,7 +142,9 @@ class PageWork:
 
 
 def build_work(page: str, baseline: bytes, source_sha256: str) -> PageWork:
-    text = baseline.decode("utf-8")
+    # Translation and validation use the same explicitly recorded syntax
+    # errata; inventory/provenance stay pinned to the immutable raw source.
+    text = apply_source_errata(baseline.decode("utf-8"))
     doc = split_document(text)
     if not doc.has_front_matter:
         # The per-file modification notice lives in the front matter.
@@ -187,6 +192,26 @@ def sections(body: str) -> list[tuple[int, int, str]]:
         out.append((offset, offset + len(restored), restored))
         offset += len(restored)
     return out
+
+
+def protected_draft(protector: Protector, protected_source: str, draft: str) -> str:
+    """Give a draft the source's exact placeholder IDs, including duplicates."""
+    from collections import deque
+    other = Protector()
+    protected = other.protect_body(draft)
+    available = defaultdict(deque)
+    for match in TOKEN_RE.finditer(protected_source):
+        token = match.group(0)
+        available[protector.restore(token)].append(token)
+    def replace(match):
+        original = other.restore(match.group(0))
+        if not available[original]:
+            raise PageProblems(['repair draft protected regions do not match source'])
+        return available[original].popleft()
+    result = TOKEN_RE.sub(replace, protected)
+    if any(available.values()):
+        raise PageProblems(['repair draft is missing protected source regions'])
+    return result
 
 
 # -- runner ------------------------------------------------------------------------
@@ -336,6 +361,31 @@ class Runner:
                           f"status={entry['status']}")
             return "dry-run"
         findings: dict[int, list[str]] = {}
+        pending_repair: tuple[Candidate, ReviewResult] | None = None
+        if candidate is None:
+            # A bounded retry resumes the last rejected draft instead of paying
+            # to recreate the whole page. The checkpoint is never an approval.
+            saved = self.cache.get("pending-repairs", Cache.key(page, work.source_sha256))
+            if saved and saved.get("source_sha256") == work.source_sha256:
+                text, provenance = saved.get("text"), saved.get("translator")
+                providers = (provenance or {}).get("providers", []) if isinstance(provenance, dict) else []
+                if (isinstance(text, str) and providers
+                        and all(p.get("provider") and p.get("model") and p.get("family") for p in providers)
+                        and not compare_translation(work.baseline, text, self.rules)):
+                    previous = Candidate(text, provenance, new=True)
+                    record = saved.get("review") or {}
+                    if (saved.get("prompt_version") == self.prompts.version
+                            and record.get("approved") is False and record.get("issues")
+                            and record.get("provider") in self.pool.providers):
+                        rejected = ReviewResult(False, record["issues"], record["provider"], record.get("model", ""))
+                        pending_repair = (previous, rejected)
+                        findings = self.issues_to_findings(work, rejected.issues)
+                    else:
+                        # Section ids and editorial rules may have changed.
+                        # Review the complete saved draft under the current policy.
+                        candidate = previous
+                    self.log("rejected_draft_resumed", page=page,
+                             repair_ready=pending_repair is not None)
         while True:
             if candidate is None:
                 attempts = self.manifest.entry(page).get("attempts", 0)
@@ -343,7 +393,13 @@ class Runner:
                     self.manifest.update(page, last_error="attempt limit reached", updated_at=now())
                     return "failed"
                 try:
-                    candidate = self.translate(work, findings, attempts + 1)
+                    if pending_repair:
+                        previous, rejected = pending_repair
+                        candidate = self.repair(work, previous, rejected)
+                        if candidate is None:
+                            candidate = self.translate(work, findings, attempts + 1)
+                    else:
+                        candidate = self.translate(work, findings, attempts + 1)
                 except PageProblems as exc:
                     self.manifest.update(page, attempts=attempts + 1, last_error=str(exc)[:500], updated_at=now())
                     self.log("page_invalid", page=page, problems=exc.problems[:20])
@@ -361,6 +417,11 @@ class Runner:
                 self.commit(page, work, candidate, review)
                 return "reviewed"
             self.log("review_rejected", page=page, provider=review.provider, issues=review.issues[:20])
+            self.cache.put("pending-repairs", Cache.key(page, work.source_sha256), {
+                "source_sha256": work.source_sha256, "text": candidate.text,
+                "translator": candidate.translator, "prompt_version": self.prompts.version,
+                "review": {"approved": False, "issues": review.issues,
+                           "provider": review.provider, "model": review.model}, "at": now()})
             if candidate.new:
                 self.cache.put("rejected", Cache.key(page, sha256_text(candidate.text)),
                                {"page": page, "text": candidate.text, "issues": review.issues})
@@ -368,6 +429,7 @@ class Runner:
                 self.manifest.update(page, reviewer=self._review_record(review, candidate),
                                      last_error="review rejected", updated_at=now())
             findings = self.issues_to_findings(work, review.issues)
+            pending_repair = (candidate, review)
             candidate = None
             if self.manifest.entry(page).get("attempts", 0) >= config.MAX_PAGE_ATTEMPTS:
                 self.manifest.update(page, last_error=f"review rejected after {config.MAX_PAGE_ATTEMPTS} attempts",
@@ -375,6 +437,119 @@ class Runner:
                 return "failed"
 
     # -- translation ---------------------------------------------------------------
+    def repair(self, work: PageWork, candidate: Candidate, review: ReviewResult) -> Candidate | None:
+        """Patch identified sections only; unrelated draft bytes stay unchanged.
+
+        Invalid/global finding IDs conservatively fall back to full translation.
+        Any successful patch still receives complete independent review.
+        """
+        cache_key = Cache.key(work.page, work.source_sha256, self.prompts.version,
+                              sha256_text(candidate.text), json.dumps(review.issues, ensure_ascii=False, sort_keys=True))
+        cached = self.cache.get('repairs', cache_key)
+        if cached and not compare_translation(work.baseline, cached.get('text', ''), self.rules):
+            self.log('repair_cache_hit', page=work.page)
+            return Candidate(cached['text'], cached['translator'], new=True)
+        source_sections = sections(work.doc.body)
+        draft_doc = split_document(candidate.text)
+        draft_sections = sections(draft_doc.body)
+        if len(source_sections) != len(draft_sections):
+            return None
+        major = [issue for issue in review.issues if issue.get('severity') == 'major']
+        if not major:
+            return None
+        requested = {}
+        for issue in major:
+            identifier = issue.get('id') or ''
+            if identifier == 'front_matter':
+                requested[identifier] = None
+                continue
+            match = re.fullmatch(r'section\.(\d+)', identifier)
+            if not match or int(match[1]) >= len(source_sections):
+                return None
+            requested[identifier] = int(match[1])
+        protector = Protector()
+        request = []
+        locations = {}
+        for identifier, index in requested.items():
+            if index is None:
+                original_fields = translatable_fields(work.doc.data)
+                draft_fields = translatable_fields(draft_doc.data)
+                for sid, original in original_fields.items():
+                    protected = protector.protect_body(original)
+                    try:
+                        draft = protected_draft(protector, protected, draft_fields[sid])
+                    except PageProblems:
+                        self.log('repair_fallback', page=work.page, reason='front matter protected context differs')
+                        return None
+                    request.append({'id': sid, 'kind': 'front_matter', 'text': protected,
+                                    'draft': draft})
+                    locations[sid] = None
+            else:
+                sid = f'body.{index:03d}'
+                protected = protector.protect_body(source_sections[index][2])
+                try:
+                    draft = protected_draft(protector, protected, draft_sections[index][2])
+                except PageProblems:
+                    self.log('repair_fallback', page=work.page, reason='section protected context differs', section=identifier)
+                    return None
+                request.append({'id': sid, 'kind': 'markdown', 'text': protected,
+                                'draft': draft})
+                locations[sid] = index
+        metadata = {'page': work.page, 'task': 'repair', 'source_sha256': work.source_sha256,
+                    'prompt_version': self.prompts.version, 'issue_ids': list(requested)}
+        messages = [f"[{i.get('id')}] {i.get('problem')} Suggested correction: {i.get('suggestion', '')}"
+                    for i in review.issues if i.get('id') in requested]
+        problems = []
+        for _ in range(config.MAX_CHUNK_TRIES):
+            prompt = self.prompts.translation_prompt(metadata, request, messages + problems)
+            try:
+                reply = self.pool.call(self.options.translators, TRANSLATOR_SYSTEM, prompt, 'repair')
+                answer = extract_json_object(reply.text)
+                outputs, problems = validate_translation(request, answer, protector, self.rules)
+            except NoProviderAvailable as exc:
+                raise PageFailure(f'no repair translator available: {exc}', stop=True)
+            except ProviderError as exc:
+                if exc.kind in (INVALID, TRUNCATED):
+                    problems = [f'previous repair response {exc.kind}; return complete JSON']
+                    continue
+                raise PageFailure(f'repair translator {exc.kind}: {exc.detail[:300]}')
+            if problems:
+                self.log('repair_invalid', page=work.page, problems=problems[:20])
+                continue
+            restored = {sid: protector.restore(text) for sid, text in outputs.items()}
+            patches = []
+            for sid, index in locations.items():
+                if index is None:
+                    continue
+                start, end, original = draft_sections[index]
+                leading = re.match(r'\s*', original).group(0)
+                trailing = re.search(r'\s*$', original).group(0)
+                # Response validation trims outer whitespace. Keep the old
+                # section boundary so adjacent headings never merge.
+                replacement = leading + restored[sid].strip() + trailing
+                patches.append((start, end, replacement))
+            patches.sort(reverse=True)
+            body = draft_doc.body
+            for start, end, replacement in patches:
+                body = body[:start] + replacement + body[end:]
+            fields = {sid: text for sid, text in restored.items() if locations[sid] is None}
+            text = add_modification_notice(rewrite(draft_doc, fields) + body)
+            problems = compare_translation(work.baseline, text, self.rules)
+            if problems:
+                self.log('repair_invalid', page=work.page, problems=problems[:20])
+                continue
+            provenance = copy.deepcopy(candidate.translator)
+            provenance.update(at=now(), prompt_version=self.prompts.version)
+            provenance.setdefault('providers', []).append({
+                'provider': reply.provider, 'model': reply.model,
+                'family': self.pool.providers[reply.provider].family, 'repairs': list(requested)})
+            self.log('page_repaired', page=work.page, sections=list(requested),
+                     repaired_chars=sum(len(item['text']) for item in request), draft_chars=len(candidate.text),
+                     provider=reply.provider)
+            self.cache.put('repairs', cache_key, {'text': text, 'translator': provenance, 'at': now()})
+            return Candidate(text, provenance, new=True)
+        raise PageProblems(problems)
+
     def _chunk_request(self, work: PageWork, chunk: Chunk) -> list[dict]:
         """Segments for one model call; text without letters (only code
         placeholders, numbers, punctuation) is passed through unchanged."""
@@ -473,9 +648,11 @@ class Runner:
         if len(src_sections) == len(out_sections):
             for i, (s, o) in enumerate(zip(src_sections, out_sections)):
                 if s[2].strip() or o[2].strip():
-                    items.append({"id": f"section.{i:03d}", "source": s[2], "translation": o[2]})
+                    items.append({"id": f"section.{i:03d}", "source": s[2], "translation": o[2],
+                                  "protected_legal_notices": legal_notice_lines(s[2])})
         else:
-            items.append({"id": "body", "source": work.doc.body, "translation": doc.body})
+            items.append({"id": "body", "source": work.doc.body, "translation": doc.body,
+                          "protected_legal_notices": legal_notice_lines(work.doc.body)})
         return items
 
     def review(self, work: PageWork, candidate: Candidate) -> ReviewResult | None:

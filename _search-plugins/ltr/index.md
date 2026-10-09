@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Learning to Rank
 parent: Optimizing search quality
@@ -13,39 +14,39 @@ redirect_from:
 # Learning to Rank
 <!-- vale on -->
 
-The Learning to Rank plugin for OpenSearch enables you to use machine learning (ML) and behavioral data to fine-tune the relevance of documents. It uses models from the [XGBoost](https://xgboost.ai/) and [RankLib](https://lemurproject.org/ranklib.php) libraries. These models rescore the search results, considering query-dependent features such as click-through data or field matches, which can further improve relevance.
+OpenSearch 的 Learning to Rank 外掛程式可讓您使用機器學習 (ML) 與行為資料來微調文件的相關性。它使用來自 [XGBoost](https://xgboost.ai/) 與 [RankLib](https://lemurproject.org/ranklib.php) 程式庫的模型。這些模型會重新評分搜尋結果，並考量與查詢相關的特徵，例如點擊資料或欄位匹配，進一步提升相關性。
 
-The term _learning to rank_ is abbreviated as LTR throughout the OpenSearch documentation when the term is used in a general sense. For the plugin developer documentation, see [`opensearch-learning-to-rank-base`](https://github.com/opensearch-project/opensearch-learning-to-rank-base).
+在 OpenSearch 文件中，_learning to rank_ 一詞在一般語境下縮寫為 LTR。外掛程式開發者文件請參閱 [`opensearch-learning-to-rank-base`](https://github.com/opensearch-project/opensearch-learning-to-rank-base)。
 {: .note} 
 
-## Getting started
+## 入門
 
-The following resources can help you get started:
+下列資源可協助您快速上手：
 
-- If you are new to LTR, start with the [ML ranking core concepts]({{site.url}}{{site.baseurl}}/search-plugins/ltr/core-concepts/) documentation.
-- For a quick introduction, see the demo in [hello-ltr](https://github.com/o19s/hello-ltr).
-- If you are familiar with LTR, start with the [Scope of the plugin]({{site.url}}{{site.baseurl}}/search-plugins/ltr/fits-in/) documentation.
+- 如果您是 LTR 新手，請從 [機器學習排序的核心概念]({{site.url}}{{site.baseurl}}/search-plugins/ltr/core-concepts/) 文件開始。
+- 如需快速簡介，請參閱 [hello-ltr](https://github.com/o19s/hello-ltr) 中的示範。
+- 如果您已熟悉 LTR，請從 [外掛程式的適用範圍]({{site.url}}{{site.baseurl}}/search-plugins/ltr/fits-in/) 文件開始。
 
-## Core concepts and setup
+## 核心概念與設定
 
-Before implementing LTR, familiarize yourself with the foundational concepts and architecture:
+在實作 LTR 之前，請先熟悉基礎概念與架構：
 
-- [ML ranking core concepts]({{site.url}}{{site.baseurl}}/search-plugins/ltr/core-concepts/): Understand the fundamental concepts behind Learning to Rank.
-- [Scope of the plugin]({{site.url}}{{site.baseurl}}/search-plugins/ltr/fits-in/): Learn how LTR integrates with your OpenSearch infrastructure.
+- [機器學習排序的核心概念]({{site.url}}{{site.baseurl}}/search-plugins/ltr/core-concepts/)：瞭解 Learning to Rank 背後的基本概念。
+- [外掛程式的適用範圍]({{site.url}}{{site.baseurl}}/search-plugins/ltr/fits-in/)：瞭解 LTR 如何與您的 OpenSearch 基礎架構整合。
 
-## Feature engineering and model development
+## 特徵工程與模型開發
 
-Create and train your ranking models using the following workflow:
+使用下列工作流程建立並訓練您的排序模型：
 
-- [Feature engineering]({{site.url}}{{site.baseurl}}/search-plugins/ltr/feature-engineering/): Design effective features for your ranking models.
-- [Working with features]({{site.url}}{{site.baseurl}}/search-plugins/ltr/working-with-features/): Create and manage feature sets.
-- [Logging feature scores]({{site.url}}{{site.baseurl}}/search-plugins/ltr/logging-features/): Collect feature data for model training.
-- [Uploading trained models]({{site.url}}{{site.baseurl}}/search-plugins/ltr/training-models/): Build and train your ranking models.
+- [特徵工程]({{site.url}}{{site.baseurl}}/search-plugins/ltr/feature-engineering/)：為您的排序模型設計有效的特徵。
+- [使用特徵]({{site.url}}{{site.baseurl}}/search-plugins/ltr/working-with-features/)：建立並管理特徵集。
+- [記錄特徵分數]({{site.url}}{{site.baseurl}}/search-plugins/ltr/logging-features/)：收集特徵資料以供模型訓練。
+- [上傳已訓練模型]({{site.url}}{{site.baseurl}}/search-plugins/ltr/training-models/)：建立並訓練您的排序模型。
 
-## Deployment and advanced topics
+## 部署與進階主題
 
-Once your models are trained, deploy them in production and explore advanced features:
+模型訓練完成後，即可部署至正式環境並探索進階功能：
 
-- [Optimizing search with LTR]({{site.url}}{{site.baseurl}}/search-plugins/ltr/searching-with-your-model/): Deploy models in production search.
-- [Advanced functionality]({{site.url}}{{site.baseurl}}/search-plugins/ltr/advanced-functionality/): Explore advanced LTR features and techniques.
-- [Common issues]({{site.url}}{{site.baseurl}}/search-plugins/ltr/faq/): Common questions and troubleshooting.
+- [使用 LTR 最佳化搜尋]({{site.url}}{{site.baseurl}}/search-plugins/ltr/searching-with-your-model/)：在正式環境搜尋中部署模型。
+- [進階功能]({{site.url}}{{site.baseurl}}/search-plugins/ltr/advanced-functionality/)：探索進階的 LTR 功能與技術。
+- [常見問題]({{site.url}}{{site.baseurl}}/search-plugins/ltr/faq/)：常見問題與疑難排解。

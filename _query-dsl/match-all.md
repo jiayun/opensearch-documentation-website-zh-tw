@@ -1,12 +1,13 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Match all queries
+title: "全部相符查詢"
 nav_order: 20
 ---
 
-# Match all queries
+# 全部相符查詢
 
-The `match_all` query returns all documents. This query can be useful in testing large document sets if you need to return the entire set.
+`match_all` 查詢會傳回所有文件。如果您需要傳回整組文件，此查詢在測試大型文件集時可能很實用。
 
 ```json
 GET _search
@@ -18,7 +19,7 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-The `match_all` query has a `match_none` counterpart, which is rarely useful:
+`match_all` 查詢有 `match_none` 對應版本，但很少派上用場：
 
 ```json
 GET _search
@@ -31,11 +32,11 @@ GET _search
 {% include copy-curl.html %}
 
 
-## Parameters
+## 參數
 
-Both the `match_all` and `match_none` queries accept the following parameters. All parameters are optional.
+`match_all` 和 `match_none` 查詢都接受下列參數。所有參數都是選用的。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`boost` | Floating-point | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field’s relevance. Values between 0.0 and 1.0 decrease the field’s relevance. Default is 1.0.
-`_name` | String | The name of the query for query tagging. Optional.
+`boost` | 浮點數 | 指定此欄位對相關性分數之權重的浮點值。大於 1.0 的值會提高欄位的相關性。介於 0.0 和 1.0 之間的值會降低欄位的相關性。預設值為 1.0。
+`_name` | 字串 | 用於查詢標記的查詢名稱。選用。

@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: User agent
+title: "使用者代理程式"
 parent: Ingest processors
 nav_order: 330
 ---
 
-# User agent processor
+# 使用者代理程式處理器
 
-The `user_agent` processor is used to extract information from the user agent string, such as the browser, device, and operating system used by the client. The `user_agent` processor is particularly useful for analyzing user behavior and identifying trends based on user devices, operating systems, and browsers. It can also be helpful for troubleshooting issues specific to certain user agent configurations.
+`user_agent` 處理器用於從使用者代理程式字串中擷取資訊，例如用戶端所使用的瀏覽器、裝置和作業系統。`user_agent` 處理器特別適合用來分析使用者行為，以及根據使用者裝置、作業系統和瀏覽器找出趨勢。它也有助於針對特定使用者代理程式組態的問題進行疑難排解。
 
-The following is the syntax for the `user_agent` processor:
+以下是 `user_agent` 處理器的語法：
 
 ```json
 {
@@ -23,30 +24,30 @@ The following is the syntax for the `user_agent` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `user_agent` processor.
+下表列出 `user_agent` 處理器的必要和選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
-`field` | Required | The field containing the user agent string.
-`target_field` | Optional | The field in which to store the extracted user agent information. If not specified, then the information is stored in the `user_agent` field.
-`ignore_missing`  | Optional  | Specifies whether the processor should ignore documents that do not contain the specified `field`. If set to `true`, the processor does not modify the document if the `field` does not exist. Default is `false`. |
-`regex_file` | Optional | A file containing regular expression patterns used to parse the user agent string. This file should be located in the `config/ingest-user-agent` directory within the OpenSearch package. If not specified, then the default file `regexes.yaml` is used.
-`properties` | Optional | A list of properties to be extracted from the user agent string and added to the `target_field`. If not specified, then the default properties are `name`, `major`, `minor`, `patch`, `build`, `os`, `os_name`, `os_major`, `os_minor`, and `device`.
-`description`  | Optional  | A brief description of the processor.  |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | Specifies whether the processor continues to run even if it encounters an error. If set to `true`, then failures are ignored. Default is `false`. |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |
+`field` | 必要 | 包含使用者代理程式字串的欄位。
+`target_field` | 選用 | 用來儲存所擷取使用者代理程式資訊的欄位。若未指定，則資訊會儲存在 `user_agent` 欄位中。
+`ignore_missing`  | 選用  | 指定處理器是否應忽略未包含所指定 `field` 的文件。若設為 `true`，則當 `field` 不存在時，處理器不會修改文件。預設為 `false`。 |
+`regex_file` | 選用 | 包含用來剖析使用者代理程式字串之規則表達式模式的檔案。此檔案應位於 OpenSearch 套件內的 `config/ingest-user-agent` 目錄中。若未指定，則會使用預設檔案 `regexes.yaml`。
+`properties` | 選用 | 要從使用者代理程式字串中擷取並新增至 `target_field` 的屬性清單。若未指定，則預設屬性為 `name`、`major`、`minor`、`patch`、`build`、`os`、`os_name`、`os_major`、`os_minor` 和 `device`。
+`description`  | 選用  | 處理器的簡短說明。  |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。 |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+請依照下列步驟在管線中使用處理器。
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
 
-The following query creates a pipeline named `user_agent_pipeline` that uses the `user_agent` processor to extract user agent information: 
+下列查詢會建立名為 `user_agent_pipeline` 的管線，其使用 `user_agent` 處理器來擷取使用者代理程式資訊： 
 
 ```json
 PUT _ingest/pipeline/user_agent_pipeline
@@ -64,12 +65,12 @@ PUT _ingest/pipeline/user_agent_pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2 (Optional): Test the pipeline
+### 步驟 2 (選用)：測試管線
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/user_agent_pipeline/_simulate
@@ -86,9 +87,9 @@ POST _ingest/pipeline/user_agent_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應可確認管線運作正常：
 
 ```json
 {
@@ -122,9 +123,9 @@ The following example response confirms that the pipeline is working as expected
 }
 ```
 
-### Step 3: Ingest a document 
+### 步驟 3：匯入文件 
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=user_agent_pipeline
@@ -134,9 +135,9 @@ PUT testindex1/_doc/1?pipeline=user_agent_pipeline
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The preceding request parses the `user_agent` string into its components and indexes the document, along with all documents containing those components, into the `testindex1` index, as shown in the following response:
+上述請求會將 `user_agent` 字串剖析為其組成部分，並將該文件以及所有包含這些組成部分的文件編製索引至 `testindex1` 索引，如下列回應所示：
 
 ```json
 {
@@ -154,18 +155,18 @@ The preceding request parses the `user_agent` string into its components and ind
 }
 ```
 
-### Step 4 (Optional): Retrieve the document
+### 步驟 4 (選用)：擷取文件
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The response includes the original `user_agent` field and the parsed `user_agent_info` field containing the device, operating system, and browser information: 
+回應包含原始 `user_agent` 欄位，以及剖析後的 `user_agent_info` 欄位，其中包含裝置、作業系統和瀏覽器資訊： 
 
 ```json
 {

@@ -1,46 +1,47 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Comparing single queries
+title: "比較單一查詢"
 nav_order: 10
 parent: Search Relevance Workbench
 grand_parent: Optimizing search quality
 has_children: false
 ---
 
-# Comparing single queries
+# 比較單一查詢
 
-With Compare Search Results in OpenSearch Dashboards, you can compare results from two queries side by side to determine whether one query produces better results than the other. Using this tool, you can evaluate search quality by experimenting with queries.
+透過 OpenSearch Dashboards 中的 Compare Search Results，您可以並排比較兩個查詢的結果，判斷其中一個查詢是否產生比另一個更好的結果。使用此工具，您可以透過嘗試不同查詢來評估搜尋品質。
 
-For example, you can see how results change when you apply one of the following query changes:
+例如，您可以套用下列其中一種查詢變更，查看結果如何改變：
 
-- Weighting fields differently
-- Different stemming or lemmatization strategies
-- Shingling
+- 為欄位設定不同的權重
+- 使用不同的詞幹提取或詞形還原策略
+- 使用詞元組合（Shingling）
 
-## Prerequisites
+## 先決條件
 
-Before you get started, you must index data in OpenSearch. To learn how to create a new index, see [Index data]({{site.url}}{{site.baseurl}}/opensearch/index-data/).
+開始之前，您必須在 OpenSearch 中將資料編製索引。若要瞭解如何建立新索引，請參閱[將資料編製索引]({{site.url}}{{site.baseurl}}/opensearch/index-data/)。
 
-Alternatively, you can add sample data in OpenSearch Dashboards using the following steps:
+或者，您可以使用下列步驟，在 OpenSearch Dashboards 中新增範例資料：
 
-1. On the top menu bar, go to **OpenSearch Dashboards > Overview**.
-1. Select **View app directory**.
-1. Select **Add sample data**.
-1. Choose one of the built-in datasets and select **Add data**.
+1. 在頂端功能表列中，前往 **OpenSearch Dashboards > Overview**。
+1. 選取 **View app directory**。
+1. 選取 **Add sample data**。
+1. 選擇其中一個內建資料集，然後選取 **Add data**。
 
 <!-- vale off -->
-## Using Compare Search Results in OpenSearch Dashboards
+## 在 OpenSearch Dashboards 中使用 Compare Search Results
 <!-- vale on -->
 
-To compare search results in OpenSearch Dashboards, perform the following steps.
+若要在 OpenSearch Dashboards 中比較搜尋結果，請執行下列步驟。
 
-**Step 1:** On the top menu bar, go to **OpenSearch Plugins > Search Relevance**.
+**步驟 1：** 在頂端功能表列中，前往 **OpenSearch Plugins > Search Relevance**。
 
-**Step 2:** Enter the search text in the search bar.
+**步驟 2：** 在搜尋列中輸入搜尋文字。
 
-**Step 3:** Select an index for **Query 1** and enter a query (request body only) in [OpenSearch Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/). The `GET` HTTP method and the `_search` endpoint are implicit. Use the `%SearchText%` variable to refer to the text in the search bar.
+**步驟 3：** 為 **Query 1** 選取索引，並以 [OpenSearch Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/) 輸入查詢（僅限請求本文）。`GET` HTTP 方法與 `_search` 端點已隱含指定。使用 `%SearchText%` 變數來參照搜尋列中的文字。
 
-The following is an example query:
+以下是查詢範例：
 
 ```json
 {
@@ -53,9 +54,9 @@ The following is an example query:
 }
 ```
 
-**Step 4:** Select an index for **Query 2** and enter a query (request body only).
+**步驟 4：** 為 **Query 2** 選取索引，並輸入查詢（僅限請求本文）。
 
-The following example query boosts the `title` field in the search results:
+下列查詢範例會提高搜尋結果中 `title` 欄位的權重：
 
 ```json
 {
@@ -68,17 +69,17 @@ The following example query boosts the `title` field in the search results:
 }
 ```
 
-**Step 5:** Select **Search** and compare **Result 1** and **Result 2**.
+**步驟 5：** 選取 **Search**，並比較 **Result 1** 與 **Result 2**。
 
-The following example screen shows a search for the word "cup" in the `description` and `item_name` fields with and without boosting the `item_name`.
+下列範例畫面顯示在 `description` 與 `item_name` 欄位中搜尋「cup」一詞時，提高與未提高 `item_name` 權重的結果。
 
-![Compare search results]({{site.url}}{{site.baseurl}}/images/search_relevance.png)
+![比較搜尋結果]({{site.url}}{{site.baseurl}}/images/search_relevance.png)
 
-If a result in Result 1 appears in Result 2, the `Up` and `Down` indicators below the result number signify how many positions the result moved up or down compared to the same result in Result 2. In this example, the document with the ID 2 is `Up 1` position in Result 2 compared to Result 1 and `Down 1` position in Result 1 compared to Result 2.
+如果 Result 1 中的某個結果也出現在 Result 2 中，結果編號下方的 `Up` 與 `Down` 指標會表示，相較於 Result 2 中的相同結果，該結果向上或向下移動了多少個位置。在此範例中，ID 為 2 的文件在 Result 2 中的位置相較於 Result 1 為 `Up 1` 個位置，而在 Result 1 中的位置相較於 Result 2 為 `Down 1` 個位置。
 
-## Changing the number of results
+## 變更結果數量
 
-By default, OpenSearch returns the top 10 results. To change the number of returned results to a different value, specify the `size` parameter in the query:
+根據預設，OpenSearch 會傳回前 10 筆結果。若要將傳回的結果數量變更為其他值，請在查詢中指定 `size` 參數：
 
 ```json
 {
@@ -92,58 +93,58 @@ By default, OpenSearch returns the top 10 results. To change the number of retur
 }
 ```
 
-Setting `size` to a high value (for example, larger than 250 documents) may degrade performance.
+將 `size` 設定為較高的值（例如超過 250 份文件）可能會降低效能。
 {: .note}
 
-You cannot save a given comparison for future use, so Compare Search Results is not suitable for systematic testing. Instead, review the [Search result comparison]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/comparing-search-results/) experiment.
+您無法儲存特定比較以供日後使用，因此 Compare Search Results 不適合用於系統化測試。請改為參閱[搜尋結果比較]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/comparing-search-results/)實驗。
 {: .note}
 
-## Comparing OpenSearch search results using Search Relevance Workbench
+## 使用 Search Relevance Workbench 比較 OpenSearch 搜尋結果
 
-[Search Relevance Workbench]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/using-search-relevance-workbench/) provides richer visualization options for examining the difference between two queries.
+[Search Relevance Workbench]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/using-search-relevance-workbench/) 提供更豐富的視覺化選項，讓您檢視兩個查詢之間的差異。
 
-To use Search Relevance Workbench, follow steps 1--4. The displayed results and the options for viewing the differences are shown in the following image.
+若要使用 Search Relevance Workbench，請依照步驟 1--4 操作。顯示的結果與檢視差異的選項如下圖所示。
 
-![Compare search results]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/comparing_search_results.png)
+![比較搜尋結果]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/comparing_search_results.png)
 
-The top section provides a summary of the results: how many of the retrieved results are unique to the query on the left, how many are unique to the query on the right, and how many are part of both queries?
+頂端區域提供結果摘要：擷取的結果中，有多少筆僅出現在左側查詢、有多少筆僅出現在右側查詢，以及有多少筆同時出現在兩個查詢中？
 
-What follows is a visual representation of the retrieved results. By default the unique identifier field (`_id`) is shown. You can change this by selecting a different field in the **Display Field** dropdown list.
-In the side-by-side view, you can see the positional changes for all common documents among the two result lists.
-Selecting one item shows all stored fields in the index to facilitate easier document identification.
+接下來是擷取結果的視覺化呈現。根據預設，會顯示唯一識別碼欄位（`_id`）。您可以在 **Display Field** 下拉式清單中選取其他欄位來變更此設定。
+在並排檢視中，您可以查看兩份結果清單中所有共同文件的位置變化。
+選取其中一個項目會顯示索引中所有已儲存的欄位，方便您識別文件。
 
-Lastly, Search Relevance Workbench allows you to choose among different visualization styles from a dropdown list:
+最後，Search Relevance Workbench 可讓您從下拉式清單中選擇不同的視覺化樣式：
 
-* **Default style**: Different colors are used for the two result list documents (unique results are on the left in yellow and on the right in purple, and common results are displayed in green).
-* **Ranking change color coding**: All unique documents are purple, and common results are green to focus on ranking changes.
-* **Ranking change color coding 2**: All unique documents are gray, and common results are green to focus on ranking changes.
-* **Venn diagram color coding**: All unique documents are purple, and common results are blue as in the Venn diagram at the top of the two result lists.
+* **Default style**：使用不同顏色顯示兩份結果清單中的文件（各自獨有的結果在左側以黃色顯示，在右側以紫色顯示，共同結果則以綠色顯示）。
+* **Ranking change color coding**：所有獨有文件皆以紫色顯示，共同結果則以綠色顯示，讓您專注於排名變化。
+* **Ranking change color coding 2**：所有獨有文件皆以灰色顯示，共同結果則以綠色顯示，讓您專注於排名變化。
+* **Venn diagram color coding**：所有獨有文件皆以紫色顯示，共同結果則以藍色顯示，與兩份結果清單頂端的文氏圖相同。
 
-## Comparing OpenSearch search results with reranked results
+## 比較 OpenSearch 搜尋結果與重新排名後的結果
 
-One use case for Compare Search Results is the comparison of raw OpenSearch results with the same results processed by a reranking application. OpenSearch currently integrates with the following two rerankers:
+Compare Search Results 的其中一個使用案例，是比較原始 OpenSearch 結果與經重新排名應用程式處理後的相同結果。OpenSearch 目前整合了下列兩個重新排名工具：
 
 - [Amazon Kendra Intelligent Ranking for OpenSearch](#reranking-results-with-amazon-kendra-intelligent-ranking-for-opensearch)
 - [Amazon Personalize Search Ranking](#personalizing-search-results-with-amazon-personalize-search-ranking)
 
 <!-- vale off -->
-### Reranking results with Amazon Kendra Intelligent Ranking for OpenSearch
+### 使用 Amazon Kendra Intelligent Ranking for OpenSearch 重新排名結果
 <!-- vale on -->
 
-An example of a reranker is **Amazon Kendra Intelligent Ranking for OpenSearch**, contributed by the Amazon Kendra team. This plugin takes search results from OpenSearch and applies Amazon Kendra’s semantic relevance rankings calculated using vector embeddings and other semantic search techniques. For many applications, this provides better result rankings.
+重新排名工具的其中一個範例是由 Amazon Kendra 團隊貢獻的 **Amazon Kendra Intelligent Ranking for OpenSearch**。此外掛程式會取得 OpenSearch 的搜尋結果，並套用 Amazon Kendra 使用向量嵌入與其他語意搜尋技術計算出的語意相關性排名。對許多應用程式而言，這能提供更好的結果排名。
 
-To try Amazon Kendra Intelligent Ranking, you must first set up the Amazon Kendra service. To get started, see [Amazon Kendra](https://aws.amazon.com/kendra/). For detailed information, including plugin setup instructions, see [Amazon Kendra Intelligent Ranking for self-managed OpenSearch](https://docs.aws.amazon.com/kendra/latest/dg/opensearch-rerank.html).
+若要試用 Amazon Kendra Intelligent Ranking，您必須先設定 Amazon Kendra 服務。若要開始使用，請參閱 [Amazon Kendra](https://aws.amazon.com/kendra/)。如需詳細資訊，包括外掛程式設定說明，請參閱[適用於自行管理之 OpenSearch 的 Amazon Kendra Intelligent Ranking](https://docs.aws.amazon.com/kendra/latest/dg/opensearch-rerank.html)。
 
-### Comparing search results with reranked results in OpenSearch Dashboards
+### 在 OpenSearch Dashboards 中比較搜尋結果與重新排名後的結果
 
-To compare search results with reranked results in OpenSearch Dashboards, enter a query in **Query 1** and enter the same query using a reranker in **Query 2**. Then compare the OpenSearch results with the reranked results.
+若要在 OpenSearch Dashboards 中比較搜尋結果與重新排名後的結果，請在 **Query 1** 中輸入查詢，並在 **Query 2** 中輸入使用重新排名工具的相同查詢。接著比較 OpenSearch 結果與重新排名後的結果。
 
-The following example demonstrates searching for the text "snacking nuts" in the `abo` index. The documents in the index contain snack descriptions in the `bullet_point` array.
+下列範例示範在 `abo` 索引中搜尋「snacking nuts」文字。索引中的文件在 `bullet_point` 陣列中包含零食描述。
 
-![OpenSearch Intelligent Ranking query]({{site.url}}{{site.baseurl}}/images/kendra_query.png)
+![OpenSearch Intelligent Ranking 查詢]({{site.url}}{{site.baseurl}}/images/kendra_query.png)
 
-1. Enter `snacking nuts` in the search bar.
-1. Enter the following query, which searches the `bullet_point` field for the search text "snacking nuts", in **Query 1**:
+1. 在搜尋列中輸入 `snacking nuts`。
+1. 在 **Query 1** 中輸入下列查詢，在 `bullet_point` 欄位中搜尋「snacking nuts」文字：
 
     ```json
     {
@@ -155,7 +156,7 @@ The following example demonstrates searching for the text "snacking nuts" in the
       "size": 25
     }
     ```
-1. Enter the same query with a reranker in **Query 2**. This example uses Amazon Kendra Intelligent Ranking:
+1. 在 **Query 2** 中輸入使用重新排名工具的相同查詢。此範例使用 Amazon Kendra Intelligent Ranking：
 
     ```json
     {
@@ -181,13 +182,13 @@ The following example demonstrates searching for the text "snacking nuts" in the
     }
     ```
 
-    In the preceding query, `body_field` refers to the body field of the documents in the index, which Amazon Kendra Intelligent Ranking uses to rank the results. The `body_field` is required, while the `title_field` is optional.
-1. Select **Search** and compare the results in **Result 1** and **Result 2**.
+    在上述查詢中，`body_field` 參照索引中文件的 body 欄位，Amazon Kendra Intelligent Ranking 會使用此欄位為結果排名。`body_field` 為必要項目，而 `title_field` 為選用項目。
+1. 選取 **Search**，並比較 **Result 1** 與 **Result 2** 中的結果。
 
 <!-- vale off -->
-### Personalizing search results with Amazon Personalize Search Ranking
+### 使用 Amazon Personalize Search Ranking 個人化搜尋結果
 <!-- vale on -->
 
-Another example of a reranker is **Amazon Personalize Search Ranking**, contributed by the Amazon Personalize team. Amazon Personalize uses machine learning (ML) techniques to generate custom recommendations for your users. The plugin takes OpenSearch search results and applies a [search pipeline]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/) to rerank them according to their Amazon Personalize ranking. The Amazon Personalize rankings are based on the user's past behavior and metadata about the search items and the user. This workflow improves the search experience for your users by personalizing their search results.
+另一個重新排名工具的範例是由 Amazon Personalize 團隊貢獻的 **Amazon Personalize Search Ranking**。Amazon Personalize 使用機器學習（ML）技術，為您的使用者產生客製化推薦。此外掛程式會取得 OpenSearch 搜尋結果，並套用[搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/)，根據其 Amazon Personalize 排名重新排名。Amazon Personalize 排名以使用者過往的行為，以及搜尋項目和使用者的中繼資料為依據。此工作流程透過個人化搜尋結果，改善使用者的搜尋體驗。
 
-To try Amazon Personalize Search Ranking, you must first set up Amazon Personalize. To get started, see [Amazon Personalize](https://docs.aws.amazon.com/personalize/latest/dg/setup.html). For detailed information, including plugin setup instructions, see [Personalizing search results from OpenSearch](https://docs.aws.amazon.com/personalize/latest/dg/personalize-opensearch.html).
+若要試用 Amazon Personalize Search Ranking，您必須先設定 Amazon Personalize。若要開始使用，請參閱 [Amazon Personalize](https://docs.aws.amazon.com/personalize/latest/dg/setup.html)。如需詳細資訊，包括外掛程式設定說明，請參閱[個人化 OpenSearch 的搜尋結果](https://docs.aws.amazon.com/personalize/latest/dg/personalize-opensearch.html)。

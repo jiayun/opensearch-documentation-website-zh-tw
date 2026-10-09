@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Configuring telemetry ingestion
+title: "設定遙測資料匯入"
 nav_order: 10
 parent: Application Performance Monitoring
 ---
 
-# Configuring telemetry ingestion
-**Introduced 3.6**
+# 設定遙測資料匯入
+**於 3.6 版推出**
 {: .label .label-purple }
 
-To use APM, you need to ingest application traces and logs into OpenSearch using the OpenTelemetry Collector and Data Prepper pipeline. For an overview of the complete APM architecture, see [APM architecture]({{site.url}}{{site.baseurl}}/observing-your-data/apm/#apm-architecture).
+若要使用 APM，您需要透過 OpenTelemetry Collector 和 Data Prepper 管線，將應用程式追蹤和記錄檔匯入 OpenSearch。如需完整 APM 架構的概觀，請參閱 [APM 架構]({{site.url}}{{site.baseurl}}/observing-your-data/apm/#apm-architecture)。
 
-This page covers configuring the OpenTelemetry Collector and Data Prepper to process and route telemetry data to OpenSearch and Prometheus.
+本頁說明如何設定 OpenTelemetry Collector 和 Data Prepper，以處理遙測資料並將其路由至 OpenSearch 和 Prometheus。
 
-## Configuring the OpenTelemetry Collector
+## 設定 OpenTelemetry Collector
 
-The [OpenTelemetry (OTel) Collector](https://opentelemetry.io/docs/collector/) acts as the entry point for all application telemetry. It receives data through the OpenTelemetry Protocol (OTLP) and routes traces and logs to Data Prepper while sending metrics to Prometheus.
+[OpenTelemetry (OTel) Collector](https://opentelemetry.io/docs/collector/) 是所有應用程式遙測資料的進入點。它透過 OpenTelemetry Protocol (OTLP) 接收資料，並將追蹤和記錄檔路由至 Data Prepper，同時將指標傳送至 Prometheus。
 
-The following example shows the key exporter and pipeline configuration for routing telemetry to Data Prepper and Prometheus:
+下列範例顯示將遙測資料路由至 Data Prepper 和 Prometheus 的主要匯出器與管線組態：
 
 ```yaml
 exporters:
@@ -51,14 +52,14 @@ service:
 ```
 {% include copy.html %}
 
-The `otlp/opensearch` exporter sends traces and logs to Data Prepper. The `otlphttp/prometheus` exporter sends metrics directly to Prometheus. For a complete OTel Collector configuration example including receivers, processors, and telemetry settings, see the [observability-stack repository](https://github.com/opensearch-project/observability-stack/blob/main/docker-compose/otel-collector/config.yaml).
+`otlp/opensearch` 匯出器會將追蹤和記錄檔傳送至 Data Prepper。`otlphttp/prometheus` 匯出器會將指標直接傳送至 Prometheus。如需包含接收器、處理器和遙測設定的完整 OTel Collector 組態範例，請參閱 [observability-stack 儲存庫](https://github.com/opensearch-project/observability-stack/blob/main/docker-compose/otel-collector/config.yaml)。
 {: .note}
 
-## Configuring Data Prepper pipelines
+## 設定 Data Prepper 管線
 
-Data Prepper receives telemetry data from the OTel Collector and processes it into the formats required for APM. The pipeline architecture routes data through specialized subpipelines for log, trace, and service map generation.
+Data Prepper 會從 OTel Collector 接收遙測資料，並將其處理成 APM 所需的格式。管線架構會將資料路由至專門處理記錄檔與追蹤，以及產生服務對應圖的子管線。
 
-The following example shows a complete Data Prepper pipeline configuration:
+下列範例顯示完整的 Data Prepper 管線組態：
 
 ```yaml
 # Main OTLP pipeline - receives all telemetry and routes by type
@@ -147,35 +148,35 @@ service-map-pipeline:
 ```
 {% include copy.html %}
 
-### Pipeline architecture
+### 管線架構
 
-The Data Prepper pipeline processes telemetry data using the following steps:
+Data Prepper 管線透過下列步驟處理遙測資料：
 
-1. The entry pipeline (`otlp-pipeline`) receives all telemetry on port 21893 and routes logs and traces to their respective subpipelines.
-2. The log pipeline (`otel-logs-pipeline`) maps the `time` field to `@timestamp` and writes logs to OpenSearch using the `log-analytics-plain` index type.
-3. The trace pipeline (`otel-traces-pipeline`) distributes traces to both the raw storage pipeline and the service map pipeline.
-4. The raw trace pipeline (`traces-raw-pipeline`) processes individual trace spans using the `otel_traces` processor and stores them in OpenSearch using the `trace-analytics-plain-raw` index type.
-5. The service map pipeline (`service-map-pipeline`) uses the `otel_apm_service_map` processor to generate service dependency maps and RED metrics. Service map topology data is written to OpenSearch, and RED metrics are exported to Prometheus through remote write.
+1. 入口管線（`otlp-pipeline`）會在連接埠 21893 接收所有遙測資料，並將記錄檔和追蹤路由至各自的子管線。
+2. 記錄檔管線（`otel-logs-pipeline`）會將 `time` 欄位對應至 `@timestamp`，並使用 `log-analytics-plain` 索引類型將記錄檔寫入 OpenSearch。
+3. 追蹤管線（`otel-traces-pipeline`）會將追蹤分送至原始資料儲存管線和服務對應圖管線。
+4. 原始追蹤管線（`traces-raw-pipeline`）會使用 `otel_traces` 處理器處理個別追蹤跨度，並使用 `trace-analytics-plain-raw` 索引類型將其儲存在 OpenSearch 中。
+5. 服務對應圖管線（`service-map-pipeline`）會使用 `otel_apm_service_map` 處理器產生服務相依性對應圖和 RED 指標。服務對應圖的拓撲資料會寫入 OpenSearch，而 RED 指標則透過遠端寫入匯出至 Prometheus。
 
-Two key configuration options for the `otel_apm_service_map` processor are `group_by_attributes` (which determines how services can be grouped in the application map) and `window_duration` (which sets the time window for aggregating trace data). For complete configuration details, see [APM service map processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/otel-apm-service-map/).
+`otel_apm_service_map` 處理器的兩個主要組態選項為 `group_by_attributes`（決定服務在應用程式對應圖中的分組方式）和 `window_duration`（設定彙總追蹤資料的時間範圍）。如需完整的組態詳細資訊，請參閱 [APM 服務對應圖處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/otel-apm-service-map/)。
 {: .note}
 
-## Verifying ingestion
+## 驗證匯入
 
-After configuring the OTel Collector and Data Prepper, verify that data is flowing correctly:
+設定 OTel Collector 和 Data Prepper 後，請驗證資料是否正常流動：
 
-1. Verify that the following indexes are created in your OpenSearch cluster:
-   - `otel-v1-apm-span-*`: Raw trace spans.
-   - `otel-v2-apm-service-map`: Service topology data.
-   - `logs-otel-v1-*`: Application logs.
+1. 驗證您的 OpenSearch 叢集中是否已建立下列索引：
+   - `otel-v1-apm-span-*`：原始追蹤跨度。
+   - `otel-v2-apm-service-map`：服務拓撲資料。
+   - `logs-otel-v1-*`：應用程式記錄檔。
 
-2. Verify that the Data Prepper remote write target is active in your Prometheus instance.
+2. 驗證 Data Prepper 的遠端寫入目標在您的 Prometheus 執行個體中是否處於作用中狀態。
 
-3. Navigate to **Observability** > **APM** in OpenSearch Dashboards to confirm that your services appear in the [Services]({{site.url}}{{site.baseurl}}/observing-your-data/apm/services/) catalog and the [Application map]({{site.url}}{{site.baseurl}}/observing-your-data/apm/application-map/).
+3. 在 OpenSearch Dashboards 中，前往 **Observability** > **APM**，確認您的服務出現在[服務]({{site.url}}{{site.baseurl}}/observing-your-data/apm/services/)目錄和[應用程式對應圖]({{site.url}}{{site.baseurl}}/observing-your-data/apm/application-map/)中。
 
-Ensure that all port mappings are correct between the OTel Collector, Data Prepper, OpenSearch, and Prometheus. Mismatched ports are a common cause of ingestion failures.
+請確保 OTel Collector、Data Prepper、OpenSearch 和 Prometheus 之間的所有連接埠對應皆正確。連接埠不符是匯入失敗的常見原因。
 {: .warning}
 
-## Next steps
+## 後續步驟
 
-- [Configuring APM in OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/observing-your-data/apm/configuring-apm/): Create datasets, index patterns, and configure APM settings to start using APM features.
+- [在 OpenSearch Dashboards 中設定 APM]({{site.url}}{{site.baseurl}}/observing-your-data/apm/configuring-apm/)：建立資料集、索引模式，並設定 APM 設定，即可開始使用 APM 功能。

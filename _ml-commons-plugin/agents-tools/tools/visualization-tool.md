@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Visualization tool
+title: "視覺化工具"
 has_children: false
 has_toc: false
 nav_order: 120
@@ -8,15 +9,15 @@ parent: Tools
 grand_parent: Agents and tools
 ---
 
-# Visualization tool
-**Introduced 2.13**
+# 視覺化工具
+**於 2.13 版推出**
 {: .label .label-purple }
 
-Use the `VisualizationTool` to find visualizations relevant to a question.
+使用 `VisualizationTool` 來尋找與問題相關的視覺化。
 
-## Step 1: Register a flow agent that will run the VisualizationTool
+## 步驟 1：註冊將執行 VisualizationTool 的流程代理程式
 
-A flow agent runs a sequence of tools in order and returns the last tool's output. To create a flow agent, send the following register agent request:
+流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -39,9 +40,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-For parameter descriptions, see [Register parameters](#register-parameters).
+參數說明請參閱 [Register parameters](#register-parameters)。
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -49,11 +50,11 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 2: Run the agent
+## 步驟 2：執行代理程式
 
-Before you run the agent, make sure that you add the sample OpenSearch Dashboards `Sample eCommerce orders` dataset. To learn more, see [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
+執行代理程式之前，請確認您已新增 OpenSearch Dashboards 的 `Sample eCommerce orders` 範例資料集。若要了解更多，請參閱 [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
 
-Then, run the agent by sending the following request:
+接著，傳送下列請求來執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
@@ -65,7 +66,7 @@ POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
 ```
 {% include copy-curl.html %} 
 
-By default, OpenSearch returns the top three matching visualizations. You can use the `size` parameter to specify the number of results returned. The output is returned in CSV format. The output includes two columns: `Title` (the visualization title displayed in OpenSearch Dashboards) and `Id` (a unique ID for this visualization):
+預設情況下，OpenSearch 會傳回前三個相符的視覺化。您可以使用 `size` 參數來指定傳回的結果數量。輸出以 CSV 格式傳回，包含兩個欄位：`Title`（在 OpenSearch Dashboards 中顯示的視覺化標題）和 `Id`（此視覺化的唯一 ID）：
 
 ```json
 {
@@ -84,24 +85,24 @@ By default, OpenSearch returns the top three matching visualizations. You can us
 }
 ```
 
-## Register parameters
+## 註冊參數
 
-The following table lists all tool parameters that are available when registering an agent.
-
-Parameter	| Type | Required/Optional | Description	
-:--- | :--- | :--- | :---
-`input` | String | Required | The user input used to match visualizations.
-`index` | String | Optional | The index to search. Default is `.kibana` (the system index for OpenSearch Dashboards data).
-`size` | Integer | Optional | The number of visualizations to return. Default is `3`.
-
-## Execute parameters
-
-The following table lists all tool parameters that are available when running the agent.
+下表列出註冊代理程式時可用的所有工具參數。
 
 Parameter	| Type | Required/Optional | Description	
 :--- | :--- | :--- | :---
-`question` | String | Required | The natural language question to send to the LLM. 
+`input` | String | 必要 | 用於比對視覺化的使用者輸入。
+`index` | String | 選用 | 要搜尋的索引。預設為 `.kibana`（OpenSearch Dashboards 資料的系統索引）。
+`size` | Integer | 選用 | 要傳回的視覺化數量。預設為 `3`。
 
-## Testing the tool
+## 執行參數
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+下表列出執行代理程式時可用的所有工具參數。
+
+Parameter	| Type | Required/Optional | Description	
+:--- | :--- | :--- | :---
+`question` | String | 必要 | 要傳送給 LLM 的自然語言問題。
+
+## 測試工具
+
+您可以將此工具作為代理程式工作流程的一部分執行，也可以使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適合用於測試個別工具或執行獨立操作。

@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete connector
+title: "刪除連接器"
 parent: Connector APIs
 grand_parent: ML Commons APIs
 nav_order: 30
 ---
 
-# Delete Connector API
+# 刪除連接器 API
 
-Deletes a standalone connector. For more information, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/).
+刪除獨立連接器。如需更多資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-## Endpoints
+## 端點
 
 ```json
 DELETE /_plugins/_ml/connectors/{connector_id}
 ```
 
-## Example request
+## 範例請求
 
 ```json
 DELETE /_plugins/_ml/connectors/KsAo1YsB0jLkkocY6j4U
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -41,9 +42,9 @@ DELETE /_plugins/_ml/connectors/KsAo1YsB0jLkkocY6j4U
 }
 ```
 
-## Error responses
+## 錯誤回應
 
-If you attempt to delete a connector that doesn't exist, OpenSearch returns a 200 response with `"result": "not_found"` rather than an error:
+如果您嘗試刪除不存在的連接器，OpenSearch 會傳回 200 回應，其中包含 `"result": "not_found"` 而不是錯誤：
 
 ```json
 {

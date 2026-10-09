@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: List API keys
+title: "列出 API 金鑰"
 parent: API key APIs
 grand_parent: Security APIs
 nav_order: 20
@@ -9,25 +10,25 @@ redirect_from:
 ---
 
 # List API Keys API
-**Introduced 3.7**
+**於 3.7 版導入**
 {: .label .label-purple }
 
-Returns all API keys, including active, expired, and revoked keys.
+傳回所有 API 金鑰，包括作用中、已到期與已撤銷的金鑰。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_security/api/apitokens
 ```
 
-## Example request
+## 範例請求
 
 ```json
 GET _plugins/_security/api/apitokens
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 [
@@ -54,17 +55,17 @@ GET _plugins/_security/api/apitokens
 ]
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is an array of JSON objects. Each object contains the following fields.
+回應本文是一個 JSON 物件陣列。每個物件包含下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `id` | String | The unique identifier for the key. |
-| `name` | String | The key name. |
-| `iat` | Long | The issued-at timestamp, in epoch milliseconds. |
-| `expires_at` | Long | The expiration timestamp, in epoch milliseconds. |
-| `cluster_permissions` | Array of strings | The cluster-level permissions granted to the key. |
-| `index_permissions` | Array of objects | The index-level permissions granted to the key. |
-| `revoked_at` | Long | The revocation timestamp, in epoch milliseconds. Present only if the key has been revoked. |
-| `created_by` | String | The user who created the key. |
+| `id` | 字串 | 金鑰的唯一識別碼。 |
+| `name` | 字串 | 金鑰名稱。 |
+| `iat` | Long | 簽發時間戳記，以 epoch 毫秒表示。 |
+| `expires_at` | Long | 到期時間戳記，以 epoch 毫秒表示。 |
+| `cluster_permissions` | 字串陣列 | 授權給此金鑰的叢集層級權限。 |
+| `index_permissions` | 物件陣列 | 授權給此金鑰的索引層級權限。 |
+| `revoked_at` | Long | 撤銷時間戳記，以 epoch 毫秒表示。僅在金鑰已被撤銷時才會出現。 |
+| `created_by` | 字串 | 建立此金鑰的使用者。 |

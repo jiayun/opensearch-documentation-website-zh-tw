@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Asynchronous batch ingestion
+title: "非同步批次匯入"
 nav_order: 90
 parent: Batch ingestion
 grand_parent: Connecting to externally hosted models 
@@ -8,24 +9,24 @@ great_grand_parent: Integrating ML models
 ---
 
 
-# Asynchronous batch ingestion
-**Deprecated 3.0**
+# 非同步批次匯入
+**已棄用 3.0**
 {: .label .label-red }
 
-This feature is deprecated. For similar functionality, use [OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/). If you'd like to see this feature reinstated, [create an issue](https://github.com/opensearch-project/ml-commons/issues) in the ML Commons repository.
+此功能已棄用。如需類似功能，請使用 [OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/)。若您希望恢復此功能，請在 ML Commons 儲存庫中[建立問題](https://github.com/opensearch-project/ml-commons/issues)。
 {: .warning}
 
 
-[Batch ingestion]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/batch-ingestion/) configures an ingest pipeline, which processes documents one by one. For each document, batch ingestion calls an externally hosted model to generate text embeddings from the document text and then ingests the document, including text and embeddings, into an OpenSearch index.
+[批次匯入]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/batch-ingestion/)會設定資料匯入管線，逐一處理文件。批次匯入會針對每份文件呼叫外部託管的模型，從文件文字產生文字嵌入，然後將文件 (包含文字與嵌入) 匯入 OpenSearch 索引。
 
-An alternative to this real-time process, _asynchronous_ batch ingestion, ingests both documents and their embeddings generated outside of OpenSearch and stored on a remote file server, such as Amazon Simple Storage Service (Amazon S3) or OpenAI. Asynchronous ingestion returns a task ID and runs asynchronously to ingest data offline into your k-NN cluster for neural search. You can use asynchronous batch ingestion together with the [Batch Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/batch-predict/) to perform inference asynchronously. The batch predict operation takes an input file containing documents and calls an externally hosted model to generate embeddings for those documents in an output file. You can then use asynchronous batch ingestion to ingest both the input file containing documents and the output file containing their embeddings into an OpenSearch index.
+此即時程序的替代方案是_非同步_批次匯入，它會同時匯入文件及其嵌入，而這些嵌入是在 OpenSearch 外部產生並儲存在遠端檔案伺服器上，例如 Amazon Simple Storage Service (Amazon S3) 或 OpenAI。非同步匯入會傳回任務 ID，並以非同步方式執行，將資料離線匯入您的 k-NN 叢集以進行神經搜尋。您可以將非同步批次匯入與 [Batch Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/batch-predict/) 搭配使用，以非同步方式執行推論。批次預測作業會接收包含文件的輸入檔案，並呼叫外部託管的模型，將這些文件的嵌入產生到輸出檔案中。接著，您可以使用非同步批次匯入，將包含文件的輸入檔案及包含其嵌入的輸出檔案一併匯入 OpenSearch 索引。
 
-The Asynchronous Batch Ingestion API is supported by Amazon SageMaker, Amazon Bedrock, and OpenAI.
+非同步批次匯入 API 支援 Amazon SageMaker、Amazon Bedrock 及 OpenAI。
 {: .note}
 
-## Prerequisites
+## 先決條件
 
-Before using asynchronous batch ingestion, you must generate text embeddings using a model of your choice and store the output on a file server, such as Amazon S3. For example, you can store the output of a Batch API call to an Amazon SageMaker text embedding model in a file with the Amazon S3 output path `s3://offlinebatch/output/sagemaker_batch.json.out`. The output is in JSONL format, with each line representing a text embedding result. The file contents have the following format:
+使用非同步批次匯入之前，您必須使用您選擇的模型產生文字嵌入，並將輸出儲存在檔案伺服器上，例如 Amazon S3。舉例來說，您可以將對 Amazon SageMaker 文字嵌入模型進行 Batch API 呼叫的輸出，儲存在 Amazon S3 輸出路徑 `s3://offlinebatch/output/sagemaker_batch.json.out` 的檔案中。輸出為 JSONL 格式，每一行代表一筆文字嵌入結果。檔案內容格式如下：
 
 ```
 {"SageMakerOutput":[[-0.017166402,0.055771016,...],[-0.06422759,-0.004301484,...],"content":["this is chapter 1","harry potter"],"id":1}
@@ -33,11 +34,11 @@ Before using asynchronous batch ingestion, you must generate text embeddings usi
 ...
 ```
 
-## Ingesting data from a single file
+## 從單一檔案匯入資料
 
-First, create a k-NN index into which you'll ingest the data. The fields in the k-NN index represent the structure of the data in the source file. 
+首先，建立一個 k-NN 索引，您將把資料匯入其中。k-NN 索引中的欄位代表來源檔案中資料的結構。
 
-In this example, the source file holds documents containing titles and chapters, along with their corresponding embeddings. Thus, you'll create a k-NN index with the fields `id`, `chapter_embedding`, `chapter`, `title_embedding`, and `title`:
+在此範例中，來源檔案包含含有標題與章節的文件，以及其對應的嵌入。因此，您將建立一個包含欄位 `id`、`chapter_embedding`、`chapter`、`title_embedding` 及 `title` 的 k-NN 索引：
 
 ```json
 PUT /my-nlp-index
@@ -88,9 +89,9 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-When using an S3 file as the source for asynchronous batch ingestion, you must map the fields in the source file to fields in the index in order to indicate into which index each piece of data is ingested. If no JSON path is provided for a field, that field will be set to `null` in the k-NN index.
+使用 S3 檔案作為非同步批次匯入的來源時，您必須將來源檔案中的欄位對應至索引中的欄位，以指出每一筆資料要匯入哪個索引。若未提供某個欄位的 JSON 路徑，該欄位在 k-NN 索引中將設為 `null`。
 
-In the `field_map`, indicate the location of the data for each field in the source file. You can also specify fields to be ingested directly into your index without making any changes to the source file by adding their JSON paths to the `ingest_fields` array. For example, in the following asynchronous batch ingestion request, the element with the JSON path `$.id` from the source file is ingested directly into the `id` field of your index. To ingest this data from the Amazon S3 file, send the following request to your OpenSearch endpoint:
+在 `field_map` 中，指出來源檔案中每個欄位的資料位置。您也可以將欄位的 JSON 路徑新增至 `ingest_fields` 陣列，以指定要直接匯入索引的欄位，而不對來源檔案做任何變更。舉例來說，在下列非同步批次匯入請求中，來源檔案中 JSON 路徑為 `$.id` 的元素會直接匯入您索引的 `id` 欄位。若要從 Amazon S3 檔案匯入此資料，請將下列請求傳送至您的 OpenSearch 端點：
 
 ```json
 POST /_plugins/_ml/_batch_ingestion
@@ -118,7 +119,7 @@ POST /_plugins/_ml/_batch_ingestion
 ```
 {% include copy-curl.html %}
 
-The response contains a task ID for the ingestion task:
+回應包含匯入任務的任務 ID：
 
 ```json
 {
@@ -128,14 +129,14 @@ The response contains a task ID for the ingestion task:
 }
 ```
 
-To check the status of the operation, provide the task ID to the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/). Once ingestion is complete, the task `state` changes to `COMPLETED`.
+若要檢查作業狀態，請將任務 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)。匯入完成後，任務 `state` 會變更為 `COMPLETED`。
 
 
-## Ingesting data from multiple files
+## 從多個檔案匯入資料
 
-You can also ingest data from multiple files by specifying the file locations in the `source`. The following example ingests data from three OpenAI files. 
+您也可以在 `source` 中指定檔案位置，從多個檔案匯入資料。下列範例會從三個 OpenAI 檔案匯入資料。
 
-The OpenAI Batch API input file is formatted as follows:
+OpenAI Batch API 輸入檔案的格式如下：
 
 ```
 {"custom_id": "request-1", "method": "POST", "url": "/v1/embeddings", "body": {"model": "text-embedding-ada-002", "input": [ "What is the meaning of life?", "The food was delicious and the waiter..."]}}
@@ -144,16 +145,16 @@ The OpenAI Batch API input file is formatted as follows:
 ...
 ```
 
-The OpenAI Batch API output file is formatted as follows:
+OpenAI Batch API 輸出檔案的格式如下：
 
 ```
 {"id": "batch_req_ITKQn29igorXCAGp6wzYs5IS", "custom_id": "request-1", "response": {"status_code": 200, "request_id": "10845755592510080d13054c3776aef4", "body": {"object": "list", "data": [{"object": "embedding", "index": 0, "embedding": [0.0044326545, ... ...]}, {"object": "embedding", "index": 1, "embedding": [0.002297497, ... ... ]}], "model": "text-embedding-ada-002", "usage": {"prompt_tokens": 15, "total_tokens": 15}}}, "error": null}
 ...
 ```
 
-If you have run the Batch API in OpenAI for text embedding and want to ingest the model input and output files along with some metadata into your index, send the following asynchronous ingestion request. Make sure to use `source[file-index]` to identify the file's location in the source array in the request body. For example, `source[0]` refers to the first file in the `data_source.source` array. 
+若您已在 OpenAI 中執行 Batch API 以進行文字嵌入，並想將模型輸入與輸出檔案以及一些中繼資料匯入您的索引，請傳送下列非同步匯入請求。請務必使用 `source[file-index]` 來識別檔案在請求本文中來源陣列的位置。舉例來說，`source[0]` 指的是 `data_source.source` 陣列中的第一個檔案。
 
-The following request ingests seven fields into your index: Five are specified in the `field_map` section and two are specified in `ingest_fields`. The format follows the pattern `sourcefile.jsonPath`, indicating the JSON path for each file. In the field_map, `$.body.input[0]` is used as the JSON path to ingest data into the `question` field from the second file in the `source` array. The `ingest_fields` array lists all elements from the `source` files that will be ingested directly into your index:
+下列請求會將七個欄位匯入您的索引：其中五個指定於 `field_map` 區段，兩個指定於 `ingest_fields`。格式遵循 `sourcefile.jsonPath` 模式，指出每個檔案的 JSON 路徑。在 field_map 中，`$.body.input[0]` 用作 JSON 路徑，以從 `source` 陣列中的第二個檔案將資料匯入 `question` 欄位。`ingest_fields` 陣列列出 `source` 檔案中將直接匯入您索引的所有元素：
 
 ```json
 POST /_plugins/_ml/_batch_ingestion
@@ -178,9 +179,9 @@ POST /_plugins/_ml/_batch_ingestion
 ```
 {% include copy-curl.html %}
 
-In the request, make sure to define the `_id` field in the `field_map`. This is necessary in order to map each data entry from the three separate files. 
+在請求中，請務必在 `field_map` 中定義 `_id` 欄位。這是為了對應來自三個不同檔案的每一筆資料項目所必需。
 
-The response contains a task ID for the ingestion task:
+回應包含匯入任務的任務 ID：
 
 ```json
 {
@@ -190,6 +191,6 @@ The response contains a task ID for the ingestion task:
 }
 ```
 
-To check the status of the operation, provide the task ID to the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/). Once ingestion is complete, the task `state` changes to `COMPLETED`.
+若要檢查作業狀態，請將任務 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)。匯入完成後，任務 `state` 會變更為 `COMPLETED`。
 
-For request field descriptions, see [Asynchronous Batch Ingestion API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/async-batch-ingest/).
+如需請求欄位說明，請參閱 [Asynchronous Batch Ingestion API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/async-batch-ingest/)。

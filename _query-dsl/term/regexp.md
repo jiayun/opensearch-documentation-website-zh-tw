@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Regexp
 parent: Term-level queries
 nav_order: 100
 ---
 
-# Regexp query
+# Regexp 查詢
 
-Use the `regexp` query to search for terms that match a regular expression. For more information about writing regular expressions, see [Regular expression syntax]({{site.url}}{{site.baseurl}}/query-dsl/regex-syntax/).
+使用 `regexp` 查詢來搜尋符合規則表達式的詞元。如需撰寫規則表達式的詳細資訊，請參閱[規則表達式語法]({{site.url}}{{site.baseurl}}/query-dsl/regex-syntax/)。
 
-The following query searches for any term that starts with any uppercase or lowercase letter followed by `amlet`:
+下列查詢會搜尋任何以大寫或小寫字母開頭，且後面接著 `amlet` 的詞元：
 
 ```json
 GET shakespeare/_search
@@ -23,20 +24,20 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-Note the following important considerations:
+請注意下列重要考量：
 
-- Regular expressions are applied to the terms (that is, tokens) in the field---not to the entire field.
-- By default, the maximum length of a regular expression is 1,000 characters. To change the maximum length, update the `index.max_regex_length` setting.
-- Regular expressions use the Lucene syntax, which differs from more standardized implementations. Test thoroughly to ensure that you receive the results you expect. To learn more, see [the Lucene documentation](https://lucene.apache.org/core/{{site.lucene_version}}/core/index.html).
-- To improve regexp query performance, avoid wildcard patterns without a prefix or suffix, such as `.*` or `.*?+`.
-- `regexp` queries can be expensive operations and require the [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/#expensive-queries) setting to be set to `true`. Before making frequent `regexp` queries, test their impact on cluster performance and examine alternative queries that may achieve similar results.
-- The [wildcard field type]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/wildcard/) builds an index that is specially designed to be very efficient for wildcard and regular expression queries.
+- 規則表達式會套用至欄位中的詞元 (亦即 token)，而非整個欄位。
+- 根據預設，規則表達式的長度上限為 1,000 個字元。若要變更長度上限，請更新 `index.max_regex_length` 設定。
+- 規則表達式使用 Lucene 語法，這與較標準化的實作方式不同。請徹底測試，以確保您獲得預期的結果。如需深入了解，請參閱 [Lucene 文件](https://lucene.apache.org/core/{{site.lucene_version}}/core/index.html)。
+- 若要提升 regexp 查詢效能，請避免使用沒有前置字元或後置字元的萬用字元模式，例如 `.*` 或 `.*?+`。
+- `regexp` 查詢可能是成本高昂的操作，且需要將 [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/#expensive-queries) 設定設為 `true`。在頻繁執行 `regexp` 查詢之前，請先測試其對叢集效能的影響，並檢視可能可達到類似結果的替代查詢。
+- [wildcard 欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/wildcard/) 會建立專門設計來非常有效率地處理萬用字元和規則表達式查詢的索引。
 
-## Matching terms instead of field values
+## 比對詞元而非欄位值
 
-A `regexp` query is not analyzed, but the field it searches might be. When a `text` field is indexed, the standard analyzer splits its value into lowercase terms, and the regular expression must match one of those terms. As a result, a pattern containing uppercase letters or spaces returns no results for a `text` field.
+`regexp` 查詢不會經過分析，但其搜尋的欄位可能會。當 `text` 欄位經過索引時，標準分析器會將其值分割成小寫詞元，而規則表達式必須符合其中一個詞元。因此，包含大寫字母或空格的模式對 `text` 欄位不會傳回任何結果。
 
-To try this, index a document into an index that uses dynamic mapping. The `title` field is mapped as `text` and has a `title.keyword` subfield:
+若要試試看，請將文件編製索引至使用動態對應的索引。`title` 欄位會對應為 `text`，並具有 `title.keyword` 子欄位：
 
 ```json
 PUT my-index/_doc/1?refresh=true
@@ -46,7 +47,7 @@ PUT my-index/_doc/1?refresh=true
 ```
 {% include copy-curl.html %}
 
-The `title` field contains the terms `henry` and `iv`, so the following query returns no results:
+`title` 欄位包含詞元 `henry` 和 `iv`，因此下列查詢不會傳回任何結果：
 
 ```json
 GET my-index/_search
@@ -60,7 +61,7 @@ GET my-index/_search
 ```
 {% include copy-curl.html %}
 
-To match the original field value, including its capitalization and spaces, search the `keyword` subfield:
+若要符合原始欄位值（包括其大小寫和空格），請搜尋 `keyword` 子欄位：
 
 ```json
 GET my-index/_search
@@ -75,10 +76,10 @@ GET my-index/_search
 {% include copy-curl.html %}
 
 <details markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta}
+<summary>
+    回應
+</summary>
+{: .text-delta}
 
 ```json
 {
@@ -111,15 +112,15 @@ GET my-index/_search
 ```
 </details>
 
-If a `regexp` query returns no results, also check the following:
+如果 `regexp` 查詢未傳回任何結果，也請檢查下列事項：
 
-- The pattern must match the entire term. For example, `hen` does not match the term `henry`, but `hen.*` does.
-- The `^` and `$` anchors are not supported. For example, `^Henry.*` does not match `Henry IV` in a `keyword` field. For more information, see [Unsupported features]({{site.url}}{{site.baseurl}}/query-dsl/regex-syntax/#unsupported-features).
-- Matching is case sensitive by default. To match terms regardless of case, set `case_insensitive` to `true`. For example, `henry iv` matches `Henry IV` in the `title.keyword` field when `case_insensitive` is `true`.
+- 模式必須符合整個詞元。例如，`hen` 不符合詞元 `henry`，但 `hen.*` 符合。
+- 不支援 `^` 和 `$` 錨點。例如，`^Henry.*` 在 `keyword` 欄位中不符合 `Henry IV`。如需詳細資訊，請參閱[不支援的功能]({{site.url}}{{site.baseurl}}/query-dsl/regex-syntax/#unsupported-features)。
+- 根據預設，比對會區分大小寫。若要不論大小寫進行詞元比對，請將 `case_insensitive` 設為 `true`。例如，當 `case_insensitive` 為 `true` 時，`henry iv` 會在 `title.keyword` 欄位中符合 `Henry IV`。
 
-## Parameters
+## 參數
 
-The query accepts the name of the field (`<field>`) as a top-level parameter:
+此查詢接受欄位名稱（`<field>`）作為最上層參數：
 
 ```json
 GET _search
@@ -136,16 +137,16 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-The `<field>` accepts the following parameters. All parameters except `value` are optional.
+`<field>` 接受下列參數。除了 `value` 之外，所有參數都是選用的。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`value` | String | The regular expression used for matching terms in the field specified in `<field>`.
-`boost` | Floating-point | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field’s relevance. Values between 0.0 and 1.0 decrease the field’s relevance. Default is 1.0.
-`case_insensitive` | Boolean | If `true`, allows case-insensitive matching of the regular expression value with the indexed field values. Default is `false` (case sensitivity is determined by the field's mapping).
-`flags` | String | Enables optional operators for Lucene's regular expression engine. For valid values, see [Optional operators]({{site.url}}{{site.baseurl}}/query-dsl/regex-syntax/#optional-operators).
-`max_determinized_states` | Integer | Lucene converts a regular expression to an automaton with a number of determinized states. This parameter specifies the maximum number of automaton states the query requires. Use this parameter to prevent high resource consumption. To run complex regular expressions, you may need to increase the value of this parameter. Default is 10,000.
-`rewrite` | String | Determines how OpenSearch rewrites and scores multi-term queries. Valid values are `constant_score`, `scoring_boolean`, `constant_score_boolean`, `top_terms_N`, `top_terms_boost_N`, and `top_terms_blended_freqs_N`. Default is `constant_score`.
+`value` | 字串 | 用於比對 `<field>` 中所指定欄位之詞元的規則表達式。
+`boost` | 浮點數 | 浮點數值，用於指定此欄位對相關性分數的權重。大於 1.0 的值會提高欄位的相關性。介於 0.0 和 1.0 之間的值會降低欄位的相關性。預設為 1.0。
+`case_insensitive` | 布林值 | 若為 `true`，則允許規則表達式值與已編製索引的欄位值進行不區分大小寫的比對。預設為 `false`（大小寫區分由欄位的對應決定）。
+`flags` | 字串 | 啟用 Lucene 規則表達式引擎的選用運算子。如需有效值，請參閱[選用運算子]({{site.url}}{{site.baseurl}}/query-dsl/regex-syntax/#optional-operators)。
+`max_determinized_states` | 整數 | Lucene 會將規則表達式轉換為具有若干確定化狀態的自動機。此參數會指定查詢所需的自動機狀態數上限。請使用此參數來避免高資源耗用。若要執行複雜的規則表達式，您可能需要提高此參數的值。預設為 10,000。
+`rewrite` | 字串 | 決定 OpenSearch 如何改寫及評分多詞元查詢。有效值為 `constant_score`、`scoring_boolean`、`constant_score_boolean`、`top_terms_N`、`top_terms_boost_N` 和 `top_terms_blended_freqs_N`。預設為 `constant_score`。
 
-If [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/index/#expensive-queries) is set to `false`, then `regexp` queries are not executed.
+如果將 [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/index/#expensive-queries) 設為 `false`，則不會執行 `regexp` 查詢。
 {: .important}

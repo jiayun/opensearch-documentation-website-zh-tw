@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Position increment gap
+title: "位置增量間距"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/position-increment-gap/
@@ -9,15 +10,15 @@ has_children: false
 has_toc: false
 ---
 
-# Position increment gap mapping parameter
+# position_increment_gap 對應參數
 
-The `position_increment_gap` mapping parameter defines the positional distance between tokens of multi-valued fields during indexing. This affects how [`match_phrase`]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/) and [`span`]({{site.url}}{{site.baseurl}}/query-dsl/span/index/) queries behave when searching across multiple values of the same field.
+`position_increment_gap` 對應參數定義多值欄位的詞元在編製索引時的位置距離。這會影響 [`match_phrase`]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/) 與 [`span`]({{site.url}}{{site.baseurl}}/query-dsl/span/index/) 查詢在同一欄位的多個值之間搜尋時的行為。
 
-By default, each new value in a multi-valued field is treated as if it is separated from the previous one by a gap of `100` positions. This helps prevent false positives when searching for phrases that may span across different field values.
+預設情況下，多值欄位中的每個新值都會被視為與前一個值相隔 `100` 個位置的間距。這有助於避免搜尋可能跨越不同欄位值的片語時產生誤判。
 
-## Setting a position increment gap
+## 設定 position_increment_gap
 
-Use the following request to create an index named `articles` with a `tags` field of type `text`, setting `position_increment_gap` to `0`:
+使用下列請求建立名為 `articles` 的索引，其中包含一個類型為 `text` 的 `tags` 欄位，並將 `position_increment_gap` 設定為 `0`：
 
 ```json
 PUT /articles
@@ -34,9 +35,9 @@ PUT /articles
 ```
 {% include copy-curl.html %}
 
-## Indexing a multi-valued field
+## 為多值欄位編製索引
 
-Use the following request to index a document in which the `tags` field contains multiple values:
+使用下列請求為一份 `tags` 欄位包含多個值的文件編製索引：
 
 ```json
 PUT /articles/_doc/1
@@ -46,9 +47,9 @@ PUT /articles/_doc/1
 ```
 {% include copy-curl.html %}
 
-## Search using a `match_phrase` query
+## 使用 `match_phrase` 查詢進行搜尋
 
-Use the following `match_phrase` query to search for "machine learning" in the `tags` field:
+使用下列 `match_phrase` 查詢在 `tags` 欄位中搜尋 "machine learning"：
 
 ```json
 GET /articles/_search
@@ -62,7 +63,7 @@ GET /articles/_search
 ```
 {% include copy-curl.html %}
 
-The result demonstrates that the phrase match succeeds because the `position_increment_gap` is set to `0`, allowing tokens from separate values to be treated as adjacent:
+結果顯示片語比對成功，因為 `position_increment_gap` 設定為 `0`，讓來自不同值的詞元被視為相鄰：
 
 ```json
 {
@@ -90,4 +91,4 @@ The result demonstrates that the phrase match succeeds because the `position_inc
 }
 ```
 
-If the `position_increment_gap` remained at `100`, no hits would be returned because tokens `machine` and `learning` would be considered to be 100 positions away from each other.
+如果 `position_increment_gap` 維持在 `100`，則不會傳回任何命中結果，因為詞元 `machine` 與 `learning` 會被視為彼此相距 100 個位置。

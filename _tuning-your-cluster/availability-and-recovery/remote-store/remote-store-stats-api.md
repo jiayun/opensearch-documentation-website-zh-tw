@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Remote Store Stats API 
 nav_order: 20
@@ -8,47 +9,47 @@ grand_parent: Availability and recovery
 
 # Remote Store Stats API
 
-Introduced 2.8
+於 2.8 版推出
 {: .label .label-purple }
 
-Use the Remote Store Stats API to monitor shard-level remote-backed storage performance. 
+使用 Remote Store Stats API 監視分片層級的遠端儲存效能。
 
-Metrics returned from this API only relate to indexes stored on remote-backed nodes. For an aggregated output on an index at the node or cluster level, use the [Index Stats]({{site.url}}{{site.baseurl}}/api-reference/index-apis/stats/), [Nodes Stats]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/), or [Cluster Stats]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-stats/) API.
+此 API 傳回的指標僅與儲存在以遠端儲存空間為後端的節點上的索引相關。若要在節點或叢集層級取得索引的彙總輸出，請使用 [Index Stats]({{site.url}}{{site.baseurl}}/api-reference/index-apis/stats/)、[Nodes Stats]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/) 或 [Cluster Stats]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-stats/) API。
 
-## Endpoints
+## 端點
 
 ```json
 GET _remotestore/stats/{index_name}
 GET _remotestore/stats/{index_name}/{shard_id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`index_name` | String | The index name or index pattern.
-`shard_id` | String | The shard ID.
+`index_name` | 字串 | 索引名稱或索引模式。
+`shard_id` | 字串 | 分片 ID。
 
-## Remote store stats for an index
+## 索引的遠端儲存統計
 
-Use the following API to get remote store statistics for all index shards.
+使用下列 API 來取得所有索引分片的遠端儲存統計資料。
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _remotestore/stats/{index_name}
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 <details open markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta }
+<summary>
+    回應
+</summary>
+{: .text-delta }
 
 ```json
 {
@@ -257,105 +258,105 @@ GET _remotestore/stats/{index_name}
 ```
 </details>
 
-### Response body fields
+### 回應本文欄位
 
-The response body of the Remote Store Stats API is split into three categories:
+Remote Store Stats API 的回應本文分為三個類別：
 
-* `routing` : Contains information related to the shard’s routing
-* `segment` : Contains statistics related to segment transfers from remote-backed storage
-* `translog` : Contains statistics related to translog transfers from remote-backed storage
+* `routing` ：包含與分片路由相關的資訊
+* `segment` ：包含與從遠端後端儲存空間傳輸分段相關的統計資料
+* `translog` ：包含與從遠端後端儲存空間傳輸 translog 相關的統計資料
 
 <!-- vale off -->
 #### routing
 <!-- vale on -->
 
-The `routing` object contains the following fields.
+`routing` 物件包含下列欄位。
 
-|Field	|Description	|
+|欄位	|說明	|
 |:---	|:---	|
-| `primary` | Denotes whether the shard copy is a primary shard. |
-| `node` | The name of the node to which the shard is assigned. |
+| `primary` | 表示該分片複本是否為主要分片。 |
+| `node` | 分片所指派節點的名稱。 |
 
 <!-- vale off -->
 #### segment
 <!-- vale on -->
 
-The `segment.upload` object contains the following fields.
+`segment.upload` 物件包含下列欄位。
 
-|Field	|Description	|
+|欄位	|說明	|
 |:---	|:---	|
-| `local_refresh_timestamp_in_millis` | The last successful local refresh timestamp, in milliseconds.  |
-| `remote_refresh_timestamp_in_millis` | The last successful remote refresh timestamp, in milliseconds. |
-| `refresh_time_lag_in_millis` | The amount of time, in milliseconds, that the remote refresh is behind the local refresh. |
-| `refresh_lag` | The number of refreshes by which the remote store is lagging behind the local store.   |
-| `bytes_lag` | The lag, in bytes, between the remote and local stores.  |
-| `backpressure_rejection_count` | The total number of write rejections issued due to backpressure in the remote store.    |
-| `consecutive_failure_count` | The number of consecutive remote refresh failures since the last successful refresh.  |
-| `total_remote_refresh` | The total number of remote refreshes.  |
-| `total_uploads_in_bytes` | The total number of bytes in all uploads to the remote store.  |
-| `remote_refresh_size_in_bytes.last_successful` | The size of the data uploaded during the last successful refresh.  |
-| `remote_refresh_size_in_bytes.moving_avg` | The average size of the data, in bytes, uploaded in the last *N* refreshes. *N* is defined in the `remote_store.moving_average_window_size` setting. For more information, see [Remote segment backpressure]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-segment-backpressure/). |
-| `upload_latency_in_bytes_per_sec.moving_avg` | The average speed of remote segment uploads, in bytes per second, for the last *N* uploads. *N* is defined in the `remote_store.moving_average_window_size` setting. For more information, see [Remote segment backpressure]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-segment-backpressure/).    |
-| `remote_refresh_latency_in_millis.moving_avg` | The average amount of time, in milliseconds, taken by a single remote refresh during the last *N* remote refreshes. *N* is defined in the `remote_store.moving_average_window_size` setting. For more information, see [Remote segment backpressure]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-segment-backpressure/).    |
+| `local_refresh_timestamp_in_millis` | 最後一次成功本機重新整理的時間戳記，以毫秒為單位。  |
+| `remote_refresh_timestamp_in_millis` | 最後一次成功遠端重新整理的時間戳記，以毫秒為單位。 |
+| `refresh_time_lag_in_millis` | 遠端重新整理落後本機重新整理的時間量，以毫秒為單位。 |
+| `refresh_lag` | 遠端儲存空間落後本機儲存空間的重新整理次數。   |
+| `bytes_lag` | 遠端與本機儲存空間之間的落差，以位元組為單位。  |
+| `backpressure_rejection_count` | 因遠端儲存空間的背壓而發出的寫入拒絕總數。    |
+| `consecutive_failure_count` | 自上次成功重新整理以來連續發生的遠端重新整理失敗次數。  |
+| `total_remote_refresh` | 遠端重新整理的總次數。  |
+| `total_uploads_in_bytes` | 上傳至遠端儲存空間的所有資料總位元組數。  |
+| `remote_refresh_size_in_bytes.last_successful` | 最後一次成功重新整理期間所上傳的資料大小。  |
+| `remote_refresh_size_in_bytes.moving_avg` | 最近 *N* 次重新整理所上傳資料的平均大小，以位元組為單位。*N* 定義於 `remote_store.moving_average_window_size` 設定中。如需更多資訊，請參閱[遠端分段背壓]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-segment-backpressure/)。 |
+| `upload_latency_in_bytes_per_sec.moving_avg` | 最近 *N* 次上傳的遠端分段上傳平均速度，以位元組每秒為單位。*N* 定義於 `remote_store.moving_average_window_size` 設定中。如需更多資訊，請參閱[遠端分段背壓]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-segment-backpressure/)。    |
+| `remote_refresh_latency_in_millis.moving_avg` | 最近 *N* 次遠端重新整理期間，單次遠端重新整理所花費的平均時間，以毫秒為單位。*N* 定義於 `remote_store.moving_average_window_size` 設定中。如需更多資訊，請參閱[遠端分段背壓]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-segment-backpressure/)。    |
 
-The `segment.download` object contains the following fields.
+`segment.download` 物件包含下列欄位。
 
-|Field	|Description	|
+|欄位	|說明	|
 |:---	|:---	|
-| `last_sync_timestamp`| The timestamp, in milliseconds, since the last successful segment file download from remote-backed storage. |
-| `total_download_size.started_bytes` | The total number of bytes of segment files actively being downloaded from remote-backed storage.   |
-| `total_download_size.succeeded_bytes` | The total number of bytes of segment files successfully downloaded from remote-backed storage. |
-| `total_download_size.failed_bytes` | The total number of bytes of segment files that failed to download from remote-back storage. |
-| `download_size_in_bytes.last_successful` | The size, in bytes, of the last segment file successfully downloaded from remote-backed storage. |
-| `download_size_in_bytes.moving_avg`  | The average size of segment data, in bytes, downloaded in the last 20 downloads. |
-| `download_speed_in_bytes_per_sec.moving_avg` | The average download speed, in bytes per second, of the last 20 downloads. |
+| `last_sync_timestamp`| 自上次成功從遠端後端儲存空間下載分段檔案以來的時間戳記，以毫秒為單位。 |
+| `total_download_size.started_bytes` | 正在從遠端後端儲存空間下載的分段檔案總位元組數。   |
+| `total_download_size.succeeded_bytes` | 成功從遠端後端儲存空間下載的分段檔案總位元組數。 |
+| `total_download_size.failed_bytes` | 從遠端後端儲存空間下載失敗的分段檔案總位元組數。 |
+| `download_size_in_bytes.last_successful` | 最後一次成功從遠端後端儲存空間下載的分段檔案大小，以位元組為單位。 |
+| `download_size_in_bytes.moving_avg`  | 最近 20 次下載所下載分段資料的平均大小，以位元組為單位。 |
+| `download_speed_in_bytes_per_sec.moving_avg` | 最近 20 次下載的平均下載速度，以位元組每秒為單位。 |
 
 #### translog
 
-The `translog.upload` object contains the following fields.
+`translog.upload` 物件包含下列欄位。
 
-|Field	|Description	|
+|欄位	|說明	|
 |:---	|:---	|
-| `last_successful_upload_timestamp`| The timestamp, in milliseconds, since the last translog file successfully uploaded to remote-backed storage. |
-| `total_uploads.started` | The total number of attempted translog upload syncs to remote-backed storage. |
-| `total_uploads.failed` | The total number of failed translog upload syncs to remote-backed storage.   |
-| `total_uploads.succeeded` | The total number of successful translog upload syncs to remote-backed storage.  |
-| `total_upload_size.started_bytes` | The total number of bytes of translog files actively being downloaded from remote-backed storage. |
-| `total_upload_size.succeeded_bytes` | The total number of bytes of translog files successfully uploaded to remote-backed storage. |
-|`total_upload_size.failed_bytes` | The total number of bytes of translog files that failed to upload to remote-backed storage. |
-| `total_upload_time_in_millis` | The total amount of time spent, in milliseconds, uploading translog files to remote-backed storage. |
-| `upload_size_in_bytes.moving_avg` | The average size of translog data, in bytes, uploaded in the last *N* downloads. *N* is defined in the `remote_store.moving_average_window_size` setting. |
-| `upload_speed_in_bytes_per_sec.moving_avg` | The average speed of translog uploads, in bytes per second, for the last *N* uploads. *N* is defined in the `remote_store.moving_average_window_size` setting.    |
-| `upload_time_in_millis.moving_avg` | The average amount of time taken by a single translog upload, in milliseconds, since the last *N* uploads. *N* is defined in the `remote_store.moving_average_window_size` setting.    |
+| `last_successful_upload_timestamp`| 自上次成功將 translog 檔案上傳至遠端後端儲存空間以來的時間戳記，以毫秒為單位。 |
+| `total_uploads.started` | 嘗試將 translog 上傳同步至遠端後端儲存空間的總次數。 |
+| `total_uploads.failed` | 將 translog 上傳同步至遠端後端儲存空間失敗的總次數。   |
+| `total_uploads.succeeded` | 成功將 translog 上傳同步至遠端後端儲存空間的總次數。  |
+| `total_upload_size.started_bytes` | 正在從遠端後端儲存空間下載的 translog 檔案總位元組數。 |
+| `total_upload_size.succeeded_bytes` | 成功上傳至遠端後端儲存空間的 translog 檔案總位元組數。 |
+|`total_upload_size.failed_bytes` | 上傳至遠端後端儲存空間失敗的 translog 檔案總位元組數。 |
+| `total_upload_time_in_millis` | 將 translog 檔案上傳至遠端後端儲存空間所花費的總時間，以毫秒為單位。 |
+| `upload_size_in_bytes.moving_avg` | 最近 *N* 次下載所上傳 translog 資料的平均大小，以位元組為單位。*N* 定義於 `remote_store.moving_average_window_size` 設定中。 |
+| `upload_speed_in_bytes_per_sec.moving_avg` | 最近 *N* 次上傳的 translog 上傳平均速度，以位元組每秒為單位。*N* 定義於 `remote_store.moving_average_window_size` 設定中。    |
+| `upload_time_in_millis.moving_avg` | 自最近 *N* 次上傳以來，單次 translog 上傳所花費的平均時間，以毫秒為單位。*N* 定義於 `remote_store.moving_average_window_size` 設定中。    |
 
-The `translog.download` object contains the following fields.
+`translog.download` 物件包含下列欄位。
 
-|Field	|Description	|
+|欄位	|說明	|
 |:---	|:---	|
-| `last_successful_download_timestamp` | The timestamp, in milliseconds, since the last translog file successfully uploaded to remote-backed storage. |
-| `total_downloads.succeeded` | The total number of successful translog download syncs from remote-backed storage. |
-| `total_download_size.succeeded_bytes` | The total number of bytes of translog files successfully uploaded from remote-backed storage.  |
-| `total_download_time_in_millis` | The total amount of time spent, in milliseconds, downloading translog files from remote-backed storage.  |
-| `download_size_in_bytes.moving_avg`  | The average size of translog data, in bytes, downloaded in the last *N* downloads. *N* is defined in the `remote_store.moving_average_window_size` setting.    |
-| `download_speed_in_bytes_per_sec.moving_avg` | The average speed of translog downloads, in bytes per second, for the last *N* uploads. *N* is defined in the `remote_store.moving_average_window_size` setting.   |
-| `download_time_in_millis.moving_avg` |  The average amount of time taken by a single translog download, in milliseconds, since the last *N* uploads. *N* is defined in the `remote_store.moving_average_window_size` setting.  |
+| `last_successful_download_timestamp` | 自上次成功將 translog 檔案上傳至遠端後端儲存空間以來的時間戳記，以毫秒為單位。 |
+| `total_downloads.succeeded` | 成功從遠端後端儲存空間下載同步 translog 的總次數。 |
+| `total_download_size.succeeded_bytes` | 成功從遠端後端儲存空間上傳的 translog 檔案總位元組數。  |
+| `total_download_time_in_millis` | 從遠端後端儲存空間下載 translog 檔案所花費的總時間，以毫秒為單位。  |
+| `download_size_in_bytes.moving_avg`  | 最近 *N* 次下載所下載 translog 資料的平均大小，以位元組為單位。*N* 定義於 `remote_store.moving_average_window_size` 設定中。    |
+| `download_speed_in_bytes_per_sec.moving_avg` | 最近 *N* 次上傳的 translog 下載平均速度，以位元組每秒為單位。*N* 定義於 `remote_store.moving_average_window_size` 設定中。   |
+| `download_time_in_millis.moving_avg` |  自最近 *N* 次上傳以來，單次 translog 下載所花費的平均時間，以毫秒為單位。*N* 定義於 `remote_store.moving_average_window_size` 設定中。  |
 
-## Remote store stats for a single shard
+## 單一分片的遠端儲存空間統計資料
 
-Use the following API to get remote store statistics for a single shard.
+使用下列 API 取得單一分片的遠端儲存空間統計資料。
 
-#### Example request
+#### 請求範例
 
 ```json
 GET _remotestore/stats/{index_name}/{shard_id}
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 回應範例
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta }
 
@@ -472,9 +473,9 @@ GET _remotestore/stats/{index_name}/{shard_id}
 ```
 </details>
 
-### Remote store stats for a local shard
+### 本機分片的遠端儲存統計資料
 
-If you want to fetch only shards present on the node serving a Remote Store Stats API request, set the `local` query parameter to `true`, as shown in the following example request:
+若您只想擷取處理 Remote Store Stats API 請求的節點上存在的分片，請將 `local` 查詢參數設為 `true`，如下列請求範例所示：
 
 
 ```json

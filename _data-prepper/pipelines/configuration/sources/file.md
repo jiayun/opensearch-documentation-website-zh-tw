@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: File
+title: "檔案"
 parent: Sources
 grand_parent: Pipelines
 nav_order: 24
 ---
 
-# File source
+# 檔案來源
 
-The `file` plugin reads events from a local file once when the pipeline starts. It's useful for loading seed data, testing processors and sinks, or replaying a fixed dataset. This source *does not monitor* the file for new lines after startup.
+`file` 外掛程式會在管線啟動時從本機檔案讀取事件一次。它適合用於載入種子資料、測試處理器與接收器，或重新播放固定的資料集。此來源在啟動後*不會持續監看*檔案是否有新的一行。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`path` | Yes | String | An absolute path to the input file inside the Data Prepper container, for example, `/usr/share/data-prepper/data/input.jsonl`.
-`format` | No | String | Specifies how to interpret the file content. Valid values are `json` and `plain`. Use `json` when your file has one JSON object per line or a JSON array. Use `plain` for raw text lines. Default is `plain`.
-`record_type` | No | String | The type of output record produced by the source. Valid values are `event` and `string`. Use `event` to produce structured events expected by downstream processors and the OpenSearch sink. Default is `string`.
+`path` | 是 | 字串 | Data Prepper 容器內輸入檔案的絕對路徑，例如 `/usr/share/data-prepper/data/input.jsonl`。
+`format` | 否 | 字串 | 指定如何解讀檔案內容。有效值為 `json` 與 `plain`。當您的檔案每行有一個 JSON 物件或是一個 JSON 陣列時，請使用 `json`；若為原始文字行，請使用 `plain`。預設值為 `plain`。
+`record_type` | 否 | 字串 | 來源產生的輸出記錄類型。有效值為 `event` 與 `string`。請使用 `event` 產生下游處理器與 OpenSearch 接收器所需的結構化事件。預設值為 `string`。
 
-### Example
+### 範例
 
-The following examples demonstrate how different file types can be processed.
+以下範例示範如何處理不同的檔案類型。
 
-### JSON file
+### JSON 檔案
 
-The following example processes a JSON file:
+以下範例處理 JSON 檔案：
 
 ```yaml
 file-to-opensearch:
@@ -41,9 +42,9 @@ file-to-opensearch:
 ```
 {% include copy.html %}
 
-### Plain text file
+### 純文字檔案
 
-A raw text file can be processed using the following pipeline:
+原始文字檔案可以使用以下管線處理：
 
 ```yaml
 plain-file-to-opensearch:
@@ -67,9 +68,9 @@ plain-file-to-opensearch:
 ```
 {% include copy.html %}
 
-### CSV file
+### CSV 檔案
 
-You can process a CSV file using the `csv` processor:
+您可以使用 `csv` 處理器來處理 CSV 檔案：
 
 ```yaml
 csv-file-to-opensearch:

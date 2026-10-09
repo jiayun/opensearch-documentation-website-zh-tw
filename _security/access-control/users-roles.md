@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Defining users and roles
+title: "定義使用者與角色"
 parent: Access control
 nav_order: 70
 redirect_from:
  - /security-plugin/access-control/users-roles/
 ---
 
-# Defining users and roles
+# 定義使用者與角色
 
-You define users in OpenSearch to control who has access to OpenSearch data. You can use the internal user database to store users, or you can store them in an external authentication system, such as [LDAP or Active Directory]({{site.url}}{{site.baseurl}}/security/authentication-backends/ldap/).
+您在 OpenSearch 中定義使用者，以控制誰可以存取 OpenSearch 資料。您可以使用內部使用者資料庫來儲存使用者，也可以將使用者儲存在外部驗證系統中，例如 [LDAP 或 Active Directory]({{site.url}}{{site.baseurl}}/security/authentication-backends/ldap/)。
 
-You define roles to determine the scope of a permission or action group. You can create roles with specific privileges, for example, roles that contain any combination of cluster-wide permissions, index-specific permissions, document- and field-level security, and tenants.
+您定義角色來決定權限或動作群組的範圍。您可以建立具有特定權限的角色，例如包含叢集層級權限、索引專屬權限、文件與欄位層級安全性，以及租用戶之任意組合的角色。
 
-You can map users to roles during user creation or after users and roles have been defined. This mapping determines the permissions and access levels for each user based on the roles they are assigned.
+您可以在建立使用者時，或在使用者與角色定義完成後，將使用者對應到角色。此對應會根據指派給使用者的角色，決定該使用者的權限與存取層級。
 
 ---
 
 <details closed markdown="block">
   <summary>
-    Table of contents
+    目錄
   </summary>
   {: .text-delta }
 - TOC
@@ -28,268 +29,268 @@ You can map users to roles during user creation or after users and roles have be
 
 ---
 
-## Defining users
+## 定義使用者
 
-You can define users by using OpenSearch Dashboards, `internal_users.yml`, or the REST API. When creating users, you can map users to roles by using `internal_users.yml` or the REST API. If you are using OpenSearch Dashboards to define users, follow the steps in the [Map users to roles]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#mapping-users-to-roles) tutorial.
+您可以使用 OpenSearch Dashboards、`internal_users.yml` 或 REST API 來定義使用者。建立使用者時，您可以使用 `internal_users.yml` 或 REST API 將使用者對應到角色。如果您使用 OpenSearch Dashboards 定義使用者，請依照[將使用者對應到角色]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#mapping-users-to-roles)教學中的步驟操作。
 
-Unless you are defining new [reserved or hidden users]({{site.url}}{{site.baseurl}}/security/access-control/api/#reserved-and-hidden-resources), using OpenSearch Dashboards or the REST API to create new users, roles, and role mappings is recommended. The `.yml` files are for initial setup and are not for ongoing use.
+除非您要定義新的[保留或隱藏使用者]({{site.url}}{{site.baseurl}}/security/access-control/api/#reserved-and-hidden-resources)，否則建議使用 OpenSearch Dashboards 或 REST API 來建立新的使用者、角色與角色對應。`.yml` 檔案僅用於初始設定，不適合持續使用。
 {: .warning }
 
 ### OpenSearch Dashboards
 
-1. Choose **Security**, **Internal Users**, and **Create internal user**.
-1. Provide a username and password. The Security plugin automatically hashes the password and stores it in the `.opendistro_security` index.
-1. If desired, specify user attributes.
+1. 選擇 **Security**、**Internal Users**，然後選擇 **Create internal user**。
+1. 提供使用者名稱與密碼。Security 外掛程式會自動將密碼雜湊，並儲存在 `.opendistro_security` 索引中。
+1. 視需要指定使用者屬性。
 
-   Attributes are optional user properties that you can use for variable substitution in index permissions or document-level security.
+   屬性是選用的使用者屬性，可用於索引權限或文件層級安全性中的變數替換。
 
-1. Choose **Submit**.
+1. 選擇 **Submit**。
 
 ### `internal_users.yml`
 
-See [YAML files]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#internal_usersyml).
+請參閱 [YAML 檔案]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#internal_usersyml)。
 
 
 ### REST API
 
-See [Create user]({{site.url}}{{site.baseurl}}/security/api/users/create-user/).
+請參閱[建立使用者]({{site.url}}{{site.baseurl}}/security/api/users/create-user/)。
 
 
-## Defining roles
+## 定義角色
 
-Similarly to defining users, you can define roles using OpenSearch Dashboards, `roles.yml`, or the REST API. OpenSearch provides predefined roles and a special read-only role.
+與定義使用者類似，您可以使用 OpenSearch Dashboards、`roles.yml` 或 REST API 來定義角色。OpenSearch 提供預先定義的角色以及一個特殊的唯讀角色。
 
-Unless you are defining new [reserved or hidden users]({{site.url}}{{site.baseurl}}/security/access-control/api/#reserved-and-hidden-resources), using OpenSearch Dashboards or the REST API to create new users, roles, and role mappings is recommended. The `.yml` files are for initial setup and are not for ongoing use.
+除非您要定義新的 [保留或隱藏使用者]({{site.url}}{{site.baseurl}}/security/access-control/api/#reserved-and-hidden-resources)，否則建議使用 OpenSearch Dashboards 或 REST API 來建立新的使用者、角色與角色對應。`.yml` 檔案僅用於初始設定，不適合持續使用。
 {: .warning }
 
 ### OpenSearch Dashboards
 
-1. Choose **Security**, **Roles**, and **Create role**.
-1. Provide a name for the role.
-1. Add permissions as desired.
+1. 選擇 **Security**、**Roles**，然後選擇 **Create role**。
+1. 提供角色名稱。
+1. 視需要新增權限。
 
-   For example, you might give a role no cluster permissions, `read` permissions to two indexes, `unlimited` permissions to a third index, and read permissions to the `analysts` tenant.
+   例如，您可以給予某個角色沒有叢集權限、給兩個索引 `read` 權限、給第三個索引 `unlimited` 權限，並給予 `analysts` 租用戶讀取權限。
 
-1. Choose **Submit**.
+1. 選擇 **Submit**。
 
 
 ### `roles.yml`
 
-See [YAML files]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#rolesyml).
+請參閱 [YAML 檔案]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#rolesyml)。
 
 
 ### REST API
 
-See [Create role]({{site.url}}{{site.baseurl}}/security/api/roles/create-role/).
+請參閱[建立角色]({{site.url}}{{site.baseurl}}/security/api/roles/create-role/)。
 
-## Editing roles
+## 編輯角色
 
-You can edit roles using one of the following methods.
+您可以使用下列其中一種方法編輯角色。
 
 ### OpenSearch Dashboards
 
-1. Choose **Security** > **Roles**. In the **Create role** section, select **Explore existing roles**. 
-1. Select the role you want to edit. 
-1. Choose **edit role**. Make any necessary updates to the role.
-1. To save your changes, select **Update**.
+1. 選擇 **Security** > **Roles**。在 **Create role** 區段中，選取 **Explore existing roles**。
+1. 選取您要編輯的角色。
+1. 選擇 **edit role**。對角色進行任何必要的更新。
+1. 若要儲存變更，請選取 **Update**。
 
 ### `roles.yml`
 
-See [YAML files]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#rolesyml).
+請參閱 [YAML 檔案]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#rolesyml)。
 
 ### REST API
 
-See [Patch roles]({{site.url}}{{site.baseurl}}/security/api/roles/patch-roles/).
+請參閱[修補角色]({{site.url}}{{site.baseurl}}/security/api/roles/patch-roles/)。
 
-## Mapping users to roles
+## 將使用者對應到角色
 
-If you didn't specify roles when you created your user, you can map roles to it afterwards.
+如果您在建立使用者時未指定角色，可以在之後將角色對應到該使用者。
 
-Just like users and roles, you create role mappings using OpenSearch Dashboards, `roles_mapping.yml`, or the REST API.
+與使用者和角色一樣，您可以使用 OpenSearch Dashboards、`roles_mapping.yml` 或 REST API 來建立角色對應。
 
 ### OpenSearch Dashboards
 
-1. Choose **Security**, **Roles**, and a role.
-1. Choose the **Mapped users** tab and **Manage mapping**.
-1. Specify users or external identities (also known as backend roles).
-1. Choose **Map**.
+1. 選擇 **Security**、**Roles**，然後選擇一個角色。
+1. 選擇 **Mapped users** 索引標籤，然後選擇 **Manage mapping**。
+1. 指定使用者或外部身分 (也稱為後端角色)。
+1. 選擇 **Map**。
 
 
 ### `roles_mapping.yml`
 
-See [YAML files]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#roles_mappingyml).
+請參閱 [YAML 檔案]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#roles_mappingyml)。
 
 
 ### REST API
 
-See [Create role mapping]({{site.url}}{{site.baseurl}}/security/api/role-mappings/create-role-mapping/).
+請參閱[建立角色對應]({{site.url}}{{site.baseurl}}/security/api/role-mappings/create-role-mapping/)。
 
-## Defining read-only roles
+## 定義唯讀角色
 
-A read-only role grants a user the ability to read data from the OpenSearch cluster but not to modify or delete any data. The read-only role is useful when you want to provide access to data for reporting, analysis, or visualization purposes without allowing modifications to the data or the cluster itself. This maintains data integrity and prevents accidental or unauthorized changes.
+唯讀角色授予使用者從 OpenSearch 叢集讀取資料的能力，但不能修改或刪除任何資料。當您想要提供資料存取權以進行報告、分析或視覺化，而不允許修改資料或叢集本身時，唯讀角色非常實用。這可維持資料完整性，並防止意外或未經授權的變更。
 
-As with any role in OpenSearch, a read-only role can be configured using the following methods:
+與 OpenSearch 中的任何角色一樣，唯讀角色可以使用下列方法設定：
  
-- Using OpenSearch Dashboards
-- Modifying the `yml` configuration files
-- Using the Cluster Settings API 
+- 使用 OpenSearch Dashboards
+- 修改 `yml` 組態檔案
+- 使用 Cluster Settings API
 
-The simplest way to get familiar with roles and role mappings is to use OpenSearch Dashboards. The interface simplifies creating roles and assigning those roles to users, with an easy-to-navigate workflow. 
+熟悉角色與角色對應最簡單的方式是使用 OpenSearch Dashboards。此介面透過易於瀏覽的工作流程，簡化了建立角色以及將角色指派給使用者的過程。
 {: .tip}
 
-### Defining a basic read-only role
+### 定義基本唯讀角色
 
-To create a basic read-only role that allows a user to access OpenSearch Dashboards, view existing dashboards and visualizations, and query different indexes, use the following permissions. These permissions give the user access to all tenants and indexes on the cluster.
+若要建立一個基本唯讀角色，允許使用者存取 OpenSearch Dashboards、檢視現有的儀表板與視覺化，以及查詢不同的索引，請使用下列權限。這些權限會授予使用者存取叢集上所有租用戶與索引的權限。
 
 
-#### Cluster permissions
+#### 叢集權限
 
-For a user requiring read-only access to cluster-wide resources, such as visualizations or dashboards, add the `cluster_composite_ops_ro` permission to that user's role.
+對於需要唯讀存取叢集層級資源 (例如視覺化或儀表板) 的使用者，請將 `cluster_composite_ops_ro` 權限新增至該使用者的角色。
 
-#### Index permissions
+#### 索引權限
 
-A user requiring access to view visualizations will also require access to the index used to create the visualization. To give a user read-only access to all indexes, specify all (`*`) under the **Index** dropdown and **Read** in **Index Permissions**.
+需要存取權以檢視視覺化的使用者，也需要存取用來建立該視覺化的索引。若要授予使用者所有索引的唯讀存取權，請在 **Index** 下拉式選單中指定所有索引（`*`），並在 **Index Permissions** 中選擇 **Read**。
 
-#### Tenant permissions
+#### 租用戶權限
 
-If you use tenants to split work between teams or projects, use the all (`*`) option followed by the **Read only** option, as shown in the following image.
+如果您使用租用戶來劃分團隊或專案之間的工作，請使用所有租用戶（`*`）選項，然後選擇 **Read only** 選項，如下圖所示。
 
-![creating role]({{site.url}}{{site.baseurl}}/images/role_creation_read_only.png)
+![建立角色]({{site.url}}{{site.baseurl}}/images/role_creation_read_only.png)
 
-After setting all permission types and defining the role, you can map the role directly to a user on the role's **Mapped users** tab. Select **Map users** and then choose a user to map to the role, as shown in the following image.
+設定完所有權限類型並定義角色之後，您可以在角色的 **Mapped users** 索引標籤上，將該角色直接對應到使用者。選取 **Map users**，然後選擇要對應到該角色的使用者，如下圖所示。
 
-![mapping users]({{site.url}}{{site.baseurl}}/images/mapping-users.png)
+![對應使用者]({{site.url}}{{site.baseurl}}/images/mapping-users.png)
 
 ### OpenSearch Dashboards `readonly_mode`
 
-The OpenSearch Dashboards `readonly_mode` functionality is used to give a user access to the `Dashboards` interface only, removing all other UI elements from view.
+OpenSearch Dashboards 的 `readonly_mode` 功能用於僅授予使用者存取 `Dashboards` 介面的權限，並將所有其他 UI 元素從畫面中移除。
 
-To configure this role, add the following line to your `opensearch_dashboards.yml` file:
+若要設定此角色，請在您的 `opensearch_dashboards.yml` 檔案中新增下列一行：
 
 `opensearch_security.readonly_mode.roles: [new_role]`
 
-Even if the assigned role grants additional privileges or a user is mapped to other roles with write access to indexes, OpenSearch Dashboards restricts this access. Direct access to OpenSearch data using cURL or API is still allowed. OpenSearch Dashboards is not involved in this communication. 
+即使指派的角色授予額外權限，或使用者被對應到其他具有索引寫入權限的角色，OpenSearch Dashboards 仍會限制此存取權。使用 cURL 或 API 直接存取 OpenSearch 資料仍然允許，OpenSearch Dashboards 不會參與此通訊。
 
-If a user is mapped to the `readonly_mode` role, all other elements of the UI will be removed, except for `Dashboards`. In the following image, the view on the left shows the screen from the perspective of a user mapped to a `readonly_mode` role. The view on the right shows a user's standard view.
+如果使用者被對應到 `readonly_mode` 角色，除了 `Dashboards` 之外，UI 的所有其他元素都會被移除。在下圖中，左側的畫面顯示被對應到 `readonly_mode` 角色的使用者所看到的畫面，右側的畫面則顯示使用者的標準畫面。
 
 ![compare read only mode]({{site.url}}{{site.baseurl}}/images/compare_read_only_mode.png)
 
-Mapping a user to only the `readonly_mode` role does not allow them to view relevant indexes or existing dashboards. Read access to indexes and dashboards requires separate permissions.
+僅將使用者對應到 `readonly_mode` 角色，並不允許該使用者檢視相關索引或現有的儀表板。對索引與儀表板的讀取權限需要另外設定。
 {: .note }
 
 
-If a user is also mapped to any role listed under `plugins.security.restapi.roles_enabled` in `opensearch.yml`, for example, `all_access` or `security_rest_api_access`, then `readonly_mode` is ignored, giving them access to the standard UI elements.
+如果使用者同時被對應到 `opensearch.yml` 中 `plugins.security.restapi.roles_enabled` 底下所列的任何角色，例如 `all_access` 或 `security_rest_api_access`，則 `readonly_mode` 會被忽略，使用者將可以存取標準的 UI 元素。
 
-### Additional permissions
+### 額外權限
 
-If a user requires permissions in addition to those included in the `read_only` role, such as for alerting or anomaly detection tasks, you can assign predefined roles, such as `alerting_read_access` or `anomaly_read_access`.
+如果使用者需要 `read_only` 角色所包含權限以外的權限，例如執行警示或異常偵測工作所需的權限，您可以指派預先定義的角色，例如 `alerting_read_access` 或 `anomaly_read_access`。
 
-## Predefined roles
+## 預先定義的角色
 
-The Security plugin includes several predefined roles that serve as useful defaults.
+Security 外掛程式包含數個預先定義的角色，可作為實用的預設角色。
 
-### Built-in roles
+### 內建角色
 
-The following table lists built-in static roles that are always provided.
+下表列出一律提供的內建靜態角色。
 
-| Role | Description |
+| 角色 | 說明 |
 | :--- | :--- |
-| `all_access`| Superuser role with full cluster access. Grants permissions to perform all cluster operations, write to all indexes, and access all tenants.|
-| `kibana_server` | The role used by the OpenSearch Dashboards server user to read/write its internal saved objects and system indexes. Don't assign to human users. |
-| `kibana_user` | Lets a user sign in and use OpenSearch Dashboards. Grants permissions for cluster read and search, index monitoring, and writing to OpenSearch Dashboards indexes. Combine with read permissions for your data. |
-| `logstash`| Grants Logstash the permissions it needs to interact with OpenSearch. |
-| `manage_snapshots`| Grants permissions to manage snapshot repositories and run snapshot and snapshot restore operations. |
-| `own_index` | Grants each user full access to the user's own index (named after the user). Useful for personal workspaces or multi-tenant environments. |
-| `readall` | Grants read and search permissions, such as calling `_search` and `_msearch` APIs, for all indexes in the cluster. |
-| `readall_and_monitor` | Grants the same permissions as `readall`, with additional cluster monitoring permissions (for example, viewing cluster health and statistics). |
+| `all_access`| 具有完整叢集存取權的超級使用者角色。授予執行所有叢集操作、寫入所有索引及存取所有租用戶的權限。|
+| `kibana_server` | OpenSearch Dashboards 伺服器使用者用來讀取／寫入其內部儲存物件與系統索引的角色。請勿指派給人員使用者。 |
+| `kibana_user` | 允許使用者登入並使用 OpenSearch Dashboards。授予讀取與搜尋叢集、監控索引，以及寫入 OpenSearch Dashboards 索引的權限。請搭配您資料的讀取權限使用。 |
+| `logstash`| 授予 Logstash 與 OpenSearch 互動所需的權限。 |
+| `manage_snapshots`| 授予管理快照儲存庫及執行快照與快照還原操作的權限。 |
+| `own_index` | 授予每位使用者完整存取自己索引（以使用者名稱命名）的權限。適用於個人工作區或多租用戶環境。 |
+| `readall` | 授予對叢集中所有索引的讀取與搜尋權限，例如呼叫 `_search` 和 `_msearch` API。 |
+| `readall_and_monitor` | 授予與 `readall` 相同的權限，並提供額外的叢集監控權限（例如檢視叢集健全狀態與統計資料）。 |
 
-For a detailed breakdown of the individual permissions for these roles, see [static_roles.yml](https://github.com/opensearch-project/security/blob/main/src/main/resources/static_config/static_roles.yml).
+如需這些角色各項權限的詳細資訊，請參閱 [static_roles.yml](https://github.com/opensearch-project/security/blob/main/src/main/resources/static_config/static_roles.yml)。
 
-### Demo roles
+### 示範角色
 
-The following table lists the demo roles that are created by default if the `roles.yml` file is not provided when initializing the Security plugin.
+下表列出初始化 Security 外掛程式時，若未提供 `roles.yml` 檔案，預設會建立的示範角色。
 
-| **Role** | **Description** |
+| **角色** | **說明** |
 | :--- | :--- |
-| `alerting_ack_alerts`| Grants permissions to view and acknowledge alerts but not to modify destinations or monitors. |
-| `alerting_full_access` | Grants full permissions to perform all alerting actions. |
-| `alerting_read_access` | Grants permissions to view alerts, destinations, and monitors, but not to acknowledge alerts or modify destinations or monitors. |
-| `anomaly_full_access`| Grants full permissions to perform all anomaly detection actions. |
-| `anomaly_read_access`| Grants permissions to view detectors but not to create, modify, or delete detectors. |
-| `asynchronous_search_full_access`| Grants full permissions to perform all asynchronous search actions. |
-| `asynchronous_search_read_access`| Grants permissions to view asynchronous searches but not to submit, modify, or delete them. |
-| `cross_cluster_replication_follower_full_access` | Grants full access to perform cross-cluster replication actions on the follower cluster. |
-| `cross_cluster_replication_leader_full_access` | Grants full access to perform cross-cluster replication actions on the leader cluster. |
-| `index_management_full_access` | Grants full permissions to perform all index management actions, including ISM, transforms, and rollups. |
-| `ml_full_access` | Grants full permissions to use all machine learning (ML) features, including starting tasks and managing models. |
-| `ml_read_access` | Grants permissions to view ML configuration, stats, models, and tasks without modifying them. |
-| `notifications_full_access`| Grants full permissions to perform all Notifications actions. |
-| `notifications_read_access`| Grants permissions to view Notifications configuration/channels and features but not modify them. |
-| `point_in_time_full_access`| Grants full permissions to perform all Point-in-Time operations.|
-| `reports_instances_read_access`| Grants permissions to generate on-demand reports and download existing report instances but not to view/create report definitions. |
-| `security_analytics_ack_alerts`| Grants permissions to view and acknowledge Security Analytics alerts. |
-| `security_analytics_full_access` | Grants full permissions to use all Security Analytics functionality. |
-| `security_analytics_read_access` | Grants permissions to view Security Analytics detectors, alerts, findings, mappings, and rules. |
-| `snapshot_management_full_access`| Grants full permissions to perform all snapshot management actions (including repositories and snapshots).|
-| `snapshot_management_read_access`| Grants permissions to view snapshot management policies, repositories, and snapshots without modifying them. |
+| `alerting_ack_alerts`| 授予檢視及確認警示的權限，但不授予修改目的地或監視器的權限。 |
+| `alerting_full_access` | 授予執行所有警示動作的完整權限。 |
+| `alerting_read_access` | 授予檢視警示、目的地及監視器的權限，但不授予確認警示或修改目的地或監視器的權限。 |
+| `anomaly_full_access`| 授予執行所有異常偵測動作的完整權限。 |
+| `anomaly_read_access`| 授予檢視偵測器的權限，但不授予建立、修改或刪除偵測器的權限。 |
+| `asynchronous_search_full_access`| 授予執行所有非同步搜尋動作的完整權限。 |
+| `asynchronous_search_read_access`| 授予檢視非同步搜尋的權限，但不授予提交、修改或刪除這些搜尋的權限。 |
+| `cross_cluster_replication_follower_full_access` | 授予在追隨者叢集上執行跨叢集複寫動作的完整存取權。 |
+| `cross_cluster_replication_leader_full_access` | 授予在領導者叢集上執行跨叢集複寫動作的完整存取權。 |
+| `index_management_full_access` | 授予執行所有索引管理動作的完整權限，包括 ISM、轉換及彙整。 |
+| `ml_full_access` | 授予使用所有機器學習（ML）功能的完整權限，包括啟動工作及管理模型。 |
+| `ml_read_access` | 授予檢視 ML 組態、統計資料、模型及工作的權限，但不授予修改這些項目的權限。 |
+| `notifications_full_access`| 授予執行所有 Notifications 動作的完整權限。 |
+| `notifications_read_access`| 授予檢視 Notifications 組態／通道及功能的權限，但不授予修改這些項目的權限。 |
+| `point_in_time_full_access`| 授予執行所有時間點操作的完整權限。|
+| `reports_instances_read_access`| 授予依需求產生報表及下載現有報表執行個體的權限，但不授予檢視／建立報表定義的權限。 |
+| `security_analytics_ack_alerts`| 授予檢視及確認 Security Analytics 警示的權限。 |
+| `security_analytics_full_access` | 授予使用所有 Security Analytics 功能的完整權限。 |
+| `security_analytics_read_access` | 授予檢視 Security Analytics 偵測器、警示、發現結果、對應及規則的權限。 |
+| `snapshot_management_full_access`| 授予執行所有快照管理動作（包括儲存庫與快照）的完整權限。|
+| `snapshot_management_read_access`| 授予檢視快照管理政策、儲存庫及快照的權限，但不授予修改這些項目的權限。 |
 
-For a breakdown of individual permissions assigned to each role, see [roles.yml](https://github.com/opensearch-project/security/blob/main/config/roles.yml).
+如需指派給各角色的各項權限詳細資訊，請參閱 [roles.yml](https://github.com/opensearch-project/security/blob/main/config/roles.yml)。
 
-## Example 
+## 範例 
 
-The following tutorial describes the steps for creating a bulk access role in OpenSearch Dashboards.
+以下教學說明在 OpenSearch Dashboards 中建立大量存取角色的步驟。
 
-Create a new `bulk_access` role:
+建立新的 `bulk_access` 角色：
 
-1. Open OpenSearch Dashboards.
-1. Choose **Security**, **Roles**.
-1. Create a new role named `bulk_access`.
-1. For **Cluster permissions**, add the `cluster_composite_ops` action group.
-1. For **Index Permissions**, add an index pattern. For example, you might specify `my-index-*`.
-1. For index permissions, add the `write` action group.
-1. Choose **Create**.
+1. 開啟 OpenSearch Dashboards。
+1. 選取 **Security**、**Roles**。
+1. 建立名為 `bulk_access` 的新角色。
+1. 在 **Cluster permissions** 中，新增 `cluster_composite_ops` 動作群組。
+1. 在 **Index Permissions** 中，新增索引模式。例如，您可以指定 `my-index-*`。
+1. 在索引權限中，新增 `write` 動作群組。
+1. 選取 **Create**。
 
-Map the role to your user:
+將角色對應至您的使用者：
 
-1. Choose the **Mapped users** tab and **Manage mapping**.
-1. For **Internal users**, add your bulk access user.
-1. Choose **Map**.
+1. 選取 **Mapped users** 索引標籤及 **Manage mapping**。
+1. 在 **Internal users** 中，新增您的大量存取使用者。
+1. 選取 **Map**。
 
-## Admin and super admin roles
+## 管理員與超級管理員角色
 
-OpenSearch user roles are essential for controlling access to cluster resources. Users can be categorized as regular users, admin users, or super admin users based on their access rights and responsibilities.
+OpenSearch 使用者角色對於控制叢集資源的存取至關重要。根據使用者的存取權限與職責，可將使用者分為一般使用者、管理員使用者或超級管理員使用者。
 
-For more information about defining users, see [Defining users]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#defining-users). For more information about defining roles, see [Defining roles]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#defining-roles).
+如需定義使用者的詳細資訊，請參閱[定義使用者]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#defining-users)。如需定義角色的詳細資訊，請參閱[定義角色]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#defining-roles)。
 
 
-### Regular users
-Regular users have basic access permissions that allow them to interact with the OpenSearch cluster, such as querying data and using dashboards, but they do not have administrative privileges.
+### 一般使用者
+一般使用者具有基本存取權限，可與 OpenSearch 叢集互動，例如查詢資料及使用儀表板，但不具備管理權限。
 
-### Admin users
-Admin users have elevated permissions that allow them to perform various administrative tasks within the cluster. They have broader access compared to regular users, including permissions to:
-- Manage users and roles.
-- Configure permissions.
-- Adjust backend settings.
+### 管理員使用者
+管理員使用者具有較高的權限，可在叢集中執行各種管理工作。相較於一般使用者，他們具有更廣泛的存取權，包括下列權限：
+- 管理使用者與角色。
+- 設定權限。
+- 調整後端設定。
 
-Admin users can perform these tasks by configuring settings in the `opensearch.yml` file, using OpenSearch Dashboards, or interacting with the REST API. For more information about configuring users and roles, see [predefined roles]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#predefined-roles).
+管理員使用者可以透過設定 `opensearch.yml` 檔案中的設定、使用 OpenSearch Dashboards，或與 REST API 互動來執行這些工作。如需設定使用者與角色的詳細資訊，請參閱[預先定義的角色]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#predefined-roles)。
 
-### Super admin users
-Super admin users have the highest level of administrative authority within the OpenSearch environment. This role is typically reserved for select users and should be managed carefully.
+### 超級管理員使用者
+超級管理員使用者在 OpenSearch 環境中具有最高層級的管理權限。此角色通常保留給特定使用者，且應謹慎管理。
 
-Super admin users have unrestricted access to all settings and data within the cluster, including permissions to:
-- Modify Security plugin configurations.
-- Access and manage the security index `.opendistro_security`.
-- Override any security limitations.
+超級管理員使用者可不受限制地存取叢集中的所有設定與資料，包括下列權限：
+- 修改 Security 外掛程式組態。
+- 存取及管理安全性索引 `.opendistro_security`。
+- 覆寫任何安全性限制。
 
-#### Authentication of the super admin role
+#### 超級管理員角色的驗證
 
-Super admin users are authenticated through certificates, not passwords. The necessary certificates are defined in the `admin_dn` section of the `opensearch.yml` file and must be signed with the same root certificate authority (CA), as shown in the following example:
+超級管理員使用者是透過憑證驗證，而非密碼。必要的憑證定義於 `opensearch.yml` 檔案的 `admin_dn` 區段中，且必須由相同的根憑證授權單位 (CA) 簽署，如下列範例所示：
 ```
 YAML
 plugins.security.authcz.admin_dn:
 - CN=kirk,OU=client,O=client,L=test, C=de
 ``` 
 
-If the super admin certificate is signed by a different CA, then the admin CA must be concatenated with the node's CA in the file defined in `plugins.security.ssl.http.pemtrustedcas_filepath` in `opensearch.yml`. 
+如果超級管理員憑證是由不同的 CA 簽署，則必須在 `opensearch.yml` 中 `plugins.security.ssl.http.pemtrustedcas_filepath` 所定義的檔案裡，將管理員 CA 與節點的 CA 串接起來。
 
-For more information, see [Configuring super admin certificates]({{site.url}}{{site.baseurl}}/security/configuration/tls/#configuring-admin-certificates).
+如需更多資訊，請參閱[設定超級管理員憑證]({{site.url}}{{site.baseurl}}/security/configuration/tls/#configuring-admin-certificates)。

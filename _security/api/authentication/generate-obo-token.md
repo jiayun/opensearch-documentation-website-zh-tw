@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Generate on-behalf-of token
+title: "產生 On-Behalf-Of 權杖"
 parent: Authentication APIs
 grand_parent: Security APIs
 nav_order: 70
 ---
 
-# Generate On-Behalf-Of Token API
-**Introduced 2.12**
+# 產生 On-Behalf-Of 權杖 API
+**於 2.12 版導入**
 {: .label .label-purple }
 
-Generates an On-Behalf-Of token for the current user.
+為目前使用者產生 On-Behalf-Of 權杖。
 
-On-Behalf-Of authentication must be configured before you call this API. Add an `on_behalf_of` section containing a `signing_key` to the `config.dynamic` section of the `config.yml` file and apply it with `securityadmin.sh`. For more information, see [On-Behalf-Of authentication]({{site.url}}{{site.baseurl}}/security/access-control/authentication-tokens/#on-behalf-of-authentication).
+呼叫此 API 之前，必須先設定 On-Behalf-Of 驗證。請在 `config.yml` 檔案的 `config.dynamic` 區段中加入包含 `signing_key` 的 `on_behalf_of` 區段，並使用 `securityadmin.sh` 套用。如需更多資訊，請參閱 [On-Behalf-Of 驗證]({{site.url}}{{site.baseurl}}/security/access-control/authentication-tokens/#on-behalf-of-authentication)。
 
 <!-- spec_insert_start
 api: security.generate_obo_token
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 POST /_plugins/_security/api/generateonbehalfoftoken
 ```
@@ -28,19 +29,19 @@ POST /_plugins/_security/api/generateonbehalfoftoken
 api: security.generate_obo_token
 component: request_body_parameters
 -->
-## Request body fields
+## 請求本文欄位
 
-The request body is __required__. It is a JSON object with the following fields.
+請求本文為 __必要__。它是一個包含下列欄位的 JSON 物件。
 
-| Property | Required | Data type | Description |
+| 屬性 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `description` | **Required** | String | The description supplied by the user to describe the token. |
-| `duration` | _Optional_ | String | A duration in seconds. |
-| `service` | _Optional_ | String | The name of the service when generating a token for that service. |
+| `description` | **必要** | 字串 | 使用者提供的權杖說明。 |
+| `duration` | _選用_ | 字串 | 以秒為單位的持續時間。 |
+| `service` | _選用_ | 字串 | 為該服務產生權杖時的服務名稱。 |
 
 <!-- spec_insert_end -->
 
-## Example request
+## 範例請求
 
 ```json
 POST _plugins/_security/api/generateonbehalfoftoken
@@ -52,7 +53,7 @@ POST _plugins/_security/api/generateonbehalfoftoken
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -66,14 +67,14 @@ POST _plugins/_security/api/generateonbehalfoftoken
 api: security.generate_obo_token
 component: response_body_parameters
 -->
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文是一個包含下列欄位的 JSON 物件。
 
-| Property | Data type | Description | Default |
+| 屬性 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `authenticationToken` | String | The generated OBO token. | N/A |
-| `durationSeconds` | String | The duration of the token. | `300s` |
-| `user` | String | The name of the entity requesting token. | N/A |
+| `authenticationToken` | 字串 | 產生的 OBO 權杖。 | N/A |
+| `durationSeconds` | 字串 | 權杖的持續時間。 | `300s` |
+| `user` | 字串 | 請求權杖的實體名稱。 | N/A |
 
 <!-- spec_insert_end -->

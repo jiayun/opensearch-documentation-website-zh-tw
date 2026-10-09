@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Verifying backfill components
+title: "驗證回填元件"
 grand_parent: Migration phases
 nav_order: 3
 parent: Deploy
 permalink: /classic/migration-assistant/migration-phases/deploy/verifying-backfill-components/
 ---
 
-# Verifying backfill components
+# 驗證回填元件
 
-Before using the Migration Assistant, take the following steps to verify that your cluster is ready for migration.
+使用 Migration Assistant 之前，請採取下列步驟，確認您的叢集已準備好進行遷移。
 
-## Verifying snapshot creation
+## 驗證快照建立
 
-Verify that a snapshot can be created of your source cluster and used for metadata and backfill scenarios.
+確認可以建立來源叢集的快照，並用於中繼資料與回填情境。
 
-### Installing the Elasticsearch S3 Repository plugin
+### 安裝 Elasticsearch S3 儲存庫外掛程式
 
-The snapshot needs to be stored in a location that Migration Assistant can access. This guide uses Amazon Simple Storage Service (Amazon S3). By default, Migration Assistant creates an S3 bucket for storage. Therefore, it is necessary to install the [Elasticsearch S3 repository plugin](https://www.elastic.co/guide/en/elasticsearch/plugins/7.10/repository-s3.html) on your source nodes (https://www.elastic.co/guide/en/elasticsearch/plugins/7.10/repository-s3.html).
+快照必須儲存在 Migration Assistant 可存取的位置。本指南使用 Amazon Simple Storage Service (Amazon S3)。根據預設，Migration Assistant 會建立 S3 儲存貯體做為儲存空間。因此，您必須在來源節點上安裝 [Elasticsearch S3 儲存庫外掛程式](https://www.elastic.co/guide/en/elasticsearch/plugins/7.10/repository-s3.html) (https://www.elastic.co/guide/en/elasticsearch/plugins/7.10/repository-s3.html)。
 
-Additionally, make sure that the plugin has been configured with AWS credentials that allow it to read and write to Amazon S3. If your Elasticsearch cluster is running on Amazon Elastic Compute Cloud (Amazon EC2) or Amazon Elastic Container Service (Amazon ECS) instances with an AWS Identity and Access Management (IAM) execution role, include the necessary S3 permissions. Alternatively, you can store the credentials in the [Elasticsearch keystore](https://www.elastic.co/guide/en/elasticsearch/plugins/7.10/repository-s3-client.html).
+此外，請確認此外掛程式已設定可讀取及寫入 Amazon S3 的 AWS 憑證。如果您的 Elasticsearch 叢集執行於具有 AWS Identity and Access Management (IAM) 執行角色的 Amazon Elastic Compute Cloud (Amazon EC2) 或 Amazon Elastic Container Service (Amazon ECS) 執行個體上，請加入必要的 S3 權限。或者，您也可以將憑證儲存在 [Elasticsearch keystore](https://www.elastic.co/guide/en/elasticsearch/plugins/7.10/repository-s3-client.html) 中。
 
-### Verifying the S3 repository plugin configuration
+### 驗證 S3 儲存庫外掛程式組態
 
-You can verify that the S3 repository plugin is configured correctly by creating a test snapshot.
+您可以建立測試快照，以確認 S3 儲存庫外掛程式已正確設定。
 
-Create an S3 bucket for the snapshot using the following AWS Command Line Interface (AWS CLI) command:
+使用下列 AWS Command Line Interface (AWS CLI) 命令，為快照建立 S3 儲存貯體：
 
 ```shell
 aws s3api create-bucket --bucket <your-bucket-name> --region <your-aws-region>
 ```
 {% include copy.html %}
 
-Register a new S3 snapshot repository on your source cluster using the following cURL command:
+使用下列 cURL 命令，在您的來源叢集上註冊新的 S3 快照儲存庫：
 
 ```shell
 curl -X PUT "http://<your-source-cluster>:9200/_snapshot/test_s3_repository" -H "Content-Type: application/json" -d '{
@@ -45,7 +46,7 @@ curl -X PUT "http://<your-source-cluster>:9200/_snapshot/test_s3_repository" -H 
 ```
 {% include copy.html %}
 
-Next, create a test snapshot that captures only the cluster's metadata:
+接著，建立僅擷取叢集中繼資料的測試快照：
 
 ```shell
 curl -X PUT "http://<your-source-cluster>:9200/_snapshot/test_s3_repository/test_snapshot_1" -H "Content-Type: application/json" -d '{
@@ -56,27 +57,27 @@ curl -X PUT "http://<your-source-cluster>:9200/_snapshot/test_s3_repository/test
 ```
 {% include copy.html %}
 
-Check the AWS Management Console to confirm that your bucket contains the snapshot. 
+檢查 AWS Management Console，確認您的儲存貯體包含該快照。
 
-### Removing test snapshots after verification
+### 驗證後移除測試快照
 
-To remove the resources created during verification, you can use the following deletion commands:
+若要移除驗證期間建立的資源，您可以使用下列刪除命令：
 
-**Test snapshot**
+**測試快照**
 
 ```shell
 curl -X DELETE "http://<your-source-cluster>:9200/_snapshot/test_s3_repository/test_snapshot_1?pretty"
 ```
 {% include copy.html %}
 
-**Test snapshot repository**
+**測試快照儲存庫**
 
 ```shell
 curl -X DELETE "http://<your-source-cluster>:9200/_snapshot/test_s3_repository?pretty"
 ```
 {% include copy.html %}
 
-**S3 bucket**
+**S3 儲存貯體**
 
 ```shell
 aws s3 rm s3://<your-bucket-name> --recursive
@@ -84,40 +85,40 @@ aws s3api delete-bucket --bucket <your-bucket-name> --region <your-aws-region>
 ```
 {% include copy.html %}
 
-### Troubleshooting
+### 疑難排解
 
-Use this guidance to troubleshoot any of the following snapshot verification issues.
+請使用本指引，針對下列任何快照驗證問題進行疑難排解。
 
-#### Access denied error (403)
+#### 存取遭拒錯誤 (403)
 
-If you encounter an error like `AccessDenied (Service: Amazon S3; Status Code: 403)`, verify the following:
+如果您遇到類似 `AccessDenied (Service: Amazon S3; Status Code: 403)` 的錯誤，請確認下列事項：
 
-- Make sure you're using the S3 bucket created by Migration Assistant.
-- If you're using a custom S3 bucket, verify that:
-  - The IAM role assigned to your Elasticsearch cluster has the necessary S3 permissions.
-  - The bucket name and AWS Region provided in the snapshot configuration match the actual S3 bucket you created.
+- 確認您使用的是 Migration Assistant 所建立的 S3 儲存貯體。
+- 如果您使用自訂的 S3 儲存貯體，請確認：
+  - 指派給您 Elasticsearch 叢集的 IAM 角色具有必要的 S3 權限。
+  - 快照組態中提供的儲存貯體名稱與 AWS Region 與您實際建立的 S3 儲存貯體相符。
 
-#### Older versions of Elasticsearch
+#### 較舊版本的 Elasticsearch
 
-Older versions of the Elasticsearch S3 repository plugin may have trouble reading IAM role credentials embedded in Amazon EC2 and Amazon ECS instances. This is because the copy of the AWS SDK shipped with them is too old to read the new standard way of retrieving those credentials, as shown in [the Instance Metadata Service v2 (IMDSv2) specification](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html). This can result in snapshot creation failures, with an error message similar to the following:
+較舊版本的 Elasticsearch S3 儲存庫外掛程式，可能無法讀取內嵌於 Amazon EC2 與 Amazon ECS 執行個體中的 IAM 角色憑證。這是因為這些版本隨附的 AWS SDK 複本過舊，無法讀取新的標準憑證擷取方式，如 [Instance Metadata Service v2 (IMDSv2) 規格](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html) 所述。這可能導致快照建立失敗，並出現類似下列的錯誤訊息：
 
 ```json
 {"error":{"root_cause":[{"type":"repository_verification_exception","reason":"[migration_assistant_repo] path [rfs-snapshot-repo] is not accessible on cluster manager node"}],"type":"repository_verification_exception","reason":"[migration_assistant_repo] path [rfs-snapshot-repo] is not accessible on cluster manager node","caused_by":{"type":"i_o_exception","reason":"Unable to upload object [rfs-snapshot-repo/tests-s8TvZ3CcRoO8bvyXcyV2Yg/master.dat] using a single upload","caused_by":{"type":"amazon_service_exception","reason":"Unauthorized (Service: null; Status Code: 401; Error Code: null; Request ID: null)"}}},"status":500}
 ```
 
-If you encounter this issue, you can resolve it by temporarily enabling IMDSv1 on the instances in your source cluster for the duration of the snapshot. There is a toggle for this available in the AWS Management Console and in the AWS CLI. Switching this toggle will turn on the older access model and enable the Elasticsearch S3 repository plugin to work as normal. For more information about IMDSv1, see [Modify instance metadata options for existing instances](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-IMDS-existing-instances.html).
+如果您遇到此問題，可以在快照期間，於來源叢集的執行個體上暫時啟用 IMDSv1 來解決。AWS Management Console 與 AWS CLI 中都有可用的切換開關。切換此開關會開啟較舊的存取模式，並讓 Elasticsearch S3 儲存庫外掛程式恢復正常運作。如需 IMDSv1 的詳細資訊，請參閱 [修改現有執行個體的執行個體中繼資料選項](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-IMDS-existing-instances.html)。
 
-### Snapshot and S3 bucket issues
+### 快照與 S3 儲存貯體問題
 
-When using the CDK deployment for Migration Assistant, you might encounter the following errors during snapshot creation and deletion.
+使用 Migration Assistant 的 CDK 部署時，您可能會在建立與刪除快照期間遇到下列錯誤。
 
-#### Bucket permissions
+#### 儲存貯體權限
 
-To make sure that you can delete snapshots and create them during the AWS Cloud Development Kit (AWS CDK) deployment process, confirm that the `OSMigrations-dev-<region>-CustomS3AutoDeleteObjects` stack has S3 object deletion rights. Then, verify that `OSMigrations-dev-<region>-default-SnapshotRole` has the following S3 permissions:
+為確保您可以在 AWS Cloud Development Kit (AWS CDK) 部署程序期間刪除及建立快照，請確認 `OSMigrations-dev-<region>-CustomS3AutoDeleteObjects` 堆疊具有 S3 物件刪除權限。接著，確認 `OSMigrations-dev-<region>-default-SnapshotRole` 具有下列 S3 權限：
 
-  - List bucket contents  
-  - Read/Write/Delete objects
+  - 列出儲存貯體內容  
+  - 讀取/寫入/刪除物件
 
-#### Snapshot conflicts
+#### 快照衝突
 
-To prevent snapshot conflicts, use the `console snapshot delete` command from the Migration Console. If you delete snapshots or snapshot repositories in a location other than the Migration Console, you might encounter "already exists" errors.
+為避免快照衝突，請從 Migration Console 使用 `console snapshot delete` 命令。如果您在 Migration Console 以外的位置刪除快照或快照儲存庫，可能會遇到「already exists」錯誤。

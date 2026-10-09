@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Post-filtering
+title: "後置篩選"
 parent: Filtering data
 nav_order: 20
 ---
 
-# Post-filtering vector search results
+# 對向量搜尋結果進行後置篩選
 
-You can achieve post-filtering with a [Boolean filter](#boolean-filter-with-ann-search) or by providing [the `post_filter` parameter](#the-post_filter-parameter).
+您可以透過 [布林篩選](#boolean-filter-with-ann-search) 或提供 [`post_filter` 參數](#the-post_filter-parameter) 來實現後置篩選。
 
-### Boolean filter with ANN search
+### 搭配 ANN 搜尋的布林篩選
 
-A Boolean filter consists of a Boolean query that contains a k-NN query and a filter. For example, the following query searches for hotels that are closest to the specified `location` and then filters the results to return hotels with a rating between 8 and 10, inclusive, that provide parking:
+布林篩選由一個包含 k-NN 查詢與篩選條件的布林查詢組成。例如，下列查詢會搜尋距離指定 `location` 最近的飯店，然後篩選結果，只回傳評分介於 8 到 10（含）且提供停車位的飯店：
 
 ```json
 POST /hotels-index/_search
@@ -57,7 +58,7 @@ POST /hotels-index/_search
 ```
 {% include copy-curl.html %}
 
-The response includes documents containing the matching hotels:
+回應會包含內含符合飯店的文件：
 
 ```json
 {
@@ -120,9 +121,9 @@ The response includes documents containing the matching hotels:
 }
 ```
 
-### The post_filter parameter
+### post_filter 參數
 
-If you use the `knn` query alongside filters or other clauses (for example, `bool`, `must`, `match`), you might receive fewer than `k` results. In this example, `post_filter` reduces the number of results from 2 to 1:
+如果您將 `knn` 查詢與篩選條件或其他子句（例如 `bool`、`must`、`match`）一起使用，可能會收到少於 `k` 筆的結果。在此範例中，`post_filter` 會將結果數量從 2 筆減少為 1 筆：
 
 ```json
 GET my-knn-index-1/_search

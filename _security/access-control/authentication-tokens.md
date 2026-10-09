@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Authorization tokens
+title: "授權權杖"
 parent: Access control
 nav_order: 125
 redirect_from:
@@ -8,23 +9,23 @@ redirect_from:
  - /security-plugin/access-control/authorization-tokens/
 ---
 
-# Authorization tokens
+# 授權權杖
 
-The Security plugin allows you to configure two types of authentication tokens: On-Behalf-Of (OBO) tokens and Service Account tokens.
+Security 外掛程式可讓您設定兩種類型的驗證權杖：On-Behalf-Of（OBO）權杖和服務帳號權杖。
 
-## On-Behalf-Of authentication
+## On-Behalf-Of 驗證
 
-The following sections describe the use, configuration, structure, and endpoint for OBO tokens.
+以下各節說明 OBO 權杖的用途、組態、結構和端點。
 
-### Usage
+### 用途
 
-On-Behalf-Of tokens are a special form of JSON Web Token (JWT) used for managing authentication requests between a user's client and an extension. These tokens operate "just-in-time," meaning that a token is issued immediately before it is required for authentication. A token will have a configurable window of validity (with a maximum duration of five minutes), after which it expires and cannot be used.
+On-Behalf-Of 權杖是一種特殊形式的 JSON Web Token（JWT），用於管理使用者用戶端與擴充功能之間的驗證請求。這些權杖採用「即時」運作方式，表示權杖會在需要用於驗證之前立即核發。權杖的有效期間可設定（最長為五分鐘），超過此期間後，權杖便會到期且無法使用。
 
-An extension can use an OBO token to interact with an OpenSearch cluster, using the same privileges as the user it represents. This is why these tokens are called "on-behalf-of." Since these tokens are not restricted, they enable services to function as though they are the original user until the token expires. This implies that the feature's applicability extends beyond only extension-related uses cases, allowing for a wider range of uses.
+擴充功能可使用 OBO 權杖與 OpenSearch 叢集互動，並使用與其所代表的使用者相同的權限。這就是這些權杖稱為「on-behalf-of」的原因。由於這些權杖不受限制，因此服務可在權杖到期之前，如同原始使用者一般運作。這表示此功能的適用範圍不僅限於與擴充功能相關的使用案例，還可用於更廣泛的用途。
 
-### Configuration
+### 組態
 
-In the [`config/opensearch-security/config.yml` file]({{site.url}}{{site.baseurl}}/security/configuration/configuration/), the OBO configuration is located in the `config.dynamic` section. It contains the `signing_key` for the token signature and an optional `encryption_key` for encrypting the `roles` claims in the token payload:
+在 [`config/opensearch-security/config.yml` 檔案]({{site.url}}{{site.baseurl}}/security/configuration/configuration/)中，OBO 組態位於 `config.dynamic` 區段。它包含用於權杖簽章的 `signing_key`，以及用於加密權杖承載內容中 `roles` 宣告的選用 `encryption_key`：
 
 ```yaml
 config:
@@ -36,49 +37,49 @@ config:
 ...
 ```
 
-The default encoding algorithm for signing the JWT is HMAC SHA512. Keys are Base64-encoded strings in the [`config/opensearch-security/config.yml` file]({{site.url}}{{site.baseurl}}/security/configuration/configuration/). After the configuration is applied using the `securityadmin.sh -cd <configuration directory>` command, the values are stored in the security system index and used cluster-wide.
+用於簽署 JWT 的預設編碼演算法為 HMAC SHA512。金鑰是 [`config/opensearch-security/config.yml` 檔案]({{site.url}}{{site.baseurl}}/security/configuration/configuration/)中以 Base64 編碼的字串。使用 `securityadmin.sh -cd <configuration directory>` 命令套用組態後，這些值會儲存在安全性系統索引中，並供整個叢集使用。
 
-When `encryption_key` is omitted, roles and backend roles are stored as plain text in the token claims. When it is provided, the `roles` claim is encrypted. Cluster administrators can choose whether to encrypt role information based on their security requirements.
+省略 `encryption_key` 時，角色和後端角色會以明文儲存在權杖宣告中。提供此設定時，`roles` 宣告會經過加密。叢集管理員可根據其安全性需求，選擇是否加密角色資訊。
 
-### Token structure
+### 權杖結構
 
-The payload of an OBO token must include all standard configurations of a JWT, along with role claims. The absence of any of these claims results in a malformed token and fails to meet the required standard for authentication.
+OBO 權杖的承載內容必須包含 JWT 的所有標準組態，以及角色宣告。缺少其中任何宣告都會導致權杖格式錯誤，無法符合驗證所需的標準。
 
-The OBO token contains the following claims:
-* Issuer (`iss`): OpenSearch cluster identifier
-	* It is essential that the issuer is validated as a part of security control measures. This strategy is forward-thinking, particularly in the context of potential multi-tenant scenarios, such as OpenSearch Serverless, where differing cryptographic keys could be associated with each issuer. By checking the value of issuer, each OBO token is restricted to its associated issuer.
-* Issue-at (`iat`): Current time for issuing this token
-	* Used as the reference of the expiration.
-* Not-before (`nbf`): The earliest point at which the token can be used
-	* Given that the OBO token is designed for just-in-time usage, its `nbf` should align with the issued-at time (`iat`), indicating the moment when the token was created.
-* Expiry (`exp`): Expiration time
-	* Each OBO token incorporates an expiration mechanism, which is verified upon its receipt. Once a token is issued, it cannot be revoked. Instead, the token is only invalidated upon its expiration. Further, the generation of OBO tokens by extensions is subject to dynamic settings. This functionality safeguards the system by preventing the issuance of future tokens under certain conditions.
-	* The default configuration establishes an expiration time of 300 seconds for OBO tokens. Recognizing that different scenarios may necessitate different token durations, OpenSearch has the capability for users to personalize this expiration time. The maximum duration that can be assigned to a token is 600 seconds.
-	* In reference to the OBO token's current design, token revocation isn't a current concern, given its intended just-in-time use and brief lifespan. If, however, future adjustments necessitate an extended lifespan for this token, token revocation will be added. This strategy will be adopted to improve and solidify the security measures associated with OBO token use.
-* Subject (`sub`): User identifier
-	* Name of the user with which this OBO token is associated.
-* Audience (`aud`): The extension’s unique identifier
-	* For the extension use case, the `aud` field is a reference to the specific extension that represents the target service.
-	* For the REST API use case, the API parameter service enables the specifying of the target service(s) using this token. The default value is set to `self-issued`.
-* Roles: Security privilege evaluation
-	* When `encryption_key` is configured, the mapped roles are encrypted in the token payload:
-		* Encrypted mapped roles (`encrypted_roles`)
-	* When `encryption_key` is not configured, roles are stored as plain text:
-		* Mapped roles (`roles`)
-		* Backend roles (`backend_roles`)
+OBO 權杖包含下列宣告：
+* 核發者（`iss`）：OpenSearch 叢集識別碼
+	* 務必將核發者驗證納入安全性控制措施。這項策略具有前瞻性，尤其適用於潛在的多租用戶情境，例如 OpenSearch Serverless，其中每個核發者可能會關聯到不同的密碼編譯金鑰。透過檢查核發者的值，每個 OBO 權杖都會限制為僅適用於其關聯的核發者。
+* 核發時間（`iat`）：核發此權杖時的目前時間
+	* 用作到期時間的參考依據。
+* 生效時間（`nbf`）：可使用權杖的最早時間點
+	* 由於 OBO 權杖是為即時使用而設計，其 `nbf` 應與核發時間（`iat`）一致，表示權杖建立的時間點。
+* 到期時間（`exp`）：到期時間
+	* 每個 OBO 權杖都包含到期機制，並在收到權杖時進行驗證。權杖一經核發，便無法撤銷，而是僅在到期時失效。此外，擴充功能產生 OBO 權杖的行為受動態設定控制。此功能可在特定條件下阻止後續權杖的核發，藉此保護系統。
+	* 預設組態將 OBO 權杖的到期時間設為 300 秒。考量到不同情境可能需要不同的權杖有效期間，OpenSearch 可讓使用者自訂此到期時間。權杖可設定的最長有效期間為 600 秒。
+	* 就 OBO 權杖目前的設計而言，考量到其預期的即時用途和短暫有效期間，目前無須考慮權杖撤銷。不過，若未來的調整需要延長此權杖的有效期間，將會加入權杖撤銷功能。採用此策略是為了改善並強化與 OBO 權杖使用相關的安全性措施。
+* 主體（`sub`）：使用者識別碼
+	* 與此 OBO 權杖關聯的使用者名稱。
+* 受眾（`aud`）：擴充功能的唯一識別碼
+	* 在擴充功能使用案例中，`aud` 欄位指向代表目標服務的特定擴充功能。
+	* 在 REST API 使用案例中，API 參數 service 可用於指定使用此權杖的目標服務。預設值設為 `self-issued`。
+* 角色：安全性權限評估
+	* 設定 `encryption_key` 時，對應的角色會在權杖承載內容中加密：
+		* 加密的對應角色（`encrypted_roles`）
+	* 未設定 `encryption_key` 時，角色會以明文儲存：
+		* 對應的角色（`roles`）
+		* 後端角色（`backend_roles`）
 
-The OpenSearch Security plugin handles the encryption and decryption processes. This approach ensures the protection of user information, even when traversing the trust boundary between OpenSearch and any third-party services.
+OpenSearch Security 外掛程式負責處理加密和解密程序。這種方式可確保使用者資訊受到保護，即使資訊跨越 OpenSearch 與任何第三方服務之間的信任邊界也一樣。
 
-### API endpoint
+### API 端點
 
-You can access the `POST /_plugins/_security/api/generateonbehalfoftoken` API endpoint on the Security plugin in order to create a short-lived, self-issued OBO token to perform certain actions on the user's behalf.
+您可以存取 Security 外掛程式上的 `POST /_plugins/_security/api/generateonbehalfoftoken` API 端點，以建立自行核發且有效期間短暫的 OBO 權杖，代表使用者執行特定動作。
 
-To access this API endpoint, the request body should contain three API parameters:
+若要存取此 API 端點，請求本文應包含三個 API 參數：
 
-* `description`: This parameter allows the user to articulate the purpose for requesting this token, providing clarity and transparency.
-* `service` (optional): This parameter is directed to the audience claim of the OBO token. It offers users the opportunity to designate the target service for which they intend to use the token. Although this is an optional parameter, if not specified, the default value is set to `self-issued`.
-* `durationSeconds` (optional): This parameter allows users to customize the token's expiration time according to its anticipated usage. The maximum duration is capped at 600 seconds to maintain security. If not specified, the default duration is set to 300 seconds.
-The following is an example of requesting an OBO token with a lifespan of 3 minutes for the user “admin” for testing purposes:
+* `description`：此參數可讓使用者說明請求此權杖的目的，提高清晰度與透明度。
+* `service`（選用）：此參數對應至 OBO 權杖的受眾宣告。使用者可透過此參數指定預計使用權杖的目標服務。雖然這是選用參數，但若未指定，預設值會設為 `self-issued`。
+* `durationSeconds`（選用）：此參數可讓使用者根據權杖的預期用途自訂到期時間。為維護安全性，最長有效期間限制為 600 秒。若未指定，預設有效期間會設為 300 秒。
+以下範例為基於測試目的，替使用者「admin」請求有效期間為 3 分鐘的 OBO 權杖：
 
 ```json
 POST /_plugins/_security/api/generateonbehalfoftoken
@@ -90,45 +91,45 @@ POST /_plugins/_security/api/generateonbehalfoftoken
 ```
 {% include copy-curl.html security=true %}
 
-### Additional authorization restriction 
+### 額外的授權限制 
 
-While the conversation about the usage of OBO tokens continues, it is critical to manage certain edge cases. Even though an OBO token can act as a valid Bearer authorization header for any API access, certain limitations are needed. For instance, using an OBO token to access the API endpoint to issue another OBO token should be forbidden. Similarly, using an OBO token to access the reset password API in order to modify a user's authentication information should be disallowed. These preventive measures are necessary to uphold the system's integrity and security.
+隨著 OBO 權杖用途的討論持續進行，妥善處理特定邊界情況至關重要。雖然 OBO 權杖可作為有效的 Bearer 授權標頭，用於存取任何 API，但仍需要某些限制。例如，應禁止使用 OBO 權杖存取 API 端點來核發另一個 OBO 權杖。同樣地，也應禁止使用 OBO 權杖存取重設密碼 API，以修改使用者的驗證資訊。這些預防措施是維護系統完整性與安全性所必需的。
 
-For more information, see the [related discussion](https://github.com/opensearch-project/security/issues/2891).
+如需更多資訊，請參閱[相關討論](https://github.com/opensearch-project/security/issues/2891)。
 
-### Permissions
+### 權限
 
-To create an OBO token, you must have the `security:obo/create` permission.
+若要建立 OBO 權杖，您必須擁有 `security:obo/create` 權限。
 
-## Service accounts
+## 服務帳戶
 
-Service Accounts tokens are the second form of authentication token supported by the Security plugin. 
+服務帳戶權杖是 Security 外掛程式支援的第二種驗證權杖形式。
 
-### Introduction
+### 簡介
 
-Service Accounts are a new authC/authZ path where extensions can run requests without assuming the role(s) of the active user. Service Accounts are a special type of principal associated with each extension and have a set of permissions. The permissions assigned to Service Accounts grant the associated extension the authorization to run any of the mapped operations without needing to assume the roles of the active user or stash the user’s role(s) in the ephemeral user context. 
+服務帳戶是一種新的 authC/authZ 路徑，讓擴充功能可以在不擔任作用中使用者角色的情況下執行請求。服務帳戶是與每個擴充功能相關聯的特殊類型主體，並具有一組權限。指派給服務帳戶的權限會授予相關聯的擴充功能授權，使其能夠執行任何對應的操作，而不需要擔任作用中使用者的角色，或將使用者的角色暫存於臨時使用者情境中。
 
-Service accounts only permit operations on system indexes associated with the mapped extension.
+服務帳戶僅允許對與對應擴充功能相關聯的系統索引執行操作。
 {: .important}
 
-### Background
+### 背景
 
-Before the introduction of Service Accounts, it was not possible for an extension to service a request without assuming the roles of the active user. Instead, when a request is processed, an ephemeral “Plugin User” was created. The Plugin User then assumed all the permissions of the currently authenticated operator (human user). The result was a Plugin User that acted on the extension’s behalf but had all of the privileges of the operator. In this way, the previous model can be said to have had extensions “impersonate” the operator. This impersonation approach lead to two main issues:
-* Impersonation compromises referential integrity, meaning it is difficult for auditors to identify which requests were run by an extension or by an operator. A system with referential integrity maintains a transactional record in its audit log. The record provides a clear history of actions taken by various subjects at specific times. When extensions impersonate users for both requests they make on behalf of the operator and requests they send on their own, the audit log lacks referential integrity.
-* Impersonation also makes it impossible to restrict an extension’s permissions beyond those of the user it impersonates. When an extension assumes the roles of the active subject, it copies all of the roles. This includes even those permissions which are unnecessary for completing its intended actions. This practice not only deviates from the principal of least-privileges, but also increases the threat surface area. With each additional permission granted to the Plugin User, the potential impact a misconfigured or malicious extension may have grows.
+在服務帳戶推出之前，擴充功能無法在不擔任作用中使用者角色的情況下處理請求。反之，當處理請求時，會建立一個臨時的「外掛程式使用者」。接著，外掛程式使用者會取得目前已驗證操作者 (真人使用者) 的所有權限。結果就是一個代表擴充功能行事、但擁有操作者所有權限的外掛程式使用者。如此一來，可以說先前的模型讓擴充功能「冒用」操作者的身分。這種冒用身分的做法導致兩個主要問題：
+* 冒用身分會損害參照完整性，這表示稽核人員難以辨識哪些請求是由擴充功能執行，哪些是由操作者執行。具有參照完整性的系統會在其稽核記錄中維護交易記錄。該記錄會提供各種主體在特定時間所採取動作的清楚歷程。當擴充功能無論是代表操作者發出請求，還是自行送出請求，都冒用使用者身分時，稽核記錄便缺乏參照完整性。
+* 冒用使用者身分也使擴充功能無法取得比所冒用身分的使用者更受限制的權限。當擴充功能擔任作用中主體的角色時，它會複製所有角色。這甚至包括完成其預期動作所不需要的權限。這種做法不僅偏離了最小權限原則，也增加了威脅暴露面。授予外掛程式使用者的每個額外權限，都會增加設定錯誤或惡意擴充功能可能造成的潛在影響。
 
-### Benefits
+### 優點
 
-Service Accounts address the issues described in the Background section by defining a separate state in which autonomously operating extensions run. Service Accounts maintain referential integrity by introducing a distinct state in which extensions run when sending requests on their own behalf. 
-Audit logging can then record when an extension runs on its own—it makes authC/authZ calls against the Service Accounts—or whether it is running an action on behalf of the operator and therefore making use of the OBO tokens.
+服務帳戶透過定義一個獨立狀態 (自主運作的擴充功能在其中執行) 來解決背景一節所述的問題。服務帳戶透過引入一個獨特狀態 (擴充功能代表自身送出請求時所執行的狀態) 來維持參照完整性。
+稽核記錄接著便能記錄擴充功能何時自行執行 (對服務帳戶進行 authC/authZ 呼叫)，或何時代表操作者執行動作，因而使用 OBO 權杖。
 
-Similarly, Service Accounts address threat exposure concerns by separating the roles an extension assumes from those of the operator or a generic hard-coded user (such as those in the `internal_users.yml` file). 
-Service Accounts will not assume the roles of the operator but instead have their own privileges listed in the Service Accounts. The roles associated with Service Accounts can therefore be as a restrictive as possible in alignment with the principle of least-privileges. To avoid providing extensions with overly permissive service accounts, extension authors should have a strong understanding of what types of operations their extensions hope to run.
+同樣地，服務帳戶透過將擴充功能所擔任的角色與操作者或一般硬式編碼使用者 (例如 `internal_users.yml` 檔案中的使用者) 的角色分開，來解決威脅暴露的疑慮。
+服務帳戶不會擔任操作者的角色，而是擁有列於服務帳戶中的自身權限。因此，與服務帳戶相關聯的角色可以盡可能具有限制性，以符合最小權限原則。為了避免為擴充功能提供權限過於寬鬆的服務帳戶，擴充功能作者應充分了解其擴充功能希望執行哪些類型的操作。
 
-### API endpoint
+### API 端點
 
-As suggested by the name, the Boolean flag `service` denotes whether a given internal user account is a Service Accounts. If an account is not a Service Accounts, then any attempts to generate an associated authorization token for the account will fail. Similarly, the `enabled` field determines when a Service Accounts can be used by an extension to perform operations. If a Service Accounts is not `enabled`, attempts to fetch its authorization token will be blocked and the Service Accounts will be unable to run requests on its own behalf using a previously issued authorization token.
-The following is an example of creating a Service Accounts with `ALL PERMISSIONS` for your service or extension.
+顧名思義，布林值旗標 `service` 表示指定的內部使用者帳戶是否為服務帳戶。如果帳戶不是服務帳戶，則任何為該帳戶產生相關授權權杖的嘗試都會失敗。同樣地，`enabled` 欄位會決定擴充功能何時可以使用服務帳戶來執行操作。如果服務帳戶不是 `enabled`，則擷取其授權權杖的嘗試將會遭到封鎖，且該服務帳戶將無法使用先前發出的授權權杖代表自身執行請求。
+以下範例說明如何為您的服務或擴充功能建立具有 `ALL PERMISSIONS` 的服務帳戶。
 ```json
 PUT /_plugins/_security/api/internalusers/admin_service
 {
@@ -142,14 +143,14 @@ PUT /_plugins/_security/api/internalusers/admin_service
 ```
 {% include copy-curl.html security=true %}
  
-## Handling OBO and service accounts requests
-While both OBO token handling and Service Accounts can be viewed as independent features, the most significant benefits are realized when coupled. Specifically, OpenSearch exposes a client that is used to connect to the OpenSearch cluster and provides the plugins with the capability to run requests. 
-With OBO tokens and Service Accounts, the client now is able to be used to handle requests that use both of these features. When the client makes a request that requires an extension to use an OBO token, the first step for handling the request is forwarding the request to the Security plugin. In the Security plugin, the request is authenticated and authorized against the active user. If the active user is permitted, the request returns to OpenSearch’s core code base, where a request to create an OBO token for the target extension using the active user’s identity is created. This request to generate the OBO token is then handled by the _`IdentityPlugin`_ implementation. In the standard scenario this is the Security plugin, so the request is returned to the Security plugin’s implementation of the `TokenManager` interface, which generates a new OBO token for the request. 
-After generating the token, the Security plugin forwards the request with the OBO token to the extension. At that point, the extension can call OpenSearch’s REST methods with the token. The permissions associated with the token will then be evaluated for the authorization of the request. If the token conveys the permissions required for the operation, the action will be performed, and the response will be sent back to the extension. After processing OpenSearch’s response, the extension will forward its own handling of the response to the client. If the OBO token does not entail the permissions required for initiating the target action, a forbidden response is returned to the extension.
+## 處理 OBO 與服務帳戶請求
+雖然 OBO 權杖處理與服務帳戶都可以視為獨立功能，但兩者結合時才能實現最顯著的效益。具體而言，OpenSearch 公開了一個用戶端，用於連線至 OpenSearch 叢集，並為外掛程式提供執行請求的能力。
+有了 OBO 權杖與服務帳戶，該用戶端現在可以用來處理同時使用這兩項功能的請求。當用戶端發出需要擴充功能使用 OBO 權杖的請求時，處理該請求的第一步是將請求轉送至 Security 外掛程式。在 Security 外掛程式中，會針對作用中使用者對請求進行驗證與授權。如果允許作用中使用者，請求會回到 OpenSearch 的核心程式碼基底，並在其中建立一個使用作用中使用者身分為目標擴充功能建立 OBO 權杖的請求。這個產生 OBO 權杖的請求接著會由 _`IdentityPlugin`_ 實作處理。在標準情境中，這就是 Security 外掛程式，因此請求會回到 Security 外掛程式對 `TokenManager` 介面的實作，由它為請求產生新的 OBO 權杖。
+產生權杖後，Security 外掛程式會將帶有 OBO 權杖的請求轉送至擴充功能。此時，擴充功能可以使用該權杖呼叫 OpenSearch 的 REST 方法。接著會評估與該權杖相關聯的權限，以授權該請求。如果權杖帶有該操作所需的權限，便會執行該動作，並將回應傳回擴充功能。處理完 OpenSearch 的回應後，擴充功能會將其自身的回應處理轉送至用戶端。如果 OBO 權杖未帶有啟動目標動作所需的權限，則會將禁止回應傳回擴充功能。
 
-Extensions acting on their own behalf also use the client that is exposed by OpenSearch. When an extension is first initialized in OpenSearch, the `IdentityPlugin` is triggered to create a new Service Accounts for it and to provide the associated Service Accounts token. In the default configuration, the Security plugin is the `IdentityPlugin` and handles these processes. 
-After OpenSearch receives the Service Accounts token, it forwards that token to the associated extension. After the extension has received its token, requests by the client to make use of the Service Accounts associated with the extension are operable. In these scenarios, the extension receives the requests from the client and then forwards the request along with the Service Accounts token to OpenSearch. OpenSearch further transfers the packages to the Security plugin, where the token is parsed and the request is treated as a traditional request using "Basic Authentication" in the `InternalAuthenticationBackend`.
+代表自身行事的擴充功能也會使用 OpenSearch 所公開的用戶端。當擴充功能首次在 OpenSearch 中初始化時，會觸發 `IdentityPlugin` 為其建立新的服務帳戶，並提供相關聯的服務帳戶權杖。在預設組態中，Security 外掛程式即為 `IdentityPlugin`，並處理這些程序。
+在 OpenSearch 收到服務帳戶權杖後，會將該權杖轉送至相關聯的擴充功能。擴充功能收到其權杖後，用戶端即可使用與該擴充功能相關聯的服務帳戶來執行請求。在這些情境中，擴充功能會從用戶端接收請求，然後將請求連同服務帳戶權杖轉送至 OpenSearch。OpenSearch 會進一步將這些內容傳送至 Security 外掛程式，由它剖析權杖，並將該請求視為在 `InternalAuthenticationBackend` 中使用「基本驗證」的傳統請求。
 
-In both OBO and Service Accounts token request flows, the `TokenManager` interface for the `IdentityPlugin` is used by the `IdentityPlugin` to handle the tokens' distribution and processing. This interface is implemented by the Security plugin as an `IdentityPlugin` and contains logic for issuing a token that is either an OBO or Service Accounts token.
+在 OBO 與服務帳戶權杖的請求流程中，`IdentityPlugin` 會使用 `IdentityPlugin` 的 `TokenManager` 介面來處理權杖的散佈與處理。此介面由 Security 外掛程式實作為 `IdentityPlugin`，並包含發出 OBO 或服務帳戶權杖的邏輯。
 
 

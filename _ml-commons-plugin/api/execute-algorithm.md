@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Execute algorithm 
+title: "執行演算法"
 parent: ML Commons APIs
 nav_order: 90
 ---
 
 # Execute Algorithm API
 
-Some algorithms, such as [Localization]({{site.url}}{{site.baseurl}}/ml-commons-plugin/algorithms#localization), don't require trained models. You can run no-model-based algorithms using the `execute` API.
+有些演算法（例如 [Localization]({{site.url}}{{site.baseurl}}/ml-commons-plugin/algorithms#localization)）不需要已訓練的模型。您可以使用 `execute` API 執行不依賴模型的演算法。
 
-## Endpoints
+## 端點
 
 ```json
 POST _plugins/_ml/_execute/{algorithm_name}
 ```
 
-## Example request: Execute localization 
+## 範例請求：執行 Localization 演算法
 
-The following example uses the Localization algorithm to find subset-level information for aggregate data (for example, aggregated over time) that demonstrates the activity of interest, such as spikes, drops, changes, or anomalies.
+下列範例使用 Localization 演算法，為彙總資料（例如隨時間彙總的資料）找出子集合層級的資訊，以呈現感興趣的活動，例如尖峰、下降、變化或異常。
 
 ```json
 POST /_plugins/_ml/_execute/anomaly_localization
@@ -44,7 +45,7 @@ POST /_plugins/_ml/_execute/anomaly_localization
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {

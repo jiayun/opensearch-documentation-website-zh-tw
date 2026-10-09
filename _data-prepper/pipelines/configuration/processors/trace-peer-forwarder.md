@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Trace Peer Forwarder
+title: "追蹤對等轉送器"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 380
 ---
 
-# Trace Peer Forwarder processor
+# 追蹤對等轉送器處理器
 
-The `trace_peer_forwarder` processor is used with [Peer Forwarder]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/peer-forwarder/) to reduce by half the number of events forwarded in a [Trace Analytics]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/trace-analytics/) pipeline. In Trace Analytics, each event is typically duplicated when it is sent from `otel-trace-pipeline` to `raw-pipeline` and `service-map-pipeline`. When pipelines forward events, this causes the core Peer Forwarder to send multiple HTTP requests for the same event. You can use `trace peer forwarder` to forward an event once through the `otel-trace-pipeline` instead of `raw-pipeline` and `service-map-pipeline`, which prevents unnecessary HTTP requests.
+`trace_peer_forwarder` 處理器與[對等轉送器]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/peer-forwarder/)搭配使用，可將[追蹤分析]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/trace-analytics/)管線中轉送的事件數量減少一半。在追蹤分析中，每個事件從 `otel-trace-pipeline` 傳送至 `raw-pipeline` 和 `service-map-pipeline` 時，通常都會複製一份。當管線轉送事件時，這會導致核心對等轉送器針對同一個事件傳送多個 HTTP 請求。您可以使用 `trace peer forwarder`，透過 `otel-trace-pipeline` 將事件轉送一次，而非透過 `raw-pipeline` 和 `service-map-pipeline` 轉送，藉此避免不必要的 HTTP 請求。
 
-You should use `trace_peer_forwarder` for Trace Analytics pipelines when you have multiple nodes.
+當您有多個節點時，應在追蹤分析管線中使用 `trace_peer_forwarder`。
 
-## Usage
+## 使用方式
 
-To get started with `trace_peer_forwarder`, first configure [Peer Forwarder]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/peer-forwarder/). Then create a `pipeline.yaml` file and specify `trace peer forwarder` as the processor. You can configure `peer forwarder` in your `data-prepper-config.yaml` file. For more detailed information, see [Configuring OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/getting-started/#2-configuring-data-prepper).
+若要開始使用 `trace_peer_forwarder`，請先設定[對等轉送器]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/peer-forwarder/)。接著建立 `pipeline.yaml` 檔案，並將 `trace peer forwarder` 指定為處理器。您可以在 `data-prepper-config.yaml` 檔案中設定 `peer forwarder`。如需更詳細的資訊，請參閱[設定 OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/getting-started/#2-configuring-data-prepper)。
 
-See the following example `pipeline.yaml` file: 
+請參閱下列 `pipeline.yaml` 檔案範例： 
 
 ```yaml
 otel-trace-pipeline:
@@ -49,4 +50,4 @@ service-map-pipeline:
     - opensearch:
 ```
 
-In the preceding `pipeline.yaml` file, events are forwarded in the `otel-trace-pipeline` to the target peer, and no forwarding is performed in `raw-pipeline` or `service-map-pipeline`. This process helps improve network performance by forwarding events (as HTTP requests) once instead of twice. 
+在前述 `pipeline.yaml` 檔案中，事件會在 `otel-trace-pipeline` 中轉送至目標對等節點，而 `raw-pipeline` 或 `service-map-pipeline` 中不會執行轉送。此流程將事件（以 HTTP 請求的形式）轉送一次而非兩次，有助於提升網路效能。 

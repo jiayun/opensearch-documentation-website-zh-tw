@@ -1,66 +1,67 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete agentic memory
+title: "刪除代理程式記憶"
 parent: Agentic memory APIs
 grand_parent: ML Commons APIs
 nav_order: 53
 ---
 
-# Delete Agentic Memory API
-**Introduced 3.3**
+# 刪除代理程式記憶 API
+**3.3 版新增**
 {: .label .label-purple }
 
-Use this API to delete a specific memory by its type and ID or to delete memories matching a query. This unified API supports deleting memories of any [memory type]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-types): `sessions`, `working`, `long-term`, or `history`.
+使用此 API 依類型與 ID 刪除特定記憶，或刪除符合查詢條件的記憶。此統一 API 支援刪除任何[記憶類型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-types)的記憶：`sessions`、`working`、`long-term` 或 `history`。
 
-## Delete a memory by type and ID
+## 依類型與 ID 刪除記憶
 
-Use this API to delete a memory by type and ID.
+使用此 API 依類型與 ID 刪除記憶。
 
-### Endpoints
+### 端點
 
 ```json
 DELETE /_plugins/_ml/memory_containers/{memory_container_id}/memories/{type}/{id}
 ```
 
-### Path parameters
+### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required/Optional | Description |
+| 參數 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `memory_container_id` | String | Required | The ID of the memory container from which to delete the memory. |
-| `type` | String | Required | The type of memory to delete. Valid values are `sessions`, `working`, `long-term`, and `history`. |
-| `id` | String | Required | The ID of the specific memory to delete. |
+| `memory_container_id` | 字串 | 必要 | 要從中刪除記憶的記憶容器 ID。 |
+| `type` | 字串 | 必要 | 要刪除的記憶類型。有效值為 `sessions`、`working`、`long-term` 與 `history`。 |
+| `id` | 字串 | 必要 | 要刪除之特定記憶的 ID。 |
 
-### Example request: Delete a working memory
+### 範例請求：刪除工作記憶
 
 ```json
 DELETE /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/working/XyEuiJkBeh2gPPwzjYWM
 ```
 {% include copy-curl.html %}
 
-### Example request: Delete a long-term memory
+### 範例請求：刪除長期記憶
 
 ```json
 DELETE /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/DcxjTpkBvwXRq366C1Zz
 ```
 {% include copy-curl.html %}
 
-### Example request: Delete a sessions memory
+### 範例請求：刪除工作階段記憶
 
 ```json
 DELETE /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/sessions/CcxjTpkBvwXRq366A1aE
 ```
 {% include copy-curl.html %}
 
-### Example request: Delete a history memory
+### 範例請求：刪除歷程記憶
 
 ```json
 DELETE /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/history/eMxnTpkBvwXRq366hmAU
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -75,9 +76,9 @@ DELETE /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/history/eMx
 }
 ```
 
-### Error responses
+### 錯誤回應
 
-If you attempt to delete a memory from a container that doesn't exist, OpenSearch returns a 404 Not Found error:
+如果您嘗試從不存在的容器刪除記憶，OpenSearch 會傳回 404 Not Found 錯誤：
 
 ```json
 {
@@ -95,39 +96,39 @@ If you attempt to delete a memory from a container that doesn't exist, OpenSearc
 }
 ```
 
-### Response fields
+### 回應欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `result` | String | The result of the delete operation. |
-| `_id` | String | The ID of the deleted memory. |
-| `_version` | Integer | The version number after deletion. |
-| `_shards` | Object | Information about the shards involved in the operation. |
+| `result` | 字串 | 刪除作業的結果。 |
+| `_id` | 字串 | 已刪除記憶的 ID。 |
+| `_version` | 整數 | 刪除後的版本號。 |
+| `_shards` | 物件 | 此作業所涉及分片的相關資訊。 |
 
-## Delete memories by query
+## 依查詢刪除記憶
 
-Use this API to delete multiple memories using a query to match specific criteria.
+使用此 API 透過查詢比對特定條件，以刪除多筆記憶。
 
-### Endpoints
+### 端點
 
 ```json
 POST /_plugins/_ml/memory_containers/{memory_container_id}/memories/{type}/_delete_by_query
 ```
 
-### Path parameters
+### 路徑參數
 
-| Field                 | Data type | Required/Optional | Description |
+| 欄位                 | 資料類型 | 必要/選用 | 說明 |
 |:----------------------| :--- | :--- | :--- |
-| `memory_container_id` | String | Required | The ID of the memory container from which to delete the memory. |
-| `type` | String | Required | The type of memory to delete. Valid values are `sessions`, `working`, `long-term`, and `history`. |
+| `memory_container_id` | 字串 | 必要 | 要從中刪除記憶的記憶容器 ID。 |
+| `type` | 字串 | 必要 | 要刪除的記憶類型。有效值為 `sessions`、`working`、`long-term` 與 `history`。 |
 
-### Request body fields
+### 請求本文欄位
 
-The request body must contain a query to match the memories you want to delete.
+請求本文必須包含用於比對您要刪除之記憶的查詢。
 
-### Example request
+### 範例請求
 
 ```json
 POST /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/working/_delete_by_query
@@ -141,7 +142,7 @@ POST /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/working/_dele
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -165,20 +166,20 @@ POST /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/working/_dele
 }
 ```
 
-### Response fields
+### 回應欄位
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `took` | Integer | The time, in milliseconds, taken to execute the request. |
-| `timed_out` | Boolean | Whether the request timed out. |
-| `total` | Integer | The total number of documents processed. |
-| `deleted` | Integer | The number of documents deleted. |
-| `batches` | Integer | The number of batches processed. |
-| `version_conflicts` | Integer | The number of version conflicts encountered. |
-| `noops` | Integer | The number of no-operation updates. |
-| `retries` | Object | Information about bulk and search retries. |
-| `throttled_millis` | Integer | The time, in milliseconds, that the request was throttled. |
-| `requests_per_second` | Float | The number of requests processed per second. |
-| `throttled_until_millis` | Integer | The time, in milliseconds, until throttling is lifted. |
-| `failures` | Array | Any failures that occurred during the operation. |
+| `took` | 整數 | 執行請求所花費的時間（毫秒）。 |
+| `timed_out` | 布林值 | 請求是否逾時。 |
+| `total` | 整數 | 已處理的文件總數。 |
+| `deleted` | 整數 | 已刪除的文件數。 |
+| `batches` | 整數 | 已處理的批次數。 |
+| `version_conflicts` | 整數 | 遭遇的版本衝突數。 |
+| `noops` | 整數 | 無作業的更新數。 |
+| `retries` | 物件 | 大量作業與搜尋重試的相關資訊。 |
+| `throttled_millis` | 整數 | 請求被節流的時間（毫秒）。 |
+| `requests_per_second` | 浮點數 | 每秒處理的請求數。 |
+| `throttled_until_millis` | 整數 | 節流解除前的時間（毫秒）。 |
+| `failures` | 陣列 | 作業期間發生的任何失敗。 |
 

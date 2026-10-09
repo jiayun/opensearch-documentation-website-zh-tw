@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search agentic memory
+title: "搜尋代理程式記憶"
 parent: Agentic memory APIs
 grand_parent: ML Commons APIs
 nav_order: 54
 ---
 
-# Search Agentic Memory API
-**Introduced 3.3**
+# 搜尋代理程式記憶 API
+**於 3.3 版推出**
 {: .label .label-purple }
 
-Use this API to search for memories of a specific type within a memory container. This unified API supports searching `sessions`, `working`, `long-term`, and `history` [memory types]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-types).
+使用此 API 在記憶容器內搜尋特定類型的記憶。此統一 API 支援搜尋 `sessions`、`working`、`long-term` 和 `history` [記憶類型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-types)。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/memory_containers/{memory_container_id}/memories/{type}/_search
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required/Optional | Description |
+| 參數 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `memory_container_id` | String | Required | The ID of the memory container. |
-| `type` | String | Required | The memory type. Valid values are `sessions`, `working`, `long-term`, and `history`. |
+| `memory_container_id` | 字串 | 必要 | 記憶容器的 ID。 |
+| `type` | 字串 | 必要 | 記憶類型。有效值為 `sessions`、`working`、`long-term` 和 `history`。 |
 
-## Request fields
+## 請求欄位
 
-The request body supports standard OpenSearch query domain-specific language (DSL). For more information, see [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/).
+請求本文支援標準 OpenSearch Query DSL。如需更多資訊，請參閱 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/)。
 
-## Example request: Search sessions
+## 範例請求：搜尋工作階段
 
 ```json
 GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/sessions/_search
@@ -50,7 +51,7 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/sessions/_sear
 ```
 {% include copy-curl.html %}
 
-## Example request: Search long-term memories
+## 範例請求：搜尋長期記憶
 
 ```json
 GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/_search
@@ -77,7 +78,7 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/_sea
 ```
 {% include copy-curl.html %}
 
-## Example request: Search a history memory
+## 範例請求：搜尋歷史記憶
 
 ```json
 GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/history/_search
@@ -96,7 +97,7 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/history/_searc
 ```
 {% include copy-curl.html %}
 
-## Example request: Search working memories with a namespace filter
+## 範例請求：使用命名空間篩選條件搜尋工作記憶
 
 ```json
 GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/working/_search
@@ -130,7 +131,7 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/working/_searc
 ```
 {% include copy-curl.html %}
 
-## Example request: Search trace data by session
+## 範例請求：依工作階段搜尋追蹤資料
 
 ```json
 GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/working/_search
@@ -151,7 +152,7 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/working/_searc
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -189,6 +190,6 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/working/_searc
 }
 ```
 
-## Response fields
+## 回應欄位
 
-The response fields vary depending on the memory type being searched. For field descriptions, see [Get memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/get-memory/#response-fields).
+回應欄位會依所搜尋的記憶類型而有所不同。如需欄位說明，請參閱[取得記憶]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/get-memory/#response-fields)。

@@ -1,62 +1,63 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Monitoring search quality
+title: "監控搜尋品質"
 nav_order: 70
 parent: Search Relevance Workbench
 grand_parent: Optimizing search quality
 has_children: false
 ---
 
-# Monitoring search quality
-**Introduced 3.4**
+# 監控搜尋品質
+**於 3.4 版推出**
 {: .label .label-purple }
 
-Search quality is not static. Even if your ranking algorithms remain unchanged, the indexed data evolves, signals such as popularity and recency fluctuate, and user queries shift over time.
+搜尋品質並非一成不變。即使您的排名演算法維持不變，已編製索引的資料仍會持續演進，諸如熱門程度與新近程度等訊號會有所波動，使用者的查詢也會隨時間改變。
 
-To detect and prevent unintended changes in relevance, you should monitor search quality on an ongoing basis. You can configure a cron schedule to run a search evaluation experiment at regular intervals.
-
-
-Each job can have only one schedule. To modify the schedule, delete the existing schedule and create a new one. Deleting a schedule also removes its associated historical data.
-
-## Scheduling a search evaluation using Search Relevance Workbench
-
-After you successfully run a search evaluation for the first time, a clock icon appears that allows you to schedule the experiment, as shown in the following image.
-
-![Schedule a Experiment to Run]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/experiment_scheduled_icon.png)
-
-On the scheduling page, configure how frequently you want the experiment to run, as shown in the following image.
-
-![Setting the schedule of how often to run]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/experiment_scheduled_modal.png)
-
-### Evaluating search quality
-
-Once an experiment is scheduled, a new dashboard icon lets you monitor the search results over time. Because the dashboard evaluates results daily, it may take up to 24 hours for the data to populate and display meaningful insights.
-
-![Review search quality over time]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/experiment_scheduled_dashboard.png)
+為了偵測並避免相關性出現非預期的變化，您應該持續監控搜尋品質。您可以設定 cron 排程，定期執行搜尋評估實驗。
 
 
-## Scheduling a search evaluation using the API
+每個作業只能有一個排程。若要修改排程，請刪除現有排程並建立新的排程。刪除排程也會一併移除其相關的歷史資料。
 
-You can create regularly scheduled experiments using the API. The experiment you are scheduling must already exist.
+## 使用 Search Relevance Workbench 排定搜尋評估
 
-### Endpoint
+在您首次成功執行搜尋評估後，會出現一個時鐘圖示，讓您排定該實驗，如下圖所示。
+
+![排定實驗執行時間]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/experiment_scheduled_icon.png)
+
+在排程頁面上，設定您希望實驗執行的頻率，如下圖所示。
+
+![設定執行頻率的排程]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/experiment_scheduled_modal.png)
+
+### 評估搜尋品質
+
+排定實驗後，會出現一個新的儀表板圖示，讓您隨時間監控搜尋結果。由於儀表板每天評估結果，資料最多可能需要 24 小時才會填入並顯示有意義的洞察。
+
+![隨時間檢視搜尋品質]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/experiment_scheduled_dashboard.png)
+
+
+## 使用 API 排定搜尋評估
+
+您可以使用 API 建立定期排定的實驗。您要排定的實驗必須已經存在。
+
+### 端點
 
 ```json
 POST _plugins/_search_relevance/experiments/schedule
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available input parameters.
+下表列出可用的輸入參數。
 
-Field | Data type |  Description
+欄位 | 資料類型 |  說明
 :---  | :--- | :---
-`experimentId` | String | The experiment ID to rerun.
-`cronExpression` | String | A cron schedule for running the evaluation in UTC.
+`experimentId` | 字串 | 要重新執行的實驗 ID。
+`cronExpression` | 字串 | 以 UTC 執行評估的 cron 排程。
 
-### Example request
+### 範例請求
 
-The following request schedules the experiment to run every night at 1 AM:
+下列請求會排定該實驗每天凌晨 1 點執行：
 
 ```json
 POST _plugins/_search_relevance/experiments/schedule
@@ -67,37 +68,37 @@ POST _plugins/_search_relevance/experiments/schedule
 ```
 {% include copy-curl.html %}
 
-## Managing scheduled experiments
+## 管理已排定的實驗
 
-You can retrieve or delete scheduled experiments using the following APIs.
+您可以使用下列 API 擷取或刪除已排定的實驗。
 
-### Retrieve scheduled experiments
+### 擷取已排定的實驗
 
-This API retrieves the available scheduled experiments.
+此 API 會擷取可用的已排定實驗。
 
-#### Endpoints
+#### 端點
 
 ```json
 GET _plugins/_search_relevance/experiments/schedule
 GET _plugins/_search_relevance/experiments/schedule/{experiment_id}
 ```
 
-#### Path parameters
+#### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `experiment_id` | String | The ID of the scheduled experiment to retrieve. If not provided, retrieves all scheduled experiments. |
+| `experiment_id` | 字串 | 要擷取的已排定實驗 ID。若未提供，則擷取所有已排定的實驗。 |
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_search_relevance/experiments/schedule/6282afa6-fa14-49c8-a627-ac1d5204d357
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -142,33 +143,33 @@ GET _plugins/_search_relevance/experiments/schedule/6282afa6-fa14-49c8-a627-ac1d
 }
 ```
 
-### Delete a scheduled experiment
+### 刪除已排定的實驗
 
-You can delete a scheduled experiment using the scheduled experiment ID.
+您可以使用已排定的實驗 ID 刪除已排定的實驗。
 
-#### Endpoint
+#### 端點
 
 ```json
 DELETE _plugins/_search_relevance/experiments/schedule/<experiment_id>
 ```
 
-### Path parameters
+### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `experiment_id` | String | The ID of the scheduled experiment to delete.  |
+| `experiment_id` | 字串 | 要刪除的已排定實驗 ID。  |
 
 
-#### Example request
+#### 範例請求
 
 ```json
 DELETE _plugins/_search_relevance/experiments/schedule/6282afa6-fa14-49c8-a627-ac1d5204d357
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {

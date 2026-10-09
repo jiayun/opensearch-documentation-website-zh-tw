@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Patch action groups
+title: "局部更新動作群組"
 parent: Action group APIs
 grand_parent: Security APIs
 nav_order: 20
 ---
 
 # Patch Action Groups API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-Updates action groups without replacing them. Specify an action group name to update individual attributes of one action group, or omit the name to create, update, or delete multiple action groups in a single call.
+更新動作群組而不加以取代。指定動作群組名稱可更新單一動作群組的個別屬性，或省略名稱以在單一呼叫中建立、更新或刪除多個動作群組。
 
 <!-- spec_insert_start
 api: security.patch_action_groups
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PATCH /_plugins/_security/api/actiongroups
 ```
@@ -31,27 +32,27 @@ PATCH /_plugins/_security/api/actiongroups/{action_group}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required | Description |
+| 參數 | 資料類型 | 必要 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `action_group` | String | No | The name of the action group to update. If omitted, the request can modify multiple action groups. |
+| `action_group` | 字串 | 否 | 要更新的動作群組名稱。若省略，請求可修改多個動作群組。 |
 
-## Request body fields
+## 請求本文欄位
 
-The request body is required. It is an array of JSON objects. Each object contains the following fields.
+請求本文為必要內容。它是一個 JSON 物件陣列。每個物件包含下列欄位。
 
-| Field | Data type | Description | Required |
+| 欄位 | 資料類型 | 說明 | 必要 |
 | :--- | :--- | :--- | :--- |
-| `op` | String | The operation to perform. Valid values are `add`, `remove`, `replace`, `move`, `copy`, and `test`. | Yes |
-| `path` | String | The path to modify. When you specify an action group name, the path is relative to that action group, such as `/allowed_actions`. When you omit the name, the path names the action group, such as `/CREATE_INDEX`. | Yes |
-| `value` | Object | The new value. Required for the `add`, `replace`, and `test` operations. | No |
+| `op` | 字串 | 要執行的操作。有效值為 `add`、`remove`、`replace`、`move`、`copy` 與 `test`。 | 是 |
+| `path` | 字串 | 要修改的路徑。指定動作群組名稱時，路徑相對於該動作群組，例如 `/allowed_actions`。省略名稱時，路徑即為動作群組的名稱，例如 `/CREATE_INDEX`。 | 是 |
+| `value` | 物件 | 新值。`add`、`replace` 與 `test` 操作需要此欄位。 | 否 |
 
-## Example request
+## 範例請求
 
-The following request replaces the allowed actions of the `custom_action_group` action group:
+下列請求會取代 `custom_action_group` 動作群組的允許動作：
 
 ```json
 PATCH _plugins/_security/api/actiongroups/custom_action_group
@@ -63,7 +64,7 @@ PATCH _plugins/_security/api/actiongroups/custom_action_group
 ```
 {% include copy-curl.html security=true %}
 
-The following request adds the `CREATE_INDEX` action group and removes the `CRUD` action group:
+下列請求會新增 `CREATE_INDEX` 動作群組並移除 `CRUD` 動作群組：
 
 ```json
 PATCH _plugins/_security/api/actiongroups
@@ -78,9 +79,9 @@ PATCH _plugins/_security/api/actiongroups
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
-A request that updates one action group names it in the response:
+更新單一動作群組的請求會在回應中指明該動作群組的名稱：
 
 ```json
 {
@@ -89,7 +90,7 @@ A request that updates one action group names it in the response:
 }
 ```
 
-A bulk request does not name the action groups it changed:
+批次請求不會指明其變更的動作群組名稱：
 
 ```json
 {

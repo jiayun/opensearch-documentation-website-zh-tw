@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Conditional execution
+title: "條件式執行"
 has_children: true
 nav_order: 40
 ---
 
-# Conditional execution
+# 條件式執行
 
-In ingest pipelines, you can control whether a processor runs by using the optional `if` parameter. This allows for conditional execution of processors based on the incoming document contents. The condition is written as a Painless script and evaluated against the document context (`ctx`). For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+在資料匯入管線中，您可以使用選用的 `if` 參數來控制處理器是否執行。這可讓處理器根據傳入文件的內容進行條件式執行。條件以 Painless 指令碼撰寫，並根據文件上下文（`ctx`）進行評估。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-## Basic conditional execution
+## 基本條件式執行
 
-Each processor can include an `if` clause. If the condition evaluates to `true`, the processor runs; otherwise, it's skipped.
+每個處理器都可以包含 `if` 子句。如果條件評估為 `true`，處理器就會執行；否則會被略過。
 
-### Example: Drop debug-level logs
+### 範例：捨棄偵錯層級的記錄檔
 
-The following pipeline drops any document in which the `log_level` field is equal to `debug`:
+下列管線會捨棄 `log_level` 欄位等於 `debug` 的所有文件：
 
 ```json
 PUT _ingest/pipeline/drop_debug_logs
@@ -31,7 +32,7 @@ PUT _ingest/pipeline/drop_debug_logs
 ```
 {% include copy-curl.html %}
 
-### Example index request
+### 索引請求範例
 
 ```json
 POST logs/_doc/1?pipeline=drop_debug_logs
@@ -42,7 +43,7 @@ POST logs/_doc/1?pipeline=drop_debug_logs
 ```
 {% include copy-curl.html %}
 
-This document is dropped because the condition evaluates to `true`:
+由於條件評估為 `true`，此文件會被捨棄：
 
 ```json
 {
@@ -58,13 +59,13 @@ This document is dropped because the condition evaluates to `true`:
 }
 ```
 
-## Null-safe field checks when using nested fields
+## 使用巢狀欄位時的 Null 安全欄位檢查
 
-When working with nested fields, it's important to avoid null pointer exceptions. Use the null-safe `?.` operator in Painless scripts.
+處理巢狀欄位時，務必避免 null 指標例外。請在 Painless 指令碼中使用 null 安全的 `?.` 運算子。
 
-### Example: Drop documents based on a nested field
+### 範例：根據巢狀欄位捨棄文件
 
-The following drop processor executes only if the nested `app.env` field exists and equals `debug`:
+下列 drop 處理器只有在巢狀 `app.env` 欄位存在且等於 `debug` 時才會執行：
 
 ```json
 PUT _ingest/pipeline/drop_debug_env
@@ -80,7 +81,7 @@ PUT _ingest/pipeline/drop_debug_env
 ```
 {% include copy-curl.html %}
 
-If the null-safe `?.` operator is not configured, indexing any document that doesn't contain the `app.env` field will trigger the following null pointer exception:
+如果未設定 null 安全的 `?.` 運算子，對任何不含 `app.env` 欄位的文件編製索引時，將會觸發下列 null 指標例外：
 
 ```json
 {
@@ -89,9 +90,9 @@ If the null-safe `?.` operator is not configured, indexing any document that doe
 }
 ```
 
-## Handling flattened fields
+## 處理扁平化欄位
 
-If your document has a flattened field, for example, `"app.env": "debug"`, use the [`dot_expander`]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/dot-expander/) processor to convert it into a nested structure:
+如果您的文件有扁平化欄位，例如 `"app.env": "debug"`，請使用 [`dot_expander`]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/dot-expander/) 處理器將其轉換為巢狀結構：
 
 ```json
 PUT _ingest/pipeline/drop_debug_env
@@ -112,9 +113,9 @@ PUT _ingest/pipeline/drop_debug_env
 ```
 {% include copy-curl.html %}
 
-## Safe method calls in conditions
+## 條件中的安全方法呼叫
 
-Avoid calling methods on potential null values. Use constants or null checks instead:
+避免在可能為 null 的值上呼叫方法。請改用常數或 null 檢查：
 
 ```json
 {
@@ -124,13 +125,13 @@ Avoid calling methods on potential null values. Use constants or null checks ins
 }
 ```
 
-## Full example: Multi-step conditional pipeline
+## 完整範例：多步驟條件式管線
 
-The following ingest pipeline uses three processors:
+下列資料匯入管線使用三個處理器：
 
-1. `set`: If no value is provided in the `user` field, sets the `user` field to `guest`.
-2. `set`: If the `status_code` is provided and is higher than `400`, sets the `error` field to `true`.
-3. `drop`: If the `app.env` field is equal to `debug`, drops the entire document.
+1. `set`：如果 `user` 欄位未提供值，則將 `user` 欄位設為 `guest`。
+2. `set`：如果提供了 `status_code` 且高於 `400`，則將 `error` 欄位設為 `true`。
+3. `drop`：如果 `app.env` 欄位等於 `debug`，則捨棄整份文件。
 
 ```json
 PUT _ingest/pipeline/logs_processing
@@ -160,9 +161,9 @@ PUT _ingest/pipeline/logs_processing
 ```
 {% include copy-curl.html %}
 
-### Simulate the pipeline
+### 模擬管線
 
-The following simulation request applies the conditional logic to three documents:
+下列模擬請求對三份文件套用條件式邏輯：
 
 ```json
 POST _ingest/pipeline/logs_processing/_simulate
@@ -192,7 +193,7 @@ POST _ingest/pipeline/logs_processing/_simulate
 ```
 {% include copy-curl.html %}
 
-The response demonstrates how the processors respond based on each condition:
+回應示範了處理器如何根據各項條件做出回應：
 
 ```json
 {

@@ -1,98 +1,99 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: API permissions
+title: "API 權限"
 parent: Access control
 nav_order: 120
 redirect_from:
  - /security-plugin/access-control/api/
 ---
 
-# API permissions
+# API 權限
 
-The Security plugin REST API lets you programmatically create and manage users, roles, role mappings, action groups, and tenants. This page describes how to grant and restrict access to that API and how reserved and hidden resources affect it. For the endpoint reference, see [Security APIs]({{site.url}}{{site.baseurl}}/security/api/).
+安全性外掛程式的 REST API 可讓您以程式設計方式建立及管理使用者、角色、角色對應、動作群組和租用戶。本頁說明如何授予及限制對該 API 的存取，以及保留和隱藏資源如何影響它。如需端點參考，請參閱[安全性 API]({{site.url}}{{site.baseurl}}/security/api/)。
 
-## Access control for the API
+## API 的存取控制
 
-Access to the Security plugin REST API has two layers:
+對安全性外掛程式 REST API 的存取有兩層：
 
-- General access controls the roles that can send requests to the Security APIs and the endpoints and HTTP methods that those roles can call.
-- REST API admin permissions allow users without an admin certificate to call the APIs that are otherwise restricted to a super admin.
+- 一般存取決定哪些角色可向安全性 API 傳送請求，以及這些角色可呼叫哪些端點和 HTTP 方法。
+- REST API 管理員權限允許沒有管理員憑證的使用者呼叫原本僅限超級管理員使用的 API。
 
-The two layers are independent grants. A request is allowed if either one permits it.
+這兩層是獨立的授權。只要其中一層允許，請求就會被允許。
 
-### Enable general API access
+### 啟用一般 API 存取
 
-To grant a role general access to the Security APIs, add the role to `plugins.security.restapi.roles_enabled` in `opensearch.yml`:
+若要授予角色對安全性 API 的一般存取權，請將該角色新增至 `opensearch.yml` 中的 `plugins.security.restapi.roles_enabled`：
 
 ```yml
 plugins.security.restapi.roles_enabled: ["<role>", ...]
 ```
 {% include copy.html %}
 
-Restart the cluster after changing this static setting.
+變更此靜態設定後，請重新啟動叢集。
 
-A role listed in this setting can call every Security API except the allow list, distinguished name, and certificate APIs, which are restricted to a super admin. A user who is neither mapped to such a role nor granted a [REST API admin permission](#rest-api-admin-permissions) receives `403 Forbidden`, no matter which other cluster permissions that user holds.
+列於此設定中的角色可以呼叫每個安全性 API，但允許清單、辨別名稱和憑證 API 除外，這些 API 僅限超級管理員使用。若使用者既未對應至這類角色，也未獲授與 [REST API 管理員權限](#rest-api-admin-permissions)，則無論該使用者擁有其他哪些叢集權限，都會收到 `403 Forbidden`。
 
-To prevent a role from reaching certain APIs, disable individual endpoints for it:
+若要防止角色存取特定 API，請為其停用個別端點：
 
 ```yml
 plugins.security.restapi.endpoints_disabled.<role>.<endpoint>: ["<method>", ...]
 ```
 {% include copy.html %}
 
-If a user is mapped to more than one role, an endpoint or method is disabled only when it is disabled for every one of that user's roles that has an `endpoints_disabled` entry. For example, if one role disables `DELETE` on `ROLES` but another of the user's roles does not, that user can still send `DELETE` requests to the role APIs. A per-role entry also restricts general access only: a user granted a matching [REST API admin permission](#rest-api-admin-permissions) still reaches the endpoint.
+若使用者對應至多個角色，則只有在該使用者所有具有 `endpoints_disabled` 項目的角色都停用某個端點或方法時，該端點或方法才會被停用。例如，若某個角色在 `ROLES` 上停用 `DELETE`，但該使用者的另一個角色並未停用，則該使用者仍可將 `DELETE` 請求傳送至角色 API。個別角色的項目也只會限制一般存取：獲授與相符 [REST API 管理員權限](#rest-api-admin-permissions) 的使用者仍可存取該端點。
 
-To disable an endpoint for every role, including the roles listed in `plugins.security.restapi.roles_enabled`, use `global` in place of the role name:
+若要為每個角色停用某個端點，包括列於 `plugins.security.restapi.roles_enabled` 中的角色，請使用 `global` 取代角色名稱：
 
 ```yml
 plugins.security.restapi.endpoints_disabled.global.<endpoint>: ["<method>", ...]
 ```
 {% include copy.html %}
 
-Unlike a per-role entry, a `global` entry also overrides REST API admin permissions.
+與個別角色的項目不同，`global` 項目也會覆寫 REST API 管理員權限。
 
-### REST API admin permissions
+### REST API 管理員權限
 
-The `restapi:admin` cluster permissions grant access that a `plugins.security.restapi.roles_enabled` role does not provide: the allow list, distinguished name, and certificate APIs, which are otherwise restricted to a super admin; several operations on the security configuration itself; and admin-level access to hidden and reserved resources. To use them, enable REST API admin permissions in `opensearch.yml`:
+`restapi:admin` 叢集權限會授予 `plugins.security.restapi.roles_enabled` 角色未提供的存取權：允許清單、辨別名稱和憑證 API，這些 API 原本僅限超級管理員使用；安全性組態本身的若干操作；以及對隱藏和保留資源的管理員層級存取。若要使用這些權限，請在 `opensearch.yml` 中啟用 REST API 管理員權限：
 
 ```yml
 plugins.security.restapi.admin.enabled: true
 ```
 {% include copy.html %}
 
-Restart the cluster after changing this static setting. Then grant the role the cluster permission for the endpoint you want it to reach. The role does not also need to be listed in `plugins.security.restapi.roles_enabled`. When `plugins.security.restapi.admin.enabled` is `false`, OpenSearch ignores these permissions and the APIs remain reachable only with an admin certificate.
+變更此靜態設定後，請重新啟動叢集。然後授予該角色您希望其存取之端點的叢集權限。該角色不需要同時列於 `plugins.security.restapi.roles_enabled` 中。當 `plugins.security.restapi.admin.enabled` 為 `false` 時，OpenSearch 會忽略這些權限，且這些 API 仍只能透過管理員憑證存取。
 
-You must assign these permissions explicitly. Broad cluster permissions such as `*` and `cluster:*` do not grant them, and you cannot grant them through an action group.
+您必須明確指派這些權限。`*` 和 `cluster:*` 等廣泛的叢集權限不會授予這些權限，且您無法透過動作群組授予這些權限。
 
-A role that contains any `restapi:admin` permission cannot be created or modified through the [Role APIs]({{site.url}}{{site.baseurl}}/security/api/roles/), even by a super admin, and neither can a mapping for such a role through the [Role mapping APIs]({{site.url}}{{site.baseurl}}/security/api/role-mappings/). Define the role in `roles.yml` and its mapping in `roles_mapping.yml`, and then apply both with `securityadmin.sh`. This restriction, together with the action group restriction, prevents a user from granting themselves additional access to the Security APIs. For more information, see [Applying changes to configuration files]({{site.url}}{{site.baseurl}}/security/configuration/security-admin/).
+包含任何 `restapi:admin` 權限的角色無法透過[角色 API]({{site.url}}{{site.baseurl}}/security/api/roles/) 建立或修改，即使是超級管理員也不行，這類角色的對應也無法透過[角色對應 API]({{site.url}}{{site.baseurl}}/security/api/role-mappings/) 建立或修改。請在 `roles.yml` 中定義角色，並在 `roles_mapping.yml` 中定義其對應，然後使用 `securityadmin.sh` 套用兩者。此限制連同動作群組限制，可防止使用者為自己授予對安全性 API 的額外存取權。如需詳細資訊，請參閱[將變更套用至組態檔]({{site.url}}{{site.baseurl}}/security/configuration/security-admin/)。
 {: .note}
 
-The following table lists the cluster permissions that correspond to the Security APIs. The reserved `security_rest_api_full_access` role contains all of them except `restapi:admin/ratelimiters`, `restapi:admin/rollback_version`, and `restapi:admin/view_version`. Because the role permits security-sensitive cluster changes, map it only to trusted administrators.
+下表列出對應至安全性 API 的叢集權限。保留的 `security_rest_api_full_access` 角色包含所有這些權限，但 `restapi:admin/ratelimiters`、`restapi:admin/rollback_version` 和 `restapi:admin/view_version` 除外。由於該角色允許對安全性敏感的叢集變更，請僅將其對應至受信任的管理員。
 
-| Permission | APIs granted | Description |
+| 權限 | 授予的 API | 說明 |
 | :--- | :--- | :--- |
-| `restapi:admin/actiongroups` | `/actiongroup` and `/actiongroups` | Permission to retrieve, create, modify, and delete any action group, including bulk updates. |
-| `restapi:admin/allowlist` | `/allowlist` | Permission to add endpoints and HTTP methods to the allow list. |
-| `restapi:admin/config/update` | `PUT` and `PATCH` on `/securityconfig` | Permission to replace or patch the security configuration. |
-| `restapi:admin/internalusers` | `/internaluser` and `/user` | Permission to add, retrieve, modify, and delete any user in the cluster. |
-| `restapi:admin/nodesdn` | `/nodesdn` | Permission to add, retrieve, update, and delete the distinguished names in the allow list that enables communication between clusters and nodes. |
-| `restapi:admin/ratelimiters` | `/authfailurelisteners` | Permission to retrieve and modify the authentication rate limiting configuration. |
-| `restapi:admin/resource_sharing/migrate` | `/resources/migrate` | Permission to migrate plugin-defined resource sharing records. |
-| `restapi:admin/roles` | `/roles` | Permission to add, retrieve, modify, and delete any role in the cluster. |
-| `restapi:admin/rolesmapping` | `/rolesmapping` | Permission to add, retrieve, modify, and delete any role mapping. |
-| `restapi:admin/rollback_version` | `/version/rollback` | Permission to restore a previous version of the security configuration. |
-| `restapi:admin/ssl/certs/info` | `/certificates`, `/certificates/{node_id}`, and `/ssl/certs` | Permission to view the current transport and HTTP certificates. |
-| `restapi:admin/ssl/certs/reload` | `/ssl/{cert_type}/reloadcerts` | Permission to reload the transport and HTTP certificates. |
-| `restapi:admin/tenants` | `/tenants` | Permission to retrieve, create, modify, and delete any tenant. |
-| `restapi:admin/view_version` | `/versions` and `/version/{version_id}` | Permission to list the security configuration versions and retrieve the contents of one version. |
+| `restapi:admin/actiongroups` | `/actiongroup` 和 `/actiongroups` | 擷取、建立、修改和刪除任何動作群組的權限，包括大量更新。 |
+| `restapi:admin/allowlist` | `/allowlist` | 將端點和 HTTP 方法新增至允許清單的權限。 |
+| `restapi:admin/config/update` | `/securityconfig` 上的 `PUT` 和 `PATCH` | 取代或修補安全性組態的權限。 |
+| `restapi:admin/internalusers` | `/internaluser` 和 `/user` | 在叢集中新增、擷取、修改和刪除任何使用者的權限。 |
+| `restapi:admin/nodesdn` | `/nodesdn` | 在允許清單中新增、擷取、更新和刪除辨別名稱的權限，該允許清單可啟用叢集與節點之間的通訊。 |
+| `restapi:admin/ratelimiters` | `/authfailurelisteners` | 擷取和修改驗證速率限制組態的權限。 |
+| `restapi:admin/resource_sharing/migrate` | `/resources/migrate` | 遷移外掛程式定義的資源共用記錄的權限。 |
+| `restapi:admin/roles` | `/roles` | 在叢集中新增、擷取、修改和刪除任何角色的權限。 |
+| `restapi:admin/rolesmapping` | `/rolesmapping` | 新增、擷取、修改和刪除任何角色對應的權限。 |
+| `restapi:admin/rollback_version` | `/version/rollback` | 還原安全性組態先前版本的權限。 |
+| `restapi:admin/ssl/certs/info` | `/certificates`、`/certificates/{node_id}` 和 `/ssl/certs` | 檢視目前傳輸和 HTTP 憑證的權限。 |
+| `restapi:admin/ssl/certs/reload` | `/ssl/{cert_type}/reloadcerts` | 重新載入傳輸和 HTTP 憑證的權限。 |
+| `restapi:admin/tenants` | `/tenants` | 擷取、建立、修改和刪除任何租用戶的權限。 |
+| `restapi:admin/view_version` | `/versions` 和 `/version/{version_id}` | 列出安全性組態版本並擷取其中一個版本內容的權限。 |
 
-The paths in the preceding table are relative to `_plugins/_security/api/`. To grant a role every one of these permissions at once, assign `restapi:admin/*` directly to the role.
+上表中的路徑相對於 `_plugins/_security/api/`。若要一次授予角色所有這些權限，請將 `restapi:admin/*` 直接指派給該角色。
 
-The Security APIs that this table does not list have no `restapi:admin` permission of their own. A role listed in `plugins.security.restapi.roles_enabled` can already call them.
+本表未列出的安全性 API 沒有自己的 `restapi:admin` 權限。列於 `plugins.security.restapi.roles_enabled` 中的角色已可呼叫它們。
 
-General access already covers action group, internal user, role, role mapping, and tenant resources that are neither hidden nor reserved. The matching permission from the preceding table extends that access to [reserved and hidden resources](#reserved-and-hidden-resources).
+一般存取已涵蓋既非隱藏也非保留的動作群組、內部使用者、角色、角色對應和租用戶資源。上表中相符的權限會將該存取權延伸至[保留和隱藏資源](#reserved-and-hidden-resources)。
 
-For example, the following role grants admin-level access to the internal user APIs. Define the role in `roles.yml`:
+例如，下列角色會授予對內部使用者 API 的管理員層級存取權。請在 `roles.yml` 中定義該角色：
 
 ```yml
 manage_internal_users:
@@ -102,7 +103,7 @@ manage_internal_users:
 ```
 {% include copy.html %}
 
-Map users or backend roles to the role in `roles_mapping.yml`:
+在 `roles_mapping.yml` 中將使用者或後端角色對應至該角色：
 
 ```yml
 manage_internal_users:
@@ -115,35 +116,35 @@ manage_internal_users:
 ```
 {% include copy.html %}
 
-Apply both files using [`securityadmin.sh`]({{site.url}}{{site.baseurl}}/security/configuration/security-admin/). This configuration reaches the internal user APIs without granting access to any other Security API. To give the role general access as well, also list it in `plugins.security.restapi.roles_enabled`.
+使用 [`securityadmin.sh`]({{site.url}}{{site.baseurl}}/security/configuration/security-admin/) 套用這兩個檔案。此組態可存取內部使用者 API，而不會授予對任何其他安全性 API 的存取權。若要同時授予該角色一般存取權，也請將其列於 `plugins.security.restapi.roles_enabled` 中。
 
-### Endpoint values
+### 端點值
 
-The following table lists the valid `endpoint` values and the APIs that each one covers.
+下表列出有效的 `endpoint` 值，以及每個值所涵蓋的 API。
 
-| Value | APIs |
+| 值 | API |
 | :--- | :--- |
-| `ACTIONGROUPS` | The action group APIs. |
-| `ALLOWLIST` | The allow list APIs. |
-| `APITOKENS` | The API key APIs. |
-| `AUDIT` | The audit log APIs. |
-| `AUTHTOKEN` | The Authorization Token API. |
-| `CACHE` | The Flush Cache API. |
-| `CONFIG` | The configuration APIs, including the upgrade check and upgrade operations. |
-| `INTERNALUSERS` | The internal user APIs. |
-| `NODESDN` | The distinguished name APIs. |
-| `RATELIMITERS` | The APIs that configure authentication rate limiting. |
-| `RESOURCE_SHARING` | The operation that migrates plugin-defined resource sharing records. |
-| `ROLES` | The role APIs. |
-| `ROLESMAPPING` | The role mapping APIs. |
-| `ROLLBACK_VERSION` | The operation that restores a previous version of the security configuration. |
-| `SSL` | The certificate APIs. |
-| `TENANTS` | The tenant APIs and the multi-tenancy configuration APIs. |
-| `VIEW_VERSION` | The operations that list security configuration versions and return the contents of one version. |
+| `ACTIONGROUPS` | 動作群組 API。 |
+| `ALLOWLIST` | 允許清單 API。 |
+| `APITOKENS` | API 金鑰 API。 |
+| `AUDIT` | 稽核記錄 API。 |
+| `AUTHTOKEN` | Authorization Token API。 |
+| `CACHE` | Flush Cache API。 |
+| `CONFIG` | 組態 API，包括升級檢查和升級操作。 |
+| `INTERNALUSERS` | 內部使用者 API。 |
+| `NODESDN` | 辨別名稱 API。 |
+| `RATELIMITERS` | 設定驗證速率限制的 API。 |
+| `RESOURCE_SHARING` | 遷移外掛程式定義的資源共用記錄的操作。 |
+| `ROLES` | 角色 API。 |
+| `ROLESMAPPING` | 角色對應 API。 |
+| `ROLLBACK_VERSION` | 還原安全性組態先前版本的操作。 |
+| `SSL` | 憑證 API。 |
+| `TENANTS` | 租用戶 API 和多租用戶組態 API。 |
+| `VIEW_VERSION` | 列出安全性組態版本並傳回其中一個版本內容的操作。 |
 
-The account APIs, the Permissions Info API, the Dashboards Info API, and the Security Plugin Health API have no `endpoint` value because any authenticated user can call them.
+帳戶 API、Permissions Info API、Dashboards Info API 和 Security Plugin Health API 沒有 `endpoint` 值，因為任何已驗證的使用者都可以呼叫它們。
 
-Possible values for `method` are:
+`method` 的可能值為：
 
 - `GET`
 - `PUT`
@@ -151,7 +152,7 @@ Possible values for `method` are:
 - `DELETE`
 - `PATCH`
 
-For example, the following configuration grants `rest_api_user` general API access but blocks all methods on the role and internal user APIs:
+例如，下列組態會授予 `rest_api_user` 一般 API 存取權，但封鎖角色和內部使用者 API 上的所有方法：
 
 ```yml
 plugins.security.restapi.roles_enabled: ["rest_api_user"]
@@ -160,18 +161,18 @@ plugins.security.restapi.endpoints_disabled.rest_api_user.INTERNALUSERS: ["*"]
 ```
 {% include copy.html %}
 
-To use the `PUT` and `PATCH` methods for the [Configuration APIs]({{site.url}}{{site.baseurl}}/security/api/configuration/), add the following line to `opensearch.yml`:
+若要對[組態 API]({{site.url}}{{site.baseurl}}/security/api/configuration/) 使用 `PUT` 和 `PATCH` 方法，請將下列行新增至 `opensearch.yml`：
 
 ```yml
 plugins.security.unsupported.restapi.allow_securityconfig_modification: true
 ```
 {% include copy.html %}
 
-## Reserved and hidden resources
+## 保留和隱藏資源
 
-You can mark users, roles, role mappings, and action groups as reserved. Resources that have this flag set to true can't be changed using the REST API or OpenSearch Dashboards.
+您可以將使用者、角色、角色對應和動作群組標記為保留。將此旗標設為 true 的資源無法使用 REST API 或 OpenSearch Dashboards 變更。
 
-To mark a resource as reserved, add the following flag:
+若要將資源標記為保留，請新增下列旗標：
 
 ```yml
 kibana_user:
@@ -179,7 +180,7 @@ kibana_user:
 ```
 {% include copy.html %}
 
-Likewise, you can mark users, roles, role mappings, and action groups as hidden. Resources that have this flag set to true are not returned by the REST API and not visible in OpenSearch Dashboards:
+同樣地，您可以將使用者、角色、角色對應和動作群組標記為隱藏。將此旗標設為 true 的資源不會由 REST API 傳回，也不會顯示在 OpenSearch Dashboards 中：
 
 ```yml
 kibana_user:
@@ -187,12 +188,12 @@ kibana_user:
 ```
 {% include copy.html %}
 
-Hidden resources are automatically reserved.
+隱藏資源會自動保留。
 
-To add or remove these flags, modify `config/opensearch-security/internal_users.yml` and run `plugins/opensearch-security/tools/securityadmin.sh`.
+若要新增或移除這些旗標，請修改 `config/opensearch-security/internal_users.yml` 並執行 `plugins/opensearch-security/tools/securityadmin.sh`。
 
-## Resource sharing
-**Introduced 3.3**
+## 資源共用
+**於 3.3 版推出**
 {: .label .label-purple }
 
-For managing resource-level access control and sharing plugin-defined resources such as ML models and anomaly detectors, see [Resource sharing APIs]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/).
+如需管理資源層級的存取控制，以及共用外掛程式定義的資源 (例如 ML 模型和異常偵測器)，請參閱[資源共用 API]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/)。

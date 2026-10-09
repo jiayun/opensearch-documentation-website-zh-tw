@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get index settings
+title: "取得索引設定"
 parent: Index settings and mappings
 grand_parent: Index APIs
 nav_order: 10
@@ -9,13 +10,13 @@ redirect_from:
 ---
 
 # Get Index Settings API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Get Index Settings API returns the configuration settings for one or more indexes. Use this API to retrieve index-level settings such as the number of shards and replicas, refresh intervals, analysis configurations, and other index parameters.
+Get Index Settings API 會傳回一個或多個索引的組態設定。使用此 API 可擷取索引層級的設定，例如分片與副本的數量、重新整理間隔、分析組態，以及其他索引參數。
 
 
-## Endpoints
+## 端點
 
 <!-- spec_insert_start
 component: endpoints
@@ -27,32 +28,32 @@ GET /{target-index}/_settings/{setting}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`target-index` | String | The name of the index to retrieve settings from. You can specify a single index name, a comma-separated list of index names, or a wildcard expression. Use `_all` or `*` to retrieve settings from all indexes in the cluster.
-`setting` | String | The name of a specific setting to retrieve. When specified, the response includes only the requested setting instead of all settings.
+`target-index` | 字串 | 要從中擷取設定的索引名稱。您可以指定單一索引名稱、以逗號分隔的索引名稱清單，或萬用字元運算式。使用 `_all` 或 `*` 可從叢集中的所有索引擷取設定。
+`setting` | 字串 | 要擷取的特定設定名稱。指定後，回應只會包含所要求的設定，而非所有設定。
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`allow_no_indices` | Boolean | Specifies whether to ignore wildcard expressions or index patterns that don’t match any indexes. When `false`, the request returns an error if a wildcard expression doesn’t match any indexes. When `true`, the request ignores missing indexes and returns only the settings for indexes that exist. Default is `true`.
-`expand_wildcards` | String | Specifies the types of indexes to which wildcard expressions can expand. Supports comma-separated values. Valid values are `all` (all indexes), `open` (open indexes), `closed` (closed indexes), `hidden` (hidden indexes), and `none` (wildcard expressions are not accepted). Default is `open`.
-`flat_settings` | Boolean | Specifies whether to return settings in flat format. When `true`, settings are returned in a flattened format (for example, `”index.creation_date”: “123456789”`). When `false`, settings are returned in nested format (for example, `”index”: {“creation_date”: “123456789”}`). Default is `false`.
-`include_defaults` | Boolean | Specifies whether to include default settings in the response. Default settings are configurations that are implicitly applied by OpenSearch when not explicitly set, including settings used by OpenSearch plugins. When `true`, the response includes both custom and default settings. When `false`, the response includes only custom settings. Default is `false`.
-`ignore_unavailable` | Boolean | Specifies whether to ignore indexes that are missing or closed. When `true`, the request does not return an error if the target index is missing or closed. When `false`, the request returns an error if the target index is unavailable. Default is `false`.
-`local` | Boolean | Specifies whether to retrieve settings from the local node only or from the cluster manager node. When `true`, settings are retrieved from the local node. When `false`, settings are retrieved from the cluster manager node. Default is `false`.
-`cluster_manager_timeout` | Time | The amount of time to wait for a connection to the cluster manager node. Default is `30s`.
+`allow_no_indices` | 布林值 | 指定是否忽略未符合任何索引的萬用字元運算式或索引模式。當 `false` 時，若萬用字元運算式未符合任何索引，請求會傳回錯誤。當 `true` 時，請求會忽略不存在的索引，只傳回現有索引的設定。預設為 `true`。
+`expand_wildcards` | 字串 | 指定萬用字元運算式可展開的索引類型。支援以逗號分隔的值。有效值為 `all` (所有索引)、`open` (開啟的索引)、`closed` (關閉的索引)、`hidden` (隱藏的索引)，以及 `none` (不接受萬用字元運算式)。預設為 `open`。
+`flat_settings` | 布林值 | 指定是否以扁平格式傳回設定。當 `true` 時，設定會以扁平化格式傳回 (例如 `”index.creation_date”: “123456789”`)。當 `false` 時，設定會以巢狀格式傳回 (例如 `”index”: {“creation_date”: “123456789”}`)。預設為 `false`。
+`include_defaults` | 布林值 | 指定是否在回應中包含預設設定。預設設定是 OpenSearch 在未明確設定時隱含套用的組態，包括 OpenSearch 外掛程式所使用的設定。當 `true` 時，回應會同時包含自訂與預設設定。當 `false` 時，回應只會包含自訂設定。預設為 `false`。
+`ignore_unavailable` | 布林值 | 指定是否忽略不存在或已關閉的索引。當 `true` 時，若目標索引不存在或已關閉，請求不會傳回錯誤。當 `false` 時，若目標索引無法使用，請求會傳回錯誤。預設為 `false`。
+`local` | 布林值 | 指定只從本機節點擷取設定，或從叢集管理員節點擷取設定。當 `true` 時，會從本機節點擷取設定。當 `false` 時，會從叢集管理員節點擷取設定。預設為 `false`。
+`cluster_manager_timeout` | 時間 | 等待連線至叢集管理員節點的時間量。預設為 `30s`。
 
-## Example request: Retrieving settings for a single index
+## 範例請求：擷取單一索引的設定
 
-The following example retrieves all settings for the `books` index:
+下列範例會擷取 `books` 索引的所有設定：
 
 <!-- spec_insert_start
 component: example_code
@@ -76,36 +77,36 @@ response = client.indices.get_settings(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example request: Retrieving settings from multiple indexes
+## 範例請求：從多個索引擷取設定
 
-The following example retrieves settings from multiple indexes:
+下列範例會從多個索引擷取設定：
 
 ```json
 GET /books,products/_settings
 ```
 {% include copy.html %}
 
-## Example request: Retrieving settings from all indexes
+## 範例請求：從所有索引擷取設定
 
-The following example retrieves settings from all indexes in the cluster:
+下列範例會從叢集中的所有索引擷取設定：
 
 ```json
 GET /_all/_settings
 ```
 {% include copy.html %}
 
-## Example request: Retrieving settings using a wildcard pattern
+## 範例請求：使用萬用字元模式擷取設定
 
-The following example uses a wildcard pattern to retrieve settings from all indexes matching the pattern:
+下列範例使用萬用字元模式，從所有符合該模式的索引擷取設定：
 
 ```json
 GET /logs-*/_settings
 ```
 {% include copy.html %}
 
-## Example request: Filtering settings by name
+## 範例請求：依名稱篩選設定
 
-The following example filters the response to return only settings matching the specified pattern:
+下列範例會篩選回應，只傳回符合指定模式的設定：
 
 ```json
 GET /logs-*/_settings/index.number_*
@@ -114,9 +115,9 @@ GET /logs-*/_settings/index.number_*
 
 {% capture default_response %}
 
-## Example response 
+## 範例回應
 
-By default, settings are returned in nested format:
+根據預設，設定會以巢狀格式傳回：
 
 ```json
 {
@@ -145,9 +146,9 @@ By default, settings are returned in nested format:
 
 {% capture flat_response %}
 
-## Example response: Flat format
+## 範例回應：扁平格式
 
-When you specify `flat_settings=true`, settings are returned in flattened format:
+當您指定 `flat_settings=true` 時，設定會以扁平化格式傳回：
 
 ```json
 {
@@ -168,14 +169,14 @@ When you specify `flat_settings=true`, settings are returned in flattened format
 {% endcapture %}
 {{ flat_response }}
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`settings` | An object containing all settings for the index. The specific settings returned depend on the index configuration. For information about available index settings, see [Index settings]({{site.url}}{{site.baseurl}}/im-plugin/index-settings/).
+`settings` | 包含索引所有設定的物件。傳回的特定設定取決於索引組態。如需可用索引設定的相關資訊，請參閱[索引設定]({{site.url}}{{site.baseurl}}/im-plugin/index-settings/)。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:monitor/settings/get`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`indices:monitor/settings/get`。

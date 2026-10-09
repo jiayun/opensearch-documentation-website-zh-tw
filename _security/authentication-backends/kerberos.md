@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Kerberos
 parent: Authentication backends
 nav_order: 75
 ---
 
-# Kerberos authentication
+# Kerberos 驗證
 
-Kerberos is a robust and secure method for user authentication that prevents passwords from being sent over the internet by issuing "tickets" for secure identity verification.
+Kerberos 是一種穩健且安全的使用者驗證方法，它透過核發「票證」來進行安全的身分驗證，避免密碼經由網際網路傳送。
 
-In order to use Kerberos authentication, you must set the following settings in `opensearch.yml` and `config.yml`.
+若要使用 Kerberos 驗證，您必須在 `opensearch.yml` 和 `config.yml` 中設定下列設定。
 
-## OpenSearch node configuration
+## OpenSearch 節點組態
 
-In `opensearch.yml`, define the following settings:
+在 `opensearch.yml` 中定義下列設定：
 
 ```yml
 plugins.security.kerberos.krb5_filepath: 'krb5.conf'
@@ -21,18 +22,18 @@ plugins.security.kerberos.acceptor_keytab_filepath: 'opensearch_keytab.tab'
 plugins.security.kerberos.acceptor_principal: 'HTTP/localhost'
 ```
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`krb5_filepath` | The path to your Kerberos configuration file. This file contains various settings regarding your Kerberos installation, for example, the `realm` names, `hostnames`, and ports of the Kerberos key distribution center (KDC).
-`acceptor_keytab_filepath` | The path to the `keytab` file, which contains the principal that the Security plugin uses to issue requests through Kerberos.
-`acceptor_principal` | The principal that the Security plugin uses to issue requests through Kerberos. This value must be present in the `keytab` file.
+`krb5_filepath` | Kerberos 組態檔案的路徑。此檔案包含與您的 Kerberos 安裝相關的各種設定，例如 Kerberos 金鑰配送中心 (KDC) 的 `realm` 名稱、`hostnames` 和連接埠。
+`acceptor_keytab_filepath` | `keytab` 檔案的路徑，此檔案包含 Security 外掛程式透過 Kerberos 發出請求時所使用的主體 (principal)。
+`acceptor_principal` | Security 外掛程式透過 Kerberos 發出請求時所使用的主體。此值必須存在於 `keytab` 檔案中。
 
-Because of security restrictions, the `keytab` and `krb5.conf` files must be placed in the `config` directory or its subdirectory, and their paths in `opensearch.yml` must be relative, not absolute.
+基於安全性限制，`keytab` 和 `krb5.conf` 檔案必須放在 `config` 目錄或其子目錄中，而且它們在 `opensearch.yml` 中的路徑必須是相對路徑，而非絕對路徑。
 {: .note }
 
-## Cluster security configuration
+## 叢集安全性組態
 
-The following example shows a typical Kerberos authentication domain in `config.yml`:
+下列範例顯示 `config.yml` 中典型的 Kerberos 驗證網域：
 
 ```yml
 kerberos_auth_domain:
@@ -48,15 +49,15 @@ kerberos_auth_domain:
     type: noop
 ```
 
-Authentication through Kerberos when using a browser on an HTTP level is achieved using SPNEGO. Kerberos/SPNEGO implementations vary, depending on your browser and operating system. This is important when deciding if you need to set the `challenge` flag to `true` or `false`.
+在 HTTP 層級使用瀏覽器時，透過 Kerberos 進行的驗證是以 SPNEGO 達成。Kerberos/SPNEGO 的實作會因您的瀏覽器和作業系統而有所不同。在決定是否需要將 `challenge` 旗標設為 `true` 或 `false` 時，這一點很重要。
 
-As with [HTTP Basic Authentication]({{site.url}}{{site.baseurl}}/security/authentication-backends/basic-authc/), this flag determines how the Security plugin should react when no `Authorization` header is found in the HTTP request or if this header does not equal `negotiate`.
+與 [HTTP 基本驗證]({{site.url}}{{site.baseurl}}/security/authentication-backends/basic-authc/) 相同，此旗標決定當 HTTP 請求中找不到 `Authorization` 標頭，或此標頭不等於 `negotiate` 時，Security 外掛程式應如何回應。
 
-If set to `true`, the Security plugin sends a response with status code 401 and a `WWW-Authenticate` header set to `negotiate`. This tells the client (browser) to resend the request with the `Authorization` header set. If set to `false`, the Security plugin cannot extract the credentials from the request, and authentication fails. Setting `challenge` to `false` thus makes sense only if the Kerberos credentials are sent in the initial request.
+若設為 `true`，Security 外掛程式會傳送狀態碼為 401 的回應，並將 `WWW-Authenticate` 標頭設為 `negotiate`。這會告知用戶端 (瀏覽器) 重新傳送已設定 `Authorization` 標頭的請求。若設為 `false`，Security 外掛程式將無法從請求中擷取認證資訊，驗證便會失敗。因此，只有在初始請求中就已傳送 Kerberos 認證資訊時，將 `challenge` 設為 `false` 才有意義。
 
-Name | Description
+名稱 | 說明
 :--- | :---
-`krb_debug` | As the name implies, setting it to `true` outputs Kerberos-specific debugging messages to `stdout`. Use this setting if you encounter problems with your Kerberos integration. Default is `false`.
-`strip_realm_from_principal` | When set it to `true`, the Security plugin strips the realm from the user name. Default: `true`.
+`krb_debug` | 顧名思義，將此設定設為 `true` 會將 Kerberos 專屬的偵錯訊息輸出至 `stdout`。若您的 Kerberos 整合發生問題，請使用此設定。預設值為 `false`。
+`strip_realm_from_principal` | 設為 `true` 時，Security 外掛程式會從使用者名稱中移除領域 (realm)。預設值：`true`。
 
-Because Kerberos/SPNEGO authenticates users on an HTTP level, no additional `authentication_backend` is needed. Set this value to `noop`.
+由於 Kerberos/SPNEGO 是在 HTTP 層級驗證使用者，因此不需要額外的 `authentication_backend`。請將此值設為 `noop`。

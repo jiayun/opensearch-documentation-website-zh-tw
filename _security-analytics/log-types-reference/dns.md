@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: DNS
 parent: Supported log types
 nav_order: 35
 ---
 
-# DNS log type
+# DNS 記錄類型
 
-The `dns` log type stores DNS activity.
+`dns` 記錄類型會儲存 DNS 活動。
 
-The following code snippet contains all the `raw_field`, `ecs`, and `ocsf` mappings for this log type:
+以下程式碼片段包含此記錄類型的所有 `raw_field`、`ecs` 與 `ocsf` 對應：
 
 ```json
  "mappings": [

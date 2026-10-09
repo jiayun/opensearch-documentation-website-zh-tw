@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Semantic search using AWS CloudFormation and Amazon SageMaker 
+title: "使用 AWS CloudFormation 與 Amazon SageMaker 進行語意搜尋"
 parent: Semantic search
 grand_parent: Vector search
 nav_order: 70
@@ -8,28 +9,28 @@ redirect_from:
   - /vector-search/tutorials/semantic-search/semantic-search-cfn-sagemaker/
 ---
 
-# Semantic search using AWS CloudFormation and Amazon SageMaker 
+# 使用 AWS CloudFormation 與 Amazon SageMaker 進行語意搜尋 
 
-This tutorial shows you how to implement semantic search in [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) using [AWS CloudFormation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cfn-template.html) and Amazon SageMaker. For more information, see [Semantic search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/).
+本教學說明如何使用 [AWS CloudFormation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cfn-template.html) 與 Amazon SageMaker，在 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 中實作語意搜尋。如需更多資訊，請參閱[語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)。
 
-If you are using self-managed OpenSearch instead of Amazon OpenSearch Service, create a connector to the Amazon SageMaker model using [the blueprint](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/sagemaker_connector_blueprint.md). For more information about creating a connector, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/). 
+如果您使用自行管理的 OpenSearch 而非 Amazon OpenSearch Service，請使用[藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/sagemaker_connector_blueprint.md)建立與 Amazon SageMaker 模型的連接器。如需建立連接器的詳細資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。 
 
-The CloudFormation integration automates the steps in the [Semantic Search with SageMaker Embedding Model tutorial]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-sagemaker/). The CloudFormation template creates an IAM role and invokes an AWS Lambda function to set up an AI connector and model.
+CloudFormation 整合會自動執行[使用 SageMaker 嵌入模型的語意搜尋教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-sagemaker/)中的步驟。CloudFormation 範本會建立 IAM 角色，並叫用 AWS Lambda 函式來設定 AI 連接器與模型。
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將以 `your_` 為前綴的預留位置取代為您自己的值。
 {: .note}
 
-## Model input and output requirements
+## 模型輸入與輸出需求
 
-Ensure that your Amazon SageMaker model inputs follow the format required by the [default pre-processing function]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#preprocessing-function). 
+請確認您的 Amazon SageMaker 模型輸入符合[預設前處理函式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#preprocessing-function)所需的格式。 
 
-The model input must be an array of strings:
+模型輸入必須是字串陣列：
 
 ```json
 ["hello world", "how are you"]
 ```
 
-Additionally, ensure that the model output follows the format required by the [default post-processing function]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#post-processing-function). The model output must be an array of arrays, where each inner array corresponds to the embedding of an input string:
+此外，請確認模型輸出符合[預設後處理函式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#post-processing-function)所需的格式。模型輸出必須是陣列的陣列，其中每個內部陣列對應一個輸入字串的嵌入：
 
 ```json
 [
@@ -46,23 +47,23 @@ Additionally, ensure that the model output follows the format required by the [d
 ]
 ```
 
-If your model input/output is not the same as the required default, you can build your own pre-/post-processing function using a [Painless script]({{site.url}}{{site.baseurl}}/scripting/painless/).
+如果您的模型輸入/輸出與所需的預設格式不同，您可以使用 [Painless 指令碼]({{site.url}}{{site.baseurl}}/scripting/painless/)建立自己的前處理/後處理函式。
 
-### Example: Amazon Bedrock Titan embedding model
+### 範例：Amazon Bedrock Titan 嵌入模型
 
-For example, the Amazon Bedrock Titan embedding model ([blueprint](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_titan_embedding_blueprint.md#2-create-connector-for-amazon-bedrock)) input is as follows:
+例如，Amazon Bedrock Titan 嵌入模型（[藍圖](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_titan_embedding_blueprint.md#2-create-connector-for-amazon-bedrock)）的輸入如下：
 
 ```json
 { "inputText": "your_input_text" }
 ```
 
-OpenSearch expects the following input format:
+OpenSearch 預期的輸入格式如下：
 
 ```json
 { "text_docs": [ "your_input_text1", "your_input_text2"] }
 ```
 
-To convert `text_docs` into `inputText`, you must define the following pre-processing function:
+若要將 `text_docs` 轉換為 `inputText`，您必須定義下列前處理函式：
 
 ```json
 "pre_process_function": """
@@ -76,7 +77,7 @@ To convert `text_docs` into `inputText`, you must define the following pre-proce
 ```
 {% include copy.html %}
 
-The default Amazon Bedrock Titan embedding model output has the following format:
+預設的 Amazon Bedrock Titan 嵌入模型輸出格式如下：
 
 ```json
 {
@@ -84,7 +85,7 @@ The default Amazon Bedrock Titan embedding model output has the following format
 }
 ```
 
-However, OpenSearch expects the following format:
+然而，OpenSearch 預期的格式如下：
 
 ```json
 {
@@ -95,7 +96,7 @@ However, OpenSearch expects the following format:
 }
 ```
 
-To transform the Amazon Bedrock Titan embedding model output into the format expected by OpenSearch, you must define the following post-processing function:
+若要將 Amazon Bedrock Titan 嵌入模型的輸出轉換為 OpenSearch 預期的格式，您必須定義下列後處理函式：
 
 ```json
 "post_process_function": """
@@ -116,74 +117,74 @@ To transform the Amazon Bedrock Titan embedding model output into the format exp
 ```
 {% include copy.html %}
 
-## Prerequisite: Create an OpenSearch cluster
+## 先決條件：建立 OpenSearch 叢集
 
-Go to the [Amazon OpenSearch Service console](https://console.aws.amazon.com/aos/home) and create an OpenSearch domain.
+前往 [Amazon OpenSearch Service 主控台](https://console.aws.amazon.com/aos/home)並建立 OpenSearch 網域。
 
-Note the domain Amazon Resource Name (ARN); you'll use it in the following steps.
+請記下網域的 Amazon Resource Name (ARN)；您將在後續步驟中使用它。
 
-## Step 1: Map a backend role
+## 步驟 1：對應後端角色
 
-The OpenSearch CloudFormation template uses a Lambda function to create an AI connector with an AWS Identity and Access Management (IAM) role. You must map the IAM role to `ml_full_access` to grant the required permissions. Follow [Step 2.2 of the Semantic Search with SageMaker Embedding Model tutorial]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-sagemaker/#step-22-map-a-backend-role) to map a backend role.
+OpenSearch CloudFormation 範本會使用 Lambda 函式，建立具有 AWS Identity and Access Management (IAM) 角色的 AI 連接器。您必須將 IAM 角色對應至 `ml_full_access`，以授予所需的權限。請依照[使用 SageMaker 嵌入模型的語意搜尋教學的步驟 2.2]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-sagemaker/#step-22-map-a-backend-role)對應後端角色。
 
-The IAM role is specified in the **Lambda Invoke OpenSearch ML Commons Role Name** field in the CloudFormation template. The default IAM role is `LambdaInvokeOpenSearchMLCommonsRole`, so you must map the `arn:aws:iam::your_aws_account_id:role/LambdaInvokeOpenSearchMLCommonsRole` backend role to `ml_full_access`.
+IAM 角色指定於 CloudFormation 範本中的 **Lambda Invoke OpenSearch ML Commons Role Name** 欄位。預設 IAM 角色為 `LambdaInvokeOpenSearchMLCommonsRole`，因此您必須將 `arn:aws:iam::your_aws_account_id:role/LambdaInvokeOpenSearchMLCommonsRole` 後端角色對應至 `ml_full_access`。
 
-For a broader mapping, you can grant all roles `ml_full_access` using a wildcard:  
+若需要更廣泛的對應，您可以使用萬用字元授予所有角色 `ml_full_access`：  
 
 ```
 arn:aws:iam::your_aws_account_id:role/*
 ```  
 
-Because `all_access` includes more permissions than `ml_full_access`, mapping the backend role to `all_access` is also acceptable.
+由於 `all_access` 包含的權限比 `ml_full_access` 更多，將後端角色對應至 `all_access` 也是可接受的。
 
-## Step 2: Run the CloudFormation template  
+## 步驟 2：執行 CloudFormation 範本  
 
-The CloudFormation template integration is available in the [Amazon OpenSearch Service console](https://console.aws.amazon.com/aos/home). From the left navigation pane, select **Integrations**, as shown in the following image.
+CloudFormation 範本整合可於 [Amazon OpenSearch Service 主控台](https://console.aws.amazon.com/aos/home)中使用。請從左側導覽窗格選取 **Integrations**，如下圖所示。
 
-![Semantic search CloudFormation integration]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/semantic_search_remote_model_Integration_1.png)  
+![語意搜尋 CloudFormation 整合]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/semantic_search_remote_model_Integration_1.png)  
 
-Choose one of the following options to deploy a model to Amazon SageMaker.
+請選擇下列其中一個選項，將模型部署至 Amazon SageMaker。
 
-### Option 1: Deploy a pretrained model to Amazon SageMaker  
+### 選項 1：將預先訓練的模型部署至 Amazon SageMaker  
 
-You can deploy a pretrained Hugging Face sentence transformer embedding model from the [Deep Java Library model repository](https://djl.ai/), as shown in the following image.
+您可以從 [Deep Java Library 模型儲存庫](https://djl.ai/)部署預先訓練的 Hugging Face 句子轉換器嵌入模型，如下圖所示。
 
-![Deploy a pretrained model to Amazon SageMaker]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/semantic_search_remote_model_Integration_2.png)
+![將預先訓練的模型部署至 Amazon SageMaker]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/semantic_search_remote_model_Integration_2.png)
 
-Complete the following fields, keeping all other fields at their default values:  
+請填寫下列欄位，其餘欄位全部保留預設值：  
 
-1. Enter your **Amazon OpenSearch Endpoint**.  
-2. Use the default **SageMaker Configuration** to start quickly, or you can modify it as needed. For supported Amazon SageMaker instance types, see the [Amazon SageMaker documentation](https://aws.amazon.com/sagemaker/).  
-3. Leave the **SageMaker Endpoint Url** field empty. If you provide a URL, the model will not be deployed to Amazon SageMaker, and a new inference endpoint will not be created.  
-4. Leave the **Custom Image** field empty. The default image is `djl-inference:0.22.1-cpu-full`. For available images, see the [AWS Deep Learning Containers](https://docs.aws.amazon.com/deep-learning-containers/latest/devguide/deep-learning-containers-images.html).  
-5. Leave the **Custom Model Data Url** field empty.  
-6. The **Custom Model Environment** field defaults to `djl://ai.djl.huggingface.pytorch/sentence-transformers/all-MiniLM-L6-v2`. For a list of supported models, see [Supported models](#supported-models).  
+1. 輸入您的 **Amazon OpenSearch Endpoint**。  
+2. 使用預設的 **SageMaker Configuration** 快速開始，或視需要修改。如需支援的 Amazon SageMaker 執行個體類型，請參閱 [Amazon SageMaker 文件](https://aws.amazon.com/sagemaker/)。  
+3. 將 **SageMaker Endpoint Url** 欄位留空。如果您提供 URL，模型將不會部署至 Amazon SageMaker，也不會建立新的推論端點。  
+4. 將 **Custom Image** 欄位留空。預設映像為 `djl-inference:0.22.1-cpu-full`。如需可用的映像，請參閱 [AWS Deep Learning Containers](https://docs.aws.amazon.com/deep-learning-containers/latest/devguide/deep-learning-containers-images.html)。  
+5. 將 **Custom Model Data Url** 欄位留空。  
+6. **Custom Model Environment** 欄位預設為 `djl://ai.djl.huggingface.pytorch/sentence-transformers/all-MiniLM-L6-v2`。如需支援的模型清單，請參閱[支援的模型](#supported-models)。  
 
-### Option 2: Use an existing SageMaker inference endpoint  
+### 選項 2：使用現有的 SageMaker 推論端點  
 
-If you already have a SageMaker inference endpoint, you can configure a model using that endpoint, as shown in the following image.  
+如果您已有 SageMaker 推論端點，可以使用該端點設定模型，如下圖所示。  
 
-![Using an existing SageMaker inference endpoint]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/semantic_search_remote_model_Integration_3.png)
+![使用現有的 SageMaker 推論端點]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/semantic_search_remote_model_Integration_3.png)
 
-Complete the following fields, keeping all others at their default values:  
+填寫下列欄位，其他欄位則保留預設值：  
 
-1. Enter your **Amazon OpenSearch Endpoint**.  
-2. Enter your **SageMaker Endpoint Url**.  
-3. Leave the **Custom Image**, **Custom Model Data Url**, and **Custom Model Environment** fields empty.  
+1. 輸入您的 **Amazon OpenSearch Endpoint**。  
+2. 輸入您的 **SageMaker Endpoint Url**。  
+3. 將 **Custom Image**、**Custom Model Data Url** 和 **Custom Model Environment** 欄位留空。  
 
-### Output
+### 輸出
 
-After deployment, you can find the OpenSearch AI connector and model IDs in the CloudFormation stack **Outputs**.  
+部署後，您可以在 CloudFormation 堆疊的 **Outputs** 中找到 OpenSearch AI 連接器和模型 ID。  
 
-If an error occurs, follow these steps to review the logs:
+如果發生錯誤，請依照下列步驟檢視記錄檔：
 
-1. Open the Amazon SageMaker console.
-1. Navigate to the **CloudWatch Logs** section.
-1. Search for **Log Groups** that contain (or are associated with) your CloudFormation stack name.
+1. 開啟 Amazon SageMaker 主控台。
+1. 前往 **CloudWatch Logs** 區段。
+1. 搜尋包含您的 CloudFormation 堆疊名稱（或與其相關聯）的 **Log Groups**。
 
-## Supported models
+## 支援的模型
 
-The following Hugging Face sentence transformer embedding models are available in the [Deep Java Library model repository](https://djl.ai/):
+[Deep Java Library 模型儲存庫](https://djl.ai/)提供下列 Hugging Face 句子轉換器嵌入模型：
 
 ```
 djl://ai.djl.huggingface.pytorch/sentence-transformers/LaBSE/

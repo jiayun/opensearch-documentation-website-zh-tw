@@ -1,77 +1,78 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Multi-tenancy aggregate view for saved objects
+title: "已儲存物件的多租用戶彙總檢視"
 parent: OpenSearch Dashboards multi-tenancy
 nav_order: 150
 ---
 
-# OpenSearch Dashboards multi-tenancy aggregate view for saved objects
+# OpenSearch Dashboards 已儲存物件的多租用戶彙總檢視
 
-This is an experimental feature released in OpenSearch 2.4 and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, see the [Dashboards object sharing](https://github.com/opensearch-project/OpenSearch-Dashboards/issues/2249) GitHub issue. For a more comprehensive view of the proposed future development of multi-tenancy, see the [Dashboards object sharing](https://github.com/opensearch-project/security/issues/1869) issue.
+這是在 OpenSearch 2.4 中推出的實驗性功能，不建議在正式環境中使用。如需瞭解此功能的進度更新，或想提供意見回饋，請參閱 GitHub 上的 [Dashboards 物件共用](https://github.com/opensearch-project/OpenSearch-Dashboards/issues/2249)議題。如需更全面地瞭解多租用戶功能未來的開發提案，請參閱 [Dashboards 物件共用](https://github.com/opensearch-project/security/issues/1869)議題。
 {: .warning}
 
-Aggregate view for saved objects allows a user who has access to multiple tenants to see all saved objects associated with those tenants in a single view without having to switch between tenants to do so. This includes both tenants created by the user and tenants shared with the user. Aggregate view introduces a Tenant dropdown menu and column in the Saved Objects table that gives the user the option to filter by tenants and make visible their associated saved objects.
+已儲存物件的彙總檢視可讓具有多個租用戶存取權的使用者，在單一檢視中查看與這些租用戶相關聯的所有已儲存物件，無須在租用戶之間切換。這包括使用者建立的租用戶，以及與使用者共用的租用戶。彙總檢視在 Saved Objects 表格中新增了 Tenant 下拉式選單與欄，讓使用者可以依租用戶篩選，並顯示與其相關聯的已儲存物件。
 
-Once you identify a saved object of interest, you can then switch to that tenant to work with the object.
+找到您感興趣的已儲存物件後，您就可以切換至該租用戶以操作該物件。
 
-To access saved objects, expand the top menu and select **Management > Dashboards Management > Saved Objects**. The Saved Objects window opens. By default, all tenants the user has permissions for are displayed along with all saved objects associated with the tenants.
+若要存取已儲存物件，請展開頂端選單，並選取 **Management > Dashboards Management > Saved Objects**。Saved Objects 視窗隨即開啟。預設會顯示使用者具有權限的所有租用戶，以及與這些租用戶相關聯的所有已儲存物件。
 
-As an experimental feature, aggregate view for saved objects is kept behind a feature flag and must be enabled in the `opensearch_dashboards.yml` file before the feature is made available. See [Enabling aggregate view](#enabling-aggregate-view-for-saved-objects) for more information.
+已儲存物件的彙總檢視是實驗性功能，由功能旗標控制，必須先在 `opensearch_dashboards.yml` 檔案中啟用，才能使用此功能。如需詳細資訊，請參閱[啟用彙總檢視](#enabling-aggregate-view-for-saved-objects)。
 {: .note }
 
-### Feature benefits
+### 功能優點
 
-- Implementing an aggregate view for all saved objects on one screen allows you to quickly locate an object of interest and determine which tenant is associated with it. Once you locate an object, you can select the appropriate tenant and work with the object.
-- This feature also adds a Tenant dropdown menu to the Saved Objects table, which allows you to filter the view by tenants and their associated saved objects.
+- 在單一畫面中提供所有已儲存物件的彙總檢視，可讓您快速找到感興趣的物件，並確認與其相關聯的租用戶。找到物件後，您可以選取適當的租用戶並操作該物件。
+- 此功能也會在 Saved Objects 表格中新增 Tenant 下拉式選單，讓您依租用戶及其相關聯的已儲存物件篩選檢視。
 
-### Plans for future development
+### 未來開發計畫
 
-In subsequent releases, we plan to expand the functionality of this feature to include the ability to perform actions directly from aggregate view and share items without having to first select a specific tenant. In the longer term, OpenSearch plans to evolve multi-tenancy so that it becomes a much more flexible tool for sharing objects among users and employs a more sophisticated way of assigning the roles and permissions that facilitate sharing. To learn more about the features being proposed for future releases, see the GitHub issue [Dashboards object sharing](https://github.com/opensearch-project/security/issues/1869).
+在後續版本中，我們計畫擴充此功能，讓您可以直接從彙總檢視執行動作及共用項目，無須先選取特定租用戶。長期而言，OpenSearch 計畫持續發展多租用戶功能，使其成為更具彈性的工具，讓使用者彼此共用物件，並採用更完善的方式指派促進共用的角色與權限。若要進一步瞭解未來版本的功能提案，請參閱 GitHub 上的 [Dashboards 物件共用](https://github.com/opensearch-project/security/issues/1869)議題。
 
-### Known limitations
+### 已知限制
 
-In this first experimental phase of development, there are some limitations that should be observed before enabling the feature and using it in a test environment:
+在開發的第一個實驗階段中，啟用此功能並在測試環境中使用前，應留意以下限制：
 
-* The feature can only be used in a new cluster. The feature is not supported by clusters already in use.
-* Also, the feature should be used only in a test environment, not in production. 
-* Finally, once the feature has been enabled and used in a test cluster, the feature cannot be disabled for the cluster. Disabling the feature once it has been used to work with tenants and saved objects can result in the loss of saved objects and can have an impact on tenant-to-tenant functionality. This can occur when disabling the feature in any one of three ways: disabling the aggregate view feature with the [feature flag](#enabling-aggregate-view-for-saved-objects); disabling multi-tenancy with the traditional [multi-tenancy configuration]({{site.url}}{{site.baseurl}}/security/multi-tenancy/multi-tenancy-config/) setting; or disabling multi-tenancy with [dynamic configuration]({{site.url}}{{site.baseurl}}/security/multi-tenancy/dynamic-config/) settings.
+* 此功能只能用於新的叢集。已在使用中的叢集不支援此功能。
+* 此外，此功能應僅用於測試環境，不應用於正式環境。 
+* 最後，一旦在測試叢集中啟用並使用此功能，就無法再為該叢集停用此功能。在使用此功能操作租用戶與已儲存物件後將其停用，可能導致已儲存物件遺失，並影響租用戶之間的功能。透過下列三種方式中的任何一種停用此功能時，都可能發生這種情況：使用[功能旗標](#enabling-aggregate-view-for-saved-objects)停用彙總檢視功能；使用傳統的[多租用戶組態]({{site.url}}{{site.baseurl}}/security/multi-tenancy/multi-tenancy-config/)設定停用多租用戶功能；或使用[動態組態]({{site.url}}{{site.baseurl}}/security/multi-tenancy/dynamic-config/)設定停用多租用戶功能。
 
-These limitations will be addressed in upcoming releases.
+這些限制將在即將推出的版本中解決。
 
-## Enabling aggregate view for saved objects
+## 啟用已儲存物件的彙總檢視
 
-By default, the aggregate view in the Saved Objects table is disabled. To enable the feature, add the `opensearch_security.multitenancy.enable_aggregation_view` flag to the `opensearch_dashboards.yml` file and set it to `true`:
+預設情況下，Saved Objects 表格中的彙總檢視為停用狀態。若要啟用此功能，請將 `opensearch_security.multitenancy.enable_aggregation_view` 旗標新增至 `opensearch_dashboards.yml` 檔案，並將其設為 `true`：
 
 `opensearch_security.multitenancy.enable_aggregation_view: true`
 
-After enabling the feature you can start the new cluster and then launch Dashboards. 
+啟用此功能後，您可以啟動新的叢集，然後啟動 Dashboards。 
 
-## Working in aggregate view
+## 在彙總檢視中操作
 
-Select the **Tenant** dropdown arrow to display the list of tenants available to the user. You can select multiple tenants while the menu is open. Each time you select a tenant in the menu, the list of saved objects is filtered by that tenant and any others with a check mark beside their name.
+選取 **Tenant** 下拉式箭頭，以顯示使用者可用的租用戶清單。選單開啟時，您可以選取多個租用戶。每次在選單中選取租用戶時，已儲存物件清單都會依該租用戶，以及名稱旁有勾選標記的其他租用戶進行篩選。
 
-![Dashboards Saved Objects view with emphasis on Tenants column]({{site.url}}{{site.baseurl}}/images/Security/Tenant_column.png){: width="500" }
+![Dashboards Saved Objects 檢視，重點標示 Tenants 欄]({{site.url}}{{site.baseurl}}/images/Security/Tenant_column.png){: width="500" }
    
-After you finish specifying tenants, select anywhere outside the menu to collapse it. 
-* The Title column displays the names of the available saved objects. 
-* The Tenant column displays the tenants associated with the saved objects. 
-* Also, the number of tenants selected for filtering is shown in a red box beside the Tenant dropdown menu label.
+指定完租用戶後，請選取選單外的任意位置，將選單收合。 
+* Title 欄顯示可用的已儲存物件名稱。 
+* Tenant 欄顯示與已儲存物件相關聯的租用戶。 
+* 此外，Tenant 下拉式選單標籤旁的紅色方框會顯示已選取用於篩選的租用戶數量。
 
-![Dashboards Saved Objects tenant filtering]({{site.url}}{{site.baseurl}}/images/Security/ten-filter-results.png){: width="700" }
+![Dashboards Saved Objects 租用戶篩選]({{site.url}}{{site.baseurl}}/images/Security/ten-filter-results.png){: width="700" }
 
-Use the **Type** dropdown menu to filter saved objects by type. The behavior of the **Type** dropdown menu is the same as the behavior of the **Tenant** dropdown menu.
+使用 **Type** 下拉式選單，依類型篩選已儲存物件。**Type** 下拉式選單的行為與 **Tenant** 下拉式選單相同。
 
-### Selecting and working with a saved object
+### 選取並操作已儲存物件
 
-After identifying a saved object that you would like to work with, follow these steps to access the object:
+找到您想操作的已儲存物件後，請依照下列步驟存取該物件：
 
-1. Note the tenant associated with the object in the Tenant column.
-1. In the upper-right corner of the window, open the user menu and select **Switch tenants**.
-   ![Switching tenants in the user menu]({{site.url}}{{site.baseurl}}/images/Security/switch_tenant.png){: width="425" }
-1. In the **Select your tenant** window, choose either the Global or Private option, or one of the custom tenant options, to specify the correct tenant. Select the **Confirm** button. The tenant becomes active and is displayed in the user menu.
-1. After the tenant is active, you can use the controls in the Actions column to work with saved objects associated with the tenant.
-![Actions column controls]({{site.url}}{{site.baseurl}}/images/Security/actions.png){: width="700" }
+1. 記下 Tenant 欄中與該物件相關聯的租用戶。
+1. 在視窗右上角開啟使用者選單，並選取 **Switch tenants**。
+   ![在使用者選單中切換租用戶]({{site.url}}{{site.baseurl}}/images/Security/switch_tenant.png){: width="425" }
+1. 在 **Select your tenant** 視窗中，選擇 Global 或 Private 選項，或其中一個自訂租用戶選項，以指定正確的租用戶。選取 **Confirm** 按鈕。該租用戶隨即成為使用中的租用戶，並顯示在使用者選單中。
+1. 租用戶成為使用中的租用戶後，您可以使用 Actions 欄中的控制項，操作與該租用戶相關聯的已儲存物件。
+![Actions 欄控制項]({{site.url}}{{site.baseurl}}/images/Security/actions.png){: width="700" }
 
-When a tenant is not active, you cannot use the Actions column controls to work with its associated objects. To work with those objects, follow the preceding steps to make the tenant active.
+當租用戶未處於使用中狀態時，您無法使用 Actions 欄的控制項操作與其相關聯的物件。若要操作這些物件，請依照上述步驟，將該租用戶設為使用中的租用戶。
 {: .note }
 

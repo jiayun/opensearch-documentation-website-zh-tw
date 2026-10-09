@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: AWS Lambda
 parent: Sinks
@@ -6,34 +7,34 @@ grand_parent: Pipelines
 nav_order: 10
 ---
 
-# AWS Lambda sink
+# AWS Lambda 接收端
 
-This page explains how to configure and use [AWS Lambda](https://aws.amazon.com/lambda/) with OpenSearch Data Prepper, enabling Lambda functions to serve as both processors and sinks.
+本頁面說明如何在 OpenSearch Data Prepper 中設定與使用 [AWS Lambda](https://aws.amazon.com/lambda/)，讓 Lambda 函式同時作為處理器與接收端。
 
-## Configuration
+## 組態
 
-Configure the Lambda sink using the following parameters.
+使用下列參數來設定 Lambda 接收端。
 
-Field             | Type    | Required | Description                                                                 
+欄位             | 類型    | 必要 | 說明                                                                 
 --------------------| ------- | -------- | ---------------------------------------------------------------------------- 
-`function_name`     | String  | Yes      | The name of the AWS Lambda function to invoke.                               
-`invocation_type`   | String  | No       | Specifies the invocation type. Default is `event`.             
-`aws.region`        | String  | Yes      | The AWS Region in which the Lambda function is located.                         
-`aws.sts_role_arn`  | String  | No       | The Amazon Resource Name (ARN) of the role to assume before invoking the Lambda function.               
-`max_retries`       | Integer | No       | The maximum number of sink-level retries if the Lambda invocation fails. This controls Data Prepper's retry logic. Default is `3`.
-`client.max_retries` | Integer | No | The maximum number of AWS SDK client-level retries for individual API calls. This controls the underlying SDK retry mechanism for network or service errors. Default is `3`.             
-`client.api_call_timeout` | Duration | No | The total timeout for the entire API call including all retries. Default is `60s`.
-`client.api_call_attempt_timeout` | Duration | No | The timeout for each individual retry attempt. If not specified, AWS SDK defaults are used.
-`client.connection_timeout` | Duration | No | The SDK connection timeout. Default is `60s`.
-`client.read_timeout` | Duration | No | The amount of time the SDK waits for data to be read from an established connection. If not specified, AWS SDK defaults are used.
-`client.max_concurrency` | Integer | No | The maximum number of concurrent threads in the client. Default is `200`.
-`client.base_delay`  | Duration | No | The base delay for the exponential backoff. Default is `100ms`.
-`client.max_backoff` | Duration | No | The maximum backoff time for the exponential backoff. Default is `20s`.             
-`batch`             | Object  | No       | Optional batch settings for Lambda invocations. Contains `key_name` (default: `"events"`) and `threshold` object with `event_count` (default: `100`), `maximum_size` (default: `"5mb"`), and `event_collect_timeout` (default: `10s`).
-`lambda_when`       | String  | No       | A conditional expression that determines when to invoke the Lambda sink.          
-`dlq`               | Object  | No       | The dead-letter queue (DLQ) configuration for failed invocations.                
+`function_name`     | 字串  | 是      | 要叫用的 AWS Lambda 函式名稱。                               
+`invocation_type`   | 字串  | 否       | 指定叫用類型。預設為 `event`。             
+`aws.region`        | 字串  | 是      | Lambda 函式所在的 AWS 區域。                         
+`aws.sts_role_arn`  | 字串  | 否       | 在叫用 Lambda 函式前所要擔任之角色的 Amazon Resource Name (ARN)。               
+`max_retries`       | 整數 | 否       | Lambda 叫用失敗時，接收端層級的最大重試次數。此設定控制 Data Prepper 的重試邏輯。預設為 `3`。
+`client.max_retries` | 整數 | 否 | 個別 API 呼叫在 AWS SDK 用戶端層級的最大重試次數。此設定控制底層 SDK 針對網路或服務錯誤的重試機制。預設為 `3`。             
+`client.api_call_timeout` | Duration | 否 | 整個 API 呼叫（包含所有重試）的總逾時時間。預設為 `60s`。
+`client.api_call_attempt_timeout` | Duration | 否 | 每次個別重試嘗試的逾時時間。若未指定，則使用 AWS SDK 的預設值。
+`client.connection_timeout` | Duration | 否 | SDK 連線逾時時間。預設為 `60s`。
+`client.read_timeout` | Duration | 否 | SDK 從已建立的連線讀取資料時所等待的時間。若未指定，則使用 AWS SDK 的預設值。
+`client.max_concurrency` | 整數 | 否 | 用戶端的最大並行執行緒數。預設為 `200`。
+`client.base_delay`  | Duration | 否 | 指數退避的基礎延遲。預設為 `100ms`。
+`client.max_backoff` | Duration | 否 | 指數退避的最大退避時間。預設為 `20s`。             
+`batch`             | 物件  | 否       | Lambda 叫用的選用批次設定。包含 `key_name`（預設：`"events"`）以及具有 `event_count`（預設：`100`）、`maximum_size`（預設：`"5mb"`）和 `event_collect_timeout`（預設：`10s`）的 `threshold` 物件。
+`lambda_when`       | 字串  | 否       | 決定何時叫用 Lambda 接收端的條件運算式。          
+`dlq`               | 物件  | 否       | 失敗叫用的死信佇列 (DLQ) 組態。                
 
-#### Example configuration
+#### 組態範例
 
 ```yaml
 sink:
@@ -67,31 +68,31 @@ sink:
 ```
 {% include copy.html %}
 
-## Timeout configuration
+## 逾時組態
 
-The AWS Lambda sink supports multiple timeout layers following AWS SDK best practices:
+AWS Lambda 接收端遵循 AWS SDK 最佳實務，支援多層逾時：
 
-- `api_call_timeout`: The total amount of time for the entire API call including all retries.
-- `api_call_attempt_timeout`: The time limit for each individual attempt.
-- `read_timeout`: The amount of time to wait for data from an established connection.
+- `api_call_timeout`：整個 API 呼叫（包含所有重試）的總時間。
+- `api_call_attempt_timeout`：每次個別嘗試的時間限制。
+- `read_timeout`：從已建立的連線等待資料的時間。
 
-For Lambda functions that run for longer than 60 seconds, configure both `api_call_timeout` and `read_timeout` to appropriate values. 
+對於執行時間超過 60 秒的 Lambda 函式，請將 `api_call_timeout` 與 `read_timeout` 都設定為適當的值。
 
-## Usage
+## 用法
 
-The invocation types are as follows:
+叫用類型如下：
 
-- `event` (Default): Executes functions asynchronously without waiting for responses.  
-- `request-response` (Sink only): Executes functions synchronously, though responses are not processed.
-- `batch`: Automatically groups events based on configured thresholds. 
-- `dlq`: Supports the DLQ configuration for failed invocations after retry attempts.
+- `event`（預設）：以非同步方式執行函式，不等待回應。  
+- `request-response`（僅限接收端）：以同步方式執行函式，但不會處理回應。
+- `batch`：根據設定的門檻自動將事件分組。 
+- `dlq`：支援在重試嘗試後針對失敗叫用使用 DLQ 組態。
 
-Data Prepper components use an AWS Identity and Access Management (IAM) role assumption, `aws.sts_role_arn`, for secure Lambda function invocation and respect Lambda's concurrency limits during event processing. For more information, see the [AWS Lambda documentation](https://docs.aws.amazon.com/lambda).
+Data Prepper 元件使用 AWS Identity and Access Management (IAM) 角色擔任機制 `aws.sts_role_arn`，以安全地叫用 Lambda 函式，並在事件處理期間遵守 Lambda 的並行限制。如需更多資訊，請參閱 [AWS Lambda 文件](https://docs.aws.amazon.com/lambda)。
 {: .note}
 
-## Developer guide
+## 開發人員指南
 
-Integration tests must be executed separately from the main Data Prepper build. Execute them with the following command:
+整合測試必須與 Data Prepper 主要建置分開執行。請使用下列命令執行：
 
 ```bash
 ./gradlew :data-prepper-plugins:aws-lambda:integrationTest -Dtests.sink.lambda.region="us-east-1" -Dtests.sink.lambda.functionName="lambda_test_function"  -Dtests.sink.lambda.sts_role_arn="arn:aws:iam::123456789012:role/dataprepper-role

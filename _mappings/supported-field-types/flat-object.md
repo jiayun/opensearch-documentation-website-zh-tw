@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Flat object
+title: "扁平物件"
 nav_order: 43
 has_children: false
 parent: Object field types
@@ -10,43 +11,43 @@ redirect_from:
   - /field-types/flat-object/
 ---
 
-# Flat object field type
-**Introduced 2.7**
+# 扁平物件欄位類型
+**於 2.7 版推出**
 {: .label .label-purple }
 
-In OpenSearch, you don't have to specify a mapping before indexing documents. If you don't specify a mapping, OpenSearch uses [dynamic mapping]({{site.url}}{{site.baseurl}}/mappings/index#dynamic-mapping) to map every field and its subfields in the document automatically. When you ingest documents such as logs, you may not know every field's subfield name and type in advance. In this case, dynamically mapping all new subfields can quickly lead to a "mapping explosion," where the growing number of fields may degrade the performance of your cluster. 
+在 OpenSearch 中，您不需要在將文件編製索引前指定對應。如果您未指定對應，OpenSearch 會使用[動態對應]({{site.url}}{{site.baseurl}}/mappings/index#dynamic-mapping)自動對應文件中的每個欄位及其子欄位。當您匯入記錄檔等文件時，您可能無法事先得知每個欄位的子欄位名稱與類型。在這種情況下，動態對應所有新的子欄位可能會迅速導致「對應爆炸」，也就是欄位數量不斷增加，可能降低叢集的效能。
 
-The flat object field type solves this problem by treating the entire JSON object as a string. Subfields within the JSON object are accessible using standard dot path notation, but they are not indexed for fast lookup.
+扁平物件欄位類型將整個 JSON 物件視為字串，藉此解決這個問題。JSON 物件內的子欄位可使用標準點路徑標記法存取，但不會編製索引以供快速查閱。
 
-The maximum field value length in the dot notation is 2<sup>24</sup> &minus; 1.
+點標記法中的欄位值長度上限為 2<sup>24</sup> &minus; 1。
 {: .note}
 
-The flat object field type provides the following benefits:
+扁平物件欄位類型提供下列優點：
 
-- Efficient reads: Fetching performance is similar to that of a keyword field.
-- Memory efficiency: Storing the entire complex JSON object in one field without indexing all of its subfields reduces the number of fields in an index. 
-- Space efficiency: OpenSearch does not create an inverted index for subfields in flat objects, thereby saving space. 
-- Compatibility for migration: You can migrate your data from systems that support similar flat types to OpenSearch.
+- 高效率讀取：擷取效能與 keyword 欄位類似。
+- 記憶體效率：將整個複雜的 JSON 物件儲存在單一欄位中，而不為其所有子欄位編製索引，可減少索引中的欄位數量。
+- 空間效率：OpenSearch 不會為扁平物件中的子欄位建立倒排索引，因此可節省空間。
+- 遷移相容性：您可以將資料從支援類似扁平類型的系統遷移至 OpenSearch。
 
-Mapping a field as a flat object applies when a field and its subfields are mostly read and not used as search criteria because the subfields are not indexed. Flat objects are useful for objects with a large number of fields or when you don't know the keys in advance.
+將欄位對應為扁平物件適用於欄位及其子欄位大多僅供讀取，且不會用作搜尋條件的情況，因為子欄位不會編製索引。扁平物件適用於欄位數量龐大的物件，或您事先不知道索引鍵的情況。
 
-Flat objects support exact match queries with and without dot path notation. For a complete list of supported query types, see [Supported queries](#supported-queries).
+扁平物件支援使用及不使用點路徑標記法的完全相符查詢。如需支援的查詢類型完整清單，請參閱[支援的查詢](#supported-queries)。
 
-Searching for a specific value of a nested field in a document may be inefficient because it may require a full scan of the index, which can be an expensive operation.
+在文件中搜尋巢狀欄位的特定值可能效率不佳，因為可能需要完整掃描索引，這可能是相當耗費資源的操作。
 {: .note}
 
-Flat objects do not support:
+扁平物件不支援：
 
-- Type-specific parsing.
-- Numerical operations, such as numerical comparison or numerical sorting.
-- Text analysis.
-- Highlighting.
-- Aggregations of subfields using dot notation.
-- Filtering by subfields.
+- 類型特定的剖析。
+- 數值操作，例如數值比較或數值排序。
+- 文字分析。
+- 醒目提示。
+- 使用點標記法彙總子欄位。
+- 依子欄位篩選。
 
-## Supported queries
+## 支援的查詢
 
-The flat object field type supports the following queries:
+扁平物件欄位類型支援下列查詢：
 
 - [Term]({{site.url}}{{site.baseurl}}/query-dsl/term/term/) 
 - [Terms]({{site.url}}{{site.baseurl}}/query-dsl/term/terms/) 
@@ -60,20 +61,20 @@ The flat object field type supports the following queries:
 - [Exists]({{site.url}}{{site.baseurl}}/query-dsl/term/exists/)
 - [Wildcard]({{site.url}}{{site.baseurl}}/query-dsl/term/wildcard/)
 
-## Limitations
+## 限制
 
-The following limitations apply to flat objects in OpenSearch 2.7:
+下列限制適用於 OpenSearch 2.7 中的扁平物件：
 
-- Flat objects do not support open parameters.
-- Painless scripting and wildcard queries are not supported for retrieving values of subfields. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+- 扁平物件不支援開放參數。
+- 不支援使用 Painless 指令碼與萬用字元查詢來擷取子欄位的值。如需詳細資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-This functionality is planned for a future release.
+此功能預計於未來版本推出。
 
-## Using flat object
+## 使用扁平物件
 
-The following example illustrates mapping a field as a flat object, indexing documents with flat object fields, and searching for leaf values of the flat object in those documents.
+下列範例說明如何將欄位對應為扁平物件、為含有扁平物件欄位的文件編製索引，以及搜尋這些文件中扁平物件的葉值。
 
-First, create a mapping for your index, where `issue` is of type `flat_object`:
+首先，為您的索引建立對應，其中 `issue` 的類型為 `flat_object`：
 
 ```json
 PUT /test-index/
@@ -89,7 +90,7 @@ PUT /test-index/
 ```
 {% include copy-curl.html %}
 
-Next, index two documents with flat object fields:
+接著，為兩份含有扁平物件欄位的文件編製索引：
 
 ```json
 PUT /test-index/_doc/1
@@ -129,7 +130,7 @@ PUT /test-index/_doc/2
 ```
 {% include copy-curl.html %}
 
-To search for a leaf value of the flat object, use either a GET or a POST request. Even if you don't know the field names, you can search for a leaf value in the entire flat object. For example, the following request searches for all issues labeled as bugs:
+若要搜尋扁平物件的葉值，請使用 GET 或 POST 請求。即使您不知道欄位名稱，仍可在整個扁平物件中搜尋葉值。例如，下列請求會搜尋所有標示為 bug 的問題：
 
 ```json
 GET /test-index/_search
@@ -140,7 +141,7 @@ GET /test-index/_search
 }
 ```
 
-Alternatively, if you know the subfield name in which to search, provide the field's path in dot notation:
+或者，如果您知道要在哪個子欄位中搜尋，請以點標記法提供該欄位的路徑：
 
 ```json
 GET /test-index/_search
@@ -152,7 +153,7 @@ GET /test-index/_search
 ```
 {% include copy-curl.html %}
 
-In both cases, the response is the same and contains document 2:
+在兩種情況下，回應都相同，且包含文件 2：
 
 ```json
 {
@@ -193,7 +194,7 @@ In both cases, the response is the same and contains document 2:
 }
 ```
 
-Using a prefix query, you can search for all issues for the versions that start with `2.`:
+使用前置詞查詢，您可以搜尋版本開頭為 `2.` 的所有問題：
 
 ```json
 GET /test-index/_search
@@ -204,7 +205,7 @@ GET /test-index/_search
 }
 ```
 
-With a range query, you can search for all issues for versions 2.0--2.1:
+使用範圍查詢，您可以搜尋版本 2.0--2.1 的所有問題：
 
 ```json
 GET /test-index/_search
@@ -220,9 +221,9 @@ GET /test-index/_search
 }
 ```
 
-## Defining a subfield as a flat object
+## 將子欄位定義為扁平物件
 
-You can define a subfield of a JSON object as a flat object. For example, use the following query to define the `issue.labels` as `flat_object`:
+您可以將 JSON 物件的子欄位定義為扁平物件。例如，使用下列查詢將 `issue.labels` 定義為 `flat_object`：
 
 ```json
 PUT /test-index/
@@ -245,8 +246,8 @@ PUT /test-index/
 ```
 {% include copy-curl.html %}
 
-Because `issue.number` is not part of the flat object, you can use it to aggregate and sort documents.
+由於 `issue.number` 不屬於扁平物件的一部分，您可以使用它來彙總及排序文件。
 
-## Related documentation
+## 相關文件
 
-- [Disable objects]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/disable-objects/)
+- [停用物件]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/disable-objects/)

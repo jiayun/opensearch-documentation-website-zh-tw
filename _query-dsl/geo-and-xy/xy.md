@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: xy
 parent: Geographic and xy queries
@@ -8,34 +9,34 @@ redirect_from:
   - /query-dsl/query-dsl/geo-and-xy/xy/
 ---
 
-# xy query
+# xy 查詢
 
-To search for documents that contain [xy point]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy-point/) or [xy shape]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy-shape/) fields, use an xy query. 
+若要搜尋包含 [xy point]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy-point/) 或 [xy shape]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy-shape/) 欄位的文件，請使用 xy 查詢。
 
-## Spatial relations
+## 空間關係
 
-When you provide an xy shape to the xy query, the xy fields in the documents are matched using the following spatial relations to the provided shape.
+當您將 xy shape 提供給 xy 查詢時，文件中的 xy 欄位會使用下列空間關係與提供的形狀進行比對。
 
-Relation | Description | Supporting xy field type
+關係 | 說明 | 支援的 xy 欄位類型
 :--- | :--- | :--- 
-`INTERSECTS` | (Default) Matches documents whose xy point or xy shape intersects the shape provided in the query. | `xy_point`, `xy_shape`
-`DISJOINT` | Matches documents whose xy shape does not intersect with the shape provided in the query. | `xy_shape`
-`WITHIN` | Matches documents whose xy shape is completely within the shape provided in the query. | `xy_shape`
-`CONTAINS` | Matches documents whose xy shape completely contains the shape provided in the query. | `xy_shape`
+`INTERSECTS` | （預設）比對其 xy point 或 xy shape 與查詢中提供的形狀相交的文件。 | `xy_point`, `xy_shape`
+`DISJOINT` | 比對其 xy shape 與查詢中提供的形狀不相交的文件。 | `xy_shape`
+`WITHIN` | 比對其 xy shape 完全位於查詢中提供的形狀內的文件。 | `xy_shape`
+`CONTAINS` | 比對其 xy shape 完全包含查詢中提供的形狀的文件。 | `xy_shape`
 
-The following examples illustrate searching for documents that contain xy shapes. To learn how to search for documents that contain xy points, see the [Querying xy points](#querying-xy-points) section.
+下列範例說明如何搜尋包含 xy shape 的文件。若要了解如何搜尋包含 xy point 的文件，請參閱[查詢 xy point](#querying-xy-points)一節。
 
-## Defining the shape in an xy query
+## 在 xy 查詢中定義形狀
 
-You can define the shape in an xy query either by providing a new shape definition at query time or by referencing the name of a shape pre-indexed in another index.  
+您可以在 xy 查詢中定義形狀，方法是在查詢時提供新的形狀定義，或參照在另一個索引中預先編製索引的形狀名稱。
 
-### Using a new shape definition
+### 使用新的形狀定義
 
-To provide a new shape to an xy query, define it in the `xy_shape` field.
+若要為 xy 查詢提供新的形狀，請在 `xy_shape` 欄位中定義它。
 
-The following example illustrates how to search for documents containing xy shapes that match an xy shape defined at query time.
+下列範例說明如何搜尋包含 xy shape 且符合查詢時所定義 xy shape 的文件。
 
-First, create an index and map the `geometry` field as an `xy_shape`:
+首先，建立索引並將 `geometry` 欄位對應為 `xy_shape`：
 
 ```json
 PUT testindex
@@ -51,7 +52,7 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-Index a document with a point and a document with a polygon:
+將包含點的文件和包含多邊形的文件編製索引：
 
 ```json
 PUT testindex/_doc/1
@@ -81,7 +82,7 @@ PUT testindex/_doc/2
 ```
 {% include copy-curl.html %}
 
-Define an [`envelope`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy-shape#envelope)&mdash;a bounding rectangle in the `[[minX, maxY], [maxX, minY]]` format. Search for documents with xy points or shapes that intersect that envelope:
+定義一個 [`envelope`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy-shape#envelope)&mdash;即 `[[minX, maxY], [maxX, minY]]` 格式的邊界矩形。搜尋 xy point 或形狀與該邊界矩形相交的文件：
 
 ```json
 GET testindex/_search
@@ -101,12 +102,12 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The following image depicts the example. Both the point and the polygon are within the bounding envelope.
+下圖說明此範例。點和多邊形都位於邊界矩形內。
 
-![xy shape query]({{site.url}}{{site.baseurl}}/images/xy_query.png){: width="250" }
+![xy shape 查詢]({{site.url}}{{site.baseurl}}/images/xy_query.png){: width="250" }
 
 
-The response contains both documents:
+回應包含這兩份文件：
 
 ```json
 {
@@ -178,20 +179,20 @@ The response contains both documents:
 }
 ```
 
-### Using a pre-indexed shape definition
+### 使用預先編製索引的形狀定義
 
-When constructing an xy query, you can also reference the name of a shape pre-indexed in another index. Using this method, you can define an xy shape at index time and refer to it by name, providing the following parameters in the `indexed_shape` object.
+建構 xy 查詢時，您也可以參照在另一個索引中預先編製索引的形狀名稱。使用此方法，您可以在編製索引時定義 xy shape 並依名稱參照它，並在 `indexed_shape` 物件中提供下列參數。
 
-Parameter | Description
+參數 | 說明
 :--- | :---
-`index` | The name of the index that contains the pre-indexed shape.
-`id` | The document ID of the document that contains the pre-indexed shape.
-`path` | The field name of the field that contains the pre-indexed shape as a path.
-`routing` | The routing value of the document that contains the pre-indexed shape. Required if the shape document was indexed with a custom routing value.
+`index` | 包含預先編製索引形狀的索引名稱。
+`id` | 包含預先編製索引形狀之文件的文件 ID。
+`path` | 以路徑形式包含預先編製索引形狀的欄位名稱。
+`routing` | 包含預先編製索引形狀之文件的路由值。若形狀文件是以自訂路由值編製索引，則為必要。
 
-The following example illustrates referencing the name of a shape pre-indexed in another index. In this example, the index `pre-indexed-shapes` contains the shape that defines the boundaries, and the index `testindex` contains the shapes whose locations are checked against those boundaries.
+下列範例說明如何參照在另一個索引中預先編製索引的形狀名稱。在此範例中，索引 `pre-indexed-shapes` 包含定義邊界的形狀，而索引 `testindex` 包含會依據這些邊界檢查其位置的形狀。
 
-First, create an index `pre-indexed-shapes` and map the `geometry` field for this index as an `xy_shape`:
+首先，建立索引 `pre-indexed-shapes` 並將此索引的 `geometry` 欄位對應為 `xy_shape`：
 
 ```json
 PUT pre-indexed-shapes
@@ -207,7 +208,7 @@ PUT pre-indexed-shapes
 ```
 {% include copy-curl.html %}
 
-Index an envelope that specifies the boundaries and name it `rectangle`:
+將指定邊界的邊界矩形編製索引並命名為 `rectangle`：
 
 ```json
 PUT pre-indexed-shapes/_doc/rectangle
@@ -220,7 +221,7 @@ PUT pre-indexed-shapes/_doc/rectangle
 ```
 {% include copy-curl.html %}
 
-Index a document with a point and a document with a polygon into the index `testindex`:
+將包含點的文件和包含多邊形的文件編製索引至索引 `testindex`：
 
 ```json
 PUT testindex/_doc/1
@@ -250,7 +251,7 @@ PUT testindex/_doc/2
 ```
 {% include copy-curl.html %}
 
-Search for documents with shapes that intersect `rectangle` in the index `testindex` using a filter:
+使用篩選器搜尋在索引 `testindex` 中其形狀與 `rectangle` 相交的文件：
 
 ```json
 GET testindex/_search
@@ -274,7 +275,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The preceding query uses the default spatial relation `INTERSECTS` and returns both the point and the polygon:
+上述查詢使用預設空間關係 `INTERSECTS`，並同時傳回點和多邊形：
 
 ```json
 {
@@ -346,11 +347,11 @@ The preceding query uses the default spatial relation `INTERSECTS` and returns b
 }
 ```
 
-## Querying xy points
+## 查詢 xy point
 
-You can also use an xy query to search for documents that contain xy points. 
+您也可以使用 xy 查詢來搜尋包含 xy point 的文件。 
 
-Create a mapping with `point` as `xy_point`:
+建立對應，將 `point` 設為 `xy_point`：
 
 ```json
 PUT testindex1
@@ -366,7 +367,7 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-Index three points:
+將三個點編製索引：
 
 ```json
 PUT testindex1/_doc/1
@@ -392,7 +393,7 @@ PUT testindex1/_doc/3
 ```
 {% include copy-curl.html %}
 
-Search for points that lie within the circle with the center at (0, 0) and a radius of 2:
+搜尋位於圓心為 (0, 0) 且半徑為 2 的圓內的點：
 
 ```json
 GET testindex1/_search
@@ -412,14 +413,14 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-xy point only supports the default `INTERSECTS` spatial relation, so you don't need to provide the `relation` parameter.
+xy point 僅支援預設的 `INTERSECTS` 空間關係，因此您不需要提供 `relation` 參數。
 {: .note}
 
-The following image depicts the example. Points 1 and 2 are within the circle, and point 3 is outside the circle.
+下圖說明此範例。點 1 和點 2 位於圓內，而點 3 位於圓外。
 
-![xy point query]({{site.url}}{{site.baseurl}}/images/xy_query_point.png){: width="300" }
+![xy point 查詢]({{site.url}}{{site.baseurl}}/images/xy_query_point.png){: width="300" }
 
-The response returns documents 1 and 2:
+回應會傳回文件 1 和 2：
 
 ```json
 {

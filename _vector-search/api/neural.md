@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Neural Search API
 parent: Vector search API
@@ -8,13 +9,13 @@ has_children: false
 
 # Neural Search API
 
-The Neural Search plugin provides several APIs for monitoring semantic and hybrid search features.
+Neural Search 外掛程式提供多個 API，用於監視語意搜尋與混合搜尋功能。
 
-## Stats
+## 統計
 
-The Neural Search Stats API provides information about the current status of the Neural Search plugin. This includes both cluster-level and node-level statistics. Cluster-level statistics have a single value for the entire cluster. Node-level statistics have a single value for each node in the cluster. 
+Neural Search Stats API 提供 Neural Search 外掛程式目前狀態的相關資訊。這包括叢集層級與節點層級的統計資料。叢集層級的統計資料在整個叢集中只有單一值。節點層級的統計資料在叢集中的每個節點各有一個值。
 
-By default, the Neural Search Stats API is disabled through a cluster setting. To enable statistics collection, use the following command:
+根據預設，Neural Search Stats API 會透過叢集設定停用。若要啟用統計資料收集，請使用下列命令：
 
 ```json
 PUT /_cluster/settings
@@ -26,9 +27,9 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-To disable statistics collection, set the cluster setting to `false`. When disabled, all values are reset and new statistics are not collected. 
+若要停用統計資料收集，請將叢集設定設為 `false`。停用時，所有值都會重設，且不會收集新的統計資料。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_neural/stats
@@ -37,39 +38,39 @@ GET /_plugins/_neural/{nodes}/stats
 GET /_plugins/_neural/{nodes}/stats/{stats}
 ```
 
-### Path parameters
+### 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數都是選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `nodes` | String | A node or a list of nodes (comma-separated) to filter statistics by. Default is all nodes. |
-| `stats` | String | A statistic name or names (comma-separated) to return. Default is all statistics. |
+| `nodes` | 字串 | 用來篩選統計資料的節點或節點清單 (以逗號分隔)。預設為所有節點。 |
+| `stats` | 字串 | 要傳回的統計資料名稱，可為單一名稱或多個名稱 (以逗號分隔)。預設為所有統計資料。 |
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數都是選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `include_metadata` | Boolean | When `true`, includes additional metadata fields for each statistic (see [Available metadata](#available-metadata)). Default is `false`. |
-| `flat_stat_paths` | Boolean | When `true`, flattens the JSON response structure for easier parsing. Default is `false`. | 
-| `include_individual_nodes` | Boolean | When `true`, includes statistics for individual nodes in the `nodes` category. When `false`, excludes the `nodes` category from the response. Default is `true`. |
-| `include_all_nodes` | Boolean | When `true`, includes aggregated statistics across all nodes in the `all_nodes` category. When `false`, excludes the `all_nodes` category from the response. Default is `true`. |
-| `include_info` | Boolean | When `true`, includes cluster-wide information in the `info` category. When `false`, excludes the `info` category from the response. Default is `true`. |
+| `include_metadata` | 布林值 | 當 `true` 時，會為每項統計資料加入額外的中繼資料欄位 (請參閱[可用的中繼資料](#available-metadata))。預設為 `false`。 |
+| `flat_stat_paths` | 布林值 | 當 `true` 時，會扁平化 JSON 回應結構，以便更容易解析。預設為 `false`。 |
+| `include_individual_nodes` | 布林值 | 當 `true` 時，會包含 `nodes` 類別中各個節點的統計資料。當 `false` 時，會從回應中排除 `nodes` 類別。預設為 `true`。 |
+| `include_all_nodes` | 布林值 | 當 `true` 時，會包含 `all_nodes` 類別中所有節點的彙總統計資料。當 `false` 時，會從回應中排除 `all_nodes` 類別。預設為 `true`。 |
+| `include_info` | 布林值 | 當 `true` 時，會包含 `info` 類別中的叢集範圍資訊。當 `false` 時，會從回應中排除 `info` 類別。預設為 `true`。 |
 
-#### Example request
+#### 範例請求
 
 ```json
 GET /_plugins/_neural/node1,node2/stats/stat1,stat2?include_metadata=true,flat_stat_paths=true
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -246,7 +247,7 @@ GET /_plugins/_neural/stats/
 
 </details>
 
-If `include_metadata` is `true`, each stats object contains additional metadata:
+如果 `include_metadata` 為 `true`，則每個統計物件會包含額外的中繼資料：
 
 ```json
 {
@@ -261,213 +262,213 @@ If `include_metadata` is `true`, each stats object contains additional metadata:
 }
 ```
 
-For more information, see [Available metadata](#available-metadata).
+如需更多資訊，請參閱[可用的中繼資料](#available-metadata)。
 
-### Response body fields
+### 回應本文欄位
 
-The following sections describe response body fields.
+以下各節說明回應本文欄位。
 
-#### Categories of statistics
+#### 統計資料類別
 
-The following table lists all categories of statistics.
+下表列出所有統計資料類別。
 
-| Category | Data type | Description |
+| 類別 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `info` | Object | Contains cluster-wide information and statistics that are not specific to individual nodes. |
-| `all_nodes` | Object | Provides aggregated statistics across all nodes in the cluster. |
-| `nodes` | Object | Contains node-specific statistics, with each node identified by its unique node ID. |
+| `info` | 物件 | 包含整個叢集的資訊，以及不針對個別節點的統計資料。 |
+| `all_nodes` | 物件 | 提供叢集中所有節點的彙總統計資料。 |
+| `nodes` | 物件 | 包含各節點的統計資料，每個節點皆以其唯一的節點 ID 識別。 |
 
-#### Available statistics
+#### 可用的統計資料
 
-The following table lists the available statistics. For statistics with paths prefixed with `nodes.<node_id>`, aggregate cluster-level statistics are also available at the same path prefixed with `all_nodes`.
+下表列出可用的統計資料。對於路徑以 `nodes.<node_id>` 為前綴的統計資料，也可在以 `all_nodes` 為前綴的相同路徑取得叢集層級的彙總統計資料。
 
-| Statistic name | Category | Statistic path within category | Description |
+| 統計資料名稱 | 類別 | 類別內的統計資料路徑 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `cluster_version` | `info` | `cluster_version` | The version of the cluster. |
+| `cluster_version` | `info` | `cluster_version` | 叢集的版本。 |
 
-**Info statistics: Processors**
+**資訊統計資料：處理器**
 
-| Statistic name | Category | Statistic path within category | Description |
+| 統計資料名稱 | 類別 | 類別內的統計資料路徑 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `text_embedding_processors_in_pipelines` | `info` | `processors.ingest.text_embedding_processors_in_pipelines` | The number of `text_embedding` processors in ingest pipelines. |
-| `sparse_encoding_processors` | `info` | `processors.ingest.sparse_encoding_processors` | The number of `sparse_encoding` processors in ingest pipelines. |
-| `skip_existing_processors` | `info` | `processors.ingest.skip_existing_processors` | The number of processors with `skip_existing` set to `true` in ingest pipelines. |
-| `text_image_embedding_processors` | `info` | `processors.ingest.text_image_embedding_processors` | The number of `text_image_embedding` processors in ingest pipelines. |
-| `text_chunking_delimiter_processors` | `info` | `processors.ingest.text_chunking_delimiter_processors` | The number of `text_chunking` processors using the `delimiter` algorithm in ingest pipelines. |
-| `text_chunking_fixed_token_length_processors` | `info` | `processors.ingest.text_chunking_fixed_token_length_processors` | The number of `text_chunking` processors using the `fixed_token_length` algorithm in ingest pipelines. |
-| `text_chunking_fixed_char_length_processors` | `info` | `processors.ingest.text_chunking_fixed_char_length_processors` | The number of `text_chunking` processors using the `fixed_character_length` algorithm in ingest pipelines. |
-| `text_chunking_processors` | `info` | `processors.ingest.text_chunking_processors` | The number of `text_chunking` processors in ingest pipelines. |
-| `rerank_ml_processors` | `info` | `processors.search.rerank_ml_processors` | The number of `rerank` processors of the `ml_opensearch` type in search pipelines. |
-| `rerank_by_field_processors` | `info` | `processors.search.rerank_by_field_processors` | The number of `rerank` processors of the `by_field` type. |
-| `neural_sparse_two_phase_processors` | `info` | `processors.search.neural_sparse_two_phase_processors` | The number of `neural_sparse_two_phase_processor` processors in search pipelines. |
-| `neural_query_enricher_processors` | `info` | `processors.search.neural_query_enricher_processors` | The number of `neural_query_enricher` processors in search pipelines. |
+| `text_embedding_processors_in_pipelines` | `info` | `processors.ingest.text_embedding_processors_in_pipelines` | 資料匯入管線中 `text_embedding` 處理器的數量。 |
+| `sparse_encoding_processors` | `info` | `processors.ingest.sparse_encoding_processors` | 資料匯入管線中 `sparse_encoding` 處理器的數量。 |
+| `skip_existing_processors` | `info` | `processors.ingest.skip_existing_processors` | 資料匯入管線中將 `skip_existing` 設為 `true` 的處理器數量。 |
+| `text_image_embedding_processors` | `info` | `processors.ingest.text_image_embedding_processors` | 資料匯入管線中 `text_image_embedding` 處理器的數量。 |
+| `text_chunking_delimiter_processors` | `info` | `processors.ingest.text_chunking_delimiter_processors` | 資料匯入管線中使用 `delimiter` 演算法的 `text_chunking` 處理器數量。 |
+| `text_chunking_fixed_token_length_processors` | `info` | `processors.ingest.text_chunking_fixed_token_length_processors` | 資料匯入管線中使用 `fixed_token_length` 演算法的 `text_chunking` 處理器數量。 |
+| `text_chunking_fixed_char_length_processors` | `info` | `processors.ingest.text_chunking_fixed_char_length_processors` | 資料匯入管線中使用 `fixed_character_length` 演算法的 `text_chunking` 處理器數量。 |
+| `text_chunking_processors` | `info` | `processors.ingest.text_chunking_processors` | 資料匯入管線中 `text_chunking` 處理器的數量。 |
+| `rerank_ml_processors` | `info` | `processors.search.rerank_ml_processors` | 搜尋管線中 `ml_opensearch` 類型的 `rerank` 處理器數量。 |
+| `rerank_by_field_processors` | `info` | `processors.search.rerank_by_field_processors` | `by_field` 類型的 `rerank` 處理器數量。 |
+| `neural_sparse_two_phase_processors` | `info` | `processors.search.neural_sparse_two_phase_processors` | 搜尋管線中 `neural_sparse_two_phase_processor` 處理器的數量。 |
+| `neural_query_enricher_processors` | `info` | `processors.search.neural_query_enricher_processors` | 搜尋管線中 `neural_query_enricher` 處理器的數量。 |
 
-**Info statistics: Hybrid processors**
+**資訊統計資料：混合處理器**
 
-| Statistic name | Category | Statistic path within category | Description |
+| 統計資料名稱 | 類別 | 類別內的統計資料路徑 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `normalization_processors` | `info` | `processors.search.hybrid.normalization_processors` | The number of `normalization-processor` processors. |
-| `norm_minmax_processors` | `info` | `processors.search.hybrid.norm_minmax_processors` | The number of `normalization-processor` processors with `normalization.technique` set to `min_max`. |
-| `norm_l2_processors` | `info` | `processors.search.hybrid.norm_l2_processors` | The number of `normalization-processor` processors with `normalization.technique` set to `l2`. |
-| `norm_zscore_processors` | `info` | `processors.search.hybrid.norm_zscore_processors` | The number of `normalization-processor` processors with `normalization.technique` set to `z_score`. |
-| `comb_arithmetic_processors` | `info` | `processors.search.hybrid.comb_arithmetic_processors` | The number of `normalization-processor` processors with `combination.technique` set to `arithmetic_mean`. |
-| `comb_geometric_processors` | `info` | `processors.search.hybrid.comb_geometric_processors` | The number of `normalization-processor` processors with `combination.technique` set to `geometric_mean`. |
-| `comb_harmonic_processors` | `info` | `processors.search.hybrid.comb_harmonic_processors` | The number of `normalization-processor` processors with `combination.technique` set to `harmonic_mean`. |
-| `rank_based_normalization_processors` | `info` | `processors.search.hybrid.rank_based_normalization_processors` | The number of `score-ranker-processor` processors. |
-| `comb_rrf_processors` | `info` | `processors.search.hybrid.comb_rrf_processors` | The number of `score-ranker-processor` processors with `combination.technique` set to `rrf`. |
+| `normalization_processors` | `info` | `processors.search.hybrid.normalization_processors` | `normalization-processor` 處理器的數量。 |
+| `norm_minmax_processors` | `info` | `processors.search.hybrid.norm_minmax_processors` | 將 `normalization.technique` 設為 `min_max` 的 `normalization-processor` 處理器數量。 |
+| `norm_l2_processors` | `info` | `processors.search.hybrid.norm_l2_processors` | 將 `normalization.technique` 設為 `l2` 的 `normalization-processor` 處理器數量。 |
+| `norm_zscore_processors` | `info` | `processors.search.hybrid.norm_zscore_processors` | 將 `normalization.technique` 設為 `z_score` 的 `normalization-processor` 處理器數量。 |
+| `comb_arithmetic_processors` | `info` | `processors.search.hybrid.comb_arithmetic_processors` | 將 `combination.technique` 設為 `arithmetic_mean` 的 `normalization-processor` 處理器數量。 |
+| `comb_geometric_processors` | `info` | `processors.search.hybrid.comb_geometric_processors` | 將 `combination.technique` 設為 `geometric_mean` 的 `normalization-processor` 處理器數量。 |
+| `comb_harmonic_processors` | `info` | `processors.search.hybrid.comb_harmonic_processors` | 將 `combination.technique` 設為 `harmonic_mean` 的 `normalization-processor` 處理器數量。 |
+| `rank_based_normalization_processors` | `info` | `processors.search.hybrid.rank_based_normalization_processors` | `score-ranker-processor` 處理器的數量。 |
+| `comb_rrf_processors` | `info` | `processors.search.hybrid.comb_rrf_processors` | 將 `combination.technique` 設為 `rrf` 的 `score-ranker-processor` 處理器數量。 |
 
-**Node-level statistics: Processors**
+**節點層級統計資料：處理器**
 
-| Statistic name | Category | Statistic path within category | Description |
+| 統計資料名稱 | 類別 | 類別內的統計資料路徑 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `text_embedding_executions` | `nodes`, `all_nodes` | `processors.ingest.text_embedding_executions` | The number of `text_embedding` processor executions. |
-| `skip_existing_executions` | `nodes`, `all_nodes` | `processors.ingest.skip_existing_executions` | The number of processor executions that have `skip_existing` set to `true`. |
-| `text_chunking_fixed_token_length_executions` | `nodes`, `all_nodes` | `processors.ingest.text_chunking_fixed_token_length_executions` | The number of `text_chunking` processor executions with the `fixed_token_length` algorithm. |
-| `sparse_encoding_executions` | `nodes`, `all_nodes` | `processors.ingest.sparse_encoding_executions` | The number of `sparse_encoding` processor executions. |
-| `text_chunking_fixed_char_length_executions` | `nodes`, `all_nodes` | `processors.ingest.text_chunking_fixed_char_length_executions` | The number of `text_chunking` processor executions with the `fixed_character_length` algorithm. |
-| `text_chunking_executions` | `nodes`, `all_nodes` | `processors.ingest.text_chunking_executions` | The number of `text_chunking` processor executions. |
-| `semantic_field_executions` | `nodes`, `all_nodes` | `processors.ingest.semantic_field_executions` | The number of `semantic` field system processor executions. |
-| `semantic_field_chunking_executions` | `nodes`, `all_nodes` | `processors.ingest.semantic_field_chunking_executions` | The number of `semantic` field system chunking processor executions. |
-| `text_chunking_delimiter_executions` | `nodes`, `all_nodes` | `processors.ingest.text_chunking_delimiter_executions` | The number of `text_chunking` processor executions with the `delimiter` algorithm. |
-| `text_image_embedding_executions` | `nodes`, `all_nodes` | `processors.ingest.text_image_embedding_executions` | The number of `text_image_embedding` processor executions. |
-| `neural_sparse_two_phase_executions` | `nodes`, `all_nodes` | `processors.search.neural_sparse_two_phase_executions` | The number of `neural_sparse_two_phase_processor` processor executions. |
-| `rerank_by_field_executions` | `nodes`, `all_nodes` | `processors.search.rerank_by_field_executions` | The number of `rerank` processor executions of the `by_field` type. |
-| `neural_query_enricher_executions` | `nodes`, `all_nodes` | `processors.search.neural_query_enricher_executions` | The number of `neural_query_enricher` processor executions. |
-| `rerank_ml_executions` | `nodes`, `all_nodes` | `processors.search.rerank_ml_executions` | The number of `rerank` processor executions of the `ml_opensearch` type. |
+| `text_embedding_executions` | `nodes`, `all_nodes` | `processors.ingest.text_embedding_executions` | `text_embedding` 處理器的執行次數。 |
+| `skip_existing_executions` | `nodes`, `all_nodes` | `processors.ingest.skip_existing_executions` | 將 `skip_existing` 設為 `true` 的處理器執行次數。 |
+| `text_chunking_fixed_token_length_executions` | `nodes`, `all_nodes` | `processors.ingest.text_chunking_fixed_token_length_executions` | 使用 `fixed_token_length` 演算法的 `text_chunking` 處理器執行次數。 |
+| `sparse_encoding_executions` | `nodes`, `all_nodes` | `processors.ingest.sparse_encoding_executions` | `sparse_encoding` 處理器的執行次數。 |
+| `text_chunking_fixed_char_length_executions` | `nodes`, `all_nodes` | `processors.ingest.text_chunking_fixed_char_length_executions` | 使用 `fixed_character_length` 演算法的 `text_chunking` 處理器執行次數。 |
+| `text_chunking_executions` | `nodes`, `all_nodes` | `processors.ingest.text_chunking_executions` | `text_chunking` 處理器的執行次數。 |
+| `semantic_field_executions` | `nodes`, `all_nodes` | `processors.ingest.semantic_field_executions` | `semantic` 欄位系統處理器的執行次數。 |
+| `semantic_field_chunking_executions` | `nodes`, `all_nodes` | `processors.ingest.semantic_field_chunking_executions` | `semantic` 欄位系統分塊處理器的執行次數。 |
+| `text_chunking_delimiter_executions` | `nodes`, `all_nodes` | `processors.ingest.text_chunking_delimiter_executions` | 使用 `delimiter` 演算法的 `text_chunking` 處理器執行次數。 |
+| `text_image_embedding_executions` | `nodes`, `all_nodes` | `processors.ingest.text_image_embedding_executions` | `text_image_embedding` 處理器的執行次數。 |
+| `neural_sparse_two_phase_executions` | `nodes`, `all_nodes` | `processors.search.neural_sparse_two_phase_executions` | `neural_sparse_two_phase_processor` 處理器的執行次數。 |
+| `rerank_by_field_executions` | `nodes`, `all_nodes` | `processors.search.rerank_by_field_executions` | `by_field` 類型的 `rerank` 處理器執行次數。 |
+| `neural_query_enricher_executions` | `nodes`, `all_nodes` | `processors.search.neural_query_enricher_executions` | `neural_query_enricher` 處理器的執行次數。 |
+| `rerank_ml_executions` | `nodes`, `all_nodes` | `processors.search.rerank_ml_executions` | `ml_opensearch` 類型的 `rerank` 處理器執行次數。 |
 
-**Node-level statistics: Hybrid processors**
+**節點層級統計資料：混合處理器**
 
-| Statistic name | Category | Statistic path within category | Description |
+| 統計資料名稱 | 類別 | 類別內的統計資料路徑 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `normalization_processor_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.normalization_processor_executions` | The number of `normalization-processor` processor executions. |
-| `rank_based_normalization_processor_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.rank_based_normalization_processor_executions` | The number of `score-ranker-processor` processor executions. |
-| `comb_harmonic_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.comb_harmonic_executions` | The number of `normalization-processor` processor executions with `combination.technique` set to `harmonic_mean`. |
-| `norm_zscore_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.norm_zscore_executions` | The number of `normalization-processor` processor executions with `normalization.technique` set to `z_score`. |
-| `comb_rrf_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.comb_rrf_executions` | The number of `score-ranker-processor` processor executions with `combination.technique` set to `rrf`. |
-| `norm_l2_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.norm_l2_executions` | The number of `normalization-processor` processor executions with `normalization.technique` set to `l2`. |
-| `comb_arithmetic_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.comb_arithmetic_executions` | The number of `normalization-processor` processor executions with `combination.technique` set to `arithmetic_mean`. |
-| `comb_geometric_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.comb_geometric_executions` | The number of `normalization-processor` processor executions with `combination.technique` set to `geometric_mean`. |
-| `norm_minmax_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.norm_minmax_executions` | The number of `normalization-processor` processor executions with `normalization.technique` set to `min_max`. |
+| `normalization_processor_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.normalization_processor_executions` | `normalization-processor` 處理器的執行次數。 |
+| `rank_based_normalization_processor_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.rank_based_normalization_processor_executions` | `score-ranker-processor` 處理器的執行次數。 |
+| `comb_harmonic_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.comb_harmonic_executions` | 將 `combination.technique` 設為 `harmonic_mean` 的 `normalization-processor` 處理器執行次數。 |
+| `norm_zscore_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.norm_zscore_executions` | 將 `normalization.technique` 設為 `z_score` 的 `normalization-processor` 處理器執行次數。 |
+| `comb_rrf_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.comb_rrf_executions` | 將 `combination.technique` 設為 `rrf` 的 `score-ranker-processor` 處理器執行次數。 |
+| `norm_l2_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.norm_l2_executions` | 將 `normalization.technique` 設為 `l2` 的 `normalization-processor` 處理器執行次數。 |
+| `comb_arithmetic_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.comb_arithmetic_executions` | 將 `combination.technique` 設為 `arithmetic_mean` 的 `normalization-processor` 處理器執行次數。 |
+| `comb_geometric_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.comb_geometric_executions` | 將 `combination.technique` 設為 `geometric_mean` 的 `normalization-processor` 處理器執行次數。 |
+| `norm_minmax_executions` | `nodes`, `all_nodes` | `processors.search.hybrid.norm_minmax_executions` | 將 `normalization.technique` 設為 `min_max` 的 `normalization-processor` 處理器執行次數。 |
 
-**Node-level statistics: Query**
+**節點層級統計資料：查詢**
 
-| Statistic name | Category | Statistic path within category | Description                                                                                                                                |
+| 統計名稱 | 類別 | 類別內的統計路徑 | 說明                                                                                                                                |
 | :--- | :--- | :--- |:-------------------------------------------------------------------------------------------------------------------------------------------|
-| `hybrid_query_with_pagination_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_with_pagination_requests` | The number of `hybrid` query requests with pagination.                                                                                     |
-| `hybrid_query_with_filter_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_with_filter_requests` | The number of `hybrid` query requests with filters.                                                                                        |
-| `hybrid_query_with_inner_hits_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_with_inner_hits_requests` | The number of `hybrid` query requests with inner hits.                                                                                     |
-| `hybrid_query_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_requests` | The total number of `hybrid` query requests.                                                                                               |
-| `neural_query_against_semantic_sparse_requests` | `nodes`, `all_nodes` | `query.neural.neural_query_against_semantic_sparse_requests` | The number of `neural` query requests against semantic sparse fields.                                                                      |
-| `neural_query_requests` | `nodes`, `all_nodes` | `query.neural.neural_query_requests` | The total number of `neural` query requests.                                                                                               |
-| `neural_query_against_semantic_dense_requests` | `nodes`, `all_nodes` | `query.neural.neural_query_against_semantic_dense_requests` | The number of `neural` query requests against semantic dense fields.                                                                       |
-| `neural_query_against_knn_requests` | `nodes`, `all_nodes` | `query.neural.neural_query_against_knn_requests` | The number of `neural` query requests against k-NN fields.                                                                                 |
-| `neural_sparse_query_requests` | `nodes`, `all_nodes` | `query.neural_sparse.neural_sparse_query_requests` | The number of `neural_sparse` query requests against `rank_features` fields (traditional neural sparse search).                                                                                              |
-| `seismic_query_requests` | `nodes`, `all_nodes` | `query.neural_sparse.seismic_query_requests` | The number of `neural_sparse` query requests against `sparse_vector` fields (neural sparse approximate nearest neighbor (ANN) search using the SEISMIC algorithm). |
+| `hybrid_query_with_pagination_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_with_pagination_requests` | 帶有分頁的 `hybrid` 查詢請求數量。                                                                                     |
+| `hybrid_query_with_filter_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_with_filter_requests` | 帶有篩選條件的 `hybrid` 查詢請求數量。                                                                                        |
+| `hybrid_query_with_inner_hits_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_with_inner_hits_requests` | 帶有內部命中的 `hybrid` 查詢請求數量。                                                                                     |
+| `hybrid_query_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_requests` | `hybrid` 查詢請求的總數。                                                                                               |
+| `neural_query_against_semantic_sparse_requests` | `nodes`, `all_nodes` | `query.neural.neural_query_against_semantic_sparse_requests` | 針對語意稀疏欄位的 `neural` 查詢請求數量。                                                                      |
+| `neural_query_requests` | `nodes`, `all_nodes` | `query.neural.neural_query_requests` | `neural` 查詢請求的總數。                                                                                               |
+| `neural_query_against_semantic_dense_requests` | `nodes`, `all_nodes` | `query.neural.neural_query_against_semantic_dense_requests` | 針對語意稠密欄位的 `neural` 查詢請求數量。                                                                       |
+| `neural_query_against_knn_requests` | `nodes`, `all_nodes` | `query.neural.neural_query_against_knn_requests` | 針對 k-NN 欄位的 `neural` 查詢請求數量。                                                                                 |
+| `neural_sparse_query_requests` | `nodes`, `all_nodes` | `query.neural_sparse.neural_sparse_query_requests` | 針對 `rank_features` 欄位的 `neural_sparse` 查詢請求數量 (傳統神經稀疏搜尋)。                                                                                              |
+| `seismic_query_requests` | `nodes`, `all_nodes` | `query.neural_sparse.seismic_query_requests` | 針對 `sparse_vector` 欄位的 `neural_sparse` 查詢請求數量 (使用 SEISMIC 演算法的神經稀疏近似最近鄰 (ANN) 搜尋)。 |
 
-**Node-level statistics: Memory**
+**節點層級統計：記憶體**
 
-| Statistic name | Category             | Statistic path within category                                  | Description                                                                                                 |
+| 統計名稱 | 類別             | 類別內的統計路徑                                  | 說明                                                                                                 |
 | :--- |:---------------------|:----------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------|
-| `sparse_memory_usage_percentage` | `nodes`              | `memory.sparse.sparse_memory_usage_percentage`                  | The percentage of JVM heap memory used to store sparse data on the node relative to the maximum JVM memory. |
-| `sparse_memory_usage` | `nodes`, `all_nodes` | `memory.sparse.sparse_memory_usage`                             | The amount of JVM heap memory used to store sparse data on the node, in kilobytes.                           |
-| `clustered_posting_usage` | `nodes`, `all_nodes` | `memory.sparse.clustered_posting_usage`                         | The amount of JVM heap memory used to store clustered posting on the node, in kilobytes.                     |
-| `forward_index_usage` | `nodes`, `all_nodes` | `memory.sparse.forward_index_usage`                            | The amount of JVM heap memory used to store the forward index on the node, in kilobytes.                         |
+| `sparse_memory_usage_percentage` | `nodes`              | `memory.sparse.sparse_memory_usage_percentage`                  | 節點上用於儲存稀疏資料的 JVM 堆積記憶體相對於最大 JVM 記憶體的百分比。 |
+| `sparse_memory_usage` | `nodes`, `all_nodes` | `memory.sparse.sparse_memory_usage`                             | 節點上用於儲存稀疏資料的 JVM 堆積記憶體量，以 KB 為單位。                           |
+| `clustered_posting_usage` | `nodes`, `all_nodes` | `memory.sparse.clustered_posting_usage`                         | 節點上用於儲存叢集式張貼清單的 JVM 堆積記憶體量，以 KB 為單位。                     |
+| `forward_index_usage` | `nodes`, `all_nodes` | `memory.sparse.forward_index_usage`                            | 節點上用於儲存正向索引的 JVM 堆積記憶體量，以 KB 為單位。                         |
 
-These memory statistics report the Lucene engine cache only. The native engine keeps its index in a memory-mapped file on disk, so native engine index memory is not reflected in these statistics. For more information, see [Engines]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines).
+這些記憶體統計資料僅回報 Lucene 引擎快取。原生引擎會將其索引保留在磁碟上的記憶體對應檔案中，因此原生引擎的索引記憶體不會反映在這些統計資料中。如需更多資訊，請參閱[引擎]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines)。
 {: .note}
 
-**Node-level statistics: Semantic highlighting**
+**節點層級統計：語意醒目提示**
 
-| Statistic name | Category | Statistic path within category | Description |
+| 統計名稱 | 類別 | 類別內的統計路徑 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `semantic_highlighting_request_count` | `nodes`, `all_nodes` | `semantic_highlighting.semantic_highlighting_request_count` | The number of single inference `semantic` highlighting requests (one inference call per document). See [Single inference mode]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#basic-usage-single-inference-mode). |
-| `semantic_highlighting_batch_request_count` | `nodes`, `all_nodes` | `semantic_highlighting.semantic_highlighting_batch_request_count` | The number of batch inference `semantic` highlighting requests (multiple documents processed in a single inference call). See [Batch inference mode]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#batch-inference-mode). |
+| `semantic_highlighting_request_count` | `nodes`, `all_nodes` | `semantic_highlighting.semantic_highlighting_request_count` | 單次推論 `semantic` 醒目提示請求數量 (每份文件一次推論呼叫)。請參閱[單次推論模式]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#basic-usage-single-inference-mode)。 |
+| `semantic_highlighting_batch_request_count` | `nodes`, `all_nodes` | `semantic_highlighting.semantic_highlighting_batch_request_count` | 批次推論 `semantic` 醒目提示請求數量 (在單次推論呼叫中處理多份文件)。請參閱[批次推論模式]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#batch-inference-mode)。 |
 
-#### Available metadata
+#### 可用的中繼資料
 
-When `include_metadata` is `true`, the field values in the response are replaced by their respective metadata objects, which include additional information about the statistic types, as described in the following table. 
+當 `include_metadata` 為 `true` 時，回應中的欄位值會以其各自的中繼資料物件取代，這些物件包含有關統計類型的額外資訊，如下表所述。 
 
-| Statistic type | Description |
+| 統計類型 | 說明 |
 | :--- | :--- |
-| `info_string` | A basic string value that provides informational content, such as versions or names. See [`info_string`](#info-string).|
-| `info_counter` | A numerical counter that represents static or slowly changing values. See [`info_counter`](#info-counter).|
-| `timestamped_event_counter` | A counter that tracks events over time, including information about recent activity. See [`timestamped_event_counter`](#timestamped-event-counter).|
+| `info_string` | 提供資訊性內容的基本字串值，例如版本或名稱。請參閱[`info_string`](#info-string)。|
+| `info_counter` | 代表靜態或緩慢變化值的數值計數器。請參閱[`info_counter`](#info-counter)。|
+| `timestamped_event_counter` | 追蹤一段時間內事件的計數器，包含近期活動的相關資訊。請參閱[`timestamped_event_counter`](#timestamped-event-counter)。|
 
 <p id="info-string"></p>
 
-The `info_string` object contains the following metadata fields.
+`info_string` 物件包含下列中繼資料欄位。
 
-| Metadata field | Data type | Description |
+| 中繼資料欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `value` | String | The actual string value of the statistic. |
-| `stat_type` | String | Always set to `info_string`. |
+| `value` | 字串 | 統計資料的實際字串值。 |
+| `stat_type` | 字串 | 一律設為 `info_string`。 |
 
 <p id="info-counter"></p>
 
-The `info_counter` object contains the following metadata fields.
+`info_counter` 物件包含下列中繼資料欄位。
 
-| Metadata field | Data type | Description |
+| 中繼資料欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `value` | Integer | The current count value. |
-| `stat_type` | String | Always set to `info_counter`. |
+| `value` | 整數 | 目前的計數值。 |
+| `stat_type` | 字串 | 一律設為 `info_counter`。 |
 
 <p id="timestamped-event-counter"></p>
 
-The `timestamped_event_counter` object contains the following metadata fields.
+`timestamped_event_counter` 物件包含下列中繼資料欄位。
 
-| Metadata field | Data type | Description |
+| 中繼資料欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `value` | Integer | The total number of events that occurred since the node started. |
-| `stat_type` | String | Always set to `timestamped_event_counter`. |
-| `trailing_interval_value` | Integer | The number of events that occurred in the past 5 minutes. |
-| `minutes_since_last_event` | Integer | The amount of time (in minutes) since the last recorded event. |
+| `value` | 整數 | 自節點啟動以來發生的事件總數。 |
+| `stat_type` | 字串 | 一律設為 `timestamped_event_counter`。 |
+| `trailing_interval_value` | 整數 | 過去 5 分鐘內發生的事件數量。 |
+| `minutes_since_last_event` | 整數 | 自上次記錄事件以來的時間量 (以分鐘為單位)。 |
 
-## Warm up
-**Introduced 3.3**
+## 暖機
+**於 3.3 版導入**
 {: .label .label-purple }
 
-Sparse indexes support [neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/). To maximize search efficiency, OpenSearch caches sparse data in JVM memory.
+稀疏索引支援[神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)。為了將搜尋效率最大化，OpenSearch 會將稀疏資料快取在 JVM 記憶體中。
 
-To avoid high latency during initial searches, you can run random queries during a warmup period. After the warmup period, sparse data is stored in JVM memory, and you can start production workloads. However, this approach is indirect and requires additional effort.
+為避免初次搜尋時出現高延遲，您可以在暖機期間執行隨機查詢。暖機期間結束後，稀疏資料會儲存在 JVM 記憶體中，您就可以開始正式工作負載。不過，這種方式較為間接，且需要額外的心力。
 
-As an alternative, you can use the warm up API operation to avoid latency during initial searches. This operation loads all sparse data for the primary and replica shards of the specified indexes into JVM memory. The warm up API operation is idempotent: if a segment's sparse data is already loaded into memory, this operation has no effect. It only loads files not currently stored in memory.
+或者，您可以使用暖機 API 操作來避免初次搜尋時的延遲。此操作會將指定索引之主要分片與副本分片的所有稀疏資料載入 JVM 記憶體。暖機 API 操作具有冪等性：如果某個分段的稀疏資料已載入記憶體，此操作不會產生任何效果。它只會載入目前未儲存在記憶體中的檔案。
 
-This API operation only works with sparse indexes (indexes created with `index.sparse` set to `true`) whose fields use the Lucene engine. The native engine reads its index from a memory-mapped file rather than the JVM heap cache, so there is nothing to warm up. For more information, see [Engines]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines).
+此 API 操作僅適用於稀疏索引（以 `index.sparse` 設為 `true` 建立的索引），且其欄位必須使用 Lucene 引擎。原生引擎會從記憶體對應檔案讀取其索引，而非 JVM 堆積快取，因此沒有需要暖機的內容。如需更多資訊，請參閱[引擎]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines)。
 {: .note}
 
-### Endpoints
+### 端點
 
 ```json
 POST /_plugins/_neural/warmup/{index}
 ```
 
-### Path parameters
+### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `<index>` | String | An index name or names (comma-separated) to warm up. Supports wildcards (`*`). Required. |
+| `<index>` | 字串 | 要暖機的一個或多個索引名稱（以逗號分隔）。支援萬用字元 (`*`)。必要。 |
 
-#### Example request
+#### 範例請求
 
-The following request performs a warm up operation on three indexes:
+下列請求對三個索引執行暖機操作：
 
 ```json
 POST /_plugins/_neural/warmup/index1,index2,index3
 ```
 {% include copy-curl.html %}
 
-You can use the warm up API operation with index patterns to load one or more indexes that match a specified pattern into the cache:
+您可以在暖機 API 操作中使用索引模式，將符合指定模式的一個或多個索引載入快取：
 
 ```json
 POST /_plugins/_neural/warmup/index*
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
-The API call returns results only after the warm up operation finishes or the request times out:
+API 呼叫只會在暖機操作完成或請求逾時後才傳回結果：
 
 ```json
 {
@@ -479,65 +480,65 @@ The API call returns results only after the warm up operation finishes or the re
 }
 ```
 
-If the request times out, then the operation continues on the cluster. 
+如果請求逾時，操作會繼續在叢集上執行。
 
-To monitor the warm up operation, use the [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/):
+若要監視暖機操作，請使用 [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/)：
 
 ```json
 GET /_tasks
 ```
 {% include copy-curl.html %}
 
-After the operation has finished, use the [neural stats API operation](#stats) to monitor the updated memory usage.
+操作完成後，請使用 [neural stats API 操作](#stats) 監視更新後的記憶體使用量。
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field                | Data type | Description                                                      |
+| 欄位                | 資料類型 | 說明                                                      |
 | :------------------- | :-------- | :--------------------------------------------------------------- |
-| `_shards.total`      | Integer   | The total number of shards that OpenSearch attempted to warm up. |
-| `_shards.successful` | Integer   | The number of shards that were successfully warmed up.           |
-| `_shards.failed`     | Integer   | The number of shards that failed to warm up.                     |
+| `_shards.total`      | 整數   | OpenSearch 嘗試暖機的分片總數。 |
+| `_shards.successful` | 整數   | 成功暖機的分片數量。           |
+| `_shards.failed`     | 整數   | 暖機失敗的分片數量。                     |
 
-### Best practices
+### 最佳做法
 
-To ensure that the warm up operation works properly, follow these best practices:
+為確保暖機操作正常運作，請遵循下列最佳做法：
 
-* Avoid running merge operations on indexes you plan to warm up: During a merge operation, OpenSearch creates new segments and may delete old ones. For example, if the warm up API operation loads sparse indexes A and B into native memory, but a merge creates a new segment C from A and B, then A and B are removed from memory but C is not yet loaded. In this case, the initial loading delay for sparse index C still occurs.
+* 避免在計畫暖機的索引上執行合併操作：在合併操作期間，OpenSearch 會建立新的分段，並可能刪除舊的分段。例如，如果暖機 API 操作將稀疏索引 A 與 B 載入原生記憶體，但合併操作從 A 與 B 建立了新的分段 C，則 A 與 B 會從記憶體中移除，而 C 尚未載入。在這種情況下，稀疏索引 C 仍會出現初次載入延遲。
 
-* Verify that all sparse indexes you plan to warm up can fit into JVM memory. For more information about memory limits, see [neural_search.circuit_breaker.limit]({{site.url}}{{site.baseurl}}/vector-search/settings#neural-search-plugin-settings).
+* 確認您計畫暖機的所有稀疏索引都能放入 JVM 記憶體。如需記憶體限制的更多資訊，請參閱 [neural_search.circuit_breaker.limit]({{site.url}}{{site.baseurl}}/vector-search/settings#neural-search-plugin-settings)。
 
-## Clear cache
-**Introduced 3.3**
+## 清除快取
+**於 3.3 版導入**
 {: .label .label-purple }
 
-During [neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/) or warm up operations, sparse data is loaded into JVM memory. You can remove this data by deleting the corresponding index.
+在[神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)或暖機操作期間，稀疏資料會載入 JVM 記憶體。您可以透過刪除對應的索引來移除這些資料。
 
-In contrast, decreasing the [neural search circuit breaker limit]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann#memory-and-caching-settings) does not immediately evict cached sparse data. To manually clear cached data, use the neural search clear cache API operation. This operation removes all in-memory sparse data for all shards (primaries and replicas) of the indexes specified in the request.
+相對地，降低[神經搜尋斷路器限制]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann#memory-and-caching-settings)並不會立即驅逐已快取的稀疏資料。若要手動清除快取資料，請使用 neural search clear cache API 操作。此操作會移除請求中所指定索引之所有分片（主要與副本）的所有記憶體內稀疏資料。
 
-Similar to the [warm up operation](#warm-up), the clear cache operation is idempotent: if you attempt to clear the cache for an index that has already been evicted, the operation has no additional effect.
+與[暖機操作](#warm-up)類似，清除快取操作具有冪等性：如果您嘗試清除已被驅逐之索引的快取，操作不會產生額外效果。
 
-This API operation only works with sparse indexes (indexes created with `index.sparse` set to `true`) whose fields use the Lucene engine. The native engine does not use a plugin-managed cache, so there is nothing to clear. For more information, see [Engines]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines).
+此 API 操作僅適用於稀疏索引（以 `index.sparse` 設為 `true` 建立的索引），且其欄位必須使用 Lucene 引擎。原生引擎不使用外掛程式管理的快取，因此沒有需要清除的內容。如需更多資訊，請參閱[引擎]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines)。
 {: .note}
 
-### Endpoints
+### 端點
 
 ```json
 POST /_plugins/_neural/clear_cache/{index}
 ```
 
-### Path parameters
+### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description                                                                                  |
+| 參數 | 資料類型 | 說明                                                                                  |
 | :-------- | :-------- | :------------------------------------------------------------------------------------------- |
-| `<index>` | String    | An index name or names (comma-separated) for which to clear cache. Supports wildcards (`*`). Required. |
+| `<index>` | 字串    | 要清除快取的一個或多個索引名稱（以逗號分隔）。支援萬用字元 (`*`)。必要。 |
 
-#### Example request
+#### 範例請求
 
-The following request clears the sparse data of three specified indexes from JVM memory:
+下列請求會從 JVM 記憶體中清除三個指定索引的稀疏資料：
 
 ```json
 POST /_plugins/_neural/clear_cache/index1,index2,index3
@@ -545,7 +546,7 @@ POST /_plugins/_neural/clear_cache/index1,index2,index3
 
 {% include copy-curl.html %}
 
-You can also use index patterns to clear one or more indexes that match a pattern:
+您也可以使用索引模式來清除符合某個模式的一個或多個索引：
 
 ```json
 POST /_plugins/_neural/clear_cache/index*
@@ -553,9 +554,9 @@ POST /_plugins/_neural/clear_cache/index*
 
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
-The API call returns results only after the clear cache operation finishes or the request times out:
+API 呼叫只會在清除快取操作完成或請求逾時後才傳回結果：
 
 ```json
 {
@@ -567,9 +568,9 @@ The API call returns results only after the clear cache operation finishes or th
 }
 ```
 
-If the request times out, the operation continues running in the cluster.
+如果請求逾時，操作會繼續在叢集中執行。
 
-To monitor the progress of the clear cache operation, use the [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/):
+若要監視清除快取操作的進度，請使用 [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/)：
 
 ```json
 GET /_tasks
@@ -577,14 +578,14 @@ GET /_tasks
 
 {% include copy-curl.html %}
 
-After the operation finishes, use the [neural stats API operation](#stats) to check updated memory usage.
+操作完成後，請使用 [neural stats API 操作](#stats) 檢查更新後的記憶體使用量。
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field                | Data type | Description                                                      |
+| 欄位                | 資料類型 | 說明                                                      |
 | :------------------- | :-------- | :--------------------------------------------------------------- |
-| `_shards.total`      | Integer   | The total number of shards for which OpenSearch attempted to clear cache. |
-| `_shards.successful` | Integer   | The number of shards for which cache was successfully cleared.           |
-| `_shards.failed`     | Integer   | The number of shards for which cache failed to clear.                     |
+| `_shards.total`      | 整數   | OpenSearch 嘗試清除快取的分片總數。 |
+| `_shards.successful` | 整數   | 成功清除快取的分片數量。           |
+| `_shards.failed`     | 整數   | 清除快取失敗的分片數量。                     |

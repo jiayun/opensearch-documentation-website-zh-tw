@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Set
 parent: Ingest processors
 nav_order: 240
 ---
 
-# Set processor
+# Set 處理器
 
-The `set` processor adds or updates fields in a document. It sets one field and associates it with the specified value. If the field already exists, then its value is replaced with the provided one unless the `override` parameter is set to `false`. When `override` is `false` and the specified field exists, the value of the field remains unchanged.
+`set` 處理器會新增或更新文件中的欄位。它會設定一個欄位，並將該欄位與指定的值關聯。如果欄位已存在，其值會被提供的值取代，除非 `override` 參數設為 `false`。當 `override` 為 `false` 且指定的欄位已存在時，欄位的值會維持不變。
 
-The following is the syntax for the `set` processor:
+以下是 `set` 處理器的語法：
 
 ```json
 {
@@ -26,29 +27,29 @@ The following is the syntax for the `set` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `set` processor.
+下表列出 `set` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`field` | Required | The name of the field to be set or updated. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets).
-`value` | Required | The value assigned to the field. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets).
-`override` | Optional | A Boolean flag that determines whether the processor should override the existing value of the field.
-`ignore_empty_value` | Optional | A Boolean flag that determines whether the processor should ignore `null` values or empty strings. Default is `false`.
-`description`  | Optional  | A description of the processor's purpose or configuration.
-`if` | Optional | Specifies to conditionally execute the processor.
-`ignore_failure` | Optional | Specifies to ignore processor failures. See [Handling pipeline failures]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/).
-`on_failure` | Optional | Specifies a list of processors to run if the processor fails during execution. These processors are executed in the order they are specified.
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type.
+`field` | 必要 | 要設定或更新的欄位名稱。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。
+`value` | 必要 | 指派給欄位的值。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。
+`override` | 選用 | 布林值旗標，用於決定處理器是否應覆寫欄位的現有值。
+`ignore_empty_value` | 選用 | 布林值旗標，用於決定處理器是否應忽略 `null` 值或空字串。預設為 `false`。
+`description`  | 選用  | 處理器用途或組態的說明。
+`if` | 選用 | 指定依條件執行處理器。
+`ignore_failure` | 選用 | 指定忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`on_failure` | 選用 | 指定處理器在執行期間失敗時要執行的處理器清單。這些處理器會依指定的順序執行。
+`tag` | 選用 | 處理器的識別標籤。有助於在偵錯時區分相同類型的處理器。
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+請依照下列步驟在管線中使用處理器。
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
 
-The following query creates a pipeline named `set-pipeline` that uses the `set` processor to add a new field `new_field` with the value `some_value` to the document: 
+下列查詢會建立名為 `set-pipeline` 的管線，使用 `set` 處理器在文件中新增欄位 `new_field`，其值為 `some_value`： 
 
 ```json
 PUT _ingest/pipeline/set-pipeline
@@ -66,12 +67,12 @@ PUT _ingest/pipeline/set-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2 (Optional): Test the pipeline
+### 步驟 2（選用）：測試管線
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/set-pipeline/_simulate
@@ -87,9 +88,9 @@ POST _ingest/pipeline/set-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -112,9 +113,9 @@ The following example response confirms that the pipeline is working as expected
 ```
 {% include copy-curl.html %}
 
-### Step 3: Ingest a document 
+### 步驟 3：匯入文件 
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 POST testindex1/_doc?pipeline=set-pipeline
@@ -124,9 +125,9 @@ POST testindex1/_doc?pipeline=set-pipeline
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The request indexes the document into the index `testindex1` and then indexes all documents with the `new_field` set to `some_value`, as shown in the following response:
+此請求會將文件編製索引至索引 `testindex1`，接著將所有文件編製索引，並將 `new_field` 設為 `some_value`，如下列回應所示：
 
 ```json
 {
@@ -145,9 +146,9 @@ The request indexes the document into the index `testindex1` and then indexes al
 ```
 {% include copy-curl.html %}
 
-### Step 4 (Optional): Retrieve the document
+### 步驟 4（選用）：擷取文件
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1

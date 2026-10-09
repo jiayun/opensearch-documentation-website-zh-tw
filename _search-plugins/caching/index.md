@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Caching
+title: "快取"
 parent: Improving search performance
 has_children: true
 nav_order: 10
@@ -8,29 +9,29 @@ redirect_from:
   - /search-plugins/caching/
 ---
 
-# Caching
+# 快取
 
-OpenSearch relies on different on-heap cache types to accelerate data retrieval, providing significant improvement in search latency. However, cache size is limited by the amount of memory available on a node. When processing a larger dataset that can potentially be cached, the cache size limit can result in many pieces of data either being removed from the cache or not being cached, causing an incomplete query. This impacts performance because OpenSearch needs to process the query again, causing high resource consumption.
+OpenSearch 依賴不同的堆內快取類型來加速資料擷取，大幅改善搜尋延遲。然而，快取大小受限於節點上可用的記憶體量。在處理可能被快取的較大資料集時，快取大小限制會導致許多資料被從快取中移除或無法被快取，造成查詢不完整。這會影響效能，因為 OpenSearch 需要重新處理查詢，導致高度資源消耗。
 
-Understanding how your data uses the cache can help improve your cluster's performance and prevent you from using too much memory, reducing the cost of querying your data.
+了解您的資料如何使用快取，有助於改善叢集的效能，並避免使用過多記憶體，降低查詢資料的成本。
 
-## Supported on-heap cache types
+## 支援的堆內快取類型
 
-OpenSearch supports the following on-heap cache types:
+OpenSearch 支援下列堆內快取類型：
 
-- [**Index request cache**]({{site.url}}{{site.baseurl}}/search-plugins/caching/request-cache/): Caches the local results on each shard. This allows frequently used and potentially resource-heavy search requests to return results almost instantaneously.
-- **Query cache**: Caches common data from similar queries at the shard level. The query cache is more granular than the request cache and can cache data to be reused in different queries.
-- [**Field data cache**]({{site.url}}{{site.baseurl}}/search-plugins/caching/field-data-cache/): Caches field data and global ordinals, which are both used to support aggregations on certain field types.
+- [**索引請求快取**]({{site.url}}{{site.baseurl}}/search-plugins/caching/request-cache/)：在每個分片上快取本機結果。這讓經常使用且可能耗用大量資源的搜尋請求幾乎能立即傳回結果。
+- **查詢快取**：在分片層級快取來自相似查詢的共同資料。查詢快取比請求快取更細緻，可以快取資料以在不同查詢中重複使用。
+- [**欄位資料快取**]({{site.url}}{{site.baseurl}}/search-plugins/caching/field-data-cache/)：快取欄位資料與全域序數，兩者都用於支援特定欄位類型的彙總。
 
-## Additional cache stores
+## 其他快取儲存區
 
-**Introduced 2.14**
+**2.14 版新增**
 {: .label .label-purple }
 
-In addition to existing custom OpenSearch on-heap cache stores, cache plugins provide the following cache stores: 
+除了現有的 OpenSearch 自訂堆內快取儲存區之外，快取外掛程式還提供下列快取儲存區：
 
-- **Disk cache**: Stores the precomputed result of a query on disk. Use a disk cache to cache much larger datasets, provided that the disk's latency is within an acceptable range.
-- **Tiered cache**: A multi-level cache in which each tier has its own characteristics and performance levels. For example, a tiered cache can contain both on-heap and disk tiers. By combining different tiers, you can achieve a balance between cache performance and size. To learn more, see [Tiered cache]({{site.url}}{{site.baseurl}}/search-plugins/caching/tiered-cache/).
+- **磁碟快取**：將查詢的預先計算結果儲存在磁碟上。只要磁碟延遲在可接受的範圍內，即可使用磁碟快取來快取大得多的資料集。
+- **分層快取**：一種多層級快取，其中每一層都有自己的特性與效能等級。例如，分層快取可以同時包含堆內層與磁碟層。透過結合不同的層，您可以在快取效能與大小之間取得平衡。若要了解更多，請參閱 [分層快取]({{site.url}}{{site.baseurl}}/search-plugins/caching/tiered-cache/)。
 
-In OpenSearch 2.14, the request cache is integrated with cache plugins. You can use a tiered or disk cache as a request-level cache.
+在 OpenSearch 2.14 中，請求快取已與快取外掛程式整合。您可以使用分層快取或磁碟快取作為請求層級快取。
 {: .note}

@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search agent
+title: "搜尋代理程式"
 parent: Agent APIs
 grand_parent: ML Commons APIs
 nav_order: 35
 ---
 
 # Search Agent API
-**Introduced 2.13**
+**於 2.13 版導入**
 {: .label .label-purple }
 
-Use this command to search for agents you've already created. You can provide any OpenSearch search query in the request body.
+使用此命令搜尋您已建立的代理程式。您可以在請求本文中提供任何 OpenSearch 搜尋查詢。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/agents/_search
 POST /_plugins/_ml/agents/_search
 ```
 
-## Example request: Searching for all agents
+## 範例請求：搜尋所有代理程式
 
 ```json
 POST /_plugins/_ml/agents/_search
@@ -32,7 +33,7 @@ POST /_plugins/_ml/agents/_search
 ```
 {% include copy-curl.html %}
 
-## Example request: Searching for agents of a certain type
+## 範例請求：搜尋特定類型的代理程式
 
 ```json
 POST /_plugins/_ml/agents/_search
@@ -48,7 +49,7 @@ POST /_plugins/_ml/agents/_search
 ```
 {% include copy-curl.html %}
 
-#### Example: Searching for an agent by description
+#### 範例：依描述搜尋代理程式
 
 ```json
 GET _plugins/_ml/agents/_search
@@ -69,7 +70,7 @@ GET _plugins/_ml/agents/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -134,6 +135,6 @@ Assistant:"""
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-For response field descriptions, see [Register Agent API request fields]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent#request-body-fields).
+回應欄位的說明請參閱 [Register Agent API 請求欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent#request-body-fields)。

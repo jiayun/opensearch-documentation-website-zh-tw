@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Alerts and Findings API
+title: "警示與發現 API"
 parent: Threat intelligence APIs
 grand_parent: Threat intelligence
 nav_order: 50
 ---
 
 
-# Alerts and Findings API
+# 警示與發現 API
 
-The threat intelligence Alerts and Findings API retrieves information about alerts and findings from threat intelligence feeds.
+威脅情報警示與發現 API 可從威脅情報饋送中擷取警示與發現的相關資訊。
 
 
 ---
 
-## Get threat intelligence alerts
+## 取得威脅情報警示
 
-Retrieves any alerts related to threat intelligence monitors.
+擷取與威脅情報監視器相關的所有警示。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_security_analytics/threat_intel/alerts
@@ -26,29 +27,29 @@ GET /_plugins/_security_analytics/threat_intel/alerts
 {% include copy-curl.html %}
 
 
-### Path parameters
+### 路徑參數
 
-You can specify the following parameters when requesting an alert.
+請求警示時，您可以指定下列參數。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :---- 
-`severityLevel` | Filter alerts by severity level. Optional.        
-`alertState`    | Used to filter by alert state. Possible values are `ACTIVE`, `ACKNOWLEDGED`, `COMPLETED`, `ERROR`, or `DELETED`. Optional. 
-`sortString`    | The string Security Analytics uses to sort the alerts. Optional.                          
-`sortOrder`     | The order used to sort the list of alerts. Possible values are `asc` or `desc`. Optional.                        
-`missing`       | A list of fields for which no alias mappings were found. Optional.                                          
-`size`          | An optional maximum number of results to be returned in the response. Optional.                          
-`startIndex`    | The pagination indicator. Optional.  
-`searchString`  | The alert attribute you want returned in the search. Optional. 
+`severityLevel` | 依嚴重性等級篩選警示。選用。        
+`alertState`    | 用於依警示狀態篩選。可能的值為 `ACTIVE`、`ACKNOWLEDGED`、`COMPLETED`、`ERROR` 或 `DELETED`。選用。 
+`sortString`    | Security Analytics 用來排序警示的字串。選用。                          
+`sortOrder`     | 用於排序警示清單的順序。可能的值為 `asc` 或 `desc`。選用。                        
+`missing`       | 未找到別名對應的欄位清單。選用。                                          
+`size`          | 選用的回應中可傳回的最大結果數量。選用。                          
+`startIndex`    | 分頁指示器。選用。  
+`searchString`  | 您希望在搜尋中傳回的警示屬性。選用。
 
-### Example request
+### 範例請求
 
 ```json
 GET /_plugins/_security_analytics/threat_intel/alerts
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -77,44 +78,44 @@ GET /_plugins/_security_analytics/threat_intel/alerts
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-A threat intelligence alert can have one of the following states.
+威脅情報警示可能處於下列其中一種狀態。
 
-| State  | Description  |
+| 狀態  | 說明  |
 | :---- | :--- |
-| `ACTIVE`   | The alert is ongoing and unacknowledged. Alerts remain in this state until they are acknowledged, the trigger associated with the alert is deleted, or the threat intelligence monitor is deleted entirely. |
-| `ACKNOWLEDGED` | The alert is acknowledged, but the root cause of the alert has not been addressed.  |
-| `COMPLETED` | The alert is no longer ongoing. Alerts enter this state after the corresponding trigger evaluates to `false`.   |
-| `DELETED` | The monitor or trigger for the alert was deleted while the alert was active.  |
+| `ACTIVE`   | 警示正在進行中且尚未確認。警示會保持此狀態，直到被確認、與警示相關聯的觸發條件被刪除，或威脅情報監視器被完全刪除為止。 |
+| `ACKNOWLEDGED` | 警示已確認，但警示的根本原因尚未處理。  |
+| `COMPLETED` | 警示已不再進行中。當對應的觸發條件評估結果為 `false` 後，警示會進入此狀態。   |
+| `DELETED` | 警示作用中時，其監視器或觸發條件已被刪除。  |
 
 ---
 
-## Update Alerts Status API 
+## 更新警示狀態 API 
 
-Updates the status of the specified alerts to `ACKNOWLEDGED` or `COMPLETED`. Only alerts in the `ACTIVE` state can be updated. 
+將指定警示的狀態更新為 `ACKNOWLEDGED` 或 `COMPLETED`。只有處於 `ACTIVE` 狀態的警示才能更新。 
 
-### Endpoints
+### 端點
 
 ```json
 PUT /plugins/security_analytics/threat_intel/alerts/status
 ```
 
-### Example requests
+### 範例請求
 
-The following example updates the status of the specified alerts to `ACKNOWLEDGED`:
+下列範例將指定警示的狀態更新為 `ACKNOWLEDGED`：
 
 ```json
 PUT /plugins/security_analytics/threat_intel/alerts/status?state=ACKNOWLEDGED&alert_ids={alert-id},{alert-id}
 ```
 
-The following example updates the status of the specified alerts to `COMPLETED`:
+下列範例將指定警示的狀態更新為 `COMPLETED`：
 
 ```json
 PUT /plugins/security_analytics/threat_intel/alerts/status?state=COMPLETED&alert_ids=alert_ids={alert-id},{alert-id}
 ```
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -170,28 +171,28 @@ PUT /plugins/security_analytics/threat_intel/alerts/status?state=COMPLETED&alert
 
 ---
 
-## Get findings
+## 取得發現
 
-Returns threat intelligence indicator of compromise (IOC) findings. When the threat intelligence monitor finds a malicious IOC during a data scan, a finding is automatically generated.
+傳回威脅情報入侵指標 (IOC) 的發現。當威脅情報監視器在資料掃描期間發現惡意的 IOC 時，系統會自動產生一筆發現。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_security_analytics/threat_intel/findings/
 ```
 
-### Path parameters 
+### 路徑參數 
 
-| Parameter      | Description                                                                                 |
+| 參數      | 說明                                                                                 |
 |:---------------|:--------------------------------------------------------------------------------------------|
-| `sortString`   | Specifies which string Security Analytics uses to sort the alerts. Optional.     |
-| `sortOrder`    | The order used to sort the list of findings. Possible values are `asc` or `desc`. Optional. |
-| `missing`      | A list of fields for which there were no alias mappings found. Optional.                     |
-| `size`         | The maximum number of results to be returned in the response. Optional.     |
-| `startIndex`   | The pagination indicator. Optional.                                                         |
-| `searchString` | The alert attribute you want returned in the search. Optional.                              |
+| `sortString`   | 指定 Security Analytics 用來排序警示的字串。選用。     |
+| `sortOrder`    | 用於排序發現清單的順序。可能的值為 `asc` 或 `desc`。選用。 |
+| `missing`      | 未找到別名對應的欄位清單。選用。                     |
+| `size`         | 回應中要傳回的最大結果數量。選用。     |
+| `startIndex`   | 分頁指示器。選用。                                                         |
+| `searchString` | 您希望在搜尋中傳回的警示屬性。選用。                              |
 
-### Example request
+### 範例請求
 
 ```json
 GET /_plugins/_security_analytics/threat_intel/findings/_search?size=3

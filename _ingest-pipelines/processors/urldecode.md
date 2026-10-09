@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: URL decode
+title: "URL 解碼"
 parent: Ingest processors
 nav_order: 320
 ---
 
-# URL decode processor
+# URL 解碼處理器
 
-The `urldecode` processor is useful for decoding URL-encoded strings in log data or other text fields. This can make the data more readable and easier to analyze, especially when working with URLs or query parameters that contain special characters or spaces.
+`urldecode` 處理器可用於解碼記錄資料或其他文字欄位中經過 URL 編碼的字串。這能讓資料更易讀、更容易分析，尤其是在處理包含特殊字元或空格的 URL 或查詢參數時。
 
-The following is the syntax for the `urldecode` processor:
+以下是 `urldecode` 處理器的語法：
 
 ```json
 {
@@ -21,28 +22,28 @@ The following is the syntax for the `urldecode` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `urldecode` processor.
+下表列出 `urldecode` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | Required  | The field containing the URL-encoded string to be decoded. |
-`target_field`  | Optional  | The field in which the decoded string is stored. If not specified, then the decoded string is stored in the same field as the original encoded string. |
-`ignore_missing`  | Optional  | Specifies whether the processor should ignore documents that do not contain the specified `field`. If set to `true`, then the processor ignores missing values in the `field` and leaves the `target_field` unchanged. Default is `false`. |
-`description`  | Optional  | A brief description of the processor.  |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | Specifies whether the processor continues to run even if it encounters an error. If set to `true`, then failures are ignored. Default is `false`. |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |
+`field`  | 必要  | 包含要解碼之 URL 編碼字串的欄位。 |
+`target_field`  | 選用  | 儲存解碼後字串的欄位。若未指定，解碼後的字串會儲存在與原始編碼字串相同的欄位中。 |
+`ignore_missing`  | 選用  | 指定處理器是否應忽略不含指定 `field` 的文件。若設為 `true`，處理器會忽略 `field` 中缺少的值，並保持 `target_field` 不變。預設為 `false`。 |
+`description`  | 選用  | 處理器的簡短描述。  |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
+`on_failure` | 選用 | 當處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。 |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+依照下列步驟在管線中使用處理器。
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
 
-The following query creates a pipeline named `urldecode_pipeline` that uses the `urldecode` processor to decode the URL-encoded string in the `encoded_url` field and store the decoded string in the `decoded_url` field: 
+下列查詢會建立名為 `urldecode_pipeline` 的管線，使用 `urldecode` 處理器解碼 `encoded_url` 欄位中經過 URL 編碼的字串，並將解碼後的字串儲存在 `decoded_url` 欄位中：
 
 ```json
 PUT _ingest/pipeline/urldecode_pipeline
@@ -60,12 +61,12 @@ PUT _ingest/pipeline/urldecode_pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2 (Optional): Test the pipeline
+### 步驟 2（選用）：測試管線
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/urldecode_pipeline/_simulate
@@ -81,9 +82,9 @@ POST _ingest/pipeline/urldecode_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -106,9 +107,9 @@ The following example response confirms that the pipeline is working as expected
 ```
 {% include copy-curl.html %}
 
-### Step 3: Ingest a document 
+### 步驟 3：匯入文件
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=url_decode_pipeline
@@ -118,9 +119,9 @@ PUT testindex1/_doc/1?pipeline=url_decode_pipeline
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The preceding request indexes the document into the index `testindex1` and indexes all documents containing the `encoded_url` field, which is processed by the `urldecode_pipeline` to populate the `decoded_url` field, as shown in the following response:
+上述請求會將文件編製索引至索引 `testindex1`，並為所有包含 `encoded_url` 欄位的文件編製索引，該欄位由 `urldecode_pipeline` 處理以填入 `decoded_url` 欄位，如下列回應所示：
 
 ```json
 {
@@ -139,18 +140,18 @@ The preceding request indexes the document into the index `testindex1` and index
 ```
 {% include copy-curl.html %}
 
-### Step 4 (Optional): Retrieve the document
+### 步驟 4（選用）：擷取文件
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The response includes the original `encoded_url` field and the `decoded_url` field:
+回應包含原始的 `encoded_url` 欄位與 `decoded_url` 欄位：
 
 ```json
 {

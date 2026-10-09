@@ -1,53 +1,54 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Correlation engine APIs
+title: "關聯引擎 API"
 parent: Security Analytics APIs
 nav_order: 55
 ---
 
-# Correlation engine APIs
+# 關聯引擎 API
 
-Correlation engine APIs allow you to create new correlation rules, view findings and correlations within a certain time window, and perform other tasks.
+關聯引擎 API 可讓您建立新的關聯規則、檢視特定時間範圍內的發現項目與關聯，以及執行其他工作。
 
 ---
 
-## Create correlation rules between log types
+## 在記錄類型之間建立關聯規則
 
-Creates a correlation rule that correlates findings from two or more log sources.
+建立關聯規則，將來自兩個或多個記錄來源的發現項目建立關聯。
 
-### Endpoints
+### 端點
 
 ```json
 POST /_plugins/_security_analytics/correlation/rules
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- |:--- |
-| `name` | String | The name of the correlation rule. Optional. |
-| `correlate` | Array | The log sources to correlate. Provide at least two. Required. |
-| `correlate.index` | String | The name of the index used as the log source. |
-| `correlate.query` | String | The query used to filter security logs for correlation. |
-| `correlate.category` | String | The log type associated with the log source. |
-| `time_window` | Long | The window, in milliseconds, within which findings must occur to be correlated. Optional. If not specified, the `plugins.security_analytics.correlation_time_window` cluster setting applies. |
-| `trigger` | Object | Generates a correlation alert and sends notifications when the rule correlates findings. Optional. |
-| `trigger.name` | String | The name of the trigger. |
-| `trigger.severity` | String | Severity level for the trigger expressed as an integer: 1 = highest; 2 = high; 3 = medium; 4 = low; 5 = lowest. |
-| `trigger.actions` | Array | The notifications to send when the trigger generates an alert. |
-| `trigger.actions.name` | String | The name of the action. Required for each action. |
-| `trigger.actions.destination_id` | String | The ID of the notification channel that receives the message. |
-| `trigger.actions.subject_template.source` | String | The subject of the notification message. Can include [correlation rule trigger variables](#correlation-rule-trigger-variables). |
-| `trigger.actions.subject_template.lang` | String | The scripting language used to define the subject. Must be `mustache`. |
-| `trigger.actions.message_template.source` | String | The body of the notification message. Can include [correlation rule trigger variables](#correlation-rule-trigger-variables). |
-| `trigger.actions.message_template.lang` | String | The scripting language used to define the message. Must be `mustache`. |
-| `trigger.actions.throttle_enabled` | Boolean | Whether to limit the number of notifications sent within a span of time. Default is `false`. |
-| `trigger.actions.throttle.unit` | String | The unit of time used for throttling. |
-| `trigger.actions.throttle.value` | Integer | The number of units of time used for throttling. |
+| `name` | 字串 | 關聯規則的名稱。選用。 |
+| `correlate` | 陣列 | 要建立關聯的記錄來源。請提供至少兩個。必要。 |
+| `correlate.index` | 字串 | 做為記錄來源的索引名稱。 |
+| `correlate.query` | 字串 | 用來篩選安全性記錄以建立關聯的查詢。 |
+| `correlate.category` | 字串 | 與記錄來源相關聯的記錄類型。 |
+| `time_window` | Long | 發現項目必須在此時間範圍內發生才能建立關聯，以毫秒為單位。選用。若未指定，則套用 `plugins.security_analytics.correlation_time_window` 叢集設定。 |
+| `trigger` | 物件 | 當規則將發現項目建立關聯時，產生關聯警示並傳送通知。選用。 |
+| `trigger.name` | 字串 | 觸發程序的名稱。 |
+| `trigger.severity` | 字串 | 以整數表示的觸發程序嚴重性等級：1 = 最高；2 = 高；3 = 中；4 = 低；5 = 最低。 |
+| `trigger.actions` | 陣列 | 當觸發程序產生警示時要傳送的通知。 |
+| `trigger.actions.name` | 字串 | 動作的名稱。每個動作皆為必要。 |
+| `trigger.actions.destination_id` | 字串 | 接收訊息的通知管道 ID。 |
+| `trigger.actions.subject_template.source` | 字串 | 通知訊息的主旨。可包含[關聯規則觸發程序變數](#correlation-rule-trigger-variables)。 |
+| `trigger.actions.subject_template.lang` | 字串 | 用來定義主旨的指令碼語言。必須是 `mustache`。 |
+| `trigger.actions.message_template.source` | 字串 | 通知訊息的本文。可包含[關聯規則觸發程序變數](#correlation-rule-trigger-variables)。 |
+| `trigger.actions.message_template.lang` | 字串 | 用來定義訊息的指令碼語言。必須是 `mustache`。 |
+| `trigger.actions.throttle_enabled` | 布林值 | 是否限制在一段時間內傳送的通知數量。預設為 `false`。 |
+| `trigger.actions.throttle.unit` | 字串 | 用於節流的時間單位。 |
+| `trigger.actions.throttle.value` | 整數 | 用於節流的時間單位數量。 |
 
-### Example request
+### 範例請求
 
 ```json
 POST /_plugins/_security_analytics/correlation/rules
@@ -78,7 +79,7 @@ POST /_plugins/_security_analytics/correlation/rules
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -112,17 +113,17 @@ POST /_plugins/_security_analytics/correlation/rules
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- |:--- |
-| `_id` | String | The ID for the new rule. |
+| `_id` | 字串 | 新規則的 ID。 |
 
-### Correlation rule triggers
+### 關聯規則觸發程序
 
-Add a `trigger` to a correlation rule to generate a correlation alert and send a notification each time the rule correlates findings. The following request creates a rule with a trigger that notifies a channel when a network finding correlates with an Active Directory finding:
+將 `trigger` 新增至關聯規則，即可在每次規則將發現項目建立關聯時產生關聯警示並傳送通知。下列請求會建立規則，並在其中包含觸發程序，當網路發現項目與 Active Directory 發現項目建立關聯時通知管道：
 
 ```json
 POST /_plugins/_security_analytics/correlation/rules
@@ -164,7 +165,7 @@ POST /_plugins/_security_analytics/correlation/rules
 ```
 {% include copy-curl.html %}
 
-The response contains the generated trigger and action IDs:
+回應包含產生的觸發程序與動作 ID：
 
 ```json
 {
@@ -210,51 +211,51 @@ The response contains the generated trigger and action IDs:
 }
 ```
 
-Each action requires a `name`. A request that omits it fails with an `uninitialized_property_access_exception` error.
+每個動作都需要 `name`。若請求省略它，會失敗並出現 `uninitialized_property_access_exception` 錯誤。
 {: .note}
 
-### Correlation rule trigger variables
+### 關聯規則觸發程序變數
 
-The following table lists the variables available in the `subject_template` and `message_template` of a correlation rule trigger action. These variables differ from the ones available in alerting monitors, which are described in [Monitor variables]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/#monitor-variables).
+下表列出關聯規則觸發程序動作的 `subject_template` 與 `message_template` 中可用的變數。這些變數與警示監視器中可用的變數不同，後者說明於[監視器變數]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/#monitor-variables)。
 
-| Variable | Data type | Description |
+| 變數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `ctx.correlationRuleName` | String | The name of the correlation rule that generated the alert. |
-| `ctx.sourceFinding` | String | The ID of the finding that initiated the correlation. |
-| `ctx.correlatedFindingIds` | Array | The IDs of the findings correlated with the source finding. |
-| `ctx.timeWindow` | Long | The correlation time window, in milliseconds. |
+| `ctx.correlationRuleName` | 字串 | 產生警示的關聯規則名稱。 |
+| `ctx.sourceFinding` | 字串 | 起始關聯的發現項目 ID。 |
+| `ctx.correlatedFindingIds` | 陣列 | 與來源發現項目建立關聯的發現項目 ID。 |
+| `ctx.timeWindow` | Long | 關聯時間範圍，以毫秒為單位。 |
 
-To see the entire context object, add {% raw %}`{{ctx}}`{% endraw %} to the message body.
+若要查看整個情境物件，請將 {% raw %}`{{ctx}}`{% endraw %} 新增至訊息本文。
 
 ---
 
-## List all findings and correlations within a certain time window
+## 列出特定時間範圍內的所有發現項目與關聯
 
-Lists all findings and their correlations within a certain time window.
+列出特定時間範圍內的所有發現項目及其關聯。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_security_analytics/correlations
 ```
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. Both query parameters are required.
+下表列出可用的查詢參數。兩個查詢參數皆為必要。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- |:--- |
-| `start_timestamp` | Number | Start time for the time window, in milliseconds. |
-| `end_timestamp` | Number | End time for the time window, in milliseconds. |
+| `start_timestamp` | 數字 | 時間範圍的開始時間，以毫秒為單位。 |
+| `end_timestamp` | 數字 | 時間範圍的結束時間，以毫秒為單位。 |
 
-### Example request
+### 範例請求
 
 ```json
 GET /_plugins/_security_analytics/correlations?start_timestamp=1689289210000&end_timestamp=1689300010000
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -272,49 +273,49 @@ GET /_plugins/_security_analytics/correlations?start_timestamp=1689289210000&end
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- |:--- |
-| `finding1` | String | The ID for a first finding in the correlation. |
-| `logType1` | String | The log type associated with the first finding. |
-| `finding2` | String | The ID for a second finding in the correlation. |
-| `logType2` | String | The log type associated with the second finding. |
-| `rules` | Array | A list of correlation rule IDs associated with the correlated findings. |
+| `finding1` | 字串 | 關聯中第一個發現項目的 ID。 |
+| `logType1` | 字串 | 與第一個發現項目相關聯的記錄類型。 |
+| `finding2` | 字串 | 關聯中第二個發現項目的 ID。 |
+| `logType2` | 字串 | 與第二個發現項目相關聯的記錄類型。 |
+| `rules` | 陣列 | 與相關聯發現項目相關的關聯規則 ID 清單。 |
 
 ---
 
-## List correlations for a finding belonging to a log type
+## 列出屬於某記錄類型之發現項目的關聯
 
-Lists the findings correlated with a given finding.
+列出與指定發現項目相關聯的發現項目。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_security_analytics/findings/correlate
 ```
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters.
+下表列出可用的查詢參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- |:--- |
-| `finding` | String | The finding ID. Required. |
-| `detector_type` | String | The log type for the detector. Required. |
-| `nearby_findings` | Number | The number of nearby findings with respect to the given finding ID. Optional. |
-| `time_window` | String | Sets a time window in which all of the correlations must have occurred together. Optional. |
+| `finding` | 字串 | 發現項目 ID。必要。 |
+| `detector_type` | 字串 | 偵測器的記錄類型。必要。 |
+| `nearby_findings` | 數字 | 相對於指定發現項目 ID 的鄰近發現項目數。選用。 |
+| `time_window` | 字串 | 設定所有關聯必須同時發生的時間範圍。選用。 |
 
-### Example request
+### 範例請求
 
 ```json
 GET /_plugins/_security_analytics/findings/correlate?finding=425dce0b-f5ee-4889-b0c0-7d15669f0871&detector_type=ad_ldap&nearby_findings=20&time_window=10m
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -353,50 +354,50 @@ GET /_plugins/_security_analytics/findings/correlate?finding=425dce0b-f5ee-4889-
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- |:--- |
-| `finding` | String | The finding ID. |
-| `detector_type` | String | The log type associated with the finding. |
-| `score` | Number | The correlation score for the correlated finding. The score is based on the proximity of relevant findings in the threat scenario defined by the correlation rule. |
+| `finding` | 字串 | 發現項目 ID。 |
+| `detector_type` | 字串 | 與發現項目相關聯的記錄類型。 |
+| `score` | 數字 | 相關聯發現項目的關聯分數。此分數依據關聯規則所定義之威脅情境中相關發現項目的鄰近程度計算。 |
 
 ---
 
-## List correlation alerts
+## 列出關聯警示
 
-Lists the alerts generated by correlation rule triggers.
+列出由關聯規則觸發所產生的警示。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_security_analytics/correlationAlerts
 ```
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- |:--- |
-| `correlation_rule_id` | String | The correlation rule ID. |
+| `correlation_rule_id` | 字串 | 關聯規則 ID。 |
 
-### Example request
+### 範例請求
 
 ```json
 GET /_plugins/_security_analytics/correlationAlerts?correlation_rule_id=VjY0MpABPzR_pcEveVRq
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 <details markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta}
+<summary>
+    回應
+</summary>
+{: .text-delta}
 
 ```json
 {
@@ -445,51 +446,51 @@ GET /_plugins/_security_analytics/correlationAlerts?correlation_rule_id=VjY0MpAB
 ```
 </details>
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- |:--- |
-| `correlationAlerts` | Array | The correlation alerts that match the request. |
-| `correlationAlerts.correlated_finding_ids` | Array | The IDs of the findings correlated by the rule. |
-| `correlationAlerts.correlation_rule_id` | String | The ID of the correlation rule that generated the alert. |
-| `correlationAlerts.correlation_rule_name` | String | The name of the correlation rule that generated the alert. |
-| `correlationAlerts.user` | Object | The user associated with the correlation rule. |
-| `correlationAlerts.id` | String | The alert ID. |
-| `correlationAlerts.version` | Integer | The alert version. |
-| `correlationAlerts.schema_version` | Integer | The version of the alert index schema. |
-| `correlationAlerts.trigger_name` | String | The name of the trigger that generated the alert. |
-| `correlationAlerts.state` | String | The alert state. Valid values are `ACTIVE`, `ACKNOWLEDGED`, `COMPLETED`, `ERROR`, and `DELETED`. |
-| `correlationAlerts.error_message` | String | The error message for the alert, if any. |
-| `correlationAlerts.severity` | String | The severity level of the trigger that generated the alert. |
-| `correlationAlerts.action_execution_results` | Array | The results of the notification actions that the trigger ran. |
-| `correlationAlerts.start_time` | String | The time at which the alert was generated. |
-| `correlationAlerts.end_time` | String | The time at which the correlation time window ended. |
-| `correlationAlerts.acknowledged_time` | String | The time at which the alert was acknowledged. `null` if the alert has not been acknowledged. |
-| `total_alerts` | Integer | The total number of alerts returned. |
+| `correlationAlerts` | 陣列 | 符合請求的關聯警示。 |
+| `correlationAlerts.correlated_finding_ids` | 陣列 | 由規則建立關聯之發現項目的 ID。 |
+| `correlationAlerts.correlation_rule_id` | 字串 | 產生警示的關聯規則 ID。 |
+| `correlationAlerts.correlation_rule_name` | 字串 | 產生警示的關聯規則名稱。 |
+| `correlationAlerts.user` | 物件 | 與關聯規則相關聯的使用者。 |
+| `correlationAlerts.id` | 字串 | 警示 ID。 |
+| `correlationAlerts.version` | 整數 | 警示版本。 |
+| `correlationAlerts.schema_version` | 整數 | 警示索引結構描述的版本。 |
+| `correlationAlerts.trigger_name` | 字串 | 產生警示的觸發程序名稱。 |
+| `correlationAlerts.state` | 字串 | 警示狀態。有效值為 `ACTIVE`、`ACKNOWLEDGED`、`COMPLETED`、`ERROR` 及 `DELETED`。 |
+| `correlationAlerts.error_message` | 字串 | 警示的錯誤訊息（若有）。 |
+| `correlationAlerts.severity` | 字串 | 產生警示之觸發程序的嚴重性層級。 |
+| `correlationAlerts.action_execution_results` | 陣列 | 觸發程序執行之通知動作的結果。 |
+| `correlationAlerts.start_time` | 字串 | 產生警示的時間。 |
+| `correlationAlerts.end_time` | 字串 | 關聯時間範圍結束的時間。 |
+| `correlationAlerts.acknowledged_time` | 字串 | 警示確認的時間。若警示尚未確認則為 `null`。 |
+| `total_alerts` | 整數 | 傳回的警示總數。 |
 
 ---
 
-## Acknowledge correlation alerts
+## 確認關聯警示
 
-Acknowledges one or more correlation alerts.
+確認一或多個關聯警示。
 
-### Endpoints
+### 端點
 
 ```json
 POST /_plugins/_security_analytics/_acknowledge/correlationAlerts
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- |:--- |
-| `alertIds` | Array | The IDs of the correlation alerts to acknowledge. Required. |
+| `alertIds` | 陣列 | 要確認的關聯警示 ID。必要。 |
 
-### Example request
+### 請求範例
 
 ```json
 POST /_plugins/_security_analytics/_acknowledge/correlationAlerts
@@ -499,13 +500,13 @@ POST /_plugins/_security_analytics/_acknowledge/correlationAlerts
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 <details markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta}
+<summary>
+    回應
+</summary>
+{: .text-delta}
 
 ```json
 {
@@ -554,11 +555,11 @@ POST /_plugins/_security_analytics/_acknowledge/correlationAlerts
 ```
 </details>
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- |:--- |
-| `acknowledged` | Array | The correlation alerts that were acknowledged. |
-| `failed` | Array | The correlation alerts that could not be acknowledged. |
+| `acknowledged` | 陣列 | 已確認的關聯警示。 |
+| `failed` | 陣列 | 無法確認的關聯警示。 |

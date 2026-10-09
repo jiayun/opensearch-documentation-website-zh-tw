@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: hasTags()
 parent: Functions
@@ -7,14 +8,14 @@ nav_order: 20
 ---
 
 <!-- vale off -->
-# hasTags() function
+# hasTags() 函式
 <!-- vale on -->
 
-The `hasTags()` function takes one or more string type arguments and returns `true` if all of the arguments passed are present in an event's tags. If an argument does not exist in the event's tags, then the function returns `false`. 
+`hasTags()` 函式接受一個或多個字串類型的引數，如果傳入的所有引數都存在於事件的標籤中，則傳回 `true`。如果某個引數不存在於事件的標籤中，則函式傳回 `false`。
 
-For example, if you use the expression `hasTags("tag1")` and the event contains `tag1`, then OpenSearch Data Prepper returns `true`. If you use the expression `hasTags("tag2")` but the event only contains `tag1`, then Data Prepper returns `false`.
+例如，如果您使用運算式 `hasTags("tag1")`，且事件包含 `tag1`，則 OpenSearch Data Prepper 會傳回 `true`。如果您使用運算式 `hasTags("tag2")`，但事件僅包含 `tag1`，則 Data Prepper 會傳回 `false`。
 
-#### Example
+#### 範例
 
 ```json
 {

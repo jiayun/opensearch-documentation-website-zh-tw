@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: PPL monitors
+title: "PPL 監視器"
 nav_order: 22
 parent: Monitors
 grand_parent: Alerting
 has_children: false
 ---
 
-# PPL monitors
+# PPL 監視器
 
-PPL alert monitors use [Piped Processing Language (PPL)]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/) queries to monitor your data. They are [per query monitors]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/per-query-bucket-monitors/) that use PPL instead of query DSL as the query language.
+PPL 警示監視器使用 [Piped Processing Language (PPL)]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/) 查詢來監視您的資料。它們是[每查詢監視器]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/per-query-bucket-monitors/)，以 PPL 取代 Query DSL 作為查詢語言。
 
-## Setup
+## 設定
 
-The examples on this page use an `application_logs` index containing web request logs. To follow along, create the index with the following mapping:
+本頁的範例使用包含網路請求記錄檔的 `application_logs` 索引。若要跟著操作，請使用下列對應建立索引：
 
 ```json
 PUT /application_logs
@@ -31,7 +32,7 @@ PUT /application_logs
 ```
 {% include copy-curl.html %}
 
-Index the sample documents:
+將範例文件編製索引：
 
 ```json
 POST /application_logs/_bulk?refresh=true
@@ -44,42 +45,42 @@ POST /application_logs/_bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-## Creating a PPL monitor in OpenSearch Dashboards
+## 在 OpenSearch Dashboards 中建立 PPL 監視器
 
-To create a PPL monitor, follow these steps:
+若要建立 PPL 監視器，請依照下列步驟操作：
 
-1. Select **Alerting** > **Monitors** > **Create monitor**.
-2. Select the **PPL monitor** option.
-3. Enter a name for the monitor and configure the schedule (by time interval or custom cron expression). For more information about cron expressions, see [Cron expressions]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions).
-4. In the **Query** section, enter your PPL query, for example:
+1. 選取 **Alerting** > **Monitors** > **Create monitor**。
+2. 選取 **PPL monitor** 選項。
+3. 輸入監視器名稱並設定排程（依時間間隔或自訂 cron 運算式）。如需 cron 運算式的詳細資訊，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。
+4. 在 **Query** 區段中輸入您的 PPL 查詢，例如：
 
    ```sql
    source = application_logs | stats avg(response_time) as avg_response by endpoint
    ```
    {% include copy.html %}
 
-5. Add one or more triggers. For more information about configuring trigger conditions, see [PPL triggers](#ppl-triggers).
-6. Add actions to specify notifications when triggers fire. For more information, see [Actions]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/actions/).
-7. Select **Create**.
+5. 新增一或多個觸發條件。如需設定觸發條件的詳細資訊，請參閱 [PPL 觸發條件](#ppl-triggers)。
+6. 新增動作以指定觸發條件啟動時的通知方式。如需詳細資訊，請參閱[動作]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/actions/)。
+7. 選取 **Create**。
 
-## PPL triggers
+## PPL 觸發條件
 
-PPL monitors use `ppl_trigger` objects, which differ from the Painless-script-based triggers used by other monitor types. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/). Each PPL monitor supports up to 10 triggers.
+PPL 監視器使用 `ppl_trigger` 物件，與其他監視器類型所使用的 Painless 指令碼觸發條件不同。如需詳細資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。每個 PPL 監視器最多支援 10 個觸發條件。
 
-### Number of results trigger
+### 結果數量觸發條件
 
-A number of results trigger evaluates the total number of rows returned by the base PPL query against a threshold. The following comparison operators are supported.
+結果數量觸發條件會將基礎 PPL 查詢傳回的資料列總數與閾值進行比較。支援下列比較運算子。
 
-Operator | Description
+運算子 | 說明
 :--- | :---
-`>` | Greater than
-`>=` | Greater than or equal to
-`<` | Less than
-`<=` | Less than or equal to
-`==` | Equal to
-`!=` | Not equal to
+`>` | 大於
+`>=` | 大於或等於
+`<` | 小於
+`<=` | 小於或等於
+`==` | 等於
+`!=` | 不等於
 
-For example, to trigger an alert when more than one result is returned, use the following trigger definition:
+例如，若要在傳回超過一筆結果時觸發警示，請使用下列觸發條件定義：
 
 ```json
 {
@@ -94,17 +95,17 @@ For example, to trigger an alert when more than one result is returned, use the 
 }
 ```
 
-### Custom condition trigger
+### 自訂條件觸發條件
 
-A custom condition trigger appends a `where` clause to the base PPL query. If the modified query returns any results, the trigger fires. This allows you to define fine-grained conditions based on computed fields or aggregations. The custom condition is validated as a `where` statement during monitor creation.
+自訂條件觸發條件會在基礎 PPL 查詢後附加 `where` 子句。如果修改後的查詢傳回任何結果，觸發條件就會啟動。這可讓您根據計算欄位或彙總定義細緻的條件。自訂條件會在建立監視器時驗證為 `where` 陳述式。
 
-For example, consider the following base query:
+例如，請考慮下列基礎查詢：
 
 ```sql
 source = application_logs | stats max(response_time) as max_response by endpoint
 ```
 
-To trigger an alert when any endpoint has a maximum response time above 3000 ms, use the following trigger definition:
+若要在任何端點的最大回應時間超過 3000 毫秒時觸發警示，請使用下列觸發條件定義：
 
 ```json
 {
@@ -118,17 +119,17 @@ To trigger an alert when any endpoint has a maximum response time above 3000 ms,
 }
 ```
 
-## Template variables
+## 範本變數
 
-PPL monitors provide the following additional template variable for use in [actions]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/actions/) and notification messages.
+PPL 監視器提供下列額外的範本變數，可在[動作]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/actions/)和通知訊息中使用。
 
-Variable | Data type | Description
+變數 | 資料類型 | 說明
 :--- | :--- | :---
-`ctx.ppl_query_results` | Array | A list of maps in which each element represents a PPL query result row. The keys in each map are field names from the query schema. For number of results triggers, the array contains the base query results. For custom condition triggers, it contains the results of the query with the custom condition applied.
+`ctx.ppl_query_results` | 陣列 | 一個由對應表組成的清單，其中每個元素代表一列 PPL 查詢結果。每個對應表中的鍵為查詢結構描述中的欄位名稱。對於結果數量觸發條件，此陣列包含基礎查詢的結果。對於自訂條件觸發條件，此陣列包含套用自訂條件後的查詢結果。
 
-### Mustache template example
+### Mustache 範本範例
 
-The following example iterates over PPL query results and outputs the fields in each row:
+下列範例會迭代 PPL 查詢結果，並輸出每一列中的欄位：
 
 {% raw %}
 ```
@@ -139,9 +140,9 @@ PPL Query Results:
 ```
 {% endraw %}
 
-## Query result format
+## 查詢結果格式
 
-PPL query results contain `schema` and `datarows` fields. For example, the query `source = application_logs | where level = 'ERROR' | stats count() as error_count by endpoint` returns the following response:
+PPL 查詢結果包含 `schema` 和 `datarows` 欄位。例如，查詢 `source = application_logs | where level = 'ERROR' | stats count() as error_count by endpoint` 會傳回下列回應：
 
 ```json
 {
@@ -158,7 +159,7 @@ PPL query results contain `schema` and `datarows` fields. For example, the query
 }
 ```
 
-These results are automatically transformed into a list of maps for use in templates and are available in `ctx.ppl_query_results`:
+這些結果會自動轉換為對應表清單以供範本使用，並可在 `ctx.ppl_query_results` 中取得：
 
 ```json
 [
@@ -167,9 +168,9 @@ These results are automatically transformed into a list of maps for use in templ
 ]
 ```
 
-## Creating a PPL monitor using the API
+## 使用 API 建立 PPL 監視器
 
-The following example creates a PPL monitor with both trigger types:
+下列範例建立一個同時包含兩種觸發條件類型的 PPL 監視器：
 
 ```json
 POST _plugins/_alerting/monitors
@@ -239,18 +240,18 @@ POST _plugins/_alerting/monitors
 ```
 {% include copy-curl.html %}
 
-The response confirms that the monitor was created and returns its `_id`. The monitor runs on its configured schedule, and each run evaluates the triggers against the latest query results. When a trigger's condition is met, it fires and runs its actions.
+回應會確認監視器已建立，並傳回其 `_id`。監視器會依照其設定的排程執行，每次執行時都會根據最新的查詢結果評估觸發條件。當觸發條件的條件符合時，就會啟動並執行其動作。
 
-## Testing a PPL monitor
+## 測試 PPL 監視器
 
-To run a monitor immediately instead of waiting for its next scheduled run, use the Execute API with the monitor ID. Add `?dryrun=true` to evaluate the triggers without creating alerts or running actions:
+若要立即執行監視器而不等待下一次排程執行，請使用 Execute API 並提供監視器 ID。加入 `?dryrun=true` 以評估觸發條件，而不建立警示或執行動作：
 
 ```json
 POST _plugins/_alerting/monitors/<monitor_id>/_execute?dryrun=true
 ```
 {% include copy-curl.html %}
 
-The response reports the query results and, for each trigger, whether it fired. The `triggered` field indicates whether each trigger's condition was met. For custom condition triggers, `ppl_query_results` contains the rows that matched the condition:
+回應會報告查詢結果，以及每個觸發條件是否啟動。`triggered` 欄位指出每個觸發條件的條件是否符合。對於自訂條件觸發條件，`ppl_query_results` 包含符合條件的資料列：
 
 ```json
 {
@@ -288,17 +289,17 @@ The response reports the query results and, for each trigger, whether it fired. 
 }
 ```
 
-## Settings
+## 設定
 
-OpenSearch supports the following PPL monitor settings. All settings are dynamic, so you can change them without restarting your cluster:
+OpenSearch 支援下列 PPL 監視器設定。所有設定皆為動態設定，因此您無需重新啟動叢集即可變更：
 
-- `plugins.alerting.monitor.max_ppl_triggers` (Dynamic, integer): The maximum number of triggers allowed per PPL monitor. This is also the highest accepted value, so you can only lower it. Default is `10`.
+- `plugins.alerting.monitor.max_ppl_triggers`（動態，整數）：每個 PPL 監視器允許的最大觸發條件數量。這也是可接受的最大值，因此您只能調低。預設值為 `10`。
 
-- `plugins.alerting.ppl_query_max_execution_duration` (Dynamic, time unit): The maximum execution time allowed for a PPL query during monitor execution. Default is `30s`.
+- `plugins.alerting.ppl_query_max_execution_duration`（動態，時間單位）：監視器執行期間 PPL 查詢允許的最長執行時間。預設值為 `30s`。
 
-- `plugins.alerting.ppl_monitor_max_query_length` (Dynamic, long): The maximum number of characters for a PPL query. Default is `2000`.
+- `plugins.alerting.ppl_monitor_max_query_length`（動態，long）：PPL 查詢的最大字元數。預設值為 `2000`。
 
-- `plugins.alerting.ppl_query_results_max_datarows` (Dynamic, long): The maximum number of data rows to retrieve when executing a PPL query. Default is `10000`.
+- `plugins.alerting.ppl_query_results_max_datarows`（動態，long）：執行 PPL 查詢時可擷取的最大資料列數。預設值為 `10000`。
 
-- `plugins.alerting.ppl_query_results_max_size` (Dynamic, long): The maximum estimated size, in bytes, of query results stored in alerts and notifications. If the results exceed this size, the alert replaces them with a message stating that the PPL query results were too large. Default is `3000`.
+- `plugins.alerting.ppl_query_results_max_size`（動態，long）：儲存在警示和通知中的查詢結果的最大估計大小（以位元組為單位）。如果結果超過此大小，警示會以一則訊息取代結果，指出 PPL 查詢結果過大。預設值為 `3000`。
 

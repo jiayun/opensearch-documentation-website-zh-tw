@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Exists
 parent: Term-level queries
 nav_order: 70
 ---
 
-# Exists query
+# Exists 查詢
 
-Use the `exists` query to search for documents that contain a specific field.
+使用 `exists` 查詢來搜尋包含特定欄位的文件。
 
-An indexed value will not exist for a document field in any of the following cases:
+在下列任一情況下，文件欄位不會有已編製索引的值：
 
-- The field has `"index" : false` specified in the mapping.
-- The field in the source JSON is `null` or `[]`.
-- The length of the field value exceeds the `ignore_above` setting in the mapping.
-- The field value is malformed and `ignore_malformed` is defined in the mapping.
+- 欄位在對應中指定了 `"index" : false`。
+- 來源 JSON 中的欄位為 `null` 或 `[]`。
+- 欄位值的長度超過對應中的 `ignore_above` 設定。
+- 欄位值的格式錯誤，且對應中已定義 `ignore_malformed`。
 
-An indexed value will exist for a document field in any of the following cases:
+在下列任一情況下，文件欄位會有已編製索引的值：
 
-- The value is an array that contains one or more null elements and one or more non-null elements (for example, `["one", null]`).
-- The value is an empty string (`""` or `"-"`).
-- The value is a custom `null_value`, as defined in the field mapping.
+- 值為陣列，包含一個或多個 null 元素，以及一個或多個非 null 元素（例如，`["one", null]`）。
+- 值為空字串（`""` 或 `"-"`）。
+- 值為欄位對應中定義的自訂 `null_value`。
 
 
-## Example
+## 範例
 
-For example, consider an index that contains the following two documents:
+例如，假設某個索引包含下列兩份文件：
 
 ```json
 PUT testindex/_doc/1
@@ -44,7 +45,7 @@ PUT testindex/_doc/2
 ```
 {% include copy-curl.html %}
 
-The following query searches for documents that contain the `description` field:
+下列查詢會搜尋包含 `description` 欄位的文件：
 
 ```json
 GET testindex/_search
@@ -58,7 +59,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含符合條件的文件：
 
 ```json
 {
@@ -91,9 +92,9 @@ The response contains the matching document:
 }
 ```
 
-## Finding documents with missing indexed values
+## 尋找缺少已編製索引值的文件
 
-To find documents with missing indexed values, you can use the `must_not` [Boolean query]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/) with the inner `exists` query. For example, the following request searches for documents in which the `description` field is missing:
+若要尋找缺少已編製索引值的文件，您可以使用 `must_not` [布林查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/)，並在其中使用 `exists` 查詢。例如，下列請求會搜尋缺少 `description` 欄位的文件：
 
 ```json
 GET testindex/_search
@@ -111,7 +112,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含符合條件的文件：
 
 ```json
 {
@@ -143,10 +144,10 @@ The response contains the matching document:
 }
 ```
 
-## Parameters
+## 參數
 
-The query accepts the name of the field (`<field>`) as a top-level parameter.
+此查詢接受欄位名稱（`<field>`）作為頂層參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`boost` | Floating-point | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field’s relevance. Values between 0.0 and 1.0 decrease the field’s relevance. Default is 1.0.
+`boost` | 浮點數 | 指定此欄位對相關性分數所占權重的浮點數值。大於 1.0 的值會提高欄位的相關性。介於 0.0 與 1.0 之間的值會降低欄位的相關性。預設值為 1.0。

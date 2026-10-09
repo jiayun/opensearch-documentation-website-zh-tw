@@ -1,112 +1,113 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Pretrained models
+title: "預訓練模型"
 parent: Using ML models within OpenSearch
 grand_parent: Integrating ML models
 nav_order: 10
 ---
 
-# OpenSearch-provided pretrained models
-**Introduced 2.9**
+# OpenSearch 提供的預訓練模型
+**於 2.9 版引入**
 {: .label .label-purple }
 
-OpenSearch provides a variety of open-source pretrained models that can assist with a range of machine learning (ML) search and analytics use cases. You can upload any supported model to the OpenSearch cluster and use it locally.
+OpenSearch 提供多種開放原始碼的預訓練模型，可協助處理各種機器學習 (ML) 搜尋與分析使用案例。您可以將任何支援的模型上傳至 OpenSearch 叢集，並在本機使用。
 
-## Supported pretrained models
+## 支援的預訓練模型
 
-OpenSearch supports the following models, categorized by type. Text embedding models are sourced from [Hugging Face](https://huggingface.co/). Sparse encoding models are trained by OpenSearch. Although models with the same type will have similar use cases, each model has a different model size and will perform differently depending on your cluster setup. For a performance comparison of some pretrained models, see the [SBERT documentation](https://www.sbert.net/docs/pretrained_models.html#model-overview).
+OpenSearch 支援下列模型，並依類型分類。文字嵌入模型來自 [Hugging Face](https://huggingface.co/)。稀疏編碼模型由 OpenSearch 訓練。雖然相同類型的模型會有類似的使用案例，但每個模型的模型大小不同，且會依您的叢集設定而有不同的效能表現。如需部分預訓練模型的效能比較，請參閱 [SBERT 文件](https://www.sbert.net/docs/pretrained_models.html#model-overview)。
 
-Running local models on the CentOS 7 operating system is not supported. Moreover, not all local models can run on all hardware and operating systems.
+不支援在 CentOS 7 作業系統上執行本機模型。此外，並非所有本機模型都能在所有硬體和作業系統上執行。
 {: .important}
 
-### Sentence transformers
+### 句子轉換器
 
-Sentence transformer models map sentences and paragraphs across a dimensional dense vector space. The number of vectors depends on the type of model. You can use these models for use cases such as clustering or semantic search.
+句子轉換器模型會將句子和段落對應至多維的密集向量空間。向量數量取決於模型類型。您可以將這些模型用於分群或語意搜尋等使用案例。
 
-The following table provides a list of sentence transformer models and artifact links you can use to download them. Note that you must prefix the model name with `huggingface/`, as shown in the **Model name** column.
+下表列出句子轉換器模型，以及可用於下載這些模型的成品連結。請注意，您必須在模型名稱前加上 `huggingface/` 前綴，如 **Model name** 欄所示。
 
-**Token limits and truncation**: Text embedding models have maximum token limits (typically 512 tokens for BERT-based models). When a document exceeds this limit, the model automatically truncates the text, and the truncated content is not represented in the embeddings. This can significantly impact search relevance because documents may not be returned in search results if the relevant content was truncated. To avoid this issue, split long documents into smaller chunks before generating embeddings. 
+**詞元限制與截斷**：文字嵌入模型有最大詞元數限制 (以 BERT 為基礎的模型通常為 512 個詞元)。當文件超過此限制時，模型會自動截斷文字，而被截斷的內容不會呈現在嵌入中。這可能會大幅影響搜尋相關性，因為如果相關內容遭到截斷，文件可能不會出現在搜尋結果中。為避免此問題，請在產生嵌入之前，先將長文件分割成較小的區塊。
 {: .warning}
 
-| Model name | Version | Vector dimensions | Auto-truncation | TorchScript artifact | ONNX artifact |
+| 模型名稱 | 版本 | 向量維度 | 自動截斷 | TorchScript 成品 | ONNX 成品 |
 |:---|:---|:---|:---|:---|:---|
-| `huggingface/sentence-transformers/all-distilroberta-v1` | 1.0.2 | 768-dimensional dense vector space. | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-distilroberta-v1/1.0.2/torch_script/sentence-transformers_all-distilroberta-v1-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-distilroberta-v1/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-distilroberta-v1/1.0.2/onnx/sentence-transformers_all-distilroberta-v1-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-distilroberta-v1/1.0.2/onnx/config.json) |
-| `huggingface/sentence-transformers/all-MiniLM-L6-v2` | 1.0.2 | 384-dimensional dense vector space.  | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L6-v2/1.0.2/torch_script/sentence-transformers_all-MiniLM-L6-v2-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L6-v2/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L6-v2/1.0.2/onnx/sentence-transformers_all-MiniLM-L6-v2-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L6-v2/1.0.2/onnx/config.json) |
-| `huggingface/sentence-transformers/all-MiniLM-L12-v2` | 1.0.2 | 384-dimensional dense vector space. | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L12-v2/1.0.2/torch_script/sentence-transformers_all-MiniLM-L12-v2-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L12-v2/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L12-v2/1.0.2/onnx/sentence-transformers_all-MiniLM-L12-v2-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L12-v2/1.0.2/onnx/config.json) |
-| `huggingface/sentence-transformers/all-mpnet-base-v2` | 1.0.2 | 768-dimensional dense vector space. | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-mpnet-base-v2/1.0.2/torch_script/sentence-transformers_all-mpnet-base-v2-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-mpnet-base-v2/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-mpnet-base-v2/1.0.2/onnx/sentence-transformers_all-mpnet-base-v2-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-mpnet-base-v2/1.0.2/onnx/config.json) |
-| `huggingface/sentence-transformers/msmarco-distilbert-base-tas-b` | 1.0.3 | 768-dimensional dense vector space. Optimized for semantic search. | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/msmarco-distilbert-base-tas-b/1.0.3/torch_script/sentence-transformers_msmarco-distilbert-base-tas-b-1.0.3-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/msmarco-distilbert-base-tas-b/1.0.3/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/msmarco-distilbert-base-tas-b/1.0.3/onnx/sentence-transformers_msmarco-distilbert-base-tas-b-1.0.3-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/msmarco-distilbert-base-tas-b/1.0.3/onnx/config.json) |
-| `huggingface/sentence-transformers/multi-qa-MiniLM-L6-cos-v1` | 1.0.2 | 384-dimensional dense vector space. Designed for semantic search and trained on 215 million question/answer pairs. | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-MiniLM-L6-cos-v1/1.0.2/torch_script/sentence-transformers_multi-qa-MiniLM-L6-cos-v1-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-MiniLM-L6-cos-v1/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-MiniLM-L6-cos-v1/1.0.2/onnx/sentence-transformers_multi-qa-MiniLM-L6-cos-v1-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-MiniLM-L6-cos-v1/1.0.2/onnx/config.json) |
-| `huggingface/sentence-transformers/multi-qa-mpnet-base-dot-v1` | 1.0.2 | 768-dimensional dense vector space. | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-mpnet-base-dot-v1/1.0.2/torch_script/sentence-transformers_multi-qa-mpnet-base-dot-v1-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-mpnet-base-dot-v1/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-mpnet-base-dot-v1/1.0.2/onnx/sentence-transformers_multi-qa-mpnet-base-dot-v1-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-mpnet-base-dot-v1/1.0.2/onnx/config.json) |
-| `huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2` | 1.0.2 | 384-dimensional dense vector space. | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2/1.0.2/torch_script/sentence-transformers_paraphrase-MiniLM-L3-v2-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2/1.0.2/onnx/sentence-transformers_paraphrase-MiniLM-L3-v2-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2/1.0.2/onnx/config.json) |
-| `huggingface/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` | 1.0.2 | 384-dimensional dense vector space. | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/1.0.2/torch_script/sentence-transformers_paraphrase-multilingual-MiniLM-L12-v2-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/1.0.2/onnx/sentence-transformers_paraphrase-multilingual-MiniLM-L12-v2-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/1.0.2/onnx/config.json) |
-| `huggingface/sentence-transformers/paraphrase-mpnet-base-v2` | 1.0.1 | 768-dimensional dense vector space. | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-mpnet-base-v2/1.0.1/torch_script/sentence-transformers_paraphrase-mpnet-base-v2-1.0.1-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-mpnet-base-v2/1.0.1/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-mpnet-base-v2/1.0.1/onnx/sentence-transformers_paraphrase-mpnet-base-v2-1.0.1-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-mpnet-base-v2/1.0.1/onnx/config.json) |
-| `huggingface/sentence-transformers/distiluse-base-multilingual-cased-v1` | 1.0.2 | 512-dimensional dense vector space. | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/distiluse-base-multilingual-cased-v1/1.0.2/torch_script/sentence-transformers_distiluse-base-multilingual-cased-v1-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/distiluse-base-multilingual-cased-v1/1.0.2/torch_script/config.json) | Not available |
+| `huggingface/sentence-transformers/all-distilroberta-v1` | 1.0.2 | 768 維密集向量空間。 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-distilroberta-v1/1.0.2/torch_script/sentence-transformers_all-distilroberta-v1-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-distilroberta-v1/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-distilroberta-v1/1.0.2/onnx/sentence-transformers_all-distilroberta-v1-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-distilroberta-v1/1.0.2/onnx/config.json) |
+| `huggingface/sentence-transformers/all-MiniLM-L6-v2` | 1.0.2 | 384 維密集向量空間。 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L6-v2/1.0.2/torch_script/sentence-transformers_all-MiniLM-L6-v2-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L6-v2/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L6-v2/1.0.2/onnx/sentence-transformers_all-MiniLM-L6-v2-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L6-v2/1.0.2/onnx/config.json) |
+| `huggingface/sentence-transformers/all-MiniLM-L12-v2` | 1.0.2 | 384 維密集向量空間。 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L12-v2/1.0.2/torch_script/sentence-transformers_all-MiniLM-L12-v2-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L12-v2/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L12-v2/1.0.2/onnx/sentence-transformers_all-MiniLM-L12-v2-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-MiniLM-L12-v2/1.0.2/onnx/config.json) |
+| `huggingface/sentence-transformers/all-mpnet-base-v2` | 1.0.2 | 768 維密集向量空間。 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-mpnet-base-v2/1.0.2/torch_script/sentence-transformers_all-mpnet-base-v2-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-mpnet-base-v2/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-mpnet-base-v2/1.0.2/onnx/sentence-transformers_all-mpnet-base-v2-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/all-mpnet-base-v2/1.0.2/onnx/config.json) |
+| `huggingface/sentence-transformers/msmarco-distilbert-base-tas-b` | 1.0.3 | 768 維密集向量空間。針對語意搜尋最佳化。 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/msmarco-distilbert-base-tas-b/1.0.3/torch_script/sentence-transformers_msmarco-distilbert-base-tas-b-1.0.3-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/msmarco-distilbert-base-tas-b/1.0.3/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/msmarco-distilbert-base-tas-b/1.0.3/onnx/sentence-transformers_msmarco-distilbert-base-tas-b-1.0.3-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/msmarco-distilbert-base-tas-b/1.0.3/onnx/config.json) |
+| `huggingface/sentence-transformers/multi-qa-MiniLM-L6-cos-v1` | 1.0.2 | 384 維密集向量空間。專為語意搜尋設計，並以 2.15 億組問答配對訓練。 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-MiniLM-L6-cos-v1/1.0.2/torch_script/sentence-transformers_multi-qa-MiniLM-L6-cos-v1-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-MiniLM-L6-cos-v1/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-MiniLM-L6-cos-v1/1.0.2/onnx/sentence-transformers_multi-qa-MiniLM-L6-cos-v1-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-MiniLM-L6-cos-v1/1.0.2/onnx/config.json) |
+| `huggingface/sentence-transformers/multi-qa-mpnet-base-dot-v1` | 1.0.2 | 768 維密集向量空間。 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-mpnet-base-dot-v1/1.0.2/torch_script/sentence-transformers_multi-qa-mpnet-base-dot-v1-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-mpnet-base-dot-v1/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-mpnet-base-dot-v1/1.0.2/onnx/sentence-transformers_multi-qa-mpnet-base-dot-v1-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/multi-qa-mpnet-base-dot-v1/1.0.2/onnx/config.json) |
+| `huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2` | 1.0.2 | 384 維密集向量空間。 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2/1.0.2/torch_script/sentence-transformers_paraphrase-MiniLM-L3-v2-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2/1.0.2/onnx/sentence-transformers_paraphrase-MiniLM-L3-v2-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2/1.0.2/onnx/config.json) |
+| `huggingface/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` | 1.0.2 | 384 維密集向量空間。 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/1.0.2/torch_script/sentence-transformers_paraphrase-multilingual-MiniLM-L12-v2-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/1.0.2/onnx/sentence-transformers_paraphrase-multilingual-MiniLM-L12-v2-1.0.2-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/1.0.2/onnx/config.json) |
+| `huggingface/sentence-transformers/paraphrase-mpnet-base-v2` | 1.0.1 | 768 維密集向量空間。 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-mpnet-base-v2/1.0.1/torch_script/sentence-transformers_paraphrase-mpnet-base-v2-1.0.1-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-mpnet-base-v2/1.0.1/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-mpnet-base-v2/1.0.1/onnx/sentence-transformers_paraphrase-mpnet-base-v2-1.0.1-onnx.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/paraphrase-mpnet-base-v2/1.0.1/onnx/config.json) |
+| `huggingface/sentence-transformers/distiluse-base-multilingual-cased-v1` | 1.0.2 | 512 維密集向量空間。 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/distiluse-base-multilingual-cased-v1/1.0.2/torch_script/sentence-transformers_distiluse-base-multilingual-cased-v1-1.0.2-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/distiluse-base-multilingual-cased-v1/1.0.2/torch_script/config.json) | 無法使用 |
 
 
-### Sparse encoding models
-**Introduced 2.11**
+### 稀疏編碼模型
+**於 2.11 版導入**
 {: .label .label-purple }
 
-Sparse encoding models transfer text into a sparse vector and convert the vector to a list of `<token: weight>` pairs representing the text entry and its corresponding weight in the sparse vector. You can use these models for use cases such as clustering or sparse neural search.
+稀疏編碼模型會將文字轉換為稀疏向量，並將該向量轉換為 `<token: weight>` 成對清單，代表文字項目及其在稀疏向量中對應的權重。您可以在分群或稀疏神經搜尋等使用情境中使用這些模型。
 
-We recommend the following combinations for optimal performance:
+為獲得最佳效能，我們建議以下組合：
 
-- Use the `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill` model during both ingestion and search.
-- Use the `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-gte` model during ingestion and the
-`amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1` tokenizer during search.
+- 在匯入與搜尋時都使用 `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill` 模型。
+- 在匯入時使用 `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-gte` 模型，並在搜尋時使用
+`amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1` 斷詞器。
 
-Both `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-distill` and `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-gte` are pruned with a maximum value ratio of 0.1, providing an improved trade-off between retrieval performance and index size.
+`amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-distill` 與 `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-gte` 都以最大值比例 0.1 進行剪枝，在檢索效能與索引大小之間提供更佳的權衡。
 
-For more information about the preceding options for running neural sparse search, see [Generating sparse vector embeddings automatically]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-with-pipelines/).
+如需執行神經稀疏搜尋之上述選項的更多資訊，請參閱[自動產生稀疏向量嵌入]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-with-pipelines/)。
 
-The following table provides a list of sparse encoding models and artifact links you can use to download them.
+下表列出稀疏編碼模型，以及可用以下載這些模型的成品連結。
 
-| Model name | Version | Auto-truncation | TorchScript artifact | Description |
+| 模型名稱 | 版本 | 自動截斷 | TorchScript 成品 | 說明 |
 |:---|:---|:---|:---|:---|
-| `amazon/neural-sparse/opensearch-neural-sparse-encoding-v1` | 1.0.1 | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-v1/1.0.1/torch_script/neural-sparse_opensearch-neural-sparse-encoding-v1-1.0.1-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-v1/1.0.1/torch_script/config.json) | A neural sparse encoding model. The model transforms text into a sparse vector, identifies the indexes of non-zero elements in the vector, and then converts the vector into `<entry, weight>` pairs, where each entry corresponds to a non-zero element index. To experiment with this model using transformers and the PyTorch API, see the [Hugging Face documentation](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-v1). |
-| `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill` | 1.0.0 | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill/1.0.0/torch_script/neural-sparse_opensearch-neural-sparse-encoding-v2-distill-1.0.0-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill/1.0.0/torch_script/config.json) | A neural sparse encoding model. The model transforms text into a sparse vector, identifies the indexes of non-zero elements in the vector, and then converts the vector into `<entry, weight>` pairs, where each entry corresponds to a non-zero element index. To experiment with this model using transformers and the PyTorch API, see the [Hugging Face documentation](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-v2-distill). |
-| `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v1` | 1.0.1 | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v1/1.0.1/torch_script/neural-sparse_opensearch-neural-sparse-encoding-doc-v1-1.0.1-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v1/1.0.1/torch_script/config.json) | A neural sparse encoding model. The model transforms text into a sparse vector, identifies the indexes of non-zero elements in the vector, and then converts the vector into `<entry, weight>` pairs, where each entry corresponds to a non-zero element index. To experiment with this model using transformers and the PyTorch API, see the [Hugging Face documentation](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-doc-v1). |
-| `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-distill` | 1.0.0 | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-distill/1.0.0/torch_script/neural-sparse_opensearch-neural-sparse-encoding-doc-v2-distill-1.0.0-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-distill/1.0.0/torch_script/config.json) | A neural sparse encoding model. The model transforms text into a sparse vector, identifies the indexes of non-zero elements in the vector, and then converts the vector into `<entry, weight>` pairs, where each entry corresponds to a non-zero element index. To experiment with this model using transformers and the PyTorch API, see the [Hugging Face documentation](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-doc-v2-distill). |
-| `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-mini` | 1.0.0 | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-mini/1.0.0/torch_script/neural-sparse_opensearch-neural-sparse-encoding-doc-v2-mini-1.0.0-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-mini/1.0.0/torch_script/config.json) | A neural sparse encoding model. The model transforms text into a sparse vector, identifies the indexes of non-zero elements in the vector, and then converts the vector into `<entry, weight>` pairs, where each entry corresponds to a non-zero element index. To experiment with this model using transformers and the PyTorch API, see the [Hugging Face documentation](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-doc-v2-mini). |
-| `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-distill` | 1.0.0 | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-distill/1.0.0/torch_script/neural-sparse_opensearch-neural-sparse-encoding-doc-v3-distill-1.0.0-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-distill/1.0.0/torch_script/config.json) | A neural sparse encoding model. The model transforms text into a sparse vector, identifies the indexes of non-zero elements in the vector, and then converts the vector into `<entry, weight>` pairs, where each entry corresponds to a non-zero element index. To experiment with this model using transformers and the PyTorch API, see the [Hugging Face documentation](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-doc-v3-distill). |
-| `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-gte` | 1.0.0 | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-gte/1.0.0/torch_script/neural-sparse_opensearch-neural-sparse-encoding-doc-v3-gte-1.0.0-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-gte/1.0.0/torch_script/config.json) | A neural sparse encoding model. The model transforms text into a sparse vector, identifies the indexes of non-zero elements in the vector, and then converts the vector into `<entry, weight>` pairs, where each entry corresponds to a non-zero element index. To experiment with this model using transformers and the PyTorch API, see the [Hugging Face documentation](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-doc-v3-gte). |
-| `amazon/neural-sparse/opensearch-neural-sparse-encoding-multilingual-v1` | 1.0.0 | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-multilingual-v1/1.0.0/torch_script/neural-sparse_opensearch-neural-sparse-encoding-multilingual-v1-1.0.0-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-multilingual-v1/1.0.0/torch_script/config.json) | A multilingual neural sparse encoding model. The model transforms text into a sparse vector, identifies the indexes of non-zero elements in the vector, and then converts the vector into `<entry, weight>` pairs, where each entry corresponds to a non-zero element index. To experiment with this model using transformers and the PyTorch API, see the [Hugging Face documentation](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-multilingual-v1). |
-| `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1` | 1.0.1 | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1/1.0.1/torch_script/neural-sparse_opensearch-neural-sparse-tokenizer-v1-1.0.1-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1/1.0.1/torch_script/config.json) | A neural sparse tokenizer. The tokenizer splits text into tokens and assigns each token a predefined weight, which is the token's inverse document frequency (IDF). If the IDF file is not provided, the weight defaults to 1. For more information, see [Preparing a model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/#preparing-a-model). |
-| `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-multilingual-v1` | 1.0.0 | Yes | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-tokenizer-multilingual-v1/1.0.0/torch_script/neural-sparse_opensearch-neural-sparse-tokenizer-multilingual-v1-1.0.0-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-tokenizer-multilingual-v1/1.0.0/torch_script/config.json) | A multilingual neural sparse tokenizer. The tokenizer splits text into tokens and assigns each token a predefined weight, which is the token's inverse document frequency (IDF). If the IDF file is not provided, the weight defaults to 1. For more information, see [Preparing a model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/#preparing-a-model). |
+| `amazon/neural-sparse/opensearch-neural-sparse-encoding-v1` | 1.0.1 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-v1/1.0.1/torch_script/neural-sparse_opensearch-neural-sparse-encoding-v1-1.0.1-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-v1/1.0.1/torch_script/config.json) | 神經稀疏編碼模型。此模型將文字轉換為稀疏向量，識別向量中非零元素的索引，然後將向量轉換為 `<entry, weight>` 成對結構，其中每個項目對應一個非零元素索引。若要使用 transformers 與 PyTorch API 實驗此模型，請參閱 [Hugging Face 文件](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-v1)。 |
+| `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill` | 1.0.0 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill/1.0.0/torch_script/neural-sparse_opensearch-neural-sparse-encoding-v2-distill-1.0.0-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill/1.0.0/torch_script/config.json) | 神經稀疏編碼模型。此模型將文字轉換為稀疏向量，識別向量中非零元素的索引，然後將向量轉換為 `<entry, weight>` 成對結構，其中每個項目對應一個非零元素索引。若要使用 transformers 與 PyTorch API 實驗此模型，請參閱 [Hugging Face 文件](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-v2-distill)。 |
+| `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v1` | 1.0.1 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v1/1.0.1/torch_script/neural-sparse_opensearch-neural-sparse-encoding-doc-v1-1.0.1-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v1/1.0.1/torch_script/config.json) | 神經稀疏編碼模型。此模型將文字轉換為稀疏向量，識別向量中非零元素的索引，然後將向量轉換為 `<entry, weight>` 成對結構，其中每個項目對應一個非零元素索引。若要使用 transformers 與 PyTorch API 實驗此模型，請參閱 [Hugging Face 文件](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-doc-v1)。 |
+| `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-distill` | 1.0.0 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-distill/1.0.0/torch_script/neural-sparse_opensearch-neural-sparse-encoding-doc-v2-distill-1.0.0-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-distill/1.0.0/torch_script/config.json) | 神經稀疏編碼模型。此模型將文字轉換為稀疏向量，識別向量中非零元素的索引，然後將向量轉換為 `<entry, weight>` 成對結構，其中每個項目對應一個非零元素索引。若要使用 transformers 與 PyTorch API 實驗此模型，請參閱 [Hugging Face 文件](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-doc-v2-distill)。 |
+| `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-mini` | 1.0.0 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-mini/1.0.0/torch_script/neural-sparse_opensearch-neural-sparse-encoding-doc-v2-mini-1.0.0-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-mini/1.0.0/torch_script/config.json) | 神經稀疏編碼模型。此模型將文字轉換為稀疏向量，識別向量中非零元素的索引，然後將向量轉換為 `<entry, weight>` 成對結構，其中每個項目對應一個非零元素索引。若要使用 transformers 與 PyTorch API 實驗此模型，請參閱 [Hugging Face 文件](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-doc-v2-mini)。 |
+| `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-distill` | 1.0.0 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-distill/1.0.0/torch_script/neural-sparse_opensearch-neural-sparse-encoding-doc-v3-distill-1.0.0-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-distill/1.0.0/torch_script/config.json) | 神經稀疏編碼模型。此模型將文字轉換為稀疏向量，識別向量中非零元素的索引，然後將向量轉換為 `<entry, weight>` 成對結構，其中每個項目對應一個非零元素索引。若要使用 transformers 與 PyTorch API 實驗此模型，請參閱 [Hugging Face 文件](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-doc-v3-distill)。 |
+| `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-gte` | 1.0.0 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-gte/1.0.0/torch_script/neural-sparse_opensearch-neural-sparse-encoding-doc-v3-gte-1.0.0-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-gte/1.0.0/torch_script/config.json) | 神經稀疏編碼模型。此模型將文字轉換為稀疏向量，識別向量中非零元素的索引，然後將向量轉換為 `<entry, weight>` 成對結構，其中每個項目對應一個非零元素索引。若要使用 transformers 與 PyTorch API 實驗此模型，請參閱 [Hugging Face 文件](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-doc-v3-gte)。 |
+| `amazon/neural-sparse/opensearch-neural-sparse-encoding-multilingual-v1` | 1.0.0 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-multilingual-v1/1.0.0/torch_script/neural-sparse_opensearch-neural-sparse-encoding-multilingual-v1-1.0.0-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-encoding-multilingual-v1/1.0.0/torch_script/config.json) | 多語言神經稀疏編碼模型。此模型將文字轉換為稀疏向量，識別向量中非零元素的索引，然後將向量轉換為 `<entry, weight>` 成對結構，其中每個項目對應一個非零元素索引。若要使用 transformers 與 PyTorch API 實驗此模型，請參閱 [Hugging Face 文件](https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-multilingual-v1)。 |
+| `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1` | 1.0.1 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1/1.0.1/torch_script/neural-sparse_opensearch-neural-sparse-tokenizer-v1-1.0.1-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1/1.0.1/torch_script/config.json) | 神經稀疏斷詞器。此斷詞器將文字拆分為詞元，並為每個詞元指派預先定義的權重，即該詞元的反向文件頻率 (IDF)。若未提供 IDF 檔案，權重預設為 1。如需更多資訊，請參閱[準備模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/#preparing-a-model)。 |
+| `amazon/neural-sparse/opensearch-neural-sparse-tokenizer-multilingual-v1` | 1.0.0 | 是 | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-tokenizer-multilingual-v1/1.0.0/torch_script/neural-sparse_opensearch-neural-sparse-tokenizer-multilingual-v1-1.0.0-torch_script.zip)<br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-tokenizer-multilingual-v1/1.0.0/torch_script/config.json) | 多語言神經稀疏斷詞器。此斷詞器將文字拆分為詞元，並為每個詞元指派預先定義的權重，即該詞元的反向文件頻率 (IDF)。若未提供 IDF 檔案，權重預設為 1。如需更多資訊，請參閱[準備模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/#preparing-a-model)。 |
 
-### Cross-encoder models
-**Introduced 2.12**
+### 交叉編碼器模型
+**2.12 版新增**
 {: .label .label-purple }
 
-Cross-encoder models support query reranking. 
+交叉編碼器模型支援查詢重新排序。
 
-The following table provides a list of cross-encoder models and artifact links you can use to download them. Note that you must prefix the model name with `huggingface/cross-encoders`, as shown in the **Model name** column. 
+下表列出交叉編碼器模型及其可用於下載的成品連結。請注意，模型名稱必須加上 `huggingface/cross-encoders` 前綴，如 **Model name** 欄所示。
 
-| Model name | Version | TorchScript artifact | ONNX artifact |
+| 模型名稱 | 版本 | TorchScript 成品 | ONNX 成品 |
 |:---|:---|:---|:---|
 | `huggingface/cross-encoders/ms-marco-MiniLM-L-6-v2` | 1.0.2 | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/cross-encoders/ms-marco-MiniLM-L-6-v2/1.0.2/torch_script/cross-encoders_ms-marco-MiniLM-L-6-v2-1.0.2-torch_script.zip) <br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/cross-encoders/ms-marco-MiniLM-L-6-v2/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/cross-encoders/ms-marco-MiniLM-L-6-v2/1.0.2/onnx/cross-encoders_ms-marco-MiniLM-L-6-v2-1.0.2-onnx.zip) <br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/cross-encoders/ms-marco-MiniLM-L-6-v2/1.0.2/onnx/config.json) |
 | `huggingface/cross-encoders/ms-marco-MiniLM-L-12-v2` | 1.0.2 | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/cross-encoders/ms-marco-MiniLM-L-12-v2/1.0.2/torch_script/cross-encoders_ms-marco-MiniLM-L-12-v2-1.0.2-torch_script.zip) <br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/cross-encoders/ms-marco-MiniLM-L-12-v2/1.0.2/torch_script/config.json) | - [model_url](https://artifacts.opensearch.org/models/ml-models/huggingface/cross-encoders/ms-marco-MiniLM-L-12-v2/1.0.2/onnx/cross-encoders_ms-marco-MiniLM-L-12-v2-1.0.2-onnx.zip) <br>- [config_url](https://artifacts.opensearch.org/models/ml-models/huggingface/cross-encoders/ms-marco-MiniLM-L-12-v2/1.0.2/onnx/config.json)
 
-### Semantic sentence highlighting models
-**Introduced 3.0**
+### 語意句子醒目提示模型
+**3.0 版新增**
 {: .label .label-purple }
 
-Semantic sentence highlighting models are specifically designed to work with the [`semantic` highlighter]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#the-semantic-highlighter). These models analyze document text and identify the sentences that are most semantically relevant to the search query.
+語意句子醒目提示模型專為搭配 [`semantic` 醒目提示器]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#the-semantic-highlighter)而設計。這些模型會分析文件文字，並找出與搜尋查詢語意最相關的句子。
 
-For a tutorial on using these models with the semantic highlighter, see [Using semantic highlighting]({{site.url}}{{site.baseurl}}/tutorials/vector-search/semantic-highlighting-tutorial/).
+如需搭配語意醒目提示器使用這些模型的教學，請參閱[使用語意醒目提示]({{site.url}}{{site.baseurl}}/tutorials/vector-search/semantic-highlighting-tutorial/)。
 
-The following table provides a list of semantic sentence highlighting models and artifact links you can use to download them. Note that you must prefix the model name with `opensearch/`, as shown in the **Model name** column.
+下表列出語意句子醒目提示模型及其可用於下載的成品連結。請注意，模型名稱必須加上 `opensearch/` 前綴，如 **Model name** 欄所示。
 
-| Model name | Version | TorchScript artifact | Description |
+| 模型名稱 | 版本 | TorchScript 成品 | 說明 |
 |:---|:---|:---|:---|
-| `amazon/sentence-highlighting/opensearch-semantic-highlighter-v1` | 1.0.0 | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/sentence-highlighting/opensearch-semantic-highlighter-v1/1.0.0/torch_script/sentence-highlighting_opensearch-semantic-highlighter-v1-1.0.0-torch_script.zip) <br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/sentence-highlighting/opensearch-semantic-highlighter-v1/1.0.0/torch_script/config.json) | A model optimized for identifying semantically relevant sentences to be highlighted. |
+| `amazon/sentence-highlighting/opensearch-semantic-highlighter-v1` | 1.0.0 | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/sentence-highlighting/opensearch-semantic-highlighter-v1/1.0.0/torch_script/sentence-highlighting_opensearch-semantic-highlighter-v1-1.0.0-torch_script.zip) <br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/sentence-highlighting/opensearch-semantic-highlighter-v1/1.0.0/torch_script/config.json) | 專為找出需醒目提示的語意相關句子而最佳化的模型。 |
 
 
-## Prerequisites
+## 必要條件
 
-On clusters with dedicated ML nodes, specify `"only_run_on_ml_node": "true"` for improved performance. For more information, see [ML Commons cluster settings]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/). 
+在配備專屬 ML 節點的叢集上，請指定 `"only_run_on_ml_node": "true"` 以提升效能。如需更多資訊，請參閱 [ML Commons 叢集設定]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/)。
 
-This example uses a simple setup with no dedicated ML nodes and allows running a model on a non-ML node. To ensure that this basic local setup works, specify the following cluster settings:
+此範例使用不含專屬 ML 節點的簡單組態，並允許在非 ML 節點上執行模型。為確保此基本本機組態可正常運作，請指定以下叢集設定：
 
 ```json
 PUT _cluster/settings
@@ -120,14 +121,14 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-## Step 1: Register a model group
+## 步驟 1：註冊模型群組
 
-To register a model, you have the following options:
+若要註冊模型，您有以下選項：
 
-- You can use `model_group_id` to register a model version to an existing model group.
-- If you do not use `model_group_id`, ML Commons creates a model with a new model group.
+- 您可以使用 `model_group_id` 將模型版本註冊到現有的模型群組。
+- 若不使用 `model_group_id`，ML Commons 會以新的模型群組建立模型。
 
-To register a model group, send the following request:
+若要註冊模型群組，請傳送以下請求：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -138,7 +139,7 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-The response contains the model group ID that you'll use to register a model to this model group:
+回應包含模型群組 ID，您將使用該 ID 將模型註冊到此模型群組：
 
 ```json
 {
@@ -147,13 +148,13 @@ The response contains the model group ID that you'll use to register a model to 
 }
 ```
 
-To learn more about model groups, see [Model access control]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/).
+若要進一步了解模型群組，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
 
-## Step 2: Register a local OpenSearch-provided model
+## 步驟 2：註冊 OpenSearch 提供的本機模型
 
-To register an OpenSearch-provided model to the model group created in step 1, provide the model group ID from step 1 in the following request.
+若要將 OpenSearch 提供的模型註冊到步驟 1 建立的模型群組，請在以下請求中提供步驟 1 的模型群組 ID。
 
-Because pretrained models originate from the ML Commons model repository, you only need to provide the `name`, `version`, `model_group_id`, and `model_format` in the register API request:  
+由於預先訓練模型來自 ML Commons 模型儲存庫，您只需在註冊 API 請求中提供 `name`、`version`、`model_group_id` 和 `model_format`：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -166,7 +167,7 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns the task ID of the register operation:
+OpenSearch 會傳回註冊作業的任務 ID：
 
 ```json
 {
@@ -175,14 +176,14 @@ OpenSearch returns the task ID of the register operation:
 }
 ```
 
-To check the status of the operation, provide the task ID to the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+若要檢查作業狀態，請將任務 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
 ```bash
 GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 ```
 {% include copy-curl.html %}
 
-When the operation is complete, the state changes to `COMPLETED`:
+當作業完成時，狀態會變為 `COMPLETED`：
 
 ```json
 {
@@ -199,20 +200,20 @@ When the operation is complete, the state changes to `COMPLETED`:
 }
 ```
 
-Take note of the returned `model_id` because you'll need it to deploy the model.
+請記下傳回的 `model_id`，因為部署模型時需要用到它。
 
-## Step 3: Deploy the model
+## 步驟 3：部署模型
 
-The deploy operation reads the model's chunks from the model index and then creates an instance of the model to load into memory. The bigger the model, the more chunks the model is split into and longer it takes for the model to load into memory.
+部署作業會從模型索引讀取模型的區塊，然後建立要載入記憶體的模型執行個體。模型越大，被分割成的區塊就越多，載入記憶體所需的時間也越長。
 
-To deploy the registered model, provide its model ID from step 3 in the following request:
+若要部署已註冊的模型，請在以下請求中提供其步驟 3 的模型 ID：
 
 ```bash
 POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_deploy
 ```
 {% include copy-curl.html %}
 
-The response contains the task ID that you can use to check the status of the deploy operation:
+回應包含任務 ID，您可用它來檢查部署作業的狀態：
 
 ```json
 {
@@ -221,14 +222,14 @@ The response contains the task ID that you can use to check the status of the de
 }
 ```
 
-As in the previous step, check the status of the operation by calling the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+與上一個步驟相同，透過呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 檢查作業狀態：
 
 ```bash
 GET /_plugins/_ml/tasks/vVePb4kBJ1eYAeTM7ljG
 ```
 {% include copy-curl.html %}
 
-When the operation is complete, the state changes to `COMPLETED`:
+當作業完成時，狀態會變為 `COMPLETED`：
 
 ```json
 {
@@ -245,16 +246,16 @@ When the operation is complete, the state changes to `COMPLETED`:
 }
 ```
 
-If a cluster or node is restarted, then you need to redeploy the model. To learn how to set up automatic redeployment, see [Model deployment settings]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/#model-deployment-settings).
+如果叢集或節點重新啟動，您需要重新部署模型。若要了解如何設定自動重新部署，請參閱[模型部署設定]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/#model-deployment-settings)。
 {: .tip} 
 
-## Step 4 (Optional): Test the model
+## 步驟 4 (選用)：測試模型
 
-Use the [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) to test the model.
+使用 [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 來測試模型。
 
-### Text embedding model
+### 文字嵌入模型
 
-For a text embedding model, send the following request:
+若為文字嵌入模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/_predict/text_embedding/cleMb4kBJ1eYAeTMFFg4
@@ -266,7 +267,7 @@ POST /_plugins/_ml/_predict/text_embedding/cleMb4kBJ1eYAeTMFFg4
 ```
 {% include copy-curl.html %}
 
-The response contains text embeddings for the provided sentence:
+回應中包含所提供句子的文字嵌入：
 
 ```json
 {
@@ -292,9 +293,9 @@ The response contains text embeddings for the provided sentence:
 }
 ```
 
-### Sparse encoding model or sparse tokenizer
+### 稀疏編碼模型或稀疏斷詞器
 
-For a sparse encoding model or sparse tokenizer, send the following request:
+若為稀疏編碼模型或稀疏斷詞器，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
@@ -304,7 +305,7 @@ POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
 ```
 {% include copy-curl.html %}
 
-The response contains the extracted tokens and their corresponding weights:
+回應中包含擷取出的詞元及其對應的權重：
 
 ```json
 {
@@ -329,7 +330,7 @@ The response contains the extracted tokens and their corresponding weights:
 }
 ```
 
-The preceding example uses the default `lexical` output format, which returns strings as keys. You can control the output key format by setting `parameters.sparse_embedding_format` to `lexical` (returns string tokens) or `token_id` (returns integer token IDs). The following example sets the `sparse_embedding_format` to `token_id`:
+上述範例使用預設的 `lexical` 輸出格式，會以字串作為鍵傳回。您可以將 `parameters.sparse_embedding_format` 設為 `lexical` (傳回字串詞元) 或 `token_id` (傳回整數詞元 ID)，來控制輸出鍵的格式。下列範例將 `sparse_embedding_format` 設為 `token_id`：
 
 ```json
 POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
@@ -342,7 +343,7 @@ POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
 ```
 {% include copy-curl.html %}
 
-The response contains the token IDs and their corresponding token weights:
+回應中包含詞元 ID 及其對應的詞元權重：
 
 ```json
 {
@@ -365,9 +366,9 @@ The response contains the token IDs and their corresponding token weights:
 }
 ```
 
-### Cross-encoder model
+### 交叉編碼器模型
 
-For a cross-encoder model, send the following request:
+若為交叉編碼器模型，請傳送下列請求：
 
 ```json
 POST _plugins/_ml/models/{model_id}/_predict
@@ -383,7 +384,7 @@ POST _plugins/_ml/models/{model_id}/_predict
 ```
 {% include copy-curl.html %}
 
-The model calculates the similarity score of `query_text` and each document in `text_docs` and returns a list of scores for each document in the order they were provided in `text_docs`:
+模型會計算 `query_text` 與 `text_docs` 中每份文件的相似度分數，並依文件在 `text_docs` 中提供的順序，傳回每份文件的分數清單：
 
 ```json
 {
@@ -464,22 +465,22 @@ The model calculates the similarity score of `query_text` and each document in `
 }
 ```
 
-A higher document score means higher similarity. In the preceding response, documents are scored as follows against the query text `today is sunny`:
+文件分數越高，代表相似度越高。在上述回應中，各文件相對於查詢文字 `today is sunny` 的分數如下：
 
-Document text | Score
+文件文字 | 分數
 :--- | :---
 `how are you` | -6.077798
 `today is sunny` | 10.223609
 `today is july fifth` | -1.3987057
 `it is winter` | -4.5923924
 
-The document that contains the same text as the query is scored the highest, and the remaining documents are scored based on the text similarity.
+與查詢文字相同的文件分數最高，其餘文件則依文字相似度計分。
 
-## Step 5: Use the model for search
+## 步驟 5：使用模型進行搜尋
 
-To learn how to set up a vector index and use text embedding models for search, see [Semantic search]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/).
+若要了解如何設定向量索引，並使用文字嵌入模型進行搜尋，請參閱[語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)。
 
-To learn how to set up a vector index and use sparse encoding models for search, see [Neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/).
+若要了解如何設定向量索引，並使用稀疏編碼模型進行搜尋，請參閱[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
 
-To learn how to use cross-encoder models for reranking, see [Reranking search results]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/).
+若要了解如何使用交叉編碼器模型進行重新排序，請參閱[重新排序搜尋結果]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)。
 

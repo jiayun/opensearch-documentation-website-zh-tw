@@ -1,20 +1,21 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Sort results
+title: "排序結果"
 parent: Customizing search results
 nav_order: 30
 redirect_from:
   - /opensearch/search/sort/
 ---
 
-# Sort results
+# 排序結果
 
-Sorting allows your users to sort results in a way that’s most meaningful to them.
+排序功能可讓您的使用者以對他們最有意義的方式排序結果。
 
-By default, full-text queries sort results by the relevance score.
-You can choose to sort the results by any field value in either ascending or descending order by setting the `order` parameter to `asc` or `desc`.
+依預設，全文查詢會依相關性分數排序結果。
+您可以將 `order` 參數設為 `asc` 或 `desc`，選擇依任何欄位值以遞增或遞減順序排序結果。
 
-For example, to sort results by descending order of a `line_id` value, use the following query:
+例如，若要依 `line_id` 值以遞減順序排序結果，請使用下列查詢：
 
 ```json
 GET shakespeare/_search
@@ -37,7 +38,7 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-The results are sorted by `line_id` in descending order:
+結果會依 `line_id` 以遞減順序排序：
 
 ```json
 {
@@ -231,9 +232,9 @@ The results are sorted by `line_id` in descending order:
 }
 ```
 
-The `sort` parameter is an array, so you can specify multiple field values in the order of their priority.
+`sort` 參數是陣列，因此您可以依優先順序指定多個欄位值。
 
-If you have two fields with the same value for `line_id`, OpenSearch uses `speech_number`, which is the second option for sorting:
+如果您有兩個欄位的 `line_id` 值相同，OpenSearch 會使用第二個排序選項 `speech_number`：
 
 ```json
 GET shakespeare/_search
@@ -261,7 +262,7 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-You can continue to sort by any number of field values to get the results in the right order. It doesn’t have to be a numerical value&mdash;you can also sort by date or timestamp fields:
+您可以繼續依任意數量的欄位值排序，讓結果以正確的順序排列。欄位值不一定要是數值&mdash;您也可以依日期或時間戳記欄位排序：
 
 ```json
 "sort": [
@@ -274,9 +275,9 @@ You can continue to sort by any number of field values to get the results in the
 ```
 {% include copy-curl.html %}
 
-A text field that is analyzed cannot be used to sort documents, because the inverted index only contains the individual tokenized terms and not the entire string. So you cannot sort by the `play_name`, for example.
+經過分析的文字欄位無法用於排序文件，因為倒排索引只包含個別斷詞後的詞彙，而非完整字串。因此，例如您無法依 `play_name` 排序。
 
-To bypass this limitation, you can use a raw version of the text field mapped as a keyword type. In the following example, `play_name.keyword` is not analyzed and you have a copy of the full original version for sorting purposes:
+若要避開此限制，您可以使用對應為 keyword 類型的文字欄位原始版本。在下列範例中，`play_name.keyword` 未經分析，因此您有一份完整原始版本的副本可供排序使用：
 
 ```json
 GET shakespeare/_search
@@ -299,13 +300,13 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-The results are sorted by the `play_name` field in alphabetical order.
+結果會依 `play_name` 欄位以字母順序排序。
 
-Use `sort` with the [`search_after` parameter]({{site.url}}{{site.baseurl}}/opensearch/search/paginate#the-search_after-parameter) for more efficient scrolling.
-The results start with the document that comes after the sort values you specify in the `search_after` array.
+將 `sort` 與 [`search_after` 參數]({{site.url}}{{site.baseurl}}/opensearch/search/paginate#the-search_after-parameter) 搭配使用，可提高捲動效率。
+結果會從您在 `search_after` 陣列中指定的排序值之後的文件開始。
 
-Make sure you have the same number of values in the `search_after` array as in the `sort` array, also ordered in the same way.
-In this case, you are requesting results starting with the document that comes after `line_id = 3202` and `speech_number = 8`:
+請確保 `search_after` 陣列中的值與 `sort` 陣列中的值數量相同，且排列順序也相同。
+在此情況下，您請求的結果會從 `line_id = 3202` 和 `speech_number = 8` 之後的文件開始：
 
 ```json
 GET shakespeare/_search
@@ -337,15 +338,15 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-## Sort mode
+## 排序模式
 
-The sort mode is applicable to sorting by array or multivalued fields. It specifies what array value should be chosen for sorting the document. For numeric fields that contain an array of numbers, you can sort by the `avg`, `sum`, or `median` modes. To sort by the minimum or maximum values, use the `min` or `max` modes that work for both numeric and string data types.
+排序模式適用於依陣列或多值欄位排序。它指定應選擇哪個陣列值來排序文件。對於包含數字陣列的數值欄位，您可以使用 `avg`、`sum` 或 `median` 模式排序。若要依最小值或最大值排序，請使用 `min` 或 `max` 模式，這些模式同時適用於數值和字串資料類型。
 
-The default mode is `min` for ascending sort order and `max` for descending sort order.
+預設模式在遞增排序時為 `min`，在遞減排序時為 `max`。
 
-The following example illustrates sorting by an array field using the sort mode.
+下列範例說明如何使用排序模式依陣列欄位排序。
 
-Consider an index that holds student grades. Index two documents into the index:
+假設有一個儲存學生成績的索引。將兩份文件編製索引至該索引：
 
 ```json
 PUT students/_doc/1
@@ -365,7 +366,7 @@ PUT students/_doc/2
 ```
 {% include copy-curl.html %}
 
-Sort all students by highest grade average using the `avg` mode:
+使用 `avg` 模式，依最高平均成績排序所有學生：
 
 ```json
 GET students/_search
@@ -380,7 +381,7 @@ GET students/_search
 ```
 {% include copy-curl.html %}
 
-The response contains students sorted by `grades` in descending order:
+回應包含依 `grades` 遞減排序的學生：
 
 ```json
 {
@@ -434,11 +435,11 @@ The response contains students sorted by `grades` in descending order:
 }
 ```
 
-## Sorting nested objects
+## 排序巢狀物件
 
-When sorting [nested]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/nested/) objects, provide the `path` parameter specifying the path to the field on which to sort. 
+排序 [巢狀]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/nested/) 物件時，請提供 `path` 參數，指定要排序欄位的路徑。
 
-For example, in the index `students`, map the variable `first_sem` as `nested`:
+例如，在索引 `students` 中，將變數 `first_sem` 對應為 `nested`：
 
 ```json
 PUT students
@@ -454,7 +455,7 @@ PUT students
 ```
 {% include copy-curl.html %}
 
-Index two documents with nested fields:
+將兩份包含巢狀欄位的文件編製索引：
 
 ```json
 PUT students/_doc/1
@@ -478,7 +479,7 @@ PUT students/_doc/2
 ```
 {% include copy-curl.html %}
 
-When sorting by grade average, provide the path to the nested field:
+依平均成績排序時，請提供巢狀欄位的路徑：
 
 ```json
 GET students/_search
@@ -500,11 +501,11 @@ GET students/_search
 ```
 {% include copy-curl.html %}
 
-## Handling missing values
+## 處理缺失值
 
-The `missing` parameter specifies the handling of missing values. The built-in valid values are `_last` (list the documents with the missing value last) and `_first` (list the documents with the missing value first). The default value is `_last`. You can also specify a custom value to be used for missing documents as the sort value. 
+`missing` 參數指定缺失值的處理方式。內建的有效值為 `_last` (將缺失值的文件列在最後) 和 `_first` (將缺失值的文件列在最前面)。預設值為 `_last`。您也可以指定自訂值，作為缺失文件的排序值。
 
-For example, you can index a document with an `average` field and another document without an `average` field:
+例如，您可以將一份包含 `average` 欄位的文件，以及另一份不包含 `average` 欄位的文件編製索引：
 
 ```json
 PUT students/_doc/1
@@ -523,7 +524,7 @@ PUT students/_doc/2
 ```
 {% include copy-curl.html %}
 
-Sort the documents, ordering the document with a missing field first:
+排序文件，將缺失欄位的文件排在最前面：
 
 ```json
 GET students/_search
@@ -543,7 +544,7 @@ GET students/_search
 ```
 {% include copy-curl.html %}
 
-The response lists document 2 first:
+回應會先列出文件 2：
 
 ```json
 {
@@ -590,11 +591,11 @@ The response lists document 2 first:
 }
 ```
 
-## Ignoring unmapped fields
+## 忽略未對應的欄位
 
-If a field is not mapped, a search request that sorts by this field fails by default. To avoid this, you can use the `unmapped_type` parameter, which signals to OpenSearch to ignore the field. For example, if you set `unmapped_type` to `long`, the field is treated as if it were mapped as type `long`. Additionally, all documents in the index that have an `unmapped_type` field are treated as if they had no value in this field, so they are not sorted by it.
+如果欄位未對應，依該欄位排序的搜尋請求預設會失敗。若要避免這種情況，您可以使用 `unmapped_type` 參數，指示 OpenSearch 忽略該欄位。例如，如果您將 `unmapped_type` 設為 `long`，該欄位會被視為已對應為 `long` 類型。此外，索引中所有具有 `unmapped_type` 欄位的文件都會被視為在該欄位中沒有值，因此不會依該欄位排序。
 
-For example, consider two indexes. Index a document that contains an `average` field in the first index:
+例如，考慮兩個索引。在第一個索引中將一份包含 `average` 欄位的文件編製索引：
 
 ```json
 PUT students/_doc/1
@@ -605,7 +606,7 @@ PUT students/_doc/1
 ```
 {% include copy-curl.html %}
 
-Index a document that does not contain an `average` field in the second index:
+在第二個索引中將一份不包含 `average` 欄位的文件編製索引：
 
 ```json
 PUT students_no_map/_doc/2
@@ -615,7 +616,7 @@ PUT students_no_map/_doc/2
 ```
 {% include copy-curl.html %}
 
-Search for all documents in both indexes and sort them by the `average` field:
+搜尋兩個索引中的所有文件，並依 `average` 欄位排序：
 
 ```json
 GET students*/_search
@@ -634,7 +635,7 @@ GET students*/_search
 ```
 {% include copy-curl.html %}
 
-By default, the second index produces an error because the `average` field is not mapped:
+預設情況下，第二個索引會產生錯誤，因為 `average` 欄位未對應：
 
 ```json
 {
@@ -683,7 +684,7 @@ By default, the second index produces an error because the `average` field is no
 }
 ```
 
-You can specify the `unmapped_type` parameter so that the unmapped field is ignored:
+您可以指定 `unmapped_type` 參數，以便忽略未對應的欄位：
 
 ```json
 GET students*/_search
@@ -703,7 +704,7 @@ GET students*/_search
 ```
 {% include copy-curl.html %}
 
-The response contains both documents:
+回應包含兩份文件：
 
 ```json
 {
@@ -750,9 +751,9 @@ The response contains both documents:
 }
 ```
 
-## Tracking scores
+## 追蹤分數
 
-By default, scores are not computed when sorting on a field. You can set `track_scores` to `true` to compute and track scores:
+依預設，依欄位排序時不會計算分數。您可以將 `track_scores` 設為 `true` 來計算並追蹤分數：
 
 ```json
 GET students/_search
@@ -772,21 +773,21 @@ GET students/_search
 ```
 {% include copy-curl.html %}
 
-## Sorting by geodistance
+## 依地理距離排序
 
-You can sort documents by `_geo_distance`. The following parameters are supported.
+您可以依 `_geo_distance` 排序文件。支援下列參數。
 
-Parameter | Description
+參數 | 說明
 :--- | :---
-`distance_type` | Specifies the method of computing the distance. Valid values are `arc` and `plane`. The `plane` method is faster but less accurate for long distances or close to the poles. Default is `arc`.
-`mode` | Specifies how to handle a field with several geopoints. By default, documents are sorted by the shortest distance when the sort order is ascending and by the longest distance when the sort order is descending. Valid values are `min`, `max`, `median`, and `avg`.
-`unit` | Specifies the units used to compute sort values. Default is meters (`m`).
-`ignore_unmapped` | Specifies how to treat an unmapped field. Set `ignore_unmapped` to `true` to ignore unmapped fields. Default is `false` (produce an error when encountering an unmapped field).
+`distance_type` | 指定計算距離的方法。有效值為 `arc` 和 `plane`。`plane` 方法較快，但對於長距離或靠近極點的位置較不準確。預設為 `arc`。
+`mode` | 指定如何處理含有多個地理點的欄位。依預設，當排序順序為遞增時，文件會依最短距離排序；當排序順序為遞減時，則依最長距離排序。有效值為 `min`、`max`、`median` 和 `avg`。
+`unit` | 指定用於計算排序值的單位。預設為公尺 (`m`)。
+`ignore_unmapped` | 指定如何處理未對應的欄位。將 `ignore_unmapped` 設為 `true` 可忽略未對應的欄位。預設為 `false` (遇到未對應的欄位時產生錯誤)。
 
-The `_geo_distance` parameter does not support `missing_values`. The distance is always considered to be `infinity` when a document does not contain the field used for computing distance.
+`_geo_distance` 參數不支援 `missing_values`。當文件不包含用於計算距離的欄位時，距離一律視為 `infinity`。
 {: .note}
 
-For example, create an index and map the `point` field as a `geo_point`:
+例如，建立索引並將 `point` 欄位對應為 `geo_point`：
 
 ```json
 PUT testindex1
@@ -802,7 +803,7 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-Index two documents containing geopoints:
+將兩個包含地理點的文件編製索引：
 
 ```json
 PUT testindex1/_doc/1
@@ -820,7 +821,7 @@ PUT testindex1/_doc/2
 ```
 {% include copy-curl.html %}
 
-Search for all documents and sort them by the distance from the provided point:
+搜尋所有文件並依與所提供點的距離排序：
 
 ```json
 GET testindex1/_search
@@ -844,7 +845,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the sorted documents:
+回應包含已排序的文件：
 
 ```json
 {
@@ -896,10 +897,10 @@ The response contains the sorted documents:
 }
 ```
 
-You can provide coordinates in any format supported by the geopoint field type. For a description of all formats, see the [geopoint field type documentation]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point/).
+您可以使用 geopoint 欄位類型支援的任何格式提供座標。如需所有格式的說明，請參閱 [geopoint 欄位類型文件]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point/)。
 {: .note}
 
-To pass multiple geopoints to `_geo_distance`, use an array:
+若要將多個地理點傳遞至 `_geo_distance`，請使用陣列：
 
 ```json
 GET testindex1/_search
@@ -923,11 +924,11 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-For each document, the sorting distance is calculated as the minimum, maximum, or average (as specified by the `mode`) of the distances from all points provided in the search to all points in the document.
+對於每份文件，排序距離會計算為搜尋中提供的所有點與文件中所有點之間距離的最小值、最大值或平均值 (依 `mode` 指定)。
 
-## Performance considerations
+## 效能考量
 
-Sorted field values are loaded into memory for sorting. Therefore, for minimum overhead we recommend mapping [numeric types]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/) to the smallest acceptable types, like `short`, `integer`, and `float`. [String types]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/string/) should not have the sorted field analyzed or tokenized.
+排序的欄位值會載入記憶體中以進行排序。因此，為了將額外負擔降到最低，我們建議將[數值類型]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/)對應為可接受的最小類型，例如 `short`、`integer` 和 `float`。[字串類型]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/string/)的排序欄位不應經過分析或斷詞。
 
-The `_id` field is restricted from use in sorting operations. If you need to sort by document ID, consider duplicating the ID value into another field with `doc_values` enabled. For more information about `_id` field limitations, see [ID field type]({{site.url}}{{site.baseurl}}/field-types/metadata-fields/id/).
+`_id` 欄位限制不能用於排序作業。如果您需要依文件 ID 排序，請考慮將 ID 值複製到另一個已啟用 `doc_values` 的欄位。如需 `_id` 欄位限制的詳細資訊，請參閱 [ID 欄位類型]({{site.url}}{{site.baseurl}}/field-types/metadata-fields/id/)。
 {: .note}

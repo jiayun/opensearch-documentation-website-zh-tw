@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reranking search results by a field
+title: "依欄位重新排序搜尋結果"
 parent: Reranking search results
 nav_order: 120
 redirect_from:
   - /vector-search/tutorials/reranking/reranking-by-field/
 ---
 
-# Reranking search results by a field using Cohere Rerank
+# 使用 Cohere Rerank 依欄位重新排序搜尋結果
 
-You can rerank search [results by a field]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/#the-by_field-rerank-type). This feature is useful when your documents include a field that is particularly important or when you want to rerank results from an externally hosted model. For more information, see [Reranking search results by a field]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field/).
+您可以[依欄位重新排序搜尋結果]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/#the-by_field-rerank-type)。當您的文件包含特別重要的欄位，或您想使用外部託管的模型重新排序結果時，此功能相當實用。如需更多資訊，請參閱[依欄位重新排序搜尋結果]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field/)。
 
-This tutorial explains how to use the [Cohere Rerank](https://docs.cohere.com/reference/rerank-1) model to rerank search results by a field in self-managed OpenSearch and in [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/).
+本教學說明如何在自行管理的 OpenSearch 和 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 中，使用 [Cohere Rerank](https://docs.cohere.com/reference/rerank-1) 模型依欄位重新排序搜尋結果。
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將以 `your_` 前綴開頭的預留位置替換為您自己的值。
 {: .note}
 
-## Step 1 (self-managed OpenSearch): Create a connector
+## 步驟 1（自行管理的 OpenSearch）：建立連接器
 
-To create a connector, send the following request:
+若要建立連接器，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -49,43 +50,43 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-The response contains the connector ID:
+回應包含連接器 ID：
 
 ```json
 {"connector_id":"qp2QP40BWbTmLN9Fpo40"}
 ```
 
-Note the connector ID; you'll use it in the following steps. Then go to [Step 2](#step-2-register-the-cohere-rerank-model).
+請記下連接器 ID；您將在後續步驟中使用它。接著前往[步驟 2](#step-2-register-the-cohere-rerank-model)。
 
-## Step 1 (Amazon OpenSearch Service): Create a connector
+## 步驟 1（Amazon OpenSearch Service）：建立連接器
 
-Follow these steps to create a connector using Amazon OpenSearch Service.
+請依照下列步驟，使用 Amazon OpenSearch Service 建立連接器。
 
-### Prerequisite: Create an OpenSearch cluster
+### 先決條件：建立 OpenSearch 叢集
 
-Go to the [Amazon OpenSearch Service console](https://console.aws.amazon.com/aos/home) and create an OpenSearch domain.
+前往 [Amazon OpenSearch Service 主控台](https://console.aws.amazon.com/aos/home)，並建立 OpenSearch 網域。
 
-Note the domain Amazon Resource Name (ARN) and URL; you'll use them in the following steps.
+請記下網域的 Amazon Resource Name（ARN）和 URL；您將在後續步驟中使用它們。
 
-### Step 1.1: Store the API key in AWS Secrets Manager
+### 步驟 1.1：將 API 金鑰儲存在 AWS Secrets Manager 中
 
-Store your Cohere API key in [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html):
+將您的 Cohere API 金鑰儲存在 [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html) 中：
 
-1. Open AWS Secrets Manager.
-1. Select **Store a new secret**.
-1. Select **Other type of secret**.
-1. Create a key-value pair with **my_cohere_key** as the key and your Cohere API key as the value.
-1. Name your secret `my_test_cohere_secret`.
+1. 開啟 AWS Secrets Manager。
+1. 選取 **Store a new secret**。
+1. 選取 **Other type of secret**。
+1. 建立鍵值配對，以 **my_cohere_key** 作為鍵，並以您的 Cohere API 金鑰作為值。
+1. 將您的秘密命名為 `my_test_cohere_secret`。
 
-Note the secret ARN; you'll use it in the following steps.
+請記下秘密的 ARN；您將在後續步驟中使用它。
 
-### Step 1.2: Create an IAM role
+### 步驟 1.2：建立 IAM 角色
 
-To use the secret created in Step 1, you must create an AWS Identity and Access Management (IAM) role with read permissions for the secret. This IAM role will be configured in the connector and will allow the connector to read the secret.
+若要使用步驟 1 中建立的秘密，您必須建立具有該秘密讀取權限的 AWS Identity and Access Management（IAM）角色。此 IAM 角色將設定於連接器中，讓連接器能夠讀取該秘密。
 
-Go to the IAM console, create a new IAM role named `my_cohere_secret_role`, and add the following trust policy and permissions:
+前往 IAM 主控台，建立名為 `my_cohere_secret_role` 的新 IAM 角色，並新增下列信任政策和權限：
 
-- Custom trust policy:
+- 自訂信任政策：
 
 ```json
 {
@@ -103,7 +104,7 @@ Go to the IAM console, create a new IAM role named `my_cohere_secret_role`, and 
 ```
 {% include copy.html %}
 
-- Permissions:
+- 權限：
 
 ```json
 {
@@ -122,19 +123,19 @@ Go to the IAM console, create a new IAM role named `my_cohere_secret_role`, and 
 ```
 {% include copy.html %}
 
-Note the role ARN; you'll use it in the following steps.
+請記下角色的 ARN；您將在後續步驟中使用它。
 
-### Step 1.3: Configure an IAM role in Amazon OpenSearch Service
+### 步驟 1.3：在 Amazon OpenSearch Service 中設定 IAM 角色
 
-Follow these steps to configure an IAM role in Amazon OpenSearch Service.
+請依照下列步驟，在 Amazon OpenSearch Service 中設定 IAM 角色。
 
-#### Step 1.3.1: Create an IAM role for signing connector requests
+#### 步驟 1.3.1：建立用於簽署連接器請求的 IAM 角色
 
-Generate a new IAM role specifically for signing your Create Connector API request.
+建立專門用於簽署您的 Create Connector API 請求的新 IAM 角色。
 
-Create an IAM role named `my_create_cohere_connector_role` with the following trust policy and permissions:
+建立名為 `my_create_cohere_connector_role` 的 IAM 角色，並設定下列信任政策和權限：
 
-- Custom trust policy:
+- 自訂信任政策：
 
 ```json
 {
@@ -152,9 +153,9 @@ Create an IAM role named `my_create_cohere_connector_role` with the following tr
 ```
 {% include copy.html %}
 
-You'll use the `your_iam_user_arn` IAM user to assume the role in Step 4.1.
+您將在步驟 4.1 中使用 `your_iam_user_arn` IAM 使用者擔任此角色。
 
-- Permissions:
+- 權限：
 
 ```json
 {
@@ -175,26 +176,26 @@ You'll use the `your_iam_user_arn` IAM user to assume the role in Step 4.1.
 ```
 {% include copy.html %}
 
-Note this role ARN; you'll use it in the following steps.
+請記下此角色的 ARN；您將在後續步驟中使用它。
 
-#### Step 1.3.2: Map a backend role
+#### 步驟 1.3.2：對應後端角色
 
-Follow these steps to map a backend role:
+請依照下列步驟對應後端角色：
 
-1. Log in to OpenSearch Dashboards and select **Security** on the top menu.
-2. Select **Roles**, and then select the **ml_full_access** role. 
-3. On the **ml_full_access** role details page, select **Mapped users**, and then select **Manage mapping**. 
-4. Enter the IAM role ARN created in Step 3.1 in the **Backend roles** field, as shown in the following image.
-    ![Mapping a backend role]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/mapping_iam_role_arn.png)
-4. Select **Map**. 
+1. 登入 OpenSearch Dashboards，並在頂端選單中選取 **Security**。
+2. 選取 **Roles**，然後選取 **ml_full_access** 角色。 
+3. 在 **ml_full_access** 角色詳細資料頁面上，選取 **Mapped users**，然後選取 **Manage mapping**。 
+4. 在 **Backend roles** 欄位中輸入步驟 3.1 中建立的 IAM 角色 ARN，如下圖所示。
+    ![對應後端角色]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/mapping_iam_role_arn.png)
+4. 選取 **Map**。 
 
-The IAM role is now successfully configured in your OpenSearch cluster.
+IAM 角色現已成功設定於您的 OpenSearch 叢集中。
 
-## Step 1.4: Create a connector
+## 步驟 1.4：建立連接器
 
-Follow these steps to create a connector for the model. For more information about creating a connector, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/).
+請依照下列步驟，為模型建立連接器。如需建立連接器的詳細資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-Run the following Python code with the temporary credentials fetched from AWS.
+使用從 AWS 取得的臨時憑證執行下列 Python 程式碼。
  
 ```python
 import boto3
@@ -250,19 +251,19 @@ print(r.text)
 ```
 {% include copy.html %}
 
-The script outputs a connector ID:
+此指令碼會輸出連接器 ID：
 
 ```json
 {"connector_id":"qp2QP40BWbTmLN9Fpo40"}
 ```
 
-Note the connector ID; you'll use it in the next step.
+請記下連接器 ID；您將在下一個步驟中使用它。
 
-## Step 2: Register the Cohere Rerank model
+## 步驟 2：註冊 Cohere Rerank 模型
 
-After successfully creating a connector using either the self-managed OpenSearch or Amazon OpenSearch Service method, you can register the Cohere Rerank model. 
+使用自行管理的 OpenSearch 或 Amazon OpenSearch Service 方法成功建立連接器後，即可註冊 Cohere Rerank 模型。
 
-Use the connector ID from Step 1.4 to create a model:
+請使用步驟 1.4 中的連接器 ID 來建立模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -275,11 +276,11 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Note the connector ID; you'll use it in the following steps.
+請記下連接器 ID，後續步驟會用到。
 
-# Step 3: Test the model
+# 步驟 3：測試模型
 
-To test the model, send the following request:
+若要測試模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/your_model_id/_predict
@@ -293,7 +294,7 @@ POST /_plugins/_ml/models/your_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents:
+回應會包含相符的文件：
 
 ```json
 {
@@ -344,15 +345,15 @@ The response contains the matching documents:
 }
 ```
 
-For each document, a score is assigned by the rerank model. Now you'll create a search pipeline that invokes the Cohere model and reorders the search results based on their relevance score.
+每份文件都會由重新排序模型指派一個分數。接下來您將建立一個搜尋管線，該管線會呼叫 Cohere 模型，並根據相關性分數重新排列搜尋結果。
 
-## Step 3: Rerank the search results
+## 步驟 3：重新排列搜尋結果
 
-Follow these steps to rerank the search results.
+請依照下列步驟重新排列搜尋結果。
 
-### Step 3.1: Create an index
+### 步驟 3.1：建立索引
 
-To create an index, send the following request:
+若要建立索引，請傳送下列請求：
 
 ```json
 POST _bulk
@@ -379,9 +380,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-### Step 3.2: Create a reranking pipeline
+### 步驟 3.2：建立重新排序管線
 
-To create a reranking pipeline, send the following request:
+若要建立重新排序管線，請傳送下列請求：
 
 ```json
 PUT /_search/pipeline/cohere_pipeline
@@ -422,9 +423,9 @@ PUT /_search/pipeline/cohere_pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 3.3: Test the pipeline
+### 步驟 3.3：測試管線
 
-To test the pipeline, send a query related to the indexed documents and set `top_n` to a value greater than or equal to `size`:
+若要測試管線，請傳送一個與已編製索引文件相關的查詢，並將 `top_n` 設為大於或等於 `size` 的值：
 
 ```json
 GET nyc_facts/_search?search_pipeline=cohere_pipeline
@@ -445,7 +446,7 @@ GET nyc_facts/_search?search_pipeline=cohere_pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains the reranked documents:
+回應會包含重新排序後的文件：
 
 ```json
 {
@@ -527,5 +528,5 @@ The response contains the reranked documents:
 }
 ```
 
-When evaluating the reranked results, focus on the `result_document` field and its corresponding `relevance_score`. The `fact_description` field shows the original document text and does not reflect the reranking order.
+評估重新排序後的結果時，請著重於 `result_document` 欄位及其對應的 `relevance_score`。`fact_description` 欄位顯示的是原始文件文字，並不反映重新排序的順序。
 {: .note}

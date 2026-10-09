@@ -1,16 +1,17 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Named queries
+title: "具名查詢"
 nav_order: 77
 ---
 
-# Named queries
+# 具名查詢
 
-Any query clause can include a `_name` parameter that assigns a label to it. When a document matches, the response includes a `matched_queries` array listing the names of all query clauses that contributed to the match. This is useful for identifying the parts of a complex query that matched a given document.
+任何查詢子句都可以包含 `_name` 參數，為該子句指派標籤。當文件相符時，回應會包含 `matched_queries` 陣列，列出所有對該次相符有貢獻的查詢子句名稱。這對於辨識複雜查詢中符合特定文件的部分很有用。
 
-## Example
+## 範例
 
-The following query uses two named `match` clauses inside a `bool` query. Each clause has a `_name` that identifies it:
+下列查詢在 `bool` 查詢內使用兩個具名的 `match` 子句。每個子句都有一個用於識別它的 `_name`：
 
 ```json
 GET opensearch_dashboards_sample_data_ecommerce/_search
@@ -29,9 +30,9 @@ GET opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-The `matched_queries` array in each hit shows which named clauses matched that document:
+每個命中項目中的 `matched_queries` 陣列會顯示哪些具名子句符合該文件：
 
 ```json
 {
@@ -95,10 +96,10 @@ The `matched_queries` array in each hit shows which named clauses matched that d
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response fields specific to named queries.
+下表列出具名查詢專屬的回應欄位。
 
-| Field | Description |
+| 欄位 | 說明 |
 | :--- | :--- |
-| `matched_queries` | An array of strings listing the `_name` values of all query clauses that matched this document. Only present when at least one named clause matches. |
+| `matched_queries` | 字串陣列，列出所有符合此文件的查詢子句的 `_name` 值。只有在至少一個具名子句相符時才會出現。 |

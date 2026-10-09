@@ -1,16 +1,17 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Troubleshooting
+title: "疑難排解"
 nav_order: 88
 redirect_from:
   - /search-plugins/sql/troubleshoot/
 ---
 
-# SQL and PPL troubleshooting
+# SQL 與 PPL 疑難排解
 
-The SQL plugin is stateless, so troubleshooting is mostly focused on why a particular query fails.
+SQL 外掛程式是無狀態的，因此疑難排解大多著重於特定查詢失敗的原因。
 
-The most common error is the dreaded null pointer exception, which can occur during parsing errors or when using the wrong HTTP method (POST compared to GET and the other way around). The POST method and HTTP request body offer the most consistent results:
+最常見的錯誤是令人聞之色變的空指標例外，這可能發生在剖析錯誤期間，或使用錯誤的 HTTP 方法時（POST 與 GET，以及相反情況）。POST 方法與 HTTP 請求本文能提供最一致的結果：
 
 ```json
 POST _plugins/_sql
@@ -20,9 +21,9 @@ POST _plugins/_sql
 ```
 {% include copy-curl.html %}
 
-If a query isn't behaving the way you expect, use the `_explain` API to see the translated query, which you can then troubleshoot. For most operations, `_explain` returns OpenSearch query DSL. For `UNION`, `MINUS`, and `JOIN`, it returns something more akin to a SQL execution plan.
+如果查詢的行為不如預期，請使用 `_explain` API 查看轉譯後的查詢，然後據以進行疑難排解。對大多數操作而言，`_explain` 會傳回 OpenSearch query DSL。對於 `UNION`、`MINUS` 和 `JOIN`，它會傳回更類似 SQL 執行計畫的內容。
 
-#### Example request
+#### 範例請求
 
 ```json
 POST _plugins/_sql/_explain
@@ -33,7 +34,7 @@ POST _plugins/_sql/_explain
 {% include copy-curl.html %}
 
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -42,9 +43,9 @@ POST _plugins/_sql/_explain
 }
 ```
 
-## Index mapping verification exception
+## 索引對應驗證例外
 
-If you see the following verification exception, make sure the index in your query isn't an index pattern and doesn't have multiple types:
+如果您看到下列驗證例外，請確認查詢中的索引不是索引模式，且沒有多個類型：
 
 ```json
 {
@@ -57,4 +58,4 @@ If you see the following verification exception, make sure the index in your que
 }
 ```
 
-If these steps don't work, submit a [GitHub issue](https://github.com/opensearch-project/sql/issues).
+如果這些步驟無效，請提交 [GitHub 議題](https://github.com/opensearch-project/sql/issues)。

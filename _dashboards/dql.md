@@ -1,44 +1,45 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Dashboards Query Language (DQL)
+title: "Dashboards 查詢語言（DQL）"
 nav_order: 50
 redirect_from:
   - /dashboards/discover/dql/
 ---
 
 <!-- vale off -->
-# Dashboards Query Language (DQL)
+# Dashboards 查詢語言（DQL）
 <!-- vale on -->
 
-Dashboards Query Language (DQL) is a simple text-based query language used to filter data in OpenSearch Dashboards. 
+Dashboards 查詢語言（DQL）是一種簡單的文字式查詢語言，用於在 OpenSearch Dashboards 中篩選資料。 
 
-DQL and [query string query]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/) (Lucene) language are the two search bar language options in Discover and Dashboards. This page provides a reference for the DQL syntax. For the Lucene syntax, see [Query string query]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/). For a syntax comparison, see the [Command quick reference](#dql-and-query-string-query-quick-reference).
+DQL 和 [query string 查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/)（Lucene）語言是 Discover 和 Dashboards 搜尋列中的兩種語言選項。本頁提供 DQL 語法參考。如需 Lucene 語法，請參閱 [Query string 查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/)。如需比較語法，請參閱[命令快速參考](#dql-and-query-string-query-quick-reference)。
 
-By default, OpenSearch Dashboards uses DQL syntax. To switch to query string query (Lucene), select the **DQL** button next to the search box and then toggle the **On** switch, as shown in the following image. 
+OpenSearch Dashboards 預設使用 DQL 語法。若要切換至 query string 查詢（Lucene），請選取搜尋方塊旁的 **DQL** 按鈕，然後切換 **On** 開關，如下圖所示。 
 
-![Search term using DQL toolbar in Dashboard]({{site.url}}{{site.baseurl}}/images/dashboards/dql-interface.png)
+![在 Dashboard 中使用 DQL 工具列搜尋詞彙]({{site.url}}{{site.baseurl}}/images/dashboards/dql-interface.png)
 
-The syntax changes to **Lucene**. To switch back to DQL, select the **Lucene** button and toggle the **Off** switch.
+語法會變更為 **Lucene**。若要切換回 DQL，請選取 **Lucene** 按鈕，然後切換 **Off** 開關。
 
-## Queries on analyzed text
+## 對經過分析的文字進行查詢
 
-When running queries, understanding whether your fields are analyzed ([`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) type) or non-analyzed ([`keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/keyword/) type) is crucial because it significantly impacts search behavior. In analyzed fields, text undergoes tokenization and filtering, while non-analyzed fields store exact values. For simple field queries like `wind`, searches against analyzed fields match documents containing `wind` regardless of case, while the same query on keyword fields requires exact matching of the full string. For more information about analyzed fields, see [Text analysis]({{site.url}}{{site.baseurl}}/analyzers/).
+執行查詢時，了解您的欄位是經過分析（[`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 類型）還是未經分析（[`keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/keyword/) 類型）至關重要，因為這會大幅影響搜尋行為。在經過分析的欄位中，文字會經過斷詞和篩選，而未經分析的欄位則儲存精確值。對於 `wind` 這類簡單的欄位查詢，搜尋經過分析的欄位時，會比對含有 `wind` 的文件，不區分大小寫；但對 keyword 欄位執行相同查詢時，則需要精確比對完整字串。如需經過分析的欄位的詳細資訊，請參閱[文字分析]({{site.url}}{{site.baseurl}}/analyzers/)。
 
-## Setup
+## 設定
 
-To follow this tutorial in OpenSearch Dashboards, expand the following setup steps.
+若要在 OpenSearch Dashboards 中依照本教學操作，請展開下列設定步驟。
 
 <details markdown="block">
-  <summary>
-    Setup
-  </summary>
-  {: .text-delta}
+<summary>
+    設定
+</summary>
+{: .text-delta}
 
-Use the following steps to prepare sample data for querying.
+使用下列步驟準備範例資料以供查詢。
 
-**Step 1: Set up mappings for the index**
+**步驟 1：設定索引的對應**
 
-On the main menu, select **Management** > **Dev Tools** to open [Dev Tools]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/run-queries/). Send the following request to create index mappings:
+在主選單中，選取 **Management** > **Dev Tools**，以開啟 [Dev Tools]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/run-queries/)。傳送下列請求以建立索引對應：
 
 ```json
 PUT testindex
@@ -55,9 +56,9 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-**Step 2: Ingest the documents into the index**
+**步驟 2：將文件匯入索引**
 
-In **Dev Tools**, ingest the following documents into the index:
+在 **Dev Tools** 中，將下列文件匯入索引：
 
 ```json
 PUT /testindex/_doc/1
@@ -104,238 +105,238 @@ PUT /testindex/_doc/4
 ```
 {% include copy-curl.html %}
 
-**Step 3: Create an index pattern**
+**步驟 3：建立索引模式**
 
-Follow these steps to create an index pattern for your index:
+依照下列步驟為您的索引建立索引模式：
 
-1. On the main menu, select **Management** > **Dashboards Management**. 
-1. Select **Index patterns** and then **Create index pattern**.
-1. In **Index pattern name**, enter `testindex*`. Select **Next step**.
-1. In **Time field**, select `I don't want to use the time filter`.
-1. Select **Create index pattern**.
+1. 在主選單中，選取 **Management** > **Dashboards Management**。 
+1. 選取 **Index patterns**，然後選取 **Create index pattern**。
+1. 在 **Index pattern name** 中，輸入 `testindex*`。選取 **Next step**。
+1. 在 **Time field** 中，選取 `I don't want to use the time filter`。
+1. 選取 **Create index pattern**。
 
-For more information about index patterns, see [Index patterns]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/).
+如需索引模式的詳細資訊，請參閱[索引模式]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/)。
 
-**Step 4: Navigate to Discover and select the index pattern**
+**步驟 4：前往 Discover 並選取索引模式**
 
-On the main menu, select **Discover**. In the upper-left corner, select `testindex*` from the **Index patterns** dropdown list. The main panel displays the documents in the index, and you can now try out the DQL queries described on this page.
+在主選單中，選取 **Discover**。在左上角，從 **Index patterns** 下拉式清單中選取 `testindex*`。主要面板會顯示索引中的文件，您現在可以試用本頁所述的 DQL 查詢。
 
-The [Object fields](#object-fields) and [Nested fields](#nested-fields) sections provide links for additional setup needed to try queries in those sections.
+[物件欄位](#object-fields)和[巢狀欄位](#nested-fields)章節提供連結，說明試用這些章節中的查詢所需的額外設定。
 {: .note}
 </details>
 
-## DQL and query string query quick reference
+## DQL 和 query string 查詢快速參考
 
-The following table provides a quick reference for both query language commands. 
+下表提供這兩種查詢語言命令的快速參考。 
 
-| Feature | DQL | Query string query (Lucene)|
+| 功能 | DQL | Query string 查詢（Lucene）|
 |:---|:---|:---|
-| Basic term search | `wind` | `wind` |
-| Multiple terms | `wind gone` (finds documents containing `wind` or `gone`) | `wind gone` (finds documents containing `wind` or `gone`) |
-| Exact phrase search | `"wind rises"` | `"wind rises"` |
-| Field-specific search | `title: wind` | `title:wind` |
-| Existence of a field | `description:*` | `_exists_:description` |
-| Multiple terms in field | `title: (wind OR rises)` <br><br> | `title:(wind OR rises)` |
-| Field containing spaces | `article*title: wind` | `article\ title:wind` |
-| Escaping special characters | `format: 2\*3` | `format:2\*3` |
-| Multiple field search | `title: wind OR description: film` | `title:wind OR description:film` |
-| Nested field search | See [Nested fields](#nested-fields) | Not supported |
-| Numeric range | `page_views >= 100 and page_views <= 300` <br><br> `not page_views: 100` (results include documents that don't contain a `page_views` field) <br><br>   See [Ranges](#ranges)| `page_views:[100 TO 300]` <br><br>  `page_views:(>=100 AND <=300)` <br><br>  `page_views:(+>=100 +<=300)` <br><br>  `page_views:[100 TO *]` <br><br>  `page_views:>=100` <br><br>  `NOT page_views:100` (results include documents that don't contain a `page_views` field) <br><br> See [Ranges]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/#ranges)|
-| Date range | `date >= "1939-01-01" and date <= "2013-12-31"` <br><br> `not date: "1939-09-08"` | `date:[1939-01-01 TO 2013-12-31]` <br><br> `NOT date:1939-09-08` <br><br> Supports all numeric range syntax constructs|
-| Exclusive range | Not supported | `page_views: {100 TO 300}` (returns documents whose `page_views` are between `100` and `300`, excluding `100` and `300`) |
-| Boolean `AND` | `media_type: film AND page_views: 100` <br><br> `media_type: film and page_views: 100`| `media_type:film AND page_views:100` <br><br> `+media_type:film +page_views:100`|
-| Boolean `NOT` | `NOT media_type: article` <br><br> `not media_type: article` | `NOT media_type:article` <br><br> `-media_type:article`  |
-| Boolean `OR` | `title: wind OR description: film` <br><br> `title: wind or description: film` | `title: wind OR description: film` |
-| Required/Prohibited operators | Not supported | Supports both `+` (required operator) and `-` (prohibited operator) <br><br> `+title:wind -media_type:article` (returns documents in which `title` contains `wind` but `media_type` does not contain `article`)  |
-| Wildcards | `title: wind*`<br><br> `titl*: wind` <br><br> Does not support wildcards in phrase searches (within quotation marks) <br><br> Only supports `*` (multiple characters)  | `title:wind*` or `title:w?nd` <br><br> Does not support wildcards in field names <br><br> Does not support wildcards in phrase searches (within quotation marks) <br><br> Supports `*` (multiple characters) and `?` (single character) |
-| Regular expressions | Not supported | `title:/w[a-z]nd/` |
-| Fuzzy search | Not supported | `title:wind~2` |
-| Proximity search | Not supported | `"wind rises"~2` |
-| Boosting terms | Not supported | `title:wind^2` |
-| Reserved characters | `\ ( ) : < > " *` | `+ - = && || > < ! ( ) { } [ ] ^ " ~ * ? : \ /` |
+| 基本詞彙搜尋 | `wind` | `wind` |
+| 多個詞彙 | `wind gone`（尋找含有 `wind` 或 `gone` 的文件） | `wind gone`（尋找含有 `wind` 或 `gone` 的文件） |
+| 精確片語搜尋 | `"wind rises"` | `"wind rises"` |
+| 特定欄位搜尋 | `title: wind` | `title:wind` |
+| 欄位是否存在 | `description:*` | `_exists_:description` |
+| 欄位中的多個詞彙 | `title: (wind OR rises)` <br><br> | `title:(wind OR rises)` |
+| 含有空格的欄位 | `article*title: wind` | `article\ title:wind` |
+| 跳脫特殊字元 | `format: 2\*3` | `format:2\*3` |
+| 多欄位搜尋 | `title: wind OR description: film` | `title:wind OR description:film` |
+| 巢狀欄位搜尋 | 請參閱[巢狀欄位](#nested-fields) | 不支援 |
+| 數值範圍 | `page_views >= 100 and page_views <= 300` <br><br> `not page_views: 100`（結果包含不含 `page_views` 欄位的文件） <br><br>   請參閱[範圍](#ranges)| `page_views:[100 TO 300]` <br><br>  `page_views:(>=100 AND <=300)` <br><br>  `page_views:(+>=100 +<=300)` <br><br>  `page_views:[100 TO *]` <br><br>  `page_views:>=100` <br><br>  `NOT page_views:100`（結果包含不含 `page_views` 欄位的文件） <br><br> 請參閱[範圍]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/#ranges)|
+| 日期範圍 | `date >= "1939-01-01" and date <= "2013-12-31"` <br><br> `not date: "1939-09-08"` | `date:[1939-01-01 TO 2013-12-31]` <br><br> `NOT date:1939-09-08` <br><br> 支援所有數值範圍語法結構|
+| 不含邊界值的範圍 | 不支援 | `page_views: {100 TO 300}`（傳回 `page_views` 介於 `100` 和 `300` 之間的文件，不含 `100` 和 `300`） |
+| 布林值 `AND` | `media_type: film AND page_views: 100` <br><br> `media_type: film and page_views: 100`| `media_type:film AND page_views:100` <br><br> `+media_type:film +page_views:100`|
+| 布林值 `NOT` | `NOT media_type: article` <br><br> `not media_type: article` | `NOT media_type:article` <br><br> `-media_type:article`  |
+| 布林值 `OR` | `title: wind OR description: film` <br><br> `title: wind or description: film` | `title: wind OR description: film` |
+| 必須包含／禁止包含運算子 | 不支援 | 同時支援 `+`（必須包含運算子）和 `-`（禁止包含運算子） <br><br> `+title:wind -media_type:article`（傳回 `title` 含有 `wind`，但 `media_type` 不含 `article` 的文件）  |
+| 萬用字元 | `title: wind*`<br><br> `titl*: wind` <br><br> 不支援在片語搜尋（引號內）中使用萬用字元 <br><br> 僅支援 `*`（多個字元）  | `title:wind*` 或 `title:w?nd` <br><br> 不支援在欄位名稱中使用萬用字元 <br><br> 不支援在片語搜尋（引號內）中使用萬用字元 <br><br> 支援 `*`（多個字元）和 `?`（單一字元） |
+| 正規表示式 | 不支援 | `title:/w[a-z]nd/` |
+| 模糊搜尋 | 不支援 | `title:wind~2` |
+| 鄰近搜尋 | 不支援 | `"wind rises"~2` |
+| 提高詞彙權重 | 不支援 | `title:wind^2` |
+| 保留字元 | `\ ( ) : < > " *` | `+ - = && || > < ! ( ) { } [ ] ^ " ~ * ? : \ /` |
 
-## Search for terms
+## 搜尋詞彙
 
-By default, DQL searches in the field set as the default field on the index. If the default field is not set, DQL searches all fields. For example, the following query searches for documents containing the words `rises` or `wind` in any of their fields:
+預設情況下，DQL 會在索引中設為預設欄位的欄位內搜尋。若未設定預設欄位，DQL 會搜尋所有欄位。例如，下列查詢會搜尋任何欄位中包含 `rises` 或 `wind` 字詞的文件：
 
 ```python
 rises wind
 ```
 {% include copy.html %}
 
-The preceding query matches documents in which any search term appears regardless of the order. By default, DQL combines search terms with an `or`. To learn how to create Boolean expressions containing search terms, see [Boolean operators](#boolean-operators). 
+上述查詢會比對任何搜尋詞彙出現的文件，不論順序為何。預設情況下，DQL 使用 `or` 結合搜尋詞彙。若要瞭解如何建立包含搜尋詞彙的布林運算式，請參閱 [布林運算子](#boolean-operators)。
 
-To search for a phrase (an ordered sequence of words), surround your text with quotation marks. For example, the following query searches for the exact text "wind rises":
+若要搜尋片語（依序排列的字詞序列），請使用引號包住文字。例如，下列查詢會搜尋確切文字 "wind rises"：
 
 ```python
 "wind rises"
 ```
 {% include copy.html %}
 
-Hyphens are reserved characters in Lucene, so if your search term contains hyphens, DQL might prompt you to switch to Lucene syntax. To avoid this, surround your search term with quotation marks in a phrase search or omit the hyphen in a regular search.
+連字號是 Lucene 的保留字元，因此若您的搜尋詞彙包含連字號，DQL 可能會提示您切換至 Lucene 語法。若要避免這種情況，請在片語搜尋中使用引號包住搜尋詞彙，或在一般搜尋中省略連字號。
 {: .tip}
 
-## Reserved characters
+## 保留字元
 
-The following is a list of reserved characters in DQL:
+以下是 DQL 中的保留字元清單：
 
 `\`, `(`, `)`, `:`, `<`, `>`, `"`, `*`
 
-Use a backslash (`\`) to escape reserved characters. For example, to search for an expression `2*3`, specify the query as `2\*3`:
+使用反斜線（`\`）來跳脫保留字元。例如，若要搜尋運算式 `2*3`，請將查詢指定為 `2\*3`：
 
 ```plaintext
 2\*3
 ```
 {% include copy.html %}
 
-## Search in a field
+## 在欄位中搜尋
 
-To search for text in a particular field, specify the field name before the colon:
+若要在特定欄位中搜尋文字，請在冒號前指定欄位名稱：
 
 ```python
 title: rises wind
 ```
 {% include copy.html %}
 
-The analyzer for the field you're searching parses the query text into tokens and matches documents in which any of the tokens appear.
+您所搜尋欄位的分析器會將查詢文字解析成詞元，並比對任何詞元出現的文件。
 
-DQL ignores white space characters, so `title:rises wind` and `title: rises wind` are the same. 
+DQL 會忽略空白字元，因此 `title:rises wind` 與 `title: rises wind` 相同。
 {: .tip}
 
-Use wildcards to refer to field names containing spaces. For example, `article*title` matches the `article title` field.
+使用萬用字元來參照包含空格的欄位名稱。例如，`article*title` 會比對 `article title` 欄位。
 {: .tip}
 
-## Field names
+## 欄位名稱
 
-Specify the field name before the colon. The following table contains example queries with field names.
+請在冒號前指定欄位名稱。下表包含使用欄位名稱的範例查詢。
 
-Query | Criterion for a document to match | Matching documents from the `testindex` index
+查詢 | 文件比對條件 | 來自 `testindex` 索引的比對文件
 :--- | :--- | :---
-`title: wind` | The `title` field contains the word `wind`. | 1, 2
-`title: (wind OR windy)` | The `title` field contains the word `wind` or the word `windy`. | 1, 2, 3
-`title: "wind rises"` | The `title` field contains the phrase `wind rises`. | 1
-`title.keyword: The wind rises` | The `title.keyword` field exactly matches `The wind rises`. | 1
-`title*: wind` | Any field that starts with `title` (for example, `title` and `title.keyword`) contains the word `wind` | 1, 2
-`article*title: wind` | The field that starts with `article` and ends with `title` contains the word `wind`. Matches the field `article title`. | 4
-`description:*` | Documents in which the field `description` exists. | 1, 2
+`title: wind` | `title` 欄位包含字詞 `wind`。 | 1, 2
+`title: (wind OR windy)` | `title` 欄位包含字詞 `wind` 或字詞 `windy`。 | 1, 2, 3
+`title: "wind rises"` | `title` 欄位包含片語 `wind rises`。 | 1
+`title.keyword: The wind rises` | `title.keyword` 欄位完全符合 `The wind rises`。 | 1
+`title*: wind` | 任何以 `title` 開頭的欄位（例如 `title` 與 `title.keyword`）包含字詞 `wind` | 1, 2
+`article*title: wind` | 以 `article` 開頭且以 `title` 結尾的欄位包含字詞 `wind`。符合欄位 `article title`。 | 4
+`description:*` | 欄位 `description` 存在的文件。 | 1, 2
 
-## Wildcards
+## 萬用字元
 
-DQL supports wildcards (`*` only) in both search terms and field names, for example:
+DQL 在搜尋詞彙與欄位名稱中都支援萬用字元（僅 `*`），例如：
 
 ```python
 t*le: *wind and rise*
 ```
 {% include copy.html %}
 
-## Ranges
+## 範圍
 
-DQL supports numeric inequalities using the `>`, `<`, `>=`, and `<=` operators, for example: 
+DQL 支援使用 `>`、`<`、`>=` 與 `<=` 運算子的數值不等式，例如：
 
 ```python
 page_views > 100 and page_views <= 300
 ```
 {% include copy.html %}
 
-You can use the range operators on dates. For example, the following query searches for documents containing dates within the 2013--2023 range, inclusive:
+您可以對日期使用範圍運算子。例如，下列查詢會搜尋包含 2013 至 2023 年（含端點）範圍內日期的文件：
 
 ```python
 date >= "2013-01-01" and date < "2024-01-01"
 ```
 {% include copy.html %}
 
-You can query for "not equal to" by using `not` and the field name, for example: 
+您可以使用 `not` 與欄位名稱來查詢「不等於」，例如：
 
 ```python
 not page_views: 100
 ```
 {% include copy.html %}
 
-Note that the preceding query returns documents in which either the `page_views` field does not contain `100` or the field is not present. To filter by those documents that contain the field `page_views`, use the following query:
+請注意，上述查詢會傳回 `page_views` 欄位不包含 `100`，或該欄位不存在的文件。若要篩選出包含欄位 `page_views` 的文件，請使用下列查詢：
 
 ```python
 page_views:* and not page_views: 100
 ```
 {% include copy.html %}
 
-## Boolean operators
+## 布林運算子
 
-DQL supports the `and`, `or`, and `not` Boolean operators. DQL is not case sensitive, so `AND` and `and` are the same. For example, the following query is a conjunction of two Boolean clauses: 
+DQL 支援 `and`、`or` 與 `not` 布林運算子。DQL 不區分大小寫，因此 `AND` 與 `and` 相同。例如，下列查詢是兩個布林子句的合取：
 
 ```python
 title: wind and description: epic
 ```
 {% include copy.html %}
 
-Boolean operators follow the logical precedence order of `not`, `and`, and `or`, so in the following example, `title: wind and description: epic` is evaluated first:
+布林運算子遵循 `not`、`and` 與 `or` 的邏輯優先順序，因此在下列範例中，`title: wind and description: epic` 會先被求值：
 
 ```python
 media_type: article or title: wind and description: epic
 ```
 {% include copy.html %}
 
-To dictate the order of evaluation, group Boolean clauses in parentheses. For example, in the following query, the parenthesized expression is evaluated first:
+若要指定求值順序，請將布林子句以括號分組。例如，在下列查詢中，括號內的運算式會先被求值：
 
 ```python
 (media_type: article or title: wind) and description: epic
 ```
 {% include copy.html %}
 
-The field prefix refers to the token that immediately follows the colon. For example, the following query searches for documents in which the `title` field contains `windy` or documents containing the word `historical` in any of their fields:
+欄位前綴會參照緊接在冒號之後的詞元。例如，下列查詢會搜尋 `title` 欄位包含 `windy` 的文件，或任何欄位中包含字詞 `historical` 的文件：
 
 ```python
 title: windy or historical
 ```
 {% include copy.html %}
 
-To search for documents in which the `title` field contains `windy` or `historical`, group the terms in parentheses:
+若要搜尋 `title` 欄位包含 `windy` 或 `historical` 的文件，請將詞彙以括號分組：
 
 ```python
 title: (windy or historical)
 ```
 {% include copy.html %}
 
-The preceding query is equivalent to `title: windy or title: historical`.
+上述查詢等同於 `title: windy or title: historical`。
 
-To negate a query, use the `not` operator. For example, the following query searches for documents that contain the word `wind` in the `title` field, are not of the `media_type` `article`, and do not contain `epic` in the `description` field:
+若要否定查詢，請使用 `not` 運算子。例如，下列查詢會搜尋 `title` 欄位包含字詞 `wind`、不是 `article` 類型的 `media_type`，且 `description` 欄位不包含 `epic` 的文件：
 
 ```python
 title: wind and not (media_type: article or description: epic)
 ```
 {% include copy.html %}
 
-Queries can contain multiple grouping levels, for example:
+查詢可以包含多個分組層級，例如：
 
 ```python
 title: ((wind or windy) and not rises)
 ```
 {% include copy.html %}
 
-## Object fields
+## 物件欄位
 
-To refer to an object's inner field, list the dot path of the field. 
+若要參照物件的內部欄位，請列出該欄位的點路徑。
 
-To index a document containing an object, follow the steps in the [object field type example]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/object/#example). To search the `name` field of the `patient` object, use the following syntax:
+若要為包含物件的文件編製索引，請依照 [物件欄位類型範例]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/object/#example) 中的步驟。若要搜尋 `patient` 物件的 `name` 欄位，請使用下列語法：
 
 ```python
 patient.name: john
 ```
 {% include copy.html %}
 
-## Nested fields
+## 巢狀欄位
 
-To refer to a nested object, list the JSON path of the field. 
+若要參照巢狀物件，請列出該欄位的 JSON 路徑。
 
-To index a document containing an object, follow the steps in the [nested field type example]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/#mapping-objects-as-nested).
+若要為包含物件的文件編製索引，請依照 [巢狀欄位類型範例]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/#mapping-objects-as-nested) 中的步驟。
 
-To search the `name` field of the `patients` object, use the following syntax:
+若要搜尋 `patients` 物件的 `name` 欄位，請使用下列語法：
 
 ```python
 patients: {name: john}
 ```
 {% include copy.html %}
 
-To retrieve documents that match multiple fields, specify all the fields. For example, consider an additional `status` field in the following document:
+若要擷取符合多個欄位的文件，請指定所有欄位。例如，假設下列文件中有額外的 `status` 欄位：
 
 ```json
 { 
@@ -347,23 +348,23 @@ To retrieve documents that match multiple fields, specify all the fields. For ex
 }
 ```
 
-To search for a discharged patient whose name is John, specify the `name` and the `status` in the query:
+若要搜尋名為 John 的已出院病患，請在查詢中指定 `name` 與 `status`：
 
 ```python
 patients: {name: john} and status: discharged
 ```
 {% include copy.html %}
 
-You can combine multiple Boolean and range queries to create a more refined query, for example:
+您可以結合多個布林與範圍查詢來建立更精細的查詢，例如：
 
 ```python
 patients: {name: john and smoker: true and age < 57} 
 ```
 {% include copy.html %}
 
-## Doubly nested fields 
+## 雙重巢狀欄位 
 
-Consider a document with a doubly nested field. In this document, both the `patients` and `names` fields are of type `nested`:
+請考慮一份具有雙重巢狀欄位的文件。在這份文件中，`patients` 與 `names` 欄位皆為 `nested` 類型：
 
 ```json
 {
@@ -378,14 +379,14 @@ Consider a document with a doubly nested field. In this document, both the `pati
 }
 ```
 
-To search the `name` field of the `patients` object, use the following syntax:
+若要搜尋 `patients` 物件的 `name` 欄位，請使用下列語法：
 
 ```python
 patients: {names: {name: john}}
 ```
 {% include copy.html %}
 
-In contrast, consider a document in which the `patients` field is of type `object` but the `names` field is of type `nested`:
+相對地，請考慮一份文件中 `patients` 欄位為 `object` 類型，但 `names` 欄位為 `nested` 類型：
 
 ```json
 {
@@ -399,7 +400,7 @@ In contrast, consider a document in which the `patients` field is of type `objec
 }
 ```
 
-To search the `name` field of the `patients` object, use the following syntax:
+若要搜尋 `patients` 物件的 `name` 欄位，請使用下列語法：
 
 ```python
 patients.names: {name: john}

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Patch configuration
+title: "修補組態"
 parent: Security configuration APIs
 grand_parent: Security APIs
 nav_order: 20
@@ -9,35 +10,35 @@ redirect_from:
 ---
 
 # Patch Security Configuration API
-**Introduced 2.10**
+**於 2.10 版導入**
 {: .label .label-purple }
 
-The Patch Configuration API allows you to update specific parts of the Security plugin configuration without replacing the entire configuration document. 
+Patch Configuration API 可讓您更新 Security 外掛程式組態的特定部分，而無需取代整個組態文件。
 
-This operation can easily break your existing security configuration. We strongly recommend using the `securityadmin.sh` script instead, which includes validations and safeguards to prevent misconfiguration.
+此作業可能輕易破壞您現有的安全性組態。我們強烈建議改用 `securityadmin.sh` 指令碼，其中包含可防止組態錯誤的驗證與防護機制。
 {: .warning}
 
 <!-- spec_insert_start
 api: security.patch_configuration
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PATCH /_plugins/_security/api/securityconfig
 ```
 <!-- spec_insert_end -->
 
-## Request body fields
+## 請求本文欄位
 
-The request body is **required**. It is an **array of JSON objects** (NDJSON). Each object has the following fields.
+請求本文是**必要**的。它是一個 **JSON 物件陣列** (NDJSON)。每個物件具有下列欄位。
 
-| Property | Required | Data type | Description |
+| 屬性 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `op` | **Required** | String | The operation to perform. Valid values are `add`, `remove`, `replace`, `move`, `copy`, and `test`. |
-| `path` | **Required** | String | The JSON pointer path to the location in the configuration to modify. |
-| `value` | Optional | Object | The value to use for the operation. Required for `add`, `replace`, and `test` operations. |
+| `op` | **必要** | 字串 | 要執行的作業。有效值為 `add`、`remove`、`replace`、`move`、`copy` 與 `test`。 |
+| `path` | **必要** | 字串 | 指向組態中要修改位置的 JSON 指標路徑。 |
+| `value` | 選用 | 物件 | 作業要使用的值。`add`、`replace` 與 `test` 作業需要此欄位。 |
 
-## Example request
+## 範例請求
 
 ```json
 PATCH /_plugins/_security/api/securityconfig
@@ -51,7 +52,7 @@ PATCH /_plugins/_security/api/securityconfig
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -60,22 +61,22 @@ PATCH /_plugins/_security/api/securityconfig
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文是一個具有下列欄位的 JSON 物件。
 
-| Property | Data type | Description |
+| 屬性 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `status` | String | The status of the request. A successful request returns "OK". |
-| `message` | String | A message describing the result of the operation. |
+| `status` | 字串 | 請求的狀態。成功的請求會回傳 "OK"。 |
+| `message` | 字串 | 描述作業結果的訊息。 |
 
-## Enabling this API
+## 啟用此 API
 
-By default, this API is disabled for security reasons. To enable it, add the following line to `opensearch.yml`:
+基於安全性考量，此 API 預設為停用。若要啟用，請在 `opensearch.yml` 中加入以下一行：
 
 ```yml
 plugins.security.unsupported.restapi.allow_securityconfig_modification: true
 ```
 {% include copy.html %}
 
-For more information about granting access to the Security APIs, see [Access control for the API]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api).
+如需授予 Security API 存取權限的更多資訊，請參閱 [API 的存取控制]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api)。

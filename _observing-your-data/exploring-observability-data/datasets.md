@@ -1,39 +1,40 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Datasets
+title: "資料集"
 nav_order: 10
 parent: Using Discover for observability
 redirect_from:
   - /observability-plugin/datasets/
 ---
 
-# Datasets
-**Introduced 3.5**
+# 資料集
+**於 3.5 版推出**
 {: .label .label-purple }
 
-A _dataset_ represents a collection of indexes that you want to analyze together. Datasets provide a user-friendly way to organize and access your observability data in OpenSearch Dashboards. Datasets allow you to assign types, names, and descriptions to your data sources and indexes, making it easier to work with logs and traces.
+_資料集_ 代表您想要一起分析的一組索引集合。資料集提供了一種方便使用的方式，讓您在 OpenSearch Dashboards 中組織及存取您的可觀測性資料。資料集可讓您為資料來源和索引指派類型、名稱和描述，讓您更輕鬆地處理記錄檔和追蹤資料。
 
-Datasets offer several advantages over traditional index patterns:
+相較於傳統的索引模式，資料集提供了幾項優點：
 
-- **User-friendly names**: Assign descriptive names instead of relying on index pattern syntax.
-- **Descriptions**: Add context about what data the dataset contains.
-- **Schema mappings**: Map fields from non-standard formats to OpenTelemetry-compatible fields for correlation.
-- **Type-specific behavior**: Logs and traces datasets integrate with their respective Discover pages.
+- **方便使用的名稱**：指派描述性名稱，而不必依賴索引模式語法。
+- **描述**：新增資料集所含資料的相關內容。
+- **結構描述對應**：將非標準格式的欄位對應至與 OpenTelemetry 相容的欄位，以便進行關聯。
+- **類型專屬行為**：記錄檔和追蹤資料集會與其各自的 Discover 頁面整合。
 
-## Dataset types
+## 資料集類型
 
-OpenSearch supports the following dataset types.
+OpenSearch 支援下列資料集類型。
 
-| Type | Description | Use case |
+| 類型 | 描述 | 使用案例 |
 |:-----|:------------|:---------|
-| **Logs** | Generic log data for analytics and exploration | Application logs, system logs, access logs |
-| **Traces** | OpenTelemetry span data ingested through OpenSearch Data Prepper | Distributed tracing, performance monitoring |
+| **Logs** | 用於分析和探索的一般記錄資料 | 應用程式記錄檔、系統記錄檔、存取記錄檔 |
+| **Traces** | 透過 OpenSearch Data Prepper 匯入的 OpenTelemetry span 資料 | 分散式追蹤、效能監控 |
 
-## Prerequisites
+## 先決條件
 
-Before using datasets, ensure that you have fulfilled the following prerequisites:
+使用資料集之前，請確認您已符合下列先決條件：
 
-1. **Enable feature flags**: Add the following settings to your `opensearch_dashboards.yml` file:
+1. **啟用功能旗標**：將下列設定新增至您的 `opensearch_dashboards.yml` 檔案：
 
    ```yaml
    workspace.enabled: true
@@ -44,97 +45,97 @@ Before using datasets, ensure that you have fulfilled the following prerequisite
    ```
    {% include copy.html %}
 
-   After updating the configuration file, restart OpenSearch Dashboards for the changes to take effect.
+   更新組態檔案後，請重新啟動 OpenSearch Dashboards，變更才會生效。
 
-1. **Index data**: Your log or trace data must already be indexed in OpenSearch.
+1. **將資料編製索引**：您的記錄或追蹤資料必須已編製索引至 OpenSearch。
 
-1. **Ensure appropriate permissions**: You need permissions to create and manage datasets in your workspace.
+1. **確保具備適當權限**：您需要具備在工作區中建立及管理資料集的權限。
 
-## Creating a logs dataset
+## 建立記錄資料集
 
-To create a logs dataset, follow these steps:
+若要建立記錄資料集，請依照下列步驟進行：
 
-1. In the workspace left navigation, select **Datasets**.
+1. 在工作區左側導覽中，選取 **Datasets**。
 
-2. Select **Create dataset** and choose **Logs** from the dropdown menu.
+2. 選取 **Create dataset**，然後從下拉式功能表中選擇 **Logs**。
 
-3. In **Step 1: Select data**, select your data source, as shown in the following image. You can use wildcard patterns (for example, `logs-*`) to match multiple indexes.
+3. 在 **Step 1: Select data** 中，選取您的資料來源，如下圖所示。您可以使用萬用字元模式 (例如 `logs-*`) 來比對多個索引。
 
-   ![Selecting a data source]({{site.url}}{{site.baseurl}}/images/datasets/datasets-select-data-source.png)
+   ![選取資料來源]({{site.url}}{{site.baseurl}}/images/datasets/datasets-select-data-source.png)
 
-4. In **Step 2: Configure data**, configure the dataset settings, as shown in the following image.
+4. 在 **Step 2: Configure data** 中，設定資料集設定，如下圖所示。
 
-   ![Configuring logs dataset settings]({{site.url}}{{site.baseurl}}/images/datasets/datasets-configure-logs.png)
+   ![設定記錄資料集設定]({{site.url}}{{site.baseurl}}/images/datasets/datasets-configure-logs.png)
 
-   You can configure the following settings:
+   您可以設定下列設定：
 
-   - **Name** -- Enter a descriptive name for the dataset.
-   - **Description** (Optional) -- Add the data description.
-   - **Time field**: Choose the timestamp field for time-based queries.
-   - **Schema mappings** (Optional) -- Map your log fields to standard OpenTelemetry fields for correlation with traces:
-     - **Trace ID field**: The field containing trace identifiers.
-     - **Span ID field**: The field containing span identifiers.
-     - **Service name field**: The field containing service names.
-     - **Timestamp field**: The field containing event timestamps.  
+   - **Name** -- 輸入資料集的描述性名稱。
+   - **Description** (選用) -- 新增資料描述。
+   - **Time field**：選擇用於時間型查詢的時間戳記欄位。
+   - **Schema mappings** (選用) -- 將您的記錄欄位對應至標準 OpenTelemetry 欄位，以便與追蹤建立關聯：
+     - **Trace ID field**：包含追蹤識別碼的欄位。
+     - **Span ID field**：包含 span 識別碼的欄位。
+     - **Service name field**：包含服務名稱的欄位。
+     - **Timestamp field**：包含事件時間戳記的欄位。  
 
-5. Select **Create dataset** to save your configuration.
+5. 選取 **Create dataset** 以儲存您的組態。
 
-## Creating a traces dataset
+## 建立追蹤資料集
 
-To create a traces dataset, follow these steps:
+若要建立追蹤資料集，請依照下列步驟進行：
 
-1. In the workspace left navigation, select **Datasets**.
+1. 在工作區左側導覽中，選取 **Datasets**。
 
-2. Select **Create dataset** and choose **Traces** from the dropdown menu.
+2. 選取 **Create dataset**，然後從下拉式功能表中選擇 **Traces**。
 
-3. In **Step 1: Select data**, select your trace data source. The data source must reference indexes containing OpenTelemetry span data ingested using Data Prepper.
+3. 在 **Step 1: Select data** 中，選取您的追蹤資料來源。資料來源必須參照包含使用 Data Prepper 匯入之 OpenTelemetry span 資料的索引。
 
-4. In **Step 2: Configure data**, configure the dataset settings, as shown in the following image.
+4. 在 **Step 2: Configure data** 中，設定資料集設定，如下圖所示。
 
-   ![Configuring traces dataset settings]({{site.url}}{{site.baseurl}}/images/datasets/datasets-configure-traces.png)
+   ![設定追蹤資料集設定]({{site.url}}{{site.baseurl}}/images/datasets/datasets-configure-traces.png)
 
-   You can configure the following settings:
+   您可以設定下列設定：
 
-   - **Name** -- Enter a descriptive name for the dataset.
-   - **Description** (Optional) -- Add the data description.
-   - **Time field** -- Choose the timestamp field (typically, `startTime` or `@timestamp`).
+   - **Name** -- 輸入資料集的描述性名稱。
+   - **Description** (選用) -- 新增資料描述。
+   - **Time field** -- 選擇時間戳記欄位 (通常是 `startTime` 或 `@timestamp`)。
 
-5. Select **Create dataset** to save your configuration.
+5. 選取 **Create dataset** 以儲存您的組態。
 
-## Viewing datasets
+## 檢視資料集
 
-After creating datasets, you can view and manage them from the **Datasets** page using the following steps:
+建立資料集之後，您可以透過下列步驟從 **Datasets** 頁面檢視及管理這些資料集：
 
-1. In the workspace left navigation, select **Datasets**.
+1. 在工作區左側導覽中，選取 **Datasets**。
 
-2. The list view displays all datasets with their names, types, and data sources, as shown in the following image.
+2. 清單檢視會顯示所有資料集及其名稱、類型和資料來源，如下圖所示。
 
-   ![Datasets list view]({{site.url}}{{site.baseurl}}/images/datasets/datasets-list.png)
+   ![資料集清單檢視]({{site.url}}{{site.baseurl}}/images/datasets/datasets-list.png)
 
-3. Select a dataset to view its details, including configuration settings and any correlations.
+3. 選取資料集以檢視其詳細資料，包括組態設定和任何關聯。
 
-## Analyzing datasets in Discover pages
+## 在 Discover 頁面中分析資料集
 
-Datasets integrate with the Discover interface for exploring your data.
+資料集會與 Discover 介面整合，以便探索您的資料。
 
-### Logs datasets
+### 記錄檔資料集
 
-To analyze logs datasets, follow these steps:
+若要分析記錄檔資料集，請依照下列步驟進行：
 
-1. Navigate to **Discover** > **Logs**.
-2. From the dataset selector, select your logs dataset.
-3. Use Piped Processing Language (PPL) queries to explore and analyze your log data.
+1. 瀏覽至 **Discover** > **Logs**。
+2. 從資料集選取器中，選取您的記錄檔資料集。
+3. 使用 Piped Processing Language (PPL) 查詢來探索及分析您的記錄資料。
 
-### Traces datasets
+### 追蹤資料集
 
-To analyze traces datasets, follow these steps:
+若要分析追蹤資料集，請依照下列步驟進行：
 
-1. Navigate to **Discover** > **Traces**.
-2. Select your traces dataset from the dataset selector.
-3. Explore span data and trace flows.
+1. 瀏覽至 **Discover** > **Traces**。
+2. 從資料集選取器中選取您的追蹤資料集。
+3. 探索 span 資料和追蹤流程。
 
-## Related documentation
+## 相關文件
 
-- [Index patterns]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/) -- Compare datasets to traditional index patterns.
-- [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) -- Ingest OpenTelemetry data into OpenSearch.
-- [Correlations]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/correlations/) -- Link traces and logs datasets.
+- [索引模式]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/) -- 比較資料集與傳統索引模式。
+- [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) -- 將 OpenTelemetry 資料匯入 OpenSearch。
+- [關聯]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/correlations/) -- 連結追蹤資料集和記錄檔資料集。

@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Example UBI query DSL queries
+title: "UBI Query DSL 查詢範例"
 parent: User Behavior Insights
 grand_parent: Optimizing search quality
 has_children: false
 nav_order: 15
 ---
 
-# Example UBI query DSL queries
+# UBI Query DSL 查詢範例
 
-You can use the OpenSearch search query language, [query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/), to write User Behavior Insights (UBI) queries. The following example returns the number of times that each `action_name` event occurs.
-For more extensive analytic queries, see [Example UBI SQL queries]({{site.url}}{{site.baseurl}}/search-plugins/ubi/sql-queries/). 
-#### Example request
+您可以使用 OpenSearch 搜尋查詢語言 [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/) 來撰寫 User Behavior Insights (UBI) 查詢。下列範例會傳回每個 `action_name` 事件發生的次數。
+如需更完整的分析查詢，請參閱 [UBI SQL 查詢範例]({{site.url}}{{site.baseurl}}/search-plugins/ubi/sql-queries/)。 
+#### 請求範例
 ```json
 GET ubi_events/_search
 {
@@ -28,7 +29,7 @@ GET ubi_events/_search
 ```
 {% include copy.html %}
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -96,4 +97,4 @@ GET ubi_events/_search
 ```
 {% include copy.html %}
 
-You can run the preceding queries in the OpenSearch Dashboards [Dev Tools]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/index/) console.
+您可以在 OpenSearch Dashboards 的 [Dev Tools]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/index/) 主控台中執行上述查詢。

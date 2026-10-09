@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: User impersonation
+title: "使用者身分模擬"
 parent: Access control
 nav_order: 105
 redirect_from:
  - /security-plugin/access-control/impersonation/
 ---
 
-# User impersonation
+# 使用者身分模擬
 
-User impersonation allows specially privileged users to act as another user without knowledge of nor access to the impersonated user's credentials.
+使用者身分模擬可讓具備特殊權限的使用者以其他使用者的身分操作，而無需知道或存取被模擬使用者的憑證。
 
-Impersonation can be useful for testing and troubleshooting, or for allowing system services to safely act as a user.
+身分模擬可用於測試與疑難排解，或讓系統服務安全地以某位使用者的身分操作。
 
-Impersonation can occur on either the REST interface or at the transport layer.
+身分模擬可發生在 REST 介面或傳輸層。
 
 
-## REST interface
+## REST 介面
 
-To allow one user to impersonate another, add the following to `opensearch.yml`:
+若要允許某位使用者模擬另一位使用者，請將下列內容新增至 `opensearch.yml`：
 
 ```yml
 plugins.security.authcz.rest_impersonation_user:
@@ -27,12 +28,12 @@ plugins.security.authcz.rest_impersonation_user:
     - <IMPERSONATED_USER_2>
 ```
 
-The impersonated user field supports wildcards. Setting it to `*` allows `AUTHENTICATED_USER` to impersonate any user.
+被模擬使用者欄位支援萬用字元。將其設為 `*` 可讓 `AUTHENTICATED_USER` 模擬任何使用者。
 
 
-## Transport interface
+## 傳輸介面
 
-In a similar fashion, add the following to enable transport layer impersonation:
+同樣地，新增下列內容以啟用傳輸層身分模擬：
 
 ```yml
 plugins.security.authcz.impersonation_dn:
@@ -41,9 +42,9 @@ plugins.security.authcz.impersonation_dn:
 ```
 
 
-## Impersonating users
+## 模擬使用者
 
-To impersonate another user, submit a request to the system with the HTTP header `opendistro_security_impersonate_as` set to the name of the user to be impersonated. A good test is to make a GET request to the `_plugins/_security/authinfo` URI:
+若要模擬另一位使用者，請向系統提交請求，並將 HTTP 標頭 `opendistro_security_impersonate_as` 設為要模擬的使用者名稱。一個不錯的測試方式是對 `_plugins/_security/authinfo` URI 發出 GET 請求：
 
 ```bash
 curl -XGET -u 'admin:<custom-admin-password>' -k -H "opendistro_security_impersonate_as: user_1" https://localhost:9200/_plugins/_security/authinfo?pretty

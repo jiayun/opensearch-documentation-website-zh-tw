@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Spaces
+title: "空間"
 parent: k-NN vector
 grand_parent: Supported field types
 redirect_from:
@@ -9,45 +10,45 @@ nav_order: 10
 has_math: true
 ---
 
-# Vector spaces
+# 向量空間
 
-In vector search, a _space_ defines how the distance (or similarity) between two vectors is calculated. The choice of space affects how nearest neighbors are determined during search operations. 
+在向量搜尋中，_空間_ (space) 定義了兩個向量之間距離（或相似度）的計算方式。空間的選擇會影響搜尋作業期間最近鄰的判定方式。
 
-## Distance calculation
+## 距離計算
 
-A space defines the function used to measure the distance between two points in order to determine the k-nearest neighbors. In k-NN search, a lower score equates to a closer and better result. This is the opposite of how OpenSearch scores results, where a higher score equates to a better result. OpenSearch supports the following spaces. 
+空間定義了用來測量兩點之間距離的函式，以判定 k 個最近鄰。在 k-NN 搜尋中，分數越低代表結果越近、越好。這與 OpenSearch 為結果評分的方式相反，在 OpenSearch 中分數越高代表結果越好。OpenSearch 支援下列空間。
 
-Not every method/engine combination supports each of the spaces. For a list of supported spaces, see the section for a specific engine in the [method documentation]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/).
+並非每種方法/引擎組合都支援每個空間。如需支援的空間清單，請參閱[方法文件]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/)中特定引擎的章節。
 {: .note}
 
-| Space type | Search type | Distance function ($$d$$ ) | OpenSearch score |
+| 空間類型 | 搜尋類型 | 距離函式 ($$d$$ ) | OpenSearch 分數 |
 | :--- | :--- | :--- |
-| `l1`  | Approximate, exact | $$ d(\mathbf{x}, \mathbf{y}) = \sum_{i=1}^n \lvert x_i - y_i \rvert $$ | $$ score = {1 \over {1 + d} } $$ |
-| `l2`  | Approximate, exact | $$ d(\mathbf{x}, \mathbf{y}) = \sum_{i=1}^n (x_i - y_i)^2 $$ | $$ score = {1 \over 1 + d } $$ |
-| `linf` | Approximate, exact | $$ d(\mathbf{x}, \mathbf{y}) = max(\lvert x_i - y_i \rvert) $$ | $$ score = {1 \over 1 + d } $$ |
-| `cosinesimil` | Approximate, exact | $$ d(\mathbf{x}, \mathbf{y}) = 1 - cos { \theta } = 1 - {\mathbf{x} \cdot \mathbf{y} \over \lVert \mathbf{x}\rVert \cdot \lVert \mathbf{y}\rVert}$$$$ = 1 - {\sum_{i=1}^n x_i y_i \over \sqrt{\sum_{i=1}^n x_i^2} \cdot \sqrt{\sum_{i=1}^n y_i^2}}$$, <br> where $$\lVert \mathbf{x}\rVert$$ and $$\lVert \mathbf{y}\rVert$$ represent the norms of vectors $$\mathbf{x}$$ and $$\mathbf{y}$$, respectively. | $$ score = {2 - d \over 2} $$ |
-| `innerproduct` (supported for Lucene in OpenSearch version 2.13 and later) | Approximate | **NMSLIB** and **Faiss**:<br> $$ d(\mathbf{x}, \mathbf{y}) = - {\mathbf{x} \cdot \mathbf{y}} = - \sum_{i=1}^n x_i y_i $$  <br><br>**Lucene**:<br> $$ d(\mathbf{x}, \mathbf{y}) = {\mathbf{x} \cdot \mathbf{y}} = \sum_{i=1}^n x_i y_i $$ | **NMSLIB** and **Faiss**:<br> $$ \text{If} d \ge 0,  score = {1 \over 1 + d }$$ <br> $$\text{If} d < 0, score = −d + 1$$  <br><br>**Lucene:**<br> $$ \text{If} d > 0, score = d + 1 $$ <br> $$\text{If} d \le 0, score = {1 \over 1 + (-1 \cdot d) }$$ |
-| `innerproduct` (supported for Lucene in OpenSearch version 2.13 and later) | Exact | $$ d(\mathbf{x}, \mathbf{y}) = - {\mathbf{x} \cdot \mathbf{y}} = - \sum_{i=1}^n x_i y_i $$ | $$ \text{If} d \ge 0,  score = {1 \over 1 + d }$$ <br> $$\text{If} d < 0, score = −d + 1$$ |
-| `hamming` (supported for binary vectors in OpenSearch version 2.16 and later) | Approximate, exact | $$ d(\mathbf{x}, \mathbf{y}) = \text{countSetBits}(\mathbf{x} \oplus \mathbf{y})$$ | $$ score = {1 \over 1 + d } $$ |
-| `hammingbit` (supported for binary and long vectors) | Exact | $$ d(\mathbf{x}, \mathbf{y}) = \text{countSetBits}(\mathbf{x} \oplus \mathbf{y})$$ | $$ score = {1 \over 1 + d } $$ |
+| `l1`  | 近似、精確 | $$ d(\mathbf{x}, \mathbf{y}) = \sum_{i=1}^n \lvert x_i - y_i \rvert $$ | $$ score = {1 \over {1 + d} } $$ |
+| `l2`  | 近似、精確 | $$ d(\mathbf{x}, \mathbf{y}) = \sum_{i=1}^n (x_i - y_i)^2 $$ | $$ score = {1 \over 1 + d } $$ |
+| `linf` | 近似、精確 | $$ d(\mathbf{x}, \mathbf{y}) = max(\lvert x_i - y_i \rvert) $$ | $$ score = {1 \over 1 + d } $$ |
+| `cosinesimil` | 近似、精確 | $$ d(\mathbf{x}, \mathbf{y}) = 1 - cos { \theta } = 1 - {\mathbf{x} \cdot \mathbf{y} \over \lVert \mathbf{x}\rVert \cdot \lVert \mathbf{y}\rVert}$$$$ = 1 - {\sum_{i=1}^n x_i y_i \over \sqrt{\sum_{i=1}^n x_i^2} \cdot \sqrt{\sum_{i=1}^n y_i^2}}$$，<br> 其中 $$\lVert \mathbf{x}\rVert$$ 與 $$\lVert \mathbf{y}\rVert$$ 分別代表向量 $$\mathbf{x}$$ 與 $$\mathbf{y}$$ 的範數。 | $$ score = {2 - d \over 2} $$ |
+| `innerproduct`（Lucene 自 OpenSearch 2.13 版起支援） | 近似 | **NMSLIB** 與 **Faiss**：<br> $$ d(\mathbf{x}, \mathbf{y}) = - {\mathbf{x} \cdot \mathbf{y}} = - \sum_{i=1}^n x_i y_i $$  <br><br>**Lucene**：<br> $$ d(\mathbf{x}, \mathbf{y}) = {\mathbf{x} \cdot \mathbf{y}} = \sum_{i=1}^n x_i y_i $$ | **NMSLIB** 與 **Faiss**：<br> $$ \text{If} d \ge 0,  score = {1 \over 1 + d }$$ <br> $$\text{If} d < 0, score = −d + 1$$  <br><br>**Lucene:**<br> $$ \text{If} d > 0, score = d + 1 $$ <br> $$\text{If} d \le 0, score = {1 \over 1 + (-1 \cdot d) }$$ |
+| `innerproduct`（Lucene 自 OpenSearch 2.13 版起支援） | 精確 | $$ d(\mathbf{x}, \mathbf{y}) = - {\mathbf{x} \cdot \mathbf{y}} = - \sum_{i=1}^n x_i y_i $$ | $$ \text{If} d \ge 0,  score = {1 \over 1 + d }$$ <br> $$\text{If} d < 0, score = −d + 1$$ |
+| `hamming`（二進位向量自 OpenSearch 2.16 版起支援） | 近似、精確 | $$ d(\mathbf{x}, \mathbf{y}) = \text{countSetBits}(\mathbf{x} \oplus \mathbf{y})$$ | $$ score = {1 \over 1 + d } $$ |
+| `hammingbit`（支援二進位向量與 long 類型向量） | 精確 | $$ d(\mathbf{x}, \mathbf{y}) = \text{countSetBits}(\mathbf{x} \oplus \mathbf{y})$$ | $$ score = {1 \over 1 + d } $$ |
 
-The cosine similarity formula does not include the `1 -` prefix. However, because similarity search libraries equate lower scores with closer results, they return `1 - cosineSimilarity` for the cosine similarity space---this is why `1 -` is included in the distance function.
+餘弦相似度公式不包含 `1 -` 前綴。不過，由於相似度搜尋程式庫將較低的分數視為更近的結果，因此它們會在餘弦相似度空間中傳回 `1 - cosineSimilarity`——這就是距離函式中包含 `1 -` 的原因。
 {: .note }
 
-With cosine similarity, it is not valid to pass a zero vector (`[0, 0, ...]`) as input. This is because the magnitude of such a vector is 0, which raises a `divide by 0` exception in the corresponding formula. Requests containing the zero vector will be rejected, and a corresponding exception will be thrown.
+使用餘弦相似度時，不可傳入零向量 (`[0, 0, ...]`) 作為輸入。這是因為此類向量的量值為 0，會在對應的公式中引發 `divide by 0` 例外。包含零向量的請求將被拒絕，並擲回對應的例外。
 {: .note }
 
-The `hamming` space type is supported for binary vectors in OpenSearch version 2.16 and later. For more information, see [Binary k-NN vectors]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized#binary-vectors).
+`hamming` 空間類型自 OpenSearch 2.16 版起支援二進位向量。如需更多資訊，請參閱[二進位 k-NN 向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized#binary-vectors)。
 {: .note}
 
-When using `cosinesimil` with the Faiss engine, vectors are automatically normalized to unit length during indexing because Faiss uses inner product on normalized vectors internally. If your vectors are already normalized, consider using `innerproduct` instead of `cosinesimil` to obtain equivalent results with explicit control over normalization.
+搭配 Faiss 引擎使用 `cosinesimil` 時，向量會在編製索引期間自動正規化為單位長度，因為 Faiss 內部會對已正規化的向量使用內積。如果您的向量已經正規化，請考慮改用 `innerproduct` 而非 `cosinesimil`，以取得等效結果並明確控制正規化。
 {: .important}
 
-## Specifying the space type
+## 指定空間類型
 
-The space type is specified when creating an index.
+空間類型是在建立索引時指定的。
 
-You can specify the space type at the top level of the field mapping:
+您可以在欄位對應的最上層指定空間類型：
 
 ```json
 PUT /test-index
@@ -70,7 +71,7 @@ PUT /test-index
 ```
 {% include copy-curl.html %}
 
-Alternatively, you can specify the space type within the `method` object if defining a method:
+或者，如果定義方法，您可以在 `method` 物件內指定空間類型：
 
 ```json
 PUT test-index

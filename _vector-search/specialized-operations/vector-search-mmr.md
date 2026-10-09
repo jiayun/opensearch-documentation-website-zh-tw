@@ -1,41 +1,42 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Vector search with MMR reranking
+title: "使用 MMR 重新排序的向量搜尋"
 nav_order: 60
 parent: Specialized vector search
 has_children: false
 has_math: true
 ---
 
-# Vector search with MMR reranking
-**Introduced 3.3**
+# 使用 MMR 重新排序的向量搜尋
+**於 3.3 版導入**
 {: .label .label-purple }
 
-The maximal marginal relevance (MMR) search helps balance relevance and diversity in search results. Instead of returning only the most similar documents, MMR selects results that are both relevant to the query and different from each other. This improves the coverage of the result set and reduces redundancy, which is especially useful in vector search scenarios.
+最大邊際相關性 (MMR) 搜尋有助於在搜尋結果中平衡相關性與多樣性。MMR 不只傳回最相似的文件，而是選取既與查詢相關、彼此又互不相同的結果。這能改善結果集的涵蓋範圍並減少重複，在向量搜尋情境中特別有用。
 
-MMR reranking balances two competing objectives:
+MMR 重新排序會平衡兩個相互競爭的目標：
 
- - Relevance: How well a document matches the query.
+ - 相關性：文件與查詢的符合程度。
 
- - Diversity: How different a document is from the documents already selected.
+ - 多樣性：文件與已選取文件之間的差異程度。
 
-The algorithm computes a score for each candidate document using the following formula:
+此演算法使用下列公式為每個候選文件計算分數：
 
 $$MMR = (1 − \lambda) \times \text{relevance_score} - \lambda \times max(\text{similarity_with_selected_docs})$$,
 
-where:
+其中：
 
- - $$\lambda$$ is the diversity parameter (closer to 1 means higher diversity).
+ - $$\lambda$$ 是多樣性參數（越接近 1 代表多樣性越高）。
 
- - $$\text{relevance_score}$$ measures similarity between the query vector and the candidate document vector.
+ - $$\text{relevance_score}$$ 衡量查詢向量與候選文件向量之間的相似度。
 
- - $$\text{similarity_with_selected_docs}$$ measures similarity between the candidate and already selected documents.
+ - $$\text{similarity_with_selected_docs}$$ 衡量候選文件與已選取文件之間的相似度。
 
-By adjusting $$\lambda$$, you can control the trade-off between highly relevant results and more diverse coverage in the result set.
+透過調整 $$\lambda$$，您可以控制高相關性結果與結果集更多樣化涵蓋範圍之間的取捨。
 
-# Prerequisites
+# 必要條件
 
-To use MMR, you must enable [system-generated search processor factories]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/system-generated-search-processors/). Set the `cluster.search.enabled_system_generated_factories` setting (by default, an empty list) to `*` (all factories) or explicitly include the required factories:
+若要使用 MMR，您必須啟用[系統產生的搜尋處理器工廠]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/system-generated-search-processors/)。將 `cluster.search.enabled_system_generated_factories` 設定（預設為空清單）設為 `*`（所有工廠），或明確加入所需的工廠：
 
 ```json
 PUT _cluster/settings
@@ -50,23 +51,23 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-# Parameters
+# 參數
 
-The `mmr` object is provided in the `ext` object of the Search API request body and supports the following parameters.
+`mmr` 物件提供於 Search API 請求本文的 `ext` 物件中，並支援下列參數。
 
-| Parameter                 | Data type | Required/Optional                                 | Description                                                                                                                                                                                 |
+| 參數                 | 資料類型 | 必要/選用                                 | 說明                                                                                                                                                                                 |
 | ------------------------- | --------- | ----------------------------------------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `diversity`               | Float     | Optional                                        | Controls the weight of diversity ($$\lambda$$) in the reranking process. Valid values range from `0` to `1`, inclusive. A value of `1` prioritizes maximum diversity; `0` disables diversity. Default is `0.5`. |
-| `candidates`              | Integer   | Optional                                        | The number of candidate documents to retrieve before applying MMR reranking. Default is `3 * size`, where `size` is the query's `size` parameter (the requested number of results to return).                                                                                        |
-| `vector_field_path`       | String    | Optional (required for remote indexes) | The path to the vector field used for MMR reranking. If not provided, OpenSearch resolves it automatically from the search request.                                                            |
-| `vector_field_data_type`  | String    | Optional (required for remote indexes) | The data type of the vector field. Used to parse the field and calculate similarity. If not provided, OpenSearch resolves it from the index mapping.                                            |
-| `vector_field_space_type` | String    | Optional (required for remote indexes) | Used to determine the similarity function for the vector field, such as cosine similarity or Euclidean distance. If not provided, OpenSearch resolves it from the index mapping. For valid values, see [Distance calculation]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/#distance-calculation).             |
-| `explain`                 | Boolean   | Optional                               | When `true`, adds an `mmr_explain` object to each selected hit's `_source` containing per-hit MMR scoring details. Default is `false`. See [Explain MMR scoring](#explain-mmr-scoring). |
+| `diversity`               | Float     | 選用                                        | 控制重新排序過程中多樣性 ($$\lambda$$) 的權重。有效值範圍為 `0` 至 `1`（含端點）。值為 `1` 時優先考量最大多樣性；`0` 則停用多樣性。預設為 `0.5`。 |
+| `candidates`              | Integer   | 選用                                        | 在套用 MMR 重新排序之前要擷取的候選文件數量。預設為 `3 * size`，其中 `size` 是查詢的 `size` 參數（要求傳回的結果數量）。                                                                                        |
+| `vector_field_path`       | String    | 選用（遠端索引為必要） | 用於 MMR 重新排序的向量欄位路徑。若未提供，OpenSearch 會自動從搜尋請求中解析。                                                            |
+| `vector_field_data_type`  | String    | 選用（遠端索引為必要） | 向量欄位的資料類型。用於解析欄位並計算相似度。若未提供，OpenSearch 會從索引對應中解析。                                            |
+| `vector_field_space_type` | String    | 選用（遠端索引為必要） | 用於決定向量欄位的相似度函式，例如餘弦相似度或歐氏距離。若未提供，OpenSearch 會從索引對應中解析。有效值請參閱[距離計算]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/#distance-calculation)。             |
+| `explain`                 | Boolean   | 選用                               | 當設為 `true` 時，會在每個所選命中的 `_source` 中加入一個 `mmr_explain` 物件，其中包含每個命中的 MMR 評分詳細資訊。預設為 `false`。請參閱[說明 MMR 評分](#explain-mmr-scoring)。 |
 
 
-# Example request
+# 範例請求
 
-The following example shows how to use the `mmr` parameter in a `knn` query:
+下列範例示範如何在 `knn` 查詢中使用 `mmr` 參數：
 
 ```json
 POST /my-index/_search
@@ -88,7 +89,7 @@ POST /my-index/_search
 ```
 {% include copy-curl.html %}
 
-The following example shows how to use the `mmr` parameter in a `neural` query:
+下列範例示範如何在 `neural` 查詢中使用 `mmr` 參數：
 
 ```json
 POST /my-index/_search
@@ -114,28 +115,28 @@ POST /my-index/_search
 ```
 {% include copy-curl.html %}
 
-When querying multiple indexes, all vector fields must have matching data types and space types. These settings determine the similarity function used for document comparisons.
+查詢多個索引時，所有向量欄位必須具有相符的資料類型與空間類型。這些設定會決定文件比較所使用的相似度函式。
 {: .note}
 
-# Explain MMR scoring
-**Introduced 3.7**
+# 說明 MMR 評分
+**於 3.7 版導入**
 {: .label .label-purple }
 
-When `explain` is set to `true`, each selected hit's `_source` contains an `mmr_explain` object that provides explanations about why the document was chosen. This is useful for debugging and understanding the MMR reranking behavior.
+當 `explain` 設為 `true` 時，每個所選命中的 `_source` 會包含一個 `mmr_explain` 物件，說明文件被選取的原因。這對於偵錯及了解 MMR 重新排序行為很有幫助。
 
-The `mmr_explain` object contains the following fields.
+`mmr_explain` 物件包含下列欄位。
 
-| Field | Description |
+| 欄位 | 說明 |
 |-------|-------------|
-| `original_score` | The original relevance score from the k-NN or neural search. |
-| `max_similarity_to_selected` | The maximum vector similarity between this document and any already selected document. For the first selected document, this value is `0.0`. |
-| `mmr_score` | The computed MMR score at selection time using the formula `(1 - diversity) * original_score - diversity * max_similarity_to_selected`. |
-| `mmr_formula` | A human-readable representation of the MMR formula with the actual values substituted. |
+| `original_score` | 來自 k-NN 或神經搜尋的原始相關性分數。 |
+| `max_similarity_to_selected` | 此文件與任何已選取文件之間的最大向量相似度。對於第一個選取的文件，此值為 `0.0`。 |
+| `mmr_score` | 選取當下使用公式 `(1 - diversity) * original_score - diversity * max_similarity_to_selected` 計算出的 MMR 分數。 |
+| `mmr_formula` | 以實際值代入後的 MMR 公式之人類可讀表示。 |
 
-The selection order and previously selected documents can be inferred from each hit's position in the result list.
+選取順序與先前選取的文件可從每個命中在結果清單中的位置推斷。
 {: .note}
 
-The following example shows how to use the `explain` parameter:
+下列範例示範如何使用 `explain` 參數：
 
 ```json
 POST /my-index/_search
@@ -158,7 +159,7 @@ POST /my-index/_search
 ```
 {% include copy-curl.html %}
 
-The response includes an `mmr_explain` object in each hit's `_source`:
+回應會在每個命中的 `_source` 中包含一個 `mmr_explain` 物件：
 
 ```json
 {
@@ -195,14 +196,14 @@ The response includes an `mmr_explain` object in each hit's `_source`:
 }
 ```
 
-# Limitations
+# 限制
 
-The following limitations apply to vector search with MMR reranking:
+下列限制適用於使用 MMR 重新排序的向量搜尋：
 
-- **Supported query types**: MMR supports only a `knn` or `neural` query as the top-level query in a search request. If a `knn` or `neural` query is nested inside another query type (such as a `bool` query or `hybrid` query), MMR is not supported.
+- **支援的查詢類型**：MMR 僅支援 `knn` 或 `neural` 查詢作為搜尋請求中的頂層查詢。若 `knn` 或 `neural` 查詢巢狀於其他查詢類型內（例如 `bool` 查詢或 `hybrid` 查詢），則不支援 MMR。
 
-- **Remote index requirements**: When querying remote indexes, you must explicitly provide vector field information (`vector_field_path`, `vector_field_data_type`, and `vector_field_space_type`). Unlike a local index for which OpenSearch can automatically resolve this metadata from the index mapping, the system cannot reliably fetch this information from the remote cluster. Providing these details ensures correct parsing of the vector data and accurate similarity calculations.
+- **遠端索引需求**：查詢遠端索引時，您必須明確提供向量欄位資訊（`vector_field_path`、`vector_field_data_type` 與 `vector_field_space_type`）。不同於本機索引可由 OpenSearch 自動從索引對應中解析此中繼資料，系統無法可靠地從遠端叢集取得這些資訊。提供這些詳細資訊可確保正確解析向量資料並準確計算相似度。
 
-## Related documentation
+## 相關文件
 
-- [System-generated search processors]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/system-generated-search-processors/)
+- [系統產生的搜尋處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/system-generated-search-processors/)

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Shard indexing backpressure
+title: "分片索引編製背壓"
 nav_order: 62
 has_children: true
 parent: Availability and recovery
@@ -8,26 +9,26 @@ redirect_from:
   - /opensearch/shard-indexing-backpressure/
 ---
 
-# Shard indexing backpressure
+# 分片索引編製背壓
 
-Shard indexing backpressure is a smart rejection mechanism at a per-shard level that dynamically rejects indexing requests when your cluster is under strain. It propagates a backpressure that transfers requests from an overwhelmed node or shard to other nodes or shards that are still healthy.
+分片索引編製背壓是一種以個別分片為單位的智慧拒絕機制，當您的叢集承受壓力時，會動態拒絕索引編製請求。它會傳遞背壓，將請求從不堪負荷的節點或分片轉移到其他仍健康運作的節點或分片。
 
-With shard indexing backpressure, you can prevent nodes in your cluster from running into cascading failures due to performance degradation caused by slow nodes, stuck tasks, resource-intensive requests, traffic surges, skewed shard allocations, and so on.
+有了分片索引編製背壓，您可以避免叢集中的節點因慢速節點、卡住的工作、耗用大量資源的請求、流量暴增、分片配置不均等因素所造成的效能降低，而陷入連鎖故障。
 
-Shard indexing backpressure comes into effect only when one primary and one secondary parameter is breached.
+只有在一個主要參數和一個次要參數同時被觸犯時，分片索引編製背壓才會生效。
 
-## Primary parameters
+## 主要參數
 
-Primary parameters are early indicators that a cluster is under strain:
+主要參數是叢集承受壓力的早期指標：
 
-- Shard memory limit breach: If the memory usage of a shard exceeds 95% of its allocated memory, this limit is breached.
-- Node memory limit breach: If the memory usage of a node exceeds 70% of its allocated memory, this limit is breached.
+- 分片記憶體限制觸犯：如果分片的記憶體使用量超過其配置記憶體的 95%，即觸犯此限制。
+- 節點記憶體限制觸犯：如果節點的記憶體使用量超過其配置記憶體的 70%，即觸犯此限制。
 
-The breach of primary parameters doesn’t cause any actual request rejections, it just triggers an evaluation of the secondary parameters.
+觸犯主要參數不會導致任何實際的請求拒絕，只會觸發次要參數的評估。
 
-## Secondary parameters
+## 次要參數
 
-Secondary parameters check the performance at the shard level to confirm that the cluster is under strain:
+次要參數會檢查分片層級的效能，以確認叢集確實承受壓力：
 
-- Throughput: If the throughput at the shard level decreases significantly in its historic view, this limit is breached.
-- Successful Request: If the number of pending requests increases significantly in its historic view, this limit is breached.
+- 吞吐量：如果分片層級的吞吐量相較於過往紀錄大幅下降，即超過此限制。
+- 成功請求：如果待處理請求的數量在其歷史檢視中大幅增加，即觸犯此限制。

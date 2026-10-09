@@ -9,8 +9,8 @@ class SchedulingTests(unittest.TestCase):
         entries.update({p: {'status': 'pending'} for p in translations})
         batch = mixed_batch(reviews + translations, entries)
         self.assertEqual(len(batch), 25)
-        self.assertEqual(batch[:4], ['r0', 'r1', 'r2', 't0'])
-        self.assertEqual(sum(p.startswith('t') for p in batch), 6)
+        self.assertEqual(batch[:4], ['r0', 't0', 'r1', 't1'])
+        self.assertEqual(sum(p.startswith('t') for p in batch), 12)
         self.assertEqual(len(set(batch)), 25)
 
     def test_empty_and_unbalanced_queues_use_available_work(self):

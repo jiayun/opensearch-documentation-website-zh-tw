@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Deleting search pipelines
+title: "刪除搜尋管線"
 nav_order: 30
 has_children: false
 parent: Search pipelines
 ---
 
-# Deleting search pipelines
+# 刪除搜尋管線
 
-Use the following request to delete a pipeline.
+請使用下列請求來刪除管線。
 
-To delete a specific search pipeline, pass the pipeline ID as a parameter:
+若要刪除特定的搜尋管線，請將管線 ID 作為參數傳入：
 
 ```json
 DELETE /_search/pipeline/{pipeline-id}
 ```
 {% include copy-curl.html %}
 
-To delete all search pipelines in a cluster, use the wildcard character (`*`):
+若要刪除叢集中的所有搜尋管線，請使用萬用字元 (`*`)：
 
 ```json
 DELETE /_search/pipeline/*

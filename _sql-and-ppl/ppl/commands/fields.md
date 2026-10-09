@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: fields
 parent: Commands
@@ -8,33 +9,33 @@ nav_order: 18
 
 <!-- vale off -->
 
-# fields command
+# fields 命令
 
 <!-- vale on -->
 
-The `fields` command specifies the fields that should be included in or excluded from the search results.
+`fields` 命令指定搜尋結果應包含或排除的欄位。
 
-## Syntax
+## 語法
 
-The `fields` command has the following syntax:
+`fields` 命令的語法如下：
 
 ```sql
 fields [+|-] <field-list>
 ```
 
-## Parameters
+## 參數
 
-The `fields` command supports the following parameters.
+`fields` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要／選用 | 說明 |
 | --- | --- | --- |
-| `<field-list>` | Required | A comma-delimited or space-delimited list of fields to keep or remove. Supports wildcard patterns. |
-| `[+|-]` | Optional | If the plus sign (`+`) is used, only the fields specified in the `field-list` are included. If the minus sign (`-`) is used, all fields specified in the `field-list` are excluded. Default is `+`. |
+| `<field-list>` | 必要 | 要保留或移除的欄位清單，以逗號或空格分隔。支援萬用字元模式。 |
+| `[+|-]` | 選用 | 若使用加號（`+`），則僅包含 `field-list` 中指定的欄位。若使用減號（`-`），則排除 `field-list` 中指定的所有欄位。預設為 `+`。 |
   
 
-## Example 1: Selecting the fields you need for triage
+## 範例 1：選取您進行問題分流所需的欄位
 
-The following query selects specific fields from the search results:
+下列查詢會從搜尋結果中選取特定欄位：
   
 ```sql
 source=otellogs
@@ -46,7 +47,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -59,9 +60,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Removing noisy fields from results 
+## 範例 2：從結果中移除雜訊欄位 
 
-The following query removes the raw `body` field after extracting what you need, keeping the output clean:
+下列查詢會在擷取您所需的內容後，移除原始的 `body` 欄位，讓輸出保持簡潔：
   
 ```sql
 source=otellogs
@@ -74,7 +75,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -87,9 +88,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Selecting all severity-related fields with a prefix wildcard
+## 範例 3：使用前綴萬用字元選取所有與嚴重程度相關的欄位
 
-When you're not sure of the exact field names, use wildcards to grab all fields starting with a common prefix. This selects both `severityText` and `severityNumber`:
+當您不確定確切的欄位名稱時，可使用萬用字元取得所有以共同前綴開頭的欄位。這會同時選取 `severityText` 和 `severityNumber`：
   
 ```sql
 source=otellogs
@@ -101,7 +102,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -114,9 +115,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 4: Selecting trace correlation fields with a suffix wildcard
+## 範例 4：使用後綴萬用字元選取追蹤關聯欄位
 
-The following query grabs all fields ending with `Id`, useful for pulling trace correlation identifiers when debugging distributed requests:
+下列查詢會取得所有以 `Id` 結尾的欄位，適合在偵錯分散式請求時擷取追蹤關聯識別碼：
   
 ```sql
 source=otellogs
@@ -127,7 +128,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -140,9 +141,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 5: Combining explicit fields with wildcards
+## 範例 5：結合明確指定的欄位與萬用字元
 
-The following query selects specific fields alongside wildcard-matched fields. This grabs the severity text plus all trace identifiers in one query:
+下列查詢會同時選取特定欄位與符合萬用字元的欄位。這會在一次查詢中取得嚴重程度文字及所有追蹤識別碼：
   
 ```sql
 source=otellogs
@@ -153,7 +154,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -166,9 +167,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 6: Removing trace fields with wildcard exclusion
+## 範例 6：使用萬用字元排除方式移除追蹤欄位
 
-The following query strips all identifier fields from the output, useful when you want the log content without the tracing metadata:
+下列查詢會從輸出中移除所有識別碼欄位，適合在您只想取得記錄檔內容而不需要追蹤中繼資料時使用：
   
 ```sql
 source=otellogs
@@ -180,7 +181,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -190,9 +191,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 7: Deduplicating fields
+## 範例 7：移除重複欄位
 
-The following query automatically prevents duplicate columns when wildcards expand to already specified fields:
+當萬用字元展開後包含已指定的欄位時，下列查詢會自動避免產生重複的資料欄：
 
 ```sql
 source=otellogs
@@ -202,7 +203,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results. Even though `severityText` is explicitly specified and also matches `severity*`, it appears only once because of automatic deduplication:
+此查詢會傳回下列結果。即使 `severityText` 已明確指定，而且也符合 `severity*`，由於會自動移除重複項目，因此只會出現一次：
 
 <!-- vale off -->
 
@@ -214,9 +215,9 @@ The query returns the following results. Even though `severityText` is explicitl
 
 <!-- vale on -->
 
-## Example 8: Selecting all fields  
+## 範例 8：選取所有欄位  
 
-The following query selects all fields defined in the index schema using `` `*` ``. Fields with null values are included in the The query returns the following results:
+下列查詢會使用 `` `*` `` 選取索引結構描述中定義的所有欄位。值為 null 的欄位也會包含在此查詢傳回的下列結果中：
   
 ```sql
 source=otellogs
@@ -227,7 +228,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -238,6 +239,6 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Related documentation 
+## 相關文件 
 
-- [`table`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/table/) -- An alias command with identical functionality  
+- [`table`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/table/) -- 功能相同的別名命令  

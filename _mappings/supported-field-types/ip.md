@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: IP address
+title: "IP 位址"
 nav_order: 55
 has_children: false
 parent: Supported field types
@@ -10,18 +11,18 @@ redirect_from:
   - /field-types/ip/
 ---
 
-# IP address field type
-**Introduced 1.0**
+# IP 位址欄位類型
+**於 1.0 版推出**
 {: .label .label-purple }
 
-An `ip` field type contains an IP address in IPv4 or IPv6 format. 
+`ip` 欄位類型包含 IPv4 或 IPv6 格式的 IP 位址。
 
-To represent IP address ranges, there is an IP [range field type]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/range/).
+若要表示 IP 位址範圍，另有 IP [範圍欄位類型]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/range/)。
 {: .note }
 
-## Example
+## 範例
 
-Create a mapping with an IP address:
+建立含有 IP 位址的對應：
 
 ```json
 PUT testindex 
@@ -37,7 +38,7 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-Index a document with an IP address:
+將含有 IP 位址的文件編製索引：
 
 ```json
 PUT testindex/_doc/1 
@@ -47,7 +48,7 @@ PUT testindex/_doc/1
 ```
 {% include copy-curl.html %}
 
-Query an index for a specific IP address:
+查詢索引中的特定 IP 位址：
 
 ```json
 GET testindex/_doc/1 
@@ -61,11 +62,11 @@ GET testindex/_doc/1
 ```
 {% include copy-curl.html %}
 
-## Searching for an IP address and its associated network mask
+## 搜尋 IP 位址及其相關聯的網路遮罩
 
-You can query an index for an IP address in [Classless Inter-Domain Routing (CIDR) notation](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation). Using CIDR notation, specify the IP address and the prefix length (0–32), separated by `/`. For example, the prefix length of 24 will match all IP addresses with the same initial 24 bits.
+您可以使用 [Classless Inter-Domain Routing (CIDR) 標記法](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation) 查詢索引中的 IP 位址。使用 CIDR 標記法時，請指定 IP 位址與前置長度 (0–32)，兩者以 `/` 分隔。例如，前置長度 24 會比對開頭 24 位元相同的所有 IP 位址。
 
-#### Example query in IPv4 format
+#### IPv4 格式的範例查詢
 
 ```json
 GET testindex/_search 
@@ -79,7 +80,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-#### Example query in IPv6 format
+#### IPv6 格式的範例查詢
 
 ```json
 GET testindex/_search 
@@ -93,7 +94,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-If you use an IP address in IPv6 format in a `query_string` query, you need to escape `:` characters because they are parsed as special characters. You can accomplish this by wrapping the IP address in quotation marks and escaping those quotation marks with `\`.
+如果您在 `query_string` 查詢中使用 IPv6 格式的 IP 位址，必須逸出 `:` 字元，因為這些字元會被剖析為特殊字元。您可以將 IP 位址以引號括住，並使用 `\` 逸出這些引號。
 
 ```json
 GET testindex/_search 
@@ -107,24 +108,24 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by `ip` field types. All parameters are optional.
+下表列出 `ip` 欄位類型可接受的參數。所有參數皆為選用。
 
-Parameter | Description 
-:--- | :--- 
-`boost` | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field's relevance. Values between 0.0 and 1.0 decrease the field's relevance. Default is 1.0. Dynamically updatable.
-`doc_values` | A Boolean value that specifies if the field should be stored on disk so that it can be used for aggregations, sorting, or scripting. Default is `true`.
-`ignore_malformed` | A Boolean value that specifies to ignore malformed values and not to throw an exception. Default is `false`. Dynamically updatable.
-`index` | A Boolean value that specifies whether the field should be searchable. Default is `true`. For indexes that use a pluggable data format, the default is `false`, and `true` is not supported. For more information, see [Pluggable data format indexes]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/#pluggable-data-format-indexes).
-[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | A value to be used in place of `null`. Must be of the same type as the field. If this parameter is not specified, the field is treated as missing when its value is `null`. Default is `null`.
-`store` | A Boolean value that specifies whether the field value should be stored and can be retrieved separately from the `_source` field. Default is `false`. 
+參數 | 說明
+:--- | :---
+`boost` | 浮點值，用於指定此欄位對相關性分數的權重。大於 1.0 的值會提高欄位的相關性。介於 0.0 與 1.0 之間的值會降低欄位的相關性。預設值為 1.0。可動態更新。
+`doc_values` | 布林值，用於指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設值為 `true`。
+`ignore_malformed` | 布林值，用於指定是否忽略格式錯誤的值而不擲回例外狀況。預設值為 `false`。可動態更新。
+`index` | 布林值，用於指定欄位是否可供搜尋。預設值為 `true`。對於使用可插式資料格式的索引，預設值為 `false`，且不支援 `true`。如需詳細資訊，請參閱[可插式資料格式索引]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/#pluggable-data-format-indexes)。
+[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用於取代 `null` 的值。其類型必須與欄位相同。若未指定此參數，當欄位值為 `null` 時，該欄位會被視為缺少。預設值為 `null`。
+`store` | 布林值，用於指定是否應儲存欄位值，並可與 `_source` 欄位分開擷取。預設值為 `false`。
 
-## Derived source
+## 衍生的來源
 
-When an index uses [derived source]({{site.url}}{{site.baseurl}}/field-types/metadata-fields/source/#derived-source), OpenSearch may sort IP address values and remove duplicates in multi-value IP fields during source reconstruction.
+當索引使用[衍生的來源]({{site.url}}{{site.baseurl}}/field-types/metadata-fields/source/#derived-source)時，OpenSearch 在重建來源期間可能會排序 IP 位址值，並移除多重值 IP 欄位中的重複項目。
 
-Create an index that enables derived source and configures an `ip` field:
+建立可啟用衍生的來源並設定 `ip` 欄位的索引：
 
 ```json
 PUT sample-index1
@@ -146,7 +147,7 @@ PUT sample-index1
 }
 ```
 
-Index a document with multiple IP addresses, including duplicates, into the index:
+將含有多個 IP 位址 (包括重複項目) 的文件編製索引至該索引：
 
 ```json
 PUT sample-index1/_doc/1
@@ -155,7 +156,7 @@ PUT sample-index1/_doc/1
 }
 ```
 
-After OpenSearch reconstructs `_source`, the derived `_source` removes duplicates and sorts the values:
+在 OpenSearch 重建 `_source` 之後，衍生的 `_source` 會移除重複項目並排序值：
 
 ```json
 {

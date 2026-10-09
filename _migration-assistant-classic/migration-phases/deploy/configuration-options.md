@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Configuration options
+title: "組態選項"
 nav_order: 1
 grand_parent: Migration phases
 parent: Deploy
 permalink: /classic/migration-assistant/migration-phases/deploy/configuration-options/
 ---
 
-# Configuration options
+# 組態選項
 
-This page outlines the configuration options for three key migrations scenarios:
+本頁說明三種主要遷移情境的組態選項：
 
-1. **Metadata migration**
-2. **Backfill migration with `Reindex-from-Snapshot` (RFS)**
-3. **Live capture migration with Capture and Replay  (C&R)**
+1. **中繼資料遷移**
+2. **使用 `Reindex-from-Snapshot` (RFS) 的回填遷移**
+3. **使用 Capture and Replay (C&R) 的即時擷取遷移**
 
-Each of these migrations depends on either a snapshot or a capture proxy. The following example `cdk.context.json` configurations are used by AWS Cloud Development Kit (AWS CDK) to deploy and configure Migration Assistant for OpenSearch, shown as separate blocks for each migration type. If you are performing a migration applicable to multiple scenarios, these options can be combined.
+這些遷移各自依賴快照或擷取代理程式。下列範例 `cdk.context.json` 組態由 AWS Cloud Development Kit (AWS CDK) 用來部署及設定 Migration Assistant for OpenSearch，並依各遷移類型分別顯示為獨立區塊。如果您執行的遷移適用於多個情境，可以合併這些選項。
 
 
-For a complete list of configuration options, see [`opensearch-migrations-options.md`](https://github.com/opensearch-project/opensearch-migrations/blob/main/deployment/cdk/opensearch-service-migration/options.md). If you need a configuration option that is not found on this page, create an issue in the [OpenSearch Migrations repository](https://github.com/opensearch-project/opensearch-migrations/issues).
+如需完整的組態選項清單，請參閱 [`opensearch-migrations-options.md`](https://github.com/opensearch-project/opensearch-migrations/blob/main/deployment/cdk/opensearch-service-migration/options.md)。如果您需要的組態選項未出現在本頁，請在 [OpenSearch Migrations 儲存庫](https://github.com/opensearch-project/opensearch-migrations/issues) 中建立議題。
 {: .tip }
 
-Options for the source cluster endpoint, target cluster endpoint, and existing virtual private cloud (VPC) should be configured in order for the migration tools to function effectively.
+您應設定來源叢集端點、目標叢集端點及現有虛擬私有雲端 (VPC) 的選項，遷移工具才能有效運作。
 
-## Shared configuration options
+## 共用組態選項
 
-Each migration configuration shares the following options.
+每個遷移組態都共用下列選項。
 
 
-| Name | Example  | Description   |
+| 名稱 | 範例  | 說明   |
 | :--- | :--- | :--- |
-| `sourceClusterEndpoint` | `"https://source-cluster.elb.us-east-1.endpoint.com"`  | The endpoint for the source cluster.  |
-| `targetClusterEndpoint` | `"https://vpc-demo-opensearch-cluster-cv6hggdb66ybpk4kxssqt6zdhu.us-west-2.es.amazonaws.com:443"`   | The endpoint for the target cluster. Required if using an existing target cluster for the migration instead of creating a new one. |
-| `vpcId` | `"vpc-123456789abcdefgh"`  | The ID of the existing VPC in which the migration resources will be stored. The VPC must have at least two private subnets that span two Availability Zones. |
+| `sourceClusterEndpoint` | `"https://source-cluster.elb.us-east-1.endpoint.com"`  | 來源叢集的端點。  |
+| `targetClusterEndpoint` | `"https://vpc-demo-opensearch-cluster-cv6hggdb66ybpk4kxssqt6zdhu.us-west-2.es.amazonaws.com:443"`   | 目標叢集的端點。如果使用現有目標叢集進行遷移，而非建立新的目標叢集，則為必要。 |
+| `vpcId` | `"vpc-123456789abcdefgh"`  | 將儲存遷移資源的現有 VPC ID。該 VPC 必須至少有兩個私人子網路，且橫跨兩個可用區域。 |
 
 
-## Backfill migration using RFS
+## 使用 RFS 的回填遷移
 
-The following CDK performs a backfill migrations using RFS:
+下列 CDK 會使用 RFS 執行回填遷移：
 
 ```json
 {
@@ -64,21 +65,21 @@ The following CDK performs a backfill migrations using RFS:
 ```
 {% include copy.html %}
 
-Performing an RFS backfill migration requires an existing snapshot. 
+執行 RFS 回填遷移需要現有快照。 
 
 
-The RFS configuration uses the following options. All options are optional. 
+RFS 組態使用下列選項。所有選項皆為選用。 
 
-| Name  | Example | Description |
+| 名稱  | 範例 | 說明 |
 | :--- | :--- | :--- |
-| `reindexFromSnapshotServiceEnabled` | `true` | Enables deployment and configuration of the RFS ECS service. |
-| `reindexFromSnapshotExtraArgs` | `"--target-aws-region us-east-1 --target-aws-service-signing-name es"` | Extra arguments for the Document Migration command, with space separation. See [RFS Extra Arguments](https://github.com/opensearch-project/opensearch-migrations/blob/main/DocumentsFromSnapshotMigration/README.md#arguments) for more information. You can pass `--no-insecure` to remove the `--insecure` flag. |
+| `reindexFromSnapshotServiceEnabled` | `true` | 啟用 RFS ECS 服務的部署與組態。 |
+| `reindexFromSnapshotExtraArgs` | `"--target-aws-region us-east-1 --target-aws-service-signing-name es"` | Document Migration 命令的額外引數，以空格分隔。如需詳細資訊，請參閱 [RFS 額外引數](https://github.com/opensearch-project/opensearch-migrations/blob/main/DocumentsFromSnapshotMigration/README.md#arguments)。您可以傳遞 `--no-insecure` 以移除 `--insecure` 旗標。 |
 
-To view all available arguments for `reindexFromSnapshotExtraArgs`, see [Snapshot migrations `README`](https://github.com/opensearch-project/opensearch-migrations/blob/main/DocumentsFromSnapshotMigration/README.md#arguments). At a minimum, no extra arguments may be needed.
+如要檢視 `reindexFromSnapshotExtraArgs` 的所有可用引數，請參閱 [快照遷移 `README`](https://github.com/opensearch-project/opensearch-migrations/blob/main/DocumentsFromSnapshotMigration/README.md#arguments)。在最基本的情況下，可能不需要任何額外引數。
 
-## Live capture migration with C&R 
+## 使用 C&R 的即時擷取遷移 
 
-The following sample CDK performs a live capture migration with C&R:
+下列範例 CDK 會使用 C&R 執行即時擷取遷移：
 
 ```json
 {
@@ -116,27 +117,27 @@ The following sample CDK performs a live capture migration with C&R:
 ```
 {% include copy.html %}
 
-Performing a live capture migration requires that a Capture Proxy be configured to capture incoming traffic and send it to the target cluster using the Traffic Replayer service. For arguments available in `captureProxyExtraArgs`, refer to the `@Parameter` fields [here](https://github.com/opensearch-project/opensearch-migrations/blob/main/TrafficCapture/trafficCaptureProxyServer/src/main/java/org/opensearch/migrations/trafficcapture/proxyserver/CaptureProxy.java). For `trafficReplayerExtraArgs`, refer to the `@Parameter` fields [here](https://github.com/opensearch-project/opensearch-migrations/blob/main/TrafficCapture/trafficReplayer/src/main/java/org/opensearch/migrations/replay/TrafficReplayer.java). At a minimum, no extra arguments may be needed.
+執行即時擷取遷移需要設定 Capture Proxy，以擷取傳入流量並使用 Traffic Replayer 服務將其傳送至目標叢集。如需 `captureProxyExtraArgs` 中可用的引數，請參閱[這裡](https://github.com/opensearch-project/opensearch-migrations/blob/main/TrafficCapture/trafficCaptureProxyServer/src/main/java/org/opensearch/migrations/trafficcapture/proxyserver/CaptureProxy.java)的 `@Parameter` 欄位。如需 `trafficReplayerExtraArgs`，請參閱[這裡](https://github.com/opensearch-project/opensearch-migrations/blob/main/TrafficCapture/trafficReplayer/src/main/java/org/opensearch/migrations/replay/TrafficReplayer.java)的 `@Parameter` 欄位。在最基本的情況下，可能不需要任何額外引數。
 
 
-| Name  | Example                                                                | Description   |
+| 名稱  | 範例                                                                | 說明   |
 | :--- |:-----------------------------------------------------------------------| :--- |
-| `captureProxyServiceEnabled`    | `true`                                                                 | Enables the Capture Proxy service deployment using an AWS CloudFormation stack.  |
-| `captureProxyExtraArgs`  | `"--suppressCaptureForHeaderMatch user-agent .*elastic-java/7.17.0.*"` | Extra arguments for the Capture Proxy command, including options specified by the [Capture Proxy](https://github.com/opensearch-project/opensearch-migrations/blob/main/TrafficCapture/trafficCaptureProxyServer/src/main/java/org/opensearch/migrations/trafficcapture/proxyserver/CaptureProxy.java).  |
-| `captureProxyDesiredCount`  | `0`                                                                    |  Sets the number of Capture Proxy Amazon Elastic Container Service (Amazon ECS) tasks. In most cases, keep this setting at `0` until you verify connectivity between the source and target clusters in the Migration Console. After deployment, you can modify the networking setup to allow ingress from the migration security groups into the existing cluster security groups.  |
-| `trafficReplayerServiceEnabled` | `true`                                                                 | Enables the Traffic Replayer service deployment using a CloudFormation stack.  |
-| `trafficReplayerExtraArgs`      | `"--sigv4-auth-header-service-region es,us-east-1 --speedup-factor 5"` | Extra arguments for the Traffic Replayer command, including options for authentication headers and other parameters specified by the [Traffic Replayer](https://github.com/opensearch-project/opensearch-migrations/blob/main/TrafficCapture/trafficReplayer/src/main/java/org/opensearch/migrations/replay/TrafficReplayer.java). |
-| `targetClusterProxyServiceEnabled` | `true`                                                                 | Enables the target cluster proxy service deployment using a CloudFormation stack. |
-| `targetClusterProxyDesiredCount`  | `0`                                                                    | Sets the number of target cluster proxy Amazon ECS tasks. In most cases, keep this setting at `0` until you verify connectivity between the source and target clusters in the Migration Console. After deployment, you can modify the networking setup to allow ingress from the migration security groups into the existing cluster security groups.  |
+| `captureProxyServiceEnabled`    | `true`                                                                 | 使用 AWS CloudFormation 堆疊啟用 Capture Proxy 服務部署。  |
+| `captureProxyExtraArgs`  | `"--suppressCaptureForHeaderMatch user-agent .*elastic-java/7.17.0.*"` | Capture Proxy 命令的額外引數，包括 [Capture Proxy](https://github.com/opensearch-project/opensearch-migrations/blob/main/TrafficCapture/trafficCaptureProxyServer/src/main/java/org/opensearch/migrations/trafficcapture/proxyserver/CaptureProxy.java) 指定的選項。  |
+| `captureProxyDesiredCount`  | `0`                                                                    |  設定 Capture Proxy Amazon Elastic Container Service (Amazon ECS) 任務的數量。在大多數情況下，請將此設定保持為 `0`，直到您在 Migration Console 中驗證來源與目標叢集之間的連線為止。部署後，您可以修改網路設定，以允許從遷移安全性群組傳入現有叢集安全性群組。  |
+| `trafficReplayerServiceEnabled` | `true`                                                                 | 使用 CloudFormation 堆疊啟用 Traffic Replayer 服務部署。  |
+| `trafficReplayerExtraArgs`      | `"--sigv4-auth-header-service-region es,us-east-1 --speedup-factor 5"` | Traffic Replayer 命令的額外引數，包括驗證標頭選項及 [Traffic Replayer](https://github.com/opensearch-project/opensearch-migrations/blob/main/TrafficCapture/trafficReplayer/src/main/java/org/opensearch/migrations/replay/TrafficReplayer.java) 指定的其他參數。 |
+| `targetClusterProxyServiceEnabled` | `true`                                                                 | 使用 CloudFormation 堆疊啟用目標叢集代理服務部署。 |
+| `targetClusterProxyDesiredCount`  | `0`                                                                    | 設定目標叢集代理 Amazon ECS 任務的數量。在大多數情況下，請將此設定保持為 `0`，直到您在 Migration Console 中驗證來源與目標叢集之間的連線為止。部署後，您可以修改網路設定，以允許從遷移安全性群組傳入現有叢集安全性群組。  |
 
-For arguments available in `captureProxyExtraArgs`, see the `@Parameter` fields in [`CaptureProxy.java`](https://github.com/opensearch-project/opensearch-migrations/blob/main/TrafficCapture/trafficCaptureProxyServer/src/main/java/org/opensearch/migrations/trafficcapture/proxyserver/CaptureProxy.java). For `trafficReplayerExtraArgs`, see the `@Parameter` fields in [`TrafficReplayer.java`](https://github.com/opensearch-project/opensearch-migrations/blob/main/TrafficCapture/trafficReplayer/src/main/java/org/opensearch/migrations/replay/TrafficReplayer.java).
+如需 `captureProxyExtraArgs` 中可用的引數，請參閱 [`CaptureProxy.java`](https://github.com/opensearch-project/opensearch-migrations/blob/main/TrafficCapture/trafficCaptureProxyServer/src/main/java/org/opensearch/migrations/trafficcapture/proxyserver/CaptureProxy.java) 中的 `@Parameter` 欄位。如需 `trafficReplayerExtraArgs`，請參閱 [`TrafficReplayer.java`](https://github.com/opensearch-project/opensearch-migrations/blob/main/TrafficCapture/trafficReplayer/src/main/java/org/opensearch/migrations/replay/TrafficReplayer.java) 中的 `@Parameter` 欄位。
 
 
-## Cluster authentication options
+## 叢集驗證選項
 
-Both the source and target cluster can use no authentication, authentication limited to VPC, basic authentication with a username and password, or AWS Signature Version 4 scoped to a user or role.
+來源叢集與目標叢集皆可使用無驗證、僅限 VPC 的驗證、以使用者名稱與密碼進行的基本驗證，或限定於某個使用者或角色的 AWS Signature Version 4。
 
-### No authentication
+### 無驗證
 
 ```json
     "sourceCluster": {
@@ -147,7 +148,7 @@ Both the source and target cluster can use no authentication, authentication lim
 ```
 {% include copy.html %}
 
-### Basic authentication
+### 基本驗證
 
 ```json
     "sourceCluster": {
@@ -161,7 +162,7 @@ Both the source and target cluster can use no authentication, authentication lim
 ```
 {% include copy.html %}
 
-### AWS Signature Version 4 authentication
+### AWS Signature Version 4 驗證
 
 ```json
     "sourceCluster": {
@@ -176,25 +177,25 @@ Both the source and target cluster can use no authentication, authentication lim
 ```
 {% include copy.html %}
 
-The `serviceSigningName` can be `es` for an Elasticsearch or OpenSearch domain.
+`serviceSigningName` 可以是 `es`，適用於 Elasticsearch 或 OpenSearch 網域。
 
-All of these authentication options apply to both source and target clusters.
+所有這些驗證選項皆同時適用於來源與目標叢集。
 
-## Snapshot options
+## 快照選項
 
-The following configuration options customize the process of migrating from snapshots.
+下列組態選項可用於自訂從快照進行遷移的程序。
 
-### Snapshot of a managed service source
+### 受管理服務來源的快照
 
-If your source cluster is on Amazon OpenSearch Service, you need to set up an additional AWS Identity and Access Management (IAM) role and pass it with the snapshot creation call, as described in the [AWS documentation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-snapshots.html). Migration Assistant can automatically manage this process. OpenSearch Service snapshots are only compatible with AWS Signature Version 4 authentication. The following parameter ensures that the additional IAM role is created and passed.
+如果您的來源叢集位於 Amazon OpenSearch Service 上，您需要設定額外的 AWS Identity and Access Management (IAM) 角色，並在建立快照的呼叫中傳遞該角色，如 [AWS 文件](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-snapshots.html) 所述。Migration Assistant 可以自動管理此程序。OpenSearch Service 快照僅與 AWS Signature Version 4 驗證相容。下列參數可確保建立並傳遞額外的 IAM 角色。
 
-| Name  | Example | Description |
+| 名稱  | 範例 | 說明 |
 | :--- | :--- | :--- |
-| `managedServiceSourceSnapshotEnabled` | `true` | Creates the necessary roles and trust relationships for taking a snapshot of an OpenSearch Service source cluster. This is only compatible with AWS Signature Version 4 authentication.|
+| `managedServiceSourceSnapshotEnabled` | `true` | 為 OpenSearch Service 來源叢集建立快照所需的必要角色與信任關係。此功能僅與 AWS Signature Version 4 驗證相容。|
 
-### Bring your own snapshot
+### 自備快照
 
-You can use an existing Amazon Simple Storage Service (Amazon S3) snapshot to perform [metadata]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/migrate-metadata/) and [backfill]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/backfill/) migrations instead of using Migration Assistant to create a snapshot:
+您可以使用現有的 Amazon Simple Storage Service (Amazon S3) 快照來執行[中繼資料]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/migrate-metadata/)與[回填]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/backfill/)遷移，而不使用 Migration Assistant 建立快照：
 
 ```json
     "snapshot": {
@@ -206,7 +207,7 @@ You can use an existing Amazon Simple Storage Service (Amazon S3) snapshot to pe
 ```
 {% include copy.html %}
 
-The version of the cluster used for the provided snapshot configuration should be aligned with the source cluster version. The source cluster version is required to ensure that the provided snapshot is parsed appropriately. If access to the source cluster is not required for monitoring and verification, it can be disabled as follows:
+所提供快照組態中使用的叢集版本應與來源叢集版本一致。需要來源叢集版本，才能確保所提供的快照能被正確解析。如果監控與驗證不需要存取來源叢集，可以依照下列方式停用：
 ```json
     "sourceCluster": {
         "disabled": true,
@@ -215,11 +216,11 @@ The version of the cluster used for the provided snapshot configuration should b
 ```
 {% include copy.html %}
 
-By default, Amazon S3 buckets automatically allow roles in the same AWS account (with the appropriate `s3:*` permissions) to access the S3 bucket, regardless of the bucket's AWS Region. If the external S3 bucket is in the same AWS account as the Migration Assistant deployment, no further IAM configuration is required to access the bucket.
+預設情況下，Amazon S3 儲存貯體會自動允許同一 AWS 帳戶中的角色（具備適當的 `s3:*` 權限）存取 S3 儲存貯體，無論儲存貯體位於哪個 AWS 區域。如果外部 S3 儲存貯體與 Migration Assistant 部署位於同一個 AWS 帳戶中，則不需要額外的 IAM 組態即可存取該儲存貯體。
 
-If you use a custom permission model with Amazon S3, any access control list (ACL) or custom bucket policy should allow the Migration Assistant task roles for RFS and the Migration Console to read from the S3 bucket.
+如果您在 Amazon S3 中使用自訂權限模型，任何存取控制清單 (ACL) 或自訂儲存貯體政策都應允許 RFS 與 Migration Console 的 Migration Assistant 任務角色從 S3 儲存貯體讀取資料。
 
-If the S3 bucket is in a separate AWS account from the Migration Assistant deployment, you need a custom bucket policy similar to the following to allow access to Migration Assistant:
+如果 S3 儲存貯體與 Migration Assistant 部署位於不同的 AWS 帳戶中，您需要類似下列的自訂儲存貯體政策，以允許 Migration Assistant 存取：
 
 ```json
 {
@@ -246,8 +247,8 @@ If the S3 bucket is in a separate AWS account from the Migration Assistant deplo
 ```
 {% include copy.html %}
 
-## Network configuration
+## 網路組態
 
-The migration tooling expects the source cluster, target cluster, and migration resources to exist in the same VPC. If this is not the case, manual networking setup outside of this documentation is likely required.
+遷移工具預期來源叢集、目標叢集與遷移資源位於同一個 VPC 中。如果情況並非如此，可能需要在本文件之外手動設定網路。
 
 {% include migration-phase-navigation.html %}

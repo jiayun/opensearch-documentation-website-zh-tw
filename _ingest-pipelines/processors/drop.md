@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Drop
 parent: Ingest processors
 nav_order: 70
 ---
 
-This documentation describes using the `drop` processor in OpenSearch ingest pipelines. Consider using the [Data Prepper `drop_events` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/drop-events/), which runs on the OpenSearch cluster, if your use case involves large or complex datasets.
+本文件說明如何在 OpenSearch 資料匯入管線中使用 `drop` 處理器。如果您的使用情境涉及大型或複雜的資料集，請考慮使用在 OpenSearch 叢集上執行的 [Data Prepper `drop_events` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/drop-events/)。
 {: .note}
 
-# Drop processor
+# Drop 處理器
 
-The `drop` processor is used to discard documents without indexing them. This can be useful for preventing documents from being indexed based on certain conditions. For example, you might use a `drop` processor to prevent documents that are missing important fields or contain sensitive information from being indexed. 
+`drop` 處理器用於捨棄文件而不將其編製索引。這對於根據特定條件防止文件被編製索引非常有用。例如，您可以使用 `drop` 處理器來防止缺少重要欄位或包含敏感資訊的文件被編製索引。
 
-The `drop` processor does not raise any errors when it discards documents, making it useful for preventing indexing problems without cluttering your OpenSearch logs with error messages.
+`drop` 處理器在捨棄文件時不會引發任何錯誤，因此可以在避免索引問題的同時，不讓錯誤訊息充斥您的 OpenSearch 記錄檔。
 
-## Syntax example
+## 語法範例
 
-The following is the syntax for the `drop` processor:
+以下是 `drop` 處理器的語法：
 
 ```json
 {
@@ -27,25 +28,25 @@ The following is the syntax for the `drop` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `drop` processor.
+下表列出 `drop` 處理器的必要與選用參數。
 
-Parameter | Required | Description |
+參數 | 必要 | 說明 |
 |-----------|-----------|-----------|
-`description`  | Optional  | A brief description of the processor.  |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | If set to `true`, failures are ignored. Default is `false`. See [Handling pipeline failures]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/) for more information. |
-`on_failure` | Optional | A list of processors to run if the processor fails. See [Handling pipeline failures]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/) for more information. |
-`tag` | Optional | An identifier tag for the processor. Useful for distinguishing between processors of the same type when debugging. |
+`description`  | 選用  | 處理器的簡短描述。  |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 若設為 `true`，則忽略失敗。預設為 `false`。如需更多資訊，請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。如需更多資訊，請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。 |
+`tag` | 選用 | 處理器的識別標籤。在除錯時，有助於區分相同類型的處理器。 |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+依照下列步驟在管線中使用處理器。
 
-**Step 1: Create a pipeline**
+**步驟 1：建立管線**
 
-The following query creates a pipeline, named `drop-pii`, that uses the `drop` processor to prevent a document containing personally identifiable information (PII) from being indexed:
+下列查詢會建立一個名為 `drop-pii` 的管線，使用 `drop` 處理器來防止包含個人識別資訊 (PII) 的文件被編製索引：
 
 ```json
 PUT /_ingest/pipeline/drop-pii
@@ -62,12 +63,12 @@ PUT /_ingest/pipeline/drop-pii
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline**
+**步驟 2 (選用)：測試管線**
 
-It is recommended that you test your pipeline before ingesting documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/drop-pii/_simulate
@@ -85,9 +86,9 @@ POST _ingest/pipeline/drop-pii/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected (the document has been dropped):
+下列範例回應確認管線如預期運作 (文件已被捨棄)：
 
 ```json
 {
@@ -98,9 +99,9 @@ The following example response confirms that the pipeline is working as expected
 ```
 {% include copy-curl.html %}
 
-**Step 3: Ingest a document**
+**步驟 3：匯入文件**
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=drop-pii
@@ -110,7 +111,7 @@ PUT testindex1/_doc/1?pipeline=drop-pii
 ```
 {% include copy-curl.html %}
 
-The following response confirms that the document with the ID of `1` was not indexed: 
+下列回應確認 ID 為 `1` 的文件未被編製索引：
 
 ```json
 {

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Observability
+title: "可觀測性"
 nav_order: 1
 has_children: true
 has_toc: false
@@ -11,111 +12,111 @@ redirect_from:
   - /observing-your-data/index/
 ---
 
-# Observability
+# 可觀測性
 
-OpenSearch provides observability capabilities for monitoring applications, infrastructure, and AI agents. Choose the path that matches your use case.
+OpenSearch 提供可觀測性功能，可用於監控應用程式、基礎架構與 AI 代理程式。請選擇符合您使用情境的路徑。
 
 ---
 
-## Ingesting observability data
+## 匯入可觀測性資料
 
-Before exploring your data, you need to ingest it into OpenSearch. Use [OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) to transform unstructured log data into structured data for improved querying and filtering.
+在探索資料之前，您需要先將資料匯入 OpenSearch。使用 [OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) 將非結構化的記錄資料轉換為結構化資料，以改善查詢與篩選。
 
 <span class="centering-container">
-[Get started with log ingestion]({{site.url}}{{site.baseurl}}/observing-your-data/log-ingestion/){: .btn-dark-blue}
+[開始使用記錄匯入]({{site.url}}{{site.baseurl}}/observing-your-data/log-ingestion/){: .btn-dark-blue}
 </span>
 
 ---
 
-## Exploring and analyzing observability data
+## 探索與分析可觀測性資料
 
-OpenSearch provides the following tools for exploring and analyzing observability data:
+OpenSearch 提供下列工具來探索與分析可觀測性資料：
 
-- [Event analytics]({{site.url}}{{site.baseurl}}/observing-your-data/event-analytics/) -- Turn data-driven events into visualizations using [Piped Processing Language (PPL)]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/).
-- [Application analytics]({{site.url}}{{site.baseurl}}/observing-your-data/app-analytics/) -- Create custom observability applications to view system availability status.
-- [Trace analytics]({{site.url}}{{site.baseurl}}/observing-your-data/trace/index/) -- Visualize and analyze distributed traces from your applications.
-- [Metric analytics]({{site.url}}{{site.baseurl}}/observing-your-data/prometheusmetrics/) -- Query and visualize Prometheus metrics data.
-- [Using Discover for observability]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/) -- Analyze logs, metrics, and traces using specialized interfaces within observability workspaces.
+- [事件分析]({{site.url}}{{site.baseurl}}/observing-your-data/event-analytics/) -- 使用 [Piped Processing Language (PPL)]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/) 將資料驅動的事件轉換為視覺化。
+- [應用程式分析]({{site.url}}{{site.baseurl}}/observing-your-data/app-analytics/) -- 建立自訂的可觀測性應用程式，以檢視系統可用性狀態。
+- [追蹤分析]({{site.url}}{{site.baseurl}}/observing-your-data/trace/index/) -- 將應用程式的分散式追蹤視覺化並加以分析。
+- [指標分析]({{site.url}}{{site.baseurl}}/observing-your-data/prometheusmetrics/) -- 查詢並將 Prometheus 指標資料視覺化。
+- [使用 Discover 進行可觀測性分析]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/) -- 在可觀測性工作區中使用專用介面來分析記錄、指標與追蹤。
 
 ---
 
-## Monitoring applications
+## 監控應用程式
 
-For specialized application monitoring, OpenSearch provides two focused solutions: Application Performance Monitoring (APM) for traditional microservices and agent traces for AI/LLM applications.
+針對特定的應用程式監控，OpenSearch 提供兩種專用解決方案：適用於傳統微服務的 Application Performance Monitoring (APM)，以及適用於 AI/LLM 應用程式的代理程式追蹤。
 
-|  | APM | Agent traces |
+|  | APM | 代理程式追蹤 |
 |---------|-----|--------------|
-| **Purpose** | Monitor microservices and web applications | Monitor AI agents and large language models (LLMs) |
-| **Metrics** | RED metrics (Rate, Errors, Duration) | Token usage, model calls, agent steps |
-| **Visualization** | Service maps, latency charts, error tracking | Execution graphs (DAGs), trace trees, timelines |
-| **Conventions** | OpenTelemetry standard conventions | OpenTelemetry generative AI semantic conventions |
-| **Best for** | APIs, microservices, web services | Chatbots, AI agents, LLM applications |
+| **用途** | 監控微服務與 Web 應用程式 | 監控 AI 代理程式與大型語言模型 (LLM) |
+| **指標** | RED 指標 (Rate、Errors、Duration) | 詞元用量、模型呼叫、代理程式步驟 |
+| **視覺化** | 服務對應圖、延遲圖表、錯誤追蹤 | 執行圖 (DAG)、追蹤樹、時間軸 |
+| **慣例** | OpenTelemetry 標準慣例 | OpenTelemetry 生成式 AI 語意慣例 |
+| **最適合** | API、微服務、Web 服務 | 聊天機器人、AI 代理程式、LLM 應用程式 |
 
 ### APM
 
-[APM]({{site.url}}{{site.baseurl}}/observing-your-data/apm/) monitors distributed applications using service topology, RED metrics, and performance tracking. APM requires the following components:
+[APM]({{site.url}}{{site.baseurl}}/observing-your-data/apm/) 使用服務拓撲、RED 指標與效能追蹤來監控分散式應用程式。APM 需要下列元件：
 
-- An OpenSearch cluster and [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/) with [workspaces]({{site.url}}{{site.baseurl}}/dashboards/workspace/) enabled.
-- An OpenTelemetry Collector.
-- [OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/).
-- Prometheus for metrics storage.
-- Applications instrumented using OpenTelemetry.
+- 一個 OpenSearch 叢集，以及已啟用[工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/)的 [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/)。
+- 一個 OpenTelemetry Collector。
+- [OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/)。
+- 用於儲存指標的 Prometheus。
+- 已導入 OpenTelemetry 監測功能的應用程式。
 
-### Agent traces
+### 代理程式追蹤
 
-[Agent traces]({{site.url}}{{site.baseurl}}/observing-your-data/agent-traces/) observe generative AI applications and LLM agents using specialized tracing for AI workloads. Agent traces require the following components:
+[代理程式追蹤]({{site.url}}{{site.baseurl}}/observing-your-data/agent-traces/)使用專為 AI 工作負載設計的追蹤功能，來觀測生成式 AI 應用程式與 LLM 代理程式。代理程式追蹤需要下列元件：
 
-- An OpenSearch cluster with [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/).
-- [OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) for trace processing.
-- Applications instrumented with OpenTelemetry generative AI semantic conventions.
+- 一個 OpenSearch 叢集與 [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/)。
+- 用於追蹤處理的 [OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/)。
+- 依照 OpenTelemetry 生成式 AI 語意慣例導入追蹤功能的應用程式。
 
 <span class="centering-container">
-[Get started with agent traces]({{site.url}}{{site.baseurl}}/observing-your-data/agent-traces/){: .btn-dark-blue}
+[開始使用代理程式追蹤]({{site.url}}{{site.baseurl}}/observing-your-data/agent-traces/){: .btn-dark-blue}
 </span>
 
 ---
 
-## Query performance
+## 查詢效能
 
-Use [Query Insights]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/) to monitor and optimize the performance of queries running in your cluster. Identify slow queries, analyze query patterns, and improve cluster efficiency.
+使用 [Query Insights]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/) 來監控並最佳化叢集中執行之查詢的效能。找出慢速查詢、分析查詢模式，並改善叢集效率。
 
 <span class="centering-container">
-[Get started with Query Insights]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/){: .btn-dark-blue}
+[開始使用 Query Insights]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/){: .btn-dark-blue}
 </span>
 
 ---
 
-## Organizing visualizations
+## 整理視覺化
 
-After creating visualizations, organize them into dashboards and reports for sharing with your team:
+建立視覺化之後，請將其整理至儀表板與報告中，以便與團隊分享：
 
-- [Notebooks]({{site.url}}{{site.baseurl}}/observing-your-data/notebooks/) -- Combine visualizations, code blocks, and narrative text to create reports, runbooks, and documentation.
-- [Operational panels]({{site.url}}{{site.baseurl}}/observing-your-data/operational-panels/) -- Organize PPL visualizations into dashboards for monitoring and analysis.
+- [Notebooks]({{site.url}}{{site.baseurl}}/observing-your-data/notebooks/) -- 結合視覺化、程式碼區塊與敘述文字，以建立報告、操作手冊與文件。
+- [操作面板]({{site.url}}{{site.baseurl}}/observing-your-data/operational-panels/) -- 將 PPL 視覺化整理至儀表板中，以進行監控與分析。
 
 ---
 
-## Alerting and detection
+## 警示與偵測
 
-OpenSearch provides tools for detecting issues and sending notifications:
+OpenSearch 提供用於偵測問題與傳送通知的工具：
 
-- [Alerting]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/) -- Create monitors that query your data on a schedule, define triggers for alert conditions, and execute actions when alerts fire.
-- [Anomaly detection]({{site.url}}{{site.baseurl}}/observing-your-data/ad/) -- Automatically detect anomalies in your time-series data using machine learning with the Random Cut Forest (RCF) algorithm.
-- [Forecasting]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/) -- Predict future values in your time-series data using the RCF model to anticipate threshold breaches before they occur.
-- [Service-level objectives]({{site.url}}{{site.baseurl}}/observing-your-data/slo/) (Experimental) -- Define availability and latency targets for your services and track error budgets and consumption rates against a Prometheus-compatible ruler.
-- [Notifications]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/) -- Configure channels for sending alerts through Slack, email, Amazon SNS, webhooks, and other communication services.
+- [警示]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/) -- 建立會依排程查詢資料的監視器、定義警示條件的觸發程序，並在警示觸發時執行動作。
+- [異常偵測]({{site.url}}{{site.baseurl}}/observing-your-data/ad/) -- 使用機器學習與 Random Cut Forest (RCF) 演算法，自動偵測時間序列資料中的異常。
+- [預測]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/) -- 使用 RCF 模型預測時間序列資料的未來值，以便在超出閾值之前預先因應。
+- [服務等級目標]({{site.url}}{{site.baseurl}}/observing-your-data/slo/) (實驗性) -- 為您的服務定義可用性與延遲目標，並依據與 Prometheus 相容的 ruler 追蹤錯誤預算與耗用率。
+- [通知]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/) -- 設定透過 Slack、電子郵件、Amazon SNS、Webhook 及其他通訊服務傳送警示的管道。
 
 ---
 
 ## OpenSearch Observability Stack
 
-The OpenSearch Observability Stack provides a complete, preconfigured observability platform that you can run locally using Docker Compose. The Observability Stack includes:
+OpenSearch Observability Stack 提供一套完整且預先設定好的可觀測性平台，您可以使用 Docker Compose 在本機執行。Observability Stack 包含：
 
-- All APM and agent trace capabilities.
-- A GenAI SDK for Python or TypeScript instrumentation.
-- An Agent Health tool for local debugging and evaluation.
-- A Docker Compose setup with example applications.
-- A preconfigured OpenTelemetry Collector, [OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/), and Prometheus.
+- 所有 APM 與代理程式追蹤功能。
+- 用於在 Python 或 TypeScript 應用程式中導入監測功能的 GenAI SDK。
+- 用於本機偵錯與評估的 Agent Health 工具。
+- 包含範例應用程式的 Docker Compose 設定。
+- 預先設定好的 OpenTelemetry Collector、[OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) 與 Prometheus。
 
 <span class="centering-container">
-[Learn more about Observability Stack](https://observability.opensearch.org/){: .btn-dark-blue}
+[進一步了解 Observability Stack](https://observability.opensearch.org/){: .btn-dark-blue}
 </span>

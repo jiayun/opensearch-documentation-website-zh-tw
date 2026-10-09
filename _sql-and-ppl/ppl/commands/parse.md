@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: parse
 parent: Commands
@@ -8,44 +9,44 @@ nav_order: 33
 
 <!-- vale off -->
 
-# parse command
+# parse 命令
 
 <!-- vale on -->
 
-The `parse` command extracts information from a text field using a regular expression and adds the extracted information to the search results. It uses Java regex patterns. For more information, see the [Java regular expression documentation](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html).
+`parse` 命令會使用規則表達式從文字欄位擷取資訊，並將擷取到的資訊加入搜尋結果。此命令使用 Java 規則表達式模式。如需詳細資訊，請參閱 [Java 規則表達式文件](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)。
 
 <!-- vale off -->
 
-## The rex and parse commands compared
+## rex 與 parse 命令的比較
 
 <!-- vale on -->
 
-The `rex` and `parse` commands both extract information from text fields using Java regular expressions with named capture groups. To compare the capabilities of the `rex` and `parse` commands, see the [`rex` command documentation]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/rex/).
+`rex` 與 `parse` 命令都會使用帶有具名擷取群組的 Java 規則表達式，從文字欄位擷取資訊。若要比較 `rex` 與 `parse` 命令的功能，請參閱 [`rex` 命令文件]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/rex/)。
 
-## Syntax
+## 語法
 
-The `parse` command has the following syntax:
+`parse` 命令的語法如下：
 
 ```sql
 parse <field> <pattern>
 ```
 
-## Parameters
+## 參數
 
-The `parse` command supports the following parameters.
+`parse` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<field>` | Required | The text field to parse. |
-| `<pattern>` | Required | The regular expression pattern used to extract new fields from the specified text field. If a field with the same name already exists, its values are replaced. |
+| `<field>` | 必要 | 要剖析的文字欄位。 |
+| `<pattern>` | 必要 | 用來從指定文字欄位擷取新欄位的規則表達式模式。若已存在同名欄位，其值會被取代。 |
 
-## Regular expression
+## 規則表達式
 
-The regular expression pattern is used to match the whole text field of each document based on the [Java regular expression syntax](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html). Each named capture group in the expression becomes a new `STRING` field.  
+規則表達式模式會根據 [Java 規則表達式語法](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)，用來比對每份文件的整個文字欄位。運算式中的每個具名擷取群組都會成為新的 `STRING` 欄位。  
 
-## Example 1: Extracting error details from log messages  
+## 範例 1：從記錄訊息擷取錯誤詳細資料  
 
-The following query extracts the error summary and detail from error log messages. This is useful for categorizing errors during incident triage:
+下列查詢會從錯誤記錄訊息擷取錯誤摘要與詳細資料。這在事件分級期間分類錯誤時很有用：
   
 ```sql
 source=otellogs
@@ -57,7 +58,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -70,9 +71,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Extracting IP addresses from log messages  
+## 範例 2：從記錄訊息擷取 IP 位址  
 
-The following query extracts IP addresses from log messages for a specific service:
+下列查詢會從特定服務的記錄訊息擷取 IP 位址：
   
 ```sql
 source=otellogs
@@ -84,7 +85,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -97,29 +98,29 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Limitations
+## 限制
 
-The `parse` command has the following limitations:
+`parse` 命令有下列限制：
 
-- Fields created by the `parse` command cannot be parsed again. For example, the following command does not function as intended:
+- 由 `parse` 命令建立的欄位無法再次剖析。例如，下列命令無法如預期運作：
 
     ```sql
     source=otellogs | parse body '(?<errmsg>[^:]+): (?<detail>.+)' | parse detail '\\w+ (?<word>\\w+)'
     ```
 
-- Fields created by the `parse` command cannot be overridden by other commands. For example, in the following query, the `where` clause does not match any documents because `errmsg` cannot be overridden:
+- 由 `parse` 命令建立的欄位無法被其他命令覆寫。例如，在下列查詢中，`where` 子句不會比對到任何文件，因為 `errmsg` 無法被覆寫：
 
     ```sql
     source=otellogs | parse body '(?<errmsg>[^:]+): (?<detail>.+)' | eval errmsg='1' | where errmsg='1'
     ```
 
-- The source text field used by the `parse` command cannot be overridden. For example, in the following query, the `errmsg` field is not parsed correctly because `body` is overridden:
+- `parse` 命令所使用的來源文字欄位無法被覆寫。例如，在下列查詢中，`errmsg` 欄位無法正確剖析，因為 `body` 被覆寫：
 
     ```sql
     source=otellogs | parse body '(?<errmsg>[^:]+): (?<detail>.+)' | eval body='1'
     ```
 
-- Fields created by the `parse` command cannot be filtered or sorted after they are used in the `stats` command. For example, in the following query, the `where` clause does not function as intended:
+- 由 `parse` 命令建立的欄位在 `stats` 命令中使用後，就無法加以篩選或排序。例如，在下列查詢中，`where` 子句無法如預期運作：
 
     ```sql
     source=otellogs | parse body '(?<errmsg>[^:]+): (?<detail>.+)' | stats count() by errmsg | where errmsg='Payment failed'

@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: IP address functions
+title: "IP 位址函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 8
 ---
 
-# IP address functions
+# IP 位址函式
 
-The following IP address functions are supported in PPL.
+PPL 支援下列 IP 位址函式。
 
 ## CIDRMATCH
 
-**Usage**: `CIDRMATCH(ip, cidr)`
+**用法**：`CIDRMATCH(ip, cidr)`
 
-Checks whether an IP address is within the specified CIDR range.
+檢查 IP 位址是否位於指定的 CIDR 範圍內。
 
-**Parameters**:
+**參數**：
 
-- `ip` (Required): The IP address to check, as a string or IP value. Supports both IPv4 and IPv6.
-- `cidr` (Required): The CIDR range to check against, as a string. Supports both IPv4 and IPv6 blocks.
+- `ip` (必要)：要檢查的 IP 位址，以字串或 IP 值表示。同時支援 IPv4 與 IPv6。
+- `cidr` (必要)：要比對的 CIDR 範圍，以字串表示。同時支援 IPv4 與 IPv6 區塊。
 
-**Return type**: `BOOLEAN`
+**回傳類型**：`BOOLEAN`
 
-### Example
+### 範例
   
 ```sql
 source=weblogs
@@ -32,7 +33,7 @@ source=weblogs
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -45,19 +46,19 @@ The query returns the following results:
 
 ## GEOIP
 
-**Usage**: `GEOIP(dataSourceName, ipAddress[, options])`
+**用法**：`GEOIP(dataSourceName, ipAddress[, options])`
 
-Retrieves location information for IP addresses using the OpenSearch Geospatial plugin API.
+使用 OpenSearch Geospatial 外掛程式 API 擷取 IP 位址的位置資訊。
 
-**Parameters**:
+**參數**：
 
-- `dataSourceName` (Required): The name of an established data source on the OpenSearch Geospatial plugin. For configuration details, see the [IP2Geo processor documentation]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/ip2geo/).
-- `ipAddress` (Required): The IP address to look up, as a string or IP value. Supports both IPv4 and IPv6.
-- `options` (Optional): A comma-separated string of fields to output. The available fields depend on the data source provider's schema. For example, the `geolite2-city` dataset includes fields like `country_iso_code`, `country_name`, `continent_name`, `region_iso_code`, `region_name`, `city_name`, `time_zone`, and `location`.
+- `dataSourceName` (必要)：OpenSearch Geospatial 外掛程式上已建立之資料來源的名稱。組態詳細資訊請參閱 [IP2Geo 處理器文件]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/ip2geo/)。
+- `ipAddress` (必要)：要查詢的 IP 位址，以字串或 IP 值表示。同時支援 IPv4 與 IPv6。
+- `options` (選用)：以逗號分隔的輸出欄位字串。可用欄位取決於資料來源供應商的結構描述。例如，`geolite2-city` 資料集包含 `country_iso_code`、`country_name`、`continent_name`、`region_iso_code`、`region_name`、`city_name`、`time_zone` 與 `location` 等欄位。
 
-**Return type**: `OBJECT`
+**回傳類型**：`OBJECT`
 
-### Example
+### 範例
   
 ```sql
 source=weblogs
@@ -65,7 +66,7 @@ source=weblogs
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 

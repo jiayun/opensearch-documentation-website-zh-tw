@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reindex documents
+title: "重新編製文件索引"
 parent: Document APIs
 nav_order: 60
 redirect_from: 
@@ -8,113 +9,113 @@ redirect_from:
   - /opensearch/rest-api/document-apis/reindex/
 ---
 
-# Reindex Documents API
-**Introduced 1.0**
+# 重新編製文件索引 API
+**1.0 版新增**
 {: .label .label-purple}
 
-The reindex document API operation copies all documents or a subset of documents from a source index(es), data stream, or alias into a destination index, data stream, or alias. The source and destination must be different. 
+重新編製文件索引 API 作業會將所有文件或部分文件從來源索引、資料串流或別名複製到目的地索引、資料串流或別名。來源與目的地必須不同。
 
-The reindex operation takes a snapshot of the source index and copies documents to the destination index. For each document, copying is performed by extracting the document source ([`_source` field]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/source/)) and indexing it into the destination.
+重新編製索引作業會取得來源索引的快照，並將文件複製到目的地索引。對每份文件而言，複製是透過擷取文件來源（[`_source` 欄位]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/source/)）並將其編製索引到目的地來完成。
 
-OpenSearch natively supports cross-cluster reindexing, allowing you to copy data between different OpenSearch clusters. For more information, see [Cross-cluster reindexing](#cross-cluster-reindexing).
+OpenSearch 原生支援跨叢集重新編製索引，讓您可以在不同的 OpenSearch 叢集之間複製資料。如需更多資訊，請參閱[跨叢集重新編製索引](#cross-cluster-reindexing)。
 
-Before using the Reindex API, note the following requirements and limitations:
+在使用 Reindex API 之前，請注意下列需求與限制：
 
-- The reindex operation requires the `_source` field to be enabled for all documents in the source index. If `_source` is disabled, the operation will fail.
-- You must create and configure the destination index before running the reindex operation. OpenSearch does not automatically copy settings, mappings, or shard configurations from the source index.
-- Configure the appropriate number of shards, replicas, and field mappings for the destination index based on your requirements.
-- For large reindex operations, consider temporarily disabling replicas on the destination index by setting `number_of_replicas` to `0` and then re-enabling them after completion.
+- 重新編製索引作業需要來源索引中的所有文件都啟用 `_source` 欄位。如果 `_source` 已停用，作業將會失敗。
+- 您必須在執行重新編製索引作業之前建立並設定目的地索引。OpenSearch 不會自動從來源索引複製設定、對應或分片組態。
+- 請根據您的需求為目的地索引設定適當數量的分片、副本與欄位對應。
+- 進行大規模的重新編製索引作業時，可考慮將 `number_of_replicas` 設定為 `0` 以暫時停用目的地索引的副本，並在完成後重新啟用。
 
-Reindexing large datasets can be resource intensive and may impact cluster performance. Monitor cluster health during reindex operations and consider using throttling parameters for production environments. For more information, see [Performance optimization](#performance-optimization).
+重新編製大型資料集的索引可能會耗用大量資源，並可能影響叢集效能。請在重新編製索引作業期間監控叢集健康狀態，並考慮在正式環境中使用節流參數。如需更多資訊，請參閱[效能最佳化](#performance-optimization)。
 {: .warning }
 
-For a practical, tutorial-style guide to reindexing with common use cases and examples, see [Reindex data]({{site.url}}{{site.baseurl}}/im-plugin/reindex-data/).
+如需包含常見使用案例與範例的重新編製索引實務教學指南，請參閱[重新編製資料索引]({{site.url}}{{site.baseurl}}/im-plugin/reindex-data/)。
 {: .tip }
 
-Unlike update operations that modify documents within the same index, reindex operations work on different sources and destinations. Thus, version conflicts are unlikely. The `version_type` parameter controls how OpenSearch handles document versions during reindexing. By default, version conflicts stop the reindex process. To continue reindexing when conflicts occur, set the `conflicts` parameter to `proceed`. The response will include a count of version conflicts encountered. Other error types are unaffected by the `conflicts` parameter.
+與修改同一索引內文件的更新作業不同，重新編製索引作業是在不同的來源與目的地之間進行，因此不太可能發生版本衝突。`version_type` 參數控制 OpenSearch 在重新編製索引期間如何處理文件版本。預設情況下，版本衝突會停止重新編製索引程序。若要在發生衝突時繼續重新編製索引，請將 `conflicts` 參數設定為 `proceed`。回應將包含遇到的版本衝突數量。其他錯誤類型不受 `conflicts` 參數影響。
 
-By default, documents with the same ID are overwritten. The `op_type` parameter determines whether existing documents can be replaced or if only new documents are allowed, in which case attempting to index a document with an existing ID results in an error. For more information, see [Request body fields](#request-body-fields).
+預設情況下，具有相同 ID 的文件會被覆寫。`op_type` 參數決定是否可以取代現有文件，或僅允許新文件；若是後者，嘗試為具有現有 ID 的文件編製索引會導致錯誤。如需更多資訊，請參閱[請求本文欄位](#request-body-fields)。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_reindex
 ```
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All parameters are optional.
+下表列出可用的查詢參數。所有參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`refresh` | Boolean | If `true`, OpenSearch refreshes shards to make the reindex operation available to search results. Valid values are `true`, `false`, and `wait_for`, which specifies to wait for a refresh before executing the operation. Default is `false`.
-`timeout` | Time unit | How long to wait for a response from the cluster. Default is `30s`.
-`wait_for_active_shards` | String | The number of active shards that must be available before OpenSearch processes the reindex request. Default is `1` (only the primary shard). Set to `all` or a positive integer. Values greater than `1` require replicas. For example, if you specify a value of `3`, the index must have two replicas distributed across two additional nodes for the operation to succeed.
-`wait_for_completion` | Boolean | If `false`, OpenSearch runs the reindex operation asynchronously without waiting for it to complete. The request returns immediately, and the task continues in the background. You can monitor its progress using the [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/). Default is `true`, which means the operation runs synchronously. See [Asynchronous operations](#asynchronous-operations).
-`requests_per_second` | Integer | Specifies the request's throttling in sub-requests per second. Default is `-1`, which means no throttling. See [Controlling reindex rate](#controlling-the-reindex-rate) and [Throttling and rate control](#throttling-and-rate-control).
-`require_alias` | Boolean | Whether the destination index must be an alias. Default is `false`.
-`scroll` | Time unit | How long to keep the search context open. Default is `5m`.
-`slices` | Integer | The number of slices for automatic slicing. OpenSearch automatically divides the reindex operation into this number of parallel subtasks. Default is `1` (no slicing). Set this parameter to `auto` for OpenSearch to automatically determine the optimal number of slices. See [Using slicing for parallel processing](#using-slicing-for-parallel-processing). 
-`max_docs` | Integer | The maximum number of documents that the reindex operation should process. Default is all documents. See [Extracting sample data](#extracting-sample-data).
+`refresh` | 布林值 | 若為 `true`，OpenSearch 會重新整理分片，使重新編製索引作業的結果可供搜尋。有效值為 `true`、`false`，以及指定在執行作業前等待重新整理的 `wait_for`。預設為 `false`。
+`timeout` | 時間單位 | 等待叢集回應的時間長度。預設為 `30s`。
+`wait_for_active_shards` | 字串 | 在 OpenSearch 處理重新編製索引請求之前，必須可用的作用中分片數量。預設為 `1`（僅主要分片）。可設定為 `all` 或正整數。大於 `1` 的值需要副本。例如，若您指定值為 `3`，則索引必須有兩個副本分散在兩個額外的節點上，作業才能成功。
+`wait_for_completion` | 布林值 | 若為 `false`，OpenSearch 會以非同步方式執行重新編製索引作業，而不等待其完成。請求會立即傳回，工作會在背景繼續進行。您可以使用 [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/) 監控其進度。預設為 `true`，表示作業以同步方式執行。請參閱[非同步作業](#asynchronous-operations)。
+`requests_per_second` | 整數 | 指定請求的節流，以每秒子請求數為單位。預設為 `-1`，表示不進行節流。請參閱[控制重新編製索引速率](#controlling-the-reindex-rate)與[節流與速率控制](#throttling-and-rate-control)。
+`require_alias` | 布林值 | 目的地索引是否必須為別名。預設為 `false`。
+`scroll` | 時間單位 | 保持搜尋上下文開啟的時間長度。預設為 `5m`。
+`slices` | 整數 | 自動切片的切片數量。OpenSearch 會自動將重新編製索引作業分割為此數量的平行子工作。預設為 `1`（不切片）。將此參數設定為 `auto` 可讓 OpenSearch 自動決定最佳切片數量。請參閱[使用切片進行平行處理](#using-slicing-for-parallel-processing)。
+`max_docs` | 整數 | 重新編製索引作業應處理的最大文件數量。預設為所有文件。請參閱[擷取範例資料](#extracting-sample-data)。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists all request body fields.
+下表列出所有請求本文欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`source` | Object | Required | The source to copy data from. See [The `source` object](#the-source-object).
-`dest` | Object | Required | The destination to copy data to. See [The `dest` object](#the-dest-object).
-`conflicts` | String | Optional | Indicates to OpenSearch what should happen if the reindex operation encounters a version conflict. Valid values are `abort` and `proceed`. Default is `abort`.
-`script` | Object | Optional | A script that OpenSearch uses to apply transformations to the data during the reindex operation. See [The `script` object](#the-script-object).
+`source` | 物件 | 必要 | 要從中複製資料的來源。請參閱[`source` 物件](#the-source-object)。
+`dest` | 物件 | 必要 | 要將資料複製到的目的地。請參閱[`dest` 物件](#the-dest-object)。
+`conflicts` | 字串 | 選用 | 告知 OpenSearch 當重新編製索引作業遇到版本衝突時應如何處理。有效值為 `abort` 與 `proceed`。預設為 `abort`。
+`script` | 物件 | 選用 | OpenSearch 在重新編製索引作業期間用來對資料套用轉換的指令碼。請參閱[`script` 物件](#the-script-object)。
 
-### The `source` object
+### `source` 物件
 
-The `source` object supports the following fields.
+`source` 物件支援下列欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`index` | String | Required | The name of the index, data stream, or alias to copy from. You can specify multiple source indexes as a comma-separated list.
-`query` | Object | Optional | The search query to use for the reindex operation. See [Filtering documents by query](#filtering-documents-by-query).
-`remote` | Object | Optional | Information about a remote OpenSearch cluster to copy data from. See [Cross-cluster reindexing](#cross-cluster-reindexing).
-`remote.host` | String | Required when `remote` is specified | The URL for the remote OpenSearch cluster that you want to index from.
-`remote.username` | String | Optional | The username to use for authentication with the remote host.
-`remote.password` | String | Optional | The password to use for authentication with the remote host.
-`remote.socket_timeout` | String | Optional | The remote socket read timeout. Default is `30s`.
-`remote.connect_timeout` | String | Optional | The remote connection timeout. Default is `30s`.
-`size` | Integer | Optional | The number of documents to index per batch. Use this when indexing from a remote source to ensure that each batch fits within the on-heap buffer, which has a default maximum size of 100 MB.
-`slice` | Object | Optional | The configuration for manual slicing. Must be an object with `id` (slice ID) and `max` (total number of slices) properties to manually specify which slice of the data to process. This enables parallel processing by running multiple reindex operations, each handling a different slice. See [Using slicing for parallel processing](#using-slicing-for-parallel-processing). 
-`_source` | Boolean or Array | Optional | Whether to reindex source fields. Specify a list of fields to reindex or `true` to reindex all fields. Default is `true`. See [Selecting specific fields](#selecting-specific-fields).
-`sort` | Array | Optional | _Deprecated_. A comma-separated list of `<field>:<direction>` pairs used to sort documents before reindexing. If used with `max_docs` to control which documents are reindexed, consider [filtering documents by query](#filtering-documents-by-query) to find the desired subset of data.
+`index` | 字串 | 必要 | 要從中複製資料的索引、資料串流或別名名稱。您可以以逗號分隔清單指定多個來源索引。
+`query` | 物件 | 選用 | 用於重新編製索引作業的搜尋查詢。請參閱[依查詢篩選文件](#filtering-documents-by-query)。
+`remote` | 物件 | 選用 | 要從中複製資料的遠端 OpenSearch 叢集資訊。請參閱[跨叢集重新編製索引](#cross-cluster-reindexing)。
+`remote.host` | 字串 | 指定 `remote` 時必要 | 您要從中編製索引的遠端 OpenSearch 叢集 URL。
+`remote.username` | 字串 | 選用 | 用於遠端主機驗證的使用者名稱。
+`remote.password` | 字串 | 選用 | 用於遠端主機驗證的密碼。
+`remote.socket_timeout` | 字串 | 選用 | 遠端 socket 讀取逾時。預設為 `30s`。
+`remote.connect_timeout` | 字串 | 選用 | 遠端連線逾時。預設為 `30s`。
+`size` | 整數 | 選用 | 每個批次要編製索引的文件數量。從遠端來源編製索引時使用此設定，以確保每個批次都能容納於堆積記憶體緩衝區中；該緩衝區的預設大小上限為 100 MB。
+`slice` | 物件 | 選用 | 手動切片的組態。必須是包含 `id`（切片 ID）與 `max`（切片總數）屬性的物件，以手動指定要處理的資料切片。這可透過執行多個重新編製索引作業（每個作業處理不同的切片）來實現平行處理。請參閱[使用切片進行平行處理](#using-slicing-for-parallel-processing)。
+`_source` | 布林值或陣列 | 選用 | 是否重新編製來源欄位的索引。指定要重新編製索引的欄位清單，或指定 `true` 以重新編製所有欄位的索引。預設為 `true`。請參閱[選取特定欄位](#selecting-specific-fields)。
+`sort` | 陣列 | 選用 | _已淘汰_。用於在重新編製索引前排序文件的 `<field>:<direction>` 配對逗號分隔清單。若與 `max_docs` 搭配使用以控制要重新編製索引的文件，請考慮改用[依查詢篩選文件](#filtering-documents-by-query)來找出所需的資料子集。
 
-### The `dest` object
+### `dest` 物件
 
-The `dest` object supports the following fields.
+`dest` 物件支援下列欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`index` | String | Required | The name of the index, data stream, or alias to copy to.
-`version_type` | String | Optional | Controls how OpenSearch handles document versions during reindexing:<br>• `internal` (default): Ignores versions and overwrites any documents in the destination that have the same ID as documents from the source.<br>• `external`: Preserves the version from the source, creates any missing documents, and updates documents in the destination only if they have an older version than the source.<br>• `external_gt`: Similar to `external` but only updates documents if the source version is greater than the destination version.<br>• `external_gte`: Similar to `external` but updates documents if the source version is greater than or equal to the destination version.
-`op_type` | String | Optional | Determines how documents are processed during reindexing:<br>• `index` (default): Creates new documents and updates existing ones.<br>• `create`: Only creates documents that don't exist in the destination. Documents with existing IDs cause version conflicts. Required when reindexing to data streams (which are append-only).
-`pipeline` | String | Optional | The ingest pipeline to use during reindexing. See [Transforming documents using ingest pipelines](#transforming-documents-using-ingest-pipelines).
-`routing` | String | Optional | Controls how document routing is handled during reindexing. Valid values are `keep` (preserves existing routing, default), `discard` (removes routing), or `=<value>` (sets routing to a specific value). See [Routing](#routing).
+`index` | 字串 | 必要 | 要複製過去的目標索引、資料串流或別名名稱。
+`version_type` | 字串 | 選用 | 控制 OpenSearch 在重新編製索引時如何處理文件版本：<br>• `internal` (預設)：忽略版本，並覆寫目的地中與來源文件具有相同 ID 的任何文件。<br>• `external`：保留來源的版本，建立任何遺漏的文件，並且僅在目的地文件的版本比來源舊時才更新。<br>• `external_gt`：類似於 `external`，但僅在來源版本大於目的地版本時才更新文件。<br>• `external_gte`：類似於 `external`，但在來源版本大於或等於目的地版本時更新文件。
+`op_type` | 字串 | 選用 | 決定重新編製索引時文件的處理方式：<br>• `index` (預設)：建立新文件並更新現有文件。<br>• `create`：僅建立目的地中不存在的文件。具有現有 ID 的文件會造成版本衝突。重新編製索引至資料串流 (僅能附加) 時為必要。
+`pipeline` | 字串 | 選用 | 重新編製索引時要使用的資料匯入管線。請參閱[使用資料匯入管線轉換文件](#transforming-documents-using-ingest-pipelines)。
+`routing` | 字串 | 選用 | 控制重新編製索引時文件路由的處理方式。有效值為 `keep` (保留現有路由，預設)、`discard` (移除路由) 或 `=<value>` (將路由設為特定值)。請參閱[路由](#routing)。
 
-### The `script` object
+### `script` 物件
 
-The `script` object supports the following fields.
+`script` 物件支援下列欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`source` | String | Required | The script source code as a string.
-`lang` | String | Optional | The scripting language. Valid values are `painless`, `expression`, `mustache`, and `java`. Default is `painless`. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+`source` | 字串 | 必要 | 以字串表示的指令碼原始碼。
+`lang` | 字串 | 選用 | 指令碼語言。有效值為 `painless`、`expression`、`mustache` 和 `java`。預設為 `painless`。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-## How reindexing works
+## 重新編製索引的運作方式
 
-The reindex operation takes a snapshot of the source index and copies documents to the destination index. This approach means that version conflicts are unlikely to occur, unlike update operations that work on the same index.
+重新編製索引作業會擷取來源索引的快照，並將文件複製到目的地索引。這種方式表示版本衝突不太可能發生，與在同一索引上運作的更新作業不同。
 
-By default, version conflicts stop the reindex process. To continue reindexing when conflicts occur, set the `conflicts` parameter to `proceed`. The response will include a count of version conflicts encountered. Other error types are unaffected by the `conflicts` parameter.
+預設情況下，版本衝突會停止重新編製索引程序。若要在發生衝突時繼續重新編製索引，請將 `conflicts` 參數設為 `proceed`。回應將包含遇到的版本衝突數量。其他錯誤類型不受 `conflicts` 參數影響。
 
-## Example request
+## 範例請求
 
 <!-- spec_insert_start
 component: example_code
@@ -162,7 +163,7 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -186,36 +187,36 @@ response = client.reindex(
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields and provides a detailed description for each.
+下表列出所有回應本文欄位，並為每個欄位提供詳細說明。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`took` | Integer | The total time in milliseconds required to complete the entire reindex operation, including all batch processing and network overhead.
-`timed_out` | Boolean | Indicates whether any part of the reindex operation exceeded the configured timeout. If `true`, the operation may have been partially completed.
-`total` | Integer | The total number of documents successfully processed during the reindex operation. This includes documents that were created, updated, or resulted in no-op operations.
-`updated` | Integer | The number of documents that were updated in the destination index because a document with the same ID already existed.
-`created` | Integer | The number of new documents created in the destination index. These are documents that didn't previously exist in the destination.
-`deleted` | Integer | The number of documents deleted from the destination index. This occurs when scripts set `ctx.op = "delete"`.
-`batches` | Integer | The number of scroll batches processed during the reindex operation. Each batch contains multiple documents as configured by the `size` parameter.
-`version_conflicts` | Integer | The number of version conflicts encountered. Version conflicts occur when the destination document has a higher version than the source document (when using external versioning).
-`noops` | Integer | The number of documents that were skipped during processing. This happens when scripts set `ctx.op = "noop"` or when no changes are needed.
-`retries` | Object | The retry statistics object containing retry counts for different operation types. Retries occur automatically when temporary failures are encountered.
-`retries.bulk` | Integer | The number of bulk operation retries attempted during the reindex operation.
-`retries.search` | Integer | The number of search operation retries attempted during the reindex operation.
-`throttled_millis` | Integer | The total time in milliseconds that the operation was throttled to comply with the `requests_per_second` setting. Higher values indicate more throttling was applied.
-`requests_per_second` | Float | The actual rate of requests executed per second during the operation. This may differ from the requested rate due to throttling adjustments and system performance.
-`throttled_until_millis` | Integer | For asynchronous operations, this indicates the next time (in milliseconds since epoch) that throttled requests will be executed. Always `0` for completed operations.
-`failures` | Array | An array of failure objects describing any unrecoverable errors encountered during the operation. Each failure includes details about the error type, cause, and affected document.
+`took` | 整數 | 完成整個重新編製索引作業所需的總時間 (毫秒)，包括所有批次處理與網路開銷。
+`timed_out` | 布林值 | 指出重新編製索引作業是否有任何部分超過設定的逾時時間。若為 `true`，作業可能已部分完成。
+`total` | 整數 | 重新編製索引作業期間成功處理的文件總數。包括已建立、已更新或產生無作業 (no-op) 的文件。
+`updated` | 整數 | 因目的地索引中已存在相同 ID 的文件而更新的文件數量。
+`created` | 整數 | 在目的地索引中建立的新文件數量。這些是先前不存在於目的地中的文件。
+`deleted` | 整數 | 從目的地索引刪除的文件數量。這發生在指令碼設定 `ctx.op = "delete"` 時。
+`batches` | 整數 | 重新編製索引作業期間處理的捲動批次數量。每個批次包含多個文件，數量由 `size` 參數設定。
+`version_conflicts` | 整數 | 遇到的版本衝突數量。當目的地文件的版本高於來源文件時 (使用外部版本控制時)，會發生版本衝突。
+`noops` | 整數 | 處理期間略過的文件數量。這發生在指令碼設定 `ctx.op = "noop"` 或不需要任何變更時。
+`retries` | 物件 | 包含不同作業類型重試次數的重試統計物件。遇到暫時性失敗時會自動重試。
+`retries.bulk` | 整數 | 重新編製索引作業期間嘗試的批次 (bulk) 作業重試次數。
+`retries.search` | 整數 | 重新編製索引作業期間嘗試的搜尋作業重試次數。
+`throttled_millis` | 整數 | 為符合 `requests_per_second` 設定而對作業進行節流的總時間 (毫秒)。數值越高表示套用的節流越多。
+`requests_per_second` | 浮點數 | 作業期間每秒實際執行的請求速率。由於節流調整與系統效能，此值可能與請求的速率不同。
+`throttled_until_millis` | 整數 | 對於非同步作業，此值表示節流請求下次執行的時間 (自 epoch 起算的毫秒數)。已完成的作業一律為 `0`。
+`failures` | 陣列 | 描述作業期間遇到的任何無法復原錯誤的失敗物件陣列。每個失敗項目包含錯誤類型、原因與受影響文件的詳細資訊。
 
-## Selective reindexing
+## 選擇性重新編製索引
 
-The following examples demonstrate different ways to selectively copy data during reindexing, including filtering documents, selecting specific fields, and extracting sample datasets.
+下列範例示範在重新編製索引時選擇性複製資料的不同方式，包括篩選文件、選取特定欄位，以及擷取範例資料集。
 
-### Filtering documents by query
+### 依查詢篩選文件
 
-Copy only documents that match specific criteria:
+僅複製符合特定條件的文件：
 
 <!-- spec_insert_start
 component: example_code
@@ -287,9 +288,9 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Selecting specific fields
+### 選取特定欄位
 
-Copy only specific fields from source documents:
+僅從來源文件複製特定欄位：
 
 <!-- spec_insert_start
 component: example_code
@@ -350,9 +351,9 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Extracting sample data
+### 擷取樣本資料
 
-Create a smaller dataset for testing:
+建立較小的資料集以供測試：
 
 <!-- spec_insert_start
 component: example_code
@@ -427,15 +428,15 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Routing
+## 路由
 
-By default, if the reindex operation encounters a document with routing, the routing is preserved unless changed by a script. You can control routing behavior using the `routing` parameter in the `dest` section:
+依預設，如果重新編製索引作業遇到具有路由的文件，除非指令碼變更路由，否則會保留路由。您可以使用 `dest` 區段中的 `routing` 參數來控制路由行為：
 
-- `keep`: Preserves the routing from the source document (default)
-- `discard`: Removes routing from reindexed documents
-- `=<text>`: Sets routing to the specified value for all reindexed documents
+- `keep`：保留來源文件的路由（預設）
+- `discard`：移除重新編製索引之文件的路由
+- `=<text>`：將所有重新編製索引之文件的路由設為指定值
 
-The following request sets a custom routing value for all reindexed documents:
+下列請求會為所有重新編製索引的文件設定自訂路由值：
 
 <!-- spec_insert_start
 component: example_code
@@ -486,9 +487,9 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Transforming documents using ingest pipelines
+### 使用資料匯入管線轉換文件
 
-To transform data, process documents through an ingest pipeline during reindexing. First create the pipeline, then reference it in the reindex operation:
+若要轉換資料，請在重新編製索引期間透過資料匯入管線處理文件。先建立管線，再於重新編製索引作業中參照該管線：
 
 <!-- spec_insert_start
 component: example_code
@@ -539,7 +540,7 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Before running the reindex operation, create the ingest pipeline. This example creates a pipeline that adds a `processed_at` timestamp and converts the `status` field to uppercase:
+執行重新編製索引作業之前，請先建立資料匯入管線。此範例會建立一個管線，新增 `processed_at` 時間戳記，並將 `status` 欄位轉換為大寫：
 
 ```json
 PUT /_ingest/pipeline/data-enrichment
@@ -561,9 +562,9 @@ PUT /_ingest/pipeline/data-enrichment
 }
 ```
 
-### Controlling the reindex rate
+### 控制重新編製索引的速率
 
-Control the reindex rate to minimize cluster impact:
+控制重新編製索引的速率，以盡量降低對叢集的影響：
 
 <!-- spec_insert_start
 component: example_code
@@ -612,27 +613,27 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Script operations
+## 指令碼作業
 
-You can transform documents during the reindex process using scripts. You can modify document content, metadata, and control which documents are processed.
+您可以在重新編製索引過程中使用指令碼轉換文件。您可以修改文件內容、中繼資料，並控制要處理哪些文件。
 
-Scripts can modify the following document metadata fields:
+指令碼可以修改下列文件中繼資料欄位：
 
-- `ctx._id`: Change the document ID.
-- `ctx._index`: Route documents to different destination indexes.
-- `ctx._version`: Control document versioning.
-- `ctx._routing`: Set custom routing values.
+- `ctx._id`：變更文件 ID。
+- `ctx._index`：將文件路由至不同的目的地索引。
+- `ctx._version`：控制文件版本管理。
+- `ctx._routing`：設定自訂路由值。
 
-Set the `ctx.op` field to control what happens to each document:
+設定 `ctx.op` 欄位，以控制對每份文件執行的動作：
 
-- `ctx.op = "index"`: Index the document normally (default behavior).
-- `ctx.op = "create"`: Only create the document if it doesn't exist.
-- `ctx.op = "noop"`: Skip the document (useful for conditional processing).
-- `ctx.op = "delete"`: Delete the document from the destination index.
+- `ctx.op = "index"`：正常編製文件索引（預設行為）。
+- `ctx.op = "create"`：僅在文件不存在時建立文件。
+- `ctx.op = "noop"`：略過文件（適用於條件式處理）。
+- `ctx.op = "delete"`：從目的地索引刪除文件。
 
-### Transforming field values
+### 轉換欄位值
 
-You can add or modify fields in documents during reindexing. For example, this script adds a timestamp and migration status to each document:
+您可以在重新編製索引期間新增或修改文件中的欄位。例如，此指令碼會為每份文件新增時間戳記和遷移狀態：
 
 <!-- spec_insert_start
 component: example_code
@@ -689,9 +690,9 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Renaming fields
+### 重新命名欄位
 
-You can rename fields during reindexing using scripts. This script renames `client_name` to `customer_name` and `total_amount` to `order_total` during the reindex operation:
+您可以使用指令碼，在重新編製索引時重新命名欄位。此指令碼會在重新編製索引作業期間，將 `client_name` 重新命名為 `customer_name`，並將 `total_amount` 重新命名為 `order_total`：
 
 <!-- spec_insert_start
 component: example_code
@@ -748,9 +749,9 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Processing documents conditionally
+### 依條件處理文件
 
-You can skip documents based on conditions or apply different transformations. For example, this script skips archived documents and adds a migration timestamp to all others:
+您可以依條件略過文件，或套用不同的轉換。例如，此指令碼會略過已封存的文件，並為所有其他文件新增遷移時間戳記：
 
 <!-- spec_insert_start
 component: example_code
@@ -807,9 +808,9 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Routing documents to different indexes
+### 將文件路由至不同索引
 
-You can dynamically route documents to different destination indexes based on document content. For example, this script routes products to category-specific indexes:
+您可以根據文件內容，動態將文件路由至不同的目的地索引。例如，此指令碼會將產品路由至各類別專屬的索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -866,9 +867,9 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Consolidating time-based indexes
+### 整併以時間為基礎的索引
 
-Use the following script to consolidate multiple time-based indexes into a single index:
+使用下列指令碼，將多個以時間為基礎的索引整併為單一索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -933,11 +934,11 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-This example consolidates 3 months of daily log indexes into a quarterly index while adding metadata about the consolidation.
+此範例會將 3 個月的每日記錄檔索引整併為季度索引，同時新增關於此次整併的中繼資料。
 
-## Asynchronous operations
+## 非同步作業
 
-For large datasets, you can run reindex operations asynchronously to avoid blocking your application. When you set `wait_for_completion=false`, OpenSearch immediately returns a task ID that you can use to monitor the operation's progress:
+對於大型資料集，您可以非同步執行重新編製索引作業，以避免阻塞您的應用程式。當您設定 `wait_for_completion=false` 時，OpenSearch 會立即傳回工作 ID，您可以用它來監控作業進度：
 
 <!-- spec_insert_start
 component: example_code
@@ -986,7 +987,7 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The response includes a task ID:
+回應包含工作 ID：
 
 ```json
 {
@@ -994,21 +995,21 @@ The response includes a task ID:
 }
 ```
 
-Use the [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/) to check the status of your reindex operation:
+使用 [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/) 檢查您的重新編製索引作業狀態：
 
 ```json
 GET /_tasks/oTUltX4IQMOUUVeiohTt8A:12345
 ```
 
-You can manage long-running reindex tasks using these operations:
+您可以使用下列作業管理長時間執行的重新編製索引工作：
 
-- Cancel a running reindex: `POST /_tasks/oTUltX4IQMOUUVeiohTt8A:12345/_cancel`
-- List all reindex tasks: `GET /_tasks?actions=*reindex*`
-- Task cleanup: OpenSearch automatically removes completed task documents, but you can manually delete them if needed for immediate cleanup.
+- 取消正在執行的重新編製索引作業：`POST /_tasks/oTUltX4IQMOUUVeiohTt8A:12345/_cancel`
+- 列出所有重新編製索引工作：`GET /_tasks?actions=*reindex*`
+- 工作清理：OpenSearch 會自動移除已完成的工作文件，但若需要立即清理，您可以手動刪除這些文件。
 
-## Cross-cluster reindexing
+## 跨叢集重新編製索引
 
-Copy data from a remote OpenSearch cluster:
+從遠端 OpenSearch 叢集複製資料：
 
 <!-- spec_insert_start
 component: example_code
@@ -1074,13 +1075,13 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### SSL configuration for remote reindexing
+### 遠端重新索引的 SSL 組態
 
-When reindexing from remote clusters over HTTPS, configure SSL settings in `opensearch.yml`.
+透過 HTTPS 從遠端叢集重新索引時，請在 `opensearch.yml` 中設定 SSL 設定。
 
-#### Certificate-based authentication
+#### 憑證式驗證
 
-Configure SSL using individual certificate files:
+使用個別憑證檔案設定 SSL：
 
 ```yaml
 reindex.ssl.certificate_authorities: ["/path/to/ca-cert.pem"]
@@ -1089,9 +1090,9 @@ reindex.ssl.key: "/path/to/client-key.pem"
 reindex.ssl.verification_mode: full
 ```
 
-#### Keystore-based authentication
+#### 金鑰儲存區式驗證
 
-Configure SSL using keystore and truststore files:
+使用金鑰儲存區和信任儲存區檔案設定 SSL：
 
 ```yaml
 reindex.ssl.keystore.path: "/path/to/keystore.p12"
@@ -1100,24 +1101,24 @@ reindex.ssl.truststore.path: "/path/to/truststore.p12"
 reindex.ssl.truststore.type: "PKCS12"
 ```
 
-#### SSL configuration options
+#### SSL 組態選項
 
-The following table lists the available SSL configuration parameters.
+下表列出可用的 SSL 組態參數。
 
-Parameter | Description | Default
+參數 | 說明 | 預設值
 :--- | :--- | :---
-`reindex.ssl.verification_mode` | The certificate verification level: `full`, `certificate`, or `none` | `full`
-`reindex.ssl.certificate_authorities` | A list of CA certificate file paths | None
-`reindex.ssl.truststore.path` | The path to the truststore file (JKS or PKCS12) | None
-`reindex.ssl.keystore.path` | The path to the keystore file for client authentication | None
-`reindex.ssl.supported_protocols` | The supported TLS protocol versions | `TLSv1.3,TLSv1.2`
+`reindex.ssl.verification_mode` | 憑證驗證等級：`full`、`certificate` 或 `none` | `full`
+`reindex.ssl.certificate_authorities` | CA 憑證檔案路徑清單 | 無
+`reindex.ssl.truststore.path` | 信任儲存區檔案的路徑（JKS 或 PKCS12） | 無
+`reindex.ssl.keystore.path` | 用於用戶端驗證的金鑰儲存區檔案路徑 | 無
+`reindex.ssl.supported_protocols` | 支援的 TLS 通訊協定版本 | `TLSv1.3,TLSv1.2`
 
-SSL settings must be configured in `opensearch.yml` and require a cluster restart. They cannot be set in the reindex request body.
+SSL 設定必須在 `opensearch.yml` 中設定，且需要重新啟動叢集。這些設定無法在重新索引請求本文中設定。
 {: .warning }
 
-#### Remote cluster allow list
+#### 遠端叢集允許清單
 
-Configure allowed remote hosts in `opensearch.yml`:
+在 `opensearch.yml` 中設定允許的遠端主機：
 
 ```yaml
 reindex.remote.allowlist: [
@@ -1127,28 +1128,28 @@ reindex.remote.allowlist: [
 ]
 ```
 
-The allow list supports:
+允許清單支援：
 
-- Explicit host:port combinations.
-- Wildcard patterns for IP ranges.
-- Multiple cluster endpoints.
+- 明確指定的主機與連接埠組合。
+- 用於 IP 範圍的萬用字元模式。
+- 多個叢集端點。
 
-#### Retry settings
+#### 重試設定
 
-When a request to the remote cluster fails, OpenSearch retries it with an exponential backoff. The following cluster settings control the retries.
+當傳送至遠端叢集的請求失敗時，OpenSearch 會採用指數退避方式重試。下列叢集設定可控制重試行為。
 
-Setting | Description | Default
+設定 | 說明 | 預設值
 :--- | :--- | :---
-`reindex.remote.retry.initial_backoff` | The wait time before the first retry. Each subsequent retry doubles the wait time. | `500ms`
-`reindex.remote.retry.max_count` | The maximum number of retries before the reindex operation fails. | `15`
+`reindex.remote.retry.initial_backoff` | 第一次重試前的等待時間。之後每次重試的等待時間都會加倍。 | `500ms`
+`reindex.remote.retry.max_count` | 重新索引作業失敗前的重試次數上限。 | `15`
 
-## Performance optimization
+## 效能最佳化
 
-Use the following techniques to optimize reindexing performance.
+使用下列技巧將重新索引效能最佳化。
 
-### Throttling and rate control
+### 節流與速率控制
 
-Control the reindex operation's impact on cluster performance using throttling:
+使用節流控制重新索引作業對叢集效能的影響：
 
 <!-- spec_insert_start
 component: example_code
@@ -1193,19 +1194,19 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-You can dynamically adjust throttling for running reindex operations:
+您可以動態調整執行中重新索引作業的節流：
 
 ```json
 POST /_reindex/task_id/_rethrottle?requests_per_second=200
 ```
 
-### Using slicing for parallel processing
+### 使用切片進行平行處理
 
-Slicing divides a reindex operation into multiple parallel tasks to improve performance on large datasets.
+切片會將重新索引作業分成多個平行任務，以提升大型資料集的處理效能。
 
-#### Automatic slicing
+#### 自動切片
 
-To let OpenSearch determine the optimal number of slices, set the `slices` query parameter to `auto`:
+若要讓 OpenSearch 決定最佳切片數量，請將 `slices` 查詢參數設為 `auto`：
 
 <!-- spec_insert_start
 component: example_code
@@ -1250,24 +1251,24 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Manual slicing
+#### 手動切片
 
-For more control over parallelization, you can manually configure slices by specifying the slice ID and total number of slices in the request body.
+若要進一步控制平行處理，您可以在請求本文中指定切片 ID 和切片總數，以手動設定切片。
 
-OpenSearch uses the `max` parameter to partition the dataset consistently across all slice requests. OpenSearch applies a hash function to each document using the `max` value to determine which slice the document belongs to. This ensures that:
+OpenSearch 使用 `max` 參數，在所有切片請求中以一致的方式分割資料集。OpenSearch 會使用 `max` 值，對每份文件套用雜湊函式，以判定文件屬於哪個切片。這可確保：
 
-- Documents are distributed evenly across all slices.
-- Each document goes to exactly one slice (no duplicates or gaps).
-- All parallel requests must use the same `max` value for consistency.
+- 文件均勻分布於所有切片。
+- 每份文件恰好分配到一個切片（沒有重複或遺漏）。
+- 所有平行請求都必須使用相同的 `max` 值，以維持一致性。
 
-For example, with `max: 4`, you can run four separate requests in parallel:
+例如，使用 `max: 4` 時，您可以平行執行四個獨立請求：
 
-- Request 1: `{"id": 0, "max": 4}` (processes slice `0`)
-- Request 2: `{"id": 1, "max": 4}` (processes slice `1`)
-- Request 3: `{"id": 2, "max": 4}` (processes slice `2`)
-- Request 4: `{"id": 3, "max": 4}` (processes slice `3`)
+- 請求 1：`{"id": 0, "max": 4}`（處理切片 `0`）
+- 請求 2：`{"id": 1, "max": 4}`（處理切片 `1`）
+- 請求 3：`{"id": 2, "max": 4}`（處理切片 `2`）
+- 請求 4：`{"id": 3, "max": 4}`（處理切片 `3`）
 
-The following request processes slice `0` out of 4 total slices:
+下列請求會處理總共 4 個切片中的切片 `0`：
 
 <!-- spec_insert_start
 component: example_code
@@ -1322,27 +1323,27 @@ response = client.reindex(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Run multiple requests with different slice IDs (0--3) for parallel processing.
+使用不同的切片 ID（0--3）執行多個請求，以進行平行處理。
 
-### Monitoring reindex operations
+### 監控重新索引作業
 
-Use the following methods to monitor the progress and performance of your reindex operations.
+使用下列方法監控您重新索引作業的進度與效能。
 
-Monitor all active reindex operations in your cluster:
+監控您叢集中所有進行中的重新索引作業：
 
 ```json
 GET /_tasks?actions=*reindex*&detailed=true
 ```
 {% include copy-curl.html %}
 
-Check the progress of a specific reindex task using its task ID:
+使用特定重新索引任務的任務 ID 檢查其進度：
 
 ```json
 GET /_tasks/oTUltX4IQMOUUVeiohTt8A:12345
 ```
 {% include copy-curl.html %}
 
-Monitor cluster performance and disk usage during reindex operations:
+在重新索引作業期間監控叢集效能與磁碟使用量：
 
 ```json
 GET /_cluster/health
@@ -1354,6 +1355,6 @@ GET /_nodes/stats/indices/store
 ```
 {% include copy-curl.html %}
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:data/write/reindex`.
+如果您使用 Security 外掛程式，請確保您具有適當的權限：`indices:data/write/reindex`。

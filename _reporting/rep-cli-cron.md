@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Schedule reports with the cron utility
+title: "使用 cron 公用程式排程報告"
 nav_order: 20
 parent: Reporting using the CLI
 grand_parent: Reporting
@@ -8,29 +9,29 @@ redirect_from:
   - /dashboards/reporting-cli/rep-cli-cron/
 ---
 
-# Schedule reports with the cron utility
+# 使用 cron 公用程式排程報告
 
-You can use the cron command-line utility to initiate a report request with the Reporting CLI that runs periodically at any date or time interval. Follow the cron expression syntax to specify the date and time that precedes the command that you want to initiate.
+您可以使用 cron 命令列公用程式，透過 Reporting CLI 發起報告請求，並在任何日期或時間間隔定期執行。請依照 cron 運算式語法，指定您要發起之命令前面的日期與時間。
 
-To learn about the cron expression syntax, see [Cron expressions]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions). To get help with cron, open the man page by running the following command:
+如要了解 cron 運算式語法，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。如要取得 cron 的說明，請執行下列命令來開啟手冊頁面：
 
 ```
 man cron
 ```
 
-### Prerequisites
+### 先決條件
 
-- You need a machine with cron installed.
-- You need to install the Reporting CLI. See [Downloading and installing the Reporting CLI tool]({{site.url}}{{site.baseurl}}/dashboards/reporting-cli/rep-cli-install/)
+- 您需要一部已安裝 cron 的機器。
+- 您需要安裝 Reporting CLI。請參閱[下載及安裝 Reporting CLI 工具]({{site.url}}{{site.baseurl}}/dashboards/reporting-cli/rep-cli-install/)
 
-## Specifying the report details
+## 指定報告詳細資料
 
-Open the crontab editor by running the following command:
+請執行下列命令來開啟 crontab 編輯器：
 
 ```
 crontab -e
 ```
-In the crontab editor, enter the report request. The following example shows a cron report that runs every day at 8:00 AM:
+在 crontab 編輯器中，輸入報告請求。下列範例顯示每天上午 8:00 執行的 cron 報告：
 
 ```
 0 8 * * * opensearch-reporting-cli -u https://playground.opensearch.org/app/dashboards#/view/084aed50-6f48-11ed-a3d5-1ddbf0afc873 -e ses -s <sender_email> -r <recipient_email>

@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: HTML strip
+title: "移除 HTML 標籤"
 parent: Ingest processors
 nav_order: 140
 ---
 
-# HTML strip processor
+# 移除 HTML 標籤處理器
 
-The `html_strip` processor removes HTML tags from string fields in incoming documents. This processor is useful when indexing data from webpages or other sources that may contain HTML markup. HTML tags are replaced with newline characters (`\n`).
+`html_strip` 處理器會從傳入文件的字串欄位中移除 HTML 標籤。當您為來自網頁或其他可能包含 HTML 標記的來源資料編製索引時，此處理器相當實用。HTML 標籤會以換行字元（`\n`）取代。
 
-The following is the syntax for the `html_strip` processor:
+以下是 `html_strip` 處理器的語法：
 
 ```json
 {  
@@ -20,28 +21,28 @@ The following is the syntax for the `html_strip` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `html_strip` processor.
+下表列出 `html_strip` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`field` | Required | The string field from which to remove HTML tags.
-`target_field` | Optional | The field that receives the plain text version after stripping HTML tags. If not specified, then the field is updated in-place.
-`ignore_missing` | Optional | Specifies whether the processor should ignore documents that do not contain the specified field. Default is `false`.
-`description` | Optional | A description of the processor's purpose or configuration.
-`if` | Optional | Specifies to conditionally execute the processor.
-`ignore_failure` | Optional | Specifies to ignore processor failures. See [Handling pipeline failures]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/).
-`on_failure` | Optional | Specifies a list of processors to run if the processor fails during execution. These processors are executed in the order they are specified. See [Handling pipeline failures]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/).
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type.
+`field` | 必要 | 要從中移除 HTML 標籤的字串欄位。
+`target_field` | 選用 | 在移除 HTML 標籤後，接收純文字版本的欄位。若未指定，則會就地更新該欄位。
+`ignore_missing` | 選用 | 指定處理器是否應忽略未包含所指定欄位的文件。預設為 `false`。
+`description` | 選用 | 處理器用途或組態的說明。
+`if` | 選用 | 指定以條件方式執行處理器。
+`ignore_failure` | 選用 | 指定忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`on_failure` | 選用 | 指定處理器在執行期間失敗時要執行的一組處理器。這些處理器會依指定的順序執行。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+請依照下列步驟在管線中使用處理器。
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
 
-The following query creates a pipeline named `strip-html-pipeline` that uses the `html_strip` processor to remove HTML tags from the description field and store the processed value in a new field named `cleaned_description`:
+下列查詢會建立名為 `strip-html-pipeline` 的管線，該管線使用 `html_strip` 處理器從 description 欄位移除 HTML 標籤，並將處理後的值儲存在名為 `cleaned_description` 的新欄位中：
 
 ```json
 PUT _ingest/pipeline/strip-html-pipeline
@@ -59,12 +60,12 @@ PUT _ingest/pipeline/strip-html-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2 (Optional): Test the pipeline
+### 步驟 2 (選用)：測試管線
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/strip-html-pipeline/_simulate
@@ -80,9 +81,9 @@ POST _ingest/pipeline/strip-html-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線運作正常：
 
 ```json
 {
@@ -105,9 +106,9 @@ The following example response confirms that the pipeline is working as expected
 ```
 {% include copy-curl.html %}
 
-### Step 3: Ingest a document 
+### 步驟 3：匯入文件 
 
-The following query ingests a document into an index named `products`:
+下列查詢會將文件匯入名為 `products` 的索引：
 
 ```json
 PUT products/_doc/1?pipeline=strip-html-pipeline
@@ -118,9 +119,9 @@ PUT products/_doc/1?pipeline=strip-html-pipeline
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The response shows that the request has indexed the document into the index `products` and will index all documents with the `description` field containing HTML tags while storing the plain text version in the `cleaned_description` field:
+回應顯示請求已將文件編製索引至索引 `products`，並會將所有含有 HTML 標籤之 `description` 欄位的文件編製索引，同時將純文字版本儲存在 `cleaned_description` 欄位中：
 
 ```json
 {
@@ -139,18 +140,18 @@ The response shows that the request has indexed the document into the index `pro
 ```
 {% include copy-curl.html %}
 
-### Step 4 (Optional): Retrieve the document
+### 步驟 4 (選用)：擷取文件
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET products/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The response includes both the original `description` field and the `cleaned_description` field with HTML tags removed:
+回應同時包含原始的 `description` 欄位，以及已移除 HTML 標籤的 `cleaned_description` 欄位：
 
 ```json
 {

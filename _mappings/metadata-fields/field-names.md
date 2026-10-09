@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Field names
+title: "欄位名稱"
 parent: Metadata fields
 nav_order: 10
 redirect_from:
   - /field-types/metadata-fields/field-names/
 ---
 
-# Field names metadata field
+# 欄位名稱中繼資料欄位
 
-The `_field_names` field indexes field names that contain non-null values. This enables the use of the `exists` query, which can identify documents that either have or do not have non-null values for a specified field. 
+`_field_names` 欄位會將包含非 null 值的欄位名稱編製索引。這讓您能夠使用 `exists` 查詢，該查詢可識別指定欄位具有或不具有非 null 值的文件。
 
-However, `_field_names` only indexes field names when both `doc_values` and `norms` are disabled. If either `doc_values` or `norms` are enabled, then the `exists` query still functions but will not rely on the `_field_names` field.
+然而，只有在 `doc_values` 與 `norms` 皆停用時，`_field_names` 才會將欄位名稱編製索引。若啟用了 `doc_values` 或 `norms`，則 `exists` 查詢仍可運作，但不會依賴 `_field_names` 欄位。
 
-## Mapping example
+## 對應範例
 
 ```json
 {

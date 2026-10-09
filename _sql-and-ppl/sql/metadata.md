@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Metadata queries
+title: "中繼資料查詢"
 parent: SQL
 nav_order: 9
 redirect_from:
@@ -8,13 +9,13 @@ redirect_from:
   - /search-plugins/sql/sql/metadata/
 ---
 
-# SQL metadata queries
+# SQL 中繼資料查詢
 
-To view basic metadata about your indexes, use the `SHOW` and `DESCRIBE` commands.
+若要檢視索引的基本中繼資料，請使用 `SHOW` 和 `DESCRIBE` 命令。
 
-### Syntax
+### 語法
 
-Rule `showStatement`:
+規則 `showStatement`：
 
 <!-- vale off -->
 
@@ -22,7 +23,7 @@ Rule `showStatement`:
 
 <!-- vale on -->
 
-Rule `showFilter`:
+規則 `showFilter`：
 
 <!-- vale off -->
 
@@ -30,17 +31,17 @@ Rule `showFilter`:
 
 <!-- vale on -->
 
-### Example 1: View metadata for indexes
+### 範例 1：檢視索引的中繼資料
 
-To view metadata for indexes that match a specific pattern, use the `SHOW` command.
-Use the wildcard `%` to match all indexes:
+若要檢視符合特定模式的索引中繼資料，請使用 `SHOW` 命令。
+使用萬用字元 `%` 來比對所有索引：
 
 ```sql
 SHOW TABLES LIKE %
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -52,16 +53,16 @@ The query returns the following results:
 <!-- vale on -->
 
 
-### Example 2: View metadata for a specific index
+### 範例 2：檢視特定索引的中繼資料
 
-To view metadata for an index name with a prefix of `acc`:
+若要檢視索引名稱前置字元為 `acc` 的中繼資料：
 
 ```sql
 SHOW TABLES LIKE acc%
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -72,16 +73,16 @@ The query returns the following results:
 <!-- vale on -->
 
 
-### Example 3: View metadata for all fields in an index
+### 範例 3：檢視索引中所有欄位的中繼資料
 
-To view metadata for all fields in indexes that match a specific pattern, use the `DESCRIBE` command:
+若要檢視符合特定模式之索引中所有欄位的中繼資料，請使用 `DESCRIBE` 命令：
 
 ```sql
 DESCRIBE TABLES LIKE accounts
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -101,16 +102,16 @@ The query returns the following results:
 
 <!-- vale on -->
 
-### Example 4: View metadata for specific fields
+### 範例 4：檢視特定欄位的中繼資料
 
-To view metadata only for fields whose names match a specific pattern, add the `COLUMNS LIKE` clause to the `DESCRIBE` command. The following query returns metadata for the fields in the `accounts` index whose names end in `name`:
+若只要檢視名稱符合特定模式之欄位的中繼資料，請在 `DESCRIBE` 命令中新增 `COLUMNS LIKE` 子句。下列查詢會傳回 `accounts` 索引中名稱以 `name` 結尾之欄位的中繼資料：
 
 ```sql
 DESCRIBE TABLES LIKE accounts COLUMNS LIKE %name
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 

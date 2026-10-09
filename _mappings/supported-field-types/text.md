@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Text
 nav_order: 15
@@ -11,22 +12,22 @@ redirect_from:
   - /field-types/text/
 ---
 
-# Text field type
-**Introduced 1.0**
+# Text 欄位類型
+**於 1.0 版推出**
 {: .label .label-purple }
 
-A `text` field type contains a string that is analyzed. It is used for full-text search because it allows partial matches. Searches for multiple terms can match some but not all of them. Depending on the analyzer, results can be case insensitive, stemmed, have stopwords removed, have synonyms applied, and so on.
+`text` 欄位類型包含經過分析的字串。它用於全文搜尋，因為它允許部分比對。搜尋多個詞彙時，可以只比對其中部分而非全部。視分析器而定，結果可以不區分大小寫、進行詞幹化、移除停用詞、套用同義詞等等。
 
 
-If you need to use a field for exact-value search, map it as a [`keyword`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/keyword/) instead.
+如果您需要使用某個欄位進行精確值搜尋，請改將它對應為 [`keyword`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/keyword/)。
 {: .note }
 
-The [`match_only_text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/match-only-text/) field is a space-optimized version of the `text` field. If you don't need to query phrases or use positional queries, map the field as `match_only_text` instead of `text`. Positional queries are queries in which the position of the term in the phrase is important, such as interval or span queries. 
+[`match_only_text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/match-only-text/) 欄位是 `text` 欄位的空間最佳化版本。如果您不需要查詢片語或使用位置查詢，請將欄位對應為 `match_only_text` 而不是 `text`。位置查詢是指詞彙在片語中的位置很重要的查詢，例如 interval 或 span 查詢。
 {: .note}
 
-## Example
+## 範例
 
-Create a mapping with a text field:
+建立一個包含 text 欄位的對應：
 
 ```json
 PUT movies
@@ -42,54 +43,54 @@ PUT movies
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by text field types. All parameters are optional.
+下表列出 text 欄位類型接受的參數。所有參數皆為選用。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :---
-`analyzer` | The analyzer to be used for this field. By default, it will be used at index time and at search time. To override it at search time, set the `search_analyzer` parameter. Default is the `standard` analyzer, which uses grammar-based tokenization and is based on the [Unicode Text Segmentation](https://unicode.org/reports/tr29/) algorithm.
-`boost` | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field's relevance. Values between 0.0 and 1.0 decrease the field's relevance. Default is 1.0. Dynamically updatable.
-`eager_global_ordinals` | Specifies whether global ordinals should be loaded eagerly on refresh. If the field is often used for aggregations, this parameter should be set to `true`. Default is `false`. Dynamically updatable.
-`fielddata` | A Boolean value that specifies whether to access analyzed tokens for this field for sorting, aggregation, and scripting. Default is `false`. Dynamically updatable.
-`fielddata_frequency_filter` | A JSON object that specifies to load into memory only those analyzed tokens whose document frequency is between the `min` and `max` values (provided as either an absolute number or a percentage). Frequency is computed per segment. Parameters: `min`, `max`, `min_segment_size`. Default is to load all analyzed tokens. Dynamically updatable.
-`fields` | To index the same string in several ways (for example, as a keyword and text), provide the fields parameter. You can specify one version of the field to be used for search and another to be used for sorting and aggregations.
-`index` | A Boolean value that specifies whether the field should be searchable. Default is `true`.
-`index_options` | Specifies the information to be stored in the index for search and highlighting. Valid values: `docs` (doc number only), `freqs` (doc number and term frequencies), `positions` (doc number, term frequencies, and term positions), `offsets` (doc number, term frequencies, term positions, and start and end character offsets). Default is `positions`.
-`index_phrases` | A Boolean value that specifies to index 2-grams separately. 2-grams are combinations of two consecutive words in this field's string. Leads to faster exact phrase queries with no slop but a larger index. Works best when stopwords are not removed. Default is `false`.
-`index_prefixes` | A JSON object that specifies to index term prefixes separately. The number of characters in the prefix is between `min_chars` and `max_chars`, inclusive. Leads to faster prefix searches but a larger index. Optional parameters: `min_chars`, `max_chars`. Default `min_chars` is 2, `max_chars` is 5.
-`meta` | Accepts metadata for this field.
-`norms` | A Boolean value that specifies whether the field length should be used when calculating relevance scores. Default is `true`.
-`position_increment_gap` | When text fields are analyzed, they are assigned positions. If a field contained an array of strings, and these positions were consecutive, this would lead to potentially matching across different array elements. To prevent this, an artificial gap is inserted between consecutive array elements. You can change this gap by specifying an integer `position_increment_gap`. Note: If `slop` is greater than `position_element_gap`, matching across different array elements may occur. Default is 100. Dynamically updatable.
-`similarity` | The ranking algorithm for calculating relevance scores. Default is `BM25`. 
-[`term_vector`](#term-vector-parameter) | A Boolean value that specifies whether a term vector for this field should be stored. Default is `no`.
+`analyzer` | 此欄位要使用的分析器。預設情況下，會在編製索引時和搜尋時使用。若要在搜尋時覆寫，請設定 `search_analyzer` 參數。預設為 `standard` 分析器，它使用基於文法的斷詞，並以 [Unicode Text Segmentation](https://unicode.org/reports/tr29/) 演算法為基礎。
+`boost` | 一個浮點數值，指定此欄位對相關性分數的權重。高於 1.0 的值會提高該欄位的相關性；介於 0.0 與 1.0 之間的值會降低該欄位的相關性。預設為 1.0。可動態更新。
+`eager_global_ordinals` | 指定是否應在重新整理時立即載入全域序數。如果此欄位經常用於彙總，應將此參數設為 `true`。預設為 `false`。可動態更新。
+`fielddata` | 一個布林值，指定是否要存取此欄位經過分析的詞元，以用於排序、彙總和指令碼。預設為 `false`。可動態更新。
+`fielddata_frequency_filter` | 一個 JSON 物件，指定只將文件頻率介於 `min` 與 `max` 值之間（以絕對數字或百分比提供）的已分析詞元載入記憶體。頻率是按分段計算。參數：`min`、`max`、`min_segment_size`。預設載入所有已分析的詞元。可動態更新。
+`fields` | 若要以多種方式為同一字串編製索引（例如同時作為 keyword 和 text），請提供 fields 參數。您可以指定一個版本的欄位用於搜尋，另一個版本用於排序和彙總。
+`index` | 一個布林值，指定此欄位是否應可搜尋。預設為 `true`。
+`index_options` | 指定要儲存在索引中供搜尋與突顯使用的資訊。有效值：`docs`（僅文件編號）、`freqs`（文件編號與詞彙頻率）、`positions`（文件編號、詞彙頻率與詞彙位置）、`offsets`（文件編號、詞彙頻率、詞彙位置以及起始與結束字元偏移量）。預設為 `positions`。
+`index_phrases` | 一個布林值，指定是否單獨為 2-gram 編製索引。2-gram 是此欄位字串中兩個連續詞彙的組合。可加快無 slop 的精確片語查詢，但會使索引變大。在未移除停用詞時效果最佳。預設為 `false`。
+`index_prefixes` | 一個 JSON 物件，指定單獨為詞彙前綴編製索引。前綴的字元數介於 `min_chars` 與 `max_chars` 之間（含端點）。可加快前綴搜尋，但會使索引變大。選用參數：`min_chars`、`max_chars`。預設 `min_chars` 為 2，`max_chars` 為 5。
+`meta` | 接受此欄位的中繼資料。
+`norms` | 一個布林值，指定計算相關性分數時是否應使用欄位長度。預設為 `true`。
+`position_increment_gap` | text 欄位經過分析後會被指派位置。如果某個欄位包含字串陣列，而這些位置是連續的，可能會導致跨不同陣列元素的比對。為避免這種情況，會在連續的陣列元素之間插入一個人為間隔。您可以透過指定整數 `position_increment_gap` 來變更此間隔。注意：如果 `slop` 大於 `position_element_gap`，可能會發生跨不同陣列元素的比對。預設為 100。可動態更新。
+`similarity` | 用於計算相關性分數的排名演算法。預設為 `BM25`。
+[`term_vector`](#term-vector-parameter) | 一個布林值，指定是否應儲存此欄位的詞彙向量。預設為 `no`。
 
-## Term vector parameter
+## 詞彙向量參數
 
-A term vector is produced during analysis. It contains:
-- A list of terms.
-- The ordinal position of each term.
-- The start and end character offsets of the search string within the field.
-- Payloads (if available). Each term can have custom binary data associated with the term's position.
+詞彙向量是在分析期間產生的。它包含：
+- 詞彙清單。
+- 每個詞彙的序數位置。
+- 搜尋字串在欄位內的起始與結束字元偏移量。
+- 承載資料（如果有的話）。每個詞彙都可以有與該詞彙位置相關聯的自訂二進位資料。
 
-The `term_vector` field contains a JSON object that accepts the following parameters:
+`term_vector` 欄位包含一個接受下列參數的 JSON 物件：
 
-Parameter | Stored values
+參數 | 儲存的值
 :--- | :---
-`no` | None. This is the default.
-`yes` | Terms in the field.
-`with_offsets` | Terms and character offsets.
-`with_positions_offsets` | Terms, positions, and character offsets.
-`with_positions_offsets_payloads` | Terms, positions, character offsets, and payloads.
-`with_positions` | Terms and positions.
-`with_positions_payloads` | Terms, positions, and payloads.
+`no` | 無。這是預設值。
+`yes` | 欄位中的詞彙。
+`with_offsets` | 詞彙與字元偏移量。
+`with_positions_offsets` | 詞彙、位置與字元偏移量。
+`with_positions_offsets_payloads` | 詞彙、位置、字元偏移量與承載資料。
+`with_positions` | 詞彙與位置。
+`with_positions_payloads` | 詞彙、位置與承載資料。
 
-Storing positions is useful for proximity queries. Storing character offsets is useful for highlighting.
+儲存位置對鄰近查詢很有用。儲存字元偏移量對突顯很有用。
 {: .tip }
 
-### Term vector parameter example
+### 詞彙向量參數範例
 
-Create a mapping with a text field that stores character offsets in a term vector:
+建立一個包含 text 欄位的對應，該欄位在詞彙向量中儲存字元偏移量：
 
 ```json
 PUT testindex
@@ -106,7 +107,7 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-Index a document with a text field:
+為一個包含 text 欄位的文件編製索引：
 
 ```json
 PUT testindex/_doc/1
@@ -116,7 +117,7 @@ PUT testindex/_doc/1
 ```
 {% include copy-curl.html %}
 
-Query for "date of birth" and highlight it in the original field:
+查詢「date of birth」並在原始欄位中將它突顯：
 
 ```json
 GET testindex/_search
@@ -135,7 +136,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The words "date of birth" are highlighted in the response:
+「date of birth」這幾個字會在回應中被突顯：
 
 ```json
 {

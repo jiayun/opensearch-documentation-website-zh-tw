@@ -1,63 +1,64 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get message traces
+title: "取得訊息追蹤"
 parent: Memory APIs
 grand_parent: ML Commons APIs
 nav_order: 70
 ---
 
 # Get Message Traces API
-**Introduced 2.12**
+**2.12 版推出**
 {: .label .label-purple }
 
-Use this API to retrieve message trace information for [conversational search]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/). This can be useful for debugging.
+使用此 API 擷取[對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)的訊息追蹤資訊。這對偵錯很有幫助。
 
-For each message, an agent may need to run different tools. You can use the Get Traces API to get all trace data for a message. The trace data includes detailed steps of a message execution.
+對於每則訊息，代理程式可能需要執行不同的工具。您可以使用 Get Traces API 取得某則訊息的所有追蹤資料。追蹤資料包含訊息執行的詳細步驟。
 
-When the Security plugin is enabled, all memories exist in a `private` security mode. Only the user who created a memory can interact with that memory and its messages.
+啟用 Security 外掛程式時，所有記憶都存在於 `private` 安全性模式中。只有建立記憶的使用者才能與該記憶及其訊息互動。
 {: .important}
 
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/memory/message/{message_id}/traces
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`message_id` | String | The ID of the message to trace.
+`message_id` | 字串 | 要追蹤的訊息 ID。
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the available response fields.
+下表列出可用的回應欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `memory_id` | String | The memory ID. |
-| `message_id` | String | The message ID. |
-| `create_time` | String | The time at which the message was created. |
-| `updated_time` | String | The time at which the message was last updated. |
-| `input` | String | The question in the message (human input). |
-| `prompt_template` | String | The prompt template that was used for the message. |
-| `response` | String | The answer to the question (generative AI output). |
-| `origin` | String | The name of the AI or other system that generated the response. |
-| `additional_info` | Object | Any other information that was sent to the `origin`. |
-| `parent_message_id` | String | The ID of the parent message (for trace messages). |
-| `trace_number` | Integer | The trace number (for trace messages). |
+| `memory_id` | 字串 | 記憶 ID。 |
+| `message_id` | 字串 | 訊息 ID。 |
+| `create_time` | 字串 | 訊息的建立時間。 |
+| `updated_time` | 字串 | 訊息的最後更新時間。 |
+| `input` | 字串 | 訊息中的問題（人類輸入）。 |
+| `prompt_template` | 字串 | 訊息所使用的提示範本。 |
+| `response` | 字串 | 問題的答案（生成式 AI 輸出）。 |
+| `origin` | 字串 | 產生回應的 AI 或其他系統名稱。 |
+| `additional_info` | 物件 | 傳送至 `origin` 的任何其他資訊。 |
+| `parent_message_id` | 字串 | 父訊息的 ID（適用於追蹤訊息）。 |
+| `trace_number` | 整數 | 追蹤編號（適用於追蹤訊息）。 |
 
-## Example request
+## 範例請求
 
 ```json
 GET /_plugins/_ml/memory/message/TAuCZY0BT2tRrkdmCPqZ/traces
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {

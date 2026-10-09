@@ -1,41 +1,42 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get agentic memory
+title: "取得代理程式記憶"
 parent: Agentic memory APIs
 grand_parent: ML Commons APIs
 nav_order: 51
 ---
 
 # Get Agentic Memory API
-**Introduced 3.3**
+**3.3 版新增**
 {: .label .label-purple }
 
-Use this API to retrieve a specific memory by its type and ID. This unified API supports the four [memory types]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-types): `sessions`, `working`, `long-term`, and `history`.
+使用此 API 可依記憶的類型與 ID 擷取特定記憶。此統一 API 支援四種[記憶類型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-types)：`sessions`、`working`、`long-term` 與 `history`。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/memory_containers/{memory_container_id}/memories/{type}/{id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required/Optional | Description |
+| 參數 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `memory_container_id` | String | Required | The ID of the memory container from which to retrieve the memory. |
-| `type` | String | Required | The memory type. Valid values are `sessions`, `working`, `long-term`, and `history`. |
-| `id` | String | Required | The ID of the memory to retrieve. |
+| `memory_container_id` | 字串 | 必要 | 要從中擷取記憶的記憶容器 ID。 |
+| `type` | 字串 | 必要 | 記憶類型。有效值為 `sessions`、`working`、`long-term` 與 `history`。 |
+| `id` | 字串 | 必要 | 要擷取的記憶 ID。 |
 
-## Example request: Get a working memory
+## 範例請求：取得工作記憶
 
 ```json
 GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/working/XyEuiJkBeh2gPPwzjYWM
 ```
 {% include copy-curl.html %}
 
-## Example response: Working memory
+## 範例回應：工作記憶
 
 ```json
 {
@@ -68,14 +69,14 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/working/XyEuiJ
 }
 ```
 
-## Example request: Get a long-term memory
+## 範例請求：取得長期記憶
 
 ```json
 GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/DcxjTpkBvwXRq366C1Zz
 ```
 {% include copy-curl.html %}
 
-## Example response: Long-term memory 
+## 範例回應：長期記憶 
 
 ```json
 {
@@ -97,14 +98,14 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/Dcxj
 }
 ```
 
-## Example request: Get a session
+## 範例請求：取得工作階段
 
 ```json
 GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/sessions/CcxjTpkBvwXRq366A1aE
 ```
 {% include copy-curl.html %}
 
-## Example response: Session
+## 範例回應：工作階段
 
 ```json
 {
@@ -117,14 +118,14 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/sessions/CcxjT
 }
 ```
 
-## Example request: Get a history memory
+## 範例請求：取得歷史記憶
 
 ```json
 GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/history/eMxnTpkBvwXRq366hmAU
 ```
 {% include copy-curl.html %}
 
-## Example response: History 
+## 範例回應：歷史 
 
 ```json
 {
@@ -147,67 +148,67 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/history/eMxnTp
 }
 ```
 
-## Response fields
+## 回應欄位
 
-The response fields vary depending on the memory type.
+回應欄位會依記憶類型而有所不同。
 
-### Working memory response fields
+### 工作記憶回應欄位
 
-The following table lists all working memory response body fields.
+下表列出所有工作記憶回應本文欄位。
 
-| Field                 | Data type | Description                                             |
+| 欄位                 | 資料類型 | 說明                                             |
 |:----------------------| :--- |:--------------------------------------------------------|
-| `memory_container_id` | String | The ID of the memory container.                         |
-| `payload_type`        | String | The type of payload. Valid values are `conversation` and `data`.          |
-| `messages`            | Array | Array of conversation messages (applicable only to the `conversation` memory type). | 
-| `namespace`           | Object | The namespace context for this memory.                  |
-| `metadata`            | Object | Additional metadata associated with the memory.         |
-| `tags`                | Object | Associated tags for categorization.                     |
-| `infer`               | Boolean | Whether inference was enabled for this memory.          |
-| `created_time`        | Long | The timestamp of when the memory was created.                  |
-| `last_updated_time`   | Long | The timestamp of when the memory was last updated.             |
+| `memory_container_id` | 字串 | 記憶容器的 ID。                         |
+| `payload_type`        | 字串 | 負載類型。有效值為 `conversation` 與 `data`。          |
+| `messages`            | 陣列 | 對話訊息的陣列 (僅適用於 `conversation` 記憶類型)。 | 
+| `namespace`           | 物件 | 此記憶的命名空間上下文。                  |
+| `metadata`            | 物件 | 與此記憶相關聯的其他中繼資料。         |
+| `tags`                | 物件 | 用於分類的相關標籤。                     |
+| `infer`               | 布林值 | 此記憶是否已啟用推論。          |
+| `created_time`        | Long | 記憶建立的時間戳記。                  |
+| `last_updated_time`   | Long | 記憶最後更新的時間戳記。             |
 
-### Long-term memory response fields
+### 長期記憶回應欄位
 
-The following table lists all long-term memory response body fields.
+下表列出所有長期記憶回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `memory` | String | The extracted long-term memory fact. |
-| `strategy_type` | String | The type of memory strategy used (for example, `SEMANTIC`, `SUMMARY`, or `USER_PREFERENCE`). |
-| `namespace` | Object | The namespace context for this memory. |
-| `namespace_size` | Integer | The number of namespaces. |
-| `tags` | Object | Associated tags for categorization. |
-| `created_time` | Long | The timestamp when the memory was created. |
-| `last_updated_time` | Long | The timestamp when the memory was last updated. |
-| `memory_embedding` | Array | The vector embedding of the memory content (truncated in display). |
-| `owner_id` | String | The ID of the memory owner. |
-| `strategy_id` | String | The unique identifier for the strategy instance. |
+| `memory` | 字串 | 擷取出的長期記憶事實。 |
+| `strategy_type` | 字串 | 所使用的記憶策略類型 (例如 `SEMANTIC`、`SUMMARY` 或 `USER_PREFERENCE`)。 |
+| `namespace` | 物件 | 此記憶的命名空間上下文。 |
+| `namespace_size` | 整數 | 命名空間的數量。 |
+| `tags` | 物件 | 用於分類的相關標籤。 |
+| `created_time` | Long | 記憶建立的時間戳記。 |
+| `last_updated_time` | Long | 記憶最後更新的時間戳記。 |
+| `memory_embedding` | 陣列 | 記憶內容的向量嵌入 (顯示時會截斷)。 |
+| `owner_id` | 字串 | 記憶擁有者的 ID。 |
+| `strategy_id` | 字串 | 策略執行個體的唯一識別碼。 |
 
-### Session response fields
+### 工作階段回應欄位
 
-The following table lists all session response body fields.
+下表列出所有工作階段回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `memory_container_id` | String | The ID of the memory container. |
-| `namespace` | Object | The namespace context for this session. |
-| `created_time` | String | The timestamp of when the session was created. |
-| `last_updated_time` | String | The timestamp of when the session was last updated. |
+| `memory_container_id` | 字串 | 記憶容器的 ID。 |
+| `namespace` | 物件 | 此工作階段的命名空間上下文。 |
+| `created_time` | 字串 | 工作階段建立的時間戳記。 |
+| `last_updated_time` | 字串 | 工作階段最後更新的時間戳記。 |
 
-### History response fields
+### 歷史回應欄位
 
-The following table lists all history response body fields.
+下表列出所有歷史回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `owner_id` | String | The ID of the memory owner. |
-| `memory_container_id` | String | The ID of the memory container. |
-| `memory_id` | String | The ID of the affected memory. |
-| `action` | String | The type of operation: `ADD`, `UPDATE`, or `DELETE`. |
-| `after` | Object | The memory content after the operation. |
-| `before` | Object | The memory content before the operation (for `UPDATE` operations). |
-| `namespace` | Object | The namespace context for this memory. |
-| `namespace_size` | Integer | The number of namespaces. |
-| `tags` | Object | Associated tags for categorization. |
-| `created_time` | Long | The timestamp of when the operation occurred. |
+| `owner_id` | 字串 | 記憶擁有者的 ID。 |
+| `memory_container_id` | 字串 | 記憶容器的 ID。 |
+| `memory_id` | 字串 | 受影響記憶的 ID。 |
+| `action` | 字串 | 操作類型：`ADD`、`UPDATE` 或 `DELETE`。 |
+| `after` | 物件 | 操作後的記憶內容。 |
+| `before` | 物件 | 操作前的記憶內容 (適用於 `UPDATE` 操作)。 |
+| `namespace` | 物件 | 此記憶的命名空間上下文。 |
+| `namespace_size` | 整數 | 命名空間的數量。 |
+| `tags` | 物件 | 用於分類的相關標籤。 |
+| `created_time` | Long | 操作發生的時間戳記。 |

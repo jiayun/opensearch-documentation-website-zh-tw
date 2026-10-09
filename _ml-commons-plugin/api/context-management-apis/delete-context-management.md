@@ -1,42 +1,43 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete context management
+title: "刪除情境管理"
 parent: Context management APIs
 grand_parent: ML Commons APIs
 nav_order: 40
 ---
 
-# Delete Context Management API
-**Introduced 3.5**
+# 刪除情境管理 API
+**於 3.5 版推出**
 {: .label .label-purple }
 
-Use this API to delete a context management configuration. Once deleted, the context management can no longer be used by agents.
+使用此 API 刪除情境管理組態。刪除後，代理程式即無法再使用該情境管理。
 
-Deleting a context management configuration does not affect the agents currently using it. However, new agent registrations or executions will not be able to reference the deleted context management.
+刪除情境管理組態不會影響目前正在使用它的代理程式。不過，新的代理程式註冊或執行將無法參照已刪除的情境管理。
 {: .note}
 
-## Endpoints
+## 端點
 
 ```json
 DELETE /_plugins/_ml/context_management/{context_management_name}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-Parameter | Data type | Required/Optional | Description
+參數 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`context_management_name` | String | Required | The name of the context management to delete.
+`context_management_name` | 字串 | 必要 | 要刪除的情境管理名稱。
 
-## Example request
+## 範例請求
 
 ```json
 DELETE /_plugins/_ml/context_management/advanced-context-management
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -45,9 +46,9 @@ DELETE /_plugins/_ml/context_management/advanced-context-management
 }
 ```
 
-## Error responses
+## 錯誤回應
 
-If you attempt to delete a context management configuration that doesn't exist, the API returns a 404 error indicating the resource was not found:
+如果您嘗試刪除不存在的情境管理組態，API 會傳回 404 錯誤，指出找不到該資源：
 
 ```json
 {
@@ -65,6 +66,6 @@ If you attempt to delete a context management configuration that doesn't exist, 
 }
 ```
 
-## Related documentation
+## 相關文件
 
-For more information, see [Context management]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/).
+如需更多資訊，請參閱[情境管理]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/)。

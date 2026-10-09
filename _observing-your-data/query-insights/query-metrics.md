@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Query metrics
+title: "查詢指標"
 parent: Query insights
 nav_order: 30
 ---
 
-# Query metrics
-**Introduced 2.16**
+# 查詢指標
+**自 2.16 版起推出**
 {: .label .label-purple }
 
-Key query [metrics](#metrics), such as aggregation types, query types, latency, and resource usage per query type, are captured along the search path by using the OpenTelemetry (OTel) instrumentation framework. The telemetry data can be consumed using OTel metrics [exporters]({{site.url}}{{site.baseurl}}/observing-your-data/trace/distributed-tracing/#exporters).
+關鍵查詢[指標](#metrics)，例如彙總類型、查詢類型、延遲，以及每種查詢類型的資源使用量，會透過 OpenTelemetry (OTel) 檢測架構沿著搜尋路徑擷取。遙測資料可使用 OTel 指標[匯出工具]({{site.url}}{{site.baseurl}}/observing-your-data/trace/distributed-tracing/#exporters)來取用。
 
-## Configuring query metric generation
+## 設定查詢指標產生
 
-To configure query metric generation, use the following steps.
+若要設定查詢指標產生，請使用下列步驟。
 
-### Step 1: Install the OpenTelemetry plugin
+### 步驟 1：安裝 OpenTelemetry 外掛程式
 
-For information about installing the OpenTelemetry plugin, see [Distributed tracing]({{site.url}}{{site.baseurl}}/observing-your-data/trace/distributed-tracing/).
+如需安裝 OpenTelemetry 外掛程式的相關資訊，請參閱[分散式追蹤]({{site.url}}{{site.baseurl}}/observing-your-data/trace/distributed-tracing/)。
 
-### Step 2: Enable query metrics
+### 步驟 2：啟用查詢指標
 
-Enable query metrics by configuring the following `opensearch.yml` settings:
+透過設定下列 `opensearch.yml` 設定來啟用查詢指標：
 
 ```yaml
 telemetry.feature.metrics.enabled: true
@@ -29,7 +30,7 @@ search.query.metrics.enabled: true
 ```
 {% include copy.html %}
 
-The following is a complete sample configuration that includes a telemetry configuration:
+以下是包含遙測設定的完整範例組態：
 
 ```yaml
 # Enable query metrics feature
@@ -43,7 +44,7 @@ telemetry.feature.tracer.enabled: true
 ```
 {% include copy.html %}
 
-Alternatively, you can configure query metric generation using the API:
+或者，您可以使用 API 來設定查詢指標產生：
 
 ```json
 PUT _cluster/settings
@@ -55,7 +56,7 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-Configure the export of metrics and traces using a gRPC exporter. For more information, see [Exporters]({{site.url}}{{site.baseurl}}/observing-your-data/trace/distributed-tracing/#exporters). You can skip this step if you use the [default logging exporter](#default-logging-exporter):
+使用 gRPC 匯出工具來設定指標與追蹤的匯出。如需詳細資訊，請參閱[匯出工具]({{site.url}}{{site.baseurl}}/observing-your-data/trace/distributed-tracing/#exporters)。如果您使用[預設記錄匯出工具](#default-logging-exporter)，則可以略過此步驟：
 
 ```yaml
 telemetry.otel.tracer.span.exporter.class: io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter
@@ -63,20 +64,20 @@ telemetry.otel.metrics.exporter.class: io.opentelemetry.exporter.otlp.metrics.Ot
 ```
 {% include copy.html %}
 
-## Metrics
+## 指標
 
-Query metrics provide the following measurements:
+查詢指標提供下列量測：
 
-- The number of queries per query type (for example, the number of `match` or `regex` queries)
-- The number of queries per aggregation type (for example, the number of `terms` aggregation queries)
-- The number of queries per sort order (for example, the number of ascending and descending `sort` queries)
-- Histograms of `latency` for each query type, aggregation type, and sort order
-- Histograms of `cpu` for each query type, aggregation type, and sort order
-- Histograms of `memory` for each query type, aggregation type, and sort order
+- 每種查詢類型的查詢數 (例如 `match` 或 `regex` 查詢的數量)
+- 每種彙總類型的查詢數 (例如 `terms` 彙總查詢的數量)
+- 每種排序順序的查詢數 (例如遞增與遞減 `sort` 查詢的數量)
+- 每種查詢類型、彙總類型與排序順序的 `latency` 直方圖
+- 每種查詢類型、彙總類型與排序順序的 `cpu` 直方圖
+- 每種查詢類型、彙總類型與排序順序的 `memory` 直方圖
 
-## Default logging exporter
+## 預設記錄匯出工具
 
-By default, if no gRPC exporters are configured, then the metrics and traces are exported to log files. The data is saved in the `opensearch/logs` directory in the following files:
+根據預設，如果未設定任何 gRPC 匯出工具，則指標與追蹤會匯出至記錄檔。資料會儲存在 `opensearch/logs` 目錄中的下列檔案：
 
 - `opensearch_otel_metrics.log`
 - `opensearch_otel_traces.log`

@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using a search pipeline
+title: "使用搜尋管線"
 nav_order: 20
 has_children: false
 parent: Search pipelines
 ---
 
-# Using a search pipeline
+# 使用搜尋管線
 
-You can use a search pipeline in the following ways:
+您可以透過下列方式使用搜尋管線：
 
-- [Specify an existing pipeline](#specifying-an-existing-search-pipeline-for-a-request) for a request.
-- [Use a temporary pipeline](#using-a-temporary-search-pipeline-for-a-request) for a request.
-- Set a [default pipeline](#default-search-pipeline) for all requests in an index.
+- 為請求[指定現有的管線](#specifying-an-existing-search-pipeline-for-a-request)。
+- 為請求[使用暫時性管線](#using-a-temporary-search-pipeline-for-a-request)。
+- 為索引中的所有請求設定[預設管線](#default-search-pipeline)。
 
-## Specifying an existing search pipeline for a request
+## 為請求指定現有的搜尋管線
 
-After you [create a search pipeline]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/), you can use the pipeline with a query in the following ways. For a complete example of using a search pipeline with a `filter_query` processor, see [`filter_query` processor example]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/filter-query-processor#example).
+在[建立搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/)之後，您可以透過下列方式在查詢中使用該管線。如需搭配 `filter_query` 處理器使用搜尋管線的完整範例，請參閱 [`filter_query` 處理器範例]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/filter-query-processor#example)。
 
-### Specifying the pipeline in a query parameter
+### 在查詢參數中指定管線
 
-You can specify the pipeline name in the `search_pipeline` query parameter as follows:
+您可以在 `search_pipeline` 查詢參數中指定管線名稱，如下所示：
 
 ```json
 GET /my_index/_search?search_pipeline=my_pipeline
 ```
 {% include copy-curl.html %}
 
-### Specifying the pipeline in the request body
+### 在請求本文中指定管線
 
-You can provide a search pipeline ID in the search request body as follows:
+您可以在搜尋請求本文中提供搜尋管線 ID，如下所示：
 
 ```json
 GET /my-index/_search
@@ -44,7 +45,7 @@ GET /my-index/_search
 ```
 {% include copy-curl.html %}
 
-For multi-search, you can provide a search pipeline ID in the search request body as follows:
+對於多重搜尋，您可以在搜尋請求本文中提供搜尋管線 ID，如下所示：
 
 ```json
 GET /_msearch
@@ -56,9 +57,9 @@ GET /_msearch
 ```
 {% include copy-curl.html %}
 
-## Using a temporary search pipeline for a request
+## 為請求使用暫時性搜尋管線
 
-As an alternative to creating a search pipeline, you can define a temporary search pipeline to be used for only the current query:
+除了建立搜尋管線之外，您也可以定義僅用於目前查詢的暫時性搜尋管線：
 
 ```json
 POST /my-index/_search
@@ -95,15 +96,15 @@ POST /my-index/_search
 ```
 {% include copy-curl.html %}
 
-With this syntax, the pipeline does not persist and is used only for the query for which it is specified.
+使用此語法時，管線不會保存，僅用於指定它的該次查詢。
 
-## Default search pipeline
+## 預設搜尋管線
 
-For convenience, you can set a default search pipeline for an index. Once your index has a default pipeline, you don't need to specify the `search_pipeline` query parameter in every search request.
+為了方便起見，您可以為索引設定預設搜尋管線。一旦索引有了預設管線，您就不需要在每個搜尋請求中指定 `search_pipeline` 查詢參數。
 
-### Setting a default search pipeline for an index
+### 為索引設定預設搜尋管線
 
-To set a default search pipeline for an index, specify the `index.search.default_pipeline` in the index's settings:
+若要為索引設定預設搜尋管線，請在索引的設定中指定 `index.search.default_pipeline`：
 
 ```json
 PUT /my_index/_settings 
@@ -113,18 +114,18 @@ PUT /my_index/_settings
 ```
 {% include copy-curl.html %}
 
-After setting the default pipeline for `my_index`, you can try the same search for all documents:
+為 `my_index` 設定預設管線後，您可以對所有文件執行相同的搜尋：
 
 ```json
 GET /my_index/_search
 ```
 {% include copy-curl.html %}
 
-The response contains only the public document, indicating that the pipeline was applied by default:
+回應只包含公開文件，表示管線已預設套用：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -160,18 +161,18 @@ The response contains only the public document, indicating that the pipeline was
 ```
 </details>
 
-You can search across multiple indexes that share the same default pipeline. For example, `alias1` has two indexes, `my_index1` and `my_index2`, both of which have the default pipeline `my_pipeline` attached to them:
+您可以跨多個共用相同預設管線的索引進行搜尋。例如，`alias1` 有兩個索引 `my_index1` 和 `my_index2`，兩者都附加了預設管線 `my_pipeline`：
 
 ```json
 GET /alias1/_search
 ```
 {% include copy-curl.html %}
 
-The response includes only the public version of the document, confirming that the default pipeline was successfully applied:
+回應只包含文件的公開版本，確認預設管線已成功套用：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -207,18 +208,18 @@ The response includes only the public version of the document, confirming that t
 ```
 </details>
 
-### Disabling the default pipeline for a request
+### 為請求停用預設管線
 
-If you want to run a search request without applying the default pipeline, you can set the `search_pipeline` query parameter to `_none`:
+如果您想在不套用預設管線的情況下執行搜尋請求，可以將 `search_pipeline` 查詢參數設定為 `_none`：
 
 ```json
 GET /my_index/_search?search_pipeline=_none
 ```
 {% include copy-curl.html %}
 
-### Removing the default pipeline
+### 移除預設管線
 
-To remove the default pipeline from an index, set it to `null` or `_none`:
+若要從索引移除預設管線，請將其設定為 `null` 或 `_none`：
 
 ```json
 PUT /my_index/_settings 

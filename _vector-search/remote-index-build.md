@@ -1,33 +1,34 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Remote index build
+title: "遠端索引建置"
 nav_order: 72
 has_children: false
 ---
 
-# Building vector indexes remotely using GPUs
-Introduced 3.0 
+# 使用 GPU 遠端建置向量索引
+於 3.0 版導入 
 {: .label .label-purple }
 
-OpenSearch supports building vector indexes using a GPU-accelerated remote index build service. Using GPUs dramatically reduces index build times and decreases costs. For benchmarking results, see [this blog post](https://opensearch.org/blog/GPU-Accelerated-Vector-Search-OpenSearch-New-Frontier/).
+OpenSearch 支援使用 GPU 加速的遠端索引建置服務來建置向量索引。使用 GPU 可大幅縮短索引建置時間並降低成本。基準測試結果請參閱[這篇網誌文章](https://opensearch.org/blog/GPU-Accelerated-Vector-Search-OpenSearch-New-Frontier/)。
 
-## Supported configurations
+## 支援的組態
 
-The remote index build service supports [Faiss]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#faiss-engine) indexes that use the `hnsw` method. For these indexes, the service supports the following vector types:
+遠端索引建置服務支援使用 `hnsw` 方法的 [Faiss]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#faiss-engine) 索引。對於這些索引，該服務支援下列向量類型：
 
-- The default 32-bit floating-point (`FP32`) vectors
-- 16-bit floating-point (`FP16`), byte, and binary vectors, at all compression levels (`2x`, `8x`, `16x`, and `32x`)
-- [`half_float` vectors]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#half-float-vectors), at the `1x` and `16x` compression levels
+- 預設的 32 位元浮點數 (`FP32`) 向量
+- 16 位元浮點數 (`FP16`)、位元組與二進位向量，適用於所有壓縮層級 (`2x`、`8x`、`16x` 與 `32x`)
+- [`half_float` 向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#half-float-vectors)，適用於 `1x` 與 `16x` 壓縮層級
 
-Vectors quantized using the [`bf16` encoder type]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/faiss-scalar-quantization/#the-bf16-encoder) are not supported, and indexes using that encoder are always built locally.
+不支援使用 [`bf16` 編碼器類型]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/faiss-scalar-quantization/#the-bf16-encoder) 量化的向量，使用該編碼器的索引一律在本機建置。
 
-## Prerequisites
+## 先決條件
 
-Before configuring the remote index build settings, ensure you fulfill the following prerequisites. For more information about updating dynamic settings, see [Dynamic settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/#dynamic-settings).
+在設定遠端索引建置設定之前，請確認您符合下列先決條件。有關更新動態設定的更多資訊，請參閱[動態設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/#dynamic-settings)。
 
-### Step 1: Enable the remote index build service
+### 步驟 1：啟用遠端索引建置服務
 
-OpenSearch builds an index remotely only when both the cluster-level `knn.remote_index_build.enabled` setting and the index-level `index.knn.remote_index_build.enabled` setting are `true`. The cluster-level setting is `false` by default, so enable it for the cluster:
+只有當叢集層級設定 `knn.remote_index_build.enabled` 與索引層級設定 `index.knn.remote_index_build.enabled` 都設為 `true` 時，OpenSearch 才會遠端建置索引。叢集層級設定預設為 `false`，因此請為叢集啟用它：
 
 ```json
 PUT /_cluster/settings
@@ -39,30 +40,30 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-The index-level setting is `true` by default, so set it to `false` only to exclude an individual index from remote index building. For descriptions of both settings, see [Remote index build settings]({{site.url}}{{site.baseurl}}/vector-search/settings/#remote-index-build-settings).
+索引層級設定預設為 `true`，因此僅在要將個別索引排除於遠端索引建置之外時，才將它設為 `false`。有關這兩項設定的說明，請參閱[遠端索引建置設定]({{site.url}}{{site.baseurl}}/vector-search/settings/#remote-index-build-settings)。
 
-### Step 2: Create and register the remote vector repository
+### 步驟 2：建立並註冊遠端向量儲存庫
 
-The remote vector repository acts as an intermediate object store between the OpenSearch cluster and the remote build service. The cluster uploads vectors and document IDs to the repository. The remote build service retrieves the data, builds the index externally, and uploads the completed result back to the repository.
+遠端向量儲存庫充當 OpenSearch 叢集與遠端建置服務之間的中介物件儲存空間。叢集會將向量與文件 ID 上傳至儲存庫。遠端建置服務會擷取該資料、在外部建置索引，並將完成的結果上傳回儲存庫。
 
-To create and register the repository, follow the steps in [Register repository]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/#register-repository). Then set the `knn.remote_index_build.repository` dynamic setting to the name of the registered repository.
+若要建立並註冊儲存庫，請依照[註冊儲存庫]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/#register-repository)中的步驟操作。然後將 `knn.remote_index_build.repository` 動態設定設為已註冊儲存庫的名稱。
 
-The remote build service only supports Amazon Simple Storage Service (Amazon S3) repositories.
+遠端建置服務僅支援 Amazon Simple Storage Service (Amazon S3) 儲存庫。
 {: .note}
 
-### Step 3: Set up a remote vector index builder
+### 步驟 3：設定遠端向量索引建置器
 
-Configure the remote endpoint in the k-NN settings by setting `knn.remote_index_build.service.endpoint` to a running [remote vector index builder](https://github.com/opensearch-project/remote-vector-index-builder) instance. For instructions on setting up the remote service, see [the user guide](https://github.com/opensearch-project/remote-vector-index-builder/blob/main/USER_GUIDE.md).
+在 k-NN 設定中，將 `knn.remote_index_build.service.endpoint` 設為執行中的[遠端向量索引建置器](https://github.com/opensearch-project/remote-vector-index-builder) 執行個體，以設定遠端端點。有關設定遠端服務的說明，請參閱[使用者指南](https://github.com/opensearch-project/remote-vector-index-builder/blob/main/USER_GUIDE.md)。
 
-## Configuring remote index build settings
+## 設定遠端索引建置設定
 
-The remote index build service supports several additional, optional settings. For information about configuring any remaining remote index build settings, see [Remote index build settings]({{site.url}}{{site.baseurl}}/vector-search/settings/#remote-index-build-settings).
+遠端索引建置服務支援數個額外的選用設定。有關設定其餘遠端索引建置設定的資訊，請參閱[遠端索引建置設定]({{site.url}}{{site.baseurl}}/vector-search/settings/#remote-index-build-settings)。
 
-## Using the remote index build service
+## 使用遠端索引建置服務
 
-Once the remote index build service is configured, any segment flush and merge operations that meet the following requirements will transparently use the GPU build path:
+遠端索引建置服務設定完成後，任何符合下列要求的分段排清與合併作業都會透明地使用 GPU 建置路徑：
 
-- The index is using one of the [supported configurations](#supported-configurations).
-- The segment size is greater than `index.knn.remote_index_build.size.min` and less than `knn.remote_index_build.size.max`.
+- 索引使用其中一種[支援的組態](#supported-configurations)。
+- 分段大小大於 `index.knn.remote_index_build.size.min` 且小於 `knn.remote_index_build.size.max`。
 
-You can monitor remote index build tasks by calling the k-NN Stats API and reviewing the [remote index build statistics]({{site.url}}{{site.baseurl}}/vector-search/api/knn/#remote-index-build-stats).
+您可以呼叫 k-NN Stats API 並檢視[遠端索引建置統計資料]({{site.url}}{{site.baseurl}}/vector-search/api/knn/#remote-index-build-stats)來監控遠端索引建置工作。

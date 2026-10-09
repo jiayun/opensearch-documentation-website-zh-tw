@@ -1,65 +1,66 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Backfill
+title: "回填"
 nav_order: 6
 parent: Migration phases
 permalink: /classic/migration-assistant/migration-phases/backfill/
 ---
 
-# Using backfill
+# 使用回填
 
-After the [metadata]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/migrate-metadata/) for your cluster has been migrated, you can use Capture Proxy data replication and snapshots to backfill your data into the next cluster.
+遷移叢集的[中繼資料]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/migrate-metadata/)後，您可以使用 Capture Proxy 資料複寫與快照，將資料回填至下一個叢集。
 
-## Migrate documents with RFS
+## 使用 RFS 遷移文件
 
-You can now use RFS to migrate documents from your original cluster:
+您現在可以使用 RFS 從原始叢集遷移文件：
 
-### Starting the backfill
+### 啟動回填
 
-To start the migration from RFS, start a `backfill` using the following command:
+若要透過 RFS 啟動遷移，請使用下列命令啟動 `backfill`：
 
 ```bash
 console backfill start
 ```
 {% include copy.html %}
 
-The status will be `Running` even if all the shards have been migrated.
+即使所有分片都已遷移，狀態仍會是 `Running`。
 
-### Scaling up the fleet
+### 擴增工作節點群
 
-_(Optional)_ To speed up the migration, increase the number of documents processed simultaneously by using the following command:
+_（選用）_ 若要加快遷移速度，請使用下列命令增加同時處理的文件數量：
 
 ```bash
 console backfill scale <NUM_WORKERS>
 ```
 {% include copy.html %}
 
-To speed up the transfer, you can scale the number of workers. It may take a few minutes for these additional workers to come online. The following command will update the worker fleet to a size of 10:
+若要加快傳輸速度，您可以增加工作節點的數量。這些額外的工作節點可能需要幾分鐘才會上線。下列命令會將工作節點群的規模更新為 10：
 
 ```shell
 console backfill scale 5
 ```
 {% include copy.html %}
 
-We recommend slowly scaling up the fleet while monitoring the health metrics of the target cluster to avoid oversaturating it. [Amazon OpenSearch Service domains](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/monitoring.html) provide a number of metrics and logs that can be used for this monitoring.
+我們建議您逐步擴增工作節點群，同時監控目標叢集的健康狀態指標，以避免使其過度飽和。[Amazon OpenSearch Service 網域](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/monitoring.html)提供多種指標與記錄檔，可用於此類監控。
 
-### Monitoring the backfill
+### 監控回填
 
-To check the status of the documentation backfill, use the following command:
+若要檢查文件回填的狀態，請使用下列命令：
 
 ```bash
 console backfill status
 ```
 {% include copy.html %}
 
-Use the following command to perform detailed monitoring of the backfill process:
+使用下列命令詳細監控回填程序：
 
 ```bash
 console backfill status --deep-check
 ```
 {% include copy.html %}
 
-You should receive the following output:
+您應該會收到下列輸出：
 
 ```json
 BackfillStatus.RUNNING
@@ -73,38 +74,38 @@ Shards in progress: 11
 Shards unclaimed: 5
 ```
 
-Logs and metrics are available in Amazon CloudWatch in the `OpenSearchMigrations` log group.
+您可以在 Amazon CloudWatch 的 `OpenSearchMigrations` 記錄檔群組中取得記錄檔與指標。
 
-If you need to stop the backfill process, use the following command:
+如果您需要停止回填程序，請使用下列命令：
 
 ```bash
 console backfill stop
 ```
 {% include copy.html %}
 
-### Pause the migration
+### 暫停遷移
 
-To pause a migration, use the following command:
+若要暫停遷移，請使用下列命令：
 
 ```shell
 console backfill pause
 ```
 
-This will stop all existing workers from running while leaving the backfill operation in a state from which it can be restarted. When you want to restart the migration, perform one of the following actions:
+這會停止所有現有工作節點的執行，同時讓回填作業維持在可重新啟動的狀態。當您想要重新啟動遷移時，請執行下列其中一項操作：
 
-- Run `console backfill start`.
-- Scale up the worker count by running `console backfill scale <worker_count>`.
+- 執行 `console backfill start`。
+- 執行 `console backfill scale <worker_count>` 以增加工作節點數量。
 
-### Stopping the migration
+### 停止遷移
 
-Completing the backfill process requires manually stopping the migration. Stopping the migration shuts down all workers and cleans up all metadata used to track and coordinate the migration. Once the status checks report that your data has been completely migrated, you can stop the migration with the following command:
+完成回填程序需要手動停止遷移。停止遷移會關閉所有工作節點，並清除所有用於追蹤及協調遷移的中繼資料。當狀態檢查回報您的資料已完全遷移後，您可以使用下列命令停止遷移：
 
 ```shell
 console backfill stop
 ```
 {% include copy.html %}
 
-Migration Assistant should return the following response:
+Migration Assistant 應該會傳回下列回應：
 
 ```shell
 Backfill stopped successfully.
@@ -114,24 +115,24 @@ RFS Workers are still running, waiting for them to complete...
 Backfill working state archived to: /shared-logs-output/migration-console-default/backfill_working_state/working_state_backup_20241115174822.json
 ```
 
-You cannot restart a stopped migration. Instead, you can pause the backfill process using `console backfill pause`.
+您無法重新啟動已停止的遷移。您可以改用 `console backfill pause` 暫停回填程序。
 
-### Amazon CloudWatch metrics and dashboard
+### Amazon CloudWatch 指標與儀表板
 
-Migration Assistant creates an Amazon CloudWatch dashboard, named `MigrationAssistant_ReindexFromSnapshot_Dashboard`, that you can use to visualize the health and performance of the backfill process. It combines the metrics for the backfill workers and, for those migrating to Amazon OpenSearch Service, the target cluster.
+Migration Assistant 會建立名為 `MigrationAssistant_ReindexFromSnapshot_Dashboard` 的 Amazon CloudWatch 儀表板，讓您以視覺化方式呈現回填程序的健康狀態與效能。此儀表板會整合回填工作節點的指標；若您遷移至 Amazon OpenSearch Service，也會整合目標叢集的指標。
 
-You can find the backfill dashboard in the CloudWatch console based on the AWS Region in which you have deployed Migration Assistant. The metric graphs for your target cluster will be blank until you select the OpenSearch domain you're migrating to from the dropdown menu at the top of the dashboard.
+您可以根據部署 Migration Assistant 的 AWS 區域，在 CloudWatch 主控台中找到回填儀表板。在您從儀表板頂端的下拉式選單選取要遷移至的 OpenSearch 網域之前，目標叢集的指標圖表會維持空白。
 
-## Validating the backfill
+## 驗證回填
 
-After the backfill is complete and the workers have stopped, examine the contents of your cluster using the [Refresh API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/refresh/) and the [Flush API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/flush/). The following example uses the console CLI with the Refresh API to check the backfill status:
+回填完成且工作節點停止後，請使用 [Refresh API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/refresh/) 與 [Flush API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/flush/) 檢查叢集的內容。下列範例使用主控台 CLI 搭配 Refresh API 來檢查回填狀態：
 
 ```shell
 console clusters cat-indices --refresh
 ```
 {% include copy.html %}
 
-This will display the number of documents in each of the indexes in the target cluster, as shown in the following example response:
+這會顯示目標叢集中各個索引的文件數量，如下列範例回應所示：
 
 ```shell
 SOURCE CLUSTER
@@ -147,11 +148,11 @@ green  open   .migrations_working_state lopd47ReQ9OEhw4ZuJGZOg   1   1          
 green  open   .kibana_1
 ```
 
-You can run additional queries against the target cluster to mimic your production workflow and closely examine the results.
+您可以對目標叢集執行其他查詢，以模擬正式環境的工作流程，並仔細檢查結果。
 
-## Verify that all documents were migrated
+## 確認所有文件皆已遷移
 
-Use the following query in CloudWatch Logs Insights to identify failed documents:
+在 CloudWatch Logs Insights 中使用下列查詢，找出遷移失敗的文件：
 
 ```bash
 fields @message
@@ -161,6 +162,6 @@ fields @message
 ```
 {% include copy.html %}
 
-If any failed documents are identified, you can index the failed documents directly as opposed to using RFS.
+如果找到任何遷移失敗的文件，您可以直接將這些文件編製索引，而不使用 RFS。
 
 {% include migration-phase-navigation.html %}

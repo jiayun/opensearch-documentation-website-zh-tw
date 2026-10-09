@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Data Distribution tool
+title: "資料分布工具"
 has_children: false
 has_toc: false
 nav_order: 25
@@ -9,25 +10,25 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# Data Distribution tool
-**Introduced 3.3.0**
+# 資料分布工具
+**於 3.3.0 版引入**
 {: .label .label-purple }
 <!-- vale on -->
 
-The `DataDistributionTool` analyzes data distribution patterns within datasets and compares distributions between different time periods. It supports both single dataset analysis and comparative analysis to identify significant changes in field value distributions, helping detect anomalies, trends, and data quality issues.
+`DataDistributionTool` 會分析資料集內的資料分布模式，並比較不同時段之間的分布。它支援單一資料集分析與比較分析，可識別欄位值分布的顯著變化，協助偵測異常、趨勢與資料品質問題。
 
-The tool supports both [query domain-specific language (DSL)]({{site.url}}{{site.baseurl}}/query-dsl/) and [Piped Processing Language (PPL)]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) queries for flexible data retrieval and filtering.
+此工具同時支援[查詢領域專用語言（DSL）]({{site.url}}{{site.baseurl}}/query-dsl/)與[管線處理語言（PPL）]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/)查詢，以靈活擷取與篩選資料。
 
-## Analysis modes
+## 分析模式
 
-The tool automatically selects the appropriate analysis mode based on the provided parameters:
+此工具會根據提供的參數，自動選取適當的分析模式：
 
-- **Comparative analysis**: When both baseline and selection time ranges are provided, the tool compares field distributions between the two periods to identify significant changes and divergences.
-- **Single dataset analysis**: When only a selection time range is provided, the tool analyzes distribution patterns within the dataset to provide insights into field value frequencies and characteristics.
+- **比較分析**：同時提供基準與選取時間範圍時，此工具會比較兩個時段之間的欄位分布，以識別顯著變化與差異。
+- **單一資料集分析**：僅提供選取時間範圍時，此工具會分析資料集內的分布模式，提供欄位值頻率與特性的深入資訊。
 
-## Step 1: Register a flow agent that runs the DataDistributionTool
+## 步驟 1：註冊執行 DataDistributionTool 的流程代理程式
 
-A flow agent runs a sequence of tools in order, returning the last tool's output. To create a flow agent, send the following register agent request:
+流程代理程式會依序執行一系列工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -48,9 +49,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-No parameters are required to register the tool. The tool uses dynamic parameter validation at execution time. 
+註冊此工具不需要任何參數。此工具會在執行時動態驗證參數。 
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -58,13 +59,13 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 2: Run the agent
+## 步驟 2：執行代理程式
 
-Run the agent to perform either a comparative distribution analysis or a single dataset distribution analysis.
+執行代理程式以進行比較分布分析或單一資料集分布分析。
 
-### Comparative analysis
+### 比較分析
 
-To perform a comparative distribution analysis between two time periods, provide both the baseline and selection time ranges:
+若要對兩個時段進行比較分布分析，請同時提供基準與選取時間範圍：
 
 ```json
 POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
@@ -84,7 +85,7 @@ POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns a field-by-field comparison showing distribution changes between time periods:
+OpenSearch 會傳回逐一欄位的比較結果，顯示時段之間的分布變化：
 
 ```json
 {
@@ -101,9 +102,9 @@ OpenSearch returns a field-by-field comparison showing distribution changes betw
 }
 ```
 
-### Single dataset analysis
+### 單一資料集分析
 
-To perform a single dataset distribution analysis, provide only a selection time range:
+若要進行單一資料集分布分析，請僅提供選取時間範圍：
 
 ```json
 POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
@@ -120,7 +121,7 @@ POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns distribution patterns for the analyzed dataset:
+OpenSearch 會傳回所分析資料集的分布模式：
 
 ```json
 {
@@ -137,9 +138,9 @@ OpenSearch returns distribution patterns for the analyzed dataset:
 }
 ```
 
-## Using a PPL query
+## 使用 PPL 查詢
 
-Run the agent using PPL for data retrieval:
+執行代理程式，使用 PPL 擷取資料：
 
 ```json
 POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
@@ -157,9 +158,9 @@ POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
 ```
 {% include copy-curl.html %}
 
-## Using a custom DSL query
+## 使用自訂 DSL 查詢
 
-Run the agent with a complete custom DSL query:
+使用完整的自訂 DSL 查詢執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
@@ -177,37 +178,37 @@ POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
 ```
 {% include copy-curl.html %}
 
-## Execute parameters
+## 執行參數
 
-The following table lists the available tool parameters for running the agent.
+下表列出執行代理程式時可用的工具參數。
 
-| Parameter | Type | Required/Optional | Description |
+| 參數 | 類型 | 必要／選用 | 說明 |
 |:----------|:-----|:------------------|:------------|
-| `index` | String | Required | The name of the OpenSearch index containing the data to analyze. |
-| `timeField` | String | Required | A date/time field for time-based filtering. |
-| `selectionTimeRangeStart` | String | Required | The start time for the analysis period, in UTC date string format (for example, `2025-01-15 10:00:00`). |
-| `selectionTimeRangeEnd` | String | Required | The end time for the analysis period, in UTC date string format (for example, `2025-01-15 11:00:00`). |
-| `baselineTimeRangeStart` | String | Optional | The start time for the baseline comparison period, in UTC date string format (for example, `2025-01-15 10:00:00`). Required for the comparative analysis mode. |
-| `baselineTimeRangeEnd` | String | Optional | The end time for the baseline comparison period, in UTC date string format (for example, `2025-01-15 11:00:00`). Required for the comparative analysis mode. |
-| `size` | Integer | Optional | The maximum number of documents to analyze. Default is `1000`. Maximum is `10000`. |
-| `queryType` | String | Optional | The query type. Valid values are `ppl` and `dsl`. Default is `dsl`. |
-| `filter` | Array | Optional | Additional DSL query conditions for filtering, specified as JSON strings (for example, `["{\"term\": {\"status\": \"error\"}}", "{\"range\": {\"level\": {\"gte\": 3}}}"]`). |
-| `dsl` | String | Optional | A complete raw DSL query as a JSON string. If provided, takes precedence over the `filter` parameter. |
-| `ppl` | String | Optional | A complete PPL statement without time information. Used when `queryType` is `ppl`. |
+| `index` | 字串 | 必要 | 包含待分析資料的 OpenSearch 索引名稱。 |
+| `timeField` | 字串 | 必要 | 用於依時間篩選的日期／時間欄位。 |
+| `selectionTimeRangeStart` | 字串 | 必要 | 分析時段的開始時間，採用 UTC 日期字串格式（例如，`2025-01-15 10:00:00`）。 |
+| `selectionTimeRangeEnd` | 字串 | 必要 | 分析時段的結束時間，採用 UTC 日期字串格式（例如，`2025-01-15 11:00:00`）。 |
+| `baselineTimeRangeStart` | 字串 | 選用 | 基準比較時段的開始時間，採用 UTC 日期字串格式（例如，`2025-01-15 10:00:00`）。比較分析模式需要此參數。 |
+| `baselineTimeRangeEnd` | 字串 | 選用 | 基準比較時段的結束時間，採用 UTC 日期字串格式（例如，`2025-01-15 11:00:00`）。比較分析模式需要此參數。 |
+| `size` | 整數 | 選用 | 要分析的文件數量上限。預設為 `1000`。上限為 `10000`。 |
+| `queryType` | 字串 | 選用 | 查詢類型。有效值為 `ppl` 與 `dsl`。預設為 `dsl`。 |
+| `filter` | 陣列 | 選用 | 用於篩選的額外 DSL 查詢條件，以 JSON 字串指定（例如，`["{\"term\": {\"status\": \"error\"}}", "{\"range\": {\"level\": {\"gte\": 3}}}"]`）。 |
+| `dsl` | 字串 | 選用 | 以 JSON 字串表示的完整原始 DSL 查詢。若提供此參數，則優先於 `filter` 參數。 |
+| `ppl` | 字串 | 選用 | 不含時間資訊的完整 PPL 陳述式。當 `queryType` 為 `ppl` 時使用。 |
 
-## Testing the tool
+## 測試工具
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+您可以將此工具作為代理程式工作流程的一部分執行，或使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適合用於測試個別工具或執行獨立作業。
 
-## Limitations
+## 限制
 
-The Data Distribution tool has the following limitations:
+資料分布工具有下列限制：
 
-- **Maximum document volume**: The tool has a default limit of 1,000 documents per execution, with a maximum configurable limit of 10,000 documents (`MAX_SIZE_LIMIT = 10000`).
-- **Field cardinality limits**: High-cardinality fields are automatically filtered to ensure meaningful analysis results:
-  - ID fields: Maximum of 30 unique values.
-  - Data fields: Maximum of 10 unique values (or dataset size ÷ 2, whichever is larger).
-- **Result limits**: 
-  - Comparative analysis: Returns the top 10 field differences.
-  - Single dataset analysis: Returns the top 30 field distributions.
-  - Top changes per field: Limited to 10 items.
+- **文件數量上限**：此工具每次執行預設最多處理 1,000 份文件，可設定的上限為 10,000 份文件（`MAX_SIZE_LIMIT = 10000`）。
+- **欄位基數限制**：系統會自動篩除高基數欄位，以確保分析結果具有意義：
+  - ID 欄位：最多 30 個相異值。
+  - 資料欄位：最多 10 個相異值（或資料集大小 ÷ 2，取較大者）。
+- **結果限制**： 
+  - 比較分析：傳回前 10 個欄位差異。
+  - 單一資料集分析：傳回前 30 個欄位分布。
+  - 每個欄位的主要變化：限 10 個項目。

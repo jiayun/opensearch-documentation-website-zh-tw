@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Geographic and xy queries
+title: "地理與 xy 查詢"
 has_children: true
 nav_order: 65
 redirect_from:
@@ -10,27 +11,27 @@ redirect_from:
    - /query-dsl/geo-and-xy/
 ---
 
-# Geographic and xy queries
+# 地理與 xy 查詢
 
-Geographic and xy queries let you search fields that contain points and shapes on a map or coordinate plane. Geographic queries work on geospatial data, while xy queries work on two-dimensional coordinate data. Out of all geographic queries, the geoshape query is very similar to the xy query, but the former searches [geographic fields]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geographic/), while the latter searches [Cartesian fields]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy).
+地理與 xy 查詢可讓您搜尋包含地圖或座標平面上點與形狀的欄位。地理查詢適用於地理空間資料，而 xy 查詢適用於二維座標資料。在所有地理查詢中，geoshape 查詢與 xy 查詢非常相似，但前者搜尋[地理欄位]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geographic/)，後者搜尋[笛卡兒欄位]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy)。
 
-## xy queries
+## xy 查詢
 
-[xy queries]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/geo-and-xy/xy) search for documents that contain geometries in a Cartesian coordinate system. These geometries can be specified in [`xy_point`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy-point) fields, which support points, and [`xy_shape`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy-shape) fields, which support points, lines, circles, and polygons. 
+[xy 查詢]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/geo-and-xy/xy)搜尋在笛卡兒座標系統中包含幾何圖形的文件。這些幾何圖形可以指定在支援點的 [`xy_point`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy-point) 欄位，以及支援點、線、圓形與多邊形的 [`xy_shape`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy-shape) 欄位中。
 
-xy queries return documents that contain:
-- xy shapes and xy points that have one of four spatial relations to the provided shape: `INTERSECTS`, `DISJOINT`, `WITHIN`, or `CONTAINS`.
-- xy points that intersect the provided shape.
+xy 查詢會回傳包含以下內容的文件：
+- 與所提供形狀具有四種空間關係之一（`INTERSECTS`、`DISJOINT`、`WITHIN` 或 `CONTAINS`）的 xy 形狀與 xy 點。
+- 與所提供形狀相交的 xy 點。
 
-## Geographic queries
+## 地理查詢
 
-Geographic queries search for documents that contain geospatial geometries. These geometries can be specified in [`geo_point`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point/) fields, which support points on a map, and [`geo_shape`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-shape/) fields, which support points, lines, circles, and polygons. 
+地理查詢搜尋包含地理空間幾何圖形的文件。這些幾何圖形可以指定在支援地圖上點的 [`geo_point`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point/) 欄位，以及支援點、線、圓形與多邊形的 [`geo_shape`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-shape/) 欄位中。
 
-OpenSearch provides the following geographic query types:
+OpenSearch 提供下列地理查詢類型：
 
-| Query type | Description |
+| 查詢類型 | 說明 |
 | :--- | :--- |
-| [Geo-bounding box]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/geo-and-xy/geo-bounding-box/) | Returns documents with geopoint field values that are within a bounding box. |
-| [Geodistance]({{site.url}}{{site.baseurl}}/query-dsl/geo-and-xy/geodistance/) | Returns documents with geopoints that are within a specified distance from the provided geopoint. |
-| [Geopolygon]({{site.url}}{{site.baseurl}}/query-dsl/geo-and-xy/geopolygon/) | Returns documents containing geopoints that are within a polygon. |
-| [Geoshape]({{site.url}}{{site.baseurl}}/query-dsl/geo-and-xy/geoshape/) | Returns documents containing geoshapes and geopoints that have one of four spatial relations to the provided shape (`INTERSECTS`, `DISJOINT`, `WITHIN`, or `CONTAINS`) or geopoints that intersect the provided shape. |
+| [Geo-bounding box]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/geo-and-xy/geo-bounding-box/) | 回傳地理點欄位值位於邊界框內的文件。 |
+| [Geodistance]({{site.url}}{{site.baseurl}}/query-dsl/geo-and-xy/geodistance/) | 回傳其地理點與所提供地理點的距離在指定範圍內的文件。 |
+| [Geopolygon]({{site.url}}{{site.baseurl}}/query-dsl/geo-and-xy/geopolygon/) | 回傳包含位於多邊形內之地理點的文件。 |
+| [Geoshape]({{site.url}}{{site.baseurl}}/query-dsl/geo-and-xy/geoshape/) | 回傳包含與所提供形狀具有四種空間關係之一（`INTERSECTS`、`DISJOINT`、`WITHIN` 或 `CONTAINS`）的地理形狀與地理點，或與所提供形狀相交之地理點的文件。 |

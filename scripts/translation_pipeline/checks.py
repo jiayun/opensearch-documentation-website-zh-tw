@@ -13,6 +13,7 @@ from .frontmatter import (FrontMatterError, has_modification_notice, split_docum
 from .protect import (STRAY_BRACKET_RE, PlaceholderError, Protector, fenced_blocks,
                       protected_inventory)
 from .segment import heading_levels
+from .source_errata import apply_source_errata
 from .store import Manifest, SourceInventory, SourceStore, sha256_bytes
 from .terms import TermRules, check_markdown, check_prose, errors
 
@@ -53,6 +54,12 @@ def _html_block_openings(body: str) -> Counter:
 def compare_translation(baseline: str, current: str, rules: TermRules) -> list[str]:
     """Problems that make `current` an unacceptable translation of `baseline`."""
     problems: list[str] = []
+    try:
+        # Hash-pinned syntax repairs of malformed upstream Markdown; the
+        # translation must match the repaired baseline.
+        baseline = apply_source_errata(baseline)
+    except ValueError as exc:
+        return [f"source errata: {exc}"]
     try:
         base_doc = split_document(baseline)
         cur_doc = split_document(current)

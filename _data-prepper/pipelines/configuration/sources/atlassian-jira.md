@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Atlassian Jira
 parent: Sources
@@ -6,20 +7,20 @@ grand_parent: Pipelines
 nav_order: 7
 ---
 
-# Atlassian Jira source
+# Atlassian Jira 來源
 
-You can use the OpenSearch Data Prepper `jira` source to ingest records from one or more [Atlassian Jira](https://www.atlassian.com/software/jira) projects.
+您可以使用 OpenSearch Data Prepper `jira` 來源，從一或多個 [Atlassian Jira](https://www.atlassian.com/software/jira) 專案匯入記錄。
 
-## Usage
+## 使用方式
 
-Set up Jira project access credentials by choosing one of the following options:
+請選擇下列其中一種方式，設定 Jira 專案存取認證：
 
-- **Basic authentication** (API key authentication): Follow [these instructions](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/).
-- **OAuth 2.0 authentication**: Follow [these instructions](https://developer.atlassian.com/cloud/jira/platform/oauth-2-3lo-apps/#faq-rrt-config).
+- **基本驗證**（API 金鑰驗證）：請依照[這些說明](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)操作。
+- **OAuth 2.0 驗證**：請依照[這些說明](https://developer.atlassian.com/cloud/jira/platform/oauth-2-3lo-apps/#faq-rrt-config)操作。
 
-As an additional optional step, store the credentials in AWS Secrets Manager. If you don't store the credentials in AWS Secrets Manager, then you must provide plain-text credentials directly in the pipeline configuration.
+您也可以選擇另外將認證儲存在 AWS Secrets Manager 中。如果您未將認證儲存在 AWS Secrets Manager 中，則必須直接在管線組態中提供純文字認證。
 
-The following example pipeline specifies `jira` as a source. The pipeline ingests data from Jira projects named `project1` and `project2` and applies filters to select tickets from these projects as a source:
+下列範例管線將 `jira` 指定為來源。此管線會從名為 `project1` 和 `project2` 的 Jira 專案匯入資料，並套用篩選條件，從這些專案中選取工單作為來源：
 
 ```yaml
 version: "2"
@@ -79,73 +80,73 @@ atlassian-jira-pipeline:
 ```
 {% include copy.html %}
 
-## Configuration options
+## 組態選項
 
-The `jira` source supports the following configuration options.
+`jira` 來源支援下列組態選項。
 
-| Option            | Required | Type                              | Description                                                                                                                                                                                                                   |
+| 選項            | 必要 | 類型                              | 說明                                                                                                                                                                                                                   |
 |:------------------|:---------|:----------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `hosts`           | Yes      | List                              | The Atlassian Confluence hostname. Currently, only one host is supported, so this list is expected to be of size 1.                                                                                                                        |
-| `acknowledgments` | No       | Boolean                           | When set to `true`, enables the `jira` source to receive [end-to-end acknowledgments]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/pipelines#end-to-end-acknowledgments) when events are received by OpenSearch sinks. |
-| `authentication`  | Yes      | [authentication](#Authentication) | Configures the authentication method used to access `jira` source records from the specified host.                                                                                                                                         |
-| `filter`          | No       | [filter](#Filter)                 | Applies specific filter criteria while extracting Jira tickets.                                                                                                                                                     |
+| `hosts`           | 是      | 清單                              | Atlassian Confluence 主機名稱。目前僅支援一部主機，因此此清單的大小應為 1。                                                                                                                        |
+| `acknowledgments` | 否       | 布林值                           | 設為 `true` 時，可讓 `jira` 來源在 OpenSearch 接收器收到事件時接收[端對端確認]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/pipelines#end-to-end-acknowledgments)。 |
+| `authentication`  | 是      | [驗證](#Authentication) | 設定用於從指定主機存取 `jira` 來源記錄的驗證方法。                                                                                                                                         |
+| `filter`          | 否       | [篩選條件](#Filter)                 | 在擷取 Jira 工單時套用特定的篩選條件。                                                                                                                                                     |
 
-### Authentication
+### 驗證
 
-You can use one of the following authentication methods to access the specified Jira host. You must provide one of the following parameters.
+您可以使用下列其中一種驗證方法來存取指定的 Jira 主機。您必須提供下列其中一個參數。
 
-| Option   | Required | Type              | Description                                            |
+| 選項   | 必要 | 類型              | 說明                                            |
 |:---------|:---------|:------------------|:-------------------------------------------------------|
-| `basic`  | Yes      | [Basic](#basic-authentication)   | Basic authentication credentials used to access a Jira host.  |
-| `oauth2` | Yes      | [OAuth 2.0](#oauth-20-authentication)| OAuth 2.0 authentication credentials used to access a Jira host. |
+| `basic`  | 是      | [Basic](#basic-authentication)   | 用於存取 Jira 主機的基本驗證認證。  |
+| `oauth2` | 是      | [OAuth 2.0](#oauth-20-authentication)| 用於存取 Jira 主機的 OAuth 2.0 驗證認證。 |
 
-#### Basic authentication
+#### 基本驗證
 
-Either basic or OAuth 2.0 credentials are required to access the Jira site. If you use `basic` authentication, the following fields are required.
+存取 Jira 網站需要基本認證或 OAuth 2.0 認證。如果您使用 `basic` 驗證，則下列欄位為必要欄位。
 
-| Option     | Required | Type   | Description                                                                                     |
+| 選項     | 必要 | 類型   | 說明                                                                                     |
 |:-----------|:---------|:-------|:------------------------------------------------------------------------------------------------|
-| `username` | Yes      | String | A username or reference to the secret key storing the username.           |
-| `password` | Yes      | String | A password (API key) or reference to the secret key storing the password. |
+| `username` | 是      | 字串 | 使用者名稱，或儲存使用者名稱之秘密金鑰的參照。           |
+| `password` | 是      | 字串 | 密碼（API 金鑰），或儲存密碼之秘密金鑰的參照。 |
 
-#### OAuth 2.0 authentication
+#### OAuth 2.0 驗證
 
-Either basic or OAuth 2.0 credentials are required to access the Jira site. If you use OAuth 2.0, the following fields are required.
+存取 Jira 網站需要基本認證或 OAuth 2.0 認證。如果您使用 OAuth 2.0，則下列欄位為必要欄位。
 
-| Option          | Required | Type   | Description                                                                                     |
+| 選項          | 必要 | 類型   | 說明                                                                                     |
 |:----------------|:---------|:-------|:------------------------------------------------------------------------------------------------|
-| `client_id`     | Yes      | String | A `client_id` or reference to the secret key storing the `client_id`.         |
-| `client_secret` | Yes      | String | A `client_secret` or reference to the secret key storing the `client_secret`. |
-| `access_token`  | Yes      | String | An `access_token` or reference to the secret key storing the `access_token`.   |
-| `refresh_token` | Yes      | String | A `refresh_token` or reference to the secret key storing the `refresh_token`. |
+| `client_id`     | 是      | 字串 | `client_id`，或儲存 `client_id` 之秘密金鑰的參照。         |
+| `client_secret` | 是      | 字串 | `client_secret`，或儲存 `client_secret` 之秘密金鑰的參照。 |
+| `access_token`  | 是      | 字串 | `access_token`，或儲存 `access_token` 之秘密金鑰的參照。   |
+| `refresh_token` | 是      | 字串 | `refresh_token`，或儲存 `refresh_token` 之秘密金鑰的參照。 |
 
-### Filter
+### 篩選條件
 
-Optionally, you can specify filters to select specific content. If no filters are specified, all the projects and tickets visible for the specified credentials will be extracted and sent to the specified sink in the pipeline.
+您可以選擇指定篩選條件來選取特定內容。如果未指定任何篩選條件，則指定認證可見的所有專案和工單都會被擷取，並傳送至管線中指定的接收器。
 
-| Option       | Required | Type   | Description                                    |
+| 選項       | 必要 | 類型   | 說明                                    |
 |:-------------|:---------|:-------|:-----------------------------------------------|
-| `project`    | No       | String | A list of project keys to include or exclude.        |
-| `issue_type` | No       | String | A list of issue type filters to include or exclude. |
-| `status`     | No       | String | A list of status filters to include or exclude.     |
+| `project`    | 否       | 字串 | 要包含或排除的專案金鑰清單。        |
+| `issue_type` | 否       | 字串 | 要包含或排除的問題類型篩選條件清單。 |
+| `status`     | 否       | 字串 | 要包含或排除的狀態篩選條件清單。     |
 
-### AWS secrets
+### AWS 秘密
 
-You can use the following options in the `aws` secrets configuration if you plan to store the credentials in AWS Secrets Manager. Storing secrets in AWS Secrets Manager is optional. If AWS Secrets Manager is not used, credentials must be specified in the pipeline YAML itself, in plain text.
+如果您打算將認證儲存在 AWS Secrets Manager 中，可以在 `aws` 秘密組態中使用下列選項。將秘密儲存在 AWS Secrets Manager 中為選用。如果未使用 AWS Secrets Manager，則必須直接在管線 YAML 中以純文字指定認證。
 
-If OAuth 2.0 authentication is used in combination with `aws` secrets, this source requires write permissions to the secret to be able to write back the updated (or renewed) access token once the current token expires.
+如果將 OAuth 2.0 驗證與 `aws` 秘密搭配使用，此來源需要該秘密的寫入權限，才能在目前的權杖到期時寫回已更新（或已續期）的存取權杖。
 
-| Option         | Required | Type   | Description                                                                                                                                                                                                                                                                                    |
+| 選項         | 必要 | 類型   | 說明                                                                                                                                                                                                                                                                                    |
 |:---------------|:---------|:-------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `region`       | Yes      | String | The AWS Region to use for credentials. Defaults to the [standard SDK behavior for determining the Region](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html).                                                                                         |
-| `sts_role_arn` | Yes      | String | The AWS Security Token Service (AWS STS) role to assume for requests to Atlassian Jira. Defaults to `null`, which uses the [standard SDK behavior for credentials](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html). |
-| `secret_id`    | Yes      | Map    | The Amazon Resource Name (ARN) of the secret where the credentials are stored.                                                                                                                              
+| `region`       | 是      | 字串 | 用於認證的 AWS 區域。預設採用[判斷區域的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html)。                                                                                         |
+| `sts_role_arn` | 是      | 字串 | 向 Atlassian Jira 發出請求時要擔任的 AWS Security Token Service (AWS STS) 角色。預設為 `null`，即使用[認證的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html)。 |
+| `secret_id`    | 是      | 對應    | 儲存認證之秘密的 Amazon Resource Name (ARN)。                                                                                                                              
 
-## Metrics
+## 指標
 
-The `jira` source includes the following metrics (counters):
+`jira` 來源包含下列指標（計數器）：
 
-* `crawlingTime`: The amount of time taken to crawl through all the new changes in Jira.
-* `ticketFetchLatency`: The ticket fetch API operation latency.
-* `searchCallLatency`: The search API operation latency.
-* `searchResultsFound`: The number of tickets found in a specified search API call.
+* `crawlingTime`：爬取 Jira 中所有新變更所花費的時間。
+* `ticketFetchLatency`：工單擷取 API 操作的延遲。
+* `searchCallLatency`：搜尋 API 操作的延遲。
+* `searchResultsFound`：在指定的搜尋 API 呼叫中找到的工單數量。

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create or update pipeline
+title: "建立或更新管線"
 nav_order: 10
 redirect_from:
   - /opensearch/rest-api/ingest-apis/create-update-ingest/
@@ -8,22 +9,22 @@ redirect_from:
   - /api-reference/ingest-apis/create-update-ingest/
 ---
 
-# Create or update pipeline
-**Introduced 1.0**
+# 建立或更新管線
+**1.0 版新增**
 {: .label .label-purple }
 
-Use the create pipeline API operation to create or update pipelines in OpenSearch. Note that the pipeline requires you to define at least one processor that specifies how to change the documents. 
+使用 create pipeline API 操作，在 OpenSearch 中建立或更新管線。請注意，管線需要您至少定義一個處理器，以指定如何變更文件。
 
-## Path and HTTP method
+## 路徑與 HTTP 方法
 
-Replace `<pipeline-id>` with your pipeline ID:
+將 `<pipeline-id>` 替換為您的管線 ID：
 
 ```json
 PUT _ingest/pipeline/{pipeline-id}
 ```
-#### Example request
+#### 範例請求
 
-Here is an example in JSON format that creates an ingest pipeline with two `set` processors and an `uppercase` processor. The first `set` processor sets the `grad_year` to `2023`, and the second `set` processor sets `graduated` to `true`. The `uppercase` processor converts the `name` field to uppercase.
+以下是一個 JSON 格式的範例，建立一個包含兩個 `set` 處理器和一個 `uppercase` 處理器的資料匯入管線。第一個 `set` 處理器將 `grad_year` 設定為 `2023`，第二個 `set` 處理器將 `graduated` 設定為 `true`。`uppercase` 處理器將 `name` 欄位轉換為大寫。
 
 ```json
 PUT _ingest/pipeline/my-pipeline
@@ -54,7 +55,7 @@ PUT _ingest/pipeline/my-pipeline
 ```
 {% include copy-curl.html %}
 
-To index a document through the pipeline, specify the pipeline name in the `pipeline` query parameter:
+若要透過管線將文件編製索引，請在 `pipeline` 查詢參數中指定管線名稱：
 
 ```json
 POST students/_doc/1?pipeline=my-pipeline
@@ -64,14 +65,14 @@ POST students/_doc/1?pipeline=my-pipeline
 ```
 {% include copy-curl.html %}
 
-To verify the pipeline processed the document, retrieve it:
+若要驗證管線已處理該文件，請擷取該文件：
 
 ```json
 GET students/_doc/1
 ```
 {% include copy-curl.html %}
 
-The response shows that the pipeline set `grad_year` and `graduated` and converted `name` to uppercase:
+回應顯示管線已設定 `grad_year` 和 `graduated`，並將 `name` 轉換為大寫：
 
 ```json
 {
@@ -89,37 +90,37 @@ The response shows that the pipeline set `grad_year` and `graduated` and convert
 }
 ```
 
-To learn more about error handling, see [Handling pipeline failures]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/pipeline-failures/).
+若要進一步了解錯誤處理，請參閱 [處理管線失敗]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/pipeline-failures/)。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the request body fields used to create or update a pipeline. 
+下表列出用於建立或更新管線的請求本文欄位。
 
-Parameter | Required | Type | Description
+參數 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`processors` | Required | Array of processor objects | An array of processors, each of which transforms documents. Processors are run sequentially in the order specified.
-`description` | Optional | String | A description of your ingest pipeline. 
+`processors` | 必要 | 處理器物件陣列 | 處理器陣列，每個處理器都會轉換文件。處理器會依指定的順序依序執行。
+`description` | 選用 | 字串 | 資料匯入管線的說明。
 
-## Path parameters
+## 路徑參數
 
-Parameter | Required | Type | Description
+參數 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`pipeline-id` | Required | String | The unique identifier, or pipeline ID, assigned to the ingest pipeline. 
+`pipeline-id` | 必要 | 字串 | 指派給資料匯入管線的唯一識別碼，即管線 ID。
 
-## Query parameters
+## 查詢參數
 
-Parameter | Required | Type | Description
+參數 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`cluster_manager_timeout` | Optional | Time | Period to wait for a connection to the cluster manager node. Defaults to 30 seconds.
-`timeout` | Optional | Time | Period to wait for a response. Defaults to 30 seconds. 
+`cluster_manager_timeout` | 選用 | 時間 | 等待連線至叢集管理員節點的期間。預設為 30 秒。
+`timeout` | 選用 | 時間 | 等待回應的期間。預設為 30 秒。
 
-## Template snippets
+## 範本片段
 
-Some processor parameters support [Mustache](https://mustache.github.io/) template snippets. To get the value of a field, surround the field name in three curly braces, for example, `{% raw %}{{{field-name}}}{% endraw %}`.
+某些處理器參數支援 [Mustache](https://mustache.github.io/) 範本片段。若要取得欄位的值，請在三個大括號中包住欄位名稱，例如 `{% raw %}{{{field-name}}}{% endraw %}`。
 
-#### Example: `set` ingest processor using Mustache template snippet
+#### 範例：使用 Mustache 範本片段的 `set` 資料匯入處理器
 
-Building on the student data pipeline shown in the [example request](#example-request), the following example uses Mustache template snippets to dynamically set field names and values. Instead of hardcoding the field name and value, the processor reads them from the document itself. In this example, the field name is taken from the document's `{% raw %}{{{department}}}{% endraw %}` field and the value is taken from the `{% raw %}{{{advisor}}}{% endraw %}` field:
+以[範例請求](#example-request)中顯示的學生資料管線為基礎，下列範例使用 Mustache 範本片段動態設定欄位名稱與值。處理器不會將欄位名稱與值寫死，而是從文件本身讀取。在此範例中，欄位名稱取自文件的 `{% raw %}{{{department}}}{% endraw %}` 欄位，值取自 `{% raw %}{{{advisor}}}{% endraw %}` 欄位：
 
 ```json
 PUT _ingest/pipeline/my-pipeline
@@ -136,7 +137,7 @@ PUT _ingest/pipeline/my-pipeline
 ```
 {% include copy-curl.html %}
 
-To test this pipeline, index a document that contains the `department` and `advisor` fields:
+若要測試此管線，請將包含 `department` 和 `advisor` 欄位的文件編製索引：
 
 ```json
 POST students/_doc/2?pipeline=my-pipeline
@@ -148,14 +149,14 @@ POST students/_doc/2?pipeline=my-pipeline
 ```
 {% include copy-curl.html %}
 
-Retrieve the document to verify the result:
+擷取文件以驗證結果：
 
 ```json
 GET students/_doc/2
 ```
 {% include copy-curl.html %}
 
-The response shows that the pipeline dynamically created a `computer_science` field with the value `Dr. Smith`:
+回應顯示管線動態建立了一個值為 `Dr. Smith` 的 `computer_science` 欄位：
 
 ```json
 {
@@ -174,13 +175,13 @@ The response shows that the pipeline dynamically created a `computer_science` fi
 }
 ```
 
-## Processor tags for monitoring and debugging
+## 用於監控與除錯的處理器標籤
 
-When monitoring ingest pipeline performance using the `GET /_nodes/stats/ingest` API, processors without tags appear with generic names in the statistics output. This makes it difficult to identify which specific processor stage might be causing performance bottlenecks in complex pipelines. All ingest processors support an optional `tag` parameter that assigns a meaningful identifier to each processor. This parameter is useful for monitoring pipeline performance and debugging issues in production environments.
+使用 `GET /_nodes/stats/ingest` API 監控資料匯入管線效能時，沒有標籤的處理器會在統計輸出中以一般名稱顯示。這使得在複雜的管線中，難以識別哪個特定處理器階段可能造成效能瓶頸。所有資料匯入處理器都支援選用的 `tag` 參數，可為每個處理器指派有意義的識別碼。此參數對於監控管線效能以及在正式環境中除錯非常有用。
 
-The following examples demonstrate the difference between using processors with and without tags when monitoring pipeline performance.
+下列範例示範在監控管線效能時，使用有標籤與無標籤處理器的差異。
 
-Create a pipeline without processor tags:
+建立沒有處理器標籤的管線：
 
 ```json
 PUT _ingest/pipeline/log-processing-without-tags
@@ -210,7 +211,7 @@ PUT _ingest/pipeline/log-processing-without-tags
 ```
 {% include copy-curl.html %}
 
-Create a pipeline with processor tags:
+建立有處理器標籤的管線：
 
 ```json
 PUT _ingest/pipeline/log-processing-with-tags
@@ -243,7 +244,7 @@ PUT _ingest/pipeline/log-processing-with-tags
 ```
 {% include copy-curl.html %}
 
-Test both pipelines with sample log data:
+使用範例記錄資料測試這兩個管線：
 
 ```json
 POST logs-without-tags/_doc?pipeline=log-processing-without-tags
@@ -261,14 +262,14 @@ POST logs-with-tags/_doc?pipeline=log-processing-with-tags
 ```
 {% include copy-curl.html %}
 
-Check the ingest statistics to see the difference in processor identification:
+檢查資料匯入統計資料，查看處理器識別的差異：
 
 ```json
 GET _nodes/stats/ingest
 ```
 {% include copy-curl.html %}
 
-The pipeline without tags contains generic processor names:
+沒有標籤的管線包含一般處理器名稱：
 
 ```json
 "log-processing-without-tags": {
@@ -314,7 +315,7 @@ The pipeline without tags contains generic processor names:
 }
 ```
 
-The pipeline with tags contains descriptive processor names:
+有標籤的管線包含描述性的處理器名稱：
 
 ```json
 "log-processing-with-tags": {

@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Permissions info
+title: "權限資訊"
 parent: Authentication APIs
 grand_parent: Security APIs
 nav_order: 40
 ---
 
 # Permissions Info API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-Retrieves the evaluated REST API permissions for the current user.
+擷取目前使用者的 REST API 權限評估結果。
 
 <!-- spec_insert_start
 api: security.get_permissions_info
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_plugins/_security/api/permissionsinfo
 ```
 <!-- spec_insert_end -->
 
-## Example request
+## 範例請求
 
 ```json
 GET _plugins/_security/api/permissionsinfo
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -40,13 +41,13 @@ GET _plugins/_security/api/permissionsinfo
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文是一個包含下列欄位的 JSON 物件。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `user` | String | A string representation of the current user, including the user name, backend roles, and requested tenant. |
-| `user_name` | String | The name of the current user. |
-| `has_api_access` | Boolean | Whether the current user can call the Security APIs. |
-| `disabled_endpoints` | Object | The Security API endpoints that are disabled for the current user. Each key is an endpoint name and each value is the list of HTTP methods disabled for it. The object is empty when no endpoints are disabled. |
+| `user` | 字串 | 目前使用者的字串表示法，包含使用者名稱、後端角色與所請求的租用戶。 |
+| `user_name` | 字串 | 目前使用者的名稱。 |
+| `has_api_access` | 布林值 | 目前使用者是否可以呼叫 Security API。 |
+| `disabled_endpoints` | 物件 | 目前使用者被停用的 Security API 端點。每個鍵是端點名稱，每個值是針對該端點停用的 HTTP 方法清單。當沒有端點被停用時，此物件為空。 |

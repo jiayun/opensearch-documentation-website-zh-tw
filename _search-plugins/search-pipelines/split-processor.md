@@ -1,39 +1,40 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Split
+title: "分割"
 nav_order: 140
 has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
 ---
 
-# Split search processor
-Introduced 2.17
+# 分割搜尋處理器
+於 2.17 版推出
 {: .label .label-purple }
 
-The `split` processor splits a string field into an array of substrings based on a specified delimiter.
+`split` 處理器會根據指定的分隔符號，將字串欄位分割成子字串陣列。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists all available request fields.
+下表列出所有可用的請求欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`field` | String | The field containing the string to be split. Required.
-`separator` | String | The delimiter used to split the string. Specify either a single separator character or a regular expression pattern. Required.
-`preserve_trailing` | Boolean | If set to `true`, preserves empty trailing fields (for example, `''`) in the resulting array. If set to `false`, then empty trailing fields are removed from the resulting array. Default is `false`. 
-`target_field` | String | The field in which the array of substrings is stored. If not specified, then the field is updated in place. 
-`tag` | String | The processor's identifier. 
-`description` | String | A description of the processor. 
-`ignore_failure` | Boolean | If `true`, then OpenSearch [ignores any failure]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures) of this processor and continues to run the remaining processors in the search pipeline. Optional. Default is `false`.
+`field` | 字串 | 包含要分割之字串的欄位。必要。
+`separator` | 字串 | 用來分割字串的分隔符號。請指定單一分隔字元或規則運算式模式。必要。
+`preserve_trailing` | 布林值 | 若設為 `true`，則保留結果陣列中尾端的空欄位（例如 `''`）。若設為 `false`，則會從結果陣列中移除尾端的空欄位。預設為 `false`。 
+`target_field` | 字串 | 儲存子字串陣列的欄位。若未指定，則會就地更新該欄位。 
+`tag` | 字串 | 處理器的識別碼。 
+`description` | 字串 | 處理器的說明。 
+`ignore_failure` | 布林值 | 若為 `true`，則 OpenSearch [忽略此處理器的任何失敗]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/creating-search-pipeline/#ignoring-processor-failures)，並繼續執行搜尋管線中的其餘處理器。選用。預設為 `false`。
 
-## Example 
+## 範例 
 
-The following example demonstrates using a search pipeline with a `split` processor.
+下列範例示範如何使用含有 `split` 處理器的搜尋管線。
 
-### Setup
+### 設定
 
-Create an index named `my_index` and index a document containing the field `message`:
+建立名為 `my_index` 的索引，並將包含 `message` 欄位的文件編製索引：
 
 ```json
 POST /my_index/_doc/1
@@ -44,9 +45,9 @@ POST /my_index/_doc/1
 ```
 {% include copy-curl.html %}
 
-### Creating a search pipeline 
+### 建立搜尋管線 
 
-The following request creates a search pipeline with a `split` response processor that splits the `message` field and stores the results in the `split_message` field:
+下列請求會建立含有 `split` 回應處理器的搜尋管線，該處理器會分割 `message` 欄位，並將結果儲存在 `split_message` 欄位中：
 
 ```json
 PUT /_search/pipeline/my_pipeline
@@ -64,20 +65,20 @@ PUT /_search/pipeline/my_pipeline
 ```
 {% include copy-curl.html %}
 
-### Using a search pipeline
+### 使用搜尋管線
 
-Search for documents in `my_index` without a search pipeline:
+在沒有搜尋管線的情況下搜尋 `my_index` 中的文件：
 
 ```json
 GET /my_index/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the field `message`:
+回應包含 `message` 欄位：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 ```json
@@ -112,18 +113,18 @@ The response contains the field `message`:
 ```
 </details>
 
-To search with a pipeline, specify the pipeline name in the `search_pipeline` query parameter:
+若要使用管線搜尋，請在 `search_pipeline` 查詢參數中指定管線名稱：
 
 ```json
 GET /my_index/_search?search_pipeline=my_pipeline
 ```
 {% include copy-curl.html %}
 
-The `message` field is split and the results are stored in the `split_message` field:
+`message` 欄位會遭到分割，並將結果儲存在 `split_message` 欄位中：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -165,7 +166,7 @@ The `message` field is split and the results are stored in the `split_message` f
 ```
 </details>
 
-You can also use the `fields` option to search for specific fields in a document:
+您也可以使用 `fields` 選項來搜尋文件中的特定欄位：
 
 ```json
 POST /my_index/_search?pretty&search_pipeline=my_pipeline
@@ -175,11 +176,11 @@ POST /my_index/_search?pretty&search_pipeline=my_pipeline
 ``` 
 {% include copy-curl.html %}
 
-In the response, the `message` field is split and the results are stored in the `split_message` field:
+在回應中，`message` 欄位會遭到分割，並將結果儲存在 `split_message` 欄位中：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 

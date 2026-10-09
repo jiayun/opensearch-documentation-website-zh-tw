@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: gsub
 parent: Ingest processors
@@ -6,12 +7,12 @@ nav_order: 125
 ---
 
 <!-- vale off -->
-# Gsub processor
+# Gsub 處理器
 <!-- vale on -->
 
-The `gsub` processor performs a regular expression search-and-replace operation on string fields in incoming documents. If the field contains an array of strings, the operation is applied to all elements in the array. However, if the field contains non-string values, the processor throws an exception. Use cases for the `gsub` processor include removing sensitive information from log messages or user-generated content, normalizing data formats or conventions (for example, converting date formats, removing special characters), and extracting or transforming substrings from field values for further processing or analysis.
+`gsub` 處理器會對傳入文件中的字串欄位執行正規表示式搜尋並取代的操作。如果欄位包含字串陣列，該操作會套用至陣列中的所有元素。不過，如果欄位包含非字串的值，處理器會擲回例外狀況。`gsub` 處理器的使用案例包括從記錄訊息或使用者產生的內容中移除敏感資訊、將資料格式或慣例標準化（例如轉換日期格式、移除特殊字元），以及從欄位值中擷取或轉換子字串以進行後續處理或分析。
 
-The following is the syntax for the `gsub` processor:
+以下是 `gsub` 處理器的語法：
 
 ```json
 "gsub": {
@@ -22,29 +23,29 @@ The following is the syntax for the `gsub` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `gsub` processor.
+下表列出 `gsub` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`field` | Required | The field to apply the replacement to.
-`pattern` | Required | The pattern to be replaced.
-`replacement` | Required | The string that will replace the matching patterns.
-`target_field` | Optional | The name of the field in which to store the parsed data. If `target_field` is not specified, the parsed data replaces the original data in the `field` field. Default is `field`.
-`if` | Optional | A condition for running the processor.
-`ignore_missing` | Optional | Specifies whether the processor should ignore documents that do not contain the specified field. Default is `false`.
-`ignore_failure` | Optional | Specifies whether the processor continues execution even if it encounters an error. If set to `true`, then failures are ignored. Default is `false`.
-`on_failure` | Optional | A list of processors to run if the processor fails.
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type.
+`field` | 必要 | 要套用取代作業的欄位。
+`pattern` | 必要 | 要被取代的模式。
+`replacement` | 必要 | 用來取代符合模式的字串。
+`target_field` | 選用 | 用來儲存解析資料的欄位名稱。如果未指定 `target_field`，解析後的資料會取代 `field` 欄位中的原始資料。預設為 `field`。
+`if` | 選用 | 執行處理器的條件。
+`ignore_missing` | 選用 | 指定處理器是否應忽略不含指定欄位的文件。預設為 `false`。
+`ignore_failure` | 選用 | 指定處理器遇到錯誤時是否仍繼續執行。如果設定為 `true`，則會忽略失敗。預設為 `false`。
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+依照下列步驟在管線中使用處理器。
 
-### Step 1: Create a pipeline
+### 步驟 1：建立管線
 
-The following query creates a pipeline named `gsub_pipeline` that uses the `gsub` processor to replace all occurrences of the word `error` with the word `warning` in the `message` field:
+下列查詢會建立名為 `gsub_pipeline` 的管線，該管線使用 `gsub` 處理器將 `message` 欄位中所有出現的 `error` 一詞取代為 `warning`：
 
 ```json
 PUT _ingest/pipeline/gsub_pipeline
@@ -63,12 +64,12 @@ PUT _ingest/pipeline/gsub_pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2 (Optional): Test the pipeline
+### 步驟 2（選用）：測試管線
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/gsub_pipeline/_simulate
@@ -84,9 +85,9 @@ POST _ingest/pipeline/gsub_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following response confirms that the pipeline is working as expected:
+下列回應確認管線如預期運作：
 
 ```json
 {
@@ -108,9 +109,9 @@ The following response confirms that the pipeline is working as expected:
 ```
 {% include copy-curl.html %}
 
-### Step 3: Ingest a document 
+### 步驟 3：匯入文件
 
-The following query ingests a document into an index named `logs`:
+下列查詢會將文件匯入名為 `logs` 的索引：
 
 ```json
 PUT logs/_doc/1?pipeline=gsub_pipeline
@@ -120,9 +121,9 @@ PUT logs/_doc/1?pipeline=gsub_pipeline
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following response shows that the request indexed the document into the index named `logs` and that the `gsub` processor replaced all occurrences of the word `error` with the word `warning` in the `message` field:
+下列回應顯示請求已將文件編製索引至名為 `logs` 的索引，且 `gsub` 處理器已將 `message` 欄位中所有出現的 `error` 一詞取代為 `warning`：
 
 ```json
 {
@@ -141,18 +142,18 @@ The following response shows that the request indexed the document into the inde
 ```
 {% include copy-curl.html %}
 
-### Step 4 (Optional): Retrieve the document
+### 步驟 4（選用）：擷取文件
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET logs/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The following response shows the document with the modified `message` field value:
+下列回應顯示 `message` 欄位值已修改的文件：
 
 ```json
 {

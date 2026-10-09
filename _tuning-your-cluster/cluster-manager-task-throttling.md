@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cluster manager task throttling
+title: "叢集管理員任務節流"
 nav_order: 10
 has_children: false
 ---
 
-# Cluster manager task throttling
+# 叢集管理員任務節流
 
-For many cluster state updates, such as defining a mapping or creating an index, nodes submit tasks to the cluster manager. The cluster manager maintains a pending task queue for these tasks and runs them in a single-threaded environment. When nodes send tens of thousands of resource-intensive tasks, like `put-mapping` or snapshot tasks, these tasks can pile up in the queue and flood the cluster manager. This affects the cluster manager's performance and may in turn affect the availability of the whole cluster. 
+對於許多叢集狀態更新，例如定義對應或建立索引，節點會將任務提交給叢集管理員。叢集管理員會為這些任務維護一個待處理任務佇列，並在單一執行緒環境中執行這些任務。當節點傳送數以萬計的資源密集型任務時，例如 `put-mapping` 或快照任務，這些任務可能會在佇列中堆積，並淹沒叢集管理員。這會影響叢集管理員的效能，並可能進而影響整個叢集的可用性。
 
-The first line of defense is to implement mechanisms in the caller nodes to avoid task overload on the cluster manager. However, even with those mechanisms in place, the cluster manager needs a built-in way to protect itself: cluster manager task throttling.
+第一道防線是在呼叫端節點中實作機制，以避免叢集管理員的任務超載。然而，即使這些機制已就緒，叢集管理員仍需要一種內建的方式來保護自己：叢集管理員任務節流。
 
-By default, the cluster manager uses predefined throttling limits to determine whether to reject a task. You can modify these limits or disable throttling for specific task types.
+根據預設，叢集管理員會使用預先定義的節流限制來判斷是否拒絕任務。您可以修改這些限制，或停用特定任務類型的節流。
 
-The cluster manager rejects a task based on its type. For any incoming task, the cluster manager evaluates the total number of tasks of the same type in the pending task queue. If this number exceeds the threshold for this task type, the cluster manager rejects the incoming task. Rejecting a task does not affect tasks of a different type. For example, if the cluster manager rejects a `put-mapping` task, it can still accept a subsequent `create-index` task. 
+叢集管理員會根據任務類型來拒絕任務。對於任何傳入的任務，叢集管理員會評估待處理任務佇列中相同類型的任務總數。如果此數量超過此任務類型的閾值，叢集管理員就會拒絕傳入的任務。拒絕任務不會影響不同類型的任務。例如，如果叢集管理員拒絕了 `put-mapping` 任務，它仍可接受後續的 `create-index` 任務。
 
-When the cluster manager rejects a task, the node performs retries with exponential backoff to resubmit the task to the cluster manager. If retries are unsuccessful within the timeout period, OpenSearch returns a cluster timeout error.
+當叢集管理員拒絕任務時，節點會以指數退避方式執行重試，將任務重新提交給叢集管理員。如果重試在逾時期間內未成功，OpenSearch 會傳回叢集逾時錯誤。
 
-## Setting throttling limits
+## 設定節流限制
 
-You can set throttling limits by specifying them in the `cluster_manager.throttling.thresholds` object and updating the [OpenSearch cluster settings]({{site.url}}{{site.baseurl}}/api-reference/cluster-settings/). The setting is dynamic, so you can change the behavior of this feature without restarting your cluster.
+您可以在 `cluster_manager.throttling.thresholds` 物件中指定節流限制，並更新 [OpenSearch 叢集設定]({{site.url}}{{site.baseurl}}/api-reference/cluster-settings/) 來設定這些限制。此設定為動態設定，因此您可以在不重新啟動叢集的情況下變更此功能的行為。
 
-By default, throttling is enabled for all task types. To disable throttling for a specific task type, set its threshold value to `-1`.
+根據預設，所有任務類型都會啟用節流。若要停用特定任務類型的節流，請將其閾值設為 `-1`。
 {: .note}
 
-The request has the following format:
+請求的格式如下：
 
 ```json
 PUT _cluster/settings
@@ -39,18 +40,18 @@ PUT _cluster/settings
 }
 ```
 
-The `cluster_manager.throttling.thresholds` object contains the following fields.
+`cluster_manager.throttling.thresholds` 物件包含下列欄位。
 
-Field name | Description
+欄位名稱 | 說明
 :--- | :---
-`task-type` | The task type. For a list of valid task types, see [supported task types and default thresholds](#supported-task-types-and-default-thresholds).
-`<task-type>.value` | The maximum number of tasks of the `task-type` type in the cluster manager's pending task queue. <br> For default thresholds for each task type, see [Supported task types and default thresholds](#supported-task-types-and-default-thresholds).
+`task-type` | 任務類型。如需有效的任務類型清單，請參閱[支援的任務類型與預設閾值](#supported-task-types-and-default-thresholds)。
+`<task-type>.value` | 叢集管理員待處理任務佇列中 `task-type` 類型任務的最大數量。<br> 如需各任務類型的預設閾值，請參閱[支援的任務類型與預設閾值](#supported-task-types-and-default-thresholds)。
 
-## Supported task types and default thresholds
+## 支援的任務類型與預設閾值
 
-The following table lists all supported task types and their default throttling threshold values.
+下表列出所有支援的任務類型及其預設節流閾值。
 
-Task type | Threshold
+任務類型 | 閾值
 :--- | :---
 `create-index `| 50
 `update-settings` | 50
@@ -91,9 +92,9 @@ Task type | Threshold
 `restore-snapshot` | 50
 `cluster-reroute-api` | 50
 
-## Example request
+## 範例請求
 
-The following request sets the throttling threshold for the `put-mapping` task type to 100:
+下列請求會將 `put-mapping` 任務類型的節流閾值設為 100：
 
 ```json
 PUT _cluster/settings

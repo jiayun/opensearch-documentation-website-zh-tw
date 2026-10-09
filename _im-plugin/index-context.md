@@ -1,68 +1,69 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index context
+title: "索引情境"
 parent: Tuning indexes
 nav_order: 50
 redirect_from:
   - /opensearch/index-context/
 ---
 
-# Index context
-**Introduced 2.17**
+# 索引情境
+**於 2.17 版推出**
 {: .label .label-purple }
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).
+這是實驗性功能，不建議在正式環境中使用。如需此功能的最新進展，或想提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/)的討論。
 {: .warning}
 
-Index context declares the use case for an index. Using the context information, OpenSearch applies a predetermined set of settings and mappings, which provides the following benefits:
+索引情境會宣告索引的使用情境。OpenSearch 會利用情境資訊套用一組預先決定的設定和對應，帶來下列優點：
 
-- Optimized performance
-- Settings tuned to your specific use case
-- Accurate mappings and aliases based on [OpenSearch Integrations]({{site.url}}{{site.baseurl}}/integrations/)
+- 最佳化的效能
+- 針對您的特定使用情境調整的設定
+- 根據 [OpenSearch Integrations]({{site.url}}{{site.baseurl}}/integrations/) 的精確對應和別名
 
-The settings and metadata configuration that are applied using component templates are automatically loaded when your cluster starts. Component templates that start with `@abc_template@` or Application-Based Configuration (ABC) templates can only be used through a `context` object declaration, in order to prevent configuration issues.
+使用元件範本套用的設定和中繼資料組態，會在您的叢集啟動時自動載入。以 `@abc_template@` 開頭的元件範本或 Application-Based Configuration (ABC) 範本，只能透過 `context` 物件宣告使用，以避免發生組態問題。
 {: .warning}
 
-## Enabling index context
+## 啟用索引情境
 
-Index context requires two settings, both of which are applied at node startup. Enable both on every node in the cluster, and then restart the nodes:
+索引情境需要兩項設定，兩者都在節點啟動時套用。請在叢集中的每個節點上啟用這兩項設定，然後重新啟動節點：
 
-1. Set the `opensearch.experimental.feature.application_templates.enabled` feature flag to `true`. For more information, see [Experimental feature flags]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/experimental/).
+1. 將 `opensearch.experimental.feature.application_templates.enabled` 功能旗標設為 `true`。如需詳細資訊，請參閱[實驗性功能旗標]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/experimental/)。
 
-2. Add the following line to `opensearch.yml`:
+2. 將下列這行加入 `opensearch.yml`：
 
    ```yaml
    cluster.application_templates.enabled: true
    ```
    {% include copy.html %}
 
-Do not set `cluster.application_templates.enabled` using the [Cluster settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/). The API accepts the update and returns `200`, but the node then fails to apply the resulting cluster state, logging an error that the feature flag is not enabled. The node repeatedly gives up its cluster manager role, and every request that changes the cluster state, such as creating an index, stops responding until you restart the node. If you set the value as a persistent setting, it is reapplied after the restart.
+請勿使用 [Cluster settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/) 設定 `cluster.application_templates.enabled`。該 API 會接受更新並傳回 `200`，但節點接著無法套用產生的叢集狀態，並記錄功能旗標未啟用的錯誤。節點會反覆放棄其叢集管理員角色，而每個會變更叢集狀態的請求 (例如建立索引) 都會停止回應，直到您重新啟動節點為止。如果您將該值設為持續性設定，重新啟動後會再次套用。
 {: .warning}
 
-The `opensearch-system-templates` plugin supplies the component templates that back each context. It is bundled with all OpenSearch distributions except the minimal distribution. If you use the minimal distribution, install it using one of the [installation methods]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/#installing-plugins).
+`opensearch-system-templates` 外掛程式提供支援每個情境的元件範本。除了最小發行版之外，所有 OpenSearch 發行版都隨附此程式。如果您使用最小發行版，請使用其中一種[安裝方法]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/#installing-plugins)加以安裝。
 
-## Using the `context` setting
+## 使用 `context` 設定
 
-Use the `context` setting with the Index API to add use-case-specific context.
+將 `context` 設定與 Index API 搭配使用，以新增使用情境專屬的情境。
 
-### Considerations
+### 注意事項
 
-Consider the following when using the `context` parameter during index creation:
+在建立索引期間使用 `context` 參數時，請考量下列事項：
 
-- If you use the `context` parameter to create an index, you cannot include any settings declared in the index context during index creation or dynamic settings updates.
-- The index context becomes permanent when set on an index or index template.
+- 如果您使用 `context` 參數建立索引，則在建立索引或動態設定更新期間，不能包含索引情境中宣告的任何設定。
+- 在索引或索引範本上設定索引情境後，該情境即成為永久設定。
 
-When you adhere to these limitations, suggested configurations or mappings are uniformly applied on indexed data within the specified context.
+當您遵守這些限制時，建議的組態或對應會一致地套用至指定情境內已編製索引的資料。
 
-If `cluster.application_templates.enabled` is not enabled, a request that declares a context is rejected with `400`.
+如果未啟用 `cluster.application_templates.enabled`，宣告情境的請求會遭到拒絕，並傳回 `400`。
 
-### Examples
+### 範例
 
-The following examples show how to use index context.
+下列範例顯示如何使用索引情境。
 
-#### Create an index
+#### 建立索引
 
-The following example request creates an index in which to store metric data by declaring a `metrics` mapping as the context:
+以下範例請求會建立索引以儲存指標資料，並將 `metrics` 對應宣告為情境：
 
 ```json
 PUT /my-metrics-index
@@ -74,14 +75,14 @@ PUT /my-metrics-index
 ```
 {% include copy-curl.html %}
 
-After creation, the context is added to the index and the corresponding settings are applied. To confirm this, send the following request:
+建立後，情境會新增至索引，並套用對應的設定。若要確認，請傳送下列請求：
 
 ```json
 GET /my-metrics-index
 ```
 {% include copy-curl.html %}
 
-The response contains the context and the settings that it applied:
+回應會包含情境及其套用的設定：
 
 ```json
 {
@@ -113,9 +114,9 @@ The response contains the context and the settings that it applied:
 ```
 
 
-#### Create an index template
+#### 建立索引範本
 
-You can also use the `context` parameter when creating an index template. The following example request creates an index template with the context information as `logs`:
+您也可以在建立索引範本時使用 `context` 參數。以下範例請求會建立索引範本，並將情境名稱設為 `logs`：
 
 ```json
 PUT _index_template/my-logs
@@ -131,14 +132,14 @@ PUT _index_template/my-logs
 ```
 {% include copy-curl.html %}
 
-All indexes created using this index template will get the metadata provided by the associated component template. To confirm that `context` was added to the template, send the following request:
+所有使用此索引範本建立的索引，都會取得相關聯元件範本提供的中繼資料。若要確認 `context` 已新增至範本，請傳送下列請求：
 
 ```json
 GET _index_template/my-logs
 ```
 {% include copy-curl.html %}
 
-The response contains the context:
+回應會包含情境：
 
 ```json
 {
@@ -159,12 +160,12 @@ The response contains the context:
 }
 ```
 
-If there is any conflict between any settings, mappings, or aliases directly declared by your template and the backing component template for the context, the latter gets higher priority during index creation.
+如果您的範本直接宣告的任何設定、對應或別名，與情境的後端元件範本之間有任何衝突，在建立索引期間以後者優先。
 
 
-## Available context templates
+## 可用的情境範本
 
-The following templates can be used through the `context` parameter:
+下列範本可透過 `context` 參數使用：
 
 - `logs`
 - `metrics`
@@ -175,6 +176,6 @@ The following templates can be used through the `context` parameter:
 - `apache-web-logs`
 - `k8s-logs`
 
-For more information about these templates, see the [OpenSearch system templates repository](https://github.com/opensearch-project/opensearch-system-templates/tree/main/src/main/resources/org/opensearch/system/applicationtemplates/v1).
+如需這些範本的詳細資訊，請參閱 [OpenSearch 系統範本儲存庫](https://github.com/opensearch-project/opensearch-system-templates/tree/main/src/main/resources/org/opensearch/system/applicationtemplates/v1)。
 
-To view the current version of these templates on your cluster, use `GET /_component_template`.
+若要檢視叢集上這些範本的目前版本，請使用 `GET /_component_template`。

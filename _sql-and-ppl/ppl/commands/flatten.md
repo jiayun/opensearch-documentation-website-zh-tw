@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: flatten
 parent: Commands
@@ -8,38 +9,38 @@ nav_order: 20
 
 <!-- vale off -->
 
-# flatten command
+# flatten 命令
 
 <!-- vale on -->
 
-The `flatten` command converts a struct or object field into individual fields within a document.
+`flatten` 命令會將結構體或物件欄位轉換為文件中的個別欄位。
 
-The resulting flattened fields are ordered lexicographically by their original key names. For example, if a struct contains the keys `b`, `c`, and `Z`, the flattened fields are ordered as `Z`, `b`, `c`.
+產生的扁平化欄位會依其原始鍵名以字典序排序。例如，若某個結構體包含鍵 `b`、`c` 和 `Z`，則扁平化欄位的順序為 `Z`、`b`、`c`。
 
-`flatten` should not be applied to arrays. To expand an array field into multiple rows, use the `expand` command. Note that arrays can be stored in non-array fields in OpenSearch; when flattening a field that contains a nested array, only the first element of the array is flattened.
+`flatten` 不應套用於陣列。若要將陣列欄位展開為多個資料列，請使用 `expand` 命令。請注意，在 OpenSearch 中，陣列可以儲存在非陣列欄位中；當扁平化包含巢狀陣列的欄位時，只會扁平化陣列的第一個元素。
 {: .important}
 
-## Syntax
+## 語法
 
-The `flatten` command has the following syntax:
+`flatten` 命令的語法如下：
 
 ```sql
 flatten <field> [as (<alias-list>)]
 ```
 
-## Parameters
+## 參數
 
-The `flatten` command supports the following parameters.
+`flatten` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<field>` | Required | The field to be flattened. Only object and nested fields are supported. |
-| `<alias-list>` | Optional | A list of names to use instead of the original key names, separated by commas. If specifying more than one alias, enclose the list in parentheses. The number of aliases must match the number of keys in the struct, and the aliases must follow the lexicographical order of the corresponding original keys. |  
+| `<field>` | 必要 | 要扁平化的欄位。僅支援物件和巢狀欄位。 |
+| `<alias-list>` | 選用 | 用來取代原始鍵名的名稱清單，以逗號分隔。若指定多個別名，請將清單括在括號中。別名的數量必須與結構體中的鍵數量相符，且別名必須依對應原始鍵的字典序排列。 |  
   
 
-## Example: Flatten the instrumentation scope object  
+## 範例：扁平化 instrumentation scope 物件  
 
-The following query flattens the `instrumentationScope` nested object into individual fields, useful for analyzing which OTel SDK versions are in use:
+下列查詢會將 `instrumentationScope` 巢狀物件扁平化為個別欄位，可用於分析目前使用哪些 OTel SDK 版本：
   
 ```sql
 source=otellogs
@@ -50,7 +51,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -64,8 +65,8 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Limitations
+## 限制
 
-The `flatten` command has the following limitations:
+`flatten` 命令有下列限制：
 
-* The `flatten` command may not function as expected if the fields to be flattened are not visible. For example, in the query `source=my-index | fields message | flatten message`, the `flatten message` command fails to execute as expected because some flattened fields, such as `message.info` and `message.author`, are hidden after the `fields message` command. As an alternative, use `source=my-index | flatten message`.
+* 若要扁平化的欄位無法顯示，`flatten` 命令可能無法如預期運作。例如，在查詢 `source=my-index | fields message | flatten message` 中，`flatten message` 命令無法如預期執行，因為某些扁平化欄位（例如 `message.info` 和 `message.author`）在 `fields message` 命令之後會隱藏。替代做法是使用 `source=my-index | flatten message`。

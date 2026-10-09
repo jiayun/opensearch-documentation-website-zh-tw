@@ -1,49 +1,50 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Top hits
+title: "排名最高的命中結果"
 parent: Metric aggregations
 nav_order: 130
 redirect_from:
   - /query-dsl/aggregations/metric/top-hits/
 ---
 
-# Top hits aggregation
+# 排名最高的命中結果彙總
 
-The `top_hits` aggregation is a multi-value metric aggregation that retrieves the highest-scoring documents within each aggregation bucket. Use it inside a bucket aggregation to return representative or top-ranked documents per group.
+`top_hits` 彙總是一種多值指標彙總，可擷取每個彙總桶 (bucket) 中分數最高的文件。請在桶彙總中使用此彙總，以傳回每個群組中具代表性或排名最高的文件。
 
-When combined with a bucket aggregation, such as [`terms`]({{site.url}}{{site.baseurl}}/aggregations/bucket/terms/), the `top_hits` aggregation groups the result set by specified properties and retrieves the highest-scoring or most recently updated documents from each group. This is useful in the following scenarios:
+與桶彙總（例如 [`terms`]({{site.url}}{{site.baseurl}}/aggregations/bucket/terms/)）搭配使用時，`top_hits` 彙總會依指定的屬性將結果集分組，並從每個群組中擷取分數最高或最近更新的文件。這在下列情境中很實用：
 
-- Displaying the most recent transaction in each product category.
-- Showing the highest-scoring search result from each manufacturer.
-- Retrieving representative documents from grouped results without returning every match.
+- 顯示每個產品類別中最近的一筆交易。
+- 顯示每個製造商分數最高的搜尋結果。
+- 從分組結果中擷取具代表性的文件，而不傳回所有相符項目。
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by the `top_hits` aggregation.
+下表列出 `top_hits` 彙總接受的參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `from` | Integer | The offset from the first result to fetch. Default is `0`. |
-| `size` | Integer | The maximum number of top matching hits to return per bucket. Default is `3`. |
-| `sort` | Object or Array | Defines how the top matching hits are sorted. By default, hits are sorted by the score of the main query. |
+| `from` | 整數 | 要擷取的結果相對於第一個結果的位移。預設為 `0`。 |
+| `size` | 整數 | 每個桶要傳回的最相符命中項目數量上限。預設為 `3`。 |
+| `sort` | 物件或陣列 | 定義最相符命中項目的排序方式。根據預設，命中項目會依主要查詢的分數排序。 |
 
-## Supported per-hit features
+## 支援的個別命中功能
 
-Because the `top_hits` aggregation returns standard search hits, the following per-hit features are supported:
+由於 `top_hits` 彙總會傳回標準的搜尋命中項目，因此支援下列個別命中功能：
 
-- [Highlighting]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/)
+- [醒目提示]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/)
 - [Explain]({{site.url}}{{site.baseurl}}/api-reference/search-apis/explain/)
-- [Named queries]({{site.url}}{{site.baseurl}}/query-dsl/named-queries/)
-- [Source filtering]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#using-source-filtering)
-- [Stored fields]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#searching-with-stored-fields)
-- [Script fields]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#using-scripted-fields)
-- [Doc value fields]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#searching-with-doc-value-fields)
-- [Include versions]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#query-parameters)
-- Include sequence numbers and primary terms
+- [具名查詢]({{site.url}}{{site.baseurl}}/query-dsl/named-queries/)
+- [來源篩選]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#using-source-filtering)
+- [儲存欄位]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#searching-with-stored-fields)
+- [指令碼欄位]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#using-scripted-fields)
+- [Doc value 欄位]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#searching-with-doc-value-fields)
+- [包含版本]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#query-parameters)
+- 包含序號與主要分片任期
 
-## Example: Grouping results by category
+## 範例：依類別將結果分組
 
-In the following example, orders in the e-commerce dataset are grouped by product category using a `terms` aggregation, and the `top_hits` subaggregation retrieves the most recent order from each category. Only the `order_date`, `taxful_total_price`, and `customer_full_name` fields are included in the source:
+在下列範例中，會使用 `terms` 彙總依產品類別將電子商務資料集中的訂單分組，並由 `top_hits` 子彙總擷取每個類別中最近的一筆訂單。來源中只包含 `order_date`、`taxful_total_price` 和 `customer_full_name` 欄位：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -80,7 +81,7 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 
 <details markdown="block">
   <summary>
-    Example response
+    回應範例
   </summary>
   {: .text-delta}
 
@@ -198,11 +199,11 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 </details>
 
-## Example: Field collapsing
+## 範例：欄位摺疊
 
-Field collapsing, or result grouping, organizes a result set into logical groups and returns the top documents from each group. The groups are ordered by the relevance of their highest-scoring document.
+欄位摺疊（又稱結果分組）會將結果集整理成邏輯群組，並傳回每個群組中排名最前的文件。群組會依其分數最高之文件的相關性排序。
 
-You can implement field collapsing by wrapping a `top_hits` aggregation inside a bucket aggregation. The following example searches the e-commerce dataset for products matching `shirt` and groups the results by `manufacturer`. A `max` aggregation captures the highest score per manufacturer, and the `terms` aggregation uses that score to order the buckets by relevance:
+您可以將 `top_hits` 彙總包在桶彙總中，以實作欄位摺疊。下列範例會在電子商務資料集中搜尋符合 `shirt` 的產品，並依 `manufacturer` 將結果分組。`max` 彙總會擷取每個製造商的最高分數，而 `terms` 彙總則使用該分數依相關性排序各個桶：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -245,12 +246,12 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-The `max` (or `min`) aggregation is required because the `top_hits` aggregation cannot be used directly in the `order` option of the `terms` aggregation.
+之所以必須使用 `max`（或 `min`）彙總，是因為 `top_hits` 彙總無法直接用於 `terms` 彙總的 `order` 選項中。
 {: .note}
 
 <details markdown="block">
   <summary>
-    Example response
+    回應範例
   </summary>
   {: .text-delta}
 
@@ -395,13 +396,13 @@ The `max` (or `min`) aggregation is required because the `top_hits` aggregation 
 ```
 </details>
 
-## Example: Using top hits aggregations with nested objects
+## 範例：將排名最高的命中結果彙總與巢狀物件搭配使用
 
-When the `top_hits` aggregation is wrapped in a [`nested`]({{site.url}}{{site.baseurl}}/aggregations/bucket/nested/) or `reverse_nested` aggregation, it returns nested hits. Nested hits are internally stored as separate Lucene documents that share the same document ID as their parent. The `top_hits` aggregation can surface these inner documents when used within a `nested` or `reverse_nested` aggregation context.
+當 `top_hits` 彙總包在 [`nested`]({{site.url}}{{site.baseurl}}/aggregations/bucket/nested/) 或 `reverse_nested` 彙總中時，會傳回巢狀命中結果。巢狀命中結果在內部儲存為個別的 Lucene 文件，並與其父文件共用相同的文件 ID。在 `nested` 或 `reverse_nested` 彙總語境中使用時，`top_hits` 彙總可以呈現這些內部文件。
 
-Each nested hit includes a `_nested` field in the response that identifies the array field and the zero-based offset of the nested object within that array. This information is useful for locating the original nested object within the parent document source.
+每個巢狀命中結果在回應中都包含 `_nested` 欄位，用來識別陣列欄位，以及巢狀物件在該陣列中從零起算的位移。這項資訊有助於在父文件來源中找出原始的巢狀物件。
 
-First, create an index with a `nested` field type:
+首先，建立具有 `nested` 欄位類型的索引：
 
 ```json
 PUT /top-hits-products
@@ -422,7 +423,7 @@ PUT /top-hits-products
 ```
 {% include copy-curl.html %}
 
-Add a document containing a nested `reviews` field:
+新增一份包含巢狀 `reviews` 欄位的文件：
 
 ```json
 PUT /top-hits-products/_doc/1?refresh=true
@@ -437,7 +438,7 @@ PUT /top-hits-products/_doc/1?refresh=true
 ```
 {% include copy-curl.html %}
 
-The following request searches for products tagged `laptop`, groups the nested reviews by reviewer, and retrieves the top review per reviewer:
+下列請求會搜尋標記為 `laptop` 的產品，依評論者將巢狀評論分組，並擷取每位評論者排名最高的評論：
 
 ```json
 GET /top-hits-products/_search
@@ -469,13 +470,13 @@ GET /top-hits-products/_search
 ```
 {% include copy-curl.html %}
 
-The `_nested` field identifies the array field (`reviews`) and the zero-based position (`offset`) of the nested object within that array:
+`_nested` 欄位會識別陣列欄位 (`reviews`)，以及巢狀物件在該陣列中從零起算的位置 (`offset`)：
 
 <details markdown="block">
-  <summary>
-    Example response
-  </summary>
-  {: .text-delta}
+<summary>
+    範例回應
+</summary>
+{: .text-delta}
 
 ```json
 {
@@ -564,13 +565,13 @@ The `_nested` field identifies the array field (`reviews`) and the zero-based po
 ```
 </details>
 
-When `_source` is requested for a nested hit, only the source of the nested object is returned rather than the entire parent document source. Stored fields defined on the nested object level are also accessible through `top_hits` when it resides inside a `nested` or `reverse_nested` aggregation.
+為巢狀命中結果請求 `_source` 時，只會傳回巢狀物件的來源，而不是整個父文件的來源。當 `top_hits` 位於 `nested` 或 `reverse_nested` 彙總內時，也可以透過它存取在巢狀物件層級定義的已儲存欄位。
 
-Only nested hits contain the `_nested` field. Regular (non-nested) hits do not include this field.
+只有巢狀命中結果包含 `_nested` 欄位。一般 (非巢狀) 命中結果不會包含此欄位。
 
-The `_nested` field can also serve as a reference for locating the nested object within the original source when `_source` is disabled on the index.
+當索引停用 `_source` 時，`_nested` 欄位也可以作為參考，用來在原始來源中找出巢狀物件。
 
-For mappings that contain multiple levels of nested object types, the `_nested` information can be hierarchical. The following snippet shows a nested hit that resides at the first position of `nested_grand_child_field`, which is itself within the second position of `nested_child_field`:
+對於包含多層巢狀物件類型的對應，`_nested` 資訊可能是階層式的。下列程式碼片段顯示一個位於 `nested_grand_child_field` 第一個位置的巢狀命中結果，而它本身又位於 `nested_child_field` 的第二個位置：
 
 ```json
 "hits": [
@@ -591,9 +592,9 @@ For mappings that contain multiple levels of nested object types, the `_nested` 
 ]
 ```
 
-## Example: Highlighting matched terms
+## 範例：醒目提示相符的詞彙
 
-The following example searches for `shirt` across product names and uses `highlight` to wrap matched terms in `<em>` tags within each top hit:
+下列範例會在產品名稱中搜尋 `shirt`，並使用 `highlight` 在每個排名最高的命中結果中以 `<em>` 標籤包住相符的詞彙：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -632,10 +633,10 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 {% include copy-curl.html %}
 
 <details markdown="block">
-  <summary>
-    Example response
-  </summary>
-  {: .text-delta}
+<summary>
+    範例回應
+</summary>
+{: .text-delta}
 
 ```json
 {
@@ -739,9 +740,9 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 </details>
 
-## Example: Using script fields
+## 範例：使用指令碼欄位
 
-The following example retrieves the highest-priced order per category and computes a 15% discount using a `script_fields` definition:
+下列範例會擷取每個類別中價格最高的訂單，並使用 `script_fields` 定義計算 15% 的折扣：
 
 ```json
 GET /opensearch_dashboards_sample_data_ecommerce/_search
@@ -784,10 +785,10 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 {% include copy-curl.html %}
 
 <details markdown="block">
-  <summary>
-    Example response
-  </summary>
-  {: .text-delta}
+<summary>
+    範例回應
+</summary>
+{: .text-delta}
 
 ```json
 {
@@ -883,19 +884,19 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 </details>
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the response body fields returned within each `top_hits` aggregation result.
+下表列出每個 `top_hits` 彙總結果中傳回的回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `hits.total.value` | Integer | The total number of documents matching the aggregation within the bucket. |
-| `hits.total.relation` | String | Indicates whether the total is exact (`eq`) or a lower bound (`gte`). |
-| `hits.max_score` | Float or Null | The highest relevance score among the returned hits. This is `null` when hits are sorted by a field other than `_score`. |
-| `hits.hits` | Array | An array of the top matching documents for the bucket. |
-| `hits.hits._index` | String | The index containing the document. |
-| `hits.hits._id` | String | The unique identifier of the document. |
-| `hits.hits._score` | Float or Null | The relevance score of the document. This is `null` when sorting by a field other than `_score`. |
-| `hits.hits._source` | Object | The original document source. When source filtering is applied, only the requested fields are returned. |
-| `hits.hits.sort` | Array | The sort values used to order this hit, present only when an explicit `sort` is specified. |
-| `hits.hits._nested` | Object | Present only for nested hits. Contains `field` (the nested array field name) and `offset` (the zero-based position within the array). |
+| `hits.total.value` | 整數 | 桶 (bucket) 中符合彙總條件的文件總數。 |
+| `hits.total.relation` | 字串 | 表示總數是確切值（`eq`）還是下限值（`gte`）。 |
+| `hits.max_score` | 浮點數或空值 | 傳回的命中結果中最高的相關性分數。當命中結果依 `_score` 以外的欄位排序時，此值為 `null`。 |
+| `hits.hits` | 陣列 | 該桶中最符合條件的文件陣列。 |
+| `hits.hits._index` | 字串 | 包含該文件的索引。 |
+| `hits.hits._id` | 字串 | 文件的唯一識別碼。 |
+| `hits.hits._score` | 浮點數或空值 | 文件的相關性分數。當依 `_score` 以外的欄位排序時，此值為 `null`。 |
+| `hits.hits._source` | 物件 | 原始文件來源。套用來源篩選時，只會傳回所請求的欄位。 |
+| `hits.hits.sort` | 陣列 | 用於排序此命中結果的排序值，只有在明確指定 `sort` 時才會出現。 |
+| `hits.hits._nested` | 物件 | 只有巢狀命中結果才會出現。包含 `field`（巢狀陣列欄位名稱）和 `offset`（在陣列中從零起算的位置）。 |

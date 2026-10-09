@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Multi-search
+title: "多重搜尋"
 parent: Search APIs
 nav_order: 20
 redirect_from: 
@@ -8,18 +9,18 @@ redirect_from:
  - /api-reference/multi-search/
 ---
 
-# Multi-Search API
-**Introduced 1.0**
+# 多重搜尋 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-As the name suggests, the multi-search operation lets you bundle multiple search requests into a single request. OpenSearch then executes the searches in parallel, so you get back the response more quickly compared to sending one request per search. OpenSearch executes each search independently, so the failure of one doesn't affect the others.
+如同名稱所示，多重搜尋作業可讓您將多個搜尋請求捆綁成單一請求。OpenSearch 接著會平行執行這些搜尋，因此相較於每個搜尋各送出一個請求，您能更快收到回應。OpenSearch 會獨立執行每個搜尋，因此其中一個失敗不會影響其他搜尋。
 
 
 <!-- spec_insert_start
 api: msearch
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET  /_msearch
 POST /_msearch
@@ -28,44 +29,44 @@ POST /{index}/_msearch
 ```
 <!-- spec_insert_end -->
 
-Specifying an index in the path sets the default target for any searches whose metadata line does not include an `index` field. If you omit the path parameter and a search's metadata line also does not specify an `index`, the search runs against all indexes.
+在路徑中指定索引，會為中繼資料行未包含 `index` 欄位的任何搜尋設定預設目標。如果您省略路徑參數，且某個搜尋的中繼資料行也未指定 `index`，該搜尋會對所有索引執行。
 
 
-## Query parameters and metadata options
+## 查詢參數與中繼資料選項
 
-All parameters are optional. Some can also be applied per-search as part of each metadata line.
+所有參數都是選用。部分參數也可以依每個搜尋，作為各中繼資料行的一部分來套用。
 
-Parameter | Type | Description | Supported in metadata line
+參數 | 類型 | 說明 | 支援於中繼資料行
 :--- | :--- | :--- | :---
-`allow_no_indices` | Boolean | Whether to ignore wildcards that don't match any indexes. Default is `true`. | Yes
-`cancel_after_time_interval` | Time | The time after which the search request will be canceled. Supported at both parent and child request levels. The order of precedence is:<br> 1. Child-level parameter<br> 2. Parent-level parameter<br> 3. [Cluster settings]({{site.url}}{{site.baseurl}}/api-reference/cluster-settings/).<br>Default is -1. | Yes
-`ccs_minimize_roundtrips` | Boolean | Whether OpenSearch should try to minimize the number of network round trips between the coordinating node and remote clusters (only applicable to cross-cluster search requests). Default is `true`. | No
-`expand_wildcards` | Enum | Expands wildcard expressions to concrete indexes. Combine multiple values with commas. Supported values are `all`, `open`, `closed`, `hidden`, and `none`. Default is `open`. | Yes
-`ignore_unavailable` | Boolean | If an index or shard from the indexes list doesn't exist, whether to ignore it rather than fail the query. Default is `false`. | Yes
-`include_named_queries_score` | Boolean | Whether to return scores for named queries. Default is `false`. | No
-`max_concurrent_searches` | Integer | The maximum number of concurrent searches. The default depends on your node count and search thread pool size. Higher values can improve performance, but risk overloading the cluster. | No
-`max_concurrent_shard_requests` | Integer | Maximum number of concurrent shard requests that each search executes per node. Default is 5. Higher values can improve performance, but risk overloading the cluster. | No
-`pre_filter_shard_size` | Integer | A threshold that triggers a pre-filter round trip to eliminate shards that cannot match the query (for example, because a date range filter falls outside the shard's bounds). When unspecified, the pre-filter phase runs if the request targets more than 128 shards, targets a read-only index, or sorts on an indexed field. Default is `128`. | No
-`rest_total_hits_as_int` | String | Whether the `hits.total` property is returned as an integer (`true`) or an object (`false`). Default is `false`. | No
-`routing` | String | Comma-separated custom routing values used to route all searches in the request to specific shards. To set routing for individual searches, use the `routing` option in the metadata line instead. | No
-`search_type` | String | Affects relevance score. Valid options are `query_then_fetch` and `dfs_query_then_fetch`. `query_then_fetch` scores documents using term and document frequencies for the shard (faster, less accurate), whereas `dfs_query_then_fetch` uses term and document frequencies across all shards (slower, more accurate). Default is `query_then_fetch`. | Yes
-`typed_keys` | Boolean | Whether to prefix aggregation names with their internal types in the response. Default is `false`. | No
+`allow_no_indices` | 布林值 | 是否忽略未符合任何索引的萬用字元。預設為 `true`。 | 是
+`cancel_after_time_interval` | 時間 | 搜尋請求將被取消的時間。支援父層與子層請求層級。優先順序為：<br> 1. 子層參數<br> 2. 父層參數<br> 3. [叢集設定]({{site.url}}{{site.baseurl}}/api-reference/cluster-settings/)。<br>預設為 -1。 | 是
+`ccs_minimize_roundtrips` | 布林值 | OpenSearch 是否應盡量減少協調節點與遠端叢集之間的網路來回次數（僅適用於跨叢集搜尋請求）。預設為 `true`。 | 否
+`expand_wildcards` | 列舉值 | 將萬用字元運算式展開為具體索引。以逗號合併多個值。支援的值為 `all`、`open`、`closed`、`hidden` 及 `none`。預設為 `open`。 | 是
+`ignore_unavailable` | 布林值 | 若索引清單中的某個索引或分片不存在，是否予以忽略而非讓查詢失敗。預設為 `false`。 | 是
+`include_named_queries_score` | 布林值 | 是否傳回具名查詢的分數。預設為 `false`。 | 否
+`max_concurrent_searches` | 整數 | 並行搜尋的最大數量。預設值取決於您的節點數與搜尋執行緒集區大小。較高的值可提升效能，但可能使叢集超載。 | 否
+`max_concurrent_shard_requests` | 整數 | 每個搜尋在每個節點上執行的並行分片請求最大數量。預設為 5。較高的值可提升效能，但可能使叢集超載。 | 否
+`pre_filter_shard_size` | 整數 | 觸發預先篩選來回以排除無法符合查詢之分片的閾值（例如，因為日期範圍篩選落在分片的界限之外）。未指定時，若請求的目標超過 128 個分片、目標為唯讀索引，或依已編製索引的欄位排序，則會執行預先篩選階段。預設為 `128`。 | 否
+`rest_total_hits_as_int` | 字串 | `hits.total` 屬性是否以整數（`true`）或物件（`false`）形式傳回。預設為 `false`。 | 否
+`routing` | 字串 | 以逗號分隔的自訂路由值，用於將請求中的所有搜尋路由至特定分片。若要為個別搜尋設定路由，請改用中繼資料行中的 `routing` 選項。 | 否
+`search_type` | 字串 | 影響相關性分數。有效選項為 `query_then_fetch` 與 `dfs_query_then_fetch`。`query_then_fetch` 使用分片的詞彙與文件頻率為文件評分（較快、較不準確），而 `dfs_query_then_fetch` 則使用所有分片的詞彙與文件頻率（較慢、較準確）。預設為 `query_then_fetch`。 | 是
+`typed_keys` | 布林值 | 是否在回應中為彙總名稱加上其內部類型的前置字元。預設為 `false`。 | 否
 
 
-## Metadata-only options
+## 僅限中繼資料的選項
 
-Some options can't be applied as parameters to the entire request. Instead, you can apply them per-search as part of each metadata line. All are optional.
+部分選項無法作為整個請求的參數套用。您可以改為依每個搜尋，作為各中繼資料行的一部分來套用。全部都是選用。
 
-Option | Type | Description
+選項 | 類型 | 說明
 :--- | :--- | :---
-`index` | String, string array | If you don't specify an index or multiple indexes as part of the URL (or want to override the URL value for an individual search), you can include it here. Examples include `"logs-*"` and `["my-store", "sample_data_ecommerce"]`.
-`preference` | String | The nodes or shards that you'd like to perform the search. This setting can be useful for testing, but in most situations, the default behavior provides the best search latencies. Options include `_local`, `_only_local`, `_prefer_nodes`, `_only_nodes`, and `_shards`. These last three options accept a list of nodes or shards. Examples include `"_only_nodes:data-node1,data-node2"` and `"_shards:0,1`.
-`request_cache` | Boolean | Whether to cache results, which can improve latency for repeat searches. Default is to use the `index.requests.cache.enable` setting for the index (which defaults to `true` for new indexes).
-`routing` | String | Comma-separated custom routing values, for example, `"routing": "value1,value2,value3"`. Unlike `routing` at the query parameter level, which applies to all searches in the request, this option targets routing for an individual search only.
+`index` | 字串、字串陣列 | 如果您未在 URL 中指定一個或多個索引（或想為個別搜尋覆寫 URL 值），可以在此加入。範例包括 `"logs-*"` 與 `["my-store", "sample_data_ecommerce"]`。
+`preference` | 字串 | 您想執行搜尋的節點或分片。此設定有助於測試，但在大多數情況下，預設行為可提供最佳的搜尋延遲。選項包括 `_local`、`_only_local`、`_prefer_nodes`、`_only_nodes` 及 `_shards`。最後三個選項接受節點或分片清單。範例包括 `"_only_nodes:data-node1,data-node2"` 與 `"_shards:0,1`。
+`request_cache` | 布林值 | 是否快取結果，可改善重複搜尋的延遲。預設為使用索引的 `index.requests.cache.enable` 設定（新索引預設為 `true`）。
+`routing` | 字串 | 以逗號分隔的自訂路由值，例如 `"routing": "value1,value2,value3"`。與查詢參數層級套用於請求中所有搜尋的 `routing` 不同，此選項僅針對個別搜尋的路由。
 
-## Request body
+## 請求本文
 
-The multi-search request body uses newline-delimited JSON (NDJSON) format, alternating between metadata and query lines:
+多重搜尋請求本文使用以換行符號分隔的 JSON（NDJSON）格式，在中繼資料行與查詢行之間交替：
 
 ```
 Metadata\n
@@ -75,32 +76,32 @@ Query\n
 
 ```
 
-- Metadata lines include options, such as which indexes to search and the type of search. A metadata line can be empty (`{}`) if no per-search overrides are needed.
-- Query lines use the [query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/).
+- 中繼資料行包含選項，例如要搜尋哪些索引以及搜尋類型。若不需要依搜尋覆寫，中繼資料行可以是空的（`{}`）。
+- 查詢行使用 [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/)。
 
-Like the [bulk]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) operation, the JSON doesn't need to be minified---spaces are fine---but it does need to be on a single line. OpenSearch uses newline characters to parse multi-search requests and requires that the request body end with a newline character.
+如同[大量]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/)作業，JSON 不需要壓縮---可以有空格---但必須位於單一行。OpenSearch 使用換行字元來剖析多重搜尋請求，並要求請求本文以換行字元結尾。
 
-When sending requests to this endpoint, set the `Content-Type` header to `application/x-ndjson`.
+將請求傳送至此端點時，請將 `Content-Type` 標頭設為 `application/x-ndjson`。
 {: .note}
 
-### Query body fields
+### 查詢本文欄位
 
-Each query line accepts the same parameters as the [Search API]({{site.url}}{{site.baseurl}}/api-reference/search/) request body. The following table lists the most commonly used fields.
+每個查詢行接受與[搜尋 API]({{site.url}}{{site.baseurl}}/api-reference/search/) 請求本文相同的參數。下表列出最常用的欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `query` | Object | The query DSL expression to execute. See [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/). |
-| `aggregations` | Object | Aggregations to run alongside the search. See [Aggregations]({{site.url}}{{site.baseurl}}/aggregations/). |
-| `from` | Integer | The starting offset for returned hits. Default is `0`. |
-| `size` | Integer | The number of hits to return. Default is `10`. |
-| `sort` | Array or Object | The fields and order by which to sort results. |
-| `_source` | Boolean, String, or Object | Controls which fields are included in the `_source` of each hit. |
-| `highlight` | Object | Highlight configuration for matched fields. |
+| `query` | 物件 | 要執行的 Query DSL 運算式。請參閱 [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/)。 |
+| `aggregations` | 物件 | 與搜尋一併執行的彙總。請參閱[彙總]({{site.url}}{{site.baseurl}}/aggregations/)。 |
+| `from` | 整數 | 傳回命中結果的起始位移。預設為 `0`。 |
+| `size` | 整數 | 要傳回的命中結果數量。預設為 `10`。 |
+| `sort` | 陣列或物件 | 排序結果所依據的欄位與順序。 |
+| `_source` | 布林值、字串或物件 | 控制每個命中結果的 `_source` 中包含哪些欄位。 |
+| `highlight` | 物件 | 符合欄位的醒目提示組態。 |
 
 
-## Example: Searching multiple indexes
+## 範例：搜尋多個索引
 
-The following example runs queries against multiple indexes, specifying the target index in each metadata line:
+下列範例對多個索引執行查詢，並在每個中繼資料行中指定目標索引：
 
 
 <!-- spec_insert_start
@@ -140,9 +141,9 @@ response = client.msearch(
 <!-- spec_insert_end -->
 
 
-## Example: Using a default index
+## 範例：使用預設索引
 
-When you specify an index in the URL path, that index serves as the default for any searches whose metadata line does not include an `index` field. The following example runs two queries against the `products` index without repeating the index name in each metadata line:
+當您在 URL 路徑中指定索引時，對於中繼資料行未包含 `index` 欄位的任何搜尋，該索引會作為預設索引。下列範例會對 `products` 索引執行兩個查詢，而無需在每個中繼資料行中重複索引名稱：
 
 <!-- spec_insert_start
 component: example_code
@@ -181,13 +182,13 @@ response = client.msearch(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Using search templates
+## 使用搜尋範本
 
-The multi-search API supports [search templates]({{site.url}}{{site.baseurl}}/search-plugins/search-template/) through the `_msearch/template` endpoint. This lets you execute parameterized searches, separating the query structure from the values passed at search time.
+Multi-search API 透過 `_msearch/template` 端點支援[搜尋範本]({{site.url}}{{site.baseurl}}/search-plugins/search-template/)。這可讓您執行參數化搜尋，將查詢結構與搜尋時傳入的值分開。
 
-### Example: Inline templates
+### 範例：內嵌範本
 
-The following request uses inline templates to run two parameterized searches in a single call:
+下列請求使用內嵌範本，在單一呼叫中執行兩個參數化搜尋：
 
 ```json
 GET _msearch/template
@@ -198,9 +199,9 @@ GET _msearch/template
 
 ```
 
-### Example: Stored templates
+### 範例：已儲存的範本
 
-You can also reference pre-registered templates by ID. First, create the stored templates:
+您也可以依 ID 參考預先註冊的範本。首先，建立已儲存的範本：
 
 ```json
 POST _scripts/product_search_template
@@ -242,7 +243,7 @@ POST _scripts/price_range_template
 ```
 {% include copy-curl.html %}
 
-Then use the stored templates in a multi-search request:
+接著在多重搜尋請求中使用已儲存的範本：
 
 ```json
 GET _msearch/template
@@ -253,9 +254,9 @@ GET _msearch/template
 
 ```
 
-## Example response
+## 回應範例
 
-OpenSearch returns an array with the results of each search in the same order as the multi-search request.
+OpenSearch 會傳回一個陣列，其中包含每個搜尋的結果，順序與多重搜尋請求中的順序相同。
 
 ```json
 {
@@ -441,29 +442,29 @@ OpenSearch returns an array with the results of each search in the same order as
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the top-level response body fields.
+下表列出最上層的回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `took` | Integer | The total time, in milliseconds, for OpenSearch to process all searches in the request. |
-| `responses` | Array | An array of search response objects, returned in the same order as the corresponding searches in the request. If a particular search fails completely, the array entry for that search contains an `error` object and a `status` code instead of the normal search response. |
+| `took` | 整數 | OpenSearch 處理請求中所有搜尋的總時間，以毫秒為單位。 |
+| `responses` | 陣列 | 搜尋回應物件的陣列，傳回順序與請求中對應的搜尋相同。如果某個特定搜尋完全失敗，該搜尋的陣列項目會包含 `error` 物件和 `status` 狀態碼，而非正常的搜尋回應。 |
 
-The following table lists the fields within each entry of the `responses` array.
+下表列出 `responses` 陣列中每個項目的欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `took` | Integer | The time, in milliseconds, for OpenSearch to process the individual search. |
-| `timed_out` | Boolean | Whether the search timed out before completing. |
-| `_shards` | Object | Information about the number of shards involved in the search, including `total`, `successful`, `skipped`, and `failed` counts. |
-| `hits` | Object | The search results, including `total` hit count, `max_score`, and an array of matching `hits`. |
-| `status` | Integer | The HTTP status code for the individual search result. A value of `200` indicates success. |
+| `took` | 整數 | OpenSearch 處理個別搜尋的時間，以毫秒為單位。 |
+| `timed_out` | 布林值 | 搜尋是否在完成前逾時。 |
+| `_shards` | 物件 | 搜尋涉及的分片數量相關資訊，包括 `total`、`successful`、`skipped` 和 `failed` 計數。 |
+| `hits` | 物件 | 搜尋結果，包括 `total` 命中數、`max_score`，以及相符 `hits` 的陣列。 |
+| `status` | 整數 | 個別搜尋結果的 HTTP 狀態碼。值為 `200` 表示成功。 |
 
-## Partial responses
+## 部分回應
 
-If one or more shards fail during execution, the multi-search API still returns results from the successful shards. Each individual search response in the `responses` array includes a `_shards` object that reports how many shards succeeded and how many failed, allowing you to determine whether results are complete.
+如果執行期間有一或多個分片失敗，多搜尋 API 仍會傳回成功分片的結果。`responses` 陣列中的每個個別搜尋回應都包含 `_shards` 物件，回報有多少分片成功、多少分片失敗，讓您判斷結果是否完整。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:data/read/msearch`.
+如果您使用 Security 外掛程式，請確定您具有適當的權限：`indices:data/read/msearch`。

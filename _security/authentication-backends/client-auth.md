@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Client certificate authentication
+title: "用戶端憑證驗證"
 parent: Authentication backends
 nav_order: 70
 redirect_from:
@@ -8,23 +9,23 @@ redirect_from:
   - /security-plugin/configuration/client-auth/
 ---
 
-# Client certificate authentication
+# 用戶端憑證驗證
 
-After obtaining your own certificates either from a certificate authority (CA) or by [generating your own certificates using OpenSSL]({{site.url}}{{site.baseurl}}/security/configuration/generate-certificates/), you can start configuring OpenSearch to authenticate a user using a client certificate.
+在從憑證授權單位 (CA) 取得您自己的憑證，或[使用 OpenSSL 產生您自己的憑證]({{site.url}}{{site.baseurl}}/security/configuration/generate-certificates/)之後，您就可以開始設定 OpenSearch，以使用用戶端憑證來驗證使用者。
 
-Client certificate authentication offers more security advantages than just using basic authentication (username and password). Because client certificate authentication requires both a client certificate and its private key, which are often in the user's possession, it is less vulnerable to brute force attacks in which malicious individuals try to guess a user's password.
+用戶端憑證驗證比單純使用基本驗證 (使用者名稱與密碼) 提供更多安全性優勢。由於用戶端憑證驗證同時需要用戶端憑證及其私密金鑰，而這些通常由使用者持有，因此較不易受到暴力破解攻擊的影響，這類攻擊是惡意人士試圖猜測使用者的密碼。
 
-Another benefit of client certificate authentication is you can use it along with basic authentication, providing two layers of security.
+用戶端憑證驗證的另一個優點是您可以將它與基本驗證搭配使用，提供兩層安全性。
 
-## Enabling client certificate authentication
+## 啟用用戶端憑證驗證
 
-To enable client certificate authentication, you must first set `clientauth_mode` in `opensearch.yml` to either `OPTIONAL` or `REQUIRE`:
+若要啟用用戶端憑證驗證，您必須先將 `opensearch.yml` 中的 `clientauth_mode` 設為 `OPTIONAL` 或 `REQUIRE`：
 
 ```yml
 plugins.security.ssl.http.clientauth_mode: OPTIONAL
 ```
 
-Next, enable client certificate authentication in the `client_auth_domain` section of `config.yml`.
+接著，在 `config.yml` 的 `client_auth_domain` 區段中啟用用戶端憑證驗證。
 
 ```yml
 clientcert_auth_domain:
@@ -43,13 +44,13 @@ clientcert_auth_domain:
     type: noop
 ```
 
-## Assigning roles to a certificate's common name
+## 將角色指派給憑證的一般名稱
 
-You can now assign your certificate's common name (CN) to a role. This step requires you to identify the certificate's CN and the role you want to assign it to. To view a list of all predefined OpenSearch roles, see [Predefined roles]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#predefined-roles). To get started, first [define a role]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#defining-roles) and then map your certificate's CN to that role.
+您現在可以將憑證的一般名稱 (CN) 指派給角色。此步驟需要您識別憑證的 CN 以及您要指派給它的角色。若要檢視所有預先定義的 OpenSearch 角色清單，請參閱[預先定義的角色]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#predefined-roles)。若要開始，請先[定義角色]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#defining-roles)，然後將憑證的 CN 對應到該角色。
 
-After determining which role to map to your certificate's CN, you can use [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#mapping-users-to-roles), [`roles_mapping.yml`]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#roles_mappingyml), or the [REST API]({{site.url}}{{site.baseurl}}/security/api/role-mappings/create-role-mapping/) to map the role. The following example uses the `REST API` to map the CN `CLIENT1` to the role `readall`.
+在決定要對應到憑證 CN 的角色之後，您可以使用 [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#mapping-users-to-roles)、[`roles_mapping.yml`]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#roles_mappingyml) 或 [REST API]({{site.url}}{{site.baseurl}}/security/api/role-mappings/create-role-mapping/) 來對應角色。下列範例使用 `REST API` 將 CN `CLIENT1` 對應到角色 `readall`。
 
-**Example request**
+**範例請求**
 
 ```json
 PUT _plugins/_security/api/rolesmapping/readall
@@ -60,7 +61,7 @@ PUT _plugins/_security/api/rolesmapping/readall
 }
 ```
 
-**Example response**
+**範例回應**
 
 ```json
 {
@@ -69,9 +70,9 @@ PUT _plugins/_security/api/rolesmapping/readall
 }
 ```
 
-After mapping a role to your client certificate's CN, you're ready to connect to your cluster using those credentials.
+將角色對應到用戶端憑證的 CN 之後，您就可以使用這些認證資訊連線到您的叢集。
 
-The following code example uses the Python `requests` library to connect to a local OpenSearch cluster and sends a GET request to the `movies` index.
+下列程式碼範例使用 Python `requests` 程式庫連線到本機 OpenSearch 叢集，並將 GET 請求傳送到 `movies` 索引。
 
 ```python
 import requests
@@ -128,6 +129,6 @@ output.opensearch:
 ```
 {% endcomment %}
 
-## Using certificates with Docker
+## 搭配 Docker 使用憑證
 
-While we recommend using the [tarball]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/tar/) installation of ODFE to test client certificate authentication configurations, you can also use any of the other install types. For instructions on using Docker security, see [Configuring basic security settings]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/docker/#configuring-basic-security-settings).
+雖然我們建議使用 ODFE 的[封存檔]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/tar/)安裝來測試用戶端憑證驗證組態，您也可以使用任何其他安裝類型。如需使用 Docker 安全性的指示，請參閱[設定基本安全性設定]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/docker/#configuring-basic-security-settings)。

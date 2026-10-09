@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Search Relevance Stats API
 nav_order: 65
@@ -8,43 +9,43 @@ has_children: false
 ---
 
 # Search Relevance Stats API
-Introduced 2.7
+2.7 版引進
 {: .label .label-purple }
 
-The Search Relevance Stats API provides information about [Search Relevance plugin](https://github.com/opensearch-project/dashboards-search-relevance) operations. The Search Relevance plugin processes operations sent by the [Compare Search Results]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/) Dashboards tool.
+Search Relevance Stats API 提供 [Search Relevance 外掛程式](https://github.com/opensearch-project/dashboards-search-relevance)作業的相關資訊。Search Relevance 外掛程式會處理 [Compare Search Results]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/) Dashboards 工具所送出的作業。
 
-The Search Relevance Stats API captures statistics for a one-minute interval during which it receives a request. For example, if a request is received at 23:59:59.004, statistics are collected for the 23:58:00.000--23:58:59.999 time interval.
+Search Relevance Stats API 會擷取收到請求當下那一分鐘區間的統計資料。舉例來說，若在 23:59:59.004 收到請求，則會收集 23:58:00.000--23:58:59.999 時間區間的統計資料。
 
-To change the default time interval for which statistics are collected, update the `searchRelevanceDashboards.metrics.metricInterval` setting in the `opensearch_dashboards.yml` file with the new time interval in milliseconds. The `opensearch_dashboards.yml` file is located in the `config` folder of your OpenSearch Dashboards installation. For example, the following sets the interval to one second:
+如要變更收集統計資料的預設時間區間，請在 `opensearch_dashboards.yml` 檔案中將 `searchRelevanceDashboards.metrics.metricInterval` 設定更新為新的時間區間（以毫秒為單位）。`opensearch_dashboards.yml` 檔案位於 OpenSearch Dashboards 安裝目錄的 `config` 資料夾中。舉例來說，下列設定會將區間設為一秒：
 
 ```yml
 searchRelevanceDashboards.metrics.metricInterval: 1000 
 ```
 
-#### Example request
+#### 範例請求
 
-You can access the Search Relevance Stats API by providing its URL address in the following format:
+您可以在下列格式中提供 Search Relevance Stats API 的 URL 位址來存取該 API：
 
 ```
 <opensearch-dashboards-endpoint-address>/api/relevancy/stats
 ```
 
-The OpenSearch Dashboards endpoint address may contain a port number if it is specified in the OpenSearch configuration file. The specific URL format depends on the type of OpenSearch deployment and the network environment in which it is hosted.
+若 OpenSearch 組態檔中指定了連接埠號，OpenSearch Dashboards 端點位址可能會包含該連接埠號。具體的 URL 格式取決於 OpenSearch 部署類型及其所在的網路環境。
 {: .note}
 
-You can query the endpoint in two ways:
+您可以用兩種方式查詢端點：
   
-  - By accessing the endpoint address (for example, `http://localhost:5601/api/relevancy/stats`) in a browser
+  - 在瀏覽器中存取端點位址 (例如 `http://localhost:5601/api/relevancy/stats`)
 
-  - By using the `curl` command in the terminal:
+  - 在終端機中使用 `curl` 命令：
     ```bash
     curl -X GET http://localhost:5601/api/relevancy/stats
     ```
     {% include copy.html %}
 
-#### Example response
+#### 範例回應
 
-The following is the response for the preceding request:
+以下是前述請求的回應：
 
 ```json
 {
@@ -83,33 +84,33 @@ The following is the response for the preceding request:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response fields.
+下表列出所有回應欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- | 
-| [`data.search_relevance`](#the-datasearch_relevance-object) | Object | Statistics related to Search Relevance operations. |
-| `overall` | Object | The average statistics for all operations. |
-| `overall.response_time_avg` | Double | The average response time for all operations, in milliseconds. |
-| `overall.requests_per_second` | Double | The average number of requests per second for all operations. |
-| `counts_by_component` | Object | The sum of all `count` values for all child objects of the `data` object. |
-| `counts_by_component.search_relevance` | The total number of responses for all operations in the `search_relevance` object. |
-| `counts_by_status_code` | Object | Contains a list of all response codes and their counts for all Search Relevance operations. |
+| [`data.search_relevance`](#the-datasearch_relevance-object) | 物件 | 與 Search Relevance 作業相關的統計資料。 |
+| `overall` | 物件 | 所有作業的平均統計資料。 |
+| `overall.response_time_avg` | Double | 所有作業的平均回應時間（以毫秒為單位）。 |
+| `overall.requests_per_second` | Double | 所有作業平均每秒的請求數。 |
+| `counts_by_component` | 物件 | `data` 物件之所有子物件的所有 `count` 值總和。 |
+| `counts_by_component.search_relevance` | `search_relevance` 物件中所有作業的回應總數。 |
+| `counts_by_status_code` | 物件 | 包含所有 Search Relevance 作業的回應碼及其計數清單。 |
 
-### The `data.search_relevance` object
+### `data.search_relevance` 物件
 
-The `data.search_relevance` object contains the fields described in the following table.
+`data.search_relevance` 物件包含下表所述的欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `comparison_search` | Object | Statistics related to the comparison search operation. A comparison search operation is a request that compares two queries when both Query 1 and Query 2 are entered in the Compare Search Results tool. |
-| `single_search` | Object | Statistics related to a single search operation. A single search operation is a request to run a single query when only Query 1 or Query 2, not both, is entered in the Compare Search Results tool. |
-| `fetch_index` | Object | Statistics related to the operation of fetching the index or indexes for a comparison search or single search. |
+| `comparison_search` | 物件 | 與比較搜尋作業相關的統計資料。比較搜尋作業是指在 Compare Search Results 工具中同時輸入 Query 1 和 Query 2 時，用來比較兩個查詢的請求。 |
+| `single_search` | 物件 | 與單一搜尋作業相關的統計資料。單一搜尋作業是指在 Compare Search Results 工具中僅輸入 Query 1 或 Query 2（而非兩者）時，用來執行單一查詢的請求。 |
+| `fetch_index` | 物件 | 與擷取比較搜尋或單一搜尋之索引相關的作業統計資料。 |
 
-Each of the `comparison_search`, `single_search`, and `fetch_index` objects contains a list of HTTP response codes. The following table lists the fields for each response code.
+`comparison_search`、`single_search` 和 `fetch_index` 物件各包含一份 HTTP 回應碼清單。下表列出每個回應碼的欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `response_time_total` | Double | The sum of the response times for the responses with this HTTP code, in milliseconds. |
-| `count` | Integer | The total number of responses with this HTTP code.  |
+| `response_time_total` | Double | 有此 HTTP 回應碼之回應的回應時間總和（以毫秒為單位）。 |
+| `count` | 整數 | 有此 HTTP 回應碼的回應總數。  |

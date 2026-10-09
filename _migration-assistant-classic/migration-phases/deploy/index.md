@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Deploy
+title: "部署"
 parent: Migration phases
 nav_order: 2
 has_children: true
@@ -8,58 +9,58 @@ has_toc: true
 permalink: /classic/migration-assistant/migration-phases/deploy/
 ---
 
-# Deploy
+# 部署
 
-This quickstart assumes that you have performed an [assessment]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/assessment/) to understand upgrade breaking changes and limitations before beginning.
+本快速入門假設您在開始之前已執行[評估]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/assessment/)，以了解升級的重大變更與限制。
 
-This quickstart outlines how to deploy Migration Assistant for OpenSearch and execute an existing data migration using `Reindex-from-Snapshot` (RFS). It uses AWS for illustrative purposes. However, you can modify the steps for use with other cloud providers.
+本快速入門說明如何部署 Migration Assistant for OpenSearch，並使用 `Reindex-from-Snapshot` (RFS) 執行現有的資料遷移。文中以 AWS 作為說明範例，但您可以修改這些步驟以搭配其他雲端供應商使用。
 
-**Note**: Although this page focuses on RFS-only deployment, you can add Capture and Replay functionality or replace RFS options with Capture and Replay as described in [Configuration options]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/deploy/configuration-options/#live-capture-migration-with-cr).
+**注意**：雖然本頁面著重於僅使用 RFS 的部署，您也可以依照[組態選項]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/deploy/configuration-options/#live-capture-migration-with-cr)所述，加入 Capture and Replay 功能，或以 Capture and Replay 取代 RFS 選項。
 
-Before using this quickstart, review [Is Migration Assistant right for you?]({{site.url}}{{site.baseurl}}/classic/migration-assistant/is-migration-assistant-right-for-you/).
+在使用本快速入門之前，請先檢閱 [Migration Assistant 是否適合您？]({{site.url}}{{site.baseurl}}/classic/migration-assistant/is-migration-assistant-right-for-you/)。
 
-Because this guide uses [AWS Cloud Development Kit (AWS CDK)](https://aws.amazon.com/cdk/), ensure that the `CDKToolkit` stack exists and is in the `CREATE_COMPLETE` state. For setup instructions, see the [CDK Toolkit documentation](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html).
+由於本指南使用 [AWS Cloud Development Kit (AWS CDK)](https://aws.amazon.com/cdk/)，請確保 `CDKToolkit` 堆疊已存在且處於 `CREATE_COMPLETE` 狀態。設定說明請參閱 [CDK Toolkit 文件](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html)。
 
-## Planning your deployment environment
+## 規劃部署環境
 
-Before beginning the deployment, consider the following environment planning steps:
+在開始部署之前，請考慮下列環境規劃步驟：
 
-- **Choose a unique stage name**: Avoid using `dev` if you have existing deployments or potential conflicts. Consider using "test", "staging", "prod", or other descriptive names.
-- **Verify domain endpoints**: Ensure your source and target cluster endpoints are accessible and properly formatted.
-- **Prepare authentication**: Have your cluster credentials and AWS Secrets Manager Amazon Resource Names (ARNs) ready.
-- **Check AWS credentials**: Verify that your AWS credentials are properly configured for the target account and AWS Region.
+- **選擇唯一的 stage 名稱**：如果您已有現存的部署或可能發生衝突，請避免使用 `dev`。建議使用 "test"、"staging"、"prod" 或其他描述性名稱。
+- **驗證網域端點**：確保您的來源與目標叢集端點可存取且格式正確。
+- **準備驗證資訊**：備妥您的叢集憑證與 AWS Secrets Manager Amazon Resource Names (ARN)。
+- **檢查 AWS 憑證**：確認您的 AWS 憑證已針對目標帳戶與 AWS 區域正確設定。
 
-## Prerequisites
+## 必要條件
 
-Before proceeding with the deployment, ensure you have completed the following prerequisites.
+在繼續部署之前，請確保您已完成下列必要條件。
 
-### AWS environment setup
-1. **Configure AWS credentials**: Run `aws configure` to set up your credentials or ensure environment variables are properly set.
-2. **Verify account access**: Test your credentials with `aws sts get-caller-identity`.
-3. **Check region**: Ensure you're deploying to the correct AWS Region.
+### AWS 環境設定
+1. **設定 AWS 憑證**：執行 `aws configure` 來設定您的憑證，或確保環境變數已正確設定。
+2. **驗證帳戶存取權**：使用 `aws sts get-caller-identity` 測試您的憑證。
+3. **檢查區域**：確保您部署到正確的 AWS 區域。
 
 ---
 
-## Step 1: Install Bootstrap on an Amazon EC2 instance (~10 minutes)
+## 步驟 1：在 Amazon EC2 執行個體上安裝 Bootstrap（約 10 分鐘）
 
-To begin your migration, use the following steps to install a `bootstrap` box on an Amazon Elastic Compute Cloud (Amazon EC2) instance. The instance uses AWS CloudFormation to create and manage the stack.
+若要開始遷移，請依照下列步驟在 Amazon Elastic Compute Cloud (Amazon EC2) 執行個體上安裝 `bootstrap` box。該執行個體使用 AWS CloudFormation 來建立與管理堆疊。
 
-1. Log in to the target AWS account in which you want to deploy Migration Assistant.
-2. From the browser where you are logged in to your target AWS account, right-click [here](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?templateURL=https://solutions-reference.s3.amazonaws.com/migration-assistant-for-amazon-opensearch-service/latest/migration-assistant-for-amazon-opensearch-service.template&redirectId=SolutionWeb) to load the CloudFormation template from a new browser tab.
-3. Follow the CloudFormation stack wizard:
+1. 登入您要部署 Migration Assistant 的目標 AWS 帳戶。
+2. 在已登入目標 AWS 帳戶的瀏覽器中，以滑鼠右鍵按一下[這裡](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?templateURL=https://solutions-reference.s3.amazonaws.com/migration-assistant-for-amazon-opensearch-service/latest/migration-assistant-for-amazon-opensearch-service.template&redirectId=SolutionWeb)，從新的瀏覽器分頁載入 CloudFormation 範本。
+3. 依照 CloudFormation 堆疊精靈操作：
  * **Stack Name:** `MigrationBootstrap`
  * **Stage Name:** `dev`
- * Choose **Next** after each step > **Acknowledge** > **Submit**.
-4. Verify that the Bootstrap stack exists and is set to `CREATE_COMPLETE`. This process takes around 10 minutes to complete.
+ * 每個步驟後選擇 **Next** > **Acknowledge** > **Submit**。
+4. 確認 Bootstrap 堆疊已存在且狀態設為 `CREATE_COMPLETE`。此程序約需 10 分鐘完成。
 
 ---
 
-## Step 2: Set up Bootstrap instance access (~5 minutes)
+## 步驟 2：設定 Bootstrap 執行個體存取權（約 5 分鐘）
 
-Use the following steps to set up Bootstrap instance access:
+請依照下列步驟設定 Bootstrap 執行個體的存取權：
 
-1. After deployment, find the EC2 instance ID for the `bootstrap-dev-instance`.
-2. Create an AWS Identity and Access Management (IAM) policy using the following snippet, replacing `<aws-region>`, `<aws-account>`, `<stage>`, and `<ec2-instance-id>` with your information:
+1. 部署完成後，找出 `bootstrap-dev-instance` 的 EC2 執行個體 ID。
+2. 使用下列程式碼片段建立 AWS Identity and Access Management (IAM) 政策，並將 `<aws-region>`、`<aws-account>`、`<stage>` 與 `<ec2-instance-id>` 替換為您的資訊：
 
  ```json
  {
@@ -78,75 +79,75 @@ Use the following steps to set up Bootstrap instance access:
  ```
  {% include copy.html %}
 
-3. Name the policy, for example, `SSM-OSMigrationBootstrapAccess`, and then create the policy by selecting **Create policy**.
-4. Attach the newly created policy to your EC2 instance's IAM role.
+3. 為政策命名，例如 `SSM-OSMigrationBootstrapAccess`，然後選取 **Create policy** 來建立政策。
+4. 將新建立的政策附加至 EC2 執行個體的 IAM 角色。
 
 ---
 
-## Step 3: Log in to Bootstrap and build Migration Assistant (~15 minutes)
+## 步驟 3：登入 Bootstrap 並建置 Migration Assistant（約 15 分鐘）
 
-Next, log in to Bootstrap and build Migration Assistant using the following steps.
+接著，請依照下列步驟登入 Bootstrap 並建置 Migration Assistant。
 
-### Prerequisites
+### 必要條件
 
-To use these steps, make sure you fulfill the following prerequisites:
+若要使用這些步驟，請確保您符合下列必要條件：
 
-* The AWS Command Line Interface (AWS CLI) and AWS Session Manager plugin are installed on your instance.
-* The AWS credentials are configured (`aws configure`) for your instance.
+* 執行個體上已安裝 AWS Command Line Interface (AWS CLI) 與 AWS Session Manager 外掛程式。
+* 已為您的執行個體設定 AWS 憑證 (`aws configure`)。
 
-### Steps
+### 步驟
 
-1. Load AWS credentials into your terminal.
-2. Log in to the instance using the following command, replacing `<instance-id>` and `<aws-region>` with your instance ID and Region:
+1. 將 AWS 憑證載入您的終端機。
+2. 使用下列命令登入執行個體，並將 `<instance-id>` 與 `<aws-region>` 替換為您的執行個體 ID 與區域：
 
  ```bash
  aws ssm start-session --document-name BootstrapShellDoc-<stage>-<aws-region> --target <instance-id> --region <aws-region> [--profile <profile-name>]
  ```
  {% include copy.html %}
  
-3. Once logged in, run the following command from the shell of the Bootstrap instance in the `/opensearch-migrations` directory:
+3. 登入後，在 Bootstrap 執行個體的 shell 中，於 `/opensearch-migrations` 目錄執行下列命令：
 
  ```bash
  ./initBootstrap.sh && cd deployment/cdk/opensearch-service-migration
  ```
  {% include copy.html %}
  
-4. After a successful build, note the path for infrastructure deployment, which will be used in the next step.
+4. 建置成功後，記下基礎設施部署的路徑，後續步驟將會用到。
 
 ---
 
-## Step 4: Configure and deploy RFS (~20 minutes)
+## 步驟 4：設定並部署 RFS（約 20 分鐘）
 
-To deploy Migration Assistant with RFS, the following stacks must be deployed:
+若要部署搭配 RFS 的 Migration Assistant，必須部署下列堆疊：
 
-* `Migration Assistant network` stack
-* `RFS` stack
-* `Migration Console` stack
+* `Migration Assistant network` 堆疊
+* `RFS` 堆疊
+* `Migration Console` 堆疊
 
-### RFS parameters
+### RFS 參數
 
-Before configuring the deployment, understand the RFS parameters. If you're creating a snapshot using migration tooling, these parameters are automatically configured. If you're using an existing snapshot, you need to modify the `reindexFromSnapshotExtraArgs` setting with the following values:
+在設定部署之前，請先了解 RFS 參數。如果您使用遷移工具建立快照，這些參數會自動設定。如果您使用現有的快照，則需要使用下列值修改 `reindexFromSnapshotExtraArgs` 設定：
 
 ```bash
 "reindexFromSnapshotExtraArgs": "--s3-repo-uri s3://<bucket-name>/<repo> --s3-region <region> --snapshot-name <name>"
 ```
 {% include copy.html %}
 
-Additionally, you must assign the `migrationconsole` and `reindexFromSnapshot` task role permissions to the S3 bucket.
+此外，您必須將 `migrationconsole` 與 `reindexFromSnapshot` 任務角色權限指派給 S3 儲存貯體。
 
-### Configuration and deployment steps
+### 組態與部署步驟
 
-Use the following steps to configure and deploy RFS, deploy Migration Assistant, and verify installation of the required stacks:
+請依照下列步驟設定並部署 RFS、部署 Migration Assistant，並驗證必要堆疊是否已安裝：
 
-1. **Set up authentication secrets**: Add the basic authentication information (username and password) for both the source and target clusters as separate secrets in [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html). Each secret must include two key-value pairs: one for the username and one for the password. The plaintext of each secret should resemble the following example:
+1. **設定驗證密鑰**：將來源與目標叢集的基本驗證資訊（使用者名稱與密碼）分別以獨立的密鑰新增至 [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html)。每個密鑰必須包含兩組鍵值對：一組用於使用者名稱，一組用於密碼。每個密鑰的明文應類似下列範例：
 
  ```json
  {"username":"admin","password":"myStrongPassword123!"}
  ```
 
- Be sure to copy the secret Amazon Resource Name (ARN) for use during deployment.
+ 請務必複製密鑰的 Amazon Resource Name (ARN)，以在部署期間使用。
 
-2. **Configure the deployment context**: From the same shell as the Bootstrap instance, modify the `cdk.context.json` file located in the `/opensearch-migrations/deployment/cdk/opensearch-service-migration` directory and configure the following settings:
+2. **設定部署內容**：在與 Bootstrap 執行個體相同的 shell 中，修改位於 `/opensearch-migrations/deployment/cdk/opensearch-service-migration` 目錄的 `cdk.context.json` 檔案，並設定下列設定：
 
  ```json
  {
@@ -173,13 +174,13 @@ Use the following steps to configure and deploy RFS, deploy Migration Assistant,
  }
  }
  ```
- {% include copy.html %}
+{% include copy.html %}
 
- The source and target cluster authorization can be configured to have no authorization, `basic` with a username and password, or `sigv4`.
+ 來源與目標叢集的授權可設定為無授權、`basic`（含使用者名稱與密碼），或 `sigv4`。
 
- **Environment configuration examples**
+ **環境組態範例**
 
- To avoid conflicts with existing deployments, consider using different context IDs and stage names:
+ 為避免與現有部署衝突，建議使用不同的內容 ID 與 stage 名稱：
 
  ```json
  {
@@ -209,36 +210,36 @@ Use the following steps to configure and deploy RFS, deploy Migration Assistant,
  }
  }
  ```
- {% include copy.html %}
+{% include copy.html %}
 
- **Important configuration notes**:
- - Use unique `stage` values to prevent resource naming conflicts.
- - Ensure that secret ARNs are complete and accessible in your deployment AWS Region.
- - Domain endpoints can be simplified names or full AWS URLs.
- - Deploy using `./deploy.sh <contextId>` (for example, `./deploy.sh test-deploy`).
+ **重要組態注意事項**：
+ - 使用唯一的 `stage` 值，以避免資源命名衝突。
+ - 確保密鑰 ARN 完整且可在您的部署 AWS 區域中存取。
+ - 網域端點可以使用簡化名稱或完整的 AWS URL。
+ - 使用 `./deploy.sh <contextId>` 進行部署（例如 `./deploy.sh test-deploy`）。
 
-3. **Bootstrap the CDK**: After the `cdk.context.json` file is fully configured, bootstrap the account and deploy the required stacks using the following command:
+3. **Bootstrap CDK**：`cdk.context.json` 檔案完全設定完成後，使用下列命令 bootstrap 帳戶並部署必要的堆疊：
 
  ```bash
  cdk bootstrap --c contextId=default --require-approval never
  ```
- {% include copy.html %}
+{% include copy.html %}
 
-4. **Deploy Migration Assistant**: Deploy Migration Assistant using the following command:
+4. **部署 Migration Assistant**：使用下列命令部署 Migration Assistant：
 
  ```bash
  cdk deploy "*" --c contextId=default --require-approval never --concurrency 5
  ```
- {% include copy.html %}
+{% include copy.html %}
 
-5. **Verify the deployment**: From the same Bootstrap instance shell, verify that all CloudFormation stacks were installed successfully:
+5. **驗證部署**：在相同的 Bootstrap 執行個體 shell 中，驗證所有 CloudFormation 堆疊是否已成功安裝：
 
  ```bash
  aws cloudformation list-stacks --query "StackSummaries[?StackStatus!='DELETE_COMPLETE'].[StackName,StackStatus]" --output table
  ```
- {% include copy.html %}
+{% include copy.html %}
 
- You should receive a similar output for your Region:
+ 您應該會收到類似下列適用於您區域的輸出：
 
  ```bash
  ------------------------------------------------------------------------
@@ -255,9 +256,9 @@ Use the following steps to configure and deploy RFS, deploy Migration Assistant,
 
 ---
 
-## Step 5: Access the Migration Console
+## 步驟 5：存取遷移主控台
 
-Run the following command to access the Migration Console:
+執行以下命令以存取遷移主控台：
 
 ```bash
 ./accessContainer.sh migration-console dev <region>
@@ -265,21 +266,21 @@ Run the following command to access the Migration Console:
 {% include copy.html %}
 
 
-`accessContainer.sh` is located in `/opensearch-migrations/deployment/cdk/opensearch-service-migration/` on the Bootstrap instance. To learn more, see [Accessing the Migration Console]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-console/accessing-the-migration-console/).
+`accessContainer.sh` 位於 Bootstrap 執行個體上的 `/opensearch-migrations/deployment/cdk/opensearch-service-migration/`。若要了解更多，請參閱[存取遷移主控台]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-console/accessing-the-migration-console/)。
 {: .note}
 
 ---
 
-## Step 6: Verify the connection to the source and target clusters
+## 步驟 6：驗證與來源及目標叢集的連線
 
-To verify the connection to the clusters, run the following command:
+若要驗證與叢集的連線，請執行以下命令：
 
 ```bash
 console clusters connection-check
 ```
 {% include copy.html %}
 
-You should receive the following output:
+您應該會收到以下輸出：
 
 ```bash
 SOURCE CLUSTER
@@ -288,78 +289,78 @@ TARGET CLUSTER
 ConnectionResult(connection_message='Successfully connected!', connection_established=True, cluster_version='')
 ```
 
-To learn more about Migration Console commands, see [Migration Console command reference]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-console/migration-console-command-reference/).
+若要了解更多關於遷移主控台命令的資訊，請參閱[遷移主控台命令參考]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-console/migration-console-command-reference/)。
 
 ---
 
-## Troubleshooting
+## 疑難排解
 
-The following section covers common deployment issues and resolutions.
+以下章節說明常見的部署問題與解決方法。
 
-### Common deployment issues
+### 常見部署問題
 
-**Problem: AWS credentials not configured**
+**問題：未設定 AWS 憑證**
 ```
 Unable to locate credentials. You can configure credentials by running "aws configure".
 ```
-**Resolution**:
-1. Run `aws configure` and provide your access key, secret key, and Region.
-2. Alternatively, set environment variables: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`.
-3. Verify credentials with `aws sts get-caller-identity`.
+**解決方法**：
+1. 執行 `aws configure` 並提供您的存取金鑰、私密金鑰和區域。
+2. 或者，設定環境變數：`AWS_ACCESS_KEY_ID`、`AWS_SECRET_ACCESS_KEY`、`AWS_DEFAULT_REGION`。
+3. 使用 `aws sts get-caller-identity` 驗證憑證。
 
-**Problem: Stack naming conflicts**
+**問題：堆疊命名衝突**
 ```
 Stack with id OSMigrations-dev-us-west-2-MigrationConsole already exists
 ```
-**Resolution**:
-1. Use a different `stage` value in your context configuration (for example, "test", "staging").
-2. Or destroy existing stacks: `cdk destroy "*" --c contextId=<existing-context>`.
-3. Ensure unique context IDs for parallel deployments.
+**解決方法**：
+1. 在您的 context 組態中使用不同的 `stage` 值（例如 "test"、"staging"）。
+2. 或銷毀現有的堆疊：`cdk destroy "*" --c contextId=<existing-context>`。
+3. 確保平行部署使用唯一的 context ID。
 
-**Problem: Docker build failures**
+**問題：Docker 建置失敗**
 ```
 ERROR: failed to solve: public.ecr.aws/sam/build-nodejs18.x: pulling from host public.ecr.aws failed
 ```
-**Resolution**:
-1. Run `docker logout public.ecr.aws` to clear the authentication cache.
-2. Retry the build process: `./buildDockerImages.sh`.
+**解決方法**：
+1. 執行 `docker logout public.ecr.aws` 以清除驗證快取。
+2. 重試建置程序：`./buildDockerImages.sh`。
 
-**Problem: CDK bootstrap required**
+**問題：需要 CDK bootstrap**
 ```
 This stack uses assets, so the toolkit stack must be deployed to the environment
 ```
-**Resolution**:
-1. Bootstrap the CDK in your Region: `cdk bootstrap --c contextId=<your-context>`.
-2. Ensure you have configured the correct AWS credentials and Region.
+**解決方法**：
+1. 在您的區域中 bootstrap CDK：`cdk bootstrap --c contextId=<your-context>`。
+2. 確保您已設定正確的 AWS 憑證和區域。
 
-### Rollback procedures
+### 復原程序
 
-If you need to remove a deployment:
+如果您需要移除部署：
 
-1. **Stop all running services**:
+1. **停止所有執行中的服務**：
  ```bash
  console backfill stop # If backfill is running
  ```
 
-2. **Destroy CDK stacks**:
+2. **銷毀 CDK 堆疊**：
  ```bash
  cdk destroy "*" --c contextId=<your-context> --force
  ```
 
-3. **Clean up manually if needed**:
- - Remove any remaining CloudFormation stacks from the AWS Management Console.
- - Delete any orphaned resources, for example, Amazon Elastic Container Service (Amazon ECS) tasks and load balancers.
+3. **視需要手動清理**：
+ - 從 AWS Management Console 移除任何剩餘的 CloudFormation 堆疊。
+ - 刪除任何孤立資源，例如 Amazon Elastic Container Service (Amazon ECS) 任務和負載平衡器。
 
 ---
 
-## Next steps
+## 後續步驟
 
-After completing the deployment, proceed with the migration phases:
+完成部署後，繼續進行遷移階段：
 
-1. **[Create a snapshot]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/create-snapshot/)**: Create a snapshot of your source cluster.
-2. **[Migrate metadata]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/migrate-metadata/)**: Migrate cluster metadata to the target.
-3. **[Backfill]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/backfill/)**: Migrate documents and monitor the process.
+1. **[建立快照]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/create-snapshot/)**：為來源叢集建立快照。
+2. **[遷移中繼資料]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/migrate-metadata/)**：將叢集中繼資料遷移至目標。
+3. **[回填]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/backfill/)**：遷移文件並監控程序。
 
-For more information about the complete migration process, see [Migration phases]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/).
+若要了解更多關於完整遷移程序的資訊，請參閱[遷移階段]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/)。
 
 {% include migration-phase-navigation.html %}

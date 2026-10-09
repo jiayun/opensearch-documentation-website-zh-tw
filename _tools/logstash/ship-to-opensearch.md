@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Ship events to OpenSearch
+title: "將事件傳送至 OpenSearch"
 parent: Logstash
 nav_order: 220
 redirect_from:
  - /clients/logstash/ship-to-opensearch/
 ---
 
-# Ship events to OpenSearch
+# 將事件傳送至 OpenSearch
 
-You can ship Logstash events to an OpenSearch cluster and then visualize your events with OpenSearch Dashboards.
+您可以將 Logstash 事件傳送至 OpenSearch 叢集，然後使用 OpenSearch Dashboards 將事件視覺化。
 
-Make sure you have [Logstash]({{site.url}}{{site.baseurl}}/tools/logstash/index#install-logstash), [OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/), and [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/).
+請確認您已安裝 [Logstash]({{site.url}}{{site.baseurl}}/tools/logstash/index#install-logstash)、[OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/) 與 [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/)。
 {: .note }
 
-## OpenSearch output plugin
+## OpenSearch output 外掛程式
 
-To run the OpenSearch output plugin, add the following configuration in your `pipeline.conf` file:
+若要執行 OpenSearch output 外掛程式，請在您的 `pipeline.conf` 檔案中加入以下組態：
 
 ```yml
 output {
@@ -30,11 +31,11 @@ output {
 }
 ```
 
-## Sample walkthrough
+## 範例逐步解說
 
-The following walkthrough shows an example of how the ship a Logstash event.
+以下逐步解說示範如何傳送 Logstash 事件的範例。
 
-1.  Open the `config/pipeline.conf` file and add in the following configuration:
+1.  開啟 `config/pipeline.conf` 檔案並加入以下組態：
 
     ```yml
     input {
@@ -54,23 +55,23 @@ The following walkthrough shows an example of how the ship a Logstash event.
     }
     ```
 
-The Logstash pipeline accepts JSON input through the terminal and ships the events to an OpenSearch cluster running locally. Logstash writes the events to an index with the `logstash-logs-%{+YYYY.MM.dd}` naming convention.
+此 Logstash 管線透過終端機接受 JSON 輸入，並將事件傳送至在本機執行的 OpenSearch 叢集。Logstash 會依照 `logstash-logs-%{+YYYY.MM.dd}` 命名慣例將事件寫入索引。
 
-2. Start Logstash:
+2. 啟動 Logstash：
 
     ```bash
     $ bin/logstash -f config/pipeline.conf --config.reload.automatic
     ```
 
-    `config/pipeline.conf` is a relative path to the `pipeline.conf` file. You can use an absolute path as well.
+    `config/pipeline.conf` 是 `pipeline.conf` 檔案的相對路徑。您也可以使用絕對路徑。
 
-3. Add a JSON object in the terminal:
+3. 在終端機中加入 JSON 物件：
 
     ```json
     { "amount": 10, "quantity": 2}
     ```
 
-4. Start OpenSearch Dashboards and choose **Dev Tools**:
+4. 啟動 OpenSearch Dashboards 並選擇 **Dev Tools**：
 
     ```json
     GET _cat/indices?v
@@ -79,9 +80,9 @@ The Logstash pipeline accepts JSON input through the terminal and ships the even
     green | open | logstash-logs-2021.07.01 | iuh648LYSnmQrkGf70pplA | 1 | 1 | 1 | 0 | 10.3kb | 5.1kb
     ```
 
-## Adding different authentication mechanisms in the Output plugin
+## 在 Output 外掛程式中加入不同的驗證機制
 
-In addition to the existing authentication mechanisms, you can add a new authentication mechanism using the `auth_type` setting, as shown in the following example configuration:
+除了現有的驗證機制之外，您可以使用 `auth_type` 設定加入新的驗證機制，如下列範例組態所示：
 
 ```yml
 output {    
@@ -96,17 +97,17 @@ output {
    }            
 }               
 ```
-### Parameters inside auth_type
+### auth_type 內的參數
 
-The following parameters are supported in the `auth_type` setting:
+`auth_type` 設定支援下列參數：
 
-- `type` (string): The type of authentication.
-- `user`: A user name.
-- `password`: The password used for basic authentication.
+- `type` (字串)：驗證類型。
+- `user`：使用者名稱。
+- `password`：用於基本驗證的密碼。
 
-## Configuration for AWS IAM authentication
+## AWS IAM 驗證的組態
 
-To run the Logstash Output OpenSearch plugin using `aws_iam` authentication, add the following configuration:
+若要使用 `aws_iam` 驗證執行 Logstash Output OpenSearch 外掛程式，請加入以下組態：
 
 ```yml
 output {        
@@ -124,43 +125,43 @@ output {
 }
 ```
 
-### Required parameters
+### 必要參數
 
-- `hosts` (array of string): The `AmazonOpensearchService` domain endpoint and port number.
-- `auth_type` (JSON object): The authentication settings.
-    - `type` (string): "aws_iam".
-    - `aws_access_key_id` (string): AWS access key.
-    - `aws_secret_access_key` (string): AWS secret access key.
-    - `region` (string, :default => "us-east-1"): The region in which the domain is located.
-- port (string): AmazonOpensearchService listens on port 443 for `HTTPS`.
-- protocol (string): The protocol used to connect. For `AmazonOpensearchService`, the protocol is `https`.
+- `hosts` (字串陣列)：`AmazonOpensearchService` 網域端點與連接埠號碼。
+- `auth_type` (JSON 物件)：驗證設定。
+    - `type` (字串)："aws_iam"。
+    - `aws_access_key_id` (字串)：AWS 存取金鑰。
+    - `aws_secret_access_key` (字串)：AWS 私密存取金鑰。
+    - `region` (字串，:default => "us-east-1")：網域所在的區域。
+- port (字串)：AmazonOpensearchService 在連接埠 443 上監聽 `HTTPS`。
+- protocol (字串)：用於連線的通訊協定。對於 `AmazonOpensearchService`，通訊協定為 `https`。
 
-### Optional parameters
+### 選用參數
 
-- `template` (path): You can set the path to your own template here. If no template is specified, the plugin uses the default template.
-- `template_name` (string, default => `logstash`): Defines how the template is named inside OpenSearch.
-- `service_name` (string): Defines the service name to be used for `aws_iam` authentication.
-- `legacy_template` (Boolean, default => `true`): Selects the OpenSearch template API. When `true`, uses legacy templates derived from the `_template` API. When `false`, uses the `index_template` API.
-- `default_server_major_version` (number): The OpenSearch server major version to use when it's not available from the OpenSearch root URL. If not set, the plugin throws an exception when the version can't be fetched.
-- `target_bulk_bytes` (number): The maximum number of bytes in the buffer. When the maximum is reached, Logstash will flush the data to OpenSearch. This is useful when the bulk requests are too large for the OpenSearch cluster and the cluster returns a `429` error.
+- `template` (路徑)：您可以在此設定自己的範本路徑。若未指定範本，外掛程式會使用預設範本。
+- `template_name` (字串，default => `logstash`)：定義範本在 OpenSearch 內部的命名方式。
+- `service_name` (字串)：定義用於 `aws_iam` 驗證的服務名稱。
+- `legacy_template` (布林值，default => `true`)：選取 OpenSearch 範本 API。當為 `true` 時，使用衍生自 `_template` API 的舊版範本。當為 `false` 時，使用 `index_template` API。
+- `default_server_major_version` (數字)：當無法從 OpenSearch 根 URL 取得時所要使用的 OpenSearch 伺服器主要版本。若未設定，當無法取得版本時，外掛程式會擲回例外狀況。
+- `target_bulk_bytes` (數字)：緩衝區的最大位元組數。達到上限時，Logstash 會將資料排清至 OpenSearch。當大量請求對 OpenSearch 叢集而言過大，且叢集傳回 `429` 錯誤時，此設定很有用。
 
-### Credential resolution logic
+### 憑證解析邏輯
 
-The following list provides details on the credential resolution logic:
+下列清單提供憑證解析邏輯的詳細資訊：
 
-- A user passes `aws_access_key_id` and `aws_secret_access_key` in the configuration.
-- Environment variables, such `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are recommended since they are recognized by all the AWS SDKs and CLIs except for `.NET`. You can also use `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` which are recognized by the Java SDK.
-- The credential profiles file found in the `~/.aws/credentials` directory, is shared by all AWS SDKs and the AWS CLI.
-- Instance profile credentials are delivered through the Amazon EC2 metadata service.
+- 使用者在組態中傳遞 `aws_access_key_id` 與 `aws_secret_access_key`。
+- 建議使用環境變數，例如 `AWS_ACCESS_KEY_ID` 與 `AWS_SECRET_ACCESS_KEY`，因為除了 `.NET` 之外，所有 AWS SDK 與 CLI 都能識別這些變數。您也可以使用 Java SDK 能識別的 `AWS_ACCESS_KEY` 與 `AWS_SECRET_KEY`。
+- 位於 `~/.aws/credentials` 目錄中的憑證設定檔，由所有 AWS SDK 與 AWS CLI 共用。
+- 執行個體設定檔憑證透過 Amazon EC2 中繼資料服務傳遞。
 
-## Data streams
+## 資料串流
 
-The OpenSearch output plugin can store both time-series datasets (such as logs, events, and metrics) and non-time-series data in OpenSearch.
-The data stream is recommended to index time-series datasets (such as logs, metrics, and events) into OpenSearch.
+OpenSearch output 外掛程式可以將時間序列資料集 (例如記錄檔、事件與指標) 以及非時間序列資料儲存在 OpenSearch 中。
+建議使用資料串流將時間序列資料集 (例如記錄檔、指標與事件) 編製索引至 OpenSearch。
 
-To learn more about data streams, see the [data stream documentation]({{site.url}}{{site.baseurl}}/opensearch/data-streams/).
+若要進一步了解資料串流，請參閱[資料串流文件]({{site.url}}{{site.baseurl}}/opensearch/data-streams/)。
 
-To ingest data into a data stream through Logstash, create the data stream and specify the name of the data stream and set the `action` setting to `create`, as shown in the following example configuration:
+若要透過 Logstash 將資料匯入資料串流，請建立資料串流、指定資料串流的名稱，並將 `action` 設定設為 `create`，如下列範例組態所示：
 
 ```yml
 output {    

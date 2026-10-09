@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Policy examples
+title: "原則範例"
 nav_order: 20
 parent: Policies
 grand_parent: Index State Management
 has_children: false
 ---
 
-# Policy examples
+# 原則範例
 
-The following examples are complete policies in JSON format. For the components of a policy, see [Policies]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/). To create a policy in OpenSearch Dashboards, see [Creating a policy]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/#creating-a-policy). To create one using the API, see [ISM API]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/).
+下列範例是 JSON 格式的完整原則。關於原則的組成元件，請參閱[原則]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/)。若要在 OpenSearch Dashboards 中建立原則，請參閱[建立原則]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/#creating-a-policy)。若要使用 API 建立原則，請參閱[ISM API]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/)。
 
 
-## Sample policy with ISM template for auto rollover
+## 含 ISM 範本以自動輪替的範例原則
 
-The following sample template policy is for a rollover use case.
+下列範本原則範例適用於輪替使用案例。
 
-If you want to skip rollovers for an index, set `index.plugins.index_state_management.rollover_skip` to `true` in the settings of that index.
+如果您想略過某個索引的輪替，請在該索引的設定中將 `index.plugins.index_state_management.rollover_skip` 設為 `true`。
 
-1. Create a policy with an `ism_template` field:
+1. 建立含 `ism_template` 欄位的原則：
 
    ```json
    PUT _plugins/_ism/policies/rollover_policy
@@ -48,9 +49,9 @@ If you want to skip rollovers for an index, set `index.plugins.index_state_manag
    ```
    {% include copy-curl.html %}
 
-   You need to specify the `index_patterns` field. If you don't specify a value for `priority`, it defaults to 0.
+   您必須指定 `index_patterns` 欄位。如果您未指定 `priority` 的值，其預設為 0。
 
-2. Set up a template with the `rollover_alias` as `log` :
+2. 設定範本，將 `rollover_alias` 設為 `log`：
 
    ```json
    PUT _index_template/ism_rollover
@@ -65,7 +66,7 @@ If you want to skip rollovers for an index, set `index.plugins.index_state_manag
    ```
    {% include copy-curl.html %}
 
-3. Create an index with the `log` alias:
+3. 建立含 `log` 別名的索引：
 
    ```json
    PUT log-000001
@@ -79,7 +80,7 @@ If you want to skip rollovers for an index, set `index.plugins.index_state_manag
    ```
    {% include copy-curl.html %}
 
-4. Index a document to trigger the rollover condition:
+4. 將文件編製索引以觸發輪替條件：
 
    ```json
    POST log/_doc
@@ -89,20 +90,20 @@ If you want to skip rollovers for an index, set `index.plugins.index_state_manag
    ```
    {% include copy-curl.html %}
 
-5. Verify if the policy is attached to the `log-000001` index:
+5. 確認原則是否已附加至 `log-000001` 索引：
 
    ```json
    GET _plugins/_ism/explain/log-000001?pretty
    ```
    {% include copy-curl.html %}
 
-## Example policy with ISM templates for the alias action
+## 含 ISM 範本以執行別名動作的範例原則
 
-The following example policy is for an alias action use case.
+下列範例原則適用於別名動作使用案例。
 
-In the following example, the first job will trigger the rollover action, and a new index will be created. Next, another document is added to the two indexes. The new job will then cause the second index to point to the log alias, and the older index will be removed due to the alias action.
+在下列範例中，第一個工作會觸發輪替動作，並建立新的索引。接著，會將另一份文件新增至這兩個索引。新的工作會使第二個索引指向 log 別名，而較舊的索引會因別名動作而被移除。
 
-First, create an ISM policy:
+首先，建立 ISM 原則：
 
 ```json
 PUT /_plugins/_ism/policies/rollover_alias_policy
@@ -153,10 +154,10 @@ PUT /_plugins/_ism/policies/rollover_alias_policy
 ```
 {% include copy-curl.html %}
 
-An `ism_template` whose index patterns overlap those of an existing policy at the same priority is rejected, so this policy uses its own `alias-log*` pattern rather than the `log*` pattern of the preceding example.
+若 `ism_template` 的索引模式與現有原則在相同優先順序下的索引模式重疊，則會遭到拒絕，因此此原則使用自己的 `alias-log*` 模式，而非前一個範例的 `log*` 模式。
 {: .note}
 
-Next, create an index template on which to enable the policy:
+接著，建立要在其上啟用原則的索引範本：
 
 ```json
 PUT /_index_template/ism_rollover_alias
@@ -171,7 +172,7 @@ PUT /_index_template/ism_rollover_alias
 ```
 {% include copy-curl.html %}
 
-Next, change the cluster settings to trigger jobs every minute:
+接著，變更叢集設定，以每分鐘觸發工作：
 
 ```json
 PUT /_cluster/settings?pretty=true
@@ -183,7 +184,7 @@ PUT /_cluster/settings?pretty=true
 ```
 {% include copy-curl.html %}
 
-Next, create a new index:
+接著，建立新的索引：
 
 ```json
 PUT /alias-log-000001
@@ -197,7 +198,7 @@ PUT /alias-log-000001
 ```
 {% include copy-curl.html %}
 
-Finally, add a document to the index to trigger the job:
+最後，將文件新增至索引以觸發工作：
 
 ```json
 POST /alias-log-000001/_doc
@@ -207,7 +208,7 @@ POST /alias-log-000001/_doc
 ```
 {% include copy-curl.html %}
 
-You can verify these steps using the Alias and Index API:
+您可以使用 Alias 和 Index API 驗證這些步驟：
 
 ```json
 GET /_cat/indices?pretty
@@ -219,10 +220,10 @@ GET /_cat/aliases?pretty
 ```
 {% include copy-curl.html %}
 
-The `index` and `remove_index` parameters are not allowed with alias action policies. Only the `add` and `remove` alias action parameters are allowed.
+別名動作原則不允許使用 `index` 和 `remove_index` 參數。僅允許使用 `add` 和 `remove` 別名動作參數。
 {: .warning }
 
-When you are finished, restore the job interval to its default so that the shortened interval does not apply to every managed index in the cluster:
+完成後，請將工作間隔還原為預設值，以免縮短的間隔套用至叢集中的每個受管理索引：
 
 ```json
 PUT /_cluster/settings
@@ -234,13 +235,13 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-## Example policy
+## 範例原則
 
-The following example policy implements a `hot`, `warm`, and `delete` workflow. You can use this policy as a template to prioritize resources to your indexes based on their levels of activity.
+下列範例原則會實作 `hot`、`warm` 和 `delete` 工作流程。您可以使用此原則作為範本，根據索引的活動程度來決定資源的優先順序。
 
-In this case, an index is initially in a `hot` state. After 7 days, it changes to a `warm` state, where the number of replicas is reduced to 1 and the indexes are moved to nodes with the `warm` attribute.
+在此情況下，索引最初處於 `hot` 狀態。7 天後，它會變成 `warm` 狀態，其中副本數會減少為 1，且索引會移至具有 `warm` 屬性的節點。
 
-After 30 days, the policy moves this index into a `delete` state. The service sends a notification to a Chime room that the index is being deleted, and then permanently deletes it.
+30 天後，原則會將此索引移至 `delete` 狀態。服務會傳送通知至 Chime 聊天室，指出該索引即將遭到刪除，然後永久刪除該索引。
 
 ```json
 PUT _plugins/_ism/policies/hot_warm_delete_policy
@@ -320,6 +321,6 @@ PUT _plugins/_ism/policies/hot_warm_delete_policy
 ```
 {% include copy-curl.html %}
 
-This diagram shows the `states`, `transitions`, and `actions` of the preceding policy as a finite-state machine. For more information about finite-state machines, see [Wikipedia](https://en.wikipedia.org/wiki/Finite-state_machine).
+此圖顯示前述原則的 `states`、`transitions` 和 `actions` 做為有限狀態機。如需有限狀態機的詳細資訊，請參閱 [Wikipedia](https://en.wikipedia.org/wiki/Finite-state_machine)。
 
-![Policy State Machine]({{site.url}}{{site.baseurl}}/images/ism.png)
+![原則狀態機]({{site.url}}{{site.baseurl}}/images/ism.png)

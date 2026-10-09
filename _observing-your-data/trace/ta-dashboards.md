@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Trace Analytics plugin for OpenSearch Dashboards
+title: "OpenSearch Dashboards 的 Trace Analytics 外掛程式"
 parent: Trace analytics
 nav_order: 50
 redirect_from:
@@ -8,211 +9,211 @@ redirect_from:
   - /monitoring-plugins/trace/ta-dashboards/
 ---
 
-# Trace Analytics in OpenSearch Dashboards
+# OpenSearch Dashboards 中的 Trace Analytics
 
-The Trace Analytics plugin offers at-a-glance visibility into application performance based on [OpenTelemetry (OTel)](https://opentelemetry.io/) protocol data that standardizes instrumentation for collecting telemetry data from cloud-native software.
+Trace Analytics 外掛程式以 [OpenTelemetry (OTel)](https://opentelemetry.io/) 通訊協定資料為基礎，讓您一眼掌握應用程式效能；該通訊協定將雲端原生軟體收集遙測資料所需的插樁方式標準化。
 
-## Installing the plugin
+## 安裝外掛程式
 
-See [Standalone OpenSearch Dashboards plugin install]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/plugins/) for instructions on how to install the Trace Analytics plugin.
+請參閱[獨立 OpenSearch Dashboards 外掛程式安裝]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/plugins/)，了解如何安裝 Trace Analytics 外掛程式。
 
-## Setting up the OpenTelemetry demo
+## 設定 OpenTelemetry 示範
 
-The [OpenTelemetry Demo with OpenSearch](https://github.com/opensearch-project/opentelemetry-demo) simulates a distributed application generating real-time telemetry data, providing you with a practical environment in which to explore features available with the Trace Analytics plugin before implementing it in your environment.
+[OpenTelemetry Demo with OpenSearch](https://github.com/opensearch-project/opentelemetry-demo) 會模擬一個產生即時遙測資料的分散式應用程式，提供您一個實用的環境，讓您在實際於自己的環境中實作 Trace Analytics 外掛程式之前，先探索其可用功能。
 
-### Step 1: Set up the OpenTelemetry Demo
+### 步驟 1：設定 OpenTelemetry 示範
 
-- Clone the [OpenTelemetry Demo with OpenSearch](https://github.com/opensearch-project/opentelemetry-demo) repository: `git clone https://github.com/opensearch-project/opentelemetry-demo`.
-- Follow the [Getting Started](https://github.com/opensearch-project/opentelemetry-demo/tree/main?tab=readme-ov-file#running-this-demo) instructions to deploy the demo application using Docker, which runs multiple microservices generating telemetry data.
+- 複製 [OpenTelemetry Demo with OpenSearch](https://github.com/opensearch-project/opentelemetry-demo) 儲存庫：`git clone https://github.com/opensearch-project/opentelemetry-demo`。
+- 依照[入門](https://github.com/opensearch-project/opentelemetry-demo/tree/main?tab=readme-ov-file#running-this-demo)指示，使用 Docker 部署示範應用程式，該應用程式會執行多個產生遙測資料的微服務。
 
-### Step 2: Ingest telemetry data
+### 步驟 2：匯入遙測資料
 
-- Configure the OTel collectors to send telemetry data (traces, metrics, logs) to your OpenSearch cluster, using the [preexisting setup](https://github.com/opensearch-project/opentelemetry-demo/tree/main/src/otel-collector).
-- Confirm that [Data Prepper](https://github.com/opensearch-project/opentelemetry-demo/tree/main/src/dataprepper) is set up to process the incoming data, handle trace analytics and service map pipelines, submit data to required indexes, and perform preaggregated calculations.
+- 使用[既有設定](https://github.com/opensearch-project/opentelemetry-demo/tree/main/src/otel-collector)，設定 OTel 收集器以將遙測資料 (追蹤、指標、記錄檔) 傳送至您的 OpenSearch 叢集。
+- 確認已設定 [Data Prepper](https://github.com/opensearch-project/opentelemetry-demo/tree/main/src/dataprepper) 來處理傳入的資料、處理追蹤分析與服務地圖管線、將資料提交至必要的索引，並執行預先彙總的計算。
 
-### Step 3: Explore trace analytics in OpenSearch Dashboards
+### 步驟 3：在 OpenSearch Dashboards 中探索追蹤分析
 
-The **Trace Analytics** application includes two options: **Services** and **Traces**:
+**Trace Analytics** 應用程式包含兩個選項：**Services** 與 **Traces**：
 
-- **Services** lists all services in the application and provides an interactive map that shows how the various services connect to each other. In contrast to the dashboard (which helps identify problems by operation), the **Service map** helps you identify problems by service based on error rates and latency. To access this option, go to **Trace Analytics** > **Services**.
-- **Traces** groups traces together by HTTP method and path so that you can see the average latency, error rate, and trends associated with a particular operation. For a more focused view, try filtering by trace group name. To access this option, go to **Trace Analytics** > **Traces**. From the **Trace Groups** panel, you can review the traces in a trace group. From the **Traces** panel you can analyze individual traces to get a detailed summary.
+- **Services** 會列出應用程式中的所有服務，並提供互動式地圖，顯示各種服務之間的連線方式。與儀表板 (可依作業協助找出問題) 不同，**Service map** 可協助您依服務並根據錯誤率與延遲來找出問題。若要存取此選項，請前往 **Trace Analytics** > **Services**。
+- **Traces** 會依 HTTP 方法與路徑將追蹤分組，讓您查看與特定作業相關的平均延遲、錯誤率及趨勢。若想獲得更聚焦的檢視，請嘗試依追蹤群組名稱篩選。若要存取此選項，請前往 **Trace Analytics** > **Traces**。您可以從 **Trace Groups** 面板檢閱追蹤群組中的追蹤。您可以從 **Traces** 面板分析個別追蹤，以取得詳細摘要。
 
-### Step 4: Perform correlation analysis
+### 步驟 4：執行關聯分析
 
-Select **Services correlation** to display relationships between telemetry signals. This feature helps you navigate from the logical service level to associated metrics and logs for a specific service.
+選取 **Services correlation** 以顯示遙測訊號之間的關係。此功能可協助您從邏輯服務層級，瀏覽至特定服務的相關指標與記錄檔。
 
-The Trace Analytics plugin supports correlating spans, traces, and services with their corresponding logs. This lets you move directly from a trace or span to relevant log entries, or from a service to its correlated logs, within the Trace Analytics interface. Correlation streamlines troubleshooting by offering a unified view of telemetry data, making it easier to identify root causes and understand application context.
+Trace Analytics 外掛程式支援將 span、追蹤與服務和其對應的記錄檔建立關聯。這可讓您在 Trace Analytics 介面中，直接從追蹤或 span 移至相關的記錄項目，或從服務移至其相關的記錄檔。關聯功能提供遙測資料的統一檢視，簡化疑難排解，讓您更容易找出根本原因並了解應用程式內容。
 
-Use the following options to perform correlation:
+使用下列選項執行關聯：
 
-- **Trace-to-log correlation**: On the trace details page, select **View associated logs**.
-- **Span-to-log correlation**: In the span details flyout (opened by selecting a span ID in the Gantt chart or span table), select **View associated logs**.
-- **Service-to-log correlation**: On the services page, select the **Discover** icon next to the desired service.
-- **Service-to-service correlation**: On the services page, use the **Focus on** option in the service map to view a service and its dependencies.
-
----
-
-## Schema dependencies and assumptions
-
-The plugin requires you to use [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) to process and visualize OTel data and relies on the following Data Prepper pipelines for OTel correlations and service map calculations:
-
-- [Trace analytics pipeline]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/trace-analytics/)
-- [Service map pipeline]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/service-map/)
-
-### Standardized telemetry data
-
-The plugin requires telemetry data to follow the OTel schema conventions, including the structure and naming of spans, traces, and metrics as specified by OTel, and to be implemented using the [Simple Schema for Observability]({{site.url}}{{site.baseurl}}/observing-your-data/ss4o/).
-
-### Service names and dependency map
-
-For accurate service mapping and correlation analysis, adhere to the following guidelines:
-
-- Service names must be unique and used consistently across application components.
-- The `serviceName` field must be populated using the Data Prepper pipeline.
-- Services must be ingested with predefined upstream and downstream dependencies to construct accurate service maps and understand service relationships.
-
-### Trace and span IDs
-
-Traces and spans must have consistently generated and maintained unique identifiers across distributed systems to enable end-to-end tracing and accurate performance insights.
-
-### RED metrics adherence
-
-The plugin expects metric data to include rate, error, and duration (RED) indicators for each service, either preaggregated using the Data Prepper pipeline or calculated dynamically based on spans. This allows you to effectively compute and display key performance indicators.
-
-### Correlation fields
-
-Certain fields, such as `serviceName`, must be present to perform correlation analysis. These fields enable the plugin to link related telemetry data and provide a holistic view of service interactions and dependencies.
-
-### Correlation indexes
-
-Navigating from the service dialog to its corresponding traces or logs requires the existence of correlating fields and that the target indexes (for example, logs) follow the specified naming conventions, as described at [Simple Schema for Observability]({{site.url}}{{site.baseurl}}/observing-your-data/ss4o/).
+- **Trace-to-log correlation**：在追蹤詳細資料頁面上，選取 **View associated logs**。
+- **Span-to-log correlation**：在 span 詳細資料飛出視窗中 (透過在甘特圖或 span 表格中選取 span ID 開啟)，選取 **View associated logs**。
+- **Service-to-log correlation**：在服務頁面上，選取所需服務旁的 **Discover** 圖示。
+- **Service-to-service correlation**：在服務頁面上，使用服務地圖中的 **Focus on** 選項，以檢視服務及其相依性。
 
 ---
 
-## Trace analytics with OTel protocol analytics
+## 結構描述相依性與假設
 
-Introduced 2.15
+此外掛程式要求您使用 [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) 來處理及視覺化 OTel 資料，並依賴下列 Data Prepper 管線來進行 OTel 關聯與服務地圖計算：
+
+- [追蹤分析管線]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/trace-analytics/)
+- [服務地圖管線]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/service-map/)
+
+### 標準化遙測資料
+
+此外掛程式要求遙測資料遵循 OTel 結構描述慣例，包括 OTel 所指定的 span、追蹤與指標的結構與命名，並使用 [Simple Schema for Observability]({{site.url}}{{site.baseurl}}/observing-your-data/ss4o/) 來實作。
+
+### 服務名稱與相依性對應
+
+為進行準確的服務對應與關聯分析，請遵循下列準則：
+
+- 服務名稱必須是唯一的，並在應用程式元件之間一致使用。
+- `serviceName` 欄位必須使用 Data Prepper 管線填入。
+- 匯入服務時，必須一併匯入預先定義的上游與下游相依性，才能建構準確的服務地圖並了解服務關係。
+
+### 追蹤與 span ID
+
+追蹤與 span 必須在分散式系統中一致地產生並維護唯一識別碼，才能進行端對端追蹤並取得準確的效能見解。
+
+### 遵循 RED 指標
+
+此外掛程式預期指標資料會包含每個服務的速率、錯誤與持續時間（RED）指標，這些指標可透過 Data Prepper 管線預先彙總，或根據 span 動態計算。這可讓您有效計算並顯示關鍵效能指標。
+
+### 關聯欄位
+
+必須有特定欄位 (例如 `serviceName`) 才能執行關聯分析。這些欄位可讓外掛程式連結相關的遙測資料，並提供服務互動與相依性的整體檢視。
+
+### 關聯索引
+
+若要從服務對話方塊瀏覽至其對應的追蹤或記錄檔，必須有相互關聯的欄位，且目標索引 (例如記錄檔) 必須遵循指定的命名慣例，如 [Simple Schema for Observability]({{site.url}}{{site.baseurl}}/observing-your-data/ss4o/) 所述。
+
+---
+
+## 使用 OTel 通訊協定分析的追蹤分析
+
+於 2.15 版推出
 {: .label .label-purple }
 
-Trace analytics with OTel protocol analytics provide comprehensive insights into distributed systems. You can visualize and analyze the following assets:
+使用 OTel 通訊協定分析的追蹤分析可提供分散式系統的完整見解。您可以視覺化並分析下列資產：
 
-- [Service](https://opentelemetry.io/docs/specs/semconv/resource/#service): The components of a distributed application. These components are significant logical terms used to measure and monitor the application's building blocks in order to validate the system's health.
-- [Traces](https://opentelemetry.io/docs/concepts/signals/traces/): A visual representation of a request's path across services into requests' journeys across services, offering insights into latency and performance issues.
-- [RED metrics](https://opentelemetry.io/docs/specs/otel/metrics/api/): Metrics for service health and performance, measured as requests per second (rate), failed requests (errors), and request processing time (duration).
+- [服務](https://opentelemetry.io/docs/specs/semconv/resource/#service)：分散式應用程式的元件。這些元件是重要的邏輯詞彙，用於測量及監視應用程式的建構組塊，以驗證系統的健康狀態。
+- [追蹤](https://opentelemetry.io/docs/concepts/signals/traces/)：請求跨服務路徑的視覺化呈現，將其轉化為請求跨服務的歷程，可深入了解延遲與效能問題。
+- [RED 指標](https://opentelemetry.io/docs/specs/otel/metrics/api/)：服務健康狀態與效能的指標，以每秒請求數 (rate)、失敗的請求 (errors) 及請求處理時間 (duration) 來衡量。
 
-### Trace analytics visualizations
+### 追蹤分析視覺化
 
-**Services** visualizations, such as a table or map, help you logically analyze service behavior and accuracy. The following visualizations can help you identify anomalies and errors:
+**Services** 視覺化 (例如表格或地圖) 可協助您以邏輯方式分析服務行為與準確性。下列視覺化可協助您識別異常與錯誤：
 
-- **Services table**
+- **服務表格**
 
-  - A RED indicator, along with connected upstream and downstream services and other actions, is indicated in each table column. An example **Services** table is shown in the following image.
+  - 每個表格欄位都會顯示 RED 指標，以及連接的上游與下游服務和其他動作。下圖顯示 **Services** 表格範例。
 
-  ![Services table]({{site.url}}{{site.baseurl}}/images/trace-analytics/services-table.png)
+  ![服務表格]({{site.url}}{{site.baseurl}}/images/trace-analytics/services-table.png)
 
-  - General-purpose filter selection is used for field or filter composition. The following image shows this filter.
+  - 通用篩選選擇用於組合欄位或篩選條件。下圖顯示此篩選器。
 
-  ![Services filter selection]({{site.url}}{{site.baseurl}}/images/trace-analytics/services-filter-selection.png)
+  ![服務篩選選擇]({{site.url}}{{site.baseurl}}/images/trace-analytics/services-filter-selection.png)
 
-  - The **Services** throughput tooltip provides an at-a-glance overview of a service's incoming request trend for the past 24 hours. The following image shows an example tooltip.
+  - **Services** 輸送量工具提示可讓您一目了然地檢視服務過去 24 小時的傳入請求趨勢。下圖顯示工具提示範例。
 
-  ![Services throughput tooltip ]({{site.url}}{{site.baseurl}}/images/trace-analytics/service-throughput-tooltip.png)
+  ![服務輸送量工具提示]({{site.url}}{{site.baseurl}}/images/trace-analytics/service-throughput-tooltip.png)
 
-  - The **Services** correlation dialog window provides an at-a-glance overview of a service's details, including its 24-hour throughput trend. You can use these details to analyze correlated logs or traces by filtering based on the `serviceName` field. The following image shows this window.
+  - **Services** 相關性對話視窗可讓您一目了然地檢視服務的詳細資訊，包括其 24 小時輸送量趨勢。您可以使用這些詳細資訊，根據 `serviceName` 欄位進行篩選，以分析相互關聯的記錄檔或追蹤。下圖顯示此視窗。
 
-  ![Services correlation dialog window]({{site.url}}{{site.baseurl}}/images/trace-analytics/single-service-correlation-dialog.png)
+  ![服務相關性對話視窗]({{site.url}}{{site.baseurl}}/images/trace-analytics/single-service-correlation-dialog.png)
 
-  - The **Services** RED metrics dialog window provides an at-a-glance overview of a service's RED metrics indicators, including 24-hour error, duration, and throughput rate. The following image shows this window.
+  - **Services** RED 指標對話視窗可讓您一目了然地檢視服務的 RED 指標，包括 24 小時的錯誤、持續時間與輸送率。下圖顯示此視窗。
 
-  ![Services RED metrics for duration]({{site.url}}{{site.baseurl}}/images/trace-analytics/single-service-RED-metrics.png)
+  ![服務持續時間的 RED 指標]({{site.url}}{{site.baseurl}}/images/trace-analytics/single-service-RED-metrics.png)
 
-  - The **Span details** dialog window provides the details of a trace. You can use this information to further analyze a trace's elements, such as attributes and associated logs. The following image shows this window.
+  - **Span details** 對話視窗提供追蹤的詳細資訊。您可以使用這些資訊進一步分析追蹤的元素，例如屬性與相關聯的記錄檔。下圖顯示此視窗。
 
-  ![Services Span details dialog window]({{site.url}}{{site.baseurl}}/images/trace-analytics/span-details-fly-out.png)
+  ![服務 Span 詳細資料對話視窗]({{site.url}}{{site.baseurl}}/images/trace-analytics/span-details-fly-out.png)
 
 - **Service map**
 
-  - The **Service map** displays nodes, each representing a service. The node color indicates the RED indicator severity for that service and its dependencies. The following image shows a map.
+  - **Service map** 顯示各個節點，每個節點代表一項服務。節點顏色表示該服務及其相依項目的 RED 指標嚴重程度。下圖顯示一個地圖。
 
-  ![Services map tooltip]({{site.url}}{{site.baseurl}}/images/trace-analytics/service-details-tooltip.png)
+  ![服務地圖工具提示]({{site.url}}{{site.baseurl}}/images/trace-analytics/service-details-tooltip.png)
 
-  - You can select a node to open a detailed dialog window for its associated service. This interactive map visualizes service interconnections, helping identify problems by service, unlike dashboards that identify issues by operation. You can sort by error rate or latency to pinpoint potential problem areas.
+  - 您可以選取節點，開啟其相關聯服務的詳細對話視窗。此互動式地圖可視覺化服務之間的相互連接，協助您依服務識別問題，不同於依操作識別問題的儀表板。您可以依錯誤率或延遲排序，以找出潛在的問題區域。
 
-  - In the **Service map** dialog window, nodes represent connected downstream services dependent on the selected service. The node color indicates the RED indicator severity for that service and its downstream dependencies. The following image shows this dialog window.
+  - 在 **Service map** 對話視窗中，節點代表相依於所選服務的已連接下游服務。節點顏色表示該服務及其下游相依項目的 RED 指標嚴重程度。下圖顯示此對話視窗。
 
-  ![Service map dialog window]({{site.url}}{{site.baseurl}}/images/trace-analytics/single-service-fly-out.png)
+  ![服務地圖對話視窗]({{site.url}}{{site.baseurl}}/images/trace-analytics/single-service-fly-out.png)
 
-- **Trace groups**
+- **追蹤群組**
 
-  - Traces are grouped by their HTTP API name, allowing clustering based on their business functional unit. Traces are grouped by HTTP method and path, displaying the average latency, error rate, and trends associated with a particular operation. You can filter by trace group name. The following image shows the **Trace Groups** window.
+  - 追蹤會依其 HTTP API 名稱分組，以便依業務功能單位將追蹤歸類。追蹤會依 HTTP 方法與路徑分組，顯示與特定操作相關聯的平均延遲、錯誤率與趨勢。您可以依追蹤群組名稱篩選。下圖顯示 **Trace Groups** 視窗。
 
-  ![Trace Groups window]({{site.url}}{{site.baseurl}}/images/trace-analytics/trace-group-RED-metrics.png)
+  ![追蹤群組視窗]({{site.url}}{{site.baseurl}}/images/trace-analytics/trace-group-RED-metrics.png)
 
-  - In the **Trace Groups** window, you can filter by group name and other filters. You can also analyze associated traces. To drill down on the traces that comprise a group, select the number of traces in the right-hand column and then choose an individual trace to see a detailed summary.
+  - 在 **Trace Groups** 視窗中，您可以依群組名稱與其他條件篩選。您也可以分析相關聯的追蹤。若要深入檢視組成群組的追蹤，請選取右側欄位中的追蹤數量，然後選擇個別追蹤以查看詳細摘要。
 
-  ![Trace group dialog window]({{site.url}}{{site.baseurl}}/images/ta-dashboard.png)
+  ![追蹤群組對話視窗]({{site.url}}{{site.baseurl}}/images/ta-dashboard.png)
 
-  - The **Trace details** window displays a breakdown of a single trace, including its corresponding spans, associated service names, and a waterfall chart of the spans' time and duration interactions. The following image shows this view.
+  - **Trace details** 視窗顯示單一追蹤的細部分解，包括其對應的 span、相關聯的服務名稱，以及 span 時間與持續時間互動的瀑布圖。下圖顯示此檢視。
 
-  ![Trace details window]({{site.url}}{{site.baseurl}}/images/ta-trace.png)
+  ![追蹤詳細資料視窗]({{site.url}}{{site.baseurl}}/images/ta-trace.png)
 
-## Support for custom index names and cross-cluster indexes
+## 支援自訂索引名稱與跨叢集索引
 
-Introduced 3.1  
+於 3.1 版推出  
 {: .label .label-purple }
 
-Trace Analytics in OpenSearch 3.1 includes expanded support for custom index names and cross-cluster indexes, offering greater flexibility and scalability for distributed environments. The following enhancements are now available:
+OpenSearch 3.1 的 Trace Analytics 擴充了對自訂索引名稱與跨叢集索引的支援，為分散式環境提供更大的彈性與擴充性。現在提供下列強化功能：
 
-- You can configure custom index names for Observability span, service, and log indexes. This allows you to align index naming with your organization's conventions and manage data across multiple environments more effectively. You can also configure correlated log indexes and map their corresponding fields for `timestamp`, `serviceName`, `spanId`, and `traceId`. This feature is particularly useful if your logs do not follow the OpenTelemetry (OTel) format and require custom field mappings. Custom span indexes must follow Data Prepper span index mappings.
+- 您可以為 Observability 的 span、服務與記錄索引設定自訂索引名稱。這可讓索引命名符合您組織的慣例，並更有效地管理多個環境之間的資料。您也可以設定相互關聯的記錄索引，並為 `timestamp`、`serviceName`、`spanId` 與 `traceId` 對應其相應的欄位。如果您的記錄檔不符合 OpenTelemetry (OTel) 格式且需要自訂欄位對應，此功能特別有用。自訂 span 索引必須遵循 Data Prepper 的 span 索引對應。
 
-  The following image shows the custom index name configuration interface in the Observability settings panel.
+  下圖顯示 Observability 設定面板中的自訂索引名稱組態介面。
 
-  ![Custom index name configuration UI]({{site.url}}{{site.baseurl}}/images/ta-index-settings.png)
+  ![自訂索引名稱組態介面]({{site.url}}{{site.baseurl}}/images/ta-index-settings.png)
 
-- The **Trace details** page now includes an associated logs panel, which helps you analyze logs correlated with specific traces to improve troubleshooting and root cause analysis. The following image shows the logs panel.
+- **Trace details** 頁面現在包含相關聯記錄檔面板，可協助您分析與特定追蹤相互關聯的記錄檔，以改善疑難排解與根本原因分析。下圖顯示記錄檔面板。
 
-  ![Trace detail page with associated logs panel]({{site.url}}{{site.baseurl}}/images/ta-trace-logs-correlation.png)
+  ![含相關聯記錄檔面板的追蹤詳細資料頁面]({{site.url}}{{site.baseurl}}/images/ta-trace-logs-correlation.png)
 
-- A new dropdown menu lets you view all spans, root spans, service entry spans, or traces. The custom data grid provides advanced sorting and display options, including a full-screen mode for easier data exploration, as shown in the following image.
+- 新的下拉式選單可讓您檢視所有 span、根 span、服務進入 span 或追蹤。自訂資料格線提供進階排序與顯示選項，包括便於探索資料的全螢幕模式，如下圖所示。
 
-  ![Drop-down menu and custom data grid in Trace Analytics]({{site.url}}{{site.baseurl}}/images/ta-span-kind.png)
+  ![Trace Analytics 中的下拉式選單與自訂資料格線]({{site.url}}{{site.baseurl}}/images/ta-span-kind.png)
 
-- The service map now appears under the traces table on the **Trace Analytics** page, providing immediate visual context for service relationships and dependencies as you analyze trace data.
+- 服務地圖現在顯示在 **Trace Analytics** 頁面的追蹤表格下方，在您分析追蹤資料時，可立即提供服務關係與相依性的視覺化內容。
 
-  ![Service map displayed below traces table]({{site.url}}{{site.baseurl}}/images/ta-traces-page.png)
+  ![顯示在追蹤表格下方的服務地圖]({{site.url}}{{site.baseurl}}/images/ta-traces-page.png)
 
-- The **Trace details** page features a new tree view that displays a hierarchical breakdown of spans. The layout has been updated to position the pie chart next to the overview panel for a more intuitive summary of trace metrics, as shown in the following image.
+- **Trace details** 頁面新增了樹狀檢視，可顯示 span 的階層式分解。版面配置已更新，將圓餅圖放置在概觀面板旁邊，以更直觀地摘要追蹤指標，如下圖所示。
 
-  ![Gantt chart with tree view and pie chart layout]({{site.url}}{{site.baseurl}}/images/ta-hierarchial-view.png)
+  ![含樹狀檢視與圓餅圖版面配置的甘特圖]({{site.url}}{{site.baseurl}}/images/ta-hierarchial-view.png)
 
-- The Gantt chart now includes a selectable mini-map, allowing you to quickly navigate to and focus on specific sections of the trace timeline, as shown in the following image.
+- 甘特圖現在包含可選取的迷你地圖，讓您能快速導覽並聚焦於追蹤時間軸的特定區段，如下圖所示。
 
-  ![Gantt chart with selectable mini-map]({{site.url}}{{site.baseurl}}/images/ta-gantt-mini-map.png)
+  ![含可選取迷你地圖的甘特圖]({{site.url}}{{site.baseurl}}/images/ta-gantt-mini-map.png)
 
-- The service map has been redesigned to better support large node groups, making it easier to visualize complex service topologies. You can now focus on a specific service to view its dependencies and reset the map as needed, as shown in the following image.
+- 服務地圖已重新設計，以更妥善支援大型節點群組，讓複雜的服務拓撲更容易視覺化。您現在可以聚焦於特定服務以檢視其相依項目，並視需要重設地圖，如下圖所示。
 
-  ![Redesigned service map with large node groups]({{site.url}}{{site.baseurl}}/images/ta-service-map-dependencies.png)
+  ![重新設計的大型節點群組服務地圖]({{site.url}}{{site.baseurl}}/images/ta-service-map-dependencies.png)
 
-- The service view table now includes more quick-select icons, allowing you to view correlated traces and logs in their corresponding views with the correct context passed and to view service details in context without leaving the page, as shown in the following image.
+- 服務檢視表格現在包含更多快速選取圖示，讓您可以在對應的檢視中查看相互關聯的追蹤與記錄檔，並傳入正確的脈絡資訊；您也可以不離開頁面，就在目前脈絡中查看服務詳細資訊，如下圖所示。
 
-  ![Service table quick select icons]({{site.url}}{{site.baseurl}}/images/ta-service-table-icons.png)
+  ![服務表格快速選取圖示]({{site.url}}{{site.baseurl}}/images/ta-service-table-icons.png)
 
-## Configurable service map limits
-Introduced 3.2  
+## 可設定的服務地圖限制
+於 3.2 版推出  
 {: .label .label-purple }
 
-OpenSearch provides default limits for service map rendering. You can increase these limits to render large topologies more completely or lower them to improve client-side performance when focusing on smaller views. This is especially important in environments with many services or dense interconnections, for which the default limits may result in incomplete maps.
+OpenSearch 為服務地圖的呈現提供預設限制。您可以提高這些限制，以更完整地呈現大型拓撲，或降低限制，在專注於較小檢視時改善用戶端效能。這在擁有大量服務或緊密互連的環境中尤其重要，因為預設限制可能導致地圖不完整。
 
 
-### Service map configuration settings
+### 服務地圖組態設定
 
-Two **Advanced Settings** control the size and complexity of service maps generated by service map queries:
+有兩項 **Advanced Settings** 可控制服務地圖查詢所產生地圖的大小與複雜度：
 
-- `observability:traceAnalyticsServiceMapMaxNodes`: The maximum number of service nodes displayed. Default is 500. 
-- `observability:traceAnalyticsServiceMapMaxEdges`: The maximum number of edges (service-to-service connections) displayed. Default is 1,000.
+- `observability:traceAnalyticsServiceMapMaxNodes`：顯示的服務節點數量上限。預設為 500。 
+- `observability:traceAnalyticsServiceMapMaxEdges`：顯示的邊（服務之間的連線）數量上限。預設為 1,000。
 
-To configure these settings in OpenSearch Dashboards, follow these steps:
-1. From the main menu, select **Management** > **Dashboard Management** > **Advanced Settings**.
-1. In the search box, search for `Observability`. In the **Observability** section, locate the **Trace analytics service map maximum edges** and *Trace analytics service map maximum nodes** settings. Adjust the values according to your environment and performance requirements, then save your changes. Higher values can increase browser memory and CPU usage.
+若要在 OpenSearch Dashboards 中設定這些設定，請依照下列步驟操作：
+1. 從主選單選取 **Management** > **Dashboard Management** > **Advanced Settings**。
+1. 在搜尋方塊中搜尋 `Observability`。在 **Observability** 區段中，找到 **Trace analytics service map maximum edges** 與 *Trace analytics service map maximum nodes** 設定。根據您的環境與效能需求調整數值，然後儲存變更。較高的數值可能會增加瀏覽器的記憶體與 CPU 用量。
 
 

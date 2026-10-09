@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Token count
 nav_order: 55
@@ -11,15 +12,15 @@ redirect_from:
   - /field-types/token-count/
 ---
 
-# Token count field type
-**Introduced 1.0**
+# Token count 欄位類型
+**於 1.0 版導入**
 {: .label .label-purple }
 
-A token count field type stores the number of analyzed tokens in a string.
+Token count 欄位類型會儲存字串經分析後的詞元數量。
 
-## Example
+## 範例
 
-Create a mapping with a token count field:
+建立一個包含 token count 欄位的對應：
 
 ```json
 PUT testindex
@@ -41,7 +42,7 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-Index three documents with text fields:
+將三份含有文字欄位的文件編製索引：
 
 ```json
 PUT testindex/_doc/1
@@ -61,7 +62,7 @@ PUT testindex/_doc/3
 ```
 {% include copy-curl.html %}
 
-Search for sentences with fewer than 10 words:
+搜尋少於 10 個詞的句子：
 
 ```json
 GET testindex/_search
@@ -77,7 +78,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The response contains one matching sentence:
+回應包含一個符合的句子：
 
 ```json
 {
@@ -110,16 +111,16 @@ The response contains one matching sentence:
 }
 ```
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by token count field types. The `analyzer` parameter is required; all other parameters are optional.
+下表列出 token count 欄位類型接受的參數。`analyzer` 參數為必要；其餘參數皆為選用。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :--- 
-`analyzer` | The analyzer to be used for this field. Specify an analyzer without token filters for optimal performance. Required. Dynamically updatable.
-`boost` | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field's relevance. Values between 0.0 and 1.0 decrease the field's relevance. Default is 1.0. Dynamically updatable.
-`doc_values` | A Boolean value that specifies whether the field should be stored on disk so that it can be used for aggregations, sorting, or scripting. Default is `true`.
-`enable_position_increments` | A Boolean value that specifies whether position increments should be counted. To avoid removing stopwords, set this field to `false`. Default is `true`.
-`index` | A Boolean value that specifies whether the field should be searchable. Default is `true`.
-[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | A value to be used in place of `null`. Must be of the same type as the field. If this parameter is not specified, the field is treated as missing when its value is `null`. Default is `null`.
-`store` | A Boolean value that specifies whether the field value should be stored and can be retrieved separately from the `_source` field. Default is `false`. 
+`analyzer` | 此欄位要使用的分析器。若要達到最佳效能，請指定不含詞元篩選器的分析器。必要。可動態更新。
+`boost` | 指定此欄位對相關性分數權重的浮點數值。高於 1.0 的值會提高此欄位的相關性；介於 0.0 與 1.0 之間的值會降低此欄位的相關性。預設為 1.0。可動態更新。
+`doc_values` | 指定是否應將此欄位儲存在磁碟上，以便用於彙總、排序或指令碼的布林值。預設為 `true`。
+`enable_position_increments` | 指定是否應計算位置增量的布林值。若要避免移除停用詞，請將此欄位設為 `false`。預設為 `true`。
+`index` | 指定此欄位是否應可被搜尋的布林值。預設為 `true`。
+[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。必須與該欄位為相同類型。若未指定此參數，當欄位值為 `null` 時，該欄位會被視為遺失。預設為 `null`。
+`store` | 指定是否應儲存欄位值，並可與 `_source` 欄位分開擷取的布林值。預設為 `false`。 

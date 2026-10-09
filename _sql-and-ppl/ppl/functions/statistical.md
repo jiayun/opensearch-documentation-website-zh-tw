@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Statistical functions
+title: "統計函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 12
 ---
 
-# Statistical functions
+# 統計函式
 
-The following statistical functions are supported in PPL.
+PPL 支援下列統計函式。
 
 ## MAX
 
-**Usage**: `MAX(x, y, ...)`
+**用法**：`MAX(x, y, ...)`
 
-Returns the largest value among the provided arguments. When both strings and numbers are supplied, strings are considered greater than numbers, and the function returns the lexicographically greatest string. This function is available only in the `eval` command.
+傳回所提供引數中的最大值。當同時提供字串與數字時，字串會被視為大於數字，函式會傳回依字典序最大的字串。此函式僅能在 `eval` 命令中使用。
 
-**Parameters**:
+**參數**：
 
-- `x, y, ...` (Required): Variable number of arguments of type `INTEGER`, `LONG`, `FLOAT`, `DOUBLE`, or `STRING`.
+- `x, y, ...` (必要)：數量可變的引數，類型為 `INTEGER`、`LONG`、`FLOAT`、`DOUBLE` 或 `STRING`。
 
-**Return type**: Type of the selected argument
+**傳回類型**：所選引數的類型
 
-### Example
+### 範例
   
 ```sql
 source=accounts
@@ -31,7 +32,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -51,7 +52,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -71,7 +72,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -86,17 +87,17 @@ The query returns the following results:
   
 ## MIN
 
-**Usage**: `MIN(x, y, ...)`
+**用法**：`MIN(x, y, ...)`
 
-Returns the smallest value among the provided arguments. When both strings and numbers are supplied, numbers are considered smaller than strings, and the function returns the minimum numeric value. This function is available only in the `eval` command.
+傳回所提供引數中的最小值。當同時提供字串與數字時，數字會被視為小於字串，函式會傳回最小的數值。此函式僅能在 `eval` 命令中使用。
 
-**Parameters**:
+**參數**：
 
-- `x, y, ...` (Required): Variable number of arguments of type `INTEGER`, `LONG`, `FLOAT`, `DOUBLE`, or `STRING`.
+- `x, y, ...` (必要)：數量可變的引數，類型為 `INTEGER`、`LONG`、`FLOAT`、`DOUBLE` 或 `STRING`。
 
-**Return type**: Type of the selected argument
+**傳回類型**：所選引數的類型
 
-### Example
+### 範例
   
 ```sql
 source=accounts
@@ -105,7 +106,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -125,7 +126,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -145,7 +146,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 

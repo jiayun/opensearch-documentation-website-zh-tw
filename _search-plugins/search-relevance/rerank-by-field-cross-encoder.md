@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reranking by a field using a cross-encoder
+title: "使用交叉編碼器依欄位重新排序"
 parent: Reranking search results
 grand_parent: Optimizing search quality
 has_children: false
 nav_order: 30
 ---
 
-# Reranking by a field using a cross-encoder model
-**Introduced 2.18**
+# 使用交叉編碼器模型依欄位重新排序
+**於 2.18 版推出**
 {: .label .label-purple }
 
-In this tutorial, you'll learn how to use a cross-encoder model hosted on Amazon SageMaker to rerank search results and improve search relevance. 
+在本教學中，您將學習如何使用託管於 Amazon SageMaker 的交叉編碼器模型，重新排序搜尋結果並提升搜尋相關性。
 
-To rerank documents, you'll configure a search pipeline that processes search results at query time. The pipeline intercepts search results and passes them to the [`ml_inference` search response processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-response/), which invokes the cross-encoder model. The model generates scores used to rerank the matching documents [`by_field`]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field/).
+若要重新排序文件，您將設定一個在查詢時處理搜尋結果的搜尋管線。此管線會攔截搜尋結果，並將其傳遞至 [`ml_inference` 搜尋回應處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-response/)，該處理器會叫用交叉編碼器模型。模型會產生分數，用來重新排序相符的文件 [`by_field`]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field/)。
 
-## Prerequisite: Deploy a model on Amazon SageMaker
+## 先決條件：在 Amazon SageMaker 上部署模型
 
-Run the following code to deploy a model on Amazon SageMaker. For this example, you'll use the [`ms-marco-MiniLM-L-6-v2`](https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2) Hugging Face cross-encoder model hosted on Amazon SageMaker. We recommend using a GPU for better performance:
+執行下列程式碼，在 Amazon SageMaker 上部署模型。在此範例中，您將使用託管於 Amazon SageMaker 的 [`ms-marco-MiniLM-L-6-v2`](https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2) Hugging Face 交叉編碼器模型。我們建議使用 GPU 以獲得更好的效能：
 
 ```python
 import sagemaker
@@ -45,21 +46,21 @@ predictor = huggingface_model.deploy(
 ```
 {% include copy.html %}
 
-After deploying the model, you can find the model endpoint by going to the Amazon SageMaker console in the AWS Management Console and selecting **Inference > Endpoints** on the left tab. Note the URL for the created model; you'll use it to create a connector.
+部署模型後，您可以前往 AWS Management Console 中的 Amazon SageMaker 主控台，並在左側索引標籤選取 **Inference > Endpoints**，以找到模型端點。請記下所建立模型的 URL；您將使用它來建立連接器。
 
-## Running a search with reranking
+## 執行含重新排序的搜尋
 
-To run a search with reranking, follow these steps:
+若要執行含重新排序的搜尋，請依照下列步驟：
 
-1. [Create a connector](#step-1-create-a-connector).
-1. [Register the model](#step-2-register-the-model).
-1. [Ingest documents into an index](#step-3-ingest-documents-into-an-index).
-1. [Create a search pipeline](#step-4-create-a-search-pipeline).
-1. [Search using reranking](#step-5-search-using-reranking).
+1. [建立連接器](#step-1-create-a-connector)。
+1. [註冊模型](#step-2-register-the-model)。
+1. [將文件匯入索引](#step-3-ingest-documents-into-an-index)。
+1. [建立搜尋管線](#step-4-create-a-search-pipeline)。
+1. [使用重新排序進行搜尋](#step-5-search-using-reranking)。
 
-## Step 1: Create a connector
+## 步驟 1：建立連接器
 
-Create a connector to the cross-encoder model by providing the model URL in the `actions.url` parameter:
+在 `actions.url` 參數中提供模型 URL，以建立與交叉編碼器模型的連接器：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -92,11 +93,11 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-Note the connector ID contained in the response; you'll use it in the following step.
+請記下回應中包含的連接器 ID；您將在下一步中使用它。
 
-## Step 2: Register the model
+## 步驟 2：註冊模型
 
-To register the model, provide the connector ID in the `connector_id` parameter:
+若要註冊模型，請在 `connector_id` 參數中提供連接器 ID：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -111,9 +112,9 @@ POST /_plugins/_ml/models/_register
 {% include copy-curl.html %}
 
 
-## Step 3: Ingest documents into an index
+## 步驟 3：將文件匯入索引
 
-Create an index and ingest sample documents containing facts about the New York City boroughs:
+建立索引並匯入內含紐約市各行政區相關資訊的範例文件：
 
 ```json
 POST /nyc_areas/_bulk
@@ -132,25 +133,25 @@ POST /nyc_areas/_bulk
 ```
 {% include copy-curl.html %}
 
-## Step 4: Create a search pipeline
+## 步驟 4：建立搜尋管線
 
-Next, create a search pipeline for reranking. In the search pipeline configuration, the `input_map` and `output_map` define how the input data is prepared for the cross-encoder model and how the model's output is interpreted for reranking:
+接著，建立用於重新排序的搜尋管線。在搜尋管線組態中，`input_map` 與 `output_map` 會定義如何為交叉編碼器模型準備輸入資料，以及如何解讀模型的輸出以進行重新排序：
 
-- The `input_map` specifies which fields in the search documents and the query should be used as model inputs:
-    - The `text` field maps to the `facts` field in the indexed documents. It provides the document-specific content that the model will analyze.
-    - The `text_pair` field dynamically retrieves the search query text (`multi_match.query`) from the search request. 
+- `input_map` 會指定搜尋文件與查詢中的哪些欄位應做為模型輸入：
+    - `text` 欄位會對應至已編製索引文件中的 `facts` 欄位。它會提供模型將分析的文件特定內容。
+    - `text_pair` 欄位會從搜尋請求中動態擷取搜尋查詢文字 (`multi_match.query`)。
 
-    The combination of `text` (document `facts`) and `text_pair` (search `query`) allows the cross-encoder model to compare the relevance of the document to the query, considering their semantic relationship.
+    `text` (文件 `facts`) 與 `text_pair` (搜尋 `query`) 的組合，可讓交叉編碼器模型考量文件與查詢之間的語意關係，進而比較其相關性。
 
-- The `output_map` field specifies how the output of the model is mapped to the fields in the response:
-    - The `rank_score` field in the response will store the model's relevance score, which will be used to perform reranking.
+- `output_map` 欄位會指定模型的輸出如何對應至回應中的欄位：
+    - 回應中的 `rank_score` 欄位將儲存模型的相關性分數，該分數將用於執行重新排序。
+
+使用 `by_field` 重新排序類型時，`rank_score` 欄位將包含與 `_score` 欄位相同的分數。若要從搜尋結果中移除 `rank_score` 欄位，請將 `remove_target_field` 設為 `true`。
+
+比較原始分數與重新排序後的分數，有助於您評估搜尋相關性的改善程度。若要比較原始 BM25 分數與重新排序後的分數，請將 `keep_previous_score` 設為 `true`。原始分數會基於偵錯目的納入搜尋結果中，且預設會儲存在 `previous_score` 欄位中。如果您的索引已包含名為 `previous_score` 的文件欄位，請將 `previous_score_field` 設為不同的名稱，以免重新排序處理器覆寫現有欄位。
+
     
-When using the `by_field` rerank type, the `rank_score` field will contain the same score as the `_score` field. To remove the `rank_score` field from the search results, set `remove_target_field` to `true`.
-
-Comparing the original and reranked scores can help you evaluate improvements in search relevance. To compare the original BM25 score with the reranked score, set `keep_previous_score` to `true`. The original score is included in the search results for debugging purposes and is stored in the `previous_score` field by default. If your index already contains a document field named `previous_score`, set `previous_score_field` to a different name so that the rerank processor does not overwrite the existing field. 
-
-    
-To create the search pipeline, send the following request:
+若要建立搜尋管線，請傳送下列請求：
 
 ```json
 PUT /_search/pipeline/my_pipeline
@@ -195,9 +196,9 @@ PUT /_search/pipeline/my_pipeline
 ```
 {% include copy-curl.html %}
 
-## Step 5: Search using reranking
+## 步驟 5：使用重新排序進行搜尋
 
-Use the following request to search indexed documents and rerank them using the cross-encoder model. The request retrieves documents containing any of the specified terms in the `description` or `facts` fields. These terms are then used to compare and rerank the matched documents:
+使用下列請求來搜尋已編製索引的文件，並使用交叉編碼器模型重新排序。此請求會擷取在 `description` 或 `facts` 欄位中包含任何指定詞彙的文件。接著使用這些詞彙來比較並重新排序符合的文件：
 
 ```json
 POST /nyc_areas/_search?search_pipeline=my_pipeline
@@ -212,7 +213,7 @@ POST /nyc_areas/_search?search_pipeline=my_pipeline
 ```
 {% include copy-curl.html %}
 
-In the response, the `original_query_score` field contains the document's BM25 score, which it would have received if you hadn't applied the pipeline. Note that while BM25 ranked "Astoria" the highest, the cross-encoder model prioritized "Harlem" because it matched more search terms:
+在回應中，`original_query_score` 欄位包含文件的 BM25 分數，也就是在未套用管線的情況下文件原本會得到的分數。請注意，雖然 BM25 將 "Astoria" 排名最高，但交叉編碼器模型優先考慮 "Harlem"，因為它符合較多的搜尋詞彙：
 
 ```json
 {

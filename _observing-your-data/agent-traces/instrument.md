@@ -1,48 +1,49 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Instrumenting your application
+title: "為您的應用程式進行檢測"
 parent: Agent traces
 nav_order: 10
 ---
 
-# Instrumenting your application
-**Introduced 3.6**
+# 為您的應用程式進行檢測
+**於 3.6 版推出**
 {: .label .label-purple }
 
-The `opensearch-genai-observability-sdk-py` package instruments Python AI agents using [OpenTelemetry](https://opentelemetry.io/). The SDK provides two instrumentation approaches:
+`opensearch-genai-observability-sdk-py` 套件使用 [OpenTelemetry](https://opentelemetry.io/) 為 Python AI 代理程式進行檢測。此 SDK 提供兩種檢測方式：
 
-- **Auto-instrumentation**: Automatically captures LLM calls from supported providers (OpenAI, Anthropic, Amazon Bedrock, LangChain, LlamaIndex) without code changes.
-- **Manual instrumentation**: Use the `@observe` decorator to trace custom agent logic, tool calls, and orchestration code.
+- **自動檢測**：不需變更程式碼，即可自動擷取支援的供應商 (OpenAI、Anthropic、Amazon Bedrock、LangChain、LlamaIndex) 的 LLM 呼叫。
+- **手動檢測**：使用 `@observe` 裝飾器來追蹤自訂的代理程式邏輯、工具呼叫及協調程式碼。
 
-For most applications, combine both approaches: enable auto-instrumentation for LLM calls and use `@observe` for application-specific operations.
+對大多數應用程式而言，請合併使用這兩種方式：為 LLM 呼叫啟用自動檢測，並使用 `@observe` 處理應用程式特定的操作。
 
-## Prerequisites
+## 先決條件
 
-Before you start, ensure that you have the following:
+開始之前，請確認您具備下列項目：
 
-- Python 3.10 or later.
-- An OpenSearch cluster with [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/index/) configured for trace ingestion.
-- An [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/) to normalize spans using generative AI semantic conventions.
+- Python 3.10 或更新版本。
+- 一個已設定 [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/index/) 以進行追蹤匯入的 OpenSearch 叢集。
+- 一個 [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)，用以使用生成式 AI 語意慣例來正規化 span。
 
-## Installation
+## 安裝
 
-Install the base package:
+安裝基礎套件：
 
 ```bash
 pip install opensearch-genai-observability-sdk-py
 ```
 {% include copy.html %}
 
-To enable auto-instrumentation for specific providers, install the corresponding optional dependencies. For example, to instrument OpenAI and LangChain:
+若要為特定供應商啟用自動檢測，請安裝對應的選用相依套件。例如，若要檢測 OpenAI 和 LangChain：
 
 ```bash
 pip install opensearch-genai-observability-sdk-py[openai,langchain]
 ```
 {% include copy.html %}
 
-The following providers support auto-instrumentation:
+下列供應商支援自動檢測：
 
-| Provider | Package name |
+| 供應商 | 套件名稱 |
 | :--- | :--- |
 | OpenAI | `openai` |
 | Anthropic | `anthropic` |
@@ -51,15 +52,15 @@ The following providers support auto-instrumentation:
 | LangChain | `langchain` |
 | LlamaIndex | `llamaindex` |
 
-## Core API
+## 核心 API
 
-The following sections describe the core API functions.
+下列各節說明核心 API 函式。
 
 <!-- vale off -->
 ### register()
 <!-- vale on -->
 
-The `register()` function configures the OpenTelemetry tracer and exporter. Call it once at application startup:
+`register()` 函式會設定 OpenTelemetry 追蹤器與匯出工具。請在應用程式啟動時呼叫一次：
 
 ```python
 from opentelemetry_genai_sdk import register
@@ -73,20 +74,20 @@ register(
 ```
 {% include copy.html %}
 
-The following table describes the `register()` parameters.
+下表說明 `register()` 參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `endpoint` | String | The OpenTelemetry Protocol (OTLP) endpoint URL. Default is `http://localhost:4318` for the OpenTelemetry Collector. |
-| `service_name` | String | An identifier for your application in trace data. |
-| `protocol` | String | The transport protocol. Valid values are `http` and `grpc`. |
-| `auto_instrument` | Boolean | When `true`, automatically discovers and enables installed provider instrumentation packages. Default is `false`. |
+| `endpoint` | 字串 | OpenTelemetry Protocol (OTLP) 端點 URL。OpenTelemetry Collector 的預設值為 `http://localhost:4318`。 |
+| `service_name` | 字串 | 您的應用程式在追蹤資料中的識別碼。 |
+| `protocol` | 字串 | 傳輸通訊協定。有效值為 `http` 和 `grpc`。 |
+| `auto_instrument` | 布林值 | 當設為 `true` 時，會自動探索並啟用已安裝的供應商檢測套件。預設值為 `false`。 |
 
 <!-- vale off -->
-### @observe decorator
+### @observe 裝飾器
 <!-- vale on -->
 
-The `@observe` decorator wraps functions to create spans automatically. Use it to trace agent invocations, tool calls, and other operations:
+`@observe` 裝飾器會包裝函式以自動建立 span。使用它來追蹤代理程式叫用、工具呼叫及其他操作：
 
 ```python
 from opentelemetry_genai_sdk import observe, Op
@@ -103,13 +104,13 @@ def search_database(query: str):
 ```
 {% include copy.html %}
 
-The decorator supports synchronous functions, asynchronous functions, generators, and asynchronous generators. Span names are generated automatically from function names, or you can provide a custom name using the `name_from` parameter.
+此裝飾器支援同步函式、非同步函式、產生器及非同步產生器。Span 名稱會自動由函式名稱產生，您也可以使用 `name_from` 參數提供自訂名稱。
 
 <!-- vale off -->
 ### enrich()
 <!-- vale on -->
 
-The `enrich()` function adds GenAI semantic attributes to the active span:
+`enrich()` 函式會將 GenAI 語意屬性新增至作用中的 span：
 
 ```python
 from opentelemetry_genai_sdk import enrich
@@ -128,7 +129,7 @@ enrich(
 ### score()
 <!-- vale on -->
 
-The `score()` function attaches evaluation metrics to traces or individual spans:
+`score()` 函式會將評估指標附加至追蹤或個別 span：
 
 ```python
 from opentelemetry_genai_sdk import score
@@ -142,50 +143,50 @@ score(
 ```
 {% include copy.html %}
 
-## Operation types
+## 操作類型
 
-The `Op` class provides standardized operation names that map to [GenAI semantic conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/). These operation types determine how spans are categorized and displayed in the **Agent Traces** page.
+`Op` 類別提供標準化的操作名稱，對應至 [GenAI 語意慣例](https://opentelemetry.io/docs/specs/semconv/gen-ai/)。這些操作類型會決定 span 在 **Agent Traces** 頁面中的分類與顯示方式。
 
-| Operation | Constant | Description |
+| 操作 | 常數 | 說明 |
 | :--- | :--- | :--- |
-| Invoke agent | `Op.INVOKE_AGENT` | Root-level agent invocation. |
-| Execute tool | `Op.EXECUTE_TOOL` | Tool or function call within an agent. |
-| Chat | `Op.CHAT` | LLM chat completion request. |
-| Create agent | `Op.CREATE_AGENT` | Agent initialization. |
-| Retrieval | `Op.RETRIEVAL` | Document or data retrieval operation. |
-| Embeddings | `Op.EMBEDDINGS` | Embedding generation request. |
-| Text completion | `Op.TEXT_COMPLETION` | Text completion request. |
+| 叫用代理程式 | `Op.INVOKE_AGENT` | 根層級的代理程式叫用。 |
+| 執行工具 | `Op.EXECUTE_TOOL` | 代理程式內的工具或函式呼叫。 |
+| 聊天 | `Op.CHAT` | LLM 聊天補全請求。 |
+| 建立代理程式 | `Op.CREATE_AGENT` | 代理程式初始化。 |
+| 擷取 | `Op.RETRIEVAL` | 文件或資料擷取操作。 |
+| 產生嵌入 | `Op.EMBEDDINGS` | 嵌入產生請求。 |
+| 文字補全 | `Op.TEXT_COMPLETION` | 文字補全請求。 |
 
-## Framework integrations
+## 架構整合
 
-The SDK integrates with popular agent frameworks. The general pattern is to combine auto-instrumentation (for LLM calls) with manual `@observe` decorators (for agent-specific logic).
+此 SDK 可與熱門的代理程式架構整合。一般模式是合併使用自動檢測 (用於 LLM 呼叫) 與手動 `@observe` 裝飾器 (用於代理程式特定的邏輯)。
 
 ### Strands Agents
 
-Strands supports both approaches:
-- **Native OpenTelemetry**: Use `StrandsTelemetry` to automatically emit spans for agent invocations, tool executions, and LLM interactions.
-- **Manual decoration**: Use `@observe` on custom functions for additional instrumentation.
+Strands 支援這兩種方式：
+- **原生 OpenTelemetry**：使用 `StrandsTelemetry` 自動為代理程式叫用、工具執行及 LLM 互動發出 span。
+- **手動裝飾**：在自訂函式上使用 `@observe` 以進行額外的檢測。
 
 ### LangGraph
 
-Wrap LangGraph nodes and the orchestration layer with `@observe`. Enable auto-instrumentation to capture model calls within nodes automatically.
+使用 `@observe` 包裝 LangGraph 節點與協調層。啟用自動檢測以自動擷取節點內的模型呼叫。
 
 <!-- vale off -->
 ### CrewAI
 <!-- vale on -->
 
-Use `@observe` to wrap crew execution functions. Install the appropriate provider package (for example, `[openai]`) to automatically capture LLM calls made by crew members.
+使用 `@observe` 包裝 crew 執行函式。安裝適當的供應商套件 (例如 `[openai]`) 以自動擷取 crew 成員發出的 LLM 呼叫。
 
 <!-- vale off -->
 ### OpenAI Agents SDK
 <!-- vale on -->
 
-Enable auto-instrumentation for comprehensive LLM coverage. Supplement with `@observe` for top-level coordination logic and custom operations.
+啟用自動檢測以獲得完整的 LLM 涵蓋範圍。搭配使用 `@observe` 以處理頂層協調邏輯與自訂操作。
 
 ### Amazon Bedrock
 
-Install `[bedrock]` to automatically capture `converse` and `invoke_model` calls. Use `@observe` for agent orchestration and custom tool implementations.
+安裝 `[bedrock]` 以自動擷取 `converse` 和 `invoke_model` 呼叫。使用 `@observe` 進行代理程式協調與自訂工具實作。
 
-## Next steps
+## 後續步驟
 
-After instrumenting your application, configure OpenSearch Dashboards to view your traces. See [Viewing agent traces]({{site.url}}{{site.baseurl}}/observing-your-data/agent-traces/agent-tracing/) for configuration and visualization options.
+為您的應用程式進行檢測後，請設定 OpenSearch Dashboards 以檢視您的追蹤。如需組態與視覺化選項，請參閱[檢視代理程式追蹤]({{site.url}}{{site.baseurl}}/observing-your-data/agent-traces/agent-tracing/)。

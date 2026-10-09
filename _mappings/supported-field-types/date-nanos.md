@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Date nanoseconds
+title: "奈秒日期"
 redirect_from:
   - /field-types/supported-field-types/date-nanos/
 parent: Date field types
@@ -8,22 +9,22 @@ grand_parent: Supported field types
 nav_order: 40
 ---
 
-# Date nanoseconds field type
-**Introduced 1.0**
+# 奈秒日期欄位類型
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The `date_nanos` field type is similar to the [`date`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/) field type in that it holds a date. However, `date` stores the date in millisecond resolution, while `date_nanos` stores the date in nanosecond resolution. Dates are stored as `long` values that correspond to nanoseconds since the epoch. Therefore, the range of supported dates is approximately 1970--2262.
+`date_nanos` 欄位類型與 [`date`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date/) 欄位類型類似，都是用來儲存日期。然而，`date` 以毫秒解析度儲存日期，而 `date_nanos` 則以奈秒解析度儲存日期。日期以 `long` 值儲存，對應自 epoch 起算的奈秒數。因此，支援的日期範圍大約是 1970 至 2262 年。
 
-Queries on `date_nanos` fields are converted to range queries on the field value's `long` representation. Then the stored fields and aggregation results are converted to a string using the format set on the field. 
+對 `date_nanos` 欄位的查詢會轉換為以該欄位值 `long` 表示法的範圍查詢。接著，儲存的欄位與彙總結果會使用欄位上設定的格式轉換為字串。
 
-The `date_nanos` field supports all [formats]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date#formats) and [parameters]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date#parameters) that `date` supports. You can use multiple formats separated by `||`.
+`date_nanos` 欄位支援 `date` 所支援的所有[格式]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date#formats)與[參數]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/date#parameters)。您可以使用以 `||` 分隔的多種格式。
 {: .note}
 
-For `date_nanos` fields, you can use the `strict_date_optional_time_nanos` format to preserve nanosecond resolution. If you don't specify the format when mapping a field as `date_nanos`, the default format is `strict_date_optional_time||epoch_millis` that lets you pass values in either `strict_date_optional_time` or `epoch_millis` format. The `strict_date_optional_time` format supports dates in nanosecond resolution, but the `epoch_millis` format supports dates in millisecond resolution only.
+對於 `date_nanos` 欄位，您可以使用 `strict_date_optional_time_nanos` 格式來保留奈秒解析度。如果在將欄位對應為 `date_nanos` 時未指定格式，預設格式為 `strict_date_optional_time||epoch_millis`，可讓您以 `strict_date_optional_time` 或 `epoch_millis` 格式傳入值。`strict_date_optional_time` 格式支援奈秒解析度的日期，但 `epoch_millis` 格式僅支援毫秒解析度的日期。
 
-## Example
+## 範例
 
-Create a mapping with the `date` field of type `date_nanos` that has the `strict_date_optional_time_nanos` format:
+建立一個包含 `date` 欄位的對應，該欄位類型為 `date_nanos` 並使用 `strict_date_optional_time_nanos` 格式：
 
 ```json
 PUT testindex/_mapping
@@ -38,7 +39,7 @@ PUT testindex/_mapping
 ```
 {% include copy-curl.html %}
 
-Index two documents into the index:
+將兩份文件編製索引至該索引：
 
 ```json
 PUT testindex/_doc/1
@@ -52,7 +53,7 @@ PUT testindex/_doc/2
 ```
 {% include copy-curl.html %}
 
-You can use a range query to search for a date range:
+您可以使用範圍查詢來搜尋日期範圍：
 
 ```json
 GET testindex/_search
@@ -69,7 +70,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the document whose date is in the specified range:
+回應包含日期在指定範圍內的文件：
 
 ```json
 {
@@ -101,7 +102,7 @@ The response contains the document whose date is in the specified range:
 }
 ```
 
-When querying documents with `date_nanos` fields, you can use `fields` or `docvalue_fields`:
+查詢含有 `date_nanos` 欄位的文件時，您可以使用 `fields` 或 `docvalue_fields`：
 
 ```json
 GET testindex/_search
@@ -123,7 +124,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The response to either of the preceding queries contains both indexed documents:
+上述任一查詢的回應都包含兩份已編製索引的文件：
 
 ```json
 {
@@ -173,7 +174,7 @@ The response to either of the preceding queries contains both indexed documents:
 }
 ```
 
-You can sort on a `date_nanos` field as follows:
+您可以如下所示依 `date_nanos` 欄位排序：
 
 ```json
 GET testindex/_search
@@ -185,7 +186,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the sorted documents:
+回應包含排序後的文件：
 
 ```json
 {
@@ -231,7 +232,7 @@ The response contains the sorted documents:
 }
 ```
 
-You can also use a [Painless]({{site.url}}{{site.baseurl}}/scripting/painless/) script to access the nanoseconds part of the field:
+您也可以使用 [Painless]({{site.url}}{{site.baseurl}}/scripting/painless/) 指令碼來存取欄位的奈秒部分：
 
 ```json
 GET testindex/_search
@@ -248,7 +249,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The response contains only the nanosecond parts of the fields:
+回應僅包含欄位的奈秒部分：
 
 ```json
 {
@@ -292,11 +293,11 @@ The response contains only the nanosecond parts of the fields:
 }
 ```
 
-## Derived source
+## 衍生來源
 
-When an index uses [derived source]({{site.url}}{{site.baseurl}}/field-types/metadata-fields/source/#derived-source), OpenSearch may sort values in multi-value date fields during source reconstruction. Derived source returns dates in the format specified in `print_format`. If `print_format` is not specified and `format` contains multiple date formats separated by `||`, derived source returns dates in the first format.
+當索引使用 [衍生來源]({{site.url}}{{site.baseurl}}/field-types/metadata-fields/source/#derived-source) 時，OpenSearch 在重建來源時可能會排序多值日期欄位中的值。衍生來源會以 `print_format` 中指定的格式傳回日期。如果未指定 `print_format`，且 `format` 包含以 `||` 分隔的多種日期格式，衍生來源會以第一種格式傳回日期。
 
-Create an index that enables derived source and configures a `date_nanos` field with multiple formats:
+建立一個啟用衍生來源並設定含多種格式之 `date_nanos` 欄位的索引：
 
 ```json
 PUT sample-index1
@@ -319,7 +320,7 @@ PUT sample-index1
 }
 ```
 
-Index a document with mixed date formats into the index:
+將含有混合日期格式的文件編製索引至該索引：
 
 ```json
 PUT sample-index1/_doc/1
@@ -328,7 +329,7 @@ PUT sample-index1/_doc/1
 }
 ```
 
-After OpenSearch reconstructs `_source`, the derived `_source` is as follows:
+在 OpenSearch 重建 `_source` 之後，衍生的 `_source` 如下：
 
 ```json
 {

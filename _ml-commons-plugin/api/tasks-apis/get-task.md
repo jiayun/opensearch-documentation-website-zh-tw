@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get ML task
+title: "取得 ML 任務"
 parent: ML Tasks APIs
 grand_parent: ML Commons APIs
 nav_order: 10
 ---
 
-# Get ML Task API
+# 取得 ML 任務 API
 
-You can retrieve information about a machine learning (ML) task (such as model training, deployment, or prediction tasks) using the `task_id`.
+您可以使用 `task_id` 擷取機器學習 (ML) 任務的相關資訊 (例如模型訓練、部署或預測任務)。
 
-This API is different from the [general Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/get-tasks/), which tracks general OpenSearch operations and has a different response format.
+此 API 與[一般 Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/get-tasks/) 不同，後者用於追蹤一般 OpenSearch 作業，且回應格式不同。
 {: .important }
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/tasks/{task_id}
 ```
 
-## Example request
+## 範例請求
 
 ```json
 GET /_plugins/_ml/tasks/MsBi1YsB0jLkkocYjD5f
 ```
 {% include copy-curl.html %}
 
-## Example responses
+## 範例回應
 
-The response format depends on the task state. Different ML operations (for example, model training, deployment, or registration) return different response formats based on their current status.
+回應格式取決於任務狀態。不同的 ML 作業 (例如模型訓練、部署或註冊) 會根據其目前狀態傳回不同的回應格式。
 
-### Task in progress
+### 任務進行中
 
-While a task is still running, the response includes task details but excludes the `model_id`:
+當任務仍在執行時，回應會包含任務詳細資料，但不包含 `model_id`：
 
 ```json
 {
@@ -46,11 +47,11 @@ While a task is still running, the response includes task details but excludes t
 }
 ```
 
-### Task completed
+### 任務已完成
 
-When a task completes successfully, the response includes the `model_id` and full task details:
+當任務順利完成時，回應會包含 `model_id` 及完整的任務詳細資料：
 
-**Model deployment task**:
+**模型部署任務**：
 
 ```json
 {
@@ -67,7 +68,7 @@ When a task completes successfully, the response includes the `model_id` and ful
 }
 ```
 
-**Model registration task**:
+**模型註冊任務**：
 
 ```json
 {
@@ -84,7 +85,7 @@ When a task completes successfully, the response includes the `model_id` and ful
 }
 ```
 
-**Model training task**:
+**模型訓練任務**：
 
 ```json
 {
@@ -100,18 +101,18 @@ When a task completes successfully, the response includes the `model_id` and ful
 }
 ```
 
-## Response fields
+## 回應欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `model_id` | String | The unique identifier for the ML model. Available when task is completed. |
-| `task_type` | String | The type of ML operation (for example, `REGISTER_MODEL`, `DEPLOY_MODEL`, or `TRAINING`). |
-| `function_name` | String | The ML function type (for example, `TEXT_EMBEDDING` or `KMEANS`). |
-| `state` | String | The current task state. Valid values are `CREATED` (task created), `RUNNING` (task actively executing), `COMPLETED` (task finished successfully), `FAILED` (task encountered an error), `CANCELLED` (task was canceled), `COMPLETED_WITH_ERROR` (task completed with errors), `CANCELLING` (task being canceled), `EXPIRED` (task expired), and `UNREACHABLE` (task node unreachable). |
-| `worker_node` | Array | An array of node IDs of nodes on which the task is running. |
-| `create_time` | Long | The timestamp when the task was created, in milliseconds since epoch. |
-| `last_update_time` | Long | The timestamp of the last status update, in milliseconds since epoch. |
-| `is_async` | Boolean | Whether the task runs asynchronously. Usually `true` for ML tasks. |
-| `input_type` | String | The input type for training tasks (for example, `SEARCH_QUERY`). |
+| `model_id` | 字串 | ML 模型的唯一識別碼。任務完成時可使用。 |
+| `task_type` | 字串 | ML 作業類型 (例如 `REGISTER_MODEL`、`DEPLOY_MODEL` 或 `TRAINING`)。 |
+| `function_name` | 字串 | ML 函式類型 (例如 `TEXT_EMBEDDING` 或 `KMEANS`)。 |
+| `state` | 字串 | 目前的任務狀態。有效值為 `CREATED` (已建立任務)、`RUNNING` (任務正在執行)、`COMPLETED` (任務順利完成)、`FAILED` (任務發生錯誤)、`CANCELLED` (任務已取消)、`COMPLETED_WITH_ERROR` (任務完成但有錯誤)、`CANCELLING` (任務正在取消)、`EXPIRED` (任務已過期)，以及 `UNREACHABLE` (任務節點無法連線)。 |
+| `worker_node` | 陣列 | 執行任務之節點的節點 ID 陣列。 |
+| `create_time` | Long | 建立任務時的時間戳記，以自 epoch 起算的毫秒為單位。 |
+| `last_update_time` | Long | 上次狀態更新的時間戳記，以自 epoch 起算的毫秒為單位。 |
+| `is_async` | 布林值 | 任務是否以非同步方式執行。ML 任務通常為 `true`。 |
+| `input_type` | 字串 | 訓練任務的輸入類型 (例如 `SEARCH_QUERY`)。 |

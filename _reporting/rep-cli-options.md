@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reporting CLI options
+title: "Reporting CLI 選項"
 nav_order: 30
 parent: Reporting using the CLI
 grand_parent: Reporting
@@ -8,35 +9,35 @@ redirect_from:
   - /dashboards/reporting-cli/rep-cli-options/
 ---
 
-# Reporting CLI options
+# Reporting CLI 選項
 
-You can use any of the following arguments with the `opensearch-reporting-cli` tool.
+您可以在 `opensearch-reporting-cli` 工具中使用下列任何引數。
 
-| Argument      | Description       | Acceptable values and usage | Environment variable
+| 引數      | 說明       | 可接受的值與用法 | 環境變數
 :--------------------- | :--- | :--- |
-`-u`, `--url` | The URL for the visualization. | Obtain from OpenSearch Dashboards > Visualize > Share > Permalinks > Copy link. | OPENSEARCH_URL
-`-a`, `--auth` | The authentication type for the report. | You can specify either Basic `basic`, Cognito `cognito`, SAML `saml`, or no authentication `none`. If no value is specified, the Reporting CLI tool defaults to no authentication, type `none`. Basic, Cognito, and SAML require credentials with the `-c` flag. | N/A
-`-c`, `--credentials` | The OpenSearch login credentials. | Enter your username and password separated by a colon. For example, username:password. Required for Basic, Cognito, and SAML authentication types. | OPENSEARCH_USERNAME and OPENSEARCH_PASSWORD
-`-t`, `--tenant` | The tenants in OpenSearch Dashboards. | The default tenant is private.| N/A
-`-f`, `--format` | The file format for the report. | Can be either `pdf`, `png`, or `csv`. The default is `pdf`.| N/A
-`-w`, `--width` | The window width in pixels for the report. | Default is `1680`.| N/A
-`-l`, `--height` | The minimum window height in pixels for the report. | Default is `600`. | N/A
-`-n`, `--filename` | The file name of the report. | Default is `reporting`. | `opensearch-report-YYY-MM-DDTHH-mm-ss.sssZ`
-`-e`, `--transport` | The transport mechanism for sending the email. | For Amazon SES, specify `ses`. Amazon SES requires an AWS configuration on your system to store the credentials. For SMTP, use `smtp` and also specify the login credentials with `--smtpusername` and `--smtppassword`. | OPENSEARCH_TRANSPORT
-`-s`, `--from` | The email address of the sender. | For example, `user@amazon.com`. | OPENSEARCH_FROM
-`-r`, `--to` | The email address of the recipient. | For example, `user@amazon.com`. | OPENSEARCH_TO
-`--smtphost` | The hostname of the SMTP server. | For example, `SMTP_HOST`. | OPENSEARCH_SMTP_HOST
-`--smtpport` | The port for the SMTP connection. | For example, `SMTP_PORT`. | OPENSEARCH_SMTP_PORT
-`--smtpsecure` | Specifies to use TLS when connecting to the server. | For example, `SMTP_SECURE`. | OPENSEARCH_SMTP_SECURE
-`--smtpusername` | The SMTP username.| For example, `SMTP_USERNAME`. | OPENSEARCH_SMTP_USERNAME
-`--smtppassword` | The SMTP password.| For example, `SMTP_PASSWORD`. | OPENSEARCH_SMTP_PASSWORD
-`--subject` | The email subject text encased in quotes. | Can be any string. The default is "This is an email containing your dashboard report". | OPENSEARCH_EMAIL_SUBJECT
-`--note` | The email body, either a string or a path to a text file. | The default note is "Hi,\\nHere is the latest report!" | OPENSEARCH_EMAIL_NOTE
-`-h`, `--help` | Specifies to display the list of optional arguments from the command line. | N/A
+`-u`, `--url` | 視覺化的 URL。 | 從 OpenSearch Dashboards > Visualize > Share > Permalinks > Copy link 取得。 | OPENSEARCH_URL
+`-a`, `--auth` | 報告的驗證類型。 | 您可以指定 Basic `basic`、Cognito `cognito`、SAML `saml`，或不驗證 `none`。若未指定任何值，Reporting CLI 工具預設為不驗證，類型為 `none`。Basic、Cognito 和 SAML 需要使用 `-c` 旗標提供認證。 | N/A
+`-c`, `--credentials` | OpenSearch 登入認證。 | 輸入以冒號分隔的使用者名稱和密碼。例如，username:password。Basic、Cognito 和 SAML 驗證類型為必要。 | OPENSEARCH_USERNAME 和 OPENSEARCH_PASSWORD
+`-t`, `--tenant` | OpenSearch Dashboards 中的租用戶。 | 預設租用戶為 private。| N/A
+`-f`, `--format` | 報告的檔案格式。 | 可以是 `pdf`、`png` 或 `csv`。預設為 `pdf`。| N/A
+`-w`, `--width` | 報告的視窗寬度 (以像素為單位)。 | 預設為 `1680`。| N/A
+`-l`, `--height` | 報告的視窗最小高度 (以像素為單位)。 | 預設為 `600`。 | N/A
+`-n`, `--filename` | 報告的檔案名稱。 | 預設為 `reporting`。 | `opensearch-report-YYY-MM-DDTHH-mm-ss.sssZ`
+`-e`, `--transport` | 傳送電子郵件的傳輸機制。 | 若為 Amazon SES，請指定 `ses`。Amazon SES 需要在您的系統上進行 AWS 組態以儲存認證。若為 SMTP，請使用 `smtp`，並使用 `--smtpusername` 和 `--smtppassword` 指定登入認證。 | OPENSEARCH_TRANSPORT
+`-s`, `--from` | 寄件者的電子郵件地址。 | 例如，`user@amazon.com`。 | OPENSEARCH_FROM
+`-r`, `--to` | 收件者的電子郵件地址。 | 例如，`user@amazon.com`。 | OPENSEARCH_TO
+`--smtphost` | SMTP 伺服器的主機名稱。 | 例如，`SMTP_HOST`。 | OPENSEARCH_SMTP_HOST
+`--smtpport` | SMTP 連線的連接埠。 | 例如，`SMTP_PORT`。 | OPENSEARCH_SMTP_PORT
+`--smtpsecure` | 指定連線至伺服器時使用 TLS。 | 例如，`SMTP_SECURE`。 | OPENSEARCH_SMTP_SECURE
+`--smtpusername` | SMTP 使用者名稱。| 例如，`SMTP_USERNAME`。 | OPENSEARCH_SMTP_USERNAME
+`--smtppassword` | SMTP 密碼。| 例如，`SMTP_PASSWORD`。 | OPENSEARCH_SMTP_PASSWORD
+`--subject` | 以引號括住的電子郵件主旨文字。 | 可以是任何字串。預設為 "This is an email containing your dashboard report"。 | OPENSEARCH_EMAIL_SUBJECT
+`--note` | 電子郵件本文，可以是字串或文字檔的路徑。 | 預設註記為 "Hi,\\nHere is the latest report!" | OPENSEARCH_EMAIL_NOTE
+`-h`, `--help` | 指定從命令列顯示選用引數的清單。 | N/A
 
-## Getting help
+## 取得協助
 
-To get a list of all available CLI arguments, run the following command:
+若要取得所有可用 CLI 引數的清單，請執行下列命令：
 
 ``` 
 $ opensearch-reporting-cli -h

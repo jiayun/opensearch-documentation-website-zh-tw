@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Paginating hybrid query results
+title: "混合查詢結果分頁"
 parent: Hybrid search
 grand_parent: AI search
 has_children: false
 nav_order: 20
 ---
 
-# Paginating hybrid query results
-**Introduced 2.19**
+# 混合查詢結果分頁
+**2.19 版新增**
 {: .label .label-purple }
 
-You can apply pagination to hybrid query results by using the `pagination_depth` parameter in the hybrid query clause, along with the standard `from` and `size` parameters. The `pagination_depth` parameter defines the maximum number of search results that can be retrieved from each shard per subquery. For example, setting `pagination_depth` to `50` allows up to 50 results per subquery to be maintained in memory from each shard.
+您可以在混合查詢子句中使用 `pagination_depth` 參數，搭配標準的 `from` 與 `size` 參數，對混合查詢結果進行分頁。`pagination_depth` 參數定義每個子查詢從每個分片可擷取的最大搜尋結果數量。例如，將 `pagination_depth` 設為 `50`，可讓每個子查詢從每個分片在記憶體中保留最多 50 筆結果。
 
-To navigate through the results, use the `from` and `size` parameters:
+若要瀏覽結果，請使用 `from` 與 `size` 參數：
 
-- `from`: Specifies the document number from which you want to start showing the results. Default is `0`.
-- `size`: Specifies the number of results to return on each page. Default is `10`.
+- `from`：指定開始顯示結果的文件編號。預設為 `0`。
+- `size`：指定每頁傳回的結果數量。預設為 `10`。
 
-For example, to show 10 documents starting from the 20th document, specify `from: 20` and `size: 10`. For more information about pagination, see [Paginate results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#the-from-and-size-parameters).
+例如，若要從第 20 筆文件開始顯示 10 筆文件，請指定 `from: 20` 與 `size: 10`。如需分頁的更多資訊，請參閱 [分頁顯示結果]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#the-from-and-size-parameters)。
 
-### The impact of pagination_depth on hybrid search results
+### pagination_depth 對混合搜尋結果的影響
 
-Changing `pagination_depth` affects the underlying set of search results retrieved before any ranking, filtering, or pagination adjustments are applied. This is because `pagination_depth` determines the number of results retrieved per subquery from each shard, which can ultimately change the result order after normalization. To ensure consistent pagination, keep the `pagination_depth` value the same while navigating between pages.  
+變更 `pagination_depth` 會影響在套用任何排名、篩選或分頁調整之前所擷取的底層搜尋結果集合。這是因為 `pagination_depth` 決定每個子查詢從每個分片擷取的結果數量，最終可能改變正規化後的結果順序。為確保分頁一致，請在翻頁時保持 `pagination_depth` 值不變。  
 
-By default, hybrid search without pagination retrieves results using the `from + size` formula, where `from` is always `0`.
+預設情況下，未分頁的混合搜尋會使用 `from + size` 公式擷取結果，其中 `from` 一律為 `0`。
 {: .note}  
 
-To enable deeper pagination, increase the `pagination_depth` value. You can then navigate through results using the `from` and `size` parameters. Note that deeper pagination can impact search performance because retrieving and processing more results requires additional computational resources.
+若要啟用更深的分頁，請提高 `pagination_depth` 值。接著即可使用 `from` 與 `size` 參數瀏覽結果。請注意，更深的分頁可能影響搜尋效能，因為擷取和處理更多結果需要額外的運算資源。
 
-The following example shows a search request configured with `from: 0`, `size: 5`, and `pagination_depth: 10`. This means that up to 10 search results per shard will be retrieved for both the `bool` and `term` queries before pagination is applied:
+下列範例顯示以 `from: 0`、`size: 5` 與 `pagination_depth: 10` 設定的搜尋請求。這表示在套用分頁之前，`bool` 與 `term` 查詢各自會從每個分片擷取最多 10 筆搜尋結果：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -67,7 +68,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains the first five results:
+回應包含前五筆結果：
 
 ```json
 {
@@ -137,7 +138,7 @@ The response contains the first five results:
 }
 ```
 
-The following search request is configured with `from: 6`, `size: 5`, and `pagination_depth: 10`. The `pagination_depth` remains unchanged to ensure that pagination is based on the same set of search results:
+下列搜尋請求以 `from: 6`、`size: 5` 與 `pagination_depth: 10` 設定。`pagination_depth` 保持不變，以確保分頁是基於同一組搜尋結果：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -176,7 +177,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-The response excludes the first five entries and displays the remaining results:
+回應排除前五筆項目，並顯示其餘結果：
 
 ```json
 {

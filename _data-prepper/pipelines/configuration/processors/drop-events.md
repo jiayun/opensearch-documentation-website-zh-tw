@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Drop events
+title: "捨棄事件"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 130
 ---
 
-# Drop events processor
+# 捨棄事件處理器
 
-The `drop_events` processor drops all the events that are passed into it. The following table describes when events are dropped and how exceptions for dropping events are handled. 
+`drop_events` 處理器會捨棄所有傳入的事件。下表說明何時會捨棄事件，以及如何處理捨棄事件時的例外狀況。 
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`drop_when` | Yes | String | Accepts an OpenSearch Data Prepper expression string following the [expression syntax]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/). Configuring `drop_events` with `drop_when: true` drops all the events received.
-`handle_failed_events` | No | Enum | Specifies how exceptions are handled when an exception occurs while evaluating an event. Default is `drop`, which drops the event so that it is not sent to any sinks or further processors. Valid values are: <br> - `drop`: The event will be dropped and a warning will be logged.<br> - `drop_silently`: The event will be dropped without warning. <br> - `skip`: The event will not be dropped and a warning will be logged. <br> - `skip_silently`: The event will not be dropped and no warning will be logged.<br>For more information, see [handle_failed_events](https://github.com/opensearch-project/data-prepper/tree/main/data-prepper-plugins/drop-events-processor#handle_failed_events).
+`drop_when` | 是 | 字串 | 接受遵循[運算式語法]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)的 OpenSearch Data Prepper 運算式字串。將 `drop_events` 設定為 `drop_when: true` 會捨棄所有收到的事件。
+`handle_failed_events` | 否 | 列舉值 | 指定在評估事件時發生例外狀況的處理方式。預設值為 `drop`，會捨棄該事件，使其不會傳送至任何 sink 或後續的處理器。有效值為：<br> - `drop`：事件將被捨棄，並記錄一則警告。<br> - `drop_silently`：事件將被捨棄，且不記錄警告。 <br> - `skip`：事件不會被捨棄，並記錄一則警告。 <br> - `skip_silently`：事件不會被捨棄，且不記錄警告。<br>如需更多資訊，請參閱 [handle_failed_events](https://github.com/opensearch-project/data-prepper/tree/main/data-prepper-plugins/drop-events-processor#handle_failed_events)。
 
-## Examples
+## 範例
 
-The following are examples of pipeline configurations using `drop_events` processors.
+以下是使用 `drop_events` 處理器的管線組態範例。
 
-The examples don't use security and are for demonstration purposes only. We strongly recommend configuring SSL before using these examples in production.
+這些範例未使用安全性機制，僅供示範之用。我們強烈建議在正式環境中使用這些範例之前，先設定 SSL。
 {: .warning}
 
-### Filter out debug logs
+### 排除偵錯記錄
 
-The following example configuration demonstrates filtering out `DEBUG` level logs to reduce noise and storage costs while allowing `INFO`, `WARN`, and `ERROR` events:
+以下範例組態示範如何排除 `DEBUG` 層級的記錄，以減少雜訊和儲存成本，同時保留 `INFO`、`WARN` 和 `ERROR` 事件：
 
 ```yaml
 filter-debug-logs-pipeline:
@@ -49,7 +50,7 @@ filter-debug-logs-pipeline:
 ```
 {% include copy.html %}
 
-You can test this pipeline using the following command:
+您可以使用以下命令測試此管線：
 
 ```bash
 curl -sS -X POST "http://localhost:2021/events" \
@@ -63,7 +64,7 @@ curl -sS -X POST "http://localhost:2021/events" \
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含以下資訊：
 
 ```json
 {
@@ -113,9 +114,9 @@ The documents stored in OpenSearch contain the following information:
 }
 ```
 
-### Multi-condition event filtering
+### 多條件事件篩選
 
-The following example shows how to drop events based on multiple criteria, such as debug logs, error status codes, and missing user IDs, in order to ensure that only valid and important events reach OpenSearch:
+以下範例示範如何根據多個條件捨棄事件，例如偵錯記錄檔、錯誤狀態碼和缺少使用者 ID，以確保只有有效且重要的事件會送達 OpenSearch：
 
 ```yaml
 multi-condition-filter-pipeline:
@@ -144,7 +145,7 @@ multi-condition-filter-pipeline:
 ```
 {% include copy.html %}
 
-You can test this pipeline using the following command:
+您可以使用以下命令測試此管線：
 
 ```bash
 curl -sS -X POST "http://localhost:2021/events" \
@@ -159,7 +160,7 @@ curl -sS -X POST "http://localhost:2021/events" \
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含以下資訊：
 
 ```json
 {
@@ -202,9 +203,9 @@ The documents stored in OpenSearch contain the following information:
 }
 ```
 
-### Intelligent data sampling
+### 智慧型資料取樣
 
-The following example demonstrates how to implement sampling strategies that drop high-volume traffic based on request ID patterns and internal IP addresses in order to manage data volume while preserving representative samples:
+以下範例示範如何實作取樣策略，根據請求 ID 模式和內部 IP 位址捨棄高流量，以便在管理資料量的同時保留具代表性的樣本：
 
 ```yaml
 sampling-pipeline:
@@ -234,7 +235,7 @@ sampling-pipeline:
 ```
 {% include copy.html %}
 
-You can test this pipeline using the following command:
+您可以使用以下命令測試此管線：
 
 ```bash
 curl -sS -X POST "http://localhost:2021/events" \
@@ -249,7 +250,7 @@ curl -sS -X POST "http://localhost:2021/events" \
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含以下資訊：
 
 ```json
 {

@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Span near
+title: "Span near 查詢"
 parent: Span queries
 grand_parent: Query DSL
 nav_order: 50
 ---
 
-# Span near query
+# Span near 查詢
 
-The `span_near` query matches spans that are near one another. You can specify how far apart the spans can be and whether they need to appear in a specific order.
+`span_near` 查詢會比對彼此相近的跨度 (span)。您可以指定跨度之間允許的距離，以及它們是否需要以特定順序出現。
 
-For example, you can use the `span_near` query to:
-- Find terms that appear within a certain distance of each other.
-- Match phrases in which words appear in a specific order.
-- Find related concepts that appear close to each other in text.
+例如，您可以使用 `span_near` 查詢來：
+- 尋找彼此在特定距離內出現的詞彙。
+- 比對單字以特定順序出現的片語。
+- 尋找在文字中彼此相近出現的相關概念。
 
-## Example
+## 範例
 
-To try the examples in this section, complete the [setup steps]({{site.url}}{{site.baseurl}}/query-dsl/span/#setup).
+若要嘗試本節中的範例，請先完成[設定步驟]({{site.url}}{{site.baseurl}}/query-dsl/span/#setup)。
 {: .tip}
 
-The following query searches for any forms of "sleeve" and "long" appearing next to each other, in any order:
+下列查詢會搜尋以任意順序彼此接近的「sleeve」與「long」的各種詞形：
 
 ```json
 GET /clothing/_search
@@ -47,13 +48,13 @@ GET /clothing/_search
 ```
 {% include copy-curl.html %}
 
-The query matches documents 1 ("Long-sleeved...") and 2 ("...long fluttered sleeves..."). In document 1, the words are next to each other, while in document 2, they are within the specified slop distance of `1` (there is 1 word between them).
+此查詢會比對文件 1（「Long-sleeved...」）與文件 2（「...long fluttered sleeves...」）。在文件 1 中，這些單字彼此相鄰；而在文件 2 中，它們位於指定的 slop 距離 `1` 之內（兩者之間有 1 個單字）。
 
 <details markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta}
+<summary>
+    回應
+</summary>
+{: .text-delta}
 
 ```json
 {
@@ -93,12 +94,12 @@ The query matches documents 1 ("Long-sleeved...") and 2 ("...long fluttered slee
 }
 ```
 
-## Parameters
+## 參數
 
-The following table lists all top-level parameters supported by `span_near` queries.
+下表列出 `span_near` 查詢支援的所有頂層參數。
 
-| Parameter | Data type | Description | 
+| 參數 | 資料類型 | 說明 | 
 |:----------|:-----|:------------|
-| `clauses` | An array of span queries that define the terms or phrases to match. All specified terms must appear within the defined slop distance. Required. |
-| `slop` | Integer | The maximum number of intervening unmatched positions between spans. Required. |
-| `in_order` | Boolean | Whether spans need to appear in the same order as in the `clauses` array. Optional. Default is `false`. |
+| `clauses` | 由跨度查詢組成的陣列，定義要比對的詞彙或片語。所有指定的詞彙都必須出現在定義的 slop 距離內。必要。 |
+| `slop` | 整數 | 跨度之間未比對位置的最大數量。必要。 |
+| `in_order` | 布林值 | 跨度是否需要以與 `clauses` 陣列相同的順序出現。選用。預設為 `false`。 |

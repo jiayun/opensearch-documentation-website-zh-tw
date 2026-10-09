@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Match Boolean prefix
+title: "布林前綴比對"
 parent: Full-text queries
 nav_order: 40
 ---
 
-# Match Boolean prefix query
+# 布林前綴比對查詢
 
-The `match_bool_prefix` query analyzes the provided search string and creates a [Boolean query]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/) from the string's terms. It uses every term except the last term as a whole word for matching. The last term is used as a prefix. The `match_bool_prefix` query returns documents that contain either the whole-word terms or terms that start with the prefix term, in any order.
+`match_bool_prefix` 查詢會分析提供的搜尋字串，並根據字串中的詞元建立[布林查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/)。它會將除了最後一個詞元以外的每個詞元都當作完整單字來比對。最後一個詞元則作為前綴使用。`match_bool_prefix` 查詢會傳回包含完整單字詞元或以該前綴開頭之詞元的文件，順序不拘。
 
-The following example shows a basic `match_bool_prefix` query:
+下列範例顯示基本的 `match_bool_prefix` 查詢：
 
 ```json
 GET _search
@@ -23,7 +24,7 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-To pass additional parameters, you can use the expanded syntax:
+若要傳遞其他參數，您可以使用擴充語法：
 
 ```json
 GET _search
@@ -40,9 +41,9 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-## Example
+## 範例
 
-For example, consider an index with the following documents:
+舉例來說，假設某個索引包含下列文件：
 
 ```json
 PUT testindex/_doc/1
@@ -61,7 +62,7 @@ PUT testindex/_doc/2
 ```
 {% include copy-curl.html %}
 
-The following `match_bool_prefix` query searches for the whole word `rises` and the words that start with `wi`, in any order:
+下列 `match_bool_prefix` 查詢會搜尋完整單字 `rises` 以及以 `wi` 開頭的單字，順序不拘：
 
 ```json
 GET testindex/_search
@@ -75,7 +76,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The preceding query is equivalent to the following Boolean query:
+上述查詢等同於下列布林查詢：
 
 ```json
 GET testindex/_search
@@ -91,11 +92,11 @@ GET testindex/_search
 }
 ```
 
-The response contains both documents:
+回應會包含這兩份文件：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -139,9 +140,9 @@ The response contains both documents:
 
 </details>
 
-## The `match_bool_prefix` and `match_phrase_prefix` queries
+## `match_bool_prefix` 與 `match_phrase_prefix` 查詢
 
-The `match_bool_prefix` query matches terms in any position, while the `match_phrase_prefix` query matches terms as a whole phrase. To illustrate the difference, once again consider the `match_bool_prefix` query from the preceding section:
+`match_bool_prefix` 查詢會比對任何位置的詞元，而 `match_phrase_prefix` 查詢則會將詞元比對為完整詞組。為了說明差異，再次以上一節的 `match_bool_prefix` 查詢為例：
 
 ```json
 GET testindex/_search
@@ -155,9 +156,9 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-Both `The wind rises` and `Gone with the wind` match the search terms, so the query returns both documents.
+`The wind rises` 與 `Gone with the wind` 都符合搜尋詞元，因此查詢會傳回這兩份文件。
 
-Now run a `match_phrase_prefix` query on the same index:
+現在對同一個索引執行 `match_phrase_prefix` 查詢：
 
 ```json
 GET testindex/_search
@@ -171,11 +172,11 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The response returns no documents because none of the documents contain a phrase `rises wi` in the specified order.
+回應不會傳回任何文件，因為沒有任何文件包含依指定順序排列的 `rises wi` 詞組。
 
-## Analyzer
+## 分析器
 
-By default, when you run a query on a `text` field, the search text is analyzed using the index analyzer associated with the field. You can specify a different search analyzer in the `analyzer` parameter:
+根據預設，當您對 `text` 欄位執行查詢時，搜尋文字會使用與該欄位相關聯的索引分析器進行分析。您可以在 `analyzer` 參數中指定不同的搜尋分析器：
 
 ```json
 GET testindex/_search
@@ -192,9 +193,9 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
  
-## Parameters
+## 參數
 
-The query accepts the name of the field (`<field>`) as a top-level parameter:
+此查詢接受欄位名稱（`<field>`）作為最上層參數：
 
 ```json
 GET _search
@@ -211,19 +212,19 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-The `<field>` accepts the following parameters. All parameters except `query` are optional.
+`<field>` 接受下列參數。除了 `query` 以外的所有參數都是選用的。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`query` | String | The text, number, Boolean value, or date to use for search. Required.
-`analyzer` | String | The [analyzer]({{site.url}}{{site.baseurl}}/analyzers/index/) used to tokenize the query string text. Default is the index-time analyzer specified for the `default_field`. If no analyzer is specified for the `default_field`, the `analyzer` is the default analyzer for the index. For more information about `index.query.default_field`, see [Dynamic index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings).
-`fuzziness` | `AUTO`, `0`, or a positive integer | The number of character edits (insert, delete, substitute) that it takes to change one word to another when determining whether a term matched a value. For example, the distance between `wined` and `wind` is 1. The default, `AUTO`, dynamically selects the edit distance based on the search term's length. You can customize the thresholds using the syntax `AUTO:[low],[high]`, where `low` and `high` define the character length boundaries. When omitted, OpenSearch uses `AUTO:3,6` as the default, which applies the following rules: <br>- Terms containing 0--2 characters: Requires an exact match (0 edits). <br>- Terms containing 3--5 characters: Allows a maximum of 1 edit. <br>- Terms containing 6 or more characters: Allows a maximum of 2 edits. <br>For example, `AUTO:4,7` requires exact matches for terms containing 0--3 characters, allows a maximum of 1 edit for terms containing 4--6 characters, and allows a maximum of 2 edits for terms containing 7 or more characters. Using `AUTO` is recommended for most scenarios.
-`fuzzy_rewrite` | String | Determines how OpenSearch rewrites the query. Valid values are `constant_score`, `scoring_boolean`, `constant_score_boolean`, `top_terms_N`, `top_terms_boost_N`, and `top_terms_blended_freqs_N`. If the `fuzziness` parameter is not `0`, the query uses a `fuzzy_rewrite` method of `top_terms_blended_freqs_${max_expansions}` by default. Default is `constant_score`. 
-`fuzzy_transpositions` | Boolean | Setting `fuzzy_transpositions` to `true` (default) adds swaps of adjacent characters to the insert, delete, and substitute operations of the `fuzziness` option. For example, the distance between `wind` and `wnid` is 1 if `fuzzy_transpositions` is true (swap "n" and "i") and 2 if it is false (delete "n", insert "n"). If `fuzzy_transpositions` is false, `rewind` and `wnid` have the same distance (2) from `wind`, despite the more human-centric opinion that `wnid` is an obvious typo. The default is a good choice for most use cases.
-`max_expansions` | Positive integer |  The maximum number of terms to which the query can expand. Fuzzy queries “expand to” a number of matching terms that are within the distance specified in `fuzziness`. Then OpenSearch tries to match those terms. Default is `50`.
-`minimum_should_match` | Positive or negative integer, positive or negative percentage, combination | If the query string contains multiple search terms and you use the `or` operator, the number of terms that need to match for the document to be considered a match. For example, if `minimum_should_match` is 2, `wind often rising` does not match `The Wind Rises.` If `minimum_should_match` is `1`, it matches. For details, see [Minimum should match]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/).
-`operator` | String | If the query string contains multiple search terms, whether all terms need to match (`and`) or only one term needs to match (`or`) for a document to be considered a match. Valid values are `or` and `and`. Default is `or`.
-`prefix_length` | Non-negative integer | The number of leading characters that are not considered in fuzziness. Default is `0`.
+`query` | 字串 | 用於搜尋的文字、數字、布林值或日期。必要。
+`analyzer` | 字串 | 用於將查詢字串文字斷詞的[分析器]({{site.url}}{{site.baseurl}}/analyzers/index/)。預設為針對 `default_field` 指定的索引時間分析器。若未針對 `default_field` 指定分析器，則 `analyzer` 是索引的預設分析器。如需 `index.query.default_field` 的詳細資訊，請參閱[動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)。
+`fuzziness` | `AUTO`、`0` 或正整數 | 在判斷某個詞元是否符合某個值時，將一個單字變更為另一個單字所需的字元編輯次數（插入、刪除、取代）。例如，`wined` 與 `wind` 之間的距離為 1。預設值 `AUTO` 會根據搜尋詞元的長度動態選取編輯距離。您可以使用 `AUTO:[low],[high]` 語法自訂臨界值，其中 `low` 與 `high` 定義字元長度界限。省略時，OpenSearch 會使用 `AUTO:3,6` 作為預設值，套用下列規則：<br>- 包含 0--2 個字元的詞元：需要完全相符（0 次編輯）。<br>- 包含 3--5 個字元的詞元：最多允許 1 次編輯。<br>- 包含 6 個以上字元的詞元：最多允許 2 次編輯。<br>例如，`AUTO:4,7` 要求包含 0--3 個字元的詞元完全相符，包含 4--6 個字元的詞元最多允許 1 次編輯，而包含 7 個以上字元的詞元最多允許 2 次編輯。在大多數情境下，建議使用 `AUTO`。
+`fuzzy_rewrite` | 字串 | 決定 OpenSearch 如何重寫查詢。有效值為 `constant_score`、`scoring_boolean`、`constant_score_boolean`、`top_terms_N`、`top_terms_boost_N` 及 `top_terms_blended_freqs_N`。若 `fuzziness` 參數不是 `0`，查詢預設會使用 `top_terms_blended_freqs_${max_expansions}` 的 `fuzzy_rewrite` 方法。預設值為 `constant_score`。 
+`fuzzy_transpositions` | 布林值 | 將 `fuzzy_transpositions` 設為 `true`（預設值）會將相鄰字元的調換加入 `fuzziness` 選項的插入、刪除及取代作業中。例如，若 `fuzzy_transpositions` 為 true，則 `wind` 與 `wnid` 之間的距離為 1（調換「n」與「i」）；若為 false，則距離為 2（刪除「n」、插入「n」）。若 `fuzzy_transpositions` 為 false，則 `rewind` 與 `wnid` 與 `wind` 的距離相同（2），儘管以更貼近人類的觀點來看，`wnid` 是明顯的打字錯誤。對大多數使用情境而言，預設值是很好的選擇。
+`max_expansions` | 正整數 |  查詢可擴充的詞元數上限。模糊查詢會「擴充」為多個符合 `fuzziness` 中所指定距離的相符詞元。接著 OpenSearch 會嘗試比對這些詞元。預設值為 `50`。
+`minimum_should_match` | 正或負整數、正或負百分比、組合 | 若查詢字串包含多個搜尋詞元，且您使用 `or` 運算子，此參數為文件被視為相符所必須符合的詞元數。例如，若 `minimum_should_match` 為 2，則 `wind often rising` 不符合 `The Wind Rises.`；若 `minimum_should_match` 為 `1`，則符合。如需詳細資訊，請參閱[最低相符條件]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/)。
+`operator` | 字串 | 若查詢字串包含多個搜尋詞元，此參數決定文件必須所有詞元都符合（`and`）或只要有一個詞元符合（`or`）才視為相符。有效值為 `or` 與 `and`。預設值為 `or`。
+`prefix_length` | 非負整數 | 在模糊比對中不列入考量的前置字元數。預設值為 `0`。
 
-The `fuzziness`, `fuzzy_transpositions`, `fuzzy_rewrite`, `max_expansions`, and `prefix_length` parameters can be applied to the term subqueries constructed for all terms except the final term. They do not have any effect on the prefix query constructed for the final term.
+`fuzziness`、`fuzzy_transpositions`、`fuzzy_rewrite`、`max_expansions` 及 `prefix_length` 參數可套用至為除了最後一個詞元以外的所有詞元所建構的詞元子查詢。它們對為最後一個詞元所建構的前綴查詢沒有任何影響。
 {: .note}

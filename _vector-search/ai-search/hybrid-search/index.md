@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Hybrid search
+title: "混合搜尋"
 parent: AI search
 has_children: true
 nav_order: 40
@@ -9,33 +10,33 @@ redirect_from:
    - /vector-search/ai-search/hybrid-search/
 ---
 
-# Hybrid search
-Introduced 2.11
+# 混合搜尋
+於 2.11 版推出
 {: .label .label-purple }
 
-Hybrid search combines keyword and semantic search to improve search relevance. To implement hybrid search, you need to set up a [search pipeline]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/) that runs at search time. The search pipeline intercepts search results at an intermediate stage and applies processing to normalize and combine document scores.  
+混合搜尋結合關鍵字搜尋與語意搜尋，以提升搜尋相關性。若要實作混合搜尋，您需要設定一個在搜尋時執行的[搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/)。搜尋管線會在中間階段攔截搜尋結果，並套用處理程序來正規化及合併文件分數。
 
-Two search phase results processors are available for hybrid search, and they differ in what they combine:
+混合搜尋提供兩種搜尋階段結果處理器，兩者的差異在於合併的內容不同：
 
-- The [normalization processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/) is score based. It converts the scores from each query clause to a common scale and then combines them, preserving the margins between documents. Choose it when the difference between two documents' scores contains information that the final ranking must reflect, or when you need fine-grained control through normalization techniques, combination techniques, and score bounds.
-- The [score ranker processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/score-ranker-processor/) is rank based. It uses reciprocal rank fusion (RRF) to combine documents according to their position in each query clause's results, ignoring the scores themselves. Choose it when you want a configuration that works without first measuring how your query clauses score documents. For more information, see [Reciprocal rank fusion]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/rrf/).
+- [正規化處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/)以分數為基礎。它會將每個查詢子句的分數轉換為共同的尺度，然後加以合併，並保留文件之間的差距。當兩份文件分數之間的差異含有最終排名必須反映的資訊，或者當您需要透過正規化技術、合併技術及分數界限進行精細控制時，請選擇此處理器。
+- [分數排名處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/score-ranker-processor/)以排名為基礎。它使用倒數排名融合 (RRF)，依據文件在每個查詢子句結果中的位置來合併文件，而忽略分數本身。當您想要一種不需先衡量查詢子句如何為文件評分即可運作的組態時，請選擇此處理器。如需更多資訊，請參閱[倒數排名融合]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/rrf/)。
 
-The following example uses the normalization processor. To compare both processors on your own data and judgment lists, see [Optimizing hybrid search]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/optimize-hybrid-search/).
+下列範例使用正規化處理器。若要在您自己的資料與判斷清單上比較這兩種處理器，請參閱[最佳化混合搜尋]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/optimize-hybrid-search/)。
 
-**PREREQUISITE**<br>
-To follow this example, you must set up a text embedding model. For more information, see [Choosing a model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model). If you have already generated text embeddings, skip to [Step 3](#step-3-configure-a-search-pipeline).
+**先決條件**<br>
+若要依照此範例操作，您必須設定文字嵌入模型。如需更多資訊，請參閱[選擇模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model)。如果您已經產生文字嵌入，請跳至[步驟 3](#step-3-configure-a-search-pipeline)。
 {: .note}
 
-## Configuring hybrid search
+## 設定混合搜尋
 
-There are two ways to configure hybrid search:
+設定混合搜尋有兩種方式：
 
-- [**Automated workflow**](#automated-workflow) (Recommended for quick setup): Automatically create an ingest pipeline, an index, and a search pipeline with minimal configuration.
-- [**Manual setup**](#manual-setup) (Recommended for custom configurations): Manually configure each component for greater flexibility and control.
+- [**自動化工作流程**](#automated-workflow)（建議用於快速設定）：以最少的組態自動建立資料匯入管線、索引及搜尋管線。
+- [**手動設定**](#manual-setup)（建議用於自訂組態）：手動設定每個元件，以獲得更大的彈性與控制權。
 
-## Automated workflow
+## 自動化工作流程
 
-OpenSearch provides a [workflow template]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/#hybrid-search) that automatically creates an ingest pipeline, an index, and a search pipeline. You must provide the model ID for the configured model when creating a workflow. Review the hybrid search workflow template [defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/hybrid-search-defaults.json) to determine whether you need to update any of the parameters. For example, if the model dimensionality is different from the default (`1024`), specify the dimensionality of your model in the `output_dimension` parameter. To create the default hybrid search workflow, send the following request:
+OpenSearch 提供[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/#hybrid-search)，可自動建立資料匯入管線、索引及搜尋管線。建立工作流程時，您必須提供所設定模型的模型 ID。請檢閱混合搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/hybrid-search-defaults.json)，以判斷是否需要更新任何參數。例如，如果模型維度與預設值 (`1024`) 不同，請在 `output_dimension` 參數中指定模型的維度。若要建立預設的混合搜尋工作流程，請傳送下列請求：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=hybrid_search&provision=true
@@ -45,7 +46,7 @@ POST /_plugins/_flow_framework/workflow?use_case=hybrid_search&provision=true
 ```
 {% include copy-curl.html %}
 
-OpenSearch responds with a workflow ID for the created workflow:
+OpenSearch 會回應所建立工作流程的工作流程 ID：
 
 ```json
 {
@@ -53,36 +54,36 @@ OpenSearch responds with a workflow ID for the created workflow:
 }
 ```
 
-To check the workflow status, send the following request:
+若要檢查工作流程狀態，請傳送下列請求：
 
 ```json
 GET /_plugins/_flow_framework/workflow/U_nMXJUBq_4FYQzMOS4B/_status
 ```
 {% include copy-curl.html %}
 
-Once the workflow completes, the `state` changes to `COMPLETED`. The workflow creates the following components:
+工作流程完成後，`state` 會變更為 `COMPLETED`。工作流程會建立下列元件：
 
-- An ingest pipeline named `nlp-ingest-pipeline`
-- An index named `my-nlp-index` 
-- A search pipeline named `nlp-search-pipeline`
+- 名為 `nlp-ingest-pipeline` 的資料匯入管線
+- 名為 `my-nlp-index` 的索引
+- 名為 `nlp-search-pipeline` 的搜尋管線
 
-You can now continue with [steps 4 and 5](#step-4-ingest-documents-into-the-index) to ingest documents into the index and search the index.
+您現在可以繼續進行[步驟 4 和 5](#step-4-ingest-documents-into-the-index)，將文件匯入索引並搜尋該索引。
 
-## Manual setup
+## 手動設定
 
-To manually configure hybrid search, follow these steps:
+若要手動設定混合搜尋，請依照下列步驟操作：
 
-1. [Create an ingest pipeline](#step-1-create-an-ingest-pipeline).
-1. [Create an index for ingestion](#step-2-create-an-index-for-ingestion).
-1. [Configure a search pipeline](#step-3-configure-a-search-pipeline).
-1. [Ingest documents into the index](#step-4-ingest-documents-into-the-index).
-1. [Search the index using hybrid search](#step-5-search-the-index-using-hybrid-search).
+1. [建立資料匯入管線](#step-1-create-an-ingest-pipeline)。
+1. [建立用於匯入的索引](#step-2-create-an-index-for-ingestion)。
+1. [設定搜尋管線](#step-3-configure-a-search-pipeline)。
+1. [將文件匯入索引](#step-4-ingest-documents-into-the-index)。
+1. [使用混合搜尋來搜尋索引](#step-5-search-the-index-using-hybrid-search)。
 
-## Step 1: Create an ingest pipeline
+## 步驟 1：建立資料匯入管線
 
-To generate vector embeddings, you need to create an [ingest pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/) that contains a [`text_embedding` processor]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/text-embedding/), which will convert the text in a document field to vector embeddings. The processor's `field_map` determines the input fields from which to generate vector embeddings and the output fields in which to store the embeddings.
+若要產生向量嵌入，您需要建立一個[資料匯入管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)，其中包含 [`text_embedding` 處理器]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/text-embedding/)，它會將文件欄位中的文字轉換為向量嵌入。處理器的 `field_map` 會決定要從哪些輸入欄位產生向量嵌入，以及要在哪些輸出欄位中儲存嵌入。
 
-The following example request creates an ingest pipeline that converts the text from `passage_text` to text embeddings and stores the embeddings in `passage_embedding`:
+下列範例請求會建立一個資料匯入管線，將 `passage_text` 中的文字轉換為文字嵌入，並將嵌入儲存在 `passage_embedding` 中：
 
 ```json
 PUT /_ingest/pipeline/nlp-ingest-pipeline
@@ -102,11 +103,11 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-## Step 2: Create an index for ingestion
+## 步驟 2：建立用於匯入的索引
 
-In order to use the text embedding processor defined in your pipeline, create a vector index, adding the pipeline created in the previous step as the default pipeline. Ensure that the fields defined in the `field_map` are mapped as correct types. Continuing with the example, the `passage_embedding` field must be mapped as a k-NN vector with a dimension that matches the model dimension. Similarly, the `passage_text` field should be mapped as `text`.
+為了使用管線中定義的文字嵌入處理器，請建立向量索引，並將上一個步驟建立的管線新增為預設管線。請確保 `field_map` 中定義的欄位對應為正確的類型。延續此範例，`passage_embedding` 欄位必須對應為維度符合模型維度的 k-NN 向量。同樣地，`passage_text` 欄位應對應為 `text`。
 
-The following example request creates a vector index that is set up with a default ingest pipeline:
+下列範例請求會建立一個已設定預設資料匯入管線的向量索引：
 
 ```json
 PUT /my-nlp-index
@@ -139,12 +140,12 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-For more information about creating a vector index and using supported methods, see [Creating a vector index]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/).
+如需建立向量索引及使用支援方法的詳細資訊，請參閱[建立向量索引]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/)。
 
 
-## Step 3: Configure a search pipeline
+## 步驟 3：設定搜尋管線
 
-To configure a search pipeline with a [`normalization-processor`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/), use the following request. The normalization technique in the processor is set to `min_max`, and the combination technique is set to `arithmetic_mean`. The `weights` array specifies the weights assigned to each query clause as decimal percentages:
+若要使用 [`normalization-processor`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/) 設定搜尋管線，請使用下列請求。處理器中的正規化技術設為 `min_max`，合併技術設為 `arithmetic_mean`。`weights` 陣列會以十進位百分比指定指派給每個查詢子句的權重：
 
 ```json
 PUT /_search/pipeline/nlp-search-pipeline
@@ -172,9 +173,9 @@ PUT /_search/pipeline/nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-## Step 4: Ingest documents into the index
+## 步驟 4：將文件匯入索引
 
-To ingest documents into the index created in the previous step, send the following requests:
+若要將文件匯入上一個步驟建立的索引，請傳送下列請求：
 
 ```json
 PUT /my-nlp-index/_doc/1
@@ -194,15 +195,15 @@ PUT /my-nlp-index/_doc/2
 ```
 {% include copy-curl.html %}
 
-Before the document is ingested into the index, the ingest pipeline runs the `text_embedding` processor on the document, generating text embeddings for the `passage_text` field. The indexed document includes the `passage_text` field, which contains the original text, and the `passage_embedding` field, which contains the vector embeddings. 
+在文件匯入索引之前，資料匯入管線會對文件執行 `text_embedding` 處理器，為 `passage_text` 欄位產生文字嵌入。已編製索引的文件包含 `passage_text` 欄位，其中存放原始文字，以及 `passage_embedding` 欄位，其中存放向量嵌入。 
 
-## Step 5: Search the index using hybrid search
+## 步驟 5：使用混合搜尋來搜尋索引
 
-To perform hybrid search on your index, use the [`hybrid` query]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/), which combines the results of keyword and semantic search.
+若要對您的索引執行混合搜尋，請使用 [`hybrid` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/)，此查詢會結合關鍵字搜尋與語意搜尋的結果。
 
-#### Example: Combining a neural query and a match query
+#### 範例：結合 neural 查詢與 match 查詢
 
-The following example request combines two query clauses---a `neural` query and a `match` query. It specifies the search pipeline created in the previous step as a query parameter:
+下列範例請求結合了兩個查詢子句：`neural` 查詢與 `match` 查詢。它透過查詢參數指定上一個步驟建立的搜尋管線：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -238,9 +239,9 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-Alternatively, you can set a default search pipeline for the `my-nlp-index` index. For more information, see [Default search pipeline]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/using-search-pipeline/#default-search-pipeline).
+您也可以為 `my-nlp-index` 索引設定預設搜尋管線。如需詳細資訊，請參閱[預設搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/using-search-pipeline/#default-search-pipeline)。
 
-The response contains the matching document:
+回應包含符合條件的文件：
 
 ```json
 {
@@ -274,9 +275,9 @@ The response contains the matching document:
 ```
 {% include copy-curl.html %}
 
-#### Example: Combining a match query and a term query
+#### 範例：結合 match 查詢與 term 查詢
 
-The following example request combines two query clauses---a `match` query and a `term` query. It specifies the search pipeline created in the previous step as a query parameter:
+下列範例請求結合了兩個查詢子句：`match` 查詢與 `term` 查詢。它透過查詢參數指定上一個步驟建立的搜尋管線：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -308,7 +309,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents:
+回應包含符合條件的文件：
 
 ```json
 {
@@ -351,13 +352,13 @@ The response contains the matching documents:
 ```
 {% include copy-curl.html %}
 
-## Filtering data
+## 篩選資料
 
-Hybrid search supports two approaches to filtering:
+混合搜尋支援兩種篩選方式：
 
-- **Pre-filtering** removes documents before they are scored. To use pre-filtering, add a top-level `filter` to the `hybrid` query. This is the most common approach for filtering hybrid search results. For more information, see [Hybrid search with pre-filtering]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/pre-filtering/)
-- **Post-filtering** removes documents after all scoring is complete. To use post-filtering, add a `post_filter` to the search request. Use this approach for faceted search with aggregations when you want the facets to reflect the unfiltered query while filtering only the displayed hits. For more information, see [Hybrid search with post-filtering]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/post-filtering/).
+- **預先篩選** 會在評分之前移除文件。若要使用預先篩選，請在 `hybrid` 查詢中新增最上層的 `filter`。這是篩選混合搜尋結果最常見的方式。如需詳細資訊，請參閱[使用預先篩選的混合搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/pre-filtering/)
+- **事後篩選** 會在所有評分完成後移除文件。若要使用事後篩選，請在搜尋請求中新增 `post_filter`。在搭配彙總的面向搜尋中，若您希望面向反映未篩選的查詢，同時只篩選顯示的命中結果，請使用此方式。如需詳細資訊，請參閱[使用事後篩選的混合搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/post-filtering/)。
 
-## Next steps
+## 後續步驟
 
-- Explore our [tutorials]({{site.url}}{{site.baseurl}}/vector-search/tutorials/) to learn how to build AI search applications. 
+- 探索我們的[教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/)，了解如何建置 AI 搜尋應用程式。 

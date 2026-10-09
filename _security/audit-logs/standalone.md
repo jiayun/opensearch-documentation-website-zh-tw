@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Standalone audit logging
+title: "獨立稽核記錄"
 parent: Audit logs
 nav_order: 133
 ---
 
-# Standalone audit logging
+# 獨立稽核記錄
 
 ---
 
 <details markdown="block">
   <summary>
-    Table of contents
+    目錄
   </summary>
   {: .text-delta }
 - TOC
@@ -20,15 +21,15 @@ nav_order: 133
 
 ---
 
-Standalone audit logging enables audit logging for OpenSearch clusters that do not use fine-grained access control (FGAC). This includes clusters running in SSL-only mode (`plugins.security.ssl_only: true`) or with security disabled (`plugins.security.disabled: true`).
+獨立稽核記錄可為未使用細微存取控制 (FGAC) 的 OpenSearch 叢集啟用稽核記錄。這包括以僅限 SSL 模式 (`plugins.security.ssl_only: true`) 執行或停用安全性 (`plugins.security.disabled: true`) 的叢集。
 
-In this context, *standalone* refers to audit logging that operates independently of fine-grained access control. It runs inside the Security plugin and uses the same audit infrastructure (sinks, routing, and the asynchronous thread pool) as standard mode, but it does not depend on authentication or authorization to produce events.
+在此情境中，*獨立*是指獨立於細微存取控制運作的稽核記錄。它在 Security 外掛程式內執行，並使用與標準模式相同的稽核基礎架構 (接收端、路由與非同步執行緒集區)，但不依賴驗證或授權來產生事件。
 
-Clusters that do not require authentication or authorization may still need audit trails for compliance frameworks such as SOC 2, HIPAA, PCI DSS, and GDPR. Standalone audit logging records the source, action, and time for each request in these clusters.
+不需要驗證或授權的叢集，仍可能需要稽核軌跡以符合 SOC 2、HIPAA、PCI DSS 和 GDPR 等合規框架。獨立稽核記錄會記錄這些叢集中每個請求的來源、動作與時間。
 
-## Requirements
+## 必要條件
 
-To enable standalone audit logging, add both of the following settings to `opensearch.yml` on each node:
+若要啟用獨立稽核記錄，請在每個節點的 `opensearch.yml` 中加入以下兩個設定：
 
 ```yml
 plugins.security.audit.enable_standalone: true
@@ -36,87 +37,87 @@ plugins.security.audit.type: log4j
 ```
 {% include copy.html %}
 
-Both settings are required:
+兩個設定皆為必要：
 
-- `plugins.security.audit.enable_standalone: true` activates the standalone audit subsystem.
-- `plugins.security.audit.type: <sink>` specifies the audit sink, which is the destination for audit events.
+- `plugins.security.audit.enable_standalone: true` 會啟用獨立稽核子系統。
+- `plugins.security.audit.type: <sink>` 會指定稽核接收端，也就是稽核事件的目的地。
 
-After adding these settings, restart each node to activate standalone audit logging.
+加入這些設定後，請重新啟動每個節點以啟用獨立稽核記錄。
 
-The following categories never produce events in standalone mode because no authentication or authorization decisions occur: `FAILED_LOGIN`, `AUTHENTICATED`, `GRANTED_PRIVILEGES`, `MISSING_PRIVILEGES`, `OPENDISTRO_SECURITY_INDEX_ATTEMPT`, `API_TOKEN_WRITE`, `RESOURCE_ACCESS_GRANTED`, `RESOURCE_ACCESS_DENIED`, and `RESOURCE_SHARING_CHANGED`. A warning is logged at startup for any of these categories that is not already disabled by another setting. Because `AUTHENTICATED` and `GRANTED_PRIVILEGES` are disabled by default, the default startup warning does not mention them.
+下列類別在獨立模式下永遠不會產生事件，因為不會發生任何驗證或授權決策：`FAILED_LOGIN`、`AUTHENTICATED`、`GRANTED_PRIVILEGES`、`MISSING_PRIVILEGES`、`OPENDISTRO_SECURITY_INDEX_ATTEMPT`、`API_TOKEN_WRITE`、`RESOURCE_ACCESS_GRANTED`、`RESOURCE_ACCESS_DENIED` 和 `RESOURCE_SHARING_CHANGED`。啟動時，若這些類別中有任何一個尚未被其他設定停用，就會記錄一則警告。由於 `AUTHENTICATED` 和 `GRANTED_PRIVILEGES` 預設為停用，預設的啟動警告不會提及它們。
 {: .warning }
 
-## Supported audit sinks
+## 支援的稽核接收端
 
-Standalone audit logging supports the same sinks as standard mode. The following table describes the available sink types.
+獨立稽核記錄支援與標準模式相同的接收端。下表說明可用的接收端類型。
 
-Sink type | Description
+接收端類型 | 說明
 :--- | :---
-`internal_opensearch` | Writes audit events to an index on the current OpenSearch cluster.
-`log4j` | Writes events to a Log4j logger. You can use any Log4j appender (file, SNMP, JDBC, Kafka).
-`webhook` | Sends events as JSON to an arbitrary HTTP endpoint.
-`external_opensearch` | Writes to an audit index on a remote OpenSearch cluster.
-`debug` | Prints events to `stdout`. Intended for development and troubleshooting only.
+`internal_opensearch` | 將稽核事件寫入目前 OpenSearch 叢集上的索引。
+`log4j` | 將事件寫入 Log4j 記錄器。您可以使用任何 Log4j appender (檔案、SNMP、JDBC、Kafka)。
+`webhook` | 以 JSON 格式將事件傳送至任意 HTTP 端點。
+`external_opensearch` | 寫入遠端 OpenSearch 叢集上的稽核索引。
+`debug` | 將事件列印至 `stdout`。僅適用於開發與疑難排解。
 
-For sink-specific configuration options, see [Audit log storage types]({{site.url}}{{site.baseurl}}/security/audit-logs/storage-types/).
+如需接收端專屬的組態選項，請參閱 [稽核記錄儲存類型]({{site.url}}{{site.baseurl}}/security/audit-logs/storage-types/)。
 
-## Tracked events
+## 追蹤的事件
 
-Standalone audit logging adds two request-tracking categories for clusters without authentication. The following table describes these categories.
+獨立稽核記錄為沒有驗證的叢集新增了兩個請求追蹤類別。下表說明這些類別。
 
-Category | Origin | Description
+類別 | 來源 | 說明
 :--- | :--- | :---
-`REQUEST_AUDIT` | REST | Captures REST-originated requests, including source IP, target indexes, request body, and HTTP headers. This is the primary event for standalone mode.
-`TRANSPORT_AUDIT` | Transport | Captures transport-originated requests between nodes, including shard-level operations (`bulk[s][p]`, `search[phase/query]`), replica writes, and forwarded requests.
+`REQUEST_AUDIT` | REST | 擷取源自 REST 的請求，包括來源 IP、目標索引、請求本文與 HTTP 標頭。這是獨立模式的主要事件。
+`TRANSPORT_AUDIT` | Transport | 擷取節點之間源自傳輸層的請求，包括分片層級作業 (`bulk[s][p]`、`search[phase/query]`)、副本寫入與轉送的請求。
 
-`REQUEST_AUDIT` originates from REST (`audit_request_origin: REST`), but the event itself is recorded with `audit_request_layer: TRANSPORT`. As a result, it can be suppressed by any of `disabled_categories`, `disabled_transport_categories`, or `disabled_rest_categories`---adding `REQUEST_AUDIT` to any one of these settings suppresses the event.
+`REQUEST_AUDIT` 源自 REST (`audit_request_origin: REST`)，但事件本身會以 `audit_request_layer: TRANSPORT` 記錄。因此，它可能會被 `disabled_categories`、`disabled_transport_categories` 或 `disabled_rest_categories` 中的任何一個所抑制---在這些設定中的任何一個加入 `REQUEST_AUDIT` 即可抑制該事件。
 {: .note}
 
-These categories do not imply any authentication or authorization semantics. They record that a request was received and processed.
+這些類別不代表任何驗證或授權語意。它們只記錄某個請求已被接收並處理。
 
-In addition to these request-tracking categories, standalone audit logging emits the standard document-level compliance categories when [compliance tracking](#compliance-tracking) is enabled. The following table describes these categories.
+除了這些請求追蹤類別之外，當啟用[合規追蹤](#compliance-tracking)時，獨立稽核記錄也會發出標準的文件層級合規類別。下表說明這些類別。
 
-Category | Description
+類別 | 說明
 :--- | :---
-`COMPLIANCE_DOC_WRITE` | A document was written to a watched index. For more information, see [Document write tracking](#document-write-tracking).
-`COMPLIANCE_DOC_READ` | A watched field was read from a watched index. For more information, see [Document read tracking](#document-read-tracking).
+`COMPLIANCE_DOC_WRITE` | 文件被寫入受監看的索引。如需更多資訊，請參閱[文件寫入追蹤](#document-write-tracking)。
+`COMPLIANCE_DOC_READ` | 從受監看的索引讀取了受監看的欄位。如需更多資訊，請參閱[文件讀取追蹤](#document-read-tracking)。
 
-Compliance events are governed only by the compliance settings (`compliance.enabled` and the watched indexes and fields). They are not affected by `disabled_categories`, which applies to every REST- and transport-layer category, such as `REQUEST_AUDIT` and `TRANSPORT_AUDIT`.
+合規事件僅受合規設定 (`compliance.enabled` 以及受監看的索引與欄位) 管控。它們不受 `disabled_categories` 影響，後者適用於所有 REST 層與傳輸層類別，例如 `REQUEST_AUDIT` 和 `TRANSPORT_AUDIT`。
 
-### Event fields
+### 事件欄位
 
-Each `REQUEST_AUDIT` event includes:
+每個 `REQUEST_AUDIT` 事件包括：
 
-- `@timestamp` --- When the event occurred
-- `audit_cluster_name`, `audit_node_name`, `audit_node_id` --- Cluster and node identity
-- `audit_request_privilege` --- The transport action being audited (for example, `indices:data/write/index`)
-- `audit_request_body` --- Request body (configurable)
-- `audit_request_remote_address` --- Client source IP
-- `audit_trace_indices` --- Target indexes (raw patterns)
-- `audit_trace_resolved_indices` --- Resolved concrete indexes (when `resolve_indices: true`)
-- `audit_transport_request_type` --- Transport request class (for example, `IndexRequest` or `SearchRequest`)
-- `audit_request_layer` --- `TRANSPORT` for `REQUEST_AUDIT` events
-- `audit_rest_request_headers` --- HTTP headers (sensitive headers excluded)
+- `@timestamp` --- 事件發生的時間
+- `audit_cluster_name`、`audit_node_name`、`audit_node_id` --- 叢集與節點識別
+- `audit_request_privilege` --- 受稽核的傳輸動作 (例如 `indices:data/write/index`)
+- `audit_request_body` --- 請求本文 (可設定)
+- `audit_request_remote_address` --- 用戶端來源 IP
+- `audit_trace_indices` --- 目標索引 (原始模式)
+- `audit_trace_resolved_indices` --- 解析後的具體索引 (當 `resolve_indices: true` 時)
+- `audit_transport_request_type` --- 傳輸請求類別 (例如 `IndexRequest` 或 `SearchRequest`)
+- `audit_request_layer` --- `REQUEST_AUDIT` 事件的 `TRANSPORT`
+- `audit_rest_request_headers` --- HTTP 標頭 (排除敏感性標頭)
 
-### Identity in standalone mode
+### 獨立模式中的識別
 
-The identity information captured in audit events depends on the security mode. The following table describes the identity captured in each mode.
+稽核事件中擷取的識別資訊取決於安全性模式。下表說明每種模式中擷取的識別。
 
-Security mode | Identity captured
+安全性模式 | 擷取的識別
 :--- | :---
-SSL-only with mTLS | The client certificate's subject distinguished name (DN), logged as `audit_request_effective_user` (for example, `CN=my-app,OU=engineering,O=myorg`).
-SSL-only without mTLS | The source IP address only.
-Security disabled | The source IP address only.
+僅限 SSL 且使用 mTLS | 用戶端憑證的主體辨別名稱 (DN)，記錄為 `audit_request_effective_user` (例如 `CN=my-app,OU=engineering,O=myorg`)。
+僅限 SSL 但不使用 mTLS | 僅來源 IP 位址。
+停用安全性 | 僅來源 IP 位址。
 
-## Configuration
+## 組態
 
-Configure initial standalone audit settings in `opensearch.yml`. Dynamic settings can be updated at runtime using the [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/). Static settings, including `enable_standalone`, `action_groups.<NAME>`, and sink connection settings, require a node restart. No security index is required.
+請在 `opensearch.yml` 中設定初始的獨立稽核設定。動態設定可使用 [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/) 在執行階段更新。靜態設定，包括 `enable_standalone`、`action_groups.<NAME>` 與接收端連線設定，則需要重新啟動節點。不需要任何安全性索引。
 
-Standalone mode does not use the [Audit log APIs]({{site.url}}{{site.baseurl}}/security/api/audit/) or `audit.yml`. Both of those manage the security index and require fine-grained access control. In standalone mode, use the Cluster Settings API instead.
+獨立模式不使用 [Audit log APIs]({{site.url}}{{site.baseurl}}/security/api/audit/) 或 `audit.yml`。這兩者都會管理安全性索引，且需要細微存取控制。在獨立模式中，請改用 Cluster Settings API。
 
-### Dynamic configuration
+### 動態組態
 
-Most filter and compliance settings can be changed at runtime without restarting the cluster. To change a setting, send a `PUT _cluster/settings` request:
+大多數篩選與合規設定可以在不重新啟動叢集的情況下於執行階段變更。若要變更設定，請傳送 `PUT _cluster/settings` 請求：
 
 ```json
 PUT _cluster/settings
@@ -128,14 +129,14 @@ PUT _cluster/settings
 ```
 {% include copy.html %}
 
-Dynamic settings override the values in `opensearch.yml` and persist across cluster restarts.
+動態設定會覆寫 `opensearch.yml` 中的值，並在叢集重新啟動後持續保留。
 
-A `PUT _cluster/settings` request that changes a setting that is not dynamically updatable succeeds and stores the new value, but the value is never applied, and no error indicates that the update had no effect.
+若 `PUT _cluster/settings` 請求變更了不支援動態更新的設定，該請求會成功並儲存新值，但該值永遠不會被套用，而且不會有任何錯誤指出此次更新沒有效果。
 {: .warning}
 
-### Dynamic settings reference
+### 動態設定參考
 
-The following settings are registered as dynamic cluster settings. Types are shown as placeholders:
+下列設定已註冊為動態叢集設定。類型以預留位置顯示：
 
 ```yml
 # Global toggle
@@ -170,12 +171,12 @@ plugins.security.audit.compliance.internal_config: <bool>
 ```
 {% include copy.html %}
 
-Note the following about the locations in which these settings can be specified:
+關於這些設定可指定的位置，請注意以下幾點：
 
-- The `plugins.security.audit.enabled` setting is runtime-only. Setting it in `opensearch.yml` has no effect. In standalone mode, change it using `PUT _cluster/settings`.
-- The compliance settings use different key names in `opensearch.yml` than in `PUT _cluster/settings`. Only `plugins.security.audit.compliance.enabled` uses the same name in both. For the remaining compliance settings, only the legacy `opendistro_security.compliance.history.*` keys are valid in `opensearch.yml`. The following table maps each compliance cluster setting to its corresponding key in `opensearch.yml`.
+- `plugins.security.audit.enabled` 設定僅能在執行時期使用。在 `opensearch.yml` 中設定它沒有效果。在獨立模式下，請使用 `PUT _cluster/settings` 進行變更。
+- 合規性設定在 `opensearch.yml` 與 `PUT _cluster/settings` 中使用不同的鍵名。只有 `plugins.security.audit.compliance.enabled` 在兩者中使用相同名稱。其餘合規性設定在 `opensearch.yml` 中僅接受舊版的 `opendistro_security.compliance.history.*` 鍵。下表將每個合規性叢集設定對應到 `opensearch.yml` 中相應的鍵。
 
-Cluster setting | Key in `opensearch.yml`
+叢集設定 | `opensearch.yml` 中的鍵
 :--- | :---
 `plugins.security.audit.compliance.enabled` | `plugins.security.audit.compliance.enabled`
 `plugins.security.audit.compliance.write_metadata_only` | `opendistro_security.compliance.history.write.metadata_only`
@@ -188,33 +189,33 @@ Cluster setting | Key in `opensearch.yml`
 `plugins.security.audit.compliance.external_config` | `opendistro_security.compliance.history.external_config_enabled`
 `plugins.security.audit.compliance.internal_config` | `opendistro_security.compliance.history.internal_config_enabled`
 
-Static settings (`enable_standalone`, `action_groups.<NAME>`, `log4j.enable_mdc_routing`, sink connection settings, and the thread pool settings) require a node restart and cannot be changed using the Cluster Settings API.
+靜態設定（`enable_standalone`、`action_groups.<NAME>`、`log4j.enable_mdc_routing`、接收端連線設定，以及執行緒集區設定）需要重新啟動節點，且無法使用 Cluster Settings API 變更。
 
-### Available filter settings
+### 可用的篩選設定
 
-The following table describes the settings that control what is logged. Settings that are dynamically updatable can be changed at runtime using the [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/). Set the remaining settings in `opensearch.yml`.
+下表說明控制記錄內容的設定。可動態更新的設定可以在執行時期使用 [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/) 變更。其餘設定請在 `opensearch.yml` 中設定。
 
-Setting | Default | Dynamically updatable | Description
+設定 | 預設值 | 可動態更新 | 說明
 :--- | :--- | :--- | :---
-`plugins.security.audit.config.enable_rest` | `true` | Yes | Enable REST-layer audit events.
-`plugins.security.audit.config.enable_transport` | `true` | Yes | Enable transport-layer audit events.
-`plugins.security.audit.config.log_request_body` | `true` | Yes | Include the request body in audit events.
-`plugins.security.audit.config.resolve_indices` | `true` | Yes | Resolve wildcard index patterns to concrete indexes.
-`plugins.security.audit.config.resolve_bulk_requests` | `false` | Yes | Log individual sub-operations in bulk requests.
-`plugins.security.audit.config.exclude_sensitive_headers` | `true` | Yes | Exclude sensitive headers (for example, `Authorization`) from audit events.
-`plugins.security.audit.config.disabled_categories` | `[]` | Yes | Request-tracking categories to disable (for example, `["REQUEST_AUDIT"]`). Does not affect `COMPLIANCE_*` categories.
-`plugins.security.audit.config.disabled_rest_categories` | `["AUTHENTICATED", "GRANTED_PRIVILEGES", "RESOURCE_ACCESS_GRANTED", "RESOURCE_ACCESS_DENIED", "RESOURCE_SHARING_CHANGED"]` | Yes | REST-layer categories to disable. Deprecated. Use `disabled_categories` instead.
-`plugins.security.audit.config.disabled_transport_categories` | `["AUTHENTICATED", "GRANTED_PRIVILEGES", "RESOURCE_ACCESS_GRANTED", "RESOURCE_ACCESS_DENIED", "RESOURCE_SHARING_CHANGED", "CLUSTER_SETTINGS_CHANGED", "INDEX_SETTINGS_CHANGED"]` | Yes | Transport-layer categories to disable. Deprecated. Use `disabled_categories` instead.
-`plugins.security.audit.config.ignore_users` | `["kibanaserver"]` | Yes | Users whose requests are not logged.
-`plugins.security.audit.config.ignore_requests` | `[]` | Yes | Action patterns or REST paths to exclude (for example, `["cluster:monitor/*"]`).
-`plugins.security.audit.config.ignore_headers` | `[]` | No | HTTP headers to exclude from audit events.
+`plugins.security.audit.config.enable_rest` | `true` | 是 | 啟用 REST 層的稽核事件。
+`plugins.security.audit.config.enable_transport` | `true` | 是 | 啟用傳輸層的稽核事件。
+`plugins.security.audit.config.log_request_body` | `true` | 是 | 在稽核事件中包含請求本文。
+`plugins.security.audit.config.resolve_indices` | `true` | 是 | 將萬用字元索引模式解析為具體索引。
+`plugins.security.audit.config.resolve_bulk_requests` | `false` | 是 | 記錄 bulk 請求中的個別子作業。
+`plugins.security.audit.config.exclude_sensitive_headers` | `true` | 是 | 從稽核事件中排除敏感標頭（例如 `Authorization`）。
+`plugins.security.audit.config.disabled_categories` | `[]` | 是 | 要停用的請求追蹤類別（例如 `["REQUEST_AUDIT"]`）。不影響 `COMPLIANCE_*` 類別。
+`plugins.security.audit.config.disabled_rest_categories` | `["AUTHENTICATED", "GRANTED_PRIVILEGES", "RESOURCE_ACCESS_GRANTED", "RESOURCE_ACCESS_DENIED", "RESOURCE_SHARING_CHANGED"]` | 是 | 要停用的 REST 層類別。已棄用。請改用 `disabled_categories`。
+`plugins.security.audit.config.disabled_transport_categories` | `["AUTHENTICATED", "GRANTED_PRIVILEGES", "RESOURCE_ACCESS_GRANTED", "RESOURCE_ACCESS_DENIED", "RESOURCE_SHARING_CHANGED", "CLUSTER_SETTINGS_CHANGED", "INDEX_SETTINGS_CHANGED"]` | 是 | 要停用的傳輸層類別。已棄用。請改用 `disabled_categories`。
+`plugins.security.audit.config.ignore_users` | `["kibanaserver"]` | 是 | 其請求不會被記錄的使用者。
+`plugins.security.audit.config.ignore_requests` | `[]` | 是 | 要排除的動作模式或 REST 路徑（例如 `["cluster:monitor/*"]`）。
+`plugins.security.audit.config.ignore_headers` | `[]` | 否 | 要從稽核事件中排除的 HTTP 標頭。
 
-Setting `disabled_rest_categories` or `disabled_transport_categories` replaces the entire default list rather than adding to it. If you set either to a custom list, include the categories shown in the preceding table that you still want disabled. Any category you omit is reenabled without warning.
+設定 `disabled_rest_categories` 或 `disabled_transport_categories` 會取代整個預設清單，而不是在其中新增項目。如果您將其中任一設定為自訂清單，請包含上表中您仍想停用的類別。任何省略的類別都會在無警告的情況下重新啟用。
 {: .warning }
 
-### Enabling and disabling audit logging at runtime
+### 在執行時期啟用與停用稽核記錄
 
-You can enable or disable audit logging without restarting the cluster:
+您可以在不重新啟動叢集的情況下啟用或停用稽核記錄：
 
 ```json
 PUT _cluster/settings
@@ -226,15 +227,15 @@ PUT _cluster/settings
 ```
 {% include copy.html %}
 
-Set the value to `true` to reenable audit logging.
+將值設為 `true` 即可重新啟用稽核記錄。
 
-## Compliance tracking
+## 合規性追蹤
 
-Document-level compliance tracking works in standalone mode for both reads and writes.
+文件層級的合規性追蹤在獨立模式下同時支援讀取與寫入。
 
-### Document write tracking
+### 文件寫入追蹤
 
-To track writes to specific indexes, configure the watched indexes:
+若要追蹤對特定索引的寫入，請設定要監看的索引：
 
 ```yml
 plugins.security.audit.compliance.enabled: true
@@ -244,11 +245,11 @@ opendistro_security.compliance.history.write.watched_indices:
 ```
 {% include copy.html %}
 
-Write events are logged with the `COMPLIANCE_DOC_WRITE` category and include the document ID, index name, and shard ID. When `write_log_diffs: true`, the event includes a diff between the previous and current document content.
+寫入事件會以 `COMPLIANCE_DOC_WRITE` 類別記錄，並包含文件 ID、索引名稱與分片 ID。當 `write_log_diffs: true` 時，事件會包含先前與目前文件內容之間的差異。
 
-### Document read tracking
+### 文件讀取追蹤
 
-To track reads of specific fields in specific indexes, configure `read_watched_fields`. As a cluster setting, this is a list of strings---each entry is a comma-separated string whose first token is an index pattern and whose remaining tokens are field patterns. If no field patterns are given for an index, all fields (`*`) are watched:
+若要追蹤特定索引中特定欄位的讀取，請設定 `read_watched_fields`。作為叢集設定，這是一份字串清單——每個項目是以逗號分隔的字串，其第一個詞元是索引模式，其餘詞元則是欄位模式。若某個索引未指定任何欄位模式，則會監看所有欄位 (`*`)：
 
 ```yml
 plugins.security.audit.compliance.enabled: true
@@ -258,32 +259,32 @@ opendistro_security.compliance.history.read.watched_fields:
 ```
 {% include copy.html %}
 
-Read events are logged with the `COMPLIANCE_DOC_READ` category and include the field values that were accessed.
+讀取事件會以 `COMPLIANCE_DOC_READ` 類別記錄，並包含所存取的欄位值。
 
-### Compliance settings
+### 合規設定
 
-The following table describes the compliance settings. Settings that are dynamically updatable can be changed at runtime using the [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/). Set the remaining settings in `opensearch.yml`.
+下表說明合規設定。可動態更新的設定可在執行階段使用 [Cluster Settings API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/) 變更。其餘設定請在 `opensearch.yml` 中設定。
 
-Setting | Default | Dynamically updatable | Description
+設定 | 預設 | 可動態更新 | 說明
 :--- | :--- | :--- | :---
-`plugins.security.audit.compliance.enabled` | `true` | Yes | Enable compliance tracking. Compliance events are only produced for the indexes and fields configured in the watched settings.
-`plugins.security.audit.compliance.write_metadata_only` | `false` | Yes | Log only metadata for write events (no document content).
-`plugins.security.audit.compliance.read_metadata_only` | `false` | Yes | Log only metadata for read events (no field values).
-`plugins.security.audit.compliance.write_log_diffs` | `false` | Yes | Include diffs between old and new document content.
-`plugins.security.audit.compliance.write_watched_indices` | `[]` | Yes | Index patterns to watch for write compliance events.
-`plugins.security.audit.compliance.read_watched_fields` | `[]` | Yes | Index-and-fields patterns to watch for read compliance events. Each entry is a comma-separated string: `<index-pattern>,<field-pattern>,...`.
-`plugins.security.audit.compliance.write_ignore_users` | `["kibanaserver"]` | No | Users whose document writes are not tracked for compliance.
-`plugins.security.audit.compliance.read_ignore_users` | `["kibanaserver"]` | No | Users whose document reads are not tracked for compliance.
-`plugins.security.audit.compliance.external_config` | `false` | No | Log the external configuration (`opensearch.yml` and environment) once at startup.
-`plugins.security.audit.compliance.internal_config` | `false` | No | Log changes to the internal security configuration.
+`plugins.security.audit.compliance.enabled` | `true` | 是 | 啟用合規追蹤。合規事件只會針對受監看設定中所設定的索引與欄位產生。
+`plugins.security.audit.compliance.write_metadata_only` | `false` | 是 | 寫入事件只記錄中繼資料 (不記錄文件內容)。
+`plugins.security.audit.compliance.read_metadata_only` | `false` | 是 | 讀取事件只記錄中繼資料 (不記錄欄位值)。
+`plugins.security.audit.compliance.write_log_diffs` | `false` | 是 | 包含新舊文件內容之間的差異。
+`plugins.security.audit.compliance.write_watched_indices` | `[]` | 是 | 要監看寫入合規事件的索引模式。
+`plugins.security.audit.compliance.read_watched_fields` | `[]` | 是 | 要監看讀取合規事件的索引與欄位模式。每個項目是以逗號分隔的字串：`<index-pattern>,<field-pattern>,...`。
+`plugins.security.audit.compliance.write_ignore_users` | `["kibanaserver"]` | 否 | 其文件寫入不受合規追蹤的使用者。
+`plugins.security.audit.compliance.read_ignore_users` | `["kibanaserver"]` | 否 | 其文件讀取不受合規追蹤的使用者。
+`plugins.security.audit.compliance.external_config` | `false` | 否 | 在啟動時記錄一次外部組態 (`opensearch.yml` 與環境)。
+`plugins.security.audit.compliance.internal_config` | `false` | 否 | 記錄內部安全性組態的變更。
 
-## Example configurations
+## 範例組態
 
-The following examples configure standalone audit logging in SSL-only and security-disabled modes.
+以下範例說明如何在僅 SSL 與停用安全性的模式下設定獨立稽核記錄。
 
-### SSL-only mode with Log4j sink
+### 僅 SSL 模式搭配 Log4j 接收器
 
-This configuration enables audit logging in an SSL-only cluster, writing events to a Log4j logger:
+此組態會在僅 SSL 的叢集中啟用稽核記錄，並將事件寫入 Log4j 記錄器：
 
 ```yml
 plugins.security.ssl_only: true
@@ -311,9 +312,9 @@ plugins.security.audit.config.ignore_requests:
 ```
 {% include copy.html %}
 
-### Security-disabled mode with internal index sink
+### 停用安全性模式搭配內部索引接收器
 
-This configuration enables audit logging in a cluster with security disabled, storing events in an internal OpenSearch index:
+此組態會在停用安全性的叢集中啟用稽核記錄，並將事件儲存在內部 OpenSearch 索引中：
 
 ```yml
 plugins.security.disabled: true
@@ -335,4 +336,4 @@ opendistro_security.compliance.history.write.watched_indices:
 ```
 {% include copy.html %}
 
-With this configuration, audit events are written to a daily rolling index named `security-auditlog-YYYY.MM.dd` by default.
+使用此組態時，稽核事件預設會寫入名為 `security-auditlog-YYYY.MM.dd` 的每日輪替索引。

@@ -1,126 +1,127 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Snapshot and restore
+title: "快照與還原"
 nav_order: 10
 has_toc: false
 permalink: /migrate-or-upgrade/snapshot-restore/
 redirect_from: 
 ---
 
-# Snapshot and restore for migration
+# 用於遷移的快照與還原
 
-Snapshots are one of the most reliable methods for migrating data between OpenSearch clusters. This approach is particularly useful when you need to move data from one environment to another, such as migrating from a proof-of-concept cluster to a production environment, or when performing major version upgrades that require a fresh cluster deployment.
+快照是在 OpenSearch 叢集之間遷移資料最可靠的方法之一。當您需要將資料從一個環境移動到另一個環境時，這種方法特別有用，例如從概念驗證叢集遷移到正式環境，或是在需要全新叢集部署的重大版本升級時。
 
-## When to use snapshot and restore for migration
+## 何時使用快照與還原進行遷移
 
-Snapshot and restore is ideal for migration scenarios when:
+快照與還原適合以下遷移情境：
 
-- **Migrating between different OpenSearch versions** where in-place upgrades aren't supported.
-- **Moving to a different infrastructure** (on-premises to cloud, different cloud providers).
-- **Changing cluster architecture** (different node configurations, shard strategies).
-- **Zero-downtime requirements** aren't critical and you can afford some downtime.
-- You are working with **large data volumes** where other migration methods might be impractical.
-- **Complete cluster migration** including indexes, settings, and metadata.
+- 在不支援就地升級的情況下，**在不同 OpenSearch 版本之間遷移**。
+- **移動到不同的基礎架構**（從地端到雲端，或不同的雲端供應商）。
+- **變更叢集架構**（不同的節點組態、分片策略）。
+- **零停機需求**並非關鍵，且您可以接受一些停機時間。
+- 您正在處理**大量資料**，其他遷移方法可能不切實際。
+- **完整叢集遷移**，包括索引、設定與中繼資料。
 
-## Migration workflow overview
+## 遷移工作流程概觀
 
-A typical snapshot-based migration follows this workflow:
+典型的快照式遷移遵循以下工作流程：
 
-1. **Prepare the source cluster**: Ensure cluster health and configure a snapshot repository.
-2. **Create snapshot repository**: Set up shared storage accessible by both clusters.
-3. **Take comprehensive snapshots**: Capture all necessary indexes and cluster state.
-4. **Set up a target cluster**: Deploy and configure the destination OpenSearch cluster.
-5. **Register repository on target**: Connect the target cluster to the snapshot repository.
-6. **Restore snapshots**: Selectively restore indexes and configurations.
-7. **Validate and test** - Verify data integrity and application functionality.
-8. **Switch traffic** - Update applications to use the new cluster.
+1. **準備來源叢集**：確保叢集健康並設定快照儲存庫。
+2. **建立快照儲存庫**：設定兩個叢集皆可存取的共用儲存空間。
+3. **進行完整的快照**：擷取所有必要的索引與叢集狀態。
+4. **設定目標叢集**：部署並設定目的地 OpenSearch 叢集。
+5. **在目標叢集註冊儲存庫**：將目標叢集連接到快照儲存庫。
+6. **還原快照**：選擇性還原索引與組態。
+7. **驗證與測試** - 確認資料完整性與應用程式功能。
+8. **切換流量** - 更新應用程式以使用新叢集。
 
-## Key considerations for migration
+## 遷移的重要考量
 
-Consider the following before migrating using snapshots.
+使用快照遷移之前，請考量以下事項。
 
-### Data consistency
-Snapshots capture data as it existed when the snapshot was initiated, but they're not instantaneous. For migration purposes, consider:
-- **Stopping writes** to ensure data consistency during the final snapshot.
-- **Taking incremental snapshots** to minimize the final downtime window.
-- **Planning for data that changes** during the migration process.
+### 資料一致性
+快照擷取的是快照啟動當時存在的資料，但並非即時完成。就遷移目的而言，請考量：
+- **停止寫入**，以確保最終快照期間的資料一致性。
+- **進行增量快照**，以縮短最終停機時間。
+- **規劃遷移過程中變動的資料**。
 
-### Version compatibility
-- Snapshots are **forward compatible by one major version**.
-- For larger version gaps, you may need to restore to an intermediate cluster, reindex, and take new snapshots.
-- Always verify compatibility between source and target OpenSearch versions.
+### 版本相容性
+- 快照**向前相容一個主要版本**。
+- 若版本差距較大，您可能需要先還原到中繼叢集、重新編製索引，再進行新的快照。
+- 請務必確認來源與目標 OpenSearch 版本之間的相容性。
 
-### Storage requirements
-- **Incremental nature** means that frequent snapshots don't significantly increase storage usage.
-- **Plan storage capacity** for the full dataset plus incremental changes.
-- **Consider network bandwidth** for cloud-based repositories.
+### 儲存需求
+- **增量特性**表示頻繁的快照不會顯著增加儲存空間使用量。
+- **規劃儲存容量**，需涵蓋完整資料集加上增量變更。
+- 針對雲端儲存庫，**考量網路頻寬**。
 
-## Snapshot repository options for migration
+## 遷移適用的快照儲存庫選項
 
-Choose the appropriate repository type based on your migration requirements and infrastructure setup.
+根據您的遷移需求與基礎架構設定，選擇適當的儲存庫類型。
 
-### Shared file systems
-Best for migrations within the same infrastructure where both clusters can access shared storage.
+### 共用檔案系統
+最適合在同一基礎架構內、兩個叢集皆可存取共用儲存空間的遷移。
 
 ### Amazon S3
-Ideal for cloud migrations or when migrating between different environments. Provides durability and accessibility across AWS Regions.
+適合雲端遷移，或在不同環境之間遷移時使用。可跨 AWS 區域提供持久性與可存取性。
 
 ### Azure Blob Storage
-Suitable for Azure-based migrations or hybrid cloud scenarios.
+適合以 Azure 為基礎的遷移或混合雲情境。
 
-### Cross-cloud considerations
-When migrating between different cloud providers, consider:
-- **Data transfer costs** and time requirements.
-- **Network connectivity** between the source cluster, storage, and the target cluster.
-- **Security and access controls** across different environments.
+### 跨雲端考量
+在不同雲端供應商之間遷移時，請考量：
+- **資料傳輸成本**與時間需求。
+- 來源叢集、儲存空間與目標叢集之間的**網路連線**。
+- 不同環境之間的**安全性與存取控制**。
 
-## Migration-specific restoration options
+## 遷移專用的還原選項
 
-When restoring for migration purposes, you have several options for customizing the process.
+為遷移目的進行還原時，您有多種選項可自訂流程。
 
-### Selective restoration
-- **Choose specific indexes** rather than restoring everything.
-- **Exclude system indexes** that might conflict with the target cluster configuration.
-- **Rename indexes** to avoid conflicts or implement new naming conventions.
+### 選擇性還原
+- **選擇特定索引**，而非還原所有內容。
+- **排除系統索引**，避免與目標叢集組態衝突。
+- **重新命名索引**，以避免衝突或導入新的命名慣例。
 
-### Index settings modification
-- **Update replica counts** to match target cluster capacity.
-- **Modify shard allocation** for different node configurations.
-- **Adjust refresh intervals** and other performance settings.
+### 索引設定修改
+- **更新副本數量**，以符合目標叢集容量。
+- **修改分片分配**，以適應不同的節點組態。
+- **調整重新整理間隔**與其他效能設定。
 
-### Remote snapshot restoration
-For large datasets, consider using `storage_type: remote_snapshot` to:
-- **Reduce initial restore time** by keeping data in the repository.
-- **Save local storage** on the target cluster.
-- **Enable faster access** to historical data.
+### 遠端快照還原
+對於大型資料集，可考慮使用 `storage_type: remote_snapshot` 來：
+- **縮短初始還原時間**，將資料保留在儲存庫中。
+- **節省目標叢集的本機儲存空間**。
+- **加快歷史資料的存取速度**。
 
-## Security considerations for migration
+## 遷移的安全性考量
 
-When migrating with snapshots:
+使用快照遷移時：
 
-- **Exclude security indexes** (`.opendistro_security`) from snapshots to avoid conflicts.
-- **Plan security configuration** separately from data migration.
-- **Use appropriate access controls** for snapshot repositories.
-- **Consider encryption** for sensitive data in transit and at rest.
+- 從快照中**排除安全性索引**（`.opendistro_security`），以避免衝突。
+- **安全性組態**應與資料遷移分開規劃。
+- 為快照儲存庫**使用適當的存取控制**。
+- 針對傳輸中與靜態的敏感性資料，**考量加密**。
 
-## Monitoring and validation
+## 監控與驗證
 
-During migration:
+遷移期間：
 
-- **Monitor snapshot progress** using the Snapshot Status API.
-- **Validate data integrity** after restoration.
-- **Test application functionality** before switching traffic.
-- **Keep the source cluster available** until migration is fully validated.
+- 使用 Snapshot Status API **監控快照進度**。
+- 還原後**驗證資料完整性**。
+- 切換流量前**測試應用程式功能**。
+- 在遷移完全驗證之前，**保持來源叢集可用**。
 
-## Next steps
+## 後續步驟
 
-- **Snapshot creation and management**: See [Take and restore snapshots]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/).
-- **API reference**: See [Snapshot APIs]({{site.url}}{{site.baseurl}}/api-reference/snapshots/index/) for complete API documentation.
-- **Automated snapshots**: See [Snapshot management]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-management/) for information about scheduling and automation.
-- **Alternative migration methods**: Consider [Migration Assistant]({{site.url}}{{site.baseurl}}/migration-assistant/) for more complex migration scenarios.
+- **快照建立與管理**：請參閱 [Take and restore snapshots]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/)。
+- **API 參考**：完整的 API 文件請參閱 [Snapshot APIs]({{site.url}}{{site.baseurl}}/api-reference/snapshots/index/)。
+- **自動化快照**：排程與自動化資訊請參閱 [Snapshot management]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-management/)。
+- **其他遷移方法**：較複雜的遷移情境可考慮 [Migration Assistant]({{site.url}}{{site.baseurl}}/migration-assistant/)。
 
-## Related migration approaches
+## 其他遷移方式
 
-- **[Migration Assistant]({{site.url}}{{site.baseurl}}/migration-assistant/)**: For zero-downtime migrations with live traffic capture
-- **[Rolling upgrades]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/rolling-upgrade/)**: For in-place version upgrades
-- **Remote reindex**: For selective data migration between clusters
+- **[Migration Assistant]({{site.url}}{{site.baseurl}}/migration-assistant/)**：適用於可擷取即時流量的零停機遷移
+- **[Rolling upgrades]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/rolling-upgrade/)**：適用於就地版本升級
+- **Remote reindex**：適用於叢集之間的選擇性資料遷移

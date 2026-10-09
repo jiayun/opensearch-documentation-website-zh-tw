@@ -1,17 +1,18 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Neural
+title: "神經查詢"
 parent: AI and vector search queries
 nav_order: 50
 ---
 
-# Neural query
+# Neural 查詢
 
-Use the `neural` query for vector field search by text or image in [vector search]({{site.url}}{{site.baseurl}}/vector-search/). 
+使用 `neural` 查詢，在[向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/)中依文字或圖片搜尋向量欄位。
 
-## Request body fields
+## 請求本文欄位
 
-Include the following request fields in the `neural` query:
+在 `neural` 查詢中包含下列請求欄位：
 
 ```json
 "neural": {
@@ -24,26 +25,26 @@ Include the following request fields in the `neural` query:
 }
 ```
 
-The top-level `vector_field` specifies the vector or semantic field against which to run a search query. The following table lists the other neural query fields.
+最上層的 `vector_field` 指定要執行搜尋查詢的向量或語意欄位。下表列出其他 neural 查詢欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- 
-`query_text` | String | Optional | The query text from which to generate vector embeddings. You must specify at least one `query_text` or `query_image`.
-`query_image` | String | Optional | A Base64-encoded string that corresponds to the query image from which to generate vector embeddings. You must specify at least one `query_text` or `query_image`.
-`model_id` | String | Optional if the target field is a semantic field. Required if the target field is a `knn_vector` field and the default model ID is not set. For more information, see [Setting a default model on an index or field]({{site.url}}{{site.baseurl}}/search-plugins/neural-text-search/#setting-a-default-model-on-an-index-or-field). | The ID of the model that will be used to generate vector embeddings from the query text. The model must be deployed in OpenSearch before it can be used in neural search. For more information, see [Using custom models within OpenSearch]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/) and [Neural search]({{site.url}}{{site.baseurl}}/search-plugins/neural-search/). Cannot be provided together with the `semantic_field_search_analyzer`. 
-`k` | Integer | Optional | The number of results returned by the k-NN search. Only one variable, either `k`, `min_score`, or `max_distance`, can be specified. If a variable is not specified, the default is `k` with a value of `10`.
-`min_score` | Float | Optional | The minimum score threshold for the search results. Only one variable, either `k`, `min_score`, or `max_distance`, can be specified. For more information, see [Radial search]({{site.url}}{{site.baseurl}}/search-plugins/knn/radial-search-knn/).
-`max_distance` | Float | Optional | The maximum distance threshold for the search results. Only one variable, either `k`, `min_score`, or `max_distance`, can be specified. For more information, see [Radial search]({{site.url}}{{site.baseurl}}/search-plugins/knn/radial-search-knn/).
-`filter` | Object | Optional | A query that can be used to reduce the number of documents considered. For more information about filter usage, see [Vector search with filters]({{site.url}}{{site.baseurl}}/search-plugins/knn/filter-search-knn/).
-`method_parameters` | Object | Optional | Additional parameters for fine-tuning the search:<br>- `ef_search` (Integer): The number of vectors to examine (for the `hnsw` method)<br>- `nprobes` (Integer): The number of buckets to examine (for the `ivf` method). For more information, see [Specifying method parameters in the query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/index/#specifying-method-parameters-in-the-query).
-`rescore` | Object or Boolean | Optional | Parameters for configuring rescoring functionality:<br>- `oversample_factor` (Float): Controls how many candidate vectors are retrieved before rescoring. Valid values are in the `[1.0, 100.0]` range. Default is `false` for fields with `in_memory` mode (no rescoring) and `enabled` (with dynamic values) for fields with `on_disk` mode. In `on_disk` mode, the default `oversample_factor` is determined by the `compression_level`. For more information, see the [compression level table]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#rescoring-quantized-results-to-full-precision). To explicitly enable rescoring with the default `oversample_factor` of `1.0`, set `rescore` to `true`. For more information, see [Rescoring results]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/index/#rescoring-results).
-`expand_nested_docs` | Boolean | Optional | When `true`, retrieves scores for all nested field documents within each parent document. Used with nested queries. For more information, see [Vector search with nested fields]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/nested-search-knn/).
-`semantic_field_search_analyzer` | String | Optional | Specifies an analyzer for tokenizing the `query_text` when using a sparse encoding model. Valid values are `standard`, `bert-uncased`, and `mbert-uncased`. Cannot be used together with `model_id`. For more information, see [Analyzers]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/).
-`query_tokens` | Map of token (string) to weight (float) | Optional | A raw sparse vector in the form of tokens and their weights. Used as an alternative to `query_text` for direct vector input. Either `query_text` or `query_tokens` must be specified.
+`query_text` | 字串 | 選用 | 用來產生向量嵌入的查詢文字。您必須至少指定 `query_text` 或 `query_image` 其中之一。
+`query_image` | 字串 | 選用 | 對應查詢圖片的 Base64 編碼字串，用來產生向量嵌入。您必須至少指定 `query_text` 或 `query_image` 其中之一。
+`model_id` | 字串 | 若目標欄位是語意欄位，則為選用。若目標欄位是 `knn_vector` 欄位，且未設定預設模型 ID，則為必要。如需更多資訊，請參閱[在索引或欄位上設定預設模型]({{site.url}}{{site.baseurl}}/search-plugins/neural-text-search/#setting-a-default-model-on-an-index-or-field)。 | 將用來從查詢文字產生向量嵌入的模型 ID。模型必須先部署到 OpenSearch，才能在 neural 搜尋中使用。如需更多資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)與[神經搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-search/)。不可與 `semantic_field_search_analyzer` 一併提供。
+`k` | 整數 | 選用 | k-NN 搜尋傳回的結果數量。只能指定 `k`、`min_score` 或 `max_distance` 其中一個變數。若未指定變數，預設為 `k`，其值為 `10`。
+`min_score` | 浮點數 | 選用 | 搜尋結果的最低分數門檻。只能指定 `k`、`min_score` 或 `max_distance` 其中一個變數。如需更多資訊，請參閱[徑向搜尋]({{site.url}}{{site.baseurl}}/search-plugins/knn/radial-search-knn/)。
+`max_distance` | 浮點數 | 選用 | 搜尋結果的最大距離門檻。只能指定 `k`、`min_score` 或 `max_distance` 其中一個變數。如需更多資訊，請參閱[徑向搜尋]({{site.url}}{{site.baseurl}}/search-plugins/knn/radial-search-knn/)。
+`filter` | 物件 | 選用 | 可用來減少所考量文件數量的查詢。如需篩選器用法的更多資訊，請參閱[使用篩選器的向量搜尋]({{site.url}}{{site.baseurl}}/search-plugins/knn/filter-search-knn/)。
+`method_parameters` | 物件 | 選用 | 用於微調搜尋的其他參數：<br>- `ef_search`（整數）：要檢視的向量數量（適用於 `hnsw` 方法）<br>- `nprobes`（整數）：要檢視的桶數量（適用於 `ivf` 方法）。如需更多資訊，請參閱[在查詢中指定方法參數]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/index/#specifying-method-parameters-in-the-query)。
+`rescore` | 物件或布林值 | 選用 | 用於設定重新評分功能的參數：<br>- `oversample_factor`（浮點數）：控制在重新評分之前擷取多少候選向量。有效值在 `[1.0, 100.0]` 範圍內。對於 `in_memory` 模式（不重新評分）的欄位，預設為 `false`；對於 `on_disk` 模式的欄位，預設為 `enabled`（動態值）。在 `on_disk` 模式下，預設的 `oversample_factor` 由 `compression_level` 決定。如需更多資訊，請參閱[壓縮層級表]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#rescoring-quantized-results-to-full-precision)。若要以 `1.0` 的預設 `oversample_factor` 明確啟用重新評分，請將 `rescore` 設為 `true`。如需更多資訊，請參閱[重新評分結果]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/index/#rescoring-results)。
+`expand_nested_docs` | 布林值 | 選用 | 當設定為 `true` 時，會擷取每個父文件內所有巢狀欄位文件的分數。與巢狀查詢搭配使用。如需更多資訊，請參閱[使用巢狀欄位的向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/nested-search-knn/)。
+`semantic_field_search_analyzer` | 字串 | 選用 | 使用稀疏編碼模型時，指定用來斷詞 `query_text` 的分析器。有效值為 `standard`、`bert-uncased` 與 `mbert-uncased`。不可與 `model_id` 一起使用。如需更多資訊，請參閱[分析器]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/)。
+`query_tokens` | 詞元（字串）對權重（浮點數）的對應 | 選用 | 以詞元及其權重形式表示的原始稀疏向量。作為 `query_text` 的替代方案，用於直接向量輸入。必須指定 `query_text` 或 `query_tokens` 其中之一。
 
-#### Example request
+#### 範例請求
 
-The following example shows a search with a `k` value of `100` and a filter that includes a range query and a term query:
+下列範例顯示 `k` 值為 `100`，並包含範圍查詢與詞彙查詢之篩選器的搜尋：
 
 ```json
 GET /my-nlp-index/_search
@@ -80,7 +81,7 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-The following search query includes a k-NN radial search `min_score` of `0.95` and a filter that includes a range query and a term query:
+下列搜尋查詢包含 k-NN 徑向搜尋 `min_score` 為 `0.95`，以及包含範圍查詢與詞彙查詢之篩選器：
 
 ```json
 GET /my-nlp-index/_search
@@ -117,7 +118,7 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-The following search query includes a k-NN radial search `max_distance` of `10` and a filter that includes a range query and a term query:
+下列搜尋查詢包含 k-NN 徑向搜尋 `max_distance` 為 `10`，以及包含範圍查詢與詞彙查詢之篩選器：
 
 ```json
 GET /my-nlp-index/_search
@@ -154,7 +155,7 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-The following example shows a search against a `semantic` field using a dense model. A `semantic` field stores model information in its configuration. The `neural` query automatically retrieves the `model_id` from the `semantic` field's configuration in the index mapping and rewrites the query to target the corresponding embedding field:
+下列範例顯示使用稠密模型對 `semantic` 欄位進行搜尋。`semantic` 欄位會在其組態中儲存模型資訊。`neural` 查詢會自動從索引對應中 `semantic` 欄位的組態擷取 `model_id`，並改寫查詢以指向對應的嵌入欄位：
 
 ```json
 GET /my-nlp-index/_search
@@ -171,7 +172,7 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-The following example shows a search against a `semantic` field using a sparse encoding model. This search uses sparse embeddings:
+下列範例顯示使用稀疏編碼模型對 `semantic` 欄位進行搜尋。此搜尋使用稀疏嵌入：
 
 ```json
 GET /my-nlp-index/_search
@@ -189,4 +190,4 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-For more information, see [Semantic field type]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/semantic/).
+如需更多資訊，請參閱[語意欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/semantic/)。

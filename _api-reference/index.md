@@ -1,144 +1,145 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: API reference
+title: "API 參考"
 nav_order: 1
 has_toc: false
 has_children: true
 nav_exclude: true
-description: "Complete OpenSearch API reference for REST APIs and gRPC APIs, including cluster, index, search, document, and other operations."
+description: "OpenSearch REST API 與 gRPC API 的完整 API 參考，涵蓋叢集、索引、搜尋、文件及其他操作。"
 permalink: /api-reference/
 redirect_from:
   - /opensearch/rest-api/index/
   - /api-reference/index/
 ---
 
-# API reference
+# API 參考
 
-You can use [REST APIs](#rest-apis) for every API operation in OpenSearch. You can call a subset of these operations using the experimental [gRPC APIs](#grpc-apis) instead.
+OpenSearch 中的每個 API 操作都可以使用 [REST API](#rest-apis)。您也可以改用實驗性的 [gRPC API](#grpc-apis) 呼叫其中一部分操作。
 
-This page lists API families rather than individual operations. To find a specific operation, open the family that owns it and use the list of APIs on its page.
+本頁列出的是 API 系列而非個別操作。若要尋找特定操作，請開啟其所屬的系列，並使用該頁面上的 API 清單。
 
-## REST APIs
-**Introduced 1.0**
+## REST API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-OpenSearch provides the following REST APIs.
+OpenSearch 提供下列 REST API。
 
-### Core REST APIs
+### 核心 REST API
 
-The following core REST APIs are documented in this section.
+本節說明下列核心 REST API。
 
-| API | Use it to |
+| API | 用途 |
 | :--- | :--- |
-| [Analyze API]({{site.url}}{{site.baseurl}}/api-reference/analyze-apis/) | Inspect the tokens that an analyzer produces from a text string. |
-| [CAT APIs]({{site.url}}{{site.baseurl}}/api-reference/cat/) | Read cluster statistics as plain text aligned in columns. |
-| [List APIs]({{site.url}}{{site.baseurl}}/api-reference/list/) | Read index and shard statistics as paginated plain text. |
-| [Cluster APIs]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/) | Check cluster health, change cluster settings, and retrieve cluster statistics. |
-| [Data stream APIs]({{site.url}}{{site.baseurl}}/api-reference/data-stream/) | Create, delete, modify, and retrieve information about data streams. |
-| [Document APIs]({{site.url}}{{site.baseurl}}/api-reference/document-apis/) | Index, retrieve, update, and delete documents, individually or in bulk. |
-| [Index APIs]({{site.url}}{{site.baseurl}}/api-reference/index-apis/) | Create, configure, maintain, and delete indexes, aliases, and index templates. |
-| [Ingest APIs]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/) | Define the ingest pipelines and processors that transform documents as they are indexed. |
-| [Nodes APIs]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/) | Retrieve information, statistics, and hot threads for individual nodes. |
-| [Script APIs]({{site.url}}{{site.baseurl}}/api-reference/script-apis/) | Store, retrieve, and run Painless scripts. |
-| [Search APIs]({{site.url}}{{site.baseurl}}/api-reference/search-apis/) | Run queries and work with search templates, scroll contexts, and search profiling. |
-| [Snapshot APIs]({{site.url}}{{site.baseurl}}/api-reference/snapshots/) | Manage snapshot repositories and take and restore snapshots. |
-| [Tasks APIs]({{site.url}}{{site.baseurl}}/api-reference/tasks/) | Track and cancel long-running operations. |
+| [Analyze API]({{site.url}}{{site.baseurl}}/api-reference/analyze-apis/) | 檢視分析器從文字字串產生的詞元。 |
+| [CAT API]({{site.url}}{{site.baseurl}}/api-reference/cat/) | 以對齊欄位的純文字讀取叢集統計資料。 |
+| [List API]({{site.url}}{{site.baseurl}}/api-reference/list/) | 以分頁純文字讀取索引與分片統計資料。 |
+| [Cluster API]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/) | 檢查叢集健康狀態、變更叢集設定，以及擷取叢集統計資料。 |
+| [Data stream API]({{site.url}}{{site.baseurl}}/api-reference/data-stream/) | 建立、刪除、修改資料串流，以及擷取其相關資訊。 |
+| [Document API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/) | 單獨或大量編製索引、擷取、更新及刪除文件。 |
+| [Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/) | 建立、設定、維護及刪除索引、別名與索引範本。 |
+| [Ingest API]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/) | 定義在文件編製索引時轉換文件的資料匯入管線與處理器。 |
+| [Nodes API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/) | 擷取個別節點的資訊、統計資料與熱執行緒。 |
+| [Script API]({{site.url}}{{site.baseurl}}/api-reference/script-apis/) | 儲存、擷取及執行 Painless 指令碼。 |
+| [Search API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/) | 執行查詢，並使用搜尋範本、捲動情境與搜尋效能分析。 |
+| [Snapshot API]({{site.url}}{{site.baseurl}}/api-reference/snapshots/) | 管理快照儲存庫，以及建立與還原快照。 |
+| [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/) | 追蹤及取消長時間執行的操作。 |
 
-The rest of the APIs listed on this page are documented in their respective sections.
+本頁所列其餘 API 則在各自的章節中說明。
 
-### Search feature and query language APIs
+### 搜尋功能與查詢語言 API
 
-The following APIs extend the core search APIs with additional ways to submit queries, process results, and measure relevance.
+下列 API 為核心搜尋 API 提供額外的方式來提交查詢、處理結果及衡量相關性。
 
-| API | Use it to |
+| API | 用途 |
 | :--- | :--- |
-| [Asynchronous Search API]({{site.url}}{{site.baseurl}}/search-plugins/async/) | Run a search in the background and retrieve partial results while it completes. |
-| [Search Pipeline APIs]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/) | Define the search pipelines and processors that transform search requests and results. |
-| [Search Relevance Workbench APIs]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/using-search-relevance-workbench/) | Create the query sets, search configurations, judgments, and experiments that measure search quality. |
-| [SQL and PPL API]({{site.url}}{{site.baseurl}}/sql-and-ppl/sql-and-ppl-api/) | Run SQL and Piped Processing Language queries and manage the data sources they read. |
+| [Asynchronous Search API]({{site.url}}{{site.baseurl}}/search-plugins/async/) | 在背景執行搜尋，並在完成過程中擷取部分結果。 |
+| [Search Pipeline API]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/) | 定義轉換搜尋請求與結果的搜尋管線與處理器。 |
+| [Search Relevance Workbench API]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/using-search-relevance-workbench/) | 建立用於衡量搜尋品質的查詢集、搜尋組態、判斷與實驗。 |
+| [SQL 與 PPL API]({{site.url}}{{site.baseurl}}/sql-and-ppl/sql-and-ppl-api/) | 執行 SQL 與 Piped Processing Language 查詢，並管理它們讀取的資料來源。 |
 
-### Vector search and machine learning APIs
+### 向量搜尋與機器學習 API
 
-The following APIs manage the models, agents, and workflows that support vector search and machine learning.
+下列 API 管理支援向量搜尋與機器學習的模型、代理程式與工作流程。
 
-| API | Use it to |
+| API | 用途 |
 | :--- | :--- |
-| [ML Commons API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/) | Register, deploy, and run machine learning models, agents, and connectors. |
-| [Vector Search API]({{site.url}}{{site.baseurl}}/vector-search/api/) | Manage the models and read the statistics that support vector search. |
-| [Workflow APIs]({{site.url}}{{site.baseurl}}/automating-configurations/api/) | Create, provision, and manage the workflow templates that automate complex setup tasks. |
+| [ML Commons API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/) | 註冊、部署及執行機器學習模型、代理程式與連接器。 |
+| [Vector Search API]({{site.url}}{{site.baseurl}}/vector-search/api/) | 管理支援向量搜尋的模型，並讀取其統計資料。 |
+| [Workflow API]({{site.url}}{{site.baseurl}}/automating-configurations/api/) | 建立、佈建及管理可自動化複雜設定任務的工作流程範本。 |
 
-### Index management APIs
+### 索引管理 API
 
-The following APIs automate the maintenance of indexes and their data.
+下列 API 可自動化索引及其資料的維護作業。
 
-| API | Use it to |
+| API | 用途 |
 | :--- | :--- |
-| [Index Rollups API]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rollup-api/) | Create and manage the rollup jobs that summarize historical data into smaller indexes. |
-| [Index State Management API]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/) | Create and manage the policies that automate index lifecycle operations. |
-| [ISM Error Prevention API]({{site.url}}{{site.baseurl}}/im-plugin/ism/error-prevention/api/) | Turn on Index State Management error prevention and read its validation results. |
-| [Refresh Search Analyzer API]({{site.url}}{{site.baseurl}}/im-plugin/refresh-analyzer/) | Reload the search analyzers of an open index without closing it. |
-| [Transforms API]({{site.url}}{{site.baseurl}}/im-plugin/index-transforms/transforms-apis/) | Create and manage the transform jobs that reshape data into a new index. |
+| [Index Rollups API]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rollup-api/) | 建立及管理將歷史資料彙整為較小索引的 rollup 工作。 |
+| [Index State Management API]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/) | 建立及管理可自動化索引生命週期操作的政策。 |
+| [ISM Error Prevention API]({{site.url}}{{site.baseurl}}/im-plugin/ism/error-prevention/api/) | 開啟 Index State Management 錯誤防護，並讀取其驗證結果。 |
+| [Refresh Search Analyzer API]({{site.url}}{{site.baseurl}}/im-plugin/refresh-analyzer/) | 在不關閉開啟中索引的情況下重新載入其搜尋分析器。 |
+| [Transforms API]({{site.url}}{{site.baseurl}}/im-plugin/index-transforms/transforms-apis/) | 建立及管理將資料重塑至新索引的 transform 工作。 |
 
-### Cluster management APIs
+### 叢集管理 API
 
-The following APIs protect cluster availability and control how a cluster uses its resources.
+下列 API 可保護叢集可用性，並控制叢集使用資源的方式。
 
-| API | Use it to |
+| API | 用途 |
 | :--- | :--- |
-| [Cross-Cluster Replication (CCR) API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/api/) | Replicate indexes from a leader cluster to a follower cluster. |
-| [Remote Store Stats API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-store-stats-api/) | Read upload and download statistics for remote-backed storage. |
-| [Rules API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/rule-based-autotagging/rule-lifecycle-api/) | Create and manage the auto-tagging rules that assign incoming requests to a workload group. |
-| [Shard Indexing Backpressure Stats API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/stats-api/) | Monitor shard indexing backpressure. |
-| [Snapshot Management API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/sm-api/) | Take and delete snapshots on a schedule. |
-| [Workload Management APIs]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-groups/) | Create the workload groups that limit resource usage and read their statistics. |
+| [Cross-Cluster Replication (CCR) API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/api/) | 將索引從領導者叢集複寫至追隨者叢集。 |
+| [Remote Store Stats API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-store-stats-api/) | 讀取遠端備份儲存空間的上傳與下載統計資料。 |
+| [Rules API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/rule-based-autotagging/rule-lifecycle-api/) | 建立及管理將傳入請求指派至工作負載群組的自動標籤規則。 |
+| [Shard Indexing Backpressure Stats API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/stats-api/) | 監視分片索引寫入回壓。 |
+| [Snapshot Management API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/sm-api/) | 依排程建立及刪除快照。 |
+| [Workload Management API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-groups/) | 建立限制資源用量的工作負載群組，並讀取其統計資料。 |
 
-### Observability and monitoring APIs
+### 可觀測性與監控 API
 
-The following APIs report the cluster state and notify you when it changes.
+下列 API 會回報叢集狀態，並在狀態變更時通知您。
 
-| API | Use it to |
+| API | 用途 |
 | :--- | :--- |
-| [Alerting API]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/api/) | Create and manage monitors, triggers, and alerts. |
-| [Anomaly Detection API]({{site.url}}{{site.baseurl}}/observing-your-data/ad/api/) | Create and manage anomaly detectors and read the anomalies they find. |
-| [Forecasting API]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/) | Create and manage forecasters and read the forecasts they produce. |
-| [Job Scheduler APIs]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/job-scheduler/index/#job-scheduler-apis) | Monitor the scheduled jobs and locks on a cluster. |
-| [Notifications API]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/api/) | Define the channels that deliver notifications and the sources that send them. |
-| [Performance Analyzer API]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/pa/api/) | Retrieve performance metrics for a node or a cluster. |
-| [Query Insights APIs]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/) | Read top N queries, live queries, and query insights health statistics, and change query insights settings. |
-| [Reporting API]({{site.url}}{{site.baseurl}}/reporting/api/) | Define reports and generate them from dashboards, visualizations, saved searches, and notebooks. Downloading the rendered content uses the OpenSearch Dashboards endpoint. |
-| [Root Cause Analysis API]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/pa/rca/api/) | Retrieve root cause analysis results for a cluster. |
+| [Alerting API]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/api/) | 建立及管理監視器、觸發條件與警示。 |
+| [Anomaly Detection API]({{site.url}}{{site.baseurl}}/observing-your-data/ad/api/) | 建立及管理異常偵測器，並讀取其發現的異常。 |
+| [Forecasting API]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/) | 建立及管理預測器，並讀取其產生的預測。 |
+| [Job Scheduler API]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/job-scheduler/index/#job-scheduler-apis) | 監視叢集上的排程工作與鎖定。 |
+| [Notifications API]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/api/) | 定義傳遞通知的頻道，以及傳送通知的來源。 |
+| [Performance Analyzer API]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/pa/api/) | 擷取節點或叢集的效能指標。 |
+| [Query Insights API]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/) | 讀取前 N 名查詢、即時查詢與查詢洞察健康狀態統計資料，並變更查詢洞察設定。 |
+| [Reporting API]({{site.url}}{{site.baseurl}}/reporting/api/) | 定義報告，並從儀表板、視覺化、已儲存的搜尋與筆記本產生報告。下載已轉譯的內容會使用 OpenSearch Dashboards 端點。 |
+| [Root Cause Analysis API]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/pa/rca/api/) | 擷取叢集的根本原因分析結果。 |
 
-### Security and security analytics APIs
+### 安全性與安全分析 API
 
-The following APIs provide access control for a cluster and detect security threats in the data it contains.
+下列 API 為叢集提供存取控制，並偵測其資料中的安全威脅。
 
-| API | Use it to |
+| API | 用途 |
 | :--- | :--- |
-| [Resource Sharing APIs]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) | Share plugin resources, such as models and detectors, with other users and roles. |
-| [Security APIs]({{site.url}}{{site.baseurl}}/security/api/) | Manage users, roles, role mappings, action groups, and tenants, and read or replace the security configuration. |
-| [Security Analytics APIs]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/index/) | Manage the detectors, rules, findings, and alerts that identify security events. |
+| [Resource Sharing API]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) | 與其他使用者和角色共用外掛程式資源，例如模型與偵測器。 |
+| [Security API]({{site.url}}{{site.baseurl}}/security/api/) | 管理使用者、角色、角色對應、動作群組與租用戶，並讀取或取代安全性組態。 |
+| [Security Analytics API]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/index/) | 管理用於識別安全事件的偵測器、規則、發現與警示。 |
 
-### OpenSearch Dashboards APIs
+### OpenSearch Dashboards API
 
-The following APIs manage OpenSearch Dashboards saved objects and workspaces and read usage statistics. Unlike the preceding REST API requests that are sent to the OpenSearch REST layer on port 9200 by default, you send these requests to OpenSearch Dashboards on port 5601 by default.
+下列 API 管理 OpenSearch Dashboards 已儲存的物件與工作區，並讀取使用量統計資料。與先前預設傳送至連接埠 9200 上 OpenSearch REST 層的 REST API 請求不同，這些請求預設會傳送至連接埠 5601 上的 OpenSearch Dashboards。
 
-| API | Use it to |
+| API | 用途 |
 | :--- | :--- |
-| [Maps Stats API]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/maps-stats-api/) | Read usage statistics for maps and their layers. |
-| [Saved Objects APIs]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects-api/) | List, create, update, export, and import saved objects such as index patterns, visualizations, and dashboards. |
-| [Search Relevance Stats API]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/stats-api/) | Read usage statistics for search relevance operations. |
-| [Workspace APIs]({{site.url}}{{site.baseurl}}/dashboards/workspace/apis/) | Create, update, list, and delete workspaces. |
+| [Maps Stats API]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/maps-stats-api/) | 讀取地圖及其圖層的使用量統計資料。 |
+| [Saved Objects API]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects-api/) | 列出、建立、更新、匯出及匯入已儲存的物件，例如索引模式、視覺化與儀表板。 |
+| [Search Relevance Stats API]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/stats-api/) | 讀取搜尋相關性操作的使用量統計資料。 |
+| [Workspace API]({{site.url}}{{site.baseurl}}/dashboards/workspace/apis/) | 建立、更新、列出及刪除工作區。 |
 
-## gRPC APIs
-**Introduced 3.0**
+## gRPC API
+**於 3.0 版導入**
 {: .label .label-purple }
 
-You can use gRPC APIs as an alternative to REST interfaces. These APIs use the gRPC protocol to provide more efficient communication with OpenSearch clusters. For more information and supported APIs, see [gRPC APIs]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/).
+您可以使用 gRPC API 作為 REST 介面的替代方案。這些 API 使用 gRPC 通訊協定，與 OpenSearch 叢集進行更有效率的通訊。如需更多資訊與支援的 API，請參閱 [gRPC API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/)。
 
-## Reference
+## 參考
 
-The following pages provide additional API reference information:
+下列頁面提供額外的 API 參考資訊：
 
-- [Common REST parameters]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/)
-- [Supported units]({{site.url}}{{site.baseurl}}/api-reference/units/)
-- [Popular APIs]({{site.url}}{{site.baseurl}}/api-reference/popular-api/)
+- [通用 REST 參數]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/)
+- [支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)
+- [常用 API]({{site.url}}{{site.baseurl}}/api-reference/popular-api/)

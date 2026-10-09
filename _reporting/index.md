@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reporting
+title: "報告"
 nav_order: 1
 has_children: false
 nav_exclude: true
@@ -9,10 +10,10 @@ redirect_from:
   - /reporting/index/
 ---
 
-# Reporting
+# 報告
 
-OpenSearch lets you generate and schedule reports from dashboards, visualizations, and saved searches, either through OpenSearch Dashboards or from the command line. Learn more about the following reporting features:
+OpenSearch 可讓您從儀表板、視覺化和已儲存的搜尋產生及排程報告，無論是透過 OpenSearch Dashboards 或從命令列皆可。進一步了解下列報告功能：
 
-- [Reporting using OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/reporting/report-dashboard-index/) 
-- [Reporting API]({{site.url}}{{site.baseurl}}/reporting/api/)
-- [Reporting using the CLI]({{site.url}}{{site.baseurl}}/reporting/rep-cli-index/)
+- [使用 OpenSearch Dashboards 產生報告]({{site.url}}{{site.baseurl}}/reporting/report-dashboard-index/) 
+- [報告 API]({{site.url}}{{site.baseurl}}/reporting/api/)
+- [使用 CLI 產生報告]({{site.url}}{{site.baseurl}}/reporting/rep-cli-index/)

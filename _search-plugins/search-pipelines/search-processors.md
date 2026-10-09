@@ -1,77 +1,78 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: User-defined search processors
+title: "使用者定義的搜尋處理器"
 nav_order: 40
 has_children: true
 parent: Search pipelines
 ---
 
-# User-defined search processors
+# 使用者定義的搜尋處理器
 
-**User-defined search processors** are processors that you manually configure in search pipelines to customize search behavior. You define these processors in your pipeline configuration and control their parameters, execution order, and conditions.
+**使用者定義的搜尋處理器**是您在搜尋管線中手動設定以自訂搜尋行為的處理器。您可以在管線組態中定義這些處理器，並控制其參數、執行順序及條件。
 
-The following sections list all user-defined search processors available in OpenSearch. OpenSearch can also create processors automatically based on search request parameters. For more information, see [System-generated search processors]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/system-generated-search-processors/).
+下列各節列出 OpenSearch 中所有可用的使用者定義搜尋處理器。OpenSearch 也可以根據搜尋請求參數自動建立處理器。如需更多資訊，請參閱[系統產生的搜尋處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/system-generated-search-processors/)。
 
-## Search request processors
+## 搜尋請求處理器
 
-A _search request processor_ intercepts a search request (the query and the metadata passed in the request), performs an operation with or on the search request, and submits the search request to the index.
+_搜尋請求處理器_會攔截搜尋請求 (請求中傳遞的查詢與中繼資料)，對搜尋請求執行操作，並將搜尋請求提交至索引。
 
-The following table lists all supported search request processors.
+下表列出所有支援的搜尋請求處理器。
 
-Processor | Description | Earliest available version
+處理器 | 說明 | 最早可用版本
 :--- | :--- | :---
-[`agentic_query_translator`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/) | Translates `agentic` queries into OpenSearch query domain-specific language (DSL) and executes an agent to process the query. | 3.2
-[`filter_query`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/filter-query-processor/) | Adds a filtering query that is used to filter requests. | 2.8
-[`ml_inference`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-request/) | Invokes registered machine learning (ML) models in order to rewrite queries. | 2.16 
-[`neural_query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/) | Sets a default model for neural search and neural sparse search at the index or field level. | 2.11 (neural), 2.13 (neural sparse)
-[`neural_sparse_two_phase_processor`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-sparse-query-two-phase-processor/) | Accelerates the neural sparse query. | 2.15
-[`oversample`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/oversample-processor/) | Increases the search request `size` parameter, storing the original value in the pipeline state.  | 2.12
-[`script`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/script-processor/) | Adds a script that is run on newly indexed documents. | 2.8
+[`agentic_query_translator`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-query-translator-processor/) | 將 `agentic` 查詢轉譯為 OpenSearch 查詢領域特定語言 (DSL)，並執行代理程式來處理查詢。 | 3.2
+[`filter_query`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/filter-query-processor/) | 新增用於篩選請求的篩選查詢。 | 2.8
+[`ml_inference`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-request/) | 叫用已註冊的機器學習 (ML) 模型以改寫查詢。 | 2.16 
+[`neural_query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/) | 在索引或欄位層級設定用於神經搜尋與神經稀疏搜尋的預設模型。 | 2.11 (neural)、2.13 (neural sparse)
+[`neural_sparse_two_phase_processor`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-sparse-query-two-phase-processor/) | 加速神經稀疏查詢。 | 2.15
+[`oversample`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/oversample-processor/) | 增加搜尋請求的 `size` 參數，並將原始值儲存在管線狀態中。  | 2.12
+[`script`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/script-processor/) | 新增對新編製索引文件執行的指令碼。 | 2.8
 
-## Search response processors
+## 搜尋回應處理器
 
-A _search response processor_ intercepts a search response and search request (the query, results, and metadata passed in the request), performs an operation with or on the search response, and returns the search response.
+_搜尋回應處理器_會攔截搜尋回應與搜尋請求 (請求中傳遞的查詢、結果與中繼資料)，對搜尋回應執行操作，並傳回搜尋回應。
 
-The following table lists all supported search response processors.
+下表列出所有支援的搜尋回應處理器。
 
-Processor | Description | Earliest available version
+處理器 | 說明 | 最早可用版本
 :--- | :--- | :---
-[`agentic_context`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-context-processor/)| Returns the agent summary, generated query, and memory ID for an `agentic` query. | 3.3
-[`collapse`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/collapse-processor/)| Deduplicates search hits based on a field value, similarly to `collapse` in a search request. | 2.12
-[`hybrid_score_explanation`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/explanation-processor/)| Adds detailed scoring information to search results when the `explain` parameter is enabled, providing information about score normalization, combination techniques, and individual score calculations in hybrid queries.  | 2.19
-[`ml_inference`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-response/) | Invokes registered machine learning (ML) models in order to incorporate model output as additional search response fields. | 2.16 
-[`personalize_search_ranking`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/personalize-search-ranking/) | Uses [Amazon Personalize](https://aws.amazon.com/personalize/) to rerank search results (requires setting up the Amazon Personalize service). | 2.9
-[`rename_field`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rename-field-processor/)| Renames an existing field. | 2.8
-[`rerank`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)| Reranks search results using a cross-encoder model. | 2.12
-[`retrieval_augmented_generation`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/) | Used for retrieval-augmented generation (RAG) in [conversational search]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/). | 2.10 (generally available in 2.12)
-[`sort`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/sort-processor/)| Sorts an array of items in either ascending or descending order. | 2.16
-[`split`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/split-processor/)| Splits a string field into an array of substrings based on a specified delimiter. | 2.17
-[`truncate_hits`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/truncate-hits-processor/)| Discards search hits after a specified target count is reached. Can undo the effect of the `oversample` request processor.  | 2.12
+[`agentic_context`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/agentic-context-processor/)| 傳回 `agentic` 查詢的代理程式摘要、產生的查詢及記憶體 ID。 | 3.3
+[`collapse`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/collapse-processor/)| 根據欄位值將搜尋命中結果去除重複，類似於搜尋請求中的 `collapse`。 | 2.12
+[`hybrid_score_explanation`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/explanation-processor/)| 在啟用 `explain` 參數時，將詳細評分資訊新增至搜尋結果，提供混合查詢中分數正規化、組合技術及個別分數計算的相關資訊。  | 2.19
+[`ml_inference`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-response/) | 叫用已註冊的機器學習 (ML) 模型，以將模型輸出納入為額外的搜尋回應欄位。 | 2.16 
+[`personalize_search_ranking`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/personalize-search-ranking/) | 使用 [Amazon Personalize](https://aws.amazon.com/personalize/) 重新排序搜尋結果 (需要設定 Amazon Personalize 服務)。 | 2.9
+[`rename_field`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rename-field-processor/)| 重新命名現有欄位。 | 2.8
+[`rerank`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)| 使用交叉編碼器模型重新排序搜尋結果。 | 2.12
+[`retrieval_augmented_generation`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/) | 用於[對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)中的檢索增強生成 (RAG)。 | 2.10 (2.12 正式推出)
+[`sort`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/sort-processor/)| 以遞增或遞減順序排序項目陣列。 | 2.16
+[`split`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/split-processor/)| 根據指定的分隔符號，將字串欄位分割為子字串陣列。 | 2.17
+[`truncate_hits`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/truncate-hits-processor/)| 在達到指定的目標計數後捨棄搜尋命中結果。可復原 `oversample` 請求處理器的效果。  | 2.12
 
-## Search phase results processors
+## 搜尋階段結果處理器
 
-A _search phase results processor_ runs between search phases at the coordinating node level. It intercepts the results retrieved from one search phase and transforms them before passing them to the next search phase.
+_搜尋階段結果處理器_會在協調節點層級的搜尋階段之間執行。它會攔截從某個搜尋階段擷取的結果，並在傳遞至下一個搜尋階段之前進行轉換。
 
-The following table lists all supported search phase results processors.
+下表列出所有支援的搜尋階段結果處理器。
 
-Processor | Description | Earliest available version
+處理器 | 說明 | 最早可用版本
 :--- | :--- | :---
-[`normalization-processor`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/) | Intercepts the query phase results and normalizes and combines the document scores before passing the documents to the fetch phase. | 2.10
+[`normalization-processor`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/) | 攔截查詢階段結果，並在將文件傳遞至擷取階段之前，將文件分數正規化並合併。 | 2.10
 
-## Viewing available processor types
+## 檢視可用的處理器類型
 
-You can use the Nodes Search Pipelines API to view the available processor types:
+您可以使用 Nodes Search Pipelines API 檢視可用的處理器類型：
 
 ```json
 GET /_nodes/search_pipelines
 ```
 {% include copy-curl.html %}
 
-The response contains the `search_pipelines` object that lists the available request and response processors:
+回應包含 `search_pipelines` 物件，其中列出可用的請求與回應處理器：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -123,9 +124,9 @@ The response contains the `search_pipelines` object that lists the available req
 ```
 </details>
 
-In addition to the processors provided by OpenSearch, additional processors may be provided by plugins.
+除了 OpenSearch 提供的處理器之外，外掛程式也可能提供其他處理器。
 {: .note}
 
-## Selectively enabling processors
+## 選擇性啟用處理器
 
-Processors defined by the [search-pipeline-common module](https://github.com/opensearch-project/OpenSearch/blob/2.x/modules/search-pipeline-common/src/main/java/org/opensearch/search/pipeline/common/SearchPipelineCommonModulePlugin.java) are selectively enabled through the following cluster settings: `search.pipeline.common.request.processors.allowed`, `search.pipeline.common.response.processors.allowed`, or `search.pipeline.common.search.phase.results.processors.allowed`. If unspecified, then all processors are enabled. An empty list disables all processors. Removing enabled processors causes pipelines using them to fail after a node restart.
+由 [search-pipeline-common 模組](https://github.com/opensearch-project/OpenSearch/blob/2.x/modules/search-pipeline-common/src/main/java/org/opensearch/search/pipeline/common/SearchPipelineCommonModulePlugin.java) 定義的處理器會透過下列叢集設定選擇性啟用：`search.pipeline.common.request.processors.allowed`、`search.pipeline.common.response.processors.allowed` 或 `search.pipeline.common.search.phase.results.processors.allowed`。若未指定，則會啟用所有處理器。空清單會停用所有處理器。移除已啟用的處理器會導致使用這些處理器的管線在節點重新啟動後失敗。

@@ -1,81 +1,82 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: User Behavior Insights
 parent: Optimizing search quality
 has_children: true
 nav_order: 10
-description: "User Behavior Insights (UBI) is a schema for capturing user search behavior, including the queries users submit, the results shown, and the actions they take."
+description: "User Behavior Insights (UBI) 是一種用於擷取使用者搜尋行為的結構描述，包括使用者提交的查詢、顯示的結果，以及他們採取的動作。"
 redirect_from:
   - /search-plugins/ubi/
 ---
 # User Behavior Insights
 
-**Introduced 2.15**
+**於 2.15 版推出**
 {: .label .label-purple }
 
-**References UBI Specification 1.3.0**
+**參照 UBI Specification 1.3.0**
 {: .label .label-purple }
 
-User Behavior Insights (UBI) is a schema for capturing user search behavior. Search behavior consists of the queries that the user submits, the results that are presented to them, and the actions they take on those results. The UBI schema links all user interactions (events) to the search result they were performed on. That is, it not only captures the chronological sequence of events but also captures the causal links between events. Analysis of this behavior is used for improving the quality of search results.
+User Behavior Insights (UBI) 是一種用於擷取使用者搜尋行為的結構描述。搜尋行為包括使用者提交的查詢、呈現給他們的結果，以及他們對這些結果採取的動作。UBI 結構描述會將所有使用者互動 (事件) 連結到執行這些互動時所針對的搜尋結果。也就是說，它不僅擷取事件的時間先後順序，也擷取事件之間的因果關聯。對這些行為的分析可用於改善搜尋結果的品質。
 
-Client applications such as web pages or apps capture user behavior and send UBI data to a UBI endpoint. For web pages, this is typically handled by JavaScript code.
+網頁或應用程式等用戶端應用程式會擷取使用者行為，並將 UBI 資料傳送至 UBI 端點。對網頁而言，這通常由 JavaScript 程式碼處理。
 
-In principle, queries sent to the server and results returned by the server can be sent to the UBI endpoint from the client. But as an optimization, they can instead be sent directly to the UBI endpoint from the server, without incurring a round-trip to the client. That is the function of the UBI plugin and is not a requirement to adopt UBI.
+原則上，傳送至伺服器的查詢以及伺服器傳回的結果，可以由用戶端傳送至 UBI 端點。但作為最佳化，它們可以改為直接從伺服器傳送至 UBI 端點，而不需要往返用戶端。這是 UBI 外掛程式的功能，並非採用 UBI 的必要條件。
 
 
-> "how our users are using our product, whether search results were useful for them and whether they clicked on top-n results we gave and all related stuff" -- Data scientist working on search.
+> 「我們的使用者如何使用我們的產品、搜尋結果對他們是否有用、他們是否點擊了我們提供的前 n 名結果，以及所有相關的資訊」 -- 從事搜尋工作的資料科學家。
 
-UBI includes the following elements:
-* A machine-readable [schema](https://github.com/o19s/ubi) that facilitates interoperability of the UBI specification.
-* [ubi.js](https://github.com/opensearch-project/user-behavior-insights/tree/main/ubi-javascript-collector/ubi.js): An (optional) client-side JavaScript library for capturing searches and events.
-* An (optional) OpenSearch [plugin](https://github.com/opensearch-project/user-behavior-insights) that streamlines the recording of query data.
+UBI 包含下列元素：
+* 一個機器可讀的[結構描述](https://github.com/o19s/ubi)，促進 UBI 規格的互通性。
+* [ubi.js](https://github.com/opensearch-project/user-behavior-insights/tree/main/ubi-javascript-collector/ubi.js)：用於擷取搜尋與事件的 (選用) 用戶端 JavaScript 程式庫。
+* 一個 (選用的) OpenSearch [外掛程式](https://github.com/opensearch-project/user-behavior-insights)，可簡化查詢資料的記錄。
 
-Advanced features in OpenSearch, such as the [Search Relevance Workbench]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/using-search-relevance-workbench/) and the [Hybrid Search Optimizer]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/optimize-hybrid-search/), build on the data collected according to the UBI specification.
+OpenSearch 的進階功能，例如 [Search Relevance Workbench]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/using-search-relevance-workbench/) 與 [Hybrid Search Optimizer]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/optimize-hybrid-search/)，都是根據依 UBI 規格收集的資料建置。
 
 <!-- vale off -->
 
 <table>
   <tr style="vertical-align: top;">
     <td>
-      <h2>Tutorials</h2>
+      <h2>教學</h2>
       <ul>    
-        <li><a href="{{site.url}}{{site.baseurl}}/search-plugins/ubi/ubi-aws-managed-services-tutorial/">Learn to use Amazon OpenSearch Ingestion</a> pipelines for gathering UBI-formatted data in Amazon OpenSearch Service.</li>        
-        <li><a href="{{site.url}}{{site.baseurl}}/search-plugins/ubi/ubi-dashboard-tutorial/">Learn to create custom dashboards</a> for visualizing UBI data.</li>    
-        <li> Based on <a href="https://github.com/o19s/chorus-opensearch-edition">Chorus for OpenSearch</a> demo:
+        <li><a href="{{site.url}}{{site.baseurl}}/search-plugins/ubi/ubi-aws-managed-services-tutorial/">學習使用 Amazon OpenSearch Ingestion</a> 管線在 Amazon OpenSearch Service 中收集 UBI 格式的資料。</li>        
+        <li><a href="{{site.url}}{{site.baseurl}}/search-plugins/ubi/ubi-dashboard-tutorial/">學習建立自訂儀表板</a>以視覺化 UBI 資料。</li>    
+        <li> 基於 <a href="https://github.com/o19s/chorus-opensearch-edition">Chorus for OpenSearch</a> 示範：
           <ul>
-            <li><a href="https://github.com/o19s/chorus-opensearch-edition/blob/main/katas/002_derive_interaction_data.md">Derive Interaction Data from User Clicks.</a></li>
-            <li><a href="https://github.com/o19s/chorus-opensearch-edition/blob/main/katas/006_protecting_sensitive_information.md">Protecting sensistive information when using UBI.</a></li>
-            <li><a href="https://github.com/o19s/chorus-opensearch-edition/blob/main/katas/007_configure_AB_with_TDI.md">Configuring an A/B test with Team Draft Interleaving</a></li>    
+            <li><a href="https://github.com/o19s/chorus-opensearch-edition/blob/main/katas/002_derive_interaction_data.md">從使用者點擊衍生互動資料。</a></li>
+            <li><a href="https://github.com/o19s/chorus-opensearch-edition/blob/main/katas/006_protecting_sensitive_information.md">使用 UBI 時保護敏感資訊。</a></li>
+            <li><a href="https://github.com/o19s/chorus-opensearch-edition/blob/main/katas/007_configure_AB_with_TDI.md">使用 Team Draft Interleaving 設定 A/B 測試</a></li>    
           </ul>
         </li>
       </ul>
     </td>
     <td>
-      <h2>How To Guides</h2>
+      <h2>操作指南</h2>
       <ul>        
-        <li>How to <a href="https://github.com/opensearch-project/user-behavior-insights?tab=readme-ov-file#user-quick-start">install and use the UBI plugin</a> in OpenSearch.</li>          
-        <li>How to use <a href="{{site.url}}{{site.baseurl}}/search-plugins/ubi/ubi-javascript-collector/">ubi.js</a>, a client-side JavaScript library for capturing events.</li>
-        <li>How to <a href="{{site.url}}{{site.baseurl}}/search-plugins/ubi/dsl-queries/">write queries for UBI data using OpenSearch query DSL.</a></li>
-        <li>How to <a href="{{site.url}}{{site.baseurl}}/search-plugins/ubi/sql-queries/">write analytic queries for UBI data using SQL.</a></li>          
+        <li>如何在 OpenSearch 中<a href="https://github.com/opensearch-project/user-behavior-insights?tab=readme-ov-file#user-quick-start">安裝與使用 UBI 外掛程式</a>。</li>          
+        <li>如何使用 <a href="{{site.url}}{{site.baseurl}}/search-plugins/ubi/ubi-javascript-collector/">ubi.js</a>，一個用於擷取事件的用戶端 JavaScript 程式庫。</li>
+        <li>如何<a href="{{site.url}}{{site.baseurl}}/search-plugins/ubi/dsl-queries/">使用 OpenSearch Query DSL 為 UBI 資料撰寫查詢。</a></li>
+        <li>如何<a href="{{site.url}}{{site.baseurl}}/search-plugins/ubi/sql-queries/">使用 SQL 為 UBI 資料撰寫分析查詢。</a></li>          
       </ul>
     </td>
   </tr>
   <tr style="vertical-align: top;">
     <td>
-      <h2>Explanation</h2>
+      <h2>概念說明</h2>
       <ul>
-        <li><a href="https://docs.google.com/presentation/d/e/2PACX-1vTJ9wYhhRG2sHxB-pm2Pfcqv0AzwRzSgTn-VyKTV6bL4PyXQC9C9kE6Oyrkag2_Olb6Ugevs_kbflId/pub?start=true&loop=false&delayms=3000">Why UBI?</a> presentation.</li>
-        <li>Learn more about this standard via <a href="https://www.UBISearch.dev">https://www.UBISearch.dev</a>, the community clearinghouse.</li>                
-        <li>Watch <a href="https://youtu.be/0chun264PRQ">Leveraging UBI to enhance Search Relevance</a> talk to understand how to use this data to improve search quality.</li>
-        <li>Go deeper with UBI.  Watch <a href="https://www.youtube.com/watch?v=xi261oUamXc">You’ve Deployed User Behavior Insights. Now What?</a> to see what else you can do.</li>
+        <li><a href="https://docs.google.com/presentation/d/e/2PACX-1vTJ9wYhhRG2sHxB-pm2Pfcqv0AzwRzSgTn-VyKTV6bL4PyXQC9C9kE6Oyrkag2_Olb6Ugevs_kbflId/pub?start=true&loop=false&delayms=3000">為什麼需要 UBI？</a> 簡報。</li>
+        <li>透過 <a href="https://www.UBISearch.dev">https://www.UBISearch.dev</a> (社群資源中心) 進一步了解此標準。</li>                
+        <li>觀看 <a href="https://youtu.be/0chun264PRQ">Leveraging UBI to enhance Search Relevance</a> 演講，了解如何使用這些資料來改善搜尋品質。</li>
+        <li>深入探索 UBI。觀看 <a href="https://www.youtube.com/watch?v=xi261oUamXc">You’ve Deployed User Behavior Insights. Now What?</a>，看看您還能做些什麼。</li>
       </ul>
     </td>
     <td>
-        <h2>Reference</h2>
+        <h2>參考資料</h2>
         <ul>
             <li><a href="https://github.com/opensearch-project/user-behavior-insights">UBI Plugin for OpenSearch</a></li>
               <li><a href="{{site.url}}{{site.baseurl}}/search-plugins/ubi/schemas/">UBI Schema in OpenSearch</a></li>
-            <li>Repository for the <a href="https://github.com/o19s/ubi">UBI Schema</a>.</li>                
+            <li><a href="https://github.com/o19s/ubi">UBI Schema</a> 的儲存庫。</li>                
             <li><a href="https://o19s.github.io/ubi/docs/html/1.3.0/query.request.schema.html">Query Tracking Specification</a></li>
             <li><a href="https://o19s.github.io/ubi/docs/html/1.3.0/event.schema.html">Event Tracking Specification</a></li>                
             
@@ -85,5 +86,5 @@ Advanced features in OpenSearch, such as the [Search Relevance Workbench]({{site
 </table>
 
 <!-- vale on -->
-The documentation categories were adapted using concepts based on [Diátaxis](https://diataxis.fr/).
+本文件分類是根據 [Diátaxis](https://diataxis.fr/) 的概念改編而成。
 {: .tip }

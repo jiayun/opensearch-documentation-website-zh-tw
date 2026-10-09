@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Dissect
 parent: Processors
@@ -6,13 +7,13 @@ grand_parent: Pipelines
 nav_order: 120
 ---
 
-# Dissect processor
+# Dissect 處理器
  
-The `dissect` processor extracts values from an event and maps them to individual fields based on user-defined `dissect` patterns. The processor is well suited for field extraction from log messages with a known structure. 
+`dissect` 處理器會從事件中擷取值，並根據使用者定義的 `dissect` 模式，將這些值對應至個別欄位。此處理器非常適合從結構已知的記錄檔訊息中擷取欄位。 
 
-## Basic usage
+## 基本用法
 
-To use the `dissect` processor, create the following `pipeline.yaml` file:
+若要使用 `dissect` 處理器，請建立下列 `pipeline.yaml` 檔案：
 
 ```yaml
 dissect-pipeline:
@@ -30,15 +31,15 @@ dissect-pipeline:
 ```
 {% include copy.html %}
 
-Then create the following file named `logs_json.log` and replace the `path` in the file source of your `pipeline.yaml` file with the path of a file containing the following JSON data:
+接著建立名為 `logs_json.log` 的下列檔案，並將 `pipeline.yaml` 檔案之檔案來源中的 `path` 替換為包含下列 JSON 資料之檔案的路徑：
 
 ```json
 {"log": "07-25-2023 10:00:00 ERROR: error message"}
 ```
 
-The `dissect` processor will retrieve the fields (`Date`, `Time`, `Log_Type`, and `Message`) from the `log` message, based on the pattern `%{Date} %{Time} %{Type}: %{Message}` configured in the pipeline.
+`dissect` 處理器會根據管線中設定的模式 `%{Date} %{Time} %{Type}: %{Message}`，從 `log` 訊息中擷取欄位（`Date`、`Time`、`Log_Type` 和 `Message`）。
 
-After running the pipeline, you should receive the following standard output:
+執行管線後，您應該會收到下列標準輸出：
 
 ```json
 {
@@ -50,49 +51,49 @@ After running the pipeline, you should receive the following standard output:
 }
 ```
 
-## Configuration
+## 組態
 
-You can configure the `dissect` processor with the following options.
+您可以使用下列選項設定 `dissect` 處理器。
 
-| Option | Required | Type | Description |
+| 選項 | 必要 | 類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `map` | Yes | Map | Defines the `dissect` patterns for specific keys. For details on how to define fields in the `dissect` pattern, see [Field notations](#field-notations). |
-| `target_types` | No | Map | Specifies the data types for extract fields. Valid options are `integer`, `double`, `string`, and `boolean`. By default, all fields are of the `string` type. |
-| `delete_source` | No | Boolean | Whether to delete the source field after successful parsing. Default is `false`. |
-| `dissect_when` | No | String | Specifies a condition for performing the `dissect` operation using a [Data Prepper expression]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/). If specified, the `dissect` operation will only run when the expression evaluates to true. |
+| `map` | 是 | Map | 為特定索引鍵定義 `dissect` 模式。如需在 `dissect` 模式中定義欄位的詳細資訊，請參閱[欄位標記法](#field-notations)。 |
+| `target_types` | 否 | Map | 指定擷取欄位的資料類型。有效選項為 `integer`、`double`、`string` 和 `boolean`。預設情況下，所有欄位皆為 `string` 類型。 |
+| `delete_source` | 否 | 布林值 | 是否在成功剖析後刪除來源欄位。預設為 `false`。 |
+| `dissect_when` | 否 | 字串 | 使用 [Data Prepper 運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)指定執行 `dissect` 作業的條件。若有指定，`dissect` 作業只會在運算式評估為 true 時執行。 |
 
-### Field notations
+### 欄位標記法
 
-You can define `dissect` patterns with the following field types.
+您可以使用下列欄位類型定義 `dissect` 模式。
 
-#### Normal field
+#### 一般欄位
 
-A field without a suffix or prefix. The field will be directly added to the output event. The format is `%{field_name}`.
+不含後置詞或前置詞的欄位。此欄位會直接新增至輸出事件。格式為 `%{field_name}`。
 
-#### Skip field
+#### 略過欄位
 
-A field that will not be included in the event. The format is `%{}` or `%{?field_name}`.
+不會包含在事件中的欄位。格式為 `%{}` 或 `%{?field_name}`。
 
-#### Append field
+#### 附加欄位
 
-A field that will be combined with other fields. To append multiple values and include the final value in the field, use `+` before the field name in the `dissect` pattern. The format is `%{+field_name}`. 
+會與其他欄位合併的欄位。若要附加多個值並將最終值納入欄位中，請在 `dissect` 模式中的欄位名稱前使用 `+`。格式為 `%{+field_name}`。 
 
-For example, with the pattern `%{+field_name}, %{+field_name}`, log message `"foo, bar"` will parse into `{"field_name": "foobar"}`.
+例如，使用模式 `%{+field_name}, %{+field_name}` 時，記錄檔訊息 `"foo, bar"` 會剖析為 `{"field_name": "foobar"}`。
 
-You can also define the order of the concatenation with the help of the suffix `/<integer>`. 
+您也可以藉由後置詞 `/<integer>` 定義串連的順序。 
 
-For example, with a pattern `"%{+field_name/2}, %{+field_name/1}"`, log message `"foo, bar"` will parse into `{"field_name": "barfoo"}`.
+例如，使用模式 `"%{+field_name/2}, %{+field_name/1}"` 時，記錄檔訊息 `"foo, bar"` 會剖析為 `{"field_name": "barfoo"}`。
 
-If the order is not mentioned, the append operation will occur in the order of the fields specified in the `dissect` pattern. 
+若未指定順序，附加作業會依照 `dissect` 模式中所指定欄位的順序進行。 
 
-#### Indirect field
+#### 間接欄位
 
-A field that uses the value from another field as its field name. When defining a pattern, prefix the field with a `&` to assign the value found in the field as the key in the key-value pair.
+使用另一個欄位的值作為其欄位名稱的欄位。定義模式時，請在欄位前加上 `&`，以將該欄位中找到的值指派為鍵值組中的索引鍵。
 
-For example, with a pattern `"%{?field_name}, %{&field_name}"`, the log message `"foo, bar"` will parse into `{“foo”: “bar”}`. In the log message, `foo` is captured from the skip field `%{?field_name}`. `foo` then serves as the key to the value captured from the field `%{&field_name}`.
+例如，使用模式 `"%{?field_name}, %{&field_name}"` 時，記錄檔訊息 `"foo, bar"` 會剖析為 `{“foo”: “bar”}`。在此記錄檔訊息中，`foo` 是從略過欄位 `%{?field_name}` 擷取而來。接著，`foo` 會作為從欄位 `%{&field_name}` 擷取之值的索引鍵。
 
-#### Padded field
+#### 填補欄位
 
-A field with the paddings to the right removed. The `->` operator can be used as a suffix to indicate that white spaces after this field can be ignored.
+移除右側填補內容的欄位。`->` 運算子可作為後置詞使用，表示可忽略此欄位之後的空白字元。
 
-For example, with a pattern `%{field1->} %{field2}`, log message `“firstname    lastname”` will parse into `{“field1”: “firstname”, “field2”: “lastname”}`.
+例如，使用模式 `%{field1->} %{field2}` 時，記錄檔訊息 `“firstname    lastname”` 會剖析為 `{“field1”: “firstname”, “field2”: “lastname”}`。

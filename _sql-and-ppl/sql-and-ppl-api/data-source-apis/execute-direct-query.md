@@ -1,63 +1,64 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Execute direct query
+title: "執行直接查詢"
 parent: Data source APIs
 nav_order: 10
 grand_parent: SQL and PPL API
 ---
 
-# Execute Direct Query API
+# 執行直接查詢 API
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).    
+這是一項實驗性功能，不建議在正式環境中使用。若要了解此功能的最新進度或提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/) 的討論。    
 {: .warning}
 
-Executes a query against an external data source using the data source's native query language.
+使用資料來源的原生查詢語言，對外部資料來源執行查詢。
 
-Before using this API, you must configure a data source. For information about configuring data sources, see [Data sources]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/).
+使用此 API 之前，您必須先設定資料來源。有關設定資料來源的資訊，請參閱 [資料來源]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/)。
 {: .note}
 
-## Endpoint
+## 端點
 
 ```json
 POST /_plugins/_directquery/_query/{dataSource}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`dataSource` | String | The name of the configured data source to query. Required.
+`dataSource` | 字串 | 要查詢之已設定資料來源的名稱。必要。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`query` | String | The query to execute in the data source's native query language (for example, PromQL for Prometheus). Required.
-`language` | String | The query language. For Prometheus data sources, use `PROMQL`. Required.
-`options` | Object | Data-source-specific query options. See [Prometheus options](#prometheus-options). Optional.
-`maxResults` | Integer | The maximum number of results to return. Only applies to Prometheus. Optional.
-`timeout` | Integer | The query timeout in seconds. Only applies to Prometheus. Optional.
-`sessionId` | String | A session identifier for tracking queries. If not provided, a UUID is automatically generated. Optional.
+`query` | 字串 | 以資料來源的原生查詢語言執行的查詢（例如 Prometheus 的 PromQL）。必要。
+`language` | 字串 | 查詢語言。對於 Prometheus 資料來源，請使用 `PROMQL`。必要。
+`options` | 物件 | 資料來源專屬的查詢選項。請參閱 [Prometheus 選項](#prometheus-options)。選用。
+`maxResults` | 整數 | 要傳回的最大結果數量。僅適用於 Prometheus。選用。
+`timeout` | 整數 | 查詢逾時時間（秒）。僅適用於 Prometheus。選用。
+`sessionId` | 字串 | 用於追蹤查詢的工作階段識別碼。若未提供，將自動產生 UUID。選用。
 
-### Prometheus options
+### Prometheus 選項
 
-The following options are specific to Prometheus data sources and should be provided in the `options` object.
+下列選項專屬於 Prometheus 資料來源，應在 `options` 物件中提供。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`options.queryType` | String | The type of query. Valid values are `instant` or `range`. Default is `instant`. Optional.
-`options.time` | String | The evaluation timestamp for instant queries, specified as a Unix timestamp. Required for instant queries.
-`options.start` | String | The start timestamp for `range` queries, specified as a Unix timestamp. Required for `range` queries.
-`options.end` | String | The end timestamp for `range` queries, specified as a Unix timestamp. Required for `range` queries.
-`options.step` | String | The query resolution step width for `range` queries, in duration format (for example, `15s`, `1m`, `1h`). Required for `range` queries.
+`options.queryType` | 字串 | 查詢類型。有效值為 `instant` 或 `range`。預設為 `instant`。選用。
+`options.time` | 字串 | 即時查詢的評估時間戳記，以 Unix 時間戳記指定。即時查詢時為必要。
+`options.start` | 字串 | `range` 查詢的開始時間戳記，以 Unix 時間戳記指定。`range` 查詢時為必要。
+`options.end` | 字串 | `range` 查詢的結束時間戳記，以 Unix 時間戳記指定。`range` 查詢時為必要。
+`options.step` | 字串 | `range` 查詢的查詢解析步幅，以時間長度格式指定（例如 `15s`、`1m`、`1h`）。`range` 查詢時為必要。
 
-## Example request: Instant query
+## 範例請求：即時查詢
 
-The following request executes an instant PromQL query against a Prometheus data source:
+下列請求對 Prometheus 資料來源執行即時 PromQL 查詢：
 
 ```json
 POST /_plugins/_directquery/_query/my_prometheus
@@ -71,9 +72,9 @@ POST /_plugins/_directquery/_query/my_prometheus
 ```
 {% include copy-curl.html %}
 
-## Example request: Range query
+## 範例請求：範圍查詢
 
-The following request executes a range query to retrieve CPU usage over time:
+下列請求執行範圍查詢，以擷取一段時間內的 CPU 使用率：
 
 ```json
 POST /_plugins/_directquery/_query/my_prometheus
@@ -90,7 +91,7 @@ POST /_plugins/_directquery/_query/my_prometheus
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -115,12 +116,12 @@ POST /_plugins/_directquery/_query/my_prometheus
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`queryId` | String | The unique identifier for the executed query.
-`sessionId` | String | The session identifier for tracking related queries.
-`results` | Object | The query results from the data source, returned in the data source's native response format.
+`queryId` | 字串 | 已執行查詢的唯一識別碼。
+`sessionId` | 字串 | 用於追蹤相關查詢的工作階段識別碼。
+`results` | 物件 | 來自資料來源的查詢結果，以資料來源的原生回應格式傳回。

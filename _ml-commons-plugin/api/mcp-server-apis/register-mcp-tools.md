@@ -1,51 +1,52 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Register MCP tools 
+title: "註冊 MCP 工具"
 parent: MCP server APIs
 grand_parent: ML Commons APIs
 nav_order: 10
 ---
 
-# Register MCP Tools API
-**Introduced 3.0**
+# 註冊 MCP 工具 API
+**於 3.0 版推出**
 {: .label .label-purple }
 
-Use this API to register one or more Model Context Protocol (MCP)-based tools. For more information about supported tools, see [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/).
+使用此 API 註冊一或多個以 Model Context Protocol (MCP) 為基礎的工具。如需支援工具的詳細資訊，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/mcp/tools/_register
 ```
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request fields.
+下表列出可用的請求欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :---  | :--- | :--- | :--- 
-`tools` | Array | Required | A list of tools. 
+`tools` | 陣列 | 必要 | 工具的清單。
 
 
-The `tools` array contains a list of tools. Each tool contains the following fields.
+`tools` 陣列包含工具的清單。每個工具包含下列欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :---  | :--- | :---
-`name`| String | Optional | The tool name. The tool name defaults to the `type` parameter value. If you need to include multiple tools of the same type in the MCP server, specify different names for the tools. |
-`type` | String | Required | The tool type. For a list of supported tools, see [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/). 
-`description` | String | Optional | The description of the tool.
-`parameters` | Object | Optional | The parameters for the tool. The parameters are dependent on the tool type. For information about specific tool types, see [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/).
-`attributes` | Object | Optional | The configuration properties (attributes) for the tool. The most important attribute in this field is the tool's `input_schema`, which defines the expected parameter format for the tool. This schema is sent to the large language model (LLM) so it can properly format parameters when executing the tool.
+`name`| 字串 | 選用 | 工具名稱。工具名稱預設為 `type` 參數值。如果您需要在 MCP 伺服器中包含多個相同類型的工具，請為這些工具指定不同的名稱。 |
+`type` | 字串 | 必要 | 工具類型。如需支援工具的清單，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
+`description` | 字串 | 選用 | 工具的說明。
+`parameters` | 物件 | 選用 | 工具的參數。參數取決於工具類型。如需特定工具類型的資訊，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
+`attributes` | 物件 | 選用 | 工具的組態屬性 (attributes)。此欄位中最重要的屬性是工具的 `input_schema`，其定義工具的預期參數格式。此結構描述會傳送給大型語言模型 (LLM)，以便在執行工具時正確地格式化參數。
 
-## Example requests
+## 範例請求
 
-The [built-in tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/) are categorized as either zero-configuration tools (no parameters required) or parameterized tools (require parameters). Zero-configuration tools use a standard initialization process and thus have the same request body because no parameters are required. In contrast, for parameterized tools, you must provide the correct initialization parameters to ensure the tool functions as expected. 
+[內建工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)分為零組態工具 (不需要參數) 或參數化工具 (需要參數)。零組態工具使用標準初始化程序，因此因為不需要參數而具有相同的請求本文。相對地，對於參數化工具，您必須提供正確的初始化參數，以確保工具如預期般運作。
 
-### Example request: Zero-configuration tools
+### 範例請求：零組態工具
 
 <details markdown="block">
   <summary>
-    Example request
+    範例請求
   </summary>
 
 ```json
@@ -302,9 +303,9 @@ The [built-in tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools
 
 </details>
 
-### Example requests: Parameterized tools
+### 範例請求：參數化工具
 
-The following sections provide example requests for registering parameterized tools. For information about tool-specific parameters, see the corresponding [tool documentation]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/).
+下列章節提供註冊參數化工具的範例請求。有關工具特定參數的資訊，請參閱對應的[工具文件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
 
 #### WebSearchTool
 
@@ -382,9 +383,9 @@ POST /_plugins/_ml/mcp/tools/_register
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-OpenSearch responds with the node ID and the status of the creation of all tools for each node:
+OpenSearch 會回應節點 ID 以及每個節點所有工具的建立狀態：
 
 ```json
 {

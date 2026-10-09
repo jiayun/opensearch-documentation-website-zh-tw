@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reranking search results using a reranker in Amazon SageMaker
+title: "使用 Amazon SageMaker 中的重新排序器對搜尋結果重新排序"
 parent: Reranking search results
 nav_order: 115
 redirect_from:
   - /vector-search/tutorials/reranking/reranking-sagemaker/
 ---
 
-# Reranking search results using a reranker in Amazon SageMaker
+# 使用 Amazon SageMaker 中的重新排序器對搜尋結果重新排序
 
-A [reranking pipeline]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/) can rerank search results, providing a relevance score for each document in the search results with respect to the search query. The relevance score is calculated by a reranker model. 
+[重新排序管線]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)可以對搜尋結果重新排序，並針對搜尋結果中的每個文件，計算其相對於搜尋查詢的相關性分數。相關性分數由重新排序器模型計算。
 
-This tutorial shows you how to rerank search results in self-managed OpenSearch and [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/). The tutorial uses the [Hugging Face `BAAI/bge-reranker-v2-m3`](https://huggingface.co/BAAI/bge-reranker-v2-m3) model hosted on Amazon SageMaker.
+本教學說明如何在自管 OpenSearch 與 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 中對搜尋結果重新排序。本教學使用託管於 Amazon SageMaker 的 [Hugging Face `BAAI/bge-reranker-v2-m3`](https://huggingface.co/BAAI/bge-reranker-v2-m3) 模型。
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將以 `your_` 前綴開頭的預留位置替換為您自己的值。
 {: .note}
 
-## Prerequisite: Deploy the model to Amazon SageMaker
+## 必要條件：將模型部署至 Amazon SageMaker
 
-Use the following code to deploy the model to Amazon SageMaker. We suggest using a GPU for better performance:  
+請使用下列程式碼將模型部署至 Amazon SageMaker。建議使用 GPU 以獲得更好的效能：  
 
 ```python
 import json
@@ -53,9 +54,9 @@ predictor = huggingface_model.deploy(
 ```
 {% include copy.html %}
 
-For more information, see [How to deploy this model using Amazon SageMaker](https://huggingface.co/BAAI/bge-reranker-v2-m3?sagemaker_deploy=true).
+如需更多資訊，請參閱[如何使用 Amazon SageMaker 部署此模型](https://huggingface.co/BAAI/bge-reranker-v2-m3?sagemaker_deploy=true)。
 
-To perform a reranking test, use the following code:
+若要執行重新排序測試，請使用下列程式碼：
 
 ```python
 result = predictor.predict(data={
@@ -72,7 +73,7 @@ print(json.dumps(result, indent=2))
 ```
 {% include copy.html %}
 
-The response contains the reranked results ordered by relevance score:
+回應包含依相關性分數排序的重新排序結果：
 
 ```json
 [
@@ -95,14 +96,14 @@ The response contains the reranked results ordered by relevance score:
 ]
 ```
 
-To sort the results by index, use the following code:
+若要依索引排序結果，請使用下列程式碼：
 
 ```python
 print(json.dumps(sorted(result, key=lambda x: x['index']),indent=2))
 ```
 {% include copy.html %}
 
-The sorted results are as follows:
+排序後的結果如下：
 
 ```json
 [
@@ -125,7 +126,7 @@ The sorted results are as follows:
 ]
 ```
 
-Note the model inference endpoint; you'll use it to create a connector in the next step. You can confirm the inference endpoint URL using the following code:
+請記下模型推論端點；您將在下一步中使用它來建立連接器。您可以使用下列程式碼確認推論端點 URL：
 
 ```python
 region_name = boto3.Session().region_name
@@ -135,11 +136,11 @@ print(endpoint_url)
 ```
 {% include copy.html %}
 
-## Step 1: Create a connector and register the model
+## 步驟 1：建立連接器並註冊模型
 
-To create a connector for the model, send the following request. 
+若要為模型建立連接器，請傳送下列請求。
 
-If you are using self-managed OpenSearch, supply your AWS credentials:
+如果您使用的是自管 OpenSearch，請提供您的 AWS 憑證：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -216,7 +217,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-If you are using Amazon OpenSearch service, you can provide an AWS Identity and Access Management (IAM) role Amazon Resource Name (ARN) that allows access to the SageMaker model inference endpoint:
+如果您使用的是 Amazon OpenSearch Service，您可以提供允許存取 SageMaker 模型推論端點的 AWS Identity and Access Management (IAM) 角色 Amazon Resource Name (ARN)：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -291,9 +292,9 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-For more information, see the [AWS documentation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html), [this tutorial]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-sagemaker/), and [the AIConnectorHelper notebook](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/tutorials/aws/AIConnectorHelper.ipynb).
+如需更多資訊，請參閱 [AWS 文件](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)、[本教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-sagemaker/)以及 [AIConnectorHelper 筆記本](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/tutorials/aws/AIConnectorHelper.ipynb)。
 
-Use the connector ID from the response to register and deploy the model:
+使用回應中的連接器 ID 來註冊並部署模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -306,9 +307,9 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Note the model ID in the response; you'll use it in the following steps.
+請記下回應中的模型 ID；您將在後續步驟中使用它。
 
-Test the model by using the Predict API:
+使用 Predict API 測試模型：
 
 ```json
 POST _plugins/_ml/models/your_model_id/_predict
@@ -326,7 +327,7 @@ POST _plugins/_ml/models/your_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-Alternatively, you can test the model as follows:
+或者，您可以依照下列方式測試模型：
 
 ```json
 POST _plugins/_ml/_predict/text_similarity/your_model_id
@@ -342,9 +343,9 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
 ```
 {% include copy-curl.html %}
 
-The connector `pre_process_function` transforms the input into the format required by the previously shown parameters.
+連接器 `pre_process_function` 會將輸入轉換為先前所示參數所需的格式。
 
-By default, the model output has the following format:
+預設情況下，模型輸出具有下列格式：
 
 ```json
 [
@@ -367,7 +368,7 @@ By default, the model output has the following format:
 ]
 ```
 
-The connector `post_process_function` transforms the model's output into a format that the [rerank processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) can interpret and orders the results by index. This adapted format is as follows:
+連接器 `post_process_function` 會將模型的輸出轉換為 [重新排序處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) 可解讀的格式，並依索引排序結果。轉換後的格式如下：
 
 ```json
 {
@@ -421,15 +422,15 @@ The connector `post_process_function` transforms the model's output into a forma
 }
 ```
 
-The response contains two `similarity` objects. For each `similarity` object, the `data` array contains a relevance score for each document with respect to the query. The `similarity` objects are provided in the order of the input documents---the first object pertains to the first document. 
+回應包含兩個 `similarity` 物件。對於每個 `similarity` 物件，`data` 陣列包含每份文件相對於查詢的相關性分數。`similarity` 物件會依輸入文件的順序提供——第一個物件對應第一份文件。
 
-## Step 2: Configure a reranking pipeline
+## 步驟 2：設定重新排序管線
 
-Follow these steps to configure a reranking pipeline.
+請依照下列步驟設定重新排序管線。
 
-### Step 2.1: Ingest test data
+### 步驟 2.1：匯入測試資料
 
-Send a bulk request to ingest test data:
+傳送大量請求以匯入測試資料：
 
 ```json
 POST _bulk
@@ -444,9 +445,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-### Step 2.2: Create a reranking pipeline
+### 步驟 2.2：建立重新排序管線
 
-Create a reranking pipeline with the cross-encoder model:
+使用 cross-encoder 模型建立重新排序管線：
 
 ```json
 PUT /_search/pipeline/rerank_pipeline_sagemaker
@@ -468,14 +469,14 @@ PUT /_search/pipeline/rerank_pipeline_sagemaker
 ```
 {% include copy-curl.html %}
 
-If you provide multiple field names in `document_fields`, the values of all fields are first concatenated, and then reranking is performed.
+如果您在 `document_fields` 中提供多個欄位名稱，會先串接所有欄位的值，然後再執行重新排序。
 {: .note}
 
-### Step 2.3: Test the reranking
+### 步驟 2.3：測試重新排序
 
-To limit the number of returned results, you can specify the `size` parameter. For example, set `"size": 2` to return the top two documents.
+若要限制傳回的結果數量，您可以指定 `size` 參數。例如，將 `"size": 2` 設為傳回前兩份文件。
 
-First, test the query without using the reranking pipeline:
+首先，在不使用重新排序管線的情況下測試查詢：
 
 ```json
 POST my-test-data/_search
@@ -496,7 +497,7 @@ POST my-test-data/_search
 ```
 {% include copy-curl.html %}
 
-The first document in the response is `Carson City is the capital city of the American state of Nevada`, which is incorrect:
+回應中的第一份文件是 `Carson City is the capital city of the American state of Nevada`，這是錯誤的：
 
 ```json
 {
@@ -584,7 +585,7 @@ The first document in the response is `Carson City is the capital city of the Am
 }
 ```
 
-Next, test the query using the reranking pipeline:
+接著，使用重新排序管線測試查詢：
 
 ```json
 POST my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
@@ -612,7 +613,7 @@ POST my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
 ```
 {% include copy-curl.html %}
 
-The first document in the response is `"Washington, D.C. (also known as simply Washington or D.C., and officially as the District of Columbia) is the capital of the United States. It is a federal district."`, which is correct:
+回應中的第一份文件是 `"Washington, D.C. (also known as simply Washington or D.C., and officially as the District of Columbia) is the capital of the United States. It is a federal district."`，這是正確的：
 
 ```json
 {
@@ -703,7 +704,7 @@ The first document in the response is `"Washington, D.C. (also known as simply W
 }
 ```
 
-To avoid writing the query twice, use the `query_text_path` instead of `query_text`, as follows:
+若要避免將查詢寫兩次，請使用 `query_text_path` 而非 `query_text`，如下所示：
 
 ```json
 POST my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker

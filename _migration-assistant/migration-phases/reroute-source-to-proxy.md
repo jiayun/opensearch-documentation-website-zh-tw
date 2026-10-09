@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reroute client traffic to capture proxy
+title: "將用戶端流量重新導向至擷取 Proxy"
 nav_order: 30
 parent: Migration workflows
 permalink: /migration-assistant/migration-phases/reroute-source-to-proxy/
 ---
 
-# Reroute client traffic to the capture proxy
+# 將用戶端流量重新導向至擷取 Proxy
 
-The following information applies only to zero-downtime migrations that use Capture and Replay.
+以下資訊僅適用於使用「擷取與重播」(Capture and Replay) 的零停機遷移。
 {: .note }
 
-Capture must start before snapshot backfill if you want to preserve writes that happen during the migration window.
+若您想保留遷移期間發生的寫入，擷取必須在快照回填之前啟動。
 
-## Workflow-created resources
+## 工作流程建立的資源
 
-When your workflow includes a `traffic.proxies` section, Migration Assistant creates:
+當您的工作流程包含 `traffic.proxies` 區段時，Migration Assistant 會建立：
 
-- Capture proxy pods.
-- A Kubernetes Service resource in front of those pods.
-- Apache Kafka configuration so captured traffic can be replayed later.
+- 擷取 Proxy Pod。
+- 位於這些 Pod 前方的 Kubernetes Service 資源。
+- Apache Kafka 組態，以便日後重播所擷取的流量。
 
-Client traffic is sent to the proxy Kubernetes Service. The proxy forwards requests to the source cluster and records them for later replay.
+用戶端流量會傳送至 Proxy 的 Kubernetes Service。Proxy 會將請求轉送至來源叢集，並記錄這些請求以供日後重播。
 
-## Kubernetes and EKS compared
+## Kubernetes 與 EKS 的比較
 
-The migration engine is the same on both Kubernetes and Amazon Elastic Kubernetes Service (EKS) platforms. The practical difference is how the Kubernetes Service is exposed and integrated into your environment:
+遷移引擎在 Kubernetes 與 Amazon Elastic Kubernetes Service (EKS) 兩個平台上皆相同。實務上的差異在於 Kubernetes Service 的暴露方式，以及如何整合至您的環境：
 
-- On **generic Kubernetes**, you provide the networking pattern that routes clients to the proxy Kubernetes Service.
-- On **Amazon EKS**, the Kubernetes Service can be backed by AWS load-balancer infrastructure, and the bootstrap path automates more of the platform configuration.
+- 在**一般 Kubernetes** 上，您需提供將用戶端路由至 Proxy Kubernetes Service 的網路模式。
+- 在 **Amazon EKS** 上，Kubernetes Service 可由 AWS 負載平衡器基礎架構支援，且啟動路徑會自動化更多平台組態。
 
-## Configure the proxy in the workflow
+## 在工作流程中設定 Proxy
 
-Always start from the current sample:
+請一律從目前的範例開始：
 
 ```bash
 workflow configure sample --load
@@ -40,25 +41,25 @@ workflow configure edit
 ```
 {% include copy.html %}
 
-In the proxy configuration, important fields include:
+在 Proxy 組態中，重要欄位包括：
 
 - `listenPort`
 - `podReplicas`
-- `internetFacing` when you need external exposure on EKS.
+- 當您需要在 EKS 上對外暴露時，使用 `internetFacing`。
 - `tls`
 - `setHeader`
 
-## TLS behavior
+## TLS 行為
 
-The proxy is secure by default. If you do not configure TLS explicitly, the workflow provisions a self-signed certificate for the proxy.
+Proxy 預設為安全。若您未明確設定 TLS，工作流程會為 Proxy 佈建自簽憑證。
 
-If you intentionally want plain text HTTP, set the proxy TLS mode to `plaintext`.
+若您刻意想使用純文字 HTTP，請將 Proxy TLS 模式設為 `plaintext`。
 
-## Host and header overrides
+## 主機與標頭覆寫
 
-If your source uses host-based routing, add a static header in the proxy configuration.
+若您的來源使用以主機為基礎的路由，請在 Proxy 組態中新增靜態標頭。
 
-Use the `setHeader` field with entries in `Header-Name: value` format, for example:
+使用 `setHeader` 欄位並以 `Header-Name: value` 格式提供項目，例如：
 
 ```json
 {
@@ -67,27 +68,27 @@ Use the `setHeader` field with entries in `Header-Name: value` format, for examp
 ```
 {% include copy.html %}
 
-## Find the proxy endpoint
+## 尋找 Proxy 端點
 
-After you submit the workflow, inspect the Services in the `ma` namespace and identify the one created for the proxy:
+提交工作流程後，請檢查 `ma` 命名空間中的 Service，並找出為 Proxy 建立的那一個：
 
 ```bash
 kubectl get svc -n ma
 ```
 {% include copy.html %}
 
-Then update your application, DNS, or load balancer to send traffic to that proxy endpoint instead of directly to the source.
+接著更新您的應用程式、DNS 或負載平衡器，將流量改為傳送至該 Proxy 端點，而非直接傳送至來源。
 
-## Verify capture before proceeding
+## 繼續之前先驗證擷取
 
-Before you proceed to metadata migration and backfill, confirm that:
+在您繼續進行中繼資料遷移與回填之前，請確認：
 
-- The proxy pods are running.
-- The Kubernetes Service is reachable.
-- Application traffic is flowing through the proxy.
-- The workflow shows the traffic components as healthy.
+- Proxy Pod 正在執行。
+- Kubernetes Service 可連線。
+- 應用程式流量正流經 Proxy。
+- 工作流程顯示流量元件狀態良好。
 
-Useful commands:
+實用命令：
 
 ```bash
 workflow status
@@ -95,12 +96,12 @@ workflow manage
 ```
 {% include copy.html %}
 
-## Next steps
+## 後續步驟
 
-Once capture is live, keep traffic flowing through the proxy while you perform the following steps:
+擷取上線後，請在執行下列步驟期間讓流量持續流經 Proxy：
 
-1. Migrate metadata
-2. Backfill historical documents
-3. Replay the captured traffic to catch the target up
+1. 遷移中繼資料
+2. 回填歷史文件
+3. 重播所擷取的流量，讓目標趕上進度
 
 {% include migration-phase-navigation.html %}

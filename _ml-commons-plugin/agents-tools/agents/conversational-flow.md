@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Conversational flow agents
+title: "對話流程代理程式"
 has_children: false
 has_toc: false
 nav_order: 20
@@ -8,11 +9,11 @@ parent: Agents
 grand_parent: Agents and tools
 ---
 
-# Conversational flow agents
-**Introduced 2.13**
+# 對話流程代理程式
+**於 2.13 版導入**
 {: .label .label-purple }
 
-Similarly to a [flow agent]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/flow/), a conversational flow agent is configured with a set of tools that it runs in order. The difference between them is that a conversational flow agent stores the conversation in an index, in the following example, the `conversation_index`. The following agent runs the `VectorDBTool` and then the `MLModelTool`:
+與[流程代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/flow/)類似，對話流程代理程式會設定一組工具，並依序執行。兩者的差異在於對話流程代理程式會將對話儲存在索引中，例如以下範例中的 `conversation_index`。下列代理程式會先執行 `VectorDBTool`，再執行 `MLModelTool`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -63,20 +64,20 @@ Assistant:"""
 ```
 {% include copy-curl.html %}
 
-For more information about the Register Agent API request fields, see [Request body fields]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/#request-body-fields).
+如需 Register Agent API 請求欄位的詳細資訊，請參閱[請求本文欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/#request-body-fields)。
 
-For a step-by-step tutorial, see [Agents and tools tutorial]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents-tools-tutorial/).
+如需逐步教學，請參閱[代理程式與工具教學]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents-tools-tutorial/)。
 
-## Using external MCP tools
-**Introduced 3.8**
+## 使用外部 MCP 工具
+**於 3.8 版導入**
 {: .label .label-purple }
 
-Conversational flow agents can call external MCP server tools in a fixed pipeline alongside OpenSearch tools such as `MLModelTool`. Configure `parameters.mcp_connectors` and declare each MCP tool explicitly in the `tools` array using `McpStreamableHttpTool` or `McpSseTool`. For setup steps and examples, see [Using MCP tools with flow agents and conversational flow agents]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/mcp-connector/#flow-agents-and-conversational-flow-agents).
+對話流程代理程式可以在固定管線中呼叫外部 MCP 伺服器工具，並與 `MLModelTool` 等 OpenSearch 工具並用。請設定 `parameters.mcp_connectors`，並使用 `McpStreamableHttpTool` 或 `McpSseTool` 在 `tools` 陣列中明確宣告每個 MCP 工具。如需設定步驟與範例，請參閱[在流程代理程式與對話流程代理程式中使用 MCP 工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/mcp-connector/#flow-agents-and-conversational-flow-agents)。
 
-## Next steps
+## 後續步驟
 
-- To learn more about registering agents, see [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/).
-- For a list of supported tools, see [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/).
-- For a step-by-step tutorial, see [Agents and tools tutorial]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents-tools-tutorial/).
-- For supported APIs, see [Agent APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/).
-- To use agents and tools in configuration automation, see [Automating configurations]({{site.url}}{{site.baseurl}}/automating-configurations/index/).
+- 若要進一步了解如何註冊代理程式，請參閱 [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)。
+- 如需支援的工具清單，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
+- 如需逐步教學，請參閱[代理程式與工具教學]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents-tools-tutorial/)。
+- 如需支援的 API，請參閱[代理程式 API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/)。
+- 若要在組態自動化中使用代理程式與工具，請參閱[自動化組態]({{site.url}}{{site.baseurl}}/automating-configurations/index/)。

@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index operations
+title: "索引操作"
 nav_order: 5
 redirect_from:
   - /dashboards/im-dashboards/index-management/
   - /dashboards/admin-ui-index/index-management/
 ---
 
-# Index operations
+# 索引操作
 
-An index is the basic unit of data storage in OpenSearch. Over the lifetime of an index, you create it, inspect its settings and statistics, close it while you change static settings, reopen it, and eventually delete it. You can perform each of these operations using the [core index APIs]({{site.url}}{{site.baseurl}}/api-reference/index-apis/core-index-apis/) or from the **Index Management** page in OpenSearch Dashboards.
+索引是 OpenSearch 中資料儲存的基本單位。在索引的生命週期中，您會建立索引、檢視其設定與統計資料、在變更靜態設定時關閉索引、重新開啟索引，最後刪除索引。您可以透過[核心索引 API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/core-index-apis/) 或 OpenSearch Dashboards 的 **Index Management** 頁面執行這些操作。
 
-For information about maintenance operations such as refresh, flush, force merge, shrink, and split, see [Index maintenance]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/).
+有關重新整理、排清、強制合併、縮減與分割等維護操作的資訊，請參閱[索引維護]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/)。
 
-## Creating an index
+## 建立索引
 
-You can let OpenSearch create an index implicitly when you index the first document into it, or you can create the index explicitly so that you control its mappings and settings from the start. Create the index explicitly when you need a specific number of shards, a custom refresh interval, or field mappings that differ from the dynamically inferred ones.
+您可以讓 OpenSearch 在將第一份文件編製索引時隱含地建立索引，也可以明確地建立索引，以便從一開始就控制其對應與設定。當您需要特定數量的分片、自訂的重新整理間隔，或與動態推斷結果不同的欄位對應時，請明確地建立索引。
 
-The following request creates an index with two primary shards, one replica, and a `date` mapping for the `timestamp` field:
+下列請求會建立一個具有兩個主要分片、一個副本，並為 `timestamp` 欄位設定 `date` 對應的索引：
 
 ```json
 PUT /logs-2026
@@ -38,158 +39,158 @@ PUT /logs-2026
 ```
 {% include copy-curl.html %}
 
-For all available settings and mappings, see [Create Index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/). To apply the same settings and mappings to every index whose name matches a pattern, use an [index template]({{site.url}}{{site.baseurl}}/im-plugin/index-templates/).
+所有可用的設定與對應，請參閱 [Create Index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/)。若要將相同的設定與對應套用至名稱符合某個模式的所有索引，請使用[索引範本]({{site.url}}{{site.baseurl}}/im-plugin/index-templates/)。
 
-Index names must follow the [naming restrictions for indexes]({{site.url}}{{site.baseurl}}/im-plugin/#naming-restrictions-for-indexes).
+索引名稱必須遵循[索引命名限制]({{site.url}}{{site.baseurl}}/im-plugin/#naming-restrictions-for-indexes)。
 
-## Viewing index information
+## 檢視索引資訊
 
-To retrieve the settings, mappings, and aliases of an index, use the [Get Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/get-index/):
+若要擷取索引的設定、對應與別名，請使用 [Get Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/get-index/)：
 
 ```json
 GET /logs-2026
 ```
 {% include copy-curl.html %}
 
-To check whether an index exists without retrieving it, use [Index Exists]({{site.url}}{{site.baseurl}}/api-reference/index-apis/exists/). To resolve an alias, data stream, or wildcard expression to the concrete indexes it covers, use [Resolve Index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/resolve-index/). For document counts, store size, and per-operation metrics, use [Index Stats]({{site.url}}{{site.baseurl}}/api-reference/index-apis/stats/).
+若要檢查索引是否存在而不擷取它，請使用 [Index Exists]({{site.url}}{{site.baseurl}}/api-reference/index-apis/exists/)。若要將別名、資料串流或萬用字元運算式解析為其涵蓋的具體索引，請使用 [Resolve Index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/resolve-index/)。若要取得文件數量、儲存大小與各項操作的指標，請使用 [Index Stats]({{site.url}}{{site.baseurl}}/api-reference/index-apis/stats/)。
 
-## Closing and opening an index
+## 關閉與開啟索引
 
-A closed index rejects read and write requests and releases the memory its shards were using, but its data remains on disk. Close an index when you need to change a static setting, which can only be updated on a closed index, or when you want to retain an index that is no longer queried without paying its memory cost.
+已關閉的索引會拒絕讀取與寫入請求，並釋放其分片所使用的記憶體，但資料仍保留在磁碟上。當您需要變更只能在已關閉索引上更新的靜態設定時，或當您想保留不再被查詢的索引而不付出其記憶體成本時，請關閉索引。
 
-To close an index, use the [Close Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/close-index/):
+若要關閉索引，請使用 [Close Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/close-index/)：
 
 ```json
 POST /logs-2026/_close
 ```
 {% include copy-curl.html %}
 
-To make the index available again, use the [Open Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/open-index/):
+若要讓索引再次可用，請使用 [Open Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/open-index/)：
 
 ```json
 POST /logs-2026/_open
 ```
 {% include copy-curl.html %}
 
-For the list of settings that require a closed index, see [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/).
+需要已關閉索引的設定清單，請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)。
 
-## Deleting an index
+## 刪除索引
 
-Deleting an index removes its documents, shards, and metadata. Use the [Delete Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/delete-index/):
+刪除索引會移除其文件、分片與中繼資料。請使用 [Delete Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/delete-index/)：
 
 ```json
 DELETE /logs-2026
 ```
 {% include copy-curl.html %}
 
-A deleted index cannot be recovered unless you restore it from a [snapshot]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/index/).
+已刪除的索引無法復原，除非您從[快照]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/index/)還原它。
 {: .warning}
 
-To delete indexes on a schedule rather than manually, define an [Index State Management policy]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/) with a `delete` action.
+若要依排程而非手動刪除索引，請定義一個包含 `delete` 動作的 [Index State Management 政策]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/)。
 
-## Index operations in OpenSearch Dashboards
+## OpenSearch Dashboards 中的索引操作
 
-To navigate to the **Index Management** page, go to **Management > Index Management** on the top menu. The **Indexes** page lists the indexes in your cluster and provides the following information about each one.
+若要前往 **Index Management** 頁面，請在頂端選單中前往 **Management > Index Management**。**Indexes** 頁面會列出叢集中的索引，並提供每個索引的下列資訊。
 
-| Column | Description |
+| 欄位 | 說明 |
 | :--- | :--- |
-| **Index** | The name of the index. |
-| **Health** | The replication status of the index: green (all primary and replica shards are assigned), yellow (at least one replica shard is not assigned), or red (at least one primary shard is not assigned). |
-| **Managed by policy** | Whether an Index State Management policy applies to the index, either directly or through an alias. |
-| **Status** | Whether the index is open or closed. |
-| **Total size** | The storage used by the index across all primary and replica shards. |
-| **Size of primaries** | The storage used by the index across all primary shards. |
-| **Total documents** | The number of documents in the index. |
-| **Deleted documents** | The number of documents deleted from the index. |
-| **Primaries** | The number of primary shards. |
-| **Replicas** | The number of replica shards for each primary shard. |
+| **Index** | 索引的名稱。 |
+| **Health** | 索引的複寫狀態：綠色（所有主要與副本分片皆已指派）、黃色（至少一個副本分片未指派），或紅色（至少一個主要分片未指派）。 |
+| **Managed by policy** | 是否有 Index State Management 政策直接或透過別名套用於該索引。 |
+| **Status** | 索引是開啟還是關閉。 |
+| **Total size** | 索引在所有主要與副本分片上使用的儲存空間。 |
+| **Size of primaries** | 索引在所有主要分片上使用的儲存空間。 |
+| **Total documents** | 索引中的文件數量。 |
+| **Deleted documents** | 從索引中刪除的文件數量。 |
+| **Primaries** | 主要分片的數量。 |
+| **Replicas** | 每個主要分片的副本分片數量。 |
 
-Because the list can span several pages, use the search box to find an index by name.
+由於清單可能跨越多頁，請使用搜尋方塊依名稱尋找索引。
 
-The following image shows the **Indexes** page.
+下圖顯示 **Indexes** 頁面。
 
-![Indexes page]({{site.url}}{{site.baseurl}}/images/admin-ui-index/indexes-list.png)
+![Indexes 頁面]({{site.url}}{{site.baseurl}}/images/admin-ui-index/indexes-list.png)
 
-### Viewing index details
+### 檢視索引詳細資訊
 
-1. In **Index Management**, select **Indexes**.
-1. Select an index name in the **Index** column.
+1. 在 **Index Management** 中，選取 **Indexes**。
+1. 在 **Index** 欄位中選取索引名稱。
 
-The index page shows an **Overview** panel with metrics for the index, along with **Settings**, **Mappings**, and **Alias** tabs that you can edit. To return to the list, select **Indexes** in the breadcrumb trail.
+索引頁面會顯示包含索引指標的 **Overview** 面板，以及可編輯的 **Settings**、**Mappings** 與 **Alias** 索引標籤。若要返回清單，請在階層連結軌跡中選取 **Indexes**。
 
-### Creating an index
+### 建立索引
 
-1. In **Index Management**, select **Indexes**, and then select **Create Index**.
-1. In **Define index**, enter an index name. Optionally, select existing aliases for the index or enter the name of a new alias to create.
-1. In **Index settings**, enter the number of primary shards, the number of replicas, and the refresh interval. The default refresh interval is `1s`. To supply additional settings as a flat JSON object, expand **Advanced settings**. For the available options, see [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/).
-1. In **Index mapping**, define the fields in your documents. Select **Visual editor** to add fields one at a time or **JSON editor** to paste an existing mapping. In the visual editor, select **Add new field** or **Add new object**, enter a field name, and select a field type. For an object field, select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/plus-icon.png" class="inline-icon" alt="plus icon"/>{:/} (plus) icon to add nested fields. This panel is optional; if you leave it empty, OpenSearch infers mappings from the first documents you index.
-1. Select **Create**. Any new aliases that you specified are created along with the index.
+1. 在 **Index Management** 中，選取 **Indexes**，然後選取 **Create Index**。
+1. 在 **Define index** 中，輸入索引名稱。您也可以選擇為索引選取現有別名，或輸入要建立的新別名名稱。
+1. 在 **Index settings** 中，輸入主要分片數量、副本數量與重新整理間隔。預設的重新整理間隔為 `1s`。若要以扁平 JSON 物件提供其他設定，請展開 **Advanced settings**。可用的選項請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)。
+1. 在 **Index mapping** 中，定義文件中的欄位。選取 **Visual editor** 逐一新增欄位，或選取 **JSON editor** 貼上現有對應。在視覺化編輯器中，選取 **Add new field** 或 **Add new object**，輸入欄位名稱，並選取欄位類型。對於物件欄位，選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/plus-icon.png" class="inline-icon" alt="plus icon"/>{:/}（加號）圖示以新增巢狀欄位。此面板為選用；若留空，OpenSearch 會從您編製索引的前幾份文件推斷對應。
+1. 選取 **Create**。您指定的任何新別名都會與索引一併建立。
 
-To create an [append-only index]({{site.url}}{{site.baseurl}}/im-plugin/append-only-index/), add the following setting in **Advanced settings** before you create the index:
+若要建立[僅附加索引]({{site.url}}{{site.baseurl}}/im-plugin/append-only-index/)，請在建立索引前於 **Advanced settings** 中新增下列設定：
 
 ```json
 "index.append_only.enabled": "true"
 ```
 {% include copy.html %}
 
-An index cannot be converted to or from an append-only index after it is created.
+索引建立後無法轉換為或轉換自僅附加索引。
 {: .warning}
 
-### Editing an index
+### 編輯索引
 
-1. In **Index Management**, select **Indexes**.
-1. Select an index name in the **Index** column.
-1. Select the tab for what you want to change:
+1. 在 **Index Management** 中，選取 **Indexes**。
+1. 在 **Index** 欄位中選取索引名稱。
+1. 選取對應您要變更項目的索引標籤：
 
-   - To change the number of replicas or the refresh interval, select **Settings**. To supply other settings as a flat JSON object, expand **Advanced settings**. You cannot change the number of primary shards of an existing index; to change it, [shrink]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/#shrinking-an-index-1) or [split]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/#splitting-an-index-1) the index instead.
-   - To add fields or objects, select **Mappings**. You cannot change the name or type of an existing field.
-   - To add an alias, select an existing alias, or remove one, select **Alias**. To remove an alias, select the {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/cross-icon.png" class="inline-icon" alt="cross icon"/>{:/} (cross) icon next to its name.
+   - 若要變更副本數量或重新整理間隔，請選取 **Settings**。若要以扁平 JSON 物件提供其他設定，請展開 **Advanced settings**。您無法變更現有索引的主要分片數量；若要變更，請改為[縮減]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/#shrinking-an-index-1)或[分割]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/#splitting-an-index-1)索引。
+   - 若要新增欄位或物件，請選取 **Mappings**。您無法變更現有欄位的名稱或類型。
+   - 若要新增別名、選取現有別名或移除別名，請選取 **Alias**。若要移除別名，請選取其名稱旁的 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/cross-icon.png" class="inline-icon" alt="cross icon"/>{:/}（叉號）圖示。
 
-1. Select **Save**.
+1. 選取 **Save**。
 
-### Closing an index
+### 關閉索引
 
-1. In **Index Management**, select **Indexes**.
-1. Select the checkbox next to each index that you want to close.
-1. Select **Actions**, and then select **Close**.
-1. Enter `close` in the confirmation dialog, and then select **Close**.
+1. 在 **Index Management** 中，選取 **Indexes**。
+1. 選取您要關閉之每個索引旁的核取方塊。
+1. 選取 **Actions**，然後選取 **Close**。
+1. 在確認對話方塊中輸入 `close`，然後選取 **Close**。
 
-### Opening an index
+### 開啟索引
 
-1. In **Index Management**, select **Indexes**.
-1. Select the checkbox next to each closed index that you want to open.
-1. Select **Actions**, and then select **Open**.
-1. Select **Open** in the confirmation dialog.
+1. 在 **Index Management** 中，選取 **Indexes**。
+1. 選取您要開啟之每個已關閉索引旁的核取方塊。
+1. 選取 **Actions**，然後選取 **Open**。
+1. 在確認對話方塊中選取 **Open**。
 
-### Deleting an index
+### 刪除索引
 
-1. In **Index Management**, select **Indexes**.
-1. Select the checkbox next to each index that you want to delete.
-1. Select **Actions**, and then select **Delete**.
-1. Enter `delete` in the confirmation dialog, and then select **Delete**.
+1. 在 **Index Management** 中，選取 **Indexes**。
+1. 選取您要刪除之每個索引旁的核取方塊。
+1. 選取 **Actions**，然後選取 **Delete**。
+1. 在確認對話方塊中輸入 `delete`，然後選取 **Delete**。
 
-### Applying a policy
+### 套用政策
 
-To attach an Index State Management policy to an index from the index list:
+若要從索引清單將 Index State Management 政策附加至索引：
 
-1. In **Index Management**, select **Indexes**.
-1. Select the checkbox next to each index that you want the policy to manage.
-1. Select **Actions**, and then select **Apply policy**.
-1. Select a policy from **Policy ID**. A preview of the policy is displayed.
-1. If the policy includes a `rollover` action, enter an existing alias in **Rollover alias**.
-1. Select **Apply**.
+1. 在 **Index Management** 中，選取 **Indexes**。
+1. 選取您要由政策管理之每個索引旁的核取方塊。
+1. 選取 **Actions**，然後選取 **Apply policy**。
+1. 從 **Policy ID** 選取一項政策。系統會顯示政策的預覽。
+1. 若政策包含 `rollover` 動作，請在 **Rollover alias** 中輸入現有別名。
+1. 選取 **Apply**。
 
-For more information, see [Managed indexes]({{site.url}}{{site.baseurl}}/im-plugin/ism/managedindexes/).
+如需更多資訊，請參閱[受管理的索引]({{site.url}}{{site.baseurl}}/im-plugin/ism/managedindexes/)。
 
-### Permissions and error reporting
+### 權限與錯誤報告
 
-Permissions are enforced at the API level through [permissions]({{site.url}}{{site.baseurl}}/security/access-control/permissions/) and action groups. OpenSearch Dashboards does not add a separate layer of permission control: you can view the **Index Management** pages if you have access to them, and you can complete an operation if you have permission to call the corresponding API.
+權限是在 API 層級透過[權限]({{site.url}}{{site.baseurl}}/security/access-control/permissions/)與動作群組強制執行。OpenSearch Dashboards 不會新增額外的權限控制層：只要您有權存取 **Index Management** 頁面即可檢視它們，只要您有權呼叫對應的 API 即可完成操作。
 
-An operation that fails immediately reports an error in the interface. For an operation that runs longer, the failure is reported when it occurs. You can also check the state of an operation in the **Status** column of the index list. For more information, see [Checking the status of long-running operations]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/#checking-the-status-of-long-running-operations).
+立即失敗的操作會在介面中報告錯誤。執行時間較長的操作，則會在失敗發生時報告。您也可以在索引清單的 **Status** 欄位中檢查操作的狀態。如需更多資訊，請參閱[檢查長時間執行操作的狀態]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/#checking-the-status-of-long-running-operations)。
 
-## Related documentation
+## 相關文件
 
-- [Add and manage your data]({{site.url}}{{site.baseurl}}/getting-started/manage-data/)
-- [Core index APIs]({{site.url}}{{site.baseurl}}/api-reference/index-apis/core-index-apis/)
-- [Index maintenance]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/)
+- [新增與管理您的資料]({{site.url}}{{site.baseurl}}/getting-started/manage-data/)
+- [核心索引 API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/core-index-apis/)
+- [索引維護]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/)
 - [Index State Management]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/)

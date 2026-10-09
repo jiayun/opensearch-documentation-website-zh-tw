@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index prefixes
+title: "索引前綴"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/index-prefixes/
@@ -9,22 +10,22 @@ has_children: false
 has_toc: false
 ---
 
-# Index prefixes mapping parameter
+# 索引前綴對應參數
 
-The `index_prefixes` mapping parameter instructs the engine to generate additional index entries for the beginning segments of terms in a text field. When enabled, it builds a prefix index based on configurable minimum and maximum character lengths. This can significantly improve the performance of [prefix queries]({{site.url}}{{site.baseurl}}/query-dsl/term/prefix/), such as [autocomplete]({{site.url}}{{site.baseurl}}/opensearch/search/autocomplete/) or [search as you type]({{site.url}}{{site.baseurl}}/opensearch/search/autocomplete/#search-as-you-type), by allowing these queries to quickly match the pre-indexed term prefixes.
+`index_prefixes` 對應參數會指示引擎為文字欄位中詞彙的開頭分段產生額外的索引項目。啟用後，它會根據可設定的最小與最大字元長度建立前綴索引。這可以大幅改善[前綴查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/prefix/)的效能，例如[自動完成]({{site.url}}{{site.baseurl}}/opensearch/search/autocomplete/)或[隨打即搜]({{site.url}}{{site.baseurl}}/opensearch/search/autocomplete/#search-as-you-type)，讓這些查詢能快速比對預先編製索引的詞彙前綴。
 
-By default, prefix indexing is not performed, maintaining minimal index size and fast indexing operations. However, if your application benefits from rapid prefix matching, enabling this parameter can provide a marked improvement in query efficiency.
+根據預設，不會執行前綴索引，以維持最小的索引大小與快速的索引作業。不過，如果您的應用程式受益於快速的前綴比對，啟用此參數可以明顯改善查詢效率。
 
-## Index prefixes configuration
+## 索引前綴組態
 
-You can pass the following configuration parameters to the `index_prefixes` mapping parameter:
+您可以將下列組態參數傳遞給 `index_prefixes` 對應參數：
 
-- `min_chars`: The minimum length of the prefix that needs to be indexed. Minimum is `0`. Default is `2`.
-- `max_chars`: The maximum length of the prefix that needs to be indexed. Maximum is `20`. Default is `5`.
+- `min_chars`：需要編製索引的前綴的最小長度。最小值為 `0`。預設為 `2`。
+- `max_chars`：需要編製索引的前綴的最大長度。最大值為 `20`。預設為 `5`。
 
-## Enabling index prefixes on a field
+## 在欄位上啟用索引前綴
 
-The following request creates an index named `products` with the `name` field configured to build a prefix index with a length of between `2` and `10` characters:
+下列請求會建立名為 `products` 的索引，並將 `name` 欄位設定為建立長度介於 `2` 與 `10` 個字元之間的前綴索引：
 
 ```json
 PUT /products
@@ -44,7 +45,7 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-Index a document using the following request:
+使用下列請求將文件編製索引：
 
 ```json
 PUT /products/_doc/1
@@ -54,7 +55,7 @@ PUT /products/_doc/1
 ```
 {% include copy-curl.html %}
 
-The following search request shows a prefix query that searches for documents in which the `name` field starts with `ul`:
+下列搜尋請求顯示一個前綴查詢，用於搜尋 `name` 欄位開頭為 `ul` 的文件：
 
 ```json
 POST /products/_search
@@ -68,7 +69,7 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含相符的文件：
 
 ```json
 {
@@ -93,9 +94,9 @@ The response contains the matching document:
 }
 ```
 
-## Using default parameters with index prefixes
+## 搭配索引前綴使用預設參數
 
-The following request creates an index named `products_default` using `index_prefixes` with the default parameters:
+下列請求會使用 `index_prefixes` 搭配預設參數建立名為 `products_default` 的索引：
 
 ```json
 PUT /products_default

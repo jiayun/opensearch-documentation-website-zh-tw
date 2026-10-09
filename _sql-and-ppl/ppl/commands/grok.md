@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: grok
 parent: Commands
@@ -8,33 +9,33 @@ nav_order: 22
 
 <!-- vale off -->
 
-# grok command
+# grok 命令
 
 <!-- vale on -->
 
-The `grok` command parses a text field using a Grok pattern and appends the extracted results to the search results.
+`grok` 命令會使用 Grok 模式剖析文字欄位，並將擷取的結果附加到搜尋結果中。
 
-## Syntax
+## 語法
 
-The `grok` command has the following syntax:
+`grok` 命令的語法如下：
 
 ```sql
 grok <field> <pattern>
 ```
 
-## Parameters
+## 參數
 
-The `grok` command supports the following parameters.
+`grok` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<field>` | Required | The text field to parse. |
-| `<pattern>` | Required | The Grok pattern used to extract new fields from the specified text field. If a new field name already exists, it overwrites the original field. |  
+| `<field>` | 必要 | 要剖析的文字欄位。 |
+| `<pattern>` | 必要 | 用於從指定文字欄位擷取新欄位的 Grok 模式。如果新欄位名稱已存在，則會覆寫原始欄位。 |  
   
 
-## Example 1: Parsing Apache access logs  
+## 範例 1：剖析 Apache 存取記錄檔  
 
-The following query parses raw Apache access logs using the built-in `COMMONAPACHELOG` grok pattern:
+下列查詢使用內建的 `COMMONAPACHELOG` grok 模式剖析原始 Apache 存取記錄檔：
   
 ```sql
 source=apache
@@ -43,7 +44,7 @@ source=apache
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -56,9 +57,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 2: Extracting fields from Envoy access logs
+## 範例 2：從 Envoy 存取記錄檔擷取欄位
 
-The following query parses Envoy access log entries, extracting the HTTP method, path, and status code:
+下列查詢剖析 Envoy 存取記錄項目，擷取 HTTP 方法、路徑與狀態碼：
 
 ```sql
 source=otellogs
@@ -69,7 +70,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -80,9 +81,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 3: Extracting durations from log messages
+## 範例 3：從記錄訊息擷取持續時間
 
-The following query uses grok to extract numeric durations from log messages:
+下列查詢使用 grok 從記錄訊息中擷取數值持續時間：
 
 ```sql
 source=otellogs
@@ -94,7 +95,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -106,8 +107,8 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Limitations
+## 限制
 
-The `grok` command has the following limitations:
+`grok` 命令有下列限制：
 
-* The `grok` command has the same [limitations]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/parse#limitations) as the `parse` command. 
+* `grok` 命令與 `parse` 命令具有相同的[限制]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/parse#limitations)。 

@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Pipeline 
+title: "管線"
 parent: Sources
 grand_parent: Pipelines
 nav_order: 90
 ---
 
-# Pipeline source
+# 管線來源
 
-Use the `pipeline` sink to read from another pipeline.
+使用 `pipeline` 接收端從另一個管線讀取資料。
 
-## Configuration
+## 組態
 
-The `pipeline` source supports the following configuration options.
+`pipeline` 來源支援下列組態選項。
 
-| Option | Required | Type   | Description                            |
+| 選項 | 必要 | 資料類型 | 說明 |
 |:-------|:---------|:-------|:---------------------------------------|
-| `name` | Yes      | String | The name of the pipeline to read from. |
+| `name` | 是 | 字串 | 要讀取的管線名稱。 |
 
-## Usage
+## 用法
 
-The following example configures a `pipeline` sink named `sample-pipeline` that reads from a pipeline named `movies`:
+下列範例設定名為 `sample-pipeline` 的 `pipeline` 接收端，它會從名為 `movies` 的管線讀取資料：
 
 ```yaml
 sample-pipeline:

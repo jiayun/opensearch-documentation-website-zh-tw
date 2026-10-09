@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Mappings APIs
+title: "對應 API"
 parent: Security Analytics APIs
 nav_order: 45
 ---
 
-# Mappings APIs
+# 對應 API
 
-The following APIs can be used for a number of tasks related to mappings, from creating to getting and updating mappings.
+下列 API 可用於多項與對應相關的工作，包括建立、取得及更新對應。
 
 ---
-## Get mappings view
+## 取得對應檢視
 
-Returns a view of the fields contained in an index used as a log source.
+回傳作為記錄來源之索引所包含欄位的檢視。
 
-### Request body fields
+### 請求本文欄位
 
-The following fields are used to get field mappings.
+下列欄位用於取得欄位對應。
 
 Field | Type | Description
 :--- | :--- |:--- 
-`index_name` | String | The name of the index used for log ingestion. 
-`rule_topic` | String | The log type of the index. 
+`index_name` | String | 用於記錄匯入的索引名稱。
+`rule_topic` | String | 索引的記錄類型。
 
-#### Example request
+#### 請求範例
 
 ```json
 GET /_plugins/_security_analytics/mappings/view
@@ -34,7 +35,7 @@ GET /_plugins/_security_analytics/mappings/view
 }
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -76,11 +77,11 @@ GET /_plugins/_security_analytics/mappings/view
 ```
 
 ---
-## Create mappings
+## 建立對應
 
-Creates field alias mappings for a specified index.
+為指定的索引建立欄位別名對應。
 
-#### Example request
+#### 請求範例
 
 ```json
 POST /_plugins/_security_analytics/mappings
@@ -100,7 +101,7 @@ POST /_plugins/_security_analytics/mappings
 }
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -109,23 +110,23 @@ POST /_plugins/_security_analytics/mappings
 ```
 
 ---
-## Get mappings
+## 取得對應
 
-Retrieves field alias mappings for a specified index.
+擷取指定索引的欄位別名對應。
 
-### Path parameters
+### 路徑參數
 
 Field | Type | Description
 :--- | :--- |:--- 
-`index_name` | String | The name of the index used for log ingestion. Required.
+`index_name` | String | 用於記錄匯入的索引名稱。必要。
 
-#### Example request
+#### 請求範例
 
 ```json
 GET /_plugins/_security_analytics/mappings?index_name=windows
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -147,11 +148,11 @@ GET /_plugins/_security_analytics/mappings?index_name=windows
 ```
 
 ---
-## Update mappings
+## 更新對應
 
-Updates the field alias mapping for a specified index.
+更新指定索引的欄位別名對應。
 
-#### Example request
+#### 請求範例
 
 ```json
 PUT /_plugins/_security_analytics/mappings
@@ -163,7 +164,7 @@ PUT /_plugins/_security_analytics/mappings
 }
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {

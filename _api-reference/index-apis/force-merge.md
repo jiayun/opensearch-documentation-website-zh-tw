@@ -1,83 +1,84 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Force merge
+title: "強制合併"
 parent: Index operations
 grand_parent: Index APIs
 nav_order: 40
 ---
 
 # Force Merge API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The force merge API operation forces a merge on the shards of one or more indexes. For a data stream, the API forces a merge on the shards of the stream's backing index.
+Force Merge API 操作會對一或多個索引的分片強制執行合併。對於資料串流，此 API 會對該串流後端索引的分片強制執行合併。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_forcemerge
 POST /{index}/_forcemerge/
 ```
 
-## The merge operation
+## 合併操作
 
-In OpenSearch, a shard is a Lucene index, which consists of _segments_ (or segment files). Segments store the indexed data. Periodically, smaller segments are merged into larger ones and the larger segments become immutable. Merging reduces the overall number of segments on each shard and frees up disk space. 
+在 OpenSearch 中，分片是一個 Lucene 索引，由 _分段_（或分段檔案）組成。分段儲存已編製索引的資料。系統會定期將較小的分段合併為較大的分段，而較大的分段會變成不可變。合併可減少每個分片的分段總數，並釋放磁碟空間。
 
-OpenSearch performs background segment merges that produce segments no larger than `index.merge.policy.max_merged_segment` (the default is 5 GB).
+OpenSearch 會在背景執行分段合併，所產生的分段不會大於 `index.merge.policy.max_merged_segment`（預設為 5 GB）。
 
-## Deleted documents
+## 已刪除的文件
 
-When a document is deleted from an OpenSearch index, it is not deleted from the Lucene segment but is rather only marked to be deleted. When the segment files are merged, deleted documents are removed (or _expunged_). Thus, merging also frees up space occupied by documents marked as deleted.
+當文件從 OpenSearch 索引中刪除時，它並不會從 Lucene 分段中刪除，而只是被標記為待刪除。當分段檔案合併時，已刪除的文件會被移除（或 _清除_）。因此，合併也能釋放被標記為刪除的文件所佔用的空間。
 
 ## Force Merge API
 
-In addition to periodic merging, you can force a segment merge using the Force Merge API. 
+除了定期合併之外，您也可以使用 Force Merge API 強制執行分段合併。
 
-Use the Force Merge API on an index only after all write requests sent to the index are completed. The force merge operation can produce very large segments. If write requests are still sent to the index, then the merge policy does not merge these segments until they primarily consist of deleted documents. This can increase disk space usage and lead to performance degradation.
+請只在所有傳送至索引的寫入請求都完成之後，才對該索引使用 Force Merge API。強制合併操作可能會產生非常大的分段。如果仍有寫入請求傳送至索引，合併原則在這些分段主要由已刪除文件組成之前，不會合併它們。這可能會增加磁碟空間使用量，並導致效能下降。
 {: .warning}
 
-When you call the Force Merge API, the call is blocked until merge completion. If during this time the connection is lost, the force merge operation continues in the background. New force merge requests sent to the same index will be blocked until the currently running merge operation is complete.
+當您呼叫 Force Merge API 時，呼叫會被阻擋直到合併完成。如果在此期間連線中斷，強制合併操作會繼續在背景執行。傳送至同一索引的新強制合併請求會被阻擋，直到目前執行中的合併操作完成為止。
 
-## Force merging multiple indexes
+## 強制合併多個索引
 
-To force merge multiple indexes, you can call the Force Merge API on the following index combinations:
+若要強制合併多個索引，您可以對下列索引組合呼叫 Force Merge API：
 
-- Multiple indexes
-- One or more data streams containing multiple backing indexes
-- One or more index aliases pointing to multiple indexes
-- All data streams and indexes in a cluster
+- 多個索引
+- 包含多個後端索引的一或多個資料串流
+- 指向多個索引的一或多個索引別名
+- 叢集中的所有資料串流與索引
 
-When you force merge multiple indexes, the merge operation is executed on each shard of a node sequentially. When the force merge operation is in progress, the storage for the shard temporarily increases so that all segments can be rewritten into a new segment. When `max_num_segments` is set to `1`, the storage for the shard temporarily doubles.
+當您強制合併多個索引時，合併操作會在節點的每個分片上依序執行。當強制合併操作進行中時，分片的儲存空間會暫時增加，以便將所有分段重寫為一個新分段。當 `max_num_segments` 設定為 `1` 時，分片的儲存空間會暫時加倍。
 
-## Force merging data streams
+## 強制合併資料串流
 
-It can be useful to force merge data streams in order to manage a data stream's backing indexes, especially after a rollover operation. Time-based indexes receive indexing requests only during a specified time period. Once that time period has elapsed and the index receives no more write requests, you can force merge segments of all index shards into one segment. Searches on single-segment shards are more efficient because they use simpler data structures.
+強制合併資料串流有助於管理資料串流的後端索引，尤其是在輪替操作之後。以時間為基礎的索引只在指定的時間期間內接收編製索引的請求。一旦該時間期間過去且索引不再接收寫入請求，您就可以將所有索引分片的分段強制合併為一個分段。對單一分段分片的搜尋效率更高，因為它們使用較簡單的資料結構。
 
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `<index>` | String | A comma-separated list of indexes, data streams, or index aliases to which the operation is applied. Supports wildcard expressions (`*`). Use `_all` or `*` to specify all indexes and data streams in a cluster. |
+| `<index>` | 字串 | 以逗號分隔的索引、資料串流或索引別名清單，操作會套用至這些對象。支援萬用字元運算式（`*`）。使用 `_all` 或 `*` 可指定叢集中的所有索引與資料串流。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `allow_no_indices` | Boolean | If `false`, the request returns an error if any wildcard expression or index alias targets any closed or missing indexes. Default is `true`. |
-| `expand_wildcards` | String | Specifies the types of indexes to which wildcard expressions can expand. Supports comma-separated values. Valid values are: <br> - `all`: Expand to all open and closed indexes, including hidden indexes. <br> - `open`: Expand to open indexes. <br> - `closed`: Expand to closed indexes. <br> - `hidden`: Include hidden indexes when expanding. Must be combined with `open`, `closed`, or both. <br> - `none`: Do not accept wildcard expressions. <br> Default is `open`. |
-| `flush` | Boolean | Performs a flush on the indexes after the force merge. A flush ensures that the files are persisted to disk. Default is `true`. |
-| `ignore_unavailable` | Boolean | If `true`, OpenSearch ignores missing or closed indexes. If `false`, OpenSearch returns an error if the force merge operation encounters missing or closed indexes. Default is `false`. |
-| `max_num_segments` | Integer | The number of larger segments into which smaller segments are merged. Set this parameter to `1` to merge all segments into one segment. The default behavior is to perform the merge as necessary. |
-| `only_expunge_deletes` | Boolean | If `true`, the merge operation only expunges segments containing a certain percentage of deleted documents. The percentage is 10% by default and is configurable in the `index.merge.policy.expunge_deletes_allowed` setting. Prior to OpenSearch 2.12, `only_expunge_deletes` ignored the `index.merge.policy.max_merged_segment` setting. Starting with OpenSearch 2.12, using `only_expunge_deletes` does not produce segments larger than `index.merge.policy.max_merged_segment` (by default, 5 GB). For more information, see [Deleted documents](#deleted-documents). Default is `false`. |
-| `primary_only` | Boolean | If set to `true`, then the merge operation is performed only on the primary shards of an index. This can be useful when you want to take a snapshot of the index after the merge is complete. Snapshots only copy segments from the primary shards. Merging the primary shards can reduce resource consumption. Default is `false`. |
-| `wait_for_completion` | Boolean | If `false`, OpenSearch runs the force merge operation asynchronously without waiting for it to complete. The request returns immediately, and the task continues in the background. You can monitor its progress using the [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/). Default is `true`, which means the operation runs synchronously. |
+| `allow_no_indices` | 布林值 | 若為 `false`，當任何萬用字元運算式或索引別名指向任何已關閉或遺失的索引時，請求會傳回錯誤。預設為 `true`。 |
+| `expand_wildcards` | 字串 | 指定萬用字元運算式可展開至哪些索引類型。支援以逗號分隔的值。有效值為：<br> - `all`：展開至所有開啟與已關閉的索引，包括隱藏索引。<br> - `open`：展開至開啟的索引。<br> - `closed`：展開至已關閉的索引。<br> - `hidden`：展開時包含隱藏索引。必須與 `open`、`closed` 或兩者合併使用。<br> - `none`：不接受萬用字元運算式。<br> 預設為 `open`。 |
+| `flush` | 布林值 | 在強制合併之後對索引執行排清。排清可確保檔案持續保存至磁碟。預設為 `true`。 |
+| `ignore_unavailable` | 布林值 | 若為 `true`，OpenSearch 會忽略遺失或已關閉的索引。若為 `false`，當強制合併操作遇到遺失或已關閉的索引時，OpenSearch 會傳回錯誤。預設為 `false`。 |
+| `max_num_segments` | 整數 | 較小分段要合併成的較大分段數量。將此參數設為 `1` 可將所有分段合併為一個分段。預設行為是視需要執行合併。 |
+| `only_expunge_deletes` | 布林值 | 若為 `true`，合併操作只會針對已刪除文件比例達到特定百分比的分段，清除其中的已刪除文件。該百分比預設為 10%，並可透過 `index.merge.policy.expunge_deletes_allowed` 設定進行調整。在 OpenSearch 2.12 之前，`only_expunge_deletes` 會忽略 `index.merge.policy.max_merged_segment` 設定。從 OpenSearch 2.12 開始，使用 `only_expunge_deletes` 不會產生大於 `index.merge.policy.max_merged_segment` 的分段（預設為 5 GB）。如需更多資訊，請參閱[已刪除的文件](#deleted-documents)。預設為 `false`。 |
+| `primary_only` | 布林值 | 若設為 `true`，合併操作只會在索引的主要分片上執行。當您想在合併完成後為索引建立快照時，這會很有用。快照只會從主要分片複製分段。合併主要分片可以減少資源消耗。預設為 `false`。 |
+| `wait_for_completion` | 布林值 | 若為 `false`，OpenSearch 會以非同步方式執行強制合併操作，而不等待其完成。請求會立即傳回，工作會在背景繼續執行。您可以使用 [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/) 監視其進度。預設為 `true`，表示操作以同步方式執行。 |
 
-## Example requests
+## 範例請求
 <!-- spec_insert_start
 component: example_code
 rest: POST /.testindex-logs/_forcemerge?primary_only=true
@@ -103,11 +104,11 @@ response = client.indices.forcemerge(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The following examples show how to use the Force merge API.
+下列範例示範如何使用 Force Merge API。
 
-### Force merge a specific index
+### 強制合併特定索引
 
-The following example force merges a specific index:
+下列範例強制合併特定索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -131,9 +132,9 @@ response = client.indices.forcemerge(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Force merge multiple indexes
+### 強制合併多個索引
 
-The following example force merges multiple indexes:
+下列範例強制合併多個索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -159,9 +160,9 @@ response = client.indices.forcemerge(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Force merge all indexes
+### 強制合併所有索引
 
-The following example force merges all indexes:
+下列範例強制合併所有索引：
 
 <!-- spec_insert_start
 component: example_code
@@ -183,9 +184,9 @@ response = client.indices.forcemerge()
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Force merge a data stream's backing indexes into one segment
+### 將資料串流的後端索引強制合併為一個分段
 
-The following example force merges a data stream's backing indexes into one segment:
+下列範例將資料串流的後端索引強制合併為一個分段：
 
 <!-- spec_insert_start
 component: example_code
@@ -210,9 +211,9 @@ response = client.indices.forcemerge(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Force merge primary shards
+### 強制合併主要分片
 
-The following example force merges an index's primary shards:
+下列範例強制合併索引的主要分片：
 
 <!-- spec_insert_start
 component: example_code
@@ -237,7 +238,7 @@ response = client.indices.forcemerge(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -249,17 +250,17 @@ response = client.indices.forcemerge(
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response fields.
+下表列出所有回應欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `shards` | Object | Contains information about the shards on which the request was executed. |
-| `shards.total` | Integer | The number of shards on which the operation was executed. |
-| `shards.successful` | Integer | The number of shards on which the operation was successful. |
-| `shards.failed` | Integer | The number of shards on which the operation failed. |
+| `shards` | 物件 | 包含執行請求所在分片的相關資訊。 |
+| `shards.total` | 整數 | 執行操作所在的分片數量。 |
+| `shards.successful` | 整數 | 操作成功執行的分片數量。 |
+| `shards.failed` | 整數 | 操作執行失敗的分片數量。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/forcemerge`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`indices:admin/forcemerge`。

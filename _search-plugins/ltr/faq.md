@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Common issues
+title: "常見問題"
 nav_order: 1000
 parent: Learning to Rank
 grand_parent: Optimizing search quality
 has_children: false
 ---
 
-# Common issues
+# 常見問題
 
-To make the most of Learning to Rank (LTR), consider these helpful insights.
+為了充分發揮 Learning to Rank (LTR) 的效益，請參考這些實用的見解。
 
-## Negative scores
+## 負分數
 
-Lucene does not allow for negative query scores. This can be problematic if your raw features include negative values. To address this, confirm that your features are non-negative _before_ training your model. You can achieve this by creating normalized fields with values shifted by the minimum value or by passing the scores through a function that produces a value greater than or equal to `0`.
+Lucene 不允許負的查詢分數。如果您的原始特徵包含負值，這可能會造成問題。為了解決這個問題，請在訓練模型 _之前_ 確認您的特徵為非負值。您可以建立將各數值減去最小值的正規化欄位，或將分數傳入會產生大於或等於 `0` 之值的函式，來達成此目的。
 
-## Bugs
+## 錯誤
 
-If you encounter a bug while working with the plugin, you can open an issue in the [`opensearch-learning-to-rank-base` repository](https://github.com/opensearch-project/opensearch-learning-to-rank-base/issues). The project team regularly investigates and resolves issues. If you are seeking general support, the issue may be closed and you may be directed to the relevant support channel(s).
+如果您在使用此外掛程式時遇到錯誤，可以在 [`opensearch-learning-to-rank-base` 儲存庫](https://github.com/opensearch-project/opensearch-learning-to-rank-base/issues) 中開啟問題。專案團隊會定期調查並解決問題。如果您需要一般支援，該問題可能會被關閉，並將您導向相關的支援管道。
 
-## Further assistance
+## 進一步協助
 
-If you need further assistance, join the [Relevance Slack Community](https://opensourceconnections.com/slack) and participate in the `#opensearch-learn-to-rank` channel to receive guidance and support from the community.
+如果您需要進一步協助，請加入 [Relevance Slack Community](https://opensourceconnections.com/slack) 並參與 `#opensearch-learn-to-rank` 頻道，以獲得社群的指引與支援。

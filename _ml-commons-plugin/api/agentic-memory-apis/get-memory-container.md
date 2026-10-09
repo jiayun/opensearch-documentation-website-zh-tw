@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get memory container
+title: "取得記憶容器"
 parent: Agentic memory APIs
 grand_parent: ML Commons APIs
 nav_order: 20
 ---
 
 # Get Memory Container API
-**Introduced 3.3**
+**於 3.3 版推出**
 {: .label .label-purple }
 
 
-Use this API to retrieve a memory container by its ID.
+使用此 API 依 ID 擷取記憶容器。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/memory_containers/{memory_container_id}
 ```
 
-## Example request
+## 範例請求
 
 ```json
 GET /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -54,6 +55,6 @@ GET /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-For response field descriptions, see [Create Memory Container API request fields]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container#request-body-fields).
+如需回應欄位的說明，請參閱 [Create Memory Container API 請求欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container#request-body-fields)。

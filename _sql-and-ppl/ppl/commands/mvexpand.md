@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: mvexpand
 parent: Commands
@@ -8,32 +9,32 @@ nav_order: 31
 
 <!-- vale off -->
 
-# mvexpand command
+# mvexpand 命令
 
 <!-- vale on -->
 
-The `mvexpand` command expands each value in a multivalue (array) field into a separate row. For each document, every element in the specified array field is returned as its own row.
+`mvexpand` 命令會將多值（陣列）欄位中的每個值展開為個別的資料列。對於每份文件，指定陣列欄位中的每個元素都會各自以一個資料列傳回。
 
-## Syntax
+## 語法
 
-The `mvexpand` command has the following syntax:
+`mvexpand` 命令的語法如下：
 
 ```sql
 mvexpand <field> [limit=<int>]
 ```
 
-## Parameters
+## 參數
 
-The `mvexpand` command supports the following parameters.
+`mvexpand` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<field>` | Required | The multivalue (array) field to expand. |
-| `limit` | Optional | The maximum number of values per document to expand. If not specified, all array elements are expanded. |
+| `<field>` | 必要 | 要展開的多值（陣列）欄位。 |
+| `limit` | 選用 | 每份文件要展開的值數量上限。若未指定，則會展開所有陣列元素。 |
 
-## Example 1: Using basic expansion
+## 範例 1：使用基本展開
 
-The following query creates an array and expands it into separate rows:
+下列查詢會建立一個陣列，並將其展開為個別的資料列：
 
 ```sql
 source=people
@@ -45,7 +46,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -57,9 +58,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 2: Limiting the number of expanded rows
+## 範例 2：限制展開的資料列數量
 
-The following query expands an array while limiting the number of expanded rows:
+下列查詢會展開陣列，同時限制展開的資料列數量：
 
 ```sql
 source=people
@@ -71,7 +72,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -83,9 +84,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 3: Expanding nested fields
+## 範例 3：展開巢狀欄位
 
-The following query expands a multivalue `projects` field into one row per project:
+下列查詢會將多值 `projects` 欄位展開為每個專案一個資料列：
 
 ```sql
 source=people
@@ -96,7 +97,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -108,9 +109,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 4: Single-value array
+## 範例 4：單值陣列
 
-A single-element array expands to one row:
+只有單一元素的陣列會展開為一個資料列：
 
 ```sql
 source=people
@@ -122,7 +123,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -132,9 +133,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 5: Missing fields
+## 範例 5：缺少的欄位
 
-The following query attempts to expand a field that does not exist in the input schema:
+下列查詢嘗試展開輸入結構描述中不存在的欄位：
 
 ```sql
 source=people
@@ -146,13 +147,13 @@ source=people
 ```
 {% include copy.html %}
 
-The query throws the following semantic check exception:
+此查詢會擲回下列語意檢查例外狀況：
 
 ```text
 {'reason': 'Invalid Query', 'details': "Field 'tags' not found in the schema", 'type': 'SemanticCheckException'}
 ```
 
-## Related commands
+## 相關命令
 
-- [`nomv`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/nomv/) -- Converts a multivalue field into a single-value string
-- [`mvcombine`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/mvcombine/) -- Combines multiple rows into a single row with multivalue fields
+- [`nomv`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/nomv/) -- 將多值欄位轉換為單值字串
+- [`mvcombine`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/mvcombine/) -- 將多個資料列合併為一個含有多值欄位的資料列

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Semantic search using Amazon Bedrock Titan in another account
+title: "使用另一個帳戶中的 Amazon Bedrock Titan 進行語意搜尋"
 parent: Semantic search
 grand_parent: Vector search
 nav_order: 50
@@ -8,48 +9,48 @@ redirect_from:
   - /vector-search/tutorials/semantic-search/semantic-search-bedrock-titan-other/
 ---
 
-# Semantic search using Amazon Bedrock Titan in another account
+# 使用另一個帳戶中的 Amazon Bedrock Titan 進行語意搜尋
 
-You can configure a connector to an Amazon Bedrock model hosted in a different account than the account hosting Amazon OpenSearch Service. This tutorial shows you how to implement semantic search in [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) using the [Amazon Bedrock Titan embedding model](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html) hosted in another account. For more information, see [Semantic search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/).
+您可以設定連接器，連線至託管於與 Amazon OpenSearch Service 所在帳戶不同之帳戶中的 Amazon Bedrock 模型。本教學說明如何使用託管於另一個帳戶中的 [Amazon Bedrock Titan 嵌入模型](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html)，在 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 中實作語意搜尋。更多資訊請參閱 [語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)。
 
-Amazon Bedrock has a [quota limit](https://docs.aws.amazon.com/bedrock/latest/userguide/quotas.html). For more information about increasing this limit, see [Increase model invocation capacity with Provisioned Throughput in Amazon Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/prov-throughput.html).
+Amazon Bedrock 有 [配額限制](https://docs.aws.amazon.com/bedrock/latest/userguide/quotas.html)。有關提高此限制的更多資訊，請參閱 [透過 Amazon Bedrock 的佈建輸送量提高模型呼叫容量](https://docs.aws.amazon.com/bedrock/latest/userguide/prov-throughput.html)。
 {: .warning}
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將以 `your_` 前綴開頭的預留位置替換為您自己的值。
 {: .note}
 
-## Cross-account setup
+## 跨帳戶設定
 
-In this tutorial, you'll use two AWS accounts: Account A (hosting Amazon OpenSearch Service) and Account B (hosting an Amazon Bedrock model).
+在本教學中，您將使用兩個 AWS 帳戶：帳戶 A (託管 Amazon OpenSearch Service) 與帳戶 B (託管 Amazon Bedrock 模型)。
 
-To invoke a model hosted in a different account than the account hosting Amazon OpenSearch Service, you must configure two roles in the connector credentials:
+若要呼叫託管於與 Amazon OpenSearch Service 所在帳戶不同之帳戶中的模型，您必須在連接器憑證中設定兩個角色：
 
-- `roleArn`: The role in Account A that is used to assume the external account role in Account B.
-- `externalAccountRoleArn`: The role in Account B that is used to invoke the Amazon Bedrock model.
+- `roleArn`：帳戶 A 中用於擔任帳戶 B 外部帳戶角色的角色。
+- `externalAccountRoleArn`：帳戶 B 中用於呼叫 Amazon Bedrock 模型的角色。
 
-In this tutorial , you'll use the following role names:
+在本教學中，您將使用下列角色名稱：
 
-- Account A: `my_cross_account_role_accountA`
+- 帳戶 A：`my_cross_account_role_accountA`
 
-  Amazon Resource Name (ARN): `arn:aws:iam::<your_aws_account_A>:role/my_cross_account_role_accountA`
+  Amazon Resource Name (ARN)：`arn:aws:iam::<your_aws_account_A>:role/my_cross_account_role_accountA`
 
-- Account B: `my_invoke_bedrock_role_accountB`
+- 帳戶 B：`my_invoke_bedrock_role_accountB`
 
-  ARN: `arn:aws:iam::<your_aws_account_B>:role/my_invoke_bedrock_role_accountB`
+  ARN：`arn:aws:iam::<your_aws_account_B>:role/my_invoke_bedrock_role_accountB`
 
-## Prerequisite: Create an OpenSearch cluster
+## 必要條件：建立 OpenSearch 叢集
 
-Go to the [Amazon OpenSearch Service console](https://console.aws.amazon.com/aos/home) and create an OpenSearch domain.
+前往 [Amazon OpenSearch Service 主控台](https://console.aws.amazon.com/aos/home) 並建立 OpenSearch 網域。
 
-Note the domain ARN; you'll use it in the following steps.
+記下網域 ARN；您將在後續步驟中使用它。
 
-## Step 1: Create an IAM role in Account B
+## 步驟 1：在帳戶 B 中建立 IAM 角色
 
-To invoke the model on Amazon Bedrock, you must create an AWS Identity and Access Management (IAM) role with appropriate permissions. The connector will use this role to invoke the model.
+若要呼叫 Amazon Bedrock 上的模型，您必須建立具有適當權限的 AWS Identity and Access Management (IAM) 角色。連接器將使用此角色來呼叫模型。
 
-Go to the IAM console, create a new IAM role named `my_invoke_bedrock_role_accountB`, and add the following trust policy and permissions:
+前往 IAM 主控台，建立名為 `my_invoke_bedrock_role_accountB` 的新 IAM 角色，並新增下列信任政策與權限：
 
-- Custom trust policy:
+- 自訂信任政策：
 
 ```json
 {
@@ -68,7 +69,7 @@ Go to the IAM console, create a new IAM role named `my_invoke_bedrock_role_accou
 ```
 {% include copy.html %}
 
-- Permissions:
+- 權限：
 
 ```json
 {
@@ -86,19 +87,19 @@ Go to the IAM console, create a new IAM role named `my_invoke_bedrock_role_accou
 ```
 {% include copy.html %}
 
-Note the role ARN; you'll use it in the following steps.
+記下角色 ARN；您將在後續步驟中使用它。
 
-## 2. Create an IAM role in Account A
+## 2. 在帳戶 A 中建立 IAM 角色
 
-Follow these steps to configure an IAM role in Amazon OpenSearch Service.
+依照下列步驟在 Amazon OpenSearch Service 中設定 IAM 角色。
 
-### Step 2.1: Create an IAM role for assuming externalAccountRoleArn
+### 步驟 2.1：建立用於擔任 externalAccountRoleArn 的 IAM 角色
 
-Create an IAM role for assuming `externalAccountRoleArn` in Account B.
+建立 IAM 角色，用於擔任帳戶 B 中的 `externalAccountRoleArn`。
 
-Go to the IAM console, create a new IAM role named  `my_cross_account_role_accountA` , and add the following trust policy and permissions:
+前往 IAM 主控台，建立名為 `my_cross_account_role_accountA` 的新 IAM 角色，並新增下列信任政策與權限：
 
-- Custom trust policy:
+- 自訂信任政策：
 
 ```json
 {
@@ -116,7 +117,7 @@ Go to the IAM console, create a new IAM role named  `my_cross_account_role_accou
 ```
 {% include copy.html %}
 
-- Permissions:
+- 權限：
 
 ```json
 {
@@ -132,15 +133,15 @@ Go to the IAM console, create a new IAM role named  `my_cross_account_role_accou
 ```
 {% include copy.html %}
 
-Note the role ARN; you'll use it in the following steps.
+記下角色 ARN；您將在後續步驟中使用它。
 
-### Step 2.2: Create an IAM role for signing connector requests
+### 步驟 2.2：建立用於簽署連接器請求的 IAM 角色
 
-Generate a new IAM role specifically for signing your Create Connector API request.
+專門產生一個新的 IAM 角色，用於簽署您的 Create Connector API 請求。
 
-Create an IAM role named `my_create_connector_role_accountA` with the following trust policy and permissions:
+建立名為 `my_create_connector_role_accountA` 的 IAM 角色，並使用下列信任政策與權限：
 
-- Custom trust policy:
+- 自訂信任政策：
 
 ```json
 {
@@ -158,9 +159,9 @@ Create an IAM role named `my_create_connector_role_accountA` with the following 
 ```
 {% include copy.html %}
 
-You'll use the `your_iam_user_arn` IAM user to assume the role in Step 3.
+您將在步驟 3 中使用 `your_iam_user_arn` IAM 使用者來擔任此角色。
 
-- Permissions:
+- 權限：
 
 ```json
 {
@@ -181,26 +182,26 @@ You'll use the `your_iam_user_arn` IAM user to assume the role in Step 3.
 ```
 {% include copy.html %}
 
-Note this role ARN; you'll use it in the following steps.
+記下此角色 ARN；您將在後續步驟中使用它。
 
-### Step 2.3: Map a backend role
+### 步驟 2.3：對應後端角色
 
-Follow these steps to map a backend role:
+依照下列步驟對應後端角色：
 
-1. Log in to OpenSearch Dashboards and select **Security** on the top menu.
-2. Select **Roles**, and then select the **ml_full_access** role. 
-3. On the **ml_full_access** role details page, select **Mapped users**, and then select **Manage mapping**. 
-4. Enter the IAM role ARN created in Step 2.2 (`arn:aws:iam::<your_aws_account_A>:role/my_create_connector_role_accountA`) in the **Backend roles** field, as shown in the following image.
-    ![Mapping a backend role]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/mapping_iam_role_arn.png)
-5. Select **Map**. 
+1. 登入 OpenSearch Dashboards，並在頂端選單選取 **Security**。
+2. 選取 **Roles**，然後選取 **ml_full_access** 角色。
+3. 在 **ml_full_access** 角色詳細資訊頁面，選取 **Mapped users**，然後選取 **Manage mapping**。
+4. 在 **Backend roles** 欄位中輸入步驟 2.2 中建立的 IAM 角色 ARN (`arn:aws:iam::<your_aws_account_A>:role/my_create_connector_role_accountA`)，如下圖所示。
+    ![對應後端角色]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/mapping_iam_role_arn.png)
+5. 選取 **Map**。
 
-The IAM role is now successfully configured in your OpenSearch cluster.
+IAM 角色現已成功在您的 OpenSearch 叢集中完成設定。
 
-## Step 3: Create a connector
+## 步驟 3：建立連接器
 
-Follow these steps to create a connector for the model. For more information about creating a connector, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/).
+依照下列步驟為模型建立連接器。有關建立連接器的更多資訊，請參閱 [連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-Run the following Python code with the temporary credentials fetched from AWS.
+使用從 AWS 取得的暫時憑證執行下列 Python 程式碼。
  
 ```python
 import boto3
@@ -258,19 +259,19 @@ print(r.text)
 ```
 {% include copy.html %}
 
-The script outputs a connector ID:
+指令碼會輸出連接器 ID：
 
 ```json
 {"connector_id":"N0qpQY0BOhavBOmfOCnw"}
 ```
 
-Note the connector ID; you'll use it in the next step.
+記下連接器 ID；您將在下一個步驟中使用它。
 
-## Step 4: Create and test the model
+## 步驟 4：建立並測試模型
 
-Log in to OpenSearch Dashboards, open the DevTools console, and run the following requests to create and test the model.
+登入 OpenSearch Dashboards，開啟 DevTools 主控台，然後執行下列請求以建立並測試模型。
 
-1. Create a model group:
+1. 建立模型群組：
 
     ```json
     POST /_plugins/_ml/model_groups/_register
@@ -281,7 +282,7 @@ Log in to OpenSearch Dashboards, open the DevTools console, and run the followin
     ```
     {% include copy-curl.html %}
 
-    The response contains the model group ID:
+    回應包含模型群組 ID：
 
     ```json
     {
@@ -290,7 +291,7 @@ Log in to OpenSearch Dashboards, open the DevTools console, and run the followin
     }
     ```
 
-2. Register the model:
+2. 註冊模型：
 
     ```json
     POST /_plugins/_ml/models/_register
@@ -304,7 +305,7 @@ Log in to OpenSearch Dashboards, open the DevTools console, and run the followin
     ```
     {% include copy-curl.html %}
 
-    The response contains the model ID:
+    回應包含模型 ID：
 
     ```json
     {
@@ -314,14 +315,14 @@ Log in to OpenSearch Dashboards, open the DevTools console, and run the followin
     }
     ```
 
-3. Deploy the model:
+3. 部署模型：
 
     ```json
     POST /_plugins/_ml/models/PEq3QY0BOhavBOmf1Sml/_deploy
     ```
     {% include copy-curl.html %}
 
-    The response contains a task ID for the deployment operation:
+    回應包含部署作業的工作 ID：
 
     ```json
     {
@@ -331,7 +332,7 @@ Log in to OpenSearch Dashboards, open the DevTools console, and run the followin
     }
     ```
 
-4. Test the model:
+4. 測試模型：
 
     ```json
     POST /_plugins/_ml/models/PEq3QY0BOhavBOmf1Sml/_predict
@@ -343,7 +344,7 @@ Log in to OpenSearch Dashboards, open the DevTools console, and run the followin
     ```
     {% include copy-curl.html %}
 
-    The response contains the embeddings generated by the model:
+    回應包含模型產生的嵌入：
 
     ```json
     {
@@ -369,13 +370,13 @@ Log in to OpenSearch Dashboards, open the DevTools console, and run the followin
     }
     ```
 
-## Step 5: Configure semantic search
+## 步驟 5：設定語意搜尋
 
-Follow these steps to configure semantic search.
+請依照下列步驟設定語意搜尋。
 
-### Step 5.1: Create an ingest pipeline
+### 步驟 5.1：建立資料匯入管線
 
-First, create an [ingest pipeline]({{site.url}}{{site.baseurl}}/ingest-pipelines/) that uses the model in Amazon SageMaker to create embeddings from the input text:
+首先，建立一個[資料匯入管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/)，使用 Amazon SageMaker 中的模型從輸入文字產生嵌入：
 
 ```json
 PUT /_ingest/pipeline/my_bedrock_embedding_pipeline
@@ -395,9 +396,9 @@ PUT /_ingest/pipeline/my_bedrock_embedding_pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 5.2: Create a vector index
+### 步驟 5.2：建立向量索引
 
-Next, create a vector index for storing the input text and generated embeddings:
+接著，建立向量索引以儲存輸入文字和產生的嵌入：
 
 ```json
 PUT my_index
@@ -421,9 +422,9 @@ PUT my_index
 ```
 {% include copy-curl.html %}
 
-### Step 5.3: Ingest data
+### 步驟 5.3：匯入資料
 
-Ingest a sample document into the index:
+將範例文件匯入索引：
 
 ```json
 POST /my_index/_doc/1000001
@@ -433,9 +434,9 @@ POST /my_index/_doc/1000001
 ```
 {% include copy-curl.html %}
 
-### Step 5.4: Search the index
+### 步驟 5.4：搜尋索引
 
-Run a vector search to retrieve documents from the vector index:
+執行向量搜尋以從向量索引擷取文件：
 
 ```json
 POST /my_index/_search

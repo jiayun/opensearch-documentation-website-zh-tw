@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: List Index tool
+title: "List Index 工具"
 has_children: false
 has_toc: false
 nav_order: 35
@@ -9,19 +10,19 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# List Index tool
-**Introduced 3.0**
+# List Index 工具
+**3.0 版新增**
 {: .label .label-purple }
 <!-- vale on -->
 
-The `ListIndexTool` retrieves index information for the OpenSearch cluster, similarly to the [List Indices API]({{site.url}}{{site.baseurl}}/api-reference/list/list-indices/).
+`ListIndexTool` 會擷取 OpenSearch 叢集的索引資訊，類似於 [List Indices API]({{site.url}}{{site.baseurl}}/api-reference/list/list-indices/)。
 
-The `ListIndexTool` replaces the `CatIndexTool` starting with OpenSearch version 3.0.
+從 OpenSearch 3.0 版開始，`ListIndexTool` 取代了 `CatIndexTool`。
 {: .note}
 
-## Step 1: Register a flow agent that will run the ListIndexTool
+## 步驟 1：註冊將執行 ListIndexTool 的流程代理程式
 
-A flow agent runs a sequence of tools in order and returns the last tool's output. To create a flow agent, send the following register agent request:
+流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -42,9 +43,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-For parameter descriptions, see [Register parameters](#register-parameters).
+參數說明請參閱 [Register parameters](#register-parameters)。
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -52,11 +53,11 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 2: Run the agent
+## 步驟 2：執行代理程式
 
-Before you run the agent, make sure that you add the sample OpenSearch Dashboards `Sample eCommerce orders` dataset. To learn more, see [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data).
+在執行代理程式之前，請確認您已新增 OpenSearch Dashboards 的 `Sample eCommerce orders` 範例資料集。若要了解更多，請參閱 [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
 
-Then, run the agent by sending the following request:
+接著，傳送下列請求來執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
@@ -68,7 +69,7 @@ POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
 ```
 {% include copy-curl.html %} 
 
-OpenSearch returns the index information:
+OpenSearch 會傳回索引資訊：
 
 ```json
 {
@@ -114,26 +115,26 @@ green    open    .opendistro-job-scheduler-lock    XjgmXAVKQ4e8Y-ac54VBzg    1  
 }
 ```
 
-## Register parameters
+## 註冊參數
 
-The following table lists all tool parameters that are available when registering an agent.
+下表列出註冊代理程式時可用的所有工具參數。
 
 <!-- vale off -->
-Parameter | Type | Required/Optional | Description
+參數 | 類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`indices` | String | Optional | A comma-delimited list of one or more indexes on which to run the list index operation. Default is an empty list, which means all indexes.
-`local` | Boolean | Optional | When `true`, retrieves information from the local node only instead of the cluster manager node. Default is `false`.
-`page_size` | Integer | Optional | Specifies the number of index results returned per page when using the List Indices API. The API retrieves index status in a paginated manner. Default is `100`.
+`indices` | 字串 | 選用 | 以逗號分隔的一或多個索引清單，用於執行列出索引操作。預設為空清單，表示所有索引。
+`local` | 布林值 | 選用 | 當為 `true` 時，僅從本機節點擷取資訊，而不是從叢集管理員節點擷取。預設為 `false`。
+`page_size` | 整數 | 選用 | 指定使用 List Indices API 時每頁傳回的索引結果數量。此 API 以分頁方式擷取索引狀態。預設為 `100`。
 <!-- vale on -->
 
-## Execute parameters
+## 執行參數
 
-The following table lists all tool parameters that are available when running the agent.
+下表列出執行代理程式時可用的所有工具參數。
 
-Parameter	| Type | Required/Optional | Description	
+參數	| 類型 | 必要/選用 | 說明	
 :--- | :--- | :--- | :---
-`question` | String | Required | The natural language question to send to the LLM. 
+`question` | 字串 | 必要 | 要傳送給 LLM 的自然語言問題。
 
-## Testing the tool
+## 測試工具
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+您可以將此工具作為代理程式工作流程的一部分執行，也可以使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適用於測試個別工具或執行獨立操作。

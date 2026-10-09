@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Rule APIs
+title: "規則 API"
 parent: Security Analytics APIs
 nav_order: 40
 ---
 
-# Rule APIs
+# 規則 API
 
-The following APIs can be used for a number of tasks related to rules, from searching for pre-packaged rules to creating and updating custom rules.
+下列 API 可用於執行多項與規則相關的工作，從搜尋預先封裝的規則，到建立及更新自訂規則。
 
 ---
-## Create custom rule
+## 建立自訂規則
 
-Creates a custom rule using Sigma security rule formatting. For information about how to write a rule in Sigma format, see information provided at [Sigma's GitHub repository](https://github.com/SigmaHQ/sigma).
+使用 Sigma 安全性規則格式建立自訂規則。如需有關如何以 Sigma 格式撰寫規則的資訊，請參閱 [Sigma 的 GitHub 儲存庫](https://github.com/SigmaHQ/sigma) 所提供的資訊。
 
 ```json
 POST /_plugins/_security_analytics/rules?category=windows
 ```
 
-### Example request
+### 範例請求
 
 ```yml
 Header:
@@ -53,9 +54,9 @@ falsepositives:
     - Unknown
 ```
 
-### Example response
+### 範例回應
 
-**Sample 1:**
+**範例 1：**
 
 ```json
 {
@@ -96,7 +97,7 @@ falsepositives:
 }
 ```
 
-**Sample 2:**
+**範例 2：**
 
 ```json
 {
@@ -119,11 +120,11 @@ falsepositives:
 ```
 
 ---
-## Update custom rule (not forced)
+## 更新自訂規則 (非強制)
 
-Updates a custom rule. If the rule is actively used by detectors, the update is rejected unless the `forced` flag is set to `true`.
+更新自訂規則。如果偵測器正在使用該規則，除非將 `forced` 旗標設為 `true`，否則會拒絕更新。
 
-### Example request
+### 範例請求
 
 ```json
 PUT /_plugins/_security_analytics/rules/ZaFv1IMBdLpXWBiBa1XI?category=windows
@@ -159,7 +160,7 @@ falsepositives:
     - Unknown
 ```
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -182,11 +183,11 @@ falsepositives:
 ```
 
 ---
-## Update custom rule (forced)
+## 更新自訂規則 (強制)
 
-Forces an update to a custom rule, even if it is actively used by detectors.
+強制更新自訂規則，即使偵測器正在使用該規則也一樣。
 
-### Example request
+### 範例請求
 
 ```json
 PUT /_plugins/_security_analytics/rules/ZaFv1IMBdLpXWBiBa1XI?category=windows&forced=true
@@ -222,7 +223,7 @@ falsepositives:
     - Unknown
 ```
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -264,11 +265,11 @@ falsepositives:
 ```
 
 ---
-## Search pre-packaged rules
+## 搜尋預先封裝的規則
 
-Searches for pre-packaged rules by category or other criteria.
+依類別或其他條件搜尋預先封裝的規則。
 
-### Example request
+### 範例請求
 
 ```json
 POST /_plugins/_security_analytics/rules/_search?pre_packaged=true
@@ -291,7 +292,7 @@ POST /_plugins/_security_analytics/rules/_search?pre_packaged=true
 }
 ```
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -361,11 +362,11 @@ POST /_plugins/_security_analytics/rules/_search?pre_packaged=true
 ```
 
 ---
-## Search custom rules
+## 搜尋自訂規則
 
-Searches for custom rules by category or other criteria.
+依類別或其他條件搜尋自訂規則。
 
-### Example request
+### 範例請求
 
 ```json
 POST /_plugins/_security_analytics/rules/_search?pre_packaged=false
@@ -390,7 +391,7 @@ Body:
 }
 ```
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -460,17 +461,17 @@ Body:
 ```
 
 ---
-## Delete custom rule (not forced)
+## 刪除自訂規則（非強制）
 
-Deletes a custom rule. If the rule is actively used by detectors, the deletion is rejected unless the `forced` flag is set to `true`.
+刪除自訂規則。如果該規則正被偵測器使用中，除非將 `forced` 旗標設為 `true`，否則刪除作業會被拒絕。
 
-### Example request
+### 範例請求
 
 ```json
 DELETE /_plugins/_security_analytics/rules/ZaFv1IMBdLpXWBiBa1XI
 ```
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -493,17 +494,17 @@ DELETE /_plugins/_security_analytics/rules/ZaFv1IMBdLpXWBiBa1XI
 ```
 
 ---
-## Delete custom rule (forced)
+## 刪除自訂規則 (強制)
 
-Forces deletion of a custom rule, even if it is actively used by detectors.
+強制刪除自訂規則，即使偵測器正在使用該規則也一樣。
 
-### Example request
+### 範例請求
 
 ```json
 DELETE /_plugins/_security_analytics/rules/ZaFv1IMBdLpXWBiBa1XI?forced=true
 ```
 
-### Example response
+### 範例回應
 
 ```json
 {

@@ -1,80 +1,81 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Processor chains
+title: "處理器鏈"
 has_children: false
 nav_order: 30
 ---
 
-# Processor chains
-**Introduced 3.3**
+# 處理器鏈
+**於 3.3 版推出**
 {: .label .label-purple }
 
-Processor chains enable flexible data transformation pipelines that can process both input and output data. Chain multiple processors together to create sequential transformations where each processor's output becomes the next processor's input.
+處理器鏈能建立彈性的資料轉換管線，可同時處理輸入與輸出資料。將多個處理器串接在一起，即可建立循序轉換，讓每個處理器的輸出成為下一個處理器的輸入。
 
-Processors provide a way to:
+處理器提供下列功能：
 
-- **Transform data formats**: Convert between different data structures (strings, JSON, arrays).
-- **Extract specific information**: Use JSONPath or regex patterns to extract relevant data.
-- **Clean and filter content**: Remove unwanted fields or apply formatting rules.
-- **Standardize data**: Ensure consistent data formats across different components.
+- **轉換資料格式**：在不同資料結構（字串、JSON、陣列）之間轉換。
+- **擷取特定資訊**：使用 JSONPath 或正規表示式模式擷取相關資料。
+- **清理與篩選內容**：移除不需要的欄位或套用格式化規則。
+- **標準化資料**：確保不同元件之間的資料格式一致。
 
-Processors execute in the order in which they appear in the array. Each processor receives the output from the previous processor.
+處理器會依照其在陣列中出現的順序執行。每個處理器都會接收前一個處理器的輸出。
 {: .note}
 
-Processor chains are specifically designed for ML workflows and differ from processors in ingest and search pipelines:
+處理器鏈專為機器學習工作流程而設計，與資料匯入管線和搜尋管線中的處理器不同：
 
-- [**Ingest pipelines**]({{site.url}}{{site.baseurl}}/ingest-pipelines/): Transform documents during indexing into OpenSearch.
-- [**Search pipelines**]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/): Transform queries and search results during search operations.
-- **Processor chains**: Transform data within ML Commons workflows (agent tools, model inputs/outputs).
+- [**資料匯入管線**]({{site.url}}{{site.baseurl}}/ingest-pipelines/)：在將文件編製索引至 OpenSearch 的過程中轉換文件。
+- [**搜尋管線**]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/)：在搜尋作業期間轉換查詢與搜尋結果。
+- **處理器鏈**：在 ML Commons 工作流程（代理程式工具、模型輸入/輸出）中轉換資料。
 
-Processor chains provide specialized data transformation capabilities tailored for AI/ML use cases, such as cleaning model responses, extracting structured data from LLM outputs, and preparing inputs for model inference.
+處理器鏈提供專為 AI/ML 使用情境量身打造的資料轉換功能，例如清理模型回應、從 LLM 輸出中擷取結構化資料，以及準備模型推論的輸入。
 
-## Configuration
+## 組態
 
-Processors can be configured in different contexts:
+處理器可以在不同的情境中設定：
 
-- **Tool outputs**: Add an `output_processors` array in the tool's `parameters` section.
-- **Model outputs**: Add an `output_processors` array in the model's `parameters` section during a `_predict` call.
-- **Model inputs**: Add an `input_processors` array in the model's `parameters` section of a `_predict` call.
+- **工具輸出**：在工具的 `parameters` 區段中新增 `output_processors` 陣列。
+- **模型輸出**：在 `_predict` 呼叫時，於模型的 `parameters` 區段中新增 `output_processors` 陣列。
+- **模型輸入**：在 `_predict` 呼叫時，於模型的 `parameters` 區段中新增 `input_processors` 陣列。
 
-For complete examples, see [Example usage with agents](#example-usage-with-agents) and [Example usage with models](#example-usage-with-models).
+完整範例請參閱 [搭配代理程式的使用範例](#example-usage-with-agents) 與 [搭配模型的使用範例](#example-usage-with-models)。
 
-## Supported processor types
+## 支援的處理器類型
 
-The following table lists all supported processors.
+下表列出所有支援的處理器。
 
-Processor | Description
+處理器 | 說明
 :--- | :---
-[`conditional`](#conditional) | Applies different processor chains based on conditions.
-[`extract_json`](#extract_json) | Extracts JSON objects or arrays from text strings.
-[`for_each`](#for_each) | Iterates through array elements and applies a chain of processors to each element.
-[`jsonpath_filter`](#jsonpath_filter) | Extracts data using JSONPath expressions.
-[`process_and_set`](#process_and_set) | Applies a chain of processors to the input and sets the result at a specified JSONPath location.
-[`regex_capture`](#regex_capture) | Captures specific groups from regex matches.
-[`regex_replace`](#regex_replace) | Replaces text using regular expression patterns.
-[`remove_jsonpath`](#remove_jsonpath) | Removes fields from JSON objects using JSONPath.
-[`set_field`](#set_field) | Sets a field to a specified static value or copies a value from another field.
-[`to_string`](#to_string) | Converts the input to a JSON string representation.
+[`conditional`](#conditional) | 依據條件套用不同的處理器鏈。
+[`extract_json`](#extract_json) | 從文字字串中擷取 JSON 物件或陣列。
+[`for_each`](#for_each) | 逐一迭代陣列元素，並對每個元素套用一連串處理器。
+[`jsonpath_filter`](#jsonpath_filter) | 使用 JSONPath 運算式擷取資料。
+[`process_and_set`](#process_and_set) | 對輸入套用一連串處理器，並將結果設定在指定的 JSONPath 位置。
+[`regex_capture`](#regex_capture) | 從正規表示式比對結果中擷取特定群組。
+[`regex_replace`](#regex_replace) | 使用正規表示式模式取代文字。
+[`remove_jsonpath`](#remove_jsonpath) | 使用 JSONPath 從 JSON 物件中移除欄位。
+[`set_field`](#set_field) | 將欄位設定為指定的靜態值，或從另一個欄位複製值。
+[`to_string`](#to_string) | 將輸入轉換為 JSON 字串表示法。
 
-### Conditional
+### 條件式處理器
 
-Applies different processor chains based on conditions.
+依據條件套用不同的處理器鏈。
 
-**Parameters**:
+**參數**：
 
-- `path` (string, optional): The JSONPath expression used to extract the value for condition evaluation.
-- `routes` (array, required): An array of condition-processor mappings.
-- `default` (array, optional): The default processors if no conditions match.
+- `path`（字串，選用）：用於擷取條件評估所需值的 JSONPath 運算式。
+- `routes`（陣列，必要）：條件與處理器對應的陣列。
+- `default`（陣列，選用）：沒有任何條件符合時使用的預設處理器。
 
-**Supported conditions**:
+**支援的條件**：
 
-- Exact value match: `"value"`
-- Numeric comparisons: `">10"`, `"<5"`, `">="`, `"<="`, `"==5"`
-- Existence checks: `"exists"`, `"null"`, `"not_exists"`
-- Regex matching: `"regex:pattern"`
-- Contains text: `"contains:substring"`
+- 精確值比對：`"value"`
+- 數值比較：`">10"`、`"<5"`、`">="`、`"<="`、`"==5"`
+- 存在性檢查：`"exists"`、`"null"`、`"not_exists"`
+- 正規表示式比對：`"regex:pattern"`
+- 包含文字：`"contains:substring"`
 
-**Example configuration**:
+**組態範例**：
 
 ```json
 {
@@ -98,13 +99,13 @@ Applies different processor chains based on conditions.
 }
 ```
 
-**Example input**:
+**輸入範例**：
 
 ```json
 {"index": "test-index", "status": "green", "docs": 100}
 ```
 
-**Example output**:
+**輸出範例**：
 
 ```json
 {"index": "test-index", "healthy": "green", "docs": 100}
@@ -112,14 +113,14 @@ Applies different processor chains based on conditions.
 
 ### extract_json
 
-Extracts JSON objects or arrays from text strings.
+從文字字串中擷取 JSON 物件或陣列。
 
-**Parameters**:
+**參數**：
 
-- `extract_type` (string, optional): The type of JSON to extract: `"object"`, `"array"`, or `"auto"`. Default is `"auto"`.
-- `default` (any, optional): The default value if JSON extraction fails.
+- `extract_type`（字串，選用）：要擷取的 JSON 類型：`"object"`、`"array"` 或 `"auto"`。預設為 `"auto"`。
+- `default`（任意類型，選用）：JSON 擷取失敗時使用的預設值。
 
-**Example configuration**:
+**組態範例**：
 
 ```json
 {
@@ -129,13 +130,13 @@ Extracts JSON objects or arrays from text strings.
 }
 ```
 
-**Example input**:
+**輸入範例**：
 
 ```json
 "The result is: {\"status\": \"success\", \"count\": 5} - processing complete"
 ```
 
-**Example output**:
+**輸出範例**：
 
 ```json
 {"status": "success", "count": 5}
@@ -143,21 +144,21 @@ Extracts JSON objects or arrays from text strings.
 
 ### for_each
 
-Iterates through array elements and applies a chain of processors to each element. Useful for transforming array elements uniformly, such as when adding missing fields, filtering content, or normalizing data structures.
+逐一迭代陣列元素，並對每個元素套用一連串處理器。適合用來一致地轉換陣列元素，例如新增缺少的欄位、篩選內容或將資料結構標準化。
 
-**Parameters**:
+**參數**：
 
-- `path` (string, required): The JSONPath expression pointing to the array to iterate over. Must use `[*]` notation for array elements.
-- `processors` (array, required): A list of processor configurations to apply to each array element.
+- `path`（字串，必要）：指向要迭代之陣列的 JSONPath 運算式。必須使用 `[*]` 標記法來表示陣列元素。
+- `processors`（陣列，必要）：要套用至每個陣列元素的處理器組態清單。
 
-**Behavior**:
+**行為**：
 
-- Each element is processed independently using the configured processor chain.
-- The output of the processor chain replaces the original element.
-- If the path doesn't exist or doesn't point to an array, the input is returned unchanged.
-- If the processing of an element fails, the original element is kept.
+- 每個元素都會使用設定的處理器鏈獨立處理。
+- 處理器鏈的輸出會取代原始元素。
+- 如果路徑不存在或未指向陣列，則原樣傳回輸入。
+- 如果某個元素的處理失敗，則保留原始元素。
 
-**Example configuration**:
+**組態範例**：
 
 ```json
 {
@@ -173,7 +174,7 @@ Iterates through array elements and applies a chain of processors to each elemen
 }
 ```
 
-**Example input**:
+**輸入範例**：
 
 ```json
 {
@@ -184,7 +185,7 @@ Iterates through array elements and applies a chain of processors to each elemen
 }
 ```
 
-**Example output**:
+**輸出範例**：
 
 ```json
 {
@@ -197,14 +198,14 @@ Iterates through array elements and applies a chain of processors to each elemen
 
 ### jsonpath_filter
 
-Extracts data using JSONPath expressions.
+使用 JSONPath 運算式擷取資料。
 
-**Parameters**:
+**參數**：
 
-- `path` (string, required): The JSONPath expression used to extract data.
-- `default` (any, optional): The default value if the path is not found.
+- `path`（字串，必要）：用於擷取資料的 JSONPath 運算式。
+- `default`（任意類型，選用）：找不到路徑時使用的預設值。
 
-**Example configuration**:
+**組態範例**：
 
 ```json
 {
@@ -214,13 +215,13 @@ Extracts data using JSONPath expressions.
 }
 ```
 
-**Example input**:
+**輸入範例**：
 
 ```json
 {"data": {"items": [{"name": "item1"}, {"name": "item2"}]}}
 ```
 
-**Example output**:
+**輸出範例**：
 
 ```json
 ["item1", "item2"]
@@ -228,20 +229,20 @@ Extracts data using JSONPath expressions.
 
 ### process_and_set
 
-Applies a chain of processors to the input and sets the result at a specified JSONPath location.
+對輸入套用一連串處理器，並將結果設定在指定的 JSONPath 位置。
 
-**Parameters**:
+**參數**：
 
-- `path` (string, required): The JSONPath expression specifying where to set the processed result.
-- `processors` (array, required): A list of processor configurations to apply sequentially.
+- `path`（字串，必要）：指定處理結果設定位置的 JSONPath 運算式。
+- `processors`（陣列，必要）：要依序套用的處理器組態清單。
 
-**Path behavior**:
+**路徑行為**：
 
-- If the path exists, it will be updated with the processed value.
-- If the path doesn't exist, the processor chain attempts to create it (works for simple nested fields).
-- A parent path must exist for new field creation to succeed.
+- 如果路徑存在，將以處理後的值更新該路徑。
+- 如果路徑不存在，處理器鏈會嘗試建立該路徑（適用於簡單的巢狀欄位）。
+- 父路徑必須存在，新欄位的建立才會成功。
 
-**Example configuration**:
+**組態範例**：
 
 ```json
 {
@@ -260,13 +261,13 @@ Applies a chain of processors to the input and sets the result at a specified JS
 }
 ```
 
-**Example input**:
+**輸入範例**：
 
 ```json
 {"name": "Test Index!", "status": "active"}
 ```
 
-**Example output**:
+**輸出範例**：
 
 ```json
 {"name": "Test Index!", "status": "active", "summary": {"clean_name": "Test_Index_"}}
@@ -274,14 +275,14 @@ Applies a chain of processors to the input and sets the result at a specified JS
 
 ### regex_capture
 
-Captures specific groups from regex matches. For regex syntax details, see [Java regex syntax](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html).
+從 regex 比對結果中擷取特定群組。如需 regex 語法詳細資訊，請參閱 [Java regex 語法](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)。
 
-**Parameters**:
+**參數**：
 
-- `pattern` (string, required): A regular expression pattern with capture groups.
-- `groups` (string or array, optional): Group numbers to capture. Can be a single number like `"1"` or array like `"[1, 2, 4]"`. Default is `"1"`.
+- `pattern`（字串，必要）：含有擷取群組的規則運算式模式。
+- `groups`（字串或陣列，選用）：要擷取的群組編號。可以是單一數字，例如 `"1"`，或陣列，例如 `"[1, 2, 4]"`。預設為 `"1"`。
 
-**Example configuration**:
+**範例組態**：
 
 ```json
 {
@@ -291,13 +292,13 @@ Captures specific groups from regex matches. For regex syntax details, see [Java
 }
 ```
 
-**Example input**:
+**範例輸入**：
 
 ```json
 "1,green,open,.plugins-ml-model-group,DCJHJc7pQ6Gid02PaSeXBQ,1,0"
 ```
 
-**Example output**:
+**範例輸出**：
 
 ```json
 ["1", ".plugins-ml-model-group"]
@@ -305,14 +306,14 @@ Captures specific groups from regex matches. For regex syntax details, see [Java
 
 ### regex_replace
 
-Replaces text using regular expression patterns. For regex syntax details, see [Java regex syntax](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html).
+使用規則運算式模式取代文字。如需 regex 語法詳細資訊，請參閱 [Java regex 語法](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)。
 
-**Parameters**:
-- `pattern` (string, required): A regular expression pattern to match.
-- `replacement` (string, optional): Replacement text. Default is `""`.
-- `replace_all` (Boolean, optional): Whether to replace all matches or only the first. Default is `true`.
+**參數**：
+- `pattern`（字串，必要）：要比對的規則運算式模式。
+- `replacement`（字串，選用）：取代文字。預設為 `""`。
+- `replace_all`（布林值，選用）：要取代所有符合項目或僅取代第一個。預設為 `true`。
 
-**Example configuration**:
+**範例組態**：
 
 ```json
 {
@@ -322,13 +323,13 @@ Replaces text using regular expression patterns. For regex syntax details, see [
 }
 ```
 
-**Example input**:
+**範例輸入**：
 
 ```json
 "row,health,status,index\n1,green,open,.plugins-ml-model\n2,red,closed,test-index"
 ```
 
-**Example output**:
+**範例輸出**：
 
 ```json
 "1,green,open,.plugins-ml-model\n2,red,closed,test-index"
@@ -336,13 +337,13 @@ Replaces text using regular expression patterns. For regex syntax details, see [
 
 ### remove_jsonpath
 
-Removes fields from JSON objects using JSONPath.
+使用 JSONPath 從 JSON 物件中移除欄位。
 
-**Parameters**:
+**參數**：
 
-- `paths` (array, required): An array of JSONPath expressions identifying fields to remove.
+- `paths`（陣列，必要）：識別要移除之欄位的 JSONPath 運算式陣列。
 
-**Example configuration**:
+**範例組態**：
 
 ```json
 {
@@ -351,13 +352,13 @@ Removes fields from JSON objects using JSONPath.
 }
 ```
 
-**Example input**:
+**範例輸入**：
 
 ```json
 {"name": "user1", "sensitive_data": "secret", "public_info": "visible"}
 ```
 
-**Example output**:
+**範例輸出**：
 
 ```json
 {"name": "user1", "public_info": "visible"}
@@ -365,22 +366,22 @@ Removes fields from JSON objects using JSONPath.
 
 ### set_field
 
-Sets a field to a specified static value or copies a value from another field.
+將欄位設定為指定的靜態值，或從其他欄位複製值。
 
-**Parameters**:
+**參數**：
 
-- `path` (string, required): The JSONPath expression specifying where to set the value.
-- `value` (any, conditionally required): The static value to set. Either `value` or `source_path` must be provided.
-- `source_path` (string, conditionally required): The JSONPath expression to copy the value from. Either `value` or `source_path` must be provided.
-- `default` (any, optional): The default value when `source_path` doesn't exist. Only used with `source_path`.
+- `path`（字串，必要）：指定要在何處設定值的 JSONPath 運算式。
+- `value`（任意類型，依條件必要）：要設定的靜態值。必須提供 `value` 或 `source_path`。
+- `source_path`（字串，依條件必要）：要從中複製值的 JSONPath 運算式。必須提供 `value` 或 `source_path`。
+- `default`（任意類型，選用）：`source_path` 不存在時的預設值。僅與 `source_path` 搭配使用。
 
-**Path behavior**:
+**路徑行為**：
 
-- If the path exists, it will be updated with the new value.
-- If the path doesn't exist, the processor chain attempts to create it (works for simple nested fields).
-- A parent path must exist for new field creation to succeed.
+- 如果路徑存在，將會以新值更新。
+- 如果路徑不存在，處理器鏈會嘗試建立它（適用於簡單的巢狀欄位）。
+- 父路徑必須存在，才能成功建立新欄位。
 
-**Example configuration (static value)**:
+**範例組態（靜態值）**：
 
 ```json
 {
@@ -390,7 +391,7 @@ Sets a field to a specified static value or copies a value from another field.
 }
 ```
 
-**Example configuration (copy field)**:
+**範例組態（複製欄位）**：
 
 ```json
 {
@@ -401,13 +402,13 @@ Sets a field to a specified static value or copies a value from another field.
 }
 ```
 
-**Example input**:
+**範例輸入**：
 
 ```json
 {"user": {"id": 123}, "name": "John"}
 ```
 
-**Example output**:
+**範例輸出**：
 
 ```json
 {"user": {"id": 123}, "name": "John", "userId": 123, "metadata": {"processed_at": "2024-03-15T10:30:00Z"}}
@@ -415,13 +416,13 @@ Sets a field to a specified static value or copies a value from another field.
 
 ### to_string
 
-Converts the input to a JSON string representation.
+將輸入轉換為 JSON 字串表示法。
 
-**Parameters**:
+**參數**：
 
-- `escape_json` (Boolean, optional): Whether to escape JSON characters. Default is `false`.
+- `escape_json`（布林值，選用）：是否逸出 JSON 字元。預設為 `false`。
 
-**Example configuration**:
+**範例組態**：
 
 ```json
 {
@@ -430,23 +431,23 @@ Converts the input to a JSON string representation.
 }
 ```
 
-**Example input**:
+**範例輸入**：
 
 ```json
 {"name": "test", "value": 123}
 ```
 
-**Example output**:
+**範例輸出**：
 
 ```json
 "{\"name\":\"test\",\"value\":123}"
 ```
 
-## Example usage with agents
+## 搭配代理程式使用的範例
 
-The following example demonstrates using processor chains with agents.
+下列範例示範如何搭配代理程式使用處理器鏈。
 
-### Step 1: Register a flow agent with output processors
+### 步驟 1：註冊具有輸出處理器的流程代理程式
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -476,9 +477,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### Step 2: Execute the agent
+### 步驟 2：執行代理程式
 
-Using the `agent_id` returned in the previous step:
+使用前一個步驟傳回的 `agent_id`：
 
 ```json
 POST /_plugins/_ml/agents/{agent_id}/_execute
@@ -490,7 +491,7 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
 ```
 {% include copy-curl.html %}
 
-Without output processors, the raw `ListIndexTool` returns verbose CSV output with headers and extra columns:
+若沒有輸出處理器，原始 `ListIndexTool` 會傳回冗長的 CSV 輸出，其中包含標頭與額外資料欄：
 
 ```cs
 row,health,status,index,uuid,pri,rep,docs.count,docs.deleted,store.size,pri.store.size
@@ -499,12 +500,12 @@ row,health,status,index,uuid,pri,rep,docs.count,docs.deleted,store.size,pri.stor
 3,green,open,.plugins-ml-memory-meta,LqP3QMaURNKYDZ9p8dTq3Q,1,0,2,0,44.8kb,44.8kb
 ```
 
-The output processors transform the verbose CSV output into a clean, readable format by:
+輸出處理器會以下列方式將冗長的 CSV 輸出轉換為簡潔、易讀的格式：
 
-1. **`regex_replace`**: Removing the CSV header row.
-2. **`regex_capture`**: Extracting only essential information (row number, health, status, and index name).
+1. **`regex_replace`**：移除 CSV 標頭列。
+2. **`regex_capture`**：僅擷取必要資訊 (列號、健康狀態、狀態及索引名稱)。
 
-With output processors, the agent returns clean, formatted data with only essential index information:
+有了輸出處理器，代理程式會傳回簡潔、格式化的資料，其中僅包含必要的索引資訊：
 
 ```cs
 1,green,open,.plugins-ml-model-group
@@ -512,13 +513,13 @@ With output processors, the agent returns clean, formatted data with only essent
 3,green,open,.plugins-ml-memory-meta
 ```
 
-## Example usage with models
+## 搭配模型使用的範例
 
-The following examples demonstrate how to use processor chains with models during Predict API calls.
+下列範例示範如何在 Predict API 呼叫期間搭配模型使用處理器鏈。
 
-### Example: Input processors
+### 範例：輸入處理器
 
-This example shows you how to modify model input using `input_processors` to replace text before processing:
+此範例示範如何使用 `input_processors` 修改模型輸入，以在處理前取代文字：
 
 ```json
 POST _plugins/_ml/models/{model_id}/_predict
@@ -538,11 +539,11 @@ POST _plugins/_ml/models/{model_id}/_predict
 ```
 {% include copy-curl.html %}
 
-In this example, the `regex_replace` processor modifies the prompt before it's sent to the model, changing "100 words" to "20 words".
+在此範例中，`regex_replace` 處理器會在提示傳送至模型前加以修改，將「100 words」變更為「20 words」。
 
-### Example: Output processors
+### 範例：輸出處理器
 
-This example shows you how to process model output using `output_processors` to extract and format JSON data. In this example, the output processors first extract the content from the model response using JSONPath. Then they parse and extract the JSON object from the text response:
+此範例示範如何使用 `output_processors` 處理模型輸出，以擷取並格式化 JSON 資料。在此範例中，輸出處理器會先使用 JSONPath 從模型回應中擷取內容。接著，它們會從文字回應中剖析並擷取 JSON 物件：
 
 ```json
 POST _plugins/_ml/models/{model_id}/_predict
@@ -584,7 +585,7 @@ POST _plugins/_ml/models/{model_id}/_predict
 ```
 {% include copy-curl.html %}
 
-Without output processors, the raw response contains the full model output with extensive metadata and a nested structure:
+若沒有輸出處理器，原始回應會包含完整的模型輸出，其中含有大量中繼資料與巢狀結構：
 
 ```json
 {
@@ -637,7 +638,7 @@ Without output processors, the raw response contains the full model output with 
 }
 ```
 
-With output processors, the response is simplified to contain only the extracted and parsed JSON data:
+有了輸出處理器，回應會簡化為僅包含所擷取並剖析的 JSON 資料：
 
 ```json
 {

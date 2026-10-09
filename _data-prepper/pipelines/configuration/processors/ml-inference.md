@@ -1,42 +1,43 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: ML inference
+title: "ML 推論"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 210
 ---
 
-# ML inference processor
+# ML 推論處理器
 
-The `ml_inference` processor allows you to use OpenSearch machine learning (ML) functionality within OpenSearch Data Prepper. By integrating ML models into Data Prepper pipelines, you can apply them during data ingestion into Amazon OpenSearch Service in order to power AI-driven search experiences such as vector search, semantic search, or conversational search. To explore OpenSearch AI-powered search types, see [AI search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/).
+`ml_inference` 處理器可讓您在 OpenSearch Data Prepper 中使用 OpenSearch 的機器學習 (ML) 功能。將 ML 模型整合至 Data Prepper 管線後，您可以在將資料匯入 Amazon OpenSearch Service 的過程中套用這些模型，以支援向量搜尋、語意搜尋或對話式搜尋等 AI 驅動的搜尋體驗。若要探索 OpenSearch 的 AI 搜尋類型，請參閱 [AI 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/)。
 
-Using the `ml_inference` processor, you can invoke an OpenSearch-hosted ML model within your Data Prepper pipeline in order to process events. The processor supports both real-time invocations and asynchronous (offline) batch job invocations.
+使用 `ml_inference` 處理器，您可以在 Data Prepper 管線中叫用由 OpenSearch 託管的 ML 模型來處理事件。此處理器同時支援即時叫用與非同步 (離線) 批次作業叫用。
 
-To use the `ml_inference` processor, you must have the ML Commons plugin installed on your cluster. The plugin is included by default in standard OpenSearch distributions. For more information, see [Managing OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/).
+若要使用 `ml_inference` 處理器，您的叢集必須安裝 ML Commons 外掛程式。標準 OpenSearch 發行版本預設已包含此外掛程式。如需詳細資訊，請參閱[管理 OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)。
 {: .note}
 
-## Configuration fields
+## 組態欄位
 
-The following table describes the configuration options for the `ml_inference` processor.
+下表說明 `ml_inference` 處理器的組態選項。
 
-| Option | Required | Type | Description |
+| 選項 | 必要 | 類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `host`             | Yes      | String | The name of the OpenSearch host.                                                                          |
-| `action_type`      | Yes      | String | The type of action to perform. Currently, only `batch_predict` is supported. Default is `batch_predict`. |
-| `model_id`         | Yes      | String | The ID of the ML model to invoke.                                             |
-| `output_path`      | Yes      | String | The [Amazon Simple Storage Service (Amazon S3)](https://aws.amazon.com/s3/) location to which the offline batch job results will be written.                                      |
-| `aws.region`       | Yes      | String | The AWS Region to which OpenSearch Service is deployed.                                                  |
-| `aws.sts_role_arn` | No       | String | The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM) role to assume.                                  |
-| `service_name`     | No       | String | The name of the AI service hosting the model used for inference. Default is `sagemaker` (Amazon SageMaker).  |
-| `input_key`        | No       | String | The name of the event field to use as the S3 object key name when writing batch job results. This allows dynamic naming of output files based on event data.                                                              |
-| `ml_when`          | No       | String | A conditional expression that determines when to invoke the `ml_inference` processor.                     |
-| `tags_on_failure`  | No       | List   | A list of tags to add to events if the `ml_inference` processor fails or encounters an error.             |
+| `host`             | 是      | String | OpenSearch 主機的名稱。                                                                          |
+| `action_type`      | 是      | String | 要執行的動作類型。目前僅支援 `batch_predict`。預設為 `batch_predict`。 |
+| `model_id`         | 是      | String | 要叫用的 ML 模型 ID。                                             |
+| `output_path`      | 是      | String | 離線批次作業結果要寫入的 [Amazon Simple Storage Service (Amazon S3)](https://aws.amazon.com/s3/) 位置。                                      |
+| `aws.region`       | 是      | String | OpenSearch Service 所部署的 AWS 區域。                                                  |
+| `aws.sts_role_arn` | 否       | String | 要擔任的 AWS Identity and Access Management (IAM) 角色的 Amazon Resource Name (ARN)。                                  |
+| `service_name`     | 否       | String | 託管推論所用模型的 AI 服務名稱。預設為 `sagemaker` (Amazon SageMaker)。  |
+| `input_key`        | 否       | String | 寫入批次作業結果時，要作為 S3 物件鍵名稱的事件欄位名稱。這可讓您根據事件資料動態命名輸出檔案。                                                              |
+| `ml_when`          | 否       | String | 決定何時叫用 `ml_inference` 處理器的條件運算式。                     |
+| `tags_on_failure`  | 否       | List   | 當 `ml_inference` 處理器失敗或發生錯誤時，要新增至事件的標籤清單。             |
 
 
 
-#### Example configuration
+#### 組態範例
 
-The following example shows an example `map_to_list` processor configuration:
+以下範例展示 `map_to_list` 處理器的組態範例：
 
 ```yaml
   processor:
@@ -54,14 +55,14 @@ The following example shows an example `map_to_list` processor configuration:
 ```
 {% include copy.html %}
 
-## Usage
+## 使用方式
 
-The processor supports `batch_predict` operations, which invoke the [Batch Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/batch-predict/) for offline batch processing.
+此處理器支援 `batch_predict` 操作，此操作會叫用 [Batch Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/batch-predict/) 進行離線批次處理。
 
 
-## Behavior
+## 行為
 
-For `batch_predict` operations, the `ml_inference` processor works best with the [S3 source]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/). To configure S3 to process metadata only, configure the S3 scan block as follows:
+對於 `batch_predict` 操作，`ml_inference` 處理器搭配 [S3 來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/) 使用效果最佳。若要將 S3 設定為僅處理中繼資料，請依下列方式設定 S3 掃描區塊：
 
 ```yaml
 scan:
@@ -72,20 +73,20 @@ scan:
 ```
 {% include copy.html %}
 
-When `metadata_only` is enabled, the processor receives events in the following format:
+啟用 `metadata_only` 時，處理器會接收下列格式的事件：
 
 ```json
 {"bucket":"test-offlinebatch","length":6234,"time":1738108982.000000000,"key":"input_folder/batch_input_1.json"}
 ```
 
-To filter specific records for processing, use `ml_when` conditions.
+若要篩選特定記錄進行處理，請使用 `ml_when` 條件。
 
 
-## Monitoring the offline batch job status
+## 監控離線批次作業狀態
 
-Once an offline batch job is created by the Data Prepper pipeline, you can track its status using the AI provider's (Amazon SageMaker or Amazon Bedrock) native console.
+Data Prepper 管線建立離線批次作業後，您可以使用 AI 供應商 (Amazon SageMaker 或 Amazon Bedrock) 的原生主控台追蹤其狀態。
 
-Alternatively, you can check the job status by calling the [Search ML Tasks API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/search-task/). For example, to search for all currently running tasks, use the following request:
+或者，您也可以呼叫 [Search ML Tasks API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/search-task/) 來檢查作業狀態。例如，若要搜尋所有目前正在執行的任務，請使用下列請求：
 
 ```json
 GET /_plugins/_ml/tasks/_search

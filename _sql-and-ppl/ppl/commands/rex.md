@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: rex
 parent: Commands
@@ -8,59 +9,59 @@ nav_order: 40
 
 <!-- vale off -->
 
-# rex command
+# rex 命令
 
 <!-- vale on -->
 
-The `rex` command extracts fields from a raw text field using regular expression named capture groups. It uses Java regex patterns. For more information, see the [Java regular expression documentation](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html).
+`rex` 命令使用正規表示式的具名擷取群組，從原始文字欄位中擷取欄位。它使用 Java regex 模式。如需更多資訊，請參閱 [Java 正規表示式文件](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)。
 
 <!-- vale off -->
 
-## The rex and parse commands compared
+## rex 與 parse 命令的比較
 
 <!-- vale on -->
 
-The `rex` and [`parse`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/parse/) commands both extract information from text fields using Java regular expressions with named capture groups. The following table compares the capabilities of the `rex` and `parse` commands. 
+`rex` 與 [`parse`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/parse/) 命令都使用帶有具名擷取群組的 Java 正規表示式，從文字欄位中擷取資訊。下表比較了 `rex` 與 `parse` 命令的功能。
 
-| Feature | `rex` | `parse` |
+| 功能 | `rex` | `parse` |
 | --- | --- | --- |
-| Pattern type | Java regex | Java regex |
-| Named groups required | Yes | Yes |
-| Multiple named groups | Yes | No |
-| Multiple matches | Yes | No |
-| Text substitution | Yes | No |
-| Offset tracking | Yes | No |
-| Special characters in group names | No | No |
+| 模式類型 | Java regex | Java regex |
+| 需要具名群組 | 是 | 是 |
+| 多個具名群組 | 是 | 否 |
+| 多重比對 | 是 | 否 |
+| 文字替換 | 是 | 否 |
+| 偏移量追蹤 | 是 | 否 |
+| 群組名稱中的特殊字元 | 否 | 否 |
 
-## Syntax
+## 語法
 
-The `rex` command has the following syntax:
+`rex` 命令的語法如下：
 
 ```sql
 rex [mode=<mode>] field=<field> <pattern> [max_match=<int>] [offset_field=<string>]
 ```
 
-## Parameters
+## 參數
 
-The `rex` command supports the following parameters.
+`rex` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `field` | Required | The field to extract data from. The field must be a string. |
-| `<pattern>` | Required | The regular expression pattern with named capture groups used to extract new fields. The pattern must contain at least one named capture group using the `(?<name>pattern)` syntax. Group names must start with a letter and contain only letters and digits. |
-| `mode` | Optional | The pattern-matching mode. Valid values are `extract` and `sed`. The `extract` mode creates new fields from regular expression named capture groups. The `sed` mode performs text substitution using sed-style patterns (supports `s/pattern/replacement/` with flags, `y/from_chars/to_chars/` transliteration, and backreferences). |
-| `max_match` | Optional | The maximum number of matches to extract. If the value is greater than `1`, the extracted fields are returned as arrays. A value of `0` indicates unlimited matches; however, the effective number of matches is automatically limited by the configured maximum. The default maximum is `10` and can be configured using `plugins.ppl.rex.max_match.limit` (see the [note]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/rex/#note)). Default is `1`. |
-| `offset_field` | Optional | Valid in `extract` mode only. The name of the field in which to store the character offset positions of the matches. |
+| `field` | 必要 | 要從中擷取資料的欄位。該欄位必須是字串。 |
+| `<pattern>` | 必要 | 用來擷取新欄位、帶有具名擷取群組的正規表示式模式。模式必須至少包含一個使用 `(?<name>pattern)` 語法的具名擷取群組。群組名稱必須以字母開頭，且只能包含字母與數字。 |
+| `mode` | 選用 | 比對模式。有效值為 `extract` 與 `sed`。`extract` 模式會從正規表示式的具名擷取群組建立新欄位。`sed` 模式會使用 sed 風格的模式執行文字替換（支援帶旗標的 `s/pattern/replacement/`、`y/from_chars/to_chars/` 字元轉換，以及回參照）。 |
+| `max_match` | 選用 | 要擷取的最大比對次數。如果該值大於 `1`，擷取的欄位會以陣列形式回傳。值為 `0` 表示比對次數無上限；不過，實際比對次數會自動受設定的最大值限制。預設最大值為 `10`，可透過 `plugins.ppl.rex.max_match.limit` 進行設定（請參閱[注意]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/rex/#note)）。預設值為 `1`。 |
+| `offset_field` | 選用 | 僅在 `extract` 模式下有效。用來儲存比對結果字元偏移位置的欄位名稱。 |
 
 <p id="note"></p>
 
-You can set the `max_match` limit in the `plugins.ppl.rex.max_match.limit` cluster setting. For more information, see [SQL settings]({{site.url}}{{site.baseurl}}/sql-and-ppl/settings/). Setting this limit to a large value is not recommended because it can lead to excessive memory consumption, especially with patterns that match empty strings (for example, `\d*` or `\w*`).
+您可以在 `plugins.ppl.rex.max_match.limit` 叢集設定中設定 `max_match` 限制。如需更多資訊，請參閱 [SQL 設定]({{site.url}}{{site.baseurl}}/sql-and-ppl/settings/)。不建議將此限制設定為過大的值，因為這可能導致過度的記憶體消耗，尤其是當模式會比對空字串時（例如 `\d*` 或 `\w*`）。
 {: .note}
 
 
-## Example 1: Extracting service name and error type from log messages  
+## 範例 1：從記錄檔訊息中擷取服務名稱與錯誤類型  
 
-The following query extracts the error type from Java exception log messages. Non-matching rows return `null` for the extracted field:
+下列查詢會從 Java 例外狀況記錄檔訊息中擷取錯誤類型。未比對到的資料列在擷取的欄位中會回傳 `null`：
   
 ```sql
 source=otellogs
@@ -72,7 +73,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會回傳下列結果：
   
 <!-- vale off -->
 
@@ -85,9 +86,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Extracting multiple words using max_match  
+## 範例 2：使用 max_match 擷取多個單字  
 
-The following query uses the `rex` command with the `max_match` parameter to extract multiple words from the `body` field. The extracted field is returned as an array of strings:
+下列查詢使用 `rex` 命令搭配 `max_match` 參數，從 `body` 欄位中擷取多個單字。擷取的欄位會以字串陣列的形式回傳：
   
 ```sql
 source=otellogs
@@ -98,7 +99,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會回傳下列結果：
   
 <!-- vale off -->
 
@@ -114,11 +115,11 @@ The query returns the following results:
 
 <!-- vale off -->
 
-## Example 3: Replacing text using sed mode  
+## 範例 3：使用 sed 模式替換文字  
 
 <!-- vale on -->
 
-The following query uses `sed` mode to mask IP addresses in log messages for privacy compliance:
+下列查詢使用 `sed` 模式來遮罩記錄檔訊息中的 IP 位址，以符合隱私合規要求：
 
 ```sql
 source=otellogs
@@ -129,7 +130,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會回傳下列結果：
 
 <!-- vale off -->
 
@@ -139,9 +140,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 4: Tracking match positions using offset_field  
+## 範例 4：使用 offset_field 追蹤比對位置  
 
-The following query tracks the character positions where matches occur, useful for highlighting matches in a UI:
+下列查詢會追蹤比對發生的字元位置，適合用於在使用者介面中突顯比對結果：
   
 ```sql
 source=otellogs
@@ -153,7 +154,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會回傳下列結果：
   
 <!-- vale off -->
 
@@ -164,7 +165,7 @@ The query returns the following results:
 <!-- vale on -->
   
 
-Capture group names cannot contain underscores because of [Java regex](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) limitations. For example, `(?<error_type>\w+)` is invalid; use `(?<errortype>\w+)` instead.
+由於 [Java regex](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) 的限制，擷取群組名稱不能包含底線。例如，`(?<error_type>\w+)` 是無效的；請改用 `(?<errortype>\w+)`。
 {: .note}
 
-For detailed Java regex pattern syntax and usage, refer to the official [Java Pattern documentation](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html).
+如需詳細的 Java regex 模式語法與用法，請參閱官方 [Java Pattern 文件](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)。

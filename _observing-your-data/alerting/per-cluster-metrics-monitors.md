@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Per cluster metrics monitors
+title: "個別叢集指標監視器"
 nav_order: 15
 parent: Monitors
 grand_parent: Alerting
 has_children: false
 ---
 
-# Per cluster metrics monitors
+# 個別叢集指標監視器
 
-_Per cluster metrics monitors_ are a type of alert monitor that collects and analyzes metrics from a single cluster, providing insights into the cluster's performance and health. You can set alerts to monitor certain conditions, such as when:
+_個別叢集指標監視器_ 是一種警示監視器，可收集並分析單一叢集的指標，提供叢集效能與健全狀態的相關資訊。您可以設定警示來監視特定條件，例如：
 
-- Cluster health reaches yellow or red status.
-- Cluster-level metrics---for example, CPU usage and JVM memory usage---reach specified thresholds.
-- Node-level metrics---for example, available disk space, JVM memory usage, and CPU usage---reach specified thresholds.
-- Total number of documents stored reaches specified thresholds.
+- 叢集健全狀態變為黃色或紅色。
+- 叢集層級指標（例如 CPU 使用率與 JVM 記憶體使用量）達到指定閾值。
+- 節點層級指標（例如可用磁碟空間、JVM 記憶體使用量與 CPU 使用率）達到指定閾值。
+- 儲存的文件總數達到指定閾值。
 
-## Create a cluster metrics monitor
+## 建立叢集指標監視器
 
-To create a cluster metrics monitor, follow these steps:
+若要建立叢集指標監視器，請依照下列步驟操作：
 
-1. Select **Alerting** > **Monitors** > **Create monitor**.
-2. Select the **Per cluster metrics monitor** option.
-3. In the Query section, pick the **Request type** from the dropdown list.
-4. (Optional) If you want to filter the API response to use only certain path parameters, enter those parameters under **Path parameters**. Most APIs that can be used to monitor cluster status support path parameters as described in their documentation (for example, comma-separated lists of index names).
-5. In the [Triggers]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/triggers/) section, indicate which conditions will trigger an alert. The trigger condition autopopulates a `painless ctx` variable. For example, a cluster monitor watching for Cluster Stats uses the trigger condition `ctx.results[0].indices.count <= 0`, which triggers an alert based on the number of indexes returned by the query. For more specificity, add any additional Painless conditions supported by the API. To see an example of the condition response, select **Preview condition response**.
-6. In the Actions section, indicate how you want your users to be notified when a trigger condition is met.
-7. Select **Create**. Your new monitor appears in the **Monitors** list.
+1. 選取 **Alerting** > **Monitors** > **Create monitor**。
+2. 選取 **Per cluster metrics monitor** 選項。
+3. 在 Query 區段中，從下拉式清單選擇 **Request type**。
+4. （選用）如果您想篩選 API 回應，僅使用特定路徑參數，請在 **Path parameters** 下輸入這些參數。大多數可用於監視叢集狀態的 API 都支援其文件中所述的路徑參數（例如以逗號分隔的索引名稱清單）。
+5. 在[觸發條件]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/triggers/)區段中，指定哪些條件會觸發警示。觸發條件會自動填入 `painless ctx` 變數。例如，監視 Cluster Stats 的叢集監視器使用觸發條件 `ctx.results[0].indices.count <= 0`，根據查詢傳回的索引數量觸發警示。若要進一步細化條件，請新增 API 支援的任何其他 Painless 條件。若要查看條件回應的範例，請選取 **Preview condition response**。
+6. 在 Actions 區段中，指定觸發條件滿足時，您希望如何通知使用者。
+7. 選取 **Create**。您的新監視器會出現在 **Monitors** 清單中。
 
-The following example shows a configuration of a cluster metrics monitor.
+下列範例顯示叢集指標監視器的組態。
 
-![Cluster metrics monitor]({{site.url}}{{site.baseurl}}/images/cluster-metrics.png){: width="700" }
+![叢集指標監視器]({{site.url}}{{site.baseurl}}/images/cluster-metrics.png){: width="700" }
 
-## Supported APIs
+## 支援的 API
 
-Trigger conditions use responses from the following API endpoints. Most APIs that can be used to monitor cluster status support path parameters (for example, comma-separated lists of index names). They do not support query parameters.
+觸發條件使用下列 API 端點的回應。大多數可用於監視叢集狀態的 API 都支援路徑參數（例如以逗號分隔的索引名稱清單）。這些 API 不支援查詢參數。
 
 - [`_cluster/health`]({{site.url}}{{site.baseurl}}/api-reference/cluster-health/)
 - [`_cluster/stats`]({{site.url}}{{site.baseurl}}/api-reference/cluster-stats/)
@@ -47,11 +48,11 @@ Trigger conditions use responses from the following API endpoints. Most APIs tha
 - [`_cat/snapshots`]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-snapshots/)
 - [`_cat/tasks`]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-tasks/)
 
-## Restrict API fields
+## 限制 API 欄位
 
-If you want to hide fields from the API response and not expose them for alerting, reconfigure the [supported_json_payloads.json](https://github.com/opensearch-project/alerting/blob/main/alerting/src/main/resources/org/opensearch/alerting/settings/supported_json_payloads.json) file inside the Alerting plugin. The file functions as an allow list for the API fields you want to use in an alert. By default, all APIs and their parameters can be used for monitors and trigger conditions.
+如果您想隱藏 API 回應中的欄位，避免將其提供給警示使用，請重新設定 Alerting 外掛程式內的 [supported_json_payloads.json](https://github.com/opensearch-project/alerting/blob/main/alerting/src/main/resources/org/opensearch/alerting/settings/supported_json_payloads.json) 檔案。此檔案可作為您想在警示中使用的 API 欄位允許清單。預設情況下，所有 API 及其參數都可用於監視器與觸發條件。
 
-However, you can modify the file so that cluster metrics monitors can only be created for APIs referenced. Furthermore, only fields referenced in the supported files can create trigger conditions. This `supported_json_payloads.json` allows for a cluster metrics monitor to be created for the `_cluster/stats` API, and triggers conditions for the `indices.shards.total` and `indices.shards.index.shards.min` fields.
+不過，您可以修改此檔案，讓叢集指標監視器只能針對檔案中參照的 API 建立。此外，只有支援檔案中參照的欄位才能用來建立觸發條件。此 `supported_json_payloads.json` 允許為 `_cluster/stats` API 建立叢集指標監視器，並為 `indices.shards.total` 與 `indices.shards.index.shards.min` 欄位設定觸發條件。
 
 ```json
 "/_cluster/stats": {
@@ -62,15 +63,15 @@ However, you can modify the file so that cluster metrics monitors can only be cr
 }
 ```
 
-## Painless triggers
+## Painless 觸發條件
 
-Painless scripts define triggers for cluster metrics monitors, similar to per query or per bucket monitors, which are defined using the extraction query definition option. Painless scripts are composed of at least one statement and any additional functions you wish to run. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+Painless 指令碼可定義叢集指標監視器的觸發條件，類似於使用擷取查詢定義選項所定義的個別查詢或個別桶監視器。Painless 指令碼由至少一個陳述式，以及您希望執行的任何其他函式組成。如需詳細資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-The cluster metrics monitor supports up to **ten** triggers.
+叢集指標監視器最多支援 **十個** 觸發條件。
 
-In the following example, the monitor is configured to call the Cluster Health API for two clusters, `cluster-1` and `cluster-2`. The trigger condition will create an alert when either of the clusters' `status` is not `green`.
+在下列範例中，監視器設定為對兩個叢集 `cluster-1` 和 `cluster-2` 呼叫 Cluster Health API。當任一叢集的 `status` 不是 `green` 時，觸發條件就會建立警示。
 
-The `script` parameter points the `source` to the Painless script `for (cluster in ctx.results[0].keySet()) if (ctx.results[0][cluster].status != \"green\") return true`. See [Trigger variables]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/triggers/#trigger-variables) for more `painless ctx` variable options.
+`script` 參數將 `source` 指向 Painless 指令碼 `for (cluster in ctx.results[0].keySet()) if (ctx.results[0][cluster].status != \"green\") return true`。如需更多 `painless ctx` 變數選項，請參閱[觸發條件變數]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/triggers/#trigger-variables)。
 
 ```json
 {
@@ -112,17 +113,17 @@ The `script` parameter points the `source` to the Painless script `for (cluster 
   ]
 }
 ```
-The dashboards interface supports the selection of clusters to be monitored and the desired API. A view of the interface is shown in the following image.
+儀表板介面支援選取要監視的叢集及所需的 API。下圖顯示此介面。
 
-The following [permissions]({{site.url}}{{site.baseurl}}/security/access-control/permissions/) are required in order to create a cross-cluster monitor through the dashboards UI: `cluster:admin/opensearch/alerting/remote/indexes/get`, `indices:admin/resolve/index`, `cluster:monitor/health`, and `indices:admin/mappings/get`.
+若要透過儀表板 UI 建立跨叢集監視器，需要下列[權限]({{site.url}}{{site.baseurl}}/security/access-control/permissions/)：`cluster:admin/opensearch/alerting/remote/indexes/get`、`indices:admin/resolve/index`、`cluster:monitor/health` 和 `indices:admin/mappings/get`。
 {: .note}
 
-![Cluster metrics monitor]({{site.url}}{{site.baseurl}}/images/alerting/cross-cluster-cluster-metrics-monitors.png){: width="700" }
+![叢集指標監視器]({{site.url}}{{site.baseurl}}/images/alerting/cross-cluster-cluster-metrics-monitors.png){: width="700" }
 
-### Limitations
+### 限制
 
-Per cluster metrics monitors have the following limitations:
+個別叢集指標監視器有下列限制：
 
-- The OpenSearch cluster must be in a state where an index's conditions can be monitored and actions can be executed against the index.
-- Removing resource permissions from a user will not prevent that user’s preexisting monitors for that resource from executing.
-- Users with permissions to create monitors are not blocked from creating monitors for resources for which they do not have permissions; however, those monitors will not run.
+- OpenSearch 叢集必須處於可監視索引條件，並可對該索引執行動作的狀態。
+- 移除使用者對某個資源的權限，不會阻止該使用者先前為該資源建立的監視器執行。
+- 具有建立監視器權限的使用者，可以為自己沒有權限的資源建立監視器；不過，這些監視器不會執行。

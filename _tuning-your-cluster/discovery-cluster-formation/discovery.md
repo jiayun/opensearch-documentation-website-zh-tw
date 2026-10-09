@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Node discovery and seed hosts
+title: "節點探索與種子主機"
 parent: Discovery and cluster formation
 nav_order: 10
 ---
 
-# Node discovery and seed hosts
+# 節點探索與種子主機
 
-Node discovery is the process by which OpenSearch nodes locate and connect to other nodes to form or join a cluster. This process is essential when starting a node for the first time or when a node loses connection to the cluster manager and needs to rejoin the cluster.
+節點探索是 OpenSearch 節點找到並連線至其他節點，以組成或加入叢集的過程。當您第一次啟動節點，或節點失去與叢集管理員的連線而需要重新加入叢集時，此過程至關重要。
 
-The discovery process operates in two distinct phases:
+探索過程分為兩個不同的階段：
 
-1. **Initial seed discovery**: Each starting node connects to a predefined list of seed addresses and attempts to identify whether the nodes at those addresses are cluster manager eligible.
+1. **初始種子探索**：每個啟動中的節點會連線至預先定義的種子位址清單，並嘗試辨識這些位址上的節點是否具備叢集管理員資格。
 
-2. **Peer discovery**: Once connected to seed nodes, the node exchanges lists of known cluster-manager-eligible peers. This creates a cascading discovery process whereby each newly discovered node provides additional peer information.
+2. **對等探索**：一旦連線至種子節點，該節點便會交換已知且具備叢集管理員資格的對等節點清單。這會形成串聯式的探索過程，每個新探索到的節點都會提供額外的對等節點資訊。
 
-The discovery process continues until one of the following conditions is met:
+探索過程會持續進行，直到符合下列其中一個條件為止：
 
-- **For non-cluster-manager-eligible nodes**: Discovery continues until an elected cluster manager is found.
-- **For cluster-manager-eligible nodes**: Discovery continues until either an elected cluster manager is found or enough cluster-manager-eligible nodes are discovered to complete a cluster manager election.
+- **對於不具備叢集管理員資格的節點**：探索會持續進行，直到找到已選出的叢集管理員為止。
+- **對於具備叢集管理員資格的節點**：探索會持續進行，直到找到已選出的叢集管理員，或探索到足夠且具備叢集管理員資格的節點以完成叢集管理員選舉為止。
 
-If neither condition is met within the configured time, the node retries the discovery process after the interval specified by `discovery.find_peers_interval` (default is `1s`).
+若在設定的時間內未符合任一條件，節點會在 `discovery.find_peers_interval` 指定的間隔後重試探索過程（預設為 `1s`）。
 
-## Seed host providers
+## 種子主機提供者
 
-OpenSearch uses _seed host providers_ to supply the initial list of addresses for node discovery. These providers define how nodes obtain the seed addresses needed to start the discovery process.
+OpenSearch 使用 _種子主機提供者_ 來提供節點探索的初始位址清單。這些提供者定義節點如何取得啟動探索過程所需的種子位址。
 
-You can configure seed host providers using the `discovery.seed_providers` setting, which accepts a list of provider types. This allows you to combine multiple discovery methods for your cluster. The default provider is `settings`, which uses static configuration.
+您可以使用 `discovery.seed_providers` 設定來設定種子主機提供者，該設定接受提供者類型清單。這可讓您為叢集合併多種探索方法。預設提供者為 `settings`，其使用靜態組態。
 
-### Settings-based seed host provider
+### 以設定為基礎的種子主機提供者
 
-The settings-based provider uses static configuration to define a list of seed node addresses. This is the most common approach for on-premises deployments with known node addresses.
+以設定為基礎的提供者使用靜態組態來定義種子節點位址清單。對於節點位址已知的內部部署而言，這是最常見的做法。
 
-Configure seed hosts using the `discovery.seed_hosts` setting in `opensearch.yml`:
+在 `opensearch.yml` 中使用 `discovery.seed_hosts` 設定來設定種子主機：
 
 ```yaml
 discovery.seed_hosts:
@@ -42,54 +43,54 @@ discovery.seed_hosts:
 ```
 {% include copy.html %}
 
-Each seed host address can be specified in the following ways.
+每個種子主機位址可透過下列方式指定。
 
-| Format                  | Example                  | Notes                                    |
+| 格式                  | 範例                  | 備註                                    |
 | ----------------------- | ------------------------ | ---------------------------------------- |
-| IP address with port    | `192.168.1.10:9300`      | Specifies a custom transport port        |
-| IP address without port | `192.168.1.11`           | Uses the default transport port          |
-| Hostname with port      | `node1.example.com:9300` | Specifies a custom transport port        |
-| Hostname without port   | `node1.example.com`      | Uses the default transport port          |
-| IPv6 address            | `[2001:db8::1]:9300`     | Brackets are required for IPv6 addresses |
+| 含連接埠的 IP 位址    | `192.168.1.10:9300`      | 指定自訂傳輸連接埠        |
+| 不含連接埠的 IP 位址 | `192.168.1.11`           | 使用預設傳輸連接埠          |
+| 含連接埠的主機名稱      | `node1.example.com:9300` | 指定自訂傳輸連接埠        |
+| 不含連接埠的主機名稱   | `node1.example.com`      | 使用預設傳輸連接埠          |
+| IPv6 位址            | `[2001:db8::1]:9300`     | IPv6 位址必須加上方括號 |
 
-When no port is specified, OpenSearch uses the first port from these settings in order:
+未指定連接埠時，OpenSearch 會依序使用下列設定中的第一個連接埠：
 
 1. `transport.profiles.default.port`
 2. `transport.port`
 
-If neither setting is configured, the default port `9300` is used.
+若兩者皆未設定，則使用預設連接埠 `9300`。
 
-When you specify hostnames as seed addresses, OpenSearch performs the following DNS resolution steps:
+當您指定主機名稱作為種子位址時，OpenSearch 會執行下列 DNS 解析步驟：
 
-- OpenSearch performs DNS lookups to resolve hostnames to IP addresses.
-- If a hostname resolves to multiple IP addresses, OpenSearch attempts to connect to all resolved addresses.
-- DNS lookups are subject to JVM DNS caching settings.
-- Resolution occurs during each discovery round, allowing for dynamic IP changes.
+- OpenSearch 執行 DNS 查詢，將主機名稱解析為 IP 位址。
+- 若主機名稱解析為多個 IP 位址，OpenSearch 會嘗試連線至所有解析出的位址。
+- DNS 查詢受 JVM DNS 快取設定所規範。
+- 解析會在每一輪探索時進行，允許動態變更 IP。
 
-The DNS resolution behavior is controlled by these settings:
+DNS 解析行為由下列設定控制：
 
-- `discovery.seed_resolver.max_concurrent_resolvers`: Maximum concurrent DNS lookups (default is `10`)
-- `discovery.seed_resolver.timeout`: Timeout for each DNS lookup (default is `5s`)
+- `discovery.seed_resolver.max_concurrent_resolvers`：並行 DNS 查詢數上限（預設為 `10`）
+- `discovery.seed_resolver.timeout`：每次 DNS 查詢的逾時時間（預設為 `5s`）
 
-### File-based seed host provider
+### 以檔案為基礎的種子主機提供者
 
-The file-based provider reads seed host addresses from an external file, allowing for dynamic updates without restarting nodes. This is particularly useful in containerized environments where IP addresses may not be known at startup.
+以檔案為基礎的提供者會從外部檔案讀取種子主機位址，允許在不重新啟動節點的情況下動態更新。這在啟動時可能還不知道 IP 位址的容器化環境中特別有用。
 
-Enable the file-based provider in `opensearch.yml`:
+在 `opensearch.yml` 中啟用以檔案為基礎的提供者：
 
 ```yaml
 discovery.seed_providers: file
 ```
 {% include copy.html %}
 
-You can also combine it with the settings-based provider:
+您也可以將其與以設定為基礎的提供者合併使用：
 
 ```yaml
 discovery.seed_providers: [settings, file]
 ```
 {% include copy.html %}
 
-Create a file named `unicast_hosts.txt` in your OpenSearch configuration directory (`$OPENSEARCH_PATH_CONF/unicast_hosts.txt`). The file should follow this format:
+在您的 OpenSearch 組態目錄（`$OPENSEARCH_PATH_CONF/unicast_hosts.txt`）中建立名為 `unicast_hosts.txt` 的檔案。該檔案應遵循下列格式：
 
 ```
 # Static IP addresses
@@ -109,29 +110,29 @@ node2.example.com:9301
 ```
 {% include copy.html %}
 
-Each line in the file must follow these rules:
+檔案中的每一行都必須遵循下列規則：
 
-- Each line contains a single host address.
-- Specify a `host:port` or just `host` (uses the default port).
-- Lines starting with `#` are treated as comments.
-- IPv6 addresses must be enclosed in brackets, with an optional port specified after the brackets.
-- Empty lines are ignored.
+- 每一行包含單一主機位址。
+- 指定 `host:port` 或僅指定 `host`（使用預設連接埠）。
+- 以 `#` 開頭的行會被視為註解。
+- IPv6 位址必須以方括號括住，並可在方括號後選擇性指定連接埠。
+- 空行會被忽略。
 
-OpenSearch automatically detects changes to the `unicast_hosts.txt` file and reloads the seed host list without requiring a node restart. This allows you to:
+OpenSearch 會自動偵測 `unicast_hosts.txt` 檔案的變更，並重新載入種子主機清單，而不需要重新啟動節點。這可讓您：
 
-- Add new seed hosts as your cluster grows.
-- Remove decommissioned nodes from the seed list.
-- Update IP addresses after infrastructure changes.
+- 在叢集成長時新增種子主機。
+- 從種子清單中移除已除役的節點。
+- 在基礎結構變更後更新 IP 位址。
 
-Note that file-based discovery supplements (rather than replaces) any seed hosts configured in the `discovery.seed_hosts` setting.
+請注意，以檔案為基礎的探索會補充（而非取代）在 `discovery.seed_hosts` 設定中設定的任何種子主機。
 
-## Configuration examples
+## 組態範例
 
-The following examples demonstrate how to configure different discovery mechanisms.
+下列範例示範如何設定不同的探索機制。
 
-### Combining discovery providers
+### 合併探索提供者
 
-You can use multiple seed host providers simultaneously:
+您可以同時使用多個種子主機提供者：
 
 ```yaml
 discovery.seed_providers: [settings, file]
@@ -141,21 +142,21 @@ discovery.seed_hosts:
 ```
 {% include copy.html %}
 
-This configuration uses both static seed hosts and hosts loaded dynamically from a file.
+此組態同時使用靜態種子主機與從檔案動態載入的主機。
 
-### Single-node development setup
+### 單節點開發設定
 
-For development or testing environments:
+適用於開發或測試環境：
 
 ```yaml
 discovery.type: single-node
 ```
 {% include copy.html %}
 
-When `discovery.type` is set to `single-node`, OpenSearch bypasses the normal discovery process and forms a single-node cluster immediately.
+當 `discovery.type` 設為 `single-node` 時，OpenSearch 會略過一般探索過程，並立即形成單節點叢集。
 
-## Related documentation
+## 相關文件
 
-- To troubleshoot discovery issues, use the monitoring commands detailed in the [Discovery and cluster formation]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/#monitoring-discovery-and-cluster-formation) overview.
+- 若要對探索問題進行疑難排解，請使用 [探索與叢集形成]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/#monitoring-discovery-and-cluster-formation) 概觀中詳述的監控命令。
 
-- For a complete list of discovery-related settings, see [Discovery and cluster formation settings]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/settings/).
+- 如需探索相關設定的完整清單，請參閱 [探索與叢集形成設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/settings/)。

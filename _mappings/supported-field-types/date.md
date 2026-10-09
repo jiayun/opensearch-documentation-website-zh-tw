@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Date
+title: "日期"
 nav_order: 25
 has_children: false
 parent: Date field types
@@ -11,22 +12,22 @@ redirect_from:
   - /field-types/date/
 ---
 
-# Date field type
-**Introduced 1.0**
+# 日期欄位類型
+**於 1.0 版導入**
 {: .label .label-purple }
 
-A date in OpenSearch can be represented as one of the following:
+OpenSearch 中的日期可以用下列其中一種形式表示：
 
-- A long value that corresponds to milliseconds since the epoch. Dates are stored in this form internally.
-- A formatted string.
-- An integer value that corresponds to seconds since the epoch.
+- 一個對應自 epoch 起算毫秒數的 long 值。日期在內部即以此形式儲存。
+- 一個已格式化的字串。
+- 一個對應自 epoch 起算秒數的整數值。
 
-To represent date ranges, there is a date [range field type]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/range/).
+若要表示日期範圍，可使用日期 [range 欄位類型]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/range/)。
 {: .note }
 
-## Example
+## 範例
 
-Create a mapping with a date field and two date formats:
+建立一個含日期欄位與兩種日期格式的對應：
 
 ```json
 PUT testindex
@@ -43,132 +44,132 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by date field types. All parameters are optional.
+下表列出日期欄位類型接受的參數。所有參數皆為選用。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :--- 
-`boost` | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field's relevance. Values between 0.0 and 1.0 decrease the field's relevance. Default is 1.0. Dynamically updatable.
-`doc_values` | A Boolean value that specifies whether the field should be stored on disk so that it can be used for aggregations, sorting, or scripting. Default is `true`.
-`format` | The format for parsing dates. Default is `strict_date_optional_time||epoch_millis`.
-`ignore_malformed` | A Boolean value that specifies to ignore malformed values and not to throw an exception. Default is `false`. Dynamically updatable.
-`index` | A Boolean value that specifies whether the field should be searchable. Default is `true`. For indexes that use a pluggable data format, the default is `false`, and `true` is not supported. For more information, see [Pluggable data format indexes]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/#pluggable-data-format-indexes).
-`locale` | A region- and language-specific way of representing the date. Default is [`ROOT`](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html#ROOT) (a region- and language-neutral locale).
-`meta` | Accepts metadata for this field.
-[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | A value to be used in place of `null`. Must be of the same type as the field. If this parameter is not specified, the field is treated as missing when its value is `null`. Default is `null`.
-`print_format` | The format in which OpenSearch returns dates in the `fields` and `docvalue_fields` sections of search responses, in aggregation keys, and in derived source. Does not affect dates in `_source`, which are returned as originally provided. Default is the first format specified in `format`.
-`skip_list` | A Boolean value that specifies whether to enable skip list indexing for doc values. When enabled, OpenSearch creates indexed doc values that can improve performance for `range` queries by allowing the query engine to skip irrelevant document ranges. Skip list indexing is automatically enabled for the `@timestamp` field and fields used for index sorting. For all other fields, the default is `false`.
-`store` | A Boolean value that specifies whether the field value should be stored and can be retrieved separately from the `_source` field. Default is `false`. 
+`boost` | 一個浮點數值，指定此欄位對相關性分數的權重。高於 1.0 的值會提高該欄位的相關性，介於 0.0 與 1.0 之間的值會降低該欄位的相關性。預設為 1.0。可動態更新。
+`doc_values` | 一個布林值，指定是否應將該欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `true`。
+`format` | 解析日期所用的格式。預設為 `strict_date_optional_time||epoch_millis`。
+`ignore_malformed` | 一個布林值，指定是否忽略格式錯誤的值而不擲回例外狀況。預設為 `false`。可動態更新。
+`index` | 一個布林值，指定該欄位是否可供搜尋。預設為 `true`。對於使用可插拔資料格式的索引，預設為 `false`，且不支援 `true`。如需更多資訊，請參閱 [可插拔資料格式索引]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/#pluggable-data-format-indexes)。
+`locale` | 依地區與語言表示日期的方式。預設為 [`ROOT`](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html#ROOT)（不因地區與語言而異的地區設定）。
+`meta` | 接受此欄位的中繼資料。
+[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。必須與該欄位屬於相同類型。若未指定此參數，當欄位值為 `null` 時，該欄位會被視為遺失。預設為 `null`。
+`print_format` | OpenSearch 在搜尋回應的 `fields` 與 `docvalue_fields` 區段、彙總鍵值以及衍生來源中回傳日期所用的格式。不影響 `_source` 中的日期，這些日期會依原本提供的方式回傳。預設為 `format` 中指定的第一種格式。
+`skip_list` | 一個布林值，指定是否啟用 doc values 的跳躍清單索引。啟用後，OpenSearch 會建立已編製索引的 doc values，讓查詢引擎能略過不相關的文件範圍，從而改善 `range` 查詢的效能。`@timestamp` 欄位以及用於索引排序的欄位會自動啟用跳躍清單索引。對所有其他欄位，預設為 `false`。
+`store` | 一個布林值，指定是否應儲存欄位值，並使其可與 `_source` 欄位分開擷取。預設為 `false`。 
 
-## Formats
+## 格式
 
-OpenSearch has built-in date formats, but you can also create your own custom formats. You can specify multiple date formats, separated by `||`.
+OpenSearch 內建多種日期格式，您也可以建立自己的自訂格式。您可以指定多種日期格式，並以 `||` 分隔。
 
-## Default format
+## 預設格式
 
-You can choose to use an experimental default date format, `strict_date_time_no_millis||strict_date_optional_time||epoch_millis`. To use the experimental default, set the `opensearch.experimental.optimization.datetime_formatter_caching.enabled` feature flag to `true`. For more information about enabling and disabling feature flags, see [Enabling experimental features]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/experimental/).
+您可以選擇使用實驗性的預設日期格式 `strict_date_time_no_millis||strict_date_optional_time||epoch_millis`。若要使用此實驗性預設值，請將 `opensearch.experimental.optimization.datetime_formatter_caching.enabled` 功能旗標設為 `true`。如需啟用與停用功能旗標的更多資訊，請參閱 [啟用實驗性功能]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/experimental/)。
 
-## Built-in formats
+## 內建格式
 
-Most of the date formats have a `strict_` counterpart. When the format starts with `strict_`, the date must have the correct number of digits specified in the format. For example, if the format is set to `strict_year_month_day` (`"yyyy-MM-dd"`), both month and day have to be two-digit numbers. So, `"2020-06-09"` is valid, while `"2020-6-9"` is invalid.
+大多數日期格式都有 `strict_` 對應版本。當格式以 `strict_` 開頭時，日期必須具有格式中指定的正確位數。例如，若格式設為 `strict_year_month_day`（`"yyyy-MM-dd"`），則月份與日期都必須是兩位數。因此 `"2020-06-09"` 是有效的，而 `"2020-6-9"` 則無效。
 
-Epoch is defined as 00:00:00 UTC on January 1, 1970.
+Epoch 定義為 1970 年 1 月 1 日 00:00:00 UTC。
 {: .note }
 
-y: year<br>
-Y: [week-based year](https://en.wikipedia.org/wiki/ISO_8601#Week_dates)<br>
-M: month<br>
-w: ordinal [week of the year](https://en.wikipedia.org/wiki/ISO_8601#Week_dates) from 01 to 53<br> 
-d: day<br>
-D: ordinal day of the year from 001 to 365 (366 for leap years)<br>
-e: ordinal day of the week from 1 (Monday) to 7 (Sunday)<br>
-H: hour from 0 to 23<br>
-m: minute<br>
-s: second<br>
-S: fraction of a second<br>
-Z: time zone offset (for example, +0400; -0400; -04:00)<br>
+y: 年<br>
+Y: [週為基準的年份](https://en.wikipedia.org/wiki/ISO_8601#Week_dates)<br>
+M: 月<br>
+w: 一年中的序數[週](https://en.wikipedia.org/wiki/ISO_8601#Week_dates)，從 01 到 53<br> 
+d: 日<br>
+D: 一年中的序數日，從 001 到 365（閏年為 366）<br>
+e: 一週中的序數日，從 1（星期一）到 7（星期日）<br>
+H: 小時，從 0 到 23<br>
+m: 分鐘<br>
+s: 秒<br>
+S: 秒的小數部分<br>
+Z: 時區偏移（例如 +0400；-0400；-04:00）<br>
 {: .note }
 
-### Numeric date formats
+### 數值日期格式
 
-Format name and description | Examples
+格式名稱與說明 | 範例
 :--- | :---
-`epoch_millis` <br> The number of milliseconds since the epoch. Minimum is -2<sup>63</sup>. Maximum is 2<sup>63</sup> &minus; 1. | 1553391286000
-`epoch_second` <br> The number of seconds since the epoch. Minimum is -2<sup>63</sup> &divide; 1000. Maximum is (2<sup>63</sup> &minus; 1) &divide; 1000. | 1553391286
+`epoch_millis` <br> 自 epoch 起算的毫秒數。最小值為 -2<sup>63</sup>。最大值為 2<sup>63</sup> &minus; 1。 | 1553391286000
+`epoch_second` <br> 自 epoch 起算的秒數。最小值為 -2<sup>63</sup> &divide; 1000。最大值為 (2<sup>63</sup> &minus; 1) &divide; 1000。 | 1553391286
 
-### Basic date formats
+### 基本日期格式
 
-Components of basic date formats are not separated by a delimiter. For example, "20190323".
+基本日期格式的各組成部分之間不以分隔符號分隔。例如 "20190323"。
 
-Format name and description | Pattern and examples
+格式名稱與說明 | 模式與範例
 :--- | :---
-**Dates**| 
-`basic_date_time` <br> A basic date and time separated by `T`. | `"yyyyMMdd`T`HHmmss.SSSZ"`<br>`"20190323T213446.123-04:00"`
-`basic_date_time_no_millis` <br> A basic date and time without milliseconds, separated by `T`. | `"yyyyMMdd`T`HHmmssZ"`<br>`"20190323T213446-04:00"`
-`basic_date` <br> A date with a four-digit year, two-digit month, and two-digit day. | `"yyyyMMdd"<br>"20190323"` 
-**Times** |
-`basic_time` <br> A time with a two-digit hour, two-digit minute, two-digit second, three-digit millisecond, and time zone offset. |`"HHmmss.SSSZ"` <br> `"213446.123-04:00"`
-`basic_time_no_millis` <br> A basic time without milliseconds. | `"HHmmssZ"` <br> `"213446-04:00"`
-**T times** | 
-`basic_t_time` <br> A basic time preceded by `T`. | `"`T`HHmmss.SSSZ"` <br> `"T213446.123-04:00"`
-`basic_t_time_no_millis` <br> A basic time without milliseconds, preceded by `T`. | `"`T`HHmmssZ"` <br> `"T213446-04:00"`
-**Ordinal dates** |
-`basic_ordinal_date_time` <br> A full ordinal date and time. | `"yyyyDDD`T`HHmmss.SSSZ"`<br>`"2019082T213446.123-04:00"`
-`basic_ordinal_date_time_no_millis` <br> A full ordinal date and time without milliseconds. | `"yyyyDDD`T`HHmmssZ"`<br>`"2019082T213446-04:00"`
-`basic_ordinal_date` <br> A date with a four-digit year and three-digit ordinal day of the year. | `"yyyyDDD"` <br> `"2019082"`
-**Week-based dates** | 
-`basic_week_date_time` <br> `strict_basic_week_date_time` <br> A full week-based date and time separated by `T`. | `"YYYY`W`wwe`T`HHmmss.SSSZ"` <br> `"2019W126213446.123-04:00"`
-`basic_week_date_time_no_millis` <br> `strict_basic_week_date_time_no_millis` <br> A basic week-based year date and time without milliseconds, separated by `T`. | `"YYYY`W`wwe`T`HHmmssZ"` <br> "2019W126213446-04:00"
-`basic_week_date` <br> `strict_basic_week_date` <br> A full week-based date with a four-digit week-based year, two-digit ordinal week of the year, and one-digit ordinal day of the week separated by `W`. | `"YYYY`W`wwe"` <br> `"2019W126"`
+**日期**| 
+`basic_date_time` <br> 以 `T` 分隔的基本日期與時間。 | `"yyyyMMdd`T`HHmmss.SSSZ"`<br>`"20190323T213446.123-04:00"`
+`basic_date_time_no_millis` <br> 不含毫秒、以 `T` 分隔的基本日期與時間。 | `"yyyyMMdd`T`HHmmssZ"`<br>`"20190323T213446-04:00"`
+`basic_date` <br> 四位數年份、兩位數月份與兩位數日期的日期。 | `"yyyyMMdd"<br>"20190323"` 
+**時間** |
+`basic_time` <br> 含兩位數小時、兩位數分鐘、兩位數秒、三位數毫秒以及時區偏移的時間。 |`"HHmmss.SSSZ"` <br> `"213446.123-04:00"`
+`basic_time_no_millis` <br> 不含毫秒的基本時間。 | `"HHmmssZ"` <br> `"213446-04:00"`
+**T 時間** | 
+`basic_t_time` <br> 前面加上 `T` 的基本時間。 | `"`T`HHmmss.SSSZ"` <br> `"T213446.123-04:00"`
+`basic_t_time_no_millis` <br> 前面加上 `T`、不含毫秒的基本時間。 | `"`T`HHmmssZ"` <br> `"T213446-04:00"`
+**序數日期** |
+`basic_ordinal_date_time` <br> 完整的序數日期與時間。 | `"yyyyDDD`T`HHmmss.SSSZ"`<br>`"2019082T213446.123-04:00"`
+`basic_ordinal_date_time_no_millis` <br> 不含毫秒的完整序數日期與時間。 | `"yyyyDDD`T`HHmmssZ"`<br>`"2019082T213446-04:00"`
+`basic_ordinal_date` <br> 四位數年份與三位數一年中序數日的日期。 | `"yyyyDDD"` <br> `"2019082"`
+**週為基準的日期** | 
+`basic_week_date_time` <br> `strict_basic_week_date_time` <br> 以 `T` 分隔的完整週為基準日期與時間。 | `"YYYY`W`wwe`T`HHmmss.SSSZ"` <br> `"2019W126213446.123-04:00"`
+`basic_week_date_time_no_millis` <br> `strict_basic_week_date_time_no_millis` <br> 不含毫秒、以 `T` 分隔的基本週為基準年份日期與時間。 | `"YYYY`W`wwe`T`HHmmssZ"` <br> "2019W126213446-04:00"
+`basic_week_date` <br> `strict_basic_week_date` <br> 含四位數週為基準年份、兩位數一年中序數週與一位數一週中序數日、以 `W` 分隔的完整週為基準日期。 | `"YYYY`W`wwe"` <br> `"2019W126"`
 
-### Full date formats
+### 完整日期格式
 
-Components of full date formats are separated by a `-` delimiter for date and `:` delimiter for time. For example, `"2019-03-23T21:34"`.
+完整日期格式的各個組成部分會以日期分隔符號 `-` 和時間分隔符號 `:` 分隔。例如，`"2019-03-23T21:34"`。
 
-Format name and description | Pattern and examples
+格式名稱與說明 | 模式與範例
 :--- | :---
-**Dates** |
-`date_optional_time`<br>`strict_date_optional_time` <br> A generic full date and time. Year is required. Month, day, and time are optional. Time is separated from date by `T`. | Multiple patterns. <br>`"2019--03--23T21:34:46.123456789--04:00"` <br> `"2019-03-23T21:34:46"` <br> `"2019-03-23T21:34"` <br> `"2019"`
-`strict_date_optional_time_nanos` <br>A generic full date and time. Year is required. Month, day, and time are optional. If time is specified, it must contain hours, minutes, and seconds, but fraction of a second is optional. Fraction of a second is one to nine digits long and has nanosecond resolution. Time is separated from date by `T`. | Multiple patterns. <br> `"2019-03-23T21:34:46.123456789-04:00"` <br> `"2019-03-23T21:34:46"` <br> `"2019"` 
-`date_time` <br> `strict_date_time` <br> A full date and time separated by `T`. | `"yyyy-MM-dd`T`HH:mm:ss.SSSZ"` <br> `"2019-03-23T21:34:46.123-04:00"`
-`date_time_no_millis` <br> `strict_date_time_no_millis` <br> A full date and time without milliseconds, separated by `T`. | `"yyyy-MM-dd'T'HH:mm:ssZ"` <br> `"2019-03-23T21:34:46-04:00"` 
-`date_hour_minute_second_fraction` <br> `strict_date_hour_minute_second_fraction` <br> A full date, two-digit hour, two-digit minute, two-digit second, and one- to nine-digit fraction of a second separated by `T`. | `"yyyy-MM-dd`T`HH:mm:ss.SSSSSSSSS"`<br>`"2019-03-23T21:34:46.123456789"` <br> `"2019-03-23T21:34:46.1"`
-`date_hour_minute_second_millis` <br> `strict_date_hour_minute_second_millis` <br> A full date, two-digit hour, two-digit minute, two-digit second, and three-digit millisecond separated by `T`. | `"yyyy-MM-dd`T`HH:mm:ss.SSS"` <br> `"2019-03-23T21:34:46.123"` 
-`date_hour_minute_second` <br> `strict_date_hour_minute_second` <br> A full date, two-digit hour, two-digit minute, and two-digit second separated by `T`.| `"yyyy-MM-dd`T`HH:mm:ss"`<br>`"2019-03-23T21:34:46"`
-`date_hour_minute` <br> `strict_date_hour_minute` <br> A full date, two-digit hour, and two-digit minute. | `"yyyy-MM-dd`T`HH:mm"` <br> `"2019-03-23T21:34"`
-`date_hour` <br> `strict_date_hour` <br> A full date and two-digit hour, separated by `T`. | `"yyyy-MM-dd`T`HH"` <br> `"2019-03-23T21"` 
-`date` <br> `strict_date` <br> A four-digit year, two-digit month, and two-digit day. | `"yyyy-MM-dd"` <br> `"2019-03-23"` 
-`year_month_day` <br> `strict_year_month_day` <br> A four-digit year, two-digit month, and two-digit day. | `"yyyy-MM-dd"` <br> `"2019-03-23"` 
-`year_month` <br> `strict_year_month` <br> A four-digit year and two-digit month. | `"yyyy-MM"` <br> `"2019-03"` 
-`year` <br> `strict_year` <br> A four-digit year. | `"yyyy"` <br> `"2019"` 
-`rfc3339_lenient` <br>An RFC3339 compatible DateTimeFormatter which is much faster than other full date-lenient formats like `strict_date_optional_time` | `"YYYY"` <br> `"2019"` <br> `"YYYY-MM"` <br> `"2019-03"` <br> `"YYYY-MM-DD"` <br> `"2019-03-23"` <br> `"YYYY-MM-DDThh:mmTZD"` <br> `"2019-03-23T21:34Z"` <br> `"YYYY-MM-DDThh:mm:ssTZD"` <br> `"2019-03-23T21:34:46Z"` <br> `"YYYY-MM-DDThh:mm:ss.sTZD"` <br> `"2019-03-23T21:34:46.123456789-04:00"` <br> `"YYYY-MM-DDThh:mm:ss,sTZD"` <br> `"2019-03-23T21:34:46,123456789-04:00"`
-**Times** | 
-`time` <br> `strict_time` <br> A two-digit hour, two-digit minute, two-digit second, one- to nine-digit fraction of a second, and time zone offset. | `"HH:mm:ss.SSSSSSSSSZ"` <br> `"21:34:46.123456789-04:00"` <br> `"21:34:46.1-04:00"`
-`time_no_millis` <br> `strict_time_no_millis` <br> A two-digit hour, two-digit minute, two-digit second, and time zone offset. | `"HH:mm:ssZ"` <br> `"21:34:46-04:00"` 
-`hour_minute_second_fraction` <br> `strict_hour_minute_second_fraction` <br> A two-digit hour, two-digit minute, two-digit second, and one- to nine-digit fraction of a second. | `"HH:mm:ss.SSSSSSSSS"` <br> `"21:34:46.1"` <br> `"21:34:46.123456789"` 
-`hour_minute_second_millis` <br> `strict_hour_minute_second_millis` <br> A two-digit hour, two-digit minute, two-digit second, and three-digit millisecond. | `"HH:mm:ss.SSS"` <br> `"21:34:46.123"` 
-`hour_minute_second` <br> `strict_hour_minute_second` <br> A two-digit hour, two-digit minute, and two-digit second. | `"HH:mm:ss"` <br> `"21:34:46"` 
-`hour_minute` <br> `strict_hour_minute` <br> A two-digit hour and two-digit minute. | `"HH:mm"` <br> `"21:34"` 
-`hour` <br> `strict_hour` <br> A two-digit hour. | `"HH"` <br> `"21"` 
-**T times** |
-`t_time` <br> `strict_t_time` <br> A two-digit hour, two-digit minute, two-digit second, one- to nine-digit fraction of a second, and time zone offset, preceded by `T`. | `"`T`HH:mm:ss.SSSSSSSSSZ"<br>"T21:34:46.123456789-04:00"` <br> `"T21:34:46.1-04:00"`
-`t_time_no_millis` <br> `strict_t_time_no_millis` <br> A two-digit hour, two-digit minute, two-digit second, and time zone offset, preceded by `T`. | `"`T`HH:mm:ssZ"` <br> `"T21:34:46-04:00"`
-**Ordinal dates** |
-`ordinal_date_time` <br> `strict_ordinal_date_time` <br> A full ordinal date and time separated by `T`. | `"yyyy-DDD`T`HH:mm:ss.SSSZ"` <br> `"2019-082T21:34:46.123-04:00"` 
-`ordinal_date_time_no_millis` <br> `strict_ordinal_date_time_no_millis` <br> A full ordinal date and time without milliseconds, separated by `T`. | `"yyyy-DDD`T`HH:mm:ssZ"` <br> `"2019-082T21:34:46-04:00"`
-`ordinal_date` <br> `strict_ordinal_date`<br> A full ordinal date with a four-digit year and three-digit ordinal day of the year. | `"yyyy-DDD"` <br> `"2019-082"`
-**Week-based dates** |
-`week_date_time` <br> `strict_week_date_time` <br> A full week-based date and time separated by `T`. Week date is a four-digit week-based year, two-digit ordinal week of the year, and one-digit ordinal day of the week. Time is a two-digit hour, two-digit minute, two-digit second, one- to nine-digit fraction of a second, and a time zone offset. | `"YYYY-`W`ww-e`T`HH:mm:ss.SSSSSSSSSZ"` <br> `"2019-W12-6T21:34:46.1-04:00"` <br> `"2019-W12-6T21:34:46.123456789-04:00"`
-`week_date_time_no_millis` <br> `strict_week_date_time_no_millis` <br> A full week-based date and time without milliseconds, separated by `T`. Week date is a four-digit week-based year, two-digit ordinal week of the year, and one-digit ordinal day of the week. Time is a two-digit hour, two-digit minute, two-digit second, and time zone offset. | `"YYYY-`W`ww-e`T`HH:mm:ssZ"` <br> `"2019-W12-6T21:34:46-04:00"`
-`week_date` <br> `strict_week_date` <br> A full week-based date with a four-digit week-based year, two-digit ordinal week of the year, and one-digit ordinal day of the week. | `"YYYY-`W`ww-e"` <br> `"2019-W12-6"`
-`weekyear_week_day` <br> `strict_weekyear_week_day` <br> A four-digit week-based year, two-digit ordinal week of the year, and one digit day of the week. | `"YYYY-'W'ww-e"` <br> `"2019-W12-6"` 
-`weekyear_week` <br> `strict_weekyear_week` <br> A four-digit week-based year and two-digit ordinal week of the year. | `"YYYY-`W`ww"` <br> `"2019-W12"` 
-`weekyear` <br> `strict_weekyear` <br> A four-digit week-based year. | `"YYYY"` <br> `"2019"` 
+**日期** |
+`date_optional_time`<br>`strict_date_optional_time` <br> 通用的完整日期與時間。年份為必要。月份、日與時間為選用。時間與日期以 `T` 分隔。 | 多種模式。<br>`"2019--03--23T21:34:46.123456789--04:00"` <br> `"2019-03-23T21:34:46"` <br> `"2019-03-23T21:34"` <br> `"2019"`
+`strict_date_optional_time_nanos` <br>通用的完整日期與時間。年份為必要。月份、日與時間為選用。若指定時間，則必須包含時、分與秒，但秒的小數部分為選用。秒的小數部分長度為一至九位數，並具有奈秒解析度。時間與日期以 `T` 分隔。 | 多種模式。<br> `"2019-03-23T21:34:46.123456789-04:00"` <br> `"2019-03-23T21:34:46"` <br> `"2019"` 
+`date_time` <br> `strict_date_time` <br> 以 `T` 分隔的完整日期與時間。 | `"yyyy-MM-dd`T`HH:mm:ss.SSSZ"` <br> `"2019-03-23T21:34:46.123-04:00"`
+`date_time_no_millis` <br> `strict_date_time_no_millis` <br> 不含毫秒、以 `T` 分隔的完整日期與時間。 | `"yyyy-MM-dd'T'HH:mm:ssZ"` <br> `"2019-03-23T21:34:46-04:00"` 
+`date_hour_minute_second_fraction` <br> `strict_date_hour_minute_second_fraction` <br> 以 `T` 分隔的完整日期、兩位數時、兩位數分、兩位數秒，以及一至九位數的秒的小數部分。 | `"yyyy-MM-dd`T`HH:mm:ss.SSSSSSSSS"`<br>`"2019-03-23T21:34:46.123456789"` <br> `"2019-03-23T21:34:46.1"`
+`date_hour_minute_second_millis` <br> `strict_date_hour_minute_second_millis` <br> 以 `T` 分隔的完整日期、兩位數時、兩位數分、兩位數秒，以及三位數毫秒。 | `"yyyy-MM-dd`T`HH:mm:ss.SSS"` <br> `"2019-03-23T21:34:46.123"` 
+`date_hour_minute_second` <br> `strict_date_hour_minute_second` <br> 以 `T` 分隔的完整日期、兩位數時、兩位數分與兩位數秒。| `"yyyy-MM-dd`T`HH:mm:ss"`<br>`"2019-03-23T21:34:46"`
+`date_hour_minute` <br> `strict_date_hour_minute` <br> 完整日期、兩位數時與兩位數分。 | `"yyyy-MM-dd`T`HH:mm"` <br> `"2019-03-23T21:34"`
+`date_hour` <br> `strict_date_hour` <br> 以 `T` 分隔的完整日期與兩位數時。 | `"yyyy-MM-dd`T`HH"` <br> `"2019-03-23T21"` 
+`date` <br> `strict_date` <br> 四位數年份、兩位數月份與兩位數日。 | `"yyyy-MM-dd"` <br> `"2019-03-23"` 
+`year_month_day` <br> `strict_year_month_day` <br> 四位數年份、兩位數月份與兩位數日。 | `"yyyy-MM-dd"` <br> `"2019-03-23"` 
+`year_month` <br> `strict_year_month` <br> 四位數年份與兩位數月份。 | `"yyyy-MM"` <br> `"2019-03"` 
+`year` <br> `strict_year` <br> 四位數年份。 | `"yyyy"` <br> `"2019"` 
+`rfc3339_lenient` <br>與 RFC3339 相容的 DateTimeFormatter，其速度遠快於其他寬鬆的完整日期格式，例如 `strict_date_optional_time` | `"YYYY"` <br> `"2019"` <br> `"YYYY-MM"` <br> `"2019-03"` <br> `"YYYY-MM-DD"` <br> `"2019-03-23"` <br> `"YYYY-MM-DDThh:mmTZD"` <br> `"2019-03-23T21:34Z"` <br> `"YYYY-MM-DDThh:mm:ssTZD"` <br> `"2019-03-23T21:34:46Z"` <br> `"YYYY-MM-DDThh:mm:ss.sTZD"` <br> `"2019-03-23T21:34:46.123456789-04:00"` <br> `"YYYY-MM-DDThh:mm:ss,sTZD"` <br> `"2019-03-23T21:34:46,123456789-04:00"`
+**時間** | 
+`time` <br> `strict_time` <br> 兩位數時、兩位數分、兩位數秒、一至九位數的秒的小數部分，以及時區位移。 | `"HH:mm:ss.SSSSSSSSSZ"` <br> `"21:34:46.123456789-04:00"` <br> `"21:34:46.1-04:00"`
+`time_no_millis` <br> `strict_time_no_millis` <br> 兩位數時、兩位數分、兩位數秒，以及時區位移。 | `"HH:mm:ssZ"` <br> `"21:34:46-04:00"` 
+`hour_minute_second_fraction` <br> `strict_hour_minute_second_fraction` <br> 兩位數時、兩位數分、兩位數秒，以及一至九位數的秒的小數部分。 | `"HH:mm:ss.SSSSSSSSS"` <br> `"21:34:46.1"` <br> `"21:34:46.123456789"` 
+`hour_minute_second_millis` <br> `strict_hour_minute_second_millis` <br> 兩位數時、兩位數分、兩位數秒，以及三位數毫秒。 | `"HH:mm:ss.SSS"` <br> `"21:34:46.123"` 
+`hour_minute_second` <br> `strict_hour_minute_second` <br> 兩位數時、兩位數分與兩位數秒。 | `"HH:mm:ss"` <br> `"21:34:46"` 
+`hour_minute` <br> `strict_hour_minute` <br> 兩位數時與兩位數分。 | `"HH:mm"` <br> `"21:34"` 
+`hour` <br> `strict_hour` <br> 兩位數時。 | `"HH"` <br> `"21"` 
+**T 時間** |
+`t_time` <br> `strict_t_time` <br> 以 `T` 開頭的兩位數時、兩位數分、兩位數秒、一至九位數的秒的小數部分，以及時區位移。 | `"`T`HH:mm:ss.SSSSSSSSSZ"<br>"T21:34:46.123456789-04:00"` <br> `"T21:34:46.1-04:00"`
+`t_time_no_millis` <br> `strict_t_time_no_millis` <br> 以 `T` 開頭的兩位數時、兩位數分、兩位數秒，以及時區位移。 | `"`T`HH:mm:ssZ"` <br> `"T21:34:46-04:00"`
+**序數日期** |
+`ordinal_date_time` <br> `strict_ordinal_date_time` <br> 以 `T` 分隔的完整序數日期與時間。 | `"yyyy-DDD`T`HH:mm:ss.SSSZ"` <br> `"2019-082T21:34:46.123-04:00"` 
+`ordinal_date_time_no_millis` <br> `strict_ordinal_date_time_no_millis` <br> 不含毫秒、以 `T` 分隔的完整序數日期與時間。 | `"yyyy-DDD`T`HH:mm:ssZ"` <br> `"2019-082T21:34:46-04:00"`
+`ordinal_date` <br> `strict_ordinal_date`<br> 包含四位數年份與三位數年度序數日的完整序數日期。 | `"yyyy-DDD"` <br> `"2019-082"`
+**以週為基礎的日期** |
+`week_date_time` <br> `strict_week_date_time` <br> 以 `T` 分隔的完整以週為基礎的日期與時間。週日期為四位數的以週為基礎的年份、兩位數的年度序數週，以及一位數的星期序數日。時間為兩位數時、兩位數分、兩位數秒、一至九位數的秒的小數部分，以及時區位移。 | `"YYYY-`W`ww-e`T`HH:mm:ss.SSSSSSSSSZ"` <br> `"2019-W12-6T21:34:46.1-04:00"` <br> `"2019-W12-6T21:34:46.123456789-04:00"`
+`week_date_time_no_millis` <br> `strict_week_date_time_no_millis` <br> 不含毫秒、以 `T` 分隔的完整以週為基礎的日期與時間。週日期為四位數的以週為基礎的年份、兩位數的年度序數週，以及一位數的星期序數日。時間為兩位數時、兩位數分、兩位數秒，以及時區位移。 | `"YYYY-`W`ww-e`T`HH:mm:ssZ"` <br> `"2019-W12-6T21:34:46-04:00"`
+`week_date` <br> `strict_week_date` <br> 包含四位數的以週為基礎的年份、兩位數的年度序數週，以及一位數的星期序數日的完整以週為基礎的日期。 | `"YYYY-`W`ww-e"` <br> `"2019-W12-6"`
+`weekyear_week_day` <br> `strict_weekyear_week_day` <br> 四位數的以週為基礎的年份、兩位數的年度序數週，以及一位數的星期序數日。 | `"YYYY-'W'ww-e"` <br> `"2019-W12-6"` 
+`weekyear_week` <br> `strict_weekyear_week` <br> 四位數的以週為基礎的年份與兩位數的年度序數週。 | `"YYYY-`W`ww"` <br> `"2019-W12"` 
+`weekyear` <br> `strict_weekyear` <br> 四位數的以週為基礎的年份。 | `"YYYY"` <br> `"2019"` 
 
-## Custom formats
+## 自訂格式
 
-You can create custom formats for date fields. For example, the following request specifies a date in the common `"MM/dd/yyyy"` format:
+您可以為日期欄位建立自訂格式。例如，下列請求以常見的 `"MM/dd/yyyy"` 格式指定日期：
 
 ```json
 PUT testindex
@@ -185,7 +186,7 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-Index a document with a date:
+為含有日期的文件編製索引：
 
 ```json
 PUT testindex/_doc/21 
@@ -195,7 +196,7 @@ PUT testindex/_doc/21
 ```
 {% include copy-curl.html %}
 
-When searching for an exact date, provide that date in the same format:
+搜尋確切日期時，請以相同格式提供該日期：
 
 ```json
 GET testindex/_search
@@ -211,7 +212,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-Range queries by default use the field's mapped format. You can also specify the range of dates in a different format by providing the `format` parameter:
+範圍查詢預設會使用欄位對應的格式。您也可以提供 `format` 參數，以不同格式指定日期範圍：
 
 ```json
 GET testindex/_search
@@ -229,50 +230,50 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-## Date math
+## 日期運算
 
-The date field type supports using date math to specify durations in queries. For example, the `gt`, `gte`, `lt`, and `lte` parameters in [range queries]({{site.url}}{{site.baseurl}}/query-dsl/term/range/) and the `from` and `to` parameters in [date range aggregations]({{site.url}}{{site.baseurl}}/query-dsl/aggregations/bucket/date-range/) accept date math expressions.
+date 欄位類型支援在查詢中使用日期運算來指定時間長度。例如，[範圍查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/range/)中的 `gt`、`gte`、`lt` 和 `lte` 參數，以及[日期範圍彙總]({{site.url}}{{site.baseurl}}/query-dsl/aggregations/bucket/date-range/)中的 `from` 和 `to` 參數，都接受日期運算運算式。
 
-A date math expression contains a fixed date, optionally followed by one or more mathematical expressions. The fixed date may be either `now` (current date and time in milliseconds since the epoch) or a string ending with `||` that specifies a date (for example, `2022-05-18||`). The date must be in the [default format](#default-format) (which is `strict_date_time_no_millis||strict_date_optional_time||epoch_millis` by default).
+日期運算運算式包含一個固定日期，其後可選擇性地接上一或多個數學運算式。固定日期可以是 `now`（自 epoch 起算的毫秒數表示的目前日期與時間），或是以 `||` 結尾並指定日期的字串（例如 `2022-05-18||`）。日期必須採用[預設格式](#default-format)（預設為 `strict_date_time_no_millis||strict_date_optional_time||epoch_millis`）。
 
-If you specify multiple date formats in the field mapping, OpenSearch uses the first format to convert the milliseconds since the epoch value to a string. <br>
-If a field mapping for a field contains no format, OpenSearch uses the `strict_date_optional_time` format to convert the epoch value to a string.
+如果您在欄位對應中指定多種日期格式，OpenSearch 會使用第一種格式將自 epoch 起算的毫秒數值轉換為字串。<br>
+如果欄位的對應中沒有指定格式，OpenSearch 會使用 `strict_date_optional_time` 格式將 epoch 值轉換為字串。
 {: .note}
 
-Date math supports the following mathematical operators.
+日期運算支援下列數學運算子。
 
-Operator | Description | Example
+運算子 | 說明 | 範例
 :--- | :--- | :---
-`+` | Addition | `+1M`: Add 1 month.
-`-` | Subtraction | `-1y`: Subtract 1 year.
-`/` | Rounding down | `/h`: Round to the beginning of the hour.
+`+` | 加法 | `+1M`：加 1 個月。
+`-` | 減法 | `-1y`：減 1 年。
+`/` | 向下取整 | `/h`：向下取整至該小時的起點。
 
-Date math supports the following time units:
+日期運算支援下列時間單位：
 
-`y`: Years<br>
-`M`: Months<br>
-`w`: Weeks<br>
-`d`: Days<br>
-`h` or `H`: Hours<br>
-`m`: Minutes<br>
-`s`: Seconds
+`y`：年<br>
+`M`：月<br>
+`w`：週<br>
+`d`：日<br>
+`h` 或 `H`：小時<br>
+`m`：分鐘<br>
+`s`：秒
 {: .note }
 
-### Example expressions
+### 運算式範例
 
-The following example expressions illustrate using date math:
+下列範例運算式說明日期運算的用法：
 
-- `now+1M`: The current date and time in milliseconds since the epoch, plus 1 month.
-- `2022-05-18||/M`: `05/18/2022`, rounded to the beginning of the month. Resolves to `2022-05-01`.
-- `2022-05-18T15:23||/h`: `15:23` on `05/18/2022`, rounded to the beginning of the hour. Resolves to `2022-05-18T15`.
-- `2022-05-18T15:23:17.789||+2M-1d/d`: `15:23:17.789` on `05/18/2022` plus 2 months minus 1 day, rounded to the beginning of the day. Resolves to `2022-07-17`.
+- `now+1M`：自 epoch 起算的目前日期與時間（毫秒數），加 1 個月。
+- `2022-05-18||/M`：`05/18/2022`，捨入至該月的開始。解析為 `2022-05-01`。
+- `2022-05-18T15:23||/h`：`05/18/2022` 的 `15:23`，捨入至該小時的開始。解析為 `2022-05-18T15`。
+- `2022-05-18T15:23:17.789||+2M-1d/d`：`05/18/2022` 的 `15:23:17.789` 加 2 個月減 1 天，捨入至該日的開始。解析為 `2022-07-17`。
 
 
-### Using date math in a range query
+### 在範圍查詢中使用日期運算
 
-The following example illustrates using date math in a [range query]({{site.url}}{{site.baseurl}}/query-dsl/term/range/).
+下列範例說明在[範圍查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/range/)中使用日期運算。
 
-Set up an index with `release_date` mapped as `date`:
+建立一個索引，其中 `release_date` 對應為 `date`：
 
 ```json
 PUT testindex 
@@ -288,7 +289,7 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-Index two documents into the index:
+將兩份文件編製索引至該索引：
 
 ```json
 PUT testindex/_doc/1
@@ -306,7 +307,7 @@ PUT testindex/_doc/2
 ```
 {% include copy-curl.html %}
 
-The following query searches for documents with `release_date` within 2 months and 1 day of `09/14/2022`. The lower boundary of the range is rounded to the beginning of the day on `09/14/2022`:
+下列查詢搜尋 `release_date` 介於 `09/14/2022` 當日的起點與其後 2 個月又 1 天之間的文件。範圍的下界會向下取整至 `09/14/2022` 當日的起點：
 
 ```json
 GET testindex/_search
@@ -323,7 +324,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The response contains both documents:
+回應包含這兩份文件：
 
 ```json
 {
@@ -363,11 +364,11 @@ The response contains both documents:
 }
 ```
 
-## Derived source
+## 衍生來源
 
-When an index uses [derived source]({{site.url}}{{site.baseurl}}/field-types/metadata-fields/source/#derived-source), OpenSearch may sort values in multi-value date fields during source reconstruction. Derived source returns dates in the format specified in `print_format`. If `print_format` is not specified and `format` contains multiple date formats separated by `||`, derived source returns dates in the first format.
+當索引使用 [衍生來源]({{site.url}}{{site.baseurl}}/field-types/metadata-fields/source/#derived-source) 時，OpenSearch 在重建來源時可能會排序多值日期欄位中的值。衍生來源會以 `print_format` 中指定的格式傳回日期。如果未指定 `print_format`，且 `format` 包含以 `||` 分隔的多種日期格式，衍生來源會以第一種格式傳回日期。
 
-Create an index that enables derived source and configures a `date` field with multiple formats:
+建立一個啟用衍生來源並設定具有多種格式的 `date` 欄位的索引：
 
 ```json
 PUT sample-index1
@@ -390,7 +391,7 @@ PUT sample-index1
 }
 ```
 
-Index a document with mixed date formats into the index:
+將一份包含混合日期格式的文件編製索引至該索引：
 
 ```json
 PUT sample-index1/_doc/1
@@ -399,7 +400,7 @@ PUT sample-index1/_doc/1
 }
 ```
 
-After OpenSearch reconstructs `_source`, all dates are in the `strict_date_time_no_millis` format:
+在 OpenSearch 重建 `_source` 之後，所有日期都會是 `strict_date_time_no_millis` 格式：
 
 ```json
 {

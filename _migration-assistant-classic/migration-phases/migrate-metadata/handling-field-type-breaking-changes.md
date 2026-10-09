@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Transform field types
+title: "轉換欄位類型"
 nav_order: 2
 parent: Migrate metadata
 grand_parent: Migration phases
 permalink: /classic/migration-assistant/migration-phases/migrate-metadata/handling-field-type-breaking-changes/
 ---
 
-# Transform field types
+# 轉換欄位類型
 
 {: .note }
-These transformations may not apply to your use case, but the framework for creating a transformation is designed to handle mutations, data enrichment, and other modifications when modifying workloads or moving them to a new target.
+這些轉換可能不適用於您的使用情境，但建立轉換的框架旨在處理變更工作負載或將其移至新目標時的突變、資料充實及其他修改。
 
-This guide explains how to use Migration Assistant to transform field types that are deprecated or incompatible during a migration to OpenSearch.
+本指南說明如何在遷移至 OpenSearch 的過程中，使用 Migration Assistant 轉換已淘汰或不相容的欄位類型。
 
-Field types define how data is stored and queried in an index. Each field in a document is mapped to a data type, which determines how it is indexed and what operations can be performed on it.
+欄位類型定義資料在索引中的儲存與查詢方式。文件中的每個欄位都對應到一個資料類型，該類型決定其索引方式以及可對其執行哪些操作。
 
-For example, the following index mapping for a library's book collection defines three fields, each with a different type:
+例如，下列圖書館藏書的索引對應定義了三個欄位，每個欄位各有不同的類型：
 
 ```json
 GET /library-books/_mappings
@@ -33,30 +34,30 @@ GET /library-books/_mappings
 }
 ```
 
-For more information, see [Mappings and field types]({{site.url}}{{site.baseurl}}/mappings/).
+如需更多資訊，請參閱[對應與欄位類型]({{site.url}}{{site.baseurl}}/mappings/)。
 
-## Configure item transformations
+## 設定項目轉換
 
-You can customize how field types are transformed during metadata and data migrations by supplying a transformation configuration file using the following steps:
+您可以提供轉換組態檔，自訂中繼資料與資料遷移期間欄位類型的轉換方式，步驟如下：
 
-1. Open the Migration Assistant console.
-2. Create a JavaScript file to define your transformation logic using the following command:
+1. 開啟 Migration Assistant 主控台。
+2. 使用下列命令建立 JavaScript 檔案來定義您的轉換邏輯：
 
    ```bash
    vim /shared-logs-output/field-type-converter.js
    ```
    {% include copy.html %}
 
-3. Write any JavaScript rules that perform the desired field type conversions. For an example of how the rules can be implemented, see the [example `field-type-converter.js` implementation](#example-field-type-converterjs-implementation).
-4. Create a transformation descriptor file using the following command:
+3. 撰寫任何執行所需欄位類型轉換的 JavaScript 規則。如需規則實作方式的範例，請參閱[`field-type-converter.js` 實作範例](#example-field-type-converterjs-implementation)。
+4. 使用下列命令建立轉換描述檔：
 
    ```bash
    vim /shared-logs-output/transformation.json
    ```
    {% include copy.html %}
 
-5. Add a reference to your JavaScript file in `transformation.json`.
-6. Run the metadata migration and supply the transformation configuration using a command similar to the following:
+5. 在 `transformation.json` 中加入對您 JavaScript 檔案的參照。
+6. 執行中繼資料遷移，並使用類似下列的命令提供轉換組態：
 
    ```bash
    console metadata migrate \
@@ -64,12 +65,12 @@ You can customize how field types are transformed during metadata and data migra
    ```
    {% include copy.html %}
 
-### Example `field-type-converter.js` implementation
+### `field-type-converter.js` 實作範例
 
-The following script demonstrates how to perform common field type conversions, including:
+下列指令碼示範如何執行常見的欄位類型轉換，包括：
 
-* Replacing the deprecated `string` type with `text`.
-* Converting `flattened` to `flat_object` and removing the `index` property if present.
+* 將已淘汰的 `string` 類型替換為 `text`。
+* 將 `flattened` 轉換為 `flat_object`，並在存在時移除 `index` 屬性。
 
 
 ```javascript
@@ -123,28 +124,28 @@ function main(context) {
 ```
 {% include copy.html %}
 
-The script contains the following elements:
+該指令碼包含下列元素：
 
-1. The `rules` array defines transformation logic:
+1. `rules` 陣列定義轉換邏輯：
 
-   * `when`: Key-value conditions to match on a node
-   * `set`: Key-value pairs to apply when the `when` clause matches
-   * `remove` (optional): Keys to delete from the node when matched
+   * `when`：用於比對節點的鍵值條件
+   * `set`：當 `when` 子句符合時要套用的鍵值對
+   * `remove` (選用)：符合時要從節點刪除的鍵
 
-2. The `applyRules` function recursively traverses the input:
+2. `applyRules` 函式會遞迴走訪輸入：
 
-   * Arrays are recursively processed element by element.
-   * `Map` objects are matched and mutated using the defined rules.
-   * Plain objects are checked for matches and transformed accordingly.
+   * 陣列會逐元素遞迴處理。
+   * `Map` 物件會使用定義的規則進行比對與修改。
+   * 一般物件會檢查是否符合並據以轉換。
 
-3. The `main` function returns a transformation function that:
+3. `main` 函式會回傳一個轉換函式，該函式會：
 
-   * Applies the rules to each document.
-   * Returns the modified document for migration or replay.
+   * 將規則套用至每份文件。
+   * 回傳修改後的文件，供遷移或重新播放使用。
 
-### Example `transformation.json`
+### `transformation.json` 範例
 
-The following JSON file references your transformation script and initializes the JavaScript engine with your custom rules:
+下列 JSON 檔案會參照您的轉換指令碼，並使用您的自訂規則初始化 JavaScript 引擎：
 
 ```json
 [
@@ -158,6 +159,6 @@ The following JSON file references your transformation script and initializes th
 ```
 {% include copy.html %}
 
-## Summary
+## 摘要
 
-By using a transformation configuration, you can rewrite deprecated or incompatible field types during metadata migration or data replay. This ensures that your target OpenSearch cluster only receives compatible mappings—even if the source cluster includes outdated types like `string` or features like `flattened` that need conversion.
+透過使用轉換組態，您可以在中繼資料遷移或資料重新播放期間改寫已淘汰或不相容的欄位類型。這可確保目標 OpenSearch 叢集只會收到相容的對應——即使來源叢集包含 `string` 等過時類型，或需要轉換的 `flattened` 等功能。

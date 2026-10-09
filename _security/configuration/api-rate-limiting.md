@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: API rate limiting
+title: "API 速率限制"
 parent: Configuration
 nav_order: 50
 ---
 
 
-# API rate limiting
+# API 速率限制
 
-API rate limiting is typically used to restrict the number of API calls that users can make in a set span of time, thereby helping to manage the rate of API traffic. For security purposes, rate limiting features, by restricting failed login attempts, have the potential to defend against denial of service (DoS) attacks or repeated login attempts intended to gain access through trial and error.
+API 速率限制通常用於限制使用者在特定期間內可發出的 API 呼叫次數，藉此協助管理 API 流量速率。基於安全性目的，速率限制功能可透過限制失敗的登入嘗試，防禦阻斷服務 (DoS) 攻擊或意圖以嘗試錯誤方式取得存取權的重複登入嘗試。
 
-You have the option to configure the Security plugin for username rate limiting, IP address rate limiting, or both. These configurations are made in the `config.yml` file. See the following sections for information about each type of rate limiting configuration.
+您可以選擇為 Security 外掛程式設定使用者名稱速率限制、IP 位址速率限制，或兩者皆設定。這些組態是在 `config.yml` 檔案中進行。請參閱下列各節，以了解各類型速率限制組態的相關資訊。
 
 
-## Username rate limiting
+## 使用者名稱速率限制
 
-The username rate limiting configuration limits login attempts by username. When a login fails, the username is blocked from use by any machine in the network. The following example shows `config.yml` file settings configured for username rate limiting:
+使用者名稱速率限制組態會依使用者名稱限制登入嘗試。當登入失敗時，網路中的任何機器都無法再使用該使用者名稱。下列範例顯示為使用者名稱速率限制設定的 `config.yml` 檔案設定：
 
 ```yml
 auth_failure_listeners:
@@ -30,24 +31,24 @@ auth_failure_listeners:
 ```
 {% include copy.html %}
 
-The following table describes the individual settings for this type of configuration.
+下表說明此類型組態的各項設定。
 
-| Setting | Description |
+| 設定 | 說明 |
 | :--- | :--- |
-| `type` | The type of rate limiting. In this case, `username`. |
-| `authentication_backend` | The internal backend. Enter `internal`. |
-| `allowed_tries` | The number of login attempts allowed before login attempts are blocked. Be aware that increasing the number increases heap usage. |
-| `time_window_seconds` | The window of time during which the value for `allowed_tries` is enforced. For example, if `allowed_tries` is `3` and `time_window_seconds` is `60`, a username has 3 attempts to log in successfully within a 60-second time span before login attempts are blocked. |
-| `block_expiry_seconds` | The window of time during which login attempts remain blocked after a failed login. After this time elapses, login is reset and the username can attempt to log in again. |
-| `max_blocked_clients` | The maximum number of blocked usernames. This limits heap usage to avoid a potential DoS attack. |
-| `max_tracked_clients` | The maximum number of tracked usernames with failed login attempts. This limits heap usage to avoid a potential DoS attack. |
+| `type` | 速率限制的類型。在此情況下為 `username`。 |
+| `authentication_backend` | 內部後端。請輸入 `internal`。 |
+| `allowed_tries` | 登入嘗試遭到封鎖前允許的登入嘗試次數。請注意，增加此數目會增加堆積記憶體使用量。 |
+| `time_window_seconds` | 強制執行 `allowed_tries` 值的時間範圍。例如，若 `allowed_tries` 為 `3` 且 `time_window_seconds` 為 `60`，則該使用者名稱在 60 秒內有 3 次嘗試登入的機會，之後登入嘗試就會遭到封鎖。 |
+| `block_expiry_seconds` | 登入失敗後，登入嘗試維持封鎖的時間範圍。經過此時間後，登入會重設，該使用者名稱可再次嘗試登入。 |
+| `max_blocked_clients` | 遭封鎖使用者名稱的數量上限。這會限制堆積記憶體使用量，以避免潛在的 DoS 攻擊。 |
+| `max_tracked_clients` | 追蹤登入失敗使用者名稱的數量上限。這會限制堆積記憶體使用量，以避免潛在的 DoS 攻擊。 |
 
 
-## IP address rate limiting
+## IP 位址速率限制
 
-The IP address rate limiting configuration limits login attempts by IP address. When a login fails, the IP address specific to the machine being used for login is blocked. 
+IP 位址速率限制組態會依 IP 位址限制登入嘗試。當登入失敗時，用於登入之機器所屬的特定 IP 位址會遭到封鎖。
 
-Configuring IP address rate limiting involves two steps. First, set the `challenge` setting to `false` in the `http_authenticator` section of the `config.yml` file:
+設定 IP 位址速率限制包含兩個步驟。首先，在 `config.yml` 檔案的 `http_authenticator` 區段中，將 `challenge` 設定設為 `false`：
 
 ```yml
 http_authenticator:
@@ -55,9 +56,9 @@ http_authenticator:
   challenge: false
 ```
 
-For more information about this setting, see [HTTP basic authentication]({{site.url}}{{site.baseurl}}/security/authentication-backends/basic-authc/).
+如需此設定的詳細資訊，請參閱 [HTTP 基本驗證]({{site.url}}{{site.baseurl}}/security/authentication-backends/basic-authc/)。
 
-Second, configure the IP address rate limiting settings. The following example shows a completed configuration:
+其次，設定 IP 位址速率限制設定。下列範例顯示完成的組態：
 
 ```yml
 auth_failure_listeners:
@@ -71,15 +72,15 @@ auth_failure_listeners:
 ```
 {% include copy.html %}
 
-The following table describes the individual settings for this type of configuration.
+下表說明此類型組態的各項設定。
 
-| Setting | Description                                                                                                                                                                                                                                                              |
+| 設定 | 說明                                                                                                                                                                                                                                                              |
 | :--- |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `type` | The type of rate limiting. In this case, `ip`.                                                                                                                                                                                                                           |
-| `allowed_tries` | The number of login attempts allowed before login attempts are blocked. Be aware that increasing the number increases heap usage.                                                                                                                                        |
-| `time_window_seconds` | The window of time during which the value for `allowed_tries` is enforced. For example, if `allowed_tries` is `3` and `time_window_seconds` is `60`, an IP address has 3 attempts to log in successfully within a 60-second time span before login attempts are blocked. |
-| `block_expiry_seconds` | The window of time during which login attempts remain blocked after a failed login. After this time elapses, login is reset and the IP address can attempt to log in again.                                                                                              |
-| `max_blocked_clients` | The maximum number of blocked IP addresses. This limits heap usage to avoid a potential DoS attack.                                                                                                                                                                      |
-| `max_tracked_clients` | The maximum number of tracked IP addresses with failed login attempts. This limits heap usage to avoid a potential DoS attack.                                                                                                                                           |
-| `ignore_hosts` | A list of IP addresses, CIDR ranges, or hostname patterns to ignore for rate limiting. `config.dynamic.hosts_resolver_mode` must be set to `ip-hostname` to support hostname matching.                                                                                    |
+| `type` | 速率限制的類型。在此情況下為 `ip`。                                                                                                                                                                                                                           |
+| `allowed_tries` | 登入嘗試遭到封鎖前允許的登入嘗試次數。請注意，增加此數目會增加堆積記憶體使用量。                                                                                                                                        |
+| `time_window_seconds` | 強制執行 `allowed_tries` 值的時間範圍。例如，若 `allowed_tries` 為 `3` 且 `time_window_seconds` 為 `60`，則該 IP 位址在 60 秒內有 3 次嘗試登入的機會，之後登入嘗試就會遭到封鎖。 |
+| `block_expiry_seconds` | 登入失敗後，登入嘗試維持封鎖的時間範圍。經過此時間後，登入會重設，該 IP 位址可再次嘗試登入。                                                                                              |
+| `max_blocked_clients` | 遭封鎖 IP 位址的數量上限。這會限制堆積記憶體使用量，以避免潛在的 DoS 攻擊。                                                                                                                                                                      |
+| `max_tracked_clients` | 追蹤登入失敗 IP 位址的數量上限。這會限制堆積記憶體使用量，以避免潛在的 DoS 攻擊。                                                                                                                                           |
+| `ignore_hosts` | 速率限制要忽略的 IP 位址、CIDR 範圍或主機名稱模式清單。`config.dynamic.hosts_resolver_mode` 必須設為 `ip-hostname` 才能支援主機名稱比對。                                                                                    |
 

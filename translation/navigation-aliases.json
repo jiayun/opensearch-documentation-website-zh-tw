@@ -1,0 +1,21 @@
+{
+ "baseline_commit": "55880db68ce90d82cf6d83ac9a44bc0fc86a07a2",
+ "aliases": [
+  {
+   "collection": "search-plugins",
+   "ancestry": ["Search processors", "Search pipelines", null, null],
+   "target": "_search-plugins/search-pipelines/search-processors.md",
+   "target_original_title": "User-defined search processors",
+   "target_source_sha256": "393187db0af48a8dfe7284fdfe40c13845a91d6dda3d82be20f2d7fd5c90256e",
+   "reason": "Upstream renamed the parent; agentic-context-processor.md and agentic-query-translator-processor.md still use the old title."
+  },
+  {
+   "collection": "search-plugins",
+   "ancestry": ["Compare Search Results", "Optimizing search quality", null, null],
+   "target": "_search-plugins/search-relevance/compare-search-results.md",
+   "target_original_title": "Comparing single queries",
+   "target_source_sha256": "88a9c4beccddeb4869d9abc16204799b54ba10967f312d59f451e2dd18e3fb20",
+   "reason": "Upstream renamed the parent; stats-api.md still uses the old title."
+  }
+ ]
+}

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: OpenSearch Dashboards multi-tenancy
+title: "OpenSearch Dashboards 多租用戶"
 nav_order: 140
 has_children: true
 has_toc: false
@@ -10,31 +11,31 @@ redirect_from:
   - /security/access-control/multi-tenancy/
 ---
 
-# OpenSearch Dashboards multi-tenancy
+# OpenSearch Dashboards 多租用戶
 
-*Tenants* in OpenSearch Dashboards are spaces for saving index patterns, visualizations, dashboards, and other OpenSearch Dashboards objects. OpenSearch allows users to create multiple tenants for multiple uses. Tenants are useful for safely sharing your work with other OpenSearch Dashboards users. You can control which roles have access to a tenant and whether those roles have read or write access. By default, all OpenSearch Dashboards users have access to two independent tenants: the global tenant and a private tenant. Multi-tenancy also provides the option to create custom tenants.
+OpenSearch Dashboards 中的*租用戶*是用來儲存索引模式、視覺化、儀表板及其他 OpenSearch Dashboards 物件的空間。OpenSearch 允許使用者建立多個租用戶以供多種用途使用。租用戶適合用來安全地與其他 OpenSearch Dashboards 使用者分享您的工作。您可以控制哪些角色可以存取租用戶，以及這些角色是否具有讀取或寫入權限。根據預設，所有 OpenSearch Dashboards 使用者都可以存取兩個獨立的租用戶：全域租用戶與私人租用戶。多租用戶也提供建立自訂租用戶的選項。
 
-- **Global** -- This tenant is shared between every OpenSearch Dashboards user. It does allow for sharing objects among users who have access to it.
-- **Private** -- This tenant is exclusive to each user and can't be shared. It does not allow you to access routes or index patterns created by the user's global tenant.
-- **Custom** -- Administrators can create custom tenants and assign them to specific roles. Once created, these tenants can then provide spaces for specific groups of users.
+- **全域** -- 此租用戶由每個 OpenSearch Dashboards 使用者共用。它允許在可存取該租用戶的使用者之間分享物件。
+- **私人** -- 此租用戶專屬於每位使用者，無法共用。它不允許您存取該使用者的全域租用戶所建立的路由或索引模式。
+- **自訂** -- 管理員可以建立自訂租用戶並將其指派給特定角色。建立後，這些租用戶便可為特定使用者群組提供空間。
 
-The global tenant in OpenSearch Dashboards doesn't synchronize its content with private tenants. When you make modifications inside your global tenant, these changes are exclusive to the global tenant. They aren't automatically mirrored or replicated in the private tenant. Some example changes to both private and global tenants include the following:
+OpenSearch Dashboards 中的全域租用戶不會將其內容與私人租用戶同步。當您在全域租用戶中進行修改時，這些變更僅限於全域租用戶。它們不會自動反映或複寫到私人租用戶中。私人租用戶與全域租用戶的一些範例變更包括下列項目：
 
-- Change advanced settings
-- Create visualizations
-- Create index patterns
+- 變更進階設定
+- 建立視覺化
+- 建立索引模式
 
-To provide a practical example, you might use the private tenant for exploratory work, create detailed visualizations with your team in an `analysts` tenant, and maintain a summary dashboard for corporate leadership in an `executive` tenant.
+舉一個實際的例子，您可以使用私人租用戶進行探索性工作，在 `analysts` 租用戶中與團隊建立詳細的視覺化，並在 `executive` 租用戶中為公司領導階層維護摘要儀表板。
 
-If you share a visualization or dashboard with someone, you can see that the URL includes the tenant:
+如果您與某人分享視覺化或儀表板，您可以看到 URL 中包含該租用戶：
 
 ```
 http://<opensearch_dashboards_host>:5601/app/opensearch-dashboards?security_tenant=analysts#/visualize/edit/c501fa50-7e52-11e9-ae4e-b5d69947d32e?_g=()
 ```
 
-## Next steps
+## 後續步驟
 
-To get started with tenants, see [Multi-tenancy configuration]({{site.url}}{{site.baseurl}}/security/multi-tenancy/multi-tenancy-config/) for information about enabling multi-tenancy, adding tenants, and assigning roles to tenants.
+若要開始使用租用戶，請參閱[多租用戶組態]({{site.url}}{{site.baseurl}}/security/multi-tenancy/multi-tenancy-config/)，以取得啟用多租用戶、新增租用戶及將角色指派給租用戶的相關資訊。
 
-For information about making dynamic changes to the multi-tenancy configuration, see [Dynamic configuration in OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/security/multi-tenancy/dynamic-config/).
+如需對多租用戶組態進行動態變更的相關資訊，請參閱 [OpenSearch Dashboards 中的動態組態]({{site.url}}{{site.baseurl}}/security/multi-tenancy/dynamic-config/)。
 

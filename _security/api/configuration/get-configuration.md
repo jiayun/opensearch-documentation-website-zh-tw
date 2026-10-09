@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get configuration
+title: "取得組態"
 parent: Security configuration APIs
 grand_parent: Security APIs
 nav_order: 30
@@ -8,32 +9,32 @@ redirect_from:
   - /api-reference/security/configuration/get-configuration/
 ---
 
-# Get Security Configuration API
-**Introduced 2.10**
+# 取得安全性組態 API
+**於 2.10 版導入**
 {: .label .label-purple }
 
-The Get Configuration API retrieves the current security configuration. This configuration includes authentication domains and other security-related configurations.
+Get Configuration API 會擷取目前的安全性組態。此組態包含驗證網域與其他安全性相關的組態。
 
 <!-- spec_insert_start
 api: security.get_configuration
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_plugins/_security/api/securityconfig
 ```
 <!-- spec_insert_end -->
 
-## Example request
+## 範例請求
 
 ```json
 GET /_plugins/_security/api/securityconfig
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
-The response is abbreviated here:
+回應在此經過刪節：
 
 ```json
 {
@@ -221,26 +222,26 @@ The response is abbreviated here:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文是一個包含下列欄位的 JSON 物件。
 
-| Property | Data type | Description |
+| 屬性 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `config` | Object | The root object containing the security configuration. |
+| `config` | 物件 | 包含安全性組態的根物件。 |
 
 <details markdown="block">
   <summary>
-    Response body fields: <code>config</code>
+    回應本文欄位：<code>config</code>
   </summary>
   {: .text-delta}
 
-`config` is a JSON object that contains the following fields.
+`config` 是一個包含下列欄位的 JSON 物件。
 
-| Property | Data type | Description |
+| 屬性 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `dynamic` | Object | The main configuration object containing all security configuration settings. Includes authentication domains (`authc`), authorization settings (`authz`), and various security behaviors. |
+| `dynamic` | 物件 | 包含所有安全性組態設定的主要組態物件。包括驗證網域 (`authc`)、授權設定 (`authz`) 以及各種安全性行為。 |
 
 </details>
 
-## Usage notes
+## 使用說明

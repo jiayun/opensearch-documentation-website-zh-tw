@@ -1,53 +1,54 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: OTel logs 
+title: "OTel 記錄檔"
 parent: Sources
 grand_parent: Pipelines
 nav_order: 60
 ---
 
-# OTel logs source
+# OTel logs 來源
 
 
-The `otel_logs_source` source is an OpenTelemetry source that follows the [OpenTelemetry Protocol Specification](https://github.com/open-telemetry/oteps/blob/master/text/0035-opentelemetry-protocol.md) and receives logs from the OTel Collector in the form of `ExportLogsServiceRequest` records.
+`otel_logs_source` 來源是一種 OpenTelemetry 來源，遵循 [OpenTelemetry 協定規格](https://github.com/open-telemetry/oteps/blob/master/text/0035-opentelemetry-protocol.md)，並以 `ExportLogsServiceRequest` 記錄的形式接收來自 OTel Collector 的記錄檔。
 
-This source supports the `OTLP/gRPC` protocol.
+此來源支援 `OTLP/gRPC` 協定。
 {: .note}
 
-## Configuration
+## 組態
 
-You can configure the `otel_logs_source` source with the following options. 
+您可以使用下列選項來設定 `otel_logs_source` 來源。
 
-| Option | Type | Description |
+| 選項 | 類型 | 說明 |
 | :--- | :--- | :--- |
-| port | Integer | Represents the port that the `otel_logs_source` source is running on. Default value is `21892`. |
-| path | String | Represents the path for sending unframed HTTP requests. You can use this option to support an unframed gRPC request with an HTTP idiomatic path to a configurable path. The path should start with `/`, and its length should be at least 1. The `/opentelemetry.proto.collector.logs.v1.LogsService/Export` endpoInteger is disabled for both gRPC and HTTP requests if the path is configured. The path can contain a `${pipelineName}` placeholder, which is replaced with the pipeline name. If the value is empty and `unframed_requests` is `true`, then the source provides the path `/opentelemetry.proto.collector.logs.v1.LogsService/Export`. |
-| max_request_length | String | The maximum number of bytes allowed in the payload of a single gRPC or HTTP request. Default value is `10mb`. |
-| request_timeout | Integer | Represents the request timeout duration in milliseconds. Default value is `10000`. |
-| health_check_service | Boolean | Enables the gRPC health check service under `grpc.health.v1/Health/Check`. Default value is `false`. |
-| proto_reflection_service | Boolean | Enables a reflection service for Protobuf services (see [ProtoReflectionService](https://grpc.github.io/grpc-java/javadoc/io/grpc/protobuf/services/ProtoReflectionService.html) and [gRPC reflection](https://github.com/grpc/grpc-java/blob/master/documentation/server-reflection-tutorial.md)). Default value is `false`. |
-| unframed_requests | Boolean | Enables requests that are not framed using the gRPC wire protocol. Default value is `false`. |
-| thread_count  | Integer | The number of threads to keep in the `ScheduledThreadPool`. Default value is `500`. |
-| max_connection_count | Integer | The maximum number of open connections allowed. Default value is `500`. |
-| compression | String | The compression type applied to the client request payload. Valid values are `none` or `gzip`. Use `gzip` to apply gzip decompression to the incoming request. Default is `none` (no compression). |
-| output_format | String | Specifies the output format of the generated events. Valid values are `otel` or `opensearch`. Default is `opensearch`. |
+| port | 整數 | 代表 `otel_logs_source` 來源執行所在的連接埠。預設值為 `21892`。 |
+| path | 字串 | 代表傳送未框架 HTTP 請求的路徑。您可以使用此選項，透過 HTTP 慣用路徑將未框架的 gRPC 請求支援到可設定的路徑。路徑應以 `/` 開頭，且長度至少為 1。若已設定路徑，則 `/opentelemetry.proto.collector.logs.v1.LogsService/Export` 端點對 gRPC 與 HTTP 請求皆停用。路徑可包含 `${pipelineName}` 佔位符，該佔位符會被替換為管線名稱。若值為空且 `unframed_requests` 為 `true`，則來源會提供路徑 `/opentelemetry.proto.collector.logs.v1.LogsService/Export`。 |
+| max_request_length | 字串 | 單一 gRPC 或 HTTP 請求的酬載所允許的最大位元組數。預設值為 `10mb`。 |
+| request_timeout | 整數 | 代表請求逾時時間長度（毫秒）。預設值為 `10000`。 |
+| health_check_service | 布林值 | 在 `grpc.health.v1/Health/Check` 下啟用 gRPC 健康狀態檢查服務。預設值為 `false`。 |
+| proto_reflection_service | 布林值 | 為 Protobuf 服務啟用反映服務（請參閱 [ProtoReflectionService](https://grpc.github.io/grpc-java/javadoc/io/grpc/protobuf/services/ProtoReflectionService.html) 與 [gRPC 反映](https://github.com/grpc/grpc-java/blob/master/documentation/server-reflection-tutorial.md)）。預設值為 `false`。 |
+| unframed_requests | 布林值 | 啟用未使用 gRPC 線路協定框架化的請求。預設值為 `false`。 |
+| thread_count  | 整數 | `ScheduledThreadPool` 中保留的執行緒數量。預設值為 `500`。 |
+| max_connection_count | 整數 | 允許的開啟連線數量上限。預設值為 `500`。 |
+| compression | 字串 | 套用至用戶端請求酬載的壓縮類型。有效值為 `none` 或 `gzip`。使用 `gzip` 可對傳入的請求套用 gzip 解壓縮。預設為 `none`（無壓縮）。 |
+| output_format | 字串 | 指定所產生事件的輸出格式。有效值為 `otel` 或 `opensearch`。預設為 `opensearch`。 |
 
 ### SSL
 
-You can configure SSL in the `otel_logs_source` source with the following options.
+您可以在 `otel_logs_source` 來源中使用下列選項來設定 SSL。
 
-| Option | Type | Description |
+| 選項 | 類型 | 說明 |
 | :--- | :--- | :--- |
-| `ssl` | Boolean | Enables TLS/SSL. Default value is `true`. |
-| `sslKeyCertChainFile` | String | Represents the SSL certificate chain file path or Amazon Simple Storage Service (Amazon S3) path. For example, see the Amazon S3 path `s3://<bucketName>/<path>`. Required if `ssl` is set to `true`.  |
-| `sslKeyFile` | String | Represents the SSL key file path or Amazon S3 path. For example, see the Amazon S3 path `s3://<bucketName>/<path>`. Required if `ssl` is set to `true`.  |
-| `useAcmCertForSSL` | Boolean | Enables TLS/SSL using a certificate and private key from AWS Certificate Manager (ACM). Default value is `false`. |
-| `acmCertificateArn` | String | Represents the ACM certificate Amazon Resource Name (ARN). ACM certificates take precedence over Amazon S3 or local file system certificates. Required if `useAcmCertForSSL` is set to `true`. |
-| `awsRegion` | String | Represents the AWS Region used by ACM or Amazon S3. Required if `useAcmCertForSSL` is set to `true` or `sslKeyCertChainFile` or `sslKeyFile` is the Amazon S3 path. |
+| `ssl` | 布林值 | 啟用 TLS/SSL。預設值為 `true`。 |
+| `sslKeyCertChainFile` | 字串 | 代表 SSL 憑證鏈檔案路徑或 Amazon Simple Storage Service (Amazon S3) 路徑。例如，請參閱 Amazon S3 路徑 `s3://<bucketName>/<path>`。當 `ssl` 設定為 `true` 時為必要。 |
+| `sslKeyFile` | 字串 | 代表 SSL 金鑰檔案路徑或 Amazon S3 路徑。例如，請參閱 Amazon S3 路徑 `s3://<bucketName>/<path>`。當 `ssl` 設定為 `true` 時為必要。 |
+| `useAcmCertForSSL` | 布林值 | 使用 AWS Certificate Manager (ACM) 的憑證與私密金鑰來啟用 TLS/SSL。預設值為 `false`。 |
+| `acmCertificateArn` | 字串 | 代表 ACM 憑證的 Amazon Resource Name (ARN)。ACM 憑證的優先順序高於 Amazon S3 或本機檔案系統憑證。當 `useAcmCertForSSL` 設定為 `true` 時為必要。 |
+| `awsRegion` | 字串 | 代表 ACM 或 Amazon S3 所使用的 AWS 區域。當 `useAcmCertForSSL` 設定為 `true` 或 `sslKeyCertChainFile`，或 `sslKeyFile` 為 Amazon S3 路徑時為必要。 |
 
-## Usage
+## 用法
 
-To get started, create a `pipeline.yaml` file and add `otel_logs_source` as the source:
+若要開始使用，請建立一個 `pipeline.yaml` 檔案，並新增 `otel_logs_source` 作為來源：
 
 ```yaml
 source:
@@ -55,7 +56,7 @@ source:
 ```
 {% include copy.html %}
 
-To generate data in the OpenTelemetry format, set the `output_format` setting to `otel`, as shown in the following example:
+若要產生 OpenTelemetry 格式的資料，請將 `output_format` 設定設為 `otel`，如下列範例所示：
 
 ```yaml
 source:
@@ -64,9 +65,9 @@ source:
 ```
 {% include copy.html %}
 
-## Example
+## 範例
 
-The following pipeline shows Data Prepper receiving OTLP logs over HTTPS using a PEM certificate and key, with unframed HTTP at a custom path, accepting gzip-compressed payloads, and indexing them into OpenSearch using the OpenTelemetry field schema:
+下列管線顯示 Data Prepper 使用 PEM 憑證與金鑰透過 HTTPS 接收 OTLP 記錄檔，在自訂路徑上使用未框架 HTTP，接受 gzip 壓縮的酬載，並使用 OpenTelemetry 欄位結構描述將其編製索引至 OpenSearch：
 
 ```yaml
 otel-logs-otel-output:
@@ -92,7 +93,7 @@ otel-logs-otel-output:
 ```
 {% include copy.html %}
 
-You can test this pipeline using the following commands:
+您可以使用下列命令來測試此管線：
 
 ```bash
 cat > /tmp/otel-log3.json <<'JSON'
@@ -128,7 +129,7 @@ curl -s -X POST "https://localhost:21892/ingest/otel-logs-otel-output/v1/logs" \
 ```
 {% include copy.html %}
 
-The document stored in OpenSearch contains the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 {
@@ -178,17 +179,17 @@ The document stored in OpenSearch contains the following information:
 }
 ```
 
-## Metrics
+## 指標
 
-You can use the following metrics with the `otel_logs_source` source.
+您可以在 `otel_logs_source` 來源中使用下列指標。
 
-| Option | Type | Description |
+| 選項 | 類型 | 說明 |
 | :--- | :--- | :--- | 
-| `requestTimeouts` | Counter | Measures the total number of requests that time out. | 
-| `requestsReceived` | Counter | Measures the total number of requests received by the `otel_logs_source` source. |
-| `badRequests` | Counter | Measures the total number of requests that could not be parsed. |
-| `requestsTooLarge` | Counter | Measures the total number of requests that exceed the maximum allowed size. Indicates that the size of the data being written into the buffer is beyond the buffer's maximum capacity. |
-| `internalServerError` | Counter | Measures the total number of requests that are erroneous due to errors other than `requestTimeouts` or `requestsTooLarge`. |
-| `successRequests` | Counter | Measures the total number of requests successfully written to the buffer. |
-| `payloadSize` | Distribution summary | Measures the distribution of all incoming payload sizes. |
-| `requestProcessDuration` | Timer | Measures the duration of request processing. |
+| `requestTimeouts` | 計數器 | 測量逾時的請求總數。 | 
+| `requestsReceived` | 計數器 | 測量 `otel_logs_source` 來源所接收的請求總數。 |
+| `badRequests` | 計數器 | 測量無法剖析的請求總數。 |
+| `requestsTooLarge` | 計數器 | 測量超過允許大小上限的請求總數。表示寫入緩衝區的資料大小超過緩衝區的最大容量。 |
+| `internalServerError` | 計數器 | 測量因 `requestTimeouts` 或 `requestsTooLarge` 以外的錯誤而失敗的請求總數。 |
+| `successRequests` | 計數器 | 測量成功寫入緩衝區的請求總數。 |
+| `payloadSize` | 分佈摘要 | 測量所有傳入酬載大小的分佈。 |
+| `requestProcessDuration` | 計時器 | 測量請求處理的持續時間。 |

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: rare
 parent: Commands
@@ -8,39 +9,39 @@ nav_order: 35
 
 <!-- vale off -->
 
-# rare command
+# rare 命令
 
 <!-- vale on -->
 
-The `rare` command identifies the least common combination of values across all fields specified in the field list.
+`rare` 命令會找出欄位清單中所有欄位裡最不常見的值組合。
 
-The command returns up to 10 results for each distinct combination of values in the group-by fields.
+此命令會針對 group-by 欄位中每個不同的值組合，最多傳回 10 筆結果。
 {: .note}
 
-The `rare` command is not rewritten to [query domain-specific language (DSL)]({{site.url}}{{site.baseurl}}/query-dsl/). It is only executed on the coordinating node.
+`rare` 命令不會改寫為 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/)。它只會在協調節點上執行。
 {: .note}
 
-## Syntax
+## 語法
 
-The `rare` command has the following syntax:
+`rare` 命令的語法如下：
 
 ```sql
 rare [rare-options] <field-list> [by-clause]
 ```
 
-## Parameters
+## 參數
 
-The `rare` command supports the following parameters.
+`rare` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<field-list>` | Required | A comma-delimited list of field names. |
-| `<by-clause>` | Optional | One or more fields to group the results by. |
-| `rare-options` | Optional | Additional options for controlling output: <br> - `showcount`: Whether to create a field in the output containing the frequency count for each combination of values. Default is `true`. <br> - `countfield`: The name of the field that contains the count. Default is `count`. <br> - `usenull`: Whether to output null values. Default is the value of `plugins.ppl.syntax.legacy.preferred`. |
+| `<field-list>` | 必要 | 以逗號分隔的欄位名稱清單。 |
+| `<by-clause>` | 選用 | 用來將結果分組的一或多個欄位。 |
+| `rare-options` | 選用 | 控制輸出的其他選項：<br> - `showcount`：是否在輸出中建立包含每個值組合出現次數的欄位。預設為 `true`。<br> - `countfield`：包含計數的欄位名稱。預設為 `count`。<br> - `usenull`：是否輸出 null 值。預設為 `plugins.ppl.syntax.legacy.preferred` 的值。 |
 
-## Example 1: Finding the least common values without showing counts
+## 範例 1：找出最不常見的值而不顯示計數
 
-The following query uses `showcount=false` to find the least common severity levels without displaying frequency counts:
+下列查詢使用 `showcount=false` 找出最不常見的嚴重性層級，而不顯示出現次數：
 
 ```sql
 source=otellogs
@@ -49,7 +50,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -62,9 +63,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 2: Finding the least common values grouped by field
+## 範例 2：依欄位分組找出最不常見的值
 
-The following query finds the least common severity levels grouped by service:
+下列查詢會依服務分組，找出最不常見的嚴重性層級：
 
 ```sql
 source=otellogs
@@ -73,7 +74,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -94,9 +95,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 3: Finding the least common values with frequency counts
+## 範例 3：找出最不常見的值並顯示出現次數
 
-The following query finds the least common severity levels with their frequency counts:
+下列查詢會找出最不常見的嚴重性層級及其出現次數：
 
 ```sql
 source=otellogs
@@ -105,7 +106,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -118,9 +119,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 4: Customizing the count field name
+## 範例 4：自訂計數欄位名稱
 
-The following query uses `countfield` to specify a custom name for the frequency count field:
+下列查詢使用 `countfield` 為出現次數欄位指定自訂名稱：
 
 ```sql
 source=otellogs
@@ -129,7 +130,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -142,9 +143,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 5: Specifying null value handling
+## 範例 5：指定 null 值的處理方式
 
-The following query uses `usenull=false` to exclude null values:
+下列查詢使用 `usenull=false` 排除 null 值：
 
 ```sql
 source=otellogs
@@ -153,7 +154,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -165,7 +166,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following query uses `usenull=true` to include null values in the results:
+下列查詢使用 `usenull=true` 將 null 值納入結果中：
 
 ```sql
 source=otellogs
@@ -174,7 +175,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 

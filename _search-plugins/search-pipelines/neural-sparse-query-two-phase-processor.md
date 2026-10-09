@@ -1,42 +1,43 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Neural sparse query two-phase
+title: "Neural sparse 查詢兩階段處理器"
 nav_order: 60
 parent: User-defined search processors
 grand_parent: Search pipelines
 ---
 
-# Neural sparse query two-phase processor
+# Neural sparse 查詢兩階段處理器
 Introduced 2.15
 {: .label .label-purple }
 
-The `neural_sparse_two_phase_processor` search processor is designed to provide faster search pipelines for [neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/). It accelerates the neural sparse query by dividing the original method of scoring all documents with all tokens into two steps: 
+`neural_sparse_two_phase_processor` 搜尋處理器旨在為 [neural sparse 搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/) 提供更快速的搜尋管線。它將原本以所有詞元為所有文件評分的方法拆分為兩個步驟，以加速 neural sparse 查詢：
 
-1. High-weight tokens score the documents and filter out the top documents.
-2. Low-weight tokens rescore the top documents.
+1. 由高權重詞元為文件評分，並篩選出排名靠前的文件。
+2. 由低權重詞元對排名靠前的文件重新評分。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists all available request fields.
+下表列出所有可用的請求欄位。
 
 Field | Data type | Description
 :--- | :--- | :---
-`enabled` | Boolean | Controls whether the two-phase processor is enabled. Default is `true`.
-`two_phase_parameter` | Object | A map of key-value pairs representing the two-phase parameters and their associated values. You can specify the value of `prune_ratio`, `expansion_rate`, `max_window_size`, or any combination of these three parameters. Optional.
-`two_phase_parameter.prune_type` | String | The pruning strategy for separating high-weight and low-weight tokens. Default is `max_ratio`. For valid values, see [Pruning sparse vectors]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/sparse-encoding/#pruning-sparse-vectors).
-`two_phase_parameter.prune_ratio` | Float | This ratio defines how high-weight and low-weight tokens are separated. The threshold is calculated by multiplying the token's maximum score by its `prune_ratio`. Valid values are in the [0,1] range for `prune_type` set to `max_ratio`. Default is `0.4`.
-`two_phase_parameter.expansion_rate` | Float | The rate at which documents will be fine-tuned during the second phase. The second-phase document number equals the query size (default is 10) multiplied by its expansion rate. Valid range is greater than 1.0. Default is `5.0`
-`two_phase_parameter.max_window_size` | Int | The maximum number of documents that can be processed using the two-phase processor. Valid range is greater than 50. Default is `10000`.
-`tag` | String | The processor's identifier. Optional.
-`description` | String | A description of the processor. Optional.
+`enabled` | Boolean | 控制是否啟用兩階段處理器。預設為 `true`。
+`two_phase_parameter` | Object | 代表兩階段參數及其對應值的鍵值對映射。您可以指定 `prune_ratio`、`expansion_rate`、`max_window_size` 的值，或這三個參數的任意組合。選用。
+`two_phase_parameter.prune_type` | String | 用於區分高權重與低權重詞元的修剪策略。預設為 `max_ratio`。有效值請參閱 [Pruning sparse vectors]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/sparse-encoding/#pruning-sparse-vectors)。
+`two_phase_parameter.prune_ratio` | Float | 此比例定義高權重與低權重詞元的區分方式。閾值由詞元的最高分數乘以其 `prune_ratio` 計算得出。當 `prune_type` 設為 `max_ratio` 時，有效值範圍為 [0,1]。預設為 `0.4`。
+`two_phase_parameter.expansion_rate` | Float | 第二階段中文件被微調的比率。第二階段的文件數量等於查詢大小 (預設為 10) 乘以其擴展比率。有效範圍為大於 1.0。預設為 `5.0`
+`two_phase_parameter.max_window_size` | Int | 可使用兩階段處理器處理的文件數量上限。有效範圍為大於 50。預設為 `10000`。
+`tag` | String | 處理器的識別碼。選用。
+`description` | String | 處理器的描述。選用。
 
-## Example
+## 範例
 
-The following example creates a search pipeline with a `neural_sparse_two_phase_processor` search request processor. 
+以下範例建立一個包含 `neural_sparse_two_phase_processor` 搜尋請求處理器的搜尋管線。
 
-### Create search pipeline
+### 建立搜尋管線
 
-The following example request creates a search pipeline with a `neural_sparse_two_phase_processor` search request processor. The processor sets a custom model ID at the index level and provides different default model IDs for two specific index fields:
+以下範例請求建立一個包含 `neural_sparse_two_phase_processor` 搜尋請求處理器的搜尋管線。該處理器在索引層級設定自訂模型 ID，並為兩個特定索引欄位提供不同的預設模型 ID：
 
 ```json
 PUT /_search/pipeline/two_phase_search_pipeline
@@ -59,9 +60,9 @@ PUT /_search/pipeline/two_phase_search_pipeline
 ```
 {% include copy-curl.html %}
 
-### Set search pipeline
+### 設定搜尋管線
 
-After the two-phase pipeline is created, set the `index.search.default_pipeline` setting to the name of the pipeline for the index on which you want to use the two-phase pipeline:
+建立兩階段管線後，請將 `index.search.default_pipeline` 設定設為您要使用該兩階段管線之索引的管線名稱：
 
 ```json
 PUT /index-name/_settings 
@@ -71,25 +72,25 @@ PUT /index-name/_settings
 ```
 {% include copy-curl.html %}
 
-## Limitation
+## 限制
 
-The `neural_sparse_two_phase_processor` has the following limitations.
+`neural_sparse_two_phase_processor` 有以下限制。
 
-### Version support
+### 版本支援
 
-The `neural_sparse_two_phase_processor` can only be used with OpenSearch 2.15 or later.
+`neural_sparse_two_phase_processor` 只能與 OpenSearch 2.15 或更新版本搭配使用。
 
-### Compound query support
+### 複合查詢支援
 
-Only the Boolean [compound query]({{site.url}}{{site.baseurl}}/query-dsl/compound/index/) is supported.
+僅支援 Boolean [複合查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/index/)。
 
-Neural sparse queries and Boolean queries with a boost parameter (not boosting queries) are also supported.
+也支援 neural sparse 查詢以及帶有 boost 參數的 Boolean 查詢 (非 boosting 查詢)。
 
-## Examples
+## 範例
 
-The following examples show neural sparse queries with the supported query types.
+以下範例展示使用支援查詢類型的 neural sparse 查詢。
 
-### Single neural sparse query
+### 單一 neural sparse 查詢
 
 ```
 GET /my-nlp-index/_search
@@ -106,7 +107,7 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-### Neural sparse query nested in a Boolean query
+### 巢狀於 Boolean 查詢中的 neural sparse 查詢
 
 ```
 GET /my-nlp-index/_search
@@ -130,22 +131,22 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
   
-## P99 latency metrics
-Using an OpenSearch cluster set up on three m5.4xlarge Amazon Elastic Compute Cloud (Amazon EC2) instances, OpenSearch conducts neural sparse query P99 latency tests on indexes corresponding to more than 10 datasets.
+## P99 延遲指標
+OpenSearch 在三個 m5.4xlarge Amazon Elastic Compute Cloud (Amazon EC2) 執行個體上設定的叢集，針對對應超過 10 個資料集的索引進行 neural sparse 查詢 P99 延遲測試。
 
-### Doc-only mode latency metric
+### Doc-only 模式延遲指標
 
-In doc-only mode, the two-phase processor can significantly decrease query latency, as shown by the following latency metrics:
+在 doc-only 模式下，兩階段處理器可顯著降低查詢延遲，如下列延遲指標所示：
 
-- Average latency without the two-phase processor: 53.56 ms
-- Average latency with the two-phase processor: 38.61 ms
+- 不使用兩階段處理器的平均延遲：53.56 ms
+- 使用兩階段處理器的平均延遲：38.61 ms
 
-This results in an overall latency reduction of approximately 27.92%. Most indexes show a significant latency reduction when using the two-phase processor, with reductions ranging from 5.14 to 84.6%. The specific latency optimization values depend on the data distribution within the indexes.
+整體延遲約降低 27.92%。大多數索引在使用兩階段處理器時都顯示出顯著的延遲降低，降幅介於 5.14% 至 84.6% 之間。具體的延遲最佳化數值取決於索引內的資料分佈。
 
-### Bi-encoder mode latency metric
+### Bi-encoder 模式延遲指標
 
-In bi-encoder mode, the two-phase processor can significantly decrease query latency, as shown by the following latency metrics:
-- Average latency without the two-phase processor: 300.79 ms
-- Average latency with the two-phase processor: 121.64 ms
+在 bi-encoder 模式下，兩階段處理器可顯著降低查詢延遲，如下列延遲指標所示：
+- 不使用兩階段處理器的平均延遲：300.79 ms
+- 使用兩階段處理器的平均延遲：121.64 ms
 
-This results in an overall latency reduction of approximately 59.56%. Most indexes show a significant latency reduction when using the two-phase processor, with reductions ranging from 1.56 to 82.84%. The specific latency optimization values depend on the data distribution within the indexes.
+整體延遲約降低 59.56%。大多數索引在使用兩階段處理器時都顯示出顯著的延遲降低，降幅介於 1.56% 至 82.84% 之間。具體的延遲最佳化數值取決於索引內的資料分佈。

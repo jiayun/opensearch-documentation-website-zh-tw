@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Correlations
+title: "相互關聯"
 nav_order: 60
 parent: Using Discover for observability
 redirect_from:
   - /observability-plugin/correlations/
 ---
 
-# Correlations
-**Introduced 3.5**
+# 相互關聯
+**3.5 版新增**
 {: .label .label-purple }
 
-Correlations allow you to link trace datasets with logs datasets, enabling you to view related log entries when analyzing distributed traces. Correlating datasets helps you quickly identify the root cause of issues by connecting trace spans to their corresponding application logs.
+相互關聯 (Correlations) 讓您能將追蹤資料集與記錄資料集連結，在分析分散式追蹤時檢視相關的記錄項目。透過將追蹤 span 與對應的應用程式記錄連結起來，相互關聯資料集可協助您快速找出問題的根本原因。
 
-When troubleshooting distributed systems, you often need to correlate data across multiple sources. A trace might show that a request failed, but the detailed error information is in your application logs. Using correlations, you can:
+在對分散式系統進行疑難排解時，您經常需要跨多個來源相互關聯資料。追蹤可能顯示某個請求失敗，但詳細的錯誤資訊卻在您的應用程式記錄中。使用相互關聯，您可以：
 
-- Link a single trace dataset to up to five logs datasets.
-- View related logs directly from the span details panel.
-- Navigate seamlessly between trace analysis and log exploration.
+- 將單一追蹤資料集連結至最多五個記錄資料集。
+- 直接從 span 詳細資料面板檢視相關記錄。
+- 在追蹤分析與記錄探索之間順暢切換。
 
-## Prerequisites
+## 必要條件
 
-Before using correlations, ensure that you have fulfilled the following prerequisites:
+使用相互關聯之前，請確認您已符合下列必要條件：
 
-1. **Enable feature flags**: Add the following settings to your `opensearch_dashboards.yml` file:
+1. **啟用功能旗標**：在您的 `opensearch_dashboards.yml` 檔案中加入下列設定：
 
    ```yaml
    workspace.enabled: true
@@ -34,105 +35,105 @@ Before using correlations, ensure that you have fulfilled the following prerequi
    ```
    {% include copy.html %}
 
-   After updating the configuration file, restart OpenSearch Dashboards for the changes to take effect.
+   更新組態檔後，請重新啟動 OpenSearch Dashboards 以讓變更生效。
 
-1. **Create datasets**: You must have at least one trace dataset and one logs dataset configured. For detailed instructions, see [Datasets]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/datasets/).
+1. **建立資料集**：您必須已設定至少一個追蹤資料集與一個記錄資料集。詳細說明請參閱[資料集]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/datasets/)。
 
-1. **Configure schema mappings**: Your logs datasets must have schema mappings configured. At a minimum, you need to map the **Trace ID** field so that logs can be matched to traces.
+1. **設定結構對應**：您的記錄資料集必須已設定結構對應。至少需要對應 **Trace ID** 欄位，才能將記錄與追蹤進行比對。
 
-## Correlation requirements
+## 相互關聯需求
 
-For correlations to work correctly, your logs data must include the following fields that can be mapped to trace context.
+若要讓相互關聯正常運作，您的記錄資料必須包含下列可對應至追蹤情境的欄位。
 
-| Field | Purpose |
+| 欄位 | 用途 |
 |:------|:--------|
-| **Trace ID** | Links log entries to specific traces |
-| **Span ID** | Links log entries to specific spans |
-| **Service name** | Filters logs by service |
-| **Timestamp** | Orders log entries chronologically |
+| **Trace ID** | 將記錄項目連結至特定追蹤 |
+| **Span ID** | 將記錄項目連結至特定 span |
+| **Service name** | 依服務篩選記錄 |
+| **Timestamp** | 依時間先後排序記錄項目 |
 
-If your logs do not follow OpenTelemetry conventions, configure schema mappings in your logs dataset to map your custom field names to these standard fields.
+如果您的記錄未遵循 OpenTelemetry 慣例，請在記錄資料集中設定結構對應，將自訂欄位名稱對應至這些標準欄位。
 
-## Creating a trace-to-logs correlation
+## 建立追蹤與記錄之間的相互關聯
 
-To create a correlation between a trace dataset and logs datasets, follow these steps:
+若要在追蹤資料集與記錄資料集之間建立相互關聯，請依照下列步驟操作：
 
-1. Navigate to **Datasets** in the left navigation.
+1. 在左側導覽中前往 **Datasets**。
 
-2. Select the trace dataset you want to correlate with logs.
+2. 選取您要與記錄相互關聯的追蹤資料集。
 
-3. In the dataset details page, select the **Correlated datasets** tab, as shown in the following image.
+3. 在資料集詳細資料頁面中，選取 **Correlated datasets** 索引標籤，如下圖所示。
 
-   ![Trace dataset Correlated datasets tab]({{site.url}}{{site.baseurl}}/images/datasets/correlations-trace-dataset-tab.png)
+   ![追蹤資料集的 Correlated datasets 索引標籤]({{site.url}}{{site.baseurl}}/images/datasets/correlations-trace-dataset-tab.png)
 
-4. Select **Configure correlation**.
+4. 選取 **Configure correlation**。
 
-5. In the **Configure correlation** dialog, select up to five logs datasets to correlate with this trace dataset, as shown in the following image.
+5. 在 **Configure correlation** 對話方塊中，選取最多五個要與此追蹤資料集相互關聯的記錄資料集，如下圖所示。
 
-   ![Configure correlation dialog]({{site.url}}{{site.baseurl}}/images/datasets/correlations-configure-dialog.png)
+   ![Configure correlation 對話方塊]({{site.url}}{{site.baseurl}}/images/datasets/correlations-configure-dialog.png)
 
-6. Select **Save** to create the correlation.
+6. 選取 **Save** 以建立相互關聯。
 
-7. The correlated logs datasets now appear in the **Correlated datasets** table, as shown in the following image.
+7. 相互關聯的記錄資料集現在會出現在 **Correlated datasets** 表格中，如下圖所示。
 
-   ![Created correlation in table]({{site.url}}{{site.baseurl}}/images/datasets/correlations-created-table.png)
+   ![表格中已建立的相互關聯]({{site.url}}{{site.baseurl}}/images/datasets/correlations-created-table.png)
 
-## Viewing correlations in logs datasets
+## 在記錄資料集中檢視相互關聯
 
-You can view the trace datasets that are correlated with a logs dataset from the logs dataset details:
+您可以從記錄資料集詳細資料中檢視與該記錄資料集相互關聯的追蹤資料集：
 
-1. Navigate to **Datasets** in the left navigation.
+1. 在左側導覽中前往 **Datasets**。
 
-2. Select a logs dataset that has been correlated with a trace dataset.
+2. 選取已與追蹤資料集相互關聯的記錄資料集。
 
-3. Select the **Correlated traces** tab to view trace datasets linked with this logs dataset, as shown in the following image.
+3. 選取 **Correlated traces** 索引標籤，以檢視與此記錄資料集連結的追蹤資料集，如下圖所示。
 
-   ![Logs dataset Correlated traces tab]({{site.url}}{{site.baseurl}}/images/datasets/correlations-logs-dataset-tab.png)
+   ![記錄資料集的 Correlated traces 索引標籤]({{site.url}}{{site.baseurl}}/images/datasets/correlations-logs-dataset-tab.png)
 
-This view is read-only. To modify correlations, you must edit them from the trace dataset.
+此檢視為唯讀。若要修改相互關聯，您必須從追蹤資料集進行編輯。
 {: .note}
 
-## Using correlations in the Traces page
+## 在 Traces 頁面中使用相互關聯
 
-After creating correlations, you can access related logs when analyzing traces.
+建立相互關聯後，您可以在分析追蹤時存取相關記錄。
 
-### Viewing related logs in span details
+### 在 span 詳細資料中檢視相關記錄
 
-1. Navigate to **Discover** > **Traces**. 
+1. 前往 **Discover** > **Traces**。
 
-2. Select a trace to view its details.
+2. 選取一個追蹤以檢視其詳細資料。
 
-3. Select a span within the trace to open the **Span details**.
+3. 在追蹤中選取一個 span 以開啟 **Span details**。
 
-4. In **Span details**, select the **Logs** tab to open **Related logs**, as shown in the following image. The related logs are retrieved by matching the trace ID from the span to log entries in your correlated logs datasets.
+4. 在 **Span details** 中，選取 **Logs** 索引標籤以開啟 **Related logs**，如下圖所示。相關記錄是透過將 span 中的追蹤 ID 與相互關聯記錄資料集中的記錄項目進行比對來擷取。
 
-   ![Span details with related logs]({{site.url}}{{site.baseurl}}/images/datasets/correlations-span-details-logs.png)
+   ![顯示相關記錄的 span 詳細資料]({{site.url}}{{site.baseurl}}/images/datasets/correlations-span-details-logs.png)
 
-6. Select a log entry to view its full details or navigate to the **Logs** page for further exploration.
+6. 選取一個記錄項目以檢視其完整詳細資料，或前往 **Logs** 頁面進一步探索。
 
-## Managing correlations
+## 管理相互關聯
 
-You can edit or remove correlations from the trace dataset details page.
+您可以從追蹤資料集詳細資料頁面編輯或移除相互關聯。
 
-### Editing correlations
+### 編輯相互關聯
 
-To modify an existing correlation, follow these steps:
+若要修改現有的相互關聯，請依照下列步驟操作：
 
-1. Navigate to **Datasets** in the left navigation and select the trace dataset you want to modify.
-2. Select the **Correlated datasets** tab.
-3. Select **Configure correlation** to modify the list of correlated logs datasets.
-4. Add or remove datasets as needed.
-5. Select **Save** to apply changes.
+1. 在左側導覽中前往 **Datasets**，並選取您要修改的追蹤資料集。
+2. 選取 **Correlated datasets** 索引標籤。
+3. 選取 **Configure correlation** 以修改相互關聯記錄資料集的清單。
+4. 視需要新增或移除資料集。
+5. 選取 **Save** 以套用變更。
 
-### Removing correlations
+### 移除相互關聯
 
-To remove a correlation:
+若要移除相互關聯：
 
-1. Navigate to **Datasets** in the left navigation and select the trace dataset you want to modify.
-2. Select the **Correlated datasets** tab.
-3. Delete the configured correlations using the delete icon.
+1. 在左側導覽中前往 **Datasets**，並選取您要修改的追蹤資料集。
+2. 選取 **Correlated datasets** 索引標籤。
+3. 使用刪除圖示刪除已設定的相互關聯。
 
-## Related documentation
+## 相關文件
 
-- [Datasets]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/datasets/) -- Create and manage datasets.
-- [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) -- Ingest OpenTelemetry data into OpenSearch.
+- [資料集]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/datasets/) -- 建立與管理資料集。
+- [Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) -- 將 OpenTelemetry 資料匯入 OpenSearch。

@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Grouping top N queries
+title: "將前 N 筆查詢分組"
 parent: Query insights
 nav_order: 20
 ---
 
-# Grouping top N queries
-**Introduced 2.17**
+# 將前 N 筆查詢分組
+**於 2.17 版推出**
 {: .label .label-purple }
 
-Monitoring the [top N queries]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/top-n-queries/) can help you to identify the most resource-intensive queries based on latency, CPU, and memory usage in a specified time window. However, if a single computationally expensive query is executed multiple times, it can occupy all top N query slots, potentially preventing other expensive queries from appearing in the list. To address this issue, you can group similar queries, gaining insight into various high-impact query groups.
+監視[前 N 筆查詢]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/top-n-queries/)可協助您依據指定時間範圍內的延遲、CPU 及記憶體使用量，找出最耗用資源的查詢。然而，若單一運算成本高昂的查詢被執行多次，可能會佔用所有前 N 筆查詢的名額，進而導致其他高成本查詢無法出現在清單中。為解決此問題，您可以將類似的查詢分組，以深入了解各種高影響力的查詢群組。
 
-## Grouping queries by similarity
+## 依相似度將查詢分組
 
-Grouping queries by `similarity` organizes them based on the query structure, removing everything except the core query operations.
+依 `similarity` 將查詢分組，會依據查詢結構來組織查詢，移除核心查詢操作以外的所有內容。
 
-For example, the following query:
+例如，下列查詢：
 
 ```json
 {
@@ -32,7 +33,7 @@ For example, the following query:
 }
 ```
 
-Has the following corresponding query structure:
+具有下列對應的查詢結構：
 
 ```c
 bool
@@ -41,13 +42,13 @@ bool
   query_string
 ```
 
-When queries share the same query structure, they are grouped together, ensuring that all similar queries belong to the same group.
+當查詢共用相同的查詢結構時，便會歸為同一組，確保所有類似的查詢都屬於同一個群組。
 
-## Configuring the query structure
+## 設定查詢結構
 
-The preceding example query shows a simplified query structure. By default, the query structure also includes field names and field data types. 
+上述範例查詢顯示的是簡化的查詢結構。根據預設，查詢結構也會包含欄位名稱及欄位資料類型。
 
-For example, consider an index `index1` with the following field mapping:
+例如，假設有一個索引 `index1` 具有下列欄位對應：
 
 ```json
 "mappings": {
@@ -68,7 +69,7 @@ For example, consider an index `index1` with the following field mapping:
 }
 ```
 
-If you run the following query on this index:
+若您對此索引執行下列查詢：
 
 ```json
 {
@@ -108,7 +109,7 @@ If you run the following query on this index:
 }
 ```
 
-Then the query has the following corresponding query structure:
+則該查詢具有下列對應的查詢結構：
 
 ```c
 bool []
@@ -121,7 +122,7 @@ bool []
     regexp [field3, text]
 ```
 
-To exclude field names and field data types from the query structure, configure the following settings:
+若要從查詢結構中排除欄位名稱及欄位資料類型，請設定下列設定：
 
 ```json
 PUT _cluster/settings
@@ -134,28 +135,27 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-## Aggregate metrics per group
+## 各群組的彙總指標
 
-In addition to retrieving latency, CPU, and memory metrics for individual top N queries, you can obtain aggregate statistics for the
-top N query groups. For each query group, the response includes the following statistics:
-- The total latency, CPU usage, or memory usage (depending on the configured metric type) 
-- The total query count
+除了擷取個別前 N 筆查詢的延遲、CPU 及記憶體指標之外，您也可以取得前 N 筆查詢群組的彙總統計資料。回應中會針對每個查詢群組包含下列統計資料：
+- 總延遲、CPU 使用量或記憶體使用量（視設定的指標類型而定）
+- 查詢總數
 
-Using these statistics, you can calculate the average latency, CPU usage, or memory usage for each query group. 
-The response also includes one example query from the query group. 
+您可以利用這些統計資料，計算每個查詢群組的平均延遲、CPU 使用量或記憶體使用量。
+回應中也會包含該查詢群組中的一個範例查詢。
 
-## Configuring query grouping
+## 設定查詢分組
 
-To configure grouping for top N queries, use the following steps.
+若要設定前 N 筆查詢的分組，請使用下列步驟。
 
-The examples on this page use the Cluster Settings API. For production deployments requiring fine-grained API access control, you can use the [Query Insights Settings API]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/settings-api/) instead, which provides equivalent functionality with enhanced security.
+本頁的範例使用 Cluster Settings API。若為需要細緻 API 存取控制的正式部署環境，您可以改用 [Query Insights Settings API]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/settings-api/)，其提供相同的功能並強化了安全性。
 {: .tip}
 
-### Step 1: Enable top N query monitoring 
+### 步驟 1：啟用前 N 筆查詢監視
 
-Ensure that top N query monitoring is enabled for at least one of the metrics: latency, CPU, or memory. For more information, see [Configuring top N query monitoring]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/top-n-queries/#configuring-top-n-query-monitoring).
+請確認已針對至少一種指標啟用前 N 筆查詢監視：延遲、CPU 或記憶體。如需詳細資訊，請參閱[設定前 N 筆查詢監視]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/top-n-queries/#configuring-top-n-query-monitoring)。
 
-For example, to enable top N query monitoring by latency with the default settings, send the following request:
+例如，若要使用預設設定依延遲啟用前 N 筆查詢監視，請傳送下列請求：
 
 ```json
 PUT _cluster/settings
@@ -167,9 +167,9 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-### Step 2: Configure query grouping
+### 步驟 2：設定查詢分組
 
-Set the desired grouping method by updating the following cluster setting:
+藉由更新下列叢集設定來設定所需的分組方法：
 
 ```json
 PUT _cluster/settings
@@ -181,13 +181,13 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-The default value for the `group_by` setting is `none`, which disables grouping. The supported values for `group_by` are `similarity` and `none`.
+`group_by` 設定的預設值為 `none`，其會停用分組。`group_by` 支援的值為 `similarity` 及 `none`。
 
-### Step 3 (Optional): Limit the number of monitored query groups
+### 步驟 3（選用）：限制受監視的查詢群組數目
 
-Optionally, you can limit the number of monitored query groups. Queries already included in the top N query list (the most resource-intensive queries) will not be considered in determining the limit. Essentially, the maximum applies only to other query groups, and the top N queries are tracked separately. This helps manage the tracking of query groups based on workload and query window size. 
+您也可以選擇限制受監視的查詢群組數目。已納入前 N 筆查詢清單（最耗用資源的查詢）的查詢，將不會納入限制的判定。基本上，此上限僅適用於其他查詢群組，前 N 筆查詢則會個別追蹤。這有助於依據工作負載及查詢時間範圍大小來管理查詢群組的追蹤。
 
-To limit tracking to 100 query groups, send the following request:
+若要將追蹤限制為 100 個查詢群組，請傳送下列請求：
 
 ```json
 PUT _cluster/settings
@@ -199,22 +199,22 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-The default value for `max_groups_excluding_topn` is `100`, and you can set it to any value between `0` and `10,000`, inclusive.
+`max_groups_excluding_topn` 的預設值為 `100`，您可以將其設為 `0` 到 `10,000` 之間的任何值（含頭尾）。
 
-## Monitoring query groups
+## 監視查詢群組
 
-To view the top N query groups, send the following request:
+若要檢視前 N 筆查詢群組，請傳送下列請求：
 
 ```json
 GET /_insights/top_queries
 ```
 {% include copy-curl.html %}
 
-The response contains the top N query groups:
+回應中包含前 N 筆查詢群組：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -292,32 +292,32 @@ The response contains the top N query groups:
 
 </details>
 
-## Response body fields
+## 回應本文欄位
 
-The response includes the following fields.
+回應中包含下列欄位。
 
-Field | Data type        | Description
+欄位 | 資料類型        | 說明
 :--- |:-----------------| :---
-`top_queries` | Array            | The list of top query groups.
-`top_queries.timestamp` | Integer          | The execution timestamp for the first query in the query group.
-`top_queries.id` | String           | The unique identifier for the query or query group.
-`top_queries.total_shards` | Integer          | The number of shards on which the first query was executed.
-`top_queries.failed` | Boolean           | Indicates whether the search request failed during execution.
-`top_queries.wlm_group_id` | String           | The workload management group ID for the first query in the query group.
-`top_queries.query_group_hashcode` | String           | The hash code that uniquely identifies the query group and is generated from the [query structure](#grouping-queries-by-similarity).
-`top_queries.task_resource_usages` | Array of objects | The resource usage breakdown for the various tasks belonging to the first query in the query group.
-`top_queries.username` | String           | The username associated with the first query in the query group.
-`top_queries.user_roles` | Array            | The security roles associated with the user who sent the first query in the query group.
-`top_queries.node_id` | String           | The node ID of the node that coordinated the execution of the first query in the query group.
-`top_queries.labels` | Object           | Used to label the top query.
-`top_queries.search_type` | String           | The search request execution type. Valid values are `query_then_fetch` and `dfs_query_then_fetch`. See the `search_type` parameter in the [Search API documentation]({{site.url}}{{site.baseurl}}/api-reference/search/#query-parameters).
-`top_queries.source_truncated` | Boolean          | Whether the source field was truncated for the first query in the query group. For more information, see [Configuring source truncation]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/top-n-queries/#configuring-source-truncation).
-`top_queries.phase_latency_map` | Object           | The coordinator phase latency map for the first query in the query group. The map includes the amount of time, in milliseconds, that the query spent in the `expand`, `query`, and `fetch` phases.
-`top_queries.source` | Object           | The source of the first query in the query group.
-`top_queries.indices` | Array            | The indexes specified in the first query in the query group.
-`top_queries.group_by` | String           | The `group_by` setting applied when the query was executed.
-`top_queries.measurements` | Object           | The aggregate measurements for the query group.
-`top_queries.measurements.<metric>` | Object           | The aggregate measurements for the metric.
-`top_queries.measurements.<metric>.number` | Integer          | The cumulative metric value for all queries in the query group.
-`top_queries.measurements.<metric>.count` | Integer          | The number of queries in the query group.
-`top_queries.measurements.<metric>.aggregationType` | String           | The aggregation type for the current entry. If grouping by similarity is enabled, then `aggregationType` is `AVERAGE`. If it is not enabled, then `aggregationType` is `NONE`. 
+`top_queries` | 陣列            | 前幾名查詢群組的清單。
+`top_queries.timestamp` | 整數          | 查詢群組中第一筆查詢的執行時間戳記。
+`top_queries.id` | 字串           | 查詢或查詢群組的唯一識別碼。
+`top_queries.total_shards` | 整數          | 執行第一筆查詢時所用的分片數。
+`top_queries.failed` | 布林值           | 指出搜尋請求在執行期間是否失敗。
+`top_queries.wlm_group_id` | 字串           | 查詢群組中第一筆查詢的工作負載管理群組 ID。
+`top_queries.query_group_hashcode` | 字串           | 可唯一識別查詢群組的雜湊碼，由[查詢結構](#grouping-queries-by-similarity)產生。
+`top_queries.task_resource_usages` | 物件陣列 | 查詢群組中第一筆查詢所屬各項工作的資源使用量明細。
+`top_queries.username` | 字串           | 與查詢群組中第一筆查詢相關聯的使用者名稱。
+`top_queries.user_roles` | 陣列            | 與傳送查詢群組中第一筆查詢之使用者相關聯的安全性角色。
+`top_queries.node_id` | 字串           | 協調查詢群組中第一筆查詢執行之節點的節點 ID。
+`top_queries.labels` | 物件           | 用於標示前幾名查詢。
+`top_queries.search_type` | 字串           | 搜尋請求的執行類型。有效值為 `query_then_fetch` 及 `dfs_query_then_fetch`。請參閱 [Search API 文件]({{site.url}}{{site.baseurl}}/api-reference/search/#query-parameters)中的 `search_type` 參數。
+`top_queries.source_truncated` | 布林值          | 查詢群組中第一筆查詢的來源欄位是否遭到截斷。如需詳細資訊，請參閱[設定來源截斷]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/top-n-queries/#configuring-source-truncation)。
+`top_queries.phase_latency_map` | 物件           | 查詢群組中第一筆查詢的協調器階段延遲對應。此對應包含查詢在 `expand`、`query` 及 `fetch` 階段所花費的時間（以毫秒為單位）。
+`top_queries.source` | 物件           | 查詢群組中第一筆查詢的來源。
+`top_queries.indices` | 陣列            | 查詢群組中第一筆查詢所指定的索引。
+`top_queries.group_by` | 字串           | 執行查詢時所套用的 `group_by` 設定。
+`top_queries.measurements` | 物件           | 查詢群組的彙總量測值。
+`top_queries.measurements.<metric>` | 物件           | 指標的彙總量測值。
+`top_queries.measurements.<metric>.number` | 整數          | 查詢群組中所有查詢的累計指標值。
+`top_queries.measurements.<metric>.count` | 整數          | 查詢群組中的查詢數。
+`top_queries.measurements.<metric>.aggregationType` | 字串           | 目前項目的彙總類型。若已啟用依相似度分組，則 `aggregationType` 為 `AVERAGE`。若未啟用，則 `aggregationType` 為 `NONE`。 

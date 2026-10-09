@@ -1,60 +1,61 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete memory container
+title: "刪除記憶容器"
 parent: Agentic memory APIs
 grand_parent: ML Commons APIs
 nav_order: 30
 ---
 
-# Delete Memory Container API
-**Introduced 3.3**
+# 刪除記憶容器 API
+**於 3.3 版推出**
 {: .label .label-purple }
 
-Use this API to delete a memory container by its ID.
+使用此 API，依 ID 刪除記憶容器。
 
-## Endpoints
+## 端點
 
 ```json
 DELETE /_plugins/_ml/memory_containers/{memory_container_id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required/Optional | Description |
+| 參數 | 資料類型 | 必要／選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `memory_container_id` | String | Required | The ID of the memory container to delete. |
+| `memory_container_id` | 字串 | 必要 | 要刪除的記憶容器 ID。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters.
+下表列出可用的查詢參數。
 
-| Parameter | Data type | Required/Optional | Description |
+| 參數 | 資料類型 | 必要／選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `delete_all_memories` | Boolean | Optional | Controls whether to delete all memory indexes when deleting the container. Default is `false`. When `false`, memory indexes (sessions, working, long-term, history) are preserved. |
-| `delete_memories` | Array | Optional | Array of memory types to delete when deleting the container. Default is empty array. Accepts values: `sessions`, `working`, `long-term`, `history`. Example: `delete_memories=sessions,working`. |
+| `delete_all_memories` | 布林值 | 選用 | 控制刪除容器時是否刪除所有記憶索引。預設為 `false`。當值為 `false` 時，會保留記憶索引（sessions、working、long-term、history）。 |
+| `delete_memories` | 陣列 | 選用 | 刪除容器時要刪除的記憶類型陣列。預設為空陣列。接受的值：`sessions`、`working`、`long-term`、`history`。範例：`delete_memories=sessions,working`。 |
 
-## Example request: Basic deletion (preserves memory indexes)
+## 請求範例：基本刪除（保留記憶索引）
 
 ```json
 DELETE /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN
 ```
 
-## Example request: Delete a container and all memory indexes
+## 請求範例：刪除容器及所有記憶索引
 
 ```json
 DELETE /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN?delete_all_memories=true
 ```
 
-## Example request: Delete a container and specific memory types
+## 請求範例：刪除容器及特定記憶類型
 
 ```json
 DELETE /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN?delete_memories=sessions,working
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -73,9 +74,9 @@ DELETE /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN?delete_memories=sess
 }
 ```
 
-## Error responses
+## 錯誤回應
 
-If you attempt to delete a memory container that doesn't exist, OpenSearch returns a 404 Not Found error:
+如果您嘗試刪除不存在的記憶容器，OpenSearch 會傳回 404 Not Found 錯誤：
 
 ```json
 {
@@ -93,15 +94,15 @@ If you attempt to delete a memory container that doesn't exist, OpenSearch retur
 }
 ```
 
-## Response fields
+## 回應欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `result` | String | The result of the delete operation. |
-| `_id` | String | The ID of the deleted memory container. |
-| `_version` | Integer | The version number after deletion. |
-| `_shards` | Object | Information about the shards involved in the operation. |
-| `_seq_no` | Long | The sequence number assigned to the delete operation. |
-| `_primary_term` | Long | The primary term of the index. |
+| `result` | 字串 | 刪除操作的結果。 |
+| `_id` | 字串 | 已刪除的記憶容器 ID。 |
+| `_version` | 整數 | 刪除後的版本號碼。 |
+| `_shards` | 物件 | 參與操作的分片資訊。 |
+| `_seq_no` | 長整數 | 指派給刪除操作的序號。 |
+| `_primary_term` | 長整數 | 索引的主要分片任期。 |

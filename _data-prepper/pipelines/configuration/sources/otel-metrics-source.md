@@ -1,41 +1,42 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: OTel metrics source
+title: "OTel 指標來源"
 parent: Sources
 grand_parent: Pipelines
 nav_order: 70
 ---
 
-# OTel metrics source
+# OTel 指標來源
 
-The `otel_metrics_source` is an OpenTelemetry Collector source that collects metric data. The following table describes options you can use to configure the `otel_metrics_source` source. 
+`otel_metrics_source` 是收集指標資料的 OpenTelemetry Collector 來源。下表說明您可以用來設定 `otel_metrics_source` 來源的選項。
 
-## Configuration
+## 設定
 
-You can configure the `otel_metrics_source` source with the following options. 
+您可以使用下列選項設定 `otel_metrics_source` 來源。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`port` | No | Integer | The port that the OpenTelemtry metrics source runs on. Default value is `21891`.
-`request_timeout` | No | Integer | The request timeout, in milliseconds. Default value is `10000`.
-`health_check_service` | No | Boolean | Enables a gRPC health check service under `grpc.health.v1/Health/Check`. Default value is `false`.
-`proto_reflection_service` | No | Boolean | Enables a reflection service for Protobuf services (see [gRPC reflection](https://github.com/grpc/grpc/blob/master/doc/server-reflection.md) and [gRPC Server Reflection Tutorial](https://github.com/grpc/grpc-java/blob/master/documentation/server-reflection-tutorial.md) docs). Default value is `false`.
-`unframed_requests` | No | Boolean | Enables requests not framed using the gRPC wire protocol.
-`thread_count` | No | Integer | The number of threads to keep in the `ScheduledThreadPool`. Default value is `200`.
-`max_connection_count` | No | Integer | The maximum allowed number of open connections. Default value is `500`.
-| `output_format` | String | Specifies the output format of the generated events. Valid values are `otel` or `opensearch`. Default is `opensearch`. |
-`max_request_length` | No | ByteCount | The maximum number of bytes allowed in the payload of a single gRPC or HTTP request. Default value is `10mb`.
-`ssl` | No | Boolean | Enables connections to the OpenTelemetry source port over TLS/SSL. Default value is `true`.
-`sslKeyCertChainFile` | Conditionally | String | File-system path or Amazon Simple Storage Service (Amazon S3) path to the security certificate (for example, `"config/demo-data-prepper.crt"` or `"s3://my-secrets-bucket/demo-data-prepper.crt"`). Required if `ssl` is set to `true`.
-`sslKeyFile` | Conditionally | String | File-system path or Amazon S3 path to the security key (for example, `"config/demo-data-prepper.key"` or `"s3://my-secrets-bucket/demo-data-prepper.key"`). Required if `ssl` is set to `true`.
-`useAcmCertForSSL` | No | Boolean | Whether to enable TLS/SSL using a certificate and private key from AWS Certificate Manager (ACM). Default value is `false`.
-`acmCertificateArn` | Conditionally | String | Represents the ACM certificate ARN. ACM certificate take preference over S3 or local file system certificates. Required if `useAcmCertForSSL` is set to `true`.
-`awsRegion` | Conditionally | String | Represents the AWS Region used by ACM or Amazon S3. Required if `useAcmCertForSSL` is set to `true` or `sslKeyCertChainFile` and `sslKeyFile` is the Amazon S3 path.
-`authentication` | No | Object | An authentication configuration. By default, an unauthenticated server is created for the pipeline. This uses pluggable authentication for HTTPS. To use basic authentication, define the `http_basic` plugin with a `username` and `password`. To provide customer authentication, use or create a plugin that implements [GrpcAuthenticationProvider](https://github.com/opensearch-project/data-prepper/blob/1.2.0/data-prepper-plugins/armeria-common/src/main/java/com/amazon/dataprepper/armeria/authentication/GrpcAuthenticationProvider.java).
+`port` | 否 | 整數 | OpenTelemtry 指標來源執行的連接埠。預設值為 `21891`。
+`request_timeout` | 否 | 整數 | 請求逾時，以毫秒為單位。預設值為 `10000`。
+`health_check_service` | 否 | 布林值 | 在 `grpc.health.v1/Health/Check` 下啟用 gRPC 健康狀態檢查服務。預設值為 `false`。
+`proto_reflection_service` | 否 | 布林值 | 為 Protobuf 服務啟用反射服務（請參閱 [gRPC 反射](https://github.com/grpc/grpc/blob/master/doc/server-reflection.md) 與 [gRPC 伺服器反射教學](https://github.com/grpc/grpc-java/blob/master/documentation/server-reflection-tutorial.md) 文件）。預設值為 `false`。
+`unframed_requests` | 否 | 布林值 | 啟用未使用 gRPC 傳輸協定框架的請求。
+`thread_count` | 否 | 整數 | 保留在 `ScheduledThreadPool` 中的執行緒數目。預設值為 `200`。
+`max_connection_count` | 否 | 整數 | 允許開啟的連線數上限。預設值為 `500`。
+| `output_format` | 字串 | 指定所產生事件的輸出格式。有效值為 `otel` 或 `opensearch`。預設值為 `opensearch`。 |
+`max_request_length` | 否 | ByteCount | 單一 gRPC 或 HTTP 請求的承載資料中允許的位元組數上限。預設值為 `10mb`。
+`ssl` | 否 | 布林值 | 啟用透過 TLS/SSL 連線至 OpenTelemetry 來源連接埠。預設值為 `true`。
+`sslKeyCertChainFile` | 有條件 | 字串 | 安全憑證的檔案系統路徑或 Amazon Simple Storage Service (Amazon S3) 路徑（例如 `"config/demo-data-prepper.crt"` 或 `"s3://my-secrets-bucket/demo-data-prepper.crt"`）。若 `ssl` 設為 `true` 則為必要。
+`sslKeyFile` | 有條件 | 字串 | 安全金鑰的檔案系統路徑或 Amazon S3 路徑（例如 `"config/demo-data-prepper.key"` 或 `"s3://my-secrets-bucket/demo-data-prepper.key"`）。若 `ssl` 設為 `true` 則為必要。
+`useAcmCertForSSL` | 否 | 布林值 | 是否使用 AWS Certificate Manager (ACM) 的憑證與私密金鑰啟用 TLS/SSL。預設值為 `false`。
+`acmCertificateArn` | 有條件 | 字串 | 代表 ACM 憑證 ARN。ACM 憑證優先於 S3 或本機檔案系統憑證。若 `useAcmCertForSSL` 設為 `true` 則為必要。
+`awsRegion` | 有條件 | 字串 | 代表 ACM 或 Amazon S3 使用的 AWS 區域。若 `useAcmCertForSSL` 設為 `true`，或 `sslKeyCertChainFile` 與 `sslKeyFile` 均為 Amazon S3 路徑，則為必要。
+`authentication` | 否 | 物件 | 驗證組態。根據預設，會為管線建立未經驗證的伺服器。這會使用可插拔的驗證機制來處理 HTTPS。若要使用基本驗證，請以 `username` 與 `password` 定義 `http_basic` 外掛程式。若要提供自訂驗證，請使用或建立實作 [GrpcAuthenticationProvider](https://github.com/opensearch-project/data-prepper/blob/1.2.0/data-prepper-plugins/armeria-common/src/main/java/com/amazon/dataprepper/armeria/authentication/GrpcAuthenticationProvider.java) 的外掛程式。
 
-## Usage
+## 使用方式
 
-To use the `otel-metrics` source, create the following `pipeline.yaml` file with `otel_metrics_source` as the source:
+若要使用 `otel-metrics` 來源，請建立下列以 `otel_metrics_source` 為來源的 `pipeline.yaml` 檔案：
 
 ```yaml
 source:
@@ -43,7 +44,7 @@ source:
 ```
 {% include copy.html %}
 
-To use the OpenTelemetry format for your output, set the `output_format` to `otel`, as shown in the following example:
+若要為輸出使用 OpenTelemetry 格式，請將 `output_format` 設為 `otel`，如下列範例所示：
 
 ```yaml
 source:
@@ -53,12 +54,12 @@ source:
 {% include copy.html %}
 
 
-## Metrics
+## 指標
 
-The `otel_metrics_source` source includes the following metrics.
+`otel_metrics_source` 來源包含下列指標。
 
-### Counters
+### 計數器
 
-- `requestTimeouts`: Measures the total number of requests that time out.
-- `requestsReceived`: Measures the total number of requests received by the OpenTelemetry metrics source.
+- `requestTimeouts`：測量逾時的請求總數。
+- `requestsReceived`：測量 OpenTelemetry 指標來源收到的請求總數。
 

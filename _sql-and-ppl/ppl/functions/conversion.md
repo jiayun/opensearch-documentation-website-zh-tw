@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Type conversion functions
+title: "類型轉換函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 4
 ---
 
-# Type conversion functions
+# 類型轉換函式
 
-The following type conversion functions are supported in PPL.
+PPL 支援下列類型轉換函式。
 
 ## CAST
 
-**Usage**: `cast(expr as dataType)`
+**用法**：`cast(expr as dataType)`
 
-Casts the expression to the specified data type and returns the converted value.
+將運算式轉換為指定的資料類型，並傳回轉換後的值。
 
-**Parameters**:
+**參數**：
 
-- `expr` (Required): The expression to cast to a different data type.
-- `dataType` (Required): The target data type for the cast operation.
+- `expr`（必要）：要轉換為其他資料類型的運算式。
+- `dataType`（必要）：轉換作業的目標資料類型。
 
-**Return type**: Specified by data type
+**回傳類型**：由資料類型指定
 
-The following table shows the conversion rules used for casting between data types:
+下表顯示資料類型之間轉換時所使用的轉換規則：
   
 <!-- vale off -->
 
@@ -39,12 +40,12 @@ The following table shows the conversion rules used for casting between data typ
 
 <!-- vale on -->
   
-Note1: The conversion follows the JDK specification.
-Note2: IP addresses are converted to their canonical representation. The canonical representation for IPv6 is described in [RFC 5952](https://datatracker.ietf.org/doc/html/rfc5952).
+Note1：轉換遵循 JDK 規格。
+Note2：IP 位址會轉換為其標準表示法。IPv6 的標準表示法詳見 [RFC 5952](https://datatracker.ietf.org/doc/html/rfc5952)。
 
-#### Example
+#### 範例
 
-The following example casts different data types to string:
+下列範例將不同的資料類型轉換為字串：
 
 ```sql
 source=people
@@ -53,7 +54,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -63,7 +64,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The following example casts values to integer type:
+下列範例將值轉換為整數類型：
 
 ```sql
 source=people
@@ -72,7 +73,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -82,7 +83,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The following example casts strings to date, time, and timestamp types:
+下列範例將字串轉換為 date、time 與 timestamp 類型：
 
 ```sql
 source=people
@@ -91,7 +92,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -101,7 +102,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The following example demonstrates chaining cast functions:
+下列範例示範鏈結多個轉換函式：
 
 ```sql
 source=people
@@ -110,7 +111,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -120,20 +121,20 @@ The query returns the following results:
 
 <!-- vale on -->
   
-## Implicit type conversion  
+## 隱含類型轉換  
 
-Implicit conversion is automatic casting. When a function does not have an exact match for the input types, the engine looks for another signature that can safely handle the values. It selects the option that requires the least conversion of the original types, so you can mix literals and fields without adding explicit `cast` functions.
+隱含轉換是自動的類型轉換。當函式沒有與輸入類型完全相符的簽名時，引擎會尋找另一個能安全處理這些值的簽名。它會選擇需要對原始類型進行最少轉換的選項，因此您可以在不加入明確 `cast` 函式的情況下混合使用字面值與欄位。
 
-### String to numeric type conversion
+### 字串轉數值類型
 
-When a string is used where a numeric value is expected, the engine attempts to parse the string as a number:
+當字串被用在需要數值的地方時，引擎會嘗試將該字串剖析為數字：
 
-- The string must represent a valid numeric value, such as `"3.14"` or `"42"`. Any other value causes the query to fail.
-- If a string is used alongside numeric arguments, the engine treats it as a `DOUBLE` so that the numeric overload of the function can be applied.
+- 字串必須代表有效的數值，例如 `"3.14"` 或 `"42"`。任何其他值都會導致查詢失敗。
+- 如果字串與數值引數一起使用，引擎會將它視為 `DOUBLE`，以便套用函式的數值版本。
 
-#### Example
+#### 範例
 
-The following example demonstrates using strings in arithmetic operations:
+下列範例示範在算術運算中使用字串：
 
 ```sql
 source=people
@@ -142,7 +143,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -152,7 +153,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The following example demonstrates using strings in comparison operations:
+下列範例示範在比較運算中使用字串：
 
 ```sql
 source=people
@@ -161,7 +162,7 @@ source=people
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -173,28 +174,28 @@ The query returns the following results:
   
 ## TOSTRING
 
-**Usage**: `tostring(value[, format])`
+**用法**：`tostring(value[, format])`
 
-Converts the value to a string representation. If a format is provided, converts numbers to the specified format type. For Boolean values, converts to `TRUE` or `FALSE`.
+將值轉換為字串表示法。若有提供格式，則將數字轉換為指定的格式類型。對於布林值，會轉換為 `TRUE` 或 `FALSE`。
 
-**Parameters**:
+**參數**：
 
-- `value` (Required): The value to convert to string (any data type).
-- `format` (Optional): The format type for number conversion. This parameter is only used when `value` is a number. If `value` is a Boolean, this parameter is ignored.
+- `value`（必要）：要轉換為字串的值（任何資料類型）。
+- `format`（選用）：數字轉換所使用的格式類型。此參數僅在 `value` 為數字時使用。若 `value` 為布林值，則會忽略此參數。
 
-Format types:
+格式類型：
 
-- `binary`: Converts a number to a binary value.
-- `hex`: Converts the number to a hexadecimal value.
-- `commas`: Formats the number using commas. If the number includes a decimal, the function rounds the number to the nearest two decimal places.
-- `duration`: Converts the value in seconds to the readable time format `HH:MM:SS`.
-- `duration_millis`: Converts the value in milliseconds to the readable time format `HH:MM:SS`.
+- `binary`：將數字轉換為二進位值。
+- `hex`：將數字轉換為十六進位值。
+- `commas`：使用逗號格式化數字。若數字包含小數，函式會將數字四捨五入至最接近的兩位小數。
+- `duration`：將以秒為單位的值轉換為可讀的時間格式 `HH:MM:SS`。
+- `duration_millis`：將以毫秒為單位的值轉換為可讀的時間格式 `HH:MM:SS`。
 
-**Return type**: `STRING`
+**回傳類型**：`STRING`
 
-#### Example
+#### 範例
 
-The following example converts a number to its binary string representation:
+下列範例將數字轉換為其二進位字串表示法：
 
 ```sql
 source=accounts
@@ -204,7 +205,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -214,7 +215,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The following example converts a number to its hexadecimal string representation:
+下列範例將數字轉換為其十六進位字串表示法：
 
 ```sql
 source=accounts
@@ -224,7 +225,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -234,7 +235,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The following example formats numbers with comma separators:
+下列範例以逗號分隔符格式化數字：
   
 ```sql
 source=accounts
@@ -244,7 +245,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -254,9 +255,9 @@ The query returns the following results:
 
 <!-- vale on -->
   
-### Example: Convert seconds to duration format
+### 範例：將秒數轉換為時長格式
 
-The following example converts the number of seconds to the `HH:MM:SS` format representing hours, minutes, and seconds:
+下列範例將秒數轉換為代表時、分、秒的 `HH:MM:SS` 格式：
   
 ```sql
 source=accounts
@@ -266,7 +267,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -276,7 +277,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The following example converts a Boolean value to string:
+下列範例將布林值轉換為字串：
   
 ```sql
 source=accounts
@@ -286,7 +287,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -298,26 +299,26 @@ The query returns the following results:
 
 ## TONUMBER
 
-**Usage**: `tonumber(string[, base])`
+**用法**：`tonumber(string[, base])`
 
-Converts the string value to a number. The optional `base` parameter specifies the base of the input string. If not provided, the function assumes base `10`.
+將字串值轉換為數字。選用的 `base` 參數指定輸入字串的基數。若未提供，函式會假設基數為 `10`。
 
-**Parameters**:
+**參數**：
 
-- `string` (Required): The string representation of the number to convert.
-- `base` (Optional): The base of the input string (between `2` and `36`). Defaults to `10`.
+- `string`（必要）：要轉換之數字的字串表示法。
+- `base`（選用）：輸入字串的基數（介於 `2` 與 `36` 之間）。預設為 `10`。
 
-**Return type**: `NUMBER`
+**回傳類型**：`NUMBER`
 
-You can use this function with `eval` commands and as part of `eval` expressions. Base values can be between `2` and `36`.
+您可以在 `eval` 命令中使用此函式，也可以將它用於 `eval` 運算式。基數值可介於 `2` 與 `36` 之間。
 
-**Value limits**:
-- Base 10: Maximum is `+(2-2^-52)·2^1023` and minimum is `-(2-2^-52)·2^1023`.
-- Other bases: Maximum is `2^63-1` (or `7FFFFFFFFFFFFFFF`) and minimum is `-2^63` (or `-7FFFFFFFFFFFFFFF`).
+**數值限制**：
+- 基數 10：最大值為 `+(2-2^-52)·2^1023`，最小值為 `-(2-2^-52)·2^1023`。
+- 其他基數：最大值為 `2^63-1`（或 `7FFFFFFFFFFFFFFF`），最小值為 `-2^63`（或 `-7FFFFFFFFFFFFFFF`）。
 
-If the `tonumber` function cannot parse a field value to a number, the function returns `NULL`. You can use this function to convert string representations of numbers in various bases to their corresponding base 10 values.
+若 `tonumber` 函式無法將欄位值剖析為數字，函式會傳回 `NULL`。您可以使用此函式將各種基數的數字字串表示法轉換為對應的基數 10 值。
 
-#### Example: Convert a binary string to a number
+#### 範例：將二進位字串轉換為數字
 
 ```sql
 source=people
@@ -327,7 +328,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -337,7 +338,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-#### Example: Convert a hexadecimal string to a number
+#### 範例：將十六進位字串轉換為數字
 
 ```sql
 source=people
@@ -347,7 +348,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -357,7 +358,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-#### Example: Convert a decimal string without a decimal part to a number
+#### 範例：將不含小數部分的十進位字串轉換為數字
 
 ```sql
 source=people
@@ -367,7 +368,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -377,7 +378,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-#### Example: Convert a decimal string with a decimal part to a number
+#### 範例：將含小數部分的十進位字串轉換為數字
 
 ```sql
 source=people
@@ -387,7 +388,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 

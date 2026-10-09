@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Memory and context
+title: "記憶與情境"
 nav_order: 40
 has_children: true
 has_toc: false
 ---
 
-# Memory and context
+# 記憶與情境
 
-OpenSearch provides intelligent memory and context management systems that enable AI agents to maintain persistent knowledge and conversation context across sessions.
+OpenSearch 提供智慧型記憶與情境管理系統，讓 AI 代理程式能夠跨工作階段維持持久的知識與對話情境。
 
-## Memory systems
+## 記憶系統
 
-OpenSearch offers two complementary memory approaches:
+OpenSearch 提供兩種互補的記憶方式：
 
-- **[Agentic memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/)**: An intelligent memory system that uses large language models (LLMs) to extract insights, learn user preferences, and maintain contextual knowledge across agent interactions.
+- **[代理式記憶]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/)**：一種智慧型記憶系統，使用大型語言模型（LLM）擷取洞見、學習使用者偏好，並在代理程式互動之間維持情境知識。
 
-- **[Context management]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/)**: A structured approach to managing conversation context and system state for AI agents and applications.
+- **[情境管理]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/)**：一種結構化方法，用於管理 AI 代理程式與應用程式的對話情境和系統狀態。
 
-## Related APIs
+## 相關 API
 
-For programmatic access to memory and context features, see:
+若要透過程式存取記憶與情境功能，請參閱：
 
-- **[Agentic Memory APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/)**: Complete API reference for managing memory containers, sessions, and memories.
-- **[Context Management APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/)**: API reference for creating and managing conversation contexts.
+- **[Agentic Memory APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/)**：管理記憶容器、工作階段與記憶的完整 API 參考文件。
+- **[Context Management APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/)**：建立與管理對話情境的 API 參考文件。

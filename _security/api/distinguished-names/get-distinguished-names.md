@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get distinguished names
+title: "取得辨別名稱"
 parent: Distinguished name APIs
 grand_parent: Security APIs
 nav_order: 30
 ---
 
 # Get Distinguished Names API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Retrieves the distinguished names in the allow list. Specify a cluster name to retrieve the distinguished names for one cluster or node, or omit the cluster name to retrieve them for all clusters and nodes.
+擷取允許清單中的辨別名稱。指定叢集名稱可擷取單一叢集或節點的辨別名稱，或省略叢集名稱以擷取所有叢集和節點的辨別名稱。
 
-This API is reserved for a superadmin. Authenticate with an admin certificate rather than with a user name and password. For more information, see [Access control for the API]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api).
+此 API 保留給超級管理員使用。請使用管理員憑證進行驗證，而非使用者名稱和密碼。如需更多資訊，請參閱[API 的存取控制]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api)。
 {: .note}
 
 <!-- spec_insert_start
 api: security.get_distinguished_names
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_plugins/_security/api/nodesdn
 ```
@@ -34,41 +35,41 @@ GET /_plugins/_security/api/nodesdn/{cluster_name}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required | Description |
+| 參數 | 資料類型 | 必要 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `cluster_name` | String | No | The name of the cluster whose node distinguished names you want to retrieve. If omitted, the distinguished names for all clusters and nodes are returned. |
+| `cluster_name` | 字串 | 否 | 您要擷取其節點辨別名稱的叢集名稱。若省略，則會傳回所有叢集和節點的辨別名稱。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `show_all` | Boolean | Whether to include the statically configured node distinguished names in the response. |
+| `show_all` | 布林值 | 是否在回應中包含靜態設定的節點辨別名稱。 |
 
-## Example request
+## 範例請求
 
-The following request retrieves the distinguished names for all clusters and nodes:
+下列請求會擷取所有叢集和節點的辨別名稱：
 
 ```json
 GET _plugins/_security/api/nodesdn
 ```
 {% include copy-curl.html security=true %}
 
-The following request retrieves the distinguished names for the `cluster3` cluster:
+下列請求會擷取 `cluster3` 叢集的辨別名稱：
 
 ```json
 GET _plugins/_security/api/nodesdn/cluster3
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
-The response to a request for all clusters and nodes contains one entry per cluster:
+針對所有叢集和節點的請求，其回應會為每個叢集包含一個項目：
 
 ```json
 {
@@ -80,7 +81,7 @@ The response to a request for all clusters and nodes contains one entry per clus
 }
 ```
 
-When you retrieve the distinguished names for one cluster, the response contains only that cluster:
+當您擷取單一叢集的辨別名稱時，回應只會包含該叢集：
 
 ```json
 {

@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Clone snapshot
+title: "複製快照"
 parent: Snapshot APIs
 nav_order: 10
 ---
 
 # Clone Snapshot API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-Creates a clone of all or part of a snapshot in the same repository as the original.
+在與原始快照相同的儲存庫中，建立整個或部分快照的複本。
 
 
 <!-- spec_insert_start
 api: snapshot.clone
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PUT /_snapshot/{repository}/{snapshot}/_clone/{target_snapshot}
 ```
@@ -26,15 +27,15 @@ PUT /_snapshot/{repository}/{snapshot}/_clone/{target_snapshot}
 api: snapshot.clone
 component: path_parameters
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required | Data type | Description |
+| 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `repository` | **Required** | String | The name of repository which will contain the snapshots clone. |
-| `snapshot` | **Required** | String | The name of the original snapshot. |
-| `target_snapshot` | **Required** | String | The name of the cloned snapshot. |
+| `repository` | **必要** | String | 將包含快照複本的儲存庫名稱。 |
+| `snapshot` | **必要** | String | 原始快照的名稱。 |
+| `target_snapshot` | **必要** | String | 複製後快照的名稱。 |
 
 <!-- spec_insert_end -->
 
@@ -44,20 +45,20 @@ api: snapshot.clone
 component: query_parameters
 include_deprecated: false
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `cluster_manager_timeout` | String | The amount of time to wait for a response from the cluster manager node. For more information about supported time units, see [Common parameters]({{site.url}}{{site.baseurl}}/api-reference/units/#time-units). |
+| `cluster_manager_timeout` | String | 等待叢集管理員節點回應的時間。如需支援的時間單位詳細資訊，請參閱 [Common parameters]({{site.url}}{{site.baseurl}}/api-reference/units/#time-units)。 |
 
 <!-- spec_insert_end -->
 
 
-## Example request
+## 範例請求
 
-The following request clones indexes `index_a` and `index_b` from `my_snapshot`, a snapshot located in the snapshot repository `my-opensearch-repo`, into a new snapshot in the same repository called `my_new_snapshot`:
+下列請求會將快照儲存庫 `my-opensearch-repo` 中名為 `my_snapshot` 的快照內的索引 `index_a` 與 `index_b`，複製到同一儲存庫中名為 `my_new_snapshot` 的新快照：
 
 <!-- spec_insert_start
 component: example_code
@@ -96,9 +97,9 @@ response = client.snapshot.clone(
 <!-- spec_insert_end -->
 
 
-## Example response
+## 範例回應
 
-The successful creation of a snapshot clone returns the following response:
+成功建立快照複本會傳回下列回應：
 
 ```json
 { 
@@ -106,6 +107,6 @@ The successful creation of a snapshot clone returns the following response:
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/snapshot/clone`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:admin/snapshot/clone`。

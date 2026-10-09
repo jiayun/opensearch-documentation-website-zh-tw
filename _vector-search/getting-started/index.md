@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Getting started
+title: "入門"
 nav_order: 10
 has_children: true
 has_toc: false
@@ -8,38 +9,38 @@ redirect_from:
   - /vector-search/getting-started/
 ---
 
-# Getting started with vector search
+# 向量搜尋入門
 
-This guide shows you how to use your own vectors in OpenSearch. You'll learn to create a vector index, add location data, and run a vector search to find the nearest hotels on a coordinate plane. While this example uses two-dimensional vectors for simplicity, the same approach applies to higher-dimensional vectors used in semantic search and recommendation systems.
+本指南說明如何在 OpenSearch 中使用您自己的向量。您將學會建立向量索引、新增位置資料，並執行向量搜尋，在座標平面上找出最近的飯店。雖然這個範例為了簡化而使用二維向量，但相同做法也適用於語意搜尋和推薦系統中使用的高維向量。
 
 
-## Prerequisite: Install OpenSearch
+## 先決條件：安裝 OpenSearch
   
 
 <details markdown="block">
   <summary>
-  If you don't have OpenSearch installed, follow these steps to create a cluster.
+  如果您尚未安裝 OpenSearch，請依照下列步驟建立叢集。
   </summary>
 
-Before you start, ensure that [Docker](https://docs.docker.com/get-docker/) is installed and running in your environment. <br>
-This demo configuration is insecure and should not be used in production environments.
+開始之前，請確認您的環境中已安裝並執行 [Docker](https://docs.docker.com/get-docker/)。<br>
+此示範組態並不安全，不應在正式環境中使用。
 {: .note} 
 
-Download and run OpenSearch: 
+下載並執行 OpenSearch：
 
 ```bash
 docker pull opensearchproject/opensearch:latest && docker run -it -p 9200:9200 -p 9600:9600 -e "discovery.type=single-node" -e "DISABLE_SECURITY_PLUGIN=true" opensearchproject/opensearch:latest
 ```
 {% include copy.html %}
 
-OpenSearch is now running on port 9200. To verify that OpenSearch is running, send the following request: 
+OpenSearch 現在執行於連接埠 9200。若要確認 OpenSearch 正在執行，請傳送下列請求：
 
 ```bash
 curl http://localhost:9200
 ```
 {% include copy.html %}
 
-You should get a response that looks like this:
+您應該會收到類似以下的回應：
 
 ```json
 {
@@ -61,20 +62,20 @@ You should get a response that looks like this:
 }
 ```
 
-For more information, see [Installation quickstart]({{site.url}}{{site.baseurl}}/getting-started/quickstart/) and [Install and configure OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/).
+如需更多資訊，請參閱[安裝快速入門]({{site.url}}{{site.baseurl}}/getting-started/quickstart/)和[安裝及設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/)。
 
 </details>
 
-## Running API requests
+## 執行 API 請求
 
-This guide includes API request examples that you can run in several ways:
+本指南包含 API 請求範例，您可以用幾種方式執行：
 
-- **OpenSearch Dashboards Dev Tools console** (recommended): Open OpenSearch Dashboards at `http://localhost:5601`, select **Dev Tools** in the upper-right corner, and paste the request. Select the request and choose the play button. For more information, see [Running queries in the console]({{site.url}}{{site.baseurl}}/dashboards/visualize/run-queries/).
-- **cURL**: Use the **Copy as cURL** button next to each code example to copy the request in cURL format, then paste and run it in your terminal.
+- **OpenSearch Dashboards Dev Tools 主控台**（建議）：在 `http://localhost:5601` 開啟 OpenSearch Dashboards，選取右上角的 **Dev Tools**，然後貼上請求。選取該請求並選擇播放按鈕。如需更多資訊，請參閱[在主控台中執行查詢]({{site.url}}{{site.baseurl}}/dashboards/visualize/run-queries/)。
+- **cURL**：使用每個程式碼範例旁的 **Copy as cURL** 按鈕，以 cURL 格式複製請求，然後在終端機中貼上並執行。
 
-## Step 1: Create a vector index
+## 步驟 1：建立向量索引
 
-First, create an index that will store sample hotel data. To signal to OpenSearch that this is a vector index, set `index.knn` to `true`. You'll store the vectors in a vector field named `location`. The vectors you'll ingest will be two-dimensional, and the distance between vectors will be calculated using the [Euclidean `l2` similarity metric]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-basics/#calculating-similarity):
+首先，建立一個將儲存範例飯店資料的索引。若要向 OpenSearch 表示這是向量索引，請將 `index.knn` 設為 `true`。您會將向量儲存在名為 `location` 的向量欄位中。您將匯入的向量是二維的，而向量之間的距離會使用[歐幾里得 `l2` 相似度計量]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-basics/#calculating-similarity)計算：
 
 ```json
 PUT /hotels-index
@@ -95,13 +96,13 @@ PUT /hotels-index
 ```
 {% include copy-curl.html %}
 
-To use a different method or engine, see [Methods and engines]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/).
+若要使用不同的方法或引擎，請參閱[方法與引擎]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/)。
 
-Vector queries usually have a `size` > 0, so by default they don't enter the request cache. In OpenSearch 2.19 or later, if your workload mostly consists of vector queries, consider increasing the dynamic `indices.requests.cache.maximum_cacheable_size` cluster setting to a larger value, such as `256`. This allows queries with a `size` of up to 256 to enter the request cache, improving performance. For more information, see [Request cache]({{site.url}}{{site.baseurl}}/search-plugins/caching/request-cache/).
+向量查詢通常會有 `size` > 0，因此預設不會進入請求快取。在 OpenSearch 2.19 或更新版本中，如果您的工作負載大多由向量查詢組成，請考慮將動態 `indices.requests.cache.maximum_cacheable_size` 叢集設定調高為更大的值，例如 `256`。這可讓 `size` 最高為 256 的查詢進入請求快取，進而提升效能。如需更多資訊，請參閱[請求快取]({{site.url}}{{site.baseurl}}/search-plugins/caching/request-cache/)。
 
-## Step 2: Add data to your index
+## 步驟 2：將資料新增至您的索引
 
-Next, add data to your index. Each document represents a hotel. The `location` field in each document contains a two-dimensional vector specifying the hotel's location:
+接著，將資料新增至您的索引。每份文件代表一間飯店。每份文件中的 `location` 欄位包含指定該飯店位置的二維向量：
 
 ```json
 POST /_bulk
@@ -118,9 +119,9 @@ POST /_bulk
 ```
 {% include copy-curl.html %}
 
-## Step 3: Search your data
+## 步驟 3：搜尋您的資料
 
-Now search for hotels closest to the pin location `[5, 4]`. To search for the top three closest hotels, set `k` to `3`:
+現在搜尋最接近圖釘位置 `[5, 4]` 的飯店。若要搜尋最接近的三間飯店，請將 `k` 設為 `3`：
 
 ```json
 POST /hotels-index/_search
@@ -138,11 +139,11 @@ POST /hotels-index/_search
 ```
 {% include copy-curl.html %}
 
-The following image shows the hotels on the coordinate plane. The query point is labeled `Pin`, and each hotel is labeled with its document number.
+下圖顯示座標平面上的飯店。查詢點標示為 `Pin`，而每間飯店都標有其文件編號。
 
-![Hotels on a coordinate plane]({{site.url}}{{site.baseurl}}/images/k-nn-search-hotels.png){:style="width: 400px;" class="img-centered"}
+![座標平面上的飯店]({{site.url}}{{site.baseurl}}/images/k-nn-search-hotels.png){:style="width: 400px;" class="img-centered"}
 
-The response contains the hotels closest to the specified pin location:
+回應包含最接近指定圖釘位置的飯店：
 
 ```json
 {
@@ -199,13 +200,13 @@ The response contains the hotels closest to the specified pin location:
 }
 ```
 
-## Generating vector embeddings automatically
+## 自動產生向量嵌入
 
-If your data isn't already in vector format, you can generate vector embeddings directly within OpenSearch. This allows you to transform text or images into their numerical representations for similarity search. For more information, see [Generating vector embeddings automatically]({{site.url}}{{site.baseurl}}/vector-search/getting-started/auto-generated-embeddings/).
+如果您的資料尚未是向量格式，您可以直接在 OpenSearch 中產生向量嵌入。這可讓您將文字或圖片轉換為其數值表示，以進行相似度搜尋。如需更多資訊，請參閱[自動產生向量嵌入]({{site.url}}{{site.baseurl}}/vector-search/getting-started/auto-generated-embeddings/)。
 
-## Next steps
+## 後續步驟
 
-- [Vector search basics]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-basics/)
-- [Preparing vectors]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-options/)
-- [Vector search with filters]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/)
-- [Generating vector embeddings automatically]({{site.url}}{{site.baseurl}}/vector-search/getting-started/auto-generated-embeddings/)
+- [向量搜尋基本概念]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-basics/)
+- [準備向量]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-options/)
+- [使用篩選條件的向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/)
+- [自動產生向量嵌入]({{site.url}}{{site.baseurl}}/vector-search/getting-started/auto-generated-embeddings/)

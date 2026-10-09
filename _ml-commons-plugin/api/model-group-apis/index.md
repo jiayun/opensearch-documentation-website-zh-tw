@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Model group APIs
+title: "模型群組 API"
 parent: ML Commons APIs
 has_children: true
 has_toc: false
@@ -9,12 +10,12 @@ redirect_from:
   - /ml-commons-plugin/api/model-group-apis/
 ---
 
-# Model group APIs
+# 模型群組 API
 
-ML Commons supports the following model-group-level APIs:
+ML Commons 支援下列模型群組層級的 API：
 
-- [Register model group]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/register-model-group/)
-- [Update model group]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/update-model-group/)
-- [Get model group]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/get-model-group/)
-- [Search model group]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/search-model-group/)
-- [Delete model group]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/delete-model-group/)
+- [註冊模型群組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/register-model-group/)
+- [更新模型群組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/update-model-group/)
+- [取得模型群組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/get-model-group/)
+- [搜尋模型群組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/search-model-group/)
+- [刪除模型群組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/delete-model-group/)

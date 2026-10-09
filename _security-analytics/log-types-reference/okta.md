@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Okta
 parent: Supported log types
 nav_order: 80
 ---
 
-# Okta log type
+# Okta 記錄檔類型
 
-The `okta` log type records Okta events generated from a range of actions, such as downloading an export file, requesting application access, or revoking privileges.
+`okta` 記錄檔類型會記錄由各種動作產生的 Okta 事件，例如下載匯出檔案、要求應用程式存取權，或撤銷權限。
 
-The following code snippet contains all the `raw_field` and `ecs` mappings for this log type:
+下列程式碼片段包含此記錄檔類型的所有 `raw_field` 和 `ecs` 對應：
 
 ```json
   "mappings": [

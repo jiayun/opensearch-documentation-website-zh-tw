@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cartesian field types
+title: "笛卡兒欄位類型"
 nav_order: 65
 has_children: true
 has_toc: false
@@ -11,20 +12,20 @@ redirect_from:
   - /field-types/xy/
 ---
 
-# Cartesian field types
+# 笛卡兒欄位類型
 
-Cartesian field types facilitate indexing and searching of points and shapes in a two-dimensional Cartesian coordinate system. Cartesian field types are similar to [geographic]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geographic/) field types, except they represent points and shapes on the Cartesian plane, which is not based on the Earth-fixed terrestrial reference system. Calculating distances on a plane is more efficient than calculating distances on a sphere, so distance sorting is faster for Cartesian field types. 
+笛卡兒欄位類型可協助在二維笛卡兒座標系統中，為點和形狀編製索引及進行搜尋。笛卡兒欄位類型類似於[地理]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geographic/)欄位類型，差別在於它們代表笛卡兒平面上的點和形狀，而該平面並非以地球固定的陸地參考系統為基礎。在平面上計算距離比在球面上計算距離更有效率，因此笛卡兒欄位類型的距離排序速度更快。
 
-Cartesian field types work well for spatial applications like virtual reality, computer-aided design (CAD), and amusement park and sporting venue mapping. 
+笛卡兒欄位類型非常適合虛擬實境、電腦輔助設計 (CAD)，以及遊樂園和運動場館地圖繪製等空間應用。
 
-The coordinates for the Cartesian field types are single-precision floating-point values. For information about the range and precision of floating-point values, see [Numeric field types]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/).
+笛卡兒欄位類型的座標為單精度浮點值。如需浮點值的範圍和精確度相關資訊，請參閱[數值欄位類型]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/)。
 
-The following table lists all Cartesian field types that OpenSearch supports.
+下表列出 OpenSearch 支援的所有笛卡兒欄位類型。
 
-Field data type | Description
+欄位資料類型 | 說明
 :--- | :---  
-[`xy_point`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy-point/) | A point in a two-dimensional Cartesian coordinate system, specified by x and y coordinates. 
-[`xy_shape`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy-shape/) | A shape, such as a polygon or a collection of xy points, in a two-dimensional Cartesian coordinate system. 
+[`xy_point`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy-point/) | 二維笛卡兒座標系統中的點，由 x 和 y 座標指定。
+[`xy_shape`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/xy-shape/) | 二維笛卡兒座標系統中的形狀，例如多邊形或 xy 點的集合。
 
-OpenSearch supports indexing and searching of Cartesian field types but not aggregations on Cartesian field types. If you'd like to see aggregations implemented, open a [GitHub issue](https://github.com/opensearch-project/geospatial).
+OpenSearch 支援為笛卡兒欄位類型編製索引及進行搜尋，但不支援對笛卡兒欄位類型進行彙總。如果您希望我們實作彙總功能，請開啟 [GitHub issue](https://github.com/opensearch-project/geospatial)。
 {: .note}

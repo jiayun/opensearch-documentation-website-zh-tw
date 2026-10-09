@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Functions
+title: "函式"
 nav_order: 10
 ---
 
-# SQL and PPL common functions
+# SQL 與 PPL 通用函式
 
-OpenSearch supports the following common functions shared across the SQL and PPL languages. Most functions work in both SQL (with `SELECT`) and PPL (with `source` and `eval`/`where`). Functions available only in SQL are marked with an asterisk (\*).
+OpenSearch 支援下列在 SQL 與 PPL 語言間共用的通用函式。大多數函式可同時用於 SQL（搭配 `SELECT`）與 PPL（搭配 `source` 與 `eval`/`where`）。僅在 SQL 中可用的函式會以星號（\*）標示。
 
-You must enable field data in the document mapping for most string functions to work properly.
+您必須在文件對應中啟用 field data，大多數字串函式才能正常運作。
 
-The specification shows the return type of the function with a generic type `T` as the argument.
-For example, `abs(number T) -> T` means that the function `abs` accepts a numerical argument of type `T`, which could be any subtype of the `number` type, and it returns the actual type of `T` as the return type.
+規格中以泛型型別 `T` 作為引數來顯示函式的回傳型別。
+例如，`abs(number T) -> T` 表示函式 `abs` 接受型別為 `T` 的數值引數，該型別可以是 `number` 型別的任何子型別，並且回傳實際型別 `T` 作為回傳型別。
 
-## Mathematical
+## 數學
 
-| Function   | Specification                                                    | Example                                        |
+| 函式   | 規格                                                    | 範例                                        |
 |:-----------|:-----------------------------------------------------------------|:-----------------------------------------------|
 | `abs`      | `abs(number T) -> T`                                             | `abs(0.5)`                              |
 | `add`      | `add(number T, number T) -> T`                                   | `add(1, 5)`                             |
@@ -53,9 +54,9 @@ For example, `abs(number T) -> T` means that the function `abs` accepts a numeri
 | `/`        | `number T / number T -> T`                                       | `1 / 0.5`                               |
 | `%`        | `number T % number T -> T`                                       | `2 % 3`                                 |
 
-## Trigonometric
+## 三角函式
 
-| Function  | Specification                         | Example                |
+| 函式  | 規格                         | 範例                |
 |:----------|:--------------------------------------|:-----------------------|
 | `acos`    | `acos(number T) -> double`            | `acos(0.5)`     |
 | `asin`    | `asin(number T) -> double`            | `asin(0.5)`     |
@@ -70,9 +71,9 @@ For example, `abs(number T) -> T` means that the function `abs` accepts a numeri
 | `sinh`    | `sinh(number T) -> double`            | `sinh(0.5)`     |
 | `tan`     | `tan(number T) -> double`             | `tan(0.5)`      |
 
-## Date and time
+## 日期與時間
 
-| Function             | Specification                                                                          | Example                                                                             |
+| 函式             | 規格                                                                          | 範例                                                                             |
 |:---------------------|:---------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------|
 | `adddate`            | `adddate(date, INTERVAL expr unit) -> date`                                            | `adddate(date('2020-08-26'), INTERVAL 1 hour)`                               |
 | `addtime`            | `addtime(date, date) -> date`                                                          | `addtime(date('2008-12-12'), date('2008-12-12'))`                            |
@@ -86,7 +87,7 @@ For example, `abs(number T) -> T` means that the function `abs` accepts a numeri
 | `datediff`           | `datediff(date, date) -> integer`                                                      | `datediff(date('2000-01-02'), date('2000-01-01'))`                           |
 | `datetime`           | `datetime(string) -> datetime`                                                         | `datetime('2008-12-25 00:00:00')`                                            |
 | `date_add`           | `date_add(date, INTERVAL integer UNIT)`                                                | `date_add('2020-08-26', INTERVAL 1 HOUR)`                                    |
-| `date_format`        | `date_format(date, string) -> string` or `date_format(date, string, string) -> string` | `date_format(date('2020-08-26'), 'Y')`                                       |
+| `date_format`        | `date_format(date, string) -> string` 或 `date_format(date, string, string) -> string` | `date_format(date('2020-08-26'), 'Y')`                                       |
 | `date_sub`           | `date_sub(date, INTERVAL expr unit) -> date`                                           | `date_sub(date('2008-01-02'), INTERVAL 31 day)`                              |
 | `dayofmonth`         | `dayofmonth(date) -> integer`                                                          | `dayofmonth(date('2001-05-07'))`                                             |
 | `day`                | `day(date) -> integer`                                                                 | `day(date('2020-08-25'))`                                                    |
@@ -145,16 +146,16 @@ For example, `abs(number T) -> T` means that the function `abs` accepts a numeri
 | `year`               | `year(date) -> integer`                                                                | `year(date('2001-07-05'))`                                                   |
 | `yearweek`           | `yearweek(date[mode])  -> integer`                                                     | `yearweek(date('2008-02-20'))`                                               |
 
-## String
+## 字串
 
-| Function    | Specification                                                                       | Example                                                        |
+| 函式    | 規格                                                                       | 範例                                                        |
 |:------------|:------------------------------------------------------------------------------------|:---------------------------------------------------------------|
 | `ascii`\*   | `ascii(string) -> integer`                                                          | `ascii('h')`                                            |
 | `concat`    | `concat(string, string) -> string`                                                  | `concat('hello', 'world')`                              |
 | `concat_ws` | `concat_ws(separator, string, string…) -> string`                                   | `concat_ws(" ", "Hello", "World!")`                     |
 | `left`\*    | `left(string, integer) -> string`                                                   | `left('hello', 2)`                                      |
 | `length`    | `length(string) -> integer`                                                         | `length('hello')`                                       |
-| `locate`    | `locate(string, string, integer) -> integer` or `locate(string, string) -> integer` | `locate('o', 'hello')`, `locate('l', 'hello world', 5)` |
+| `locate`    | `locate(string, string, integer) -> integer` 或 `locate(string, string) -> integer` | `locate('o', 'hello')`、`locate('l', 'hello world', 5)` |
 | `replace`   | `replace(string, string, string) -> string`                                         | `replace('hello', 'l', 'x')`                            |
 | `right`     | `right(string, integer) -> string`                                                  | `right('hello', 2)`                                     |
 | `rtrim`     | `rtrim(string) -> string`                                                           | `rtrim('hello   ')`                                     |
@@ -162,23 +163,23 @@ For example, `abs(number T) -> T` means that the function `abs` accepts a numeri
 | `trim`      | `trim(string) -> string`                                                            | `trim('   hello')`                                      |
 | `upper`     | `upper(string) -> string`                                                           | `upper('hello world')`                                  |
 
-## Aggregate
+## 彙總
 
-| Function | Specification            | Example                            |
+| 函式 | 規格            | 範例                            |
 |:---------|:-------------------------|:-----------------------------------|
 | `avg`    | `avg(number T) -> T`     | `avg(column)` |
 | `count`  | `count(number T) -> T`   | `count(date)` |
 | `min`    | `min(number T) -> T`     | `min(column)` |
 | `show`\* | `show(string) -> string` | `SHOW TABLES LIKE my-index`        |
 
-## Advanced
+## 進階
 
-| Function | Specification                              | Example                                 |
+| 函式 | 規格                              | 範例                                 |
 |:---------|:-------------------------------------------|:----------------------------------------|
-| `if`     | `if(boolean, os_type, os_type) -> os_type` | `if(false, 0, 1)`, `if(true, 0, 1)` |
-| `ifnull` | `ifnull(os_type, os_type) -> os_type`      | `ifnull(0, 1)`, `ifnull(null, 1)`  |
-| `isnull` | `isnull(os_type) -> integer`               | `isnull(null)`, `isnull(1)`        |
+| `if`     | `if(boolean, os_type, os_type) -> os_type` | `if(false, 0, 1)`、`if(true, 0, 1)` |
+| `ifnull` | `ifnull(os_type, os_type) -> os_type`      | `ifnull(0, 1)`、`ifnull(null, 1)`  |
+| `isnull` | `isnull(os_type) -> integer`               | `isnull(null)`、`isnull(1)`        |
 
-## Relevance-based search (full-text search)
+## 以相關性為基礎的搜尋 (全文搜尋)
 
-These functions are only available in the `WHERE` clause. For their descriptions and usage examples in SQL and PPL, see [Full-text search]({{site.url}}{{site.baseurl}}/search-plugins/sql/full-text/).
+這些函式僅能在 `WHERE` 子句中 使用。如需其在 SQL 與 PPL 中的說明及使用範例，請參閱[全文搜尋]({{site.url}}{{site.baseurl}}/search-plugins/sql/full-text/)。

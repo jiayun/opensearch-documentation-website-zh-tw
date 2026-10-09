@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Migration Console
 nav_order: 50
@@ -10,6 +11,6 @@ permalink: /classic/migration-assistant/migration-console/
 
 # Migration Console
 
-The Migration Assistant deployment includes an Amazon Elastic Container Service (Amazon ECS) task that hosts tools that run different phases of the migration and check the progress or results of the migration. This ECS task is called the **Migration Console**. The Migration Console is a command line interface used to interact with the deployed components of the solution.
+Migration Assistant 部署包含一個 Amazon Elastic Container Service (Amazon ECS) 任務，該任務託管了用於執行遷移各個階段，以及檢查遷移進度或結果的工具。此 ECS 任務稱為 **Migration Console**。Migration Console 是一個命令列介面，用於與解決方案的已部署元件互動。
 
-This section provides information about how to access the Migration Console and what commands are supported.
+本節提供如何存取 Migration Console，以及支援哪些命令的相關資訊。

@@ -1,23 +1,24 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Improving search performance
+title: "改善搜尋效能"
 nav_order: 220
 has_children: true
 has_toc: false
 ---
 
-# Improving search performance
+# 改善搜尋效能
 
-OpenSearch offers several ways to improve search performance, from foundational optimizations to specialized techniques:
+OpenSearch 提供多種改善搜尋效能的方式，從基礎最佳化到專門技術：
 
-- Store frequently accessed data in memory with [caching]({{site.url}}{{site.baseurl}}/search-plugins/caching/) for faster retrieval.
+- 使用[快取]({{site.url}}{{site.baseurl}}/search-plugins/caching/)將經常存取的資料儲存在記憶體中，以加快擷取速度。
 
-- Search segments concurrently using [concurrent segment search]({{site.url}}{{site.baseurl}}/search-plugins/concurrent-segment-search/) for better resource utilization.
+- 使用[並行分段搜尋]({{site.url}}{{site.baseurl}}/search-plugins/concurrent-segment-search/)同時搜尋多個分段，以提升資源使用率。
 
-- Control shard selection for optimized query routing with [search shard routing]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/search-shard-routing/).
+- 使用[搜尋分片路由]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/search-shard-routing/)控制分片選取，以最佳化查詢路由。
 
-- Skip indexes that cannot contain matching documents using [index-level search pruning]({{site.url}}{{site.baseurl}}/search-plugins/index-level-search-pruning/) for time-series workloads.
+- 針對時間序列工作負載，使用[索引層級搜尋剪枝]({{site.url}}{{site.baseurl}}/search-plugins/index-level-search-pruning/)略過不可能包含符合文件之索引。
 
-- Run resource-intensive queries asynchronously with [asynchronous search]({{site.url}}{{site.baseurl}}/search-plugins/async/) to avoid timeouts.
+- 使用[非同步搜尋]({{site.url}}{{site.baseurl}}/search-plugins/async/)以非同步方式執行資源密集的查詢，避免逾時。
 
-- Improve aggregation performance using a [star-tree index]({{site.url}}{{site.baseurl}}/search-plugins/star-tree-index/) for analytical workloads.
+- 針對分析工作負載，使用[星狀樹索引]({{site.url}}{{site.baseurl}}/search-plugins/star-tree-index/)改善彙總效能。

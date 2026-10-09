@@ -1,240 +1,241 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Metrics reference
+title: "指標參考"
 parent: Performance Analyzer
 nav_order: 3
 redirect_from:
   - /monitoring-plugins/pa/reference/
 ---
 
-# Performance Analyzer metrics reference
+# Performance Analyzer 指標參考
 
-Performance Analyzer provides a number of metrics to help you evaluate performance. The following tables describe the available metrics, grouped by the dimensions that are most relevant for that metric. All metrics support the `avg`, `sum`, `min`, and `max` aggregations, although for certain metrics, the measured value is the same regardless of aggregation type. 
+Performance Analyzer 提供多項指標，協助您評估效能。下表說明可用的指標，並依與該指標最相關的維度分組。所有指標都支援 `avg`、`sum`、`min` 與 `max` 彙總，但對某些指標而言，無論彙總類型為何，測得的數值都相同。
 
-For information about each of the dimensions, see [dimensions reference](#dimensions-reference) later in this topic.
+有關各維度的資訊，請參閱本主題稍後的[維度參考](#dimensions-reference)。
 
-## Relevant dimensions: `ShardID`, `IndexName`, `Operation`, `ShardRole`
+## 相關維度：`ShardID`、`IndexName`、`Operation`、`ShardRole`
 
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `CPU_Utilization` | CPU usage ratio. CPU time (in milliseconds) used by the associated thread(s) in the past five seconds, divided by 5000 milliseconds. |
-| `Paging_MajfltRate` | The number of major faults per second in the past five seconds. A major fault requires the process to load a memory page from disk. |
-| `Paging_MinfltRate` | The number of minor faults per second in the past five seconds. A minor fault does not requires the process to load a memory page from disk. |
-| `Paging_RSS` | The number of pages the process has in real memory---the pages that count towards text, data, or stack space. This number does not include pages that have not been demand-loaded in or swapped out. |
-| `Sched_Runtime` | Time (seconds) spent executing on the CPU per context switch. |
-| `Sched_Waittime` | Time (seconds) spent waiting on a run queue per context switch. |
-| `Sched_CtxRate` | Number of times run on the CPU per second in the past five seconds. |
-| `Heap_AllocRate` | An approximation, in bytes, of the heap memory allocated per second in the last 5 seconds. |
-| `IO_ReadThroughput` | Number of bytes read per second in the last five seconds. |
-| `IO_WriteThroughput` | Number of bytes written per second in the last five seconds. |
-| `IO_TotThroughput` | Number of bytes read or written per second in the last five seconds. |
-| `IO_ReadSyscallRate` | Read system calls per second in the last five seconds. |
-| `IO_WriteSyscallRate` | Write system calls per second in the last five seconds. |
-| `IO_TotalSyscallRate` | Read and write system calls per second in the last five seconds. |
-| `Thread_Blocked_Time` | The average amount of time, in seconds, that the associated thread has been blocked from entering or reentering a monitor. |
-| `Thread_Blocked_Event` | The total number of times that the associated thread has been blocked from entering or reentering a monitor (that is, the number of times a thread has been in the `blocked` state). |
-| `Thread_Waited_Time` | The average amount of time, in seconds, that the associated thread has waited to enter or reenter a monitor (that is, the amount of time a thread has been in the `WAITING` or `TIMED_WAITING` state)". |
-| `Thread_Waited_Event` | The total number of times that the associated thread has waited to enter or reenter a monitor (that is, the number of times a thread has been in the `WAITING` or `TIMED_WAITING` state). |
-| `ShardEvents` | The total number of events executed on a shard in the past five seconds. |
-| `ShardBulkDocs` | The total number of documents indexed in the past five seconds. |
+| `CPU_Utilization` | CPU 使用率。過去五秒內相關執行緒所使用的 CPU 時間（毫秒），除以 5000 毫秒。 |
+| `Paging_MajfltRate` | 過去五秒內每秒的主要錯誤次數。主要錯誤需要處理程序從磁碟載入記憶體分頁。 |
+| `Paging_MinfltRate` | 過去五秒內每秒的次要錯誤次數。次要錯誤不需要處理程序從磁碟載入記憶體分頁。 |
+| `Paging_RSS` | 處理程序在實際記憶體中擁有的分頁數---即計入文字、資料或堆疊空間的分頁。此數字不包括尚未依需求載入或已換出的分頁。 |
+| `Sched_Runtime` | 每次內容切換在 CPU 上執行所花費的時間（秒）。 |
+| `Sched_Waittime` | 每次內容切換在執行佇列上等待所花費的時間（秒）。 |
+| `Sched_CtxRate` | 過去五秒內每秒在 CPU 上執行的次數。 |
+| `Heap_AllocRate` | 過去 5 秒內每秒配置的堆積記憶體近似值（位元組）。 |
+| `IO_ReadThroughput` | 過去五秒內每秒讀取的位元組數。 |
+| `IO_WriteThroughput` | 過去五秒內每秒寫入的位元組數。 |
+| `IO_TotThroughput` | 過去五秒內每秒讀取或寫入的位元組數。 |
+| `IO_ReadSyscallRate` | 過去五秒內每秒的讀取系統呼叫次數。 |
+| `IO_WriteSyscallRate` | 過去五秒內每秒的寫入系統呼叫次數。 |
+| `IO_TotalSyscallRate` | 過去五秒內每秒的讀取與寫入系統呼叫次數。 |
+| `Thread_Blocked_Time` | 相關執行緒被阻擋而無法進入或重新進入監視器的平均時間（秒）。 |
+| `Thread_Blocked_Event` | 相關執行緒被阻擋而無法進入或重新進入監視器的總次數（亦即執行緒處於 `blocked` 狀態的次數）。 |
+| `Thread_Waited_Time` | 相關執行緒等待進入或重新進入監視器的平均時間（秒）（亦即執行緒處於 `WAITING` 或 `TIMED_WAITING` 狀態的時間）"。 |
+| `Thread_Waited_Event` | 相關執行緒等待進入或重新進入監視器的總次數（亦即執行緒處於 `WAITING` 或 `TIMED_WAITING` 狀態的次數）。 |
+| `ShardEvents` | 過去五秒內在分片上執行的事件總數。 |
+| `ShardBulkDocs` | 過去五秒內編製索引的文件總數。 |
 
-## Relevant dimensions: `ShardID`, `IndexName` 
+## 相關維度：`ShardID`、`IndexName` 
 
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `Indexing_ThrottleTime` | Time (milliseconds) that the index has been under merge throttling control in the past five seconds. |
-| `Cache_Query_Hit` | The number of successful lookups in the query cache in the past five seconds. |
-| `Cache_Query_Miss` | The number of lookups in the query cache that failed to retrieve a `DocIdSet` in the past five seconds. `DocIdSet` is a set of document IDs in Lucene. |
-| `Cache_Query_Size` | Query cache memory size in bytes. |
-| `Cache_FieldData_Eviction` | The number of times OpenSearch has evicted data from the `fielddata` heap space (occurs when the heap space is full) in the past five seconds. |
-| `Cache_FieldData_Size` | `fielddata` memory size in bytes. |
-| `Cache_Request_Hit` | The number of successful lookups in the shard request cache in the past five seconds. |
-| `Cache_Request_Miss` | The number of lookups in the request cache that failed to retrieve the results of search requests in the past five seconds. |
-| `Cache_Request_Eviction` | The number of times OpenSearch evicts data from shard request cache (occurs when the request cache is full) in the past five seconds. |
-| `Cache_Request_Size` | Shard request cache memory size in bytes. |
+| `Indexing_ThrottleTime` | 過去五秒內該索引處於合併節流控制下的時間（毫秒）。 |
+| `Cache_Query_Hit` | 過去五秒內查詢快取中成功查閱的次數。 |
+| `Cache_Query_Miss` | 過去五秒內查詢快取中未能擷取 `DocIdSet` 的查閱次數。`DocIdSet` 是 Lucene 中的一組文件 ID。 |
+| `Cache_Query_Size` | 查詢快取的記憶體大小（位元組）。 |
+| `Cache_FieldData_Eviction` | 過去五秒內 OpenSearch 從 `fielddata` 堆積空間驅逐資料的次數（在堆積空間已滿時發生）。 |
+| `Cache_FieldData_Size` | `fielddata` 的記憶體大小（位元組）。 |
+| `Cache_Request_Hit` | 過去五秒內分片請求快取中成功查閱的次數。 |
+| `Cache_Request_Miss` | 過去五秒內請求快取中未能擷取搜尋請求結果的查閱次數。 |
+| `Cache_Request_Eviction` | 過去五秒內 OpenSearch 從分片請求快取驅逐資料的次數（在請求快取已滿時發生）。 |
+| `Cache_Request_Size` | 分片請求快取的記憶體大小（位元組）。 |
 
-## Relevant dimensions: `ShardID`, `IndexName`, `IndexingStage`  
+## 相關維度：`ShardID`、`IndexName`、`IndexingStage`  
   
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `Indexing_Pressure_Current_Limits` | The total heap size, in bytes, that is available for use by an index shard in a particular indexing stage (Coordinating, Primary, or Replica). |
-| `Indexing_Pressure_Current_Bytes` | The total heap size, in bytes, occupied by an index shard in a particular indexing stage (Coordinating, Primary, or Replica). |
-| `Indexing_Pressure_Last_Successful_Timestamp` | The timestamp of a successful request for an index shard in a particular indexing stage (Coordinating, Primary, or Replica). |
-| `Indexing_Pressure_Rejection_Count` | The total number of rejections performed by OpenSearch for an index shard in a particular indexing stage (Coordinating, Primary, or Replica). |
-| `Indexing_Pressure_Average_Window_Throughput` | The average throughput of the last n requests (The value of n is determined by the `shard_indexing_pressure.secondary_parameter.throughput.request_size_window` setting) for an index shard in a particular indexing stage (Coordinating, Primary, or Replica). |
+| `Indexing_Pressure_Current_Limits` | 在特定索引階段（Coordinating、Primary 或 Replica）中，可供索引分片使用的總堆積大小（位元組）。 |
+| `Indexing_Pressure_Current_Bytes` | 在特定索引階段（Coordinating、Primary 或 Replica）中，索引分片所佔用的總堆積大小（位元組）。 |
+| `Indexing_Pressure_Last_Successful_Timestamp` | 在特定索引階段（Coordinating、Primary 或 Replica）中，索引分片成功請求的時間戳記。 |
+| `Indexing_Pressure_Rejection_Count` | 在特定索引階段（Coordinating、Primary 或 Replica）中，OpenSearch 對索引分片執行的拒絕總數。 |
+| `Indexing_Pressure_Average_Window_Throughput` | 在特定索引階段（Coordinating、Primary 或 Replica）中，索引分片最近 n 個請求的平均輸送量（n 的值由 `shard_indexing_pressure.secondary_parameter.throughput.request_size_window` 設定決定）。 |
     
-## Relevant dimensions: `Operation`, `Exception`, `Indices`, `HTTPRespCode`, `ShardID`, `IndexName`, `ShardRole`    
+## 相關維度：`Operation`、`Exception`、`Indices`、`HTTPRespCode`、`ShardID`、`IndexName`、`ShardRole`    
    
- | Metric | Description |
+ | 指標 | 說明 |
 | :--- | :--- |
-| `Latency` | Latency (milliseconds) of a request. |
+| `Latency` | 請求的延遲（毫秒）。 |
 
-## Relevant dimension: `MemType`   
+## 相關維度：`MemType`   
    
- | Metric | Description |
+ | 指標 | 說明 |
 | :--- | :--- |
-| `GC_Collection_Event` | The number of garbage collections that have occurred in the past five seconds. |
-| `GC_Collection_Time` | The approximate accumulated time (milliseconds) of all garbage collections that have occurred in the past five seconds. |
-| `Heap_Committed` | The amount of memory (bytes) that is committed for the JVM to use. |
-| `Heap_Init` | The amount of memory (bytes) that the JVM initially requests from the operating system for memory management. |
-| `Heap_Max` | The maximum amount of memory (bytes) that can be used for memory management. |
-| `Heap_Used` | The amount of used memory in bytes. |
+| `GC_Collection_Event` | 過去五秒內發生的垃圾收集次數。 |
+| `GC_Collection_Time` | 過去五秒內發生的所有垃圾收集的累計時間近似值（毫秒）。 |
+| `Heap_Committed` | 已配置供 JVM 使用的記憶體量（位元組）。 |
+| `Heap_Init` | JVM 為記憶體管理最初向作業系統要求的記憶體量（位元組）。 |
+| `Heap_Max` | 可用於記憶體管理的最大記憶體量（位元組）。 |
+| `Heap_Used` | 已使用的記憶體量（位元組）。 |
 
-## Relevant dimension: `DiskName`   
+## 相關維度：`DiskName`   
    
- | Metric | Description |
+ | 指標 | 說明 |
 | :--- | :--- |
-| `Disk_Utilization` | Disk utilization rate: percentage of disk time spent reading and writing by the OpenSearch process in the past five seconds. |
-| `Disk_WaitTime` | Average duration (milliseconds) of read and write operations in the past five seconds. |
-| `Disk_ServiceRate` | Service rate: MB read or written per second in the past five seconds. This metric assumes that each disk sector stores 512 bytes. |
+| `Disk_Utilization` | 磁碟使用率：過去五秒內 OpenSearch 處理程序讀取與寫入所花費的磁碟時間百分比。 |
+| `Disk_WaitTime` | 過去五秒內讀取與寫入作業的平均持續時間（毫秒）。 |
+| `Disk_ServiceRate` | 服務速率：過去五秒內每秒讀取或寫入的 MB 數。此指標假設每個磁碟磁區儲存 512 位元組。 |
 
-## Relevant dimension: `DestAddr`   
+## 相關維度：`DestAddr`   
    
- | Metric | Description |
+ | 指標 | 說明 |
 | :--- | :--- |
-| `Net_TCP_NumFlows` | The number of samples collected. Performance Analyzer collects 1 sample every 5 seconds. |
-| `Net_TCP_TxQ` | The average number of TCP packets in the send buffer. |
-| `Net_TCP_RxQ` | The average number of TCP packets in the receive buffer. |
-| `Net_TCP_Lost` | The average number of unrecovered recurring timeouts. This number is reset when the recovery finishes or `SND.UNA` is advanced. `SND.UNA` is the sequence number of the first byte of data that has been sent but not yet acknowledged. |
-| `Net_TCP_SendCWND` | The average size, in bytes, of the sending congestion window. |
-| `Net_TCP_SSThresh` | The average size, in bytes, of the slow start size threshold. |
+| `Net_TCP_NumFlows` | 已收集的樣本數。Performance Analyzer 每 5 秒收集 1 個樣本。 |
+| `Net_TCP_TxQ` | 傳送緩衝區中 TCP 封包的平均數量。 |
+| `Net_TCP_RxQ` | 接收緩衝區中 TCP 封包的平均數量。 |
+| `Net_TCP_Lost` | 未復原的重複逾時平均次數。當復原完成或 `SND.UNA` 前進時，此數字會重設。`SND.UNA` 是已傳送但尚未確認的第一個資料位元組的序號。 |
+| `Net_TCP_SendCWND` | 傳送擁塞視窗的平均大小（位元組）。 |
+| `Net_TCP_SSThresh` | 慢速啟動大小閾值的平均大小（位元組）。 |
 
-## Relevant dimension: `Direction`    
+## 相關維度：`Direction`    
    
- | Metric | Description |
+ | 指標 | 說明 |
 | :--- | :--- |
-| `Net_PacketRate4` | The total number of IPv4 datagrams transmitted/received from/by interfaces per second, including those transmitted or received in error. |
-| `Net_PacketDropRate4` | The total number of IPv4 datagrams transmitted or received in error per second. |
-| `Net_PacketRate6` | The total number of IPv6 datagrams transmitted or received from or by interfaces per second, including those transmitted or received in error. |
-| `Net_PacketDropRate6` | The total number of IPv6 datagrams transmitted or received in error per second. |
-| `Net_Throughput` | The number of bits transmitted or received per second by all network interfaces. |
+| `Net_PacketRate4` | 每秒從介面傳送／接收的 IPv4 資料封包總數，包括傳送或接收時發生錯誤的資料封包。 |
+| `Net_PacketDropRate4` | 每秒傳送或接收時發生錯誤的 IPv4 資料封包總數。 |
+| `Net_PacketRate6` | 每秒從介面傳送／接收的 IPv6 資料封包總數，包括傳送或接收時發生錯誤的資料封包。 |
+| `Net_PacketDropRate6` | 每秒傳送或接收時發生錯誤的 IPv6 資料封包總數。 |
+| `Net_Throughput` | 所有網路介面每秒傳送或接收的位元數。 |
 
 
-## Relevant dimension: `ThreadPoolType`   
+## 相關維度：`ThreadPoolType`   
    
- | Metric | Description |
+ | 指標 | 說明 |
 | :--- | :--- |
-| `ThreadPool_QueueSize` | The size of the task queue. |
-| `ThreadPool_RejectedReqs` | The number of rejected executions. |
-| `ThreadPool_TotalThreads` | The current number of threads in the pool. |
-| `ThreadPool_ActiveThreads` | The approximate number of threads that are actively executing tasks. |
-| `ThreadPool_QueueLatency` | The latency of the task queue. |
-| `ThreadPool_QueueCapacity` | The current capacity of the task queue. |
+| `ThreadPool_QueueSize` | 工作佇列的大小。 |
+| `ThreadPool_RejectedReqs` | 遭拒絕的執行次數。 |
+| `ThreadPool_TotalThreads` | 集區中目前的執行緒數。 |
+| `ThreadPool_ActiveThreads` | 正在積極執行工作的執行緒約略數目。 |
+| `ThreadPool_QueueLatency` | 工作佇列的延遲。 |
+| `ThreadPool_QueueCapacity` | 工作佇列目前的容量。 |
 
-## Relevant dimension: `ClusterManager_PendingTaskType`  
+## 相關維度：`ClusterManager_PendingTaskType`  
    
- | Metric | Description |
+ | 指標 | 說明 |
 | :--- | :--- |
-| `ClusterManager_PendingQueueSize` | The current number of pending tasks in the cluster state update thread. Each node has a cluster state update thread that submits cluster state update tasks, such as create index, update mapping, allocate shard, and fail shard. |
+| `ClusterManager_PendingQueueSize` | 叢集狀態更新執行緒中目前待處理工作的數目。每個節點都有一個叢集狀態更新執行緒，負責提交叢集狀態更新工作，例如建立索引、更新對應、配置分片及使分片失敗。 |
 
-## Relevant dimensions: `Operation`, `Exception`, `Indices`, `HTTPRespCode`   
+## 相關維度：`Operation`、`Exception`、`Indices`、`HTTPRespCode`   
    
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `HTTP_RequestDocs` | The number of items in the request (only for the `_bulk` request type). |
-| `HTTP_TotalRequests` | The number of requests completed in the last 5 seconds. |
+| `HTTP_RequestDocs` | 請求中的項目數（僅適用於 `_bulk` 請求類型）。 |
+| `HTTP_TotalRequests` | 過去 5 秒內完成的請求數。 |
 
-## Relevant dimension: `CBType` 
+## 相關維度：`CBType` 
   
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `CB_EstimatedSize` | The current number of estimated bytes. |
-| `CB_TrippedEvents` | The number of times that the circuit breaker has tripped. |
-| `CB_ConfiguredSize` | The limit, in bytes, of the amount of memory operations can use. |
+| `CB_EstimatedSize` | 目前預估的位元組數。 |
+| `CB_TrippedEvents` | 斷路器觸發的次數。 |
+| `CB_ConfiguredSize` | 作業可使用的記憶體量上限，以位元組為單位。 |
 
-## Relevant dimensions: `ClusterManagerTaskInsertOrder`, `ClusterManagerTaskPriority`, `ClusterManagerTaskType`, `ClusterManagerTaskMetadata`
+## 相關維度：`ClusterManagerTaskInsertOrder`、`ClusterManagerTaskPriority`、`ClusterManagerTaskType`、`ClusterManagerTaskMetadata`
  
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `ClusterManager_Task_Queue_Time` | The amount of time, in milliseconds, that a cluster manager task spent in the queue. |
-| `ClusterManager_Task_Run_Time` | The amount of time, in milliseconds, that a cluster manager task has been running. |
+| `ClusterManager_Task_Queue_Time` | 叢集管理員工作在佇列中花費的時間，以毫秒為單位。 |
+| `ClusterManager_Task_Run_Time` | 叢集管理員工作已執行的時間，以毫秒為單位。 |
      
-## Relevant dimension: `CacheType` 
+## 相關維度：`CacheType` 
   
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `Cache_MaxSize` | The maximum size of the cache, in bytes. |
+| `Cache_MaxSize` | 快取的大小上限，以位元組為單位。 |
 
-## Relevant dimension: `ControllerName` 
-| Metric | Description |
+## 相關維度：`ControllerName` 
+| 指標 | 說明 |
 | :--- | :--- |
-| `AdmissionControl_RejectionCount` | The total number of rejections performed by a Controller of Admission Control. |
-| `AdmissionControl_CurrentValue` | The current value for Controller of Admission Control. |
-| `AdmissionControl_ThresholdValue` | The threshold value for Controller of Admission Control. |
+| `AdmissionControl_RejectionCount` | 允入控制器 (Controller of Admission Control) 執行的拒絕總次數。 |
+| `AdmissionControl_CurrentValue` | 允入控制器 (Controller of Admission Control) 目前的值。 |
+| `AdmissionControl_ThresholdValue` | 允入控制器 (Controller of Admission Control) 的閾值。 |
 
-## Relevant dimension: `NodeID` 
+## 相關維度：`NodeID` 
   
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `Data_RetryingPendingTasksCount` | The number of throttled pending tasks on which the data node is actively performing retries. This is an absolute metric measured at the current timestamp. |
-| `ClusterManager_ThrottledPendingTasksCount` | The sum of the total pending tasks that were throttled by the cluster manager node. This is a cumulative metric, so make sure to check the max aggregation. |
+| `Data_RetryingPendingTasksCount` | 資料節點正在積極重試的受節流待處理工作數。這是依目前時間戳記測量的絕對指標。 |
+| `ClusterManager_ThrottledPendingTasksCount` | 遭叢集管理員節點節流的待處理工作總數加總。這是累計指標，因此請務必檢查 max 彙總。 |
 
-## Relevant dimensions: N/A
-The following metrics are relevant to the cluster as a whole and do not require specific dimensions.
+## 相關維度：N/A
+下列指標與整個叢集相關，不需要特定維度。
 
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `Election_Term` | A number that increases monotonically with every cluster manager election. |
-| `PublishClusterState_Latency` | The amount of time taken by the quorum of nodes to publish the new cluster state. This metric is available for the current cluster manager. |
-| `PublishClusterState_Failure` | The number of times the new cluster state failed to publish on the cluster manager node. |
-| `ClusterApplierService_Latency` | The amount of time taken by each node for the apply cluster state sent by the cluster manager. |
-| `ClusterApplierService_Failure` | The number of times that the apply cluster state action failed on each node. |
+| `Election_Term` | 每次叢集管理員選舉時單調遞增的數字。 |
+| `PublishClusterState_Latency` | 節點法定人數發佈新叢集狀態所花費的時間。此指標適用於目前的叢集管理員。 |
+| `PublishClusterState_Failure` | 新叢集狀態在叢集管理員節點上發佈失敗的次數。 |
+| `ClusterApplierService_Latency` | 每個節點套用叢集管理員所傳送之叢集狀態所花費的時間。 |
+| `ClusterApplierService_Failure` | 每個節點上套用叢集狀態動作失敗的次數。 |
 
-## Relevant dimensions: `IndexName`, `NodeName`, `ShardType`, `ShardID`
+## 相關維度：`IndexName`、`NodeName`、`ShardType`、`ShardID`
   
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `Shard_State` | The state of each shard, for example, `STARTED`, `UNASSIGNED`, or `RELOCATING`. |
+| `Shard_State` | 每個分片的狀態，例如 `STARTED`、`UNASSIGNED` 或 `RELOCATING`。 |
 
-## Relevant dimensions: `NodeID`, `searchbp_mode`
+## 相關維度：`NodeID`、`searchbp_mode`
 
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `SearchBP_Shard_Stats_CancellationCount` | The number of tasks marked for cancellation at the shard task level. |
-| `SearchBP_Shard_Stats_LimitReachedCount` | The number of times that the cancellable task total exceeded the set cancellation threshold at the shard task level. |
-| `SearchBP_Shard_Stats_Resource_Heap_Usage_CancellationCount` | The number of tasks marked for cancellation because of excessive heap usage since the node last restarted at the shard task level. |
-| `SearchBP_Shard_Stats_Resource_Heap_Usage_CurrentMax` | The maximum heap usage for tasks currently running at the shard task level. |
-| `SearchBP_Shard_Stats_Resource_Heap_Usage_RollingAvg` | The rolling average heap usage for the `n` most recent tasks at the shard task level. The default value for `n` is `100`. |
-| `SearchBP_Shard_Stats_Resource_CPU_Usage_CancellationCount` | The number of tasks marked for cancellation because of excessive CPU usage since the node last restarted at the shard task level. |
-| `SearchBP_Shard_Stats_Resource_CPU_Usage_CurrentMax` | The maximum CPU time for all tasks currently running on the node at the shard task level. |
-| `SearchBP_Shard_Stats_Resource_CPU_Usage_CurrentAvg` | The average CPU time for all tasks currently running on the node at the shard task level. |
-| `SearchBP_Shard_Stats_Resource_ElaspedTime_Usage_CancellationCount` | The number of tasks marked for cancellation because of excessive time elapsed since the node last restarted at the shard task level. |
-| `SearchBP_Shard_Stats_Resource_ElaspedTime_Usage_CurrentMax` | The maximum time elapsed for all tasks currently running on the node at the shard task level. |
-| `SearchBP_Shard_Stats_Resource_ElaspedTime_Usage_CurrentAvg` | The average time elapsed for all tasks currently running on the node at the shard task level. |
-| `Searchbp_Task_Stats_CancellationCount` | The number of tasks marked for cancellation at the search task level. |
-| `SearchBP_Task_Stats_LimitReachedCount` | The number of times that the cancellable task total exceeded the set cancellation threshold at the search task level. |
-| `SearchBP_Task_Stats_Resource_Heap_Usage_CancellationCount` | The number of tasks marked for cancellation because of excessive heap usage since the node last restarted at the search task level. |
-| `SearchBP_Task_Stats_Resource_Heap_Usage_CurrentMax` | The maximum heap usage for tasks currently running at the search task level. |
-| `SearchBP_Task_Stats_Resource_Heap_Usage_RollingAvg` | The rolling average heap usage for the `n` most recent tasks at the search task level. The default value for `n` is `10`. |
-| `SearchBP_Task_Stats_Resource_CPU_Usage_CancellationCount` | The number of tasks marked for cancellation because of excessive CPU usage since the node last restarted at the search task level. |
-| `SearchBP_Task_Stats_Resource_CPU_Usage_CurrentMax` | The maximum CPU time for all tasks currently running on the node at the search task level. |
-| `SearchBP_Task_Stats_Resource_CPU_Usage_CurrentAvg` | The average CPU time for all tasks currently running on the node at the search task level. |
-| `SearchBP_Task_Stats_Resource_ElaspedTime_Usage_CancellationCount` | The number of tasks marked for cancellation because of excessive time elapsed since the node last restarted at the search task level. |
-| `SearchBP_Task_Stats_Resource_ElaspedTime_Usage_CurrentMax` | The maximum time elapsed for all tasks currently running on the node at the search task level. |
-| `SearchBP_Task_Stats_Resource_ElaspedTime_Usage_CurrentAvg` | The average time elapsed for all tasks currently running on the node at the search task level. | 
+| `SearchBP_Shard_Stats_CancellationCount` | 在分片工作層級標記為取消的工作數。 |
+| `SearchBP_Shard_Stats_LimitReachedCount` | 在分片工作層級，可取消工作總數超過所設定取消閾值的次數。 |
+| `SearchBP_Shard_Stats_Resource_Heap_Usage_CancellationCount` | 自節點上次重新啟動以來，在分片工作層級因堆積使用量過高而標記為取消的工作數。 |
+| `SearchBP_Shard_Stats_Resource_Heap_Usage_CurrentMax` | 在分片工作層級目前執行中工作的堆積使用量最大值。 |
+| `SearchBP_Shard_Stats_Resource_Heap_Usage_RollingAvg` | 在分片工作層級，最近 `n` 個工作的移動平均堆積使用量。`n` 的預設值為 `100`。 |
+| `SearchBP_Shard_Stats_Resource_CPU_Usage_CancellationCount` | 自節點上次重新啟動以來，在分片工作層級因 CPU 使用量過高而標記為取消的工作數。 |
+| `SearchBP_Shard_Stats_Resource_CPU_Usage_CurrentMax` | 在分片工作層級，節點上目前執行中所有工作的 CPU 時間最大值。 |
+| `SearchBP_Shard_Stats_Resource_CPU_Usage_CurrentAvg` | 在分片工作層級，節點上目前執行中所有工作的平均 CPU 時間。 |
+| `SearchBP_Shard_Stats_Resource_ElaspedTime_Usage_CancellationCount` | 自節點上次重新啟動以來，在分片工作層級因經過時間過長而標記為取消的工作數。 |
+| `SearchBP_Shard_Stats_Resource_ElaspedTime_Usage_CurrentMax` | 在分片工作層級，節點上目前執行中所有工作的經過時間最大值。 |
+| `SearchBP_Shard_Stats_Resource_ElaspedTime_Usage_CurrentAvg` | 在分片工作層級，節點上目前執行中所有工作的平均經過時間。 |
+| `Searchbp_Task_Stats_CancellationCount` | 在搜尋工作層級標記為取消的工作數。 |
+| `SearchBP_Task_Stats_LimitReachedCount` | 在搜尋工作層級，可取消工作總數超過所設定取消閾值的次數。 |
+| `SearchBP_Task_Stats_Resource_Heap_Usage_CancellationCount` | 自節點上次重新啟動以來，在搜尋工作層級因堆積使用量過高而標記為取消的工作數。 |
+| `SearchBP_Task_Stats_Resource_Heap_Usage_CurrentMax` | 在搜尋工作層級目前執行中工作的堆積使用量最大值。 |
+| `SearchBP_Task_Stats_Resource_Heap_Usage_RollingAvg` | 在搜尋工作層級，最近 `n` 個工作的移動平均堆積使用量。`n` 的預設值為 `10`。 |
+| `SearchBP_Task_Stats_Resource_CPU_Usage_CancellationCount` | 自節點上次重新啟動以來，在搜尋工作層級因 CPU 使用量過高而標記為取消的工作數。 |
+| `SearchBP_Task_Stats_Resource_CPU_Usage_CurrentMax` | 在搜尋工作層級，節點上目前執行中所有工作的 CPU 時間最大值。 |
+| `SearchBP_Task_Stats_Resource_CPU_Usage_CurrentAvg` | 在搜尋工作層級，節點上目前執行中所有工作的平均 CPU 時間。 |
+| `SearchBP_Task_Stats_Resource_ElaspedTime_Usage_CancellationCount` | 自節點上次重新啟動以來，在搜尋工作層級因經過時間過長而標記為取消的工作數。 |
+| `SearchBP_Task_Stats_Resource_ElaspedTime_Usage_CurrentMax` | 在搜尋工作層級，節點上目前執行中所有工作的經過時間最大值。 |
+| `SearchBP_Task_Stats_Resource_ElaspedTime_Usage_CurrentAvg` | 在搜尋工作層級，節點上目前執行中所有工作的平均經過時間。 | 
 
 
-## Dimensions reference
+## 維度參考
 
-| Dimension            | Return values                                   |
+| 維度            | 回傳值                                   |
 |----------------------|-------------------------------------------------|
-| `ShardID`              | The ID of the shard, for example, `1`.           |
-| `IndexName`            | The name of the index, for example, `my-index`.   |
-| `Operation`            | The type of operation, for example, `shardbulk`.  |
-| `ShardRole`            | The shard role, for example, `primary` or `replica`.                            |
-| `Exception`            | OpenSearch exceptions, for example, `org.opensearch.index_not_found_exception`. |
-| `Indices`              | The list of indexes in the request URL.        |
-| `HTTPRespCode`         | The OpenSearch response code, for example, `200`. |
-| `MemType`              | The memory type, for example, `totYoungGC`, `totFullGC`, `Survivor`, `PermGen`, `OldGen`, `Eden`, `NonHeap`, or `Heap`. |
-| `DiskName`             | The name of the disk, for example, `sda1`.        |
-| `DestAddr`             | The destination address, for example, `010015AC`. |
-| `Direction`            | The direction, for example, `in` or `out`.                                    |
-| `ThreadPoolType`       | The OpenSearch thread pools, for example, `index`, `search`, or `snapshot`. |
-| `CBType`               | The circuit breaker type, for example, `accounting`, `fielddata`, `in_flight_requests`, `parent`, or `request`. |
-| `ClusterManagerTaskInsertOrder`| The order in which the task was inserted, for example, `3691`. |
-| `ClusterManagerTaskPriority`   | The priority of the task, for example, `URGENT`. OpenSearch executes higher-priority tasks before lower-priority ones, regardless of `insert_order`. |
-| `ClusterManagerTaskType`       | The task type, for example, `shard-started`, `create-index`, `delete-index`, `refresh-mapping`, `put-mapping`, `CleanupSnapshotRestoreState`, or `Update snapshot state`. |
-| `ClusterManagerTaskMetadata`   | The metadata for the task (if any).                 |
-| `CacheType`            | The cache type, for example, `Field_Data_Cache`, `Shard_Request_Cache`, or `Node_Query_Cache`. |
-| `NodeID`               | The ID of the node.                                |
-| `Searchbp_mode`        | The search backpressure mode, for example, `monitor_only` (default), `enforced`, or `disabled`. |
+| `ShardID`              | 分片的 ID，例如 `1`。           |
+| `IndexName`            | 索引的名稱，例如 `my-index`。   |
+| `Operation`            | 操作的類型，例如 `shardbulk`。  |
+| `ShardRole`            | 分片角色，例如 `primary` 或 `replica`。                            |
+| `Exception`            | OpenSearch 例外，例如 `org.opensearch.index_not_found_exception`。 |
+| `Indices`              | 請求 URL 中的索引清單。        |
+| `HTTPRespCode`         | OpenSearch 回應碼，例如 `200`。 |
+| `MemType`              | 記憶體類型，例如 `totYoungGC`、`totFullGC`、`Survivor`、`PermGen`、`OldGen`、`Eden`、`NonHeap` 或 `Heap`。 |
+| `DiskName`             | 磁碟的名稱，例如 `sda1`。        |
+| `DestAddr`             | 目的地位址，例如 `010015AC`。 |
+| `Direction`            | 方向，例如 `in` 或 `out`。                                    |
+| `ThreadPoolType`       | OpenSearch 執行緒集區，例如 `index`、`search` 或 `snapshot`。 |
+| `CBType`               | 斷路器類型，例如 `accounting`、`fielddata`、`in_flight_requests`、`parent` 或 `request`。 |
+| `ClusterManagerTaskInsertOrder`| 工作插入的順序，例如 `3691`。 |
+| `ClusterManagerTaskPriority`   | 工作的優先順序，例如 `URGENT`。OpenSearch 會先執行優先順序較高的工作，再執行優先順序較低的工作，無論 `insert_order` 為何。 |
+| `ClusterManagerTaskType`       | 工作類型，例如 `shard-started`、`create-index`、`delete-index`、`refresh-mapping`、`put-mapping`、`CleanupSnapshotRestoreState` 或 `Update snapshot state`。 |
+| `ClusterManagerTaskMetadata`   | 工作的中繼資料（如果有的話）。                 |
+| `CacheType`            | 快取類型，例如 `Field_Data_Cache`、`Shard_Request_Cache` 或 `Node_Query_Cache`。 |
+| `NodeID`               | 節點的 ID。                                |
+| `Searchbp_mode`        | 搜尋回壓模式，例如 `monitor_only`（預設）、`enforced` 或 `disabled`。 |

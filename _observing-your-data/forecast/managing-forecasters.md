@@ -1,60 +1,61 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Managing forecasters
+title: "管理預測器"
 nav_order: 8
 parent: Forecasting
 has_children: false
 ---
 
-# Managing forecasters
+# 管理預測器
 
-After you [create a forecaster]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/getting-started/), you can manage its lifecycle and configuration using the **Details** page. This includes starting or stopping the forecaster, updating its settings, or deleting it entirely. Use this page to monitor forecaster status, troubleshoot issues, and fine-tune behavior over time.
+在[建立預測器]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/getting-started/)之後，您可以使用 **Details** 頁面管理其生命週期與組態。這包括啟動或停止預測器、更新其設定，或完全刪除它。您可以使用此頁面監視預測器狀態、疑難排解問題，並隨時間微調行為。
 
-## Forecasters table
+## Forecasters 表格
 
-The **Forecasters** table provides an overview of every forecaster you have configured.
+**Forecasters** 表格提供您已設定之每個預測器的總覽。
 
-| Column | Description |
+| 欄位 | 說明 |
 |--------|-------------|
-| **Name** | The name you assigned when creating the forecaster. |
-| **Status** | The current lifecycle state—for example, `Running`, `Initializing`, or `Test complete`. Click the <i class="euiIcon euiIcon--xs euiIcon--expand"></i> icon for more information, including the timestamp of the most recent status change and any failure messages. |
-| **Index** | The source index or alias from which the forecaster reads. |
-| **Last updated** | The timestamp of the most recent configuration change. |
-| **Quick actions** | Context-aware buttons such as **Start**, **Stop**, or **Delete**, depending on the forecaster's current state. |
+| **Name** | 您在建立預測器時指派的名稱。 |
+| **Status** | 目前的生命週期狀態，例如 `Running`、`Initializing` 或 `Test complete`。按一下 <i class="euiIcon euiIcon--xs euiIcon--expand"></i> 圖示可取得更多資訊，包括最近一次狀態變更的時間戳記以及任何失敗訊息。 |
+| **Index** | 預測器讀取資料的來源索引或別名。 |
+| **Last updated** | 最近一次組態變更的時間戳記。 |
+| **Quick actions** | 依預測器目前狀態而定的情境感知按鈕，例如 **Start**、**Stop** 或 **Delete**。 |
 
-## Execution states
+## 執行狀態
 
-A forecaster (that is, the underlying forecasting job) can be in any of the following states. Transitions marked *automatic* happen without user action; others require you to manually select **Start** or **Stop**.
+預測器（也就是底層的預測工作）可能處於下列任一狀態。標記為*自動*的轉換無需使用者操作即可發生；其他狀態則需要您手動選取 **Start** 或 **Stop**。
 
-| State | Description | Typical trigger |
+| 狀態 | 說明 | 典型觸發方式 |
 |-------|-------------|------------------|
-| **Inactive** | The forecaster was created but never started. | None. |
-| **Inactive: stopped** | The forecaster was manually stopped after running. | User selects **Stop forecasting**. |
-| **Awaiting data to initialize forecast** | The job is trying to start but lacks enough historical data. | Automatic. |
-| **Awaiting data to restart forecast** | The job is resuming after a data gap and is waiting for new data. | Automatic after a data outage. |
-| **Initializing test** | The model is being built for a one-time backtest. | Automatic on **Create and test** or **Start test**. |
-| **Test complete** | The backtest has finished and the job is no longer running. | Automatic. |
-| **Initializing forecast** | The model is being trained for continuous real-time forecasting. | Automatic after selecting **Start forecasting**. |
-| **Running** | The job is streaming live data and generating forecasts. | Automatic when initialization completes successfully. |
-| **Initializing test failed** | The test failed, often due to insufficient data. | Automatic. |
-| **Initializing forecast failed** | Real-time mode failed to initialize. | Automatic. |
-| **Forecast failed** | The job started but encountered a runtime error, such as a shard failure. | Automatic but requires the user's attention. |
+| **Inactive** | 預測器已建立但從未啟動。 | 無。 |
+| **Inactive: stopped** | 預測器在執行後被手動停止。 | 使用者選取 **Stop forecasting**。 |
+| **Awaiting data to initialize forecast** | 工作嘗試啟動但歷史資料不足。 | 自動。 |
+| **Awaiting data to restart forecast** | 工作在資料中斷後恢復，正在等待新資料。 | 資料中斷後自動發生。 |
+| **Initializing test** | 正在為一次性回測建置模型。 | 選取 **Create and test** 或 **Start test** 後自動發生。 |
+| **Test complete** | 回測已完成，工作不再執行。 | 自動。 |
+| **Initializing forecast** | 正在訓練模型以進行持續的即時預測。 | 選取 **Start forecasting** 後自動發生。 |
+| **Running** | 工作正在串流即時資料並產生預測。 | 初始化成功完成時自動發生。 |
+| **Initializing test failed** | 測試失敗，通常是由於資料不足。 | 自動。 |
+| **Initializing forecast failed** | 即時模式初始化失敗。 | 自動。 |
+| **Forecast failed** | 工作已啟動但遇到執行階段錯誤，例如分片失敗。 | 自動，但需要使用者注意。 |
 
-The following diagram illustrates the relationships and transitions between states.
+下圖說明各狀態之間的關係與轉換。
 
 ![Forecast state diagram]({{site.url}}{{site.baseurl}}/images/forecast/state.png){: width="1600" height="1600" }
 
-## Find and filter forecasters
+## 尋找與篩選預測器
 
-If you have many forecasters, use the pagination controls at the bottom of the table to navigate between pages. You can also use the search bar to filter by **name**, **status**, or **index**, which can be helpful when managing large sets of forecasters.
+如果您有許多預測器，可以使用表格底部的分頁控制項在頁面之間導覽。您也可以使用搜尋列依 **name**、**status** 或 **index** 進行篩選，這在管理大量預測器時很有幫助。
 
-## Alert on forecasted values
+## 針對預測值發出警示
 
-Because forecast result indexes are not system indexes, you can create an [Alerting monitor]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/) for the result indexes like you would for any other user index.
+由於預測結果索引不是系統索引，您可以像對任何其他使用者索引一樣，為結果索引建立[警示監視器]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/)。
 
-### Example alert monitor
+### 警示監視器範例
 
-For example, the following is a monitor for a high-cardinality forecaster. You can modify the schedule, query, and aggregation to match your use case:
+例如，以下是一個針對高基數預測器的監視器。您可以修改排程、查詢與彙總以符合您的使用情境：
 
 {% raw %}
 ```json
@@ -188,25 +189,25 @@ For example, the following is a monitor for a high-cardinality forecaster. You c
 {% endraw %}
 {% include copy-curl.html %}
 
-### Monitor design
+### 監視器設計
 
-The following table explains each design choice used in the example alert monitor and why it matters.
+下表說明範例警示監視器中使用的每個設計選擇及其重要性。
 
-| Design choice | Rationale |
+| 設計選擇 | 理由 |
 |---------------|-----------|
-| `size: 1` in the search input | Retrieves a single document so you can reference `ctx.results.0.hits.hits.0` in the notification to identify which entity (such as `host` or `service`) triggered the alert. |
-| `execution_end_time` range `"now-15m"` → `now` | Filters on the result creation timestamp, which reflects when the forecast was generated. This avoids delays caused by ingestion lag. Avoid filtering on `data_end_time` if your index includes late-arriving data (such as backfilled logs). |
-| `max(forecast_upper_bound)` as the metric | Detects upper-bound spikes. Alternatives include: <br> `min(forecast_lower_bound)` for sudden drops. <br> `avg(forecast_value)` for trend shifts. <br> For additional fields, see the [forecast result schema](https://github.com/opensearch-project/anomaly-detection/blob/main/src/main/resources/mappings/forecast-results.json). |
-| Index pattern `opensearch-forecast-results*` | Matches the default result index pattern. Update this pattern if you route results to a custom index, such as `opensearch-forecast-result-abc*`. |
-| Optional term filter on `forecaster_id` | Use this filter to target a specific forecaster and avoid matching unrelated forecasts. |
-| Monitor every 1 min, query window 15 min | Evaluates forecasts every minute to detect anomalies quickly. The 15-minute look-back window increases resilience to timing delays. Combined with a 15-minute alert throttle, this avoids duplicate notifications for the same event. |
-| Mustache block prints all entity dimensions | Displays both single-dimension (`host=server_3`) and multi-dimension (`host=server_3`, `service=auth`) entity values. You can also include a link to a pre-filtered dashboard for faster triage. |
-| Threshold | Use the OpenSearch Dashboards visual editor to analyze recent forecast values and determine an appropriate threshold that reliably indicates anomalies. |
+| 搜尋輸入中的 `size: 1` | 擷取單一文件，讓您可以在通知中參照 `ctx.results.0.hits.hits.0`，以識別是哪個實體（例如 `host` 或 `service`）觸發了警示。 |
+| `execution_end_time` 範圍 `"now-15m"` → `now` | 依結果建立時間戳記篩選，該時間戳記反映預測產生的時間。這可避免匯入延遲造成的延誤。如果您的索引包含延遲抵達的資料（例如回填的記錄檔），請避免依 `data_end_time` 篩選。 |
+| 以 `max(forecast_upper_bound)` 作為指標 | 偵測上限飆升。其他選項包括：<br> `min(forecast_lower_bound)` 用於偵測突然下降。<br> `avg(forecast_value)` 用於偵測趨勢變化。<br> 如需其他欄位，請參閱[預測結果結構描述](https://github.com/opensearch-project/anomaly-detection/blob/main/src/main/resources/mappings/forecast-results.json)。 |
+| 索引模式 `opensearch-forecast-results*` | 符合預設的結果索引模式。如果您將結果路由至自訂索引（例如 `opensearch-forecast-result-abc*`），請更新此模式。 |
+| `forecaster_id` 上的選用詞彙篩選 | 使用此篩選器以鎖定特定預測器，避免比對到不相關的預測。 |
+| 監視器每 1 分鐘執行一次，查詢視窗 15 分鐘 | 每分鐘評估一次預測，以快速偵測異常。15 分鐘的回溯視窗可提高對時間延遲的容錯能力。結合 15 分鐘的警示節流，可避免同一事件產生重複通知。 |
+| Mustache 區塊印出所有實體維度 | 顯示單維度（`host=server_3`）與多維度（`host=server_3`、`service=auth`）的實體值。您也可以加入連結至預先篩選的儀表板，以加快分類速度。 |
+| 門檻值 | 使用 OpenSearch Dashboards 視覺化編輯器分析最近的預測值，並決定能可靠指出異常的適當門檻值。 |
 
 
-### Example alert
+### 警示範例
 
-The following example shows a sample alert email generated by a monitor that detects when a forecasted value breaches a defined threshold. In this case, the monitor is tracking a high-cardinality forecaster and has triggered an alert for a specific entity (`host = server_3`):
+以下範例顯示由監視器產生的警示電子郵件樣本，該監視器會在預測值超出定義的門檻值時進行偵測。在此案例中，監視器正在追蹤一個高基數預測器，並已針對特定實體（`host = server_3`）觸發警示：
 
 ```
 Monitor **test** entered **ALERT** state — please investigate.
@@ -219,8 +220,8 @@ Entity
   • host = server_3
 ```
 
-## Next steps
+## 後續步驟
 
-After setting up and managing your forecasters, you may want to control who can access and modify them. To learn how to manage permissions, secure result indexes, and apply fine-grained access controls, see [the security page]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/security/).
+在設定並管理您的預測器之後，您可能會想控制誰可以存取與修改它們。若要了解如何管理權限、保護結果索引以及套用細微存取控制，請參閱[安全性頁面]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/security/)。
 
 

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: expand
 parent: Commands
@@ -8,40 +9,40 @@ nav_order: 15
 
 <!-- vale off -->
 
-# expand command
+# expand 命令
 
 <!-- vale on -->
 
-The `expand` command transforms a single document with a nested array field into multiple documents, each containing one element of the array. All other fields in the original document are duplicated across the resulting documents.
+`expand` 命令會將含有巢狀陣列欄位的單一文件轉換為多份文件，每份文件各包含該陣列中的一個元素。原始文件中的所有其他欄位都會複製到產生的文件中。
 
-The `expand` command operates in the following way:
+`expand` 命令的運作方式如下：
 
-* It generates one row per element in the specified array field.
-* The specified array field is converted into individual rows.
-* If an alias is provided, the expanded values appear under the alias instead of the original field name.
-* If the specified field is an empty array, the row is retained with the expanded field set to `null`.
+* 它會為指定陣列欄位中的每個元素產生一列。
+* 指定的陣列欄位會轉換成個別資料列。
+* 若提供別名，展開後的值會顯示在別名之下，而非原始欄位名稱。
+* 若指定的欄位是空陣列，則會保留該列，並將展開的欄位設為 `null`。
 
-## Syntax
+## 語法
 
-The `expand` command has the following syntax:
+`expand` 命令的語法如下：
 
 ```sql
 expand <field> [as alias]
 ```
 
-## Parameters
+## 參數
 
-The `expand` command supports the following parameters.
+`expand` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<field>` | Required | The field to be expanded. Only nested arrays are supported. |
-| `<alias>` | Optional | The name to use in place of the original field name. |  
+| `<field>` | 必要 | 要展開的欄位。僅支援巢狀陣列。 |
+| `<alias>` | 選用 | 用來取代原始欄位名稱的名稱。 |  
   
 
-## Example: Expand a collected list of services into individual rows  
+## 範例：將收集到的服務清單展開為個別資料列  
 
-The following query first collects all service names per severity level into an array using `stats list()`, then expands each array element into its own row. This is useful when you need to go from an aggregated view back to individual rows:
+下列查詢會先使用 `stats list()` 將每個嚴重性層級的所有服務名稱收集到陣列中，再將每個陣列元素展開為各自的資料列。當您需要從彙總檢視回到個別資料列時，這項功能相當實用：
   
 ```sql
 source=otellogs
@@ -53,7 +54,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -67,8 +68,8 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Limitations
+## 限制
 
-The `expand` command has the following limitations:
+`expand` 命令有下列限制：
 
-* The `expand` command only supports nested arrays. Primitive fields storing arrays are not supported. For example, a string field storing an array of strings cannot be expanded.
+* `expand` 命令僅支援巢狀陣列。不支援儲存陣列的原始類型欄位。例如，儲存字串陣列的字串欄位無法展開。

@@ -1,20 +1,21 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: KV
 parent: Ingest processors
 nav_order: 200
 ---
 
-This documentation describes using the `kv` processor in OpenSearch ingest pipelines. Consider using the [Data Prepper `key_value` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/key-value/), which runs on the OpenSearch cluster, if your use case involves large or complex datasets.
+本文件說明如何在 OpenSearch 資料匯入管線中使用 `kv` 處理器。如果您的使用案例涉及大型或複雜的資料集，請考慮使用在 OpenSearch 叢集上執行的 [Data Prepper `key_value` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/key-value/)。
 {: .note}
 
-# KV processor
+# KV 處理器
 
-The `kv` processor automatically extracts specific event fields or messages that are in a `key=value` format. This structured format organizes your data by grouping it together based on keys and values. It's helpful for analyzing, visualizing, and using data, such as user behavior analytics, performance optimizations, or security investigations. 
+`kv` 處理器會自動擷取採用 `key=value` 格式的特定事件欄位或訊息。這種結構化格式會根據鍵和值將資料分組，以組織您的資料。這有助於分析、視覺化及運用資料，例如使用者行為分析、效能最佳化或安全性調查。 
 
-## Example
+## 範例
 
-The following is the syntax for the `kv` processor: 
+以下是 `kv` 處理器的語法： 
 
 ```json
 {
@@ -27,35 +28,35 @@ The following is the syntax for the `kv` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `kv` processor.
+下表列出 `kv` 處理器的必要與選用參數。
 
-| Parameter  | Required/Optional  | Description  |
-`field`  | Required  | The name of the field containing the data to be parsed. |
-`field_split` | Required | The regex pattern for key-value pair splitting. |
-`value_split` | Required | The regex pattern for splitting the key from the value within a key-value pair, for example, equal sign `=` or colon `:`.
-`exclude_keys` | Optional | The keys to exclude from the document. Default is `null`. |
-`include_keys` | Optional | The keys for filtering and inserting. Default is to include all keys. |
-`prefix` | Optional | The prefix to add to the extracted keys. Default is `null`. |
-`strip_brackets` | Optional | If set to `true`, strips brackets (`()`, `<>,` or `[]`) and quotes (`'` or `"`) from extracted values. Default is `false`.
-`trim_key` | Optional | The string of characters to trim from the extracted keys. | 
-`trim value` | Optional | The string of characters to trim from the extracted values. |
-`description`  | Optional  | A brief description of the processor.  |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | If set to `true`, failures are ignored. Default is `false`. |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`ignore_missing`  | Optional  | Specifies whether the processor should ignore documents that do not contain the specified field. Default is `false`.  |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |
-`target_field`  | Optional  | The name of the field in which to insert the extracted keys. Default is `null`. |
+| 參數  | 必要/選用  | 說明  |
+`field`  | 必要  | 包含待剖析資料的欄位名稱。 |
+`field_split` | 必要 | 用於分割鍵值組的正規表示式模式。 |
+`value_split` | 必要 | 用於在鍵值組內分隔鍵和值的正規表示式模式，例如等號 `=` 或冒號 `:`。
+`exclude_keys` | 選用 | 要從文件中排除的鍵。預設為 `null`。 |
+`include_keys` | 選用 | 用於篩選和插入的鍵。預設包含所有鍵。 |
+`prefix` | 選用 | 要新增至擷取之鍵的前綴。預設為 `null`。 |
+`strip_brackets` | 選用 | 若設為 `true`，會從擷取的值中移除括號（`()`、`<>,` 或 `[]`）和引號（`'` 或 `"`）。預設為 `false`。
+`trim_key` | 選用 | 要從擷取的鍵中修剪掉的字元字串。 | 
+`trim value` | 選用 | 要從擷取的值中修剪掉的字元字串。 |
+`description`  | 選用  | 處理器的簡短說明。  |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 若設為 `true`，則會忽略失敗。預設為 `false`。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`ignore_missing`  | 選用  | 指定處理器是否應忽略不含指定欄位的文件。預設為 `false`。  |
+`tag` | 選用 | 處理器的識別標籤。有助於在偵錯時區分相同類型的處理器。 |
+`target_field`  | 選用  | 要插入擷取之鍵的欄位名稱。預設為 `null`。 |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+請依照下列步驟在管線中使用處理器。
 
-**Step 1: Create a pipeline**
+**步驟 1：建立管線**
 
-The following query creates a pipeline, named `kv-pipeline`, that uses the `kv` processor to extract the `message` field of a document:
+下列查詢會建立名為 `kv-pipeline` 的管線，使用 `kv` 處理器擷取文件的 `message` 欄位：
 
 ```json
 PUT _ingest/pipeline/kv-pipeline
@@ -74,12 +75,12 @@ PUT _ingest/pipeline/kv-pipeline
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline**
+**步驟 2（選用）：測試管線**
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/kv-pipeline/_simulate
@@ -97,9 +98,9 @@ POST _ingest/pipeline/kv-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-**Response**
+**回應**
 
-The following example response confirms that, in addition to the original `message` field, the document contains fields generated from key-value pairs:
+下列範例回應確認，除了原始的 `message` 欄位之外，文件還包含從鍵值組產生的欄位：
 
 ```json
 {  
@@ -122,9 +123,9 @@ The following example response confirms that, in addition to the original `messa
 }
 ```
 
-**Step 3: Ingest a document**
+**步驟 3：匯入文件**
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=kv-pipeline
@@ -134,9 +135,9 @@ PUT testindex1/_doc/1?pipeline=kv-pipeline
 ```
 {% include copy-curl.html %}
 
-**Step 4 (Optional): Retrieve the document**
+**步驟 4（選用）：擷取文件**
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1

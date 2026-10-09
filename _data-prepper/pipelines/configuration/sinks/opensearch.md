@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: OpenSearch 
 parent: Sinks
@@ -8,13 +9,13 @@ nav_order: 50
 
 # OpenSearch sink
 
-You can use the `opensearch` sink plugin to send data to an OpenSearch cluster, a legacy Elasticsearch cluster, or an Amazon OpenSearch Service domain.
+您可以使用 `opensearch` sink 外掛程式將資料傳送至 OpenSearch 叢集、舊版 Elasticsearch 叢集或 Amazon OpenSearch Service 網域。
 
-The plugin supports OpenSearch 1.0 and later and Elasticsearch 7.3 and later.
+此外掛程式支援 OpenSearch 1.0 及更新版本，以及 Elasticsearch 7.3 及更新版本。
 
-## Usage
+## 使用方式
 
-To configure an `opensearch` sink, specify the `opensearch` option within the pipeline configuration:
+若要設定 `opensearch` sink，請在管線組態中指定 `opensearch` 選項：
 
 ```yaml
 pipeline:
@@ -31,7 +32,7 @@ pipeline:
       bulk_size: 4
 ```
 
-To configure an [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html) sink, specify the domain endpoint as the `hosts` option, as shown in the following example:
+若要設定 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html) sink，請將網域端點指定為 `hosts` 選項，如下列範例所示：
 
 ```yaml
 pipeline:
@@ -46,77 +47,77 @@ pipeline:
       bulk_size: 4
 ```
 
-## Configuration options
+## 組態選項
 
-The following table describes options you can configure for the `opensearch` sink.
+下表說明您可以為 `opensearch` sink 設定的選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- |:---| :---
-`hosts` | Yes | List | A list of OpenSearch hosts to write to, such as `["https://localhost:9200", "https://remote-cluster:9200"]`.
-`cert` | No | String | The path to the security certificate. For example, `"config/root-ca.pem"` if the cluster uses the OpenSearch Security plugin.
-`username` | No | String  | The username for HTTP basic authentication.
-`password` | No | String | The password for HTTP basic authentication.
-`aws` | No | AWS  | The [AWS](#aws) configuration. 
-[max_retries](#configure-max_retries) | No | Integer | The maximum number of times that the `opensearch` sink should try to push data to the OpenSearch server before considering it to be a failure. Defaults to `Integer.MAX_VALUE`. When not provided, the sink will try to push data to the OpenSearch server indefinitely and exponential backoff will increase the waiting time before a retry.
-`aws_sigv4` | No | Boolean | **Deprecated in Data Prepper 2.7.** Default is `false`. Whether to use AWS Identity and Access Management (IAM) signing to connect to an Amazon OpenSearch Service domain. For your access key, secret key, and optional session token, OpenSearch Data Prepper uses the default credential chain (environment variables, Java system properties, `~/.aws/credential`). 
-`aws_region` | No | String | **Deprecated in Data Prepper 2.7.** The AWS Region (for example, `"us-east-1"`) for the domain when you are connecting to Amazon OpenSearch Service.
-`aws_sts_role_arn` | No | String | **Deprecated in Data Prepper 2.7.** The IAM role that the plugin uses to sign requests sent to Amazon OpenSearch Service. If this information is not provided, then the plugin uses the default credentials.
-`socket_timeout` | No | Integer | The timeout value, in milliseconds, when waiting for data to be returned (the maximum period of inactivity between two consecutive data packets). A timeout value of `0` is interpreted as an infinite timeout. If this timeout value is negative or not set, then the underlying Apache HttpClient will rely on operating system settings to manage socket timeouts.
-`connect_timeout` | No | Integer| The timeout value, in milliseconds, when requesting a connection from the connection manager. A timeout value of `0` is interpreted as an infinite timeout. If this timeout value is negative or not set, the underlying Apache HttpClient will rely on operating system settings to manage connection timeouts.
-`insecure` | No | Boolean  | Whether or not to verify SSL certificates. If set to `true`, then certificate authority (CA) certificate verification is disabled and insecure HTTP requests are sent instead. Default is `false`.
-`proxy` | No | String | The address of the [forward HTTP proxy server](https://en.wikipedia.org/wiki/Proxy_server). The format is `"&lt;hostname or IP&gt;:&lt;port&gt;"` (for example, `"example.com:8100"`, `"http://example.com:8100"`, `"112.112.112.112:8100"`). The port number cannot be omitted.
-`index` | Conditionally | String | The name of the export index. Only required when the `index_type` is `custom`. The index can be a plain string, such as `my-index-name`, contain [Java date-time patterns](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html), such as `my-index-%{yyyy.MM.dd}` or `my-%{yyyy-MM-dd-HH}-index`, be formatted using field values, such as `my-index-${/my_field}`, or use [Data Prepper expressions]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/), such as `my-index-${getMetadata(\"my_metadata_field\"}`. All formatting options can be combined to provide flexibility when creating static, dynamic, and rolling indexes. 
-`index_type` | No | String | Specifies the type of data the sink plugin handles. Valid values include `custom`, `trace-analytics-raw`, `trace-analytics-plain-raw`, `trace-analytics-service-map`, `log-analytics`, `log-analytics-plain`, `metric-analytics`, `metric-analytics-plain`, and `management-disabled`. <br><br>To produce Amazon Security Lake–compliant data from the `otel_logs_source` with `output_format: otel`, set `index_type` to `log-analytics-plain`. <br>For `otel_metrics_source` with `output_format: otel`, set `index_type` to `metric-analytics-plain`. <br>For `otel_trace_source` with `output_format: otel`, set `index_type` to `trace-analytics-plain-raw`. <br><br>Default is `custom`.
+`hosts` | 是 | 清單 | 要寫入的 OpenSearch 主機清單，例如 `["https://localhost:9200", "https://remote-cluster:9200"]`。
+`cert` | 否 | 字串 | 安全性憑證的路徑。例如，若叢集使用 OpenSearch Security 外掛程式，則為 `"config/root-ca.pem"`。
+`username` | 否 | 字串  | HTTP 基本驗證的使用者名稱。
+`password` | 否 | 字串 | HTTP 基本驗證的密碼。
+`aws` | 否 | AWS  | [AWS](#aws) 組態。 
+[max_retries](#configure-max_retries) | 否 | 整數 | `opensearch` sink 在視為失敗之前，應嘗試將資料推送至 OpenSearch 伺服器的次數上限。預設為 `Integer.MAX_VALUE`。若未提供，sink 會持續嘗試將資料推送至 OpenSearch 伺服器，且指數退避會增加重試前的等待時間。
+`aws_sigv4` | 否 | 布林值 | **在 Data Prepper 2.7 中已棄用。** 預設為 `false`。是否使用 AWS Identity and Access Management (IAM) 簽章來連線至 Amazon OpenSearch Service 網域。針對您的存取金鑰、私密金鑰及選用的工作階段權杖，OpenSearch Data Prepper 會使用預設憑證鏈（環境變數、Java 系統屬性、`~/.aws/credential`）。 
+`aws_region` | 否 | 字串 | **在 Data Prepper 2.7 中已棄用。** 當您連線至 Amazon OpenSearch Service 時，網域的 AWS 區域（例如 `"us-east-1"`）。
+`aws_sts_role_arn` | 否 | 字串 | **在 Data Prepper 2.7 中已棄用。** 此外掛程式用來簽署傳送至 Amazon OpenSearch Service 之請求的 IAM 角色。若未提供此資訊，此外掛程式會使用預設憑證。
+`socket_timeout` | 否 | 整數 | 等待資料傳回時的逾時值（毫秒）（兩個連續資料封包之間的最長閒置期間）。逾時值 `0` 會解譯為無限逾時。若此逾時值為負數或未設定，則基礎 Apache HttpClient 會依賴作業系統設定來管理通訊端逾時。
+`connect_timeout` | 否 | 整數| 從連線管理員要求連線時的逾時值（毫秒）。逾時值 `0` 會解譯為無限逾時。若此逾時值為負數或未設定，則基礎 Apache HttpClient 會依賴作業系統設定來管理連線逾時。
+`insecure` | 否 | 布林值  | 是否驗證 SSL 憑證。若設為 `true`，則會停用憑證授權單位 (CA) 憑證驗證，並改為傳送不安全的 HTTP 請求。預設為 `false`。
+`proxy` | 否 | 字串 | [轉送 HTTP Proxy 伺服器](https://en.wikipedia.org/wiki/Proxy_server) 的位址。格式為 `"&lt;hostname or IP&gt;:&lt;port&gt;"`（例如 `"example.com:8100"`、`"http://example.com:8100"`、`"112.112.112.112:8100"`）。連接埠號不能省略。
+`index` | 有條件 | 字串 | 匯出索引的名稱。僅當 `index_type` 為 `custom` 時才需要。索引可以是純字串，例如 `my-index-name`；包含 [Java 日期時間模式](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html)，例如 `my-index-%{yyyy.MM.dd}` 或 `my-%{yyyy-MM-dd-HH}-index`；使用欄位值格式化，例如 `my-index-${/my_field}`；或使用 [Data Prepper 運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，例如 `my-index-${getMetadata(\"my_metadata_field\"}`。所有格式化選項皆可合併使用，以便在建立靜態、動態及輪替索引時提供彈性。 
+`index_type` | 否 | 字串 | 指定 sink 外掛程式處理的資料類型。有效值包括 `custom`、`trace-analytics-raw`、`trace-analytics-plain-raw`、`trace-analytics-service-map`、`log-analytics`、`log-analytics-plain`、`metric-analytics`、`metric-analytics-plain` 及 `management-disabled`。<br><br>若要從 `otel_logs_source` 搭配 `output_format: otel` 產生符合 Amazon Security Lake 規範的資料，請將 `index_type` 設為 `log-analytics-plain`。<br>若為 `otel_metrics_source` 搭配 `output_format: otel`，請將 `index_type` 設為 `metric-analytics-plain`。<br>若為 `otel_trace_source` 搭配 `output_format: otel`，請將 `index_type` 設為 `trace-analytics-plain-raw`。<br><br>預設為 `custom`。
 
 
-`template_type` | No | String | Defines what type of OpenSearch template to use. Available options are `v1` and `index-template`. The default value is `v1`, which uses the original OpenSearch templates available at the `_template` API endpoints. The `index-template` option uses composable [index templates]({{site.url}}{{site.baseurl}}/opensearch/index-templates/), which are available through the OpenSearch `_index_template` API. Composable index types offer more flexibility than the default and are necessary when an OpenSearch cluster contains existing index templates. Composable templates are available for all versions of OpenSearch and some later versions of Elasticsearch. When `distribution_version` is set to `es6`, Data Prepper enforces the `template_type` as `v1`.
-`template_file` | No | String | The path to a JSON [index template]({{site.url}}{{site.baseurl}}/opensearch/index-templates/) file, such as `/your/local/template-file.json`, when `index_type` is set to `custom`. For an example template file, see [otel-v1-apm-span-index-template.json](https://github.com/opensearch-project/data-prepper/blob/main/data-prepper-plugins/opensearch/src/main/resources/otel-v1-apm-span-index-template.json). If you supply a template file, then it must match the template format specified by the `template_type` parameter.
-`template_content` | No | JSON | Contains all the inline JSON found inside of the index  [index template]({{site.url}}{{site.baseurl}}/opensearch/index-templates/). For an example of template content, see [the example template content](#example_template_content).
-`document_id_field` | No | String | **Deprecated in Data Prepper 2.7 in favor of `document_id`.** The field from the source data to use for the OpenSearch document ID (for example, `"my-field"`) if `index_type` is `custom`.
-`document_id` | No | String | A format string to use as the `_id` in OpenSearch documents. To specify a single field in an event, use `${/my_field}`. You can also use Data Prepper expressions to construct the `document_id`, for example, `${getMetadata(\"some_metadata_key\")}`. These options can be combined into more complex formats, such as `${/my_field}-test-${getMetadata(\"some_metadata_key\")}`. 
-`document_version` | No | String  |  A format string to use as the `_version` in OpenSearch documents. To specify a single field in an event, use `${/my_field}`. You can also use Data Prepper expressions to construct the `document_version`, for example, `${getMetadata(\"some_metadata_key\")}`. These options can be combined into more complex versions, such as `${/my_field}${getMetadata(\"some_metadata_key\")}`. The `document_version` format must evaluate to a long type and can only be used when `document_version_type` is set to either `external` or `external_gte`.
-`document_version_type` | No | String  | The document version type for index operations. Must be one of `external`, `external_gte`, or `internal`. If set to `external` or `external_gte`, then `document_version` is required.
-`dlq_file` | No | String | The path to your preferred dead letter queue file (such as `/your/local/dlq-file`). Data Prepper writes to this file when it fails to index a document on the OpenSearch cluster.
-`dlq` | No | N/A | [DLQ configurations]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/dlq/). 
-`bulk_size` | No | Integer (long) | The maximum size (in MiB) of bulk requests sent to the OpenSearch cluster. Values below `0` indicate an unlimited size. If a single document exceeds the maximum bulk request size, then Data Prepper sends each request individually. Default value is `5`.
-`ism_policy_file` | No | String | The absolute file path for an Index State Management (ISM) policy JSON file. This policy file is effective only when there is no built-in policy file for the index type. For example, the `custom` index type is currently the only type without a built-in policy file, so it will use this policy file if it is provided through this parameter. For more information about the policy JSON file, see [ISM policies]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/).
-`number_of_shards` | No | Integer  | The number of primary shards that an index should have on the destination OpenSearch server. This parameter is effective only when `template_file` is either explicitly provided in the sink configuration or built in. If this parameter is set, then it will override the value in the index template file. For more information, see [Create index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/).
-`number_of_replicas` | No | Integer | The number of replica shards that each primary shard should have on the destination OpenSearch server. For example, if you have 4 primary shards and set `number_of_replicas` to `3`, then the index has 12 replica shards. This parameter is effective only when `template_file` is either explicitly provided in the sink configuration or built in. If this parameter is set, then it will override the value in the index template file. For more information, see [Create index]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/).
-`distribution_version` | No | String  | Indicates whether the backend version of the sink is Elasticsearch 6 or later. `es6` represents Elasticsearch 6. `default` represents the latest compatible backend version, such as Elasticsearch 7.x, OpenSearch 1.x, or OpenSearch 2.x. Default is `default`.
-`enable_request_compression` | No | Boolean | Whether to enable compression when sending requests to OpenSearch. When `distribution_version` is set to `es6`, default is `false`. For all other distribution versions, default is `true`.
-`action` | No | String | The OpenSearch bulk action to use for documents. Must be one of `create`, `index`, `update`, `upsert`, or `delete`. Default is `index`.
-`actions` | No | List | A [list of actions](#actions) that can be used as an alternative to `action`, which reads as a switch case statement that conditionally determines the bulk action to take for an event. 
-`flush_timeout` | No | Long | A long class that contains the amount of time, in milliseconds, to try packing a bulk request up to the `bulk_size` before flushing the request. If this timeout expires before a bulk request has reached the `bulk_size`, the request will be flushed. Set to `-1` to disable the flush timeout and instead flush whatever is present at the end of each batch. Default is `60,000`, or 1 minute.
-`normalize_index` | No | Boolean | If true, then the OpenSearch sink will try to create dynamic index names. Index names with format options specified in `${})` are valid according to the [index naming restrictions]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/#index-naming-restrictions). Any invalid characters will be removed. Default value is `false`.
-`routing` | No | String | A string used as a hash for generating the `shard_id` for a document when it is stored in OpenSearch. Each incoming record is searched. When present, the string is used as the routing field for the document. When not present, the default routing mechanism (`document_id`) is used by OpenSearch when storing the document. Supports formatting with fields in events and [Data Prepper expressions]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/), such as `${/my_field}-test-${getMetadata(\"some_metadata_key\")}`.
-`document_root_key` | No | String  | The key in the event that will be used as the root in the document. The default is the root of the event. If the key does not exist, then the entire event is written as the document. If `document_root_key` is of a basic value type, such as a string or integer, then the document will have a structure of `{"data": <value of the document_root_key>}`.
-`serverless` | No | Boolean | **Deprecated in Data Prepper 2.7. Use this option with the `aws` configuration instead.** Determines whether the OpenSearch backend is Amazon OpenSearch Serverless. Set this value to `true` when the destination for the `opensearch` sink is an Amazon OpenSearch Serverless collection. Default is `false`.
-`serverless_options` | No | Object | **Deprecated in Data Prepper 2.7. Use this option with the `aws` configuration instead.** The network configuration options available when the backend of the `opensearch` sink is set to Amazon OpenSearch Serverless. For more information, see [Serverless options](#serverless-options).
-`query_lookup` | No | Object | Configuration for querying existing documents before indexing to prevent duplicates. For more information, see [Query lookup](#query-lookup).
+`template_type` | 否 | 字串 | 定義要使用的 OpenSearch 範本類型。可用選項為 `v1` 和 `index-template`。預設值為 `v1`，使用 `_template` API 端點提供的原始 OpenSearch 範本。`index-template` 選項使用可組合的[索引範本]({{site.url}}{{site.baseurl}}/opensearch/index-templates/)，可透過 OpenSearch `_index_template` API 取得。可組合的索引類型比預設類型更具彈性，且當 OpenSearch 叢集包含既有索引範本時，必須使用這些類型。所有版本的 OpenSearch 及部分較新版本的 Elasticsearch 都提供可組合範本。當 `distribution_version` 設為 `es6` 時，Data Prepper 會強制將 `template_type` 設為 `v1`。
+`template_file` | 否 | 字串 | 當 `index_type` 設為 `custom` 時，JSON [索引範本]({{site.url}}{{site.baseurl}}/opensearch/index-templates/)檔案的路徑，例如 `/your/local/template-file.json`。如需範本檔案的範例，請參閱 [otel-v1-apm-span-index-template.json](https://github.com/opensearch-project/data-prepper/blob/main/data-prepper-plugins/opensearch/src/main/resources/otel-v1-apm-span-index-template.json)。如果您提供範本檔案，該檔案必須符合 `template_type` 參數指定的範本格式。
+`template_content` | 否 | JSON | 包含索引  [索引範本]({{site.url}}{{site.baseurl}}/opensearch/index-templates/)內的所有內嵌 JSON。如需範本內容的範例，請參閱[範本內容範例](#example_template_content)。
+`document_id_field` | 否 | 字串 | **已於 Data Prepper 2.7 中棄用，改用 `document_id`。** 當 `index_type` 為 `custom` 時，來源資料中用作 OpenSearch 文件 ID 的欄位（例如 `"my-field"`）。
+`document_id` | 否 | 字串 | 用作 OpenSearch 文件中 `_id` 的格式字串。若要指定事件中的單一欄位，請使用 `${/my_field}`。您也可以使用 Data Prepper 運算式來建構 `document_id`，例如 `${getMetadata(\"some_metadata_key\")}`。這些選項可以組合成更複雜的格式，例如 `${/my_field}-test-${getMetadata(\"some_metadata_key\")}`。 
+`document_version` | 否 | 字串  |  用作 OpenSearch 文件中 `_version` 的格式字串。若要指定事件中的單一欄位，請使用 `${/my_field}`。您也可以使用 Data Prepper 運算式來建構 `document_version`，例如 `${getMetadata(\"some_metadata_key\")}`。這些選項可以組合成更複雜的版本，例如 `${/my_field}${getMetadata(\"some_metadata_key\")}`。`document_version` 格式的求值結果必須為 long 類型，而且只能在 `document_version_type` 設為 `external` 或 `external_gte` 時使用。
+`document_version_type` | 否 | 字串  | 編製索引作業的文件版本類型。必須為 `external`、`external_gte` 或 `internal` 其中之一。如果設為 `external` 或 `external_gte`，則必須提供 `document_version`。
+`dlq_file` | 否 | 字串 | 您偏好的死信佇列檔案路徑（例如 `/your/local/dlq-file`）。當 Data Prepper 無法在 OpenSearch 叢集上將文件編製索引時，會寫入此檔案。
+`dlq` | 否 | 不適用 | [DLQ 組態]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/dlq/)。 
+`bulk_size` | 否 | 整數（long） | 傳送至 OpenSearch 叢集的批次請求大小上限（以 MiB 為單位）。低於 `0` 的值表示大小不受限制。如果單一文件超過批次請求大小上限，Data Prepper 會個別傳送每個請求。預設值為 `5`。
+`ism_policy_file` | 否 | 字串 | Index State Management（ISM）政策 JSON 檔案的絕對檔案路徑。此政策檔案僅在索引類型沒有內建政策檔案時生效。例如，`custom` 索引類型目前是唯一沒有內建政策檔案的類型，因此，如果透過此參數提供政策檔案，就會使用該檔案。如需政策 JSON 檔案的詳細資訊，請參閱 [ISM 政策]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/)。
+`number_of_shards` | 否 | 整數  | 索引在目的地 OpenSearch 伺服器上應具有的主要分片數。此參數僅在 sink 組態中明確提供 `template_file` 或其為內建時生效。如果設定此參數，便會覆寫索引範本檔案中的值。如需詳細資訊，請參閱[建立索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/)。
+`number_of_replicas` | 否 | 整數 | 每個主要分片在目的地 OpenSearch 伺服器上應具有的副本分片數。例如，如果您有 4 個主要分片，並將 `number_of_replicas` 設為 `3`，則索引會有 12 個副本分片。此參數僅在 sink 組態中明確提供 `template_file` 或其為內建時生效。如果設定此參數，便會覆寫索引範本檔案中的值。如需詳細資訊，請參閱[建立索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/)。
+`distribution_version` | 否 | 字串  | 指出 sink 的後端版本是 Elasticsearch 6 還是更新版本。`es6` 代表 Elasticsearch 6。`default` 代表最新的相容後端版本，例如 Elasticsearch 7.x、OpenSearch 1.x 或 OpenSearch 2.x。預設為 `default`。
+`enable_request_compression` | 否 | 布林值 | 是否在向 OpenSearch 傳送請求時啟用壓縮。當 `distribution_version` 設為 `es6` 時，預設為 `false`。對於所有其他發行版本，預設為 `true`。
+`action` | 否 | 字串 | 要用於文件的 OpenSearch 批次動作。必須為 `create`、`index`、`update`、`upsert` 或 `delete` 其中之一。預設為 `index`。
+`actions` | 否 | 清單 | 可用來替代 `action` 的[動作清單](#actions)，其運作方式如同 switch case 陳述式，依條件決定要對事件執行的批次動作。 
+`flush_timeout` | 否 | Long | 一個 long 類別，包含在排清請求之前，嘗試將批次請求填滿至 `bulk_size` 的時間長度，以毫秒為單位。如果此逾時期限在批次請求達到 `bulk_size` 之前到期，便會排清請求。設為 `-1` 可停用排清逾時，改為在每個批次結束時排清當時已有的所有內容。預設為 `60,000`，即 1 分鐘。
+`normalize_index` | 否 | 布林值 | 如果為 true，OpenSearch sink 會嘗試建立動態索引名稱。在 `${})` 中指定格式選項的索引名稱，依據[索引命名限制]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/#index-naming-restrictions)為有效名稱。任何無效字元都會移除。預設值為 `false`。
+`routing` | 否 | 字串 | 將文件儲存至 OpenSearch 時，用作雜湊以產生文件 `shard_id` 的字串。會搜尋每筆傳入的記錄。若存在此字串，便會將其用作文件的路由欄位。若不存在，OpenSearch 會在儲存文件時使用預設路由機制（`document_id`）。支援使用事件中的欄位和 [Data Prepper 運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)進行格式化，例如 `${/my_field}-test-${getMetadata(\"some_metadata_key\")}`。
+`document_root_key` | 否 | 字串  | 事件中將用作文件根的鍵。預設為事件的根。如果該鍵不存在，則會將整個事件寫入為文件。如果 `document_root_key` 是基本值類型，例如字串或整數，則文件的結構將為 `{"data": <value of the document_root_key>}`。
+`serverless` | 否 | 布林值 | **已於 Data Prepper 2.7 中棄用。請改為搭配 `aws` 組態使用此選項。** 決定 OpenSearch 後端是否為 Amazon OpenSearch Serverless。當 `opensearch` sink 的目的地為 Amazon OpenSearch Serverless 集合時，請將此值設為 `true`。預設為 `false`。
+`serverless_options` | 否 | 物件 | **已於 Data Prepper 2.7 中棄用。請改為搭配 `aws` 組態使用此選項。** 當 `opensearch` sink 的後端設為 Amazon OpenSearch Serverless 時，可用的網路組態選項。如需詳細資訊，請參閱 [Serverless 選項](#serverless-options)。
+`query_lookup` | 否 | 物件 | 在編製索引之前查詢既有文件，以避免重複文件的組態。如需詳細資訊，請參閱[查詢查找](#query-lookup)。
 
 
-## Query lookup
+## 查詢查找
 
-The `query_lookup` configuration enables deduplication by querying OpenSearch for existing documents before indexing new ones. This feature helps prevent duplicates in two scenarios:
+`query_lookup` 組態會在為新文件編製索引之前，先查詢 OpenSearch 中已有的文件，以啟用去重功能。此功能可在兩種情境下協助避免重複：
 
-1. **Conditional querying**: Query for documents based on a condition before indexing them.
-2. **Error-based querying**: Query for documents when bulk operation errors occur that could result in partial success, such as socket timeouts or 500 internal server errors.
+1. **條件式查詢**：在為文件編製索引之前，先根據條件查詢文件。
+2. **錯誤導向查詢**：當大量操作發生可能導致部分成功的錯誤（例如 socket 逾時或 500 內部伺服器錯誤）時，查詢文件。
 
-### Query lookup options
+### 查詢查找選項
 
-The `query_lookup` object supports the following options.
+`query_lookup` 物件支援下列選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`query_when` | No | String | A [Data Prepper expression]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/) that determines which documents qualify for querying before indexing. For example, `getMetadata("potential_duplicate") == true` will only query documents with that metadata field set to `true`.
-`query_term` | Yes | String | The unique field of the document that will be used to query for existing documents in OpenSearch. This is typically an ID field.
-`query_on_bulk_errors` | No | Boolean | When set to `true`, documents that encounter recoverable bulk operation errors (such as socket timeouts or 500 errors) will be queried rather than immediately retried. This helps prevent duplicates when the initial indexing request may have partially succeeded. Default is `false`.
-`query_duration` | No | Duration | The amount of time to query for a given document before indexing it. Use ISO 8601 duration format, such as `PT5M` for 5 minutes. Default is `PT5M`.
-`async_limit` | No | Integer | The maximum number of documents that can be queried concurrently before blocking the processor worker threads. Default is `5000`.
+`query_when` | 否 | 字串 | 一個 [Data Prepper 運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，用於決定哪些文件在編製索引前符合查詢條件。例如，`getMetadata("potential_duplicate") == true` 只會查詢該中繼資料欄位設定為 `true` 的文件。
+`query_term` | 是 | 字串 | 文件的唯一欄位，將用於查詢 OpenSearch 中已有的文件。這通常是一個 ID 欄位。
+`query_on_bulk_errors` | 否 | 布林值 | 設定為 `true` 時，遇到可復原的大量操作錯誤（例如 socket 逾時或 500 錯誤）的文件會先進行查詢，而不是立即重試。這有助於在初始索引請求可能已部分成功的情況下避免重複。預設值為 `false`。
+`query_duration` | 否 | 期間 | 在為指定文件編製索引之前查詢該文件的時間長度。使用 ISO 8601 期間格式，例如 `PT5M` 表示 5 分鐘。預設值為 `PT5M`。
+`async_limit` | 否 | 整數 | 在阻擋處理器工作執行緒之前，可同時查詢的最大文件數。預設值為 `5000`。
 
-### Query lookup example
+### 查詢查找範例
 
-The following example configuration queries for documents with a `potential_duplicate` metadata field before indexing:
+下列範例組態會在編製索引之前查詢具有 `potential_duplicate` 中繼資料欄位的文件：
 
 ```yaml
 pipeline:
@@ -135,96 +136,96 @@ pipeline:
         async_limit: 5000
 ```
 
-In this configuration:
-- Documents with the `potential_duplicate` metadata set to `true` are queried before indexing.
-- The `document_id` field is used as the unique identifier for querying.
-- If a bulk operation encounters errors like socket timeouts or 500 errors, the affected documents are queried rather than immediately retried.
-- Documents are queried for up to 5 minutes before being indexed.
-- Up to 5,000 documents can be queried concurrently.
+在此組態中：
+- 中繼資料 `potential_duplicate` 設定為 `true` 的文件會在編製索引前先進行查詢。
+- `document_id` 欄位會用作查詢時的唯一識別碼。
+- 如果大量操作遇到 socket 逾時或 500 錯誤等錯誤，受影響的文件會先進行查詢，而不是立即重試。
+- 文件在編製索引之前最多會被查詢 5 分鐘。
+- 最多可同時查詢 5,000 份文件。
 
-If a document already exists in OpenSearch, it will be dropped and the event handle will be released, preventing duplicates.
+如果文件已存在於 OpenSearch 中，該文件將被捨棄並釋放事件控制碼，以避免重複。
 
 <!-- vale off -->
 ## aws
 <!-- vale on -->
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`region` | No | String | The AWS Region to use for credentials. Defaults to [standard SDK behavior to determine the Region](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html).
-`sts_role_arn` | No | String | The AWS Security Token Service (AWS STS) role to assume for requests to Amazon SQS and Amazon S3. Defaults to `null`, which will use [standard SDK behavior for credentials](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html).
-`sts_header_overrides` | No | Map | A map of header overrides that the IAM role assumes for the sink plugin.
-`sts_external_id` | No | String | The external ID to attach to AssumeRole requests from AWS STS.
-`serverless` | No | Boolean | Determines whether the OpenSearch backend is Amazon OpenSearch Serverless. Set this value to `true` when the destination for the `opensearch` sink is an Amazon OpenSearch Serverless collection. Default is `false`.
-`serverless_options` | No | Object | The network configuration options available when the backend of the `opensearch` sink is set to Amazon OpenSearch Serverless. For more information, see [Serverless options](#serverless-options).
+`region` | 否 | 字串 | 用於憑證的 AWS 區域。預設採用[判斷區域的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html)。
+`sts_role_arn` | 否 | 字串 | 對 Amazon SQS 和 Amazon S3 發出請求時所擔任的 AWS Security Token Service (AWS STS) 角色。預設值為 `null`，將採用[憑證的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html)。
+`sts_header_overrides` | 否 | 對應 | IAM 角色為此 sink 外掛程式所擔任時的標頭覆寫對應。
+`sts_external_id` | 否 | 字串 | 要附加至來自 AWS STS 之 AssumeRole 請求的外部 ID。
+`serverless` | 否 | 布林值 | 決定 OpenSearch 後端是否為 Amazon OpenSearch Serverless。當 `opensearch` sink 的目的地是 Amazon OpenSearch Serverless 集合時，請將此值設定為 `true`。預設值為 `false`。
+`serverless_options` | 否 | 物件 | 當 `opensearch` sink 的後端設定為 Amazon OpenSearch Serverless 時可用的網路組態選項。如需更多資訊，請參閱 [Serverless 選項](#serverless-options)。
 
 <!-- vale off -->
 ## actions
 <!-- vale on -->
 
-The following options can be used inside the `actions` option.
+下列選項可在 `actions` 選項內使用。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- |:---| :--- | :---
-`type` | Yes | String | The type of bulk action to use if the `when` condition evaluates to true. Must be either `create`, `index`, `update`, `upsert`, or `delete`.
-`when` | No | String | A [Data Prepper expression]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/) that conditionally evaluates whether an event will be sent to OpenSearch using the bulk action configured in `type`. When empty, the bulk action will be chosen automatically when the event is sent to OpenSearch.
+`type` | 是 | 字串 | 當 `when` 條件評估為 true 時要使用的大量操作類型。必須是 `create`、`index`、`update`、`upsert` 或 `delete`。
+`when` | 否 | 字串 | 一個 [Data Prepper 運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，用於條件式評估是否使用 `type` 中設定的大量操作將事件傳送至 OpenSearch。留空時，會在事件傳送至 OpenSearch 時自動選擇大量操作。
 
 
-## Serverless options
+## Serverless 選項
 
-The following options can be used in the `serverless_options` object.
+下列選項可在 `serverless_options` 物件中使用。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :---| :---
-`network_policy_name` | Yes | String | The name of the network policy to create.
-`collection_name` | Yes | String | The name of the Amazon OpenSearch Serverless collection to configure.
-`vpce_id` | Yes | String | The virtual private cloud (VPC) endpoint to which the source connects.
+`network_policy_name` | 是 | 字串 | 要建立的網路政策名稱。
+`collection_name` | 是 | 字串 | 要設定的 Amazon OpenSearch Serverless 集合名稱。
+`vpce_id` | 是 | 字串 | 來源所連線的虛擬私人雲端 (VPC) 端點。
 
-### Configure max_retries
+### 設定 max_retries
 
-You can include the `max_retries` option in your pipeline configuration to control the number of times the source tries to write to sinks with exponential backoff. If you don't include this option, pipelines keep retrying forever. 
+您可以在管線組態中加入 `max_retries` 選項，以控制來源以指數退避方式嘗試寫入 sink 的次數。若未加入此選項，管線將無限期重試。
 
-If you specify `max_retries` and a pipeline has a [dead-letter queue (DLQ)]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/dlq/) configured, the pipeline will keep trying to write to sinks until it reaches the maximum number of retries, at which point it starts to send failed data to the DLQ.
+如果您指定了 `max_retries`，且管線已設定[死信佇列 (DLQ)]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/dlq/)，管線會持續嘗試寫入 sink，直到達到最大重試次數，屆時便會開始將失敗的資料傳送至 DLQ。
 
-If you don't specify `max_retries`, only data that is rejected by sinks is written to the DLQ. Pipelines continue to try to write all other data to the sinks.
+如果您未指定 `max_retries`，只有被 sink 拒絕的資料會寫入 DLQ。管線會繼續嘗試將所有其他資料寫入 sink。
 
-### Error handling with acknowledgments
+### 使用確認時的錯誤處理
 
-When pipelines have [end-to-end acknowledgments]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/#end-to-end-acknowledgments) enabled, error handling is controlled by two key configurations:
-* [Dead-letter queue (DLQ)]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/dlq/)
+當管線啟用了[端對端確認]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/#end-to-end-acknowledgments)時，錯誤處理由兩個關鍵組態控制：
+* [死信佇列 (DLQ)]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/dlq/)
 * [`max_retries`](#configure-max_retries)
 
-#### DLQ configuration (strongly recommended)
+#### DLQ 組態（強烈建議）
 
-The OpenSearch sink acknowledges events only when:
-* Successfully sent to OpenSearch.
-* Successfully sent to DLQ.
+OpenSearch sink 只會在下列情況下確認事件：
+* 成功傳送至 OpenSearch。
+* 成功傳送至 DLQ。
 
-Without a DLQ configured:
-* Failed events remain unacknowledged.
-* Source must handle retries.
-* Risk of infinite reprocessing for non-retryable errors.
+若未設定 DLQ：
+* 失敗的事件將保持未確認狀態。
+* 來源必須自行處理重試。
+* 對於不可重試的錯誤，可能導致無限重複處理的風險。
 
-#### Example: S3 source with acknowledgments
+#### 範例：啟用確認的 S3 來源
 
-Consider an [S3 source]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/) with acknowledgments enabled:
+請考慮一個啟用了確認的 [S3 來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/)：
 
-**Without DLQ**:
-* A single failed event prevents acknowledgment of an entire S3 object.
-* The entire S3 object requires reprocessing.
-* Non-retryable errors can cause infinite reprocessing ("poison pill").
+**沒有 DLQ 時**：
+* 單一失敗事件會導致整個 S3 物件無法確認。
+* 整個 S3 物件需要重新處理。
+* 不可重試的錯誤可能導致無限重複處理（「毒丸」）。
 
-**With `max_retries` but no DLQ**:
-* Reaching `max_retries` still prevents acknowledgment.
-* Results in unnecessary reprocessing of entire S3 objects.
+**有 `max_retries` 但沒有 DLQ 時**：
+* 達到 `max_retries` 仍會導致無法確認。
+* 導致整個 S3 物件被不必要地重新處理。
 
-**Best practice**---always configure a DLQ when using acknowledgments to:
-* Prevent infinite reprocessing.
-* Handle non-retryable errors gracefully.
-* Minimize unnecessary reprocessing.
+**最佳實務**---在使用確認時務必設定 DLQ，以便：
+* 避免無限重複處理。
+* 妥善處理不可重試的錯誤。
+* 將不必要的重新處理降至最低。
 
-## OpenSearch cluster security
+## OpenSearch 叢集安全性
 
-In order to send data to an OpenSearch cluster using the `opensearch` sink plugin, you must specify your username and password within the pipeline configuration. The following example `pipelines.yaml` file demonstrates how to specify admin security credentials:
+若要使用 `opensearch` sink 外掛程式將資料傳送至 OpenSearch 叢集，您必須在管線組態中指定您的使用者名稱與密碼。下列範例 `pipelines.yaml` 檔案示範如何指定管理員安全性憑證：
 
 ```yaml
 sink:
@@ -234,31 +235,31 @@ sink:
       ...
 ```
 
-Alternately, rather than admin credentials, you can specify the credentials of a user mapped to a role with the minimum permissions listed in the following sections.
+或者，您也可以不使用管理員憑證，改為指定對應至具有下列各節所列最低權限角色之使用者的憑證。
 
-### Cluster permissions
+### 叢集權限
 
 - `cluster_all`
 - `indices:admin/template/get`
 - `indices:admin/template/put`
 
-If the target is an OpenSearch data stream, the following permission is required by the data stream detector:
+如果目標是 OpenSearch 資料串流，資料串流偵測器需要下列權限：
 
 - `indices:admin/data_stream/get`
 
-### Index permissions
+### 索引權限
 
-- Index: `otel-v1*`; Index permission: `indices_all`
-- Index: `.opendistro-ism-config`; Index permission: `indices_all`
-- Index: `*`; Index permission: `manage_aliases`
+- 索引：`otel-v1*`；索引權限：`indices_all`
+- 索引：`.opendistro-ism-config`；索引權限：`indices_all`
+- 索引：`*`；索引權限：`manage_aliases`
 
-For instructions on how to map users to roles, see [Map users to roles]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#mapping-users-to-roles).
+如需如何將使用者對應至角色的操作說明，請參閱[將使用者對應至角色]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#mapping-users-to-roles)。
 
-## Amazon OpenSearch Service domain security
+## Amazon OpenSearch Service 網域安全性
 
-The `opensearch` sink plugin can send data to an [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html) domain, which uses IAM for security. The plugin uses the default credential chain. Run `aws configure` using the [AWS Command Line Interface (AWS CLI)](https://aws.amazon.com/cli/) to set your credentials.
+`opensearch` sink 外掛程式可將資料傳送至使用 IAM 進行安全性的 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html) 網域。此外掛程式使用預設憑證鏈。請使用 [AWS Command Line Interface (AWS CLI)](https://aws.amazon.com/cli/) 執行 `aws configure` 來設定您的憑證。
 
-Make sure the credentials that you configure have the required IAM permissions. The following domain access policy demonstrates the minimum required permissions:
+請確認您設定的憑證具有必要的 IAM 權限。下列網域存取原則示範最低必要權限：
 
 ```json
 {
@@ -290,16 +291,16 @@ Make sure the credentials that you configure have the required IAM permissions. 
 }
 ```
 
-For instructions on how to configure the domain access policy, see [Resource-based policies
-](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ac.html#ac-types-resource) in the Amazon OpenSearch Service documentation.
+如需如何設定網域存取原則的操作說明，請參閱 Amazon OpenSearch Service 文件中的[資源型原則
+](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ac.html#ac-types-resource)。
 
-### Fine-grained access control
+### 精細存取控制
 
-If your OpenSearch Service domain uses [fine-grained access control](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html), the `opensearch` sink plugin requires some additional configuration.
+如果您的 OpenSearch Service 網域使用[精細存取控制](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html)，則 `opensearch` sink 外掛程式需要一些額外的組態。
 
-#### IAM ARN as master user
+#### 以 IAM ARN 作為主使用者
 
-If you're using an IAM Amazon Resource Name (ARN) as the master user, include the `aws_sigv4` option in your sink configuration:
+如果您使用 IAM Amazon Resource Name (ARN) 作為主使用者，請在 sink 組態中加入 `aws_sigv4` 選項：
 
 ```yaml
 ...
@@ -309,11 +310,11 @@ sink:
       aws_sigv4: true
 ```
 
-Run `aws configure` using the AWS CLI to use the master IAM user credentials. If you don't want to use the master user, you can specify a different IAM role using the `aws_sts_role_arn` option. The plugin will then use this role to sign requests sent to the domain sink. The ARN that you specify must be included in the [domain access policy]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sinks/opensearch/#amazon-opensearch-service-domain-security).
+請使用 AWS CLI 執行 `aws configure` 來使用主 IAM 使用者憑證。如果您不想使用主使用者，可以使用 `aws_sts_role_arn` 選項指定不同的 IAM 角色。此外掛程式接著會使用此角色來簽署傳送至網域 sink 的請求。您指定的 ARN 必須包含在[網域存取原則]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sinks/opensearch/#amazon-opensearch-service-domain-security)中。
 
-#### Master user in the internal user database
+#### 內部使用者資料庫中的主使用者
 
-If your domain uses a master user in the internal user database, specify the master username and password as well as the `aws_sigv4` option:
+如果您的網域使用內部使用者資料庫中的主使用者，請指定主使用者名稱與密碼，以及 `aws_sigv4` 選項：
 
 ```yaml
 sink:
@@ -323,22 +324,22 @@ sink:
       password: "master-password"
 ```
 
-For more information, see [Recommended configurations](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html#fgac-recommendations) in the Amazon OpenSearch Service documentation.
+如需更多資訊，請參閱 Amazon OpenSearch Service 文件中的[建議組態](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html#fgac-recommendations)。
 
-***Note***: You can create a new IAM role or internal user database user with the `all_access` permission and use it instead of the master user.
+***注意***：您可以建立具有 `all_access` 權限的新 IAM 角色或內部使用者資料庫使用者，並使用它來取代主使用者。
 
-## OpenSearch Serverless collection security
+## OpenSearch Serverless 集合安全性
 
-The `opensearch` sink plugin can send data to an [Amazon OpenSearch Serverless](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html) collection.
+`opensearch` sink 外掛程式可將資料傳送至 [Amazon OpenSearch Serverless](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html) 集合。
 
-OpenSearch Serverless collection sinks have the following limitations:
+OpenSearch Serverless 集合 sink 有下列限制：
 
-- You can't write to a collection that uses virtual private cloud (VPC) access. The collection must be accessible from public networks.
-- The OTel trace group processor doesn't currently support collection sinks.
+- 您無法寫入使用虛擬私有雲端 (VPC) 存取的集合。此集合必須可從公用網路存取。
+- OTel trace group processor 目前不支援集合 sink。
 
-### Creating a pipeline role
+### 建立管線角色
 
-First, create an IAM role that the pipeline will assume in order to write to the collection. The role must have the following minimum permissions:
+首先，建立管線為了寫入集合而將擔任的 IAM 角色。此角色必須具有下列最低權限：
 
 ```json
 {
@@ -355,7 +356,7 @@ First, create an IAM role that the pipeline will assume in order to write to the
 }
 ```
 
-The role must have the following trust relationship, which allows the pipeline to assume it:
+此角色必須具有下列信任關係，以允許管線擔任該角色：
 
 ```json
 {
@@ -372,12 +373,12 @@ The role must have the following trust relationship, which allows the pipeline t
 }
 ```
 
-### Creating a collection
+### 建立集合
 
-Next, create a collection with the following settings:
+接著，建立具有下列設定的集合：
 
-- Public [network access](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-network.html) to both the OpenSearch endpoint and OpenSearch Dashboards.
-- The following [data access policy](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-data-access.html), which grants the required permissions to the pipeline role:
+- 對 OpenSearch 端點與 OpenSearch Dashboards 的公用[網路存取](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-network.html)。
+- 下列[資料存取原則](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-data-access.html)，其會將必要權限授予管線角色：
 
   ```json
   [
@@ -404,13 +405,13 @@ Next, create a collection with the following settings:
   ]
   ```
 
-  ***Important***: Make sure to replace the ARN in the `Principal` element with the ARN of the pipeline role that you created in the preceding step.
+  ***重要***：請務必將 `Principal` 元素中的 ARN 取代為您在前述步驟中建立之管線角色的 ARN。
 
-  For instructions on how to create collections, see [Creating collections](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-manage.html#serverless-create) in the Amazon OpenSearch Service documentation.
+  如需如何建立集合的操作說明，請參閱 Amazon OpenSearch Service 文件中的[建立集合](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-manage.html#serverless-create)。
 
-### Creating a pipeline
+### 建立管線
 
-Within your `pipelines.yaml` file, specify the OpenSearch Serverless collection endpoint as the `hosts` option. In addition, you must set the `serverless` option to `true`. Specify the pipeline role in the `sts_role_arn` option:
+在您的 `pipelines.yaml` 檔案中，將 OpenSearch Serverless 集合端點指定為 `hosts` 選項。此外，您必須將 `serverless` 選項設為 `true`。在 `sts_role_arn` 選項中指定管線角色：
 
 ```yaml
 log-pipeline:
@@ -430,9 +431,9 @@ log-pipeline:
           region: "us-east-1"
 ```
 
-### Example with template_content and actions <a id="example_template_content"></a>
+### 使用 template_content 和 actions 的範例 <a id="example_template_content"></a>
 
-The following example pipeline contains both `template_content` and a list of conditional `actions`:
+下列範例管線同時包含 `template_content` 和一份附帶條件的 `actions` 清單：
 
 ```yaml
 log-pipeline:

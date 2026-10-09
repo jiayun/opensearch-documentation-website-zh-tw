@@ -1,42 +1,43 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Resource sharing APIs
+title: "資源共用 API"
 parent: Resource sharing and access control
 grand_parent: Access control
 nav_order: 10
 ---
 
-# Resource sharing APIs
-**Introduced 3.3**
+# 資源共用 API
+**3.3 版新增**
 {: .label .label-purple }
 
-The Resource Sharing APIs provide programmatic access to manage fine-grained, document-level access control for plugin-defined resources. These APIs allow you to share resources, manage access permissions, and automate resource sharing workflows.
+資源共用 API 提供程式化存取，用於管理外掛程式所定義資源的細微文件層級存取控制。這些 API 可讓您共用資源、管理存取權限，並自動化資源共用工作流程。
 
-You can manage resource sharing directly using these REST APIs. Operations can only be performed if you are the owner, a superadmin, or have sharing access to the resource.
+您可以直接使用這些 REST API 來管理資源共用。只有當您是資源擁有者、超級管理員，或對該資源具有共用存取權時，才能執行相關操作。
 
-## Migrate legacy sharing metadata
+## 遷移舊版共用中繼資料
 
-Imports legacy plugin-managed sharing metadata. This API is intended to be run once by an administrator during system migration.
+匯入舊版由外掛程式管理的共用中繼資料。此 API 旨在系統遷移期間由管理員執行一次。
 
-### Endpoint
+### 端點
 
 ```json
 POST _plugins/_security/api/resources/migrate
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `source_index` | String | The source index containing legacy sharing metadata. Required. |
-| `username_path` | String | A JSON path to the owner name (for example, `/owner/name`). Required. |
-| `backend_roles_path` | String | A JSON path to backend roles (for example, `/owner/backend_roles`). Required. |
-| `default_owner` | String | The default owner for resources without explicit ownership. Required. |
-| `default_access_level` | Object | The default access levels by resource type. Add additional entries if the resource index contains multiple resource types. Required. |
+| `source_index` | 字串 | 包含舊版共用中繼資料的來源索引。必要。 |
+| `username_path` | 字串 | 指向擁有者名稱的 JSON 路徑 (例如 `/owner/name`)。必要。 |
+| `backend_roles_path` | 字串 | 指向後端角色的 JSON 路徑 (例如 `/owner/backend_roles`)。必要。 |
+| `default_owner` | 字串 | 未明確指定擁有者之資源的預設擁有者。必要。 |
+| `default_access_level` | 物件 | 依資源類型區分的預設存取層級。若資源索引包含多種資源類型，請新增其他項目。必要。 |
 
-### Example request
+### 範例請求
 
 ```json
 POST _plugins/_security/api/resources/migrate
@@ -53,7 +54,7 @@ POST _plugins/_security/api/resources/migrate
 ```
 {% include copy-curl.html security=true %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -63,47 +64,47 @@ POST _plugins/_security/api/resources/migrate
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `summary` | String | A summary message describing the migration results, including counts of migrated, skipped, and failed resources. |
-| `resourcesWithDefaultOwner` | Array | A list of resource IDs that were assigned the default owner because no owner information was found. |
-| `skippedResources` | Array | A list of resource IDs that were skipped during migration (for example, missing type information or already migrated). |
+| `summary` | 字串 | 描述遷移結果的摘要訊息，包括已遷移、已略過及失敗的資源數量。 |
+| `resourcesWithDefaultOwner` | 陣列 | 因找不到擁有者資訊而被指派預設擁有者的資源 ID 清單。 |
+| `skippedResources` | 陣列 | 遷移期間被略過的資源 ID 清單 (例如缺少類型資訊或已遷移)。 |
 
-### Required permissions
+### 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `restapi:admin/resource_sharing/migrate`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`restapi:admin/resource_sharing/migrate`。
 
-## Get sharing configuration
+## 取得共用組態
 
-Retrieves the current sharing configuration for a specific resource.
+擷取特定資源目前的共用組態。
 
-### Endpoint
+### 端點
 
 ```json
 GET _plugins/_security/api/resource/share
 ```
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. 
+下表列出可用的查詢參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `resource_id` | String | The unique identifier of the resource. Required. |
-| `resource_type` | String | The type of the resource (for example, `ml-model-group`). Required. |
+| `resource_id` | 字串 | 資源的唯一識別碼。必要。 |
+| `resource_type` | 字串 | 資源的類型 (例如 `ml-model-group`)。必要。 |
 
-### Example request
+### 範例請求
 
 ```json
 GET _plugins/_security/api/resource/share?resource_id=model-group-123&resource_type=ml-model-group
 ```
 {% include copy-curl.html security=true %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -128,47 +129,47 @@ GET _plugins/_security/api/resource/share?resource_id=model-group-123&resource_t
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `sharing_info` | Object | Contains the complete sharing configuration for the resource. |
-| `sharing_info.resource_id` | String | The unique identifier of the resource. |
-| `sharing_info.created_by` | Object | Information about the resource creator. |
-| `sharing_info.created_by.user` | String | The username of the resource creator. |
-| `sharing_info.share_with` | Object | The sharing configuration organized by access level. |
-| `sharing_info.share_with.<access_level>` | Object | An access level (for example, `read_only`, `read_write`) containing lists of principals. |
-| `sharing_info.share_with.<access_level>.users` | Array | A list of usernames with this access level. |
-| `sharing_info.share_with.<access_level>.roles` | Array | A list of roles with this access level. |
-| `sharing_info.share_with.<access_level>.backend_roles` | Array | A list of backend roles with this access level. |
+| `sharing_info` | 物件 | 包含該資源的完整共用組態。 |
+| `sharing_info.resource_id` | 字串 | 資源的唯一識別碼。 |
+| `sharing_info.created_by` | 物件 | 資源建立者的相關資訊。 |
+| `sharing_info.created_by.user` | 字串 | 資源建立者的使用者名稱。 |
+| `sharing_info.share_with` | 物件 | 依存取層級組織的共用組態。 |
+| `sharing_info.share_with.<access_level>` | 物件 | 一個存取層級 (例如 `read_only`、`read_write`)，包含主體清單。 |
+| `sharing_info.share_with.<access_level>.users` | 陣列 | 具有此存取層級的使用者名稱清單。 |
+| `sharing_info.share_with.<access_level>.roles` | 陣列 | 具有此存取層級的角色清單。 |
+| `sharing_info.share_with.<access_level>.backend_roles` | 陣列 | 具有此存取層級的後端角色清單。 |
 
-### Required permissions
+### 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/security/resource/share`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:admin/security/resource/share`。
 
-## Replace resource sharing configuration
+## 取代資源共用組態
 
-Completely replaces the sharing configuration for a resource. This operation overwrites all existing sharing settings.
+完全取代資源的共用組態。此操作會覆寫所有現有的共用設定。
 
-### Endpoint
+### 端點
 
 ```json
 PUT _plugins/_security/api/resource/share
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `resource_id` | String | The unique identifier of the resource. Required. |
-| `resource_type` | String | The type of the resource. Required. |
-| `share_with` | Object | Sharing configuration organized by access level. Each access level can contain `users`, `roles`, and `backend_roles` arrays. Required. |
+| `resource_id` | 字串 | 資源的唯一識別碼。必要。 |
+| `resource_type` | 字串 | 資源的類型。必要。 |
+| `share_with` | 物件 | 依存取層級組織的共用組態。每個存取層級可包含 `users`、`roles` 和 `backend_roles` 陣列。必要。 |
 
-### Example request: Share with specific users and roles
+### 範例請求：與特定使用者和角色共用
 
 ```json
 PUT _plugins/_security/api/resource/share
@@ -189,7 +190,7 @@ PUT _plugins/_security/api/resource/share
 ```
 {% include copy-curl.html security=true %}
 
-### Example request: Make a resource private
+### 範例請求：將資源設為私人
 
 ```json
 PUT _plugins/_security/api/resource/share
@@ -201,7 +202,7 @@ PUT _plugins/_security/api/resource/share
 ```
 {% include copy-curl.html security=true %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -226,48 +227,48 @@ PUT _plugins/_security/api/resource/share
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `sharing_info` | Object | Contains the complete sharing configuration for the resource. |
-| `sharing_info.resource_id` | String | The unique identifier of the resource. |
-| `sharing_info.created_by` | Object | Information about the resource creator. |
-| `sharing_info.created_by.user` | String | The username of the resource creator. |
-| `sharing_info.share_with` | Object | The sharing configuration organized by access level. |
-| `sharing_info.share_with.<access_level>` | Object | An access level (for example, `read_only`, `read_write`) containing lists of principals. |
-| `sharing_info.share_with.<access_level>.users` | Array | A list of usernames with this access level. |
-| `sharing_info.share_with.<access_level>.roles` | Array | A list of roles with this access level. |
-| `sharing_info.share_with.<access_level>.backend_roles` | Array | A list of backend roles with this access level. |
+| `sharing_info` | 物件 | 包含該資源的完整共用組態。 |
+| `sharing_info.resource_id` | 字串 | 資源的唯一識別碼。 |
+| `sharing_info.created_by` | 物件 | 資源建立者的相關資訊。 |
+| `sharing_info.created_by.user` | 字串 | 資源建立者的使用者名稱。 |
+| `sharing_info.share_with` | 物件 | 依存取層級組織的共用組態。 |
+| `sharing_info.share_with.<access_level>` | 物件 | 一個存取層級 (例如 `read_only`、`read_write`)，包含主體清單。 |
+| `sharing_info.share_with.<access_level>.users` | 陣列 | 具有此存取層級的使用者名稱清單。 |
+| `sharing_info.share_with.<access_level>.roles` | 陣列 | 具有此存取層級的角色清單。 |
+| `sharing_info.share_with.<access_level>.backend_roles` | 陣列 | 具有此存取層級的後端角色清單。 |
 
-### Required permissions
+### 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/security/resource/share`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`cluster:admin/security/resource/share`。
 
-## Update resource sharing configuration
+## 更新資源共用組態
 
-Adds or removes access without affecting the existing sharing configuration. This operation is non-destructive and preserves current access settings.
+在不影響現有共用組態的情況下新增或移除存取權。此操作為非破壞性，並會保留目前的存取設定。
 
-### Endpoint
+### 端點
 
 ```json
 PATCH _plugins/_security/api/resource/share
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `resource_id` | String | The unique identifier of the resource. Required. |
-| `resource_type` | String | The type of the resource. Required. |
-| `add` | Object | Access to add, organized by access level. Optional. |
-| `revoke` | Object | Access to remove, organized by access level. Optional. |
+| `resource_id` | 字串 | 資源的唯一識別碼。必要。 |
+| `resource_type` | 字串 | 資源的類型。必要。 |
+| `add` | 物件 | 要新增的存取權，依存取層級分類。選用。 |
+| `revoke` | 物件 | 要移除的存取權，依存取層級分類。選用。 |
 
-### Example request: Add and revoke access simultaneously
+### 範例請求：同時新增與撤銷存取權
 
 ```json
 PATCH _plugins/_security/api/resource/share
@@ -284,7 +285,7 @@ PATCH _plugins/_security/api/resource/share
 ```
 {% include copy-curl.html security=true %}
 
-### Example request: Make a resource public
+### 範例請求：將資源設為公開
 
 ```json
 PATCH _plugins/_security/api/resource/share
@@ -298,7 +299,7 @@ PATCH _plugins/_security/api/resource/share
 ```
 {% include copy-curl.html security=true %}
 
-### Example request: Remove specific access
+### 範例請求：移除特定存取權
 
 ```json
 PATCH _plugins/_security/api/resource/share
@@ -312,7 +313,7 @@ PATCH _plugins/_security/api/resource/share
 ```
 {% include copy-curl.html security=true %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -333,52 +334,52 @@ PATCH _plugins/_security/api/resource/share
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `sharing_info` | Object | Contains the complete sharing configuration for the resource after modifications. |
-| `sharing_info.resource_id` | String | The unique identifier of the resource. |
-| `sharing_info.created_by` | Object | Information about the resource creator. |
-| `sharing_info.created_by.user` | String | The username of the resource creator. |
-| `sharing_info.share_with` | Object | The updated sharing configuration organized by access level. |
-| `sharing_info.share_with.<access_level>` | Object | An access level containing lists of principals after add/revoke operations. |
-| `sharing_info.share_with.<access_level>.users` | Array | A list of usernames with this access level. |
-| `sharing_info.share_with.<access_level>.roles` | Array | A list of roles with this access level. |
-| `sharing_info.share_with.<access_level>.backend_roles` | Array | A list of backend roles with this access level. |
+| `sharing_info` | 物件 | 包含修改後資源的完整共用組態。 |
+| `sharing_info.resource_id` | 字串 | 資源的唯一識別碼。 |
+| `sharing_info.created_by` | 物件 | 資源建立者的相關資訊。 |
+| `sharing_info.created_by.user` | 字串 | 資源建立者的使用者名稱。 |
+| `sharing_info.share_with` | 物件 | 更新後的共用組態，依存取層級分類。 |
+| `sharing_info.share_with.<access_level>` | 物件 | 一個存取層級，包含新增/撤銷操作後的主體清單。 |
+| `sharing_info.share_with.<access_level>.users` | 陣列 | 具有此存取層級的使用者名稱清單。 |
+| `sharing_info.share_with.<access_level>.roles` | 陣列 | 具有此存取層級的角色清單。 |
+| `sharing_info.share_with.<access_level>.backend_roles` | 陣列 | 具有此存取層級的後端角色清單。 |
 
-### Required permissions
+### 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/security/resource/share`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`cluster:admin/security/resource/share`。
 
-## List accessible resources
+## 列出可存取的資源
 
-Returns all resources of a specific type that you have access to view or manage.
+傳回您有權檢視或管理的特定類型的所有資源。
 
-### Endpoint
+### 端點
 
 ```json
 GET _plugins/_security/api/resource/list
 ```
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters. 
+下表列出可用的查詢參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `resource_type` | String | The type of resources to list. Required. |
+| `resource_type` | 字串 | 要列出的資源類型。必要。 |
 
-### Example request
+### 範例請求
 
 ```json
 GET _plugins/_security/api/resource/list?resource_type=ml-model-group
 ```
 {% include copy-curl.html security=true %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -408,44 +409,44 @@ GET _plugins/_security/api/resource/list?resource_type=ml-model-group
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `resources` | Array | A list of resources accessible to the authenticated user. |
-| `resources[].resource_id` | String | The unique identifier of the resource. |
-| `resources[].created_by` | Object | Information about the resource creator. |
-| `resources[].created_by.user` | String | The username of the resource creator. |
-| `resources[].created_by.tenant` | String | The tenant associated with the resource creator (if applicable). |
-| `resources[].share_with` | Object | The sharing configuration for this resource. This field may not be present if the resource has not been shared yet. |
-| `resources[].share_with.<access_level>` | Object | An access level containing lists of principals. |
-| `resources[].share_with.<access_level>.users` | Array | A list of usernames with this access level. |
-| `resources[].can_share` | Boolean | Indicates whether the authenticated user has permission to share this resource. |
+| `resources` | 陣列 | 已驗證使用者可存取的資源清單。 |
+| `resources[].resource_id` | 字串 | 資源的唯一識別碼。 |
+| `resources[].created_by` | 物件 | 資源建立者的相關資訊。 |
+| `resources[].created_by.user` | 字串 | 資源建立者的使用者名稱。 |
+| `resources[].created_by.tenant` | 字串 | 與資源建立者相關聯的租用戶（若適用）。 |
+| `resources[].share_with` | 物件 | 此資源的共用組態。若資源尚未共用，則可能不會有此欄位。 |
+| `resources[].share_with.<access_level>` | 物件 | 一個存取層級，包含主體清單。 |
+| `resources[].share_with.<access_level>.users` | 陣列 | 具有此存取層級的使用者名稱清單。 |
+| `resources[].can_share` | 布林值 | 指出已驗證使用者是否具有共用此資源的權限。 |
 
-### Required permissions
+### 必要權限
 
-This API requires authenticated access but does not require specific cluster permissions.
+此 API 需要已驗證的存取權，但不需要特定的叢集權限。
 
-## List resource types
+## 列出資源類型
 
-Returns all available shareable resource types and their supported access levels. OpenSearch Dashboards uses this API to determine supported access levels per resource type.
+傳回所有可用的可共用資源類型及其支援的存取層級。OpenSearch Dashboards 會使用此 API 來判斷每種資源類型所支援的存取層級。
 
-### Endpoint
+### 端點
 
 ```json
 GET _plugins/_security/api/resource/types
 ```
 
-### Example request
+### 範例請求
 
 ```json
 GET _plugins/_security/api/resource/types
 ```
 {% include copy-curl.html security=true %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -462,21 +463,21 @@ GET _plugins/_security/api/resource/types
 }
 ```
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `types` | Array | A list of resource types available in the system. |
-| `types[].type` | String | The name of the resource type. |
-| `types[].action_groups` | Array | A list of available action groups (access levels) for this resource type. |
+| `types` | 陣列 | 系統中可用資源類型的清單。 |
+| `types[].type` | 字串 | 資源類型的名稱。 |
+| `types[].action_groups` | 陣列 | 此資源類型可用動作群組（存取層級）的清單。 |
 
-### Required permissions
+### 必要權限
 
-This API requires authenticated access but does not require specific cluster permissions.
+此 API 需要已驗證的存取權，但不需要特定的叢集權限。
 
-## Related documentation
+## 相關文件
 
-- [Resource sharing and access control]({{site.url}}{{site.baseurl}}/security/access-control/resources/) -- Backend concepts, configuration, and setup
-- [Resource access management]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI workflows and user guidance
+- [資源共用與存取控制]({{site.url}}{{site.baseurl}}/security/access-control/resources/) -- 後端概念、組態與設定
+- [資源存取管理]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI 工作流程與使用者指引

@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Windows
 parent: Supported log types
 nav_order: 100
 ---
 
-# Windows log type
+# Windows 記錄檔類型
 
-The `windows` log type records events that happen in Windows applications, system services, and the Windows operating system.
+`windows` 記錄檔類型會記錄 Windows 應用程式、系統服務和 Windows 作業系統中發生的事件。
 
-The following code snippet contains all the `raw_field` and `ecs` mappings for this log type:
+下列程式碼片段包含此記錄檔類型的所有 `raw_field` 和 `ecs` 對應：
 
 ```json
  "mappings":[

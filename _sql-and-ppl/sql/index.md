@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: SQL
 nav_order: 4
@@ -12,23 +13,23 @@ redirect_from:
 
 # SQL
 
-SQL in OpenSearch bridges the gap between traditional relational database concepts and the flexibility of OpenSearch's document-oriented data storage. This integration gives you the ability to use your SQL knowledge to query, analyze, and extract insights from your OpenSearch data.
+OpenSearch 中的 SQL 銜接了傳統關聯式資料庫概念與 OpenSearch 文件導向資料儲存之間的落差。這項整合讓您能夠運用 SQL 知識，查詢、分析並從 OpenSearch 資料中萃取洞察。
 
-## SQL and OpenSearch terminology
+## SQL 與 OpenSearch 術語
 
-Here’s how core SQL concepts map to OpenSearch:
+以下是核心 SQL 概念對應至 OpenSearch 的方式：
 
 SQL | OpenSearch
 :--- | :---
-Table | Index
-Row | Document
-Column | Field
+資料表 | 索引
+資料列 | 文件
+資料行 | 欄位
 
 ## REST API
 
-For a complete REST API reference for the SQL plugin, see [SQL/PPL API]({{site.url}}{{site.baseurl}}/search-plugins/sql/sql-ppl-api/). 
+如需 SQL 外掛程式的完整 REST API 參考，請參閱 [SQL/PPL API]({{site.url}}{{site.baseurl}}/search-plugins/sql/sql-ppl-api/)。
 
-To use the SQL plugin with your own applications, send requests to the `_plugins/_sql` endpoint:
+若要將 SQL 外掛程式與您自己的應用程式搭配使用，請將請求傳送至 `_plugins/_sql` 端點：
 
 ```json
 POST _plugins/_sql
@@ -38,7 +39,7 @@ POST _plugins/_sql
 ```
 {% include copy-curl.html %}
 
-You can query multiple indexes by using a comma-separated list:
+您可以使用以逗號分隔的清單來查詢多個索引：
 
 ```json
 POST _plugins/_sql
@@ -48,7 +49,7 @@ POST _plugins/_sql
 ```
 {% include copy-curl.html %}
 
-You can specify an index pattern with a wildcard expression:
+您可以使用萬用字元運算式指定索引模式：
 
 ```json
 POST _plugins/_sql
@@ -58,7 +59,7 @@ POST _plugins/_sql
 ```
 {% include copy-curl.html %}
 
-To run the preceding query in the command line, use the [cURL](https://curl.haxx.se/) command:
+若要在命令列中執行上述查詢，請使用 [cURL](https://curl.haxx.se/) 命令：
 
 ```bash
 curl -XPOST https://localhost:9200/_plugins/_sql -u 'admin:<custom-admin-password>' -k -H 'Content-Type: application/json' -d '{"query": "SELECT * FROM my-index* LIMIT 50"}'
@@ -66,7 +67,7 @@ curl -XPOST https://localhost:9200/_plugins/_sql -u 'admin:<custom-admin-passwor
 {% include copy.html %}
 
 
-You can specify the [response format]({{site.url}}{{site.baseurl}}/search-plugins/sql/response-formats/) as JDBC, standard OpenSearch JSON, CSV, or raw. By default, queries return data in JDBC format. The following query sets the format to JSON:
+您可以將[回應格式]({{site.url}}{{site.baseurl}}/search-plugins/sql/response-formats/)指定為 JDBC、標準 OpenSearch JSON、CSV 或 raw。根據預設，查詢會以 JDBC 格式傳回資料。下列查詢會將格式設為 JSON：
 
 ```json
 POST _plugins/_sql?format=json
@@ -76,4 +77,4 @@ POST _plugins/_sql?format=json
 ```
 {% include copy-curl.html %}
 
-For more information about request parameters, settings, supported operations, and tools, see the related topics under [SQL]({{site.url}}{{site.baseurl}}/search-plugins/sql/sql/index/).
+如需請求參數、設定、支援的操作及工具的詳細資訊，請參閱 [SQL]({{site.url}}{{site.baseurl}}/search-plugins/sql/sql/index/) 下的相關主題。

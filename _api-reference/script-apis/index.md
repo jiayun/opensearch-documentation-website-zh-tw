@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Script APIs
+title: "指令碼 API"
 has_children: true
 has_toc: false
 nav_order: 90
@@ -9,42 +10,42 @@ redirect_from:
   - /api-reference/script-apis/
 ---
 
-# Script APIs
-**Introduced 1.0**
+# 指令碼 API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The script APIs allow you to work with both stored and inline scripts in OpenSearch. The default scripting language is Painless. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+指令碼 API 可讓您在 OpenSearch 中使用已儲存與內嵌指令碼。預設的指令碼語言是 Painless。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-## Types of scripts
+## 指令碼類型
 
-OpenSearch supports two types of scripts:
+OpenSearch 支援兩種指令碼類型：
 
-- **Inline scripts**: Scripts defined directly within API requests. They are compiled each time they are executed.
-- **Stored scripts**: Precompiled scripts saved in the cluster state that can be reused across multiple requests. They reduce compilation time and enhance search speed.
+- **內嵌指令碼**：直接定義於 API 請求中的指令碼。每次執行時都會重新編譯。
+- **已儲存指令碼**：預先編譯並儲存在叢集狀態中的指令碼，可跨多個請求重複使用。它們可縮短編譯時間並提升搜尋速度。
 
 
-## Script API operations
+## 指令碼 API 操作
 
-OpenSearch supports the following script API operations.
+OpenSearch 支援下列指令碼 API 操作。
 
-### Inline script operations
+### 內嵌指令碼操作
 
-Execute scripts directly without saving them to the cluster state:
+直接執行指令碼，而不將其儲存至叢集狀態：
 
-- [Execute inline script]({{site.url}}{{site.baseurl}}/api-reference/script-apis/exec-script/)
+- [執行內嵌指令碼]({{site.url}}{{site.baseurl}}/api-reference/script-apis/exec-script/)
 
-### Stored script operations
+### 已儲存指令碼操作
 
-Manage precompiled scripts saved in the cluster state:
+管理儲存在叢集狀態中的預先編譯指令碼：
 
-- [Create or update stored script]({{site.url}}{{site.baseurl}}/api-reference/script-apis/create-stored-script/)
-- [Execute stored script]({{site.url}}{{site.baseurl}}/api-reference/script-apis/exec-stored-script/) 
-- [Get stored script]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-stored-script/)
-- [Delete stored script]({{site.url}}{{site.baseurl}}/api-reference/script-apis/delete-script/)
+- [建立或更新已儲存指令碼]({{site.url}}{{site.baseurl}}/api-reference/script-apis/create-stored-script/)
+- [執行已儲存指令碼]({{site.url}}{{site.baseurl}}/api-reference/script-apis/exec-stored-script/) 
+- [取得已儲存指令碼]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-stored-script/)
+- [刪除已儲存指令碼]({{site.url}}{{site.baseurl}}/api-reference/script-apis/delete-script/)
 
-### Script information
+### 指令碼資訊
 
-Get information about available script contexts and languages:
+取得可用指令碼內容與語言的相關資訊：
 
-- [Get script contexts]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-script-contexts/) - List available contexts for stored scripts
-- [Get script languages]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-script-language/) - List supported scripting languages
+- [取得指令碼內容]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-script-contexts/) - 列出已儲存指令碼可用的內容
+- [取得指令碼語言]({{site.url}}{{site.baseurl}}/api-reference/script-apis/get-script-language/) - 列出支援的指令碼語言

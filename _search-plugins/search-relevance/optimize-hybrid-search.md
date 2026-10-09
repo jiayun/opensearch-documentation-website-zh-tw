@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Optimizing hybrid search
+title: "最佳化混合搜尋"
 nav_order: 60
 parent: Search Relevance Workbench
 grand_parent: Optimizing search quality
 has_children: false
 ---
 
-# Optimizing hybrid search
+# 最佳化混合搜尋
 
-A key challenge of using hybrid search in OpenSearch is combining results from lexical and vector-based search effectively. OpenSearch provides different techniques and various parameters you can experiment with to find the best setup for your application. What works best, however, depends heavily on your data, user behavior, and application domain—there is no one-size-fits-all solution.
+在 OpenSearch 中使用混合搜尋的一項關鍵挑戰，是如何有效地結合詞彙搜尋與向量搜尋的結果。OpenSearch 提供多種技術與各種參數，讓您可以實驗並找出最適合應用程式的組態。然而，什麼設定最有效，很大程度上取決於您的資料、使用者行為與應用程式領域——並沒有放諸四海皆準的解決方案。
 
-Search Relevance Workbench helps you systematically find the ideal set of parameters for your needs.
+Search Relevance Workbench 可協助您有系統地找出符合需求的理想參數組合。
 
-## Requirements
+## 需求
 
-Internally, optimizing hybrid search involves running multiple search quality evaluation experiments. For these experiments, you need a query set, judgments, and a search configuration.
-Search Relevance Workbench supports hybrid search optimization with exactly two query clauses. While hybrid search typically combines vector and lexical queries, you can run hybrid search optimization with two lexical query clauses:
+在內部，最佳化混合搜尋涉及執行多個搜尋品質評估實驗。進行這些實驗時，您需要一組查詢集、判斷結果與搜尋組態。
+Search Relevance Workbench 支援混合搜尋最佳化，但僅限於恰好兩個查詢子句。雖然混合搜尋通常結合向量與詞彙查詢，您也可以使用兩個詞彙查詢子句執行混合搜尋最佳化：
 
 ```json
 PUT _plugins/_search_relevance/search_configurations
@@ -28,7 +29,7 @@ PUT _plugins/_search_relevance/search_configurations
 ```
 {% include copy-curl.html %}
 
-Hybrid search optimization is most valuable when combining lexical and vector-based search results. For optimal results, configure your hybrid search query with two clauses: one textual query clause and one neural query clause. You don't need to configure the search pipeline to combine results because the hybrid search optimization process handles this automatically. The following is an example of a search configuration suitable for hybrid search optimization:
+混合搜尋最佳化在結合詞彙搜尋與向量搜尋結果時最有價值。為獲得最佳結果，請將混合搜尋查詢設定為兩個子句：一個文字查詢子句與一個 neural 查詢子句。您不需要設定搜尋管線來結合結果，因為混合搜尋最佳化程序會自動處理。以下是一個適合混合搜尋最佳化的搜尋組態範例：
 
 ```json
 PUT _plugins/_search_relevance/search_configurations
@@ -40,21 +41,21 @@ PUT _plugins/_search_relevance/search_configurations
 ```
 {% include copy-curl.html %}
 
-The model ID specified in the `query` must be a valid model ID for a model deployed in OpenSearch. The target index must contain the field used for neural search embeddings (in this example, `title_embedding`).
+`query` 中指定的模型 ID，必須是已在 OpenSearch 中部署之模型的有效模型 ID。目標索引必須包含用於神經搜尋嵌入的欄位（在本範例中為 `title_embedding`）。
 
-For an end-to-end example, see the [`search-relevance` repository](https://github.com/opensearch-project/search-relevance).
+如需端對端範例，請參閱 [`search-relevance` 儲存庫](https://github.com/opensearch-project/search-relevance)。
 
-## Running a hybrid search optimization experiment
+## 執行混合搜尋最佳化實驗
 
-You can create a hybrid search optimization experiment by calling the Search Relevance Workbench `experiments` endpoint.
+您可以透過呼叫 Search Relevance Workbench 的 `experiments` 端點來建立混合搜尋最佳化實驗。
 
-### Endpoint
+### 端點
 
 ```json
 PUT _plugins/_search_relevance/experiments
 ```
 
-### Example request
+### 範例請求
 
 ```json
 PUT _plugins/_search_relevance/experiments
@@ -68,7 +69,7 @@ PUT _plugins/_search_relevance/experiments
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -77,33 +78,33 @@ PUT _plugins/_search_relevance/experiments
 }
 ```
 
-## Experimentation process
+## 實驗流程
 
-The hybrid search optimization experiment evaluates all combinations of the following parameter variants for each query in the query set and scores the results against the judgment list:
+混合搜尋最佳化實驗會評估查詢集中每個查詢的下列參數變體的所有組合，並根據判斷清單為結果評分：
 
-- Score-based variants:
-  - Normalization techniques: `l2`, `min_max`, and `z_score`. The `z_score` technique can be combined only with `arithmetic_mean` because of a [normalization processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/#request-body-fields) restriction.
-  - Combination techniques: `arithmetic_mean`, `harmonic_mean`, and `geometric_mean`.
-  - Lexical and neural search weights ranging from `0.0` to `1.0`, in `0.1` increments.
+- 分數型變體：
+  - 正規化技術：`l2`、`min_max` 與 `z_score`。由於 [正規化處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/#request-body-fields) 的限制，`z_score` 技術只能與 `arithmetic_mean` 結合使用。
+  - 結合技術：`arithmetic_mean`、`harmonic_mean` 與 `geometric_mean`。
+  - 詞彙與神經搜尋權重範圍從 `0.0` 到 `1.0`，以 `0.1` 為遞增單位。
 
-- Rank-based variants:
-  - The `rrf` ([Reciprocal Rank Fusion (RRF)]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/score-ranker-processor/)) combination technique, evaluated using `rank_constant` values of `1`, `5`, `10`, `20`, and `60`. RRF variants use equal weights in all subqueries.
+- 排名型變體：
+  - `rrf` ([Reciprocal Rank Fusion (RRF)]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/score-ranker-processor/)) 結合技術，使用 `rank_constant` 值 `1`、`5`、`10`、`20` 與 `60` 進行評估。RRF 變體在所有子查詢中使用相等權重。
 
-## Evaluating the results
+## 評估結果
 
-The results for each evaluation are stored. You can view the results in OpenSearch Dashboards by selecting the corresponding experiment in the overview of past experiments, as shown in the following image.
+每次評估的結果都會儲存。您可以在 OpenSearch Dashboards 中，從過去實驗的概覽畫面選取對應的實驗來檢視結果，如下圖所示。
 
-![Compare search results]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/experiment_overview_hybrid_search_optimization.png)
+![比較搜尋結果]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/experiment_overview_hybrid_search_optimization.png)
 
-All executed queries and their calculated search metrics are displayed, as shown in the following image.
+畫面會顯示所有已執行的查詢及其計算出的搜尋指標，如下圖所示。
 
-![Compare search results]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/hybrid_search_optimization_query_overview.png)
+![比較搜尋結果]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/hybrid_search_optimization_query_overview.png)
 
-To view query variants, select one of the queries, as shown in the following image.
+若要檢視查詢變體，請選取其中一個查詢，如下圖所示。
 
-![Compare search results]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/hybrid_search_optimization_variant_parameters.png)
+![比較搜尋結果]({{site.url}}{{site.baseurl}}/images/search-relevance-workbench/hybrid_search_optimization_variant_parameters.png)
 
-You can also retrieve this information by using the following SQL search statement and providing your `experimentId`:
+您也可以使用下列 SQL 搜尋陳述式並提供您的 `experimentId` 來擷取這項資訊：
 
 ```json
 POST _plugins/_sql
@@ -113,4 +114,4 @@ POST _plugins/_sql
 ```
 {% include copy-curl.html %}
 
-To review these results visually, see [Exploring search evaluation results]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/explore-experiment-results/).
+若要以視覺化方式檢視這些結果，請參閱 [探索搜尋評估結果]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/explore-experiment-results/)。

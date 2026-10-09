@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: top
 parent: Commands
@@ -8,37 +9,37 @@ nav_order: 50
 
 <!-- vale off -->
 
-# top command 
+# top 命令
 
 <!-- vale on -->
 
-The `top` command finds the most common combination of values across all fields specified in the field list.
+`top` 命令會找出欄位清單中所有指定欄位裡最常見的值組合。
 
-The `top` command is not rewritten to [query domain-specific language (DSL)]({{site.url}}{{site.baseurl}}/query-dsl/). It is only executed on the coordinating node.
+`top` 命令不會改寫為 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/)。它只會在協調節點上執行。
 {: .note}
 
-## Syntax
+## 語法
 
-The `top` command has the following syntax:
+`top` 命令的語法如下：
 
 ```sql
 top [N] [top-options] <field-list> [by-clause]
 ```
 
-## Parameters
+## 參數
 
-The `top` command supports the following parameters.
+`top` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<N>` | Optional | The number of results to return. Default is `10`. |
-| `top-options` | Optional | `showcount`: Whether to create a field in the output that represents a count of the tuple of values. Default is `true`.<br>`countfield`: The name of the field that contains the count. Default is `count`.<br>`usenull`: Whether to output `null` values. Default is the value of `plugins.ppl.syntax.legacy.preferred`. |
-| `<field-list>` | Required | A comma-delimited list of field names.  |
-| `<by-clause>` | Optional | One or more fields to group the results by. |
+| `<N>` | 選用 | 要傳回的結果數量。預設為 `10`。 |
+| `top-options` | 選用 | `showcount`：是否在輸出中建立一個代表值元組計數的欄位。預設為 `true`。<br>`countfield`：包含計數的欄位名稱。預設為 `count`。<br>`usenull`：是否輸出 `null` 值。預設為 `plugins.ppl.syntax.legacy.preferred` 的值。 |
+| `<field-list>` | 必要 | 以逗號分隔的欄位名稱清單。  |
+| `<by-clause>` | 選用 | 用來分組結果的一或多個欄位。 |
 
-## Example 1: Displaying counts in the default count column
+## 範例 1：在預設的 count 欄位中顯示計數
 
-The following query finds the most common severity levels:
+下列查詢會找出最常見的嚴重性層級：
 
 ```sql
 source=otellogs
@@ -47,7 +48,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-By default, the `top` command automatically includes a `count` column showing the frequency of each value:
+預設情況下，`top` 命令會自動包含一個 `count` 欄位，顯示每個值出現的頻率：
 
 <!-- vale off -->
 
@@ -60,9 +61,9 @@ By default, the `top` command automatically includes a `count` column showing th
 
 <!-- vale on -->
 
-## Example 2: Finding the most common values without the count display
+## 範例 2：不顯示計數欄位，找出最常見的值
 
-The following query uses `showcount=false` to hide the `count` column in the results:
+下列查詢使用 `showcount=false` 在結果中隱藏 `count` 欄位：
 
 ```sql
 source=otellogs
@@ -71,7 +72,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -84,9 +85,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 3: Renaming the count column
+## 範例 3：重新命名計數欄位
 
-The following query uses the `countfield` parameter to specify a custom name (`cnt`) for the count column instead of the default `count`:
+下列查詢使用 `countfield` 參數為計數欄位指定自訂名稱 (`cnt`)，而非預設的 `count`：
   
 ```sql
 source=otellogs
@@ -95,7 +96,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -108,9 +109,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 4: Limiting the number of returned results
+## 範例 4：限制傳回的結果數量
 
-The following query returns the top 1 most common severity level:
+下列查詢會傳回最常見的前 1 個嚴重性層級：
 
 ```sql
 source=otellogs
@@ -119,7 +120,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -129,9 +130,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 5: Grouping the results
+## 範例 5：分組結果
 
-The following query finds the most common severity level within each service:
+下列查詢會找出每個服務中最常見的嚴重性層級：
 
 ```sql
 source=otellogs
@@ -140,7 +141,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -156,9 +157,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 6: Specifying null value handling
+## 範例 6：指定 null 值的處理方式
 
-The following query specifies `usenull=false` to exclude null values:
+下列查詢指定 `usenull=false` 以排除 null 值：
 
 ```sql
 source=otellogs
@@ -167,7 +168,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -179,7 +180,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following query specifies `usenull=true` to include null values in the results:
+下列查詢指定 `usenull=true` 以在結果中包含 null 值：
 
 ```sql
 source=otellogs
@@ -188,7 +189,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 

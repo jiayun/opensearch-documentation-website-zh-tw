@@ -1,18 +1,19 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Translate
+title: "轉換"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 390
 ---
 
-# Translate processor
+# Translate 處理器
 
-The `translate` processor transforms values in events into preconfigured values.
+`translate` 處理器會將事件中的值轉換為預先設定的值。
 
-## Basic usage
+## 基本用法
 
-To use the `translate` processor, create the following `pipeline.yaml` file:
+若要使用 `translate` 處理器，請建立下列 `pipeline.yaml` 檔案：
 
 ```yaml
 translate-pipeline:
@@ -33,16 +34,16 @@ translate-pipeline:
     - stdout:
 ```
 
-Then create the following file named `logs_json.log` and replace the `path` in the file source of your `pipeline.yaml` file with the path of a file containing the following JSON data:
+接著建立下列名為 `logs_json.log` 的檔案，並將 `pipeline.yaml` 檔案中 file 來源裡的 `path` 替換為包含下列 JSON 資料的檔案路徑：
 
 ```json
 { "status": "404" }
 ```
 
-The `translate` processor configuration in `pipeline.yaml` retrieves the `source` value from the event data and compares it against the keys specified under the `targets`. 
-When a match is found, the processor places the corresponding mapped value into the `target` key provided in the configuration.
+`pipeline.yaml` 中的 `translate` 處理器組態會從事件資料中擷取 `source` 值，並將它與 `targets` 底下指定的鍵進行比較。
+找到相符項目時，處理器會將對應的值放入組態中提供的 `target` 鍵。
 
-When you run OpenSearch Data Prepper with the previous `pipeline.yaml` file, you should receive the following output:
+當您使用先前的 `pipeline.yaml` 檔案執行 OpenSearch Data Prepper 時，應該會收到下列輸出：
 
 ```json
 {
@@ -51,9 +52,9 @@ When you run OpenSearch Data Prepper with the previous `pipeline.yaml` file, you
 }
 ```
 
-## Advanced options
+## 進階選項
 
-The following example shows a more involved mapping with additional configurations for the `translate` processor:
+下列範例顯示 `translate` 處理器更複雜的對應與其他組態：
 
 ```yaml
 processor:
@@ -81,83 +82,83 @@ processor:
           sts_role_arn: arn:aws:iam::123456789012:role/MyS3Role
 ```
 
-On the top level, specify `mappings` for inline mapping configurations, or `file` pull mapping configurations from a file. Both `mappings` and `file` options can be specified together, and the processor considers the mappings from both sources for translations. In instances where the pipeline configuration and file mappings share duplicate `source` and `target` pairs, the mappings specified within the pipeline configuration take precedence.
+在最上層，您可以指定 `mappings` 進行內嵌對應組態，或指定 `file` 從檔案提取對應組態。`mappings` 與 `file` 兩個選項可以同時指定，處理器會將兩個來源的對應都用於轉換。當管線組態與檔案中的對應共用重複的 `source` 與 `target` 配對時，以管線組態中指定的對應為優先。
 
 
-## Configuration
+## 組態
 
-You can use the following options to configure the `translate` processor.
+您可以使用下列選項來設定 `translate` 處理器。
 
-| Parameter | Required | Type | Description |
+| 參數 | 必要 | 類型 | 說明 |
 | :--- | :---  | :--- | :--- |
-| mappings | No | List | Defines inline mappings. For more information, see [mappings](#mappings). |
-| file | No | Map | Points to the file that contains mapping configurations. For more information, see [file](#file). |
+| mappings | 否 | 清單 | 定義內嵌對應。如需更多資訊，請參閱 [mappings](#mappings)。 |
+| file | 否 | 對應表 | 指向包含對應組態的檔案。如需更多資訊，請參閱 [file](#file)。 |
 
 <!-- vale off -->
 ### mappings
 <!-- vale on -->
 
-Each item in the `mappings` configuration contains the following options.
+`mappings` 組態中的每個項目包含下列選項。
 
-| Parameter | Required | Type | Description |
+| 參數 | 必要 | 類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| source | Yes | String or list | The source field to translate. Can be a string or a list of strings. |
-| targets | Yes | List |  A list of target field configurations, such as the target field key or translation maps. |
+| source | 是 | 字串或清單 | 要轉換的來源欄位。可以是字串或字串清單。 |
+| targets | 是 | 清單 | 目標欄位組態的清單，例如目標欄位鍵或轉換對應。 |
 
-Each item in the `targets` configuration contains the following options.
+`targets` 組態中的每個項目包含下列選項。
 
-| Parameter | Required | Type | Description |
+| 參數 | 必要 | 類型 | 說明 |
 | :--- | :---  | :--- | :--- |
-| target | Yes | String | The key that specifies the field in the output in which the translated value will be placed. |
-| map | No | Map | A list of key-value pairs that define the translations. Each key represents a possible value in the source field, and the corresponding value represents what it should be translated to. For examples, see [map option](#map-option). At least one of `map` and `regex` should be configured. |
-| regex | No | Map | A map of keys that defines the translation map. For more options, see [regex option](#regex-option). At least one of `map` and `regex` should be configured. |
-| default | No | String | The default value to use when no match is found during translation. |
-| type | No | String | Specifies the data type for the target value. |
-| translate_when | No | String | Uses a [Data Prepper expression]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/) to specify a condition for performing the translation. When specified, the expression will only translate when the condition is met. |
+| target | 是 | 字串 | 指定輸出中欄位的鍵，轉換後的值將放置於此。 |
+| map | 否 | 對應表 | 定義轉換的鍵值對清單。每個鍵代表來源欄位中可能的值，對應的值代表應轉換成的值。如需範例，請參閱 [map 選項](#map-option)。`map` 與 `regex` 至少應設定其中一個。 |
+| regex | 否 | 對應表 | 定義轉換對應的鍵對應表。如需更多選項，請參閱 [regex 選項](#regex-option)。`map` 與 `regex` 至少應設定其中一個。 |
+| default | 否 | 字串 | 轉換時找不到相符項目時使用的預設值。 |
+| type | 否 | 字串 | 指定目標值的資料類型。 |
+| translate_when | 否 | 字串 | 使用 [Data Prepper 運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/) 指定執行轉換的條件。指定此選項時，只有在符合條件時才會執行轉換。 |
 
 <!-- vale off -->
-#### map option
+#### map 選項
 <!-- vale on -->
 
-You can use the following key types when using the map option:
+使用 map 選項時，您可以使用下列鍵類型：
 
-* Individual keys
+* 個別鍵
   ```yaml
     map:
       ok : "Success"
       120: "Found"
   ```
-* Number ranges
+* 數字範圍
   ```yaml
     map:
       "100-200": "Success"
       "400-499": "Error"
   ```
-* Comma-delimited keys
+* 逗號分隔的鍵
   ```yaml
     map:
       "key1,key2,key3": "value1"
       "100-200,key4": "value2"
   ```
 
-When configuring the keys inside the `map` option, do not use any overlapping number ranges or duplicate keys.
+在 `map` 選項中設定鍵時，請勿使用任何重疊的數字範圍或重複的鍵。
 
 <!-- vale off -->
-#### regex option
+#### regex 選項
 <!-- vale on -->
 
-You can use the following options with the `regex` option. 
+您可以在 `regex` 選項中使用下列選項。
 
-| Parameter | Required | Type | Description |
+| 參數 | 必要 | 類型 | 說明 |
 | :--- | :---  | :--- | :--- |
-| patterns | Yes | Map | A map of key-value pairs defining the regex patterns of keys and the value to translate to for each pattern. |
-| exact | No | Boolean | Whether to use full string match or partial string match on the regex pattern. If `true`, the pattern is considered a match only when the entire key matches the pattern. Otherwise, the pattern is considered a match when a sub-string of the key matches the pattern. |
+| patterns | 是 | 對應表 | 定義鍵的 regex 模式以及每個模式要轉換成的值之鍵值對對應表。 |
+| exact | 否 | 布林值 | 是否對 regex 模式使用完整字串比對或部分字串比對。若為 `true`，只有當整個鍵符合模式時才視為相符；否則，只要鍵的子字串符合模式即視為相符。 |
 
 <!-- vale off -->
 ### file
 <!-- vale on -->
 
-The `file` option in the `translate` processor takes a local YAML file or an Amazon Simple Storage Service (Amazon S3) object containing translation mappings. The file's contents should be in the following format:
+`translate` 處理器中的 `file` 選項可接受本機 YAML 檔案，或包含轉換對應的 Amazon Simple Storage Service (Amazon S3) 物件。檔案內容應採用下列格式：
 ```yaml
 mappings:
   - source: "status"
@@ -168,17 +169,17 @@ mappings:
         # Other configurations
 ```
 
-You can use the following options in the `file` configuration.
+您可以在 `file` 組態中使用下列選項。
 
-| Parameter | Required | Type | Description |
+| 參數 | 必要 | 類型 | 說明 |
 | :--- | :---  | :--- | :--- |
-| name | Yes | String | The full path to a local file or key name for an S3 object. |
-| `aws` | No | Map | The AWS configuration when the file is an S3 object. See the following table for more information. |
+| name | 是 | 字串 | 本機檔案的完整路徑，或 S3 物件的鍵名稱。 |
+| `aws` | 否 | 對應表 | 當檔案為 S3 物件時的 AWS 組態。如需更多資訊，請參閱下表。 |
 
-You can use the following options with the `aws` configuration.
+您可以在 `aws` 組態中使用下列選項。
 
-| Parameter | Required | Type | Description |
+| 參數 | 必要 | 類型 | 說明 |
 | :--- | :---  | :--- | :--- |
-| `bucket` | Yes | String | The Amazon S3 bucket name. |
-| `region` | Yes | String | The AWS Region to use for credentials. |
-| `sts_role_arn` | Yes | String | The AWS Security Token Service (AWS STS) role to assume for requests to Amazon S3. |
+| `bucket` | 是 | 字串 | Amazon S3 儲存桶名稱。 |
+| `region` | 是 | 字串 | 用於憑證的 AWS 區域。 |
+| `sts_role_arn` | 是 | 字串 | 對 Amazon S3 發出請求時要擔任的 AWS Security Token Service (AWS STS) 角色。 |

@@ -1,66 +1,67 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Anomaly detector
+title: "異常偵測器"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 30
 ---
 
-# Anomaly detector processor
+# 異常偵測器處理器
 
-The `anomaly_detector` processor takes structured data and runs anomaly detection algorithms on fields that you can configure in that data. The data must be either an integer or a real number for the anomaly detection algorithm to detect anomalies. Deploying the aggregate processor in a pipeline before the `anomaly_detector` processor can help you achieve the best results, as the aggregate processor automatically aggregates events by key and keeps them on the same host. For example, if you are searching for an anomaly in latencies from a specific IP address and if all the events go to the same host, then the host has more data for these events. This additional data results in better training of the machine learning (ML) algorithm, which results in better anomaly detection. 
+`anomaly_detector` 處理器會接收結構化資料，並對該資料中您可設定的欄位執行異常偵測演算法。資料必須是整數或實數，異常偵測演算法才能偵測異常。在管線中將彙總處理器部署於 `anomaly_detector` 處理器之前，有助於您獲得最佳結果，因為彙總處理器會自動依索引鍵彙總事件，並將其保留在同一部主機上。例如，如果您要搜尋來自特定 IP 位址之延遲中的異常，且所有事件都傳送到同一部主機，該主機就會擁有這些事件的更多資料。這些額外資料能讓機器學習 (ML) 演算法獲得更好的訓練，進而帶來更好的異常偵測結果。
 
-## Configuration
+## 組態
 
-You can configure the `anomaly_detector` processor by specifying a key and the options for the selected mode. You can use the following options to configure the `anomaly_detector` processor.
+您可以指定索引鍵及所選模式的選項，以設定 `anomaly_detector` 處理器。您可以使用下列選項來設定 `anomaly_detector` 處理器。
 
-| Name | Required | Description |
+| 名稱 | 必要 | 說明 |
 | :--- | :--- | :--- |
-| `keys` | Yes | A non-ordered `List<String>` that is used as input to the ML algorithm to detect anomalies in the values of the keys in the list. At least one key is required.
-| `mode` | Yes | The ML algorithm (or model) used to detect anomalies. You must provide a mode. See [random_cut_forest mode](#random_cut_forest-mode).
-| `identification_keys` | No | If provided, anomalies will be detected within each unique instance of this key. For example, if you provide the `ip` field, anomalies will be detected separately for each unique IP address.
-| `cardinality_limit` | No | If using the `identification_keys` settings, a new ML model will be created for every degree of cardinality. This can cause a large amount of memory usage, so it is helpful to set a limit on the number of models. Default limit is 5000.
-| `verbose` | No | RCF will try to automatically learn and reduce the number of anomalies detected. For example, if latency is consistently between 50 and 100, and then suddenly jumps to around 1000, only the first one or two data points after the transition will be detected (unless there are other spikes/anomalies). Similarly, for repeated spikes to the same level, RCF will likely eliminate many of the spikes after a few initial ones. This is because the default setting is to minimize the number of alerts detected. Setting the `verbose` setting to `true` will cause RCF to consistently detect these repeated cases, which may be useful for detecting anomalous behavior that lasts an extended period of time.
+| `keys` | 是 | 無排序的 `List<String>`，作為 ML 演算法的輸入，用於偵測清單中各索引鍵值的異常。至少需要一個索引鍵。
+| `mode` | 是 | 用於偵測異常的 ML 演算法 (或模型)。您必須提供模式。請參閱 [random_cut_forest 模式](#random_cut_forest-mode)。
+| `identification_keys` | 否 | 若有提供，將在此索引鍵的每個唯一執行個體中偵測異常。例如，如果您提供 `ip` 欄位，將針對每個唯一 IP 位址分別偵測異常。
+| `cardinality_limit` | 否 | 若使用 `identification_keys` 設定，將為每個基數建立新的 ML 模型。這可能會使用大量記憶體，因此設定模型數量上限會有所幫助。預設上限為 5000。
+| `verbose` | 否 | RCF 會嘗試自動學習並減少偵測到的異常數量。例如，如果延遲一直介於 50 到 100 之間，然後突然跳升至約 1000，則只會偵測到轉變後的前一或兩個資料點 (除非有其他尖峰/異常)。同樣地，對於重複出現且達到相同程度的尖峰，RCF 可能會在最初幾個尖峰之後排除其中許多尖峰。這是因為預設設定是將偵測到的警示數量降至最低。將 `verbose` 設定設為 `true` 會使 RCF 持續偵測這些重複情況，這對於偵測持續一段較長時間的異常行為可能很有用。
 
 
-### Keys
+### 索引鍵
 
-Keys that are used in the `anomaly_detector` processor are present in the input event. For example, if the input event is `{"key1":value1, "key2":value2, "key3":value3}`, then any of the keys (such as `key1`, `key2`, `key3`) in that input event can be used as anomaly detector keys as long as their value (such as `value1`, `value2`, `value3`) is an integer or real number.
+`anomaly_detector` 處理器中使用的索引鍵存在於輸入事件中。例如，如果輸入事件為 `{"key1":value1, "key2":value2, "key3":value3}`，則該輸入事件中的任何索引鍵 (例如 `key1`、`key2`、`key3`) 都可以作為異常偵測器索引鍵，只要其值 (例如 `value1`、`value2`、`value3`) 為整數或實數即可。
 
 <!-- vale off -->
-### random_cut_forest mode
+### random_cut_forest 模式
 <!-- vale on -->
 
-The random cut forest (RCF) ML algorithm is an unsupervised algorithm for detecting anomalous data points within a dataset. To detect anomalies, the `anomaly_detector` processor uses the `random_cut_forest` mode.
+隨機切割森林 (RCF) ML 演算法是一種非監督式演算法，用於偵測資料集中的異常資料點。為了偵測異常，`anomaly_detector` 處理器會使用 `random_cut_forest` 模式。
 
-| Name | Description |
+| 名稱 | 說明 |
 | :--- | :--- |
-| `random_cut_forest` | Processes events using the RCF ML algorithm to detect anomalies. | 
+| `random_cut_forest` | 使用 RCF ML 演算法處理事件以偵測異常。 | 
 
-RCF is an unsupervised ML algorithm for detecting anomalous data points within a dataset. OpenSearch Data Prepper uses RCF to detect anomalies in data by passing the values of the configured key to RCF. For example, when an event with a latency value of 11.5 is sent, the following anomaly event is generated:
+RCF 是一種非監督式 ML 演算法，用於偵測資料集中的異常資料點。OpenSearch Data Prepper 會將所設定索引鍵的值傳遞給 RCF，以使用 RCF 偵測資料中的異常。例如，當傳送延遲值為 11.5 的事件時，會產生下列異常事件：
 
 
 ```json
 { "latency": 11.5, "deviation_from_expected":[10.469302736820003],"grade":1.0}
 ```
 
-In this example, `deviation_from_expected` is a list of deviations for each of the keys from their corresponding expected values, and `grade` is the anomaly grade that indicates the anomaly severity.
+在此範例中，`deviation_from_expected` 是各索引鍵與其對應預期值之偏差的清單，而 `grade` 是表示異常嚴重程度的異常等級。
      
 
-You can configure `random_cut_forest` mode with the following options. 
+您可以使用下列選項設定 `random_cut_forest` 模式。
 
-| Name | Default value | Range | Description |
+| 名稱 | 預設值 | 範圍 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `shingle_size` | `4` | 1--60 | The shingle size used in the ML algorithm. |
-| `sample_size` | `256` | 100--2500 | The sample size used in the ML algorithm. |
-| `time_decay` | `0.1` | 0--1.0 | The time decay value used in the ML algorithm. Used as the mathematical expression `timeDecay` divided by `SampleSize` in the ML algorithm. |
-| `type` | `metrics` | N/A | The type of data sent to the algorithm. |
-| `output_after` | 32 | N/A | Specifies the number of events to process before outputting any detected anomalies. |
-| `version` | `1.0` | N/A | The algorithm version number. |
+| `shingle_size` | `4` | 1--60 | ML 演算法中使用的 shingle 大小。 |
+| `sample_size` | `256` | 100--2500 | ML 演算法中使用的樣本大小。 |
+| `time_decay` | `0.1` | 0--1.0 | ML 演算法中使用的時間衰減值。在 ML 演算法中作為數學運算式 `timeDecay` 除以 `SampleSize` 使用。 |
+| `type` | `metrics` | N/A | 傳送給演算法的資料類型。 |
+| `output_after` | 32 | N/A | 指定在輸出任何偵測到的異常之前要處理的事件數量。 |
+| `version` | `1.0` | N/A | 演算法版本號碼。 |
 
-## Usage
+## 使用方式
 
-To get started, create the following `pipeline.yaml` file. You can use the following pipeline configuration to look for anomalies in the `latency` field in events that are passed to the processor. Then you can use the following YAML configuration file `random_cut_forest` mode to detect anomalies:
+若要開始使用，請建立下列 `pipeline.yaml` 檔案。您可以使用下列管線組態，在傳遞給處理器的事件中尋找 `latency` 欄位的異常。接著，您可以使用下列 YAML 組態檔案 `random_cut_forest` 模式來偵測異常：
 
 ```yaml
 ad-pipeline:
@@ -75,6 +76,6 @@ ad-pipeline:
 ```
 {% include copy.html %}
 
-When you run the `anomaly_detector` processor, the processor extracts the value for the `latency` key and then passes the value through the RCF ML algorithm. You can configure any key that comprises integers or real numbers as values. In the following example, you can configure `bytes` or `latency` as the key for an anomaly detector. 
+當您執行 `anomaly_detector` 處理器時，處理器會擷取 `latency` 索引鍵的值，然後將該值傳遞給 RCF ML 演算法。您可以將任何以整數或實數為值的索引鍵設定為索引鍵。在下列範例中，您可以將 `bytes` 或 `latency` 設定為異常偵測器的索引鍵。
 
 `{"ip":"1.2.3.4", "bytes":234234, "latency":0.2}`

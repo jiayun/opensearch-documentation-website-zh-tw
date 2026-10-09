@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Fields
+title: "欄位"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/fields/
@@ -9,15 +10,15 @@ has_children: false
 has_toc: false
 ---
 
-# Fields mapping parameter
+# fields 對應參數
 
-The `fields` mapping parameter enables you to index the same field in multiple ways by defining additional subfields. With multi-fields, the primary field value is stored using its main mapping. Additionally, you can configure one or more subfields with alternate mappings, for example, different data types or analyzers that support varied search and aggregation requirements.
+`fields` 對應參數可讓您透過定義額外的子欄位，以多種方式為同一個欄位編製索引。透過多欄位 (multi-fields)，主要欄位的值會依其主要對應方式儲存。此外，您可以為一或多個子欄位設定替代對應，例如不同的資料類型或分析器，以支援各種搜尋與彙總需求。
 
-Multi-fields are especially useful when you need to perform full-text searches on one representation of the data and exact-match operations (like sorting or aggregations) on another. Additionally, you can index the same field with different analyzers. For example, one subfield might use the default analyzer for general text searches, while another subfield uses a custom analyzer for generating n-grams to support autocomplete or fuzzy matching.
+當您需要對資料的一種表示方式執行全文搜尋，並對另一種表示方式執行精確比對操作 (例如排序或彙總) 時，多欄位特別有用。此外，您可以使用不同的分析器為同一個欄位編製索引。例如，一個子欄位可能使用預設分析器進行一般文字搜尋，而另一個子欄位則使用自訂分析器產生 n-gram，以支援自動完成或模糊比對。
 
-## Configuring multi-fields
+## 設定多欄位
 
-In the following example, an index named `articles` is created with a `title` field that is analyzed as full text. A subfield named `raw` is defined under `fields` to store the same value as a `keyword` for exact-match queries:
+在下列範例中，建立了一個名為 `articles` 的索引，其中包含一個以全文方式分析的 `title` 欄位。在 `fields` 之下定義了一個名為 `raw` 的子欄位，將相同的值儲存為 `keyword`，以進行精確比對查詢：
 
 ```json
 PUT /articles
@@ -38,9 +39,9 @@ PUT /articles
 ```
 {% include copy-curl.html %}
 
-## Using different analyzers
+## 使用不同的分析器
 
-In the following example, the same `title` field is indexed using two different analyzers. The main field uses the default analyzer for full-text search, while the `ngrams` subfield uses a custom n-gram analyzer to support features like autocomplete:
+在下列範例中，同一個 `title` 欄位使用兩種不同的分析器編製索引。主要欄位使用預設分析器進行全文搜尋，而 `ngrams` 子欄位則使用自訂的 n-gram 分析器，以支援自動完成等功能：
 
 ```json
 PUT /articles
@@ -88,9 +89,9 @@ PUT /articles
 ```
 {% include copy-curl.html %}
 
-## Indexing a document
+## 為文件編製索引
 
-After the index is created, you can index documents into it. The `title` field will be processed as defined by its mapping, and its subfields will provide alternate representations of the same value:
+建立索引之後，您可以在其中為文件編製索引。`title` 欄位會依其對應定義的方式處理，其子欄位則會提供相同值的替代表示方式：
 
 ```json
 PUT /articles/_doc/1
@@ -100,9 +101,9 @@ PUT /articles/_doc/1
 ```
 {% include copy-curl.html %}
 
-## Querying multi-fields
+## 查詢多欄位
 
-You can target the additional subfields in queries to suit different requirements. For example, to perform an aggregation on the exact value of the title, query the `title.raw` subfield using the following request:
+您可以在查詢中指定額外的子欄位，以符合不同的需求。例如，若要對 title 的精確值執行彙總，請使用下列請求查詢 `title.raw` 子欄位：
 
 ```json
 POST /articles/_search
@@ -119,7 +120,7 @@ POST /articles/_search
 ```
 {% include copy-curl.html %}
 
-The `title.raw` subfield, mapped as a `keyword`, allows exact-match aggregations even though the original title field is full-text analyzed:
+`title.raw` 子欄位對應為 `keyword`，即使原始 title 欄位是以全文方式分析，仍可執行精確比對彙總：
 
 ```json
 {
@@ -147,7 +148,7 @@ The `title.raw` subfield, mapped as a `keyword`, allows exact-match aggregations
 }
 ```
 
-Alternatively, to use the autocomplete functionality, you can run a `match` query on the `title.ngrams` subfield:
+或者，若要使用自動完成功能，您可以對 `title.ngrams` 子欄位執行 `match` 查詢：
 
 ```json
 POST /articles/_search
@@ -161,7 +162,7 @@ POST /articles/_search
 ```
 {% include copy-curl.html %}
 
-The `title.ngrams` subfield uses a custom n-gram analyzer, therefore the prefix `Und` successfully matches the start of the word `Understanding`:
+`title.ngrams` 子欄位使用自訂的 n-gram 分析器，因此前綴 `Und` 可成功比對到單字 `Understanding` 的開頭：
 
 ```json
 {

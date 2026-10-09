@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: eval
 parent: Commands
@@ -8,38 +9,38 @@ nav_order: 13
 
 <!-- vale off -->
 
-# eval command
+# eval 命令
 
 <!-- vale on -->
 
-The `eval` command evaluates the specified expression and appends the result of the evaluation to the search results.
+`eval` 命令會評估指定的運算式，並將評估結果附加至搜尋結果。
 
-The `eval` command processes data after documents are retrieved from the shards. This means that `eval` cannot be used to filter documents before they are returned. Use a `where` clause for filtering. Additionally, because `eval` computations are performed on the coordinating node rather than distributed across data nodes, performance may be slower for large result sets.
+`eval` 命令會在從分片擷取文件之後處理資料。這表示在文件傳回之前，無法使用 `eval` 篩選文件。請使用 `where` 子句進行篩選。此外，由於 `eval` 的運算是在協調節點上執行，而非分散至各資料節點，因此對於大型結果集，效能可能會較慢。
 
-The `eval` command is not rewritten to [query domain-specific language (DSL)]({{site.url}}{{site.baseurl}}/query-dsl/). It is only executed on the coordinating node.
+`eval` 命令不會被改寫為 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/)，僅會在協調節點上執行。
 {: .note}
 
-## Syntax
+## 語法
 
-The `eval` command has the following syntax:
+`eval` 命令的語法如下：
 
 ```sql
 eval <field>=<expression> ["," <field>=<expression> ]...
 ```
 
-## Parameters
+## 參數
 
-The `eval` command supports the following parameters.
+`eval` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<field>` | Required | The name of the field to create or update. If the field does not exist, a new field is added. If it already exists, its value is overwritten. |
-| `<expression>` | Required | The expression to evaluate. |  
+| `<field>` | 必要 | 要建立或更新的欄位名稱。若該欄位不存在，則會新增欄位；若已存在，則會覆寫其值。 |
+| `<expression>` | 必要 | 要評估的運算式。 |  
   
 
-## Example 1: Classifying logs by severity tier  
+## 範例 1：依嚴重性等級分類記錄檔  
 
-The following query creates an `is_critical` field that classifies each log as critical or non-critical based on severity, useful for building alert rules:
+下列查詢會建立 `is_critical` 欄位，依據嚴重性將每筆記錄分類為重大或非重大，適合用於建立警示規則：
   
 ```sql
 source=otellogs
@@ -51,7 +52,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -65,9 +66,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Finding errors without traces  
+## 範例 2：找出沒有追蹤的錯誤  
 
-The following query creates two Boolean fields to identify error logs and whether they have distributed tracing context. Errors that are not traced are harder to debug because you can't follow the request across services:
+下列查詢會建立兩個布林值欄位，用以識別錯誤記錄，以及這些記錄是否具有分散式追蹤內容。未經追蹤的錯誤較難偵錯，因為您無法跨服務追蹤該請求：
   
 ```sql
 source=otellogs
@@ -79,7 +80,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -96,9 +97,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Building a standardized log line  
+## 範例 3：建立標準化的記錄行  
 
-The following query prepends the severity level to the log body, creating a standardized format for export or alerting:
+下列查詢會在記錄本文前加上嚴重性等級，建立適用於匯出或警示的標準化格式：
   
 ```sql
 source=otellogs
@@ -111,7 +112,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 

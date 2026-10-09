@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Span or
 parent: Span queries
@@ -6,21 +7,21 @@ grand_parent: Query DSL
 nav_order: 70
 ---
 
-# Span or query
+# Span or 查詢
 
-The `span_or` query combines multiple span queries and matches the union of their spans. A match occurs if at least one of the contained span queries matches.
+`span_or` 查詢會結合多個 span 查詢，並比對其跨度的聯集。只要其中至少一個 span 查詢符合，就會產生相符結果。
 
-For example, you can use the `span_or` query to:
-- Find spans matching any of several patterns.
-- Combine different span patterns as alternatives.
-- Match multiple span variations in a single query.
+例如，您可以使用 `span_or` 查詢來：
+- 尋找符合多種模式中任一模式的跨度。
+- 結合不同的跨度模式，作為替代選項。
+- 在單一查詢中比對多種跨度變化。
 
-## Example
+## 範例
 
-To try the examples in this section, complete the [setup steps]({{site.url}}{{site.baseurl}}/query-dsl/span/#setup).
+若要試用本節的範例，請完成[設定步驟]({{site.url}}{{site.baseurl}}/query-dsl/span/#setup)。
 {: .tip}
 
-The following query searches for either "formal collar" or "button collar" appearing within 2 words of each other:
+下列查詢會搜尋「formal collar」或「button collar」，其中兩個詞彼此相距不超過 2 個字詞：
 
 ```json
 GET /clothing/_search
@@ -71,11 +72,11 @@ GET /clothing/_search
 ```
 {% include copy-curl.html %}
 
-The query matches documents 1 ("...formal collar...") and 3 ("...button-down collar...") within the specified slop distance.
+此查詢會比對到文件 1（「...formal collar...」）和文件 3（「...button-down collar...」），兩者均在指定的 slop 距離內。
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -118,10 +119,10 @@ The query matches documents 1 ("...formal collar...") and 3 ("...button-down col
 ```
 </details>
 
-## Parameters
+## 參數
 
-The following table lists all top-level parameters supported by `span_or` queries.
+下表列出 `span_or` 查詢支援的所有最上層參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 |:----------|:-----|:------------|
-| `clauses` | Array | The array of span queries to match. The query matches if any of these span queries match. Must contain at least one span query. Required. |
+| `clauses` | 陣列 | 要比對的 span 查詢陣列。只要其中任一 span 查詢符合，此查詢就會符合。必須包含至少一個 span 查詢。必要。 |

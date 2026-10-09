@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: API
 parent: Performance Analyzer
@@ -8,32 +9,32 @@ redirect_from:
 ---
 
 # Performance Analyzer API
-Introduced 1.0
+於 1.0 版推出
 {: .label .label-purple }
 
-Performance Analyzer uses a single HTTP method and URI for most requests:
+Performance Analyzer 對大多數請求使用單一 HTTP 方法與 URI：
 
 ```
 GET {endpoint}:9600/_plugins/_performanceanalyzer/metrics
 ```
 
-Note the use of port 9600. Provide parameters for metrics, aggregations, dimensions, and nodes (optional):
+請注意連接埠 9600 的使用。提供指標、彙總、維度與節點（選用）的參數：
 
 ```
 ?metrics=<metrics>&agg=<aggregations>&dim=<dimensions>&nodes=all"
 ```
 
-For a full list of metrics, see [Metrics reference]({{site.url}}{{site.baseurl}}/monitoring-plugins/pa/reference/). Performance Analyzer updates its data every five seconds. If you create a custom client, we recommend using that same interval for calls to the API.
+完整的指標清單請參閱[指標參考資料]({{site.url}}{{site.baseurl}}/monitoring-plugins/pa/reference/)。Performance Analyzer 每 5 秒更新一次資料。如果您建立自訂用戶端，建議使用相同的間隔呼叫 API。
 
 
-#### Example request
+#### 範例請求
 
 ```
 GET localhost:9600/_plugins/_performanceanalyzer/metrics?metrics=Latency,CPU_Utilization&agg=avg,max&dim=ShardID&nodes=all
 ```
 
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -100,19 +101,19 @@ GET localhost:9600/_plugins/_performanceanalyzer/metrics?metrics=Latency,CPU_Uti
 }
 ```
 
-In this case, each top-level object represents a node. The API returns names and data types for the metrics and dimensions that you specified, along with values from five seconds ago and current values (if different). Null values represent inactivity during that time period.
+在此範例中，每個頂層物件代表一個節點。API 會傳回您指定的指標與維度的名稱和資料類型，以及 5 秒前的值和目前的值（若不同）。Null 值代表該時段內沒有活動。
 
-Performance Analyzer has one additional URI that returns the unit for each metric.
+Performance Analyzer 還有一個額外的 URI，會傳回每個指標的單位。
 
 
-#### Example request
+#### 範例請求
 
 ```
 GET localhost:9600/_plugins/_performanceanalyzer/metrics/units
 ```
 
 
-#### Example response
+#### 範例回應
 
 ```json
 {

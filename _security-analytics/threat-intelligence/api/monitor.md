@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Monitor API
 parent: Threat intelligence APIs
@@ -8,100 +9,55 @@ nav_order: 35
 
 # Monitor API
 
-You can use the threat intelligence Monitor API to create, search, and update [monitors]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/) for your threat intelligence feeds.
+您可以使用威脅情報 Monitor API 來建立、搜尋及更新威脅情報摘要的[監視器]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/)。
 
 
 ---
-## Create or update a threat intelligence monitor
+## 建立或更新威脅情報監視器
 
-Creates or updates a threat intelligence monitor.
+建立或更新威脅情報監視器。
 
-### Endpoints
+### 端點
 
-The `POST` method creates a new monitor. The `PUT` method updates a monitor.
+`POST` 方法會建立新的監視器。`PUT` 方法會更新監視器。
 
 ```json
 POST _plugins/_security_analytics/threat_intel/monitors
 PUT _plugins/_security_analytics/threat_intel/monitors/{monitor_id}
 ```
 
-### Request body fields
+### 請求本文欄位
 
-You can specify the following fields in the request body.
+您可以在請求本文中指定下列欄位。
 
-| Field  | Type | Description  |
+| 欄位  | 類型 | 說明  |
 | :--- |  :---  | :--- |
-| `name`  | String  | The name of the monitor. Required. |
-| `schedule`  | Object  | The schedule that determines how often the monitor runs. Required.  |
-| `schedule.period` | Object  | Information about the frequency of the schedule. Required.  |
-| `schedule.period.interval`   | Integer | The interval at which the monitor runs. Required.   |
-| `schedule.period.unit`   | String  | The unit of time for the interval.  |
-| `enabled` | Object  | Information about the user who created the monitor. Required.    |
-| `user.backend_roles`   | Array   | The backend roles associated with the user. Optional.  |
-| `user.roles`   | Array   | The roles associated with the user. Optional. |
-| `user.custom_attribute_names`   | Array   | Custom attribute names associated with the user. Optional.   |
-| `user.user_requested_tenant`   | String  | The tenant requested by the user. Optional.   |
-| `indices`   | Array   | The log data sources used for the monitor. Required.  |
-| `per_ioc_type_scan_input_list`  | Array   | A list of inputs to scan based on the indicator of compromise (IOC) types. Required.   |
-| `per_ioc_type_scan_input_list.ioc_type`   | String  | The type of IOC (for example, hashes). Required.  |
-| `per_ioc_type_scan_input_list.index_to_fields_map`  | Object  |The index field mappings that contain values for the given IOC type. Required. |
-| `per_ioc_type_scan_input_list.index_to_fields_map.<index>` | Array   | A list of fields contained in the specified index. Required.   |
-| `triggers`  | Array   | The trigger settings for alerts. Required.   |
-| `triggers.data_sources`   | Array   | A list of data sources associated with the trigger. Required.  |
-| `triggers.name`  | String  | The name of the trigger. Required.  |
-| `triggers.severity`  | String  | The severity level of the trigger (for example, high, medium, or low). Required.  |
+| `name`  | 字串  | 監視器的名稱。必要。 |
+| `schedule`  | 物件  | 決定監視器執行頻率的排程。必要。  |
+| `schedule.period` | 物件  | 排程頻率的相關資訊。必要。  |
+| `schedule.period.interval`   | 整數 | 監視器執行的間隔。必要。   |
+| `schedule.period.unit`   | 字串  | 間隔的時間單位。  |
+| `enabled` | 物件  | 建立監視器之使用者的相關資訊。必要。    |
+| `user.backend_roles`   | 陣列   | 與使用者相關聯的後端角色。選用。  |
+| `user.roles`   | 陣列   | 與使用者相關聯的角色。選用。 |
+| `user.custom_attribute_names`   | 陣列   | 與使用者相關聯的自訂屬性名稱。選用。   |
+| `user.user_requested_tenant`   | 字串  | 使用者要求的租用戶。選用。   |
+| `indices`   | 陣列   | 用於監視器的記錄資料來源。必要。  |
+| `per_ioc_type_scan_input_list`  | 陣列   | 要根據入侵指標 (IOC) 類型掃描的輸入清單。必要。   |
+| `per_ioc_type_scan_input_list.ioc_type`   | 字串  | IOC 類型 (例如雜湊)。必要。  |
+| `per_ioc_type_scan_input_list.index_to_fields_map`  | 物件  |包含指定 IOC 類型值的索引欄位對應。必要。 |
+| `per_ioc_type_scan_input_list.index_to_fields_map.<index>` | 陣列   | 指定索引中包含的欄位清單。必要。   |
+| `triggers`  | 陣列   | 警示的觸發程序設定。必要。   |
+| `triggers.data_sources`   | 陣列   | 與觸發程序相關聯的資料來源清單。必要。  |
+| `triggers.name`  | 字串  | 觸發程序的名稱。必要。  |
+| `triggers.severity`  | 字串  | 觸發程序的嚴重性層級 (例如高、中或低)。必要。  |
 
-### Example requests
+### 範例請求
 
-The following section provides example requests for the Monitor API.
+下列小節提供 Monitor API 的範例請求。
 
 
-#### Create a monitor
-
-```json
-{
-    "name": "Threat intel monitor",
-    "schedule": {
-        "period": {
-            "interval": 1,
-            "unit": "MINUTES"
-        }
-    },
-    "enabled": false,
-    "user": {
-        "name": "",
-        "backend_roles": [],
-        "roles": [],
-        "custom_attribute_names": [],
-        "user_requested_tenant": null
-    },
-    "indices": [
-        "windows"
-    ],
-    "per_ioc_type_scan_input_list": [
-        {
-            "ioc_type": "hashes",
-            "index_to_fields_map": {
-                "windows": [
-                    "file_hash"
-                ]
-            }
-        }
-    ],
-  "triggers": [
-        {
-            "data_sources": [
-                "windows",
-                "random"
-            ],
-            "name": "regwarg",
-            "severity": "high"
-        }
-    ]
-}
-```
-
-### Update a monitor
+#### 建立監視器
 
 ```json
 {
@@ -146,8 +102,53 @@ The following section provides example requests for the Monitor API.
 }
 ```
 
+### 更新監視器
 
-### Example response
+```json
+{
+    "name": "Threat intel monitor",
+    "schedule": {
+        "period": {
+            "interval": 1,
+            "unit": "MINUTES"
+        }
+    },
+    "enabled": false,
+    "user": {
+        "name": "",
+        "backend_roles": [],
+        "roles": [],
+        "custom_attribute_names": [],
+        "user_requested_tenant": null
+    },
+    "indices": [
+        "windows"
+    ],
+    "per_ioc_type_scan_input_list": [
+        {
+            "ioc_type": "hashes",
+            "index_to_fields_map": {
+                "windows": [
+                    "file_hash"
+                ]
+            }
+        }
+    ],
+  "triggers": [
+        {
+            "data_sources": [
+                "windows",
+                "random"
+            ],
+            "name": "regwarg",
+            "severity": "high"
+        }
+    ]
+}
+```
+
+
+### 範例回應
 
 ```json
 {
@@ -203,24 +204,24 @@ The following section provides example requests for the Monitor API.
 ```
 ---
 
-## Delete a monitor
+## 刪除監視器
 
-Deletes an existing threat intelligence monitor.
+刪除現有的威脅情報監視器。
 
-### Endpoints
+### 端點
 
 ```json
 DELETE /_plugins/_security_analytics/threat_intel/monitors/{monitor_id}
 ```
 
-### Example request
+### 範例請求
 
 ```json
 DELETE /_plugins/_security_analytics/threat_intel/monitors/B8p88ZAB1vBjq44wkjEy
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -229,13 +230,13 @@ DELETE /_plugins/_security_analytics/threat_intel/monitors/B8p88ZAB1vBjq44wkjEy
 }
 ```
 
-## Search for a monitor
+## 搜尋監視器
 
-Searches for an existing monitor using a query. The request body expects a search query. For query options, see [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/).
+使用查詢搜尋現有的監視器。請求本文需要搜尋查詢。如需查詢選項，請參閱 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/)。
  
-### Example request
+### 範例請求
 
-The following example request using a match query with the monitor's ID to search for the monitor:
+下列範例請求使用符合監視器 ID 的 match 查詢來搜尋監視器：
 
 ```json
 POST /_plugins/_security_analytics/detectors/_search
@@ -249,7 +250,7 @@ POST /_plugins/_security_analytics/detectors/_search
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {

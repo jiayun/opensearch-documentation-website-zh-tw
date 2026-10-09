@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Train and predict 
+title: "訓練與預測"
 parent: Model APIs
 grand_parent: ML Commons APIs
 nav_order: 75
@@ -8,13 +9,13 @@ nav_order: 75
 
 # Train and Predict API
 
-Use to train and then immediately predict against the same training dataset. Can only be used with unsupervised learning models and the following algorithms:
+用於訓練，然後立即針對相同的訓練資料集進行預測。僅可搭配非監督式學習模型及下列演算法使用：
 
 - `BATCH_RCF`
 - `FIT_RCF`
 - `k-means`
 
-## Example request: Train and predict with indexed data
+## 範例請求：使用已編製索引的資料進行訓練與預測
 
 ```json
 POST /_plugins/_ml/_train_predict/kmeans
@@ -47,7 +48,7 @@ POST /_plugins/_ml/_train_predict/kmeans
 ```
 {% include copy-curl.html %}
 
-## Example request: Train and predict with data directly
+## 範例請求：直接使用資料進行訓練與預測
 
 ```json
 POST /_plugins/_ml/_train_predict/kmeans
@@ -147,7 +148,7 @@ POST /_plugins/_ml/_train_predict/kmeans
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {

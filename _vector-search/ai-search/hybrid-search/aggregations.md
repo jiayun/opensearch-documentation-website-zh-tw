@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Combining hybrid search and aggregations
+title: "結合混合搜尋與彙總"
 parent: Hybrid search
 grand_parent: AI search
 has_children: false
 nav_order: 50
 ---
 
-# Combining hybrid search and aggregations
-**Introduced 2.13**
+# 結合混合搜尋與彙總
+**於 2.13 版推出**
 {: .label .label-purple }
 
-You can enhance search results by combining a hybrid query clause with any aggregation that OpenSearch supports. Aggregations allow you to use OpenSearch as an analytics engine. For more information about aggregations, see [Aggregations]({{site.url}}{{site.baseurl}}/aggregations/).
+您可以將混合查詢子句與 OpenSearch 支援的任何彙總結合，以強化搜尋結果。彙總可讓您將 OpenSearch 當作分析引擎使用。如需彙總的詳細資訊，請參閱[彙總]({{site.url}}{{site.baseurl}}/aggregations/)。
 
-Most aggregations are performed on the subset of documents that is returned by a hybrid query. The only aggregation that operates on all documents is the [`global`]({{site.url}}{{site.baseurl}}/aggregations/bucket/global/) aggregation.
+大多數彙總都是在混合查詢所傳回的文件子集上執行。唯一會對所有文件執行的彙總是 [`global`]({{site.url}}{{site.baseurl}}/aggregations/bucket/global/) 彙總。
 
-To use aggregations with a hybrid query, first create an index. Aggregations are typically used on fields of special types, like `keyword` or `integer`. The following example creates an index with several such fields:
+若要將彙總與混合查詢搭配使用，請先建立索引。彙總通常用於特殊類型的欄位，例如 `keyword` 或 `integer`。下列範例會建立包含數個這類欄位的索引：
 
 ```json
 PUT /my-nlp-index
@@ -40,7 +41,7 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-The following request ingests six documents into your new index:
+下列請求會將六份文件匯入您的新索引：
 
 ```json
 POST /_bulk
@@ -63,7 +64,7 @@ POST /_bulk
 ```
 {% include copy-curl.html %}
 
-Now you can combine a hybrid query clause with a `min` aggregation:
+現在您可以將混合查詢子句與 `min` 彙總結合：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -112,7 +113,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents and the aggregation results: 
+回應會包含相符的文件與彙總結果：
 
 ```json
 {

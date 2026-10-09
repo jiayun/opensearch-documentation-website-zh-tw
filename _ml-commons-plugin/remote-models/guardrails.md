@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Guardrails
+title: "防護欄"
 has_children: false
 has_toc: false
 nav_order: 70
@@ -8,29 +9,29 @@ parent: Connecting to externally hosted models
 grand_parent: Integrating ML models
 ---
 
-# Configuring model guardrails
-**Introduced 2.13**
+# 設定模型防護欄
+**於 2.13 版推出**
 {: .label .label-purple }
 
-Guardrails can guide a large language model (LLM) toward desired behavior. They act as a filter, preventing the LLM from generating output that is harmful or violates ethical principles and facilitating safer use of AI. Guardrails also cause the LLM to produce more focused and relevant output. 
+防護欄可以引導大型語言模型 (LLM) 產生期望的行為。它們扮演篩選器的角色，防止 LLM 產生有害或違反倫理原則的輸出，並促進更安全地使用 AI。防護欄也會讓 LLM 產生更聚焦且更相關的輸出。
 
-You can configure guardrails for your LLM using the following methods:
-- Provide a list of words to be prohibited in the input or output of the model. Alternatively, you can provide a regular expression against which the model input or output will be matched. For more information, see [Validating input/output using stopwords and regex](#validating-inputoutput-using-stopwords-and-regex).
-- Configure a separate LLM whose purpose is to validate the user input and the LLM output.
+您可以使用下列方法為 LLM 設定防護欄：
+- 提供一份禁止出現在模型輸入或輸出中的字詞清單。或者，您可以提供一個規則運算式，用來比對模型輸入或輸出。如需詳細資訊，請參閱[使用停用詞與規則運算式驗證輸入/輸出](#validating-inputoutput-using-stopwords-and-regex)。
+- 設定一個專門用來驗證使用者輸入與 LLM 輸出的獨立 LLM。
 
-## Prerequisites
+## 先決條件
 
-Before you start, make sure you have fulfilled the [prerequisites]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/#prerequisites) for connecting to an externally hosted model.
+開始之前，請確認您已滿足[先決條件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/#prerequisites)，以便連線至外部託管的模型。
 
-## Validating input/output using stopwords and regex
-**Introduced 2.13**
+## 使用停用詞與規則運算式驗證輸入/輸出
+**於 2.13 版推出**
 {: .label .label-purple }
 
-A simple way to validate the user input and LLM output is to provide a set of prohibited words (stopwords) or a regular expression for validation.
+驗證使用者輸入與 LLM 輸出的簡單方式，是提供一組禁止使用的字詞 (停用詞) 或一個用於驗證的規則運算式。
 
-### Step 1: Create a guardrail index
+### 步驟 1：建立防護欄索引
 
-To start, create an index that will store the excluded words (_stopwords_). In the index settings, specify a `title` field, which will contain excluded words, and a `query` field of the [percolator]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/percolator/) type. The percolator query will be used to match the LLM input or output:
+首先，建立一個用來儲存排除字詞 (_stopwords_) 的索引。在索引設定中，指定一個 `title` 欄位 (其中會包含排除字詞)，以及一個 [percolator]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/percolator/) 類型的 `query` 欄位。percolator 查詢將用來比對 LLM 的輸入或輸出：
 
 ```json
 PUT /words0
@@ -49,9 +50,9 @@ PUT /words0
 ```
 {% include copy-curl.html %}
 
-### Step 2: Index excluded words or phrases
+### 步驟 2：將排除的字詞或詞句編製索引
 
-Next, index a query string query that will be used to match excluded words in the model input or output:
+接著，將一個查詢字串查詢編製索引，用來比對模型輸入或輸出中的排除字詞：
 
 ```json
 PUT /words0/_doc/1?refresh
@@ -77,11 +78,11 @@ PUT /words0/_doc/2?refresh
 ```
 {% include copy-curl.html %}
 
-For more query string options, see [Query string query]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/).
+如需更多查詢字串選項，請參閱[查詢字串查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/)。
 
-### Step 3: Register a model group
+### 步驟 3：註冊模型群組
 
-To register a model group, send the following request:
+若要註冊模型群組，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -92,7 +93,7 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-The response contains the model group ID that you'll use to register a model to this model group:
+回應中包含模型群組 ID，您將使用該 ID 將模型註冊至此模型群組：
 
 ```json
 {
@@ -101,11 +102,11 @@ The response contains the model group ID that you'll use to register a model to 
 }
 ```
 
-To learn more about model groups, see [Model access control]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/).
+如要進一步瞭解模型群組，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
 
-### Step 4: Create a connector
+### 步驟 4：建立連接器
 
-Now you can create a connector for the model. In this example, you'll create a connector to the Anthropic Claude model hosted on Amazon Bedrock:
+現在您可以為模型建立連接器。在此範例中，您將建立一個連接至託管於 Amazon Bedrock 上的 Anthropic Claude 模型的連接器：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -145,7 +146,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-The response contains the connector ID for the newly created connector:
+回應中包含新建立連接器的連接器 ID：
 
 ```json
 {
@@ -153,9 +154,9 @@ The response contains the connector ID for the newly created connector:
 }
 ```
 
-### Step 5: Register and deploy the model with guardrails
+### 步驟 5：使用防護欄註冊並部署模型
 
-To register an externally hosted model, provide the model group ID from step 3 and the connector ID from step 4 in the following request. To configure guardrails, include the `guardrails` object:
+若要註冊外部託管的模型，請在下列請求中提供步驟 3 的模型群組 ID 與步驟 4 的連接器 ID。若要設定防護欄，請加入 `guardrails` 物件：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -200,9 +201,9 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-For more information, see [The `guardrails` parameter]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-guardrails-parameter).
+如需詳細資訊，請參閱[`guardrails` 參數]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-guardrails-parameter)。
 
-OpenSearch returns the task ID of the register operation:
+OpenSearch 會傳回註冊作業的工作 ID：
 
 ```json
 {
@@ -211,14 +212,14 @@ OpenSearch returns the task ID of the register operation:
 }
 ```
 
-To check the status of the operation, provide the task ID to the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+若要檢查作業狀態，請將工作 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
 ```bash
 GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 ```
 {% include copy-curl.html %}
 
-When the operation is complete, the state changes to `COMPLETED`:
+作業完成後，狀態會變更為 `COMPLETED`：
 
 ```json
 {
@@ -235,9 +236,9 @@ When the operation is complete, the state changes to `COMPLETED`:
 }
 ```
 
-### Step 6 (Optional): Test the model
+### 步驟 6 (選用)：測試模型
 
-To demonstrate how guardrails are applied, first run the predict operation that does not contain any excluded words:
+為了示範防護欄的套用方式，請先執行不含任何排除字詞的預測作業：
 
 ```json
 POST /_plugins/_ml/models/p94dYo4BrXGpZpgPp98E/_predict
@@ -249,7 +250,7 @@ POST /_plugins/_ml/models/p94dYo4BrXGpZpgPp98E/_predict
 ```
 {% include copy-curl.html %}
 
-The response contains the LLM answer:
+回應中包含 LLM 的答案：
 
 ```json
 {
@@ -269,7 +270,7 @@ The response contains the LLM answer:
 }
 ```
 
-Then run the predict operation that contains excluded words:
+接著執行包含排除字詞的預測作業：
 
 ```json
 POST /_plugins/_ml/models/p94dYo4BrXGpZpgPp98E/_predict
@@ -281,7 +282,7 @@ POST /_plugins/_ml/models/p94dYo4BrXGpZpgPp98E/_predict
 ```
 {% include copy-curl.html %}
 
-The response contains an error message because guardrails were triggered:
+回應中包含錯誤訊息，因為已觸發防護欄：
 
 ```json
 {
@@ -299,19 +300,19 @@ The response contains an error message because guardrails were triggered:
 }
 ```
 
-Guardrails are also triggered when a prompt matches the supplied regular expression.
+當提示符合所提供的規則運算式時，也會觸發防護欄。
 
-## Validating input/output using a guardrail model
-**Introduced 2.15**
+## 使用防護模型驗證輸入/輸出
+**於 2.15 版導入**
 {: .label .label-purple }
 
-For more advanced validation, you can configure a guardrail model---a separate LLM whose purpose is to validate the user input and the LLM output. In this example, you'll configure two models:
-- Chat model: An Anthropic Claude model hosted on Amazon Bedrock whose purpose is to hold a conversation with a user.
-- Guardrail model: An OpenAI model whose purpose is to validate the user input and Anthropic Claude output.
+如需更進階的驗證，您可以設定防護模型（guardrail model）——一個專門用來驗證使用者輸入與 LLM 輸出的獨立 LLM。在本範例中，您將設定兩個模型：
+- 對話模型：託管於 Amazon Bedrock 的 Anthropic Claude 模型，用途是與使用者進行對話。
+- 防護模型：OpenAI 模型，用途是驗證使用者輸入與 Anthropic Claude 輸出。
 
-### Step 1: Create a connector for the guardrail model
+### 步驟 1：為防護模型建立連接器
 
-First, create a connector to the OpenAI guardrail model. Note that the OpenAI prompt instructs the model to respond only with the words `accept` or `reject`, depending on whether the input/output is acceptable. Additionally, the request contains the `response_filter` parameter, which specifies the field in which the guardrail model will provide the validation result: 
+首先，建立連往 OpenAI 防護模型的連接器。請注意，OpenAI 提示會指示模型僅根據輸入/輸出是否可接受，回覆 `accept` 或 `reject` 這兩個詞。此外，請求包含 `response_filter` 參數，用於指定防護模型提供驗證結果的欄位：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -346,7 +347,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-The response contains the connector ID used in the next steps:
+回應包含後續步驟將使用的連接器 ID：
 
 ```json
 {
@@ -354,9 +355,9 @@ The response contains the connector ID used in the next steps:
 }
 ```
 
-### Step 2: Register a model group for the guardrail model
+### 步驟 2：為防護模型註冊模型群組
 
-To register a model group for the OpenAI guardrail model, send the following request:
+若要為 OpenAI 防護模型註冊模型群組，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -367,7 +368,7 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-The response contains the model group ID used to register a model to this model group:
+回應包含用於將模型註冊至此模型群組的模型群組 ID：
 
 ```json
 {
@@ -376,11 +377,11 @@ The response contains the model group ID used to register a model to this model 
 }
 ```
 
-To learn more about model groups, see [Model access control]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/).
+若要進一步了解模型群組，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
 
-### Step 3: Register and deploy the guardrail model
+### 步驟 3：註冊並部署防護模型
 
-Using the connector ID and the model group ID, register and deploy the OpenAI guardrail model:
+使用連接器 ID 與模型群組 ID，註冊並部署 OpenAI 防護模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -394,7 +395,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns the task ID of the register operation and the model ID of the registered model:
+OpenSearch 會傳回註冊作業的任務 ID 以及已註冊模型的模型 ID：
 
 ```json
 {
@@ -404,14 +405,14 @@ OpenSearch returns the task ID of the register operation and the model ID of the
 }
 ```
 
-To check the status of the operation, provide the task ID to the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+若要檢查作業狀態，請將任務 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
 ```bash
 GET /_plugins/_ml/tasks/onJaDZABNFJeYR3I2fQ1
 ```
 {% include copy-curl.html %}
 
-When the operation is complete, the state changes to `COMPLETED`:
+當作業完成時，狀態會變更為 `COMPLETED`：
 
 ```json
 {
@@ -428,11 +429,11 @@ When the operation is complete, the state changes to `COMPLETED`:
 }
 ```
 
-### Step 4 (Optional): Test the guardrail model
+### 步驟 4（選用）：測試防護模型
 
-You can test the guardrail model user input validation by sending requests that do and do not contain offensive words. 
+您可以傳送包含與不包含冒犯性詞語的請求，來測試防護模型的使用者輸入驗證。
 
-First, send a request that does not contain offensive words:
+首先，傳送不包含冒犯性詞語的請求：
 
 ```json
 POST /_plugins/_ml/models/o3JaDZABNFJeYR3I2fRV/_predict
@@ -444,7 +445,7 @@ POST /_plugins/_ml/models/o3JaDZABNFJeYR3I2fRV/_predict
 ```
 {% include copy-curl.html %}
 
-The guardrail model accepts the preceding request:
+防護模型會接受上述請求：
 
 ```json
 {
@@ -464,7 +465,7 @@ The guardrail model accepts the preceding request:
 }
 ```
 
-Next, send a request that contains offensive words:
+接著，傳送包含冒犯性詞語的請求：
 
 ```json
 POST /_plugins/_ml/models/o3JaDZABNFJeYR3I2fRV/_predict
@@ -476,7 +477,7 @@ POST /_plugins/_ml/models/o3JaDZABNFJeYR3I2fRV/_predict
 ```
 {% include copy-curl.html %}
 
-The guardrail model rejects the preceding request:
+防護模型會拒絕上述請求：
 
 ```json
 {
@@ -496,9 +497,9 @@ The guardrail model rejects the preceding request:
 }
 ```
 
-### Step 5: Create a connector for the chat model
+### 步驟 5：為對話模型建立連接器
 
-In this example, the chat model will be an Anthropic Claude model hosted on Amazon Bedrock. To create a connector for the model, send the following request. Note that the `response_filter` parameter specifies the field in which the guardrail model will provide the validation result: 
+在本範例中，對話模型將是託管於 Amazon Bedrock 的 Anthropic Claude 模型。若要為該模型建立連接器，請傳送下列請求。請注意，`response_filter` 參數會指定防護模型提供驗證結果的欄位：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -538,7 +539,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-The response contains the connector ID used in the next steps:
+回應包含後續步驟將使用的連接器 ID：
 
 ```json
 {
@@ -546,9 +547,9 @@ The response contains the connector ID used in the next steps:
 }
 ```
 
-### Step 6: Register and deploy the chat model with guardrails
+### 步驟 6：註冊並部署具有防護機制的聊天模型
 
-To register and deploy the Anthropic Claude chat model, send the following request. Note that the `guardrails` object contains a `response_validation_regex` parameter that specifies to only treat the input/output as valid if the guardrail model responds with a variant of the word `accept`:
+若要註冊並部署 Anthropic Claude 聊天模型，請傳送下列請求。請注意，`guardrails` 物件包含 `response_validation_regex` 參數，該參數指定只有在防護機制模型以 `accept` 這個詞的某種變體作為回應時，才將輸入/輸出視為有效：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -573,7 +574,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns the task ID of the register operation and the model ID of the registered model:
+OpenSearch 會傳回註冊作業的任務 ID 以及已註冊模型的模型 ID：
 
 ```json
 {
@@ -583,11 +584,11 @@ OpenSearch returns the task ID of the register operation and the model ID of the
 }
 ```
 
-### Step 7 (Optional): Test the chat model with guardrails
+### 步驟 7（選用）：測試具有防護機制的聊天模型
 
-You can test the Anthropic Claude chat model with guardrails by sending predict requests that do and do not contain offensive words. 
+您可以傳送包含與不包含冒犯性字詞的預測請求，以測試具有防護機制的 Anthropic Claude 聊天模型。
 
-First, send a request that does not contain offensive words:
+首先，傳送不包含冒犯性字詞的請求：
 
 ```json
 POST /_plugins/_ml/models/43JqDZABNFJeYR3IQPQH/_predict
@@ -600,7 +601,7 @@ POST /_plugins/_ml/models/43JqDZABNFJeYR3IQPQH/_predict
 ```
 {% include copy-curl.html %}
 
-OpenSearch responds with the LLM answer:
+OpenSearch 會以 LLM 的答案作為回應：
 
 ```json
 {
@@ -620,7 +621,7 @@ OpenSearch responds with the LLM answer:
 }
 ```
 
-Next, send a request that contains offensive words:
+接著，傳送包含冒犯性字詞的請求：
 
 ```json
 POST /_plugins/_ml/models/43JqDZABNFJeYR3IQPQH/_predict
@@ -632,9 +633,9 @@ POST /_plugins/_ml/models/43JqDZABNFJeYR3IQPQH/_predict
 }
 ```
 
-OpenSearch responds with an error.
+OpenSearch 會回應錯誤。
 
-## Next steps
+## 後續步驟
 
-- For more information about configuring guardrails, see [The `guardrails` parameter]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-guardrails-parameter).
-- For a tutorial demonstrating how to use Amazon Bedrock guardrails, see [Using Amazon Bedrock guardrails]({{site.url}}{{site.baseurl}}/vector-search/tutorials/model-controls/bedrock-guardrails/).
+- 如需設定防護機制的詳細資訊，請參閱 [`guardrails` 參數]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-guardrails-parameter)。
+- 如需示範如何使用 Amazon Bedrock 防護機制的教學，請參閱[使用 Amazon Bedrock 防護機制]({{site.url}}{{site.baseurl}}/vector-search/tutorials/model-controls/bedrock-guardrails/)。

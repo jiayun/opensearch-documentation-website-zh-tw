@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Agents
+title: "代理程式"
 parent: Agents and tools
 has_children: true
 has_toc: false
@@ -9,63 +10,63 @@ redirect_from:
   - /ml-commons-plugin/agents-tools/agents/
 ---
 
-# Agents
-**Introduced 2.13**
+# 代理程式
+**於 2.13 版推出**
 {: .label .label-purple }
 
-An _agent_ is a coordinator that uses a large language model (LLM) to solve a problem. After the LLM reasons and decides what action to take, the agent coordinates the action execution. OpenSearch supports the following agent types:
+_代理程式_ 是一種協調器，會使用大型語言模型 (LLM) 來解決問題。在 LLM 進行推理並決定要採取的行動之後，代理程式會協調行動的執行。OpenSearch 支援下列代理程式類型：
 
-- [_Flow agent_]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/flow/): Runs tools sequentially, in the order specified in its configuration. The workflow of a flow agent is fixed. Useful for retrieval-augmented generation (RAG).
-- [_Conversational flow agent_]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational-flow/): Runs tools sequentially, in the order specified in its configuration. The workflow of a conversational flow agent is fixed. Stores conversation history so that users can ask follow-up questions. Useful for creating a chatbot.
-- [_Conversational agent_]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/): Reasons in order to provide a response based on the available knowledge, including the LLM knowledge base and a set of tools provided to the LLM. The LLM reasons iteratively to decide what action to take until it obtains the final answer or reaches the iteration limit. Stores conversation history so that users can ask follow-up questions. The workflow of a conversational agent is variable, based on follow-up questions. For specific questions, uses the Chain-of-Thought (CoT) process to select the best tool from the configured tools for providing a response to the question. Useful for creating a chatbot that employs RAG.
-- [_Conversational agent V2_]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/#the-conversational_v2-agent-with-full-multimodal-support): An enhanced version of the conversational agent with built-in multimodal support out of the box, requiring minimal configuration. Accepts text, images, documents, and multi-turn message history as input using a standardized interface, without requiring custom connector setup. Returns a standardized output format along with token usage metrics. Requires the [unified registration method](#unified-registration-method) and [Agentic Memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/).
-- [_Plan-execute-reflect agent_]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/): Dynamically plans, executes, and refines multi-step workflows to solve complex tasks. Internally, a plan-execute-reflect agent uses a conversational agent to execute each individual step in the plan. The agent automatically selects the most appropriate tool for each step based on tool descriptions and context. Ideal for long-running, exploratory processes that benefit from iterative reasoning and adaptive execution. Useful for conducting research or performing root cause analysis (RCA).
-- [_AG-UI agent_]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/ag-ui/): Follows the AG-UI protocol for integrating AI agents with frontend applications. Enables seamless communication between OpenSearch and UIs by accepting frontend context and tools, allowing the agent to interact directly with UI components and application state. Useful for interactive dashboards.
+- [_流程代理程式_]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/flow/)：依其組態中指定的順序，循序執行工具。流程代理程式的工作流程是固定的。適用於檢索增強生成 (RAG)。
+- [_對話流程代理程式_]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational-flow/)：依其組態中指定的順序，循序執行工具。對話流程代理程式的工作流程是固定的。會儲存對話歷程記錄，讓使用者可以提出後續問題。適用於建立聊天機器人。
+- [_對話代理程式_]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/)：進行推理，以根據可用的知識提供回應，包括 LLM 知識庫以及提供給 LLM 的一組工具。LLM 會反覆進行推理，以決定要採取的行動，直到取得最終答案或達到反覆運算次數上限為止。會儲存對話歷程記錄，讓使用者可以提出後續問題。對話代理程式的工作流程會依後續問題而有所不同。針對特定問題，會使用思維鏈 (CoT) 程序，從已設定的工具中選出最適合用來提供問題回應的工具。適用於建立採用 RAG 的聊天機器人。
+- [_對話代理程式 V2_]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/#the-conversational_v2-agent-with-full-multimodal-support)：對話代理程式的增強版本，內建多模態支援且開箱即用，只需最少的組態。使用標準化介面接受文字、影像、文件和多重回合訊息歷程記錄作為輸入，不需要自訂連接器設定。會傳回標準化的輸出格式以及詞元用量指標。需要[統一註冊方法](#unified-registration-method)和 [Agentic Memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/)。
+- [_規劃-執行-反思代理程式_]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/)：動態規劃、執行及調整多步驟工作流程，以解決複雜的工作。在內部，規劃-執行-反思代理程式會使用對話代理程式來執行計畫中的每個個別步驟。代理程式會根據工具描述和內容，自動為每個步驟選出最適合的工具。非常適合可受益於反覆推理和調適性執行的長時間執行、探索性流程。適用於進行研究或執行根本原因分析 (RCA)。
+- [_AG-UI 代理程式_]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/ag-ui/)：遵循 AG-UI 通訊協定，將 AI 代理程式與前端應用程式整合。透過接受前端內容和工具，讓 OpenSearch 與 UI 之間能夠順暢通訊，使代理程式可以直接與 UI 元件和應用程式狀態互動。適用於互動式儀表板。
 
-## Creating agents
+## 建立代理程式
 
-You can create agents using two registration methods: the regular registration method or the unified registration method.
+您可以使用兩種註冊方法建立代理程式：一般註冊方法或統一註冊方法。
 
-### Regular registration method
+### 一般註冊方法
 
-The regular registration method uses the [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/) and requires multiple steps to create an agent:
+一般註冊方法使用 [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)，且需要多個步驟才能建立代理程式：
 
-1. **Register a connector**: Create a connector with a complex JSON configuration including a `request_body` and `url` parameters.
-2. **Register a model**: Create a model that manually references the `connector_id` from Step 1.
-3. **Register an agent**: Create the agent by providing the `model_id`, configuring the `_llm_interface` parameter, and mapping `question` to `prompt`.
-4. **Execute the agent**: Execute the agent with a limited text-based `question` parameter only.
+1. **註冊連接器**：建立具有複雜 JSON 組態的連接器，包括 `request_body` 和 `url` 參數。
+2. **註冊模型**：建立模型，手動參照步驟 1 中的 `connector_id`。
+3. **註冊代理程式**：提供 `model_id`、設定 `_llm_interface` 參數，並將 `question` 對應至 `prompt`，以建立代理程式。
+4. **執行代理程式**：僅使用有限的文字型 `question` 參數來執行代理程式。
 
-### Unified registration method
-**Introduced 3.5**
+### 統一註冊方法
+**於 3.5 版推出**
 {: .label .label-purple }
 
-The Unified Agent API streamlines agent creation and execution by automating connector and model setup, significantly reducing the complexity of working with agents in OpenSearch. The Unified Agent API registers an agent in a single API call by automatically handling model group creation, connector configuration, and model registration based on the `model` block configuration:
+Unified Agent API 會自動設定連接器和模型，大幅降低在 OpenSearch 中使用代理程式的複雜度，進而簡化代理程式的建立和執行。Unified Agent API 會根據 `model` 區塊組態自動處理模型群組建立、連接器設定和模型註冊，只需一次 API 呼叫即可註冊代理程式：
 
-1. **Register an agent** (connector and model are created automatically).
-2. **Execute the agent** using the `input` field.
+1. **註冊代理程式** (會自動建立連接器和模型)。
+2. 使用 `input` 欄位**執行代理程式**。
 
-The unified registration method differs from the regular registration method in the following ways.
+統一註冊方法和一般註冊方法有下列不同之處。
 
-| Aspect | Regular registration method | Unified registration method |
+| 層面 | 一般註冊方法 | 統一註冊方法 |
 | :--- | :--- | :--- |
-| **Workflow steps** | 1. Register connector<br>2. Register model<br>3. Register agent<br>4. Execute with `question` parameter | 1. Register agent (automatic connector/model creation)<br>2. Execute with flexible `input` field |
-| **Configuration complexity** | Manual connector configuration with request bodies, URLs, and parameter mappings | Automatic configuration with built-in validation and defaults |
-| **Model setup** | Requires separate model registration before agent creation | Creates model resources automatically during agent registration |
-| **Model reference** | Uses `llm.model_id` to reference preregistered models | Uses `model` block with provider credentials and configuration |
-| **LLM interface** | Manual `_llm_interface` parameter configuration | Automatic `_llm_interface` detection from `model_provider` |
-| **Input capabilities** | Limited to text-based `question` parameter | Supports multimodal inputs (text, images, messages) through enhanced execution API |
+| **工作流程步驟** | 1. 註冊連接器<br>2. 註冊模型<br>3. 註冊代理程式<br>4. 使用 `question` 參數執行 | 1. 註冊代理程式 (自動建立連接器/模型)<br>2. 使用彈性的 `input` 欄位執行 |
+| **組態複雜度** | 手動設定連接器，包含請求本文、URL 和參數對應 | 自動設定，內建驗證和預設值 |
+| **模型設定** | 建立代理程式之前需要個別註冊模型 | 在代理程式註冊期間自動建立模型資源 |
+| **模型參照** | 使用 `llm.model_id` 參照預先註冊的模型 | 使用 `model` 區塊搭配供應商憑證和組態 |
+| **LLM 介面** | 手動設定 `_llm_interface` 參數 | 從 `model_provider` 自動偵測 `_llm_interface` |
+| **輸入功能** | 僅限文字型 `question` 參數 | 透過增強的執行 API 支援多模態輸入 (文字、影像、訊息) |
 
-#### Supported models
+#### 支援的模型
 
-The following models are supported:
+支援下列模型：
 
-- **Amazon Bedrock Converse API** with Anthropic Claude models
-- **Google Gemini** models
-- **OpenAI** models
+- **Amazon Bedrock Converse API** 搭配 Anthropic Claude 模型
+- **Google Gemini** 模型
+- **OpenAI** 模型
 
-#### Prerequisites
+#### 先決條件
 
-The Unified Agent API is disabled by default. To enable it, update the following cluster setting:
+Unified Agent API 預設為停用。若要啟用，請更新下列叢集設定：
 
 ```json
 PUT /_cluster/settings
@@ -77,7 +78,7 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-If you plan to use Model Context Protocol (MCP) connectors with your unified agents, also enable MCP connector support:
+如果您打算搭配統一代理程式使用 Model Context Protocol (MCP) 連接器，也請啟用 MCP 連接器支援：
 
 ```json
 PUT /_cluster/settings
@@ -89,11 +90,11 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-#### Example
+#### 範例
 
-The following example demonstrates the unified registration method.
+下列範例示範統一註冊方法。
 
-**Step 1: Register an agent**
+**步驟 1：註冊代理程式**
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -116,9 +117,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-For complete registration details, field definitions, and examples for all model providers, see [Unified agent registration]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/#unified-agent-registration). 
+如需所有模型供應商的完整註冊詳細資料、欄位定義和範例，請參閱[統一代理程式註冊]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/#unified-agent-registration)。
 
-**Step 2: Execute the agent**
+**步驟 2：執行代理程式**
 
 ```json
 POST /_plugins/_ml/agents/{agent_id}/_execute
@@ -128,35 +129,35 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
 ```
 {% include copy-curl.html %}
 
-For execution details and input format specifications, see [Unified agent execution]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#unified-agent-execution).
+如需執行詳細資料和輸入格式規格，請參閱[統一代理程式執行]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#unified-agent-execution)。
 
-#### Limitations
+#### 限制
 
-The following limitations apply to the unified registration method:
+下列限制適用於統一註冊方法：
 
-- **Agent types**: Only `conversational`, `conversational_v2`, `plan_execute_and_reflect`, and `AG_UI` agents are supported.
-- **Multimodal input**: When using the unified registration method, content block and message-based input formats require `conversational_v2` agents. All other unified agent types, including `conversational` agents using either `conversation_index` or `agentic_memory`, accept only plain text input. When using the regular registration method, multimodal support is possible if the connector is configured to pass multimodal content to the LLM, with the input format determined by the connector configuration.
+- **代理程式類型**：僅支援 `conversational`、`conversational_v2`、`plan_execute_and_reflect` 和 `AG_UI` 代理程式。
+- **多模態輸入**：使用統一註冊方法時，內容區塊和訊息型輸入格式需要 `conversational_v2` 代理程式。所有其他統一代理程式類型 (包括使用 `conversation_index` 或 `agentic_memory` 的 `conversational` 代理程式) 僅接受純文字輸入。使用一般註冊方法時，如果連接器設定為將多模態內容傳遞至 LLM，則可支援多模態，輸入格式取決於連接器組態。
 
-The Unified Agent API is fully backward compatible with existing agents. Agents created using the regular registration method continue to function normally. You can use both registration methods in the same cluster.
+Unified Agent API 與現有代理程式完全回溯相容。使用一般註冊方法建立的代理程式會繼續正常運作。您可以在同一個叢集中使用這兩種註冊方法。
 
-Agents created using the Unified Agent API cannot be updated to use the regular registration method parameters.
+使用 Unified Agent API 建立的代理程式無法更新為使用一般註冊方法參數。
 {: .note}
 
-## Hidden agents
-**Introduced 2.13**
+## 隱藏代理程式
+**於 2.13 版推出**
 {: .label .label-purple }
 
-To hide agent details from end users, including the cluster admin, you can register a _hidden_ agent. If an agent is hidden, non-superadmin users don't have permission to call any [Agent APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/index/), except for the [Execute API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/), on the agent.
+若要對終端使用者 (包括叢集管理員) 隱藏代理程式詳細資料，您可以註冊_隱藏_代理程式。如果代理程式已隱藏，非超級管理員使用者就沒有權限對該代理程式呼叫任何 [Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/index/)，但 [Execute API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/) 除外。
 
-Only superadmin users can register a hidden agent. To register a hidden agent, you first need to authenticate with an [admin certificate]({{site.url}}{{site.baseurl}}/security/configuration/tls/#configuring-admin-certificates):
+只有超級管理員使用者可以註冊隱藏代理程式。若要註冊隱藏代理程式，您必須先使用[管理員憑證]({{site.url}}{{site.baseurl}}/security/configuration/tls/#configuring-admin-certificates)進行驗證：
 
 ```bash
 curl -k --cert ./kirk.pem --key ./kirk-key.pem -XGET 'https://localhost:9200/.opendistro_security/_search'
 ```
 {% include copy.html %}
 
-All agents created by a superadmin user are automatically registered as hidden. Only the superadmin user can view hidden agent details and delete hidden agents.
-To register a hidden agent, send a request to the `_register` endpoint:
+超級管理員使用者建立的所有代理程式都會自動註冊為隱藏。只有超級管理員使用者可以檢視隱藏代理程式詳細資料和刪除隱藏代理程式。
+若要註冊隱藏代理程式，請將請求傳送至 `_register` 端點：
 
 ```bash
 curl -k --cert ./kirk.pem --key ./kirk-key.pem -X POST 'https://localhost:9200/_plugins/_ml/agents/_register' -H 'Content-Type: application/json' -d '
@@ -191,11 +192,11 @@ curl -k --cert ./kirk.pem --key ./kirk-key.pem -X POST 'https://localhost:9200/_
 ```
 {% include copy.html %}
 
-## Next steps
+## 後續步驟
 
-- To learn more about registering agents, see [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/).
-- For a list of supported tools, see [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/).
-- For a step-by-step tutorial, see [Agents and tools tutorial]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents-tools-tutorial/).
-- For a step-by-step tutorial on using a plan-execute-reflect agent, see [Building a plan-execute-reflect agent]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/agents/build-plan-execute-reflect-agent/).
-- For supported APIs, see [Agent APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/).
-- To use agents and tools in configuration automation, see [Automating configurations]({{site.url}}{{site.baseurl}}/automating-configurations/index/).
+- 若要進一步了解如何註冊代理程式，請參閱 [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)。
+- 如需支援的工具清單，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
+- 如需逐步教學，請參閱[代理程式與工具教學]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents-tools-tutorial/)。
+- 如需使用規劃-執行-反思代理程式的逐步教學，請參閱[建立規劃-執行-反思代理程式]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/agents/build-plan-execute-reflect-agent/)。
+- 如需支援的 API，請參閱 [Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/)。
+- 若要在組態自動化中使用代理程式和工具，請參閱[自動化組態]({{site.url}}{{site.baseurl}}/automating-configurations/index/)。

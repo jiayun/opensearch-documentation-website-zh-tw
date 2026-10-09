@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: ML ranking core concepts
+title: "ML 排序核心概念"
 nav_order: 10
 parent: Learning to Rank
 grand_parent: Optimizing search quality
 has_children: false
 ---
 
-# ML ranking core concepts
+# ML 排序核心概念
 
-This guide is intended for OpenSearch developers and data scientist who are interested in adding machine learning (ML) ranking capabilities to their OpenSearch system.
+本指南適用於希望在 OpenSearch 系統中加入機器學習 (ML) 排序功能的 OpenSearch 開發人員與資料科學家。
 
-## What is LTR
+## 什麼是 LTR
 
-Learning to Rank (LTR) applies ML to search relevance ranking. This differs from other classic ML problems, such as the following: 
+Learning to Rank (LTR) 將機器學習應用於搜尋相關性排序。這與其他典型的機器學習問題不同，例如：
 
-- **Regression:** The goal is to predict a variable, such as a stock price, as a function of known information, such as number of employees or revenue. The output is a direct prediction.
-- **Classification:** The goal is to categorize an entity into predefined classes, for example, profitable or not profitable. The output is a category.
+- **迴歸：** 目標是根據已知資訊（例如員工人數或營收）預測某個變數（例如股價）。輸出是直接的預測值。
+- **分類：** 目標是將實體歸類到預先定義的類別中，例如獲利或不獲利。輸出是一個類別。
 
-The objective of LTR is not to make a direct prediction but rather to learn a function (`f`) that can rank documents in an order that best matches your perception of relevance for a given query. The output `f` does not represent a literal value but rather a prediction of the document's relative usefulness. 
+LTR 的目標不是做出直接預測，而是學習一個函式 (`f`)，能夠以最符合您對特定查詢相關性認知的方式排列文件順序。輸出 `f` 並不代表字面上的數值，而是對文件相對有用性的預測。
 
-For comprehensive information about LTR, see [How is Search Different From Other Machine Learning Problems?](http://opensourceconnections.com/blog/2017/08/03/search-as-machine-learning-prob/) and [What is Learning to Rank?](http://opensourceconnections.com/blog/2017/02/24/what-is-learning-to-rank/).
+如需 LTR 的完整資訊，請參閱 [搜尋與其他機器學習問題有何不同？](http://opensourceconnections.com/blog/2017/08/03/search-as-machine-learning-prob/) 與 [什麼是 Learning to Rank？](http://opensourceconnections.com/blog/2017/02/24/what-is-learning-to-rank/)。
 
-## Defining the ideal ordering with judgment lists
+## 以判斷清單定義理想排序
 
-Judgment lists, also known as golden sets, provide a way to grade individual search results for a keyword search. These lists express the ideal ordering of search results based on your expectations. 
+判斷清單 (judgment list)，也稱為黃金集 (golden set)，提供一種為關鍵字搜尋的個別搜尋結果評分的方式。這些清單根據您的期望表達搜尋結果的理想排序。
 
-For example, using the [demo on GitHub](http://github.com/opensearch-project/opensearch-learning-to-rank-base/tree/main/demo/), in a search for `Rambo`, the judgment list may appear similar to the following: 
+例如，使用 [GitHub 上的示範](http://github.com/opensearch-project/opensearch-learning-to-rank-base/tree/main/demo/)，在搜尋 `Rambo` 時，判斷清單可能類似如下：
 
 ```
 grade,keywords,movie
@@ -40,31 +41,31 @@ grade,keywords,movie
 0,Rambo,First Daughter
 ```
 
-This judgment list establishes the ideal ordering of search results for the query `Rambo`. Metrics like [Normalized Discounted Cumulative Gain (NDCG)](https://en.wikipedia.org/wiki/Discounted_cumulative_gain) and [Expected Reciprocal Rank (ERR)](https://dl.acm.org/doi/abs/10.1145/1645953.1646033) can then be used to evaluate how closely the actual search results match this ideal ordering.
+此判斷清單為查詢 `Rambo` 建立了搜尋結果的理想排序。接著可以使用 [正規化折損累積增益 (NDCG)](https://en.wikipedia.org/wiki/Discounted_cumulative_gain) 與 [預期倒數排名 (ERR)](https://dl.acm.org/doi/abs/10.1145/1645953.1646033) 等指標，評估實際搜尋結果與此理想排序的吻合程度。
 
-The ranking function `f` aims to generate results closely aligned with the judgment list, maximizing quality metrics across various training queries. This ensures maximally useful search results.
+排序函式 `f` 的目標是產生與判斷清單緊密一致的結果，在各種訓練查詢上將品質指標最大化。這可確保搜尋結果發揮最大效用。
 
-## Understanding features as building blocks of relevance
+## 將特徵理解為相關性的基本要素
 
-The ranking function `f` uses input variables to arrive at a predicted output. For example, in stock price forecasting, input variables may encompass company-specific data like employee count and revenue. Likewise, in search relevance, the predictive model must leverage features that characterize the document, the query, and their associations, such as the [term frequency–inverse document frequency (TF–IDF)](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) score of the query keywords in a field. 
+排序函式 `f` 使用輸入變數得出預測輸出。例如，在股價預測中，輸入變數可能包含員工人數與營收等公司專屬資料。同樣地，在搜尋相關性中，預測模型必須利用能夠描述文件、查詢以及兩者關聯的特徵，例如查詢關鍵字在某個欄位中的 [詞頻－逆向文件頻率 (TF–IDF)](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) 分數。
 
-Similarly, in the context of searching for movies, the ranking function must use relevant features to determine the most relevant results. These features may include:
+同樣地，在搜尋電影的情境中，排序函式必須使用相關特徵來判斷最相關的結果。這些特徵可能包括：
 
-- Whether and to what degree the search keywords match the title field, such as `titleScore`.
-- Whether and to what degree the search keywords match the description field, such as `descScore`.
-- The movie's popularity, such as `popularity`.
-- The movie's rating, such as `rating`.
-- The number of keywords used during the search, such as `numKeywords*)`.
+- 搜尋關鍵字是否以及多大程度符合 title 欄位，例如 `titleScore`。
+- 搜尋關鍵字是否以及多大程度符合 description 欄位，例如 `descScore`。
+- 電影的熱門程度，例如 `popularity`。
+- 電影的評分，例如 `rating`。
+- 搜尋時使用的關鍵字數量，例如 `numKeywords*)`。
 
-The ranking function would become `f(titleScore, descScore, popularity, rating, numKeywords)`. The goal is to use the features in a way that maximizes the likelihood of the search results being useful. 
+排序函式將變成 `f(titleScore, descScore, popularity, rating, numKeywords)`。目標是以能夠最大化搜尋結果有用性機率的方式使用這些特徵。
 
-For example, in the `Rambo` use case, it seems intuitive that `titleScore` would be important. However, for the top movie _First Blood_, the keyword `Rambo` is likely only mentioned in the description. In this case, the `descScore` would become relevant. Additionally, the `popularity` and `rating` features could help differentiate between sequels and originals. If the existing features do not work for this purpose, then a new feature `isSequel` could be introduced. This new feature could then be used to make better ranking decisions.
+例如，在 `Rambo` 的使用案例中，`titleScore` 似乎直覺上很重要。然而，對於排名最高的電影 _First Blood_，關鍵字 `Rambo` 可能只出現在 description 中。在這種情況下，`descScore` 就會變得相關。此外，`popularity` 與 `rating` 特徵可以協助區分續集與原作。如果現有特徵無法達成此目的，則可以引入新特徵 `isSequel`。這個新特徵接著可用來做出更好的排序決策。
 
-Selecting and experimenting with features is fundamental to LTR. Using features that fail to help predict patterns in the target variable can result in an unsatisfactory search experience, following the principle of "garbage in, garbage out" that applies to any ML problem.
+選擇並實驗各種特徵是 LTR 的基礎。使用無法協助預測目標變數模式的特徵，會導致不理想的搜尋體驗，這正符合適用於任何機器學習問題的「垃圾進、垃圾出」原則。
 
-## Completing the training set by logging features
+## 透過記錄特徵完成訓練集
 
-When you have a set of defined features, the next step is to annotate the judgment list with each feature's values. These values are used when the training process begins. For example, consider the following judgment list: 
+當您定義好一組特徵後，下一步是為判斷清單標註每個特徵的值。這些值會在訓練過程開始時使用。例如，請考慮以下判斷清單：
 
 ```
 grade,keywords,movie
@@ -74,7 +75,7 @@ grade,keywords,movie
 ...
 ```
 
-To complete the training set, add the following features:
+若要完成訓練集，請加入以下特徵：
 
 ```
 grade,keywords,movie,titleScore,descScore,popularity,...
@@ -83,9 +84,9 @@ grade,keywords,movie,titleScore,descScore,popularity,...
 3,Rambo,Rambo III,53.1,40.1,50,...
 ```
 
-The `titleScore` represents the relevance score of the `Rambo` keyword in the title field of the document, and so on.
+`titleScore` 代表 `Rambo` 關鍵字在文件 title 欄位中的相關性分數，依此類推。
 
-Many LTR models are familiar with a file format introduced by Support Vector Machine for Ranking (SVMRank), an early LTR method. In this format, queries are given IDs, and the actual document identifier can be removed from the training process. Features are labeled with ordinals starting at `1`. For the preceding example, the file format would be:
+許多 LTR 模型都熟悉由 Support Vector Machine for Ranking (SVMRank) 這種早期 LTR 方法所引入的檔案格式。在這種格式中，查詢會被賦予 ID，而實際的文件識別碼可以從訓練過程中移除。特徵以從 `1` 開始的序數標記。以上述範例而言，檔案格式會是：
 
 ```
 4   qid:1   1:0.0   2:21.5  3:100,...
@@ -94,49 +95,49 @@ Many LTR models are familiar with a file format introduced by Support Vector Mac
 ...
 ```
 
-In actual systems, you might log these values and then use them later to annotate a judgment list. In other cases, the judgment list might come from user analytics, so the feature values are logged as you interact with the search application. See [Logging features]({{site.url}}{{site.baseurl}}/search-plugins/ltr/logging-features/) for more information.
+在實際系統中，您可能會記錄這些值，之後再用來標註判斷清單。在其他情況下，判斷清單可能來自使用者分析，因此特徵值會在您與搜尋應用程式互動時記錄下來。如需更多資訊，請參閱 [記錄特徵]({{site.url}}{{site.baseurl}}/search-plugins/ltr/logging-features/)。
 
-## Training a ranking function 
+## 訓練排序函式
 
-The following are key considerations for training a ranking function: 
+以下是訓練排序函式時的重要考量：
 
-- **Ranking models:** Several models, such as the following, are available for training, each with pros and cons:
+- **排序模型：** 有多種模型可用於訓練，各有優缺點，例如：
 
-  - **Tree-based models** (for example, LambdaMART, MART, Random Forests)
-    - Generally the most accurate. 
-    - Large and complex, making them expensive to train.
-    - Tools such as [RankLib](https://sourceforge.net/p/lemur/wiki/RankLib/) and [XGBoost](https://github.com/dmlc/xgboost) focus on tree-based models. 
+  - **樹狀模型**（例如 LambdaMART、MART、Random Forests）
+    - 通常最為準確。
+    - 龐大且複雜，訓練成本高昂。
+    - [RankLib](https://sourceforge.net/p/lemur/wiki/RankLib/) 與 [XGBoost](https://github.com/dmlc/xgboost) 等工具專注於樹狀模型。
     
-  - **SVM-based models (SVMRank)**
-    - Less accurate but less expensive to train. 
-    - See [Support Vector Machine for Ranking](https://www.cs.cornell.edu/people/tj/svm_light/svm_rank.html) for more information.
+  - **SVM 型模型 (SVMRank)**
+    - 較不準確，但訓練成本較低。
+    - 如需更多資訊，請參閱 [用於排序的支援向量機](https://www.cs.cornell.edu/people/tj/svm_light/svm_rank.html)。
     
-  - **Linear models**
-    - Perform basic linear regression on the judgment list.
-    - Tend to not be useful outside of the examples. 
-    - See [Learning to Rank 101 — Linear Models](http://opensourceconnections.com/blog/2017/04/01/learning-to-rank-linear-models/) for more information.
+  - **線性模型**
+    - 對判斷清單執行基本的線性迴歸。
+    - 通常在範例之外不太有用。
+    - 如需更多資訊，請參閱 [Learning to Rank 入門：線性模型](http://opensourceconnections.com/blog/2017/04/01/learning-to-rank-linear-models/)。
 
-- **Model selection:** The choice of model can depend not only on performance but also on your level of experience and familiarity with the different approaches.
+- **模型選擇：** 模型的選擇不僅取決於效能，也取決於您對不同方法的經驗與熟悉程度。
 
-## Testing: Is the model any good
+## 測試：模型是否夠好
 
-When testing the quality of the ranking model, consider the following: 
+測試排序模型的品質時，請考慮以下幾點：
 
-- **Judgment list limitations:** A judgment list cannot include every possible query that a model may encounter in the real world. It is important to test the model on a variety of queries in order to assess its ability to generalize beyond the training data. 
-- **Overfitting:** A model that is overfit to the training data does not perform well on new, unseen data. To avoid this, consider doing the following:
-  - Preserving some judgment lists as a _test set_ that is not used during the training process.
-  - Evaluating the model's performance on the test set, which reflects how it may perform in unfamiliar scenarios.
-  - Monitoring the _test NDCG_ metric, which should remain high as the model is trained.
-- **Temporal generalization:** Even after deploying the model, you should continue testing the model's performance using more recent judgment lists to ensure that it does not become overfit to seasonal or temporal situations. 
+- **判斷清單的限制：** 判斷清單無法涵蓋模型在真實世界中可能遇到的所有查詢。務必在各種查詢上測試模型，以評估其超越訓練資料的泛化能力。
+- **過度擬合：** 對訓練資料過度擬合的模型，在新的未見資料上表現不佳。為避免這種情況，請考慮執行以下操作：
+  - 保留部分判斷清單作為訓練過程中不使用的 _測試集_。
+  - 在測試集上評估模型的效能，這反映了模型在陌生情境中的可能表現。
+  - 監控 _test NDCG_ 指標，隨著模型訓練，該指標應維持在高水準。
+- **時間泛化：** 即使在部署模型之後，您仍應持續使用較新的判斷清單測試模型效能，以確保模型不會對季節性或時間性情況過度擬合。
 
-## Real-world concerns
+## 實際層面的考量
 
-The following are practical considerations for using the Learning to Rank plugin:
+以下是使用 Learning to Rank 外掛程式的實務考量：
 
-- **Accurate judgment lists:** How can you create judgment lists that reflect your users' perception of search quality?
-- **Measuring search quality:** What metrics should you use to determine whether the search results are useful to your users?
-- **Data collection infrastructure:** What kind of infrastructure do you need in order to collect and log user behavior and feature data?
-- **Model retraining:** How will you know when your model needs to be retrained?
-- **A/B testing:** How will you compare your new model to your current search solution? What key performance indicators (KPIs) will you use to determine the success of your search system?
+- **準確的判斷清單：** 如何建立能反映使用者對搜尋品質認知的判斷清單？
+- **衡量搜尋品質：** 應使用哪些指標來判斷搜尋結果對使用者是否有用？
+- **資料收集基礎架構：** 需要什麼樣的基礎架構來收集並記錄使用者行為與特徵資料？
+- **模型重新訓練：** 如何得知模型何時需要重新訓練？
+- **A/B 測試：** 如何將新模型與目前的搜尋解決方案比較？將使用哪些關鍵效能指標 (KPI) 來判斷搜尋系統的成功與否？
 
-See [How does the plugin fit in?]({{site.url}}{{site.baseurl}}/search-plugins/ltr/fits-in/) to learn more about how the Learning to Rank plugin's functionality fits into a complete LTR system.
+請參閱 [此外掛程式如何融入整體系統？]({{site.url}}{{site.baseurl}}/search-plugins/ltr/fits-in/)，進一步了解 Learning to Rank 外掛程式的功能如何融入完整的 LTR 系統。

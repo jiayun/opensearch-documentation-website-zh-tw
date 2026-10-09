@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Decompress
+title: "解壓縮"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 90
 ---
 
-# Decompress processor
+# Decompress 處理器
 
-The `decompress` processor decompresses any Base64-encoded compressed fields inside of an event.
+`decompress` 處理器會解壓縮事件中任何以 Base64 編碼的壓縮欄位。
 
-## Configuration
+## 組態
 
 Option | Required | Type | Description
 :--- | :--- | :--- | :---
-`keys` | Yes | List<String> | The fields in the event that will be decompressed.                                                                                          
-`type` | Yes | Enum | The type of decompression to use for the `keys` in the event. Only `gzip` is supported.                                           
-`decompress_when` | No | String| A [Data Prepper conditional expression]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/) that determines when the `decompress` processor will run on certain events.
-`tags_on_failure` | No | List<String> | A list of strings with which to tag events when the processor fails to decompress the `keys` inside an event. Defaults to `_decompression_failure`.                               
+`keys` | Yes | List<String> | 事件中將被解壓縮的欄位。                                                                                          
+`type` | Yes | Enum | 對事件中的 `keys` 使用的解壓縮類型。僅支援 `gzip`。                                           
+`decompress_when` | No | String| 一個 [Data Prepper 條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，用於決定 `decompress` 處理器何時對特定事件執行。
+`tags_on_failure` | No | List<String> | 當處理器無法解壓縮事件內的 `keys` 時，用來標記事件的字串清單。預設為 `_decompression_failure`。                               
 
-## Usage
+## 用法
 
-This example demonstrates a complete pipeline that receives compressed log data, decompresses it, and stores it in OpenSearch:
+此範例示範一個完整的管線，它接收壓縮的記錄資料、進行解壓縮，並儲存到 OpenSearch：
 
 ```yaml
 decompress-logs-pipeline:
@@ -54,7 +55,7 @@ decompress-logs-pipeline:
 ```
 {% include copy.html %}
 
-You can test the pipeline using the two following commands:
+您可以使用下列兩個命令來測試此管線：
 
 ```bash
 
@@ -88,7 +89,7 @@ curl -sS -X POST "http://localhost:2021/events" \
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 {
@@ -141,26 +142,26 @@ The documents stored in OpenSearch contain the following information:
 ```
 {% include copy.html %}
 
-## Metrics 
+## 指標 
 
-By default, Data Prepper serves metrics from the `/metrics/prometheus` endpoint on port `4900`. You can access all the metrics by running the following command:
+預設情況下，Data Prepper 會從連接埠 `4900` 上的 `/metrics/prometheus` 端點提供指標。您可以執行以下命令來存取所有指標：
 
 ```bash
 curl http://localhost:4900/metrics/prometheus
 ```
 {% include copy.html %}
 
-The following table describes common [abstract processor](https://github.com/opensearch-project/data-prepper/blob/main/data-prepper-api/src/main/java/org/opensearch/dataprepper/model/processor/AbstractProcessor.java) metrics. 
+下表說明常見的[抽象處理器](https://github.com/opensearch-project/data-prepper/blob/main/data-prepper-api/src/main/java/org/opensearch/dataprepper/model/processor/AbstractProcessor.java)指標。 
 
 | Metric name | Type | Description |
 | ------------- | ---- | -----------|
-| `recordsIn` | Counter | The ingress of records to a pipeline component. |
-| `recordsOut` | Counter | The egress of records from a pipeline component. |
-| `timeElapsed` | Timer | The time elapsed during execution of a pipeline component. |
+| `recordsIn` | Counter | 進入管線元件的記錄量。 |
+| `recordsOut` | Counter | 從管線元件輸出的記錄量。 |
+| `timeElapsed` | Timer | 管線元件執行期間所經過的時間。 |
 
 ### Counter
 
-The `decompress` processor accounts for the following metrics:
+`decompress` 處理器會追蹤下列指標：
 
-* `processingErrors`: The number of processing errors that have occurred in the `decompress` processor.
+* `processingErrors`：`decompress` 處理器中發生的處理錯誤數量。
 

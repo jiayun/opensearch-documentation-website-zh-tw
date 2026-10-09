@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Ingesting data
+title: "匯入資料"
 nav_order: 30
 has_children: true
 has_toc: false
@@ -8,22 +9,22 @@ redirect_from:
   - /vector-search/ingesting-data/
 ---
 
-# Ingesting data into a vector index
+# 將資料匯入向量索引
 
-After creating a vector index, you need to either ingest raw vector data or convert data to embeddings while ingesting it.
+建立向量索引之後，您需要匯入原始向量資料，或在匯入時將資料轉換為嵌入。
 
-## Comparison of ingestion methods
+## 匯入方法比較
 
-The following table compares the two ingestion methods.
+下表比較了這兩種匯入方法。
 
-| Feature                       | Data format          | Ingest pipeline | Vector generation         | Additional fields            |
+| 功能                       | 資料格式          | 資料匯入管線 | 向量產生         | 額外欄位            |
 |-------------------------------|----------------------------|---------------------|---------------------------------|-----------------------------------|
-| **Raw vector ingestion**      | Pre-generated vectors      | Not required        | External                        | Optional metadata                |
-| **Converting data to embeddings during ingestion** | Text or image data                   | Required            | Internal (during ingestion)     | Original data + embeddings        |
+| **原始向量匯入**      | 預先產生的向量      | 不需要        | 外部                        | 選用的中繼資料                |
+| **匯入時將資料轉換為嵌入** | 文字或圖片資料                   | 需要            | 內部 (匯入期間)     | 原始資料 + 嵌入        |
 
-## Raw vector ingestion
+## 原始向量匯入
 
-When working with raw vectors or embeddings generated outside of OpenSearch, you directly ingest vector data into the `knn_vector` field. No pipeline is required because the vectors are already generated:
+使用在 OpenSearch 之外產生的原始向量或嵌入時，您可以直接將向量資料匯入 `knn_vector` 欄位。不需要管線，因為向量已經產生：
 
 ```json
 PUT /my-raw-vector-index/_doc/1
@@ -34,7 +35,7 @@ PUT /my-raw-vector-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-You can also use the [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) to ingest multiple vectors efficiently:
+您也可以使用 [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) 有效地匯入多個向量：
 
 ```json
 PUT /_bulk
@@ -45,9 +46,9 @@ PUT /_bulk
 ```
 {% include copy-curl.html %}
 
-## Converting data to embeddings during ingestion
+## 匯入時將資料轉換為嵌入
 
-After you have [configured an ingest pipeline]({{site.url}}{{site.baseurl}}/vector-search/creating-vector-index/#converting-data-to-embeddings-during-ingestion) that automatically generates embeddings, you can ingest text data directly into your index:
+[設定好會自動產生嵌入的資料匯入管線]({{site.url}}{{site.baseurl}}/vector-search/creating-vector-index/#converting-data-to-embeddings-during-ingestion)之後，您可以直接將文字資料匯入索引：
 
 ```json
 PUT /my-ai-search-index/_doc/1
@@ -57,9 +58,9 @@ PUT /my-ai-search-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-The pipeline automatically generates and stores the embeddings in the `output_embedding` field.
+管線會自動產生嵌入並儲存在 `output_embedding` 欄位中。
 
-You can also use the [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) to ingest multiple documents efficiently:
+您也可以使用 [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) 有效地匯入多份文件：
 
 ```json
 PUT /_bulk
@@ -70,17 +71,17 @@ PUT /_bulk
 ```
 {% include copy-curl.html %}
 
-## Working with sparse vectors
+## 使用稀疏向量
 
-OpenSearch also supports sparse vectors. For more information, see [Neural sparse search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-search/).
+OpenSearch 也支援稀疏向量。如需更多資訊，請參閱[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-search/)。
 
-## Text chunking
+## 文字分塊
 
-For information about splitting large documents into smaller passages before generating embeddings during dense or sparse AI search, see [Text chunking]({{site.url}}{{site.baseurl}}/vector-search/ingesting-data/text-chunking/).
+如需在稠密或稀疏 AI 搜尋中產生嵌入之前，將大型文件分割成較小段落的資訊，請參閱[文字分塊]({{site.url}}{{site.baseurl}}/vector-search/ingesting-data/text-chunking/)。
 
-## Next steps
+## 後續步驟
 
-- [Searching vector data]({{site.url}}{{site.baseurl}}/vector-search/searching-data/)
+- [搜尋向量資料]({{site.url}}{{site.baseurl}}/vector-search/searching-data/)
 - [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/)
-- [Ingest pipelines]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)
-- [Text embedding processor]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/text-embedding/)
+- [資料匯入管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)
+- [文字嵌入處理器]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/text-embedding/)

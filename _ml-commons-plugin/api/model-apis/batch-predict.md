@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title:  Batch predict
+title: "批次預測"
 parent: Model APIs
 grand_parent: ML Commons APIs
 nav_order: 70
@@ -8,33 +9,33 @@ nav_order: 70
 
 # Batch Predict API
 
-ML Commons can perform inference on large datasets in an offline asynchronous mode using a model deployed on external model servers. To use the Batch Predict API, you must provide the `model_id` for an externally hosted model. Amazon SageMaker, Cohere, and OpenAI are the only verified external servers that support this API.
+ML Commons 可使用部署在外部模型伺服器上的模型，以離線非同步模式對大型資料集執行推論。若要使用 Batch Predict API，您必須提供外部託管模型的 `model_id`。Amazon SageMaker、Cohere 和 OpenAI 是目前僅有經過驗證且支援此 API 的外部伺服器。
 
-For information about user access for this API, see [Model access control considerations]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations).
+如需此 API 的使用者存取權相關資訊，請參閱[模型存取控制注意事項]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
 
-For information about externally hosted models, see [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/). 
+如需外部託管模型的相關資訊，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。 
 
-For instructions on how set up batch inference and connector blueprints, see the following:
+如需設定批次推論和連接器藍圖的操作說明，請參閱下列內容：
 
-- [Amazon SageMaker batch predict connector blueprint](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/batch_inference_sagemaker_connector_blueprint.md)
+- [Amazon SageMaker 批次預測連接器藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/batch_inference_sagemaker_connector_blueprint.md)
 
-- [OpenAI batch predict connector blueprint](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/batch_inference_openAI_connector_blueprint.md)
+- [OpenAI 批次預測連接器藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/batch_inference_openAI_connector_blueprint.md)
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/models/{model_id}/_batch_predict
 ```
 
-## Prerequisites
+## 先決條件
 
-Before using the Batch Predict API, you need to create a connector to the externally hosted model. For each action, specify the `action_type` parameter that describes the action:
+使用 Batch Predict API 之前，您需要建立連接至外部託管模型的連接器。針對每個動作，指定用於描述該動作的 `action_type` 參數：
 
-- `batch_predict`: Runs the batch predict operation.
-- `batch_predict_status`: Checks the batch predict operation status.
-- `cancel_batch_predict`: Cancels the batch predict operation.
+- `batch_predict`：執行批次預測作業。
+- `batch_predict_status`：檢查批次預測作業的狀態。
+- `cancel_batch_predict`：取消批次預測作業。
 
-For example, to create a connector to an OpenAI `text-embedding-ada-002` model, send the following request. The `cancel_batch_predict` action is optional and supports canceling the batch job running on OpenAI:
+例如，若要建立連接至 OpenAI `text-embedding-ada-002` 模型的連接器，請傳送下列請求。`cancel_batch_predict` 動作為選用，支援取消在 OpenAI 上執行的批次工作：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -93,7 +94,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-The response contains a connector ID that you'll use in the next steps:
+回應包含連接器 ID，您將在後續步驟中使用此 ID：
 
 ```json
 {
@@ -101,7 +102,7 @@ The response contains a connector ID that you'll use in the next steps:
 }
 ```
 
-Next, register an externally hosted model and provide the connector ID of the created connector:
+接著，註冊外部託管模型，並提供已建立連接器的連接器 ID：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -114,7 +115,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-The response contains the task ID for the register operation:
+回應包含註冊作業的任務 ID：
 
 ```json
 {
@@ -124,11 +125,11 @@ The response contains the task ID for the register operation:
 }
 ```
 
-To check the status of the operation, provide the task ID to the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/). Once the registration is complete, the task `state` changes to `COMPLETED`.
+若要檢查作業狀態，請將任務 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)。註冊完成後，任務的 `state` 會變更為 `COMPLETED`。
 
-## Example request
+## 請求範例
 
-Once you have completed the prerequisite steps, you can call the Batch Predict API. The parameters in the batch predict request override those defined in the connector:
+完成先決條件步驟後，您就可以呼叫 Batch Predict API。批次預測請求中的參數會覆寫連接器中定義的參數：
 
 ```json
 POST /_plugins/_ml/models/lyjxwZABNrAVdFa9zrcZ/_batch_predict
@@ -140,9 +141,9 @@ POST /_plugins/_ml/models/lyjxwZABNrAVdFa9zrcZ/_batch_predict
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The response contains the task ID for the batch predict operation:
+回應包含批次預測作業的任務 ID：
 
 ```json
 {
@@ -151,18 +152,18 @@ The response contains the task ID for the batch predict operation:
 }
 ```
 
-To check the status of the batch predict job, provide the task ID to the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/). You can find the job details in the `remote_job` field in the task. Once the prediction is complete, the task `state` changes to `COMPLETED`.
+若要檢查批次預測工作的狀態，請將任務 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)。您可以在任務的 `remote_job` 欄位中找到工作詳細資訊。預測完成後，任務的 `state` 會變更為 `COMPLETED`。
 
-## Example request
+## 請求範例
 
 ```json
 GET /_plugins/_ml/tasks/KYZSv5EBqL2d0mFvs80C
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The response contains the batch predict operation details in the `remote_job` field:
+回應的 `remote_job` 欄位包含批次預測作業的詳細資訊：
 
 ```json
 {
@@ -206,20 +207,20 @@ The response contains the batch predict operation details in the `remote_job` fi
 }
 ```
 
-For the definition of each field in the result, see [OpenAI Batch API](https://platform.openai.com/docs/guides/batch). Once the batch inference is complete, you can download the output by calling the [OpenAI Files API](https://platform.openai.com/docs/api-reference/files) and providing the file name specified in the `id` field of the response.
+如需結果中各欄位的定義，請參閱 [OpenAI Batch API](https://platform.openai.com/docs/guides/batch)。批次推論完成後，您可以呼叫 [OpenAI Files API](https://platform.openai.com/docs/api-reference/files)，並提供回應的 `id` 欄位中指定的檔案名稱，以下載輸出。
 
-### Canceling a batch predict job
+### 取消批次預測工作
 
-You can also cancel the batch predict operation running on the remote platform using the task ID returned by the batch predict request. To add this capability, set the `action_type` to `cancel_batch_predict` in the connector configuration when creating the connector.  
+您也可以使用批次預測請求傳回的任務 ID，取消在遠端平台上執行的批次預測作業。若要新增此功能，請在建立連接器時，於連接器組態中將 `action_type` 設為 `cancel_batch_predict`。  
 
-## Example request
+## 請求範例
 
 ```json
 POST /_plugins/_ml/tasks/KYZSv5EBqL2d0mFvs80C/_cancel_batch
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
 ```json
 {

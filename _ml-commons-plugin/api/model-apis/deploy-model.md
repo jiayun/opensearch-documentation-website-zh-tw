@@ -1,16 +1,17 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Deploy model
+title: "部署模型"
 parent: Model APIs
 grand_parent: ML Commons APIs
 nav_order: 20
 ---
 
-# Deploy Model API
+# 部署模型 API
 
-The deploy model operation reads the model's chunks from the model index and then creates an instance of the model to cache in memory. This operation requires the `model_id`. 
+部署模型操作會從模型索引讀取模型的分段，然後建立模型執行個體以快取於記憶體中。此操作需要 `model_id`。
 
-[Externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/) are deployed automatically by default when you send a Predict API request for the first time. To disable automatic deployment for an externally hosted model, set `plugins.ml_commons.model_auto_deploy.enable` to `false`:
+[外部託管的模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/) 在您第一次傳送 Predict API 請求時，預設會自動部署。若要停用外部託管模型的自動部署，請將 `plugins.ml_commons.model_auto_deploy.enable` 設為 `false`：
 
 ```json
 PUT _cluster/settings
@@ -22,26 +23,26 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-For information about user access for this API, see [Model access control considerations]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations).
+如需此 API 使用者存取權的相關資訊，請參閱[模型存取控制考量]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/models/{model_id}/_deploy
 ```
 
-## Example request: Deploying to all available ML nodes
+## 範例請求：部署至所有可用的 ML 節點
 
-In this example request, OpenSearch deploys the model to any available OpenSearch ML node:
+在此範例請求中，OpenSearch 會將模型部署至任何可用的 OpenSearch ML 節點：
 
 ```json
 POST /_plugins/_ml/models/WWQI44MBbzI2oUKAvNUt/_deploy
 ```
 {% include copy-curl.html %}
 
-## Example request: Deploying to a specific node
+## 範例請求：部署至特定節點
 
-If you want to reserve the memory of other ML nodes within your cluster, you can deploy your model to a specific node(s) by specifying the `node_ids` in the request body:
+如果您想保留叢集中其他 ML 節點的記憶體，可以在請求本文中指定 `node_ids`，將模型部署至特定節點：
 
 ```json
 POST /_plugins/_ml/models/WWQI44MBbzI2oUKAvNUt/_deploy
@@ -51,9 +52,9 @@ POST /_plugins/_ml/models/WWQI44MBbzI2oUKAvNUt/_deploy
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-The Deploy Model API returns a `task_id` that you can use to monitor the deployment progress:
+部署模型 API 會傳回 `task_id`，您可以用來監視部署進度：
 
 ```json
 {
@@ -63,16 +64,16 @@ The Deploy Model API returns a `task_id` that you can use to monitor the deploym
 }
 ```
 
-## Monitoring deployment status
+## 監視部署狀態
 
-To check the status of your model deployment and retrieve the model ID when deployment completes, use the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) and provide the returned `task_id` as a path parameter:
+若要檢查模型部署的狀態，並在部署完成時擷取模型 ID，請使用 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)，並提供傳回的 `task_id` 作為路徑參數：
 
 ```json
 GET /_plugins/_ml/tasks/hA8P44MBhyWuIwnfvTKP
 ```
 {% include copy-curl.html %}
 
-The Get ML Task API returns different response formats depending on whether the deployment is in progress or completed. For detailed information about all possible response formats, see [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/#example-responses).
+Get ML Task API 會依部署進行中或已完成，傳回不同的回應格式。如需所有可能回應格式的詳細資訊，請參閱 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/#example-responses)。
 
-If a cluster or node is restarted, then you need to redeploy the model. To learn how to set up automatic redeployment, see [Model deployment settings]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/#model-deployment-settings).
+如果叢集或節點重新啟動，您就必須重新部署模型。若要瞭解如何設定自動重新部署，請參閱[模型部署設定]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/#model-deployment-settings)。
 {: .tip} 

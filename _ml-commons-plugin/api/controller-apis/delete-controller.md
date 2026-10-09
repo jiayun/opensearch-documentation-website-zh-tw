@@ -1,39 +1,40 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Delete controller
+title: "刪除控制器"
 parent: Controller APIs
 grand_parent: ML Commons APIs
 nav_order: 50
 ---
 
-# Delete Controller API
-**Introduced 2.12**
+# 刪除控制器 API
+**於 2.12 版導入**
 {: .label .label-purple }
 
-Use this API to delete a controller for a model based on the `model_id`.
+使用此 API，根據 `model_id` 刪除模型的控制器。
 
-## Endpoints
+## 端點
 
 ```json
 DELETE /_plugins/_ml/controllers/{model_id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. 
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `model_id` | String | The model ID of the model for which to delete the controller. |
+| `model_id` | 字串 | 要刪除控制器之模型的模型 ID。 |
 
-## Example request
+## 請求範例
 
 ```json
 DELETE /_plugins/_ml/controllers/MzcIJX8BA7mbufL6DOwl
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -51,9 +52,9 @@ DELETE /_plugins/_ml/controllers/MzcIJX8BA7mbufL6DOwl
 }
 ```
 
-## Error responses
+## 錯誤回應
 
-If you attempt to delete a controller when the controller index doesn't exist, OpenSearch returns a 404 Not Found error:
+如果控制器索引不存在時嘗試刪除控制器，OpenSearch 會傳回 404 Not Found 錯誤：
 
 ```json
 {
@@ -79,6 +80,6 @@ If you attempt to delete a controller when the controller index doesn't exist, O
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/opensearch/ml/controllers/delete`.
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:admin/opensearch/ml/controllers/delete`。

@@ -309,19 +309,21 @@ agy 的模型與配額分開管理，使用 `agy models` 查到的識別字，�
 | `agy-sonnet` | `claude-sonnet-5-5-medium` | Claude／GPT | 一般校對優先 |
 | `agy-opus` | `claude-opus-5-5-medium` | Claude／GPT | 超過 45,000 字元的校對提示優先 |
 | `agy-gpt` | `gpt-oss-120b-medium` | Claude／GPT | 翻譯備援，尚未列入正式校對來源 |
-| `agy` | `gemini-3.1-pro-high` | Gemini | 獨立校對後備 |
+| `agy` | `gemini-3.1-pro-high` | Gemini | 主動分攤獨立校對 |
 | `agy-flash` | `gemini-3.8-flash-low` | Gemini | 翻譯後備 |
 
 每個群組內的模型共享停用與 CLI 回報的重置時間，另一組仍可用；不把 agy 的 Claude／GPT 配額與獨立 Claude CLI 公司帳號配額混在一起。校對獨立性則看模型家族：agy Claude 與獨立 Claude CLI 都屬於 `claude`，不得互相校對同一譯文。數字百分比不由本程式估算，實際配額不足以服務回覆判定。
 
+一般校對的輪替為 Gemini Pro、Gemini Pro、Sonnet、Codex；跳過冷卻中或與譯文同家族的來源。Gemini 群組可用時會實際分到工作，不必等 Codex 不可用才接手；Claude／GPT 群組冷卻時，Gemini Pro 約承擔三分之二的一般校對呼叫。
+
 Claude 的 `You've hit your session limit · resets 3am (Asia/Taipei)` 會歸類為配額耗盡，立即停用該次執行的 Claude，不做連線重試。其他執行緒也會跳過已停用來源。CLI 明確回報重置時間與時區時，批次會等到該時間後一分鐘再恢復 Claude 優先順序；未回報重置時間則不自行猜測。
 
-夜間排程讓可用工具分攤呼叫，約 60% 新翻譯呼叫交給 Ollama Cloud：`glm-5.3-flash:cloud` 約 40%、`deepseek-v4.1-flash:cloud` 約 20%，`glm-5.2:cloud`／`gemma4:cloud` 備援；Cloud 同時最多 2 個請求。依使用者指示，Kimi K3 消耗過大，排除於翻譯、備援及試跑。模型退役或不可用時切換其他來源；帳號配額耗盡時一併暫停 Cloud 模型，不逐一重試相同配額。明確的並行請求上限屬於暫時容量，不能誤判為五小時配額耗盡。Codex 可立即加入，使用既有 ChatGPT 登入配額，翻譯採 `gpt-6.1-sol`／low，獨立校對採 `gpt-6-sol`／medium；皆在獨立暫存目錄使用 read-only sandbox。每份譯文仍由不同模型校對，額外付費 API 不自動接替。
+夜間排程讓可用工具分攤呼叫，約 80% 新翻譯呼叫交給 Ollama Cloud：`glm-5.3-flash:cloud` 約 40%、`deepseek-v4.1-flash:cloud` 約 40%，`glm-5.2:cloud`／`gemma4:cloud` 備援；Cloud 同時最多 2 個請求。依使用者指示，Kimi K3 消耗過大，排除於翻譯、備援及試跑。模型退役或不可用時切換其他來源；帳號配額耗盡時一併暫停 Cloud 模型，不逐一重試相同配額。明確的並行請求上限屬於暫時容量，不能誤判為五小時配額耗盡。Codex 可立即加入，使用既有 ChatGPT 登入配額，翻譯採 `gpt-6.1-sol`／low，獨立校對採 `gpt-6-sol`／medium；皆在獨立暫存目錄使用 read-only sandbox。每份譯文仍由不同模型校對，額外付費 API 不自動接替。
 
 無可用獨立校對模型的頁面保存為 `translated`，後續續跑只需補校對；原有 `reviewed` 頁面不會重做。
 # 夜間續跑與配額保留
 
-`python3 -u scripts/translation-overnight.py` 以每批 25 頁、4 個工作程序續跑，穿插 3 篇待校對與 1 篇新翻譯，避免校對佇列讓 Cloud 翻譯一直閒置。Claude、agy、Ollama、Codex 立即分攤工作，翻譯與校對維持不同模型，沿用完整發布門檻。執行期間不要另開 `translation.py run` 或手動改寫 manifest；兩種 runner 使用同一個排他鎖。
+`python3 -u scripts/translation-overnight.py` 使用持續補工排程，最多 4 頁同時處理，待校對與新翻譯交錯派發；任一頁完成即補入下一頁，避免校對佇列讓 Cloud 翻譯一直閒置。Claude、agy、Ollama、Codex 立即分攤工作，翻譯與校對維持不同模型，沿用完整發布門檻。執行期間不要另開 `translation.py run` 或手動改寫 manifest；兩種 runner 使用同一個排他鎖。
 
 Claude 配額在服務明示的重置時間後重新探測；其他未知重置時間每 5 小時最多探測一次。品質失敗保留待處理，冷卻後再試，不降低校對要求。
 
@@ -330,3 +332,18 @@ Claude 配額在服務明示的重置時間後重新探測；其他未知重置�
 Codex 每次工作前透過 app-server 讀取已登入帳號的實際週用量；週剩餘 ≤25% 就停止翻譯／校對，保留使用者要求的 20% 及 5 個百分點緩衝。用量未知時停止 Codex 工作，5 分鐘後再查詢；讀取失敗不能當成帳號五小時配額耗盡，重新派工前仍需確認用量。這是本 repo 的派工限制，無法限制使用者在其他 Codex 工作階段的消耗，也無法保證單次請求的實際扣額。
 
 即時記錄：`.translation-cache/overnight-console.log`、`.translation-cache/overnight-state.json`、`.translation-cache/overnight.pid`。停止時可向 pid 傳送 SIGTERM，讓正在處理的頁面完成存檔。全部頁面完成時排程停止，仍需執行網站、搜尋、導覽與授權的最終驗證才能發布。
+
+使用者要求立即重試退件文件時，先讓現有 runner 完成停機並釋放排他鎖，再執行 `python3 -u scripts/translation-overnight.py --retry-now`。這只重設未完成頁面的有限嘗試與品質重試等待，不清除 Claude、agy、Ollama 或 Codex 的實際配額限制，也不降低獨立審查要求。
+
+退件草稿會另外保存於 `.translation-cache/pending-repairs/`，包含來源雜湊、譯文、完整模型來源與審查問題；它不表示審查通過。續跑先驗證草稿的結構與來源，再進行局部修補和整頁獨立審查。提示版本改變時先以新規則重審草稿，避免套用失效的段落編號。缺少可信模型來源、程式碼有變動或來源不同的草稿不會被採用。
+
+`translation/source-errata.json` 記錄少量上游 Markdown 格式錯誤的修正，例如缺少程式碼圍欄或錯誤的反引號。每項修正限定原始全文 SHA-256，並要求精確替換文字只出現一次；來源更新後不會默默沿用。`translation/source/` 與來源清單維持原始英文，翻譯、結構檢查和網站英文錨點重建在記憶體中套用相同格式修正，保留 API、程式碼內容與範例值。
+
+導覽對應先比對完整的上游階層；上游省略祖先欄位時，只採用同集合中唯一的原始標題，跨集合則要求唯一且完整的階層相符。已改名的父頁使用 `translation/navigation-aliases.json` 明確指定來源頁面，並核對基準版本、原始標題與來源雜湊；子頁採用該父頁的實際階層。名稱有歧義、來源變動或父頁不存在時，全文建置仍會失敗，須修正資料後才能發布。
+
+
+## 退件修補與持續補工
+
+校對退件時，能定位到段落的重大問題使用既有中文做局部修補。模型只收到受影響段落的原文、既有中文與校對問題，其餘段落保持逐位元相同；語意修補優先使用可用的 Claude／Codex。每次修補仍經完整結構檢查與整篇獨立校對。全域問題、未知段落或保護內容無法可靠對齊時，保守退回完整重翻。`repairs` 快取依原文、既有譯文、問題與提示版本識別，不能當作校對通過。
+
+夜間排程最多維持 4 個進行中的頁面，一個完成立即補工；慢頁不會擋住其餘空位。30 秒心跳與每次完成均更新 `.translation-cache/overnight-state.json`，包含 active_pages、完成／待處理數及各來源冷卻時間。失敗有冷卻與次數上限，提示規則或術語更新才開啟新的有限重試，不重做已完成文件。暫停停止補工，既有任務完成後保存一致的進度。

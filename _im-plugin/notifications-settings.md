@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Long-running operation notifications
+title: "長時間執行作業通知"
 nav_order: 70
 redirect_from:
   - /im-plugin/notifications/
@@ -8,37 +9,37 @@ redirect_from:
   - /dashboards/admin-ui-index/notifications/
 ---
 
-# Long-running operation notifications
+# 長時間執行作業通知
 
-**Introduced 2.8**
+**於 2.8 版推出**
 {: .label .label-purple }
 
-Reindex, resize, force merge, and open operations can run for minutes or hours. When you send one of these requests with `wait_for_completion` set to `false`, it returns a task ID immediately instead of blocking. Configure a notification against that task ID, or against the operation type, to be told when the work finishes or fails rather than polling for it.
+重新索引、調整大小、強制合併及開啟作業可能需要執行數分鐘或數小時。當您傳送其中一個請求並將 `wait_for_completion` 設為 `false` 時，它會立即傳回任務 ID，而不會持續等待作業完成。針對該任務 ID 或作業類型設定通知，即可在工作完成或失敗時收到通知，而不必輪詢。
 
-Notifications are delivered through the channels configured in the [Notifications]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/index/) application, which supports Amazon Chime, Amazon Simple Notification Service (Amazon SNS), Amazon Simple Email Service (Amazon SES), email through SMTP, Slack, and custom webhooks.
+通知會透過 [Notifications]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/index/) 應用程式中設定的管道傳送，該應用程式支援 Amazon Chime、Amazon Simple Notification Service (Amazon SNS)、Amazon Simple Email Service (Amazon SES)、透過 SMTP 傳送的電子郵件、Slack 及自訂 Webhook。
 
-## Configuring notification settings
+## 設定通知設定
 
-An `lron_config` object takes either a `task_id` or an `action_name`, and the choice determines how long the setting lives:
+`lron_config` 物件接受 `task_id` 或 `action_name`，而您的選擇會決定該設定的存續時間：
 
-- Provide `task_id` for a one-time setting. It is deleted automatically when the task ends. If you provide both `task_id` and `action_name`, `action_name` is ignored, though it can help you search for and debug your notification settings.
-- Provide `action_name` without `task_id` for a global, persistent setting that applies to every operation of that type.
+- 提供 `task_id` 以建立一次性設定。當任務結束時，它會自動刪除。如果您同時提供 `task_id` 和 `action_name`，則會忽略 `action_name`，不過它有助於您搜尋及偵錯您的通知設定。
+- 提供 `action_name` 而不提供 `task_id`，以建立適用於該類型每個作業的全域持續性設定。
 
-The following table lists the parameters for long-running index operation notifications. 
+下表列出長時間執行索引作業通知的參數。
 
-| Parameter | Type | Description |
+| 參數 | 類型 | 說明 |
 | :--- | :--- | :--- |
-| `lron_config` | Object | Long-running index operation notification configuration. |
-| `task_id` | String | The task ID of the task that you want to be notified about. Optional. One of `task_id` and `action_name` must be specified.|
-| `action_name` | String | The operation type that you want to be notified about. Provide `action_name` but not `task_id` to be notified of all operations of this type. Supported values are `indices:data/write/reindex`, `indices:admin/resize`, `indices:admin/forcemerge`, and `indices:admin/open`. Optional. One of `task_id` and `action_name` must be specified. |
-| `lron_condition` | Object | Specifies which events you want to be notified about. Optional. If not provided, you'll be notified of both the operation success and failure. |
-| `lron_condition.success` | Boolean | Set this parameter to `true` to be notified when the operation succeeds. Optional. Default is `true`. |
-| `lron_condition.failure` | Boolean | Set this parameter to `true` to be notified when the operation fails or times out. Optional. Default is `true`. |
-| `channels` | Object | Supported communication channels include Amazon Chime, Amazon Simple Notification Service (Amazon SNS), Amazon Simple Email Service (Amazon SES), email through SMTP, Slack, and custom webhooks. If either `lron_condition.success` or `lron_condition.failure` is `true`, `channels` must contain at least one channel. Learn how to configure notification channels in [Notifications]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/index/). |
+| `lron_config` | 物件 | 長時間執行索引作業通知組態。 |
+| `task_id` | 字串 | 您要收到通知的任務其任務 ID。選用。必須指定 `task_id` 和 `action_name` 其中之一。|
+| `action_name` | 字串 | 您要收到通知的作業類型。提供 `action_name` 而不提供 `task_id`，以收到此類型所有作業的通知。支援的值為 `indices:data/write/reindex`、`indices:admin/resize`、`indices:admin/forcemerge` 及 `indices:admin/open`。選用。必須指定 `task_id` 和 `action_name` 其中之一。 |
+| `lron_condition` | 物件 | 指定您要收到通知的事件。選用。若未提供，您會同時收到作業成功與失敗的通知。 |
+| `lron_condition.success` | 布林值 | 將此參數設為 `true`，以在作業成功時收到通知。選用。預設為 `true`。 |
+| `lron_condition.failure` | 布林值 | 將此參數設為 `true`，以在作業失敗或逾時時收到通知。選用。預設為 `true`。 |
+| `channels` | 物件 | 支援的通訊管道包括 Amazon Chime、Amazon Simple Notification Service (Amazon SNS)、Amazon Simple Email Service (Amazon SES)、透過 SMTP 傳送的電子郵件、Slack 及自訂 Webhook。如果 `lron_condition.success` 或 `lron_condition.failure` 為 `true`，則 `channels` 必須包含至少一個管道。請在 [Notifications]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/index/) 中瞭解如何設定通知管道。 |
 
-### Create notification settings
+### 建立通知設定
 
-The following example request sets up notifications for every reindex operation that fails:
+下列範例請求會為每個失敗的重新索引作業設定通知：
 
 ```json
 POST /_plugins/_im/lron
@@ -59,7 +60,7 @@ POST /_plugins/_im/lron
 ```
 {% include copy-curl.html %}
 
-The response contains the ID of the new notification setting:
+回應包含新通知設定的 ID：
 
 ```json
 {
@@ -79,9 +80,9 @@ The response contains the ID of the new notification setting:
 }
 ```
 
-To be notified about a single operation rather than all operations of a type, provide its task ID. Send the operation with `wait_for_completion` set to `false` so that it returns a task ID instead of blocking.
+若要收到單一作業的通知，而非某類型所有作業的通知，請提供其任務 ID。傳送作業時將 `wait_for_completion` 設為 `false`，使其傳回任務 ID，而不會持續等待作業完成。
 
-The following request indexes a document, which creates the source index that the reindex operation reads from:
+下列請求會將文件編製索引，這會建立重新索引作業所讀取的來源索引：
 
 ```json
 POST /my-source-index/_doc?refresh=true
@@ -91,7 +92,7 @@ POST /my-source-index/_doc?refresh=true
 ```
 {% include copy-curl.html %}
 
-The following request reindexes that index and returns a task ID:
+下列請求會重新索引該索引並傳回任務 ID：
 
 ```json
 POST /_reindex?wait_for_completion=false
@@ -106,7 +107,7 @@ POST /_reindex?wait_for_completion=false
 ```
 {% include copy-curl.html %}
 
-Then provide the returned task ID in `task_id`:
+然後在 `task_id` 中提供傳回的任務 ID：
 
 ```json
 POST /_plugins/_im/lron
@@ -127,37 +128,37 @@ POST /_plugins/_im/lron
 ```
 {% include copy-curl.html %}
 
-The task ID must belong to a node in the cluster. A task ID from another cluster, or one you invent, is rejected with `400`.
+任務 ID 必須屬於叢集中的節點。來自其他叢集的任務 ID，或您自行虛構的任務 ID，會遭到拒絕並傳回 `400`。
 {: .note}
 
-### Notification setting ID
+### 通知設定 ID
 
-The response returns an ID for the notification setting in the `_id` field. You can use this ID to read, update, or delete this notification setting. For a global `lron_config`, the ID is in the form `LRON:<action_name>` (for example, `LRON:indices:data/write/reindex`). 
+回應會在 `_id` 欄位中傳回通知設定的 ID。您可以使用此 ID 來讀取、更新或刪除此通知設定。對於全域 `lron_config`，ID 的格式為 `LRON:<action_name>` (例如 `LRON:indices:data/write/reindex`)。
 
-The `action_name` may contain a slash character (`/`), which must be HTTP encoded as `%2F` if you use it the Dev Tools console. For example, `LRON:indices:data/write/reindex` becomes `LRON:indices:data%2Fwrite%2Freindex`.
+`action_name` 可能包含斜線字元 (`/`)，如果您在 Dev Tools 主控台中使用它，必須將其 HTTP 編碼為 `%2F`。例如，`LRON:indices:data/write/reindex` 會變成 `LRON:indices:data%2Fwrite%2Freindex`。
 {: .important}
 
-For a task `lron_config`, the ID is in the form `LRON:<task ID>`.
+對於任務 `lron_config`，ID 的格式為 `LRON:<task ID>`。
 
-## Retrieve notification settings 
+## 擷取通知設定
 
-The following examples retrieve the current configured notification settings. 
+下列範例會擷取目前設定的通知設定。
 
-Use the following request to retrieve a notification setting with the specified [notification setting ID](#notification-setting-id):
+使用下列請求來擷取具有指定 [通知設定 ID](#notification-setting-id) 的通知設定：
 
 ```json
  GET /_plugins/_im/lron/{lronID}
 ```
 {% include copy-curl.html %}
 
-For example, the following request retrieves the notification setting for the `reindex` operation:
+例如，下列請求會擷取 `reindex` 作業的通知設定：
 
 ```json
 GET /_plugins/_im/lron/LRON:indices:data%2Fwrite%2Freindex
 ```
 {% include copy-curl.html %}
 
-The response contains the setting:
+回應包含該設定：
 
 ```json
 {
@@ -182,14 +183,14 @@ The response contains the setting:
 }
 ```
 
-Use the following request to retrieve all notification settings:
+使用下列請求來擷取所有通知設定：
 
 ```json
 GET /_plugins/_im/lron
 ```
 {% include copy-curl.html %}
 
-The response contains all configured notification settings with their IDs: 
+回應包含所有已設定通知設定及其 ID：
 
 ```json
 {
@@ -225,9 +226,9 @@ The response contains all configured notification settings with their IDs:
 }
 ```
 
-## Update notification settings 
+## 更新通知設定
 
-The following example modifies an existing notification setting with the specified [notification setting ID](#notification-setting-id):
+下列範例會修改具有指定 [通知設定 ID](#notification-setting-id) 的現有通知設定：
 
 ```json
 PUT /_plugins/_im/lron/LRON:indices:data%2Fwrite%2Freindex
@@ -248,7 +249,7 @@ PUT /_plugins/_im/lron/LRON:indices:data%2Fwrite%2Freindex
 ```
 {% include copy-curl.html %}
 
-The response contains the updated setting:
+回應包含更新後的設定：
 
 ```json
 {
@@ -268,67 +269,67 @@ The response contains the updated setting:
 }
 ```
 
-## Delete notification settings 
+## 刪除通知設定
 
-The following example removes a notifications setting with the specified [notification setting ID](#notification-setting-id):
+下列範例會移除具有指定 [通知設定 ID](#notification-setting-id) 的通知設定：
 
 ```json
 DELETE /_plugins/_im/lron/{lronID}
 ```
 {% include copy-curl.html %}
 
-For example, the following request deletes the notification setting for the `reindex` operation:
+例如，下列請求會刪除 `reindex` 作業的通知設定：
 
 ```json
 DELETE _plugins/_im/lron/LRON:indices:data%2Fwrite%2Freindex
 ```
 {% include copy-curl.html %}
 
-## Notifications in OpenSearch Dashboards
+## OpenSearch Dashboards 中的通知
 
-To navigate to the **Index Management** page, go to **Management > Index Management** on the top menu. Select **Notification settings** to set the defaults for the operations that support notifications, as shown in the following image.
+若要前往 **Index Management** 頁面，請在上方功能表前往 **Management > Index Management**。選取 **Notification settings** 以設定支援通知之作業的預設值，如下圖所示。
 
-![Notification settings page]({{site.url}}{{site.baseurl}}/images/admin-ui-index/notification-settings.png)
+![通知設定頁面]({{site.url}}{{site.baseurl}}/images/admin-ui-index/notification-settings.png)
 
-### Creating a notification channel
+### 建立通知管道
 
-A notification setting needs at least one channel to deliver to:
+通知設定至少需要一個可傳送的管道：
 
-1. In **Index Management**, select **Notification settings**, and then select **Manage channels**. The **Channels** page opens in a separate window.
-1. Select **Create channel**.
-1. Enter a name for the channel and, optionally, a description.
-1. In **Configurations**, select a **Channel type**. The settings that follow depend on the type: an email channel asks for a sender type, a sender, and recipients, while a Slack channel asks for a webhook URL.
-1. Enter the settings for the channel type.
-1. Optionally, select **Send test message** to confirm that the channel works.
-1. Select **Create**.
+1. 在 **Index Management** 中，選取 **Notification settings**，然後選取 **Manage channels**。**Channels** 頁面會在不同的視窗中開啟。
+1. 選取 **Create channel**。
+1. 輸入管道名稱，並選擇性地輸入說明。
+1. 在 **Configurations** 中，選取 **Channel type**。後續設定取決於類型：電子郵件管道會要求寄件者類型、寄件者及收件者，而 Slack 管道則會要求 Webhook URL。
+1. 輸入該管道類型的設定。
+1. 選擇性地選取 **Send test message**，以確認管道可正常運作。
+1. 選取 **Create**。
 
-### Setting defaults for all operations
+### 設定所有作業的預設值
 
-Default settings apply to every reindex, shrink, split, clone, force merge, and open operation in the cluster:
+預設設定會套用至叢集中的每個重新索引、縮小、分割、複製、強制合併及開啟作業：
 
-1. In **Index Management**, select **Notification settings**.
-1. In **Defaults for index operations**, select **Has failed**, **Has completed**, or both for each of **reindex**, **shrink, split, clone**, **force merge**, and **open**.
-1. For each operation that you selected a notification for, select one or more channels from **Notification channels**.
-1. Select **Save**.
+1. 在 **Index Management** 中，選取 **Notification settings**。
+1. 在 **Defaults for index operations** 中，為 **reindex**、**shrink, split, clone**、**force merge** 及 **open** 各選取 **Has failed**、**Has completed** 或兩者。
+1. 針對您選取通知的每個作業，從 **Notification channels** 中選取一或多個管道。
+1. 選取 **Save**。
 
-Viewing or changing default notification settings requires permission to read them.
+檢視或變更預設通知設定需要讀取這些設定的權限。
 
-### Sending additional notifications
+### 傳送其他通知
 
-Reindex, split, shrink, and force merge operations can carry their own notification settings in addition to the defaults:
+重新索引、分割、縮小及強制合併作業除了預設值之外，還能帶有自己的通知設定：
 
-1. In **Index Management**, select **Indexes**.
-1. Select the index that the operation applies to.
-1. Select **Actions**, and then select the operation, such as **Reindex**.
-1. Expand **Advanced settings**. The **Notifications** section lists the defaults currently in effect.
-1. Select **Send additional notifications**.
-1. Select **Has failed / timed out**, **Has completed**, or both.
-1. Select a channel from **Notification channels**.
-1. Select the button for the operation, such as **Reindex**.
+1. 在 **Index Management** 中，選取 **Indexes**。
+1. 選取該作業適用的索引。
+1. 選取 **Actions**，然後選取作業，例如 **Reindex**。
+1. 展開 **Advanced settings**。**Notifications** 區段會列出目前生效的預設值。
+1. 選取 **Send additional notifications**。
+1. 選取 **Has failed / timed out**、**Has completed** 或兩者。
+1. 從 **Notification channels** 中選取管道。
+1. 選取該作業的按鈕，例如 **Reindex**。
 
-## Related documentation
+## 相關文件
 
-- [Notifications]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/index/)
-- [Index maintenance]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/)
-- [Reindexing data]({{site.url}}{{site.baseurl}}/im-plugin/reindex-data/)
+- [通知]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/index/)
+- [索引維護]({{site.url}}{{site.baseurl}}/im-plugin/index-maintenance/)
+- [重新編製資料索引]({{site.url}}{{site.baseurl}}/im-plugin/reindex-data/)
 - [ISM API]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/)

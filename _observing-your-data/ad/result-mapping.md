@@ -1,15 +1,16 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Anomaly result mapping
+title: "異常結果對應"
 parent: Anomaly detection
 nav_order: 6
 redirect_from: 
   - /monitoring-plugins/ad/result-mapping/
 ---
 
-# Anomaly result mapping
+# 異常結果對應
 
-When you select the **Enable custom result index** box on the **Custom result index** pane, the Anomaly Detection plugin will save the results to an index of your choosing. When the anomaly detector does not detect an anomaly, the result format is as follows:
+當您在 **Custom result index** 窗格中選取 **Enable custom result index** 方塊時，Anomaly Detection 外掛程式會將結果儲存到您選擇的索引。當異常偵測器未偵測到異常時，結果格式如下：
 
 ```json
 {
@@ -61,27 +62,27 @@ When you select the **Enable custom result index** box on the **Custom result in
 ```
 {% include copy-curl.html %}
 
-## Response body fields
+## 回應本文欄位
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`detector_id` | A unique ID for identifying a detector.
-`schema_version` | The mapping version of the result index.
-`data_start_time` | The start of the detection range of the aggregated data.
-`data_end_time` | The end of the detection range of the aggregated data.
-`feature_data` | An array of the aggregated data points between the `data_start_time` and `data_end_time`.
-`execution_start_time` | The actual start time of the detector for a specific run that produces the anomaly result. This start time includes the window delay parameter that you can set to delay data collection. Window delay is the difference between the `execution_start_time` and `data_start_time`.
-`execution_end_time` | The actual end time of the detector for a specific run that produces the anomaly result.
-`anomaly_score` | Indicates relative severity of an anomaly. The higher the score, the more anomalous a data point is.
-`anomaly_grade` | A normalized version of the `anomaly_score` on a scale between 0 and 1.
-`confidence` | The probability of the accuracy of the `anomaly_score`. The closer this number is to 1, the higher the accuracy. During the probation period of a running detector, the confidence is low (< 0.9) because of its exposure to limited data.
-`entity` | An entity is a combination of specific category fields’ values. It includes the name and value of the category field. In the previous example, `process_name` is the category field and one of the processes such as `process_3` is the field's value. The `entity` field is only present for a high-cardinality detector (where you've selected a category field).
-`model_id` | A unique ID that identifies a model. If a detector is a single-stream detector (with no category field), it has only one model. If a detector is a high-cardinality detector (with one or more category fields), it might have multiple models, one for each entity.
-`threshold` | One of the criteria for a detector to classify a data point as an anomaly is that its `anomaly_score` must surpass a dynamic threshold. This field records the current threshold.
+`detector_id` | 用於識別偵測器的唯一 ID。
+`schema_version` | 結果索引的對應版本。
+`data_start_time` | 彙總資料偵測範圍的開始時間。
+`data_end_time` | 彙總資料偵測範圍的結束時間。
+`feature_data` | `data_start_time` 與 `data_end_time` 之間彙總資料點的陣列。
+`execution_start_time` | 產生異常結果的特定執行中，偵測器的實際開始時間。此開始時間包含您可設定以延遲資料收集的 window delay 參數。Window delay 是 `execution_start_time` 與 `data_start_time` 之間的差異。
+`execution_end_time` | 產生異常結果的特定執行中，偵測器的實際結束時間。
+`anomaly_score` | 指出異常的相對嚴重性。分數越高，資料點就越異常。
+`anomaly_grade` | `anomaly_score` 的正規化版本，範圍介於 0 與 1 之間。
+`confidence` | `anomaly_score` 準確度的機率。此數字越接近 1，準確度越高。在執行中偵測器的觀察期間，由於其暴露於有限的資料，信心水準會偏低（< 0.9）。
+`entity` | 實體是特定類別欄位值的組合。它包含類別欄位的名稱與值。在前述範例中，`process_name` 是類別欄位，而 `process_3` 等其中一個處理程序則是該欄位的值。`entity` 欄位僅存在於高基數偵測器（您已選取類別欄位者）。
+`model_id` | 用於識別模型的唯一 ID。如果偵測器是單一串流偵測器（沒有類別欄位），則它只有一個模型。如果偵測器是高基數偵測器（具有一或多個類別欄位），則它可能有多個模型，每個實體各一個。
+`threshold` | 偵測器將資料點分類為異常的準則之一，是其 `anomaly_score` 必須超過動態閾值。此欄位會記錄目前的閾值。
 
-When the imputation option is enabled, the anomaly results include a `feature_imputed` array showing which features were modified due to missing data. If no features were imputed, then this is excluded.
+當啟用插補選項時，異常結果會包含 `feature_imputed` 陣列，顯示哪些特徵因資料遺漏而遭到修改。如果沒有插補任何特徵，則會排除此項。
 
-In the following example anomaly result output, the `processing_bytes_max` feature was imputed, as shown by the `imputed: true` status:
+在下列異常結果輸出範例中，`processing_bytes_max` 特徵已插補，如 `imputed: true` 狀態所示：
 
 ```json
 {
@@ -155,7 +156,7 @@ In the following example anomaly result output, the `processing_bytes_max` featu
 ```
 {% include copy-curl.html %}
 
-When an anomaly is detected, the result is provided in the following format:
+當偵測到異常時，結果會以下列格式提供：
 
 ```json
 {
@@ -256,21 +257,21 @@ When an anomaly is detected, the result is provided in the following format:
 ```
 {% include copy-curl.html %}
 
-Note that the result includes the following additional field.
+請注意，結果包含下列額外欄位。
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`relevant_attribution` | Represents the contribution of each input variable. The sum of the attributions is normalized to 1.
-`expected_values` | The expected value for each feature.
+`relevant_attribution` | 代表每個輸入變數的貢獻。歸因的總和會正規化為 1。
+`expected_values` | 每個特徵的預期值。
 
-The detector may be late in detecting an anomaly. For example: The detector observes a sequence of data that alternates between "slow weeks" (represented by the triples {1, 2, 3}) and "busy weeks" (represented by the triples {2, 4, 5}). If the detector comes across a pattern {2, 2, X}, where it has not yet seen the value that X will take, then the detector infers that the pattern is anomalous. However, it cannot determine which 2 is the cause. If X = 3, then the first 2 is the anomaly. If X = 5, then the second 2 is the anomaly. If it is the first 2, then the detector will be late in detecting the anomaly.
+偵測器可能會延遲偵測到異常。例如：偵測器觀察到一系列在「緩慢週」（以三元組 {1, 2, 3} 表示）與「忙碌週」（以三元組 {2, 4, 5} 表示）之間交替的資料。如果偵測器遇到模式 {2, 2, X}，而它尚未看到 X 會取什麼值，則偵測器會推斷該模式為異常。然而，它無法判斷是哪個 2 造成的。如果 X = 3，則第一個 2 是異常。如果 X = 5，則第二個 2 是異常。如果是第一個 2，則偵測器會延遲偵測到異常。
 
-When a detector is late in detecting an anomaly, the result includes the following additional fields.
+當偵測器延遲偵測到異常時，結果會包含下列額外欄位。
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`past_values` | The actual input that triggered an anomaly. If `past_values` is `null`, then the attributions or expected values are from the current input. If `past_values` is not `null`, then the attributions or expected values are from a past input (for example, the previous two steps of the data [1,2,3]).
-`approx_anomaly_start_time` | The approximate time of the actual input that triggered an anomaly. This field helps you understand the time at which a detector flags an anomaly. Both single-stream and high-cardinality detectors do not query previous anomaly results because these queries are costly operations. The cost is especially high for high-cardinality detectors that may have many entities. If the data is not continuous, then the accuracy of this field is low and the actual time at which the detector detects an anomaly can be earlier.
+`past_values` | 觸發異常的實際輸入。如果 `past_values` 是 `null`，則歸因或預期值來自目前的輸入。如果 `past_values` 不是 `null`，則歸因或預期值來自過去的輸入（例如資料的前兩個步驟 [1,2,3]）。
+`approx_anomaly_start_time` | 觸發異常的實際輸入的近似時間。此欄位可協助您了解偵測器標記異常的時間。單一串流與高基數偵測器都不會查詢先前的異常結果，因為這些查詢是成本高昂的操作。對於可能有許多實體的高基數偵測器，成本尤其高昂。如果資料不連續，則此欄位的準確度偏低，且偵測器偵測到異常的實際時間可能更早。
 
 ```json
 {
@@ -395,13 +396,13 @@ Field | Description
 ```
 {% include copy-curl.html %}
 
-## Flattened anomaly result mapping
+## 攤平的異常結果對應
 
-When selecting the **Enable flattened custom result index** option in the **Custom result index** pane, the Anomaly Detection plugin saves the results with all of the nested fields flattened in the index.
+當您在 **Custom result index** 窗格中選取 **Enable flattened custom result index** 選項時，Anomaly Detection 外掛程式會將所有巢狀欄位攤平後的結果儲存在索引中。
 
-The nested fields stored in the index use the following flattening rules.
+儲存在索引中的巢狀欄位會使用下列攤平規則。
 
-Field | Flattening rule | Example nested input | Example flattened output
+欄位 | 攤平規則 | 巢狀輸入範例 | 攤平後的輸出範例
 :--- | :--- | :--- | :---
 `relevant_attribution` | `relevant_attribution_$FEATURE_NAME_data: $RELEVANT_ATTRIBUTION_FEATURE_DATA` | `relevant_attribution : [{"feature_id": "deny_max1", "data": 0.07339452532666227}]` | `relevant_attribution_deny_max1_data: 0.07339452532666227`
 `past_values` | `past_values_$FEATURE_NAME_data: $PAST_VALUES_FEATURE_DATA`  | `"past_values": [{"feature_id": "processing_bytes_max", "data": 905}]`                                           | `past_values_processing_bytes_max_data: 905`
@@ -409,7 +410,7 @@ Field | Flattening rule | Example nested input | Example flattened output
 `expected_values` | `expected_values_$FEATURE_NAME_data: $EXPECTED_VALUES_FEATURE_DATA`  | `"expected_values": [{"likelihood": 1, "value_list": [{"feature_id": "processing_bytes_max", "data": 905}]}]`    | `expected_values_processing_bytes_max_data: 905` 
 `entity` | `entity_$NAME_value: $ENTITY_VALUE ` | `"entity": [{"name": "process_name", "value": "process_3"}]` | `entity_process_name_value: process_3 `
 
-For example, when a detector is late in detecting an anomaly, the flattened result appears in the following format:
+例如，當偵測器延遲偵測到異常時，攤平後的結果會以下列格式顯示：
 
 ```json
 {

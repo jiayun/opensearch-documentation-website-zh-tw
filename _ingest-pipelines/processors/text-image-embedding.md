@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Text/image embedding
+title: "文字/影像嵌入"
 parent: Ingest processors
 nav_order: 270
 redirect_from:
@@ -8,16 +9,16 @@ redirect_from:
 ---
 
 <!-- vale off -->
-# Text/image embedding processor
+# 文字/影像嵌入處理器
 <!-- vale on -->
 
-The `text_image_embedding` processor is used to generate combined vector embeddings from text and image fields for [multimodal neural search]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/). 
+`text_image_embedding` 處理器用於從文字與影像欄位產生組合的向量嵌入，以支援[多模態神經搜尋]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/)。
 
-**PREREQUISITE**<br>
-Before using the `text_image_embedding` processor, you must set up a machine learning (ML) model. For more information, see [Choosing a model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model).
+**必要條件**<br>
+使用 `text_image_embedding` 處理器之前，您必須先設定機器學習 (ML) 模型。如需更多資訊，請參閱[選擇模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model)。
 {: .note}
 
-The following is the syntax for the `text_image_embedding` processor: 
+以下是 `text_image_embedding` 處理器的語法：
 
 ```json
 {
@@ -33,28 +34,28 @@ The following is the syntax for the `text_image_embedding` processor:
 ```
 {% include copy.html %}
 
-## Parameters
+## 參數
 
-The following table lists the required and optional parameters for the `text_image_embedding` processor.
+下表列出 `text_image_embedding` 處理器的必要與選用參數。
 
-| Parameter  | Data type | Required/Optional  | Description  |
+| 參數  | 資料類型 | 必要/選用  | 說明  |
 |:---|:---|:---|:---|
-`model_id` | String | Required | The ID of the model that will be used to generate the embeddings. The model must be deployed in OpenSearch before it can be used in neural search. For more information, see [Using custom models within OpenSearch]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/) and [Multimodal search]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/).
-`embedding` | String | Required | The name of the vector field in which to store the generated embeddings. A single embedding is generated for both `text` and `image` fields.
-`field_map` | Object | Required | Contains key-value pairs that specify the fields from which to generate embeddings.
-`field_map.text` | String | Optional | The name of the field from which to obtain text for generating vector embeddings. You must specify at least one `text` or `image`.
-`field_map.image`  | String | Optional | The name of the field from which to obtain the image for generating vector embeddings. You must specify at least one `text` or `image`.
-`description`  | String | Optional  | A brief description of the processor.  |
-`tag` | String | Optional | An identifier tag for the processor. Useful for debugging to distinguish between processors of the same type. |
-`skip_existing` | Boolean | Optional | When `true`, the processor does not make inference calls for fields that already contain embeddings, leaving existing embeddings unchanged. Default is `false`.|
+`model_id` | 字串 | 必要 | 用於產生嵌入的模型 ID。模型必須先部署到 OpenSearch，才能在神經搜尋中使用。如需更多資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)與[多模態搜尋]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/)。
+`embedding` | 字串 | 必要 | 用於儲存所產生嵌入的向量欄位名稱。`text` 與 `image` 欄位會共用一個產生的嵌入。
+`field_map` | 物件 | 必要 | 包含鍵值對，用於指定要從哪些欄位產生嵌入。
+`field_map.text` | 字串 | 選用 | 用於取得文字以產生向量嵌入的欄位名稱。您必須至少指定一個 `text` 或 `image`。
+`field_map.image`  | 字串 | 選用 | 用於取得影像以產生向量嵌入的欄位名稱。您必須至少指定一個 `text` 或 `image`。
+`description`  | 字串 | 選用  | 處理器的簡短說明。  |
+`tag` | 字串 | 選用 | 處理器的識別標籤。在偵錯時可用於區分相同類型的處理器。 |
+`skip_existing` | 布林值 | 選用 | 當設定為 `true` 時，處理器不會對已包含嵌入的欄位進行推論呼叫，並保留現有的嵌入不變。預設值為 `false`。|
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline. You must provide a model ID when creating the processor. For more information, see [Using custom models within OpenSearch]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/). 
+依照下列步驟在管線中使用處理器。建立處理器時必須提供模型 ID。如需更多資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。
 
-**Step 1: Create a pipeline.** 
+**步驟 1：建立管線。**
 
-The following example request creates an ingest pipeline where the text from `image_description` and the image from `image_binary` will be converted into vector embeddings and the embeddings will be stored in `vector_embedding`:
+下列範例請求會建立一條資料匯入管線，將 `image_description` 的文字與 `image_binary` 的影像轉換為向量嵌入，並將嵌入儲存在 `vector_embedding` 中：
 
 ```json
 PUT /_ingest/pipeline/nlp-ingest-pipeline
@@ -76,15 +77,15 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-You can set up multiple processors in one pipeline to generate embeddings for multiple fields.
+您可以在一條管線中設定多個處理器，為多個欄位產生嵌入。
 {: .note}
 
-**Step 2 (Optional): Test the pipeline.**
+**步驟 2 (選用)：測試管線。**
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/nlp-ingest-pipeline/_simulate
@@ -103,9 +104,9 @@ POST _ingest/pipeline/nlp-ingest-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The response confirms that in addition to the `image_description` and `image_binary` fields, the processor has generated vector embeddings in the `vector_embedding` field:
+回應確認處理器除了 `image_description` 與 `image_binary` 欄位之外，已在 `vector_embedding` 欄位中產生向量嵌入：
 
 ```json
 {
@@ -134,11 +135,11 @@ The response confirms that in addition to the `image_description` and `image_bin
 }
 ```
 
-Once you have created an ingest pipeline, you need to create an index for ingestion and ingest documents into the index. To learn more, see [Step 2: Create an index for ingestion]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/#step-2-create-an-index-for-ingestion) and [Step 3: Ingest documents into the index]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/#step-3-ingest-documents-into-the-index) of [Multimodal search]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/).
+建立資料匯入管線之後，您需要建立一個索引供匯入使用，並將文件匯入該索引。若要了解更多，請參閱[多模態搜尋]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/)中的[步驟 2：建立供匯入使用的索引]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/#step-2-create-an-index-for-ingestion)與[步驟 3：將文件匯入索引]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/#step-3-ingest-documents-into-the-index)。
 
-## Next steps
+## 後續步驟
 
-- To learn how to use the `neural` query for a multimodal search, see [Neural query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/).
-- To learn more about multimodal search, see [Multimodal search]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/).
-- To learn more about using models in OpenSearch, see [Choosing a model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model).
-- For a comprehensive example, see [Getting started with semantic and hybrid search]({{site.url}}{{site.baseurl}}/search-plugins/neural-search-tutorial/).
+- 若要了解如何使用 `neural` 查詢進行多模態搜尋，請參閱[神經查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)。
+- 若要了解更多關於多模態搜尋的資訊，請參閱[多模態搜尋]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/)。
+- 若要了解更多關於在 OpenSearch 中使用模型的資訊，請參閱[選擇模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model)。
+- 若需完整範例，請參閱[語意與混合搜尋入門]({{site.url}}{{site.baseurl}}/search-plugins/neural-search-tutorial/)。

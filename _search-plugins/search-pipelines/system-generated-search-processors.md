@@ -1,20 +1,21 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: System-generated search processors
+title: "系統產生的搜尋處理器"
 nav_order: 50
 has_children: false
 parent: Search pipelines
 ---
 
-# System-generated search processors
-**Introduced 3.3**
+# 系統產生的搜尋處理器
+**3.3 版新增**
 {: .label .label-purple }
 
-System-generated search processors are processors that OpenSearch creates automatically based on the search request. Unlike [user-defined processors]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/search-processors/) that you manually configure in pipelines, system-generated processors are triggered automatically when certain features are used, eliminating the need for manual processor configuration.
+系統產生的搜尋處理器是 OpenSearch 根據搜尋請求自動建立的處理器。與您在管線中手動設定的[使用者自訂處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/search-processors/)不同，系統產生的處理器會在使用特定功能時自動觸發，無需手動設定處理器。
 
-## Enabling system-generated search processors
+## 啟用系統產生的搜尋處理器
 
-To enable system-generated search processor creation, set the `cluster.search.enabled_system_generated_factories` cluster setting to `*` (all factories) or explicitly list the factories you want to enable. The following example enables `mmr_over_sample_factory`, `mmr_rerank_factory`, and `semantic-highlighter`:
+若要啟用系統產生搜尋處理器的建立功能，請將 `cluster.search.enabled_system_generated_factories` 叢集設定設為 `*` (所有工廠)，或明確列出您要啟用的工廠。以下範例啟用 `mmr_over_sample_factory`、`mmr_rerank_factory` 和 `semantic-highlighter`：
 
 ```json
 PUT _cluster/settings
@@ -30,41 +31,41 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-## Processor types
+## 處理器類型
 
-OpenSearch supports the following types of system-generated processors:
+OpenSearch 支援下列類型的系統產生處理器：
 
-* [Search request processors](#system-generated-search-request-processors)
-* [Search response processors](#system-generated-search-response-processors)
+* [搜尋請求處理器](#system-generated-search-request-processors)
+* [搜尋回應處理器](#system-generated-search-response-processors)
 
-Each system-generated processor runs at a fixed execution stage, either before or after user-defined processors of the same type.
+每個系統產生的處理器都在固定的執行階段執行，也就是在同類型使用者自訂處理器之前或之後。
 {: .note}
 
-### System-generated search request processors
+### 系統產生的搜尋請求處理器
 
-The following table lists the available system-generated search request processors.
+下表列出可用的系統產生搜尋請求處理器。
 
-| Processor name    | Processor factory name    | Execution stage     | Trigger condition                                          | Description                                                                                                                                         |
+| 處理器名稱    | 處理器工廠名稱    | 執行階段     | 觸發條件                                          | 說明                                                                                                                                         |
 | ----------------- | ------------------------- | ------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `mmr_over_sample` | `mmr_over_sample_factory` | Runs after any user-defined request processors. | Triggered when a search request includes the `mmr` parameter in the `ext` object. See [Vector search with MMR reranking]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/vector-search-mmr/). | Adjusts the query size and `k` value of the `knn` or `neural` query to oversample candidates for maximal marginal relevance (MMR) reranking. |
-| `knn_default_excludes` | `knn_default_excludes_factory` | Runs before any user-defined request processors. | Triggered for every search request, except when the request already specifies how to return the source by setting `_source` to `true` or `false` or by setting `stored_fields` to `_none_`. Applies only to indexes containing `knn_vector` fields with `_source` enabled. See [Automatically exclude vectors from search results]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning-search/#automatically-exclude-vectors-from-search-results). | Adds all `knn_vector` fields to `_source.excludes` so that vectors are omitted from the search response by default. Fields already listed in the request's `_source.includes` or `_source.excludes` remain unchanged. |
+| `mmr_over_sample` | `mmr_over_sample_factory` | 在所有使用者自訂請求處理器之後執行。 | 當搜尋請求在 `ext` 物件中包含 `mmr` 參數時觸發。請參閱[使用 MMR 重新排序的向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/vector-search-mmr/)。 | 調整 `knn` 或 `neural` 查詢的查詢大小與 `k` 值，以對候選結果進行超額取樣，供最大邊際相關性 (MMR) 重新排序使用。 |
+| `knn_default_excludes` | `knn_default_excludes_factory` | 在所有使用者自訂請求處理器之前執行。 | 對每個搜尋請求觸發，但請求已透過將 `_source` 設為 `true` 或 `false`，或將 `stored_fields` 設為 `_none_` 來指定如何回傳來源的情況除外。僅適用於包含已啟用 `_source` 的 `knn_vector` 欄位的索引。請參閱[自動從搜尋結果中排除向量]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning-search/#automatically-exclude-vectors-from-search-results)。 | 將所有 `knn_vector` 欄位加入 `_source.excludes`，使向量預設不會出現在搜尋回應中。已在請求的 `_source.includes` 或 `_source.excludes` 中列出的欄位則保持不變。 |
 
-### System-generated search response processors
+### 系統產生的搜尋回應處理器
 
-The following table lists the available system-generated search response processors.
+下表列出可用的系統產生搜尋回應處理器。
 
-| Processor name | Processor factory name | Execution stage    | Trigger condition                                          | Description                                                                                                                               |
+| 處理器名稱 | 處理器工廠名稱 | 執行階段    | 觸發條件                                          | 說明                                                                                                                               |
 | -------------- | ---------------------- | ------------------ | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `mmr_rerank`   | `mmr_rerank_factory`   | Runs before any user-defined response processors. | Triggered when a search request includes the `mmr` parameter in the `ext` object. See [Vector search with MMR reranking]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/vector-search-mmr/). | Reranks the oversampled results using MMR and reduces them to the original query size.  |
-| `semantic-highlighter` | `semantic-highlighter` | Runs after any user-defined response processors. | Triggered when a search request contains a `highlight` object with `type` set to `semantic` and includes the `semantic_highlighting_batch` parameter in the `ext` object. See [The `semantic` highlighter]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#the-semantic-highlighter). | Performs batch inference processing for semantic highlighting. |
+| `mmr_rerank`   | `mmr_rerank_factory`   | 在所有使用者自訂回應處理器之前執行。 | 當搜尋請求在 `ext` 物件中包含 `mmr` 參數時觸發。請參閱[使用 MMR 重新排序的向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/vector-search-mmr/)。 | 使用 MMR 對超額取樣的結果重新排序，並將其縮減為原始查詢大小。  |
+| `semantic-highlighter` | `semantic-highlighter` | 在所有使用者自訂回應處理器之後執行。 | 當搜尋請求包含 `type` 設為 `semantic` 的 `highlight` 物件，且在 `ext` 物件中包含 `semantic_highlighting_batch` 參數時觸發。請參閱[`semantic` 高亮顯示器]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#the-semantic-highlighter)。 | 為語意高亮顯示執行批次推論處理。 |
 
-## Limitations
+## 限制
 
-The following limitations apply to system-generated processors:
+系統產生的處理器有下列限制：
 
-- OpenSearch supports only **one system-generated processor per processor type and execution stage** for a given search request. Since each processor type (request and response) can run at two execution stages (before or after user-defined processors), a single search request can include multiple system-generated processors, as long as they are of different types or run at different execution stages. This limitation ensures deterministic execution order and predictable behavior.
+- 針對特定搜尋請求，OpenSearch 對**每種處理器類型與執行階段僅支援一個系統產生的處理器**。由於每種處理器類型 (請求與回應) 可以在兩個執行階段 (使用者自訂處理器之前或之後) 執行，單一搜尋請求可以包含多個系統產生的處理器，只要它們屬於不同類型或在不同的執行階段執行即可。此限制可確保確定性的執行順序與可預測的行為。
 
-## Related documentation
+## 相關文件
 
-- [Vector search with MMR reranking]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/vector-search-mmr/)
-- [Automatically exclude vectors from search results]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning-search/#automatically-exclude-vectors-from-search-results)
+- [使用 MMR 重新排序的向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/specialized-operations/vector-search-mmr/)
+- [自動從搜尋結果中排除向量]({{site.url}}{{site.baseurl}}/vector-search/performance-tuning-search/#automatically-exclude-vectors-from-search-results)

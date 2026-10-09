@@ -1,26 +1,27 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Uppercase string
+title: "大寫字串"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 420
 ---
 
-# Uppercase string processor
+# 大寫字串處理器
 
-The `uppercase_string` processor converts the value (a string) of a key from its current case to uppercase. 
+`uppercase_string` 處理器會將某個鍵的值 (字串) 從目前的字母大小寫轉換為大寫。
 
-### Configuration
+### 組態
 
-You can configure the `uppercase_string` processor with the following options.
+您可以使用下列選項來設定 `uppercase_string` 處理器。
 
-Option | Required | Description
+選項 | 必要 | 說明
 :--- | :--- | :---
- `with_keys` | Yes | A list of keys to convert to uppercase. |
+ `with_keys` | 是 | 要轉換為大寫的鍵清單。 |
 
-### Usage
+### 使用方式
 
-To get started, create the following `pipeline.yaml` file:
+若要開始使用，請建立下列 `pipeline.yaml` 檔案：
 
 ```yaml
 pipeline:
@@ -38,14 +39,14 @@ pipeline:
 ```
 {% include copy.html %}
 
-Next, create a log file named `logs_json.log`. After that, replace the `path` in the file source of your `pipeline.yaml` file with the correct file path. For more detailed information, see [Configuring OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/getting-started/#2-configuring-data-prepper). 
+接著，建立名為 `logs_json.log` 的記錄檔。之後，將 `pipeline.yaml` 檔案之檔案來源中的 `path` 取代為正確的檔案路徑。如需更詳細的資訊，請參閱[設定 OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/getting-started/#2-configuring-data-prepper)。
 
-Before you run Data Prepper, the source appears in the following format:
+執行 Data Prepper 之前，來源會以下列格式顯示：
 
 ```json
 {"uppercaseField": "hello"}
 ```
-After you run Data Prepper, the source is converted to the following format:
+執行 Data Prepper 之後，來源會轉換為下列格式：
 
 ```json
 {"uppercaseField": "HELLO"}

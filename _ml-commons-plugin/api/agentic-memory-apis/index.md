@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Agentic memory APIs
+title: "代理程式記憶體 API"
 parent: ML Commons APIs
 has_children: true
 has_toc: false
@@ -9,15 +10,15 @@ redirect_from:
   - /ml-commons-plugin/api/agentic-memory-apis/
 ---
 
-# Agentic memory APIs
-**Introduced 3.3**
+# 代理程式記憶體 API
+**3.3 版推出**
 {: .label .label-purple }
 
-Agentic memory APIs provide persistent memory management for AI agents. For an overview of concepts, use cases, and getting started information, see [Agentic memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/).
+代理程式記憶體 API 為 AI 代理程式提供持久性記憶體管理。如需概念概觀、使用案例及入門資訊，請參閱[代理程式記憶體]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/)。
 
-## Disabling agentic memory APIs
+## 停用代理程式記憶體 API
 
-Agentic memory APIs are enabled by default. To disable agentic memory APIs, update the following cluster setting:
+代理程式記憶體 API 預設為啟用。若要停用代理程式記憶體 API，請更新下列叢集設定：
 
 ```json
 PUT /_cluster/settings
@@ -29,21 +30,21 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-OpenSearch supports the following memory container APIs:
+OpenSearch 支援下列記憶體容器 API：
 
-- [Create memory container]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/)
-- [Get memory container]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/get-memory-container/)
-- [Update memory container]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/update-memory-container/)
-- [Delete memory container]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/delete-memory-container/)
-- [Search memory container]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/search-memory-container/)
+- [建立記憶體容器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/)
+- [取得記憶體容器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/get-memory-container/)
+- [更新記憶體容器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/update-memory-container/)
+- [刪除記憶體容器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/delete-memory-container/)
+- [搜尋記憶體容器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/search-memory-container/)
 
-OpenSearch supports the following memory APIs:
+OpenSearch 支援下列記憶體 API：
 
-- [Add memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/add-memory/)
-- [Create session]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-session/)
-- [Get memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/get-memory/)
-- [Update memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/update-memory/)
-- [Delete memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/delete-memory/)
-- [Search memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/search-memory/)
-- [Semantic search memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/semantic-search-memory/)
-- [Hybrid search memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/hybrid-search-memory/)
+- [新增記憶體]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/add-memory/)
+- [建立工作階段]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-session/)
+- [取得記憶體]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/get-memory/)
+- [更新記憶體]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/update-memory/)
+- [刪除記憶體]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/delete-memory/)
+- [搜尋記憶體]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/search-memory/)
+- [語意搜尋記憶體]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/semantic-search-memory/)
+- [混合搜尋記憶體]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/hybrid-search-memory/)

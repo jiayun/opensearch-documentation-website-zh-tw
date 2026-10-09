@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get node certificates
+title: "取得節點憑證"
 parent: Certificate APIs
 grand_parent: Security APIs
 nav_order: 30
 ---
 
-# Get Node Certificates API
-**Introduced 2.15**
+# 取得節點憑證 API
+**於 2.15 版引進**
 {: .label .label-purple }
 
-Retrieves the certificates in use on the specified node. To retrieve the certificates in use on every node in the cluster, use the [Get All Certificates API]({{site.url}}{{site.baseurl}}/security/api/certificates/get-all-certificates/).
+擷取指定節點上使用中的憑證。若要擷取叢集中每個節點上使用中的憑證，請使用[取得所有憑證 API]({{site.url}}{{site.baseurl}}/security/api/certificates/get-all-certificates/)。
 
-This API is reserved for a superadmin. Authenticate with an admin certificate rather than with a user name and password. For more information, see [Access control for the API]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api).
+此 API 保留給超級管理員使用。請使用管理員憑證進行驗證，而非使用使用者名稱與密碼。如需更多資訊，請參閱 [API 的存取控制]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api)。
 {: .note}
 
 <!-- spec_insert_start
 api: security.get_node_certificates
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_plugins/_security/api/certificates/{node_id}
 ```
@@ -29,13 +30,13 @@ GET /_plugins/_security/api/certificates/{node_id}
 api: security.get_node_certificates
 component: path_parameters
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required | Data type | Description |
+| 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `node_id` | **Required** | String | The node ID to retrieve certificates for. |
+| `node_id` | **必要** | 字串 | 要擷取憑證的節點 ID。 |
 
 <!-- spec_insert_end -->
 
@@ -43,27 +44,27 @@ The following table lists the available path parameters.
 api: security.get_node_certificates
 component: query_parameters
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `cert_type` | String | The type of certificates (`HTTP`, `TRANSPORT`, or `ALL`) to retrieve from a node. |
-| `timeout` | String | The maximum duration, in seconds, to spend retrieving certificates from all nodes before a timeout. |
+| `cert_type` | 字串 | 要從節點擷取的憑證類型（`HTTP`、`TRANSPORT` 或 `ALL`）。 |
+| `timeout` | 字串 | 在逾時前，從所有節點擷取憑證所能花費的最長時間（以秒為單位）。 |
 
 <!-- spec_insert_end -->
 
-## Example request
+## 請求範例
 
 ```json
 GET _plugins/_security/api/certificates/DOlaf_0NSe-HkUXbca8-xA
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 回應範例
 
-The response is abbreviated here:
+此處的回應經過縮減：
 
 ```json
 {
@@ -109,28 +110,28 @@ The response is abbreviated here:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文是 JSON 物件，包含下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `_nodes` | Object | The number of nodes that the request reached, along with the number that succeeded and failed. |
-| `cluster_name` | String | The name of the cluster. |
-| `nodes` | Object | The certificates on each node, keyed by node ID. |
-| `nodes.<node_id>.name` | String | The name of the node. |
-| `nodes.<node_id>.certificates` | Object | The node's certificates, grouped into `http`, `transport`, and `transport_client` lists. |
+| `_nodes` | 物件 | 請求觸及的節點數，以及成功與失敗的節點數。 |
+| `cluster_name` | 字串 | 叢集的名稱。 |
+| `nodes` | 物件 | 每個節點上的憑證，以節點 ID 為鍵。 |
+| `nodes.<node_id>.name` | 字串 | 節點的名稱。 |
+| `nodes.<node_id>.certificates` | 物件 | 節點的憑證，分組為 `http`、`transport` 及 `transport_client` 清單。 |
 
-Each certificate contains the following fields.
+每個憑證包含下列欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `format` | String | The format of the certificate, such as `pem`. |
-| `alias` | String | The alias of the certificate in the keystore, or `null` when the certificate has no alias. |
-| `subject_dn` | String | The distinguished name of the certificate's subject. |
-| `issuer_dn` | String | The distinguished name of the certificate authority that issued the certificate. |
-| `san` | String | The subject alternative names in the certificate. |
-| `serial_number` | String | The serial number of the certificate. |
-| `has_private_key` | Boolean | Whether the node holds the private key for the certificate. |
-| `not_before` | String | The date and time when the certificate becomes valid. |
-| `not_after` | String | The date and time when the certificate expires. |
+| `format` | 字串 | 憑證的格式，例如 `pem`。 |
+| `alias` | 字串 | 金鑰儲存區中憑證的別名，若憑證沒有別名則為 `null`。 |
+| `subject_dn` | 字串 | 憑證主體的辨別名稱。 |
+| `issuer_dn` | 字串 | 簽發該憑證之憑證授權單位的辨別名稱。 |
+| `san` | 字串 | 憑證中的主體替代名稱。 |
+| `serial_number` | 字串 | 憑證的序號。 |
+| `has_private_key` | 布林值 | 節點是否持有該憑證的私密金鑰。 |
+| `not_before` | 字串 | 憑證生效的日期與時間。 |
+| `not_after` | 字串 | 憑證到期的日期與時間。 |

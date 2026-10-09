@@ -1,18 +1,19 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Stats 
+title: "統計資料"
 parent: ML Commons APIs
 nav_order: 120
 ---
 
 # ML Commons Stats API
 
-The Stats API provides basic statistics about ML Commons, such as the number of running tasks. To monitor machine learning workflows using more detailed time-series metrics, see [Monitoring machine learning workflows]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/metrics/getting-started/#monitoring-machine-learning-workflows).
+Stats API 提供 ML Commons 的基本統計資料，例如執行中的任務數量。若要使用更詳細的時間序列指標監視機器學習工作流程，請參閱[監視機器學習工作流程]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/metrics/getting-started/#monitoring-machine-learning-workflows)。
 {: .note }
 
-Gets statistics related to the number of tasks. 
+取得與任務數量相關的統計資料。 
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/stats
@@ -21,14 +22,14 @@ GET /_plugins/_ml/{nodeId}/stats/
 GET /_plugins/_ml/{nodeId}/stats/{stat}
 ```
 
-## Example request: Get all stats for all nodes
+## 請求範例：取得所有節點的所有統計資料
 
 ```json
 GET /_plugins/_ml/stats
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
 ```json
 {
@@ -56,21 +57,21 @@ GET /_plugins/_ml/stats
 }
 ```
 
-## Example request: Get all stats for a specific node
+## 請求範例：取得特定節點的所有統計資料
 
 ```json
 GET /_plugins/_ml/{nodeId}/stats/
 ```
 {% include copy-curl.html %}
 
-## Example request: Get a specified stat for a specific node 
+## 請求範例：取得特定節點的指定統計資料 
 
 ```json
 GET /_plugins/_ml/{nodeId}/stats/{stat}
 ```
 {% include copy-curl.html %}
 
-## Example request: Get a specified stat for all nodes
+## 請求範例：取得所有節點的指定統計資料
 
 ```json
 GET /_plugins/_ml/stats/{stat}

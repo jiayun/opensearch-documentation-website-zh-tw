@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Register model group
+title: "註冊模型群組"
 parent: Model group APIs
 grand_parent: ML Commons APIs
 nav_order: 10
 ---
 
-# Register Model Group API
+# 註冊模型群組 API
 
-To register a model group, send a `POST` request to the `_register` endpoint. You can register a model group in `public`, `private`, or `restricted` access mode. 
+若要註冊模型群組，請向 `_register` 端點傳送 `POST` 請求。您可以在 `public`、`private` 或 `restricted` 存取模式下註冊模型群組。
 
-Each model group name in the cluster must be globally unique.
+叢集中的每個模型群組名稱都必須是全域唯一的。
 {: .important}
 
-For more information, see [Model access control]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/).
+如需更多資訊，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
 
-## Path and HTTP method
+## 路徑與 HTTP 方法
 
 ```json
 POST /_plugins/_ml/model_groups/_register
 ```
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request fields. 
+下表列出可用的請求欄位。
 
-Field |Data type | Description 
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`name` | String | The model group name. Required.
-`model_group_id` | String | A unique identifier for the model group. Optional. If omitted, OpenSearch generates one automatically. 
-`description` | String | The model group description. Optional.
-`access_mode` | String | The access mode for this model. Valid values are `public`, `private`, and `restricted`. When this parameter is set to `restricted`, you must specify either `backend_roles` or `add_all_backend_roles`, but not both. Optional. If you specify none of the security parameters (`access_mode`, `backend_roles`, and `add_all_backend_roles`), the default `access_mode` is `private`.
-`backend_roles` | Array | A list of the model owner's backend roles to add to the model. Can be specified only if `access_mode` is `restricted`. Cannot be specified at the same time as `add_all_backend_roles`. Optional.
-`add_all_backend_roles` | Boolean | If `true`, all backend roles of the model owner are added to the model group. Default is `false`. Cannot be specified at the same time as `backend_roles`. Admin users cannot set this parameter to `true`. Optional.
+`name` | 字串 | 模型群組名稱。必要。
+`model_group_id` | 字串 | 模型群組的唯一識別碼。選用。若省略，OpenSearch 會自動產生。
+`description` | 字串 | 模型群組描述。選用。
+`access_mode` | 字串 | 此模型的存取模式。有效值為 `public`、`private` 和 `restricted`。當此參數設為 `restricted` 時，您必須指定 `backend_roles` 或 `add_all_backend_roles` 其中之一，但不可同時指定兩者。選用。若您未指定任何安全性參數（`access_mode`、`backend_roles` 和 `add_all_backend_roles`），預設的 `access_mode` 為 `private`。
+`backend_roles` | 陣列 | 要新增至模型的模型擁有者後端角色清單。僅能在 `access_mode` 為 `restricted` 時指定。不可與 `add_all_backend_roles` 同時指定。選用。
+`add_all_backend_roles` | 布林值 | 若為 `true`，模型擁有者的所有後端角色都會新增至模型群組。預設為 `false`。不可與 `backend_roles` 同時指定。管理員使用者不可將此參數設為 `true`。選用。
 
-## Example request
+## 範例請求
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -46,7 +47,7 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -55,18 +56,18 @@ POST /_plugins/_ml/model_groups/_register
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the available response fields. 
+下表列出可用的回應欄位。
 
-Field |Data type | Description 
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`model_group_id` | String | The model group ID that you can use to access this model group.
-`status` | String | The operation status. 
+`model_group_id` | 字串 | 模型群組 ID，您可用它來存取此模型群組。
+`status` | 字串 | 操作狀態。
 
-## Registering a public model group
+## 註冊公開模型群組
 
-If you register a model group with a `public` access mode, any model in this model group will be accessible to any user with access to the cluster. The following request registers a public model group:
+若您以 `public` 存取模式註冊模型群組，此模型群組中的任何模型都可供具有叢集存取權的任何使用者存取。下列請求會註冊一個公開模型群組：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -78,22 +79,22 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-## Registering a restricted model group
+## 註冊受限模型群組
 
-To limit access by backend role, you must register a model group with the `restricted` access mode. 
+若要依後端角色限制存取，您必須以 `restricted` 存取模式註冊模型群組。
 
-When registering a model group, you must attach one or more of your backend roles to the model using one but not both of the following methods:
-    - Provide a list of backend roles in the `backend_roles` parameter.
-    - Set the `add_all_backend_roles` parameter to `true` to add all your backend roles to the model group. This option is not available to admin users.
+註冊模型群組時，您必須使用下列其中一種方法（不可同時使用兩種）將您的一或多個後端角色附加至模型：
+    - 在 `backend_roles` 參數中提供後端角色清單。
+    - 將 `add_all_backend_roles` 參數設為 `true`，以將您的所有後端角色新增至模型群組。此選項不適用於管理員使用者。
 
-Any user who shares a backend role with the model group can access any model in this model group. This grants the user the permissions included with the user role that is mapped to the backend role. 
+任何與模型群組共用後端角色的使用者，都可以存取此模型群組中的任何模型。這會授與該使用者對應至該後端角色的使用者角色所包含的權限。
 
-An admin user can access all model groups regardless of their access mode. 
+管理員使用者可以存取所有模型群組，無論其存取模式為何。
 {: .note}
 
-## Example request: A list of backend roles
+## 範例請求：後端角色清單
 
-The following request registers a restricted model group, which can be accessed only by users with the `IT` backend role:
+下列請求會註冊一個受限模型群組，僅有具備 `IT` 後端角色的使用者可以存取：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -106,9 +107,9 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-## Example request: All backend roles
+## 範例請求：所有後端角色
 
-The following request registers a restricted model group, adding all backend roles of the user to the model group:
+下列請求會註冊一個受限模型群組，並將使用者的所有後端角色新增至模型群組：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -121,9 +122,9 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-## Registering a private model group
+## 註冊私有模型群組
 
-If you register a model group with a `private` access mode, any model in this model group will be accessible only to you and the admin users. The following request registers a private model group:
+若您以 `private` 存取模式註冊模型群組，此模型群組中的任何模型僅供您和管理員使用者存取。下列請求會註冊一個私有模型群組：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -135,7 +136,7 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-If you don't specify any of the `access_mode`, `backend_roles`, or `add_all_backend_roles`, the model will have a `private` access mode:
+若您未指定 `access_mode`、`backend_roles` 或 `add_all_backend_roles` 任何一項，模型將具有 `private` 存取模式：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -146,6 +147,6 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-## Registering a model group in a cluster where model access control is disabled
+## 在停用模型存取控制的叢集中註冊模型群組
 
-If model access control is disabled on your cluster (one of the [prerequisites](ml-commons-plugin/model-access-control/#model-access-control-prerequisites) is not met), you can register a model group with a `name` and `description` but cannot specify any of the access parameters (`model_access_name`, `backend_roles`, or `add_backend_roles`). By default, in such a cluster, all model groups are public.
+若您的叢集已停用模型存取控制（未符合其中一項[先決條件](ml-commons-plugin/model-access-control/#model-access-control-prerequisites)），您仍可以註冊具有 `name` 和 `description` 的模型群組，但無法指定任何存取參數（`model_access_name`、`backend_roles` 或 `add_backend_roles`）。在此類叢集中，所有模型群組預設皆為公開。

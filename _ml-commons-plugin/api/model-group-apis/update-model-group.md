@@ -1,34 +1,35 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Update model group
+title: "更新模型群組"
 parent: Model group APIs
 grand_parent: ML Commons APIs
 nav_order: 20
 ---
 
-# Update Model Group API
+# 更新模型群組 API
 
-To update a model group, send a `PUT` request to the `model_groups` endpoint and provide the ID of the model group you want to update.
+若要更新模型群組，請向 `model_groups` 端點傳送 `PUT` 請求，並提供您要更新之模型群組的 ID。
 
-When updating a model group, the following restrictions apply:
+更新模型群組時，適用下列限制：
 
-- The model owner or an admin user can update all fields. Any user who shares one or more backend roles with the model group can update the `name` and `description` fields only.
-- When updating the `access_mode` to `restricted`, you must specify either `backend_roles` or `add_all_backend_roles` but not both.
-- When updating the `name`, ensure the name is globally unique in the cluster.
+- 模型擁有者或管理員使用者可以更新所有欄位。任何與模型群組共用一或多個後端角色的使用者，則只能更新 `name` 和 `description` 欄位。
+- 將 `access_mode` 更新為 `restricted` 時，您必須指定 `backend_roles` 或 `add_all_backend_roles` 其中之一，但不可同時指定兩者。
+- 更新 `name` 時，請確保該名稱在叢集中是全域唯一的。
 
-For more information, see [Model access control]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/).
+如需更多資訊，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
 
-## Path and HTTP method
+## 路徑與 HTTP 方法
 
 ```json
 PUT /_plugins/_ml/model_groups/{model_group_id}
 ```
 
-## Request body fields
+## 請求本文欄位
 
-Refer to [Request fields](#request-body-fields) for request field descriptions. 
+請求欄位的說明請參閱[請求欄位](#request-body-fields)。
 
-## Example request
+## 範例請求
 
 ```json
 PUT /_plugins/_ml/model_groups/{model_group_id}
@@ -40,6 +41,6 @@ PUT /_plugins/_ml/model_groups/{model_group_id}
 ```
 {% include copy-curl.html %}
 
-## Updating a model group in a cluster where model access control is disabled
+## 在停用模型存取控制的叢集中更新模型群組
 
-If model access control is disabled on your cluster (one of the [prerequisites](ml-commons-plugin/model-access-control/#model-access-control-prerequisites) is not met), you can update only the `name` and `description` of a model group but cannot update any of the access parameters (`model_access_name`, `backend_roles`, or `add_backend_roles`). 
+如果您的叢集已停用模型存取控制（未符合其中一項[先決條件](ml-commons-plugin/model-access-control/#model-access-control-prerequisites)），您只能更新模型群組的 `name` 和 `description`，而無法更新任何存取參數（`model_access_name`、`backend_roles` 或 `add_backend_roles`）。 

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Authentication information
+title: "驗證資訊"
 parent: Authentication APIs
 grand_parent: Security APIs
 nav_order: 10
@@ -8,17 +9,17 @@ redirect_from:
   - /api-reference/security/authentication/auth-info/
 ---
 
-# Authentication Information API
-**Introduced 1.0**
+# 驗證資訊 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Returns information about the currently authenticated user, including the user's name, roles, backend roles, custom attributes, and tenant memberships. Use it to debug authentication problems or to confirm the permissions that a user holds.
+傳回目前通過驗證之使用者的相關資訊，包括使用者名稱、角色、後端角色、自訂屬性以及租用戶成員資格。您可以使用此 API 來偵錯驗證問題，或確認使用者所擁有的權限。
 
 <!-- spec_insert_start
 api: security.authinfo
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET  /_plugins/_security/authinfo
 POST /_plugins/_security/authinfo
@@ -29,36 +30,36 @@ POST /_plugins/_security/authinfo
 api: security.authinfo
 component: query_parameters
 -->
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `auth_type` | String | The type of the current authentication request. |
-| `verbose` | Boolean | Whether to return a verbose response. |
+| `auth_type` | 字串 | 目前驗證請求的類型。 |
+| `verbose` | 布林值 | 是否傳回詳細回應。 |
 
 <!-- spec_insert_end -->
 
-## Example request
+## 範例請求
 
-The following example request retrieves authentication information for the currently authenticated user:
+下列範例請求會擷取目前通過驗證之使用者的驗證資訊：
 
 ```json
 GET /_plugins/_security/authinfo
 ```
 {% include copy-curl.html security=true %}
 
-The following example request retrieves verbose authentication information:
+下列範例請求會擷取詳細的驗證資訊：
 
 ```json
 GET /_plugins/_security/authinfo?verbose=true
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
-The default response describes the user, their roles, and their tenants:
+預設回應會描述使用者、其角色及其租用戶：
 
 ```json
 {
@@ -84,7 +85,7 @@ The default response describes the user, their roles, and their tenants:
 }
 ```
 
-A verbose response adds the size fields:
+詳細回應會新增大小欄位：
 
 ```json
 {
@@ -113,28 +114,28 @@ A verbose response adds the size fields:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文是包含下列欄位的 JSON 物件。
 
-| Property | Data type | Description |
+| 屬性 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `user` | String | A string representation of the user object, including the username and backend roles. |
-| `user_name` | String | The username of the authenticated user. |
-| `backend_roles` | Array of strings | The backend roles associated with the user, typically obtained from an external authentication system. |
-| `roles` | Array of strings | The OpenSearch Security roles assigned to the user, determining their permissions. |
-| `tenants` | Object | The tenants the user has access to, with `true` indicating read-write access and `false` indicating read-only access. |
-| `principal` | String | The user's authentication principal, if available. |
-| `peer_certificates` | String | The number of peer certificates related to the user's authentication. |
-| `sso_logout_url` | String | The logout URL for single sign-on (SSO) authentication, if applicable. |
-| `remote_address` | String | The IP address and port of the client making the request. |
-| `custom_attribute_names` | Array of strings | The names of any custom attributes associated with the user. |
-| `user_requested_tenant` | String | The name of the tenant the user has requested to switch to, if any. |
+| `user` | 字串 | 使用者物件的字串表示法，包含使用者名稱與後端角色。 |
+| `user_name` | 字串 | 通過驗證之使用者的使用者名稱。 |
+| `backend_roles` | 字串陣列 | 與使用者相關聯的後端角色，通常取自外部驗證系統。 |
+| `roles` | 字串陣列 | 指派給使用者的 OpenSearch Security 角色，用於決定其權限。 |
+| `tenants` | 物件 | 使用者可存取的租用戶，其中 `true` 表示讀寫存取權，`false` 表示唯讀存取權。 |
+| `principal` | 字串 | 使用者的驗證主體 (若有的話)。 |
+| `peer_certificates` | 字串 | 與使用者驗證相關的同儕憑證數量。 |
+| `sso_logout_url` | 字串 | 單一登入 (SSO) 驗證的登出 URL (若適用)。 |
+| `remote_address` | 字串 | 發出請求之用戶端的 IP 位址與連接埠。 |
+| `custom_attribute_names` | 字串陣列 | 與使用者相關聯之任何自訂屬性的名稱。 |
+| `user_requested_tenant` | 字串 | 使用者要求切換至的租用戶名稱 (若有)。 |
 
-When requesting a verbose response, the following additional fields are included.
+要求詳細回應時，會包含下列其他欄位。
 
-| Property | Data type | Description |
+| 屬性 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `size_of_user` | String | The size of the user object in memory. |
-| `size_of_backendroles` | String | The size of the user's backend roles. |
-| `size_of_custom_attributes` | String | The size of the user's custom attributes. |
+| `size_of_user` | 字串 | 使用者物件在記憶體中的大小。 |
+| `size_of_backendroles` | 字串 | 使用者後端角色的大小。 |
+| `size_of_custom_attributes` | 字串 | 使用者自訂屬性的大小。 |

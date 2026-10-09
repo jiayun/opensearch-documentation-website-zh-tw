@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: spath
 parent: Commands
@@ -8,56 +9,56 @@ nav_order: 44
 
 <!-- vale off -->
 
-# spath command
+# spath 命令
 
 <!-- vale on -->
 
-The `spath` command extracts fields from structured JSON data. It operates in two modes:
+`spath` 命令可從結構化的 JSON 資料中擷取欄位。它有兩種運作模式：
 
-- **Path-based mode**: When `path` is specified, extracts a single value at the given JSON path.
-- **Auto-extract mode** (experimental): When `path` is omitted, extracts all fields from the JSON into a map.
+- **路徑模式**：當指定 `path` 時，會擷取指定 JSON 路徑上的單一值。
+- **自動擷取模式** (實驗性)：當省略 `path` 時，會將 JSON 中的所有欄位擷取成一個 map。
 
-The `spath` command is not executed on OpenSearch data nodes. It extracts fields from data after it has been returned to the coordinating node, which is slow on large datasets. We recommend indexing fields needed for filtering directly instead of using `spath` to filter nested fields.
+`spath` 命令不會在 OpenSearch 資料節點上執行。它是在資料回傳至協調節點之後才擷取欄位，因此在大型資料集上速度較慢。建議直接為篩選所需的欄位編製索引，而不要使用 `spath` 來篩選巢狀欄位。
 {: .note}
 
-## Syntax
+## 語法
 
-The `spath` command has the following syntax:
+`spath` 命令的語法如下：
 
 ```sql
 spath input=<field> [output=<field>] [[path=]<path>]
 ```
 
-## Parameters
+## 參數
 
-The `spath` command supports the following parameters.
+`spath` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `input` | Required | The field containing JSON data to parse. |
-| `output` | Optional | The destination field in which the extracted data is stored. Default is the value of `path` in path-based mode, or the value of `input` in auto-extract mode. |
-| `path` | Optional | The JSON path that identifies the data to extract. When omitted, all fields are extracted into a map (auto-extract mode). |  
+| `input` | 必要 | 包含要剖析之 JSON 資料的欄位。 |
+| `output` | 選用 | 儲存擷取資料的目標欄位。預設值在路徑模式下為 `path` 的值，在自動擷取模式下為 `input` 的值。 |
+| `path` | 選用 | 識別要擷取資料的 JSON 路徑。省略時，所有欄位都會擷取成一個 map (自動擷取模式)。 |  
 
-For more information about path syntax, see [json_extract]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/functions/json#json_extract).
+如需路徑語法的詳細資訊，請參閱 [json_extract]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/functions/json#json_extract)。
 
-## Auto-extract mode (experimental)
+## 自動擷取模式 (實驗性)
 
-When `path` is omitted, the `spath` command runs in auto-extract mode. Instead of extracting a single value, it flattens the entire JSON into a `map<string, string>` column using the following rules:
+當省略 `path` 時，`spath` 命令會以自動擷取模式執行。它不會擷取單一值，而是依照下列規則將整個 JSON 攤平成 `map<string, string>` 欄：
 
-- Nested objects use dotted keys: `user.name`, `user.age`
-- Arrays use `{}` suffix: `tags{}`, `users{}.name`
-- Duplicate logical keys merge into arrays: `c{}.b = [2, 3]`
-- Null values are preserved: a JSON `null` becomes the string `"null"` in the map
-- All values are stringified: numeric and Boolean values are converted to their string representation (for example, `30` becomes `"30"`, `true` becomes `"true"`, and arrays become `"[a, b, c]"`)
+- 巢狀物件使用點號鍵：`user.name`、`user.age`
+- 陣列使用 `{}` 後綴：`tags{}`、`users{}.name`
+- 重複的邏輯鍵會合併成陣列：`c{}.b = [2, 3]`
+- Null 值會保留：JSON 中的 `null` 會變成 map 中的字串 `"null"`
+- 所有值都會字串化：數值與布林值會轉換為其字串表示 (例如 `30` 變成 `"30"`、`true` 變成 `"true"`，而陣列變成 `"[a, b, c]"`)
 
-Auto-extract mode processes the entire input field with no character limit. For large JSON payloads, consider using path-based extraction to target specific fields.
+自動擷取模式會處理整個輸入欄位，沒有字元數限制。對於大型 JSON 負載，建議使用路徑擷取來針對特定欄位。
 {: .note}
 >
-> Invalid or malformed JSON returns partial results containing any fields successfully parsed before the error. Empty JSON object (`{}`) returns an empty map.
+> 無效或格式錯誤的 JSON 會回傳部分結果，其中包含在錯誤發生前成功剖析的所有欄位。空的 JSON 物件 (`{}`) 會回傳空的 map。
 
-## Example 1: Extracting basic fields
+## 範例 1：擷取基本欄位
 
-The basic use of `spath` extracts a single field from JSON data. The following query extracts the `n` field from JSON objects in the `doc_n` field:
+`spath` 的基本用法是從 JSON 資料中擷取單一欄位。下列查詢會從 `doc_n` 欄位中的 JSON 物件擷取 `n` 欄位：
   
 ```sql
 source=structured
@@ -66,7 +67,7 @@ source=structured
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢回傳下列結果：
   
 <!-- vale off -->
 
@@ -79,9 +80,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Lists and nesting  
+## 範例 2：清單與巢狀結構  
 
-The following query shows how to traverse nested fields and extract list elements:
+下列查詢示範如何走訪巢狀欄位並擷取清單元素：
   
 ```sql
 source=structured
@@ -92,7 +93,7 @@ source=structured
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢回傳下列結果：
   
 <!-- vale off -->
 
@@ -105,9 +106,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Summing inner elements  
+## 範例 3：加總內部元素  
 
-The following query shows how to use `spath` to extract the `n` field from JSON data and calculate the sum of all extracted values: 
+下列查詢示範如何使用 `spath` 從 JSON 資料中擷取 `n` 欄位，並計算所有擷取值的總和： 
   
 ```sql
 source=structured
@@ -118,7 +119,7 @@ source=structured
 ```
 {% include copy.html %}
   
-The query returns the following results. The `spath` command always returns inner values as strings:
+查詢回傳下列結果。`spath` 命令一律以字串回傳內部值：
   
 <!-- vale off -->
 
@@ -129,9 +130,9 @@ The query returns the following results. The `spath` command always returns inne
 <!-- vale on -->
   
 
-## Example 4: Using escaped paths  
+## 範例 4：使用逸出路徑  
 
-Use quoted string syntax to access JSON field names that contain spaces, dots, or other special characters:
+使用引號字串語法來存取包含空格、點號或其他特殊字元的 JSON 欄位名稱：
   
 ```sql
 source=structured
@@ -141,7 +142,7 @@ source=structured
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢回傳下列結果：
   
 <!-- vale off -->
 
@@ -154,9 +155,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 5: Using auto-extract mode  
+## 範例 5：使用自動擷取模式  
 
-When `path` is omitted, `spath` extracts all fields from the JSON into a map. You can access individual values using dotted path navigation, where `doc.user.name` resolves to the map key `user.name`. For keys containing special characters like `{}`, use backtick quoting:
+當省略 `path` 時，`spath` 會將 JSON 中的所有欄位擷取成一個 map。您可以使用點號路徑導覽來存取個別值，其中 `doc.user.name` 會解析為 map 鍵 `user.name`。對於包含 `{}` 等特殊字元的鍵，請使用反引號括住：
   
 ```sql
 source=structured
@@ -165,7 +166,7 @@ source=structured
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢回傳下列結果：
   
 <!-- vale off -->
 
@@ -177,10 +178,10 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The flattening rules demonstrated in this example:
+此範例示範的攤平規則：
 
-- Nested objects use dotted keys: `user.name` and `user.age` are extracted from `{"user": {"name": "John", "age": 30}}`
-- Arrays use `{}` suffix: `tags{}` is extracted from `{"tags": ["java", "sql"]}`
-- Duplicate logical keys merge into arrays: in the third row, both `"user": {"name": "Bob"}` (nested) and `"user.name": "Bobby"` (direct dotted key) resolve to the same key `user.name`, so their values merge into `'[Bob, Bobby]'`
-- All values are strings: numeric `30` becomes `'30'`, boolean `true` becomes `'true'`, and arrays become strings like `'[java, sql]'`
-- Null values are preserved: in the second row, `"active": null` is kept as `'active': 'null'` in the map
+- 巢狀物件使用點號鍵：`user.name` 與 `user.age` 是從 `{"user": {"name": "John", "age": 30}}` 擷取
+- 陣列使用 `{}` 後綴：`tags{}` 是從 `{"tags": ["java", "sql"]}` 擷取
+- 重複的邏輯鍵會合併成陣列：在第三列中，`"user": {"name": "Bob"}` (巢狀) 與 `"user.name": "Bobby"` (直接點號鍵) 都解析為同一個鍵 `user.name`，因此它們的值合併成 `'[Bob, Bobby]'`
+- 所有值都是字串：數值 `30` 變成 `'30'`、布林值 `true` 變成 `'true'`，而陣列變成 `'[java, sql]'` 之類的字串
+- Null 值會保留：在第二列中，`"active": null` 在 map 中保留為 `'active': 'null'`

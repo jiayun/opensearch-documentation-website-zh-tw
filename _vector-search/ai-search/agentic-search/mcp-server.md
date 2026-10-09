@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using external MCP servers
+title: "使用外部 MCP 伺服器"
 parent: Agentic search
 grand_parent: AI search
 nav_order: 110
 has_children: false
 ---
 
-# Using external MCP servers
+# 使用外部 MCP 伺服器
 
-External Model Context Protocol (MCP) servers extend agentic search capabilities by providing access to external tools and data sources. By connecting to MCP servers, your agents can use external APIs, databases, and services to enhance search results with real-time information and specialized functionality.
+外部 Model Context Protocol (MCP) 伺服器透過提供外部工具與資料來源的存取權，擴展代理式搜尋的能力。透過連線至 MCP 伺服器，您的代理程式可以使用外部 API、資料庫與服務，以即時資訊與特殊功能強化搜尋結果。
 
-This guide demonstrates how to create an external MCP server, connect it to an agentic search agent, and use external tools to answer complex queries that require external data.
+本指南示範如何建立外部 MCP 伺服器、將其連線至代理式搜尋代理程式，並使用外部工具回答需要外部資料的複雜查詢。
 
-## Prerequisites
+## 先決條件
 
-Before using external MCP servers with agentic search, ensure that you have:
+在搭配代理式搜尋使用外部 MCP 伺服器之前，請確認您已具備：
 
-- Access to create and deploy MCP servers.
-- Understanding of the [MCP connector configuration]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/mcp-connector/).
+- 建立與部署 MCP 伺服器的存取權。
+- 了解 [MCP 連接器組態]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/mcp-connector/)。
 
-## Step 1: Create a sample products index
+## 步驟 1：建立範例產品索引
 
-First, create a products index to demonstrate external MCP tool integration:
+首先，建立產品索引以示範外部 MCP 工具整合：
 
 ```json
 PUT /products-index
@@ -51,9 +52,9 @@ PUT /products-index
 ```
 {% include copy-curl.html %}
 
-## Step 2: Ingest sample data
+## 步驟 2：匯入範例資料
 
-Add sample product documents to demonstrate external MCP tool usage:
+新增範例產品文件以示範外部 MCP 工具的使用方式：
 
 ```json
 POST _bulk
@@ -68,9 +69,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Step 3: Create an external MCP server
+## 步驟 3：建立外部 MCP 伺服器
 
-Create a sample MCP server. This MCP server provides a `brand_collection_tool` that categorizes brands into different tiers (`favorites`, `budget`, and `luxury`) based on user preferences. The agent can use this tool to understand which brands belong to specific categories when processing natural language queries:
+建立範例 MCP 伺服器。此 MCP 伺服器提供一個 `brand_collection_tool`，可根據使用者偏好將品牌分類為不同層級（`favorites`、`budget` 與 `luxury`）。代理程式在處理自然語言查詢時，可使用此工具了解哪些品牌屬於特定類別：
 
 ```python
 from fastmcp import FastMCP
@@ -98,9 +99,9 @@ if __name__ == "__main__":
 ```
 {% include copy.html %}
 
-## Step 4: Create an MCP connector
+## 步驟 4：建立 MCP 連接器
 
-Register an MCP connector to connect your agentic search agent to the external MCP server. The MCP connector uses the `mcp_streamable_http` protocol to communicate with your external MCP server. Replace `<Your MCP Server URL>` with the actual URL where your MCP server is running and `<Your API Key>` with the appropriate authentication key:
+註冊 MCP 連接器，將您的代理式搜尋代理程式連線至外部 MCP 伺服器。MCP 連接器使用 `mcp_streamable_http` 通訊協定與您的外部 MCP 伺服器通訊。請將 `<Your MCP Server URL>` 取代為您的 MCP 伺服器實際執行的 URL，並將 `<Your API Key>` 取代為適當的驗證金鑰：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -124,9 +125,9 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-## Step 5: Create a model for the agent
+## 步驟 5：為代理程式建立模型
 
-Register a model that will be used by both the conversational agent and the `QueryPlanningTool`:
+註冊一個將由對話代理程式與 `QueryPlanningTool` 共同使用的模型：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -161,9 +162,9 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-## Step 6: Create an agent with MCP connectors
+## 步驟 6：建立含 MCP 連接器的代理程式
 
-Register a conversational agent that includes MCP connectors to access external tools:
+註冊一個包含 MCP 連接器以存取外部工具的對話代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -206,14 +207,14 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-The agent configuration includes:
-- **MCP connectors**: Links to external MCP servers that provide additional tools.
-- **Standard tools**: `ListIndexTool`, `IndexMappingTool`, and `QueryPlanningTool` for core agentic search functionality.
-- **External tools**: Automatically available through the MCP connector (for example, `brand_collection_tool`).
+代理程式組態包含：
+- **MCP 連接器**：連結至提供其他工具的外部 MCP 伺服器。
+- **標準工具**：`ListIndexTool`、`IndexMappingTool` 與 `QueryPlanningTool`，用於核心代理式搜尋功能。
+- **外部工具**：透過 MCP 連接器自動提供（例如 `brand_collection_tool`）。
 
-## Step 7: Create an agentic search pipeline
+## 步驟 7：建立代理式搜尋管線
 
-Create a search pipeline that uses your agent with external MCP tools:
+建立一個使用您的代理程式搭配外部 MCP 工具的搜尋管線：
 
 ```json
 PUT _search/pipeline/mcp-agentic-pipeline
@@ -237,9 +238,9 @@ PUT _search/pipeline/mcp-agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-## Step 8: Run an agentic search with external tools
+## 步驟 8：使用外部工具執行代理式搜尋
 
-Send a natural language query that requires external MCP tool usage:
+傳送需要使用外部 MCP 工具的自然語言查詢：
 
 ```json
 POST products-index/_search?search_pipeline=mcp-agentic-pipeline
@@ -253,14 +254,14 @@ POST products-index/_search?search_pipeline=mcp-agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-The agent processes this query by:
+代理程式透過以下方式處理此查詢：
 
-1. **Using external MCP tools**: Calling `brand_collection_tool` with the `favorites` category to get the list of favorite brands.
-2. **Discovering indexes**: Using the `ListIndexTool` to find relevant indexes.
-3. **Analyzing the schema**: Using the `IndexMappingTool` to understand the index structure.
-4. **Planning the query**: Using the `QueryPlanningTool` to generate the final query domain-specific language (DSL) query.
+1. **使用外部 MCP 工具**：呼叫 `brand_collection_tool` 並使用 `favorites` 類別，以取得喜愛品牌的清單。
+2. **探索索引**：使用 `ListIndexTool` 尋找相關的索引。
+3. **分析結構描述**：使用 `IndexMappingTool` 了解索引結構。
+4. **規劃查詢**：使用 `QueryPlanningTool` 產生最終的查詢領域特定語言（DSL）查詢。
 
-The response includes matching products and detailed agent execution information. The `agent_steps_summary` shows how the agent orchestrated multiple tools, including the external MCP tool (`brand_collection_tool`), to understand the user's request and generate an appropriate search query:
+回應包含相符的產品以及詳細的代理程式執行資訊。`agent_steps_summary` 顯示代理程式如何協調多個工具，包括外部 MCP 工具（`brand_collection_tool`），以了解使用者的請求並產生適當的搜尋查詢：
 
 ```json
 {
@@ -335,8 +336,8 @@ The response includes matching products and detailed agent execution information
 }
 ```
 
-## Next steps
+## 後續步驟
 
-- [MCP connector configuration]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/mcp-connector/) -- Learn more about configuring MCP connectors for external tool integration.
-- [Configuring agentic search agents]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/) -- Configure agent behaviors with different models and tools.
-- [Using conversational agents]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-converse/) -- Learn more about conversational agents and their advanced features.
+- [MCP 連接器組態]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/mcp-connector/) -- 進一步了解如何設定 MCP 連接器以整合外部工具。
+- [設定代理式搜尋代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/) -- 使用不同的模型和工具設定代理程式行為。
+- [使用對話代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-converse/) -- 進一步了解對話代理程式及其進階功能。

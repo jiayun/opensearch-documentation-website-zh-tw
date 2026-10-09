@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: HTTP
 parent: Sources
@@ -8,48 +9,48 @@ redirect_from:
   - /data-prepper/pipelines/configuration/sources/http-source/
 ---
 
-# HTTP source
+# HTTP 來源
 
-The `http` plugin accepts HTTP requests from clients. The following table describes options you can use to configure the `http` source.
+`http` 外掛程式可接受來自用戶端的 HTTP 請求。下表說明您可用來設定 `http` 來源的選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`port` | No | Integer | The port that the source is running on. Default value is `2021`. Valid options are between `0` and `65535`.
-`path` | No | String | The URI path for log ingestion should start with a forward slash (/), for example, `/${pipelineName}/logs`. The `${pipelineName}` placeholder will be replaced with the pipeline name. The default value is `/log/ingest`.
-`health_check_service` | No | Boolean | Enables the health check service on the `/health` endpoint on the defined port. Default value is `false`.
-`unauthenticated_health_check` | No | Boolean | Determines whether or not authentication is required on the health check endpoint. OpenSearch Data Prepper ignores this option if no authentication is defined. Default value is `false`.
-`request_timeout` | No | Integer | The request timeout, in milliseconds. Default value is `10000`.
-`thread_count` | No | Integer | The number of threads to keep in the ScheduledThreadPool. Default value is `200`.
-`max_connection_count` | No | Integer | The maximum allowed number of open connections. Default value is `500`.
-`max_pending_requests` | No | Integer | The maximum allowed number of tasks in the `ScheduledThreadPool` work queue. Default value is `1024`.
-`max_request_length` | No | ByteCount | The maximum number of bytes allowed in the payload of a single HTTP request. Default value is `10mb`.
-`authentication` | No | Object | An authentication configuration. By default, this creates an unauthenticated server for the pipeline. This uses pluggable authentication for HTTPS. To use basic authentication define the `http_basic` plugin with a `username` and `password`. To provide customer authentication, use or create a plugin that implements [ArmeriaHttpAuthenticationProvider](https://github.com/opensearch-project/data-prepper/blob/1.2.0/data-prepper-plugins/armeria-common/src/main/java/com/amazon/dataprepper/armeria/authentication/ArmeriaHttpAuthenticationProvider.java).
-`ssl` | No | Boolean | Enables TLS/SSL. Default value is `false`.
-`ssl_certificate_file` | Conditionally | String | The SSL certificate chain file path or Amazon Simple Storage Service (Amazon S3) path (for example, `s3://<bucketName>/<path>`). Required if `ssl` is set to `true` and `use_acm_certificate_for_ssl` is set to `false`.
-`ssl_key_file` | Conditionally | String | The SSL key file path or Amazon S3 path (for example, `s3://<bucketName>/<path>`). Required if `ssl` is set to `true` and `use_acm_certificate_for_ssl` is set to `false`.
-`use_acm_certificate_for_ssl` | No | Boolean | Enables TLS/SSL using the certificate and private key from AWS Certificate Manager (ACM). Default is `false`.
-`acm_certificate_arn` | Conditionally | String | The ACM certificate Amazon Resource Name (ARN). The ACM certificate takes preference over Amazon S3 or a local file system certificate. Required if `use_acm_certificate_for_ssl` is set to true.
-`acm_private_key_password` | No | String | ACM private key password that decrypts the private key. If not provided, Data Prepper generates a random password.
-`acm_certificate_timeout_millis` | No | Integer | Timeout, in milliseconds, that ACM takes to get certificates. Default value is 120000.
-`aws_region` | Conditionally | String | AWS region used by ACM or Amazon S3. Required if `use_acm_certificate_for_ssl` is set to true or `ssl_certificate_file` and `ssl_key_file` is the Amazon S3 path.
+`port` | 否 | 整數 | 來源執行所在的連接埠。預設值為 `2021`。有效選項介於 `0` 與 `65535` 之間。
+`path` | 否 | 字串 | 記錄匯入的 URI 路徑應以正斜線 (/) 開頭，例如 `/${pipelineName}/logs`。`${pipelineName}` 預留位置將取代為管線名稱。預設值為 `/log/ingest`。
+`health_check_service` | 否 | 布林值 | 在定義的連接埠上，於 `/health` 端點啟用健康狀態檢查服務。預設值為 `false`。
+`unauthenticated_health_check` | 否 | 布林值 | 判斷健康狀態檢查端點是否需要驗證。若未定義驗證，OpenSearch Data Prepper 會忽略此選項。預設值為 `false`。
+`request_timeout` | 否 | 整數 | 請求逾時，以毫秒為單位。預設值為 `10000`。
+`thread_count` | 否 | 整數 | 保留在 ScheduledThreadPool 中的執行緒數目。預設值為 `200`。
+`max_connection_count` | 否 | 整數 | 允許開啟的連線數上限。預設值為 `500`。
+`max_pending_requests` | 否 | 整數 | `ScheduledThreadPool` 工作佇列中允許的工作數上限。預設值為 `1024`。
+`max_request_length` | 否 | ByteCount | 單一 HTTP 請求的承載中允許的位元組數上限。預設值為 `10mb`。
+`authentication` | 否 | 物件 | 驗證組態。根據預設，這會為管線建立未經驗證的伺服器。這會針對 HTTPS 使用可外掛的驗證。若要使用基本驗證，請使用 `username` 和 `password` 定義 `http_basic` 外掛程式。若要提供自訂驗證，請使用或建立實作 [ArmeriaHttpAuthenticationProvider](https://github.com/opensearch-project/data-prepper/blob/1.2.0/data-prepper-plugins/armeria-common/src/main/java/com/amazon/dataprepper/armeria/authentication/ArmeriaHttpAuthenticationProvider.java) 的外掛程式。
+`ssl` | 否 | 布林值 | 啟用 TLS/SSL。預設值為 `false`。
+`ssl_certificate_file` | 視情況而定 | 字串 | SSL 憑證鏈檔案路徑或 Amazon Simple Storage Service (Amazon S3) 路徑 (例如 `s3://<bucketName>/<path>`)。若 `ssl` 設為 `true` 且 `use_acm_certificate_for_ssl` 設為 `false`，則為必要。
+`ssl_key_file` | 視情況而定 | 字串 | SSL 金鑰檔案路徑或 Amazon S3 路徑 (例如 `s3://<bucketName>/<path>`)。若 `ssl` 設為 `true` 且 `use_acm_certificate_for_ssl` 設為 `false`，則為必要。
+`use_acm_certificate_for_ssl` | 否 | 布林值 | 使用 AWS Certificate Manager (ACM) 的憑證和私密金鑰啟用 TLS/SSL。預設為 `false`。
+`acm_certificate_arn` | 視情況而定 | 字串 | ACM 憑證 Amazon Resource Name (ARN)。ACM 憑證優先於 Amazon S3 或本機檔案系統憑證。若 `use_acm_certificate_for_ssl` 設為 true，則為必要。
+`acm_private_key_password` | 否 | 字串 | 用於解密私密金鑰的 ACM 私密金鑰密碼。若未提供，Data Prepper 會產生隨機密碼。
+`acm_certificate_timeout_millis` | 否 | 整數 | ACM 取得憑證的逾時時間，以毫秒為單位。預設值為 120000。
+`aws_region` | 視情況而定 | 字串 | ACM 或 Amazon S3 使用的 AWS 區域。若 `use_acm_certificate_for_ssl` 設為 true，或 `ssl_certificate_file` 且 `ssl_key_file` 為 Amazon S3 路徑，則為必要。
 
 <!--- ## Configuration
 
 Content will be added to this section.--->
 
-## Ingestion
+## 匯入
 
-Clients should send HTTP `POST` requests to the endpoint `/log/ingest`.
+用戶端應將 HTTP `POST` 請求傳送至端點 `/log/ingest`。
 
-The `http` protocol only supports the JSON UTF-8 codec for incoming requests, for example, `[{"key1": "value1"}, {"key2": "value2"}]`.
+`http` 通訊協定僅支援用於傳入請求的 JSON UTF-8 轉碼器，例如 `[{"key1": "value1"}, {"key2": "value2"}]`。
 
-## Example
+## 範例
 
-The following examples demonstrate different configurations that can be used with the `http` source.
+下列範例示範可與 `http` 來源搭配使用的不同組態。
 
-### Minimal HTTP source
+### 最小 HTTP 來源
 
-The following is the minimal configuration using all default values:
+以下是使用所有預設值的最小組態：
 
 ```yaml
 minimal-http-pipeline:
@@ -60,7 +61,7 @@ minimal-http-pipeline:
 ```
 {% include copy.html %}
 
-You can test this pipeline using the following command:
+您可以使用下列命令測試此管線：
 
 ```bash
 curl -s "http://localhost:2021/log/ingest" \
@@ -69,16 +70,16 @@ curl -s "http://localhost:2021/log/ingest" \
 ```
 {% include copy.html %}
 
-You should see the following output in the Data Prepper logs:
+您應該會在 Data Prepper 記錄檔中看到下列輸出：
 
 ```
 {"msg":"one"}
 {"msg":"two"}
 ```
 
-### Custom path using the pipeline name and health check
+### 使用管線名稱和健康狀態檢查的自訂路徑
 
-The following example uses a custom path, configures a custom port, and enables health checks:
+下列範例使用自訂路徑、設定自訂連接埠，並啟用健康狀態檢查：
 
 ```yaml
 audit-pipeline:
@@ -93,14 +94,14 @@ audit-pipeline:
 ```
 {% include copy.html %}
 
-You can use the following command to check the pipeline health:
+您可以使用下列命令檢查管線健康狀態：
 
 ```bash
 curl -s "http://localhost:2022/health"
 ```
 {% include copy.html %}
 
-You can ingest data using the following command:
+您可以使用下列命令匯入資料：
 
 ```bash
 curl -s "http://localhost:2022/audit-pipeline/logs" \
@@ -109,9 +110,9 @@ curl -s "http://localhost:2022/audit-pipeline/logs" \
 ```
 {% include copy.html %}
 
-### Basic authentication on the source
+### 來源上的基本驗證
 
-The following example configures a custom port and path, enables health checks, and configures basic authentication:
+下列範例設定自訂連接埠和路徑、啟用健康狀態檢查，並設定基本驗證：
 
 ```yaml
 secure-intake-pipeline:
@@ -137,7 +138,7 @@ secure-intake-pipeline:
 ```
 {% include copy.html %}
 
-You can test this pipeline using the following command:
+您可以使用下列命令測試此管線：
 
 ```bash
 curl -s -u ingest:s3cr3t "http://localhost:2023/ingest" \
@@ -146,24 +147,24 @@ curl -s -u ingest:s3cr3t "http://localhost:2023/ingest" \
 ```
 {% include copy.html %}
 
-## Metrics
+## 指標
 
-The `http` source includes the following metrics.
+`http` 來源包含下列指標。
 
-### Counters
+### 計數器
 
-- `requestsReceived`: Measures the total number of requests received by the `/log/ingest` endpoint.
-- `requestsRejected`: Measures the total number of requests rejected (429 response status code) by the HTTP Source plugin.
-- `successRequests`: Measures the total number of requests successfully processed (200 response status code) the by HTTP Source plugin.
-- `badRequests`: Measures the total number of requests with either an invalid content type or format processed by the HTTP Source plugin (400 response status code).
-- `requestTimeouts`: Measures the total number of requests that time out in the HTTP source server (415 response status code).
-- `requestsTooLarge`: Measures the total number of requests where the size of the event is larger than the buffer capacity (413 response status code).
-- `internalServerError`: Measures the total number of requests processed by the HTTP Source with a custom exception type (500 response status code).
+- `requestsReceived`：測量 `/log/ingest` 端點接收的請求總數。
+- `requestsRejected`：測量 HTTP Source 外掛程式拒絕的請求總數 (429 回應狀態碼)。
+- `successRequests`：測量 HTTP Source 外掛程式成功處理的請求總數 (200 回應狀態碼)。
+- `badRequests`：測量 HTTP Source 外掛程式處理的內容類型或格式無效的請求總數 (400 回應狀態碼)。
+- `requestTimeouts`：測量 HTTP 來源伺服器中逾時的請求總數 (415 回應狀態碼)。
+- `requestsTooLarge`：測量事件大小大於緩衝區容量的請求總數 (413 回應狀態碼)。
+- `internalServerError`：測量 HTTP Source 處理的自訂例外狀況類型請求總數 (500 回應狀態碼)。
 
-### Timers
+### 計時器
 
-- `requestProcessDuration`: Measures the latency of requests processed by the HTTP Source plugin in seconds. 
+- `requestProcessDuration`：測量 HTTP Source 外掛程式處理之請求的延遲，以秒為單位。
 
-### Distribution summaries
+### 分佈摘要
 
-- `payloadSize`: Measures the incoming request payload size in bytes.
+- `payloadSize`：測量傳入請求承載的大小，以位元組為單位。

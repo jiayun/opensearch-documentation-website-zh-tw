@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: RAG chatbot with a conversational flow agent
+title: "使用對話式流程代理程式的 RAG 聊天機器人"
 parent: Chatbots
 grand_parent: Generative AI
 nav_order: 160
@@ -11,20 +12,20 @@ redirect_from:
   - /vector-search/tutorials/chatbots/rag-conversational-agent/
 ---
 
-# RAG chatbot with a conversational flow agent
+# 使用對話式流程代理程式的 RAG 聊天機器人
 
-This tutorial explains how to use a conversational flow agent to build a retrieval-augmented generation (RAG) application with your OpenSearch data as a knowledge base.
+本教學說明如何使用對話式流程代理程式，以您的 OpenSearch 資料作為知識庫來建立檢索增強生成 (RAG) 應用程式。
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將以 `your_` 為前綴的預留位置替換為您自己的值。
 {: .note}
 
-An alternative way to build RAG conversational search is to use a RAG pipeline. For more information, see [Conversational search using the Cohere Command model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/conversational-search-cohere/).
+建立 RAG 對話式搜尋的另一種方式是使用 RAG 管線。如需更多資訊，請參閱 [使用 Cohere Command 模型的對話式搜尋]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/conversational-search-cohere/)。
 
-## Prerequisite
+## 必要條件
 
-In this tutorial, you'll build a RAG application that provides an OpenSearch [vector index]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/) as a knowledge base for a large language model (LLM). For data retrieval, you'll use [semantic search]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/). For a comprehensive semantic search setup, see [this tutorial]({{site.url}}{{site.baseurl}}/search-plugins/neural-search-tutorial/).
+在本教學中，您將建立一個 RAG 應用程式，提供 OpenSearch [向量索引]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/) 作為大型語言模型 (LLM) 的知識庫。資料擷取將使用 [語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)。如需完整的語意搜尋設定，請參閱 [本教學]({{site.url}}{{site.baseurl}}/search-plugins/neural-search-tutorial/)。
 
-First, you'll need to update your cluster settings. If you don't have a dedicated machine learning (ML) node, set `"plugins.ml_commons.only_run_on_ml_node": false`. To avoid triggering a native memory circuit breaker, set `"plugins.ml_commons.native_memory_threshold"` to 100%:
+首先，您需要更新叢集設定。如果您沒有專用的機器學習 (ML) 節點，請設定 `"plugins.ml_commons.only_run_on_ml_node": false`。為避免觸發原生記憶體斷路器，請將 `"plugins.ml_commons.native_memory_threshold"` 設為 100%：
 
 ```json
 PUT _cluster/settings
@@ -38,13 +39,13 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-## Step 1: Prepare the knowledge base
+## 步驟 1：準備知識庫
 
-Use the following steps to prepare the knowledge base that will supplement the LLM knowledge.
+使用下列步驟準備用於補充 LLM 知識的知識庫。
 
-### Step 1.1: Register a text embedding model
+### 步驟 1.1：註冊文字嵌入模型
 
-Register a text embedding model that will translate text into vector embeddings:
+註冊一個可將文字轉換為向量嵌入的文字嵌入模型：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -56,23 +57,23 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-Note the text embedding model ID; you'll use it in the following steps.
+請記下文字嵌入模型的 ID；後續步驟會用到它。
 
-As an alternative, you can get the model ID by calling the [Get Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+或者，您可以呼叫 [Get Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來取得模型 ID：
 
 ```json
 GET /_plugins/_ml/tasks/your_task_id
 ```
 {% include copy-curl.html %}
 
-Deploy the model:
+部署模型：
 
 ```json
 POST /_plugins/_ml/models/your_text_embedding_model_id/_deploy
 ```
 {% include copy-curl.html %}
 
-Test the model:
+測試模型：
 
 ```json
 POST /_plugins/_ml/models/your_text_embedding_model_id/_predict
@@ -84,11 +85,11 @@ POST /_plugins/_ml/models/your_text_embedding_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-For more information about using models within your OpenSearch cluster, see [Pretrained models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/).
+如需在 OpenSearch 叢集內使用模型的更多資訊，請參閱 [預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)。
 
-### Step 1.2: Create an ingest pipeline
+### 步驟 1.2：建立資料匯入管線
 
-Create an ingest pipeline with a text embedding processor, which can invoke the model created in the previous step to generate embeddings from text fields:
+建立一個包含文字嵌入處理器的資料匯入管線，該處理器可叫用上一個步驟建立的模型，從文字欄位產生嵌入：
 
 ```json
 PUT /_ingest/pipeline/test_population_data_pipeline
@@ -108,11 +109,11 @@ PUT /_ingest/pipeline/test_population_data_pipeline
 ```
 {% include copy-curl.html %}
 
-For more information about ingest pipelines, see [Ingest pipelines]({{site.url}}{{site.baseurl}}/ingest-pipelines/).
+如需資料匯入管線的更多資訊，請參閱 [資料匯入管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/)。
 
-### Step 1.3: Create a vector index
+### 步驟 1.3：建立向量索引
 
-Create a vector index specifying the ingest pipeline as a default pipeline:
+建立向量索引，並將該資料匯入管線指定為預設管線：
 
 ```json
 PUT test_population_data
@@ -139,11 +140,11 @@ PUT test_population_data
 ```
 {% include copy-curl.html %}
 
-For more information about vector indexes, see [Creating a vector index]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/).
+如需向量索引的更多資訊，請參閱 [建立向量索引]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/)。
 
-### Step 1.4: Ingest data
+### 步驟 1.4：匯入資料
 
-Ingest test data into the vector index:
+將測試資料匯入向量索引：
 
 ```json
 POST _bulk
@@ -162,13 +163,13 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Step 2: Prepare an LLM
+## 步驟 2：準備 LLM
 
-This tutorial uses the [Amazon Bedrock Claude model](https://aws.amazon.com/bedrock/claude/) for conversational search. You can also use other LLMs. For more information about using externally hosted models, see [Connecting to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/).
+本教學使用 [Amazon Bedrock Claude 模型](https://aws.amazon.com/bedrock/claude/) 進行對話式搜尋。您也可以使用其他 LLM。如需使用外部託管模型的詳細資訊，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
 
-### Step 2.1: Create a connector
+### 步驟 2.1：建立連接器
 
-Create a connector for the Claude model:
+為 Claude 模型建立連接器：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -199,11 +200,11 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-Note the connector ID; you'll use it to register the model.
+請記下連接器 ID；您將使用它來註冊模型。
 
-### Step 2.2: Register the model
+### 步驟 2.2：註冊模型
 
-Register the Claude model hosted on Amazon Bedrock:
+註冊託管於 Amazon Bedrock 的 Claude 模型：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -216,20 +217,20 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-Note the LLM model ID; you'll use it in the following steps.
+請記下 LLM 模型 ID；您將在後續步驟中使用它。
 
-### Step 2.3: Deploy the model
+### 步驟 2.3：部署模型
 
-Deploy the Claude model:
+部署 Claude 模型：
 
 ```json
 POST /_plugins/_ml/models/your_LLM_model_id/_deploy
 ```
 {% include copy-curl.html %}
 
-### Step 2.4: Test the model
+### 步驟 2.4：測試模型
 
-To test the model, send a Predict API request:
+若要測試模型，請傳送 Predict API 請求：
 
 ```json
 POST /_plugins/_ml/models/your_LLM_model_id/_predict
@@ -241,18 +242,18 @@ POST /_plugins/_ml/models/your_LLM_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-## Step 3: Register an agent
+## 步驟 3：註冊代理程式
 
-OpenSearch provides the following agent types: `flow`, `conversational_flow`, and `conversational`. For more information about agents, see [Agents]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/).
+OpenSearch 提供下列代理程式類型：`flow`、`conversational_flow` 及 `conversational`。如需代理程式的詳細資訊，請參閱[代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)。
 
-You will use a `conversational_flow` agent in this tutorial. The agent consists of the following:
+本教學將使用 `conversational_flow` 代理程式。此代理程式包含下列項目：
 
-- Meta info: `name`, `type`, and `description`.
-- `app_type`: Differentiates between application types.
-- `memory`: Stores user questions and LLM responses as a conversation so that an agent can retrieve conversation history from memory and continue the same conversation.
-- `tools`: Defines a list of tools to use. The agent will run these tools sequentially.
+- 中繼資訊：`name`、`type` 及 `description`。
+- `app_type`：區分應用程式類型。
+- `memory`：將使用者問題與 LLM 回應儲存為對話，讓代理程式可從記憶體擷取對話歷程記錄並繼續相同的對話。
+- `tools`：定義要使用的工具清單。代理程式將依序執行這些工具。
 
-To register an agent, send the following request:
+若要註冊代理程式，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -292,7 +293,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-OpenSearch responds with an agent ID:
+OpenSearch 會回應代理程式 ID：
 
 ```json
 {
@@ -300,15 +301,15 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-Note the agent ID; you'll use it in the next step. 
+請記下代理程式 ID；您將在下一個步驟中使用它。
 
-## Step 4: Run the agent
+## 步驟 4：執行代理程式
 
-You'll run the agent to analyze the increase in Seattle's population. When you run this agent, the agent will create a new conversation. Later, you can continue this conversation by asking other questions.
+您將執行代理程式來分析西雅圖人口的成長。當您執行此代理程式時，代理程式會建立新的對話。之後，您可以透過詢問其他問題來繼續此對話。
 
-### Step 4.1: Start a new conversation
+### 步驟 4.1：開始新的對話
 
-First, start a new conversation by asking the LLM a question:
+首先，透過向 LLM 詢問問題來開始新的對話：
 
 ```json
 POST /_plugins/_ml/agents/your_agent_id/_execute
@@ -320,7 +321,7 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-The response contains the answer generated by the LLM:
+回應包含 LLM 產生的答案：
 
 ```json
 {
@@ -348,48 +349,48 @@ The response contains the answer generated by the LLM:
 }
 ```
 
-The response contains the following fields:
+回應包含下列欄位：
 
-- `memory_id` is the identifier for the memory (conversation) that groups all messages within a single conversation. Note this ID; you'll use it in the next step.
-- `parent_message_id` is the identifier for the current message (one question/answer) between the human and the LLM. One memory can contain multiple messages.
+- `memory_id` 是記憶體 (對話) 的識別碼，會將單一對話中的所有訊息分組。請記下此 ID；您將在下一個步驟中使用它。
+- `parent_message_id` 是目前訊息 (一個問題/答案) 的識別碼，代表人類與 LLM 之間的互動。一個記憶體可以包含多個訊息。
 
-To obtain memory details, call the [Get Memory API](ml-commons-plugin/api/memory-apis/get-memory/):
+若要取得記憶體詳細資訊，請呼叫 [Get Memory API](ml-commons-plugin/api/memory-apis/get-memory/)：
 
 ```json
 GET /_plugins/_ml/memory/gQ75lI0BHcHmo_cz2acL
 ```
 {% include copy-curl.html %}
 
-To obtain all messages within a memory, call the [Get Messages API](ml-commons-plugin/api/memory-apis/get-message/):
+若要取得記憶體內的所有訊息，請呼叫 [Get Messages API](ml-commons-plugin/api/memory-apis/get-message/)：
 
 ```json
 GET /_plugins/_ml/memory/gQ75lI0BHcHmo_cz2acL/messages
 ```
 {% include copy-curl.html %}
 
-To obtain message details, call the [Get Message API](ml-commons-plugin/api/memory-apis/get-message/):
+若要取得訊息詳細資訊，請呼叫 [Get Message API](ml-commons-plugin/api/memory-apis/get-message/)：
 
 ```json
 GET /_plugins/_ml/memory/message/gg75lI0BHcHmo_cz2acZ
 ```
 {% include copy-curl.html %}
 
-For debugging purposes, you can obtain trace data for a message by calling the [Get Message Traces API](ml-commons-plugin/api/memory-apis/get-message-traces/):
+基於偵錯目的，您可以呼叫 [Get Message Traces API](ml-commons-plugin/api/memory-apis/get-message-traces/) 來取得訊息的追蹤資料：
 
 ```json
 GET /_plugins/_ml/memory/message/gg75lI0BHcHmo_cz2acZ/traces
 ```
 {% include copy-curl.html %}
 
-### 4.2 Continue a conversation by asking new questions
+### 4.2 透過詢問新問題來繼續對話
 
-To continue the same conversation, provide the memory ID from the previous step.
+若要繼續相同的對話，請提供上一個步驟中的記憶體 ID。
 
-Additionally, you can provide the following parameters:
+此外，您可以提供下列參數：
 
-- `message_history_limit`: Specify how many historical messages you want included in the new question/answer round for an agent.
-- `prompt`: Use this parameter to customize the LLM prompt. For example, the following example adds a new instruction `always learn useful information from chat history` 
-and a new parameter `next_action`:
+- `message_history_limit`：指定您希望代理程式在新的問題/答案回合中包含多少歷史訊息。
+- `prompt`：使用此參數來自訂 LLM 提示。例如，下列範例會新增指令 `always learn useful information from chat history` 
+及新參數 `next_action`：
 
 ```json
 POST /_plugins/_ml/agents/your_agent_id/_execute
@@ -405,7 +406,7 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-The response contains the answer generated by the LLM:
+回應包含 LLM 產生的答案：
 
 ```json
 {
@@ -433,7 +434,7 @@ The response contains the answer generated by the LLM:
 }
 ```
 
-If you know which tool the agent should use to execute a particular Predict API request, you can specify the tool when executing the agent. For example, if you want to translate the preceding answer into Chinese, you don't need to retrieve any data from the knowledge base. To run only the Claude model, specify the `bedrock_claude_model` tool in the `selected_tools` parameter:
+如果您知道代理程式應使用哪個工具來執行特定的 Predict API 請求，您可以在執行代理程式時指定該工具。例如，如果您想將上述答案翻譯成中文，就不需要從知識庫擷取任何資料。若只要執行 Claude 模型，請在 `selected_tools` 參數中指定 `bedrock_claude_model` 工具：
 
 ```json
 POST /_plugins/_ml/agents/your_agent_id/_execute
@@ -446,12 +447,12 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-The agent will run the tools one by one in the new order defined in `selected_tools`. 
+代理程式將依 `selected_tools` 中定義的新順序逐一執行工具。
 {: .note}
 
-## Configuring multiple knowledge bases
+## 設定多個知識庫
 
-You can configure multiple knowledge bases for an agent. For example, if you have both product description and comment data, you can configure the agent with the following two tools:
+您可以為代理程式設定多個知識庫。例如，如果您同時擁有產品描述與評論資料，可以使用下列兩個工具來設定代理程式：
 
 ```json
 {
@@ -502,9 +503,9 @@ You can configure multiple knowledge bases for an agent. For example, if you hav
 ```
 {% include copy-curl.html %}
 
-When you run the agent, the agent will query product description and comment data and then send the query results and the question to the LLM.
+當您執行代理程式時，代理程式會查詢產品描述與評論資料，然後將查詢結果與問題傳送給 LLM。
 
-To query a specific knowledge base, specify it in `selected_tools`. For example, if the question relates only to product comments, you can retrieve information only from `product_comments_vectordb`:
+若要查詢特定的知識庫，請在 `selected_tools` 中指定。例如，如果問題只與產品評論相關，您可以只從 `product_comments_vectordb` 擷取資訊：
 
 ```json
 POST /_plugins/_ml/agents/your_agent_id/_execute
@@ -517,11 +518,11 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-## Running queries on an index
+## 在索引上執行查詢
 
-Use `SearchIndexTool` to run any OpenSearch query on any index.
+使用 `SearchIndexTool` 在任何索引上執行任何 OpenSearch 查詢。
 
-### Setup: Register an agent
+### 設定：註冊代理程式
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -553,7 +554,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### Run a BM25 query
+### 執行 BM25 查詢
 
 ```json
 POST /_plugins/_ml/agents/your_agent_id/_execute
@@ -575,9 +576,9 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-### Exposing only the `question` parameter
+### 僅公開 `question` 參數
 
-To expose only the `question` parameter, define the agent as follows:
+若要僅公開 `question` 參數，請如下定義代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -619,7 +620,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-Now you can run the agent specifying only the `question` parameter:
+現在您可以執行代理程式，並只指定 `question` 參數：
 
 ```json
 POST /_plugins/_ml/agents/your_agent_id/_execute
@@ -631,7 +632,7 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-### Run a vector search
+### 執行向量搜尋
 
 ```json
 POST /_plugins/_ml/agents/your_agent_id/_execute
@@ -657,13 +658,13 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-To expose the `question` parameter, see [Exposing only the `question` parameter](#exposing-only-the-question-parameter).
+若要公開 `question` 參數，請參閱 [僅公開 `question` 參數](#exposing-only-the-question-parameter)。
 
-### Run a hybrid search query
+### 執行混合搜尋查詢
 
-Hybrid search combines keyword and vector search to improve search relevance. For more information, see [Hybrid search]({{site.url}}{{site.baseurl}}/search-plugins/hybrid-search/).
+混合搜尋結合關鍵字搜尋與向量搜尋，以改善搜尋相關性。如需更多資訊，請參閱 [混合搜尋]({{site.url}}{{site.baseurl}}/search-plugins/hybrid-search/)。
 
-Configure a search pipeline:
+設定搜尋管線：
 
 ```json
 PUT /_search/pipeline/nlp-search-pipeline
@@ -691,7 +692,7 @@ PUT /_search/pipeline/nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-Run an agent with a hybrid query:
+使用混合查詢執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/your_agent_id/_execute
@@ -734,27 +735,27 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-To expose the `question` parameter, see [Exposing only the `question` parameter](#exposing-only-the-question-parameter).
+若要公開 `question` 參數，請參閱 [僅公開 `question` 參數](#exposing-only-the-question-parameter)。
 
-### Natural language query
+### 自然語言查詢
 
-The `PPLTool` can translate a natural language query (NLQ) to [Piped Processing Language (PPL)]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) and execute the generated PPL query.
+`PPLTool` 可以將自然語言查詢 (NLQ) 轉譯為 [Piped Processing Language (PPL)]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) 並執行產生的 PPL 查詢。
 
-#### Setup
+#### 設定
 
-Before you start, go to the OpenSearch Dashboards home page, select `Add sample data`, and then add `Sample eCommerce orders`.
+開始之前，請前往 OpenSearch Dashboards 首頁，選取 `Add sample data`，然後新增 `Sample eCommerce orders`。
 
 <!-- vale off -->
-#### Step 1: Register an agent with the PPLTool
+#### 步驟 1：使用 PPLTool 註冊代理程式
 <!-- vale on -->
 
-The `PPLTool` has the following parameters:
+`PPLTool` 具有下列參數：
 
-- `model_type` (Enum): `CLAUDE`, `OPENAI`, or `FINETUNE`.
-- `execute` (Boolean): If `true`, executes the generated PPL query.
-- `input` (String): You must provide the `index` and `question` as inputs.
+- `model_type`（列舉）：`CLAUDE`、`OPENAI` 或 `FINETUNE`。
+- `execute`（布林值）：若為 `true`，則執行產生的 PPL 查詢。
+- `input`（字串）：您必須提供 `index` 和 `question` 作為輸入。
 
-For this tutorial, you'll use Bedrock Claude, so set the `model_type` to `CLAUDE`:
+本教學將使用 Bedrock Claude，因此請將 `model_type` 設為 `CLAUDE`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -789,9 +790,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### Step 2: Run the agent with an NLQ
+### 步驟 2：使用 NLQ 執行代理程式
 
-Run the agent:
+執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/your_agent_id/_execute
@@ -804,7 +805,7 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-The response contains the answer generated by the LLM:
+回應包含 LLM 產生的答案：
 
 ```json
 {
@@ -829,7 +830,7 @@ The response contains the answer generated by the LLM:
 }
 ```
 
-For more information, obtain trace data by calling the [Get Message Traces API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/get-message-traces/):
+如需更多資訊，請呼叫 [Get Message Traces API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/get-message-traces/) 取得追蹤資料：
 
 ```json
 GET _plugins/_ml/memory/message/s6IioI0BJhBwrVXYeYOW/traces

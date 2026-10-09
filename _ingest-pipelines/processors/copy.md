@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Copy
+title: "複製"
 parent: Ingest processors
 nav_order: 35
 redirect_from:
    - /api-reference/ingest-apis/processors/copy/
 ---
 
-This documentation describes using the `copy` processor in OpenSearch ingest pipelines. Consider using the [Data Prepper `copy_values` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/copy-values/), which runs on the OpenSearch cluster, if your use case involves large or complex datasets.
+本文件說明如何在 OpenSearch 資料匯入管線中使用 `copy` 處理器。如果您的使用情境涉及大型或複雜的資料集，請考慮使用 [Data Prepper `copy_values` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/copy-values/)，該處理器在 OpenSearch 叢集上執行。
 {: .note}
 
-# Copy processor
+# Copy 處理器
 
-The `copy` processor copies an entire object in an existing field to another field.
+`copy` 處理器會將現有欄位中的整個物件複製到另一個欄位。
 
-## Syntax
+## 語法
 
-The following is the syntax for the `copy` processor: 
+以下是 `copy` 處理器的語法：
 
 ```json
 {
@@ -31,30 +32,30 @@ The following is the syntax for the `copy` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `copy` processor.
+下表列出 `copy` 處理器的必要與選用參數。
 
-| Parameter  | Required/Optional  | Description  |
+| 參數  | 必要/選用  | 說明  |
 |---|---|---|
-`source_field`  | Required  | The name of the field to be copied. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets). |
-`target_field`  | Required  | The name of the field to be copied to. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets). |
-`ignore_missing`  | Optional  | Specifies whether the processor should ignore documents that do not contain the specified `source_field`. If set to `true`, the processor does not modify the document if the `source_field` does not exist or is `null`. Default is `false`. |
-`override_target`  | Optional  | Specifies whether the processor should override the `target_field` if it already exists in the document. If set to `true`, the processor overrides the value of `target_field` if it already exists. Default is `false`. |
-`remove_source`  | Optional  | Specifies whether the processor should remove the `source_field` after it has been copied. If set to `true`, the processor removes the `source_field` from the document. Default is `false`. |
-`description`  | Optional  | A brief description of the processor.  |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | Specifies whether the processor continues execution even if it encounters an error. If set to `true`, the failure is ignored. Default is `false`. |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |
+`source_field`  | 必要  | 要複製的欄位名稱。支援 [範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
+`target_field`  | 必要  | 要複製到的欄位名稱。支援 [範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
+`ignore_missing`  | 選用  | 指定處理器是否應忽略未包含所指定 `source_field` 的文件。若設為 `true`，當 `source_field` 不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。 |
+`override_target`  | 選用  | 指定處理器是否應覆寫文件中已存在的 `target_field`。若設為 `true`，當 `target_field` 已存在時，處理器會覆寫其值。預設為 `false`。 |
+`remove_source`  | 選用  | 指定處理器是否應在複製後移除 `source_field`。若設為 `true`，處理器會從文件中移除 `source_field`。預設為 `false`。 |
+`description`  | 選用  | 處理器的簡短說明。  |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則忽略失敗。預設為 `false`。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。 |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+請依照下列步驟在管線中使用處理器。
 
-**Step 1: Create a pipeline** 
+**步驟 1：建立管線**
 
-The following query creates a pipeline named `copy_object` that copies a nested object from one field to the root level: 
+下列查詢會建立名為 `copy_object` 的管線，將巢狀物件從某個欄位複製到根層級：
 
 ```json
 PUT /_ingest/pipeline/copy_object
@@ -75,12 +76,12 @@ PUT /_ingest/pipeline/copy_object
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline**
+**步驟 2 (選用)：測試管線**
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/copy_object/_simulate
@@ -103,9 +104,9 @@ POST _ingest/pipeline/copy_object/_simulate
 ```
 {% include copy-curl.html %}
 
-**Response**
+**回應**
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線運作正常：
 
 ```json
 {
@@ -129,9 +130,9 @@ The following example response confirms that the pipeline is working as expected
 }
 ```
 
-**Step 3: Ingest a document**
+**步驟 3：匯入文件**
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=copy_object
@@ -144,9 +145,9 @@ PUT testindex1/_doc/1?pipeline=copy_object
 ```
 {% include copy-curl.html %}
 
-**Step 4 (Optional): Retrieve the document**
+**步驟 4 (選用)：擷取文件**
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1

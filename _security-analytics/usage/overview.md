@@ -1,69 +1,70 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: The Overview page
+title: "總覽頁面"
 parent: Using Security Analytics
 nav_order: 25
 ---
 
 <!-- vale off -->
-# The Overview page
+# 總覽頁面
 <!-- vale on -->
 
-When you select **Security Analytics** from the top menu, the **Overview** page is displayed. The **Overview** page consists of five sections:
-* Findings and alert count
-* Recent alerts
-* Recent findings
-* Most frequent detection rules
-* Detectors
+當您從頂端選單選取 **Security Analytics** 時，就會顯示 **Overview** 頁面。**Overview** 頁面由五個區段組成：
+* Findings 與警示數量
+* 最近的警示
+* 最近的 findings
+* 最常觸發的偵測規則
+* 偵測器
 
-Each section provides a summary description for each element of Security Analytics, along with controls that let you take action for each item.
-
----
-## Overview and getting started
-
-The upper portion of the **Overview** page contains two control buttons for refreshing information and getting started with Security Analytics. You can select the **Refresh** button to refresh all of the information on the page. 
-
-You can also select the **Getting started** link to expand the Get started with Security Analytics window, which includes a summary of the setup steps as well as control buttons that allow you to jump to any of the steps.
-
-![The overview page with getting started quick launch window]({{site.url}}{{site.baseurl}}/images/Security/overview.png){: width="85%" }
-
-* In step 1 of setup, select **Create detector** to define a detector. 
-* In step 2, select **View findings** to go to the Findings page. For details about this page, see [Working with findings]({{site.url}}{{site.baseurl}}/security-analytics/usage/findings/).
-* In step 3, select **View alerts** to go to the Security alerts page. For details about this page, see [Working with alerts]({{site.url}}{{site.baseurl}}/security-analytics/usage/alerts/).
-* In step 4, select **Manage rules** to go to the Rules page. For more on rules, see [Working with rules]({{site.url}}{{site.baseurl}}/security-analytics/usage/rules/).
+每個區段都提供 Security Analytics 各項元素的摘要說明，並附上可讓您對每個項目採取行動的控制項。
 
 ---
-## Findings and alert count
+## 總覽與入門
 
-The Findings and alert count section provides a graph showing data on the latest findings. Use the **Group by** dropdown list to select either **All findings** or **Log type**.
+**Overview** 頁面的上半部包含兩個控制按鈕，分別用於重新整理資訊以及開始使用 Security Analytics。您可以選取 **Refresh** 按鈕來重新整理頁面上的所有資訊。
 
-![A graph showing counts for findings and alerts.]({{site.url}}{{site.baseurl}}/images/Security/count.png){: width="75%" }
+您也可以選取 **Getting started** 連結來展開 Get started with Security Analytics 視窗，其中包含設定步驟的摘要，以及可讓您跳至任何步驟的控制按鈕。
 
----
-## Recent alerts
+![總覽頁面與入門快速啟動視窗]({{site.url}}{{site.baseurl}}/images/Security/overview.png){: width="85%" }
 
-The Recent alerts table displays recent alerts by time, trigger name, and alert severity. Select **View alerts** to go to the Alerts page.
-
-![A table showing the most recent alerts.]({{site.url}}{{site.baseurl}}/images/Security/recent-alerts.png){: width="50%" }
-
----
-## Recent findings
-
-The Recent findings table displays recent findings by time, rule name, rule severity, and detector. Select **View all findings** to go to the Findings page.
-
-![A table showing the most recent findings.]({{site.url}}{{site.baseurl}}/images/Security/recent-findings.png){: width="50%" }
+* 在設定的步驟 1 中，選取 **Create detector** 來定義偵測器。
+* 在步驟 2 中，選取 **View findings** 前往 Findings 頁面。有關此頁面的詳細資訊，請參閱[使用 findings]({{site.url}}{{site.baseurl}}/security-analytics/usage/findings/)。
+* 在步驟 3 中，選取 **View alerts** 前往 Security alerts 頁面。有關此頁面的詳細資訊，請參閱[使用警示]({{site.url}}{{site.baseurl}}/security-analytics/usage/alerts/)。
+* 在步驟 4 中，選取 **Manage rules** 前往 Rules 頁面。有關規則的更多資訊，請參閱[使用規則]({{site.url}}{{site.baseurl}}/security-analytics/usage/rules/)。
 
 ---
-## Most frequent detection rules
+## Findings 與警示數量
 
-This section provides a graphical representation of detection rules that trigger findings most often and how they compare to others as a percentage of the whole. The rule names represented by the graph are listed to the right. You can hover over each color on the graph to see details about the detection rule it represents.
+Findings 與警示數量區段提供一個圖表，顯示最新 findings 的資料。使用 **Group by** 下拉式清單選取 **All findings** 或 **Log type**。
 
-![The detection rule graph on the Overview page]({{site.url}}{{site.baseurl}}/images/Security/rule_graph.png){: width="50%" }
+![顯示 findings 與警示數量的圖表。]({{site.url}}{{site.baseurl}}/images/Security/count.png){: width="75%" }
 
 ---
-## Detectors
+## 最近的警示
 
-The Detectors section displays a list of available detectors by detector name, status (active/inactive), and log type. Select **View all detectors** to go to the Detectors page. Select **Create detector** to go directly to the Define detector page.
+Recent alerts 表格依時間、觸發條件名稱與警示嚴重性顯示最近的警示。選取 **View alerts** 前往 Alerts 頁面。
 
-![A table showing available detectors.]({{site.url}}{{site.baseurl}}/images/Security/detector-overview.png){: width="50%" }
+![顯示最近警示的表格。]({{site.url}}{{site.baseurl}}/images/Security/recent-alerts.png){: width="50%" }
+
+---
+## 最近的 findings
+
+Recent findings 表格依時間、規則名稱、規則嚴重性與偵測器顯示最近的 findings。選取 **View all findings** 前往 Findings 頁面。
+
+![顯示最近 findings 的表格。]({{site.url}}{{site.baseurl}}/images/Security/recent-findings.png){: width="50%" }
+
+---
+## 最常觸發的偵測規則
+
+此區段以圖形方式呈現最常觸發 findings 的偵測規則，以及它們佔整體百分比與其他規則的比較。圖表所代表的規則名稱列於右側。您可以將滑鼠游標停留在圖表上的每個顏色，以查看其所代表偵測規則的詳細資訊。
+
+![Overview 頁面上的偵測規則圖表]({{site.url}}{{site.baseurl}}/images/Security/rule_graph.png){: width="50%" }
+
+---
+## 偵測器
+
+Detectors 區段依偵測器名稱、狀態 (啟用/停用) 與記錄類型顯示可用偵測器的清單。選取 **View all detectors** 前往 Detectors 頁面。選取 **Create detector** 可直接前往 Define detector 頁面。
+
+![顯示可用偵測器的表格。]({{site.url}}{{site.baseurl}}/images/Security/detector-overview.png){: width="50%" }
 

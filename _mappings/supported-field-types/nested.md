@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Nested
 nav_order: 42
@@ -11,17 +12,17 @@ redirect_from:
   - /field-types/nested/
 ---
 
-# Nested field type
-**Introduced 1.0**
+# Nested 欄位類型
+**於 1.0 版推出**
 {: .label .label-purple }
 
-A nested field type is a special type of [object field type]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/object/). 
+Nested 欄位類型是一種特殊的 [object 欄位類型]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/object/)。
 
-Any object field can take an array of objects. Each of the objects in the array is dynamically mapped as an object field type and stored in flattened form. This means that the objects in the array are broken down into individual fields, and values for each field across all objects are stored together. It is sometimes necessary to use the nested type to preserve a nested object as a whole so that you can perform a search on it.
+任何 object 欄位都可以接受物件陣列。陣列中的每個物件都會動態對應為 object 欄位類型，並以攤平的形式儲存。這表示陣列中的物件會被拆解成個別欄位，而所有物件中每個欄位的值會一起儲存。有時需要使用 nested 類型將巢狀物件完整保留，以便對它執行搜尋。
 
-## Flattened form
+## 攤平形式
 
-By default, each of the nested objects is dynamically mapped as object field type. Any object field can take an array of objects. 
+預設情況下，每個巢狀物件都會動態對應為 object 欄位類型。任何 object 欄位都可以接受物件陣列。
 
 ```json
 PUT testindex1/_doc/100
@@ -34,7 +35,7 @@ PUT testindex1/_doc/100
 ```
 {% include copy-curl.html %}
 
-When these objects are stored, they are flattened, so their internal representation has an array of all values for each field:
+這些物件在儲存時會被攤平，因此其內部表示形式是每個欄位所有值的陣列：
 
 ```json
 {
@@ -44,7 +45,7 @@ When these objects are stored, they are flattened, so their internal representat
 }
 ```
 
-Some queries will work correctly in this representation. If you search for patients older than 75 OR smokers, document 100 should match.
+某些查詢在這種表示形式下可以正確運作。如果您搜尋年齡大於 75 歲或吸菸的病患，文件 100 應該會符合。
 
 ```json
 GET testindex1/_search
@@ -71,7 +72,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The query correctly returns document 100:
+查詢正確地傳回文件 100：
 
 ```json
 {
@@ -115,7 +116,7 @@ The query correctly returns document 100:
 }
 ```
 
-Alternatively, if you search for patients older than 75 AND smokers, document 100 should not match.
+或者，如果您搜尋年齡大於 75 歲且吸菸的病患，文件 100 不應該符合。
 
 ```json
 GET testindex1/_search 
@@ -142,11 +143,11 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-However, this query still incorrectly returns document 100. This is because the relation between age and smoking was lost when arrays of values for individual fields were created.
+然而，此查詢仍然錯誤地傳回文件 100。這是因為在建立個別欄位的值陣列時，年齡與吸菸之間的關聯性遺失了。
 
-## Mapping objects as nested
+## 將物件對應為 nested
 
-Nested objects are stored as separate documents, and the parent object has references to its children. To mark objects as nested, create a mapping with a nested field type.
+巢狀物件會以個別文件的形式儲存，父物件會保有對其子物件的參照。若要將物件標記為 nested，請建立包含 nested 欄位類型的對應。
 
 ```json
 PUT testindex1
@@ -162,7 +163,7 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-Then, index a document with a nested field type:
+接著，為包含 nested 欄位類型的文件編製索引：
 
 ```json
 PUT testindex1/_doc/100
@@ -175,7 +176,7 @@ PUT testindex1/_doc/100
 ```
 {% include copy-curl.html %}
 
-You can use the following nested query to search for patients older than 75 OR smokers:
+您可以使用下列 nested 查詢來搜尋年齡大於 75 歲或吸菸的病患：
 
 ```json
 GET testindex1/_search
@@ -207,7 +208,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The query correctly returns both patients:
+查詢正確地傳回兩位病患：
 
 ```json
 {
@@ -250,7 +251,7 @@ The query correctly returns both patients:
 }
 ```
 
-You can use the following nested query to search for patients older than 75 AND smokers:
+您可以使用下列 nested 查詢來搜尋年齡大於 75 歲且吸菸的病患：
 
 ```json
 GET testindex1/_search
@@ -282,7 +283,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The previous query returns no results, as expected:
+如預期，前一個查詢沒有傳回任何結果：
 
 ```json
 {
@@ -305,19 +306,19 @@ The previous query returns no results, as expected:
 }
 ```
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by object field types. All parameters are optional.
+下表列出 object 欄位類型接受的參數。所有參數皆為選用。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :--- 
-[`dynamic`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/object#the-dynamic-parameter) | Specifies whether new fields can be dynamically added to the object. Valid values are `true`, `false`, `strict`, `strict_allow_templates`, and `false_allow_templates`. Default is `true`.
-`include_in_parent` | A Boolean value that specifies whether all fields in the child nested object should also be added to the parent document in flattened form. Default is `false`.
-`include_in_root` | A Boolean value that specifies whether all fields in the child nested object should also be added to the root document in flattened form. Default is `false`.
-`properties` | Fields of this object, which can be of any supported type. New properties can be dynamically added to this object if `dynamic` is set to `true`.
+[`dynamic`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/object#the-dynamic-parameter) | 指定是否可以動態地在物件中新增欄位。有效值為 `true`、`false`、`strict`、`strict_allow_templates` 和 `false_allow_templates`。預設值為 `true`。
+`include_in_parent` | 布林值，指定是否應將子巢狀物件中的所有欄位以攤平形式一併新增至父文件。預設值為 `false`。
+`include_in_root` | 布林值，指定是否應將子巢狀物件中的所有欄位以攤平形式一併新增至根文件。預設值為 `false`。
+`properties` | 此物件的欄位，可以是任何支援的類型。如果 `dynamic` 設定為 `true`，則可以動態地在這個物件中新增屬性。
 
-## Next steps
+## 後續步驟
 
-- Learn about [joining queries]({{site.url}}{{site.baseurl}}/query-dsl/joining/) on nested fields.
-- Learn about [retrieving inner hits]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/).
-- Learn about the [disable objects]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/disable-objects/) mapping parameter.
+- 了解巢狀欄位上的 [聯結查詢]({{site.url}}{{site.baseurl}}/query-dsl/joining/)。
+- 了解[擷取 inner hits]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/)。
+- 了解 [停用物件]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/disable-objects/) 對應參數。

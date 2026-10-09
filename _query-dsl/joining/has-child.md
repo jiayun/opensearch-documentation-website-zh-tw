@@ -1,20 +1,21 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Has child
+title: "Has child 查詢"
 parent: Joining queries
 nav_order: 10
 ---
 
-# Has child query
+# Has child 查詢
 
-The `has_child` query returns parent documents whose child documents match a specific query. You can establish parent/child relationships between documents in the same index by using a [join]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/) field type.
+`has_child` 查詢會傳回子文件符合特定查詢的父文件。您可以使用 [join]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/) 欄位類型，在同一索引中的文件之間建立父子關係。
 
-The `has_child` query is slower than other queries because of the join operation it performs. Performance decreases as the number of matching child documents pointing to different parent documents increases. Each `has_child` query in your search may significantly impact query performance. If you prioritize speed, avoid using this query or limit its usage as much as possible.
+`has_child` 查詢因為會執行 join 操作，所以比其他查詢慢。指向不同父文件的相符子文件數量增加時，效能會下降。搜尋中的每個 `has_child` 查詢都可能對查詢效能造成顯著影響。如果您重視速度，請避免使用此查詢，或盡量限制其使用。
 {: .warning}
 
-## Example 
+## 範例 
 
-Before you can run a `has_child` query, your index must contain a [join]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/) field in order to establish parent/child relationships. The index mapping request uses the following format:
+在您執行 `has_child` 查詢之前，您的索引必須包含 [join]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/) 欄位，才能建立父子關係。索引對應請求使用下列格式：
 
 ```json
 PUT /example_index
@@ -33,9 +34,9 @@ PUT /example_index
 ```
 {% include copy-curl.html %}
 
-In this example, you'll configure an index that contains documents representing products and their brands. 
+在此範例中，您將設定一個索引，其中包含代表產品及其品牌的文件。 
 
-First, create the index and establish the parent/child relationship between `brand` and `product`:
+首先，建立索引並在 `brand` 與 `product` 之間建立父子關係：
 
 ```json
 PUT testindex1
@@ -54,7 +55,7 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-Index two parent (brand) documents:
+將兩個父文件 (品牌) 編製索引：
 
 ```json
 PUT testindex1/_doc/1
@@ -74,7 +75,7 @@ PUT testindex1/_doc/2
 ```
 {% include copy-curl.html %}
 
-Index three child (product) documents:
+將三個子文件 (產品) 編製索引：
 
 ```json
 PUT testindex1/_doc/3?routing=1
@@ -115,7 +116,7 @@ PUT testindex1/_doc/5?routing=2
 ```
 {% include copy-curl.html %}
 
-To search for the parent of a child, use a `has_child` query. The following query returns parent documents (brands) that make watches:
+若要搜尋子文件的父文件，請使用 `has_child` 查詢。下列查詢會傳回製造手錶的父文件 (品牌)：
 
 ```json
 GET testindex1/_search
@@ -134,7 +135,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The response returns both brands:
+回應會傳回這兩個品牌：
 
 ```json
 {
@@ -176,9 +177,9 @@ The response returns both brands:
 }
 ```
 
-## Retrieving inner hits
+## 擷取內部命中
 
-To return child documents that matched the query, provide the `inner_hits` parameter:
+若要傳回符合查詢的子文件，請提供 `inner_hits` 參數：
 
 ```json
 GET testindex1/_search
@@ -198,7 +199,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The response contains child documents in the `inner_hits` field:
+回應會在 `inner_hits` 欄位中包含子文件：
 
 ```json
 {
@@ -308,28 +309,28 @@ The response contains child documents in the `inner_hits` field:
 }
 ```
 
-For more information about retrieving inner hits, see [Inner hits]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/).
+如需擷取內部命中的詳細資訊，請參閱 [內部命中]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/)。
 
-## Parameters
+## 參數
 
-The following table lists all top-level parameters supported by `has_child` queries.
+下表列出 `has_child` 查詢支援的所有最上層參數。
 
-| Parameter  | Required/Optional | Description  |
+| 參數  | 必要／選用 | 說明  |
 |:---|:---|:---|
-| `type` | Required | Specifies the name of the child relationship as defined in the `join` field mapping. |
-| `query` | Required | The query to run on child documents. If a child document matches the query, the parent document is returned. |
-| `ignore_unmapped` | Optional | Indicates whether to ignore unmapped `type` fields and not return documents instead of throwing an error. You can provide this parameter when querying multiple indexes, some of which may not contain the `type` field. Default is `false`. |
-| `max_children` | Optional | The maximum number of matching child documents for a parent document. If exceeded, the parent document is excluded from the search results. |
-| `min_children` | Optional | The minimum number of matching child documents required for a parent document to be included in the results. If not met, the parent is excluded. Default is `1`.|
-| `score_mode` | Optional | Defines how scores of matching child documents influence the parent document's score. Valid values are: <br> - `none`: Ignores the relevance scores of child documents and assigns a score of `0` to the parent document. <br> - `avg`: Uses the average relevance score of all matching child documents. <br> - `max`: Assigns the highest relevance score from the matching child documents to the parent. <br> - `min`: Assigns the lowest relevance score from the matching child documents to the parent. <br> - `sum`: Sums the relevance scores of all matching child documents. <br> Default is `none`. |
-| `inner_hits` | Optional | If provided, returns the underlying hits (child documents) that matched the query. |
+| `type` | 必要 | 指定在 `join` 欄位對應中定義的子關係名稱。 |
+| `query` | 必要 | 要在子文件上執行的查詢。如果子文件符合查詢，則會傳回父文件。 |
+| `ignore_unmapped` | 選用 | 指出是否忽略未對應的 `type` 欄位，並且不傳回文件，而非擲回錯誤。在查詢多個索引時，若其中部分索引可能不包含 `type` 欄位，您可以提供此參數。預設為 `false`。 |
+| `max_children` | 選用 | 父文件相符子文件數目上限。若超過此上限，父文件會從搜尋結果中排除。 |
+| `min_children` | 選用 | 父文件要納入結果所需的相符子文件數目下限。若未達到，父文件會遭到排除。預設為 `1`。|
+| `score_mode` | 選用 | 定義相符子文件的分數如何影響父文件的分數。有效值為：<br> - `none`：忽略子文件的相關性分數，並為父文件指派 `0` 的分數。<br> - `avg`：使用所有相符子文件的平均相關性分數。<br> - `max`：將相符子文件中最高的相關性分數指派給父文件。<br> - `min`：將相符子文件中最低的相關性分數指派給父文件。<br> - `sum`：加總所有相符子文件的相關性分數。<br> 預設為 `none`。 |
+| `inner_hits` | 選用 | 若提供，會傳回符合查詢的基礎命中（子文件）。 |
 
 
-## Sorting limitations
+## 排序限制
 
-The `has_child` query does not support [sorting results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/) using standard sorting options. If you need to sort parent documents by fields in their child documents, you can use a [`function_score` query]({{site.url}}{{site.baseurl}}/query-dsl/compound/function-score/) and sort by the parent document's score. 
+`has_child` 查詢不支援使用標準排序選項來[排序結果]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/)。如果您需要依子文件中的欄位來排序父文件，您可以使用 [`function_score` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/function-score/)，並依父文件的分數排序。 
 
-In the preceding example, you can sort parent documents (brands) based on the `sales_count` of their child products. This query multiplies the score by the `sales_count` field of the child documents and assigns the highest relevance score from the matching child documents to the parent:
+在上述範例中，您可以依子產品的 `sales_count` 來排序父文件 (品牌)。此查詢會將分數乘以子文件的 `sales_count` 欄位，並將相符子文件中最高的相關性分數指派給父文件：
 
 ```json
 GET testindex1/_search
@@ -351,7 +352,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the brands sorted by the highest child `sales_count`:
+回應會包含依最高子文件 `sales_count` 排序的品牌：
 
 ```json
 {
@@ -393,6 +394,6 @@ The response contains the brands sorted by the highest child `sales_count`:
 }
 ```
 
-## Next steps
+## 後續步驟
 
-- Learn more about [retrieving inner hits]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/).
+- 進一步了解[擷取內部命中]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/)。

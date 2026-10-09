@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Span queries
+title: "Span 查詢"
 has_children: true
 has_toc: false
 nav_order: 75
@@ -11,31 +12,31 @@ redirect_from:
   - /query-dsl/span/
 ---
 
-# Span queries
+# Span 查詢
 
-You can use span queries to perform precise positional searches. Span queries are low-level, specific queries that provide control over the order and proximity of specified query terms. They are primarily used to search legal documents and patents. 
+您可以使用 span 查詢來執行精確的位置搜尋。Span 查詢是低階、特定的查詢，可控制指定查詢詞彙的順序與鄰近程度。它們主要用於搜尋法律文件和專利。
 
-Span queries include the following query types:
+Span 查詢包含下列查詢類型：
 
-| Query type | Description |
+| 查詢類型 | 說明 |
 | :--- | :--- |
-| [Span containing]({{site.url}}{{site.baseurl}}/query-dsl/span/span-containing/) | Returns larger spans that contain smaller spans within them. The opposite of the `span_within` query. |
-| [Span field masking]({{site.url}}{{site.baseurl}}/query-dsl/span/span-field-masking/) | Allows span queries to work across different fields by making one field appear as another. Useful when the same text is indexed using different analyzers. |
-| [Span first]({{site.url}}{{site.baseurl}}/query-dsl/span/span-first/) | Matches terms or phrases that appear within a specified number of positions from the start of a field. |
-| [Span multi-term]({{site.url}}{{site.baseurl}}/query-dsl/span/span-multi-term/) | Enables multi-term queries (like `prefix`, `wildcard`, or `fuzzy`) to work within span queries. |
-| [Span near]({{site.url}}{{site.baseurl}}/query-dsl/span/span-near/) | Finds terms or phrases that appear within a specified distance of each other. Supports requiring matches to appear in a specific order. |
-| [Span not]({{site.url}}{{site.baseurl}}/query-dsl/span/span-not/) | Excludes matches that overlap with another span query. |
-| [Span or]({{site.url}}{{site.baseurl}}/query-dsl/span/span-or/) | Matches documents that satisfy any of the provided span queries. |
-| [Span term]({{site.url}}{{site.baseurl}}/query-dsl/span/span-term/) | Matches a single term while maintaining position information for use in other span queries. |
-| [Span within]({{site.url}}{{site.baseurl}}/query-dsl/span/span-within/) | Returns smaller spans that are enclosed by larger spans. The opposite of the `span_containing` query. |
+| [Span containing]({{site.url}}{{site.baseurl}}/query-dsl/span/span-containing/) | 傳回包含較小 span 的較大 span。與 `span_within` 查詢相反。 |
+| [Span field masking]({{site.url}}{{site.baseurl}}/query-dsl/span/span-field-masking/) | 讓 span 查詢可跨不同欄位運作，方式是讓某個欄位看起來像另一個欄位。當相同文字使用不同分析器編製索引時很有用。 |
+| [Span first]({{site.url}}{{site.baseurl}}/query-dsl/span/span-first/) | 比對從欄位開頭起算的指定位置數內出現的詞彙或片語。 |
+| [Span multi-term]({{site.url}}{{site.baseurl}}/query-dsl/span/span-multi-term/) | 讓多詞彙查詢 (例如 `prefix`、`wildcard` 或 `fuzzy`) 可在 span 查詢內運作。 |
+| [Span near]({{site.url}}{{site.baseurl}}/query-dsl/span/span-near/) | 尋找彼此距離在指定範圍內出現的詞彙或片語。支援要求比對結果必須以特定順序出現。 |
+| [Span not]({{site.url}}{{site.baseurl}}/query-dsl/span/span-not/) | 排除與另一個 span 查詢重疊的比對結果。 |
+| [Span or]({{site.url}}{{site.baseurl}}/query-dsl/span/span-or/) | 比對符合任何所提供 span 查詢的文件。 |
+| [Span term]({{site.url}}{{site.baseurl}}/query-dsl/span/span-term/) | 比對單一詞彙，同時保留位置資訊以供其他 span 查詢使用。 |
+| [Span within]({{site.url}}{{site.baseurl}}/query-dsl/span/span-within/) | 傳回被較大 span 包圍的較小 span。與 `span_containing` 查詢相反。 |
 
-## Setup
+## 設定
 
-To try the examples in this section, use the following steps to configure an example index.
+若要試用本節的範例，請使用下列步驟來設定範例索引。
 
-### Step 1: Create an index
+### 步驟 1：建立索引
 
-First, create an index for an e-commerce clothing website. The `description` field uses the default `standard` analyzer, while the `description.stemmed` subfield applies the `english` analyzer to enable stemming:
+首先，為電子商務服飾網站建立索引。`description` 欄位使用預設的 `standard` 分析器，而 `description.stemmed` 子欄位則套用 `english` 分析器以啟用詞幹擷取：
 
 ```json
 PUT /clothing
@@ -58,9 +59,9 @@ PUT /clothing
 ```
 {% include copy-curl.html %}
 
-### Step 2: Index data
+### 步驟 2：將資料編製索引
 
-Index sample documents into the index:
+將範例文件編製索引至該索引：
 
 ```json
 POST /clothing/_doc/1

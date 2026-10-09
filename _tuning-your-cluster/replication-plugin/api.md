@@ -1,49 +1,50 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Cross-Cluster Replication API
+title: "跨叢集複寫 API"
 nav_order: 50
 parent: Cross-cluster replication
 redirect_from:
   - /replication-plugin/api/
 ---
 
-# Cross-Cluster Replication API
+# 跨叢集複寫 API
 
-Use these replication operations to programmatically manage cross-cluster replication.
+使用這些複寫操作以程式化方式管理跨叢集複寫。
 
 <details markdown="block">
   <summary>
-    Table of contents
+    目錄
   </summary>
   {: .text-delta }
 - TOC
 {:toc}
 </details>
 
-## Start replication
-**Introduced 1.1**
+## 開始複寫
+**於 1.1 版推出**
 {: .label .label-purple }
 
-Initiate replication of an index from the leader cluster to the follower cluster. Send this request to the follower cluster.
+從領導叢集起始將索引複寫至跟隨叢集。將此請求傳送至跟隨叢集。
 
 
-### Endpoints
+### 端點
 
 ```json
 PUT /_plugins/_replication/{follower-index}/_start
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description | Required |
+| 欄位 | 資料類型 | 說明 | 必要 |
 | :--- | :--- | :--- | :--- |
-| `leader_alias` | String | The name of the cross-cluster connection. You define this alias when you [set up a cross-cluster connection]({{site.url}}{{site.baseurl}}/replication-plugin/get-started/#set-up-a-cross-cluster-connection). | Yes |
-| `leader_index` | String | The index on the leader cluster that you want to replicate. | Yes |
-| `use_roles` | Object | The roles to use for all subsequent backend replication tasks between the indexes. Specify a `leader_cluster_role` and `follower_cluster_role`. See [Map the leader and follower cluster roles]({{site.url}}{{site.baseurl}}/replication-plugin/permissions/#map-the-leader-and-follower-cluster-roles). | If Security plugin is enabled |
+| `leader_alias` | 字串 | 跨叢集連線的名稱。您在[設定跨叢集連線]({{site.url}}{{site.baseurl}}/replication-plugin/get-started/#set-up-a-cross-cluster-connection)時定義此別名。 | 是 |
+| `leader_index` | 字串 | 您要複寫的領導叢集上的索引。 | 是 |
+| `use_roles` | 物件 | 用於索引之間所有後續後端複寫工作的角色。指定 `leader_cluster_role` 與 `follower_cluster_role`。請參閱[對應領導與跟隨叢集角色]({{site.url}}{{site.baseurl}}/replication-plugin/permissions/#map-the-leader-and-follower-cluster-roles)。 | 若已啟用 Security 外掛程式 |
 
-### Example request
+### 範例請求
 
 ```json
 PUT /_plugins/_replication/follower-01/_start
@@ -58,7 +59,7 @@ PUT /_plugins/_replication/follower-01/_start
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -66,19 +67,19 @@ PUT /_plugins/_replication/follower-01/_start
 }
 ```
 
-## Stop replication
-**Introduced 1.1**
+## 停止複寫
+**於 1.1 版推出**
 {: .label .label-purple }
 
-Terminates replication and converts the follower index to a standard index. Send this request to the follower cluster.
+終止複寫並將跟隨索引轉換為標準索引。將此請求傳送至跟隨叢集。
 
-### Endpoints
+### 端點
 
 ```json
 POST /_plugins/_replication/{follower-index}/_stop
 ```
 
-### Example request
+### 範例請求
 
 ```json
 POST /_plugins/_replication/follower-01/_stop
@@ -86,7 +87,7 @@ POST /_plugins/_replication/follower-01/_stop
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -94,19 +95,19 @@ POST /_plugins/_replication/follower-01/_stop
 }
 ```
 
-## Pause replication
-**Introduced 1.1**
+## 暫停複寫
+**於 1.1 版推出**
 {: .label .label-purple }
 
-Pauses replication of the leader index. Send this request to the follower cluster.
+暫停領導索引的複寫。將此請求傳送至跟隨叢集。
 
-### Endpoints
+### 端點
 
 ```json
 POST /_plugins/_replication/{follower-index}/_pause
 ```
 
-### Example request
+### 範例請求
 
 ```json
 POST /_plugins/_replication/follower-01/_pause
@@ -114,9 +115,9 @@ POST /_plugins/_replication/follower-01/_pause
 ```
 {% include copy-curl.html %}
 
-You can't resume replication after it's been paused longer than the retention lease period. To recover, use [force-resume]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/force-resume/), which restores the follower index from a snapshot of the leader.
+若暫停時間超過保留租約期間，您將無法繼續複寫。若要復原，請使用 [force-resume]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/force-resume/)，其會從領導叢集的快照還原跟隨索引。
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -124,27 +125,27 @@ You can't resume replication after it's been paused longer than the retention le
 }
 ```
 
-## Resume replication
-**Introduced 1.1**
+## 繼續複寫
+**於 1.1 版推出**
 {: .label .label-purple }
 
-Resumes replication of the leader index. Send this request to the follower cluster.
+繼續領導索引的複寫。將此請求傳送至跟隨叢集。
 
-### Endpoints
+### 端點
 
 ```json
 POST /_plugins/_replication/{follower-index}/_resume
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description | Required |
+| 欄位 | 資料類型 | 說明 | 必要 |
 | :--- | :--- | :--- | :--- |
-| `force_resume` | Boolean | When set to `true`, performs a stop-delete-start cycle to restore the follower index from the leader when retention leases have expired. Use this when replication has been paused for more than 12 hours and a normal resume fails. For more information, see [Force resume replication]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/force-resume/). Default is `false`. | No |
+| `force_resume` | 布林值 | 設為 `true` 時，會執行停止-刪除-開始循環，以在保留租約過期時從領導叢集還原跟隨索引。當複寫已暫停超過 12 小時且一般繼續複寫失敗時，請使用此項。如需更多資訊，請參閱[強制繼續複寫]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/force-resume/)。預設為 `false`。 | 否 |
 
-### Example request
+### 範例請求
 
 ```json
 POST /_plugins/_replication/follower-01/_resume
@@ -152,7 +153,7 @@ POST /_plugins/_replication/follower-01/_resume
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -160,38 +161,38 @@ POST /_plugins/_replication/follower-01/_resume
 }
 ```
 
-### Error responses
+### 錯誤回應
 
-The following table describes common error responses for the resume operation.
+下表說明繼續複寫操作常見的錯誤回應。
 
-| Status code | Error | Description |
+| 狀態碼 | 錯誤 | 說明 |
 | :--- | :--- | :--- |
-| 404 | `Retention lease doesn't exist. Use force_resume=true to restore from snapshot.` | The retention lease has expired and `force_resume` was not set to `true`. Retry the request with `"force_resume": true`. |
-| 400 | Replication is not in PAUSED state | Force resume can only be used when replication is paused. Check the replication status first. |
-| 500 | Failed to stop replication | The internal stop operation failed. Verify cluster health and retry. |
-| 500 | Failed to delete follower index | The follower index could not be deleted after stopping replication. Manual cleanup may be required. |
-| 500 | Failed to start replication | The internal start operation failed after the follower was deleted. You may need to manually start replication again. |
+| 404 | `Retention lease doesn't exist. Use force_resume=true to restore from snapshot.` | 保留租約已過期，且 `force_resume` 未設為 `true`。請以 `"force_resume": true` 重試請求。 |
+| 400 | Replication is not in PAUSED state | 強制繼續複寫僅能在複寫暫停時使用。請先檢查複寫狀態。 |
+| 500 | Failed to stop replication | 內部停止操作失敗。請確認叢集健康狀態並重試。 |
+| 500 | Failed to delete follower index | 停止複寫後無法刪除跟隨索引。可能需要手動清理。 |
+| 500 | Failed to start replication | 刪除跟隨索引後，內部開始操作失敗。您可能需要再次手動開始複寫。 |
 
-## Get replication status
-**Introduced 1.1**
+## 取得複寫狀態
+**於 1.1 版推出**
 {: .label .label-purple }
 
-Gets the status of index replication. Possible statuses are `SYNCING`, `BOOTSTRAPING`, `PAUSED`, and `REPLICATION NOT IN PROGRESS`. Use the syncing details to measure replication lag. Send this request to the follower cluster.
+取得索引複寫的狀態。可能的狀態為 `SYNCING`、`BOOTSTRAPING`、`PAUSED` 及 `REPLICATION NOT IN PROGRESS`。使用同步詳細資料來衡量複寫延遲。將此請求傳送至跟隨叢集。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_replication/{follower-index}/_status
 ```
 
-### Example request
+### 範例請求
 
 ```json
 GET /_plugins/_replication/follower-01/_status
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -207,30 +208,30 @@ GET /_plugins/_replication/follower-01/_status
   }
 }
 ```
-To include shard replication details in the response, add the `&verbose=true` parameter.
+若要在回應中包含分片複寫詳細資料，請新增 `&verbose=true` 參數。
 
-The leader and follower checkpoint values begin as negative integers and reflect the shard count (-1 for one shard, -5 for five shards, and so on). The values increment toward positive integers with each change that you make. For example, when you make a change on the leader index, the `leader_checkpoint` becomes `0`. The `follower_checkpoint` is initially still `-1` until the follower index pulls the change from the leader, at which point it increments to `0`. If the values are the same, it means the indexes are fully synced.
+領導與跟隨檢查點值一開始為負整數，並反映分片數量（一個分片為 -1，五個分片為 -5，依此類推）。每次進行變更時，這些值會遞增至正整數。例如，當您在領導索引上進行變更時，`leader_checkpoint` 會變成 `0`。`follower_checkpoint` 一開始仍為 `-1`，直到跟隨索引從領導叢集提取該變更，此時它會遞增至 `0`。若這些值相同，表示索引已完全同步。
 
-## Get leader cluster stats
-**Introduced 1.1**
+## 取得領導叢集統計資料
+**於 1.1 版推出**
 {: .label .label-purple }
 
-Gets information about replicated leader indexes on a specified cluster. 
+取得指定叢集上已複寫領導索引的相關資訊。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_replication/leader_stats
 ```
 
-### Example request
+### 範例請求
 
 ```json
 GET /_plugins/_replication/leader_stats
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -265,26 +266,26 @@ GET /_plugins/_replication/leader_stats
 }
 ```
 
-## Get follower cluster stats
-**Introduced 1.1**
+## 取得跟隨叢集統計資料
+**於 1.1 版推出**
 {: .label .label-purple }
 
-Gets information about follower (syncing) indexes on a specified cluster. 
+取得指定叢集上跟隨 (同步中) 索引的相關資訊。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_replication/follower_stats
 ```
 
-### Example request
+### 範例請求
 
 ```json
 GET /_plugins/_replication/follower_stats
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -330,26 +331,26 @@ GET /_plugins/_replication/follower_stats
 }
 ```
 
-## Get auto-follow stats
-**Introduced 1.1**
+## 取得 auto-follow 統計資料
+**於 1.1 版推出**
 {: .label .label-purple }
 
-Gets information about auto-follow activity and any replication rules configured on the specified cluster.
+取得 auto-follow 活動以及指定叢集上所設定之任何複寫規則的相關資訊。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_replication/autofollow_stats
 ```
 
-### Example request
+### 範例請求
 
 ```json
 GET /_plugins/_replication/autofollow_stats
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -374,19 +375,19 @@ GET /_plugins/_replication/autofollow_stats
 }
 ```
 
-## Update settings
-**Introduced 1.1**
+## 更新設定
+**於 1.1 版推出**
 {: .label .label-purple }
 
-Updates settings on the follower index.
+更新跟隨索引上的設定。
 
-### Endpoints
+### 端點
 
 ```json
 PUT /_plugins/_replication/{follower-index}/_update
 ```
 
-### Example request
+### 範例請求
 
 ```json
 PUT /_plugins/_replication/follower-01/_update
@@ -399,7 +400,7 @@ PUT /_plugins/_replication/follower-01/_update
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -407,36 +408,36 @@ PUT /_plugins/_replication/follower-01/_update
 }
 ```
 
-## Create replication rule
-**Introduced 1.1**
+## 建立複寫規則
+**於 1.1 版推出**
 {: .label .label-purple }
 
-Automatically starts replication on indexes matching a specified pattern. If a new index on the leader cluster matches the pattern, OpenSearch automatically creates a follower index and begins replication. You can also use this API to update existing replication rules.
+自動對符合指定模式的索引開始複寫。如果領導叢集上的新索引符合該模式，OpenSearch 會自動建立跟隨索引並開始複寫。您也可以使用此 API 更新現有的複寫規則。
 
-Send this request to the follower cluster.
+將此請求傳送至跟隨叢集。
 
-Make sure to note the names of all auto-follow patterns after you create them. The replication plugin currently does not include an API operation to retrieve a list of existing patterns.
+建立所有 auto-follow 模式後，請務必記下其名稱。複寫外掛程式目前並未包含可擷取現有模式清單的 API 操作。
 {: .tip }
 
-### Endpoints
+### 端點
 
 ```json
 POST /_plugins/_replication/_autofollow
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description | Required |
+| 欄位 | 資料類型 | 說明 | 必要 |
 | :--- | :--- | :--- | :--- |
-| `leader_alias` | String | The name of the cross-cluster connection. You define this alias when you [set up a cross-cluster connection]({{site.url}}{{site.baseurl}}/replication-plugin/get-started/#set-up-a-cross-cluster-connection). | Yes |
-| `name` | String | A name for the auto-follow pattern. | Yes |
-| `pattern` | String | An array of index patterns to match against indexes in the specified leader cluster. Supports wildcard characters. For example, `leader-*`. | Yes |
-| `follower_index_pattern` | String | A pattern for the follower index name. Use the `{% raw %}{{leader_index}}{% endraw %}` placeholder to include the leader index name. For example, `{% raw %}{{leader_index}}{% endraw %}-replica` creates a follower index named `<leader_index_name>-replica`. Use this field to avoid name collisions when an index with the same name already exists on the follower cluster or when replicating indexes from multiple leader clusters. If omitted, the follower index uses the same name as the leader index. | No |
-| `use_roles` | Object | The roles to use for all subsequent backend replication tasks between the indexes. Specify a `leader_cluster_role` and `follower_cluster_role`. See [Map the leader and follower cluster roles]({{site.url}}{{site.baseurl}}/replication-plugin/permissions/#map-the-leader-and-follower-cluster-roles). | If Security plugin is enabled |
+| `leader_alias` | 字串 | 跨叢集連線的名稱。您可以在[設定跨叢集連線]({{site.url}}{{site.baseurl}}/replication-plugin/get-started/#set-up-a-cross-cluster-connection)時定義此別名。 | 是 |
+| `name` | 字串 | auto-follow 模式的名稱。 | 是 |
+| `pattern` | 字串 | 要與指定領導叢集中索引比對的索引模式陣列。支援萬用字元。例如 `leader-*`。 | 是 |
+| `follower_index_pattern` | 字串 | 跟隨索引名稱的模式。使用 `{% raw %}{{leader_index}}{% endraw %}` 預留位置來包含領導索引名稱。例如，`{% raw %}{{leader_index}}{% endraw %}-replica` 會建立名為 `<leader_index_name>-replica` 的跟隨索引。當跟隨叢集上已存在同名索引，或從多個領導叢集複寫索引時，請使用此欄位以避免名稱衝突。若省略，跟隨索引會使用與領導索引相同的名稱。 | 否 |
+| `use_roles` | 物件 | 索引之間所有後續後端複寫工作要使用的角色。請指定 `leader_cluster_role` 和 `follower_cluster_role`。請參閱[對應領導與跟隨叢集角色]({{site.url}}{{site.baseurl}}/replication-plugin/permissions/#map-the-leader-and-follower-cluster-roles)。 | 若已啟用 Security 外掛程式 |
 
-### Example request
+### 範例請求
 
 ```json
 POST /_plugins/_replication/_autofollow
@@ -453,7 +454,7 @@ POST /_plugins/_replication/_autofollow
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {
@@ -461,30 +462,30 @@ POST /_plugins/_replication/_autofollow
 }
 ```
 
-## Delete replication rule
-**Introduced 1.1**
+## 刪除複寫規則
+**於 1.1 版推出**
 {: .label .label-purple }
 
-Deletes the specified replication rule. This operation prevents any new indexes from being replicated but does not stop existing replication that the rule has already initiated. Replicated indexes remain read-only until you stop replication.
+刪除指定的複寫規則。此操作會防止任何新索引被複寫，但不會停止該規則已啟動的現有複寫。在您停止複寫之前，已複寫的索引會保持唯讀。
 
-Send this request to the follower cluster.
+將此請求傳送至跟隨叢集。
 
-### Endpoints
+### 端點
 
 ```json
 DELETE /_plugins/_replication/_autofollow
 ```
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-| Field | Data type | Description | Required |
+| 欄位 | 資料類型 | 說明 | 必要 |
 | :--- | :--- | :--- | :--- |
-| `leader_alias` | String | The name of the cross-cluster connection. You define this alias when you [set up a cross-cluster connection]({{site.url}}{{site.baseurl}}/replication-plugin/get-started/#set-up-a-cross-cluster-connection). | Yes |
-| `name` | String | The name of the pattern. | Yes |
+| `leader_alias` | 字串 | 跨叢集連線的名稱。您可以在[設定跨叢集連線]({{site.url}}{{site.baseurl}}/replication-plugin/get-started/#set-up-a-cross-cluster-connection)時定義此別名。 | 是 |
+| `name` | 字串 | 模式的名稱。 | 是 |
 
-### Example request
+### 範例請求
 
 ```json
 DELETE /_plugins/_replication/_autofollow
@@ -495,7 +496,7 @@ DELETE /_plugins/_replication/_autofollow
 ```
 {% include copy-curl.html %}
 
-### Example response
+### 範例回應
 
 ```json
 {

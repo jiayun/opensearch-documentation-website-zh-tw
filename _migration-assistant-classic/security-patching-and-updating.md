@@ -1,40 +1,41 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Security patching and updating
+title: "安全性修補與更新"
 nav_order: 30
 permalink: /classic/migration-assistant/security-patching-and-updating/
 ---
 
-# Security patching and updating
+# 安全性修補與更新
 
-This page describes how to safely update the **bootstrap box** (the Amazon Elastic Compute Cloud [Amazon EC2] instance you use to build and run Migration Assistant components), clean Docker caches, and rebuild the Migration Assistant container images.
+本頁面說明如何安全地更新 **bootstrap box** (用於建置與執行 Migration Assistant 元件的 Amazon Elastic Compute Cloud [Amazon EC2] 執行個體)、清理 Docker 快取，以及重建 Migration Assistant 容器映像。
 
-> **Recommended cadence**: Perform these steps only when Migration Assistant is not actively running.
+> **建議頻率**：僅在 Migration Assistant 未執行時執行這些步驟。
 
 ---
 
-## Step 1: Patch the operating system on the bootstrap box
+## 步驟 1：修補 bootstrap box 上的作業系統
 
 ```shell
 sudo dnf upgrade --refresh -y
 ```
 {% include copy.html %}
 
-> **Note**: If the kernel or core libraries are updated, a reboot is often required.
+> **注意**：如果核心或核心程式庫已更新，通常需要重新開機。
 
-Reboot if required:
+如有需要，請重新開機：
 
 ```shell
 sudo reboot
 ```
 {% include copy.html %}
 
-After the box comes back up, reconnect, and continue.
+機器重新啟動後，重新連線並繼續。
 
 
-## Step 2: Clear Docker build and download caches
+## 步驟 2：清除 Docker 建置與下載快取
 
-Clearing the Docker build and downloaded caches removes **all** unused images, containers, networks, and volumes to free disk space and ensure clean rebuilds:
+清除 Docker 建置與下載快取會移除**所有**未使用的映像、容器、網路與儲存區 (volume)，以釋放磁碟空間並確保重建時的乾淨狀態：
 
 ```shell
 docker system prune -a --volumes
@@ -42,9 +43,9 @@ docker system prune -a --volumes
 {% include copy.html %}
 
 
-## Step 3: Clean prior Gradle outputs
+## 步驟 3：清理先前的 Gradle 輸出
 
-From the repository root, run the following command to clean prior Gradle outputs:
+從儲存庫根目錄執行下列命令，以清理先前的 Gradle 輸出：
 
 ```shell
 ./gradlew clean
@@ -52,9 +53,9 @@ From the repository root, run the following command to clean prior Gradle output
 {% include copy.html %}
 
 
-## Step 4: Rebuild Migration Assistant images
+## 步驟 4：重建 Migration Assistant 映像
 
-Rebuild the Docker images used by Migration Assistant:
+重建 Migration Assistant 使用的 Docker 映像：
 
 ```shell
 ./gradlew :buildDockerImages -x test
@@ -62,9 +63,9 @@ Rebuild the Docker images used by Migration Assistant:
 {% include copy.html %}
 
 
-## Step 5: Redeploy Migration Assistant
+## 步驟 5：重新部署 Migration Assistant
 
-Redeploy Migration Assistant to replace existing container images with the freshly built versions:
+重新部署 Migration Assistant，以最新建置的版本取代現有的容器映像：
 
 ```shell
 cd deployment/cdk/opensearch-service-migration
@@ -72,18 +73,18 @@ cd deployment/cdk/opensearch-service-migration
 ```
 {% include copy.html %}
 
-> **Warning**: Redeployment will interrupt any running migration tasks (for example, Capture Proxy, Traffic Replayer, or Reindex-from-Snapshot).
-> **Do not** redeploy while actively migrating, as this can cause data loss or inconsistent state.
+> **警告**：重新部署會中斷任何執行中的遷移工作 (例如 Capture Proxy、Traffic Replayer 或 Reindex-from-Snapshot)。
+> **請勿**在遷移進行中重新部署，否則可能導致資料遺失或狀態不一致。
 {: .warning}
 
 
-## Troubleshooting
+## 疑難排解
 
-* **`toomanyrequests: Rate exceeded`**:
-  Retry the last build command. Some downstream container images are rate limited and may change over time.
+* **`toomanyrequests: Rate exceeded`**：
+  重試最後一個建置命令。部分下游容器映像有速率限制，且可能隨時間變更。
 
-* **Cannot pull base images**:
-  Ensure that the instance has internet egress (NAT/IGW) and access to Docker Hub/Amazon Elastic Container Registry (Amazon ECR) as required.
+* **無法提取基礎映像**：
+  確認執行個體具有網際網路對外連線 (NAT/IGW)，並視需要可存取 Docker Hub/Amazon Elastic Container Registry (Amazon ECR)。
 
-* **Gradle cache corruption**:
-  If problems persist after `./gradlew clean`, also remove `~/.gradle/caches` and retry.
+* **Gradle 快取損毀**：
+  如果在 `./gradlew clean` 之後問題仍然存在，請一併移除 `~/.gradle/caches` 後重試。

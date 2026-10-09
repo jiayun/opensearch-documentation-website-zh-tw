@@ -1,39 +1,40 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get controller
+title: "取得控制器"
 parent: Controller APIs
 grand_parent: ML Commons APIs
 nav_order: 20
 ---
 
-# Get Controller API
-**Introduced 2.12**
+# 取得控制器 API
+**於 2.12 版推出**
 {: .label .label-purple }
 
-Use this API to retrieve information about a controller for a model by model ID.
+使用此 API 可依模型 ID 取得模型的控制器相關資訊。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_ml/controllers/{model_id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. 
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `model_id` | String | The model ID of the model for which to retrieve the controller. |
+| `model_id` | 字串 | 要取得其控制器的模型 ID。 |
 
-## Example request
+## 範例請求
 
 ```json
 GET /_plugins/_ml/controllers/T_S-cY0BKCJ3ot9qr0aP
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -51,7 +52,7 @@ GET /_plugins/_ml/controllers/T_S-cY0BKCJ3ot9qr0aP
 }
 ```
 
-If there is no controller defined for the model, OpenSearch returns an error:
+如果模型沒有定義控制器，OpenSearch 會傳回錯誤：
 
 ```json
 {
@@ -69,10 +70,10 @@ If there is no controller defined for the model, OpenSearch returns an error:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-For response field descriptions, see [Create Controller API request fields]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/controller-apis/create-controller#request-body-fields).
+如需回應欄位的說明，請參閱 [Create Controller API 的請求本文欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/controller-apis/create-controller#request-body-fields)。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:admin/opensearch/ml/controllers/get`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`cluster:admin/opensearch/ml/controllers/get`。

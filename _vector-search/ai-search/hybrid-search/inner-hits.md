@@ -1,42 +1,43 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using inner hits in hybrid queries
+title: "在混合查詢中使用內部命中"
 parent: Hybrid search
 grand_parent: AI search
 has_children: false
 nav_order: 60
 ---
 
-# Using inner hits in hybrid queries
-**Introduced 3.0**
+# 在混合查詢中使用內部命中
+**於 3.0 版導入**
 {: .label .label-purple }
 
-When running a hybrid search, you can retrieve the matching nested objects or child documents by including an `inner_hits` clause in your search request. This information lets you explore the specific parts of a document that matched the query.
+執行混合搜尋時，您可以在搜尋請求中加入 `inner_hits` 子句，以擷取相符的巢狀物件或子文件。這項資訊可讓您探索文件中與查詢相符的特定部分。
 
-To learn more about how `inner_hits` works, see [Retrieve inner hits]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/).
+若要進一步了解 `inner_hits` 的運作方式，請參閱[擷取內部命中]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/)。
 
 
-During hybrid query execution, documents are scored and retrieved as follows:
+混合查詢執行時，文件的評分與擷取方式如下：
 
-1. Each subquery selects parent documents based on the relevance of their inner hits.
-1. The selected parent documents from all subqueries are combined, and their scores are normalized to produce a hybrid score.
-1. For each parent document, the relevant `inner_hits` are retrieved from the shards and included in the final response.
+1. 每個子查詢會根據內部命中的相關性選取父文件。
+1. 來自所有子查詢的已選取父文件會被合併，其分數會經過標準化以產生混合分數。
+1. 針對每個父文件，相關的 `inner_hits` 會從分片中擷取，並包含在最終回應中。
 
-Hybrid queries handle inner hits differently than traditional queries when determining final search results:
+混合查詢在決定最終搜尋結果時，處理內部命中的方式與傳統查詢不同：
 
-- In a **traditional query**, the final ranking of parent documents is determined directly by the `inner_hits` scores.
-- In a **hybrid query**, the final ranking is determined by the **hybrid score** (a normalized combination of all subquery scores). However, parent documents are still fetched from the shard based on the relevance of their `inner_hits`.
+- 在**傳統查詢**中，父文件的最終排名直接由 `inner_hits` 分數決定。
+- 在**混合查詢**中，最終排名由**混合分數**（所有子查詢分數經標準化後的組合）決定。不過，父文件仍會根據其 `inner_hits` 的相關性從分片中擷取。
 
-The `inner_hits` section in the response shows the original (raw) scores before normalization. The parent documents show the final hybrid score.
+回應中的 `inner_hits` 區段會顯示標準化之前的原始分數。父文件則顯示最終的混合分數。
 {: .note}
 
-## Example
+## 範例
 
-The following example demonstrates using `inner_hits` with a hybrid query. 
+下列範例示範如何在混合查詢中使用 `inner_hits`。
 
-### Step 1: Create an index
+### 步驟 1：建立索引
 
-Create an index with two nested fields (`user` and `location`):
+建立一個包含兩個巢狀欄位（`user` 與 `location`）的索引：
 
 ```json
 PUT /my-nlp-index
@@ -75,9 +76,9 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-### Step 2: Create a search pipeline 
+### 步驟 2：建立搜尋管線
 
-Configure a search pipeline with a `normalization-processor` using the `min_max` normalization technique and the `arithmetic_mean` combination technique:
+使用 `min_max` 標準化技術與 `arithmetic_mean` 組合技術，設定一個包含 `normalization-processor` 的搜尋管線：
 
 ```json
 PUT /_search/pipeline/nlp-search-pipeline
@@ -100,9 +101,9 @@ PUT /_search/pipeline/nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 3: Ingest documents into the index
+### 步驟 3：將文件匯入索引
 
-To ingest documents into the index created in the previous step, send the following request:
+若要將文件匯入上一個步驟建立的索引，請傳送下列請求：
 
 ```json
 POST /my-nlp-index/_bulk
@@ -113,9 +114,9 @@ POST /my-nlp-index/_bulk
 ```
 {% include copy-curl.html %}
 
-### Step 4: Search the index using hybrid search and fetch inner hits
+### 步驟 4：使用混合搜尋搜尋索引並擷取內部命中
 
-The following request runs a hybrid query to search for matches in two nested fields: `user` and `location`. It combines the results from each field into a single ranked list of parent documents while also retrieving the matching nested objects using `inner_hits`:
+下列請求會執行混合查詢，在兩個巢狀欄位 `user` 與 `location` 中搜尋相符項目。它會將每個欄位的結果合併為單一排名的父文件清單，同時使用 `inner_hits` 擷取相符的巢狀物件：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -153,7 +154,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-The response includes the matched parent documents along with the relevant nested `inner_hits` for both the `user` and `location` nested fields. Each inner hit shows which nested object matched and how strongly it contributed to the overall hybrid score:
+回應包含相符的父文件，以及 `user` 與 `location` 兩個巢狀欄位的相關巢狀 `inner_hits`。每個內部命中會顯示哪個巢狀物件相符，以及它對整體混合分數的貢獻程度：
 
 ```json
 ...
@@ -246,14 +247,14 @@ The response includes the matched parent documents along with the relevant neste
 ...
 ```
 
-## Using the explain parameter
+## 使用 explain 參數
 
-To understand how inner hits contribute to the hybrid score, you can enable explanation. The response will include detailed scoring information. For more information about using `explain` with hybrid queries, see [Hybrid search explain]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/explain/).
+若要了解內部命中如何影響混合分數，您可以啟用說明功能。回應將包含詳細的評分資訊。如需在混合查詢中使用 `explain` 的更多資訊，請參閱[混合搜尋說明]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/explain/)。
 
-`explain` is an expensive operation in terms of both resources and time. For production clusters, we recommend using it sparingly for the purpose of troubleshooting.
+`explain` 在資源與時間方面都是昂貴的操作。對於正式環境叢集，我們建議僅在疑難排解時少量使用。
 {: .warning}
 
-First, add the `hybrid_score_explanation` processor to the search pipeline you created in Step 2:
+首先，將 `hybrid_score_explanation` 處理器加入您在步驟 2 建立的搜尋管線：
 
 ```json
 PUT /_search/pipeline/nlp-search-pipeline
@@ -280,9 +281,9 @@ PUT /_search/pipeline/nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-For more information, see [Hybrid score explanation processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/explanation-processor/) and [Hybrid search explain]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/explain/).
+如需更多資訊，請參閱[混合分數說明處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/explanation-processor/)與[混合搜尋說明]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/explain/)。
 
-Then, run the same query you ran in Step 4 and include the `explain` parameter in your search request:
+接著，執行您在步驟 4 執行過的相同查詢，並在搜尋請求中加入 `explain` 參數：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline&explain=true
@@ -320,7 +321,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline&explain=true
 ```
 {% include copy-curl.html %}
 
-The response includes an `_explanation` object containing detailed scoring information. The nested `details` array provides the relevant information about the score mode used, the number of child documents contributing to the parent document's score, and how the scores were normalized and combined:
+回應包含一個 `_explanation` 物件，其中含有詳細的評分資訊。巢狀的 `details` 陣列提供下列相關資訊：所使用的分數模式、對父文件分數有貢獻的子文件數量，以及分數如何被標準化與組合：
 
 ```json
 {
@@ -369,9 +370,9 @@ The response includes an `_explanation` object containing detailed scoring infor
 ...
 ```
 
-## Sorting with inner hits
+## 使用內部命中進行排序
 
-To apply sorting, add a `sort` subclause in the `inner_hits` clause. For example, to sort by `user.age`, specify this sort condition in the `inner_hits` clause:
+若要套用排序，請在 `inner_hits` 子句中新增 `sort` 子句。例如，若要依 `user.age` 排序，請在 `inner_hits` 子句中指定此排序條件：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -417,7 +418,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-In the response, the `user` inner hits are sorted by age in descending order rather than by relevance, which is why the `_score` field is `null` (scores are not calculated when custom sorting is applied):
+在回應中，`user` 內部命中會依 age 遞減排序，而非依相關性排序，這就是為什麼 `_score` 欄位為 `null`（套用自訂排序時不會計算分數）：
 
 ```json
 ...
@@ -467,9 +468,9 @@ In the response, the `user` inner hits are sorted by age in descending order rat
 ...
 ```
 
-## Pagination with inner hits
+## 使用內部命中進行分頁
 
-To paginate inner hit results, specify the `from` parameter (starting position) and `size` parameter (number of results) in the `inner_hits` clause. The following example request retrieves only the third and fourth nested objects from the `user` field by setting `from` to `2` (skip the first two) and `size` to `2` (return two results):
+若要對內部命中結果進行分頁，請在 `inner_hits` 子句中指定 `from` 參數（起始位置）與 `size` 參數（結果數量）。下列範例請求僅從 `user` 欄位擷取第三個與第四個巢狀物件，其方式是將 `from` 設為 `2`（略過前兩個），並將 `size` 設為 `2`（傳回兩個結果）：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -507,7 +508,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-The response contains the `user` field inner hits starting from the offset of `2`:
+回應包含從位移 `2` 開始的 `user` 欄位內部命中：
 
 ```json
 ...
@@ -551,9 +552,9 @@ The response contains the `user` field inner hits starting from the offset of `2
 ...
 ```
 
-## Defining a custom name for the inner_hits field
+## 為 inner_hits 欄位定義自訂名稱
 
-To differentiate between multiple inner hits in a single query, you can define custom names for inner hits in the search response. For example, you can provide a custom name, `coordinates`, for the `location` field inner hits as follows:
+若要區分單一查詢中的多個內部命中，您可以為搜尋回應中的內部命中定義自訂名稱。例如，您可以為 `location` 欄位的內部命中提供自訂名稱 `coordinates`，如下所示：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -590,7 +591,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-In the response, inner hits for the `user` field appear under the custom name `coordinates`:
+在回應中，`user` 欄位的內部命中會以自訂名稱 `coordinates` 顯示：
 
 ```json
 ...

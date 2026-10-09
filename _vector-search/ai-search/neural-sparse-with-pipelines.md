@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Generating sparse vector embeddings automatically
+title: "自動產生稀疏向量嵌入"
 parent: Neural sparse search
 grand_parent: AI search
 nav_order: 10
@@ -9,43 +10,43 @@ redirect_from:
   - /search-plugins/neural-sparse-with-pipelines/
 ---
 
-# Generating sparse vector embeddings automatically
+# 自動產生稀疏向量嵌入
 
-Generating sparse vector embeddings automatically enables neural sparse search to function like lexical search. To take advantage of this encapsulation, set up an ingest pipeline to create and store sparse vector embeddings from document text during ingestion. At query time, input plain text, which will be automatically converted into vector embeddings for search.
+自動產生稀疏向量嵌入可讓神經稀疏搜尋像詞彙搜尋一樣運作。若要利用此封裝，請設定資料匯入管線，在匯入期間從文件文字建立並儲存稀疏向量嵌入。查詢時，輸入純文字，系統會自動將其轉換為向量嵌入以供搜尋。
 
-Neural sparse search works as follows:
+神經稀疏搜尋的運作方式如下：
 
-- At ingestion time, neural sparse search uses a sparse encoding model to generate sparse vector embeddings from text fields. 
+- 匯入時，神經稀疏搜尋會使用稀疏編碼模型，從文字欄位產生稀疏向量嵌入。
 
-- At query time, neural sparse search operates in one of two search modes: 
+- 查詢時，神經稀疏搜尋會以下列兩種搜尋模式之一運作：
 
-    - **Doc-only mode (default)**: A sparse encoding model generates sparse vector embeddings from documents at ingestion time. At query time, neural sparse search tokenizes query text and obtains the token weights from a lookup table. This approach provides faster retrieval at the cost of a slight decrease in search relevance. The query-time tokenization can be performed by the following components:
-      - **A DL model analyzer (default)**: A [DL model analyzer]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/dl-model-analyzers/) uses a built-in ML model. This approach provides faster retrieval at the cost of a slight decrease in search relevance.
-      - **A custom tokenizer**: You can deploy a custom tokenizer using the [Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/) to tokenize query text. This approach provides more flexibility while maintaining consistent tokenization across your neural sparse search implementation. 
+    - **僅文件模式 (預設)**：稀疏編碼模型會在匯入時從文件產生稀疏向量嵌入。查詢時，神經稀疏搜尋會將查詢文字斷詞，並從查閱表中取得詞元權重。此方法可提供更快的擷取速度，但會稍微降低搜尋相關性。查詢時的斷詞可由下列元件執行：
+      - **DL 模型分析器 (預設)**：[DL 模型分析器]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/dl-model-analyzers/) 使用內建的 ML 模型。此方法可提供更快的擷取速度，但會稍微降低搜尋相關性。
+      - **自訂斷詞器**：您可以使用 [Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/) 部署自訂斷詞器，為查詢文字斷詞。此方法提供更大的彈性，同時在您的神經稀疏搜尋實作中維持一致的斷詞方式。
 
-    - **Bi-encoder mode**: A sparse encoding model generates sparse vector embeddings from both documents and query text. This approach provides better search relevance at the cost of an increase in latency. 
+    - **雙編碼器模式**：稀疏編碼模型會同時從文件和查詢文字產生稀疏向量嵌入。此方法可提供更好的搜尋相關性，但會增加延遲。
 
-We recommend using the default doc-only mode with a DL analyzer because it provides the best balance of performance and relevance for most use cases. 
-{: tip} 
+我們建議使用搭配 DL 分析器的預設僅文件模式，因為對大多數使用案例而言，它能在效能與相關性之間取得最佳平衡。
+{: tip}
 
-The default doc-only mode with an analyzer works as follows:
+搭配分析器的預設僅文件模式運作方式如下：
 
-1. At ingestion time:
-   - Your registered sparse encoding model generates sparse vector embeddings.
-   - These embeddings are stored as token-weight pairs in your index.
+1. 匯入時：
+   - 您註冊的稀疏編碼模型會產生稀疏向量嵌入。
+   - 這些嵌入會以詞元權重配對的形式儲存在您的索引中。
 
-2. At search time:
-   - The query text is analyzed using a built-in DL model analyzer (which uses a corresponding built-in ML model tokenizer).
-   - The token weights are obtained from a precomputed lookup table that's built into OpenSearch.
-   - The tokenization matches what the sparse encoding model expects because they both use the same tokenization scheme.
+2. 搜尋時：
+   - 查詢文字會使用內建的 DL 模型分析器進行分析 (該分析器使用對應的內建 ML 模型斷詞器)。
+   - 詞元權重會從 OpenSearch 內建的預先計算查閱表中取得。
+   - 斷詞結果會與稀疏編碼模型的預期相符，因為兩者使用相同的斷詞配置。
 
-Thus, you must choose and apply an ML model at ingestion time, but you only need to specify an analyzer (not a model) at search time.
+因此，您必須在匯入時選擇並套用 ML 模型，但在搜尋時只需指定分析器 (而非模型)。
 
-## Sparse encoding model/analyzer compatibility
+## 稀疏編碼模型/分析器相容性
 
-The following table lists all available models for use in doc-only mode. Each model is paired with its compatible analyzer that should be used at search time. Choose based on your language needs (English or multilingual) and performance requirements.
+下表列出所有可用於僅文件模式的模型。每個模型都搭配其相容的分析器，應在搜尋時使用。請根據您的語言需求（英文或多語言）和效能需求來選擇。
 
-| Model                                                                    | Analyzer        | BEIR relevance | MIRACL relevance | Model parameters |
+| 模型                                                                    | 分析器        | BEIR 相關性 | MIRACL 相關性 | 模型參數 |
 | ------------------------------------------------------------------------ | --------------- | -------------- | ---------------- | ---------------- |
 | `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v1`          | `bert-uncased`  | 0.490          | N/A              | 133M             |
 | `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v2-distill`  | `bert-uncased`  | 0.504          | N/A              | 67M              |
@@ -54,19 +55,19 @@ The following table lists all available models for use in doc-only mode. Each mo
 | `amazon/neural-sparse/opensearch-neural-sparse-encoding-doc-v3-gte`       | `bert-uncased`  | 0.546          | N/A              | 133M             |
 | `amazon/neural-sparse/opensearch-neural-sparse-encoding-multilingual-v1` | `mbert-uncased` | 0.500          | 0.629            | 168M             |
 
-## Example: Using the default doc-only mode with an analyzer
+## 範例：使用搭配分析器的預設僅文件模式
 
-This example uses the recommended **doc-only** mode with a **DL model analyzer**. In this mode, OpenSearch applies a sparse encoding model at ingestion time and a compatible DL model analyzer at search time. For examples of other modes, see [Using custom configurations for neural sparse search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-custom/). 
+此範例使用建議的 **僅文件** 模式搭配 **DL 模型分析器**。在此模式中，OpenSearch 會在匯入時套用稀疏編碼模型，並在搜尋時套用相容的 DL 模型分析器。如需其他模式的範例，請參閱[使用自訂組態進行神經稀疏搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-custom/)。
 
-For this example, you'll use neural sparse search with OpenSearch's built-in machine learning (ML) model hosting and ingest pipelines. Because the transformation of text to embeddings is performed within OpenSearch, you'll use text when ingesting and searching documents. 
+在此範例中，您將使用神經稀疏搜尋，並搭配 OpenSearch 內建的機器學習 (ML) 模型代管與資料匯入管線。由於文字轉換為嵌入的作業是在 OpenSearch 內執行，因此您在匯入及搜尋文件時將使用文字。
 
-### Prerequisites
+### 先決條件
 
-Before you start, complete the [prerequisites]({{site.url}}{{site.baseurl}}/search-plugins/neural-search-tutorial/#prerequisites). 
+開始之前，請先完成[先決條件]({{site.url}}{{site.baseurl}}/search-plugins/neural-search-tutorial/#prerequisites)。
 
-### Step 1: Configure a sparse encoding model for ingestion
+### 步驟 1：設定用於匯入的稀疏編碼模型
 
-To use doc-only mode, first [choose a sparse encoding model](#sparse-encoding-modelanalyzer-compatibility) to be used at ingestion time. Then, register and deploy the model. For example, to register and deploy the `opensearch-neural-sparse-encoding-doc-v3-distill` model, use the following request:
+若要使用僅文件模式，請先[選擇稀疏編碼模型](#sparse-encoding-modelanalyzer-compatibility) 以供匯入時使用。然後註冊並部署模型。例如，若要註冊並部署 `opensearch-neural-sparse-encoding-doc-v3-distill` 模型，請使用下列請求：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -78,7 +79,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Registering a model is an asynchronous task. OpenSearch returns a task ID for every model you register:
+註冊模型是非同步工作。OpenSearch 會為您註冊的每個模型傳回一個工作 ID：
 
 ```json
 {
@@ -87,14 +88,14 @@ Registering a model is an asynchronous task. OpenSearch returns a task ID for ev
 }
 ```
 
-You can check the status of the task by calling the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+您可以呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來檢查工作狀態：
 
 ```json
 GET /_plugins/_ml/tasks/aFeif4oB5Vm0Tdw8yoN7
 ```
 {% include copy-curl.html %}
 
-Once the task is complete, the task state will change to `COMPLETED` and the ML Tasks API response will contain the model ID of the registered model:
+工作完成後，工作狀態會變更為 `COMPLETED`，且 ML Tasks API 回應會包含已註冊模型之模型的 ID：
 
 ```json
 {
@@ -111,13 +112,13 @@ Once the task is complete, the task state will change to `COMPLETED` and the ML 
 }
 ```
 
-Note the `model_id` of the model you've created; you'll need it for the following steps.
+請記下您所建立模型的 `model_id`；後續步驟會用到。
 
-### Step 2: Create an ingest pipeline
+### 步驟 2：建立資料匯入管線
 
-To generate sparse vector embeddings, you need to create an [ingest pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/) that contains a [`sparse_encoding` processor]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/sparse-encoding/), which will convert the text in a document field to vector embeddings. The processor's `field_map` determines the input fields from which to generate vector embeddings and the output fields in which to store the embeddings.
+若要產生稀疏向量嵌入，您需要建立包含 [`sparse_encoding` 處理器]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/sparse-encoding/) 的[資料匯入管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)，該處理器會將文件欄位中的文字轉換為向量嵌入。處理器的 `field_map` 會決定要從哪些輸入欄位產生向量嵌入，以及要在哪些輸出欄位中儲存嵌入。
 
-The following example request creates an ingest pipeline where the text from `passage_text` will be converted into sparse vector embeddings, which will be stored in `passage_embedding`. Provide the model ID of the registered model in the request:
+下列範例請求會建立資料匯入管線，其中 `passage_text` 的文字會轉換為稀疏向量嵌入，並儲存在 `passage_embedding` 中。請在請求中提供已註冊模型的模型 ID：
 
 ```json
 PUT /_ingest/pipeline/nlp-ingest-pipeline-sparse
@@ -139,13 +140,13 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline-sparse
 ```
 {% include copy-curl.html %}
 
-To split long text into passages, use the `text_chunking` ingest processor before the `sparse_encoding` processor. For more information, see [Text chunking]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/).
+若要將長文字分割為段落，請在 `sparse_encoding` 處理器之前使用 `text_chunking` 匯入處理器。如需詳細資訊，請參閱[文字區塊化]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/)。
 
-### Step 3: Create an index for ingestion
+### 步驟 3：建立用於匯入的索引
 
-In order to use the sparse encoding processor defined in your pipeline, create a rank features index, adding the pipeline created in the previous step as the default pipeline. Ensure that the fields defined in the `field_map` are mapped as correct types. Continuing with the example, the `passage_embedding` field must be mapped as [`rank_features`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/rank/#rank-features). Similarly, the `passage_text` field must be mapped as `text`.
+若要使用管線中定義的稀疏編碼處理器，請建立 rank features 索引，並將上一步建立的管線新增為預設管線。請確保 `field_map` 中定義的欄位已對應為正確的類型。延續先前的範例，`passage_embedding` 欄位必須對應為 [`rank_features`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/rank/#rank-features)。同樣地，`passage_text` 欄位必須對應為 `text`。
 
-The following example request creates a rank features index configured with a default ingest pipeline:
+下列範例請求會建立一個設定了預設資料匯入管線的 rank features 索引：
 
 ```json
 PUT /my-nlp-index
@@ -170,7 +171,7 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-To save disk space, you can exclude the embedding vector from the source as follows:
+若要節省磁碟空間，您可以依照下列方式將嵌入向量從來源中排除：
 
 ```json
 PUT /my-nlp-index
@@ -200,12 +201,12 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-Once the `<token, weight>` pairs are excluded from the source, they cannot be recovered. Before applying this optimization, make sure you don't need the  `<token, weight>` pairs for your application.
+一旦 `<token, weight>` 配對從來源中排除，就無法復原。在套用此最佳化之前，請確認您的應用程式不需要 `<token, weight>` 配對。
 {: .important}
 
-### Step 4: Ingest documents into the index
+### 步驟 4：將文件匯入索引
 
-To ingest documents into the index created in the previous step, send the following requests:
+若要將文件匯入上一步建立的索引，請傳送下列請求：
 
 ```json
 PUT /my-nlp-index/_doc/1
@@ -225,14 +226,14 @@ PUT /my-nlp-index/_doc/2
 ```
 {% include copy-curl.html %}
 
-Before the document is ingested into the index, the ingest pipeline runs the `sparse_encoding` processor on the document, generating vector embeddings for the `passage_text` field. The indexed document includes the `passage_text` field, which contains the original text, and the `passage_embedding` field, which contains the vector embeddings. 
+在文件匯入索引之前，資料匯入管線會對文件執行 `sparse_encoding` 處理器，為 `passage_text` 欄位產生向量嵌入。編製索引後的文件包含 `passage_text` 欄位（其中包含原始文字），以及 `passage_embedding` 欄位（其中包含向量嵌入）。
 
 
-### Step 5: Search the data
+### 步驟 5：搜尋資料
 
-To perform a neural sparse search on your index, use the `neural_sparse` query clause in [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/) queries. 
+若要對索引執行神經稀疏搜尋，請在 [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/) 查詢中使用 `neural_sparse` 查詢子句。
 
-The following example request uses a `neural_sparse` query to search for relevant documents using a raw text query. Specify the `analyzer` compatible with the model you chose (see [Sparse encoding model/analyzer compatibility](#sparse-encoding-modelanalyzer-compatibility)):
+下列範例請求使用 `neural_sparse` 查詢，以原始文字查詢搜尋相關文件。請指定與您所選模型相容的 `analyzer`（請參閱 [稀疏編碼模型／分析器相容性](#sparse-encoding-modelanalyzer-compatibility)）：
 
 ```json
 GET my-nlp-index/_search
@@ -249,7 +250,7 @@ GET my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-If you don't specify an analyzer, the default `bert-uncased` analyzer is used. Thus, this query is equivalent to the preceding one:
+如果您未指定分析器，則會使用預設的 `bert-uncased` 分析器。因此，此查詢等同於前一個查詢：
 
 ```json
 GET my-nlp-index/_search
@@ -265,7 +266,7 @@ GET my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents:
+回應包含符合的文件：
 
 ```json
 {
@@ -341,7 +342,7 @@ The response contains the matching documents:
 }
 ```
 
-To minimize disk and network I/O latency related to sparse embedding sources, you can exclude the embedding vector source from the query as follows:
+若要將與稀疏嵌入來源相關的磁碟與網路 I/O 延遲降到最低，您可以依照下列方式在查詢中排除嵌入向量來源：
 
 ```json
 GET my-nlp-index/_search
@@ -363,9 +364,9 @@ GET my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-## Bi-encoder mode
+## 雙編碼器模式
 
-In bi-encoder mode, register and deploy a bi-encoder model to use at both ingestion and query time:
+在雙編碼器模式中，請註冊並部署一個雙編碼器模型，以便在匯入與查詢時使用：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -377,7 +378,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-After deployment, use the same `model_id` for search:
+部署完成後，使用相同的 `model_id` 進行搜尋：
 
 ```json
 GET my-nlp-index/_search
@@ -394,11 +395,11 @@ GET my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-For a complete example, see [Using custom configurations for neural sparse search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-custom/).
+完整範例請參閱 [使用自訂組態進行神經稀疏搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-custom/)。
 
-## Doc-only mode with a custom tokenizer
+## 搭配自訂斷詞器的僅文件模式
 
-You can use doc-only mode with a custom tokenizer. To deploy a tokenizer, send the following request:
+您可以搭配自訂斷詞器使用僅文件模式。若要部署斷詞器，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -410,7 +411,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-After deployment, use the `model_id` of the tokenizer in your query:
+部署完成後，在查詢中使用斷詞器的 `model_id`：
 
 ```json
 GET my-nlp-index/_search
@@ -427,21 +428,21 @@ GET my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-For a complete example, see [Using custom configurations for neural sparse search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-custom/).
+完整範例請參閱 [使用自訂組態進行神經稀疏搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-custom/)。
 
-## Using a semantic field
+## 使用語意欄位
 
-Using a `semantic` field simplifies neural sparse search configuration. To use a `semantic` field, follow these steps. For more information, see [Semantic field type]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/semantic/).
+使用 `semantic` 欄位可簡化神經稀疏搜尋的組態。若要使用 `semantic` 欄位，請依照下列步驟操作。如需更多資訊，請參閱 [語意欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/semantic/)。
 
-### Step 1: Register and deploy a sparse encoding model
+### 步驟 1：註冊並部署稀疏編碼模型
 
-First, register and deploy a sparse encoding model as described in [Step 1](#step-1-register-and-deploy-a-sparse-encoding-model).
+首先，依照 [步驟 1](#step-1-register-and-deploy-a-sparse-encoding-model) 所述註冊並部署稀疏編碼模型。
 
-## Step 2: Create an index with a semantic field for ingestion
+## 步驟 2：建立含有語意欄位以供匯入的索引
 
-The sparse encoding model configured in the previous step is used at ingestion time to generate sparse vector embeddings. When using a `semantic` field, set the `model_id` to the ID of the model used for ingestion. For doc-only mode, you can additionally specify the model to be used at query time by providing its ID in the `search_model_id` field.
+前一步驟中設定的稀疏編碼模型會在匯入時用於產生稀疏向量嵌入。使用 `semantic` 欄位時，請將 `model_id` 設定為用於匯入的模型 ID。若為僅文件模式，您還可以在 `search_model_id` 欄位中提供其 ID，以指定查詢時要使用的模型。
 
-The following example shows how to create an index with a `semantic` field configured in doc-only mode using a sparse encoding model. To enable automatic splitting of long text into smaller passages, set `chunking` to `true` in the semantic field configuration:
+下列範例示範如何使用稀疏編碼模型，建立一個在僅文件模式下設定 `semantic` 欄位的索引。若要啟用將長文字自動拆分為較小段落的機制，請在語意欄位組態中將 `chunking` 設為 `true`：
 
 ```json
 PUT /my-nlp-index
@@ -463,7 +464,7 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-After creating the index, you can retrieve its mapping to verify that the embedding field was automatically created:
+建立索引後，您可以擷取其對應，以驗證嵌入欄位是否已自動建立：
 
 ```json
 GET /my-nlp-index/_mapping
@@ -519,11 +520,11 @@ GET /my-nlp-index/_mapping
 ```
 {% include copy-curl.html %}
 
-An object field named `passage_text_semantic_info` is automatically created. It includes a `rank_features` subfield for storing the embedding, along with additional text fields for capturing model metadata.
+系統會自動建立名為 `passage_text_semantic_info` 的物件欄位。其中包含用於儲存嵌入的 `rank_features` 子欄位，以及用於擷取模型中繼資料的其他文字欄位。
 
-### Step 3: Ingest documents into the index
+### 步驟 3：將文件匯入索引
 
-To ingest documents into the index created in the previous step, send the following requests:
+若要將文件匯入前一步驟建立的索引，請傳送下列請求：
 
 ```json
 PUT /my-nlp-index/_doc/1
@@ -543,7 +544,7 @@ PUT /my-nlp-index/_doc/2
 ```
 {% include copy-curl.html %}
 
-Before a document is ingested into the index, OpenSearch automatically chunks the text and generates sparse vector embeddings for each chunk. To verify that the embedding is generated properly, you can run a search request to retrieve the document:
+在文件匯入索引之前，OpenSearch 會自動將文字分塊，並為每個區塊產生稀疏向量嵌入。若要驗證嵌入是否正確產生，您可以執行搜尋請求來擷取該文件：
 
 ```json
 GET /my-nlp-index/_doc/1
@@ -578,11 +579,11 @@ GET /my-nlp-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-## Step 3: Search the data
+## 步驟 3：搜尋資料
 
-To search the embeddings of the semantic field, use the `neural` query clause in [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/) queries.
+若要搜尋語意欄位的嵌入，請在 [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/) 查詢中使用 `neural` 查詢子句。
 
-The following example uses a `neural` query to search for relevant documents using text input. You only need to specify the `semantic` field name---OpenSearch automatically rewrites the query and applies it to the underlying embedding field, appropriately handling any nested objects. There's no need to provide the `model_id` in the query because OpenSearch retrieves it from the `semantic` field's configuration in the index mapping:
+下列範例使用 `neural` 查詢，以文字輸入搜尋相關文件。您只需指定 `semantic` 欄位名稱---OpenSearch 會自動改寫查詢並套用至底層的嵌入欄位，並適當處理任何巢狀物件。查詢中無需提供 `model_id`，因為 OpenSearch 會從索引對應中 `semantic` 欄位的組態取得該值：
 
 ```json
 GET my-nlp-index/_search
@@ -603,7 +604,7 @@ GET my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents:
+回應包含符合的文件：
 
 ```json
 {
@@ -645,7 +646,7 @@ The response contains the matching documents:
 }
 ```
 
-Alternatively, you can use a built-in analyzer to tokenize the query text:
+或者，您可以使用內建的分析器來對查詢文字進行斷詞：
 
 ```json
 GET my-nlp-index/_search
@@ -667,24 +668,24 @@ GET my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-To simplify the query further, you can define the `semantic_field_search_analyzer` in the `semantic` field configuration. This allows you to omit the analyzer from the query itself because OpenSearch automatically applies the configured analyzer during search.
+若要進一步簡化查詢，您可以在 `semantic` 欄位組態中定義 `semantic_field_search_analyzer`。如此一來，您就可以在查詢本身省略分析器，因為 OpenSearch 會在搜尋時自動套用設定的分析器。
 
-## Accelerating neural sparse search
+## 加速神經稀疏搜尋
 
-To learn more about improving retrieval time for neural sparse search, see [Accelerating neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/#accelerating-neural-sparse-search).
+若要深入了解如何改善神經稀疏搜尋的擷取時間，請參閱 [加速神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/#accelerating-neural-sparse-search)。
 
-If you're using `semantic` fields with a `neural` query, query acceleration is not supported. You can achieve acceleration by running a `neural_sparse` query directly against the underlying `rank_features` field.
+如果您將 `semantic` 欄位與 `neural` 查詢搭配使用，則不支援查詢加速。您可以透過直接對底層的 `rank_features` 欄位執行 `neural_sparse` 查詢來達到加速效果。
 {: .note}
 
-## Troubleshooting
+## 疑難排解
 
-This section contains information about resolving common issues encountered while running neural sparse search.
+本節包含在執行神經稀疏搜尋時，解決常見問題的相關資訊。
 
-### Remote connector throttling exceptions
+### 遠端連接器節流例外
 
-When using connectors to call a remote service such as Amazon SageMaker, ingestion and search calls sometimes fail because of remote connector throttling exceptions. 
+使用連接器呼叫遠端服務 (例如 Amazon SageMaker) 時，匯入和搜尋呼叫有時會因為遠端連接器節流例外而失敗。
 
-For OpenSearch versions earlier than 2.15, a throttling exception will be returned as an error from the remote service:
+在早於 2.15 的 OpenSearch 版本中，節流例外會以遠端服務的錯誤形式傳回：
 
 ```json
 {
@@ -693,10 +694,10 @@ For OpenSearch versions earlier than 2.15, a throttling exception will be return
 }
 ```
 
-To mitigate throttling exceptions, decrease the maximum number of connections specified in the `max_connection` setting in the connector's [`client_config`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields) object. Doing so will prevent the maximum number of concurrent connections from exceeding the threshold of the remote service. You can also modify the retry settings to avoid a request spike during ingestion.
+若要減輕節流例外，請降低連接器的 [`client_config`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields) 物件中 `max_connection` 設定所指定的最大連線數。這麼做可避免並行連線數上限超過遠端服務的閾值。您也可以修改重試設定，以避免匯入期間的請求暴增。
 
-## Next steps
+## 後續步驟
 
-- To learn how to use custom neural sparse search configurations, see [Using custom configurations for neural sparse search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-custom/). 
-- To learn more about improving retrieval time for neural sparse search, see [Accelerating neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/#accelerating-neural-sparse-search).
-- To learn how to build AI search applications, explore our [tutorials]({{site.url}}{{site.baseurl}}/vector-search/tutorials/). 
+- 若要了解如何使用自訂神經稀疏搜尋組態，請參閱[使用自訂組態進行神經稀疏搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-custom/)。
+- 若要進一步了解如何改善神經稀疏搜尋的擷取時間，請參閱[加速神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/#accelerating-neural-sparse-search)。
+- 若要了解如何建置 AI 搜尋應用程式，請探索我們的[教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/)。 

@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Text chunking
+title: "文字分段"
 parent: Ingest processors
 nav_order: 258
 ---
 
-# Text chunking processor
+# 文字分段處理器
 
-The `text_chunking` processor splits a long document into shorter passages. The processor supports the following algorithms for text splitting:
+`text_chunking` 處理器會將長文件分割成較短的文章段落。此處理器支援下列文字分割演算法：
 
-- [`fixed_token_length`](#the-fixed-token-length-algorithm): Splits text into passages of the length specified by the number of tokens.
-- [`fixed_char_length`](#the-fixed-character-length-algorithm): Splits text into passages of the length specified by the number of characters.
-- [`delimiter`](#the-delimiter-algorithm): Splits text into passages on a delimiter. 
+- [`fixed_token_length`](#the-fixed-token-length-algorithm)：依詞元數量指定的長度將文字分割成段落。
+- [`fixed_char_length`](#the-fixed-character-length-algorithm)：依字元數指定的長度將文字分割成段落。
+- [`delimiter`](#the-delimiter-algorithm)：依分隔符號將文字分割成段落。
 
-The following is the syntax for the `text_chunking` processor:
+以下是 `text_chunking` 處理器的語法：
 
 ```json
 {
@@ -28,83 +29,83 @@ The following is the syntax for the `text_chunking` processor:
 }
 ```
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `text_chunking` processor.
+下表列出 `text_chunking` 處理器的必要與選用參數。
 
-| Parameter                   | Data type | Required/Optional  | Description                                                                                                                                                                          |
+| 參數                   | 資料類型 | 必要／選用  | 說明                                                                                                                                                                          |
 |:----------------------------|:----------|:---|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `field_map`                 | Object    | Required	 | Contains key-value pairs that specify the mapping of a text field to the output field.	                                                                                              |
-| `field_map.<input_field>`	  | String	   | Required	 | The name of the field from which to obtain text for generating chunked passages.	                                                                                                    |
-| `field_map.<output_field>`	 | String	   | Required	 | The name of the field in which to store the chunked results.	                                                                                                                        |
-| `algorithm`	                | Object	   | Required	 | Contains at most one key-value pair that specifies the chunking algorithm and parameters.                                                                                            |
-| `algorithm.<name>`          | String	   | Optional	 | The name of the chunking algorithm. Valid values are [`fixed_token_length`](#the-fixed-token-length-algorithm), [`fixed_char_length`](#the-fixed-character-length-algorithm), and [`delimiter`](#the-delimiter-algorithm). Default is `fixed_token_length`.	 |
-| `algorithm.<parameters>`	   | Object	   | Optional	 | The parameters for the chunking algorithm. By default, contains the default parameters of the `fixed_token_length` algorithm.	                                                       |
-| `ignore_missing`	           | Boolean	  | Optional	 | If `true`, empty fields are excluded from the output. If `false`, the output will contain an empty list for every empty field. Default is `false`.	                                                        |
-| `description`	              | String	   | Optional	 | A brief description of the processor.                                                                                                                                                |
-| `tag`	                      | String	   | Optional	 | An identifier tag for the processor. Useful when debugging in order to distinguish between processors of the same type.	                                                             |
+| `field_map`                 | 物件    | 必要	 | 包含鍵值對，用於指定文字欄位到輸出欄位的對應。	                                                                                              |
+| `field_map.<input_field>`	  | 字串	   | 必要	 | 從中取得文字以產生分段段落的欄位名稱。	                                                                                                    |
+| `field_map.<output_field>`	 | 字串	   | 必要	 | 儲存分段結果的欄位名稱。	                                                                                                                        |
+| `algorithm`	                | 物件	   | 必要	 | 包含最多一個鍵值對，用於指定分段演算法與參數。                                                                                            |
+| `algorithm.<name>`          | 字串	   | 選用	 | 分段演算法的名稱。有效值為 [`fixed_token_length`](#the-fixed-token-length-algorithm)、[`fixed_char_length`](#the-fixed-character-length-algorithm) 及 [`delimiter`](#the-delimiter-algorithm)。預設為 `fixed_token_length`。	 |
+| `algorithm.<parameters>`	   | 物件	   | 選用	 | 分段演算法的參數。依預設，包含 `fixed_token_length` 演算法的預設參數。	                                                       |
+| `ignore_missing`	           | 布林值	  | 選用	 | 若為 `true`，空欄位會從輸出中排除。若為 `false`，輸出會為每個空欄位包含空清單。預設為 `false`。	                                                        |
+| `description`	              | 字串	   | 選用	 | 處理器的簡短描述。                                                                                                                                                |
+| `tag`	                      | 字串	   | 選用	 | 處理器的識別標籤。在偵錯時可用來區分同類型的處理器。	                                                             |
 
-To perform chunking on nested fields, specify `input_field` and `output_field` values as JSON objects. Dot paths of nested fields are not supported. For example, use `"field_map": { "foo": { "bar": "bar_chunk"} }` instead of `"field_map": { "foo.bar": "foo.bar_chunk"}`.
+若要對巢狀欄位執行分段，請將 `input_field` 與 `output_field` 值指定為 JSON 物件。不支援巢狀欄位的點路徑。例如，請使用 `"field_map": { "foo": { "bar": "bar_chunk"} }` 而非 `"field_map": { "foo.bar": "foo.bar_chunk"}`。
 {: .note}
 
-### The fixed token length algorithm
+### 固定詞元長度演算法
 
-The following table lists the optional parameters for the `fixed_token_length` algorithm.
+下表列出 `fixed_token_length` 演算法的選用參數。
 
-| Parameter  | Data type | Required/Optional  | Description  |
+| 參數  | 資料類型 | 必要／選用  | 說明  |
 |:---|:----------|:---|:---|
-| `token_limit`	     | Integer	  | Optional	 | The token limit for chunking algorithms. Valid values are integers of at least `1`. Default is `384`.	                                                  |
-| `tokenizer`	       | String	   | Optional	 | The [word tokenizer]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/index/#word-tokenizers) name. Default is `standard`.	 |
-| `overlap_rate`	    | Float     | Optional	 | The degree of overlap in the token algorithm. Valid values are floats between `0` and `0.5`, inclusive. Default is `0`.	                                              |
-| `max_chunk_limit`	 | Integer   | Optional	 | The chunk limit for chunking algorithms. Default is `100`. To disable this parameter, set it to `-1`.	|
+| `token_limit`	     | 整數	  | 選用	 | 分段演算法的詞元上限。有效值為至少 `1` 的整數。預設為 `384`。	                                                  |
+| `tokenizer`	       | 字串	   | 選用	 | [單字斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/index/#word-tokenizers) 名稱。預設為 `standard`。	 |
+| `overlap_rate`	    | 浮點數     | 選用	 | 詞元演算法中的重疊程度。有效值為介於 `0` 與 `0.5` 之間（含）的浮點數。預設為 `0`。	                                              |
+| `max_chunk_limit`	 | 整數   | 選用	 | 分段演算法的分段上限。預設為 `100`。若要停用此參數，請將其設為 `-1`。	|
 
-The default value of `token_limit` is calculated as `512 (tokens) * 0.75 = 384` so that output passages don't exceed the token limit constraint of the downstream text embedding models. For [OpenSearch-supported pretrained models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#supported-pretrained-models), like `msmarco-distilbert-base-tas-b` and `opensearch-neural-sparse-encoding-v1`, the input token limit is `512`. The `standard` tokenizer tokenizes text into words. According to [OpenAI](https://platform.openai.com/docs/introduction), 1 token equals approximately 0.75 words of English text.
+`token_limit` 的預設值計算方式為 `512 (tokens) * 0.75 = 384`，使輸出段落不會超過下游文字嵌入模型的詞元上限限制。對於 [OpenSearch 支援的預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#supported-pretrained-models)，例如 `msmarco-distilbert-base-tas-b` 與 `opensearch-neural-sparse-encoding-v1`，輸入詞元上限為 `512`。`standard` 斷詞器會將文字斷詞為詞。根據 [OpenAI](https://platform.openai.com/docs/introduction)，1 個詞元約等於 0.75 個英文單字。
 {: .note}
 
-You can set the `overlap_rate` to a decimal percentage value in the 0--0.5 range, inclusive. As suggested by [Amazon Bedrock](https://aws.amazon.com/blogs/aws/knowledge-bases-now-delivers-fully-managed-rag-experience-in-amazon-bedrock/), we recommend setting this parameter to a value of 0–0.2 to improve accuracy.
+您可以將 `overlap_rate` 設為 0--0.5 範圍（含）內的小數百分比值。如 [Amazon Bedrock](https://aws.amazon.com/blogs/aws/knowledge-bases-now-delivers-fully-managed-rag-experience-in-amazon-bedrock/) 所建議，我們建議將此參數設為 0–0.2 以提升準確度。
 {: .note}
 
-The `max_chunk_limit` parameter limits the number of chunked passages. If the number of passages generated by the processor exceeds the limit, the excess text is added to the last chunk.
+`max_chunk_limit` 參數會限制分段段落的數量。若處理器產生的段落數超過上限，多出的文字會加入最後一個分段。
 {: .note}
 
-### The fixed character length algorithm
+### 固定字元長度演算法
 
-The following table lists the optional parameters for the `fixed_char_length` algorithm.
+下表列出 `fixed_char_length` 演算法的選用參數。
 
-| Parameter  | Data type | Required/Optional  | Description  |
+| 參數  | 資料類型 | 必要／選用  | 說明  |
 |:---|:----------|:---|:---|
-| `char_limit`	     | Integer	  | Optional	 | The char limit for chunking algorithms. Valid values are integers of at least `1`. Default is `2048`.	                                                  |
-| `overlap_rate`	    | Float     | Optional	 | The degree of overlap in the token algorithm. Valid values are floats between `0` and `0.5`, inclusive. Default is `0`.	                                              |
-| `max_chunk_limit`	 | Integer   | Optional	 | The chunk limit for chunking algorithms. Default is `100`. To disable this parameter, set it to `-1`.	|
+| `char_limit`	     | 整數	  | 選用	 | 分段演算法的字元上限。有效值為至少 `1` 的整數。預設為 `2048`。	                                                  |
+| `overlap_rate`	    | 浮點數     | 選用	 | 詞元演算法中的重疊程度。有效值為介於 `0` 與 `0.5` 之間（含）的浮點數。預設為 `0`。	                                              |
+| `max_chunk_limit`	 | 整數   | 選用	 | 分段演算法的分段上限。預設為 `100`。若要停用此參數，請將其設為 `-1`。	|
 
-The default `char_limit` is calculated as `512 (tokens) * 4 (chars) = 2048` because 512 tokens is a common limit for text embedding models. According to [OpenAI](https://platform.openai.com/docs/concepts#tokens), 1 token equals approximately 4 characters of English text.
+`char_limit` 的預設值計算方式為 `512 (tokens) * 4 (chars) = 2048`，因為 512 個詞元是文字嵌入模型的常見上限。根據 [OpenAI](https://platform.openai.com/docs/concepts#tokens)，1 個詞元約等於 4 個英文字元。
 {: .note}
 
-You can set the `overlap_rate` to a decimal percentage value in the 0--0.5 range, inclusive. As suggested by [Amazon Bedrock](https://aws.amazon.com/blogs/aws/knowledge-bases-now-delivers-fully-managed-rag-experience-in-amazon-bedrock/), we recommend setting this parameter to a value of 0–0.2 to improve accuracy.
+您可以將 `overlap_rate` 設為 0--0.5 範圍（含）內的小數百分比值。如 [Amazon Bedrock](https://aws.amazon.com/blogs/aws/knowledge-bases-now-delivers-fully-managed-rag-experience-in-amazon-bedrock/) 所建議，我們建議將此參數設為 0–0.2 以提升準確度。
 {: .note}
 
-The `max_chunk_limit` parameter limits the number of chunked passages. If the number of passages generated by the processor exceeds the limit, the excess text is added to the last chunk.
+`max_chunk_limit` 參數會限制分段段落的數量。若處理器產生的段落數超過上限，多出的文字會加入最後一個分段。
 {: .note}
 
-### The delimiter algorithm
+### 分隔符演算法
 
-The following table lists the optional parameters for the `delimiter` algorithm.
+下表列出 `delimiter` 演算法的選用參數。
 
-| Parameter  | Data type | Required/Optional  | Description  |
+| 參數  | 資料類型 | 必要／選用  | 說明  |
 |:---|:---|:---|:---|
-| `delimiter`	| String	    | Optional	 | A string delimiter used to split text. You can set the `delimiter` to any string, for example, `\n` (split text into paragraphs on a new line) or `.` (split text into sentences). Default is `\n\n` (split text into paragraphs on two new line characters). |
-| `max_chunk_limit`	 | Integer	   | Optional	 | The chunk limit for chunking algorithms. Default is `100`. To disable this parameter, set it to `-1`.	 |
+| `delimiter`	| 字串	    | 選用	 | 用於分割文字的字串分隔符。您可以將 `delimiter` 設定為任何字串，例如 `\n`（以換行將文字分割為段落）或 `.`（以句點將文字分割成句子）。預設為 `\n\n`（以兩個換行字元將文字分割為段落）。 |
+| `max_chunk_limit`	 | 整數	   | 選用	 | 分段演算法的分段上限。預設為 `100`。若要停用此參數，請將其設定為 `-1`。	 |
 
-The `max_chunk_limit` parameter limits the number of chunked passages. If the number of passages generated by the processor exceeds the limit, the excess text is added to the last chunk.
+`max_chunk_limit` 參數限制分段段落的數量。如果處理器產生的段落數量超過上限，多出的文字會加入最後一個分段。
 {: .note}
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline. You can specify the chunking algorithm when creating the processor. If you don't provide an algorithm name, the chunking processor will use the default `fixed_token_length` algorithm along with all its default parameters.
+請依照下列步驟在管線中使用處理器。您可以在建立處理器時指定分塊演算法。如果您未提供演算法名稱，分塊處理器將使用預設的 `fixed_token_length` 演算法及其所有預設參數。
 
-**Step 1: Create a pipeline**
+**步驟 1：建立管線**
 
-The following example request creates an ingest pipeline that converts the text in the `passage_text` field into chunked passages, which will be stored in the `passage_chunk` field:
+下列範例請求會建立一個資料匯入管線，將 `passage_text` 欄位中的文字轉換為分塊段落，並儲存在 `passage_chunk` 欄位中：
 
 ```json
 PUT _ingest/pipeline/text-chunking-ingest-pipeline
@@ -130,12 +131,12 @@ PUT _ingest/pipeline/text-chunking-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline**
+**步驟 2 (選用)：測試管線**
 
-It is recommended that you test your pipeline before ingesting documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/text-chunking-ingest-pipeline/_simulate
@@ -153,9 +154,9 @@ POST _ingest/pipeline/text-chunking-ingest-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### Response
+#### 回應
 
-The response confirms that, in addition to the `passage_text` field, the processor has generated chunking results in the `passage_chunk` field. The processor split the paragraph into 10-word chunks. Because of the `overlap` setting of 0.2, the last 2 words of a chunk are duplicated in the following chunk:
+回應確認除了 `passage_text` 欄位之外，處理器已在 `passage_chunk` 欄位中產生分段結果。處理器將段落分割為 10 個詞的分段。由於 `overlap` 設定為 0.2，每個分段的最後 2 個詞會在下一個分段中重複出現：
 
 ```json
 {
@@ -181,11 +182,11 @@ The response confirms that, in addition to the `passage_text` field, the process
 }
 ```
 
-Once you have created an ingest pipeline, you need to create an index for document ingestion. To learn more, see [Text chunking]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/).
+建立資料匯入管線後，您需要建立一個索引來匯入文件。若要了解更多，請參閱 [文字分段]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/)。
 
-## Cascading text chunking processors
+## 級聯文字分塊處理器
 
-You can chain multiple text chunking processors together. For example, to split documents into paragraphs, apply the `delimiter` algorithm and specify the parameter as `\n\n`. To prevent a paragraph from exceeding the token limit, append another text chunking processor that uses the `fixed_token_length` algorithm. You can configure the ingest pipeline for this example as follows:
+您可以將多個文字分塊處理器串連在一起。例如，若要將文件分割為段落，請套用 `delimiter` 演算法並將參數指定為 `\n\n`。為了防止段落超過詞元上限，可以附加另一個使用 `fixed_token_length` 演算法的文字分塊處理器。您可以如下設定此範例的資料匯入管線：
 
 ```json
 PUT _ingest/pipeline/text-chunking-cascade-ingest-pipeline
@@ -223,13 +224,13 @@ PUT _ingest/pipeline/text-chunking-cascade-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-### Recursive text chunking using cascaded processors
+### 使用級聯處理器的遞迴文字分塊
 
-For more advanced control, you can chain more than two processors in order to create a recursive chunking effect. This strategy involves deconstructing text into progressively smaller, more semantically meaningful units.
+若需要更進階的控制，您可以串連兩個以上的處理器，以建立遞迴分塊效果。此策略會將文字逐步解構為更小、更具語意意義的單元。
 
-For example, you can first split a document into paragraphs (`\n\n`) and then split each paragraph into sentences (`. `). Finally, you can chunk each sentence using the `fixed_char_length` algorithm to ensure that the final passages do not exceed a specific length. This hierarchical approach helps maintain as much semantic context as possible within the final size constraints.
+例如，您可以先將文件分割為段落 (`\n\n`)，再將每個段落分割為句子 (`. `)。最後，您可以使用 `fixed_char_length` 演算法對每個句子進行分塊，以確保最終段落不超過特定長度。這種階層式方法有助於在最終大小限制內盡可能保留語意上下文。
 
-The following example configures a three-stage recursive chunking pipeline:
+下列範例設定了一個三階段遞迴分塊管線：
 
 ```json
 PUT _ingest/pipeline/recursively-text-chunking-cascade-ingest-pipeline
@@ -278,9 +279,9 @@ PUT _ingest/pipeline/recursively-text-chunking-cascade-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-## Next steps
+## 後續步驟
 
-- For a complete example, see [Text chunking]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/).
-- To learn more about semantic search, see [Semantic search]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/).
-- To learn more about sparse search, see [Neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/).
-- To learn more about using models in OpenSearch, see [Choosing a model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model).
+- 如需完整範例，請參閱 [文字分段]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/)。
+- 若要了解更多關於語意搜尋的資訊，請參閱 [語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)。
+- 若要了解更多關於稀疏搜尋的資訊，請參閱 [神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
+- 若要了解更多關於在 OpenSearch 中使用模型的資訊，請參閱 [選擇模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model)。

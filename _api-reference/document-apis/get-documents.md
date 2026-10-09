@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get document
+title: "取得文件"
 parent: Document APIs
 nav_order: 5
 redirect_from:
@@ -8,26 +9,26 @@ redirect_from:
 ---
 
 # Get Document API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Get Document API retrieves a JSON document and its metadata from an index by document ID. You can also use HEAD requests to verify that a document or its source exists without retrieving the full content.
+Get Document API 會依文件 ID 從索引中擷取 JSON 文件及其中繼資料。您也可以使用 HEAD 請求來驗證文件或其來源是否存在，而不需擷取完整內容。
 
-## Endpoints
+## 端點
 
-To retrieve a document and its metadata from an index, use the `GET` method:
+若要從索引中擷取文件及其中繼資料，請使用 `GET` 方法：
 
 ```json
 GET /{index}/_doc/{id}
 ```
 
-To retrieve only the document source, use the following endpoint:
+若只要擷取文件來源，請使用下列端點：
 
 ```json
 GET /{index}/_source/{id}
 ```
 
-To verify that a document exists, use the `HEAD` method:
+若要驗證文件是否存在，請使用 `HEAD` 方法：
 
 ```json
 HEAD /{index}/_doc/{id}
@@ -38,37 +39,37 @@ HEAD /{index}/_source/{id}
 api: get
 component: path_parameters
 -->
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Required | Data type | Description |
+| 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `id` | **Required** | String | The unique identifier of the document. |
-| `index` | **Required** | String | The name of the index containing the document. |
+| `id` | **必要** | 字串 | 文件的唯一識別碼。 |
+| `index` | **必要** | 字串 | 包含該文件的索引名稱。 |
 
 <!-- spec_insert_end -->
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Methods | Data type | Description | Default |
+| 參數 | 方法 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- | :--- |
-| `_source` | `GET` | Boolean or List or String | Whether to return the `_source` field. Set to `true` to include it, `false` to exclude it, or specify a comma-separated list of field names to return. See [Source filtering](#source-filtering).| N/A |
-| `_source_excludes` | `GET` | List or String | A comma-separated list of source fields to exclude from the response. See [Source filtering](#source-filtering). | N/A |
-| `_source_includes` | `GET` | List or String | A comma-separated list of source fields to include in the response. See [Source filtering](#source-filtering). | N/A |
-| `preference` | `GET`, `HEAD` | String | A preference for which node or shard should handle the operation. By default, OpenSearch selects a shard replica randomly. See [Preference](#preference). | `random` |
-| `realtime` | `GET`, `HEAD` | Boolean | Whether the request is real time. If `true`, the request retrieves the most recent version of the document. If `false`, the request is near-real-time and retrieves the document based on the last refresh. See [Real-time behavior](#real-time-behavior). | `true` |
-| `refresh` | `GET`, `HEAD` | Boolean or String | Whether to refresh the affected shards before the operation to make recent changes visible. <br> Valid values are: <br> - `false`: Do not refresh the affected shards. <br> - `true`: Refresh the affected shards immediately. <br> - `wait_for`: Wait for the changes to become visible before responding. See [Refresh](#refresh). | `false` |
-| `routing` | `GET`, `HEAD` | List or String | The routing value used to target a specific primary shard. See [Routing](#routing).| N/A |
-| `stored_fields` | `GET` | List or String | A comma-separated list of stored fields to return. If no fields are specified, no stored fields are included in the response. If this parameter is specified, the `_source` parameter defaults to `false`. | N/A |
-| `version` | `GET`, `HEAD` | Integer | The explicit version number for concurrency control. The specified version must match the current version of the document for the request to succeed. | N/A |
-| `version_type` | `GET`, `HEAD` | String | The version type for concurrency control. <br> Valid values are: <br> - `internal`: The version number is managed internally by OpenSearch. <br> - `external`: The version number must be greater than the current version. <br> - `external_gte`: The version number must be greater than or equal to the current version. | `internal` |
+| `_source` | `GET` | 布林值或清單或字串 | 是否傳回 `_source` 欄位。設為 `true` 表示包含，設為 `false` 表示排除，或指定以逗號分隔的欄位名稱清單以傳回。請參閱[來源篩選](#source-filtering)。| N/A |
+| `_source_excludes` | `GET` | 清單或字串 | 要從回應中排除的來源欄位，以逗號分隔的清單。請參閱[來源篩選](#source-filtering)。 | N/A |
+| `_source_includes` | `GET` | 清單或字串 | 要包含在回應中的來源欄位，以逗號分隔的清單。請參閱[來源篩選](#source-filtering)。 | N/A |
+| `preference` | `GET`, `HEAD` | 字串 | 指定由哪個節點或分片處理此作業的偏好設定。預設情況下，OpenSearch 會隨機選取一個副本分片。請參閱[偏好設定](#preference)。 | `random` |
+| `realtime` | `GET`, `HEAD` | 布林值 | 請求是否為即時。若為 `true`，請求會擷取文件的最新版本。若為 `false`，請求為近似即時，並依據最近一次重新整理擷取文件。請參閱[即時行為](#real-time-behavior)。 | `true` |
+| `refresh` | `GET`, `HEAD` | 布林值或字串 | 是否在作業前重新整理受影響的分片，使最近的變更可見。<br> 有效值為：<br> - `false`：不重新整理受影響的分片。<br> - `true`：立即重新整理受影響的分片。<br> - `wait_for`：在回應前等待變更變為可見。請參閱[重新整理](#refresh)。 | `false` |
+| `routing` | `GET`, `HEAD` | 清單或字串 | 用於指定特定主要分片的路由值。請參閱[路由](#routing)。| N/A |
+| `stored_fields` | `GET` | 清單或字串 | 要傳回的儲存欄位，以逗號分隔的清單。若未指定任何欄位，回應中將不包含任何儲存欄位。若指定此參數，`_source` 參數會預設為 `false`。 | N/A |
+| `version` | `GET`, `HEAD` | 整數 | 用於並行控制的明確版本號。指定的版本必須與文件目前的版本相符，請求才會成功。 | N/A |
+| `version_type` | `GET`, `HEAD` | 字串 | 用於並行控制的版本類型。<br> 有效值為：<br> - `internal`：版本號由 OpenSearch 內部管理。<br> - `external`：版本號必須大於目前的版本。<br> - `external_gte`：版本號必須大於或等於目前的版本。 | `internal` |
 
-## Example request
+## 範例請求
 
-The following example retrieves a document by its ID:
+下列範例依 ID 擷取文件：
 
 <!-- spec_insert_start
 component: example_code
@@ -93,9 +94,9 @@ response = client.get(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-The following example shows a response from a `GET` request:
+下列範例顯示 `GET` 請求的回應：
 
 ```json
 {
@@ -122,29 +123,29 @@ The following example shows a response from a `GET` request:
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The `GET` response contains the following fields.
+`GET` 回應包含下列欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`_index` | String | The name of the index containing the document.
-`_id` | String | The document's unique identifier.
-`_version` | Integer | The document's version number. Incremented each time the document is updated.
-`_seq_no` | Integer | The sequence number assigned to the document for the indexing operation. Used to ensure an older version doesn't overwrite a newer version.
-`_primary_term` | Integer | The primary term assigned to the document for the indexing operation. Used with `_seq_no` for optimistic concurrency control.
-`found` | Boolean | Indicates whether the document exists. `true` if the document was found, `false` otherwise.
-`_routing` | String | The routing value used to determine which shard stores the document. Only included if a routing value was specified when the document was indexed.
-`_source` | Object | The original JSON document that was indexed. Excluded if the `_source` parameter is set to `false` or if the `stored_fields` parameter is used.
-`_fields` | Object | Contains stored field values when the `stored_fields` parameter is specified. Only returned if `stored_fields` is set and `found` is `true`. Field values are always returned as arrays. See [Retrieving stored fields](#retrieving-stored-fields).
+`_index` | 字串 | 包含該文件的索引名稱。
+`_id` | 字串 | 文件的唯一識別碼。
+`_version` | 整數 | 文件的版本號。每次更新文件時都會遞增。
+`_seq_no` | 整數 | 為編製索引作業指派給文件的序號。用於確保較舊的版本不會覆寫較新的版本。
+`_primary_term` | 整數 | 為編製索引作業指派給文件的主要分片任期。與 `_seq_no` 搭配使用以進行樂觀並行控制。
+`found` | 布林值 | 表示文件是否存在。若找到文件則為 `true`，否則為 `false`。
+`_routing` | 字串 | 用於判斷哪個分片儲存該文件的路由值。僅在編製索引時有指定路由值才會包含。
+`_source` | 物件 | 編製索引的原始 JSON 文件。若 `_source` 參數設為 `false` 或使用 `stored_fields` 參數，則會排除。
+`_fields` | 物件 | 當指定 `stored_fields` 參數時包含儲存欄位的值。僅在設定 `stored_fields` 且 `found` 為 `true` 時才會傳回。欄位值一律以陣列形式傳回。請參閱[擷取已儲存的欄位](#retrieving-stored-fields)。
 
-## Source filtering
+## 來源篩選
 
-By default, the Get Document API returns the entire contents of the `_source` field. You can control which parts of the source are returned or exclude it entirely.
+預設情況下，Get Document API 會傳回 `_source` 欄位的完整內容。您可以控制傳回來源的哪些部分，或完全排除。
 
-### Disabling source retrieval
+### 停用來源擷取
 
-To exclude the `_source` field from the response, set the `_source` parameter to `false`. The following example retrieves document metadata without the source content:
+若要從回應中排除 `_source` 欄位，請將 `_source` 參數設為 `false`。下列範例擷取文件中繼資料但不包含來源內容：
 
 <!-- spec_insert_start
 component: example_code
@@ -170,7 +171,7 @@ response = client.get(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The response excludes the `_source` field:
+回應會排除 `_source` 欄位：
 
 ```json
 {
@@ -183,11 +184,11 @@ The response excludes the `_source` field:
 }
 ```
 
-### Source includes and excludes
+### 來源包含與排除
 
-To retrieve only specific fields from a large document, use the `_source_includes` parameter to include specific fields or the `_source_excludes` parameter to exclude fields. This reduces network overhead by transferring only the required data.
+若要從大型文件中只擷取特定欄位，請使用 `_source_includes` 參數包含特定欄位，或使用 `_source_excludes` 參數排除欄位。這樣只會傳輸所需的資料，從而降低網路負擔。
 
-The following example retrieves only the `name` and `price` fields:
+下列範例只擷取 `name` 與 `price` 欄位：
 
 <!-- spec_insert_start
 component: example_code
@@ -213,7 +214,7 @@ response = client.get(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The `_source` field of the response contains only the `price` and `name` fields:
+回應的 `_source` 欄位只包含 `price` 與 `name` 欄位：
 
 ```json
 {
@@ -230,9 +231,9 @@ The `_source` field of the response contains only the `price` and `name` fields:
 }
 ```
 
-### Shorter notation
+### 簡短表示法
 
-If you only need to include certain fields without excluding any, use the shorter notation by specifying fields directly in the `_source` parameter. The following example retrieves only the `name` and `price` fields:
+如果您只需要包含特定欄位，而不排除任何欄位，可直接在 `_source` 參數中指定欄位，使用簡短表示法。以下範例只擷取 `name` 和 `price` 欄位：
 
 <!-- spec_insert_start
 component: example_code
@@ -258,9 +259,9 @@ response = client.get(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Retrieving the source field only
+## 只擷取來源欄位
 
-Use the `_source` endpoint to retrieve only the document source without metadata. The following example retrieves only the source content:
+使用 `_source` 端點只擷取文件來源，而不含中繼資料。以下範例只擷取來源內容：
 
 <!-- spec_insert_start
 component: example_code
@@ -285,7 +286,7 @@ response = client.get_source(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The response contains the `_source` field only:
+回應只包含 `_source` 欄位：
 
 ```json
 {
@@ -304,7 +305,7 @@ The response contains the `_source` field only:
 }
 ```
 
-You can combine the `_source` endpoint with source filtering parameters. The following example retrieves only specific fields from the source:
+您可以將 `_source` 端點與來源篩選參數搭配使用。以下範例只從來源擷取特定欄位：
 
 <!-- spec_insert_start
 component: example_code
@@ -330,7 +331,7 @@ response = client.get_source(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The response contains only the `price` and `name` fields:
+回應只包含 `price` 和 `name` 欄位：
 
 ```json
 {
@@ -339,7 +340,7 @@ The response contains only the `price` and `name` fields:
 }
 ```
 
-You can use HEAD with the `_source` endpoint to check whether the document source exists:
+您可以搭配使用 HEAD 與 `_source` 端點，檢查文件來源是否存在：
 
 <!-- spec_insert_start
 component: example_code
@@ -364,13 +365,13 @@ response = client.exists_source(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The response contains only `200 - true`.
+回應只包含 `200 - true`。
 
-## Routing
+## 路由
 
-When documents are indexed with a custom routing value, you must provide the same routing value when retrieving them. The routing value determines which shard stores the document.
+以自訂路由值將文件編製索引時，您必須在擷取文件時提供相同的路由值。路由值會決定由哪個分片儲存文件。
 
-The following example retrieves a document that was indexed with routing value `user1`:
+以下範例擷取以路由值 `user1` 編製索引的文件：
 
 <!-- spec_insert_start
 component: example_code
@@ -396,7 +397,7 @@ response = client.get(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The response contains the document with the specified routing:
+回應包含具有指定路由值的文件：
 
 ```json
 {
@@ -424,13 +425,13 @@ The response contains the document with the specified routing:
 }
 ```
 
-If you don't specify the correct routing value, OpenSearch cannot locate the document and returns a `found: false` response.
+如果您未指定正確的路由值，OpenSearch 就無法找到文件，並會傳回 `found: false` 回應。
 
-## Retrieving stored fields
+## 擷取已儲存的欄位
 
-Use the `stored_fields` parameter to retrieve specific fields that were stored in the index at indexing time. Only fields with `store: true` in the mapping are returned. Fields without this setting are ignored.
+使用 `stored_fields` 參數擷取在編製索引時儲存於索引中的特定欄位。只有在對應中具有 `store: true` 的欄位才會傳回。沒有此設定的欄位會被忽略。
 
-The following example retrieves only the `category` and `manufacturer` stored fields from a document:
+以下範例只從文件擷取已儲存的 `category` 和 `manufacturer` 欄位：
 
 <!-- spec_insert_start
 component: example_code
@@ -456,7 +457,7 @@ response = client.get(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-Note that field values retrieved from stored fields are always returned as arrays. Even though `category` and `manufacturer` are single-valued fields, they are returned in arrays:
+請注意，從已儲存欄位擷取的欄位值一律以陣列形式傳回。即使 `category` 和 `manufacturer` 是單值欄位，也會以陣列形式傳回：
 
 ```json
 {
@@ -477,7 +478,7 @@ Note that field values retrieved from stored fields are always returned as array
 }
 ```
 
-When retrieving stored fields from a document indexed with routing, you must provide the routing value. The following example retrieves stored fields from a document with routing:
+從使用路由編製索引的文件擷取已儲存欄位時，您必須提供路由值。以下範例從具有路由值的文件擷取已儲存欄位：
 
 <!-- spec_insert_start
 component: example_code
@@ -503,11 +504,11 @@ response = client.get(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Checking document existence
+## 檢查文件是否存在
 
-You can use the HEAD method to verify whether a document exists without retrieving its content. OpenSearch returns HTTP status code `200` if the document exists or `404` if it doesn't.
+您可以使用 HEAD 方法確認文件是否存在，而不擷取其內容。如果文件存在，OpenSearch 會傳回 HTTP 狀態碼 `200`；如果不存在，則會傳回 `404`。
 
-The following example checks whether a document exists:
+以下範例檢查文件是否存在：
 
 <!-- spec_insert_start
 component: example_code
@@ -532,41 +533,41 @@ response = client.exists(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The response contains only `200 - true`.
+回應只包含 `200 - true`。
 
-## Preference
+## 偏好設定
 
-The `preference` parameter controls which shard replica handles the request. By default, OpenSearch randomly distributes get operations across available shard replicas.
+`preference` 參數控制由哪個副本分片處理請求。預設情況下，OpenSearch 會將 GET 作業隨機分散到可用的副本分片上。
 
-You can set the `preference` parameter to one of the following values:
+您可以將 `preference` 參數設為下列其中一個值：
 
-- `_local`: Directs the operation to a locally allocated shard replica, reducing network overhead.
-- Custom string value: Routes requests with the same custom value to the same shard replicas. This ensures consistent results when shards are in different refresh states. Common custom values include session IDs or usernames.
+- `_local`：將作業導向配置於本機的副本分片，以減少網路額外負擔。
+- 自訂字串值：將具有相同自訂值的請求路由至相同的副本分片。這可確保分片處於不同重新整理狀態時，仍能取得一致的結果。常見的自訂值包括工作階段 ID 或使用者名稱。
 
-## Real-time behavior
+## 即時行為
 
-By default, the Get Document API operates in real time, retrieving the latest version of a document regardless of the index refresh rate. This means you can retrieve a document immediately after indexing it, even before the index has been refreshed to make it searchable.
+預設情況下，Get Document API 以即時方式運作，無論索引重新整理的頻率為何，都會擷取文件的最新版本。這表示您可以在將文件編製索引後立即擷取該文件，即使索引尚未重新整理使其可供搜尋也一樣。
 
-When you request stored fields (using the `stored_fields` parameter) and the document has been updated but not yet refreshed, OpenSearch parses and analyzes the document source to extract the requested stored fields.
+當您請求已儲存的欄位（使用 `stored_fields` 參數），而文件已更新但尚未重新整理時，OpenSearch 會剖析並分析文件來源，以擷取所請求的已儲存欄位。
 
-To disable real-time behavior and retrieve the document based on the last refreshed state of the index, set the `realtime` parameter to `false`.
+若要停用即時行為，並根據索引上次重新整理後的狀態擷取文件，請將 `realtime` 參數設為 `false`。
 
-## Refresh
+## 重新整理
 
-The `refresh` parameter can be set to `true` to refresh the relevant shard before retrieving the document. Refreshing makes recent changes searchable but can impose significant system load and slow indexing. Carefully evaluate the trade-off between data freshness and performance before enabling this parameter.
+`refresh` 參數可設為 `true`，以便在擷取文件前重新整理相關的分片。重新整理可讓最近的變更可供搜尋，但可能會造成顯著的系統負載並減緩索引速度。啟用此參數前，請仔細評估資料新鮮度與效能之間的取捨。
 
-## Versioning
+## 版本控制
 
-You can use the `version` parameter to retrieve a document only if its current version matches the specified number. This ensures data consistency when working with versioned documents.
+您可以使用 `version` 參數，僅在文件目前版本符合指定號碼時才擷取該文件。這可確保在處理具有版本控制的文件時的資料一致性。
 
-Internally, OpenSearch marks the old document version as deleted when a document is updated and creates an entirely new document version. Although you cannot access old versions through the Get Document API, OpenSearch automatically cleans up deleted versions in the background during indexing.
+在內部，當文件更新時，OpenSearch 會將舊文件版本標記為已刪除，並建立全新的文件版本。雖然您無法透過 Get Document API 存取舊版本，但 OpenSearch 會在編製索引時自動於背景清理已刪除的版本。
 
-## Distributed model
+## 分散式模型
 
-The Get Document API uses the document ID to compute a hash value that identifies the shard storing the document. OpenSearch then routes the request to one of the replicas in that shard group (including the primary shard and its replicas) and returns the result.
+Get Document API 使用文件 ID 計算雜湊值，以識別儲存該文件的分片。接著 OpenSearch 會將請求路由至該分片群組中的其中一個副本（包括主要分片及其副本），並傳回結果。
 
-Having more shard replicas improves GET operation scalability because the load is distributed across multiple replicas, increasing throughput for retrieval requests.
+擁有更多副本分片可提升 GET 作業的可擴展性，因為負載會分散到多個副本，進而提高擷取請求的輸送量。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:data/read/get`.
+如果您使用 Security 外掛程式，請確保您具備適當的權限：`indices:data/read/get`。

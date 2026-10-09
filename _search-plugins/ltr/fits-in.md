@@ -1,30 +1,31 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Scope of the plugin
+title: "外掛程式的範圍"
 nav_order: 20
 parent: Learning to Rank
 grand_parent: Optimizing search quality
 has_children: false
 ---
 
-# Scope of the plugin
+# 外掛程式的範圍
 
-The Learning to Rank plugin for OpenSearch helps you develop and use machine learning (ML)-based ranking models for your application search operations. The following sections describe how the plugin fits into the overall LTR process.
+OpenSearch 的 Learning to Rank 外掛程式可協助您開發及使用以機器學習（ML）為基礎的排序模型，供應用程式的搜尋作業使用。以下各節說明此外掛程式如何融入整體 LTR 流程。
 
-## What the plugin does
+## 外掛程式提供的功能
 
-The plugin provides the building blocks to develop and use LTR models, giving you the following capabilities: 
+此外掛程式提供開發及使用 LTR 模型所需的基本元件，讓您具備下列能力： 
 
-1. **Developing query-dependent features:** Create custom features that capture the relationship between a search query and a document. These features can be stored in OpenSearch.
-2. **Logging feature values:** Record the feature values for documents returned in search results. Once you have logged the feature sets for your documents, you can combine this data with the judgment lists you have developed. This will give you a complete training set that you can use to test and train your ranking models. Tools such as RankLib or XGBoost can then be used to develop a satisfactory model.
-3. **Deploying and using models:** Upload trained ranking models to the plugin and use them to rerank search results. The plugin offers a custom OpenSearch query domain-specific language (DSL) primitive that allows you to execute the model during the search process.
+1. **開發依查詢而定的特徵：** 建立自訂特徵，擷取搜尋查詢與文件之間的關係。這些特徵可以儲存在 OpenSearch 中。
+2. **記錄特徵值：** 記錄搜尋結果所傳回文件的特徵值。記錄文件的特徵集後，您可以將這些資料與您建立的評判清單結合。這樣就能取得完整的訓練集，用來測試及訓練排序模型。接著，您可以使用 RankLib 或 XGBoost 等工具，開發出令人滿意的模型。
+3. **部署及使用模型：** 將訓練完成的排序模型上傳至外掛程式，並使用這些模型重新排序搜尋結果。此外掛程式提供自訂的 OpenSearch Query DSL 基本元素，讓您能在搜尋過程中執行模型。
 
-## What the plugin does not do
+## 外掛程式未提供的功能
 
-The plugin does not support the creation of judgment lists. This is a task you must handle yourself because it is domain specific. See the [Wikimedia Foundation blog](https://blog.wikimedia.org/2017/09/19/search-relevance-survey/) for an example approach to developing judgment lists for searching articles. Some domains, such as e-commerce, may focus more on conversion-related signals, while others may involve human relevance assessors (either internal experts or crowdsourced workers).
+此外掛程式不支援建立評判清單。這項工作必須由您自行處理，因為它與特定領域有關。請參閱 [Wikimedia Foundation 部落格](https://blog.wikimedia.org/2017/09/19/search-relevance-survey/)，了解如何建立用於搜尋文章的評判清單範例方法。某些領域（例如電子商務）可能更著重於與轉換相關的訊號，其他領域則可能需要人工相關性評估人員（內部專家或群眾外包人員）參與。
 
-The plugin does not handle model training or testing. This is an offline process that should be handled using the appropriate tools, such as [XGBoost](https://xgboost.ai/) and [RankLib](https://lemurproject.org/ranklib.php). The plugin integrates with these external model-building workflows. Training and testing ranking models can be a CPU-intensive task that requires data science expertise and offline testing. Most organizations prefer to have data scientists oversee the model development process rather than running it directly in their production environment.
+此外掛程式不處理模型訓練或測試。這是離線流程，應使用適當的工具處理，例如 [XGBoost](https://xgboost.ai/) 和 [RankLib](https://lemurproject.org/ranklib.php)。此外掛程式可與這些外部模型建置工作流程整合。訓練及測試排序模型可能需要大量 CPU 資源，也需要資料科學專業知識與離線測試。大多數組織傾向讓資料科學家監督模型開發流程，而非直接在正式環境中執行此流程。
 
-## Next steps
+## 後續步驟
 
-Learn about [working with features]({{site.url}}{{site.baseurl}}/search-plugins/ltr/working-with-features/).
+了解如何[使用特徵]({{site.url}}{{site.baseurl}}/search-plugins/ltr/working-with-features/)。

@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Collapsing hybrid query results
+title: "摺疊混合查詢結果"
 parent: Hybrid search
 grand_parent: AI search
 has_children: false
 nav_order: 35
 ---
 
-# Collapsing hybrid query results
-**Introduced 3.1**
+# 摺疊混合查詢結果
+**3.1 版新增**
 {: .label .label-purple }
 
-The `collapse` parameter lets you group results by a field, returning only the highest scoring document for each unique field value. This is useful when you want to avoid duplicates in your search results. The field you collapse on must be of type `keyword` or a numeric type. The number of results returned is still limited by the `size` parameter in your query.
+`collapse` 參數可讓您依某個欄位將結果分組，每個唯一欄位值只傳回分數最高的文件。當您想避免搜尋結果出現重複項目時，這項功能非常實用。用來摺疊的欄位必須是 `keyword` 類型或數值類型。傳回的結果數量仍受查詢中的 `size` 參數限制。
 
-The `collapse` parameter is compatible with other hybrid query search options, such as sort, explain, and pagination, using their standard syntax.
+`collapse` 參數與其他混合查詢搜尋選項相容，例如 sort、explain 與分頁，並使用它們的標準語法。
 
-When using `collapse` in a hybrid query, note the following considerations:
+在混合查詢中使用 `collapse` 時，請注意以下事項：
 
-- The [`index.neural_search.hybrid_collapse_docs_per_group_per_subquery`]({{site.url}}{{site.baseurl}}/vector-search/settings/#hybrid-collapse-docs-per-group) setting is deprecated and has no effect. If this setting exists in your index configuration, you can safely remove it. Search results are entirely controlled by the `size` parameter in the search request.
-- Aggregations run on pre-collapsed results, not the final output.
-- Pagination behavior changes: Because `collapse` reduces the total number of results, it can affect how results are distributed across pages. To retrieve more results, consider increasing the pagination depth.
-- Results may differ from those returned by the [`collapse` response processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/collapse-processor/), which applies collapse logic after the query is executed.
+- [`index.neural_search.hybrid_collapse_docs_per_group_per_subquery`]({{site.url}}{{site.baseurl}}/vector-search/settings/#hybrid-collapse-docs-per-group) 設定已棄用且沒有任何作用。如果您的索引組態中存在此設定，可以放心將其移除。搜尋結果完全由搜尋請求中的 `size` 參數控制。
+- 彙總是在摺疊前的結果上執行，而不是在最終輸出上執行。
+- 分頁行為會改變：由於 `collapse` 會減少結果總數，因此可能影響結果在各頁之間的分布方式。若要取得更多結果，請考慮增加分頁深度。
+- 結果可能與 [`collapse` 回應處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/collapse-processor/) 傳回的結果不同，後者是在查詢執行完畢後才套用摺疊邏輯。
 
-## Example
+## 範例
 
-The following example demonstrates how to collapse hybrid query results.
+下列範例示範如何摺疊混合查詢結果。
 
-Create an index:
+建立索引：
 
 ```json
 PUT /bakery-items
@@ -51,7 +52,7 @@ PUT /bakery-items
 ```
 {% include copy-curl.html %}
 
-Ingest documents into the index:
+將文件匯入索引：
 
 ```json
 POST /bakery-items/_bulk
@@ -68,7 +69,7 @@ POST /bakery-items/_bulk
 ```
 {% include copy-curl.html %}
 
-Create a search pipeline. This example uses the `min_max` normalization technique:
+建立搜尋管線。此範例使用 `min_max` 標準化技術：
 
 ```json
 PUT /_search/pipeline/norm-pipeline
@@ -90,7 +91,7 @@ PUT /_search/pipeline/norm-pipeline
 ```
 {% include copy-curl.html %}
 
-Search the index, grouping the search results by the `item` field:
+搜尋索引，並依 `item` 欄位將搜尋結果分組：
 
 ```json
 GET /bakery-items/_search?search_pipeline=norm-pipeline
@@ -122,7 +123,7 @@ GET /bakery-items/_search?search_pipeline=norm-pipeline
 ```
 {% include copy-curl.html %}
 
-The response returns the collapsed search results:
+回應會傳回摺疊後的搜尋結果：
 
 ```json
 "hits": {
@@ -168,9 +169,9 @@ The response returns the collapsed search results:
   }
 ```
 
-## Collapse and sort results
+## 摺疊並排序結果
 
-To collapse and sort hybrid query results, provide the `collapse` and `sort` parameters in the query:
+若要摺疊並排序混合查詢結果，請在查詢中提供 `collapse` 與 `sort` 參數：
 
 ```json
 GET /bakery-items/_search?search_pipeline=norm-pipeline
@@ -203,9 +204,9 @@ GET /bakery-items/_search?search_pipeline=norm-pipeline
 ```
 {% include copy-curl.html %}
 
-For more information about sorting in a hybrid query, see [Using sorting with a hybrid query]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/sorting/).
+如需在混合查詢中排序的更多資訊，請參閱 [在混合查詢中使用排序]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/sorting/)。
 
-In the response, documents are sorted by the lowest price:
+在回應中，文件會依最低價格排序：
 
 ```json
 "hits": {
@@ -257,9 +258,9 @@ In the response, documents are sorted by the lowest price:
   }
 ```
 
-## Collapse and explain
+## 摺疊與 explain
 
-You can provide the `explain` query parameter when collapsing search results:
+您可以在摺疊搜尋結果時提供 `explain` 查詢參數：
 
 ```json
 GET /bakery-items/_search?search_pipeline=norm-pipeline&explain=true
@@ -291,7 +292,7 @@ GET /bakery-items/_search?search_pipeline=norm-pipeline&explain=true
 ```
 {% include copy-curl.html %}
 
-The response contains detailed information about the scoring process for each search result:
+回應包含每個搜尋結果評分程序的詳細資訊：
 
 ```json
 "hits": {
@@ -373,13 +374,13 @@ The response contains detailed information about the scoring process for each se
     }
 ```
 
-For more information about using `explain` in a hybrid query, see [Hybrid search explain]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/explain/).
+如需在混合查詢中使用 `explain` 的更多資訊，請參閱 [混合搜尋的評分說明]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/explain/)。
 
-## Collapse and pagination
+## 摺疊與分頁
 
-You can paginate collapsed results by providing the `from` and `size` parameters. For more information about pagination in a hybrid query, see [Paginating hybrid query results]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/pagination/). For more information about `from` and `size`, see [The `from` and `size` parameters]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#the-from-and-size-parameters).
+您可以提供 `from` 和 `size` 參數來為摺疊後的結果分頁。如需混合查詢中分頁的詳細資訊，請參閱[為混合查詢結果分頁]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/pagination/)。如需 `from` 和 `size` 的詳細資訊，請參閱[`from` 和 `size` 參數]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#the-from-and-size-parameters)。
 
-For this example, create the following index:
+在此範例中，請建立下列索引：
 
 ```json
 PUT /bakery-items-pagination
@@ -407,7 +408,7 @@ PUT /bakery-items-pagination
 ```
 {% include copy-curl.html %}
 
-Ingest the following documents into the index:
+將下列文件匯入索引：
 
 ```json
 POST /bakery-items-pagination/_bulk
@@ -447,7 +448,7 @@ POST /bakery-items-pagination/_bulk
 ```
 {% include copy-curl.html %}
 
-Run a `hybrid` query, specifying the `from` and `size` parameters to paginate results. In the following example, the query requests two results starting from the sixth position (`from: 5, size: 2`). The pagination depth is set to limit each shard to return a maximum of 10 documents. After the results are retrieved, the `collapse` parameter is applied in order to group them by the `item` field:
+執行 `hybrid` 查詢，並指定 `from` 和 `size` 參數來為結果分頁。在下列範例中，查詢要求從第六個位置開始的兩筆結果（`from: 5, size: 2`）。分頁深度設定為限制每個分片最多回傳 10 份文件。擷取結果後，套用 `collapse` 參數，以 `item` 欄位將結果分組：
 
 ```json
 GET /bakery-items-pagination/_search?search_pipeline=norm-pipeline
@@ -528,13 +529,13 @@ GET /bakery-items-pagination/_search?search_pipeline=norm-pipeline
     }
 ```
 
-## Retrieving inner hits for collapsed hybrid query results
-**Introduced 3.2**
+## 擷取摺疊後混合查詢結果的內部命中
+**於 3.2 版推出**
 {: .label .label-purple }
 
-You can use the `inner_hits` parameter within the `collapse` parameter to retrieve additional documents from each collapsed group.
+您可以在 `collapse` 參數內使用 `inner_hits` 參數，從每個摺疊群組中擷取其他文件。
 
-The following example uses the `bakery-items` index created previously. It searches for cake items, collapses (groups) the results by the `item` field, and returns the two cheapest items for each collapsed value:
+下列範例使用先前建立的 `bakery-items` 索引。它會搜尋蛋糕品項，依 `item` 欄位摺疊（分組）結果，並為每個摺疊值回傳最便宜的兩個品項：
 
 ```json
 GET /bakery-items/_search?search_pipeline=norm-pipeline
@@ -573,13 +574,13 @@ GET /bakery-items/_search?search_pipeline=norm-pipeline
 ```
 {% include copy-curl.html %}
 
-In the response, the main `hits` contain the top-scoring document from each collapsed group. The `inner_hits` contain the two cheapest items from each group:
+在回應中，主要 `hits` 包含每個摺疊群組中分數最高的文件。`inner_hits` 包含每個群組中最便宜的兩個品項：
 
 <details open markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta}
+<summary>
+    回應
+</summary>
+{: .text-delta}
 
 ```json
 {

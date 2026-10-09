@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: patterns
 parent: Commands
@@ -8,80 +9,80 @@ nav_order: 34
 
 <!-- vale off -->
 
-# patterns command
+# patterns 命令
 
 <!-- vale on -->
 
-The `patterns` command extracts log patterns from a text field and appends the results to the search results. Grouping logs by pattern simplifies aggregating statistics from large volumes of log data for analysis and troubleshooting. You can choose from the following log parsing methods to achieve high pattern-grouping accuracy:
+`patterns` 命令會從文字欄位擷取記錄模式，並將結果附加到搜尋結果。依模式將記錄分組，可簡化從大量記錄資料彙總統計資料，以進行分析與疑難排解。您可以選擇下列記錄解析方法，以達到高模式分組準確度：
 
-* `simple_pattern`: A parsing method that uses [Java regular expressions](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html).
-* `brain`: An automatic log-grouping method that provides high grouping accuracy while preserving semantic meaning.
+* `simple_pattern`：一種使用 [Java 正規表示式](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) 的解析方法。
+* `brain`：一種自動記錄分組方法，在保留語意的前提下提供高分組準確度。
 
-The `patterns` command supports the following modes:
+`patterns` 命令支援下列模式：
 
-* `label`: Returns individual pattern labels.
-* `aggregation`: Returns aggregated results for the target field.
+* `label`：傳回個別的模式標籤。
+* `aggregation`：傳回目標欄位的彙總結果。
 
-The command identifies variable parts of log messages (such as timestamps, numbers, IP addresses, and unique identifiers) and replaces them with `<*>` placeholders to create reusable patterns. For example, email addresses like `amberduke@pyrami.com` and `hattiebond@netagy.com` are replaced with the pattern `<*>@<*>.<*>`.
+此命令會識別記錄訊息中的變動部分（例如時間戳記、數字、IP 位址與唯一識別碼），並以 `<*>` 預留位置取代，以建立可重複使用的模式。例如，`amberduke@pyrami.com` 與 `hattiebond@netagy.com` 之類的電子郵件地址會被取代為模式 `<*>@<*>.<*>`。
 
-The `patterns` command is not executed on OpenSearch data nodes. It only groups log patterns from log messages that have been returned to the coordinating node.
+`patterns` 命令不會在 OpenSearch 資料節點上執行。它只會對已回傳至協調節點的記錄訊息進行記錄模式分組。
 {: .note}
 
-## Syntax
+## 語法
 
-The `patterns` command supports the following syntax options.
+`patterns` 命令支援下列語法選項。
 
-### Simple pattern method syntax
+### 簡單模式方法語法
 
-The `patterns` command with a `simple_pattern` method has the following syntax:
+使用 `simple_pattern` 方法的 `patterns` 命令具有下列語法：
 
 ```sql
 patterns <field> [by <byClause>] [method=simple_pattern] [mode=label | aggregation] [max_sample_count=integer] [show_numbered_token=boolean] [new_field=<new-field-name>] [pattern=<regex-pattern>]
 ```
 
-### Brain method syntax
+### Brain 方法語法
 
-The `patterns` command with a `brain` method has the following syntax:
+使用 `brain` 方法的 `patterns` 命令具有下列語法：
 
 ```sql
 patterns <field> [by <byClause>] [method=brain] [mode=label | aggregation] [max_sample_count=integer] [buffer_limit=integer] [show_numbered_token=boolean] [new_field=<new-field-name>] [variable_count_threshold=integer] [frequency_threshold_percentage=decimal]
 ```
 
-## Parameters
+## 參數
 
-The `patterns` command supports the following parameters.
+`patterns` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<field>` | Required | The text field that is analyzed to extract log patterns. |
-| `<byClause>` | Optional | The fields or scalar functions used to group logs before labeling or aggregation. |
-| `method` | Optional | The pattern extraction method to use. Valid values are `simple_pattern` and `brain`. Default is `simple_pattern`. |
-| `mode` | Optional | The output mode of the command. Valid values are `label` and `aggregation`. Default is `label`. |
-| `max_sample_count` | Optional | The maximum number of sample log entries returned per pattern in `aggregation` mode. Default is `10`. |
-| `buffer_limit` | Optional | A safeguard setting for the `brain` method that limits the size of its internal temporary buffer. Minimum is `50000`. Default is `100000`. |
-| `show_numbered_token` | Optional | Enables numbered token placeholders in the output instead of the default wildcard token. See [Placeholder behavior](#placeholder-behavior). Default is `false`. |
-| `<new_field>` | Optional | An alias for the output field that contains the extracted pattern. Default is `patterns_field`. |
+| `<field>` | 必要 | 用於分析以擷取記錄模式的文字欄位。 |
+| `<byClause>` | 選用 | 在標籤或彙總之前用於分組記錄的欄位或純量函式。 |
+| `method` | 選用 | 要使用的模式擷取方法。有效值為 `simple_pattern` 與 `brain`。預設為 `simple_pattern`。 |
+| `mode` | 選用 | 命令的輸出模式。有效值為 `label` 與 `aggregation`。預設為 `label`。 |
+| `max_sample_count` | 選用 | 在 `aggregation` 模式下，每個模式傳回的樣本記錄項目數上限。預設為 `10`。 |
+| `buffer_limit` | 選用 | `brain` 方法的保護設定，用於限制其內部暫時緩衝區的大小。最小值為 `50000`。預設為 `100000`。 |
+| `show_numbered_token` | 選用 | 在輸出中啟用編號詞元預留位置，而非預設的萬用字元詞元。請參閱[預留位置行為](#placeholder-behavior)。預設為 `false`。 |
+| `<new_field>` | 選用 | 包含所擷取模式之輸出欄位的別名。預設為 `patterns_field`。 |
 
-The `simple_pattern` method accepts the following parameters.
+`simple_pattern` 方法接受下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<pattern>` | Optional | A custom [Java regular expression](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) pattern that identifies characters or sequences to replace with `<*>` placeholders. When not specified, the method uses a default pattern that automatically removes alphanumeric characters and replaces variable parts with `<*>` placeholders while preserving structural elements. |
+| `<pattern>` | 選用 | 自訂的 [Java 正規表示式](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) 模式，用於識別要以 `<*>` 預留位置取代的字元或字元序列。未指定時，此方法會使用預設模式，自動移除英數字元，並在保留結構元素的同時，以 `<*>` 預留位置取代變動部分。 |
 
-The `brain` method accepts the following parameters.
+`brain` 方法接受下列參數。
 
-| Parameter | Required/Optional | Description | 
+| 參數 | 必要/選用 | 說明 | 
 | --- | --- | --- | 
-| `variable_count_threshold` | Optional | Controls the algorithm sensitivity to detecting constant words by counting distinct words at specific positions in the initial log groups. Default is `5`. |
-| `frequency_threshold_percentage` | Optional | Sets the minimum word frequency percentage threshold. Words with frequencies below this value are ignored. The `brain` algorithm selects log patterns based on the longest word combination. Default is `0.3`. |
+| `variable_count_threshold` | 選用 | 透過計算初始記錄群組中特定位置的不同單字數，控制演算法對偵測常數單字的敏感度。預設為 `5`。 |
+| `frequency_threshold_percentage` | 選用 | 設定最低單字頻率百分比門檻。頻率低於此值的單字會被忽略。`brain` 演算法會根據最長的單字組合選取記錄模式。預設為 `0.3`。 |
 
-## Placeholder behavior
+## 預留位置行為
 
-By default, the Apache Calcite engine labels variables using the `<*>` placeholder. If the `show_numbered_token` option is enabled, the Calcite engine's `label` mode not only labels the text pattern but also assigns numbered placeholders to variable tokens. In `aggregation` mode, it outputs both the labeled pattern and the variable tokens for each pattern. In this case, variable placeholders use the format `<token%d>` instead of `<*>`.
+預設情況下，Apache Calcite 引擎使用 `<*>` 預留位置標記變數。如果啟用 `show_numbered_token` 選項，Calcite 引擎的 `label` 模式不僅會標記文字模式，還會為變數詞元指派編號預留位置。在 `aggregation` 模式下，它會輸出每個模式的標記模式與變數詞元。此時，變數預留位置會使用 `<token%d>` 格式，而非 `<*>`。
 
-## Changing the default pattern method  
+## 變更預設模式方法  
 
-To override default pattern parameters, run the following command:
+若要覆寫預設模式參數，請執行下列命令：
 
 ```json
 PUT _cluster/settings
@@ -97,13 +98,13 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
   
-## Simple pattern examples
+## 簡單模式範例
 
-The following are examples of using the `simple_pattern` method.
+以下是使用 `simple_pattern` 方法的範例。
 
-### Example 1: Extract patterns from log messages
+### 範例 1：從記錄訊息擷取模式
 
-The following query extracts patterns from error log messages, replacing variable parts with `<*>` placeholders:
+下列查詢會從錯誤記錄訊息擷取模式，並以 `<*>` 預留位置取代變動部分：
   
 ```sql
 source=otellogs
@@ -115,7 +116,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -128,9 +129,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-### Example 2: Extract log patterns
+### 範例 2：擷取記錄模式
 
-The following query extracts default patterns from a raw log field:
+下列查詢會從原始記錄欄位擷取預設模式：
   
 ```sql
 source=apache
@@ -139,7 +140,7 @@ source=apache
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -153,9 +154,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-### Example 3: Extract log patterns using a custom regex pattern
+### 範例 3：使用自訂規則運算式模式擷取記錄檔模式
 
-The following query extracts patterns from a raw log field using a custom pattern:
+下列查詢使用自訂模式，從原始記錄檔欄位擷取模式：
   
 ```sql
 source=apache
@@ -164,7 +165,7 @@ source=apache
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -178,9 +179,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-### Example 4: Return a log pattern aggregation result
+### 範例 4：傳回記錄檔模式彙總結果
 
-The following query aggregates patterns extracted from a raw log field:
+下列查詢彙總從原始記錄檔欄位擷取的模式：
   
 ```sql
 source=apache
@@ -189,7 +190,7 @@ source=apache
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -203,9 +204,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-### Example 5: Return aggregated log patterns with detected variable tokens
+### 範例 5：傳回包含偵測到的可變詞元的彙總記錄檔模式
 
-The following query returns aggregated results with detected variable tokens. When the `show_numbered_token` option is enabled, the pattern output uses numbered placeholders (for example, `<token1>`, `<token2>`) and returns a mapping of each placeholder to the values that it represents:
+下列查詢傳回包含偵測到的可變詞元的彙總結果。啟用 `show_numbered_token` 選項時，模式輸出會使用編號預留位置（例如 `<token1>`、`<token2>`），並傳回每個預留位置與其所代表值的對應：
 
   
 ```sql
@@ -216,7 +217,7 @@ source=apache
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -227,13 +228,13 @@ The query returns the following results:
 <!-- vale on -->
 
 
-## Brain pattern examples
+## Brain 模式範例
 
-The following are examples of using the `brain` method.
+以下是使用 `brain` 方法的範例。
 
-### Example 1: Extract log patterns
+### 範例 1：擷取記錄檔模式
 
-The following query extracts semantically meaningful log patterns from a raw log field using the `brain` algorithm. This query uses the default `variable_count_threshold` value of `5`:
+下列查詢使用 `brain` 演算法，從原始記錄檔欄位擷取具有語意意義的記錄檔模式。此查詢使用 `variable_count_threshold` 的預設值 `5`：
   
 ```sql
 source=apache
@@ -242,7 +243,7 @@ source=apache
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -256,9 +257,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-### Example 2: Extract log patterns using custom parameters
+### 範例 2：使用自訂參數擷取記錄檔模式
 
-The following query extracts semantically meaningful log patterns from a raw log field using custom parameters of the `brain` algorithm:
+下列查詢使用 `brain` 演算法的自訂參數，從原始記錄檔欄位擷取具有語意意義的記錄檔模式：
   
 ```sql
 source=apache
@@ -267,7 +268,7 @@ source=apache
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢傳回下列結果：
   
 <!-- vale off -->
 
@@ -281,9 +282,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-### Example 3: Return a log pattern aggregation result
+### 範例 3：傳回記錄檔模式彙總結果
 
-The following query aggregates patterns extracted from a raw log field using the `brain` algorithm:
+下列查詢使用 `brain` 演算法，彙總從原始記錄檔欄位擷取的模式：
   
 ```sql
 source=apache
@@ -292,7 +293,7 @@ source=apache
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -303,9 +304,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-### Example 4: Return aggregated log patterns with detected variable tokens
+### 範例 4：傳回包含偵測到的變數詞元的彙總記錄檔模式
 
-The following query returns aggregated results with detected variable tokens using the `brain` method. When the `show_numbered_token` option is enabled, the pattern output uses numbered placeholders (for example, `<token1>`, `<token2>`) and returns a mapping of each placeholder to the values that it represents:
+下列查詢使用 `brain` 方法，傳回包含偵測到的變數詞元的彙總結果。啟用 `show_numbered_token` 選項時，模式輸出會使用編號的預留位置（例如 `<token1>`、`<token2>`），並傳回每個預留位置對應到其所代表值的對應：
   
 ```sql
 source=apache
@@ -314,7 +315,7 @@ source=apache
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 

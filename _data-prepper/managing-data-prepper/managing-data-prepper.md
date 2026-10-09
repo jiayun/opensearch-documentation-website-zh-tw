@@ -1,10 +1,11 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Managing OpenSearch Data Prepper
+title: "管理 OpenSearch Data Prepper"
 has_children: true
 nav_order: 20
 ---
 
-# Managing OpenSearch Data Prepper
+# 管理 OpenSearch Data Prepper
 
-You can perform administrator functions for OpenSearch Data Prepper, including system configuration, interacting with core APIs, Log4j configuration, and monitoring. You can set up peer forwarding to coordinate multiple Data Prepper nodes when using stateful aggregation. 
+您可以執行 OpenSearch Data Prepper 的管理員功能，包括系統組態、與核心 API 互動、Log4j 組態和監控。使用具狀態彙總時，您可以設定對等轉送，以協調多個 Data Prepper 節點。 

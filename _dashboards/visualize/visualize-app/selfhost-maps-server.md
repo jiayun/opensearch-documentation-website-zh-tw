@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Using self-hosted map servers
+title: "使用自行託管的地圖伺服器"
 parent: Configuring maps
 grand_parent: Creating visualizations in the Visualize application
 great_grand_parent: Building data visualizations
@@ -10,37 +11,37 @@ redirect_from:
   - /dashboards/selfhost-maps-server/
 ---
 
-# Using self-hosted map servers
+# 使用自行託管的地圖伺服器
 
-The self-host maps server for OpenSearch Dashboards provides access to the default maps service in air-gapped environments. OpenSearch-compatible map URLs include a map manifest with map tiles and vectors, the map tiles, and the map vectors.
+OpenSearch Dashboards 的自行託管地圖伺服器可讓您在實體隔離 (air-gapped) 環境中存取預設的地圖服務。與 OpenSearch 相容的地圖 URL 包括含有地圖圖磚與向量的地圖資訊清單、地圖圖磚，以及地圖向量。
 
-The following sections provide steps for setting up and using the self-host maps server with OpenSearch Dashboards.
+以下各節說明設定自行託管地圖伺服器並搭配 OpenSearch Dashboards 使用的步驟。
 
-You can access the `maps-server` image from the official OpenSearch [Docker Hub repository](https://hub.docker.com/u/opensearchproject).
+您可以從 OpenSearch 官方的 [Docker Hub 儲存庫](https://hub.docker.com/u/opensearchproject)取得 `maps-server` 映像檔。
 {: .note}
 
-## Pulling the Docker image
+## 下載 Docker 映像檔
 
-Open your terminal and run the following command:
+開啟您的終端機並執行下列命令：
 
 `docker pull opensearchproject/opensearch-maps-server:1.0.0`
 
-## Setting up the server
+## 設定伺服器
 
-You must set up the map tiles before running the server. You have two setup options: Use the OpenSearch-provided maps service tiles set, or generate the raster tiles set.
+執行伺服器之前，您必須先設定地圖圖磚。您有兩種設定選項：使用 OpenSearch 提供的地圖服務圖磚集，或產生點陣圖磚集。
 
-### Option 1: Use the OpenSearch-provided maps service tiles set
+### 選項 1：使用 OpenSearch 提供的地圖服務圖磚集
 
-Create a Docker volume to hold the tiles set:
+建立 Docker 磁碟區以存放圖磚集：
 
 `docker volume create tiles-data`
 
-Download the tiles set from the OpenSearch maps service. Two planet tiles sets are available based on the desired zoom level:
+從 OpenSearch 地圖服務下載圖磚集。依所需的縮放層級，提供兩種全球圖磚集：
 
-- Zoom level 8 (https://maps.opensearch.org/offline/planet-osm-default-z0-z8.tar.gz)
-- Zoom level 10 (https://maps.opensearch.org/offline/planet-osm-default-z0-z10.tar.gz)
+- 縮放層級 8（https://maps.opensearch.org/offline/planet-osm-default-z0-z8.tar.gz）
+- 縮放層級 10（https://maps.opensearch.org/offline/planet-osm-default-z0-z10.tar.gz）
 
-The planet tiles set for zoom level 10 (2 GB compressed/6.8 GB uncompressed) is approximately 10 times larger than the set for zoom level 8 (225 MB compressed/519 MB uncompressed).
+縮放層級 10 的全球圖磚集（壓縮後 2 GB／解壓縮後 6.8 GB）約為縮放層級 8 圖磚集（壓縮後 225 MB／解壓縮後 519 MB）的 10 倍大。
 {: .note} 
 
 ```
@@ -51,13 +52,13 @@ docker run \
     import
 ```
 
-### Option 2: Generate the raster tiles set
+### 選項 2：產生點陣圖磚集
 
-To generate the raster tiles set, use the [raster tile generation pipeline](https://github.com/opensearch-project/maps/tree/main/tiles-generation/cdk) and then use the tiles set absolute path to create a volume to start the server.
+若要產生點陣圖磚集，請使用[點陣圖磚產生管線](https://github.com/opensearch-project/maps/tree/main/tiles-generation/cdk)，然後使用圖磚集的絕對路徑建立磁碟區以啟動伺服器。
 
-## Starting the server
+## 啟動伺服器
 
-Use the following command to start the server using the Docker volume `tiles-data`. The following command is an example using host URL "localhost" and port "8080":
+使用下列命令，透過 Docker 磁碟區 `tiles-data` 啟動伺服器。下列命令是使用主機 URL「localhost」與連接埠「8080」的範例：
 
 ```
 docker run \
@@ -68,7 +69,7 @@ docker run \
     run
 ```
 
-Or, if you generated the raster tiles set, run the server using that tiles set:
+或者，如果您已產生點陣圖磚集，請使用該圖磚集執行伺服器：
 
 ```
 docker run \
@@ -77,34 +78,34 @@ docker run \
     opensearch/opensearch-maps-server \
     run
 ```
-Confirm the server is running by opening each of the following links in a browser on your host or with a `curl` command (for example, `curl http://localhost:8080/manifest.json`).
+若要確認伺服器正在執行，請在主機的瀏覽器中開啟下列各個連結，或使用 `curl` 命令（例如 `curl http://localhost:8080/manifest.json`）。
 
-* Map manifest URL: `http://localhost:8080/manifest.json`
-* Map tiles URL: `http://localhost:8080/tiles/data/{z}/{x}/{y}.png`
-* Map tiles demo URL: `http://localhost:8080/`
+* 地圖資訊清單 URL：`http://localhost:8080/manifest.json`
+* 地圖圖磚 URL：`http://localhost:8080/tiles/data/{z}/{x}/{y}.png`
+* 地圖圖磚示範 URL：`http://localhost:8080/`
 
-## Using the self-host maps server with OpenSearch Dashboards
+## 搭配 OpenSearch Dashboards 使用自行託管地圖伺服器
 
-You can use the self-host maps server with OpenSearch Dashboards by either adding the parameter to `opensearch_dashboards.yml` or configuring the default WMS properties in OpenSearch Dashboards.
+若要搭配 OpenSearch Dashboards 使用自行託管地圖伺服器，您可以將參數新增至 `opensearch_dashboards.yml`，或在 OpenSearch Dashboards 中設定預設 WMS 屬性。
 
-### Option 1: Configure opensearch_dashboards.yml
+### 選項 1：設定 opensearch_dashboards.yml
 
-Configure the manifest URL in `opensearch_dashboards.yml`:
+在 `opensearch_dashboards.yml` 中設定資訊清單 URL：
 
 `map.opensearchManifestServiceUrl: "http://localhost:8080/manifest.json"`
 
-### Option 2: Configure Default WMS properties in OpenSearch Dashboards
+### 選項 2：在 OpenSearch Dashboards 中設定預設 WMS 屬性
 
-1. On the OpenSearch Dashboards console, select **Dashboards Management** > **Advanced Settings**. 
-2. Locate `visualization:tileMap:WMSdefaults` under **Default WMS properties**. 
-3. Change `"enabled": false` to `"enabled": true` and add the URL for the valid map server.
+1. 在 OpenSearch Dashboards 主控台中，選取 **Dashboards Management** > **Advanced Settings**。
+2. 在 **Default WMS properties** 下找到 `visualization:tileMap:WMSdefaults`。
+3. 將 `"enabled": false` 變更為 `"enabled": true`，並新增有效地圖伺服器的 URL。
 
-## Licenses
+## 授權
 
 Tiles are generated per [Terms of Use for Natural Earth vector map data](https://www.naturalearthdata.com/about/terms-of-use/) and [Copyright and License for OpenStreetMap](https://www.openstreetmap.org/copyright).
 
-## Related documentation
+## 相關文件
 
-* [Configuring a Web Map Service (WMS)]({{site.url}}{{site.baseurl}}/dashboards/visualize/maptiles/)
-* [Coordinate maps]({{site.url}}{{site.baseurl}}/dashboards/visualize/coordinate-maps/)
-* [Region maps]({{site.url}}{{site.baseurl}}/dashboards/visualize/region-maps/)
+* [設定 Web Map Service (WMS)]({{site.url}}{{site.baseurl}}/dashboards/visualize/maptiles/)
+* [座標地圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/coordinate-maps/)
+* [區域地圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/region-maps/)

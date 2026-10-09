@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: ISM supported operations
+title: "ISM 支援的操作"
 nav_order: 10
 parent: Policies
 grand_parent: Index State Management
@@ -8,38 +9,38 @@ has_children: false
 ---
 
 
-# ISM supported operations
+# ISM 支援的操作
 
-ISM supports the following operations:
+ISM 支援以下操作：
 
-- [Force merge](#force-merge)
-- [Read only](#read-only)
-- [Read write](#read-write)
-- [Publish field domains](#publish-field-domains)
-- [Replica count](#replica-count)
-- [Shrink](#shrink)
-- [Close](#close)
-- [Open](#open)
-- [Delete](#delete)
-- [Rollover](#rollover)
-- [Notification](#notification)
-- [Snapshot](#snapshot)
-- [Convert index to remote](#convert-index-to-remote)
-- [Index priority](#index-priority)
-- [Allocation](#allocation)
-- [Rollup](#rollup)
-- [Stop replication](#stop-replication)
-- [Search only](#search-only)
+- [強制合併](#force-merge)
+- [唯讀](#read-only)
+- [讀寫](#read-write)
+- [發布欄位定義域](#publish-field-domains)
+- [副本數量](#replica-count)
+- [縮減](#shrink)
+- [關閉](#close)
+- [開啟](#open)
+- [刪除](#delete)
+- [輪替](#rollover)
+- [通知](#notification)
+- [快照](#snapshot)
+- [將索引轉換為遠端索引](#convert-index-to-remote)
+- [索引優先順序](#index-priority)
+- [分配](#allocation)
+- [彙整](#rollup)
+- [停止複寫](#stop-replication)
+- [僅供搜尋](#search-only)
 
-## Force merge
+## 強制合併
 
-Reduces the number of Lucene segments by merging the segments of individual shards. This operation attempts to set the index to a `read-only` state before starting the merging process.
+透過合併個別分片的分段，減少 Lucene 分段的數量。此操作會在開始合併程序之前，嘗試將索引設定為 `read-only` 狀態。
 
-Parameter | Description | Type | Required
+參數 | 說明 | 類型 | 必要
 :--- | :--- |:--- |:--- |
-`max_num_segments` | The number of segments to reduce the shard to. | Integer | Yes
+`max_num_segments` | 分片要縮減至的分段數量。 | 整數 | 是
 
-The following example merges the segments of each shard into a single segment:
+以下範例將每個分片的分段合併為單一分段：
 
 ```json
 {
@@ -50,11 +51,11 @@ The following example merges the segments of each shard into a single segment:
 ```
 {% include copy.html %}
 
-## Read only
+## 唯讀
 
-Sets a managed index to be read only.
+將受管理的索引設定為唯讀。
 
-The `read_only` operation takes no parameters:
+`read_only` 操作不接受任何參數：
 
 ```json
 {
@@ -63,16 +64,16 @@ The `read_only` operation takes no parameters:
 ```
 {% include copy.html %}
 
-Set the index setting `index.blocks.write` to `true` for a managed index.
+為受管理的索引將索引設定 `index.blocks.write` 設定為 `true`。
 
-The `index.blocks.write` block does not prevent the index from refreshing.
+`index.blocks.write` 區塊不會阻止索引重新整理。
 {: .note}
 
-## Read write
+## 讀寫
 
-Sets a managed index to be writeable.
+將受管理的索引設定為可寫入。
 
-The `read_write` operation takes no parameters:
+`read_write` 操作不接受任何參數：
 
 ```json
 {
@@ -81,23 +82,23 @@ The `read_write` operation takes no parameters:
 ```
 {% include copy.html %}
 
-## Publish field domains
-**Introduced 3.9**
+## 發布欄位定義域
+**於 3.9 版推出**
 {: .label .label-purple }
 
-Computes the field domains for a managed index and publishes them to the index metadata. OpenSearch uses field domains for [index-level search pruning]({{site.url}}{{site.baseurl}}/search-plugins/index-level-search-pruning/).
+為受管理的索引計算欄位定義域 (field domain)，並將其發布至索引中繼資料。OpenSearch 使用欄位定義域進行[索引層級的搜尋剪枝]({{site.url}}{{site.baseurl}}/search-plugins/index-level-search-pruning/)。
 
-A field domain contains the minimum and maximum values for a field in one index. The `date_range` field domain type applies to `date` and `date_nanos` fields. For `date` fields, ISM stores the bounds in epoch milliseconds; for `date_nanos` fields, ISM stores the bounds in epoch nanoseconds.
+欄位定義域包含單一索引中某個欄位的最小值與最大值。`date_range` 欄位定義域類型適用於 `date` 與 `date_nanos` 欄位。對於 `date` 欄位，ISM 以 epoch 毫秒儲存邊界；對於 `date_nanos` 欄位，ISM 以 epoch 奈秒儲存邊界。
 
-Before computing field domains, ISM refreshes the index. It then computes the minimum and maximum values for each configured field and publishes them to the index's `index_field_domains` metadata. If a configured field has no values in the index, ISM does not publish a field domain for that field, and if no field domains are produced, the action completes without publishing any field domains.
+在計算欄位定義域之前，ISM 會先重新整理索引。接著為每個已設定的欄位計算最小值與最大值，並將其發布至索引的 `index_field_domains` 中繼資料。如果某個已設定的欄位在索引中沒有任何值，ISM 就不會為該欄位發布欄位定義域；如果沒有產生任何欄位定義域，此操作會在未發布任何欄位定義域的情況下完成。
 
-Parameter | Description | Type | Required
+參數 | 說明 | 類型 | 必要
 :--- | :--- |:--- |:--- |
-`fields` | The fields for which ISM computes and publishes field domains. | Array | Yes
-`fields.field` | The field name. | String | Yes
-`fields.type` | The field domain type. Valid value is `date_range`. | String | Yes
+`fields` | ISM 要計算並發布欄位定義域的欄位。 | 陣列 | 是
+`fields.field` | 欄位名稱。 | 字串 | 是
+`fields.type` | 欄位定義域類型。有效值為 `date_range`。 | 字串 | 是
 
-The following example publishes a `date_range` field domain for the `@timestamp` field:
+以下範例為 `@timestamp` 欄位發布 `date_range` 欄位定義域：
 
 ```json
 {
@@ -113,7 +114,7 @@ The following example publishes a `date_range` field domain for the `@timestamp`
 ```
 {% include copy.html %}
 
-The managed index must be write blocked before this action runs, so add a `read_only` action before `publish_field_domains`:
+在此操作執行之前，受管理的索引必須處於寫入封鎖狀態，因此請在 `publish_field_domains` 之前加入 `read_only` 操作：
 
 ```json
 {
@@ -136,20 +137,20 @@ The managed index must be write blocked before this action runs, so add a `read_
 ```
 {% include copy.html %}
 
-Use this action only for indexes that remain write blocked after publishing. If writes resume, a new document can fall outside the published field domain, and pruning can skip an index that holds matching documents, silently dropping results from searches.
+此操作僅適用於發布後仍維持寫入封鎖狀態的索引。如果恢復寫入，新文件可能會落在已發布的欄位定義域之外，剪枝可能會略過包含符合條件文件的索引，從而無聲地遺失搜尋結果。
 {: .important}
 
-If the Security plugin is enabled, the ISM execution user must have permission to publish field domains using the `indices:admin/field_domains/put` action.
+如果已啟用 Security 外掛程式，ISM 執行使用者必須具有使用 `indices:admin/field_domains/put` 操作發布欄位定義域的權限。
 
-## Replica count
+## 副本數量
 
-Sets the number of replicas to assign to an index.
+設定要指派給索引的副本數量。
 
-Parameter | Description | Type | Required
+參數 | 說明 | 類型 | 必要
 :--- | :--- |:--- |:--- |
-`number_of_replicas` | Defines the number of replicas to assign to an index. | Integer | Yes
+`number_of_replicas` | 定義要指派給索引的副本數量。 | 整數 | 是
 
-The following example assigns two replicas to the index:
+以下範例為索引指派兩個副本：
 
 ```json
 {
@@ -160,17 +161,17 @@ The following example assigns two replicas to the index:
 ```
 {% include copy.html %}
 
-For information about setting replicas, see [Primary and replica shards]({{site.url}}{{site.baseurl}}/intro/#primary-and-replica-shards).
+如需設定副本的資訊，請參閱 [主要分片與副本分片]({{site.url}}{{site.baseurl}}/intro/#primary-and-replica-shards)。
 
-## Shrink
+## 縮減
 
-Allows you to reduce the number of primary shards in your indexes. With this action, you can specify:
+允許您減少索引中的主要分片數量。透過此操作，您可以指定：
 
-- The number of primary shards that the target index should contain.
-- A max shard size for the primary shards in the target index.
-- Specify a percentage to shrink the number of primary shards in the target index.
+- 目標索引應包含的主要分片數量。
+- 目標索引中主要分片的最大分片大小。
+- 指定縮減目標索引主要分片數量的百分比。
 
-The following example shrinks the index to one primary shard, names the target index by appending `_shrunken` to the source index name, and adds the `my-alias` alias:
+以下範例將索引縮減為一個主要分片，透過在來源索引名稱後附加 `_shrunken` 來命名目標索引，並新增 `my-alias` 別名：
 
 ```json
 "shrink": {
@@ -189,17 +190,17 @@ The following example shrinks the index to one primary shard, names the target i
 ```
 {% include copy.html %}
 
-Parameter | Description | Type | Example | Required
+參數 | 說明 | 類型 | 範例 | 必要
 :--- | :--- |:--- |:--- |
-`num_new_shards` | The maximum number of primary shards in the shrunken index. | Integer | `5` | Yes. It, however, cannot be used with `max_shard_size` or `percentage_of_source_shards`.
-`max_shard_size` | The maximum size in bytes of a shard for the target index. | Keyword | `5gb` | Yes, however, it cannot be used with `num_new_shards` or `percentage_of_source_shards`.
-`percentage_of_source_shards` | Percentage of the number of original primary shards to shrink. This parameter indicates the minimum percentage to use when shrinking the number of primary shards. Must be between 0.0 and 1.0, exclusive.  | Percentage | `0.5` | Yes, however it cannot be used with `max_shard_size` or `num_new_shards`
-`target_index_name_template` | The name of the shrunken index. Accepts strings and the Mustache variables `{% raw %}{{ctx.index}}{% endraw %}` and `{% raw %}{{ctx.indexUuid}}{% endraw %}`. | String or Mustache template | `{"source": "{% raw %}{{ctx.index}}_shrunken"}{% endraw %}` | No
-`aliases` | Aliases to add to the new index. | Object | `myalias` | No. It must be an array of alias objects.
-`switch_aliases` | If `true`, copies the aliases from the source index to the target index. If there is a name conflict with an alias from the `aliases` field, the alias in the `aliases` field is used instead of the name. | Boolean | `true` | No. The default implicit value is `false`, which means no aliases are copied by default.
-`force_unsafe` | If `true`, shrinks the index even if it has no replicas. | Boolean | `false` | No
+`num_new_shards` | 縮減後索引中主要分片的最大數量。 | 整數 | `5` | 是。但不可與 `max_shard_size` 或 `percentage_of_source_shards` 搭配使用。
+`max_shard_size` | 目標索引中分片的最大大小 (位元組)。 | 關鍵字 | `5gb` | 是，但不可與 `num_new_shards` 或 `percentage_of_source_shards` 搭配使用。
+`percentage_of_source_shards` | 要縮減的原始主要分片數量的百分比。此參數表示縮減主要分片數量時使用的最小百分比。必須介於 0.0 與 1.0 之間 (不含端點)。 | 百分比 | `0.5` | 是，但不可與 `max_shard_size` 或 `num_new_shards` 搭配使用
+`target_index_name_template` | 縮減後索引的名稱。接受字串以及 Mustache 變數 `{% raw %}{{ctx.index}}{% endraw %}` 和 `{% raw %}{{ctx.indexUuid}}{% endraw %}`。 | 字串或 Mustache 範本 | `{"source": "{% raw %}{{ctx.index}}_shrunken"}{% endraw %}` | 否
+`aliases` | 要新增至新索引的別名。 | 物件 | `myalias` | 否。必須是別名物件的陣列。
+`switch_aliases` | 若為 `true`，則將別名從來源索引複製到目標索引。如果與 `aliases` 欄位中的別名發生名稱衝突，則使用 `aliases` 欄位中的別名取代該名稱。 | 布林值 | `true` | 否。預設隱含值為 `false`，表示預設不會複製任何別名。
+`force_unsafe` | 若為 `true`，即使索引沒有副本也會進行縮減。 | 布林值 | `false` | 否
 
-If you want to add `aliases` to the action, the parameter must include an array of [alias objects]({{site.url}}{{site.baseurl}}/api-reference/alias/), as in the following example:
+如果您想在此操作中加入 `aliases`，該參數必須包含[別名物件]({{site.url}}{{site.baseurl}}/api-reference/alias/)的陣列，如下列範例所示：
 
 ```json
 "aliases": [
@@ -223,11 +224,11 @@ If you want to add `aliases` to the action, the parameter must include an array 
 ```
 {% include copy.html %}
 
-## Close
+## 關閉
 
-Closes the managed index.
+關閉受管理的索引。
 
-The `close` operation takes no parameters:
+`close` 操作不接受任何參數：
 
 ```json
 {
@@ -236,15 +237,15 @@ The `close` operation takes no parameters:
 ```
 {% include copy.html %}
 
-Closed indexes remain on disk, but consume no CPU or memory. You can't read from, write to, or search closed indexes.
+已關閉的索引仍會保留在磁碟上，但不會耗用 CPU 或記憶體。您無法從已關閉的索引讀取、寫入或搜尋。
 
-Closing an index is a good option if you need to retain data for longer than you need to actively search it and have sufficient disk space on your data nodes. If you need to search the data again, reopening a closed index is simpler than restoring an index from a snapshot.
+如果您需要保留資料的時間比需要主動搜尋它的時間更長，而且資料節點上有足夠的磁碟空間，關閉索引是不錯的選擇。如果您需要再次搜尋資料，重新開啟已關閉的索引比從快照還原索引更簡單。
 
-## Open
+## 開啟
 
-Opens a managed index.
+開啟受管理的索引。
 
-The `open` operation takes no parameters:
+`open` 操作不接受任何參數：
 
 ```json
 {
@@ -253,11 +254,11 @@ The `open` operation takes no parameters:
 ```
 {% include copy.html %}
 
-## Delete
+## 刪除
 
-Deletes a managed index.
+刪除受管理的索引。
 
-The `delete` operation takes no parameters:
+`delete` 操作不接受任何參數：
 
 ```json
 {
@@ -266,35 +267,35 @@ The `delete` operation takes no parameters:
 ```
 {% include copy.html %}
 
-## Rollover
+## 輪替
 
-Rolls an alias over to a new index when the managed index meets one of the rollover conditions.
+當受管理的索引符合其中一個輪替條件時，將別名輪替至新索引。
 
 <p id="important-note"></p>
 
-> **IMPORTANT**
+> **重要**
 >
->ISM checks the conditions for operations on **every execution of the policy** based on the **set interval**, _not_ continuously. The rollover will be performed if the value **has reached** or _has exceeded_ the configured limit **when the check is performed**. For example, with `min_size` configured to a value of 100 GiB, ISM might check the index at 99 GiB and not perform the rollover. However, if the index has grown past the limit by the next check (for example, to 105 GiB), the operation is performed.
+>ISM 會根據**設定的間隔**，在**每次執行原則**時檢查操作的條件，_而非_持續檢查。如果在**執行檢查時**值**已達到**或_已超過_設定的限制，就會執行輪替。例如，當 `min_size` 設定為 100 GiB 時，ISM 可能在索引為 99 GiB 時檢查，而不執行輪替。不過，如果索引在下次檢查時已超過限制（例如達到 105 GiB），就會執行該操作。
 {: .important}
 
-If you need to skip the rollover action, you can set the index setting `index.plugins.index_state_management.rollover_skip` to `true`. For example, if you receive the error message "Missing alias or not the write index...", you can set the `index.plugins.index_state_management.rollover_skip` parameter to `true` and retry to skip the rollover action.
+如果您需要略過輪替動作，可以將索引設定 `index.plugins.index_state_management.rollover_skip` 設為 `true`。例如，如果您收到「Missing alias or not the write index...」錯誤訊息，可以將 `index.plugins.index_state_management.rollover_skip` 參數設為 `true` 並重試，以略過輪替動作。
 
-The index format must match the pattern: `^.*-\d+$`. For example, `(logs-000001)`.
-Set `index.plugins.index_state_management.rollover_alias` as the alias to rollover.
+索引格式必須符合模式：`^.*-\d+$`。例如，`(logs-000001)`。
+將 `index.plugins.index_state_management.rollover_alias` 設為要輪替的別名。
 
-The `rollover` operation has the following parameters, all of which are optional.
+`rollover` 操作具有下列參數，全部都是選用的。
 
-Parameter | Description | Type | Example
+參數 | 說明 | 類型 | 範例
 :--- | :--- |:--- |:---
-`min_size` | The minimum size of the total primary shard storage (not counting replicas) required to roll over the index. For example, if you set `min_size` to 100 GiB and your index has 5 primary shards and 5 replica shards of 20 GiB each, the total size of all primary shards is 100 GiB, so the rollover occurs. See [**Important** note](#important-note). | String | `20gb` or `5mb`
-`min_primary_shard_size` | The minimum storage size of a **single primary shard** required to roll over the index. For example, if you set `min_primary_shard_size` to 30 GiB and **one of** the primary shards in the index has a size greater than the condition, the rollover occurs. See [**Important** note](#important-note). | String | `20gb` or `5mb`
-`min_doc_count` |  The minimum number of documents required to roll over the index. See [**Important** note](#important-note). | Integer | `2000000`
-`min_index_age` |  The minimum age required to roll over the index. Index age is the time between its creation and the present. Supported units are `d` (days), `h` (hours), `m` (minutes), `s` (seconds), `ms` (milliseconds), and `micros` (microseconds). See [**Important** note](#important-note). | String | `5d` or `7h`
-`copy_alias` | Controls whether to copy over all aliases from the current index to a newly created index. Default is `false`.  | Boolean | `true` or `false`
-`prevent_empty_rollover` | Controls whether to skip the rollover when the index contains no documents. When `true`, an empty index does not roll over. Default is `false`. | Boolean | `true` or `false`
-`any_of` | A list of condition groups. Each group is an object containing one or more of `min_size`, `min_primary_shard_size`, `min_doc_count`, and `min_index_age`. Within a group, the conditions are combined with AND; the groups are combined with OR. Mutually exclusive with the conditions set directly on the `rollover` object. Specifying both, an empty list, or an empty group returns an error. | Array | `[{"min_index_age": "7d"}]`
+`min_size` | 輪替索引所需的主要分片儲存空間總大小下限（不含副本）。例如，如果您將 `min_size` 設為 100 GiB，而您的索引有 5 個主要分片和 5 個副本分片，每個為 20 GiB，則所有主要分片的總大小為 100 GiB，因此會執行輪替。請參閱[**重要**注意](#important-note)。 | 字串 | `20gb` 或 `5mb`
+`min_primary_shard_size` | 輪替索引所需的**單一主要分片**儲存空間大小下限。例如，如果您將 `min_primary_shard_size` 設為 30 GiB，而索引中**其中一個**主要分片的大小大於該條件，就會執行輪替。請參閱[**重要**注意](#important-note)。 | 字串 | `20gb` 或 `5mb`
+`min_doc_count` |  輪替索引所需的文件數下限。請參閱[**重要**注意](#important-note)。 | 整數 | `2000000`
+`min_index_age` |  輪替索引所需的存留時間下限。索引存留時間是指從建立到現在的時間。支援的單位為 `d`（天）、`h`（小時）、`m`（分鐘）、`s`（秒）、`ms`（毫秒）和 `micros`（微秒）。請參閱[**重要**注意](#important-note)。 | 字串 | `5d` 或 `7h`
+`copy_alias` | 控制是否將目前索引的所有別名複製到新建立的索引。預設為 `false`。  | 布林值 | `true` 或 `false`
+`prevent_empty_rollover` | 控制當索引不含任何文件時是否略過輪替。當 `true` 時，空索引不會輪替。預設為 `false`。 | 布林值 | `true` 或 `false`
+`any_of` | 條件群組的清單。每個群組是一個物件，包含 `min_size`、`min_primary_shard_size`、`min_doc_count` 和 `min_index_age` 其中一或多項。在群組內，條件會以 AND 合併；群組之間則以 OR 合併。與直接設定在 `rollover` 物件上的條件互斥。同時指定兩者、空清單或空群組都會傳回錯誤。 | 陣列 | `[{"min_index_age": "7d"}]`
 
-Conditions set directly on the `rollover` object are combined with a logical OR, so the rollover occurs as soon as one of them is met. The following rollover action rolls the index over when the index is at least 7 days old or at least 50 GiB in size:
+直接設定在 `rollover` 物件上的條件會以邏輯 OR 合併，因此只要符合其中一個條件就會執行輪替。下列輪替動作會在索引存留時間至少 7 天或大小至少 50 GiB 時輪替索引：
 
 ```json
 {
@@ -306,9 +307,9 @@ Conditions set directly on the `rollover` object are combined with a logical OR,
 ```
 {% include copy.html %}
 
-To require that several conditions be met together, use `any_of`. This parameter takes a list of condition groups. The conditions within a group are combined with AND, and the groups are combined with OR, so the rollover occurs when every condition in at least one group is met. 
+若要要求必須同時符合多個條件，請使用 `any_of`。此參數接受條件群組的清單。群組內的條件會以 AND 合併，群組之間則以 OR 合併，因此只要至少一個群組中的每個條件都符合，就會執行輪替。 
 
-The following rollover action rolls the index over when it is at least 7 days old and at least 50 GiB in size, or when it reaches 100,000,000 documents:
+下列輪替動作會在索引存留時間至少 7 天且大小至少 50 GiB 時，或在達到 100,000,000 份文件時輪替索引：
 
 ```json
 {
@@ -327,23 +328,23 @@ The following rollover action rolls the index over when it is at least 7 days ol
 ```
 {% include copy.html %}
 
-In a mixed-version cluster, every node must be running OpenSearch 3.7 or later to evaluate grouped conditions. Nodes running earlier versions do not process `any_of`.
+在混合版本的叢集中，每個節點都必須執行 OpenSearch 3.7 或更新版本，才能評估分組條件。執行較舊版本的節點不會處理 `any_of`。
 {: .note}
 
-## Notification
+## 通知
 
-Sends you a notification.
+傳送通知給您。
 
-Parameter | Description | Type | Required
+參數 | 說明 | 類型 | 必要
 :--- | :--- |:--- |:--- |
-`destination` | The destination URL. | Slack, Amazon Chime, or webhook URL | Yes
-`message_template` |  The text of the message. You can add variables to your messages using [Mustache templates](https://mustache.github.io/mustache.5.html). | Object | Yes
+`destination` | 目的地 URL。 | Slack、Amazon Chime 或 webhook URL | 是
+`message_template` |  訊息文字。您可以使用 [Mustache 範本](https://mustache.github.io/mustache.5.html)將變數新增至訊息。 | 物件 | 是
 
-The destination system **must** return a response otherwise the notification operation throws an error.
+目的地系統**必須**傳回回應，否則通知操作會擲回錯誤。
 
-### Example 1: Chime notification
+### 範例 1：Chime 通知
 
-The following notification operation sends a message to an Amazon Chime webhook:
+下列通知操作會將訊息傳送至 Amazon Chime webhook：
 
 ```json
 {
@@ -361,9 +362,9 @@ The following notification operation sends a message to an Amazon Chime webhook:
 ```
 {% include copy.html %}
 
-### Example 2: Custom webhook notification
+### 範例 2：自訂 webhook 通知
 
-The following notification operation sends a message to a custom webhook:
+下列通知操作會將訊息傳送至自訂 webhook：
 
 ```json
 {
@@ -381,9 +382,9 @@ The following notification operation sends a message to a custom webhook:
 ```
 {% include copy.html %}
 
-### Example 3: Slack notification
+### 範例 3：Slack 通知
 
-The following notification operation sends a message to a Slack webhook:
+下列通知操作會將訊息傳送至 Slack webhook：
 
 ```json
 {
@@ -401,30 +402,30 @@ The following notification operation sends a message to a Slack webhook:
 ```
 {% include copy.html %}
 
-You can use `ctx` variables in your message to represent a number of policy parameters based on the past executions of your policy. For example, if your policy has a rollover action, you can use `{% raw %}{{ctx.action.name}}{% endraw %}` in your message to represent the name of the rollover.
+您可以在訊息中使用 `ctx` 變數，根據原則過去的執行情形來代表多個原則參數。例如，如果您的原則有輪替動作，您可以在訊息中使用 `{% raw %}{{ctx.action.name}}{% endraw %}` 來代表輪替的名稱。
 
-The following `ctx` variable options are available for every policy:
+下列 `ctx` 變數選項適用於每個原則：
 
-### Guaranteed variables
+### 保證可用的變數
 
-Parameter | Description | Type
+參數 | 說明 | 類型
 :--- | :--- |:--- |:--- |
-`index` | The name of the index. | String
-`index_uuid` | The UUID of the index. | String
-`policy_id` | The name of the policy. | String
+`index` | 索引的名稱。 | 字串
+`index_uuid` | 索引的 UUID。 | 字串
+`policy_id` | 政策的名稱。 | 字串
 
-## Snapshot
+## 快照
 
-Back up your cluster's indexes and state. For more information about snapshots, see [Take and restore snapshots]({{site.url}}{{site.baseurl}}/opensearch/snapshots/snapshot-restore/).
+備份叢集的索引與狀態。如需快照的詳細資訊，請參閱 [建立及還原快照]({{site.url}}{{site.baseurl}}/opensearch/snapshots/snapshot-restore/)。
 
-The `snapshot` operation has the following parameters.
+`snapshot` 操作具有下列參數。
 
-Parameter | Description | Type | Required | Default
+參數 | 說明 | 類型 | 必要 | 預設
 :--- | :--- |:--- |:--- |
-`repository` | The repository name that you register through the native snapshot API operations.  | String | Yes | -
-`snapshot` | The name of the snapshot. Accepts strings and the Mustache variables `{% raw %}{{ctx.index}}{% endraw %}` and `{% raw %}{{ctx.indexUuid}}{% endraw %}`. If the Mustache variables are invalid, then the snapshot name defaults to the index's name. | String or Mustache template | Yes | -
+`repository` | 您透過原生快照 API 操作註冊的儲存庫名稱。 | 字串 | 是 | -
+`snapshot` | 快照的名稱。接受字串以及 Mustache 變數 `{% raw %}{{ctx.index}}{% endraw %}` 和 `{% raw %}{{ctx.indexUuid}}{% endraw %}`。如果 Mustache 變數無效，快照名稱會預設為索引的名稱。 | 字串或 Mustache 範本 | 是 | -
 
-The following example takes a snapshot of the index in the `my_backup` repository and names the snapshot using the index UUID:
+以下範例會在 `my_backup` 儲存庫中為索引建立快照，並使用索引 UUID 為快照命名：
 
 ```json
 {
@@ -436,43 +437,43 @@ The following example takes a snapshot of the index in the `my_backup` repositor
 ```
 {% include copy.html %}
 
-## Convert index to remote
+## 將索引轉換為遠端索引
 
-Converts an existing index into a searchable snapshot by restoring it from a remote snapshot repository. This action reduces storage costs by moving infrequently accessed data to remote storage while keeping it searchable. Set `delete_original_index` to `true` to remove the original index once the restore request is accepted, so that only the remote snapshot-backed index remains.
+透過從遠端快照儲存庫還原，將現有索引轉換為可搜尋快照。此動作會將不常存取的資料移至遠端儲存空間，同時保持其可搜尋，藉此降低儲存成本。將 `delete_original_index` 設定為 `true`，即可在還原請求被接受後移除原始索引，只留下以遠端快照為基礎的索引。
 
-The `convert_index_to_remote` operation has the following parameters.
+`convert_index_to_remote` 操作具有下列參數。
 
-Parameter | Description | Type | Required | Default
+參數 | 說明 | 類型 | 必要 | 預設
 :--- | :--- |:--- |:--- |
-`repository` | The repository name registered through the native snapshot API operations. Must be a remote repository (for example, S3, Azure, or GCS).  | String | Yes | N/A
-`snapshot` | The name of the snapshot created by the snapshot action.  | String | Yes | N/A
-`include_aliases` | Whether to include index aliases during the restore operation. If `true`, all aliases associated with the original index are restored with the remote index. If your application accesses the index using aliases, set this parameter to `true`. | Boolean | No | `false`
-`ignore_index_settings` | A comma-separated list of index settings to ignore during the restore operation. For example, `index.refresh_interval,index.number_of_replicas`. This is useful when you want to apply different settings to the restored remote index than the ones configured in the original index. | String | No | Empty string
-`number_of_replicas` | The number of replicas to configure for the restored remote index. This allows you to control replica allocation during the conversion process without requiring a separate update operation. Setting `number_of_replicas` during conversion helps prevent the cluster from entering a yellow state or creating unnecessary load during replica assignment. | Integer | No | `0`
-`rename_pattern` | The naming pattern for the restored searchable snapshot index. Use `$1` as a placeholder for the original index name. For example, `remote_$1` renames `my-index` to `remote_my-index`. | String | No | `$1_remote`
-`delete_original_index` | Whether to delete the original index after the restore request is accepted. | Boolean | No | `false`
+`repository` | 透過原生快照 API 操作註冊的儲存庫名稱。必須是遠端儲存庫（例如 S3、Azure 或 GCS）。 | 字串 | 是 | N/A
+`snapshot` | 由快照動作建立的快照名稱。 | 字串 | 是 | N/A
+`include_aliases` | 還原操作期間是否包含索引別名。若為 `true`，與原始索引關聯的所有別名都會隨遠端索引一併還原。如果您的應用程式透過別名存取索引，請將此參數設定為 `true`。 | 布林值 | 否 | `false`
+`ignore_index_settings` | 還原操作期間要忽略的索引設定清單，以逗號分隔。例如 `index.refresh_interval,index.number_of_replicas`。當您想為還原後的遠端索引套用與原始索引不同的設定時，此參數非常實用。 | 字串 | 否 | 空字串
+`number_of_replicas` | 為還原後的遠端索引設定的副本數量。這讓您能在轉換過程中控制副本分配，而不需要另外執行更新操作。在轉換期間設定 `number_of_replicas` 有助於防止叢集進入黃色狀態，或在副本分配期間產生不必要的負載。 | 整數 | 否 | `0`
+`rename_pattern` | 還原後的可搜尋快照索引的命名模式。使用 `$1` 作為原始索引名稱的預留位置。例如，`remote_$1` 會將 `my-index` 重新命名為 `remote_my-index`。 | 字串 | 否 | `$1_remote`
+`delete_original_index` | 是否在還原請求被接受後刪除原始索引。 | 布林值 | 否 | `false`
 
-### Prerequisites
+### 必要條件
 
-Before using the `convert_index_to_remote` action, ensure the following:
+使用 `convert_index_to_remote` 動作之前，請確認下列事項：
 
-- A remote repository (S3, Azure, or GCS) is registered and accessible.
-- A snapshot of the index exists in the specified repository, typically created using the `snapshot` action.
-- The repository name matches the one used in the snapshot action.
+- 已註冊遠端儲存庫（S3、Azure 或 GCS）且可存取。
+- 指定儲存庫中存在索引的快照，通常是以 `snapshot` 動作建立。
+- 儲存庫名稱與快照動作中使用的名稱相符。
 
-### Usage notes
+### 使用注意事項
 
-Note the following to ensure a smooth and predictable conversion when restoring an index as a searchable snapshot:
+將索引還原為可搜尋快照時，請注意下列事項，以確保轉換順利且可預期：
 
-- The original index is deleted after the remote snapshot restore is successfully accepted only if you set `delete_original_index` to `true`. By default, the original index remains alongside the searchable snapshot version.
-- The repository name used in the `convert_index_to_remote` operation must match the repository name specified during the snapshot action.
-- Each object in the `actions` array holds one action. Putting `snapshot` and `convert_index_to_remote` in the same object is accepted, but only one of them is stored, so the snapshot is never taken. List each one in its own object.
-- You can reference the snapshot using Mustache variables like `{% raw %}{{ctx.index}}{% endraw %}` or `{% raw %}{{ctx.indexUuid}}{% endraw %}` for dynamic naming.
-- Consider your cluster's capacity when setting `number_of_replicas`. If there aren't enough eligible nodes for replica restoration, the cluster may enter a yellow state.
+- 只有當您將 `delete_original_index` 設定為 `true` 時，原始索引才會在遠端快照還原成功被接受後刪除。預設情況下，原始索引會與可搜尋快照版本並存。
+- `convert_index_to_remote` 操作中使用的儲存庫名稱必須與快照動作中指定的儲存庫名稱相符。
+- `actions` 陣列中的每個物件都包含一個動作。將 `snapshot` 和 `convert_index_to_remote` 放在同一個物件中雖然會被接受，但只會儲存其中一個，因此永遠不會建立快照。請將每個動作列在各自的物件中。
+- 您可以使用 `{% raw %}{{ctx.index}}{% endraw %}` 或 `{% raw %}{{ctx.indexUuid}}{% endraw %}` 等 Mustache 變數來參照快照，以進行動態命名。
+- 設定 `number_of_replicas` 時，請考量叢集的容量。如果沒有足夠的合格節點可供副本還原，叢集可能會進入黃色狀態。
 
-### Basic example
+### 基本範例
 
-The following example shows a basic conversion using the minimum required parameters. The `snapshot` action creates the snapshot that `convert_index_to_remote` then restores, so each one is a separate object in the `actions` array:
+以下範例示範使用最少必要參數的基本轉換。`snapshot` 動作會建立快照，然後由 `convert_index_to_remote` 還原，因此兩者各自是 `actions` 陣列中的獨立物件：
 
 ```json
 "actions": [
@@ -492,9 +493,9 @@ The following example shows a basic conversion using the minimum required parame
 ```
 {% include copy.html %}
 
-### Advanced configuration example
+### 進階組態範例
 
-The following example demonstrates using all available configuration options. This configuration includes aliases, ignores certain index settings during restore, and configures two replicas for the searchable snapshot:
+以下範例示範使用所有可用的組態選項。此組態包含別名、在還原期間忽略某些索引設定，並為可搜尋快照設定兩個副本：
 
 ```json
 {
@@ -510,9 +511,9 @@ The following example demonstrates using all available configuration options. Th
 ```
 {% include copy.html %}
 
-### Complete policy example
+### 完整政策範例
 
-The following policy moves indexes older than 30 days to searchable snapshots with optimized settings for cost efficiency:
+以下政策會將超過 30 天的索引移至可搜尋快照，並使用針對成本效益最佳化的設定：
 
 ```json
 {
@@ -559,17 +560,17 @@ The following policy moves indexes older than 30 days to searchable snapshots wi
 ```
 {% include copy.html %}
 
-## Index priority
+## 索引優先順序
 
-Set the priority for the index in a specific state. Unallocated shards of indexes are recovered in the order of their priority, whenever possible. The indexes with higher priority values are recovered first followed by the indexes with lower priority values.
+設定索引在特定狀態下的優先順序。索引未分配的分片會盡可能依其優先順序復原。優先順序值較高的索引會先復原，接著才是優先順序值較低的索引。
 
-The `index_priority` operation has the following parameter.
+`index_priority` 操作具有下列參數。
 
-Parameter | Description | Type | Required | Default
+參數 | 說明 | 類型 | 必要 | 預設
 :--- | :--- |:--- |:--- |:---
-`priority` | The priority for the index as soon as it enters a state. | Integer | Yes | 1
+`priority` | 索引進入狀態時的優先順序。 | 整數 | 是 | 1
 
-The following example sets the index priority to `50`:
+以下範例將索引優先順序設定為 `50`：
 
 ```json
 "actions": [
@@ -582,21 +583,21 @@ The following example sets the index priority to `50`:
 ```
 {% include copy.html %}
 
-## Allocation
+## 配置
 
-Allocate the index to a node with a specific attribute set [like this]({{site.url}}{{site.baseurl}}/opensearch/cluster/#advanced-step-7-set-up-a-hot-warm-architecture).
-For example, setting `require` to `warm` moves your data only to "warm" nodes.
+將索引配置到具有特定屬性設定的節點，[如本例所示]({{site.url}}{{site.baseurl}}/opensearch/cluster/#advanced-step-7-set-up-a-hot-warm-architecture)。
+例如，將 `require` 設為 `warm`，只會將您的資料移至「warm」節點。
 
-The `allocation` operation has the following parameters. At least one of `require`, `include`, or `exclude` must be specified.
+`allocation` 操作具有下列參數。必須至少指定 `require`、`include` 或 `exclude` 其中之一。
 
-Parameter | Description | Type | Required
+參數 | 說明 | 類型 | 必要
 :--- | :--- |:--- |:---
-`require` | Allocate the index to a node with a specified attribute. | Object | No
-`include` | Allocate the index to a node with any of the specified attributes. | Object | No
-`exclude` | Don't allocate the index to a node with any of the specified attributes. | Object | No
-`wait_for` | Wait for the policy to execute before allocating the index to a node with a specified attribute. | Boolean | No. Default is `false`.
+`require` | 將索引配置到具有指定屬性的節點。 | 物件 | 否
+`include` | 將索引配置到具有任一指定屬性的節點。 | 物件 | 否
+`exclude` | 不將索引配置到具有任一指定屬性的節點。 | 物件 | 否
+`wait_for` | 等待政策執行後，再將索引配置到具有指定屬性的節點。 | 布林值 | 否。預設為 `false`。
 
-The following example allocates the index to nodes whose `temp` attribute is set to `warm`:
+下列範例會將索引配置到 `temp` 屬性設為 `warm` 的節點：
 
 ```json
 "actions": [
@@ -609,14 +610,14 @@ The following example allocates the index to nodes whose `temp` attribute is set
 ```
 {% include copy.html %}
 
-## Rollup
+## 彙整
 
-[Index rollup]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/index/) lets you periodically reduce data granularity by rolling up old data into summarized indexes. Define the job in an `ism_rollup` object. For the fields it accepts, see [Create or update an index rollup job]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rollup-api/#create-or-update-an-index-rollup-job).
+[索引彙整]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/index/)可讓您定期將舊資料彙整為摘要索引，以降低資料的細緻程度。在 `ism_rollup` 物件中定義作業。如需其接受的欄位，請參閱[建立或更新索引彙整作業]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rollup-api/#create-or-update-an-index-rollup-job)。
 
-Rollup jobs can be continuous or non-continuous. A rollup job created using an ISM policy can only be non-continuous.
+彙整作業可以是持續性或非持續性作業。使用 ISM 政策建立的彙整作業只能是非持續性作業。
 {: .note }
 
-The following policy rolls the `opensearch_dashboards_sample_data_ecommerce` fields up into hourly buckets in a `target` index:
+下列政策會將 `opensearch_dashboards_sample_data_ecommerce` 欄位彙整為 `target` 索引中每小時一個的桶：
 
 ```json
 PUT _plugins/_ism/policies/sample_rollup_policy
@@ -694,13 +695,13 @@ PUT _plugins/_ism/policies/sample_rollup_policy
 ```
 {% include copy-curl.html %}
 
-To create a rollup job in OpenSearch Dashboards, see [Creating a rollup job]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/index/#creating-a-rollup-job).
+若要在 OpenSearch Dashboards 中建立彙整作業，請參閱[建立彙整作業]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/index/#creating-a-rollup-job)。
 
-## Stop replication
+## 停止複寫
 
-Stops replication and converts the follower index to a regular index.
+停止複寫，並將追隨者索引轉換為一般索引。
 
-The `stop_replication` operation takes no parameters:
+`stop_replication` 操作不接受任何參數：
 
 ```json
 {
@@ -709,24 +710,24 @@ The `stop_replication` operation takes no parameters:
 ```
 {% include copy.html %}
 
-When cross-cluster replication is enabled, the follower index becomes read-only, preventing all write operations. To manage replicated indexes on a follower cluster, you can perform the `stop_replication` action before performing other write operations. For example, you can define a policy that first runs `stop_replication` and then deletes the index by running a `delete` action.
+啟用跨叢集複寫時，追隨者索引會變成唯讀，阻止所有寫入操作。若要管理追隨者叢集上的複寫索引，您可以先執行 `stop_replication` 動作，再執行其他寫入操作。例如，您可以定義一個政策，先執行 `stop_replication`，再執行 `delete` 動作來刪除索引。
 
-If security is enabled, in addition to [stop replication permissions]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/permissions/#replication-permissions), you must have the `indices:internal/plugins/replication/index/stop` permission in order to use the `stop_replication` action.
+如果已啟用安全性，除了[停止複寫權限]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/permissions/#replication-permissions)之外，您還必須具有 `indices:internal/plugins/replication/index/stop` 權限，才能使用 `stop_replication` 動作。
 {: .note}
 
-## Search only
+## 僅供搜尋
 
-When an index enters `search_only` mode, OpenSearch removes its primary and regular replica shards while retaining search replicas for query operations. All write operations to the index are blocked. This is useful for log lifecycle management where older indexes no longer need write capability but should remain searchable.
+當索引進入 `search_only` 模式時，OpenSearch 會移除其主要分片和一般副本分片，同時保留搜尋副本供查詢操作使用。對該索引的所有寫入操作都會遭到封鎖。這適用於記錄檔生命週期管理，因為較舊的索引不再需要寫入功能，但仍應可供搜尋。
 
-> This action requires the following prerequisites:
-> - Remote store must be enabled on the cluster.
-> - Segment replication must be enabled on the index.
-> - Search replicas must be configured on the index.
+> 此動作必須符合下列先決條件：
+> - 叢集必須啟用遠端儲存。
+> - 索引必須啟用分段複寫。
+> - 索引必須設定搜尋副本。
 >
-> For more information about search-only mode and reader/writer separation, see [Separate index and search workloads]({{site.url}}{{site.baseurl}}/tuning-your-cluster/separate-index-and-search-workloads/).
+> 如需僅供搜尋模式及讀取器與寫入器分離的詳細資訊，請參閱[分離索引編製與搜尋工作負載]({{site.url}}{{site.baseurl}}/tuning-your-cluster/separate-index-and-search-workloads/)。
 {: .note}
 
-Set an index to search-only mode using the following action:
+使用下列動作將索引設為僅供搜尋模式：
 
 ```json
 {
@@ -735,12 +736,12 @@ Set an index to search-only mode using the following action:
 ```
 {% include copy.html %}
 
-If the index is already in search-only mode, the action completes successfully without making any changes.
+如果索引已處於僅供搜尋模式，此動作會成功完成，且不會進行任何變更。
 
-You can manually enable or disable `search_only` mode outside of ISM policies by calling the [Scale API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/scale/).
+您可以呼叫 [Scale API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/scale/)，在 ISM 政策之外手動啟用或停用 `search_only` 模式。
 {: .tip}
 
-The following example policy transitions an index to `search_only` mode after 7 days:
+下列範例政策會在 7 天後將索引轉換為 `search_only` 模式：
 
 ```json
 PUT _plugins/_ism/policies/hot-warm-search-only

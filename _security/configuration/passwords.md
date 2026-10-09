@@ -1,62 +1,63 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Managing passwords
+title: "管理密碼"
 parent: Configuration
 nav_order: 12
 ---
 
-# Managing passwords
+# 管理密碼
 
-A cluster running the Security plugin uses several distinct passwords. Each one is set by a different person, stored in a different place, and changed through a different procedure, so the first step in any password task is identifying which password you are dealing with.
+執行 Security 外掛程式的叢集會使用數個不同的密碼。每個密碼由不同的人設定、儲存在不同的位置，並透過不同的程序變更，因此任何密碼任務的第一步，就是確認您正在處理的是哪一個密碼。
 
-The following table lists the passwords in an OpenSearch cluster.
+下表列出 OpenSearch 叢集中的密碼。
 
-| Password | Who sets it | Where it is stored |
+| 密碼 | 由誰設定 | 儲存位置 |
 | :--- | :--- | :--- |
-| [Admin password](#admin-password) | Whoever installs OpenSearch | The `.opendistro_security` index, seeded from the `OPENSEARCH_INITIAL_ADMIN_PASSWORD` environment variable |
-| [Internal user passwords](#internal-user-passwords) | A cluster administrator | The `.opendistro_security` index |
-| [Your own password](#your-own-password) | The user who owns the account | The `.opendistro_security` index |
-| [Dashboards service account password](#dashboards-service-account-password) | Whoever configures OpenSearch Dashboards | The `opensearch.password` setting in `opensearch_dashboards.yml` |
-| [Keystore and truststore passwords](#keystore-and-truststore-passwords) | Whoever configures TLS | The OpenSearch keystore |
+| [管理員密碼](#admin-password) | 安裝 OpenSearch 的人 | `.opendistro_security` 索引，由 `OPENSEARCH_INITIAL_ADMIN_PASSWORD` 環境變數初始化 |
+| [內部使用者密碼](#internal-user-passwords) | 叢集管理員 | `.opendistro_security` 索引 |
+| [您自己的密碼](#your-own-password) | 擁有該帳戶的使用者 | `.opendistro_security` 索引 |
+| [Dashboards 服務帳戶密碼](#dashboards-service-account-password) | 設定 OpenSearch Dashboards 的人 | `opensearch_dashboards.yml` 中的 `opensearch.password` 設定 |
+| [Keystore 與 truststore 密碼](#keystore-and-truststore-passwords) | 設定 TLS 的人 | OpenSearch keystore |
 
-Passwords for users authenticated by an external backend, such as LDAP or Active Directory, are managed in that backend rather than in OpenSearch. For more information, see [Authentication backends]({{site.url}}{{site.baseurl}}/security/authentication-backends/authc-index/).
+由外部後端 (例如 LDAP 或 Active Directory) 驗證的使用者，其密碼是在該後端中管理，而不是在 OpenSearch 中管理。如需更多資訊，請參閱[驗證後端]({{site.url}}{{site.baseurl}}/security/authentication-backends/authc-index/)。
 
-The `OPENSEARCH_PASSWORD` environment variable is not an OpenSearch setting. Clients and tools, such as the [Reporting CLI]({{site.url}}{{site.baseurl}}/reporting/rep-cli-options/), read it to obtain the credentials they use when connecting to a cluster.
+`OPENSEARCH_PASSWORD` 環境變數不是 OpenSearch 設定。用戶端與工具 (例如 [Reporting CLI]({{site.url}}{{site.baseurl}}/reporting/rep-cli-options/)) 會讀取它，以取得連線至叢集時所使用的認證。
 {: .note}
 
-## Admin password
+## 管理員密碼
 
-The `admin` user is created by the security demo configuration and has full access to the cluster. Its password is set once, through an environment variable, at the time the demo configuration is installed, and changing it afterward requires a different procedure.
+`admin` 使用者是由安全性示範組態建立，並具有叢集的完整存取權。其密碼會在安裝示範組態時透過環境變數設定一次，之後若要變更則需要不同的程序。
 
-There is no default admin password. A cluster will not start unless you supply one, and the `admin:admin` credentials used by earlier versions no longer work.
+沒有預設的管理員密碼。除非您提供一個，否則叢集不會啟動，而且舊版本所使用的 `admin:admin` 認證已不再有效。
 
-### Setting the initial admin password
+### 設定初始管理員密碼
 
-A new cluster requires a custom admin password before it can install a security demo configuration. Set the `OPENSEARCH_INITIAL_ADMIN_PASSWORD` environment variable before the first start:
+新的叢集必須先有自訂的管理員密碼，才能安裝安全性示範組態。請在第一次啟動前設定 `OPENSEARCH_INITIAL_ADMIN_PASSWORD` 環境變數：
 
 ```bash
 export OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>
 ```
 {% include copy.html %}
 
-The variable is read once, by the demo configuration installer, and becomes the password for the `admin` user. It has no effect on later starts, and it does not apply to a cluster whose `opensearch.yml` file is already configured, because the installer does not run on an existing cluster. The syntax for setting the variable differs by distribution. For more information, see [Setting up a demo configuration]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#installing-the-demo-configuration).
+此變數會由示範組態安裝程式讀取一次，並成為 `admin` 使用者的密碼。它對之後的啟動沒有影響，也不適用於已設定 `opensearch.yml` 檔案的叢集，因為安裝程式不會在現有叢集上執行。設定此變數的語法因發行版而異。如需更多資訊，請參閱[設定示範組態]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#installing-the-demo-configuration)。
 
-If the password does not meet the [admin password requirements]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements), the installation fails and the cluster does not start.
+如果密碼不符合[管理員密碼需求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)，安裝會失敗，且叢集不會啟動。
 
-### Changing the admin password
+### 變更管理員密碼
 
-After installation, the admin password can no longer be changed through the REST API or OpenSearch Dashboards, because the demo configuration marks the `admin` user as [reserved]({{site.url}}{{site.baseurl}}/security/access-control/api/#reserved-and-hidden-resources). Setting `OPENSEARCH_INITIAL_ADMIN_PASSWORD` again has no effect either. To reset the admin password, follow these steps:
+安裝之後，管理員密碼就無法再透過 REST API 或 OpenSearch Dashboards 變更，因為示範組態會將 `admin` 使用者標示為[保留]({{site.url}}{{site.baseurl}}/security/access-control/api/#reserved-and-hidden-resources)。再次設定 `OPENSEARCH_INITIAL_ADMIN_PASSWORD` 也沒有作用。若要重設管理員密碼，請依照下列步驟：
 
-1. Generate a password hash for the new password:
+1. 為新密碼產生密碼雜湊：
 
    ```bash
    ./plugins/opensearch-security/tools/hash.sh -p <new-password>
    ```
    {% include copy.html %}
 
-1. Replace the `hash` value for the `admin` user in `<OPENSEARCH_HOME>/config/opensearch-security/internal_users.yml` with the generated hash.
+1. 將 `<OPENSEARCH_HOME>/config/opensearch-security/internal_users.yml` 中 `admin` 使用者的 `hash` 值取代為產生的雜湊。
 
-1. Load the file into the `.opendistro_security` index:
+1. 將檔案載入 `.opendistro_security` 索引：
 
    ```bash
    ./plugins/opensearch-security/tools/securityadmin.sh \
@@ -69,21 +70,21 @@ After installation, the admin password can no longer be changed through the REST
    ```
    {% include copy.html %}
 
-The `-f` and `-t` arguments limit the operation to internal users, which preserves roles and role mappings created through the REST API. Any internal users created through the REST API are overwritten. For more information, see [Applying changes to configuration files]({{site.url}}{{site.baseurl}}/security/configuration/security-admin/).
+`-f` 與 `-t` 引數會將作業限制在內部使用者，這會保留透過 REST API 建立的角色與角色對應。任何透過 REST API 建立的內部使用者都會被覆寫。如需更多資訊，請參閱[將變更套用至組態檔案]({{site.url}}{{site.baseurl}}/security/configuration/security-admin/)。
 
-## Internal user passwords
+## 內部使用者密碼
 
-An administrator sets the password for an internal user when creating or updating that user. Use any of the following methods:
+管理員會在建立或更新內部使用者時設定該使用者的密碼。請使用下列任一方法：
 
-- Create the user in OpenSearch Dashboards, which prompts for the password. For more information, see [Defining users]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#defining-users).
-- Send a plaintext password in the `password` field of a REST API request. The Security plugin hashes the password before storing it. For more information, see [Create or Update User API]({{site.url}}{{site.baseurl}}/security/api/users/create-user/).
-- Add a `bcrypt` hash generated by `hash.sh` to `internal_users.yml` and run `securityadmin.sh` to load the file. Reserve this method for the initial setup of a cluster. For more information, see [internal_users.yml]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#internal_usersyml).
+- 在 OpenSearch Dashboards 中建立使用者，系統會提示您輸入密碼。如需更多資訊，請參閱[定義使用者]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/#defining-users)。
+- 在 REST API 請求的 `password` 欄位中傳送純文字密碼。Security 外掛程式會在儲存前將密碼雜湊。如需更多資訊，請參閱[建立或更新使用者 API]({{site.url}}{{site.baseurl}}/security/api/users/create-user/)。
+- 將 `hash.sh` 產生的 `bcrypt` 雜湊新增至 `internal_users.yml`，並執行 `securityadmin.sh` 以載入檔案。請將此方法保留給叢集的初始設定使用。如需更多資訊，請參閱 [internal_users.yml]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#internal_usersyml)。
 
-Passwords set through OpenSearch Dashboards or the REST API are validated against the [password settings]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#password-settings) in `opensearch.yml`. Hashes written directly to `internal_users.yml` bypass that validation.
+透過 OpenSearch Dashboards 或 REST API 設定的密碼，會依據 `opensearch.yml` 中的[密碼設定]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#password-settings)進行驗證。直接寫入 `internal_users.yml` 的雜湊會略過該驗證。
 
-## Your own password
+## 您自己的密碼
 
-Any authenticated user can change their own password without administrator involvement by supplying the current password along with the new one:
+任何已驗證的使用者都可以在不需要管理員介入的情況下變更自己的密碼，只要同時提供目前密碼與新密碼即可：
 
 ```json
 PUT /_plugins/_security/api/account
@@ -94,30 +95,30 @@ PUT /_plugins/_security/api/account
 ```
 {% include copy-curl.html security=true %}
 
-For more information, see [Change Password API]({{site.url}}{{site.baseurl}}/security/api/account/change-password/).
+如需更多資訊，請參閱[變更密碼 API]({{site.url}}{{site.baseurl}}/security/api/account/change-password/)。
 
-## Dashboards service account password
+## Dashboards 服務帳戶密碼
 
-OpenSearch Dashboards authenticates to OpenSearch as an internal user, configured through the `opensearch.username` and `opensearch.password` settings in `opensearch_dashboards.yml`. The demo configuration uses the `kibanaserver` user for this purpose. Changing this password takes two steps: update the `kibanaserver` user's password in OpenSearch, then set the matching value in `opensearch_dashboards.yml` and restart OpenSearch Dashboards.
+OpenSearch Dashboards 會以內部使用者身分向 OpenSearch 進行驗證，並透過 `opensearch_dashboards.yml` 中的 `opensearch.username` 與 `opensearch.password` 設定進行設定。示範組態會使用 `kibanaserver` 使用者來達成此目的。變更此密碼需要兩個步驟：先在 OpenSearch 中更新 `kibanaserver` 使用者的密碼，然後在 `opensearch_dashboards.yml` 中設定相符的值，並重新啟動 OpenSearch Dashboards。
 
-This is a service account rather than a login account. End users sign in to OpenSearch Dashboards with their own credentials. For more information, see [Configuring sign-in options]({{site.url}}{{site.baseurl}}/security/configuration/multi-auth/).
+這是服務帳戶，而不是登入帳戶。終端使用者會以自己的認證登入 OpenSearch Dashboards。如需更多資訊，請參閱[設定登入選項]({{site.url}}{{site.baseurl}}/security/configuration/multi-auth/)。
 
-## Keystore and truststore passwords
+## Keystore 與 truststore 密碼
 
-Keystore and truststore passwords protect TLS certificate stores and are unrelated to user authentication. Store them in the OpenSearch keystore rather than in `opensearch.yml`. For more information, see [OpenSearch keystore]({{site.url}}{{site.baseurl}}/security/configuration/opensearch-keystore/) and [Configuring TLS certificates]({{site.url}}{{site.baseurl}}/security/configuration/tls/).
+Keystore 與 truststore 密碼會保護 TLS 憑證存放區，與使用者驗證無關。請將它們儲存在 OpenSearch keystore 中，而不是儲存在 `opensearch.yml` 中。如需更多資訊，請參閱 [OpenSearch keystore]({{site.url}}{{site.baseurl}}/security/configuration/opensearch-keystore/) 與[設定 TLS 憑證]({{site.url}}{{site.baseurl}}/security/configuration/tls/)。
 
-## Demo configuration passwords
+## 示範組態密碼
 
-Along with the `admin` user, the demo configuration creates the `kibanaserver`, `kibanaro`, `logstash`, `readall`, and `snapshotrestore` users. Only the `admin` password comes from `OPENSEARCH_INITIAL_ADMIN_PASSWORD`. The others keep the default passwords published in `internal_users.yml`, so their credentials are public knowledge.
+除了 `admin` 使用者之外，示範組態還會建立 `kibanaserver`、`kibanaro`、`logstash`、`readall` 與 `snapshotrestore` 使用者。只有 `admin` 密碼來自 `OPENSEARCH_INITIAL_ADMIN_PASSWORD`。其他使用者會保留 `internal_users.yml` 中公布的預設密碼，因此其認證是公開資訊。
 
-Change the password of every demo user you keep, and delete the ones you do not need, before moving a cluster into production. The demo certificates are equally unsuitable for production use. For more information, see [Best practices]({{site.url}}{{site.baseurl}}/security/configuration/best-practices/).
+在將叢集移入正式環境之前，請變更您保留的每個示範使用者密碼，並刪除您不需要的使用者。示範憑證同樣不適合用於正式環境。如需更多資訊，請參閱[最佳實務]({{site.url}}{{site.baseurl}}/security/configuration/best-practices/)。
 {: .warning}
 
-## Password requirements
+## 密碼需求
 
-Two independent sets of rules apply, depending on how the password is set. Only the second set is a configurable password policy:
+視密碼的設定方式而定，會套用兩組獨立的規則。只有第二組是可設定的密碼原則：
 
-- The initial admin password is checked against rules built into the demo configuration installer, which cannot be changed. For more information, see [Admin password requirements]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements).
-- Passwords set through OpenSearch Dashboards or the REST API are checked against `plugins.security.restapi.password_validation_regex`, `plugins.security.restapi.password_min_length`, and `plugins.security.restapi.password_score_based_validation_strength`. For more information, see [Password settings]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#password-settings).
+- 初始管理員密碼會依據示範組態安裝程式內建的規則進行檢查，這些規則無法變更。如需更多資訊，請參閱[管理員密碼需求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)。
+- 透過 OpenSearch Dashboards 或 REST API 設定的密碼，會依據 `plugins.security.restapi.password_validation_regex`、`plugins.security.restapi.password_min_length` 與 `plugins.security.restapi.password_score_based_validation_strength` 進行檢查。如需更多資訊，請參閱[密碼設定]({{site.url}}{{site.baseurl}}/security/configuration/yaml/#password-settings)。
 
-Both sets use the [`zxcvbn`](https://github.com/dropbox/zxcvbn) strength estimator, which scores a password on entropy. Common words, dates, sequences such as `1234` or `qwerty`, and predictable substitutions such as `3` for `E` lower the score, while length and unpredictability raise it. A password that satisfies every character rule can still be rejected as too weak. To check a password's score, use the [`zxcvbn` demo](https://lowe.github.io/tryzxcvbn).
+兩組規則都使用 [`zxcvbn`](https://github.com/dropbox/zxcvbn) 強度估算器，它會依據熵為密碼評分。常見的單字、日期、`1234` 或 `qwerty` 等序列，以及 `3` 取代 `E` 這類可預測的替換，都會降低分數，而長度與不可預測性則會提高分數。即使密碼符合所有字元規則，仍可能因強度不足而被拒絕。若要檢查密碼的分數，請使用 [`zxcvbn` 示範](https://lowe.github.io/tryzxcvbn)。

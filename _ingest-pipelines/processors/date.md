@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Date
+title: "日期"
 parent: Ingest processors
 nav_order: 50
 redirect_from:
    - /api-reference/ingest-apis/processors/date/
 ---
 
-This documentation describes using the `date` processor in OpenSearch ingest pipelines. Consider using the [Data Prepper `date` processor]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/date/), which runs on the OpenSearch cluster, if your use case involves large or complex datasets.
+本文件說明如何在 OpenSearch 資料匯入管線中使用 `date` 處理器。如果您的使用情境涉及大型或複雜的資料集，請考慮使用 [Data Prepper `date` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/date/)，其執行於 OpenSearch 叢集上。
 {: .note}
 
-# Date processor
+# 日期處理器
 
-The `date` processor is used to parse dates from document fields and to add the parsed data to a new field. By default, the parsed data is stored in the `@timestamp` field. 
+`date` 處理器用於從文件欄位剖析日期，並將剖析後的資料新增至新欄位。根據預設，剖析後的資料會儲存在 `@timestamp` 欄位中。
 
-## Syntax example
+## 語法範例
 
-The following is the syntax for the `date` processor:
+以下是 `date` 處理器的語法：
 
 ```json
 {
@@ -28,31 +29,31 @@ The following is the syntax for the `date` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `date` processor.
+下表列出 `date` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | Required  | The name of the field containing the data to be converted. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets). |
-`formats`  | Required | An array of the expected date formats. Can be a [date format]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#formats) or one of the following formats: ISO8601, UNIX, UNIX_MS, or TAI64N.  |
-`description`  | Optional  | A brief description of the processor.  |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | Specifies whether the processor continues execution even if it encounters errors. If set to `true`, failures are ignored. Default is `false`. |
-`locale`  | Optional  | The locale to use when parsing the date. Default is `ENGLISH`. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets).  |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`output_format` | Optional | The [date format]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#formats) to use for the target field. Default is `yyyy-MM-dd'T'HH:mm:ss.SSSZZ`. |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |
-`target_field`  | Optional  | The name of the field in which to store the parsed data. Default target field is `@timestamp`. | 
-`timezone`  | Optional  | The time zone to use when parsing the date. Default is `UTC`. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets). |
+`field`  | 必要  | 包含要轉換之資料的欄位名稱。支援 [範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
+`formats`  | 必要 | 預期日期格式的陣列。可以是 [日期格式]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#formats) 或下列其中一種格式：ISO8601、UNIX、UNIX_MS 或 TAI64N。  |
+`description`  | 選用  | 處理器的簡短描述。  |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
+`locale`  | 選用  | 剖析日期時要使用的地區設定。預設為 `ENGLISH`。支援 [範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。  |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`output_format` | 選用 | 要用於目標欄位的 [日期格式]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#formats)。預設為 `yyyy-MM-dd'T'HH:mm:ss.SSSZZ`。 |
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。 |
+`target_field`  | 選用  | 用來儲存剖析後資料的欄位名稱。預設目標欄位為 `@timestamp`。 | 
+`timezone`  | 選用  | 剖析日期時要使用的時區。預設為 `UTC`。支援 [範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+請依照下列步驟在管線中使用處理器。
 
-**Step 1: Create a pipeline**
+**步驟 1：建立管線**
 
-The following query creates a pipeline, named `date-output-format`, that uses the `date` processor to convert from European date format to US date format, adding the new field `date_us` with the desired `output_format`:
+下列查詢會建立名為 `date-output-format` 的管線，其使用 `date` 處理器將歐洲日期格式轉換為美國日期格式，並新增具有所需 `output_format` 的新欄位 `date_us`：
 
 ```json
 PUT /_ingest/pipeline/date-output-format
@@ -73,12 +74,12 @@ PUT /_ingest/pipeline/date-output-format
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline**
+**步驟 2 (選用)：測試管線**
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/date-output-format/_simulate
@@ -97,9 +98,9 @@ POST _ingest/pipeline/date-output-format/_simulate
 ```
 {% include copy-curl.html %}
 
-**Response**
+**回應**
 
-The following example response confirms that the pipeline is working as expected:
+下列範例回應確認管線運作正常：
 
 ```json
 {
@@ -121,9 +122,9 @@ The following example response confirms that the pipeline is working as expected
 }
 ```
 
-**Step 3: Ingest a document**
+**步驟 3：匯入文件**
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=date-output-format
@@ -133,9 +134,9 @@ PUT testindex1/_doc/1?pipeline=date-output-format
 ```
 {% include copy-curl.html %}
 
-**Step 4 (Optional): Retrieve the document**
+**步驟 4 (選用)：擷取文件**
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1

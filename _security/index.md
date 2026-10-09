@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: About security
+title: "關於安全性"
 nav_order: 1
 has_children: false
 has_toc: false
@@ -14,78 +15,78 @@ redirect_from:
   - /troubleshoot/index/
 ---
 
-# About security in OpenSearch
+# 關於 OpenSearch 的安全性
 
-Security in OpenSearch is built around four main features that work together to safeguard data and track activity within a cluster. Separately, these features are:
+OpenSearch 的安全性圍繞四項主要功能建構，這些功能協同運作，以保護資料並追蹤叢集內的活動。這些功能分別是：
 
-* Encryption.
-* Authentication.
-* Access control.
-* Audit logging and compliance.
+* 加密。
+* 驗證。
+* 存取控制。
+* 稽核記錄與合規。
 
-Used together they provide effective protection of sensitive data by placing it behind multiple layers of defense and granting or restricting access to the data at different levels in the OpenSearch data structure. Most implementations use a combination of options for these features to meet specific security needs.
+這些功能搭配使用時，可透過多層防護將敏感資料置於層層保護之下，並在 OpenSearch 資料結構的不同層級授予或限制對資料的存取，從而提供有效的敏感資料保護。大多數實作會組合使用這些功能的各種選項，以滿足特定的安全性需求。
 
-## Features at a glance
+## 功能概覽
 
-The following topics provide a general description of the features that define security in OpenSearch.
+下列主題概要說明定義 OpenSearch 安全性的各項功能。
 
-### Encryption
+### 加密
 
-Encryption typically addresses the protection of data both at rest and in transit. OpenSearch Security is responsible for managing encryption in transit.
+加密通常涵蓋靜態資料與傳輸中資料的保護。OpenSearch Security 負責管理傳輸中的加密。
 
-In transit, Security encrypts data moving to, from, and within the cluster. OpenSearch uses the TLS protocol, which covers both client-to-node encryption (the REST layer) and node-to-node encryption (the transport layer). This combination of in-transit encryption helps ensure that both requests to OpenSearch and the movement of data among different nodes are safe from tampering.
+在傳輸過程中，Security 會加密進出叢集以及在叢集內移動的資料。OpenSearch 使用 TLS 協定，涵蓋用戶端對節點的加密 (REST 層) 與節點對節點的加密 (傳輸層)。這種傳輸中加密的組合有助於確保對 OpenSearch 的請求以及資料在不同節點之間的移動都不會遭到竄改。
 
-You can find out more about configuring TLS in the [Configuring TLS certificates]({{site.url}}{{site.baseurl}}/security/configuration/tls/) section.
+您可以在[設定 TLS 憑證]({{site.url}}{{site.baseurl}}/security/configuration/tls/)一節中進一步了解如何設定 TLS。
 
-Encryption at rest, on the other hand, protects data stored in the cluster, including indexes, logs, swap files, automated snapshots, and all data in the application directory. This type of encryption is managed by the operating system on each OpenSearch node. To enable encryption at rest in most Linux distributions, use the `cryptsetup` command:
+另一方面，靜態加密可保護儲存在叢集中的資料，包括索引、記錄檔、置換檔、自動快照，以及應用程式目錄中的所有資料。這類加密由每個 OpenSearch 節點上的作業系統管理。若要在大多數 Linux 發行版中啟用靜態加密，請使用 `cryptsetup` 命令：
 
 ```bash
 cryptsetup luksFormat --key-file <key> <partition>
 ```
 {% include copy.html %}
 
-For full documentation about the command, see [cryptsetup(8) — Linux manual page](https://man7.org/linux/man-pages/man8/cryptsetup.8.html).
+如需該命令的完整文件，請參閱 [cryptsetup(8) — Linux 手冊頁](https://man7.org/linux/man-pages/man8/cryptsetup.8.html)。
 
-### Authentication
+### 驗證
 
-Authentication is used to validate the identity of users and works by verifying an end user’s credentials against a backend configuration. These credentials can be a simple name and password, a JSON web token, or a TLS certificate. Once the authentication domain extracts those credentials from a user’s request, it can check their validity against the authentication backend.
+驗證用於確認使用者身分，其運作方式是將終端使用者的憑證與後端組態進行比對驗證。這些憑證可以是簡單的使用者名稱與密碼、JSON 網頁權杖，或 TLS 憑證。驗證網域從使用者的請求中擷取這些憑證後，即可對照驗證後端檢查其有效性。
 
-The backend used for validation can be OpenSearch's built-in internal user database—used for storing user and role configurations and hashed passwords—or one of a wide range of industry-standard identification protocols such as LDAP, Active Directory, SAML, or OpenID Connect. A common practice is to chain together more than one authentication method to create a more robust defense against unauthorized access. This might involve, for example, HTTP basic authentication followed by a backend configuration that specifies the LDAP protocol. See the [Configuring the Security backend]({{site.url}}{{site.baseurl}}/security/configuration/configuration/) section to learn more about setting up the backend.
+用於驗證的後端可以是 OpenSearch 內建的內部使用者資料庫 (用於儲存使用者與角色組態以及雜湊後的密碼)，也可以是眾多業界標準識別協定之一，例如 LDAP、Active Directory、SAML 或 OpenID Connect。常見的做法是將多種驗證方法串連起來，建立更強健的防護以抵禦未經授權的存取。例如，這可能涉及先使用 HTTP 基本驗證，再接上指定 LDAP 協定的後端組態。請參閱[設定 Security 後端]({{site.url}}{{site.baseurl}}/security/configuration/configuration/)一節，進一步了解如何設定後端。
 
-### Access control
+### 存取控制
 
-Access control (or authorization) generally involves selectively assigning permissions to users that allow them to perform specific tasks, such as clearing the cache for a particular index or taking a snapshot of a cluster. However, rather than assign individual permissions directly to users, OpenSearch assigns these permissions to roles and then maps the roles to users. For more on setting up these relationships, see [Users and roles]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/). Roles, therefore, define the actions that users can perform, including the data they can read, the cluster settings they can modify, the indexes to which they can write, and so on. Roles are reusable across multiple users, and users can have multiple roles.
+存取控制 (或授權) 通常涉及選擇性地為使用者指派權限，讓他們能夠執行特定任務，例如清除特定索引的快取或為叢集製作快照。不過，OpenSearch 並不直接將個別權限指派給使用者，而是將這些權限指派給角色，再將角色對應到使用者。如需設定這些關係的更多資訊，請參閱[使用者與角色]({{site.url}}{{site.baseurl}}/security/access-control/users-roles/)。因此，角色定義了使用者可以執行的動作，包括他們可以讀取的資料、可以修改的叢集設定、可以寫入的索引等等。角色可在多個使用者之間重複使用，使用者也可以擁有多個角色。
 
-Another notable characteristic of access control in OpenSearch is the ability to assign user access through levels of increasing granularity. Fine-grained access control (FGAC) means that a role can control permissions for users at not only the cluster level but also the index level, the document level, and even the field level. For example, a role may provide a user access to certain cluster-level permissions but at the same time prevent the user from accessing a given group of indexes. Likewise, that role may grant access to certain types of documents but not others, or it may even include access to specific fields within a document but exclude access to other sensitive fields. Field masking further extends FGAC by providing options to mask certain types of data, such as a list of emails, which can still be aggregated but not made viewable to a role.
+OpenSearch 存取控制的另一個顯著特性，是能夠以遞增的細緻度層級指派使用者存取權。細緻存取控制 (FGAC) 表示角色不僅可以在叢集層級控制使用者權限，還可以在索引層級、文件層級，甚至欄位層級控制權限。例如，某個角色可以為使用者提供某些叢集層級的權限，但同時防止該使用者存取特定的一組索引。同樣地，該角色可以授予對某些類型文件的存取權而不授予其他類型，甚至可以包含對文件內特定欄位的存取權，但排除對其他敏感欄位的存取權。欄位遮罩進一步擴充了 FGAC，提供遮罩某些類型資料的選項，例如電子郵件清單，這類資料仍可進行彙總，但不會對角色顯示。
 
-To learn more about this feature, see the [Access control]({{site.url}}{{site.baseurl}}/security/access-control/index/) section of the security documentation.
+若要進一步了解此功能，請參閱安全性文件中的[存取控制]({{site.url}}{{site.baseurl}}/security/access-control/index/)一節。
 
-### Audit logging and compliance
+### 稽核記錄與合規
 
-Finally, audit logging and compliance refer to mechanisms that allow for tracking and analysis of activity within a cluster. This is important after data breaches (unauthorized access) or when data suffers unintended exposure, as could happen when the data is left vulnerable in an unsecured location. However, audit logging can be just as valuable a tool for assessing excessive loads on a cluster or surveying trends for a given task. This feature allows you to review changes made anywhere in a cluster and track access patterns and API requests of all types, whether valid or invalid.
+最後，稽核記錄與合規是指可用於追蹤與分析叢集內活動的機制。這在發生資料外洩 (未經授權的存取) 或資料遭到意外暴露時非常重要，例如資料被留在不安全的位置而處於易受攻擊的狀態時。不過，稽核記錄同樣是評估叢集負載過高或調查特定任務趨勢的寶貴工具。此功能可讓您檢視叢集中任何位置所做的變更，並追蹤所有類型的存取模式與 API 請求，無論其有效或無效。
 
-How OpenSearch archives logging is configurable at many levels of detail, and there are a number of options for where those logs are stored. Compliance features also ensure that all data is available if and when compliance auditing is required. In this case, the logging can be automated to focus on data especially pertinent to those compliance requirements.
+OpenSearch 封存記錄的方式可在多個細節層級進行組態，而且這些記錄檔的儲存位置也有多種選項。合規功能也確保在需要進行合規稽核時，所有資料都可供使用。在這種情況下，記錄可以自動化，聚焦於與這些合規要求特別相關的資料。
 
-See the [Audit logs]({{site.url}}{{site.baseurl}}/security/audit-logs/index/) section of the security documentation to read more about this feature.
+若要進一步了解此功能，請參閱安全性文件中的[稽核記錄]({{site.url}}{{site.baseurl}}/security/audit-logs/index/)一節。
 
-## Other features and functionality
+## 其他功能
 
-OpenSearch includes other features that complement the security infrastructure.
+OpenSearch 還包含其他可補足安全性基礎架構的功能。
 
-### Dashboards multi-tenancy
+### Dashboards 多租用戶
 
-One such feature is OpenSearch Dashboards multi-tenancy. Tenants are work spaces that include visualizations, index patterns, and other Dashboards objects. Multi-tenancy allows for the sharing of tenants among users of Dashboards and leverages OpenSearch roles to manage access to tenants and safely make them available to others.
-For more information about creating tenants, see [OpenSearch Dashboards multi-tenancy]({{site.url}}{{site.baseurl}}/security/multi-tenancy/tenant-index/).
+其中一項功能是 OpenSearch Dashboards 多租用戶。租用戶是包含視覺化、索引模式與其他 Dashboards 物件的工作空間。多租用戶允許在 Dashboards 使用者之間共用租用戶，並運用 OpenSearch 角色來管理對租用戶的存取，安全地將其提供給其他人使用。
+如需建立租用戶的更多資訊，請參閱 [OpenSearch Dashboards 多租用戶]({{site.url}}{{site.baseurl}}/security/multi-tenancy/tenant-index/)。
 
-### Cross-cluster search
+### 跨叢集搜尋
 
-Another notable feature is cross-cluster search. This feature provides users with the ability to perform searches from one node in a cluster across other clusters that have been set up to coordinate this type of search. As with other features, cross-cluster search is supported by the OpenSearch access control infrastructure, which defines the permissions users have for working with this feature.
-To learn more, see [Cross-cluster search]({{site.url}}{{site.baseurl}}/security/access-control/cross-cluster-search/).
+另一項值得注意的功能是跨叢集搜尋。此功能讓使用者能夠從叢集中的某個節點，對已設定為協調此類搜尋的其他叢集執行搜尋。與其他功能一樣，跨叢集搜尋由 OpenSearch 存取控制基礎架構支援，該基礎架構定義了使用者使用此功能的權限。
+若要進一步了解，請參閱[跨叢集搜尋]({{site.url}}{{site.baseurl}}/security/access-control/cross-cluster-search/)。
 
-## Next steps
+## 後續步驟
 
-- To get started with OpenSearch security, read the [Getting started guide]({{site.url}}{{site.baseurl}}/security/getting-started/).
+- 若要開始使用 OpenSearch 安全性，請閱讀[入門指南]({{site.url}}{{site.baseurl}}/security/getting-started/)。
 
-- For practical recommendations, follow the [Best practices for OpenSearch security]({{site.url}}{{site.baseurl}}/security/configuration/best-practices/), which include 10 key considerations.
+- 如需實用建議，請參閱 [OpenSearch 安全性最佳實務]({{site.url}}{{site.baseurl}}/security/configuration/best-practices/)，其中包含 10 項重要考量。
 
-- To configure security in your OpenSearch implementation, use the [Security configuration overview]({{site.url}}{{site.baseurl}}/security/configuration/index/) for step-by-step instructions and links to customization options for your environment.
+- 若要在您的 OpenSearch 實作中設定安全性，請使用[安全性組態概覽]({{site.url}}{{site.baseurl}}/security/configuration/index/)取得逐步說明，以及適用於您環境的自訂選項連結。

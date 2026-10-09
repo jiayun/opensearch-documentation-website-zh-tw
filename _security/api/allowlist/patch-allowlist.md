@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Patch allow list
+title: "修補允許清單"
 parent: Allow list APIs
 grand_parent: Security APIs
 nav_order: 20
 ---
 
-# Patch Allow List API
-**Introduced 2.1**
+# 修補允許清單 API
+**於 2.1 版推出**
 {: .label .label-purple }
 
-Updates an allow list configuration.
+更新允許清單組態。
 
-This API is reserved for a superadmin. Authenticate with an admin certificate rather than with a user name and password. For more information, see [Access control for the API]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api).
+此 API 僅供超級管理員使用。請使用管理員憑證進行驗證，而非使用使用者名稱和密碼。如需詳細資訊，請參閱 [API 的存取控制]({{site.url}}{{site.baseurl}}/security/access-control/api/#access-control-for-the-api)。
 {: .note}
 
 <!-- spec_insert_start
 api: security.patch_allowlist
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PATCH /_plugins/_security/api/allowlist
 ```
 <!-- spec_insert_end -->
 
-## Request body fields
+## 請求本文欄位
 
-The request body is required. It is an array of JSON objects. Each object contains the following fields.
+請求本文為必要項目。它是由 JSON 物件組成的陣列。每個物件包含下列欄位。
 
-| Field | Data type | Description | Required |
+| 欄位 | 資料類型 | 說明 | 必要 |
 | :--- | :--- | :--- | :--- |
-| `op` | String | The operation to perform. Valid values are `add`, `remove`, `replace`, `move`, `copy`, and `test`. | Yes |
-| `path` | String | The path to modify, such as `/config/enabled` or `/config/requests`. Because the path uses JSON Pointer syntax, escape any forward slash in a request path as `~1`. For example, the path to the `/_cat/shards` entry is `/config/requests/~1_cat~1shards`. | Yes |
-| `value` | Object or array | The new value. Required for the `add`, `replace`, and `test` operations. | No |
+| `op` | 字串 | 要執行的操作。有效值為 `add`、`remove`、`replace`、`move`、`copy` 和 `test`。 | 是 |
+| `path` | 字串 | 要修改的路徑，例如 `/config/enabled` 或 `/config/requests`。由於路徑使用 JSON Pointer 語法，請將請求路徑中的任何正斜線跳脫為 `~1`。例如，`/_cat/shards` 項目的路徑為 `/config/requests/~1_cat~1shards`。 | 是 |
+| `value` | 物件或陣列 | 新的值。`add`、`replace` 和 `test` 操作必須提供此值。 | 否 |
 
-## Example request
+## 請求範例
 
-The following request adds the `/_cat/shards` endpoint to the allow list:
+下列請求會將 `/_cat/shards` 端點新增至允許清單：
 
 ```json
 PATCH _plugins/_security/api/allowlist
@@ -53,7 +54,7 @@ PATCH _plugins/_security/api/allowlist
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 回應範例
 
 ```json
 {

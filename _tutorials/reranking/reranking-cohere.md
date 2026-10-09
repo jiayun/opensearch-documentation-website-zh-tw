@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reranking using Cohere Rerank
+title: "使用 Cohere Rerank 重新排序"
 parent: Reranking search results
 nav_order: 90
 redirect_from:
@@ -8,18 +9,18 @@ redirect_from:
   - /vector-search/tutorials/reranking/reranking-cohere/
 ---
 
-# Reranking search results using Cohere Rerank
+# 使用 Cohere Rerank 重新排序搜尋結果
 
-A [reranking pipeline]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/) can rerank search results, providing a relevance score for each document in the search results with respect to the search query. The relevance score is calculated by a cross-encoder model. 
+[重新排序管線]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)可以重新排序搜尋結果，為搜尋結果中的每份文件提供相對於搜尋查詢的相關性分數。相關性分數由交叉編碼器模型計算。
 
-This tutorial shows you how to use the [Cohere Rerank](https://docs.cohere.com/reference/rerank-1) model in a reranking pipeline. 
+本教學說明如何在重新排序管線中使用 [Cohere Rerank](https://docs.cohere.com/reference/rerank-1) 模型。
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將開頭為前置字元 `your_` 的預留位置替換為您自己的值。
 {: .note}
 
-## Step 1: Register a Cohere Rerank model
+## 步驟 1：註冊 Cohere Rerank 模型
 
-Create a connector for the Cohere Rerank model:
+為 Cohere Rerank 模型建立連接器：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -51,7 +52,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-Use the connector ID from the response to register a Cohere Rerank model:
+使用回應中的連接器 ID 註冊 Cohere Rerank 模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -64,9 +65,9 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Note the model ID in the response; you'll use it in the following steps.
+請記下回應中的模型 ID；您將在後續步驟中使用它。
 
-Test the model by calling the Predict API:
+呼叫 Predict API 來測試模型：
 
 ```json
 POST _plugins/_ml/models/your_model_id/_predict
@@ -84,12 +85,12 @@ POST _plugins/_ml/models/your_model_id/_predict
 }
 ```
 
-To ensure compatibility with the rerank pipeline, the `top_n` value must be the same as the length of the `documents` list. 
+為確保與重新排序管線相容，`top_n` 值必須與 `documents` 清單的長度相同。
 {: .important}
 
-You can customize the number of top documents returned in the response by providing the `size` parameter. For more information, see [Step 2.3](#step-23-test-the-reranking).
+您可以提供 `size` 參數，自訂回應中傳回的頂端文件數量。如需詳細資訊，請參閱[步驟 2.3](#step-23-test-the-reranking)。
 
-OpenSearch responds with the inference results:
+OpenSearch 會回應推論結果：
 
 ```json
 {
@@ -143,15 +144,15 @@ OpenSearch responds with the inference results:
 }
 ```
 
-The response contains four `similarity` objects. For each `similarity` object, the `data` array contains a relevance score for each document with respect to the query. The `similarity` objects are provided in the order of the input documents; the first object pertains to the first document. This differs from the default output of the Cohere Rerank model, which orders documents by relevance score. The document order is changed in the `connector.post_process.cohere.rerank` post-processing function in order to make the output compatible with a reranking pipeline.
+回應包含四個 `similarity` 物件。對於每個 `similarity` 物件，`data` 陣列包含每份文件相對於查詢的相關性分數。`similarity` 物件會依輸入文件的順序提供；第一個物件對應第一份文件。這與 Cohere Rerank 模型的預設輸出不同，後者會依相關性分數排序文件。文件順序會在 `connector.post_process.cohere.rerank` 後處理函式中變更，以使輸出與重新排序管線相容。
 
-## Step 2: Configure a reranking pipeline
+## 步驟 2：設定重新排序管線
 
-Follow these steps to configure a reranking pipeline.
+請依照下列步驟設定重新排序管線。
 
-### Step 2.1: Ingest test data
+### 步驟 2.1：匯入測試資料
 
-Send a bulk request to ingest test data:
+傳送大量請求以匯入測試資料：
 
 ```json
 POST _bulk
@@ -166,9 +167,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-### Step 2.2: Create a reranking pipeline
+### 步驟 2.2：建立重新排序管線
 
-Create a reranking pipeline with the Cohere Rerank model:
+使用 Cohere Rerank 模型建立重新排序管線：
 
 ```json
 PUT /_search/pipeline/rerank_pipeline_cohere
@@ -190,9 +191,9 @@ PUT /_search/pipeline/rerank_pipeline_cohere
 ```
 {% include copy-curl.html %}
 
-### Step 2.3: Test the reranking
+### 步驟 2.3：測試重新排序
 
-To limit the number of returned results, you can specify the `size` parameter. For example, set `"size": 2` to return the top two documents:
+若要限制傳回的結果數量，您可以指定 `size` 參數。例如，將 `"size": 2` 設為傳回前兩份文件：
 
 ```json
 GET my-test-data/_search?search_pipeline=rerank_pipeline_cohere
@@ -212,7 +213,7 @@ GET my-test-data/_search?search_pipeline=rerank_pipeline_cohere
 ```
 {% include copy-curl.html %}
 
-The response contains the two most relevant documents:
+回應包含兩份最相關的文件：
 
 ```json
 {
@@ -271,7 +272,7 @@ The response contains the two most relevant documents:
 }
 ```
 
-To compare these results to results without reranking, run the search without a reranking pipeline:
+若要將這些結果與未重新排序的結果進行比較，請在沒有重新排序管線的情況下執行搜尋：
 
 ```json
 GET my-test-data/_search
@@ -290,7 +291,7 @@ GET my-test-data/_search
 ```
 {% include copy-curl.html %}
 
-The first document in the response pertains to Carson City, which is not the capital of the United States:
+回應中的第一份文件對應 Carson City，而 Carson City 並非美國首都：
 
 ```json
 {

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Generating embeddings
+title: "產生嵌入"
 parent: Vector operations
 grand_parent: Vector search
 nav_order: 5
@@ -9,20 +10,20 @@ redirect_from:
   - /vector-search/tutorials/vector-operations/generate-embeddings/
 ---
 
-# Generating embeddings from arrays of objects
+# 從物件陣列產生嵌入
 
-This tutorial shows you how to generate embeddings for arrays of objects. For more information, see [Generating embeddings automatically]({{site.url}}{{site.baseurl}}/vector-search/getting-started/auto-generated-embeddings/).
+本教學說明如何為物件陣列產生嵌入。如需更多資訊，請參閱[自動產生嵌入]({{site.url}}{{site.baseurl}}/vector-search/getting-started/auto-generated-embeddings/)。
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將開頭為前綴 `your_` 的預留位置取代為您自己的值。
 {: .note}
 
-## Step 1: Register an embedding model
+## 步驟 1：註冊嵌入模型
 
-In this tutorial, you will use the [Amazon Titan Text Embeddings models](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html) hosted on Amazon Bedrock. 
+在本教學中，您將使用託管於 Amazon Bedrock 的 [Amazon Titan Text Embeddings 模型](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html)。
 
-First, follow the [Amazon Bedrock Titan blueprint example](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_titan_embedding_blueprint.md) to register and deploy the model. 
+首先，請依照 [Amazon Bedrock Titan 藍圖範例](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_titan_embedding_blueprint.md) 註冊並部署模型。
 
-Test the model, providing the model ID:
+測試模型，並提供模型 ID：
 
 ```json
 POST /_plugins/_ml/models/your_embedding_model_id/_predict
@@ -34,7 +35,7 @@ POST /_plugins/_ml/models/your_embedding_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-The response contains inference results:
+回應包含推論結果：
 
 ```json
 {
@@ -54,13 +55,13 @@ The response contains inference results:
 }
 ```
 
-## Step 2: Create an ingest pipeline
+## 步驟 2：建立資料匯入管線
 
-Follow the next set of steps to create an ingest pipeline for generating embeddings.
+請依照下列步驟建立用於產生嵌入的資料匯入管線。
 
-### Step 2.1: Create a vector index
+### 步驟 2.1：建立向量索引
 
-First, create a vector index:
+首先，建立向量索引：
 
 ```json
 PUT my_books
@@ -92,15 +93,15 @@ PUT my_books
 ```
 {% include copy-curl.html %}
 
-### Step 2.2: Create an ingest pipeline
+### 步驟 2.2：建立資料匯入管線
 
-Then create an inner ingest pipeline to generate an embedding for one array element.
+接著建立內部資料匯入管線，為單一陣列元素產生嵌入。
 
-This pipeline contains three processors:
+此管線包含三個處理器：
 
-- `text_embedding` processor: Converts the value of the temporary field to an embedding.
+- `text_embedding` 處理器：將暫存欄位的值轉換為嵌入。
 
-To create such a pipeline, send the following request:
+若要建立這類管線，請傳送下列請求：
 
 ```json
 PUT _ingest/pipeline/bedrock_embedding_pipeline
@@ -119,9 +120,9 @@ PUT _ingest/pipeline/bedrock_embedding_pipeline
 ```
 {% include copy-curl.html %}
 
-### Step 2.3: Simulate the pipeline
+### 步驟 2.3：模擬管線
 
-First, you'll test the pipeline on an array that contains two book objects, both with a `title` field:
+首先，您將在包含兩個書籍物件的陣列上測試管線，這兩個物件都有 `title` 欄位：
 
 ```json
 POST _ingest/pipeline/bedrock_embedding_pipeline/_simulate
@@ -148,7 +149,7 @@ POST _ingest/pipeline/bedrock_embedding_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-The response contains generated embeddings for both objects in their `title_embedding` fields:
+回應包含兩個物件在其 `title_embedding` 欄位中產生的嵌入：
 
 ```json
 {
@@ -181,7 +182,7 @@ The response contains generated embeddings for both objects in their `title_embe
 }
 ```
 
-Next, you'll test the pipeline on an array that contains two book objects, one with a `title` field and one without:
+接著，您將在包含兩個書籍物件的陣列上測試管線，其中一個有 `title` 欄位，另一個則沒有：
 
 ```json
 POST _ingest/pipeline/bedrock_embedding_foreach_pipeline/_simulate
@@ -207,7 +208,7 @@ POST _ingest/pipeline/bedrock_embedding_foreach_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-The response contains generated embeddings for the object that contains the `title` field:
+回應包含含有 `title` 欄位之物件所產生的嵌入：
 
 ```json
 {
@@ -237,9 +238,9 @@ The response contains generated embeddings for the object that contains the `tit
   ]
 }
 ```
-### Step 2.4: Test data ingestion
+### 步驟 2.4：測試資料匯入
 
-Ingest one document:
+匯入一份文件：
 
 ```json
 PUT my_books/_doc/1
@@ -258,14 +259,14 @@ PUT my_books/_doc/1
 ```
 {% include copy-curl.html %}
 
-Get the document:
+取得該文件：
 
 ```json
 GET my_books/_doc/1
 ```
 {% include copy-curl.html %}
 
-The response contains the generated embeddings:
+回應包含產生的嵌入：
 
 ```json
 {
@@ -292,7 +293,7 @@ The response contains the generated embeddings:
 }      
 ```
 
-You can also ingest several documents in bulk and test the generated embeddings by calling the Get Document API:
+您也可以大量匯入多份文件，並透過呼叫 Get Document API 來測試產生的嵌入：
 
 ```json
 POST _bulk

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Vector search API
+title: "向量搜尋 API"
 nav_order: 80
 has_children: true
 has_toc: false
@@ -10,32 +11,32 @@ redirect_from:
   - /search-plugins/knn/api/
 ---
 
-# Vector search API
+# 向量搜尋 API
 
-In OpenSearch, vector search functionality is provided by the k-NN plugin and Neural Search plugin. The k-NN plugin provides basic k-NN functionality, while the Neural Search plugin provides automatic embedding generation at indexing and search time.
+在 OpenSearch 中，向量搜尋功能由 k-NN 外掛程式與 Neural Search 外掛程式提供。k-NN 外掛程式提供基本的 k-NN 功能，而 Neural Search 外掛程式則在編製索引與搜尋時自動產生嵌入。
 
-For k-NN plugin APIs, see [k-NN API]({{site.url}}{{site.baseurl}}/vector-search/api/knn/).
+如需 k-NN 外掛程式的 API，請參閱 [k-NN API]({{site.url}}{{site.baseurl}}/vector-search/api/knn/)。
 
-In addition to plugin-specific APIs, the following APIs support vector search functionality:
+除了外掛程式專屬的 API 之外，下列 API 也支援向量搜尋功能：
 
-- [k-NN vector]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)
-- [k-NN query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)
-- [Neural query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)
-- [Neural sparse query]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural-sparse/)
-- [Ingest pipelines]({{site.url}}{{site.baseurl}}/ingest-pipelines/)
-- Ingest processors:
-    - [ML inference]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/ml-inference/)
-    - [Sparse encoding]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/sparse-encoding/)
-    - [Text chunking]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-chunking/)
-    - [Text embedding]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/)
-    - [Text/image embedding]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-image-embedding/)
-- [Search pipelines]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/)
-- Search processors:
-    - [ML inference (request)]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-request/)
-    - [ML inference (response)]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-response/)
-    - [Neural query enricher]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/)
-    - [Neural sparse query two-phase]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-sparse-query-two-phase-processor/)
-    - [Normalization]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/)
-    - [Rerank]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)
-    - [Retrieval-augmented generation]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/)
-    - [Score ranker]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/score-ranker-processor/)
+- [k-NN 向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)
+- [k-NN 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)
+- [神經查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)
+- [神經稀疏查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural-sparse/)
+- [資料匯入管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/)
+- 資料匯入處理器：
+    - [機器學習推論]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/ml-inference/)
+    - [稀疏編碼]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/sparse-encoding/)
+    - [文字分塊]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-chunking/)
+    - [文字嵌入]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/)
+    - [文字/影像嵌入]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-image-embedding/)
+- [搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/)
+- 搜尋處理器：
+    - [機器學習推論（請求）]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-request/)
+    - [機器學習推論（回應）]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-response/)
+    - [神經查詢增強器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/)
+    - [兩階段神經稀疏查詢]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-sparse-query-two-phase-processor/)
+    - [正規化]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/)
+    - [重新排序]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)
+    - [檢索增強生成]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/)
+    - [分數排序器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/score-ranker-processor/)

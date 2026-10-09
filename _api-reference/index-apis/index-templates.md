@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index templates
+title: "索引範本"
 parent: Index APIs
 nav_order: 50
 has_children: true
 has_toc: false
 ---
 
-# Index template APIs
+# 索引範本 API
 
-Index template APIs allow you to create and manage templates that automatically apply settings, mappings, and aliases to new indexes that match specific patterns. Templates provide a powerful way to ensure consistency across your indexes.
+索引範本 API 可讓您建立及管理範本，自動將設定、對應和別名套用至符合特定模式的新索引。範本是確保各索引之間一致性的強大方式。
 
-## Available APIs
+## 可用的 API
 
-OpenSearch supports the following index template APIs.
+OpenSearch 支援下列索引範本 API。
 
-| API | Description |
+| API | 說明 |
 |-----|-------------|
-| [Create index template]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index-template/) | Creates or updates an index template. |
-| [Delete index template]({{site.url}}{{site.baseurl}}/api-reference/index-apis/delete-index-template/) | Deletes an index template. |
-| [Get index template]({{site.url}}{{site.baseurl}}/api-reference/index-apis/get-index-template/) | Returns information about one or more index templates. |
-| [Index template exists]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-template-exists/) | Checks if an index template exists. |
-| [Simulate index template]({{site.url}}{{site.baseurl}}/api-reference/index-apis/simulate-index-template/) | Simulates the application of index templates. |
-| [Component template]({{site.url}}{{site.baseurl}}/api-reference/index-apis/component-template/) | Manages component templates that can be reused across index templates. |
+| [建立索引範本]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index-template/) | 建立或更新索引範本。 |
+| [刪除索引範本]({{site.url}}{{site.baseurl}}/api-reference/index-apis/delete-index-template/) | 刪除索引範本。 |
+| [取得索引範本]({{site.url}}{{site.baseurl}}/api-reference/index-apis/get-index-template/) | 傳回一或多個索引範本的相關資訊。 |
+| [索引範本是否存在]({{site.url}}{{site.baseurl}}/api-reference/index-apis/index-template-exists/) | 檢查索引範本是否存在。 |
+| [模擬索引範本]({{site.url}}{{site.baseurl}}/api-reference/index-apis/simulate-index-template/) | 模擬索引範本的套用。 |
+| [元件範本]({{site.url}}{{site.baseurl}}/api-reference/index-apis/component-template/) | 管理可在多個索引範本之間重複使用的元件範本。 |
 
-## Legacy template APIs
+## 舊版範本 API
 
-OpenSearch also supports the following legacy template APIs for backward compatibility. These APIs use the older template format and are deprecated in favor of the preceding index template APIs.
+為了回溯相容性，OpenSearch 也支援下列舊版範本 API。這些 API 使用較舊的範本格式，且已被棄用，建議改用前述的索引範本 API。
 
-| API | Description |
+| API | 說明 |
 |-----|-------------|
-| [Post template (legacy)]({{site.url}}{{site.baseurl}}/api-reference/index-apis/post-template-legacy/) | Creates or updates a legacy index template using POST. |
-| [Put template (legacy)]({{site.url}}{{site.baseurl}}/api-reference/index-apis/put-template-legacy/) | Creates or updates a legacy index template using PUT. |
-| [Get template (legacy)]({{site.url}}{{site.baseurl}}/api-reference/index-apis/get-template-legacy/) | Returns information about one or more legacy index templates. |
-| [Template exists (legacy)]({{site.url}}{{site.baseurl}}/api-reference/index-apis/template-exists-legacy/) | Checks if a legacy index template exists. |
-| [Delete template (legacy)]({{site.url}}{{site.baseurl}}/api-reference/index-apis/delete-template-legacy/) | Deletes a legacy index template. |
+| [Post 範本（舊版）]({{site.url}}{{site.baseurl}}/api-reference/index-apis/post-template-legacy/) | 使用 POST 建立或更新舊版索引範本。 |
+| [Put 範本（舊版）]({{site.url}}{{site.baseurl}}/api-reference/index-apis/put-template-legacy/) | 使用 PUT 建立或更新舊版索引範本。 |
+| [取得範本（舊版）]({{site.url}}{{site.baseurl}}/api-reference/index-apis/get-template-legacy/) | 傳回一或多個舊版索引範本的相關資訊。 |
+| [範本是否存在（舊版）]({{site.url}}{{site.baseurl}}/api-reference/index-apis/template-exists-legacy/) | 檢查舊版索引範本是否存在。 |
+| [刪除範本（舊版）]({{site.url}}{{site.baseurl}}/api-reference/index-apis/delete-template-legacy/) | 刪除舊版索引範本。 |

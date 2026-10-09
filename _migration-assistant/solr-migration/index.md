@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Solr migration
+title: "Solr 遷移"
 nav_order: 60
 has_children: true
 has_toc: true
 permalink: /migration-assistant/solr-migration/
 ---
 
-# Solr migration
+# Solr 遷移
 
-Solr migrations use a different architecture than Elasticsearch migrations because Solr and OpenSearch have fundamentally different schema formats and data layouts.
+Solr 遷移使用的架構與 Elasticsearch 遷移不同，因為 Solr 與 OpenSearch 的結構描述格式與資料配置有根本上的差異。
 
-## Supported versions
+## 支援的版本
 
-The following table lists the supported source and target versions.
+下表列出支援的來源與目標版本。
 
-| Source | Target |
+| 來源 | 目標 |
 |:-------|:-------|
-| Apache Solr 6.x--9.x (SolrCloud or Standalone) | OpenSearch 1.x, 2.x, or 3.x |
+| Apache Solr 6.x--9.x (SolrCloud 或 Standalone) | OpenSearch 1.x、2.x 或 3.x |
 
-The version string in your workflow configuration must match the format `SOLR <major>.<minor>.<patch>`. Examples: `SOLR 8.11.4`, `SOLR 9.7.0`, `SOLR 6.6.0`.
+您工作流程組態中的版本字串必須符合格式 `SOLR <major>.<minor>.<patch>`。例如：`SOLR 8.11.4`、`SOLR 9.7.0`、`SOLR 6.6.0`。
 
-## Solr migration differences
+## Solr 遷移的差異
 
-Unlike Elasticsearch, which shares a common Lucene data format and similar REST API with OpenSearch, Solr uses its own schema format (`schema.xml`) and a different Lucene index layout. Solr migrations use a specialized component called SolrReader, which reads Solr backup data and translates Solr schemas to OpenSearch mappings. For step-by-step S3 backup setup and workflow configuration, see the [Solr backfill guide]({{site.url}}{{site.baseurl}}/migration-assistant/solr-migration/solr-backfill-guide/).
+Elasticsearch 與 OpenSearch 共用相同的 Lucene 資料格式與類似的 REST API，Solr 則不同，它使用自己的結構描述格式 (`schema.xml`) 以及不同的 Lucene 索引配置。Solr 遷移使用一個稱為 SolrReader 的專用元件，它會讀取 Solr 備份資料，並將 Solr 結構描述轉譯為 OpenSearch 對應。如需逐步的 S3 備份設定與工作流程組態，請參閱 [Solr 回填指南]({{site.url}}{{site.baseurl}}/migration-assistant/solr-migration/solr-backfill-guide/)。
 
-## Migration phases
+## 遷移階段
 
-Solr migrations follow these phases.
+Solr 遷移會依循下列階段進行。
 
-### Phase 1: Data migration (backfill)
+### 階段 1：資料遷移 (回填)
 
-1. **Create a Solr backup** -- Use Solr's backup API for SolrCloud collections, or file-system copy for standalone cores.
-2. **Run SolrReader** -- Reads the Solr backup's Lucene segment files, extracts documents, and translates Solr `schema.xml` field types into OpenSearch mappings.
-3. **Bulk-index into OpenSearch** -- Documents are indexed into the target with translated mappings.
+1. **建立 Solr 備份** -- 針對 SolrCloud 集合使用 Solr 的備份 API，或針對獨立核心使用檔案系統複製。
+2. **執行 SolrReader** -- 讀取 Solr 備份的 Lucene 分段檔案、擷取文件，並將 Solr `schema.xml` 欄位類型轉譯為 OpenSearch 對應。
+3. **大量編製索引至 OpenSearch** -- 文件會以轉譯後的對應編製索引至目標。
 
-The following table shows how SolrReader performs schema translation.
+下表顯示 SolrReader 如何執行結構描述轉譯。
 
-| Solr field type | OpenSearch mapping |
+| Solr 欄位類型 | OpenSearch 對應 |
 |:----------------|:-------------------|
 | `solr.TextField` | `text` |
 | `solr.StrField` | `keyword` |
@@ -48,19 +49,19 @@ The following table shows how SolrReader performs schema translation.
 | `solr.BoolField` | `boolean` |
 | `solr.DatePointField` | `date` |
 
-### Phase 2: Validate and cutover
+### 階段 2：驗證與切換
 
-After backfill completes, validate document counts and sample queries against the target. Once confident, point your application directly at OpenSearch.
+回填完成後，請針對目標驗證文件數量與範例查詢。確認無誤後，將您的應用程式直接指向 OpenSearch。
 
-Solr migrations support **backfill only**---Capture and Replay (live traffic migration) is not supported for Solr sources. You will need to update your application's query layer to use the OpenSearch API.
+Solr 遷移僅支援**回填**---Solr 來源不支援擷取與重播 (即時流量遷移)。您將需要更新應用程式的查詢層，以使用 OpenSearch API。
 {: .warning }
 
-## Migrated components
+## 已遷移的元件
 
-| Component | Supported | Notes |
+| 元件 | 支援 | 備註 |
 |:----------|:----------|:------|
-| Documents | Yes | Extracted from Solr backup Lucene segment files |
-| Schema (field types) | Yes | `schema.xml` → OpenSearch mappings |
-| Solr plugins | No | Must be reimplemented or removed |
-| ZooKeeper configuration | No | Not applicable to OpenSearch |
-| Query traffic | No | Application must be updated to use OpenSearch API |
+| 文件 | 是 | 從 Solr 備份的 Lucene 分段檔案擷取 |
+| 結構描述 (欄位類型) | 是 | `schema.xml` → OpenSearch 對應 |
+| Solr 外掛程式 | 否 | 必須重新實作或移除 |
+| ZooKeeper 組態 | 否 | 不適用於 OpenSearch |
+| 查詢流量 | 否 | 應用程式必須更新為使用 OpenSearch API |

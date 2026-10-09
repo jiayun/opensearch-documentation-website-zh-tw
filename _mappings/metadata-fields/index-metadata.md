@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index
+title: "索引"
 parent: Metadata fields
 nav_order: 40
 redirect_from:
   - /field-types/metadata-fields/index-metadata/
 ---
 
-# Index metadata field
+# 索引中繼資料欄位
 
-When querying across multiple indexes, you may need to filter results based on the index into which a document was indexed. The `index` field matches documents based on their index. 
+在跨多個索引進行查詢時，您可能需要根據文件被編製索引的索引來篩選結果。`index` 欄位會依據文件所在的索引來比對文件。
 
-The following example requests create two indexes, `products` and `customers`, and add a document to each index.
+下列範例請求會建立兩個索引 `products` 和 `customers`，並分別在每個索引中新增一份文件。
 
-The first request adds a document to the `products` index:
+第一個請求會在 `products` 索引中新增一份文件：
 
 ```json
 PUT products/_doc/1
@@ -23,7 +24,7 @@ PUT products/_doc/1
 ```
 {% include copy-curl.html %}
 
-The second request adds a document to the `customers` index:
+第二個請求會在 `customers` 索引中新增一份文件：
 
 ```json
 PUT customers/_doc/2
@@ -33,7 +34,7 @@ PUT customers/_doc/2
 ```
 {% include copy-curl.html %}
 
-You can then query both indexes and filter the results using the `_index` field, as shown in the following example request:
+接著您可以使用 `_index` 欄位查詢這兩個索引並篩選結果，如下列範例請求所示：
 
 ```json
 GET products,customers/_search
@@ -70,18 +71,18 @@ GET products,customers/_search
 ```
 {% include copy-curl.html %}
 
-In this example:
+在此範例中：
 
-- The `query` section uses a `terms` query to match documents from the `products` and `customers` indexes.
-- The `aggs` section performs a `terms` aggregation on the `_index` field, grouping the results by index.
-- The `sort` section sorts the results by the `_index` field in ascending order.
-- The `script_fields` section adds a new field called `index_name` to the search results containing the `_index` field value for each document.
+- `query` 區段使用 `terms` 查詢來比對來自 `products` 和 `customers` 索引的文件。
+- `aggs` 區段對 `_index` 欄位執行 `terms` 彙總，並依索引將結果分組。
+- `sort` 區段依 `_index` 欄位以遞增順序排序結果。
+- `script_fields` 區段在搜尋結果中新增名為 `index_name` 的新欄位，其中包含每份文件的 `_index` 欄位值。
 
-## Querying on the `_index` field
+## 在 `_index` 欄位上進行查詢
 
-The `_index` field represents the index into which a document was indexed. You can use this field in your queries to filter, aggregate, sort, or retrieve index information for your search results.
+`_index` 欄位代表文件被編製索引的索引。您可以在查詢中使用此欄位，以篩選、彙總、排序或擷取搜尋結果的索引資訊。
 
-Because the `_index` field is automatically added to every document, you can use it in your queries like any other field. For example, you can use the `terms` query to match documents from multiple indexes. The following example query returns all documents from the `products` and `customers` indexes:
+由於 `_index` 欄位會自動新增至每份文件，您可以像使用其他欄位一樣在查詢中使用它。例如，您可以使用 `terms` 查詢來比對來自多個索引的文件。下列範例查詢會傳回 `products` 和 `customers` 索引中的所有文件：
 
 ```json
  {

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Rolling upgrade
+title: "滾動升級"
 nav_order: 20
 has_children: true
 has_toc: false
@@ -12,35 +13,35 @@ redirect_from:
  - /install-and-configure/upgrade-opensearch/rolling-upgrade/
 ---
 
-# Rolling upgrade
+# 滾動升級
 
-Rolling upgrades, sometimes referred to as "node replacement upgrades," can be performed on running clusters with virtually no downtime. Nodes are individually stopped and upgraded in place. Alternatively, nodes can be stopped and replaced, one at a time, by hosts running the new version. During this process, you can continue to index and query data in your cluster.
+滾動升級（有時稱為「節點替換升級」）幾乎可以在不停機的情況下於執行中的叢集上進行。節點會逐一停止並就地升級。或者，也可以一次一個地停止節點，並以執行新版本的主機取代。在此過程中，您仍可繼續在叢集中編製索引及查詢資料。
 
-This document serves as a high-level, platform-agnostic overview of the rolling upgrade procedure. For specific examples of commands, scripts, and configuration files, refer to the [Rolling upgrade lab]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/rolling-upgrade/rolling-upgrade-lab/).
+本文件提供滾動升級程序的高階、平台無關概覽。如需指令、指令碼與組態檔的具體範例，請參閱 [滾動升級實驗室]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/rolling-upgrade/rolling-upgrade-lab/)。
 
-## Preparing to upgrade
-Before making any changes to your OpenSearch cluster, is it highly recommended to back up your configuration files and create a [snapshot]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/) of the cluster state and indexes.
+## 準備升級
+在對您的 OpenSearch 叢集進行任何變更之前，強烈建議先備份您的組態檔，並為叢集狀態與索引建立[快照]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/)。
 
-**Important**: OpenSearch nodes **cannot be downgraded**. If you need to revert the upgrade, then you will need to perform a new installation of OpenSearch and restore the cluster from a snapshot. Take a snapshot and store it in a remote repository before beginning the upgrade procedure. Rolling upgrades are **only supported between major adjacent versions**, for example, from OpenSearch 1.x to 2.x but not 1.x to 3.x.
+**重要**：OpenSearch 節點**無法降級**。如果您需要復原升級，就必須重新安裝 OpenSearch，並從快照還原叢集。請在開始升級程序之前建立快照，並將其儲存在遠端儲存庫中。滾動升級**僅支援相鄰的主要版本之間**，例如從 OpenSearch 1.x 升級到 2.x，但不支援從 1.x 升級到 3.x。
 {: .important}
 
-**Important**: The minimum required cluster version for upgrades to 3.x.x is 2.19.0.
+**重要**：升級至 3.x.x 所需的最低叢集版本為 2.19.0。
 {: .important}
 
-### Cross-cluster replication
+### 跨叢集複寫
 
-If your cluster uses [cross-cluster replication]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/), follow these guidelines when upgrading:
+如果您的叢集使用[跨叢集複寫]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/)，升級時請遵循以下準則：
 
-- **Unidirectional replication**: Upgrade the follower cluster first, then the leader cluster.
-- **Bidirectional replication**: Stop replication in one direction, then upgrade both clusters. For the replication that remains active, upgrade the follower cluster first, then the leader cluster. Resume the stopped replication after both clusters are upgraded.
+- **單向複寫**：先升級追隨者叢集，再升級領導者叢集。
+- **雙向複寫**：先停止其中一個方向的複寫，然後升級兩個叢集。對於仍在運作的複寫，先升級追隨者叢集，再升級領導者叢集。兩個叢集都升級完成後，再恢復已停止的複寫。
 
-## Performing the upgrade
+## 執行升級
 
-1. Verify the health of your OpenSearch cluster before you begin. You should resolve any index or shard allocation issues prior to upgrading to ensure that your data is preserved. A status of **green** indicates that all primary and replica shards are allocated. See [Cluster health]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/) for more information. The following command queries the `_cluster/health` API endpoint:
+1. 開始之前，請先確認 OpenSearch 叢集的健康狀態。您應在升級前解決任何索引或分片分配問題，以確保資料不會遺失。**green** 狀態表示所有主要分片與副本分片皆已分配。如需更多資訊，請參閱 [Cluster health]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/)。下列指令查詢 `_cluster/health` API 端點：
    ```json
    GET "/_cluster/health?pretty"
    ```
-   The response should look similar to the following example:
+   回應應類似於下列範例：
    ```json
    {
        "cluster_name":"opensearch-dev-cluster",
@@ -60,7 +61,7 @@ If your cluster uses [cross-cluster replication]({{site.url}}{{site.baseurl}}/tu
        "active_shards_percent_as_number":100.0
    }
    ```
-1. Disable shard replication to prevent shard replicas from being created while nodes are being taken offline. This stops the movement of Lucene index segments on nodes in your cluster. You can disable shard replication by querying the `_cluster/settings` API endpoint:
+1. 停用分片複寫，以防止在節點離線期間建立分片副本。這會停止叢集中節點上 Lucene 索引分段的移動。您可以透過查詢 `_cluster/settings` API 端點來停用分片複寫：
    ```json
    PUT "/_cluster/settings?pretty"
    {
@@ -69,7 +70,7 @@ If your cluster uses [cross-cluster replication]({{site.url}}{{site.baseurl}}/tu
        }
    }
    ```
-   The response should look similar to the following example:
+   回應應類似於下列範例：
    ```json
    {
      "acknowledged" : true,
@@ -86,11 +87,11 @@ If your cluster uses [cross-cluster replication]({{site.url}}{{site.baseurl}}/tu
    }
    ```
 
-1. Perform a flush operation on the cluster to commit transaction log entries to the Lucene index:
+1. 對叢集執行排清作業，將異動記錄項目提交至 Lucene 索引：
    ```json
    POST "/_flush?pretty"
    ```
-   The response should look similar to the following example:
+   回應應類似於下列範例：
    ```json
    {
      "_shards" : {
@@ -100,20 +101,20 @@ If your cluster uses [cross-cluster replication]({{site.url}}{{site.baseurl}}/tu
      }
    }
    ```
-1. Review your cluster and identify the first node to upgrade. The nodes should be upgraded in the following order:
+1. 檢查您的叢集並找出第一個要升級的節點。節點應依照下列順序升級：
 
-    1. Data nodes
-    1. Ingest/machine learning (ML)/coordinating nodes
-    1. Cluster manager nodes
+    1. 資料節點
+    1. 資料匯入／機器學習（ML）／協調節點
+    1. 叢集管理員節點
 
-    Eligible cluster manager nodes should be upgraded last because OpenSearch nodes can join a cluster with cluster manager nodes running an older version, but they cannot join a cluster with all cluster manager nodes running a newer version.
+    符合資格的叢集管理員節點應最後升級，因為 OpenSearch 節點可以加入執行較舊版本的叢集管理員節點所在的叢集，但無法加入所有叢集管理員節點都執行較新版本的叢集。
     {: .important}
 
-1. Query the `_cat/nodes` endpoint to identify which node was promoted to cluster manager. The following command includes additional query parameters that request only the name, version, node.role, and master headers. Note that OpenSearch 1.x versions use the term "master," which has been deprecated and replaced by "cluster_manager" in OpenSearch 2.x and later.
+1. 查詢 `_cat/nodes` 端點，以確認哪個節點被提升為叢集管理員。下列指令包含額外的查詢參數，僅請求 name、version、node.role 與 master 標頭。請注意，OpenSearch 1.x 版本使用「master」一詞，該詞已被棄用，並在 OpenSearch 2.x 及之後的版本中由「cluster_manager」取代。
    ```bash
    GET "/_cat/nodes?v&h=name,version,node.role,master" | column -t
    ```
-   The response should look similar to the following example:
+   回應應類似於下列範例：
    ```bash
    name        version  node.role  master
    os-node-01  7.10.2   dimr       -
@@ -121,35 +122,35 @@ If your cluster uses [cross-cluster replication]({{site.url}}{{site.baseurl}}/tu
    os-node-03  7.10.2   dimr       -
    os-node-02  7.10.2   dimr       *
    ```
-1. Stop the node you are upgrading. If running this in Docker, do not delete the volume associated with the container when you delete the container. The new OpenSearch container will use the existing volume. **Deleting the volume will result in data loss**.
-1. Confirm that the associated node has been dismissed from the cluster by querying the `_cat/nodes` API endpoint:
+1. 停止您要升級的節點。如果在 Docker 中執行，刪除容器時請勿刪除與該容器關聯的儲存區。新的 OpenSearch 容器將使用現有的儲存區。**刪除儲存區將導致資料遺失**。
+1. 透過查詢 `_cat/nodes` API 端點，確認相關節點已從叢集中移除：
    ```bash
    GET "/_cat/nodes?v&h=name,version,node.role,master" | column -t
    ```
-   The response should look similar to the following example:
+   回應應類似於下列範例：
    ```bash
    name        version  node.role  master
    os-node-02  7.10.2   dimr       *
    os-node-04  7.10.2   dimr       -
    os-node-03  7.10.2   dimr       -
    ```
-   `os-node-01` is no longer listed because the container has been stopped and deleted.
-1. Upgrade the node:
-     - If running in Docker, deploy a new container running the desired version of OpenSearch, mapped to the same volume as the container you deleted.
-     - If upgrading using [Debian]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/debian/) or [RPM]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/rpm/) packages, install OpenSearch using `rpm`, `yum`, or `dpkg` and start the service. No further configuration is needed because locations and files are preserved.
-     - If upgrading using [Tarball]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/tar/), the following actions are required:
-        - Back up `jvm.options`, `opensearch.yml`, certificates, and the `data` folder.
-        - Extract the new tarball.
-        - Copy the previous `data` directory to the new `data` directory, **otherwise data will be lost**.
-        - Copy the previous `opensearch.yml` file to the new `config/opensearch.yml` file.
-        - Copy the previous `jvm.options` file to the new `config/jvm.options` file.
-        - Copy the TLS certificates listed in the `opensearch.yml` file to the `./config/` directory.
-        - Start OpenSearch.
-1. Query the `_cat/nodes` endpoint after OpenSearch is running on the new node to confirm that it has joined the cluster:
+   `os-node-01` 已不再列出，因為容器已被停止並刪除。
+1. 升級節點：
+     - 如果在 Docker 中執行，請部署一個執行所需 OpenSearch 版本的新容器，並對應到與您刪除的容器相同的儲存區。
+     - 如果使用 [Debian]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/debian/) 或 [RPM]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/rpm/) 套件升級，請使用 `rpm`、`yum` 或 `dpkg` 安裝 OpenSearch，並啟動服務。由於位置與檔案都會保留，因此無需進一步設定。
+     - 如果使用 [Tarball]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/tar/) 升級，則需要執行下列動作：
+        - 備份 `jvm.options`、`opensearch.yml`、憑證以及 `data` 資料夾。
+        - 解壓縮新的 tarball。
+        - 將先前的 `data` 目錄複製到新的 `data` 目錄，**否則資料將會遺失**。
+        - 將先前的 `opensearch.yml` 檔案複製到新的 `config/opensearch.yml` 檔案。
+        - 將先前的 `jvm.options` 檔案複製到新的 `config/jvm.options` 檔案。
+        - 將 `opensearch.yml` 檔案中列出的 TLS 憑證複製到 `./config/` 目錄。
+        - 啟動 OpenSearch。
+1. 在新節點上執行 OpenSearch 後，查詢 `_cat/nodes` 端點以確認它已加入叢集：
    ```bash
    GET "/_cat/nodes?v&h=name,version,node.role,master" | column -t
    ```
-   The response should look similar to the following example:
+   回應應類似於下列範例：
    ```bash
    name        version  node.role  master
    os-node-02  7.10.2   dimr       *
@@ -157,15 +158,15 @@ If your cluster uses [cross-cluster replication]({{site.url}}{{site.baseurl}}/tu
    os-node-01  7.10.2   dimr       -
    os-node-03  7.10.2   dimr       -
    ```
-   In the example output, the new OpenSearch node reports a running version of `7.10.2` to the cluster. This is the result of `compatibility.override_main_response_version`, which is used when connecting to a cluster with legacy clients that check for a version. You can manually confirm the version of the node by calling the `/_nodes` API endpoint, as in the following command. Replace `<nodeName>` with the name of your node. See [Nodes API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/) to learn more.
+   在範例輸出中，新的 OpenSearch 節點向叢集回報的執行版本為 `7.10.2`。這是 `compatibility.override_main_response_version` 的結果，用於連線至會檢查版本的舊式用戶端所在的叢集。您可以透過呼叫 `/_nodes` API 端點手動確認節點的版本，如下列指令所示。請將 `<nodeName>` 取代為您的節點名稱。如需更多資訊，請參閱 [Nodes API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/)。
    ```bash
    GET "/_nodes/{nodeName}?pretty=true" | jq -r '.nodes | .[] | "\(.name) v\(.version)"'
    ```
-   The response should look similar to the following example:
+   回應應類似於下列範例：
    ```bash
    os-node-01 v1.3.7
    ```
-1. Reenable shard replication:
+1. 重新啟用分片複寫：
    ```json
    PUT "/_cluster/settings?pretty"
    {
@@ -174,7 +175,7 @@ If your cluster uses [cross-cluster replication]({{site.url}}{{site.baseurl}}/tu
        }
    }
    ```
-   The response should look similar to the following example:
+   回應應類似於下列範例：
    ```json
    {
      "acknowledged" : true,
@@ -190,11 +191,11 @@ If your cluster uses [cross-cluster replication]({{site.url}}{{site.baseurl}}/tu
      "transient" : { }
    }
    ```
-1. Confirm that the cluster is healthy:
+1. 確認叢集健康狀態良好：
    ```bash
    GET "/_cluster/health?pretty"
    ```
-   The response should look similar to the following example:
+   回應應類似於下列範例：
    ```json
    {
      "cluster_name" : "opensearch-dev-cluster",
@@ -215,11 +216,11 @@ If your cluster uses [cross-cluster replication]({{site.url}}{{site.baseurl}}/tu
      "active_shards_percent_as_number" : 100.0
    }
    ```
-1. Repeat steps 2 through 11 for each node in your cluster. Remember to upgrade an eligible cluster manager node last. After replacing the last node, query the `_cat/nodes` endpoint to confirm that all nodes have joined the cluster. The cluster is now bootstrapped to the new version of OpenSearch. You can verify the cluster version by querying the `_cat/nodes` API endpoint:
+1. 對叢集中的每個節點重複步驟 2 至 11。請記得最後升級符合資格的叢集管理員節點。取代最後一個節點後，查詢 `_cat/nodes` 端點以確認所有節點都已加入叢集。此時叢集已完成新版本 OpenSearch 的引導。您可以透過查詢 `_cat/nodes` API 端點來驗證叢集版本：
    ```bash
    GET "/_cat/nodes?v&h=name,version,node.role,master" | column -t
    ```
-   The response should look similar to the following example:
+   回應應類似於下列範例：
    ```bash
    name        version  node.role  master
    os-node-04  1.3.7    dimr       -
@@ -227,68 +228,68 @@ If your cluster uses [cross-cluster replication]({{site.url}}{{site.baseurl}}/tu
    os-node-01  1.3.7    dimr       -
    os-node-03  1.3.7    dimr       -
    ```
-1. The upgrade is now complete, and you can begin using the latest features and fixes.
+1. 升級現已完成，您可以開始使用最新的功能與修正。
 
-## Rolling restart
+## 輪流重新啟動
 
-A rolling restart follows the same step-by-step procedure as a rolling upgrade, with the exception of upgrading of actual nodes. During a rolling restart, nodes are restarted one at a time—typically to apply configuration changes, refresh certificates, or perform system-level maintenance—without disrupting cluster availability.
+輪流重新啟動遵循與滾動升級相同的逐步程序，差別在於不升級實際節點。在輪流重新啟動期間，節點會逐一重新啟動——通常是為了套用組態變更、更新憑證或執行系統層級維護——而不會中斷叢集可用性。
 
-To perform a rolling restart, follow the steps outlined in [Performing the upgrade](#performing-the-upgrade), excluding the steps that involve upgrading the OpenSearch binary or container image:
+若要執行輪流重新啟動，請遵循[執行升級](#performing-the-upgrade)中所述的步驟，但排除涉及升級 OpenSearch 二進位檔或容器映像的步驟：
 
-1. **Check cluster health**  
-   Ensure the cluster status is green and all shards are assigned.  
-   _(See [step 1](#performing-the-upgrade) in the rolling upgrade procedure)_
+1. **檢查叢集健康狀態**  
+   確保叢集狀態為綠色，且所有分片皆已分配。  
+   _（請參閱滾動升級程序中的[步驟 1](#performing-the-upgrade)）_
 
-2. **Disable shard allocation**  
-   Prevent OpenSearch from trying to reallocate shards while nodes are offline.  
-   _(See [step 2](#performing-the-upgrade) in the rolling upgrade procedure)_
+2. **停用分片分配**  
+   防止 OpenSearch 在節點離線時嘗試重新分配分片。  
+   _（請參閱滾動升級程序中的[步驟 2](#performing-the-upgrade)）_
 
-3. **Flush transaction logs**  
-   Commit recent operations to Lucene to reduce recovery time.  
-   _(See [step 3](#performing-the-upgrade) in the rolling upgrade procedure)_
+3. **排清交易記錄**  
+   將最近的作業提交至 Lucene，以縮短復原時間。  
+   _（請參閱滾動升級程序中的[步驟 3](#performing-the-upgrade)）_
 
-4. **Review and identify the next node to restart**  
-   Ensure you restart the current cluster manager node last.  
-   _(See [step 4](#performing-the-upgrade) in the rolling upgrade procedure)_
+4. **檢閱並識別下一個要重新啟動的節點**  
+   確保最後才重新啟動目前的叢集管理員節點。  
+   _（請參閱滾動升級程序中的[步驟 4](#performing-the-upgrade)）_
 
-5. **Check which node is the current cluster manager**  
-   Use the `_cat/nodes` API to determine which node is the current active cluster manager.  
-   _(See [step 5](#performing-the-upgrade) in the rolling upgrade procedure)_
+5. **檢查哪個節點是目前叢集管理員**  
+   使用 `_cat/nodes` API 判斷哪個節點是目前作用中的叢集管理員。  
+   _（請參閱滾動升級程序中的[步驟 5](#performing-the-upgrade)）_
 
-6. **Stop the node**  
-   Shut down the node gracefully. Do not delete the associated data volume.  
-   _(See [step 6](#performing-the-upgrade) in the rolling upgrade procedure)_
+6. **停止節點**  
+   正常關閉節點。請勿刪除相關聯的資料磁碟區。  
+   _（請參閱滾動升級程序中的[步驟 6](#performing-the-upgrade)）_
 
-7. **Confirm the node has left the cluster**  
-   Use `_cat/nodes` to verify that it's no longer listed.  
-   _(See [step 7](#performing-the-upgrade) in the rolling upgrade procedure)_
+7. **確認節點已離開叢集**  
+   使用 `_cat/nodes` 驗證該節點已不再列出。  
+   _（請參閱滾動升級程序中的[步驟 7](#performing-the-upgrade)）_
 
-8. **Restart the node**  
-   Start the same node (same binary/version/config) and let it rejoin the cluster.  
-   _(See [step 8](#performing-the-upgrade) in the rolling upgrade procedure — without upgrading the binary)_
+8. **重新啟動節點**  
+   啟動相同的節點（相同的二進位檔/版本/組態），並讓它重新加入叢集。  
+   _（請參閱滾動升級程序中的[步驟 8](#performing-the-upgrade)——不升級二進位檔）_
 
-9. **Verify that the restarted node has rejoined**  
-   Check `_cat/nodes` to confirm that the node is present and healthy.  
-   _(See [step 9](#performing-the-upgrade) in the rolling upgrade procedure)_
+9. **驗證重新啟動的節點已重新加入**  
+   檢查 `_cat/nodes` 以確認該節點存在且狀況良好。  
+   _（請參閱滾動升級程序中的[步驟 9](#performing-the-upgrade)）_
 
-10. **Reenable shard allocation**  
-    Restore full shard movement capability.  
-    _(See [step 10](#performing-the-upgrade) in the rolling upgrade procedure)_
+10. **重新啟用分片分配**  
+    還原完整的分片移動能力。  
+    _（請參閱滾動升級程序中的[步驟 10](#performing-the-upgrade)）_
 
-11. **Confirm cluster health is green**  
-    Validate stability before restarting the next node.  
-    _(See [step 11](#performing-the-upgrade) in the rolling upgrade procedure)_
+11. **確認叢集健康狀態為綠色**  
+    在重新啟動下一個節點之前驗證穩定性。  
+    _（請參閱滾動升級程序中的[步驟 11](#performing-the-upgrade)）_
 
-12. **Repeat the process for all other nodes**  
-    Restart each node one at a time. If a node is eligible for the cluster manager role, restart it last.  
-    _(See [step 12](#performing-the-upgrade) in the rolling upgrade procedure — again, no upgrade step)_
+12. **對所有其他節點重複此程序**  
+    逐一重新啟動每個節點。如果某個節點符合叢集管理員角色的資格，請最後再重新啟動它。  
+    _（請參閱滾動升級程序中的[步驟 12](#performing-the-upgrade)——同樣地，沒有升級步驟）_
 
-By preserving quorum and restarting nodes sequentially, rolling restarts ensure zero downtime and full data continuity.
+藉由維持法定人數並依序重新啟動節點，輪流重新啟動可確保零停機時間與完整的資料持續性。
 
-## Related documentation
+## 相關文件
 
-- [Rolling upgrade lab]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/rolling-upgrade/rolling-upgrade-lab/) -- A hands-on lab with step-by-step instructions for practicing rolling upgrades in a test environment.
-- [OpenSearch configuration]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)
+- [滾動升級實驗室]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/rolling-upgrade/rolling-upgrade-lab/) -- 提供逐步指示的實作實驗室，可在測試環境中練習滾動升級。
+- [OpenSearch 組態]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)
 - [Performance Analyzer]({{site.url}}{{site.baseurl}}/monitoring-plugins/pa/index/)
-- [Install and configure OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/)
-- [About Security in OpenSearch]({{site.url}}{{site.baseurl}}/security/index/)
+- [安裝並設定 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/)
+- [關於 OpenSearch 中的安全性]({{site.url}}{{site.baseurl}}/security/index/)

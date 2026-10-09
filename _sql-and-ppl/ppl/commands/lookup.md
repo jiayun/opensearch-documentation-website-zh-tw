@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: lookup
 parent: Commands
@@ -8,21 +9,21 @@ nav_order: 27
 
 <!-- vale off -->
 
-# lookup command
+# lookup 命令
 
 <!-- vale on -->
 
-The `lookup` command enriches search data by adding or replacing values from a lookup index (dimension table). It allows you to extend fields in your index with values from a dimension table, appending or replacing values when the lookup condition matches. Compared with the `join` command, `lookup` is better suited for enriching source data with a static dataset.
+`lookup` 命令透過新增或取代來自查詢索引 (維度表) 的值，以充實搜尋資料。它可讓您使用維度表中的值擴充索引中的欄位，並在查詢條件符合時附加或取代值。與 `join` 命令相比，`lookup` 更適合使用靜態資料集來充實來源資料。
 
-## Syntax
+## 語法
 
-The `lookup` command has the following syntax:
+`lookup` 命令的語法如下：
 
 ```sql
 lookup <lookupIndex> (<lookupMappingField> [as <sourceMappingField>])... [(replace | append | output) (<inputField> [as <outputField>])...]
 ```
 
-The following are examples of the `lookup` command syntax:
+以下是 `lookup` 命令語法的範例：
 
 ```sql
 source = table1 | lookup table2 id
@@ -36,22 +37,22 @@ source = table1 | lookup table2 id as cid, name output dept as department
 source = table1 | lookup table2 id as cid, name output dept as department, city as location
 ```
 
-## Parameters
+## 參數
 
-The `lookup` command supports the following parameters.
+`lookup` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<lookupIndex>` | Required | The name of the lookup index (dimension table). |
-| `<lookupMappingField>` | Required | A key in the lookup index used for matching, similar to a join key in the right table. Specify multiple fields as a comma-separated list. |
-| `<sourceMappingField>` | Optional | A key from the source data (left side) used for matching, similar to a join key in the left table. Default is `lookupMappingField`. |
-| `<inputField>` | Optional | A field in the lookup index whose matched values are applied to the results (output). Specify multiple fields as a comma-separated list. If not specified, all fields except `lookupMappingField` from the lookup index are applied to the results. |
-| `<outputField>` | Optional | The name of the field in the results (output) in which matched values are placed. Specify multiple fields as a comma-separated list. If the `outputField` specifies an existing field in the source query, its values are replaced or appended with matched values from the `inputField`. If the field specified in the `outputField` is not an existing field, a new field is added to the results when using `replace`, or the operation fails when using `append`. |
-| `(replace \| append \| output)` | Optional | Specifies how matched values are applied to the output. `replace` overwrites existing values with matched values from the lookup index. `append` fills only missing values in the results with matched values from the lookup index. `output` is a synonym for `replace` (provided for SPL compatibility). Default is `replace`. |
+| `<lookupIndex>` | 必要 | 查詢索引 (維度表) 的名稱。 |
+| `<lookupMappingField>` | 必要 | 查詢索引中用於比對的鍵，類似右側資料表中的聯結鍵。可指定多個欄位，以逗號分隔。 |
+| `<sourceMappingField>` | 選用 | 來源資料 (左側) 中用於比對的鍵，類似左側資料表中的聯結鍵。預設為 `lookupMappingField`。 |
+| `<inputField>` | 選用 | 查詢索引中的欄位，其符合的值會套用至結果 (輸出)。可指定多個欄位，以逗號分隔。若未指定，查詢索引中除 `lookupMappingField` 以外的所有欄位都會套用至結果。 |
+| `<outputField>` | 選用 | 結果 (輸出) 中放置符合值的欄位名稱。可指定多個欄位，以逗號分隔。若 `outputField` 指定來源查詢中已存在的欄位，其值會被取代或附加來自 `inputField` 的符合值。若 `outputField` 中指定的欄位不是已存在的欄位，使用 `replace` 時會在結果中新增欄位，使用 `append` 時則操作會失敗。 |
+| `(replace \| append \| output)` | 選用 | 指定符合值如何套用至輸出。`replace` 會以查詢索引中的符合值覆寫現有值。`append` 僅以查詢索引中的符合值填補結果中缺少的值。`output` 是 `replace` 的同義詞 (為了 SPL 相容性而提供)。預設為 `replace`。 |
   
-## Example 1: Replacing existing values  
+## 範例 1：取代現有值  
 
-The following query uses the `lookup` command with the `replace` strategy to overwrite existing values:  
+下列查詢使用 `lookup` 命令搭配 `replace` 策略來覆寫現有值：  
   
 ```sql
 source = worker
@@ -60,7 +61,7 @@ source = worker
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -76,9 +77,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Appending missing values  
+## 範例 2：附加缺少的值  
 
-The following query uses the `lookup` command with the `append` strategy to append missing values only:
+下列查詢使用 `lookup` 命令搭配 `append` 策略，僅附加缺少的值：
   
 ```sql
 source = worker
@@ -88,9 +89,9 @@ source = worker
 {% include copy.html %}
   
 
-## Example 3: Specifying no input field  
+## 範例 3：不指定輸入欄位  
 
-The following query uses the `lookup` command without specifying an `inputField`, which adds all fields from the lookup index to the results:
+下列查詢使用 `lookup` 命令但不指定 `inputField`，這會將查詢索引中的所有欄位新增至結果：
   
 ```sql
   source = worker
@@ -99,7 +100,7 @@ The following query uses the `lookup` command without specifying an `inputField`
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -114,9 +115,9 @@ The query returns the following results:
 
 <!-- vale on -->
   
-## Example 4: Adding matched values to a new field
+## 範例 4：將符合值新增至新欄位
 
-The following query places matched values into a new field specified by `outputField`:
+下列查詢將符合值放入 `outputField` 指定的新欄位：
   
 ```sql
   source = worker
@@ -125,7 +126,7 @@ The following query places matched values into a new field specified by `outputF
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -140,9 +141,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 5: Using OUTPUT keyword
+## 範例 5：使用 OUTPUT 關鍵字
 
-The `OUTPUT` keyword is a synonym for `REPLACE`. The following query demonstrates using `OUTPUT` to overwrite existing values:
+`OUTPUT` 關鍵字是 `REPLACE` 的同義詞。下列查詢示範使用 `OUTPUT` 來覆寫現有值：
 
 ```sql
 source = worker
@@ -151,7 +152,7 @@ source = worker
 ```
 {% include copy.html %}
 
-This query produces the same results as Example 1 (using `REPLACE`):
+此查詢產生的結果與範例 1 (使用 `REPLACE`) 相同：
 
 <!-- vale off -->
 

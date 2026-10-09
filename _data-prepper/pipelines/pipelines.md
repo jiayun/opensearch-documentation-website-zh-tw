@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Pipelines
+title: "管線"
 has_children: true
 nav_order: 10
 redirect_from:
@@ -10,17 +11,17 @@ redirect_from:
   - /data-prepper/pipelines/pipelines-configuration-options/
 ---
 
-# Data Prepper pipelines
+# Data Prepper 管線
 
-Pipelines are critical components that streamline the process of acquiring, transforming, and loading data from various sources into a centralized data repository or processing system. The following diagram illustrates how OpenSearch Data Prepper ingests data into OpenSearch.
+管線是關鍵元件，可簡化從各種來源取得、轉換並載入資料至集中式資料儲存庫或處理系統的程序。下圖說明 OpenSearch Data Prepper 如何將資料匯入 OpenSearch。
 
-![Data Prepper pipeline]({{site.url}}{{site.baseurl}}/images/data-prepper-pipeline.png)
+![Data Prepper 管線]({{site.url}}{{site.baseurl}}/images/data-prepper-pipeline.png)
 
-## Configuring Data Prepper pipelines
+## 設定 Data Prepper 管線
 
-Pipelines are defined in the configuration YAML file. Starting with Data Prepper 2.0, you can define pipelines across multiple YAML configuration files, with each file containing the configuration for one or more pipelines. This gives you flexibility to organize and chain together complex pipeline configurations. To ensure proper loading of your pipeline configurations, place the YAML configuration files in the `pipelines` folder in your application's home directory, for example, `/usr/share/data-prepper`.
+管線定義於組態 YAML 檔案中。從 Data Prepper 2.0 開始，您可以在多個 YAML 組態檔案中定義管線，每個檔案可包含一或多個管線的組態。這讓您可以彈性地組織並串連複雜的管線組態。為確保管線組態能正確載入，請將 YAML 組態檔案放置於應用程式主目錄中的 `pipelines` 資料夾，例如 `/usr/share/data-prepper`。
 
-The following is an example configuration:
+以下是一個範例組態：
 
 ```yml
 simple-sample-pipeline:
@@ -40,42 +41,42 @@ simple-sample-pipeline:
 ```
 {% include copy.html %}
 
-### Pipeline components
+### 管線元件
 
-The following table describes the components used in the given pipeline.
+下表說明指定管線中使用的元件。
 
-Option | Required | Type        | Description
+選項 | 必要 | 類型        | 說明
 :--- | :--- |:------------| :---
-`workers` | No | Integer | The number of application threads. Set to the number of CPU cores. Default is `1`. 
-`delay` | No | Integer | The number of milliseconds that `workers` wait between buffer read attempts. Default is `3000`.
-`source` | Yes | String list | `random` generates random numbers by using a Universally Unique Identifier (UUID) generator. 
-`bounded_blocking` | No | String list | The default buffer in Data Prepper.
-`processor` | No | String list | A `string_converter` with an `upper_case` processor that converts strings to uppercase.
-`sink` | Yes | `stdout` outputs to standard output. 	
+`workers` | 否 | 整數 | 應用程式執行緒的數量。設定為 CPU 核心數。預設值為 `1`。 
+`delay` | 否 | 整數 | `workers` 在緩衝區讀取嘗試之間等待的毫秒數。預設值為 `3000`。
+`source` | 是 | 字串清單 | `random` 使用通用唯一識別碼 (UUID) 產生器產生亂數。 
+`bounded_blocking` | 否 | 字串清單 | Data Prepper 的預設緩衝區。
+`processor` | 否 | 字串清單 | 一個 `string_converter`，包含將字串轉換為大寫的 `upper_case` 處理器。
+`sink` | 是 | `stdout` 輸出至標準輸出。 	
 
-## Pipeline concepts
+## 管線概念
 
-The following are fundamental concepts relating to Data Prepper pipelines.
+以下是與 Data Prepper 管線相關的基本概念。
 
-### End-to-end acknowledgments
+### 端對端確認
 
-Data Prepper ensures reliable and durable data delivery from sources to sinks through end-to-end (E2E) acknowledgments. The E2E acknowledgment process begins at the source, which monitors event batches within pipelines and waits for a positive acknowledgment upon successful delivery to the sinks. In pipelines with multiple sinks, including nested Data Prepper pipelines, the E2E acknowledgment is sent when events reach the final sink in the pipeline chain. Conversely, the source sends a negative acknowledgment if an event cannot be delivered to a sink for any reason.
+Data Prepper 透過端對端 (E2E) 確認，確保資料從來源可靠且持久地傳遞至匯端。E2E 確認程序從來源開始，來源會監視管線內的事件批次，並在成功傳遞至匯端後等待肯定確認。在具有多個匯端的管線中，包括巢狀的 Data Prepper 管線，E2E 確認會在事件抵達管線鏈中的最終匯端時送出。相反地，如果事件因任何原因無法傳遞至匯端，來源會送出否定確認。
 
-If a pipeline component fails to process and send an event, then the source receives no acknowledgment. In the case of a failure, the pipeline's source times out, allowing you to take necessary actions, such as rerunning the pipeline or logging the failure.
+如果管線元件無法處理並傳送事件，則來源不會收到任何確認。發生失敗時，管線的來源會逾時，讓您可以採取必要的行動，例如重新執行管線或記錄失敗。
 
-### Conditional routing
+### 條件式路由
 
-Pipelines also support conditional routing, which enables the routing of events to different sinks based on specific conditions. To add conditional routing, specify a list of named routes using the `route` component and assign specific routes to sinks using the `routes` property. Any sink with the `routes` property only accepts events matching at least one of the routing conditions.
+管線也支援條件式路由，可根據特定條件將事件路由至不同的匯端。若要新增條件式路由，請使用 `route` 元件指定具名路由清單，並使用 `routes` 屬性將特定路由指派給匯端。任何具有 `routes` 屬性的匯端只會接受符合至少一個路由條件的事件。
 
-In the following pipeline, routes are defined at the pipeline level under `route`. The route uses [Data Prepper expressions](https://github.com/opensearch-project/data-prepper/tree/main/examples) to define the condition. Two named routes are declared:
+在下列管線中，路由定義於管線層級的 `route` 之下。該路由使用 [Data Prepper 運算式](https://github.com/opensearch-project/data-prepper/tree/main/examples) 來定義條件。宣告了兩個具名路由：
 
 - `errors: /level == "ERROR"`
 
 - `slow_requests: /latency_ms != null and /latency_ms >= 1000`
 
-Each OpenSearch sink can opt in to one or more routes using the `routes:` setting. Events that satisfy a route's condition are delivered to the sinks that reference that route. For example, the first sink receives events matching `errors`, and the second sink receives events matching `slow_requests`.
+每個 OpenSearch 匯端都可以使用 `routes:` 設定選擇加入一或多個路由。符合路由條件的事件會傳遞至參照該路由的匯端。例如，第一個匯端接收符合 `errors` 的事件，第二個匯端接收符合 `slow_requests` 的事件。
 
-By default, any sink without a `routes:` list receives all events, regardless of whether they matched other routes. In the following example, the third sink has no `routes:` setting, so it receives all events, including those already routed to the first two sinks:
+預設情況下，任何沒有 `routes:` 清單的匯端都會接收所有事件，無論這些事件是否符合其他路由。在下列範例中，第三個匯端沒有 `routes:` 設定，因此它會接收所有事件，包括已路由至前兩個匯端的事件：
 
 ```yml
 routes-demo-pipeline:
@@ -120,7 +121,7 @@ routes-demo-pipeline:
 ```
 {% include copy.html %}
 
-You can test this pipeline using the following command:
+您可以使用下列命令測試此管線：
 
 ```bash
 curl -sS -X POST "http://localhost:2021/logs" \
@@ -133,7 +134,7 @@ curl -sS -X POST "http://localhost:2021/logs" \
 ```
 {% include copy.html %}
 
-The documents are stored in the corresponding indexes:
+文件會儲存在對應的索引中：
 
 ```
 health status index                        uuid                   pri rep docs.count docs.deleted store.size pri.store.size
@@ -144,13 +145,13 @@ green open   routed-errors-2025.10.14     v3r7JzPfQVOS8dWOBF1o2w   1   1        
 ...
 ```
 
-### DLQ pipeline
+### DLQ 管線
 
-The dead-letter queue (DLQ) pipeline is a dedicated pipeline that captures events Data Prepper cannot process at any stage, including the source, processor, buffer, or sink. You define this pipeline using the reserved name `dlq_pipeline`, and it must be configured without a source.
+死信佇列 (DLQ) 管線是一個專用管線，用於擷取 Data Prepper 在任何階段 (包括來源、處理器、緩衝區或匯端) 無法處理的事件。您使用保留名稱 `dlq_pipeline` 定義此管線，且它必須設定為不含來源。
 
-The pipeline can include optional processors and routes, but it must contain at least one sink used to send failed events to an external destination. Like other pipelines, the DLQ pipeline can use routes and multiple sinks to direct different events to different destinations.
+此管線可以包含選用的處理器和路由，但必須包含至少一個匯端，用於將失敗的事件傳送至外部目的地。與其他管線一樣，DLQ 管線可以使用路由和多個匯端，將不同的事件導向不同的目的地。
 
-The following is an example configuration:
+以下是一個範例組態：
 
 ```yml
 dlq_pipeline:
@@ -165,6 +166,6 @@ dlq_pipeline:
 
 
 
-## Next steps
+## 後續步驟
 
-- See [Common uses cases]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/common-use-cases/) for example configurations.
+- 請參閱 [常見使用案例]({{site.url}}{{site.baseurl}}/data-prepper/common-use-cases/common-use-cases/) 以取得範例組態。

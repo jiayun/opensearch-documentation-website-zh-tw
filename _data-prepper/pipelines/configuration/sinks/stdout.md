@@ -1,11 +1,12 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Standard output
+title: "標準輸出"
 parent: Sinks
 grand_parent: Pipelines
 nav_order: 70
 ---
 
-# Standard output sink
+# 標準輸出接收器
 
-Use the `stdout` sink for console output and testing. It has no configurable options.
+`stdout` 接收器適用於主控台輸出與測試。它沒有任何可設定的選項。

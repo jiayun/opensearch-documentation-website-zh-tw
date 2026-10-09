@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Comparing query sets
+title: "比較查詢集"
 nav_order: 12
 parent: Search Relevance Workbench
 grand_parent: Optimizing search quality
 has_children: false
 ---
 
-# Comparing search configurations
+# 比較搜尋組態
 
-To compare the results of two different search configurations, you can run a pairwise experiment. To achieve this, you need two search configurations and a query set to use for the search configuration.
+若要比較兩種不同搜尋組態的結果，您可以執行成對實驗。為此，您需要兩個搜尋組態，以及一個用於搜尋組態的查詢集。
 
-For more information about creating a query set, see [Query Sets]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/query-sets/).
+如需建立查詢集的詳細資訊，請參閱[查詢集]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/query-sets/)。
 
-For more information about creating search configurations, see [Search Configurations]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/search-configurations/).
+如需建立搜尋組態的詳細資訊，請參閱[搜尋組態]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/search-configurations/)。
 
-## Creating a pairwise experiment
+## 建立成對實驗
 
-An experiment is used to compare the metrics between two different search configurations. An experiment shows you the top N results for every query based on the specified search configurations. In the dashboard, you can view the returned documents from any of the queries in the query set and determine which search configuration returns more relevant results. Additionally, you can measure the similarity between the two returned search result lists using the provided similarity metrics.
+實驗用於比較兩種不同搜尋組態之間的指標。實驗會根據指定的搜尋組態，顯示每個查詢的前 N 筆結果。在儀表板中，您可以檢視查詢集中任何查詢所傳回的文件，並判斷哪個搜尋組態傳回更相關的結果。此外，您可以使用提供的相似度指標，衡量兩份傳回搜尋結果清單之間的相似度。
 
-### Example
+### 範例
 
-To create a pairwise comparison experiment for the specified query set and search configurations, send the following request:
+若要為指定的查詢集和搜尋組態建立成對比較實驗，請傳送下列請求：
 
 ```json
 PUT _plugins/_search_relevance/experiments
@@ -34,18 +35,18 @@ PUT _plugins/_search_relevance/experiments
 ```
 {% include copy-curl.html %}
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available input parameters.
+下表列出可用的輸入參數。
 
-Field | Data type |  Description
+欄位 | 資料類型 |  說明
 :---  | :--- | :---
-`querySetId` | String |	The query set ID.
-`searchConfigurationList` | List | A list of search configuration IDs to use for comparison.
-`size` | Integer | The number of documents to return in the results.
-`type` | String | Defines the type of experiment to run. Valid values are `PAIRWISE_COMPARISON`, `HYBRID_OPTIMIZER`, or `POINTWISE_EVALUATION`. Depending on the experiment type, you must provide different body fields in the request. `PAIRWISE_COMPARISON` is for comparing two search configurations against a query set and is used [here]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/compare-query-sets/). `HYBRID_OPTIMIZER` is for combining results and is used [here]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/optimize-hybrid-search/). `POINTWISE_EVALUATION` is for evaluating a search configuration against judgments and is used [here]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/evaluate-search-quality/).
+`querySetId` | 字串 |	查詢集 ID。
+`searchConfigurationList` | 清單 | 要用於比較的搜尋組態 ID 清單。
+`size` | 整數 | 結果中要傳回的文件數。
+`type` | 字串 | 定義要執行的實驗類型。有效值為 `PAIRWISE_COMPARISON`、`HYBRID_OPTIMIZER` 或 `POINTWISE_EVALUATION`。視實驗類型而定，您必須在請求中提供不同的本文欄位。`PAIRWISE_COMPARISON` 用於將兩個搜尋組態與查詢集進行比較，並用於[這裡]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/compare-query-sets/)。`HYBRID_OPTIMIZER` 用於合併結果，並用於[這裡]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/optimize-hybrid-search/)。`POINTWISE_EVALUATION` 用於根據評判評估搜尋組態，並用於[這裡]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/evaluate-search-quality/)。
 
-The response contains the experiment ID of the created experiment:
+回應包含所建立實驗的實驗 ID：
 
 ```json
 {
@@ -53,35 +54,35 @@ The response contains the experiment ID of the created experiment:
     "experiment_result": "CREATED"
 }
 ```
-## Interpreting the experiment results
-To interpret the experiment results, use the following operations.
+## 解讀實驗結果
+若要解讀實驗結果，請使用下列操作。
 
-### Retrieving the experiment results
+### 擷取實驗結果
 
-Use the following API to retrieve the result of a specific experiment.
+使用下列 API 擷取特定實驗的結果。
 
-#### Endpoints
+#### 端點
 
 ```json
 GET _plugins/_search_relevance/experiments
 GET _plugins/_search_relevance/experiments/{experiment_id}
 ```
 
-#### Path parameters
+#### 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `experiment_id` | String | The ID of the experiment to retrieve. Retrieves all experiments when empty. |
+| `experiment_id` | 字串 | 要擷取的實驗 ID。留空時會擷取所有實驗。 |
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_search_relevance/experiments/cbd2c209-96d1-4012-aa73-e524b7a1b11a
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -124,11 +125,11 @@ GET _plugins/_search_relevance/experiments/cbd2c209-96d1-4012-aa73-e524b7a1b11a
 }
 ```
 
-Once the experiment finishes running, the results are available:
+實驗執行完成後，即可取得結果：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
 
 ```json
@@ -239,14 +240,14 @@ Once the experiment finishes running, the results are available:
 
 </details>
 
-### Interpreting the results
+### 解讀結果
 
-As shown in the preceding response, both search configurations return the top N documents, with `size` set to 10 in the search request. In addition to the results, the response also includes metrics from the pairwise comparison.
+如前述回應所示，兩個搜尋組態都會傳回前 N 筆文件，且搜尋請求中的 `size` 設為 10。除了結果之外，回應也包含成對比較的指標。
 
-### Response body fields
+### 回應本文欄位
 
-Field | Description
+欄位 | 說明
 :--- | :---
-`jaccard` | Shows the similarity score by dividing the intersection cardinality by the union cardinality of the returned documents.
-`rbo` | The Rank-Biased Overlap (RBO) metric compares the returned result sets at each ranking depth—for example, the top 1 document, top 2 documents, and so on. It places greater importance on higher-ranked results, giving more weight to earlier positions in the list.
-`frequencyWeighted` | Similar to the Jaccard metric, the frequency-weighted metric calculates the ratio of the weighted intersection to the weighted union of two sets. However, unlike standard Jaccard, it gives more weight to documents with higher frequencies, skewing the result toward more frequently occurring items.
+`jaccard` | 以傳回文件的交集基數除以聯集基數，顯示相似度分數。
+`rbo` | Rank-Biased Overlap (RBO) 指標會比較每個排名深度的傳回結果集，例如前 1 筆文件、前 2 筆文件等。它更重視排名較高的結果，對清單中較前面的位置賦予更高權重。
+`frequencyWeighted` | 與 Jaccard 指標類似，頻率加權指標會計算兩個集合的加權交集與加權聯集的比率。不過，與標準 Jaccard 不同的是，它會對頻率較高的文件賦予更高權重，使結果偏向出現頻率較高的項目。

@@ -1,36 +1,37 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create or update tenant
+title: "建立或更新租用戶"
 parent: Tenant APIs
 grand_parent: Security APIs
 nav_order: 10
 ---
 
-# Create or Update Tenant API
-**Introduced 1.0**
+# 建立或更新租用戶 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Creates or replaces the specified tenant.
+建立或取代指定的租用戶。
 
 <!-- spec_insert_start
 api: security.create_tenant
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PUT /_plugins/_security/api/tenants/{tenant}
 ```
 <!-- spec_insert_end -->
 
-## Request body fields
+## 請求本文欄位
 
-The request body is required. It is a JSON object with the following field.
+請求本文為必要項目。其為包含下列欄位的 JSON 物件。
 
-| Field | Data type | Description | Required |
+| 欄位 | 資料類型 | 說明 | 必要 |
 | :--- | :--- | :--- | :--- |
-| `description` | String | A description of the tenant. | No |
+| `description` | 字串 | 租用戶的說明。 | 否 |
 
-## Example request
+## 請求範例
 
 ```json
 PUT _plugins/_security/api/tenants/test-tenant
@@ -40,7 +41,7 @@ PUT _plugins/_security/api/tenants/test-tenant
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 回應範例
 
 ```json
 {

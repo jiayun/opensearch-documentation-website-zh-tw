@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Derived
+title: "衍生欄位"
 nav_order: 55
 has_children: false
 parent: Specialized search field types
@@ -9,55 +10,54 @@ redirect_from:
   - /field-types/supported-field-types/derived/
 ---
 
-# Derived field type
-**Introduced 2.15**
+# 衍生欄位類型
+**於 2.15 版推出**
 {: .label .label-purple }
 
-Derived fields allow you to create new fields dynamically by executing scripts on existing fields. The existing fields can be either retrieved from the `_source` field, which contains the original document, or from a field's doc values. Once you define a derived field either in an index mapping or within a search request, you can use the field in a query in the same way you would use a regular field.
+衍生欄位可讓您透過在現有欄位上執行指令碼，動態建立新欄位。現有欄位可從包含原始文件的 `_source` 欄位擷取，或從欄位的 doc values 取得。當您在索引對應或搜尋請求中定義衍生欄位後，即可像使用一般欄位一樣，在查詢中使用該欄位。
 
-## When to use derived fields
+## 何時使用衍生欄位
 
-Derived fields offer flexibility in field manipulation and prioritize storage efficiency. However,
-because they are computed at query time, they can reduce query performance. Derived fields are particularly useful in scenarios requiring real-time data transformation, such as:
+衍生欄位在欄位操作上提供彈性，並優先考量儲存效率。然而，由於它們是在查詢時計算，因此可能降低查詢效能。衍生欄位在需要即時資料轉換的情境中特別實用，例如：
 
-- **Log analysis**: Extracting timestamps and log levels from log messages.
-- **Performance metrics**: Calculating response times from start and end timestamps.
-- **Security analytics**: Real-time IP geolocation and user-agent parsing for threat detection.
-- **Experimental use cases**: Testing new data transformations, creating temporary fields for A/B testing, or generating one-time reports without altering mappings or reindexing data.
+- **記錄檔分析**：從記錄訊息中擷取時間戳記和記錄層級。
+- **效能指標**：從開始和結束時間戳記計算回應時間。
+- **安全性分析**：即時 IP 地理位置定位和使用者代理程式剖析，以進行威脅偵測。
+- **實驗性使用案例**：測試新的資料轉換、建立用於 A/B 測試的臨時欄位，或產生一次性報告，而不需變更對應或重新編製資料索引。
 
-Despite the potential performance impact of query-time computations, the flexibility and storage efficiency of derived fields make them a valuable tool for these applications.
+儘管查詢時計算可能影響效能，衍生欄位的彈性和儲存效率仍使其成為這些應用情境的寶貴工具。
 
-## Current limitations
+## 目前限制
 
-Currently, derived fields have the following limitations:
+目前衍生欄位有下列限制：
 
-- **Scoring and sorting**: Not yet supported.
-- **Aggregations**: Derived fields support most aggregation types. The following aggregations are not supported: geographic (geodistance, geohash grid, geohex grid, geotile grid, geobounds, geocentroid), significant terms, significant text, and scripted metric.
-- **Dashboard support**: These fields are not displayed in the list of available fields in OpenSearch Dashboards. However, you can still use them for filtering if you know the derived field name.
-- **Chained derived fields**: One derived field cannot be used to define another derived field.
-- **Join field type**: Derived fields are not supported for the [join field type]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/join/).
+- **評分和排序**：尚未支援。
+- **彙總**：衍生欄位支援大多數彙總類型。不支援下列彙總：地理 (geodistance、geohash grid、geohex grid、geotile grid、geobounds、geocentroid)、significant terms、significant text 和 scripted metric。
+- **儀表板支援**：這些欄位不會顯示在 OpenSearch Dashboards 的可用欄位清單中。不過，如果您知道衍生欄位名稱，仍可使用它們進行篩選。
+- **鏈結衍生欄位**：一個衍生欄位不能用來定義另一個衍生欄位。
+- **join 欄位類型**：衍生欄位不支援 [join 欄位類型]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/join/)。
 
-We are planning to address these limitations in future versions.
+我們計劃在未來版本中解決這些限制。
 
-## Prerequisites
+## 先決條件
 
-Before using a derived field, be sure to satisfy the following prerequisites:
+使用衍生欄位之前，請務必符合下列先決條件：
 
-- **Enable `_source` or `doc_values`**: Ensure that either the `_source` field or doc values is enabled for the fields used in your script.
-- **Enable expensive queries**: Ensure that [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/index/#expensive-queries) is set to `true`.
-- **Feature control**: Derived fields are enabled by default. You can enable or disable derived fields by using the following settings:
-    - **Index level**: Update the `index.query.derived_field.enabled` setting.
-    - **Cluster level**: Update the `search.derived_field.enabled` setting.
-    Both settings are dynamic, so they can be changed without reindexing or node restarts.
-- **Performance considerations**: Before using derived fields, evaluate the [performance implications](#performance) to ensure that derived fields meet your scale requirements.
+- **啟用 `_source` 或 `doc_values`**：確保為指令碼中使用的欄位啟用 `_source` 欄位或 doc values。
+- **啟用高成本查詢**：確保將 [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/index/#expensive-queries) 設為 `true`。
+- **功能控制**：衍生欄位預設為啟用。您可以使用下列設定啟用或停用衍生欄位：
+    - **索引層級**：更新 `index.query.derived_field.enabled` 設定。
+    - **叢集層級**：更新 `search.derived_field.enabled` 設定。
+    這兩個設定都是動態的，因此不需重新編製索引或重新啟動節點即可變更。
+- **效能考量**：使用衍生欄位之前，請評估[效能影響](#performance)，以確保衍生欄位符合您的規模需求。
 
-## Defining derived fields
+## 定義衍生欄位
 
-You can define derived fields [in index mappings](#defining-derived-fields-in-index-mappings) or [directly within a search request](#defining-and-searching-derived-fields-in-a-search-request). 
+您可以在[索引對應中](#defining-derived-fields-in-index-mappings)或[直接在搜尋請求中](#defining-and-searching-derived-fields-in-a-search-request)定義衍生欄位。
 
-## Example setup
+## 範例設定
 
-To try the examples on this page, first create the following `logs` index:
+若要試用本頁的範例，請先建立下列 `logs` 索引：
 
 ```json
 PUT logs
@@ -81,7 +81,7 @@ PUT logs
 ```
 {% include copy-curl.html %}
 
-Add sample documents to the index:
+將範例文件新增至索引：
 
 ```json
 POST _bulk
@@ -98,9 +98,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Defining derived fields in index mappings
+## 在索引對應中定義衍生欄位
 
-To derive the `timestamp`, `method`, and `size` fields from the `request` field indexed in the `logs` index, configure the following mappings:
+若要從 `logs` 索引中編製索引的 `request` 欄位衍生出 `timestamp`、`method` 和 `size` 欄位，請設定下列對應：
 
 ```json
 PUT /logs/_mapping
@@ -136,48 +136,48 @@ PUT /logs/_mapping
 ```
 {% include copy-curl.html %}
 
-Note that the `timestamp` field has an additional `format` parameter that specifies the format in which to display `date` fields. If you don't include a `format` parameter, then the format defaults to `strict_date_time_no_millis`. For more information about supported date formats, see [Parameters](#parameters).
+請注意，`timestamp` 欄位有一個額外的 `format` 參數，用於指定顯示 `date` 欄位的格式。如果您未包含 `format` 參數，則格式預設為 `strict_date_time_no_millis`。如需支援的日期格式詳細資訊，請參閱[參數](#parameters)。
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by `derived` field types. All parameters are dynamic and can be modified without reindexing documents.
+下表列出 `derived` 欄位類型接受的參數。所有參數都是動態的，不需重新編製文件索引即可修改。
 
-| Parameter | Required/Optional | Description | 
+| 參數 | 必要/選用 | 說明 |
 | :--- | :--- | :--- |
-| `type` | Required | The type of the derived field. Supported types are `boolean`, `date`, `geo_point`, `ip`, `keyword`, `text`, `long`, `double`, `float`, and `object`. |
-| `script` | Required | The script associated with the derived field. Any value emitted from the script must be emitted using `emit()`. The type of the emitted value must match the `type` of the derived field. Scripts have access to both the `doc_values` and `_source` fields if those are enabled. The doc value of a field can be accessed using `doc['field_name'].value`, and the source can be accessed using `params._source["field_name"]`. |
-| `format` | Optional | The format used for parsing dates. Only applicable to `date` fields. Valid values are `strict_date_time_no_millis`, `strict_date_optional_time`, and `epoch_millis`. For more information, see [Formats]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#formats).|
-| `ignore_malformed`| Optional | A Boolean value that specifies whether to ignore malformed values when running a query on a derived field. Default value is `false` (throw an exception when encountering malformed values). |
-| `prefilter_field` | Optional | An indexed text field provided to boost the performance of derived fields. Specifies an existing indexed field on which to filter prior to filtering on the derived field. For more information, see [Prefilter field](#prefilter-field). |
+| `type` | 必要 | 衍生欄位的類型。支援的類型包括 `boolean`、`date`、`geo_point`、`ip`、`keyword`、`text`、`long`、`double`、`float` 和 `object`。 |
+| `script` | 必要 | 與衍生欄位相關聯的指令碼。指令碼發出的任何值都必須使用 `emit()` 發出。發出值的類型必須符合衍生欄位的 `type`。如果已啟用 `doc_values` 和 `_source` 欄位，指令碼可以存取這兩個欄位。欄位的 doc value 可使用 `doc['field_name'].value` 存取，而來源可使用 `params._source["field_name"]` 存取。 |
+| `format` | 選用 | 用於剖析日期的格式。僅適用於 `date` 欄位。有效值為 `strict_date_time_no_millis`、`strict_date_optional_time` 和 `epoch_millis`。如需詳細資訊，請參閱[格式]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#formats)。|
+| `ignore_malformed`| 選用 | 一個布林值，指定在衍生欄位上執行查詢時是否忽略格式錯誤的值。預設值為 `false` (遇到格式錯誤的值時擲回例外狀況)。 |
+| `prefilter_field` | 選用 | 一個已編製索引的文字欄位，用於提升衍生欄位的效能。指定現有的已編製索引欄位，以便在篩選衍生欄位之前先對其進行篩選。如需詳細資訊，請參閱[預先篩選欄位](#prefilter-field)。 |
 
-## Emitting values in scripts
+## 在指令碼中發出值
 
-The `emit()` function is available only within the derived field script context. It is used to emit one or multiple (for a multi-valued field) script values for a document on which the script runs.
+`emit()` 函式僅能在衍生欄位指令碼內容中使用。它用來為執行指令碼的文件發出一或多個（適用於多值欄位）指令碼值。
 
-The following table lists the `emit()` function formats for the supported field types.
+下表列出支援欄位類型的 `emit()` 函式格式。
 
-| Type      | Emit format                      | Multi-valued fields supported|
+| 類型      | 發出格式                      | 支援多值欄位|
 |-----------|----------------------------------|--------------|
-| `boolean` | `emit(boolean)`                  | No           |
-| `double`  | `emit(double)`                   | Yes          |
-| `date`    | `emit(long timeInMilis)`         | Yes          |
-| `float`   | `emit(float)`                    | Yes          |
-| `geo_point`| `emit(double lat, double lon)`   | Yes          |
-| `ip`      | `emit(String ip)`                | Yes          |
-| `keyword` | `emit(String)`                   | Yes          |
-| `long`    | `emit(long)`                     | Yes          |
-| `object`  | `emit(String json)` (valid JSON) | Yes          |
-| `text`    | `emit(String)`                   | Yes          |
+| `boolean` | `emit(boolean)`                  | 否           |
+| `double`  | `emit(double)`                   | 是          |
+| `date`    | `emit(long timeInMilis)`         | 是          |
+| `float`   | `emit(float)`                    | 是          |
+| `geo_point`| `emit(double lat, double lon)`   | 是          |
+| `ip`      | `emit(String ip)`                | 是          |
+| `keyword` | `emit(String)`                   | 是          |
+| `long`    | `emit(long)`                     | 是          |
+| `object`  | `emit(String json)` (有效的 JSON) | 是          |
+| `text`    | `emit(String)`                   | 是          |
 
-By default, a type mismatch between a derived field and its emitted value will result in the search request failing with an error. If `ignore_malformed` is set to `true`, then the failing document is skipped and the search request succeeds.
+預設情況下，衍生欄位與其發出值之間的類型不符會導致搜尋請求失敗並產生錯誤。若將 `ignore_malformed` 設定為 `true`，則會略過失敗的文件，且搜尋請求會成功。
 {: .note}
 
-The size limit of the emitted values is 1 MB per document.
+每個文件發出值的大小上限為 1 MB。
 {: .important}
 
-## Searching derived fields defined in index mappings
+## 搜尋索引對應中定義的衍生欄位
 
-To search derived fields, use the same syntax as when searching regular fields. For example, the following request searches for documents with derived `timestamp` field in the specified range:
+若要搜尋衍生欄位，請使用與搜尋一般欄位相同的語法。例如，下列請求會搜尋衍生 `timestamp` 欄位在指定範圍內的文件：
 
 ```json
 POST /logs/_search
@@ -195,11 +195,11 @@ POST /logs/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents:
+回應包含符合的文件：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -282,9 +282,9 @@ The response contains the matching documents:
 ```
 </details>
 
-## Defining and searching derived fields in a search request
+## 在搜尋請求中定義與搜尋衍生欄位
 
-You can also define derived fields directly in a search request and query them along with regular indexed fields. For example, the following request creates the `url` and `status` derived fields and searches those fields along with the regular `request` and `clientip` fields:
+您也可以直接在搜尋請求中定義衍生欄位，並與一般已編製索引的欄位一起查詢。例如，下列請求會建立 `url` 與 `status` 衍生欄位，並將這些欄位與一般 `request` 和 `clientip` 欄位一起搜尋：
 
 ```json
 POST /logs/_search
@@ -333,11 +333,11 @@ POST /logs/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents:
+回應包含符合的文件：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -410,19 +410,19 @@ The response contains the matching documents:
 ```
 </details>
 
-Derived fields use the default analyzer specified in the index analysis settings during search. You can override the default analyzer or specify a search analyzer within a search request in the same way as with regular fields. For more information, see [Analyzers]({{site.url}}{{site.baseurl}}/analyzers/).
+衍生欄位在搜尋時會使用索引分析設定中指定的預設分析器。您可以覆寫預設分析器，或在搜尋請求中指定搜尋分析器，方式與一般欄位相同。如需更多資訊，請參閱[分析器]({{site.url}}{{site.baseurl}}/analyzers/)。
 {: .note}
 
-When both an index mapping and a search definition are present for a field, the search definition takes precedence.
+當欄位同時存在索引對應與搜尋定義時，以搜尋定義為優先。
 {: .note}
 
-### Retrieving fields
+### 擷取欄位
 
-You can retrieve derived fields using the `fields` parameter in the search request in the same way as with regular fields, as shown in the preceding examples. You can also use wildcards to retrieve all derived fields that match a given pattern.
+您可以在搜尋請求中使用 `fields` 參數擷取衍生欄位，方式與一般欄位相同，如前面的範例所示。您也可以使用萬用字元擷取符合指定模式的所有衍生欄位。
 
-### Highlighting
+### 醒目提示
 
-Derived fields of type `text` support highlighting using the [unified highlighter]({{site.url}}{{site.baseurl}}/opensearch/search/highlight#the-unified-highlighter). For example, the following request specifies to highlight the derived `url` field:
+類型為 `text` 的衍生欄位支援使用[統一醒目提示器]({{site.url}}{{site.baseurl}}/opensearch/search/highlight#the-unified-highlighter)進行醒目提示。例如，下列請求指定對衍生 `url` 欄位進行醒目提示：
 
 ```json
 POST /logs/_search
@@ -463,11 +463,11 @@ POST /logs/_search
 ```
 {% include copy-curl.html %}
 
-The response specifies highlighting in the `url` field:
+回應會在 `url` 欄位中指定醒目提示：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -544,14 +544,14 @@ The response specifies highlighting in the `url` field:
 ```
 </details>
 
-## Aggregations
+## 彙總
 
-Derived fields support most aggregation types. 
+衍生欄位支援大多數的彙總類型。
 
-Geographic, significant terms, significant text, and scripted metric aggregations are not supported.
+不支援地理、顯著詞彙、顯著文字及指令碼指標彙總。
 {: .note}
 
-For example, the following request creates a simple `terms` aggregation on the `method` derived field:
+例如，下列請求會在 `method` 衍生欄位上建立簡單的 `terms` 彙總：
 
 ```json
 POST /logs/_search
@@ -568,11 +568,11 @@ POST /logs/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the following buckets:
+回應包含下列桶：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -618,19 +618,19 @@ The response contains the following buckets:
 ```
 </details>
 
-## Performance
+## 效能
 
-Derived fields are not indexed but are computed dynamically by retrieving values from the `_source` field or doc values. Thus, they run more slowly. To improve performance, try the following:
+衍生欄位不會編製索引，而是透過從 `_source` 欄位或 doc values 擷取值來動態計算。因此，它們的執行速度較慢。若要改善效能，請嘗試下列做法：
 
-- Prune the search space by adding query filters on indexed fields in conjunction with derived fields.
-- Use doc values instead of `_source` in the script for faster access, whenever applicable.
-- Consider using a [`prefilter_field`](#prefilter-field) to automatically prune the search space without explicit filters in the search request.
+- 在已編製索引的欄位上新增查詢篩選條件，並搭配衍生欄位，以修剪搜尋空間。
+- 在指令碼中使用 doc values 而非 `_source`，以加快存取速度 (若適用)。
+- 考慮使用 [`prefilter_field`](#prefilter-field)，以在搜尋請求中不需明確篩選條件的情況下自動修剪搜尋空間。
 
-### Prefilter field
+### 預先篩選欄位
 
-Specifying a prefilter field helps to prune the search space without adding explicit filters in the search request. The prefilter field specifies an existing indexed field (`prefilter_field`) on which to filter automatically when constructing the query. The `prefilter_field` must be a text field (either [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) or [`match_only_text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/match-only-text/)).
+指定預先篩選欄位有助於在搜尋請求中不需新增明確篩選條件的情況下修剪搜尋空間。預先篩選欄位會指定現有的已編製索引欄位 (`prefilter_field`)，在建構查詢時自動據以篩選。`prefilter_field` 必須是文字欄位 ([`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 或 [`match_only_text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/match-only-text/))。
 
-For example, you can add a `prefilter_field` to the `method` derived field. Update the index mapping, specifying to prefilter on the `request` field: 
+例如，您可以將 `prefilter_field` 新增至 `method` 衍生欄位。更新索引對應，指定在 `request` 欄位上進行預先篩選：
 
 ```json
 PUT /logs/_mapping
@@ -650,7 +650,7 @@ PUT /logs/_mapping
 ```
 {% include copy-curl.html %}
 
-Now search using a query on the `method` derived field:
+現在使用 `method` 衍生欄位上的查詢進行搜尋：
 
 ```json
 POST /logs/_search
@@ -668,20 +668,20 @@ POST /logs/_search
 ```
 {% include copy-curl.html %}
 
-OpenSearch automatically adds a filter on the `request` field to your query:
+OpenSearch 會自動在您的查詢中新增 `request` 欄位的篩選條件：
 
 ```json
 "#request:GET #DerivedFieldQuery (Query: [ method:GET])"
 ```
 
-You can use the `profile` option to analyze derived field performance, as shown in the preceding example.
+您可以使用 `profile` 選項來分析衍生欄位效能，如上述範例所示。
 {: .tip} 
 
-## Derived object fields
+## 衍生物件欄位
 
-A script can emit a valid JSON object so that you can query subfields without indexing them, in the same way as with regular fields. This is useful for large JSON objects that require occasional searches on some subfields. In this case, indexing the subfields is expensive, while defining derived fields for each subfield also adds a lot of resource overhead. If you don't [explicitly provide the subfield type](#explicit-subfield-type), then the subfield type is [inferred](#inferred-subfield-type).
+指令碼可以發出有效的 JSON 物件，讓您查詢子欄位而不需將它們編製索引，方式與一般欄位相同。這對於需要偶爾搜尋某些子欄位的大型 JSON 物件很有用。在此情況下，將子欄位編製索引的成本很高，而為每個子欄位定義衍生欄位也會增加許多資源負擔。如果您未[明確提供子欄位類型](#explicit-subfield-type)，則會[推斷](#inferred-subfield-type)子欄位類型。
 
-For example, the following request defines a `derived_request_object` derived field as an `object` type:
+例如，下列請求將 `derived_request_object` 衍生欄位定義為 `object` 類型：
 
 ```json
 PUT logs_object
@@ -703,7 +703,7 @@ PUT logs_object
 ```
 {% include copy-curl.html %}
 
-Consider the following documents, in which the `request_object` is a string representation of a JSON object:
+請考慮下列文件，其中 `request_object` 是 JSON 物件的字串表示：
 
 ```json
 POST _bulk
@@ -720,7 +720,7 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-The following query searches the `@timestamp` subfield of the `derived_request_object`:
+下列查詢會搜尋 `derived_request_object` 的 `@timestamp` 子欄位：
 
 ```json
 POST /logs_object/_search
@@ -738,11 +738,11 @@ POST /logs_object/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents:
+回應包含相符的文件：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -796,7 +796,7 @@ The response contains the matching documents:
 
 </details>
 
-You can also specify to highlight a derived object field:
+您也可以指定要醒目提示衍生物件欄位：
 
 ```json
 POST /logs_object/_search
@@ -827,11 +827,11 @@ POST /logs_object/_search
 ```
 {% include copy-curl.html %}
 
-The response adds highlighting to the `derived_request_object.request` field:
+回應會將醒目提示新增至 `derived_request_object.request` 欄位：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -902,13 +902,13 @@ The response adds highlighting to the `derived_request_object.request` field:
 
 </details>
 
-### Inferred subfield type 
+### 推斷的子欄位類型 
 
-Type inference is based on the same logic as [Dynamic mapping]({{site.url}}{{site.baseurl}}/opensearch/mappings#dynamic-mapping). Instead of inferring the subfield type from the first document, a random sample of documents is used to infer the type. If the subfield isn't found in any documents from the random sample, type inference fails and logs a warning. For subfields that seldom occur in documents, consider defining the explicit field type. Using dynamic type inference for such subfields may result in a query returning no results, like for a missing field. 
+類型推斷採用與[動態對應]({{site.url}}{{site.baseurl}}/opensearch/mappings#dynamic-mapping)相同的邏輯。不同於從第一份文件推斷子欄位類型，這裡使用文件的隨機樣本來推斷類型。如果隨機樣本中的任何文件都找不到該子欄位，類型推斷就會失敗並記錄一則警告。對於在文件中很少出現的子欄位，建議定義明確的欄位類型。對這類子欄位使用動態類型推斷，可能導致查詢沒有任何結果，就像欄位遺失一樣。 
 
-### Explicit subfield type
+### 明確的子欄位類型
 
-To define the explicit subfield type, provide the `type` parameter in the `properties` object. In the following example, the `derived_logs_object.is_active` field is defined as `boolean`. Because this field is only present in one of the documents, its type inference might fail, so it's important to define the explicit type:
+若要定義明確的子欄位類型，請在 `properties` 物件中提供 `type` 參數。在下列範例中，`derived_logs_object.is_active` 欄位被定義為 `boolean`。由於此欄位只存在於其中一份文件中，其類型推斷可能會失敗，因此定義明確的類型非常重要：
 
 ```json
 POST /logs_object/_search
@@ -934,11 +934,11 @@ POST /logs_object/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching documents:
+回應包含符合的文件：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 

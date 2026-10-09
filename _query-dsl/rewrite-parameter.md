@@ -1,54 +1,55 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Rewrite
+title: "重寫"
 nav_order: 85
 ---
 
-# Rewrite parameter
+# Rewrite 參數
 
-Multi-term queries like `wildcard`, `prefix`, `regexp`, `fuzzy`, and `range` expand internally into sets of terms. The `rewrite` parameter allows you to control how these term expansions are executed and scored.
+多詞元查詢（例如 `wildcard`、`prefix`、`regexp`、`fuzzy` 和 `range`）會在內部展開為一組詞元。`rewrite` 參數可讓您控制這些詞元展開的執行與評分方式。
 
-When a multi-term query expands into many terms (for example, `prefix: "error*"` matching hundreds of terms), they are internally converted into `term` queries. This process can have the following drawbacks:
+當多詞元查詢展開為大量詞元時（例如 `prefix: "error*"` 符合數百個詞元），它們會在內部被轉換為 `term` 查詢。此過程可能有以下缺點：
 
-* Exceed the `indices.query.bool.max_clause_count` limit (default is `1024`).
-* Affect how scores are calculated for matching documents.
-* Impact memory and latency depending on the rewrite method used.
+* 超過 `indices.query.bool.max_clause_count` 限制（預設為 `1024`）。
+* 影響符合文件的分數計算方式。
+* 依所使用的 rewrite 方法而影響記憶體與延遲。
 
-The `rewrite` parameter gives you control over how multi-term queries behave internally.
+`rewrite` 參數可讓您控制多詞元查詢在內部的行為。
 
-| Mode                        | Scores                                 | Performance | Notes                                         |
+| 模式                        | 分數                                 | 效能 | 備註                                         |
 | --------------------------- | -------------------------------------- | ----------- | --------------------------------------------- |
-| `constant_score`            | Same score for all matches             | Best        | Default mode, ideal for filters               |
-| `scoring_boolean`           | TF/IDF-based                           | Moderate    | Full relevance scoring                        |
-| `constant_score_boolean`    | Same score but with Boolean structure | Moderate    | Use with `must_not` or `minimum_should_match` |
-| `top_terms_N`               | TF/IDF on top N terms                  | Efficient   | Truncates expansion                           |
-| `top_terms_boost_N`         | Static boosts                          | Fast        | Less accurate                                 |
-| `top_terms_blended_freqs_N` | Blended score                          | Balanced    | Best scoring/efficiency trade-off              |
+| `constant_score`            | 所有符合項目分數相同             | 最佳        | 預設模式，適合篩選用途               |
+| `scoring_boolean`           | 以 TF/IDF 為基礎                           | 中等    | 完整相關性評分                        |
+| `constant_score_boolean`    | 分數相同但具有布林結構 | 中等    | 搭配 `must_not` 或 `minimum_should_match` 使用 |
+| `top_terms_N`               | 前 N 個詞元使用 TF/IDF                  | 高效   | 截斷展開                           |
+| `top_terms_boost_N`         | 靜態加權值                          | 快速        | 精確度較低                                 |
+| `top_terms_blended_freqs_N` | 混合分數                          | 均衡    | 評分與效能之間的最佳權衡              |
 
 
-## Available rewrite methods
+## 可用的 rewrite 方法
 
-The following table summarizes the available rewrite methods.
+下表摘要說明可用的 rewrite 方法。
 
-| Rewrite method | Description |
-| [`constant_score`](#constant-score) | (Default) All expanded terms are evaluated together as a single unit, assigning the same score to every match. Matching documents are not scored individually, making it very efficient for filtering use cases. |
-| [`scoring_boolean`](#scoring-boolean) | Breaks the query into a Boolean `should` clause with one term query per match. Each result is scored individually based on relevance. |
-| [`constant_score_boolean`](#constant-score-boolean) | Similar to `scoring_boolean`, but all documents receive a fixed score regardless of term frequency. Maintains Boolean structure without TF/IDF weighting. |
-| [`top_terms_N`](#top-terms-n) | Restricts scoring and execution to the N most frequent terms. Reduces resource usage and prevents clause overload. |
-| [`top_terms_boost_N`](#top-terms-boost-n) | Like `top_terms_N` but uses static boosting instead of full scoring. Offers performance improvements with simplified relevance. |
-| [`top_terms_blended_freqs_N`](#top-terms-blended-frequencies-n) | Chooses the top N matching terms and averages their document frequencies for scoring. Produces balanced scores without full term explosion. |
+| Rewrite 方法 | 說明 |
+| [`constant_score`](#constant-score) | （預設）所有展開的詞元會作為單一單位一起評估，並為每個符合項目指派相同分數。符合的文件不會個別評分，因此在篩選使用情境中非常高效。 |
+| [`scoring_boolean`](#scoring-boolean) | 將查詢拆解為布林 `should` 子句，每個符合項目各有一個 term 查詢。每個結果會依相關性個別評分。 |
+| [`constant_score_boolean`](#constant-score-boolean) | 與 `scoring_boolean` 類似，但所有文件都會收到固定分數，不論詞元頻率為何。保留布林結構但不使用 TF/IDF 加權。 |
+| [`top_terms_N`](#top-terms-n) | 將評分與執行限制在頻率最高的 N 個詞元。減少資源用量並防止子句過載。 |
+| [`top_terms_boost_N`](#top-terms-boost-n) | 與 `top_terms_N` 類似，但使用靜態加權而非完整評分。以簡化的相關性提供效能改善。 |
+| [`top_terms_blended_freqs_N`](#top-terms-blended-frequencies-n) | 選取前 N 個符合的詞元，並平均其文件頻率以進行評分。在不造成詞元全面爆炸的情況下產生均衡的分數。 |
 
-## Boolean-based rewrite limits
+## 布林型 rewrite 的限制
 
-All Boolean-based rewrites, such as `scoring_boolean`, `constant_score_boolean`, and `top_terms_*`, are subject to the following dynamic [cluster settings for indexes]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/cluster-settings-for-indexes/#dynamic-settings):
+所有布林型 rewrite（例如 `scoring_boolean`、`constant_score_boolean` 和 `top_terms_*`）都受到下列索引的動態[叢集設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/cluster-settings-for-indexes/#dynamic-settings)約束：
 
 ```json
 indices.query.bool.max_clause_count
 ```
 
-This setting controls the maximum number of allowed Boolean `should` clauses (default is `1024`). If your query expands to a number of clauses greater than this limit, it is rejected with a `too_many_clauses` error returned as a HTTP 400 Bad Request response. Similarly, if your query _and all its children cumulatively_ expands to a total number of clauses greater than this limit, it is rejected with a `too_many_nested_clauses` error returned as a HTTP 400 Bad Request response.
+此設定控制允許的布林 `should` 子句數量上限（預設為 `1024`）。如果您的查詢展開後的子句數量超過此限制，將會被拒絕，並以 HTTP 400 Bad Request 回應傳回 `too_many_clauses` 錯誤。同樣地，如果您的查詢 _及其所有子查詢累計_ 展開後的子句總數超過此限制，也會被拒絕，並以 HTTP 400 Bad Request 回應傳回 `too_many_nested_clauses` 錯誤。
 
-For example, a wildcard, such as "error*", might expand to hundreds or thousands of matching terms, which could include "error", "errors", "error_log", "error404", and others. Each of these terms turns into a separate `term` query. If the number of terms exceeds the `indices.query.bool.max_clause_count` limit, the query fails:
+例如，像 "error*" 這樣的萬用字元可能會展開為數百或數千個符合的詞元，其中可能包括 "error"、"errors"、"error_log"、"error404" 等。每個詞元都會變成獨立的 `term` 查詢。如果詞元數量超過 `indices.query.bool.max_clause_count` 限制，查詢就會失敗：
 
 ```json
 POST /logs/_search
@@ -65,7 +66,7 @@ POST /logs/_search
 ```
 {% include copy-curl.html %}
 
-The query is expanded internally as follows:
+查詢會在內部展開如下：
 
 ```json
 {
@@ -81,15 +82,15 @@ The query is expanded internally as follows:
 }
 ```
 
-## Constant score 
+## 固定分數
 
-The default `constant_score` rewrite method wraps all expanded terms into a single query and skips the scoring phase entirely. This approach has the following characteristics:
+預設的 `constant_score` rewrite 方法會將所有展開的詞元包裝成單一查詢，並完全略過評分階段。此方法具有以下特性：
 
-* Executes all term matches as a single [bit array](https://en.wikipedia.org/wiki/Bit_array) query.
-* Ignores scoring altogether; every document gets a `_score` of `1.0`.
-* Fastest option; ideal for filtering.
+* 將所有詞元符合項目以單一[位元陣列](https://en.wikipedia.org/wiki/Bit_array)查詢執行。
+* 完全忽略評分；每個文件都會得到 `1.0` 的 `_score`。
+* 最快的選項；適合篩選用途。
 
-The following example runs a `wildcard` query using the default `constant_score` rewrite method to efficiently filter documents matching the pattern `warning*` in the `message` field:
+以下範例使用預設的 `constant_score` rewrite 方法執行 `wildcard` 查詢，以高效篩選 `message` 欄位中符合 `warning*` 模式的文件：
 
 ```json
 POST /logs/_search
@@ -105,14 +106,14 @@ POST /logs/_search
 ```
 {% include copy-curl.html %}
 
-## Scoring Boolean
+## 布林評分
 
-The `scoring_boolean` rewrite method breaks the expanded terms into separate `term` queries combined under a Boolean `should` clause. This approach works as follows:
+`scoring_boolean` rewrite 方法會將展開的詞元拆分為多個獨立的 `term` 查詢，並在布林 `should` 子句下合併。此方法的運作方式如下：
 
-* Expands the wildcard into individual `term` queries inside a Boolean `should` clause.
-* Each document's score reflects how many terms it matches and the terms' frequency.
+* 將萬用字元展開為布林 `should` 子句內的個別 `term` 查詢。
+* 每個文件的分數反映它符合多少詞元，以及這些詞元的頻率。
 
-The following example uses a `scoring_boolean` rewrite configuration:
+以下範例使用 `scoring_boolean` rewrite 組態：
 
 ```json
 POST /logs/_search
@@ -129,15 +130,15 @@ POST /logs/_search
 ```
 {% include copy-curl.html %}
 
-## Constant score Boolean
+## 固定分數布林查詢
 
-The `constant_score_boolean` rewrite method uses the same Boolean structure as `scoring_boolean` but disables scoring, making it useful when clause logic is needed without relevance ranking. This method has the following characteristics:
+`constant_score_boolean` rewrite 方法使用與 `scoring_boolean` 相同的布林結構，但停用評分，因此在需要子句邏輯但不需要相關性排名時非常實用。此方法具有以下特性：
 
-* Similar structure to `scoring_boolean`, but documents are not ranked.
-* All matching documents receive the same score.
-* Retains Boolean clause flexibility, such as using `must_not`, without ranking.
+* 結構與 `scoring_boolean` 類似，但不對文件進行排名。
+* 所有符合的文件都會得到相同分數。
+* 保留布林子句的彈性，例如使用 `must_not`，但不進行排名。
 
-The following example query uses a `must_not` Boolean clause:
+以下範例查詢使用 `must_not` 布林子句：
 
 ```json
 POST /logs/_search
@@ -158,7 +159,7 @@ POST /logs/_search
 ```
 {% include copy-curl.html %}
 
-This query is internally expanded as follows:
+此查詢會在內部展開如下：
 
 ```json
 {
@@ -177,15 +178,15 @@ This query is internally expanded as follows:
 }
 ```
 
-## Top terms N
+## 前 N 個詞元
 
-The `top_terms_N` method is one of several rewrite options designed to balance scoring accuracy and performance when expanding multi-term queries. It works as follows:
+`top_terms_N` 方法是多種 rewrite 選項之一，旨在展開多詞元查詢時平衡評分精確度與效能。其運作方式如下：
 
-* Only the N most frequently matching terms are selected and scored.
-* Useful when you expect a large term expansion and want to limit the load.
-* Other valid terms are ignored to preserve performance.
+* 只選取並評分最常符合的前 N 個詞元。
+* 當您預期會有大量詞元展開並希望限制負載時非常實用。
+* 其他有效詞元會被忽略以維持效能。
 
-The following query uses the `top_terms_2` rewrite method to score only the two most frequent terms that match the `warning*` pattern in the `message` field:
+以下查詢使用 `top_terms_2` rewrite 方法，只對 `message` 欄位中符合 `warning*` 模式且最常出現的兩個詞元進行評分：
 
 ```json
 POST /logs/_search
@@ -202,15 +203,15 @@ POST /logs/_search
 ```
 {% include copy-curl.html %}
 
-## Top terms boost N
+## 前 N 個詞元的加權值
 
-The `top_terms_boost_N` rewrite method selects the top N matching terms and applies static `boost` values instead of computing full relevance scores. It works as follows:
+`top_terms_boost_N` rewrite 方法會選取前 N 個符合的詞元，並套用靜態 `boost` 值，而不是計算完整的相關性分數。其運作方式如下：
 
-* Limits expansion to the top N terms like `top_terms_N`.
-* Rather than computing TF/IDF, it assigns a preset boost to each term.
-* Provides faster execution with predictable relevance weights.
+* 與 `top_terms_N` 一樣，將展開限制在前 N 個詞元。
+* 不計算 TF/IDF，而是為每個詞元指派預設的加權值。
+* 以可預測的相關性權重提供更快的執行速度。
 
-The following example uses a `top_terms_boost_2` rewrite parameter:
+以下範例使用 `top_terms_boost_2` rewrite 參數：
 
 ```json
 POST /logs/_search
@@ -227,15 +228,15 @@ POST /logs/_search
 ```
 {% include copy-curl.html %}
 
-## Top terms blended frequencies N
+## 前 N 個詞元的混合頻率
 
-The `top_terms_blended_freqs_N` rewrite method selects the top N matching terms and blends their document frequencies to produce more balanced relevance scores. This approach has the following characteristics:
+`top_terms_blended_freqs_N` rewrite 方法會選取前 N 個符合的詞元，並混合其文件頻率以產生更均衡的相關性分數。此方法具有以下特性：
 
-* Picks the top N matching terms and applies a blended frequency to all.
-* Blending makes scoring smoother across terms that differ in frequency.
-* Good trade-off when you want performance with realistic scoring.
+* 選取前 N 個符合的詞元，並對所有詞元套用混合頻率。
+* 混合可讓頻率不同的詞元之間的評分更加平滑。
+* 當您想要兼顧效能與真實評分時，這是很好的權衡選擇。
 
-The following example uses a `top_terms_blended_freqs_2` rewrite parameter:
+以下範例使用 `top_terms_blended_freqs_2` rewrite 參數：
 
 ```json
 POST /logs/_search

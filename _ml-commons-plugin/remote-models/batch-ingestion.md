@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Batch ingestion
+title: "批次匯入"
 has_children: true
 has_toc: false
 nav_order: 80
@@ -8,26 +9,26 @@ parent: Connecting to externally hosted models
 grand_parent: Integrating ML models
 ---
 
-# Using externally hosted ML models for batch ingestion
+# 使用外部託管的 ML 模型進行批次匯入
 
-**Introduced 2.15**
+**2.15 版新增**
 {: .label .label-purple }
 
-If you are ingesting multiple documents and generating embeddings by invoking an externally hosted model, you can use batch ingestion to improve performance.
+如果您要匯入多份文件，並透過呼叫外部託管的模型來產生嵌入，可以使用批次匯入來提升效能。
 
-When using the [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) to ingest documents, processors that support batch ingestion will split documents into batches and send each batch of documents to an externally hosted model in a single request.
+當您使用 [Bulk API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) 匯入文件時，支援批次匯入的處理器會將文件分成多個批次，並以單一請求將每批文件傳送至外部託管的模型。
 
-The [`text_embedding`]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/) and [`sparse_encoding`]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/sparse-encoding/) processors support batch ingestion.
+[`text_embedding`]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/) 與 [`sparse_encoding`]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/sparse-encoding/) 處理器支援批次匯入。
 
 
-## Step 1: Register a model group
+## 步驟 1：註冊模型群組
 
-You can register a model in two ways:
+您可以透過兩種方式註冊模型：
 
-* You can use `model_group_id` to register a model version to an existing model group.
-* If you do not use `model_group_id`, then ML Commons creates a model with a new model group.
+* 您可以使用 `model_group_id` 將模型版本註冊到現有的模型群組。
+* 如果您不使用 `model_group_id`，ML Commons 會以新的模型群組建立模型。
 
-To register a model group, send the following request:
+若要註冊模型群組，請傳送以下請求：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -38,7 +39,7 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-The response contains the model group ID that you'll use to register a model to this model group:
+回應中包含模型群組 ID，您將使用它把模型註冊到此模型群組：
 
 ```json
 {
@@ -47,13 +48,13 @@ The response contains the model group ID that you'll use to register a model to 
 }
 ```
 
-To learn more about model groups, see [Model access control]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/).
+若要進一步了解模型群組，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
 
-## Step 2: Create a connector
+## 步驟 2：建立連接器
 
-You can create a standalone connector that can be reused by multiple model registrations in OpenSearch that share the same external endpoint and configuration. Alternatively, you can specify a connector when creating a model so that it can be used only for that model. For more information and example connectors, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/).
+您可以建立獨立連接器，供 OpenSearch 中多個共用相同外部端點與組態的模型註冊重複使用。或者，您也可以在建立模型時指定連接器，使其僅供該模型使用。如需更多資訊與範例連接器，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-The Connectors Create API, `/_plugins/_ml/connectors/_create`, creates connectors that facilitate registering and deploying external models in OpenSearch. Using the `endpoint` parameter, you can connect ML Commons to any supported ML tool by using its specific API endpoint. For example, you can connect to a ChatGPT model by using the `api.openai.com` endpoint:
+Connectors Create API（`/_plugins/_ml/connectors/_create`）會建立連接器，協助在 OpenSearch 中註冊與部署外部模型。透過 `endpoint` 參數，您可以使用特定 API 端點將 ML Commons 連接到任何支援的 ML 工具。例如，您可以使用 `api.openai.com` 端點連接到 ChatGPT 模型：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -85,9 +86,9 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-The `parameters.input_docs_processed_step_size` parameter is used to set the maximum batch size for documents sent to a remote server. You can set this parameter to the maximum batch size supported by the remote server or to a smaller number for optimal performance.
+`parameters.input_docs_processed_step_size` 參數用於設定傳送至遠端伺服器的文件批次大小上限。您可以將此參數設定為遠端伺服器支援的最大批次大小，或設定為較小的數值以獲得最佳效能。
 
-The response contains the connector ID for the newly created connector:
+回應中包含新建連接器的連接器 ID：
 
 ```json
 {
@@ -95,9 +96,9 @@ The response contains the connector ID for the newly created connector:
 }
 ```
 
-## Step 3: Register an externally hosted model
+## 步驟 3：註冊外部託管的模型
 
-To register an externally hosted model to the model group created in step 1, provide the model group ID from step 1 and the connector ID from step 2 in the following request. You must specify the `function_name` as `remote`:
+若要將外部託管的模型註冊到步驟 1 建立的模型群組，請在以下請求中提供步驟 1 的模型群組 ID 與步驟 2 的連接器 ID。您必須將 `function_name` 指定為 `remote`：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -111,7 +112,7 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-OpenSearch returns the task ID of the register operation:
+OpenSearch 會傳回註冊作業的任務 ID：
 
 ```json
 {
@@ -120,14 +121,14 @@ OpenSearch returns the task ID of the register operation:
 }
 ```
 
-To check the status of the operation, provide the task ID to the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+若要檢查作業狀態，請將任務 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
 ```json
 GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 ```
 {% include copy-curl.html %}
 
-When the operation is complete, the state changes to `COMPLETED`:
+當作業完成時，狀態會變更為 `COMPLETED`：
 
 ```json
 {
@@ -144,11 +145,11 @@ When the operation is complete, the state changes to `COMPLETED`:
 }
 ```
 
-Take note of the returned `model_id` because you’ll need it to deploy the model.
+請記下傳回的 `model_id`，因為部署模型時需要用到它。
 
-## Step 4: Deploy the model
+## 步驟 4：部署模型
 
-Externally hosted models are deployed automatically when you send a Predict API request for the first time. To disable automatic deployment for an externally hosted model, set `plugins.ml_commons.model_auto_deploy.enable` to `false`:
+當您第一次傳送 Predict API 請求時，外部託管的模型會自動部署。若要停用外部託管模型的自動部署，請將 `plugins.ml_commons.model_auto_deploy.enable` 設定為 `false`：
 
 ```json
 PUT _cluster/settings
@@ -160,14 +161,14 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-To undeploy the model, use the [Undeploy API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/undeploy-model/):
+若要取消部署模型，請使用 [Undeploy API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/undeploy-model/)：
 
 ```json
 POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_deploy
 ```
 {% include copy-curl.html %}
 
-The response contains the task ID, which you can use to check the status of the deploy operation:
+回應中包含任務 ID，您可以用它來檢查部署作業的狀態：
 
 ```json
 {
@@ -176,14 +177,14 @@ The response contains the task ID, which you can use to check the status of the 
 }
 ```
 
-As in the previous step, check the status of the operation by calling the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+如同上一個步驟，請呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來檢查作業狀態：
 
 ```json
 GET /_plugins/_ml/tasks/vVePb4kBJ1eYAeTM7ljG
 ```
 {% include copy-curl.html %}
 
-When the operation is complete, the state changes to `COMPLETED`:
+當作業完成時，狀態會變更為 `COMPLETED`：
 
 ```json
 {
@@ -200,9 +201,9 @@ When the operation is complete, the state changes to `COMPLETED`:
 }
 ```
 
-## Step 5: Create an ingest pipeline
+## 步驟 5：建立資料匯入管線
 
-The following example request creates an ingest pipeline with a `text_embedding` processor. The processor converts the text in the `passage_text` field into text embeddings and stores the embeddings in `passage_embedding`:
+以下範例請求會建立一個包含 `text_embedding` 處理器的資料匯入管線。該處理器會將 `passage_text` 欄位中的文字轉換為文字嵌入，並將嵌入儲存在 `passage_embedding` 中：
 
 ```json
 PUT /_ingest/pipeline/nlp-ingest-pipeline
@@ -223,9 +224,9 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-## Step 6: Perform bulk indexing
+## 步驟 6：執行大量編製索引
 
-To ingest documents in bulk, call the Bulk API and provide the `pipeline` parameter. If you don't provide a `pipeline` parameter, then the default ingest pipeline for the index will be used for ingestion:
+若要大量匯入文件，請呼叫 Bulk API 並提供 `pipeline` 參數。如果您未提供 `pipeline` 參數，則會使用該索引的預設資料匯入管線進行匯入：
 
 ```json
 POST _bulk?batch_size=5&pipeline=nlp-ingest-pipeline

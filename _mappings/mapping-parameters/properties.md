@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Properties
+title: "屬性"
 parent: Mapping parameters
 redirect_from:
   - /field-types/mapping-parameters/properties/
@@ -9,15 +10,15 @@ has_children: false
 has_toc: false
 ---
 
-# Properties mapping parameter
+# Properties 對應參數
 
-The `properties` mapping parameter is used to define the structure and data types of fields within an object or the root of a document. It acts as the core of any mapping definition, allowing you to explicitly specify field names, types (such as `text`, `keyword`, `date`, or `float`), and additional settings or mapping parameters for each field.
+`properties` 對應參數用於定義物件內或文件根層級之欄位的結構與資料類型。它是任何對應定義的核心，可讓您明確指定欄位名稱、類型（例如 `text`、`keyword`、`date` 或 `float`），以及每個欄位的其他設定或對應參數。
 
-By using `properties`, you gain full control over how your data is indexed and stored, enabling precise search behavior, aggregation support, and data validation.
+使用 `properties` 後，您就能完全掌控資料的編製索引與儲存方式，實現精確的搜尋行為、彙總支援與資料驗證。
 
-## Defining fields with properties
+## 使用 properties 定義欄位
 
-The following request creates an index named `products` with a structured mapping using the `properties` parameter. It includes a nested object field called `dimensions` with subfields:
+下列請求會建立名為 `products` 的索引，並使用 `properties` 參數建立結構化對應。其中包含一個名為 `dimensions` 的巢狀物件欄位，並帶有下列子欄位：
 
 ```json
 PUT /products
@@ -54,9 +55,9 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-## Indexing a document
+## 將文件編製索引
 
-Use the following command to index a document with [nested fields]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/):
+使用下列命令，將含有[巢狀欄位]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/)的文件編製索引：
 
 ```json
 PUT /products/_doc/1
@@ -75,12 +76,12 @@ PUT /products/_doc/1
 ```
 {% include copy-curl.html %}
 
-## Querying and aggregating using dot notation
+## 使用點記法查詢與彙總
 
-You can query or aggregate on object subfields using dot notation. Use the following command to execute a query that:
+您可以使用點記法查詢或彙總物件的子欄位。使用下列命令執行查詢，該查詢會：
 
-- Filters documents on the `dimensions.width` field, returning documents in which `width` is between `5` and `10`.
-- Creates a [histogram aggregation]({{site.url}}{{site.baseurl}}/aggregations/bucket/histogram/) on the `dimensions.depth` field, creating buckets for products using `depth` intervals of `0.5`.
+- 依 `dimensions.width` 欄位篩選文件，傳回 `width` 介於 `5` 與 `10` 之間的文件。
+- 在 `dimensions.depth` 欄位上建立[直方圖彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/histogram/)，以 `0.5` 的 `depth` 間隔為產品建立桶 (bucket)。
 
 ```json
 POST /products/_search
@@ -105,7 +106,7 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-The following response shows a matching document in which the `dimensions.width` field falls within the specified range. It also includes a histogram aggregation result for `dimensions.depth`:
+下列回應顯示一筆符合的文件，其中 `dimensions.width` 欄位落在指定的範圍內。它也包含 `dimensions.depth` 的直方圖彙總結果：
 
 ```json
 {

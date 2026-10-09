@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Patch roles
+title: "修補角色"
 parent: Role APIs
 grand_parent: Security APIs
 nav_order: 20
 ---
 
 # Patch Roles API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Updates roles without replacing them. Specify a role name to update individual attributes of one role, or omit the role name to create, update, or delete multiple roles in a single call.
+更新角色而不取代角色。指定角色名稱可更新單一角色的個別屬性；省略角色名稱則可在單次呼叫中建立、更新或刪除多個角色。
 
 <!-- spec_insert_start
 api: security.patch_roles
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PATCH /_plugins/_security/api/roles
 ```
@@ -31,30 +32,30 @@ PATCH /_plugins/_security/api/roles/{role}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required | Description |
+| 參數 | 資料類型 | 必要 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `role` | String | No | The name of the role to update. If omitted, the request can modify multiple roles. |
+| `role` | 字串 | 否 | 要更新的角色名稱。若省略，請求可修改多個角色。 |
 
-## Request body fields
+## 請求本文欄位
 
-The request body is required. It is an array of JSON objects. Each object contains the following fields.
+請求本文為必要項目。請求本文是 JSON 物件的陣列。每個物件包含下列欄位。
 
-| Field | Data type | Description | Required |
+| 欄位 | 資料類型 | 說明 | 必要 |
 | :--- | :--- | :--- | :--- |
-| `op` | String | The operation to perform. Valid values are `add`, `remove`, `replace`, `move`, `copy`, and `test`. | Yes |
-| `path` | String | The path to modify. When you specify a role name, the path is relative to that role, such as `/index_permissions/0/fls`. When you omit the role name, the path begins with the role name, such as `/reporting-role/cluster_permissions`. | Yes |
-| `value` | Object | The new value. Required for the `add`, `replace`, and `test` operations. | No |
+| `op` | 字串 | 要執行的操作。有效值為 `add`、`remove`、`replace`、`move`、`copy` 和 `test`。 | 是 |
+| `path` | 字串 | 要修改的路徑。指定角色名稱時，路徑是相對於該角色，例如 `/index_permissions/0/fls`。省略角色名稱時，路徑以角色名稱開頭，例如 `/reporting-role/cluster_permissions`。 | 是 |
+| `value` | 物件 | 新的值。`add`、`replace` 和 `test` 操作為必要。 | 否 |
 
-Use `-` as an array index to append a new permission to the end of an array of permissions.
+使用 `-` 作為陣列索引，可將新權限附加至權限陣列的結尾。
 {: .note}
 
-## Example request
+## 請求範例
 
-The following request replaces the field-level security settings of the `test-role` role and removes its document-level security settings:
+下列請求會取代 `test-role` 角色的欄位層級安全性設定，並移除其文件層級安全性設定：
 
 ```json
 PATCH _plugins/_security/api/roles/test-role
@@ -69,7 +70,7 @@ PATCH _plugins/_security/api/roles/test-role
 ```
 {% include copy-curl.html security=true %}
 
-The following request adds the `reporting-role` role and removes the `test-role-2` role:
+下列請求會新增 `reporting-role` 角色並移除 `test-role-2` 角色：
 
 ```json
 PATCH _plugins/_security/api/roles
@@ -91,9 +92,9 @@ PATCH _plugins/_security/api/roles
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 回應範例
 
-A request that updates one role names it in the response:
+更新單一角色的請求會在回應中列出該角色的名稱：
 
 ```json
 {
@@ -102,7 +103,7 @@ A request that updates one role names it in the response:
 }
 ```
 
-A bulk request does not name the roles it changed:
+大量請求不會列出其所變更角色的名稱：
 
 ```json
 {

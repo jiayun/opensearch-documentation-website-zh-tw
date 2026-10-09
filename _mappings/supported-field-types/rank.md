@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Rank field types
+title: "Rank 欄位類型"
 nav_order: 25
 has_children: false
 parent: Specialized search field types
@@ -11,27 +12,27 @@ redirect_from:
   - /field-types/rank/
 ---
 
-# Rank field types
-**Introduced 1.0**
+# Rank 欄位類型
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The following table lists all rank field types that OpenSearch supports.
+下表列出 OpenSearch 支援的所有 rank 欄位類型。
 
-Field data type | Description
+欄位資料類型 | 說明
 :--- | :---  
-[`rank_feature`](#rank-feature) | Boosts or decreases the relevance score of documents. 
-[`rank_features`](#rank-features) | Boosts or decreases the relevance score of documents. Used when the list of features is sparse. 
+[`rank_feature`](#rank-feature) | 提升或降低文件的相關性分數。 
+[`rank_features`](#rank-features) | 提升或降低文件的相關性分數。適用於特徵清單稀疏的情況。 
 
-Rank feature and rank features fields can be queried with [rank feature queries](#rank-feature-query) only. They do not support aggregating or sorting.
+Rank feature 與 rank features 欄位只能使用 [rank feature 查詢](#rank-feature-query)來查詢。它們不支援彙總或排序。
 {: .note }
 
 ## Rank feature
 
-A rank feature field type uses a positive [float]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/) value to boost or decrease the relevance score of a document in a `rank_feature` query. By default, this value boosts the relevance score. To decrease the relevance score, set the optional `positive_score_impact` parameter to false.
+Rank feature 欄位類型會使用正的 [float]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/) 值，在 `rank_feature` 查詢中提升或降低文件的相關性分數。根據預設，此值會提升相關性分數。若要降低相關性分數，請將選用的 `positive_score_impact` 參數設為 false。
 
-### Example
+### 範例
 
-Create a mapping with a rank feature field:
+建立含有 rank feature 欄位的對應：
 
 ```json
 PUT chessplayers
@@ -54,7 +55,7 @@ PUT chessplayers
 ```
 {% include copy-curl.html %}
 
-Index three documents with a rank_feature field that boosts the score (`rating`) and a rank_feature field that decreases the score (`age`):
+將三份文件編製索引，其中一個 rank_feature 欄位會提升分數 (`rating`)，另一個 rank_feature 欄位則會降低分數 (`age`)：
 
 ```json
 PUT testindex1/_doc/1
@@ -86,11 +87,11 @@ PUT testindex1/_doc/3
 ```
 {% include copy-curl.html %}
 
-## Rank feature query
+## Rank feature 查詢
 
-Using a rank feature query, you can rank players by rating, by age, or by both rating and age. If you rank players by rating, higher-rated players will have higher relevance scores. If you rank players by age, younger players will have higher relevance scores.
+使用 rank feature 查詢，您可以依評分、依年齡，或同時依評分與年齡為玩家排名。若依評分為玩家排名，評分較高的玩家會有較高的相關性分數。若依年齡為玩家排名，較年輕的玩家會有較高的相關性分數。
 
-Use a rank feature query to search for players based on age and rating:
+使用 rank feature 查詢，依年齡與評分搜尋玩家：
 
 ```json
 GET chessplayers/_search
@@ -115,7 +116,7 @@ GET chessplayers/_search
 ```
 {% include copy-curl.html %}
 
-When ranked by both age and rating, younger players and players who are more highly ranked score better:
+同時依年齡與評分排名時，較年輕的玩家以及排名較高的玩家分數較好：
 
 ```json
 {
@@ -174,11 +175,11 @@ When ranked by both age and rating, younger players and players who are more hig
 
 ## Rank features
 
-A rank features field type is similar to the rank feature field type, but it is more suitable for a sparse list of features. A rank features field can index numeric feature vectors that are later used to boost or decrease documents' relevance scores in `rank_feature` queries. 
+Rank features 欄位類型與 rank feature 欄位類型類似，但更適合稀疏的特徵清單。Rank features 欄位可將數值特徵向量編製索引，之後用於在 `rank_feature` 查詢中提升或降低文件的相關性分數。 
 
-### Example
+### 範例
 
-Create a mapping with a rank features field:
+建立含有 rank features 欄位的對應：
 
 ```json
 PUT testindex1
@@ -194,7 +195,7 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-To index a document with a rank features field, use a hashmap with string keys and positive float values:
+若要將含有 rank features 欄位的文件編製索引，請使用以字串為鍵、以正 float 值為值的 hashmap：
 
 ```json
 PUT testindex1/_doc/1
@@ -219,7 +220,7 @@ PUT testindex1/_doc/2
 ```
 {% include copy-curl.html %}
 
-Query the documents using a rank feature query:
+使用 rank feature 查詢來查詢文件：
 
 ```json
 GET testindex1/_search
@@ -233,7 +234,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The response is ranked by relevance score:
+回應會依相關性分數排名：
 
 ```json
 {
@@ -282,5 +283,5 @@ The response is ranked by relevance score:
 }
 ```
 
-Rank feature and rank features fields use top nine significant bits for precision, leading to about 0.4% relative error. Values are stored with a relative precision of 2<sup>−8</sup> = 0.00390625.
+Rank feature 與 rank features 欄位使用最高的九個有效位元來計算精確度，導致約 0.4% 的相對誤差。值的儲存相對精確度為 2<sup>−8</sup> = 0.00390625。
 {: .note }

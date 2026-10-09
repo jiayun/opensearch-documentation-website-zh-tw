@@ -1,34 +1,35 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: System indexes
+title: "系統索引"
 parent: Configuration
 nav_order: 60
 redirect_from:
  - /security-plugin/configuration/system-indices/
 ---
 
-# System indexes
+# 系統索引
 
-System indexes store state that is managed by OpenSearch or an OpenSearch plugin, such as security configuration, asynchronous task results, and plugin metadata. A system index usually starts with a period (`.`), but a period-prefixed index is not necessarily a system index. OpenSearch identifies system indexes from descriptors registered by OpenSearch and its plugins.
+系統索引儲存由 OpenSearch 或 OpenSearch 外掛程式管理的狀態，例如安全性組態、非同步工作結果，以及外掛程式中繼資料。系統索引通常以句點 (`.`) 開頭，但以句點為前綴的索引不一定是系統索引。OpenSearch 依據 OpenSearch 及其外掛程式註冊的描述器來識別系統索引。
 
-System indexes differ from regular indexes in the following ways:
+系統索引與一般索引的差異如下：
 
-- OpenSearch permits a registered system index to be automatically created even when `action.auto_create_index` is `false` or its pattern would otherwise exclude the index. Registering a system index does not create it immediately. The owning component typically creates it when the component first stores data.
-- Operations that target only system indexes use the `system_read` and `system_write` thread pools for supported read and write paths. This isolates internal component work from regular search and write traffic. A request that mixes system and regular indexes might use a regular thread pool.
-- System indexes are intended to be accessed through their owning component's API. When the Security plugin is enabled, it adds the access controls described in [Security plugin protection](#security-plugin-protection).
+- 即使 `action.auto_create_index` 為 `false`，或其模式原本會排除該索引，OpenSearch 仍允許已註冊的系統索引自動建立。註冊系統索引並不會立即建立它；擁有該索引的元件通常會在首次儲存資料時建立。
+- 僅針對系統索引的操作會使用 `system_read` 與 `system_write` 執行緒集區來處理支援的讀取與寫入路徑。這可將內部元件的工作與一般的搜尋及寫入流量隔離。混合系統索引與一般索引的請求可能會使用一般的執行緒集區。
+- 系統索引應透過其擁有元件的 API 存取。當 Security 外掛程式啟用時，它會加入 [Security 外掛程式保護](#security-plugin-protection) 所描述的存取控制。
 
-Do not modify a system index directly. Use the API provided by the component that owns the index. Direct changes can corrupt component state or become incompatible after an upgrade.
+請勿直接修改系統索引。請使用擁有該索引之元件提供的 API。直接變更可能會損毀元件狀態，或在升級後變得不相容。
 {: .warning}
 
-## System index patterns in the standard distribution
+## 標準發行版中的系統索引模式
 
-The following table lists the descriptors registered at startup by the components in the standard OpenSearch distribution. The owning component usually creates an index only when its feature first stores data, so an index does not need to exist to be registered as a system index. The exact set can change between OpenSearch versions and can also depend on plugin settings.
+下表列出標準 OpenSearch 發行版中各元件在啟動時註冊的描述器。擁有元件通常只在其功能首次儲存資料時才建立索引，因此索引不必存在也能註冊為系統索引。確切的集合可能隨 OpenSearch 版本而異，也可能取決於外掛程式設定。
 
-| Component | Registered index patterns |
+| 元件 | 已註冊的索引模式 |
 | :--- | :--- |
 | OpenSearch task management | `.tasks*` |
 | OpenSearch Dashboards | `.opensearch_dashboards`<br>`.opensearch_dashboards_*`<br>`.reporting-*`<br>`.apm-agent-configuration`<br>`.apm-custom-link` |
-| Security plugin | `.opendistro_security` (configurable)<br>`.opensearch_security_api_tokens`<br>`.opendistro-anomaly-detectors-sharing`<br>`.opensearch-forecasters-sharing`<br>`.plugins-ml-model-group-sharing`<br>`.plugins-flow-framework-templates-sharing`<br>`.plugins-flow-framework-state-sharing`<br>`.opendistro-reports-definitions-sharing`<br>`.opendistro-reports-instances-sharing` |
+| Security plugin | `.opendistro_security` (可設定)<br>`.opensearch_security_api_tokens`<br>`.opendistro-anomaly-detectors-sharing`<br>`.opensearch-forecasters-sharing`<br>`.plugins-ml-model-group-sharing`<br>`.plugins-flow-framework-templates-sharing`<br>`.plugins-flow-framework-state-sharing`<br>`.opendistro-reports-definitions-sharing`<br>`.opendistro-reports-instances-sharing` |
 | Alerting | `.opendistro-alerting-config`<br>`.opendistro-alerting-alert*`<br>`.opensearch-alerting-comments*` |
 | Anomaly Detection and Forecasting | `.opendistro-anomaly-detectors`<br>`.opendistro-anomaly-detector-jobs`<br>`.opendistro-anomaly-results*`<br>`.opendistro-anomaly-checkpoints`<br>`.opendistro-anomaly-detection-state`<br>`.opensearch-forecasters`<br>`.opensearch-forecast-checkpoints`<br>`.opensearch-forecast-state` |
 | Asynchronous Search | `.opendistro-asynchronous-search-response` |
@@ -47,41 +48,41 @@ The following table lists the descriptors registered at startup by the component
 | Security Analytics | `.opensearch-sap-correlation-alerts`<br>`.opensearch-sap-threat-intel` |
 | SQL | `.ql-datasources`<br>`.query_execution_request*` |
 
-An index created or managed by a plugin is not necessarily a system index. Some plugin-created indexes are regular indexes because their contents are intended to be searched by users. For example, the Forecasting plugin result indexes are regular indexes even though the plugin's configuration, checkpoint, and state indexes are system indexes. Similarly, when the Security plugin audit logs are stored in OpenSearch, their index or data stream is user searchable rather than registered as a system index.
+由外掛程式建立或管理的索引不一定是系統索引。有些外掛程式建立的索引是一般索引，因為其內容是設計給使用者搜尋的。例如，Forecasting 外掛程式的結果索引是一般索引，即使該外掛程式的組態、檢查點與狀態索引是系統索引。同樣地，當 Security 外掛程式的稽核記錄儲存在 OpenSearch 中時，其索引或資料串流可供使用者搜尋，而不會註冊為系統索引。
 
-## Security plugin protection
+## Security 外掛程式保護
 
-The Security plugin always protects its configuration index, `.opendistro_security`, by default. When system index protection is enabled, the plugin also protects indexes registered with OpenSearch and any legacy patterns configured in `plugins.security.system_indices.indices`.
+Security 外掛程式預設一律保護其組態索引 `.opendistro_security`。當系統索引保護啟用時，該外掛程式也會保護向 OpenSearch 註冊的索引，以及在 `plugins.security.system_indices.indices` 中設定的任何舊版模式。
 
-The demo security configuration enables system index protection:
+示範安全性組態會啟用系統索引保護：
 
 ```yml
 plugins.security.system_indices.enabled: true
 ```
 
-### Write protection
+### 寫入保護
 
-Regular index permissions, including broad permissions for `*`, do not grant write access to a protected system index. Writes are permitted only in one of the following contexts:
+一般索引權限 (包括 `*` 的廣泛權限) 不會授予受保護系統索引的寫入存取權。只有在下列其中一種情況下才允許寫入：
 
-- The plugin that registered the system index performs the operation using its plugin identity.
-- A super admin authenticates using an [admin certificate]({{site.url}}{{site.baseurl}}/security/configuration/tls/#configuring-admin-certificates).
-- System index permissions are enabled and a role explicitly grants `system:admin/system_index` for the index pattern. This option does not grant access to the Security plugin configuration index.
+- 註冊該系統索引的外掛程式以其外掛程式身分執行操作。
+- 超級管理員使用[管理員憑證]({{site.url}}{{site.baseurl}}/security/configuration/tls/#configuring-admin-certificates)進行驗證。
+- 已啟用系統索引權限，且某個角色明確授予該索引模式 `system:admin/system_index` 權限。此選項不會授予 Security 外掛程式組態索引的存取權。
 
-Use the owning plugin's API whenever possible, including when you authenticate as a super admin. For example, use the Security REST API or `securityadmin.sh` to change Security plugin configuration instead of indexing documents directly into `.opendistro_security`.
+請盡可能使用擁有該索引之外掛程式的 API，包括以超級管理員身分驗證時。例如，請使用 Security REST API 或 `securityadmin.sh` 來變更 Security 外掛程式組態，而不是將文件直接編製索引到 `.opendistro_security`。
 
-### Read protection and scrubbed results
+### 讀取保護與經過濾的結果
 
-Read protection does not produce the same response for every API. For a user without system index access, the Security plugin can replace the underlying index reader with an empty reader. As a result:
+讀取保護不會對每個 API 產生相同的回應。對於沒有系統索引存取權的使用者，Security 外掛程式可以將底層索引讀取器替換為空讀取器。因此：
 
-- A search can return `200 OK` with zero hits even though matching documents exist.
-- A get request can behave as though the document does not exist.
-- An operation that cannot be safely filtered can return `403 Forbidden`.
+- 搜尋可能會傳回 `200 OK` 且零個命中結果，即使存在符合的文件。
+- get 請求的行為可能如同文件不存在。
+- 無法安全篩選的操作可能會傳回 `403 Forbidden`。
 
-Do not interpret a successful response or an empty result as proof that the caller has access to a system index. When `plugins.security.system_indices.permission.enabled` is enabled, an explicit request from a user without the required system index permission is generally rejected instead of returning scrubbed search results.
+請勿將成功的回應或空結果解讀為呼叫者具有系統索引存取權的證明。當 `plugins.security.system_indices.permission.enabled` 啟用時，來自沒有必要系統索引權限之使用者的明確請求通常會被拒絕，而不是傳回經過濾的搜尋結果。
 
-The `.tasks*` family is an exception. The Security plugin permits reads so that authorized users can use the task APIs and read stored task results. OpenSearch still protects writes to the index.
+`.tasks*` 系列是例外。Security 外掛程式允許讀取，讓獲得授權的使用者可以使用工作 API 並讀取已儲存的工作結果。OpenSearch 仍會保護對該索引的寫入。
 
-To read the Security configuration index directly, authenticate with an admin certificate:
+若要直接讀取 Security 組態索引，請使用管理員憑證進行驗證：
 
 ```bash
 curl -k --cert ./kirk.pem --key ./kirk-key.pem \
@@ -89,13 +90,13 @@ curl -k --cert ./kirk.pem --key ./kirk-key.pem \
 ```
 {% include copy.html %}
 
-### Audit logging
+### 稽核記錄
 
-When Security audit logging is enabled, rejected attempts to access the Security plugin configuration index or another protected system index are recorded in the `OPENDISTRO_SECURITY_INDEX_ATTEMPT` audit category. This check is separate from ordinary index permissions and document-level or field-level security, so granting broad index permissions does not bypass the protection or its audit event. For information about audit configuration and excluded categories, see [Audit logs]({{site.url}}{{site.baseurl}}/security/audit-logs/index/).
+當 Security 稽核記錄啟用時，存取 Security 外掛程式組態索引或其他受保護系統索引而被拒絕的嘗試，會記錄在 `OPENDISTRO_SECURITY_INDEX_ATTEMPT` 稽核類別中。此檢查與一般索引權限以及文件層級或欄位層級安全性是分開的，因此授予廣泛的索引權限無法繞過此保護或其稽核事件。如需稽核組態與排除類別的資訊，請參閱[稽核記錄]({{site.url}}{{site.baseurl}}/security/audit-logs/index/)。
 
-## Configuring additional system indexes
+## 設定其他系統索引
 
-The `plugins.security.system_indices.indices` setting can protect additional index patterns, but it is deprecated. Existing deployments can continue to use it while migrating plugin-owned indexes to system index descriptors. Because it is a static node setting, every node must use the same value and must be restarted after a change:
+`plugins.security.system_indices.indices` 設定可以保護其他索引模式，但已不建議使用。現有部署可以在將外掛程式擁有的索引遷移至系統索引描述器時繼續使用它。由於它是靜態節點設定，每個節點都必須使用相同的值，並且在變更後必須重新啟動：
 
 ```yml
 plugins.security.system_indices.enabled: true
@@ -104,18 +105,18 @@ plugins.security.system_indices.indices:
 ```
 {% include copy.html %}
 
-For information about granting users explicit access, see [System index permissions]({{site.url}}{{site.baseurl}}/security/access-control/permissions/#system-index-permissions).
+如需授予使用者明確存取權的資訊，請參閱[系統索引權限]({{site.url}}{{site.baseurl}}/security/access-control/permissions/#system-index-permissions)。
 
-## System indexes for plugin developers
+## 供外掛程式開發人員使用的系統索引
 
-A plugin that owns internal indexes should register them with OpenSearch rather than requiring an administrator to add patterns to `plugins.security.system_indices.indices`. To register a plugin's system indexes with OpenSearch, follow these steps:
+擁有內部索引的外掛程式應向 OpenSearch 註冊這些索引，而不是要求管理員將模式加入 `plugins.security.system_indices.indices`。若要向 OpenSearch 註冊外掛程式的系統索引，請依照下列步驟：
 
-1. Implement `SystemIndexPlugin` and return a `SystemIndexDescriptor` for each index pattern. Patterns must start with `.` and must not overlap descriptors registered by another plugin.
-2. Expose plugin-specific actions and REST APIs for accessing the data instead of requiring callers to use the standard index APIs.
-3. Implement `IdentityAwarePlugin` and retain the assigned `PluginSubject`.
-4. Run internal client operations as the assigned subject. A `FilterClient` wrapper can apply the `PluginSubject` consistently and restore the caller's thread context before invoking an asynchronous listener.
+1. 實作 `SystemIndexPlugin`，並為每個索引模式傳回一個 `SystemIndexDescriptor`。模式必須以 `.` 開頭，且不得與其他外掛程式註冊的描述器重疊。
+2. 提供外掛程式專屬的動作與 REST API 來存取資料，而不是要求呼叫者使用標準索引 API。
+3. 實作 `IdentityAwarePlugin`，並保留所獲指派的 `PluginSubject`。
+4. 以獲指派的主體執行內部用戶端操作。`FilterClient` 包裝器可以一致地套用 `PluginSubject`，並在叫用非同步監聽器之前還原呼叫者的執行緒上下文。
 
-Calling `ThreadContext.stashContext()` by itself is not sufficient when the Security plugin is installed: stashing removes the caller's context but does not establish the plugin identity that authorizes access to the plugin's registered system indexes.
+當 Security 外掛程式已安裝時，僅呼叫 `ThreadContext.stashContext()` 並不足夠：暫存上下文會移除呼叫者的上下文，但不會建立授權存取該外掛程式所註冊系統索引所需的外掛程式身分。
 {: .important}
 
-For an implementation example, see the Security plugin's [sample `PluginClient`](https://github.com/opensearch-project/security/blob/main/sample-resource-plugin/src/main/java/org/opensearch/sample/utils/PluginClient.java) and [`SampleResourcePlugin`](https://github.com/opensearch-project/security/blob/main/sample-resource-plugin/src/main/java/org/opensearch/sample/SampleResourcePlugin.java).
+如需實作範例，請參閱 Security 外掛程式的 [`PluginClient` 範例](https://github.com/opensearch-project/security/blob/main/sample-resource-plugin/src/main/java/org/opensearch/sample/utils/PluginClient.java) 與 [`SampleResourcePlugin`](https://github.com/opensearch-project/security/blob/main/sample-resource-plugin/src/main/java/org/opensearch/sample/SampleResourcePlugin.java)。

@@ -1,67 +1,68 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Deploy on Kubernetes
+title: "在 Kubernetes 上部署"
 nav_order: 1
 grand_parent: Migration workflows
 parent: Choose your deployment
 permalink: /migration-assistant/migration-phases/deploy/deploying-to-kubernetes/
 ---
 
-# Deploy on Kubernetes
+# 在 Kubernetes 上部署
 
-Use this path when you already operate your own Kubernetes platform, you are evaluating Migration Assistant locally, or you are deploying outside AWS. You receive the same migration engine, workflow model, and console experience as EKS. The difference is that **you provide the surrounding platform pieces yourself**.
+當您已經自行維運 Kubernetes 平台、正在本機評估 Migration Assistant，或要在 AWS 以外部署時，請使用此路徑。您會獲得與 EKS 相同的遷移引擎、工作流程模型及主控台體驗。差別在於**周邊的平台元件必須由您自行提供**。
 
-If you are on AWS and want the recommended production path, use [Deploy on Amazon EKS]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-eks/).
+如果您在 AWS 上，且想要建議的正式環境路徑，請使用[在 Amazon EKS 上部署]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-eks/)。
 
-## Recommended use cases
+## 建議的使用案例
 
-This path is appropriate when:
+此路徑適用於下列情況：
 
-- You already run a self-managed Kubernetes platform and are comfortable owning cluster identity, storage, logging, and registry access.
-- You are testing locally with `minikube` or `kind`.
-- Your migration is not centered on AWS-managed services.
+- 您已經執行自行管理的 Kubernetes 平台，且能自在地負責叢集身分、儲存空間、記錄及登錄檔存取。
+- 您正在使用 `minikube` 或 `kind` 在本機測試。
+- 您的遷移並非以 AWS 受管服務為核心。
 
-## Your responsibilities
+## 您的責任
 
-On generic Kubernetes, Migration Assistant does **not** automatically provision or wire:
+在一般 Kubernetes 上，Migration Assistant **不會**自動佈建或連接：
 
-- AWS Identity and Access Management (IAM) pod identity for AWS Signature Version 4-authenticated source or target clusters.
-- Private image mirroring for isolated networks.
-- Default snapshot bucket and IAM helpers
-- CloudWatch dashboards and AWS-native logging integration.
-- AWS-tuned storage classes and auto scaling node pools.
+- 針對以 AWS Signature Version 4 驗證的來源或目標叢集，提供 AWS Identity and Access Management (IAM) pod 身分。
+- 針對隔離網路提供私有映像鏡像。
+- 預設快照桶及 IAM 協助程式
+- CloudWatch 儀表板及 AWS 原生記錄整合。
+- AWS 調校的儲存類別及自動擴展節點集區。
 
-The workflow engine is the same as the EKS path.
+工作流程引擎與 EKS 路徑相同。
 
-## Prerequisites
+## 先決條件
 
-Before you begin, make sure you have the following:
+開始之前，請確認您具備下列項目：
 
-- Kubernetes 1.24 or later
-- `kubectl` configured for your cluster
-- Helm 3 installed
-- Network connectivity from the cluster to the source and target clusters.
-- A StorageClass with dynamic provisioning
+- Kubernetes 1.24 或更新版本
+- 已為您的叢集設定 `kubectl`
+- 已安裝 Helm 3
+- 叢集可連線至來源與目標叢集的網路連線。
+- 具備動態佈建的 StorageClass
 
-## Local evaluation with Minikube
+## 使用 Minikube 進行本機評估
 
-For local testing, use the repository's helper script. This is the fastest way to experience the workflow model before preparing a production platform.
+若要進行本機測試，請使用儲存庫的協助程式指令碼。這是在準備正式環境平台之前，體驗工作流程模型最快的方式。
 
-### Prerequisites for local builds
+### 本機建置的先決條件
 
-Local builds require the following:
+本機建置需要下列項目：
 
-- JDK 11--17 (`localTesting.sh` builds container images from source)
+- JDK 11--17 (`localTesting.sh` 會從原始碼建置容器映像)
 - Docker
-- `minikube`, `kubectl`, and Helm 3
-- At least 8 vCPUs and 12 GB of RAM available to Docker.
+- `minikube`、`kubectl` 及 Helm 3
+- Docker 至少可使用 8 個 vCPU 及 12 GB 的記憶體。
 
-The Migration Assistant images are large (several GB combined). If Docker does not have enough memory, the script fails with unclear error messages.
+Migration Assistant 映像很大 (合計達數 GB)。如果 Docker 沒有足夠的記憶體，指令碼會失敗並顯示不清楚的錯誤訊息。
 {: .warning }
 
-### Step 1: Clone a release tag
+### 步驟 1：複製發行標籤
 
-Clone a release tag:
+複製發行標籤：
 
 ```bash
 git clone --branch 3.2.1 https://github.com/opensearch-project/opensearch-migrations
@@ -69,20 +70,20 @@ cd opensearch-migrations/deployment/k8s
 ```
 {% include copy.html %}
 
-### Step 2: Run the local testing script
+### 步驟 2：執行本機測試指令碼
 
-Run the local testing script:
+執行本機測試指令碼：
 
 ```bash
 ./localTesting.sh
 ```
 {% include copy.html %}
 
-The script starts Minikube, builds the container images, installs the Helm chart, and deploys test source and target clusters. Use this path for learning and validation, not as a production blueprint.
+指令碼會啟動 Minikube、建置容器映像、安裝 Helm chart，並部署測試來源與目標叢集。請將此路徑用於學習與驗證，而非做為正式環境的範本。
 
-### Verify the deployment
+### 驗證部署
 
-To verify that the pods are running and access the Migration Console, run the following commands:
+若要驗證 pod 正在執行並存取 Migration Console，請執行下列命令：
 
 ```bash
 kubectl get pods -n ma
@@ -90,26 +91,26 @@ kubectl exec -it migration-console-0 -n ma -- /bin/bash
 ```
 {% include copy.html %}
 
-## Production deployment on generic Kubernetes
+## 在一般 Kubernetes 上正式部署
 
-For a production deployment on generic Kubernetes, follow these steps.
+若要在一般 Kubernetes 上正式部署，請依照下列步驟進行。
 
-### Step 1: Choose an image source
+### 步驟 1：選擇映像來源
 
-Migration Assistant is published to Amazon Public ECR (`public.ecr.aws/opensearchproject/...`). The Helm chart's default `images.*.repository` values are short development names that cannot be pulled directly, so you have to either point the chart at the public images or mirror them into your own registry.
+Migration Assistant 發佈於 Amazon Public ECR (`public.ecr.aws/opensearchproject/...`)。Helm chart 的預設 `images.*.repository` 值是簡短的開發名稱，無法直接提取，因此您必須將 chart 指向公開映像，或將其鏡像到您自己的登錄檔。
 
-The following three options are available:
+下列三個選項可供使用：
 
-1. **Pull from Amazon Public ECR** (simplest): Use the `valuesEks.yaml` shipped in the chart, which contains the full `images.*.repository` and `images.*.tag` overrides for the public images.
-2. **Mirror the images into your own registry**: Use this for isolated environments. Then configure the chart to reference that registry by passing your own values file.
-3. **Use the EKS bootstrap path instead**: The bootstrap script automates mirroring. See [Deploy on Amazon EKS]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-eks/).
+1. **從 Amazon Public ECR 提取** (最簡單)：使用 chart 隨附的 `valuesEks.yaml`，其中包含公開映像的完整 `images.*.repository` 及 `images.*.tag` 覆寫。
+2. **將映像鏡像到您自己的登錄檔**：適用於隔離環境。接著透過傳入您自己的 values 檔案，設定 chart 以參照該登錄檔。
+3. **改用 EKS 啟動程序路徑**：啟動程序指令碼會自動執行鏡像。請參閱[在 Amazon EKS 上部署]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-eks/)。
 
-The exact image tags must match the Migration Assistant release you want to run. You can find released versions at [the GitHub releases page](https://github.com/opensearch-project/opensearch-migrations/releases).
+確切的映像標籤必須符合您要執行的 Migration Assistant 發行版本。您可以在 [GitHub 發行頁面](https://github.com/opensearch-project/opensearch-migrations/releases)找到已發行的版本。
 {: .note }
 
-### Step 2: Clone the release tag
+### 步驟 2：複製發行標籤
 
-Clone the release tag you want to install:
+複製您要安裝的發行標籤：
 
 ```bash
 git clone --branch <RELEASE_TAG> https://github.com/opensearch-project/opensearch-migrations
@@ -117,20 +118,20 @@ cd opensearch-migrations/deployment/k8s
 ```
 {% include copy.html %}
 
-For example, `--branch 3.2.1` pins to that release. Building or installing from `main` is not recommended for production use.
+例如，`--branch 3.2.1` 會固定至該發行版本。不建議從 `main` 建置或安裝以供正式環境使用。
 
-### Step 3: Create the namespace
+### 步驟 3：建立命名空間
 
-Create the Migration Assistant namespace:
+建立 Migration Assistant 命名空間：
 
 ```bash
 kubectl create namespace ma
 ```
 {% include copy.html %}
 
-### Step 4 (Optional): Create Kubernetes secrets 
+### 步驟 4 (選用)：建立 Kubernetes 密鑰 
 
-If your source or target requires basic authentication, store the credentials in Kubernetes secrets and reference those secret names in the workflow configuration. The process is the same on generic Kubernetes and EKS. To create a secret for the source and target, run the following commands:
+如果您的來源或目標需要基本驗證，請將認證儲存在 Kubernetes 密鑰中，並在工作流程組態中參照這些密鑰名稱。此程序在一般 Kubernetes 與 EKS 上相同。若要為來源與目標建立密鑰，請執行下列命令：
 
 ```bash
 kubectl create secret generic source-credentials \
@@ -148,9 +149,9 @@ kubectl create secret generic target-credentials \
 ```
 {% include copy.html %}
 
-### Step 5: Install the Helm chart
+### 步驟 5：安裝 Helm chart
 
-The chart is at `charts/aggregates/migrationAssistantWithArgo`. Use one of the values files shipped in the chart to provide the public image references:
+chart 位於 `charts/aggregates/migrationAssistantWithArgo`。請使用 chart 隨附的其中一個 values 檔案來提供公開映像參照：
 
 ```bash
 # For local Minikube/kind testing
@@ -165,60 +166,60 @@ helm install ma -n ma charts/aggregates/migrationAssistantWithArgo \
 ```
 {% include copy.html %}
 
-If your nodes cannot reach public registries, mirror the images into a private registry first and copy `valuesEks.yaml` into your own values file with the registry prefix updated.
+如果您的節點無法連線至公開登錄檔，請先將映像鏡像到私有登錄檔，並將 `valuesEks.yaml` 複製到您自己的 values 檔案，同時更新登錄檔前置字元。
 {: .note }
 
-### Step 6: Verify that the platform is running
+### 步驟 6：驗證平台正在執行
 
-Verify that the platform is running:
+驗證平台正在執行：
 
 ```bash
 kubectl get pods -n ma
 ```
 {% include copy.html %}
 
-You should see the Migration Console, the Argo workflow controller, and the Argo server in `Running` state.
+您應該會看到 Migration Console、Argo 工作流程控制器及 Argo 伺服器處於 `Running` 狀態。
 
-### Step 7: Access the Migration Console
+### 步驟 7：存取 Migration Console
 
-Access the Migration Console:
+存取 Migration Console：
 
 ```bash
 kubectl exec -it migration-console-0 -n ma -- /bin/bash
 ```
 {% include copy.html %}
 
-After accessing the console, the remaining steps are the same as for EKS: load the sample configuration, edit it, run a pilot migration, and then run the full workflow.
+存取主控台後，其餘步驟與 EKS 相同：載入範例組態、編輯該組態、執行試驗遷移，然後執行完整工作流程。
 
-## Authentication on generic Kubernetes
+## 一般 Kubernetes 上的驗證
 
-Migration Assistant supports the following authentication methods on generic Kubernetes.
+Migration Assistant 在一般 Kubernetes 上支援下列驗證方法。
 
-### Basic authentication
+### 基本驗證
 
-Basic authentication works the same way as EKS. Put the credentials in a Kubernetes secret and reference the secret name in `authConfig.basic.secretName`.
+基本驗證的運作方式與 EKS 相同。將認證放入 Kubernetes 密鑰，並在 `authConfig.basic.secretName` 中參照該密鑰名稱。
 
-### Use AWS Signature Version 4 for Amazon OpenSearch Service or Serverless NextGen
+### 針對 Amazon OpenSearch Service 或 Serverless NextGen 使用 AWS Signature Version 4
 
-AWS Signature Version 4 is supported by the workflow configuration, but **generic Kubernetes does not automatically create AWS pod identity for you**.
+工作流程組態支援 AWS Signature Version 4，但**一般 Kubernetes 不會自動為您建立 AWS pod 身分**。
 
-If your source or target uses Amazon OpenSearch Service or OpenSearch Serverless NextGen, you must make AWS credentials available to two sets of pods:
+如果您的來源或目標使用 Amazon OpenSearch Service 或 OpenSearch Serverless NextGen，您必須讓兩組 pod 都能取得 AWS 認證：
 
-- The Migration Console pod (`migration-console-0`), running under the `migration-console-access-role` service account, which runs CLI commands such as `console clusters connection-check`
-- The Argo workflow executor pods, running under the `argo-workflow-executor` service account, which perform the actual migration steps.
+- Migration Console pod (`migration-console-0`)，在 `migration-console-access-role` 服務帳戶下執行，會執行 `console clusters connection-check` 等 CLI 命令
+- Argo 工作流程執行器 pod，在 `argo-workflow-executor` 服務帳戶下執行，會執行實際的遷移步驟。
 
-On EKS, pod identity is configured automatically. On generic Kubernetes, you must configure credential injection yourself.
+在 EKS 上，pod 身分會自動設定。在一般 Kubernetes 上，您必須自行設定認證注入。
 
-The chart includes a developer-oriented Kyverno policy that can mount local AWS credentials for certain pods, but that is not a production identity strategy.
+chart 包含一個以開發人員為導向的 Kyverno 原則，可為特定 pod 掛載本機 AWS 認證，但這不是正式環境的身分策略。
 {: .warning }
 
-If you are on AWS and want AWS Signature Version 4 to work without configuring credential injection manually, use [Deploy on Amazon EKS]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-eks/).
+如果您在 AWS 上，且希望 AWS Signature Version 4 在無需手動設定認證注入的情況下運作，請使用[在 Amazon EKS 上部署]({{site.url}}{{site.baseurl}}/migration-assistant/migration-phases/deploy/deploying-to-eks/)。
 
-## Next steps
+## 後續步驟
 
-1. Open the Migration Console and run `console --version`.
-2. Load the sample workflow with `workflow configure sample --load`.
-3. Run `console clusters connection-check` before submitting a workflow.
-4. Start with [Using the Workflow CLI]({{site.url}}{{site.baseurl}}/migration-assistant/workflow-cli/getting-started/).
+1. 開啟 Migration Console 並執行 `console --version`。
+2. 使用 `workflow configure sample --load` 載入範例工作流程。
+3. 在提交工作流程之前執行 `console clusters connection-check`。
+4. 從[使用 Workflow CLI]({{site.url}}{{site.baseurl}}/migration-assistant/workflow-cli/getting-started/)開始。
 
 {% include migration-phase-navigation.html %}

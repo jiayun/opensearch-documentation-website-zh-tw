@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: head
 parent: Commands
@@ -8,36 +9,36 @@ nav_order: 23
 
 <!-- vale off -->
 
-# head command
+# head 命令
 
 <!-- vale on -->
 
-The `head` command returns the first N lines from a search result.
+`head` 命令會從搜尋結果傳回前 N 行。
 
-The `head` command is not rewritten to [query domain-specific language (DSL)]({{site.url}}{{site.baseurl}}/query-dsl/index/). It is only executed on the coordinating node.
+`head` 命令不會改寫為 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/index/)。它只會在協調節點上執行。
 {: .note}
 
-## Syntax
+## 語法
 
-The `head` command has the following syntax:
+`head` 命令的語法如下：
 
 ```sql
 head [<size>] [from <offset>]
 ```
 
-## Parameters
+## 參數
 
-The `head` command supports the following parameters.
+`head` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<size>` | Optional | The number of results to return. Must be an integer. Default is `10`. |
-| `<offset>` | Optional | The number of results to skip (used with the `from` keyword). Must be an integer. Default is `0`. |
+| `<size>` | 選用 | 要傳回的結果數。必須是整數。預設為 `10`。 |
+| `<offset>` | 選用 | 要略過的結果數 (與 `from` 關鍵字搭配使用)。必須是整數。預設為 `0`。 |
   
 
-## Example 1: Retrieving the first set of results using the default size 
+## 範例 1：使用預設大小擷取第一組結果
 
-The following query retrieves the most recent errors, limited to the default 10 results. This is a common first step when investigating an incident:
+下列查詢會擷取最新的錯誤，並限制為預設的 10 筆結果。這是調查事件時常見的第一步：
   
 ```sql
 source=otellogs
@@ -49,7 +50,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -69,9 +70,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Retrieving a specified number of results  
+## 範例 2：擷取指定數量的結果
 
-The following query returns the top 3 most critical log entries for a quick severity check:
+下列查詢會傳回前 3 筆最嚴重的記錄檔項目，以便快速檢查嚴重性：
   
 ```sql
 source=otellogs
@@ -83,7 +84,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -96,9 +97,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Retrieving the first N results after an offset M
+## 範例 3：在位移 M 之後擷取前 N 筆結果
 
-The following query skips the 2 most critical entries and returns the next 3, useful for paging through results after reviewing the top issues:
+下列查詢會略過 2 筆最嚴重的項目，並傳回接下來的 3 筆，適合在檢閱最嚴重的問題後分頁瀏覽結果：
   
 ```sql
 source=otellogs
@@ -110,7 +111,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 

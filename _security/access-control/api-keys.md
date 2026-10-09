@@ -1,51 +1,52 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: API keys
+title: "API 金鑰"
 parent: Access control
 nav_order: 126
 ---
 
-# API keys
-**Introduced 3.7**
+# API 金鑰
+**3.7 版新增**
 {: .label .label-purple }
 
-API keys allow security administrators to create long-lived, scoped tokens for programmatic access to OpenSearch. Each key carries its own permissions and authenticates using the `Authorization: ApiKey <token>` header, without requiring a username and password.
+API 金鑰可讓安全性管理員建立長期有效、具範圍限制的權杖，以程式設計方式存取 OpenSearch。每個金鑰都帶有自己的權限，並透過 `Authorization: ApiKey <token>` 標頭進行驗證，無需使用者名稱與密碼。
 
-API keys are useful in the following scenarios:
+API 金鑰適用於下列情境：
 
-- CI/CD pipelines that need to index data or run queries
-- Monitoring agents that poll cluster health
-- Automation scripts with least-privilege access
-- Service-to-service communication
+- 需要將資料編製索引或執行查詢的 CI/CD 管線
+- 輪詢叢集健康狀態的監控代理程式
+- 採用最低權限存取的自動化指令碼
+- 服務對服務的通訊
 
-The following steps describe the API key authentication process:
+下列步驟說明 API 金鑰的驗證流程：
 
-1. You create a key using the REST API or OpenSearch Dashboards, specifying permissions and a duration.
-2. The plain text token (prefixed with `os_`) is returned **once** and never stored.
-3. Clients include the token in the `Authorization: ApiKey <token>` header.
-4. The Security plugin hashes the incoming token using SHA-256, searches for it in an in-memory cache, and evaluates permissions.
+1. 您使用 REST API 或 OpenSearch Dashboards 建立金鑰，指定權限與有效期限。
+2. 純文字權杖（以 `os_` 為字首）只會回傳**一次**，且不會被儲存。
+3. 用戶端將權杖放入 `Authorization: ApiKey <token>` 標頭中。
+4. Security 外掛程式使用 SHA-256 對收到的權杖進行雜湊運算，在記憶體快取中搜尋該權杖，並評估其權限。
 
-You can list all keys and revoke them at any time. Revocation is immediate.
+您可以列出所有金鑰，並隨時撤銷它們。撤銷會立即生效。
 
-## Security considerations
+## 安全性考量
 
-The following security properties apply to API keys:
+下列安全性特性適用於 API 金鑰：
 
-- Tokens are generated using a cryptographically secure random number generator, making brute-force attacks not feasible.
-- Only the SHA-256 hash is stored. The plain-text token is never persisted.
-- Token creation and revocation are logged under the `API_TOKEN_WRITE` audit category. Authentication events show `token:<name>` as the user.
-- Revocation is broadcasted synchronously to all nodes. During a network partition, the revoke request fails and returns an error. Tokens expire automatically based on `duration_seconds`.
+- 權杖使用符合密碼學安全的亂數產生器產生，因此暴力破解攻擊不可行。
+- 只儲存 SHA-256 雜湊值。純文字權杖永遠不會被保存。
+- 權杖的建立與撤銷會記錄在 `API_TOKEN_WRITE` 稽核類別下。驗證事件會顯示 `token:<name>` 作為使用者。
+- 撤銷作業會同步廣播至所有節點。在網路分割期間，撤銷請求會失敗並回傳錯誤。權杖會根據 `duration_seconds` 自動到期。
 
-## Limitations
+## 限制
 
-- Only security administrators can create, list, and revoke API keys.
-- Requests authenticated with an API key cannot access system indexes (`.opensearch_security*`) or protected indexes.
-- Requests authenticated with an API key cannot call Security API endpoints.
-- The `indices:data/write/bulk` action is evaluated as a cluster-level permission. To index documents using an API key, include `indices:data/write/bulk` in the cluster permissions or use a cluster action group that includes it.
+- 只有安全性管理員可以建立、列出及撤銷 API 金鑰。
+- 以 API 金鑰驗證的請求無法存取系統索引（`.opensearch_security*`）或受保護的索引。
+- 以 API 金鑰驗證的請求無法呼叫 Security API 端點。
+- `indices:data/write/bulk` 動作會被視為叢集層級權限來評估。若要使用 API 金鑰將文件編製索引，請在叢集權限中加入 `indices:data/write/bulk`，或使用包含該權限的叢集動作群組。
 
-## Configuring API keys
+## 設定 API 金鑰
 
-Enable API keys in `config/opensearch-security/config.yml` under `config.dynamic`:
+在 `config/opensearch-security/config.yml` 的 `config.dynamic` 下啟用 API 金鑰：
 
 ```yaml
 config:
@@ -57,16 +58,16 @@ config:
 ```
 {% include copy.html %}
 
-After editing the file, apply the configuration:
+編輯檔案後，套用組態：
 
 ```bash
 bash tools/securityadmin.sh -cd config/opensearch-security/ -icl -nhnv
 ```
 {% include copy.html %}
 
-## Creating an API key
+## 建立 API 金鑰
 
-The following request creates an API key with cluster monitoring and bulk write permissions for indexes matching `logs-*`:
+下列請求會建立一個 API 金鑰，針對符合 `logs-*` 的索引授予叢集監控與大量寫入權限：
 
 ```bash
 curl -k -u admin:$PASSWORD -X POST https://localhost:9200/_plugins/_security/api/apitokens \
@@ -85,7 +86,7 @@ curl -k -u admin:$PASSWORD -X POST https://localhost:9200/_plugins/_security/api
 ```
 {% include copy.html %}
 
-The response includes the plain-text token:
+回應中包含純文字權杖：
 
 ```json
 {
@@ -94,12 +95,12 @@ The response includes the plain-text token:
 }
 ```
 
-Copy the token immediately. It is not stored and cannot be retrieved again.
+請立即複製該權杖。它不會被儲存，也無法再次取得。
 {: .warning }
 
-## Using an API key
+## 使用 API 金鑰
 
-To use an API key, include the token in the `Authorization` header:
+若要使用 API 金鑰，請將權杖放入 `Authorization` 標頭中：
 
 ```bash
 curl -k -H "Authorization: ApiKey os_VNsOYN6kDoIgyrD_sBX2jmEIdfcnK5h9zq4u8ddjn8U" \
@@ -107,20 +108,20 @@ curl -k -H "Authorization: ApiKey os_VNsOYN6kDoIgyrD_sBX2jmEIdfcnK5h9zq4u8ddjn8U
 ```
 {% include copy.html %}
 
-## Listing API keys
+## 列出 API 金鑰
 
-To list all available API keys, send the following request:
+若要列出所有可用的 API 金鑰，請傳送下列請求：
 
 ```bash
 curl -k -u admin:$PASSWORD https://localhost:9200/_plugins/_security/api/apitokens
 ```
 {% include copy.html %}
 
-The response includes all keys (active, expired, and revoked) with metadata such as `expires_at`, `revoked_at`, and `created_by`.
+回應中包含所有金鑰（作用中、已到期與已撤銷），以及 `expires_at`、`revoked_at` 和 `created_by` 等中繼資料。
 
-## Revoking an API key
+## 撤銷 API 金鑰
 
-To revoke an API key, send a `DELETE` request containing the key ID:
+若要撤銷 API 金鑰，請傳送包含金鑰 ID 的 `DELETE` 請求：
 
 ```bash
 curl -k -u admin:$PASSWORD -X DELETE \
@@ -128,13 +129,13 @@ curl -k -u admin:$PASSWORD -X DELETE \
 ```
 {% include copy.html %}
 
-Revocation is synchronous: the key is immediately unusable across all nodes.
+撤銷是同步的：金鑰會立即在所有節點上無法使用。
 
-## Managing API keys in OpenSearch Dashboards
+## 在 OpenSearch Dashboards 中管理 API 金鑰
 
-If the Security Dashboards plugin is installed, you can manage API keys from the **Security** > **API Keys** page. You can create keys with cluster and index permissions, select expiration presets, and revoke keys.
+若已安裝 Security Dashboards 外掛程式，您可以從 **Security** > **API Keys** 頁面管理 API 金鑰。您可以建立具有叢集與索引權限的金鑰、選取到期預設值，以及撤銷金鑰。
 
-To enable managing API keys in OpenSearch Dashboards, add the following line to `opensearch_dashboards.yml`:
+若要在 OpenSearch Dashboards 中啟用 API 金鑰管理，請在 `opensearch_dashboards.yml` 中加入下列一行：
 
 ```yaml
 opensearch_security.api_keys.enabled: true

@@ -1,20 +1,21 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: ISM Error Prevention API
+title: "ISM 錯誤預防 API"
 parent: ISM error prevention
 grand_parent: Index State Management
 nav_order: 20
 ---
 
-# ISM Error Prevention API
+# ISM 錯誤預防 API
 
-The ISM Error Prevention API allows you to enable Index State Management (ISM) error prevention and check the validation status and message.
+ISM 錯誤預防 API 可讓您啟用索引狀態管理 (ISM) 錯誤預防，並檢查驗證狀態與訊息。
 
-## Enable error prevention validation
+## 啟用錯誤預防驗證
 
-You can configure error prevention validation by setting the `plugins.index_state_management.action_validation.enabled` parameter.
+您可以透過設定 `plugins.index_state_management.action_validation.enabled` 參數來設定錯誤預防驗證。
 
-#### Example request
+#### 範例請求
 
 ```json
 PUT _cluster/settings
@@ -26,7 +27,7 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -44,18 +45,18 @@ PUT _cluster/settings
 }
 ```
 
-## Check validation status and message using the Explain API
+## 使用 Explain API 檢查驗證狀態與訊息
 
-Pass the `validate_action=true` path parameter in the Explain API URI to view the validation status and message.
+在 Explain API URI 中傳入 `validate_action=true` 路徑參數，即可檢視驗證狀態與訊息。
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_ism/explain/test-000001?validate_action=true
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -103,23 +104,23 @@ GET _plugins/_ism/explain/test-000001?validate_action=true
 }
 ```
 
-The validation status and message are returned only when you pass `validate_action=true`. Setting the parameter to `false` or omitting it returns neither.
+只有在傳入 `validate_action=true` 時，才會傳回驗證狀態與訊息。將該參數設為 `false` 或省略該參數，則兩者都不會傳回。
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_ism/explain/test-000001?validate_action=false
 ```
 {% include copy-curl.html %}
 
-Omitting the parameter has the same result:
+省略該參數會得到相同的結果：
 
 ```json
 GET _plugins/_ism/explain/test-000001
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {

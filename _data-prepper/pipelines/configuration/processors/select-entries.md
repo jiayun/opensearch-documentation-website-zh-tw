@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Select entries
 parent: Processors
@@ -6,24 +7,24 @@ grand_parent: Pipelines
 nav_order: 320
 ---
 
-# Select entries processor
+# Select entries 處理器
 
-The `select_entries` processor selects entries from an OpenSearch Data Prepper event.
-Only the selected entries remain in the processed event and while all other entries are removed. However, the processor does not remove any events from the Data Prepper pipeline.
+`select_entries` 處理器會從 OpenSearch Data Prepper 事件中選取項目。
+只有被選取的項目會保留在處理後的事件中，其餘所有項目都會被移除。不過，此處理器不會從 Data Prepper 管線中移除任何事件。
 
-## Configuration
+## 組態
 
-You can configure the `select_entries` processor using the following options.
+您可以使用下列選項來設定 `select_entries` 處理器。
 
 | Option | Required | Description |
 | :--- |:---------| :--- |
-| `include_keys` | No       | A list of keys to be selected from an event. |
-| `include_keys_regex` | No | A regular expression (regex) pattern that matches the keys to be selected from an event. |
-| `select_when` | No       | A [conditional expression]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/), such as `/some-key == "test"`, that is evaluated to determine whether the processor will be executed on the event. If the condition is not met, then the event continues through the pipeline unmodified, with all the original fields present. |
+| `include_keys` | No       | 要從事件中選取的鍵清單。 |
+| `include_keys_regex` | No | 符合要從事件中選取之鍵的規則運算式 (regex) 模式。 |
+| `select_when` | No       | 一個[條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，例如 `/some-key == "test"`，用於評估是否要在事件上執行此處理器。若條件不符合，事件將以未修改的狀態繼續通過管線，並保留所有原始欄位。 |
 
-## Usage
+## 用法
 
-First, create the following `pipeline.yaml` file:
+首先，建立下列 `pipeline.yaml` 檔案：
 
 ```yaml
 pipeline:
@@ -39,7 +40,7 @@ pipeline:
 {% include copy.html %}
 
 
-For example, when your source contains the following event record:
+例如，當您的來源包含下列事件記錄時：
 
 ```json
 {
@@ -50,15 +51,15 @@ For example, when your source contains the following event record:
 }
 ```
 
-After processing, only the keys listed in `include_keys` are retained in the event; all other keys are removed:
+處理後，只有 `include_keys` 中列出的鍵會保留在事件中；其餘所有鍵都會被移除：
 
 ```json
 {"key1": "value1", "key2": "value2"}
 ```
 
-### Selecting keys using a regex
+### 使用 regex 選取鍵
 
-The following example shows how to configure the `include_keys_regex` field in the `pipeline.yaml` file:
+下列範例示範如何在 `pipeline.yaml` 檔案中設定 `include_keys_regex` 欄位：
 
 ```yaml
 pipeline:
@@ -74,7 +75,7 @@ pipeline:
 ```
 {% include copy.html %}
 
-For example, when your source contains the following event record:
+例如，當您的來源包含下列事件記錄時：
 
 ```json
 {
@@ -89,17 +90,17 @@ For example, when your source contains the following event record:
 }
 ```
 
-The processor retains keys explicitly listed in `include_keys` and any keys matching the` include_keys_regex` pattern, removing all other keys from the event:
+處理器會保留 `include_keys` 中明確列出的鍵，以及符合 ` include_keys_regex` 模式的任何鍵，並從事件中移除其餘所有鍵：
 
 ```json
 {"key1": "value1", "key2": "value2", "random1": "another", "random2" : "set", "random3": "of", "random4": "values"}
 ```
 
-### Accessing nested fields
+### 存取巢狀欄位
 
-Use `/` to access nested fields.
+使用 `/` 來存取巢狀欄位。
 
-For example, when your source contains the following events with nested fields:
+例如，當您的來源包含下列含巢狀欄位的事件時：
 
 ```
 {
@@ -115,7 +116,7 @@ For example, when your source contains the following events with nested fields:
 }
 ```
 
-You can use the following syntax to select a subset of fields:
+您可以使用下列語法來選取欄位的子集：
 
 ```
 pipeline:

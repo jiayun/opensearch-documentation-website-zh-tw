@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: timechart
 parent: Commands
@@ -8,107 +9,107 @@ nav_order: 49
 
 <!-- vale off -->
 
-# timechart command
+# timechart 命令
 
 <!-- vale on -->
 
-The `timechart` command creates a time-based aggregation of data. It groups data by time intervals and, optionally, by a field, and then applies an aggregation function to each group. The results are returned in a non-pivoted format, with separate rows for each time-field combination.
+`timechart` 命令會建立以時間為基礎的資料彙總。它會依時間間隔將資料分組，並可選擇性地依欄位分組，然後對每個群組套用彙總函式。結果以非樞紐格式傳回，每個時間與欄位的組合各佔一列。
 
-## Syntax
+## 語法
 
-The `timechart` command has the following syntax:
+`timechart` 命令的語法如下：
 
 ```sql
 timechart [timefield=<field_name>] [span=<time_interval>] [limit=<number>] [useother=<boolean>] [usenull=<boolean>] [nullstr=<string>] <aggregation_function> [by <field>]
 ```
 
-## Parameters
+## 參數
 
-The `timechart` command supports the following parameters.
+`timechart` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `timefield` | Optional | The field to use for time-based grouping. Must be a timestamp field. Default is `@timestamp`. |
-| `span` | Optional | Specifies the time interval for grouping data. Default is `1m` (1 minute). For a complete list of supported time units, see [Time units](#time-units). |
-| `limit` | Optional | Specifies the maximum number of distinct values to display when using the `by` clause. Default is `10`. When there are more distinct values than the limit, additional values are grouped into an `OTHER` category if `useother` is not set to `false`. The "most distinct" values are determined by calculating the sum of aggregation values across all time intervals. Set to `0` to show all distinct values without any limit (when `limit=0`, `useother` is automatically set to `false`). Only applies when using the `by` clause. |
-| `useother` | Optional | Controls whether to create an `OTHER` category for values beyond the `limit`. When set to `false`, only the top N values (based on `limit`) are shown without an `OTHER` category. When set to `true`, values beyond the `limit` are grouped into an `OTHER` category. This parameter only applies when using the `by` clause and when there are more values than the `limit`. Default is `true`. |
-| `usenull` | Optional | Controls whether to group documents that have null values in the `by` field into a separate `NULL` category. When `usenull=false`, documents with null values in the `by` field are excluded from the results. When `usenull=true`, documents with null values in the `by` field are grouped into a separate `NULL` category. Default is `true`. |
-| `nullstr` | Optional | Specifies the category name for documents that have null values in the `by` field. This parameter only applies when `usenull` is `true`. Default is `"NULL"`. |
-| `<aggregation_function>` | Required | The aggregation function to apply to each time bucket. Only a single aggregation function is supported. Available functions: All aggregation functions supported by the [stats]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/stats/) command as well as the timechart-specific aggregations. |
-| `by` | Optional | Groups the results by the specified field in addition to time intervals. If not specified, the aggregation is performed across all documents in each time interval. |
+| `timefield` | 選用 | 用於依時間分組的欄位。必須是時間戳記欄位。預設為 `@timestamp`。 |
+| `span` | 選用 | 指定資料分組的時間間隔。預設為 `1m` (1 分鐘)。如需支援的時間單位完整清單，請參閱[時間單位](#time-units)。 |
+| `limit` | 選用 | 指定使用 `by` 子句時要顯示的不同值數量上限。預設為 `10`。當不同值超過上限時，若 `useother` 未設為 `false`，其餘值會被歸入一個 `OTHER` 類別。「最顯著」的不同值是透過計算所有時間間隔的彙總值總和來決定。設為 `0` 可不加限制地顯示所有不同值 (當 `limit=0` 時，`useother` 會自動設為 `false`)。僅在使用 `by` 子句時適用。 |
+| `useother` | 選用 | 控制是否為超出 `limit` 的值建立 `OTHER` 類別。設為 `false` 時，只會顯示前 N 個值 (數量由 `limit` 指定)，且不會有 `OTHER` 類別。設為 `true` 時，超出 `limit` 的值會被歸入一個 `OTHER` 類別。此參數僅在使用 `by` 子句且值數量超過 `limit` 時適用。預設為 `true`。 |
+| `usenull` | 選用 | 控制是否將 `by` 欄位為 null 值的文件歸入一個獨立的 `NULL` 類別。當 `usenull=false` 時，`by` 欄位為 null 值的文件會從結果中排除。當 `usenull=true` 時，`by` 欄位為 null 值的文件會被歸入一個獨立的 `NULL` 類別。預設為 `true`。 |
+| `nullstr` | 選用 | 指定 `by` 欄位為 null 值之文件的類別名稱。此參數僅在 `usenull` 為 `true` 時適用。預設為 `"NULL"`。 |
+| `<aggregation_function>` | 必要 | 要套用至每個時間桶的彙總函式。僅支援單一彙總函式。可用函式：[stats]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/stats/) 命令支援的所有彙總函式，以及 timechart 專屬的彙總。 |
+| `by` | 選用 | 除了時間間隔之外，再依指定欄位將結果分組。若未指定，則對每個時間間隔內的所有文件執行彙總。 |
 
-## Notes
+## 注意事項
 
-The following considerations apply when using the `timechart` command:
+使用 `timechart` 命令時，請注意下列事項：
 
-* The `timechart` command requires a timestamp field in the data. By default, it uses the `@timestamp` field, but you can specify a different field using the `timefield` parameter.  
-* Results are returned in an non-pivoted format with separate rows for each time-field combination that has data.  
-* Only combinations that contain data are included in the results---empty combinations are omitted rather than showing null or zero values.  
-* The top N values for the `limit` parameter are selected based on the sum of values across all time intervals for each distinct field value.  
-* When using the `limit` parameter, values beyond the limit are grouped into an `OTHER` category (unless `useother=false`).   
-* Documents with null values in the `by` field are treated as a separate category and appear as null in the results.  
+* `timechart` 命令需要資料中有時間戳記欄位。預設使用 `@timestamp` 欄位，但您可以使用 `timefield` 參數指定其他欄位。  
+* 結果以非樞紐格式傳回，每個有資料的時間與欄位組合各佔一列。  
+* 只有包含資料的組合才會納入結果---空白組合會被省略，而不會顯示 null 或零值。  
+* `limit` 參數的前 N 個值，是依每個不同欄位值在所有時間間隔的值總和來選取。  
+* 使用 `limit` 參數時，超出上限的值會被歸入一個 `OTHER` 類別 (除非 `useother=false`)。   
+* `by` 欄位為 null 值的文件會被視為一個獨立類別，並在結果中顯示為 null。  
 
-### Time units
+### 時間單位
 
-The following time units are available for the `span` parameter:
+`span` 參數可使用下列時間單位：
 
-* Milliseconds (`ms`)
-* Seconds (`s`)
-* Minutes (`m`, case sensitive)
-* Hours (`h`)
-* Days (`d`)
-* Weeks (`w`)
-* Months (`M`, case sensitive)
-* Quarters (`q`)
-* Years (`y`)
+* 毫秒 (`ms`)
+* 秒 (`s`)
+* 分鐘 (`m`，區分大小寫)
+* 小時 (`h`)
+* 天 (`d`)
+* 週 (`w`)
+* 月 (`M`，區分大小寫)
+* 季 (`q`)
+* 年 (`y`)
 
-## Timechart-specific aggregation functions
+## timechart 專屬彙總函式
 
-The `timechart` command provides specialized rate-based aggregation functions that calculate values per unit of time.
+`timechart` 命令提供專門計算每單位時間數值的速率型彙總函式。
 
 <!-- vale off -->
 ### per_second
 <!-- vale on -->
 
-**Usage**: `per_second(field)` calculates the per-second rate for a numeric field within each time bucket.
+**用法**：`per_second(field)` 計算每個時間桶內數值欄位的每秒速率。
 
-**Calculation formula**: `per_second(field) = sum(field) / span_in_seconds`, where `span_in_seconds` is the span interval in seconds.
+**計算公式**：`per_second(field) = sum(field) / span_in_seconds`，其中 `span_in_seconds` 為以秒為單位的間隔。
 
-**Return type**: DOUBLE
+**回傳類型**：DOUBLE
 
 <!-- vale off -->
 ### per_minute
 <!-- vale on -->
 
-**Usage**: `per_minute(field)` calculates the per-minute rate for a numeric field within each time bucket.
+**用法**：`per_minute(field)` 計算每個時間桶內數值欄位的每分鐘速率。
 
-**Calculation formula**: `per_minute(field) = sum(field) * 60 / span_in_seconds`, where `span_in_seconds` is the span interval in seconds.
+**計算公式**：`per_minute(field) = sum(field) * 60 / span_in_seconds`，其中 `span_in_seconds` 為以秒為單位的間隔。
 
-**Return type**: DOUBLE
+**回傳類型**：DOUBLE
 
 <!-- vale off -->
 ### per_hour
 <!-- vale on -->
 
-**Usage**: `per_hour(field)` calculates the per-hour rate for a numeric field within each time bucket.
+**用法**：`per_hour(field)` 計算每個時間桶內數值欄位的每小時速率。
 
-**Calculation formula**: `per_hour(field) = sum(field) * 3600 / span_in_seconds`, where `span_in_seconds` is the span interval in seconds.
+**計算公式**：`per_hour(field) = sum(field) * 3600 / span_in_seconds`，其中 `span_in_seconds` 為以秒為單位的間隔。
 
-**Return type**: DOUBLE
+**回傳類型**：DOUBLE
 
 <!-- vale off -->
 ### per_day
 <!-- vale on -->
 
-**Usage**: `per_day(field)` calculates the per-day rate for a numeric field within each time bucket.
+**用法**：`per_day(field)` 計算每個時間桶內數值欄位的每天速率。
 
-**Calculation formula**: `per_day(field) = sum(field) * 86400 / span_in_seconds`, where `span_in_seconds` is the span interval in seconds.
+**計算公式**：`per_day(field) = sum(field) * 86400 / span_in_seconds`，其中 `span_in_seconds` 為以秒為單位的間隔。
 
-**Return type**: DOUBLE
+**回傳類型**：DOUBLE
   
-## Example 1: Log volume per 5 minutes
+## 範例 1：每 5 分鐘的記錄事件數量
 
-The following query counts all log events in 5-minute windows to monitor overall system activity:
+下列查詢以 5 分鐘視窗統計所有記錄事件，以監控整體系統活動：
 
 ```sql
 source=otellogs
@@ -117,7 +118,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -131,9 +132,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Error rate over time by service
+## 範例 2：各服務隨時間變化的錯誤率
 
-The following query counts only error logs per service in 10-minute windows to track service health:
+下列查詢以 10 分鐘視窗統計各服務的錯誤記錄，以追蹤服務健康狀態：
 
 ```sql
 source=otellogs
@@ -143,7 +144,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -159,9 +160,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Top 3 services with the rest grouped as OTHER
+## 範例 3：前 3 大服務，其餘歸入 OTHER
 
-The following query limits the breakdown to the top 3 services by log volume, grouping remaining services into an OTHER category:
+下列查詢將明細限制為依記錄數量排名的前 3 大服務，並將其餘服務歸入 OTHER 類別：
 
 ```sql
 source=otellogs
@@ -170,7 +171,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -188,9 +189,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 4: Excluding the OTHER category
+## 範例 4：排除 OTHER 類別
 
-The following query shows only the top 2 services without an OTHER bucket by setting useother=false:
+下列查詢透過設定 useother=false，只顯示前 2 個服務，且不包含 OTHER 桶：
 
 ```sql
 source=otellogs
@@ -199,7 +200,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -211,9 +212,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 5: Per-second error rate by severity
+## 範例 5：依嚴重性計算每秒錯誤率
 
-The following query uses the per_second rate function to normalize error counts across different time windows, grouped by severity level:
+下列查詢使用 per_second 速率函式，將不同時間範圍內的錯誤計數標準化，並依嚴重性層級分組：
 
 ```sql
 source=otellogs
@@ -223,7 +224,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -242,9 +243,9 @@ The query returns the following results:
 
 <!-- vale on -->
   
-## Example 6: Distinct service count over time
+## 範例 6：隨時間變化的不重複服務計數
 
-The following query tracks how many unique services are actively logging per hour, useful for detecting service outages:
+下列查詢會追蹤每小時有多少個不重複的服務正在主動記錄，可用於偵測服務中斷：
 
 ```sql
 source=otellogs
@@ -253,7 +254,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -264,11 +265,11 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 7: Using limit=0 with count() to show all values  
+## 範例 7：搭配 count() 使用 limit=0 以顯示所有值  
 
-This example uses the `events_many_hosts` dataset, which contains 11 distinct hosts.
+此範例使用 `events_many_hosts` 資料集，其中包含 11 個不重複的主機。
 
-To display all distinct values without applying any limit, set `limit=0`:
+若要顯示所有不重複的值而不套用任何限制，請設定 `limit=0`：
   
 ```sql
 source=events_many_hosts
@@ -276,7 +277,7 @@ source=events_many_hosts
 ```
 {% include copy.html %}
   
-All 11 hosts are returned as separate rows without an `OTHER` category:
+所有 11 個主機會以個別資料列的形式傳回，且不含 `OTHER` 類別：
   
 <!-- vale off -->
 
@@ -296,9 +297,9 @@ All 11 hosts are returned as separate rows without an `OTHER` category:
 
 <!-- vale on -->
 
-## Example 8: Using useother=false with the count() function  
+## 範例 8：搭配 count() 函式使用 useother=false  
 
-The following query limits the results to the top 10 hosts without creating an `OTHER` category by setting `useother=false`:
+下列查詢透過設定 `useother=false`，將結果限制為前 10 個主機，且不建立 `OTHER` 類別：
   
 ```sql
 source=events_many_hosts
@@ -306,7 +307,7 @@ source=events_many_hosts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -328,11 +329,11 @@ The query returns the following results:
 
 <!-- vale off -->
 
-## Example 9: Using the limit parameter with the useother parameter and the avg() function  
+## 範例 9：搭配 useother 參數與 avg() 函式使用 limit 參數  
 
 <!-- vale on -->
 
-The following query displays the top 3 hosts based on average `cpu_usage` per hour. All remaining hosts are grouped into an `OTHER` category (by default, `useother=true`):
+下列查詢會依每小時的平均 `cpu_usage` 顯示前 3 個主機。其餘所有主機會分組為 `OTHER` 類別（預設為 `useother=true`）：
   
 ```sql
 source=events_many_hosts
@@ -340,7 +341,7 @@ source=events_many_hosts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -353,7 +354,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The following query displays the top 3 hosts based on average `cpu_usage` per hour without creating an `OTHER` category by setting `useother=false`:
+下列查詢會依每小時的平均 `cpu_usage` 顯示前 3 個主機，且透過設定 `useother=false` 不建立 `OTHER` 類別：
 
 ```sql
 source=events_many_hosts
@@ -361,7 +362,7 @@ source=events_many_hosts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -374,9 +375,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 10: Handling null values in the by field
+## 範例 10：處理 by 欄位中的 null 值
 
-The following query demonstrates how null values in the `by` field are treated as a separate category:
+下列查詢示範 `by` 欄位中的 null 值如何被視為個別類別：
 
 ```sql
 source=events_null
@@ -384,7 +385,7 @@ source=events_null
 ```
 {% include copy.html %}
   
-The `events_null` dataset contains one entry without a `host` value. Because the default settings are `usenull=true` and `nullstr="NULL"`, this entry is grouped into a separate `NULL` category:
+`events_null` 資料集包含一筆沒有 `host` 值的項目。由於預設設定為 `usenull=true` 與 `nullstr="NULL"`，此項目會分組為個別的 `NULL` 類別：
   
 <!-- vale off -->
 
@@ -398,9 +399,9 @@ The `events_null` dataset contains one entry without a `host` value. Because the
 <!-- vale on -->
   
 
-## Example 11: Calculating the per-second packet rate  
+## 範例 11：計算每秒封包速率  
 
-The following query calculates the per-second packet rate for network traffic data using the `per_second()` function:
+下列查詢使用 `per_second()` 函式，計算網路流量資料的每秒封包速率：
   
 ```sql
 source=events
@@ -408,7 +409,7 @@ source=events
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -422,9 +423,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Limitations
+## 限制
 
-The `timechart` command has the following limitations:
+`timechart` 命令有下列限制：
 
-* Only a single aggregation function is supported per `timechart` command.
-* The `bins` parameter and other `bin` options are not supported. To control the time intervals, use the `span` parameter.  
+* 每個 `timechart` 命令僅支援單一彙總函式。
+* 不支援 `bins` 參數與其他 `bin` 選項。若要控制時間間隔，請使用 `span` 參數。  

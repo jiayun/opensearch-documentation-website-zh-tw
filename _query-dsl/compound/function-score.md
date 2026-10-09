@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Function score
+title: "函式分數"
 parent: Compound queries
 nav_order: 60
 has_math: true
@@ -8,11 +9,11 @@ redirect_from:
   - /query-dsl/query-dsl/compound/function-score/
 ---
 
-# Function score query
+# Function score 查詢
 
-Use a `function_score` query if you need to alter the relevance scores of documents returned in the results. A `function_score` query defines a query and one or more functions that can be applied to all results or subsets of the results to recalculate their relevance scores. A `function_score` query changes how documents are ranked, not which documents are returned. If you omit the top-level `query` parameter, `function_score` runs on `match_all`, so every document in the index matches and receives a base query score of `1`. To limit which documents are returned, provide an explicit top-level `query`, wrap `function_score` in a [`bool` query](#returning-only-documents-that-match-a-function-filter), or specify a [`min_score`](#filtering-documents-that-dont-meet-a-threshold).
+如果您需要變更結果中所傳回文件的相關性分數，請使用 `function_score` 查詢。`function_score` 查詢會定義一個查詢以及一或多個函式，這些函式可套用至所有結果或結果的子集，以重新計算其相關性分數。`function_score` 查詢會變更文件的排名方式，而不是傳回哪些文件。如果您省略最上層的 `query` 參數，`function_score` 會在 `match_all` 上執行，因此索引中的每份文件都會相符，並取得 `1` 的基礎查詢分數。若要限制傳回哪些文件，請提供明確的最上層 `query`、將 `function_score` 包裝在 [`bool` 查詢](#returning-only-documents-that-match-a-function-filter) 中，或指定 [`min_score`](#filtering-documents-that-dont-meet-a-threshold)。
 
-The examples in this section use a `blogs` index containing the following documents:
+本節的範例使用包含下列文件的 `blogs` 索引：
 
 ```json
 POST _bulk
@@ -27,9 +28,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Using one scoring function
+## 使用單一評分函式
 
-The most basic example of a `function_score` query uses one function to recalculate the score. The following query uses a `weight` function to double all relevance scores. This function applies to all documents in the results because there is no top-level `query` parameter specified, so `function_score` runs on `match_all`:
+`function_score` 查詢最基本的範例使用一個函式來重新計算分數。下列查詢使用 `weight` 函式將所有相關性分數加倍。此函式會套用至結果中的所有文件，因為未指定最上層的 `query` 參數，所以 `function_score` 會在 `match_all` 上執行：
 
 ```json
 GET blogs/_search
@@ -43,9 +44,9 @@ GET blogs/_search
 ```
 {% include copy-curl.html %}
 
-## Limiting which documents are scored
+## 限制要評分的文件
 
-Use the top-level `query` parameter to define which documents `function_score` runs on. Only documents matching this query are returned. The following query limits results to blog posts matching `OpenSearch` and then doubles their relevance scores:
+使用最上層的 `query` 參數來定義 `function_score` 要在哪些文件上執行。只有符合此查詢的文件才會傳回。下列查詢將結果限制為符合 `OpenSearch` 的部落格文章，然後將其相關性分數加倍：
 
 ```json
 GET blogs/_search
@@ -64,14 +65,14 @@ GET blogs/_search
 ```
 {% include copy-curl.html %}
 
-## Applying a scoring function to a subset of documents
+## 將評分函式套用至文件子集
 
-To apply a scoring function to only a subset of the matching documents, specify a `filter` for a function in the `functions` array. The function contributes to the score only for documents matching its filter. Omitting a `filter` is equivalent to specifying `match_all`, so the function applies to every document. The relevance score produced by the filter query is not used in the calculation.
+若要只將評分函式套用至相符文件的子集，請在 `functions` 陣列中為函式指定 `filter`。此函式只會為符合其篩選條件的文件貢獻分數。省略 `filter` 等同於指定 `match_all`，因此函式會套用至每份文件。篩選查詢所產生的相關性分數不會用於計算中。
 
-A function `filter` determines which documents a function scores, not which documents are returned. Documents that match the top-level query (or the implicit `match_all`) but match none of the function filters are still returned.
+函式的 `filter` 會決定函式為哪些文件評分，而不是決定要傳回哪些文件。符合最上層查詢 (或隱含的 `match_all`) 但不符合任何函式篩選條件的文件仍會傳回。
 {: .important}
 
-The following query adds `0.5` to the score of blog posts with at least 1,000 views and `1` to the score of blog posts with at least 150 likes. Because no top-level `query` is specified, `function_score` runs on `match_all` and returns every document in the index:
+下列查詢會為檢視次數至少 1,000 次的部落格文章分數加上 `0.5`，並為按讚數至少 150 次的部落格文章分數加上 `1`。因為未指定最上層的 `query`，`function_score` 會在 `match_all` 上執行，並傳回索引中的每份文件：
 
 ```json
 GET blogs/_search
@@ -107,31 +108,31 @@ GET blogs/_search
 ```
 {% include copy-curl.html %}
 
-All four blog posts are returned:
+四篇部落格文章都會傳回：
 
-- Document 1 matches both filters and receives a score of `1.5` (the function factor `0.5 + 1` multiplied by the `match_all` query score of `1`).
-- Document 2 matches only the `views` filter and receives a score of `0.5`.
-- Documents 3 and 4 match neither filter and each receive a score of `1`. The implicit `match_all` query contributes `1`, and because no function matched, the function factor is also `1`:
+- 文件 1 同時符合兩個篩選條件，並取得 `1.5` 的分數 (函式因數 `0.5 + 1` 乘以 `match_all` 查詢分數 `1`)。
+- 文件 2 只符合 `views` 篩選條件，並取得 `0.5` 的分數。
+- 文件 3 和 4 都不符合任何篩選條件，且各取得 `1` 的分數。隱含的 `match_all` 查詢貢獻 `1`，而且因為沒有函式相符，函式因數也是 `1`：
 
 $$ \text{final score} = \text{query score} \times \text{function factor} = 1 \times 1 = 1 $$
 
-Documents that match no function filters can therefore rank above documents that do. In the preceding results, documents 3 and 4 score `1` while document 2 scores `0.5`. To confirm that this is the cause of an unexpected score, set `explain` to `true` and look for a `No function matched` entry in the explanation. To exclude these documents, see [Returning only documents that match a function filter](#returning-only-documents-that-match-a-function-filter).
+因此，不符合任何函式篩選條件的文件，排名可能高於符合篩選條件的文件。在上述結果中，文件 3 和 4 的分數為 `1`，而文件 2 的分數為 `0.5`。若要確認這是造成非預期分數的原因，請將 `explain` 設為 `true`，並在說明中尋找 `No function matched` 項目。若要排除這些文件，請參閱[只傳回符合函式篩選條件的文件](#returning-only-documents-that-match-a-function-filter)。
 
-## Supported functions
+## 支援的函式
 
-The `function_score` query type supports the following functions:
+`function_score` 查詢類型支援下列函式：
 
-- Built-in:
-    - `weight`: Multiplies a document score by a predefined boost factor.
-    - `random_score`: Provides a random score that is consistent for a single user but different between users.
-    - `field_value_factor`: Uses the value of the specified document field to recalculate the score. 
-    - Decay functions (`gauss`, `exp`, and `linear`): Recalculates the score using a specified decay function.
-- Custom:
-    - `script_score`: Uses a script to score documents.
+- 內建：
+    - `weight`：將文件分數乘以預先定義的 boost 因數。
+    - `random_score`：提供對單一使用者一致，但不同使用者之間不同的隨機分數。
+    - `field_value_factor`：使用指定文件欄位的值來重新計算分數。
+    - 衰減函式 (`gauss`、`exp` 和 `linear`)：使用指定的衰減函式重新計算分數。
+- 自訂：
+    - `script_score`：使用指令碼為文件評分。
 
-## The weight function
+## weight 函式
 
-When you use the `weight` function, the original relevance score is multiplied by the floating-point value of `weight`:
+當您使用 `weight` 函式時，原始相關性分數會乘以 `weight` 的浮點值：
 
 ```json
 GET blogs/_search
@@ -145,15 +146,15 @@ GET blogs/_search
 ```
 {% include copy-curl.html %}
 
-Unlike the `boost` value, the `weight` function is not normalized.
+與 `boost` 值不同，`weight` 函式不會經過正規化。
 
-When you specify `weight` without any other function, it acts as a function that returns the `weight` value. When you specify it alongside another function in the `functions` array, it multiplies the score that the other function produces.
+當您指定 `weight` 而未指定任何其他函式時，它會作為傳回 `weight` 值的函式。當您在 `functions` 陣列中將它與另一個函式一起指定時，它會乘以另一個函式產生的分數。
 
-## The random score function
+## 隨機分數函式
 
-The `random_score` function provides a random score that is consistent for a single user but different between users. The score is a floating-point number in the [0, 1) range. If you don't provide a `seed`, OpenSearch derives one from the current time and scores documents using internal Lucene document IDs. The resulting scores are not reproducible: they change between requests, and documents can also be renumbered after segment merges. To achieve consistency in generating random values, provide the `seed` and `field` parameters. The `field` must be a field for which `fielddata` is enabled (commonly, a numeric field). The score is calculated using the `seed`, the `fielddata` values for the `field`, and a salt calculated using the index name and shard ID. Because the index name and shard ID are the same for documents that reside in the same shard, documents with the same `field` values will be assigned the same score. To ensure different scores for all documents in the same shard, use a `field` that has unique values for all documents. One option is to use the `_seq_no` field. However, if you choose this field, the scores can change if the document is updated because of the corresponding `_seq_no` update.
+`random_score` 函式提供對單一使用者一致，但不同使用者之間不同的隨機分數。分數是 [0, 1) 範圍內的浮點數。如果您未提供 `seed`，OpenSearch 會從目前時間衍生一個值，並使用內部 Lucene 文件 ID 為文件評分。產生的分數無法重現：它們會在不同請求之間變更，而且文件在分段合併後也可能重新編號。若要在產生隨機值時保持一致，請提供 `seed` 和 `field` 參數。`field` 必須是已啟用 `fielddata` 的欄位 (通常是數值欄位)。分數會使用 `seed`、`field` 的 `fielddata` 值，以及使用索引名稱和分片 ID 計算出的 salt 來計算。因為位於相同分片的文件具有相同的索引名稱和分片 ID，所以具有相同 `field` 值的文件會被指派相同的分數。若要確保相同分片中的所有文件都有不同的分數，請使用對所有文件都具有唯一值的 `field`。其中一個選項是使用 `_seq_no` 欄位。不過，如果您選擇此欄位，文件更新時，對應的 `_seq_no` 也會變更，因此分數可能改變。
 
-The following query uses the `random_score` function with a `seed` and `field`:
+下列查詢使用 `random_score` 函式，並搭配 `seed` 和 `field`：
 
 ```json
 GET blogs/_search
@@ -170,37 +171,37 @@ GET blogs/_search
 ```
 {% include copy-curl.html %}
 
-Specifying a `seed` without a `field` is deprecated. In this case, OpenSearch uses the `_id` field, which requires loading its `fielddata` and consumes a large amount of memory. Always provide a `field` when you specify a `seed`.
+指定 `seed` 而未指定 `field` 已過時。在此情況下，OpenSearch 會使用 `_id` 欄位，這需要載入其 `fielddata` 並耗用大量記憶體。當您指定 `seed` 時，請一律提供 `field`。
 {: .warning}
 
-## The field value factor function
+## 欄位值因數函式
 
-The `field_value_factor` function recalculates the score using the value of the specified document field. If the field is a multi-valued field, only its first value is used for calculations, and the others are not considered. 
+`field_value_factor` 函式會使用指定文件欄位的值重新計算分數。如果該欄位是多值欄位，計算時只會使用其第一個值，其餘值不予考慮。
 
-The `field_value_factor` function supports the following options:
+`field_value_factor` 函式支援下列選項：
 
-- `field`: The field to use in score calculations.
+- `field`：用於分數計算的欄位。
 
-- `factor`: An optional factor by which the field value is multiplied. Default is 1.
+- `factor`：選用的因數，欄位值會乘上此因數。預設為 1。
 
-- `modifier`: One of the modifiers to apply to the field value $$v$$. The following table lists all supported modifiers.
+- `modifier`：套用至欄位值 $$v$$ 的修飾詞之一。下表列出所有支援的修飾詞。
     
-    Modifier | Formula | Description
+    修飾詞 | 公式 | 說明
     :--- | :--- | :---
-    `log`| $$\log v$$ | Take the base-10 logarithm of the value. Taking a logarithm of a non-positive number is an illegal operation and will result in an error. For values between 0 (exclusive) and 1 (inclusive), this function returns non-negative values that will result in an error. We recommend using `log1p` or `log2p` instead of `log`.
-    `log1p`| $$\log (1 + v)$$ | Take the base-10 logarithm of the sum of 1 and the value.
-    `log2p`| $$\log (2 + v)$$ | Take the base-10 logarithm of the sum of 2 and the value.
-    `ln`| $$\ln v$$ | Take the natural logarithm of the value. Taking a logarithm of a non-positive number is an illegal operation and will result in an error. For values between 0 (exclusive) and 1 (inclusive), this function returns non-negative values that will result in an error. We recommend using `ln1p` or `ln2p` instead of `ln`.
-    `ln1p`| $$\ln (1 + v)$$ | Take the natural logarithm of the sum of 1 and the value.
-    `ln2p`| $$\ln (2 + v)$$ | Take the natural logarithm of the sum of 2 and the value.
-    `reciprocal`| $$\frac {1}{v}$$ | Take the reciprocal of the value.
-    `square`| $$v^2$$ | Square the value.
-    `sqrt`| $$\sqrt v$$ | Take the square root of the value. Taking a square root of a negative number is an illegal operation and will result in an error. Ensure that $$v$$ is non-negative.
-    `none`| N/A | Do not apply any modifier.
+    `log`| $$\log v$$ | 取該值以 10 為底數的對數。對非正數取對數是不合法的運算，會導致錯誤。對於介於 0（不含）與 1（含）之間的值，此函式會傳回非負值，而這會導致錯誤。建議使用 `log1p` 或 `log2p` 而非 `log`。
+    `log1p`| $$\log (1 + v)$$ | 取 1 與該值之和以 10 為底數的對數。
+    `log2p`| $$\log (2 + v)$$ | 取 2 與該值之和以 10 為底數的對數。
+    `ln`| $$\ln v$$ | 取該值的自然對數。對非正數取對數是不合法的運算，會導致錯誤。對於介於 0（不含）與 1（含）之間的值，此函式會傳回非負值，而這會導致錯誤。建議使用 `ln1p` 或 `ln2p` 而非 `ln`。
+    `ln1p`| $$\ln (1 + v)$$ | 取 1 與該值之和的自然對數。
+    `ln2p`| $$\ln (2 + v)$$ | 取 2 與該值之和的自然對數。
+    `reciprocal`| $$\frac {1}{v}$$ | 取該值的倒數。
+    `square`| $$v^2$$ | 將該值平方。
+    `sqrt`| $$\sqrt v$$ | 取該值的平方根。對負數取平方根是不合法的運算，會導致錯誤。請確保 $$v$$ 為非負值。
+    `none`| N/A | 不套用任何修飾詞。
 
-- `missing`: The value to use if the field is missing from the document. The `factor` and `modifier` are applied to this value instead of the missing field value.
+- `missing`：當文件中缺少該欄位時所使用的值。`factor` 和 `modifier` 會套用至此值，而非缺少的欄位值。
 
-For example, the following query uses the `field_value_factor` function to give more weight to the `views` field:
+例如，下列查詢使用 `field_value_factor` 函式，為 `views` 欄位賦予更高的權重：
 
 ```json
 GET blogs/_search
@@ -219,18 +220,18 @@ GET blogs/_search
 ```
 {% include copy-curl.html %}
 
-The preceding query calculates the relevance score using the following formula:
+上述查詢使用下列公式計算相關性分數：
 
 $$ \text{score} = \text{original score} \cdot \log(1 + 1.5 \cdot \text{views}) $$
 
-## The script score function
+## 指令碼分數函式
 
-Using the `script_score` function, you can write a custom script for scoring documents, optionally incorporating values of fields in the document. The original relevance score is accessible in the `_score` variable. 
+使用 `script_score` 函式，您可以撰寫自訂指令碼來為文件評分，並可選擇性地納入文件中欄位的值。原始相關性分數可透過 `_score` 變數存取。
 
-The calculated score cannot be negative. A negative score will result in an error. Document scores have positive 32-bit floating-point values. A score with greater precision is converted to the nearest 32-bit floating-point number.
+計算出的分數不可為負值。負分數會導致錯誤。文件分數為正數的 32 位元浮點數值。精確度較高的分數會轉換為最接近的 32 位元浮點數。
 {: .important}
 
-For example, the following query uses the `script_score` function to calculate the score based on the original score and the number of views and likes for the blog post. To give the number of views and likes a lesser weight, this formula takes the logarithm of the sum of views and likes. To make the logarithm valid even if the number of views and likes is `0`, `1` is added to their sum:
+例如，下列查詢使用 `script_score` 函式，根據原始分數以及網誌文章的觀看次數和按讚數來計算分數。為了降低觀看次數和按讚數的權重，此公式取兩者之和的對數。為了在觀看次數和按讚數為 `0` 時對數仍然有效，會在其總和加上 `1`：
 
 ```json
 GET blogs/_search
@@ -247,7 +248,7 @@ GET blogs/_search
 ```
 {% include copy-curl.html %}
 
-Scripts are compiled and cached for faster performance. Thus, it's preferable to reuse the same script and pass any parameters that the script needs:
+指令碼會被編譯並快取以提升效能。因此，建議重複使用相同的指令碼，並傳遞指令碼所需的任何參數：
 
 ```json
 GET blogs/_search
@@ -271,22 +272,22 @@ GET blogs/_search
 ```
 {% include copy-curl.html %}
 
-By default, the query score is multiplied by the script result. To use the script result as the final score, set `boost_mode` to `replace`. For more information, see [Combining the score for all functions with the query score](#combining-the-score-for-all-functions-with-the-query-score).
+預設情況下，查詢分數會乘以指令碼結果。若要將指令碼結果作為最終分數，請將 `boost_mode` 設為 `replace`。如需更多資訊，請參閱[將所有函式的分數與查詢分數合併](#combining-the-score-for-all-functions-with-the-query-score)。
 
-## Decay functions
+## 衰減函式
 
-For many applications, you need to sort the results based on proximity or recency. You can do this with decay functions. Decay functions calculate a document score using one of three decay curves: Gaussian, exponential, or linear. 
+對許多應用程式而言，您需要根據鄰近度或時間新近度來排序結果。您可以使用衰減函式來達成。衰減函式使用三種衰減曲線之一來計算文件分數：高斯、指數或線性。
 
-Decay functions operate only on [numeric]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/), [date]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/dates/), and [geopoint]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-point/) fields.
+衰減函式僅適用於 [numeric]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/)、[date]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/dates/) 和 [geopoint]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-point/) 欄位。
 {: .important}
 
-Decay functions calculate scores based on the `origin`, `scale`, `offset`, and `decay`, as shown in the following figure.
+衰減函式根據 `origin`、`scale`、`offset` 和 `decay` 計算分數，如下圖所示。
 
-![Decay function curves]({{site.url}}{{site.baseurl}}/images/decay-functions.png){: width="600" }
+![衰減函式曲線]({{site.url}}{{site.baseurl}}/images/decay-functions.png){: width="600" }
 
-### Example: Geopoint fields
+### 範例：Geopoint 欄位
 
-Suppose you're looking for a hotel near your office. You create a `hotels` index that maps the `location` field as a geopoint:
+假設您正在尋找辦公室附近的飯店。您建立一個 `hotels` 索引，將 `location` 欄位對應為 geopoint：
 
 ```json
 PUT hotels
@@ -302,7 +303,7 @@ PUT hotels
 ```
 {% include copy-curl.html %}
 
-You index two documents that correspond to nearby hotels:
+您將兩份對應至附近飯店的文件編製索引：
 
 ```json
 PUT hotels/_doc/1
@@ -328,9 +329,9 @@ PUT hotels/_doc/2
 ```
 {% include copy-curl.html %}
 
-The `origin` defines the point from which the distance is calculated (the office location). The `offset` specifies the distance from the origin within which documents are given a full score of 1. You can give hotels within 200 ft of the office the same highest score. The `scale` defines the decay rate of the graph, and the `decay` defines the score to assign to a document at the `scale` + `offset` distance from the origin. Once you are outside the 200 ft radius, you may decide that if you have to walk another 300 ft to get to a hotel (`scale` = 300 ft), you'll assign it one quarter of the original score (`decay` = 0.25).
+`origin` 定義計算距離的起點（辦公室位置）。`offset` 指定距離原點多遠以內的文件可獲得滿分 1。您可以讓辦公室 200 英呎內的飯店獲得相同的最高分。`scale` 定義圖形的衰減率，`decay` 定義在距原點 `scale` + `offset` 距離處文件所獲得的分數。一旦超出 200 英呎半徑，您可以決定如果還需再走 300 英呎才能抵達某間飯店（`scale` = 300 英呎），就給予它原始分數的四分之一（`decay` = 0.25）。
 
-You create the following query with the `origin` at (74.00, 40.71):
+您建立下列查詢，將 `origin` 設在 (74.00, 40.71)：
 
 ```json
 GET hotels/_search
@@ -355,11 +356,11 @@ GET hotels/_search
 ```
 {% include copy-curl.html %}
 
-The response contains both hotels. The hotel within 200 ft of the office has a score of 1, and the hotel outside of the 500 ft radius has a score 0.20, which is less than the `decay` parameter 0.25:
+回應包含兩間飯店。距辦公室 200 英呎內的飯店分數為 1，而位於 500 英呎半徑之外的飯店分數為 0.20，低於 `decay` 參數的 0.25：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -410,23 +411,23 @@ The response contains both hotels. The hotel within 200 ft of the office has a s
 ```
 </details>
 
-### Parameters
+### 參數
 
-The following table lists all parameters supported by the `gauss`, `exp`, and `linear` functions.
+下表列出 `gauss`、`exp` 與 `linear` 函式支援的所有參數。
 
-Parameter | Description
+參數 | 說明
 :--- | :---
-`origin` | The point from which to calculate the distance. Must be provided as a number for numeric fields, a date for date fields, or a geopoint for geopoint fields. Required for geopoint and numeric fields. Optional for date fields (defaults to `now`). For date fields, date math is supported (for example, `now-2d`).
-`offset` | Defines the distance from the origin within which documents are given a score of 1. Optional. Default is 0.
-`scale` | Documents at the distance of `scale` + `offset` from the `origin` are assigned a score of `decay`. Required. <br>For numeric fields, `scale` can be any number. <br>For date fields, `scale` can be defined as a number with [units]({{site.url}}{{site.baseurl}}/api-reference/units/) (`5h`, `1d`). If units are not provided, `scale` defaults to milliseconds. <br>For geopoint fields, `scale` can be defined as a number with [units]({{site.url}}{{site.baseurl}}/api-reference/units/) (`1mi`, `5km`). If units are not provided, `scale` defaults to meters.
-`decay` | Defines the score of a document at the distance of `scale` + `offset` from the `origin`. Optional. Default is 0.5.
+`origin` | 計算距離的起點。數值欄位必須提供數字，日期欄位必須提供日期，地理位置欄位必須提供 geopoint。地理位置欄位與數值欄位為必要。日期欄位為選用（預設為 `now`）。日期欄位支援日期運算（例如 `now-2d`）。
+`offset` | 定義與原點的距離在此範圍內的文件可獲得 1 分。選用。預設為 0。
+`scale` | 與 `origin` 距離為 `scale` + `offset` 的文件會被給予 `decay` 分。必要。<br>對數值欄位而言，`scale` 可以是任何數字。<br>對日期欄位而言，`scale` 可以定義為帶有[單位]({{site.url}}{{site.baseurl}}/api-reference/units/)的數字（`5h`、`1d`）。若未提供單位，`scale` 預設為毫秒。<br>對地理位置欄位而言，`scale` 可以定義為帶有[單位]({{site.url}}{{site.baseurl}}/api-reference/units/)的數字（`1mi`、`5km`）。若未提供單位，`scale` 預設為公尺。
+`decay` | 定義與 `origin` 距離為 `scale` + `offset` 的文件分數。選用。預設為 0.5。
 
-For fields that are missing from the document, decay functions return a score of 1.
+若文件缺少用於衰減計算的欄位，衰減函式會回傳 1 分。
 {: .note}
 
-### Example: Numeric fields
+### 範例：數值欄位
 
-The following query uses the exponential decay function to prioritize blog posts by the number of comments:
+下列查詢使用指數衰減函式，依留言數為網誌文章排定優先順序：
 
 ```json
 GET blogs/_search
@@ -450,11 +451,11 @@ GET blogs/_search
 ```
 {% include copy-curl.html %}
 
-The first two blog posts in the results have a score of 1 because one is at the origin (20) and the other is at a distance of 16, which is within the offset (the range within which documents receive a full score is calculated as 20 $$\pm$$ 5 and is [15, 25]). The third blog post is at a distance of `scale` + `offset` from the `origin` (20 &minus; (5 + 10) = 15), so it's given the default `decay` score (0.5):
+結果中的前兩篇網誌文章分數為 1，因為一篇位於原點 (20)，另一篇的距離為 16，落在偏移量範圍內（文件可獲得滿分的範圍計算為 20 $$\pm$$ 5，即 [15, 25]）。第三篇網誌文章與 `origin` 的距離為 `scale` + `offset`（20 &minus; (5 + 10) = 15），因此被給予預設的 `decay` 分數（0.5）：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -529,9 +530,9 @@ The first two blog posts in the results have a score of 1 because one is at the 
 ```
 </details>
 
-### Example: Date fields
+### 範例：日期欄位
 
-The following query uses the Gaussian decay function to prioritize blog posts published around 04/24/2022:
+下列查詢使用高斯衰減函式，為發表於 2022/04/24 前後的網誌文章排定優先順序：
 
 ```json
 GET blogs/_search
@@ -556,11 +557,11 @@ GET blogs/_search
 ```
 {% include copy-curl.html %}
 
-In the results, the first blog post was published within one day of 04/24/2022, so it has the highest score of 1. The second blog post was published on 04/17/2022, which is within `offset` + `scale` (`1d` + `6d`) and therefore has a score equal to `decay` (0.25). The third blog post was published more than 7 days after 04/24/2022, so it has a lower score. The last blog post has a score of 0 because it was published years ago:
+在結果中，第一篇網誌文章發表於 2022/04/24 前後一天內，因此獲得最高分 1。第二篇網誌文章發表於 2022/04/17，落在 `offset` + `scale`（`1d` + `6d`）範圍內，因此分數等於 `decay`（0.25）。第三篇網誌文章發表於 2022/04/24 超過 7 天之後，因此分數較低。最後一篇網誌文章的分數為 0，因為它是多年前發表的：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -635,16 +636,16 @@ In the results, the first blog post was published within one day of 04/24/2022, 
 ```
 </details>
 
-### Multi-valued fields
+### 多值欄位
 
-If the field that you specify for decay calculation contains multiple values, you can use the `multi_value_mode` parameter. This parameter specifies one of the following functions to determine the field value that is used for calculations:
+如果您為衰減計算指定的欄位包含多個值，可以使用 `multi_value_mode` 參數。此參數指定下列其中一種函式，以決定用於計算的欄位值：
 
-- `min`: (Default) The minimum distance from the `origin`. 
-- `max`: The maximum distance from the `origin`.
-- `avg`: The average distance from the `origin`.
-- `sum`: The sum of all distances from the `origin`.
+- `min`：（預設）與 `origin` 的最小距離。
+- `max`：與 `origin` 的最大距離。
+- `avg`：與 `origin` 的平均距離。
+- `sum`：與 `origin` 所有距離的總和。
 
-For example, you index a document with an array of distances:
+例如，您將一份包含距離陣列的文件編製索引：
 
 ```json
 PUT testindex/_doc/1
@@ -653,7 +654,7 @@ PUT testindex/_doc/1
 }
 ```
 
-The following query uses the `max` distance of a multi-valued field `distances` to calculate decay:
+下列查詢使用多值欄位 `distances` 的 `max` 距離來計算衰減：
 
 ```json
 GET testindex/_search
@@ -678,7 +679,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-The document is given a score of 1 because the maximum distance from the origin (1) is within the `offset` from the `origin`:
+該文件被給予 1 分，因為與原點的最大距離 (1) 落在與 `origin` 的 `offset` 範圍內：
 
 ```json
 {
@@ -716,87 +717,87 @@ The document is given a score of 1 because the maximum distance from the origin 
 }
 ```
 
-### Decay curve calculation
+### 衰減曲線計算
 
-The following formulas define score computation for various decay functions ($$v$$ denotes the document field value).
+下列公式定義各種衰減函式的分數計算方式（$$v$$ 代表文件欄位值）。
 
-**Gaussian**
+**高斯**
     
 $$ \text{score} = \exp \left(-\frac {(\max(0, \lvert v - \text{origin} \rvert - \text{offset}))^2} {2\sigma^2} \right), $$
 
-where $$\sigma$$ is calculated to ensure that the score is equal to `decay` at the distance `offset` + `scale` from the `origin`:
+其中 $$\sigma$$ 的計算方式可確保在距離 `origin` 為 `offset` + `scale` 時，分數等於 `decay`：
 
 $$ \sigma^2 = - \frac {\text{scale}^2} {2 \ln(\text{decay})} $$
 
-**Exponential**
+**指數**
 
 $$ \text{score} = \exp (\lambda \cdot \max(0, \lvert v - \text{origin} \rvert - \text{offset})),$$
 
-where $$\lambda$$ is calculated to ensure that the score is equal to `decay` at the distance `offset` + `scale` from the `origin`:
+其中 $$\lambda$$ 的計算方式可確保在距離 `origin` 為 `offset` + `scale` 時，分數等於 `decay`：
 
 $$\lambda = \frac {\ln(\text{decay})} {\text{scale}} $$
 
-**Linear**
+**線性**
 
 $$ \text{score} = \max \left(\frac {s - \max(0, \lvert v - \text{origin} \rvert - \text{offset})} {s} \right), $$
 
-where $$s$$ is calculated to ensure that the score is equal to `decay` at the distance `offset` + `scale` from the `origin`:
+其中 $$s$$ 的計算方式可確保在距離 `origin` 為 `offset` + `scale` 時，分數等於 `decay`：
 
 $$s = \frac {\text{scale}} {1 - \text{decay}}$$
 
-## Using multiple scoring functions
+## 使用多個評分函式
 
-You can specify multiple scoring functions in a function score query by listing them in the `functions` array. 
+您可以在函式分數查詢中，透過 `functions` 陣列列出多個評分函式，藉此指定多個評分函式。
 
-### Combining scores from multiple functions
+### 合併多個函式的分數
 
-Different functions can use different scales for scoring. For example, the `random_score` function provides a score between 0 and 1, but the `field_value_factor` does not have a specific scale for the score. Additionally, you may want to weigh scores given by different functions differently. To adjust scores for different functions, you can specify the `weight` parameter for each function. The score given by each function is then multiplied by the `weight` to produce the final score for that function. The `weight` parameter must be provided in the `functions` array in order to differentiate it from the [weight function](#the-weight-function), 
+不同函式可以使用不同的分數刻度。例如，`random_score` 函式提供的分數介於 0 與 1 之間，但 `field_value_factor` 沒有特定的分數刻度。此外，您可能想為不同函式給予的分數設定不同的權重。若要調整不同函式的分數，您可以為每個函式指定 `weight` 參數。接著，每個函式給予的分數會乘以 `weight`，以產生該函式的最終分數。必須在 `functions` 陣列中提供 `weight` 參數，才能與 [weight 函式](#the-weight-function) 區分。
 
-The scores given by each function are combined using the `score_mode` parameter, which takes one of the following values:
+每個函式給予的分數會使用 `score_mode` 參數合併，該參數可為下列其中一個值：
 
-- `multiply`: (Default) Scores are multiplied.
-- `sum`: Scores are added.
-- `avg`: Scores are averaged. If `weight` is specified, this is a [weighted average](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean). For example, if the first function with the weight $$1$$ returns the score $$10$$, and the second function with the weight $$4$$ returns the score $$20$$, the average is calculated as $$\frac {10 \cdot 1 + 20 \cdot 4}{1 + 4} = 18$$.
-- `first`: The score from the first function that has a matching filter is taken.
-- `max`: The maximum score is taken.
-- `min`: The minimum score is taken.
+- `multiply`：（預設）分數相乘。
+- `sum`：分數相加。
+- `avg`：分數取平均值。若有指定 `weight`，則為[加權平均](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean)。例如，若第一個權重為 $$1$$ 的函式傳回分數 $$10$$，而第二個權重為 $$4$$ 的函式傳回分數 $$20$$，則平均值計算為 $$\frac {10 \cdot 1 + 20 \cdot 4}{1 + 4} = 18$$。
+- `first`：取第一個具有相符篩選條件的函式所產生的分數。
+- `max`：取最大分數。
+- `min`：取最小分數。
 
-If a document matches none of the function filters, the function score remains at the neutral value `1` for all `score_mode` values.
+若文件不符合任何函式篩選條件，則函式分數在所有 `score_mode` 值下都會維持在中性值 `1`。
 
-### Specifying an upper limit for a score
+### 指定分數上限
 
-You can specify an upper limit for a function score in the `max_boost` parameter. The default upper limit is the maximum magnitude for a `float` value: (2 &minus; 2<sup>&minus;23</sup>) &middot; 2<sup>127</sup>.
+您可以在 `max_boost` 參數中指定函式分數的上限。預設上限為 `float` 值的最大量值：(2 &minus; 2<sup>&minus;23</sup>) &middot; 2<sup>127</sup>。
 
-### Boosting the whole query
+### 提升整筆查詢
 
-Use the top-level `boost` parameter to boost the `function_score` query as a whole. The `boost` value multiplies the query score, including the score of the implicit `match_all` query when no top-level `query` is specified. Default is `1`.
+使用最上層的 `boost` 參數來提升整筆 `function_score` 查詢。`boost` 值會乘以查詢分數，包括未指定最上層 `query` 時隱含 `match_all` 查詢的分數。預設為 `1`。
 
-Because `max_boost` caps the combined function score and not the final score, a `boost` value greater than `1` can produce scores that exceed `max_boost`. For example, a query with a `weight` of `10`, a `max_boost` of `2`, and a `boost` of `5` returns a score of `10`: the function score is capped at `2` and then multiplied by the boosted query score of `5`.
+因為 `max_boost` 會限制合併後的函式分數，而非最終分數，所以大於 `1` 的 `boost` 值可能產生超過 `max_boost` 的分數。例如，`weight` 為 `10`、`max_boost` 為 `2`、`boost` 為 `5` 的查詢會傳回分數 `10`：函式分數上限為 `2`，接著再乘以提升後的查詢分數 `5`。
 {: .note}
 
-### Combining the score for all functions with the query score
+### 將所有函式的分數與查詢分數合併
 
-You can specify how the score computed using all functions is combined with the query score in the `boost_mode` parameter, which takes one of the following values:
+您可以在 `boost_mode` 參數中指定如何使用所有函式計算出的分數與查詢分數合併，該參數可為下列其中一個值：
 
-- `multiply`: (Default) Multiply the query score by the function score.
-- `replace`: Ignore the query score and use the function score.
-- `sum`: Add the query score and the function score.
-- `avg`: Average the query score and the function score.
-- `max`: Take the greater of the query score and the function score.
-- `min`: Take the lesser of the query score and the function score.
+- `multiply`：（預設）將查詢分數乘以函式分數。
+- `replace`：忽略查詢分數，並使用函式分數。
+- `sum`：將查詢分數與函式分數相加。
+- `avg`：將查詢分數與函式分數取平均值。
+- `max`：取查詢分數與函式分數中較大者。
+- `min`：取查詢分數與函式分數中較小者。
 
-With the default `boost_mode` of `multiply` and an implicit `match_all` query, a document that matches no functions receives a score of `1`.
+在預設 `boost_mode` 為 `multiply` 且隱含 `match_all` 查詢的情況下，不符合任何函式的文件會收到分數 `1`。
 
-### Filtering documents that don't meet a threshold
+### 篩選未達門檻的文件
 
-Changing the relevance score does not change the list of matching documents. To exclude some documents that don't meet a threshold, specify the threshold value in the `min_score` parameter. All documents returned by the query are then scored and filtered using the threshold value.
+變更相關性分數不會改變相符文件的清單。若要排除部分未達門檻的文件，請在 `min_score` 參數中指定門檻值。查詢傳回的所有文件接著會使用該門檻值進行評分與篩選。
 
-Because `min_score` is applied after scoring, it doesn't exclude documents based on the function filters they matched. In the [preceding example](#applying-a-scoring-function-to-a-subset-of-documents), setting `min_score` to `0.9` excludes document 2, which matched the `views` filter and scored `0.5`, but retains documents 3 and 4, which matched no filters and scored `1`.
+因為 `min_score` 是在評分之後套用，所以不會根據文件相符的函式篩選條件來排除文件。在[前述範例](#applying-a-scoring-function-to-a-subset-of-documents)中，將 `min_score` 設為 `0.9` 會排除文件 2（其符合 `views` 篩選條件且分數為 `0.5`），但會保留文件 3 與 4（其不符合任何篩選條件且分數為 `1`）。
 {: .note}
 
-### Returning only documents that match a function filter
+### 僅傳回符合函式篩選條件的文件
 
-To return only the documents matching at least one function filter, use a [`bool` query]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/) with `minimum_should_match` instead of relying on function filters:
+若只要傳回至少符合一個函式篩選條件的文件，請使用帶有 `minimum_should_match` 的 [`bool` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/)，而不要依賴函式篩選條件：
 
 ```json
 GET blogs/_search
@@ -814,11 +815,11 @@ GET blogs/_search
 ```
 {% include copy-curl.html %}
 
-Only documents 1 and 2 are returned. To rank those documents using scoring functions, provide the `bool` query as the top-level `query` in a `function_score` query.
+只會傳回文件 1 與 2。若要使用評分函式為這些文件排名，請將 `bool` 查詢提供為 `function_score` 查詢中的最上層 `query`。
 
-### Example
+### 範例
 
-The following request searches for blog posts that include the words "OpenSearch Data Prepper", preferring the posts published around 04/24/2022. Additionally, the number of views and likes are taken into consideration. Finally, the cutoff threshold is set at the score of 6:
+下列請求會搜尋包含「OpenSearch Data Prepper」這些字的部落格文章，並偏好發布於 2022/04/24 前後的文章。此外，也會將瀏覽次數與按讚數納入考量。最後，截止門檻設為分數 6：
 
 ```json
 GET blogs/_search
@@ -871,11 +872,11 @@ GET blogs/_search
 ```
 {% include copy-curl.html %}
 
-Three blog posts match the query, but the `min_score` threshold of `6` excludes the lowest-scoring one, so the response contains two blog posts:
+有三篇部落格文章符合查詢，但 `min_score` 門檻 `6` 會排除分數最低的那篇，因此回應包含兩篇部落格文章：
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -926,13 +927,13 @@ Three blog posts match the query, but the `min_score` threshold of `6` excludes 
 ```
 </details>
 
-## Named functions
+## 具名函式
 
-When defining a function, you can specify its name using the `_name` parameter at the top level. This name is useful for debugging and understanding the scoring process. Once specified, the function name is included in the score calculation explanation whenever possible (this applies to functions, filters, and queries). You can identify the function by its `_name` in the response.
+定義函式時，您可以在最上層使用 `_name` 參數指定其名稱。此名稱有助於偵錯及理解評分過程。一旦指定，只要情況允許，函式名稱就會包含在分數計算說明中（這適用於函式、篩選條件及查詢）。您可以在回應中透過其 `_name` 識別該函式。
 
-### Example
+### 範例
 
-The following request sets `explain` to `true` for debugging purposes in order to obtain a scoring explanation in the response. Each function contains a `_name` parameter so that you can identify the function unambiguously:
+下列請求將 `explain` 設為 `true` 以進行偵錯，藉此在回應中取得評分說明。每個函式都包含 `_name` 參數，讓您可以明確識別該函式：
 
 ```json
 GET blogs/_search
@@ -979,11 +980,11 @@ GET blogs/_search
 ```
 {% include copy-curl.html %}
 
-The response explains the scoring process. For each function, the explanation contains the function `_name` in its `description`. The `*:*` entry with a value of `1` is the score of the implicit `match_all` query because no top-level `query` is specified.
+回應會說明評分過程。對於每個函式，說明會在其 `description` 中包含函式 `_name`。值為 `1` 的 `*:*` 項目是隱含 `match_all` 查詢的分數，因為未指定最上層的 `query`。
 
 <details open markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 

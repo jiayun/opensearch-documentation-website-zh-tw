@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Index stats
+title: "索引統計"
 parent: Index operations
 grand_parent: Index APIs
 nav_order: 120
 ---
 
 # Index Stats API 
-**Introduced 1.0**
+**1.0 版新增**
 {: .label .label-purple }
 
-The Index Stats API provides index statistics. For data streams, the API provides statistics for the stream's backing indexes. By default, the returned statistics are index level. To receive shard-level statistics, set the `level` parameter to `shards`.
+Index Stats API 提供索引統計資訊。對於資料串流，此 API 提供該串流後端索引的統計資訊。預設情況下，傳回的統計資訊為索引層級。若要接收分片層級的統計資訊，請將 `level` 參數設為 `shards`。
 
-When a shard moves to a different node, the shard-level statistics for the shard are cleared. Although the shard is no longer part of the node, the node preserves any node-level statistics to which the shard contributed.
+當分片移動到不同節點時，該分片的分片層級統計資訊會被清除。雖然該分片已不屬於該節點，節點仍會保留該分片曾貢獻的所有節點層級統計資訊。
 {: .note}
 
 <!-- spec_insert_start
 api: indices.stats
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_stats
 GET /{index}/_stats
@@ -28,61 +29,61 @@ GET /{index}/_stats/{metric}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `index` | String | A comma-separated list of indexes, data streams, or index aliases used to filter results. Supports wildcard expressions. To retrieve statistics for all indexes, use `_all` or `*` or omit this parameter. |
-| `metric` | String | A comma-separated list of metric groups to include in the response. For valid values, see [Metrics](#metrics). Defaults to all metrics. |
+| `index` | 字串 | 以逗號分隔的索引、資料串流或索引別名清單，用於篩選結果。支援萬用字元運算式。若要擷取所有索引的統計資訊，請使用 `_all` 或 `*`，或省略此參數。 |
+| `metric` | 字串 | 以逗號分隔的指標群組清單，用於包含在回應中。有效值請參閱[指標](#metrics)。預設為所有指標。 |
 
-### Metrics
+### 指標
 
-The following table lists all available metric groups.
+下表列出所有可用的指標群組。
 
-Metric | Description
+指標 | 說明
 :--- |:----
-`_all` | Return all statistics. 
-`completion` | Completion suggester statistics. 
-`docs` | Returns the number of documents and the number of deleted documents that have not yet been merged. Index refresh operations can affect this statistic. 
-`fielddata` | Field data statistics. 
-`flush` | Flush statistics. 
-`get` | Get statistics, including missing stats. 
-`indexing` | Indexing statistics. 
-`merge` | Merge statistics. 
-`query_cache` | Query cache statistics. 
-`refresh` | Refresh statistics. 
-`request_cache` | Shard request cache statistics. 
-`search` | Search statistics, including suggest operation statistics. Search operations can be associated with one or more groups. You can include statistics for custom groups by providing a `groups` parameter, which accepts a comma-separated list of group names. To return statistics for all groups, use `_all`. 
-`segments` | Statistics about memory use of all open segments. If the `include_segment_file_sizes` parameter is `true`, this metric includes the aggregated disk usage of each Lucene index file.
-`store` | Size of the index in byte units. 
-`translog` | Translog statistics. 
-`warmer` | Warmer statistics. 
+`_all` | 傳回所有統計資訊。 
+`completion` | 完成建議器的統計資訊。 
+`docs` | 傳回文件數目，以及尚未合併的已刪除文件數目。索引重新整理作業可能會影響此統計資訊。 
+`fielddata` | Field data 統計資訊。 
+`flush` | 排清統計資訊。 
+`get` | 取得作業的統計資訊，包括找不到文件時的統計資訊。 
+`indexing` | 索引編製統計資訊。 
+`merge` | 合併統計資訊。 
+`query_cache` | 查詢快取統計資訊。 
+`refresh` | 重新整理統計資訊。 
+`request_cache` | 分片請求快取統計資訊。 
+`search` | 搜尋統計資訊，包括建議作業的統計資訊。搜尋作業可與一個或多個群組相關聯。您可以提供 `groups` 參數來包含自訂群組的統計資訊，該參數接受以逗號分隔的群組名稱清單。若要傳回所有群組的統計資訊，請使用 `_all`。 
+`segments` | 所有開啟分段的記憶體使用統計資訊。若 `include_segment_file_sizes` 參數為 `true`，此指標會包含每個 Lucene 索引檔案的彙總磁碟用量。
+`store` | 以位元組為單位的索引大小。 
+`translog` | Translog 統計資訊。 
+`warmer` | Warmer 統計資訊。 
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-Parameter | Data type | Description 
+參數 | 資料類型 | 說明 
 :--- | :--- | :--- 
-`expand_wildcards` | String | Specifies the type of indexes to which wildcard expressions can expand. Supports comma-separated values. Valid values are: <br> - `all`: Expand to all open and closed indexes, including hidden indexes. <br> - `open`: Expand to open indexes. <br> - `closed`: Expand to closed indexes. <br> - `hidden`: Include hidden indexes when expanding. Must be combined with `open`, `closed`, or both. <br> - `none`: Do not accept wildcard expressions. <br> Default is `open`.
-`fields` | String | A comma-separated list or a wildcard expression specifying fields to include in the statistics. Specifies the default field list if neither `completion_fields` nor `fielddata_fields` is provided.
-`completion_fields` | String | A comma-separated list or wildcard expression specifying fields to include in field-level `completion` statistics.
-`fielddata_fields` | String | A comma-separated list or wildcard expression specifying fields to include in field-level `fielddata` statistics.
-`forbid_closed_indices` | Boolean | Specifies not to collect statistics for closed indexes. Default is `true`.
-`groups` | String | A comma-separated list of search groups to include in the `search` statistics. Search groups are custom labels assigned to search requests using the `stats` parameter of the [Search API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#search-stats-groups). Use `_all` to return statistics for all groups.
-`level` | String | Specifies the level used to aggregate statistics. Valid values are: <br> - `cluster`: Cluster-level statistics. <br> - `indices`: Index-level statistics. <br> - `shards`: Shard-level statistics. <br> Default is `indices`.
-`include_segment_file_sizes` | Boolean | Specifies whether to report the aggregated disk usage of each Lucene index file. Only applies to `segments` statistics. Default is `false`.
-`include_unloaded_segments` | Boolean | Specifies whether to include information from segments that are not loaded into memory. Default is `false`.
+`expand_wildcards` | 字串 | 指定萬用字元運算式可展開的索引類型。支援以逗號分隔的值。有效值為：<br> - `all`：展開至所有開啟與關閉的索引，包括隱藏索引。<br> - `open`：展開至開啟的索引。<br> - `closed`：展開至關閉的索引。<br> - `hidden`：展開時包含隱藏索引。必須與 `open`、`closed` 或兩者合併使用。<br> - `none`：不接受萬用字元運算式。<br> 預設為 `open`。
+`fields` | 字串 | 以逗號分隔的清單或萬用字元運算式，指定要包含在統計資訊中的欄位。若未提供 `completion_fields` 與 `fielddata_fields`，則指定預設欄位清單。
+`completion_fields` | 字串 | 以逗號分隔的清單或萬用字元運算式，指定要包含在欄位層級 `completion` 統計資訊中的欄位。
+`fielddata_fields` | 字串 | 以逗號分隔的清單或萬用字元運算式，指定要包含在欄位層級 `fielddata` 統計資訊中的欄位。
+`forbid_closed_indices` | 布林值 | 指定不收集已關閉索引的統計資訊。預設為 `true`。
+`groups` | 字串 | 以逗號分隔的搜尋群組清單，用於包含在 `search` 統計資訊中。搜尋群組是透過 [Search API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#search-stats-groups) 的 `stats` 參數指派給搜尋請求的自訂標籤。使用 `_all` 可傳回所有群組的統計資訊。
+`level` | 字串 | 指定用於彙總統計資訊的層級。有效值為：<br> - `cluster`：叢集層級統計資訊。<br> - `indices`：索引層級統計資訊。<br> - `shards`：分片層級統計資訊。<br> 預設為 `indices`。
+`include_segment_file_sizes` | 布林值 | 指定是否回報每個 Lucene 索引檔案的彙總磁碟用量。僅適用於 `segments` 統計資訊。預設為 `false`。
+`include_unloaded_segments` | 布林值 | 指定是否包含未載入記憶體之分段的資訊。預設為 `false`。
 
-## Example requests
+## 範例請求
 
-The following example requests show how to use the Index Stats API.
+以下範例請求示範如何使用 Index Stats API。
 
-### One index
+### 單一索引
 
-The following example returns index stats for a single index:
+以下範例傳回單一索引的索引統計資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -106,9 +107,9 @@ response = client.indices.stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Comma-separated list of indexes
+### 以逗號分隔的索引清單
 
-The following example returns stats for multiple indexes:
+以下範例傳回多個索引的統計資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -132,9 +133,9 @@ response = client.indices.stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Wildcard expression
+### 萬用字元運算式
 
-The following example returns statistics for any index whose name starts with `testindex`:
+以下範例傳回名稱以 `testindex` 開頭之所有索引的統計資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -158,9 +159,9 @@ response = client.indices.stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Specific stats
+### 特定統計資訊
 
-The following example returns index stats related to the index and flush operations:
+以下範例傳回與索引及排清作業相關的索引統計資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -185,9 +186,9 @@ response = client.indices.stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Expand wildcards
+### 展開萬用字元
 
-The following example expands all wildcards related to index stats:
+以下範例展開所有與索引統計資訊相關的萬用字元：
 
 <!-- spec_insert_start
 component: example_code
@@ -212,9 +213,9 @@ response = client.indices.stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Shard-level statistics
+### 分片層級統計資料
 
-The following example returns shard level stats about a test index:
+下列範例會傳回測試索引的分片層級統計資料：
 
 <!-- spec_insert_start
 component: example_code
@@ -239,9 +240,9 @@ response = client.indices.stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Specific search groups
+### 特定搜尋群組
 
-The following example returns search statistics for the `group1` and `group2` search groups:
+下列範例會傳回 `group1` 與 `group2` 搜尋群組的搜尋統計資料：
 
 <!-- spec_insert_start
 component: example_code
@@ -266,13 +267,13 @@ response = client.indices.stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-By default, the returned statistics are split into two groups: `primaries` and `total`. The `primaries` group contains values computed for primary shards only, while the `total` group contains accumulated values across both primary and replica shards. The following is an example Index Stats API response: 
+根據預設，傳回的統計資料會分成兩個群組：`primaries` 與 `total`。`primaries` 群組包含僅針對主要分片計算的值，而 `total` 群組則包含主要分片與副本分片累計的值。以下是 Index Stats API 回應的範例：
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -966,10 +967,10 @@ By default, the returned statistics are split into two groups: `primaries` and `
 ```
 </details>
 
-## Response body fields
+## 回應本文欄位
 
-For information about response fields, see [Nodes Stats API response fields]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/#indices).
+如需回應欄位的相關資訊，請參閱 [Nodes Stats API 回應欄位]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/#indices)。
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:monitor/stats`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`indices:monitor/stats`。

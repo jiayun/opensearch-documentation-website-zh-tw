@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Model APIs
+title: "模型 API"
 parent: ML Commons APIs
 has_children: true
 nav_order: 10
@@ -9,54 +10,54 @@ redirect_from:
   - /ml-commons-plugin/api/model-apis/
 ---
 
-# Model APIs
+# 模型 API
 
-ML Commons supports the following model-level CRUD APIs:
+ML Commons 支援下列模型層級的 CRUD API：
 
-- [Register Model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/)
-- [Deploy Model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/deploy-model/)
-- [Get Model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/get-model/)
-- [Search Model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/search-model/)
-- [Update Model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/update-model/)
-- [Undeploy Model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/undeploy-model/)
-- [Delete Model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/delete-model/)
+- [註冊模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/)
+- [部署模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/deploy-model/)
+- [取得模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/get-model/)
+- [搜尋模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/search-model/)
+- [更新模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/update-model/)
+- [取消部署模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/undeploy-model/)
+- [刪除模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/delete-model/)
 
-# Predict APIs
+# 預測 API
 
-Predict APIs are used to invoke machine learning (ML) models. ML Commons supports the following Predict APIs:
+預測 API 用於叫用機器學習 (ML) 模型。ML Commons 支援下列預測 API：
 
-- [Predict]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 
-- [Predict Stream]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict-stream/) 
-- [Batch Predict]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/batch-predict/)
+- [預測]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 
+- [預測串流]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict-stream/) 
+- [批次預測]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/batch-predict/)
 
-# Train API
+# 訓練 API
 
-The ML Commons Train API lets you train ML algorithms synchronously and asynchronously:
+ML Commons 訓練 API 可讓您以同步及非同步方式訓練 ML 演算法：
 
-- [Train]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/train/)
+- [訓練]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/train/)
 
-To train tasks through the API, three inputs are required: 
+若要透過 API 訓練任務，需要三項輸入：
 
-- Algorithm name: Must be a [FunctionName](https://github.com/opensearch-project/ml-commons/blob/1.3/common/src/main/java/org/opensearch/ml/common/parameter/FunctionName.java). This determines what algorithm the ML model runs. To add a new function, see [How To Add a New Function](https://github.com/opensearch-project/ml-commons/blob/main/docs/how-to-add-new-function.md).
-- Model hyperparameters: Adjust these parameters to improve model accuracy.  
-- Input data: The data that trains the ML model or applies it to predictions. You can input data in two ways: query against your index or use a data frame.
+- 演算法名稱：必須是 [FunctionName](https://github.com/opensearch-project/ml-commons/blob/1.3/common/src/main/java/org/opensearch/ml/common/parameter/FunctionName.java)。這會決定 ML 模型執行哪個演算法。若要新增函式，請參閱[如何新增函式](https://github.com/opensearch-project/ml-commons/blob/main/docs/how-to-add-new-function.md)。
+- 模型超參數：調整這些參數以提升模型準確度。  
+- 輸入資料：用於訓練 ML 模型或將其套用至預測的資料。您可以用兩種方式輸入資料：對您的索引進行查詢，或使用資料框架。
 
-# Train and Predict API
+# 訓練與預測 API
 
-The Train and Predict API lets you train and invoke the model using the same dataset:
+訓練與預測 API 可讓您使用相同的資料集訓練及叫用模型：
 
-- [Train and Predict]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/train-and-predict/)
+- [訓練與預測]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/train-and-predict/)
 
-## Model access control considerations
+## 模型存取控制考量
 
-For clusters with model access control enabled, users can perform API operations on models in model groups with specified access levels as follows:
+對於已啟用模型存取控制的叢集，使用者可以依照下列指定的存取層級，對模型群組中的模型執行 API 操作：
 
-- `public` model group: Any user.
-- `restricted` model group: Only the model owner or users who share at least one backend role with the model group.
-- `private` model group: Only the model owner. 
+- `public` 模型群組：任何使用者。
+- `restricted` 模型群組：僅限模型擁有者，或與該模型群組共用至少一個後端角色的使用者。
+- `private` 模型群組：僅限模型擁有者。 
 
-For clusters with model access control disabled, any user can perform API operations on models in any model group. 
+對於已停用模型存取控制的叢集，任何使用者都可以對任何模型群組中的模型執行 API 操作。 
 
-Admin users can perform API operations for models in any model group. 
+管理員使用者可以對任何模型群組中的模型執行 API 操作。 
 
-For more information, see [Model access control]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/).
+如需更多資訊，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。

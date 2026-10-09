@@ -1,72 +1,73 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Update memory container
+title: "更新記憶容器"
 parent: Agentic memory APIs
 grand_parent: ML Commons APIs
 nav_order: 15
 ---
 
-# Update Memory Container API
-**Introduced 3.3**
+# 更新記憶容器 API
+**於 3.3 版推出**
 {: .label .label-purple }
 
-Use this API to update an existing memory container's properties, such as name, description, configuration, and access permissions.
+使用此 API 更新現有記憶容器的屬性，例如名稱、描述、組態及存取權限。
 
-## Endpoints
+## 端點
 
 ```json
 PUT /_plugins/_ml/memory_containers/{memory_container_id}
 ```
 
-## Path parameters
+## 路徑參數
 
-| Parameter | Data type | Required/Optional | Description |
+| 參數 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `memory_container_id` | String | Required | The ID of the memory container to update. |
+| `memory_container_id` | 字串 | 必要 | 要更新的記憶容器 ID。 |
 
-## Request fields
+## 請求欄位
 
-| Field | Data type | Required/Optional | Description |
+| 欄位 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `name` | String | Optional | The updated name of the memory container. |
-| `description` | String | Optional | The updated description of the memory container. |
-| `configuration` | Object | Optional | The configuration object containing strategies and embedding settings. See [The configuration object](#the-configuration-object). |
+| `name` | 字串 | 選用 | 記憶容器更新後的名稱。 |
+| `description` | 字串 | 選用 | 記憶容器更新後的描述。 |
+| `configuration` | 物件 | 選用 | 包含策略與嵌入設定的組態物件。請參閱[組態物件](#the-configuration-object)。 |
 
-### The configuration object
+### 組態物件
 
-The `configuration` object supports the following fields.
+`configuration` 物件支援下列欄位。
 
-| Field | Data type | Required/Optional | Description |
+| 欄位 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `llm_id` | String | Optional | The large language model (LLM) ID to use to extract facts. |
-| `strategies` | Array | Optional | An array of strategy objects for memory processing. |
-| `embedding_model_id` | String | Optional | The embedding model ID. Can only be updated if no long-term memory index exists. |
-| `embedding_model_type` | String | Optional | The embedding model type. Can only be updated if no long-term memory index exists. |
-| `embedding_dimension` | Integer | Optional | The embedding dimension. Can only be updated if no long-term memory index exists. |
+| `llm_id` | 字串 | 選用 | 用於擷取事實的大型語言模型 (LLM) ID。 |
+| `strategies` | 陣列 | 選用 | 用於記憶處理的策略物件陣列。 |
+| `embedding_model_id` | 字串 | 選用 | 嵌入模型 ID。僅在沒有長期記憶索引時才能更新。 |
+| `embedding_model_type` | 字串 | 選用 | 嵌入模型類型。僅在沒有長期記憶索引時才能更新。 |
+| `embedding_dimension` | 整數 | 選用 | 嵌入維度。僅在沒有長期記憶索引時才能更新。 |
 
-## Update behavior
+## 更新行為
 
-Note the following update behavior.
+請注意下列更新行為。
 
-### Strategy updates
+### 策略更新
 
-- To update a specific strategy, specify the strategy `id`.
-- To create a new strategy, specify a strategy without an `id`.
+- 若要更新特定策略，請指定策略 `id`。
+- 若要建立新策略，請指定不含 `id` 的策略。
 
-### Backend roles updates
+### 後端角色更新
 
-- Adding new `backend_roles` grants new users read or write access with those roles.
-- The new `backend_roles` field overwrites the existing field, so include the original roles if you want to keep them.
+- 新增 `backend_roles` 中的角色，會授予具備這些角色的新使用者讀取或寫入存取權。
+- 新的 `backend_roles` 欄位會覆寫現有欄位，因此若您想保留原始角色，請一併包含這些角色。
 
-### Namespace updates
+### 命名空間更新
 
-- The `namespace` field in the `strategies` object is updated by overwriting. Include the original namespace if you want to keep it.
+- `strategies` 物件中的 `namespace` 欄位會以覆寫方式更新。若您想保留原始命名空間，請一併包含該命名空間。
 
-### Embedding model restrictions
+### 嵌入模型限制
 
-- The `embedding_model_id`, `embedding_model_type`, and `embedding_dimension` fields can only be updated if no long-term memory index has been created for this memory container. Once a long-term memory index with the specified `index_prefix` is created, these embedding fields cannot be updated.
+- `embedding_model_id`、`embedding_model_type` 及 `embedding_dimension` 欄位僅在此記憶容器尚未建立長期記憶索引時才能更新。一旦建立了具有指定 `index_prefix` 的長期記憶索引，就無法更新這些嵌入欄位。
 
-## Example request
+## 範例請求
 
 ```json
 PUT /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU
@@ -93,7 +94,7 @@ PUT /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -108,13 +109,13 @@ PUT /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU
 }
 ```
 
-## Response fields
+## 回應欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `result` | String | The result of the update operation. |
-| `_id` | String | The ID of the updated memory container. |
-| `_version` | Integer | The version number of the updated memory container. |
-| `_shards` | Object | Information about the shards involved in the operation. |
+| `result` | 字串 | 更新作業的結果。 |
+| `_id` | 字串 | 更新後記憶容器的 ID。 |
+| `_version` | 整數 | 更新後記憶容器的版本號碼。 |
+| `_shards` | 物件 | 作業所涉及分片的相關資訊。 |

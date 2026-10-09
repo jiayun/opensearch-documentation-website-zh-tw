@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Controller APIs
 parent: ML Commons APIs
@@ -10,17 +11,17 @@ redirect_from:
 ---
 
 # Controller APIs
-**Introduced 2.12**
+**於 2.12 版導入**
 {: .label .label-purple }
 
-You can configure a rate limit for a specific user or users of a model by calling the Controller APIs. 
+您可以透過呼叫 Controller API，為特定使用者或某模型的多位使用者設定速率限制。
 
-ML Commons supports the following controller-level APIs:
+ML Commons 支援下列控制器層級的 API：
 
-- [Create or update controller]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/controller-apis/create-controller/)
-- [Get controller]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/controller-apis/get-controller/)
-- [Delete controller]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/controller-apis/delete-controller/)
+- [建立或更新控制器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/controller-apis/create-controller/)
+- [取得控制器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/controller-apis/get-controller/)
+- [刪除控制器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/controller-apis/delete-controller/)
 
-## Required permissions
+## 必要權限
 
-To call the Controller APIs, you must have `cluster:admin/opensearch/ml/controllers/` permissions. Links to more information about each Controller API are provided in the preceding section.
+若要呼叫 Controller API，您必須具備 `cluster:admin/opensearch/ml/controllers/` 權限。各 Controller API 的詳細資訊連結已在前一節提供。

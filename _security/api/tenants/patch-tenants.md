@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Patch tenants
+title: "修補租用戶"
 parent: Tenant APIs
 grand_parent: Security APIs
 nav_order: 20
 ---
 
 # Patch Tenants API
-**Introduced 1.0**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-Updates tenants without replacing them. Specify a tenant name to update individual attributes of one tenant, or omit the tenant name to add, delete, or modify multiple tenants in a single call.
+更新租用戶而不取代它們。指定租用戶名稱以更新單一租用戶的個別屬性，或省略租用戶名稱以在單次呼叫中新增、刪除或修改多個租用戶。
 
 <!-- spec_insert_start
 api: security.patch_tenants
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PATCH /_plugins/_security/api/tenants
 ```
@@ -31,27 +32,27 @@ PATCH /_plugins/_security/api/tenants/{tenant}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required | Description |
+| 參數 | 資料類型 | 必要 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `tenant` | String | No | The name of the tenant to update. If omitted, the request can modify multiple tenants. |
+| `tenant` | 字串 | 否 | 要更新的租用戶名稱。若省略，則請求可修改多個租用戶。 |
 
-## Request body fields
+## 請求本文欄位
 
-The request body is required. It is an array of JSON objects. Each object contains the following fields.
+請求本文為必要。它是一個 JSON 物件陣列。每個物件包含下列欄位。
 
-| Field | Data type | Description | Required |
+| 欄位 | 資料類型 | 說明 | 必要 |
 | :--- | :--- | :--- | :--- |
-| `op` | String | The operation to perform. Valid values are `add`, `remove`, `replace`, `move`, `copy`, and `test`. | Yes |
-| `path` | String | The path to modify. When you specify a tenant name, the path is relative to that tenant, such as `/description`. When you omit the tenant name, the path begins with the tenant name, such as `/human_resources/description`. | Yes |
-| `value` | Object | The new value. Required for the `add`, `replace`, and `test` operations. | No |
+| `op` | 字串 | 要執行的操作。有效值為 `add`、`remove`、`replace`、`move`、`copy` 及 `test`。 | 是 |
+| `path` | 字串 | 要修改的路徑。當您指定租用戶名稱時，路徑相對於該租用戶，例如 `/description`。當您省略租用戶名稱時，路徑會以租用戶名稱開頭，例如 `/human_resources/description`。 | 是 |
+| `value` | 物件 | 新值。`add`、`replace` 及 `test` 操作為必要。 | 否 |
 
-## Example request
+## 請求範例
 
-The following request updates the description of the `human_resources` tenant:
+下列請求會更新 `human_resources` 租用戶的描述：
 
 ```json
 PATCH _plugins/_security/api/tenants/human_resources
@@ -63,7 +64,7 @@ PATCH _plugins/_security/api/tenants/human_resources
 ```
 {% include copy-curl.html security=true %}
 
-The following request updates the description of the `human_resources` tenant and adds the `another_tenant` tenant:
+下列請求會更新 `human_resources` 租用戶的描述，並新增 `another_tenant` 租用戶：
 
 ```json
 PATCH _plugins/_security/api/tenants
@@ -84,9 +85,9 @@ PATCH _plugins/_security/api/tenants
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 回應範例
 
-A request that updates one tenant names it in the response:
+更新單一租用戶的請求會在回應中指名該租用戶：
 
 ```json
 {
@@ -95,7 +96,7 @@ A request that updates one tenant names it in the response:
 }
 ```
 
-A bulk request does not name the tenants it changed:
+批次請求不會在回應中指名其變更的租用戶：
 
 ```json
 {

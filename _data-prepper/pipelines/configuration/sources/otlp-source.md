@@ -1,64 +1,65 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: OTLP source
+title: "OTLP 來源"
 parent: Sources
 grand_parent: Pipelines
 nav_order: 85
 ---
 
-# OTLP source
+# OTLP 來源
 
-The `otlp` source is a unified OpenTelemetry source that follows the [OpenTelemetry Protocol (OTLP) specification](https://opentelemetry.io/docs/specs/otlp/) and can receive logs, metrics, and traces through a single endpoint. This source consolidates the functionality of the individual `otel_logs_source`, `otel_metrics_source`, and `otel_trace_source` sources, providing a streamlined approach to ingesting all OpenTelemetry telemetry signals.
+`otlp` 來源是一個統一的 OpenTelemetry 來源，遵循 [OpenTelemetry Protocol (OTLP) 規範](https://opentelemetry.io/docs/specs/otlp/)，可以透過單一端點接收記錄、指標與追蹤。此來源整合了個別 `otel_logs_source`、`otel_metrics_source` 與 `otel_trace_source` 來源的功能，提供一種精簡的方式來匯入所有 OpenTelemetry 遙測訊號。
 
-The `otlp` source supports both the `OTLP/gRPC` and `OTLP/HTTP` protocols. For `OTLP/HTTP`, only Protobuf encoding is supported. This makes it compatible with a wide range of OpenTelemetry collectors and instrumentation libraries.
+`otlp` 來源同時支援 `OTLP/gRPC` 與 `OTLP/HTTP` 協定。對於 `OTLP/HTTP`，僅支援 Protobuf 編碼。這使其能與廣泛的 OpenTelemetry 收集器與計測程式庫相容。
 {: .note}
 
-## Configuration
+## 組態
 
-You can configure the `otlp` source with the following options.
+您可以使用下列選項來設定 `otlp` 來源。
 
-| Option | Type | Description |
+| 選項 | 類型 | 說明 |
 | :--- | :--- | :--- |
-| `port` | Integer | The port on which the `otlp` source listens. Default is `21893`. |
-| `logs_path` | String | The path for sending unframed HTTP requests for logs. Must start with `/` and have a minimum length of 1. Default is `/opentelemetry.proto.collector.logs.v1.LogsService/Export`. |
-| `metrics_path` | String | The path for sending unframed HTTP requests for metrics. Must start with `/` and have a minimum length of 1. Default is `/opentelemetry.proto.collector.metrics.v1.MetricsService/Export`. |
-| `traces_path` | String | The path for sending unframed HTTP requests for traces. Must start with `/` and have a minimum length of 1. Default is `/opentelemetry.proto.collector.trace.v1.TraceService/Export`. |
-| `request_timeout` | Duration | The request timeout duration. Default is `10s`. |
-| `retry_info` | Object | Configures retry behavior. Supports `min_delay` (default `100ms`) and `max_delay` (default `2s`) parameters to control exponential backoff. See [Retry information](#retry-information).|
-| `health_check_service` | Boolean | Enables a gRPC health check service under `grpc.health.v1.Health/Check`. When `unframed_requests` is `true`, enables HTTP health check at `/health`. Default is `false`. |
-| `proto_reflection_service` | Boolean | Enables a reflection service for Protobuf services (see [ProtoReflectionService](https://grpc.github.io/grpc-java/javadoc/io/grpc/protobuf/services/ProtoReflectionService.html) and [gRPC reflection](https://github.com/grpc/grpc-java/blob/master/documentation/server-reflection-tutorial.md)). Default is `false`. |
-| `unframed_requests` | Boolean | Enables requests not framed using the gRPC wire protocol. Default is `false`. |
-| `thread_count` | Integer | The number of threads to keep in the scheduled thread pool. Default is `200`. |
-| `max_connection_count` | Integer | The maximum allowed number of open connections. Default is `500`. |
-| `max_request_length` | String | The maximum number of bytes allowed in the payload of a single gRPC or HTTP request. Default is `10mb`. |
-| `compression` | String | The compression type applied to the client request payload. Valid values are `none` (no compression) or `gzip` (apply `gzip` decompression). Default is `none`. |
-| `output_format` | String | Specifies the decoded output format for all signals (logs, metrics, and traces) if individual output format options are not set. Valid values are `otel` (OpenTelemetry format) and `opensearch` (OpenSearch format). Default is `otel`. |
-| `logs_output_format` | String | Specifies the decoded output format specifically for logs. Takes precedence over `output_format` for logs. Valid values are `otel` and `opensearch`. Default is `otel`. |
-| `metrics_output_format` | String | Specifies the decoded output format specifically for metrics. Takes precedence over `output_format` for metrics. Valid values are `otel` and `opensearch`. Default is `otel`. |
-| `traces_output_format` | String | Specifies the decoded output format specifically for traces. Takes precedence over `output_format` for traces. Valid values are `otel` and `opensearch`. Default is `otel`. |
+| `port` | 整數 | `otlp` 來源監聽的連接埠。預設為 `21893`。 |
+| `logs_path` | 字串 | 傳送記錄未框架 HTTP 請求的路徑。必須以 `/` 開頭且長度至少為 1。預設為 `/opentelemetry.proto.collector.logs.v1.LogsService/Export`。 |
+| `metrics_path` | 字串 | 傳送指標未框架 HTTP 請求的路徑。必須以 `/` 開頭且長度至少為 1。預設為 `/opentelemetry.proto.collector.metrics.v1.MetricsService/Export`。 |
+| `traces_path` | 字串 | 傳送追蹤未框架 HTTP 請求的路徑。必須以 `/` 開頭且長度至少為 1。預設為 `/opentelemetry.proto.collector.trace.v1.TraceService/Export`。 |
+| `request_timeout` | 持續時間 | 請求逾時時間。預設為 `10s`。 |
+| `retry_info` | 物件 | 設定重試行為。支援 `min_delay`（預設 `100ms`）與 `max_delay`（預設 `2s`）參數，以控制指數退避。請參閱[重試資訊](#retry-information)。|
+| `health_check_service` | 布林值 | 在 `grpc.health.v1.Health/Check` 下啟用 gRPC 健康檢查服務。當 `unframed_requests` 為 `true` 時，會在 `/health` 啟用 HTTP 健康檢查。預設為 `false`。 |
+| `proto_reflection_service` | 布林值 | 為 Protobuf 服務啟用反映服務（請參閱 [ProtoReflectionService](https://grpc.github.io/grpc-java/javadoc/io/grpc/protobuf/services/ProtoReflectionService.html) 與 [gRPC 反映](https://github.com/grpc/grpc-java/blob/master/documentation/server-reflection-tutorial.md)）。預設為 `false`。 |
+| `unframed_requests` | 布林值 | 啟用未使用 gRPC 線路協定框架化的請求。預設為 `false`。 |
+| `thread_count` | 整數 | 排程執行緒集區中保留的執行緒數量。預設為 `200`。 |
+| `max_connection_count` | 整數 | 允許的最大開啟連線數。預設為 `500`。 |
+| `max_request_length` | 字串 | 單一 gRPC 或 HTTP 請求酬載允許的最大位元組數。預設為 `10mb`。 |
+| `compression` | 字串 | 套用至用戶端請求酬載的壓縮類型。有效值為 `none`（不壓縮）或 `gzip`（套用 `gzip` 解壓縮）。預設為 `none`。 |
+| `output_format` | 字串 | 在未設定個別輸出格式選項時，指定所有訊號（記錄、指標與追蹤）的解碼輸出格式。有效值為 `otel`（OpenTelemetry 格式）與 `opensearch`（OpenSearch 格式）。預設為 `otel`。 |
+| `logs_output_format` | 字串 | 專門指定記錄的解碼輸出格式。對記錄而言，其優先順序高於 `output_format`。有效值為 `otel` 與 `opensearch`。預設為 `otel`。 |
+| `metrics_output_format` | 字串 | 專門指定指標的解碼輸出格式。對指標而言，其優先順序高於 `output_format`。有效值為 `otel` 與 `opensearch`。預設為 `otel`。 |
+| `traces_output_format` | 字串 | 專門指定追蹤的解碼輸出格式。對追蹤而言，其優先順序高於 `output_format`。有效值為 `otel` 與 `opensearch`。預設為 `otel`。 |
 
-If an individual output format (for example, `logs_output_format`) is set, it takes precedence over the generic `output_format` for that signal type. If neither is set, the default is `otel`.
+如果設定了個別輸出格式（例如 `logs_output_format`），對該訊號類型而言，其優先順序會高於通用的 `output_format`。若兩者皆未設定，預設為 `otel`。
 {: .note}
 
-### SSL/TLS configuration
+### SSL/TLS 組態
 
-You can configure SSL/TLS in the `otlp` source with the following options.
+您可以在 `otlp` 來源中使用下列選項來設定 SSL/TLS。
 
-| Option | Type | Description |
+| 選項 | 類型 | 說明 |
 | :--- | :--- | :--- |
-| `ssl` | Boolean | Enables SSL/TLS. Default is `true`. |
-| `ssl_certificate_file` | String | The SSL certificate chain file path or Amazon Simple Storage Service (Amazon S3) path (for example, `s3://<bucketName>/<path>`). Required if `ssl` is set to `true`. |
-| `ssl_key_file` | String | The SSL key file path or Amazon S3 path (for example, `s3://<bucketName>/<path>`). Required if `ssl` is set to `true`. |
-| `use_acm_cert_for_ssl` | Boolean | Enables SSL/TLS using a certificate and private key from AWS Certificate Manager (ACM). Default is `false`. |
-| `acm_certificate_arn` | String | The ACM certificate Amazon Resource Name (ARN). ACM certificates take precedence over Amazon S3 or local file system certificates. Required if `use_acm_cert_for_ssl` is set to `true`. |
-| `acm_private_key_password` | String | The ACM private key password that decrypts the private key. If not provided, OpenSearch Data Prepper uses the private key without encryption. |
-| `aws_region` | String | The AWS Region used by ACM or Amazon S3. Required if `use_acm_cert_for_ssl` is set to `true` or if `ssl_certificate_file` and `ssl_key_file` are Amazon S3 paths. |
+| `ssl` | 布林值 | 啟用 SSL/TLS。預設為 `true`。 |
+| `ssl_certificate_file` | 字串 | SSL 憑證鏈檔案路徑或 Amazon Simple Storage Service (Amazon S3) 路徑（例如 `s3://<bucketName>/<path>`）。當 `ssl` 設為 `true` 時為必要。 |
+| `ssl_key_file` | 字串 | SSL 金鑰檔案路徑或 Amazon S3 路徑（例如 `s3://<bucketName>/<path>`）。當 `ssl` 設為 `true` 時為必要。 |
+| `use_acm_cert_for_ssl` | 布林值 | 使用來自 AWS Certificate Manager (ACM) 的憑證與私密金鑰啟用 SSL/TLS。預設為 `false`。 |
+| `acm_certificate_arn` | 字串 | ACM 憑證的 Amazon Resource Name (ARN)。ACM 憑證的優先順序高於 Amazon S3 或本機檔案系統憑證。當 `use_acm_cert_for_ssl` 設為 `true` 時為必要。 |
+| `acm_private_key_password` | 字串 | 用於解密私密金鑰的 ACM 私密金鑰密碼。若未提供，OpenSearch Data Prepper 會使用未加密的私密金鑰。 |
+| `aws_region` | 字串 | ACM 或 Amazon S3 使用的 AWS Region。當 `use_acm_cert_for_ssl` 設為 `true`，或 `ssl_certificate_file` 與 `ssl_key_file` 為 Amazon S3 路徑時為必要。 |
 
-### Authentication configuration
+### 驗證組態
 
-By default, the `otlp` source runs without authentication. You can configure authentication using the following options.
+預設情況下，`otlp` 來源在沒有驗證的情況下執行。您可以使用下列選項來設定驗證。
 
-To explicitly disable authentication, specify the following settings:
+若要明確停用驗證，請指定下列設定：
 
 ```yaml
 source:
@@ -68,7 +69,7 @@ source:
 ```
 {% include copy.html %}
 
-To enable HTTP Basic authentication, specify the following settings:
+若要啟用 HTTP Basic 驗證，請指定下列設定：
 
 ```yaml
 source:
@@ -80,11 +81,11 @@ source:
 ```
 {% include copy.html %}
 
-This plugin uses pluggable authentication for gRPC servers. To provide custom authentication, create a plugin that implements [`GrpcAuthenticationProvider`](https://github.com/opensearch-project/data-prepper/blob/main/data-prepper-plugins/armeria-common/src/main/java/org/opensearch/dataprepper/armeria/authentication/GrpcAuthenticationProvider.java).
+此外掛程式為 gRPC 伺服器使用可插拔式驗證。若要提供自訂驗證，請建立一個實作 [`GrpcAuthenticationProvider`](https://github.com/opensearch-project/data-prepper/blob/main/data-prepper-plugins/armeria-common/src/main/java/org/opensearch/dataprepper/armeria/authentication/GrpcAuthenticationProvider.java) 的外掛程式。
 
-### Retry information
+### 重試資訊
 
-You can set retry behavior using the `retry_info` setting, specifying how long to wait for the next request when backpressure occurs. The retry mechanism applies exponential backoff with a configurable maximum delay:
+您可以使用 `retry_info` 設定來設定重試行為，指定發生背壓時等待下一次請求的時間。重試機制採用指數退避，並具有可設定的最大延遲：
 
 ```yaml
 source:
@@ -95,13 +96,13 @@ source:
 ```
 {% include copy.html %}
 
-## Usage
+## 用法
 
-The following examples demonstrate how to configure and use the `otlp` source in various scenarios.
+下列範例示範如何在各種情境中設定與使用 `otlp` 來源。
 
-### Basic configuration
+### 基本組態
 
-To get started with the `otlp` source, create a `pipeline.yaml` file with the following minimal configuration:
+若要開始使用 `otlp` 來源，請使用下列最小組態建立一個 `pipeline.yaml` 檔案：
 
 ```yaml
 pipeline:
@@ -113,9 +114,9 @@ pipeline:
 ```
 {% include copy.html %}
 
-### Routing telemetry signals
+### 路由遙測訊號
 
-One of the key features of the `otlp` source is its ability to route different telemetry signals (logs, metrics, and traces) to different processors or sinks based on your specific needs. Routing is determined by metadata using the `getEventType()` function:
+`otlp` 來源的主要功能之一，是能夠根據您的特定需求，將不同的遙測訊號（記錄、指標與追蹤）路由至不同的處理器或接收端。路由由使用 `getEventType()` 函式的中繼資料決定：
 
 ```yaml
 version: "2"
@@ -179,9 +180,9 @@ otel-metrics:
 ```
 {% include copy.html %}
 
-### Using OpenSearch output format
+### 使用 OpenSearch 輸出格式
 
-To generate data in the OpenSearch format for all telemetry signals, specify the following settings:
+若要為所有遙測訊號產生 OpenSearch 格式的資料，請指定下列設定：
 
 ```yaml
 source:
@@ -190,7 +191,7 @@ source:
 ```
 {% include copy.html %}
 
-To use different output formats for different signal types, specify the following settings:
+若要為不同訊號類型使用不同的輸出格式，請指定下列設定：
 
 ```yaml
 source:
@@ -201,9 +202,9 @@ source:
 ```
 {% include copy.html %}
 
-### Configuring with SSL/TLS
+### 使用 SSL/TLS 進行設定
 
-To enable SSL/TLS with local certificates, specify the following settings:
+若要使用本機憑證啟用 SSL/TLS，請指定下列設定：
 
 ```yaml
 source:
@@ -214,7 +215,7 @@ source:
 ```
 {% include copy.html %}
 
-To use the ACM, specify the following settings:
+若要使用 ACM，請指定下列設定：
 
 ```yaml
 source:
@@ -226,52 +227,52 @@ source:
 ```
 {% include copy.html %}
 
-## Metrics
+## 指標
 
-The `otlp` source includes the following metrics for monitoring its performance and health.
+`otlp` 來源包含下列指標，用於監視其效能與健康狀態。
 
-### Counters
+### 計數器
 
-The following counters track request activity and errors in the `otlp` source.
+下列計數器會追蹤 `otlp` 來源中的請求活動與錯誤。
 
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `requestTimeouts` | The total number of requests that timed out. |
-| `requestsReceived` | The total number of requests received by the `otlp` source. |
-| `successRequests` | The total number of requests successfully processed by the `otlp` source. |
-| `badRequests` | The total number of requests with an invalid format processed by the `otlp` source. |
-| `requestsTooLarge` | The total number of requests that exceed the maximum allowed size. |
-| `internalServerError` | The total number of requests processed by the `otlp` source with custom exception types. |
+| `requestTimeouts` | 逾時的請求總數。 |
+| `requestsReceived` | `otlp` 來源收到的請求總數。 |
+| `successRequests` | `otlp` 來源成功處理的請求總數。 |
+| `badRequests` | `otlp` 來源處理之格式無效的請求總數。 |
+| `requestsTooLarge` | 超過允許大小上限的請求總數。 |
+| `internalServerError` | `otlp` 來源以自訂例外類型處理的請求總數。 |
 
-### Timers
+### 計時器
 
-The following timers track request activity and errors in the `otlp` source.
+下列計時器會追蹤 `otlp` 來源中的請求活動與錯誤。
 
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `requestProcessDuration` | The latency of requests processed by the `otlp` source, in seconds. |
+| `requestProcessDuration` | `otlp` 來源處理之請求的延遲，以秒為單位。 |
 
-### Distribution summaries
+### 分佈摘要
 
-The following distribution summaries track request activity and errors in the `otlp` source.
+下列分佈摘要會追蹤 `otlp` 來源中的請求活動與錯誤。
 
-| Metric | Description |
+| 指標 | 說明 |
 | :--- | :--- |
-| `payloadSize` | The distribution of incoming request payload sizes, in bytes. |
+| `payloadSize` | 傳入請求承載大小的分佈，以位元組為單位。 |
 
-## Migrating from individual OpenTelemetry sources
+## 從個別 OpenTelemetry 來源遷移
 
-If you're using separate `otel_logs_source`, `otel_metrics_source`, or `otel_trace_source` sources, you can migrate to the unified `otlp` source by following these steps:
+如果您使用個別的 `otel_logs_source`、`otel_metrics_source` 或 `otel_trace_source` 來源，您可以依照下列步驟遷移至統一的 `otlp` 來源：
 
-1. Replace all three sources with a single `otlp` source.
-2. Use [routing configuration](#routing-telemetry-signals) to direct different signal types to their appropriate pipelines.
-3. Change the port numbers if needed (the `otlp` source uses port `21893` by default).
+1. 將這三個來源全部替換為單一 `otlp` 來源。
+2. 使用[路由組態](#routing-telemetry-signals)將不同的訊號類型導向其適當的管線。
+3. 視需要變更連接埠號碼（`otlp` 來源預設使用連接埠 `21893`）。
 
-### Migration example
+### 遷移範例
 
-The following example demonstrates how to consolidate separate OpenTelemetry log, metric, and trace sources into a single `otlp` source.
+下列範例示範如何將個別的 OpenTelemetry 記錄、指標與追蹤來源合併為單一 `otlp` 來源。
 
-Consider a setup where logs, metrics, and traces are configured separately:
+假設有一個記錄、指標與追蹤分別設定的環境：
 
 ```yaml
 logs-pipeline:
@@ -301,7 +302,7 @@ traces-pipeline:
         index: traces
 ```
 
-You can consolidate logs, metrics, and traces into a single `otlp` source as follows:
+您可以將記錄、指標與追蹤合併為單一 `otlp` 來源，如下所示：
 
 ```yaml
 otlp-pipeline:
@@ -328,9 +329,9 @@ otlp-pipeline:
 ```
 {% include copy.html %}
 
-## Related documentation
+## 相關文件
 
-- [OTel logs source]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otel-logs-source/)
-- [OTel metrics source]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otel-metrics-source/)
-- [OTel trace source]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otel-trace-source/)
+- [OTel 記錄來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otel-logs-source/)
+- [OTel 指標來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otel-metrics-source/)
+- [OTel 追蹤來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otel-trace-source/)
 - [getEventType()]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/get-eventtype/)

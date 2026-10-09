@@ -1,50 +1,51 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Filtering in neural sparse ANN search
+title: "神經稀疏 ANN 搜尋中的篩選"
 parent: Filtering data
 nav_order: 40
 ---
 
-# Filtering in neural sparse ANN search
+# 神經稀疏 ANN 搜尋中的篩選
 
-You can run neural sparse approximate nearest neighbor (ANN) search queries with filtering in the following ways:
+您可以透過下列方式執行帶有篩選的神經稀疏近似最近鄰 (ANN) 搜尋查詢：
 
-- Provide a `filter` in the `method_parameters` of the `neural_sparse` query. The filter is evaluated by the engine that is configured for the `sparse_vector` field, so how the filter is applied depends on that engine.
-- Wrap the `neural_sparse` query in a [Boolean filter](#using-a-boolean-filter-with-neural-sparse-ann-search). The filter is evaluated outside the engine, after the query returns its top `k` results, and is applied the same way by both engines.
+- 在 `neural_sparse` 查詢的 `method_parameters` 中提供 `filter`。篩選由為 `sparse_vector` 欄位設定的引擎評估，因此篩選的套用方式取決於該引擎。
+- 將 `neural_sparse` 查詢包裝在 [布林值篩選](#using-a-boolean-filter-with-neural-sparse-ann-search) 中。篩選在引擎之外評估，於查詢傳回前 `k` 筆結果之後套用，且兩種引擎的套用方式相同。
 
-## Applying the filter
-**Introduced 3.9**
+## 套用篩選
+**於 3.9 版導入**
 {: .label .label-purple }
 
-Neural sparse ANN search supports two engines, selected by the `method.engine` mapping parameter of a `sparse_vector` field. Both engines fall back to exact search when a filter is highly selective, but when they do run approximate search, they differ in whether the filter is applied before or after retrieval. The query syntax is identical for both engines. For more information about engines, see [Engines]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines).
+神經稀疏 ANN 搜尋支援兩種引擎，透過 `sparse_vector` 欄位的 `method.engine` 對應參數選取。當篩選具有高度選擇性時，兩種引擎都會退回精確搜尋，但當它們執行近似搜尋時，差異在於篩選是在擷取之前或之後套用。兩種引擎的查詢語法完全相同。如需引擎的更多資訊，請參閱 [引擎]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines)。
 
-The algorithm uses the following variables to decide how to apply a filter:
+該演算法使用下列變數來決定如何套用篩選：
 
-- N: The number of documents in the index.
-- P: The number of documents in the document subset after the filter is applied (P <= N).
-- k: The maximum number of vectors to return in the response.
+- N：索引中的文件數。
+- P：套用篩選後文件子集中的文件數 (P <= N)。
+- k：回應中要傳回的最大向量數。
 
-When P is less than k, both engines run an exact search over the P filtered documents, which would otherwise return far fewer than k results. When P is greater than k, the engines apply the filter as follows.
+當 P 小於 k 時，兩種引擎都會對 P 筆篩選後的文件執行精確搜尋，否則傳回的結果會遠少於 k 筆。當 P 大於 k 時，引擎會依照下列方式套用篩選。
 
-| Engine | How the filter is applied | Number of results |
+| 引擎 | 篩選的套用方式 | 結果數量 |
 |:--- |:--- |:--- |
-| `lucene` (default) | Post-filtering. The algorithm runs on the N documents, and the filter is applied to the results, so the results are the intersection of the top matches and the filter. | A selective filter can return fewer than `k` results. |
-| `native` | Pre-filtering. The filter is pushed down into the engine as a candidate set, so retrieval runs within the filtered set. | Returns the full `k` results. |
+| `lucene` (預設) | 後置篩選。演算法在 N 筆文件上執行，篩選套用於結果，因此結果是前幾名相符項目與篩選的交集。 | 具選擇性的篩選可能傳回少於 `k` 筆結果。 |
+| `native` | 前置篩選。篩選會以候選集的形式下推至引擎，因此擷取會在篩選後的集合內執行。 | 傳回完整的 `k` 筆結果。 |
 
-### Post-filtering using the Lucene engine
+### 使用 Lucene 引擎進行後置篩選
 
-When P is greater than k, the Lucene engine runs the neural sparse ANN search algorithm on the N documents and applies the filter to the results. Because the filter is applied to the approximate results, a selective filter can return fewer than k results.
+當 P 大於 k 時，Lucene 引擎會在 N 筆文件上執行神經稀疏 ANN 搜尋演算法，並將篩選套用於結果。由於篩選套用於近似結果，具選擇性的篩選可能傳回少於 k 筆結果。
 
-### Pre-filtering using the native engine
+### 使用 native 引擎進行前置篩選
 
-When P is greater than k, the native engine pushes the filter down as a candidate set before retrieval begins. Approximate retrieval then runs within the filtered set, so a selective filter doesn't reduce the number of results, and the query returns the full `k` results.
+當 P 大於 k 時，native 引擎會在擷取開始前將篩選以候選集的形式下推。近似擷取接著會在篩選後的集合內執行，因此具選擇性的篩選不會減少結果數量，查詢會傳回完整的 `k` 筆結果。
 
-To use the native engine for a field, set `method.engine` to `native` in the field mapping.
+若要對欄位使用 native 引擎，請在欄位對應中將 `method.engine` 設定為 `native`。
 
-The native engine is disabled by default and requires additional node settings. Enable the engine before creating a field that uses it. For more information, see [Enabling the native engine]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#enabling-the-native-engine).
+native 引擎預設為停用，需要額外的節點設定。請在建立使用該引擎的欄位之前啟用引擎。如需更多資訊，請參閱 [啟用 native 引擎]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#enabling-the-native-engine)。
 {: .note}
 
-The following request creates an index equivalent to the `hotels-index` index used in the example, in which the `name_embedding` field uses the native engine:
+下列請求會建立一個等同於範例中使用的 `hotels-index` 索引的索引，其中 `name_embedding` 欄位使用 native 引擎：
 
 ```json
 PUT /hotels-index-native
@@ -86,15 +87,15 @@ PUT /hotels-index-native
 ```
 {% include copy-curl.html %}
 
-## Using a neural sparse ANN search filter
+## 使用神經稀疏 ANN 搜尋篩選
 
-In this example, you will create an index and search for the three hotels with high ratings, parking, and a name matching your search criteria. The index uses the default Lucene engine, so the filter is applied after approximate retrieval. To run the same query using pre-filtering, map the field to the native engine, as described in [Pre-filtering using the native engine](#pre-filtering-using-the-native-engine).
+在此範例中，您將建立一個索引，並搜尋評分高、有停車場且名稱符合搜尋條件的三家旅館。索引使用預設的 Lucene 引擎，因此篩選會在近似擷取之後套用。若要使用前置篩選執行相同的查詢，請將欄位對應至 native 引擎，如 [使用 native 引擎進行前置篩選](#pre-filtering-using-the-native-engine) 所述。
 
-### Step 1: Create a new index
+### 步驟 1：建立新索引
 
-Before you can run a neural sparse ANN search with a filter, you need to create an index with a `sparse_vector` field.
+在執行帶有篩選的神經稀疏 ANN 搜尋之前，您需要建立一個包含 `sparse_vector` 欄位的索引。
 
-The following request creates a new index called `hotels-index`:
+下列請求會建立名為 `hotels-index` 的新索引：
 
 ```json
 PUT /hotels-index
@@ -134,11 +135,11 @@ PUT /hotels-index
 ```
 {% include copy-curl.html %}
 
-### Step 2: Add data to your index
+### 步驟 2：將資料加入索引
 
-Next, add data to your index.
+接下來，將資料加入您的索引。
 
-The following request adds 10 documents that contain hotel name embeddings, ratings, and parking information:  
+下列請求會加入 10 筆包含旅館名稱嵌入、評分與停車場資訊的文件：
 
 ```json
 POST /_bulk
@@ -165,11 +166,11 @@ POST /_bulk
 ```
 {% include copy-curl.html %}
 
-### Step 3: Search your data with a filter
+### 步驟 3：使用篩選條件搜尋您的資料
 
-Now you can create a neural sparse ANN search with filters. In the `method_parameters` field of the `neural_sparse` query clause, include the point of interest that is used to search for nearest neighbors, the number of nearest neighbors to return (`k`), and a filter with the restriction criteria. Depending on how restrictive you want your filter to be, you can add multiple query clauses to a single request.
+現在您可以建立帶有篩選條件的神經稀疏 ANN 搜尋。在 `neural_sparse` 查詢子句的 `method_parameters` 欄位中，加入用來搜尋最近鄰的關注點、要傳回的最近鄰數量（`k`），以及帶有限制條件的篩選條件。視您希望篩選條件有多嚴格而定，您可以在單一請求中新增多個查詢子句。
 
-The following request creates a neural sparse ANN search query that searches for the top three hotels with names matching the text "beach resort", that are rated between 8 and 10, inclusive, and that provide parking:
+下列請求會建立神經稀疏 ANN 搜尋查詢，搜尋名稱符合文字「beach resort」、評分介於 8 到 10（含）之間，且提供停車位的前三家旅館：
 
 ```json
 POST /hotels-index/_search
@@ -208,7 +209,7 @@ POST /hotels-index/_search
 ```
 {% include copy-curl.html %}
 
-The response returns the three hotels that are nearest to the search point and meet the filter criteria:
+回應會傳回最接近搜尋點且符合篩選條件的三家旅館：
 
 ```json
 {
@@ -277,13 +278,13 @@ The response returns the three hotels that are nearest to the search point and m
 }
 ```
 
-## Post-filtering outside the query
+## 查詢外的後置篩選
 
-You can also apply post-filtering using a [Boolean filter](#using-a-boolean-filter-with-neural-sparse-ann-search). In this case, the filter is evaluated outside the engine, so it is applied the same way by both the Lucene engine and the native engine. Because filtering occurs after the neural sparse ANN search retrieves its top k results, the final number of returned results may be much smaller than k.
+您也可以使用 [布林值篩選](#using-a-boolean-filter-with-neural-sparse-ann-search) 套用後置篩選。在這種情況下，篩選條件是在引擎外部評估，因此 Lucene 引擎和 native 引擎會以相同方式套用。由於篩選是在神經稀疏 ANN 搜尋擷取其前 k 個結果之後才進行，最終傳回的結果數量可能會遠小於 k。
 
-### Using a Boolean filter with neural sparse ANN search
+### 搭配神經稀疏 ANN 搜尋使用布林值篩選
 
-A Boolean filter consists of a `bool` query that contains a `neural_sparse` query and a filter. For example, the following query searches for hotels with names matching the text "beach resort" and then filters the results to return hotels with a rating between 8 and 10, inclusive, and that provide parking:
+布林值篩選由包含 `neural_sparse` 查詢和篩選條件的 `bool` 查詢組成。例如，下列查詢會搜尋名稱符合文字「beach resort」的旅館，然後篩選結果以傳回評分介於 8 到 10（含）之間，且提供停車位的旅館：
 
 ```json
 POST /hotels-index/_search
@@ -330,7 +331,7 @@ POST /hotels-index/_search
 ```
 {% include copy-curl.html %}
 
-The response includes documents containing the matching hotels:
+回應包含符合的旅館文件：
 
 ```json
 {
@@ -369,7 +370,7 @@ The response includes documents containing the matching hotels:
 }
 ```
 
-## Next steps
+## 後續步驟
 
-- For more information about neural sparse ANN search, see [Neural sparse ANN search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/).
-- For more information about the Lucene engine and the native engine, see [Engines]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines).
+- 如需神經稀疏 ANN 搜尋的詳細資訊，請參閱 [神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)。
+- 如需 Lucene 引擎和 native 引擎的詳細資訊，請參閱 [引擎]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines)。

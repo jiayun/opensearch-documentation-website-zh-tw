@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Key components
+title: "關鍵元件"
 nav_order: 20
 permalink: /classic/migration-assistant/key-components/
 ---
 
-# Key components 
+# 關鍵元件
 
-The following are the key components of Migration Assistant.
+以下是 Migration Assistant 的關鍵元件。
 
-## Elasticsearch/OpenSearch source
+## Elasticsearch/OpenSearch 來源
 
-In this solution, your source cluster operates on either Elasticsearch or OpenSearch and is hosted on Amazon Elastic Compute Cloud (Amazon EC2) instances or in a similar computing environment. The source cluster may also be managed by AWS, an alternative cloud provider, or hosted on premises. Traffic is rerouted from the source cluster to a Traffic Capture Proxy and replayed to a target, typically on a later version of OpenSearch.
+在此解決方案中，您的來源叢集執行於 Elasticsearch 或 OpenSearch，並託管於 Amazon Elastic Compute Cloud (Amazon EC2) 執行個體或類似的運算環境中。來源叢集也可能由 AWS、其他雲端供應商管理，或託管於內部部署環境。流量會從來源叢集重新導向至 Traffic Capture Proxy，並重播至目標，通常是較新版本的 OpenSearch。
 
 ## Migration Console
 
-The Migration Console provides a migration-specific CLI and offers a variety of tools for streamlining the migration process. You can perform everything necessary for completing a migration, other than cleaning up the migration resources and managing application changes, through this console.
+Migration Console 提供專為遷移設計的 CLI，並提供多種工具來簡化遷移流程。除了清理遷移資源和管理應用程式變更之外，您可以透過此主控台執行完成遷移所需的一切作業。
 
 ## Traffic Capture Proxy
 
-This component is designed for HTTP RESTful traffic. It forwards traffic to the source cluster and also splits and channels this traffic to a stream processing service for later playback.
+此元件專為 HTTP RESTful 流量而設計。它會將流量轉送至來源叢集，同時將此流量分割並導向至串流處理服務，以供後續重播。
 
 ## Traffic Replayer
 
-Acting as a traffic simulation tool, [Traffic Replayer]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/replay-captured-traffic/) replays recorded request traffic to a target cluster, mirroring source traffic patterns. It links original requests and their responses to those directed at the target cluster, facilitating comparative analysis.
+[Traffic Replayer]({{site.url}}{{site.baseurl}}/classic/migration-assistant/migration-phases/replay-captured-traffic/) 做為流量模擬工具，會將錄製的請求流量重播至目標叢集，以模擬來源流量模式。它會將原始請求及其回應與導向目標叢集的請求及其回應建立關聯，以便進行比較分析。
 
 ## Metadata Migration Tool
 
-The Metadata Migration Tool integrated into the Migration CLI can be used independently to migrate cluster metadata, including index mappings, index configuration settings, templates, component templates, and aliases.
+整合至 Migration CLI 的 Metadata Migration Tool 可獨立使用，以遷移叢集中繼資料，包括索引對應、索引組態設定、範本、元件範本和別名。
 
 ## Reindex-from-Snapshot
 
-`Reindex-from-Snapshot` (RFS) reindexes data from an existing snapshot. Amazon Elastic Container Service (Amazon ECS) workers coordinate the migration of documents from an existing snapshot, reindexing the documents in parallel to a target cluster.
+`Reindex-from-Snapshot` (RFS) 會從現有快照重新編製索引資料。Amazon Elastic Container Service (Amazon ECS) 工作者會協調從現有快照遷移文件，將文件平行重新編製索引至目標叢集。
 
-## Target cluster
+## 目標叢集
 
-The target cluster is the destination cluster for an upgrade or migration. It may also be a cluster on the same version that has been reconfigured to meet changing application needs.
+目標叢集是升級或遷移的目的地叢集。它也可能是已重新設定以符合不斷變化的應用程式需求的同版本叢集。

@@ -1,59 +1,60 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Execute agent stream
+title: "執行代理程式串流"
 parent: Agent APIs
 grand_parent: ML Commons APIs
 nav_order: 25
 ---
 
 # Execute Agent Stream API
-**Introduced 3.3**
+**於 3.3 版推出**
 {: .label .label-purple }
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).    
+這是實驗性功能，不建議在正式環境中使用。若要瞭解此功能的最新進展或提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/)上的討論。    
 {: .warning}
 
-The Execute Agent Stream API provides the same functionality as the [Execute Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/) but returns responses in a streaming format, delivering data in chunks as it becomes available. This streaming approach is particularly beneficial for large language model interactions with lengthy responses, allowing you to see partial results immediately rather than waiting for the complete response.
+Execute Agent Stream API 提供與 [Execute Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/) 相同的功能，但會以串流格式傳回回應，在資料可用時分批傳送。這種串流方式對於回應冗長的大型語言模型互動特別有幫助，讓您可以立即看到部分結果，無須等待完整回應。
 
-Alternatively, you can stream agent execution over gRPC. For more information, see [gRPC Execute Agent Stream API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/execute-agent-stream/).
+您也可以透過 gRPC 以串流方式執行代理程式。如需詳細資訊，請參閱 [gRPC Execute Agent Stream API]({{site.url}}{{site.baseurl}}/api-reference/grpc-apis/execute-agent-stream/)。
 {: .note}
 
-This API supports the following agent types:
+此 API 支援下列代理程式類型：
 
-- **Conversational agents** with the following externally hosted model types:
+- **對話式代理程式**，搭配下列外部託管模型類型：
     - [OpenAI Chat Completion](https://platform.openai.com/docs/api-reference/completions)
     - [Amazon Bedrock Converse Stream](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ConverseStream.html)
 
-- **AG-UI agents** using the AG-UI protocol request and response format. For more information, see [AG-UI agents]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/ag-ui/).
+- **AG-UI 代理程式**，使用 AG-UI 通訊協定的請求與回應格式。如需詳細資訊，請參閱 [AG-UI 代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/ag-ui/)。
 
-## Endpoint
+## 端點
 
 ```json
 POST /_plugins/_ml/agents/{agent_id}/_execute/stream
 ```
 
-## Prerequisites
+## 先決條件
 
-Before using this API, ensure that you have fulfilled the following prerequisites.
+使用此 API 前，請確保您已滿足下列先決條件。
 
-### Set up your cluster
+### 設定您的叢集
 
-Follow these steps to set up your cluster.
+請依照下列步驟設定您的叢集。
 
-#### Step 1: Install the required plugins
+#### 步驟 1：安裝必要的外掛程式
 
-The Execute Agent Stream API depends on the following plugins, which are included in the OpenSearch distribution but must be explicitly installed as follows:
+Execute Agent Stream API 相依於下列外掛程式。這些外掛程式已包含在 OpenSearch 發行套件中，但必須依照下列方式明確安裝：
 
 ```bash
 bin/opensearch-plugin install transport-reactor-netty4
 bin/opensearch-plugin install arrow-flight-rpc
 ```
 
-For more information, see [Managing OpenSearch plugins]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/).
+如需詳細資訊，請參閱[管理 OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)。
 
-#### Step 2: Configure OpenSearch settings
+#### 步驟 2：設定 OpenSearch 設定
 
-Add these settings to your `opensearch.yml` file or Docker Compose configuration:
+將這些設定新增至您的 `opensearch.yml` 檔案或 Docker Compose 組態：
 
 ```yaml
 opensearch.experimental.feature.transport.stream.enabled: true
@@ -74,14 +75,14 @@ transport.ssl.enforce_hostname_verification: false
 ```
 {% include copy.html %}
 
-If you're using the security demo certificates, change `plugins.security.ssl.transport.enforce_hostname_verification: false` to `transport.ssl.enforce_hostname_verification: false` in your `opensearch.yml` file.
+如果您使用安全性示範憑證，請將您 `opensearch.yml` 檔案中的 `plugins.security.ssl.transport.enforce_hostname_verification: false` 變更為 `transport.ssl.enforce_hostname_verification: false`。
 {: .note}
 
-For more information about enabling experimental features, see [Experimental feature flags]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/experimental/).
+如需啟用實驗性功能的詳細資訊，請參閱[實驗性功能旗標]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/experimental/)。
 
-#### Step 3: Configure JVM options
+#### 步驟 3：設定 JVM 選項
 
-Add these settings to your `jvm.options` file:
+將這些設定新增至您的 `jvm.options` 檔案：
 
 ```yaml
 -Dio.netty.allocator.numDirectArenas=1
@@ -92,13 +93,13 @@ Add these settings to your `jvm.options` file:
 ```
 {% include copy.html %}
 
-### Configure the necessary APIs
+### 設定必要的 API
 
-Configure the API using the following steps.
+請依照下列步驟設定 API。
 
-#### Step 1: Enable the streaming feature flag
+#### 步驟 1：啟用串流功能旗標
 
-To enable the streaming feature flag, update the cluster settings as follows:
+若要啟用串流功能旗標，請依照下列方式更新叢集設定：
 
 ```json
 PUT _cluster/settings
@@ -110,9 +111,9 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-#### Step 2: Register a compatible externally hosted model
+#### 步驟 2：註冊相容的外部託管模型
 
-To register an OpenAI Chat Completion model, send the following request:
+若要註冊 OpenAI Chat Completion 模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -148,7 +149,7 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-To register an Amazon Bedrock Converse Stream model, send the following request:
+若要註冊 Amazon Bedrock Converse Stream 模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -187,13 +188,13 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-#### Step 3: Register a conversational agent
+#### 步驟 3：註冊對話式代理程式
 
-When registering your agent, you must include the `_llm_interface` parameter that corresponds to your model type:
-- OpenAI Chat Completion: `openai/v1/chat/completions`
-- Amazon Bedrock Converse Stream: `bedrock/converse/claude`
+註冊您的代理程式時，必須包含與您的模型類型對應的 `_llm_interface` 參數：
+- OpenAI Chat Completion：`openai/v1/chat/completions`
+- Amazon Bedrock Converse Stream：`bedrock/converse/claude`
 
-To register your agent, send the following request:
+若要註冊您的代理程式，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -235,7 +236,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-## Example request: Conversational agent
+## 範例請求：對話式代理程式
 
 ```json
 POST /_plugins/_ml/agents/{agent_id}/_execute/stream
@@ -247,7 +248,7 @@ POST /_plugins/_ml/agents/{agent_id}/_execute/stream
 ```
 {% include copy-curl.html %}
 
-## Example response: Conversational agent
+## 範例回應：對話式代理程式
 
 ```json
 data: {"inference_results":[{"output":[{"name":"memory_id","result":"LvU1iJkBCzHrriq5hXbN"},{"name":"parent_interaction_id","result":"L_U1iJkBCzHrriq5hXbs"},{"name":"response","dataAsMap":{"content":"[{\"index\":0.0,\"id\":\"call_HjpbrbdQFHK0omPYa6m2DCot\",\"type\":\"function\",\"function\":{\"name\":\"RetrieveIndexMetaTool\",\"arguments\":\"\"}}]","is_last":false}}]}]}
@@ -281,11 +282,11 @@ data: {"inference_results":[{"output":[{"name":"memory_id","result":"LvU1iJkBCzH
 data: {"inference_results":[{"output":[{"name":"memory_id","result":"LvU1iJkBCzHrriq5hXbN"},{"name":"parent_interaction_id","result":"L_U1iJkBCzHrriq5hXbs"},{"name":"response","dataAsMap":{"content":"","is_last":true}}]}]}
 ```
 
-## Example request with token usage
-**Introduced 3.6**
+## 含詞元用量的範例請求
+**於 3.6 版推出**
 {: .label .label-purple }
 
-To receive detailed token usage metrics in the streaming response, set `include_token_usage` to `true`:
+若要在串流回應中接收詳細的詞元用量指標，請將 `include_token_usage` 設為 `true`：
 
 ```json
 POST /_plugins/_ml/agents/{agent_id}/_execute/stream
@@ -298,9 +299,9 @@ POST /_plugins/_ml/agents/{agent_id}/_execute/stream
 ```
 {% include copy-curl.html %}
 
-### Example response with token usage
+### 含詞元用量的範例回應
 
-The streaming response includes a `token_usage` chunk sent after the content chunks and before the final completion chunk:
+串流回應包含一個 `token_usage` 區塊，該區塊會在內容區塊之後、最終完成區塊之前送出：
 
 ```json
 ... (content chunks as shown above) ...
@@ -310,14 +311,14 @@ data: {"inference_results":[{"output":[{"name":"memory_id","result":"LvU1iJkBCzH
 data: {"inference_results":[{"output":[{"name":"memory_id","result":"LvU1iJkBCzHrriq5hXbN"},{"name":"parent_interaction_id","result":"L_U1iJkBCzHrriq5hXbs"},{"name":"response","dataAsMap":{"content":"","is_last":true}}]}]}
 ```
 
-## Example request: AG-UI agent
-**Introduced 3.5**
+## 範例請求：AG-UI 代理程式
+**於 3.5 版推出**
 {: .label .label-purple }
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).
+這是實驗性功能，不建議在正式環境中使用。如需此功能進展的最新消息，或想提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/) 的討論。
 {: .warning}
 
-AG-UI agents use the AG-UI protocol format for frontend integration:
+AG-UI 代理程式使用 AG-UI 通訊協定格式進行前端整合：
 
 ```json
 POST /_plugins/_ml/agents/{agent_id}/_execute/stream
@@ -339,9 +340,9 @@ POST /_plugins/_ml/agents/{agent_id}/_execute/stream
 ```
 {% include copy-curl.html %}
 
-## Example response: AG-UI agent
+## 範例回應：AG-UI 代理程式
 
-AG-UI agents return SSEs using the AG-UI protocol format:
+AG-UI 代理程式使用 AG-UI 協定格式傳回 SSE：
 
 ```json
 data: {"type":"RUN_STARTED","timestamp":1734567890123,"threadId":"thread-xxxxx","runId":"run-xxxxx"}
@@ -355,36 +356,36 @@ data: {"type":"TEXT_MESSAGE_END","timestamp":1734567890140,"messageId":"msg-xxxx
 data: {"type":"RUN_FINISHED","timestamp":1734567890251,"threadId":"thread-xxxxx","runId":"run-xxxxx"}
 ```
 
-For complete AG-UI agent documentation, including setup, prerequisites, field definitions, and implementation details, see [AG-UI agents]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/ag-ui/).
+如需完整的 AG-UI 代理程式文件，包括設定、必要條件、欄位定義與實作細節，請參閱 [AG-UI 代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/ag-ui/)。
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response body fields.
+下表列出所有回應本文欄位。
 
-| Field | Data type | Description                                                                                                 |
+| 欄位 | 資料類型 | 說明                                                                                                 |
 | :--- | :--- |:------------------------------------------------------------------------------------------------------------|
-| `inference_results` | Array | Contains the streaming response data returned by the agent.                                                       |
-| `inference_results.output` | Array | Contains output objects for each inference result.                                                      |
-| `inference_results.output.name` | String | The name of the output field. Can be `memory_id`, `parent_interaction_id`, `response`, or `token_usage`.                   |
-| `inference_results.output.result` | String | The values of the `memory_id` and `parent_interaction_id` fields.                                        |
-| `inference_results.output.dataAsMap` | Object | Contains the response content and metadata (present for `response` and `token_usage` outputs).                               |
-| `inference_results.output.dataAsMap.content` | String | The agent's response content, which can include tool calls, tool results, or final text output.  |
-| `inference_results.output.dataAsMap.is_last` | Boolean | Indicates whether this is the final chunk in the stream: `true` for the last chunk, `false` if there are more chunks. |
-| `inference_results.output.dataAsMap.token_usage` | Object | Token usage metrics for the agent execution. Delivered as a separate streaming chunk before the final completion chunk. Only present when `include_token_usage` is set to `true`. **Introduced 3.6** |
+| `inference_results` | 陣列 | 包含代理程式傳回的串流回應資料。                                                       |
+| `inference_results.output` | 陣列 | 包含每個推論結果的輸出物件。                                                      |
+| `inference_results.output.name` | 字串 | 輸出欄位的名稱。可以是 `memory_id`、`parent_interaction_id`、`response` 或 `token_usage`。                   |
+| `inference_results.output.result` | 字串 | `memory_id` 與 `parent_interaction_id` 欄位的值。                                        |
+| `inference_results.output.dataAsMap` | 物件 | 包含回應內容與中繼資料 (出現在 `response` 與 `token_usage` 輸出中)。                               |
+| `inference_results.output.dataAsMap.content` | 字串 | 代理程式的回應內容，可能包含工具呼叫、工具結果或最終文字輸出。  |
+| `inference_results.output.dataAsMap.is_last` | 布林值 | 指出這是否為串流中的最後一個區塊：最後一個區塊為 `true`，若還有更多區塊則為 `false`。 |
+| `inference_results.output.dataAsMap.token_usage` | 物件 | 代理程式執行的詞元使用量指標。以獨立的串流區塊形式在最終完成區塊之前傳送。僅在 `include_token_usage` 設定為 `true` 時才會出現。**於 3.6 版推出** |
 
-### Token usage in streaming responses
-**Introduced 3.6**
+### 串流回應中的詞元使用量
+**3.6 版新增**
 {: .label .label-purple }
 
-To enable token usage tracking in streaming responses, set the `parameters.include_token_usage` field to `true` in your request. When enabled, the streaming response sequence is as follows:
+若要在串流回應中啟用詞元使用量追蹤，請在請求中將 `parameters.include_token_usage` 欄位設定為 `true`。啟用後，串流回應的順序如下：
 
-1. Content chunks stream through (with `is_last: false`)
-2. A `token_usage` chunk is sent containing detailed metrics
-3. A final completion chunk is sent (with empty content and `is_last: true`)
+1. 內容區塊串流傳送 (含 `is_last: false`)
+2. 傳送一個包含詳細指標的 `token_usage` 區塊
+3. 傳送最終完成區塊 (內容為空且 `is_last: true`)
 
-The token usage chunk contains the same structure as the non-streaming API response:
+詞元使用量區塊的結構與非串流 API 回應相同：
 
-- **`per_turn_usage`**: An array of token usage records for each LLM call during agent execution. Each record includes `turn` (the sequence number), `model_id`, `model_name`, `model_url`, `input_tokens`, `output_tokens`, `total_tokens`, and optional cache-related fields.
-- **`per_model_usage`**: Aggregated token usage grouped by model. Each record includes `model_id`, `model_name`, `model_url`, `call_count` (number of LLM calls), `input_tokens`, `output_tokens`, `total_tokens`, and optional cache-related fields.
+- **`per_turn_usage`**：代理程式執行期間每次 LLM 呼叫的詞元使用量記錄陣列。每筆記錄包含 `turn` (序號)、`model_id`、`model_name`、`model_url`、`input_tokens`、`output_tokens`、`total_tokens`，以及選用的快取相關欄位。
+- **`per_model_usage`**：依模型分組的彙總詞元使用量。每筆記錄包含 `model_id`、`model_name`、`model_url`、`call_count` (LLM 呼叫次數)、`input_tokens`、`output_tokens`、`total_tokens`，以及選用的快取相關欄位。
 
-For a complete description of token usage fields and how tokens are calculated by different model providers, see [Tracking token usage]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#tracking-token-usage) in the Execute Agent API documentation.
+如需詞元使用量欄位的完整說明，以及不同模型供應商如何計算詞元，請參閱 Execute Agent API 文件中的 [追蹤詞元使用量]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#tracking-token-usage)。

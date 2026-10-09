@@ -1,34 +1,35 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Anomaly Detection APIs
+title: "異常偵測 API"
 parent: Anomaly detection
 nav_order: 1
 redirect_from: 
   - /monitoring-plugins/ad/api/
 ---
 
-# Anomaly Detection APIs
+# 異常偵測 API
 
-Use these anomaly detection operations to programmatically create and manage detectors.
+使用這些異常偵測操作，以程式設計方式建立及管理偵測器。
 
 ---
 
-#### Table of contents
+#### 目錄
 - TOC
 {:toc}
 
 
 ---
 
-## Create anomaly detector
-Introduced 1.0
+## 建立異常偵測器
+於 1.0 版推出
 {: .label .label-purple }
 
-Creates an anomaly detector.
+建立異常偵測器。
 
-This command creates a single-entity detector named `test-detector` that finds anomalies based on the sum of the `value` field and stores the result in a custom `opensearch-ad-plugin-result-test` index:
+此命令會建立名為 `test-detector` 的單一實體偵測器，其根據 `value` 欄位的總和來尋找異常，並將結果儲存在自訂的 `opensearch-ad-plugin-result-test` 索引中：
 
-#### Example request
+#### 範例請求
 
 ```json
 POST _plugins/_anomaly_detection/detectors
@@ -83,7 +84,7 @@ POST _plugins/_anomaly_detection/detectors
 }
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -163,9 +164,9 @@ POST _plugins/_anomaly_detection/detectors
 }
 ```
 
-To create a high cardinality detector by specifying a category field:
+若要藉由指定類別欄位來建立高基數偵測器：
 
-#### Example request
+#### 範例請求
 
 ```json
 POST _plugins/_anomaly_detection/detectors
@@ -222,7 +223,7 @@ POST _plugins/_anomaly_detection/detectors
 }
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -305,7 +306,7 @@ POST _plugins/_anomaly_detection/detectors
 }
 ```
 
-You can specify a maximum of two category fields:
+您最多可以指定兩個類別欄位：
 
 ```json
 "category_field": [
@@ -319,50 +320,50 @@ You can specify a maximum of two category fields:
 ]
 ```
 
-You can specify the following options.
+您可以指定下列選項。
 
-Options | Description | Type | Required
-:--- | :--- |:--- |:--- |
-`name` |  The name of the detector. | `string` | Yes
-`description` |  A description of the detector. | `string` | No
-`time_field` |  The name of the time field. | `string` | Yes
-`indices`  |  A list of indexes to use as the data source. | `list` | Yes
-`feature_attributes` | Specify a `feature_name`, set the `enabled` parameter to `true`, and specify an aggregation query. | `list` | Yes
-`filter_query` |  Provide an optional filter query for your feature. | `object` | No
-`detection_interval` | The time interval for your anomaly detector. | `object` | Yes
-`window_delay` | Add extra processing time for data collection. | `object` | No
-`category_field` | Categorizes or slices data with a dimension. Similar to `GROUP BY` in SQL. | `list` | No
+選項 | 說明 | 類型 | 必要
+:--- | :--- |:--- | :--- |
+`name` |  偵測器的名稱。 | `string` | 是
+`description` |  偵測器的說明。 | `string` | 否
+`time_field` |  時間欄位的名稱。 | `string` | 是
+`indices`  |  要做為資料來源使用的索引清單。 | `list` | 是
+`feature_attributes` | 指定 `feature_name`、將 `enabled` 參數設為 `true`，並指定彙總查詢。 | `list` | 是
+`filter_query` |  為您的特徵提供選用的篩選查詢。 | `object` | 否
+`detection_interval` | 異常偵測器的時間間隔。 | `object` | 是
+`window_delay` | 為資料收集新增額外的處理時間。 | `object` | 否
+`category_field` | 使用維度將資料分類或切片。類似於 SQL 中的 `GROUP BY`。 | `list` | 否
 
 ---
 
-## Validate detector
-Introduced 1.2
+## 驗證偵測器
+於 1.2 版推出
 {: .label .label-purple }
 
-Returns whether the detector configuration has any issues that might prevent OpenSearch from creating the detector.
+傳回偵測器組態是否有任何可能導致 OpenSearch 無法建立偵測器的問題。
 
-You can use the validate detector API operation to identify issues in your detector configuration before creating the detector.
+您可以使用驗證偵測器 API 操作，在建立偵測器之前先找出偵測器組態中的問題。
 
-The request body consists of the detector configuration and follows the same format as the request body of the [create detector API]({{site.url}}{{site.baseurl}}/monitoring-plugins/ad/api#create-anomaly-detector).
+請求本文由偵測器組態組成，並遵循與[建立偵測器 API]({{site.url}}{{site.baseurl}}/monitoring-plugins/ad/api#create-anomaly-detector) 的請求本文相同的格式。
 
-You have the following validation options:
+您有下列驗證選項：
 
-- Only validate against the detector configuration and find any issues that would completely block detector creation:
+- 僅根據偵測器組態進行驗證，並找出任何會完全阻止建立偵測器的問題：
 
 ```
 POST _plugins/_anomaly_detection/detectors/_validate
 POST _plugins/_anomaly_detection/detectors/_validate/detector
 ```
 
-- Validate against the source data to see how likely the detector would complete model training.
+- 根據來源資料進行驗證，以了解偵測器完成模型訓練的可能性。
 
 ```
 POST _plugins/_anomaly_detection/detectors/_validate/model
 ```
 
-Responses from this API operation return either blocking issues as detector type responses or a response indicating a field that could be revised to increase likelihood of model training completing successfully. Model type issues don’t need to be fixed for detector creation to succeed, but the detector would likely not train successfully if they aren’t addressed.
+此 API 操作的回應會傳回封鎖問題做為偵測器類型回應，或傳回指出某個欄位可修改以提升模型訓練成功完成可能性的回應。模型類型問題不需要修正，偵測器建立仍可成功，但若未處理這些問題，偵測器可能無法順利訓練。
 
-#### Example request
+#### 範例請求
 
 ```json
 POST _plugins/_anomaly_detection/detectors/_validate
@@ -417,17 +418,17 @@ POST _plugins/_anomaly_detection/detectors/_validate/detector
 }
 ```
 
-If the Validate Detector API doesn't find any issues in the detector configuration, it returns an empty response:
+如果 Validate Detector API 在偵測器組態中沒有發現任何問題，則會傳回空回應：
 
-#### Example response
+#### 範例回應
 
 ```json
 {}
 ```
 
-If the Validate Detector API finds a configuration issue, it returns a message explaining the issue. In this example, the feature query aggregates over a field that doesn't exist in the data source:
+如果 Validate Detector API 發現組態問題，則會傳回一則說明該問題的訊息。在此範例中，特徵查詢對資料來源中不存在的欄位進行彙總：
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -442,7 +443,7 @@ If the Validate Detector API finds a configuration issue, it returns a message e
 }
 ```
 
-The following request validates against the source data to see if model training might succeed. In this example, the data is ingested at a rate of every 5 minutes, and detector interval is set to 1 minute.
+下列請求會針對來源資料進行驗證，以確認模型訓練是否可能成功。在此範例中，資料以每 5 分鐘一次的頻率匯入，且偵測器間隔設定為 1 分鐘。
 
 ```json
 POST _plugins/_anomaly_detection/detectors/_validate/model
@@ -496,11 +497,11 @@ POST _plugins/_anomaly_detection/detectors/_validate/model
 }
 ```
 
-If the Validate Detector API identifies areas of improvement in your configuration, it returns a response with suggestions for changing your configuration to improve model training.
+如果 Validate Detector API 在您的組態中找出可改進之處，則會傳回包含建議的回應，協助您變更組態以改善模型訓練。
 
-#### Example response
+#### 範例回應
 
-In this example, the Validate Detector API returns a response indicating that changing the detector interval length to at least 4 minutes can increase the probability of successful model training.
+在此範例中，Validate Detector API 傳回的回應指出，將偵測器間隔長度變更為至少 4 分鐘，可以提高模型訓練成功的機率。
 
 ```json
 {
@@ -518,7 +519,7 @@ In this example, the Validate Detector API returns a response indicating that ch
 }
 ```
 
-Another response might indicate that you can change `filter_query` (data filter) because the currently filtered data is too sparse for the model to train correctly, which can happen because the index is also ingesting data that falls outside the chosen filter. Using another `filter_query` can make your data more dense.
+另一種回應可能指出您可以變更 `filter_query` (資料篩選)，因為目前篩選後的資料過於稀疏，導致模型無法正確訓練；這可能是因為索引也匯入了落在所選篩選範圍之外的資料。使用另一個 `filter_query` 可以讓您的資料更密集。
 
 ```json
 {
@@ -532,19 +533,19 @@ Another response might indicate that you can change `filter_query` (data filter)
 
 ---
 
-## Get detector
-Introduced 1.0
+## 取得偵測器
+於 1.0 版推出
 {: .label .label-purple }
 
-Returns all information about a detector based on the `detector_id`.
+根據 `detector_id` 傳回偵測器的所有資訊。
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_anomaly_detection/detectors/{detectorId}
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -624,24 +625,24 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}
 }
 ```
 
-A _job_ is something that you schedule to run periodically, so it's only applicable for real-time anomaly detection and not historical analysis that you run just one time.
+_作業（job）_ 是您排程定期執行的項目，因此僅適用於即時異常偵測，不適用於僅執行一次的歷史分析。
 
-When you start a real-time detector, the Anomaly Detection plugin creates a job or if the job already exists updates it.
-When you start or a restart a real-time detector, the plugin creates a new real-time task that records run-time information like detector configuration snapshot, real-time job states (initializing/running/stopped), init progress, and so on.
+當您啟動即時偵測器時，Anomaly Detection 外掛程式會建立一個作業，若該作業已存在則會更新它。
+當您啟動或重新啟動即時偵測器時，該外掛程式會建立一個新的即時任務（task），記錄執行階段資訊，例如偵測器組態快照、即時作業狀態（初始化中/執行中/已停止）、初始化進度等等。
 
-A single detector can only have one real-time job (job ID is the same as detector ID), but it can have multiple real-time tasks because each restart of a real-time job creates a new real-time task. You can limit the number of real-time tasks with the `plugins.anomaly_detection.max_old_ad_task_docs_per_detector` setting.
+單一偵測器只能有一個即時作業（作業 ID 與偵測器 ID 相同），但可以有多個即時任務，因為每次重新啟動即時作業都會建立新的即時任務。您可以使用 `plugins.anomaly_detection.max_old_ad_task_docs_per_detector` 設定來限制即時任務的數量。
 
-Historical analysis doesn't have an associated job. When you start or rerun historical analysis for a detector, the Anomaly Detection plugin creates a new historical batch task that tracks the historical analysis runtime information like state, coordinating/worker node, task progress, and so on. You can limit the historical task number with the `plugins.anomaly_detection.max_old_ad_task_docs_per_detector` setting.
+歷史分析沒有相關聯的作業。當您為偵測器啟動或重新執行歷史分析時，Anomaly Detection 外掛程式會建立一個新的歷史批次任務，追蹤歷史分析的執行階段資訊，例如狀態、協調/工作節點、任務進度等等。您可以使用 `plugins.anomaly_detection.max_old_ad_task_docs_per_detector` 設定來限制歷史任務的數量。
 
-Use `job=true` to get real-time analysis task information.
+使用 `job=true` 取得即時分析任務資訊。
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_anomaly_detection/detectors/{detectorId}?job=true
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -753,15 +754,15 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}?job=true
 }
 ```
 
-Use `task=true` to get information for both real-time and historical analysis task information.
+使用 `task=true` 取得即時與歷史分析任務的資訊。
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_anomaly_detection/detectors/{detectorId}?task=true
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -1039,17 +1040,17 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}?task=true
 
 ---
 
-## Update detector
-Introduced 1.0
+## 更新偵測器
+於 1.0 版推出
 {: .label .label-purple }
 
-Updates a detector with any changes, including the description or adding or removing of features.
-To update a detector, you need to first stop both real-time detection and historical analysis.
+更新偵測器的任何變更，包括描述或新增、移除特徵。
+若要更新偵測器，您必須先停止即時偵測與歷史分析。
 
-You can't update a category field.
+您無法更新類別欄位。
 {: .note }
 
-#### Example request
+#### 範例請求
 
 ```json
 PUT _plugins/_anomaly_detection/detectors/{detectorId}
@@ -1104,7 +1105,7 @@ PUT _plugins/_anomaly_detection/detectors/{detectorId}
 ```
 
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -1186,20 +1187,20 @@ PUT _plugins/_anomaly_detection/detectors/{detectorId}
 
 ---
 
-## Delete detector
-Introduced 1.0
+## 刪除偵測器
+於 1.0 版推出
 {: .label .label-purple }
 
-Deletes a detector based on the `detector_id`.
-To delete a detector, you need to first stop both real-time detection and historical analysis.
+根據 `detector_id` 刪除偵測器。
+若要刪除偵測器，您必須先停止即時偵測與歷史分析。
 
-#### Example request
+#### 範例請求
 
 ```json
 DELETE _plugins/_anomaly_detection/detectors/{detectorId}
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -1220,15 +1221,15 @@ DELETE _plugins/_anomaly_detection/detectors/{detectorId}
 
 ---
 
-## Preview detector
-Introduced 1.0
+## 預覽偵測器
+於 1.0 版推出
 {: .label .label-purple }
 
-Passes a date range to the anomaly detector to return any anomalies within that date range.
+將日期範圍傳遞給異常偵測器，以傳回該日期範圍內的任何異常。
 
-To preview a single-entity detector:
+若要預覽單一實體偵測器：
 
-#### Example request
+#### 範例請求
 
 ```json
 POST _plugins/_anomaly_detection/detectors/_preview
@@ -1286,7 +1287,7 @@ POST _plugins/_anomaly_detection/detectors/_preview
 }
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -1367,9 +1368,9 @@ POST _plugins/_anomaly_detection/detectors/_preview
 }
 ```
 
-If you specify a category field, each result is associated with an entity:
+如果您指定類別欄位，每個結果都會與某個實體相關聯：
 
-#### Example request
+#### 範例請求
 
 ```json
 POST _plugins/_anomaly_detection/detectors/_preview
@@ -1430,7 +1431,7 @@ POST _plugins/_anomaly_detection/detectors/_preview
 }
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -1520,7 +1521,7 @@ POST _plugins/_anomaly_detection/detectors/_preview
 }
 ```
 
-You can preview a detector with the detector ID:
+您可以使用偵測器 ID 預覽偵測器：
 
 ```json
 POST _plugins/_anomaly_detection/detectors/_preview
@@ -1531,7 +1532,7 @@ POST _plugins/_anomaly_detection/detectors/_preview
 }
 ```
 
-Or:
+或：
 
 ```json
 POST _opendistro/_anomaly_detection/detectors/VEHKTXwBwf_U8gjUXY2s/_preview
@@ -1541,7 +1542,7 @@ POST _opendistro/_anomaly_detection/detectors/VEHKTXwBwf_U8gjUXY2s/_preview
 }
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -1649,21 +1650,21 @@ POST _opendistro/_anomaly_detection/detectors/VEHKTXwBwf_U8gjUXY2s/_preview
 
 ---
 
-## Start detector job
-Introduced 1.0
+## 啟動偵測器作業
+於 1.0 版推出
 {: .label .label-purple }
 
-Starts a real-time or historical anomaly detector job.
+啟動即時或歷史異常偵測器作業。
 
-To start a real-time detector job:
+若要啟動即時偵測器作業：
 
-#### Example request
+#### 範例請求
 
 ```json
 POST _plugins/_anomaly_detection/detectors/{detectorId}/_start
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -1674,9 +1675,9 @@ POST _plugins/_anomaly_detection/detectors/{detectorId}/_start
 }
 ```
 
-The `_id` represents the real-time job ID, which is the same as the detector ID.
+`_id` 代表即時工作 ID，與偵測器 ID 相同。
 
-To start historical analysis:
+若要啟動歷史分析：
 
 ```json
 POST _plugins/_anomaly_detection/detectors/{detectorId}/_start
@@ -1686,7 +1687,7 @@ POST _plugins/_anomaly_detection/detectors/{detectorId}/_start
 }
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -1697,25 +1698,25 @@ POST _plugins/_anomaly_detection/detectors/{detectorId}/_start
 }
 ```
 
-The `_id` represents the historical batch task ID, which is a random universally unique identifier (UUID).
+`_id` 代表歷史批次工作 ID，其為隨機的通用唯一識別碼 (UUID)。
 
 ---
 
-## Stop detector job
-Introduced 1.0
+## 停止偵測器作業
+於 1.0 版推出
 {: .label .label-purple }
 
-Stops a real-time or historical anomaly detector job.
+停止即時或歷史異常偵測器作業。
 
-To stop a real-time detector job:
+若要停止即時偵測器作業：
 
-#### Example request
+#### 範例請求
 
 ```json
 POST _plugins/_anomaly_detection/detectors/{detectorId}/_stop
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -1726,16 +1727,16 @@ POST _plugins/_anomaly_detection/detectors/{detectorId}/_stop
 }
 ```
 
-To stop historical analysis:
+若要停止歷史分析：
 
-Introduced 1.1
+於 1.1 版推出
 {: .label .label-purple }
 
 ```json
 POST _plugins/_anomaly_detection/detectors/{detectorId}/_stop?historical=true
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -1748,15 +1749,15 @@ POST _plugins/_anomaly_detection/detectors/{detectorId}/_stop?historical=true
 
 ---
 
-## Search detector
-Introduced 1.0
+## 搜尋偵測器
+於 1.0 版推出
 {: .label .label-purple }
 
-Returns all anomaly detectors for a search query.
+傳回符合搜尋查詢的所有異常偵測器。
 
-To search detectors using the `server_log*` index:
+若要使用 `server_log*` 索引搜尋偵測器：
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_anomaly_detection/detectors/_search
@@ -1772,7 +1773,7 @@ POST _plugins/_anomaly_detection/detectors/_search
 }
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -1865,15 +1866,15 @@ POST _plugins/_anomaly_detection/detectors/_search
 
 ---
 
-## Search detector tasks
-Introduced 1.1
+## 搜尋偵測器任務
+於 1.1 版推出
 {: .label .label-purple }
 
-Searches detector tasks.
+搜尋偵測器任務。
 
-To search for the latest detector level historical analysis task for a high cardinality detector
+若要搜尋高基數偵測器最新的偵測器層級歷史分析任務
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_anomaly_detection/detectors/tasks/_search
@@ -1903,7 +1904,7 @@ POST _plugins/_anomaly_detection/detectors/tasks/_search
 }
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -2033,9 +2034,9 @@ POST _plugins/_anomaly_detection/detectors/tasks/_search
 }
 ```
 
-To search for the latest entity-level tasks for the historical analysis of a high cardinality detector:
+若要搜尋高基數偵測器歷史分析的最新實體層級工作：
 
-#### Example request
+#### 請求範例
 
 ```json
 GET _plugins/_anomaly_detection/detectors/tasks/_search
@@ -2073,14 +2074,14 @@ POST _plugins/_anomaly_detection/detectors/tasks/_search
 }
 ```
 
-To search and aggregate states for all entity-level historical tasks:
+若要搜尋並彙總所有實體層級歷史任務的狀態：
 
-The `parent_task_id` is the same as the task ID that you can get with the profile detector API:
-`GET _plugins/_anomaly_detection/detectors/<detector_ID>/_profile/ad_task`.
+`parent_task_id` 與您可以透過偵測器剖析 API 取得的任務 ID 相同：
+`GET _plugins/_anomaly_detection/detectors/<detector_ID>/_profile/ad_task`。
 {: .note }
 
 
-#### Example request
+#### 請求範例
 
 ```json
 GET _plugins/_anomaly_detection/detectors/tasks/_search
@@ -2128,7 +2129,7 @@ POST _plugins/_anomaly_detection/detectors/tasks/_search
 }
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -2165,41 +2166,41 @@ POST _plugins/_anomaly_detection/detectors/tasks/_search
 
 ---
 
-## Search detector result
-Introduced 1.0
+## 搜尋偵測器結果
+於 1.0 版推出
 {: .label .label-purple }
 
-Returns all results for a search query.
+傳回搜尋查詢的所有結果。
 
-You have the following search options:
+您有下列搜尋選項：
 
-- To search only the default result index, simply use the search API:
+- 若要只搜尋預設結果索引，只需使用搜尋 API：
 
   ```json
   POST _plugins/_anomaly_detection/detectors/results/_search/
   ```
 
-- To search both the custom result index and default result index, you can either add the custom result index to the search API:
+- 若要同時搜尋自訂結果索引和預設結果索引，您可以將自訂結果索引加入搜尋 API：
 
   ```json
   POST _plugins/_anomaly_detection/detectors/results/_search/{custom_result_index}
   ```
 
-  Or, add the custom result index and set the `only_query_custom_result_index` parameter to `false`:
+  或者，加入自訂結果索引，並將 `only_query_custom_result_index` 參數設為 `false`：
 
   ```json
   POST _plugins/_anomaly_detection/detectors/results/_search/{custom_result_index}?only_query_custom_result_index=false
   ```
 
-- To search only the custom result index, add the custom result index to the search API and set the `only_query_custom_result_index` parameter to `true`:
+- 若要只搜尋自訂結果索引，請將自訂結果索引加入搜尋 API，並將 `only_query_custom_result_index` 參數設為 `true`：
 
   ```json
   POST _plugins/_anomaly_detection/detectors/results/_search/{custom_result_index}?only_query_custom_result_index=true
   ```
 
-The following example searches anomaly results for grade greater than 0 for real-time analysis:
+下列範例會搜尋即時分析中異常等級大於 0 的異常結果：
 
-#### Example request
+#### 請求範例
 
 ```json
 GET _plugins/_anomaly_detection/detectors/results/_search/opensearch-ad-plugin-result-test
@@ -2233,15 +2234,15 @@ POST _plugins/_anomaly_detection/detectors/results/_search/opensearch-ad-plugin-
 }
 ```
 
-If you specify the custom result index like in this example, the search results API searches both the default result indexes and custom result indexes.
+如果您像此範例一樣指定自訂結果索引，搜尋結果 API 會同時搜尋預設結果索引和自訂結果索引。
 
-If you don't specify the custom result index and you just use the `_plugins/_anomaly_detection/detectors/results/_search` URL, the Anomaly Detection plugin searches only the default result indexes.
+如果您未指定自訂結果索引，而只使用 `_plugins/_anomaly_detection/detectors/results/_search` URL，Anomaly Detection 外掛程式就只會搜尋預設結果索引。
 
-Real-time detection doesn't persist the task ID in the anomaly result, so the task ID will be null.
+即時偵測不會將任務 ID 儲存於異常結果中，因此任務 ID 會是 null。
 
-For information about the response body fields, see [Anomaly result mapping]({{site.url}}{{site.baseurl}}/monitoring-plugins/ad/result-mapping/#response-body-fields).
+如需回應本文欄位的相關資訊，請參閱[異常結果對應]({{site.url}}{{site.baseurl}}/monitoring-plugins/ad/result-mapping/#response-body-fields)。
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -2328,13 +2329,13 @@ For information about the response body fields, see [Anomaly result mapping]({{s
 }
 ```
 
-You can run historical analysis as many times as you like. So, multiple tasks might exist for the same detector.
+您可以不限次數地執行歷史分析。因此，同一個偵測器可能有多個任務。
 
-You can search for the latest historical batch task first and then search the historical batch task results.
+您可以先搜尋最新的歷史批次任務，再搜尋該歷史批次任務的結果。
 
-To search anomaly results for `grade` greater than 0 for historical analysis with the `task_id`:
+若要使用 `task_id` 搜尋歷史分析中 `grade` 大於 0 的異常結果：
 
-#### Example request
+#### 請求範例
 
 ```json
 GET _plugins/_anomaly_detection/detectors/results/_search
@@ -2366,7 +2367,7 @@ POST _plugins/_anomaly_detection/detectors/results/_search
 }
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -2439,15 +2440,15 @@ POST _plugins/_anomaly_detection/detectors/results/_search
 
 ---
 
-## Search top anomalies
-Introduced 1.2
+## 搜尋前幾名異常
+於 1.2 版推出
 {: .label .label-purple }
 
-Returns the top anomaly results for a high-cardinality detector, bucketed by categorical field values.
+針對高基數偵測器，依類別欄位值分桶，傳回前幾名的異常結果。
 
-You can pass a `historical` boolean parameter to specify whether you want to analyze real-time or historical results.
+您可以傳遞 `historical` 布林值參數，指定要分析即時結果還是歷史結果。
 
-#### Example request
+#### 請求範例
 
 ```json
 GET _plugins/_anomaly_detection/detectors/{detectorId}/results/_topAnomalies?historical=false
@@ -2463,7 +2464,7 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}/results/_topAnomalies?his
 }
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -2493,34 +2494,34 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}/results/_topAnomalies?his
 }
 ```
 
-You can specify the following options.
+您可以指定下列選項。
 
-Options | Description | Type | Required
+選項 | 說明 | 類型 | 必要
 :--- | :--- |:--- |:--- |
-`size` |  Specify the number of top buckets that you want to see. Default is 10. The maximum number is 10,000. | `integer` | No
-`category_field` |  Specify the set of category fields that you want to aggregate on. Defaults to all category fields for the detector. | `list` | No
-`order` |  Specify `severity` (anomaly grade) or `occurrence` (number of anomalies). Default is `severity`. | `string` | No
-`task_id`  |  Specify a historical task ID to see results only from that specific task. Use only when `historical=true`, otherwise the Anomaly Detection plugin ignores this parameter. | `string` | No
-`start_time_ms` | Specify the time to start analyzing results, in Epoch milliseconds. | `long` | Yes
-`end_time_ms` |  Specify the time to end analyzing results, in Epoch milliseconds. | `long` | Yes
+`size` |  指定您想查看的前幾名桶數量。預設為 10，最大值為 10,000。 | `integer` | 否
+`category_field` |  指定您要彙總的類別欄位集合。預設為偵測器的所有類別欄位。 | `list` | 否
+`order` |  指定 `severity`（異常等級）或 `occurrence`（異常數量）。預設為 `severity`。 | `string` | 否
+`task_id`  |  指定歷史任務 ID，僅查看該特定任務的結果。僅在 `historical=true` 時使用，否則 Anomaly Detection 外掛程式會忽略此參數。 | `string` | 否
+`start_time_ms` | 指定開始分析結果的時間，以 Epoch 毫秒表示。 | `long` | 是
+`end_time_ms` |  指定結束分析結果的時間，以 Epoch 毫秒表示。 | `long` | 是
 
 ---
 
-## Get detector stats
-Introduced 1.0
+## 取得偵測器統計資料
+於 1.0 版推出
 {: .label .label-purple }
 
-Provides information about how the plugin is performing.
+提供外掛程式執行效能的相關資訊。
 
-To get all stats:
+若要取得所有統計資料：
 
-#### Example request
+#### 請求範例
 
 ```json
 GET _plugins/_anomaly_detection/stats
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -2612,39 +2613,39 @@ GET _plugins/_anomaly_detection/stats
 }
 ```
 
-The `model_count` parameter shows the total number of models running on each node’s memory.
-For historical analysis, you see the values for the following fields:
+`model_count` 參數顯示每個節點記憶體中執行的模型總數。
+若是歷史分析，您會看到下列欄位的值：
 
 - `ad_total_batch_task_execution_count`
 - `ad_executing_batch_task_count`
 - `ad_canceled_batch_task_count`
 - `ad_batch_task_failure_count`
 
-If haven't run any historical analysis, these values show up as 0.
+如果您尚未執行任何歷史分析，這些值會顯示為 0。
 
-To get all stats for a specific node:
+若要取得特定節點的所有統計資料：
 
-#### Example request
+#### 請求範例
 
 ```json
 GET _plugins/_anomaly_detection/{nodeId}/stats
 ```
 
-To get specific stats for a node:
+若要取得節點的特定統計資料：
 
-#### Example request
+#### 請求範例
 
 ```json
 GET _plugins/_anomaly_detection/{nodeId}/stats/{stat}
 ```
 
-For example, to get the `ad_execute_request_count` value for node `SWD7ihu9TaaW1zKwFZNVNg`:
+例如，若要取得節點 `SWD7ihu9TaaW1zKwFZNVNg` 的 `ad_execute_request_count` 值：
 
 ```json
 GET _plugins/_anomaly_detection/SWD7ihu9TaaW1zKwFZNVNg/stats/ad_execute_request_count
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -2656,21 +2657,21 @@ GET _plugins/_anomaly_detection/SWD7ihu9TaaW1zKwFZNVNg/stats/ad_execute_request_
 }
 ```
 
-To get a specific type of stats:
+若要取得特定類型的統計資料：
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_anomaly_detection/stats/{stat}
 ```
 
-For example:
+例如：
 
 ```json
 GET _plugins/_anomaly_detection/stats/ad_executing_batch_task_count
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -2690,17 +2691,17 @@ GET _plugins/_anomaly_detection/stats/ad_executing_batch_task_count
 
 ---
 
-## Profile detector
-Introduced 1.0
+## 剖析偵測器
+於 1.0 版推出
 {: .label .label-purple }
 
-Returns information related to the current state of the detector and memory usage, including current errors and shingle size, to help troubleshoot the detector.
+傳回與偵測器目前狀態及記憶體使用量相關的資訊，包括目前的錯誤與 shingle 大小，以協助對偵測器進行疑難排解。
 
-This command helps locate logs by identifying the nodes that run the anomaly detector job for each detector.
+此命令可藉由識別為每個偵測器執行異常偵測器作業的節點，協助您找出記錄檔的位置。
 
-It also helps track the initialization percentage, the required shingles, and the estimated time left.
+它也有助於追蹤初始化百分比、所需的 shingle 數量，以及預估的剩餘時間。
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_anomaly_detection/detectors/{detectorId}/_profile/
@@ -2709,7 +2710,7 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}/_profile/{type}
 GET _plugins/_anomaly_detection/detectors/{detectorId}/_profile/{type1},{type2}
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 GET _plugins/_anomaly_detection/detectors/{detectorId}/_profile
@@ -2890,17 +2891,17 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}/_profile/total_size_in_by
 }
 ```
 
-You can see the `ad_task` field only for historical analysis.
+您只能在歷史分析中看到 `ad_task` 欄位。
 
-The `model_count` parameter shows the total number of models that a detector runs on each node’s memory. This is useful if you have several models running on your cluster and want to know the count.
+`model_count` 參數會顯示偵測器在每個節點記憶體上執行的模型總數。如果您在叢集上執行多個模型，並想知道數量，這項資訊會很有用。
 
-If you configured the category field, you can see the number of unique values in the field and all active entities with models running in memory.
+如果您設定了類別欄位，則可以看到該欄位中唯一值的數量，以及所有在記憶體中執行模型的作用中實體。
 
-You can use this data to estimate how much memory is required for anomaly detection so you can decide how to size your cluster. For example, if a detector has one million entities and only 10 of them are active in memory, you need to scale your cluster up or out.
+您可以使用這些資料來估算異常偵測所需的記憶體量，以便決定如何調整叢集規模。例如，如果某個偵測器有一百萬個實體，而其中只有 10 個在記憶體中處於作用中狀態，您就需要垂直或水平擴展叢集。
 
-For a single-entity detector:
+針對單一實體偵測器：
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -3018,15 +3019,15 @@ For a single-entity detector:
 }
 ```
 
-The `total_entities` parameter shows you the total number of entities including the number of category fields for a detector.
+`total_entities` 參數會顯示實體總數，包括偵測器的類別欄位數量。
 
-Getting the total count of entities is an expensive operation for real-time analysis of a detector with more than one category field. By default, for a real-time detection profile, a detector counts the number of entities up to a value of 10,000. For historical analysis, the Anomaly Detection plugin only detects the top 1,000 entities by default and caches the top entities in memory, so it doesn't cost much to get the total count of entities for historical analysis.
+對於具有多個類別欄位的偵測器，取得實體總數在即時分析中是一項耗費資源的操作。根據預設，在即時偵測設定檔中，偵測器最多會計數 10,000 個實體。在歷史分析方面，Anomaly Detection 外掛程式預設只會偵測前 1,000 個實體，並將排名前幾名的實體快取在記憶體中，因此取得歷史分析的實體總數並不會耗費太多資源。
 
-The `profile` operation also provides information about each entity, such as the entity’s `last_sample_timestamp` and `last_active_timestamp`. `last_sample_timestamp` shows the last document in the input data source index containing the entity, while `last_active_timestamp` shows the timestamp when the entity’s model was last seen in the model cache.
+`profile` 操作也會提供每個實體的相關資訊，例如實體的 `last_sample_timestamp` 和 `last_active_timestamp`。`last_sample_timestamp` 會顯示輸入資料來源索引中包含該實體的最後一份文件，而 `last_active_timestamp` 則會顯示該實體模型最後一次出現在模型快取中的時間戳記。
 
-If there are no anomaly results for an entity, either the entity doesn't have any sample data or resources such as memory and disk IO are constrained relative to the number of entities.
+如果某個實體沒有異常結果，可能是該實體沒有任何樣本資料，或是記憶體和磁碟 I/O 等資源相對於實體數量而言受到限制。
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_anomaly_detection/detectors/{detectorId}/_profile?_all=true
@@ -3040,7 +3041,7 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}/_profile?_all=true
 }
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -3059,17 +3060,17 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}/_profile?_all=true
 }
 ```
 
-To get profile information for only historical analysis, specify `ad_task`.
-Specifying `_all` is an expensive operation for multi-category high cardinality detectors.
+若只要取得歷史分析的設定檔資訊，請指定 `ad_task`。
+對於多類別高基數偵測器，指定 `_all` 是一項成本高昂的操作。
 
-#### Example request
+#### 範例請求
 
 ```json
 GET _plugins/_anomaly_detection/detectors/{detectorId}/_profile?_all
 GET _plugins/_anomaly_detection/detectors/{detectorId}/_profile/ad_task
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -3212,17 +3213,17 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}/_profile/ad_task
 
 ---
 
-## Delete detector results
-Introduced 1.1
+## 刪除偵測器結果
+於 1.1 版推出
 {: .label .label-purple }
 
-Deletes the results of a detector based on a query.
+根據查詢刪除偵測器的結果。
 
-The delete detector results API only deletes anomaly result documents in the default result index. It doesn't support deleting anomaly result documents stored in any custom result indexes.
+刪除偵測器結果 API 只會刪除預設結果索引中的異常結果文件。不支援刪除儲存在任何自訂結果索引中的異常結果文件。
 
-You need to manually delete anomaly result documents that you don't need from custom result indexes.
+您需要手動刪除自訂結果索引中不需要的異常結果文件。
 
-#### Example request
+#### 範例請求
 
 ```json
 DELETE _plugins/_anomaly_detection/detectors/results
@@ -3257,7 +3258,7 @@ DELETE _plugins/_anomaly_detection/detectors/results
 }
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {
@@ -3283,13 +3284,13 @@ DELETE _plugins/_anomaly_detection/detectors/results
 
 ---
 
-## Create monitor
-Introduced 1.0
+## 建立監視器
+於 1.0 版推出
 {: .label .label-purple }
 
-Create a monitor to set up alerts for the detector.
+建立監視器以為偵測器設定警示。
 
-#### Example request
+#### 範例請求
 
 ```json
 POST _plugins/_alerting/monitors
@@ -3389,7 +3390,7 @@ POST _plugins/_alerting/monitors
 }
 ```
 
-#### Example response
+#### 範例回應
 
 ```json
 {

@@ -1,116 +1,117 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Roll over index
+title: "滾動更新索引"
 parent: Index operations
 grand_parent: Index APIs
 nav_order: 70
 ---
 
 # Roll Over Index API
-**Introduced 1.0**
+**1.0 版引入**
 {: .label .label-purple }
 
-The roll over index API operation creates a new index for a data stream or index alias based on the `wait_for_active_shards` setting.
+Roll Over Index API 操作會根據 `wait_for_active_shards` 設定，為資料串流或索引別名建立新的索引。
 
-## Endpoints
+## 端點
 
 ```json
 POST /{rollover-target}/_rollover/
 POST /{rollover-target}/_rollover/{target-index}
 ```
 
-## Rollover types
+## 滾動更新類型
 
-You can roll over a data stream, an index alias with one index, or an index alias with a write index.
+您可以滾動更新資料串流、只有一個索引的索引別名，或具有寫入索引的索引別名。
 
-### Data stream
+### 資料串流
 
-When you perform a rollover operation on a data stream, the API generates a fresh write index for that stream. Simultaneously, the stream's preceding write index transforms into a regular backing index. Additionally, the rollover process increments the generation count of the data stream. Data stream rollovers do not support specifying index settings in the request body.
+當您對資料串流執行滾動更新操作時，API 會為該串流產生新的寫入索引。同時，該串流先前的寫入索引會轉換為一般的支援索引 (backing index)。此外，滾動更新程序會遞增資料串流的世代計數。資料串流的滾動更新不支援在請求本文中指定索引設定。
 
-### Index alias with one index
+### 只有一個索引的索引別名
 
-When initiating a rollover on an index alias associated with a single index, the API generates a new index and disassociates the original index from the alias.
+當您對關聯單一索引的索引別名啟動滾動更新時，API 會產生新的索引，並解除原始索引與該別名的關聯。
 
-### Index alias with a write index
+### 具有寫入索引的索引別名
 
-When an index alias references multiple indexes, one index must be designated as the write index. During a rollover, the API creates a new write index with its `is_write_index` property set to `true` while updating the previous write index by setting its `is_write_index property` to `false.`
+當索引別名參照多個索引時，必須將其中一個索引指定為寫入索引。在滾動更新期間，API 會建立新的寫入索引，並將其 `is_write_index` 屬性設為 `true`，同時將先前寫入索引的 `is_write_index property` 設為 `false.` 以更新該索引。
 
-## Incrementing index names for an alias
+## 遞增別名的索引名稱
 
-During the index alias rollover process, if you don't specify a custom name and the current index's name ends with a hyphen followed by a number (for example, `my-index-000001` or `my-index-3`), then the rollover operation will automatically increment that number for the new index's name. For instance, rolling over `my-index-000001` will generate `my-index-000002`. The numeric portion is always padded with leading zeros to ensure a consistent length of six characters.
+在索引別名滾動更新過程中，如果您未指定自訂名稱，且目前索引的名稱以連字號加上數字結尾 (例如 `my-index-000001` 或 `my-index-3`)，則滾動更新操作會自動遞增該數字作為新索引的名稱。例如，滾動更新 `my-index-000001` 會產生 `my-index-000002`。數字部分一律會以前置零補齊，以確保長度固定為六個字元。
 
-## Using date math with index rollovers
+## 在索引滾動更新中使用日期運算
 
-When using an index alias for time-series data, you can use [date math]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/) in the index name to track the rollover date. For example, you can create an alias pointing to `my-index-{now/d}-000001`. If you create an alias on June 11, 2029, then the index name would be `my-index-2029.06.11-000001`. For a rollover on June 12, 2029, the new index would be named `my-index-2029.06.12-000002`. See [Roll over an index alias with a write index](#rolling-over-an-index-alias-with-a-write-index) for a practical example.
+為時間序列資料使用索引別名時，您可以在索引名稱中使用[日期運算]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/)來追蹤滾動更新日期。例如，您可以建立指向 `my-index-{now/d}-000001` 的別名。如果您在 2029 年 6 月 11 日建立別名，則索引名稱會是 `my-index-2029.06.11-000001`。若在 2029 年 6 月 12 日進行滾動更新，新索引的名稱會是 `my-index-2029.06.12-000002`。如需實際範例，請參閱[滾動更新具有寫入索引的索引別名](#rolling-over-an-index-alias-with-a-write-index)。
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-Parameter | Data type | Description 
+參數 | 資料類型 | 說明 
 :--- | :--- | :--- 
-`rollover-target` | String | The name of the data stream or index alias to roll over. Required. |
-`target-index` | String | The name of the index to create. Supports date math. Data streams do not support this parameter. If the name of the alias's current write index does not end with `-` and a number, such as `my-index-000001` or `my-index-2`, then the parameter is required. 
+`rollover-target` | 字串 | 要滾動更新的資料串流或索引別名名稱。必要。 |
+`target-index` | 字串 | 要建立的索引名稱。支援日期運算。資料串流不支援此參數。如果別名目前寫入索引的名稱不是以 `-` 加上數字結尾 (例如 `my-index-000001` 或 `my-index-2`)，則此參數為必要。 
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters.
+下表列出可用的查詢參數。
 
-Parameter | Data type | Description 
+參數 | 資料類型 | 說明 
 :--- | :--- | :--- 
-`cluster_manager_timeout` | Time | The amount of time to wait for a connection to the cluster manager node. Default is `30s`.
-`timeout` | Time | The amount of time to wait for a response. Default is `30s`.
-`wait_for_active_shards` | String | The number of active shards that must be available before OpenSearch processes the request. Default is `1` (only the primary shard). You can also set to `all` or a positive integer. Values greater than `1` require replicas. For example, if you specify a value of `3`, then the index must have two replicas distributed across two additional nodes in order for the operation to succeed.
+`cluster_manager_timeout` | 時間 | 等待連線至叢集管理員節點的時間長度。預設為 `30s`。
+`timeout` | 時間 | 等待回應的時間長度。預設為 `30s`。
+`wait_for_active_shards` | 字串 | OpenSearch 處理請求前必須可用的作用中分片數量。預設為 `1` (僅主要分片)。您也可以設為 `all` 或正整數。大於 `1` 的值需要副本。例如，如果您指定的值為 `3`，則索引必須有兩個副本分散在另外兩個節點上，操作才會成功。
 
-## Request body fields
+## 請求本文欄位
 
-The following request body fields are supported.
+支援下列請求本文欄位。
 
 ### `alias`
 
-The `alias` parameter specifies the alias name as the key. It is required when the `template` option exists in the request body. The object body contains the following optional parameters.
+`alias` 參數以別名名稱作為鍵。當請求本文中存在 `template` 選項時，此參數為必要。物件本文包含下列選用參數。
 
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`filter` | Query DSL object | The query that limits the number of documents that the alias can access.
-`index_routing` | String | The value that routes indexing operations to a specific shard. When specified, overwrites the `routing` value for indexing operations.
-`is_hidden` | Boolean | Hides or shows the alias. When `true`, the alias is hidden. Default is `false`. Indexes for the alias must have matching values for this setting.
-`is_write_index` | Boolean | Specifies the write index. When `true`, the index is the write index for the alias. Default is `false`.
-`routing` | String | The value used to route index and search operations to a specific shard.
-`search_routing` | String | Routes search operations to a specific shard. When specified, it overwrites `routing` for search operations.
+`filter` | Query DSL 物件 | 限制別名可存取文件數量的查詢。
+`index_routing` | 字串 | 將編製索引操作路由至特定分片的值。指定時，會覆寫編製索引操作的 `routing` 值。
+`is_hidden` | 布林值 | 隱藏或顯示別名。當值為 `true` 時，別名會隱藏。預設為 `false`。該別名的所有索引在此設定上的值必須一致。
+`is_write_index` | 布林值 | 指定寫入索引。當值為 `true` 時，該索引即為別名的寫入索引。預設為 `false`。
+`routing` | 字串 | 用於將索引與搜尋操作路由至特定分片的值。
+`search_routing` | 字串 | 將搜尋操作路由至特定分片。指定時，會覆寫搜尋操作的 `routing`。
 
 ### `mappings`
 
-The `mappings` parameter specifies the index field mappings. It is optional. See [Mappings and field types]({{site.url}}{{site.baseurl}}/mappings/) for more information.
+`mappings` 參數指定索引欄位對應。此參數為選用。如需詳細資訊，請參閱[對應與欄位類型]({{site.url}}{{site.baseurl}}/mappings/)。
 
 ### `conditions`
 
-The `conditions` parameter is an optional object defining criteria for triggering the rollover. When provided, OpenSearch only rolls over if the current index satisfies one or more specified conditions. If omitted, then the rollover occurs unconditionally without prerequisites.
+`conditions` 參數是選用物件，用於定義觸發滾動更新的條件。提供此參數時，OpenSearch 只會在目前索引符合一個或多個指定條件時進行滾動更新。若省略此參數，則滾動更新會無條件執行，不需任何先決條件。
 
-The object body supports the following parameters.
+物件本文支援下列參數。
 
-Parameter | Data type | Description 
+參數 | 資料類型 | 說明 
 :--- | :--- | :--- 
-`max_age` | Time units | Triggers a rollover after the maximum elapsed time since index creation is reached. The elapsed time is always calculated since the index creation time, even if the index origination date is configured to a custom date, such as when using the `index.lifecycle.parse_origination_date` or `index.lifecycle.origination_date` settings. Optional. |
-`max_docs` | Integer | Triggers a rollover after the specified maximum number of documents, excluding documents added since the last refresh and documents in replica shards. Optional. 
-`max_size` | Byte units  | Triggers a rollover when the index reaches a specified size, calculated as the total size of all primary shards. Replicas are not counted. Use the `_cat indices` API and check the `pri.store.size` value to see the current index size. Optional.
+`max_age` | 時間單位 | 自索引建立起經過的時間達到上限後觸發滾動更新。經過時間一律從索引建立時間開始計算，即使索引起始日期已設定為自訂日期 (例如使用 `index.lifecycle.parse_origination_date` 或 `index.lifecycle.origination_date` 設定時) 也是如此。選用。 |
+`max_docs` | 整數 | 達到指定的文件數量上限後觸發滾動更新，不包含上次重新整理後新增的文件及副本分片中的文件。選用。 
+`max_size` | 位元組單位  | 當索引達到指定大小時觸發滾動更新，大小以所有主要分片的總大小計算，不計入副本。使用 `_cat indices` API 並查看 `pri.store.size` 值，即可得知目前的索引大小。選用。
 
 ### `settings`
 
-The `settings` parameter specifies the index configuration options. See [Index settings]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/) for more information.
+`settings` 參數指定索引組態選項。如需詳細資訊，請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)。
 
-## Example requests
+## 範例請求
 
-The following examples illustrate using the Rollover Index API. A rollover occurs when one or more of the specified conditions are met:
+下列範例說明如何使用 Rollover Index API。當符合一個或多個指定條件時，就會進行滾動更新：
 
-- The index was created 5 or more days ago.
-- The index contains 500 or more documents.
-- The index is 100 GB or larger.
+- 索引建立已滿 5 天或以上。
+- 索引包含 500 份或以上的文件。
+- 索引大小為 100 GB 或以上。
 
-### Rolling over a data stream
+### 滾動更新資料串流
 
-The following request rolls over the data stream if the current write index meets any of the specified conditions:
+如果目前的寫入索引符合任一指定條件，下列請求會滾動更新資料串流：
 
 <!-- spec_insert_start
 component: example_code
@@ -156,9 +157,9 @@ response = client.indices.rollover(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Rolling over an index alias with a write index
+### 滾動更新具有寫入索引的索引別名
 
-The following request creates a date-time index and sets it as the write index for `my-alias`. The index name must be URL encoded: `%3Cmy-index-%7Bnow%2Fd%7D-000001%3E` is the encoded form of `<my-index-{now/d}-000001>`, and `{now/d}` resolves to the current date:
+下列請求會建立日期時間索引，並將其設為 `my-alias` 的寫入索引。索引名稱必須經過 URL 編碼：`%3Cmy-index-%7Bnow%2Fd%7D-000001%3E` 是 `<my-index-{now/d}-000001>` 的編碼形式，而 `{now/d}` 會解析為目前日期：
 
 ```json
 PUT %3Cmy-index-%7Bnow%2Fd%7D-000001%3E
@@ -172,7 +173,7 @@ PUT %3Cmy-index-%7Bnow%2Fd%7D-000001%3E
 ```
 {% include copy-curl.html %}
 
-The next request performs a rollover using the alias:
+下一個請求會使用別名執行滾動更新：
 
 <!-- spec_insert_start
 component: example_code
@@ -218,9 +219,9 @@ response = client.indices.rollover(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### Specifying settings during a rollover
+### 在滾動更新期間指定設定
 
-In most cases, you can use an index template to automatically configure the indexes created during a rollover operation. However, when rolling over an index alias, you can use the Rollover Index API to introduce additional index settings or override the settings defined in the template by sending the following request:
+在大多數情況下，您可以使用索引範本自動設定在滾動更新操作期間建立的索引。不過，滾動更新索引別名時，您可以傳送下列請求，使用 Rollover Index API 加入額外的索引設定，或覆寫範本中定義的設定：
 
 <!-- spec_insert_start
 component: example_code
@@ -261,9 +262,9 @@ response = client.indices.rollover(
 <!-- spec_insert_end -->
 
 
-## Example response
+## 範例回應
 
-OpenSearch returns the following response confirming that all conditions except `max_size` were met:
+OpenSearch 會傳回下列回應，確認除了 `max_size` 以外的所有條件皆已符合：
 
 ```json
 {
@@ -281,6 +282,6 @@ OpenSearch returns the following response confirming that all conditions except 
 }
 ```
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/rollover`.
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`indices:admin/rollover`。

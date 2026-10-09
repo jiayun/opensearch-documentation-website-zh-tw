@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Nodes stats
 parent: Nodes APIs
@@ -6,12 +7,12 @@ nav_order: 20
 ---
 
 # Nodes Stats API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-The Nodes Stats API returns statistics about your cluster.
+Nodes Stats API 會傳回叢集的統計資訊。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_nodes/stats
@@ -22,46 +23,46 @@ GET /_nodes/stats/{metric}/{index_metric}
 GET /_nodes/{node_id}/stats/{metric}/{index_metric}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`node_id` | String | A comma-separated list of node IDs used to filter results. Supports [node filters]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/#node-filters). Defaults to `_all`.
-`metric` | String | A comma-separated list of metric groups that are included in the response. For example, `jvm,fs`. See the following list of all index metrics. Defaults to all metrics.
-`index_metric` | String | A comma-separated list of index metric groups that are included in the response. For example, `docs,store`. See the following list of all index metrics. Defaults to all index metrics.
+`node_id` | 字串 | 以逗號分隔的節點 ID 清單，用於篩選結果。支援[節點篩選器]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/#node-filters)。預設為 `_all`。
+`metric` | 字串 | 以逗號分隔、要包含在回應中的指標群組清單。例如 `jvm,fs`。請參閱下列所有索引指標的清單。預設為所有指標。
+`index_metric` | 字串 | 以逗號分隔、要包含在回應中的索引指標群組清單。例如 `docs,store`。請參閱下列所有索引指標的清單。預設為所有索引指標。
 
-The following table lists all available metric groups.
+下表列出所有可用的指標群組。
 
-Metric | Description
+指標 | 說明
 :--- |:----
-`indices` | Index statistics, such as size, document count, and search, index, and delete times for documents.
-`os` | Statistics about the host operating system, including load, memory, and swapping.
-`process` | Statistics about processes, including their memory consumption, open file descriptors, and CPU usage.
-`jvm` | Statistics about the JVM, including memory pool, buffer pool, and garbage collection, and the number of loaded classes.
-`thread_pool` | Statistics about each thread pool for the node.
-`fs` | File system statistics, such as read/write statistics, data path, and free disk space.
-`transport` | Transport layer statistics about send/receive in cluster communication.
-`http` | Statistics about the HTTP layer.
-`breaker` | Statistics about the field data circuit breakers.
-`script` | Statistics about scripts, such as compilations and cache evictions.
-`discovery` | Statistics about cluster states.
-`ingest` | Statistics about ingest pipelines.
-`adaptive_selection` | Statistics about adaptive replica selection, which selects an eligible node using shard allocation awareness.
-`script_cache` | Statistics about script cache.
-`indexing_pressure` | Statistics about the node's indexing pressure.
-`shard_indexing_pressure` | Statistics about shard indexing pressure.
-`search_backpressure` | Statistics related to search backpressure.
-`cluster_manager_throttling` | Statistics related to throttled tasks on the cluster manager node.
-`task_cancellation` | Statistics about tasks that continue running after cancellation.
-`weighted_routing` | Statistics relevant to weighted round robin requests.
-`resource_usage_stats` | Node-level resource usage statistics, such as CPU and JVM memory.
-`admission_control` | Statistics about admission control.
-`concurrency_limiter` | Statistics about adaptive concurrency limiters.
-`caches` | Statistics about caches. 
+`indices` | 索引統計資訊，例如大小、文件數量，以及文件的搜尋、編製索引與刪除時間。
+`os` | 主機作業系統的統計資訊，包括負載、記憶體與交換。
+`process` | 程序的統計資訊，包括記憶體消耗、開啟的檔案描述符與 CPU 使用率。
+`jvm` | JVM 的統計資訊，包括記憶體集區、緩衝集區、垃圾回收，以及已載入的類別數量。
+`thread_pool` | 節點每個執行緒集區的統計資訊。
+`fs` | 檔案系統統計資訊，例如讀取/寫入統計、資料路徑與可用磁碟空間。
+`transport` | 叢集通訊中傳送/接收的傳輸層統計資訊。
+`http` | HTTP 層的統計資訊。
+`breaker` | 欄位資料斷路器的統計資訊。
+`script` | 指令碼的統計資訊，例如編譯與快取驅逐。
+`discovery` | 叢集狀態的統計資訊。
+`ingest` | 資料匯入管線的統計資訊。
+`adaptive_selection` | 自適應副本選擇的統計資訊，其使用分片配置感知來選取合適的節點。
+`script_cache` | 指令碼快取的統計資訊。
+`indexing_pressure` | 節點索引壓力的統計資訊。
+`shard_indexing_pressure` | 分片索引壓力的統計資訊。
+`search_backpressure` | 與搜尋回壓相關的統計資訊。
+`cluster_manager_throttling` | 與叢集管理員節點上被節流任務相關的統計資訊。
+`task_cancellation` | 取消後仍繼續執行之任務的統計資訊。
+`weighted_routing` | 與加權輪詢請求相關的統計資訊。
+`resource_usage_stats` | 節點層級的資源使用統計資訊，例如 CPU 與 JVM 記憶體。
+`admission_control` | 准入控制的統計資訊。
+`concurrency_limiter` | 自適應並行限制器的統計資訊。
+`caches` | 快取的統計資訊。
 
-To filter the information returned for the `indices` metric, you can use specific `index_metric` values. You can use these only when you use the following query types:
+若要篩選 `indices` 指標傳回的資訊，您可以使用特定的 `index_metric` 值。這些值只能在您使用下列查詢類型時使用：
 
 ```json
 GET _nodes/stats/
@@ -69,7 +70,7 @@ GET _nodes/stats/_all
 GET _nodes/stats/indices
 ```
 
-The following index metrics are supported:
+支援下列索引指標：
 
 - `docs`
 - `store`
@@ -87,7 +88,7 @@ The following index metrics are supported:
 - `translog`
 - `request_cache`
 
-For example, the following query requests statistics for `docs` and `search`:
+例如，下列查詢會請求 `docs` 與 `search` 的統計資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -112,12 +113,12 @@ response = client.nodes.stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-You can also use specific `index_metric` values in the `caches` metric to specify which caches will return statistics. 
-The following index metrics are supported: 
+您也可以在 `caches` 指標中使用特定的 `index_metric` 值，指定要傳回哪些快取的統計資訊。
+支援下列索引指標：
 
 - request_cache
 
-For example, the following query requests statistics for the `request_cache`: 
+例如，下列查詢會請求 `request_cache` 的統計資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -142,21 +143,21 @@ response = client.nodes.stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-Parameter | Type | Description
+參數 | 類型 | 說明
 :--- | :--- | :---
-`completion_fields` | String | The fields to include in completion statistics. Supports comma-separated lists and wildcard expressions.
-`fielddata_fields` | String | The fields to include in `fielddata` statistics. Supports comma-separated lists and wildcard expressions.
-`fields` | String | The fields to include. Supports comma-separated lists and wildcard expressions.
-`groups` | String | A comma-separated list of search groups to include in the search statistics.
-`level` | String | Specifies whether statistics for the `indices` metric are aggregated at the cluster, index, or shard level. Valid values are `indices`, `node`, and `shard`. When used for the `caches` metric, `indices`, `shard`, and `tier` are valid. The `tier` value is ignored if the [tiered spillover cache]({{site.url}}{{site.baseurl}}/search-plugins/caching/tiered-cache/) is not in use.
-`timeout` | Time | Sets the time limit for node response. Default is `30s`.
-`include_segment_file_sizes` | Boolean | If segment statistics are requested, this field specifies to return the aggregated disk usage of every Lucene index file. Default is `false`. 
+`completion_fields` | 字串 | 要包含在完成統計中的欄位。支援以逗號分隔的清單與萬用字元運算式。
+`fielddata_fields` | 字串 | 要包含在 `fielddata` 統計中的欄位。支援以逗號分隔的清單與萬用字元運算式。
+`fields` | 字串 | 要包含的欄位。支援以逗號分隔的清單與萬用字元運算式。
+`groups` | 字串 | 以逗號分隔、要包含在搜尋統計中的搜尋群組清單。
+`level` | 字串 | 指定 `indices` 指標的統計資訊要在叢集、索引或分片層級彙總。有效值為 `indices`、`node` 與 `shard`。用於 `caches` 指標時，`indices`、`shard` 與 `tier` 為有效值。若未使用[分層溢出快取]({{site.url}}{{site.baseurl}}/search-plugins/caching/tiered-cache/)，`tier` 值會被忽略。
+`timeout` | 時間 | 設定節點回應的時間限制。預設為 `30s`。
+`include_segment_file_sizes` | 布林值 | 若請求分段統計資訊，此欄位指定要傳回每個 Lucene 索引檔案的彙總磁碟使用量。預設為 `false`。
 
-## Example request
+## 範例請求
 
 <!-- spec_insert_start
 component: example_code
@@ -180,13 +181,13 @@ response = client.nodes.info(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 範例回應
 
-Select the arrow to view the example response.
+選取箭頭以檢視範例回應。
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -845,614 +846,614 @@ Select the arrow to view the example response.
 ```
 </details>
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists all response fields.
+下表列出所有回應欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `_nodes` | Object | Statistics about the nodes that are returned. |
-| `_nodes.total` | Integer | The total number of nodes for this request. |
-| `_nodes.successful` | Integer | The number of nodes for which the request was successful. |
-| `_nodes.failed` | Integer | The number of nodes for which the request failed. If there are nodes for which the request failed, the failure message is included. |
-| `cluster_name` | String | The name of the cluster. |
-| [`nodes`](#nodes) | Object | Statistics for the nodes included in this request. |
+| `_nodes` | 物件 | 所傳回節點的相關統計資料。 |
+| `_nodes.total` | 整數 | 此請求的節點總數。 |
+| `_nodes.successful` | 整數 | 請求成功的節點數。 |
+| `_nodes.failed` | 整數 | 請求失敗的節點數。若有請求失敗的節點，會包含失敗訊息。 |
+| `cluster_name` | 字串 | 叢集的名稱。 |
+| [`nodes`](#nodes) | 物件 | 此請求所含節點的統計資料。 |
 
 ### `nodes`
 
-The `nodes` object contains all nodes that are returned by the request, along with their IDs. Each node has the following properties.
+`nodes` 物件包含請求所傳回的所有節點及其 ID。每個節點具有下列屬性。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`timestamp` | Integer | The time the nodes statistics were collected, in milliseconds since the epoch.
-`name` | String | The name of the node.
-`transport_address` | IP address | The host and port of the transport layer that is used by nodes in a cluster to communicate internally.
-`host` | IP address | The network host of the node.
-`ip` | IP address | The IP address and port of the node.
-`roles` | Array | The roles of the node (for example, `cluster_manager`, `data`, or `ingest`).
-`attributes` | Object | The attributes of the node (for example, `shard_indexing_pressure_enabled`).
-[`indices`](#indices) | Object | Index statistics for each index that has shards on the node.
-[`os`](#os) | Object | Statistics about the operating system for the node.
-[`process`](#process) | Object | Process statistics for the node.
-[`jvm`](#jvm) | Object | Statistics about the JVM for the node.
-[`thread_pool`](#thread_pool)| Object | Statistics about each thread pool for the node.
-[`fs`](#fs) | Object | Statistics about the file stores for the node.
-[`transport`](#transport) | Object | Transport statistics for the node.
-`http` | Object | HTTP statistics for the node.
-`http.current_open` | Integer | The number of currently open HTTP connections for the node.
-`http.total_opened` | Integer | The total number of HTTP connections the node has opened since it started.
-[`breakers`](#breakers) | Object | Statistics about the circuit breakers for the node.
-[`script`](#script-and-script_cache)| Object | Script statistics for the node.
-[`script_cache`](#script-and-script_cache)| Object | Script cache statistics for the node.
-[`discovery`](#discovery) | Object | Node discovery statistics for the node.
-[`ingest`](#ingest) | Object | Ingest statistics for the node.
-[`search_pipeline`](#search_pipeline) | Object | Statistics related to [search pipelines]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/).
-[`adaptive_selection`](#adaptive_selection) | Object | Statistics about adaptive selections for the node.
-[`indexing_pressure`](#indexing_pressure) | Object | Statistics related to the node's indexing pressure.
-[`shard_indexing_pressure`](#shard_indexing_pressure) | Object | Statistics related to indexing pressure at the shard level.
-[`search_backpressure`]({{site.url}}{{site.baseurl}}/opensearch/search-backpressure#search-backpressure-stats-api) | Object | Statistics related to search backpressure.
-[`cluster_manager_throttling`](#cluster_manager_throttling) | Object | Statistics related to throttled tasks on the cluster manager node.
-[`task_cancellation`](#task_cancellation) | Object | Statistics about tasks that continue running after cancellation.
-[`weighted_routing`](#weighted_routing) | Object | Statistics relevant to weighted round robin requests.
-[`resource_usage_stats`](#resource_usage_stats) | Object | Statistics related to resource usage for the node.
-[`admission_control`](#admission_control) | Object | Statistics related to admission control for the node.
-[`concurrency_limiters`](#concurrency_limiters) | Object | Statistics related to adaptive concurrency limiters for the node. Returned when you request the `concurrency_limiter` metric.
-[`caches`](#caches) | Object | Statistics related to caches on the node.
+`timestamp` | 整數 | 收集節點統計資料的時間，以自 epoch 起算的毫秒數表示。
+`name` | 字串 | 節點的名稱。
+`transport_address` | IP 位址 | 叢集中的節點用來在內部通訊的傳輸層主機與連接埠。
+`host` | IP 位址 | 節點的網路主機。
+`ip` | IP 位址 | 節點的 IP 位址與連接埠。
+`roles` | 陣列 | 節點的角色 (例如 `cluster_manager`、`data` 或 `ingest`)。
+`attributes` | 物件 | 節點的屬性 (例如 `shard_indexing_pressure_enabled`)。
+[`indices`](#indices) | 物件 | 節點上具有分片的每個索引的索引統計資料。
+[`os`](#os) | 物件 | 節點作業系統的相關統計資料。
+[`process`](#process) | 物件 | 節點的處理程序統計資料。
+[`jvm`](#jvm) | 物件 | 節點 JVM 的相關統計資料。
+[`thread_pool`](#thread_pool)| 物件 | 節點各執行緒集區的相關統計資料。
+[`fs`](#fs) | 物件 | 節點檔案儲存區的相關統計資料。
+[`transport`](#transport) | 物件 | 節點的傳輸統計資料。
+`http` | 物件 | 節點的 HTTP 統計資料。
+`http.current_open` | 整數 | 節點目前開啟的 HTTP 連線數。
+`http.total_opened` | 整數 | 節點自啟動以來開啟的 HTTP 連線總數。
+[`breakers`](#breakers) | 物件 | 節點斷路器的相關統計資料。
+[`script`](#script-and-script_cache)| 物件 | 節點的指令碼統計資料。
+[`script_cache`](#script-and-script_cache)| 物件 | 節點的指令碼快取統計資料。
+[`discovery`](#discovery) | 物件 | 節點的節點探索統計資料。
+[`ingest`](#ingest) | 物件 | 節點的匯入統計資料。
+[`search_pipeline`](#search_pipeline) | 物件 | [搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/) 的相關統計資料。
+[`adaptive_selection`](#adaptive_selection) | 物件 | 節點調適性選取的相關統計資料。
+[`indexing_pressure`](#indexing_pressure) | 物件 | 節點索引編製壓力的相關統計資料。
+[`shard_indexing_pressure`](#shard_indexing_pressure) | 物件 | 分片層級索引編製壓力的相關統計資料。
+[`search_backpressure`]({{site.url}}{{site.baseurl}}/opensearch/search-backpressure#search-backpressure-stats-api) | 物件 | 搜尋背壓的相關統計資料。
+[`cluster_manager_throttling`](#cluster_manager_throttling) | 物件 | 叢集管理員節點上受節流工作的相關統計資料。
+[`task_cancellation`](#task_cancellation) | 物件 | 取消後仍繼續執行之工作的相關統計資料。
+[`weighted_routing`](#weighted_routing) | 物件 | 加權輪詢請求的相關統計資料。
+[`resource_usage_stats`](#resource_usage_stats) | 物件 | 節點資源使用量的相關統計資料。
+[`admission_control`](#admission_control) | 物件 | 節點准入控制的相關統計資料。
+[`concurrency_limiters`](#concurrency_limiters) | 物件 | 節點調適性並行限制器的相關統計資料。當您請求 `concurrency_limiter` 指標時傳回。
+[`caches`](#caches) | 物件 | 節點上快取的相關統計資料。
 
 ### `indices`
 
-The `indices` object contains the index statistics for each index with shards on this node. Each index has the following properties.
+`indices` 物件包含此節點上具有分片的每個索引的索引統計資料。每個索引具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`docs` | `Object` | Document statistics for all primary shards that exist on the node.
-`docs.count` | `Integer` | The number of documents reported by Lucene. Excludes deleted documents and recently indexed documents that are not yet assigned to a segment. Nested documents are counted separately.
-`docs.deleted` | `Integer` | The number of deleted documents reported by Lucene. Excludes recent deletion operations that have not yet affect the segment.
-`store` | `Object` | Statistics about the shard sizes of the shards on the node.
-`store.size_in_bytes` | `Integer` | Total size of all shards on the node.
-`store.reserved_in_bytes` | `Integer` | The predicted number of bytes the shard store will grow to be because of activities such as restoring snapshots and peer recoveries.
-`indexing` | `Object` | Statistics about indexing operations for the node.
-`indexing.index_total` | `Integer` | The total number of indexing operations on the node.
-`indexing.index_time_in_millis` | `Integer` | The total time for all indexing operations, in milliseconds.
-`indexing.index_current` | `Integer` | The number of indexing operations that are currently running.
-`indexing.index_failed` | `Integer` | The number of indexing operations that have failed.
-`indexing.delete_total` | `Integer` | The total number of deletions.
-`indexing.delete_time_in_millis` | `Integer` | The total time for all deletion operations, in milliseconds.
-`indexing.delete_current` | `Integer` | The number of deletion operations that are currently running.
-`indexing.noop_update_total` | `Integer` | The total number of no-op operations.
-`indexing.is_throttled` | `Boolean` | Specifies whether any operations were throttled.
-`indexing.throttle_time_in_millis` | `Integer` | The total time for throttling operations, in milliseconds.
-`get` | `Object` | Statistics about the get operations for the node.
-`get.total` | `Integer` | The total number of get operations.
-`get.time_in_millis` | `Integer` | The total time for all get operations, in milliseconds.
-`get.exists_total` | `Integer` | The total number of successful get operations.
-`get.exists_time_in_millis` | `Integer` | The total time for all successful get operations, in milliseconds.
-`get.missing_total` | `Integer` | The number of failed get operations.
-`get.missing_time_in_millis` | `Integer` | The total time for all failed get operations, in milliseconds.
-`get.current` | `Integer` | The number of get operations that are currently running.
-`search` | `Object` | Statistics about the search operations for the node.
-`search.concurrent_avg_slice_count` | `Integer` | The average slice count of all search requests. This is computed as the total slice count divided by the total number of concurrent search requests.
-`search.concurrent_query_total` | `Integer` | The total number of query operations that use concurrent segment search.
-`search.concurrent_query_time_in_millis` | `Integer` | The total amount of time taken by all query operations that use concurrent segment search, in milliseconds.
-`search.concurrent_query_current` | `Integer` | The number of currently running query operations that use concurrent segment search.
-`search.startree_query_total` | `Integer` | The total number of query operations that use a star tree for search.
-`search.startree_query_time_in_millis` | `Integer` | The total amount of time taken by all query operations that use a star tree for search, in milliseconds.
-`search.startree_query_current` | `Integer` | The number of currently running query operations that use a star tree for search.
-`search.startree_query_failed` | `Integer` | The number of failed query operations that use a star tree for search.
-`search.open_contexts` | `Integer` | The number of open search contexts.
-`search.query_total` | `Integer` | The total number of shard query operations.
-`search.query_time_in_millis` | `Integer` | The total amount of time for all shard query operations, in milliseconds.
-`search.query_current` | `Integer` | The number of shard query operations that are currently running.
-`search.query_failed` | `Integer` | The total number of failed shard query operations.
-`search.fetch_total` | `Integer` | The total number of shard fetch operations.
-`search.fetch_time_in_millis` | `Integer` | The total amount of time for all shard fetch operations, in milliseconds.
-`search.fetch_current` | `Integer` | The number of shard fetch operations that are currently running.
-`search.scroll_total` | `Integer` | The total number of shard scroll operations.
-`search.scroll_time_in_millis` | `Integer` | The total amount of time for all shard scroll operations, in milliseconds.
-`search.scroll_current` | `Integer` | The number of shard scroll operations that are currently running.
-`search.point_in_time_total` | `Integer` | The total number of shard Point in Time (PIT) contexts that have been created (completed and active) since the node last restarted.
-`search.point_in_time_time_in_millis` | `Integer` |  The amount of time that shard PIT contexts have been held open since the node last restarted, in milliseconds.
-`search.point_in_time_current` | `Integer` | The number of shard PIT contexts currently open.
-`search.suggest_total` | `Integer` | The total number of shard suggest operations.
-`search.suggest_time_in_millis` | `Integer` | The total amount of time for all shard suggest operations, in milliseconds.
-`search.suggest_current` | `Integer` | The number of shard suggest operations that are currently running.
-`search.search_idle_reactivate_count_total` | `Integer` | The total number of times that all shards have been activated from an idle state.
-`search.request` | `Object` | Statistics about coordinator search operations for the node.
-`search.request.took.time_in_millis` | `Integer` | The total amount of time taken for all search requests, in milliseconds.
-`search.request.took.current` | `Integer` | The number of search requests that are currently running.
-`search.request.took.total` | `Integer` | The total number of search requests completed.
-`search.request.dfs_pre_query.time_in_millis` | `Integer` | The total amount of time for all coordinator depth-first search (DFS) pre-query operations, in milliseconds.
-`search.request.dfs_pre_query.current` | `Integer` | The number of coordinator DFS pre-query operations that are currently running.
-`search.request.dfs_pre_query.total` | `Integer` | The total number of coordinator DFS pre-query operations completed.
-`search.request.query.time_in_millis` | `Integer` | The total amount of time for all coordinator query operations, in milliseconds.
-`search.request.query.current` | `Integer` | The number of coordinator query operations that are currently running.
-`search.request.query.total` | `Integer` | The total number of coordinator query operations completed.
-`search.request.fetch.time_in_millis` | `Integer` | The total amount of time for all coordinator fetch operations, in milliseconds.
-`search.request.fetch.current` | `Integer` | The number of coordinator fetch operations that are currently running.
-`search.request.fetch.total` | `Integer` | The total number of coordinator fetch operations completed.
-`search.request.dfs_query.time_in_millis` | `Integer` | The total amount of time for all coordinator DFS pre-query operations, in milliseconds.
-`search.request.dfs_query.current` | `Integer` | The number of coordinator DFS pre-query operations that are currently running.
-`search.request.dfs_query.total` | `Integer` | The total number of coordinator DFS pre-query operations completed.
-`search.request.expand.time_in_millis` | `Integer` | The total amount of time for all coordinator expand operations, in milliseconds.
-`search.request.expand.current` | `Integer` | The number of coordinator expand operations that are currently running.
-`search.request.expand.total` | `Integer` | The total number of coordinator expand operations completed.
-`search.request.can_match.time_in_millis` | `Integer` | The total amount of time for all coordinator match operations, in milliseconds.
-`search.request.can_match.current` | `Integer` | The number of coordinator match operations that are currently running.
-`search.request.can_match.total` | `Integer` | The total number of coordinator match operations completed.
-`merges` | `Object` | Statistics about merge operations for the node.
-`merges.current` | `Integer` | The number of merge operations that are currently running.
-`merges.current_docs` | `Integer` | The number of document merges that are currently running.
-`merges.current_size_in_bytes` | `Integer` | The memory size, in bytes, that is used to perform current merge operations.
-`merges.total` | `Integer` | The total number of merge operations.
-`merges.total_time_in_millis` | `Integer` | The total time for merges, in milliseconds.
-`merges.total_docs` | `Integer` | The total number of documents that have been merged.
-`merges.total_size_in_bytes` | `Integer` | The total size of all merged documents, in bytes.
-`merges.total_stopped_time_in_millis` | `Integer` | The total time spent on stopping merge operations, in milliseconds.
-`merges.total_throttled_time_in_millis` | `Integer` | The total time spent on throttling merge operations, in milliseconds.
-`merges.total_auto_throttle_in_bytes` | `Integer` | The total size of automatically throttled merge operations, in bytes.
-`refresh` | `Object` | Statistics about refresh operations for the node.
-`refresh.total` | `Integer` | The total number of refresh operations.
-`refresh.total_time_in_millis` | `Integer` | The total time for all refresh operations, in milliseconds.
-`refresh.external_total` | `Integer` | The total number of external refresh operations.
-`refresh.external_total_time_in_millis` | `Integer` | The total time for all external refresh operations, in milliseconds.
-`refresh.listeners` | `Integer` | The number of refresh listeners.
-`flush` | `Object` | Statistics about flush operations for the node.
-`flush.total` | `Integer` | The total number of flush operations.
-`flush.periodic` | `Integer` | The total number of periodic flush operations.
-`flush.total_time_in_millis` | `Integer` | The total time for all flush operations, in milliseconds.
-`warmer` | `Object` | Statistics about the index warming operations for the node.
-`warmer.current` | `Integer` | The number of current index warming operations.
-`warmer.total` | `Integer` | The total number of index warming operations.
-`warmer.total_time_in_millis` | `Integer` | The total time for all index warming operations, in milliseconds.
-`query_cache` | Statistics about query cache operations for the node.
-`query_cache.memory_size_in_bytes` | Integer | The amount of memory used for the query cache for all shards in the node.
-`query_cache.total_count` | Integer | The total number of hits and misses in the query cache.
-`query_cache.hit_count` | Integer | The total number of hits in the query cache.
-`query_cache.miss_count` | Integer | The total number of misses in the query cache.
-`query_cache.cache_size` | Integer | The number of queries currently in the query cache.
-`query_cache.cache_count` | Integer | The total number of queries that have been added to the query cache, including those that have since been evicted.
-`query_cache.evictions` | Integer | The number of evictions from the query cache.
-`fielddata` | Object | Statistics about the field data cache for all shards in the node.
-`fielddata.memory_size_in_bytes` | Integer | The total amount of memory used for the field data cache for all shards in the node.
-`fielddata.evictions` | Integer | The number of evictions in the field data cache.
-`fielddata.item_count` | Integer | The number of items in the field data cache.
-`fielddata.fields` | Object | Contains all field data fields.
-`completion` | Object | Statistics about completions for all shards in the node.
-`completion.size_in_bytes` | Integer | The total amount of memory used for completion for all shards in the node, in bytes.
-`completion.fields` | Object | Contains completion fields.
-`segments` | Object | Statistics about segments for all shards in the node.
-`segments.count` | Integer | The total number of segments.
-`segments.memory_in_bytes` | Integer | The total amount of memory, in bytes.
-`segments.terms_memory_in_bytes` | Integer | The total amount of memory used for terms, in bytes.
-`segments.stored_fields_memory_in_bytes` | Integer | The total amount of memory used for stored fields, in bytes.
-`segments.term_vectors_memory_in_bytes` | Integer | The total amount of memory used for term vectors, in bytes.
-`segments.norms_memory_in_bytes` | Integer | The total amount of memory used for normalization factors, in bytes.
-`segments.points_memory_in_bytes` | Integer | The total amount of memory used for points, in bytes.
-`segments.doc_values_memory_in_bytes` | Integer | The total amount of memory used for doc values, in bytes.
-`segments.index_writer_memory_in_bytes` | Integer | The total amount of memory used by all index writers, in bytes.
-`segments.version_map_memory_in_bytes` | Integer | The total amount of memory used by all version maps, in bytes.
-`segments.fixed_bit_set_memory_in_bytes` | Integer | The total amount of memory used by fixed bit sets, in bytes. Fixed bit sets are used for nested objects and join fields.
-`segments.max_unsafe_auto_id_timestamp` | Integer | The timestamp for the most recently retired indexing request, in milliseconds since the epoch.
-`segments.segment_replication` | Object | Segment replication statistics for all primary shards when segment replication is enabled on the node.
-`segments.segment_replication.max_bytes_behind` | long | The maximum number of bytes behind the primary replica.
-`segments.segment_replication.total_bytes_behind` | long | The total number of bytes behind the primary replicas.
-`segments.segment_replication.max_replication_lag` | long | The maximum amount of time, in milliseconds, taken by a replica to catch up to its primary. 
-`segments.remote_store` | Object | Statistics about remote segment store operations.
-`segments.remote_store.upload` | Object | Statistics related to uploads to the remote segment store.
-`segments.remote_store.upload.total_upload_size` | Object | The amount of data, in bytes, uploaded to the remote segment store.
-`segments.remote_store.upload.total_upload_size.started_bytes` | Integer | The number of bytes to upload to the remote segment store after the upload has started.
-`segments.remote_store.upload.total_upload_size.succeeded_bytes` | Integer | The number of bytes successfully uploaded to the remote segment store.
-`segments.remote_store.upload.total_upload_size.failed_bytes` | Integer | The number of bytes that failed to upload to the remote segment store.
-`segments.remote_store.upload.refresh_size_lag` | Object | The amount of lag during upload between the remote segment store and the local store.
-`segments.remote_store.upload.refresh_size_lag.total_bytes` | Integer | The total number of bytes that lagged during the upload refresh between the remote segment store and the local store.
-`segments.remote_store.upload.refresh_size_lag.max_bytes` | Integer | The maximum amount of lag, in bytes, during the upload refresh between the remote segment store and the local store.
-`segments.remote_store.upload.max_refresh_time_lag_in_millis` | Integer | The maximum duration, in milliseconds, that the remote refresh is behind the local refresh.
-`segments.remote_store.upload.total_time_spent_in_millis` | Integer | The total amount of time, in milliseconds, spent on uploads to the remote segment store.
-`segments.remote_store.upload.pressure` | Object | Statistics related to segment store upload backpressure.
-`segments.remote_store.upload.pressure.total_rejections` | Integer | The total number of requests rejected due to segment store upload backpressure.
-`segments.remote_store.download` | Object | Statistics related to downloads to the remote segment store.
-`segments.remote_store.download.total_download_size` | Object | The total amount of data download from the remote segment store.
-`segments.remote_store.download.total_download_size.started_bytes` | Integer | The number of bytes downloaded from the remote segment store after the download starts.
-`segments.remote_store.download.total_download_size.succeeded_bytes` | Integer | The number of bytes successfully downloaded from the remote segment store.
-`segments.remote_store.download.total_download_size.failed_bytes` | Integer | The number of bytes that failed to download from the remote segment store.
-`segments.remote_store.download.total_time_spent_in_millis` | Integer | The total duration, in milliseconds, spent on downloads from the remote segment store.
-`segments.file_sizes` | Integer | Statistics about the size of the segment files.
-`translog` | Object | Statistics about transaction log operations for the node.
-`translog.operations` | Integer | The number of translog operations.
-`translog.size_in_bytes` | Integer | The size of the translog, in bytes.
-`translog.uncommitted_operations` | Integer | The number of uncommitted translog operations.
-`translog.uncommitted_size_in_bytes` | Integer | The size of uncommitted translog operations, in bytes.
-`translog.earliest_last_modified_age` | Integer | The earliest last modified age for the translog.
-`translog.remote_store` | Object | Statistics related to operations from the remote translog store.
-`translog.remote_store.upload` | Object | Statistics related to uploads to the remote translog store.
-`translog.remote_store.upload.total_uploads` | Object | The number of syncs to the remote translog store.
-`translog.remote_store.upload.total_uploads.started` | Integer | The number of upload syncs to the remote translog store that have started.
-`translog.remote_store.upload.total_uploads.failed` | Integer | The number of failed upload syncs to the remote translog store.
-`translog.remote_store.upload.total_uploads.succeeded` | Integer | The number of successful upload syncs to the remote translog store.
-`translog.remote_store.upload.total_upload_size` | Object | The total amount of data uploaded to the remote translog store.
-`translog.remote_store.upload.total_upload_size.started_bytes` | Integer | The number of bytes actively uploading to the remote translog store after the upload has started.
-`translog.remote_store.upload.total_upload_size.failed_bytes` | Integer | The number of bytes that failed to upload to the remote translog store.
-`translog.remote_store.upload.total_upload_size.succeeded_bytes` | Integer | The number of bytes successfully uploaded to the remote translog store.
-`request_cache` | Object | Statistics about the request cache for the node.
-`request_cache.memory_size_in_bytes` | Integer | The memory size used by the request cache, in bytes.
-`request_cache.evictions` | Integer | The number of request cache evictions.
-`request_cache.hit_count` | Integer | The number of request cache hits.
-`request_cache.miss_count` | Integer | The number of request cache misses.
-`recovery` | Object | Statistics about recovery operations for the node.
-`recovery.current_as_source` | Integer | The number of recovery operations that have used an index shard as a source.
-`recovery.current_as_target` | Integer | The number of recovery operations that have used an index shard as a target.
-`recovery.throttle_time_in_millis` | Integer | The delay of recovery operations due to throttling, in milliseconds.
+`docs` | `Object` | 節點上所有現存主要分片的文件統計資料。
+`docs.count` | `Integer` | Lucene 回報的文件數量。排除已刪除的文件，以及尚未指派至分段的最近編製索引文件。巢狀文件會分開計算。
+`docs.deleted` | `Integer` | Lucene 回報的已刪除文件數量。排除尚未影響分段的最近刪除作業。
+`store` | `Object` | 節點上各分片大小的統計資料。
+`store.size_in_bytes` | `Integer` | 節點上所有分片的總大小。
+`store.reserved_in_bytes` | `Integer` | 因還原快照與對等復原等活動，分片儲存空間預計將成長的位元組數。
+`indexing` | `Object` | 節點的編製索引作業統計資料。
+`indexing.index_total` | `Integer` | 節點上編製索引作業的總數。
+`indexing.index_time_in_millis` | `Integer` | 所有編製索引作業的總時間，單位為毫秒。
+`indexing.index_current` | `Integer` | 目前正在執行的編製索引作業數量。
+`indexing.index_failed` | `Integer` | 已失敗的編製索引作業數量。
+`indexing.delete_total` | `Integer` | 刪除作業的總數。
+`indexing.delete_time_in_millis` | `Integer` | 所有刪除作業的總時間，單位為毫秒。
+`indexing.delete_current` | `Integer` | 目前正在執行的刪除作業數量。
+`indexing.noop_update_total` | `Integer` | 無作業 (no-op) 的總數。
+`indexing.is_throttled` | `Boolean` | 指定是否有任何作業受到節流。
+`indexing.throttle_time_in_millis` | `Integer` | 節流作業的總時間，單位為毫秒。
+`get` | `Object` | 節點的 get 作業統計資料。
+`get.total` | `Integer` | get 作業的總數。
+`get.time_in_millis` | `Integer` | 所有 get 作業的總時間，單位為毫秒。
+`get.exists_total` | `Integer` | 成功的 get 作業總數。
+`get.exists_time_in_millis` | `Integer` | 所有成功 get 作業的總時間，單位為毫秒。
+`get.missing_total` | `Integer` | 失敗的 get 作業數量。
+`get.missing_time_in_millis` | `Integer` | 所有失敗 get 作業的總時間，單位為毫秒。
+`get.current` | `Integer` | 目前正在執行的 get 作業數量。
+`search` | `Object` | 節點的搜尋作業統計資料。
+`search.concurrent_avg_slice_count` | `Integer` | 所有搜尋請求的平均切片數。計算方式為切片總數除以並行搜尋請求的總數。
+`search.concurrent_query_total` | `Integer` | 使用並行分段搜尋的查詢作業總數。
+`search.concurrent_query_time_in_millis` | `Integer` | 所有使用並行分段搜尋的查詢作業所花費的總時間，單位為毫秒。
+`search.concurrent_query_current` | `Integer` | 目前正在執行且使用並行分段搜尋的查詢作業數量。
+`search.startree_query_total` | `Integer` | 使用 star tree 進行搜尋的查詢作業總數。
+`search.startree_query_time_in_millis` | `Integer` | 所有使用 star tree 進行搜尋的查詢作業所花費的總時間，單位為毫秒。
+`search.startree_query_current` | `Integer` | 目前正在執行且使用 star tree 進行搜尋的查詢作業數量。
+`search.startree_query_failed` | `Integer` | 使用 star tree 進行搜尋且失敗的查詢作業數量。
+`search.open_contexts` | `Integer` | 開啟中的搜尋情境數量。
+`search.query_total` | `Integer` | 分片查詢作業的總數。
+`search.query_time_in_millis` | `Integer` | 所有分片查詢作業的總時間，單位為毫秒。
+`search.query_current` | `Integer` | 目前正在執行的分片查詢作業數量。
+`search.query_failed` | `Integer` | 失敗的分片查詢作業總數。
+`search.fetch_total` | `Integer` | 分片擷取作業的總數。
+`search.fetch_time_in_millis` | `Integer` | 所有分片擷取作業的總時間，單位為毫秒。
+`search.fetch_current` | `Integer` | 目前正在執行的分片擷取作業數量。
+`search.scroll_total` | `Integer` | 分片捲動 (scroll) 作業的總數。
+`search.scroll_time_in_millis` | `Integer` | 所有分片捲動作業的總時間，單位為毫秒。
+`search.scroll_current` | `Integer` | 目前正在執行的分片捲動作業數量。
+`search.point_in_time_total` | `Integer` | 自節點上次重新啟動以來，已建立 (已完成與作用中) 的分片 Point in Time (PIT) 情境總數。
+`search.point_in_time_time_in_millis` | `Integer` | 自節點上次重新啟動以來，分片 PIT 情境保持開啟的時間長度，單位為毫秒。
+`search.point_in_time_current` | `Integer` | 目前開啟中的分片 PIT 情境數量。
+`search.suggest_total` | `Integer` | 分片建議 (suggest) 作業的總數。
+`search.suggest_time_in_millis` | `Integer` | 所有分片建議作業的總時間，單位為毫秒。
+`search.suggest_current` | `Integer` | 目前正在執行的分片建議作業數量。
+`search.search_idle_reactivate_count_total` | `Integer` | 所有分片從閒置狀態被啟用的總次數。
+`search.request` | `Object` | 節點的協調器搜尋作業統計資料。
+`search.request.took.time_in_millis` | `Integer` | 所有搜尋請求所花費的總時間，單位為毫秒。
+`search.request.took.current` | `Integer` | 目前正在執行的搜尋請求數量。
+`search.request.took.total` | `Integer` | 已完成的搜尋請求總數。
+`search.request.dfs_pre_query.time_in_millis` | `Integer` | 所有協調器深度優先搜尋 (DFS) 查詢前置作業的總時間，單位為毫秒。
+`search.request.dfs_pre_query.current` | `Integer` | 目前正在執行的協調器 DFS 查詢前置作業數量。
+`search.request.dfs_pre_query.total` | `Integer` | 已完成的協調器 DFS 查詢前置作業總數。
+`search.request.query.time_in_millis` | `Integer` | 所有協調器查詢作業的總時間，單位為毫秒。
+`search.request.query.current` | `Integer` | 目前正在執行的協調器查詢作業數量。
+`search.request.query.total` | `Integer` | 已完成的協調器查詢作業總數。
+`search.request.fetch.time_in_millis` | `Integer` | 所有協調器擷取作業的總時間，單位為毫秒。
+`search.request.fetch.current` | `Integer` | 目前正在執行的協調器擷取作業數量。
+`search.request.fetch.total` | `Integer` | 已完成的協調器擷取作業總數。
+`search.request.dfs_query.time_in_millis` | `Integer` | 所有協調器 DFS 查詢前置作業的總時間，單位為毫秒。
+`search.request.dfs_query.current` | `Integer` | 目前正在執行的協調器 DFS 查詢前置作業數量。
+`search.request.dfs_query.total` | `Integer` | 已完成的協調器 DFS 查詢前置作業總數。
+`search.request.expand.time_in_millis` | `Integer` | 所有協調器展開作業的總時間，單位為毫秒。
+`search.request.expand.current` | `Integer` | 目前正在執行的協調器展開作業數量。
+`search.request.expand.total` | `Integer` | 已完成的協調器展開作業總數。
+`search.request.can_match.time_in_millis` | `Integer` | 所有協調器比對作業的總時間，單位為毫秒。
+`search.request.can_match.current` | `Integer` | 目前正在執行的協調器比對作業數量。
+`search.request.can_match.total` | `Integer` | 已完成的協調器比對作業總數。
+`merges` | `Object` | 節點的合併作業統計資料。
+`merges.current` | `Integer` | 目前正在執行的合併作業數量。
+`merges.current_docs` | `Integer` | 目前正在執行的文件合併數量。
+`merges.current_size_in_bytes` | `Integer` | 用於執行目前合併作業的記憶體大小，單位為位元組。
+`merges.total` | `Integer` | 合併作業的總數。
+`merges.total_time_in_millis` | `Integer` | 合併的總時間，單位為毫秒。
+`merges.total_docs` | `Integer` | 已合併的文件總數。
+`merges.total_size_in_bytes` | `Integer` | 所有已合併文件的總大小，單位為位元組。
+`merges.total_stopped_time_in_millis` | `Integer` | 花費在停止合併作業的總時間，單位為毫秒。
+`merges.total_throttled_time_in_millis` | `Integer` | 花費在節流合併作業的總時間，單位為毫秒。
+`merges.total_auto_throttle_in_bytes` | `Integer` | 自動節流的合併作業總大小，單位為位元組。
+`refresh` | `Object` | 節點的重新整理作業統計資料。
+`refresh.total` | `Integer` | 重新整理作業的總數。
+`refresh.total_time_in_millis` | `Integer` | 所有重新整理作業的總時間，單位為毫秒。
+`refresh.external_total` | `Integer` | 外部重新整理作業的總數。
+`refresh.external_total_time_in_millis` | `Integer` | 所有外部重新整理作業的總時間，單位為毫秒。
+`refresh.listeners` | `Integer` | 重新整理監聽器的數量。
+`flush` | `Object` | 節點的排清作業統計資料。
+`flush.total` | `Integer` | 排清作業的總數。
+`flush.periodic` | `Integer` | 週期性排清作業的總數。
+`flush.total_time_in_millis` | `Integer` | 所有排清作業的總時間，單位為毫秒。
+`warmer` | `Object` | 節點的索引預熱作業統計資料。
+`warmer.current` | `Integer` | 目前的索引預熱作業數量。
+`warmer.total` | `Integer` | 索引預熱作業的總數。
+`warmer.total_time_in_millis` | `Integer` | 所有索引預熱作業的總時間，單位為毫秒。
+`query_cache` | 節點的查詢快取作業統計資料。
+`query_cache.memory_size_in_bytes` | 整數 | 節點中所有分片的查詢快取所使用的記憶體量。
+`query_cache.total_count` | 整數 | 查詢快取中的命中與未命中總數。
+`query_cache.hit_count` | 整數 | 查詢快取中的命中總數。
+`query_cache.miss_count` | 整數 | 查詢快取中的未命中總數。
+`query_cache.cache_size` | 整數 | 目前位於查詢快取中的查詢數量。
+`query_cache.cache_count` | 整數 | 已加入查詢快取的查詢總數，包括其後已被驅離的查詢。
+`query_cache.evictions` | 整數 | 從查詢快取驅離的數量。
+`fielddata` | 物件 | 節點中所有分片的欄位資料快取統計資料。
+`fielddata.memory_size_in_bytes` | 整數 | 節點中所有分片的欄位資料快取所使用的記憶體總量。
+`fielddata.evictions` | 整數 | 欄位資料快取中的驅離次數。
+`fielddata.item_count` | 整數 | 欄位資料快取中的項目數量。
+`fielddata.fields` | 物件 | 包含所有欄位資料欄位。
+`completion` | 物件 | 節點中所有分片的自動完成 (completion) 統計資料。
+`completion.size_in_bytes` | 整數 | 節點中所有分片的 completion 所使用的記憶體總量，單位為位元組。
+`completion.fields` | 物件 | 包含完成欄位。
+`segments` | 物件 | 節點中所有分片的分段統計資料。
+`segments.count` | 整數 | 分段總數。
+`segments.memory_in_bytes` | 整數 | 記憶體總量，以位元組為單位。
+`segments.terms_memory_in_bytes` | 整數 | 用於詞彙的記憶體總量，以位元組為單位。
+`segments.stored_fields_memory_in_bytes` | 整數 | 用於已儲存欄位的記憶體總量，以位元組為單位。
+`segments.term_vectors_memory_in_bytes` | 整數 | 用於詞彙向量的記憶體總量，以位元組為單位。
+`segments.norms_memory_in_bytes` | 整數 | 用於正規化因子的記憶體總量，以位元組為單位。
+`segments.points_memory_in_bytes` | 整數 | 用於 points 的記憶體總量，以位元組為單位。
+`segments.doc_values_memory_in_bytes` | 整數 | 用於 doc values 的記憶體總量，以位元組為單位。
+`segments.index_writer_memory_in_bytes` | 整數 | 所有索引寫入器使用的記憶體總量，以位元組為單位。
+`segments.version_map_memory_in_bytes` | 整數 | 所有版本對應使用的記憶體總量，以位元組為單位。
+`segments.fixed_bit_set_memory_in_bytes` | 整數 | 固定位元集使用的記憶體總量，以位元組為單位。固定位元集用於巢狀物件與 join 欄位。
+`segments.max_unsafe_auto_id_timestamp` | 整數 | 最近一次退役的索引請求的時間戳記，以自 epoch 起算的毫秒數為單位。
+`segments.segment_replication` | 物件 | 當節點上啟用分段複寫時，所有主要分片的分段複寫統計資料。
+`segments.segment_replication.max_bytes_behind` | long | 落後主要分片的最大位元組數。
+`segments.segment_replication.total_bytes_behind` | long | 落後主要分片的總位元組數。
+`segments.segment_replication.max_replication_lag` | long | 副本追上其主要分片所花費的最長時間，以毫秒為單位。 
+`segments.remote_store` | 物件 | 遠端分段存放區作業的統計資料。
+`segments.remote_store.upload` | 物件 | 與上傳至遠端分段存放區相關的統計資料。
+`segments.remote_store.upload.total_upload_size` | 物件 | 上傳至遠端分段存放區的資料量，以位元組為單位。
+`segments.remote_store.upload.total_upload_size.started_bytes` | 整數 | 上傳開始後，要上傳至遠端分段存放區的位元組數。
+`segments.remote_store.upload.total_upload_size.succeeded_bytes` | 整數 | 成功上傳至遠端分段存放區的位元組數。
+`segments.remote_store.upload.total_upload_size.failed_bytes` | 整數 | 上傳至遠端分段存放區失敗的位元組數。
+`segments.remote_store.upload.refresh_size_lag` | 物件 | 上傳期間，遠端分段存放區與本機存放區之間的延遲量。
+`segments.remote_store.upload.refresh_size_lag.total_bytes` | 整數 | 上傳重新整理期間，遠端分段存放區與本機存放區之間延遲的總位元組數。
+`segments.remote_store.upload.refresh_size_lag.max_bytes` | 整數 | 上傳重新整理期間，遠端分段存放區與本機存放區之間延遲的最大位元組數。
+`segments.remote_store.upload.max_refresh_time_lag_in_millis` | 整數 | 遠端重新整理落後本機重新整理的最大持續時間，以毫秒為單位。
+`segments.remote_store.upload.total_time_spent_in_millis` | 整數 | 花費在上傳至遠端分段存放區的總時間，以毫秒為單位。
+`segments.remote_store.upload.pressure` | 物件 | 與分段存放區上傳背壓相關的統計資料。
+`segments.remote_store.upload.pressure.total_rejections` | 整數 | 因分段存放區上傳背壓而遭拒絕的請求總數。
+`segments.remote_store.download` | 物件 | 與從遠端分段存放區下載相關的統計資料。
+`segments.remote_store.download.total_download_size` | 物件 | 從遠端分段存放區下載的資料總量。
+`segments.remote_store.download.total_download_size.started_bytes` | 整數 | 下載開始後，從遠端分段存放區下載的位元組數。
+`segments.remote_store.download.total_download_size.succeeded_bytes` | 整數 | 成功從遠端分段存放區下載的位元組數。
+`segments.remote_store.download.total_download_size.failed_bytes` | 整數 | 從遠端分段存放區下載失敗的位元組數。
+`segments.remote_store.download.total_time_spent_in_millis` | 整數 | 花費在從遠端分段存放區下載的總持續時間，以毫秒為單位。
+`segments.file_sizes` | 整數 | 分段檔案大小的統計資料。
+`translog` | 物件 | 節點的交易記錄檔作業統計資料。
+`translog.operations` | 整數 | translog 作業數。
+`translog.size_in_bytes` | 整數 | translog 的大小，以位元組為單位。
+`translog.uncommitted_operations` | 整數 | 未提交的 translog 作業數。
+`translog.uncommitted_size_in_bytes` | 整數 | 未提交的 translog 作業大小，以位元組為單位。
+`translog.earliest_last_modified_age` | 整數 | translog 最早的最後修改時間長度。
+`translog.remote_store` | 物件 | 與遠端 translog 存放區作業相關的統計資料。
+`translog.remote_store.upload` | 物件 | 與上傳至遠端 translog 存放區相關的統計資料。
+`translog.remote_store.upload.total_uploads` | 物件 | 與遠端 translog 存放區同步的次數。
+`translog.remote_store.upload.total_uploads.started` | 整數 | 已開始之遠端 translog 存放區上傳同步的次數。
+`translog.remote_store.upload.total_uploads.failed` | 整數 | 遠端 translog 存放區上傳同步失敗的次數。
+`translog.remote_store.upload.total_uploads.succeeded` | 整數 | 遠端 translog 存放區上傳同步成功的次數。
+`translog.remote_store.upload.total_upload_size` | 物件 | 上傳至遠端 translog 存放區的資料總量。
+`translog.remote_store.upload.total_upload_size.started_bytes` | 整數 | 上傳開始後，正主動上傳至遠端 translog 存放區的位元組數。
+`translog.remote_store.upload.total_upload_size.failed_bytes` | 整數 | 上傳至遠端 translog 存放區失敗的位元組數。
+`translog.remote_store.upload.total_upload_size.succeeded_bytes` | 整數 | 成功上傳至遠端 translog 存放區的位元組數。
+`request_cache` | 物件 | 節點之請求快取的統計資料。
+`request_cache.memory_size_in_bytes` | 整數 | 請求快取使用的記憶體大小，以位元組為單位。
+`request_cache.evictions` | 整數 | 請求快取逐出的次數。
+`request_cache.hit_count` | 整數 | 請求快取命中的次數。
+`request_cache.miss_count` | 整數 | 請求快取未命中的次數。
+`recovery` | 物件 | 節點之復原作業的統計資料。
+`recovery.current_as_source` | 整數 | 已使用索引分片作為來源的復原作業數。
+`recovery.current_as_target` | 整數 | 已使用索引分片作為目標的復原作業數。
+`recovery.throttle_time_in_millis` | 整數 | 因節流而導致的復原作業延遲，以毫秒為單位。
 
 ### `os`
 
-The `os` object has the operating system statistics for the node and has the following properties.
+`os` 物件包含節點的作業系統統計資料，並具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`timestamp` | `Integer` | The last refresh time for the operating system statistics, in milliseconds since the epoch.
-`cpu` | `Object` | Statistics about the node's CPU usage.
-`cpu.percent` | `Integer` | Recent CPU usage for the system.
-`cpu.load_average` | `Object` | Statistics about load averages for the system.
-`cpu.load_average.1m` | `Float` | The load average for the system for the time period of one minute.
-`cpu.load_average.5m` | `Float` | The load average for the system for the time period of five minutes.
-`cpu.load_average.15m` | `Float` | The load average for the system for the time period of 15 minutes.
-`mem` | `Object` | Statistics about memory usage for the node.
-`mem.total_in_bytes` | `Integer` | The total amount of physical memory, in bytes.
-`mem.free_in_bytes` | `Integer` | The total amount of free physical memory, in bytes.
-`mem.used_in_bytes` | `Integer` | The total amount of used physical memory, in bytes.
-`mem.free_percent` | `Integer` | The percentage of memory that is free.
-`mem.used_percent` | `Integer` | The percentage of memory that is used.
-`swap` | `Object` | Statistics about swap space for the node.
-`swap.total_in_bytes` | `Integer` | The total amount of swap space, in bytes.
-`swap.free_in_bytes` | `Integer` | The total amount of free swap space, in bytes.
-`swap.used_in_bytes` | `Integer` | The total amount of used swap space, in bytes.
-`cgroup` | `Object` | Contains `cgroup` statistics for the node. Returned for Linux only.
-`cgroup.cpuacct` | `Object` | Statistics about the `cpuacct` control group for the node.
-`cgroup.cpu` | `Object` | Statistics about the CPU control group for the node.
-`cgroup.memory` | `Object` | Statistics about the memory control group for the node.
+`timestamp` | `Integer` | 作業系統統計資料的上次重新整理時間，以自紀元起算的毫秒數表示。
+`cpu` | `Object` | 節點的 CPU 使用量統計資料。
+`cpu.percent` | `Integer` | 系統最近的 CPU 使用量。
+`cpu.load_average` | `Object` | 系統的平均負載統計資料。
+`cpu.load_average.1m` | `Float` | 系統在 1 分鐘期間內的平均負載。
+`cpu.load_average.5m` | `Float` | 系統在 5 分鐘期間內的平均負載。
+`cpu.load_average.15m` | `Float` | 系統在 15 分鐘期間內的平均負載。
+`mem` | `Object` | 節點的記憶體使用量統計資料。
+`mem.total_in_bytes` | `Integer` | 實體記憶體總量，以位元組為單位。
+`mem.free_in_bytes` | `Integer` | 可用實體記憶體總量，以位元組為單位。
+`mem.used_in_bytes` | `Integer` | 已使用的實體記憶體總量，以位元組為單位。
+`mem.free_percent` | `Integer` | 可用記憶體的百分比。
+`mem.used_percent` | `Integer` | 已使用記憶體的百分比。
+`swap` | `Object` | 節點的交換空間統計資料。
+`swap.total_in_bytes` | `Integer` | 交換空間總量，以位元組為單位。
+`swap.free_in_bytes` | `Integer` | 可用交換空間總量，以位元組為單位。
+`swap.used_in_bytes` | `Integer` | 已使用的交換空間總量，以位元組為單位。
+`cgroup` | `Object` | 包含節點的 `cgroup` 統計資料。僅在 Linux 上傳回。
+`cgroup.cpuacct` | `Object` | 節點的 `cpuacct` 控制群組統計資料。
+`cgroup.cpu` | `Object` | 節點的 CPU 控制群組統計資料。
+`cgroup.memory` | `Object` | 節點的記憶體控制群組統計資料。
 
 ### `process`
 
-The `process` object contains process statistics for the node and has the following properties.
+`process` 物件包含節點的處理程序統計資料，並具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`timestamp` | `Integer` | The last refresh time for the process statistics, in milliseconds since the epoch.
-`open_file_descriptors` | `Integer` |  The number of opened file descriptors associated with the current process.
-`max_file_descriptors` | `Integer` | The maximum number of file descriptors for the system.
-`cpu` | `Object` | Statistics about the CPU for the node.
-`cpu.percent` | `Integer` | The percentage of CPU usage for the process.
-`cpu.total_in_millis` | `Integer` | The total CPU time used by the process on which the JVM is running, in milliseconds.
-`mem` | `Object` | Statistics about the memory for the node.
-`mem.total_virtual_in_bytes` | `Integer` | The total amount of virtual memory that is guaranteed to be available to the process that is currently running, in bytes.
+`timestamp` | `Integer` | 處理程序統計資料的上次重新整理時間，以自紀元起算的毫秒數表示。
+`open_file_descriptors` | `Integer` |  與目前處理程序相關聯的已開啟檔案描述元數量。
+`max_file_descriptors` | `Integer` | 系統的檔案描述元數量上限。
+`cpu` | `Object` | 節點的 CPU 統計資料。
+`cpu.percent` | `Integer` | 處理程序的 CPU 使用率百分比。
+`cpu.total_in_millis` | `Integer` | 執行 JVM 的處理程序所使用的 CPU 時間總計，以毫秒為單位。
+`mem` | `Object` | 節點的記憶體統計資料。
+`mem.total_virtual_in_bytes` | `Integer` | 保證可供目前執行中處理程序使用的虛擬記憶體總量，以位元組為單位。
 
 ### `jvm`
 
-The `jvm` object contains statistics about the JVM for the node and has the following properties.
+`jvm` 物件包含節點的 JVM 統計資料，並具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`timestamp` | `Integer` | The last refresh time for the JVM statistics, in milliseconds since the epoch.
-`uptime_in_millis` | `Integer` | The JVM uptime, in milliseconds.
-`mem` | `Object` | Statistics for the JVM memory usage on the node.
-`mem.heap_used_in_bytes` | `Integer` | The amount of memory that is currently being used, in bytes.
-`mem.heap_used_percent` | `Integer` | The percentage of memory that is currently used by the heap.
-`mem.heap_committed_in_bytes` | `Integer` | The amount of memory available for use by the heap, in bytes.
-`mem.heap_max_in_bytes` | `Integer` | The maximum amount of memory available for use by the heap, in bytes.
-`mem.non_heap_used_in_bytes` | `Integer` | The amount of non-heap memory that is currently used, in bytes.
-`mem.non_heap_committed_in_bytes` | `Integer` | The maximum amount of non-heap memory available for use, in bytes.
-`mem.pools` | `Object` | Statistics about heap memory usage for the node.
-`mem.pools.young` | `Object` | Statistics about the young generation heap memory usage for the node. Contains the amount of memory used, the maximum amount of memory available, and the peak amount of memory used.
-`mem.pools.old` | `Object` | Statistics about the old generation heap memory usage for the node. Contains the amount of memory used, the maximum amount of memory available, and the peak amount of memory used.
-`mem.pools.survivor` | `Object` | Statistics about the survivor space memory usage for the node. Contains the amount of memory used, the maximum amount of memory available, and the peak amount of memory used.
-`threads` | `Object` | Statistics about the JVM thread usage for the node.
-`threads.count` | `Integer` | The number of threads that are currently active in the JVM.
-`threads.peak_count` | `Integer` | The maximum number of threads in the JVM.
-`gc.collectors` | `Object` | Statistics about the JVM garbage collectors for the node.
-`gc.collectors.young` | `Integer` | Statistics about JVM garbage collectors that collect young generation objects.
-`gc.collectors.young.collection_count` | `Integer` | The number of garbage collectors that collect young generation objects.
-`gc.collectors.young.collection_time_in_millis` | `Integer` | The total time spent on garbage collection of young generation objects, in milliseconds.
-`gc.collectors.old` | `Integer` | Statistics about JVM garbage collectors that collect old generation objects.
-`gc.collectors.old.collection_count` | `Integer` | The number of garbage collectors that collect old generation objects.
-`gc.collectors.old.collection_time_in_millis` | `Integer` | The total time spent on garbage collection of old generation objects, in milliseconds.
-`buffer_pools` | `Object` | Statistics about the JVM buffer pools for the node.
-`buffer_pools.mapped` | `Object` | Statistics about the mapped JVM buffer pools for the node.
-`buffer_pools.mapped.count` | `Integer` | The number of mapped buffer pools.
-`buffer_pools.mapped.used_in_bytes` | `Integer` | The amount of memory used by mapped buffer pools, in bytes.
-`buffer_pools.mapped.total_capacity_in_bytes` | `Integer` | The total capacity of the mapped buffer pools, in bytes.
-`buffer_pools.direct` | `Object` | Statistics about the direct JVM buffer pools for the node.
-`buffer_pools.direct.count` | `Integer` | The number of direct buffer pools.
-`buffer_pools.direct.used_in_bytes` | `Integer` | The amount of memory used by direct buffer pools, in bytes.
-`buffer_pools.direct.total_capacity_in_bytes` | `Integer` | The total capacity of the direct buffer pools, in bytes.
-`classes` | `Object` | Statistics about the classes loaded by the JVM for the node.
-`classes.current_loaded_count` | `Integer` | The number of classes currently loaded by the JVM.
-`classes.total_loaded_count` | `Integer` | The total number of classes loaded by the JVM since it started.
-`classes.total_unloaded_count` | `Integer` | The total number of classes unloaded by the JVM since it started.
+`timestamp` | `Integer` | JVM 統計資料的上次重新整理時間，以自紀元起算的毫秒數表示。
+`uptime_in_millis` | `Integer` | JVM 的運作時間，以毫秒為單位。
+`mem` | `Object` | 節點上 JVM 的記憶體使用量統計資料。
+`mem.heap_used_in_bytes` | `Integer` | 目前使用的記憶體量，以位元組為單位。
+`mem.heap_used_percent` | `Integer` | 堆積目前使用的記憶體百分比。
+`mem.heap_committed_in_bytes` | `Integer` | 可供堆積使用的記憶體量，以位元組為單位。
+`mem.heap_max_in_bytes` | `Integer` | 可供堆積使用的記憶體量上限，以位元組為單位。
+`mem.non_heap_used_in_bytes` | `Integer` | 目前使用的非堆積記憶體量，以位元組為單位。
+`mem.non_heap_committed_in_bytes` | `Integer` | 可供使用的非堆積記憶體量上限，以位元組為單位。
+`mem.pools` | `Object` | 節點的堆積記憶體使用量統計資料。
+`mem.pools.young` | `Object` | 節點的新生代堆積記憶體使用量統計資料。包含已使用的記憶體量、可用記憶體量上限，以及記憶體使用量峰值。
+`mem.pools.old` | `Object` | 節點的老年代堆積記憶體使用量統計資料。包含已使用的記憶體量、可用記憶體量上限，以及記憶體使用量峰值。
+`mem.pools.survivor` | `Object` | 節點的存活區記憶體使用量統計資料。包含已使用的記憶體量、可用記憶體量上限，以及記憶體使用量峰值。
+`threads` | `Object` | 節點的 JVM 執行緒使用量統計資料。
+`threads.count` | `Integer` | JVM 中目前作用中的執行緒數量。
+`threads.peak_count` | `Integer` | JVM 中的執行緒數量上限。
+`gc.collectors` | `Object` | 節點的 JVM 垃圾回收器統計資料。
+`gc.collectors.young` | `Integer` | 回收新生代物件的 JVM 垃圾回收器統計資料。
+`gc.collectors.young.collection_count` | `Integer` | 回收新生代物件的垃圾回收器數量。
+`gc.collectors.young.collection_time_in_millis` | `Integer` | 對新生代物件進行垃圾回收所花費的總時間，以毫秒為單位。
+`gc.collectors.old` | `Integer` | 回收老年代物件的 JVM 垃圾回收器統計資料。
+`gc.collectors.old.collection_count` | `Integer` | 回收老年代物件的垃圾回收器數量。
+`gc.collectors.old.collection_time_in_millis` | `Integer` | 對老年代物件進行垃圾回收所花費的總時間，以毫秒為單位。
+`buffer_pools` | `Object` | 節點的 JVM 緩衝區集區統計資料。
+`buffer_pools.mapped` | `Object` | 節點的 JVM 對應緩衝區集區統計資料。
+`buffer_pools.mapped.count` | `Integer` | 對應緩衝區集區的數量。
+`buffer_pools.mapped.used_in_bytes` | `Integer` | 對應緩衝區集區使用的記憶體量，以位元組為單位。
+`buffer_pools.mapped.total_capacity_in_bytes` | `Integer` | 對應緩衝區集區的總容量，以位元組為單位。
+`buffer_pools.direct` | `Object` | 節點的 JVM 直接緩衝區集區統計資料。
+`buffer_pools.direct.count` | `Integer` | 直接緩衝區集區的數量。
+`buffer_pools.direct.used_in_bytes` | `Integer` | 直接緩衝區集區使用的記憶體量，以位元組為單位。
+`buffer_pools.direct.total_capacity_in_bytes` | `Integer` | 直接緩衝區集區的總容量，以位元組為單位。
+`classes` | `Object` | 節點上 JVM 載入的類別統計資料。
+`classes.current_loaded_count` | `Integer` | JVM 目前載入的類別數量。
+`classes.total_loaded_count` | `Integer` | JVM 自啟動以來載入的類別總數。
+`classes.total_unloaded_count` | `Integer` | JVM 自啟動以來卸載的類別總數。
 
 ### `thread_pool`
 
-The `thread_pool` object contains a list of all thread pools. Each thread pool is a nested object that is specified by its ID and contains the following properties.
+`thread_pool` 物件包含所有執行緒集區的清單。每個執行緒集區都是以其 ID 指定的巢狀物件，並包含下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`threads` | `Integer` | The number of threads in the pool.
-`queue` | `Integer` | The number of threads in queue.
-`active` | `Integer` | The number of active threads in the pool.
-`rejected` | `Integer` | The number of tasks that have been rejected.
-`largest` | `Integer` | The peak number of threads in the pool.
-`completed` | `Integer` | The number of tasks completed.
-`total_wait_time_in_nanos` | `Integer` | The total amount of time that tasks spend waiting in the thread pool queue. Only the `search`, `search_throttled`, and `index_searcher` thread pools support this metric.
+`threads` | `Integer` | 集區中的執行緒數量。
+`queue` | `Integer` | 佇列中的執行緒數量。
+`active` | `Integer` | 集區中作用中的執行緒數量。
+`rejected` | `Integer` | 已拒絕的工作數量。
+`largest` | `Integer` | 集區中的執行緒數量峰值。
+`completed` | `Integer` | 已完成的工作數量。
+`total_wait_time_in_nanos` | `Integer` | 工作在執行緒集區佇列中等待的總時間。只有 `search`、`search_throttled` 和 `index_searcher` 執行緒集區支援此指標。
 
 ### `fs`
 
-The `fs` object represents statistics about the file stores for the node. It has the following properties.
+`fs` 物件代表節點檔案存放區的統計資料。它具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`timestamp` | `Integer` | The last refresh time for the file store statistics, in milliseconds since the epoch.
-`total` | `Object` | Statistics for all file stores of the node.
-`total.total_in_bytes` | `Integer` | The total memory size of all file stores, in bytes.
-`total.free_in_bytes` | `Integer` | The total unallocated disk space in all file stores, in bytes.
-`total.available_in_bytes` | `Integer` | The total disk space available to the JVM on all file stores. Represents the actual amount of memory, in bytes, that OpenSearch can use.
-`data` | `Array` | The list of all file stores. Each file store has the following properties.
-`data.path` | `String` | The path to the file store.
-`data.mount` | `String` | The mount point of the file store.
-`data.type` | `String` | The type of the file store (for example, overlay).
-`data.total_in_bytes` | `Integer` | The total size of the file store, in bytes.
-`data.free_in_bytes` | `Integer` | The total unallocated disk space in the file store, in bytes.
-`data.available_in_bytes` | `Integer` | The total amount of disk space available to the JVM for the file store, in bytes.
-`io_stats` | `Object` | I/O statistics for the node (Linux only). Includes devices, read and write operations, and the I/O operation time.
+`timestamp` | `Integer` | 檔案存放區統計資料的上次重新整理時間，以自 epoch 起算的毫秒數表示。
+`total` | `Object` | 節點所有檔案存放區的統計資料。
+`total.total_in_bytes` | `Integer` | 所有檔案存放區的記憶體總大小，以位元組為單位。
+`total.free_in_bytes` | `Integer` | 所有檔案存放區中未配置的磁碟空間總量，以位元組為單位。
+`total.available_in_bytes` | `Integer` | 所有檔案存放區中可供 JVM 使用的磁碟空間總量。代表 OpenSearch 實際可使用的記憶體量，以位元組為單位。
+`data` | `Array` | 所有檔案存放區的清單。每個檔案存放區具有下列屬性。
+`data.path` | `String` | 檔案存放區的路徑。
+`data.mount` | `String` | 檔案存放區的掛載點。
+`data.type` | `String` | 檔案存放區的類型（例如 overlay）。
+`data.total_in_bytes` | `Integer` | 檔案存放區的總大小，以位元組為單位。
+`data.free_in_bytes` | `Integer` | 檔案存放區中未配置的磁碟空間總量，以位元組為單位。
+`data.available_in_bytes` | `Integer` | 檔案存放區中可供 JVM 使用的磁碟空間總量，以位元組為單位。
+`io_stats` | `Object` | 節點的 I/O 統計資料（僅限 Linux）。包括裝置、讀取與寫入作業，以及 I/O 作業時間。
 
 ### `transport`
 
-The `transport` object has the following properties.
+`transport` 物件具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`server_open` | `Integer` | The number of open inbound TCP connections that OpenSearch nodes use for internal communication.
-`total_outbound_connections` | `Integer` | The total number of outbound transport connections that the node has opened since it started.
-`rx_count` | `Integer` | The total number of RX (receive) packets the node received during internal communication.
-`rx_size_in_bytes` | `Integer` | The total size of RX packets the node received during internal communication, in bytes.
-`tx_count` | `Integer` | The total number of TX (transmit) packets the node sent during internal communication.
-`tx_size_in_bytes` | `Integer` | The total size of TX (transmit) packets the node sent during internal communication, in bytes.
+`server_open` | `Integer` | OpenSearch 節點用於內部通訊的已開啟傳入 TCP 連線數。
+`total_outbound_connections` | `Integer` | 節點自啟動以來已開啟的傳出傳輸連線總數。
+`rx_count` | `Integer` | 節點在內部通訊期間收到的 RX（接收）封包總數。
+`rx_size_in_bytes` | `Integer` | 節點在內部通訊期間收到的 RX 封包總大小，以位元組為單位。
+`tx_count` | `Integer` | 節點在內部通訊期間傳送的 TX（傳送）封包總數。
+`tx_size_in_bytes` | `Integer` | 節點在內部通訊期間傳送的 TX（傳送）封包總大小，以位元組為單位。
 
 ### `breakers`
 
-The `breakers` object contains statistics about the circuit breakers for the node. Each circuit breaker is a nested object listed by name and contains the following properties.
+`breakers` 物件包含節點斷路器的統計資料。每個斷路器都是依名稱列出的巢狀物件，並包含下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`limit_size_in_bytes` | `Integer` | The memory limit for the circuit breaker, in bytes.
-`limit_size` | `Byte value` | The memory limit for the circuit breaker in human-readable format (for example, `307.1mb`).
-`estimated_size_in_bytes` | `Integer` | The estimated memory used for the operation, in bytes.
-`estimated_size` | `Byte value` | The estimated memory used for the operation in human-readable format (for example, `356b`).
-`overhead` | `Float` | A factor that all estimates are multiplied by to calculate the final estimate.
-`tripped` | `Integer` | The total number of times the circuit breaker has been activated to prevent an out-of-memory error.
+`limit_size_in_bytes` | `Integer` | 斷路器的記憶體限制，以位元組為單位。
+`limit_size` | `Byte value` | 以人類可讀格式表示的斷路器記憶體限制（例如 `307.1mb`）。
+`estimated_size_in_bytes` | `Integer` | 作業的預估記憶體使用量，以位元組為單位。
+`estimated_size` | `Byte value` | 以人類可讀格式表示的作業預估記憶體使用量（例如 `356b`）。
+`overhead` | `Float` | 所有預估值都會乘以此係數，以計算最終預估值。
+`tripped` | `Integer` | 斷路器為防止記憶體不足錯誤而觸發的總次數。
 
-### `script` and `script_cache`
+### `script` 和 `script_cache`
 
-The `script` and `script_cache` objects have the following properties.
+`script` 和 `script_cache` 物件具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`script` | `Object` | Script statistics for the node.
-`script.compilations` | `Integer` | The total number of script compilations for the node.
-`script.cache_evictions` | `Integer` | The total number of times the script cache has purged old data.
-`script.compilation_limit_triggered` | `Integer` | The total number of times script compilation was limited by a circuit breaker.
-`script_cache` | `Object` | Script cache statistics for the node.
-`script_cache.sum.compilations` | `Integer` | The total number of script compilations in the cache for the node.
-`script_cache.sum.cache_evictions` | `Integer` | The total number of times the script cache has purged old data.
-`script_cache.sum.compilation_limit_triggered` | `Integer` | The total number of times script compilation in the cache was limited by a circuit breaker.
-`script_cache.contexts` | `Array of objects` | The list of contexts for the script cache. Each context contains its name, the number of compilations, the number of cache evictions, and the number of times the script was limited by a circuit breaker.
+`script` | `Object` | 節點的指令碼統計資料。
+`script.compilations` | `Integer` | 節點的指令碼編譯總次數。
+`script.cache_evictions` | `Integer` | 指令碼快取清除舊資料的總次數。
+`script.compilation_limit_triggered` | `Integer` | 指令碼編譯受到斷路器限制的總次數。
+`script_cache` | `Object` | 節點的指令碼快取統計資料。
+`script_cache.sum.compilations` | `Integer` | 節點快取中的指令碼編譯總次數。
+`script_cache.sum.cache_evictions` | `Integer` | 指令碼快取清除舊資料的總次數。
+`script_cache.sum.compilation_limit_triggered` | `Integer` | 快取中的指令碼編譯受到斷路器限制的總次數。
+`script_cache.contexts` | `Array of objects` | 指令碼快取的情境清單。每個情境都包含其名稱、編譯次數、快取移出次數，以及指令碼受到斷路器限制的次數。
 
 ### `discovery`
 
-The `discovery` object contains the node discovery statistics and has the following properties.
+`discovery` 物件包含節點探索統計資料，並具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`cluster_state_queue` | `Object` | Cluster state queue statistics for the node.
-`cluster_state_queue.total` | `Integer` | The total number of cluster states in the queue.
-`cluster_state_queue.pending` | `Integer` | The number of pending cluster states in the queue.
-`cluster_state_queue.committed` | `Integer` | The number of committed cluster states in the queue.
-`published_cluster_states` | `Object` | Statistics for the published cluster states for the node.
-`published_cluster_states.full_states` | `Integer` | The number of published cluster states.
-`published_cluster_states.incompatible_diffs` | `Integer` | The number of incompatible differences between published cluster states.
-`published_cluster_states.compatible_diffs` | `Integer` | The number of compatible differences between published cluster states.
-`cluster_state_stats` | `Object` | Cluster state update statistics published by the active leader.
-`cluster_state_stats.overall` | `Object` | Overall cluster state update statistics.
-`cluster_state_stats.overall.update_count` | `Integer` | The total number of successful cluster state updates.
-`cluster_state_stats.overall.total_time_in_millis` | `Integer` | The total amount of time taken for all cluster state updates, in milliseconds.
-`cluster_state_stats.overall.failed_count` | `Integer` | The total number of failed cluster state updates.
-`cluster_state_stats.remote_upload` | `Object` | Cluster state update statistics related to remote uploads.
-`cluster_state_stats.remote_upload.success_count` | `Integer` | The total number of successful cluster state updates uploaded to the remote store.
-`cluster_state_stats.remote_upload.failed_count` | `Integer` | The total number of cluster state updates that failed to upload to the remote store.
-`cluster_state_stats.remote_upload.total_time_in_millis` | `Integer` | The total amount of time taken for all cluster state updates uploaded to the remote store, in milliseconds.
-`cluster_state_stats.remote_upload.cleanup_attempt_failed_count` | `Integer` | The total number of failures encountered while trying to clean up older cluster states from the remote store.
+`cluster_state_queue` | `Object` | 節點的叢集狀態佇列統計資料。
+`cluster_state_queue.total` | `Integer` | 佇列中的叢集狀態總數。
+`cluster_state_queue.pending` | `Integer` | 佇列中待處理的叢集狀態數。
+`cluster_state_queue.committed` | `Integer` | 佇列中已認可的叢集狀態數。
+`published_cluster_states` | `Object` | 節點已發布叢集狀態的統計資料。
+`published_cluster_states.full_states` | `Integer` | 已發布的叢集狀態數。
+`published_cluster_states.incompatible_diffs` | `Integer` | 已發布叢集狀態之間不相容的差異數。
+`published_cluster_states.compatible_diffs` | `Integer` | 已發布叢集狀態之間相容的差異數。
+`cluster_state_stats` | `Object` | 由作用中領導者發布的叢集狀態更新統計資料。
+`cluster_state_stats.overall` | `Object` | 整體叢集狀態更新統計資料。
+`cluster_state_stats.overall.update_count` | `Integer` | 成功的叢集狀態更新總數。
+`cluster_state_stats.overall.total_time_in_millis` | `Integer` | 所有叢集狀態更新所花費的總時間，以毫秒為單位。
+`cluster_state_stats.overall.failed_count` | `Integer` | 失敗的叢集狀態更新總數。
+`cluster_state_stats.remote_upload` | `Object` | 與遠端上傳相關的叢集狀態更新統計資料。
+`cluster_state_stats.remote_upload.success_count` | `Integer` | 成功上傳至遠端存放區的叢集狀態更新總數。
+`cluster_state_stats.remote_upload.failed_count` | `Integer` | 上傳至遠端存放區失敗的叢集狀態更新總數。
+`cluster_state_stats.remote_upload.total_time_in_millis` | `Integer` | 所有上傳至遠端存放區的叢集狀態更新所花費的總時間，以毫秒為單位。
+`cluster_state_stats.remote_upload.cleanup_attempt_failed_count` | `Integer` | 嘗試從遠端存放區清除較舊叢集狀態時發生的失敗總數。
 
 ### `ingest`
 
-The `ingest` object contains the ingest statistics and has the following properties.
+`ingest` 物件包含匯入統計資料，並具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`total` | `Integer` | Ingest statistics for the node's lifetime.
-`total.count` | `Integer` | The total number of documents ingested by the node.
-`total.time_in_millis` | `Integer` | The total amount of time for preprocessing ingest documents, in milliseconds.
-`total.current` | `Integer` | The total number of documents that are currently being ingested by the node.
-`total.failed` | `Integer` | The total number of failed ingest operations for the node.
-`pipelines` | `Object` | Ingest pipeline statistics for the node. Each pipeline is a nested object that is specified by its ID and has the following properties.
-`pipelines._id_.count` | `Integer` | The number of documents preprocessed by the ingest pipeline.
-`pipelines._id_.time_in_millis` | `Integer` | The total amount of time for preprocessing documents in the ingest pipeline, in milliseconds.
-`pipelines._id_.failed` | `Integer` | The total number of failed ingest operations for the ingest pipeline.
-`pipelines._id_.processors` | `Array of objects` | Statistics for the ingest processors. Includes the number of documents that are currently transformed, the total number of transformed documents, the number of failed transformations, and the time spent transforming documents.
+`total` | `Integer` | 節點整個生命週期的匯入統計資料。
+`total.count` | `Integer` | 節點匯入的文件總數。
+`total.time_in_millis` | `Integer` | 預先處理匯入文件所花費的總時間，以毫秒為單位。
+`total.current` | `Integer` | 節點目前正在匯入的文件總數。
+`total.failed` | `Integer` | 節點失敗的匯入作業總數。
+`pipelines` | `Object` | 節點的資料匯入管線統計資料。每個管線都是以其 ID 指定的巢狀物件，並具有下列屬性。
+`pipelines._id_.count` | `Integer` | 資料匯入管線預先處理的文件數。
+`pipelines._id_.time_in_millis` | `Integer` | 在資料匯入管線中預先處理文件所花費的總時間，以毫秒為單位。
+`pipelines._id_.failed` | `Integer` | 資料匯入管線失敗的匯入作業總數。
+`pipelines._id_.processors` | `Array of objects` | 匯入處理器的統計資料。包括目前正在轉換的文件數、已轉換的文件總數、轉換失敗次數，以及轉換文件所花費的時間。
 
 ### `search_pipeline`
 
-The `search_pipeline` object contains the statistics related to [search pipelines]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/) and has the following properties.
+`search_pipeline` 物件包含與[搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/)相關的統計資料，並具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`total_request` | `Object` | Cumulative statistics related to all search request processors.
-`total_request.count` | `Integer` | The total number of search request processor executions.
-`total_request.time_in_millis` | `Integer` | The total amount of time for all search request processor executions, in milliseconds.
-`total_request.current` | `Integer` | The total number of search request processor executions currently in progress.
-`total_request.failed` | `Integer` | The total number of failed search request processor executions.
-`total_response` | `Object` | Cumulative statistics related to all search response processors.
-`total_response.count` | `Integer` | The total number of search response processor executions.
-`total_response.time_in_millis` | `Integer` | The total amount of time for all search response processor executions, in milliseconds.
-`total_response.current` | `Integer` | The total number of search response processor executions currently in progress.
-`total_response.failed` | `Integer` | The total number of failed search response processor executions.
-`pipelines` | `Object` | Search pipeline statistics. Each pipeline is a nested object specified by its ID, with the properties listed in the following rows. If a processor has a `tag`, statistics for the processor are provided in the object with the name `<processor_type>:<tag>` (for example, `filter_query:abc`). Statistics for all processors of the same type that do not have a `tag` are aggregated and provided in the object with the name `<processor-type>` (for example, `filter_query`).
-`pipelines._id_.request.count` | `Integer` | The number of search request processor executions performed by the search pipeline.
-`pipelines._id_.request.time_in_millis` | `Integer` | The total amount of time for search request processor executions in the search pipeline, in milliseconds.
-`pipelines._id_.request.current` | `Integer` | The number of search request processor executions currently in progress for the search pipeline.
-`pipelines._id_.request.failed` | `Integer` | The number of failed search request processor executions for the search pipeline.
-`pipelines._id_.request_processors` | `Array of objects` | Statistics for the search request processors. Includes the total number of executions, the total amount of time of executions, the total number of executions currently in progress, and the number of failed executions.
-`pipelines._id_.response.count` | `Integer` | The number of search response processor executions performed by the search pipeline.
-`pipelines._id_.response.time_in_millis` | `Integer` | The total amount of time for search response processor executions in the search pipeline, in milliseconds.
-`pipelines._id_.response.current` | `Integer` | The number of search response processor executions currently in progress for the search pipeline.
-`pipelines._id_.response.failed` | `Integer` | The number of failed search response processor executions for the search pipeline.
-`pipelines._id_.response_processors` | `Array of objects` | Statistics for the search response processors. Includes the total number of executions, the total amount of time of executions, the total number of executions currently in progress, and the number of failed executions.
+`total_request` | `Object` | 與所有搜尋請求處理器相關的累計統計資料。
+`total_request.count` | `Integer` | 搜尋請求處理器執行的總次數。
+`total_request.time_in_millis` | `Integer` | 所有搜尋請求處理器執行所花費的總時間，單位為毫秒。
+`total_request.current` | `Integer` | 目前正在進行的搜尋請求處理器執行總次數。
+`total_request.failed` | `Integer` | 失敗的搜尋請求處理器執行總次數。
+`total_response` | `Object` | 與所有搜尋回應處理器相關的累計統計資料。
+`total_response.count` | `Integer` | 搜尋回應處理器執行的總次數。
+`total_response.time_in_millis` | `Integer` | 所有搜尋回應處理器執行所花費的總時間，單位為毫秒。
+`total_response.current` | `Integer` | 目前正在進行的搜尋回應處理器執行總次數。
+`total_response.failed` | `Integer` | 失敗的搜尋回應處理器執行總次數。
+`pipelines` | `Object` | 搜尋管線統計資料。每個管線都是以 ID 指定的巢狀物件，其屬性列於後續各列。如果處理器具有 `tag`，則該處理器的統計資料會提供在名稱為 `<processor_type>:<tag>` 的物件中 (例如 `filter_query:abc`)。沒有 `tag` 的同類型所有處理器的統計資料會彙總後提供在名稱為 `<processor-type>` 的物件中 (例如 `filter_query`)。
+`pipelines._id_.request.count` | `Integer` | 搜尋管線執行的搜尋請求處理器執行次數。
+`pipelines._id_.request.time_in_millis` | `Integer` | 搜尋管線中搜尋請求處理器執行所花費的總時間，單位為毫秒。
+`pipelines._id_.request.current` | `Integer` | 搜尋管線目前正在進行的搜尋請求處理器執行次數。
+`pipelines._id_.request.failed` | `Integer` | 搜尋管線失敗的搜尋請求處理器執行次數。
+`pipelines._id_.request_processors` | `Array of objects` | 搜尋請求處理器的統計資料。包含執行總次數、執行所花費的總時間、目前正在進行的執行總次數，以及失敗的執行次數。
+`pipelines._id_.response.count` | `Integer` | 搜尋管線執行的搜尋回應處理器執行次數。
+`pipelines._id_.response.time_in_millis` | `Integer` | 搜尋管線中搜尋回應處理器執行所花費的總時間，單位為毫秒。
+`pipelines._id_.response.current` | `Integer` | 搜尋管線目前正在進行的搜尋回應處理器執行次數。
+`pipelines._id_.response.failed` | `Integer` | 搜尋管線失敗的搜尋回應處理器執行次數。
+`pipelines._id_.response_processors` | `Array of objects` | 搜尋回應處理器的統計資料。包含執行總次數、執行所花費的總時間、目前正在進行的執行總次數，以及失敗的執行次數。
 
 ### `adaptive_selection`
 
-The `adaptive_selection` object contains the adaptive selection statistics. Each entry is specified by the node ID and has the following properties. 
+`adaptive_selection` 物件包含自適應選取統計資料。每個項目都是以節點 ID 指定，並具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`outgoing_searches` | `Integer` | The number of outgoing search requests for the node.
-`avg_queue_size` | `Integer` | The rolling average queue size of search requests for the node (exponentially weighted).
-`avg_service_time_ns` | `Integer` | The rolling average service time for search requests, in nanoseconds (exponentially weighted).
-`avg_response_time_ns` | `Integer` | The rolling average response time for search requests, in nanoseconds (exponentially weighted).
-`rank` | `String` | The node's rank that is used to select shards when routing requests.
+`outgoing_searches` | `Integer` | 該節點的傳出搜尋請求數量。
+`avg_queue_size` | `Integer` | 該節點搜尋請求的滾動平均佇列大小 (指數加權)。
+`avg_service_time_ns` | `Integer` | 搜尋請求的滾動平均服務時間，單位為奈秒 (指數加權)。
+`avg_response_time_ns` | `Integer` | 搜尋請求的滾動平均回應時間，單位為奈秒 (指數加權)。
+`rank` | `String` | 在路由請求時用於選擇分片的節點排名。
 
 ### `indexing_pressure`
 
-The `indexing_pressure` object contains the indexing pressure statistics and has the following properties.
+`indexing_pressure` 物件包含索引壓力統計資料，並具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`memory` | `Object` | Statistics related to memory consumption for the indexing load.
-`memory.current` | `Object` | Statistics related to memory consumption for the current indexing load.
-`memory.current.combined_coordinating_and_primary_in_bytes` | `Integer` | The total memory used by indexing requests in the coordinating or primary stages, in bytes. A node can reuse the coordinating memory if the primary stage is run locally, so the total memory does not necessarily equal the sum of the coordinating and primary stage memory usage.
-`memory.current.coordinating_in_bytes` | `Integer` | The total memory consumed by indexing requests in the coordinating stage, in bytes.
-`memory.current.primary_in_bytes` | `Integer` | The total memory consumed by indexing requests in the primary stage, in bytes.
-`memory.current.replica_in_bytes` | `Integer` | The total memory consumed by indexing requests in the replica stage, in bytes.
-`memory.current.all_in_bytes` | `Integer` | The total memory consumed by indexing requests in the coordinating, primary, or replica stages.
+`memory` | `Object` | 與索引負載的記憶體消耗相關的統計資料。
+`memory.current` | `Object` | 與目前索引負載的記憶體消耗相關的統計資料。
+`memory.current.combined_coordinating_and_primary_in_bytes` | `Integer` | 協調或主要階段中索引請求所使用的總記憶體，單位為位元組。如果主要階段在本機執行，節點可以重複使用協調記憶體，因此總記憶體不一定等於協調與主要階段記憶體使用量的總和。
+`memory.current.coordinating_in_bytes` | `Integer` | 協調階段中索引請求所消耗的總記憶體，單位為位元組。
+`memory.current.primary_in_bytes` | `Integer` | 主要階段中索引請求所消耗的總記憶體，單位為位元組。
+`memory.current.replica_in_bytes` | `Integer` | 副本階段中索引請求所消耗的總記憶體，單位為位元組。
+`memory.current.all_in_bytes` | `Integer` | 協調、主要或副本階段中索引請求所消耗的總記憶體。
 
 ### `shard_indexing_pressure`
 
-The `shard_indexing_pressure` object contains the [shard indexing pressure]({{site.url}}{{site.baseurl}}/opensearch/shard-indexing-backpressure) statistics and has the following properties.
+`shard_indexing_pressure` 物件包含[分片索引壓力]({{site.url}}{{site.baseurl}}/opensearch/shard-indexing-backpressure)統計資料，並具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-[`stats`]({{site.url}}{{site.baseurl}}/opensearch/stats-api/) | `Object` | Statistics about shard indexing pressure.
-`total_rejections_breakup_shadow_mode` | `Object` | If running in shadow mode, the `total_rejections_breakup_shadow_mode` object contains statistics about the request rejection criteria of all shards in the node.
-`total_rejections_breakup_shadow_mode.node_limits` | `Integer` | The total number of rejections due to the node memory limit. When all shards reach the memory limit assigned to the node (for example, 10% of heap size), the shard is unable to take in more traffic on the node, and the indexing request is rejected.
-`total_rejections_breakup_shadow_mode.no_successful_request_limits` | `Integer` | The total number of rejections when the node occupancy level is breaching its soft limit and the shard has multiple outstanding requests that are waiting to be executed. In this case, additional indexing requests are rejected until the system recovers.
-`total_rejections_breakup_shadow_mode.throughput_degradation_limits` | `Integer` | The total number of rejections when the node occupancy level is breaching its soft limit and there is a constant deterioration in the request turnaround at the shard level. In this case, additional indexing requests are rejected until the system recovers.
-`enabled` | `Boolean` | Specifies whether the shard indexing pressure feature is turned on for the node.
-`enforced` | `Boolean` | If true, the shard indexing pressure runs in enforced mode (there are rejections). If false, the shard indexing pressure runs in shadow mode (there are no rejections, but statistics are recorded and can be retrieved in the `total_rejections_breakup_shadow_mode` object). Only applicable if shard indexing pressure is enabled. 
+[`stats`]({{site.url}}{{site.baseurl}}/opensearch/stats-api/) | `Object` | 關於分片索引壓力的統計資料。
+`total_rejections_breakup_shadow_mode` | `Object` | 如果在影子模式下執行，`total_rejections_breakup_shadow_mode` 物件包含節點中所有分片的請求拒絕條件相關統計資料。
+`total_rejections_breakup_shadow_mode.node_limits` | `Integer` | 因節點記憶體限制而拒絕的總次數。當所有分片達到指派給節點的記憶體限制 (例如堆積大小的 10%) 時，分片便無法在節點上接收更多流量，索引請求會被拒絕。
+`total_rejections_breakup_shadow_mode.no_successful_request_limits` | `Integer` | 當節點佔用率突破其軟性限制，且分片有多個等待執行的未完成請求時的拒絕總次數。在這種情況下，系統會持續拒絕額外的索引請求，直到系統復原為止。
+`total_rejections_breakup_shadow_mode.throughput_degradation_limits` | `Integer` | 當節點佔用率突破其軟性限制，且分片層級的請求周轉時間持續惡化時的拒絕總次數。在這種情況下，系統會持續拒絕額外的索引請求，直到系統復原為止。
+`enabled` | `Boolean` | 指定節點是否已開啟分片索引壓力功能。
+`enforced` | `Boolean` | 若為 true，分片索引壓力會以強制模式執行 (會有拒絕)。若為 false，分片索引壓力會以影子模式執行 (不會有拒絕，但會記錄統計資料，並可在 `total_rejections_breakup_shadow_mode` 物件中擷取)。僅在啟用分片索引壓力時適用。 
 
 ### `cluster_manager_throttling`
 
-The `cluster_manager_throttling` object contains statistics about throttled tasks on the cluster manager node. It is populated only for the node that is currently elected as the cluster manager.  
+`cluster_manager_throttling` 物件包含叢集管理員節點上受節流工作的統計資料。僅會為目前獲選為叢集管理員的節點填入此資料。  
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`stats` | `Object` | Statistics about throttled tasks on the cluster manager node.
-`stats.total_throttled_tasks` | `Long` | The total number of throttled tasks.
-`stats.throttled_tasks_per_task_type` | `Object` | A breakdown of statistics by individual task type, specified as key-value pairs. The keys are individual task types, and their values represent the number of requests that were throttled.
+`stats` | `Object` | 叢集管理員節點上受節流工作的統計資料。
+`stats.total_throttled_tasks` | `Long` | 受節流工作的總數。
+`stats.throttled_tasks_per_task_type` | `Object` | 依個別工作類型細分的統計資料，以鍵值對指定。鍵為個別工作類型，其值代表遭節流的請求數。
 
 ### `task_cancellation`
-Introduced 2.9
+於 2.9 版推出
 {: .label .label-purple }
 
-The `task_cancellation` object contains statistics about tasks that continue running after being marked for cancellation. This helps monitor the effectiveness of task cancellation and identify tasks that don't properly respond to cancellation requests.
+`task_cancellation` 物件包含在標記為取消後仍繼續執行之工作的統計資料。這有助於監控工作取消的成效，並找出未正確回應取消請求的工作。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`search_task` | `Object` | Statistics about parent search tasks that continue running after cancellation.
-`search_task.current_count_post_cancel` | `Long` | The current number of search tasks that are still running after being canceled.
-`search_task.total_count_post_cancel` | `Long` | The total number of search tasks that continued running after cancellation since the node last restarted.
-`search_shard_task` | `Object` | Statistics about search shard tasks that continue running after cancellation.
-`search_shard_task.current_count_post_cancel` | `Long` | The current number of search shard tasks that are still running after being canceled.
-`search_shard_task.total_count_post_cancel` | `Long` | The total number of search shard tasks that continued running after cancellation since the node last restarted.
+`search_task` | `Object` | 取消後仍繼續執行之父搜尋工作的統計資料。
+`search_task.current_count_post_cancel` | `Long` | 取消後仍在執行之搜尋工作的目前數量。
+`search_task.total_count_post_cancel` | `Long` | 自節點上次重新啟動以來，取消後仍繼續執行之搜尋工作的總數。
+`search_shard_task` | `Object` | 取消後仍繼續執行之搜尋分片工作的統計資料。
+`search_shard_task.current_count_post_cancel` | `Long` | 取消後仍在執行之搜尋分片工作的目前數量。
+`search_shard_task.total_count_post_cancel` | `Long` | 自節點上次重新啟動以來，取消後仍繼續執行之搜尋分片工作的總數。
 
 ### `weighted_routing`
 
-The `weighted_routing` object contains statistics about weighted round robin requests. Specifically, it contains a counter of times this node has server a request while it was "zoned out".
+`weighted_routing` 物件包含加權輪詢請求的統計資料。具體來說，它包含此節點在「被劃出區域 (zoned out)」時仍處理請求的次數計數。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- |:-----------| :---
-`stats` | `Object` | Statistics about weighted routing.
-`fail_open_count` | `Integer` | Number of times a shard on this node has served a request while the routing weight for the node was set to zero.
+`stats` | `Object` | 加權路由的統計資料。
+`fail_open_count` | `Integer` | 當節點的路由權重設為零時，此節點上的分片處理請求的次數。
 
 ### `resource_usage_stats`
 
-The `resource_usage_stats` object contains the resource usage statistics. Each entry is specified by the node ID and has the following properties.
+`resource_usage_stats` 物件包含資源使用量統計資料。每個項目由節點 ID 指定，並具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- |:-----------| :---
-`timestamp` | `Integer` | The last refresh time for the resource usage statistics, in milliseconds since the epoch.
-`cpu_utilization_percent` | `Float` | Statistics for the average CPU usage of any OpenSearch processes within the time period configured in the `node.resource.tracker.global_cpu_usage.window_duration` setting.
-`memory_utilization_percent` | `Float` | The node JVM memory usage statistics within the time period configured in the `node.resource.tracker.global_jvmmp.window_duration` setting.
-`max_io_utilization_percent` | `Float` |  (Linux only) Statistics for the average IO usage of any OpenSearch processes within the time period configured in the `node.resource.tracker.global_io_usage.window_duration` setting.
+`timestamp` | `Integer` | 資源使用量統計資料的上次重新整理時間，以自 epoch 起算的毫秒數表示。
+`cpu_utilization_percent` | `Float` | 在 `node.resource.tracker.global_cpu_usage.window_duration` 設定中所設定時間範圍內，任何 OpenSearch 處理程序平均 CPU 使用量的統計資料。
+`memory_utilization_percent` | `Float` | 在 `node.resource.tracker.global_jvmmp.window_duration` 設定中所設定時間範圍內，節點 JVM 記憶體使用量的統計資料。
+`max_io_utilization_percent` | `Float` | （僅限 Linux）在 `node.resource.tracker.global_io_usage.window_duration` 設定中所設定時間範圍內，任何 OpenSearch 處理程序平均 IO 使用量的統計資料。
 
 ### `admission_control`
 
-The `admission_control` object contains the rejection count of search and indexing requests based on resource consumption and has the following properties.
+`admission_control` 物件包含根據資源耗用量而拒絕搜尋與編製索引請求的計數，並具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`admission_control.global_cpu_usage.transport.rejection_count.search` | `Integer` | The total number of search rejections in the transport layer when the node CPU usage limit was met. In this case, additional search requests are rejected until the system recovers. The CPU usage limit is configured in the `admission_control.search.cpu_usage.limit` setting.
-`admission_control.global_cpu_usage.transport.rejection_count.indexing` | `Integer` | The total number of indexing rejections in the transport layer when the node CPU usage limit was met. Any additional indexing requests are rejected until the system recovers. The CPU usage limit is configured in the `admission_control.indexing.cpu_usage.limit` setting.
-`admission_control.global_io_usage.transport.rejection_count.search` | `Integer` | The total number of search rejections in the transport layer when the node IO usage limit was met. Any additional search requests are rejected until the system recovers. The CPU usage limit is configured in the `admission_control.search.io_usage.limit` setting (Linux only).
-`admission_control.global_io_usage.transport.rejection_count.indexing` | `Integer` | The total number of indexing rejections in the transport layer when the node IO usage limit was met. Any additional indexing requests are rejected until the system recovers. The IO usage limit is configured in the `admission_control.indexing.io_usage.limit` setting (Linux only).
+`admission_control.global_cpu_usage.transport.rejection_count.search` | `Integer` | 達到節點 CPU 使用量上限時，傳輸層中搜尋遭拒的總數。在此情況下，會拒絕其他搜尋請求，直到系統復原為止。CPU 使用量上限設定於 `admission_control.search.cpu_usage.limit` 設定中。
+`admission_control.global_cpu_usage.transport.rejection_count.indexing` | `Integer` | 達到節點 CPU 使用量上限時，傳輸層中編製索引遭拒的總數。任何其他編製索引請求都會遭到拒絕，直到系統復原為止。CPU 使用量上限設定於 `admission_control.indexing.cpu_usage.limit` 設定中。
+`admission_control.global_io_usage.transport.rejection_count.search` | `Integer` | 達到節點 IO 使用量上限時，傳輸層中搜尋遭拒的總數。任何其他搜尋請求都會遭到拒絕，直到系統復原為止。CPU 使用量上限設定於 `admission_control.search.io_usage.limit` 設定中（僅限 Linux）。
+`admission_control.global_io_usage.transport.rejection_count.indexing` | `Integer` | 達到節點 IO 使用量上限時，傳輸層中編製索引遭拒的總數。任何其他編製索引請求都會遭到拒絕，直到系統復原為止。IO 使用量上限設定於 `admission_control.indexing.io_usage.limit` 設定中（僅限 Linux）。
 
 ### `concurrency_limiters`
 
-The `concurrency_limiters` object contains one entry per configured [concurrency limiter]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/concurrency-limits/), keyed by limiter name. It is returned when you request the `concurrency_limiter` metric. Each entry has the following properties.
+`concurrency_limiters` 物件包含每個已設定之[並行限制器]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/concurrency-limits/)的一個項目，並以限制器名稱作為鍵。當您請求 `concurrency_limiter` 指標時會傳回此物件。每個項目具有下列屬性。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`action_name` | `String` | The transport action that the limiter applies to.
-`mode` | `String` | The [mode]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/concurrency-limits/#modes) of the limiter. Valid values are `disabled`, `monitor_only`, and `enforced`.
-`algorithm` | `String` | The [algorithm]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/concurrency-limits/#algorithms) used to adapt the limit. Valid values are `vegas`, `gradient2`, and `aimd`.
-`current_limit` | `Integer` | The current adaptive concurrency limit, not including [burst capacity]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/concurrency-limits/#burst-capacity).
-`in_flight` | `Integer` | The number of requests currently being processed.
-`total_rejected` | `Integer` | The cumulative number of rejected requests. In `monitor_only` mode, this counts the requests that would have been rejected.
-`last_rtt_millis` | `Integer` | The most recently observed round-trip time, in milliseconds. Omitted until the limiter has recorded a completed request.
-`rtt_no_load_millis` | `Integer` | The round-trip time measured under no load, in milliseconds, used as the latency baseline. Omitted until the limiter has recorded a completed request.
+`action_name` | `String` | 限制器所套用的傳輸動作。
+`mode` | `String` | 限制器的[模式]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/concurrency-limits/#modes)。有效值為 `disabled`、`monitor_only` 及 `enforced`。
+`algorithm` | `String` | 用於調整限制的[演算法]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/concurrency-limits/#algorithms)。有效值為 `vegas`、`gradient2` 及 `aimd`。
+`current_limit` | `Integer` | 目前的自適應並行限制，不包含[暴衝容量]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/concurrency-limits/#burst-capacity)。
+`in_flight` | `Integer` | 目前正在處理的請求數。
+`total_rejected` | `Integer` | 遭拒請求的累計數量。在 `monitor_only` 模式下，這會計入原本會遭拒的請求。
+`last_rtt_millis` | `Integer` | 最近觀察到的來回時間，以毫秒為單位。在限制器記錄到完成的請求之前會省略此項。
+`rtt_no_load_millis` | `Integer` | 在無負載下測得的來回時間，以毫秒為單位，用作延遲基準。在限制器記錄到完成的請求之前會省略此項。
 
 ### `caches`
 
-Because this API supports the experimental [tiered caching feature]({{site.url}}{{site.baseurl}}/search-plugins/caching/tiered-cache/), the responses found in this section may change. If the tiered caching feature flag is not enabled, the API will return `0` for all values.
+由於此 API 支援實驗性的[分層快取功能]({{site.url}}{{site.baseurl}}/search-plugins/caching/tiered-cache/)，本節中的回應可能會有所變更。若未啟用分層快取功能旗標，API 會對所有值傳回 `0`。
 {: .warning}
 
-The `caches` object contains cache statistics, such as the `request_cache` statistics. The total values within each sub-metric are always returned, regardless of the value of the query parameter `level`. 
+`caches` 物件包含快取統計資料，例如 `request_cache` 統計資料。無論查詢參數 `level` 的值為何，一律會傳回每個子指標內的總計值。 
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`request_cache` | `Object` | Statistics for the request cache.
-`request_cache.size_in_bytes` | `Integer` | The total size, in bytes, of the request cache.
-`request_cache.evictions` | `Integer` | The total number of evictions from the request cache.
-`request_cache.hit_count` | `Integer` | The total hit count for the request cache.
-`request_cache.miss_count` | `Integer` | The total miss count for the request cache.
-`request_cache.item_count` | `Integer` | The total number of items in the request cache.
-`request_cache.store_name` | `String` | The name of the store type used by the request cache. See [tiered cache]({{site.url}}{{site.baseurl}}/search-plugins/caching/tiered-cache/) for more information. 
+`request_cache` | `Object` | 請求快取的統計資料。
+`request_cache.size_in_bytes` | `Integer` | 請求快取的總大小，以位元組為單位。
+`request_cache.evictions` | `Integer` | 請求快取遭逐出的總次數。
+`request_cache.hit_count` | `Integer` | 請求快取的總命中次數。
+`request_cache.miss_count` | `Integer` | 請求快取的總未命中次數。
+`request_cache.item_count` | `Integer` | 請求快取中的項目總數。
+`request_cache.store_name` | `String` | 請求快取所使用之存放區類型的名稱。如需詳細資訊，請參閱[分層快取]({{site.url}}{{site.baseurl}}/search-plugins/caching/tiered-cache/)。 
 
-If the `level` query parameter is set to one of its valid values, `indices`, `shard`, or `tier`, additional fields will be present in `caches.request_cache` that categorize the values by these levels. 
-For example, if `level=indices,tier`, the tiered cache is in use, and the node has indexes named `index0` and `index1`, then the `caches` object will contain the same five metrics for each combination of level values, as shown in the following table.
+若將 `level` 查詢參數設為其有效值之一，即 `indices`、`shard` 或 `tier`，則 `caches.request_cache` 中會出現其他欄位，依這些層級將值分類。 
+例如，若 `level=indices,tier`、正在使用分層快取，且節點具有名為 `index0` 與 `index1` 的索引，則 `caches` 物件會針對每個層級值組合包含相同的五個指標，如下表所示。
 
-Field | Field type | Description
+欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`request_cache.indices.index0.tier.on_heap` | `Object` | Contains the five metrics for `index0` on the heap tier.
-`request_cache.indices.index0.tier.disk` | `Object` | Contains the five metrics for `index0` on the disk tier.
-`request_cache.indices.index1.tier.on_heap` | `Object` | Contains the five metrics for `index1` on the heap tier.
-`request_cache.indices.index1.tier.disk` | `Object` | Contains the five metrics for `index1` on the disk tier. 
+`request_cache.indices.index0.tier.on_heap` | `Object` | 包含堆積層上 `index0` 的五個指標。
+`request_cache.indices.index0.tier.disk` | `Object` | 包含磁碟層上 `index0` 的五個指標。
+`request_cache.indices.index1.tier.on_heap` | `Object` | 包含堆積層上 `index1` 的五個指標。
+`request_cache.indices.index1.tier.disk` | `Object` | 包含磁碟層上 `index1` 的五個指標。 
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `cluster:monitor/nodes/stats`.
+如果您使用 Security 外掛程式，請確保您具備適當的權限：`cluster:monitor/nodes/stats`。

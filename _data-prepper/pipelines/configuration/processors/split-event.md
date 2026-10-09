@@ -1,29 +1,30 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Split event
+title: "分割事件"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 340
 ---
 
-# Split event processor
+# 分割事件處理器
 
-The `split_event` processor is used to split events based on a delimiter and generates multiple events from a user-specified field.
+`split_event` 處理器可根據分隔符號分割事件，並從使用者指定的欄位產生多個事件。
 
-## Configuration
+## 組態
 
-The following table describes the configuration options for the `split_event` processor.
+下表說明 `split_event` 處理器的組態選項。
 
-| Option           | Type    | Description                                                                                   |
+| 選項           | 類型    | 說明                                                                                   |
 |------------------|---------|-----------------------------------------------------------------------------------------------|
-| `field`          | String  | The event field to be split.                                                           |
-| `delimiter_regex`| String  | The regular expression used as the delimiter for splitting the field.                         |
-| `delimiter`      | String  | The delimiter used for splitting the field. If not specified, the default delimiter is used.  |
-| `split_when`     | String  | A [conditional expression]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/) that determines whether the processor is applied to the event. If the condition evaluates to `false`, the event remains unchanged. Default is `null` (all events are processed). |
+| `field`          | String  | 要分割的事件欄位。                                                           |
+| `delimiter_regex`| String  | 用作分割欄位之分隔符號的規則運算式。                         |
+| `delimiter`      | String  | 用於分割欄位的分隔符號。若未指定，則使用預設分隔符號。  |
+| `split_when`     | String  | 決定是否將處理器套用至事件的[條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)。若條件評估結果為 `false`，事件將保持不變。預設為 `null`（處理所有事件）。 |
 
-# Usage
+# 使用方式
 
-To use the `split_event` processor, add the following to your `pipelines.yaml` file:
+若要使用 `split_event` 處理器，請將下列內容新增至您的 `pipelines.yaml` 檔案：
 
 ```yaml
 split-event-pipeline:
@@ -38,22 +39,22 @@ split-event-pipeline:
 ```
 {% include copy.html %}
 
-When an event contains the following example input:
+當事件包含下列範例輸入時：
 
 ```json
 {"query" : "open source", "some_other_field" : "abc" }
 ```
 
-The input will be split into multiple events based on the `query` field, with the delimiter set as white space, as shown in the following example:
+輸入將根據 `query` 欄位分割成多個事件，並以空白字元作為分隔符號，如下列範例所示：
 
 ```json
 {"query" : "open", "some_other_field" : "abc" }
 {"query" : "source", "some_other_field" : "abc" }
 ```
 
-## Conditional splitting with split_when
+## 使用 split_when 進行條件式分割
 
-You can use `split_when` to conditionally apply the split based on event content. This is useful in multi-tenant pipelines where only certain events should be split. In the following example, the `split_event` processor only splits events in which the `body` field contains a new line character. Events without new lines remain unchanged:
+您可以使用 `split_when` 根據事件內容有條件地套用分割。這在多租用戶管線中很實用，因為只有特定事件需要分割。在下列範例中，`split_event` 處理器只會分割 `body` 欄位包含換行字元的事件。不含換行的事件將保持不變：
 
 ```yaml
 split-event-pipeline:

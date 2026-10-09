@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: reverse
 parent: Commands
@@ -8,26 +9,26 @@ nav_order: 39
 
 <!-- vale off -->
 
-# reverse command
+# reverse 命令
 
 <!-- vale on -->
 
-The `reverse` command reverses the display order of the search results. It returns the same results but in the opposite order.
+`reverse` 命令會反轉搜尋結果的顯示順序。它會傳回相同的結果，但順序相反。
 
-The `reverse` command processes the entire dataset. If applied directly to millions of records, it consumes significant coordinating node memory resources. Only apply the `reverse` command to smaller datasets, typically after aggregation operations.
+`reverse` 命令會處理整個資料集。如果直接套用於數百萬筆記錄，會耗用大量協調節點的記憶體資源。請只對較小的資料集套用 `reverse` 命令，通常是在彙總操作之後。
 {: .note}
 
-## Syntax
+## 語法
 
-The `reverse` command has the following syntax:
+`reverse` 命令的語法如下：
 
 ```sql
 reverse
 ```
 
-## Example 1: Using basic reverse operation
+## 範例 1：使用基本的反轉操作
 
-The following query reverses the order of all documents in the results:
+下列查詢會反轉結果中所有文件的順序：
 
 ```sql
 source=otellogs
@@ -38,7 +39,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -52,9 +53,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 2: Using the reverse and sort commands
+## 範例 2：使用 reverse 和 sort 命令
 
-The following query reverses results after sorting by `severityNumber` in ascending order, effectively implementing descending order:
+下列查詢會先依 `severityNumber` 遞增排序，再反轉結果，實際上即可達成遞減排序：
 
 ```sql
 source=otellogs
@@ -66,7 +67,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -80,9 +81,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 3: Using the reverse and head commands
+## 範例 3：使用 reverse 和 head 命令
 
-The following query uses the `reverse` command together with the `head` command to retrieve the last two records from the original result order:
+下列查詢將 `reverse` 命令與 `head` 命令搭配使用，以擷取原始結果順序中的最後兩筆記錄：
 
 ```sql
 source=otellogs
@@ -93,7 +94,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -104,9 +105,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 4: Double reverse
+## 範例 4：雙重反轉
 
-The following query shows that applying `reverse` twice returns documents in the original order:
+下列查詢說明套用 `reverse` 兩次會以原始順序傳回文件：
 
 ```sql
 source=otellogs
@@ -118,7 +119,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -132,9 +133,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 5: Using the reverse command with filtering
+## 範例 5：搭配篩選使用 reverse 命令
 
-The following query uses the `reverse` command with filtering and field selection:
+下列查詢將 `reverse` 命令與篩選及欄位選取搭配使用：
 
 ```sql
 source=otellogs
@@ -145,7 +146,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+此查詢會傳回下列結果：
 
 <!-- vale off -->
 

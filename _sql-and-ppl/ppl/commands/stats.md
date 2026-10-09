@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: stats
 parent: Commands
@@ -8,69 +9,69 @@ nav_order: 45
 
 <!-- vale off -->
 
-# stats command
+# stats 命令
 
 <!-- vale on -->
 
-The `stats` command calculates aggregations on the search results.
+`stats` 命令會計算搜尋結果的彙總。
 
 <!-- vale off -->
 
-## Comparing stats, eventstats, and streamstats
+## 比較 stats、eventstats 與 streamstats
 
 <!-- vale on -->
 
-For a comprehensive comparison of the `stats`, `eventstats`, and `streamstats` commands, including their differences in transformation behavior, output format, aggregation scope, and use cases, see [Comparing `stats`, `eventstats`, and `streamstats`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/streamstats/#comparing-stats-eventstats-and-streamstats).
+如需 `stats`、`eventstats` 與 `streamstats` 命令的完整比較，包括它們在轉換行為、輸出格式、彙總範圍及使用案例上的差異，請參閱[比較 `stats`、`eventstats` 與 `streamstats`]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/streamstats/#comparing-stats-eventstats-and-streamstats)。
 
-## Syntax
+## 語法
 
-The `stats` command has the following syntax:
+`stats` 命令的語法如下：
 
 ```sql
 stats [bucket_nullable=bool] <aggregation>... [by-clause]
 ```
 
-## Parameters
+## 參數
 
-The `stats` command supports the following parameters.
+`stats` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<aggregation>` | Required | An aggregation function. |
-| `<by-clause>` | Optional | Groups results by specified fields or expressions. Syntax: `by [span-expression,] [field,]...` If no `by-clause` is specified, the stats command returns only one row, which is the aggregation over the entire search results. |
-| `bucket_nullable` | Optional | Controls whether to include `null` buckets in group-by aggregations. When `false`, ignores records in which the `group-by` field is null, resulting in faster performance. Default is the value of `plugins.ppl.syntax.legacy.preferred`. |
-| `<span-expression>` | Optional | Splits a field into buckets by intervals (maximum of one). Syntax: `span(field_expr, interval_expr)`. By default, the interval uses the field's default unit. For date/time fields, aggregation results ignore null values. Examples: `span(age, 10)` creates 10-year age buckets, and `span(timestamp, 1h)` creates hourly buckets. Valid time units are millisecond (`ms`), second (`s`), minute (`m`), hour (`h`), day (`d`), week (`w`), month (`M`), quarter (`q`), year (`y`). |
+| `<aggregation>` | 必要 | 彙總函式。 |
+| `<by-clause>` | 選用 | 依指定的欄位或運算式將結果分組。語法：`by [span-expression,] [field,]...` 若未指定 `by-clause`，stats 命令只會傳回一列，也就是對整個搜尋結果進行的彙總。 |
+| `bucket_nullable` | 選用 | 控制是否在分組彙總中包含 `null` 桶。當設為 `false` 時，會忽略 `group-by` 欄位為 null 的記錄，因而提升效能。預設值為 `plugins.ppl.syntax.legacy.preferred` 的值。 |
+| `<span-expression>` | 選用 | 依間隔將欄位分成多個桶（最多可指定一個 span 運算式）。語法：`span(field_expr, interval_expr)`。依預設，間隔會使用欄位的預設單位。對於日期/時間欄位，彙總結果會忽略 null 值。範例：`span(age, 10)` 會建立以 10 年為單位的年齡桶，`span(timestamp, 1h)` 則會建立以小時為單位的桶。有效的時間單位為毫秒（`ms`）、秒（`s`）、分鐘（`m`）、小時（`h`）、日（`d`）、週（`w`）、月（`M`）、季（`q`）、年（`y`）。 |
 
-## Aggregation functions  
+## 彙總函式  
 
-The `stats` command supports the following aggregation functions:
+`stats` 命令支援下列彙總函式：
 
-* `COUNT`/`C` -- Count of values
-* `SUM` -- Sum of numeric values
-* `AVG` -- Average of numeric values
-* `MAX` -- Maximum value
-* `MIN` -- Minimum value
-* `VAR_SAMP` -- Sample variance
-* `VAR_POP` -- Population variance
-* `STDDEV_SAMP` -- Sample standard deviation
-* `STDDEV_POP` -- Population standard deviation
-* `DISTINCT_COUNT_APPROX` -- Approximate distinct count
-* `TAKE` -- List of original values
-* `PERCENTILE`/`PERCENTILE_APPROX` -- Percentile calculations
-* `PERC<percent>`/`P<percent>` -- Percentile shortcut functions
-* `MEDIAN` -- 50th percentile
-* `EARLIEST` -- Earliest value by timestamp
-* `LATEST` -- Latest value by timestamp
-* `FIRST` -- First non-null value
-* `LAST` -- Last non-null value
-* `LIST` -- Collect all values into array
-* `VALUES` -- Collect unique values into sorted array  
+* `COUNT`/`C` -- 值的計數
+* `SUM` -- 數值的總和
+* `AVG` -- 數值的平均值
+* `MAX` -- 最大值
+* `MIN` -- 最小值
+* `VAR_SAMP` -- 樣本變異數
+* `VAR_POP` -- 母體變異數
+* `STDDEV_SAMP` -- 樣本標準差
+* `STDDEV_POP` -- 母體標準差
+* `DISTINCT_COUNT_APPROX` -- 近似相異計數
+* `TAKE` -- 原始值清單
+* `PERCENTILE`/`PERCENTILE_APPROX` -- 百分位數計算
+* `PERC<percent>`/`P<percent>` -- 百分位數捷徑函式
+* `MEDIAN` -- 第 50 百分位數
+* `EARLIEST` -- 依時間戳記的最早值
+* `LATEST` -- 依時間戳記的最新值
+* `FIRST` -- 第一個非 null 值
+* `LAST` -- 最後一個非 null 值
+* `LIST` -- 將所有值收集到陣列
+* `VALUES` -- 將唯一值收集到已排序陣列  
   
-For detailed documentation of each function, see [Aggregation Functions]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/functions/aggregations/).
+如需每個函式的詳細文件，請參閱[彙總函式]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/functions/aggregations/)。
 
-## Example 1: Calculating the count of events  
+## 範例 1：計算事件計數  
 
-The following query counts the total number of log entries, a basic health check for log ingestion:
+下列查詢會計算記錄項目的總數，這是記錄匯入的基本健康狀態檢查：
   
 ```sql
 source=otellogs
@@ -79,7 +80,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -90,9 +91,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Calculating the average of a field  
+## 範例 2：計算欄位的平均值  
 
-The following query calculates the average severity number across all logs. A rising average over time may indicate increasing system instability:
+下列查詢會計算所有記錄的平均嚴重性數值。平均值隨時間上升可能表示系統不穩定性增加：
   
 ```sql
 source=otellogs
@@ -101,7 +102,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -112,9 +113,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Calculating the count by group  
+## 範例 3：依群組計算計數  
 
-The following query counts logs by severity level, giving you a breakdown of your system's health at a glance:
+下列查詢會依嚴重性層級計算記錄數，讓您一眼就能看出系統健康狀態的細分情形：
   
 ```sql
 source=otellogs
@@ -124,7 +125,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -138,9 +139,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 4: Calculating multiple aggregations by group  
+## 範例 4：依群組計算多個彙總  
 
-The following query calculates the total log count and severity range per service, helping you identify which services are most active and most problematic:
+下列查詢會計算每個服務的記錄總數與嚴重性範圍，協助您找出哪些服務最活躍且問題最多：
   
 ```sql
 source=otellogs
@@ -151,7 +152,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -166,9 +167,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 5: Calculating the count by a span  
+## 範例 5：依 span 計算計數  
 
-The following query groups logs into severity buckets of 10, showing the distribution across low (0--9), medium (10--19), and high (20+) severity ranges:
+下列查詢會將記錄分組為間隔為 10 的嚴重性桶，顯示低（0--9）、中（10--19）與高（20+）嚴重性範圍的分布：
   
 ```sql
 source=otellogs
@@ -177,7 +178,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -189,9 +190,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 6: Calculating the count by a field and span  
+## 範例 6：依欄位與 span 計算計數  
 
-The following query counts logs by severity level within severity number ranges, showing how severity text maps to numeric ranges:
+下列查詢會依嚴重性數值範圍計算各嚴重性層級的記錄數，顯示嚴重性文字如何對應到數值範圍：
   
 ```sql
 source=otellogs
@@ -201,7 +202,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -215,9 +216,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 7: Calculating the distinct count of a field  
+## 範例 7：計算欄位的相異計數  
 
-The following query counts the total and distinct number of services reporting logs, useful for verifying all expected services are reporting:
+下列查詢會計算回報記錄的服務名稱出現總次數，以及相異服務的數量，可用於驗證所有預期的服務都在回報：
   
 ```sql
 source=otellogs
@@ -226,7 +227,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -237,9 +238,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 8: Collecting unique values using VALUES by group  
+## 範例 8：依群組使用 VALUES 收集唯一值  
 
-The following query collects the unique service names for each severity level, useful for quickly seeing which services are affected at each level:
+下列查詢會收集每個嚴重性層級的唯一服務名稱，方便您快速看出各層級有哪些服務受到影響：
   
 ```sql
 source=otellogs
@@ -249,7 +250,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -263,9 +264,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 9: Calculating the percentile of a field  
+## 範例 9：計算欄位的百分位數  
 
-The following query calculates the 90th percentile of severity numbers, helping you understand the severity distribution:
+下列查詢會計算嚴重性數值的第 90 百分位數，協助您了解嚴重性的分布情形：
   
 ```sql
 source=otellogs
@@ -274,7 +275,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -285,9 +286,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 10: Collecting unique values using VALUES  
+## 範例 10：使用 VALUES 收集不重複的值  
 
-The following query collects all unique severity levels present in the logs:
+下列查詢會收集記錄檔中出現的所有不重複嚴重性層級：
   
 ```sql
 source=otellogs
@@ -296,7 +297,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -307,9 +308,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 11: Ignoring a null bucket
+## 範例 11：忽略 null 桶
 
-The following query excludes null values from grouping by setting `bucket_nullable=false`, useful when you only want to see services that have a defined namespace:
+下列查詢透過設定 `bucket_nullable=false`，在分組時排除 null 值。當您只想查看具有已定義命名空間的服務時，這會很有用：
 
 ```sql
 source=otellogs
@@ -318,7 +319,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -331,9 +332,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 12: Date span grouping with null handling  
+## 範例 12：依日期跨度分組並處理 null 值  
 
-The following example uses this sample index data:
+下列範例使用此範例索引資料：
 
 <!-- vale off -->
 
@@ -346,7 +347,7 @@ The following example uses this sample index data:
 
 <!-- vale on -->
 
-The following query groups data by yearly spans of the `birthday` field, automatically excluding null values:
+下列查詢會依 `birthday` 欄位的年度跨度將資料分組，並自動排除 null 值：
 
 ```sql
 source=example
@@ -354,7 +355,7 @@ source=example
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -365,7 +366,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-Group by both yearly spans and department number (by default, null `DEPTNO` values are included in the results):
+同時依年度跨度與部門編號分組（預設情況下，結果會包含 null 的 `DEPTNO` 值）：
 
 ```sql
 source=example
@@ -373,7 +374,7 @@ source=example
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -385,7 +386,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-Use `bucket_nullable=false` to exclude null `DEPTNO` values from the grouping:
+使用 `bucket_nullable=false` 從分組中排除 null 的 `DEPTNO` 值：
 
 ```sql
 source=example
@@ -393,7 +394,7 @@ source=example
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -405,9 +406,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 13: Calculating the count by the implicit @timestamp field  
+## 範例 13：依隱含的 @timestamp 欄位計算計數  
 
-If you omit the `field` parameter in the `span` function, it automatically uses the implicit `@timestamp` field:
+如果您在 `span` 函式中省略 `field` 參數，它會自動使用隱含的 `@timestamp` 欄位：
   
 ```sql
 source=big5
@@ -415,7 +416,7 @@ source=big5
 ```
 {% include copy.html %}
   
-The query returns the following results:
+此查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -425,15 +426,15 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Limitations
+## 限制
 
-The following limitations apply to the `stats` command.
+下列限制適用於 `stats` 命令。
 
-### Bucket aggregation results may be approximate for high-cardinality fields
+### 高基數欄位的桶彙總結果可能為近似值
 
-In OpenSearch, `doc_count` values for a `terms` bucket aggregation can be approximate. Thus, any aggregations (such as `sum` or `avg`) performed on those buckets may also be approximate.
+在 OpenSearch 中，`terms` 桶 (bucket) 彙總的 `doc_count` 值可能是近似值。因此，對這些桶執行的任何彙總（例如 `sum` 或 `avg`）也可能是近似值。
 
-For example, the following query retrieves the top 10 URLs:
+例如，下列查詢會擷取前 10 個 URL：
 
 ```sql
 source=hits
@@ -443,13 +444,13 @@ source=hits
 ```
 {% include copy.html %}
 
-This query is translated into a `terms` aggregation in OpenSearch with `"order": { "_count": "desc" }`. For fields with high cardinality, some buckets may be discarded, so the results may only be approximate.
+此查詢在 OpenSearch 中會轉譯為使用 `"order": { "_count": "desc" }` 的 `terms` 彙總。對於高基數欄位，部分桶可能會被捨棄，因此結果可能只是近似值。
 
-### Sorting by doc_count in ascending order may produce inaccurate results
+### 依 doc_count 遞增排序可能產生不準確的結果
 
-When retrieving the least frequent terms for high-cardinality fields, results may be inaccurate. Shard-level aggregations can miss globally rare terms or misrepresent their frequency, causing errors in the overall results.
+擷取高基數欄位中出現頻率最低的詞彙時，結果可能不準確。分片層級的彙總可能會遺漏全域罕見的詞彙，或錯誤呈現其頻率，導致整體結果出現誤差。
 
-For example, the following query retrieves the 10 least frequent URLs:
+例如，下列查詢會擷取出現頻率最低的 10 個 URL：
 
 ```sql
 source=hits
@@ -459,4 +460,4 @@ source=hits
 ```
 {% include copy.html %}
 
-A globally rare term might not appear as rare on every shard or could be entirely absent from some shard results. Conversely, a term that is infrequent on one shard might be common on another. In both cases, shard-level approximations can cause rare terms to be missed, leading to inaccurate overall results.
+全域罕見的詞彙在每個分片上不一定都顯得罕見，也可能完全未出現在某些分片的結果中。反之，在某個分片上不常見的詞彙，在另一個分片上可能很常見。在這兩種情況下，分片層級的近似計算都可能導致遺漏罕見詞彙，進而造成整體結果不準確。

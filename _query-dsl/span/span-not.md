@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Span not
 parent: Span queries
@@ -6,21 +7,21 @@ grand_parent: Query DSL
 nav_order: 60
 ---
 
-# Span not query
+# Span not 查詢
 
-The `span_not` query excludes spans that overlap with another span query. You can also specify the distance before or after the excluded spans within which matches cannot occur.
+`span_not` 查詢會排除與另一個 span 查詢重疊的 span。您也可以指定在排除的 span 之前或之後的距離，在該距離內不得發生相符項目。
 
-For example, you can use the `span_not` query to:
-- Find terms except when they appear in certain phrases.
-- Match spans unless they are near specific terms.
-- Exclude matches that occur within a certain distance of other patterns.
+例如，您可以使用 `span_not` 查詢來：
+- 尋找詞彙，但排除它們出現在特定片語中的情況。
+- 比對 span，除非它們鄰近特定詞彙。
+- 排除在其他模式特定距離內發生的相符項目。
 
-## Example
+## 範例
 
-To try the examples in this section, complete the [setup steps]({{site.url}}{{site.baseurl}}/query-dsl/span/#setup).
+若要試用本節的範例，請完成[設定步驟]({{site.url}}{{site.baseurl}}/query-dsl/span/#setup)。
 {: .tip}
 
-The following query searches for the word "dress" but not when it appears in the phrase "dress shirt":
+下列查詢會搜尋「dress」這個字，但排除它出現在「dress shirt」片語中的情況：
 
 ```json
 GET /clothing/_search
@@ -56,11 +57,11 @@ GET /clothing/_search
 ```
 {% include copy-curl.html %}
 
-The query matches document 2 because it contains the word "dress" ("Beautiful long dress..."). Document 1 is not matched because it contains the phrase "dress shirt", which is excluded. Documents 3 and 4 are not matched because they contain variations of the word "dress" ("dressed" and "dresses"), and the query is searching the raw field. 
+此查詢會比對文件 2，因為它包含「dress」這個字（「Beautiful long dress...」）。文件 1 不相符，因為它包含被排除的「dress shirt」片語。文件 3 和 4 不相符，因為它們包含「dress」這個字的變化形式（「dressed」和「dresses」），而此查詢搜尋的是原始欄位。
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -69,14 +70,14 @@ The query matches document 2 because it contains the word "dress" ("Beautiful lo
 ```
 </details>
 
-## Parameters
+## 參數
 
-The following table lists all top-level parameters supported by `span_not` queries.
+下表列出 `span_not` 查詢支援的所有最上層參數。
 
-| Parameter | Data type | Description | 
+| 參數 | 資料類型 | 說明 | 
 |:----------|:-----|:------------|
-| `include` | Object | The span query whose matches you want to find. Required. |
-| `exclude` | Object | The span query whose matches should be excluded. Required. |
-| `pre` | Integer | Specifies that the `exclude` span cannot appear within the given number of token positions before the `include` span. Optional. Default is `0`. |
-| `post` | Integer | Specifies that the `exclude` span cannot appear within the given number of token positions after the `include` span. Optional. Default is `0`. |
-| `dist` | Integer | Equivalent to setting both `pre` and `post` to the same value. Optional. |
+| `include` | 物件 | 您想尋找其相符項目的 span 查詢。必要。 |
+| `exclude` | 物件 | 應排除其相符項目的 span 查詢。必要。 |
+| `pre` | 整數 | 指定 `exclude` span 不得出現在 `include` span 之前指定詞元位置數內。選用。預設為 `0`。 |
+| `post` | 整數 | 指定 `exclude` span 不得出現在 `include` span 之後指定詞元位置數內。選用。預設為 `0`。 |
+| `dist` | 整數 | 等同於將 `pre` 和 `post` 都設為相同的值。選用。 |

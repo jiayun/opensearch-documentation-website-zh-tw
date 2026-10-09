@@ -1,33 +1,34 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Collection functions
+title: "集合函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 2
 ---
 
-# Collection functions
+# 集合函式
 
-Collection functions create, manipulate, and analyze arrays and multivalue fields in data. These functions are essential for working with complex data structures and performing operations such as filtering, transforming, and analyzing array elements.
+集合函式會建立、操作及分析資料中的陣列與多值欄位。這些函式對於處理複雜的資料結構，以及執行篩選、轉換和分析陣列元素等作業至關重要。
 
-The following collection functions are supported in PPL.
+PPL 支援下列集合函式。
 
 ## ARRAY
 
-**Usage**: `array(value1, value2, value3...)`
+**用法**：`array(value1, value2, value3...)`
 
-Creates an array containing the input values. Mixed types are automatically converted to the least restrictive type. For example, `array(1, "demo")` returns `["1", "demo"]` where the integer is converted to a string.
+建立包含輸入值的陣列。混合類型會自動轉換為限制最少的類型。例如，`array(1, "demo")` 會傳回 `["1", "demo"]`，其中整數會轉換為字串。
 
-**Parameters**:
+**參數**：
 
-- `value1` (Required): A value of any type to include in the array.
-- `value2`, `value3` (Optional): Additional values of any type to include in the array.
+- `value1` (必要)：要包含在陣列中的任意類型值。
+- `value2`、`value3` (選用)：要包含在陣列中的其他任意類型值。
 
-**Return type**: `ARRAY`
+**傳回類型**：`ARRAY`
 
-#### Example
+#### 範例
 
-The following example creates an array with numeric values:
+下列範例會建立包含數值的陣列：
 
 ```sql
 source=people
@@ -37,7 +38,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -47,7 +48,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example demonstrates mixed-type conversion:
+下列範例示範混合類型轉換：
 
 ```sql
 source=people
@@ -57,7 +58,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -69,17 +70,17 @@ The query returns the following results:
   
 ## ARRAY_LENGTH
 
-**Usage**: `array_length(array)`
+**用法**：`array_length(array)`
 
-Returns the length of the input `array`.
+傳回輸入 `array` 的長度。
 
-**Parameters**:
+**參數**：
 
-- `array` (Required): The array for which to return the length.
+- `array` (必要)：要傳回長度的陣列。
 
-**Return type**: `INTEGER`
+**傳回類型**：`INTEGER`
 
-#### Example
+#### 範例
 
 ```sql
 source=people
@@ -90,7 +91,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -102,18 +103,18 @@ The query returns the following results:
   
 ## FORALL
 
-**Usage**: `forall(array, function)`
+**用法**：`forall(array, function)`
 
-Checks whether all elements in the array satisfy the lambda function condition. The lambda function must accept a single input parameter and return a Boolean value.
+檢查陣列中的所有元素是否都符合 lambda 函式條件。lambda 函式必須接受單一輸入參數並傳回布林值。
 
-**Parameters**:
+**參數**：
 
-- `array` (Required): The array to check.
-- `function` (Required): A lambda function that returns a Boolean value and accepts a single input parameter.
+- `array` (必要)：要檢查的陣列。
+- `function` (必要)：傳回布林值並接受單一輸入參數的 lambda 函式。
 
-**Return type**: `BOOLEAN`
+**傳回類型**：`BOOLEAN`
 
-#### Example
+#### 範例
 
 ```sql
 source=people
@@ -123,7 +124,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -135,18 +136,18 @@ The query returns the following results:
   
 ## EXISTS
 
-**Usage**: `exists(array, function)`
+**用法**：`exists(array, function)`
 
-Checks whether at least one element in the array satisfies the lambda function condition. The lambda function must accept a single input parameter and return a Boolean value.
+檢查陣列中是否至少有一個元素符合 lambda 函式條件。lambda 函式必須接受單一輸入參數並傳回布林值。
 
-**Parameters**:
+**參數**：
 
-- `array` (Required): The array to check.
-- `function` (Required): A lambda function that returns a Boolean value and accepts a single input parameter.
+- `array` (必要)：要檢查的陣列。
+- `function` (必要)：傳回布林值並接受單一輸入參數的 lambda 函式。
 
-**Return type**: `BOOLEAN`
+**傳回類型**：`BOOLEAN`
 
-#### Example
+#### 範例
 
 ```sql
 source=people
@@ -156,7 +157,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -168,18 +169,18 @@ The query returns the following results:
   
 ## FILTER
 
-**Usage**: `filter(array, function)`
+**用法**：`filter(array, function)`
 
-Filters the elements in the array using a lambda function. The lambda function must accept a single input parameter and return a Boolean value.
+使用 lambda 函式篩選陣列中的元素。lambda 函式必須接受單一輸入參數並傳回布林值。
 
-**Parameters**:
+**參數**：
 
-- `array` (Required): The array to filter.
-- `function` (Required): A lambda function that returns a Boolean value and accepts a single input parameter.
+- `array` (必要)：要篩選的陣列。
+- `function` (必要)：傳回布林值並接受單一輸入參數的 lambda 函式。
 
-**Return type**: `ARRAY`
+**傳回類型**：`ARRAY`
 
-#### Example
+#### 範例
 
 ```sql
 source=people
@@ -189,7 +190,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -201,20 +202,20 @@ The query returns the following results:
   
 ## TRANSFORM
 
-**Usage**: `transform(array, function)`
+**用法**：`transform(array, function)`
 
-Transforms the elements of the `array` one by one using a lambda function. The lambda function can accept one or two inputs. If the lambda function accepts two parameters, the second parameter is the index of the element in the `array`.
+使用 lambda 函式逐一轉換 `array` 的元素。lambda 函式可以接受一或兩個輸入。如果 lambda 函式接受兩個參數，第二個參數是元素在 `array` 中的索引。
 
-**Parameters**:
+**參數**：
 
-- `array` (Required): The array to transform.
-- `function` (Required): A lambda function that accepts one or two input parameters and returns a transformed value.
+- `array` (必要)：要轉換的陣列。
+- `function` (必要)：接受一或兩個輸入參數並傳回轉換後值的 lambda 函式。
 
-**Return type**: `ARRAY`
+**傳回類型**：`ARRAY`
 
-#### Example
+#### 範例
 
-The following example transforms each element by adding 2:
+下列範例會將每個元素加上 2 來進行轉換：
 
 ```sql
 source=people
@@ -224,7 +225,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -234,7 +235,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example uses both element value and index in the transformation:
+下列範例在轉換中同時使用元素值和索引：
 
 ```sql
 source=people
@@ -244,7 +245,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -256,22 +257,22 @@ The query returns the following results:
   
 ## REDUCE
 
-**Usage**: `reduce(array, acc_base, function, <reduce_function>)`
+**用法**：`reduce(array, acc_base, function, <reduce_function>)`
 
-Uses a lambda function to iterate through all elements and interact with the accumulator base value. The lambda function accepts two parameters: the accumulator and the array element. When an optional `reduce_function` is provided, it is applied to the final accumulator value. The reduce function accepts the accumulator as a single parameter.
+使用 lambda 函式逐一查看所有元素，並與累加器基礎值互動。lambda 函式接受兩個參數：累加器和陣列元素。提供選用的 `reduce_function` 時，會套用至最終的累加器值。reduce 函式接受累加器作為單一參數。
 
-**Parameters**:
+**參數**：
 
-- `array` (Required): The array to reduce.
-- `acc_base` (Required): The initial accumulator value.
-- `function` (Required): A lambda function that accepts accumulator and array element as parameters.
-- `reduce_function` (Optional): A lambda function to apply to the final accumulator value.
+- `array` (必要)：要縮減的陣列。
+- `acc_base` (必要)：初始累加器值。
+- `function` (必要)：接受累加器和陣列元素作為參數的 lambda 函式。
+- `reduce_function` (選用)：要套用至最終累加器值的 lambda 函式。
 
-**Return type**: Same as accumulator type (determined by `acc_base` and `reduce_function`)
+**傳回類型**：與累加器類型相同 (由 `acc_base` 和 `reduce_function` 決定)
 
-#### Example
+#### 範例
 
-The following example reduces an array by summing all elements with an initial value:
+下列範例會使用初始值加總所有元素來縮減陣列：
 
 ```sql
 source=people
@@ -281,7 +282,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -291,7 +292,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example uses an additional reduce function to transform the final result:
+下列範例使用額外的 reduce 函式來轉換最終結果：
 
 ```sql
 source=people
@@ -301,7 +302,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -313,20 +314,20 @@ The query returns the following results:
   
 ## MVJOIN
 
-**Usage**: `mvjoin(array, delimiter)`
+**用法**：`mvjoin(array, delimiter)`
 
-Joins string array elements into a single string, separated by the specified delimiter. `NULL` elements are excluded from the output. Only string arrays are supported.
+將字串陣列元素聯結成單一字串，並以指定的分隔符號分隔。`NULL` 元素會從輸出中排除。僅支援字串陣列。
 
-**Parameters**:
+**參數**：
 
-- `array` (Required): An array of strings to join.
-- `delimiter` (Required): The string to use as a separator between array elements.
+- `array` (必要)：要聯結的字串陣列。
+- `delimiter` (必要)：用來作為陣列元素之間分隔符號的字串。
 
-**Return type**: `STRING`
+**傳回類型**：`STRING`
 
-#### Example
+#### 範例
 
-The following example joins an array of strings with a comma delimiter:
+下列範例會以逗號分隔符號聯結字串陣列：
 
 ```sql
 source=people
@@ -336,7 +337,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -346,7 +347,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example joins field values into a single string:
+下列範例會將欄位值聯結成單一字串：
 
 ```sql
 source=accounts
@@ -357,7 +358,7 @@ source=accounts
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -369,21 +370,21 @@ The query returns the following results:
   
 ## MVAPPEND
 
-**Usage**: `mvappend(value1, value2, value3...)`
+**用法**: `mvappend(value1, value2, value3...)`
 
-Appends all elements from parameters to create an array. Flattens array parameters and collects all individual elements. Always returns an array or `NULL` for consistent type behavior.
+附加參數中的所有元素以建立陣列。將陣列參數攤平，並收集所有個別元素。一律傳回陣列或 `NULL`，以維持一致的類型行為。
 
-**Parameters**:
+**參數**:
 
-- `value1` (Required): A value of any type to append to the array.
-- `value2` (Optional): Additional values of any type to append to the array.
-- `...` (Optional): Any number of additional values.
+- `value1`（必要）：要附加至陣列的任意類型值。
+- `value2`（選用）：要附加至陣列的其他任意類型值。
+- `...`（選用）：任意數量的其他值。
 
-**Return type**: `ARRAY`
+**傳回類型**: `ARRAY`
 
-#### Example
+#### 範例
 
-The following example appends multiple values to create an array:
+下列範例附加多個值以建立陣列：
 
 ```sql
 source=people
@@ -393,7 +394,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -403,7 +404,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example demonstrates array flattening:
+下列範例示範如何攤平陣列：
 
 ```sql
 source=people
@@ -413,7 +414,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -423,7 +424,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows nested `mvappend` calls:
+下列範例顯示巢狀的 `mvappend` 呼叫：
 
 ```sql
 source=people
@@ -433,7 +434,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -443,7 +444,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example creates an array from a single value:
+下列範例從單一值建立陣列：
 
 ```sql
 source=people
@@ -453,7 +454,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -463,7 +464,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example demonstrates `NULL` value filtering:
+下列範例示範如何篩除 `NULL` 值：
 
 ```sql
 source=people
@@ -473,7 +474,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -483,7 +484,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows behavior with only `NULL` values:
+下列範例顯示僅有 `NULL` 值時的行為：
 
 ```sql
 source=people
@@ -493,7 +494,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -503,7 +504,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example concatenates multiple arrays:
+下列範例串接多個陣列：
 
 ```sql
 source=people
@@ -513,7 +514,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -523,7 +524,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example appends field values:
+下列範例附加欄位值：
 
 ```sql
 source=accounts
@@ -533,7 +534,7 @@ source=accounts
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -543,7 +544,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example demonstrates mixed data types:
+下列範例示範混合資料類型：
 
 ```sql
 source=people
@@ -553,7 +554,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -565,20 +566,20 @@ The query returns the following results:
   
 ## SPLIT
 
-**Usage**: `split(str, delimiter)`
+**用法**: `split(str, delimiter)`
 
-Splits the string values on the delimiter and returns the string values as a multivalue field (array). Use an empty string (`""`) to split the original string into one value per character. If the delimiter is not found, the function returns an array containing the original string. If the input string is empty, the function returns an empty array.
+依分隔符號分割字串值，並以多值欄位（陣列）傳回字串值。使用空字串（`""`）可將原始字串分割成每個字元各為一個值。若找不到分隔符號，函式會傳回包含原始字串的陣列。若輸入字串為空，函式會傳回空陣列。
 
-**Parameters**:
+**參數**:
 
-- `str` (Required): The string to split.
-- `delimiter` (Required): The string to use as a delimiter for splitting.
+- `str`（必要）：要分割的字串。
+- `delimiter`（必要）：分割時要用作分隔符號的字串。
 
-**Return type**: `ARRAY`
+**傳回類型**: `ARRAY`
 
-#### Example
+#### 範例
 
-The following example splits a string using a semicolon delimiter:
+下列範例使用分號作為分隔符號來分割字串：
 
 ```sql
 source=people
@@ -588,7 +589,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -598,7 +599,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example uses a multi-character delimiter:
+下列範例使用多字元分隔符號：
 
 ```sql
 source=people
@@ -608,7 +609,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -618,7 +619,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example splits a string into individual characters using an empty delimiter:
+下列範例使用空分隔符號將字串分割成個別字元：
 
 ```sql
 source=people
@@ -628,7 +629,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -638,7 +639,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example splits using a double-colon delimiter:
+下列範例使用雙冒號作為分隔符號進行分割：
 
 ```sql
 source=people
@@ -648,7 +649,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -658,7 +659,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows behavior when the delimiter is not found:
+下列範例顯示找不到分隔符號時的行為：
 
 ```sql
 source=people
@@ -668,7 +669,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -680,19 +681,19 @@ The query returns the following results:
   
 ## MVDEDUP
 
-**Usage**: `mvdedup(array)`
+**用法**: `mvdedup(array)`
 
-Removes duplicate values from a multivalue array while preserving the order of the first occurrence. `NULL` elements are filtered out. Returns a deduplicated array, or `NULL` if the input is `NULL`.
+移除多值陣列中的重複值，同時保留各值首次出現的順序。`NULL` 元素會被篩除。傳回移除重複值後的陣列；若輸入為 `NULL`，則傳回 `NULL`。
 
-**Parameters**:
+**參數**:
 
-- `array` (Required): The array from which to remove duplicates.
+- `array`（必要）：要移除重複值的陣列。
 
-**Return type**: `ARRAY`
+**傳回類型**: `ARRAY`
 
-#### Example
+#### 範例
 
-The following example removes duplicate numbers while preserving order:
+下列範例移除重複的數字，同時保留順序：
 
 ```sql
 source=people
@@ -702,7 +703,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -712,7 +713,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example deduplicates string values:
+下列範例移除重複的字串值：
 
 ```sql
 source=people
@@ -722,7 +723,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -732,7 +733,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows behavior with an empty array:
+下列範例顯示使用空陣列時的行為：
 
 ```sql
 source=people
@@ -742,7 +743,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -754,20 +755,20 @@ The query returns the following results:
 
 ## MVFIND
 
-**Usage**: `mvfind(array, regex)`
+**用法**: `mvfind(array, regex)`
 
-Searches a multivalue array and returns the `0`-based index of the first element that matches the regular expression. Returns `NULL` if no match is found.
+搜尋多值陣列，並傳回第一個符合規則運算式的元素以 `0` 為起點的索引。若找不到相符項目，則傳回 `NULL`。
 
-**Parameters**:
+**參數**:
 
-- `array` (Required): The array to search.
-- `regex` (Required): The regular expression pattern to match against array elements.
+- `array`（必要）：要搜尋的陣列。
+- `regex`（必要）：用來比對陣列元素的規則運算式模式。
 
-**Return type**: `INTEGER` (or `NULL` if no match found)
+**傳回類型**: `INTEGER`（若找不到相符項目，則為 `NULL`）
 
-#### Example
+#### 範例
 
-The following example searches for the first element that matches a regular expression:
+下列範例搜尋第一個符合規則運算式的元素：
 
 ```sql
 source=people
@@ -777,7 +778,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -787,7 +788,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows behavior when no match is found:
+下列範例顯示找不到相符項目時的行為：
 
 ```sql
 source=people
@@ -797,7 +798,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -807,7 +808,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example uses a regex pattern with character classes:
+下列範例使用含有字元類別的規則運算式模式：
 
 ```sql
 source=people
@@ -817,7 +818,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -827,7 +828,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example demonstrates case-insensitive matching:
+下列範例示範不區分大小寫的比對：
 
 ```sql
 source=people
@@ -837,7 +838,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -849,21 +850,21 @@ The query returns the following results:
 
 ## MVINDEX
 
-**Usage**: `mvindex(array, start, [end])`
+**用法**：`mvindex(array, start, [end])`
 
-Returns a subset of the multivalue array using the start and optional end index values. Indexes are `0`-based (the first element is at index `0`). Supports negative indexing where `-1` refers to the last element. When only start is provided, the function returns a single element. When both start and end are provided, the function returns an array of elements from start to end (inclusive).
+使用起始索引值與選用的結束索引值，傳回多值陣列的子集。索引以 `0` 為起點（第一個元素位於索引 `0`）。支援負數索引，其中 `-1` 代表最後一個元素。若只提供 start，函式會傳回單一元素。若同時提供 start 與 end，函式會傳回從 start 到 end（含）的元素陣列。
 
-**Parameters**:
+**參數**：
 
-- `array` (Required): The array from which to extract elements.
-- `start` (Required): The starting index (`0`-based).
-- `end` (Optional): The ending index (`0`-based, inclusive).
+- `array`（必要）：要從中擷取元素的陣列。
+- `start`（必要）：起始索引（以 `0` 為起點）。
+- `end`（選用）：結束索引（以 `0` 為起點，包含該索引）。
 
-**Return type**: Single element type when only `start` is provided; `ARRAY` when both `start` and `end` are provided
+**傳回類型**：只提供 `start` 時為單一元素的類型；同時提供 `start` 與 `end` 時為 `ARRAY`
 
-#### Example
+#### 範例
 
-The following example gets a single element at index 1:
+下列範例取得索引 1 的單一元素：
 
 ```sql
 source=people
@@ -873,7 +874,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢傳回下列結果：
 
 <!-- vale off -->
 
@@ -883,7 +884,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example uses negative indexing to get the last element:
+下列範例使用負數索引取得最後一個元素：
 
 ```sql
 source=people
@@ -893,7 +894,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢傳回下列結果：
 
 <!-- vale off -->
 
@@ -903,7 +904,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example extracts a range of elements:
+下列範例擷取一個範圍內的元素：
 
 ```sql
 source=people
@@ -913,7 +914,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢傳回下列結果：
 
 <!-- vale off -->
 
@@ -923,7 +924,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example uses negative indexing for a range:
+下列範例使用負數索引指定範圍：
 
 ```sql
 source=people
@@ -933,7 +934,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢傳回下列結果：
 
 <!-- vale off -->
 
@@ -943,7 +944,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example extracts elements from the beginning of an array:
+下列範例從陣列開頭擷取元素：
 
 ```sql
 source=people
@@ -953,7 +954,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢傳回下列結果：
 
 <!-- vale off -->
 
@@ -965,20 +966,20 @@ The query returns the following results:
 
 ## MVMAP
 
-**Usage**: `mvmap(array, expression)`
+**用法**：`mvmap(array, expression)`
 
-Iterates over each element of a multivalue array, applies the expression to each element, and returns a multivalue array containing the transformed results. The field name in the expression is implicitly bound to each element value.
+逐一走訪多值陣列的每個元素，將運算式套用至每個元素，並傳回包含轉換結果的多值陣列。運算式中的欄位名稱會隱含繫結至每個元素值。
 
-**Parameters**:
+**參數**：
 
-- `array` (Required): The array to map over.
-- `expression` (Required): The expression to apply to each element.
+- `array`（必要）：要對應處理的陣列。
+- `expression`（必要）：要套用至每個元素的運算式。
 
-**Return type**: `ARRAY`
+**傳回類型**：`ARRAY`
 
-#### Example
+#### 範例
 
-The following example applies a mathematical operation to each element of an array:
+下列範例對陣列的每個元素套用數學運算：
 
 ```sql
 source=people
@@ -988,7 +989,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢傳回下列結果：
 
 <!-- vale off -->
 
@@ -998,7 +999,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example applies a different mathematical operation:
+下列範例套用另一種數學運算：
 
 ```sql
 source=people
@@ -1008,7 +1009,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢傳回下列結果：
 
 <!-- vale off -->
 
@@ -1018,10 +1019,10 @@ The query returns the following results:
 
 <!-- vale on -->
 
-For nested expressions such as `mvmap(mvindex(arr, 1, 3), arr * 2)`, the field name (`arr`) is extracted from the first argument and must match the field referenced in the expression.
+對於 `mvmap(mvindex(arr, 1, 3), arr * 2)` 這類巢狀運算式，欄位名稱（`arr`）會從第一個引數中擷取，且必須與運算式中參照的欄位相符。
 {: .note}
 
-The following example shows how the expression can reference other single-value fields:
+下列範例說明運算式如何參照其他單值欄位：
 
 ```sql
 source=people
@@ -1031,7 +1032,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢傳回下列結果：
 
 <!-- vale off -->
 
@@ -1044,27 +1045,27 @@ The query returns the following results:
 
 ## MVZIP
 
-**Usage**: `mvzip(mv_left, mv_right, [delim])`
+**用法**：`mvzip(mv_left, mv_right, [delim])`
 
-Combines the values in two multivalue arrays by pairing corresponding elements and joining them into strings. The delimiter specifies the character or string used to join the two values. This is similar to the Python zip command.
+將兩個多值陣列中對應的元素配對並連接成字串，藉此合併兩個陣列的值。分隔符號用於指定連接兩個值所用的字元或字串。這與 Python 的 zip 命令類似。
 
-The values are combined by pairing the first value of `mv_left` with the first value of `mv_right`, then the second with the second, and so on. Each pair is concatenated into a string using the delimiter. The function stops at the length of the shorter array.
+合併方式是將 `mv_left` 的第一個值與 `mv_right` 的第一個值配對，接著第二個與第二個配對，依此類推。每一組配對會使用分隔符號串接成一個字串。函式會在較短陣列的長度處停止。
 
-The delimiter is optional. When specified, it must be enclosed in quotation marks. The default delimiter is a comma.
+分隔符號為選用。若有指定，必須以引號括住。預設分隔符號為逗號。
 
-Returns `NULL` if either input is `NULL`. Returns an empty array if either input array is empty.
+若任一輸入為 `NULL`，則傳回 `NULL`。若任一輸入陣列為空，則傳回空陣列。
 
-**Parameters**:
+**參數**：
 
-- `mv_left` (Required): The first array to combine.
-- `mv_right` (Required): The second array to combine.
-- `delim` (Optional): The delimiter to use for joining pairs. Defaults to comma.
+- `mv_left`（必要）：要合併的第一個陣列。
+- `mv_right`（必要）：要合併的第二個陣列。
+- `delim`（選用）：用於連接配對的分隔符號。預設為逗號。
 
-**Return type**: `ARRAY`
+**傳回類型**：`ARRAY`
 
-#### Example
+#### 範例
 
-The following example combines host and port arrays with a colon delimiter:
+下列範例使用冒號分隔符號合併主機與連接埠陣列：
 
 ```sql
 source=people
@@ -1074,7 +1075,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢傳回下列結果：
 
 <!-- vale off -->
 
@@ -1084,7 +1085,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example uses a pipe delimiter with equal-length arrays:
+下列範例對長度相同的陣列使用管線符號分隔符號：
 
 ```sql
 source=people
@@ -1094,7 +1095,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢傳回下列結果：
 
 <!-- vale off -->
 
@@ -1104,7 +1105,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example demonstrates behavior with arrays of different lengths:
+下列範例示範陣列長度不同時的行為：
 
 ```sql
 source=people
@@ -1114,7 +1115,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢傳回下列結果：
 
 <!-- vale off -->
 
@@ -1124,7 +1125,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows nested `mvzip` calls:
+下列範例示範巢狀的 `mvzip` 呼叫：
 
 ```sql
 source=people
@@ -1134,7 +1135,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢傳回下列結果：
 
 <!-- vale off -->
 
@@ -1144,7 +1145,7 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The following example shows behavior with an empty array:
+下列範例示範空陣列時的行為：
 
 ```sql
 source=people
@@ -1154,7 +1155,7 @@ source=people
 ```
 {% include copy.html %}
 
-The query returns the following results:
+此查詢傳回下列結果：
 
 <!-- vale off -->
 

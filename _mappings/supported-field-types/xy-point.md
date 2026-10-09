@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: xy point
 nav_order: 58
@@ -11,15 +12,15 @@ redirect_from:
   - /field-types/xy-point/
 ---
 
-# xy point field type
-**Introduced 2.4**
+# xy point 欄位類型
+**於 2.4 版推出**
 {: .label .label-purple }
 
-An xy point field type contains a point in a two-dimensional Cartesian coordinate system, specified by x and y coordinates. It is based on the Lucene [`XYPoint`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/geo/XYPoint.html) field type. The xy point field type is similar to the [geopoint]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point/) field type, but does not have the range limitations of geopoint. The coordinates of an xy point are single-precision floating-point values. For information about the range and precision of floating-point values, see [Numeric field types]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/).
+xy point 欄位類型包含二維笛卡兒座標系統中的一個點，由 x 和 y 座標指定。它是以 Lucene 的 [`XYPoint`](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/geo/XYPoint.html) 欄位類型為基礎。xy point 欄位類型與 [geopoint]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point/) 欄位類型類似，但沒有 geopoint 的範圍限制。xy point 的座標為單精度浮點數值。如需浮點數值的範圍與精確度相關資訊，請參閱[數值欄位類型]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/numeric/)。
 
-## Example
+## 範例
 
-Create a mapping with an xy point field type:
+建立具有 xy point 欄位類型的對應：
 
 ```json
 PUT testindex1
@@ -35,11 +36,11 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-## Formats
+## 格式
 
-xy points can be indexed in the following formats:
+xy point 可以下列格式編製索引：
 
-- An object with x and y coordinates
+- 具有 x 和 y 座標的物件
 
 ```json
 PUT testindex1/_doc/1
@@ -52,7 +53,7 @@ PUT testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-- A string in the "`x`, `y`" format
+- 「`x`, `y`」格式的字串
 
 ```json
 PUT testindex1/_doc/2
@@ -62,7 +63,7 @@ PUT testindex1/_doc/2
 ```
 {% include copy-curl.html %}
 
-- An array in the [`x`, `y`] format
+- [`x`, `y`] 格式的陣列
 
 ```json
 PUT testindex1/_doc/3
@@ -72,7 +73,7 @@ PUT testindex1/_doc/3
 ```
 {% include copy-curl.html %}
 
-- A [well-known text (WKT)](https://docs.opengeospatial.org/is/12-063r5/12-063r5.html) POINT in the "POINT(`x` `y`)" format
+- 「POINT(`x` `y`)」格式的 [well-known text (WKT)](https://docs.opengeospatial.org/is/12-063r5/12-063r5.html) POINT
 
 ```json
 PUT testindex1/_doc/4
@@ -82,7 +83,7 @@ PUT testindex1/_doc/4
 ```
 {% include copy-curl.html %}
 
-- GeoJSON format
+- GeoJSON 格式
 
 ```json
 PUT testindex1/_doc/5
@@ -95,16 +96,16 @@ PUT testindex1/_doc/5
 ```
 {% include copy-curl.html %}
 
-In all xy point formats, the coordinates must be specified in the `x, y` order. 
+在所有 xy point 格式中，座標必須以 `x, y` 順序指定。
 {: .note}
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by xy point field types. All parameters are optional.
+下表列出 xy point 欄位類型可接受的參數。所有參數皆為選用。
 
-Parameter | Description 
-:--- | :--- 
-`doc_values` | A Boolean value that specifies whether the field should be stored on disk so that it can be used for aggregations, sorting, or scripting. Default is `true`.
-`ignore_malformed` | A Boolean value that specifies to ignore malformed values and not to throw an exception. Default is `false`.
-`ignore_z_value` | Specific to points with three coordinates. If `ignore_z_value` is `true`, the third coordinate is not indexed but is still stored in the `_source` field. If `ignore_z_value` is `false`, an exception is thrown.
-[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | A value to be used in place of `null`. The value must be of the same type as the field. If this parameter is not specified, the field is treated as missing when its value is `null`. Default is `null`.
+參數 | 說明
+:--- | :---
+`doc_values` | 布林值，指定欄位是否應儲存在磁碟上，以便用於彙總、排序或指令碼。預設值為 `true`。
+`ignore_malformed` | 布林值，指定是否忽略格式錯誤的值，且不擲回例外狀況。預設值為 `false`。
+`ignore_z_value` | 專用於具有三個座標的點。若 `ignore_z_value` 為 `true`，則不會將第三個座標編製索引，但仍會儲存在 `_source` 欄位中。若 `ignore_z_value` 為 `false`，則會擲回例外狀況。
+[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。該值必須與欄位具有相同的類型。若未指定此參數，則當欄位的值為 `null` 時，會將其視為缺少。預設值為 `null`。

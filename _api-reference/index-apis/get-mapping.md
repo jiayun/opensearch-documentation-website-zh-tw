@@ -1,51 +1,52 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get index mappings
+title: "取得索引對應"
 parent: Index settings and mappings
 grand_parent: Index APIs
 nav_order: 20
 ---
 
-# Get Index Mappings API
-**Introduced 1.0**
+# 取得索引對應 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-The Get Mappings API returns the mapping definitions for one or more indexes. Use this API to inspect how fields are configured in an index, verify that mapping updates were applied, or review the full schema before reindexing.
+Get Mappings API 會傳回一或多個索引的對應定義。您可以使用此 API 檢查索引中欄位的設定方式、確認對應更新是否已套用，或在重新編製索引之前檢閱完整的結構描述。
 
 <!-- spec_insert_start
 api: indices.get_mapping
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_mapping
 GET /{index}/_mapping
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `index` | String | A comma-separated list of index names to retrieve mappings for. Supports wildcard expressions. To retrieve mappings for all indexes, omit this parameter or use `_all` or `*`. |
+| `index` | 字串 | 以逗號分隔的索引名稱清單，用於取得其對應。支援萬用字元運算式。若要取得所有索引的對應，請省略此參數，或使用 `_all` 或 `*`。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description | Default |
+| 參數 | 資料類型 | 說明 | 預設值 |
 | :--- | :--- | :--- | :--- |
-| `allow_no_indices` | Boolean | Specifies whether to ignore wildcards that do not match any indexes. If `false`, the request returns an error when wildcards do not match any indexes. | `true` |
-| `cluster_manager_timeout` | String | The amount of time to wait for a connection to the cluster manager node. | `30s` |
-| `expand_wildcards` | String | Specifies the types of indexes to which wildcard expressions can expand. Supports comma-separated values. Valid values are: <br> - `all`: Match all indexes, including hidden indexes. <br> - `open`: Match open indexes. <br> - `closed`: Match closed indexes. <br> - `hidden`: Match hidden indexes. Must be combined with `open`, `closed`, or both. <br> - `none`: Do not accept wildcard expressions. | `open` |
-| `ignore_unavailable` | Boolean | Specifies whether to ignore indexes that are missing or closed. If `true`, missing or closed indexes are not included in the response. | `false` |
-| `local` | Boolean | Specifies whether to retrieve information from the local node only instead of from the cluster manager node. | `false` |
+| `allow_no_indices` | 布林值 | 指定是否忽略未符合任何索引的萬用字元。若為 `false`，當萬用字元未符合任何索引時，請求會傳回錯誤。 | `true` |
+| `cluster_manager_timeout` | 字串 | 等待連線至叢集管理員節點的時間長度。 | `30s` |
+| `expand_wildcards` | 字串 | 指定萬用字元運算式可展開的索引類型。支援以逗號分隔的值。有效值為：<br> - `all`：符合所有索引，包括隱藏索引。<br> - `open`：符合開啟的索引。<br> - `closed`：符合關閉的索引。<br> - `hidden`：符合隱藏索引。必須與 `open`、`closed` 或兩者合併使用。<br> - `none`：不接受萬用字元運算式。 | `open` |
+| `ignore_unavailable` | 布林值 | 指定是否忽略缺少或關閉的索引。若為 `true`，回應中不會包含缺少或關閉的索引。 | `false` |
+| `local` | 布林值 | 指定是否僅從本機節點擷取資訊，而非從叢集管理員節點擷取。 | `false` |
 
-## Example: Retrieving mappings for a single index
+## 範例：取得單一索引的對應
 
-The following example retrieves the mapping for the `products` index:
+下列範例會取得 `products` 索引的對應：
 
 <!-- spec_insert_start
 component: example_code
@@ -69,9 +70,9 @@ response = client.indices.get_mapping(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Retrieving mappings for multiple indexes
+## 範例：取得多個索引的對應
 
-You can retrieve mappings for multiple indexes in a single request by specifying a comma-separated list:
+您可以在單一請求中指定以逗號分隔的清單，以取得多個索引的對應：
 
 <!-- spec_insert_start
 component: example_code
@@ -95,9 +96,9 @@ response = client.indices.get_mapping(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example: Retrieving all mappings
+## 範例：取得所有對應
 
-To retrieve mappings for all indexes in the cluster, omit the index name:
+若要取得叢集中所有索引的對應，請省略索引名稱：
 
 <!-- spec_insert_start
 component: example_code
@@ -117,11 +118,11 @@ response = client.indices.get_mapping()
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## Example response
+## 回應範例
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -176,15 +177,15 @@ response = client.indices.get_mapping()
 ```
 </details>
 
-## Response body fields
+## 回應本文欄位
 
-The response contains a JSON object where each key is an index name. The following table describes the fields within each index entry.
+回應包含一個 JSON 物件，其中每個索引鍵都是索引名稱。下表說明每個索引項目內的欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `mappings` | Object | The mapping definition for the index. |
-| `mappings.properties` | Object | A map of field names to their mapping configurations, including type, parameters, and nested subfields. |
+| `mappings` | 物件 | 索引的對應定義。 |
+| `mappings.properties` | 物件 | 欄位名稱與其對應設定的對應表，包括類型、參數及巢狀子欄位。 |
 
-## Required permissions
+## 必要權限
 
-If you use the Security plugin, make sure you have the appropriate permissions: `indices:admin/mappings/get`.
+如果您使用 Security 外掛程式，請確定您具有適當的權限：`indices:admin/mappings/get`。

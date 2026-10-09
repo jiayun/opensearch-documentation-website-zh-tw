@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Approximate k-NN search
+title: "近似 k-NN 搜尋"
 nav_order: 15
 parent: Vector search techniques
 has_children: false
@@ -9,26 +10,26 @@ redirect_from:
   - /search-plugins/knn/approximate-knn/ 
 ---
 
-# Approximate k-NN search
+# 近似 k-NN 搜尋
 
-Standard k-nearest neighbors (k-NN) search methods compute similarity using a brute-force approach that measures the nearest distance between a query and a number of points, which produces exact results. This works well in many applications. However, in the case of extremely large datasets with high dimensionality, this creates a scaling problem that reduces the efficiency of the search. Approximate k-NN search methods can overcome this by employing tools that restructure indexes more efficiently and reduce the dimensionality of searchable vectors. Using this approach requires a sacrifice in accuracy but increases search processing speeds appreciably.
+標準的 k 最近鄰 (k-NN) 搜尋方法使用暴力法計算相似度，衡量查詢與多個點之間的最近距離，產生精確的結果。這在許多應用中運作良好。然而，在具有高維度的極大型資料集情況下，這會產生擴展性問題，降低搜尋效率。近似 k-NN 搜尋方法可透過採用能更有效率地重建索引結構並降低可搜尋向量維度的工具來克服此問題。使用此方法需要犧牲準確度，但能明顯提升搜尋處理速度。
 
-The approximate k-NN search methods in OpenSearch use approximate nearest neighbor (ANN) algorithms from the [NMSLIB](https://github.com/nmslib/nmslib), [Faiss](https://github.com/facebookresearch/faiss), and [Lucene](https://lucene.apache.org/) libraries to power k-NN search. These search methods employ ANN to improve search latency for large datasets. Of the three search methods OpenSearch provides, this method offers the best search scalability for large datasets. This approach is the preferred method when a dataset reaches hundreds of thousands of vectors.
+OpenSearch 中的近似 k-NN 搜尋方法使用來自 [NMSLIB](https://github.com/nmslib/nmslib)、[Faiss](https://github.com/facebookresearch/faiss) 和 [Lucene](https://lucene.apache.org/) 函式庫的近似最近鄰 (ANN) 演算法來支援 k-NN 搜尋。這些搜尋方法採用 ANN 來改善大型資料集的搜尋延遲。在 OpenSearch 提供的三種搜尋方法中，此方法為大型資料集提供最佳的搜尋擴展性。當資料集達到數十萬個向量時，此方法為首選方法。
 
-The [`opensearch-jvector` plugin]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/) provides an additional `jvector` engine for approximate k-NN search that implements DiskANN-style indexing in pure Java. The engine supports thread-safe concurrent ingestion, incremental index updates without full graph rebuilds, and native product quantization (PQ). Consider `jvector` when your dataset grows continuously or when it is larger than available memory and you need high recall at a high compression ratio.
+[`opensearch-jvector` 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/) 為近似 k-NN 搜尋提供額外的 `jvector` 引擎，以純 Java 實作 DiskANN 風格的索引編製。此引擎支援執行緒安全的並行匯入、無需完整重建圖形的增量索引更新，以及原生乘積量化 (PQ)。當您的資料集持續成長，或資料集大於可用記憶體且您需要在高壓縮率下達到高召回率時，請考慮使用 `jvector`。
 
-For information about the algorithms OpenSearch supports, see [Methods and engines]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/).
+如需 OpenSearch 支援的演算法相關資訊，請參閱[方法與引擎]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/)。
 {: .note}
 
-OpenSearch builds a native library index of the vectors for each `knn-vector` field/Lucene segment pair during indexing, which can be used to efficiently find the k-nearest neighbors to a query vector during search. To learn more about Lucene segments, see the [Apache Lucene documentation](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/codecs/lucene104/package-summary.html#package.description). These native library indexes are loaded into native memory during search and managed by a cache. To learn more about preloading native library indexes into memory, see [Warmup API]({{site.url}}{{site.baseurl}}/vector-search/api/knn#warmup-operation). Additionally, you can see which native library indexes are already loaded into memory using the [Stats API]({{site.url}}{{site.baseurl}}/vector-search/api/knn#stats).
+OpenSearch 在索引編製期間為每個 `knn-vector` 欄位/Lucene 分段配對建立向量的原生函式庫索引，可用於在搜尋期間有效率地找出查詢向量的 k 個最近鄰。如需進一步了解 Lucene 分段，請參閱 [Apache Lucene 文件](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/codecs/lucene104/package-summary.html#package.description)。這些原生函式庫索引會在搜尋期間載入原生記憶體，並由快取管理。如需進一步了解如何將原生函式庫索引預先載入記憶體，請參閱 [Warmup API]({{site.url}}{{site.baseurl}}/vector-search/api/knn#warmup-operation)。此外，您可以使用 [Stats API]({{site.url}}{{site.baseurl}}/vector-search/api/knn#stats) 查看哪些原生函式庫索引已載入記憶體。
 
-Because the native library indexes are constructed during indexing, it is not possible to apply a filter on an index and then use this search method. All filters are applied to the results produced by the ANN search.
+由於原生函式庫索引是在索引編製期間建構，因此無法在索引上套用篩選器後再使用此搜尋方法。所有篩選器都會套用至 ANN 搜尋產生的結果。
 
-## Get started with approximate k-NN
+## 開始使用近似 k-NN
 
-To use the approximate search functionality, you must first create a vector index with `index.knn` set to `true`. This setting tells OpenSearch to create native library indexes for the index.
+若要使用近似搜尋功能，您必須先建立向量索引，並將 `index.knn` 設為 `true`。此設定會告訴 OpenSearch 為該索引建立原生函式庫索引。
 
-Next, you must add one or more fields of the `knn_vector` data type. The following example creates an index with two `knn_vector` fields using the `faiss` engine:
+接著，您必須新增一或多個 `knn_vector` 資料類型的欄位。下列範例使用 `faiss` 引擎建立具有兩個 `knn_vector` 欄位的索引：
 
 ```json
 PUT my-knn-index-1
@@ -73,14 +74,14 @@ PUT my-knn-index-1
 ```
 {% include copy-curl.html %}
 
-In the preceding example, both `knn_vector` fields are configured using method definitions. Additionally, `knn_vector` fields can be configured using models. For more information, see [k-NN vector]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/).
+在上述範例中，兩個 `knn_vector` 欄位都是使用方法定義進行設定。此外，`knn_vector` 欄位也可以使用模型進行設定。如需更多資訊，請參閱 [k-NN 向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/)。
 
-The `knn_vector` data type supports a vector of floats that can have a dimension count of up to 16,000 for the NMSLIB, Faiss, and Lucene engines, as set by the `dimension` mapping parameter.
+`knn_vector` 資料類型支援浮點數向量，對於 NMSLIB、Faiss 和 Lucene 引擎，其維度計數最高可達 16,000，由 `dimension` 對應參數設定。
 
-In OpenSearch, codecs handle the storage and retrieval of indexes. OpenSearch uses a custom codec to write vector data to native library indexes so that the underlying k-NN search library can read it.
+在 OpenSearch 中，編解碼器負責處理索引的儲存與擷取。OpenSearch 使用自訂編解碼器將向量資料寫入原生函式庫索引，以便基礎的 k-NN 搜尋函式庫能夠讀取。
 {: .tip }
 
-After you create the index, you can add some data to it:
+建立索引後，您可以新增一些資料至其中：
 
 ```json
 POST _bulk
@@ -105,7 +106,7 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-Then you can run an ANN search on the data using the `knn` query type:
+接著您可以使用 `knn` 查詢類型對資料執行 ANN 搜尋：
 
 ```json
 GET my-knn-index-1/_search
@@ -123,31 +124,31 @@ GET my-knn-index-1/_search
 ```
 {% include copy-curl.html %}
 
-## The number of returned results
+## 傳回的結果數量
 
-In the preceding query, `k` represents the number of neighbors returned by the search of each graph. You must also include the `size` parameter, indicating the final number of results that you want the query to return.  
+在上述查詢中，`k` 代表每個圖形搜尋所傳回的鄰居數量。您也必須包含 `size` 參數，指出您希望查詢傳回的最終結果數量。  
 
-For the NMSLIB and Faiss engines, `k` represents the maximum number of documents returned for all segments of a shard. For the Lucene engine, `k` represents the number of documents returned for a shard. The maximum value of `k` is 10,000.
+對於 NMSLIB 和 Faiss 引擎，`k` 代表分片所有分段所傳回的文件數量上限。對於 Lucene 引擎，`k` 代表分片所傳回的文件數量。`k` 的最大值為 10,000。
 
-For any engine, each shard returns `size` results to the coordinating node. Thus, the total number of results that the coordinating node receives is `size * number of shards`. After the coordinating node consolidates the results received from all nodes, the query returns the top `size` results.
+對於任何引擎，每個分片都會將 `size` 個結果傳回協調節點。因此，協調節點接收的結果總數為 `size * number of shards`。協調節點彙整從所有節點接收的結果後，查詢會傳回前 `size` 個結果。
 
-The following table provides examples of the number of results returned by various engines in several scenarios. For these examples, assume that the number of documents contained in the segments and shards is sufficient to return the number of results specified in the table.
+下表提供各種引擎在幾種情境下所傳回結果數量的範例。在這些範例中，假設分段和分片中所包含的文件數量足以傳回表中指定的結果數量。
 
-`size` 	| `k` | Number of primary shards | 	Number of segments per shard | Number of returned results, Faiss/NMSLIB | Number of returned results, Lucene
+`size` 	| `k` | 主要分片數量 | 	每個分片的分段數量 | 傳回的結果數量，Faiss/NMSLIB | 傳回的結果數量，Lucene
 :--- | :--- | :--- | :--- | :--- | :---
 10 |	1 |	1 |	4 |	4 | 1
 10 | 10 |	1 |	4 |	10 | 10
 10 |	1 |	2 |	4 |	8 | 2
 
-The number of results returned by Faiss/NMSLIB differs from the number of results returned by Lucene only when `k` is smaller than `size`. If `k` and `size` are equal, all engines return the same number of results. 
+只有在 `k` 小於 `size` 時，Faiss/NMSLIB 傳回的結果數量才會與 Lucene 傳回的結果數量不同。如果 `k` 和 `size` 相等，所有引擎都會傳回相同數量的結果。 
 
-You can use `k`, `min_score`, or `max_distance` for [radial search]({{site.url}}{{site.baseurl}}/search-plugins/knn/radial-search-knn/).
+您可以將 `k`、`min_score` 或 `max_distance` 用於[徑向搜尋]({{site.url}}{{site.baseurl}}/search-plugins/knn/radial-search-knn/)。
 
-## Building a vector index from a model
+## 從模型建立向量索引
 
-For some of the algorithms that OpenSearch supports, the native library index needs to be trained before it can be used. It would be expensive to train every newly created segment, so, instead, OpenSearch features the concept of a *model* that initializes the native library index during segment creation. You can create a model by calling the [Train API]({{site.url}}{{site.baseurl}}/vector-search/api/knn#train-a-model) and passing in the source of the training data and the method definition of the model. Once training is complete, the model is serialized to a k-NN model system index. Then, during indexing, the model is pulled from that index to initialize the segments.
+對於 OpenSearch 支援的部分演算法，原生函式庫索引需要先經過訓練才能使用。訓練每個新建立的分段所費不貲，因此，OpenSearch 改以 *模型* 的概念，在建立分段期間初始化原生函式庫索引。您可以呼叫 [Train API]({{site.url}}{{site.baseurl}}/vector-search/api/knn#train-a-model) 並傳入訓練資料的來源和模型的方法定義來建立模型。訓練完成後，模型會序列化至 k-NN 模型系統索引。接著，在索引編製期間，會從該索引提取模型來初始化分段。
 
-To train a model, you first need an OpenSearch index containing training data. Training data can come from any `knn_vector` field that has a dimension matching the dimension of the model you want to create. Training data can be the same as the data you plan to index or come from a separate dataset. To create a training index, send the following request:
+若要訓練模型，您首先需要一個包含訓練資料的 OpenSearch 索引。訓練資料可以來自任何 `knn_vector` 欄位，其維度須符合您要建立之模型的維度。訓練資料可以與您打算編製索引的資料相同，或來自個別的資料集。若要建立訓練索引，請傳送下列請求：
 
 ```json
 PUT /train-index
@@ -168,9 +169,9 @@ PUT /train-index
 ```
 {% include copy-curl.html %}
 
-Notice that `index.knn` is not set in the index settings. This ensures that you do not create native library indexes for this index.
+請注意，索引設定中未設定 `index.knn`。這可確保您不會為此索引建立原生函式庫索引。
 
-You can now add some data to the index:
+您現在可以新增一些資料至索引：
 
 ```json
 POST _bulk
@@ -185,7 +186,7 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-After completing indexing into the training index, you can call the Train API:
+完成訓練索引的索引編製後，您可以呼叫 Train API：
 
 ```json
 POST /_plugins/_knn/models/my-model/_train
@@ -211,9 +212,9 @@ POST /_plugins/_knn/models/my-model/_train
 ```
 {% include copy-curl.html %}
 
-For more information about the method parameters, see [IVF training requirements]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#ivf-training-requirements).
+如需方法參數的詳細資訊，請參閱 [IVF 訓練需求]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#ivf-training-requirements)。
 
-The Train API returns as soon as the training job is started. To check the job status, use the Get Model API:
+Train API 會在訓練工作開始後立即傳回。若要檢查工作狀態，請使用 Get Model API：
 
 ```json
 GET /_plugins/_knn/models/my-model?filter_path=state&pretty
@@ -223,7 +224,7 @@ GET /_plugins/_knn/models/my-model?filter_path=state&pretty
 ```
 {% include copy-curl.html %}
 
-Once the model enters the `created` state, you can create an index that will use this model to initialize its native library indexes:
+一旦模型進入 `created` 狀態，您就可以建立索引，使用此模型來初始化其原生函式庫索引：
 
 ```json
 PUT /target-index
@@ -245,7 +246,7 @@ PUT /target-index
 ```
 {% include copy-curl.html %}
 
-Lastly, you can add the documents you want to be searched to the index:
+最後，您可以將要搜尋的文件新增至索引：
 
 ```json
 POST _bulk
@@ -260,4 +261,4 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-After data is ingested, it can be searched in the same way as any other `knn_vector` field.
+資料匯入後，即可像任何其他 `knn_vector` 欄位一樣進行搜尋。

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Conversational agents
+title: "對話式代理程式"
 has_children: false
 has_toc: false
 nav_order: 30
@@ -8,41 +9,41 @@ parent: Agents
 grand_parent: Agents and tools
 ---
 
-# Conversational agents
-**Introduced 2.13**
+# 對話式代理程式
+**於 2.13 版推出**
 {: .label .label-purple }
 
-A conversational agent uses a large language model (LLM) and a set of supplementary tools to reason iteratively and provide a response. The agent selects the best tool for each question using the Chain-of-Thought (CoT) process and stores conversation history so that users can ask follow-up questions. Conversational agents use [function calling]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/#request-body-fields) to invoke tools. 
+對話式代理程式使用大型語言模型 (LLM) 及一組輔助工具，以反覆推理並提供回應。代理程式會使用思維鏈 (Chain-of-Thought, CoT) 流程為每個問題選取最佳工具，並儲存對話歷史記錄，讓使用者能提出後續問題。對話式代理程式使用[函式呼叫]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/#request-body-fields)來叫用工具。
 
-OpenSearch provides two types of conversational agents:
+OpenSearch 提供兩種類型的對話式代理程式：
 
-- **[The `conversational_v2` agent](#the-conversational_v2-agent-with-full-multimodal-support)** (OpenSearch 3.6 and later): An enhanced agent with built-in multimodal support through a standardized interface. Requires the [unified registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method) and [agentic memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/).
+- **[`conversational_v2` 代理程式](#the-conversational_v2-agent-with-full-multimodal-support)** (OpenSearch 3.6 及更新版本)：透過標準化介面提供內建多模態支援的增強型代理程式。需要[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)及[代理程式記憶體]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/)。
 
-- **[The `conversational` agent (v1)](#the-conversational-agent-v1)** (OpenSearch 2.13 and later): Supports both the [unified registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method) (plain text input only) and the [regular registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#regular-registration-method) (connector-dependent capabilities). Supports both `conversation_index` and `agentic_memory` memory types.
+- **[`conversational` 代理程式 (v1)](#the-conversational-agent-v1)** (OpenSearch 2.13 及更新版本)：同時支援[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method) (僅限純文字輸入) 及[一般註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#regular-registration-method) (功能取決於連接器)。同時支援 `conversation_index` 與 `agentic_memory` 記憶體類型。
 
-## The `conversational_v2` agent with full multimodal support
-**Introduced 3.6**
+## 具備完整多模態支援的 `conversational_v2` 代理程式
+**於 3.6 版推出**
 {: .label .label-purple }
 
-A `conversational_v2` agent extends the `conversational` agent by providing built-in multimodal support through the [unified registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method), without requiring custom connector configuration. Unlike `conversational` agents, which accept only plain text input when using the unified registration method, the `conversational_v2` agents support the following input formats:
+`conversational_v2` 代理程式擴充了 `conversational` 代理程式，透過[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)提供內建多模態支援，不需要自訂連接器組態。`conversational` 代理程式在使用統一註冊方法時僅接受純文字輸入，而 `conversational_v2` 代理程式則支援下列輸入格式：
 
-- **Plain text**: A simple string input.
-- **Content blocks**: Multimodal arrays containing text, images, and documents.
-- **Messages**: Full conversation history with roles and multimodal content blocks for multi-turn interactions.
+- **純文字**：簡單的字串輸入。
+- **內容區塊**：包含文字、影像及文件的多模態陣列。
+- **訊息**：具備角色及多模態內容區塊的完整對話歷史記錄，可用於多輪互動。
 
-The agent returns a response that includes the stop reason, the assistant's message, the memory session ID, and token usage metrics. The `conversational_v2` agents require the `agentic_memory` memory type.
+代理程式會傳回包含停止原因、助理訊息、記憶體工作階段 ID 及詞元使用指標的回應。`conversational_v2` 代理程式需要 `agentic_memory` 記憶體類型。
 
-### Prerequisites
+### 先決條件
 
-The `conversational_v2` agent uses the [unified registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method) and requires the unified agent API to be enabled. For setup instructions, see [Prerequisites]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#prerequisites).
+`conversational_v2` 代理程式使用[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)，且需要啟用統一代理程式 API。如需設定指示，請參閱[先決條件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#prerequisites)。
 
-### Registering a `conversational_v2` agent
+### 註冊 `conversational_v2` 代理程式
 
-To register a `conversational_v2` agent, follow these steps.
+若要註冊 `conversational_v2` 代理程式，請依照下列步驟操作。
 
-**Step 1: Create a memory container**
+**步驟 1：建立記憶體容器**
 
-Before registering a `conversational_v2` agent, create a memory container using the [Create Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/):
+註冊 `conversational_v2` 代理程式之前，請先使用 [Create Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/) 建立記憶體容器：
 
 ```json
 POST /_plugins/_ml/memory_containers/_create
@@ -52,9 +53,9 @@ POST /_plugins/_ml/memory_containers/_create
 ```
 {% include copy-curl.html %}
 
-This creates a memory container with default settings. Depending on your use case, you may want to configure additional options such as `disable_session`, `embedding_model_id`, or memory strategies. For all available options, see [Create Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/).
+這會建立具有預設設定的記憶體容器。視您的使用情境而定，您可能會想設定其他選項，例如 `disable_session`、`embedding_model_id` 或記憶體策略。如需所有可用選項，請參閱 [Create Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/)。
 
-The response returns a `memory_container_id` that you use when registering the agent:
+回應會傳回 `memory_container_id`，供您在註冊代理程式時使用：
 
 ```json
 {
@@ -63,9 +64,9 @@ The response returns a `memory_container_id` that you use when registering the a
 }
 ```
 
-**Step 2: Register the agent**
+**步驟 2：註冊代理程式**
 
-To register the agent, send the following request:
+若要註冊代理程式，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -95,11 +96,11 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### Executing a `conversational_v2` agent
+### 執行 `conversational_v2` 代理程式
 
-The `conversational_v2` agents use the `input` field and support the following input formats:
+`conversational_v2` 代理程式使用 `input` 欄位，並支援下列輸入格式：
 
-- **Plain text input**:
+- **純文字輸入**：
 
     ```json
     POST /_plugins/_ml/agents/{agent_id}/_execute
@@ -109,7 +110,7 @@ The `conversational_v2` agents use the `input` field and support the following i
     ```
     {% include copy-curl.html %}
 
-- **Multimodal content block input**:
+- **多模態內容區塊輸入**：
 
     ```json
     POST /_plugins/_ml/agents/{agent_id}/_execute
@@ -132,7 +133,7 @@ The `conversational_v2` agents use the `input` field and support the following i
     ```
     {% include copy-curl.html %}
 
-- **Message input** (multi-turn conversation history):
+- **訊息輸入** (多輪對話歷史記錄)：
 
     ```json
     POST /_plugins/_ml/agents/{agent_id}/_execute
@@ -155,9 +156,9 @@ The `conversational_v2` agents use the `input` field and support the following i
     ```
     {% include copy-curl.html %}
 
-### The `conversational_v2` agent response format
+### `conversational_v2` 代理程式回應格式
 
-The `conversational_v2` agent returns a standardized response format:
+`conversational_v2` 代理程式會傳回標準化的回應格式：
 
 ```json
 {
@@ -192,31 +193,31 @@ The `conversational_v2` agent returns a standardized response format:
 }
 ```
 
-For the `conversational_v2` agent response fields, see [The `conversational_v2` agent response format]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#the-conversational_v2-agent-response-format).
+如需 `conversational_v2` 代理程式回應欄位，請參閱[`conversational_v2` 代理程式回應格式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#the-conversational_v2-agent-response-format)。
 
-### Limitations
+### 限制
 
-The following limitations apply to the `conversational_v2` agent:
+下列限制適用於 `conversational_v2` 代理程式：
 
-- **Memory type**: Only `agentic_memory` is supported. The `conversation_index` memory type is not compatible with `conversational_v2` agents.
-- **Streaming**: Streaming responses are not supported.
-- **Hooks and context management**: Agent execution hooks and context management are not supported.
+- **記憶體類型**：僅支援 `agentic_memory`。`conversation_index` 記憶體類型與 `conversational_v2` 代理程式不相容。
+- **串流**：不支援串流回應。
+- **掛鉤與上下文管理**：不支援代理程式執行掛鉤與上下文管理。
 
-## The `conversational` agent (v1)
+## `conversational` 代理程式（v1）
 
-The `conversational` agent supports two registration methods, each with different capabilities:
+`conversational` 代理程式支援兩種註冊方法，各有不同的功能：
 
-- **[Unified registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)**: Accepts only plain text input. Uses the `model` field for LLM configuration.
-- **[Regular registration method]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#regular-registration-method)**: Input capabilities depend on connector configuration. Uses the `llm` field for LLM configuration. Multimodal input is supported if you configure the connector to pass multimodal content to the LLM.
+- **[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)**：僅接受純文字輸入。使用 `model` 欄位設定 LLM 組態。
+- **[一般註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#regular-registration-method)**：輸入功能取決於連接器組態。使用 `llm` 欄位設定 LLM 組態。如果您將連接器設定為將多模態內容傳遞給 LLM，即可支援多模態輸入。
 
-For full multimodal support through a standardized interface, use the [`conversational_v2` agent](#the-conversational_v2-agent-with-full-multimodal-support).
+若要透過標準化介面取得完整的多模態支援，請使用 [`conversational_v2` 代理程式](#the-conversational_v2-agent-with-full-multimodal-support)。
 {: .note}
 
-A `conversational` agent can be configured with a large language model (LLM) and a set of supplementary tools that perform specific jobs. For example, you can set up an LLM and a `ListIndexTool`. When you send a question to the model, the agent includes the `ListIndexTool` as context. The LLM then decides whether it needs to use the tool to answer questions like "How many indexes are in my cluster?" This allows the LLM to answer questions outside of its knowledge base.
+您可以為 `conversational` 代理程式設定大型語言模型（LLM）和一組執行特定工作的輔助工具。例如，您可以設定 LLM 和 `ListIndexTool`。當您向模型提出問題時，代理程式會將 `ListIndexTool` 納入上下文。接著，LLM 會決定是否需要使用工具來回答「我的叢集中有多少個索引？」之類的問題。這讓 LLM 能夠回答其知識庫範圍之外的問題。
 
-### Using the unified registration method
+### 使用統一註冊方法
 
-The following example registers a `conversational` agent using the unified registration method:
+下列範例使用統一註冊方法註冊 `conversational` 代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -245,9 +246,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### Using the regular registration method
+### 使用一般註冊方法
 
-The following example registers a `conversational` agent using the regular registration method:
+下列範例使用一般註冊方法註冊 `conversational` 代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -290,18 +291,18 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-## Tracking token usage
-**Introduced 3.6**
+## 追蹤詞元用量
+**於 3.6 版推出**
 {: .label .label-purple }
 
-Conversational agents support token usage tracking, which provides detailed metrics about token consumption for each LLM call during agent execution. This helps you monitor costs, debug performance, and compare model efficiency.
+對話式代理程式支援追蹤詞元用量，可提供代理程式執行期間每次 LLM 呼叫的詞元耗用詳細指標。這有助於您監控成本、偵錯效能問題，以及比較模型效率。
 
-To enable token usage tracking, set the `include_token_usage` parameter to `true` when executing the agent. The response will include a `token_usage` output with per-turn and per-model aggregated metrics. For detailed information about token usage fields and how tokens are calculated by different model providers, see [Tracking token usage]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#tracking-token-usage) in the Execute Agent API documentation.
+若要啟用詞元用量追蹤，請在執行代理程式時將 `include_token_usage` 參數設為 `true`。回應將包含 `token_usage` 輸出，其中提供依每個對話回合和每個模型彙總的指標。如需詞元用量欄位及不同模型供應商如何計算詞元的詳細資訊，請參閱 Execute Agent API 文件中的[追蹤詞元用量]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#tracking-token-usage)。
 
-## Next steps
+## 後續步驟
 
-- To learn more about registering agents, see [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/).
-- For a list of supported tools, see [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/).
-- For a step-by-step tutorial, see [Agents and tools tutorial]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents-tools-tutorial/).
-- For supported APIs, see [Agent APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/).
-- To use agents and tools in configuration automation, see [Automating configurations]({{site.url}}{{site.baseurl}}/automating-configurations/index/).
+- 若要進一步瞭解如何註冊代理程式，請參閱 [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)。
+- 如需支援的工具清單，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
+- 如需逐步教學，請參閱[代理程式與工具教學]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents-tools-tutorial/)。
+- 如需支援的 API，請參閱[代理程式 API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/)。
+- 若要在組態自動化中使用代理程式與工具，請參閱[自動化組態]({{site.url}}{{site.baseurl}}/automating-configurations/index/)。

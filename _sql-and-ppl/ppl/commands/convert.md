@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: convert
 parent: Commands
@@ -8,52 +9,52 @@ nav_order: 10
 
 <!-- vale off -->
 
-# convert command
+# convert 命令
 
 <!-- vale on -->
 
-The `convert` command uses conversion functions to transform field values into numeric values. Original field values are overwritten unless the `AS` clause is used to create new fields with the converted values.
+`convert` 命令使用轉換函式將欄位值轉換為數值。除非使用 `AS` 子句以轉換後的值建立新欄位，否則原始欄位值會被覆寫。
 
-The `convert` command has the following properties:
+`convert` 命令具有下列屬性：
 
-- All conversion functions return `null` if a value cannot be converted to a number.
-- All numeric conversion functions return double-precision values to support aggregations.
-- Converted values are displayed using decimal notation (for example, `1234.0` or `1234.56`).
+- 若值無法轉換為數字，所有轉換函式都會傳回 `null`。
+- 所有數值轉換函式都會傳回雙精度值，以支援彙總。
+- 轉換後的值會以十進位標記法顯示 (例如 `1234.0` 或 `1234.56`)。
 
-Use the `AS` clause to preserve the original field while creating a converted field. You can apply multiple conversions within a single command (see [Example 4](#example-4-converting-multiple-fields)).
+使用 `AS` 子句可在建立轉換後欄位的同時保留原始欄位。您可以在單一命令中套用多個轉換 (請參閱[範例 4](#example-4-converting-multiple-fields))。
 
-## Syntax
+## 語法
 
-The `convert` command has the following syntax:
+`convert` 命令具有下列語法：
 
 ```sql
 convert <convert-function>(<field>) [AS <field>] [, <convert-function>(<field>) [AS <field>]]...
 ```
 
-## Parameters
+## 參數
 
-The `convert` command supports the following parameters.
+`convert` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<convert-function>` | Required | One of the conversion functions: `auto()`, `num()`, `rmcomma()`, `rmunit()`, `memk()`, or `none()`. |
-| `<field>` | Required | A single field name to convert. |
-| `AS <field>` | Optional | Creates a new field using the converted value and preserves the original field. |
+| `<convert-function>` | 必要 | 下列其中一個轉換函式：`auto()`、`num()`、`rmcomma()`、`rmunit()`、`memk()` 或 `none()`。 |
+| `<field>` | 必要 | 要轉換的單一欄位名稱。 |
+| `AS <field>` | 選用 | 使用轉換後的值建立新欄位，並保留原始欄位。 |
 
-## Conversion functions
+## 轉換函式
 
-| Function | Description |
+| 函式 | 說明 |
 | --- | --- |
-| `auto(field)` | Automatically converts fields to numbers using intelligent conversion. Supports units, including memory unit prefixes such as `k`, `m`, or `g`, commas, and scientific notation. Returns `null` for non-convertible values. |
-| `num(field)` | Extracts leading numeric portion of a string. For strings without letters, commas are interpreted as thousands separators and removed. For strings containing letters, extraction stops at the first occurrence of a letter or comma. Returns `null` for non-convertible values. |
-| `rmcomma(field)` | Removes commas (thousands separators) from numeric strings and converts the result to a number. Returns `null` if the value contains letters. |
-| `rmunit(field)` | Extracts the leading numeric portion of a string. Stops at the first letter or comma. Returns `null` for non-convertible values. |
-| `memk(field)` | Converts values containing memory unit suffixes to kilobytes. Accepts numbers containing optional unit suffixes such as `k`, `m`, or `g` (case insensitive). If the input is a numeric string with no unit suffix, the value is assumed to be in kilobytes. Returns `null` for invalid formats. |
-| `none(field)` | A no-op function that preserves the original field value. Used for excluding specific fields from wildcard conversions. |
+| `auto(field)` | 使用智慧轉換自動將欄位轉換為數字。支援單位，包括記憶體單位前置字元，例如 `k`、`m` 或 `g`、逗號及科學標記法。若值無法轉換，則傳回 `null`。 |
+| `num(field)` | 擷取字串開頭的數字部分。對於不含字母的字串，逗號會解譯為千分位分隔符號並移除。對於包含字母的字串，擷取會在第一次出現字母或逗號時停止。若值無法轉換，則傳回 `null`。 |
+| `rmcomma(field)` | 從數字字串中移除逗號 (千分位分隔符號)，並將結果轉換為數字。若值包含字母，則傳回 `null`。 |
+| `rmunit(field)` | 擷取字串開頭的數字部分。會在遇到第一個字母或逗號時停止。若值無法轉換，則傳回 `null`。 |
+| `memk(field)` | 將包含記憶體單位後置字元的值轉換為 KB。接受包含選用單位後置字元的數字，例如 `k`、`m` 或 `g` (大小寫不拘)。若輸入為不含單位後置字元的數字字串，則假設該值以 KB 為單位。若格式無效，則傳回 `null`。 |
+| `none(field)` | 不執行任何操作的函式，會保留原始欄位值。用於從萬用字元轉換中排除特定欄位。 |
 
-## Example 1: Converting a field automatically
+## 範例 1：自動轉換欄位
 
-The following query converts the `balance` field to a number using the `auto()` function:
+下列查詢使用 `auto()` 函式將 `balance` 欄位轉換為數字：
 
 ```sql
 source=accounts
@@ -63,7 +64,7 @@ source=accounts
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -75,9 +76,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 2: Converting a field containing commas
+## 範例 2：轉換包含逗號的欄位
 
-The following query converts a field containing comma-separated numbers:
+下列查詢會轉換包含逗號分隔數字的欄位：
 
 ```sql
 source=accounts
@@ -87,7 +88,7 @@ source=accounts
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -97,9 +98,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 3: Converting a field containing memory units
+## 範例 3：轉換包含記憶體單位的欄位
 
-The following query converts memory size strings to kilobytes:
+下列查詢會將記憶體大小字串轉換為 KB：
 
 ```sql
 source=system_metrics
@@ -109,7 +110,7 @@ source=system_metrics
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -119,9 +120,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 4: Converting multiple fields
+## 範例 4：轉換多個欄位
 
-The following query converts multiple fields using different conversion functions:
+下列查詢使用不同的轉換函式轉換多個欄位：
 
 ```sql
 source=accounts
@@ -131,7 +132,7 @@ source=accounts
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -143,9 +144,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 5: Using an AS clause to preserve original values
+## 範例 5：使用 AS 子句保留原始值
 
-The following query creates a new field that contains the converted value while preserving the original field:
+下列查詢會建立包含轉換後值的新欄位，同時保留原始欄位：
 
 ```sql
 source=accounts
@@ -155,7 +156,7 @@ source=accounts
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -167,9 +168,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 6: Extracting numbers from strings containing units
+## 範例 6：從包含單位的字串中擷取數字
 
-The following query extracts numeric values from strings containing units:
+下列查詢會從包含單位的字串中擷取數值：
 
 ```sql
 source=accounts
@@ -180,7 +181,7 @@ source=accounts
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -190,9 +191,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 7: Using aggregation functions
+## 範例 7：使用彙總函式
 
-The following query converts values and uses them in aggregations:
+下列查詢會轉換值並將其用於彙總：
 
 ```sql
 source=accounts
@@ -201,7 +202,7 @@ source=accounts
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -212,9 +213,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-## Example 8: Using none() to preserve field values
+## 範例 8：使用 none() 保留欄位值
 
-The `none()` function returns the unchanged field value. This is useful for explicitly preserving fields in multi-field conversions:
+`none()` 函式會傳回未變更的欄位值。這在多重欄位轉換中明確保留欄位時很有用：
 
 ```sql
 source=accounts
@@ -224,7 +225,7 @@ source=accounts
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -236,9 +237,9 @@ The query returns the following results:
 
 <!-- vale on -->
 
-### Using none() with an AS clause for field renaming
+### 搭配 AS 子句使用 none() 重新命名欄位
 
-The `none()` function can be combined with the `AS` clause to rename a field without modifying its value:
+`none()` 函式可與 `AS` 子句搭配使用，以重新命名欄位而不修改其值：
 
 ```sql
 source=accounts
@@ -248,7 +249,7 @@ source=accounts
 ```
 {% include copy.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -260,11 +261,11 @@ The query returns the following results:
 
 <!-- vale on -->
 
-The `none()` function is useful with wildcard support, allowing you to exclude specific fields from bulk conversions.
+`none()` 函式在搭配萬用字元支援時很有用，可讓您從大量轉換中排除特定欄位。
 {: .note}
 
-## Limitations
+## 限制
 
-The `convert` command requires `plugins.calcite.enabled` to be set to `true`.
+`convert` 命令需要將 `plugins.calcite.enabled` 設定為 `true`。
 
-If Apache Calcite is disabled, using any convert function results in an unsupported function error.
+若停用 Apache Calcite，使用任何 convert 函式都會導致不支援的函式錯誤。

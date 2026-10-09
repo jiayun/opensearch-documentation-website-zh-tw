@@ -1,58 +1,59 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create or update role mapping
+title: "建立或更新角色對應"
 parent: Role mapping APIs
 grand_parent: Security APIs
 nav_order: 10
 ---
 
-# Create or Update Role Mapping API
-**Introduced 1.0**
+# 建立或更新角色對應 API
+**於 1.0 版導入**
 {: .label .label-purple }
 
-Creates or replaces the specified role mapping.
+建立或取代指定的角色對應。
 
 <!-- spec_insert_start
 api: security.create_role_mapping
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 PUT /_plugins/_security/api/rolesmapping/{role}
 ```
 <!-- spec_insert_end -->
 
-## Request body fields
+## 請求本文欄位
 
-The request body is required. It is a JSON object with the following fields.
+請求本文為必要。它是一個包含下列欄位的 JSON 物件。
 
-| Field | Data type | Description | Required |
+| 欄位 | 資料類型 | 說明 | 必要 |
 | :--- | :--- | :--- | :--- |
-| `users` | Array of strings | The user names mapped to the role. Supports wildcard patterns. | No |
-| `backend_roles` | Array of strings | The backend roles mapped to the role. A user with any of these backend roles receives the role. | No |
-| `and_backend_roles` | Array of strings | The backend roles mapped to the role. A user must have all of these backend roles to receive the role. | No |
-| `hosts` | Array of strings | The host names or IP addresses mapped to the role. Supports wildcard patterns. | No |
-| `description` | String | A description of the role mapping. | No |
-| `hidden` | Boolean | Whether the role mapping is hidden from the API and OpenSearch Dashboards. Default is `false`. | No |
-| `reserved` | Boolean | Whether the role mapping is read-only and cannot be modified. Default is `false`. | No |
+| `users` | 字串陣列 | 對應到該角色的使用者名稱。支援萬用字元模式。 | 否 |
+| `backend_roles` | 字串陣列 | 對應到該角色的後端角色。具備其中任一後端角色的使用者即會取得該角色。 | 否 |
+| `and_backend_roles` | 字串陣列 | 對應到該角色的後端角色。使用者必須具備所有這些後端角色才會取得該角色。 | 否 |
+| `hosts` | 字串陣列 | 對應到該角色的主機名稱或 IP 位址。支援萬用字元模式。 | 否 |
+| `description` | 字串 | 角色對應的說明。 | 否 |
+| `hidden` | 布林值 | 角色對應是否在 API 與 OpenSearch Dashboards 中隱藏。預設為 `false`。 | 否 |
+| `reserved` | 布林值 | 角色對應是否為唯讀且不可修改。預設為 `false`。 | 否 |
 
-## Host-based role mapping
+## 以主機為基礎的角色對應
 
-The `hosts` parameter maps requests originating from specific IP addresses or hostnames to the given role. CIDR blocks are not supported, but you can use wildcard patterns (globs), such as `192.168.*.*` or `*.example.com`. This is useful when you want to assign roles based on the client's source address:
+`hosts` 參數會將來自特定 IP 位址或主機名稱的請求對應到指定的角色。不支援 CIDR 區塊，但可以使用萬用字元模式 (glob)，例如 `192.168.*.*` 或 `*.example.com`。當您想根據用戶端的來源位址指派角色時，這非常實用：
 
-* To match by IP address (for example, `"192.168.1.10"`), no additional configuration is needed.
-* To match by hostname (for example, `"myserver.example.com"`), you must set the cluster-level configuration parameter:
+* 若要依 IP 位址比對 (例如 `"192.168.1.10"`)，不需要額外的組態。
+* 若要依主機名稱比對 (例如 `"myserver.example.com"`)，您必須設定叢集層級的組態參數：
 
   ```yaml
   opensearch_security.host_resolver_mode: ip-hostname
   ```
 
-  This enables reverse DNS lookups to resolve hostnames. For more information, see [Configuring OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/).
+  這會啟用反向 DNS 查詢以解析主機名稱。如需更多資訊，請參閱[設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/)。
 
-Using `"*"` in `hosts` matches all client IPs and hostnames, meaning this role will be applied to every request, regardless of user. Combined with `users: ["someuser"]`, this can grant broader access than you intend. Avoid setting `hosts: ["*"]` unless you're intentionally granting the role to all client IPs.
+在 `hosts` 中使用 `"*"` 會比對所有用戶端 IP 與主機名稱，表示此角色會套用至每個請求，無論使用者為何。若與 `users: ["someuser"]` 搭配使用，可能會授予超出您預期的更廣泛存取權限。除非您有意將該角色授予所有用戶端 IP，否則請避免設定 `hosts: ["*"]`。
 {: .warning}
 
-## Example request
+## 範例請求
 
 ```json
 PUT _plugins/_security/api/rolesmapping/test-role
@@ -71,7 +72,7 @@ PUT _plugins/_security/api/rolesmapping/test-role
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {

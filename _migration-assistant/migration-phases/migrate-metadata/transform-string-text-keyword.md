@@ -1,39 +1,40 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Transform string fields to text/keyword
+title: "將 string 欄位轉換為 text/keyword"
 nav_order: 4
 parent: Migrate metadata
 grand_parent: Migration workflows
 permalink: /migration-assistant/migration-phases/migrate-metadata/transform-string-text-keyword/
 ---
 
-# Transform string fields to text/keyword
+# 將 string 欄位轉換為 text/keyword
 
-Older Elasticsearch versions used `string` as the primary text field type. Modern Elasticsearch and OpenSearch use `text` and `keyword` instead. Migration Assistant automatically converts legacy `string` fields into modern `text` or `keyword` mappings during metadata migration.
+較舊的 Elasticsearch 版本使用 `string` 作為主要的文字欄位類型。現代 Elasticsearch 與 OpenSearch 則改用 `text` 與 `keyword`。Migration Assistant 會在遷移中介資料時，自動將舊版的 `string` 欄位轉換為現代的 `text` 或 `keyword` 對應。
 
-## Built-in transformation behavior
+## 內建轉換行為
 
-Migration Assistant chooses the target field type based on how the original `string` field was configured:
+Migration Assistant 會依據原始 `string` 欄位的設定方式來選擇目標欄位類型：
 
-- Analyzed string behavior becomes `text`.
-- Non-analyzed or exact-match string behavior becomes `keyword`.
+- 經過分析的 string 行為會轉換為 `text`。
+- 未經分析或完全相符的 string 行為會轉換為 `keyword`。
 
-The transformation also removes or normalizes incompatible legacy mapping properties where needed.
+此轉換也會視需要移除或正規化不相容的舊版對應屬性。
 
-## Identifying string fields
+## 辨識 string 欄位
 
-To verify whether your source uses `string` fields, run the following command:
+若要確認您的來源是否使用 `string` 欄位，請執行下列命令：
 
 ```bash
 console clusters curl source /_mapping
 ```
 {% include copy.html %}
 
-If the source mapping contains `"type":"string"`, this built-in transformation may apply.
+如果來源對應包含 `"type":"string"`，就可能適用此內建轉換。
 
-## Post-migration validation
+## 遷移後驗證
 
-After metadata migration, verify the target mapping:
+遷移中介資料之後，請驗證目標對應：
 
 ```bash
 console clusters curl target /your-index/_mapping
@@ -41,18 +42,18 @@ workflow show
 ```
 {% include copy.html %}
 
-Then validate the application behavior that depends on those fields, especially:
+接著驗證相依於這些欄位的應用程式行為，尤其是：
 
-- Term queries
-- Aggregations
-- Sorting
-- Case-sensitive exact-match logic
+- 詞彙查詢
+- 彙總
+- 排序
+- 區分大小寫的完全相符邏輯
 
-## Custom transformer
+## 自訂轉換器
 
-Use a custom field type transformer if the built-in `string` conversion is not enough for your application semantics, for example if:
+如果內建的 `string` 轉換不足以滿足您應用程式的語意，例如在下列情況，請使用自訂欄位類型轉換器：
 
-- You need custom multi-field behavior.
-- You want field renaming at the same time.
-- You need special cleanup of field properties.
+- 您需要自訂的多欄位行為。
+- 您想要同時重新命名欄位。
+- 您需要特別清理欄位屬性。
 

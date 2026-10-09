@@ -1,77 +1,78 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Create or update message
+title: "建立或更新訊息"
 parent: Memory APIs
 grand_parent: ML Commons APIs
 nav_order: 40
 ---
 
-# Create Or Update Message API
-**Introduced 2.12**
+# 建立或更新訊息 API
+**於 2.12 版推出**
 {: .label .label-purple }
 
-Use this API to create or update a message within a conversational memory for [conversational search]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/). A memory stores conversation history for the current conversation. A message represents one question/answer pair within a conversation.
+使用此 API 在[對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)的對話記憶中建立或更新訊息。記憶會儲存目前對話的對話歷程。訊息代表對話中的一組問答。
 
-Once a message is created, you'll provide its `message_id` to other APIs.
+建立訊息後，您會將其 `message_id` 提供給其他 API。
 
-The POST method creates a new message. The PUT method updates an existing message.
+POST 方法會建立新訊息。PUT 方法會更新現有訊息。
 
-You can only update the `additional_info` field of a message.
+您只能更新訊息的 `additional_info` 欄位。
 {: .note}
 
-When the Security plugin is enabled, all memories exist in a `private` security mode. Only the user who created a memory can interact with that memory and its messages.
+啟用 Security 外掛程式時，所有記憶都處於 `private` 安全性模式。只有建立記憶的使用者可以與該記憶及其訊息互動。
 {: .important}
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/memory/{memory_id}/messages
 PUT /_plugins/_ml/memory/message/{message_id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`memory_id` | String | The ID of the memory to which to add the message. Required for the POST method.
-`message_id` | String | The ID of the message to be updated. Required for the PUT method.
+`memory_id` | 字串 | 要新增訊息的記憶 ID。POST 方法為必要。
+`message_id` | 字串 | 要更新的訊息 ID。PUT 方法為必要。
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists the available request fields.
+下表列出可用的請求欄位。
 
-Field | Data type | Required/Optional | Updatable | Description
+欄位 | 資料類型 | 必要／選用 | 可更新 | 說明
 :--- | :--- | :--- | :--- | :---
-`input` | String | Optional | No | The question (human input) in the message. |
-`prompt_template` | String | Optional | No | The prompt template that was used for the message. The template may contain instructions or examples that were sent to the large language model. |
-`response` | String | Optional | No | The answer (generative AI output) to the question. |
-`origin` | String | Optional | No | The name of the AI or other system that generated the response. |
-`additional_info` | Object | Optional | Yes | Any other information that was sent to the `origin`. |
+`input` | 字串 | 選用 | 否 | 訊息中的問題 (人類輸入)。 |
+`prompt_template` | 字串 | 選用 | 否 | 用於該訊息的提示範本。範本可能包含傳送給大型語言模型的指示或範例。 |
+`response` | 字串 | 選用 | 否 | 問題的答案 (生成式 AI 輸出)。 |
+`origin` | 字串 | 選用 | 否 | 產生回應的 AI 或其他系統名稱。 |
+`additional_info` | 物件 | 選用 | 是 | 傳送給 `origin` 的任何其他資訊。 |
 
-To create or update a message successfully, you must provide at least one of the preceding fields. The provided field(s) cannot be null or empty.
+若要成功建立或更新訊息，您必須至少提供上述其中一個欄位。提供的欄位不能為 null 或空白。
 {: .note}
 
-## Response body fields
+## 回應本文欄位
 
-The following table lists the available response fields.
+下表列出可用的回應欄位。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `memory_id` | String | The memory ID. |
-| `message_id` | String | The message ID. |
-| `create_time` | String | The time at which the message was created. |
-| `updated_time` | String | The time at which the message was last updated. |
-| `input` | String | The question in the message (human input). |
-| `prompt_template` | String | The prompt template that was used for the message. |
-| `response` | String | The answer to the question (generative AI output). |
-| `origin` | String | The name of the AI or other system that generated the response. |
-| `additional_info` | Object | Any other information that was sent to the `origin`. |
-| `parent_message_id` | String | The ID of the parent message (for trace messages). |
-| `trace_number` | Integer | The trace number (for trace messages). |
+| `memory_id` | 字串 | 記憶 ID。 |
+| `message_id` | 字串 | 訊息 ID。 |
+| `create_time` | 字串 | 建立訊息的時間。 |
+| `updated_time` | 字串 | 上次更新訊息的時間。 |
+| `input` | 字串 | 訊息中的問題 (人類輸入)。 |
+| `prompt_template` | 字串 | 用於該訊息的提示範本。 |
+| `response` | 字串 | 問題的答案 (生成式 AI 輸出)。 |
+| `origin` | 字串 | 產生回應的 AI 或其他系統名稱。 |
+| `additional_info` | 物件 | 傳送給 `origin` 的任何其他資訊。 |
+| `parent_message_id` | 字串 | 父訊息的 ID (用於追蹤訊息)。 |
+| `trace_number` | 整數 | 追蹤編號 (用於追蹤訊息)。 |
 
-## Example request: Create a message
+## 範例請求：建立訊息
 
 ```json
 POST /_plugins/_ml/memory/SXA2cY0BfUsSoeNTz-8m/messages
@@ -87,7 +88,7 @@ POST /_plugins/_ml/memory/SXA2cY0BfUsSoeNTz-8m/messages
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -95,7 +96,7 @@ POST /_plugins/_ml/memory/SXA2cY0BfUsSoeNTz-8m/messages
 }
 ```
 
-## Example request: Add a field to `additional_info`
+## 範例請求：新增欄位至 `additional_info`
 
 ```json
 PUT /_plugins/_ml/memory/message/WnA3cY0BfUsSoeNTI-_J
@@ -107,7 +108,7 @@ PUT /_plugins/_ml/memory/message/WnA3cY0BfUsSoeNTI-_J
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -126,7 +127,7 @@ PUT /_plugins/_ml/memory/message/WnA3cY0BfUsSoeNTI-_J
 }
 ```
 
-The updated message contains an additional `feedback` field:
+更新後的訊息包含額外的 `feedback` 欄位：
 
 ```json
 {
@@ -145,7 +146,7 @@ The updated message contains an additional `feedback` field:
 }
 ```
 
-## Example request: Change a field in `additional_info`
+## 範例請求：變更 `additional_info` 中的欄位
 
 ```json
 PUT /_plugins/_ml/memory/message/WnA3cY0BfUsSoeNTI-_J
@@ -157,7 +158,7 @@ PUT /_plugins/_ml/memory/message/WnA3cY0BfUsSoeNTI-_J
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -176,7 +177,7 @@ PUT /_plugins/_ml/memory/message/WnA3cY0BfUsSoeNTI-_J
 }
 ```
 
-The updated message contains the updated `feedback` field:
+更新後的訊息包含已更新的 `feedback` 欄位：
 
 ```json
 {

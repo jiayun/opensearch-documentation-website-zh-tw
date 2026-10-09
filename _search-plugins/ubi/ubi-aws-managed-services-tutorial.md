@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Collecting UBI-formatted data in Amazon OpenSearch Service
+title: "在 Amazon OpenSearch Service 中收集 UBI 格式的資料"
 parent: User Behavior Insights
 grand_parent: Optimizing search quality
 has_children: false
@@ -8,31 +9,31 @@ nav_order: 30
 ---
 
 
-# Collecting UBI-formatted data in Amazon OpenSearch Service
+# 在 Amazon OpenSearch Service 中收集 UBI 格式的資料
 
-This tutorial shows you how to collect queries and events in the User Behavior Insights (UBI) format when using Amazon OpenSearch Service.
+本教學說明如何在使用 Amazon OpenSearch Service 時，以 User Behavior Insights (UBI) 格式收集查詢與事件。
 
-The native UBI plugin is only available in open-source OpenSearch distributions and is not part of Amazon OpenSearch Service. If you're using OpenSearch Service and want to implement UBI-style data collection, this tutorial demonstrates an alternative approach for implementing this.
+原生 UBI 外掛程式僅適用於開源 OpenSearch 發行版本，並不包含在 Amazon OpenSearch Service 中。如果您使用的是 OpenSearch Service，並且想實作 UBI 風格的資料收集，本教學將示範一種替代做法。
 {: .important}
 
-After following this tutorial, you'll be able to send authenticated queries and events to both Amazon Simple Storage Service (Amazon S3) for long-term storage and OpenSearch for real-time processing using the `curl` command-line tool. 
+完成本教學後，您將能夠使用 `curl` 命令列工具，將已驗證的查詢與事件傳送至 Amazon Simple Storage Service (Amazon S3) 進行長期儲存，並傳送至 OpenSearch 進行即時處理。
 
-This tutorial assumes the following:
+本教學假設以下條件：
 
-1. You are using Amazon OpenSearch Service.
-2. You are not using the UBI plugin for OpenSearch. The UBI plugin is only available in the open-source version of OpenSearch and is not included in Amazon OpenSearch Service.
-3. You are writing UBI data to OpenSearch using [Amazon OpenSearch Ingestion](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ingestion.html), the managed version of OpenSearch Data Prepper.
-4. You have already configured permissions between OpenSearch Ingestion and your managed clusters by following the instructions found in [Tutorial: Ingesting data into a domain using Amazon OpenSearch Ingestion](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/osis-get-started.html), specifically the *Required permissions* step.
+1. 您正在使用 Amazon OpenSearch Service。
+2. 您並未使用 OpenSearch 的 UBI 外掛程式。UBI 外掛程式僅適用於開源版本的 OpenSearch，並未包含在 Amazon OpenSearch Service 中。
+3. 您正在使用 [Amazon OpenSearch Ingestion](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ingestion.html)（OpenSearch Data Prepper 的受管版本）將 UBI 資料寫入 OpenSearch。
+4. 您已依照 [教學：使用 Amazon OpenSearch Ingestion 將資料匯入網域](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/osis-get-started.html) 中的指示（特別是 *必要權限* 步驟），設定了 OpenSearch Ingestion 與受管叢集之間的權限。
 
-## Step 1: Set up OpenSearch indexes for UBI
+## 步驟 1：為 UBI 設定 OpenSearch 索引
 
-Follow these steps to create the indexes needed for UBI data:
+請依照下列步驟建立 UBI 資料所需的索引：
 
-1. Log in to OpenSearch Dashboards in Amazon OpenSearch Service.
-1. On the main menu, select **Management > Dev Tools** to open the **Dev Tools** console.
-1. Create two new indexes: `ubi_events` and `ubi_queries`.
+1. 登入 Amazon OpenSearch Service 中的 OpenSearch Dashboards。
+1. 在主選單中選取 **Management > Dev Tools**，開啟 **Dev Tools** 主控台。
+1. 建立兩個新索引：`ubi_events` 與 `ubi_queries`。
 
-    1. First, start creating the mappings for the `ubi_events` index:
+    1. 首先，開始建立 `ubi_events` 索引的對應：
 
         ```json
         PUT /ubi_events
@@ -41,9 +42,9 @@ Follow these steps to create the indexes needed for UBI data:
         }
         ```
 
-        A syntax warning will appear at this point. That's expected; you'll enter the mappings next.
+        此時會出現語法警告。這是預期行為；您接下來會輸入對應。
 
-        Open the [events-mapping.json](https://github.com/opensearch-project/user-behavior-insights/blob/main/src/main/resources/events-mapping.json) file, copy its contents, and paste them after the `"mappings":` line:
+        開啟 [events-mapping.json](https://github.com/opensearch-project/user-behavior-insights/blob/main/src/main/resources/events-mapping.json) 檔案，複製其內容，並貼到 `"mappings":` 行之後：
 
         ```json
         PUT ubi_events
@@ -64,9 +65,9 @@ Follow these steps to create the indexes needed for UBI data:
         }
         ```
 
-        Run the command and verify that it succeeds.
+        執行該命令並確認成功。
 
-    1. Next, create the `ubi_queries` index in a similar way. Set up the mappings:
+    1. 接著，以類似方式建立 `ubi_queries` 索引。設定對應：
 
         ```json
         PUT ubi_queries
@@ -75,21 +76,21 @@ Follow these steps to create the indexes needed for UBI data:
         }
         ```
 
-        Open the [queries-mapping.json](https://github.com/opensearch-project/user-behavior-insights/blob/main/src/main/resources/queries-mapping.json?utm_source=chatgpt.com) file, copy its contents, and paste them after the `"mappings":` line. Run the command and verify that it succeeds.
+        開啟 [queries-mapping.json](https://github.com/opensearch-project/user-behavior-insights/blob/main/src/main/resources/queries-mapping.json?utm_source=chatgpt.com) 檔案，複製其內容，並貼到 `"mappings":` 行之後。執行該命令並確認成功。
 
-## Step 2: Set up Amazon S3 storage
+## 步驟 2：設定 Amazon S3 儲存
 
-For long-term storage of UBI data, use Amazon S3.  
+若要長期儲存 UBI 資料，請使用 Amazon S3。
 
-Before proceeding, create an S3 bucket in which the query and event data will be stored. You can do this in the AWS Management Console. Note the bucket name and the AWS Region in which it is created; you'll need this information for the following steps.
+在繼續之前，請先建立一個 S3 儲存貯體，用於儲存查詢與事件資料。您可以在 AWS Management Console 中執行此操作。請記下儲存貯體名稱及其建立的 AWS 區域；後續步驟將需要這些資訊。
 
-## Step 3: Set up query and event ingest pipelines
+## 步驟 3：設定查詢與事件的資料匯入管線
 
-Follow these steps to set up query and event ingest pipelines.
+請依照下列步驟設定查詢與事件的資料匯入管線。
 
-### Required permissions
+### 必要權限
 
-To complete this tutorial, your user or role must have an attached identity-based policy with the following minimum permissions. These permissions allow you to create a pipeline role and attach a policy (`iam:Create*` and `iam:Attach*`), create or modify a domain (`es:*`), and work with pipelines (`osis:*`):
+若要完成本教學，您的使用者或角色必須附加具有下列最低權限的身分型政策。這些權限可讓您建立管線角色並附加政策（`iam:Create*` 與 `iam:Attach*`）、建立或修改網域（`es:*`），以及使用管線（`osis:*`）：
 
 ```json
 {
@@ -121,7 +122,7 @@ To complete this tutorial, your user or role must have an attached identity-base
 ```
 {% include copy.html %}
 
-Your `DataPrepperOpenSearchRole` must have permissions similar to the following:
+您的 `DataPrepperOpenSearchRole` 必須具有類似下列的權限：
 
 ```json
 {
@@ -149,43 +150,43 @@ Your `DataPrepperOpenSearchRole` must have permissions similar to the following:
 ```
 {% include copy.html %}
 
-### Step 3(a): Create a query pipeline
+### 步驟 3(a)：建立查詢管線
 
-Follow these steps to create a pipeline for UBI query data:
+請依照下列步驟建立 UBI 查詢資料的管線：
 
-1. In the Amazon OpenSearch Service console, select **Pipelines** from the left navigation pane.
-1. Select **Create pipeline**.
-1. Select a **Blank** pipeline, then select **Select blueprint**.
-1. Configure the pipeline to use the **HTTP** source plugin, which accepts UBI query data in JSON array format. Set the OpenSearch Service domain as the sink, directing all data into the `ubi_queries` index. Additionally, log all events to an S3 bucket in `.ndjson` format.
-1. In the **Source** menu, select **HTTP**. For **Path**, enter `/ubi/queries`.
-1. For **Source network options**, select **Public access** to allow the posting of data from your application.
-1. Select **Next**.
-1. Skip intermediate **Processor** steps by selecting **Next** on the **Processor** screen.
-1. Configure the first sink:
-   * In **OpenSearch resource type**, select **Managed cluster**.  
-   * Select the OpenSearch Service domain you created earlier.  
-   * In **Index name**, enter `ubi_queries`. Make sure this index exists with the required UBI schema.
-1. Configure the second sink:
-    * Select **Add Sink**.  
-    * Select **Amazon S3**.  
-    * Enter the bucket name and AWS Region you created previously.  
-    * In **Event Collection Timeout**, enter `60s` to observe data flow quickly.  
-    * Select **NDJSON** as the format.
-1. Select **Next**.
-1. Name the pipeline `ubi-queries-pipeline` and leave the capacity settings at their defaults.
-1. Select **Next**, then **Create Pipeline**.
+1. 在 Amazon OpenSearch Service 主控台中，從左側導覽窗格選取 **Pipelines**。
+1. 選取 **Create pipeline**。
+1. 選取 **Blank** 管線，然後選取 **Select blueprint**。
+1. 將管線設定為使用 **HTTP** 來源外掛程式，該外掛程式接受 JSON 陣列格式的 UBI 查詢資料。將 OpenSearch Service 網域設為接收端 (sink)，將所有資料導入 `ubi_queries` 索引。此外，將所有事件以 `.ndjson` 格式記錄到 S3 儲存貯體。
+1. 在 **Source** 選單中，選取 **HTTP**。在 **Path** 中輸入 `/ubi/queries`。
+1. 在 **Source network options** 中，選取 **Public access**，以允許從您的應用程式張貼資料。
+1. 選取 **Next**。
+1. 在 **Processor** 畫面上選取 **Next**，略過中間的 **Processor** 步驟。
+1. 設定第一個接收端：
+   * 在 **OpenSearch resource type** 中，選取 **Managed cluster**。
+   * 選取您稍早建立的 OpenSearch Service 網域。
+   * 在 **Index name** 中輸入 `ubi_queries`。請確認此索引已存在且具備必要的 UBI 結構描述。
+1. 設定第二個接收端：
+    * 選取 **Add Sink**。
+    * 選取 **Amazon S3**。
+    * 輸入您先前建立的儲存貯體名稱與 AWS 區域。
+    * 在 **Event Collection Timeout** 中輸入 `60s`，以便快速觀察資料流。
+    * 選取 **NDJSON** 作為格式。
+1. 選取 **Next**。
+1. 將管線命名為 `ubi-queries-pipeline`，並將容量設定保留為預設值。
+1. 選取 **Next**，然後選取 **Create Pipeline**。
 
-### Step 3(b): Test the query pipeline
+### 步驟 3(b)：測試查詢管線
 
-When the pipeline status is `Active`, you can start ingesting data into it. You must sign all HTTP requests to the pipeline using [AWS Signature Version 4](https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html). Use an HTTP tool such as [Postman](https://www.getpostman.com/) or [`awscurl`](https://github.com/okigan/awscurl) to send some data to the pipeline. As with indexing data directly to a domain, ingesting data into a pipeline always requires either an AWS Identity and Access Management (IAM) role or an [IAM access key and secret key](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html).
+當管線狀態為 `Active` 時，您就可以開始將資料匯入其中。您必須使用 [AWS Signature Version 4](https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html) 對所有傳送至管線的 HTTP 請求進行簽署。請使用 [Postman](https://www.getpostman.com/) 或 [`awscurl`](https://github.com/okigan/awscurl) 等 HTTP 工具，將一些資料傳送至管線。如同直接將資料編製索引至網域一樣，將資料匯入管線一律需要 AWS Identity and Access Management (IAM) 角色或 [IAM 存取金鑰與私密金鑰](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html)。
 
-To test the pipeline, use these steps:
+若要測試管線，請依照下列步驟：
 
-1. Retrieve the ingestion URL from the **Pipeline settings** page, shown in the following image.
+1. 從 **Pipeline settings** 頁面取得匯入 URL，如下圖所示。
 
     ![Pipeline Settings]({{site.url}}{{site.baseurl}}/images/ubi/opensearch-ingestion-pipeline.png "Pipeline Settings")
 
-1. Post a UBI query to the ingest pipeline. The following is an example of posting a query using [`awscurl`](https://github.com/okigan/awscurl):
+1. 將 UBI 查詢張貼至資料匯入管線。以下是使用 [`awscurl`](https://github.com/okigan/awscurl) 張貼查詢的範例：
 
     ```bash
     awscurl --service osis --region us-east-1 \
@@ -226,9 +227,9 @@ To test the pipeline, use these steps:
     ```
     {% include copy.html %}
 
-    You should receive a `200 OK` response.
+    您應該會收到 `200 OK` 回應。
 
-1. Query for the event data that you posted using the Dev Tools console. Note that it may take some time for the data to flow through OpenSearch Ingestion into the `ubi_queries` index:
+1. 使用 Dev Tools 主控台查詢您張貼的事件資料。請注意，資料可能需要一些時間才能透過 OpenSearch Ingestion 流入 `ubi_queries` 索引：
 
     ```json
     GET /ubi_queries/_search
@@ -243,29 +244,29 @@ To test the pipeline, use these steps:
     ```
     {% include copy-curl.html %}
 
-    If you want the newly written data to appear immediately, run the following request:
+    如果您希望新寫入的資料立即顯示，請執行下列請求：
 
     ```json
     POST /ubi_queries/_refresh
     ```
     {% include copy-curl.html %}
 
-### Step 3(c): Create an event pipeline
+### 步驟 3(c)：建立事件管線
 
-Repeat [Step 3(a)](#step-3a-create-a-query-pipeline) to set up a pipeline for the UBI event data. Use the following table to replace query-specific values with their event equivalents.
+重複 [步驟 3(a)](#step-3a-create-a-query-pipeline) 來設定 UBI 事件資料的管線。請使用下表將查詢專屬的值替換為對應的事件值。
 
-| Setting                  | Query pipeline           | Event pipeline           |
+| 設定                  | 查詢管線           | 事件管線           |
 |--------------------------|------------------------|------------------------|
-| Path                     | `/ubi/queries`         | `/ubi/events`          |
-| Index name               | `ubi_queries`          | `ubi_events`           |
-| Pipeline name            | `ubi-queries-pipeline` | `ubi-events-pipeline`  |
-| S3 path prefix pattern   | `ubi_queries/`         | `ubi_events/`          |
-| Dev Tools search         | `GET ubi_queries/_search` | `GET ubi_events/_search` |
-| Refresh command          | `POST ubi_queries/_refresh` | `POST ubi_events/_refresh` |
+| 路徑                     | `/ubi/queries`         | `/ubi/events`          |
+| 索引名稱               | `ubi_queries`          | `ubi_events`           |
+| 管線名稱            | `ubi-queries-pipeline` | `ubi-events-pipeline`  |
+| S3 路徑前置詞模式   | `ubi_queries/`         | `ubi_events/`          |
+| Dev Tools 搜尋         | `GET ubi_queries/_search` | `GET ubi_events/_search` |
+| 重新整理命令          | `POST ubi_queries/_refresh` | `POST ubi_events/_refresh` |
 
-### Step 3(d): Test the event pipeline
+### 步驟 3(d)：測試事件管線
 
-Test the event pipeline by following [Step 3(b)](#step-3b-test-the-query-pipeline). The following is an example of posting a query using [`awscurl`](https://github.com/okigan/awscurl):
+依照 [步驟 3(b)](#step-3b-test-the-query-pipeline) 測試事件管線。以下是使用 [`awscurl`](https://github.com/okigan/awscurl) 張貼查詢的範例：
 
 ```bash
 awscurl --service osis --region us-east-1 \
@@ -295,4 +296,4 @@ https://ubi-events-pipeline-il3g3pwe4ve4nov4bwhnzlrm4q.us-east-1.osis.amazonaws.
 ```
 {% include copy.html %}
 
-Now you're ready to start collecting UBI data for your applications.
+現在您可以開始為您的應用程式收集 UBI 資料了。

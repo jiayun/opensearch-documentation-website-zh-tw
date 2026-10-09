@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: length()
 parent: Functions
@@ -7,12 +8,12 @@ nav_order: 30
 ---
 
 <!-- vale off -->
-# length() function
+# length() 函式
 <!-- vale on -->
 
-The `length()` function takes one argument of the JSON pointer type and returns the length of the passed value. For example, `length(/message)` returns a length of `10` when a key message exists in the event and has a value of `1234567890`.
+`length()` 函式接受一個 JSON pointer 類型的引數，並傳回所傳入值的長度。例如，當事件中存在名為 message 的鍵，且其值為 `1234567890` 時，`length(/message)` 會傳回長度 `10`。
 
-#### Example 
+#### 範例 
 
 ```json
 {

@@ -1,27 +1,28 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Routing
+title: "路由"
 parent: Metadata fields
 nav_order: 60
 redirect_from:
   - /field-types/metadata-fields/routing/
 ---
 
-# Routing metadata field
+# 路由中繼資料欄位
 
-OpenSearch uses a hashing algorithm to route documents to specific shards in an index. By default, the document's `_id` field is used as the routing value, but you can also specify a custom routing value for each document.
+OpenSearch 使用雜湊演算法將文件路由至索引中的特定分片。根據預設，系統會使用文件的 `_id` 欄位作為路由值，但您也可以為每份文件指定自訂的路由值。
 
-## Default routing
+## 預設路由
 
-The following is the default OpenSearch routing formula. The `_routing` value is the document's `_id`. 
+以下是 OpenSearch 的預設路由公式。`_routing` 值是文件的 `_id`。
 
 ```json
 shard_num = hash(_routing) % num_primary_shards
 ```
 
-## Custom routing
+## 自訂路由
 
-You can specify a custom routing value when indexing a document, as shown in the following example request: 
+您可以在將文件編製索引時指定自訂的路由值，如下列範例請求所示：
 
 ```json
 PUT sample-index1/_doc/1?routing=JohnDoe1
@@ -31,18 +32,18 @@ PUT sample-index1/_doc/1?routing=JohnDoe1
 ```
 {% include copy-curl.html %}
 
-In this example, the document is routed using the value `JohnDoe1` instead of the default `_id`.
+在此範例中，文件是使用值 `JohnDoe1` 進行路由，而非預設的 `_id`。
 
-You must provide the same routing value when retrieving, deleting, or updating the document, as shown in the following example request:
+在擷取、刪除或更新文件時，您必須提供相同的路由值，如下列範例請求所示：
 
 ```json
 GET sample-index1/_doc/1?routing=JohnDoe1
 ```
 {% include copy-curl.html %}
 
-## Querying by routing
+## 依路由查詢
 
-You can query documents based on their routing value by using the `_routing` field, as shown in the following example. This query only searches the shard(s) associated with the `JohnDoe1` routing value:
+您可以使用 `_routing` 欄位，依文件的路由值查詢文件，如下列範例所示。此查詢只會搜尋與 `JohnDoe1` 路由值相關聯的分片：
 
 ```json
 GET sample-index1/_search
@@ -56,9 +57,9 @@ GET sample-index1/_search
 ```
 {% include copy-curl.html %}
 
-## Required routing
+## 必要路由
 
-You can make custom routing required for all CRUD operations on an index, as shown in the following example request. If you try to index a document without providing a routing value, OpenSearch will throw an exception.
+您可以將自訂路由設為索引上所有 CRUD 作業的必要條件，如下列範例請求所示。如果您嘗試在未提供路由值的情況下將文件編製索引，OpenSearch 會擲回例外狀況。
 
 ```json
 PUT sample-index2
@@ -72,11 +73,11 @@ PUT sample-index2
 ```
 {% include copy-curl.html %}
 
-## Routing to specific shards
+## 路由至特定分片
 
-You can configure an index to route custom values to a subset of shards rather than a single shard. This is done by setting `index.routing_partition_size` at the time of index creation. The formula for calculating the shard is `shard_num = (hash(_routing) + hash(_id)) % routing_partition_size) % num_primary_shards`.
+您可以設定索引，將自訂值路由至分片的子集，而非單一分片。這是在建立索引時設定 `index.routing_partition_size` 來完成。計算分片的公式為 `shard_num = (hash(_routing) + hash(_id)) % routing_partition_size) % num_primary_shards`。
 
-The following example request routes documents to one of four shards in the index:
+下列範例請求會將文件路由至索引中四個分片的其中一個：
 
 ```json
 PUT sample-index3

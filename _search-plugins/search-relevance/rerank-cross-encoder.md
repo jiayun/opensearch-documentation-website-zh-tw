@@ -1,34 +1,35 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reranking using a cross-encoder model
+title: "使用交叉編碼器模型重新排序"
 parent: Reranking search results
 grand_parent: Optimizing search quality
 has_children: false
 nav_order: 10
 ---
 
-# Reranking search results using a cross-encoder model
-**Introduced 2.12**
+# 使用交叉編碼器模型重新排序搜尋結果
+**於 2.12 版推出**
 {: .label .label-purple }
 
-You can rerank search results using a cross-encoder model in order to improve search relevance. To implement reranking, you need to configure a [search pipeline]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/) that runs at search time. The search pipeline intercepts search results and applies the [`rerank` processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) to them. The `rerank` processor evaluates the search results and sorts them based on the new scores provided by the cross-encoder model. 
+您可以使用交叉編碼器模型重新排序搜尋結果，以提升搜尋相關性。若要實作重新排序，您需要設定一個在搜尋時執行的[搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/)。搜尋管線會攔截搜尋結果，並對其套用 [`rerank` 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)。`rerank` 處理器會評估搜尋結果，並依據交叉編碼器模型提供的新分數加以排序。
 
-**PREREQUISITE**<br>
-Before configuring a reranking pipeline, you must set up a cross-encoder model. For information about using an OpenSearch-provided model, see [Cross-encoder models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#cross-encoder-models). For information about using a custom model, see [Custom local models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/).
+**先決條件**<br>
+設定重新排序管線之前，您必須先設定交叉編碼器模型。如需使用 OpenSearch 所提供模型的相關資訊，請參閱[交叉編碼器模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#cross-encoder-models)。如需使用自訂模型的相關資訊，請參閱[自訂本機模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)。
 {: .note}
 
-## Running a search with reranking
+## 執行含重新排序的搜尋
 
-To run a search with reranking, follow these steps:
+若要執行含重新排序的搜尋，請依照下列步驟進行：
 
-1. [Configure a search pipeline](#step-1-configure-a-search-pipeline).
-1. [Create an index for ingestion](#step-2-create-an-index-for-ingestion).
-1. [Ingest documents into the index](#step-3-ingest-documents-into-the-index).
-1. [Search using reranking](#step-4-search-using-reranking).
+1. [設定搜尋管線](#step-1-configure-a-search-pipeline)。
+1. [建立用於匯入的索引](#step-2-create-an-index-for-ingestion)。
+1. [將文件匯入索引](#step-3-ingest-documents-into-the-index)。
+1. [使用重新排序進行搜尋](#step-4-search-using-reranking)。
 
-## Step 1: Configure a search pipeline
+## 步驟 1：設定搜尋管線
 
-Next, configure a search pipeline with a [`rerank` processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) and specify the `ml_opensearch` rerank type. In the request, provide a model ID for the cross-encoder model and the document fields to use as context:
+接著，使用 [`rerank` 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)設定搜尋管線，並指定 `ml_opensearch` 重新排序類型。在請求中，提供交叉編碼器模型的模型 ID，以及要做為內容使用的文件欄位：
 
 ```json
 PUT /_search/pipeline/my_pipeline
@@ -52,11 +53,11 @@ PUT /_search/pipeline/my_pipeline
 ```
 {% include copy-curl.html %}
 
-For more information about the request fields, see [Request fields]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/#request-body-fields).
+如需請求欄位的詳細資訊，請參閱[請求欄位]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/#request-body-fields)。
 
-## Step 2: Create an index for ingestion
+## 步驟 2：建立用於匯入的索引
 
-In order to use the `rerank` processor defined in your pipeline, create an OpenSearch index and add the pipeline created in the previous step as the default pipeline:
+為了使用您在管線中定義的 `rerank` 處理器，請建立 OpenSearch 索引，並將前一個步驟建立的管線新增為預設管線：
 
 ```json
 PUT /my-index
@@ -75,9 +76,9 @@ PUT /my-index
 ```
 {% include copy-curl.html %}
 
-## Step 3: Ingest documents into the index
+## 步驟 3：將文件匯入索引
 
-To ingest documents into the index created in the previous step, send the following bulk request:
+若要將文件匯入前一個步驟建立的索引，請傳送下列大量請求：
 
 ```json
 POST /_bulk
@@ -91,9 +92,9 @@ POST /_bulk
 ```
 {% include copy-curl.html %}
 
-## Step 4: Search using reranking
+## 步驟 4：使用重新排序進行搜尋
 
-To perform a reranking search on your index, use any OpenSearch query and provide an additional `ext.rerank` field:
+若要在您的索引上執行重新排序搜尋，請使用任何 OpenSearch 查詢，並提供額外的 `ext.rerank` 欄位：
 
 ```json
 POST /my-index/_search
@@ -114,9 +115,9 @@ POST /my-index/_search
 ```
 {% include copy-curl.html %}
 
-Alternatively, you can provide the full path to the field containing the context. For more information, see [Rerank processor example]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/#example).
+或者，您也可以提供包含內容之欄位的完整路徑。如需詳細資訊，請參閱[重新排序處理器範例]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/#example)。
 
-## Next steps
+## 後續步驟
 
-- Learn more about the [`rerank` processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/).
-- See a comprehensive example of [reranking by a field using an externally hosted cross-encoder model]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-cross-encoder/).
+- 進一步了解 [`rerank` 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)。
+- 參閱[使用外部託管的交叉編碼器模型依欄位重新排序]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-cross-encoder/)的完整範例。

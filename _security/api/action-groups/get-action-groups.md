@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get action groups
+title: "取得動作群組"
 parent: Action group APIs
 grand_parent: Security APIs
 nav_order: 30
 ---
 
 # Get Action Groups API
-**Introduced 1.0**
+**於 1.0 版導入**
 {: .label .label-purple }
 
-Retrieves action groups. Specify an action group name to retrieve one action group, or omit the name to retrieve all action groups.
+擷取動作群組。指定動作群組名稱可擷取單一動作群組，或省略名稱以擷取所有動作群組。
 
 <!-- spec_insert_start
 api: security.get_action_groups
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET /_plugins/_security/api/actiongroups
 ```
@@ -31,33 +32,33 @@ GET /_plugins/_security/api/actiongroups/{action_group}
 ```
 <!-- spec_insert_end -->
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Required | Description |
+| 參數 | 資料類型 | 必要 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `action_group` | String | No | The name of the action group to retrieve. If omitted, all action groups are returned. |
+| `action_group` | 字串 | 否 | 要擷取的動作群組名稱。若省略，則傳回所有動作群組。 |
 
-## Example request
+## 範例請求
 
-The following request retrieves all action groups:
+下列請求會擷取所有動作群組：
 
 ```json
 GET _plugins/_security/api/actiongroups
 ```
 {% include copy-curl.html security=true %}
 
-The following request retrieves the `custom_action_group` action group:
+下列請求會擷取 `custom_action_group` 動作群組：
 
 ```json
 GET _plugins/_security/api/actiongroups/custom_action_group
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
-The response is abbreviated here:
+回應在此經過簡略：
 
 ```json
 {
@@ -109,7 +110,7 @@ The response is abbreviated here:
 }
 ```
 
-When you retrieve one action group, the response contains only that action group:
+當您擷取單一動作群組時，回應只包含該動作群組：
 
 ```json
 {

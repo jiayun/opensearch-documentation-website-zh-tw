@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Execute stored script
+title: "執行已儲存指令碼"
 parent: Script APIs
 nav_order: 20
 ---
 
-# Execute Stored Script API
-**Introduced 1.0**
+# 執行已儲存指令碼 API
+**於 1.0 版引入**
 {: .label .label-purple }
 
-Runs a stored script that was previously saved to the cluster state using the Create Stored Script API. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/). 
+執行先前使用 Create Stored Script API 儲存至叢集狀態的已儲存指令碼。如需詳細資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。 
 
-OpenSearch provides several ways to run a script; the following sections show how to run a script by passing script information in the request body of a `GET <index>/_search` request.
+OpenSearch 提供數種執行指令碼的方式；以下各節說明如何在 `GET <index>/_search` 請求的請求本文中傳遞指令碼資訊，以執行指令碼。
 
-## Endpoints
+## 端點
 
 ```json
 GET books/_search
@@ -28,15 +29,15 @@ GET books/_search
 }
 ```
 
-## Request body fields
+## 請求本文欄位
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `query` | Object | A filter that specifies documents to process. |
-| `script_fields` | Object | Fields to include in output. | 
-| `script` | Object | ID of the script that produces a value for a field. |
+| `query` | 物件 | 指定要處理哪些文件的篩選器。 |
+| `script_fields` | 物件 | 要包含在輸出中的欄位。 | 
+| `script` | 物件 | 為欄位產生值的指令碼 ID。 |
 
-## Example request
+## 請求範例
 <!-- spec_insert_start
 component: example_code
 rest: GET /books/_search
@@ -105,13 +106,13 @@ response = client.search(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The following request runs the stored script that was created in [Create or update stored script]({{site.url}}{{site.baseurl}}/api-reference/script-apis/create-stored-script/). The script sums the ratings for each book and displays the sum in the `total_ratings` field in the output.
+下列請求會執行在[建立或更新已儲存指令碼]({{site.url}}{{site.baseurl}}/api-reference/script-apis/create-stored-script/)中建立的已儲存指令碼。此指令碼會加總每本書的評分，並在輸出的 `total_ratings` 欄位中顯示總和。
 
-* The script's target is the `books` index.
+* 指令碼的目標是 `books` 索引。
 
-* The `"match_all": {}` property value is an empty object indicating to process each document in the index.
+* `"match_all": {}` 屬性值為空物件，表示要處理索引中的每份文件。
 
-* The `total_ratings` field value is the result of the `my-first-script` execution. See  [Create or update stored script]({{site.url}}{{site.baseurl}}/api-reference/script-apis/create-stored-script/).
+* `total_ratings` 欄位值是執行 `my-first-script` 的結果。請參閱  [建立或更新已儲存指令碼]({{site.url}}{{site.baseurl}}/api-reference/script-apis/create-stored-script/)。
 
 <!-- spec_insert_start
 component: example_code
@@ -172,9 +173,9 @@ response = client.search(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-#### Example response
+#### 回應範例
 
-The `GET books/_search` request returns the following fields:
+`GET books/_search` 請求會傳回下列欄位：
 
 ````json
 {
@@ -228,45 +229,45 @@ The `GET books/_search` request returns the following fields:
 }
 ````
 
-## Response body fields
+## 回應本文欄位
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `took` | Integer | How long the operation took in milliseconds. |
-| `timed_out` | Boolean | Whether the operation timed out. |
-| `_shards` | Object | Total number of shards processed and also the total number of successful, skipped, and not processed. |
-| `hits` | Object | Contains high-level information about the documents processed and an array of `hits` objects. See [Hits object](#hits-object). | 
+| `took` | 整數 | 作業所花費的時間，以毫秒為單位。 |
+| `timed_out` | 布林值 | 作業是否逾時。 |
+| `_shards` | 物件 | 已處理的分片總數，以及成功、略過和未處理的分片各自的總數。 |
+| `hits` | 物件 | 包含已處理文件的概略資訊，以及由 `hits` 物件組成的陣列。請參閱[命中物件](#hits-object)。 | 
 
-#### Hits object
+#### 命中物件
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `total` | Object | Total number of documents processed and their relationship to the `match` request field. |
-| `max_score` | Double | Highest relevance score returned from all the hits. |
-| `hits` | Array | Information about each document that was processed. See [Document object](#Document-object). |
+| `total` | 物件 | 已處理的文件總數，以及此總數與 `match` 請求欄位的關係。 |
+| `max_score` | 雙精度浮點數 | 所有命中結果中傳回的最高相關性分數。 |
+| `hits` | 陣列 | 每份已處理文件的資訊。請參閱[文件物件](#Document-object)。 |
 
-#### Document object
+#### 文件物件
 
-| Field | Data type | Description | 
+| 欄位 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `_index` | String | Index that contains the document. |
-| `_id` | String | Document ID. |
-| `_score` | Float | Document's relevance score. |
-| `fields` | Object | Fields and their value returned from the script. |
+| `_index` | 字串 | 包含該文件的索引。 |
+| `_id` | 字串 | 文件 ID。 |
+| `_score` | 浮點數 | 文件的相關性分數。 |
+| `fields` | 物件 | 指令碼傳回的欄位及其值。 |
 
-## Running a Painless stored script with parameters
+## 使用參數執行 Painless 已儲存指令碼
 
-To pass different parameters to the script each time when running a query, define `params` in `script_fields`.
+若要在每次執行查詢時將不同的參數傳遞給指令碼，請在 `script_fields` 中定義 `params`。
 
-The following request runs the stored script that was created in [Create or update stored script]({{site.url}}{{site.baseurl}}/api-reference/script-apis/create-stored-script/). The script sums the ratings for each book, multiplies the summed value by the `multiplier` parameter, and displays the result in the output.
+下列請求會執行在[建立或更新已儲存指令碼]({{site.url}}{{site.baseurl}}/api-reference/script-apis/create-stored-script/)中建立的已儲存指令碼。此指令碼會加總每本書的評分，將總和值乘以 `multiplier` 參數，並在輸出中顯示結果。
 
-* The script's target is the `books` index.
+* 指令碼的目標是 `books` 索引。
 
-* The `"match_all": {}` property value is an empty object, indicating that it processes each document in the index.
+* `"match_all": {}` 屬性值為空物件，表示它會處理索引中的每份文件。
 
-* The `total_ratings` field value is the result of the `multiplier-script` execution. See [Creating or updating a stored script with parameters]({{site.url}}{{site.baseurl}}/api-reference/script-apis/create-stored-script/).
+* `total_ratings` 欄位值是執行 `multiplier-script` 的結果。請參閱[使用參數建立或更新已儲存指令碼]({{site.url}}{{site.baseurl}}/api-reference/script-apis/create-stored-script/)。
 
-* `"multiplier": 2` in the `params` field is a variable passed to the stored script `multiplier-script`:
+* `params` 欄位中的 `"multiplier": 2` 是傳遞給已儲存指令碼 `multiplier-script` 的變數：
 
 <!-- spec_insert_start
 component: example_code
@@ -336,7 +337,7 @@ response = client.search(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-The response contains the matching documents:
+回應包含符合條件的文件：
 
 ```json
 {
@@ -393,9 +394,9 @@ The response contains the matching documents:
 }
 ```
 
-## Sorting results using a Painless stored script
+## 使用 Painless 已儲存指令碼排序結果
 
-The following example uses a Painless stored script to sort results:
+下列範例使用 Painless 已儲存指令碼排序結果：
 
 ```json
 GET books/_search
@@ -428,7 +429,7 @@ GET books/_search
 }
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {

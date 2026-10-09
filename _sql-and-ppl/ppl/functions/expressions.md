@@ -1,35 +1,36 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Expressions
+title: "運算式"
 parent: Functions
 grand_parent: PPL
 nav_order: 7
 ---
 
-# Expressions in PPL
+# PPL 中的運算式
 
-Expressions, particularly value expressions, return a scalar value. Expressions have different types and forms. For example, there are literal values as atomic expressions, as well as arithmetic, predicate, and function expressions built on top of them. You can use expressions in different clauses, such as arithmetic expressions in the `Filter` or `Stats` commands.
+運算式，特別是值運算式，會傳回純量值。運算式有不同的類型與形式。例如，有作為原子運算式的字面值，也有建構在其之上的算術、述詞與函式運算式。您可以在不同的子句中使用運算式，例如在 `Filter` 或 `Stats` 命令中使用算術運算式。
 
-## Arithmetic operators
+## 算術運算子
 
-Arithmetic expressions are formed by combining numeric literals and binary arithmetic operators. The following operators are available:
-1. `+`: Addition
-2. `-`: Subtraction
-3. `*`: Multiplication
-4. `/`: Division. When [`plugins.ppl.syntax.legacy.preferred`]({{site.url}}{{site.baseurl}}/sql-and-ppl/settings/) is `true` (default), integer operands follow the legacy truncating result. When the setting is `false`, the operands are promoted to floating-point, preserving the fractional part. Division by zero returns `NULL`.
-5. `%`: Modulo. This operator can only be used with integers and returns the remainder of the division.
+算術運算式由數值字面值與二元算術運算子組合而成。可用的運算子如下：
+1. `+`：加法
+2. `-`：減法
+3. `*`：乘法
+4. `/`：除法。當 [`plugins.ppl.syntax.legacy.preferred`]({{site.url}}{{site.baseurl}}/sql-and-ppl/settings/) 為 `true`（預設）時，整數運算元會遵循舊式的截斷結果。當該設定為 `false` 時，運算元會升級為浮點數，保留小數部分。除以零會傳回 `NULL`。
+5. `%`：取模。此運算子只能用於整數，並傳回除法的餘數。
 
-### Precedence
+### 優先順序
 
-You can use parentheses to control the precedence of arithmetic operators. Otherwise, operators with higher precedence are performed first.
+您可以使用括號來控制算術運算子的優先順序。否則，優先順序較高的運算子會先執行。
 
-### Type conversion
+### 類型轉換
 
-The system performs implicit type conversion when determining which operator to use. For example, adding an integer to a real number matches the signature `+(double,double)`, which results in a real number. The same type conversion rules apply to function calls.
+系統在判斷要使用哪個運算子時，會執行隱含類型轉換。例如，將整數與實數相加會符合簽名 `+(double,double)`，結果為實數。相同的類型轉換規則也適用於函式呼叫。
 
-### Examples
+### 範例
 
-The following are examples of different types of arithmetic expressions:
+以下是不同類型算術運算式的範例：
   
 ```sql
 source=accounts
@@ -38,7 +39,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -50,45 +51,45 @@ The query returns the following results:
 
 <!-- vale on -->
   
-## Predicate operators
+## 述詞運算子
 
-Predicate operators are expressions that evaluate to `true` or `false`.
+述詞運算子是評估結果為 `true` 或 `false` 的運算式。
 
-Comparisons for `MISSING` and `NULL` values follow these rules:
-- `MISSING` values only equal other `MISSING` values and are less than all other values.
-- `NULL` values equal other `NULL` values, are greater than `MISSING` values, but less than all other values.
+`MISSING` 與 `NULL` 值的比較遵循以下規則：
+- `MISSING` 值只等於其他 `MISSING` 值，並且小於所有其他值。
+- `NULL` 值等於其他 `NULL` 值，大於 `MISSING` 值，但小於所有其他值。
 
-### Operators
+### 運算子
   
-| Name | Description |
+| 名稱 | 說明 |
 | --- | --- |
-| `>` | Greater than |
-| `>=` | Greater than or equal to |
-| `<` | Less than |
-| `!=` | Not equal to |
-| `<=` | Less than or equal to |
-| `=` | Equal to |
-| `==` | Equal to (alternative syntax) |
-| `LIKE` | Simple pattern matching |
-| `IN` | Value list membership test |
-| `AND` | Logical AND |
-| `OR` | Logical OR |
-| `XOR` | Logical XOR |
-| `NOT` | Logical NOT |
+| `>` | 大於 |
+| `>=` | 大於或等於 |
+| `<` | 小於 |
+| `!=` | 不等於 |
+| `<=` | 小於或等於 |
+| `=` | 等於 |
+| `==` | 等於（替代語法） |
+| `LIKE` | 簡單模式比對 |
+| `IN` | 值清單成員測試 |
+| `AND` | 邏輯 AND |
+| `OR` | 邏輯 OR |
+| `XOR` | 邏輯 XOR |
+| `NOT` | 邏輯 NOT |
   
-You can compare date and time values. When comparing different date and time types (for example, `DATE` and `TIME`), both values are converted to `DATETIME`.
+您可以比較日期與時間值。比較不同的日期與時間類型時（例如 `DATE` 與 `TIME`），兩個值都會轉換為 `DATETIME`。
 
-The following conversion rules are applied:
-- A `TIME` value is combined with today's date.
-- A `DATE` value is interpreted as midnight on that date.
+系統會套用以下轉換規則：
+- `TIME` 值會與今天的日期合併。
+- `DATE` 值會被解讀為該日期的午夜。
 
-### Examples
+### 範例
 
-The following examples demonstrate how to use predicate operators in PPL queries.
+以下範例示範如何在 PPL 查詢中使用述詞運算子。
 
-#### Basic predicate operators
+#### 基本述詞運算子
 
-The following is an example of comparison operators:
+以下是比較運算子的範例：
   
 ```sql
 source=accounts
@@ -97,7 +98,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -107,7 +108,7 @@ The query returns the following results:
 
 <!-- vale on -->
   
-The `==` operator can be used as an alternative to `=` for equality comparisons.
+`==` 運算子可以作為 `=` 的替代方式，用於相等比較。
   
 ```sql
 source=accounts
@@ -116,7 +117,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -126,12 +127,12 @@ The query returns the following results:
 
 <!-- vale on -->
   
-Both `=` and `==` perform the same equality comparison. You can use either based on your preference.
+`=` 與 `==` 執行相同的相等比較。您可以依偏好任選其一使用。
 {: .note}
 
 #### IN
 
-The `IN` operator tests whether a field value is in the specified list of values.
+`IN` 運算子測試欄位值是否位於指定的值清單中。
   
 ```sql
 source=accounts
@@ -140,7 +141,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -153,7 +154,7 @@ The query returns the following results:
 
 #### OR
 
-The `OR` operator performs a logical OR operation between two Boolean expressions.
+`OR` 運算子在兩個布林運算式之間執行邏輯 OR 運算。
   
 ```sql
 source=accounts
@@ -162,7 +163,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 
@@ -175,7 +176,7 @@ The query returns the following results:
 
 #### NOT
 
-The `NOT` operator performs a logical NOT operation, negating a Boolean expression.
+`NOT` 運算子執行邏輯 NOT 運算，對布林運算式取反。
   
 ```sql
 source=accounts
@@ -184,7 +185,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回以下結果：
   
 <!-- vale off -->
 

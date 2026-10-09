@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Security Analytics APIs
+title: "Security Analytics API"
 nav_order: 30
 has_children: true
 has_toc: false
@@ -8,16 +9,16 @@ redirect_from:
   - /security-analytics/api-tools/
 ---
 
-# Security Analytics APIs
+# Security Analytics API
 
-Security Analytics includes a number of APIs to help administrators maintain and update an implementation. The APIs often mimic the same controls available for setting up Security Analytics in OpenSearch Dashboards, and they provide another option for administering the plugin.
+Security Analytics 提供多種 API，協助管理員維護與更新實作。這些 API 通常仿效在 OpenSearch Dashboards 中設定 Security Analytics 時可用的相同控制項，並為管理此外掛程式提供另一種選擇。
 
-The APIs for Security Analytics are separated into the following categories:
+Security Analytics 的 API 分為以下幾類：
 
-* [Detector APIs]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/detector-api/)
-* [Rules APIs]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/rule-api/)
-* [Mappings APIs]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/mappings-api/)
-* [Alerts and findings APIs]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/alert-finding-api/)
-* [Correlation engine APIs]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/correlation-eng/)
-* [Log type APIs]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/log-type-api/)
+* [偵測器 API]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/detector-api/)
+* [規則 API]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/rule-api/)
+* [對應 API]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/mappings-api/)
+* [警示與發現結果 API]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/alert-finding-api/)
+* [關聯引擎 API]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/correlation-eng/)
+* [記錄檔類型 API]({{site.url}}{{site.baseurl}}/security-analytics/api-tools/log-type-api/)
 

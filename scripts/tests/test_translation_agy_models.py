@@ -36,5 +36,13 @@ class AgyModelsTests(unittest.TestCase):
         pool = self.pool()
         chain = ['agy-sonnet', 'agy-opus', 'agy']
         self.assertEqual(pool._order_chain(chain, 'review', 50000)[0], 'agy-opus')
-        self.assertEqual(pool._order_chain(chain, 'review', 1000)[0], 'agy-sonnet')
+        self.assertEqual(pool._order_chain(chain, 'review', 1000)[0], 'agy')
         self.assertEqual(pool._order_chain(['agy-sonnet'], 'review', 50000), ['agy-sonnet'])
+
+    def test_gemini_receives_work_while_claude_gpt_bucket_is_cooling(self):
+        pool = self.pool()
+        pool.providers['codex-review'] = FakeProvider('codex-review', 'codex:model', lambda p, n: '{}')
+        pool.disable('agy-sonnet', ProviderError(QUOTA, 'Individual quota reached'))
+        chain = ['agy-sonnet', 'agy-opus', 'codex-review', 'agy', 'claude']
+        self.assertEqual([pool._order_chain(chain, 'review')[0] for _ in range(3)],
+                         ['agy', 'agy', 'codex-review'])

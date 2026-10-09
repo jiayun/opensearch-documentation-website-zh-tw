@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: CSV 
 parent: Processors
@@ -6,31 +7,31 @@ grand_parent: Pipelines
 nav_order: 70
 ---
 
-# CSV processor
+# CSV 處理器
 
-The `csv` processor parses comma-separated values (CSVs) from the event into columns.
+`csv` 處理器會將事件中以逗號分隔的值 (CSV) 解析為欄。
 
-## Configuration
+## 組態
 
-The following table describes the options you can use to configure the `csv` processor.
+下表說明可用於設定 `csv` 處理器的選項。
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`source` | No | String | The field in the event that will be parsed. Default value is `message`.
-`quote_character` | No | String | The character used as a text qualifier for a single column of data. Default is `"`.
-`delimiter` | No | String | The character separating each column. Default is `,`.
-`delete_header` | No | Boolean | If specified, the event header (`column_names_source_key`) is deleted after the event is parsed. If there is no event header, no action is taken. Default is `true`.
-`column_names_source_key` | No | String | The field in the event that specifies the CSV column names, which will be automatically detected. If there need to be extra column names, the column names are automatically generated according to their index. If `column_names` is also defined, the header in `column_names_source_key` can also be used to generate the event fields. If too few columns are specified in this field, the remaining column names are automatically generated. If too many column names are specified in this field, the CSV processor omits the extra column names.
-`column_names` | No | List | User-specified names for the CSV columns. Default is `[column1, column2, ..., columnN]` if there are no columns of data in the CSV record and `column_names_source_key` is not defined. If `column_names_source_key` is defined, the header in `column_names_source_key` generates the event fields. If too few columns are specified in this field, the remaining column names are automatically generated. If too many column names are specified in this field, the CSV processor omits the extra column names.
-`delete_source` | No | Boolean | If `true`, deletes the configured `source` field (by default, `message`) after CSV parsing. This configuration option improves memory pressure if the `source` field is not going to be used because the processing is done in batches. Default is `false`.
+`source` | 否 | 字串 | 事件中將被解析的欄位。預設值為 `message`。
+`quote_character` | 否 | 字串 | 用於單一資料欄的文字限定符號字元。預設為 `"`。
+`delimiter` | 否 | 字串 | 分隔各欄的字元。預設為 `,`。
+`delete_header` | 否 | 布林值 | 若指定，事件解析後會刪除事件標頭 (`column_names_source_key`)。若沒有事件標頭，則不採取任何動作。預設為 `true`。
+`column_names_source_key` | 否 | 字串 | 事件中指定 CSV 欄名稱的欄位，這些名稱會自動偵測。若需要額外的欄名稱，會依其索引自動產生欄名稱。若同時定義了 `column_names`，`column_names_source_key` 中的標頭也可用來產生事件欄位。若此欄位中指定的欄太少，其餘欄名稱會自動產生。若此欄位中指定的欄名稱太多，CSV 處理器會省略多餘的欄名稱。
+`column_names` | 否 | 清單 | 使用者為 CSV 欄指定的名稱。若 CSV 記錄中沒有資料欄，且未定義 `column_names_source_key`，預設為 `[column1, column2, ..., columnN]`。若定義了 `column_names_source_key`，`column_names_source_key` 中的標頭會產生事件欄位。若此欄位中指定的欄太少，其餘欄名稱會自動產生。若此欄位中指定的欄名稱太多，CSV 處理器會省略多餘的欄名稱。
+`delete_source` | 否 | 布林值 | 若為 `true`，會在 CSV 解析後刪除設定的 `source` 欄位 (預設為 `message`)。由於處理是以批次方式進行，若不會使用 `source` 欄位，此組態選項可改善記憶體壓力。預設為 `false`。
 
-## Usage
+## 使用方式
 
-Add the following examples to your `pipelines.yaml` file, depending on how you your CSV columns are formatted.
+請依您的 CSV 欄格式，將下列範例新增至您的 `pipelines.yaml` 檔案。
 
-### User-specified column names
+### 使用者指定的欄名稱
 
-The following example `pipelines.yaml` configuration points to a file named `ingest.csv` as the source. Then, the `csv` processor parses the data from the `.csv` file using the column names specified in the `column_names` setting, as shown in the following example:
+下列範例 `pipelines.yaml` 組態會將名為 `ingest.csv` 的檔案指向為來源。接著，`csv` 處理器會使用 `column_names` 設定中指定的欄名稱，解析 `.csv` 檔案中的資料，如下列範例所示：
 
 ```yaml
 csv-pipeline:
@@ -47,15 +48,15 @@ csv-pipeline:
 {% include copy.html %}
 
 
-When run, the processor will parse the message. Although only two column names are specified in processor settings, a third column name is automatically generated because the data contained in `ingest.csv` includes three columns, `1,2,3`:
+執行時，處理器會解析訊息。雖然處理器設定中只指定了兩個欄名稱，但由於 `ingest.csv` 中包含的資料有三欄，`1,2,3`，因此會自動產生第三個欄名稱：
 
 ```json
 {"message": "1,2,3", "col1": "1", "col2": "2", "column3": "3"}
 ```
 
-### Automatically detect column names
+### 自動偵測欄名稱
 
-The following configuration automatically detects the header of a CSV file ingested through an [`s3 source`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/):
+下列組態會自動偵測透過 [`s3 source`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/) 匯入之 CSV 檔案的標頭：
 
 ```yaml
 csv-s3-pipeline:
@@ -80,7 +81,7 @@ csv-s3-pipeline:
 {% include copy.html %}
 
 
-For example, if the `ingest.csv` file in the Amazon Simple Storage Service (Amazon S3) bucket that the Amazon Simple Queue Service (SQS) queue is attached to contains the following data:
+例如，若 Amazon Simple Queue Service (SQS) 佇列所連接的 Amazon Simple Storage Service (Amazon S3) 儲存貯體中的 `ingest.csv` 檔案包含下列資料：
 
 ```text
 Should,skip,this,line
@@ -88,20 +89,20 @@ a,b,c
 1,2,3
 ```
 
-Then the `csv` processor will take the following event:
+則 `csv` 處理器會採用下列事件：
 
 ```json
 {"header": "a,b,c", "message": "1,2,3"}
 ```
 
-Then, the processor parses the event into the following output. Because `delete_header` is `true` by default, the header `a,b,c` is deleted from the output:
+接著，處理器會將事件解析為下列輸出。由於 `delete_header` 預設為 `true`，因此輸出中會刪除標頭 `a,b,c`：
 ```json
 {"message": "1,2,3", "a": "1", "b": "2", "c": "3"}
 ```
 
-### Delete the source field after parsing
+### 解析後刪除來源欄位
 
-If you want to remove the original `message` field once columns are extracted, enable `delete_source`:
+若您想在擷取欄後移除原始的 `message` 欄位，請啟用 `delete_source`：
 
 ```yaml
 csv-pipeline-delete-source:
@@ -124,7 +125,7 @@ csv-pipeline-delete-source:
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 {
@@ -162,7 +163,7 @@ The documents stored in OpenSearch contain the following information:
 ```
 {% include copy.html %}
 
-If `delete_source` is set to `false`, the documents include the `message` field:
+若 `delete_source` 設為 `false`，文件會包含 `message` 欄位：
 
 ```json
 {
@@ -201,20 +202,20 @@ If `delete_source` is set to `false`, the documents include the `message` field:
 }
 ```
 
-## Metrics
+## 指標
 
-The following table describes common [Abstract processor](https://github.com/opensearch-project/data-prepper/blob/main/data-prepper-api/src/main/java/org/opensearch/dataprepper/model/processor/AbstractProcessor.java) metrics.
+下表說明常見的 [Abstract processor](https://github.com/opensearch-project/data-prepper/blob/main/data-prepper-api/src/main/java/org/opensearch/dataprepper/model/processor/AbstractProcessor.java) 指標。
 
-| Metric name | Type | Description |
+| 指標名稱 | 類型 | 說明 |
 | ------------- | ---- | -----------|
-| `recordsIn` | Counter | Metric representing the ingress of records to a pipeline component. |
-| `recordsOut` | Counter | Metric representing the egress of records from a pipeline component. |
-| `timeElapsed` | Timer | Metric representing the time elapsed during execution of a pipeline component. |
+| `recordsIn` | 計數器 | 代表記錄進入管線元件的指標。 |
+| `recordsOut` | 計數器 | 代表記錄離開管線元件的指標。 |
+| `timeElapsed` | 計時器 | 代表管線元件執行期間經過時間的指標。 |
 
-The `csv` processor includes the following custom metrics.
+`csv` 處理器包含下列自訂指標。
 
-**Counter**
+**計數器**
 
-The `csv` processor includes the following counter metrics:
+`csv` 處理器包含下列計數器指標：
 
-* `csvInvalidEvents`: The number of invalid events, usually caused by an unclosed quotation mark in the event itself. OpenSearch Data Prepper throws an exception when an invalid event is parsed. 
+* `csvInvalidEvents`：無效事件的數量，通常是因為事件本身有未閉合的引號所造成。解析無效事件時，OpenSearch Data Prepper 會擲回例外狀況。 

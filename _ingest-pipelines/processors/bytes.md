@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Bytes
 parent: Ingest processors
@@ -7,13 +8,13 @@ redirect_from:
    - /api-reference/ingest-apis/processors/bytes/
 ---
 
-# Bytes processor
+# Bytes 處理器
 
-The `bytes` processor converts a human-readable byte value to its equivalent value in bytes. The field can be a scalar or an array. If the field is a scalar, the value is converted and stored in the field. If the field is an array, all values of the array are converted.
+`bytes` 處理器會將人類可讀的位元組值轉換為其對應的位元組數值。該欄位可以是純量或陣列。若欄位為純量，則轉換該值並儲存於欄位中。若欄位為陣列，則轉換陣列中的所有值。
 
-### Syntax
+### 語法
 
-The following is the syntax for the `bytes` processor: 
+以下是 `bytes` 處理器的語法：
 
 ```json
 {
@@ -24,28 +25,28 @@ The following is the syntax for the `bytes` processor:
 ```
 {% include copy.html %}
 
-## Configuration parameters
+## 組態參數
 
-The following table lists the required and optional parameters for the `bytes` processor.  
+下表列出 `bytes` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | Required  | The name of the field containing the data to be converted. Supports [template snippets]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets). |
-`description`  | Optional  | A brief description of the processor.  |
-`if` | Optional | A condition for running the processor. |
-`ignore_failure` | Optional | Specifies whether the processor continues execution even if it encounters errors. If set to `true`, failures are ignored. Default is `false`. |
-`ignore_missing`  | Optional  | Specifies whether the processor should ignore documents that do not contain the specified field. If set to `true`, the processor does not modify the document if the field does not exist or is `null`. Default is `false`. |
-`on_failure` | Optional | A list of processors to run if the processor fails. |
-`tag` | Optional | An identifier tag for the processor. Useful for debugging in order to distinguish between processors of the same type. |
-`target_field`  | Optional  | The name of the field in which to store the parsed data. If not specified, the value will be stored in place in the `field` field. Default is `field`.  |
+`field`  | 必要  | 包含要轉換之資料的欄位名稱。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
+`description`  | 選用  | 處理器的簡短說明。  |
+`if` | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則忽略失敗。預設為 `false`。 |
+`ignore_missing`  | 選用  | 指定處理器是否應忽略不包含所指定欄位的文件。若設為 `true`，則當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。 |
+`target_field`  | 選用  | 儲存解析後資料的欄位名稱。若未指定，則該值會就地儲存於 `field` 欄位中。預設為 `field`。  |
 
-## Using the processor
+## 使用處理器
 
-Follow these steps to use the processor in a pipeline.
+請依照下列步驟在管線中使用處理器。
 
-**Step 1: Create a pipeline** 
+**步驟 1：建立管線**
 
-The following query creates a pipeline, named `file_upload`, that has one `bytes` processor. It converts the `file_size` to its byte equivalent and stores it in a new field named `file_size_bytes`:
+下列查詢會建立名為 `file_upload` 的管線，其中包含一個 `bytes` 處理器。它會將 `file_size` 轉換為其對應的位元組數值，並儲存於名為 `file_size_bytes` 的新欄位中：
 
 ```json
 PUT _ingest/pipeline/file_upload
@@ -63,12 +64,12 @@ PUT _ingest/pipeline/file_upload
 ```
 {% include copy-curl.html %}
 
-**Step 2 (Optional): Test the pipeline** 
+**步驟 2 (選用)：測試管線**
 
-It is recommended that you test your pipeline before you ingest documents.
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
-To test the pipeline, run the following query:
+若要測試管線，請執行下列查詢：
 
 ```json
 POST _ingest/pipeline/file_upload/_simulate
@@ -88,9 +89,9 @@ POST _ingest/pipeline/file_upload/_simulate
 ```
 {% include copy-curl.html %}
 
-**Response**
+**回應**
 
-The following response confirms that the pipeline is working as expected:
+下列回應確認管線運作正常：
 
 ```json
 {
@@ -115,9 +116,9 @@ The following response confirms that the pipeline is working as expected:
 }
 ```
 
-**Step 3: Ingest a document**
+**步驟 3：匯入文件**
 
-The following query ingests a document into an index named `testindex1`:
+下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=file_upload
@@ -127,9 +128,9 @@ PUT testindex1/_doc/1?pipeline=file_upload
 ```
 {% include copy-curl.html %}
 
-**Step 4 (Optional): Retrieve the document** 
+**步驟 4 (選用)：擷取文件**
 
-To retrieve the document, run the following query:
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1

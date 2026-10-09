@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Source
+title: "來源"
 parent: Metadata fields
 nav_order: 70
 redirect_from:
   - /field-types/metadata-fields/source/
 ---
 
-# Source metadata field
+# 來源中繼資料欄位
 
-The `_source` field contains the original JSON document body that was indexed. While this field is not searchable, it is stored so that the full document can be returned when executing fetch requests, such as `get` and `search`.
+`_source` 欄位包含已編製索引的原始 JSON 文件本文。雖然此欄位無法搜尋，但系統會儲存此欄位，以便在執行 `get` 和 `search` 等擷取請求時傳回完整文件。
 
-## Disabling the field
+## 停用欄位
 
-You can disable the `_source` field by setting the `enabled` parameter to `false`, as shown in the following example request:
+您可以將 `enabled` 參數設為 `false`，以停用 `_source` 欄位，如下列範例請求所示：
 
 ```json
 PUT sample-index1
@@ -27,12 +28,12 @@ PUT sample-index1
 ```
 {% include copy-curl.html %}
 
-Disabling the `_source` field can impact the availability of certain features, such as the `update`, `update_by_query`, and `reindex` APIs, as well as the ability to debug queries or aggregations using the original indexed document. To support these features without storing the `_source` field explicitly, [Derived source]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/source/#derived-source) can be used without compromising storage constraints.
+停用 `_source` 欄位可能會影響某些功能的可用性，例如 `update`、`update_by_query` 和 `reindex` API，以及使用原始已編製索引的文件對查詢或彙總進行偵錯的能力。若要在不明確儲存 `_source` 欄位的情況下支援這些功能，可以使用[衍生來源]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/source/#derived-source)，同時符合儲存空間限制。
 {: .warning}
 
-## Including or excluding fields
+## 納入或排除欄位
 
-You can selectively control the contents of the `_source` field by using the `includes` and `excludes` parameters. This allows you to prune the stored `_source` field after it is indexed but before it is saved, as shown in the following example request:
+您可以使用 `includes` 和 `excludes` 參數，選擇性地控制 `_source` 欄位的內容。這讓您能在編製索引之後、儲存之前，刪減要儲存的 `_source` 欄位內容，如下列範例請求所示：
 
 ```json
 PUT logs
@@ -53,13 +54,13 @@ PUT logs
 ```
 {% include copy-curl.html %}
 
-These fields are not stored in the `_source`, but you can still search them because the data remains indexed.
+這些欄位不會儲存在 `_source` 中，但您仍然可以搜尋這些欄位，因為資料仍保有索引。
 
-## Derived source
+## 衍生來源
 
-OpenSearch stores each ingested document in the `_source` field and also indexes individual fields for search. The `_source` field can consume significant storage space. To reduce storage use, you can configure OpenSearch to skip storing the `_source` field and instead reconstruct it dynamically when needed, for example, during `search`, `get`, `mget`, `reindex`, or `update` operations.
+OpenSearch 將每個匯入的文件儲存在 `_source` 欄位中，也會為個別欄位編製索引以供搜尋。`_source` 欄位可能會占用大量儲存空間。若要減少儲存空間用量，您可以設定 OpenSearch 略過儲存 `_source` 欄位，改為在需要時動態重建該欄位，例如在執行 `search`、`get`、`mget`、`reindex` 或 `update` 操作時。
 
-To enable derived source, configure the `derived_source` index-level setting:
+若要啟用衍生來源，請設定索引層級的 `derived_source` 設定：
 
 
 ```json
@@ -76,7 +77,7 @@ PUT sample-index1
 ```
 {% include copy-curl.html %}
 
-While skipping the `_source` field can significantly reduce storage requirements, dynamically deriving the source is generally slower than reading a stored `_source`. To avoid this overhead during search queries, do not request the `_source` field when it's not needed. You can do this in the search query by setting the `_source` parameter to `false` (demonstrated in the following example) or providing a list of `include` and `exclude` fields:
+雖然略過 `_source` 欄位可以大幅降低儲存空間需求，但動態衍生來源通常比讀取已儲存的 `_source` 更慢。若要在搜尋查詢期間避免這項額外負擔，請在不需要 `_source` 欄位時，不要請求該欄位。您可以在搜尋查詢中將 `_source` 參數設為 `false`（如下列範例所示），或提供 `include` 和 `exclude` 欄位清單來達成此目的：
 
 ```json
 GET sample-index1/_search
@@ -87,7 +88,7 @@ GET sample-index1/_search
 ```
 {% include copy-curl.html %}
 
-For real-time reads using the [Get Document API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/get-documents/) or [Multi-get Documents API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/multi-get/), which are served from the translog until [`refresh`]({{site.url}}{{site.baseurl}}/api-reference/index-apis/refresh/) happens, performance can be slower when using a derived source. This is because the document must first be ingested temporarily before the source can be reconstructed. You can avoid this additional latency by using an index-level `derived_source.translog` setting that disables generating a derived source during translog reads:
+使用 [Get Document API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/get-documents/) 或 [Multi-get Documents API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/multi-get/) 進行即時讀取時，在發生[`refresh`]({{site.url}}{{site.baseurl}}/api-reference/index-apis/refresh/) 之前，讀取請求會由交易記錄檔提供資料，此時使用衍生來源的效能可能較慢。這是因為必須先暫時匯入文件，才能重建來源。您可以使用索引層級的 `derived_source.translog` 設定，在讀取交易記錄檔期間停用衍生來源的產生，以避免這項額外延遲：
 
 ```json
 PUT sample-index1
@@ -104,13 +105,13 @@ PUT sample-index1
 }
 ```
 
-If this setting is used, you may notice differences in the `_source` content for a document depending on whether it is still in the translog or has been written to a segment.
+如果使用此設定，您可能會發現文件的 `_source` 內容會因文件仍在交易記錄檔中或已寫入分段而有所不同。
 
-### Supported fields and parameters
+### 支援的欄位與參數
 
-Derived source uses [`doc_values`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/) and [`stored_fields`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/) to reconstruct the document at query time. Because of the implementation of `doc_values`, the dynamically generated `_source` may differ in format or precision from the original ingested document.
+衍生來源使用 [`doc_values`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/) 和 [`stored_fields`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/) 在查詢時重建文件。由於 `doc_values` 的實作方式，動態產生的 `_source` 在格式或精確度上可能與原始匯入的文件不同。
 
-Derived source supports the following field types, with most of them not requiring any changes to field mappings (with some [limitations](#limitations)):
+衍生來源支援下列欄位類型，其中大多數不需要變更欄位對應（但有一些[限制](#limitations)）：
 
 - [`boolean`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/boolean/)
 - [`byte`, `double`, `float`, `half_float`, `integer`, `long`, `short`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/)
@@ -124,16 +125,16 @@ Derived source supports the following field types, with most of them not requiri
 - [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/)
 - [`wildcard`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/wildcard/)
 
-For a [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) field with derived source enabled, the field value is stored as a stored field by default. You do not need to set the `store` mapping parameter to `true`.
+對於已啟用衍生來源的 [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 欄位，欄位值預設會以儲存欄位的形式儲存。您不需要將 `store` 對應參數設為 `true`。
 {: .note}
 
-To use the [`wildcard`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/wildcard/) field with a derived source, the mapping parameter [`doc_values`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/) must be set to `true`.
+若要搭配衍生來源使用 [`wildcard`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/wildcard/) 欄位，必須將對應參數 [`doc_values`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/) 設為 `true`。
 {: .note}
 
-### Limitations
+### 限制
 
-Derived source does not support the following fields:
+衍生來源不支援下列欄位：
 
-- Fields containing [`copy_to`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/copy-to/) parameters.
-- [`keyword`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/keyword/) and [`wildcard`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/wildcard/) fields that define either the [`ignore_above`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/ignore-above/) or [`normalizer`]({{site.url}}{{site.baseurl}}/analyzers/normalizers/) parameters.
-- Nested fields.
+- 包含 [`copy_to`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/copy-to/) 參數的欄位。
+- 定義了 [`ignore_above`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/ignore-above/) 或 [`normalizer`]({{site.url}}{{site.baseurl}}/analyzers/normalizers/) 參數的 [`keyword`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/keyword/) 和 [`wildcard`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/wildcard/) 欄位。
+- 巢狀欄位。

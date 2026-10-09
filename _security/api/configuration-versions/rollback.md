@@ -1,59 +1,60 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Roll back configuration
+title: "回復組態"
 parent: Security configuration version APIs
 grand_parent: Security APIs
 nav_order: 20
 ---
 
 # Roll Back Security Configuration API
-**Introduced 3.3**
+**於 3.3 版推出**
 {: .label .label-purple }
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).
+這是實驗性功能，不建議在正式環境中使用。若要瞭解此功能的最新進展或提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/)上的討論。
 {: .warning}
 
-Restores a previous version of the security configuration. Specify a version ID to roll back to that version, or omit it to roll back to the version immediately preceding the current one.
+還原先前版本的安全性組態。指定版本 ID 即可回復至該版本，或省略版本 ID 以回復至目前版本的前一個版本。
 
-A rollback replaces the entire security configuration, including users, roles, role mappings, action groups, and tenants. Retrieve the target version with the [Get Security Configuration Versions API]({{site.url}}{{site.baseurl}}/security/api/configuration-versions/get-versions/) and confirm its contents before rolling back.
+回復會取代整個安全性組態，包括使用者、角色、角色對應、動作群組和租用戶。請使用 [Get Security Configuration Versions API]({{site.url}}{{site.baseurl}}/security/api/configuration-versions/get-versions/)擷取目標版本，並在回復前確認其內容。
 {: .warning}
 
-A rollback is itself a configuration change, so OpenSearch records a new version for it. For example, rolling back a cluster running `v6` to `v5` leaves the cluster on the `v5` configuration and adds `v7` to the version history.
+回復本身也是組態變更，因此 OpenSearch 會為此記錄一個新版本。例如，將執行 `v6` 的叢集回復至 `v5` 後，叢集會使用 `v5` 組態，並將 `v7` 新增至版本歷程記錄。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_security/api/version/rollback
 POST /_plugins/_security/api/version/rollback/{version_id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are optional.
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `version_id` | String | The version to restore, specified as `v` followed by a number, such as `v1` or `v2`. If omitted, OpenSearch restores the version immediately preceding the current one. |
+| `version_id` | 字串 | 要還原的版本，以 `v` 後接數字指定，例如 `v1` 或 `v2`。若省略，OpenSearch 會還原目前版本的前一個版本。 |
 
-## Example request
+## 請求範例
 
-The following request restores the preceding version:
+下列請求會還原前一個版本：
 
 ```json
 POST /_plugins/_security/api/version/rollback
 ```
 {% include copy-curl.html security=true %}
 
-The following request restores the `v2` version:
+下列請求會還原 `v2` 版本：
 
 ```json
 POST /_plugins/_security/api/version/rollback/v2
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 回應範例
 
-The response names the version that OpenSearch restored. A cluster running `v6` returns the following response when rolling back to the preceding version:
+回應會指出 OpenSearch 還原的版本。執行 `v6` 的叢集在回復至前一個版本時，會傳回下列回應：
 
 ```json
 {
@@ -62,7 +63,7 @@ The response names the version that OpenSearch restored. A cluster running `v6` 
 }
 ```
 
-A request that names `v2` returns the following response:
+指定 `v2` 的請求會傳回下列回應：
 
 ```json
 {
@@ -71,7 +72,7 @@ A request that names `v2` returns the following response:
 }
 ```
 
-If the requested version does not exist, OpenSearch returns `404 Not Found` and leaves the configuration unchanged:
+若請求的版本不存在，OpenSearch 會傳回 `404 Not Found`，並維持組態不變：
 
 ```json
 {
@@ -80,11 +81,11 @@ If the requested version does not exist, OpenSearch returns `404 Not Found` and 
 }
 ```
 
-## Response body fields
+## 回應本文欄位
 
-The response body is a JSON object with the following fields.
+回應本文是具有下列欄位的 JSON 物件。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `status` | String | The status of the rollback. `OK` indicates that OpenSearch restored the version. |
-| `message` | String | A message naming the version that OpenSearch restored. |
+| `status` | 字串 | 回復的狀態。`OK` 表示 OpenSearch 已還原該版本。 |
+| `message` | 字串 | 指出 OpenSearch 還原版本的訊息。 |

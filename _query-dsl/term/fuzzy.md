@@ -1,22 +1,23 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Fuzzy
+title: "模糊查詢"
 parent: Term-level queries
 nav_order: 80
 ---
 
-# Fuzzy query
+# 模糊查詢
 
-A fuzzy query searches for documents containing terms that are similar to the search term within the maximum allowed [Damerau–Levenshtein distance](https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance). The Damerau–Levenshtein distance measures the number of one-character changes needed to change one term to another term. These changes include:
+模糊查詢會搜尋包含與搜尋詞彙相似、且在允許的最大 [Damerau–Levenshtein 距離](https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance)範圍內之詞元的文件。Damerau–Levenshtein 距離衡量將一個詞元變更為另一個詞元所需的單一字元變更次數。這些變更包括：
 
-- Replacements: **c**at to **b**at
-- Insertions: cat to cat**s**
-- Deletions: **c**at to at
-- Transpositions: **ca**t to **ac**t
+- 替換：**c**at 變成 **b**at
+- 插入：cat 變成 cat**s**
+- 刪除：**c**at 變成 at
+- 交換：**ca**t 變成 **ac**t
 
-A fuzzy query creates a list of all possible expansions of the search term that fall within the Damerau-Levenshtein distance. You can specify the maximum number of such expansions in the `max_expansions` field. The query then searches for documents that match any of the expansions. If you set the `transpositions` parameter to `false`, then your search will use the classic [Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance). 
+模糊查詢會建立一份清單，列出在 Damerau-Levenshtein 距離範圍內搜尋詞彙的所有可能展開形式。您可以在 `max_expansions` 欄位中指定此類展開形式的最大數量。查詢接著會搜尋符合任何展開形式的文件。如果您將 `transpositions` 參數設為 `false`，則您的搜尋將使用經典的 [Levenshtein 距離](https://en.wikipedia.org/wiki/Levenshtein_distance)。 
 
-The following example query searches for the speaker `HALET` (misspelled `HAMLET`). The maximum edit distance is not specified, so the default `AUTO` edit distance is used:
+以下範例查詢搜尋講者 `HALET`（`HAMLET` 的誤拼）。由於未指定最大編輯距離，因此使用預設的 `AUTO` 編輯距離：
 
 ```json
 GET shakespeare/_search
@@ -32,9 +33,9 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-The response contains all documents in which `HAMLET` is the speaker.
+回應包含所有 `HAMLET` 為講者的文件。
 
-The following example query searches for the word `HALET` with advanced parameters:
+以下範例查詢使用進階參數搜尋單字 `HALET`：
 
 ```json
 GET shakespeare/_search
@@ -55,9 +56,9 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-The query accepts the name of the field (`<field>`) as a top-level parameter:
+查詢接受欄位名稱（`<field>`）作為頂層參數：
 
 ```json
 GET _search
@@ -74,20 +75,20 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-The `<field>` accepts the following parameters. All parameters except `value` are optional.
+`<field>` 接受下列參數。除 `value` 以外，所有參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`value` | String | The term to search for in the field specified in `<field>`.
-`boost` | Floating-point | A floating-point value that specifies the weight of this field toward the relevance score. Values above 1.0 increase the field’s relevance. Values between 0.0 and 1.0 decrease the field’s relevance. Default is 1.0.
-`fuzziness` | `AUTO`, `0`, or a positive integer | The number of character edits (insert, delete, substitute) needed to change one word to another when determining whether a term matched a value. For example, the distance between `wined` and `wind` is 1. The default, `AUTO`, dynamically selects the edit distance based on the search term's length. You can customize the thresholds using the syntax `AUTO:[low],[high]`, where `low` and `high` define the character length boundaries. When omitted, OpenSearch uses `AUTO:3,6` as the default, which applies the following rules: <br>- Terms containing 0--2 characters: Requires an exact match (0 edits). <br>- Terms containing 3--5 characters: Allows a maximum of 1 edit. <br>- Terms containing 6 or more characters: Allows a maximum of 2 edits. <br>For example, `AUTO:4,7` requires exact matches for terms containing 0--3 characters, allows a maximum of 1 edit for terms containing 4--6 characters, and allows a maximum of 2 edits for terms containing 7 or more characters. Using `AUTO` is recommended for most scenarios.
-`max_expansions` | Positive integer |  The maximum number of terms to which the query can expand. Fuzzy queries “expand to” a number of matching terms that are within the distance specified in `fuzziness`. Then OpenSearch tries to match those terms. Default is `50`.
-`prefix_length` | Non-negative integer | The number of leading characters that are not considered in fuzziness. Default is `0`.
-`rewrite` | String | Determines how OpenSearch rewrites and scores multi-term queries. Valid values are `constant_score`, `scoring_boolean`, `constant_score_boolean`, `top_terms_N`, `top_terms_boost_N`, and `top_terms_blended_freqs_N`. Default is `constant_score`.
-`transpositions` | Boolean | Specifies whether to allow transpositions of two adjacent characters (`ab` to `ba`) as edits. Default is `true`.
+`value` | 字串 | 要在 `<field>` 所指定欄位中搜尋的詞彙。
+`boost` | 浮點數 | 指定此欄位對相關性分數權重的浮點數值。高於 1.0 的值會提高該欄位的相關性；介於 0.0 與 1.0 之間的值會降低該欄位的相關性。預設為 1.0。
+`fuzziness` | `AUTO`、`0` 或正整數 | 在判斷詞彙是否符合某個值時，將一個單字變更為另一個單字所需的字元編輯次數（插入、刪除、替換）。例如，`wined` 與 `wind` 之間的距離為 1。預設值 `AUTO` 會根據搜尋詞彙的長度動態選取編輯距離。您可以使用 `AUTO:[low],[high]` 語法自訂門檻，其中 `low` 和 `high` 定義字元長度邊界。若省略，OpenSearch 會使用 `AUTO:3,6` 作為預設值，並套用下列規則：<br>- 包含 0--2 個字元的詞彙：需要完全相符（0 次編輯）。<br>- 包含 3--5 個字元的詞彙：允許最多 1 次編輯。<br>- 包含 6 個以上字元的詞彙：允許最多 2 次編輯。<br>例如，`AUTO:4,7` 要求包含 0--3 個字元的詞彙必須完全相符，包含 4--6 個字元的詞彙允許最多 1 次編輯，包含 7 個以上字元的詞彙允許最多 2 次編輯。大多數情境建議使用 `AUTO`。
+`max_expansions` | 正整數 | 查詢可展開的最大詞彙數量。模糊查詢會「展開至」多個在 `fuzziness` 所指定距離內的相符詞彙，然後 OpenSearch 會嘗試比對這些詞彙。預設為 `50`。
+`prefix_length` | 非負整數 | 不納入模糊比對考量的前置字元數量。預設為 `0`。
+`rewrite` | 字串 | 決定 OpenSearch 如何改寫多詞彙查詢並計分。有效值為 `constant_score`、`scoring_boolean`、`constant_score_boolean`、`top_terms_N`、`top_terms_boost_N` 和 `top_terms_blended_freqs_N`。預設為 `constant_score`。
+`transpositions` | 布林值 | 指定是否允許將兩個相鄰字元的交換（`ab` 變成 `ba`）視為一次編輯。預設為 `true`。
 
-Specifying a large value in `max_expansions` can lead to poor performance, especially if `prefix_length` is set to `0`, because of the large number of variations of the word that OpenSearch tries to match.
+在 `max_expansions` 中指定過大的值可能導致效能不佳，尤其是當 `prefix_length` 設為 `0` 時，因為 OpenSearch 會嘗試比對該單字的大量變化形式。
 {: .warning}
 
-If [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/index/#expensive-queries) is set to `false`, then fuzzy queries are not executed.
+如果 [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/index/#expensive-queries) 設為 `false`，則不會執行模糊查詢。
 {: .important}

@@ -1,32 +1,33 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Reranking by a field
+title: "依欄位重新排序"
 parent: Reranking search results
 grand_parent: Optimizing search quality
 has_children: false
 nav_order: 20
 ---
 
-# Reranking search results by a field
+# 依欄位重新排序搜尋結果
 **Introduced 2.18**
 {: .label .label-purple }
 
-You can use a `by_field` rerank type to rerank search results by a document field. Reranking search results by a field is useful if a model has already run and produced a numerical score for your documents or if a previous search response processor was applied and you want to rerank documents differently based on an aggregated field.
+您可以使用 `by_field` rerank 類型，依文件欄位重新排序搜尋結果。當模型已經執行並為您的文件產生數值分數，或已套用先前的搜尋回應處理器，而您想根據彙總欄位以不同方式重新排序文件時，依欄位重新排序搜尋結果就非常實用。
 
-To implement reranking, you need to configure a [search pipeline]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/) that runs at search time. The search pipeline intercepts search results and applies the [`rerank` processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) to them. The `rerank` processor evaluates the search results and sorts them based on the new scores obtained from a document field. 
+若要實作重新排序，您需要設定一個在搜尋時執行的[搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/)。搜尋管線會攔截搜尋結果，並對其套用 [`rerank` 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)。`rerank` 處理器會評估搜尋結果，並根據從文件欄位取得的新分數進行排序。
 
-## Running a search with reranking
+## 執行含重新排序的搜尋
 
-To run a search with reranking, follow these steps:
+若要執行含重新排序的搜尋，請依照下列步驟：
 
-1. [Configure a search pipeline](#step-1-configure-a-search-pipeline).
-1. [Create an index for ingestion](#step-2-create-an-index-for-ingestion).
-1. [Ingest documents into the index](#step-3-ingest-documents-into-the-index).
-1. [Search using reranking](#step-4-search-using-reranking).
+1. [設定搜尋管線](#step-1-configure-a-search-pipeline)。
+1. [建立用於匯入的索引](#step-2-create-an-index-for-ingestion)。
+1. [將文件匯入索引](#step-3-ingest-documents-into-the-index)。
+1. [使用重新排序進行搜尋](#step-4-search-using-reranking)。
 
-## Step 1: Configure a search pipeline
+## 步驟 1：設定搜尋管線
 
-Configure a search pipeline with a [`rerank` processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) and specify the `by_field` rerank type. The pipeline sorts by the `reviews.stars` field (specified by a complete dot path to the field) and returns the original query scores for all documents along with their new scores:
+設定一個包含 [`rerank` 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) 的搜尋管線，並指定 `by_field` rerank 類型。管線會依 `reviews.stars` 欄位排序（以完整的點路徑指定該欄位），並傳回所有文件的原始查詢分數及其新分數：
 
 ```json
 PUT /_search/pipeline/rerank_byfield_pipeline
@@ -45,13 +46,13 @@ PUT /_search/pipeline/rerank_byfield_pipeline
 ```
 {% include copy-curl.html %}
 
-For more information about the request fields, see [Request fields]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/#request-body-fields).
+如需請求欄位的更多資訊，請參閱 [Request fields]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/#request-body-fields)。
 
-When `keep_previous_score` is `true`, the pre-rerank score is stored in `previous_score` by default. Use `previous_score_field` to choose a different field name if `previous_score` already exists in your documents.
+當 `keep_previous_score` 為 `true` 時，重新排序前的分數預設會儲存在 `previous_score` 中。如果 `previous_score` 已存在於您的文件中，請使用 `previous_score_field` 選擇不同的欄位名稱。
 
-## Step 2: Create an index for ingestion
+## 步驟 2：建立用於匯入的索引
 
-In order to use the `rerank` processor defined in your pipeline, create an OpenSearch index and add the pipeline created in the previous step as the default pipeline:
+若要使用管線中定義的 `rerank` 處理器，請建立一個 OpenSearch 索引，並將上一步建立的管線新增為預設管線：
 
 ```json
 PUT /book-index
@@ -86,9 +87,9 @@ PUT /book-index
 ```
 {% include copy-curl.html %}
 
-## Step 3: Ingest documents into the index
+## 步驟 3：將文件匯入索引
 
-To ingest documents into the index created in the previous step, send the following bulk request:
+若要將文件匯入上一步建立的索引，請傳送下列大量請求：
 
 ```json
 POST /_bulk
@@ -104,9 +105,9 @@ POST /_bulk
 ```
 {% include copy-curl.html %}
 
-## Step 4: Search using reranking
+## 步驟 4：使用重新排序進行搜尋
 
-As an example, run a `match_all` query on your index:
+作為範例，請在您的索引上執行 `match_all` 查詢：
 
 ```json
 POST /book-index/_search
@@ -118,7 +119,7 @@ POST /book-index/_search
 ```
 {% include copy-curl.html %}
 
-The response contains documents sorted in descending order based on the `reviews.stars` field. Each document contains the original query score in the `previous_score` field:
+回應包含依 `reviews.stars` 欄位以遞減順序排序的文件。每份文件在 `previous_score` 欄位中包含原始查詢分數：
 
 ```json
 {
@@ -205,7 +206,7 @@ The response contains documents sorted in descending order based on the `reviews
 }
 ```
 
-## Next steps
+## 後續步驟
 
-- Learn more about the [`rerank` processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/).
-- See a comprehensive example of [reranking by a field using an externally hosted cross-encoder model]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-cross-encoder/).
+- 進一步了解 [`rerank` 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)。
+- 查看使用外部託管交叉編碼器模型依欄位重新排序的[完整範例]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-cross-encoder/)。

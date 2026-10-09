@@ -1,28 +1,29 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Per document monitors
+title: "逐文件監視器"
 nav_order: 20
 parent: Monitors
 grand_parent: Alerting
 has_children: false
 ---
 
-# Per document monitors
-Introduced 2.0
+# 逐文件監視器
+於 2.0 版推出
 {: .label .label-purple }
 
-Per document monitors are a type of alert monitor that can be used to identify and alert on specific documents in an OpenSearch index. For example, you can use the monitor to:
+逐文件監視器是一種警示監視器，可用來識別 OpenSearch 索引中的特定文件並對其發出警示。例如，您可以使用此監視器來：
 
-- Detect corrupted data or unauthorized changes.
-- Enforce data quality policies, such as ensuring all documents contain a certain field or that values in a field are within a certain range. 
-- Track changes to a specific document over time, which can be helpful for auditing and compliance purposes
+- 偵測損毀的資料或未經授權的變更。
+- 強制執行資料品質政策，例如確保所有文件都包含特定欄位，或欄位中的值位於特定範圍內。
+- 追蹤特定文件隨時間的變化，這對稽核與合規用途很有幫助。
 
-Per document monitors do not support cross-cluster searching.
+逐文件監視器不支援跨叢集搜尋。
 {: .note} 
 
-## Defining queries
+## 定義查詢
 
-Per document monitors allow you to define up to 10 queries that compare a selected field with a desired value. You can define supported field data types using the following operators:
+逐文件監視器允許您定義最多 10 個查詢，將所選欄位與期望的值進行比較。您可以使用下列運算子來定義支援的欄位資料類型：
 
 - `is` 
 - `is not`
@@ -31,25 +32,25 @@ Per document monitors allow you to define up to 10 queries that compare a select
 - `is less than`
 - `is less than equal`
 
-You can query each [trigger]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/triggers/) using up to 10 tags, adding the tag as a single trigger condition instead of specifying a single query. The [Alerting plugin]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/) processes the trigger conditions from all queries as a logical `OR` operation, so if any of the query conditions are met, it triggers an alert. The Alerting plugin then tells the [Notifications plugin]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/index/) to send the alert notification to a channel.
+您可以為每個[觸發條件]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/triggers/)使用最多 10 個標籤，將標籤新增為單一觸發條件，而不是指定單一查詢。[Alerting 外掛程式]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/)會將所有查詢的觸發條件視為邏輯 `OR` 運算來處理，因此只要符合任一查詢條件，就會觸發警示。接著 Alerting 外掛程式會通知 [Notifications 外掛程式]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/index/)將警示通知傳送至頻道。
 
-You can only use _tags_---that is, labels that can be applied to multiple queries to combine them with the logical `OR` operation---in a per document monitor.
+您只能在逐文件監視器中使用 _標籤_，也就是可套用至多個查詢、以邏輯 `OR` 運算將它們合併的標記。
 {: .important}
 
-## Document findings
+## 文件發現結果
 
-The Alerting plugin creates a list of _Findings_ that contain metadata about which document matches each query. A _Finding_ is a record of a document identified by the per document monitor query as meeting the alert condition. Key components of a finding include the document ID, timestamp, alert condition details. Findings are stored in the Findings index, `.opensearch-alerting-finding*`. 
+Alerting 外掛程式會建立一份 _發現結果_ 清單，其中包含哪些文件符合每個查詢的中繼資料。_發現結果_ 是由逐文件監視器查詢識別為符合警示條件之文件的記錄。發現結果的關鍵元件包括文件 ID、時間戳記與警示條件詳細資料。發現結果會儲存在發現結果索引 `.opensearch-alerting-finding*` 中。
 
-Security Analytics can use the findings data to keep track of and analyze the query data separately from the alert processes. See [Working with findings]({{site.url}}{{site.baseurl}}/security-analytics/usage/findings/) to learn more.
+Security Analytics 可以使用發現結果資料，將查詢資料與警示程序分開追蹤與分析。若要了解更多資訊，請參閱[使用發現結果]({{site.url}}{{site.baseurl}}/security-analytics/usage/findings/)。
 {: .note}
 
-The Alerting API also provides a _document-level monitor_ that programmatically accomplishes the same function as the _per document monitor_ in OpenSearch Dashboards. See [Document-level monitors]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/api/#document-level-monitors) to learn more.
+Alerting API 也提供 _document-level monitor_，可透過程式方式達成與 OpenSearch Dashboards 中 _逐文件監視器_ 相同的功能。若要了解更多資訊，請參閱[文件層級監視器]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/api/#document-level-monitors)。
 
-To prevent a large volume of findings in a high-ingestion cluster, configuring alert notifications for each finding is not recommended unless rules are well defined.
+為避免在高匯入量的叢集中產生大量發現結果，除非規則已妥善定義，否則不建議為每個發現結果設定警示通知。
 {: .important}
 
-The following metadata is provided for each document findings entry:
+每個文件發現結果項目都會提供下列中繼資料：
 
-* **Document**: The document ID and index name. For example: `Re5akdirhj3fl | test-logs-index`.
-* **Query**: The query name that matched the document.
-* **Time found**: The timestamp that indicates when the document was found during the runtime.
+* **Document**：文件 ID 與索引名稱。例如：`Re5akdirhj3fl | test-logs-index`。
+* **Query**：符合該文件的查詢名稱。
+* **Time found**：表示在執行期間何時找到該文件的時間戳記。

@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: API
 nav_order: 50
@@ -9,27 +10,27 @@ redirect_from:
 
 # Notifications API
 
-If you want to programmatically define your notification channels and sources for versioning and reuse, you can use the Notifications REST API to define, configure, and delete notification channels and send test messages.
+如果您想以程式方式定義通知管道與來源，以便進行版本管理與重複使用，可以使用 Notifications REST API 定義、設定及刪除通知管道，並傳送測試訊息。
 
 ---
 
-#### Table of contents
-1. TOC
+#### 目錄
+1. 目錄
 {:toc}
 
 ---
 
-## List supported channel configurations
+## 列出支援的管道組態
 
-To retrieve a list of all supported notification configuration types, send a GET request to the `features` resource.
+若要擷取所有支援的通知組態類型清單，請將 GET 請求傳送至 `features` 資源。
 
-#### Example request
+#### 請求範例
 
 ```json
 GET /_plugins/_notifications/features
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -50,17 +51,17 @@ GET /_plugins/_notifications/features
 }
 ```
 
-## List all notification channels
+## 列出所有通知管道
 
-To retrieve a list of all notification channels, send a GET request to the `channels` resource.
+若要擷取所有通知管道的清單，請將 GET 請求傳送至 `channels` 資源。
 
-#### Example request
+#### 請求範例
 
 ```json
 GET /_plugins/_notifications/channels
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -86,17 +87,17 @@ GET /_plugins/_notifications/channels
 }
 ```
 
-## List all notification configurations
+## 列出所有通知組態
 
-To retrieve a list of all notification configurations, send a GET request to the `configs` resource.
+若要擷取所有通知組態的清單，請將 GET 請求傳送至 `configs` 資源。
 
-#### Example request
+#### 請求範例
 
 ```json
 GET _plugins/_notifications/configs
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -136,48 +137,48 @@ GET _plugins/_notifications/configs
 }
 ```
 
-To filter the notification configuration types this request returns, you can refine your query with the following optional path parameters.
+若要篩選此請求傳回的通知組態類型，您可以使用下列選用的路徑參數來縮小查詢範圍。
 
-Parameter	| Description
+參數	| 說明
 :--- | :---
-`config_id` | Specifies the channel identifier.
-`config_id_list` | Specifies a comma-separated list of channel IDs.
-`from_index` | The starting index to search from.
-`max_items` | The maximum amount of items to return in your request.
-`sort_order` | Specifies the direction to sort results in. Valid options are `asc` and `desc`.
-`sort_field` | Field to sort results with.
-`last_updated_time_ms` | The Unix time in milliseconds of when the channel was last updated.
-`created_time_ms` | The Unix time in milliseconds of when the channel was created.
-`is_enabled` | Indicates whether the channel is enabled.
-`config_type` | The channel type. Valid values are `sns`, `slack`, `chime`, `webhook`, `smtp_account`, `ses_account`, `email_group`, `email`, and `microsoft_teams`.
-name | The channel name.
-description	| The channel description.
-`email.email_account_id` | The sender email addresses the channel uses.
-`email.email_group_id_list` | The email groups the channel uses.
-`email.recipient_list` | The channel recipient list.
-`email_group.recipient_list` | The channel list of email recipient groups.
-`smtp_account.method` | The email encryption method.
-`slack.url`	| The Slack incoming webhook URL. Must contain `hooks.slack.com/services/` or `hooks.gov-slack.com/services/`.
-`chime.url`	| The Amazon Chime incoming webhook URL. Must contain `hooks.chime.aws/incomingwebhooks/` and a `?token=` parameter.
-`webhook.url`	| The webhook URL.
-`smtp_account.host`	| The domain of the SMTP account.
-`smtp_account.from_address`	| The email account's sender address.
-`smtp_account.method` | The SMTP account's encryption method.
-`sns.topic_arn`	| The Amazon Simple Notification Service (SNS) topic's ARN.
-`sns.role_arn` | The Amazon SNS topic's role ARN.
-`ses_account.region` | The Amazon Simple Email Service (SES) account's AWS Region.
-`ses_account.role_arn` | The Amazon SES account's role ARN.
-`ses_account.from_address` | The Amazon SES account's sender email address.
-`microsoft_teams.url` | The Microsoft Teams webhook URL. The URL's domain must be `webhook.office.com`, `powerplatform.com`, or `logic.azure.com`.
+`config_id` | 指定管道識別碼。
+`config_id_list` | 指定以逗號分隔的管道 ID 清單。
+`from_index` | 搜尋的起始索引。
+`max_items` | 請求中要傳回的項目數量上限。
+`sort_order` | 指定結果的排序方向。有效選項為 `asc` 和 `desc`。
+`sort_field` | 用於排序結果的欄位。
+`last_updated_time_ms` | 管道上次更新時的 Unix 時間，以毫秒為單位。
+`created_time_ms` | 管道建立時的 Unix 時間，以毫秒為單位。
+`is_enabled` | 表示管道是否已啟用。
+`config_type` | 管道類型。有效值為 `sns`、`slack`、`chime`、`webhook`、`smtp_account`、`ses_account`、`email_group`、`email` 和 `microsoft_teams`。
+name | 管道名稱。
+description	| 管道說明。
+`email.email_account_id` | 管道使用的寄件者電子郵件地址。
+`email.email_group_id_list` | 管道使用的電子郵件群組。
+`email.recipient_list` | 管道的收件者清單。
+`email_group.recipient_list` | 管道的電子郵件收件者群組清單。
+`smtp_account.method` | 電子郵件加密方法。
+`slack.url`	| Slack 傳入 webhook URL。必須包含 `hooks.slack.com/services/` 或 `hooks.gov-slack.com/services/`。
+`chime.url`	| Amazon Chime 傳入 webhook URL。必須包含 `hooks.chime.aws/incomingwebhooks/` 和 `?token=` 參數。
+`webhook.url`	| webhook URL。
+`smtp_account.host`	| SMTP 帳戶的網域。
+`smtp_account.from_address`	| 電子郵件帳戶的寄件者地址。
+`smtp_account.method` | SMTP 帳戶的加密方法。
+`sns.topic_arn`	| Amazon Simple Notification Service（SNS）主題的 ARN。
+`sns.role_arn` | Amazon SNS 主題的角色 ARN。
+`ses_account.region` | Amazon Simple Email Service（SES）帳戶的 AWS 區域。
+`ses_account.role_arn` | Amazon SES 帳戶的角色 ARN。
+`ses_account.from_address` | Amazon SES 帳戶的寄件者電子郵件地址。
+`microsoft_teams.url` | Microsoft Teams webhook URL。URL 的網域必須為 `webhook.office.com`、`powerplatform.com` 或 `logic.azure.com`。
 
-## Create channel configuration
+## 建立管道組態
 
-To create a notification channel configuration, send a POST request to the `configs` resource.
+若要建立通知管道組態，請將 POST 請求傳送至 `configs` 資源。
 
-**Note:** If you specify a `config_id` that already exists, the request will fail with a 409 Conflict error. In this case, either choose a different `config_id` or use the [Update channel configuration](#update-channel-configuration) API with a PUT request to modify the existing channel. If you omit the `config_id`, OpenSearch will generate one automatically.
+**注意：** 如果您指定已存在的 `config_id`，請求將失敗並傳回 409 Conflict 錯誤。在此情況下，請選擇不同的 `config_id`，或使用 [更新管道組態](#update-channel-configuration) API 搭配 PUT 請求來修改現有管道。如果您省略 `config_id`，OpenSearch 會自動產生一個。
 {: .note}
 
-#### Example request
+#### 請求範例
 
 ```json
 POST /_plugins/_notifications/configs/
@@ -196,18 +197,18 @@ POST /_plugins/_notifications/configs/
 }
 ```
 
-The create channel API operation accepts the following fields in its request body:
+建立管道的 API 操作在請求本文中接受下列欄位：
 
-Field |	Data type |	Description |	Required
+欄位 |	資料類型 |	說明 |	必要
 :--- | :--- | :--- | :---
-`config_id` | String | The configuration's custom ID. | No
-`config` | Object |	Contains all relevant information, such as channel name, configuration type, and plugin source. |	Yes
-name | String |	Name of the channel. | Yes
-description |	String | The channel's description. | No
-`config_type` |	String | The destination of your notification. Valid options are `sns`, `slack`, `chime`, `webhook`, `smtp_account`, `ses_account`, `email_group`, `email`, and `microsoft_teams`. | Yes
-`is_enabled` | Boolean | Indicates whether the channel is enabled for sending and receiving notifications. Default is `true`.	| No
+`config_id` | 字串 | 組態的自訂 ID。 | 否
+`config` | 物件 |	包含所有相關資訊，例如管道名稱、組態類型及外掛程式來源。 |	是
+name | 字串 |	管道名稱。 | 是
+description |	字串 | 管道的說明。 | 否
+`config_type` |	字串 | 您的通知目的地。有效選項為 `sns`、`slack`、`chime`、`webhook`、`smtp_account`、`ses_account`、`email_group`、`email` 和 `microsoft_teams`。 | 是
+`is_enabled` | 布林值 | 表示管道是否已啟用以傳送及接收通知。預設為 `true`。	| 否
 
-The create channel operation accepts multiple `config_types` as possible notification destinations, so follow the format for your preferred `config_type`.
+建立管道操作接受多種 `config_types` 作為可能的通知目的地，因此請遵循您偏好的 `config_type` 格式。
 
 ```json
 "sns": {
@@ -258,7 +259,7 @@ The create channel operation accepts multiple `config_types` as possible notific
 }
 ```
 
-The following example demonstrates how to create a channel using email as a `config_type`:
+下列範例示範如何使用電子郵件作為 `config_type` 來建立管道：
 
 ```json
 POST /_plugins/_notifications/configs/
@@ -282,7 +283,7 @@ POST /_plugins/_notifications/configs/
 }
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -291,17 +292,17 @@ POST /_plugins/_notifications/configs/
 ```
 
 
-## Get channel configuration
+## 取得管道組態
 
-To get a channel configuration by `config_id`, send a GET request and specify the `config_id` as a path parameter.
+若要依 `config_id` 取得管道組態，請傳送 GET 請求，並將 `config_id` 指定為路徑參數。
 
-#### Example request
+#### 請求範例
 
 ```json
 GET _plugins/_notifications/configs/{config_id}
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -328,14 +329,14 @@ GET _plugins/_notifications/configs/{config_id}
 ```
 
 
-## Update channel configuration
+## 更新管道組態
 
-To update an existing channel configuration, send a PUT request to the `configs` resource and specify the channel's `config_id` as a path parameter. Specify the new configuration details in the request body.
+若要更新現有管道組態，請將 PUT 請求傳送至 `configs` 資源，並將管道的 `config_id` 指定為路徑參數。在請求本文中指定新的組態詳細資訊。
 
-**Note**: The PUT method only updates existing configurations. To create a new channel, use the [Create channel configuration](#create-channel-configuration) API with a POST request. If you try to use PUT with a nonexistent `config_id`, the request will fail.
+**注意**：PUT 方法僅更新現有組態。若要建立新管道，請使用 [建立管道組態](#create-channel-configuration) API 搭配 POST 請求。如果您嘗試對不存在的 `config_id` 使用 PUT，請求將失敗。
 {: .note}
 
-#### Example request
+#### 請求範例
 
 ```json
 PUT _plugins/_notifications/configs/{config_id}
@@ -352,7 +353,7 @@ PUT _plugins/_notifications/configs/{config_id}
 }
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -361,17 +362,17 @@ PUT _plugins/_notifications/configs/{config_id}
 ```
 
 
-## Delete channel configuration
+## 刪除管道組態
 
-To delete a channel configuration, send a DELETE request to the `configs` resource and specify the `config_id` as a path parameter.
+若要刪除管道組態，請將 DELETE 請求傳送至 `configs` 資源，並將 `config_id` 指定為路徑參數。
 
-#### Example request
+#### 請求範例
 
 ```json
 DELETE /_plugins/_notifications/configs/{config_id}
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -381,15 +382,15 @@ DELETE /_plugins/_notifications/configs/{config_id}
 }
 ```
 
-You can also submit a comma-separated list of channel IDs you want to delete, and OpenSearch deletes all of the specified notification channels.
+您也可以提交以逗號分隔的管道 ID 清單，列出您要刪除的管道，OpenSearch 會刪除所有指定的通知管道。
 
-#### Example request
+#### 請求範例
 
 ```json
 DELETE /_plugins/_notifications/configs/?config_id_list={config_id1},{config_id2},{config_id3}...
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {
@@ -402,17 +403,17 @@ DELETE /_plugins/_notifications/configs/?config_id_list={config_id1},{config_id2
 ```
 
 
-## Send test notification
+## 傳送測試通知
 
-To send a test notification, send a POST request to `/feature/test/` and specify the channel configuration's `config_id` as a path parameter.
+若要傳送測試通知，請將 POST 請求傳送至 `/feature/test/`，並將管道組態的 `config_id` 指定為路徑參數。
 
-#### Example request
+#### 請求範例
 
 ```json
 POST _plugins/_notifications/feature/test/{config_id}
 ```
 
-#### Example response
+#### 回應範例
 
 ```json
 {

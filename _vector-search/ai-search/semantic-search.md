@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Semantic search
+title: "語意搜尋"
 parent: AI search
 nav_order: 35
 has_children: false
@@ -9,25 +10,25 @@ redirect_from:
   - /search-plugins/semantic-search/
 ---
 
-# Semantic search
+# 語意搜尋
 
-Semantic search considers the context and intent of a query. In OpenSearch, semantic search is facilitated by text embedding models. Semantic search creates a dense vector (a list of floats) and ingests data into a vector index. 
+語意搜尋會考量查詢的上下文與意圖。在 OpenSearch 中，語意搜尋是透過文字嵌入模型來實現。語意搜尋會建立稠密向量（一連串的浮點數），並將資料匯入向量索引。
 
-**PREREQUISITE**<br>
-Before using semantic search, you must set up a text embedding model. For more information, see [Choosing a model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model).
+**先決條件**<br>
+在使用語意搜尋之前，您必須設定文字嵌入模型。如需詳細資訊，請參閱[選擇模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model)。
 {: .note}
 
-## Configuring semantic search
+## 設定語意搜尋
 
-There are two ways to configure semantic search:
+設定語意搜尋有兩種方式：
 
-- [**Automated workflow**](#automated-workflow) (Recommended for quick setup): Automatically create an ingest pipeline and index with minimal configuration.
-- [**Manual setup**](#manual-setup) (Recommended for custom configurations): Manually configure each component for greater flexibility and control.
-- [**Using a semantic field**](#using-a-semantic-field) (Recommended for quick setup with optional customization): Manually configure the index using `semantic` fields to simplify the setup process while still allowing for some level of configuration.
+- [**自動化工作流程**](#automated-workflow)（建議用於快速設定）：以最少的組態自動建立資料匯入管線與索引。
+- [**手動設定**](#manual-setup)（建議用於自訂組態）：手動設定每個元件，以獲得更大的彈性與控制權。
+- [**使用語意欄位**](#using-a-semantic-field)（建議用於可選自訂的快速設定）：使用 `semantic` 欄位手動設定索引，以簡化設定流程，同時仍允許某種程度的組態。
 
-## Automated workflow
+## 自動化工作流程
 
-OpenSearch provides a [workflow template]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/#semantic-search) that automatically creates both an ingest pipeline and an index. You must provide the model ID for the configured model when creating a workflow. Review the semantic search workflow template [defaults](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-defaults.json) to determine whether you need to update any of the parameters. For example, if the model dimensionality is different from the default (`1024`), specify the dimensionality of your model in the `output_dimension` parameter. To create the default semantic search workflow, send the following request:
+OpenSearch 提供 [工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/#semantic-search)，會自動建立資料匯入管線與索引。建立工作流程時，您必須提供已設定模型的模型 ID。請檢閱語意搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-defaults.json)，以判斷是否需要更新任何參數。例如，若模型維度與預設值（`1024`）不同，請在 `output_dimension` 參數中指定模型的維度。若要建立預設的語意搜尋工作流程，請傳送下列請求：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=semantic_search&provision=true
@@ -37,7 +38,7 @@ POST /_plugins/_flow_framework/workflow?use_case=semantic_search&provision=true
 ```
 {% include copy-curl.html %}
 
-OpenSearch responds with a workflow ID for the created workflow:
+OpenSearch 會回應所建立工作流程的工作流程 ID：
 
 ```json
 {
@@ -45,34 +46,34 @@ OpenSearch responds with a workflow ID for the created workflow:
 }
 ```
 
-To check the workflow status, send the following request:
+若要檢查工作流程狀態，請傳送下列請求：
 
 ```json
 GET /_plugins/_flow_framework/workflow/U_nMXJUBq_4FYQzMOS4B/_status
 ```
 {% include copy-curl.html %}
 
-Once the workflow completes, the `state` changes to `COMPLETED`. The workflow creates the following components:
+工作流程完成後，`state` 會變更為 `COMPLETED`。此工作流程會建立下列元件：
 
-- An ingest pipeline named `nlp-ingest-pipeline`
-- An index named `my-nlp-index` 
+- 名為 `nlp-ingest-pipeline` 的資料匯入管線
+- 名為 `my-nlp-index` 的索引
 
-You can now continue with [steps 3 and 4](#step-3-ingest-documents-into-the-index) to ingest documents into the index and search the index.
+您現在可以繼續進行[步驟 3 和 4](#step-3-ingest-documents-into-the-index)，將文件匯入索引並搜尋該索引。
 
-## Manual setup
+## 手動設定
 
-To manually configure semantic search, follow these steps:
+若要手動設定語意搜尋，請依照下列步驟：
 
-1. [Create an ingest pipeline](#step-1-create-an-ingest-pipeline).
-1. [Create an index for ingestion](#step-2-create-an-index-for-ingestion).
-1. [Ingest documents into the index](#step-3-ingest-documents-into-the-index).
-1. [Search the index](#step-4-search-the-index).
+1. [建立資料匯入管線](#step-1-create-an-ingest-pipeline)。
+1. [建立用於匯入的索引](#step-2-create-an-index-for-ingestion)。
+1. [將文件匯入索引](#step-3-ingest-documents-into-the-index)。
+1. [搜尋索引](#step-4-search-the-index)。
 
-### Step 1: Create an ingest pipeline
+### 步驟 1：建立資料匯入管線
 
-To generate vector embeddings, you need to create an [ingest pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/) that contains a [`text_embedding` processor]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/text-embedding/), which will convert the text in a document field to vector embeddings. The processor's `field_map` determines the input fields from which to generate vector embeddings and the output fields in which to store the embeddings.
+若要產生向量嵌入，您需要建立包含 [`text_embedding` 處理器]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/text-embedding/)的[資料匯入管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)，該處理器會將文件欄位中的文字轉換為向量嵌入。處理器的 `field_map` 會決定要從哪些輸入欄位產生向量嵌入，以及要將嵌入儲存在哪些輸出欄位中。
 
-The following example request creates an ingest pipeline where the text from `passage_text` will be converted into text embeddings and the embeddings will be stored in `passage_embedding`:
+下列範例請求會建立資料匯入管線，其中 `passage_text` 的文字會轉換為文字嵌入，而嵌入會儲存在 `passage_embedding` 中：
 
 ```json
 PUT /_ingest/pipeline/nlp-ingest-pipeline
@@ -92,13 +93,13 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-To split long text into passages, use the `text_chunking` ingest processor before the `text_embedding` processor. For more information, see [Text chunking]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/).
+若要將長文字分割為段落，請在 `text_embedding` 處理器之前使用 `text_chunking` 匯入處理器。如需詳細資訊，請參閱[文字區塊化]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/)。
 
-### Step 2: Create an index for ingestion
+### 步驟 2：建立用於匯入的索引
 
-In order to use the text embedding processor defined in your pipeline, create a vector index, adding the pipeline created in the previous step as the default pipeline. Ensure that the fields defined in the `field_map` are mapped as correct types. Continuing with the example, the `passage_embedding` field must be mapped as a k-NN vector with a dimension that matches the model dimension. Similarly, the `passage_text` field should be mapped as `text`.
+為了使用您在管線中定義的文字嵌入處理器，請建立向量索引，並將上一個步驟建立的管線新增為預設管線。請確保 `field_map` 中定義的欄位對應為正確的類型。延續先前的範例，`passage_embedding` 欄位必須對應為維度符合模型維度的 k-NN 向量。同樣地，`passage_text` 欄位應對應為 `text`。
 
-The following example request creates a vector index that is set up with a default ingest pipeline:
+下列範例請求會建立已設定預設資料匯入管線的向量索引：
 
 ```json
 PUT /my-nlp-index
@@ -131,11 +132,11 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-For more information about creating a vector index and its supported methods, see [Creating a vector index]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/).
+如需建立向量索引及其支援方法的詳細資訊，請參閱[建立向量索引]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/)。
 
-### Step 3: Ingest documents into the index
+### 步驟 3：將文件匯入索引
 
-To ingest documents into the index created in the previous step, send the following requests:
+若要將文件匯入上一個步驟建立的索引，請傳送下列請求：
 
 ```json
 PUT /my-nlp-index/_doc/1
@@ -155,13 +156,13 @@ PUT /my-nlp-index/_doc/2
 ```
 {% include copy-curl.html %}
 
-Before the document is ingested into the index, the ingest pipeline runs the `text_embedding` processor on the document, generating text embeddings for the `passage_text` field. The indexed document includes the `passage_text` field, which contains the original text, and the `passage_embedding` field, which contains the vector embeddings. 
+在文件匯入索引之前，資料匯入管線會對文件執行 `text_embedding` 處理器，為 `passage_text` 欄位產生文字嵌入。編製索引的文件包含 `passage_text` 欄位（其中含有原始文字）以及 `passage_embedding` 欄位（其中含有向量嵌入）。
 
-### Step 4: Search the index
+### 步驟 4：搜尋索引
 
-To perform a vector search on your index, use the `neural` query clause either in the [Search for a Model API]({{site.url}}{{site.baseurl}}/vector-search/api/knn/#search-for-a-model) or [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/) queries. You can refine the results by using a [vector search filter]({{site.url}}{{site.baseurl}}/search-plugins/knn/filter-search-knn/).
+若要在索引上執行向量搜尋，請在 [Search for a Model API]({{site.url}}{{site.baseurl}}/vector-search/api/knn/#search-for-a-model) 或 [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/) 查詢中使用 `neural` 查詢子句。您可以使用[向量搜尋篩選器]({{site.url}}{{site.baseurl}}/search-plugins/knn/filter-search-knn/)來調整結果。
 
-The following example request uses a Boolean query to combine a filter clause and two query clauses---a neural query and a `match` query. The `script_score` query assigns custom weights to the query clauses:
+下列範例請求使用布林查詢來合併一個篩選子句與兩個查詢子句——一個 neural 查詢與一個 `match` 查詢。`script_score` 查詢會為查詢子句指派自訂權重：
 
 ```json
 GET /my-nlp-index/_search
@@ -212,7 +213,7 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應會包含相符的文件：
 
 ```json
 {
@@ -245,11 +246,11 @@ The response contains the matching document:
 }
 ```
 
-### Setting a default model on an index or field
+### 在索引或欄位上設定預設模型
 
-A [`neural`]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/) query requires a model ID for generating vector embeddings. To eliminate passing the model ID with each neural query request, you can set a default model on a vector index or a field. 
+[`neural`]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/) 查詢需要模型 ID 才能產生向量嵌入。若要避免在每次神經查詢請求中傳入模型 ID，您可以在向量索引或欄位上設定預設模型。 
 
-First, create a [search pipeline]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/) with a [`neural_query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/) request processor. To set a default model for an index, provide the model ID in the `default_model_id` parameter. To set a default model for a specific field, provide the field name and the corresponding model ID in the `neural_field_default_id` map. If you provide both `default_model_id` and `neural_field_default_id`, `neural_field_default_id` takes precedence:
+首先，建立包含 [`neural_query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/) 請求處理器的[搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/)。若要為索引設定預設模型，請在 `default_model_id` 參數中提供模型 ID。若要為特定欄位設定預設模型，請在 `neural_field_default_id` 對應表中提供欄位名稱及對應的模型 ID。如果您同時提供 `default_model_id` 和 `neural_field_default_id`，則 `neural_field_default_id` 優先：
 
 ```json
 PUT /_search/pipeline/default_model_pipeline 
@@ -269,7 +270,7 @@ PUT /_search/pipeline/default_model_pipeline
 ```
 {% include copy-curl.html %}
 
-Then set the default model for your index:
+接著，為您的索引設定預設模型：
 
 ```json
 PUT /my-nlp-index/_settings
@@ -279,7 +280,7 @@ PUT /my-nlp-index/_settings
 ```
 {% include copy-curl.html %}
 
-You can now omit the model ID when searching:
+現在，您可以在搜尋時省略模型 ID：
 
 ```json
 GET /my-nlp-index/_search
@@ -301,7 +302,7 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-The response contains both documents:
+回應包含這兩份文件：
 
 ```json
 {
@@ -343,13 +344,13 @@ The response contains both documents:
 }
 ```
 
-## Using a semantic field
+## 使用語意欄位
 
-To manually configure semantic search using a `semantic` field, follow these steps. For more information, including about limitations when using `semantic` fields, see [Semantic field type]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/semantic/). 
+若要使用 `semantic` 欄位手動設定語意搜尋，請依照下列步驟操作。如需更多資訊，包括使用 `semantic` 欄位時的限制，請參閱[語意欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/semantic/)。 
 
-### Step 1: Create an index with a semantic field
+### 步驟 1：建立包含語意欄位的索引
 
-Create an index and specify the `model_id` in the `semantic` field. In this example, the `semantic` field is `passage_text`. OpenSearch automatically creates the corresponding embedding field based on the model configuration. An ingest pipeline is not required---OpenSearch automatically generates the embeddings using the specified model during indexing:
+建立索引，並在 `semantic` 欄位中指定 `model_id`。在此範例中，`semantic` 欄位為 `passage_text`。OpenSearch 會根據模型組態自動建立對應的嵌入欄位。您無需使用資料匯入管線，OpenSearch 會在編製索引期間使用指定的模型自動產生嵌入：
 
 ```json
 PUT /my-nlp-index
@@ -372,7 +373,7 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-After creating the index, you can retrieve its mapping to verify that the embedding field was automatically created:
+建立索引後，您可以擷取其對應，確認嵌入欄位已自動建立：
 
 ```json
 GET /my-nlp-index/_mapping
@@ -425,9 +426,9 @@ GET /my-nlp-index/_mapping
 ```
 {% include copy-curl.html %}
 
-### Step 2: Ingest documents into the index
+### 步驟 2：將文件匯入索引
 
-To ingest documents into the index created in the previous step, send the following requests:
+若要將文件匯入上一個步驟建立的索引，請傳送下列請求：
 
 ```json
 PUT /my-nlp-index/_doc/1
@@ -438,7 +439,7 @@ PUT /my-nlp-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-Before the document is ingested into the index, OpenSearch runs a built-in ingest pipeline that generates embeddings and stores them in the `passage_text_semantic_info.embedding` field. To verify that the embedding is generated properly, you can run a search request to retrieve the document:
+在文件匯入索引之前，OpenSearch 會執行內建的資料匯入管線，產生嵌入並將其儲存在 `passage_text_semantic_info.embedding` 欄位中。若要確認嵌入已正確產生，您可以執行搜尋請求來擷取文件：
 
 ```json
 GET /my-nlp-index/_doc/1
@@ -468,9 +469,9 @@ GET /my-nlp-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-### Step 3: Search the index
+### 步驟 3：搜尋索引
 
-To query the embedding of the `semantic` field, provide the `semantic` field's name (in this example, `passage_text`) and the query text. There's no need to specify the `model_id`---OpenSearch automatically retrieves it from the field's configuration in the index mapping and rewrites the query to target the underlying embedding field:
+若要查詢 `semantic` 欄位的嵌入，請提供 `semantic` 欄位的名稱（在此範例中為 `passage_text`）及查詢文字。您無需指定 `model_id`，OpenSearch 會自動從索引對應中的欄位組態擷取它，並改寫查詢，將底層嵌入欄位設為查詢目標：
 
 ```json
 GET /my-nlp-index/_search
@@ -491,7 +492,7 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the matching document:
+回應包含符合條件的文件：
 
 ```json
 {
@@ -524,6 +525,6 @@ The response contains the matching document:
 }
 ```
 
-## Next steps
+## 後續步驟
 
-- Explore our [semantic search tutorials]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/) to learn how to build AI search applications. 
+- 探索我們的[語意搜尋教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/)，瞭解如何建置 AI 搜尋應用程式。 

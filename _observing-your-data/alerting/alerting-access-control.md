@@ -1,43 +1,44 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Alerting resource access control
+title: "警示資源存取控制"
 nav_order: 12
 parent: Alerting
 has_children: false
 ---
 
-# Alerting resource access control
+# 警示資源存取控制
 
-Alerting integrates with the Security plugin's resource sharing and access control framework to provide document-level authorization for monitors and workflows. This replaces the legacy `plugins.alerting.filter_by_backend_roles` setting with a more flexible sharing system that allows resource owners to grant specific access levels to users, roles, or backend roles.
+警示功能與 Security 外掛程式的資源共用與存取控制架構整合，為監視器和工作流程提供文件層級的授權。這會以更具彈性的共用系統取代舊版 `plugins.alerting.filter_by_backend_roles` 設定，讓資源擁有者能將特定存取層級授予使用者、角色或後端角色。
 
-For the end-to-end framework concepts and APIs, see [Resource sharing and access control]({{site.url}}{{site.baseurl}}/security/access-control/resources/).
+如需端對端架構的概念與 API，請參閱[資源共用與存取控制]({{site.url}}{{site.baseurl}}/security/access-control/resources/)。
 {: .note}
 
-## Resource configuration
+## 資源組態
 
-Alerting registers two resource types, both stored in the same configuration index. The following table describes the alerting resource configuration.
+警示功能會註冊兩種資源類型，兩者都儲存在同一個組態索引中。下表說明警示資源組態。
 
-| Resource type | System index | Onboarded version |
+| 資源類型 | 系統索引 | 導入版本 |
 | :--- | :--- | :--- |
 | `monitor` | `.opendistro-alerting-config` | OpenSearch 3.8 |
 | `alerting-workflow` | `.opendistro-alerting-config` | OpenSearch 3.8 |
 
-The workflow resource type is named `alerting-workflow` in order to avoid a name collision with the `workflow` resource type registered by the Flow Framework plugin. Because both alerting types share the `.opendistro-alerting-config` index, the framework distinguishes them by the fields in each document.
+工作流程資源類型命名為 `alerting-workflow`，以避免與 Flow Framework 外掛程式註冊的 `workflow` 資源類型名稱衝突。由於兩種警示類型共用 `.opendistro-alerting-config` 索引，架構會依各文件中的欄位來區分它們。
 
-When resource-level authorization is enabled, each monitor's and workflow's visibility is governed by a central sharing record. Resource owners and users with sharing capabilities can grant or revoke access permissions for specific users, roles, or backend roles.
+啟用資源層級授權後，每個監視器和工作流程的可見性會由中央共用記錄控管。資源擁有者及具備共用能力的使用者，可以授予或撤銷特定使用者、角色或後端角色的存取權限。
 
-Alerts and comments are subordinate to their monitor. They are not registered resource types, so access to them is derived from access to the monitor that produced them. A user who can access a monitor can read its alerts. Adding a comment requires monitor access at the read-write or full-access level.
+警示和註解隸屬於其監視器。它們不是已註冊的資源類型，因此對它們的存取權限是衍生自對產生它們的監視器的存取權限。能存取某個監視器的使用者可以讀取其警示。新增註解則需要具備讀寫或完整存取層級的監視器存取權限。
 
-## Enable alerting resource sharing
+## 啟用警示資源共用
 
-To enable resource sharing for alerting, add the alerting resource types to the protected types list and enable resource sharing cluster-wide.
+若要為警示啟用資源共用，請將警示資源類型新增至受保護類型清單，並在叢集範圍內啟用資源共用。
 
-Admin-only: These settings can be configured only by cluster administrators with superadmin privileges.
+僅限管理員：這些設定只能由具備超級管理員權限的叢集管理員進行設定。
 {: .important }
 
-### Configuration using opensearch.yml
+### 使用 opensearch.yml 進行組態設定
 
-Add the following settings to your `opensearch.yml` configuration file to enable resource sharing for alerting:
+將下列設定新增至您的 `opensearch.yml` 組態檔，以啟用警示的資源共用：
 
 ```yaml
 plugins.security.resource_sharing.enabled: true
@@ -48,9 +49,9 @@ plugins.security.resource_sharing.protected_types:
 ```
 {% include copy.html %}
 
-### Configuration using the Cluster Settings API
+### 使用 Cluster Settings API 進行組態設定
 
-Alternatively, you can enable resource sharing dynamically using the Cluster Settings API:
+或者，您可以使用 Cluster Settings API 動態啟用資源共用：
 
 ```json
 PUT _cluster/settings
@@ -63,16 +64,16 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-When adding the alerting resource types to an existing configuration, include all previously configured resource types in the `protected_types` array.
+將警示資源類型新增至現有組態時，請在 `protected_types` 陣列中包含所有先前已設定的資源類型。
 {: .note}
 
-## Alerting access levels
+## 警示存取層級
 
-Alerting provides three predefined access levels that apply to both the `monitor` and `alerting-workflow` resource types. These access levels determine the specific permissions granted to users who have been granted access to a monitor or workflow resource.
+警示功能提供三種預先定義的存取層級，適用於 `monitor` 和 `alerting-workflow` 兩種資源類型。這些存取層級會決定授予已取得監視器或工作流程資源存取權之使用者的特定權限。
 
 ### alerting_read_only
 
-The `alerting_read_only` read-only access level grants users the ability to view and search shared monitors, workflows, and their alerts but not modify them. This access level includes the following permissions:
+`alerting_read_only` 唯讀存取層級授予使用者檢視和搜尋共用監視器、工作流程及其警示的能力，但無法修改它們。此存取層級包含下列權限：
 
 ```yaml
 - 'cluster:admin/opendistro/alerting/monitor/get'
@@ -87,7 +88,7 @@ The `alerting_read_only` read-only access level grants users the ability to view
 
 ### alerting_read_write
 
-The `alerting_read_write` read-write access level grants users full access to monitor and workflow operations, including alerts and comments, except for sharing capabilities. This access level includes all read permissions plus write operations:
+`alerting_read_write` 讀寫存取層級授予使用者對監視器和工作流程作業的完整存取權，包括警示和註解，但共用功能除外。此存取層級包含所有讀取權限以及寫入作業：
 
 ```yaml
 - 'cluster:admin/opendistro/alerting/monitor/*'
@@ -102,7 +103,7 @@ The `alerting_read_write` read-write access level grants users full access to mo
 
 ### alerting_full_access
 
-The `alerting_full_access` full access level grants users complete control over a monitor or workflow, including owner-like permissions such as sharing the resource with other users. This access level includes all read-write permissions plus remote index and resource sharing permissions:
+`alerting_full_access` 完整存取層級授予使用者對監視器或工作流程的完整控制權，包括將資源與其他使用者共用等類似擁有者的權限。此存取層級包含所有讀寫權限以及遠端索引和資源共用權限：
 
 ```yaml
 - 'cluster:admin/opendistro/alerting/monitor/*'
@@ -117,19 +118,19 @@ The `alerting_full_access` full access level grants users complete control over 
 ```
 {% include copy.html %}
 
-These access levels are predefined and cannot be modified. To request additional access levels, create an issue in the [Alerting GitHub repository](https://github.com/opensearch-project/alerting/).
+這些存取層級是預先定義的，無法修改。如需要求其他存取層級，請在 [Alerting GitHub 儲存庫](https://github.com/opensearch-project/alerting/) 中建立問題。
 {: .note}
 
-## Migrating from the legacy framework
+## 從舊版架構遷移
 
-After enabling resource sharing and marking the alerting resource types as protected, cluster administrators must run the migration API to transfer existing monitor and workflow sharing information from the legacy framework to the new resource sharing system.
+啟用資源共用並將警示資源類型標記為受保護後，叢集管理員必須執行遷移 API，將現有的監視器和工作流程共用資訊從舊版架構轉移至新的資源共用系統。
 
-Admin-only: The Migrate API can only be executed by cluster administrators with superadmin or REST admin privileges.
+僅限管理員：Migrate API 只能由具備超級管理員或 REST 管理員權限的叢集管理員執行。
 {: .important }
 
-Both alerting resource types are stored in the same index but keep owner information under different paths (`monitor.user` and `workflow.user`). Alerting declares these per-type paths on its resource providers, so the framework reads the owner from the correct path for each document. The request-level `username_path` and `backend_roles_path` parameters are still required and are used as a fallback.
+兩種警示資源類型都儲存在同一個索引中，但會將擁有者資訊保存在不同的路徑下 (`monitor.user` 和 `workflow.user`)。警示功能會在其資源提供者上宣告這些各類型專屬的路徑，因此架構會從正確的路徑讀取每份文件的擁有者。請求層級的 `username_path` 和 `backend_roles_path` 參數仍是必要，並會作為備援使用。
 
-Use the following API call to migrate legacy alerting sharing data to the resource sharing framework:
+使用下列 API 呼叫，將舊版警示共用資料遷移至資源共用架構：
 
 ```json
 POST _plugins/_security/api/resources/migrate
@@ -146,11 +147,11 @@ POST _plugins/_security/api/resources/migrate
 ```
 {% include copy-curl.html %}
 
-Replace `<replace-with-existing-user>` with the username of an existing user who should own monitors and workflows without explicit ownership information. Replace `<select-appropriate-access-level>` with one of the available alerting access levels: `alerting_read_only`, `alerting_read_write`, or `alerting_full_access`.
+將 `<replace-with-existing-user>` 取代為現有使用者的使用者名稱，該使用者應在沒有明確擁有權資訊的情況下擁有監視器和工作流程。將 `<select-appropriate-access-level>` 取代為可用的警示存取層級之一：`alerting_read_only`、`alerting_read_write` 或 `alerting_full_access`。
 
-## Related documentation
+## 相關文件
 
-- [Resource sharing and access control]({{site.url}}{{site.baseurl}}/security/access-control/resources/) -- Backend concepts, configuration, and setup
-- [Resource sharing APIs]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) -- REST API reference for programmatic management
-- [Resource access management]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI workflows and user guidance
-- [Alerting security]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/security/) -- Built-in alerting roles and legacy backend role filtering
+- [資源共用與存取控制]({{site.url}}{{site.baseurl}}/security/access-control/resources/) -- 後端概念、組態與設定
+- [資源共用 API]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) -- 以程式化管理為主的 REST API 參考
+- [資源存取管理]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI 工作流程與使用者指引
+- [警示安全性]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/security/) -- 內建警示角色與舊版後端角色篩選

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Memory APIs
+title: "對話記憶 API"
 parent: ML Commons APIs
 has_children: true
 has_toc: false
@@ -9,25 +10,25 @@ redirect_from:
   - /ml-commons-plugin/api/memory-apis/
 ---
 
-# Memory APIs
-**Introduced 2.12**
+# 對話記憶 API
+**於 2.12 版推出**
 {: .label .label-purple }
 
-Memory APIs provide operations needed to implement [conversational search]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/). A memory stores conversation history for the current conversation. A message represents one question/answer interaction between the user and a large language model. Messages are organized into memories.
+對話記憶 API 提供實作[對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)所需的操作。對話記憶會儲存目前對話的歷程。訊息代表使用者與大型語言模型之間的一次問答互動。訊息會歸入對話記憶。
 
-ML Commons supports the following memory-level APIs:
+ML Commons 支援下列對話記憶層級 API：
 
-- [Create or update memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/create-memory/)
-- [Get memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/get-memory/)
-- [Search memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/search-memory/)
-- [Delete memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/delete-memory/)
+- [建立或更新對話記憶]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/create-memory/)
+- [取得對話記憶]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/get-memory/)
+- [搜尋對話記憶]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/search-memory/)
+- [刪除對話記憶]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/delete-memory/)
 
-ML Commons supports the following message-level APIs:
+ML Commons 支援下列訊息層級 API：
 
-- [Create or update message]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/create-message/)
-- [Get message]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/get-message/)
-- [Search message]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/search-message/)
-- [Get message traces]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/get-message-traces/)
+- [建立或更新訊息]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/create-message/)
+- [取得訊息]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/get-message/)
+- [搜尋訊息]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/search-message/)
+- [取得訊息追蹤]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/get-message-traces/)
 
-When the Security plugin is enabled, all memories exist in a `private` security mode. Only the user who created a memory can interact with that memory and its messages.
+啟用 Security 外掛程式時，所有對話記憶都會以 `private` 安全性模式存在。只有建立對話記憶的使用者可以與該對話記憶及其訊息互動。
 {: .important}

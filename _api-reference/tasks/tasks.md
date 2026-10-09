@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: Tasks APIs
 has_children: yes
@@ -9,23 +10,23 @@ redirect_from:
 ---
 
 # Tasks APIs
-**Introduced 1.0**
+**1.0 版新增**
 {: .label .label-purple }
 
-A _task_ is any operation that you run in a cluster. For example, searching your data collection of books for a title or author name is a task. When you run OpenSearch, a task is automatically created to monitor your cluster's health and performance. For more information about all of the tasks currently executing in your cluster, you can use the `tasks` API operation.
+_任務_是您在叢集中執行的任何作業。例如，在您的書籍資料集合中依書名或作者名稱進行搜尋，就是一項任務。當您執行 OpenSearch 時，系統會自動建立一個任務來監控叢集的健康狀態與效能。若要取得叢集中目前正在執行之所有任務的更多資訊，您可以使用 `tasks` API 作業。
 
-## Attaching headers to tasks
+## 將標頭附加至任務
 
-To associate requests with tasks for better tracking, you can provide an `X-Opaque-Id:<ID_number>` header as part of the HTTPS request reader of your `curl` command. The API will attach the specified header in the returned result.
+若要將請求與任務建立關聯以方便追蹤，您可以在 `curl` 命令的 HTTPS 請求讀取器中提供 `X-Opaque-Id:<ID_number>` 標頭。API 會在傳回的結果中附加指定的標頭。
 
-The following request returns tasks with an `X-Opaque-Id` of `111111`:
+下列請求會傳回 `X-Opaque-Id` 為 `111111` 的任務：
 
 ```bash
 curl -i -H "X-Opaque-Id: 111111" "https://localhost:9200/_tasks" -u 'admin:<custom-admin-password>' --insecure
 ```
 {% include copy.html %}
 
-The `_tasks` operation returns the following result:
+`_tasks` 作業會傳回下列結果：
 
 ```json
 HTTP/1.1 200 OK
@@ -77,7 +78,7 @@ content-length: 768
   }
 }
 ```
-This operation supports the same parameters as the `tasks` operation. The following example shows you how to associate `X-Opaque-Id` with specific tasks:
+此作業支援與 `tasks` 作業相同的參數。下列範例說明如何將 `X-Opaque-Id` 與特定任務建立關聯：
 
 ```bash
 curl -i -H "X-Opaque-Id: 123456" "https://localhost:9200/_tasks?nodes=opensearch-node1" -u 'admin:<custom-admin-password>' --insecure

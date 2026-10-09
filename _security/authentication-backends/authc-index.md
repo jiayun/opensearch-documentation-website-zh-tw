@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Authentication backends
+title: "驗證後端"
 nav_order: 45
 has_children: true
 has_toc: false
@@ -9,24 +10,24 @@ redirect_from:
   - /security-plugin/configuration/concepts/
 ---
 
-# Authentication backends
+# 驗證後端
 
-Authentication backend configurations determine the method or methods you use for authenticating users and the way users pass their credentials and sign in to OpenSearch. Having an understanding of the basic authentication flow before getting started can help with the configuration process for whichever backend you choose. Consider the high-level sequence of events in the description that follows, and then refer to the detailed steps for configuring the authentication type you choose to use with OpenSearch.
+驗證後端組態決定您用來驗證使用者的方法，以及使用者傳遞認證資訊並登入 OpenSearch 的方式。在開始之前先瞭解基本驗證流程，有助於設定您選擇的任何後端。請參考以下說明中的概略事件順序，再參閱詳細步驟，以設定您選擇搭配 OpenSearch 使用的驗證類型。
 
-## Authentication flow
+## 驗證流程
 
-1. To identify a user who wants to access the cluster, the Security plugin needs the user's credentials.
+1. 為了識別想要存取叢集的使用者，Security 外掛程式需要該使用者的認證資訊。
 
-   These credentials differ depending on how you've configured the plugin. For example, if you use basic authentication, the credentials are a username and password. If you use a JSON web token, the credentials (username and roles) are stored within the token itself. If you use TLS certificates, the credentials are the distinguished name (DN) of the certificate. No matter which backend you use, these credentials are included in the request for authentication. Note, the Security plugin does not distinguish between identity providers when handling standard role mappings. As a result, only backend roles will differ between two users with the same name coming from two different identity providers. 
+   這些認證資訊會因您設定外掛程式的方式而異。例如，如果您使用基本驗證，認證資訊就是使用者名稱和密碼。如果您使用 JSON 網路權杖，認證資訊（使用者名稱和角色）會儲存在權杖本身中。如果您使用 TLS 憑證，認證資訊就是憑證的辨別名稱（DN）。無論您使用哪個後端，這些認證資訊都會包含在驗證請求中。請注意，Security 外掛程式在處理標準角色對應時，不會區分身分識別提供者。因此，來自兩個不同身分識別提供者且名稱相同的兩位使用者，只有後端角色會有所不同。 
 
-2. The Security plugin authenticates a request against a backend configured for an authentication provider. Some examples of authentication providers used with OpenSearch include basic authentication (which uses the internal user database), LDAP/Active Directory, JSON web tokens, SAML, or another authentication protocol.
+2. Security 外掛程式會透過為驗證提供者設定的後端來驗證請求。搭配 OpenSearch 使用的驗證提供者範例包括基本驗證（使用內部使用者資料庫）、LDAP/Active Directory、JSON 網路權杖、SAML 或其他驗證通訊協定。
 
-   The plugin supports chaining backends in `config/opensearch-security/config.yml`. If more than one backend is present, the plugin tries to authenticate the user sequentially against each until one succeeds. A common use case is to combine the internal user database of the Security plugin with LDAP/Active Directory.
+   此外掛程式支援在 `config/opensearch-security/config.yml` 中串接後端。如果有多個後端，外掛程式會依序嘗試透過每個後端驗證使用者，直到其中一個成功為止。常見的使用案例是將 Security 外掛程式的內部使用者資料庫與 LDAP/Active Directory 結合。
 
-3. After a backend verifies the user's credentials, the plugin collects any [backend roles]({{site.url}}{{site.baseurl}}/security/access-control/index/#concepts). The authentication provider determines the way these roles are retrieved. For example, LDAP extracts backend roles from its directory service based on their mappings to roles in OpenSearch, while SAML stores the roles as attributes. When basic authentication is used, the internal user database refers to role mappings configured in OpenSearch.
+3. 後端確認使用者的認證資訊後，外掛程式會收集所有[後端角色]({{site.url}}{{site.baseurl}}/security/access-control/index/#concepts)。驗證提供者決定擷取這些角色的方式。例如，LDAP 會根據後端角色與 OpenSearch 中角色的對應，從其目錄服務擷取後端角色，而 SAML 則將角色儲存為屬性。使用基本驗證時，內部使用者資料庫會參照 OpenSearch 中設定的角色對應。
 
-4. After the user is authenticated and any backend roles are retrieved, the Security plugin uses the role mapping to assign security roles to the user.
+4. 使用者通過驗證並擷取所有後端角色後，Security 外掛程式會使用角色對應，將安全性角色指派給使用者。
 
-   If the role mapping doesn't include the user (or the user's backend roles), the user is successfully authenticated, but has no permissions.
+   如果角色對應未包含該使用者（或該使用者的後端角色），使用者雖然成功通過驗證，但不具備任何權限。
 
-5. The user can now perform actions as defined by the mapped security roles. For example, a user might map to the `kibana_user` role and thus have permissions to access OpenSearch Dashboards.
+5. 使用者現在可以執行對應的安全性角色所定義的動作。例如，使用者可能對應至 `kibana_user` 角色，因此具有存取 OpenSearch Dashboards 的權限。

@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Disjunction max
+title: "析取最大值"
 parent: Compound queries
 nav_order: 50
 redirect_from:
   - /query-dsl/query-dsl/compound/disjunction-max/
 ---
 
-# Disjunction max query
+# 析取最大值查詢
 
-A disjunction max (`dis_max`) query returns any document that matches one or more query clauses. For documents that match multiple query clauses, the relevance score is set to the highest relevance score from all matching query clauses.
+析取最大值（`dis_max`）查詢會傳回符合一或多個查詢子句的任何文件。對於符合多個查詢子句的文件，其相關性分數會設為所有符合的查詢子句中最高的相關性分數。
 
-When the relevance scores of the returned documents are identical, you can use the `tie_breaker` parameter to give more weight to documents that match multiple query clauses.
+當傳回文件的相關性分數相同時，您可以使用 `tie_breaker` 參數，讓符合多個查詢子句的文件獲得更高的權重。
 
-## Example
+## 範例
 
-Consider an index with two documents that you index as follows:
+假設有一個包含兩份文件的索引，您依下列方式將文件編製索引：
 
 ```json
 PUT testindex1/_doc/1
@@ -35,7 +36,7 @@ PUT testindex1/_doc/2
 ```
 {% include copy-curl.html %}
 
-Use a `dis_max` query to search the `title` and `body` fields for the words "Shakespeare poems":
+使用 `dis_max` 查詢，在 `title` 與 `body` 欄位中搜尋「Shakespeare poems」這兩個詞：
 
 ```json
 GET testindex1/_search
@@ -52,7 +53,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-The response contains both documents. Document 1 receives a higher relevance score because its `title` field matches both words, whereas document 2 matches only the word "poems":
+回應包含這兩份文件。文件 1 獲得較高的相關性分數，因為其 `title` 欄位同時符合兩個詞，而文件 2 只符合「poems」這個詞：
 
 ```json
 {
@@ -94,11 +95,11 @@ The response contains both documents. Document 1 receives a higher relevance sco
 }
 ```
 
-## Parameters
+## 參數
 
-The following table lists all top-level parameters supported by `dis_max` queries.
+下表列出 `dis_max` 查詢支援的所有頂層參數。
 
-Parameter | Description
+參數 | 說明
 :--- | :---
-`queries` | An array of one or more query clauses that are used to match documents. A document must match at least one query clause to be returned in the results. If a document matches multiple query clauses, the relevance score is set to the highest relevance score from all matching query clauses. Required.
-`tie_breaker` | A floating-point factor between 0 and 1.0 that is used to give more weight to documents that match multiple query clauses. In this case, the relevance score of a document is calculated using the following algorithm: Take the highest relevance score from all matching query clauses, multiply the scores from all other matching clauses by the `tie_breaker` value, and add the relevance scores together, normalizing them. Optional. Default is 0 (which means only the highest score counts).
+`queries` | 由一或多個查詢子句組成的陣列，用於比對文件。文件必須至少符合一個查詢子句，才會出現在結果中。如果文件符合多個查詢子句，其相關性分數會設為所有符合的查詢子句中最高的相關性分數。必要。
+`tie_breaker` | 介於 0 與 1.0 之間的浮點數係數，用於讓符合多個查詢子句的文件獲得更高的權重。在此情況下，文件的相關性分數會使用下列演算法計算：取所有符合的查詢子句中最高的相關性分數，將其他所有符合子句的分數乘以 `tie_breaker` 值，再將相關性分數相加並進行正規化。選用。預設為 0（表示只有最高分數會被計入）。

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Register model
+title: "註冊模型"
 parent: Model APIs
 grand_parent: ML Commons APIs
 nav_order: 10
@@ -8,181 +9,181 @@ nav_order: 10
 
 # Register Model API
 
-All versions of a particular model are held in a model group. You can either [register a model group]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/register-model-group/) before registering a model to the group or register a first version of a model, thereby creating the group. Each model group name in the cluster must be globally unique. 
+特定模型的所有版本都存放在一個模型群組中。您可以先[註冊模型群組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/register-model-group/)，再將模型註冊到該群組；或者直接註冊模型的第一個版本，藉此建立群組。叢集中的每個模型群組名稱都必須是全域唯一的。
 
-If you are registering the first version of a model without first registering the model group, a new model group is created automatically with the following name and access level:
+如果您在未先註冊模型群組的情況下註冊模型的第一個版本，系統會自動建立一個新的模型群組，其名稱與存取層級如下：
 
-- Name: The new model group will have the same name as the model. Because the model group name must be unique, ensure that your model name does not have the same name as any model groups in the cluster. 
-- Access level: The access level for the new model group is determined using the `access_mode`, `backend_roles`, and `add_all_backend_roles` parameters that you pass in the request. If you provide none of the three parameters, the new model group will be `private` if model access control is enabled on your cluster and `public` if model access control is disabled. The newly registered model is the first model version assigned to that model group. 
+- 名稱：新的模型群組會與模型同名。由於模型群組名稱必須唯一，請確認您的模型名稱與叢集中任何模型群組的名稱都不相同。
+- 存取層級：新模型群組的存取層級由您在請求中傳入的 `access_mode`、`backend_roles` 和 `add_all_backend_roles` 參數決定。如果這三個參數都未提供，當叢集已啟用模型存取控制時，新的模型群組會是 `private`；當模型存取控制已停用時，則會是 `public`。新註冊的模型是指派給該模型群組的第一個模型版本。
 
-Once a model group is created, provide its `model_group_id` to register a new model version to the model group. In this case, the model name does not need to be unique.
+模型群組建立後，請提供其 `model_group_id`，以將新的模型版本註冊到該模型群組。在這種情況下，模型名稱不需要是唯一的。
 
-If you're using [pretrained models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models#supported-pretrained-models) provided by OpenSearch, we recommend that you first register a model group with a unique name for these models. Then register the pretrained models as versions to that model group. This ensures that every model group has a globally unique model group name.
+如果您使用 OpenSearch 提供的[預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models#supported-pretrained-models)，建議您先為這些模型註冊一個具有唯一名稱的模型群組，然後再將預先訓練模型註冊為該模型群組的版本。這樣可確保每個模型群組都有全域唯一的模型群組名稱。
 {: .tip}
 
-For information about user access for this API, see [Model access control considerations]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations).
+如需此 API 的使用者存取權相關資訊，請參閱[模型存取控制注意事項]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
 
-If the model is more than 10 MB in size, ML Commons splits it into smaller chunks and saves those chunks in the model's index.
+如果模型大小超過 10 MB，ML Commons 會將其分割成較小的區塊，並將這些區塊儲存在模型的索引中。
 
-## Endpoints
+## 端點
 
 ```json
 POST /_plugins/_ml/models/_register
 ```
 
-## Query parameters
+## 查詢參數
 
-The following table lists the available query parameters. All query parameters are optional.
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `deploy` | Boolean | Whether to deploy the model after registering it. The deploy operation is performed by calling the [Deploy Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/deploy-model/). Default is `false`. |
+| `deploy` | 布林值 | 是否在註冊模型後部署模型。部署作業是透過呼叫 [Deploy Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/deploy-model/) 來執行。預設為 `false`。 |
 
-## Request body fields
+## 請求本文欄位
 
-The request body fields depend on the model type.
+請求本文欄位取決於模型類型。
 
-### Register an OpenSearch-provided pretrained model
+### 註冊 OpenSearch 提供的預先訓練模型
 
-OpenSearch provides several pretrained models. For more information, see [OpenSearch-provided pretrained models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/).
+OpenSearch 提供數個預先訓練模型。如需更多資訊，請參閱 [OpenSearch 提供的預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)。
 
-#### Register a pretrained text embedding model
+#### 註冊預先訓練的文字嵌入模型
 
-To register a pretrained text embedding model, the only required parameters are `name`, `version`, and `model_format`.
+若要註冊預先訓練的文字嵌入模型，唯一必要的參數是 `name`、`version` 和 `model_format`。
 
-The following table lists the available request fields.
+下表列出可用的請求欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :---  | :--- | :--- 
-`name`| String | Required | The model name. |
-`model_id` | String | Optional | A unique identifier for the model. If omitted, OpenSearch generates one automatically. |
-`version` | String | Required | The model version. |
-`model_format` | String | Required | The portable format of the model file. Valid values are `TORCH_SCRIPT` and `ONNX`. |
-`description` | String | Optional| The model description. |
-`model_group_id` | String | Optional | The ID of the model group to which to register the model.
-`provisioned_by` | String | Optional | An optional attribution tag identifying the plugin or client that registered the model (for example, `flow-framework`). Included in ML statistics metrics.
+`name`| 字串 | 必要 | 模型名稱。 |
+`model_id` | 字串 | 選用 | 模型的唯一識別碼。若省略，OpenSearch 會自動產生一個。 |
+`version` | 字串 | 必要 | 模型版本。 |
+`model_format` | 字串 | 必要 | 模型檔案的可攜式格式。有效值為 `TORCH_SCRIPT` 和 `ONNX`。 |
+`description` | 字串 | 選用| 模型說明。 |
+`model_group_id` | 字串 | 選用 | 要將模型註冊到的模型群組 ID。
+`provisioned_by` | 字串 | 選用 | 選用的歸屬標籤，用於識別註冊此模型的外掛程式或用戶端 (例如 `flow-framework`)。會包含在 ML 統計指標中。
 
-#### Register a pretrained sparse encoding model
+#### 註冊預先訓練的稀疏編碼模型
 
-To register a pretrained sparse encoding model, you must set the function name to `SPARSE_ENCODING` or `SPARSE_TOKENIZE`.
+若要註冊預先訓練的稀疏編碼模型，您必須將函式名稱設定為 `SPARSE_ENCODING` 或 `SPARSE_TOKENIZE`。
 
-The following table lists the available request fields.
+下表列出可用的請求欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :---  | :--- | :--- 
-`name`| String | Required | The model name. |
-`model_id` | String | Optional | A unique identifier for the model. If omitted, OpenSearch generates one automatically. |
-`version` | String | Required | The model version. |
-`model_format` | String | Required | The portable format of the model file. Valid values are `TORCH_SCRIPT` and `ONNX`. |
-`function_name` | String | Required | For text embedding models, set this parameter to `TEXT_EMBEDDING`. For sparse encoding models, set this parameter to `SPARSE_ENCODING` or `SPARSE_TOKENIZE`. For cross-encoder models, set this parameter to `TEXT_SIMILARITY`. For question answering models, set this parameter to `QUESTION_ANSWERING`.
-`model_content_hash_value` | String | Required | The model content hash generated using the SHA-256 hashing algorithm.
-`url` | String | Required | The URL that contains the model. |
-`description` | String | Optional| The model description. |
-`model_group_id` | String | Optional | The ID of the model group to which to register this model.
-`provisioned_by` | String | Optional | An optional attribution tag identifying the plugin or client that registered the model (for example, `flow-framework`). Included in ML statistics metrics.
+`name`| 字串 | 必要 | 模型名稱。 |
+`model_id` | 字串 | 選用 | 模型的唯一識別碼。若省略，OpenSearch 會自動產生一個。 |
+`version` | 字串 | 必要 | 模型版本。 |
+`model_format` | 字串 | 必要 | 模型檔案的可攜式格式。有效值為 `TORCH_SCRIPT` 和 `ONNX`。 |
+`function_name` | 字串 | 必要 | 對於文字嵌入模型，請將此參數設定為 `TEXT_EMBEDDING`。對於稀疏編碼模型，請將此參數設定為 `SPARSE_ENCODING` 或 `SPARSE_TOKENIZE`。對於交叉編碼器模型，請將此參數設定為 `TEXT_SIMILARITY`。對於問答模型，請將此參數設定為 `QUESTION_ANSWERING`。
+`model_content_hash_value` | 字串 | 必要 | 使用 SHA-256 雜湊演算法產生的模型內容雜湊值。
+`url` | 字串 | 必要 | 包含模型的 URL。 |
+`description` | 字串 | 選用| 模型說明。 |
+`model_group_id` | 字串 | 選用 | 要將此模型註冊到的模型群組 ID。
+`provisioned_by` | 字串 | 選用 | 選用的歸屬標籤，用於識別註冊此模型的外掛程式或用戶端 (例如 `flow-framework`)。會包含在 ML 統計指標中。
 
-### Register a custom model 
+### 註冊自訂模型 
 
-To use a custom model locally within the OpenSearch cluster, you need to provide a URL and a config object for that model. For more information, see [Custom local models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/).
+若要在 OpenSearch 叢集內於本機使用自訂模型，您需要為該模型提供 URL 和組態物件。如需更多資訊，請參閱[自訂本機模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)。
 
-The following table lists the available request fields.
+下表列出可用的請求欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :---  | :--- | :--- 
-`name`| String | Required | The model name. |
-`model_id` | String | Optional | A unique identifier for the model. If omitted, OpenSearch generates one automatically. |
-`version` | String | Required | The model version. |
-`model_format` | String | Required | The portable format of the model file. Valid values are `TORCH_SCRIPT` and `ONNX`. |
-`function_name` | String | Required | Set this parameter to `TEXT_EMBEDDING`, `SPARSE_ENCODING`, `SPARSE_TOKENIZE`, `TEXT_SIMILARITY`, or `QUESTION_ANSWERING`.
-`model_content_hash_value` | String | Required | The model content hash generated using the SHA-256 hashing algorithm.
-[`model_config`](#the-model_config-object)  | Object | Required | The model's configuration, including the `model_type`, `embedding_dimension`, and `framework_type`. The optional `all_config` JSON string contains all model configurations. The `additional_config` object contains the corresponding `space_type` for pretrained models or the specified `space_type` for custom models. See [Space types]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/#distance-calculation). |
-`url` | String | Required | The URL that contains the model. |
-`description` | String | Optional| The model description. |
-`model_group_id` | String | Optional | The model group ID of the model group to register this model to. 
-`is_enabled`| Boolean | Optional | Specifies whether the model is enabled. Disabling the model makes it unavailable for Predict API requests, regardless of the model's deployment status. Default is `true`.
-`rate_limiter` | Object | Optional | Limits the number of times that any user can call the Predict API on the model. For more information, see [Rate limiting inference calls]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#rate-limiting-inference-calls).
-`interface`| Object | Optional | The interface for the model. For more information, see [Interface](#the-interface-parameter).|
-`provisioned_by` | String | Optional | An optional attribution tag identifying the plugin or client that registered the model (for example, `flow-framework`). Included in ML statistics metrics.
+`name`| 字串 | 必要 | 模型名稱。 |
+`model_id` | 字串 | 選用 | 模型的唯一識別碼。若省略，OpenSearch 會自動產生一個。 |
+`version` | 字串 | 必要 | 模型版本。 |
+`model_format` | 字串 | 必要 | 模型檔案的可攜式格式。有效值為 `TORCH_SCRIPT` 和 `ONNX`。 |
+`function_name` | 字串 | 必要 | 將此參數設定為 `TEXT_EMBEDDING`、`SPARSE_ENCODING`、`SPARSE_TOKENIZE`、`TEXT_SIMILARITY` 或 `QUESTION_ANSWERING`。
+`model_content_hash_value` | 字串 | 必要 | 使用 SHA-256 雜湊演算法產生的模型內容雜湊值。
+[`model_config`](#the-model_config-object)  | 物件 | 必要 | 模型的組態，包括 `model_type`、`embedding_dimension` 和 `framework_type`。選用的 `all_config` JSON 字串包含所有模型組態。`additional_config` 物件包含預先訓練模型對應的 `space_type`，或自訂模型所指定的 `space_type`。請參閱[空間類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/#distance-calculation)。 |
+`url` | 字串 | 必要 | 包含模型的 URL。 |
+`description` | 字串 | 選用| 模型說明。 |
+`model_group_id` | 字串 | 選用 | 要將此模型註冊到的模型群組之 ID。 
+`is_enabled`| 布林值 | 選用 | 指定是否啟用模型。停用模型後，無論模型的部署狀態為何，Predict API 請求都無法使用該模型。預設為 `true`。
+`rate_limiter` | 物件 | 選用 | 限制任何使用者可對該模型呼叫 Predict API 的次數。如需更多資訊，請參閱[限制推論呼叫的速率]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#rate-limiting-inference-calls)。
+`interface`| 物件 | 選用 | 模型的介面。如需更多資訊，請參閱[介面](#the-interface-parameter)。|
+`provisioned_by` | 字串 | 選用 | 選用的歸屬標籤，用於識別註冊此模型的外掛程式或用戶端 (例如 `flow-framework`)。會包含在 ML 統計指標中。
 
-#### The `model_config` object
+#### `model_config` 物件
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- 
-| `model_type` | String | The model type, such as `bert`. For a Hugging Face model, the model type is specified in `config.json`. For an example, see the [`all-MiniLM-L6-v2` Hugging Face model `config.json`](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/blob/main/config.json#L15). Required. |
-| `embedding_dimension` | Integer | The dimension of the model-generated dense vector. For a Hugging Face model, the dimension is specified in the model card. For example, in the [`all-MiniLM-L6-v2` Hugging Face model card](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2), the statement `384 dimensional dense vector space` specifies 384 as the embedding dimension. Required. |
-| `framework_type` | String  | The framework the model is using. OpenSearch supports `sentence_transformers` and `huggingface_transformers` frameworks. The `sentence_transformers` model outputs text embeddings directly, so ML Commons does not perform any post processing. For `huggingface_transformers`, ML Commons performs post processing by applying mean pooling to get text embeddings. See the example [`all-MiniLM-L6-v2` Hugging Face model](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) for more details. Required. |
-| `all_config` | String | This field is used for reference purposes. You can specify all model configurations in this field. For example, if you are using a Hugging Face model, you can minify the `config.json` file to one line and save its contents in the `all_config` field. Once the model is uploaded, you can use the get model API operation to get all model configurations stored in this field. Optional. |
-| `additional_config` | Object | Additional model configurations. Contains the `space_type`, which specifies the distance metric for k-NN search. For OpenSearch-provided pretrained models, this value is automatically set to the corresponding metric (for example, `l2` for `huggingface/sentence-transformers/all-distilroberta-v1`). For custom models, specify your preferred space type. Optional. See [Space types]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/#distance-calculation). |
+| `model_type` | 字串 | 模型類型，例如 `bert`。對於 Hugging Face 模型，模型類型指定於 `config.json`。範例請參閱 [`all-MiniLM-L6-v2` Hugging Face 模型 `config.json`](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/blob/main/config.json#L15)。必要。 |
+| `embedding_dimension` | 整數 | 模型產生的稠密向量維度。對於 Hugging Face 模型，維度指定於模型卡片中。例如，在 [`all-MiniLM-L6-v2` Hugging Face 模型卡片](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) 中，敘述 `384 dimensional dense vector space` 指定 384 作為嵌入維度。必要。 |
+| `framework_type` | 字串  | 模型使用的框架。OpenSearch 支援 `sentence_transformers` 與 `huggingface_transformers` 框架。`sentence_transformers` 模型直接輸出文字嵌入，因此 ML Commons 不會執行任何後處理。對於 `huggingface_transformers`，ML Commons 會執行後處理，套用平均池化以取得文字嵌入。更多細節請參閱範例 [`all-MiniLM-L6-v2` Hugging Face 模型](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)。必要。 |
+| `all_config` | 字串 | 此欄位用於參考用途。您可以在此欄位中指定所有模型組態。例如，如果您使用 Hugging Face 模型，可以將 `config.json` 檔案壓縮成一行，並將其內容儲存在 `all_config` 欄位中。模型上傳後，您可以使用取得模型的 API 操作，取得儲存在此欄位中的所有模型組態。選用。 |
+| `additional_config` | 物件 | 其他模型組態。包含 `space_type`，用於指定 k-NN 搜尋的距離度量。對於 OpenSearch 提供的預先訓練模型，此值會自動設定為對應的度量（例如 `huggingface/sentence-transformers/all-distilroberta-v1` 使用 `l2`）。對於自訂模型，請指定您偏好的空間類型。選用。請參閱[空間類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/#distance-calculation)。 |
 
-You can further customize a pretrained sentence transformer model's post-processing logic with the following optional fields in the `model_config` object.
+您可以使用 `model_config` 物件中的下列選用欄位，進一步自訂預先訓練句子轉換器模型的後處理邏輯。
 
-| Field | Data type | Description |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `pooling_mode` | String | The post-process model output, either `mean`, `mean_sqrt_len`, `max`, `weightedmean`, `cls`, `lasttoken`, or `none`. Use `lasttoken` for decoder-only models (for example, Qwen3-Embedding), for which the final non-padding token captures cumulative context through causal attention. Use `none` for models that already provide pre-pooled output (such as `sentence_embedding` or `pooler_output`) to skip additional pooling.|
-| `normalize_result` | Boolean | When set to `true`, normalizes the model output in order to scale to a standard range for the model. |
+| `pooling_mode` | 字串 | 後處理模型輸出，可為 `mean`、`mean_sqrt_len`、`max`、`weightedmean`、`cls`、`lasttoken` 或 `none`。對於僅解碼器模型（例如 Qwen3-Embedding），請使用 `lasttoken`，此類模型的最後一個非填充詞元會透過因果注意力擷取累積上下文。對於已提供預先池化輸出的模型（例如 `sentence_embedding` 或 `pooler_output`），請使用 `none` 以略過額外的池化。|
+| `normalize_result` | 布林值 | 設定為 `true` 時，會將模型輸出標準化，以縮放至模型的標準範圍。 |
 
-### Register a model hosted on a third-party platform
+### 註冊託管於第三方平台的模型
 
-To register a model hosted on a third-party platform, you can either first create a standalone connector and provide the ID of that connector or specify an internal connector for the model. For more information, see [Creating connectors for third-party ML platforms]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/).
+若要註冊託管於第三方平台的模型，您可以先建立獨立連接器並提供該連接器的 ID，或為模型指定內部連接器。更多資訊請參閱[為第三方 ML 平台建立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-The following table lists the available request fields.
+下表列出可用的請求欄位。
 
-Field | Data type | Required/Optional | Description
+欄位 | 資料類型 | 必要/選用 | 說明
 :---  | :--- | :--- 
-`name`| String | Required | The model name. |
-`function_name` | String | Required | Set this parameter to `remote`.
-`connector_id` | String | Required | The connector ID of a standalone connector for a model hosted on a third-party platform. For more information, see [Standalone connector]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-standalone-connector). You must provide either `connector_id` or `connector`.
-`connector` | Object | Required | Contains specifications for a connector for a model hosted on a third-party platform. For more information, see [Creating a connector for a specific model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-connector-for-a-specific-model). You must provide either `connector_id` or `connector`.
-`model_id` | String | Optional | A unique identifier for the model. If omitted, OpenSearch generates one automatically. |
-`description` | String | Optional| The model description. |
-`model_group_id` | String | Optional | The model group ID of the model group to register this model to. 
-`is_enabled`| Boolean | Optional | Specifies whether the model is enabled. Disabling the model makes it unavailable for Predict API requests, regardless of the model's deployment status. Default is `true`.
-`rate_limiter` | Object | Optional | Limits the number of times that any user can call the Predict API on the model. For more information, see [Rate limiting inference calls]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#rate-limiting-inference-calls).
-`guardrails`| Object | Optional | The guardrails for the model input. For more information, see [Guardrails](#the-guardrails-parameter).|
-`interface`| Object | Optional | The interface for the model. For more information, see [Interface](#the-interface-parameter).|
-`batch_inference_config` | Object | Optional | Configures batch inference for an externally hosted model. For more information, see [The `batch_inference_config` parameter](#the-batch_inference_config-parameter). |
-`provisioned_by` | String | Optional | An optional attribution tag identifying the plugin or client that registered the model (for example, `flow-framework`). Included in ML statistics metrics.
+`name`| 字串 | 必要 | 模型名稱。 |
+`function_name` | 字串 | 必要 | 將此參數設定為 `remote`。
+`connector_id` | 字串 | 必要 | 託管於第三方平台之模型的獨立連接器 ID。更多資訊請參閱[獨立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-standalone-connector)。您必須提供 `connector_id` 或 `connector` 其中之一。
+`connector` | 物件 | 必要 | 包含託管於第三方平台之模型連接器的規格。更多資訊請參閱[為特定模型建立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-connector-for-a-specific-model)。您必須提供 `connector_id` 或 `connector` 其中之一。
+`model_id` | 字串 | 選用 | 模型的唯一識別碼。若省略，OpenSearch 會自動產生。 |
+`description` | 字串 | 選用| 模型描述。 |
+`model_group_id` | 字串 | 選用 | 要註冊此模型之模型群組的模型群組 ID。 
+`is_enabled`| 布林值 | 選用 | 指定模型是否啟用。停用模型會使其無法用於 Predict API 請求，無論模型的部署狀態為何。預設為 `true`。
+`rate_limiter` | 物件 | 選用 | 限制任何使用者可對模型呼叫 Predict API 的次數。更多資訊請參閱[推論呼叫的速率限制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#rate-limiting-inference-calls)。
+`guardrails`| 物件 | 選用 | 模型輸入的防護機制。更多資訊請參閱[防護機制](#the-guardrails-parameter)。|
+`interface`| 物件 | 選用 | 模型的介面。更多資訊請參閱[介面](#the-interface-parameter)。|
+`batch_inference_config` | 物件 | 選用 | 為外部託管模型設定批次推論。更多資訊請參閱[`batch_inference_config` 參數](#the-batch_inference_config-parameter)。 |
+`provisioned_by` | 字串 | 選用 | 選用的歸屬標籤，用於識別註冊模型的外掛程式或用戶端（例如 `flow-framework`）。會包含在 ML 統計指標中。
 
-### The `guardrails` parameter
+### `guardrails` 參數
 
-Guardrails are safety measures for large language models (LLMs). They provide a set of rules and boundaries that control how an LLM behaves and what kind of output it generates. 
+防護機制是大型語言模型 (LLM) 的安全措施。它們提供一組規則與邊界，控制 LLM 的行為方式及其產生的輸出類型。 
 
-To register an externally hosted model with guardrails, provide the `guardrails` parameter, which supports the following fields. All fields are optional.
+若要註冊具有防護機制的外部託管模型，請提供 `guardrails` 參數，該參數支援下列欄位。所有欄位皆為選用。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :---  | :--- | :---
-`type` | String | The guardrail type. Valid values are [`local_regex`](#example-request-regex-and-stopword-validation) and [`model`](#example-request-guardrail-model-validation). Using `local_regex`, you can specify a regular expression or stop words. Using `model`, you can specify a guardrail model. For more information, see [Guardrails]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/). 
-`input_guardrail`| Object |  The guardrail for the model input. 
-`output_guardrail`| Object |  The guardrail for the model output. 
-`stop_words`| Object | The list of indexes containing stopwords used for model input/output validation. If the model prompt/response contains a stopword contained in any of the indexes, then the predict request on the model is rejected. 
-`index_name`| Object | The name of the index storing the stopwords. 
-`source_fields`| Object | The name of the field storing the stopwords. 
-`regex`| Object |  A regular expression used for input/output validation. If the model prompt/response matches the regular expression, then the predict request on the model is rejected. 
-`model_id`| String  | The guardrail model used to validate user input and LLM output. 
-`response_filter`| String | The dot path of the field containing the guardrail model response. 
-`response_validation_regex`| String | The regular expression used to validate the guardrail model response.     
+`type` | 字串 | 防護機制類型。有效值為 [`local_regex`](#example-request-regex-and-stopword-validation) 與 [`model`](#example-request-guardrail-model-validation)。使用 `local_regex` 時，您可以指定正規表示式或停用詞。使用 `model` 時，您可以指定防護機制模型。更多資訊請參閱[防護機制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/)。 
+`input_guardrail`| 物件 |  模型輸入的防護機制。 
+`output_guardrail`| 物件 |  模型輸出的防護機制。 
+`stop_words`| 物件 | 包含用於模型輸入/輸出驗證之停用詞的索引清單。若模型提示/回應包含任何索引中的停用詞，則對模型的 predict 請求會被拒絕。 
+`index_name`| 物件 | 儲存停用詞的索引名稱。 
+`source_fields`| 物件 | 儲存停用詞的欄位名稱。 
+`regex`| 物件 |  用於輸入/輸出驗證的正規表示式。若模型提示/回應符合該正規表示式，則對模型的 predict 請求會被拒絕。 
+`model_id`| 字串  | 用於驗證使用者輸入與 LLM 輸出的防護機制模型。 
+`response_filter`| 字串 | 包含防護機制模型回應之欄位的點路徑。 
+`response_validation_regex`| 字串 | 用於驗證防護機制模型回應的正規表示式。     
 
-### The `interface` parameter
+### `interface` 參數
 
-The model interface provides a highly flexible way to add arbitrary metadata annotations to all local deep learning models and externally hosted models in a JSON schema syntax. This annotation initiates a validation check on the input and output fields of the model during the model's invocation. The validation check ensures that the input and output fields are in the correct format both before and after the model performs inference.
+模型介面提供了一種高度靈活的方式，可透過 JSON schema 語法為所有本機深度學習模型與外部託管模型新增任意中繼資料註解。此註解會在模型呼叫期間，對模型的輸入與輸出欄位啟動驗證檢查。驗證檢查可確保模型執行推論前後，輸入與輸出欄位皆為正確的格式。
 
-To register a model with a model interface, provide the `interface` parameter, which supports the following fields.
+若要使用模型介面註冊模型，請提供 `interface` 參數，其支援下列欄位。
 
-Field | Data type | Description                         
+欄位 | 資料類型 | 說明                         
 :---  | :--- |:------------------------------------
-`input`| Object | The JSON schema for the model input. |
-`output`| Object | The JSON schema for the model output. |
+`input`| 物件 | 模型輸入的 JSON schema。 |
+`output`| 物件 | 模型輸出的 JSON schema。 |
 
-The input and output fields are evaluated against the provided JSON schema. You do not need to provide both fields simultaneously.
+輸入與輸出欄位會依據所提供的 JSON schema 進行評估。您不需要同時提供這兩個欄位。
 
-#### Connector model interfaces
+#### 連接器模型介面
 
-To simplify your workflow, you can register an externally hosted model using a connector in one of the [connector blueprint]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/) formats. If you do so, a predefined model interface for this connector is generated automatically during model registration. The predefined model interface is generated based on the connector blueprint and the model's metadata, so you must strictly follow the blueprint when creating the connector in order to avoid errors.
+為了簡化您的工作流程，您可以使用其中一種[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)格式，透過連接器註冊外部託管的模型。若您這麼做，系統會在模型註冊期間自動為此連接器產生預先定義的模型介面。預先定義的模型介面會根據連接器藍圖與模型的中繼資料產生，因此您在建立連接器時必須嚴格遵循藍圖，以避免發生錯誤。
 
-The following connector blueprints support creating predefined model interfaces:
+下列連接器藍圖支援建立預先定義的模型介面：
 
 - [Amazon Comprehend](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/amazon_comprehend_connector_blueprint.md)
-- [Amazon Textract](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/amazon_textract_connector_blueprint.md) (Note that a predefined model interface is only available for the `DetectDocumentText` API; the `DetectEnities` API is not supported).
+- [Amazon Textract](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/amazon_textract_connector_blueprint.md)（請注意，預先定義的模型介面僅適用於 `DetectDocumentText` API；不支援 `DetectEnities` API）。
 - [Amazon Bedrock AI21 Labs Jurassic](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_ai21labs_jurassic_blueprint.md)
 - [Amazon Bedrock Anthropic Claude 3](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_anthropic_claude3_blueprint.md)
 - [Amazon Bedrock Anthropic Claude](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_anthropic_claude_blueprint.md)
@@ -191,27 +192,27 @@ The following connector blueprints support creating predefined model interfaces:
 - [Amazon Bedrock Titan Text Embeddings](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_titan_embedding_blueprint.md)
 - [Amazon Bedrock Titan Multimodal Embeddings](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_titan_multimodal_embedding_blueprint.md)
 
-To learn more about connector blueprints, see [Connector blueprints]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/).
+若要進一步了解連接器藍圖，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)。
 
-### The `batch_inference_config` parameter
+### `batch_inference_config` 參數
 
-Use the `batch_inference_config` parameter to limit the number and size of input strings that OpenSearch sends to the model in one call so that each call stays within the externally hosted model's limits. You can also enable dynamic batching, which combines individual requests to improve overall throughput. You must set at least one of `max_items_per_request` and `max_bytes_per_request` to a positive value.
+使用 `batch_inference_config` 參數可限制 OpenSearch 在單次呼叫中傳送給模型的輸入字串數量與大小，讓每次呼叫都維持在外部託管模型的限制內。您也可以啟用動態批次處理，將個別請求合併以提升整體輸送量。您必須將 `max_items_per_request` 與 `max_bytes_per_request` 中至少一項設為正值。
 
-The following table lists the `batch_inference_config` fields.
+下表列出 `batch_inference_config` 欄位。
 
-Field | Data type | Required/Optional | Default | Description
+欄位 | 資料類型 | 必要/選用 | 預設 | 說明
 :---  | :--- | :--- | :--- | :---
-`max_items_per_request` | Integer | Optional | `-1` (disabled) | The maximum number of input strings in one call to the model. Omit this parameter or set it to `-1` to disable this limit.
-`max_bytes_per_request` | Long | Optional | `-1` (disabled) | The maximum combined size, in bytes, of the input strings in a single call to the model. This limit excludes the other fields in the connector request body, so set the value below the endpoint's payload limit to leave room for them. Omit this parameter or set it to `-1` to disable this limit.
-`dynamic_batching` | Object | Optional | | Configures dynamic batching.
-`dynamic_batching.enabled` | Boolean | Optional | `false` | When `true`, OpenSearch dynamically batches requests before sending them to the model. Dynamic batching requires a positive value for `max_items_per_request` or `max_bytes_per_request`.
-`dynamic_batching.flush_timeout_ms` | Long | Optional | `50` | The maximum time, in milliseconds, that the first request waits for additional requests before the model is invoked in batch. Valid values are 1--10,000. The batch might be invoked earlier if the accumulated input strings reach `max_items_per_request` or `max_bytes_per_request` before the timeout is reached.
+`max_items_per_request` | 整數 | 選用 | `-1`（停用） | 單次呼叫模型時輸入字串的數量上限。省略此參數或將其設為 `-1` 即可停用此限制。
+`max_bytes_per_request` | 長整數 | 選用 | `-1`（停用） | 單次呼叫模型時輸入字串的合併大小上限（以位元組為單位）。此限制不包含連接器請求本文中的其他欄位，因此請將此值設為低於端點的承載限制，以保留空間給這些欄位。省略此參數或將其設為 `-1` 即可停用此限制。
+`dynamic_batching` | 物件 | 選用 | | 設定動態批次處理。
+`dynamic_batching.enabled` | 布林值 | 選用 | `false` | 當設為 `true` 時，OpenSearch 會先動態批次處理請求，再將其傳送給模型。動態批次處理需要將 `max_items_per_request` 或 `max_bytes_per_request` 設為正值。
+`dynamic_batching.flush_timeout_ms` | 長整數 | 選用 | `50` | 第一個請求在模型以批次方式被呼叫前，等待其他請求的最長時間（以毫秒為單位）。有效值為 1--10,000。若累積的輸入字串在逾時前達到 `max_items_per_request` 或 `max_bytes_per_request`，批次可能會提前被呼叫。
 
-## Example requests
+## 範例請求
 
-The following examples show how to register different types of models.
+下列範例顯示如何註冊不同類型的模型。
 
-### Example request: OpenSearch-provided text embedding model
+### 範例請求：OpenSearch 提供的文字嵌入模型
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -224,7 +225,7 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-### Example request: OpenSearch-provided sparse encoding model
+### 範例請求：OpenSearch 提供的稀疏編碼模型
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -237,9 +238,9 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-### Example request: Custom model
+### 範例請求：自訂模型
 
-The following example request registers a version `1.0.0` of an NLP sentence transformation model named `all-MiniLM-L6-v2`.
+下列範例請求會註冊名為 `all-MiniLM-L6-v2` 的 NLP 句子轉換模型 `1.0.0` 版。
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -262,7 +263,7 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-### Example request: Externally hosted with a standalone connector
+### 範例請求：使用獨立連接器的外部託管模型
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -276,7 +277,7 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-### Example request: Externally hosted with a connector specified as part of the model
+### 範例請求：外部託管模型並在模型中指定連接器
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -315,9 +316,9 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-### Example request: Regex and stopword validation
+### 範例請求：正規表示式與停用詞驗證
 
-The following example uses a regular expression and a set of stopwords to validate the LLM response:
+下列範例使用正規表示式與一組停用詞來驗證 LLM 回應：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -352,11 +353,11 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-For a complete example, see [Validating input/output using stopwords and regex]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/#validating-inputoutput-using-stopwords-and-regex).
+完整範例請參閱[使用停用詞與正規表示式驗證輸入/輸出]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/#validating-inputoutput-using-stopwords-and-regex)。
 
-### Example request: Guardrail model validation
+### 範例請求：防護模型驗證
 
-The following example uses a guardrail model to validate the LLM response:
+下列範例使用防護模型來驗證 LLM 回應：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -381,9 +382,9 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-For a complete example, see [Validating input/output using a guardrail model]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/#validating-inputoutput-using-a-guardrail-model).
+完整範例請參閱[使用防護模型驗證輸入/輸出]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/#validating-inputoutput-using-a-guardrail-model)。
 
-### Example request: Externally hosted model with an interface
+### 範例請求：具有介面的外部託管模型
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -443,11 +444,11 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-### Example request: Batch inference configuration
+### 範例請求：批次推論組態
 
-Obtain the input string count (`max_items_per_request`) and payload (`max_bytes_per_request`) limits from the official documentation for the exact model and provider. For a custom endpoint, use the limits configured on the model server. For configuration guidance, see [Batching requests to externally hosted models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/batching-requests/).
+請從該模型與提供者的官方文件取得輸入字串數量 (`max_items_per_request`) 與承載 (`max_bytes_per_request`) 的限制。若為自訂端點，請使用模型伺服器上設定的限制。組態指引請參閱[向外部託管模型傳送批次請求]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/batching-requests/)。
 
-The following request registers an externally hosted model with size limits and dynamic batching enabled:
+下列請求註冊一個具有大小限制並啟用動態批次處理的外部託管模型：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -467,9 +468,9 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
-OpenSearch responds with the `task_id`, task `status`, and `model_id`:
+OpenSearch 會回應 `task_id`、任務 `status` 以及 `model_id`：
 
 ```json
 {
@@ -479,16 +480,16 @@ OpenSearch responds with the `task_id`, task `status`, and `model_id`:
 }
 ```
 
-## Checking the status of model registration
+## 檢查模型註冊狀態
 
-To see the status of your model registration and retrieve the model ID created for the new model version, pass the `task_id` as a path parameter to the [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/):
+若要查看模型註冊狀態並擷取為新模型版本建立的模型 ID，請將 `task_id` 作為路徑參數傳遞給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
 ```json
 GET /_plugins/_ml/tasks/{task_id}
 ```
 {% include copy-curl.html %}
 
-The response contains the model ID of the model version:
+回應包含該模型版本的模型 ID：
 
 ```json
 {

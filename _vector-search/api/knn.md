@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: k-NN API
 parent: Vector search API
@@ -10,88 +11,88 @@ redirect_from:
 
 # k-NN API
 
-OpenSearch provides several k-nearest neighbors (k-NN) APIs for managing, monitoring, and optimizing your vector workload.
+OpenSearch 提供數個 k-nearest neighbors (k-NN) API，用於管理、監控及最佳化您的向量工作負載。
 
 ## Stats
 
-The k-NN `stats` API provides information about the current status of the k-NN plugin, which implements vector search functionality. This includes both cluster-level and node-level statistics. Cluster-level statistics have a single value for the entire cluster. Node-level statistics have a single value for each node in the cluster. You can filter the query by `nodeId` and `statName`, as shown in the following example:
+k-NN `stats` API 提供 k-NN 外掛程式的目前狀態相關資訊，該外掛程式實作向量搜尋功能。這包括叢集層級與節點層級的統計資料。叢集層級統計資料對整個叢集只有單一值。節點層級統計資料對叢集中的每個節點各有一個值。您可以依 `nodeId` 與 `statName` 篩選查詢，如下列範例所示：
 
 ```json
 GET /_plugins/_knn/nodeId1,nodeId2/stats/statName1,statName2
 ```
 {% include copy-curl.html %}
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists the available response body fields.
+下表列出可用的回應本文欄位。
 
-Field |  Description
+欄位 |  說明
 :--- | :---
-`circuit_breaker_triggered` | Indicates whether the circuit breaker is triggered. This statistic is only relevant to approximate k-NN search.
-`total_load_time` | The time in nanoseconds that k-NN has taken to load native library indexes into the cache. This statistic is only relevant to approximate k-NN search.
-`eviction_count` | The number of native library indexes that have been evicted from the cache due to memory constraints or idle time. This statistic is only relevant to approximate k-NN search. <br /> **Note**: Explicit evictions that occur because of index deletion aren't counted.
-`hit_count` | The number of cache hits. A cache hit occurs when a user queries a native library index that's already loaded into memory. This statistic is only relevant to approximate k-NN search.
-`miss_count` | The number of cache misses. A cache miss occurs when a user queries a native library index that isn't loaded into memory yet. This statistic is only relevant to approximate k-NN search.
-`graph_memory_usage` | The amount of native memory native library indexes are using on the node in kilobytes.
-`graph_memory_usage_percentage` | The amount of native memory native library indexes are using on the node as a percentage of the maximum cache capacity.
-`graph_index_requests` | The number of requests to add the `knn_vector` field of a document into a native library index.
-`graph_index_errors` | The number of requests to add the `knn_vector` field of a document into a native library index that have produced an error.
-`graph_query_requests` | The number of native library index queries that have been made.
-`graph_query_errors` | The number of native library index queries that have produced an error.
-`knn_query_requests` | The number of k-NN query requests received.
-`cache_capacity_reached` | Whether `knn.memory.circuit_breaker.limit` has been reached. This statistic is only relevant to approximate k-NN search.
-`load_success_count` | The number of times k-NN successfully loaded a native library index into the cache. This statistic is only relevant to approximate k-NN search.
-`load_exception_count` | The number of times an exception occurred when trying to load a native library index into the cache. This statistic is only relevant to approximate k-NN search.
-`indices_in_cache` | For each OpenSearch index with a `knn_vector` field and approximate k-NN turned on, this statistic provides the number of native library indexes that OpenSearch index has and the total `graph_memory_usage` that the OpenSearch index is using, in kilobytes.
-`script_compilations` | The number of times the k-NN script has been compiled. This value should usually be 1 or 0, but if the cache containing the compiled scripts is filled, the k-NN script might be recompiled. This statistic is only relevant to k-NN scoring script search.
-`script_compilation_errors` | The number of errors during script compilation. This statistic is only relevant to k-NN scoring script search.
-`script_query_requests` | The total number of script queries. This statistic is only relevant to k-NN scoring script search.
-`script_query_errors` | The number of errors during script queries. This statistic is only relevant to k-NN scoring script search.
-`nmslib_initialized` | A Boolean value indicating whether the `nmslib` JNI library has been loaded and initialized on the node.
-`faiss_initialized` | A Boolean value indicating whether the `faiss` JNI library has been loaded and initialized on the node.
-`model_index_status` | The status of the model system index. Valid values are `red`, `yellow`, and `green`. If the index does not exist, this value is `null`.
-`indexing_from_model_degraded` | Boolean value indicating if indexing from a model is degraded. This happens if there is not enough JVM memory to cache the models.
-`ing_requests` | The number of training requests made to the node.
-`training_errors` | The number of training errors that have occurred on the node.
-`training_memory_usage` | The amount of native memory training is using on the node in kilobytes.
-`training_memory_usage_percentage` | The amount of native memory training is using on the node as a percentage of the maximum cache capacity.
+`circuit_breaker_triggered` | 指出是否觸發斷路器。此統計資料僅與近似 k-NN 搜尋相關。
+`total_load_time` | k-NN 將原生程式庫索引載入快取所花費的時間，以奈秒為單位。此統計資料僅與近似 k-NN 搜尋相關。
+`eviction_count` | 因記憶體限制或閒置時間而從快取中逐出的原生程式庫索引數目。此統計資料僅與近似 k-NN 搜尋相關。<br /> **注意**：因刪除索引而發生的明確逐出不會計入。
+`hit_count` | 快取命中次數。當使用者查詢已載入記憶體的原生程式庫索引時，即發生快取命中。此統計資料僅與近似 k-NN 搜尋相關。
+`miss_count` | 快取未命中次數。當使用者查詢尚未載入記憶體的原生程式庫索引時，即發生快取未命中。此統計資料僅與近似 k-NN 搜尋相關。
+`graph_memory_usage` | 原生程式庫索引在節點上使用的原生記憶體量，以 KB 為單位。
+`graph_memory_usage_percentage` | 原生程式庫索引在節點上使用的原生記憶體量，以最大快取容量的百分比表示。
+`graph_index_requests` | 將文件的 `knn_vector` 欄位新增至原生程式庫索引的請求數目。
+`graph_index_errors` | 將文件的 `knn_vector` 欄位新增至原生程式庫索引而產生錯誤的請求數目。
+`graph_query_requests` | 已進行的原生程式庫索引查詢數目。
+`graph_query_errors` | 已產生錯誤的原生程式庫索引查詢數目。
+`knn_query_requests` | 收到的 k-NN 查詢請求數目。
+`cache_capacity_reached` | 是否已達到 `knn.memory.circuit_breaker.limit`。此統計資料僅與近似 k-NN 搜尋相關。
+`load_success_count` | k-NN 成功將原生程式庫索引載入快取的次數。此統計資料僅與近似 k-NN 搜尋相關。
+`load_exception_count` | 嘗試將原生程式庫索引載入快取時發生例外狀況的次數。此統計資料僅與近似 k-NN 搜尋相關。
+`indices_in_cache` | 對於每個已開啟 `knn_vector` 欄位與近似 k-NN 的 OpenSearch 索引，此統計資料提供該 OpenSearch 索引擁有的原生程式庫索引數目，以及該 OpenSearch 索引正在使用的總 `graph_memory_usage`，以 KB 為單位。
+`script_compilations` | k-NN 指令碼已編譯的次數。此值通常應為 1 或 0，但如果包含已編譯指令碼的快取已滿，k-NN 指令碼可能會重新編譯。此統計資料僅與 k-NN 評分指令碼搜尋相關。
+`script_compilation_errors` | 指令碼編譯期間的錯誤數目。此統計資料僅與 k-NN 評分指令碼搜尋相關。
+`script_query_requests` | 指令碼查詢的總數。此統計資料僅與 k-NN 評分指令碼搜尋相關。
+`script_query_errors` | 指令碼查詢期間的錯誤數目。此統計資料僅與 k-NN 評分指令碼搜尋相關。
+`nmslib_initialized` | 布林值，指出節點上是否已載入並初始化 `nmslib` JNI 程式庫。
+`faiss_initialized` | 布林值，指出節點上是否已載入並初始化 `faiss` JNI 程式庫。
+`model_index_status` | 模型系統索引的狀態。有效值為 `red`、`yellow` 及 `green`。如果索引不存在，此值為 `null`。
+`indexing_from_model_degraded` | 布林值，指出從模型編製索引是否已降級。若沒有足夠的 JVM 記憶體可快取模型，就會發生此情況。
+`ing_requests` | 對節點進行的訓練請求數目。
+`training_errors` | 節點上已發生的訓練錯誤數目。
+`training_memory_usage` | 訓練在節點上使用的原生記憶體量，以 KB 為單位。
+`training_memory_usage_percentage` | 訓練在節點上使用的原生記憶體量，以最大快取容量的百分比表示。
 
-Some statistics contain *graph* in the name. In these cases, *graph* is synonymous with *native library index*. The term *graph* is reflective of when the plugin only supported the HNSW algorithm, which consists of hierarchical graphs.
+部分統計資料的名稱包含 *graph*。在這些情況下，*graph* 與 *native library index* 同義。*graph* 一詞反映該外掛程式僅支援 HNSW 演算法時的狀況，該演算法由階層式圖形組成。
 {: .note}
 
-#### Remote index build stats
-Introduced 3.0 
+#### 遠端索引建置統計資料
+於 3.0 版推出 
 {: .label .label-purple }
 
-If you configured [remote index build]({{site.url}}{{site.baseurl}}/vector-search/remote-index-build/), the response contains additional fields. The following table lists the available remote index build stats response body fields.
+如果您已設定[遠端索引建置]({{site.url}}{{site.baseurl}}/vector-search/remote-index-build/)，回應會包含其他欄位。下表列出可用的遠端索引建置統計資料回應本文欄位。
 
-| Field | Description |
+| 欄位 | 說明 |
 |:---|:---|
-| `repository_stats.read_success_count` | The number of successful read operations from the repository. |
-| `repository_stats.read_failure_count` | The number of failed read operations from the repository. |
-| `repository_stats.successful_read_time_in_millis` | The total time, in milliseconds, spent on successful read operations. |
-| `repository_stats.write_success_count` | The number of successful write operations to the repository. |
-| `repository_stats.write_failure_count` | The number of failed write operations to the repository. |
-| `repository_stats.successful_write_time_in_millis` | The total time, in milliseconds, spent on successful write operations. |
-| `client_stats.build_request_success_count` | The number of successful build request operations. |
-| `client_stats.build_request_failure_count` | The number of failed build request operations. |
-| `client_stats.status_request_failure_count` | The number of failed status request operations. |
-| `client_stats.status_request_success_count` | The number of successful status request operations. |
-| `client_stats.index_build_success_count` | The number of successful index build operations. |
-| `client_stats.index_build_failure_count` | The number of failed index build operations. |
-| `client_stats.waiting_time_in_ms` | The total time, in milliseconds, that the client has spent awaiting completion of remote builds. |
-| `build_stats.remote_index_build_flush_time_in_millis` | The total time, in milliseconds, spent on remote flush operations. |
-| `build_stats.remote_index_build_merge_time_in_millis` | The total time, in milliseconds, spent on remote merge operations. |
-| `build_stats.remote_index_build_current_merge_operations` | The current number of remote merge operations in progress. |
-| `build_stats.remote_index_build_current_flush_operations` | The current number of remote flush operations in progress. |
-| `build_stats.remote_index_build_current_merge_size` | The current size of remote merge operations. |
-| `build_stats.remote_index_build_current_flush_size` | The current size of remote flush operations. |
+| `repository_stats.read_success_count` | 從儲存庫成功讀取作業的次數。 |
+| `repository_stats.read_failure_count` | 從儲存庫失敗讀取作業的次數。 |
+| `repository_stats.successful_read_time_in_millis` | 成功讀取作業所花費的總時間，以毫秒為單位。 |
+| `repository_stats.write_success_count` | 對儲存庫成功寫入作業的次數。 |
+| `repository_stats.write_failure_count` | 對儲存庫失敗寫入作業的次數。 |
+| `repository_stats.successful_write_time_in_millis` | 成功寫入作業所花費的總時間，以毫秒為單位。 |
+| `client_stats.build_request_success_count` | 成功建置請求作業的次數。 |
+| `client_stats.build_request_failure_count` | 失敗建置請求作業的次數。 |
+| `client_stats.status_request_failure_count` | 失敗狀態請求作業的次數。 |
+| `client_stats.status_request_success_count` | 成功狀態請求作業的次數。 |
+| `client_stats.index_build_success_count` | 成功索引建置作業的次數。 |
+| `client_stats.index_build_failure_count` | 失敗索引建置作業的次數。 |
+| `client_stats.waiting_time_in_ms` | 用戶端等待遠端建置完成所花費的總時間，以毫秒為單位。 |
+| `build_stats.remote_index_build_flush_time_in_millis` | 遠端排清作業所花費的總時間，以毫秒為單位。 |
+| `build_stats.remote_index_build_merge_time_in_millis` | 遠端合併作業所花費的總時間，以毫秒為單位。 |
+| `build_stats.remote_index_build_current_merge_operations` | 目前進行中的遠端合併作業數目。 |
+| `build_stats.remote_index_build_current_flush_operations` | 目前進行中的遠端排清作業數目。 |
+| `build_stats.remote_index_build_current_merge_size` | 遠端合併作業的目前大小。 |
+| `build_stats.remote_index_build_current_flush_size` | 遠端排清作業的目前大小。 |
 
-#### Example request
+#### 範例請求
 
-The following examples demonstrate how to retrieve statistics related to the k-NN plugin. 
+下列範例示範如何擷取與 k-NN 外掛程式相關的統計資料。
 
-The following example fetches comprehensive statistics for the k-NN plugin across all nodes in the cluster:
+下列範例會擷取叢集中所有節點上 k-NN 外掛程式的完整統計資料：
 
 ```json
 GET /_plugins/_knn/stats?pretty
@@ -144,7 +145,7 @@ GET /_plugins/_knn/stats?pretty
 ```
 {% include copy-curl.html %}
 
-The following example retrieves specific metrics (circuit breaker status and graph memory usage) for a single node:
+下列範例會擷取單一節點的特定指標（斷路器狀態與圖形記憶體使用量）：
 
 ```json
 GET /_plugins/_knn/HYMrXXsBSamUkcAjhjeN0w/stats/circuit_breaker_triggered,graph_memory_usage?pretty
@@ -165,19 +166,19 @@ GET /_plugins/_knn/HYMrXXsBSamUkcAjhjeN0w/stats/circuit_breaker_triggered,graph_
 ```
 {% include copy-curl.html %}
 
-## Warmup operation
+## 預熱作業
 
-The native library indexes used to perform approximate k-NN search are stored as special files with other Apache Lucene segment files. To perform a search on these indexes using the k-NN plugin, the plugin needs to load these files into native memory.
+用於執行近似 k-NN 搜尋的原生程式庫索引，會以特殊檔案的形式與其他 Apache Lucene 分段檔案一併儲存。若要使用 k-NN 外掛程式對這些索引執行搜尋，外掛程式必須將這些檔案載入原生記憶體。
 
-If the plugin has not loaded the files into native memory, then it loads them when it receives a search request. The loading time can cause high latency during initial queries. To avoid this, users often run random queries during a warmup period. After this warmup period, the files are loaded into native memory, and their production workloads can launch. This loading process is indirect and requires extra effort.
+如果外掛程式尚未將檔案載入原生記憶體，則會在收到搜尋請求時載入。載入時間可能會在初始查詢時造成高延遲。為避免此問題，使用者通常會在預熱期間執行隨機查詢。預熱期間結束後，檔案已載入原生記憶體，即可啟動生產工作負載。此載入過程是間接的，需要額外的工夫。
 
-As an alternative, you can avoid this latency issue by running the k-NN plugin warmup API operation on the indexes you want to search. This operation loads all the native library files for all the shards (primaries and replicas) of all the indexes specified in the request into native memory.
+或者，您可以對想要搜尋的索引執行 k-NN 外掛程式預熱 API 作業，以避免此延遲問題。此作業會將請求中指定之所有索引的所有分片（主要與副本）的原生程式庫檔案載入原生記憶體。
 
-After the process is finished, you can search against the indexes without initial latency penalties. The warmup API operation is idempotent, so if a segment's native library files are already loaded into memory, this operation has no effect. It only loads files not currently stored in memory.
+程序完成後，您即可搜尋這些索引，而不會產生初始延遲。預熱 API 作業具有冪等性，因此如果某個分段的原生程式庫檔案已載入記憶體，此作業不會產生任何效果。它只會載入目前未儲存在記憶體中的檔案。
 
-#### Example request
+#### 範例請求
 
-The following request performs a warmup on three indexes:
+下列請求會對三個索引執行預熱：
 
 ```json
 GET /_plugins/_knn/warmup/index1,index2,index3?pretty
@@ -191,41 +192,41 @@ GET /_plugins/_knn/warmup/index1,index2,index3?pretty
 ```
 {% include copy-curl.html %}
 
-The `total` value indicates the number of shards that the k-NN plugin attempted to warm up. The response also includes the number of shards that the plugin successfully warmed up and failed to warm up.
+`total` 值表示 k-NN 外掛程式嘗試預熱的分片數量。回應中也包含外掛程式成功預熱與預熱失敗的分片數量。
 
-The call does not return results until the warmup operation finishes or the request times out. If the request times out, then the operation continues on the cluster. To monitor the warmup operation, use the OpenSearch `_tasks` API:
+在預熱作業完成或請求逾時之前，此呼叫不會傳回結果。如果請求逾時，作業會繼續在叢集上執行。若要監視預熱作業，請使用 OpenSearch `_tasks` API：
 
 ```json
 GET /_tasks
 ```
 {% include copy-curl.html %}
 
-After the operation has finished, use the [k-NN `_stats` API operation](#stats) to see what the k-NN plugin loaded into the graph.
+作業完成後，請使用 [k-NN `_stats` API 作業](#stats) 查看 k-NN 外掛程式載入圖形中的內容。
 
-### Best practices
+### 最佳做法
 
-For the warmup operation to function properly, follow these best practices:
+若要讓預熱作業正常運作，請遵循下列最佳做法：
 
-* Do not run merge operations on indexes that you want to warm up. During a merge operation, the k-NN plugin creates new segments, and old segments are sometimes deleted. For example, you could encounter a situation in which the warmup API operation loads native library indexes A and B into native memory but segment C is created from segments A and B being merged. Native library indexes A and B would no longer be in memory, and native library index C would also not be in memory. In this case, the initial penalty for loading native library index C still exists.
+* 不要對想要預熱的索引執行合併作業。在合併作業期間，k-NN 外掛程式會建立新的分段，有時會刪除舊的分段。例如，您可能會遇到以下情況：預熱 API 作業將原生程式庫索引 A 與 B 載入原生記憶體，但分段 C 是由分段 A 與 B 合併而成。原生程式庫索引 A 與 B 將不再存在於記憶體中，而原生程式庫索引 C 也尚未載入記憶體。在這種情況下，載入原生程式庫索引 C 的初始延遲仍然存在。
 
-* Confirm that all native library indexes you want to warm up can fit into native memory. For more information about the native memory limit, see the [knn.memory.circuit_breaker.limit statistic]({{site.url}}{{site.baseurl}}/search-plugins/knn/settings#cluster-settings). High graph memory usage causes cache thrashing, which can lead to operations constantly failing and attempting to run again.
+* 確認所有想要預熱的原生程式庫索引都能容納於原生記憶體中。如需原生記憶體限制的詳細資訊，請參閱 [knn.memory.circuit_breaker.limit 統計資料]({{site.url}}{{site.baseurl}}/search-plugins/knn/settings#cluster-settings)。圖形記憶體使用量過高會導致快取頻繁置換，可能使作業不斷失敗並嘗試重新執行。
 
-* Do not index any documents that you want to load into the cache. Writing new information to segments prevents the warmup API operation from loading the native library indexes until they are searchable. This means that you would have to run the warmup operation again after indexing.
+* 不要對想要載入快取的文件編製索引。將新資訊寫入分段會使預熱 API 作業無法載入原生程式庫索引，直到它們可供搜尋為止。這表示您必須在編製索引後再次執行預熱作業。
 
-## k-NN clear cache
-Introduced 2.14
+## k-NN 清除快取
+於 2.14 版導入
 {: .label .label-purple }
 
-During approximate k-NN search or warmup operations, the native library indexes (for the `faiss` and `nmslib` [deprecated] engines) are loaded into native memory. Currently, you can evict an index from the cache or native memory by either deleting the index or setting the k-NN cluster settings `knn.cache.item.expiry.enabled` and `knn.cache.item.expiry.minutes`, which removes the index from the cache if it is idle for a given period of time. However, you cannot evict an index from the cache without deleting the index. To solve this problem, you can use the k-NN clear cache API operation, which clears a given set of indexes from the cache.
+在近似 k-NN 搜尋或預熱作業期間，原生程式庫索引（`faiss` 與 `nmslib` [已淘汰] 引擎）會載入原生記憶體。目前，您可以透過刪除索引，或設定 k-NN 叢集設定 `knn.cache.item.expiry.enabled` 與 `knn.cache.item.expiry.minutes`（若索引閒置一段時間即將其從快取中移除）來將索引從快取或原生記憶體中逐出。然而，您無法在不刪除索引的情況下將索引從快取中逐出。為解決此問題，您可以使用 k-NN 清除快取 API 作業，將指定的索引集合從快取中清除。
 
-The k-NN clear cache API evicts all native library files for all shards (primaries and replicas) of all indexes specified in the request. Similarly to how the [warmup operation](#warmup-operation) behaves, the k-NN clear cache API is idempotent, meaning that if you try to clear the cache for an index that has already been evicted from the cache, it does not have any additional effect.
+k-NN 清除快取 API 會逐出請求中指定之所有索引的所有分片（主要與副本）的所有原生程式庫檔案。與[預熱作業](#warmup-operation)的行為類似，k-NN 清除快取 API 具有冪等性，也就是說，如果您嘗試清除已從快取中逐出之索引的快取，不會產生任何額外效果。
 
-This API operation only works with indexes created using the `faiss` and `nmslib` (deprecated) engines. It has no effect on indexes created using the `lucene` engine.
+此 API 作業僅適用於使用 `faiss` 與 `nmslib`（已淘汰）引擎建立的索引。對使用 `lucene` 引擎建立的索引沒有任何效果。
 {: .note}
 
-#### Example request
+#### 範例請求
 
-The following request evicts the native library indexes of three indexes from the cache:
+下列請求會將三個索引的原生程式庫索引從快取中逐出：
 
 ```json
 POST /_plugins/_knn/clear_cache/index1,index2,index3?pretty
@@ -239,9 +240,9 @@ POST /_plugins/_knn/clear_cache/index1,index2,index3?pretty
 ```
 {% include copy-curl.html %}
 
-The `total` parameter indicates the number of shards that the API attempted to clear from the cache. The response includes both the number of cleared shards and the number of shards that the plugin failed to clear.
+`total` 參數表示 API 嘗試從快取中清除的分片數量。回應包含已清除的分片數量，以及外掛程式清除失敗的分片數量。
 
-The k-NN clear cache API can be used with index patterns to clear one or more indexes that match the given pattern from the cache, as shown in the following example:
+k-NN 清除快取 API 可搭配索引模式使用，從快取中清除一或多個符合指定模式的索引，如下列範例所示：
 
 ```json
 POST /_plugins/_knn/clear_cache/index*?pretty
@@ -255,47 +256,47 @@ POST /_plugins/_knn/clear_cache/index*?pretty
 ```
 {% include copy-curl.html %}
 
-The API call does not return results until the operation finishes or the request times out. If the request times out, then the operation continues on the cluster. To monitor the request, use the `_tasks` API, as shown in the following example:
+在作業完成或請求逾時之前，API 呼叫不會傳回結果。如果請求逾時，作業會繼續在叢集上執行。若要監視請求，請使用 `_tasks` API，如下列範例所示：
 
 ```json
 GET /_tasks
 ```
 {% include copy-curl.html %}
 
-When the operation finishes, use the [k-NN `_stats` API operation](#stats) to see which indexes have been evicted from the cache.
+作業完成後，請使用 [k-NN `_stats` API 作業](#stats) 查看哪些索引已從快取中逐出。
 
-## Get a model
+## 取得模型
 
-The GET model operation retrieves information about models present in the cluster. Some native library index configurations require a training step before indexing and querying can begin. The output of training is a model that can be used to initialize native library index files during indexing. The model is serialized in the k-NN model system index. 
+GET 模型操作會擷取叢集中現有模型的相關資訊。部分原生函式庫索引組態需要先進行訓練步驟，才能開始編製索引和查詢。訓練的輸出是一個模型，可用於在編製索引期間初始化原生函式庫索引檔案。模型會序列化並儲存在 k-NN 模型系統索引中。
 
-#### Example request
+#### 範例請求
 
 ```json
 GET /_plugins/_knn/models/{model_id}
 ```
 {% include copy-curl.html %}
 
-### Response body fields
+### 回應本文欄位
 
-The following table lists the available response body fields.
+下表列出可用的回應本文欄位。
 
-Response field |  Description
+回應欄位 |  說明
 :--- | :---
-`model_id` | The unique identifier of the fetched model.
-`model_blob` | The Base64-encoded string of the serialized model.
-`state` | The model's current state, which can be `created`, `failed`, or `training`.
-`timestamp` | The date and time when the model was created.
-`description` | A user-provided description of the model.
-`error` | An error message explaining why the model is in a failed state.
-`space_type` | The space type for which the model is trained, for example, Euclidean or cosine. Note: This value can be set at the top level of the request.
-`dimension` | The dimensionality of the vector space for which this model is designed.
-`engine` | The native library used to create the model, either `faiss` or `nmslib` (deprecated). 
+`model_id` | 所擷取模型的唯一識別碼。
+`model_blob` | 序列化模型的 Base64 編碼字串。
+`state` | 模型的目前狀態，可為 `created`、`failed` 或 `training`。
+`timestamp` | 建立模型的日期和時間。
+`description` | 使用者提供的模型說明。
+`error` | 說明模型為何處於失敗狀態的錯誤訊息。
+`space_type` | 訓練模型所用的空間類型，例如 Euclidean 或 cosine。注意：此值可在請求的最上層設定。
+`dimension` | 此模型所設計之向量空間的維度。
+`engine` | 用於建立模型的原生函式庫，可為 `faiss` 或 `nmslib` (已棄用)。
 
-#### Example request
+#### 範例請求
 
-The following examples demonstrate how to retrieve information about a specific model using the k-NN plugin API. 
+下列範例示範如何使用 k-NN 外掛程式 API 擷取特定模型的相關資訊。
 
-The following example returns all the available information about the model: 
+下列範例會傳回模型的所有可用資訊：
 
 ```json
 GET /_plugins/_knn/models/test-model?pretty
@@ -313,7 +314,7 @@ GET /_plugins/_knn/models/test-model?pretty
 ```
 {% include copy-curl.html %}
 
-The following example demonstrates how to selectively retrieve fields:
+下列範例示範如何選擇性地擷取欄位：
 
 ```json
 GET /_plugins/_knn/models/test-model?pretty&filter_path=model_id,state
@@ -324,13 +325,13 @@ GET /_plugins/_knn/models/test-model?pretty&filter_path=model_id,state
 ```
 {% include copy-curl.html %}
 
-## Search for a model
+## 搜尋模型
 
-You can use an OpenSearch query to search for a model in the index. See the following usage example. 
+您可以使用 OpenSearch 查詢來搜尋索引中的模型。請參閱下列使用範例。
 
-#### Example request
+#### 範例請求
 
-The following example shows how to search for k-NN models in an OpenSearch cluster and how to retrieve the metadata for those models, excluding the potentially large `model_blob` field:
+下列範例示範如何在 OpenSearch 叢集中搜尋 k-NN 模型，以及如何擷取這些模型的中繼資料，並排除可能很大的 `model_blob` 欄位：
 
 ```json
 GET/POST /_plugins/_knn/models/_search?pretty&_source_excludes=model_blob
@@ -342,7 +343,7 @@ GET/POST /_plugins/_knn/models/_search?pretty&_source_excludes=model_blob
 ```
 {% include copy-curl.html %}
 
-The response contains the model information:
+回應包含模型資訊：
 
 ```json
 {
@@ -381,13 +382,13 @@ The response contains the model information:
 }
 ```
 
-## Delete a model
+## 刪除模型
 
-You can delete a model in the cluster by using the DELETE operation. See the following usage example. 
+您可以使用 DELETE 操作來刪除叢集中的模型。請參閱下列使用範例。
 
-#### Example request
+#### 範例請求
 
-The following example shows how to delete a k-NN model:
+下列範例示範如何刪除 k-NN 模型：
 
 ```json
 DELETE /_plugins/_knn/models/{model_id}
@@ -398,37 +399,37 @@ DELETE /_plugins/_knn/models/{model_id}
 ```
 {% include copy-curl.html %}
 
-## Train a model
+## 訓練模型
 
-You can create and train a model that can be used for initializing k-NN native library indexes during indexing. This API pulls training data from a `knn_vector` field in a training index, creates and trains a model, and then serializes it to the model system index. Training data must match the dimension passed in the request body. This request is returned when training begins. To monitor the model's state, use the [Get model API](#get-a-model).  
+您可以建立並訓練模型，用於在編製索引期間初始化 k-NN 原生函式庫索引。此 API 會從訓練索引中的 `knn_vector` 欄位提取訓練資料，建立並訓練模型，然後將其序列化至模型系統索引。訓練資料必須符合請求本文中傳入的維度。訓練開始時會傳回此請求。若要監視模型的狀態，請使用 [Get model API](#get-a-model)。
 
-### Query parameters
+### 查詢參數
 
-The following table lists the available query parameters.
+下表列出可用的查詢參數。
 
-Query parameter |  Description
+查詢參數 |  說明
 :--- | :---
-`model_id` | The unique identifier of the fetched model. If not specified, then a random ID is generated. Optional. 
-`node_id` | Specifies the preferred node on which to execute the training process. If provided, the specified node is used for training if it has the necessary capabilities and resources available. Optional.
+`model_id` | 所擷取模型的唯一識別碼。若未指定，則會產生隨機 ID。選用。
+`node_id` | 指定執行訓練程序的偏好節點。若有提供，且指定的節點具備必要的能力和可用資源，則會使用該節點進行訓練。選用。
 
-### Request body fields
+### 請求本文欄位
 
-The following table lists the available request body fields.
+下表列出可用的請求本文欄位。
 
-Request field |  Description
+請求欄位 |  說明
 :--- | :---
-`training_index` | The index from which the training data is retrieved.
-`training_field` | The `knn_vector` field in the `training_index` from which the training data is retrieved. The dimension of this field must match the `dimension` passed in this request.  
-`dimension` | The dimension of the model being trained.
-`max_training_vector_count` | The maximum number of vectors from the training index to be used for training. Defaults to all the vectors in the index. Optional.
-`search_size` | The training data is pulled from the training index using scroll queries. This parameter defines the number of results to return per scroll query. Default is `10000`. Optional.
-`description` | A user-provided description of the model. Optional.
-`method` | The configuration of the approximate k-NN method used for search operations. For more information about the available methods, see [Methods and engines]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/). The method requires training in order to be valid.
-`space_type` | The space type for which this model is trained, for example, Euclidean or cosine. Note: This value can also be set in the `method` parameter.
-   
-#### Example request
+`training_index` | 從中擷取訓練資料的索引。
+`training_field` | `training_index` 中從中擷取訓練資料的 `knn_vector` 欄位。此欄位的維度必須符合此請求中傳入的 `dimension`。  
+`dimension` | 所訓練模型的維度。
+`max_training_vector_count` | 訓練索引中用於訓練的向量數量上限。預設為索引中的所有向量。選用。
+`search_size` | 訓練資料是使用 scroll 查詢從訓練索引提取。此參數定義每個 scroll 查詢要傳回的結果數。預設為 `10000`。選用。
+`description` | 使用者提供的模型說明。選用。
+`method` | 用於搜尋操作的近似 k-NN 方法組態。如需可用方法的詳細資訊，請參閱 [方法與引擎]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/)。此方法需要訓練才能生效。
+`space_type` | 訓練此模型所用的空間類型，例如 Euclidean 或 cosine。注意：此值也可在 `method` 參數中設定。
 
-The following examples show how to initiate the training process for a k-NN model:
+#### 範例請求
+
+下列範例示範如何為 k-NN 模型啟動訓練程序：
 
 ```json
 POST /_plugins/_knn/models/{model_id}/_train?preference={node_id}
@@ -485,7 +486,7 @@ POST /_plugins/_knn/models/_train?preference={node_id}
 ```
 {% include copy-curl.html %}
 
-#### Example response
+#### 範例回應
 
 ```json
 {

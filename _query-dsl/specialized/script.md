@@ -1,20 +1,21 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Script query
+title: "指令碼查詢"
 parent: Specialized queries
 nav_order: 58
 ---
 
-# Script query
+# 指令碼查詢
 
-Use the `script` query to filter documents based on a custom condition written in the Painless scripting language. This query returns documents for which the script evaluates to `true`, enabling advanced filtering logic that can't be expressed using standard queries. For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+使用 `script` 查詢，根據以 Painless 指令碼語言撰寫的自訂條件來篩選文件。此查詢會傳回指令碼評估結果為 `true` 的文件，從而實現無法以標準查詢表達的進階篩選邏輯。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-The `script` query is computationally expensive and should be used sparingly. Only use it when necessary and ensure `search.allow_expensive_queries` is enabled (default is `true`). For more information, see [Expensive queries]({{site.url}}{{site.baseurl}}/query-dsl/#expensive-queries).
+`script` 查詢的運算成本高昂，應謹慎使用。僅在必要時使用，並確保已啟用 `search.allow_expensive_queries`（預設為 `true`）。如需更多資訊，請參閱 [高成本查詢]({{site.url}}{{site.baseurl}}/query-dsl/#expensive-queries)。
 {: .important }
 
-## Example
+## 範例
 
-Create an index named `products` with the following mappings:
+使用下列對應建立名為 `products` 的索引：
 
 ```json
 PUT /products
@@ -30,7 +31,7 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-Index example documents using the following request:
+使用下列請求為範例文件編製索引：
 
 ```json
 POST /products/_bulk
@@ -43,9 +44,9 @@ POST /products/_bulk
 ```
 {% include copy-curl.html %}
 
-## Basic script query
+## 基本指令碼查詢
 
-Return products with a rating higher than `4.6`:
+傳回評等高於 `4.6` 的產品：
 
 ```json
 POST /products/_search
@@ -61,7 +62,7 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-The returned hits only include documents with a `rating` higher than `4.6`:
+傳回的命中結果僅包含 `rating` 高於 `4.6` 的文件：
 
 ```json
 {
@@ -98,18 +99,18 @@ The returned hits only include documents with a `rating` higher than `4.6`:
 }
 ```
 
-## Parameters
+## 參數
 
-The `script` query takes the following top-level parameters.
+`script` 查詢接受下列頂層參數。
 
-| Parameter       | Required/Optional | Description                                           |
+| 參數       | 必要/選用 | 說明                                           |
 | --------------- | ----------------- | ----------------------------------------------------- |
-| `script.source` | Required          | The script code that evaluates to `true` or `false`.  |
-| `script.params` | Optional          | User-defined parameters referenced inside the script. |
+| `script.source` | 必要          | 評估結果為 `true` 或 `false` 的指令碼程式碼。  |
+| `script.params` | 選用          | 在指令碼內參照的使用者自訂參數。 |
 
-## Using script parameters
+## 使用指令碼參數
 
-You can use `params` to safely inject values, taking advantage of script compilation caching:
+您可以使用 `params` 安全地注入值，並利用指令碼編譯快取：
 
 ```json
 POST /products/_search
@@ -128,7 +129,7 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-The returned hits only include documents with a `price` of less than `100`:
+傳回的命中結果僅包含 `price` 低於 `100` 的文件：
 
 ```json
 {
@@ -165,9 +166,9 @@ The returned hits only include documents with a `price` of less than `100`:
 }
 ```
 
-## Combining multiple conditions
+## 結合多個條件
 
-Use the following query to search for products with a `rating` higher than `4.5` and a `price` lower than `100`:
+使用下列查詢搜尋 `rating` 高於 `4.5` 且 `price` 低於 `100` 的產品：
 
 ```json
 POST /products/_search
@@ -183,7 +184,7 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-Only the documents that match the requirements are returned:
+僅會傳回符合條件的文件：
 
 ```json
 {

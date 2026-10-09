@@ -1,93 +1,94 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Alerting dashboards and visualizations
+title: "警示儀表板與視覺化"
 parent: Alerting
 nav_order: 50
 has_children: true
 ---
 
-# Alerting dashboards and visualizations
-Introduced 2.9
+# 警示儀表板與視覺化
+於 2.9 版推出
 {: .label .label-purple }
 
-Create, manage, and take action on your alerts in a single, consolidated view and identify and resolve issues quickly. Use the **Dashboard** interface to:
+在單一整合檢視中建立、管理警示並採取行動，快速識別並解決問題。使用 **Dashboard** 介面來：
 
-- Set up, add, and adjust rules and conditions that trigger alerts and notifications.
-- Create graphs that show trends and patterns and build intuitive dashboards to stay informed of important metrics and data points in real time.
-- Monitor your alerts in one place with at-a-glance views.
+- 設定、新增及調整觸發警示與通知的規則和條件。
+- 建立顯示趨勢與模式的圖表，並建置直覺的儀表板，即時掌握重要指標與資料點。
+- 透過一覽式檢視在同一處監視您的警示。
 
-The following image gives you a snapshot of the Dashboard interface. 
+下圖為 Dashboard 介面的快照。
 
-![Example alerting visualization]({{site.url}}{{site.baseurl}}/images/dashboards/alerting-dashboard.png){: width="800" height="800" }
+![警示視覺化範例]({{site.url}}{{site.baseurl}}/images/dashboards/alerting-dashboard.png){: width="800" height="800" }
 
-## Getting started 
+## 入門
 
-Before getting started, you must have:
+開始之前，您必須具備：
 
-- Installed OpenSearch and OpenSearch Dashboards version 2.9 or later. See [Installing OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/).
-- Installed the Alerting and Notifications Dashboards plugins. See [Managing OpenSearch Dashboards plugins]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/plugins/) to get started.
+- 已安裝 OpenSearch 與 OpenSearch Dashboards 2.9 或更新版本。請參閱[安裝 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/)。
+- 已安裝 Alerting 與 Notifications Dashboards 外掛程式。請參閱[管理 OpenSearch Dashboards 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/plugins/)以開始使用。
 
-## Configuring admin settings
+## 設定管理員設定
 
-Users can only access, create, or manage alerts for resources for which they have permissions. Access to alerting dashboards and visualizations is controlled by OpenSearch and OpenSearch Dashboards permissions. It is enabled by default and appears as a feature under **Dashboards Management** > **Advanced Settings** > **Visualization**. If the setting is disabled, it does not appear. You can disable the setting at the cluster level in the `opensearch-dashboards.yml` file.
+使用者只能存取、建立或管理其擁有權限之資源的警示。警示儀表板與視覺化的存取權由 OpenSearch 與 OpenSearch Dashboards 權限控制。此功能預設為啟用，並顯示為 **Dashboards Management** > **Advanced Settings** > **Visualization** 下的功能。若停用該設定，則不會顯示。您可以在叢集層級的 `opensearch-dashboards.yml` 檔案中停用該設定。
 
-## General requirements for alerting visualizations
+## 警示視覺化的一般需求
 
-Alerting visualizations are displayed as time-series charts that give you a snapshot of the alert, alert status, last updated time, and reason for the alert. You can display up to 10 metrics on your chart, and each series can be shown as a line on the chart.
+警示視覺化會以時間序列圖表顯示，讓您一覽警示、警示狀態、上次更新時間及警示原因。圖表上最多可顯示 10 個指標，每個數列可在圖表上顯示為一條線。
 
-Keep in mind the following requirements when setting up or creating alerting visualizations. The visualization:
+設定或建立警示視覺化時，請留意下列需求。該視覺化：
 
-- Must be a [line chart]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/line-charts/) in which every series is displayed as a line
-- Must contain at least a Y-axis metric aggregation
-- Must not have non-Y-axis metric aggregation types
-- Must use the date histogram aggregation type for the X-axis bucket
-- Must have an X-axis on the bottom
-- Must define one X-axis aggregation bucket
-- Must have a valid time-based X-axis
+- 必須是[折線圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/line-charts/)，其中每個數列都顯示為一條線
+- 必須至少包含一個 Y 軸指標彙總
+- 不得有非 Y 軸的指標彙總類型
+- X 軸桶必須使用日期直方圖彙總類型
+- 底部必須有 X 軸
+- 必須定義一個 X 軸彙總桶
+- 必須有有效的時間型 X 軸
 
-## Creating alerting monitors
+## 建立警示監視器
 
-By default, when you begin to create the alert monitor workflow using the Dashboard interface, you are presented with a menu-driven interface. This interface provides a range of options that are displayed in full screen, in pop-ups, in pull-downs, or in dropdowns. They allow you to define the metrics that can be monitored, set thresholds, customize triggers that automate workflows, and generate actions when conditions are met. You can only create [per query monitors]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/).
+根據預設，當您開始使用 Dashboard 介面建立警示監視器工作流程時，會看到選單導向的介面。此介面提供一系列選項，以全螢幕、彈出式視窗、下拉式選單或下拉式清單顯示。這些選項可讓您定義可監視的指標、設定閾值、自訂自動化工作流程的觸發條件，並在符合條件時產生動作。您只能建立[依查詢監視器]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/)。
 
-To create an alerting monitor: 
+若要建立警示監視器：
 
-1. Choose **Dashboard** from the OpenSearch Dashboards main menu.
-2. From the **Dashboards** window, select **Create** and then choose **Dashboard**.
-3. Select **Add an existing**, then select the appropriate alerting visualization from the **Add panels** list. The visualization is added to the dashboard.
-4. From the visualization panel, choose the ellipsis icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/}). 
-5. From the **Options** menu, select **Add alerting monitor**.
-6. Input information for **Monitor details** and **Triggers**.
-7. Choose **Create monitor**. The monitor is added to the visualization.  
+1. 從 OpenSearch Dashboards 主選單選擇 **Dashboard**。
+2. 在 **Dashboards** 視窗中，選取 **Create**，然後選擇 **Dashboard**。
+3. 選取 **Add an existing**，然後從 **Add panels** 清單中選取適當的警示視覺化。該視覺化即會新增至儀表板。
+4. 在視覺化面板中，選擇省略號圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/})。
+5. 在 **Options** 選單中，選取 **Add alerting monitor**。
+6. 輸入 **Monitor details** 與 **Triggers** 的資訊。
+7. 選擇 **Create monitor**。監視器即會新增至視覺化。
 
-An example of these steps is shown in the following screenshot.
+下列螢幕擷取畫面顯示這些步驟的範例。
 
-![Create monitor interface]({{site.url}}{{site.baseurl}}/images/dashboards/create-monitor-menu.png){: width="400" height="400" }
+![建立監視器介面]({{site.url}}{{site.baseurl}}/images/dashboards/create-monitor-menu.png){: width="400" height="400" }
 
-## Associating monitors
+## 關聯監視器
 
-You can associate certain monitor types with a visualization using the Dashboard interface instead of the plugin page, giving you a single interface through which to add, view, and edit monitor data.
+您可以使用 Dashboard 介面而非外掛程式頁面，將特定監視器類型與視覺化關聯，讓您透過單一介面新增、檢視及編輯監視器資料。
 
-Continuing with the alerting visualization and dashboard created in the preceding section, associate an existing monitor with a visualization by following these steps: 
+延續上一節建立的警示視覺化與儀表板，依照下列步驟將現有監視器與視覺化關聯：
 
-1. From the visualization panel, choose the ellipsis icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/}).
-2. Select **Associated monitors**.
-3. From the **Select monitor to associate** dropdown menu, select the monitor. Only eligible monitors are listed in the dropdown menu. 
-4. View the monitor's basic information. To view comprehensive details, select **View monitor page** to open the Alerting plugin page.
-5. Select **Associate monitor**. An existing monitor is associated with the visualization.
+1. 在視覺化面板中，選擇省略號圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/})。
+2. 選取 **Associated monitors**。
+3. 在 **Select monitor to associate** 下拉式選單中，選取監視器。下拉式選單中只會列出符合資格的監視器。
+4. 檢視監視器的基本資訊。若要檢視完整詳細資料，請選取 **View monitor page** 以開啟 Alerting 外掛程式頁面。
+5. 選取 **Associate monitor**。現有監視器即會與視覺化關聯。
 
-## Exploring alerting monitor details
+## 探索警示監視器詳細資料
 
-Once you've created or associated alerting monitors, verify that the monitor is generating alerts and explore alert details by following these steps:
+建立或關聯警示監視器後，請依照下列步驟確認監視器正在產生警示，並探索警示詳細資料：
 
-1. Open the alerting dashboard. Alerts are indicated on the visualization with a triangle icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards/triangle-icon.png" class="inline-icon" alt="triangle icon"/>{:/}). 
-2. Hover over the triangle icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards/triangle-icon.png" class="inline-icon" alt="triangle icon"/>{:/}) to view high-level data, such as number of alerts. To investigate alert details, select the triangle icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards/triangle-icon.png" class="inline-icon" alt="triangle icon"/>{:/}) to open a flyout with more detailed monitor information. Alternatively, select the ellipsis icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/}) in the visualization panel and choose **View events**.
-3. Select the ellipsis icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/}), then **Alerting** > **Associated monitors**.
-4. Choose an alerting monitor from the list. Information such as history, alerts, and associated visualizations is shown within the visualization panel.
-5. Unlink or edit a monitor. 
-   1. Unlink a monitor from the visualization by selecting the link icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/link-icon.png" class="inline-icon" alt="link icon"/>{:/}) under **Actions**. This only dissociates the monitor from the visualization; it does not delete the monitor.
-   2. Edit the monitor's metrics by selecting the edit icon ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/edit-icon.png" class="inline-icon" alt="edit icon"/>{:/}).
+1. 開啟警示儀表板。警示會以三角形圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards/triangle-icon.png" class="inline-icon" alt="triangle icon"/>{:/}) 標示在視覺化上。
+2. 將游標停留在三角形圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards/triangle-icon.png" class="inline-icon" alt="triangle icon"/>{:/}) 上，以檢視高階資料，例如警示數量。若要調查警示詳細資料，請選取三角形圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards/triangle-icon.png" class="inline-icon" alt="triangle icon"/>{:/}) 以開啟飛出式視窗，顯示更詳細的監視器資訊。或者，在視覺化面板中選取省略號圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/})，然後選擇 **View events**。
+3. 選取省略號圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/})，然後選取 **Alerting** > **Associated monitors**。
+4. 從清單中選擇警示監視器。歷史記錄、警示及關聯的視覺化等資訊會顯示在視覺化面板中。
+5. 取消連結或編輯監視器。
+   1. 選取 **Actions** 下方的連結圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/link-icon.png" class="inline-icon" alt="link icon"/>{:/})，將監視器與視覺化取消連結。這只會將監視器與視覺化解除關聯，不會刪除監視器。
+   2. 選取編輯圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/edit-icon.png" class="inline-icon" alt="edit icon"/>{:/}) 以編輯監視器的指標。
 
-## Next steps
+## 後續步驟
 
-- [Learn more about the Dashboard application]({{site.url}}{{site.baseurl}}/dashboards/dashboard/index/).
-- [Learn more about alerting]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/index/).
+- [進一步瞭解 Dashboard 應用程式]({{site.url}}{{site.baseurl}}/dashboards/dashboard/index/)。
+- [進一步瞭解警示]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/index/)。

@@ -1,24 +1,25 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Ignored
+title: "已忽略"
 parent: Metadata fields
 nav_order: 30
 redirect_from:
   - /field-types/metadata-fields/ignored/
 ---
 
-# Ignored metadata field
+# 已忽略的中繼資料欄位
 
-The `_ignored` field helps you manage issues related to malformed data in your documents. This field is used to index and store field names that were ignored during the indexing process as a result of the `ignore_malformed` setting being enabled in the [index mapping]({{site.url}}{{site.baseurl}}/mappings/). 
+`_ignored` 欄位可協助您管理文件中格式錯誤資料的相關問題。當 [索引對應]({{site.url}}{{site.baseurl}}/mappings/) 中啟用了 `ignore_malformed` 設定時，此欄位會用來編製索引並儲存索引過程中遭忽略的欄位名稱。
 
-The `_ignored` field allows you to search for and identify documents containing fields that were ignored as well as for the specific field names that were ignored. This can be useful for troubleshooting. 
+`_ignored` 欄位可讓您搜尋並找出含有遭忽略欄位的文件，以及找出遭忽略的特定欄位名稱。這對於疑難排解很有幫助。
 
-You can query the `_ignored` field using the `term`, `terms`, and `exists` queries, and the results will be included in the search hits.
+您可以使用 `term`、`terms` 和 `exists` 查詢來查詢 `_ignored` 欄位，結果會包含在搜尋命中項目中。
 
-The `_ignored` field is only populated when the `ignore_malformed` setting is enabled in your index mapping. If `ignore_malformed` is set to `false` (the default value), then malformed fields will cause the entire document to be rejected, and the `_ignored` field will not be populated.
+只有在您的索引對應中啟用了 `ignore_malformed` 設定時，才會填入 `_ignored` 欄位。如果 `ignore_malformed` 設為 `false`（預設值），格式錯誤的欄位會導致整份文件遭到拒絕，且不會填入 `_ignored` 欄位。
 {: .note}
 
-The following example request shows you how to use the `_ignored` field:
+下列範例請求示範如何使用 `_ignored` 欄位：
 
 ```json
 GET _search
@@ -34,11 +35,11 @@ GET _search
 
 --- 
 
-#### Example indexing request with the `_ignored` field
+#### 使用 `_ignored` 欄位的範例索引請求
 
-The following example requests add a document with a malformed value to the `test-ignored` index and then search for the documents that contain an ignored field.
+下列範例請求會將含有格式錯誤值的文件新增至 `test-ignored` 索引，然後搜尋含有遭忽略欄位的文件。
 
-First, create the index with `ignore_malformed` set to `true` on the `length` field so that no error is thrown during indexing:
+首先，建立索引並在 `length` 欄位上將 `ignore_malformed` 設為 `true`，以便在編製索引期間不會擲回錯誤：
 
 ```json
 PUT test-ignored
@@ -58,7 +59,7 @@ PUT test-ignored
 ```
 {% include copy-curl.html %}
 
-Next, index a document whose `length` value is not a number. The `refresh` parameter makes the document immediately searchable:
+接著，將 `length` 值不是數字的文件編製索引。`refresh` 參數可讓文件立即可供搜尋：
 
 ```json
 POST test-ignored/_doc?refresh=true
@@ -69,7 +70,7 @@ POST test-ignored/_doc?refresh=true
 ```
 {% include copy-curl.html %}
 
-Finally, search for the documents that have at least one ignored field:
+最後，搜尋至少有一個遭忽略欄位的文件：
 
 ```json
 GET test-ignored/_search
@@ -83,7 +84,7 @@ GET test-ignored/_search
 ```
 {% include copy-curl.html %}
 
-#### Example reponse
+#### 範例回應
 
 ```json
 {
@@ -121,9 +122,9 @@ GET test-ignored/_search
 
 ---
 
-## Ignoring a specified field
+## 忽略指定的欄位
 
-You can use a `term` query to find documents in which a specific field was ignored, as shown in the following example request:
+您可以使用 `term` 查詢來尋找特定欄位遭忽略的文件，如下列範例請求所示：
 
 ```json
 GET _search
@@ -137,7 +138,7 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-#### Reponse 
+#### 回應 
 
 ```json
 {

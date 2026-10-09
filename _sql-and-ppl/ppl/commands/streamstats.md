@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: streamstats
 parent: Commands
@@ -8,39 +9,38 @@ nav_order: 46
 
 <!-- vale off -->
 
-# streamstats command
+# streamstats 命令
 
 <!-- vale on -->
 
-The `streamstats` command calculates cumulative or rolling statistics as events that are processed in order. Unlike `stats` or `eventstats`, which operate on the entire dataset at once, `streamstats` processes events incrementally, making it suitable for time-series and sequence-based analysis.
+`streamstats` 命令會在事件依序處理時計算累計或滾動統計值。與一次處理整個資料集的 `stats` 或 `eventstats` 不同，`streamstats` 會以漸進方式處理事件，因此適合時間序列與以序列為基礎的分析。
 
-Key features include support for the `window` (sliding window calculations) and `current` (whether to include the current event in calculations) parameters and specialized use cases such as identifying trends or detecting changes over sequences of events.  
+主要功能包括支援 `window` (滑動視窗計算) 與 `current` (是否將目前事件納入計算) 參數，以及識別趨勢或偵測事件序列變化等專門使用情境。  
   
 <!-- vale off -->
 
-## Comparing stats, eventstats, and streamstats
+## 比較 stats、eventstats 與 streamstats
 
 <!-- vale on -->
 
-The `stats`, `eventstats`, and `streamstats` commands can all generate aggregations such as average, sum, and maximum. However, they differ in how they operate and the results they produce. The following table summarizes these differences.
+`stats`、`eventstats` 與 `streamstats` 命令都能產生彙總結果，例如平均值、總和與最大值。但它們的運作方式與產生的結果有所不同。下表摘要說明這些差異。
 
-| Aspect | `stats` | `eventstats` | `streamstats` |
+| 面向 | `stats` | `eventstats` | `streamstats` |
 | --- | --- | --- | --- |
-| Transformation behavior | Transforms all events into an aggregated result table, losing original event structure | Adds aggregation results as new fields to the original events without removing the event structure | Adds cumulative (running) aggregation results to each event as it streams through the pipeline |
-| Output format | Output contains only aggregated values. Original raw events are not preserved | Original events remain, with extra fields containing summary statistics | Original events remain, with extra fields containing running totals or cumulative statistics |
-| Aggregation scope | Based on all events in the search (or groups defined by the `by` clause) | Based on all relevant events, then the result is added back to each event in the group | Calculations occur progressively as each event is processed; can be scoped by window |
-| Use cases | When only aggregated results are needed (for example, counts, averages, sums) | When aggregated statistics are needed alongside original event data | When a running total or cumulative statistic is needed across event streams |  
+| 轉換行為 | 將所有事件轉換為彙總結果表格，失去原始事件結構 | 將彙總結果作為新欄位加入原始事件，不移除事件結構 | 在每個事件流經管線時，將累計 (逐筆計算) 彙總結果加入該事件 |
+| 輸出格式 | 輸出僅包含彙總值，不保留原始事件 | 保留原始事件，並加入包含摘要統計值的額外欄位 | 保留原始事件，並加入包含累計總數或累計統計值的額外欄位 |
+| 彙總範圍 | 以搜尋中的所有事件為基礎 (或由 `by` 子句定義的群組) | 以所有相關事件為基礎，然後將結果加回群組中的每個事件 | 在處理每個事件時逐步進行計算；可以視窗限定範圍 |
+| 使用情境 | 只需要彙總結果時 (例如計數、平均值、總和) | 需要彙總統計值與原始事件資料並用時 | 需要跨事件串流的累計總數或累計統計值時 |  
   
+## 語法
 
-## Syntax
-
-The `streamstats` command has the following syntax:
+`streamstats` 命令的語法如下：
 
 ```sql
 streamstats [bucket_nullable=bool] [current=<bool>] [window=<int>] [global=<bool>] [reset_before="("<eval-expression>")"] [reset_after="("<eval-expression>")"] <function>... [by-clause]
 ```
 
-The following are examples of the `streamstats` command syntax:
+以下是 `streamstats` 命令語法的範例：
 
 ```sql
 source = table | streamstats avg(a)
@@ -58,45 +58,45 @@ source = table | streamstats current=false reset_after=a>31 avg(b) by c
 ```
 {% include copy.html %}
 
-## Parameters
+## 參數
 
-The `streamstats` command supports the following parameters.
+`streamstats` 命令支援下列參數。
 
-| Parameter | Required/Optional | Description |
+| 參數 | 必要/選用 | 說明 |
 | --- | --- | --- |
-| `<function>` | Required | An aggregation function or window function. |
-| `bucket_nullable` | Optional | Controls whether to consider null buckets as a valid group in group-by aggregations. When `false`, does not treat null group-by values as a distinct group during aggregation. Default is the value of `plugins.ppl.syntax.legacy.preferred`. |
-| `current` | Optional | Whether to include the current event in summary calculations. When `true`, includes the current event; when `false`, uses the field value from the previous event. Default is `true`. |
-| `window` | Optional | The number of events to use when computing statistics. Default is `0` (all previous and current events are used). |
-| `global` | Optional | Used only when `window` is specified. Determines whether to use a single window (`true`) or separate windows for each group defined by the `by` clause (`false`). When `false` and `window` is non-zero, a separate window is used for each group of values of the field specified in the `by` clause. Default is `true`. |
-| `reset_before` | Optional | Resets all accumulated statistics before `streamstats` computes the running metrics for an event when the `eval-expression` evaluates to `true`. If used with `window`, the window is also reset. Syntax: `reset_before="(<eval-expression>)"`. Default is `false`. |
-| `reset_after` | Optional | Resets all accumulated statistics after `streamstats` computes the running metrics for an event when the `eval-expression` evaluates to `true`. The expression can reference fields returned by `streamstats`. If used with `window`, the window is also reset. Syntax: `reset_after="(<eval-expression>)"`. Default is `false`. |
-| `<by-clause>` | Optional | Fields and expressions for grouping, including scalar functions and aggregation functions. The `span` clause can be used to split specific fields into buckets by intervals. Syntax: `by [span-expression,] [field,]...` If not specified, all events are processed as a single group and running statistics are computed across the entire event stream. |
-| `<span-expression>` | Optional | Splits a field into buckets by intervals (maximum of one). Syntax: `span(field_expr, interval_expr)`. By default, the interval uses the field's default unit. For date/time fields, aggregation results ignore null values. Examples: `span(age, 10)` creates 10-year age buckets, and `span(timestamp, 1h)` creates hourly buckets. Valid time units are millisecond (`ms`), second (`s`), minute (`m`), hour (`h`), day (`d`), week (`w`), month (`M`), quarter (`q`), year (`y`). |
+| `<function>` | 必要 | 彙總函式或視窗函式。 |
+| `bucket_nullable` | 選用 | 控制在 group-by 彙總中是否將 null 桶視為有效群組。當為 `false` 時，彙總期間不會將 null 的 group-by 值視為獨立群組。預設為 `plugins.ppl.syntax.legacy.preferred` 的值。 |
+| `current` | 選用 | 是否將目前事件納入摘要計算。當為 `true` 時，會納入目前事件；當為 `false` 時，則使用前一個事件的欄位值。預設為 `true`。 |
+| `window` | 選用 | 計算統計值時使用的事件數。預設為 `0` (使用所有先前與目前的事件)。 |
+| `global` | 選用 | 僅在指定 `window` 時使用。決定使用單一視窗 (`true`)，還是為 `by` 子句定義的每個群組使用個別視窗 (`false`)。當為 `false` 且 `window` 非零時，會為 `by` 子句中指定欄位的每組值使用個別視窗。預設為 `true`。 |
+| `reset_before` | 選用 | 當 `eval-expression` 評估為 `true` 時，在 `streamstats` 計算事件的累計指標之前重設所有累積統計值。若與 `window` 搭配使用，視窗也會一併重設。語法：`reset_before="(<eval-expression>)"`。預設為 `false`。 |
+| `reset_after` | 選用 | 當 `eval-expression` 評估為 `true` 時，在 `streamstats` 計算事件的累計指標之後重設所有累積統計值。運算式可以參考 `streamstats` 傳回的欄位。若與 `window` 搭配使用，視窗也會一併重設。語法：`reset_after="(<eval-expression>)"`。預設為 `false`。 |
+| `<by-clause>` | 選用 | 用於分組的欄位與運算式，包括純量函式與彙總函式。`span` 子句可用來依區間將特定欄位分割成桶。語法：`by [span-expression,] [field,]...` 若未指定，所有事件會作為單一群組處理，並在整個事件串流上計算累計統計值。 |
+| `<span-expression>` | 選用 | 依區間將欄位分割成桶 (最多一個)。語法：`span(field_expr, interval_expr)`。預設情況下，區間使用欄位的預設單位。對於日期/時間欄位，彙總結果會忽略 null 值。範例：`span(age, 10)` 會建立以 10 歲為間隔的年齡桶，`span(timestamp, 1h)` 會建立每小時的桶。有效的時間單位為毫秒 (`ms`)、秒 (`s`)、分鐘 (`m`)、小時 (`h`)、天 (`d`)、週 (`w`)、月 (`M`)、季 (`q`)、年 (`y`)。 |
 
 
-## Aggregation functions  
+## 彙總函式  
 
-The `streamstats` command supports the following aggregation functions:
+`streamstats` 命令支援下列彙總函式：
 
-* `COUNT` -- Count of values  
-* `SUM` -- Sum of numeric values  
-* `AVG` -- Average of numeric values  
-* `MAX` -- Maximum value  
-* `MIN` -- Minimum value  
-* `VAR_SAMP` -- Sample variance  
-* `VAR_POP` -- Population variance  
-* `STDDEV_SAMP` -- Sample standard deviation  
-* `STDDEV_POP` -- Population standard deviation  
-* `DISTINCT_COUNT`/`DC` -- Distinct count of values  
-* `EARLIEST` -- Earliest value by timestamp  
-* `LATEST` -- Latest value by timestamp 
+* `COUNT` -- 值的計數  
+* `SUM` -- 數值的總和  
+* `AVG` -- 數值的平均值  
+* `MAX` -- 最大值  
+* `MIN` -- 最小值  
+* `VAR_SAMP` -- 樣本變異數  
+* `VAR_POP` -- 母體變異數  
+* `STDDEV_SAMP` -- 樣本標準差  
+* `STDDEV_POP` -- 母體標準差  
+* `DISTINCT_COUNT`/`DC` -- 值的不重複計數  
+* `EARLIEST` -- 依時間戳記取得最早值  
+* `LATEST` -- 依時間戳記取得最晚值 
   
-For detailed documentation of each function, see [Aggregation Functions]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/functions/aggregations/).
+每個函式的詳細說明文件，請參閱[彙總函式]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/functions/aggregations/)。
 
-## Example 1: Calculating the running count of errors by service  
+## 範例 1：依服務計算錯誤的累計次數  
 
-The following query calculates a running count of error logs, grouped by service. This is useful for tracking how errors accumulate across services during an incident:
+下列查詢會依服務分組，計算錯誤記錄檔的累計次數。這對於追蹤事故期間錯誤在各服務之間的累積情況很有用：
   
 ```sql
 source=otellogs
@@ -108,7 +108,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -129,9 +129,9 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 2: Calculating running maximum severity over a sliding window
+## 範例 2：計算滑動視窗內截至前一筆事件的最高嚴重性層級
 
-The following query calculates the running maximum severity level over the previous 2 log entries, excluding the current event. This is useful for alerting when severity escalates beyond recent patterns:
+下列查詢會逐筆計算前 2 筆記錄檔項目（不含目前事件）中的最高嚴重性層級。當嚴重性升高並超出近期模式時，這有助於發出警示：
 
 ```sql
 source=otellogs
@@ -143,7 +143,7 @@ source=otellogs
 {% include copy.html %}
 {% include try-in-playground.html %}
 
-The query returns the following results:
+查詢會傳回下列結果：
 
 <!-- vale off -->
 
@@ -159,14 +159,14 @@ The query returns the following results:
 <!-- vale on -->
   
 
-## Example 3: Comparing global with group-specific windows  
+## 範例 3：比較全域與群組專屬視窗  
 
-The `global` parameter takes the following values:
+`global` 參數接受下列值：
 
-* `true`: A global window is applied across all rows, but the calculations inside the window still respect the `by` groups.
-* `false`: The window itself is created per group, meaning each group receives an independent window. 
+* `true`：會對所有資料列套用全域視窗，但視窗內的計算仍會遵循 `by` 群組。
+* `false`：視窗本身會依群組建立，表示每個群組會取得獨立的視窗。 
   
-The following example uses a sample index containing the following data:
+下列範例使用包含下列資料的範例索引：
 
 <!-- vale off -->
 
@@ -183,9 +183,9 @@ The following example uses a sample index containing the following data:
 
 <!-- vale on -->
 
-The following examples calculate the running average of `age` across accounts by country, using a different `global` parameter.  
+下列範例會依國家計算各帳戶 `age` 的逐筆累計平均值，並使用不同的 `global` 參數。  
 
-When `global=true`, the window slides across all rows in input order, but aggregation is still computed by `country`. The sliding window size is `2`:
+當 `global=true` 時，視窗會依輸入順序滑過所有資料列，但彙總仍會依 `country` 計算。滑動視窗大小為 `2`：
   
 ```sql
 source=state_country
@@ -193,7 +193,7 @@ source=state_country
 ```
 {% include copy.html %}
   
-As a result, `David` and `Rick` are included in the same sliding window when computing `running_avg` across all rows globally:
+因此，在全域計算所有資料列的 `running_avg` 時，`David` 和 `Rick` 會包含在同一個滑動視窗中：
   
 <!-- vale off -->
 
@@ -210,7 +210,7 @@ As a result, `David` and `Rick` are included in the same sliding window when com
 
 <!-- vale on -->
   
-In contrast, when `global=false`, each `by` group forms an independent stream and window:
+相對地，當 `global=false` 時，每個 `by` 群組會形成獨立的串流與視窗：
 
 ```sql
 source=state_country
@@ -218,7 +218,7 @@ source=state_country
 ```
 {% include copy.html %}
   
-`David` and `Hello` form a window for the `USA` group. As a result, for `David`, the `running_avg` is `35.0` instead of `40.0` in the previous case:
+`David` 和 `Hello` 會為 `USA` 群組形成一個視窗。因此，對於 `David`，`running_avg` 會是 `35.0`，而不是前一個案例中的 `40.0`：
   
 <!-- vale off -->
 
@@ -236,9 +236,9 @@ source=state_country
 <!-- vale on -->
   
 
-## Example 4: Resetting statistics conditionally  
+## 範例 4：有條件地重設統計資料  
 
-The following query calculates the running average of `age` across accounts by `country`, with resets applied:
+下列查詢會依 `country` 計算各帳戶 `age` 的逐筆累計平均值，並套用重設：
   
 ```sql
 source=state_country
@@ -246,7 +246,7 @@ source=state_country
 ```
 {% include copy.html %}
   
-The query returns the following results:
+查詢會傳回下列結果：
   
 <!-- vale off -->
 
@@ -265,9 +265,9 @@ The query returns the following results:
   
 
 
-## Example 5: Null bucket behavior
+## 範例 5：Null 桶行為
 
-When `bucket_nullable=false`, null values are excluded from group-by aggregations:
+當 `bucket_nullable=false` 時，null 值會從分組彙總中排除：
 
 ```sql
 source=accounts
@@ -276,7 +276,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-Rows in which the `by` field is `null` are excluded from aggregation, so the `cnt` for `Dale` is `null`:
+`by` 欄位為 `null` 的資料列會從彙總中排除，因此 `Dale` 的 `cnt` 為 `null`：
   
 <!-- vale off -->
 
@@ -289,7 +289,7 @@ Rows in which the `by` field is `null` are excluded from aggregation, so the `cn
 
 <!-- vale on -->
   
-When `bucket_nullable=true`, null values are treated as a valid group:
+當 `bucket_nullable=true` 時，null 值會視為有效的群組：
 
 ```sql
 source=accounts
@@ -298,7 +298,7 @@ source=accounts
 ```
 {% include copy.html %}
   
-As a result, the `cnt` for `Dale` is included and calculated normally:
+因此，`Dale` 的 `cnt` 會包含在內並正常計算：
   
 <!-- vale off -->
 

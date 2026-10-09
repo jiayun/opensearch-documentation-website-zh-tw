@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Semantic search using byte vectors
+title: "使用位元組向量的語意搜尋"
 parent: Vector operations
 grand_parent: Vector search
 nav_order: 10
@@ -9,30 +10,30 @@ redirect_from:
   - /vector-search/tutorials/vector-operations/semantic-search-byte-vectors/
 ---
 
-# Semantic search using byte-quantized vectors
+# 使用位元組量化向量的語意搜尋
 
-This tutorial shows you how to build a semantic search using the [Cohere Embed model](https://docs.cohere.com/reference/embed) and byte-quantized vectors. For more information about using byte-quantized vectors, see [Byte vectors]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#byte-vectors) and [Semantic search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/).
+本教學說明如何使用 [Cohere Embed 模型](https://docs.cohere.com/reference/embed)與位元組量化向量建立語意搜尋。如需使用位元組量化向量的更多資訊，請參閱 [位元組向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#byte-vectors) 與 [語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)。
 
-The Cohere Embed v3 model supports several `embedding_types`. For this tutorial, you'll use the `INT8` type to encode byte-quantized vectors. 
+Cohere Embed v3 模型支援數種 `embedding_types`。在本教學中，您將使用 `INT8` 類型來編碼位元組量化向量。
 
-The Cohere Embed v3 model supports several input types. This tutorial uses the following input types:
+Cohere Embed v3 模型支援數種輸入類型。本教學使用下列輸入類型：
 
-- `search_document`: Use this input type when you have text (in the form of documents) that you want to store in a vector database.
-- `search_query`: Use this input type when structuring search queries to find the most relevant documents in your vector database.
+- `search_document`：當您有想要儲存在向量資料庫中的文字（以文件形式）時，請使用此輸入類型。
+- `search_query`：當您在結構化搜尋查詢以找出向量資料庫中最相關的文件時，請使用此輸入類型。
 
-For more information about input types, see the [Cohere documentation](https://docs.cohere.com/docs/embed-api#the-input_type-parameter).
+如需輸入類型的更多資訊，請參閱 [Cohere 文件](https://docs.cohere.com/docs/embed-api#the-input_type-parameter)。
 
-In this tutorial, you will create two models:
+在本教學中，您將建立兩個模型：
 
-- A model used for ingestion, whose `input_type` is `search_document` 
-- A model used for search, whose `input_type` is `search_query`
+- 一個用於匯入的模型，其 `input_type` 為 `search_document`
+- 一個用於搜尋的模型，其 `input_type` 為 `search_query`
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將以 `your_` 為前綴的預留位置替換為您自己的值。
 {: .note}
 
-## Step 1: Create an embedding model for ingestion
+## 步驟 1：建立用於匯入的嵌入模型
 
-Create a connector for the Cohere model, specifying the `search_document` input type:
+為 Cohere 模型建立連接器，並指定 `search_document` 輸入類型：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -67,12 +68,12 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-To ensure compatibility with OpenSearch, the `data_type` (output in the `inference_results.output.data_type` field of the response) must be set to `FLOAT32` in the post-processing function, even though the actual embedding type will be `INT8`.
+為確保與 OpenSearch 相容，`data_type`（在回應的 `inference_results.output.data_type` 欄位中輸出）必須在後處理函式中設為 `FLOAT32`，即使實際的嵌入類型將是 `INT8`。
 {: .important}
 
-Note the connector ID in the response; you'll use it to register the model.
+請記下回應中的連接器 ID；您將用它來註冊模型。
 
-Register the model, providing its connector ID:
+註冊模型，並提供其連接器 ID：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -85,9 +86,9 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Note the model ID in the response; you'll use it in the following steps.
+請記下回應中的模型 ID；您將在後續步驟中使用它。
 
-Test the model, providing the model ID:
+測試模型，並提供模型 ID：
 
 ```json
 POST /_plugins/_ml/models/your_embedding_model_id/_predict
@@ -99,7 +100,7 @@ POST /_plugins/_ml/models/your_embedding_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-The response contains inference results:
+回應包含推論結果：
 
 ```json
 {
@@ -141,9 +142,9 @@ The response contains inference results:
 }
 ```
 
-## Step 2: Ingest data
+## 步驟 2：匯入資料
 
-First, create an ingest pipeline:
+首先，建立資料匯入管線：
 
 ```json
 PUT /_ingest/pipeline/pipeline-cohere
@@ -163,7 +164,7 @@ PUT /_ingest/pipeline/pipeline-cohere
 ```
 {% include copy-curl.html %}
 
-Next, create a vector index and set the `data_type` for the `passage_embedding` field to `byte` so that it can store byte-quantized vectors:
+接著，建立向量索引，並將 `passage_embedding` 欄位的 `data_type` 設為 `byte`，以便儲存位元組量化向量：
 
 ```json
 PUT my_test_data
@@ -200,7 +201,7 @@ PUT my_test_data
 ```
 {% include copy-curl.html %}
 
-Last, ingest test data:
+最後，匯入測試資料：
 
 ```json
 POST _bulk
@@ -211,9 +212,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Step 3: Configure semantic search
+## 步驟 3：設定語意搜尋
 
-Create a connector to an embedding model with the `search_query` input type:
+建立一個連接至嵌入模型的連接器，並使用 `search_query` 輸入類型：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -248,9 +249,9 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-Note the connector ID in the response; you'll use it to register the model.
+請記下回應中的連接器 ID；您將使用它來註冊模型。
 
-Register the model, providing its connector ID:
+註冊模型，並提供其連接器 ID：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -263,9 +264,9 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-Note the model ID in the response; you'll use it to run queries.
+請記下回應中的模型 ID；您將使用它來執行查詢。
 
-Run a vector search, providing the model ID:
+執行向量搜尋，並提供模型 ID：
 
 ```json
 POST /my_test_data/_search
@@ -285,7 +286,7 @@ POST /my_test_data/_search
 ```
 {% include copy-curl.html %}
 
-The response contains the query results:
+回應中包含查詢結果：
 
 ```json
 {

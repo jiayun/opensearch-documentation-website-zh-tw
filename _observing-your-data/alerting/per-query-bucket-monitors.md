@@ -1,36 +1,37 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Per query and per bucket monitors
+title: "每個查詢與每個桶監視器"
 nav_order: 5
 parent: Monitors
 grand_parent: Alerting
 has_children: false
 ---
 
-# Per query and per bucket monitors
+# 每個查詢與每個桶監視器
 
-Per query monitors are a type of alert monitor that can be used to identify and alert on specific queries that are run against an OpenSearch index; for example, queries that detect and respond to anomalies in specific queries. Per query monitors only trigger one alert at a time. 
+每個查詢監視器是一種警示監視器，可用來識別並警示針對 OpenSearch 索引執行的特定查詢；例如，偵測並回應特定查詢中異常的查詢。每個查詢監視器一次只會觸發一個警示。
 
-Per bucket monitors are a type of alert monitor that can be used to identify and alert on specific buckets of data that are created by a query against an OpenSearch index.
+每個桶監視器是一種警示監視器，可用來識別並警示由針對 OpenSearch 索引的查詢所建立的特定資料桶。
 
-Both monitor types support querying remote indexes using the same `cluster-name:index-name` pattern used by [cross-cluster search]({{site.url}}{{site.baseurl}}/security/access-control/cross-cluster-search/) or by using OpenSearch Dashboards 2.12 or later.
+這兩種監視器類型都支援使用與[跨叢集搜尋]({{site.url}}{{site.baseurl}}/security/access-control/cross-cluster-search/)相同的 `cluster-name:index-name` 模式查詢遠端索引，或使用 OpenSearch Dashboards 2.12 或更新版本。
 
-The following [permissions]({{site.url}}{{site.baseurl}}/security/access-control/permissions/) are required in order to create a cross-cluster monitor through the dashboards UI: `cluster:admin/opensearch/alerting/remote/indexes/get`, `indices:admin/resolve/index`, `cluster:monitor/health`, and `indices:admin/mappings/get`.
+若要透過儀表板 UI 建立跨叢集監視器，需要下列[權限]({{site.url}}{{site.baseurl}}/security/access-control/permissions/)：`cluster:admin/opensearch/alerting/remote/indexes/get`、`indices:admin/resolve/index`、`cluster:monitor/health` 及 `indices:admin/mappings/get`。
 {: .note}
 
-![Cluster metrics monitor]({{site.url}}{{site.baseurl}}/images/alerting/cross-cluster-per-query-per-bucket-monitors.png){: width="700" }
+![叢集指標監視器]({{site.url}}{{site.baseurl}}/images/alerting/cross-cluster-per-query-per-bucket-monitors.png){: width="700" }
 
-## Creating a per query or per bucket monitor
+## 建立每個查詢或每個桶監視器
 
-To create a per query monitor, follow these steps:
+若要建立每個查詢監視器，請依照下列步驟：
 
-**Step 1.** Define your query and [triggers]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/triggers/). You can use any of these methods: visual editor, query editor, or anomaly detector.
+**步驟 1.** 定義您的查詢與[觸發條件]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/triggers/)。您可以使用下列任一方法：視覺化編輯器、查詢編輯器或異常偵測器。
 
-   - Visual definition works well for monitors that can be defined as "some value is higher or lower than some threshold for some amount of time." It also works well for most monitors.
+   - 視覺化定義適用於可定義為「某個值在某段時間內高於或低於某個閾值」的監視器。它也適用於大多數監視器。
 
-   - Query definition provides flexibility in relation to your query (using [OpenSearch query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/full-text/index/)) and how you evaluate the results of that query (Painless scripting). For more information, see [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/).
+   - 查詢定義可讓您靈活地定義查詢（使用 [OpenSearch query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/full-text/index/)）以及評估該查詢結果的方式（Painless 指令碼）。如需詳細資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-The following example averages the `cpu_usage` field:
+下列範例會計算 `cpu_usage` 欄位的平均值：
 
 ```json
      {
@@ -48,7 +49,7 @@ The following example averages the `cpu_usage` field:
      }
 ```
 
-You can also filter query results using `{% raw %}{{period_start}}{% endraw %}` and `{% raw %}{{period_end}}{% endraw %}`:
+您也可以使用 `{% raw %}{{period_start}}{% endraw %}` 與 `{% raw %}{{period_end}}{% endraw %}` 篩選查詢結果：
 
 ```json
      {
@@ -75,32 +76,32 @@ You can also filter query results using `{% raw %}{{period_start}}{% endraw %}` 
      }
 ```
 
-"Start" and "end" refer to the interval at which the monitor runs. See [Monitor variables]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/#monitor-variables).
+「Start」與「end」指的是監視器執行的間隔。請參閱[監視器變數]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/#monitor-variables)。
 
-To define a monitor visually, choose **Visual editor**. Then choose a source index, a time frame, an aggregation (for example, `count()` or `average()`), a data filter (if you want to monitor a subset of your source index), and a group-by field if you want to include an aggregation field in your query. At least one group-by field is required if you're defining a per bucket monitor. 
+若要以視覺化方式定義監視器，請選擇 **Visual editor**。然後選擇來源索引、時間範圍、彙總（例如 `count()` 或 `average()`）、資料篩選條件（如果您想要監視來源索引的子集），以及群組依據欄位（如果您想要在查詢中包含彙總欄位）。如果您要定義每個桶監視器，則至少需要一個群組依據欄位。
 
-Visual definition works well for most monitors.
+視覺化定義適用於大多數監視器。
 {: .tip }
 
-If you use the Security plugin, you can only choose indexes that you have permission to access. For details, see [Alerting security]({{site.url}}{{site.baseurl}}/security/).
+如果您使用 Security 外掛程式，則只能選擇您有權存取的索引。如需詳細資訊，請參閱[警示安全性]({{site.url}}{{site.baseurl}}/security/)。
 
-To use a query, choose **Extraction query editor**, add your query (using [OpenSearch query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/full-text/index/)), and test it using the **Run** button.
+若要使用查詢，請選擇 **Extraction query editor**，新增您的查詢（使用 [OpenSearch query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/full-text/index/)），並使用 **Run** 按鈕進行測試。
 
-The monitor makes this query to OpenSearch as often as the schedule dictates; check the **Query Performance** section and make sure you're comfortable with the performance implications.
+監視器會依排程指定的頻率向 OpenSearch 發出此查詢；請檢查 **Query Performance** 區段，並確認您能接受其效能影響。
 
-Anomaly detection is available only if you are defining a per query monitor.
+只有在您定義每個查詢監視器時，才能使用異常偵測。
 {: .warning}
 
-To use an anomaly detector, choose **Anomaly detector** and select your **Detector**.
+若要使用異常偵測器，請選擇 **Anomaly detector** 並選取您的 **Detector**。
 
-The anomaly detection option is for pairing with the Anomaly Detection plugin. See [Anomaly Detection]({{site.url}}{{site.baseurl}}/monitoring-plugins/ad/).
+異常偵測選項是用來與 Anomaly Detection 外掛程式搭配使用。請參閱 [Anomaly Detection]({{site.url}}{{site.baseurl}}/monitoring-plugins/ad/)。
 
-For anomaly detector, choose an appropriate schedule for the monitor based on the detector interval. Otherwise, the alerting monitor might miss reading the results. For example, assume you set the monitor interval and the detector interval as 5 minutes, and you start the detector at 12:00. If an anomaly is detected at 12:05, it might be available at 12:06 because of the delay between writing the anomaly and it being available for queries. The monitor reads the anomaly results between 12:00 and 12:05, so it does not get the anomaly results available at 12:06.
+針對異常偵測器，請根據偵測器間隔為監視器選擇適當的排程。否則，警示監視器可能會漏讀結果。例如，假設您將監視器間隔與偵測器間隔設為 5 分鐘，並在 12:00 啟動偵測器。如果在 12:05 偵測到異常，由於寫入異常與可供查詢之間有延遲，該異常可能在 12:06 才可供使用。監視器會讀取 12:00 到 12:05 之間的異常結果，因此不會取得 12:06 才可供使用的異常結果。
 
-To avoid this issue, make sure the alerting monitor is at least twice the detector interval. When you create a monitor using OpenSearch Dashboards, the anomaly detector plugin generates a default monitor schedule that's twice the detector interval.
+若要避免此問題，請確認警示監視器的間隔至少是偵測器間隔的兩倍。當您使用 OpenSearch Dashboards 建立監視器時，異常偵測外掛程式會產生預設的監視器排程，其為偵測器間隔的兩倍。
 
-Whenever you update a detector’s interval, make sure to update the associated monitor interval, as the Anomaly Detection plugin does not do this automatically.
+每當您更新偵測器的間隔時，請務必更新相關聯的監視器間隔，因為 Anomaly Detection 外掛程式不會自動執行此操作。
 
-**Step 2.** Choose the frequency to run the monitor, for example, either by time intervals (minutes, hours, days) or on a schedule. If you run it by time interval or on a [custom cron expression]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions), then you must provide the time zone.
+**步驟 2.** 選擇執行監視器的頻率，例如依時間間隔（分鐘、小時、天）或依排程。如果您依時間間隔或依[自訂 cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)執行，則必須提供時區。
 
-**Step 3.** Add a trigger to the monitor.
+**步驟 3.** 新增觸發條件至監視器。

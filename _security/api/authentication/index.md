@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Authentication APIs
+title: "驗證 API"
 parent: Security APIs
 nav_order: 10
 has_children: true
@@ -11,18 +12,18 @@ redirect_from:
   - /security/api/authentication/
 ---
 
-# Authentication APIs
+# 驗證 API
 
-The authentication APIs return information about the authenticated user, the permissions granted to that user, and the TLS connection used to make the request.
+驗證 API 會傳回已驗證使用者的相關資訊、授予該使用者的權限，以及用於發出請求的 TLS 連線。
 
-OpenSearch supports the following authentication APIs.
+OpenSearch 支援下列驗證 API。
 
-| API | Description |
+| API | 說明 |
 | :--- | :--- |
-| [Authentication Information API]({{site.url}}{{site.baseurl}}/security/api/authentication/auth-info/) | Returns the name, roles, backend roles, custom attributes, and tenant memberships of the currently authenticated user. |
-| [Who Am I API]({{site.url}}{{site.baseurl}}/security/api/authentication/who-am-i/) | Returns the identity information of the currently authenticated user. |
-| [Who Am I Protected API]({{site.url}}{{site.baseurl}}/security/api/authentication/who-am-i-protected/) | Returns the identity information of the currently authenticated user and enforces REST layer authorization. |
-| [Permissions Info API]({{site.url}}{{site.baseurl}}/security/api/authentication/permissions-info/) | Returns the evaluated REST API permissions of the currently authenticated user. |
-| [SSL Info API]({{site.url}}{{site.baseurl}}/security/api/authentication/ssl-info/) | Returns information about the TLS connection and the certificates used for the request. |
-| [Authorization Token API]({{site.url}}{{site.baseurl}}/security/api/authentication/auth-token/) | Returns an `OK` status with an empty message. This endpoint does not issue a token. |
-| [Generate On-Behalf-Of Token API]({{site.url}}{{site.baseurl}}/security/api/authentication/generate-obo-token/) | Generates an On-Behalf-Of token that allows a service to act for the currently authenticated user. |
+| [Authentication Information API]({{site.url}}{{site.baseurl}}/security/api/authentication/auth-info/) | 傳回目前驗證使用者的名稱、角色、後端角色、自訂屬性及租用戶成員資格。 |
+| [Who Am I API]({{site.url}}{{site.baseurl}}/security/api/authentication/who-am-i/) | 傳回目前驗證使用者的身分資訊。 |
+| [Who Am I Protected API]({{site.url}}{{site.baseurl}}/security/api/authentication/who-am-i-protected/) | 傳回目前驗證使用者的身分資訊，並強制執行 REST 層授權。 |
+| [Permissions Info API]({{site.url}}{{site.baseurl}}/security/api/authentication/permissions-info/) | 傳回目前驗證使用者經評估的 REST API 權限。 |
+| [SSL Info API]({{site.url}}{{site.baseurl}}/security/api/authentication/ssl-info/) | 傳回 TLS 連線及用於該請求之憑證的相關資訊。 |
+| [Authorization Token API]({{site.url}}{{site.baseurl}}/security/api/authentication/auth-token/) | 傳回帶有空訊息的 `OK` 狀態。此端點不會核發權杖。 |
+| [Generate On-Behalf-Of Token API]({{site.url}}{{site.baseurl}}/security/api/authentication/generate-obo-token/) | 產生 On-Behalf-Of 權杖，允許服務代表目前驗證的使用者執行動作。 |

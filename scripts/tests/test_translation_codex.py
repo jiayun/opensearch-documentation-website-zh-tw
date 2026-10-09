@@ -67,11 +67,12 @@ class CodexTests(unittest.TestCase):
         providers = {n: FakeProvider(n, n, lambda p, count: '{}') for n in names}
         pool = ProviderPool(providers, balance_calls=True)
         chain = ['ollama-cloud-glm', 'ollama-cloud', 'claude', 'codex', 'agy']
-        self.assertEqual([pool._order_chain(chain, 'translate')[0] for _ in range(5)],
-                         ['ollama-cloud-glm', 'ollama-cloud', 'ollama-cloud-glm', 'claude', 'codex'])
+        self.assertEqual([pool._order_chain(chain, 'translate')[0] for _ in range(10)],
+                         ['ollama-cloud-glm', 'ollama-cloud', 'ollama-cloud-glm', 'ollama-cloud', 'claude',
+                          'ollama-cloud-glm', 'ollama-cloud', 'ollama-cloud-glm', 'ollama-cloud', 'codex'])
         review = ['agy-sonnet', 'codex-review', 'agy', 'claude']
-        self.assertEqual([pool._order_chain(review, 'review')[0] for _ in range(3)],
-                         ['agy-sonnet', 'agy-sonnet', 'codex-review'])
+        self.assertEqual([pool._order_chain(review, 'review')[0] for _ in range(4)],
+                         ['agy', 'agy', 'agy-sonnet', 'codex-review'])
         self.assertEqual(pool._order_chain(['claude'], 'review'), ['claude'])
 
     def test_codex_translation_and_review_use_distinct_models(self):

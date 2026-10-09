@@ -1,36 +1,37 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Who am I
+title: "我是誰"
 parent: Authentication APIs
 grand_parent: Security APIs
 nav_order: 20
 ---
 
 # Who Am I API
-**Introduced 2.0**
+**2.0 版導入**
 {: .label .label-purple }
 
-Returns the identity information for the current user.
+傳回目前使用者的身分資訊。
 
 <!-- spec_insert_start
 api: security.who_am_i
 component: endpoints
 -->
-## Endpoints
+## 端點
 ```json
 GET  /_plugins/_security/whoami
 POST /_plugins/_security/whoami
 ```
 <!-- spec_insert_end -->
 
-## Example request
+## 範例請求
 
 ```json
 GET _plugins/_security/whoami
 ```
 {% include copy-curl.html security=true %}
 
-## Example response
+## 範例回應
 
 ```json
 {

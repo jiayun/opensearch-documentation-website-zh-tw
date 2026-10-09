@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Read resources
+title: "讀取資源"
 parent: Data source APIs
 nav_order: 20
 grand_parent: SQL and PPL API
@@ -8,17 +9,17 @@ grand_parent: SQL and PPL API
 
 # Read Resources API
 
-This is an experimental feature and is not recommended for use in a production environment. For updates on the progress of the feature or if you want to leave feedback, join the discussion on the [OpenSearch forum](https://forum.opensearch.org/).    
+這是一項實驗性功能，不建議在正式環境中使用。若要了解此功能的進度或提供意見回饋，請加入 [OpenSearch 論壇](https://forum.opensearch.org/) 的討論。    
 {: .warning}
 
-Fetches metadata and resources from an external data source. This API provides access to labels, series, alerts, and other metadata from Prometheus and Alertmanager.
+從外部資料來源擷取中繼資料與資源。此 API 提供對 Prometheus 與 Alertmanager 的標籤、時間序列、警示及其他中繼資料的存取。
 
-Before using this API, you must configure a data source. For information about configuring data sources, see [Data sources]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/).
+使用此 API 之前，您必須先設定資料來源。關於設定資料來源的資訊，請參閱 [資料來源]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/)。
 {: .note}
 
-## Endpoints
+## 端點
 
-The Read Resources API supports several endpoints for different resource types:
+Read Resources API 針對不同的資源類型支援多個端點：
 
 ```json
 GET /_plugins/_directquery/_resources/{dataSource}/api/v1/{resourceType}
@@ -27,51 +28,51 @@ GET /_plugins/_directquery/_resources/{dataSource}/alertmanager/api/v2/{resource
 GET /_plugins/_directquery/_resources/{dataSource}/alertmanager/api/v2/alerts/groups
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters.
+下表列出可用的路徑參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`dataSource` | String | The name of the configured data source. Required.
-`resourceType` | String | The type of resource to fetch. See [Supported resource types](#supported-resource-types). Required.
-`resourceName` | String | The name of a specific resource (for example, a label name when fetching label values). Required for the label values endpoint.
+`dataSource` | 字串 | 已設定的資料來源名稱。必要。
+`resourceType` | 字串 | 要擷取的資源類型。請參閱 [支援的資源類型](#supported-resource-types)。必要。
+`resourceName` | 字串 | 特定資源的名稱（例如擷取標籤值時的標籤名稱）。使用標籤值端點時為必要參數。
 
-## Supported resource types
+## 支援的資源類型
 
-The following resource types are supported for Prometheus data sources.
+Prometheus 資料來源支援下列資源類型。
 
-Resource type | Endpoint | Description
+資源類型 | 端點 | 說明
 :--- | :--- | :---
-`labels` | `/api/v1/labels` | Fetches all label names.
-`label` | `/api/v1/label/{labelName}/values` | Fetches values for a specific label.
-`metadata` | `/api/v1/metadata` | Fetches metric metadata.
-`series` | `/api/v1/series` | Fetches time series matching a selector.
-`alerts` | `/alertmanager/api/v2/alerts` | Fetches active alerts from Alertmanager.
-`silences` | `/alertmanager/api/v2/silences` | Fetches alert silences from Alertmanager.
-`receivers` | `/alertmanager/api/v2/receivers` | Fetches Alertmanager receivers.
+`labels` | `/api/v1/labels` | 擷取所有標籤名稱。
+`label` | `/api/v1/label/{labelName}/values` | 擷取特定標籤的值。
+`metadata` | `/api/v1/metadata` | 擷取指標中繼資料。
+`series` | `/api/v1/series` | 擷取符合選擇器的時間序列。
+`alerts` | `/alertmanager/api/v2/alerts` | 從 Alertmanager 擷取作用中的警示。
+`silences` | `/alertmanager/api/v2/silences` | 從 Alertmanager 擷取警示靜默。
+`receivers` | `/alertmanager/api/v2/receivers` | 擷取 Alertmanager 接收器。
 
-## Prometheus query parameters
+## Prometheus 查詢參數
 
-The following query parameters are specific to Prometheus and Alertmanager data sources. These parameters are passed to the underlying data source API.
+下列查詢參數專屬於 Prometheus 與 Alertmanager 資料來源。這些參數會傳遞至底層的資料來源 API。
 
-Parameter   | Data type | Description
+參數   | 資料類型 | 說明
 :---|:---|:---
-`start`     | String    | The start timestamp for filtering results, in ISO 8601 format. Optional.
-`end`       | String    | The end timestamp for filtering results, in ISO 8601 format. Optional.
-`match[]`   | String    | A time series selector used to filter results (series endpoint only). Optional.
-`active`    | Boolean   | Filters alerts by active status (Alertmanager only). Optional.
-`silenced`  | Boolean   | Filters alerts by silenced status (Alertmanager only). Optional.
-`filter`    | String    | A filter expression used to match silences (Alertmanager only). Optional.
+`start`     | 字串    | 用於篩選結果的起始時間戳記，採 ISO 8601 格式。選用。
+`end`       | 字串    | 用於篩選結果的結束時間戳記，採 ISO 8601 格式。選用。
+`match[]`   | 字串    | 用於篩選結果的時間序列選擇器（僅適用於 series 端點）。選用。
+`active`    | 布林值   | 依作用中狀態篩選警示（僅適用於 Alertmanager）。選用。
+`silenced`  | 布林值   | 依靜默狀態篩選警示（僅適用於 Alertmanager）。選用。
+`filter`    | 字串    | 用於比對靜默的篩選運算式（僅適用於 Alertmanager）。選用。
 
-## Example request: Get all labels
+## 範例請求：取得所有標籤
 
 ```http
 GET /_plugins/_directquery/_resources/my_prometheus/api/v1/labels
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -86,14 +87,14 @@ GET /_plugins/_directquery/_resources/my_prometheus/api/v1/labels
 }
 ```
 
-## Example request: Get values for a specific label
+## 範例請求：取得特定標籤的值
 
 ```http
 GET /_plugins/_directquery/_resources/my_prometheus/api/v1/label/job/values
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -106,14 +107,14 @@ GET /_plugins/_directquery/_resources/my_prometheus/api/v1/label/job/values
 }
 ```
 
-## Example request: Get active alerts
+## 範例請求：取得作用中的警示
 
 ```http
 GET /_plugins/_directquery/_resources/my_prometheus/alertmanager/api/v2/alerts?active=true&silenced=false
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 [
@@ -134,7 +135,7 @@ GET /_plugins/_directquery/_resources/my_prometheus/alertmanager/api/v2/alerts?a
 ]
 ```
 
-## Example request: Get alert silences
+## 範例請求：取得警示靜默
 
 ```http
 GET /_plugins/_directquery/_resources/my_prometheus/alertmanager/api/v2/silences

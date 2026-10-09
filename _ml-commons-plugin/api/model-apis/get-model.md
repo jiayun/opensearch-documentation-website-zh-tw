@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get model
+title: "取得模型"
 parent: Model APIs
 grand_parent: ML Commons APIs
 nav_order: 30
@@ -8,32 +9,32 @@ nav_order: 30
 
 # Get Model API
 
-You can retrieve model information using the `model_id`.
+您可以使用 `model_id` 擷取模型資訊。
 
-For information about user access for this API, see [Model access control considerations]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations).
+如需此 API 的使用者存取權資訊，請參閱[模型存取控制注意事項]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
 
-## Endpoints
+## 端點
 
 ```json
 GET /_plugins/_ml/models/{model_id}
 ```
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. 
+下表列出可用的路徑參數。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `model_id` | String | The model ID of the model to retrieve. |
+| `model_id` | 字串 | 要擷取之模型的模型 ID。 |
 
-## Example request
+## 範例請求
 
 ```json
 GET /_plugins/_ml/models/N8AE1osB0jLkkocYjz7D
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {
@@ -57,18 +58,18 @@ GET /_plugins/_ml/models/N8AE1osB0jLkkocYjz7D
 }
 ```
 
-## Valid model states
+## 有效的模型狀態
 
-When a model is registered, deployed, or undeployed in OpenSearch, it transitions through various model states that reflect its availability. These states help you track the model's readiness for use, loading status, or failure conditions.
+當模型在 OpenSearch 中註冊、部署或解除部署時，會經歷各種反映其可用性的模型狀態。這些狀態可協助您追蹤模型是否可供使用、載入狀態或失敗情況。
 
-The following table lists all valid model states.
+下表列出所有有效的模型狀態。
 
-| Model state          | Description                                                                                              |
+| 模型狀態          | 說明                                                                                              |
 |:---------------------|:---------------------------------------------------------------------------------------------------------|
-| `REGISTERING `       | The model is in the process of being registered to the cluster.                                          |
-| `REGISTERED`         | The model metadata is registered to the cluster but not yet deployed.                                    |
-| `DEPLOYED`           | The model has been successfully deployed/loaded to all eligible worker nodes and is ready for inference. |
-| `DEPLOYING`          | The model is in the process of being deployed to memory.                                                 |
-| `PARTIALLY_DEPLOYED` | The model has been deployed to some of the eligible worker nodes.                                        |
-| `UNDEPLOYED`         | The model has been successfully unloaded/undeployed from memory on all the nodes.                        |
-| `DEPLOY_FAILED`      | An error occurred while trying to deploy the model to the cluster nodes.                              |
+| `REGISTERING `       | 模型正在註冊至叢集。                                          |
+| `REGISTERED`         | 模型中繼資料已註冊至叢集，但尚未部署。                                    |
+| `DEPLOYED`           | 模型已成功部署/載入至所有符合資格的工作節點，並可進行推論。 |
+| `DEPLOYING`          | 模型正在部署至記憶體。                                                 |
+| `PARTIALLY_DEPLOYED` | 模型已部署至部分符合資格的工作節點。                                        |
+| `UNDEPLOYED`         | 模型已成功從所有節點的記憶體卸載/解除部署。                        |
+| `DEPLOY_FAILED`      | 嘗試將模型部署至叢集節點時發生錯誤。                              |

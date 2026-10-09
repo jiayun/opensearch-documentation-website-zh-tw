@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Switch traffic to the target
+title: "將流量切換至目標"
 nav_order: 80
 parent: Migration workflows
 permalink: /migration-assistant/migration-phases/switch-traffic-to-target/
@@ -8,47 +9,47 @@ redirect_from:
   - /migration-assistant/migration-phases/reroute-traffic-from-capture-proxy-to-target/
 ---
 
-# Switch traffic to the target
+# 將流量切換至目標
 
-The following information applies only to zero-downtime migrations that use Capture and Replay.
+下列資訊僅適用於使用 Capture and Replay 的零停機遷移。
 {: .note }
 
-Switching traffic is the cutover step. By this point, capture has already protected writes during backfill, replay has caught the target up, and validation should already be complete.
+切換流量是轉換 (cutover) 步驟。到此階段，擷取 (capture) 已在回填期間保護寫入作業，重播 (replay) 已讓目標追上進度，而驗證應已完成。
 
-## Cutover checklist
+## 轉換檢查清單
 
-Before you switch traffic, confirm the following:
+在切換流量之前，請確認下列事項：
 
-- Replay has reached the live edge.
-- The target cluster is healthy.
-- Representative application queries work on the target.
-- The application team is ready to move traffic.
-- The rollback path is still available.
+- 重播已追上即時流量的進度。
+- 目標叢集狀態良好。
+- 具代表性的應用程式查詢可在目標上正常運作。
+- 應用程式團隊已準備好移轉流量。
+- 復原路徑仍然可用。
 
-## Switching traffic
+## 切換流量
 
-The exact mechanism depends on your environment, but the process is the same:
+確切機制取決於您的環境，但流程相同：
 
-1. Redirect clients away from the capture proxy.
-2. Point clients directly at the target cluster.
-3. Monitor the target closely during the first production traffic window.
+1. 將用戶端從擷取代理重新導向。
+2. 將用戶端直接指向目標叢集。
+3. 在第一個正式環境流量時段期間密切監控目標。
 
-In practice, that usually means updating:
+實務上，這通常表示要更新：
 
-- A DNS record
-- A load balancer backend
-- An application connection string
-- A service-discovery entry
+- DNS 記錄
+- 負載平衡器後端
+- 應用程式連線字串
+- 服務探索項目
 
-## Validate the target after switching traffic
+## 切換流量後驗證目標
 
-Immediately after switching traffic, verify the following:
+切換流量後，請立即驗證下列事項：
 
-- Cluster health
-- Basic index visibility
-- Representative application behavior
+- 叢集健康狀態
+- 基本索引可見性
+- 具代表性的應用程式行為
 
-The following commands help validate the target:
+下列命令有助於驗證目標：
 
 ```bash
 console clusters curl target /_cluster/health
@@ -56,14 +57,14 @@ console clusters cat-indices --cluster target
 ```
 {% include copy.html %}
 
-## Maintaining rollback capability
+## 維持復原能力
 
-Do not remove the source cluster or the migration infrastructure immediately after switching traffic. If you need to revert to the source, perform the following steps:
+請勿在切換流量後立即移除來源叢集或遷移基礎架構。如果您需要還原至來源，請執行下列步驟：
 
-1. Redirect clients back to the previous route.
-2. Investigate the target-side issue.
-3. Decide whether to resume replay, rerun the migration, or retry the switch later.
+1. 將用戶端重新導向回原先的路由。
+2. 調查目標端的問題。
+3. 決定要繼續重播、重新執行遷移，還是稍後重試切換。
 
-Keep the source available until you confirm that the target is stable under production traffic. After the rollback window has passed, remove migration infrastructure and any temporary resources.
+在確認目標於正式環境流量下穩定運作之前，請保持來源可用。復原時限過後，請移除遷移基礎架構及任何暫時性資源。
 
 {% include migration-phase-navigation.html %}

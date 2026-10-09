@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Geoshape
+title: "地理形狀"
 nav_order: 57
 has_children: false
 parent: Geographic field types
@@ -11,15 +12,15 @@ redirect_from:
   - /field-types/geo-shape/
 ---
 
-# Geoshape field type
-**Introduced 1.0**
+# Geoshape 欄位類型
+**於 1.0 版導入**
 {: .label .label-purple }
 
-A geoshape field type contains a geographic shape, such as a polygon or a collection of geographic points. To index a geoshape, OpenSearch tessellates the shape into a triangular mesh and stores each triangle in a BKD tree. This provides a 10<sup>-7</sup> decimal degree of precision, which represents near-perfect spatial resolution. Performance of this process is mostly impacted by the number of vertices in a polygon you are indexing.
+geoshape 欄位類型包含地理形狀，例如多邊形或地理點的集合。若要為 geoshape 編製索引，OpenSearch 會將該形狀細分為三角網格，並將每個三角形儲存在 BKD 樹中。這可提供 10<sup>-7</sup> 十進位度的精確度，代表近乎完美的空間解析度。此程序的效能主要受到您正在編製索引的多邊形頂點數量影響。
 
-## Example
+## 範例
 
-Create a mapping with a geoshape field type:
+建立包含 geoshape 欄位類型的對應：
 
 ```json
 PUT testindex
@@ -35,36 +36,36 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-## Formats
+## 格式
 
-Geoshapes can be indexed in the following formats:
+Geoshape 可以使用下列格式編製索引：
 
 - [GeoJSON](https://geojson.org/)
 - [Well-Known Text (WKT)](https://docs.opengeospatial.org/is/12-063r5/12-063r5.html)
 
-In both GeoJSON and WKT, the coordinates must be specified in the `longitude, latitude` order within coordinate arrays. Note that the longitude comes first in this format.
+在 GeoJSON 和 WKT 中，座標必須在座標陣列中以 `longitude, latitude` 順序指定。請注意，在此格式中經度在前。
 {: .note}
 
-## Geoshape types
+## Geoshape 類型
 
-The following table describes the possible geoshape types and their relationship to the GeoJSON and WKT types.
+下表說明可能的 geoshape 類型，以及它們與 GeoJSON 和 WKT 類型的關係。
 
-OpenSearch type | GeoJSON type | WKT type | Description 
+OpenSearch 類型 | GeoJSON 類型 | WKT 類型 | 說明 
 :--- | :--- | :--- | :--- 
-[`point`](#point) | Point | POINT | A geographic point specified by latitude and longitude. OpenSearch uses the World Geodetic System 1984 (WGS84) coordinate system, also known as EPSG:4326.
-[`linestring`](#linestring) | LineString | LINESTRING | A line specified by two or more points. May be a straight line or a path of connected line segments.
-[`polygon`](#polygon) | Polygon | POLYGON | A polygon specified by a list of vertices in coordinate form. The polygon must be closed, meaning the last point must be the same as the first point. Therefore, to create an n-gon, n+1 vertices are required. The minimum number of vertices is four, which creates a triangle.
-[`multipoint`](#multipoint) | MultiPoint | MULTIPOINT | An array of discrete related points that are not connected.
-[`multilinestring`](#multilinestring) | MultiLineString | MULTILINESTRING | An array of linestrings.
-[`multipolygon`](#multipolygon) | MultiPolygon | MULTIPOLYGON | An array of polygons.
-[`geometrycollection`](#geometry-collection) | GeometryCollection | GEOMETRYCOLLECTION | A collection of geoshapes that may be of different types.
-[`envelope`](#envelope) | N/A | BBOX | A bounding rectangle specified by upper-left and lower-right vertices.
+[`point`](#point) | Point | POINT | 由緯度和經度指定的地理點。OpenSearch 使用 1984 年世界大地測量系統 (WGS84) 座標系統，也稱為 EPSG:4326。
+[`linestring`](#linestring) | LineString | LINESTRING | 由兩個或多個點指定的線。可以是直線，也可以是由連接的線段組成的路徑。
+[`polygon`](#polygon) | Polygon | POLYGON | 以座標形式的頂點清單指定的多邊形。多邊形必須封閉，也就是最後一個點必須與第一個點相同。因此，若要建立 n 邊形，需要 n+1 個頂點。頂點的最小數量為四個，這會形成一個三角形。
+[`multipoint`](#multipoint) | MultiPoint | MULTIPOINT | 未連接之離散相關點的陣列。
+[`multilinestring`](#multilinestring) | MultiLineString | MULTILINESTRING | 線字串的陣列。
+[`multipolygon`](#multipolygon) | MultiPolygon | MULTIPOLYGON | 多邊形的陣列。
+[`geometrycollection`](#geometry-collection) | GeometryCollection | GEOMETRYCOLLECTION | 可能屬於不同類型的 geoshape 集合。
+[`envelope`](#envelope) | N/A | BBOX | 由左上和右下頂點指定的邊界矩形。
 
 ## Point
 
-A point is a single pair of coordinates specified by latitude and longitude. 
+點是由緯度和經度指定的單一座標對。
 
-Index a point in GeoJSON format:
+以 GeoJSON 格式為點編製索引：
 
 ```json
 PUT testindex/_doc/1
@@ -77,7 +78,7 @@ PUT testindex/_doc/1
 ```
 {% include copy-curl.html %}
 
-Index a point in WKT format:
+以 WKT 格式為點編製索引：
 
 ```json
 PUT testindex/_doc/1
@@ -89,9 +90,9 @@ PUT testindex/_doc/1
 
 ## Linestring
 
-A linestring is a line specified by two or more points. If the points are collinear, the linestring is a straight line. Otherwise, the linestring represents a path made of line segments.
+線字串是由兩個或多個點指定的線。如果這些點共線，則線字串是一條直線；否則，線字串代表由線段組成的路徑。
 
-Index a linestring in GeoJSON format:
+以 GeoJSON 格式為線字串編製索引：
 
 ```json
 PUT testindex/_doc/2
@@ -104,7 +105,7 @@ PUT testindex/_doc/2
 ```
 {% include copy-curl.html %}
 
-Index a linestring in WKT format:
+以 WKT 格式為線字串編製索引：
 
 ```json
 PUT testindex/_doc/2
@@ -116,12 +117,12 @@ PUT testindex/_doc/2
 
 ## Polygon
 
-A polygon is specified by a list of vertices in coordinate form. The polygon must be closed, meaning the last point must be the same as the first point. In the following example, a triangle is created using four points. 
+多邊形是以座標形式的頂點清單指定的。多邊形必須封閉，也就是最後一個點必須與第一個點相同。在下列範例中，使用四個點建立一個三角形。
 
-GeoJSON requires that you list the vertices of the polygon counterclockwise. WKT does not impose a specific order on vertices.
+GeoJSON 要求您以逆時針方向列出多邊形的頂點。WKT 則不對頂點施加特定順序。
 {: .note}
 
-Index a polygon (triangle) in GeoJSON format:
+以 GeoJSON 格式為多邊形 (三角形) 編製索引：
 
 ```json
 PUT testindex/_doc/3
@@ -141,7 +142,7 @@ PUT testindex/_doc/3
 ```
 {% include copy-curl.html %}
 
-Index a polygon (triangle) in WKT format:
+以 WKT 格式為多邊形 (三角形) 編製索引：
 
 ```json
 PUT testindex/_doc/3
@@ -151,12 +152,12 @@ PUT testindex/_doc/3
 ```
 {% include copy-curl.html %}
 
-The polygon may have holes inside. In this case, the `coordinates` field will contain multiple arrays. The first array represents the outer polygon, and each subsequent array represents a hole. Holes are represented as polygons and specified as arrays of coordinates.
+多邊形內部可以有洞。在這種情況下，`coordinates` 欄位會包含多個陣列。第一個陣列代表外部多邊形，而每個後續陣列代表一個洞。洞以多邊形表示，並指定為座標陣列。
 
-GeoJSON requires that you list the vertices of the polygon counterclockwise and the vertices of the hole clockwise. WKT does not impose a specific order on vertices.
+GeoJSON 要求您以逆時針方向列出多邊形的頂點，並以順時針方向列出洞的頂點。WKT 則不對頂點施加特定順序。
 {: .note}
 
-Index a polygon (triangle) with a triangular hole in GeoJSON format:
+以 GeoJSON 格式為帶有三角形洞的多邊形 (三角形) 編製索引：
 
 ```json
 PUT testindex/_doc/4
@@ -182,7 +183,7 @@ PUT testindex/_doc/4
 ```
 {% include copy-curl.html %}
 
-Index a polygon (triangle) with a triangular hole in WKT format:
+以 WKT 格式為帶有三角形洞的多邊形 (三角形) 編製索引：
 
 ```json
 PUT testindex/_doc/4
@@ -192,9 +193,9 @@ PUT testindex/_doc/4
 ```
 {% include copy-curl.html %}
 
-You can specify a polygon in OpenSearch by listing its vertices in clockwise or counterclockwise order. This works well for polygons that do not cross the date line (that are narrower than 180&deg;). However, a polygon that crosses the date line (is wider than 180&deg;) might be ambiguous because WKT does not impose a specific order on vertices. Thus, you must specify polygons that cross the date line by listing their vertices in counterclockwise order. 
+您可以在 OpenSearch 中以順時針或逆時針順序列出頂點來指定多邊形。這對於不跨越日期變更線 (寬度小於 180&deg;) 的多邊形效果良好。然而，跨越日期變更線 (寬度大於 180&deg;) 的多邊形可能會有歧義，因為 WKT 不對頂點施加特定順序。因此，您必須以逆時針順序列出頂點來指定跨越日期變更線的多邊形。
 
-You can define an [`orientation`](#parameters) parameter to specify the vertex traversal order at mapping time:
+您可以在對應時定義 [`orientation`](#parameters) 參數來指定頂點的走訪順序：
 
 ```json
 PUT testindex
@@ -211,7 +212,7 @@ PUT testindex
 ```
 {% include copy-curl.html %}
 
-Subsequently indexed documents can override the `orientation` setting:
+後續編製索引的文件可以覆寫 `orientation` 設定：
 
 ```json
 PUT testindex/_doc/3
@@ -232,9 +233,9 @@ PUT testindex/_doc/3
 
 ## Multipoint
 
-A multipoint is an array of discrete related points that are not connected. 
+多點是未連接之離散相關點的陣列。
 
-Index a multipoint in GeoJSON format:
+以 GeoJSON 格式為多點編製索引：
 
 ```json
 PUT testindex/_doc/6
@@ -250,7 +251,7 @@ PUT testindex/_doc/6
 ```
 {% include copy-curl.html %}
 
-Index a multipoint in WKT format:
+以 WKT 格式為多點編製索引：
 
 ```json
 PUT testindex/_doc/6
@@ -262,9 +263,9 @@ PUT testindex/_doc/6
 
 ## Multilinestring
 
-A multilinestring is an array of linestrings.
+多線字串是線字串的陣列。
 
-Index a linestring in GeoJSON format:
+以 GeoJSON 格式為線字串編製索引：
 
 ```json
 PUT testindex/_doc/2
@@ -280,7 +281,7 @@ PUT testindex/_doc/2
 ```
 {% include copy-curl.html %}
 
-Index a linestring in WKT format:
+以 WKT 格式為線字串編製索引：
 
 ```json
 PUT testindex/_doc/2
@@ -292,9 +293,9 @@ PUT testindex/_doc/2
 
 ## Multipolygon
 
-A multipolygon is an array of polygons. In this example, the first polygon contains a hole, and the second does not. 
+多多邊形是多邊形的陣列。在此範例中，第一個多邊形包含一個洞，而第二個則沒有。
 
-Index a multipolygon in GeoJSON format:
+以 GeoJSON 格式為多多邊形編製索引：
 
 ```json
 PUT testindex/_doc/4
@@ -330,7 +331,7 @@ PUT testindex/_doc/4
 ```
 {% include copy-curl.html %}
 
-Index a multipolygon in WKT format:
+以 WKT 格式為多多邊形編製索引：
 
 ```json
 PUT testindex/_doc/4
@@ -342,9 +343,9 @@ PUT testindex/_doc/4
 
 ## Geometry collection
 
-A geometry collection is a collection of geoshapes that may be of different types.
+幾何集合是可能屬於不同類型的 geoshape 集合。
 
-Index a geometry collection in GeoJSON format:
+以 GeoJSON 格式為幾何集合編製索引：
 
 ```json
 PUT testindex/_doc/7
@@ -366,7 +367,7 @@ PUT testindex/_doc/7
 ```
 {% include copy-curl.html %}
 
-Index a geometry collection in WKT format:
+以 WKT 格式為幾何集合編製索引：
 
 ```json
 PUT testindex/_doc/7
@@ -378,9 +379,9 @@ PUT testindex/_doc/7
 
 ## Envelope
 
-An envelope is a bounding rectangle specified by upper-left and lower-right vertices. The GeoJSON format is `[[minLon, maxLat], [maxLon, minLat]]`.
+封套是由左上和右下頂點指定的邊界矩形。GeoJSON 格式為 `[[minLon, maxLat], [maxLon, minLat]]`。
 
-Index an envelope in GeoJSON format:
+以 GeoJSON 格式為封套編製索引：
 
 ```json
 PUT testindex/_doc/2
@@ -393,9 +394,9 @@ PUT testindex/_doc/2
 ```
 {% include copy-curl.html %}
 
-In WKT format, use `BBOX (minLon, maxLon, maxLat, minLat)`.
+在 WKT 格式中，請使用 `BBOX (minLon, maxLon, maxLat, minLat)`。
 
-Index an envelope in WKT BBOX format:
+以 WKT BBOX 格式為封套編製索引：
 
 ```json
 PUT testindex/_doc/8
@@ -405,14 +406,14 @@ PUT testindex/_doc/8
 ```
 {% include copy-curl.html %}
 
-## Parameters
+## 參數
 
-The following table lists the parameters accepted by geoshape field types. All parameters are optional.
+下表列出 geoshape 欄位類型接受的參數。所有參數皆為選用。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :--- 
-`coerce` | A Boolean value that specifies whether to automatically close unclosed linear rings. Default is `false`.
-`doc_values` | A Boolean value that specifies whether the field should be stored on disk so that it can be used for aggregations, sorting, or scripting. Default is `true`.
-`ignore_malformed` | A Boolean value that specifies to ignore malformed GeoJSON or WKT geoshapes and not to throw an exception. Default is `false` (throw an exception when geoshapes are malformed).
-`ignore_z_value` | Specific to points with three coordinates. If `ignore_z_value` is `true`, then the third coordinate is not indexed but is still stored in the `_source` field. If `ignore_z_value` is `false`, then an exception is thrown. Default is `true`.
-`orientation` | Specifies the traversal order of the vertices in the geoshape's list of coordinates. `orientation` takes the following values: <br> 1. RIGHT: counterclockwise. Specify RIGHT orientation by using one of the following strings (uppercase or lowercase): `right`, `counterclockwise`, `ccw`. <br> 2. LEFT: clockwise. Specify LEFT orientation by using one of the following strings (uppercase or lowercase): `left`, `clockwise`, `cw`.  This value can be overridden by individual documents.<br> Default is `RIGHT`.
+`coerce` | 指定是否自動封閉未封閉線性環的布林值。預設為 `false`。
+`doc_values` | 指定是否應將該欄位儲存在磁碟上，以便用於彙總、排序或指令碼的布林值。預設為 `true`。
+`ignore_malformed` | 指定忽略格式錯誤的 GeoJSON 或 WKT geoshape 而不擲回例外的布林值。預設為 `false` (當 geoshape 格式錯誤時擲回例外)。
+`ignore_z_value` | 專屬於具有三個座標的點。如果 `ignore_z_value` 為 `true`，則第三個座標不會編製索引，但仍會儲存在 `_source` 欄位中。如果 `ignore_z_value` 為 `false`，則會擲回例外。預設為 `true`。
+`orientation` | 指定 geoshape 座標清單中頂點的走訪順序。`orientation` 接受下列值：<br> 1. RIGHT：逆時針。使用下列其中一個字串 (大寫或小寫) 指定 RIGHT 方向：`right`、`counterclockwise`、`ccw`。<br> 2. LEFT：順時針。使用下列其中一個字串 (大寫或小寫) 指定 LEFT 方向：`left`、`clockwise`、`cw`。  個別文件可以覆寫此值。<br> 預設為 `RIGHT`。

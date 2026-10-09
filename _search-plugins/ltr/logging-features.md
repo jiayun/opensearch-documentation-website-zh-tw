@@ -1,21 +1,22 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Logging feature scores
+title: "記錄特徵分數"
 nav_order: 50
 parent: Learning to Rank
 grand_parent: Optimizing search quality
 has_children: false
 ---
 
-# Logging feature scores
+# 記錄特徵分數
 
-Feature values need to be logged in order to train a model. This is a crucial component of the Learning to Rank plugin---as you search, feature values from the feature sets are logged so that they can be used for training. This allows models that effectively predict relevance using that set of features to be discovered.
+為了訓練模型，必須記錄特徵值。這是 Learning to Rank 外掛程式的重要組成部分——當您搜尋時，會記錄特徵集中的特徵值，以便用於訓練。這讓能夠使用該組特徵有效預測相關性的模型得以被發現。
 
 <!-- vale off -->
-## sltr query
+## sltr 查詢
 <!-- vale on -->
 
-The `sltr` query is the primary method for running features and evaluating models. When logging, an `sltr` query is used to execute each feature query and retrieve the feature scores. A feature set structure that works with the [`hello-ltr`](https://github.com/o19s/hello-ltr) demo schema is shown in the following example request:
+`sltr` 查詢是執行特徵與評估模型的主要方法。記錄時，會使用 `sltr` 查詢來執行每個特徵查詢並擷取特徵分數。可搭配 [`hello-ltr`](https://github.com/o19s/hello-ltr) 示範結構描述運作的特徵集結構，如下列範例請求所示：
 
 ```json
 PUT _ltr/_featureset/more_movie_features
@@ -49,13 +50,13 @@ PUT _ltr/_featureset/more_movie_features
 ```
 {% include copy-curl.html %}
 
-## Common use cases
+## 常見使用案例
 
-Common use cases for logging feature sets are described in the following sections.
+記錄特徵集的常見使用案例將於下列各節說明。
 
-### Joining feature values with a judgment list
+### 將特徵值與評判清單合併
 
-If the judgment list is already available, you can join feature values for each keyword/document pair to create a complete training set. For example, consider the following judgment list:
+如果評判清單已可用，您可以為每個關鍵字/文件配對合併特徵值，以建立完整的訓練集。例如，請考慮下列評判清單：
 
 ```
 grade,keywords,docId
@@ -66,7 +67,7 @@ grade,keywords,docId
 ```
 {% include copy-curl.html %}
 
-The feature values need to be retrieved for all documents that have a judgment for each search term, one search term at a time. For example, starting with a `rambo` search, a filter can be created for the associated document as follows:
+需要為每個搜尋詞彙具有評判的所有文件擷取特徵值，一次處理一個搜尋詞彙。例如，從 `rambo` 搜尋開始，可以為相關文件建立篩選條件，如下所示：
 
 ```json
 {
@@ -79,7 +80,7 @@ The feature values need to be retrieved for all documents that have a judgment f
 ```
 {% include copy-curl.html %}
 
-The Learning to Rank plugin must point to the features to be logged. The `sltr` query, which is part of the plugin, can be used for this purpose. The `sltr` query has a `_name` (the named queries feature) used to reference it, refers to the previously created feature set `more_movie_features`, and passes the search keyword `rambo` and any other required parameters, as shown in the following example query:
+Learning to Rank 外掛程式必須指向要記錄的特徵。屬於此外掛程式一部分的 `sltr` 查詢可用於此目的。`sltr` 查詢具有用來參照它的 `_name` (具名查詢功能)，會參照先前建立的特徵集 `more_movie_features`，並傳遞搜尋關鍵字 `rambo` 及任何其他必要參數，如下列範例查詢所示：
 
 ```json
 {
@@ -94,10 +95,10 @@ The Learning to Rank plugin must point to the features to be logged. The `sltr` 
 ```
 {% include copy-curl.html %}
 
-[Searching with LTR]({{site.url}}{{site.baseurl}}/search-plugins/ltr/searching-with-your-model/) provides an `sltr` query to use for executing a model. This `sltr` query is used as a mechanism to direct the Learning to Rank plugin to the feature set requiring logging.
+[使用 LTR 搜尋]({{site.url}}{{site.baseurl}}/search-plugins/ltr/searching-with-your-model/) 提供用於執行模型的 `sltr` 查詢。此 `sltr` 查詢可作為將 Learning to Rank 外掛程式導向需要記錄之特徵集的機制。
 {: .note}    
 
-To avoid influencing the score, the `sltr` query is injected as a filter, as shown in the following example:
+為避免影響分數，`sltr` 查詢會以篩選條件的形式注入，如下列範例所示：
 
 ```json
 {
@@ -129,9 +130,9 @@ To avoid influencing the score, the `sltr` query is injected as a filter, as sho
 ```
 {% include copy-curl.html %}
 
-Executing this query returns the three expected hits. The next step is to enable feature logging to refer to the `sltr` query to be logged.
+執行此查詢會傳回三個預期的命中結果。下一步是啟用特徵記錄，以參照要記錄的 `sltr` 查詢。
 
-The logging identifies the `sltr` query, runs the feature set's queries, scores each document, and returns those scores as computed fields for each document, as shown in the following example logging structure:
+記錄會識別 `sltr` 查詢、執行特徵集的查詢、為每個文件評分，並將這些分數作為每個文件的計算欄位傳回，如下列範例記錄結構所示：
 
 ```json
 "ext": {
@@ -145,17 +146,17 @@ The logging identifies the `sltr` query, runs the feature set's queries, scores 
 ```
 {% include copy-curl.html %}
 
-The log extension supports the following arguments:
+記錄擴充功能支援下列引數：
 
-- `name`: The name of the log entry to fetch from each document.
-- `named_query`: The named query that corresponds to an `sltr` query.
-- `rescore_index`: If the `sltr` query is in a rescore phase, then this is the index of the query in the rescore list.
-- `missing_as_zero`: Produces a `0` for missing features (when the feature does not match). Default is `false`.
+- `name`：要從每個文件擷取之記錄項目的名稱。
+- `named_query`：對應至 `sltr` 查詢的具名查詢。
+- `rescore_index`：如果 `sltr` 查詢位於重新評分階段，則這是查詢在重新評分清單中的索引。
+- `missing_as_zero`：為缺少的特徵 (當特徵不相符時) 產生 `0`。預設為 `false`。
   
-To enable the log to locate an `sltr` query, either during the normal query phase or during rescoring, either `named_query` or `rescore_index` must be set.
+若要讓記錄能在一般查詢階段或重新評分期間找到 `sltr` 查詢，必須設定 `named_query` 或 `rescore_index`。
 {: .note}
 
-The full example request is as follows:
+完整的範例請求如下：
 
 ```json
 POST tmdb/_search
@@ -191,7 +192,7 @@ POST tmdb/_search
 ```
 {% include copy-curl.html %}
 
-Each document now contains a log entry, as shown in the following example:
+現在每個文件都包含一個記錄項目，如下列範例所示：
 
 ```json
 {
@@ -221,21 +222,21 @@ Each document now contains a log entry, as shown in the following example:
 ```
 {% include copy-curl.html %}
 
-The judgment list can be joined with the feature values to produce a training set. For the line corresponding to document `1370` with keyword `rambo`, the following can be added:
+評判清單可以與特徵值合併，以產生訓練集。對於關鍵字 `rambo` 之文件 `1370` 所對應的行，可以新增下列內容：
 
 ```
 > 4 qid:1 1:9.510193 2:10.7808075
 ```
 {% include copy-curl.html %}
 
-Repeat this process for all of your queries.
+為您的所有查詢重複此程序。
 
-For large judgment lists, it is recommended to batch the logs for multiple queries. You can use [multi-search]({{site.url}}{{site.baseurl}}/api-reference/multi-search/) capabilities for this purpose.
+對於大型評判清單，建議將多個查詢的記錄批次處理。您可以為此使用 [多重搜尋]({{site.url}}{{site.baseurl}}/api-reference/multi-search/) 功能。
 {: .note}
 
-### Logging values for a live feature set
+### 記錄正式環境中使用的特徵集值
 
-If you are running in production with a model being executed within an `sltr` query, a live model may appear similar to the following example request:
+如果您在生產環境中執行，且模型是在 `sltr` 查詢內執行，則正式環境中使用的模型可能類似下列範例請求：
 
 ```json
 POST tmdb/_search
@@ -261,10 +262,10 @@ POST tmdb/_search
 ```
 {% include copy-curl.html %}
 
-See [Searching with LTR]({{site.url}}{{site.baseurl}}/search-plugins/ltr/searching-with-your-model/) for information about model execution.
+請參閱[使用 LTR 搜尋]({{site.url}}{{site.baseurl}}/search-plugins/ltr/searching-with-your-model/) 以取得模型執行的相關資訊。
 {: .note}
 
-To log the feature values for the query, apply the appropriate logging spec to reference the `sltr` query, as shown in the following example: 
+若要為查詢記錄特徵值，請套用適當的記錄規格以參照 `sltr` 查詢，如下列範例所示： 
 
 ```json
 "ext": {
@@ -278,11 +279,11 @@ To log the feature values for the query, apply the appropriate logging spec to r
 ```
 {% include copy-curl.html %}
 
-The example logs the features in the response, enabling future model retraining using the same feature set.
+此範例會在回應中記錄特徵值，讓您日後能使用相同的特徵集重新訓練模型。
 
-### Modifying and logging an existing feature set
+### 修改並記錄現有的特徵集
 
-Feature sets can be expanded. For example, as shown in the following example request, if a new feature, such as `user_rating`, needs to be incorporated, it can be added to the existing feature set `more_movie_features`:
+特徵集可以擴充。例如，如下方範例請求所示，若需要納入新的特徵，例如 `user_rating`，可以將其新增至現有的特徵集 `more_movie_features`：
 
 ``` json
 PUT _ltr/_feature/user_rating/_addfeatures
@@ -306,10 +307,10 @@ PUT _ltr/_feature/user_rating/_addfeatures
 ```
 {% include copy-curl.html %}
 
-See [Working with features]({{site.url}}{{site.baseurl}}/search-plugins/ltr/working-with-features/) for more information.
+如需更多資訊，請參閱[使用特徵]({{site.url}}{{site.baseurl}}/search-plugins/ltr/working-with-features/)。
 {: .note}
 
-When logging is performed, the new feature is included in the output, as shown in the following example:
+執行記錄時，新特徵會包含在輸出中，如下方範例所示：
 
 ``` json
 {
@@ -331,9 +332,9 @@ When logging is performed, the new feature is included in the output, as shown i
 ```
 {% include copy-curl.html %}
 
-### Logging values for a proposed feature set
+### 記錄建議特徵集的值
 
-You can create a completely new feature set for experimental purposes, for example, `other_movie_features`, as shown in the following example request:
+您可以為實驗目的建立全新的特徵集，例如 `other_movie_features`，如下方範例請求所示：
 
 ```json
 PUT _ltr/_featureset/other_movie_features
@@ -367,7 +368,7 @@ PUT _ltr/_featureset/other_movie_features
 ```
 {% include copy-curl.html %}
 
-The feature set, `other_movie_features`, can be logged alongside the live production set, `more_movie_features`, by appending it as another filter, as shown in the following example request:
+特徵集 `other_movie_features` 可以與線上正式環境使用的特徵集 `more_movie_features` 一起記錄，方法是將它作為另一個篩選條件附加，如下方範例請求所示：
 
 ```json
 POST tmdb/_search
@@ -404,18 +405,18 @@ POST tmdb/_search
 ```
 {% include copy-curl.html %}
 
-You can continue adding as many feature sets as needed for logging.
+您可以視記錄需要繼續新增任意數量的特徵集。
 
-## Logging scenarios
+## 記錄情境
 
-Once you have covered the basics, you can consider some real-life feature logging scenarios.
+掌握基本概念後，您可以考慮一些實際的特徵記錄情境。
 
-First, logging is used to develop judgment lists from user analytics to capture the exact value of a feature at the precise time of interaction. For instance, you may want to know the recency, title score, and other values at the precise time of a user's interaction. This would help you analyze which features or factors had relevance while training. To achieve this, you can build a comprehensive feature set for future experimentation. 
+首先，記錄用於從使用者分析資料建立判斷清單，以擷取特徵在使用者互動當下的確切值。例如，您可能想知道使用者互動當下的新近度、標題分數及其他值。這有助於您在訓練時分析哪些特徵或因素具有相關性。為達成此目標，您可以建立一套完整的特徵集供未來實驗使用。
 
-Second, logging can be used to retrain a model in which you already have confidence. You may want to keep your models up to date with a shifting index because models can lose their effectiveness over time. You may have A/B testing in place or be monitoring business metrics and notice gradual degradation in model performance. 
+其次，記錄可用於重新訓練您已有信心的模型。由於模型可能隨時間失去效力，您可能希望讓模型跟上不斷變動的索引。您可能已建立 A/B 測試，或正在監控業務指標，並注意到模型效能逐漸下降。
 
-Third, logging is used during model development. You may have a judgment list but want to iterate heavily with a local copy of OpenSearch. This allows for extensive experimentation with new features, adding and removing them from the feature sets as needed. While this process may result in being slightly out of sync with the live index, the goal is to arrive at a set of satisfactory model parameters. Once this is achieved, the model can be trained with production data to confirm that the level of performance remains acceptable.
+第三，記錄用於模型開發期間。您可能已有判斷清單，但想使用 OpenSearch 的本機複本進行大量迭代。這可讓您廣泛實驗新特徵，並視需要將它們加入或移出特徵集。雖然此過程可能導致與線上索引稍有不同步，但目標是得出一組令人滿意的模型參數。達成此目標後，即可使用正式環境資料訓練模型，以確認效能水準仍在可接受的範圍內。
 
-## Next steps
+## 後續步驟
 
-Learn more about training models in the [Uploading a trained model]({{site.url}}{{site.baseurl}}/search-plugins/ltr/training-models/) documentation.
+如需進一步了解模型訓練，請參閱[上傳已訓練的模型]({{site.url}}{{site.baseurl}}/search-plugins/ltr/training-models/)文件。

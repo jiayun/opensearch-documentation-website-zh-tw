@@ -1,42 +1,43 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Force-resume
+title: "強制恢復"
 nav_order: 25
 parent: Cross-cluster replication
 ---
 
-# Force-resume replication
-**Introduced 3.8**
+# 強制恢復複寫
+**於 3.8 版推出**
 {: .label .label-purple }
 
 
-When cross-cluster replication is paused for longer than the retention lease duration (controlled by the `index.soft_deletes.retention_lease.period` setting on the leader index, which defaults to 12 hours), the leader cluster's translog no longer retains the operations needed by the follower. A normal resume request fails because the retention lease has expired. You can use the `force_resume` parameter when sending a resume request to restore the follower index from a snapshot of the leader and reestablish replication. This eliminates the need to manually stop the existing replication, delete the follower index, and start replication from the beginning.
+當跨叢集複寫暫停的時間超過保留租約期限（由領導索引上的 `index.soft_deletes.retention_lease.period` 設定控制，預設為 12 小時）時，領導叢集的 translog 不再保留追隨者所需的作業。由於保留租約已過期，一般的恢復請求會失敗。您可以在傳送恢復請求時使用 `force_resume` 參數，從領導者的快照還原追隨者索引並重新建立複寫。這可免除手動停止現有複寫、刪除追隨者索引，以及從頭開始複寫的需求。
 
-Force-resuming replication follows these steps:
+強制恢復複寫會依循下列步驟：
 
-1. Validate that the replication is currently in a `PAUSED` state and that the retention lease has expired (making a normal resume impossible). If the retention lease has not expired, the `force_resume` flag is ignored and replication resumes normally.
-1. Stop replication by calling the existing stop replication action, which deletes replication metadata and removes the index block and the replication task.
-1. Delete the follower index so it can be restored from a snapshot.
-1. Start replication using the original connection alias and leader index configuration. This triggers a snapshot restore from the leader cluster and acquires new retention leases during the restore process.
-1. Resume translog-based replication after the restore completes. Shard replication tasks start and use the newly acquired retention leases to replicate ongoing operations from the leader.
+1. 驗證複寫目前處於 `PAUSED` 狀態，且保留租約已過期（使一般恢復無法進行）。如果保留租約尚未過期，則會忽略 `force_resume` 旗標，並正常恢復複寫。
+1. 呼叫現有的停止複寫動作來停止複寫，這會刪除複寫中繼資料，並移除索引區塊與複寫任務。
+1. 刪除追隨者索引，以便從快照還原。
+1. 使用原始連線別名與領導索引組態啟動複寫。這會觸發從領導叢集進行快照還原，並在還原過程中取得新的保留租約。
+1. 在還原完成後恢復以 translog 為基礎的複寫。分片複寫任務會啟動，並使用新取得的保留租約來複寫領導者持續進行的作業。
 
-Force-resume uses the original replication permissions and does not require reconfiguration. All operations are logged for auditing.
+強制恢復會使用原始複寫權限，且不需要重新設定。所有作業都會記錄以供稽核。
 {: .note}
 
-## Force-resume workflow
+## 強制恢復工作流程
 
-The following example demonstrates a complete force-resume workflow.
+下列範例示範完整的強制恢復工作流程。
 
-### Step 1: Verify the replication status
+### 步驟 1：驗證複寫狀態
 
-Confirm that replication is paused and identify the reason for the pause:
+確認複寫已暫停，並找出暫停的原因：
 
 ```json
 GET /_plugins/_replication/follower-01/_status
 ```
 {% include copy-curl.html %}
 
-For example, the following response shows that replication is in a user-initiated paused state:
+例如，下列回應顯示複寫處於使用者起始的暫停狀態：
 
 ```json
 {
@@ -48,9 +49,9 @@ For example, the following response shows that replication is in a user-initiate
 }
 ```
 
-### Step 2: Attempt resuming replication normally
+### 步驟 2：嘗試正常恢復複寫
 
-Try to resume replication normally:
+嘗試正常恢復複寫：
 
 ```json
 POST /_plugins/_replication/follower-01/_resume
@@ -58,7 +59,7 @@ POST /_plugins/_replication/follower-01/_resume
 ```
 {% include copy-curl.html %}
 
-If the retention lease has expired, you receive the following error:
+如果保留租約已過期，您會收到下列錯誤：
 
 ```json
 {
@@ -74,9 +75,9 @@ If the retention lease has expired, you receive the following error:
 }
 ```
 
-### Step 3: Use force-resume
+### 步驟 3：使用強制恢復
 
-Use force-resume to restore the follower index from a snapshot:
+使用強制恢復從快照還原追隨者索引：
 
 ```json
 POST /_plugins/_replication/follower-01/_resume
@@ -87,16 +88,16 @@ POST /_plugins/_replication/follower-01/_resume
 {% include copy-curl.html %}
 
 
-### Step 4: Monitor the resume progress
+### 步驟 4：監視恢復進度
 
-After force-resume is initiated, the follower index is temporarily unavailable while the snapshot restore is in progress. To monitor its status, send the following request:
+起始強制恢復後，在快照還原進行期間，追隨者索引會暫時無法使用。若要監視其狀態，請傳送下列請求：
 
 ```json
 GET /_plugins/_replication/follower-01/_status
 ```
 {% include copy-curl.html %}
 
-During the snapshot restore, the `status` is `RESTORING`:
+在快照還原期間，`status` 為 `RESTORING`：
 
 ```json
 {
@@ -108,7 +109,7 @@ During the snapshot restore, the `status` is `RESTORING`:
 }
 ```
 
-After the restore completes, the `status` changes to `SYNCING`:
+還原完成後，`status` 會變更為 `SYNCING`：
 
 ```json
 {
@@ -125,24 +126,24 @@ After the restore completes, the `status` changes to `SYNCING`:
 }
 ```
 
-## Failure recovery
+## 失敗復原
 
-The following list describes the expected behavior if a failure occurs at any stage during force-resume:
+下列清單說明在強制恢復期間的任何階段發生失敗時的預期行為：
 
-- If stop fails, the operation is aborted and the follower remains in a `PAUSED` state. No changes are made. You can retry force-resume.
-- If delete fails after stop, replication has been stopped but the follower index still exists. You can manually delete the index and start replication, or retry force-resume.
-- If start fails after delete, the follower index has been deleted and replication metadata has been removed. You need to manually start replication using the standard start replication API with the original connection alias and leader index.
-- If the snapshot restore fails, the replication task transitions to a failed state and auto-pauses. You can retry force-resume.
+- 如果停止失敗，作業會中止，追隨者會維持在 `PAUSED` 狀態。不會進行任何變更。您可以重試強制恢復。
+- 如果停止後刪除失敗，複寫已停止，但追隨者索引仍然存在。您可以手動刪除索引並啟動複寫，或重試強制恢復。
+- 如果刪除後啟動失敗，追隨者索引已刪除，且複寫中繼資料已移除。您需要使用標準啟動複寫 API，以原始連線別名與領導索引手動啟動複寫。
+- 如果快照還原失敗，複寫任務會轉為失敗狀態並自動暫停。您可以重試強制恢復。
 
-## Limitations
+## 限制
 
-Note the following limitations:
+請注意下列限制：
 
-- During the force-resume process, the follower index is deleted and restored. It is unavailable for search queries during this time. The duration depends on the index size and network bandwidth between clusters.
-- Force-resume restores the entire index. There is no option to restore only specific shards.
-- After force-resume, the follower index is a fresh copy of the leader at the time of the snapshot restore, and replication continues from that point forward.
-- Only one resume or force-resume operation can run at a time for a given index. A second request sent while force-resume is in progress is rejected.
+- 在強制恢復過程中，追隨者索引會被刪除並還原。在此期間，該索引無法用於搜尋查詢。持續時間取決於索引大小與叢集之間的網路頻寬。
+- 強制恢復會還原整個索引。無法選擇只還原特定分片。
+- 強制恢復後，追隨者索引是快照還原當下領導者的全新副本，複寫會從該時間點繼續進行。
+- 針對指定的索引，一次只能執行一個恢復或強制恢復作業。在強制恢復進行期間傳送的第二個請求會被拒絕。
 
-## Related documentation
+## 相關文件
 
-- For the API reference, including the request syntax and parameters, see [Resume replication]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/api/#resume-replication).
+- 如需 API 參考，包括請求語法與參數，請參閱[恢復複寫]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/api/#resume-replication)。

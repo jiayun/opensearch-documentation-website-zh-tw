@@ -1,31 +1,32 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Mapping explosion
+title: "對應爆炸"
 nav_order: 110
 has_children: false
 ---
 
-# Mapping explosion
+# 對應爆炸
 
-Mapping explosion occurs when an index accumulates an excessive number of fields, which can lead to performance degradation, memory issues, and cluster instability. This situation commonly arises when using dynamic mapping with highly variable document structures, where each new document introduces additional fields that are automatically added to the index mapping.
+當索引累積過多欄位時，就會發生對應爆炸，這可能導致效能降低、記憶體問題及叢集不穩定。這種情況通常發生在使用動態對應且文件結構變化很大的時候，此時每份新文件都會引入額外的欄位，而這些欄位會自動新增至索引對應中。
 
-When OpenSearch encounters new fields in documents, it automatically creates mappings for these fields through dynamic mapping. While this feature provides flexibility, it can become problematic in scenarios such as:
+當 OpenSearch 在文件中遇到新欄位時，會透過動態對應自動為這些欄位建立對應。雖然這項功能提供了彈性，但在某些情況下可能會造成問題，例如：
 
-- **Log data with varying structures**: Different log sources may include unique fields, leading to rapid field proliferation.
-- **User-generated content**: Applications that allow users to define custom fields or attributes.
-- **Nested object structures**: Documents with deeply nested objects that contain many subfields.
-- **Time-series data**: Metrics or events that include dynamic field names based on timestamps or identifiers.
+- **結構多變的記錄資料**：不同的記錄來源可能包含獨特的欄位，導致欄位快速增生。
+- **使用者產生的內容**：允許使用者定義自訂欄位或屬性的應用程式。
+- **巢狀物件結構**：包含深度巢狀物件且具有許多子欄位的文件。
+- **時間序列資料**：包含以時間戳記或識別碼為基礎的動態欄位名稱的指標或事件。
 
-As the number of fields grows, several issues can emerge:
+隨著欄位數量增加，可能會出現幾個問題：
 
-- Increased memory consumption for storing field mappings
-- Slower query performance due to larger mapping structures
-- Potential out-of-memory errors during indexing or searching
-- Difficulty in cluster recovery scenarios
+- 儲存欄位對應的記憶體用量增加
+- 由於對應結構變大，查詢效能變慢
+- 在編製索引或搜尋期間可能發生記憶體不足錯誤
+- 叢集復原情境變得困難
 
-## Mapping limit settings
+## 對應限制設定
 
-OpenSearch provides several index-level settings to prevent mapping explosion by limiting various aspects of mapping growth. These settings can be configured when creating an index or updated for existing indexes:
+OpenSearch 提供數個索引層級的設定，可透過限制對應成長的各個層面來防止對應爆炸。這些設定可以在建立索引時設定，或為現有索引更新：
 
 ```json
 PUT /my-index/_settings
@@ -35,24 +36,24 @@ PUT /my-index/_settings
 ```
 {% include copy-curl.html %}
 
-The following table lists all available mapping limit settings. All settings are dynamic. For more information, see [Updating a dynamic index setting]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#updating-a-dynamic-index-setting).
+下表列出所有可用的對應限制設定。所有設定皆為動態。如需更多資訊，請參閱[更新動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#updating-a-dynamic-index-setting)。
 
-| Setting | Default | Valid values | Description |
+| 設定 | 預設值 | 有效值 | 說明 |
 |:--- |:--- |:--- |:--- |:--- |
-| `index.mapping.total_fields.limit` | `1000` | [0, ∞) | Sets the maximum number of fields allowed in an index, including regular fields, object mappings, and field aliases. Increasing this limit requires careful consideration of cluster resources. When increasing this limit, consider also adjusting the `indices.query.bool.max_clause_count` setting to accommodate larger queries. |
-| `index.mapping.depth.limit` | `20` | [1, 100] | Controls the maximum nesting depth for field mappings. Depth is calculated by counting the levels of nested objects, starting from the root level (depth 1 for root-level fields, depth 2 for fields within 1 level of object nesting, and so on). |
-| `index.mapping.nested_fields.limit` | `50` | [0, ∞) | Limits the number of distinct `nested` field types in an index. Since nested fields require special handling and additional memory, this setting helps prevent excessive resource consumption. |
-| `index.mapping.nested_objects.limit` | `10000` | [0, ∞) | Restricts the total number of nested JSON objects that a single document can contain across all nested field types. This prevents individual documents from consuming excessive memory during indexing. |
-| `index.mapping.field_name_length.limit` | `50000` | [1, 50000] | Sets the maximum allowed length for field names. This setting can help maintain reasonable mapping sizes by preventing extremely long field names. |
-| `index.mapper.dynamic` | `true` | `true`,`false` | Determines whether new fields should be dynamically added to a mapping. Setting this to `false` can prevent uncontrolled field growth. |
+| `index.mapping.total_fields.limit` | `1000` | [0, ∞) | 設定索引中允許的欄位數量上限，包括一般欄位、物件對應及欄位別名。提高此限制時，必須審慎考量叢集資源。提高此限制時，也請考慮調整 `indices.query.bool.max_clause_count` 設定，以容納更大的查詢。 |
+| `index.mapping.depth.limit` | `20` | [1, 100] | 控制欄位對應的最大巢狀深度。深度是從根層級開始計算巢狀物件的層數（根層級欄位的深度為 1，位於 1 層物件巢狀內的欄位深度為 2，依此類推）。 |
+| `index.mapping.nested_fields.limit` | `50` | [0, ∞) | 限制索引中相異 `nested` 欄位類型的數量。由於巢狀欄位需要特殊處理及額外記憶體，此設定有助於避免過度耗用資源。 |
+| `index.mapping.nested_objects.limit` | `10000` | [0, ∞) | 限制單一文件在所有巢狀欄位類型中可包含的巢狀 JSON 物件總數。這可避免個別文件在編製索引期間耗用過多記憶體。 |
+| `index.mapping.field_name_length.limit` | `50000` | [1, 50000] | 設定欄位名稱允許的長度上限。此設定可避免極長的欄位名稱，有助於維持合理的對應大小。 |
+| `index.mapper.dynamic` | `true` | `true`,`false` | 決定是否應將新欄位動態新增至對應。將此設為 `false` 可防止欄位不受控制地成長。 |
 
-## Best practices
+## 最佳實務
 
-To avoid mapping explosion, follow these guidelines.
+為避免對應爆炸，請遵循下列準則。
 
-### Use explicit mappings
+### 使用明確對應
 
-Define explicit mappings whenever possible instead of relying on dynamic mapping:
+請盡可能定義明確對應，而不要依賴動態對應：
 
 ```json
 PUT /logs
@@ -77,9 +78,9 @@ PUT /logs
 ```
 {% include copy-curl.html %}
 
-### Configure dynamic mapping templates
+### 設定動態對應範本
 
-Use dynamic templates to control how new fields are mapped:
+使用動態範本控制新欄位的對應方式：
 
 ```json
 PUT /logs
@@ -100,9 +101,9 @@ PUT /logs
 ```
 {% include copy-curl.html %}
 
-### Use the flat_object field type
+### 使用 flat_object 欄位類型
 
-For documents with arbitrary key-value pairs, use the [`flat_object` field type]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/flat-object/) instead of allowing dynamic mapping:
+對於具有任意鍵值對的文件，請使用 [`flat_object` 欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/flat-object/)，而不要允許動態對應：
 
 ```json
 PUT /products
@@ -121,9 +122,9 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-### Disable dynamic mapping
+### 停用動態對應
 
-For indexes with well-defined schemas, disable dynamic mapping entirely:
+對於結構定義完善的索引，請完全停用動態對應：
 
 ```json
 PUT /structured-data
@@ -144,48 +145,48 @@ PUT /structured-data
 {% include copy-curl.html %}
 
 
-## Monitoring and maintenance
+## 監控與維護
 
-Regular monitoring helps you detect mapping growth early and take action before it affects cluster performance. You can monitor field mappings in the following ways.
+定期監控有助於及早偵測對應成長，並在影響叢集效能之前採取行動。您可以使用下列方式監控欄位對應。
 
-### Check the current field count
+### 檢查目前的欄位數量
 
-Monitor the number of fields in your indexes:
+監控索引中的欄位數量：
 
 ```json
 GET /my-index/_mapping
 ```
 {% include copy-curl.html %}
 
-You can also use the Cluster Stats API to get field count information:
+您也可以使用 Cluster Stats API 取得欄位數量資訊：
 
 ```json
 GET /_cluster/stats
 ```
 {% include copy-curl.html %}
 
-### Identify problematic indexes
+### 找出有問題的索引
 
-Use index statistics to find indexes with high field counts:
+使用索引統計資料找出欄位數量偏高的索引：
 
 ```json
 GET /_cat/indices?v&h=index,docs.count,store.size,pri.store.size&s=store.size:desc
 ```
 {% include copy-curl.html %}
 
-### Clean up unused fields
+### 清理未使用的欄位
 
-For indexes with dynamic mapping enabled, regularly review and clean up fields that are no longer needed by reindexing with a more restrictive mapping.
+對於已啟用動態對應的索引，請定期檢閱並清理不再需要的欄位，方法是使用更嚴格的對應重新編製索引。
 
-## Recovery from mapping explosion
+## 從對應爆炸中復原
 
-If an index has already experienced mapping explosion:
+如果索引已經發生對應爆炸：
 
-1. Determine which fields are actually needed.
-2. Create a new index with explicit mappings and appropriate limits.
-3. Reindex the data using the Reindex API, filtering out unnecessary fields.
-4. Update aliases to point to the new index.
-5. Delete the old index once the migration is complete:
+1. 判斷實際需要哪些欄位。
+2. 建立具有明確對應及適當限制的新索引。
+3. 使用 Reindex API 重新編製資料的索引，並篩除不必要的欄位。
+4. 更新別名以指向新索引。
+5. 遷移完成後刪除舊索引：
 
 ```json
 POST /_reindex

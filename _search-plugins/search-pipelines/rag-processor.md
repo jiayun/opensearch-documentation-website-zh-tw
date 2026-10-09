@@ -1,37 +1,38 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Retrieval-augmented generation
+title: "檢索增強生成"
 nav_order: 115
 has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
 ---
 
-# Retrieval-augmented generation processor
-Introduced 2.12
+# 檢索增強生成處理器
+於 2.12 版推出
 {: .label .label-purple }
 
-The `retrieval_augmented_generation` processor is a search results processor that you can use in [conversational search]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/) for retrieval-augmented generation (RAG). The processor intercepts query results, retrieves previous messages from the conversation from the conversational memory, and sends a prompt to a large language model (LLM). After the processor receives a response from the LLM, it saves the response in conversational memory and returns both the original OpenSearch query results and the LLM response.
+`retrieval_augmented_generation` 處理器是一種搜尋結果處理器，您可以在[對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)中用於檢索增強生成 (RAG)。此處理器會攔截查詢結果、從對話記憶中擷取對話的先前訊息，並將提示傳送給大型語言模型 (LLM)。處理器收到 LLM 的回應後，會將回應儲存至對話記憶，並同時傳回原始 OpenSearch 查詢結果與 LLM 回應。
 
-The `retrieval_augmented_generation` processor supports OpenAI, Amazon Bedrock, and Cohere models. To use an Amazon Bedrock or Cohere model, prefix the `llm_model` value with `bedrock/`, `bedrock-converse/`, or `cohere/`. A value without a prefix is treated as an OpenAI model. To use another model, set the `llm_response_field` parameter. For more information, see [Step 6: Use the pipeline for RAG]({{site.url}}{{site.baseurl}}/vector-search/ai-search/conversational-search/#step-6-use-the-pipeline-for-rag).
+`retrieval_augmented_generation` 處理器支援 OpenAI、Amazon Bedrock 及 Cohere 模型。若要使用 Amazon Bedrock 或 Cohere 模型，請在 `llm_model` 值前面加上 `bedrock/`、`bedrock-converse/` 或 `cohere/`。沒有前置字元的值會視為 OpenAI 模型。若要使用其他模型，請設定 `llm_response_field` 參數。如需更多資訊，請參閱[步驟 6：使用管線進行 RAG]({{site.url}}{{site.baseurl}}/vector-search/ai-search/conversational-search/#step-6-use-the-pipeline-for-rag)。
 {: .note}
 
-## Request body fields
+## 請求本文欄位
 
-The following table lists all available request fields.
+下表列出所有可用的請求欄位。
 
-Field | Data type | Description
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`model_id` | String | The ID of the model used in the pipeline. Required.
-`context_field_list` | Array | A list of fields contained in document sources that the pipeline uses as context for RAG. Required. For more information, see [Context field list](#context-field-list). 
-`system_prompt` | String | The system prompt that is sent to the LLM to adjust its behavior, such as its response tone. Can be a persona description or a set of instructions. Optional.
-`user_instructions` | String | Human-generated instructions sent to the LLM to guide it in producing results. 
-`tag` | String | The processor's identifier. Optional.
-`description` | String | A description of the processor. Optional.
+`model_id` | 字串 | 管線中所使用模型的 ID。必要。
+`context_field_list` | 陣列 | 文件來源中包含的欄位清單，管線會將其用作 RAG 的上下文。必要。如需更多資訊，請參閱[上下文欄位清單](#context-field-list)。 
+`system_prompt` | 字串 | 傳送給 LLM 的系統提示，用以調整其行為，例如回應語氣。可以是角色描述或一組指示。選用。
+`user_instructions` | 字串 | 人工產生的指示，傳送給 LLM 以引導其產生結果。 
+`tag` | 字串 | 處理器的識別碼。選用。
+`description` | 字串 | 處理器的說明。選用。
 
-### Context field list
+### 上下文欄位清單
 
-The `context_field_list` is a list of fields contained in document sources that the pipeline uses as context for RAG. For example, suppose your OpenSearch index contains a collection of documents, each including a `title` and `text`:
+`context_field_list` 是文件來源中包含的欄位清單，管線會將其用作 RAG 的上下文。例如，假設您的 OpenSearch 索引包含一組文件，每份文件都包含 `title` 和 `text`：
 
 ```json
 {
@@ -44,15 +45,15 @@ The `context_field_list` is a list of fields contained in document sources that 
 }
 ```
 
-You can specify that only the `text` contents should be sent to the LLM by setting `"context_field_list": ["text"]` in the processor. 
+您可以在處理器中設定 `"context_field_list": ["text"]`，以指定只將 `text` 的內容傳送給 LLM。 
 
-## Example 
+## 範例 
 
-The following example demonstrates using a search pipeline with a `retrieval_augmented_generation` processor. 
+下列範例示範如何使用含有 `retrieval_augmented_generation` 處理器的搜尋管線。 
 
-### Creating a search pipeline 
+### 建立搜尋管線 
 
-The following request creates a search pipeline containing a `retrieval_augmented_generation` processor for an OpenAI model:
+下列請求會建立含有 OpenAI 模型 `retrieval_augmented_generation` 處理器的搜尋管線：
 
 ```json
 PUT /_search/pipeline/rag_pipeline
@@ -73,9 +74,9 @@ PUT /_search/pipeline/rag_pipeline
 ```
 {% include copy-curl.html %}
 
-### Using a search pipeline
+### 使用搜尋管線
 
-Combine an OpenSearch query with an `ext` object that stores generative question answering parameters for the LLM:
+將 OpenSearch 查詢與 `ext` 物件結合，該物件會儲存 LLM 的生成式問答參數：
 
 ```json
 GET /my_rag_test_data/_search?search_pipeline=rag_pipeline
@@ -99,4 +100,4 @@ GET /my_rag_test_data/_search?search_pipeline=rag_pipeline
 ```
 {% include copy-curl.html %}
 
-For more information about setting up conversational search, see [Conversational search with RAG]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/).
+如需設定對話式搜尋的更多資訊，請參閱[使用 RAG 的對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)。

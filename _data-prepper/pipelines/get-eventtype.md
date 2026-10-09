@@ -1,4 +1,5 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: getEventType()
 parent: Functions
@@ -7,37 +8,37 @@ nav_order: 12
 ---
 
 <!-- vale off -->
-# getEventType() function
+# getEventType() 函式
 <!-- vale on -->
 
-The `getEventType()` function returns the internal event type of the current event. This function is particularly useful when working with unified sources that can receive multiple types of telemetry data, such as the [OTLP source]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otlp-source/).
+`getEventType()` 函式會傳回目前事件的內部事件類型。此函式在處理可接收多種遙測資料類型的統一來源時特別有用，例如 [OTLP 來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otlp-source/)。
 
-## Syntax
+## 語法
 
 ```java
 getEventType()
 ```
 
-## Return value
+## 傳回值
 
-The function returns a string representing the event type. The supported event types are `LOG`, `TRACE`, `METRIC`, and `DOCUMENT`.
+此函式會傳回代表事件類型的字串。支援的事件類型為 `LOG`、`TRACE`、`METRIC` 與 `DOCUMENT`。
 
-## Usage
+## 用法
 
-Use this function to check the event type before performing conditional processing or routing. This is especially useful when you need to handle different types of telemetry data differently in your pipeline.
+在執行條件處理或路由之前，請使用此函式檢查事件類型。當您需要在管線中以不同方式處理不同類型的遙測資料時，此函式特別有用。
 
-### Basic example
+### 基本範例
 
-Check whether an event is a trace event:
+檢查事件是否為追蹤事件：
 
 ```json
 getEventType() == "TRACE"
 ```
 {% include copy.html %}
 
-### Routing example with OTLP source
+### 搭配 OTLP 來源的路由範例
 
-To route different telemetry signals to different pipelines based on event type, use the `getEventType()` function to determine each event's type and route the different event types to different pipelines:
+若要根據事件類型將不同的遙測訊號路由至不同的管線，請使用 `getEventType()` 函式判斷每個事件的類型，並將不同的事件類型路由至不同的管線：
 
 ```yaml
 otel-telemetry-pipeline:
@@ -64,9 +65,9 @@ otel-telemetry-pipeline:
 ```
 {% include copy.html %}
 
-### Conditional processing example
+### 條件處理範例
 
-To process events differently based on their type, use the `add_when` expression to conditionally add fields to each event:
+若要根據事件類型以不同方式處理事件，請使用 `add_when` 運算式有條件地在每個事件中新增欄位：
 
 ```yaml
 processor:
@@ -83,6 +84,6 @@ processor:
 ```
 {% include copy.html %}
 
-## Related documentation
+## 相關文件
 
-- [OTLP source]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otlp-source/)
+- [OTLP 來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otlp-source/)

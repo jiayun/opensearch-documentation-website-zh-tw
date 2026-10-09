@@ -1,25 +1,26 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Configuring agents
+title: "設定代理程式"
 parent: Agentic search
 grand_parent: AI search
 nav_order: 10
 has_children: false
 ---
 
-# Configuring agentic search agents
+# 設定代理式搜尋代理程式
 
-You can configure agentic search agents by customizing their models, tools, and prompts:
+您可以透過自訂模型、工具和提示來設定代理式搜尋代理程式：
 
-- [Model configuration](#model-configuration): Choose different large language models (LLMs) optimized for various tasks.
-- [Tool orchestration](#tool-orchestration): Combine multiple tools for automated workflows.
-- [Prompt engineering](#prompt-engineering-and-customization): Fine-tune agent behavior using custom prompts.
+- [模型設定](#model-configuration)：選擇針對各種工作最佳化的不同大型語言模型 (LLM)。
+- [工具協調](#tool-orchestration)：結合多個工具以實現自動化工作流程。
+- [提示工程](#prompt-engineering-and-customization)：使用自訂提示微調代理程式行為。
 
-## Model configuration
+## 模型設定
 
-Select the appropriate language model based on your performance requirements and use case.
+根據您的效能需求和用途選擇合適的語言模型。
 
-You can also configure different models for the conversational agent and the `QueryPlanningTool`. Set the agent's model by specifying the `llm.model_id`, and set the query planner model by specifying `parameters.model_id` in the `QueryPlanningTool`:
+您也可以為對話代理程式和 `QueryPlanningTool` 設定不同的模型。透過指定 `llm.model_id` 來設定代理程式的模型，並在 `QueryPlanningTool` 中指定 `parameters.model_id` 來設定查詢規劃器模型：
 
 ```json
 {
@@ -51,21 +52,21 @@ You can also configure different models for the conversational agent and the `Qu
 ```
 {% include copy.html %}
 
-Set the `<llm_interface>` to the interface for your provider (for example, `openai/v1/chat/completions`), then choose a specific model from the following options.
+將 `<llm_interface>` 設定為您的供應商介面 (例如 `openai/v1/chat/completions`)，然後從下列選項中選擇特定模型。
 
-### OpenAI GPT models
+### OpenAI GPT 模型
 
-The following OpenAI GPT models are supported.
+支援下列 OpenAI GPT 模型。
 
 <!-- vale off -->
 
-#### GPT-5 (Recommended)
+#### GPT-5 (建議使用)
 
 <!-- vale on -->
 
-GPT-5 provides advanced reasoning capabilities and is recommended for production use cases.
+GPT-5 提供進階推理能力，建議用於正式環境的用途。
 
-**Model registration**:
+**模型註冊**：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -100,25 +101,25 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-**Reasoning modes**:
+**推理模式**：
 
-- `minimal`: Fastest response time, suitable for simple use cases
-- `low`(recommended): Slightly more reasoning, suitable for most queries
-- `medium`: Enhanced reasoning for sophisticated tasks
-- `high`: Maximum reasoning power for the most complex scenarios
+- `minimal`：回應時間最快，適合簡單的用途
+- `low`(建議使用)：推理稍多，適合大多數查詢
+- `medium`：增強推理能力，適合複雜的工作
+- `high`：最大推理能力，適合最複雜的情境
 
-As you select higher reasoning modes, overall latency increases. Choose the lowest mode that meets your accuracy needs.
+當您選擇更高的推理模式時，整體延遲會增加。請選擇符合您準確度需求的最低模式。
 {: .tip}
 
-### Anthropic Claude models
+### Anthropic Claude 模型
 
-Anthropic Claude models are available through Amazon Bedrock integration and provide analytical capabilities for complex search scenarios.
+Anthropic Claude 模型可透過 Amazon Bedrock 整合取得，並為複雜的搜尋情境提供分析能力。
 
 <!-- vale off -->
 #### Claude 4 Sonnet
 <!-- vale on -->
 
-**Amazon Bedrock connector setup**:
+**Amazon Bedrock 連接器設定**：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -152,32 +153,32 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-### Agent interface configuration
+### 代理程式介面設定
 
-When registering agents, configure the `_llm_interface` parameter to specify how the agent parses LLM output when using function calling. Choose the interface that matches your model type:
+註冊代理程式時，請設定 `_llm_interface` 參數，以指定代理程式在使用函式呼叫時如何解析 LLM 輸出。選擇符合您模型類型的介面：
 
-- `"bedrock/converse/claude"`: Anthropic Claude models hosted on Amazon Bedrock
-- `"openai/v1/chat/completions"`: OpenAI chat completion models
+- `"bedrock/converse/claude"`：託管於 Amazon Bedrock 的 Anthropic Claude 模型
+- `"openai/v1/chat/completions"`：OpenAI 聊天完成模型
 
-Each interface defines a default response schema and function call parser optimized for that model family.
+每個介面都會定義針對該模型系列最佳化的預設回應結構描述和函式呼叫解析器。
 
-## Tool orchestration
+## 工具協調
 
-You must configure a `QueryPlanningTool` for agentic search. You can configure additional tools to extend your agent's functionality.
+您必須為代理式搜尋設定 `QueryPlanningTool`。您可以設定其他工具來擴充代理程式的功能。
 
 ### QueryPlanningTool
 
-The [`QueryPlanningTool`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/query-planning-tool/) is required for agentic search functionality. It translates natural language queries into OpenSearch query domain-specific language (DSL).
+代理式搜尋功能需要 [`QueryPlanningTool`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/query-planning-tool/)。它會將自然語言查詢轉譯為 OpenSearch Query DSL。
 
-### Additional tools
+### 其他工具
 
-Beyond the required `QueryPlanningTool`, you can configure additional tools to extend your agent's functionality. OpenSearch provides built-in tools for various use cases, including search operations, data analysis, anomaly detection, and web integration. For a complete list of all available tools, see [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/).
+除了必要的 `QueryPlanningTool` 之外，您還可以設定其他工具來擴充代理程式的功能。OpenSearch 為各種用途提供內建工具，包括搜尋作業、資料分析、異常偵測和網路整合。如需所有可用工具的完整清單，請參閱 [工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
 
-The conversational agent automatically selects and orchestrates the appropriate tools based on the query context.
+對話代理程式會根據查詢情境自動選擇並協調適當的工具。
 
-#### Complete agent configuration
+#### 完整代理程式設定
 
-The following example shows how to register an agent with multiple tools:
+下列範例顯示如何註冊具有多個工具的代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -225,11 +226,11 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### Intelligent index selection
+### 智慧索引選取
 
-When you include a `ListIndexTool`, `IndexMappingTool`, or other relevant tools, your agent can automatically choose the correct index and generate queries for that index.
+當您加入 `ListIndexTool`、`IndexMappingTool` 或其他相關工具時，您的代理程式就能自動選擇正確的索引，並為該索引產生查詢。
 
-To search without specifying an index, send the following request:
+若要在不指定索引的情況下進行搜尋，請傳送下列請求：
 
 ```json
 GET /_search?search_pipeline=agentic-pipeline
@@ -243,24 +244,24 @@ GET /_search?search_pipeline=agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-The agent automatically discovers product indexes, analyzes their structure, and generates appropriate queries.
+代理程式會自動探索產品索引、分析其結構，並產生適當的查詢。
 
-If you don't specify an index in your search query, the search runs against all shards in the cluster, which can be expensive. For better performance, specify the target index when possible.
+如果您未在搜尋查詢中指定索引，搜尋就會在叢集中的所有分片上執行，這可能耗費大量資源。為了提升效能，請盡可能指定目標索引。
 {: .tip}
 
-## Prompt engineering and customization
+## 提示詞工程與自訂
 
-Configure your agent's behavior and output format using custom prompts that guide the model's reasoning process.
+使用自訂提示詞引導模型的推理過程，設定代理程式的行為與輸出格式。
 
-To customize the `QueryPlanningTool` prompt, see [`QueryPlanningTool`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/query-planning-tool/).
+若要自訂 `QueryPlanningTool` 提示詞，請參閱 [`QueryPlanningTool`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/query-planning-tool/)。
 
-### System prompt optimization
+### 系統提示詞最佳化
 
-Configure your agent's behavior with tailored system prompts that fit for your specific use case.
+使用符合您特定使用案例的專屬系統提示詞，設定代理程式的行為。
 
-### Agent output format
+### 代理程式輸出格式
 
-The agent must have the following output format:
+代理程式必須使用下列輸出格式：
 
 ```json
 {
@@ -270,11 +271,11 @@ The agent must have the following output format:
 ```
 {% include copy.html %}
 
-**Custom prompt configuration**:
+**自訂提示詞組態**：
 
-When customizing prompts, ensure that both your system and user prompts guide the model to always return results in the preceding agent output format. Proper prompt engineering is crucial for consistent output formatting.
+自訂提示詞時，請確保您的系統提示詞與使用者提示詞都會引導模型一律以上述代理程式輸出格式傳回結果。適當的提示詞工程對於維持一致的輸出格式至關重要。
 
-Provide your custom prompts during agent registration as follows:
+註冊代理程式時，請依下列方式提供您的自訂提示詞：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -309,22 +310,22 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### Prompt best practices
+### 提示詞最佳實務
 
-Follow these guidelines to create effective prompts that produce consistent, accurate results:
+請遵循下列準則，建立有效的提示詞，以產生一致且準確的結果：
 
-- **Be specific**: Clearly define the expected agent output format with `dsl_query` and `agent_steps_summary` fields.
-- **Include examples**: Provide sample queries and expected responses in the correct agent output format.
-- **Set constraints**: Specify field names, data types, and query limits.
-- **Optimize for JSON**: Ensure that your prompts guide the model to produce valid JSON with the required agent output structure.
+- **具體明確**：清楚定義預期的代理程式輸出格式，其中包含 `dsl_query` 和 `agent_steps_summary` 欄位。
+- **加入範例**：提供查詢範例，以及採用正確代理程式輸出格式的預期回應。
+- **設定限制**：指定欄位名稱、資料類型與查詢限制。
+- **針對 JSON 最佳化**：確保您的提示詞會引導模型產生有效的 JSON，並具備必要的代理程式輸出結構。
 
-### Default system prompt
+### 預設系統提示詞
 
-The following system prompt is used by default. You can customize this to modify your agent's behavior:
+預設會使用下列系統提示詞。您可以自訂此提示詞，以修改代理程式的行為：
 
 <details open markdown="block">
   <summary>
-    Prompt
+    提示詞
   </summary>
   {: .text-delta}
 
@@ -406,16 +407,16 @@ Final response JSON:
 
 </details>
 
-### Default user prompt
+### 預設使用者提示
 
-The default user prompt template passes the natural language question and available parameters to the agent:
+預設使用者提示範本會將自然語言問題與可用的參數傳遞給代理程式：
 
 ```json
 "NLQ is: ${parameters.question} and index_name is: ${parameters.index_name:-}, model ID for neural search is: ${parameters.embedding_model_id:-}"
 ```
 
-## Next steps
+## 後續步驟
 
-- For a comprehensive example of using customized agents in practice, see [Inspecting agentic search and continuing conversations]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-converse/). 
+- 如需在實務中使用自訂代理程式的完整範例，請參閱 [檢查代理式搜尋並繼續對話]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-converse/)。 
 
-- For a list of available tools, see [Tools]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/).
+- 如需可用工具的清單，請參閱 [工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。

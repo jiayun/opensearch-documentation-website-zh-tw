@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search Monitors tool
+title: "Search Monitors 工具"
 has_children: false
 has_toc: false
 nav_order: 100
@@ -9,16 +10,16 @@ grand_parent: Agents and tools
 ---
 
 <!-- vale off -->
-# Search Monitors tool
-**Introduced 2.13**
+# Search Monitors 工具
+**於 2.13 版推出**
 {: .label .label-purple }
 <!-- vale on -->
 
-The `SearchMonitorsTool` retrieves information about alerting monitors set up on your cluster. For more information about alerting monitors, see [Monitors]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/).
+`SearchMonitorsTool` 會擷取您叢集上已設定的警示監視器資訊。如需警示監視器的詳細資訊，請參閱[監視器]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/)。
 
-## Step 1: Register a flow agent that will run the SearchMonitorsTool
+## 步驟 1：註冊將執行 SearchMonitorsTool 的流程代理程式
 
-A flow agent runs a sequence of tools in order and returns the last tool's output. To create a flow agent, send the following register agent request:
+流程代理程式會依序執行一系列工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -40,9 +41,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-For parameter descriptions, see [Register parameters](#register-parameters).
+如需參數說明，請參閱[註冊參數](#register-parameters)。
 
-OpenSearch responds with an agent ID:
+OpenSearch 會傳回代理程式 ID：
 
 ```json
 {
@@ -50,9 +51,9 @@ OpenSearch responds with an agent ID:
 }
 ```
 
-## Step 2: Run the agent
+## 步驟 2：執行代理程式
 
-Run the agent by sending the following request:
+傳送下列請求以執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/EuJYYo0B9RaBCvhuy1q8/_execute
@@ -64,7 +65,7 @@ POST /_plugins/_ml/agents/EuJYYo0B9RaBCvhuy1q8/_execute
 ```
 {% include copy-curl.html %} 
 
-OpenSearch responds with a list of alerting monitors set up on your cluster and the total number of alerting monitors:
+OpenSearch 會傳回您叢集上已設定的警示監視器清單，以及警示監視器的總數：
 
 ```json
 {
@@ -81,7 +82,7 @@ OpenSearch responds with a list of alerting monitors set up on your cluster and 
 }
 ```
 
-If no monitors are found, OpenSearch responds with an empty array in the results:
+若找不到任何監視器，OpenSearch 會在結果中傳回空陣列：
 
 ```json
 {
@@ -98,31 +99,31 @@ If no monitors are found, OpenSearch responds with an empty array in the results
 }
 ```
 
-## Register parameters
+## 註冊參數
 
-The following table lists all tool parameters that are available when registering an agent. All parameters are optional.
+下表列出註冊代理程式時可用的所有工具參數。所有參數皆為選用。
 
-Parameter	| Type | Description	
+參數	| 類型 | 說明	
 :--- | :--- | :---
-`monitorId`	| String	| The ID of the monitor to search for.
-`monitorName`	| String	| The name of the monitor to search for.
-`monitorNamePattern`	| String | A wildcard query used to match the monitor name to search for.
-`enabled` |	Boolean	| Whether to return information about monitors that are currently enabled. Leave this parameter unset (or set it to `null`) to return information about both enabled and disabled monitors. Set this parameter to `true` to return only information about enabled monitors. Set this parameter to `false` to return only information about disabled monitors. Default is `null`.
-`hasTriggers` |	Boolean	| Whether to return information about monitors that have triggers enabled. Leave this parameter unset (or set it to `null`) to return information about monitors that have triggers enabled and disabled. Set this parameter to `true` to return only information about monitors with triggers enabled. Set this parameter to `false` to return only information about monitors with triggers disabled. Default is `null`.
-`indices` | String	| The index name or index pattern of the indexes tracked by the returned monitors.
-`sortOrder`| String | The sort order of the results. Valid values are `asc` (ascending) and `desc` (descending). Default is `asc`. 
-`sortString`| String |	Specifies the monitor field by which to sort the results. Default is `name.keyword`.
-`size`	| Integer |	The number of results to return. Default is `20`.
-`startIndex`| Integer |	The paginated index of the monitor to start from. Default is `0`.
+`monitorId`	| 字串	| 要搜尋的監視器 ID。
+`monitorName`	| 字串	| 要搜尋的監視器名稱。
+`monitorNamePattern`	| 字串 | 用於比對要搜尋的監視器名稱的萬用字元查詢。
+`enabled` |	布林值	| 是否傳回目前已啟用的監視器資訊。不設定此參數（或將其設為 `null`）即可傳回已啟用和已停用的監視器資訊。將此參數設為 `true`，即可僅傳回已啟用的監視器資訊。將此參數設為 `false`，即可僅傳回已停用的監視器資訊。預設為 `null`。
+`hasTriggers` |	布林值	| 是否傳回已啟用觸發條件的監視器資訊。不設定此參數（或將其設為 `null`）即可傳回已啟用和已停用觸發條件的監視器資訊。將此參數設為 `true`，即可僅傳回已啟用觸發條件的監視器資訊。將此參數設為 `false`，即可僅傳回已停用觸發條件的監視器資訊。預設為 `null`。
+`indices` | 字串	| 傳回的監視器所追蹤之索引的索引名稱或索引模式。
+`sortOrder`| 字串 | 結果的排序順序。有效值為 `asc`（遞增）和 `desc`（遞減）。預設為 `asc`。 
+`sortString`| 字串 |	指定用來排序結果的監視器欄位。預設為 `name.keyword`。
+`size`	| 整數 |	要傳回的結果數量。預設為 `20`。
+`startIndex`| 整數 |	作為起點的監視器分頁索引。預設為 `0`。
 
-## Execute parameters
+## 執行參數
 
-The following table lists all tool parameters that are available when running the agent.
+下表列出執行代理程式時可用的所有工具參數。
 
-Parameter	| Type | Required/Optional | Description	
+參數	| 類型 | 必要／選用 | 說明	
 :--- | :--- | :--- | :---
-`question` | String | Required | The natural language question to send to the LLM. 
+`question` | 字串 | 必要 | 要傳送給 LLM 的自然語言問題。 
 
-## Testing the tool
+## 測試工具
 
-You can run this tool either as part of an agent workflow or independently using the [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/). The Execute Tool API is useful for testing individual tools or performing standalone operations.
+您可以將此工具作為代理程式工作流程的一部分執行，或使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 獨立執行。Execute Tool API 適合用於測試個別工具或執行獨立操作。

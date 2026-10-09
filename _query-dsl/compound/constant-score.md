@@ -1,19 +1,20 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Constant score
+title: "固定分數"
 parent: Compound queries
 nav_order: 40
 redirect_from:
   - /query-dsl/query-dsl/compound/constant-score/
 ---
 
-# Constant score query
+# 固定分數查詢
 
-If you need to return documents that contain a certain word regardless of how many times the word appears, you can use a `constant_score` query. A `constant_score` query wraps a filter query and assigns all documents in the results a relevance score equal to the value of the `boost` parameter. Thus, all returned documents have an equal relevance score, and term frequency/inverse document frequency (TF/IDF) is not considered. Filter queries do not calculate relevance scores. Further, OpenSearch caches frequently used filter queries to improve performance. 
+如果您需要傳回包含特定詞彙的文件，而不考慮該詞彙出現的次數，可以使用 `constant_score` 查詢。`constant_score` 查詢會包裝篩選查詢，並將結果中所有文件的相關性分數設為 `boost` 參數的值。因此，所有傳回的文件都具有相同的相關性分數，且不考慮詞頻／反向文件頻率（TF/IDF）。篩選查詢不會計算相關性分數。此外，OpenSearch 會快取經常使用的篩選查詢，以提升效能。 
 
-## Example
+## 範例
 
-Use the following query to return documents that contain the word "Hamlet" in the `shakespeare` index:
+使用下列查詢，傳回 `shakespeare` 索引中包含「Hamlet」一詞的文件：
 
 ```json
 GET shakespeare/_search
@@ -32,13 +33,13 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-All documents in the results are assigned a relevance score of 1.2:
+結果中所有文件的相關性分數都設為 1.2：
 
 <details open markdown="block">
-  <summary>
-    Response
-  </summary>
-  {: .text-delta }
+<summary>
+    回應
+</summary>
+{: .text-delta }
 
 ```json
 {
@@ -203,11 +204,11 @@ All documents in the results are assigned a relevance score of 1.2:
 ```
 </details>
 
-## Parameters
+## 參數
 
-The following table lists all top-level parameters supported by `constant_score `queries.
+下表列出 `constant_score ` 查詢支援的所有最上層參數。
 
-Parameter | Description
+參數 | 說明
 :--- | :---
-`filter` | The filter query that a document must match to be returned in the results. Required.
-`boost` | A floating-point value that is assigned as the relevance score to all returned documents. Optional. Default is 1.0.
+`filter` | 文件必須符合此篩選查詢，才會在結果中傳回。必要。
+`boost` | 指派給所有傳回文件作為相關性分數的浮點數值。選用。預設為 1.0。

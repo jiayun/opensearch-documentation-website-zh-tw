@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Get connector
+title: "取得連接器"
 parent: Connector APIs
 grand_parent: ML Commons APIs
 nav_order: 20
@@ -8,22 +9,22 @@ nav_order: 20
 
 # Get Connector API
 
-This API retrieves a connector by its ID.
+此 API 會依連接器 ID 擷取連接器。
 
-### Endpoints
+### 端點
 
 ```json
 GET /_plugins/_ml/connectors/{connector_id}
 ```
 
-## Example request
+## 範例請求
 
 ```json
 GET /_plugins/_ml/connectors/N8AE1osB0jLkkocYjz7D
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 範例回應
 
 ```json
 {

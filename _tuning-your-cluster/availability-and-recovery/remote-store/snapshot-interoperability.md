@@ -1,18 +1,19 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Shallow snapshots
+title: "淺層快照"
 nav_order: 15
 parent: Remote-backed storage
 grand_parent: Availability and recovery
 ---
 
-# Shallow snapshots
+# 淺層快照
 
-Shallow copy snapshots allow you to reference data from an entire remote-backed repository instead of storing all of the data from the segment in a snapshot repository. This makes accessing segment data faster than using normal snapshots because segment data is not stored in the snapshot repository.
+淺層複製快照讓您能夠參照整個以遠端儲存空間為後端的儲存庫中的資料，而不必將分段的所有資料儲存在快照儲存庫中。這使得存取分段資料比使用一般快照更快，因為分段資料不會儲存在快照儲存庫中。
 
-## Enabling shallow snapshots
+## 啟用淺層快照
 
-Use the [Snapshot API]({{site.url}}{{site.baseurl}}/api-reference/snapshots/create-repository/) and set the `remote_store_index_shallow_copy` repository setting to `true` in order to enable shallow snapshot copies, as shown in the following example:
+使用 [Snapshot API]({{site.url}}{{site.baseurl}}/api-reference/snapshots/create-repository/) 並將 `remote_store_index_shallow_copy` 儲存庫設定設為 `true`，即可啟用淺層快照複製，如下列範例所示：
 
 ```bash
 PUT /_snapshot/snap_repo
@@ -27,35 +28,35 @@ PUT /_snapshot/snap_repo
 ```
 {% include copy-curl.html %}
 
-Once enabled, all requests using the [Snapshot API]({{site.url}}{{site.baseurl}}/api-reference/snapshots/index/) will remain the same for all snapshots. Therefore, do not disable the shallow snapshot setting after it has been enabled because disabling the setting could affect data durability.
+啟用後，所有使用 [Snapshot API]({{site.url}}{{site.baseurl}}/api-reference/snapshots/index/) 的請求對所有快照而言都維持不變。因此，啟用淺層快照設定後請勿停用，因為停用該設定可能會影響資料的耐久性。
 
-## Considerations
+## 注意事項
 
-Consider the following before using shallow copy snapshots:
+使用淺層複製快照之前，請考慮下列事項：
 
-- Shallow copy snapshots only work for remote-backed indexes.
-- All nodes in the cluster must use OpenSearch 2.10 or later to take advantage of shallow copy snapshots.
-- The `incremental` file count and size between the current snapshot and the last snapshot is `0` when using shallow copy snapshots.
-- Searchable snapshots are not supported inside shallow copy snapshots.
+- 淺層複製快照僅適用於以遠端儲存空間為後端的索引。
+- 叢集中的所有節點都必須使用 OpenSearch 2.10 或更新版本，才能利用淺層複製快照。
+- 使用淺層複製快照時，目前快照與上一個快照之間的 `incremental` 檔案數量與大小為 `0`。
+- 淺層複製快照內不支援可搜尋快照。
 
-## Shallow snapshot v2 
+## 淺層快照 v2 
 
-Starting with OpenSearch 2.17, the shallow snapshot feature offers an improved version called `shallow snapshot v2`, which aims to makes snapshot operations more efficient and scalable by introducing the following enhancements:
+從 OpenSearch 2.17 開始，淺層快照功能提供名為 `shallow snapshot v2` 的改良版本，透過引入下列強化功能，旨在讓快照作業更有效率且更具擴充性：
 
-* Deterministic snapshot operations: Shallow snapshot v2 makes snapshot operations more deterministic, ensuring consistent and predictable behavior.
-* Minimized cluster state updates: Shallow snapshot v2 minimizes the number of cluster state updates required during snapshot operations, reducing overhead and improving performance.
-* Scalability: Shallow snapshot v2 allows snapshot operations to scale independently of the number of shards in the cluster, enabling better performance and efficiency for large datasets.
+* 確定性的快照作業：淺層快照 v2 讓快照作業更具確定性，確保行為一致且可預測。
+* 將叢集狀態更新降至最低：淺層快照 v2 將快照作業期間所需的叢集狀態更新次數降至最低，減少額外負擔並提升效能。
+* 擴充性：淺層快照 v2 讓快照作業的規模可獨立於叢集中的分片數量擴充，為大型資料集帶來更好的效能與效率。
 
-Shallow snapshot v2 must be enabled separately from shallow copies.
+淺層快照 v2 必須與淺層複製分開啟用。
 
-### Enabling shallow snapshot v2
+### 啟用淺層快照 v2
 
-To enable shallow snapshot v2, enable the following repository settings:
+若要啟用淺層快照 v2，請啟用下列儲存庫設定：
 
 - `remote_store_index_shallow_copy: true`
 - `shallow_snapshot_v2: true`
 
-The following example request creates a shallow snapshot v2 repository:
+下列範例請求會建立淺層快照 v2 儲存庫：
 
 ```bash
 PUT /_snapshot/snap_repo
@@ -71,9 +72,9 @@ PUT /_snapshot/snap_repo
 ```
 {% include copy-curl.html %}
 
-### Limitations 
+### 限制 
 
-Shallow snapshot v2 has the following limitations:
+淺層快照 v2 有下列限制：
 
-* Shallow snapshot v2 only supported for remote-backed indexes.
-* All nodes in the cluster must use OpenSearch 2.17 or later to take advantage of shallow snapshot v2.
+* 淺層快照 v2 僅支援以遠端儲存空間為後端的索引。
+* 叢集中的所有節點都必須使用 OpenSearch 2.17 或更新版本，才能利用淺層快照 v2。

@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: JavaScript client
+title: "JavaScript 用戶端"
 has_children: true
 has_toc: false
 nav_order: 40
@@ -8,44 +9,44 @@ redirect_from:
   - /clients/javascript/
 ---
 
-# JavaScript client
+# JavaScript 用戶端
 
-The OpenSearch JavaScript (JS) client provides a safer and easier way to interact with your OpenSearch cluster. Rather than using OpenSearch from the browser and potentially exposing your data to the public, you can build an OpenSearch client that takes care of sending requests to your cluster. For the client's complete API documentation and additional examples, see the [JS client API documentation](https://opensearch-project.github.io/opensearch-js/3.6/index.html).
+OpenSearch JavaScript (JS) 用戶端提供更安全、更簡便的方式與您的 OpenSearch 叢集互動。與其在瀏覽器中使用 OpenSearch 而可能將資料暴露給公眾，您可以建立一個 OpenSearch 用戶端來處理傳送至叢集的請求。如需用戶端的完整 API 文件與更多範例，請參閱 [JS 用戶端 API 文件](https://opensearch-project.github.io/opensearch-js/3.6/index.html)。
 
-The client contains a library of APIs that let you perform different operations on your cluster and return a standard response body. The example here demonstrates some basic operations like creating an index, adding documents, and searching your data. 
+用戶端包含一組 API 程式庫，讓您對叢集執行各種操作並回傳標準的回應本文。此處的範例示範一些基本操作，例如建立索引、新增文件，以及搜尋您的資料。
 
-You can use helper methods to simplify the use of complicated API tasks. For more information, see [Helper methods]({{site.url}}{{site.baseurl}}/clients/javascript/helpers/). For more advanced index actions, see the [`opensearch-js` guides](https://github.com/opensearch-project/opensearch-js/tree/main/guides) in GitHub.  
+您可以使用輔助方法來簡化複雜的 API 任務。如需更多資訊，請參閱[輔助方法]({{site.url}}{{site.baseurl}}/clients/javascript/helpers/)。如需更進階的索引操作，請參閱 GitHub 上的 [`opensearch-js` 指南](https://github.com/opensearch-project/opensearch-js/tree/main/guides)。
 
-## Installing the JavaScript client
+## 安裝 JavaScript 用戶端
 
-The client requires Node.js 14 or later.
+用戶端需要 Node.js 14 或更新版本。
 
-To add the client to your project, install it from [`npm`](https://www.npmjs.com):
+若要將用戶端加入您的專案，請從 [`npm`](https://www.npmjs.com) 安裝：
 
 ```bash
 npm install @opensearch-project/opensearch
 ```
 {% include copy.html %}
 
-To install a specific version of the client, run the following command:
+若要安裝特定版本的用戶端，請執行以下命令：
 
 ```bash
 npm install @opensearch-project/opensearch@<version>
 ```
 {% include copy.html %}
 
-If you prefer to add the client manually or only want to examine the source code, see [`opensearch-js`](https://github.com/opensearch-project/opensearch-js) on GitHub.
+如果您偏好手動新增用戶端，或只想檢視原始碼，請參閱 GitHub 上的 [`opensearch-js`](https://github.com/opensearch-project/opensearch-js)。
 
-Then require the client:
+然後引入用戶端：
 
 ```javascript
 const { Client } = require("@opensearch-project/opensearch");
 ```
 {% include copy.html %}
 
-## Connecting to OpenSearch
+## 連線至 OpenSearch
 
-To connect to the default OpenSearch host, create a client object with the address `https://localhost:9200` if you are using the Security plugin:  
+若要連線至預設的 OpenSearch 主機，如果您使用 Security 外掛程式，請以位址 `https://localhost:9200` 建立用戶端物件：
 
 ```javascript
 var host = "localhost";
@@ -74,7 +75,7 @@ var client = new Client({
 ```
 {% include copy.html %}
 
-If you are not using the Security plugin, create a client object with the address `http://localhost:9200`:
+如果您未使用 Security 外掛程式，請以位址 `http://localhost:9200` 建立用戶端物件：
 
 ```javascript
 var host = "localhost";
@@ -89,28 +90,28 @@ var client = new Client({
 ```
 {% include copy.html %}
 
-## Authenticating with Amazon OpenSearch Service: AWS Signature Version 4
+## 使用 Amazon OpenSearch Service 進行驗證：AWS Signature Version 4
 
-To sign requests using the AWS SDK for JavaScript V3, install the V3 credential provider package:
+若要使用 AWS SDK for JavaScript V3 簽署請求，請安裝 V3 憑證供應商套件：
 
 ```bash
 npm install @aws-sdk/credential-provider-node
 ```
 {% include copy.html %}
 
-To sign requests using the AWS SDK for JavaScript V2, install the V2 SDK:
+若要使用 AWS SDK for JavaScript V2 簽署請求，請安裝 V2 SDK：
 
 ```bash
 npm install aws-sdk
 ```
 {% include copy.html %}
 
-The AWS SDK for JavaScript V2 reached end of support on September 8, 2025. For new applications, use the AWS SDK for JavaScript V3 examples in this section.
+AWS SDK for JavaScript V2 已於 2025 年 9 月 8 日終止支援。對於新的應用程式，請使用本節中的 AWS SDK for JavaScript V3 範例。
 {: .note}
 
-In the following examples, replace the endpoint with your domain or collection endpoint, which is listed on the domain's or collection's details page in the Amazon OpenSearch Service console.
+在下列範例中，請將端點替換為您的網域或集合端點，該端點列於 Amazon OpenSearch Service 主控台中網域或集合的詳細資料頁面。
 
-Use the following code to authenticate with AWS V2 SDK:
+請使用以下程式碼以 AWS V2 SDK 進行驗證：
 
 ```javascript
 const AWS = require('aws-sdk'); // V2 SDK.
@@ -145,7 +146,7 @@ const client = new Client({
 ```
 {% include copy.html %}
 
-Use the following code to authenticate with the AWS V2 SDK for Amazon OpenSearch Serverless:
+請使用以下程式碼以適用於 Amazon OpenSearch Serverless 的 AWS V2 SDK 進行驗證：
 
 ```javascript
 const AWS = require('aws-sdk'); // V2 SDK.
@@ -180,7 +181,7 @@ const client = new Client({
 ```
 {% include copy.html %}
 
-Use the following code to authenticate with AWS V3 SDK:
+請使用以下程式碼以 AWS V3 SDK 進行驗證：
 
 ```javascript
 const { defaultProvider } = require('@aws-sdk/credential-provider-node'); // V3 SDK.
@@ -213,7 +214,7 @@ const client = new Client({
 ```
 {% include copy.html %}
 
-Use the following code to authenticate with the AWS V3 SDK for Amazon OpenSearch Serverless:
+請使用以下程式碼以適用於 Amazon OpenSearch Serverless 的 AWS V3 SDK 進行驗證：
 
 ```javascript
 const { defaultProvider } = require('@aws-sdk/credential-provider-node'); // V3 SDK.
@@ -245,16 +246,16 @@ const client = new Client({
 ```
 {% include copy.html %}
 
-Amazon OpenSearch Serverless supports a subset of OpenSearch API operations and does not support the `refresh` parameter used in the examples on this page. For more information, see [Supported operations and plugins in Amazon OpenSearch Serverless](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-genref.html).
+Amazon OpenSearch Serverless 支援 OpenSearch API 操作的子集，且不支援本頁範例中使用的 `refresh` 參數。如需更多資訊，請參閱 [Amazon OpenSearch Serverless 支援的操作與外掛程式](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-genref.html)。
 {: .note}
 
-### Authenticating from within an AWS Lambda function
+### 在 AWS Lambda 函式中進行驗證
 
-Within an AWS Lambda function, objects declared outside the handler function retain their initialization. For more information, see [Lambda Execution Environment](https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtime-environment.html). Thus, you must initialize the OpenSearch client outside of the handler function to ensure the reuse of the original connection in subsequent invocations. This promotes efficiency and eliminates the need to create a new connection each time. 
+在 AWS Lambda 函式中，於處理常式函式外部宣告的物件會保留其初始化狀態。如需更多資訊，請參閱 [Lambda 執行環境](https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtime-environment.html)。因此，您必須在處理常式函式外部初始化 OpenSearch 用戶端，以確保後續叫用時能重複使用原始連線。這可提升效率，並免除每次都要建立新連線的需求。
 
-Initializing the client within the handler function poses a potential risk of encountering a `ConnectionError: getaddrinfo EMFILE error`. This error occurs when multiple connections are created in subsequent invocations, exceeding the system's file descriptor limit.
+在處理常式函式內初始化用戶端，可能會有遇到 `ConnectionError: getaddrinfo EMFILE error` 的風險。當後續叫用時建立了多個連線，超過系統的檔案描述元上限，就會發生此錯誤。
 
-The following example AWS Lambda function code demonstrates the correct initialization of the OpenSearch client:
+以下的 AWS Lambda 函式程式碼範例示範如何正確初始化 OpenSearch 用戶端：
 
 ```javascript
 const { defaultProvider } = require('@aws-sdk/credential-provider-node'); // V3 SDK.
@@ -296,9 +297,9 @@ exports.handler = async (event, context) => {
 ```
 {% include copy.html %}
 
-## Creating an index
+## 建立索引
 
-The following example creates an index with one primary shard and one replica. It explicitly maps the `gradDate` field as a `date` in the `yyyy-MM-dd` format. OpenSearch maps the other document fields dynamically when you index documents:
+以下範例建立一個具有一個主要分片和一個副本的索引。它會以 `yyyy-MM-dd` 格式，將 `gradDate` 欄位明確對應為 `date`。當您將文件編製索引時，OpenSearch 會動態對應其他文件欄位：
 
 ```javascript
 var index_name = "students";
@@ -322,9 +323,9 @@ var response = await client.indices.create({
 ```
 {% include copy.html %}
 
-## Indexing a document
+## 將文件編製索引
 
-Index a document into OpenSearch using the client's `index` method:
+使用用戶端的 `index` 方法，將文件編製索引至 OpenSearch：
 
 ```javascript
 var student = { firstName: "John", lastName: "Doe", gpa: 3.89, gradDate: "2022-05-15" };
@@ -338,9 +339,9 @@ var response = await client.index({
 ```
 {% include copy.html %}
 
-## Bulk indexing
+## 大量編製索引
 
-Index multiple documents in one request using the client's `bulk` method. The request body is an array in which each action is followed by the document that it applies to:
+使用用戶端的 `bulk` 方法，在單一請求中將多個文件編製索引。請求本文是一個陣列，其中每個動作後面接著該動作所套用的文件：
 
 ```javascript
 var response = await client.bulk({
@@ -355,11 +356,11 @@ var response = await client.bulk({
 ```
 {% include copy.html %}
 
-To build the request body from an array, a stream, or an async generator, use the [bulk helper]({{site.url}}{{site.baseurl}}/clients/javascript/helpers/#bulk-helper).
+若要從陣列、串流或非同步產生器建立請求本文，請使用 [bulk 輔助方法]({{site.url}}{{site.baseurl}}/clients/javascript/helpers/#bulk-helper)。
 
-## Searching for documents
+## 搜尋文件
 
-Search for all documents in an index using the client's `search` method:
+使用用戶端的 `search` 方法，搜尋索引中的所有文件：
 
 ```javascript
 var response = await client.search({
@@ -374,7 +375,7 @@ response.body.hits.hits.forEach((hit) => console.log(hit._source));
 ```
 {% include copy.html %}
 
-Each item in `response.body.hits.hits` is a plain JavaScript object. The document ID is in the `_id` property, and the document fields are properties of the `_source` object:
+`response.body.hits.hits` 中的每個項目都是純 JavaScript 物件。文件 ID 位於 `_id` 屬性中，而文件欄位則是 `_source` 物件的屬性：
 
 ```javascript
 response.body.hits.hits.forEach((hit) => {
@@ -385,7 +386,7 @@ response.body.hits.hits.forEach((hit) => {
 ```
 {% include copy.html %}
 
-Search using a `range` query:
+使用 `range` 查詢進行搜尋：
 
 ```javascript
 var response = await client.search({
@@ -404,9 +405,9 @@ var response = await client.search({
 ```
 {% include copy.html %}
 
-## Paginating results
+## 分頁顯示結果
 
-To paginate results, use the `from` and `size` parameters. The following example sorts students by graduation date and retrieves the results two at a time. The first request returns the first page of results, and the second request returns the next page:
+若要分頁顯示結果，請使用 `from` 和 `size` 參數。以下範例依畢業日期排序學生，並一次擷取兩筆結果。第一個請求會傳回第一頁結果，第二個請求則會傳回下一頁：
 
 ```javascript
 var response = await client.search({
@@ -431,11 +432,11 @@ nextPage.body.hits.hits.forEach((hit) => console.log(hit._source));
 ```
 {% include copy.html %}
 
-The `from` and `size` parameters work well for the first pages of results. To paginate through a large number of results, use point in time with `search_after`. For more information, see [Paginate results]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/).
+`from` 和 `size` 參數適用於結果的前幾頁。若要在大量結果中分頁，請使用時間點 (point in time) 搭配 `search_after`。如需更多資訊，請參閱 [分頁顯示結果]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/)。
 
-## Updating a document
+## 更新文件
 
-Update a document using the client's `update` method. The `doc` object contains only the fields to update:
+使用用戶端的 `update` 方法更新文件。`doc` 物件僅包含要更新的欄位：
 
 ```javascript
 var response = await client.update({
@@ -448,9 +449,9 @@ var response = await client.update({
 ```
 {% include copy.html %}
 
-## Deleting a document
+## 刪除文件
 
-Delete a document using the client's `delete` method:
+使用用戶端的 `delete` 方法刪除文件：
 
 ```javascript
 var response = await client.delete({
@@ -461,9 +462,9 @@ var response = await client.delete({
 ```
 {% include copy.html %}
 
-## Deleting an index
+## 刪除索引
 
-Delete an index using the `indices.delete()` method:
+使用 `indices.delete()` 方法刪除索引：
 
 ```javascript
 var response = await client.indices.delete({
@@ -472,14 +473,14 @@ var response = await client.indices.delete({
 ```
 {% include copy.html %}
 
-## Sample program
+## 範例程式
 
-This sample program combines the code from the preceding sections. It connects to a cluster that has the Security plugin enabled. To connect to a cluster without the Security plugin, change the lines marked with `// Without security` comments.
+此範例程式結合了前述各節的程式碼。它會連線至已啟用 Security 外掛程式的叢集。若要連線至未啟用 Security 外掛程式的叢集，請變更標有 `// Without security` 註解的行。
 
-This sample program is for testing only. It specifies credentials in code. In production, load credentials from a secure location.
+此範例程式僅供測試之用。它會在程式碼中指定認證資訊。在正式環境中，請從安全的位置載入認證資訊。
 {: .warning}
 
-The following sample program creates a client, creates an index, indexes documents individually and in bulk, searches for documents, updates a document, deletes a document, and then deletes the index:
+以下範例程式會建立用戶端、建立索引、個別及大量將文件編製索引、搜尋文件、更新文件、刪除文件，然後刪除索引：
 
 ```javascript
 "use strict";
@@ -639,7 +640,7 @@ main().catch(console.log);
 ```
 {% include copy.html %}
 
-The program produces the following output:
+此程式會產生下列輸出：
 
 ```
 Creating index......
@@ -676,16 +677,16 @@ Deleting the index......
 Acknowledged: true
 ```
 
-## Circuit breaker
+## 斷路器
 
-The `memoryCircuitBreaker` option can be used to prevent errors caused by a response payload being too large to fit into the heap memory available to the client.
+`memoryCircuitBreaker` 選項可用來防止因回應承載過大、無法放入用戶端可用的堆積記憶體而導致的錯誤。
 
-The `memoryCircuitBreaker` object contains two fields:
+`memoryCircuitBreaker` 物件包含兩個欄位：
 
-- `enabled`: A Boolean used to turn the circuit breaker on or off. Defaults to `false`.
-- `maxPercentage`: The threshold that determines whether the circuit breaker engages. Valid values are floats in the [0, 1] range that represent percentages in decimal form. Any value that exceeds that range will correct to `1.0`.
+- `enabled`：用於開啟或關閉斷路器的布林值。預設為 `false`。
+- `maxPercentage`：決定斷路器是否啟動的閾值。有效值為 [0, 1] 範圍內的浮點數，以小數形式表示百分比。任何超出該範圍的值都會被修正為 `1.0`。
 
-The following example instantiates a client with the circuit breaker enabled and its threshold set to 80% of the available heap size limit:
+下列範例會建立一個已啟用斷路器的用戶端執行個體，並將其閾值設定為可用堆積大小上限的 80%：
 
 ```javascript
 var client = new Client({
@@ -697,9 +698,9 @@ var client = new Client({
 ```
 {% include copy.html %}
 
-## Related documentation
+## 相關文件
 
-- To index, update, and delete documents in bulk using the client's helper method, see [Helper methods]({{site.url}}{{site.baseurl}}/clients/javascript/helpers/).
-- For more examples of using the client, see the [`opensearch-js` user guide](https://github.com/opensearch-project/opensearch-js/blob/main/USER_GUIDE.md).
-- For guides to specific tasks, such as bulk indexing and searching, see the [`opensearch-js` guides](https://github.com/opensearch-project/opensearch-js/tree/main/guides).
-- For complete sample applications, see the [`opensearch-js` samples](https://github.com/opensearch-project/opensearch-js/tree/main/samples).
+- 若要使用用戶端的輔助方法大量編製索引、更新及刪除文件，請參閱[輔助方法]({{site.url}}{{site.baseurl}}/clients/javascript/helpers/)。
+- 如需更多使用用戶端的範例，請參閱 [`opensearch-js` 使用者指南](https://github.com/opensearch-project/opensearch-js/blob/main/USER_GUIDE.md)。
+- 如需特定工作（例如大量編製索引與搜尋）的指南，請參閱 [`opensearch-js` 指南](https://github.com/opensearch-project/opensearch-js/tree/main/guides)。
+- 如需完整的範例應用程式，請參閱 [`opensearch-js` 範例](https://github.com/opensearch-project/opensearch-js/tree/main/samples)。

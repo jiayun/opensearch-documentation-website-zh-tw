@@ -1,39 +1,40 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Add entries
+title: "新增項目"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 10
 ---
 
-# Add entries processor
+# 新增項目處理器
 
-The `add_entries` processor adds entries to an event.
+`add_entries` 處理器會將項目新增至事件。
 
-## Configuration
+## 組態
 
-You can configure the `add_entries` processor with the following options.
+您可以使用下列選項設定 `add_entries` 處理器。
 
-| Option | Required | Description |
+| 選項 | 必要 | 說明 |
 | :--- | :--- | :--- |
-| `entries` | Yes | A list of entries to add to an event. |
-| `key` | No | The key of the new entry to be added. Some examples of keys include `my_key`, `myKey`, and `object/sub_Key`. The key can also be a format expression, for example, `${/key1}` to use the value of field `key1` as the key. |
-| `metadata_key` | No | The key for the new metadata attribute. The argument must be a literal string key and not a JSON Pointer. Either one string key or `metadata_key` is required. |
-| `value` | No | The value of the new entry to be added, which can be used with any of the following data types: strings, Booleans, numbers, null, nested objects, and arrays. |
-| `format` | No | A format string to use as the value of the new entry, for example, `${key1}-${key2}`, where `key1` and `key2` are existing keys in the event. Required if neither `value` nor `value_expression` is specified. |
-| `value_expression` | No | An expression string to use as the value of the new entry. For example, `/key` is an existing key in the event with a type of either a number, a string, or a Boolean. Expressions can also contain functions returning number/string/integer. For example, `length(/key)` will return the length of the key in the event when the key is a string. For more information about keys, see [Expression syntax]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/). For more information about functions, see [Functions]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/functions/). |
-| `add_when` | No | A [conditional expression]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/), such as `/some-key == "test"'`, that will be evaluated to determine whether the processor will be run on the event. |
-| `overwrite_if_key_exists` | No | When set to `true`, the existing value is overwritten if `key` already exists in the event. The default value is `false`. |
-| `append_if_key_exists` | No | When set to `true`, the existing value will be appended if a `key` already exists in the event. An array will be created if the existing value is not an array. Default is `false`. |
+| `entries` | 是 | 要新增至事件的項目清單。 |
+| `key` | 否 | 要新增之項目的鍵。鍵的範例包括 `my_key`、`myKey` 和 `object/sub_Key`。鍵也可以是格式運算式，例如使用 `${/key1}`，將欄位 `key1` 的值作為鍵。 |
+| `metadata_key` | 否 | 新中繼資料屬性的鍵。引數必須是字串常值鍵，不能是 JSON Pointer。必須提供一個字串鍵或 `metadata_key`。 |
+| `value` | 否 | 要新增之項目的值，可使用下列任一資料類型：字串、布林值、數字、null、巢狀物件和陣列。 |
+| `format` | 否 | 作為新項目值的格式字串，例如 `${key1}-${key2}`，其中 `key1` 和 `key2` 是事件中既有的鍵。如果未指定 `value` 或 `value_expression`，則此選項為必要。 |
+| `value_expression` | 否 | 作為新項目值的運算式字串。例如，`/key` 是事件中既有的鍵，其類型為數字、字串或布林值。運算式也可以包含傳回數字／字串／整數的函式。例如，當鍵為字串時，`length(/key)` 會傳回事件中該鍵的長度。如需鍵的詳細資訊，請參閱[運算式語法]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)。如需函式的詳細資訊，請參閱[函式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/functions/)。 |
+| `add_when` | 否 | 用於判斷是否對事件執行處理器的[條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，例如 `/some-key == "test"'`。 |
+| `overwrite_if_key_exists` | 否 | 設為 `true` 時，若事件中已存在 `key`，則會覆寫現有值。預設值為 `false`。 |
+| `append_if_key_exists` | 否 | 設為 `true` 時，若事件中已存在 `key`，則會將新值附加至現有值。若現有值不是陣列，則會建立陣列。預設值為 `false`。 |
 
 
-## Usage
+## 使用方式
 
-The following examples show how the `add_entries` processor can be used in different cases.
+下列範例示範如何在不同情況下使用 `add_entries` 處理器。
 
-### Example: Add entries with simple values
+### 範例：新增具有簡單值的項目
 
-The following example shows you how to configure the processor to add entries with simple values:
+下列範例示範如何設定處理器，以新增具有簡單值的項目：
 
 ```yaml
 ... 
@@ -48,21 +49,21 @@ The following example shows you how to configure the processor to add entries wi
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 
 ```json
 {"message": "hello"}
 ```
 
-The processed event will contain the following data:
+處理後的事件將包含下列資料：
 
 ```json
 {"message": "hello", "name": "John", "age": 20}
 ```
 
-### Example: Add entries using format strings
+### 範例：使用格式字串新增項目
 
-The following example shows you how to configure the processor to add entries with values from other fields:
+下列範例示範如何設定處理器，以新增值來自其他欄位的項目：
 
 ```yaml
 ... 
@@ -75,21 +76,21 @@ The following example shows you how to configure the processor to add entries wi
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 
 ```json
 {"month": "Dec", "day": 1}
 ```
 
-The processed event will contain the following data:
+處理後的事件將包含下列資料：
 
 ```json
 {"month": "Dec", "day": 1, "date": "Dec-1"}
 ```
 
-### Example: Add entries using value expressions
+### 範例：使用值運算式新增項目
 
-The following example shows you how to configure the processor to use the `value_expression` option:
+下列範例示範如何設定處理器，以使用 `value_expression` 選項：
 
 ```yaml
 ... 
@@ -102,21 +103,21 @@ The following example shows you how to configure the processor to use the `value
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 
 ```json
 {"message": "hello"}
 ```
 
-The processed event will contain the following data:
+處理後的事件將包含下列資料：
 
 ```json
 {"message": "hello", "length": 5}
 ```
 
-### Example: Add metadata
+### 範例：新增中繼資料
 
-The following example shows you how to configure the processor to add metadata to events:
+下列範例示範如何設定處理器，以將中繼資料新增至事件：
 
 ```yaml
 ... 
@@ -129,18 +130,18 @@ The following example shows you how to configure the processor to add metadata t
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 
 ```json
 {"message": "hello"}
 ```
 
-The processed event will have the same data, with the metadata, `{"length": 5}`, attached. You can subsequently use expressions like `getMetadata("length")` in the pipeline. For more information, see [`getMetadata` function]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/get-metadata/).
+處理後的事件將保有相同的資料，並附加中繼資料 `{"length": 5}`。您之後可以在管線中使用 `getMetadata("length")` 等運算式。如需詳細資訊，請參閱 [`getMetadata` 函式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/get-metadata/)。
 
 
-### Example: Add a dynamic key
+### 範例：新增動態鍵
 
-The following example shows you how to configure the processor to add metadata to events using a dynamic key:
+下列範例示範如何設定處理器，以使用動態鍵將中繼資料新增至事件：
 
 ```yaml
 ... 
@@ -153,21 +154,21 @@ The following example shows you how to configure the processor to add metadata t
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 
 ```json
 {"param_name": "cpu", "param_value": 50}
 ```
 
-The processed event will contain the following data:
+處理後的事件將包含下列資料：
 
 ```json
 {"param_name": "cpu", "param_value": 50, "cpu": 50}
 ```
 
-### Example: Overwrite existing entries
+### 範例：覆寫現有項目
 
-The following example shows you how to configure the processor to overwrite existing entries:
+下列範例示範如何設定處理器，以覆寫現有項目：
 
 ```yaml
 ... 
@@ -181,23 +182,23 @@ The following example shows you how to configure the processor to overwrite exis
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 
 ```json
 {"message": "hello"}
 ```
 
-The processed event will contain the following data:
+處理後的事件將包含下列資料：
 
 ```json
 {"message": "bye"}
 ```
 
-If `overwrite_if_key_exists` is not set to `true`, then the input event will not be changed after processing.
+如果 `overwrite_if_key_exists` 未設為 `true`，則輸入事件在處理後不會變更。
 
-### Example: Append values to existing entries
+### 範例：將值附加至現有項目
 
-The following example shows you how to configure the processor to append values to existing entries:
+下列範例示範如何設定處理器，以將值附加至現有項目：
 
 ```yaml
 ... 
@@ -211,29 +212,29 @@ The following example shows you how to configure the processor to append values 
 ```
 {% include copy.html %}
 
-When the input event contains the following data:
+當輸入事件包含下列資料時：
 
 ```json
 {"message": "hello"}
 ```
 
-The processed event will contain the following data:
+處理後的事件將包含下列資料：
 
 ```json
 {"message": ["hello", "world"]}
 ```
 
-## Example
+## 範例
 
-The following pipeline performs these actions:
+下列管線會執行這些動作：
 
-1. Adds an `app_id` field using the format string `${app}-${env}`.
-2. Adds a `message_len` field with the value of `length(/message)`.
-3. Adds a metadata key `msg_len_meta` with the value of `length(/message)`.
-4. If both `/metric/name` and `/metric/value` exist, creates a new field named after `/metric/name` and sets its value to `/metric/value`.
-5. If `/level == "error"`, adds the field `severity: "high"`.
-6. Appends `"ingested"` to the `tags` field, ensuring that the `tags` field is an array.
-7. Sets `env_normalized: "prod"`, overwriting the existing value if the field already exists.
+1. 使用格式字串 `${app}-${env}` 新增 `app_id` 欄位。
+2. 新增 `message_len` 欄位，其值為 `length(/message)`。
+3. 新增中繼資料鍵 `msg_len_meta`，其值為 `length(/message)`。
+4. 如果 `/metric/name` 和 `/metric/value` 都存在，則建立以 `/metric/name` 命名的新欄位，並將其值設為 `/metric/value`。
+5. 如果 `/level == "error"`，則新增欄位 `severity: "high"`。
+6. 將 `"ingested"` 附加至 `tags` 欄位，確保 `tags` 欄位為陣列。
+7. 設定 `env_normalized: "prod"`，如果欄位已存在，則覆寫現有值。
 
 ```yaml
 example-pipeline:
@@ -285,7 +286,7 @@ example-pipeline:
 ```
 {% include copy.html %}
 
-You can test this pipeline by executing the following command:
+您可以執行下列命令來測試此管線：
 
 ```bash
 curl -sS -X POST "http://localhost:2021/events" \
@@ -298,7 +299,7 @@ curl -sS -X POST "http://localhost:2021/events" \
 ```
 {% include copy.html %}
 
-The documents stored in OpenSearch contain the following information:
+儲存在 OpenSearch 中的文件包含下列資訊：
 
 ```json
 "hits": [

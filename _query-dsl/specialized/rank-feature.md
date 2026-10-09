@@ -1,38 +1,39 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Rank feature
+title: "排名特徵"
 parent: Specialized queries
 nav_order: 75
 ---
 
-# Rank feature
+# 排名特徵
 
-Use the `rank_feature` query to boost document scores based on numeric values in a document, such as relevance scores, popularity, or freshness. This query is ideal if you want to fine-tune relevance ranking using numerical features. Unlike [full-text queries]({{site.url}}{{site.baseurl}}/query-dsl/full-text/index/), `rank_feature` focuses solely on a numeric signal; it is most effective when combined with other queries in a compound query like `bool`.
+使用 `rank_feature` 查詢，根據文件中的數值（例如相關性分數、熱門程度或新鮮度）提高文件分數。如果您想使用數值特徵微調相關性排名，這個查詢非常適合。與[全文查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/index/)不同，`rank_feature` 僅著重於數值訊號；將其與其他查詢結合於 `bool` 等複合查詢中時，效果最佳。
 
-The `rank_feature` query expects the target field to be mapped as a [`rank_feature` field type]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/rank/). This enables internally optimized scoring for fast and efficient boosting.
+`rank_feature` 查詢要求目標欄位對應為 [`rank_feature` 欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/rank/)。這可啟用內部最佳化的評分機制，快速且有效率地提高分數。
 
-The score impact depends on the field value and the optional `saturation`, `log`, or `sigmoid` function used. These functions are applied dynamically at query time to compute the final document score; they do not alter or store any values in the document itself.
+對分數的影響取決於欄位值，以及所使用的選用 `saturation`、`log` 或 `sigmoid` 函式。這些函式會在查詢時動態套用，以計算最終文件分數；它們不會變更文件本身的任何值，也不會在文件中儲存任何值。
 
-## Parameters
+## 參數
 
-The `rank_feature` query supports the following parameters.
+`rank_feature` 查詢支援下列參數。
 
-| Parameter               | Data type | Required/Optional | Description                                                                                                                                                      |
+| 參數               | 資料類型 | 必要/選用 | 說明                                                                                                                                                      |
 | ----------------------- | --------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `field`                 | String    | Required          | A `rank_feature` or `rank_features` field that contributes to document scoring.                                                                                  |
-| `boost`                 | Float     | Optional          | A multiplier applied to the score. Default is `1.0`. Values between 0 and 1 reduce the score; values above 1 amplify it.                                         |
-| `saturation`            | Object    | Optional          | Applies a saturation function to the feature value. Boost grows with value but levels off beyond the `pivot`. Default function if no other function is provided. Only one function out of `saturation`, `log`, or `sigmoid` may be used at a time.|
-| `log`                   | Object    | Optional          | Uses a logarithmic scoring function based on the field value. Best for large ranges of values. Only one function out of `saturation`, `log`, or `sigmoid` may be used at a time.                                                                  |
-| `sigmoid`               | Object    | Optional          | Applies a sigmoid (S-shaped) curve to score impact, controlled by `pivot` and `exponent`. Only one function out of `saturation`, `log`, or `sigmoid` may be used at a time.                                                                        |
-| `positive_score_impact` | Boolean   | Optional          | When `false`, lower values score higher. Useful for features like price, for which smaller is better. Defined as part of the mapping. Default is `true`.         |
+| `field`                 | 字串    | 必要          | 參與文件評分的 `rank_feature` 或 `rank_features` 欄位。                                                                                  |
+| `boost`                 | 浮點數     | 選用          | 套用至分數的乘數。預設值為 `1.0`。介於 0 與 1 之間的值會降低分數；大於 1 的值會提高分數。                                         |
+| `saturation`            | 物件    | 選用          | 對特徵值套用飽和函式。分數提升幅度會隨值增加，但超過 `pivot` 後會趨於平緩。若未提供其他函式，則使用此預設函式。一次只能使用 `saturation`、`log` 或 `sigmoid` 中的一個函式。|
+| `log`                   | 物件    | 選用          | 使用以欄位值為基礎的對數評分函式。最適合數值範圍較大的情況。一次只能使用 `saturation`、`log` 或 `sigmoid` 中的一個函式。                                                                  |
+| `sigmoid`               | 物件    | 選用          | 對分數影響套用 sigmoid（S 形）曲線，由 `pivot` 與 `exponent` 控制。一次只能使用 `saturation`、`log` 或 `sigmoid` 中的一個函式。                                                                        |
+| `positive_score_impact` | 布林值   | 選用          | 設為 `false` 時，值越低，分數越高。適用於價格等數值越小越好的特徵。定義於對應中。預設值為 `true`。         |
 
-## Example
+## 範例
 
-The following examples demonstrate how to define and use a `rank_feature` field to influence document scoring.
+下列範例示範如何定義及使用 `rank_feature` 欄位來影響文件評分。
 
-### Create an index with a rank feature field
+### 建立具有排名特徵欄位的索引
 
-Define an index with a `rank_feature` field to represent a signal like `popularity`:
+定義具有 `rank_feature` 欄位的索引，以表示 `popularity` 等訊號：
 
 ```json
 PUT /products
@@ -47,9 +48,9 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-### Index example documents
+### 將範例文件編製索引
 
-Add sample products with varying popularity values:
+新增具有不同熱門程度值的範例產品：
 
 ```json
 POST /products/_bulk
@@ -70,9 +71,9 @@ POST /products/_bulk
 ```
 {% include copy-curl.html %}
 
-### Basic rank feature query
+### 基本排名特徵查詢
 
-You can boost results based on the `popularity` score using `rank_feature`:
+您可以使用 `rank_feature`，根據 `popularity` 分數提高結果的分數：
 
 ```json
 POST /products/_search
@@ -86,7 +87,7 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-This query alone does not perform filtering. Rather, it scores all documents based on the value of `popularity`. Higher values yield higher scores:
+此查詢單獨使用時不會進行篩選，而是根據 `popularity` 的值對所有文件評分。值越高，分數越高：
 
 ```json
 {
@@ -166,9 +167,9 @@ This query alone does not perform filtering. Rather, it scores all documents bas
 }
 ```
 
-### Combine with full-text search
+### 結合全文搜尋
 
-To filter relevant results and boost them based on popularity, use the following request. This query ranks all documents matching "headphones" and boosts those with higher popularity:
+若要篩選相關結果並根據熱門程度提高其分數，請使用下列請求。此查詢會對所有符合「headphones」的文件進行排名，並提高熱門程度較高的文件的分數：
 
 ```json
 POST /products/_search
@@ -192,11 +193,11 @@ POST /products/_search
 {% include copy-curl.html %}
 
 
-### Boost parameter
+### Boost 參數
 
-The `boost` parameter allows you to scale the score contribution of the rank_feature clause. It's especially useful in compound queries such as `bool`, where you want to control how much influence a numeric field (such as popularity, freshness, or relevance score) has on the final document ranking.
+`boost` 參數可讓您調整 rank_feature 子句對分數的貢獻比例。在 `bool` 等複合查詢中，當您想控制數值欄位（例如熱門程度、新鮮度或相關性分數）對最終文件排名的影響程度時，此參數特別實用。
 
-In the following example, the `bool` query matches documents with the term "headphones" in the `title` and boosts more popular results using a `rank_feature` clause with a `boost` of `2.0`. This doubles the contribution of the `rank_feature` score to the overall document score:
+在下列範例中，`bool` 查詢會比對 `title` 中含有詞彙「headphones」的文件，並使用 `boost` 為 `2.0` 的 `rank_feature` 子句，提高較熱門結果的分數。這會使 `rank_feature` 分數對整體文件分數的貢獻加倍：
 
 ```json
 POST /products/_search
@@ -221,15 +222,15 @@ POST /products/_search
 {% include copy-curl.html %}
 
 
-### Configure score function
+### 設定分數函式
 
-By default, the `rank_feature` query uses a `saturation` function with a `pivot` value derived from the field. You can explicitly set the function to `saturation`, `log` or `sigmoid`.
+預設情況下，`rank_feature` 查詢使用由欄位衍生出 `pivot` 值的 `saturation` 函式。您可以明確將函式設定為 `saturation`、`log` 或 `sigmoid`。
 
-#### Saturation function
+#### 飽和函式
 
-The `saturation` function is the default scoring method used in `rank_feature` queries. It assigns higher scores to documents with larger feature values, but the increase in score becomes more gradual as the value exceeds a specified `pivot`. This is useful when you want to give diminishing returns to very large values, for example, boosting `popularity` while avoiding over-rewarding extremely high numbers. The formula for calculating score is `value of the rank_feature field / (value of the rank_feature field + pivot)`. The produced score is always between `0` and `1`. If the `pivot` is not provided, the approximate geometric mean of all `rank_feature` values in the index is used. 
+`saturation` 函式是 `rank_feature` 查詢中使用的預設評分方法。它會為具有較大特徵值的文件指派較高分數，但當值超過指定的 `pivot` 時，分數的增加會變得更加平緩。當您希望對非常大的值給予遞減的回報時，這很有用，例如在提升 `popularity` 的同時，避免過度獎勵極高的數值。計算分數的公式為 `value of the rank_feature field / (value of the rank_feature field + pivot)`。產生的分數一律介於 `0` 與 `1` 之間。若未提供 `pivot`，則會使用索引中所有 `rank_feature` 值的近似幾何平均數。
 
-The following example uses `saturation` with a `pivot` of `50`:
+下列範例使用 `saturation`，並將 `pivot` 設為 `50`：
 
 ```json
 POST /products/_search
@@ -246,7 +247,7 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-The `pivot` defines the point at which the scoring growth slows down. Values higher than `pivot` still increase the score, but with diminishing returns, as can be seen in the returned hits:
+`pivot` 定義了評分成長減緩的轉折點。高於 `pivot` 的值仍會增加分數，但回報會遞減，這可以從傳回的命中結果中看出：
 
 ```json
 {
@@ -326,9 +327,9 @@ The `pivot` defines the point at which the scoring growth slows down. Values hig
 }
 ```
 
-#### Log function
+#### 對數函式
 
-The `log` function is helpful when the `rank_feature` field contains a significant range of values. It applies a logarithmic scale to the `score`, which reduces the effect of extremely high values and helps normalize scoring across wide value distributions. This is especially useful when a small difference between low values should be more impactful than a large difference between high values. The score is calculated using the formula `log(scaling_factor + rank_feature field)`. The following example uses a `scaling_factor` of `2`:
+當 `rank_feature` 欄位包含大範圍的值時，`log` 函式很有幫助。它會對 `score` 套用對數刻度，從而降低極高值的影響，並有助於在寬廣的值分佈之間將評分正常化。當低值之間的微小差異應比高值之間的巨大差異更具影響力時，這特別有用。分數使用公式 `log(scaling_factor + rank_feature field)` 計算。下列範例使用 `scaling_factor` 為 `2`：
 
 ```json
 POST /products/_search
@@ -345,7 +346,7 @@ POST /products/_search
 ```
 {% include copy-curl.html %}
 
-In the example dataset, the `popularity` field ranges from `1` to `500`. The `log` function compresses the `score` contribution from large values like `250` and `500` while still allowing documents with `10` or `25` to have meaningful scores. In contrast, if you applied the `saturation` function, documents above the `pivot` would rapidly approach the same maximum score:
+在範例資料集中，`popularity` 欄位的範圍從 `1` 到 `500`。`log` 函式會壓縮像 `250` 和 `500` 這類大值對 `score` 的貢獻，同時仍讓具有 `10` 或 `25` 的文件獲得有意義的分數。相較之下，如果您套用 `saturation` 函式，高於 `pivot` 的文件會迅速趨近相同的最高分數：
 
 ```json
 {
@@ -425,9 +426,9 @@ In the example dataset, the `popularity` field ranges from `1` to `500`. The `lo
 }
 ```
 
-#### Sigmoid function
+#### Sigmoid 函式
 
-The `sigmoid` function provides a smooth, S-shaped scoring curve, which is especially useful when you want to control the steepness and midpoint of the scoring impact. The score is derived using the formula `rank feature field value^exp / (rank feature field value^exp + pivot^exp)`. The following example uses a `sigmoid` function with a configured `pivot` and `exponent`. The `pivot` defines the value at which the score is 0.5. The `exponent` controls how steep the curve is. Lower values result in a sharper transition around the `pivot`:
+`sigmoid` 函式提供平滑的 S 形評分曲線，當您想要控制評分影響的陡峭程度與中點時，這特別有用。分數使用公式 `rank feature field value^exp / (rank feature field value^exp + pivot^exp)` 衍生。下列範例使用設定了 `pivot` 和 `exponent` 的 `sigmoid` 函式。`pivot` 定義分數為 0.5 的值。`exponent` 控制曲線的陡峭程度。較低的值會在 `pivot` 附近產生更劇烈的轉變：
 
 ```json
 POST /products/_search
@@ -446,7 +447,7 @@ POST /products/_search
 {% include copy-curl.html %}
 
 
-The `sigmoid` function smoothly boosts scores around the `pivot` (in this example,`50`), giving moderate preference to values near the `pivot` while flattening out both high and low extremes:
+`sigmoid` 函式會在 `pivot` 附近平滑地提升分數（在此範例中為 `50`），對接近 `pivot` 的值給予適度的偏好，同時將高低兩端的極值拉平：
 
 ```json
 {
@@ -526,9 +527,9 @@ The `sigmoid` function smoothly boosts scores around the `pivot` (in this exampl
 }
 ```
 
-#### Invert score impact
+#### 反轉分數影響
 
-By default, higher values lead to higher scores. If you want lower values to yield higher scores (for example, lower prices are more relevant), set `positive_score_impact` to `false` during index creation:
+根據預設，較高的值會導致較高的分數。如果您希望較低的值產生較高的分數 (例如，較低的價格更相關)，請在建立索引時將 `positive_score_impact` 設定為 `false`：
 
 ```json
 PUT /products_new

@@ -16,6 +16,12 @@ class TaiwanNormalizationTests(unittest.TestCase):
     def test_non_it_word_exception_is_preserved(self):
         self.assertEqual(normalize_taiwan_prose('添加劑與本地化'), '添加劑與本地化')
 
+    def test_view_chart_is_not_corrupted_by_noun_view_replacement(self):
+        value = '檢視圖表並檢視圖層，接著建立視圖。'
+        expected = '檢視圖表並檢視圖層，接著建立檢視。'
+        self.assertEqual(normalize_taiwan_prose(value), expected)
+        self.assertEqual(normalize_taiwan_prose(expected), expected)
+
     def test_product_codes_use_product_identifiers_without_touching_code(self):
         protector = Protector()
         source = '產品代碼\n\n```json\n{"title":"產品代碼"}\n```\n'

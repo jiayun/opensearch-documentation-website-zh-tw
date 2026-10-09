@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Agentic search
+title: "代理程式搜尋"
 parent: AI search
 nav_order: 75
 has_children: true
@@ -9,45 +10,45 @@ redirect_from:
   - /vector-search/ai-search/agentic-search/
 ---
 
-# Agentic search
-**Introduced 3.2**
+# 代理程式搜尋
+**於 3.2 版導入**
 {: .label .label-purple }
 
-Agentic search lets you ask questions in natural language and have OpenSearch plan and execute the retrieval automatically. A preconfigured agent reads the question, plans the search, and returns relevant results.
+代理程式搜尋 (agentic search) 讓您能以自然語言提問，並由 OpenSearch 自動規劃與執行擷取作業。預先設定的代理程式會讀取問題、規劃搜尋，並傳回相關結果。
 
-You can configure agentic search using the API or OpenSearch Dashboards. This guide describes configuring agentic search using the API. To learn how to configure it in OpenSearch Dashboards, see [Building Agentic Search Flows]({{site.url}}{{site.baseurl}}/vector-search/ai-search/building-agentic-search-flows/).
+您可以透過 API 或 OpenSearch Dashboards 設定代理程式搜尋。本指南說明如何使用 API 設定代理程式搜尋。若要了解如何在 OpenSearch Dashboards 中設定，請參閱 [建立代理程式搜尋流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/building-agentic-search-flows/)。
 
-## Agent types
+## 代理程式類型
 
-Agentic search supports two types of agents, each optimized for different use cases.
+代理程式搜尋支援兩種代理程式類型，各自針對不同的使用情境最佳化。
 
-### Conversational agents
+### 對話式代理程式
 
-Conversational agents provide the most flexible and powerful agentic search experience. They support multiple tools, conversation memory, and detailed reasoning traces. Use conversational agents when you need:
+對話式代理程式提供最靈活且強大的代理程式搜尋體驗。它們支援多種工具、對話記憶，以及詳細的推理軌跡。當您需要以下功能時，請使用對話式代理程式：
 
-- **Multi-tool workflows**: Automatic index discovery, schema analysis, and external data integration.
-- **Conversation memory**: The ability to continue conversations across multiple queries using memory IDs.
-- **Complex reasoning**: Detailed step-by-step reasoning traces and tool orchestration.
-- **Highest query quality**: Maximum flexibility for handling complex or ambiguous queries.
+- **多工具工作流程**：自動探索索引、分析綱要，以及整合外部資料。
+- **對話記憶**：能夠使用記憶 ID 在多個查詢之間延續對話。
+- **複雜推理**：詳細的逐步推理軌跡與工具協調。
+- **最高查詢品質**：處理複雜或模糊查詢時的最大靈活性。
 
-### Flow agents
+### 流程代理程式
 
-Flow agents offer a streamlined alternative focused solely on query planning. They provide faster response times and lower costs by using only the `QueryPlanningTool`. Use flow agents when you need:
+流程代理程式 (flow agent) 提供精簡的替代方案，僅專注於查詢規劃。它們只使用 `QueryPlanningTool`，因此回應時間更快且成本更低。當您需要以下功能時，請使用流程代理程式：
 
-- **Low latency**: Faster query processing with fewer large language model (LLM) calls.
-- **Cost efficiency**: Reduced computational overhead and API costs.
-- **Simple queries**: Straightforward search requirements without complex reasoning.
-- **Known indexes**: When you can specify target indexes directly in requests.
+- **低延遲**：減少大型語言模型 (LLM) 呼叫次數，加快查詢處理速度。
+- **成本效益**：降低運算負擔與 API 成本。
+- **簡單查詢**：無需複雜推理的直接搜尋需求。
+- **已知索引**：當您可以直接在請求中指定目標索引時。
 
-The following tutorial uses a conversational agent. To learn about flow agents, see [Using flow agents for agentic search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/flow-agent/).
+下列教學使用對話式代理程式。若要了解流程代理程式，請參閱 [使用流程代理程式進行代理程式搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/flow-agent/)。
 
-## Prerequisite
+## 必要條件
 
-Before using agentic search, you must configure an agent with the [`QueryPlanningTool`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/query-planning-tool/).
+使用代理程式搜尋之前，您必須先使用 [`QueryPlanningTool`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/query-planning-tool/) 設定代理程式。
 
-## Step 1: Create an index for ingestion
+## 步驟 1：建立用於匯入的索引
 
-Create an index for ingestion:
+建立用於匯入的索引：
 
 ```json
 PUT /iris-index
@@ -81,9 +82,9 @@ PUT /iris-index
 ```
 {% include copy-curl.html %}
 
-## Step 2: Ingest documents into the index
+## 步驟 2：將文件匯入索引
 
-To ingest documents into the index created in the previous step, send the following requests:
+若要將文件匯入上一個步驟建立的索引，請傳送下列請求：
 
 ```json
 POST _bulk
@@ -94,9 +95,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-## Step 3: Create a model for the agent and QueryPlanningTool
+## 步驟 3：為代理程式與 QueryPlanningTool 建立模型
 
-Register a single model that will be used by both the conversational agent and the `QueryPlanningTool`. This model analyzes natural language questions, coordinates tool usage, and generates the OpenSearch query domain-specific language (DSL). For available model options, see [Model configurations]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/#model-configuration):
+註冊一個同時供對話式代理程式與 `QueryPlanningTool` 使用的模型。此模型會分析自然語言問題、協調工具使用，並產生 OpenSearch 查詢領域特定語言 (DSL)。如需可用的模型選項，請參閱 [模型組態]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/#model-configuration)：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -131,13 +132,13 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-## Step 4: Create an agent
+## 步驟 4：建立代理程式
 
-Create a `conversational` agent with the `QueryPlannerTool` (required). You can add other tools as needed. 
+建立一個帶有 `QueryPlannerTool` (必要) 的 `conversational` 代理程式。您可以視需要新增其他工具。
 
-### Create an agent with a conversation index memory
+### 建立使用對話索引記憶的代理程式
 
-The following example creates a `conversational` agent that uses a `conversation_index` memory:
+下列範例建立一個使用 `conversation_index` 記憶的 `conversational` 代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -168,9 +169,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### Create an agent with an agentic memory
+### 建立使用代理程式記憶的代理程式
 
-To save memories and interactions, you can configure your agent to use [agentic memory]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/). For more information, see [Using agentic memory]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agentic-memory/). The following example creates a `conversational` agent that uses an `agentic_memory` memory: 
+若要儲存記憶與互動，您可以設定代理程式使用 [代理程式記憶]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/)。如需更多資訊，請參閱 [使用代理程式記憶]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agentic-memory/)。下列範例建立一個使用 `agentic_memory` 記憶的 `conversational` 代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -202,9 +203,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-## Step 5: Create a search pipeline
+## 步驟 5：建立搜尋管線
 
-Create a search pipeline with an agentic query translator search request processor and pass the agent ID created in the previous step:
+建立一個包含代理程式查詢轉譯器搜尋請求處理器的搜尋管線，並傳入上一個步驟建立的代理程式 ID：
 
 ```json
 PUT _search/pipeline/agentic-pipeline
@@ -220,9 +221,9 @@ PUT _search/pipeline/agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-## Step 6: Search the index
+## 步驟 6：搜尋索引
 
-To perform agentic search, use an `agentic` query. The `query_text` parameter contains the natural language question, and the `query_fields` parameter lists the fields that the agent should consider when generating the search query:
+若要執行代理程式搜尋，請使用 `agentic` 查詢。`query_text` 參數包含自然語言問題，`query_fields` 參數則列出代理程式在產生搜尋查詢時應考量的欄位：
 
 ```json
 GET iris-index/_search?search_pipeline=agentic-pipeline
@@ -237,7 +238,7 @@ GET iris-index/_search?search_pipeline=agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-The agentic search request executes the agent with the `QueryPlanningTool` and sends the natural language question, along with the index mapping and a default prompt, to an LLM to generate a DSL query. The returned DSL query is then executed as a search request in OpenSearch:
+代理程式搜尋請求會以 `QueryPlanningTool` 執行代理程式，並將自然語言問題連同索引對應與預設提示傳送至 LLM 以產生 DSL 查詢。傳回的 DSL 查詢隨後會在 OpenSearch 中作為搜尋請求執行：
 
 ```json
 "hits": {
@@ -275,26 +276,26 @@ The agentic search request executes the agent with the `QueryPlanningTool` and s
 }
 ```
 
-## Advanced configurations
+## 進階組態
 
-After setting up basic agentic search, you can enhance your implementation with these advanced features:
+設定基本代理程式搜尋之後，您可以使用下列進階功能強化實作：
 
-- [Configure agentic search agents]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/) -- Learn how to configure your agentic search agent with different models, tools, and configurations.
+- [設定代理程式搜尋代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-customization/) -- 了解如何使用不同的模型、工具與組態來設定您的代理程式搜尋代理程式。
 
-- [Use flow agents]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/flow-agent/) -- Use streamlined flow agents for faster, more cost-effective query planning when you don't need conversation memory or complex tool orchestration.
+- [使用流程代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/flow-agent/) -- 當您不需要對話記憶或複雜的工具協調時，使用精簡的流程代理程式來進行更快、更具成本效益的查詢規劃。
 
-- [Configure semantic search]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/neural-search/) -- Configure agents to automatically choose between keyword and semantic vector searches based on user intent, providing more relevant results for conceptual questions.
+- [設定語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/neural-search/) -- 設定代理程式根據使用者意圖自動在關鍵字搜尋與語意向量搜尋之間做選擇，為概念性問題提供更相關的結果。
 
-- [Add search templates]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/search-templates/) -- Add predefined search templates to handle complex query patterns that would be challenging for LLMs to generate consistently, ensuring predictable query structure and improved reliability.
+- [新增搜尋範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/search-templates/) -- 新增預先定義的搜尋範本，以處理 LLM 難以穩定產生的複雜查詢模式，確保查詢結構可預測並提升可靠性。
 
-- [Connect external MCP servers]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/mcp-server/) -- Extend agentic search with external tools and data sources through Model Context Protocol (MCP) servers for enhanced functionality and real-time information access.
+- [連接外部 MCP 伺服器]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/mcp-server/) -- 透過 Model Context Protocol (MCP) 伺服器擴充代理程式搜尋的外部工具與資料來源，以強化功能並即時存取資訊。
 
-- [Build agentic search flows]({{site.url}}{{site.baseurl}}/vector-search/ai-search/building-agentic-search-flows/) -- Configure agents and execute agentic search using AI search flows in OpenSearch Dashboards. 
+- [建立代理程式搜尋流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/building-agentic-search-flows/) -- 使用 OpenSearch Dashboards 中的 AI 搜尋流程來設定代理程式並執行代理程式搜尋。
 
-- [Rerank agentic search results]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/rerank-agentic-search-results/) -- Add a rerank search response processor to your agentic search pipeline to further rerank search results.
+- [重新排序代理程式搜尋結果]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/rerank-agentic-search-results/) -- 在您的代理程式搜尋管線中新增 rerank 搜尋回應處理器，以進一步重新排序搜尋結果。
 
-- [Use agentic memory]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agentic-memory/) -- Configure agentic search to save memories and interactions using memory containers, enabling persistent context across conversations.
+- [使用代理程式記憶]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agentic-memory/) -- 設定代理程式搜尋使用記憶容器來儲存記憶與互動，讓對話之間能保有持續的上下文。
 
-## Next steps
+## 後續步驟
 
-- [Inspecting agentic search and continuing conversations]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-converse/) -- Inspect agent behavior, view generated DSL, and continue conversations using a memory ID.
+- [檢視代理程式搜尋並延續對話]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agent-converse/) -- 檢視代理程式行為、查看產生的 DSL，並使用記憶 ID 延續對話。

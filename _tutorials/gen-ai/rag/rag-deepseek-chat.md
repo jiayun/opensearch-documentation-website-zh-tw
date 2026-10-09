@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: RAG using the DeepSeek Chat API
+title: "使用 DeepSeek Chat API 的 RAG"
 parent: RAG
 grand_parent: Generative AI
 nav_order: 120
@@ -9,51 +10,51 @@ redirect_from:
   - /tutorials/vector-search/rag/rag-deepseek-chat/
 ---
 
-# RAG using the DeepSeek Chat API
+# 使用 DeepSeek Chat API 的 RAG
 
-This tutorial shows you how to implement retrieval-augmented generation (RAG) using [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) and the [DeepSeek chat model](https://api-docs.deepseek.com/api/create-chat-completion).
+本教學說明如何使用 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 與 [DeepSeek 聊天模型](https://api-docs.deepseek.com/api/create-chat-completion) 實作檢索增強生成 (RAG)。
 
-If you are using self-managed OpenSearch instead of Amazon OpenSearch Service, obtain a DeepSeek API key and create a connector to the DeepSeek chat model using [the blueprint](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/deepseek_connector_chat_blueprint.md). For more information about creating a connector, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/). Then go directly to [Step 5](#step-5-create-and-test-the-model).
+如果您使用自行管理的 OpenSearch 而非 Amazon OpenSearch Service，請取得 DeepSeek API 金鑰，並使用[藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/deepseek_connector_chat_blueprint.md)建立與 DeepSeek 聊天模型的連接器。如需建立連接器的詳細資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。接著直接前往[步驟 5](#step-5-create-and-test-the-model)。
 
-Replace the placeholders beginning with the prefix `your_` with your own values.
+請將以 `your_` 為前綴的預留位置替換為您自己的值。
 {: .note}
 
-## Prerequisites
+## 先決條件
 
-Before you start, fulfill the following prerequisites.
+開始之前，請先完成下列先決條件。
 
-When configuring Amazon settings, only change the values mentioned in this tutorial. Keep all other settings at their default values.
+設定 Amazon 設定時，請只變更本教學提到的值。其他所有設定請維持預設值。
 {: .important}
 
-### Obtain a DeepSeek API key
+### 取得 DeepSeek API 金鑰
 
-If you don't have a DeepSeek API key already, obtain one before starting this tutorial. 
+如果您還沒有 DeepSeek API 金鑰，請在開始本教學之前先取得一個。
 
-### Create an OpenSearch cluster
+### 建立 OpenSearch 叢集
 
-Go to the [Amazon OpenSearch Service console](https://console.aws.amazon.com/aos/home) and create an OpenSearch domain.
+前往 [Amazon OpenSearch Service 主控台](https://console.aws.amazon.com/aos/home) 並建立 OpenSearch 網域。
 
-Note the domain Amazon Resource Name (ARN) and URL; you'll use them in the following steps.
+請記下網域的 Amazon Resource Name (ARN) 與 URL；您將在後續步驟中使用它們。
 
-## Step 1: Store the API key in AWS Secrets Manager
+## 步驟 1：將 API 金鑰儲存在 AWS Secrets Manager 中
 
-Store your DeepSeek API key in [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html):
+將您的 DeepSeek API 金鑰儲存在 [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html)：
 
-1. Open AWS Secrets Manager.
-1. Select **Store a new secret**.
-1. Select **Other type of secret**.
-1. Create a key-value pair with **my_deepseek_key** as the key and your DeepSeek API key as the value.
-1. Name your secret `my_test_deepseek_secret`.
+1. 開啟 AWS Secrets Manager。
+1. 選取 **Store a new secret**。
+1. 選取 **Other type of secret**。
+1. 建立索引鍵-值配對，索引鍵為 **my_deepseek_key**，值為您的 DeepSeek API 金鑰。
+1. 將您的秘密命名為 `my_test_deepseek_secret`。
 
-Note the secret ARN; you'll use it in the following steps.
+請記下秘密 ARN；您將在後續步驟中使用它。
 
-## Step 2: Create an IAM role
+## 步驟 2：建立 IAM 角色
 
-To use the secret created in Step 1, you must create an AWS Identity and Access Management (IAM) role with read permissions for the secret. This IAM role will be configured in the connector and will allow the connector to read the secret.
+若要使用步驟 1 建立的秘密，您必須建立具有該秘密讀取權限的 AWS Identity and Access Management (IAM) 角色。此 IAM 角色將在連接器中設定，並允許連接器讀取該秘密。
 
-Go to the IAM console, create a new IAM role named `my_deepseek_secret_role`, and add the following trust policy and permissions:
+前往 IAM 主控台，建立名為 `my_deepseek_secret_role` 的新 IAM 角色，並新增下列信任政策與權限：
 
-- Custom trust policy:
+- 自訂信任政策：
 
 ```json
 {
@@ -71,7 +72,7 @@ Go to the IAM console, create a new IAM role named `my_deepseek_secret_role`, an
 ```
 {% include copy.html %}
 
-- Permissions:
+- 權限：
 
 ```json
 {
@@ -90,19 +91,19 @@ Go to the IAM console, create a new IAM role named `my_deepseek_secret_role`, an
 ```
 {% include copy.html %}
 
-Note the role ARN; you'll use it in the following steps.
+請記下角色 ARN；您將在後續步驟中使用它。
 
-## Step 3: Configure an IAM role in Amazon OpenSearch Service
+## 步驟 3：在 Amazon OpenSearch Service 中設定 IAM 角色
 
-Follow these steps to configure an IAM role in Amazon OpenSearch Service.
+請依照下列步驟在 Amazon OpenSearch Service 中設定 IAM 角色。
 
-### Step 3.1: Create an IAM role for signing connector requests
+### 步驟 3.1：建立用於簽署連接器請求的 IAM 角色
 
-Generate a new IAM role specifically for signing your Create Connector API request.
+產生新的 IAM 角色，專門用於簽署您的 Create Connector API 請求。
 
-Create an IAM role named `my_create_deepseek_connector_role` with the following trust policy and permissions:
+建立名為 `my_create_deepseek_connector_role` 的 IAM 角色，並使用下列信任政策與權限：
 
-- Custom trust policy:
+- 自訂信任政策：
 
 ```json
 {
@@ -120,9 +121,9 @@ Create an IAM role named `my_create_deepseek_connector_role` with the following 
 ```
 {% include copy.html %}
 
-You'll use the `your_iam_user_arn` IAM user to assume the role in Step 4.
+您將在步驟 4 中使用 `your_iam_user_arn` IAM 使用者來擔任該角色。
 
-- Permissions:
+- 權限：
 
 ```json
 {
@@ -143,26 +144,26 @@ You'll use the `your_iam_user_arn` IAM user to assume the role in Step 4.
 ```
 {% include copy.html %}
 
-Note this role ARN; you'll use it in the following steps.
+請記下此角色 ARN；您將在後續步驟中使用它。
 
-### Step 3.2: Map a backend role
+### 步驟 3.2：對應後端角色
 
-Follow these steps to map a backend role:
+請依照下列步驟對應後端角色：
 
-1. Log in to OpenSearch Dashboards and select **Security** on the top menu.
-2. Select **Roles**, and then select the **ml_full_access** role. 
-3. On the **ml_full_access** role details page, select **Mapped users**, and then select **Manage mapping**. 
-4. Enter the IAM role ARN created in Step 3.1 in the **Backend roles** field, as shown in the following image.
-    ![Mapping a backend role]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/mapping_iam_role_arn.png)
-4. Select **Map**. 
+1. 登入 OpenSearch Dashboards，並在頂端選單選取 **Security**。
+2. 選取 **Roles**，然後選取 **ml_full_access** 角色。
+3. 在 **ml_full_access** 角色詳細資料頁面中，選取 **Mapped users**，然後選取 **Manage mapping**。
+4. 在 **Backend roles** 欄位中輸入步驟 3.1 建立的 IAM 角色 ARN，如下圖所示。
+    ![對應後端角色]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/mapping_iam_role_arn.png)
+4. 選取 **Map**。
 
-The IAM role is now successfully configured in your OpenSearch cluster.
+IAM 角色現已成功設定於您的 OpenSearch 叢集中。
 
-## Step 4: Create a connector
+## 步驟 4：建立連接器
 
-Follow these steps to create a connector for the DeepSeek chat model. For more information about creating a connector, see [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/).
+請依照下列步驟建立 DeepSeek 聊天模型的連接器。如需建立連接器的詳細資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-- Add the DeepSeek API endpoint to the trusted URL list:
+- 將 DeepSeek API 端點新增至信任的 URL 清單：
 
 ```json
 PUT /_cluster/settings
@@ -176,7 +177,7 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-- Run the following Python code with the temporary credentials fetched from AWS.
+- 使用從 AWS 取得的臨時憑證執行下列 Python 程式碼。
  
 ```python
 import boto3
@@ -232,19 +233,19 @@ print(r.text)
 ```
 {% include copy.html %}
 
-The script outputs a connector ID:
+該指令碼會輸出連接器 ID：
 
 ```json
 {"connector_id":"duRJsZQBFSAM-WcznrIw"}
 ```
 
-Note the connector ID; you'll use it in the next step.
+請記下連接器 ID；您將在下一個步驟中使用它。
 
-## Step 5: Create and test the model
+## 步驟 5：建立並測試模型
 
-Log in to OpenSearch Dashboards, open the DevTools console, and run the following requests to create and test the DeepSeek chat model.
+登入 OpenSearch Dashboards，開啟 Dev Tools 主控台，並執行下列請求以建立及測試 DeepSeek 聊天模型。
 
-1. Create a model group:
+1. 建立模型群組：
 
     ```json
     POST /_plugins/_ml/model_groups/_register
@@ -255,7 +256,7 @@ Log in to OpenSearch Dashboards, open the DevTools console, and run the followin
     ```
     {% include copy-curl.html %}
 
-    The response contains the model group ID:
+    回應包含模型群組 ID：
 
     ```json
     {
@@ -264,7 +265,7 @@ Log in to OpenSearch Dashboards, open the DevTools console, and run the followin
     }
     ```
 
-1. Register the model:
+1. 註冊模型：
 
     ```json
     POST /_plugins/_ml/models/_register
@@ -278,7 +279,7 @@ Log in to OpenSearch Dashboards, open the DevTools console, and run the followin
     ```
     {% include copy-curl.html %}
 
-    The response contains the model ID:
+    回應包含模型 ID：
 
     ```json
     {
@@ -288,14 +289,14 @@ Log in to OpenSearch Dashboards, open the DevTools console, and run the followin
     }
     ```
 
-1. Deploy the model:
+1. 部署模型：
 
     ```json
     POST /_plugins/_ml/models/VSlKsZQBts7fa6bypR02/_deploy
     ```
     {% include copy-curl.html %}
 
-    The response contains a task ID for the deployment operation:
+    回應包含部署作業的工作 ID：
 
     ```json
     {
@@ -305,7 +306,7 @@ Log in to OpenSearch Dashboards, open the DevTools console, and run the followin
     }
     ```
 
-1. Test the model:
+1. 測試模型：
 
     ```json
     POST /_plugins/_ml/models/VSlKsZQBts7fa6bypR02/_predict
@@ -326,7 +327,7 @@ Log in to OpenSearch Dashboards, open the DevTools console, and run the followin
     ```
     {% include copy-curl.html %}
 
-    The response contains the text generated by the model:
+    回應包含模型產生的文字：
 
     ```json
     {
@@ -371,13 +372,13 @@ Log in to OpenSearch Dashboards, open the DevTools console, and run the followin
     }
     ```
 
-## Step 6: Configure RAG
+## 步驟 6：設定 RAG
 
-Follow these steps to configure RAG.
+依照下列步驟設定 RAG。
 
-### Step 6.1: Create a search pipeline
+### 步驟 6.1：建立搜尋管線
 
-Create a search pipeline with a [RAG processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/):
+使用 [RAG 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/) 建立搜尋管線：
 
 ```json
 PUT /_search/pipeline/my-conversation-search-pipeline-deepseek-chat
@@ -400,9 +401,9 @@ PUT /_search/pipeline/my-conversation-search-pipeline-deepseek-chat
 ```
 {% include copy-curl.html %}
 
-### Step 6.2: Create a vector database
+### 步驟 6.2：建立向量資料庫
 
-Follow steps 1 and 2 of [this tutorial]({{site.url}}{{site.baseurl}}/search-plugins/neural-search-tutorial/) to create an embedding model and a vector index. Then ingest sample data into the index:
+依照[本教學]({{site.url}}{{site.baseurl}}/search-plugins/neural-search-tutorial/)的步驟 1 和 2 建立嵌入模型與向量索引。然後將範例資料匯入索引：
 
 ```json
 POST _bulk
@@ -421,9 +422,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-### Step 6.3: Search the index
+### 步驟 6.3：搜尋索引
 
-Run a vector search to retrieve documents from the vector database and use the DeepSeek model for RAG:
+執行向量搜尋以從向量資料庫擷取文件，並使用 DeepSeek 模型進行 RAG：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=my-conversation-search-pipeline-deepseek-chat
@@ -453,7 +454,7 @@ GET /my-nlp-index/_search?search_pipeline=my-conversation-search-pipeline-deepse
 ```
 {% include copy-curl.html %}
 
-The response includes both the relevant documents retrieved from the vector search (in the `hits` array) and the generated answer from the DeepSeek model (in the `ext.retrieval_augmented_generation` object):
+回應同時包含從向量搜尋擷取的相關文件（位於 `hits` 陣列中），以及由 DeepSeek 模型產生的答案（位於 `ext.retrieval_augmented_generation` 物件中）：
 
 ```json
 {

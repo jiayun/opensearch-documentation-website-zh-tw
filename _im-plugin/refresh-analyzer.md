@@ -1,6 +1,7 @@
 ---
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Refresh search analyzer
+title: "重新整理搜尋分析器"
 parent: Tuning indexes
 nav_order: 10
 has_toc: false
@@ -9,34 +10,34 @@ redirect_from:
   - /im-plugin/refresh-analyzer/index/
 ---
 
-# Refresh search analyzer
+# 重新整理搜尋分析器
 
-Use the Refresh Search Analyzer API to apply a change to a search analyzer's resource files in real time. For example, if you change the synonym list in your analyzer, the change takes effect without you needing to close and reopen the index:
+使用 Refresh Search Analyzer API 即時套用對搜尋分析器資源檔案的變更。例如，如果您變更了分析器中的同義詞清單，該變更會立即生效，無需關閉再重新開啟索引：
 
 ```json
 POST /_plugins/_refresh_search_analyzers/{index}
 ```
 {% include copy-curl.html %}
 
-## Path parameters
+## 路徑參數
 
-The following table lists the available path parameters. All path parameters are required.
+下表列出可用的路徑參數。所有路徑參數皆為必要。
 
-| Parameter | Data type | Description |
+| 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `index` | String | A comma-separated list of indexes, data streams, or index aliases to which the operation is applied. Supports wildcard expressions (`*`). Use `_all` or `*` to specify all indexes and data streams in a cluster. |
+| `index` | 字串 | 要套用此操作的索引、資料串流或索引別名的逗號分隔清單。支援萬用字元運算式 (`*`)。使用 `_all` 或 `*` 來指定叢集中的所有索引與資料串流。 |
 
-## Query parameters
+## 查詢參數
 
-The following table lists the supported query parameters.
+下表列出支援的查詢參數。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`reload_cached_resources` | Boolean | When set to `true`, reloads cached resources from disk without rebuilding caches for token filters that load files from disk (for example, the [`hunspell`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/hunspell/) filter's dictionary files). When `false` (the default), analyzer factories are rebuilt but cached resources are reused.
+`reload_cached_resources` | 布林值 | 設定為 `true` 時，會從磁碟重新載入快取的資源，而不會為從磁碟載入檔案的詞元篩選器 (例如 [`hunspell`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/hunspell/) 篩選器的字典檔案) 重建快取。當為 `false` (預設值) 時，會重建分析器工廠，但重複使用快取的資源。
 
-## Making a token filter updatable
+## 讓詞元篩選器可更新
 
-A token filter is only refreshed if it has an `updateable` flag of `true`. An updatable filter can be used only in a search analyzer, not in an index analyzer, because existing documents are not reanalyzed. The following request creates an index with an updatable synonym filter and applies it as the search analyzer for the `desc` field:
+只有當詞元篩選器的 `updateable` 旗標為 `true` 時，才會被重新整理。可更新的篩選器只能用於搜尋分析器，不能用於索引分析器，因為現有的文件不會重新分析。以下請求會建立一個帶有可更新同義詞篩選器的索引，並將其套用為 `desc` 欄位的搜尋分析器：
 
 ```json
 PUT /synonym_index
@@ -75,16 +76,16 @@ PUT /synonym_index
 ```
 {% include copy-curl.html %}
 
-The `synonyms_path` is relative to the `config` directory of each node. After you edit the file, refresh the analyzer:
+`synonyms_path` 是相對於每個節點的 `config` 目錄。編輯檔案後，請重新整理分析器：
 
 ```json
 POST /_plugins/_refresh_search_analyzers/synonym_index
 ```
 {% include copy-curl.html %}
 
-## Example response
+## 回應範例
 
-The response lists the analyzers that were refreshed in each index:
+回應會列出每個索引中已重新整理的分析器：
 
 ```json
 {
@@ -104,5 +105,5 @@ The response lists the analyzers that were refreshed in each index:
 }
 ```
 
-Searches against `desc` now use the updated synonym list.
+針對 `desc` 的搜尋現在會使用更新後的同義詞清單。
 
